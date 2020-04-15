@@ -132,6 +132,7 @@ local noun_slots = {
 	["count"] = "count|form",
 }
 
+
 local adj_slots = {
 	["ind_m_sg"] = "indef|m|s",
 	["def_sub_m_sg"] = "def|sbjv|m|s",
@@ -161,24 +162,24 @@ local adj_slots = {
 }
 
 local masc_adj_to_noun_slots = {
-	["ind_m_sg"] = "ind_sg",
+	["ind_m_sg"] = {"ind_sg", "acc_sg", "gen_sg", "dat_sg"},
 	["def_sub_m_sg"] = "def_sub_sg",
 	["def_obj_m_sg"] = "def_obj_sg",
 	["voc_m_sg"] = "voc_sg",
 }
 
 local fem_adj_to_noun_slots = {
-	["ind_f_sg"] = {"ind_sg", "voc_sg"},
+	["ind_f_sg"] = {"ind_sg", "voc_sg", "acc_sg", "gen_sg", "dat_sg"},
 	["def_f_sg"] = {"def_sub_sg", "def_obj_sg"},
 }
 
 local neut_adj_to_noun_slots = {
-	["ind_n_sg"] = "ind_sg",
+	["ind_n_sg"] = {"ind_sg", "voc_sg", "acc_sg", "gen_sg", "dat_sg"},
 	["def_n_sg"] = {"def_sub_sg", "def_obj_sg"},
 }
 
 local pl_adj_to_noun_slots = {
-	["ind_pl"] = "ind_pl",
+	["ind_pl"] = {"ind_pl", "count", "voc_pl", "acc_pl", "gen_pl", "dat_pl"},
 	["def_pl"] = "def_pl",
 }
 
@@ -337,14 +338,16 @@ end
 -- Note that each element of the outer list is of the same form as the input,
 -- consisting of alternating textual runs where the even-numbered segments
 -- are balanced runs, and can in turn be passed to split_alternating_runs().
-local function split_alternating_runs(segment_runs, splitchar)
+local function split_alternating_runs(segment_runs, splitchar, preserve_splitchar)
 	local grouped_runs = {}
 	local run = {}
 	for i, seg in ipairs(segment_runs) do
 		if i % 2 == 0 then
 			table.insert(run, seg)
 		else
-			local parts = rsplit(seg, splitchar, true)
+			local parts =
+				preserve_splitchar and m_string_utilities.capturing_split(seg, "(" .. splitchar .. ")") or
+				rsplit(seg, splitchar)
 			table.insert(run, parts[1])
 			for j=2,#parts do
 				table.insert(grouped_runs, run)
@@ -429,7 +432,7 @@ end
 local function parse_noun_accent_spec(accent_run)
 	local retval = {accents = {}, plurals = {}}
 	local plurals = {}
-	local plural_groups = split_alternating_runs(accent_run, "+")
+	local plural_groups = split_alternating_runs(accent_run, "%+")
 	local double_plus = false
 	for i, plural_group in ipairs(plural_groups) do
 		if i > 1 and retval.is_adj then
@@ -462,7 +465,7 @@ local function parse_noun_accent_spec(accent_run)
 			rest, retval.is_adj = rsubb(plural_group[1], "#", "")
 			if retval.is_adj then
 				retval.nocomp = true
-				rest, retval.vocative = rsubb(rest, "%(v%)", "")
+				rest, retval.has_vocative = rsubb(rest, "%(v%)", "")
 				rest, retval.human = rsubb(rest, "%(h%)", "")
 				local adj_accent_spec = parse_adj_accent_spec({rest})
 				for prop, value in pairs(adj_accent_spec) do
@@ -478,7 +481,7 @@ local function parse_noun_accent_spec(accent_run)
 				rest, retval.reducible_count = rsubb(rest, "%(c%*%)", "")
 				rest, retval.reducible_definite = rsubb(rest, "%(d%*%)", "")
 				rest, retval.reducible = rsubb(rest, "%*", "")
-				rest, retval.vocative = rsubb(rest, "%(v%)", "")
+				rest, retval.has_vocative = rsubb(rest, "%(v%)", "")
 				rest, retval.human = rsubb(rest, "%(h%)", "")
 				rest, retval.soft_sign = rsubb(rest, "%(ь%)", "")
 				rest, retval.no_soft_sign = rsubb(rest, "%(%-ь%)", "")
@@ -707,19 +710,33 @@ end
 -- }
 --
 -- Eventually the format should be changed to allow for multiple words.
-local function parse_simplified_specification(segments, is_adj)
-	local dataspec = {}
-	if #segments ~= 3 or segments[3] ~= "" then
-		error("Can't currently parse: '" .. table.concat(segments) .. "'")
+local function parse_multiword_spec(segments, is_adj)
+	local multiword_spec = {
+		word_specs = {}
+	}
+	for i = 2, #segments - 1, 2 do
+		local word_spec = {}
+		local bracketed_runs = parse_balanced_segment_run(segment[i - 1], "[", "]")
+		local space_separated_groups = split_alternating_runs(bracketed_runs, "[ %-]", "preserve splitchar")
+		local before_text = {}
+		for j, space_separated_group in ipairs(space_separated_groups) do
+			if j == #space_separated_groups then
+				word_spec.lemma = table.concat(space_separated_group)
+				if word_spec.lemma == "" then
+					error("Word is blank: '" .. table.concat(segments) .. "'")
+				end
+			else
+				table.insert(before_text, table.concat(space_separated_group))
+			end
+		end
+		word_spec.before_text = table.concat(before_text)
+		word_spec.accent_and_form_specs = is_adj and parse_adj_accent_and_form_specs(segment[i]) or
+			parse_noun_accent_and_form_specs(segment[i])
+		word_spec.forms = {}
+		table.insert(multiword_spec.word_specs, word_spec)
 	end
-	if segments[1] == "" then
-		error("Word is blank: '" .. table.concat(segments) .. "'")
-	end
-	dataspec.lemma = segments[1]
-	dataspec.accent_and_form_specs = is_adj and parse_adj_accent_and_form_specs(segments[2]) or
-		parse_noun_accent_and_form_specs(segments[2])
-	dataspec.forms = {}
-	return dataspec
+	multiword_spec.post_text = segments[#segments]
+	return multiword_spec
 end
 
 
@@ -728,17 +745,17 @@ end
 --   alternants = {DATASPEC, DATASPEC, ...}
 -- }
 --
--- where DATASPEC describes a given alternant and is as returned by parse_simplified_specification().
+-- where DATASPEC describes a given alternant and is as returned by parse_multiword_spec().
 local function parse_alternant(alternant, is_adj)
 	local parsed_alternants = {}
-	local alternant_spec = rmatch(alternant, "^%(%((.*)%)%)$")
-	local segments = parse_balanced_segment_run(alternant_spec, "<", ">")
+	local alternant_text = rmatch(alternant, "^%(%((.*)%)%)$")
+	local segments = parse_balanced_segment_run(alternant_text, "<", ">")
 	local comma_separated_groups = split_alternating_runs(segments, ",")
-	local alternant_dataspec = {alternants = {}}
+	local alternant_spec = {alternants = {}}
 	for _, comma_separated_group in ipairs(comma_separated_groups) do
-		table.insert(alternant_dataspec.alternants, parse_simplified_specification(comma_separated_group, is_adj))
+		table.insert(alternant_spec.alternants, parse_multiword_spec(comma_separated_group, is_adj))
 end
-	return alternant_dataspec
+	return alternant_spec
 end
 
 
@@ -749,28 +766,55 @@ end
 --   alternants = {DATASPEC, DATASPEC, ...}
 -- }
 --
--- where DATASPEC describes a given alternant and is as returned by parse_simplified_specification().
+-- where DATASPEC describes a given alternant and is as returned by parse_multiword_spec().
 -- If the text passed in does not consist of an alternant specification, there will be only
 -- one element in the `alternants` list.
-local function parse_simplified_specification_allowing_alternants(text, is_adj)
-	if rfind(text, "^%(%(.*%)%)$") then
-		return parse_alternant(text, is_adj)
-	else
-		local segments = parse_balanced_segment_run(text, "<", ">")
-		return {alternants = {parse_simplified_specification(segments, is_adj)}}
+local function parse_alternant_multiword_spec(text, is_adj)
+	local alternant_multiword_spec = {alternant_or_word_specs = {}}
+	local alternant_segments = m_string_utilities.capturing_split(text, "(%(%(.-%)%))")
+	local last_post_text
+	for i = 1, #alternating_segments do
+		if i % 2 == 1 then
+			local segments = parse_balanced_segment_run(alternating_segments[i], "<", ">")
+			local multiword_spec = parse_multiword_spec(segments, is_adj)
+			for _, word_spec in ipairs(multiword_spec.word_specs) do
+				table.insert(alternant_multiword_spec.alternant_or_word_specs, word_spec)
+			end
+			last_post_text = multiword_spec.post_text
+		else
+			local alternant_spec = parse_alternant(alternating_segments[i], is_adj)
+			alternant_spec.before_text = last_post_text
+		end
+	end
+	alternant_multiword_spec.post_text = last_post_text
+	return alternant_multiword_spec
+end
+
+
+local function map_word_specs(alternant_multiword_spec, fun)
+	for _, alternant_or_word_spec in ipairs(alternant_multiword_spec.alternant_or_word_specs) do
+		if alternant_or_word_spec.alternants then
+			for _, multiword_spec in ipairs(alternant_or_word_spec.alternants) do
+				for _, word_spec in ipairs(multiword_spec) do
+					fun(word_spec)
+				end
+			end
+		else
+			fun(alternant_or_word_spec)
+		end
 	end
 end
 
 
 -- Check that multisyllabic lemmas have stress, and add stress to monosyllabic
 -- lemmas if needed.
-local function check_lemma_stress(alternant_dataspec)
-	for _, dataspec in ipairs(alternant_dataspec.alternants) do
-		dataspec.lemma = add_monosyllabic_stress(dataspec.lemma)
-		if not rfind(dataspec.lemma, AC) then
-			error("Multisyllabic lemma '" .. dataspec.lemma .. "' needs an accent")
+local function check_lemma_stress(alternant_multiword_spec)
+	map_word_specs(alternant_multiword_spec, function(word_spec)
+		word_spec.lemma = add_monosyllabic_stress(word_spec.lemma)
+		if not rfind(word_spec.lemma, AC) then
+			error("Multisyllabic lemma '" .. word_spec.lemma .. "' needs an accent")
 		end
-	end
+	end)
 end
 
 
@@ -859,13 +903,13 @@ end
 -- (1) adds stress to a monosyllabic lemma if needed;
 -- (2) throws an error if a multisyllabic lemma is given without any stress;
 -- (3) constructs the stem of each accent_spec using get_adj_stem().
-local function construct_adj_stems(alternant_dataspec)
-	for _, dataspec in ipairs(alternant_dataspec.alternants) do
-		for _, accent_and_form_spec in ipairs(dataspec.accent_and_form_specs) do
+local function construct_adj_stems(alternant_multiword_spec)
+	map_word_specs(alternant_multiword_spec, function(word_spec)
+		for _, accent_and_form_spec in ipairs(word_spec.accent_and_form_specs) do
 			local accent_spec = accent_and_form_spec.accent_spec
-			accent_spec.stem = get_adj_stem(dataspec.lemma, accent_and_form_spec)
+			accent_spec.stem = get_adj_stem(word_spec.lemma, accent_and_form_spec)
 		end
-	end
+	end)
 end
 
 
@@ -874,14 +918,14 @@ end
 -- (2) constructs the reduced stem using reduce_stem(), if needed.
 -- We don't construct the reduced stem unless the user gave a reduction spec somewhere;
 -- otherwise we'll get an error on non-reducible stems.
-local function construct_noun_stems(alternant_dataspec)
-	for _, dataspec in ipairs(alternant_dataspec.alternants) do
-		dataspec.stem = get_noun_stem(dataspec.lemma)
+local function construct_noun_stems(alternant_multiword_spec)
+	map_word_specs(alternant_multiword_spec, function(word_spec)
+		word_spec.stem = get_noun_stem(word_spec.lemma)
 		local needs_reduced_stem = false
-		for _, accent_and_form_spec in ipairs(dataspec.accent_and_form_specs) do
+		for _, accent_and_form_spec in ipairs(word_spec.accent_and_form_specs) do
 			local accent_spec = accent_and_form_spec.accent_spec
 			if accent_spec.is_adj then
-				accent_spec.stem = get_adj_stem(dataspec.lemma, accent_and_form_spec, "as noun")
+				accent_spec.stem = get_adj_stem(word_spec.lemma, accent_and_form_spec, "as noun")
 			elseif accent_spec.reducible or accent_spec.reducible_definite or accent_spec.reducible_count or
 				accent_spec.reducible_vocative then
 				needs_reduced_stem = true
@@ -889,9 +933,9 @@ local function construct_noun_stems(alternant_dataspec)
 			end
 		end
 		if needs_reduced_stem then
-			dataspec.reduced_stem = reduce_stem(dataspec.stem)
+			word_spec.reduced_stem = reduce_stem(word_spec.stem)
 		end
-	end
+	end)
 end
 
 
@@ -955,6 +999,14 @@ local function detect_noun_accent_and_form_spec(lemma, accent_and_form_spec)
 			g = "m"
 		end
 		accent_spec.gender = g
+		-- Detect has-vocative indicator.
+		if accent_spec.human or accent_and_form_spec.voc_sg or accent_and_form_spec.voc_pl then
+			accent_spec.has_vocative = true
+		end
+		-- Detect has-count indicator.
+		if accent_and_form_spec.count then
+			accent_spec.has_count = true
+		end
 		detect_adj_accent_and_form_spec(lemma, accent_and_form_spec)
 	else
 		-- Detect gender if not specified.
@@ -1048,72 +1100,148 @@ local function detect_noun_accent_and_form_spec(lemma, accent_and_form_spec)
 				table.insert(accent_spec.plurals, {plural=plural})
 			end
 		end
-		-- Detect vocative indicators.
+		-- Detect has-vocative indicator.
 		if accent_spec.reducible_vocative or accent_spec.human or accent_and_form_spec.voc then
-			accent_spec.vocative = true
+			accent_spec.has_vocative = true
 		end
 		-- Detect reducible indicators.
 		if g == "m" and rfind(lemma, vowel_c .. AC .. "?зъм$") then
 			accent_spec.reducible = true
 			accent_spec.reducible_definite = true
-			if accent_spec.vocative then
+			if accent_spec.has_vocative then
 				accent_spec.reducible_vocative = true
 			end
 		end
-		-- Detect no-def-sg indicators.
+		-- Detect no-def-sg indicator.
 		if rfind(lemma, "^%u") and not accent_and_form_spec.def then
 			accent_and_form_spec["-def"] = true
 		end
-		-- Detect no-count indicators.
+		-- Detect no-count indicator.
 		if accent_spec.human and not accent_and_form_spec.count then
 			accent_and_form_spec["-count"] = true
 		end
+		-- Detect has-count indicator.
+		-- (1) Yes if an explicit count override is given.
+		accent_spec.has_count = accent_and_form_spec.count or (
+			-- Otherwise:
+			-- (2) No if -count is explicitly given.
+			not accent_and_form_spec["-count"] and
+			-- (3) Only masculine nouns ending in a consonant normally have a count form.
+			accent_spec.gender == "m" and
+			rfind(lemma, cons_c .. "$")
+		)
 	end
 end
 
 
 -- Call detect_adj_accent_and_form_spec() on all accent-and-form specs in ALTERNANT_DATASPEC.
-local function detect_all_adj_accent_and_form_specs(alternant_dataspec)
-	for _, dataspec in ipairs(alternant_dataspec.alternants) do
-		for _, accent_and_form_spec in ipairs(dataspec.accent_and_form_specs) do
-			detect_adj_accent_and_form_spec(dataspec.lemma, accent_and_form_spec)
+local function detect_all_adj_accent_and_form_specs(alternant_multiword_spec)
+	map_word_specs(alternant_multiword_spec, function(word_spec)
+		for _, accent_and_form_spec in ipairs(word_spec.accent_and_form_specs) do
+			detect_adj_accent_and_form_spec(word_spec.lemma, accent_and_form_spec)
+		end
+	end)
+end
+
+
+local function combine_num_specs(existing, new)
+	if new then
+		if not existing then
+			existing = new
+		elseif existing ~= new then
+			existing = "both"
 		end
 	end
+	return existing
+end
+
+
+local function accumulate_specs(into, from)
+	into.n = combine_num_specs(into.n, from.n)
+	into.needs_vocative = into.needs_vocative or from.needs_vocative
+end
+
+
+local function detect_word_noun_accent_and_form_specs(word_spec)
+	local n -- number for this alternant
+	for _, accent_and_form_spec in ipairs(word_spec.accent_and_form_specs) do
+		detect_noun_accent_and_form_spec(word_spec.lemma, accent_and_form_spec)
+		n = combine_num_specs(n, accent_and_form_spec.n)
+		if accent_and_form_spec.accent_spec.has_vocative then
+			word_spec.needs_vocative = true
+		end
+	end
+	word_spec.n = n
 end
 
 
 -- Call detect_noun_accent_and_form_spec() on all accent-and-form specs in ALTERNANT_DATASPEC.
 -- In the process, set ALTERNANT_DATASPEC.n to the overall number ("sg", "pl" or "both") of
 -- the lemma or alternant.
-local function detect_all_noun_accent_and_form_specs(alternant_dataspec)
-	local overall_n -- overall number spec
-	for _, dataspec in ipairs(alternant_dataspec.alternants) do
-		local n -- number for this alternant
-		for _, accent_and_form_spec in ipairs(dataspec.accent_and_form_specs) do
-			detect_noun_accent_and_form_spec(dataspec.lemma, accent_and_form_spec)
-			local specn = accent_and_form_spec.n
-			if specn then
-				if not n then
-					n = specn
-				elseif n ~= specn then
-					n = "both"
+local function detect_all_noun_accent_and_form_specs(alternant_multiword_spec)
+	for _, alternant_or_word_spec in ipairs(alternant_multiword_spec.alternant_or_word_specs) do
+		if alternant_or_word_spec.alternants then
+			for _, multiword_spec in ipairs(alternant_or_word_spec.alternants) do
+				for _, word_spec in ipairs(multiword_spec) do
+					detect_word_noun_accent_and_form_specs(word_spec)
+					accumulate_specs(multiword_spec, word_spec)
 				end
+				accumulate_specs(alternant_or_word_spec, multiword_spec)
 			end
-			if accent_and_form_spec.accent_spec.vocative then
-				dataspec.needs_vocative = true
-				alternant_dataspec.needs_vocative = true
-			end
+		else
+			detect_word_noun_accent_and_form_specs(alternant_or_word_spec)
 		end
-		dataspec.n = n
-		if n then
-			if not overall_n then
-				overall_n = n
-			elseif overall_n ~= n then
-				overall_n = "both"
-			end
+		accumulate_specs(alternant_multiword_spec, alternant_or_word_spec)
+	end
+end
+
+
+local function init_active_noun_slots()
+	local active_slots = {}
+	-- Set the always-active slots.
+	active_slots.ind_sg = true
+	active_slots.def_sub_sg = true
+	active_slots.def_obj_sg = true
+	active_slots.ind_pl = true
+	active_slots.def_pl = true
+	return active_slots
+end
+
+
+local function set_active_noun_slots(active_slots, accent_and_form_spec)
+	-- NOTE: We currently treat singular and plural as always active, and
+	-- separately calculate the overall number, which is passed into places
+	-- like make_noun_table() to determine which slots to actually use.
+
+	-- The calculations to determine whether there's a vocative and/or a count
+	-- form were done in detect_noun_accent_and_form_spec().
+	if accent_and_form_spec.accent_spec.has_vocative then
+		active_slots.voc_sg = true
+		active_slots.voc_pl = true
+	end
+	if accent_and_form_spec.accent_spec.has_count then
+		active_slots.count = true
+	end
+	for _, case in ipairs({"acc", "gen", "dat"}) do
+		-- Adjectival noun overrides currently use acc_sg, gen_sg, dat_sg,
+		-- while regular noun overrides just use acc, gen, dat.
+		if accent_and_form_spec[case] or accent_and_form_spec[case .. "_sg"] or accent_and_form_spec[case .. "_pl"] then
+			active_slots[case .. "_sg"] = true
+			active_slots[case .. "_pl"] = true
 		end
 	end
-	alternant_dataspec.n = overall_n
+end
+
+
+-- Determine overall active noun slots.
+local function compute_overall_active_noun_slots(alternant_multiword_spec)
+	local active_slots = init_active_noun_slots()
+	map_word_specs(alternant_multiword_spec, function(word_spec)
+		for _, accent_and_form_spec in ipairs(word_spec.accent_and_form_specs) do
+			set_active_noun_slots(active_slots, accent_and_form_spec)
+		end
+	end)
+	return active_slots
 end
 
 
@@ -1194,7 +1322,7 @@ end
 -- (e.g. "a" or "d"). Return value is a string. This handles accenting the plural ending as necessary,
 -- fetching the reduced stem if appropriate, removing final -ин if called for, and applying the
 -- second palatalization if appropriate (e.g. ези́к -> ези́ци).
-local function generate_noun_plural(dataspec, accent_spec, plural, accent)
+local function generate_noun_plural(word_spec, accent_spec, plural, accent)
 	local ending = plural.plural
 	if accent == "b" or accent == "c" then
 		if accent == "b" and (ending == "ове" or ending == "ьове" or ending == "йове" or ending == "еве") or
@@ -1206,7 +1334,7 @@ local function generate_noun_plural(dataspec, accent_spec, plural, accent)
 		end
 	end
 
-	local stem = accent_spec.reducible and dataspec.reduced_stem or dataspec.stem
+	local stem = accent_spec.reducible and word_spec.reduced_stem or word_spec.stem
 	
 	if accent_spec.remove_in then
 		local new_stem, removed = rsubb(stem, "и́?н$", "")
@@ -1216,11 +1344,11 @@ local function generate_noun_plural(dataspec, accent_spec, plural, accent)
 		stem = maybe_stress_final_syllable(new_stem)
 	end
 
-	if not plural.double_plus and not rfind(dataspec.lemma, "нг$") and (
+	if not plural.double_plus and not rfind(word_spec.lemma, "нг$") and (
 		-- ези́к -> ези́ци
-		rfind(ending, "^и́?$") and rfind(dataspec.lemma, "[кгх]$") or
+		rfind(ending, "^и́?$") and rfind(word_spec.lemma, "[кгх]$") or
 		-- ръка́ -> ръце́
-		rfind(ending, "^е́?$") and rfind(dataspec.lemma, "[кгх]а́?$")
+		rfind(ending, "^е́?$") and rfind(word_spec.lemma, "[кгх]а́?$")
 	) then
 		local initial, last_cons = rmatch(stem, "^(.*)([кгх])$")
 		if initial then
@@ -1237,15 +1365,15 @@ end
 -- Return value is a string. This handles determining the appropriate ending (handling the
 -- soft sign spec (ь) as needed), accenting the ending as necessary, and fetching the
 -- reduced stem if appropriate.
-local function generate_noun_definite_singular(dataspec, accent_spec, accent)
+local function generate_noun_definite_singular(word_spec, accent_spec, accent)
 	local function stressed_ending()
 		return accent == "b" or accent == "d"
 	end
 	if accent_spec.gender == "m" then
-		if rfind(dataspec.lemma, "[ая]́?$") then
-			return dataspec.lemma .. "та"
-		elseif rfind(dataspec.lemma, "[ео]́?$") then
-			return dataspec.lemma .. "то"
+		if rfind(word_spec.lemma, "[ая]́?$") then
+			return word_spec.lemma .. "та"
+		elseif rfind(word_spec.lemma, "[ео]́?$") then
+			return word_spec.lemma .. "то"
 		else
 			local ending
 			if accent_spec.soft_sign then
@@ -1255,13 +1383,13 @@ local function generate_noun_definite_singular(dataspec, accent_spec, accent)
 			else
 				ending = "ът"
 			end
-			local stem = accent_spec.reducible_definite and dataspec.reduced_stem or dataspec.stem
+			local stem = accent_spec.reducible_definite and word_spec.reduced_stem or word_spec.stem
 			return combine_stem_and_ending(stem, ending, accent_spec)
 		end
 	elseif accent_spec.gender == "f" then
-		return combine_stem_and_ending(dataspec.lemma, stressed_ending() and "та́" or "та", accent_spec)
+		return combine_stem_and_ending(word_spec.lemma, stressed_ending() and "та́" or "та", accent_spec)
 	else
-		return combine_stem_and_ending(dataspec.lemma, "то", accent_spec)
+		return combine_stem_and_ending(word_spec.lemma, "то", accent_spec)
 	end
 end
 	
@@ -1298,11 +1426,11 @@ end
 -- form can be constructed (not a masculine lemma ending in a consonant). This handles
 -- determining the appropriate ending (handling the soft sign spec (ь) as needed) and
 -- fetching the reduced stem if appropriate.
-local function generate_noun_count_form(dataspec, accent_spec)
-	if accent_spec.gender ~= "m" or not rfind(dataspec.lemma, cons_c .. "$") then
+local function generate_noun_count_form(word_spec, accent_spec)
+	if accent_spec.gender ~= "m" or not rfind(word_spec.lemma, cons_c .. "$") then
 		return nil
 	end
-	local stem = accent_spec.reducible_count and dataspec.reduced_stem or dataspec.stem
+	local stem = accent_spec.reducible_count and word_spec.reduced_stem or word_spec.stem
 	if accent_spec.soft_sign then
 		return combine_stem_and_ending(stem, "я", accent_spec)
 	else
@@ -1314,15 +1442,15 @@ end
 -- Construct the vocative of the lemma specified in DATASPEC, given the accent spec
 -- (as returned by parse_noun_accent_spec()). Return value is a string, or nil if no vocative
 -- form can be constructed. This applies the rules described in [[w:Bulgarian nouns]].
-local function generate_noun_vocative(dataspec, accent_spec)
-	if accent_spec.gender == "n" or not accent_spec.vocative then
+local function generate_noun_vocative(word_spec, accent_spec)
+	if accent_spec.gender == "n" or not accent_spec.has_vocative then
 		return nil
 	end
-	local lemma = dataspec.lemma
+	local lemma = word_spec.lemma
 	if accent_spec.gender == "f" and rfind(lemma, cons_c .. "$") then
 		return nil
 	end
-	local stem = accent_spec.reducible_vocative and dataspec.reduced_stem or dataspec.stem
+	local stem = accent_spec.reducible_vocative and word_spec.reduced_stem or word_spec.stem
 	local ending
 	if accent_spec.soft_sign then
 		ending = "ю"
@@ -1435,9 +1563,9 @@ end
 -- if the adjective has comparative forms) for all slots. (If a given slot has no values,
 -- it will not be present in `DATASPEC.forms`.) If `as_noun` is true, we're declining an adjectival noun
 -- rather than an adjective as such.
-local function decline_one_adj(dataspec, accent_and_form_spec, as_noun)
+local function decline_one_adj(word_spec, accent_and_form_spec, as_noun)
 	local accent_spec = accent_and_form_spec.accent_spec
-	local lemma = dataspec.lemma
+	local lemma = word_spec.lemma
 	local stem = accent_spec.stem
 	local formtable = {[
 		accent_and_form_spec.dva and "ind_m_pl" or
@@ -1456,40 +1584,38 @@ local function decline_one_adj(dataspec, accent_and_form_spec, as_noun)
 					to_forms = {to_forms}
 				end
 				for _, to_form in ipairs(to_forms) do
-					if dataspec.needs_vocative or to_form ~= "voc_sg" then
-						formtable[to_form] = formtable[from_form]
-					end
+					formtable[to_form] = formtable[from_form]
 				end
 			end
 		end
-		if dataspec.n ~= "pl" then
+		if word_spec.n ~= "pl" then
 			local forms_to_copy =
 				accent_spec.gender == "m" and masc_adj_to_noun_slots or
 				accent_spec.gender == "f" and fem_adj_to_noun_slots or
 				neut_adj_to_noun_slots
 			copy_forms(forms_to_copy)
 		end
-		if dataspec.n ~= "sg" then
+		if word_spec.n ~= "sg" then
 			copy_forms(pl_adj_to_noun_slots)
 		end
 		for slot, _ in pairs(noun_slots) do
-			insert_forms(dataspec.forms, slot, handle_overriding_forms(lemma, stem, formtable[slot],
+			insert_forms(word_spec.forms, slot, handle_overriding_forms(lemma, stem, formtable[slot],
 				accent_and_form_spec[slot]))
 		end
 	else
 		for slot, _ in pairs(adj_slots) do
 			local forms = handle_overriding_forms(lemma, stem, formtable[slot], accent_and_form_spec[slot])
-			insert_forms(dataspec.forms, slot, forms)
+			insert_forms(word_spec.forms, slot, forms)
 			if not accent_spec.nocomp then
-				if not dataspec.compforms then
-					dataspec.compforms = {}
+				if not word_spec.compforms then
+					word_spec.compforms = {}
 				end
-				insert_forms(dataspec.compforms, slot,
+				insert_forms(word_spec.compforms, slot,
 					map_forms(forms, function(form) return "по́-" .. form end))
-				if not dataspec.supforms then
-					dataspec.supforms = {}
+				if not word_spec.supforms then
+					word_spec.supforms = {}
 				end
-				insert_forms(dataspec.supforms, slot,
+				insert_forms(word_spec.supforms, slot,
 					map_forms(forms, function(form) return "на́й-" .. form end))
 			end
 		end
@@ -1501,9 +1627,9 @@ end
 -- This sets the form values in `DATASPEC.forms` (and `DATASPEC.compforms` and `DATASPEC.supforms`
 -- if the adjective has comparative forms) for all slots. (If a given slot has no values,
 -- it will not be present in `DATASPEC.forms`.)
-local function decline_adj(dataspec)
-	for _, accent_and_form_spec in ipairs(dataspec.accent_and_form_specs) do
-		decline_one_adj(dataspec, accent_and_form_spec)
+local function decline_adj(word_spec)
+	for _, accent_and_form_spec in ipairs(word_spec.accent_and_form_specs) do
+		decline_one_adj(word_spec, accent_and_form_spec)
 	end
 end
 
@@ -1512,10 +1638,10 @@ end
 -- corresponding to the accent-and-form spec in `accent_and_form_spec` (see parse_noun_accent_and_form_specs()).
 -- This sets the form values in `DATASPEC.forms` for all slots. (If a given slot has no values,
 -- it will not be present in `DATASPEC.forms`.)
-local function decline_one_noun(dataspec, accent_and_form_spec)
-	local lemma = dataspec.lemma
-	local stem = dataspec.stem
-	local n = accent_and_form_spec.n or dataspec.n
+local function decline_one_noun(word_spec, accent_and_form_spec)
+	local lemma = word_spec.lemma
+	local stem = word_spec.stem
+	local n = accent_and_form_spec.n or word_spec.n
 	if n == "pl" then
 		for _, overriding_form in ipairs(noun_overriding_forms) do
 			if accent_and_form_spec[overriding_form] then
@@ -1523,10 +1649,10 @@ local function decline_one_noun(dataspec, accent_and_form_spec)
 			end
 		end
 		local plurals = {{form=lemma}}
-		insert_forms(dataspec.forms, "ind_pl",
+		insert_forms(word_spec.forms, "ind_pl",
 			handle_overriding_forms(lemma, stem, plurals, accent_and_form_spec.ind_pl))
 		if not accent_and_form_spec["-def_pl"] then
-			insert_forms(dataspec.forms, "def_pl",
+			insert_forms(word_spec.forms, "def_pl",
 				handle_overriding_forms(lemma, stem, map_forms(plurals, generate_noun_definite_plural),
 					accent_and_form_spec.def_pl))
 		end
@@ -1540,48 +1666,48 @@ local function decline_one_noun(dataspec, accent_and_form_spec)
 		for _, plspec in ipairs(accent_spec.plurals) do
 			for _, accent in ipairs(accent_spec.accents) do
 				insert_form_into_list(plurals,
-					{form=generate_noun_plural(dataspec, accent_spec, plspec, accent), footnotes=plspec.footnotes}
+					{form=generate_noun_plural(word_spec, accent_spec, plspec, accent), footnotes=plspec.footnotes}
 				)
 			end
 		end
 		for _, accent in ipairs(accent_spec.accents) do
 			insert_form_into_list(definite_singulars,
-				{form=generate_noun_definite_singular(dataspec, accent_spec, accent)}
+				{form=generate_noun_definite_singular(word_spec, accent_spec, accent)}
 			)
 		end
-		insert_form_into_list(count_forms, {form=generate_noun_count_form(dataspec, accent_spec)})
-		insert_form_into_list(vocatives, {form=generate_noun_vocative(dataspec, accent_spec)})
+		insert_form_into_list(count_forms, {form=generate_noun_count_form(word_spec, accent_spec)})
+		insert_form_into_list(vocatives, {form=generate_noun_vocative(word_spec, accent_spec)})
 		if not accent_and_form_spec["-pl"] then
 			plurals = handle_overriding_forms(lemma, stem, plurals, accent_and_form_spec.pl)
-			insert_forms(dataspec.forms, "ind_pl",
+			insert_forms(word_spec.forms, "ind_pl",
 				handle_overriding_forms(lemma, stem, plurals, accent_and_form_spec.ind_pl))
 			if not accent_and_form_spec["-def_pl"] then
-				insert_forms(dataspec.forms, "def_pl",
+				insert_forms(word_spec.forms, "def_pl",
 					handle_overriding_forms(lemma, stem, map_forms(plurals, generate_noun_definite_plural),
 						accent_and_form_spec.def_pl))
 			end
 		end
-		insert_forms(dataspec.forms, "ind_sg",
+		insert_forms(word_spec.forms, "ind_sg",
 			handle_overriding_forms(lemma, stem, indefinite_singulars, accent_and_form_spec.ind))
 		if not accent_and_form_spec["-def"] then
 			definite_singulars = handle_overriding_forms(lemma, stem, definite_singulars, accent_and_form_spec.def)
-			insert_forms(dataspec.forms, "def_sub_sg",
+			insert_forms(word_spec.forms, "def_sub_sg",
 				handle_overriding_forms(lemma, stem, definite_singulars, accent_and_form_spec.def_sub))
-			insert_forms(dataspec.forms, "def_obj_sg",
+			insert_forms(word_spec.forms, "def_obj_sg",
 				handle_overriding_forms(lemma, stem, map_forms(definite_singulars, generate_noun_definite_objective_singular),
 					accent_and_form_spec.def_obj))
 		end
 		if not accent_and_form_spec["-count"] then
-			insert_forms(dataspec.forms, "count", handle_overriding_forms(lemma, stem, count_forms, accent_and_form_spec.count))
+			insert_forms(word_spec.forms, "count", handle_overriding_forms(lemma, stem, count_forms, accent_and_form_spec.count))
 		end
 		vocatives = handle_overriding_forms(lemma, stem, vocatives, accent_and_form_spec.voc)
-		insert_forms(dataspec.forms, "voc_sg", vocatives)
-		insert_forms(dataspec.forms, "acc_sg", handle_overriding_forms(lemma, stem, "acc", accent_and_form_spec.acc))
-		insert_forms(dataspec.forms, "gen_sg", handle_overriding_forms(lemma, stem, "gen", accent_and_form_spec.gen))
-		insert_forms(dataspec.forms, "dat_sg", handle_overriding_forms(lemma, stem, "dat", accent_and_form_spec.dat))
-		insert_forms(dataspec.forms, "acc_pl", handle_overriding_forms(lemma, stem, "acc_pl", accent_and_form_spec.acc_pl))
-		insert_forms(dataspec.forms, "gen_pl", handle_overriding_forms(lemma, stem, "gen_pl", accent_and_form_spec.gen_pl))
-		insert_forms(dataspec.forms, "dat_pl", handle_overriding_forms(lemma, stem, "dat_pl", accent_and_form_spec.dat_pl))
+		insert_forms(word_spec.forms, "voc_sg", vocatives)
+		insert_forms(word_spec.forms, "acc_sg", handle_overriding_forms(lemma, stem, "acc", accent_and_form_spec.acc))
+		insert_forms(word_spec.forms, "gen_sg", handle_overriding_forms(lemma, stem, "gen", accent_and_form_spec.gen))
+		insert_forms(word_spec.forms, "dat_sg", handle_overriding_forms(lemma, stem, "dat", accent_and_form_spec.dat))
+		insert_forms(word_spec.forms, "acc_pl", handle_overriding_forms(lemma, stem, "acc_pl", accent_and_form_spec.acc_pl))
+		insert_forms(word_spec.forms, "gen_pl", handle_overriding_forms(lemma, stem, "gen_pl", accent_and_form_spec.gen_pl))
+		insert_forms(word_spec.forms, "dat_pl", handle_overriding_forms(lemma, stem, "dat_pl", accent_and_form_spec.dat_pl))
 	end
 end
 
@@ -1589,18 +1715,45 @@ end
 -- Decline the noun in DATASPEC (an object as returned by parse_simplified_specification()).
 -- This sets the form values in `DATASPEC.forms` for all slots. (If a given slot has no values,
 -- it will not be present in `DATASPEC.forms`.)
-local function decline_noun(dataspec)
-	for _, accent_and_form_spec in ipairs(dataspec.accent_and_form_specs) do
+local function decline_noun(word_spec)
+	for _, accent_and_form_spec in ipairs(word_spec.accent_and_form_specs) do
 		if accent_and_form_spec.accent_spec.is_adj then
-			decline_one_adj(dataspec, accent_and_form_spec, "as noun")
+			decline_one_adj(word_spec, accent_and_form_spec, "as noun")
 		else
-			decline_one_noun(dataspec, accent_and_form_spec)
+			decline_one_noun(word_spec, accent_and_form_spec)
 		end
 	end
-	if dataspec.needs_vocative then
+	if word_spec.needs_vocative then
 		-- don't generate voc_pl unless the vocative was called for; otherwise it will
 		-- wrongly display for nouns without vocatives
-		dataspec.forms["voc_pl"] = map_forms(dataspec.forms["ind_pl"], function(x) return x end)
+		word_spec.forms["voc_pl"] = map_forms(word_spec.forms["ind_pl"], function(x) return x end)
+	end
+end
+
+
+local function decline_multiword_spec(multiword_spec, active_slots, is_adj)
+	multiword_spec.forms = {}
+	for slot, _ in pairs(active_slots) do
+		multiword_spec.forms[slot] = {{form=""}}
+	end
+	for _, word_spec in ipairs(multiword_spec.word_specs) do
+		if is_adj then
+			decline_adj(word_spec, active_slots)
+		else
+			decline_noun(word_spec, active_slots)
+		end
+		for slot, _ in pairs(active_slots) do
+			if word_spec.forms[slot] then
+				-- FIXME, should always be something in the active slots
+				append_forms(multiword_spec, slot, word_spec.forms[slot], word_spec.before_text)
+			end
+		end
+	end
+	if multiword_spec.post_text ~= "" then
+		local pseudoform = {{form=""}}
+		for slot, _ in pairs(active_slots) do
+			append_forms(multiword_spec, slot, pseudoform, multiword_spec.post_text)
+		end
 	end
 end
 
@@ -1611,50 +1764,50 @@ end
 -- not be present in `DATASPEC.forms`). It also sets `ALTERNANT_DATASPEC.forms.lemma`,
 -- which is a list of strings to use as lemmas (e.g. in the title of the generated table
 -- and in accelerators).
-local function decline_alternants(alternant_dataspec, is_adj)
-	alternant_dataspec.forms = {}
-	for _, dataspec in ipairs(alternant_dataspec.alternants) do
+local function decline_alternants(alternant_spec, is_adj)
+	alternant_spec.forms = {}
+	for _, word_spec in ipairs(alternant_spec.alternants) do
 		if is_adj then
-			decline_adj(dataspec)
-			if dataspec.compforms and not alternant_dataspec.compforms then
-				alternant_dataspec.compforms = {}
-			end
-			if dataspec.supforms and not alternant_dataspec.supforms then
-				alternant_dataspec.supforms = {}
-			end
+			decline_adj(word_spec)
 		else
-			decline_noun(dataspec)
+			decline_noun(word_spec)
 		end
 		for slot, _ in pairs(is_adj and adj_slots or noun_slots) do
-			if dataspec.forms[slot] then
-				for _, form in ipairs(dataspec.forms[slot]) do
-					insert_form(alternant_dataspec.forms, slot, form)
+			if word_spec.forms[slot] then
+				for _, form in ipairs(word_spec.forms[slot]) do
+					insert_form(alternant_spec.forms, slot, form)
 				end
 			end
 			if is_adj then
-				if dataspec.compforms and dataspec.compforms[slot] then
-					for _, form in ipairs(dataspec.compforms[slot]) do
-						insert_form(alternant_dataspec.compforms, slot, form)
+				if word_spec.compforms and word_spec.compforms[slot] then
+					if not alternant_spec.compforms then
+						alternant_spec.compforms = {}
+					end
+					for _, form in ipairs(word_spec.compforms[slot]) do
+						insert_form(alternant_spec.compforms, slot, form)
 					end
 				end
-				if dataspec.supforms and dataspec.supforms[slot] then
-					for _, form in ipairs(dataspec.supforms[slot]) do
-						insert_form(alternant_dataspec.supforms, slot, form)
+				if word_spec.supforms and word_spec.supforms[slot] then
+					if not alternant_spec.supforms then
+						alternant_spec.supforms = {}
+					end
+					for _, form in ipairs(word_spec.supforms[slot]) do
+						insert_form(alternant_spec.supforms, slot, form)
 					end
 				end
 			end
 		end
 	end
-	alternant_dataspec.forms.lemma = {}
+	alternant_spec.forms.lemma = {}
 	local lemma_slot =
-		alternant_dataspec.forms.ind_m_pl and "ind_m_pl" or -- два
-		alternant_dataspec.forms.nom_m_sg and "nom_m_sg" or -- кой, то́зи, etc.
-		alternant_dataspec.forms.m_sg and "m_sg" or -- чий, какъ́в, такъ́в, etc.
+		alternant_spec.forms.ind_m_pl and "ind_m_pl" or -- два
+		alternant_spec.forms.nom_m_sg and "nom_m_sg" or -- кой, то́зи, etc.
+		alternant_spec.forms.m_sg and "m_sg" or -- чий, какъ́в, такъ́в, etc.
 		is_adj and "ind_m_sg" or
-		alternant_dataspec.n == "pl" and "ind_pl" or
+		alternant_spec.n == "pl" and "ind_pl" or
 		"ind_sg"
-	for _, form in ipairs(alternant_dataspec.forms[lemma_slot]) do
-		m_table.insertIfNot(alternant_dataspec.forms.lemma, form.form)
+	for _, form in ipairs(alternant_spec.forms[lemma_slot]) do
+		m_table.insertIfNot(alternant_spec.forms.lemma, form.form)
 	end
 end
 
@@ -1688,13 +1841,13 @@ end
 -- objective singular forms are the same (and hence should be combined in the generated table),
 -- and sets ALTERNANT_DATASPEC.forms.footnote to the combined string to insert as a footnote
 -- (if there are no footnotes, it will be the empty string).
-local function show_forms(alternant_dataspec, is_adj)
+local function show_forms(alternant_spec, is_adj)
 	local lemmas = {}
-	for _, lemma in ipairs(alternant_dataspec.forms.lemma) do
+	for _, lemma in ipairs(alternant_spec.forms.lemma) do
 		table.insert(lemmas, remove_monosyllabic_stress(lemma))
 	end
 	local accel_lemma = lemmas[1]
-	alternant_dataspec.forms.lemma = table.concat(lemmas, ", ")
+	alternant_spec.forms.lemma = table.concat(lemmas, ", ")
 	local noteindex = 1
 	local notes = {}
 	local seen_notes = {}
@@ -1756,36 +1909,36 @@ local function show_forms(alternant_dataspec, is_adj)
 	end
 
 	if is_adj then
-		set_forms(alternant_dataspec.forms, alternant_dataspec.forms, adj_slots, false)
-		if alternant_dataspec.compforms then
-			set_forms(alternant_dataspec.compforms, alternant_dataspec.compforms, adj_slots, false)
+		set_forms(alternant_spec.forms, alternant_spec.forms, adj_slots, false)
+		if alternant_spec.compforms then
+			set_forms(alternant_spec.compforms, alternant_spec.compforms, adj_slots, false)
 		end
-		if alternant_dataspec.supforms then
-			set_forms(alternant_dataspec.supforms, alternant_dataspec.supforms, adj_slots, false)
+		if alternant_spec.supforms then
+			set_forms(alternant_spec.supforms, alternant_spec.supforms, adj_slots, false)
 		end
 	else
 		-- For def_sub_sg and def_obj_sg, first compute "raw" (unlinked) forms so we can
 		-- compare them properly; linked forms have accelerator info in them which differs
 		-- between sub and obj.
 		local raw_forms = {}
-		set_forms(alternant_dataspec.forms, raw_forms, {["def_sub_sg"] = true, ["def_obj_sg"] = true}, true)
+		set_forms(alternant_spec.forms, raw_forms, {["def_sub_sg"] = true, ["def_obj_sg"] = true}, true)
 		-- Then generate the linked forms, using a special accelerator form if the def_sub_sg and def_obj_sg are the same.
-		alternant_dataspec.combined_def_sg = raw_forms.def_sub_sg == raw_forms.def_obj_sg
-		set_forms(alternant_dataspec.forms, alternant_dataspec.forms, noun_slots, false, alternant_dataspec.combined_def_sg)
+		alternant_spec.combined_def_sg = raw_forms.def_sub_sg == raw_forms.def_obj_sg
+		set_forms(alternant_spec.forms, alternant_spec.forms, noun_slots, false, alternant_spec.combined_def_sg)
 	end
-	if alternant_dataspec.footnote then
-		table.insert(notes, alternant_dataspec.footnote)
+	if alternant_spec.footnote then
+		table.insert(notes, alternant_spec.footnote)
 	end
-	alternant_dataspec.forms.footnote = table.concat(notes, "<br />")
+	alternant_spec.forms.footnote = table.concat(notes, "<br />")
 end
 
 
 -- Generate the displayable table of all forms, given ALTERNANT_DATASPEC (as returned by
 -- parse_simplified_specification_allowing_alternants()) where show_forms() has already
 -- been called to convert `ALTERNANT_DATASPEC.forms` into a table of strings.
-local function make_noun_table(alternant_dataspec)
-	local num = alternant_dataspec.n
-	local forms = alternant_dataspec.forms
+local function make_noun_table(alternant_spec)
+	local num = alternant_spec.n
+	local forms = alternant_spec.forms
 
 	local table_begin = [=[
 <div class="NavFrame" style="width: 50em;">
@@ -1947,7 +2100,7 @@ local function make_noun_table(alternant_dataspec)
 	local table_spec
 	if num == "sg" then
 		table_spec = table_sg_begin ..
-			(alternant_dataspec.combined_def_sg and table_sg_cont_def_combined or table_sg_cont_def_split) ..
+			(alternant_spec.combined_def_sg and table_sg_cont_def_combined or table_sg_cont_def_split) ..
 			(forms.voc_sg ~= "—" and table_sg_cont_voc or "") ..
 			(forms.acc_sg ~= "—" and table_sg_cont_acc or "") ..
 			(forms.gen_sg ~= "—" and table_sg_cont_gen or "") ..
@@ -1962,7 +2115,7 @@ local function make_noun_table(alternant_dataspec)
 			table_end
 	else
 		table_spec = table_begin ..
-			(alternant_dataspec.combined_def_sg and table_cont_def_combined or table_cont_def_split) ..
+			(alternant_spec.combined_def_sg and table_cont_def_combined or table_cont_def_split) ..
 			(forms.count ~= "—" and table_cont_count or "") ..
 			((forms.voc_sg ~= "—" or forms.voc_pl ~= "—") and table_cont_voc or "") ..
 			((forms.acc_sg ~= "—" or forms.acc_pl ~= "—") and table_cont_acc or "") ..
@@ -1978,16 +2131,16 @@ local function make_noun_table(alternant_dataspec)
 </div></div>
 ]===]
 
-	alternant_dataspec.forms.notes_clause = alternant_dataspec.forms.footnote ~= "" and m_string_utilities.format(notes_template, alternant_dataspec.forms) or ""
-	return m_string_utilities.format(table_spec, alternant_dataspec.forms)
+	alternant_spec.forms.notes_clause = alternant_spec.forms.footnote ~= "" and m_string_utilities.format(notes_template, alternant_spec.forms) or ""
+	return m_string_utilities.format(table_spec, alternant_spec.forms)
 end
 
 
 -- Generate the displayable table of all adjective forms, given ALTERNANT_DATASPEC (as returned by
 -- parse_simplified_specification_allowing_alternants()) where show_forms() has already
 -- been called to convert `ALTERNANT_DATASPEC.forms` into a table of strings.
-local function make_adj_table(alternant_dataspec)
-	local forms = alternant_dataspec.forms
+local function make_adj_table(alternant_spec)
+	local forms = alternant_spec.forms
 	local table_normal_koj_begin = [=[
 <div class="NavFrame" style="width: 50em;">
 <div class="NavHead" style="background: #eff7ff;">{title}</div>
@@ -2105,7 +2258,7 @@ local function make_adj_table(alternant_dataspec)
 			(forms.short ~= "—" and table_cont_short or "") ..
 			(forms.voc_m_sg ~= "—" and table_cont_voc or "") ..
 			table_end
-		if alternant_dataspec.compforms or alternant_dataspec.supforms then
+		if alternant_spec.compforms or alternant_spec.supforms then
 			forms.title = "Positive forms of " .. forms.lemma
 		else
 			forms.title = "Positive forms of " .. forms.lemma .. " (no comparative)"
@@ -2113,15 +2266,15 @@ local function make_adj_table(alternant_dataspec)
 		local postable = m_string_utilities.format(table_spec, forms)
 		local comptable = ""
 		local suptable = ""
-		if alternant_dataspec.compforms then
-			alternant_dataspec.compforms.notes_clause = forms.notes_clause
-			alternant_dataspec.compforms.title = "Comparative forms of " .. forms.lemma
-			comptable = m_string_utilities.format(table_spec, alternant_dataspec.compforms)
+		if alternant_spec.compforms then
+			alternant_spec.compforms.notes_clause = forms.notes_clause
+			alternant_spec.compforms.title = "Comparative forms of " .. forms.lemma
+			comptable = m_string_utilities.format(table_spec, alternant_spec.compforms)
 		end
-		if alternant_dataspec.supforms then
-			alternant_dataspec.supforms.notes_clause = forms.notes_clause
-			alternant_dataspec.supforms.title = "Superlative forms of " .. forms.lemma
-			suptable = m_string_utilities.format(table_spec, alternant_dataspec.supforms)
+		if alternant_spec.supforms then
+			alternant_spec.supforms.notes_clause = forms.notes_clause
+			alternant_spec.supforms.title = "Superlative forms of " .. forms.lemma
+			suptable = m_string_utilities.format(table_spec, alternant_spec.supforms)
 		end
 		return postable .. comptable .. suptable
 	end
@@ -2132,27 +2285,27 @@ end
 -- "SLOT=FORM,FORM,...|SLOT=FORM,FORM,...|...". Embedded pipe symbols (as might occur
 -- in embedded links) are converted to <!>. If INCLUDE_PROPS is given, also include
 -- additional properties (currently, only "|n=NUMBER"). This is for use by bots.
-local function concat_forms(alternant_dataspec, include_props, is_adj)
+local function concat_forms(alternant_spec, include_props, is_adj)
 	local ins_text = {}
 	for slot, _ in pairs(is_adj and adj_slots or noun_slots) do
-		local formtext = concat_forms_in_slot(alternant_dataspec.forms[slot])
+		local formtext = concat_forms_in_slot(alternant_spec.forms[slot])
 		if formtext then
 			table.insert(ins_text, slot .. "=" .. formtext)
 		end
 	end
 	for _, slot in ipairs(is_adj and potential_adj_lemma_slots or potential_noun_lemma_slots) do
 		slot = "linked_" .. slot
-		local formtext = concat_forms_in_slot(alternant_dataspec.forms[slot])
+		local formtext = concat_forms_in_slot(alternant_spec.forms[slot])
 		if formtext then
 			table.insert(ins_text, slot .. "=" .. formtext)
 		end
 	end
 	if include_props then
 		if is_adj then
-			table.insert(ins_text, "comp=" .. (alternant_dataspec.comparable and "1" or "0"))
+			table.insert(ins_text, "comp=" .. (alternant_spec.comparable and "1" or "0"))
 		else
-			if alternant_dataspec.n then
-				table.insert(ins_text, "n=" .. alternant_dataspec.n)
+			if alternant_spec.n then
+				table.insert(ins_text, "n=" .. alternant_spec.n)
 			end
 		end
 	end
@@ -2191,13 +2344,14 @@ function export.do_generate_noun_forms(parent_args, pos, from_headword, def, sup
 	end
 	pos = args.pos or pos -- args.pos only set when from_headword
 	
-	local alternant_dataspec = parse_simplified_specification_allowing_alternants(args[1])
-	check_lemma_stress(alternant_dataspec)
-	detect_all_noun_accent_and_form_specs(alternant_dataspec)
-	construct_noun_stems(alternant_dataspec)
-	decline_alternants(alternant_dataspec)
-	alternant_dataspec.forms.lemma = args.lemma and #args.lemma > 0 and args.lemma or alternant_dataspec.forms.lemma
-	return alternant_dataspec
+	local alternant_spec = parse_simplified_specification_allowing_alternants(args[1])
+	check_lemma_stress(alternant_spec)
+	detect_all_noun_accent_and_form_specs(alternant_spec)
+	local active_slots = compute_overall_active_noun_slots(alternant_multiword_spec)
+	construct_noun_stems(alternant_spec)
+	decline_alternants(alternant_spec, active_slots)
+	alternant_spec.forms.lemma = args.lemma and #args.lemma > 0 and args.lemma or alternant_spec.forms.lemma
+	return alternant_spec
 end
 
 
@@ -2229,13 +2383,13 @@ function export.do_generate_adj_forms(parent_args, pos, from_headword, def, supp
 	end
 	pos = args.pos or pos -- args.pos only set when from_headword
 	
-	local alternant_dataspec = parse_simplified_specification_allowing_alternants(args[1], "is adj")
-	check_lemma_stress(alternant_dataspec)
-	detect_all_adj_accent_and_form_specs(alternant_dataspec)
-	construct_adj_stems(alternant_dataspec)
-	decline_alternants(alternant_dataspec, "is adj")
-	alternant_dataspec.forms.lemma = args.lemma and #args.lemma > 0 and args.lemma or alternant_dataspec.forms.lemma
-	return alternant_dataspec
+	local alternant_spec = parse_simplified_specification_allowing_alternants(args[1], "is adj")
+	check_lemma_stress(alternant_spec)
+	detect_all_adj_accent_and_form_specs(alternant_spec)
+	construct_adj_stems(alternant_spec)
+	decline_alternants(alternant_spec, "is adj")
+	alternant_spec.forms.lemma = args.lemma and #args.lemma > 0 and args.lemma or alternant_spec.forms.lemma
+	return alternant_spec
 end
 
 
@@ -2243,9 +2397,9 @@ end
 -- user-specified arguments and generate a displayable table of the declined forms.
 function export.show_noun(frame)
 	local parent_args = frame:getParent().args
-	local alternant_dataspec = export.do_generate_noun_forms(parent_args, "nouns")
-	show_forms(alternant_dataspec)
-	return make_noun_table(alternant_dataspec)
+	local alternant_spec = export.do_generate_noun_forms(parent_args, "nouns")
+	show_forms(alternant_spec)
+	return make_noun_table(alternant_spec)
 end
 
 
@@ -2253,9 +2407,9 @@ end
 -- user-specified arguments and generate a displayable table of the declined forms.
 function export.show_adj(frame)
 	local parent_args = frame:getParent().args
-	local alternant_dataspec = export.do_generate_adj_forms(parent_args, "adjectives")
-	show_forms(alternant_dataspec, "is adj")
-	return make_adj_table(alternant_dataspec)
+	local alternant_spec = export.do_generate_adj_forms(parent_args, "adjectives")
+	show_forms(alternant_spec, "is adj")
+	return make_adj_table(alternant_spec)
 end
 
 
@@ -2266,9 +2420,9 @@ end
 function export.generate_noun_forms(frame)
 	local include_props = frame.args["include_props"]
 	local parent_args = frame:getParent().args
-	local alternant_dataspec = export.do_generate_noun_forms(parent_args, "nouns")
+	local alternant_spec = export.do_generate_noun_forms(parent_args, "nouns")
 
-	return concat_forms(alternant_dataspec, include_props)
+	return concat_forms(alternant_spec, include_props)
 end
 
 
@@ -2279,9 +2433,9 @@ end
 function export.generate_adj_forms(frame)
 	local include_props = frame.args["include_props"]
 	local parent_args = frame:getParent().args
-	local alternant_dataspec = export.do_generate_adj_forms(parent_args, "adjectives")
+	local alternant_spec = export.do_generate_adj_forms(parent_args, "adjectives")
 
-	return concat_forms(alternant_dataspec, include_props)
+	return concat_forms(alternant_spec, include_props)
 end
 
 
