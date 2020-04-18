@@ -323,9 +323,9 @@ def process_line(line, etymnum=None, skip_pronun=False):
       else:
         decltext = "%s%s" % (term, decl)
       # Eliminate masculine/feminine equiv, adjective/adverb, etc. from actual decl
-      decltext = re.sub(r"\|([mf]|adv|absn|adj)=[^|]*?(?=\||$)", "", decltext)
+      decltext = re.sub(r"\|([mf]|adv|absn|adj|dim)[0-9]*=[^|]*?(?=\||$)", "", decltext)
       # Eliminate declension from hdecltext
-      hdecltext = re.sub("<.*?>", "", decl)
+      hdecltext = re.sub(r"^.*?(?=\||$)", "", decl)
 
   # Create definition
   if re.search(opt_arg_regex, defns):

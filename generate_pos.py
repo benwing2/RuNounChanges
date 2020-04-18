@@ -90,6 +90,36 @@ known_labels = {
   "inan": "inanimate",
 }
 
+def parse_off_labels(defn):
+  labels = []
+  while True:
+    if defn.startswith("+"):
+      labels.append("relational")
+      defn = re.sub(r"^\+", "", defn)
+    elif defn.startswith("#"):
+      labels.append("figurative")
+      defn = re.sub(r"^#", "", defn)
+    elif defn.startswith("!"):
+      labels.append("colloquial")
+      defn = re.sub(r"^!", "", defn)
+    else:
+      m = re.search(r"^\((.*?)\)([^ ].*)$", defn)
+      if m:
+        shortlab = m.group(1)
+        if shortlab in known_labels:
+          longlab = known_labels[shortlab]
+          if type(longlab) is list:
+            labels.extend(longlab)
+          else:
+            labels.append(longlab)
+        else:
+          labels.append(shortlab)
+        defn = m.group(2)
+      else:
+        defn = defn.replace(r"\(", "(").replace(r"\)", ")")
+        break
+  return defn, labels
+
 def generate_defn(defns, pos, lang):
   defnlines = []
 
@@ -106,47 +136,17 @@ def generate_defn(defns, pos, lang):
     elif defn.startswith("uxx:"):
       defnlines.append("#: {{ux|%s|%s}}\n" % (lang,
         re.sub("^uxx:", "", re.sub(r", *", ", ", defn))))
-    elif defn.startswith("syn:"):
-      defnlines.append("#: {{syn|%s|%s}}\n" % (lang,
-        re.sub("^syn:", "", re.sub(r", *", "|", defn))))
-    elif defn.startswith("ant:"):
-      defnlines.append("#: {{ant|%s|%s}}\n" % (lang,
-        re.sub("^ant:", "", re.sub(r", *", "|", defn))))
-    elif defn.startswith("pf:"):
-      defnlines.append("#: {{pf|%s|%s}}\n" % (lang,
-        re.sub("^pf:", "", re.sub(r", *", "|", defn))))
-    elif defn.startswith("impf:"):
-      defnlines.append("#: {{impf|%s|%s}}\n" % (lang,
-        re.sub("^impf:", "", re.sub(r", *", "|", defn))))
+    elif re.search("^(syn|ant|pf|impf):", defn):
+      m = re.search("^(.*?):(.*)$", defn)
+      tempname, defn = m.groups()
+      defn, labels = parse_off_labels(defn)
+      defntext = "#: {{%s|%s|%s}}" % (tempname, lang, re.sub(r", *", "|", defn))
+      if labels:
+        defntext += " {{i|%s}}" % ", ".join(labels)
+      defnlines.append(defntext + "\n")
     else:
-      labels = []
       prefix = ""
-      while True:
-        if defn.startswith("+"):
-          labels.append("relational")
-          defn = re.sub(r"^\+", "", defn)
-        elif defn.startswith("#"):
-          labels.append("figurative")
-          defn = re.sub(r"^#", "", defn)
-        elif defn.startswith("!"):
-          labels.append("colloquial")
-          defn = re.sub(r"^!", "", defn)
-        else:
-          m = re.search(r"^\((.*?)\)([^ ].*)$", defn)
-          if m:
-            shortlab = m.group(1)
-            if shortlab in known_labels:
-              longlab = known_labels[shortlab]
-              if type(longlab) is list:
-                labels.extend(longlab)
-              else:
-                labels.append(longlab)
-            else:
-              labels.append(shortlab)
-            defn = m.group(2)
-          else:
-            defn = defn.replace(r"\(", "(").replace(r"\)", ")")
-            break
+      defn, labels = parse_off_labels(defn)
       if labels:
         prefix = "{{lb|%s|%s}} " % (lang, "|".join(labels))
       if defn.startswith("altof:"):
