@@ -197,11 +197,19 @@ def process_line(line, etymnum=None, skip_pronun=False):
   # secondary/tertiary accents but keep the links. For declension
   # purposes (other than bg-noun), we remove everything (but still leave
   # primary accents).
-  pronterm = remove_links(term)
+  pronterm = remove_links(term).split(",")
   term = bglib.remove_non_primary_accents(term)
-  headterm = term
-  term = remove_links(term)
-  check_stress(term)
+  headterm = term.split(",")
+  headterm_parts = []
+  for num, ht in enumerate(headterm):
+    if num == 0:
+      headterm_parts.append(ht)
+    else:
+      headterm_parts.append("head%s=%s" % (num + 1, ht))
+  headterm = "|".join(headterm_parts)
+  term = remove_links(term).split(",")
+  for t in term:
+    check_stress(t)
 
   # Handle etymology
   adjformtext = ""
@@ -308,9 +316,9 @@ def process_line(line, etymnum=None, skip_pronun=False):
         gender = "n"
       elif "/n:pl" in decl:
         gender = "p"
-      elif re.search(u"[ая]́?$", term):
+      elif re.search(u"[ая]́?$", term[0]):
         gender = "f"
-      elif re.search(u"[еоиую]́?$", term):
+      elif re.search(u"[еоиую]́?$", term[0]):
         gender = "n"
       else:
         gender = "m"
@@ -321,11 +329,21 @@ def process_line(line, etymnum=None, skip_pronun=False):
         decl = decl[1:]
         decltext = decl
       else:
-        decltext = "%s%s" % (term, decl)
+        if len(term) > 1:
+          error("With multiple terms, must use ! with explicit declension")
+        decltext = "%s%s" % (term[0], decl)
       # Eliminate masculine/feminine equiv, adjective/adverb, etc. from actual decl
-      decltext = re.sub(r"\|([mf]|adv|absn|adj|dim)[0-9]*=[^|]*?(?=\||$)", "", decltext)
+      decltext = re.sub(r"\|([mf]|adv|absn|adj|dim|g)[0-9]*=[^|]*?(?=\||$)", "", decltext)
       # Eliminate declension from hdecltext
       hdecltext = re.sub(r"^.*?(?=\||$)", "", decl)
+
+  for t in term:
+    if pos == "adj" and not is_invar_gender and re.search(u"[аеоуяю]́?$", t):
+      error(u"Term %s is supposed to be an adjective but ends in vowel other than -и" % t)
+    if pos == "adj" and not is_invar_gender and re.search("r\|(m|f|adj|g)", hdecltext):
+      error("Term %s is supposed to be an adjective but has noun properties in the declension: %s" % (t, hdecltext))
+    if pos == "n" and not is_invar_gender and re.search(r"\|(adv|absn)", hdecltext):
+      error("Term %s is supposed to be a noun but has adjective properties in the declension: %s" % (t, hdecltext))
 
   # Create definition
   if re.search(opt_arg_regex, defns):
@@ -345,7 +363,10 @@ def process_line(line, etymnum=None, skip_pronun=False):
   enwikitext = ""
   cattext = ""
   filetext = ""
-  prontext = "* {{bg-IPA|%s}}\n" % pronterm
+  if len(pronterm) > 1:
+    prontext = "".join("* {{bg-IPA|%s|ann=y}}\n" % pt for pt in pronterm)
+  else:
+    prontext = "* {{bg-IPA|%s}}\n" % pronterm[0]
   tlbtext = ""
   for synantrel in remainder:
     if synantrel.startswith("#"):
@@ -402,7 +423,7 @@ def process_line(line, etymnum=None, skip_pronun=False):
           lines.append("* {{l|bg|%s}}\n" % altform)
       alttext = "===Alternative forms===\n%s\n" % "".join(lines)
     elif sartype == "part":
-      verbs, parttypes, partshort = do_split(":", vals)
+      verbs, parttypes, partdecl = do_split(":", vals)
       infleclines = []
       for verb in do_split(",", verbs):
         for parttype in do_split(",", parttypes):
@@ -413,10 +434,11 @@ def process_line(line, etymnum=None, skip_pronun=False):
 %s\n\n""" % (headterm, "\n".join(infleclines))
       if "adv" in parttype:
         partdecltext = ""
+      elif len(term) > 1:
+        error("Don't yet know how to handle participle with multiple terms")
       else:
         partdecltext = """====Declension====
-{{bg-adecl|%s%s}}\n\n""" % (term,
-          "" if partshort == "-" else "|" + partshort)
+{{bg-adecl|%s%s}}\n\n""" % (term[0], partdecl)
       parttext += partdecltext
     elif sartype == "wiki":
       for val in do_split(",", vals):
@@ -530,7 +552,7 @@ def process_line(line, etymnum=None, skip_pronun=False):
 ====Declension====
 {{bg-ndecl|%s}}
 
-""" % (term, gender, hdecltext, tlbtext, defntext, decltext)
+""" % (headterm, gender, hdecltext, tlbtext, defntext, decltext)
     elif pos == "pn":
       maintext = """{{bg-proper noun|%s|%s%s}}%s
 
@@ -538,7 +560,7 @@ def process_line(line, etymnum=None, skip_pronun=False):
 ====Declension====
 {{bg-ndecl|%s}}
 
-""" % (term, gender, hdecltext, tlbtext, defntext, decltext)
+""" % (headterm, gender, hdecltext, tlbtext, defntext, decltext)
     elif pos == "adj":
       maintext = """{{bg-adj|%s%s}}%s
 
@@ -546,7 +568,7 @@ def process_line(line, etymnum=None, skip_pronun=False):
 ====Declension====
 {{bg-adecl|%s}}%s
 
-""" % (term, hdecltext, tlbtext, defntext, decltext, attn_comp_text)
+""" % (headterm, hdecltext, tlbtext, defntext, decltext, attn_comp_text)
     elif pos == "adv":
       maintext = """{{head|bg|adverb|head=%s}}%s
 
@@ -577,24 +599,22 @@ def process_line(line, etymnum=None, skip_pronun=False):
 %s%s%s
 """ % (alsotext, enwikitext, wikitext, filetext)
 
+  prontext = "===Pronunciation===\n%s\n" % prontext
+  if skip_pronun == "attop":
+    headertext = "%s%s" % (headertext, prontext)
   if skip_pronun:
     prontext = ""
-  else:
-    prontext = "===Pronunciation===\n%s\n" % prontext
-  if etymnum == 1:
-    headertext = "%s%s" % (headertext, prontext)
 
   if etymnum:
-    bodytext = """%s%s%s===%s===
-%s%s%s%s%s%s%s""" % (
-      alttext, parttext, adjformtext, pos_to_full_pos[pos],
-      maintext, usagetext, syntext, anttext, dertext, reltext, seetext)
-    bodytext = etymtext + increase_indent(bodytext)
+    inside_etymtext = ""
   else:
-    bodytext = """%s%s%s%s%s===%s===
+    inside_etymtext = etymtext
+  bodytext = """%s%s%s%s%s===%s===
 %s%s%s%s%s%s%s""" % (
-      alttext, etymtext, prontext, parttext, adjformtext, pos_to_full_pos[pos],
-      maintext, usagetext, syntext, anttext, dertext, reltext, seetext)
+    alttext, inside_etymtext, prontext, parttext, adjformtext, pos_to_full_pos[pos],
+    maintext, usagetext, syntext, anttext, dertext, reltext, seetext)
+  if etymnum:
+    bodytext = etymtext + increase_indent(bodytext)
 
   footertext = "%s\n" % cattext
 
@@ -615,6 +635,9 @@ while True:
     lemma = els[1]
   else:
     lemma = els[0]
+  lemma = remove_links(lemma)
+  seen_lemmas = {lemma}
+  lemma = bglib.remove_accents(lemma).split(",")[0]
   morelines = []
   single_etym = False
   while True:
@@ -631,25 +654,34 @@ while True:
       nextline_lemma = nextline_els[1]
     else:
       nextline_lemma = nextline_els[0]
-    if nextline_lemma.startswith("!") and lemma == nextline_lemma[1:]:
+    starts_with_exclamation_point = False
+    if nextline_lemma.startswith("!"):
+      starts_with_exclamation_point = True
+      nextline_lemma = nextline_lemma[1:]
+    nextline_lemma_with_accents = remove_links(nextline_lemma)
+    nextline_lemma = bglib.remove_accents(nextline_lemma_with_accents).split(",")[0]
+    if starts_with_exclamation_point and lemma == nextline_lemma:
       single_etym = True
     elif lemma != nextline_lemma:
       break
     peeker.get_next_line()
     morelines.append(nextline)
+    seen_lemmas.add(nextline_lemma_with_accents)
 
   nextpage += 1
 
   def output_page(text):
     msg("Page %s %s: ------- begin text --------\n%s\n------- end text --------" % (
-      nextpage, bglib.remove_accents(lemma), text.rstrip("\n")))
+      nextpage, lemma, text.rstrip("\n")))
 
   if morelines:
-    headertext, bodytext1, footertext = process_line(line, None if single_etym else 1)
+    headertext, bodytext1, footertext = process_line(line, None if single_etym else 1,
+        skip_pronun="attop" if len(seen_lemmas) == 1 and not single_etym else False)
     morebodytext = []
     for etymnum, nextline in enumerate(morelines):
       headertext2, bodytext2, footertext2 = process_line(
-        nextline, None if single_etym else etymnum + 2, skip_pronun=single_etym
+        nextline, None if single_etym else etymnum + 2,
+        skip_pronun=single_etym or len(seen_lemmas) == 1
       )
       morebodytext.append(bodytext2)
     output_page("%s%s%s%s" % (headertext, bodytext1, "".join(morebodytext), footertext))
