@@ -33,7 +33,7 @@ pos_to_full_pos = {
   "part": "Participle",
 }
 
-opt_arg_regex = r"^(also|syn|ant|der|rel|see|tlb|pron|alt|part|wiki|enwiki|cat|tcat|usage|file):(.*)"
+opt_arg_regex = r"^(also|syn|ant|der|rel|see|tlb|pron|comp|alt|part|wiki|enwiki|cat|tcat|usage|file):(.*)"
 
 # Form for adjectives, nouns and proper nouns:
 #
@@ -359,6 +359,7 @@ def process_line(line, etymnum=None, skip_pronun=False):
   dertext = None
   reltext = None
   seetext = None
+  comptext = ""
   wikitext = ""
   enwikitext = ""
   cattext = ""
@@ -411,6 +412,13 @@ def process_line(line, etymnum=None, skip_pronun=False):
       for i, pron in enumerate(do_split(",", vals)):
         check_stress(pron)
         prontext += "* {{bg-IPA|%s}}\n" % pron
+    elif sartype == "comp":
+      comptext = ""
+      for i, comp in enumerate(do_split(",", vals)):
+        if i == 0:
+          comptext += "|%s" % comp
+        else:
+          comptext += "|comp%s=%s" % (i + 1, comp)
     elif sartype == "tlb":
       tlbtext = " {{tlb|bg|%s}}" % vals
     elif sartype == "alt":
@@ -570,10 +578,10 @@ def process_line(line, etymnum=None, skip_pronun=False):
 
 """ % (headterm, hdecltext, tlbtext, defntext, decltext, attn_comp_text)
     elif pos == "adv":
-      maintext = """{{head|bg|adverb|head=%s}}%s
+      maintext = """{{bg-adv|%s%s}}%s
 
 %s
-""" % (headterm, tlbtext, defntext)
+""" % (headterm, comptext, tlbtext, defntext)
     else:
       full_pos = pos_to_full_pos[pos]
       maintext = """{{head|bg|%s|head=%s}}%s
