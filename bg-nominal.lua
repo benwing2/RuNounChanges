@@ -93,6 +93,7 @@ local noun_overriding_forms = {
 	["dat"] = true,
 	["ind_pl"] = true,
 	["def_pl"] = true,
+	["voc_pl"] = true,
 	["acc_pl"] = true,
 	["gen_pl"] = true,
 	["dat_pl"] = true,
@@ -132,6 +133,7 @@ local noun_slots = {
 	["count"] = "count|form",
 }
 
+local extra_noun_cases = {"acc", "gen", "dat"}
 
 local adj_slots = {
 	["ind_m_sg"] = "indef|m|s",
@@ -1134,7 +1136,7 @@ local function detect_noun_accent_and_form_spec(lemma, accent_and_form_spec)
 end
 
 
--- Call detect_adj_accent_and_form_spec() on all accent-and-form specs in ALTERNANT_DATASPEC.
+-- Call detect_adj_accent_and_form_spec() on all accent-and-form specs in ALTERNANT_MULTIWORD_SPEC.
 local function detect_all_adj_accent_and_form_specs(alternant_multiword_spec)
 	map_word_specs(alternant_multiword_spec, function(word_spec)
 		for _, accent_and_form_spec in ipairs(word_spec.accent_and_form_specs) do
@@ -1144,55 +1146,48 @@ local function detect_all_adj_accent_and_form_specs(alternant_multiword_spec)
 end
 
 
-local function combine_num_specs(existing, new)
-	if new then
-		if not existing then
-			existing = new
-		elseif existing ~= new then
-			existing = "both"
-		end
-	end
-	return existing
-end
-
-
-local function accumulate_specs(into, from)
-	into.n = combine_num_specs(into.n, from.n)
-	into.needs_vocative = into.needs_vocative or from.needs_vocative
-end
-
-
-local function detect_word_noun_accent_and_form_specs(word_spec)
-	local n -- number for this alternant
-	for _, accent_and_form_spec in ipairs(word_spec.accent_and_form_specs) do
-		detect_noun_accent_and_form_spec(word_spec.lemma, accent_and_form_spec)
-		n = combine_num_specs(n, accent_and_form_spec.n)
-		if accent_and_form_spec.accent_spec.has_vocative then
-			word_spec.needs_vocative = true
-		end
-	end
-	word_spec.n = n
-end
-
-
--- Call detect_noun_accent_and_form_spec() on all accent-and-form specs in ALTERNANT_DATASPEC.
--- In the process, set ALTERNANT_DATASPEC.n to the overall number ("sg", "pl" or "both") of
--- the lemma or alternant.
+-- Call detect_noun_accent_and_form_spec() on all accent-and-form specs in ALTERNANT_MULTIWORD_SPEC.
 local function detect_all_noun_accent_and_form_specs(alternant_multiword_spec)
-	for _, alternant_or_word_spec in ipairs(alternant_multiword_spec.alternant_or_word_specs) do
-		if alternant_or_word_spec.alternants then
-			for _, multiword_spec in ipairs(alternant_or_word_spec.alternants) do
-				for _, word_spec in ipairs(multiword_spec) do
-					detect_word_noun_accent_and_form_specs(word_spec)
-					accumulate_specs(multiword_spec, word_spec)
-				end
-				accumulate_specs(alternant_or_word_spec, multiword_spec)
-			end
-		else
-			detect_word_noun_accent_and_form_specs(alternant_or_word_spec)
+	map_word_specs(alternant_multiword_spec, function(word_spec)
+		for _, accent_and_form_spec in ipairs(word_spec.accent_and_form_specs) do
+			detect_noun_accent_and_form_spec(word_spec.lemma, accent_and_form_spec)
 		end
-		accumulate_specs(alternant_multiword_spec, alternant_or_word_spec)
+	end)
+end
+
+
+local function init_active_adj_slots()
+	local active_slots = {}
+	-- Set the always-active slots.
+	active_slots.ind_m_sg = true
+	active_slots.def_sub_m_sg = true
+	active_slots.def_obj_m_sg = true
+	active_slots.ind_f_sg = true
+	active_slots.def_f_sg = true
+	active_slots.ind_n_sg = true
+	active_slots.def_n_sg = true
+	active_slots.ind_pl = true
+	active_slots.def_pl = true
+	return active_slots
+end
+
+
+local function set_active_adj_slots(active_slots, accent_and_form_spec)
+	if not accent_and_form_spec["-voc"] then
+		active_slots.voc_m_sg = true
 	end
+end
+
+
+-- Determine overall active adjective slots.
+local function compute_overall_active_adj_slots(alternant_multiword_spec)
+	local active_slots = init_active_adj_slots()
+	map_word_specs(alternant_multiword_spec, function(word_spec)
+		for _, accent_and_form_spec in ipairs(word_spec.accent_and_form_specs) do
+			set_active_adj_slots(active_slots, accent_and_form_spec)
+		end
+	end)
+	return active_slots
 end
 
 
@@ -1200,10 +1195,6 @@ local function init_active_noun_slots()
 	local active_slots = {}
 	-- Set the always-active slots.
 	active_slots.ind_sg = true
-	active_slots.def_sub_sg = true
-	active_slots.def_obj_sg = true
-	active_slots.ind_pl = true
-	active_slots.def_pl = true
 	return active_slots
 end
 
@@ -1222,13 +1213,40 @@ local function set_active_noun_slots(active_slots, accent_and_form_spec)
 	if accent_and_form_spec.accent_spec.has_count then
 		active_slots.count = true
 	end
-	for _, case in ipairs({"acc", "gen", "dat"}) do
+	for _, case in ipairs(extra_noun_cases) do
 		-- Adjectival noun overrides currently use acc_sg, gen_sg, dat_sg,
 		-- while regular noun overrides just use acc, gen, dat.
-		if accent_and_form_spec[case] or accent_and_form_spec[case .. "_sg"] or accent_and_form_spec[case .. "_pl"] then
+		if accent_and_form_spec[case] or accent_and_form_spec[case .. "_sg"] then
 			active_slots[case .. "_sg"] = true
+		end
+		if accent_and_form_spec[case .. "_pl"] then
 			active_slots[case .. "_pl"] = true
 		end
+	end
+	if not accent_and_form_spec["-def"] then
+		active_slots.def_sub_sg = true
+		active_slots.def_obj_sg = true
+	end
+	if not accent_and_form_spec["-pl"] then
+		active_slots.ind_pl = true
+		if not accent_and_form_spec["-def_pl"] then
+			active_slots.def_pl = true
+		end
+	end
+	if accent_and_form_spec.n then
+		if not active_slots.n then
+			active_slots.n = accent_and_form_spec.n
+		elseif active_slots.n ~= accent_and_form_spec.n then
+			active_slots.n = "both"
+		end
+	end
+end
+
+
+local function convert_active_noun_slots_to_active_adj_slots(active_noun_slots)
+	local active_adj_slots = init_active_adj_slots()
+	if active_noun_slots.voc_sg then
+		active_adj_slots.voc_m_sg = true
 	end
 end
 
@@ -1497,7 +1515,7 @@ end
 
 
 -- Construct the definite objective masculine singular adjective form and other definite forms.
-local function generate_adj_definite_forms(formtable, forms, no_voc)
+local function generate_adj_definite_forms(formtable, forms, active_slots)
 	insert_forms(formtable, "def_obj_m_sg", map_forms(forms["def_sub_m_sg"],
 		function(form) return rsub(form, "т$", "") end))
 	insert_forms(formtable, "def_f_sg", map_forms(forms["ind_f_sg"],
@@ -1506,7 +1524,7 @@ local function generate_adj_definite_forms(formtable, forms, no_voc)
 		function(form) return form .. "то" end))
 	insert_forms(formtable, "def_pl", map_forms(forms["ind_pl"],
 		function(form) return form .. "те" end))
-	if not no_voc then
+	if active_slots.voc_m_sg then
 		for _, formobj in ipairs(forms["ind_pl"]) do
 			insert_form(formtable, "voc_m_sg",
 				{form=formobj.form, footnotes=formobj.footnotes})
@@ -1563,7 +1581,7 @@ end
 -- if the adjective has comparative forms) for all slots. (If a given slot has no values,
 -- it will not be present in `DATASPEC.forms`.) If `as_noun` is true, we're declining an adjectival noun
 -- rather than an adjective as such.
-local function decline_one_adj(word_spec, accent_and_form_spec, as_noun)
+local function decline_one_adj(word_spec, accent_and_form_spec, active_slots, active_noun_slots)
 	local accent_spec = accent_and_form_spec.accent_spec
 	local lemma = word_spec.lemma
 	local stem = accent_spec.stem
@@ -1576,15 +1594,18 @@ local function decline_one_adj(word_spec, accent_and_form_spec, as_noun)
 	for _, accent in ipairs(accent_spec.accents) do
 		generate_adj_forms(formtable, accent_spec, accent)
 	end
-	generate_adj_definite_forms(formtable, formtable, accent_and_form_spec["-voc"])
-	if as_noun then
+	generate_adj_definite_forms(formtable, formtable, active_slots)
+	if active_noun_slots then
+		local noun_formtable = {}
 		local function copy_forms(forms_to_copy)
 			for from_form, to_forms in pairs(forms_to_copy) do
 				if type(to_forms) ~= "table" then
 					to_forms = {to_forms}
 				end
 				for _, to_form in ipairs(to_forms) do
-					formtable[to_form] = formtable[from_form]
+					if active_noun_slots[to_form] then
+						insert_forms(noun_formtable, to_form, formtable[from_form])
+					end
 				end
 			end
 		end
@@ -1599,7 +1620,7 @@ local function decline_one_adj(word_spec, accent_and_form_spec, as_noun)
 			copy_forms(pl_adj_to_noun_slots)
 		end
 		for slot, _ in pairs(noun_slots) do
-			insert_forms(word_spec.forms, slot, handle_overriding_forms(lemma, stem, formtable[slot],
+			insert_forms(word_spec.forms, slot, handle_overriding_forms(lemma, stem, noun_formtable[slot],
 				accent_and_form_spec[slot]))
 		end
 	else
@@ -1627,9 +1648,9 @@ end
 -- This sets the form values in `DATASPEC.forms` (and `DATASPEC.compforms` and `DATASPEC.supforms`
 -- if the adjective has comparative forms) for all slots. (If a given slot has no values,
 -- it will not be present in `DATASPEC.forms`.)
-local function decline_adj(word_spec)
+local function decline_adj(word_spec, active_slots)
 	for _, accent_and_form_spec in ipairs(word_spec.accent_and_form_specs) do
-		decline_one_adj(word_spec, accent_and_form_spec)
+		decline_one_adj(word_spec, accent_and_form_spec, active_slots)
 	end
 end
 
@@ -1638,76 +1659,123 @@ end
 -- corresponding to the accent-and-form spec in `accent_and_form_spec` (see parse_noun_accent_and_form_specs()).
 -- This sets the form values in `DATASPEC.forms` for all slots. (If a given slot has no values,
 -- it will not be present in `DATASPEC.forms`.)
-local function decline_one_noun(word_spec, accent_and_form_spec)
+local function decline_one_noun(word_spec, accent_and_form_spec, active_slots)
 	local lemma = word_spec.lemma
 	local stem = word_spec.stem
-	local n = accent_and_form_spec.n or word_spec.n
-	if n == "pl" then
+	if active_slots.n == "pl" then
 		for _, overriding_form in ipairs(noun_overriding_forms) do
-			if accent_and_form_spec[overriding_form] then
+			if not overriding_form:find("_pl$") and accent_and_form_spec[overriding_form] then
 				error("'/" .. overriding_form .. ":' not allowed for plurale tantum")
 			end
 		end
-		local plurals = {{form=lemma}}
-		insert_forms(word_spec.forms, "ind_pl",
-			handle_overriding_forms(lemma, stem, plurals, accent_and_form_spec.ind_pl))
-		if not accent_and_form_spec["-def_pl"] then
+
+		-- Maybe set indefinite plural.
+		local indefinite_plurals = {{form=lemma}}
+		if active_slots.ind_pl then
+			insert_forms(word_spec.forms, "ind_pl",
+				handle_overriding_forms(lemma, stem, indefinite_plurals, accent_and_form_spec.ind_pl))
+		end
+
+		-- Maybe set definite plural.
+		if active_slots.def_pl then
 			insert_forms(word_spec.forms, "def_pl",
-				handle_overriding_forms(lemma, stem, map_forms(plurals, generate_noun_definite_plural),
+				handle_overriding_forms(lemma, stem, map_forms(indefinite_plurals, generate_noun_definite_plural),
 					accent_and_form_spec.def_pl))
+		end
+
+		-- Maybe set "extra cases".
+		for _, case in ipairs(extra_noun_cases) do
+			local pl_slot = case .. "_pl"
+			if active_slots[pl_slot] then
+				insert_forms(word_spec.forms, pl_slot, handle_overriding_forms(lemma, stem, indefinite_plurals, accent_and_form_spec[pl_slot]))
+			end
 		end
 	else
 		local accent_spec = accent_and_form_spec.accent_spec
-		local plurals = {}
+
+		-- Always generate indefinite singulars since may be needed for the "extra cases" below.
 		local indefinite_singulars = {{form = lemma}}
-		local definite_singulars = {}
-		local count_forms = {}
-		local vocatives = {}
+
+		-- Always generate indefinite plurals since may be needed for the "extra cases" below.
+		local indefinite_plurals = {}
 		for _, plspec in ipairs(accent_spec.plurals) do
 			for _, accent in ipairs(accent_spec.accents) do
-				insert_form_into_list(plurals,
+				insert_form_into_list(indefinite_plurals,
 					{form=generate_noun_plural(word_spec, accent_spec, plspec, accent), footnotes=plspec.footnotes}
 				)
 			end
 		end
-		for _, accent in ipairs(accent_spec.accents) do
-			insert_form_into_list(definite_singulars,
-				{form=generate_noun_definite_singular(word_spec, accent_spec, accent)}
-			)
+		indefinite_plurals = handle_overriding_forms(lemma, stem, indefinite_plurals, accent_and_form_spec.pl)
+
+		-- Maybe set indefinite singular.
+		if active_slots.ind_sg then
+			insert_forms(word_spec.forms, "ind_sg",
+				handle_overriding_forms(lemma, stem, indefinite_singulars, accent_and_form_spec.ind))
 		end
-		insert_form_into_list(count_forms, {form=generate_noun_count_form(word_spec, accent_spec)})
-		insert_form_into_list(vocatives, {form=generate_noun_vocative(word_spec, accent_spec)})
-		if not accent_and_form_spec["-pl"] then
-			plurals = handle_overriding_forms(lemma, stem, plurals, accent_and_form_spec.pl)
-			insert_forms(word_spec.forms, "ind_pl",
-				handle_overriding_forms(lemma, stem, plurals, accent_and_form_spec.ind_pl))
-			if not accent_and_form_spec["-def_pl"] then
-				insert_forms(word_spec.forms, "def_pl",
-					handle_overriding_forms(lemma, stem, map_forms(plurals, generate_noun_definite_plural),
-						accent_and_form_spec.def_pl))
+
+		-- Maybe set definite singular.
+		if active_slots.def_sub_sg or active_slots.def_obj_sg then
+			local definite_singulars = {}
+			for _, accent in ipairs(accent_spec.accents) do
+				insert_form_into_list(definite_singulars,
+					{form=generate_noun_definite_singular(word_spec, accent_spec, accent)}
+				)
+			end
+			definite_singulars = handle_overriding_forms(lemma, stem, definite_singulars, accent_and_form_spec.def)
+			if active_slots.def_sub_sg then
+				insert_forms(word_spec.forms, "def_sub_sg",
+					handle_overriding_forms(lemma, stem, definite_singulars, accent_and_form_spec.def_sub))
+			end
+			if active_slots.def_obj_sg then
+				insert_forms(word_spec.forms, "def_obj_sg",
+					handle_overriding_forms(lemma, stem, map_forms(definite_singulars, generate_noun_definite_objective_singular),
+						accent_and_form_spec.def_obj))
 			end
 		end
-		insert_forms(word_spec.forms, "ind_sg",
-			handle_overriding_forms(lemma, stem, indefinite_singulars, accent_and_form_spec.ind))
-		if not accent_and_form_spec["-def"] then
-			definite_singulars = handle_overriding_forms(lemma, stem, definite_singulars, accent_and_form_spec.def)
-			insert_forms(word_spec.forms, "def_sub_sg",
-				handle_overriding_forms(lemma, stem, definite_singulars, accent_and_form_spec.def_sub))
-			insert_forms(word_spec.forms, "def_obj_sg",
-				handle_overriding_forms(lemma, stem, map_forms(definite_singulars, generate_noun_definite_objective_singular),
-					accent_and_form_spec.def_obj))
+
+		-- Maybe set indefinite plural.
+		if active_slots.ind_pl then
+			insert_forms(word_spec.forms, "ind_pl",
+				handle_overriding_forms(lemma, stem, indefinite_plurals, accent_and_form_spec.ind_pl))
 		end
-		if not accent_and_form_spec["-count"] then
+
+		-- Maybe set definite plural.
+		if active_slots.def_pl then
+			insert_forms(word_spec.forms, "def_pl",
+				handle_overriding_forms(lemma, stem, map_forms(indefinite_plurals, generate_noun_definite_plural),
+					accent_and_form_spec.def_pl))
+		end
+
+		-- Maybe set count.
+		if active_slots.count then
+			local count_forms = {}
+			insert_form_into_list(count_forms, {form=generate_noun_count_form(word_spec, accent_spec)})
 			insert_forms(word_spec.forms, "count", handle_overriding_forms(lemma, stem, count_forms, accent_and_form_spec.count))
 		end
-		vocatives = handle_overriding_forms(lemma, stem, vocatives, accent_and_form_spec.voc)
-		insert_forms(word_spec.forms, "voc_sg", vocatives)
-		insert_forms(word_spec.forms, "acc_sg", handle_overriding_forms(lemma, stem, "acc", accent_and_form_spec.acc))
-		insert_forms(word_spec.forms, "gen_sg", handle_overriding_forms(lemma, stem, "gen", accent_and_form_spec.gen))
-		insert_forms(word_spec.forms, "dat_sg", handle_overriding_forms(lemma, stem, "dat", accent_and_form_spec.dat))
-		insert_forms(word_spec.forms, "acc_pl", handle_overriding_forms(lemma, stem, "acc_pl", accent_and_form_spec.acc_pl))
-		insert_forms(word_spec.forms, "gen_pl", handle_overriding_forms(lemma, stem, "gen_pl", accent_and_form_spec.gen_pl))
-		insert_forms(word_spec.forms, "dat_pl", handle_overriding_forms(lemma, stem, "dat_pl", accent_and_form_spec.dat_pl))
+
+		-- Maybe set vocative singular.
+		if active_slots.voc_sg then
+			local vocatives = {}
+			insert_form_into_list(vocatives, {form=generate_noun_vocative(word_spec, accent_spec)})
+			insert_forms(word_spec.forms, "voc_sg", handle_overriding_forms(lemma, stem, vocatives, accent_and_form_spec.voc)
+		end
+
+		-- Maybe set vocative plural.
+		if active_slots.voc_pl then
+			insert_forms(word_spec.forms, "voc_pl", handle_overriding_forms(lemma, stem, indefinite_plurals, accent_and_form_spec.voc_pl))
+		end
+
+		-- Maybe set "extra cases".
+		for _, case in ipairs(extra_noun_cases) do
+			local sg_slot = case .. "_sg"
+			if active_slots[sg_slot] then
+				insert_forms(word_spec.forms, sg_slot, handle_overriding_forms(lemma, stem, indefinite_singulars, accent_and_form_spec[case]))
+			end
+			local pl_slot = case .. "_pl"
+			if active_slots[pl_slot] then
+				insert_forms(word_spec.forms, pl_slot, handle_overriding_forms(lemma, stem, indefinite_plurals, accent_and_form_spec[pl_slot]))
+			end
+		end
 	end
 end
 
@@ -1715,18 +1783,14 @@ end
 -- Decline the noun in DATASPEC (an object as returned by parse_simplified_specification()).
 -- This sets the form values in `DATASPEC.forms` for all slots. (If a given slot has no values,
 -- it will not be present in `DATASPEC.forms`.)
-local function decline_noun(word_spec)
+local function decline_noun(word_spec, active_slots)
 	for _, accent_and_form_spec in ipairs(word_spec.accent_and_form_specs) do
 		if accent_and_form_spec.accent_spec.is_adj then
-			decline_one_adj(word_spec, accent_and_form_spec, "as noun")
+			local active_adj_slots = convert_active_noun_slots_to_active_adj_slots(active_slots)
+			decline_one_adj(word_spec, accent_and_form_spec, active_adj_slots, active_slots)
 		else
-			decline_one_noun(word_spec, accent_and_form_spec)
+			decline_one_noun(word_spec, accent_and_form_spec, active_slots)
 		end
-	end
-	if word_spec.needs_vocative then
-		-- don't generate voc_pl unless the vocative was called for; otherwise it will
-		-- wrongly display for nouns without vocatives
-		word_spec.forms["voc_pl"] = map_forms(word_spec.forms["ind_pl"], function(x) return x end)
 	end
 end
 
@@ -1758,10 +1822,10 @@ local function decline_multiword_spec(multiword_spec, active_slots, is_adj)
 end
 
 
--- Decline the noun or adjective alternants in ALTERNANT_DATASPEC (an object as returned by
+-- Decline the noun or adjective alternants in ALTERNANT_SPEC (an object as returned by
 -- parse_simplified_specification_allowing_alternants()). This sets the form values
--- in `ALTERNANT_DATASPEC.forms` for all slots. (If a given slot has no values, it will
--- not be present in `DATASPEC.forms`). It also sets `ALTERNANT_DATASPEC.forms.lemma`,
+-- in `ALTERNANT_SPEC.forms` for all slots. (If a given slot has no values, it will
+-- not be present in `DATASPEC.forms`). It also sets `ALTERNANT_SPEC.forms.lemma`,
 -- which is a list of strings to use as lemmas (e.g. in the title of the generated table
 -- and in accelerators).
 local function decline_alternants(alternant_spec, is_adj)
@@ -1835,11 +1899,11 @@ local function expand_footnote(note)
 end
 
 
--- Convert `ALTERNANT_DATASPEC.forms[SLOT]` (for ALTERNANT_DATASPEC as returned by
+-- Convert `ALTERNANT_SPEC.forms[SLOT]` (for ALTERNANT_SPEC as returned by
 -- parse_simplified_specification_allowing_alternants()) for all slots into displayable text.
--- This also sets ALTERNANT_DATASPEC.combined_def_sg to true if the definite subjective and
+-- This also sets ALTERNANT_SPEC.combined_def_sg to true if the definite subjective and
 -- objective singular forms are the same (and hence should be combined in the generated table),
--- and sets ALTERNANT_DATASPEC.forms.footnote to the combined string to insert as a footnote
+-- and sets ALTERNANT_SPEC.forms.footnote to the combined string to insert as a footnote
 -- (if there are no footnotes, it will be the empty string).
 local function show_forms(alternant_spec, is_adj)
 	local lemmas = {}
@@ -1933,9 +1997,9 @@ local function show_forms(alternant_spec, is_adj)
 end
 
 
--- Generate the displayable table of all forms, given ALTERNANT_DATASPEC (as returned by
+-- Generate the displayable table of all forms, given ALTERNANT_SPEC (as returned by
 -- parse_simplified_specification_allowing_alternants()) where show_forms() has already
--- been called to convert `ALTERNANT_DATASPEC.forms` into a table of strings.
+-- been called to convert `ALTERNANT_SPEC.forms` into a table of strings.
 local function make_noun_table(alternant_spec)
 	local num = alternant_spec.n
 	local forms = alternant_spec.forms
@@ -2136,9 +2200,9 @@ local function make_noun_table(alternant_spec)
 end
 
 
--- Generate the displayable table of all adjective forms, given ALTERNANT_DATASPEC (as returned by
+-- Generate the displayable table of all adjective forms, given ALTERNANT_SPEC (as returned by
 -- parse_simplified_specification_allowing_alternants()) where show_forms() has already
--- been called to convert `ALTERNANT_DATASPEC.forms` into a table of strings.
+-- been called to convert `ALTERNANT_SPEC.forms` into a table of strings.
 local function make_adj_table(alternant_spec)
 	local forms = alternant_spec.forms
 	local table_normal_koj_begin = [=[
