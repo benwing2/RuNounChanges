@@ -33,7 +33,28 @@ pos_to_full_pos = {
   "part": "Participle",
 }
 
-opt_arg_regex = r"^(also|syn|ant|der|rel|see|tlb|pron|comp|alt|part|wiki|enwiki|cat|tcat|usage|file):(.*)"
+props = [
+  "also",
+  "syn",
+  "ant",
+  "der",
+  "rel",
+  "see",
+  "tlb",
+  "pron",
+  "comp",
+  "alt",
+  "part",
+  "nadjf",
+  "wiki",
+  "enwiki",
+  "cat",
+  "tcat",
+  "usage",
+  "file",
+]
+
+opt_arg_regex = r"^(%s):(.*)" % "|".join(props)
 
 # Form for adjectives, nouns and proper nouns:
 #
@@ -358,6 +379,7 @@ def process_line(line, etymnum=None, skip_pronun=False):
   alsotext = ""
   alttext = ""
   parttext = ""
+  nadjftext = ""
   usagelines = []
   syntext = ""
   anttext = ""
@@ -379,7 +401,7 @@ def process_line(line, etymnum=None, skip_pronun=False):
       break # ignore comments
     m = re.search(opt_arg_regex, synantrel)
     if not m:
-      error("Element %s doesn't start with also:, syn:, ant:, der:, rel:, see:, tlb:, pron:, alt: or part:" % synantrel)
+      error("Element %s doesn't start with one of %s" % (synantrel, ", ".join("%s:" % prop for prop in props)))
     sartype, vals = m.groups()
     if sartype == "also":
       alsotext = "{{also|%s}}\n" % vals.replace(",", "|")
@@ -453,6 +475,12 @@ def process_line(line, etymnum=None, skip_pronun=False):
         partdecltext = """====Declension====
 {{bg-adecl|%s%s}}\n\n""" % (term[0], partdecl)
       parttext += partdecltext
+    elif sartype == "nadjf":
+      check_stress(vals)
+      nadjftext = """===Adjective===
+{{head|bg|adjective form|head=%s}}
+
+# {{inflection of|bg|%s||n|s}}\n\n""" % (headterm, vals)
     elif sartype == "wiki":
       for val in do_split(",", vals):
         if val:
@@ -597,8 +625,9 @@ def process_line(line, etymnum=None, skip_pronun=False):
   if defns == "--":
     maintext = ""
 
-  # If both adjective and participle header, move related-terms text to level 3
-  if maintext and parttext and reltext:
+  # If both adjective and participle header, or adverb and neuter-adjective inflection header,
+  # move related-terms text to level 3
+  if maintext and (parttext or nadjftext) and reltext:
     reltext = re.sub("^====Related terms====", "===Related terms===", reltext)
 
   # If any categories, put an extra newline after them so they end with two
@@ -623,9 +652,9 @@ def process_line(line, etymnum=None, skip_pronun=False):
   else:
     inside_etymtext = etymtext
   bodytext = """%s%s%s%s%s===%s===
-%s%s%s%s%s%s%s""" % (
+%s%s%s%s%s%s%s%s""" % (
     alttext, inside_etymtext, prontext, parttext, adjformtext, pos_to_full_pos[pos],
-    maintext, usagetext, syntext, anttext, dertext, reltext, seetext)
+    maintext, usagetext, syntext, anttext, dertext, nadjftext, reltext, seetext)
   if etymnum:
     bodytext = etymtext + increase_indent(bodytext)
 
