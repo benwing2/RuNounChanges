@@ -187,14 +187,12 @@ local pl_adj_to_noun_slots = {
 
 local potential_noun_lemma_slots = {
 	"ind_sg",
-	"ind_pl",
+	"ind_pl"
 }
 
 local potential_adj_lemma_slots = {
 	"ind_m_sg",
-	"ind_m_pl", -- dva
-	"nom_m_sg", -- koj
-	"m_sg", -- chij
+	"ind_pl"
 }
 
 
@@ -758,8 +756,7 @@ local function parse_multiword_spec(segments, is_adj)
 		local before_text = {}
 		for j, space_separated_group in ipairs(space_separated_groups) do
 			if j == #space_separated_groups then
-				word_spec.orig_lemma = table.concat(space_separated_group)
-				word_spec.lemma = m_links.remove_links(word_spec.orig_lemma)
+				word_spec.lemma = m_links.remove_links(table.concat(space_separated_group))
 				if word_spec.lemma == "" then
 					error("Word is blank: '" .. table.concat(segments) .. "'")
 				end
@@ -1210,26 +1207,47 @@ end
 
 local function init_active_adj_slots()
 	local active_slots = {}
-	-- Set the always-active slots.
-	active_slots.ind_m_sg = true
-	active_slots.def_sub_m_sg = true
-	active_slots.def_obj_m_sg = true
-	active_slots.ind_f_sg = true
-	active_slots.def_f_sg = true
-	active_slots.ind_n_sg = true
-	active_slots.def_n_sg = true
-	active_slots.ind_pl = true
-	active_slots.def_pl = true
 	return active_slots
 end
 
 
 local function set_active_adj_slots(active_slots, accent_and_form_spec)
-	if not accent_and_form_spec["-voc"] then
-		active_slots.voc_m_sg = true
+	if accent_and_form_spec.koj then
+		active_slots.nom_m_sg = true
+		active_slots.acc_m_sg = true
+		active_slots.dat_m_sg = true
+		active_slots.f_sg = true
+		active_slots.n_sg = true
+		active_slots.pl = true
+	elseif accent_and_form_spec.chij then
+		active_slots.m_sg = true
+		active_slots.f_sg = true
+		active_slots.n_sg = true
+		active_slots.pl = true
+	elseif accent_and_form_spec.dva then
+		active_slots.ind_m_pl = true
+		active_slots.def_m_pl = true
+		active_slots.ind_fn_pl = true
+		active_slots.def_fn_pl = true
+	else
+		active_slots.ind_m_sg = true
+		active_slots.def_sub_m_sg = true
+		active_slots.def_obj_m_sg = true
+		active_slots.ind_f_sg = true
+		active_slots.def_f_sg = true
+		active_slots.ind_n_sg = true
+		active_slots.def_n_sg = true
+		active_slots.ind_pl = true
+		active_slots.def_pl = true
+		if not accent_and_form_spec.accent_spec.nocomp then
+			active_slots.comp = true
+		end
 	end
-	if not accent_and_form_spec.accent_spec.nocomp then
-		active_slots.comp = true
+	if accent_and_form_spec["-voc"] then
+		active_slots.no_voc = true
+	end
+	if accent_and_form_spec.short then
+		active_slots.short = true
 	end
 end
 
@@ -1242,6 +1260,9 @@ local function compute_overall_active_adj_slots(alternant_multiword_spec)
 			set_active_adj_slots(active_slots, accent_and_form_spec)
 		end
 	end)
+	if not active_slots.no_voc then
+		active_slots.voc_m_sg = true
+	end
 	return active_slots
 end
 
@@ -1695,7 +1716,7 @@ local function decline_one_adj(word_spec, accent_and_form_spec, active_slots, ac
 		for slot, _ in pairs(adj_slots) do
 			local forms = handle_overriding_forms(lemma, stem, formtable[slot], accent_and_form_spec[slot])
 			insert_forms(word_spec.forms, slot, forms)
-			if not accent_spec.nocomp then
+			if active_slots.comp and not accent_spec.nocomp then
 				if not word_spec.compforms then
 					word_spec.compforms = {}
 				end
@@ -1730,7 +1751,6 @@ end
 local function decline_one_noun(word_spec, accent_and_form_spec, active_slots, include_definite)
 	local lemma = word_spec.lemma
 	local stem = word_spec.stem
-	local formtable = {}
 	if active_slots.n == "pl" then
 		for _, overriding_form in ipairs(noun_overriding_forms) do
 			if not overriding_form:find("_pl$") and accent_and_form_spec[overriding_form] then
@@ -1741,21 +1761,23 @@ local function decline_one_noun(word_spec, accent_and_form_spec, active_slots, i
 		-- Maybe set indefinite plural.
 		local indefinite_plurals = {{form=lemma}}
 		if active_slots.ind_pl then
-			insert_forms(formtable, "ind_pl", indefinite_plurals)
+			insert_forms(word_spec.forms, "ind_pl",
+				handle_overriding_forms(lemma, stem, indefinite_plurals, accent_and_form_spec.ind_pl))
 		end
 
 		-- Maybe set definite plural.
 		if active_slots.def_pl then
-			insert_forms(formtable, "def_pl",
-				include_definite and map_forms(indefinite_plurals, generate_noun_definite_plural) or indefinite_plurals
-			)
+			insert_forms(word_spec.forms, "def_pl",
+				handle_overriding_forms(lemma, stem,
+					include_definite and map_forms(indefinite_plurals, generate_noun_definite_plural) or indefinite_plurals,
+					accent_and_form_spec.def_pl))
 		end
 
 		-- Maybe set "extra cases".
 		for _, case in ipairs(extra_noun_cases) do
 			local pl_slot = case .. "_pl"
 			if active_slots[pl_slot] then
-				insert_forms(formtable, pl_slot, indefinite_plurals)
+				insert_forms(word_spec.forms, pl_slot, handle_overriding_forms(lemma, stem, indefinite_plurals, accent_and_form_spec[pl_slot]))
 			end
 		end
 	else
@@ -1777,7 +1799,8 @@ local function decline_one_noun(word_spec, accent_and_form_spec, active_slots, i
 
 		-- Maybe set indefinite singular.
 		if active_slots.ind_sg then
-			insert_forms(formtable, "ind_sg", indefinite_singulars)
+			insert_forms(word_spec.forms, "ind_sg",
+				handle_overriding_forms(lemma, stem, indefinite_singulars, accent_and_form_spec.ind))
 		end
 
 		-- Maybe set definite singular.
@@ -1795,66 +1818,62 @@ local function decline_one_noun(word_spec, accent_and_form_spec, active_slots, i
 			end
 			definite_singulars = handle_overriding_forms(lemma, stem, definite_singulars, accent_and_form_spec.def)
 			if active_slots.def_sub_sg then
-				insert_forms(formtable, "def_sub_sg", definite_singulars)
+				insert_forms(word_spec.forms, "def_sub_sg",
+					handle_overriding_forms(lemma, stem, definite_singulars, accent_and_form_spec.def_sub))
 			end
 			if active_slots.def_obj_sg then
-				insert_forms(formtable, "def_obj_sg",
-					include_definite and map_forms(definite_singulars, generate_noun_definite_objective_singular) or
-					definite_singulars
-				)
+				insert_forms(word_spec.forms, "def_obj_sg",
+					handle_overriding_forms(lemma, stem,
+						include_definite and map_forms(definite_singulars, generate_noun_definite_objective_singular) or
+						definite_singulars,
+						accent_and_form_spec.def_obj))
 			end
 		end
 
 		-- Maybe set indefinite plural.
 		if active_slots.ind_pl then
-			insert_forms(formtable, "ind_pl", indefinite_plurals)
+			insert_forms(word_spec.forms, "ind_pl",
+				handle_overriding_forms(lemma, stem, indefinite_plurals, accent_and_form_spec.ind_pl))
 		end
 
 		-- Maybe set definite plural.
 		if active_slots.def_pl then
-			insert_forms(formtable, "def_pl",
-				include_definite and map_forms(indefinite_plurals, generate_noun_definite_plural) or
-				indefinite_plurals
-			)
+			insert_forms(word_spec.forms, "def_pl",
+				handle_overriding_forms(lemma, stem,
+					include_definite and map_forms(indefinite_plurals, generate_noun_definite_plural) or
+					indefinite_plurals,
+					accent_and_form_spec.def_pl))
 		end
 
 		-- Maybe set count.
 		if active_slots.count then
 			local count_forms = {}
 			insert_form_into_list(count_forms, {form=generate_noun_count_form(word_spec, accent_spec)})
-			insert_forms(formtable, "count", count_forms)
+			insert_forms(word_spec.forms, "count", handle_overriding_forms(lemma, stem, count_forms, accent_and_form_spec.count))
 		end
 
 		-- Maybe set vocative singular.
 		if active_slots.voc_sg then
 			local vocatives = {}
 			insert_form_into_list(vocatives, {form=generate_noun_vocative(word_spec, accent_spec)})
-			insert_forms(formtable, "voc_sg", vocatives)
+			insert_forms(word_spec.forms, "voc_sg", handle_overriding_forms(lemma, stem, vocatives, accent_and_form_spec.voc))
 		end
 
 		-- Maybe set vocative plural.
 		if active_slots.voc_pl then
-			insert_forms(formtable, "voc_pl", indefinite_plurals)
+			insert_forms(word_spec.forms, "voc_pl", handle_overriding_forms(lemma, stem, indefinite_plurals, accent_and_form_spec.voc_pl))
 		end
 
 		-- Maybe set "extra cases".
 		for _, case in ipairs(extra_noun_cases) do
 			local sg_slot = case .. "_sg"
 			if active_slots[sg_slot] then
-				insert_forms(formtable, sg_slot, indefinite_singulars)
+				insert_forms(word_spec.forms, sg_slot, handle_overriding_forms(lemma, stem, indefinite_singulars, accent_and_form_spec[case]))
 			end
 			local pl_slot = case .. "_pl"
 			if active_slots[pl_slot] then
-				insert_forms(formtable, pl_slot, indefinite_plurals)
+				insert_forms(word_spec.forms, pl_slot, handle_overriding_forms(lemma, stem, indefinite_plurals, accent_and_form_spec[pl_slot]))
 			end
-		end
-	end
-
-	for slot, _ in pairs(active_slots) do
-		if noun_slots[slot] then -- skip non-slots mixed into active_slots
-			local override = slot:gsub("_sg$", "")
-			local forms = handle_overriding_forms(lemma, stem, formtable[slot], accent_and_form_spec[override])
-			insert_forms(word_spec.forms, slot, forms)
 		end
 	end
 end
