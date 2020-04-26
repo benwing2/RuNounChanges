@@ -37,6 +37,7 @@ local m_table = require("Module:table")
 local m_string_utilities = require("Module:string utilities")
 local m_para = require("Module:parameters")
 local m_bg_translit = require("Module:bg-translit")
+local com = require("Module:bg-common")
 
 local current_title = mw.title.getCurrentTitle()
 local NAMESPACE = current_title.nsText
@@ -121,13 +122,6 @@ local base_slots = {
 }
 
 
-local first_palatalization = {
-	["к"] = "ч",
-	["г"] = "ж",
-	["х"] = "ш",
-}
-
-
 -- Used to determine if a perfective verb is prefixed; such verbs can't have
 -- a stress-shifted aorist. This will have false positives; such verbs should
 -- be indicated using (-pre).
@@ -170,15 +164,18 @@ end
 
 local function conjugate_all(forms, base)
 	local function add(slot, stems, ending)
-		if type(stems) == "string" or stems.form then
-			stems = {stems}
-		end
-		if not forms[slot] then
-			forms[slot] = {}
-		end
-		for _, stem in ipairs(stems) do
-			-- FIXME
-			m_table.insertIfNot(forms[slot], stem .. ending)
+		if type(stems) == "string" then
+			com.insert_form(forms, slot, {form = stems .. ending})
+		else
+			if stems.form then
+				stems = {stems}
+			end
+			for _, stem in ipairs(stems) do
+				if type(stem) == "string" then
+					stem = {form = stem}
+				end
+				com.insert_form(forms, slot, {form = stem.form .. ending, footnotes = stem.footnotes})
+			end
 		end
 	end
 
@@ -229,28 +226,30 @@ local function conjugate_all(forms, base)
 end
 
 
-local function pres_1conj(base, lemma)
+local function pres_advp_1conj(base, lemma)
 	local stem, last_letter, accent = rmatch(lemma, "^(.*)(.)[ая](́?)$")
 	if not stem then
 		error("Unrecognized lemma for conjugation 1: '" .. lemma .. "'")
 	end
-	local last_letter_pal = first_palatalization[last_letter] or last_letter
+	local last_letter_pal = com.first_palatalization[last_letter] or last_letter
 	base.pres1sg = lemma
 	base.pres3sg = stem .. last_letter_pal .. "е" .. accent
 	base.pres1pl = base.pres3sg .. "м"
 	base.pres3pl = lemma .. "т"
+	base.advp = base.pres3sg .. "йки"
 end
 
 
-local function pres_2conj(base, lemma)
+local function pres_advp_2conj(base, lemma)
 	local stem, accent = rmatch(lemma, "^(.*)[ая](́?)$")
 	if not stem then
 		error("Unrecognized lemma for conjugation 2: '" .. lemma .. "'")
 	end
 	base.pres1sg = lemma
-	base.pres3sg = stem  .. "и" .. accent
+	base.pres3sg = stem .. "и" .. accent
 	base.pres1pl = base.pres3sg .. "м"
 	base.pres3pl = lemma .. "т"
+	base.advp = stem .. "е" .. accent .. "йки"
 end
 
 
@@ -259,7 +258,7 @@ local function impf_12conj(base, lemma)
 	if not stem then
 		error("Unrecognized lemma for conjugation 1 or 2: '" .. lemma .. "'")
 	end
-	local last_letter_pal = first_palatalization[last_letter] or last_letter
+	local last_letter_pal = com.first_palatalization[last_letter] or last_letter
 	local full_stem = stem .. last_letter_pal
 	base.impf23 = full_stem .. "е" .. accent .. "ше"
 	if accent == AC then
@@ -267,6 +266,12 @@ local function impf_12conj(base, lemma)
 			base.impf = {full_stem .. "а́х", {form = full_stem .. "е́х", footnotes = {"largely fallen into disuse"}}}
 		else
 			base.impf = full_stem .. "я́х"
+			-- This is the only case where the imperfect participle's vowel
+			-- disagrees with the imperfect 1sg vowel, since it's a yat vowel
+			-- followed by a front vowel. In other cases, postprocess_base()
+			-- will automatically generate the imperfect participle bases based
+			-- on the imperfect 1sg.
+			base.paippl = full_stem .. "е́ли"
 		end
 	else
 		base.impf = full_stem .. "ех"
@@ -289,7 +294,7 @@ local function impv_12conj(base, lemma)
 	if not stem then
 		error("Unrecognized lemma for conjugation 1 or 2: '" .. lemma .. "'")
 	end
-	last_letter = first_palatalization[last_letter] or last_letter
+	last_letter = com.first_palatalization[last_letter] or last_letter
 	local full_stem = stem .. last_letter
 	if rfind(last_letter, "[аеиоуяюъ]") then
 		base.impv = com.maybe_stress_final_syllable(full_stem) .. "й"
@@ -312,7 +317,7 @@ local conjs
 
 
 conjs["1.1"] = function(base, lemma)
-	pres_1conj(base, lemma)
+	pres_advp_1conj(base, lemma)
 	impf_impv_12conj(base, lemma)
 
 	local stem, last_letter = rmatch(lemma, "^(.*)(.)а́?$")
@@ -322,7 +327,7 @@ conjs["1.1"] = function(base, lemma)
 	stem = com.maybe_stress_final_syllable(stem)
 
 	-- Generate aorist stems.
-	local last_letter_pal = first_palatalization[last_letter] or last_letter
+	local last_letter_pal = com.first_palatalization[last_letter] or last_letter
 	if rfind(lemma, "ля́за$") then
 		base.aor = stem .. last_letter .. "ох"
 		base.aor23 = rsub(stem, "^(.*)я", "%1е") .. last_letter .. "е"
@@ -343,11 +348,14 @@ conjs["1.1"] = function(base, lemma)
 		base.paapfstem = full_stem .. "л"
 		base.paappl = rsub(full_stem, "я", "е") .. "ли"
 	end
+
+	-- Generate past passive participle stems.
+	base.ppp = rsub(stem, "я́", "е́") .. last_letter_pal .. "ен"
 end
 
 
 conjs["1.2"] = function(base, lemma)
-	pres_1conj(base, lemma)
+	pres_advp_1conj(base, lemma)
 	impf_impv_12conj(base, lemma)
 
 	if not rfind(lemma, "а́?$") then
@@ -355,21 +363,28 @@ conjs["1.2"] = function(base, lemma)
 	end
 
 	-- Generate aorist stems.
+	local aor23
 	if rfind(lemma, "ера́$") then
 		-- бера́, дера́, пера́ and derivatives
-		base.aor23 = rsub(lemma, "ера́$", "ра́")
+		aor23 = rsub(lemma, "ера́$", "ра́")
 	elseif rfind(lemma, "греба́$") then
-		base.aor23 = rsub(lemma, "греба́$", "гре́ба")
+		aor23 = rsub(lemma, "греба́$", "гре́ба")
 	elseif rfind(lemma, "гриза́$") then
-		base.aor23 = rsub(lemma, "гриза́$", "гри́за")
+		aor23 = rsub(lemma, "гриза́$", "гри́за")
 	else
 		generate_maybe_shifted_aorist(base, lemma)
 	end
+	if aor23 then
+		base.aor23 = aor23
+	end
+
+	-- Generate past passive participle stems.
+	base.ppp = aor23 and aor23 .. "н" or rfind(lemma, "на́?$") and lemma .. "т" or lemma .. "н"
 end
 
 
 conjs["1.3"] = function(base, lemma)
-	pres_1conj(base, lemma)
+	pres_advp_1conj(base, lemma)
 	impf_impv_12conj(base, lemma)
 
 	if not rfind(lemma, "я́?$") then
@@ -377,16 +392,23 @@ conjs["1.3"] = function(base, lemma)
 	end
 
 	-- Generate aorist stems.
+	local aor23
 	if rfind(lemma, "дре́мя$") then
-		generate_maybe_shifted_aorist(base, "дря́ма", "дрема́")
+		aor23 = rsub(lemma, "дре́мя$", "дря́ма")
+		local shifted_aor23 = rsub(lemma, "дре́мя$", "дрема́")
+		generate_maybe_shifted_aorist(base, aor23, shifted_aor23)
 	else
+		aor23 = rsub(lemma, "^(.*)я", "%1а")
 		generate_maybe_shifted_aorist(base, rsub(lemma, "^(.*)я", "%1а"))
 	end
+
+	-- Generate past passive participle stems.
+	base.ppp = aor23 .. "н"
 end
 
 
 conjs["1.4"] = function(base, lemma)
-	pres_1conj(base, lemma)
+	pres_advp_1conj(base, lemma)
 	impf_impv_12conj(base, lemma)
 
 	-- Generate aorist stems.
@@ -403,11 +425,14 @@ conjs["1.4"] = function(base, lemma)
 		error("Unrecognized lemma for class 1.4: '" .. lemma .. "'")
 	end
 	generate_maybe_shifted_aorist(base, aor23)
+
+	-- Generate past passive participle stems.
+	base.ppp = aor23 .. "н"
 end
 
 
 conjs["1.5"] = function(base, lemma)
-	pres_1conj(base, lemma)
+	pres_advp_1conj(base, lemma)
 	impf_impv_12conj(base, lemma)
 
 	if not rfind(lemma, "[рщ]а́$") then
@@ -415,34 +440,66 @@ conjs["1.5"] = function(base, lemma)
 	end
 
 	-- Generate aorist stems.
-	generate_maybe_shifted_aorist(base, lemma)
+	base.aor23 = rsub(lemma, "а́$", "я́")
+	base.paappl = rsub(lemma, "а́$", "е́ли")
+
+	-- Generate past passive participle stems.
+	base.ppp = base.aor23 .. "н"
+	base.ppppl = rsub(base.aor23, "я́$", "е́") .. "ни"
 end
 
 
 conjs["1.6"] = function(base, lemma)
-	pres_1conj(base, lemma)
+	pres_advp_1conj(base, lemma)
 	impf_impv_12conj(base, lemma)
 
-	-- Generate aorist stems.
 	if not rfind(lemma, "[аяе]́я$") then
 		error("Unrecognized lemma for class 1.6: '" .. lemma .. "'")
 	end
 
-	base.aor23 = rsub(lemma, "а́$", "я́")
+	-- Generate aorist stems.
+	generate_maybe_shifted_aorist(base, lemma)
+
+	-- Generate past passive participle stems.
+	base.ppp = lemma .. "н"
 end
 
 
 conjs["1.7"] = function(base, lemma)
-	pres_1conj(base, lemma)
+	pres_advp_1conj(base, lemma)
 	impf_impv_12conj(base, lemma)
 
-	-- Generate aorist stems.
+	local ppp_endings
+	if base.ppp_t then
+		ppp_endings = "т"
+	elseif base.ppp_tn then
+		ppp_endings = {"т", "н"}
+	elseif base.ppp_nt then
+		ppp_endings = {"н", "т"}
+	else
+		ppp_endings = "н"
+	end
+
+	-- Generate aorist and past passive participle stems.
 	if rfind(lemma, "ма$") then
 		base.aor23 = rsub(lemma, "ма$", "")
+		base.ppp = base.aor23 .. "т"
 	elseif rfind(lemma, "е́я$") then
 		base.aor23 = rsub(lemma, "е́я$", "я́")
+		local yat_plural_stem = rsub(lemma, "е́я$", "е́")
+		base.paappl = yat_plural_stem .. "ли"
+		base.ppp = map_forms(ppp_endings, function(ending) return base.aor23 .. ending end) 
+		base.ppppl = map_forms(ppp_endings, function(ending) return yat_plural_stem .. ending .. "и" end) 
 	elseif rfind(lemma, "[аяиую]́я$") then
+		-- For verbs in -я́я (влия́я, сия́я), this results in an aorist participle
+		-- in -я́л, but per rechnik.chitanka.info it stays as -я́ли in the plural,
+		-- not **-е́ли.
 		base.aor23 = rsub(lemma, "я$", "")
+		if rfind(lemma, "[иую]́я$") then
+			base.ppp = base.aor23 .. "т"
+		else
+			base.ppp = map_forms(ppp_endings, function(ending) return base.aor23 .. ending .. "и" end)
+		end
 	else
 		error("Unrecognized lemma for class 1.7: '" .. lemma .. "'")
 	end
@@ -450,33 +507,49 @@ end
 
 
 conjs["2.1"] = function(base, lemma)
-	pres_2conj(base, lemma)
+	pres_advp_2conj(base, lemma)
 	impf_impv_12conj(base, lemma)
 
 	-- Generate aorist stems.
 	generate_maybe_shifted_aorist(base, rsub(lemma, "^(.*)[ая]", "%1и"))
+
+	-- Generate past passive participle stems.
+	base.ppp = rsub(lemma, "^(.*)[ая](́?)$", "%1е%2н")
 end
 
 
 conjs["2.2"] = function(base, lemma)
-	pres_2conj(base, lemma)
+	pres_advp_2conj(base, lemma)
 	impf_impv_12conj(base, lemma)
 
 	if not rfind(lemma, "я́$") then
 		error("Unrecognized lemma for class 2.2: '" .. lemma .. "'")
 	end
+
+	-- Generate aorist stems.
 	base.aor23 = lemma
+	local yat_plural_stem = rsub(lemma, "я́$", "е́")
+	base.paappl = yat_plural_stem .. "ли"
+
+	-- Generate past passive participle stems.
+	base.ppp = base.aor23 .. "н"
+	base.ppppl = yat_plural_stem .. "ни"
 end
 
 
 conjs["2.3"] = function(base, lemma)
-	pres_2conj(base, lemma)
+	pres_advp_2conj(base, lemma)
 	impf_impv_12conj(base, lemma)
 
 	if not rfind(lemma, "[жчш]а́$") then
 		error("Unrecognized lemma for class 2.3: '" .. lemma .. "'")
 	end
+
+	-- Generate aorist stems.
 	base.aor23 = lemma
+
+	-- Generate past passive participle stems.
+	base.ppp = base.aor23 .. "н"
 end
 
 
@@ -502,19 +575,43 @@ conjs["3"] = function(base, lemma)
 	-- Generate imperative stems.
 	base.impv = stem .. "й"
 	base.impvpl = stem .. "йте"
+
+	-- Generate past passive participle stems.
+	base.ppp = stem .. "н"
+
+	-- Generate adverbial participle.
+	base.advp = stem .. "йки"
 end
 
 local function postprocess_base(base)
 	if not base.aor then
 		base.aor = map_forms(base.aor23, function(form) return form .. "х" end)
 	end
-	base.prap = rsub(base.impf, "х$", "щ")
+	if not base.prap then
+		base.prap = map_forms(base.impf, function(form) return rsub(form, "х$", "щ") end)
+	end
+	if not base.paapm then
+		base.paapm = map_forms(base.aor, function(form) return rsub(form, "х$", "л") end)
+	end
 	if not base.paapfstem then
 		base.paapfstem = base.paapm
 	end
 	if not base.paappl then
-		base.paappl = base.paapfstem .. "и"
+		base.paappl = map_forms(base.paapfstem, function(form) return form .. "и" end)
 	end
+	if not base.paip then
+		base.paip = map_forms(base.impf, function(form) return rsub(form, "х$", "л") end)
+	end
+	if not base.paippl then
+		base.paippl = map_forms(base.paip, function(form) return form .. "и" end)
+	end
+	if not base.ppppl then
+		base.ppppl = map_forms(base.ppp, function(form) return form .. "и" end)
+	end
+end
+
+
+local function parse_word_spec(text)
 end
 
 
@@ -809,4 +906,63 @@ local function make_table(word_spec)
 	forms.notes_clause = forms.footnote ~= "" and
 		m_string_utilities.format(notes_template, forms) or ""
 	return m_string_utilities.format(table_spec, forms)
+end
 
+
+-- Externally callable function to parse and decline a verb given user-specified arguments.
+-- Return value is WORD_SPEC, an object where the declined forms are in `WORD_SPEC.forms`
+-- for each slot. If there are no values for a slot, the slot key will be missing. The value
+-- for a given slot is a list of objects {form=FORM, footnotes=FOOTNOTES}.
+function export.do_generate_forms(parent_args, pos, from_headword, def)
+	local params = {
+		[1] = {required = true, default = def or "пра́вя<2.1.impf.tr>"},
+		footnote = {},
+		title = {},
+	}
+	if from_headword then
+		params.lemma = {list = true}
+		params.id = {}
+		params.pos = {default = pos}
+		params.cat = {list = true}
+	end
+
+	local args = m_para.process(parent_args, params)
+
+	if args.title then
+		track("overriding-title")
+	end
+	pos = args.pos or pos -- args.pos only set when from_headword
+	
+	local alternant_multiword_spec = parse_alternant_multiword_spec(args[1], "is adj")
+	check_lemma_stress(alternant_multiword_spec)
+	detect_all_adj_accent_and_form_specs(alternant_multiword_spec)
+	local active_slots = compute_overall_active_adj_slots(alternant_multiword_spec)
+	construct_adj_stems(alternant_multiword_spec)
+	decline_multiword_or_alternant_multiword_spec(alternant_multiword_spec, active_slots, "is adj",
+		"include definite")
+	alternant_multiword_spec.forms.lemma = args.lemma and #args.lemma > 0 and args.lemma or alternant_multiword_spec.forms.lemma
+	return alternant_multiword_spec
+end
+
+
+-- Main entry point. Template-callable function to parse and conjugate a verb given
+-- user-specified arguments and generate a displayable table of the conjugated forms.
+function export.show(frame)
+	local parent_args = frame:getParent().args
+	local alternant_multiword_spec = export.do_generate_forms(parent_args)
+	show_forms(alternant_multiword_spec)
+	return make_noun_table(alternant_multiword_spec)
+end
+
+
+-- Template-callable function to parse and decline a noun given user-specified arguments and return
+-- the forms as a string "SLOT=FORM,FORM,...|SLOT=FORM,FORM,...|...". Embedded pipe symbols (as might
+-- occur in embedded links) are converted to <!>. If |include_props=1 is given, also include
+-- additional properties (currently, only "|n=NUMBER"). This is for use by bots.
+function export.generate_forms(frame)
+	local include_props = frame.args["include_props"]
+	local parent_args = frame:getParent().args
+	local alternant_multiword_spec = export.do_generate_forms(parent_args)
+
+	return concat_forms(alternant_multiword_spec, include_props)
+end
