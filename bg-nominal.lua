@@ -187,12 +187,14 @@ local pl_adj_to_noun_slots = {
 
 local potential_noun_lemma_slots = {
 	"ind_sg",
-	"ind_pl"
+	"ind_pl",
 }
 
 local potential_adj_lemma_slots = {
 	"ind_m_sg",
-	"ind_pl"
+	"ind_m_pl", -- dva
+	"nom_m_sg", -- koj
+	"m_sg", -- chij
 }
 
 
@@ -699,31 +701,65 @@ local function parse_adj_accent_and_form_specs(angle_bracket_spec)
 end
 
 
--- Parse a "simplified" specification that consists of a single word followed by an
--- accent-and-form spec in angle brackets. SEGMENTS is a list of strings (textual runs),
--- as returned by parse_balanced_segment_run(text, "<", ">"). The return value is an
--- object of the form
---
+-- Parse a multiword spec such as "[[слънчев|слъ́нчева]]<#> [[систе́ма]]<>".
+-- The return value is a table of the form
 -- {
---   lemma = "WORD",
---   accent_and_form_specs = return value of parse_noun_accent_and_form_specs() or parse_adj_accent_and_form_specs(),
---   forms = {},
---   footnote = "",
+--   word_specs = {WORD_SPEC, WORD_SPEC, ...},
+--   post_text = "TEXT-AT-END",
 -- }
 --
--- Eventually the format should be changed to allow for multiple words.
+-- where WORD_SPEC describes an individual declined word and "TEXT-AT-END" is any raw text that
+-- may occur after all declined words. Each WORD_SPEC is of the form
+--
+-- {
+--   lemma = "LEMMA",
+--   accent_and_form_specs = {ACCENT_AND_FORM_SPEC, ACCENT_AND_FORM_SPEC, ...}
+--   before_text = "TEXT-BEFORE-WORD",
+--   forms = {},
+-- }
+--
+-- For example, the return value for "[[слънчев|слъ́нчева]]<#> [[систе́ма]]<>" is
+-- {
+--   word_specs = {
+--     {
+--       lemma = "[[слънчев|слъ́нчева]]",
+--       accent_and_form_specs = {
+--         {
+--           accent_spec = {
+--             is_adj = true,
+--           }
+--         },
+--       }
+--       before_text = "",
+--       forms = {},
+--     },
+--     {
+--       lemma = "[[систе́ма]]",
+--       accent_and_form_specs = {
+--         {
+--           accent_spec = {
+--           }
+--         },
+--       }
+--       before_text = " ",
+--       forms = {},
+--     },
+--   },
+--   post_text = "",
+-- }
 local function parse_multiword_spec(segments, is_adj)
 	local multiword_spec = {
 		word_specs = {}
 	}
 	for i = 2, #segments - 1, 2 do
 		local word_spec = {}
-		local bracketed_runs = parse_balanced_segment_run(segment[i - 1], "[", "]")
+		local bracketed_runs = parse_balanced_segment_run(segments[i - 1], "[", "]")
 		local space_separated_groups = split_alternating_runs(bracketed_runs, "[ %-]", "preserve splitchar")
 		local before_text = {}
 		for j, space_separated_group in ipairs(space_separated_groups) do
 			if j == #space_separated_groups then
-				word_spec.lemma = table.concat(space_separated_group)
+				word_spec.orig_lemma = table.concat(space_separated_group)
+				word_spec.lemma = m_links.remove_links(word_spec.orig_lemma)
 				if word_spec.lemma == "" then
 					error("Word is blank: '" .. table.concat(segments) .. "'")
 				end
@@ -731,23 +767,23 @@ local function parse_multiword_spec(segments, is_adj)
 				table.insert(before_text, table.concat(space_separated_group))
 			end
 		end
-		word_spec.before_text = table.concat(before_text)
-		word_spec.accent_and_form_specs = is_adj and parse_adj_accent_and_form_specs(segment[i]) or
-			parse_noun_accent_and_form_specs(segment[i])
+		word_spec.before_text = m_links.remove_links(table.concat(before_text))
+		word_spec.accent_and_form_specs = is_adj and parse_adj_accent_and_form_specs(segments[i]) or
+			parse_noun_accent_and_form_specs(segments[i])
 		word_spec.forms = {}
 		table.insert(multiword_spec.word_specs, word_spec)
 	end
-	multiword_spec.post_text = segments[#segments]
+	multiword_spec.post_text = m_links.remove_links(segments[#segments])
 	return multiword_spec
 end
 
 
 -- Parse an alternant, e.g. "((мо́лив<>,моли́в<>))". The return value is a table of the form
 -- {
---   alternants = {DATASPEC, DATASPEC, ...}
+--   alternants = {MULTIWORD_SPEC, MULTIWORD_SPEC, ...}
 -- }
 --
--- where DATASPEC describes a given alternant and is as returned by parse_multiword_spec().
+-- where MULTIWORD_SPEC describes a given alternant and is as returned by parse_multiword_spec().
 local function parse_alternant(alternant, is_adj)
 	local parsed_alternants = {}
 	local alternant_text = rmatch(alternant, "^%(%((.*)%)%)$")
@@ -761,31 +797,37 @@ end
 end
 
 
--- Parse a "simplified" specification that consists of a either a single word followed by an
--- accent-and-form spec in angle brackets, or an alternant specification such as
--- "((мо́лив<>,моли́в<>))". The return value is a table of the form
+-- Top-level parsing function. Parse a multiword spec that may have alternants in it.
+-- The return value is a table of the form
 -- {
---   alternants = {DATASPEC, DATASPEC, ...}
+--   alternant_or_word_specs = {ALTERNANT_OR_WORD_SPEC, ALTERNANT_OR_WORD_SPEC, ...}
+--   post_text = "TEXT-AT-END",
 -- }
 --
--- where DATASPEC describes a given alternant and is as returned by parse_multiword_spec().
--- If the text passed in does not consist of an alternant specification, there will be only
--- one element in the `alternants` list.
+-- where ALTERNANT_OR_WORD_SPEC is either an alternant spec as returned by parse_alternant()
+-- or a word spec as described in the comment above parse_multiword_spec(). An alternant spec
+-- looks as follows:
+-- {
+--   alternants = {MULTIWORD_SPEC, MULTIWORD_SPEC, ...},
+--   before_text = "TEXT-BEFORE-ALTERNANT",
+-- }
+-- i.e. it is like what is returned by parse_alternant() but has an extra `before_text` field.
 local function parse_alternant_multiword_spec(text, is_adj)
 	local alternant_multiword_spec = {alternant_or_word_specs = {}}
 	local alternant_segments = m_string_utilities.capturing_split(text, "(%(%(.-%)%))")
 	local last_post_text
-	for i = 1, #alternating_segments do
+	for i = 1, #alternant_segments do
 		if i % 2 == 1 then
-			local segments = parse_balanced_segment_run(alternating_segments[i], "<", ">")
+			local segments = parse_balanced_segment_run(alternant_segments[i], "<", ">")
 			local multiword_spec = parse_multiword_spec(segments, is_adj)
 			for _, word_spec in ipairs(multiword_spec.word_specs) do
 				table.insert(alternant_multiword_spec.alternant_or_word_specs, word_spec)
 			end
 			last_post_text = multiword_spec.post_text
 		else
-			local alternant_spec = parse_alternant(alternating_segments[i], is_adj)
+			local alternant_spec = parse_alternant(alternant_segments[i], is_adj)
 			alternant_spec.before_text = last_post_text
+			table.insert(alternant_multiword_spec.alternant_or_word_specs, alternant_spec)
 		end
 	end
 	alternant_multiword_spec.post_text = last_post_text
@@ -797,7 +839,7 @@ local function map_word_specs(alternant_multiword_spec, fun)
 	for _, alternant_or_word_spec in ipairs(alternant_multiword_spec.alternant_or_word_specs) do
 		if alternant_or_word_spec.alternants then
 			for _, multiword_spec in ipairs(alternant_or_word_spec.alternants) do
-				for _, word_spec in ipairs(multiword_spec) do
+				for _, word_spec in ipairs(multiword_spec.word_specs) do
 					fun(word_spec)
 				end
 			end
@@ -1103,7 +1145,17 @@ local function detect_noun_accent_and_form_spec(lemma, accent_and_form_spec)
 			end
 		end
 		-- Detect has-vocative indicator.
-		if accent_spec.reducible_vocative or accent_spec.human or accent_and_form_spec.voc then
+		if accent_and_form_spec.voc then
+			-- If explicit override for vocative, we have a vocative regardless.
+			accent_spec.has_vocative = true
+		elseif accent_spec.gender == "n" then
+			-- Otherwise if neuter, no vocative even if (v) or (h) is used.
+			accent_spec.has_vocative = false
+		elseif accent_spec.gender == "f" and rfind(lemma, cons_c .. "$") then
+			-- Otherwise if feminine and ending in a consonant, no vocative even if (v) or (h) is used.
+			accent_spec.has_vocative = false
+		elseif accent_spec.reducible_vocative or accent_spec.human then
+			-- Otherwise, respect (v*) and (h). Note that (v) already sets has_vocative = true.
 			accent_spec.has_vocative = true
 		end
 		-- Detect reducible indicators.
@@ -1176,6 +1228,9 @@ local function set_active_adj_slots(active_slots, accent_and_form_spec)
 	if not accent_and_form_spec["-voc"] then
 		active_slots.voc_m_sg = true
 	end
+	if not accent_and_form_spec.accent_spec.nocomp then
+		active_slots.comp = true
+	end
 end
 
 
@@ -1223,15 +1278,14 @@ local function set_active_noun_slots(active_slots, accent_and_form_spec)
 			active_slots[case .. "_pl"] = true
 		end
 	end
-	if not accent_and_form_spec["-def"] then
-		active_slots.def_sub_sg = true
-		active_slots.def_obj_sg = true
+	if accent_and_form_spec["-def"] then
+		active_slots.no_def = true
 	end
-	if not accent_and_form_spec["-pl"] then
-		active_slots.ind_pl = true
-		if not accent_and_form_spec["-def_pl"] then
-			active_slots.def_pl = true
-		end
+	if accent_and_form_spec["-pl"] then
+		active_slots.no_pl = true
+	end
+	if accent_and_form_spec["-def_pl"] then
+		active_slots.no_def_pl = true
 	end
 	if accent_and_form_spec.n then
 		if not active_slots.n then
@@ -1248,6 +1302,7 @@ local function convert_active_noun_slots_to_active_adj_slots(active_noun_slots)
 	if active_noun_slots.voc_sg then
 		active_adj_slots.voc_m_sg = true
 	end
+	return active_adj_slots
 end
 
 
@@ -1259,6 +1314,16 @@ local function compute_overall_active_noun_slots(alternant_multiword_spec)
 			set_active_noun_slots(active_slots, accent_and_form_spec)
 		end
 	end)
+	if not active_slots.no_def then
+		active_slots.def_sub_sg = true
+		active_slots.def_obj_sg = true
+	end
+	if not active_slots.no_pl then
+		active_slots.ind_pl = true
+		if not active_slots.no_def_pl then
+			active_slots.def_pl = true
+		end
+	end
 	return active_slots
 end
 
@@ -1335,7 +1400,7 @@ local function map_forms(forms, fun)
 end
 
 
--- Construct the plural of the lemma specified in DATASPEC, given the accent spec
+-- Construct the plural of the lemma specified in WORD_SPEC, given the accent spec
 -- (as returned by parse_noun_accent_spec()), the plural ending (e.g. "ове"), and the accent indicator
 -- (e.g. "a" or "d"). Return value is a string. This handles accenting the plural ending as necessary,
 -- fetching the reduced stem if appropriate, removing final -ин if called for, and applying the
@@ -1378,7 +1443,7 @@ local function generate_noun_plural(word_spec, accent_spec, plural, accent)
 end
 
 
--- Construct the definite singular of the lemma specified in DATASPEC, given the accent spec
+-- Construct the definite singular of the lemma specified in WORD_SPEC, given the accent spec
 -- (as returned by parse_noun_accent_spec()) and the accent indicator (e.g. "a" or "d").
 -- Return value is a string. This handles determining the appropriate ending (handling the
 -- soft sign spec (ь) as needed), accenting the ending as necessary, and fetching the
@@ -1439,7 +1504,7 @@ local function generate_noun_definite_plural(plural_form)
 end
 
 
--- Construct the count form of the lemma specified in DATASPEC, given the accent spec
+-- Construct the count form of the lemma specified in WORD_SPEC, given the accent spec
 -- (as returned by parse_noun_accent_spec()). Return value is a string, or nil if no count
 -- form can be constructed (not a masculine lemma ending in a consonant). This handles
 -- determining the appropriate ending (handling the soft sign spec (ь) as needed) and
@@ -1457,7 +1522,7 @@ local function generate_noun_count_form(word_spec, accent_spec)
 end
 
 
--- Construct the vocative of the lemma specified in DATASPEC, given the accent spec
+-- Construct the vocative of the lemma specified in WORD_SPEC, given the accent spec
 -- (as returned by parse_noun_accent_spec()). Return value is a string, or nil if no vocative
 -- form can be constructed. This applies the rules described in [[w:Bulgarian nouns]].
 local function generate_noun_vocative(word_spec, accent_spec)
@@ -1489,13 +1554,10 @@ local function generate_noun_vocative(word_spec, accent_spec)
 end
 
 
--- Construct the indefinite adjective forms as well as the definite subjective masculine
--- singular.
-local function generate_adj_forms(formtable, accent_spec, accent)
+-- Construct the indefinite adjective forms.
+local function generate_indefinite_adj_forms(formtable, accent_spec, accent, active_slots)
 	local stem = accent_spec.stem
 	local accent = accent == "b" and AC or ""
-	insert_form(formtable, "def_sub_m_sg",
-		{form=combine_stem_and_ending(stem, "и" .. accent .. "ят", accent_spec, "is adj")})
 	insert_form(formtable, "ind_f_sg",
 		{form=combine_stem_and_ending(stem, (accent_spec.soft_sign and "я" or "а") .. accent, accent_spec, "is adj")})
 	if accent_spec.ch then
@@ -1509,28 +1571,34 @@ local function generate_adj_forms(formtable, accent_spec, accent)
 				((accent_spec.che or accent_spec.soft_sign_i) and "е" or accent_spec.soft_sign and "ьо" or "о") .. accent,
 				accent_spec, "is adj")})
 	end
-	insert_form(formtable, "ind_pl",
-		{form=combine_stem_and_ending(stem, "и" .. accent, accent_spec, "is adj")})
+	local ind_pl = combine_stem_and_ending(stem, "и" .. accent, accent_spec, "is adj")
+	insert_form(formtable, "ind_pl", {form=ind_pl})
+	if active_slots.voc_m_sg then
+		insert_form(formtable, "voc_m_sg", {form=ind_pl})
+		insert_form(formtable, "voc_m_sg", {form=ind_pl .. "й"})
+	end
 end
 
 
--- Construct the definite objective masculine singular adjective form and other definite forms.
-local function generate_adj_definite_forms(formtable, forms, active_slots)
-	insert_forms(formtable, "def_obj_m_sg", map_forms(forms["def_sub_m_sg"],
-		function(form) return rsub(form, "т$", "") end))
-	insert_forms(formtable, "def_f_sg", map_forms(forms["ind_f_sg"],
-		function(form) return form .. "та" end))
-	insert_forms(formtable, "def_n_sg", map_forms(forms["ind_n_sg"],
-		function(form) return form .. "то" end))
-	insert_forms(formtable, "def_pl", map_forms(forms["ind_pl"],
-		function(form) return form .. "те" end))
-	if active_slots.voc_m_sg then
-		for _, formobj in ipairs(forms["ind_pl"]) do
-			insert_form(formtable, "voc_m_sg",
-				{form=formobj.form, footnotes=formobj.footnotes})
-			insert_form(formtable, "voc_m_sg",
-				{form=formobj.form .. "й", footnotes=formobj.footnotes})
-		end
+-- Construct the definite adjective forms based on the indefinite ones.
+local function generate_definite_adj_forms(formtable, include_definite)
+	if include_definite then
+		insert_forms(formtable, "def_sub_m_sg", map_forms(formtable["ind_pl"],
+			function(form) return form .. "ят" end))
+		insert_forms(formtable, "def_obj_m_sg", map_forms(formtable["ind_pl"],
+			function(form) return form .. "я" end))
+		insert_forms(formtable, "def_f_sg", map_forms(formtable["ind_f_sg"],
+			function(form) return form .. "та" end))
+		insert_forms(formtable, "def_n_sg", map_forms(formtable["ind_n_sg"],
+			function(form) return form .. "то" end))
+		insert_forms(formtable, "def_pl", map_forms(formtable["ind_pl"],
+			function(form) return form .. "те" end))
+	else
+		insert_forms(formtable, "def_sub_m_sg", formtable["ind_m_sg"])
+		insert_forms(formtable, "def_obj_m_sg", formtable["ind_m_sg"])
+		insert_forms(formtable, "def_f_sg", formtable["ind_f_sg"])
+		insert_forms(formtable, "def_n_sg", formtable["ind_n_sg"])
+		insert_forms(formtable, "def_pl", formtable["ind_pl"])
 	end
 end
 
@@ -1575,13 +1643,13 @@ local function handle_overriding_forms(lemma, stem, forms, overriding_forms)
 end
 
 
--- Decline a single adjective term in DATASPEC (an object as returned by parse_simplified_specification())
+-- Decline a single adjective term in WORD_SPEC (an object as returned by parse_simplified_specification())
 -- corresponding to the accent-and-form spec in `accent_and_form_spec` (see parse_noun_accent_and_form_specs()).
--- This sets the form values in `DATASPEC.forms` (and `DATASPEC.compforms` and `DATASPEC.supforms`
+-- This sets the form values in `WORD_SPEC.forms` (and `WORD_SPEC.compforms` and `WORD_SPEC.supforms`
 -- if the adjective has comparative forms) for all slots. (If a given slot has no values,
--- it will not be present in `DATASPEC.forms`.) If `as_noun` is true, we're declining an adjectival noun
+-- it will not be present in `WORD_SPEC.forms`.) If `as_noun` is true, we're declining an adjectival noun
 -- rather than an adjective as such.
-local function decline_one_adj(word_spec, accent_and_form_spec, active_slots, active_noun_slots)
+local function decline_one_adj(word_spec, accent_and_form_spec, active_slots, active_noun_slots, include_definite)
 	local accent_spec = accent_and_form_spec.accent_spec
 	local lemma = word_spec.lemma
 	local stem = accent_spec.stem
@@ -1592,9 +1660,9 @@ local function decline_one_adj(word_spec, accent_and_form_spec, active_slots, ac
 		"ind_m_sg"
 	] = {{form=lemma}}}
 	for _, accent in ipairs(accent_spec.accents) do
-		generate_adj_forms(formtable, accent_spec, accent)
+		generate_indefinite_adj_forms(formtable, accent_spec, accent, active_slots)
 	end
-	generate_adj_definite_forms(formtable, formtable, active_slots)
+	generate_definite_adj_forms(formtable, include_definite)
 	if active_noun_slots then
 		local noun_formtable = {}
 		local function copy_forms(forms_to_copy)
@@ -1609,14 +1677,14 @@ local function decline_one_adj(word_spec, accent_and_form_spec, active_slots, ac
 				end
 			end
 		end
-		if word_spec.n ~= "pl" then
+		if active_noun_slots.n ~= "pl" then
 			local forms_to_copy =
 				accent_spec.gender == "m" and masc_adj_to_noun_slots or
 				accent_spec.gender == "f" and fem_adj_to_noun_slots or
 				neut_adj_to_noun_slots
 			copy_forms(forms_to_copy)
 		end
-		if word_spec.n ~= "sg" then
+		if active_noun_slots.n ~= "sg" then
 			copy_forms(pl_adj_to_noun_slots)
 		end
 		for slot, _ in pairs(noun_slots) do
@@ -1644,24 +1712,25 @@ local function decline_one_adj(word_spec, accent_and_form_spec, active_slots, ac
 end
 
 
--- Decline the adjective in DATASPEC (an object as returned by parse_simplified_specification()).
--- This sets the form values in `DATASPEC.forms` (and `DATASPEC.compforms` and `DATASPEC.supforms`
+-- Decline the adjective in WORD_SPEC (an object as returned by parse_simplified_specification()).
+-- This sets the form values in `WORD_SPEC.forms` (and `WORD_SPEC.compforms` and `WORD_SPEC.supforms`
 -- if the adjective has comparative forms) for all slots. (If a given slot has no values,
--- it will not be present in `DATASPEC.forms`.)
-local function decline_adj(word_spec, active_slots)
+-- it will not be present in `WORD_SPEC.forms`.)
+local function decline_adj(word_spec, active_slots, include_definite)
 	for _, accent_and_form_spec in ipairs(word_spec.accent_and_form_specs) do
-		decline_one_adj(word_spec, accent_and_form_spec, active_slots)
+		decline_one_adj(word_spec, accent_and_form_spec, active_slots, nil, include_definite)
 	end
 end
 
 
--- Decline a single noun term in DATASPEC (an object as returned by parse_simplified_specification())
+-- Decline a single noun term in WORD_SPEC (an object as returned by parse_simplified_specification())
 -- corresponding to the accent-and-form spec in `accent_and_form_spec` (see parse_noun_accent_and_form_specs()).
--- This sets the form values in `DATASPEC.forms` for all slots. (If a given slot has no values,
--- it will not be present in `DATASPEC.forms`.)
-local function decline_one_noun(word_spec, accent_and_form_spec, active_slots)
+-- This sets the form values in `WORD_SPEC.forms` for all slots. (If a given slot has no values,
+-- it will not be present in `WORD_SPEC.forms`.)
+local function decline_one_noun(word_spec, accent_and_form_spec, active_slots, include_definite)
 	local lemma = word_spec.lemma
 	local stem = word_spec.stem
+	local formtable = {}
 	if active_slots.n == "pl" then
 		for _, overriding_form in ipairs(noun_overriding_forms) do
 			if not overriding_form:find("_pl$") and accent_and_form_spec[overriding_form] then
@@ -1672,22 +1741,21 @@ local function decline_one_noun(word_spec, accent_and_form_spec, active_slots)
 		-- Maybe set indefinite plural.
 		local indefinite_plurals = {{form=lemma}}
 		if active_slots.ind_pl then
-			insert_forms(word_spec.forms, "ind_pl",
-				handle_overriding_forms(lemma, stem, indefinite_plurals, accent_and_form_spec.ind_pl))
+			insert_forms(formtable, "ind_pl", indefinite_plurals)
 		end
 
 		-- Maybe set definite plural.
 		if active_slots.def_pl then
-			insert_forms(word_spec.forms, "def_pl",
-				handle_overriding_forms(lemma, stem, map_forms(indefinite_plurals, generate_noun_definite_plural),
-					accent_and_form_spec.def_pl))
+			insert_forms(formtable, "def_pl",
+				include_definite and map_forms(indefinite_plurals, generate_noun_definite_plural) or indefinite_plurals
+			)
 		end
 
 		-- Maybe set "extra cases".
 		for _, case in ipairs(extra_noun_cases) do
 			local pl_slot = case .. "_pl"
 			if active_slots[pl_slot] then
-				insert_forms(word_spec.forms, pl_slot, handle_overriding_forms(lemma, stem, indefinite_plurals, accent_and_form_spec[pl_slot]))
+				insert_forms(formtable, pl_slot, indefinite_plurals)
 			end
 		end
 	else
@@ -1709,170 +1777,242 @@ local function decline_one_noun(word_spec, accent_and_form_spec, active_slots)
 
 		-- Maybe set indefinite singular.
 		if active_slots.ind_sg then
-			insert_forms(word_spec.forms, "ind_sg",
-				handle_overriding_forms(lemma, stem, indefinite_singulars, accent_and_form_spec.ind))
+			insert_forms(formtable, "ind_sg", indefinite_singulars)
 		end
 
 		-- Maybe set definite singular.
 		if active_slots.def_sub_sg or active_slots.def_obj_sg then
-			local definite_singulars = {}
-			for _, accent in ipairs(accent_spec.accents) do
-				insert_form_into_list(definite_singulars,
-					{form=generate_noun_definite_singular(word_spec, accent_spec, accent)}
-				)
+			local definite_singulars
+			if include_definite then
+				definite_singulars = {}
+				for _, accent in ipairs(accent_spec.accents) do
+					insert_form_into_list(definite_singulars,
+						{form=generate_noun_definite_singular(word_spec, accent_spec, accent)}
+					)
+				end
+			else
+				definite_singulars = indefinite_singulars
 			end
 			definite_singulars = handle_overriding_forms(lemma, stem, definite_singulars, accent_and_form_spec.def)
 			if active_slots.def_sub_sg then
-				insert_forms(word_spec.forms, "def_sub_sg",
-					handle_overriding_forms(lemma, stem, definite_singulars, accent_and_form_spec.def_sub))
+				insert_forms(formtable, "def_sub_sg", definite_singulars)
 			end
 			if active_slots.def_obj_sg then
-				insert_forms(word_spec.forms, "def_obj_sg",
-					handle_overriding_forms(lemma, stem, map_forms(definite_singulars, generate_noun_definite_objective_singular),
-						accent_and_form_spec.def_obj))
+				insert_forms(formtable, "def_obj_sg",
+					include_definite and map_forms(definite_singulars, generate_noun_definite_objective_singular) or
+					definite_singulars
+				)
 			end
 		end
 
 		-- Maybe set indefinite plural.
 		if active_slots.ind_pl then
-			insert_forms(word_spec.forms, "ind_pl",
-				handle_overriding_forms(lemma, stem, indefinite_plurals, accent_and_form_spec.ind_pl))
+			insert_forms(formtable, "ind_pl", indefinite_plurals)
 		end
 
 		-- Maybe set definite plural.
 		if active_slots.def_pl then
-			insert_forms(word_spec.forms, "def_pl",
-				handle_overriding_forms(lemma, stem, map_forms(indefinite_plurals, generate_noun_definite_plural),
-					accent_and_form_spec.def_pl))
+			insert_forms(formtable, "def_pl",
+				include_definite and map_forms(indefinite_plurals, generate_noun_definite_plural) or
+				indefinite_plurals
+			)
 		end
 
 		-- Maybe set count.
 		if active_slots.count then
 			local count_forms = {}
 			insert_form_into_list(count_forms, {form=generate_noun_count_form(word_spec, accent_spec)})
-			insert_forms(word_spec.forms, "count", handle_overriding_forms(lemma, stem, count_forms, accent_and_form_spec.count))
+			insert_forms(formtable, "count", count_forms)
 		end
 
 		-- Maybe set vocative singular.
 		if active_slots.voc_sg then
 			local vocatives = {}
 			insert_form_into_list(vocatives, {form=generate_noun_vocative(word_spec, accent_spec)})
-			insert_forms(word_spec.forms, "voc_sg", handle_overriding_forms(lemma, stem, vocatives, accent_and_form_spec.voc)
+			insert_forms(formtable, "voc_sg", vocatives)
 		end
 
 		-- Maybe set vocative plural.
 		if active_slots.voc_pl then
-			insert_forms(word_spec.forms, "voc_pl", handle_overriding_forms(lemma, stem, indefinite_plurals, accent_and_form_spec.voc_pl))
+			insert_forms(formtable, "voc_pl", indefinite_plurals)
 		end
 
 		-- Maybe set "extra cases".
 		for _, case in ipairs(extra_noun_cases) do
 			local sg_slot = case .. "_sg"
 			if active_slots[sg_slot] then
-				insert_forms(word_spec.forms, sg_slot, handle_overriding_forms(lemma, stem, indefinite_singulars, accent_and_form_spec[case]))
+				insert_forms(formtable, sg_slot, indefinite_singulars)
 			end
 			local pl_slot = case .. "_pl"
 			if active_slots[pl_slot] then
-				insert_forms(word_spec.forms, pl_slot, handle_overriding_forms(lemma, stem, indefinite_plurals, accent_and_form_spec[pl_slot]))
+				insert_forms(formtable, pl_slot, indefinite_plurals)
 			end
 		end
 	end
+
+	for slot, _ in pairs(active_slots) do
+		if noun_slots[slot] then -- skip non-slots mixed into active_slots
+			local override = slot:gsub("_sg$", "")
+			local forms = handle_overriding_forms(lemma, stem, formtable[slot], accent_and_form_spec[override])
+			insert_forms(word_spec.forms, slot, forms)
+		end
+	end
 end
 
 
--- Decline the noun in DATASPEC (an object as returned by parse_simplified_specification()).
--- This sets the form values in `DATASPEC.forms` for all slots. (If a given slot has no values,
--- it will not be present in `DATASPEC.forms`.)
-local function decline_noun(word_spec, active_slots)
+-- Decline the noun in WORD_SPEC (an object as returned by parse_simplified_specification()).
+-- This sets the form values in `WORD_SPEC.forms` for all slots. (If a given slot has no values,
+-- it will not be present in `WORD_SPEC.forms`.)
+local function decline_noun(word_spec, active_slots, include_definite)
 	for _, accent_and_form_spec in ipairs(word_spec.accent_and_form_specs) do
 		if accent_and_form_spec.accent_spec.is_adj then
 			local active_adj_slots = convert_active_noun_slots_to_active_adj_slots(active_slots)
-			decline_one_adj(word_spec, accent_and_form_spec, active_adj_slots, active_slots)
+			decline_one_adj(word_spec, accent_and_form_spec, active_adj_slots, active_slots, include_definite)
 		else
-			decline_one_noun(word_spec, accent_and_form_spec, active_slots)
+			decline_one_noun(word_spec, accent_and_form_spec, active_slots, include_definite)
 		end
 	end
 end
 
 
-local function decline_multiword_spec(multiword_spec, active_slots, is_adj)
+local decline_multiword_or_alternant_multiword_spec
+
+
+-- Decline the noun or adjective alternants in ALTERNANT_SPEC (an object as returned by
+-- parse_simplified_specification_allowing_alternants()). This sets the form values
+-- in `ALTERNANT_SPEC.forms` for all slots. (If a given slot has no values, it will
+-- not be present in `ALTERNANT_SPEC.forms`). It also sets `ALTERNANT_SPEC.forms.lemma`,
+-- which is a list of strings to use as lemmas (e.g. in the title of the generated table
+-- and in accelerators).
+local function decline_alternants(alternant_spec, active_slots, is_adj, include_definite)
+	alternant_spec.forms = {}
+	if active_slots.comp then
+		alternant_spec.compforms = {}
+		alternant_spec.supforms = {}
+	end
+	local include_definite_at_end = include_definite
+	for _, multiword_spec in ipairs(alternant_spec.alternants) do
+		include_definite_at_end = decline_multiword_or_alternant_multiword_spec(
+			multiword_spec, active_slots, is_adj, include_definite)
+		for slot, _ in pairs(active_slots) do
+			insert_forms(alternant_spec.forms, slot, multiword_spec.forms[slot])
+			if is_adj and active_slots.comp then
+				insert_forms(alternant_spec.compforms, slot, multiword_spec.compforms[slot])
+				insert_forms(alternant_spec.supforms, slot, multiword_spec.supforms[slot])
+			end
+		end
+	end
+	return include_definite_at_end
+end
+
+
+local function append_forms(formtable, slot, forms, before_text)
+	local old_forms = formtable[slot]
+	if #forms == 1 then
+		-- If there's only one new form, destructively modify the existing
+		-- forms and notes for this new form and its footnotes.
+		local form = forms[1]
+		for _, old_form in ipairs(old_forms) do
+			old_form.form = old_form.form .. before_text .. form.form
+			if form.footnotes and #form.footnotes > 0 then
+				if not old_form.footnotes then
+					old_form.footnotes = {}
+				end
+				for _, footnote in ipairs(form.footnotes) do
+					m_table.insertIfNot(old_form.footnotes, footnote)
+				end
+			end
+		end
+	else
+		-- If there are multiple new forms, we need to loop over all
+		-- combinations of new and old forms. In that case, use a new table
+		-- for the combined forms.
+		local ret_forms = {}
+		for _, old_form in ipairs(old_forms) do
+			for _, form in ipairs(forms) do
+				-- Do a shallow copy of the footnotes because we may modify them in-place.
+				local new_form = {form=old_form.form .. before_text .. form.form,
+					footnotes=m_table.shallowcopy(old_form.footnotes)}
+				if form.footnotes and #form.footnotes > 0 then
+					if not new_form.footnotes then
+						new_form.footnotes = {}
+					end
+					for _, footnote in ipairs(form.footnotes) do
+						m_table.insertIfNot(new_form.footnotes, footnote)
+					end
+				end
+				table.insert(ret_forms, new_form)
+			end
+		end
+		formtable[slot] = ret_forms
+	end
+end
+
+
+decline_multiword_or_alternant_multiword_spec = function(multiword_spec, active_slots, is_adj, include_definite)
 	multiword_spec.forms = {}
+	if active_slots.comp then
+		multiword_spec.compforms = {}
+		multiword_spec.supforms = {}
+	end
 	for slot, _ in pairs(active_slots) do
 		multiword_spec.forms[slot] = {{form=""}}
+		if active_slots.comp then
+			multiword_spec.compforms[slot] = {{form=""}}
+			multiword_spec.supforms[slot] = {{form=""}}
+		end
 	end
-	for _, word_spec in ipairs(multiword_spec.word_specs) do
-		if is_adj then
-			decline_adj(word_spec, active_slots)
+
+	local is_alternant_multiword = not not multiword_spec.alternant_or_word_specs
+	for _, word_spec in ipairs(is_alternant_multiword and multiword_spec.alternant_or_word_specs or multiword_spec.word_specs) do
+		if word_spec.alternants then
+			include_definite = decline_alternants(word_spec, active_slots, is_adj, include_definite)
+		elseif is_adj then
+			decline_adj(word_spec, active_slots, include_definite)
+			include_definite = false
 		else
-			decline_noun(word_spec, active_slots)
+			decline_noun(word_spec, active_slots, include_definite)
+			include_definite = not word_spec.accent_and_form_specs[1].accent_spec.is_adj
 		end
 		for slot, _ in pairs(active_slots) do
 			if word_spec.forms[slot] then
-				-- FIXME, should always be something in the active slots
-				append_forms(multiword_spec, slot, word_spec.forms[slot], word_spec.before_text)
+				append_forms(multiword_spec.forms, slot, word_spec.forms[slot], word_spec.before_text)
+			end
+			if word_spec.compforms and word_spec.compforms[slot] then
+				append_forms(multiword_spec.compforms, slot, word_spec.compforms[slot], word_spec.before_text)
+			end
+			if word_spec.supforms and word_spec.supforms[slot] then
+				append_forms(multiword_spec.supforms, slot, word_spec.supforms[slot], word_spec.before_text)
 			end
 		end
 	end
 	if multiword_spec.post_text ~= "" then
 		local pseudoform = {{form=""}}
 		for slot, _ in pairs(active_slots) do
-			append_forms(multiword_spec, slot, pseudoform, multiword_spec.post_text)
-		end
-	end
-end
-
-
--- Decline the noun or adjective alternants in ALTERNANT_SPEC (an object as returned by
--- parse_simplified_specification_allowing_alternants()). This sets the form values
--- in `ALTERNANT_SPEC.forms` for all slots. (If a given slot has no values, it will
--- not be present in `DATASPEC.forms`). It also sets `ALTERNANT_SPEC.forms.lemma`,
--- which is a list of strings to use as lemmas (e.g. in the title of the generated table
--- and in accelerators).
-local function decline_alternants(alternant_spec, is_adj)
-	alternant_spec.forms = {}
-	for _, word_spec in ipairs(alternant_spec.alternants) do
-		if is_adj then
-			decline_adj(word_spec)
-		else
-			decline_noun(word_spec)
-		end
-		for slot, _ in pairs(is_adj and adj_slots or noun_slots) do
-			if word_spec.forms[slot] then
-				for _, form in ipairs(word_spec.forms[slot]) do
-					insert_form(alternant_spec.forms, slot, form)
-				end
-			end
-			if is_adj then
-				if word_spec.compforms and word_spec.compforms[slot] then
-					if not alternant_spec.compforms then
-						alternant_spec.compforms = {}
-					end
-					for _, form in ipairs(word_spec.compforms[slot]) do
-						insert_form(alternant_spec.compforms, slot, form)
-					end
-				end
-				if word_spec.supforms and word_spec.supforms[slot] then
-					if not alternant_spec.supforms then
-						alternant_spec.supforms = {}
-					end
-					for _, form in ipairs(word_spec.supforms[slot]) do
-						insert_form(alternant_spec.supforms, slot, form)
-					end
-				end
+			append_forms(multiword_spec.forms, slot, pseudoform, multiword_spec.post_text)
+			if active_slots.comp then
+				append_forms(multiword_spec.compforms, slot, pseudoform, multiword_spec.post_text)
+				append_forms(multiword_spec.supforms, slot, pseudoform, multiword_spec.post_text)
 			end
 		end
 	end
-	alternant_spec.forms.lemma = {}
-	local lemma_slot =
-		alternant_spec.forms.ind_m_pl and "ind_m_pl" or -- два
-		alternant_spec.forms.nom_m_sg and "nom_m_sg" or -- кой, то́зи, etc.
-		alternant_spec.forms.m_sg and "m_sg" or -- чий, какъ́в, такъ́в, etc.
-		is_adj and "ind_m_sg" or
-		alternant_spec.n == "pl" and "ind_pl" or
-		"ind_sg"
-	for _, form in ipairs(alternant_spec.forms[lemma_slot]) do
-		m_table.insertIfNot(alternant_spec.forms.lemma, form.form)
+
+	if is_alternant_multiword then
+		multiword_spec.n = active_slots.n
+		local lemma_slot =
+			multiword_spec.forms.ind_m_pl and "ind_m_pl" or -- два
+			multiword_spec.forms.nom_m_sg and "nom_m_sg" or -- кой, то́зи, etc.
+			multiword_spec.forms.m_sg and "m_sg" or -- чий, какъ́в, такъ́в, etc.
+			is_adj and "ind_m_sg" or
+			multiword_spec.n == "pl" and "ind_pl" or
+			"ind_sg"
+		multiword_spec.forms.lemma = {}
+		for _, form in ipairs(multiword_spec.forms[lemma_slot]) do
+			m_table.insertIfNot(multiword_spec.forms.lemma, form.form)
+		end
 	end
+
+	return include_definite
 end
 
 
@@ -1899,19 +2039,19 @@ local function expand_footnote(note)
 end
 
 
--- Convert `ALTERNANT_SPEC.forms[SLOT]` (for ALTERNANT_SPEC as returned by
+-- Convert `ALTERNANT_MULTIWORD_SPEC.forms[SLOT]` (for ALTERNANT_MULTIWORD_SPEC as returned by
 -- parse_simplified_specification_allowing_alternants()) for all slots into displayable text.
--- This also sets ALTERNANT_SPEC.combined_def_sg to true if the definite subjective and
+-- This also sets ALTERNANT_MULTIWORD_SPEC.combined_def_sg to true if the definite subjective and
 -- objective singular forms are the same (and hence should be combined in the generated table),
--- and sets ALTERNANT_SPEC.forms.footnote to the combined string to insert as a footnote
+-- and sets ALTERNANT_MULTIWORD_SPEC.forms.footnote to the combined string to insert as a footnote
 -- (if there are no footnotes, it will be the empty string).
-local function show_forms(alternant_spec, is_adj)
+local function show_forms(alternant_multiword_spec, is_adj)
 	local lemmas = {}
-	for _, lemma in ipairs(alternant_spec.forms.lemma) do
+	for _, lemma in ipairs(alternant_multiword_spec.forms.lemma) do
 		table.insert(lemmas, remove_monosyllabic_stress(lemma))
 	end
 	local accel_lemma = lemmas[1]
-	alternant_spec.forms.lemma = table.concat(lemmas, ", ")
+	alternant_multiword_spec.forms.lemma = table.concat(lemmas, ", ")
 	local noteindex = 1
 	local notes = {}
 	local seen_notes = {}
@@ -1973,36 +2113,37 @@ local function show_forms(alternant_spec, is_adj)
 	end
 
 	if is_adj then
-		set_forms(alternant_spec.forms, alternant_spec.forms, adj_slots, false)
-		if alternant_spec.compforms then
-			set_forms(alternant_spec.compforms, alternant_spec.compforms, adj_slots, false)
+		set_forms(alternant_multiword_spec.forms, alternant_multiword_spec.forms, adj_slots, false)
+		if alternant_multiword_spec.compforms then
+			set_forms(alternant_multiword_spec.compforms, alternant_multiword_spec.compforms, adj_slots, false)
 		end
-		if alternant_spec.supforms then
-			set_forms(alternant_spec.supforms, alternant_spec.supforms, adj_slots, false)
+		if alternant_multiword_spec.supforms then
+			set_forms(alternant_multiword_spec.supforms, alternant_multiword_spec.supforms, adj_slots, false)
 		end
 	else
 		-- For def_sub_sg and def_obj_sg, first compute "raw" (unlinked) forms so we can
 		-- compare them properly; linked forms have accelerator info in them which differs
 		-- between sub and obj.
 		local raw_forms = {}
-		set_forms(alternant_spec.forms, raw_forms, {["def_sub_sg"] = true, ["def_obj_sg"] = true}, true)
+		set_forms(alternant_multiword_spec.forms, raw_forms, {["def_sub_sg"] = true, ["def_obj_sg"] = true}, true)
 		-- Then generate the linked forms, using a special accelerator form if the def_sub_sg and def_obj_sg are the same.
-		alternant_spec.combined_def_sg = raw_forms.def_sub_sg == raw_forms.def_obj_sg
-		set_forms(alternant_spec.forms, alternant_spec.forms, noun_slots, false, alternant_spec.combined_def_sg)
+		alternant_multiword_spec.combined_def_sg = raw_forms.def_sub_sg == raw_forms.def_obj_sg
+		set_forms(alternant_multiword_spec.forms, alternant_multiword_spec.forms, noun_slots,
+			false, alternant_multiword_spec.combined_def_sg)
 	end
-	if alternant_spec.footnote then
-		table.insert(notes, alternant_spec.footnote)
+	if alternant_multiword_spec.footnote then
+		table.insert(notes, alternant_multiword_spec.footnote)
 	end
-	alternant_spec.forms.footnote = table.concat(notes, "<br />")
+	alternant_multiword_spec.forms.footnote = table.concat(notes, "<br />")
 end
 
 
--- Generate the displayable table of all forms, given ALTERNANT_SPEC (as returned by
--- parse_simplified_specification_allowing_alternants()) where show_forms() has already
--- been called to convert `ALTERNANT_SPEC.forms` into a table of strings.
-local function make_noun_table(alternant_spec)
-	local num = alternant_spec.n
-	local forms = alternant_spec.forms
+-- Generate the displayable table of all noun forms, given ALTERNANT_MULTIWORD_SPEC (as returned
+-- by parse_alternant_multiword_spec()) where show_forms() has already been called to convert
+-- `ALTERNANT_MULTIWORD_SPEC.forms` into a table of strings.
+local function make_noun_table(alternant_multiword_spec)
+	local num = alternant_multiword_spec.n
+	local forms = alternant_multiword_spec.forms
 
 	local table_begin = [=[
 <div class="NavFrame" style="width: 50em;">
@@ -2164,7 +2305,7 @@ local function make_noun_table(alternant_spec)
 	local table_spec
 	if num == "sg" then
 		table_spec = table_sg_begin ..
-			(alternant_spec.combined_def_sg and table_sg_cont_def_combined or table_sg_cont_def_split) ..
+			(alternant_multiword_spec.combined_def_sg and table_sg_cont_def_combined or table_sg_cont_def_split) ..
 			(forms.voc_sg ~= "—" and table_sg_cont_voc or "") ..
 			(forms.acc_sg ~= "—" and table_sg_cont_acc or "") ..
 			(forms.gen_sg ~= "—" and table_sg_cont_gen or "") ..
@@ -2179,7 +2320,7 @@ local function make_noun_table(alternant_spec)
 			table_end
 	else
 		table_spec = table_begin ..
-			(alternant_spec.combined_def_sg and table_cont_def_combined or table_cont_def_split) ..
+			(alternant_multiword_spec.combined_def_sg and table_cont_def_combined or table_cont_def_split) ..
 			(forms.count ~= "—" and table_cont_count or "") ..
 			((forms.voc_sg ~= "—" or forms.voc_pl ~= "—") and table_cont_voc or "") ..
 			((forms.acc_sg ~= "—" or forms.acc_pl ~= "—") and table_cont_acc or "") ..
@@ -2195,16 +2336,17 @@ local function make_noun_table(alternant_spec)
 </div></div>
 ]===]
 
-	alternant_spec.forms.notes_clause = alternant_spec.forms.footnote ~= "" and m_string_utilities.format(notes_template, alternant_spec.forms) or ""
-	return m_string_utilities.format(table_spec, alternant_spec.forms)
+	alternant_multiword_spec.forms.notes_clause = alternant_multiword_spec.forms.footnote ~= "" and
+		m_string_utilities.format(notes_template, alternant_multiword_spec.forms) or ""
+	return m_string_utilities.format(table_spec, alternant_multiword_spec.forms)
 end
 
 
--- Generate the displayable table of all adjective forms, given ALTERNANT_SPEC (as returned by
--- parse_simplified_specification_allowing_alternants()) where show_forms() has already
--- been called to convert `ALTERNANT_SPEC.forms` into a table of strings.
-local function make_adj_table(alternant_spec)
-	local forms = alternant_spec.forms
+-- Generate the displayable table of all adjective forms, given ALTERNANT_MULTIWORD_SPEC (as returned
+-- by parse_alternant_multiword_spec()) where show_forms() has already been called to convert
+-- `ALTERNANT_MULTIWORD_SPEC.forms` into a table of strings.
+local function make_adj_table(alternant_multiword_spec)
+	local forms = alternant_multiword_spec.forms
 	local table_normal_koj_begin = [=[
 <div class="NavFrame" style="width: 50em;">
 <div class="NavHead" style="background: #eff7ff;">{title}</div>
@@ -2322,7 +2464,7 @@ local function make_adj_table(alternant_spec)
 			(forms.short ~= "—" and table_cont_short or "") ..
 			(forms.voc_m_sg ~= "—" and table_cont_voc or "") ..
 			table_end
-		if alternant_spec.compforms or alternant_spec.supforms then
+		if alternant_multiword_spec.compforms or alternant_multiword_spec.supforms then
 			forms.title = "Positive forms of " .. forms.lemma
 		else
 			forms.title = "Positive forms of " .. forms.lemma .. " (no comparative)"
@@ -2330,15 +2472,15 @@ local function make_adj_table(alternant_spec)
 		local postable = m_string_utilities.format(table_spec, forms)
 		local comptable = ""
 		local suptable = ""
-		if alternant_spec.compforms then
-			alternant_spec.compforms.notes_clause = forms.notes_clause
-			alternant_spec.compforms.title = "Comparative forms of " .. forms.lemma
-			comptable = m_string_utilities.format(table_spec, alternant_spec.compforms)
+		if alternant_multiword_spec.compforms then
+			alternant_multiword_spec.compforms.notes_clause = forms.notes_clause
+			alternant_multiword_spec.compforms.title = "Comparative forms of " .. forms.lemma
+			comptable = m_string_utilities.format(table_spec, alternant_multiword_spec.compforms)
 		end
-		if alternant_spec.supforms then
-			alternant_spec.supforms.notes_clause = forms.notes_clause
-			alternant_spec.supforms.title = "Superlative forms of " .. forms.lemma
-			suptable = m_string_utilities.format(table_spec, alternant_spec.supforms)
+		if alternant_multiword_spec.supforms then
+			alternant_multiword_spec.supforms.notes_clause = forms.notes_clause
+			alternant_multiword_spec.supforms.title = "Superlative forms of " .. forms.lemma
+			suptable = m_string_utilities.format(table_spec, alternant_multiword_spec.supforms)
 		end
 		return postable .. comptable .. suptable
 	end
@@ -2349,27 +2491,35 @@ end
 -- "SLOT=FORM,FORM,...|SLOT=FORM,FORM,...|...". Embedded pipe symbols (as might occur
 -- in embedded links) are converted to <!>. If INCLUDE_PROPS is given, also include
 -- additional properties (currently, only "|n=NUMBER"). This is for use by bots.
-local function concat_forms(alternant_spec, include_props, is_adj)
+local function concat_forms(alternant_multiword_spec, include_props, is_adj)
 	local ins_text = {}
+	local n = alternant_multiword_spec.n
+	local function skip_slot(slot)
+		return n == "sg" and rfind(slot, "_pl$") or n == "pl" and (slot == "count" or rfind(slot, "_sg$"))
+	end
 	for slot, _ in pairs(is_adj and adj_slots or noun_slots) do
-		local formtext = concat_forms_in_slot(alternant_spec.forms[slot])
-		if formtext then
-			table.insert(ins_text, slot .. "=" .. formtext)
+		if not skip_slot(slot) then
+			local formtext = concat_forms_in_slot(alternant_multiword_spec.forms[slot])
+			if formtext then
+				table.insert(ins_text, slot .. "=" .. formtext)
+			end
 		end
 	end
 	for _, slot in ipairs(is_adj and potential_adj_lemma_slots or potential_noun_lemma_slots) do
-		slot = "linked_" .. slot
-		local formtext = concat_forms_in_slot(alternant_spec.forms[slot])
-		if formtext then
-			table.insert(ins_text, slot .. "=" .. formtext)
+		if not skip_slot(slot) then
+			slot = "linked_" .. slot
+			local formtext = concat_forms_in_slot(alternant_multiword_spec.forms[slot])
+			if formtext then
+				table.insert(ins_text, slot .. "=" .. formtext)
+			end
 		end
 	end
 	if include_props then
 		if is_adj then
-			table.insert(ins_text, "comp=" .. (alternant_spec.comparable and "1" or "0"))
+			table.insert(ins_text, "comp=" .. (alternant_multiword_spec.comparable and "1" or "0"))
 		else
-			if alternant_spec.n then
-				table.insert(ins_text, "n=" .. alternant_spec.n)
+			if alternant_multiword_spec.n then
+				table.insert(ins_text, "n=" .. alternant_multiword_spec.n)
 			end
 		end
 	end
@@ -2378,9 +2528,10 @@ end
 
 
 -- Externally callable function to parse and decline a noun given user-specified arguments.
--- Return value is DATASPEC, an object where the declined forms are in `DATASPEC.forms` for
--- each slot. If there are no values for a slot, the slot key will be missing. The value for
--- a given slot is a list of objects {form=FORM, footnotes=FOOTNOTES}.
+-- Return value is ALTERNANT_MULTIWORD_SPEC, an object where the declined forms are in
+-- `ALTERNANT_MULTIWORD_SPEC.forms` for each slot. If there are no values for a slot, the
+-- slot key will be missing. The value for a given slot is a list of objects
+-- {form=FORM, footnotes=FOOTNOTES}.
 function export.do_generate_noun_forms(parent_args, pos, from_headword, def, support_num_type)
 	local params = {
 		[1] = {required = true, default = def or "бряг<b>"},
@@ -2408,21 +2559,23 @@ function export.do_generate_noun_forms(parent_args, pos, from_headword, def, sup
 	end
 	pos = args.pos or pos -- args.pos only set when from_headword
 	
-	local alternant_spec = parse_simplified_specification_allowing_alternants(args[1])
-	check_lemma_stress(alternant_spec)
-	detect_all_noun_accent_and_form_specs(alternant_spec)
+	local alternant_multiword_spec = parse_alternant_multiword_spec(args[1])
+	check_lemma_stress(alternant_multiword_spec)
+	detect_all_noun_accent_and_form_specs(alternant_multiword_spec)
 	local active_slots = compute_overall_active_noun_slots(alternant_multiword_spec)
-	construct_noun_stems(alternant_spec)
-	decline_alternants(alternant_spec, active_slots)
-	alternant_spec.forms.lemma = args.lemma and #args.lemma > 0 and args.lemma or alternant_spec.forms.lemma
-	return alternant_spec
+	construct_noun_stems(alternant_multiword_spec)
+	decline_multiword_or_alternant_multiword_spec(alternant_multiword_spec, active_slots, false,
+		"include definite")
+	alternant_multiword_spec.forms.lemma = args.lemma and #args.lemma > 0 and args.lemma or alternant_multiword_spec.forms.lemma
+	return alternant_multiword_spec
 end
 
 
 -- Externally callable function to parse and decline an adjective given user-specified arguments.
--- Return value is DATASPEC, an object where the declined forms are in `DATASPEC.forms` for
--- each slot. If there are no values for a slot, the slot key will be missing. The value for
--- a given slot is a list of objects {form=FORM, footnotes=FOOTNOTES}.
+-- Return value is ALTERNANT_MULTIWORD_SPEC, an object where the declined forms are in
+-- `ALTERNANT_MULTIWORD_SPEC.forms` for each slot. If there are no values for a slot, the slot
+-- key will be missing. The value for a given slot is a list of objects
+-- {form=FORM, footnotes=FOOTNOTES}.
 function export.do_generate_adj_forms(parent_args, pos, from_headword, def, support_num_type)
 	local params = {
 		[1] = {required = true, default = def or "бял<(я)>"},
@@ -2447,13 +2600,15 @@ function export.do_generate_adj_forms(parent_args, pos, from_headword, def, supp
 	end
 	pos = args.pos or pos -- args.pos only set when from_headword
 	
-	local alternant_spec = parse_simplified_specification_allowing_alternants(args[1], "is adj")
-	check_lemma_stress(alternant_spec)
-	detect_all_adj_accent_and_form_specs(alternant_spec)
-	construct_adj_stems(alternant_spec)
-	decline_alternants(alternant_spec, "is adj")
-	alternant_spec.forms.lemma = args.lemma and #args.lemma > 0 and args.lemma or alternant_spec.forms.lemma
-	return alternant_spec
+	local alternant_multiword_spec = parse_alternant_multiword_spec(args[1], "is adj")
+	check_lemma_stress(alternant_multiword_spec)
+	detect_all_adj_accent_and_form_specs(alternant_multiword_spec)
+	local active_slots = compute_overall_active_adj_slots(alternant_multiword_spec)
+	construct_adj_stems(alternant_multiword_spec)
+	decline_multiword_or_alternant_multiword_spec(alternant_multiword_spec, active_slots, "is adj",
+		"include definite")
+	alternant_multiword_spec.forms.lemma = args.lemma and #args.lemma > 0 and args.lemma or alternant_multiword_spec.forms.lemma
+	return alternant_multiword_spec
 end
 
 
@@ -2461,9 +2616,9 @@ end
 -- user-specified arguments and generate a displayable table of the declined forms.
 function export.show_noun(frame)
 	local parent_args = frame:getParent().args
-	local alternant_spec = export.do_generate_noun_forms(parent_args, "nouns")
-	show_forms(alternant_spec)
-	return make_noun_table(alternant_spec)
+	local alternant_multiword_spec = export.do_generate_noun_forms(parent_args, "nouns")
+	show_forms(alternant_multiword_spec)
+	return make_noun_table(alternant_multiword_spec)
 end
 
 
@@ -2471,9 +2626,9 @@ end
 -- user-specified arguments and generate a displayable table of the declined forms.
 function export.show_adj(frame)
 	local parent_args = frame:getParent().args
-	local alternant_spec = export.do_generate_adj_forms(parent_args, "adjectives")
-	show_forms(alternant_spec, "is adj")
-	return make_adj_table(alternant_spec)
+	local alternant_multiword_spec = export.do_generate_adj_forms(parent_args, "adjectives")
+	show_forms(alternant_multiword_spec, "is adj")
+	return make_adj_table(alternant_multiword_spec)
 end
 
 
@@ -2484,9 +2639,9 @@ end
 function export.generate_noun_forms(frame)
 	local include_props = frame.args["include_props"]
 	local parent_args = frame:getParent().args
-	local alternant_spec = export.do_generate_noun_forms(parent_args, "nouns")
+	local alternant_multiword_spec = export.do_generate_noun_forms(parent_args, "nouns")
 
-	return concat_forms(alternant_spec, include_props)
+	return concat_forms(alternant_multiword_spec, include_props)
 end
 
 
@@ -2497,9 +2652,9 @@ end
 function export.generate_adj_forms(frame)
 	local include_props = frame.args["include_props"]
 	local parent_args = frame:getParent().args
-	local alternant_spec = export.do_generate_adj_forms(parent_args, "adjectives")
+	local alternant_multiword_spec = export.do_generate_adj_forms(parent_args, "adjectives")
 
-	return concat_forms(alternant_spec, include_props)
+	return concat_forms(alternant_multiword_spec, include_props)
 end
 
 
