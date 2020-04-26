@@ -1,11 +1,15 @@
 local export = {}
 
+local lang = require("Module:languages").getByCode("bg")
+local m_links = require("Module:links")
 local m_table = require("Module:table")
 local m_string_utilities = require("Module:string utilities")
+local m_bg_translit = require("Module:bg-translit")
 
 local u = mw.ustring.char
 local rsplit = mw.text.split
 local rfind = mw.ustring.find
+local rmatch = mw.ustring.match
 local rsubn = mw.ustring.gsub
 local ulen = mw.ustring.len
 
@@ -38,6 +42,24 @@ export.second_palatalization = {
 	["г"] = "з",
 	["х"] = "с",
 }
+
+
+local footnote_abbrevs = {
+	["a"] = "archaic",
+	["c"] = "colloquial",
+	["d"] = "dialectal",
+	["fp"] = "folk-poetic",
+	["l"] = "literary",
+	["lc"] = "low colloquial",
+	["p"] = "poetic",
+	["pej"] = "pejorative",
+	["r"] = "rare",
+}
+
+
+local function translit_no_links(text)
+	return m_bg_translit.tr(m_links.remove_links(text))
+end
 
 
 -- Check if word is monosyllabic (also includes words without vowels).
@@ -251,3 +273,101 @@ function export.map_forms(forms, fun)
 	end
 	return retval
 end
+
+
+-- Expand a given footnote (as specified by the user, including the surrounding brackets)
+-- into the form to be inserted into the final generated table.
+function export.expand_footnote(note)
+	local notetext = rmatch(note, "^%[(.*)%]$")
+	assert(notetext)
+	if footnote_abbrevs[notetext] then
+		notetext = footnote_abbrevs[notetext]
+	else
+		local split_notes = m_string_utilities.capturing_split(notetext, "<(.-)>")
+		for i, split_note in ipairs(split_notes) do
+			if i % 2 == 0 then
+				split_notes[i] = footnote_abbrevs[split_note]
+				if not split_notes[i] then
+					error("Unrecognized footnote abbrev: <" .. split_note .. ">")
+				end
+			end
+		end
+		notetext = table.concat(split_notes)
+	end
+	return m_string_utilities.ucfirst(notetext) .. "."
+end
+
+
+function export.init_footnote_obj()
+	return {
+		notes = {},
+		seen_notes = {},
+		noteindex = 1,
+	}
+end
+
+
+function export.set_forms(footnote_obj, from_forms, to_forms, slots_table_or_list, slots_is_list, raw, accel_lemma, slot_to_accel_form)
+	local function do_slot(slot)
+		local forms = from_forms[slot]
+		if forms then
+			local accel_form = slot_to_accel_form(slot)
+			local bg_spans = {}
+			local tr_spans = {}
+			for i, form in ipairs(forms) do
+				-- FIXME, this doesn't necessarily work correctly if there is an
+				-- embedded link in form.form.
+				local bg_text = export.remove_monosyllabic_stress(form.form)
+				local link, tr
+				if raw or form.form == "—" then
+					link = bg_text
+				else
+					link = m_links.full_link{lang = lang, term = bg_text, tr = "-", accel = {
+						form = accel_form,
+						lemma = accel_lemma,
+					}}
+				end
+				tr = export.translit_no_links(bg_text)
+				tr = require("Module:script utilities").tag_translit(tr, lang, "default", " style=\"color: #888;\"")
+				if form.footnotes then
+					local link_indices = {}
+					for _, footnote in ipairs(form.footnotes) do
+						footnote = export.expand_footnote(footnote)
+						local this_noteindex = footnote_obj.seen_notes[footnote]
+						if not this_noteindex then
+							-- Generate a footnote index.
+							this_noteindex = footnote_obj.noteindex
+							footnote_obj.noteindex = footnote_obj.noteindex + 1
+							table.insert(footnote_obj.notes, '<sup style="color: red">' .. this_noteindex .. '</sup>' .. footnote)
+							footnote_obj.seen_notes[footnote] = this_noteindex
+						end
+						m_table.insertIfNot(link_indices, this_noteindex)
+					end
+					local footnote_text = '<sup style="color: red">' .. table.concat(link_indices, ",") .. '</sup>'
+					link = link .. footnote_text
+					tr = tr .. footnote_text
+				end
+				table.insert(bg_spans, link)
+				table.insert(tr_spans, tr)
+			end
+			local bg_span = table.concat(bg_spans, ", ")
+			local tr_span = table.concat(tr_spans, ", ")
+			to_forms[slot] = bg_span .. "<br />" .. tr_span
+		else
+			to_forms[slot] = "—"
+		end
+	end
+
+	if slots_is_list then
+		for _, slot in ipairs(slots_table_or_list) do
+			do_slot(slot)
+		end
+	else
+		for slot, _ in pairs(slots_table_or_list) do
+			do_slot(slot)
+		end
+	end
+end
+
+
+return export

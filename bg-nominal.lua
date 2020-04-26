@@ -32,11 +32,9 @@ TERMINOLOGY:
 ]=]
 
 local lang = require("Module:languages").getByCode("bg")
-local m_links = require("Module:links")
 local m_table = require("Module:table")
 local m_string_utilities = require("Module:string utilities")
 local m_para = require("Module:parameters")
-local m_bg_translit = require("Module:bg-translit")
 local com = require("Module:bg-common")
 
 local current_title = mw.title.getCurrentTitle()
@@ -66,19 +64,6 @@ local function rsubb(term, foo, bar)
     local retval, nsubs = rsubn(term, foo, bar)
     return retval, nsubs > 0
 end
-
-
-local footnote_abbrevs = {
-	["a"] = "archaic",
-	["c"] = "colloquial",
-	["d"] = "dialectal",
-	["fp"] = "folk-poetic",
-	["l"] = "literary",
-	["lc"] = "low colloquial",
-	["p"] = "poetic",
-	["pej"] = "pejorative",
-	["r"] = "rare",
-}
 
 
 local noun_overriding_forms = {
@@ -195,11 +180,6 @@ local potential_adj_lemma_slots = {
 	"ind_m_sg",
 	"ind_pl"
 }
-
-
-local function translit_no_links(text)
-	return m_bg_translit.tr(m_links.remove_links(text))
-end
 
 
 -- Add a tracking category to the page.
@@ -1808,29 +1788,6 @@ decline_multiword_or_alternant_multiword_spec = function(multiword_spec, active_
 end
 
 
--- Expand a given footnote (as specified by the user, including the surrounding brackets)
--- into the form to be inserted into the final generated table.
-local function expand_footnote(note)
-	local notetext = rmatch(note, "^%[(.*)%]$")
-	assert(notetext)
-	if footnote_abbrevs[notetext] then
-		notetext = footnote_abbrevs[notetext]
-	else
-		local split_notes = m_string_utilities.capturing_split(notetext, "<(.-)>")
-		for i, split_note in ipairs(split_notes) do
-			if i % 2 == 0 then
-				split_notes[i] = footnote_abbrevs[split_note]
-				if not split_notes[i] then
-					error("Unrecognized footnote abbrev: <" .. split_note .. ">")
-				end
-			end
-		end
-		notetext = table.concat(split_notes)
-	end
-	return m_string_utilities.ucfirst(notetext) .. "."
-end
-
-
 -- Convert `ALTERNANT_MULTIWORD_SPEC.forms[SLOT]` (for ALTERNANT_MULTIWORD_SPEC as returned by
 -- parse_simplified_specification_allowing_alternants()) for all slots into displayable text.
 -- This also sets ALTERNANT_MULTIWORD_SPEC.combined_def_sg to true if the definite subjective and
@@ -1844,89 +1801,48 @@ local function show_forms(alternant_multiword_spec, is_adj)
 	end
 	local accel_lemma = lemmas[1]
 	alternant_multiword_spec.forms.lemma = table.concat(lemmas, ", ")
-	local noteindex = 1
-	local notes = {}
-	local seen_notes = {}
 
-	local function set_forms(from_forms, to_forms, slots_table, raw, combined_def_sg)
-		for slot, _ in pairs(slots_table) do
-			local forms = from_forms[slot]
+	local function get_slot_to_accel_form(combined_def_sg)
+		return function(slot)
 			local accel_form = is_adj and adj_slots[slot] or noun_slots[slot]
 			-- HACK!
 			if combined_def_sg and slot == "def_sub_sg" then
 				accel_form = "def|s"
 			end
-			if forms then
-				local bg_spans = {}
-				local tr_spans = {}
-				for i, form in ipairs(forms) do
-					-- FIXME, this doesn't necessarily work correctly if there is an
-					-- embedded link in form.form.
-					local bg_text = com.remove_monosyllabic_stress(form.form)
-					local link, tr
-					if raw or form.form == "—" then
-						link = bg_text
-					else
-						link = m_links.full_link{lang = lang, term = bg_text, tr = "-", accel = {
-							form = accel_form,
-							lemma = accel_lemma,
-						}}
-					end
-					tr = translit_no_links(bg_text)
-					tr = require("Module:script utilities").tag_translit(tr, lang, "default", " style=\"color: #888;\"")
-					if form.footnotes then
-						local link_indices = {}
-						for _, footnote in ipairs(form.footnotes) do
-							footnote = expand_footnote(footnote)
-							local this_noteindex = seen_notes[footnote]
-							if not this_noteindex then
-								-- Generate a footnote index.
-								this_noteindex = noteindex
-								noteindex = noteindex + 1
-								table.insert(notes, '<sup style="color: red">' .. this_noteindex .. '</sup>' .. footnote)
-								seen_notes[footnote] = this_noteindex
-							end
-							m_table.insertIfNot(link_indices, this_noteindex)
-						end
-						local footnote_text = '<sup style="color: red">' .. table.concat(link_indices, ",") .. '</sup>'
-						link = link .. footnote_text
-						tr = tr .. footnote_text
-					end
-					table.insert(bg_spans, link)
-					table.insert(tr_spans, tr)
-				end
-				local bg_span = table.concat(bg_spans, ", ")
-				local tr_span = table.concat(tr_spans, ", ")
-				to_forms[slot] = bg_span .. "<br />" .. tr_span
-			else
-				to_forms[slot] = "—"
-			end
+			return accel_form
 		end
 	end
 
+	local footnote_obj = com.init_footnote_obj()
+
 	if is_adj then
-		set_forms(alternant_multiword_spec.forms, alternant_multiword_spec.forms, adj_slots, false)
+		local slot_to_accel_form = get_slot_to_accel_form(false)
+		com.set_forms(footnote_obj, alternant_multiword_spec.forms, alternant_multiword_spec.forms,
+			adj_slots, false, false, accel_lemma, slot_to_accel_form)
 		if alternant_multiword_spec.compforms then
-			set_forms(alternant_multiword_spec.compforms, alternant_multiword_spec.compforms, adj_slots, false)
+			com.set_forms(alternant_multiword_spec.compforms, alternant_multiword_spec.compforms,
+				adj_slots, false, false, accel_lemma, slot_to_accel_form)
 		end
 		if alternant_multiword_spec.supforms then
-			set_forms(alternant_multiword_spec.supforms, alternant_multiword_spec.supforms, adj_slots, false)
+			com.set_forms(alternant_multiword_spec.supforms, alternant_multiword_spec.supforms,
+				adj_slots, false, false, accel_lemma, slot_to_accel_form)
 		end
 	else
 		-- For def_sub_sg and def_obj_sg, first compute "raw" (unlinked) forms so we can
 		-- compare them properly; linked forms have accelerator info in them which differs
 		-- between sub and obj.
 		local raw_forms = {}
-		set_forms(alternant_multiword_spec.forms, raw_forms, {["def_sub_sg"] = true, ["def_obj_sg"] = true}, true)
+		com.set_forms(alternant_multiword_spec.forms, raw_forms, {"def_sub_sg", "def_obj_sg"},
+			true, true, accel_lemma, get_slot_to_accel_form(true))
 		-- Then generate the linked forms, using a special accelerator form if the def_sub_sg and def_obj_sg are the same.
 		alternant_multiword_spec.combined_def_sg = raw_forms.def_sub_sg == raw_forms.def_obj_sg
-		set_forms(alternant_multiword_spec.forms, alternant_multiword_spec.forms, noun_slots,
-			false, alternant_multiword_spec.combined_def_sg)
+		com.set_forms(alternant_multiword_spec.forms, alternant_multiword_spec.forms, noun_slots,
+			false, false, accel_lemma, get_slot_to_accel_form(alternant_multiword_spec.combined_def_sg))
 	end
 	if alternant_multiword_spec.footnote then
-		table.insert(notes, alternant_multiword_spec.footnote)
+		table.insert(footnote_obj.notes, alternant_multiword_spec.footnote)
 	end
-	alternant_multiword_spec.forms.footnote = table.concat(notes, "<br />")
+	alternant_multiword_spec.forms.footnote = table.concat(footnote_obj.notes, "<br />")
 end
 
 

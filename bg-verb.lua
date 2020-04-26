@@ -64,14 +64,6 @@ end
 local verb_slots = {
 	-- present tense
 	"pres_1sg", "pres_2sg", "pres_3sg", "pres_1pl", "pres_2pl", "pres_3pl",
-	-- future tense
-	"futr_1sg", "futr_2sg", "futr_3sg", "futr_1pl", "futr_2pl", "futr_3pl",
-	-- present-future tense. The conjugation functions generate the
-	-- "present-future" tense instead of either the present or future tense,
-	-- since the same forms are used in the present imperfect and future
-	-- perfect. These forms are later copied into the present or future in
-	-- finish_generating_forms().
-	"pres_futr_1sg", "pres_futr_2sg", "pres_futr_3sg", "pres_futr_1pl", "pres_futr_2pl", "pres_futr_3pl",
 	-- imperfect
 	"impf_1sg", "impf_2sg", "impf_3sg", "impf_1pl", "impf_2pl", "impf_3pl",
 	-- aorist
@@ -98,12 +90,69 @@ local verb_slots = {
 	"advp",
 }
 
+
+local prefix_to_accel_form = {
+	["pres", "pres|ind"],
+	["impf", "impf|ind"],
+	["aor", "aor|ind"],
+	["impv", "imp"],
+	["prap", "pres|act|part"],
+	["paap", "past|act|aor|part"],
+	["paip", "past|act|impf|part"],
+	["ppp", "past|pass|part"],
+	["vn", "vn"],
+	["advp", "adv|part"],
+}
+
+
+local suffix_to_accel_form = {
+	-- suffixes for finite forms
+	["1sg"] = "1|s",
+	["2sg"] = "2|s",
+	["3sg"] = "3|s",
+	["1pl"] = "1|p",
+	["2pl"] = "2|p",
+	["3pl"] = "3|p",
+	-- additional suffixes for imperatives
+	["sg"] = "s",
+	["pl"] = "p",
+	-- suffixes for participles that can have definite forms
+	["ind_m_sg"] = "indef|m|s",
+	["def_sub_m_sg"] = "def|sbjv|m|s",
+	["def_obj_m_sg"] = "def|objv|m|s",
+	["ind_f_sg"] = "indef|f|s",
+	["def_f_sg"] = "def|f|s",
+	["ind_n_sg"] = "indef|n|s",
+	["def_n_sg"] = "def|n|s",
+	["ind_pl"] = "indef|p",
+	["def_pl"] = "def|p",
+	-- suffixes for participles that only have indefinite forms (i.e. imperfect participle)
+	-- ("pl" already handled above)
+	["m_sg"] = "m|s",
+	["f_sg"] = "f|s",
+	["n_sg"] = "n|s",
+	-- additional verbal noun suffixes
+	["ind_sg"] = "indef|s",
+	["def_sg"] = "def|s",
+}
+
+
+local function slot_to_accel_form(slot)
+	local prefix, suffix = rmatch(slot, "^([a-z]+)_(.*)$")
+	if not prefix then
+		return prefix_to_accel_form[slot]
+	end
+	return suffix_to_accel_form[suffix] .. "|" .. prefix_to_accel_form[prefix]
+end
+
+
 local verb_misc_slots = {
 	"refl",
 	"along_with_refl",
 	"paap_ind_m_sg_notr", "paap_ind_f_sg_notr", "paap_ind_n_sg_notr", "paap_ind_pl_notr",
 	"paip_m_sg_notr", "paip_f_sg_notr", "paip_n_sg_notr", "paip_pl_notr",
 }
+
 
 local base_slots = {
 	"prap", -- masculine indefinite singular present active participle
@@ -124,7 +173,7 @@ local base_slots = {
 
 -- Used to determine if a perfective verb is prefixed; such verbs can't have
 -- a stress-shifted aorist. This will have false positives; such verbs should
--- be indicated using (-pre).
+-- be indicated using (-pref).
 local prefixes = {
 	"^[дп]о", -- also catches под-
 	"^[зн]а", -- also catches над-
@@ -162,10 +211,10 @@ local function map_forms(forms, fn)
 end
 
 
-local function conjugate_all(forms, base)
+local function conjugate_all(base)
 	local function add(slot, stems, ending)
 		if type(stems) == "string" then
-			com.insert_form(forms, slot, {form = stems .. ending})
+			com.insert_form(base.forms, slot, {form = stems .. ending})
 		else
 			if stems.form then
 				stems = {stems}
@@ -174,7 +223,7 @@ local function conjugate_all(forms, base)
 				if type(stem) == "string" then
 					stem = {form = stem}
 				end
-				com.insert_form(forms, slot, {form = stem.form .. ending, footnotes = stem.footnotes})
+				com.insert_form(base.forms, slot, {form = stem.form .. ending, footnotes = stem.footnotes})
 			end
 		end
 	end
@@ -280,7 +329,7 @@ end
 
 
 local function generate_maybe_shifted_aorist(base, aor23, shifted_aor23)
-	if (base.aspect == "impf" or not base.prefixed) and not rfind(aor23, "[ая]́$") then
+	if (base.aspect ~= "pf" or not base.prefixed) and not rfind(aor23, "[ая]́$") then
 		shifted_aor23 = shifted_aor23 or rsub(aor23, AC, "") .. AC
 		base.aor23 = {aor23, {form = shifted_aor23, footnotes = {"dialectally marked"}}}
 	else
@@ -470,11 +519,11 @@ conjs["1.7"] = function(base, lemma)
 	impf_impv_12conj(base, lemma)
 
 	local ppp_endings
-	if base.ppp_t then
+	if base.ppp_ending == "т" then
 		ppp_endings = "т"
-	elseif base.ppp_tn then
+	elseif base.ppp_ending == "тн" then
 		ppp_endings = {"т", "н"}
-	elseif base.ppp_nt then
+	elseif base.ppp_ending == "нт" then
 		ppp_endings = {"н", "т"}
 	else
 		ppp_endings = "н"
@@ -611,7 +660,129 @@ local function postprocess_base(base)
 end
 
 
+local function parse_indicator_and_form_spec(angle_bracket_spec)
+	local inside = rmatch(angle_bracket_spec, "^<(.*)>$")
+	assert(inside)
+	local base
+	local parts = rsplit(inside, ".", true)
+	local conj
+	local start = 1
+	if rfind(parts[1], "^[123]$") then
+		conj = parts[1]
+		start = 2
+		if parts[2] and rfind(parts[2], "^[1-7]$") then
+			conj = conj .. "." .. parts[2]
+			start = 3
+		end
+	end
+	base.conj = conj
+	for i=start,#parts do
+		local part = parts[start]
+		if part == "impf" or part == "pf" or part == "both" then
+			if base.aspect then
+				error("Can't specify aspect twice: '" .. inside .. "'")
+			end
+			base.aspect = part
+		elseif part == "tr" then
+			if base.tr then
+				error("Can't specify transitivity twice: " .. inside .. "'")
+			end
+		elseif part == "т" or part == "тн" or part == "нт" then
+			if base.ppp_ending then
+				error("Can't specify past passive participle ending twice: " .. inside .. "'")
+			end
+			base.ppp_ending = part
+		elseif part == "-pref" then
+			if base.no_pref then
+				error("Can't specify '-pref' twice: " .. inside .. "'")
+			end
+			base.no_pref = true
+		else
+			error("Unrecognized indicator '" .. part .. "': '" .. inside .. "'")
+		end
+	end
+	return base
+end
+
+
+-- Separate out reflexive suffix, check that multisyllabic lemmas have stress, and add stress
+-- to monosyllabic lemmas if needed.
+local function check_lemma_stress(base, lemma)
+	local active_verb, refl = rmatch(lemma, "^(.*) (с[еи])$")
+	if active_verb then
+		base.refl = refl
+		lemma = active_verb
+	end
+	lemma = com.add_monosyllabic_stress(lemma)
+	if not rfind(lemma, AC) then
+		error("Multisyllabic lemma '" .. lemma .. "' needs an accent")
+	end
+	if base.refl then
+		base.full_lemma = lemma .. " " .. base.refl
+	else
+		base.full_lemma = lemma
+	end
+	return lemma
+end
+
+
+local function detect_indicator_and_form_spec(base, lemma)
+	if not base.aspect then
+		error("Aspect of 'pf', 'impf' or 'both' must be specified")
+	end
+	if base.refl and base.tr then
+		error("Can't specify 'tr' with reflexive verb '" .. base.full_lemma .. "'")
+	end
+	if not base.conj then
+		if rfind(lemma, "м$") then
+			base.conj = "3"
+		else
+			error("For lemma ending in -а or -я, conjugation must be specified: '" .. lemma .. "'")
+		end
+	elseif base.conj == "3.1" then
+		if not rfind(lemma, "ам$") then
+			error("Conjugation 3.1 lemma must end in -ам: '" .. lemma .. "'")
+		end
+		base.conj = "3"
+	elseif base.conj == "3.2" then
+		if not rfind(lemma, "ям$") then
+			error("Conjugation 3.2 lemma must end in -ям: '" .. lemma .. "'")
+		end
+		base.conj = "3"
+	elseif not conjs[base.conj] then
+		error("Unrecognized conjugation '" .. base.conj .. "' for lemma '" .. lemma .. "'")
+	end
+	base.prefixed = not base.no_pref and verb_may_be_prefixed(lemma)
+	return lemma
+end
+
+
 local function parse_word_spec(text)
+	local segments = com.parse_balanced_segment_run(text, "<", ">")
+	if #segments ~= 3 or segments[3] ~= "" then
+		error("Verb spec must be of the form 'LEMMA<CONJ.SPECS>': '" .. text .. "'")
+	end
+	local lemma = segments[1]
+	local base = parse_indicator_and_form_spec(segments[2])
+	return base, lemma
+end
+
+
+local function show_forms(base)
+	local lemmas = {}
+	for _, lemma in ipairs(base.forms.lemma) do
+		table.insert(lemmas, com.remove_monosyllabic_stress(lemma))
+	end
+	local accel_lemma = lemmas[1]
+	base.forms.lemma = table.concat(lemmas, ", ")
+
+	local footnote_obj = com.init_footnote_obj()
+
+	com.set_forms(footnote_obj, base.forms, base.forms, verb_slots, true, false, accel_lemma, slot_to_accel_form)
+	if base.footnote then
+		table.insert(footnote_obj.notes, base.footnote)
+	end
+	base.forms.footnote = table.concat(footnote_obj.notes, "<br />")
 end
 
 
@@ -933,15 +1104,16 @@ function export.do_generate_forms(parent_args, pos, from_headword, def)
 	end
 	pos = args.pos or pos -- args.pos only set when from_headword
 	
-	local alternant_multiword_spec = parse_alternant_multiword_spec(args[1], "is adj")
-	check_lemma_stress(alternant_multiword_spec)
-	detect_all_adj_accent_and_form_specs(alternant_multiword_spec)
-	local active_slots = compute_overall_active_adj_slots(alternant_multiword_spec)
-	construct_adj_stems(alternant_multiword_spec)
-	decline_multiword_or_alternant_multiword_spec(alternant_multiword_spec, active_slots, "is adj",
-		"include definite")
-	alternant_multiword_spec.forms.lemma = args.lemma and #args.lemma > 0 and args.lemma or alternant_multiword_spec.forms.lemma
-	return alternant_multiword_spec
+	local base, lemma = parse_word_spec(args[1])
+	lemma = check_lemma_stress(base, lemma)
+	lemma = detect_indicator_and_form_spec(base, lemma)
+	conjs[base.conj](base, lemma)
+	postprocess_base(base)
+	base.forms = {}
+	base.footnote = footnote
+	conjugate_all(base)
+	base.forms.lemma = args.lemma and #args.lemma > 0 and args.lemma or {lemma}
+	return base
 end
 
 
@@ -949,9 +1121,9 @@ end
 -- user-specified arguments and generate a displayable table of the conjugated forms.
 function export.show(frame)
 	local parent_args = frame:getParent().args
-	local alternant_multiword_spec = export.do_generate_forms(parent_args)
-	show_forms(alternant_multiword_spec)
-	return make_noun_table(alternant_multiword_spec)
+	local base = export.do_generate_forms(parent_args)
+	show_forms(base)
+	return make_table(base)
 end
 
 
@@ -962,7 +1134,6 @@ end
 function export.generate_forms(frame)
 	local include_props = frame.args["include_props"]
 	local parent_args = frame:getParent().args
-	local alternant_multiword_spec = export.do_generate_forms(parent_args)
-
-	return concat_forms(alternant_multiword_spec, include_props)
+	local base = export.do_generate_forms(parent_args)
+	return concat_forms(base, include_props)
 end
