@@ -37,6 +37,7 @@ local m_table = require("Module:table")
 local m_string_utilities = require("Module:string utilities")
 local m_para = require("Module:parameters")
 local m_bg_translit = require("Module:bg-translit")
+local com = require("Module:bg-common")
 
 local current_title = mw.title.getCurrentTitle()
 local NAMESPACE = current_title.nsText
@@ -196,82 +197,8 @@ local potential_adj_lemma_slots = {
 }
 
 
-local vowel = "аеиоуяюъАЕИОУЯЮЪ"
-local vowel_c = "[" .. vowel .. "]"
-local non_vowel_c = "[^" .. vowel .. "]"
-local cons = "бцдфгчйклмнпрствшхзжьщБЦДФГЧЙКЛМНПРСТВШХЗЖЬЩ"
-local cons_c = "[" .. cons .. "]"
-
-
-local second_palatalization = {
-	["к"] = "ц",
-	["г"] = "з",
-	["х"] = "с",
-}
-
-
 local function translit_no_links(text)
 	return m_bg_translit.tr(m_links.remove_links(text))
-end
-
-
--- Check if word is monosyllabic (also includes words without vowels).
-local function is_monosyllabic(word)
-	local num_syl = ulen(rsub(word, non_vowel_c, ""))
-	return num_syl <= 1
-end
-
-
--- If word is monosyllabic, add stress to the vowel.
-local function add_monosyllabic_stress(word)
-	if is_monosyllabic(word) and not rfind(word, "^%-") and not rfind(word, AC) then
-		word = rsub(word, "(" .. vowel_c .. ")", "%1" .. AC)
-	end
-	return word
-end
-
-
--- If word is monosyllabic, remove stress from the vowel.
-local function remove_monosyllabic_stress(word)
-	if is_monosyllabic(word) and not rfind(word, "^%-") then
-		word = rsub(word, AC, "")
-	end
-	return word
-end
-
-
--- If word is unstressed, add stress onto initial syllable.
-local function maybe_stress_initial_syllable(word)
-	if not rfind(word, AC) then
-		-- stress first syllable
-		word = rsub(word, "^(.-" .. vowel_c .. ")", "%1" .. AC)
-	end
-	return word
-end
-
-
--- If word is unstressed, add stress onto final syllable.
-local function maybe_stress_final_syllable(word)
-	if not rfind(word, AC) then
-		-- stress last syllable
-		word = rsub(word, "(.*" .. vowel_c .. ")", "%1" .. AC)
-	end
-	return word
-end
-
-
--- Given a list of forms (each of which is a table of the form {form=FORM, footnotes=FOOTNOTES}),
--- concatenate into a SLOT=FORM,FORM,... string, replacing embedded | signs with <!>.
-local function concat_forms_in_slot(forms)
-	if forms then
-		local new_vals = {}
-		for _, v in ipairs(forms) do
-			table.insert(new_vals, rsub(v.form, "|", "<!>"))
-		end
-		return table.concat(new_vals, ",")
-	else
-		return nil
-	end
 end
 
 
@@ -279,88 +206,6 @@ end
 local function track(page)
 	require("Module:debug").track("bg-nominal/" .. page)
 	return true
-end
-
-
--- Parse a string containing matched instances of parens, brackets or the like.
--- Return a list of strings, alternating between textual runs not containing the
--- open/close characters and runs beginning and ending with the open/close
--- characters. For example,
---
--- parse_balanced_segment_run("foo(x(1)), bar(2)", "(", ")") = {"foo", "(x(1))", ", bar", "(2)", ""}.
-local function parse_balanced_segment_run(segment_run, open, close)
-	local break_on_open_close = m_string_utilities.capturing_split(segment_run, "([%" .. open .. "%" .. close .. "])")
-	local text_and_specs = {}
-	local level = 0
-	local seg_group = {}
-	for i, seg in ipairs(break_on_open_close) do
-		if i % 2 == 0 then
-			if seg == open then
-				table.insert(seg_group, seg)
-				level = level + 1
-			else
-				assert(seg == close)
-				table.insert(seg_group, seg)
-				level = level - 1
-				if level < 0 then
-					error("Unmatched " .. close .. " sign: '" .. segment_run .. "'")
-				elseif level == 0 then
-					table.insert(text_and_specs, table.concat(seg_group))
-					seg_group = {}
-				end
-			end
-		elseif level > 0 then
-			table.insert(seg_group, seg)
-		else
-			table.insert(text_and_specs, seg)
-		end
-	end
-	if level > 0 then
-		error("Unmatched " .. open .. " sign: '" .. segment_run .. "'")
-	end
-	return text_and_specs
-end
-
-
--- Split a list of alternating textual runs of the format returned by
--- `parse_balanced_segment_run` on `splitchar`. This only splits the odd-numbered
--- textual runs (the portions between the balanced open/close characters).
--- The return value is a list of lists, where each list contains an odd number of
--- elements, where the even-numbered elements of the sublists are the original
--- balanced textual run portions. For example, if we do
---
--- parse_balanced_segment_run("foo[x[1]][2]/baz:bar[3]", "[", "]") =
---   {"foo", "[x[1]]", "", "[2]", "/baz:bar", "[3]", ""}
---
--- then
---
--- split_alternating_runs({"foo", "[x[1]]", "", "[2]", "/baz:bar", "[3]", ""}, ":") =
---   {{"foo", "[x[1]]", "", "[2]", "/baz"}, {"bar", "[2]", ""}}
---
--- Note that each element of the outer list is of the same form as the input,
--- consisting of alternating textual runs where the even-numbered segments
--- are balanced runs, and can in turn be passed to split_alternating_runs().
-local function split_alternating_runs(segment_runs, splitchar, preserve_splitchar)
-	local grouped_runs = {}
-	local run = {}
-	for i, seg in ipairs(segment_runs) do
-		if i % 2 == 0 then
-			table.insert(run, seg)
-		else
-			local parts =
-				preserve_splitchar and m_string_utilities.capturing_split(seg, "(" .. splitchar .. ")") or
-				rsplit(seg, splitchar)
-			table.insert(run, parts[1])
-			for j=2,#parts do
-				table.insert(grouped_runs, run)
-				run = {parts[j]}
-			end
-		end
-	end
-	if #run > 0 then
-		table.insert(grouped_runs, run)
-	end
-	return grouped_runs
 end
 
 
@@ -434,7 +279,7 @@ end
 local function parse_noun_accent_spec(accent_run)
 	local retval = {accents = {}, plurals = {}}
 	local plurals = {}
-	local plural_groups = split_alternating_runs(accent_run, "%+")
+	local plural_groups = com.split_alternating_runs(accent_run, "%+")
 	local double_plus = false
 	for i, plural_group in ipairs(plural_groups) do
 		if i > 1 and retval.is_adj then
@@ -547,7 +392,7 @@ end
 -- (including adjectival nouns) and `is_adj` should be true if the particular term we're
 -- declining is an adjective or adjectival noun.
 local function parse_form_spec(form_run, from_noun, is_adj)
-	local colon_separated_groups = split_alternating_runs(form_run, ":")
+	local colon_separated_groups = com.split_alternating_runs(form_run, ":")
 	local form_name_group = colon_separated_groups[1]
 	if #form_name_group ~= 1 then
 		error("Bracketed footnotes not allowed after form name: '" .. table.concat(form_name_group) .. "'")
@@ -623,12 +468,12 @@ end
 local function parse_noun_accent_and_form_specs(angle_bracket_spec)
 	local inside = rmatch(angle_bracket_spec, "^<(.*)>$")
 	assert(inside)
-	local bracketed_runs = parse_balanced_segment_run(inside, "[", "]")
-	local comma_separated_groups = split_alternating_runs(bracketed_runs, ",")
+	local bracketed_runs = com.parse_balanced_segment_run(inside, "[", "]")
+	local comma_separated_groups = com.split_alternating_runs(bracketed_runs, ",")
 	local accent_and_form_specs = {}
 	for _, comma_separated_group in ipairs(comma_separated_groups) do
 		local accent_and_form_spec = {}
-		local slash_separated_groups = split_alternating_runs(comma_separated_group, "/")
+		local slash_separated_groups = com.split_alternating_runs(comma_separated_group, "/")
 		accent_and_form_spec.accent_spec = parse_noun_accent_spec(slash_separated_groups[1])
 		for i, slash_separated_group in ipairs(slash_separated_groups) do
 			if i > 1 then
@@ -677,12 +522,12 @@ end
 local function parse_adj_accent_and_form_specs(angle_bracket_spec)
 	local inside = rmatch(angle_bracket_spec, "^<(.*)>$")
 	assert(inside)
-	local bracketed_runs = parse_balanced_segment_run(inside, "[", "]")
-	local comma_separated_groups = split_alternating_runs(bracketed_runs, ",")
+	local bracketed_runs = com.parse_balanced_segment_run(inside, "[", "]")
+	local comma_separated_groups = com.split_alternating_runs(bracketed_runs, ",")
 	local accent_and_form_specs = {}
 	for _, comma_separated_group in ipairs(comma_separated_groups) do
 		local accent_and_form_spec = {}
-		local slash_separated_groups = split_alternating_runs(comma_separated_group, "/")
+		local slash_separated_groups = com.split_alternating_runs(comma_separated_group, "/")
 		accent_and_form_spec.accent_spec = parse_adj_accent_spec(slash_separated_groups[1])
 		for i, slash_separated_group in ipairs(slash_separated_groups) do
 			if i > 1 then
@@ -751,8 +596,8 @@ local function parse_multiword_spec(segments, is_adj)
 	}
 	for i = 2, #segments - 1, 2 do
 		local word_spec = {}
-		local bracketed_runs = parse_balanced_segment_run(segments[i - 1], "[", "]")
-		local space_separated_groups = split_alternating_runs(bracketed_runs, "[ %-]", "preserve splitchar")
+		local bracketed_runs = com.parse_balanced_segment_run(segments[i - 1], "[", "]")
+		local space_separated_groups = com.split_alternating_runs(bracketed_runs, "[ %-]", "preserve splitchar")
 		local before_text = {}
 		for j, space_separated_group in ipairs(space_separated_groups) do
 			if j == #space_separated_groups then
@@ -784,8 +629,8 @@ end
 local function parse_alternant(alternant, is_adj)
 	local parsed_alternants = {}
 	local alternant_text = rmatch(alternant, "^%(%((.*)%)%)$")
-	local segments = parse_balanced_segment_run(alternant_text, "<", ">")
-	local comma_separated_groups = split_alternating_runs(segments, ",")
+	local segments = com.parse_balanced_segment_run(alternant_text, "<", ">")
+	local comma_separated_groups = com.split_alternating_runs(segments, ",")
 	local alternant_spec = {alternants = {}}
 	for _, comma_separated_group in ipairs(comma_separated_groups) do
 		table.insert(alternant_spec.alternants, parse_multiword_spec(comma_separated_group, is_adj))
@@ -815,7 +660,7 @@ local function parse_alternant_multiword_spec(text, is_adj)
 	local last_post_text
 	for i = 1, #alternant_segments do
 		if i % 2 == 1 then
-			local segments = parse_balanced_segment_run(alternant_segments[i], "<", ">")
+			local segments = com.parse_balanced_segment_run(alternant_segments[i], "<", ">")
 			local multiword_spec = parse_multiword_spec(segments, is_adj)
 			for _, word_spec in ipairs(multiword_spec.word_specs) do
 				table.insert(alternant_multiword_spec.alternant_or_word_specs, word_spec)
@@ -851,7 +696,7 @@ end
 -- lemmas if needed.
 local function check_lemma_stress(alternant_multiword_spec)
 	map_word_specs(alternant_multiword_spec, function(word_spec)
-		word_spec.lemma = add_monosyllabic_stress(word_spec.lemma)
+		word_spec.lemma = com.add_monosyllabic_stress(word_spec.lemma)
 		if not rfind(word_spec.lemma, AC) then
 			error("Multisyllabic lemma '" .. word_spec.lemma .. "' needs an accent")
 		end
@@ -863,14 +708,14 @@ end
 -- consonant, stresses the final syllable of the result if necessary, and converts бое́ц into бо́йц- and бо́як into бо́йк-.
 -- An error is thrown if the stem can't be reduced.
 local function reduce_stem(stem)
-	local vowel_ending_stem, final_cons = rmatch(stem, "^(.*" .. vowel_c .. AC .. "?)[ея]́?(" .. cons_c .. ")$")
+	local vowel_ending_stem, final_cons = rmatch(stem, "^(.*" .. com.vowel_c .. AC .. "?)[ея]́?(" .. com.cons_c .. ")$")
 	if vowel_ending_stem then
 		-- бое́ц etc.
-		return maybe_stress_final_syllable(vowel_ending_stem .. "й" .. final_cons)
+		return com.maybe_stress_final_syllable(vowel_ending_stem .. "й" .. final_cons)
 	end
-	local initial_stem, final_cons = rmatch(stem, "^(.*)[еъ]́?(" .. cons_c .. ")$")
+	local initial_stem, final_cons = rmatch(stem, "^(.*)[еъ]́?(" .. com.cons_c .. ")$")
 	if initial_stem then
-		return maybe_stress_final_syllable(initial_stem .. final_cons)
+		return com.maybe_stress_final_syllable(initial_stem .. final_cons)
 	end
 	error("Unable to reduce stem: '" .. stem .. "'")
 end
@@ -882,12 +727,12 @@ local function get_noun_stem(lemma)
 	local stem
 	stem = rmatch(lemma, "^(.*)[аеоя]́?$")
 	if stem then
-		return maybe_stress_final_syllable(stem)
+		return com.maybe_stress_final_syllable(stem)
 	end
 	stem = rmatch(lemma, "^(%u.*)и́?$")
 	if stem then
 		-- proper names like До́бри
-		return maybe_stress_final_syllable(stem)
+		return com.maybe_stress_final_syllable(stem)
 	end
 	stem = rmatch(lemma, "^(.*)й$")
 	if stem then
@@ -909,11 +754,11 @@ local function get_adj_stem(lemma, accent_and_form_spec, as_noun)
 		-- we need to remove the ending to get the stem. No need to do any further frobbing, as the
 		-- resulting stem will be used for all forms.
 		local stem = rsub(lemma, "[аяеои]́?$", "")
-		return maybe_stress_final_syllable(stem)
+		return com.maybe_stress_final_syllable(stem)
 	end
 	local stem = rmatch(lemma, "^(.*)и́?$")
 	if stem then
-		stem = maybe_stress_final_syllable(stem)
+		stem = com.maybe_stress_final_syllable(stem)
 	else
 		stem = rmatch(lemma, "^(.*)й$") or lemma
 	end
@@ -983,8 +828,8 @@ end
 -- Concatenate a stem and an ending. If the ending has an accent, any accent on the stem is removed.
 -- If UR is specified, convert the sequence CръC to CърC, preserving any accent on -ъ-.
 local function combine_stem_and_ending(stem, ending, accent_spec, is_adj)
-	if not is_adj and accent_spec.ur and rfind(ending, "^" .. vowel_c) then
-		stem = rsub(stem, "(" .. cons_c .. ")ръ(" .. AC .. "?)(" .. cons_c .. ")", "%1ъ%2р%3")
+	if not is_adj and accent_spec.ur and rfind(ending, "^" .. com.vowel_c) then
+		stem = rsub(stem, "(" .. com.cons_c .. ")ръ(" .. AC .. "?)(" .. com.cons_c .. ")", "%1ъ%2р%3")
 	end
 	if not accent_spec.no_ya and (rfind(ending, AC) or (accent_spec.ya and rfind(ending, "^[еиь]"))) then
 		stem = rsub(stem, "я́", "е́")
@@ -1005,7 +850,7 @@ local function detect_adj_accent_and_form_spec(lemma, accent_and_form_spec)
 		local accent
 		if rfind(lemma, "и́$") then
 			accent = "b"
-		elseif accent_spec.reducible and rfind(lemma, "[ъяе]́" .. cons_c .. "$") then
+		elseif accent_spec.reducible and rfind(lemma, "[ъяе]́" .. com.cons_c .. "$") then
 			-- Reducible adjective and accent on reducible vowel, e.g. добъ́р -> fem добра́
 			accent = "b"
 		else
@@ -1068,9 +913,9 @@ local function detect_noun_accent_and_form_spec(lemma, accent_and_form_spec)
 		-- Detect accent if not specified.
 		if #accent_spec.accents == 0 then
 			local accent
-			if g == "f" and rfind(lemma, cons_c .. "$") then
+			if g == "f" and rfind(lemma, com.cons_c .. "$") then
 				accent = "d"
-			elseif accent_spec.reducible and rfind(lemma, "[ъе]́" .. cons_c .. "$") then
+			elseif accent_spec.reducible and rfind(lemma, "[ъе]́" .. com.cons_c .. "$") then
 				-- Reducible noun and accent on reducible vowel, e.g. чуждене́ц -> чужденци́
 				accent = "c"
 			elseif rfind(lemma, "[еоая]́$") then
@@ -1082,7 +927,7 @@ local function detect_noun_accent_and_form_spec(lemma, accent_and_form_spec)
 		end
 		-- Detect soft-sign indicator.
 		if g == "m" and not accent_spec.no_soft_sign and (
-			rfind(lemma, "й$") or rfind(lemma, vowel_c .. AC .. "?тел$") or rfind(lemma, vowel_c .. AC .. "?" .. cons_c .. "+а́?р$")
+			rfind(lemma, "й$") or rfind(lemma, com.vowel_c .. AC .. "?тел$") or rfind(lemma, com.vowel_c .. AC .. "?" .. com.cons_c .. "+а́?р$")
 		) then
 			accent_spec.soft_sign = true
 		end
@@ -1109,7 +954,7 @@ local function detect_noun_accent_and_form_spec(lemma, accent_and_form_spec)
 				elseif rfind(lemma, "е́?$") then
 					-- аташе́
 					plural = "ета"
-				elseif not is_monosyllabic(lemma) then
+				elseif not com.is_monosyllabic(lemma) then
 					-- ези́к, друга́р, геро́й, etc.; баща́, коле́га
 					plural = "и"
 				elseif rfind(lemma, "й$") then
@@ -1148,7 +993,7 @@ local function detect_noun_accent_and_form_spec(lemma, accent_and_form_spec)
 		elseif accent_spec.gender == "n" then
 			-- Otherwise if neuter, no vocative even if (v) or (h) is used.
 			accent_spec.has_vocative = false
-		elseif accent_spec.gender == "f" and rfind(lemma, cons_c .. "$") then
+		elseif accent_spec.gender == "f" and rfind(lemma, com.cons_c .. "$") then
 			-- Otherwise if feminine and ending in a consonant, no vocative even if (v) or (h) is used.
 			accent_spec.has_vocative = false
 		elseif accent_spec.reducible_vocative or accent_spec.human then
@@ -1156,7 +1001,7 @@ local function detect_noun_accent_and_form_spec(lemma, accent_and_form_spec)
 			accent_spec.has_vocative = true
 		end
 		-- Detect reducible indicators.
-		if g == "m" and rfind(lemma, vowel_c .. AC .. "?зъм$") then
+		if g == "m" and rfind(lemma, com.vowel_c .. AC .. "?зъм$") then
 			accent_spec.reducible = true
 			accent_spec.reducible_definite = true
 			if accent_spec.has_vocative then
@@ -1179,7 +1024,7 @@ local function detect_noun_accent_and_form_spec(lemma, accent_and_form_spec)
 			not accent_and_form_spec["-count"] and
 			-- (3) Only masculine nouns ending in a consonant normally have a count form.
 			accent_spec.gender == "m" and
-			rfind(lemma, cons_c .. "$")
+			rfind(lemma, com.cons_c .. "$")
 		)
 	end
 end
@@ -1349,78 +1194,6 @@ local function compute_overall_active_noun_slots(alternant_multiword_spec)
 end
 
 
--- Insert a form (an object of the form {form=FORM, footnotes=FOOTNOTES}) into a list of such
--- forms. If the form is already present, the footnotes of the existing and new form are combined.
-local function insert_form_into_list(list, form)
-	-- Don't do anything if the form object or the form inside it is nil. This simplifies
-	-- form insertion in the presence of declension generating functions that may return nil,
-	-- such as generate_noun_vocative() and generate_noun_count_form().
-	if not form or not form.form then
-		return
-	end
-	for _, listform in ipairs(list) do
-		if listform.form == form.form then
-			-- Form already present; combine footnotes.
-			if form.footnotes and #form.footnotes > 0 then
-				if not listform.footnotes then
-					listform.footnotes = {}
-				end
-				for _, footnote in ipairs(form.footnotes) do
-					m_table.insertIfNot(listform.footnotes, footnote)
-				end
-			end
-			return
-		end
-	end
-	-- Form not found. Do a shallow copy of the footnotes because we may modify them in-place.
-	table.insert(list, {form=form.form, footnotes=m_table.shallowcopy(form.footnotes)})
-end
-
-
--- Insert a form (an object of the form {form=FORM, footnotes=FOOTNOTES}) into the given slot in
--- the given form table.
-local function insert_form(formtable, slot, form)
-	-- Don't do anything if the form object or the form inside it is nil. This simplifies
-	-- form insertion in the presence of declension generating functions that may return nil,
-	-- such as generate_noun_vocative() and generate_noun_count_form().
-	if not form or not form.form then
-		return
-	end
-	if not formtable[slot] then
-		formtable[slot] = {}
-	end
-	insert_form_into_list(formtable[slot], form)
-end
-
-
--- Insert a list of forms (each of which is an object of the form {form=FORM, footnotes=FOOTNOTES})
--- into the given slot in the given form table. FORMS can be nil.
-local function insert_forms(formtable, slot, forms)
-	if not forms then
-		return
-	end
-	for _, form in ipairs(forms) do
-		insert_form(formtable, slot, form)
-	end
-end
-
-
--- Map a function over the form values in FORMS (a list of objects of the form
--- {form=FORM, footnotes=FOOTNOTES}). Use insert_form_into_list() to insert them into
--- the returned list in case two different forms map to the same thing.
-local function map_forms(forms, fun)
-	if not forms then
-		return nil
-	end
-	local retval = {}
-	for _, form in ipairs(forms) do
-		local newform = {form=fun(form.form), footnotes=form.footnotes}
-		insert_form_into_list(retval, newform)
-	end
-	return retval
-end
-
-
 -- Construct the plural of the lemma specified in WORD_SPEC, given the accent spec
 -- (as returned by parse_noun_accent_spec()), the plural ending (e.g. "ове"), and the accent indicator
 -- (e.g. "a" or "d"). Return value is a string. This handles accenting the plural ending as necessary,
@@ -1434,7 +1207,7 @@ local function generate_noun_plural(word_spec, accent_spec, plural, accent)
 			ending = ending .. AC
 		else
 			-- for any other plurals, put the stress on the first vowel if a stress isn't already present
-			ending = maybe_stress_initial_syllable(ending)
+			ending = com.maybe_stress_initial_syllable(ending)
 		end
 	end
 
@@ -1445,7 +1218,7 @@ local function generate_noun_plural(word_spec, accent_spec, plural, accent)
 		if not removed then
 			error("(ин) specified but stem '" .. stem .. "' doesn't end in -ин")
 		end
-		stem = maybe_stress_final_syllable(new_stem)
+		stem = com.maybe_stress_final_syllable(new_stem)
 	end
 
 	if not plural.double_plus and not rfind(word_spec.lemma, "нг$") and (
@@ -1456,7 +1229,7 @@ local function generate_noun_plural(word_spec, accent_spec, plural, accent)
 	) then
 		local initial, last_cons = rmatch(stem, "^(.*)([кгх])$")
 		if initial then
-			return combine_stem_and_ending(initial .. second_palatalization[last_cons], ending, accent_spec)
+			return combine_stem_and_ending(initial .. com.second_palatalization[last_cons], ending, accent_spec)
 		end
 	end
 
@@ -1531,7 +1304,7 @@ end
 -- determining the appropriate ending (handling the soft sign spec (ь) as needed) and
 -- fetching the reduced stem if appropriate.
 local function generate_noun_count_form(word_spec, accent_spec)
-	if accent_spec.gender ~= "m" or not rfind(word_spec.lemma, cons_c .. "$") then
+	if accent_spec.gender ~= "m" or not rfind(word_spec.lemma, com.cons_c .. "$") then
 		return nil
 	end
 	local stem = accent_spec.reducible_count and word_spec.reduced_stem or word_spec.stem
@@ -1551,14 +1324,14 @@ local function generate_noun_vocative(word_spec, accent_spec)
 		return nil
 	end
 	local lemma = word_spec.lemma
-	if accent_spec.gender == "f" and rfind(lemma, cons_c .. "$") then
+	if accent_spec.gender == "f" and rfind(lemma, com.cons_c .. "$") then
 		return nil
 	end
 	local stem = accent_spec.reducible_vocative and word_spec.reduced_stem or word_spec.stem
 	local ending
 	if accent_spec.soft_sign then
 		ending = "ю"
-	elseif rfind(lemma, vowel_c .. AC .. "?я́?$") then
+	elseif rfind(lemma, com.vowel_c .. AC .. "?я́?$") then
 		ending = "йо"
 	elseif rfind(lemma, "я́?$") then
 		ending = "ьо"
@@ -1579,24 +1352,24 @@ end
 local function generate_indefinite_adj_forms(formtable, accent_spec, accent, active_slots)
 	local stem = accent_spec.stem
 	local accent = accent == "b" and AC or ""
-	insert_form(formtable, "ind_f_sg",
+	com.insert_form(formtable, "ind_f_sg",
 		{form=combine_stem_and_ending(stem, (accent_spec.soft_sign and "я" or "а") .. accent, accent_spec, "is adj")})
 	if accent_spec.ch then
-		insert_form(formtable, "ind_n_sg",
+		com.insert_form(formtable, "ind_n_sg",
 			{form=combine_stem_and_ending(stem, "е" .. accent, accent_spec, "is adj")})
-		insert_form(formtable, "ind_n_sg",
+		com.insert_form(formtable, "ind_n_sg",
 			{form=combine_stem_and_ending(stem, "о" .. accent, accent_spec, "is adj")})
 	else
-		insert_form(formtable, "ind_n_sg",
+		com.insert_form(formtable, "ind_n_sg",
 			{form=combine_stem_and_ending(stem,
 				((accent_spec.che or accent_spec.soft_sign_i) and "е" or accent_spec.soft_sign and "ьо" or "о") .. accent,
 				accent_spec, "is adj")})
 	end
 	local ind_pl = combine_stem_and_ending(stem, "и" .. accent, accent_spec, "is adj")
-	insert_form(formtable, "ind_pl", {form=ind_pl})
+	com.insert_form(formtable, "ind_pl", {form=ind_pl})
 	if active_slots.voc_m_sg then
-		insert_form(formtable, "voc_m_sg", {form=ind_pl})
-		insert_form(formtable, "voc_m_sg", {form=ind_pl .. "й"})
+		com.insert_form(formtable, "voc_m_sg", {form=ind_pl})
+		com.insert_form(formtable, "voc_m_sg", {form=ind_pl .. "й"})
 	end
 end
 
@@ -1604,22 +1377,22 @@ end
 -- Construct the definite adjective forms based on the indefinite ones.
 local function generate_definite_adj_forms(formtable, include_definite)
 	if include_definite then
-		insert_forms(formtable, "def_sub_m_sg", map_forms(formtable["ind_pl"],
+		com.insert_forms(formtable, "def_sub_m_sg", map_forms(formtable["ind_pl"],
 			function(form) return form .. "ят" end))
-		insert_forms(formtable, "def_obj_m_sg", map_forms(formtable["ind_pl"],
+		com.insert_forms(formtable, "def_obj_m_sg", map_forms(formtable["ind_pl"],
 			function(form) return form .. "я" end))
-		insert_forms(formtable, "def_f_sg", map_forms(formtable["ind_f_sg"],
+		com.insert_forms(formtable, "def_f_sg", map_forms(formtable["ind_f_sg"],
 			function(form) return form .. "та" end))
-		insert_forms(formtable, "def_n_sg", map_forms(formtable["ind_n_sg"],
+		com.insert_forms(formtable, "def_n_sg", map_forms(formtable["ind_n_sg"],
 			function(form) return form .. "то" end))
-		insert_forms(formtable, "def_pl", map_forms(formtable["ind_pl"],
+		com.insert_forms(formtable, "def_pl", map_forms(formtable["ind_pl"],
 			function(form) return form .. "те" end))
 	else
-		insert_forms(formtable, "def_sub_m_sg", formtable["ind_m_sg"])
-		insert_forms(formtable, "def_obj_m_sg", formtable["ind_m_sg"])
-		insert_forms(formtable, "def_f_sg", formtable["ind_f_sg"])
-		insert_forms(formtable, "def_n_sg", formtable["ind_n_sg"])
-		insert_forms(formtable, "def_pl", formtable["ind_pl"])
+		com.insert_forms(formtable, "def_sub_m_sg", formtable["ind_m_sg"])
+		com.insert_forms(formtable, "def_obj_m_sg", formtable["ind_m_sg"])
+		com.insert_forms(formtable, "def_f_sg", formtable["ind_f_sg"])
+		com.insert_forms(formtable, "def_n_sg", formtable["ind_n_sg"])
+		com.insert_forms(formtable, "def_pl", formtable["ind_pl"])
 	end
 end
 
@@ -1651,12 +1424,12 @@ local function handle_overriding_forms(lemma, stem, forms, overriding_forms)
 					error("'/" .. forms .. "+' not supported, no default value")
 				end
 				for _, f in ipairs(forms) do
-					insert_form_into_list(retforms, {form=f.form, footnotes=overriding_spec.footnotes})
+					com.insert_form_into_list(retforms, {form=f.form, footnotes=overriding_spec.footnotes})
 				end
 			else
 				form = rsub(form, "~~", stem)
 				form = rsub(form, "~", lemma)
-				insert_form_into_list(retforms, {form=form, footnotes=overriding_spec.footnotes})
+				com.insert_form_into_list(retforms, {form=form, footnotes=overriding_spec.footnotes})
 			end
 		end
 		return retforms
@@ -1693,7 +1466,7 @@ local function decline_one_adj(word_spec, accent_and_form_spec, active_slots, ac
 				end
 				for _, to_form in ipairs(to_forms) do
 					if active_noun_slots[to_form] then
-						insert_forms(noun_formtable, to_form, formtable[from_form])
+						com.insert_forms(noun_formtable, to_form, formtable[from_form])
 					end
 				end
 			end
@@ -1709,23 +1482,23 @@ local function decline_one_adj(word_spec, accent_and_form_spec, active_slots, ac
 			copy_forms(pl_adj_to_noun_slots)
 		end
 		for slot, _ in pairs(noun_slots) do
-			insert_forms(word_spec.forms, slot, handle_overriding_forms(lemma, stem, noun_formtable[slot],
+			com.insert_forms(word_spec.forms, slot, handle_overriding_forms(lemma, stem, noun_formtable[slot],
 				accent_and_form_spec[slot]))
 		end
 	else
 		for slot, _ in pairs(adj_slots) do
 			local forms = handle_overriding_forms(lemma, stem, formtable[slot], accent_and_form_spec[slot])
-			insert_forms(word_spec.forms, slot, forms)
+			com.insert_forms(word_spec.forms, slot, forms)
 			if active_slots.comp and not accent_spec.nocomp then
 				if not word_spec.compforms then
 					word_spec.compforms = {}
 				end
-				insert_forms(word_spec.compforms, slot,
+				com.insert_forms(word_spec.compforms, slot,
 					map_forms(forms, function(form) return "по́-" .. form end))
 				if not word_spec.supforms then
 					word_spec.supforms = {}
 				end
-				insert_forms(word_spec.supforms, slot,
+				com.insert_forms(word_spec.supforms, slot,
 					map_forms(forms, function(form) return "на́й-" .. form end))
 			end
 		end
@@ -1761,13 +1534,13 @@ local function decline_one_noun(word_spec, accent_and_form_spec, active_slots, i
 		-- Maybe set indefinite plural.
 		local indefinite_plurals = {{form=lemma}}
 		if active_slots.ind_pl then
-			insert_forms(word_spec.forms, "ind_pl",
+			com.insert_forms(word_spec.forms, "ind_pl",
 				handle_overriding_forms(lemma, stem, indefinite_plurals, accent_and_form_spec.ind_pl))
 		end
 
 		-- Maybe set definite plural.
 		if active_slots.def_pl then
-			insert_forms(word_spec.forms, "def_pl",
+			com.insert_forms(word_spec.forms, "def_pl",
 				handle_overriding_forms(lemma, stem,
 					include_definite and map_forms(indefinite_plurals, generate_noun_definite_plural) or indefinite_plurals,
 					accent_and_form_spec.def_pl))
@@ -1777,7 +1550,7 @@ local function decline_one_noun(word_spec, accent_and_form_spec, active_slots, i
 		for _, case in ipairs(extra_noun_cases) do
 			local pl_slot = case .. "_pl"
 			if active_slots[pl_slot] then
-				insert_forms(word_spec.forms, pl_slot, handle_overriding_forms(lemma, stem, indefinite_plurals, accent_and_form_spec[pl_slot]))
+				com.insert_forms(word_spec.forms, pl_slot, handle_overriding_forms(lemma, stem, indefinite_plurals, accent_and_form_spec[pl_slot]))
 			end
 		end
 	else
@@ -1790,7 +1563,7 @@ local function decline_one_noun(word_spec, accent_and_form_spec, active_slots, i
 		local indefinite_plurals = {}
 		for _, plspec in ipairs(accent_spec.plurals) do
 			for _, accent in ipairs(accent_spec.accents) do
-				insert_form_into_list(indefinite_plurals,
+				com.insert_form_into_list(indefinite_plurals,
 					{form=generate_noun_plural(word_spec, accent_spec, plspec, accent), footnotes=plspec.footnotes}
 				)
 			end
@@ -1799,7 +1572,7 @@ local function decline_one_noun(word_spec, accent_and_form_spec, active_slots, i
 
 		-- Maybe set indefinite singular.
 		if active_slots.ind_sg then
-			insert_forms(word_spec.forms, "ind_sg",
+			com.insert_forms(word_spec.forms, "ind_sg",
 				handle_overriding_forms(lemma, stem, indefinite_singulars, accent_and_form_spec.ind))
 		end
 
@@ -1809,7 +1582,7 @@ local function decline_one_noun(word_spec, accent_and_form_spec, active_slots, i
 			if include_definite then
 				definite_singulars = {}
 				for _, accent in ipairs(accent_spec.accents) do
-					insert_form_into_list(definite_singulars,
+					com.insert_form_into_list(definite_singulars,
 						{form=generate_noun_definite_singular(word_spec, accent_spec, accent)}
 					)
 				end
@@ -1818,11 +1591,11 @@ local function decline_one_noun(word_spec, accent_and_form_spec, active_slots, i
 			end
 			definite_singulars = handle_overriding_forms(lemma, stem, definite_singulars, accent_and_form_spec.def)
 			if active_slots.def_sub_sg then
-				insert_forms(word_spec.forms, "def_sub_sg",
+				com.insert_forms(word_spec.forms, "def_sub_sg",
 					handle_overriding_forms(lemma, stem, definite_singulars, accent_and_form_spec.def_sub))
 			end
 			if active_slots.def_obj_sg then
-				insert_forms(word_spec.forms, "def_obj_sg",
+				com.insert_forms(word_spec.forms, "def_obj_sg",
 					handle_overriding_forms(lemma, stem,
 						include_definite and map_forms(definite_singulars, generate_noun_definite_objective_singular) or
 						definite_singulars,
@@ -1832,13 +1605,13 @@ local function decline_one_noun(word_spec, accent_and_form_spec, active_slots, i
 
 		-- Maybe set indefinite plural.
 		if active_slots.ind_pl then
-			insert_forms(word_spec.forms, "ind_pl",
+			com.insert_forms(word_spec.forms, "ind_pl",
 				handle_overriding_forms(lemma, stem, indefinite_plurals, accent_and_form_spec.ind_pl))
 		end
 
 		-- Maybe set definite plural.
 		if active_slots.def_pl then
-			insert_forms(word_spec.forms, "def_pl",
+			com.insert_forms(word_spec.forms, "def_pl",
 				handle_overriding_forms(lemma, stem,
 					include_definite and map_forms(indefinite_plurals, generate_noun_definite_plural) or
 					indefinite_plurals,
@@ -1848,31 +1621,31 @@ local function decline_one_noun(word_spec, accent_and_form_spec, active_slots, i
 		-- Maybe set count.
 		if active_slots.count then
 			local count_forms = {}
-			insert_form_into_list(count_forms, {form=generate_noun_count_form(word_spec, accent_spec)})
-			insert_forms(word_spec.forms, "count", handle_overriding_forms(lemma, stem, count_forms, accent_and_form_spec.count))
+			com.insert_form_into_list(count_forms, {form=generate_noun_count_form(word_spec, accent_spec)})
+			com.insert_forms(word_spec.forms, "count", handle_overriding_forms(lemma, stem, count_forms, accent_and_form_spec.count))
 		end
 
 		-- Maybe set vocative singular.
 		if active_slots.voc_sg then
 			local vocatives = {}
-			insert_form_into_list(vocatives, {form=generate_noun_vocative(word_spec, accent_spec)})
-			insert_forms(word_spec.forms, "voc_sg", handle_overriding_forms(lemma, stem, vocatives, accent_and_form_spec.voc))
+			com.insert_form_into_list(vocatives, {form=generate_noun_vocative(word_spec, accent_spec)})
+			com.insert_forms(word_spec.forms, "voc_sg", handle_overriding_forms(lemma, stem, vocatives, accent_and_form_spec.voc))
 		end
 
 		-- Maybe set vocative plural.
 		if active_slots.voc_pl then
-			insert_forms(word_spec.forms, "voc_pl", handle_overriding_forms(lemma, stem, indefinite_plurals, accent_and_form_spec.voc_pl))
+			com.insert_forms(word_spec.forms, "voc_pl", handle_overriding_forms(lemma, stem, indefinite_plurals, accent_and_form_spec.voc_pl))
 		end
 
 		-- Maybe set "extra cases".
 		for _, case in ipairs(extra_noun_cases) do
 			local sg_slot = case .. "_sg"
 			if active_slots[sg_slot] then
-				insert_forms(word_spec.forms, sg_slot, handle_overriding_forms(lemma, stem, indefinite_singulars, accent_and_form_spec[case]))
+				com.insert_forms(word_spec.forms, sg_slot, handle_overriding_forms(lemma, stem, indefinite_singulars, accent_and_form_spec[case]))
 			end
 			local pl_slot = case .. "_pl"
 			if active_slots[pl_slot] then
-				insert_forms(word_spec.forms, pl_slot, handle_overriding_forms(lemma, stem, indefinite_plurals, accent_and_form_spec[pl_slot]))
+				com.insert_forms(word_spec.forms, pl_slot, handle_overriding_forms(lemma, stem, indefinite_plurals, accent_and_form_spec[pl_slot]))
 			end
 		end
 	end
@@ -1914,10 +1687,10 @@ local function decline_alternants(alternant_spec, active_slots, is_adj, include_
 		include_definite_at_end = decline_multiword_or_alternant_multiword_spec(
 			multiword_spec, active_slots, is_adj, include_definite)
 		for slot, _ in pairs(active_slots) do
-			insert_forms(alternant_spec.forms, slot, multiword_spec.forms[slot])
+			com.insert_forms(alternant_spec.forms, slot, multiword_spec.forms[slot])
 			if is_adj and active_slots.comp then
-				insert_forms(alternant_spec.compforms, slot, multiword_spec.compforms[slot])
-				insert_forms(alternant_spec.supforms, slot, multiword_spec.supforms[slot])
+				com.insert_forms(alternant_spec.compforms, slot, multiword_spec.compforms[slot])
+				com.insert_forms(alternant_spec.supforms, slot, multiword_spec.supforms[slot])
 			end
 		end
 	end
@@ -2067,7 +1840,7 @@ end
 local function show_forms(alternant_multiword_spec, is_adj)
 	local lemmas = {}
 	for _, lemma in ipairs(alternant_multiword_spec.forms.lemma) do
-		table.insert(lemmas, remove_monosyllabic_stress(lemma))
+		table.insert(lemmas, com.remove_monosyllabic_stress(lemma))
 	end
 	local accel_lemma = lemmas[1]
 	alternant_multiword_spec.forms.lemma = table.concat(lemmas, ", ")
@@ -2089,7 +1862,7 @@ local function show_forms(alternant_multiword_spec, is_adj)
 				for i, form in ipairs(forms) do
 					-- FIXME, this doesn't necessarily work correctly if there is an
 					-- embedded link in form.form.
-					local bg_text = remove_monosyllabic_stress(form.form)
+					local bg_text = com.remove_monosyllabic_stress(form.form)
 					local link, tr
 					if raw or form.form == "—" then
 						link = bg_text
@@ -2521,7 +2294,7 @@ local function concat_forms(alternant_multiword_spec, include_props, is_adj)
 	end
 	for slot, _ in pairs(is_adj and adj_slots or noun_slots) do
 		if not skip_slot(slot) then
-			local formtext = concat_forms_in_slot(alternant_multiword_spec.forms[slot])
+			local formtext = com.concat_forms_in_slot(alternant_multiword_spec.forms[slot])
 			if formtext then
 				table.insert(ins_text, slot .. "=" .. formtext)
 			end
@@ -2530,7 +2303,7 @@ local function concat_forms(alternant_multiword_spec, include_props, is_adj)
 	for _, slot in ipairs(is_adj and potential_adj_lemma_slots or potential_noun_lemma_slots) do
 		if not skip_slot(slot) then
 			slot = "linked_" .. slot
-			local formtext = concat_forms_in_slot(alternant_multiword_spec.forms[slot])
+			local formtext = com.concat_forms_in_slot(alternant_multiword_spec.forms[slot])
 			if formtext then
 				table.insert(ins_text, slot .. "=" .. formtext)
 			end
