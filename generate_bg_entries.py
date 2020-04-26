@@ -254,6 +254,9 @@ def process_line(line, etymnum=None, skip_pronun=False):
     elif etym.startswith("deverb:"):
       _, sourceterm = do_split(":", etym)
       etymtext = "Deverbal from {{m|bg|%s}}." % sourceterm
+    elif etym.startswith("ppp:"):
+      _, sourceterm = do_split(":", etym)
+      etymtext = "Past passive participle of {{m|bg|%s}}." % sourceterm
     elif etym.startswith("back:"):
       _, sourceterm = do_split(":", etym)
       etymtext = "{{back-form|bg|%s}}" % sourceterm
@@ -331,6 +334,8 @@ def process_line(line, etymnum=None, skip_pronun=False):
       else:
         if len(term) > 1:
           error("With multiple terms, must use ! with explicit declension")
+        if not decl.startswith("<"):
+          error("Declension must start with '<' or '!': %s" % decl)
         decltext = "%s%s" % (term[0], decl)
       # Eliminate masculine/feminine equiv, adjective/adverb, etc. from actual decl
       decltext = re.sub(r"\|([mf]|adv|absn|adj|dim|g)[0-9]*=[^|]*?(?=\||$)", "", decltext)
@@ -643,6 +648,8 @@ while True:
     lemma = els[1]
   else:
     lemma = els[0]
+  if lemma.startswith("!"):
+    error("Out-of-place exclamation point in lemma: %s" % lemma)
   lemma = remove_links(lemma)
   seen_lemmas = {lemma}
   lemma = bglib.remove_accents(lemma).split(",")[0]
