@@ -1706,16 +1706,16 @@ def compare_new_and_old_template_forms(origt, newt, generate_old_forms, generate
   new_forms = split_generate_args(new_result)
   for form in set(old_forms.keys() + new_forms.keys()):
     if form not in new_forms:
-      pagemsg("WARNING: form %s=%s in old forms but missing in new forms" % (
-        form, old_forms[form]))
+      pagemsg("WARNING: for original %s and new %s, form %s=%s in old forms but missing in new forms" % (
+        origt, newt, form, old_forms[form]))
       return False
     if form not in old_forms:
-      pagemsg("WARNING: form %s=%s in new forms but missing in old forms" % (
-        form, new_forms[form]))
+      pagemsg("WARNING: for original %s and new %s, form %s=%s in new forms but missing in old forms" % (
+        origt, newt, form, new_forms[form]))
       return False
     if new_forms[form] != old_forms[form]:
-      pagemsg("WARNING: form %s=%s in old forms but =%s in new forms" % (
-        form, old_forms[form], new_forms[form]))
+      pagemsg("WARNING: for original %s and new %s, form %s=%s in old forms but =%s in new forms" % (
+        origt, newt, form, old_forms[form], new_forms[form]))
       return False
   pagemsg("%s and %s have same forms" % (origt, newt))
   return True
