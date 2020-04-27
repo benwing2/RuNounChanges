@@ -72,7 +72,7 @@ end
 -- If word is monosyllabic, add stress to the vowel.
 function export.add_monosyllabic_stress(word)
 	if export.is_monosyllabic(word) and not rfind(word, "^%-") and not rfind(word, AC) then
-		word = rsub(word, "(" .. vowel_c .. ")", "%1" .. AC)
+		word = rsub(word, "(" .. export.vowel_c .. ")", "%1" .. AC)
 	end
 	return word
 end
@@ -91,7 +91,7 @@ end
 function export.maybe_stress_initial_syllable(word)
 	if not rfind(word, AC) then
 		-- stress first syllable
-		word = rsub(word, "^(.-" .. vowel_c .. ")", "%1" .. AC)
+		word = rsub(word, "^(.-" .. export.vowel_c .. ")", "%1" .. AC)
 	end
 	return word
 end
@@ -101,7 +101,7 @@ end
 function export.maybe_stress_final_syllable(word)
 	if not rfind(word, AC) then
 		-- stress last syllable
-		word = rsub(word, "(.*" .. vowel_c .. ")", "%1" .. AC)
+		word = rsub(word, "(.*" .. export.vowel_c .. ")", "%1" .. AC)
 	end
 	return word
 end

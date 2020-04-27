@@ -186,7 +186,7 @@ local prefixes = {
 	"^[дп]о", -- also catches под-
 	"^[зн]а", -- also catches над-
 	"^из",
-	"^о[^аеиоуяюъ]", -- also catches об-, от-
+	"^о" .. com.non_vowel_c, -- also catches об-, от-
 	"^пр[еио]", -- also catches пред-
 	"^раз",
 	"^[вс][^аеиоуяю]", -- also catches въ-, съ–
@@ -260,20 +260,27 @@ local function conjugate_all(base)
 		add(baseslot .. "_3pl", stem, "а")
 	end
 
-	conjugate_participle("prap", base.prap, base.prap, base.prap .. "и")
+	if base.aspect ~= "pf" then
+		conjugate_participle("prap", base.prap, base.prap,
+			map_forms(base.prap, function(form) return form .. "и" end))
+	end
 	conjugate_participle("paap", base.paapm, base.paapfstem, base.paappl)
-	conjugate_participle("ppp", base.ppp, base.ppp, base.ppppl)
+	if base.trans == "tr" then
+		conjugate_participle("ppp", base.ppp, base.ppp, base.ppppl)
+	end
 	add("paip_m_sg", base.paip, "")
 	add("paip_f_sg", base.paip, "а")
 	add("paip_n_sg", base.paip, "о")
 	add("paip_pl", base.paippl, "")
-	add("vn_ind_sg", base.vn, "")
-	add("vn_def_sg", base.vn, "то")
-	-- Some verbal nouns are ending-stressed.
-	map_forms(base.vn, function(form) add("vn_ind_pl", rsub(form, "е(́?)$", "и%1я"), "") end)
-	map_forms(base.vn, function(form) add("vn_def_pl", rsub(form, "е(́?)$", "и%1ята"), "") end)
-	add("vn_ind_pl", base.vn, "та")
-	add("vn_def_pl", base.vn, "тата")
+	if base.aspect ~= "pf" then
+		add("vn_ind_sg", base.vn, "")
+		add("vn_def_sg", base.vn, "то")
+		-- Some verbal nouns are ending-stressed.
+		add("vn_ind_pl", map_forms(base.vn, function(form) return rsub(form, "е(́?)$", "и%1я") end), "")
+		add("vn_def_pl", map_forms(base.vn, function(form) return rsub(form, "е(́?)$", "и%1ята") end), "")
+		add("vn_ind_pl", base.vn, "та")
+		add("vn_def_pl", base.vn, "тата")
+	end
 	add("pres_1sg", base.pres1sg, "")
 	add("pres_2sg", base.pres3sg, "ш")
 	add("pres_3sg", base.pres3sg, "")
@@ -284,7 +291,26 @@ local function conjugate_all(base)
 	conjugate_aor_impf("impf", base.impf, base.impf23)
 	add("impv_sg", base.impv, "")
 	add("impv_pl", base.impvpl, "")
-	add("advp", base.advp, "")
+	if base.aspect ~= "pf" then
+		add("advp", base.advp, "")
+	end
+end
+
+
+local function add_reflexive_suffix(base)
+	if base.refl then
+		for _, slot in ipairs(verb_slots) do
+			if not rfind(slot, "^vn_") then
+				base.forms[slot] = com.map_forms(base.forms[slot], function(form)
+					if rfind(form, "%[%[") then
+						return form .. " " .. "[[" .. base.refl .. "]]"
+					else
+						return "[[" .. form .. "]]" .. " [[" .. base.refl .. "]]"
+					end
+				end)
+			end
+		end
+	end
 end
 
 
@@ -352,13 +378,13 @@ end
 
 
 local function impv_12conj(base, lemma)
-	local stem, last_letter, accent = rmatch(lemma, "^(.*)(.)[ая](́?)$")
+	local stem, last_letter = rmatch(lemma, "^(.-)(.)́?[ая]́?$")
 	if not stem then
 		error("Unrecognized lemma for conjugation 1 or 2: '" .. lemma .. "'")
 	end
 	last_letter = com.first_palatalization[last_letter] or last_letter
 	local full_stem = stem .. last_letter
-	if rfind(last_letter, "[аеиоуяюъ]") then
+	if rfind(last_letter, com.vowel_c) then
 		base.impv = com.maybe_stress_final_syllable(full_stem) .. "й"
 		base.impvpl = base.impv .. "те"
 	else
@@ -388,11 +414,19 @@ conjs["1.1"] = function(base, lemma)
 	end
 	stem = com.maybe_stress_final_syllable(stem)
 
-	-- Generate aorist stems.
+	-- Generate aorist stems (and various other stems for вля́за).
 	local last_letter_pal = com.first_palatalization[last_letter] or last_letter
 	if rfind(lemma, "ля́за$") then
-		base.aor = stem .. last_letter .. "ох"
-		base.aor23 = rsub(stem, "^(.*)я", "%1е") .. last_letter .. "е"
+		local full_stem = stem .. last_letter
+		local unyat_stem = rsub(full_stem, "ля́з$", "ле́з")
+		base.aor = full_stem .. "ох"
+		base.aor23 = unyat_stem .. "е"
+		base.impf = unyat_stem .. "ех"
+		base.impf23 = unyat_stem .. "еше"
+		base.pres3sg = unyat_stem .. "е"
+		base.pres1pl = unyat_stem .. "ем"
+		base.impv = unyat_stem
+		base.impvpl = unyat_stem .. "те"
 	elseif rfind(lemma, "[бв]лека́$") or rfind(lemma, "сека́$") then
 		base.aor = rsub(stem, "^(.*)е", "%1я") .. last_letter .. "ох"
 		base.aor23 = stem .. last_letter_pal .. "е"
@@ -416,7 +450,6 @@ conjs["1.1"] = function(base, lemma)
 
 	-- Generate verbal noun stems.
 	base.vna = base.aor23 .. "не"
-	base.vni = map_forms(base.impf, function(form) return rsub(rsub(form, "я́х$", "е́х"), "х$", "не")  end, "first only")
 end
 
 
@@ -487,8 +520,14 @@ conjs["1.4"] = function(base, lemma)
 
 	-- Generate aorist stems.
 	local aor23
+	local skip_generate_aorist = false
 	if rfind(lemma, "лъ́жа$") or rfind(lemma, "стри́жа$") or rfind(lemma, "стъ́ржа$") then
 		aor23 = rsub(lemma, "жа$", "га")
+	elseif rfind(lemma, "ре́жа$") then
+		aor23 = rsub(lemma, "ре́жа$", "ря́за")
+		local shifted_aor23 = rsub(lemma, "ре́жа", "реза́")
+		generate_maybe_shifted_aorist(base, aor23, shifted_aor23)
+		skip_generate_aorist = true
 	elseif rfind(lemma, "жа$") then
 		aor23 = rsub(lemma, "жа$", "за")
 	elseif rfind(lemma, "ча$") then
@@ -498,7 +537,9 @@ conjs["1.4"] = function(base, lemma)
 	else
 		error("Unrecognized lemma for class 1.4: '" .. lemma .. "'")
 	end
-	generate_maybe_shifted_aorist(base, aor23)
+	if not skip_generate_aorist then
+		generate_maybe_shifted_aorist(base, aor23)
+	end
 
 	-- Generate past passive participle stems.
 	base.ppp = aor23 .. "н"
@@ -558,6 +599,9 @@ conjs["1.7"] = function(base, lemma)
 	if rfind(lemma, "ма$") then
 		base.aor23 = rsub(lemma, "ма$", "")
 		base.ppp = base.aor23 .. "т"
+	elseif rfind(lemma, "[жчш]е́я$") then
+		base.aor23 = rsub(lemma, "е́я$", "а́")
+		base.ppp = map_forms(ppp_endings, function(ending) return base.aor23 .. ending end) 
 	elseif rfind(lemma, "е́я$") then
 		base.aor23 = rsub(lemma, "е́я$", "я́")
 		local yat_plural_stem = rsub(lemma, "е́я$", "е́")
@@ -572,7 +616,7 @@ conjs["1.7"] = function(base, lemma)
 		if rfind(lemma, "[иую]́я$") then
 			base.ppp = base.aor23 .. "т"
 		else
-			base.ppp = map_forms(ppp_endings, function(ending) return base.aor23 .. ending .. "и" end)
+			base.ppp = map_forms(ppp_endings, function(ending) return base.aor23 .. ending end)
 		end
 	else
 		error("Unrecognized lemma for class 1.7: '" .. lemma .. "'")
@@ -617,10 +661,6 @@ conjs["2.2"] = function(base, lemma)
 	-- Generate past passive participle stems.
 	base.ppp = base.aor23 .. "н"
 	base.ppppl = yat_plural_stem .. "ни"
-
-	-- Generate verbal noun stems.
-	base.vna = rsub(lemma, "я́$", "е́не")
-	base.vni = base.vna
 end
 
 
@@ -637,6 +677,12 @@ conjs["2.3"] = function(base, lemma)
 
 	-- Generate past passive participle stems.
 	base.ppp = base.aor23 .. "н"
+
+	-- Handle irregularities
+	if rfind(lemma, "държа́") then
+		base.impv = rsub(lemma, "държа́", "дръ́ж")
+		base.impvpl = base.impv .. "те"
+	end
 end
 
 
@@ -695,11 +741,16 @@ local function postprocess_base(base)
 	if not base.ppppl then
 		base.ppppl = map_forms(base.ppp, function(form) return form .. "и" end)
 	end
+	local function aor_impf_to_vn(form)
+		form = rsub(form, "я́х$", "е́не")
+		form = rsub(form, "х$", "не")
+		return form
+	end
 	if base.vna == nil then
-		base.vna = map_forms(base.aor, function(form) return rsub(form, "х$", "не") end, "first only")
+		base.vna = map_forms(base.aor, aor_impf_to_vn, "first only")
 	end
 	if base.vni == nil then
-		base.vni = map_forms(base.impf, function(form) return rsub(form, "х$", "не") end, "first only")
+		base.vni = map_forms(base.impf, aor_impf_to_vn, "first only")
 	end
 	if base.vna == false then
 		assert(base.vni)
@@ -721,7 +772,7 @@ local function postprocess_base(base)
 	elseif base.vnspec == "ia" then
 		base.vn = {base.vni, base.vna}
 	else
-		error("Imperfective/biaspectual verb '" .. base.full_lemma .. "' has two possible verbal nouns '" .. base.vna .. "' and '" .. base.vni .. "', don't know which one to choose; specify 'vna', 'vni', 'vnai' or 'vnia'")
+		error("Imperfective/biaspectual verb '" .. base.full_lemma .. "' has two possible verbal nouns, don't know which one to choose; specify 'vna' for " .. base.vna .. ", 'vni' for " .. base.vni .. ", or 'vnai' or 'vnia' for both")
 	end
 end
 
@@ -749,10 +800,11 @@ local function parse_indicator_and_form_spec(angle_bracket_spec)
 				error("Can't specify aspect twice: '" .. inside .. "'")
 			end
 			base.aspect = part
-		elseif part == "tr" then
-			if base.tr then
+		elseif part == "tr" or part == "intr" then
+			if base.trans then
 				error("Can't specify transitivity twice: " .. inside .. "'")
 			end
+			base.trans = part
 		elseif part == "т" or part == "тн" or part == "нт" then
 			if base.ppp_ending then
 				error("Can't specify past passive participle ending twice: " .. inside .. "'")
@@ -801,8 +853,12 @@ local function detect_indicator_and_form_spec(base, lemma)
 	if not base.aspect then
 		error("Aspect of 'pf', 'impf' or 'both' must be specified")
 	end
-	if base.refl and base.tr then
-		error("Can't specify 'tr' with reflexive verb '" .. base.full_lemma .. "'")
+	if base.refl then
+		if base.trans then
+			error("Can't specify transitivity with reflexive verb, they're always intransitive: '" .. base.full_lemma .. "'")
+		end
+	elseif not base.trans then
+		error("Transitivity of 'tr' or 'intr' must be specified")
 	end
 	if not base.conj then
 		if rfind(lemma, "м$") then
@@ -1199,7 +1255,9 @@ function export.do_generate_forms(parent_args, pos, from_headword, def)
 	base.forms = {}
 	base.footnote = footnote
 	conjugate_all(base)
-	base.forms.lemma = args.lemma and #args.lemma > 0 and args.lemma or {lemma}
+	add_reflexive_suffix(base)
+	base.forms.lemma = args.lemma and #args.lemma > 0 and args.lemma or
+		{lemma .. (base.refl and " " .. base.refl or "")}
 	return base
 end
 
