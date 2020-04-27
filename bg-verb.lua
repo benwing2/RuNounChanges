@@ -37,7 +37,7 @@ local m_table = require("Module:table")
 local m_string_utilities = require("Module:string utilities")
 local m_para = require("Module:parameters")
 local m_bg_translit = require("Module:bg-translit")
-local com = require("Module:bg-common")
+local com = require("Module:User:Benwing2/bg-common")
 
 local current_title = mw.title.getCurrentTitle()
 local NAMESPACE = current_title.nsText
@@ -92,16 +92,16 @@ local verb_slots = {
 
 
 local prefix_to_accel_form = {
-	["pres", "pres|ind"],
-	["impf", "impf|ind"],
-	["aor", "aor|ind"],
-	["impv", "imp"],
-	["prap", "pres|act|part"],
-	["paap", "past|act|aor|part"],
-	["paip", "past|act|impf|part"],
-	["ppp", "past|pass|part"],
-	["vn", "vn"],
-	["advp", "adv|part"],
+	["pres"] = "pres|ind",
+	["impf"] = "impf|ind",
+	["aor"] = "aor|ind",
+	["impv"] = "imp",
+	["prap"] = "pres|act|part",
+	["paap"] = "past|act|aor|part",
+	["paip"] = "past|act|impf|part",
+	["ppp"] = "past|pass|part",
+	["vn"] = "vn",
+	["advp"] = "adv|part",
 }
 
 
@@ -146,11 +146,19 @@ local function slot_to_accel_form(slot)
 end
 
 
+--[=[
 local verb_misc_slots = {
 	"refl",
 	"along_with_refl",
 	"paap_ind_m_sg_notr", "paap_ind_f_sg_notr", "paap_ind_n_sg_notr", "paap_ind_pl_notr",
 	"paip_m_sg_notr", "paip_f_sg_notr", "paip_n_sg_notr", "paip_pl_notr",
+}
+]=]
+
+
+local verb_notr_slots = {
+	"paap_ind_m_sg", "paap_ind_f_sg", "paap_ind_n_sg", "paap_ind_pl",
+	"paip_m_sg", "paip_f_sg", "paip_n_sg", "paip_pl",
 }
 
 
@@ -196,14 +204,17 @@ local function verb_may_be_prefixed(lemma)
 end
 
 
-local function map_forms(forms, fn)
+local function map_forms(forms, fn, first_only)
 	if type(forms) == "string" then
 		return fn(forms)
 	elseif forms.form then
 		return {form = fn(forms.form), footnotes = forms.footnotes}
 	else
 		local retval = {}
-		for _, form in ipairs(forms) do
+		for i, form in ipairs(forms) do
+			if first_only then
+				return map_forms(form, fn)
+			end
 			table.insert(retval, map_forms(form, fn))
 		end
 		return retval
@@ -240,13 +251,13 @@ local function conjugate_all(base)
 		add(baseslot .. "_def_pl", pl, "те")
 	end
 
-	local function conjugate_aor_impf(baseslot, base, base23)
-		add(baseslot .. "_1sg", base.base, "")
-		add(baseslot .. "_2sg", base.base23, "")
-		add(baseslot .. "_3sg", base.base23, "")
-		add(baseslot .. "_1pl", base.base, "ме")
-		add(baseslot .. "_2pl", base.base, "те")
-		add(baseslot .. "_3pl", base.base, "а")
+	local function conjugate_aor_impf(baseslot, stem, stem23)
+		add(baseslot .. "_1sg", stem, "")
+		add(baseslot .. "_2sg", stem23, "")
+		add(baseslot .. "_3sg", stem23, "")
+		add(baseslot .. "_1pl", stem, "ме")
+		add(baseslot .. "_2pl", stem, "те")
+		add(baseslot .. "_3pl", stem, "а")
 	end
 
 	conjugate_participle("prap", base.prap, base.prap, base.prap .. "и")
@@ -255,13 +266,14 @@ local function conjugate_all(base)
 	add("paip_m_sg", base.paip, "")
 	add("paip_f_sg", base.paip, "а")
 	add("paip_n_sg", base.paip, "о")
-	add("paip_pl", base.paippl)
-	add("vn_ind_sg", base.vn, "е")
-	add("vn_def_sg", base.vn, "ето")
-	add("vn_ind_pl", base.vn, "ия")
-	add("vn_def_pl", base.vn, "ията")
-	add("vn_ind_pl", base.vn, "ета")
-	add("vn_def_pl", base.vn, "етата")
+	add("paip_pl", base.paippl, "")
+	add("vn_ind_sg", base.vn, "")
+	add("vn_def_sg", base.vn, "то")
+	-- Some verbal nouns are ending-stressed.
+	map_forms(base.vn, function(form) add("vn_ind_pl", rsub(form, "е(́?)$", "и%1я"), "") end)
+	map_forms(base.vn, function(form) add("vn_def_pl", rsub(form, "е(́?)$", "и%1ята"), "") end)
+	add("vn_ind_pl", base.vn, "та")
+	add("vn_def_pl", base.vn, "тата")
 	add("pres_1sg", base.pres1sg, "")
 	add("pres_2sg", base.pres3sg, "ш")
 	add("pres_3sg", base.pres3sg, "")
@@ -272,6 +284,7 @@ local function conjugate_all(base)
 	conjugate_aor_impf("impf", base.impf, base.impf23)
 	add("impv_sg", base.impv, "")
 	add("impv_pl", base.impvpl, "")
+	add("advp", base.advp, "")
 end
 
 
@@ -312,7 +325,7 @@ local function impf_12conj(base, lemma)
 	base.impf23 = full_stem .. "е" .. accent .. "ше"
 	if accent == AC then
 		if rfind(last_letter_pal, "[жчш]") then
-			base.impf = {full_stem .. "а́х", {form = full_stem .. "е́х", footnotes = {"largely fallen into disuse"}}}
+			base.impf = {full_stem .. "а́х", {form = full_stem .. "е́х", footnotes = {"[largely fallen into disuse]"}}}
 		else
 			base.impf = full_stem .. "я́х"
 			-- This is the only case where the imperfect participle's vowel
@@ -331,7 +344,7 @@ end
 local function generate_maybe_shifted_aorist(base, aor23, shifted_aor23)
 	if (base.aspect ~= "pf" or not base.prefixed) and not rfind(aor23, "[ая]́$") then
 		shifted_aor23 = shifted_aor23 or rsub(aor23, AC, "") .. AC
-		base.aor23 = {aor23, {form = shifted_aor23, footnotes = {"dialectally marked"}}}
+		base.aor23 = {aor23, {form = shifted_aor23, footnotes = {"[dialectally marked]"}}}
 	else
 		base.aor23 = aor23
 	end
@@ -362,7 +375,7 @@ local function impf_impv_12conj(base, lemma)
 end
 
 
-local conjs
+local conjs = {}
 
 
 conjs["1.1"] = function(base, lemma)
@@ -400,6 +413,10 @@ conjs["1.1"] = function(base, lemma)
 
 	-- Generate past passive participle stems.
 	base.ppp = rsub(stem, "я́", "е́") .. last_letter_pal .. "ен"
+
+	-- Generate verbal noun stems.
+	base.vna = base.aor23 .. "не"
+	base.vni = map_forms(base.impf, function(form) return rsub(rsub(form, "я́х$", "е́х"), "х$", "не")  end, "first only")
 end
 
 
@@ -429,6 +446,14 @@ conjs["1.2"] = function(base, lemma)
 
 	-- Generate past passive participle stems.
 	base.ppp = aor23 and aor23 .. "н" or rfind(lemma, "на́?$") and lemma .. "т" or lemma .. "н"
+
+	-- Generate verbal noun stems.
+	if rfind(lemma, "на́?$") then
+		base.vna = false
+	elseif rfind(lemma, "ера́$") then
+		base.vna = rsub(lemma, "ера́$", "ране́")
+		base.vni = false
+	end
 end
 
 
@@ -552,6 +577,11 @@ conjs["1.7"] = function(base, lemma)
 	else
 		error("Unrecognized lemma for class 1.7: '" .. lemma .. "'")
 	end
+
+	-- Generate verbal noun stems.
+	if rfind(lemma, "[еиую]́я$") then
+		base.vna = false
+	end
 end
 
 
@@ -564,6 +594,10 @@ conjs["2.1"] = function(base, lemma)
 
 	-- Generate past passive participle stems.
 	base.ppp = rsub(lemma, "^(.*)[ая](́?)$", "%1е%2н")
+
+	-- Generate verbal noun stems.
+	base.vna = base.ppp .. "е"
+	base.vni = false
 end
 
 
@@ -583,6 +617,10 @@ conjs["2.2"] = function(base, lemma)
 	-- Generate past passive participle stems.
 	base.ppp = base.aor23 .. "н"
 	base.ppppl = yat_plural_stem .. "ни"
+
+	-- Generate verbal noun stems.
+	base.vna = rsub(lemma, "я́$", "е́не")
+	base.vni = base.vna
 end
 
 
@@ -657,13 +695,41 @@ local function postprocess_base(base)
 	if not base.ppppl then
 		base.ppppl = map_forms(base.ppp, function(form) return form .. "и" end)
 	end
+	if base.vna == nil then
+		base.vna = map_forms(base.aor, function(form) return rsub(form, "х$", "не") end, "first only")
+	end
+	if base.vni == nil then
+		base.vni = map_forms(base.impf, function(form) return rsub(form, "х$", "не") end, "first only")
+	end
+	if base.vna == false then
+		assert(base.vni)
+		base.vn = base.vni
+	elseif base.vni == false then
+		assert(base.vna)
+		base.vn = base.vna
+	elseif base.vna == base.vni then
+		base.vn = base.vna
+	elseif base.aspect == "pf" then
+		-- No verbal noun, so it doesn't matter.
+		base.vn = base.vna
+	elseif base.vnspec == "a" then
+		base.vn = base.vna
+	elseif base.vnspec == "i" then
+		base.vn = base.vni
+	elseif base.vnspec == "ai" then
+		base.vn = {base.vna, base.vni}
+	elseif base.vnspec == "ia" then
+		base.vn = {base.vni, base.vna}
+	else
+		error("Imperfective/biaspectual verb '" .. base.full_lemma .. "' has two possible verbal nouns '" .. base.vna .. "' and '" .. base.vni .. "', don't know which one to choose; specify 'vna', 'vni', 'vnai' or 'vnia'")
+	end
 end
 
 
 local function parse_indicator_and_form_spec(angle_bracket_spec)
 	local inside = rmatch(angle_bracket_spec, "^<(.*)>$")
 	assert(inside)
-	local base
+	local base = {}
 	local parts = rsplit(inside, ".", true)
 	local conj
 	local start = 1
@@ -677,7 +743,7 @@ local function parse_indicator_and_form_spec(angle_bracket_spec)
 	end
 	base.conj = conj
 	for i=start,#parts do
-		local part = parts[start]
+		local part = parts[i]
 		if part == "impf" or part == "pf" or part == "both" then
 			if base.aspect then
 				error("Can't specify aspect twice: '" .. inside .. "'")
@@ -697,6 +763,11 @@ local function parse_indicator_and_form_spec(angle_bracket_spec)
 				error("Can't specify '-pref' twice: " .. inside .. "'")
 			end
 			base.no_pref = true
+		elseif part == "vna" or part == "vni" or part == "vnai" or part == "vnia" then
+			if base.vnspec then
+				error("Can't specify verbal noun spec twice: " .. inside .. "'")
+			end
+			base.vnspec = rsub(part, "^vn", "")
 		else
 			error("Unrecognized indicator '" .. part .. "': '" .. inside .. "'")
 		end
@@ -768,21 +839,37 @@ local function parse_word_spec(text)
 end
 
 
+local function format_gender(g)
+	return require("Module:gender and number").format_list({g})
+end
+
+
 local function show_forms(base)
+	local forms = base.forms
 	local lemmas = {}
-	for _, lemma in ipairs(base.forms.lemma) do
+	for _, lemma in ipairs(forms.lemma) do
 		table.insert(lemmas, com.remove_monosyllabic_stress(lemma))
 	end
 	local accel_lemma = lemmas[1]
-	base.forms.lemma = table.concat(lemmas, ", ")
+	forms.lemma = table.concat(lemmas, ", ")
 
 	local footnote_obj = com.init_footnote_obj()
 
-	com.set_forms(footnote_obj, base.forms, base.forms, verb_slots, true, false, accel_lemma, slot_to_accel_form)
+	for _, notr_slot in ipairs(verb_notr_slots) do
+		forms[notr_slot .. "_notr"] = com.set_one_form(footnote_obj, forms, notr_slot,
+			accel_lemma, slot_to_accel_form, false, "slash join")
+	end
+	com.set_forms(footnote_obj, forms, forms, verb_slots, "is list", accel_lemma, slot_to_accel_form)
+	forms.refl = base.refl or ""
+	forms.along_with_refl = base.refl and "along with [[" .. base.refl .. "]]" or ""
+	forms.gm = format_gender("m")
+	forms.gf = format_gender("f")
+	forms.gn = format_gender("n")
+	forms.gp = format_gender("p")
 	if base.footnote then
 		table.insert(footnote_obj.notes, base.footnote)
 	end
-	base.forms.footnote = table.concat(footnote_obj.notes, "<br />")
+	forms.footnote = table.concat(footnote_obj.notes, "<br />")
 end
 
 
@@ -814,7 +901,7 @@ local function make_table(word_spec)
 
 	local table_spec = [=[
 <div class="NavFrame">
-<div class="NavHead" align=left>&nbsp; &nbsp; Conjugation</div>
+<div class="NavHead" align=left>&nbsp; &nbsp; Conjugation of {lemma}</div>
 <div class="NavContent" align="center">
 
 {\op}| style="background:#F0F0F0; font-size: 90%; width:100%; margin: 0 auto 0 auto; text-align:center;" class="inflection-table"
@@ -949,16 +1036,16 @@ local function make_table(word_spec)
 ! colspan="6" style="background:#C0C0C0" | Use [[нямаше]] [[да]] {refl} followed by the present indicative tense
 |-
 ! colspan="2" style="background:#c0cfe4" | present perfect
-! colspan="6" style="background:#C0C0C0" | Use the present indicative tense of [[съм]] {along_with_refl} and {paap_ind_m_sg_notr} {\op}{\op}g|m{\cl}{\cl}, {paap_ind_f_sg_notr} {\op}{\op}g|f{\cl}{\cl}, {paap_ind_n_sg_notr} {\op}{\op}g|n{\cl}{\cl}, or {paap_ind_pl_notr} {\op}{\op}g|p{\cl}{\cl}
+! colspan="6" style="background:#C0C0C0" | Use the present indicative tense of [[съм]] {along_with_refl} and {paap_ind_m_sg_notr} {gm}, {paap_ind_f_sg_notr} {gf}, {paap_ind_n_sg_notr} {gn}, or {paap_ind_pl_notr} {gp}
 |-
 ! colspan="2" style="background:#c0cfe4" | past perfect
-! colspan="6" style="background:#C0C0C0" | Use the imperfect indicative tense of [[съм]] {along_with_refl} and {paap_ind_m_sg_notr} {\op}{\op}g|m{\cl}{\cl}, {paap_ind_f_sg_notr} {\op}{\op}g|f{\cl}{\cl}, {paap_ind_n_sg_notr} {\op}{\op}g|n{\cl}{\cl}, or {paap_ind_pl_notr} {\op}{\op}g|p{\cl}{\cl}
+! colspan="6" style="background:#C0C0C0" | Use the imperfect indicative tense of [[съм]] {along_with_refl} and {paap_ind_m_sg_notr} {gm}, {paap_ind_f_sg_notr} {gf}, {paap_ind_n_sg_notr} {gn}, or {paap_ind_pl_notr} {gp}
 |-
 ! colspan="2" style="background:#c0cfe4" | future perfect
-! colspan="6" style="background:#C0C0C0" | Use the future indicative tense of [[съм]] {along_with_refl} and {paap_ind_m_sg_notr} {\op}{\op}g|m{\cl}{\cl}, {paap_ind_f_sg_notr} {\op}{\op}g|f{\cl}{\cl}, {paap_ind_n_sg_notr} {\op}{\op}g|n{\cl}{\cl}, or {paap_ind_pl_notr} {\op}{\op}g|p{\cl}{\cl}
+! colspan="6" style="background:#C0C0C0" | Use the future indicative tense of [[съм]] {along_with_refl} and {paap_ind_m_sg_notr} {gm}, {paap_ind_f_sg_notr} {gf}, {paap_ind_n_sg_notr} {gn}, or {paap_ind_pl_notr} {gp}
 |-
 ! colspan="2" style="background:#c0cfe4" | future perfect in the past
-! colspan="6" style="background:#C0C0C0" | Use the future in the past indicative tense of [[съм]] {along_with_refl} and {paap_ind_m_sg_notr} {\op}{\op}g|m{\cl}{\cl}, {paap_ind_f_sg_notr} {\op}{\op}g|f{\cl}{\cl}, {paap_ind_n_sg_notr} {\op}{\op}g|n{\cl}{\cl}, or {paap_ind_pl_notr} {\op}{\op}g|p{\cl}{\cl}
+! colspan="6" style="background:#C0C0C0" | Use the future in the past indicative tense of [[съм]] {along_with_refl} and {paap_ind_m_sg_notr} {gm}, {paap_ind_f_sg_notr} {gf}, {paap_ind_n_sg_notr} {gn}, or {paap_ind_pl_notr} {gp}
 |-
 ! colspan="2" style="background:#c0e4c0" | renarrative
 ! style="background:#c0e4c0" | аз
@@ -969,10 +1056,10 @@ local function make_table(word_spec)
 ! style="background:#c0e4c0" | те
 |-
 ! colspan="2" style="background:#c0e4c0" | present and imperfect
-! colspan="6" style="background:#C0C0C0; white-space: nowrap;" | Use the present indicative tense of [[съм]] (leave it out in third person) {along_with_refl} and {paip_m_sg_notr} {\op}{\op}g|m{\cl}{\cl}, {paip_f_sg_notr} {\op}{\op}g|f{\cl}{\cl}, {paip_n_sg_notr} {\op}{\op}g|n{\cl}{\cl}, or {paip_pl_notr} {\op}{\op}g|p{\cl}{\cl}
+! colspan="6" style="background:#C0C0C0; white-space: nowrap;" | Use the present indicative tense of [[съм]] (leave it out in third person) {along_with_refl} and {paip_m_sg_notr} {gm}, {paip_f_sg_notr} {gf}, {paip_n_sg_notr} {gn}, or {paip_pl_notr} {gp}
 |-
 ! colspan="2" style="background:#c0e4c0" | aorist
-! colspan="6" style="background:#C0C0C0" | Use the present indicative tense of [[съм]] (leave it out in third person) {along_with_refl} and {paap_ind_m_sg_notr} {\op}{\op}g|m{\cl}{\cl}, {paap_ind_f_sg_notr} {\op}{\op}g|f{\cl}{\cl}, {paap_ind_n_sg_notr} {\op}{\op}g|n{\cl}{\cl}, or {paap_ind_pl_notr} {\op}{\op}g|p{\cl}{\cl}
+! colspan="6" style="background:#C0C0C0" | Use the present indicative tense of [[съм]] (leave it out in third person) {along_with_refl} and {paap_ind_m_sg_notr} {gm}, {paap_ind_f_sg_notr} {gf}, {paap_ind_n_sg_notr} {gn}, or {paap_ind_pl_notr} {gp}
 |-
 ! rowspan="2" style="background:#c0e4c0" | future and future in the past
 ! style="background:#c0e4c0" | pos.
@@ -982,10 +1069,10 @@ local function make_table(word_spec)
 ! colspan="6" style="background:#C0C0C0" | Use [[нямало]] [[да]] {refl} and the present indicative tense
 |-
 ! colspan="2" style="background:#c0e4c0" | present and past perfect
-! colspan="6" style="background:#C0C0C0" | Use the present/imperfect renarrative tense of [[съм]] {along_with_refl} and {paap_ind_m_sg_notr} {\op}{\op}g|m{\cl}{\cl}, {paap_ind_f_sg_notr} {\op}{\op}g|f{\cl}{\cl}, {paap_ind_n_sg_notr} {\op}{\op}g|n{\cl}{\cl}, or {paap_ind_pl_notr} {\op}{\op}g|p{\cl}{\cl}
+! colspan="6" style="background:#C0C0C0" | Use the present/imperfect renarrative tense of [[съм]] {along_with_refl} and {paap_ind_m_sg_notr} {gm}, {paap_ind_f_sg_notr} {gf}, {paap_ind_n_sg_notr} {gn}, or {paap_ind_pl_notr} {gp}
 |-
 ! colspan="2" style="background:#c0e4c0" | future perfect and future perfect in the past
-! colspan="6" style="background:#C0C0C0" | Use the future/future in the past renarrative tense of [[съм]] {along_with_refl} and {paap_ind_m_sg_notr} {\op}{\op}g|m{\cl}{\cl}, {paap_ind_f_sg_notr} {\op}{\op}g|f{\cl}{\cl}, {paap_ind_n_sg_notr} {\op}{\op}g|n{\cl}{\cl}, or {paap_ind_pl_notr} {\op}{\op}g|p{\cl}{\cl}
+! colspan="6" style="background:#C0C0C0" | Use the future/future in the past renarrative tense of [[съм]] {along_with_refl} and {paap_ind_m_sg_notr} {gm}, {paap_ind_f_sg_notr} {gf}, {paap_ind_n_sg_notr} {gn}, or {paap_ind_pl_notr} {gp}
 |-
 ! colspan="2" style="background:#f0e68c" | dubitative
 ! style="background:#f0e68c" | аз
@@ -996,10 +1083,10 @@ local function make_table(word_spec)
 ! style="background:#f0e68c" | те
 |-
 ! colspan="2" style="background:#f0e68c" | present and imperfect
-! colspan="6" style="background:#C0C0C0" | Use the present/imperfect renarrative tense of [[съм]] {along_with_refl} and {paip_m_sg_notr} {\op}{\op}g|m{\cl}{\cl}, {paip_f_sg_notr} {\op}{\op}g|f{\cl}{\cl}, {paip_n_sg_notr} {\op}{\op}g|n{\cl}{\cl}, or {paip_pl_notr} {\op}{\op}g|p{\cl}{\cl}
+! colspan="6" style="background:#C0C0C0" | Use the present/imperfect renarrative tense of [[съм]] {along_with_refl} and {paip_m_sg_notr} {gm}, {paip_f_sg_notr} {gf}, {paip_n_sg_notr} {gn}, or {paip_pl_notr} {gp}
 |-
 ! colspan="2" style="background:#f0e68c" | aorist
-! colspan="6" style="background:#C0C0C0" | Use the aorist renarrative tense of [[съм]] {along_with_refl} and {paap_ind_m_sg_notr} {\op}{\op}g|m{\cl}{\cl}, {paap_ind_f_sg_notr} {\op}{\op}g|f{\cl}{\cl}, {paap_ind_n_sg_notr} {\op}{\op}g|n{\cl}{\cl}, or {paap_ind_pl_notr} {\op}{\op}g|p{\cl}{\cl}
+! colspan="6" style="background:#C0C0C0" | Use the aorist renarrative tense of [[съм]] {along_with_refl} and {paap_ind_m_sg_notr} {gm}, {paap_ind_f_sg_notr} {gf}, {paap_ind_n_sg_notr} {gn}, or {paap_ind_pl_notr} {gp}
 |-
 ! rowspan="2" style="background:#f0e68c" | future and future in the past
 ! style="background:#f0e68c" | pos.
@@ -1012,7 +1099,7 @@ local function make_table(word_spec)
 | colspan="6" |<center>''none''</center>
 |-
 ! colspan="2" style="background:#f0e68c" | future perfect and future perfect in the past
-! colspan="6" style="background:#C0C0C0; white-space: nowrap;" | Use the future/future in the past dubitative tense of [[съм]] {along_with_refl} and {paap_ind_m_sg_notr} {\op}{\op}g|m{\cl}{\cl}, {paap_ind_f_sg_notr} {\op}{\op}g|f{\cl}{\cl}, {paap_ind_n_sg_notr} {\op}{\op}g|n{\cl}{\cl}, or {paap_ind_pl_notr} {\op}{\op}g|p{\cl}{\cl}
+! colspan="6" style="background:#C0C0C0; white-space: nowrap;" | Use the future/future in the past dubitative tense of [[съм]] {along_with_refl} and {paap_ind_m_sg_notr} {gm}, {paap_ind_f_sg_notr} {gf}, {paap_ind_n_sg_notr} {gn}, or {paap_ind_pl_notr} {gp}
 |-
 ! colspan="2" style="background:#9be1ff" | conclusive
 ! style="background:#9be1ff" | аз
@@ -1023,10 +1110,10 @@ local function make_table(word_spec)
 ! style="background:#9be1ff" | те
 |-
 ! colspan="2" style="background:#9be1ff" | present and imperfect
-! colspan="6" style="background:#C0C0C0" | Use the present indicative tense of [[съм]] {along_with_refl} and {paip_m_sg_notr} {\op}{\op}g|m{\cl}{\cl}, {paip_f_sg_notr} {\op}{\op}g|f{\cl}{\cl}, {paip_n_sg_notr} {\op}{\op}g|n{\cl}{\cl}, or {paip_pl_notr} {\op}{\op}g|p{\cl}{\cl}
+! colspan="6" style="background:#C0C0C0" | Use the present indicative tense of [[съм]] {along_with_refl} and {paip_m_sg_notr} {gm}, {paip_f_sg_notr} {gf}, {paip_n_sg_notr} {gn}, or {paip_pl_notr} {gp}
 |-
 ! colspan="2" style="background:#9be1ff" | aorist
-! colspan="6" style="background:#C0C0C0" | Use the present indicative tense of [[съм]] {along_with_refl} and {paap_ind_m_sg_notr} {\op}{\op}g|m{\cl}{\cl}, {paap_ind_f_sg_notr} {\op}{\op}g|f{\cl}{\cl}, {paap_ind_n_sg_notr} {\op}{\op}g|n{\cl}{\cl}, or {paap_ind_pl_notr} {\op}{\op}g|p{\cl}{\cl}
+! colspan="6" style="background:#C0C0C0" | Use the present indicative tense of [[съм]] {along_with_refl} and {paap_ind_m_sg_notr} {gm}, {paap_ind_f_sg_notr} {gf}, {paap_ind_n_sg_notr} {gn}, or {paap_ind_pl_notr} {gp}
 |-
 ! rowspan="2" style="background:#9be1ff" | future and future in the past
 ! style="background:#9be1ff" | pos.
@@ -1036,10 +1123,10 @@ local function make_table(word_spec)
 ! colspan="6" style="background:#C0C0C0" | Use [[нямало]] [[е]] [[да]] {refl} and the present indicative tense
 |-
 ! colspan="2" style="background:#9be1ff" | present and past perfect
-! colspan="6" style="background:#C0C0C0" | Use the present/imperfect conclusive tense of [[съм]] {along_with_refl} and {paap_ind_m_sg_notr} {\op}{\op}g|m{\cl}{\cl}, {paap_ind_f_sg_notr} {\op}{\op}g|f{\cl}{\cl}, {paap_ind_n_sg_notr} {\op}{\op}g|n{\cl}{\cl}, or {paap_ind_pl_notr} {\op}{\op}g|p{\cl}{\cl}
+! colspan="6" style="background:#C0C0C0" | Use the present/imperfect conclusive tense of [[съм]] {along_with_refl} and {paap_ind_m_sg_notr} {gm}, {paap_ind_f_sg_notr} {gf}, {paap_ind_n_sg_notr} {gn}, or {paap_ind_pl_notr} {gp}
 |-
 ! colspan="2" style="background:#9be1ff" | future perfect and future perfect in the past
-! colspan="6" style="background:#C0C0C0; white-space: nowrap;" | Use the future/future in the past conclusive tense of [[съм]] {along_with_refl} and {paap_ind_m_sg_notr} {\op}{\op}g|m{\cl}{\cl}, {paap_ind_f_sg_notr} {\op}{\op}g|f{\cl}{\cl}, {paap_ind_n_sg_notr} {\op}{\op}g|n{\cl}{\cl}, or {paap_ind_pl_notr} {\op}{\op}g|p{\cl}{\cl}
+! colspan="6" style="background:#C0C0C0; white-space: nowrap;" | Use the future/future in the past conclusive tense of [[съм]] {along_with_refl} and {paap_ind_m_sg_notr} {gm}, {paap_ind_f_sg_notr} {gf}, {paap_ind_n_sg_notr} {gn}, or {paap_ind_pl_notr} {gp}
 |-
 ! rowspan="2" colspan="2" style="background:#f2b6c3" | conditional
 ! style="background:#f2b6c3" | аз
@@ -1049,7 +1136,7 @@ local function make_table(word_spec)
 ! style="background:#f2b6c3" | вие
 ! style="background:#f2b6c3" | те
 |-
-! colspan="6" style="background:#C0C0C0" | Use the first aorist indicative tense of [[бъда]] {along_with_refl} and {paap_ind_m_sg_notr} {\op}{\op}g|m{\cl}{\cl}, {paap_ind_f_sg_notr} {\op}{\op}g|f{\cl}{\cl}, {paap_ind_n_sg_notr} {\op}{\op}g|n{\cl}{\cl}, or {paap_ind_pl_notr} {\op}{\op}g|p{\cl}{\cl}
+! colspan="6" style="background:#C0C0C0" | Use the first aorist indicative tense of [[бъда]] {along_with_refl} and {paap_ind_m_sg_notr} {gm}, {paap_ind_f_sg_notr} {gf}, {paap_ind_n_sg_notr} {gn}, or {paap_ind_pl_notr} {gp}
 |-
 ! rowspan="2" colspan="2" style="background:#e4d4c0" | imperative
 ! style="background:#e4d4c0" | -
@@ -1137,3 +1224,6 @@ function export.generate_forms(frame)
 	local base = export.do_generate_forms(parent_args)
 	return concat_forms(base, include_props)
 end
+
+
+return export

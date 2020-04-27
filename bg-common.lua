@@ -57,14 +57,14 @@ local footnote_abbrevs = {
 }
 
 
-local function translit_no_links(text)
+function export.translit_no_links(text)
 	return m_bg_translit.tr(m_links.remove_links(text))
 end
 
 
 -- Check if word is monosyllabic (also includes words without vowels).
 function export.is_monosyllabic(word)
-	local num_syl = ulen(rsub(word, non_vowel_c, ""))
+	local num_syl = ulen(rsub(word, export.non_vowel_c, ""))
 	return num_syl <= 1
 end
 
@@ -307,55 +307,66 @@ function export.init_footnote_obj()
 end
 
 
-function export.set_forms(footnote_obj, from_forms, to_forms, slots_table_or_list, slots_is_list, raw, accel_lemma, slot_to_accel_form)
-	local function do_slot(slot)
-		local forms = from_forms[slot]
-		if forms then
-			local accel_form = slot_to_accel_form(slot)
-			local bg_spans = {}
-			local tr_spans = {}
-			for i, form in ipairs(forms) do
-				-- FIXME, this doesn't necessarily work correctly if there is an
-				-- embedded link in form.form.
-				local bg_text = export.remove_monosyllabic_stress(form.form)
-				local link, tr
-				if raw or form.form == "—" then
-					link = bg_text
-				else
-					link = m_links.full_link{lang = lang, term = bg_text, tr = "-", accel = {
-						form = accel_form,
-						lemma = accel_lemma,
-					}}
-				end
-				tr = export.translit_no_links(bg_text)
-				tr = require("Module:script utilities").tag_translit(tr, lang, "default", " style=\"color: #888;\"")
-				if form.footnotes then
-					local link_indices = {}
-					for _, footnote in ipairs(form.footnotes) do
-						footnote = export.expand_footnote(footnote)
-						local this_noteindex = footnote_obj.seen_notes[footnote]
-						if not this_noteindex then
-							-- Generate a footnote index.
-							this_noteindex = footnote_obj.noteindex
-							footnote_obj.noteindex = footnote_obj.noteindex + 1
-							table.insert(footnote_obj.notes, '<sup style="color: red">' .. this_noteindex .. '</sup>' .. footnote)
-							footnote_obj.seen_notes[footnote] = this_noteindex
-						end
-						m_table.insertIfNot(link_indices, this_noteindex)
-					end
-					local footnote_text = '<sup style="color: red">' .. table.concat(link_indices, ",") .. '</sup>'
-					link = link .. footnote_text
-					tr = tr .. footnote_text
-				end
-				table.insert(bg_spans, link)
-				table.insert(tr_spans, tr)
+function export.set_one_form(footnote_obj, formtable, slot, accel_lemma, slot_to_accel_form, raw, slash_join)
+	local forms = formtable[slot]
+	if forms then
+		local accel_form = slot_to_accel_form(slot)
+		local bg_spans = {}
+		local tr_spans = {}
+		for i, form in ipairs(forms) do
+			-- FIXME, this doesn't necessarily work correctly if there is an
+			-- embedded link in form.form.
+			local bg_text = export.remove_monosyllabic_stress(form.form)
+			local link, tr
+			if raw or form.form == "—" then
+				link = bg_text
+			else
+				link = m_links.full_link{lang = lang, term = bg_text, tr = "-", accel = {
+					form = accel_form,
+					lemma = accel_lemma,
+				}}
 			end
+			tr = export.translit_no_links(bg_text)
+			tr = require("Module:script utilities").tag_translit(tr, lang, "default", " style=\"color: #888;\"")
+			if form.footnotes then
+				local link_indices = {}
+				for _, footnote in ipairs(form.footnotes) do
+					footnote = export.expand_footnote(footnote)
+					local this_noteindex = footnote_obj.seen_notes[footnote]
+					if not this_noteindex then
+						-- Generate a footnote index.
+						this_noteindex = footnote_obj.noteindex
+						footnote_obj.noteindex = footnote_obj.noteindex + 1
+						table.insert(footnote_obj.notes, '<sup style="color: red">' .. this_noteindex .. '</sup>' .. footnote)
+						footnote_obj.seen_notes[footnote] = this_noteindex
+					end
+					m_table.insertIfNot(link_indices, this_noteindex)
+				end
+				local footnote_text = '<sup style="color: red">' .. table.concat(link_indices, ",") .. '</sup>'
+				link = link .. footnote_text
+				tr = tr .. footnote_text
+			end
+			table.insert(bg_spans, link)
+			table.insert(tr_spans, tr)
+		end
+		if slash_join then
+			return table.concat(bg_spans, "/")
+		else
 			local bg_span = table.concat(bg_spans, ", ")
 			local tr_span = table.concat(tr_spans, ", ")
-			to_forms[slot] = bg_span .. "<br />" .. tr_span
-		else
-			to_forms[slot] = "—"
+			return bg_span .. "<br />" .. tr_span
 		end
+	else
+		return "—"
+	end
+end
+
+
+function export.set_forms(footnote_obj, from_forms, to_forms, slots_table_or_list, slots_is_list,
+	accel_lemma, slot_to_accel_form, raw, slash_join)
+	local function do_slot(slot)
+		to_forms[slot] = export.set_one_form(footnote_obj, from_forms, slot, accel_lemma,
+		slot_to_accel_form, raw, slash_join)
 	end
 
 	if slots_is_list then

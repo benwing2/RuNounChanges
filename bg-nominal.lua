@@ -1818,14 +1818,14 @@ local function show_forms(alternant_multiword_spec, is_adj)
 	if is_adj then
 		local slot_to_accel_form = get_slot_to_accel_form(false)
 		com.set_forms(footnote_obj, alternant_multiword_spec.forms, alternant_multiword_spec.forms,
-			adj_slots, false, false, accel_lemma, slot_to_accel_form)
+			adj_slots, false, accel_lemma, slot_to_accel_form)
 		if alternant_multiword_spec.compforms then
 			com.set_forms(alternant_multiword_spec.compforms, alternant_multiword_spec.compforms,
-				adj_slots, false, false, accel_lemma, slot_to_accel_form)
+				adj_slots, false, accel_lemma, slot_to_accel_form)
 		end
 		if alternant_multiword_spec.supforms then
 			com.set_forms(alternant_multiword_spec.supforms, alternant_multiword_spec.supforms,
-				adj_slots, false, false, accel_lemma, slot_to_accel_form)
+				adj_slots, false, accel_lemma, slot_to_accel_form)
 		end
 	else
 		-- For def_sub_sg and def_obj_sg, first compute "raw" (unlinked) forms so we can
@@ -1833,11 +1833,11 @@ local function show_forms(alternant_multiword_spec, is_adj)
 		-- between sub and obj.
 		local raw_forms = {}
 		com.set_forms(alternant_multiword_spec.forms, raw_forms, {"def_sub_sg", "def_obj_sg"},
-			true, true, accel_lemma, get_slot_to_accel_form(true))
+			"is list", accel_lemma, get_slot_to_accel_form(true), "raw")
 		-- Then generate the linked forms, using a special accelerator form if the def_sub_sg and def_obj_sg are the same.
 		alternant_multiword_spec.combined_def_sg = raw_forms.def_sub_sg == raw_forms.def_obj_sg
 		com.set_forms(alternant_multiword_spec.forms, alternant_multiword_spec.forms, noun_slots,
-			false, false, accel_lemma, get_slot_to_accel_form(alternant_multiword_spec.combined_def_sg))
+			false, accel_lemma, get_slot_to_accel_form(alternant_multiword_spec.combined_def_sg))
 	end
 	if alternant_multiword_spec.footnote then
 		table.insert(footnote_obj.notes, alternant_multiword_spec.footnote)
