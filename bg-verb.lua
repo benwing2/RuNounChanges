@@ -11,24 +11,18 @@ Authorship: Ben Wing <benwing2>
 
 TERMINOLOGY:
 
--- "slot" = A particular case/number/definiteness (and gender for adjectives) combination.
-	 Example slot names for nouns are "ind_pl" (indefinite plural), "def_obj_sg" (definite objective
-	 singular), "voc_sg" (vocative singular). Example slot names for adjectives are "ind_pl"
-	 (indefinite plural) and "def_obj_m_sg" (definite object masculine singular) Each slot is filled
-	 with zero or more forms.
+-- "slot" = A particular combination of tense/aspect/person/number, or for participles
+	 a particular combination of tense/aspect/voice/case/gender/number/definiteness.
+	 Example slot names for nouns are "pres_1sg" (present first singular) and
+	 "paap_def_obj_m_sg" (definite objective masculine singular past active aorist participle).
+	 Each slot is filled with zero or more forms.
 
--- "form" = The declined Bulgarian form representing the value of a given slot. For example, мо́мко
-	 is a form, representing the value of the voc_sg slot of the lemma мо́мък "youth".
+-- "form" = The conjugated Bulgarian form representing the value of a given slot.
+	 For example, реши́лия is a form, representing the value of the paap_def_obj_m_sg
+	 slot of the lemma реша́.
 
--- "lemma" = The dictionary form of a given Bulgarian term. Generally the indefinite (masculine)
-	 singular, but will be the indefinite plural of plurale tantum nouns (e.g. га́щи "pants"), and
-	 may occasionally be another form if the indefinite (masculine) singular is missing.
-
--- "plurale tantum" (plural "pluralia tantum") = A noun that exists only in the plural. Examples are
-	 очила́ "glasses" and три́ци "bran".
-
--- "singulare tantum" (plural "singularia tantum") = A noun that exists only in the singular.
-	Examples are ори́з "rice" and Бълга́рия "Bulgaria".
+-- "lemma" = The dictionary form of a given Bulgarian term. Generally the first singular
+	 present, but may occasionally be another form if the first singular present is missing.
 ]=]
 
 local lang = require("Module:languages").getByCode("bg")
@@ -37,7 +31,7 @@ local m_table = require("Module:table")
 local m_string_utilities = require("Module:string utilities")
 local m_para = require("Module:parameters")
 local m_bg_translit = require("Module:bg-translit")
-local com = require("Module:User:Benwing2/bg-common")
+local com = require("Module:bg-common")
 
 local current_title = mw.title.getCurrentTitle()
 local NAMESPACE = current_title.nsText
@@ -100,7 +94,7 @@ local prefix_to_accel_form = {
 	["paap"] = "past|act|aor|part",
 	["paip"] = "past|act|impf|part",
 	["ppp"] = "past|pass|part",
-	["vn"] = "vn",
+	["vn"] = "vnoun",
 	["advp"] = "adv|part",
 }
 
@@ -223,9 +217,17 @@ end
 
 
 local function conjugate_all(base)
+	local function combine_stem_ending(stem, ending)
+		if stem == "?" then
+			return "?"
+		else
+			return stem .. ending
+		end
+	end
+
 	local function add(slot, stems, ending)
 		if type(stems) == "string" then
-			com.insert_form(base.forms, slot, {form = stems .. ending})
+			com.insert_form(base.forms, slot, {form = combine_stem_ending(stems, ending)})
 		else
 			if stems.form then
 				stems = {stems}
@@ -234,7 +236,7 @@ local function conjugate_all(base)
 				if type(stem) == "string" then
 					stem = {form = stem}
 				end
-				com.insert_form(base.forms, slot, {form = stem.form .. ending, footnotes = stem.footnotes})
+				com.insert_form(base.forms, slot, {form = combine_stem_ending(stem.form, ending), footnotes = stem.footnotes})
 			end
 		end
 	end
@@ -302,15 +304,35 @@ local function add_reflexive_suffix(base)
 		for _, slot in ipairs(verb_slots) do
 			if not rfind(slot, "^vn_") then
 				base.forms[slot] = com.map_forms(base.forms[slot], function(form)
-					if rfind(form, "%[%[") then
-						return form .. " " .. "[[" .. base.refl .. "]]"
-					else
-						return "[[" .. form .. "]]" .. " [[" .. base.refl .. "]]"
-					end
+					return form .. " " .. base.refl
 				end)
 			end
 		end
 	end
+end
+
+
+local function add_categories(base)
+	base.categories = {}
+	if base.aspect == "impf" then
+		table.insert(base.categories, "Bulgarian imperfective verbs")
+	elseif base.aspect == "pf" then
+		table.insert(base.categories, "Bulgarian perfective verbs")
+	else
+		assert(base.aspect == "both")
+		table.insert(base.categories, "Bulgarian imperfective verbs")
+		table.insert(base.categories, "Bulgarian perfective verbs")
+		table.insert(base.categories, "Bulgarian biaspectual verbs")
+	end
+	if base.trans == "tr" then
+		table.insert(base.categories, "Bulgarian transitive verbs")
+	elseif base.trans == "intr" then
+		table.insert(base.categories, "Bulgarian intransitive verbs")
+	end
+	if base.refl then
+		table.insert(base.categories, "Bulgarian reflexive verbs")
+	end
+	table.insert(base.categories, "Bulgarian conjugation " .. base.conj .. " verbs")
 end
 
 
@@ -368,9 +390,13 @@ end
 
 
 local function generate_maybe_shifted_aorist(base, aor23, shifted_aor23)
-	if (base.aspect ~= "pf" or not base.prefixed) and not rfind(aor23, "[ая]́$") then
+	if base.aspect ~= "pf" or not base.prefixed then
 		shifted_aor23 = shifted_aor23 or rsub(aor23, AC, "") .. AC
-		base.aor23 = {aor23, {form = shifted_aor23, footnotes = {"[dialectally marked]"}}}
+		if aor23 ~= shifted_aor23 then
+			base.aor23 = {aor23, {form = shifted_aor23, footnotes = {"[dialectally marked]"}}}
+		else
+			base.aor23 = aor23
+		end
 	else
 		base.aor23 = aor23
 	end
@@ -771,6 +797,8 @@ local function postprocess_base(base)
 		base.vn = {base.vna, base.vni}
 	elseif base.vnspec == "ia" then
 		base.vn = {base.vni, base.vna}
+	elseif base.vnspec == "?" then
+		base.vn = "?"
 	else
 		error("Imperfective/biaspectual verb '" .. base.full_lemma .. "' has two possible verbal nouns, don't know which one to choose; specify 'vna' for " .. base.vna .. ", 'vni' for " .. base.vni .. ", or 'vnai' or 'vnia' for both")
 	end
@@ -815,7 +843,7 @@ local function parse_indicator_and_form_spec(angle_bracket_spec)
 				error("Can't specify '-pref' twice: " .. inside .. "'")
 			end
 			base.no_pref = true
-		elseif part == "vna" or part == "vni" or part == "vnai" or part == "vnia" then
+		elseif part == "vna" or part == "vni" or part == "vnai" or part == "vnia" or part == "vn?" then
 			if base.vnspec then
 				error("Can't specify verbal noun spec twice: " .. inside .. "'")
 			end
@@ -955,9 +983,21 @@ end
 local function make_table(word_spec)
 	local forms = word_spec.forms
 
+	local ann_parts = {}
+	table.insert(ann_parts, "conjugation " .. word_spec.conj)
+	table.insert(ann_parts,
+		word_spec.aspect == "impf" and "imperfective" or
+		word_spec.aspect == "pf" and "perfective" or
+		"biaspectual")
+	table.insert(ann_parts,
+		word_spec.trans == "tr" and "transitive" or
+		word_spec.trans == "intr" and "intransitive" or
+		"reflexive")
+	forms.annotation = " (" .. table.concat(ann_parts, ", ") .. ")"
+
 	local table_spec = [=[
 <div class="NavFrame">
-<div class="NavHead" align=left>&nbsp; &nbsp; Conjugation of {lemma}</div>
+<div class="NavHead" align=left>&nbsp; &nbsp; Conjugation of {lemma}{annotation}</div>
 <div class="NavContent" align="center">
 
 {\op}| style="background:#F0F0F0; font-size: 90%; width:100%; margin: 0 auto 0 auto; text-align:center;" class="inflection-table"
@@ -1256,6 +1296,7 @@ function export.do_generate_forms(parent_args, pos, from_headword, def)
 	base.footnote = footnote
 	conjugate_all(base)
 	add_reflexive_suffix(base)
+	add_categories(base)
 	base.forms.lemma = args.lemma and #args.lemma > 0 and args.lemma or
 		{lemma .. (base.refl and " " .. base.refl or "")}
 	return base
@@ -1268,7 +1309,7 @@ function export.show(frame)
 	local parent_args = frame:getParent().args
 	local base = export.do_generate_forms(parent_args)
 	show_forms(base)
-	return make_table(base)
+	return make_table(base) .. require("Module:utilities").format_categories(base.categories, lang)
 end
 
 
