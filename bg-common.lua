@@ -318,7 +318,7 @@ function export.set_one_form(footnote_obj, formtable, slot, accel_lemma, slot_to
 			-- embedded link in form.form.
 			local bg_text = export.remove_monosyllabic_stress(form.form)
 			local link, tr
-			if raw or form.form == "—" then
+			if raw or form.form == "—" or form.form == "?" then
 				link = bg_text
 			else
 				link = m_links.full_link{lang = lang, term = bg_text, tr = "-", accel = {
