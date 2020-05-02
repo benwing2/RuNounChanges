@@ -199,10 +199,12 @@ end
 
 
 local function map_forms(forms, fn, first_only)
-	if type(forms) == "string" then
-		return fn(forms)
+	if forms == nil then
+		return nil
+	elseif type(forms) == "string" then
+		return forms == "?" and "?" or fn(forms)
 	elseif forms.form then
-		return {form = fn(forms.form), footnotes = forms.footnotes}
+		return {form = forms.form == "?" and "?" or fn(forms.form), footnotes = forms.footnotes}
 	else
 		local retval = {}
 		for i, form in ipairs(forms) do
@@ -216,6 +218,16 @@ local function map_forms(forms, fn, first_only)
 end
 
 
+local function map_append(forms, suffix)
+	return map_forms(forms, function(form) return form .. suffix end)
+end
+
+
+local function map_rsub(forms, from, to)
+	return map_forms(forms, function(form) return rsub(form, from, to) end)
+end
+
+
 local function conjugate_all(base)
 	local function combine_stem_ending(stem, ending)
 		if stem == "?" then
@@ -226,6 +238,9 @@ local function conjugate_all(base)
 	end
 
 	local function add(slot, stems, ending)
+		if stems == nil then
+			return
+		end
 		if type(stems) == "string" then
 			com.insert_form(base.forms, slot, {form = combine_stem_ending(stems, ending)})
 		else
@@ -241,14 +256,14 @@ local function conjugate_all(base)
 		end
 	end
 
-	local function conjugate_participle(baseslot, msg, fsgstem, pl)
+	local function conjugate_participle(baseslot, msg, fsg, nsg, pl)
 		add(baseslot .. "_ind_m_sg", msg, "")
 		add(baseslot .. "_def_sub_m_sg", pl, "ят")
 		add(baseslot .. "_def_obj_m_sg", pl, "я")
-		add(baseslot .. "_ind_f_sg", fsgstem, "а")
-		add(baseslot .. "_def_f_sg", fsgstem, "ата")
-		add(baseslot .. "_ind_n_sg", fsgstem, "о")
-		add(baseslot .. "_def_n_sg", fsgstem, "ото")
+		add(baseslot .. "_ind_f_sg", fsg, "")
+		add(baseslot .. "_def_f_sg", fsg, "та")
+		add(baseslot .. "_ind_n_sg", nsg, "")
+		add(baseslot .. "_def_n_sg", nsg, "то")
 		add(baseslot .. "_ind_pl", pl, "")
 		add(baseslot .. "_def_pl", pl, "те")
 	end
@@ -263,12 +278,13 @@ local function conjugate_all(base)
 	end
 
 	if base.aspect ~= "pf" then
-		conjugate_participle("prap", base.prap, base.prap,
-			map_forms(base.prap, function(form) return form .. "и" end))
+		conjugate_participle("prap", base.prap, map_append(base.prap, "а"),
+			map_append(base.prap, "о"), map_append(base.prap, "и"))
 	end
-	conjugate_participle("paap", base.paapm, base.paapfstem, base.paappl)
+	conjugate_participle("paap", base.paapm, base.paapf, base.paapn, base.paappl)
 	if base.trans == "tr" then
-		conjugate_participle("ppp", base.ppp, base.ppp, base.ppppl)
+		conjugate_participle("ppp", base.ppp, map_append(base.ppp, "а"), map_append(base.ppp, "о"),
+			base.ppppl)
 	end
 	add("paip_m_sg", base.paip, "")
 	add("paip_f_sg", base.paip, "а")
@@ -277,9 +293,14 @@ local function conjugate_all(base)
 	if base.aspect ~= "pf" then
 		add("vn_ind_sg", base.vn, "")
 		add("vn_def_sg", base.vn, "то")
-		-- Some verbal nouns are ending-stressed.
-		add("vn_ind_pl", map_forms(base.vn, function(form) return rsub(form, "е(́?)$", "и%1я") end), "")
-		add("vn_def_pl", map_forms(base.vn, function(form) return rsub(form, "е(́?)$", "и%1ята") end), "")
+		-- Some verbal nouns are ending-stressed, but the plural in -ия pushes
+		-- the stress onto the stem.
+		add("vn_ind_pl", map_forms(base.vn, function(form)
+			return com.maybe_stress_final_syllable(rsub(form, "е́?$", ""))
+		end), "ия")
+		add("vn_def_pl", map_forms(base.vn, function(form)
+			return com.maybe_stress_final_syllable(rsub(form, "е́?$", ""))
+		end), "ията")
 		add("vn_ind_pl", base.vn, "та")
 		add("vn_def_pl", base.vn, "тата")
 	end
@@ -332,7 +353,11 @@ local function add_categories(base)
 	if base.refl then
 		table.insert(base.categories, "Bulgarian reflexive verbs")
 	end
-	table.insert(base.categories, "Bulgarian conjugation " .. base.conj .. " verbs")
+	if base.conj == "irreg" then
+		table.insert(base.categories, "Bulgarian irregular verbs")
+	else
+		table.insert(base.categories, "Bulgarian conjugation " .. base.conj .. " verbs")
+	end
 end
 
 
@@ -462,17 +487,20 @@ conjs["1.1"] = function(base, lemma)
 	end
 
 	-- Generate aorist participle stems.
-	if last_letter == "д" or last_letter == "т" then
+	if rfind(lemma, "раста́$") then
+		base.paapm = stem .. "ъл"
+		base.paapf = stem .. "ла"
+	elseif last_letter == "д" or last_letter == "т" then
 		base.paapm = stem .. "л"
 	else
 		local full_stem = rsub(base.aor, "ох$", "")
 		base.paapm = full_stem .. "ъл"
-		base.paapfstem = full_stem .. "л"
+		base.paapf = full_stem .. "ла"
 		base.paappl = rsub(full_stem, "я", "е") .. "ли"
 	end
 
 	-- Generate past passive participle stems.
-	base.ppp = rsub(stem, "я́", "е́") .. last_letter_pal .. "ен"
+	base.ppp = stem .. last_letter_pal .. "ен"
 
 	-- Generate verbal noun stems.
 	base.vna = base.aor23 .. "не"
@@ -602,7 +630,11 @@ conjs["1.6"] = function(base, lemma)
 	generate_maybe_shifted_aorist(base, lemma)
 
 	-- Generate past passive participle stems.
-	base.ppp = lemma .. "н"
+	if rfind(lemma, "зна́я$") then
+		base.ppp = rsub(lemma, "я$", "ен")
+	else
+		base.ppp = lemma .. "н"
+	end
 end
 
 
@@ -705,8 +737,8 @@ conjs["2.3"] = function(base, lemma)
 	base.ppp = base.aor23 .. "н"
 
 	-- Handle irregularities
-	if rfind(lemma, "държа́") then
-		base.impv = rsub(lemma, "държа́", "дръ́ж")
+	if rfind(lemma, "държа́$") then
+		base.impv = rsub(lemma, "държа́$", "дръ́ж")
 		base.impvpl = base.impv .. "те"
 	end
 end
@@ -742,30 +774,146 @@ conjs["3"] = function(base, lemma)
 	base.advp = stem .. "йки"
 end
 
+
+conjs["irreg"] = function(base, lemma)
+	if rfind(lemma, "я́м$") then
+		conjs["1.1"](base, rsub(lemma, "я́м$", "яда́"))
+		base.pres1sg = lemma
+		base.vni = false
+		base.impv = rsub(lemma, "м$", "ж")
+		base.impvpl = base.impv .. "те"
+	elseif rfind(lemma, "зна́м$") then
+		conjs["1.6"](base, rsub(lemma, "а́м$", "а́я"))
+		base.pres1sg = lemma
+	elseif rfind(lemma, "да́м$") then
+		conjs["1.1"](base, rsub(lemma, "да́м$", "дада́"))
+		base.pres1sg = lemma
+		base.impv = rsub(lemma, "м$", "й")
+		base.impvpl = base.impv .. "те"
+	elseif rfind(lemma, "йда$") then -- до́йда, за́йда, подо́йда, придо́йда
+		pres_advp_1conj(base, lemma)
+		impf_impv_12conj(base, lemma)
+		base.aor = rsub(lemma, AC .. "йда$", "йдо́х")
+		base.aor23 = rsub(lemma, AC .. "йда$", "йде́")
+		base.paapm = rsub(lemma, AC .. "йда$", "шъ́л")
+		base.paapf = rsub(lemma, AC .. "йда$", "шла́")
+		-- no past passive participle
+		base.vna = false
+	elseif rfind(lemma, "и́да$") then -- и́да, оти́да, пооти́да, разоти́да
+		pres_advp_1conj(base, lemma)
+		impf_impv_12conj(base, lemma)
+		if lemma ~= "и́да" then
+			-- base verb и́да doesn't have aorist or aorist participle forms
+			base.aor = rsub(lemma, "да$", "дох")
+			base.aor23 = rsub(lemma, "да$", "де")
+			base.paapm = {rsub(lemma, "да$", "шъл"), rsub(lemma, "и́да$", "ишъ́л"),
+				{form=rsub(lemma, "да$", "шел"), footnotes={"[dialectal]"}}}
+			base.paapf = {rsub(lemma, "да$", "шла"), rsub(lemma, "и́да$", "ишла́")}
+		end
+		-- no past passive participle, no verbal noun
+		base.vna = false
+		base.vni = false
+	elseif rfind(lemma, "мо́га$") then
+		pres_advp_1conj(base, lemma)
+		impf_12conj(base, lemma)
+		-- no imperative
+		base.aor23 = rsub(lemma, "мо́га$", "можа́")
+		local reg_aor23 = rsub(lemma, "мо́га$", "можа́л")
+		base.paapm = {rsub(lemma, "мо́га$", "могъ́л"), reg_aor23}
+		base.paapf = {rsub(lemma, "мо́га$", "могла́"), reg_aor23 .. "а"}
+		-- no past passive participle
+		base.vna = false
+	elseif rfind(lemma, "спя́$") then
+		pres_advp_2conj(base, lemma)
+		impf_impv_12conj(base, lemma)
+		base.aor23 = rsub(lemma, "я́$", "а́")
+		-- no past passive participle
+		base.vna = rsub(lemma, "я́$", "ане́")
+		base.vni = false
+	elseif rfind(lemma, "ме́ля$") then
+		local stem = rmatch(lemma, "^(.*)я$")
+		base.pres1sg = lemma
+		base.pres3sg = {stem .. "е", stem .. "и"}
+		base.pres1pl = {stem .. "ем", stem .. "им"}
+		base.pres3pl = lemma .. "т"
+		base.advp = stem .. "ейки"
+		impf_impv_12conj(base, lemma)
+		base.aor23 = rsub(lemma, "е́ля$", "ля́")
+		local yat_plural_stem = rsub(lemma, "е́ля$", "ле́")
+		base.paappl = yat_plural_stem .. "ли"
+		base.ppp = base.aor23 .. "н"
+		base.ppppl = yat_plural_stem .. "ни"
+		base.vna = false
+		-- prefixed variants are perfective and don't have verbal nouns
+		base.vni = {"ме́лене", {form="мле́не", footnotes={"[colloquial]"}}, {form="млене́", footnotes={"[colloquial]"}}}
+	elseif rfind(lemma, "ко́ля$") then
+		pres_advp_2conj(base, lemma)
+		impf_impv_12conj(base, lemma)
+		base.aor23 = {rsub(lemma, "о́ля$", "ла́"), rsub(lemma, "я$", "и")}
+		base.ppp = {rsub(lemma, "о́ля$", "ла́н"), rsub(lemma, "я$", "ен")}
+		base.vna = false
+		-- prefixed variants are perfective and don't have verbal nouns
+		base.vni = {"ко́лене", "клане́"}
+	elseif rfind(lemma, "ви́дя$") then
+		pres_advp_2conj(base, lemma)
+		impf_impv_12conj(base, lemma)
+		base.aor23 = rsub(lemma, "ви́дя$", "видя́")
+		local yat_plural_stem = rsub(base.aor23, "я́$", "е́")
+		base.paappl = yat_plural_stem .. "ли"
+		-- Generate past passive participle stems.
+		base.ppp = base.aor23 .. "н"
+		base.ppppl = yat_plural_stem .. "ни"
+		-- Generate imperative forms.
+		base.impv = rsub(lemma, "ви́дя$", "ви́ж")
+		base.impvpl = base.impv .. "те"
+		-- perfective; no verbal noun
+		base.vna = false
+		base.vni = false
+	elseif rfind(lemma, "кълна́$") then
+		pres_advp_1conj(base, lemma)
+		impf_impv_12conj(base, lemma)
+		base.aor23 = {rsub(lemma, "кълна́$", "кле́"), lemma}
+		base.ppp = {rsub(lemma, "кълна́$", "кле́т"), lemma .. "т"}
+		base.vna = false
+	elseif rfind(lemma, "беле́жа$") then
+		pres_advp_2conj(base, lemma)
+		impf_impv_12conj(base, lemma)
+		base.aor23 = rsub(lemma, "ле́жа$", "ля́за")
+		base.ppp = rsub(lemma, "ле́жа$", "ля́зан")
+		base.vna = false
+	else
+		error("Irregular verb '" .. lemma .. "' not yet supported")
+	end
+end
+
+
 local function postprocess_base(base)
 	if not base.aor then
-		base.aor = map_forms(base.aor23, function(form) return form .. "х" end)
+		base.aor = map_append(base.aor23, "х")
 	end
 	if not base.prap then
-		base.prap = map_forms(base.impf, function(form) return rsub(form, "х$", "щ") end)
+		base.prap = map_rsub(base.impf, "х$", "щ")
 	end
 	if not base.paapm then
-		base.paapm = map_forms(base.aor, function(form) return rsub(form, "х$", "л") end)
+		base.paapm = map_rsub(base.aor, "х$", "л")
 	end
-	if not base.paapfstem then
-		base.paapfstem = base.paapm
+	if not base.paapf then
+		base.paapf = map_append(base.paapm, "а")
+	end
+	if not base.paapn then
+		base.paapn = map_rsub(base.paapf, "а(́?)$", "о%1")
 	end
 	if not base.paappl then
-		base.paappl = map_forms(base.paapfstem, function(form) return form .. "и" end)
+		base.paappl = map_rsub(base.paapf, "а(́?)$", "и%1")
 	end
 	if not base.paip then
-		base.paip = map_forms(base.impf, function(form) return rsub(form, "х$", "л") end)
+		base.paip = map_rsub(base.impf, "х$", "л")
 	end
 	if not base.paippl then
-		base.paippl = map_forms(base.paip, function(form) return form .. "и" end)
+		base.paippl = map_append(base.paip, "и")
 	end
 	if not base.ppppl then
-		base.ppppl = map_forms(base.ppp, function(form) return form .. "и" end)
+		base.ppppl = map_append(base.ppp, "и")
 	end
 	local function aor_impf_to_vn(form)
 		form = rsub(form, "я́х$", "е́не")
@@ -778,17 +926,17 @@ local function postprocess_base(base)
 	if base.vni == nil then
 		base.vni = map_forms(base.impf, aor_impf_to_vn, "first only")
 	end
-	if base.vna == false then
-		assert(base.vni)
+	if base.vna == false and base.vni == false then
+		base.vn = nil
+	elseif base.vna == false then
 		base.vn = base.vni
 	elseif base.vni == false then
-		assert(base.vna)
 		base.vn = base.vna
 	elseif base.vna == base.vni then
 		base.vn = base.vna
 	elseif base.aspect == "pf" then
-		-- No verbal noun, so it doesn't matter.
-		base.vn = base.vna
+		-- No verbal noun.
+		base.vn = nil
 	elseif base.vnspec == "a" then
 		base.vn = base.vna
 	elseif base.vnspec == "i" then
@@ -812,7 +960,10 @@ local function parse_indicator_and_form_spec(angle_bracket_spec)
 	local parts = rsplit(inside, ".", true)
 	local conj
 	local start = 1
-	if rfind(parts[1], "^[123]$") then
+	if parts[1] == "irreg" then
+		conj = "irreg"
+		start = 2
+	elseif rfind(parts[1], "^[123]$") then
 		conj = parts[1]
 		start = 2
 		if parts[2] and rfind(parts[2], "^[1-7]$") then
@@ -984,7 +1135,11 @@ local function make_table(word_spec)
 	local forms = word_spec.forms
 
 	local ann_parts = {}
-	table.insert(ann_parts, "conjugation " .. word_spec.conj)
+	if word_spec.conj == "irreg" then
+		table.insert(ann_parts, "irregular")
+	else
+		table.insert(ann_parts, "conjugation " .. word_spec.conj)
+	end
 	table.insert(ann_parts,
 		word_spec.aspect == "impf" and "imperfective" or
 		word_spec.aspect == "pf" and "perfective" or
