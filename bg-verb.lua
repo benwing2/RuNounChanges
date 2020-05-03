@@ -1093,7 +1093,7 @@ local function format_gender(g)
 end
 
 
-local function show_forms(base)
+local function show_forms(base, fullmod)
 	local forms = base.forms
 	local lemmas = {}
 	for _, lemma in ipairs(forms.lemma) do
@@ -1109,6 +1109,9 @@ local function show_forms(base)
 			nil, nil, false, "slash join")
 	end
 	com.display_forms(footnote_obj, forms, forms, verb_slots, "is list", accel_lemma, slot_to_accel_form)
+	if fullmod then
+		com.display_forms(footnote_obj, forms, forms, fullmod.verb_compound_slots, "is list", nil, nil)
+	end
 	forms.refl = base.refl or ""
 	-- forms.along_with_refl = base.refl and "along with [[" .. base.refl .. "]]" or ""
 	forms.along_with_refl = ""
@@ -1146,7 +1149,7 @@ end
 }
 ]=]
 
-local function make_table(word_spec)
+local function make_table(word_spec, fullmod)
 	local forms = word_spec.forms
 
 	local ann_parts = {}
@@ -1180,7 +1183,7 @@ local function make_table(word_spec)
 	forms.e = link("е")
 	forms.bada = link("бъ́да")
 
-	local table_spec = [=[
+	local table_spec_non_compound = [=[
 <div class="NavFrame">
 <div class="NavHead" align=left>&nbsp; &nbsp; Conjugation of {lemma}{annotation}</div>
 <div class="NavContent" align="center">
@@ -1259,7 +1262,7 @@ local function make_table(word_spec)
 |{vn_def_pl}
 |{\cl}
 {\op}| style="background:#F0F0F0; font-size: 90%; width: 100%" class="inflection-table"
-! colspan="2" rowspan="2" style="background:#C0C0C0" | person
+! colspan="{ncol}" rowspan="2" style="background:#C0C0C0" | person
 ! colspan="3" style="background:#C0C0C0" | singular
 ! colspan="3" style="background:#C0C0C0" | plural
 |-
@@ -1270,7 +1273,7 @@ local function make_table(word_spec)
 ! style="background:#C0C0C0;width:12.5%" | second
 ! style="background:#C0C0C0;width:12.5%" | third
 |-
-! colspan="2" style="background:#c0cfe4" | indicative
+! colspan="{ncol}" style="background:#c0cfe4" | indicative
 ! style="background:#c0cfe4" | аз
 ! style="background:#c0cfe4" | ти
 ! style="background:#c0cfe4" | той/тя/то
@@ -1278,7 +1281,7 @@ local function make_table(word_spec)
 ! style="background:#c0cfe4" | вие
 ! style="background:#c0cfe4" | те
 |-
-! colspan="2" style="background:#c0cfe4" | present
+! colspan="{ncol}" style="background:#c0cfe4" | present
 | {pres_1sg}
 | {pres_2sg}
 | {pres_3sg}
@@ -1286,7 +1289,7 @@ local function make_table(word_spec)
 | {pres_2pl}
 | {pres_3pl}
 |-
-! colspan="2" style="background:#c0cfe4" | imperfect
+! colspan="{ncol}" style="background:#c0cfe4" | imperfect
 | {impf_1sg}
 | {impf_2sg}
 | {impf_3sg}
@@ -1294,7 +1297,7 @@ local function make_table(word_spec)
 | {impf_2pl}
 | {impf_3pl}
 |-
-! colspan="2" style="background:#c0cfe4" | aorist
+! colspan="{ncol}" style="background:#c0cfe4" | aorist
 | {aor_1sg}
 | {aor_2sg}
 | {aor_3sg}
@@ -1302,6 +1305,9 @@ local function make_table(word_spec)
 | {aor_2pl}
 | {aor_3pl}
 |-
+]=]
+
+	local table_spec_compound_short = [=[
 ! rowspan="2" style="background:#c0cfe4" | future
 ! style="background:#c0cfe4" | pos.
 ! colspan="6" style="background:#C0C0C0" | Use {shte} {refl} followed by the present indicative tense
@@ -1419,7 +1425,10 @@ local function make_table(word_spec)
 |-
 ! colspan="6" style="background:#C0C0C0" | Use the first aorist indicative tense of {bada} {along_with_refl} and {paap_ind_m_sg_notr} {gm}, {paap_ind_f_sg_notr} {gf}, {paap_ind_n_sg_notr} {gn}, or {paap_ind_pl_notr} {gp}
 |-
-! rowspan="2" colspan="2" style="background:#e4d4c0" | imperative
+]=]
+
+	local table_spec_end = [=[
+! rowspan="2" colspan="{ncol}" style="background:#e4d4c0" | imperative
 ! style="background:#e4d4c0" | -
 ! style="background:#e4d4c0" | ти
 ! style="background:#e4d4c0" | -
@@ -1444,6 +1453,9 @@ local function make_table(word_spec)
 
 	forms.notes_clause = forms.footnote ~= "" and
 		m_string_utilities.format(notes_template, forms) or ""
+	forms.ncol = fullmod and "3" or "2"
+	local table_spec_compound = fullmod and fullmod.table_spec_compound_full or table_spec_compound_short
+	local table_spec = table_spec_non_compound .. table_spec_compound .. table_spec_end
 	return m_string_utilities.format(table_spec, forms)
 end
 
@@ -1457,6 +1469,7 @@ function export.do_generate_forms(parent_args, pos, from_headword, def)
 		[1] = {required = true, default = def or "пра́вя<2.1.impf.tr>"},
 		footnote = {},
 		title = {},
+		full = {type = "boolean"},
 	}
 	if from_headword then
 		params.lemma = {list = true}
@@ -1482,9 +1495,14 @@ function export.do_generate_forms(parent_args, pos, from_headword, def)
 	conjugate_all(base)
 	add_reflexive_suffix(base)
 	add_categories(base)
+	local fullmod
+	if args.full then
+		fullmod = require("Module:bg-verb/full")
+		fullmod.conjugate_all_compound(base)
+	end
 	base.forms.lemma = args.lemma and #args.lemma > 0 and args.lemma or
 		{lemma .. (base.refl and " " .. base.refl or "")}
-	return base
+	return base, fullmod
 end
 
 
@@ -1492,9 +1510,9 @@ end
 -- user-specified arguments and generate a displayable table of the conjugated forms.
 function export.show(frame)
 	local parent_args = frame:getParent().args
-	local base = export.do_generate_forms(parent_args)
-	show_forms(base)
-	return make_table(base) .. require("Module:utilities").format_categories(base.categories, lang)
+	local base, fullmod = export.do_generate_forms(parent_args)
+	show_forms(base, fullmod)
+	return make_table(base, fullmod) .. require("Module:utilities").format_categories(base.categories, lang)
 end
 
 

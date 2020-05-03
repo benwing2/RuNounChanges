@@ -1,31 +1,13 @@
-local verb_slots = {
-	-- present tense
-	"pres_1sg", "pres_2sg", "pres_3sg", "pres_1pl", "pres_2pl", "pres_3pl",
-	-- imperfect
-	"impf_1sg", "impf_2sg", "impf_3sg", "impf_1pl", "impf_2pl", "impf_3pl",
-	-- aorist
-	"aor_1sg", "aor_2sg", "aor_3sg", "aor_1pl", "aor_2pl", "aor_3pl",
-	-- imperative
-	"impv_sg", "impv_pl",
-	-- present active participle
-	"prap_ind_m_sg", "prap_def_sub_m_sg", "prap_def_obj_m_sg",
-	"prap_ind_f_sg", "prap_def_f_sg", "prap_ind_n_sg", "prap_def_n_sg",
-	"prap_ind_pl", "prap_def_pl",
-	-- past active aorist participle
-	"paap_ind_m_sg", "paap_def_sub_m_sg", "paap_def_obj_m_sg",
-	"paap_ind_f_sg", "paap_def_f_sg", "paap_ind_n_sg", "paap_def_n_sg",
-	"paap_ind_pl", "paap_def_pl",
-	-- past active imperfect participle
-	"paip_m_sg", "paip_f_sg", "paip_n_sg", "paip_pl",
-	-- past passive participle
-	"ppp_ind_m_sg", "ppp_def_sub_m_sg", "ppp_def_obj_m_sg",
-	"ppp_ind_f_sg", "ppp_def_f_sg", "ppp_ind_n_sg", "ppp_def_n_sg",
-	"ppp_ind_pl", "ppp_def_pl",
-	-- verbal noun
-	"vn_ind_sg", "vn_def_sg", "vn_ind_pl", "vn_def_pl",
-	-- adverbial participle
-	"advp",
-}
+local export = {}
+
+local com = require("Module:bg-common")
+
+--[=[
+
+Authorship: Ben Wing <benwing2>
+
+]=]
+
 
 -- Person/number suffixes for non-gendered slot prefixes.
 local pers_num_suffixes = {"1sg", "2sg", "3sg", "1pl", "2pl", "3pl"}
@@ -39,7 +21,7 @@ local gendered_pers_num_suffixes = {
 -- Non-gendered slot prefixes.
 local pers_num_prefixes = {
 	-- indicative
-	"pres", "impf", "aor", "fut_pos", "fut_neg", "futip_pos", "futip_neg",
+	"fut_pos", "fut_neg", "futip_pos", "futip_neg",
 	"ren_fut_neg", "dub_fut_neg", "conc_fut_neg",
 }
 
@@ -52,6 +34,20 @@ local gendered_pers_num_prefixes = {
 	"conc_pres", "conc_aor", "conc_fut_pos", "conc_prespf", "conc_futpf_pos", "conc_futpf_neg",
 	"cond",
 }
+
+
+export.verb_compound_slots = {}
+
+for _, non_gendered_prefix in ipairs(pers_num_prefixes) do
+	for _, suffix in ipairs(pers_num_suffixes) do
+		table.insert(export.verb_compound_slots, non_gendered_prefix .. "_" .. suffix)
+	end
+end
+for _, gendered_prefix in ipairs(gendered_pers_num_prefixes) do
+	for _, suffix in ipairs(gendered_pers_num_suffixes) do
+		table.insert(export.verb_compound_slots, gendered_prefix .. "_" .. suffix)
+	end
+end
 
 
 local function concat(prefix, suffix)
@@ -136,27 +132,27 @@ local shta_paip = {"[[щял]]", "[[щя́ла]]", "[[щя́ло]]", "[[ще́л
 -- local bada_pres = {"[[бъ́да]]", "[[бъ́деш]]", "[[бъ́де]]", "[[бъ́дем]]", "[[бъ́дете]]", "[[бъ́дат]]"}
 local bada_aor1 = {"[[бих]]", "[[би]]", "[[би]]", "[[би́хме]]", "[[би́хте]]", "[[би́ха]]"}
 
-local function conjugate_all_periphrastic(base)
+function export.conjugate_all_compound(base)
 	local forms = base.forms
 
 	local function addpref(dest_slot, pref, source_slot)
-		if type(pref) == "string" then
+		if type(pref) ~= "table" then
 			pref = {pref}
 		end
 		for _, p in ipairs(pref) do
 			com.insert_forms(forms, dest_slot,
-				com.map_forms(forms[source_slot], function(form) return concat(p, form) end)
+				com.map_forms(forms[source_slot], function(form) return concat(p, "[[" .. form .. "]]") end)
 			)
 		end
 	end
 
 	local function addsuf(dest_slot, suf, source_slot)
-		if type(suf) == "string" then
+		if type(suf) ~= "table" then
 			suf = {suf}
 		end
 		for _, s in ipairs(suf) do
 			com.insert_forms(forms, dest_slot,
-				com.map_forms(forms[source_slot], function(form) return concat(form, s) end)
+				com.map_forms(forms[source_slot], function(form) return concat("[[" .. form .. "]]", s) end)
 			)
 		end
 	end
@@ -244,9 +240,9 @@ local function conjugate_all_periphrastic(base)
 		addpref(dest_slot_prefix .. "_m_3sg", m_3sg, source_slot_prefix  .. "_3sg")
 		addpref(dest_slot_prefix .. "_f_3sg", f_3sg, source_slot_prefix  .. "_3sg")
 		addpref(dest_slot_prefix .. "_n_3sg", n_3sg, source_slot_prefix  .. "_3sg")
-		addpref(dest_slot_prefix .. "_1pl", x1pl, source_slot_prefix  .. "_pl")
-		addpref(dest_slot_prefix .. "_2pl", x2pl, source_slot_prefix  .. "_pl")
-		addpref(dest_slot_prefix .. "_3pl", x3pl, source_slot_prefix  .. "_pl")
+		addpref(dest_slot_prefix .. "_1pl", x1pl, source_slot_prefix  .. "_1pl")
+		addpref(dest_slot_prefix .. "_2pl", x2pl, source_slot_prefix  .. "_2pl")
+		addpref(dest_slot_prefix .. "_3pl", x3pl, source_slot_prefix  .. "_3pl")
 	end
 
 	-- Add gendered PREFIXTEXT to the forms in the gendered source slot row identified by
@@ -287,10 +283,10 @@ local function conjugate_all_periphrastic(base)
 	ngen_suffix_to_gen("ren_pres", "paip", sam_pres_no3)
 	ngen_suffix_to_gen("ren_aor", "paap_ind", sam_pres_no3)
 	local ren_fut_pos = gender_cross_person(
-		function(gender, person) return concn(shta_paip[gender], sam_pres_no3[person], "да") end
+		function(gender, person) return concn(shta_paip[gender], sam_pres_no3[person], "[[да]]") end
 	)
 	gen_prefix_to_ngen("ren_fut_pos", ren_fut_pos, "pres")
-	ngen_suffix_to_ngen("ren_fut_neg", "[[ня́мало]] [[да]]", "pres")
+	ngen_prefix_to_ngen("ren_fut_neg", "[[ня́мало]] [[да]]", "pres")
 	local ren_prespf = gender_cross_person(
 		function(gender, person) return concat(sam_paip[gender], sam_pres_no3[person]) end
 	)
@@ -299,13 +295,13 @@ local function conjugate_all_periphrastic(base)
 		function(gender, person, index) return concat(ren_fut_pos[index], sam_pres[person]) end
 	)
 	gen_prefix_to_gen("ren_futpf_pos", ren_futpf_pos, "paap_ind")
-	ngen_suffix_to_gen("ren_futpf_neg", concat_tables("[[ня́мало]] [[да]]", sam_pres), "paap_ind")
+	ngen_prefix_to_gen("ren_futpf_neg", concat_tables("[[ня́мало]] [[да]]", sam_pres), "paap_ind")
 
 	-- dubitative
 	gen_prefix_to_gen("dub_pres", ren_prespf, "paip")
 	gen_prefix_to_gen("dub_aor", ren_prespf, "paap_ind")
 	local dub_fut_pos = gender_cross_person(
-		function(gender, person) return concn(shta_paip[gender], sam_pres_no3[person], sam_paip[gender], "да") end
+		function(gender, person) return concn(shta_paip[gender], sam_pres_no3[person], sam_paip[gender], "[[да]]") end
 	)
 	gen_prefix_to_ngen("dub_fut_pos", dub_fut_pos, "pres")
 	ngen_prefix_to_ngen("dub_fut_neg", "[[ня́мало]] [[било́]] [[да]]", "pres")
@@ -314,16 +310,16 @@ local function conjugate_all_periphrastic(base)
 		function(gender, person, index) return concat(dub_fut_pos[index], sam_pres[person]) end
 	)
 	gen_prefix_to_gen("dub_futpf_pos", dub_futpf_pos, "paap_ind")
-	ngen_suffix_to_gen("dub_futpf_neg", concat_tables("[[ня́мало]] [[било́]] [[да]]", sam_pres), "paap_ind")
+	ngen_prefix_to_gen("dub_futpf_neg", concat_tables("[[ня́мало]] [[било́]] [[да]]", sam_pres), "paap_ind")
 
 	-- conclusive
 	ngen_suffix_to_gen("conc_pres", "paip", sam_pres)
 	ngen_suffix_to_gen("conc_aor", "paap_ind", sam_pres)
 	local conc_fut_pos = gender_cross_person(
-		function(gender, person) return concn(shta_paip[gender], sam_pres[person], "да") end
+		function(gender, person) return concn(shta_paip[gender], sam_pres[person], "[[да]]") end
 	)
 	gen_prefix_to_ngen("conc_fut_pos", conc_fut_pos, "pres")
-	ngen_suffix_to_ngen("conc_fut_neg", "[[ня́мало]] [[е]] [[да]]", "pres")
+	ngen_prefix_to_ngen("conc_fut_neg", "[[ня́мало]] [[е]] [[да]]", "pres")
 	local conc_prespf = gender_cross_person(
 		function(gender, person) return concat(sam_paip[gender], sam_pres[person]) end
 	)
@@ -332,137 +328,14 @@ local function conjugate_all_periphrastic(base)
 		function(gender, person, index) return concat(conc_fut_pos[index], sam_pres[person]) end
 	)
 	gen_prefix_to_gen("conc_futpf_pos", conc_futpf_pos, "paap_ind")
-	ngen_suffix_to_gen("conc_futpf_neg", concat_tables("[[ня́мало]] [[е]] [[да]]", sam_pres), "paap_ind")
+	ngen_prefix_to_gen("conc_futpf_neg", concat_tables("[[ня́мало]] [[е]] [[да]]", sam_pres), "paap_ind")
 
 	-- conditional
 	ngen_prefix_to_gen("cond", bada_aor1, "paap_ind")
 end
 
 
-local function make_table(base)
-
-	local table_spec = [=[
-<div class="NavFrame">
-<div class="NavHead" align=left>&nbsp; &nbsp; Inflection</div>
-<div class="NavContent" align=center>
-<center>
-{| style="background:#F0F0F0; font-size: 90%; width:100%"
-! colspan="2" style="width:10%; background:#e2e4c0;" | participles
-! style="background:#e2e4c0" | present active participle
-! style="background:#e2e4c0" | past active aorist participle
-! style="background:#e2e4c0" | past active imperfect participle
-! style="background:#e2e4c0" | past passive participle
-! style="background:#e2e4c0" | verbal noun
-! style="background:#e2e4c0" | adverbial participle
-|-
-! rowspan="3" style="background:#e2e4c0" | masculine
-! style="background:#e2e4c0" | indefinite
-|—
-|[[щял]]
-|[[щял]]
-|—
-| rowspan="5" |
-| rowspan="9" | [[щейки]]
-|-
-! style="background:#e2e4c0; white-space: nowrap;" | definite subject form
-|—
-|[[щелият]]
-|—
-|—
-|-
-! style="background:#e2e4c0; white-space: nowrap;" | definite object form
-|—
-|[[щелия]]
-|—
-|—
-|-
-! rowspan="2" style="background:#e2e4c0" | feminine
-! style="background:#e2e4c0" | indefinite
-|—
-|[[щяла]]
-|[[щяла]]
-|—
-|-
-! style="background:#e2e4c0" | definite
-|—
-|[[щялата]]
-|—
-|—
-|-
-! rowspan="2" style="background:#e2e4c0" | neuter
-! style="background:#e2e4c0" | indefinite
-|—
-|[[щяло]]
-|[[щяло]]
-|—
-|—
-|-
-! style="background:#e2e4c0" | definite
-|—
-|[[щялото]]
-|—
-|—
-|—
-|-
-! rowspan="2" style="background:#e2e4c0" | plural
-! style="background:#e2e4c0" | indefinite
-|—
-|[[щели]]
-|[[щели]]
-|—
-|—
-|-
-! style="background:#e2e4c0" | definite
-|—
-|[[щелите]]
-|—
-|—
-|—
-|}
-{| style="background:#F0F0F0; font-size: 90%; width:100%"
-! colspan="3" rowspan="2" style="background:#C0C0C0" | person
-! colspan="3" style="background:#C0C0C0" | singular
-! colspan="3" style="background:#C0C0C0" | plural
-|-
-! style="background:#C0C0C0;width:12.5%" | first
-! style="background:#C0C0C0;width:12.5%" | second
-! style="background:#C0C0C0;width:12.5%" | third
-! style="background:#C0C0C0;width:12.5%" | first
-! style="background:#C0C0C0;width:12.5%" | second
-! style="background:#C0C0C0;width:12.5%" | third
-|-
-! colspan="3" style="background:#c0cfe4" | indicative
-! style="background:#c0cfe4" | аз
-! style="background:#c0cfe4" | ти
-! style="background:#c0cfe4" | той/тя/то
-! style="background:#c0cfe4" | ние
-! style="background:#c0cfe4" | вие
-! style="background:#c0cfe4" | те
-|-
-! colspan="3" style="background:#c0cfe4" | present
-| [[ща]]
-| [[щеш]]
-| [[ще]]
-| [[щем]]
-| [[щете]]
-| [[щат]]
-|-
-! colspan="3" style="background:#c0cfe4" | imperfect
-| [[щях]]
-| [[щеше]]
-| [[щеше]]
-| [[щяхме]]
-| [[щяхте]]
-| [[щяха]]
-|-
-! colspan="3" style="background:#c0cfe4" | aorist
-| [[щях]]
-| [[щя]]
-| [[щя]]
-| [[щяхме]]
-| [[щяхте]]
-| [[щяха]]
-|-
+export.table_spec_compound_full = [=[
 ! rowspan="2" style="background:#c0cfe4" | future
 ! colspan="2" style="background:#c0cfe4" | pos.
 | {fut_pos_1sg}
@@ -1019,21 +892,7 @@ local function make_table(base)
 | {cond_n_2sg}
 | {cond_n_3sg}
 |-
-! colspan="3" rowspan="2" style="background:#e4d4c0" | imperative
-! style="background:#e4d4c0" | -
-! style="background:#e4d4c0" | {impv_sg}
-! style="background:#e4d4c0" | -
-! style="background:#e4d4c0" | -
-! style="background:#e4d4c0" | {impv_pl}
-! style="background:#e4d4c0" | -
-|-
-|
-|—
-|
-|
-|—
-|
-|}
-</center>
-</div>
-</div>]=]
+]=]
+
+
+return export
