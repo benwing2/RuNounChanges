@@ -48,10 +48,16 @@ local uupper = mw.ustring.upper
 
 local AC = u(0x0301) -- acute =  ́
 
+
 -- version of rsubn() that discards all but the first return value
 local function rsub(term, foo, bar)
 	local retval = rsubn(term, foo, bar)
 	return retval
+end
+
+
+local function link(term)
+	return m_links.full_link({lang = lang, term = term, tr = "-"})
 end
 
 
@@ -138,16 +144,6 @@ local function slot_to_accel_form(slot)
 	end
 	return suffix_to_accel_form[suffix] .. "|" .. prefix_to_accel_form[prefix]
 end
-
-
---[=[
-local verb_misc_slots = {
-	"refl",
-	"along_with_refl",
-	"paap_ind_m_sg_notr", "paap_ind_f_sg_notr", "paap_ind_n_sg_notr", "paap_ind_pl_notr",
-	"paip_m_sg_notr", "paip_f_sg_notr", "paip_n_sg_notr", "paip_pl_notr",
-}
-]=]
 
 
 local verb_notr_slots = {
@@ -353,9 +349,10 @@ local function add_categories(base)
 	if base.refl then
 		table.insert(base.categories, "Bulgarian reflexive verbs")
 	end
-	if base.conj == "irreg" then
+	if base.irreg or base.conj == "irreg" then
 		table.insert(base.categories, "Bulgarian irregular verbs")
-	else
+	end
+	if base.conj ~= "irreg" then
 		table.insert(base.categories, "Bulgarian conjugation " .. base.conj .. " verbs")
 	end
 end
@@ -478,6 +475,7 @@ conjs["1.1"] = function(base, lemma)
 		base.pres1pl = unyat_stem .. "ем"
 		base.impv = unyat_stem
 		base.impvpl = unyat_stem .. "те"
+		base.irreg = true
 	elseif rfind(lemma, "[бв]лека́$") or rfind(lemma, "сека́$") then
 		base.aor = rsub(stem, "^(.*)е", "%1я") .. last_letter .. "ох"
 		base.aor23 = stem .. last_letter_pal .. "е"
@@ -490,6 +488,7 @@ conjs["1.1"] = function(base, lemma)
 	if rfind(lemma, "раста́$") then
 		base.paapm = stem .. "ъл"
 		base.paapf = stem .. "ла"
+		base.irreg = true
 	elseif last_letter == "д" or last_letter == "т" then
 		base.paapm = stem .. "л"
 	else
@@ -522,8 +521,10 @@ conjs["1.2"] = function(base, lemma)
 		aor23 = rsub(lemma, "ера́$", "ра́")
 	elseif rfind(lemma, "греба́$") then
 		aor23 = rsub(lemma, "греба́$", "гре́ба")
+		base.irreg = true
 	elseif rfind(lemma, "гриза́$") then
 		aor23 = rsub(lemma, "гриза́$", "гри́за")
+		base.irreg = true
 	else
 		generate_maybe_shifted_aorist(base, lemma)
 	end
@@ -558,6 +559,7 @@ conjs["1.3"] = function(base, lemma)
 		aor23 = rsub(lemma, "дре́мя$", "дря́ма")
 		local shifted_aor23 = rsub(lemma, "дре́мя$", "дрема́")
 		generate_maybe_shifted_aorist(base, aor23, shifted_aor23)
+		base.irreg = true
 	else
 		aor23 = rsub(lemma, "^(.*)я", "%1а")
 		generate_maybe_shifted_aorist(base, rsub(lemma, "^(.*)я", "%1а"))
@@ -582,6 +584,7 @@ conjs["1.4"] = function(base, lemma)
 		local shifted_aor23 = rsub(lemma, "ре́жа", "реза́")
 		generate_maybe_shifted_aorist(base, aor23, shifted_aor23)
 		skip_generate_aorist = true
+		base.irreg = true
 	elseif rfind(lemma, "жа$") then
 		aor23 = rsub(lemma, "жа$", "за")
 	elseif rfind(lemma, "ча$") then
@@ -632,6 +635,7 @@ conjs["1.6"] = function(base, lemma)
 	-- Generate past passive participle stems.
 	if rfind(lemma, "зна́я$") then
 		base.ppp = rsub(lemma, "я$", "ен")
+		base.irreg = true
 	else
 		base.ppp = lemma .. "н"
 	end
@@ -740,6 +744,7 @@ conjs["2.3"] = function(base, lemma)
 	if rfind(lemma, "държа́$") then
 		base.impv = rsub(lemma, "държа́$", "дръ́ж")
 		base.impvpl = base.impv .. "те"
+		base.irreg = true
 	end
 end
 
@@ -776,20 +781,24 @@ end
 
 
 conjs["irreg"] = function(base, lemma)
+	base.irreg = true
 	if rfind(lemma, "я́м$") then
 		conjs["1.1"](base, rsub(lemma, "я́м$", "яда́"))
 		base.pres1sg = lemma
 		base.vni = false
 		base.impv = rsub(lemma, "м$", "ж")
 		base.impvpl = base.impv .. "те"
+		base.conj = "1.1"
 	elseif rfind(lemma, "зна́м$") then
 		conjs["1.6"](base, rsub(lemma, "а́м$", "а́я"))
 		base.pres1sg = lemma
+		base.conj = "1.6"
 	elseif rfind(lemma, "да́м$") then
 		conjs["1.1"](base, rsub(lemma, "да́м$", "дада́"))
 		base.pres1sg = lemma
 		base.impv = rsub(lemma, "м$", "й")
 		base.impvpl = base.impv .. "те"
+		base.conj = "1.1"
 	elseif rfind(lemma, "йда$") then -- до́йда, за́йда, подо́йда, придо́йда
 		pres_advp_1conj(base, lemma)
 		impf_impv_12conj(base, lemma)
@@ -799,6 +808,7 @@ conjs["irreg"] = function(base, lemma)
 		base.paapf = rsub(lemma, AC .. "йда$", "шла́")
 		-- no past passive participle
 		base.vna = false
+		base.conj = "1.1"
 	elseif rfind(lemma, "и́да$") then -- и́да, оти́да, пооти́да, разоти́да
 		pres_advp_1conj(base, lemma)
 		impf_impv_12conj(base, lemma)
@@ -813,6 +823,7 @@ conjs["irreg"] = function(base, lemma)
 		-- no past passive participle, no verbal noun
 		base.vna = false
 		base.vni = false
+		base.conj = "1.1"
 	elseif rfind(lemma, "мо́га$") then
 		pres_advp_1conj(base, lemma)
 		impf_12conj(base, lemma)
@@ -869,18 +880,21 @@ conjs["irreg"] = function(base, lemma)
 		-- perfective; no verbal noun
 		base.vna = false
 		base.vni = false
+		base.conj = "2.2"
 	elseif rfind(lemma, "кълна́$") then
 		pres_advp_1conj(base, lemma)
 		impf_impv_12conj(base, lemma)
 		base.aor23 = {rsub(lemma, "кълна́$", "кле́"), lemma}
 		base.ppp = {rsub(lemma, "кълна́$", "кле́т"), lemma .. "т"}
 		base.vna = false
+		base.conj = "1.2"
 	elseif rfind(lemma, "беле́жа$") then
 		pres_advp_2conj(base, lemma)
 		impf_impv_12conj(base, lemma)
 		base.aor23 = rsub(lemma, "ле́жа$", "ля́за")
 		base.ppp = rsub(lemma, "ле́жа$", "ля́зан")
 		base.vna = false
+		base.conj = "1.4"
 	else
 		error("Irregular verb '" .. lemma .. "' not yet supported")
 	end
@@ -1091,12 +1105,13 @@ local function show_forms(base)
 	local footnote_obj = com.init_footnote_obj()
 
 	for _, notr_slot in ipairs(verb_notr_slots) do
-		forms[notr_slot .. "_notr"] = com.set_one_form(footnote_obj, forms, notr_slot,
-			accel_lemma, slot_to_accel_form, false, "slash join")
+		forms[notr_slot .. "_notr"] = com.display_one_form(footnote_obj, forms, notr_slot,
+			nil, nil, false, "slash join")
 	end
-	com.set_forms(footnote_obj, forms, forms, verb_slots, "is list", accel_lemma, slot_to_accel_form)
+	com.display_forms(footnote_obj, forms, forms, verb_slots, "is list", accel_lemma, slot_to_accel_form)
 	forms.refl = base.refl or ""
-	forms.along_with_refl = base.refl and "along with [[" .. base.refl .. "]]" or ""
+	-- forms.along_with_refl = base.refl and "along with [[" .. base.refl .. "]]" or ""
+	forms.along_with_refl = ""
 	forms.gm = format_gender("m")
 	forms.gf = format_gender("f")
 	forms.gn = format_gender("n")
@@ -1139,6 +1154,9 @@ local function make_table(word_spec)
 		table.insert(ann_parts, "irregular")
 	else
 		table.insert(ann_parts, "conjugation " .. word_spec.conj)
+		if word_spec.irreg then
+			table.insert(ann_parts, "irregular")
+		end
 	end
 	table.insert(ann_parts,
 		word_spec.aspect == "impf" and "imperfective" or
@@ -1149,6 +1167,18 @@ local function make_table(word_spec)
 		word_spec.trans == "intr" and "intransitive" or
 		"reflexive")
 	forms.annotation = " (" .. table.concat(ann_parts, ", ") .. ")"
+
+	-- auxiliaries used in the table
+	forms.nyama = link("ня́ма")
+	forms.nyamashe = link("ня́маше")
+	forms.nyamalo = link("ня́мало")
+	forms.shte = link("ще")
+	forms.shta = link("ща")
+	forms.da = link("да")
+	forms.bilo = link("било́")
+	forms.sam = link("съм")
+	forms.e = link("е")
+	forms.bada = link("бъ́да")
 
 	local table_spec = [=[
 <div class="NavFrame">
@@ -1274,29 +1304,29 @@ local function make_table(word_spec)
 |-
 ! rowspan="2" style="background:#c0cfe4" | future
 ! style="background:#c0cfe4" | pos.
-! colspan="6" style="background:#C0C0C0" | Use [[ще]] {refl} followed by the present indicative tense
+! colspan="6" style="background:#C0C0C0" | Use {shte} {refl} followed by the present indicative tense
 |-
 ! style="background:#c0cfe4" | neg.
-! colspan="6" style="background:#C0C0C0" | Use [[няма]] [[да]] {refl} followed by the present indicative tense
+! colspan="6" style="background:#C0C0C0" | Use {nyama} {da} {refl} followed by the present indicative tense
 |-
 ! rowspan= "2" style="background:#c0cfe4" | future in the past
 ! style="background:#c0cfe4" | pos.
-! colspan="6" style="background:#C0C0C0" | Use the imperfect indicative tense of [[ща]] followed by [[да]] {refl} and the present indicative tense
+! colspan="6" style="background:#C0C0C0" | Use the imperfect indicative tense of {shta} followed by {da} {refl} and the present indicative tense
 |-
 ! style="background:#c0cfe4" | neg.
-! colspan="6" style="background:#C0C0C0" | Use [[нямаше]] [[да]] {refl} followed by the present indicative tense
+! colspan="6" style="background:#C0C0C0" | Use {nyamashe} {da} {refl} followed by the present indicative tense
 |-
 ! colspan="2" style="background:#c0cfe4" | present perfect
-! colspan="6" style="background:#C0C0C0" | Use the present indicative tense of [[съм]] {along_with_refl} and {paap_ind_m_sg_notr} {gm}, {paap_ind_f_sg_notr} {gf}, {paap_ind_n_sg_notr} {gn}, or {paap_ind_pl_notr} {gp}
+! colspan="6" style="background:#C0C0C0" | Use the present indicative tense of {sam} {along_with_refl} and {paap_ind_m_sg_notr} {gm}, {paap_ind_f_sg_notr} {gf}, {paap_ind_n_sg_notr} {gn}, or {paap_ind_pl_notr} {gp}
 |-
 ! colspan="2" style="background:#c0cfe4" | past perfect
-! colspan="6" style="background:#C0C0C0" | Use the imperfect indicative tense of [[съм]] {along_with_refl} and {paap_ind_m_sg_notr} {gm}, {paap_ind_f_sg_notr} {gf}, {paap_ind_n_sg_notr} {gn}, or {paap_ind_pl_notr} {gp}
+! colspan="6" style="background:#C0C0C0" | Use the imperfect indicative tense of {sam} {along_with_refl} and {paap_ind_m_sg_notr} {gm}, {paap_ind_f_sg_notr} {gf}, {paap_ind_n_sg_notr} {gn}, or {paap_ind_pl_notr} {gp}
 |-
 ! colspan="2" style="background:#c0cfe4" | future perfect
-! colspan="6" style="background:#C0C0C0" | Use the future indicative tense of [[съм]] {along_with_refl} and {paap_ind_m_sg_notr} {gm}, {paap_ind_f_sg_notr} {gf}, {paap_ind_n_sg_notr} {gn}, or {paap_ind_pl_notr} {gp}
+! colspan="6" style="background:#C0C0C0" | Use the future indicative tense of {sam} {along_with_refl} and {paap_ind_m_sg_notr} {gm}, {paap_ind_f_sg_notr} {gf}, {paap_ind_n_sg_notr} {gn}, or {paap_ind_pl_notr} {gp}
 |-
 ! colspan="2" style="background:#c0cfe4" | future perfect in the past
-! colspan="6" style="background:#C0C0C0" | Use the future in the past indicative tense of [[съм]] {along_with_refl} and {paap_ind_m_sg_notr} {gm}, {paap_ind_f_sg_notr} {gf}, {paap_ind_n_sg_notr} {gn}, or {paap_ind_pl_notr} {gp}
+! colspan="6" style="background:#C0C0C0" | Use the future in the past indicative tense of {sam} {along_with_refl} and {paap_ind_m_sg_notr} {gm}, {paap_ind_f_sg_notr} {gf}, {paap_ind_n_sg_notr} {gn}, or {paap_ind_pl_notr} {gp}
 |-
 ! colspan="2" style="background:#c0e4c0" | renarrative
 ! style="background:#c0e4c0" | аз
@@ -1307,23 +1337,23 @@ local function make_table(word_spec)
 ! style="background:#c0e4c0" | те
 |-
 ! colspan="2" style="background:#c0e4c0" | present and imperfect
-! colspan="6" style="background:#C0C0C0; white-space: nowrap;" | Use the present indicative tense of [[съм]] (leave it out in third person) {along_with_refl} and {paip_m_sg_notr} {gm}, {paip_f_sg_notr} {gf}, {paip_n_sg_notr} {gn}, or {paip_pl_notr} {gp}
+! colspan="6" style="background:#C0C0C0; white-space: nowrap;" | Use the present indicative tense of {sam} (leave it out in third person) {along_with_refl} and {paip_m_sg_notr} {gm}, {paip_f_sg_notr} {gf}, {paip_n_sg_notr} {gn}, or {paip_pl_notr} {gp}
 |-
 ! colspan="2" style="background:#c0e4c0" | aorist
-! colspan="6" style="background:#C0C0C0" | Use the present indicative tense of [[съм]] (leave it out in third person) {along_with_refl} and {paap_ind_m_sg_notr} {gm}, {paap_ind_f_sg_notr} {gf}, {paap_ind_n_sg_notr} {gn}, or {paap_ind_pl_notr} {gp}
+! colspan="6" style="background:#C0C0C0" | Use the present indicative tense of {sam} (leave it out in third person) {along_with_refl} and {paap_ind_m_sg_notr} {gm}, {paap_ind_f_sg_notr} {gf}, {paap_ind_n_sg_notr} {gn}, or {paap_ind_pl_notr} {gp}
 |-
 ! rowspan="2" style="background:#c0e4c0" | future and future in the past
 ! style="background:#c0e4c0" | pos.
-! colspan="6" style="background:#C0C0C0" | Use the present/imperfect renarrative tense of [[ща]] followed by [[да]] {refl} and the present indicative tense
+! colspan="6" style="background:#C0C0C0" | Use the present/imperfect renarrative tense of {shta} followed by {da} {refl} and the present indicative tense
 |-
 ! style="background:#c0e4c0" | neg.
-! colspan="6" style="background:#C0C0C0" | Use [[нямало]] [[да]] {refl} and the present indicative tense
+! colspan="6" style="background:#C0C0C0" | Use {nyamalo} {da} {refl} and the present indicative tense
 |-
 ! colspan="2" style="background:#c0e4c0" | present and past perfect
-! colspan="6" style="background:#C0C0C0" | Use the present/imperfect renarrative tense of [[съм]] {along_with_refl} and {paap_ind_m_sg_notr} {gm}, {paap_ind_f_sg_notr} {gf}, {paap_ind_n_sg_notr} {gn}, or {paap_ind_pl_notr} {gp}
+! colspan="6" style="background:#C0C0C0" | Use the present/imperfect renarrative tense of {sam} {along_with_refl} and {paap_ind_m_sg_notr} {gm}, {paap_ind_f_sg_notr} {gf}, {paap_ind_n_sg_notr} {gn}, or {paap_ind_pl_notr} {gp}
 |-
 ! colspan="2" style="background:#c0e4c0" | future perfect and future perfect in the past
-! colspan="6" style="background:#C0C0C0" | Use the future/future in the past renarrative tense of [[съм]] {along_with_refl} and {paap_ind_m_sg_notr} {gm}, {paap_ind_f_sg_notr} {gf}, {paap_ind_n_sg_notr} {gn}, or {paap_ind_pl_notr} {gp}
+! colspan="6" style="background:#C0C0C0" | Use the future/future in the past renarrative tense of {sam} {along_with_refl} and {paap_ind_m_sg_notr} {gm}, {paap_ind_f_sg_notr} {gf}, {paap_ind_n_sg_notr} {gn}, or {paap_ind_pl_notr} {gp}
 |-
 ! colspan="2" style="background:#f0e68c" | dubitative
 ! style="background:#f0e68c" | аз
@@ -1334,23 +1364,23 @@ local function make_table(word_spec)
 ! style="background:#f0e68c" | те
 |-
 ! colspan="2" style="background:#f0e68c" | present and imperfect
-! colspan="6" style="background:#C0C0C0" | Use the present/imperfect renarrative tense of [[съм]] {along_with_refl} and {paip_m_sg_notr} {gm}, {paip_f_sg_notr} {gf}, {paip_n_sg_notr} {gn}, or {paip_pl_notr} {gp}
+! colspan="6" style="background:#C0C0C0" | Use the present/imperfect renarrative tense of {sam} {along_with_refl} and {paip_m_sg_notr} {gm}, {paip_f_sg_notr} {gf}, {paip_n_sg_notr} {gn}, or {paip_pl_notr} {gp}
 |-
 ! colspan="2" style="background:#f0e68c" | aorist
-! colspan="6" style="background:#C0C0C0" | Use the aorist renarrative tense of [[съм]] {along_with_refl} and {paap_ind_m_sg_notr} {gm}, {paap_ind_f_sg_notr} {gf}, {paap_ind_n_sg_notr} {gn}, or {paap_ind_pl_notr} {gp}
+! colspan="6" style="background:#C0C0C0" | Use the aorist renarrative tense of {sam} {along_with_refl} and {paap_ind_m_sg_notr} {gm}, {paap_ind_f_sg_notr} {gf}, {paap_ind_n_sg_notr} {gn}, or {paap_ind_pl_notr} {gp}
 |-
 ! rowspan="2" style="background:#f0e68c" | future and future in the past
 ! style="background:#f0e68c" | pos.
-! colspan="6" style="background:#C0C0C0" | Use the present/imperfect dubitative tense of [[ща]] followed by [[да]] {refl} and the present indicative tense
+! colspan="6" style="background:#C0C0C0" | Use the present/imperfect dubitative tense of {shta} followed by {da} {refl} and the present indicative tense
 |-
 ! style="background:#f0e68c" | neg.
-! colspan="6" style="background:#C0C0C0" | Use [[нямало]] [[било]] [[да]] {refl} and the present indicative tense
+! colspan="6" style="background:#C0C0C0" | Use {nyamalo} {bilo} {da} {refl} and the present indicative tense
 |-
 ! colspan="2" style="background:#f0e68c" | present and past perfect
 | colspan="6" |<center>''none''</center>
 |-
 ! colspan="2" style="background:#f0e68c" | future perfect and future perfect in the past
-! colspan="6" style="background:#C0C0C0; white-space: nowrap;" | Use the future/future in the past dubitative tense of [[съм]] {along_with_refl} and {paap_ind_m_sg_notr} {gm}, {paap_ind_f_sg_notr} {gf}, {paap_ind_n_sg_notr} {gn}, or {paap_ind_pl_notr} {gp}
+! colspan="6" style="background:#C0C0C0; white-space: nowrap;" | Use the future/future in the past dubitative tense of {sam} {along_with_refl} and {paap_ind_m_sg_notr} {gm}, {paap_ind_f_sg_notr} {gf}, {paap_ind_n_sg_notr} {gn}, or {paap_ind_pl_notr} {gp}
 |-
 ! colspan="2" style="background:#9be1ff" | conclusive
 ! style="background:#9be1ff" | аз
@@ -1361,23 +1391,23 @@ local function make_table(word_spec)
 ! style="background:#9be1ff" | те
 |-
 ! colspan="2" style="background:#9be1ff" | present and imperfect
-! colspan="6" style="background:#C0C0C0" | Use the present indicative tense of [[съм]] {along_with_refl} and {paip_m_sg_notr} {gm}, {paip_f_sg_notr} {gf}, {paip_n_sg_notr} {gn}, or {paip_pl_notr} {gp}
+! colspan="6" style="background:#C0C0C0" | Use the present indicative tense of {sam} {along_with_refl} and {paip_m_sg_notr} {gm}, {paip_f_sg_notr} {gf}, {paip_n_sg_notr} {gn}, or {paip_pl_notr} {gp}
 |-
 ! colspan="2" style="background:#9be1ff" | aorist
-! colspan="6" style="background:#C0C0C0" | Use the present indicative tense of [[съм]] {along_with_refl} and {paap_ind_m_sg_notr} {gm}, {paap_ind_f_sg_notr} {gf}, {paap_ind_n_sg_notr} {gn}, or {paap_ind_pl_notr} {gp}
+! colspan="6" style="background:#C0C0C0" | Use the present indicative tense of {sam} {along_with_refl} and {paap_ind_m_sg_notr} {gm}, {paap_ind_f_sg_notr} {gf}, {paap_ind_n_sg_notr} {gn}, or {paap_ind_pl_notr} {gp}
 |-
 ! rowspan="2" style="background:#9be1ff" | future and future in the past
 ! style="background:#9be1ff" | pos.
-! colspan="6" style="background:#C0C0C0" | Use the present/imperfect conclusive tense of [[ща]] followed by [[да]] {refl} and the present indicative tense
+! colspan="6" style="background:#C0C0C0" | Use the present/imperfect conclusive tense of {shta} followed by {da} {refl} and the present indicative tense
 |-
 ! style="background:#9be1ff" | neg.
-! colspan="6" style="background:#C0C0C0" | Use [[нямало]] [[е]] [[да]] {refl} and the present indicative tense
+! colspan="6" style="background:#C0C0C0" | Use {nyamalo} {e} {da} {refl} and the present indicative tense
 |-
 ! colspan="2" style="background:#9be1ff" | present and past perfect
-! colspan="6" style="background:#C0C0C0" | Use the present/imperfect conclusive tense of [[съм]] {along_with_refl} and {paap_ind_m_sg_notr} {gm}, {paap_ind_f_sg_notr} {gf}, {paap_ind_n_sg_notr} {gn}, or {paap_ind_pl_notr} {gp}
+! colspan="6" style="background:#C0C0C0" | Use the present/imperfect conclusive tense of {sam} {along_with_refl} and {paap_ind_m_sg_notr} {gm}, {paap_ind_f_sg_notr} {gf}, {paap_ind_n_sg_notr} {gn}, or {paap_ind_pl_notr} {gp}
 |-
 ! colspan="2" style="background:#9be1ff" | future perfect and future perfect in the past
-! colspan="6" style="background:#C0C0C0; white-space: nowrap;" | Use the future/future in the past conclusive tense of [[съм]] {along_with_refl} and {paap_ind_m_sg_notr} {gm}, {paap_ind_f_sg_notr} {gf}, {paap_ind_n_sg_notr} {gn}, or {paap_ind_pl_notr} {gp}
+! colspan="6" style="background:#C0C0C0; white-space: nowrap;" | Use the future/future in the past conclusive tense of {sam} {along_with_refl} and {paap_ind_m_sg_notr} {gm}, {paap_ind_f_sg_notr} {gf}, {paap_ind_n_sg_notr} {gn}, or {paap_ind_pl_notr} {gp}
 |-
 ! rowspan="2" colspan="2" style="background:#f2b6c3" | conditional
 ! style="background:#f2b6c3" | аз
@@ -1387,7 +1417,7 @@ local function make_table(word_spec)
 ! style="background:#f2b6c3" | вие
 ! style="background:#f2b6c3" | те
 |-
-! colspan="6" style="background:#C0C0C0" | Use the first aorist indicative tense of [[бъда]] {along_with_refl} and {paap_ind_m_sg_notr} {gm}, {paap_ind_f_sg_notr} {gf}, {paap_ind_n_sg_notr} {gn}, or {paap_ind_pl_notr} {gp}
+! colspan="6" style="background:#C0C0C0" | Use the first aorist indicative tense of {bada} {along_with_refl} and {paap_ind_m_sg_notr} {gm}, {paap_ind_f_sg_notr} {gf}, {paap_ind_n_sg_notr} {gn}, or {paap_ind_pl_notr} {gp}
 |-
 ! rowspan="2" colspan="2" style="background:#e4d4c0" | imperative
 ! style="background:#e4d4c0" | -
