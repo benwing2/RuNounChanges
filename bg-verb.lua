@@ -277,14 +277,14 @@ local function conjugate_all(base)
 		conjugate_participle("prap", base.prap, map_append(base.prap, "а"),
 			map_append(base.prap, "о"), map_append(base.prap, "и"))
 	end
-	conjugate_participle("paap", base.paapm, base.paapf, base.paapn, base.paappl)
+	conjugate_participle("paap", base.paap, base.paapf, base.paapn, base.paappl)
 	if base.trans == "tr" then
 		conjugate_participle("ppp", base.ppp, map_append(base.ppp, "а"), map_append(base.ppp, "о"),
 			base.ppppl)
 	end
 	add("paip_m_sg", base.paip, "")
-	add("paip_f_sg", base.paip, "а")
-	add("paip_n_sg", base.paip, "о")
+	add("paip_f_sg", base.paipf, "")
+	add("paip_n_sg", base.paipn, "")
 	add("paip_pl", base.paippl, "")
 	if base.aspect ~= "pf" then
 		add("vn_ind_sg", base.vn, "")
@@ -301,10 +301,10 @@ local function conjugate_all(base)
 		add("vn_def_pl", base.vn, "тата")
 	end
 	add("pres_1sg", base.pres1sg, "")
-	add("pres_2sg", base.pres3sg, "ш")
+	add("pres_2sg", base.pres2sg, "")
 	add("pres_3sg", base.pres3sg, "")
 	add("pres_1pl", base.pres1pl, "")
-	add("pres_2pl", base.pres3sg, "те")
+	add("pres_2pl", base.pres2pl, "")
 	add("pres_3pl", base.pres3pl, "")
 	conjugate_aor_impf("aor", base.aor, base.aor23)
 	conjugate_aor_impf("impf", base.impf, base.impf23)
@@ -364,10 +364,7 @@ local function pres_advp_1conj(base, lemma)
 		error("Unrecognized lemma for conjugation 1: '" .. lemma .. "'")
 	end
 	local last_letter_pal = com.first_palatalization[last_letter] or last_letter
-	base.pres1sg = lemma
 	base.pres3sg = stem .. last_letter_pal .. "е" .. accent
-	base.pres1pl = base.pres3sg .. "м"
-	base.pres3pl = lemma .. "т"
 	base.advp = base.pres3sg .. "йки"
 end
 
@@ -377,10 +374,7 @@ local function pres_advp_2conj(base, lemma)
 	if not stem then
 		error("Unrecognized lemma for conjugation 2: '" .. lemma .. "'")
 	end
-	base.pres1sg = lemma
 	base.pres3sg = stem .. "и" .. accent
-	base.pres1pl = base.pres3sg .. "м"
-	base.pres3pl = lemma .. "т"
 	base.advp = stem .. "е" .. accent .. "йки"
 end
 
@@ -434,7 +428,6 @@ local function impv_12conj(base, lemma)
 	local full_stem = stem .. last_letter
 	if rfind(last_letter, com.vowel_c) then
 		base.impv = com.maybe_stress_final_syllable(full_stem) .. "й"
-		base.impvpl = base.impv .. "те"
 	else
 		full_stem = rsub(full_stem, AC, "") 
 		base.impv = full_stem .. "и́"
@@ -472,9 +465,7 @@ conjs["1.1"] = function(base, lemma)
 		base.impf = unyat_stem .. "ех"
 		base.impf23 = unyat_stem .. "еше"
 		base.pres3sg = unyat_stem .. "е"
-		base.pres1pl = unyat_stem .. "ем"
 		base.impv = unyat_stem
-		base.impvpl = unyat_stem .. "те"
 		base.irreg = true
 	elseif rfind(lemma, "[бв]лека́$") or rfind(lemma, "сека́$") then
 		base.aor = rsub(stem, "^(.*)е", "%1я") .. last_letter .. "ох"
@@ -486,14 +477,14 @@ conjs["1.1"] = function(base, lemma)
 
 	-- Generate aorist participle stems.
 	if rfind(lemma, "раста́$") then
-		base.paapm = stem .. "ъл"
+		base.paap = stem .. "ъл"
 		base.paapf = stem .. "ла"
 		base.irreg = true
 	elseif last_letter == "д" or last_letter == "т" then
-		base.paapm = stem .. "л"
+		base.paap = stem .. "л"
 	else
 		local full_stem = rsub(base.aor, "ох$", "")
-		base.paapm = full_stem .. "ъл"
+		base.paap = full_stem .. "ъл"
 		base.paapf = full_stem .. "ла"
 		base.paappl = rsub(full_stem, "я", "е") .. "ли"
 	end
@@ -743,7 +734,6 @@ conjs["2.3"] = function(base, lemma)
 	-- Handle irregularities
 	if rfind(lemma, "държа́$") then
 		base.impv = rsub(lemma, "държа́$", "дръ́ж")
-		base.impvpl = base.impv .. "те"
 		base.irreg = true
 	end
 end
@@ -756,7 +746,6 @@ conjs["3"] = function(base, lemma)
 	end
 
 	-- Generate present stems.
-	base.pres1sg = lemma
 	base.pres3sg = stem
 	base.pres1pl = stem .. "ме"
 	base.pres3pl = stem .. "т"
@@ -770,7 +759,6 @@ conjs["3"] = function(base, lemma)
 
 	-- Generate imperative stems.
 	base.impv = stem .. "й"
-	base.impvpl = stem .. "йте"
 
 	-- Generate past passive participle stems.
 	base.ppp = stem .. "н"
@@ -784,27 +772,73 @@ conjs["irreg"] = function(base, lemma)
 	base.irreg = true
 	if rfind(lemma, "я́м$") then
 		conjs["1.1"](base, rsub(lemma, "я́м$", "яда́"))
-		base.pres1sg = lemma
 		base.vni = false
 		base.impv = rsub(lemma, "м$", "ж")
-		base.impvpl = base.impv .. "те"
 		base.conj = "1.1"
+	if rfind(lemma, "съ́м$") then
+		local stem = rmatch(lemma, "^(.*)съ́м$")
+		base.pres2sg = stem .. "си́"
+		base.pres3sg = stem .. "е́"
+		base.pres1pl = stem .. "сме́"
+		base.pres2pl = stem .. "сте́"
+		base.pres3pl = stem .. "са́"
+		base.aor = stem .. "бя́х"
+		base.aor23 = {stem .. "бе́", stem .. "бе́ше"}
+		base.impf = stem .. "бя́х"
+		base.impf23 = stem .. "бе́ше"
+		base.prap = false
+		base.paap = stem .. "би́л"
+		base.paapf = stem .. "била́"
+		base.paip = stem .. "би́л"
+		base.paipf = stem .. "била́"
+		base.advp = {stem .. "бъ́дейки", stem .. "би́дейки"}
+		base.impv = "бъди́"
+		base.impvpl = "бъде́те"
+		base.vna = false
+		base.vni = false
+	elseif rfind(lemma, "бъ́да$") then
+		local stem = rmatch(lemma, "^(.*)бъ́да$")
+		base.pres3sg = stem .. "бъ́де"
+		base.aor = {stem .. "би́х", stem .. "би́дох"}
+		base.aor23 = {stem .. "би́", stem .. "би́де"}
+		base.impf = {stem .. "бъ́дех", stem .. "бя́х"}
+		base.impf23 = {stem .. "бъ́деше", stem .. "бе́ше"}
+		base.prap = stem .. "бъ́дещ"
+		base.paap = stem .. "би́л"
+		base.paapf = stem .. "била́"
+		base.paip = stem .. "бъ́дел"
+		base.advp = {stem .. "бъ́дейки", stem .. "би́дейки"}
+		base.impv = "бъди́"
+		base.impvpl = "бъде́те"
+		base.vna = false
+		base.vni = false
+	elseif rfind(lemma, "ща́") then
+		local stem = rmatch(lemma, "^(.*)ща́$")
+		base.pres3sg = stem .. "ще́"
+		base.aor = stem .. "щя́х"
+		base.aor23 = {stem .. "щя́", stem .. "ще́ше"}
+		base.impf = stem .. "щя́х"
+		base.impf23 = stem .. "ще́ше"
+		base.prap = false
+		base.paap = stem .. "щя́л"
+		base.paappl = stem .. "ще́ли"
+		base.paip = stem .. "щя́л"
+		base.paippl = stem .. "ще́ли"
+		base.vna = false
+		base.vni = false
 	elseif rfind(lemma, "зна́м$") then
 		conjs["1.6"](base, rsub(lemma, "а́м$", "а́я"))
-		base.pres1sg = lemma
 		base.conj = "1.6"
 	elseif rfind(lemma, "да́м$") then
 		conjs["1.1"](base, rsub(lemma, "да́м$", "дада́"))
-		base.pres1sg = lemma
 		base.impv = rsub(lemma, "м$", "й")
-		base.impvpl = base.impv .. "те"
 		base.conj = "1.1"
 	elseif rfind(lemma, "йда$") then -- до́йда, за́йда, подо́йда, придо́йда
 		pres_advp_1conj(base, lemma)
 		impf_impv_12conj(base, lemma)
 		base.aor = rsub(lemma, AC .. "йда$", "йдо́х")
 		base.aor23 = rsub(lemma, AC .. "йда$", "йде́")
-		base.paapm = rsub(lemma, AC .. "йда$", "шъ́л")
+		base.paap = rsub(lemma, AC .. "йда$", "шъ́л")
 		base.paapf = rsub(lemma, AC .. "йда$", "шла́")
 		-- no past passive participle
 		base.vna = false
@@ -816,7 +850,7 @@ conjs["irreg"] = function(base, lemma)
 			-- base verb и́да doesn't have aorist or aorist participle forms
 			base.aor = rsub(lemma, "да$", "дох")
 			base.aor23 = rsub(lemma, "да$", "де")
-			base.paapm = {rsub(lemma, "да$", "шъл"), rsub(lemma, "и́да$", "ишъ́л"),
+			base.paap = {rsub(lemma, "да$", "шъл"), rsub(lemma, "и́да$", "ишъ́л"),
 				{form=rsub(lemma, "да$", "шел"), footnotes={"[dialectal]"}}}
 			base.paapf = {rsub(lemma, "да$", "шла"), rsub(lemma, "и́да$", "ишла́")}
 		end
@@ -830,7 +864,7 @@ conjs["irreg"] = function(base, lemma)
 		-- no imperative
 		base.aor23 = rsub(lemma, "мо́га$", "можа́")
 		local reg_aor23 = rsub(lemma, "мо́га$", "можа́л")
-		base.paapm = {rsub(lemma, "мо́га$", "могъ́л"), reg_aor23}
+		base.paap = {rsub(lemma, "мо́га$", "могъ́л"), reg_aor23}
 		base.paapf = {rsub(lemma, "мо́га$", "могла́"), reg_aor23 .. "а"}
 		-- no past passive participle
 		base.vna = false
@@ -843,10 +877,7 @@ conjs["irreg"] = function(base, lemma)
 		base.vni = false
 	elseif rfind(lemma, "ме́ля$") then
 		local stem = rmatch(lemma, "^(.*)я$")
-		base.pres1sg = lemma
 		base.pres3sg = {stem .. "е", stem .. "и"}
-		base.pres1pl = {stem .. "ем", stem .. "им"}
-		base.pres3pl = lemma .. "т"
 		base.advp = stem .. "ейки"
 		impf_impv_12conj(base, lemma)
 		base.aor23 = rsub(lemma, "е́ля$", "ля́")
@@ -876,7 +907,6 @@ conjs["irreg"] = function(base, lemma)
 		base.ppppl = yat_plural_stem .. "ни"
 		-- Generate imperative forms.
 		base.impv = rsub(lemma, "ви́дя$", "ви́ж")
-		base.impvpl = base.impv .. "те"
 		-- perfective; no verbal noun
 		base.vna = false
 		base.vni = false
@@ -901,18 +931,35 @@ conjs["irreg"] = function(base, lemma)
 end
 
 
-local function postprocess_base(base)
+local function postprocess_base(base, lemma)
+	if not base.pres1sg then
+		base.pres1sg = lemma
+	end
+	if not base.pres2sg then
+		base.pres2sg = map_append(base.pres3sg, "ш")
+	end
+	if not base.pres1pl then
+		base.pres1pl = map_append(base.pres3sg, "м")
+	end
+	if not base.pres2pl then
+		base.pres2pl = map_append(base.pres3sg, "те")
+	end
+	if not base.pres3pl then
+		base.pres3pl = map_append(base.pres1sg, "т")
+	end
 	if not base.aor then
 		base.aor = map_append(base.aor23, "х")
 	end
-	if not base.prap then
+	if base.prap == false then
+		base.prap = nil
+	elseif not base.prap then
 		base.prap = map_rsub(base.impf, "х$", "щ")
 	end
-	if not base.paapm then
-		base.paapm = map_rsub(base.aor, "х$", "л")
+	if not base.paap then
+		base.paap = map_rsub(base.aor, "х$", "л")
 	end
 	if not base.paapf then
-		base.paapf = map_append(base.paapm, "а")
+		base.paapf = map_append(base.paap, "а")
 	end
 	if not base.paapn then
 		base.paapn = map_rsub(base.paapf, "а(́?)$", "о%1")
@@ -923,11 +970,20 @@ local function postprocess_base(base)
 	if not base.paip then
 		base.paip = map_rsub(base.impf, "х$", "л")
 	end
+	if not base.paipf then
+		base.paipf = map_append(base.paip, "а")
+	end
+	if not base.paipn then
+		base.paipn = map_rsub(base.paipf, "а(́?)$", "о%1")
+	end
 	if not base.paippl then
-		base.paippl = map_append(base.paip, "и")
+		base.paippl = map_rsub(base.paipf, "а(́?)$", "и%1")
 	end
 	if not base.ppppl then
 		base.ppppl = map_append(base.ppp, "и")
+	end
+	if not base.impvpl then
+		base.impvpl = map_append(base.impv, "те")
 	end
 	local function aor_impf_to_vn(form)
 		form = rsub(form, "я́х$", "е́не")
@@ -1489,7 +1545,7 @@ function export.do_generate_forms(parent_args, pos, from_headword, def)
 	lemma = check_lemma_stress(base, lemma)
 	lemma = detect_indicator_and_form_spec(base, lemma)
 	conjs[base.conj](base, lemma)
-	postprocess_base(base)
+	postprocess_base(base, lemma)
 	base.forms = {}
 	base.footnote = footnote
 	conjugate_all(base)
