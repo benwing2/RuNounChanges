@@ -68,6 +68,7 @@ known_labels = {
   "or": "or",
   "also": ["also", "_"],
   "f": "figurative",
+  "a": "archaic",
   "d": "dated",
   "p": "poetic",
   "h": "historical",
@@ -78,6 +79,7 @@ known_labels = {
   "l": "literary",
   "tr": "transitive",
   "in": "intransitive",
+  "intr": "intransitive",
   "io": "imperfective only",
   "po": "perfective only",
   "im": "impersonal",
@@ -88,6 +90,7 @@ known_labels = {
   "joc": "jocular",
   "an": "animate",
   "inan": "inanimate",
+  "refl": "reflexive",
 }
 
 def parse_off_labels(defn):
@@ -136,6 +139,9 @@ def generate_defn(defns, pos, lang):
     elif defn.startswith("uxx:"):
       defnlines.append("#: {{ux|%s|%s}}\n" % (lang,
         re.sub("^uxx:", "", re.sub(r", *", ", ", defn))))
+    elif defn.startswith("quote:"):
+      defnlines.append("#: {{quote|%s|%s}}\n" % (lang,
+        re.sub("^quote:", "", re.sub(r", *", ", ", defn))))
     elif re.search("^(syn|ant|pf|impf):", defn):
       m = re.search("^(.*?):(.*)$", defn)
       tempname, defn = m.groups()
@@ -148,7 +154,12 @@ def generate_defn(defns, pos, lang):
       prefix = ""
       defn, labels = parse_off_labels(defn)
       if labels:
-        prefix = "{{lb|%s|%s}} " % (lang, "|".join(labels))
+        if lang == "bg" and labels[0] == "reflexive":
+          prefix = "{{bg-reflexive%s}} " % "|".join([""] + labels[1:])
+        elif lang == "bg" and labels[0] == "reflsi":
+          prefix = u"{{bg-reflexive-си%s}} " % "|".join([""] + labels[1:])
+        else:
+          prefix = "{{lb|%s|%s}} " % (lang, "|".join(labels))
       if defn.startswith("altof:"):
         defnline = "{{alternative form of|%s|%s}}" % (lang,
             re.sub("^altof:", "", defn))

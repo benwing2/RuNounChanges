@@ -9,16 +9,12 @@ import generate_pos
 
 parser = argparse.ArgumentParser(description="Generate adjective stubs.")
 parser.add_argument('--direcfile', help="File containing directives.")
-parser.add_argument('--pos', action="store_true",
-    help="First field is part of speech (n, adj, adv, pcl, pred, prep, conj, int).")
-parser.add_argument('--adverb', action="store_true",
-    help="Directive file contains adverbs instead of adjectives.")
-parser.add_argument('--noun', action="store_true",
-    help="Directive file contains nouns instead of adjectives.")
+parser.add_argument('--pos', help="Specify part of speech (v, n, pn, adj, adjform, adv, pcl, pred, prep, conj, int) instead of including it as first field.")
 args = parser.parse_args()
 
 pos_to_full_pos = {
-  # The first three are special-cased
+  # The first four are special-cased
+  "v": "Verb",
   "n": "Noun",
   "pn": "Proper noun",
   "adj": "Adjective",
@@ -46,6 +42,7 @@ props = [
   "alt",
   "part",
   "nadjf",
+  "ppp",
   "wiki",
   "enwiki",
   "cat",
@@ -185,29 +182,32 @@ def process_line(line, etymnum=None, skip_pronun=False):
 
   els = do_split(r"\s+", line)
   if args.pos:
-    pos = els[0]
-    assert pos in pos_to_full_pos
-    del els[0]
+    pos = args.pos
   else:
-    if args.adverb:
-      pos = "adv"
-    elif args.noun:
-      pos = "n"
-    else:
-      pos = "adj"
+    pos = els[0]
+    del els[0]
+  if pos not in pos_to_full_pos:
+    error("Unrecognized part of speech %s" % pos)
 
   # Replace _ with space, but not in the declension, where there may be
   # an underscore, e.g. a|short_m=-; but allow \s to stand for a space in
   # the declension, and \u for underscore elsewhere
   els = [el.replace(r"\s", " ") if i == 2 and (pos in ["n", "pn", "adj"]) else el.replace("_", " ").replace(r"\u", "_") for i, el in enumerate(els)]
-  if pos not in ["n", "pn", "adj"]:
-    term, etym, defns = els[0], els[1], els[2]
-    remainder = els[3:]
-  else:
+  if pos == "v":
+    if len(els) < 6:
+      error("Expected six fields, saw only %s" % len(els))
+    term, etym, aspect, pairedverb, conj, defns = els[0], els[1], els[2], els[3], els[4], els[5]
+    remainder = els[6:]
+  elif pos in ["n", "pn", "adj"]:
     if len(els) < 4:
       error("Expected four fields, saw only %s" % len(els))
     term, etym, decl, defns = els[0], els[1], els[2], els[3]
     remainder = els[4:]
+  else:
+    if len(els) < 3:
+      error("Expected three fields, saw only %s" % len(els))
+    term, etym, defns = els[0], els[1], els[2]
+    remainder = els[3:]
   if term.startswith("!"):
     # ! is for continuing another entry without starting a new etym section.
     # Already processed in the outer loop.
@@ -231,6 +231,8 @@ def process_line(line, etymnum=None, skip_pronun=False):
   term = remove_links(term).split(",")
   for t in term:
     check_stress(t)
+    if "=" in t:
+      error("Equal sign in term '%s', possible misplaced declension properties" % t)
 
   # Handle etymology
   adjformtext = ""
@@ -321,6 +323,39 @@ def process_line(line, etymnum=None, skip_pronun=False):
           suffix)
     etymtext = "%s%s\n\n" % (etymheader, etymtext)
 
+  # Create conjugation
+  if pos == "v":
+    if len(term) > 1:
+      error("Multiple terms not currently supported: %s" % ",".join(term))
+    if aspect not in ["impf", "pf", "both"]:
+      error("Bad aspect '%s', expected 'impf', 'pf' or 'both'" % aspect)
+    conjparts = conj.split(".")
+    if conjparts[0] in ["1", "2", "irreg"]:
+      conjclass = "%s.%s." % (conjparts[0], conjparts[1])
+      restconj = ".".join(conjparts[2:])
+    else:
+      conjclass = ""
+      restconj = conj
+    starts_with_transitivity = re.search(r"^(tr|intr)", restconj)
+    is_reflexive = re.search(u" (се|си)$", term[0])
+    if is_reflexive and starts_with_transitivity:
+      error("Reflexive verb %s can't be specified as transitive or intransitive: %s" % (term[0], conj))
+    elif not is_reflexive and not starts_with_transitivity:
+      error("Non-reflexive verb %s must be specified as transitive or intransitive: %s" % (term[0], conj))
+    conj = conjclass + aspect + (".%s" % restconj if restconj != "-" else "")
+    conjtext = "{{bg-conj|%s<%s>}}" % (term[0], conj)
+    if ("(refl)" in defns or "(reflexive)" in defns) and not is_reflexive:
+      reflconj = re.sub(r"\.(tr|intr)", "", conj)
+      conjtext += u"\n{{bg-conj|%s се<%s>}}" % (term[0], reflconj)
+    if "(reflsi)" in defns and not is_reflexive:
+      reflconj = re.sub(r"\.(tr|intr)", "", conj)
+      conjtext += u"\n{{bg-conj|%s си<%s>}}" % (term[0], reflconj)
+    if pairedverb != "-":
+      hconjtext = "|%s=%s" % ("impf" if aspect == "pf" else "pf", pairedverb)
+    else:
+      hconjtext = ""
+    hconjtext = aspect + hconjtext
+
   # Create declension
   is_invar_gender = None
   if pos in ["n", "pn", "adj"]:
@@ -380,6 +415,7 @@ def process_line(line, etymnum=None, skip_pronun=False):
   alttext = ""
   parttext = ""
   nadjftext = ""
+  ppptext = ""
   usagelines = []
   syntext = ""
   anttext = ""
@@ -480,7 +516,13 @@ def process_line(line, etymnum=None, skip_pronun=False):
       nadjftext = """===Adjective===
 {{head|bg|adjective form|head=%s}}
 
-# {{inflection of|bg|%s||n|s}}\n\n""" % (headterm, vals)
+# {{inflection of|bg|%s||indef|n|s}}\n\n""" % (headterm, vals)
+    elif sartype == "ppp":
+      check_stress(vals)
+      ppptext = """===Participle===
+{{bg-part|%s|pass}}
+
+# {{inflection of|bg|%s||indef|m|s|past|pass|part}}\n\n""" % (headterm, vals)
     elif sartype == "wiki":
       for val in do_split(",", vals):
         if val:
@@ -610,6 +652,14 @@ def process_line(line, etymnum=None, skip_pronun=False):
 {{bg-adecl|%s}}%s
 
 """ % (headterm, hdecltext, tlbtext, defntext, decltext, attn_comp_text)
+    elif pos == "v":
+      maintext = """{{bg-verb|%s|%s}}%s
+
+%s
+====Conjugation====
+%s
+
+""" % (headterm, hconjtext, tlbtext, defntext, conjtext)
     elif pos == "adv":
       maintext = """{{bg-adv|%s%s}}%s
 
@@ -627,7 +677,7 @@ def process_line(line, etymnum=None, skip_pronun=False):
 
   # If both adjective and participle header, or adverb and neuter-adjective inflection header,
   # move related-terms text to level 3
-  if maintext and (parttext or nadjftext) and reltext:
+  if maintext and (parttext or nadjftext or ppptext) and reltext:
     reltext = re.sub("^====Related terms====", "===Related terms===", reltext)
 
   # If any categories, put an extra newline after them so they end with two
@@ -651,9 +701,9 @@ def process_line(line, etymnum=None, skip_pronun=False):
     inside_etymtext = ""
   else:
     inside_etymtext = etymtext
-  bodytext = """%s%s%s%s%s===%s===
+  bodytext = """%s%s%s%s%s%s===%s===
 %s%s%s%s%s%s%s%s""" % (
-    alttext, inside_etymtext, prontext, parttext, adjformtext, pos_to_full_pos[pos],
+    alttext, inside_etymtext, prontext, parttext, ppptext, adjformtext, pos_to_full_pos[pos],
     maintext, usagetext, syntext, anttext, dertext, nadjftext, reltext, seetext)
   if etymnum:
     bodytext = etymtext + increase_indent(bodytext)
@@ -674,9 +724,9 @@ while True:
   line = line.strip()
   els = do_split(r"\s+", line)
   if args.pos:
-    lemma = els[1]
-  else:
     lemma = els[0]
+  else:
+    lemma = els[1]
   if lemma.startswith("!"):
     error("Out-of-place exclamation point in lemma: %s" % lemma)
   lemma = remove_links(lemma)
@@ -695,9 +745,9 @@ while True:
     nextline = nextline.strip()
     nextline_els = do_split(r"\s+", nextline)
     if args.pos:
-      nextline_lemma = nextline_els[1]
-    else:
       nextline_lemma = nextline_els[0]
+    else:
+      nextline_lemma = nextline_els[1]
     starts_with_exclamation_point = False
     if nextline_lemma.startswith("!"):
       starts_with_exclamation_point = True
