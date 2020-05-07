@@ -582,6 +582,8 @@ conjs["1.4"] = function(base, lemma)
 		aor23 = rsub(lemma, "ча$", "ка")
 	elseif rfind(lemma, "ша$") then
 		aor23 = rsub(lemma, "ша$", "са")
+	elseif rfind(lemma, "ща$") then -- тра́ща
+		aor23 = rsub(lemma, "ща$", "та")
 	else
 		error("Unrecognized lemma for class 1.4: '" .. lemma .. "'")
 	end
@@ -775,7 +777,7 @@ conjs["irreg"] = function(base, lemma)
 		base.vni = false
 		base.impv = rsub(lemma, "м$", "ж")
 		base.conj = "1.1"
-	if rfind(lemma, "съ́м$") then
+	elseif rfind(lemma, "съ́м$") then
 		local stem = rmatch(lemma, "^(.*)съ́м$")
 		base.pres2sg = stem .. "си́"
 		base.pres3sg = stem .. "е́"
