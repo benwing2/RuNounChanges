@@ -329,27 +329,37 @@ def process_line(line, etymnum=None, skip_pronun=False):
       error("Multiple terms not currently supported: %s" % ",".join(term))
     if aspect not in ["impf", "pf", "both"]:
       error("Bad aspect '%s', expected 'impf', 'pf' or 'both'" % aspect)
+    reflexiveonly = False
+    if conj.startswith("ro"):
+      reflexiveonly = True
+      conj = conj[2:]
     conjparts = conj.split(".")
-    if conjparts[0] in ["1", "2", "irreg"]:
+    if conjparts[0] in ["1", "2"]:
       conjclass = "%s.%s." % (conjparts[0], conjparts[1])
       restconj = ".".join(conjparts[2:])
+    elif conjparts[0] == "irreg":
+      conjclass = "%s." % conjparts[0]
+      restconj = ".".join(conjparts[1:])
     else:
       conjclass = ""
       restconj = conj
     starts_with_transitivity = re.search(r"^(tr|intr)", restconj)
     is_reflexive = re.search(u" (се|си)$", term[0])
-    if is_reflexive and starts_with_transitivity:
+    if (is_reflexive or reflexiveonly) and starts_with_transitivity:
       error("Reflexive verb %s can't be specified as transitive or intransitive: %s" % (term[0], conj))
-    elif not is_reflexive and not starts_with_transitivity:
+    elif not (is_reflexive or reflexiveonly) and not starts_with_transitivity:
       error("Non-reflexive verb %s must be specified as transitive or intransitive: %s" % (term[0], conj))
-    conj = conjclass + aspect + (".%s" % restconj if restconj != "-" else "")
-    conjtext = "{{bg-conj|%s<%s>}}" % (term[0], conj)
+    conj = conjclass + aspect + (".%s" % restconj if restconj not in ["-", ""] else "")
+    conjlines = []
+    if not reflexiveonly:
+      conjlines.append("{{bg-conj|%s<%s>}}" % (term[0], conj))
     if ("(refl)" in defns or "(reflexive)" in defns) and not is_reflexive:
       reflconj = re.sub(r"\.(tr|intr)", "", conj)
-      conjtext += u"\n{{bg-conj|%s се<%s>}}" % (term[0], reflconj)
+      conjlines.append(u"{{bg-conj|%s се<%s>}}" % (term[0], reflconj))
     if "(reflsi)" in defns and not is_reflexive:
       reflconj = re.sub(r"\.(tr|intr)", "", conj)
-      conjtext += u"\n{{bg-conj|%s си<%s>}}" % (term[0], reflconj)
+      conjlines.append(u"{{bg-conj|%s си<%s>}}" % (term[0], reflconj))
+    conjtext = "\n".join(conjlines)
     if pairedverb != "-":
       hconjtext = "|%s=%s" % ("impf" if aspect == "pf" else "pf", pairedverb)
     else:
@@ -727,6 +737,7 @@ while True:
     lemma = els[0]
   else:
     lemma = els[1]
+  lemma = lemma.replace("_", " ")
   if lemma.startswith("!"):
     error("Out-of-place exclamation point in lemma: %s" % lemma)
   lemma = remove_links(lemma)
