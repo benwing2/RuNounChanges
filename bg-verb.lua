@@ -91,6 +91,19 @@ local verb_slots = {
 }
 
 
+local impers_verb_slots = m_table.listToSet({
+	"pres_3sg",
+	"impf_3sg",
+	"aor_3sg",
+	"prap_ind_n_sg", "prap_def_n_sg",
+	"paap_ind_n_sg", "paap_def_n_sg",
+	"paip_n_sg",
+	"ppp_ind_n_sg", "ppp_def_n_sg",
+	"vn_ind_sg", "vn_def_sg", "vn_ind_pl", "vn_def_pl",
+	"advp",
+})
+
+
 local prefix_to_accel_form = {
 	["pres"] = "pres|ind",
 	["impf"] = "impf|ind",
@@ -317,13 +330,20 @@ end
 
 
 local function add_reflexive_suffix(base)
-	if base.refl then
-		for _, slot in ipairs(verb_slots) do
-			if not rfind(slot, "^vn_") then
-				base.forms[slot] = com.map_forms(base.forms[slot], function(form)
-					return form .. " " .. base.refl
-				end)
-			end
+	for _, slot in ipairs(verb_slots) do
+		if not rfind(slot, "^vn_") then
+			base.forms[slot] = com.map_forms(base.forms[slot], function(form)
+				return form .. " " .. base.refl
+			end)
+		end
+	end
+end
+
+
+local function remove_non_impersonal_forms(base)
+	for _, slot in ipairs(verb_slots) do
+		if not impers_verb_slots[slot] then
+			base.forms[slot] = nil
 		end
 	end
 end
@@ -1071,6 +1091,11 @@ local function parse_indicator_and_form_spec(angle_bracket_spec)
 				error("Can't specify verbal noun spec twice: " .. inside .. "'")
 			end
 			base.vnspec = rsub(part, "^vn", "")
+		elseif part == "impers" then
+			if base.impers then
+				error("Can't specify 'impers' twice: " .. inside .. "'")
+			end
+			base.impers = true
 		else
 			error("Unrecognized indicator '" .. part .. "': '" .. inside .. "'")
 		end
@@ -1100,6 +1125,43 @@ local function check_lemma_stress(base, lemma)
 end
 
 
+local function impersonal_to_personal_lemma(lemma, conj)
+	local undo_first_palatalization = {
+		["ч"] = "к",
+		["ж"] = "г",
+		["ш"] = "х",
+	}
+
+	local function mustsub(from, to)
+		local newlemma = rsub(lemma, from, to)
+		if newlemma == lemma then
+			error("Unrecognized impersonal lemma for conjugation " .. conj .. ": " .. lemma)
+		end
+		return newlemma
+	end
+
+	local conj_is_2 = rfind(conj, "^2%.")
+	if conj == "1.1" then
+		return mustsub("(.)е(́?)$",
+			function(last_cons, accent)
+				return (undo_first_palatalization[last_cons] or last_cons) .. "а" .. accent
+			end)
+	elseif conj == "1.2" or conj == "1.4" or conj == "1.5" or (conj == "1.7" and rfind(lemma, "ме$")) then
+		return mustsub("е(́?)$", "а%1")
+	elseif conj == "1.3" or conj == "1.6" or conj == "1.7" then
+		return mustsub("е(́?)$", "я%1")
+	elseif (conj_is_2 and rfind(lemma, "[чжш]е$")) then
+		return mustsub("и(́?)$", "а%1")
+	elseif conj_is_2 then
+		return mustsub("и(́?)$", "я%1")
+	elseif rfind(conj, "^3") then
+		return lemma .. "м"
+	else
+		error("Can't handle irregular impersonal verbs yet")
+	end
+end
+
+
 local function detect_indicator_and_form_spec(base, lemma)
 	if not base.aspect then
 		error("Aspect of 'pf', 'impf' or 'both' must be specified")
@@ -1111,24 +1173,31 @@ local function detect_indicator_and_form_spec(base, lemma)
 	elseif not base.trans then
 		error("Transitivity of 'tr' or 'intr' must be specified")
 	end
+	local pers_ending = base.impers and "" or "м"
 	if not base.conj then
-		if rfind(lemma, "м$") then
+		if rfind(lemma, "[ая]" .. pers_ending .. "$") then
 			base.conj = "3"
+		elseif base.impers then
+			error("For lemma ending in -е or -и, conjugation must be specified: '" .. lemma .. "'")
 		else
 			error("For lemma ending in -а or -я, conjugation must be specified: '" .. lemma .. "'")
 		end
 	elseif base.conj == "3.1" then
-		if not rfind(lemma, "ам$") then
-			error("Conjugation 3.1 lemma must end in -ам: '" .. lemma .. "'")
+		if not rfind(lemma, "а" .. pers_ending .. "$") then
+			error("Conjugation 3.1 lemma must end in -а" .. pers_ending .. ": '" .. lemma .. "'")
 		end
 		base.conj = "3"
 	elseif base.conj == "3.2" then
-		if not rfind(lemma, "ям$") then
-			error("Conjugation 3.2 lemma must end in -ям: '" .. lemma .. "'")
+		if not rfind(lemma, "я" .. pers_ending .. "$") then
+			error("Conjugation 3.2 lemma must end in -я" .. pers_ending .. ": '" .. lemma .. "'")
 		end
 		base.conj = "3"
 	elseif not conjs[base.conj] then
 		error("Unrecognized conjugation '" .. base.conj .. "' for lemma '" .. lemma .. "'")
+	end
+	base.orig_lemma = lemma
+	if base.impers then
+		lemma = impersonal_to_personal_lemma(lemma, base.conj)
 	end
 	base.prefixed = not base.no_pref and verb_may_be_prefixed(lemma)
 	return lemma
@@ -1184,49 +1253,29 @@ local function show_forms(base, fullmod)
 end
 
 
---[=[
-	{1} = imp or perf
-	{2} = blank, се or си
-	{3} = pres_3sg; also used for pres_1sg (+ м, only if equal to {4} and {19} not given), pres_2sg (+ ш), pres_1pl (+ ме if equal to {4}, otherwise + м), pres_2pl (+ те), impv_sg (if {13} not given)
-	{4} = pres_3pl minus -т
-	{5} = impf_1sg minus -х; also used for impf_*pl
-	{6} = impf_2sg minus -ше; also used for impl_3sg, and as an alternative for all remaining forms if {18} given; also impv_pl (if {14} not given)
-	{7} = aor_1sg minus -х; also used for aor_*pl, and also aor_[23]sg if {16} not given
-	{8} = paap_ind_m_sg minus -л
-	{9} = paap_ind_pl minus -ли; also used for paap_def_pl, paap_def_*_m_sg
-	{10} = paap_ind_f_sg minus -ла; also used for paap_def_f_sg and paap_*_n_sg
-	{11} = ppp_ind_m_sg (only if {2} = tr); also used for paap_*_[fn]_sg, and for remaining forms if {15} not given
-	{12} = vn_ind_sg minus -не (only if {1} = imp)
-	{13} = impv_sg (defaults to {3})
-	{14} = impv_pl (defaults to {6} + те)
-	{15} = ppp_ind_pl minus -и (only if {2} = tr); also used for ppp_def_pl, ppp_def_*_m_sg (defaults to {11})
-	{16} = aor_2sg; also used for aor_3sg (defaults to {7})
-	{17} = alternative vn_ind_sg minus -не (only if {1} = imp)
-	{18} = if specified, {6} is an alternative to {5} in impf_1sg, impf_*pl, paip_*_sg, and {5} is an alternative to {6} in paip_pl
-	{19} = pres_1sg (defaults to {4} if different from {3}, otherwise {3} + м)
-}
-]=]
-
-local function make_table(word_spec, fullmod)
-	local forms = word_spec.forms
+local function make_table(base, fullmod)
+	local forms = base.forms
 
 	local ann_parts = {}
-	if word_spec.conj == "irreg" then
+	if base.conj == "irreg" then
 		table.insert(ann_parts, "irregular")
 	else
-		table.insert(ann_parts, "conjugation " .. word_spec.conj)
-		if word_spec.irreg then
+		table.insert(ann_parts, "conjugation " .. base.conj)
+		if base.irreg then
 			table.insert(ann_parts, "irregular")
 		end
 	end
 	table.insert(ann_parts,
-		word_spec.aspect == "impf" and "imperfective" or
-		word_spec.aspect == "pf" and "perfective" or
+		base.aspect == "impf" and "imperfective" or
+		base.aspect == "pf" and "perfective" or
 		"biaspectual")
 	table.insert(ann_parts,
-		word_spec.trans == "tr" and "transitive" or
-		word_spec.trans == "intr" and "intransitive" or
+		base.trans == "tr" and "transitive" or
+		base.trans == "intr" and "intransitive" or
 		"reflexive")
+	if base.impers then
+		table.insert(ann_parts, "impersonal")
+	end
 	forms.annotation = " (" .. table.concat(ann_parts, ", ") .. ")"
 
 	-- auxiliaries used in the table
@@ -1240,6 +1289,15 @@ local function make_table(word_spec, fullmod)
 	forms.sam = link("съм")
 	forms.e = link("е")
 	forms.bada = link("бъ́да")
+
+	local aor_part_list_pers = [=[
+	{paap_ind_m_sg_notr} {gm}, {paap_ind_f_sg_notr} {gf}, {paap_ind_n_sg_notr} {gn}, or {paap_ind_pl_notr} {gp}]=]
+	local aor_part_list_impers = [=[
+	{paap_ind_n_sg_notr}]=]
+	local impf_part_list_pers = [=[
+	{paip_m_sg_notr} {gm}, {paip_f_sg_notr} {gf}, {paip_n_sg_notr} {gn}, or {paip_pl_notr} {gp}]=]
+	local impf_part_list_impers = [=[
+	{paip_n_sg_notr}]=]
 
 	local table_spec_non_compound = [=[
 <div class="NavFrame">
@@ -1381,16 +1439,16 @@ local function make_table(word_spec, fullmod)
 ! colspan="6" style="background:#C0C0C0" | Use {nyamashe} {da} {refl} followed by the present indicative tense
 |-
 ! colspan="2" style="background:#c0cfe4" | present perfect
-! colspan="6" style="background:#C0C0C0" | Use the present indicative tense of {sam} {along_with_refl} and {paap_ind_m_sg_notr} {gm}, {paap_ind_f_sg_notr} {gf}, {paap_ind_n_sg_notr} {gn}, or {paap_ind_pl_notr} {gp}
+! colspan="6" style="background:#C0C0C0" | Use the present indicative tense of {sam} {along_with_refl} and {aor_part_list}
 |-
 ! colspan="2" style="background:#c0cfe4" | past perfect
-! colspan="6" style="background:#C0C0C0" | Use the imperfect indicative tense of {sam} {along_with_refl} and {paap_ind_m_sg_notr} {gm}, {paap_ind_f_sg_notr} {gf}, {paap_ind_n_sg_notr} {gn}, or {paap_ind_pl_notr} {gp}
+! colspan="6" style="background:#C0C0C0" | Use the imperfect indicative tense of {sam} {along_with_refl} and {aor_part_list}
 |-
 ! colspan="2" style="background:#c0cfe4" | future perfect
-! colspan="6" style="background:#C0C0C0" | Use the future indicative tense of {sam} {along_with_refl} and {paap_ind_m_sg_notr} {gm}, {paap_ind_f_sg_notr} {gf}, {paap_ind_n_sg_notr} {gn}, or {paap_ind_pl_notr} {gp}
+! colspan="6" style="background:#C0C0C0" | Use the future indicative tense of {sam} {along_with_refl} and {aor_part_list}
 |-
 ! colspan="2" style="background:#c0cfe4" | future perfect in the past
-! colspan="6" style="background:#C0C0C0" | Use the future in the past indicative tense of {sam} {along_with_refl} and {paap_ind_m_sg_notr} {gm}, {paap_ind_f_sg_notr} {gf}, {paap_ind_n_sg_notr} {gn}, or {paap_ind_pl_notr} {gp}
+! colspan="6" style="background:#C0C0C0" | Use the future in the past indicative tense of {sam} {along_with_refl} and {aor_part_list}
 |-
 ! colspan="2" style="background:#c0e4c0" | renarrative
 ! style="background:#c0e4c0" | аз
@@ -1401,10 +1459,10 @@ local function make_table(word_spec, fullmod)
 ! style="background:#c0e4c0" | те
 |-
 ! colspan="2" style="background:#c0e4c0" | present and imperfect
-! colspan="6" style="background:#C0C0C0; white-space: nowrap;" | Use the present indicative tense of {sam} (leave it out in third person) {along_with_refl} and {paip_m_sg_notr} {gm}, {paip_f_sg_notr} {gf}, {paip_n_sg_notr} {gn}, or {paip_pl_notr} {gp}
+! colspan="6" style="background:#C0C0C0; white-space: nowrap;" | Use the present indicative tense of {sam} (leave it out in third person) {along_with_refl} and {impf_part_list}
 |-
 ! colspan="2" style="background:#c0e4c0" | aorist
-! colspan="6" style="background:#C0C0C0" | Use the present indicative tense of {sam} (leave it out in third person) {along_with_refl} and {paap_ind_m_sg_notr} {gm}, {paap_ind_f_sg_notr} {gf}, {paap_ind_n_sg_notr} {gn}, or {paap_ind_pl_notr} {gp}
+! colspan="6" style="background:#C0C0C0" | Use the present indicative tense of {sam} (leave it out in third person) {along_with_refl} and {aor_part_list}
 |-
 ! rowspan="2" style="background:#c0e4c0" | future and future in the past
 ! style="background:#c0e4c0" | pos.
@@ -1414,10 +1472,10 @@ local function make_table(word_spec, fullmod)
 ! colspan="6" style="background:#C0C0C0" | Use {nyamalo} {da} {refl} and the present indicative tense
 |-
 ! colspan="2" style="background:#c0e4c0" | present and past perfect
-! colspan="6" style="background:#C0C0C0" | Use the present/imperfect renarrative tense of {sam} {along_with_refl} and {paap_ind_m_sg_notr} {gm}, {paap_ind_f_sg_notr} {gf}, {paap_ind_n_sg_notr} {gn}, or {paap_ind_pl_notr} {gp}
+! colspan="6" style="background:#C0C0C0" | Use the present/imperfect renarrative tense of {sam} {along_with_refl} and {aor_part_list}
 |-
 ! colspan="2" style="background:#c0e4c0" | future perfect and future perfect in the past
-! colspan="6" style="background:#C0C0C0" | Use the future/future in the past renarrative tense of {sam} {along_with_refl} and {paap_ind_m_sg_notr} {gm}, {paap_ind_f_sg_notr} {gf}, {paap_ind_n_sg_notr} {gn}, or {paap_ind_pl_notr} {gp}
+! colspan="6" style="background:#C0C0C0" | Use the future/future in the past renarrative tense of {sam} {along_with_refl} and {aor_part_list}
 |-
 ! colspan="2" style="background:#f0e68c" | dubitative
 ! style="background:#f0e68c" | аз
@@ -1428,10 +1486,10 @@ local function make_table(word_spec, fullmod)
 ! style="background:#f0e68c" | те
 |-
 ! colspan="2" style="background:#f0e68c" | present and imperfect
-! colspan="6" style="background:#C0C0C0" | Use the present/imperfect renarrative tense of {sam} {along_with_refl} and {paip_m_sg_notr} {gm}, {paip_f_sg_notr} {gf}, {paip_n_sg_notr} {gn}, or {paip_pl_notr} {gp}
+! colspan="6" style="background:#C0C0C0" | Use the present/imperfect renarrative tense of {sam} {along_with_refl} and {impf_part_list}
 |-
 ! colspan="2" style="background:#f0e68c" | aorist
-! colspan="6" style="background:#C0C0C0" | Use the aorist renarrative tense of {sam} {along_with_refl} and {paap_ind_m_sg_notr} {gm}, {paap_ind_f_sg_notr} {gf}, {paap_ind_n_sg_notr} {gn}, or {paap_ind_pl_notr} {gp}
+! colspan="6" style="background:#C0C0C0" | Use the aorist renarrative tense of {sam} {along_with_refl} and {aor_part_list}
 |-
 ! rowspan="2" style="background:#f0e68c" | future and future in the past
 ! style="background:#f0e68c" | pos.
@@ -1444,7 +1502,7 @@ local function make_table(word_spec, fullmod)
 | colspan="6" |<center>''none''</center>
 |-
 ! colspan="2" style="background:#f0e68c" | future perfect and future perfect in the past
-! colspan="6" style="background:#C0C0C0; white-space: nowrap;" | Use the future/future in the past dubitative tense of {sam} {along_with_refl} and {paap_ind_m_sg_notr} {gm}, {paap_ind_f_sg_notr} {gf}, {paap_ind_n_sg_notr} {gn}, or {paap_ind_pl_notr} {gp}
+! colspan="6" style="background:#C0C0C0; white-space: nowrap;" | Use the future/future in the past dubitative tense of {sam} {along_with_refl} and {aor_part_list}
 |-
 ! colspan="2" style="background:#9be1ff" | conclusive
 ! style="background:#9be1ff" | аз
@@ -1455,10 +1513,10 @@ local function make_table(word_spec, fullmod)
 ! style="background:#9be1ff" | те
 |-
 ! colspan="2" style="background:#9be1ff" | present and imperfect
-! colspan="6" style="background:#C0C0C0" | Use the present indicative tense of {sam} {along_with_refl} and {paip_m_sg_notr} {gm}, {paip_f_sg_notr} {gf}, {paip_n_sg_notr} {gn}, or {paip_pl_notr} {gp}
+! colspan="6" style="background:#C0C0C0" | Use the present indicative tense of {sam} {along_with_refl} and {impf_part_list}
 |-
 ! colspan="2" style="background:#9be1ff" | aorist
-! colspan="6" style="background:#C0C0C0" | Use the present indicative tense of {sam} {along_with_refl} and {paap_ind_m_sg_notr} {gm}, {paap_ind_f_sg_notr} {gf}, {paap_ind_n_sg_notr} {gn}, or {paap_ind_pl_notr} {gp}
+! colspan="6" style="background:#C0C0C0" | Use the present indicative tense of {sam} {along_with_refl} and {aor_part_list}
 |-
 ! rowspan="2" style="background:#9be1ff" | future and future in the past
 ! style="background:#9be1ff" | pos.
@@ -1468,10 +1526,10 @@ local function make_table(word_spec, fullmod)
 ! colspan="6" style="background:#C0C0C0" | Use {nyamalo} {e} {da} {refl} and the present indicative tense
 |-
 ! colspan="2" style="background:#9be1ff" | present and past perfect
-! colspan="6" style="background:#C0C0C0" | Use the present/imperfect conclusive tense of {sam} {along_with_refl} and {paap_ind_m_sg_notr} {gm}, {paap_ind_f_sg_notr} {gf}, {paap_ind_n_sg_notr} {gn}, or {paap_ind_pl_notr} {gp}
+! colspan="6" style="background:#C0C0C0" | Use the present/imperfect conclusive tense of {sam} {along_with_refl} and {aor_part_list}
 |-
 ! colspan="2" style="background:#9be1ff" | future perfect and future perfect in the past
-! colspan="6" style="background:#C0C0C0; white-space: nowrap;" | Use the future/future in the past conclusive tense of {sam} {along_with_refl} and {paap_ind_m_sg_notr} {gm}, {paap_ind_f_sg_notr} {gf}, {paap_ind_n_sg_notr} {gn}, or {paap_ind_pl_notr} {gp}
+! colspan="6" style="background:#C0C0C0; white-space: nowrap;" | Use the future/future in the past conclusive tense of {sam} {along_with_refl} and {aor_part_list}
 |-
 ! rowspan="2" colspan="2" style="background:#f2b6c3" | conditional
 ! style="background:#f2b6c3" | аз
@@ -1481,7 +1539,7 @@ local function make_table(word_spec, fullmod)
 ! style="background:#f2b6c3" | вие
 ! style="background:#f2b6c3" | те
 |-
-! colspan="6" style="background:#C0C0C0" | Use the first aorist indicative tense of {bada} {along_with_refl} and {paap_ind_m_sg_notr} {gm}, {paap_ind_f_sg_notr} {gf}, {paap_ind_n_sg_notr} {gn}, or {paap_ind_pl_notr} {gp}
+! colspan="6" style="background:#C0C0C0" | Use the first aorist indicative tense of {bada} {along_with_refl} and {aor_part_list}
 |-
 ]=]
 
@@ -1509,6 +1567,10 @@ local function make_table(word_spec, fullmod)
 </div></div>
 ]===]
 
+	forms.aor_part_list = m_string_utilities.format(
+		base.impers and aor_part_list_impers or aor_part_list_pers, forms)
+	forms.impf_part_list = m_string_utilities.format(
+		base.impers and impf_part_list_impers or impf_part_list_pers, forms)
 	forms.notes_clause = forms.footnote ~= "" and
 		m_string_utilities.format(notes_template, forms) or ""
 	forms.ncol = fullmod and "3" or "2"
@@ -1551,7 +1613,12 @@ function export.do_generate_forms(parent_args, pos, from_headword, def)
 	base.forms = {}
 	base.footnote = footnote
 	conjugate_all(base)
-	add_reflexive_suffix(base)
+	if base.refl then
+		add_reflexive_suffix(base)
+	end
+	if base.impers then
+		remove_non_impersonal_forms(base)
+	end
 	add_categories(base)
 	local fullmod
 	if args.full then
@@ -1559,7 +1626,7 @@ function export.do_generate_forms(parent_args, pos, from_headword, def)
 		fullmod.conjugate_all_compound(base)
 	end
 	base.forms.lemma = args.lemma and #args.lemma > 0 and args.lemma or
-		{lemma .. (base.refl and " " .. base.refl or "")}
+		{base.orig_lemma .. (base.refl and " " .. base.refl or "")}
 	return base, fullmod
 end
 
