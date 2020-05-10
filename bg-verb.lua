@@ -385,6 +385,9 @@ local function pres_advp_1conj(base, lemma)
 	end
 	local last_letter_pal = com.first_palatalization[last_letter] or last_letter
 	base.pres3sg = stem .. last_letter_pal .. "е" .. accent
+	-- defaults to 1sg + т, but set it explicitly in case we're called
+	-- from ям, дам, знам, with irregular 1sg
+	base.pres3pl = lemma .. "т"
 	base.advp = base.pres3sg .. "йки"
 end
 
@@ -535,6 +538,17 @@ conjs["1.2"] = function(base, lemma)
 		base.irreg = true
 	elseif rfind(lemma, "гриза́$") then
 		aor23 = rsub(lemma, "гриза́$", "гри́за")
+		base.irreg = true
+	elseif rfind(lemma, "дя́на$") then
+		local unyat_stem = rsub(lemma, "дя́на$", "де́н")
+		local unstressed_unyat_stem = rsub(lemma, "дя́на$", "ден")
+		local shifted_aor23 = unstressed_unyat_stem .. "а́"
+		generate_maybe_shifted_aorist(base, lemma, shifted_aor23)
+		base.impf = unyat_stem .. "ех"
+		base.impf23 = unyat_stem .. "еше"
+		base.pres3sg = unyat_stem .. "е"
+		base.impv = unstressed_unyat_stem .. "и́"
+		base.impvpl = unstressed_unyat_stem .. "е́те"
 		base.irreg = true
 	else
 		generate_maybe_shifted_aorist(base, lemma)
@@ -862,6 +876,10 @@ conjs["irreg"] = function(base, lemma)
 		base.aor23 = rsub(lemma, AC .. "йда$", "йде́")
 		base.paap = rsub(lemma, AC .. "йда$", "шъ́л")
 		base.paapf = rsub(lemma, AC .. "йда$", "шла́")
+		if lemma == "до́йда" then
+			base.impv = "ела́"
+			base.impvpl = base.impv .. "те"
+		end
 		-- no past passive participle
 		base.vna = false
 		base.conj = "1.1"
@@ -1007,16 +1025,21 @@ local function postprocess_base(base, lemma)
 	if not base.impvpl then
 		base.impvpl = map_append(base.impv, "те")
 	end
-	local function aor_impf_to_vn(form)
+	local function aor_to_vn(form)
 		form = rsub(form, "я́х$", "е́не")
 		form = rsub(form, "х$", "не")
 		return form
 	end
+	local function impf_to_vn(form)
+		form = rsub(form, "[ая]́х$", "е́не")
+		form = rsub(form, "х$", "не")
+		return form
+	end
 	if base.vna == nil then
-		base.vna = map_forms(base.aor, aor_impf_to_vn, "first only")
+		base.vna = map_forms(base.aor, aor_to_vn, "first only")
 	end
 	if base.vni == nil then
-		base.vni = map_forms(base.impf, aor_impf_to_vn, "first only")
+		base.vni = map_forms(base.impf, impf_to_vn, "first only")
 	end
 	if base.vna == false and base.vni == false then
 		base.vn = nil
