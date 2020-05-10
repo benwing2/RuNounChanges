@@ -36,6 +36,7 @@ props = [
   "der",
   "rel",
   "see",
+  "note",
   "tlb",
   "pron",
   "comp",
@@ -166,11 +167,14 @@ def do_split(sep, text):
 def increase_indent(text):
   return re.sub("^=(.*)=$", r"==\1==", text, 0, re.M)
 
+def fatal(line, text):
+  errmsg("ERROR: Processing line: %s" % line)
+  errmsg("ERROR: %s" % text)
+  raise ValueError
+
 def process_line(line, etymnum=None, skip_pronun=False):
   def error(text):
-    errmsg("ERROR: Processing line: %s" % line)
-    errmsg("ERROR: %s" % text)
-    assert False
+    fatal(line, text)
 
   def check_stress(word):
     word = re.sub(r"|.*", "", word)
@@ -334,13 +338,26 @@ def process_line(line, etymnum=None, skip_pronun=False):
       reflexiveonly = True
       conj = conj[2:]
     conjparts = conj.split(".")
+    is_impers = "impers" in conjparts
     if conjparts[0] in ["1", "2"]:
+      if is_impers:
+        if not re.search(u"[еи]́?$", term[0]):
+          error(u"Impersonal conjugation 1/2 verb %s should end in -е or -и" % term[0])
+      else:
+        if not re.search(u"[ая]́?$", term[0]):
+          error(u"Conjugation 1/2 verb %s should end in -а or -я" % term[0])
       conjclass = "%s.%s." % (conjparts[0], conjparts[1])
       restconj = ".".join(conjparts[2:])
     elif conjparts[0] == "irreg":
       conjclass = "%s." % conjparts[0]
       restconj = ".".join(conjparts[1:])
     else:
+      if is_impers:
+        if not re.search(u"[ая]$", term[0]):
+          error(u"Impersonal conjugation 3 verb %s should end in -а or -я" % term[0])
+      else:
+        if not re.search(u"[ая]м$", term[0]):
+          error(u"Conjugation 3 verb %s should end in -ам or -ям" % term[0])
       conjclass = ""
       restconj = conj
     starts_with_transitivity = re.search(r"^(tr|intr)", restconj)
@@ -420,6 +437,9 @@ def process_line(line, etymnum=None, skip_pronun=False):
   if re.search(opt_arg_regex, defns):
     error("Found optional-argument prefix in definition: %s" % defns)
   defntext = generate_pos.generate_defn(defns, pos_to_full_pos[pos].lower(), "bg")
+  split_defntext = re.split("'''", defntext)
+  if len(split_defntext) % 2 == 0:
+    error("Unmatched triple-quote in definition: %s" % defntext)
 
   alsotext = ""
   alttext = ""
@@ -441,7 +461,7 @@ def process_line(line, etymnum=None, skip_pronun=False):
     prontext = "".join("* {{bg-IPA|%s|ann=y}}\n" % pt for pt in pronterm)
   else:
     prontext = "* {{bg-IPA|%s}}\n" % pronterm[0]
-  tlbtext = ""
+  notetext = ""
   for synantrel in remainder:
     if synantrel.startswith("#"):
       break # ignore comments
@@ -492,8 +512,17 @@ def process_line(line, etymnum=None, skip_pronun=False):
           comptext += "|%s" % comp
         else:
           comptext += "|comp%s=%s" % (i + 1, comp)
+    elif sartype == "note":
+      vals = re.sub(r"\[\[(.*?)\]\]", r"{{m|ru|\1}}", vals)
+      vals = re.sub(r"\(\((.*?)\)\)", r"{{m|ru|\1}}", vals)
+      vals = re.sub(r"g\((.*?)\)", r"{{glossary|\1}}", vals)
+      vals = re.sub(r",\s*", ", ", vals)
+      notetext += " {{i|%s}}" % vals
     elif sartype == "tlb":
-      tlbtext = " {{tlb|bg|%s}}" % vals
+      defn, labels = generate_pos.parse_off_labels(vals)
+      if defn:
+        labels = labels + [defn]
+      notetext += " {{tlb|bg|%s}}" % "|".join(labels)
     elif sartype == "alt":
       lines = []
       for altform in do_split(",", vals):
@@ -624,12 +653,12 @@ def process_line(line, etymnum=None, skip_pronun=False):
       maintext = """{{bg-noun|%s|%s|indecl=1}}%s
 
 %s
-""" % (headterm, is_invar_gender, tlbtext, defntext)
+""" % (headterm, is_invar_gender, notetext, defntext)
     elif pos == "pn":
       maintext = """{{bg-proper noun|%s|%s|indecl=1}}%s
 
 %s
-""" % (headterm, is_invar_gender, tlbtext, defntext)
+""" % (headterm, is_invar_gender, notetext, defntext)
     elif pos == "adj":
       maintext = """{{bg-adj|%s|indecl=1}}
 
@@ -645,7 +674,7 @@ def process_line(line, etymnum=None, skip_pronun=False):
 ====Declension====
 {{bg-ndecl|%s}}
 
-""" % (headterm, gender, hdecltext, tlbtext, defntext, decltext)
+""" % (headterm, gender, hdecltext, notetext, defntext, decltext)
     elif pos == "pn":
       maintext = """{{bg-proper noun|%s|%s%s}}%s
 
@@ -653,7 +682,7 @@ def process_line(line, etymnum=None, skip_pronun=False):
 ====Declension====
 {{bg-ndecl|%s}}
 
-""" % (headterm, gender, hdecltext, tlbtext, defntext, decltext)
+""" % (headterm, gender, hdecltext, notetext, defntext, decltext)
     elif pos == "adj":
       maintext = """{{bg-adj|%s%s}}%s
 
@@ -661,7 +690,7 @@ def process_line(line, etymnum=None, skip_pronun=False):
 ====Declension====
 {{bg-adecl|%s}}%s
 
-""" % (headterm, hdecltext, tlbtext, defntext, decltext, attn_comp_text)
+""" % (headterm, hdecltext, notetext, defntext, decltext, attn_comp_text)
     elif pos == "v":
       maintext = """{{bg-verb|%s|%s}}%s
 
@@ -669,18 +698,18 @@ def process_line(line, etymnum=None, skip_pronun=False):
 ====Conjugation====
 %s
 
-""" % (headterm, hconjtext, tlbtext, defntext, conjtext)
+""" % (headterm, hconjtext, notetext, defntext, conjtext)
     elif pos == "adv":
       maintext = """{{bg-adv|%s%s}}%s
 
 %s
-""" % (headterm, comptext, tlbtext, defntext)
+""" % (headterm, comptext, notetext, defntext)
     else:
       full_pos = pos_to_full_pos[pos]
       maintext = """{{head|bg|%s|head=%s}}%s
 
 %s
-""" % (full_pos.lower(), headterm, tlbtext, defntext)
+""" % (full_pos.lower(), headterm, notetext, defntext)
 
   if defns == "--":
     maintext = ""
@@ -758,6 +787,8 @@ while True:
     if args.pos:
       nextline_lemma = nextline_els[0]
     else:
+      if len(nextline_els) < 2:
+        fatal(nextline, "Not enough elements in line")
       nextline_lemma = nextline_els[1]
     starts_with_exclamation_point = False
     if nextline_lemma.startswith("!"):

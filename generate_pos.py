@@ -106,7 +106,7 @@ def parse_off_labels(defn):
       labels.append("colloquial")
       defn = re.sub(r"^!", "", defn)
     else:
-      m = re.search(r"^\((.*?)\)([^ ].*)$", defn)
+      m = re.search(r"^\((.*?)\)((?! ).*)$", defn)
       if m:
         shortlab = m.group(1)
         if shortlab in known_labels:
@@ -180,6 +180,7 @@ def generate_defn(defns, pos, lang):
       else:
         defnline = re.sub(r", *", ", ", defn)
       defnline = re.sub(r"\(\((.*?)\)\)", r"{{m|%s|\1}}" % lang, defnline)
+      defnline = re.sub(r"<<(.*?)>>", r"{{i|\1}}", defnline)
       defnline = re.sub(r"g\((.*?)\)", r"{{glossary|\1}}", defnline)
       defnlines.append("# %s%s\n" % (prefix, defnline))
   return "".join(defnlines)
