@@ -347,10 +347,10 @@ def process_line(line, etymnum=None, skip_pronun=False):
         if not re.search(u"[ая]́?$", term[0]):
           error(u"Conjugation 1/2 verb %s should end in -а or -я" % term[0])
       conjclass = "%s.%s." % (conjparts[0], conjparts[1])
-      restconj = ".".join(conjparts[2:])
+      restconjparts = conjparts[2:]
     elif conjparts[0] == "irreg":
       conjclass = "%s." % conjparts[0]
-      restconj = ".".join(conjparts[1:])
+      restconjparts = conjparts[1:]
     else:
       if is_impers:
         if not re.search(u"[ая]$", term[0]):
@@ -359,13 +359,14 @@ def process_line(line, etymnum=None, skip_pronun=False):
         if not re.search(u"[ая]м$", term[0]):
           error(u"Conjugation 3 verb %s should end in -ам or -ям" % term[0])
       conjclass = ""
-      restconj = conj
-    starts_with_transitivity = re.search(r"^(tr|intr)", restconj)
+      restconjparts = conjparts
+    has_transitivity = "tr" in restconjparts or "intr" in restconjparts
     is_reflexive = re.search(u" (се|си)$", term[0])
-    if (is_reflexive or reflexiveonly) and starts_with_transitivity:
+    if (is_reflexive or reflexiveonly) and has_transitivity:
       error("Reflexive verb %s can't be specified as transitive or intransitive: %s" % (term[0], conj))
-    elif not (is_reflexive or reflexiveonly) and not starts_with_transitivity:
+    elif not (is_reflexive or reflexiveonly) and not has_transitivity:
       error("Non-reflexive verb %s must be specified as transitive or intransitive: %s" % (term[0], conj))
+    restconj = ".".join(restconjparts)
     conj = conjclass + aspect + (".%s" % restconj if restconj not in ["-", ""] else "")
     conjlines = []
     if not reflexiveonly:
