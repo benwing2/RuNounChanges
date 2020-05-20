@@ -125,6 +125,7 @@ def parse_off_labels(defn):
 
 def generate_defn(defns, pos, lang):
   defnlines = []
+  addlprops = {}
 
   # the following regex uses a negative lookbehind so we split on a semicolon
   # but not on a backslashed semicolon, which we then replace with a regular
@@ -163,6 +164,13 @@ def generate_defn(defns, pos, lang):
       if defn.startswith("altof:"):
         defnline = "{{alternative form of|%s|%s}}" % (lang,
             re.sub("^altof:", "", defn))
+      elif defn.startswith("oui:"):
+        oui = re.sub("^oui:", "", defn)
+        if "oui" in addlprops:
+          addlprops["oui"].append(oui)
+        else:
+          addlprops["oui"] = [oui]
+        defnline = "{{only used in|%s|%s}}" % (lang, oui)
       elif defn.startswith("dim:"):
         defnline = generate_dimaugpej(defn, "diminutive of", pos, lang)
       elif defn.startswith("end:"):
@@ -183,4 +191,4 @@ def generate_defn(defns, pos, lang):
       defnline = re.sub(r"<<(.*?)>>", r"{{i|\1}}", defnline)
       defnline = re.sub(r"g\((.*?)\)", r"{{glossary|\1}}", defnline)
       defnlines.append("# %s%s\n" % (prefix, defnline))
-  return "".join(defnlines)
+  return "".join(defnlines), addlprops

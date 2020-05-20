@@ -327,6 +327,14 @@ def process_line(line, etymnum=None, skip_pronun=False):
           suffix)
     etymtext = "%s%s\n\n" % (etymheader, etymtext)
 
+  # Create definition
+  if re.search(opt_arg_regex, defns):
+    error("Found optional-argument prefix in definition: %s" % defns)
+  defntext, addlprops = generate_pos.generate_defn(defns, pos_to_full_pos[pos].lower(), "bg")
+  split_defntext = re.split("'''", defntext)
+  if len(split_defntext) % 2 == 0:
+    error("Unmatched triple-quote in definition: %s" % defntext)
+
   # Create conjugation
   if pos == "v":
     if len(term) > 1:
@@ -339,12 +347,13 @@ def process_line(line, etymnum=None, skip_pronun=False):
       conj = conj[2:]
     conjparts = conj.split(".")
     is_impers = "impers" in conjparts
+    non_refl_verb = re.sub(u" с[еи]$", "", term[0])
     if conjparts[0] in ["1", "2"]:
       if is_impers:
-        if not re.search(u"[еи]́?$", term[0]):
+        if not re.search(u"[еи]́?$", non_refl_verb):
           error(u"Impersonal conjugation 1/2 verb %s should end in -е or -и" % term[0])
       else:
-        if not re.search(u"[ая]́?$", term[0]):
+        if not re.search(u"[ая]́?$", non_refl_verb):
           error(u"Conjugation 1/2 verb %s should end in -а or -я" % term[0])
       conjclass = "%s.%s." % (conjparts[0], conjparts[1])
       restconjparts = conjparts[2:]
@@ -353,10 +362,10 @@ def process_line(line, etymnum=None, skip_pronun=False):
       restconjparts = conjparts[1:]
     else:
       if is_impers:
-        if not re.search(u"[ая]$", term[0]):
+        if not re.search(u"[ая]$", non_refl_verb):
           error(u"Impersonal conjugation 3 verb %s should end in -а or -я" % term[0])
       else:
-        if not re.search(u"[ая]м$", term[0]):
+        if not re.search(u"[ая]м$", non_refl_verb):
           error(u"Conjugation 3 verb %s should end in -ам or -ям" % term[0])
       conjclass = ""
       restconjparts = conjparts
@@ -371,10 +380,11 @@ def process_line(line, etymnum=None, skip_pronun=False):
     conjlines = []
     if not reflexiveonly:
       conjlines.append("{{bg-conj|%s<%s>}}" % (term[0], conj))
-    if ("(refl)" in defns or "(reflexive)" in defns) and not is_reflexive:
+    oui = addlprops.get("oui", [])
+    if ("(refl)" in defns or "(reflexive)" in defns or term[0] + u" се" in oui) and not is_reflexive:
       reflconj = re.sub(r"\.(tr|intr)", "", conj)
       conjlines.append(u"{{bg-conj|%s се<%s>}}" % (term[0], reflconj))
-    if "(reflsi)" in defns and not is_reflexive:
+    if ("(reflsi)" in defns or term[0] + u" си" in oui) and not is_reflexive:
       reflconj = re.sub(r"\.(tr|intr)", "", conj)
       conjlines.append(u"{{bg-conj|%s си<%s>}}" % (term[0], reflconj))
     conjtext = "\n".join(conjlines)
@@ -433,14 +443,6 @@ def process_line(line, etymnum=None, skip_pronun=False):
       error("Term %s is supposed to be an adjective but has noun properties in the declension: %s" % (t, hdecltext))
     if pos == "n" and not is_invar_gender and re.search(r"\|(adv|absn)", hdecltext):
       error("Term %s is supposed to be a noun but has adjective properties in the declension: %s" % (t, hdecltext))
-
-  # Create definition
-  if re.search(opt_arg_regex, defns):
-    error("Found optional-argument prefix in definition: %s" % defns)
-  defntext = generate_pos.generate_defn(defns, pos_to_full_pos[pos].lower(), "bg")
-  split_defntext = re.split("'''", defntext)
-  if len(split_defntext) % 2 == 0:
-    error("Unmatched triple-quote in definition: %s" % defntext)
 
   alsotext = ""
   alttext = ""
