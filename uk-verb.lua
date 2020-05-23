@@ -137,6 +137,109 @@ local budu_forms = {
 }
 
 
+local function combine_stem_ending(stem, ending)
+	if stem == "?" then
+		return "?"
+	else
+		return stem .. ending
+	end
+end
+
+
+local function convert_to_general_form(word_or_words)
+	if type(word_or_words) == "string" then
+		return {{form = word_or_words}}
+	elseif word_or_words.form then
+		return {word_or_words}
+	else
+		local retval = {}
+		for _, form in ipairs(word_or_words) do
+			if type(form) == "string" then
+				table.insert(retval, {form = form})
+			else
+				table.insert(retval, form)
+			end
+		end
+		return retval
+	end
+end
+
+
+local function is_table_of_strings(forms)
+	for _, form in ipairs(forms) do
+		if type(form) ~= "string" then
+			return false
+		end
+	end
+	return true
+end
+
+
+local function add(forms, slot, stems, endings)
+	if stems == nil then
+		return
+	end
+	if type(stems) == "string" and type(endings) == "string" then
+		bgcom.insert_form(forms, slot, {form = combine_stem_ending(stems, endings)})
+	elseif type(stems) == "string" and is_table_of_strings(endings) then
+		for _, ending in ipairs(endings) do
+			bgcom.insert_form(forms, slot, {form = combine_stem_ending(stems, ending)})
+		end
+	else
+		stems = convert_to_general_form(stems)
+		endings = convert_to_general_form(endings)
+		for _, stem in ipairs(stems) do
+			for _, ending in ipairs(endings) do
+				local footnotes = nil
+				if stem.footnotes and ending.footnotes then
+					footnotes = m_table.shallowcopy(stem.footnotes)
+					for _, footnote in ipairs(ending.footnotes) do
+						m_table.insertIfNot(footnotes, footnote)
+					end
+				elseif stem.footnotes then
+					footnotes = stem.footnotes
+				elseif ending.footnotes then
+					footnotes = ending.footnotes
+				end
+				bgcom.insert_form(forms, slot, {form = combine_stem_ending(stem.form, ending.form), footnotes = footnotes})
+			end
+		end
+	end
+end
+
+
+local function append_pres_futr(forms, stem, sg1, sg2, sg3, pl1, pl2, pl3)
+	add(forms, "pres_futr_1sg", stem, sg1)
+	add(forms, "pres_futr_2sg", stem, sg2)
+	add(forms, "pres_futr_3sg", stem, sg3)
+	add(forms, "pres_futr_1pl", stem, pl1)
+	add(forms, "pres_futr_2pl", stem, pl2)
+	add(forms, "pres_futr_3pl", stem, pl3)
+end
+
+
+local function stress_ending(ending)
+	if type(ending)
+end
+
+local function present_e(forms, stem, accent, reflexive, use_y_endings)
+	local endings
+	if use_y_endings == "all" or rfind(stem, com.vowel_c .. "$") then
+		endings = {"ю", "єш", reflexive and "єть" or "є", {"єм", "ємо"}, "єте", "ють"}
+	elseif use_y_endings == "1sg3pl" and not rfind(stem, com.hushing_c .. "$") then
+		endings = {"ю", "еш", reflexive and "еть" or "е", {"ем", "емо"}, "ете", "ють"}
+	else
+		endings = {"у", "еш", reflexive and "еть" or "е", {"ем", "емо"}, "ете", "уть"}
+	end
+
+
+
+
+
+
+	
+
+
 local function add_categories(base)
 	base.categories = {}
 	if base.aspect == "impf" then
