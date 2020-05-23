@@ -1082,7 +1082,7 @@ local function detect_noun_accent_and_form_spec(lemma, accent_and_form_spec)
 		end
 		-- Detect soft-sign indicator.
 		if g == "m" and not accent_spec.no_soft_sign and (
-			rfind(lemma, "й$") or rfind(lemma, vowel_c .. AC .. "?тел$") or rfind(lemma, vowel_c .. AC .. "?" .. cons_c .. "ар$")
+			rfind(lemma, "й$") or rfind(lemma, vowel_c .. AC .. "?тел$") or rfind(lemma, vowel_c .. AC .. "?" .. cons_c .. "+а́?р$")
 		) then
 			accent_spec.soft_sign = true
 		end
@@ -1103,8 +1103,8 @@ local function detect_noun_accent_and_form_spec(lemma, accent_and_form_spec)
 						-- Пе́тър, Ива́н, Кру́м, Нико́ла
 						plural = "овци"
 					end
-				elseif rfind(lemma, "о́?$") or rfind(lemma, "а́н$") then
-					-- дя́до, гле́зльо; готова́н
+				elseif rfind(lemma, "о́?$") then
+					-- дя́до, гле́зльо
 					plural = "овци"
 				elseif rfind(lemma, "е́?$") then
 					-- аташе́
@@ -1564,7 +1564,7 @@ local function generate_noun_vocative(word_spec, accent_spec)
 		ending = "ьо"
 	elseif rfind(lemma, "ца́?$") or rfind(lemma, "[рч]ка́?$") or rfind(lemma, "^%u.*ка́?$") then
 		ending = "е"
-	elseif rfind(lemma, "а́?$") or rfind(lemma, "[кчц]$") or rfind(lemma, "и́?н$") then
+	elseif rfind(lemma, "а́?$") or rfind(lemma, "[кчцх]$") or rfind(lemma, "и́?н$") then
 		ending = "о"
 	elseif rfind(lemma, "[гз]$") then
 		return combine_stem_and_ending(rsub(stem, "[гз]$", "ж"), "е", accent_spec)
@@ -2166,7 +2166,7 @@ local function make_noun_table(alternant_multiword_spec)
 
 	local table_begin = [=[
 <div class="NavFrame" style="width: 50em;">
-<div class="NavHead" style="background: #eff7ff;">Inflection of {lemma}</div>
+<div class="NavHead" style="background: #eff7ff;">{title}</div>
 <div class="NavContent">
 {\op}| border="1px solid #000000" style="border-collapse: collapse; background: #F9F9F9; width: 100%;" class="inflection-table"
 ! style="width: 33%; background: #d9ebff; " |
@@ -2234,7 +2234,7 @@ local function make_noun_table(alternant_multiword_spec)
 
 	local table_sg_begin = [=[
 <div class="NavFrame" style="width: 30em;">
-<div class="NavHead" style="background: #eff7ff;">Inflection of {lemma}</div>
+<div class="NavHead" style="background: #eff7ff;">{title}</div>
 <div class="NavContent">
 {\op}| border="1px solid #000000" style="border-collapse: collapse; background: #F9F9F9; width: 100%;" class="inflection-table"
 ! style="width: 50%; background: #d9ebff; " |
@@ -2284,7 +2284,7 @@ local function make_noun_table(alternant_multiword_spec)
 
 	local table_pl = [=[
 <div class="NavFrame" style="width: 30em;">
-<div class="NavHead" style="background: #eff7ff;">Inflection of {lemma}</div>
+<div class="NavHead" style="background: #eff7ff;">{title}</div>
 <div class="NavContent">
 {\op}| border="1px solid #000000" style="border-collapse: collapse; background: #F9F9F9; width: 100%;" class="inflection-table"
 ! style="width: 50%; background: #d9ebff; " |
@@ -2355,9 +2355,9 @@ local function make_noun_table(alternant_multiword_spec)
 </div></div>
 ]===]
 
-	alternant_multiword_spec.forms.notes_clause = alternant_multiword_spec.forms.footnote ~= "" and
-		m_string_utilities.format(notes_template, alternant_multiword_spec.forms) or ""
-	return m_string_utilities.format(table_spec, alternant_multiword_spec.forms)
+	forms.notes_clause = forms.footnote ~= "" and m_string_utilities.format(notes_template, forms) or ""
+	forms.title = alternant_multiword_spec.title or "Declension of " .. forms.lemma
+	return m_string_utilities.format(table_spec, forms)
 end
 
 
@@ -2424,7 +2424,7 @@ local function make_adj_table(alternant_multiword_spec)
 
 	local table_dva_begin = [=[
 <div class="NavFrame" style="width: 25em;">
-<div class="NavHead" style="background: #eff7ff;">Forms of {lemma}</div>
+<div class="NavHead" style="background: #eff7ff;">{title}</div>
 <div class="NavContent">
 {\op}| border="1px solid #000000" style="border-collapse: collapse; background: #F9F9F9; width: 100%;" class="inflection-table"
 ! style="width: 33%; background: #d9ebff; " |
@@ -2442,7 +2442,7 @@ local function make_adj_table(alternant_multiword_spec)
 
 	local table_chij_begin = [=[
 <div class="NavFrame" style="width: 35em;">
-<div class="NavHead" style="background: #eff7ff;">Forms of {lemma}</div>
+<div class="NavHead" style="background: #eff7ff;">{title}</div>
 <div class="NavContent">
 {\op}| border="1px solid #000000" style="border-collapse: collapse; background: #F9F9F9; width: 100%;" class="inflection-table"
 ! style="font-size: 90%; background: #d9ebff;" | masculine
@@ -2466,16 +2466,19 @@ local function make_adj_table(alternant_multiword_spec)
 </div></div>
 ]===]
 
+	local special_title = alternant_multiword_spec.title or "Declension of " .. forms.lemma
 	forms.notes_clause = forms.footnote ~= "" and m_string_utilities.format(notes_template, forms) or ""
 	if forms.ind_m_pl ~= "—" then -- два
 		local table_spec = table_dva_begin .. table_end
+		forms.title = special_title
 		return m_string_utilities.format(table_spec, forms)
 	elseif forms.nom_m_sg ~= "—" then -- кой, etc.
 		local table_spec = table_normal_koj_begin .. table_cont_koj .. table_end
-		forms.title = "Forms of " .. forms.lemma
+		forms.title = special_title
 		return m_string_utilities.format(table_spec, forms)
 	elseif forms.m_sg ~= "—" then -- чий, etc.
 		local table_spec = table_chij_begin .. table_end
+		forms.title = special_title
 		return m_string_utilities.format(table_spec, forms)
 	else
 		local table_spec = table_normal_koj_begin ..
@@ -2484,9 +2487,9 @@ local function make_adj_table(alternant_multiword_spec)
 			(forms.voc_m_sg ~= "—" and table_cont_voc or "") ..
 			table_end
 		if alternant_multiword_spec.compforms or alternant_multiword_spec.supforms then
-			forms.title = "Positive forms of " .. forms.lemma
+			forms.title = alternant_multiword_spec.title or "Positive forms of " .. forms.lemma
 		else
-			forms.title = "Positive forms of " .. forms.lemma .. " (no comparative)"
+			forms.title = special_title .. " (no comparative)"
 		end
 		local postable = m_string_utilities.format(table_spec, forms)
 		local comptable = ""
@@ -2573,9 +2576,6 @@ function export.do_generate_noun_forms(parent_args, pos, from_headword, def, sup
 
 	local args = m_para.process(parent_args, params)
 
-	if args.title then
-		track("overriding-title")
-	end
 	pos = args.pos or pos -- args.pos only set when from_headword
 	
 	local alternant_multiword_spec = parse_alternant_multiword_spec(args[1])
@@ -2586,6 +2586,7 @@ function export.do_generate_noun_forms(parent_args, pos, from_headword, def, sup
 	decline_multiword_or_alternant_multiword_spec(alternant_multiword_spec, active_slots, false,
 		"include definite")
 	alternant_multiword_spec.forms.lemma = args.lemma and #args.lemma > 0 and args.lemma or alternant_multiword_spec.forms.lemma
+	alternant_multiword_spec.title = args.title
 	return alternant_multiword_spec
 end
 
@@ -2614,9 +2615,6 @@ function export.do_generate_adj_forms(parent_args, pos, from_headword, def, supp
 
 	local args = m_para.process(parent_args, params)
 
-	if args.title then
-		track("overriding-title")
-	end
 	pos = args.pos or pos -- args.pos only set when from_headword
 	
 	local alternant_multiword_spec = parse_alternant_multiword_spec(args[1], "is adj")
@@ -2627,6 +2625,7 @@ function export.do_generate_adj_forms(parent_args, pos, from_headword, def, supp
 	decline_multiword_or_alternant_multiword_spec(alternant_multiword_spec, active_slots, "is adj",
 		"include definite")
 	alternant_multiword_spec.forms.lemma = args.lemma and #args.lemma > 0 and args.lemma or alternant_multiword_spec.forms.lemma
+	alternant_multiword_spec.title = args.title
 	return alternant_multiword_spec
 end
 
