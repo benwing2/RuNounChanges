@@ -539,9 +539,12 @@ conjs["1.2"] = function(base, lemma)
 	elseif rfind(lemma, "гриза́$") then
 		aor23 = rsub(lemma, "гриза́$", "гри́за")
 		base.irreg = true
-	elseif rfind(lemma, "дя́на$") then
-		local unyat_stem = rsub(lemma, "дя́на$", "де́н")
-		local unstressed_unyat_stem = rsub(lemma, "дя́на$", "ден")
+	elseif rfind(lemma, "я́") then
+		-- дя́на (Chitanka type 153tt)
+		-- бя́лна се, дя́лна, избя́гна, мля́сна, мя́рна, отбя́гна, пробя́гна, ря́зна (Chitanka type 152att)
+		-- забя́гна, кря́кна, кря́сна, побя́гна, прибя́гна, убя́гна (Chitanka type 152ait)
+ 		local unyat_stem = rsub(lemma, "я́(.*)а$", "е́%1")
+		local unstressed_unyat_stem = rsub(unyat_stem, "е́", "е")
 		local shifted_aor23 = unstressed_unyat_stem .. "а́"
 		generate_maybe_shifted_aorist(base, lemma, shifted_aor23)
 		base.impf = unyat_stem .. "ех"
@@ -744,9 +747,17 @@ conjs["2.2"] = function(base, lemma)
 
 	-- Generate aorist stems.
 	base.aor23 = lemma
-	local yat_plural_stem = rsub(lemma, "я́$", "е́")
+	local oya = rfind(lemma, "оя́$") -- стоя́, боя́ се
+	local yat_plural_stem = oya and lemma or rsub(lemma, "я́$", "е́")
 	base.paappl = yat_plural_stem .. "ли"
 
+	if oya then
+		-- стоя has both стоя́не and стое́не as verbal nouns
+		base.vna = lemma .. "не"
+		base.paippl = lemma .. "ли"
+		base.irreg = true
+	end
+	
 	-- Generate past passive participle stems.
 	base.ppp = base.aor23 .. "н"
 	base.ppppl = yat_plural_stem .. "ни"
@@ -958,13 +969,19 @@ conjs["irreg"] = function(base, lemma)
 		base.ppp = {rsub(lemma, "кълна́$", "кле́т"), lemma .. "т"}
 		base.vna = false
 		base.conj = "1.2"
+	elseif rfind(lemma, "сте́ля$") then
+		pres_advp_1conj(base, lemma)
+		impf_impv_12conj(base, lemma)
+		base.aor23 = rsub(lemma, "сте́ля$", "стла́")
+		base.ppp = base.aor23 .. "н"
+		base.vna = false
+		base.conj = "1.3"
 	elseif rfind(lemma, "беле́жа$") then
 		pres_advp_2conj(base, lemma)
 		impf_impv_12conj(base, lemma)
 		base.aor23 = rsub(lemma, "ле́жа$", "ля́за")
 		base.ppp = rsub(lemma, "ле́жа$", "ля́зан")
 		base.vna = false
-		base.conj = "1.4"
 	else
 		error("Irregular verb '" .. lemma .. "' not yet supported")
 	end
