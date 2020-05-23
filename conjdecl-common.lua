@@ -216,6 +216,30 @@ function export.flatmap_forms(forms, fun)
 end
 
 
+-- Map a function over the form values in FORMS (a single string, a single object of the form
+-- {form=FORM, footnotes=FOOTNOTES}, or a list of either of the previous two types). If
+-- FIRST_ONLY is given and FORMS is a list, only map over the first element. Return value is
+-- of the same form as FORMS.
+function export.map_form_or_forms(forms, fn, first_only)
+	if forms == nil then
+		return nil
+	elseif type(forms) == "string" then
+		return forms == "?" and "?" or fn(forms)
+	elseif forms.form then
+		return {form = forms.form == "?" and "?" or fn(forms.form), footnotes = forms.footnotes}
+	else
+		local retval = {}
+		for i, form in ipairs(forms) do
+			if first_only then
+				return map_form_or_forms(form, fn)
+			end
+			table.insert(retval, map_form_or_forms(form, fn))
+		end
+		return retval
+	end
+end
+
+
 -- Expand a given footnote (as specified by the user, including the surrounding brackets)
 -- into the form to be inserted into the final generated table.
 function export.expand_footnote(note)

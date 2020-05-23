@@ -32,6 +32,7 @@ local m_string_utilities = require("Module:string utilities")
 local m_para = require("Module:parameters")
 local m_bg_translit = require("Module:bg-translit")
 local com = require("Module:bg-common")
+local cdcom = require("Module:conjdecl-common")
 
 local current_title = mw.title.getCurrentTitle()
 local NAMESPACE = current_title.nsText
@@ -207,33 +208,13 @@ local function verb_may_be_prefixed(lemma)
 end
 
 
-local function map_forms(forms, fn, first_only)
-	if forms == nil then
-		return nil
-	elseif type(forms) == "string" then
-		return forms == "?" and "?" or fn(forms)
-	elseif forms.form then
-		return {form = forms.form == "?" and "?" or fn(forms.form), footnotes = forms.footnotes}
-	else
-		local retval = {}
-		for i, form in ipairs(forms) do
-			if first_only then
-				return map_forms(form, fn)
-			end
-			table.insert(retval, map_forms(form, fn))
-		end
-		return retval
-	end
-end
-
-
 local function map_append(forms, suffix)
-	return map_forms(forms, function(form) return form .. suffix end)
+	return cdcom.map_form_or_forms(forms, function(form) return form .. suffix end)
 end
 
 
 local function map_rsub(forms, from, to)
-	return map_forms(forms, function(form) return rsub(form, from, to) end)
+	return cdcom.map_form_or_forms(forms, function(form) return rsub(form, from, to) end)
 end
 
 
@@ -251,7 +232,7 @@ local function conjugate_all(base)
 			return
 		end
 		if type(stems) == "string" then
-			com.insert_form(base.forms, slot, {form = combine_stem_ending(stems, ending)})
+			cdcom.insert_form(base.forms, slot, {form = combine_stem_ending(stems, ending)})
 		else
 			if stems.form then
 				stems = {stems}
@@ -260,7 +241,7 @@ local function conjugate_all(base)
 				if type(stem) == "string" then
 					stem = {form = stem}
 				end
-				com.insert_form(base.forms, slot, {form = combine_stem_ending(stem.form, ending), footnotes = stem.footnotes})
+				cdcom.insert_form(base.forms, slot, {form = combine_stem_ending(stem.form, ending), footnotes = stem.footnotes})
 			end
 		end
 	end
@@ -304,10 +285,10 @@ local function conjugate_all(base)
 		add("vn_def_sg", base.vn, "то")
 		-- Some verbal nouns are ending-stressed, but the plural in -ия pushes
 		-- the stress onto the stem.
-		add("vn_ind_pl", map_forms(base.vn, function(form)
+		add("vn_ind_pl", cdcom.map_form_or_forms(base.vn, function(form)
 			return com.maybe_stress_final_syllable(rsub(form, "е́?$", ""))
 		end), "ия")
-		add("vn_def_pl", map_forms(base.vn, function(form)
+		add("vn_def_pl", cdcom.map_form_or_forms(base.vn, function(form)
 			return com.maybe_stress_final_syllable(rsub(form, "е́?$", ""))
 		end), "ията")
 		add("vn_ind_pl", base.vn, "та")
@@ -332,7 +313,7 @@ end
 local function add_reflexive_suffix(base)
 	for _, slot in ipairs(verb_slots) do
 		if not rfind(slot, "^vn_") then
-			base.forms[slot] = com.map_forms(base.forms[slot], function(form)
+			base.forms[slot] = cdcom.map_forms(base.forms[slot], function(form)
 				return form .. " " .. base.refl
 			end)
 		end
@@ -452,7 +433,7 @@ local function impv_12conj(base, lemma)
 	if rfind(last_letter, com.vowel_c) then
 		base.impv = com.maybe_stress_final_syllable(full_stem) .. "й"
 	else
-		full_stem = rsub(full_stem, AC, "") 
+		full_stem = rsub(full_stem, AC, "")
 		base.impv = full_stem .. "и́"
 		base.impvpl = full_stem .. "е́те"
 	end
@@ -543,7 +524,7 @@ conjs["1.2"] = function(base, lemma)
 		-- дя́на (Chitanka type 153tt)
 		-- бя́лна се, дя́лна, избя́гна, мля́сна, мя́рна, отбя́гна, пробя́гна, ря́зна (Chitanka type 152att)
 		-- забя́гна, кря́кна, кря́сна, побя́гна, прибя́гна, убя́гна (Chitanka type 152ait)
- 		local unyat_stem = rsub(lemma, "я́(.*)а$", "е́%1")
+		local unyat_stem = rsub(lemma, "я́(.*)а$", "е́%1")
 		local unstressed_unyat_stem = rsub(unyat_stem, "е́", "е")
 		local shifted_aor23 = unstressed_unyat_stem .. "а́"
 		generate_maybe_shifted_aorist(base, lemma, shifted_aor23)
@@ -693,13 +674,13 @@ conjs["1.7"] = function(base, lemma)
 		base.ppp = base.aor23 .. "т"
 	elseif rfind(lemma, "[жчш]е́я$") then
 		base.aor23 = rsub(lemma, "е́я$", "а́")
-		base.ppp = map_forms(ppp_endings, function(ending) return base.aor23 .. ending end) 
+		base.ppp = cdcom.map_form_or_forms(ppp_endings, function(ending) return base.aor23 .. ending end)
 	elseif rfind(lemma, "е́я$") then
 		base.aor23 = rsub(lemma, "е́я$", "я́")
 		local yat_plural_stem = rsub(lemma, "е́я$", "е́")
 		base.paappl = yat_plural_stem .. "ли"
-		base.ppp = map_forms(ppp_endings, function(ending) return base.aor23 .. ending end) 
-		base.ppppl = map_forms(ppp_endings, function(ending) return yat_plural_stem .. ending .. "и" end) 
+		base.ppp = cdcom.map_form_or_forms(ppp_endings, function(ending) return base.aor23 .. ending end)
+		base.ppppl = cdcom.map_form_or_forms(ppp_endings, function(ending) return yat_plural_stem .. ending .. "и" end)
 	elseif rfind(lemma, "[аяиую]́я$") then
 		-- For verbs in -я́я (влия́я, сия́я), this results in an aorist participle
 		-- in -я́л, but per rechnik.chitanka.info it stays as -я́ли in the plural,
@@ -708,7 +689,7 @@ conjs["1.7"] = function(base, lemma)
 		if rfind(lemma, "[иую]́я$") then
 			base.ppp = base.aor23 .. "т"
 		else
-			base.ppp = map_forms(ppp_endings, function(ending) return base.aor23 .. ending end)
+			base.ppp = cdcom.map_form_or_forms(ppp_endings, function(ending) return base.aor23 .. ending end)
 		end
 	else
 		error("Unrecognized lemma for class 1.7: '" .. lemma .. "'")
@@ -757,7 +738,7 @@ conjs["2.2"] = function(base, lemma)
 		base.paippl = lemma .. "ли"
 		base.irreg = true
 	end
-	
+
 	-- Generate past passive participle stems.
 	base.ppp = base.aor23 .. "н"
 	base.ppppl = yat_plural_stem .. "ни"
@@ -1053,10 +1034,10 @@ local function postprocess_base(base, lemma)
 		return form
 	end
 	if base.vna == nil then
-		base.vna = map_forms(base.aor, aor_to_vn, "first only")
+		base.vna = cdcom.map_form_or_forms(base.aor, aor_to_vn, "first only")
 	end
 	if base.vni == nil then
-		base.vni = map_forms(base.impf, impf_to_vn, "first only")
+		base.vni = cdcom.map_form_or_forms(base.impf, impf_to_vn, "first only")
 	end
 	if base.vna == false and base.vni == false then
 		base.vn = nil
@@ -1245,7 +1226,7 @@ end
 
 
 local function parse_word_spec(text)
-	local segments = com.parse_balanced_segment_run(text, "<", ">")
+	local segments = cdcom.parse_balanced_segment_run(text, "<", ">")
 	if #segments ~= 3 or segments[3] ~= "" then
 		error("Verb spec must be of the form 'LEMMA<CONJ.SPECS>': '" .. text .. "'")
 	end
@@ -1644,7 +1625,7 @@ function export.do_generate_forms(parent_args, pos, from_headword, def)
 		track("overriding-title")
 	end
 	pos = args.pos or pos -- args.pos only set when from_headword
-	
+
 	local base, lemma = parse_word_spec(args[1])
 	lemma = check_lemma_stress(base, lemma)
 	lemma = detect_indicator_and_form_spec(base, lemma)
