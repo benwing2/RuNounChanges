@@ -227,8 +227,8 @@ function export.insert_form_into_list(list, form)
 			return
 		end
 	end
-	-- Form not found. Do a shallow copy of the footnotes because we may modify them in-place.
-	table.insert(list, {form=form.form, footnotes=m_table.shallowcopy(form.footnotes)})
+	-- Form not found. Clone because we may modify the footnotes in-place.
+	table.insert(list, m_table.deepcopy(form, true))
 end
 
 -- Insert a form (an object of the form {form=FORM, footnotes=FOOTNOTES}) into the given slot in
@@ -275,6 +275,27 @@ function export.map_forms(forms, fun)
 end
 
 
+-- Map a list-returning function over the form values in FORMS (a list of objects of the form
+-- {form=FORM, footnotes=FOOTNOTES}). Use insert_form_into_list() to insert them into
+-- the returned list in case two different forms map to the same thing.
+function export.flatmap_forms(forms, fun)
+	if not forms then
+		return nil
+	end
+	local retval = {}
+	for _, form in ipairs(forms) do
+		local funret = fun(form.form)
+		for _, fr in ipairs(funret) do
+			-- Clone the footnotes so we don't end up with two or more entries sharing
+			-- the same footnote object, since the footnotes are mutated in-place.
+			local newform = {form=fr, footnotes=m_table.shallowcopy(form.footnotes)}
+			export.insert_form_into_list(retval, newform)
+		end
+	end
+	return retval
+end
+
+
 -- Expand a given footnote (as specified by the user, including the surrounding brackets)
 -- into the form to be inserted into the final generated table.
 function export.expand_footnote(note)
@@ -307,10 +328,16 @@ function export.init_footnote_obj()
 end
 
 
-function export.set_one_form(footnote_obj, formtable, slot, accel_lemma, slot_to_accel_form, raw, slash_join)
+function export.display_one_form(footnote_obj, formtable, slot, accel_lemma, slot_to_accel_form, raw, slash_join)
 	local forms = formtable[slot]
 	if forms then
-		local accel_form = slot_to_accel_form(slot)
+		local accel_obj
+		if accel_lemma then
+			accel_obj = {
+				form = slot_to_accel_form(slot),
+				lemma = accel_lemma
+			}
+		end
 		local bg_spans = {}
 		local tr_spans = {}
 		for i, form in ipairs(forms) do
@@ -321,10 +348,7 @@ function export.set_one_form(footnote_obj, formtable, slot, accel_lemma, slot_to
 			if raw or form.form == "—" or form.form == "?" then
 				link = bg_text
 			else
-				link = m_links.full_link{lang = lang, term = bg_text, tr = "-", accel = {
-					form = accel_form,
-					lemma = accel_lemma,
-				}}
+				link = m_links.full_link{lang = lang, term = bg_text, tr = "-", accel = accel_obj}
 			end
 			tr = export.translit_no_links(bg_text)
 			tr = require("Module:script utilities").tag_translit(tr, lang, "default", " style=\"color: #888;\"")
@@ -362,10 +386,10 @@ function export.set_one_form(footnote_obj, formtable, slot, accel_lemma, slot_to
 end
 
 
-function export.set_forms(footnote_obj, from_forms, to_forms, slots_table_or_list, slots_is_list,
+function export.display_forms(footnote_obj, from_forms, to_forms, slots_table_or_list, slots_is_list,
 	accel_lemma, slot_to_accel_form, raw, slash_join)
 	local function do_slot(slot)
-		to_forms[slot] = export.set_one_form(footnote_obj, from_forms, slot, accel_lemma,
+		to_forms[slot] = export.display_one_form(footnote_obj, from_forms, slot, accel_lemma,
 		slot_to_accel_form, raw, slash_join)
 	end
 
