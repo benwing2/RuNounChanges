@@ -231,7 +231,7 @@ while True:
           lines.append("* {{l|ru|%s}}\n" % altform)
       alttext = "===Alternative forms===\n%s\n" % "".join(lines)
     elif sartype == "def":
-      defntext = generate_pos.generate_defn(vals, "verb")
+      defntext, _ = generate_pos.generate_defn(vals, "verb")
     elif sartype == "note":
       vals = re.sub(r"\[\[(.*?)\]\]", r"{{m|ru|\1}}", vals)
       vals = re.sub(r"\(\((.*?)\)\)", r"{{m|ru|\1}}", vals)

@@ -365,7 +365,7 @@ while True:
   # Create definition
   if re.search(opt_arg_regex, defns):
     error("Found optional-argument prefix in definition: %s" % defns)
-  defntext = generate_pos.generate_defn(defns, pos_to_full_pos[pos].lower(), "ru")
+  defntext, _ = generate_pos.generate_defn(defns, pos_to_full_pos[pos].lower(), "ru")
 
   alsotext = ""
   alttext = ""

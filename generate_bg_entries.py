@@ -331,6 +331,8 @@ def process_line(line, etymnum=None, skip_pronun=False):
   if re.search(opt_arg_regex, defns):
     error("Found optional-argument prefix in definition: %s" % defns)
   defntext, addlprops = generate_pos.generate_defn(defns, pos_to_full_pos[pos].lower(), "bg")
+  if not defntext:
+    error(addlprops)
   split_defntext = re.split("'''", defntext)
   if len(split_defntext) % 2 == 0:
     error("Unmatched triple-quote in definition: %s" % defntext)

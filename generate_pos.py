@@ -127,10 +127,12 @@ def generate_defn(defns, pos, lang):
   defnlines = []
   addlprops = {}
 
+  ever_saw_refl = False
   # the following regex uses a negative lookbehind so we split on a semicolon
   # but not on a backslashed semicolon, which we then replace with a regular
   # semicolon in the next line
   for defn in re.split(r"(?<![\\]);", defns):
+    saw_refl = False
     defn = defn.replace(r"\;", ";")
     if defn == "-":
       defnlines.append("# {{rfdef|%s}}\n" % lang)
@@ -157,8 +159,10 @@ def generate_defn(defns, pos, lang):
       if labels:
         if lang == "bg" and labels[0] == "reflexive":
           prefix = "{{bg-reflexive%s}} " % "|".join([""] + labels[1:])
+          saw_refl = True
         elif lang == "bg" and labels[0] == "reflsi":
           prefix = u"{{bg-reflexive-си%s}} " % "|".join([""] + labels[1:])
+          saw_refl = True
         else:
           prefix = "{{lb|%s|%s}} " % (lang, "|".join(labels))
       if defn.startswith("altof:"):
@@ -191,4 +195,9 @@ def generate_defn(defns, pos, lang):
       defnline = re.sub(r"<<(.*?)>>", r"{{i|\1}}", defnline)
       defnline = re.sub(r"g\((.*?)\)", r"{{glossary|\1}}", defnline)
       defnlines.append("# %s%s\n" % (prefix, defnline))
+    if saw_refl:
+      ever_saw_refl = True
+    elif ever_saw_refl:
+      return None, "Saw non-reflexive definition '%s' after reflexive definition" % defn
+
   return "".join(defnlines), addlprops
