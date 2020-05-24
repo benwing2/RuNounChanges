@@ -27,10 +27,9 @@ local m_links = require("Module:links")
 local m_table_tools = require("Module:table tools")
 local m_string_utilities = require("Module:string utilities")
 local m_script_utilities = require("Module:script utilities")
+local iut = require("Module:inflection utilities")
 local m_para = require("Module:parameters")
-local com = require("Module:uk-common")
--- FIXME, consider moving the non-Bulgarian-specific functions out of the following
-local bgcom = require("Module:bg-common")
+local com = require("Module:User:Benwing2/uk-common")
 
 local current_title = mw.title.getCurrentTitle()
 local NAMESPACE = current_title.nsText
@@ -52,6 +51,14 @@ local AC = u(0x0301) -- acute =  ́
 local function rsub(term, foo, bar)
 	local retval = rsubn(term, foo, bar)
 	return retval
+end
+
+
+-- version of rsubn() that returns a 2nd argument boolean indicating whether
+-- a substitution was made.
+local function rsubb(term, foo, bar)
+	local retval, nsubs = rsubn(term, foo, bar)
+	return retval, nsubs > 0
 end
 
 
@@ -90,17 +97,10 @@ local output_verb_slots = {
 }
 
 
-local slot_aliases = {
-	["impr_sg"] = "impr_2sg",
-	["impr_pl_1sg"] = "impr_1pl",
-	["impr_pl_2sg"] = "impr_2pl",
-}
-
-
 local input_verb_slots = {}
 for slot, _ in pairs(output_verb_slots) do
 	if rfind(slot, "^pres_[123]") then
-		table.insert(input_verb_slots, rsub(slot, "^pres_", "pres_fut_"))
+		table.insert(input_verb_slots, rsub(slot, "^pres_", "pres_futr_"))
 	elseif not rfind(slot, "^futr_") then
 		table.insert(input_verb_slots, slot)
 	end
@@ -192,10 +192,10 @@ local function add(forms, slot, stems, endings)
 		return
 	end
 	if type(stems) == "string" and type(endings) == "string" then
-		bgcom.insert_form(forms, slot, {form = combine_stem_ending(stems, endings)})
+		iut.insert_form(forms, slot, {form = combine_stem_ending(stems, endings)})
 	elseif type(stems) == "string" and is_table_of_strings(endings) then
 		for _, ending in ipairs(endings) do
-			bgcom.insert_form(forms, slot, {form = combine_stem_ending(stems, ending)})
+			iut.insert_form(forms, slot, {form = combine_stem_ending(stems, ending)})
 		end
 	else
 		stems = convert_to_general_form(stems)
@@ -213,7 +213,7 @@ local function add(forms, slot, stems, endings)
 				elseif ending.footnotes then
 					footnotes = ending.footnotes
 				end
-				bgcom.insert_form(forms, slot, {form = combine_stem_ending(stem.form, ending.form), footnotes = footnotes})
+				iut.insert_form(forms, slot, {form = combine_stem_ending(stem.form, ending.form), footnotes = footnotes})
 			end
 		end
 	end
@@ -235,7 +235,7 @@ local function add_pres_futr(base, stem, sg1, sg2, sg3, pl1, pl2, pl3)
 		end
 		local ending = "чи"
 		if com.is_stressed(pl3base) then
-			pl3base = com.make_unstressed(pl3base)
+			pl3base = com.remove_stress(pl3base)
 			ending = "чи́"
 		end
 		add(base.forms, "pres_adv_part", stem, pl3base .. ending)
@@ -257,12 +257,12 @@ end
 
 local function add_present_e(base, stem, accent, use_y_endings)
 	local endings
-	if use_y_endings == "all" or rfind(stem, com.vowel_c .. "$") then
-		endings = {"ю", "єш", base.is_reflexive and "єть" or "є", {"єм", "ємо"}, "єте", "ють"}
+	if use_y_endings == "all" or rfind(stem, com.vowel_c .. AC .. "?$") then
+		endings = {"ю", "єш", base.is_refl and "єть" or "є", {"єм", "ємо"}, "єте", "ють"}
 	elseif use_y_endings == "1sg3pl" and not rfind(stem, com.hushing_c .. "$") then
-		endings = {"ю", "еш", base.is_reflexive and "еть" or "е", {"ем", "емо"}, "ете", "ють"}
+		endings = {"ю", "еш", base.is_refl and "еть" or "е", {"ем", "емо"}, "ете", "ють"}
 	else
-		endings = {"у", "еш", base.is_reflexive and "еть" or "е", {"ем", "емо"}, "ете", "уть"}
+		endings = {"у", "еш", base.is_refl and "еть" or "е", {"ем", "емо"}, "ете", "уть"}
 	end
 	endings = stress_present_endings_per_accent(endings, accent)
 	add_pres_futr(base, stem, unpack(endings))
@@ -272,12 +272,11 @@ end
 local function add_present_i(base, stem, accent)
 	local endings
 	local iotated_type
-	if rfind(stem, com.vowel_c .. "$") then
+	if rfind(stem, com.vowel_c .. AC .. "?$") then
 		endings = {"ю", "їш", "їть", {"їм", "їмо"}, "їте", "ять"}
 		iotated_type = "none"
 	else
 		local iotated_stem = com.iotate(stem)
-		if not rfind(stem, com.hushing_c .. "$") then
 		endings = {rfind(iotated_stem, com.hushing_c .. "$") and "у" or "ю", "иш", "ить",
 			{"им", "имо"}, "ите", rfind(stem, com.hushing_c .. "$") and "ать" or "ять"}
 		if stem == iotated_stem then
@@ -325,8 +324,9 @@ local function add_imperative(base, sg2)
 		add(base.forms, "impr_2pl", stem, {vowel .. "ть"})
 	elseif rfind(sg2, com.vowel_c .. AC .. "?$") then
 		error("Invalid 2sg imperative, ends in vowel other than -и: '" .. sg2 .. "'")
-		add(base.forms, "impr_1pl", stem, "мо")
-		add(base.forms, "impr_2pl", stem, "те")
+	else
+		add(base.forms, "impr_1pl", sg2, "мо")
+		add(base.forms, "impr_2pl", sg2, "те")
 	end
 end
 
@@ -361,29 +361,151 @@ conjs["1a"] = function(base, lemma)
 end
 
 
-local function add_categories(base)
-	base.categories = {}
-	if base.aspect == "impf" then
-		table.insert(base.categories, "Ukrainian imperfective verbs")
-	elseif base.aspect == "pf" then
-		table.insert(base.categories, "Ukrainian perfective verbs")
+local function parse_indicator_and_form_spec(angle_bracket_spec)
+	local inside = rmatch(angle_bracket_spec, "^<(.*)>$")
+	assert(inside)
+	local base = {}
+	local parts = rsplit(inside, ".", true)
+	local conjarg = parts[1]
+	local conj, past_accent = rmatch(conjarg, "^(.*)/(.*)$")
+	if past_accent then
+		if past_accent ~= "a" and past_accent ~= "b" then
+			error("Unrecognized past-tense accent in conjugation spec '" .. conjarg .. "', should be 'a' or 'b': '" .. past_accent .. "'")
+		end
+		base.past_accent = past_accent
 	else
-		assert(base.aspect == "both")
-		table.insert(base.categories, "Ukrainian imperfective verbs")
-		table.insert(base.categories, "Ukrainian perfective verbs")
-		table.insert(base.categories, "Ukrainian biaspectual verbs")
+		conj = conjarg
+	end
+	if conj ~= "irreg" then
+		conj, base.conj_star = rsubb(conj, "%*", "")
+		if not rfind(conj, "^[0-9]+°?[abc]$") then
+			error("Invalid format for conjugation, should be e.g. '1a', '4b' or '6°c': '" .. conj .. "'")
+		end
+		if not conjs[conj] then
+			error("Unrecognized conjugation: '" .. conj .. "'")
+		end
+	end
+	base.conj = conj
+	for i=2,#parts do
+		local part = parts[i]
+		if part == "impf" or part == "pf" then
+			if base.aspect then
+				error("Can't specify aspect twice: '" .. inside .. "'")
+			end
+			base.aspect = part
+		elseif part == "tr" or part == "intr" then
+			if base.trans then
+				error("Can't specify transitivity twice: " .. inside .. "'")
+			end
+			base.trans = part
+		elseif part == "-ppp" then
+			if base.no_ppp then
+				error("Can't specify '-ppp' twice: " .. inside .. "'")
+			end
+			base.no_ppp = true
+		elseif part == "impers" then
+			if base.impers then
+				error("Can't specify 'impers' twice: " .. inside .. "'")
+			end
+			base.impers = true
+		elseif part == "с" or part == "д" or part == "т" or part == "ст" or part == "в" then
+			if not rfind(conj, "^7") then
+				error("Specification '" .. part .. "' can only be specified for class 7")
+			end
+			if base.cons then
+				error("Can't specify class-7 consonant twice: " .. inside .. "'")
+			end
+			base.cons = part
+		elseif part == "м" or part == "н" then
+			if not rfind(conj, "^14") then
+				error("Specification '" .. part .. "' can only be specified for class 14")
+			end
+			if base.cons then
+				error("Can't specify class-14 consonant twice: " .. inside .. "'")
+			end
+			base.cons = part
+		elseif part == "-і" then
+			if not rfind(conj, "^7") then
+				error("Specification '-і' can only be specified for class 7")
+			end
+			if base.no_i then
+				error("Can't specify '-і' twice: " .. inside .. "'")
+			end
+			base.no_i = true
+		else
+			error("Unrecognized indicator '" .. part .. "': '" .. inside .. "'")
+		end
+	end
+	return base
+end
+
+
+-- Separate out reflexive suffix, check that multisyllabic lemmas have stress, and add stress
+-- to monosyllabic lemmas if needed.
+local function normalize_lemma(base, lemma)
+	base.orig_lemma = lemma
+	lemma = com.add_monosyllabic_stress(lemma)
+	if not rfind(lemma, AC) then
+		error("Multisyllabic lemma '" .. base.orig_lemma .. "' needs an accent")
+	end
+	local active_verb, refl = rmatch(lemma, "^(.*)(с[яь])$")
+	if active_verb then
+		base.is_refl = true
+		lemma = active_verb
+	end
+	if rfind(lemma, "ть$") then
+		if refl == "сь" then
+			error("Reflexive infinitive lemma in -тьсь not possible, use -тися, -тись or ться: '" .. base.orig_lemma)
+		end
+		lemma = rsub(lemma, "ть$", "ти")
+	end
+	return lemma
+end
+
+
+local function detect_indicator_and_form_spec(base, lemma)
+	if not base.aspect then
+		error("Aspect of 'pf' or 'impf' must be specified")
 	end
 	if base.is_refl then
-		table.insert(base.categories, "Ukrainian reflexive verbs")
+		if base.trans then
+			error("Can't specify transitivity with reflexive verb, they're always intransitive: '" .. base.orig_lemma .. "'")
+		end
+	elseif not base.trans then
+		error("Transitivity of 'tr' or 'intr' must be specified")
 	end
+	if base.no_ppp then
+		if base.trans ~= "tr" then
+			error("Can only specify '-ppp' with transitive verbs")
+		end
+	end
+end
+
+
+local function parse_word_spec(text)
+	local segments = iut.parse_balanced_segment_run(text, "<", ">")
+	if #segments ~= 3 or segments[3] ~= "" then
+		error("Verb spec must be of the form 'LEMMA<CONJ.SPECS>': '" .. text .. "'")
+	end
+	local lemma = segments[1]
+	local base = parse_indicator_and_form_spec(segments[2])
+	return base, lemma
+end
+
+
+local function add_reflexive_suffix(base)
+	-- FIXME: Implement me
 end
 
 
 local function process_overrides(forms, args)
 	for _, slot in ipairs(input_verb_slots) do
-		if args[slot] and args[slot] ~= "-" and args[slot] ~= "—" then
-			for _, form in ipairs(rsplit(args[slot], "%s*,%s*")) do
-				bgcom.insert_form(forms, slot, {form=form})
+		if args[slot] then
+			forms[slot] = nil
+			if args[slot] ~= "-" and args[slot] ~= "—" then
+				for _, form in ipairs(rsplit(args[slot], "%s*,%s*")) do
+					iut.insert_form(forms, slot, {form=form})
+				end
 			end
 		end
 	end
@@ -394,7 +516,7 @@ local function add_alt_infinitive(base)
 	local newinf = {}
 	local forms = base.forms
 	if forms.infinitive then
-		forms.infinitive = bgcom.flatmap_forms(forms.infinitive, function(inf)
+		forms.infinitive = iut.flatmap_forms(forms.infinitive, function(inf)
 			inf = com.add_monosyllabic_stress(inf)
 			if rfind(inf, com.vowel_c .. AC .. "?ти$") then
 				return {inf, rsub(inf, "ти$", "ть")}
@@ -423,18 +545,18 @@ local function set_present_future(base)
 	local forms = base.forms
 	if base.aspect == "pf" then
 		for suffix, _ in pairs(futr_suffixes) do
-			forms["futr_" .. suffix] = forms["pres_fut_" .. suffix]
+			forms["futr_" .. suffix] = forms["pres_futr_" .. suffix]
 		end
 	else
 		for suffix, _ in pairs(futr_suffixes) do
-			forms["pres_" .. suffix] = forms["pres_fut_" .. suffix]
+			forms["pres_" .. suffix] = forms["pres_futr_" .. suffix]
 		end
 		-- Do the periphrastic future with бу́ду
 		if forms.infinitive then
 			for _, inf in ipairs(forms.infinitive) do
 				for slot_suffix, _ in pairs(futr_suffixes) do
 					local futrslot = "futr_" .. slot_suffix
-					bgcom.insert_form(forms, futrslot, {
+					iut.insert_form(forms, futrslot, {
 						form = "[[" .. budu_forms[slot_suffix] .. "]] [[" ..
 							com.initial_alternation(inf.form, budu_forms[slot_suffix]) .. "]]",
 						no_accel = true,
@@ -445,22 +567,22 @@ local function set_present_future(base)
 		-- Do the synthetic future
 		if forms.infinitive then
 			for _, inf in ipairs(forms.infinitive) do
-				local fut_sufs
+				local futr_sufs
 				local infstem = rmatch(inf.form, "^(.-)с[яь]$")
 				if infstem then
-					fut_sufs = futr_refl_suffixes
+					futr_sufs = futr_refl_suffixes
 				else
-					fut_sufs = futr_suffixes
+					futr_sufs = futr_suffixes
 					infstem = inf.form
 				end
-				for slot_suffix, futr_suffix in pairs(fut_sufs) do
+				for slot_suffix, futr_suffix in pairs(futr_sufs) do
 					local futrslot = "futr_" .. slot_suffix
 					if rfind(infstem, "ти́?$") then
 						if type(futr_suffix) ~= "table" then
 							futr_suffix = {futr_suffix}
 						end
 						for _, fs in ipairs(futr_suffix) do
-							bgcom.insert_form(forms, futrslot, {
+							iut.insert_form(forms, futrslot, {
 								form = infstem .. fs
 							})
 						end
@@ -468,6 +590,30 @@ local function set_present_future(base)
 				end
 			end
 		end
+	end
+end
+
+
+-- Remove impersonal, non-3rd-person, and/or imperfective-only forms.
+local function remove_nonexistent_forms(base)
+	-- FIXME: Implement me
+end
+
+
+local function add_categories(base)
+	base.categories = {}
+	if base.aspect == "impf" then
+		table.insert(base.categories, "Ukrainian imperfective verbs")
+	elseif base.aspect == "pf" then
+		table.insert(base.categories, "Ukrainian perfective verbs")
+	else
+		assert(base.aspect == "both")
+		table.insert(base.categories, "Ukrainian imperfective verbs")
+		table.insert(base.categories, "Ukrainian perfective verbs")
+		table.insert(base.categories, "Ukrainian biaspectual verbs")
+	end
+	if base.is_refl then
+		table.insert(base.categories, "Ukrainian reflexive verbs")
 	end
 end
 
@@ -674,15 +820,45 @@ end
 -- for a given slot is a list of objects {form=FORM, footnotes=FOOTNOTES}.
 function export.do_generate_forms(parent_args, pos, from_headword, def)
 	local params = {
+		[1] = {required = true, default = "чита́ти"},
+		footnote = {list = true},
+		title = {},
+	}
+	for _, slot in ipairs(input_verb_slots) do
+		params[slot] = {}
+	end
+
+	local args = m_para.process(parent_args, params)
+	local base, lemma = parse_word_spec(args[1])
+	base.title = args.title
+	base.footnotes = args.footnote
+	base.forms = {}
+	lemma = normalize_lemma(base, lemma)
+	detect_indicator_and_form_spec(base, lemma)
+	conjs[base.conj](base, lemma)
+	if base.is_refl then
+		add_reflexive_suffix(base)
+	end
+	process_overrides(base.forms, args)
+	set_present_future(base)
+	remove_nonexistent_forms(base)
+	add_categories(base)
+	return base
+end
+
+
+-- Externally callable function to parse and decline a verb given user-specified arguments.
+-- Return value is WORD_SPEC, an object where the declined forms are in `WORD_SPEC.forms`
+-- for each slot. If there are no values for a slot, the slot key will be missing. The value
+-- for a given slot is a list of objects {form=FORM, footnotes=FOOTNOTES}.
+function export.do_generate_forms_manual(parent_args, pos, from_headword, def)
+	local params = {
 		footnote = {list = true},
 		title = {},
 		aspect = {required = true, default = "impf"},
 	}
 	for _, slot in ipairs(input_verb_slots) do
 		params[slot] = {}
-	end
-	for slot, canonslot in pairs(slot_aliases) do
-		params[slot] = {alias_of = canonslot}
 	end
 
 	local args = m_para.process(parent_args, params)
@@ -704,11 +880,21 @@ function export.do_generate_forms(parent_args, pos, from_headword, def)
 end
 
 
--- Main entry point. Template-callable function to parse and conjugate a verb given
+-- Entry point for {{uk-conj}}. Template-callable function to parse and conjugate a verb given
 -- user-specified arguments and generate a displayable table of the conjugated forms.
 function export.show(frame)
 	local parent_args = frame:getParent().args
 	local base = export.do_generate_forms(parent_args)
+	show_forms(base)
+	return make_table(base) .. require("Module:utilities").format_categories(base.categories, lang)
+end
+
+
+-- Entry point for {{uk-conj-table}}. Template-callable function to parse and conjugate a verb given
+-- manually-specified inflections and generate a displayable table of the conjugated forms.
+function export.show_manual(frame)
+	local parent_args = frame:getParent().args
+	local base = export.do_generate_forms_manual(parent_args)
 	show_forms(base)
 	return make_table(base) .. require("Module:utilities").format_categories(base.categories, lang)
 end
