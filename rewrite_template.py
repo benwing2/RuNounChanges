@@ -52,7 +52,7 @@ def process_page(index, page, template, new_name, params_to_add, params_to_remov
             raise ValueError("Unrecognized filter %s" % filt)
       for old_param, new_param in params_to_rename:
         if t.has(old_param):
-          t.add(new_param, getparam(t, old_param), before=old_param)
+          t.add(new_param, getparam(t, old_param), before=old_param, preserve_spacing=False)
           rmparam(t, old_param)
           notes.append("rename %s= to %s= in {{%s}}" % (old_param, new_param, tn))
       for param in params_to_remove:
