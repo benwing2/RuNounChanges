@@ -137,6 +137,18 @@ local budu_forms = {
 }
 
 
+local function stress_ending(ending)
+	if type(ending) == "string" then
+		return com.maybe_stress_final_syllable(ending)
+	else
+		for i, e in ipairs(ending) do
+			ending[i] = com.maybe_stress_final_syllable(e)
+		end
+		return ending
+	end
+end
+
+
 local function combine_stem_ending(stem, ending)
 	if stem == "?" then
 		return "?"
@@ -208,36 +220,145 @@ local function add(forms, slot, stems, endings)
 end
 
 
-local function append_pres_futr(forms, stem, sg1, sg2, sg3, pl1, pl2, pl3)
-	add(forms, "pres_futr_1sg", stem, sg1)
-	add(forms, "pres_futr_2sg", stem, sg2)
-	add(forms, "pres_futr_3sg", stem, sg3)
-	add(forms, "pres_futr_1pl", stem, pl1)
-	add(forms, "pres_futr_2pl", stem, pl2)
-	add(forms, "pres_futr_3pl", stem, pl3)
+local function add_pres_futr(base, stem, sg1, sg2, sg3, pl1, pl2, pl3)
+	add(base.forms, "pres_futr_1sg", stem, sg1)
+	add(base.forms, "pres_futr_2sg", stem, sg2)
+	add(base.forms, "pres_futr_3sg", stem, sg3)
+	add(base.forms, "pres_futr_1pl", stem, pl1)
+	add(base.forms, "pres_futr_2pl", stem, pl2)
+	add(base.forms, "pres_futr_3pl", stem, pl3)
+	-- Do the present adverbial participle, which is based on the third plural present.
+	if base.aspect ~= "pf" and type(pl3) == "string" then
+		local pl3base = rmatch(pl3, "^(.-)ть$")
+		if not pl3base then
+			error("Invalid third-plural ending, doesn't end in -ть: '" .. pl3 .. "'")
+		end
+		local ending = "чи"
+		if com.is_stressed(pl3base) then
+			pl3base = com.make_unstressed(pl3base)
+			ending = "чи́"
+		end
+		add(base.forms, "pres_adv_part", stem, pl3base .. ending)
+	end
 end
 
 
-local function stress_ending(ending)
-	if type(ending)
+local function stress_present_endings_per_accent(endings, accent)
+	if accent == "b" then
+		for i, ending in ipairs(endings) do
+			endings[i] = stress_ending(ending)
+		end
+	elseif accent == "c" then
+		endings[1] = stress_ending(endings[1])
+	end
+	return endings
 end
 
-local function present_e(forms, stem, accent, reflexive, use_y_endings)
+
+local function add_present_e(base, stem, accent, use_y_endings)
 	local endings
 	if use_y_endings == "all" or rfind(stem, com.vowel_c .. "$") then
-		endings = {"ю", "єш", reflexive and "єть" or "є", {"єм", "ємо"}, "єте", "ють"}
+		endings = {"ю", "єш", base.is_reflexive and "єть" or "є", {"єм", "ємо"}, "єте", "ють"}
 	elseif use_y_endings == "1sg3pl" and not rfind(stem, com.hushing_c .. "$") then
-		endings = {"ю", "еш", reflexive and "еть" or "е", {"ем", "емо"}, "ете", "ють"}
+		endings = {"ю", "еш", base.is_reflexive and "еть" or "е", {"ем", "емо"}, "ете", "ють"}
 	else
-		endings = {"у", "еш", reflexive and "еть" or "е", {"ем", "емо"}, "ете", "уть"}
+		endings = {"у", "еш", base.is_reflexive and "еть" or "е", {"ем", "емо"}, "ете", "уть"}
 	end
+	endings = stress_present_endings_per_accent(endings, accent)
+	add_pres_futr(base, stem, unpack(endings))
+end
 
 
+local function add_present_i(base, stem, accent)
+	local endings
+	local iotated_type
+	if rfind(stem, com.vowel_c .. "$") then
+		endings = {"ю", "їш", "їть", {"їм", "їмо"}, "їте", "ять"}
+		iotated_type = "none"
+	else
+		local iotated_stem = com.iotate(stem)
+		if not rfind(stem, com.hushing_c .. "$") then
+		endings = {rfind(iotated_stem, com.hushing_c .. "$") and "у" or "ю", "иш", "ить",
+			{"им", "имо"}, "ите", rfind(stem, com.hushing_c .. "$") and "ать" or "ять"}
+		if stem == iotated_stem then
+			iotated_type = "none"
+		elseif rfind(iotated_stem, "л$") then
+			iotated_type = "1sg3pl"
+		else
+			iotated_type = "1sg"
+		end
+	end
+	endings = stress_present_endings_per_accent(endings, accent)
+	local s1, s2, s3, p1, p2, p3 = unpack(endings)
+	if iotated_type == "none" then
+		add_pres_futr(base, stem, s1, s2, s3, p1, p2, p3)
+	elseif iotated_type == "1sg" then
+		add_pres_futr(base, iotated_stem, s1, {}, {}, {}, {}, {})
+		add_pres_futr(base, stem, {}, s2, s3, p1, p2, p3)
+	else
+		add_pres_futr(base, iotated_stem, s1, {}, {}, {}, {}, p3)
+		add_pres_futr(base, stem, {}, s2, s3, p1, p2, {})
+	end
+end
 
 
+local function add_past(base, msgstem, reststem, accent)
+	add(base.forms, "past_m", msgstem, "")
+	add(base.forms, "past_f", reststem, accent == "b" and "а́" or "а")
+	add(base.forms, "past_n", reststem, accent == "b" and "о́" or "о")
+	add(base.forms, "past_pl", reststem, accent == "b" and "и́" or "и")
+	add(base.forms, "past_adv_part", msgstem, "ши")
+end
 
 
-	
+local function add_default_past(base, stem)
+	add_past(base, stem .. "в", stem .. "л", "a")
+end
+
+
+local function add_imperative(base, sg2)
+	add(base.forms, "impr_2sg", sg2, "")
+	local stem, ac = rmatch(sg2, "^(.-)и(" .. AC .. "?)$")
+	if stem then
+		local vowel = "і" .. ac
+		add(base.forms, "impr_1pl", stem, {vowel .. "м", vowel .. "мо"})
+		add(base.forms, "impr_2pl", stem, {vowel .. "ть"})
+	elseif rfind(sg2, com.vowel_c .. AC .. "?$") then
+		error("Invalid 2sg imperative, ends in vowel other than -и: '" .. sg2 .. "'")
+		add(base.forms, "impr_1pl", stem, "мо")
+		add(base.forms, "impr_2pl", stem, "те")
+	end
+end
+
+
+local function add_moving_ppp(base, stem)
+	local stembase, last_syl = rmatch(stem, "^(.-)(" .. com.vowel_c .. AC .. "?[нт])$")
+	if not stembase then
+		error("Unrecognized stem for past passive participle: '" .. stem .. "'")
+	end
+	if com.is_stressed(last_syl) and not com.is_nonsyllabic(stembase) then
+		stembase = com.maybe_stress_final_syllable(stembase)
+		last_syl = com.remove_stress(last_syl)
+		stem = stembase .. last_syl
+	end
+	add(base.forms, "past_pasv_part", stem, "ий")
+	add(base.forms, "past_pasv_part_impers", stem, "о")
+end
+
+
+local conjs = {}
+
+
+conjs["1a"] = function(base, lemma)
+	local stem = rmatch(lemma, "^(.*[аяі]́?)ти$")
+	if not stem then
+		error("Unrecognized lemma for class 1a: '" .. lemma .. "'")
+	end
+	add_present_e(base, stem, "a")
+	add_default_past(base, stem)
+	add_imperative(base, stem .. "й")
+	add_moving_ppp(base, stem .. "н")
+end
 
 
 local function add_categories(base)
