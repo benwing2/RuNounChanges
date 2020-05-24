@@ -231,9 +231,9 @@ function export.map_form_or_forms(forms, fn, first_only)
 		local retval = {}
 		for i, form in ipairs(forms) do
 			if first_only then
-				return map_form_or_forms(form, fn)
+				return export.map_form_or_forms(form, fn)
 			end
-			table.insert(retval, map_form_or_forms(form, fn))
+			table.insert(retval, export.map_form_or_forms(form, fn))
 		end
 		return retval
 	end

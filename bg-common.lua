@@ -3,6 +3,7 @@ local export = {}
 local lang = require("Module:languages").getByCode("bg")
 local m_links = require("Module:links")
 local m_table = require("Module:table")
+local iut = require("Module:inflection utilities")
 local m_bg_translit = require("Module:bg-translit")
 
 local u = mw.ustring.char
@@ -38,19 +39,6 @@ export.second_palatalization = {
 	["к"] = "ц",
 	["г"] = "з",
 	["х"] = "с",
-}
-
-
-local footnote_abbrevs = {
-	["a"] = "archaic",
-	["c"] = "colloquial",
-	["d"] = "dialectal",
-	["fp"] = "folk-poetic",
-	["l"] = "literary",
-	["lc"] = "low colloquial",
-	["p"] = "poetic",
-	["pej"] = "pejorative",
-	["r"] = "rare",
 }
 
 
@@ -140,7 +128,7 @@ function export.display_one_form(footnote_obj, formtable, slot, accel_lemma, slo
 			if form.footnotes then
 				local link_indices = {}
 				for _, footnote in ipairs(form.footnotes) do
-					footnote = export.expand_footnote(footnote)
+					footnote = iut.expand_footnote(footnote)
 					local this_noteindex = footnote_obj.seen_notes[footnote]
 					if not this_noteindex then
 						-- Generate a footnote index.

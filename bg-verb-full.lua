@@ -1,6 +1,6 @@
 local export = {}
 
-local com = require("Module:bg-common")
+local iut = require("Module:inflection utilities")
 
 --[=[
 
@@ -140,8 +140,8 @@ function export.conjugate_all_compound(base)
 			pref = {pref}
 		end
 		for _, p in ipairs(pref) do
-			com.insert_forms(forms, dest_slot,
-				com.map_forms(forms[source_slot], function(form) return concat(p, "[[" .. form .. "]]") end)
+			iut.insert_forms(forms, dest_slot,
+				iut.map_forms(forms[source_slot], function(form) return concat(p, "[[" .. form .. "]]") end)
 			)
 		end
 	end
@@ -151,8 +151,8 @@ function export.conjugate_all_compound(base)
 			suf = {suf}
 		end
 		for _, s in ipairs(suf) do
-			com.insert_forms(forms, dest_slot,
-				com.map_forms(forms[source_slot], function(form) return concat("[[" .. form .. "]]", s) end)
+			iut.insert_forms(forms, dest_slot,
+				iut.map_forms(forms[source_slot], function(form) return concat("[[" .. form .. "]]", s) end)
 			)
 		end
 	end

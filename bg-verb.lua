@@ -29,10 +29,10 @@ local lang = require("Module:languages").getByCode("bg")
 local m_links = require("Module:links")
 local m_table = require("Module:table")
 local m_string_utilities = require("Module:string utilities")
+local iut = require("Module:inflection utilities")
 local m_para = require("Module:parameters")
 local m_bg_translit = require("Module:bg-translit")
 local com = require("Module:bg-common")
-local cdcom = require("Module:conjdecl-common")
 
 local current_title = mw.title.getCurrentTitle()
 local NAMESPACE = current_title.nsText
@@ -209,12 +209,12 @@ end
 
 
 local function map_append(forms, suffix)
-	return cdcom.map_form_or_forms(forms, function(form) return form .. suffix end)
+	return iut.map_form_or_forms(forms, function(form) return form .. suffix end)
 end
 
 
 local function map_rsub(forms, from, to)
-	return cdcom.map_form_or_forms(forms, function(form) return rsub(form, from, to) end)
+	return iut.map_form_or_forms(forms, function(form) return rsub(form, from, to) end)
 end
 
 
@@ -232,7 +232,7 @@ local function conjugate_all(base)
 			return
 		end
 		if type(stems) == "string" then
-			cdcom.insert_form(base.forms, slot, {form = combine_stem_ending(stems, ending)})
+			iut.insert_form(base.forms, slot, {form = combine_stem_ending(stems, ending)})
 		else
 			if stems.form then
 				stems = {stems}
@@ -241,7 +241,7 @@ local function conjugate_all(base)
 				if type(stem) == "string" then
 					stem = {form = stem}
 				end
-				cdcom.insert_form(base.forms, slot, {form = combine_stem_ending(stem.form, ending), footnotes = stem.footnotes})
+				iut.insert_form(base.forms, slot, {form = combine_stem_ending(stem.form, ending), footnotes = stem.footnotes})
 			end
 		end
 	end
@@ -285,10 +285,10 @@ local function conjugate_all(base)
 		add("vn_def_sg", base.vn, "то")
 		-- Some verbal nouns are ending-stressed, but the plural in -ия pushes
 		-- the stress onto the stem.
-		add("vn_ind_pl", cdcom.map_form_or_forms(base.vn, function(form)
+		add("vn_ind_pl", iut.map_form_or_forms(base.vn, function(form)
 			return com.maybe_stress_final_syllable(rsub(form, "е́?$", ""))
 		end), "ия")
-		add("vn_def_pl", cdcom.map_form_or_forms(base.vn, function(form)
+		add("vn_def_pl", iut.map_form_or_forms(base.vn, function(form)
 			return com.maybe_stress_final_syllable(rsub(form, "е́?$", ""))
 		end), "ията")
 		add("vn_ind_pl", base.vn, "та")
@@ -313,7 +313,7 @@ end
 local function add_reflexive_suffix(base)
 	for _, slot in ipairs(verb_slots) do
 		if not rfind(slot, "^vn_") then
-			base.forms[slot] = cdcom.map_forms(base.forms[slot], function(form)
+			base.forms[slot] = iut.map_forms(base.forms[slot], function(form)
 				return form .. " " .. base.refl
 			end)
 		end
@@ -674,13 +674,13 @@ conjs["1.7"] = function(base, lemma)
 		base.ppp = base.aor23 .. "т"
 	elseif rfind(lemma, "[жчш]е́я$") then
 		base.aor23 = rsub(lemma, "е́я$", "а́")
-		base.ppp = cdcom.map_form_or_forms(ppp_endings, function(ending) return base.aor23 .. ending end)
+		base.ppp = iut.map_form_or_forms(ppp_endings, function(ending) return base.aor23 .. ending end)
 	elseif rfind(lemma, "е́я$") then
 		base.aor23 = rsub(lemma, "е́я$", "я́")
 		local yat_plural_stem = rsub(lemma, "е́я$", "е́")
 		base.paappl = yat_plural_stem .. "ли"
-		base.ppp = cdcom.map_form_or_forms(ppp_endings, function(ending) return base.aor23 .. ending end)
-		base.ppppl = cdcom.map_form_or_forms(ppp_endings, function(ending) return yat_plural_stem .. ending .. "и" end)
+		base.ppp = iut.map_form_or_forms(ppp_endings, function(ending) return base.aor23 .. ending end)
+		base.ppppl = iut.map_form_or_forms(ppp_endings, function(ending) return yat_plural_stem .. ending .. "и" end)
 	elseif rfind(lemma, "[аяиую]́я$") then
 		-- For verbs in -я́я (влия́я, сия́я), this results in an aorist participle
 		-- in -я́л, but per rechnik.chitanka.info it stays as -я́ли in the plural,
@@ -689,7 +689,7 @@ conjs["1.7"] = function(base, lemma)
 		if rfind(lemma, "[иую]́я$") then
 			base.ppp = base.aor23 .. "т"
 		else
-			base.ppp = cdcom.map_form_or_forms(ppp_endings, function(ending) return base.aor23 .. ending end)
+			base.ppp = iut.map_form_or_forms(ppp_endings, function(ending) return base.aor23 .. ending end)
 		end
 	else
 		error("Unrecognized lemma for class 1.7: '" .. lemma .. "'")
@@ -1034,10 +1034,10 @@ local function postprocess_base(base, lemma)
 		return form
 	end
 	if base.vna == nil then
-		base.vna = cdcom.map_form_or_forms(base.aor, aor_to_vn, "first only")
+		base.vna = iut.map_form_or_forms(base.aor, aor_to_vn, "first only")
 	end
 	if base.vni == nil then
-		base.vni = cdcom.map_form_or_forms(base.impf, impf_to_vn, "first only")
+		base.vni = iut.map_form_or_forms(base.impf, impf_to_vn, "first only")
 	end
 	if base.vna == false and base.vni == false then
 		base.vn = nil
@@ -1226,7 +1226,7 @@ end
 
 
 local function parse_word_spec(text)
-	local segments = cdcom.parse_balanced_segment_run(text, "<", ">")
+	local segments = iut.parse_balanced_segment_run(text, "<", ">")
 	if #segments ~= 3 or segments[3] ~= "" then
 		error("Verb spec must be of the form 'LEMMA<CONJ.SPECS>': '" .. text .. "'")
 	end

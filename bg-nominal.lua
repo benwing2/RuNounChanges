@@ -33,7 +33,9 @@ TERMINOLOGY:
 
 local lang = require("Module:languages").getByCode("bg")
 local m_table = require("Module:table")
+local m_links = require("Module:links")
 local m_string_utilities = require("Module:string utilities")
+local iut = require("Module:inflection utilities")
 local m_para = require("Module:parameters")
 local com = require("Module:bg-common")
 
@@ -259,7 +261,7 @@ end
 local function parse_noun_accent_spec(accent_run)
 	local retval = {accents = {}, plurals = {}}
 	local plurals = {}
-	local plural_groups = com.split_alternating_runs(accent_run, "%+")
+	local plural_groups = iut.split_alternating_runs(accent_run, "%+")
 	local double_plus = false
 	for i, plural_group in ipairs(plural_groups) do
 		if i > 1 and retval.is_adj then
@@ -372,7 +374,7 @@ end
 -- (including adjectival nouns) and `is_adj` should be true if the particular term we're
 -- declining is an adjective or adjectival noun.
 local function parse_form_spec(form_run, from_noun, is_adj)
-	local colon_separated_groups = com.split_alternating_runs(form_run, ":")
+	local colon_separated_groups = iut.split_alternating_runs(form_run, ":")
 	local form_name_group = colon_separated_groups[1]
 	if #form_name_group ~= 1 then
 		error("Bracketed footnotes not allowed after form name: '" .. table.concat(form_name_group) .. "'")
@@ -448,12 +450,12 @@ end
 local function parse_noun_accent_and_form_specs(angle_bracket_spec)
 	local inside = rmatch(angle_bracket_spec, "^<(.*)>$")
 	assert(inside)
-	local bracketed_runs = com.parse_balanced_segment_run(inside, "[", "]")
-	local comma_separated_groups = com.split_alternating_runs(bracketed_runs, ",")
+	local bracketed_runs = iut.parse_balanced_segment_run(inside, "[", "]")
+	local comma_separated_groups = iut.split_alternating_runs(bracketed_runs, ",")
 	local accent_and_form_specs = {}
 	for _, comma_separated_group in ipairs(comma_separated_groups) do
 		local accent_and_form_spec = {}
-		local slash_separated_groups = com.split_alternating_runs(comma_separated_group, "/")
+		local slash_separated_groups = iut.split_alternating_runs(comma_separated_group, "/")
 		accent_and_form_spec.accent_spec = parse_noun_accent_spec(slash_separated_groups[1])
 		for i, slash_separated_group in ipairs(slash_separated_groups) do
 			if i > 1 then
@@ -502,12 +504,12 @@ end
 local function parse_adj_accent_and_form_specs(angle_bracket_spec)
 	local inside = rmatch(angle_bracket_spec, "^<(.*)>$")
 	assert(inside)
-	local bracketed_runs = com.parse_balanced_segment_run(inside, "[", "]")
-	local comma_separated_groups = com.split_alternating_runs(bracketed_runs, ",")
+	local bracketed_runs = iut.parse_balanced_segment_run(inside, "[", "]")
+	local comma_separated_groups = iut.split_alternating_runs(bracketed_runs, ",")
 	local accent_and_form_specs = {}
 	for _, comma_separated_group in ipairs(comma_separated_groups) do
 		local accent_and_form_spec = {}
-		local slash_separated_groups = com.split_alternating_runs(comma_separated_group, "/")
+		local slash_separated_groups = iut.split_alternating_runs(comma_separated_group, "/")
 		accent_and_form_spec.accent_spec = parse_adj_accent_spec(slash_separated_groups[1])
 		for i, slash_separated_group in ipairs(slash_separated_groups) do
 			if i > 1 then
@@ -576,8 +578,8 @@ local function parse_multiword_spec(segments, is_adj)
 	}
 	for i = 2, #segments - 1, 2 do
 		local word_spec = {}
-		local bracketed_runs = com.parse_balanced_segment_run(segments[i - 1], "[", "]")
-		local space_separated_groups = com.split_alternating_runs(bracketed_runs, "[ %-]", "preserve splitchar")
+		local bracketed_runs = iut.parse_balanced_segment_run(segments[i - 1], "[", "]")
+		local space_separated_groups = iut.split_alternating_runs(bracketed_runs, "[ %-]", "preserve splitchar")
 		local before_text = {}
 		for j, space_separated_group in ipairs(space_separated_groups) do
 			if j == #space_separated_groups then
@@ -609,8 +611,8 @@ end
 local function parse_alternant(alternant, is_adj)
 	local parsed_alternants = {}
 	local alternant_text = rmatch(alternant, "^%(%((.*)%)%)$")
-	local segments = com.parse_balanced_segment_run(alternant_text, "<", ">")
-	local comma_separated_groups = com.split_alternating_runs(segments, ",")
+	local segments = iut.parse_balanced_segment_run(alternant_text, "<", ">")
+	local comma_separated_groups = iut.split_alternating_runs(segments, ",")
 	local alternant_spec = {alternants = {}}
 	for _, comma_separated_group in ipairs(comma_separated_groups) do
 		table.insert(alternant_spec.alternants, parse_multiword_spec(comma_separated_group, is_adj))
@@ -640,7 +642,7 @@ local function parse_alternant_multiword_spec(text, is_adj)
 	local last_post_text
 	for i = 1, #alternant_segments do
 		if i % 2 == 1 then
-			local segments = com.parse_balanced_segment_run(alternant_segments[i], "<", ">")
+			local segments = iut.parse_balanced_segment_run(alternant_segments[i], "<", ">")
 			local multiword_spec = parse_multiword_spec(segments, is_adj)
 			for _, word_spec in ipairs(multiword_spec.word_specs) do
 				table.insert(alternant_multiword_spec.alternant_or_word_specs, word_spec)
@@ -1332,24 +1334,24 @@ end
 local function generate_indefinite_adj_forms(formtable, accent_spec, accent, active_slots)
 	local stem = accent_spec.stem
 	local accent = accent == "b" and AC or ""
-	com.insert_form(formtable, "ind_f_sg",
+	iut.insert_form(formtable, "ind_f_sg",
 		{form=combine_stem_and_ending(stem, (accent_spec.soft_sign and "я" or "а") .. accent, accent_spec, "is adj")})
 	if accent_spec.ch then
-		com.insert_form(formtable, "ind_n_sg",
+		iut.insert_form(formtable, "ind_n_sg",
 			{form=combine_stem_and_ending(stem, "е" .. accent, accent_spec, "is adj")})
-		com.insert_form(formtable, "ind_n_sg",
+		iut.insert_form(formtable, "ind_n_sg",
 			{form=combine_stem_and_ending(stem, "о" .. accent, accent_spec, "is adj")})
 	else
-		com.insert_form(formtable, "ind_n_sg",
+		iut.insert_form(formtable, "ind_n_sg",
 			{form=combine_stem_and_ending(stem,
 				((accent_spec.che or accent_spec.soft_sign_i) and "е" or accent_spec.soft_sign and "ьо" or "о") .. accent,
 				accent_spec, "is adj")})
 	end
 	local ind_pl = combine_stem_and_ending(stem, "и" .. accent, accent_spec, "is adj")
-	com.insert_form(formtable, "ind_pl", {form=ind_pl})
+	iut.insert_form(formtable, "ind_pl", {form=ind_pl})
 	if active_slots.voc_m_sg then
-		com.insert_form(formtable, "voc_m_sg", {form=ind_pl})
-		com.insert_form(formtable, "voc_m_sg", {form=ind_pl .. "й"})
+		iut.insert_form(formtable, "voc_m_sg", {form=ind_pl})
+		iut.insert_form(formtable, "voc_m_sg", {form=ind_pl .. "й"})
 	end
 end
 
@@ -1357,22 +1359,22 @@ end
 -- Construct the definite adjective forms based on the indefinite ones.
 local function generate_definite_adj_forms(formtable, include_definite)
 	if include_definite then
-		com.insert_forms(formtable, "def_sub_m_sg", map_forms(formtable["ind_pl"],
+		iut.insert_forms(formtable, "def_sub_m_sg", iut.map_forms(formtable["ind_pl"],
 			function(form) return form .. "ят" end))
-		com.insert_forms(formtable, "def_obj_m_sg", map_forms(formtable["ind_pl"],
+		iut.insert_forms(formtable, "def_obj_m_sg", iut.map_forms(formtable["ind_pl"],
 			function(form) return form .. "я" end))
-		com.insert_forms(formtable, "def_f_sg", map_forms(formtable["ind_f_sg"],
+		iut.insert_forms(formtable, "def_f_sg", iut.map_forms(formtable["ind_f_sg"],
 			function(form) return form .. "та" end))
-		com.insert_forms(formtable, "def_n_sg", map_forms(formtable["ind_n_sg"],
+		iut.insert_forms(formtable, "def_n_sg", iut.map_forms(formtable["ind_n_sg"],
 			function(form) return form .. "то" end))
-		com.insert_forms(formtable, "def_pl", map_forms(formtable["ind_pl"],
+		iut.insert_forms(formtable, "def_pl", iut.map_forms(formtable["ind_pl"],
 			function(form) return form .. "те" end))
 	else
-		com.insert_forms(formtable, "def_sub_m_sg", formtable["ind_m_sg"])
-		com.insert_forms(formtable, "def_obj_m_sg", formtable["ind_m_sg"])
-		com.insert_forms(formtable, "def_f_sg", formtable["ind_f_sg"])
-		com.insert_forms(formtable, "def_n_sg", formtable["ind_n_sg"])
-		com.insert_forms(formtable, "def_pl", formtable["ind_pl"])
+		iut.insert_forms(formtable, "def_sub_m_sg", formtable["ind_m_sg"])
+		iut.insert_forms(formtable, "def_obj_m_sg", formtable["ind_m_sg"])
+		iut.insert_forms(formtable, "def_f_sg", formtable["ind_f_sg"])
+		iut.insert_forms(formtable, "def_n_sg", formtable["ind_n_sg"])
+		iut.insert_forms(formtable, "def_pl", formtable["ind_pl"])
 	end
 end
 
@@ -1404,12 +1406,12 @@ local function handle_overriding_forms(lemma, stem, forms, overriding_forms)
 					error("'/" .. forms .. "+' not supported, no default value")
 				end
 				for _, f in ipairs(forms) do
-					com.insert_form_into_list(retforms, {form=f.form, footnotes=overriding_spec.footnotes})
+					iut.insert_form_into_list(retforms, {form=f.form, footnotes=overriding_spec.footnotes})
 				end
 			else
 				form = rsub(form, "~~", stem)
 				form = rsub(form, "~", lemma)
-				com.insert_form_into_list(retforms, {form=form, footnotes=overriding_spec.footnotes})
+				iut.insert_form_into_list(retforms, {form=form, footnotes=overriding_spec.footnotes})
 			end
 		end
 		return retforms
@@ -1446,7 +1448,7 @@ local function decline_one_adj(word_spec, accent_and_form_spec, active_slots, ac
 				end
 				for _, to_form in ipairs(to_forms) do
 					if active_noun_slots[to_form] then
-						com.insert_forms(noun_formtable, to_form, formtable[from_form])
+						iut.insert_forms(noun_formtable, to_form, formtable[from_form])
 					end
 				end
 			end
@@ -1462,24 +1464,24 @@ local function decline_one_adj(word_spec, accent_and_form_spec, active_slots, ac
 			copy_forms(pl_adj_to_noun_slots)
 		end
 		for slot, _ in pairs(noun_slots) do
-			com.insert_forms(word_spec.forms, slot, handle_overriding_forms(lemma, stem, noun_formtable[slot],
+			iut.insert_forms(word_spec.forms, slot, handle_overriding_forms(lemma, stem, noun_formtable[slot],
 				accent_and_form_spec[slot]))
 		end
 	else
 		for slot, _ in pairs(adj_slots) do
 			local forms = handle_overriding_forms(lemma, stem, formtable[slot], accent_and_form_spec[slot])
-			com.insert_forms(word_spec.forms, slot, forms)
+			iut.insert_forms(word_spec.forms, slot, forms)
 			if active_slots.comp and not accent_spec.nocomp then
 				if not word_spec.compforms then
 					word_spec.compforms = {}
 				end
-				com.insert_forms(word_spec.compforms, slot,
-					map_forms(forms, function(form) return "по́-" .. form end))
+				iut.insert_forms(word_spec.compforms, slot,
+					iut.map_forms(forms, function(form) return "по́-" .. form end))
 				if not word_spec.supforms then
 					word_spec.supforms = {}
 				end
-				com.insert_forms(word_spec.supforms, slot,
-					map_forms(forms, function(form) return "на́й-" .. form end))
+				iut.insert_forms(word_spec.supforms, slot,
+					iut.map_forms(forms, function(form) return "на́й-" .. form end))
 			end
 		end
 	end
@@ -1514,15 +1516,15 @@ local function decline_one_noun(word_spec, accent_and_form_spec, active_slots, i
 		-- Maybe set indefinite plural.
 		local indefinite_plurals = {{form=lemma}}
 		if active_slots.ind_pl then
-			com.insert_forms(word_spec.forms, "ind_pl",
+			iut.insert_forms(word_spec.forms, "ind_pl",
 				handle_overriding_forms(lemma, stem, indefinite_plurals, accent_and_form_spec.ind_pl))
 		end
 
 		-- Maybe set definite plural.
 		if active_slots.def_pl then
-			com.insert_forms(word_spec.forms, "def_pl",
+			iut.insert_forms(word_spec.forms, "def_pl",
 				handle_overriding_forms(lemma, stem,
-					include_definite and map_forms(indefinite_plurals, generate_noun_definite_plural) or indefinite_plurals,
+					include_definite and iut.map_forms(indefinite_plurals, generate_noun_definite_plural) or indefinite_plurals,
 					accent_and_form_spec.def_pl))
 		end
 
@@ -1530,7 +1532,7 @@ local function decline_one_noun(word_spec, accent_and_form_spec, active_slots, i
 		for _, case in ipairs(extra_noun_cases) do
 			local pl_slot = case .. "_pl"
 			if active_slots[pl_slot] then
-				com.insert_forms(word_spec.forms, pl_slot, handle_overriding_forms(lemma, stem, indefinite_plurals, accent_and_form_spec[pl_slot]))
+				iut.insert_forms(word_spec.forms, pl_slot, handle_overriding_forms(lemma, stem, indefinite_plurals, accent_and_form_spec[pl_slot]))
 			end
 		end
 	else
@@ -1543,7 +1545,7 @@ local function decline_one_noun(word_spec, accent_and_form_spec, active_slots, i
 		local indefinite_plurals = {}
 		for _, plspec in ipairs(accent_spec.plurals) do
 			for _, accent in ipairs(accent_spec.accents) do
-				com.insert_form_into_list(indefinite_plurals,
+				iut.insert_form_into_list(indefinite_plurals,
 					{form=generate_noun_plural(word_spec, accent_spec, plspec, accent), footnotes=plspec.footnotes}
 				)
 			end
@@ -1552,7 +1554,7 @@ local function decline_one_noun(word_spec, accent_and_form_spec, active_slots, i
 
 		-- Maybe set indefinite singular.
 		if active_slots.ind_sg then
-			com.insert_forms(word_spec.forms, "ind_sg",
+			iut.insert_forms(word_spec.forms, "ind_sg",
 				handle_overriding_forms(lemma, stem, indefinite_singulars, accent_and_form_spec.ind))
 		end
 
@@ -1562,7 +1564,7 @@ local function decline_one_noun(word_spec, accent_and_form_spec, active_slots, i
 			if include_definite then
 				definite_singulars = {}
 				for _, accent in ipairs(accent_spec.accents) do
-					com.insert_form_into_list(definite_singulars,
+					iut.insert_form_into_list(definite_singulars,
 						{form=generate_noun_definite_singular(word_spec, accent_spec, accent)}
 					)
 				end
@@ -1571,13 +1573,13 @@ local function decline_one_noun(word_spec, accent_and_form_spec, active_slots, i
 			end
 			definite_singulars = handle_overriding_forms(lemma, stem, definite_singulars, accent_and_form_spec.def)
 			if active_slots.def_sub_sg then
-				com.insert_forms(word_spec.forms, "def_sub_sg",
+				iut.insert_forms(word_spec.forms, "def_sub_sg",
 					handle_overriding_forms(lemma, stem, definite_singulars, accent_and_form_spec.def_sub))
 			end
 			if active_slots.def_obj_sg then
-				com.insert_forms(word_spec.forms, "def_obj_sg",
+				iut.insert_forms(word_spec.forms, "def_obj_sg",
 					handle_overriding_forms(lemma, stem,
-						include_definite and map_forms(definite_singulars, generate_noun_definite_objective_singular) or
+						include_definite and iut.map_forms(definite_singulars, generate_noun_definite_objective_singular) or
 						definite_singulars,
 						accent_and_form_spec.def_obj))
 			end
@@ -1585,15 +1587,15 @@ local function decline_one_noun(word_spec, accent_and_form_spec, active_slots, i
 
 		-- Maybe set indefinite plural.
 		if active_slots.ind_pl then
-			com.insert_forms(word_spec.forms, "ind_pl",
+			iut.insert_forms(word_spec.forms, "ind_pl",
 				handle_overriding_forms(lemma, stem, indefinite_plurals, accent_and_form_spec.ind_pl))
 		end
 
 		-- Maybe set definite plural.
 		if active_slots.def_pl then
-			com.insert_forms(word_spec.forms, "def_pl",
+			iut.insert_forms(word_spec.forms, "def_pl",
 				handle_overriding_forms(lemma, stem,
-					include_definite and map_forms(indefinite_plurals, generate_noun_definite_plural) or
+					include_definite and iut.map_forms(indefinite_plurals, generate_noun_definite_plural) or
 					indefinite_plurals,
 					accent_and_form_spec.def_pl))
 		end
@@ -1601,31 +1603,31 @@ local function decline_one_noun(word_spec, accent_and_form_spec, active_slots, i
 		-- Maybe set count.
 		if active_slots.count then
 			local count_forms = {}
-			com.insert_form_into_list(count_forms, {form=generate_noun_count_form(word_spec, accent_spec)})
-			com.insert_forms(word_spec.forms, "count", handle_overriding_forms(lemma, stem, count_forms, accent_and_form_spec.count))
+			iut.insert_form_into_list(count_forms, {form=generate_noun_count_form(word_spec, accent_spec)})
+			iut.insert_forms(word_spec.forms, "count", handle_overriding_forms(lemma, stem, count_forms, accent_and_form_spec.count))
 		end
 
 		-- Maybe set vocative singular.
 		if active_slots.voc_sg then
 			local vocatives = {}
-			com.insert_form_into_list(vocatives, {form=generate_noun_vocative(word_spec, accent_spec)})
-			com.insert_forms(word_spec.forms, "voc_sg", handle_overriding_forms(lemma, stem, vocatives, accent_and_form_spec.voc))
+			iut.insert_form_into_list(vocatives, {form=generate_noun_vocative(word_spec, accent_spec)})
+			iut.insert_forms(word_spec.forms, "voc_sg", handle_overriding_forms(lemma, stem, vocatives, accent_and_form_spec.voc))
 		end
 
 		-- Maybe set vocative plural.
 		if active_slots.voc_pl then
-			com.insert_forms(word_spec.forms, "voc_pl", handle_overriding_forms(lemma, stem, indefinite_plurals, accent_and_form_spec.voc_pl))
+			iut.insert_forms(word_spec.forms, "voc_pl", handle_overriding_forms(lemma, stem, indefinite_plurals, accent_and_form_spec.voc_pl))
 		end
 
 		-- Maybe set "extra cases".
 		for _, case in ipairs(extra_noun_cases) do
 			local sg_slot = case .. "_sg"
 			if active_slots[sg_slot] then
-				com.insert_forms(word_spec.forms, sg_slot, handle_overriding_forms(lemma, stem, indefinite_singulars, accent_and_form_spec[case]))
+				iut.insert_forms(word_spec.forms, sg_slot, handle_overriding_forms(lemma, stem, indefinite_singulars, accent_and_form_spec[case]))
 			end
 			local pl_slot = case .. "_pl"
 			if active_slots[pl_slot] then
-				com.insert_forms(word_spec.forms, pl_slot, handle_overriding_forms(lemma, stem, indefinite_plurals, accent_and_form_spec[pl_slot]))
+				iut.insert_forms(word_spec.forms, pl_slot, handle_overriding_forms(lemma, stem, indefinite_plurals, accent_and_form_spec[pl_slot]))
 			end
 		end
 	end
@@ -1667,10 +1669,10 @@ local function decline_alternants(alternant_spec, active_slots, is_adj, include_
 		include_definite_at_end = decline_multiword_or_alternant_multiword_spec(
 			multiword_spec, active_slots, is_adj, include_definite)
 		for slot, _ in pairs(active_slots) do
-			com.insert_forms(alternant_spec.forms, slot, multiword_spec.forms[slot])
+			iut.insert_forms(alternant_spec.forms, slot, multiword_spec.forms[slot])
 			if is_adj and active_slots.comp then
-				com.insert_forms(alternant_spec.compforms, slot, multiword_spec.compforms[slot])
-				com.insert_forms(alternant_spec.supforms, slot, multiword_spec.supforms[slot])
+				iut.insert_forms(alternant_spec.compforms, slot, multiword_spec.compforms[slot])
+				iut.insert_forms(alternant_spec.supforms, slot, multiword_spec.supforms[slot])
 			end
 		end
 	end
@@ -1817,14 +1819,14 @@ local function show_forms(alternant_multiword_spec, is_adj)
 
 	if is_adj then
 		local slot_to_accel_form = get_slot_to_accel_form(false)
-		com.set_forms(footnote_obj, alternant_multiword_spec.forms, alternant_multiword_spec.forms,
+		com.display_forms(footnote_obj, alternant_multiword_spec.forms, alternant_multiword_spec.forms,
 			adj_slots, false, accel_lemma, slot_to_accel_form)
 		if alternant_multiword_spec.compforms then
-			com.set_forms(alternant_multiword_spec.compforms, alternant_multiword_spec.compforms,
+			com.display_forms(footnote_obj, alternant_multiword_spec.compforms, alternant_multiword_spec.compforms,
 				adj_slots, false, accel_lemma, slot_to_accel_form)
 		end
 		if alternant_multiword_spec.supforms then
-			com.set_forms(alternant_multiword_spec.supforms, alternant_multiword_spec.supforms,
+			com.display_forms(footnote_obj, alternant_multiword_spec.supforms, alternant_multiword_spec.supforms,
 				adj_slots, false, accel_lemma, slot_to_accel_form)
 		end
 	else
@@ -1832,11 +1834,11 @@ local function show_forms(alternant_multiword_spec, is_adj)
 		-- compare them properly; linked forms have accelerator info in them which differs
 		-- between sub and obj.
 		local raw_forms = {}
-		com.set_forms(alternant_multiword_spec.forms, raw_forms, {"def_sub_sg", "def_obj_sg"},
+		com.display_forms(footnote_obj, alternant_multiword_spec.forms, raw_forms, {"def_sub_sg", "def_obj_sg"},
 			"is list", accel_lemma, get_slot_to_accel_form(true), "raw")
 		-- Then generate the linked forms, using a special accelerator form if the def_sub_sg and def_obj_sg are the same.
 		alternant_multiword_spec.combined_def_sg = raw_forms.def_sub_sg == raw_forms.def_obj_sg
-		com.set_forms(alternant_multiword_spec.forms, alternant_multiword_spec.forms, noun_slots,
+		com.display_forms(footnote_obj, alternant_multiword_spec.forms, alternant_multiword_spec.forms, noun_slots,
 			false, accel_lemma, get_slot_to_accel_form(alternant_multiword_spec.combined_def_sg))
 	end
 	if alternant_multiword_spec.footnote then
