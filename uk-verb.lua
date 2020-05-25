@@ -160,6 +160,11 @@ local function combine_stem_ending(stem, ending)
 end
 
 
+local function is_vocalic(stem)
+	return rfind(stem, com.vowel_c .. AC .. "?$")
+end
+
+
 local function convert_to_general_form(word_or_words)
 	if type(word_or_words) == "string" then
 		return {{form = word_or_words}}
@@ -230,8 +235,8 @@ local function add_imperative(base, sg2)
 		local acvowel = (vowel == "и" and "і" or "ї") .. ac
 		add(base.forms, "impr_1pl", stem, {acvowel .. "м", acvowel .. "мо"})
 		add(base.forms, "impr_2pl", stem, {acvowel .. "ть"})
-	elseif rfind(sg2, com.vowel_c .. AC .. "?$") then
-		error("Invalid 2sg imperative, ends in vowel other than -и: '" .. sg2 .. "'")
+	elseif is_vocalic(sg2) then
+		error("Invalid 2sg imperative, ends in vowel other than -и or -ї: '" .. sg2 .. "'")
 	else
 		add(base.forms, "impr_1pl", sg2, "мо")
 		add(base.forms, "impr_2pl", sg2, "те")
@@ -253,7 +258,7 @@ local function add_imperative_from_present(base, presstem, accent)
 		end
 	end
 	local sg2
-	if rfind(presstem, com.vowel_c .. AC .. "?$") then
+	if is_vocalic(presstem) then
 		-- If the stem ends in a vowel, then regardless of imptype, stress the final
 		-- syllable if needed and add й, effectively using the short type.
 		sg2 = com.maybe_stress_final_syllable(presstem) .. "й"
@@ -307,9 +312,18 @@ local function stress_present_endings_per_accent(endings, accent)
 end
 
 
-local function add_present_e(base, stem, accent, use_y_endings, no_add_imp)
+local function add_present_e(base, stem, accent, use_y_endings, overriding_imp, no_override_stem)
+	if not no_override_stem then
+		stem = base.pres_stems or stem
+	end
+	if type(stem) == "table" then
+		for _, st in ipairs(stems) do
+			add_present_e(base, st, accent, use_y_endings, overriding_imp, true)
+		end
+		return
+	end
 	local endings
-	if use_y_endings == "all" or rfind(stem, com.vowel_c .. AC .. "?$") then
+	if use_y_endings == "all" or is_vocalic(stem) then
 		endings = {"ю", "єш", base.is_refl and "єть" or "є", {"єм", "ємо"}, "єте", "ють"}
 	elseif use_y_endings == "1sg3pl" and not rfind(stem, com.hushing_c .. "$") then
 		endings = {"ю", "еш", base.is_refl and "еть" or "е", {"ем", "емо"}, "ете", "ють"}
@@ -318,16 +332,29 @@ local function add_present_e(base, stem, accent, use_y_endings, no_add_imp)
 	end
 	endings = stress_present_endings_per_accent(endings, accent)
 	add_pres_futr(base, stem, unpack(endings))
-	if not no_add_imp then
+	if overriding_imp == false then
+		-- do nothing
+	elseif overriding_imp then
+		add_imperative(base, overriding_imp)
+	else
 		add_imperative_from_present(base, stem, accent)
 	end
 end
 
 
-local function add_present_i(base, stem, accent, no_add_imp)
+local function add_present_i(base, stem, accent, overriding_imp, no_override_stem)
+	if not no_override_stem then
+		stem = base.pres_stems or stem
+	end
+	if type(stem) == "table" then
+		for _, st in ipairs(stems) do
+			add_present_e(base, st, accent, no_add_imp, true)
+		end
+		return
+	end
 	local endings
 	local iotated_type, iotated_stem
-	if rfind(stem, com.vowel_c .. AC .. "?$") then
+	if is_vocalic(stem) then
 		endings = {"ю", "їш", "їть", {"їм", "їмо"}, "їте", "ять"}
 		iotated_type = "none"
 	else
@@ -353,7 +380,11 @@ local function add_present_i(base, stem, accent, no_add_imp)
 		add_pres_futr(base, iotated_stem, s1, {}, {}, {}, {}, p3)
 		add_pres_futr(base, stem, {}, s2, s3, p1, p2, {})
 	end
-	if not no_add_imp then
+	if overriding_imp == false then
+		-- do nothing
+	elseif overriding_imp then
+		add_imperative(base, overriding_imp)
+	else
 		add_imperative_from_present(base, stem, accent)
 	end
 end
@@ -374,7 +405,7 @@ end
 
 
 local function add_ppp(base, stem)
-	if base.is_refl or base.no_ppp or base.trans ~= "tr" then
+	if base.is_refl or not base.ppp or base.trans ~= "tr" then
 		return
 	end
 	add(base.forms, "past_pasv_part", stem, "ий")
@@ -442,28 +473,74 @@ end
 
 
 conjs["4"] = function(base, lemma, accent)
-	local stem, suffix = rmatch(lemma, "^(.*)([иї]́?)ти$")
+	local stem, suffix, ac = rmatch(lemma, "^(.*)([иї])(" .. AC .. "?)ти$")
 	if not stem then
 		error("Unrecognized lemma for class 4: '" .. lemma .. "'")
 	end
-	if (accent == "b" or accent == "c") and not com.is_stressed(suffix) then
+	if (accent == "b" or accent == "c") and ac ~= AC then
 		error("For class 4b or 4c, lemma must be end-stressed: '" .. lemma .. "'")
 	end
-	if accent == "a" and com.is_stressed(suffix) then
+	if accent == "a" and ac == AC then
 		error("For class 4a, lemma must be stem-stressed: '" .. lemma .. "'")
 	end
-	local stem_is_vocalic = rfind(stem, com.vowel_c .. AC .. "?$")
-	if rfind(suffix, "^ї") and not stem_is_vocalic then
+	local stem_is_vocalic = is_vocalic(stem)
+	if suffix == "ї" and not stem_is_vocalic then
 		error("Ending -їти can only be used with a vocalic stem: '" .. lemma .. "'")
+	elseif suffix ~= "ї" and stem_is_vocalic then
+		error("Ending -їти must be used with a vocalic stem: '" .. lemma .. "'")
 	end
 	local stressed_stem = com.maybe_stress_final_syllable(stem)
-	add_present_i(base, stressed_stem, accent)
-	add_default_past(base, stem .. suffix)
+	local sg2
+	if base.i then
+		if not rfind(stem, "о́?$") then
+			error("і-modifier can only be used with stem ending in -о: '" .. lemma .. "'")
+		end
+		sg2 = com.maybe_stress_final_syllable(rsub(stem, "о(" .. AC .. "?)$", "і%1й"))
+	elseif suffix == "ї" then
+		if accent == "a" then -- ви́труїти, impv ви́труї; default would be ви́труй
+			sg2 = stem .. "ї"
+		else
+			sg2 = stem .. "ї́" -- труї́ти, impv труї́; default would be тру́й
+		end
+	end
+	add_present_i(base, stressed_stem, accent, sg2)
+	add_default_past(base, stem .. suffix .. ac)
 	if accent == "b" then
 		add_ppp(base, com.iotate(stem) .. (stem_is_vocalic and "є́н" or "е́н"))
 	else
 		add_ppp(base, com.iotate(stressed_stem) .. (stem_is_vocalic and "єн" or "ен"))
 	end
+end
+
+
+conjs["5"] = function(base, lemma, accent)
+	local stem, suffix, ac = rmatch(lemma, "^(.*)([іая])(" .. AC .. "?)ти$")
+	if not stem then
+		error("Unrecognized lemma for class 5: '" .. lemma .. "'")
+	end
+	if (accent == "b" or accent == "c") and ac ~= AC then
+		error("For class 5b or 5c, lemma must be end-stressed: '" .. lemma .. "'")
+	end
+	if accent == "a" and ac == AC then
+		error("For class 5a, lemma must be stem-stressed: '" .. lemma .. "'")
+	end
+	local stem_is_vocalic = is_vocalic(stem)
+	if suffix == "я" and not stem_is_vocalic then
+		error("Ending -яти can only be used with a vocalic stem: '" .. lemma .. "'")
+	elseif suffix ~= "я" and stem_is_vocalic then
+		error("Ending -яти must be used with a vocalic stem: '" .. lemma .. "'")
+	end
+	local stressed_stem = com.maybe_stress_final_syllable(stem)
+	local sg2
+	if base.i then
+		if not rfind(stem, "о́?$") then
+			error("і-modifier can only be used with stem ending in -о: '" .. lemma .. "'")
+		end
+		sg2 = com.maybe_stress_final_syllable(rsub(stem, "о(" .. AC .. "?)$", "і%1й"))
+	end
+	add_present_i(base, stressed_stem, accent, sg2)
+	add_default_past(base, stem .. suffix .. ac)
+	add_moving_ppp(base, (suffix == "і" and com.iotate(stem) .. "е" or stem .. suffix) .. ac .. "н")
 end
 
 
@@ -518,40 +595,34 @@ local function parse_indicator_and_form_spec(angle_bracket_spec)
 				error("Can't specify transitivity twice: " .. inside .. "'")
 			end
 			base.trans = part
-		elseif part == "-ppp" then
-			if base.no_ppp then
-				error("Can't specify '-ppp' twice: " .. inside .. "'")
+		elseif part == "ppp" or part == "-ppp" then
+			if base.ppp ~= nil then
+				error("Can't specify past passive participle indicator twice: " .. inside .. "'")
 			end
-			base.no_ppp = true
+			base.ppp = part == "ppp"
 		elseif part == "impers" then
 			if base.impers then
 				error("Can't specify 'impers' twice: " .. inside .. "'")
 			end
 			base.impers = true
-		elseif part == "с" or part == "д" or part == "т" or part == "ст" or part == "в" then
-			if not rfind(conj, "^7") then
-				error("Specification '" .. part .. "' can only be specified for class 7")
+		elseif part == "longimp" or part == "shortimp" then
+			if base.imptype then
+				error("Can't specify imperative type twice: " .. inside .. "'")
 			end
+			base.imptype = part
+		elseif part == "с" or part == "д" or part == "т" or part == "ст" or part == "в" or part == "н" then
 			if base.cons then
-				error("Can't specify class-7 consonant twice: " .. inside .. "'")
+				error("Can't specify consonant modifier twice: " .. inside .. "'")
 			end
 			base.cons = part
-		elseif part == "м" or part == "н" then
-			if not rfind(conj, "^14") then
-				error("Specification '" .. part .. "' can only be specified for class 14")
+		elseif part == "і" or part == "-і" then -- Cyrillic і
+			if base.i ~= nil then
+				error("Can't specify і-modifier twice: " .. inside .. "'")
 			end
-			if base.cons then
-				error("Can't specify class-14 consonant twice: " .. inside .. "'")
-			end
-			base.cons = part
-		elseif part == "-і" then
-			if not rfind(conj, "^7") then
-				error("Specification '-і' can only be specified for class 7")
-			end
-			if base.no_i then
-				error("Can't specify '-і' twice: " .. inside .. "'")
-			end
-			base.no_i = true
+			base.i = part == "і" -- Latin i in base.i
+		elseif rfind(part, "^pres:") then
+			part = rsub(part, "^pres:", "")
+			base.pres_stems = rsplit(part, ":", true)
 		else
 			error("Unrecognized indicator '" .. part .. "': '" .. inside .. "'")
 		end
@@ -594,10 +665,30 @@ local function detect_indicator_and_form_spec(base, lemma)
 	elseif not base.trans then
 		error("Transitivity of 'tr' or 'intr' must be specified")
 	end
-	if base.no_ppp then
+	if base.ppp ~= nil then
 		if base.trans ~= "tr" then
-			error("Can only specify '-ppp' with transitive verbs")
+			error("Can only specify 'ppp' or '-ppp' with transitive verbs")
 		end
+	elseif base.trans == "tr" then
+		error("Must specify 'ppp' or '-ppp' with transitive verbs")
+	end
+	if base.cons then
+		if base.conjnum == "3" and rfind(base.cons, "^[тн]$") then
+			-- ok
+		elseif base.conjnum == "7" and (rfind(base.cons, "^[сдтв]$") or base.conj == "ст") then
+			-- ok
+		else
+			error("Consonant modifier '" .. base.cons .. "' can't be specified with class " .. base.conjnum)
+		end
+	end
+	if base.i ~= nil then
+		if rfind(base.conjnum, "^[4578]$") then
+			-- ok
+		else
+			error("і-modifier can't be specified with class " .. base.conjnum)
+		end
+	elseif base.conjnum == "7" or base.conjnum == "8" then
+		base.i = true
 	end
 end
 
