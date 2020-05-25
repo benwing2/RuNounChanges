@@ -152,6 +152,8 @@ end
 local function combine_stem_ending(stem, ending)
 	if stem == "?" then
 		return "?"
+	elseif com.is_stressed(ending) then
+		return com.remove_stress(stem) .. ending
 	else
 		return stem .. ending
 	end
@@ -220,6 +222,56 @@ local function add(forms, slot, stems, endings)
 end
 
 
+local function add_imperative(base, sg2)
+	add(base.forms, "impr_2sg", sg2, "")
+	-- "Long" imperatives end in -и or occasionally -ї (e.g. труї́ from труї́ти, ви́труї from ви́труїти)
+	local stem, vowel, ac = rmatch(sg2, "^(.-)([иї])(" .. AC .. "?)$")
+	if stem then
+		local acvowel = (vowel == "и" and "і" or "ї") .. ac
+		add(base.forms, "impr_1pl", stem, {acvowel .. "м", acvowel .. "мо"})
+		add(base.forms, "impr_2pl", stem, {acvowel .. "ть"})
+	elseif rfind(sg2, com.vowel_c .. AC .. "?$") then
+		error("Invalid 2sg imperative, ends in vowel other than -и: '" .. sg2 .. "'")
+	else
+		add(base.forms, "impr_1pl", sg2, "мо")
+		add(base.forms, "impr_2pl", sg2, "те")
+	end
+end
+
+
+local function add_imperative_from_present(base, presstem, accent)
+	local imptype = base.imptype
+	if not base.imptype then
+		if accent == "b" or accent == "c" then
+			imptype = "long"
+		elseif rfind(presstem, "^ви") then
+			imptype = "long"
+		elseif rfind(presstem, com.cons_c .. "[лр]$") then
+			imptype = "long"
+		else
+			imptype = "short"
+		end
+	end
+	local sg2
+	if rfind(presstem, com.vowel_c .. AC .. "?$") then
+		-- If the stem ends in a vowel, then regardless of imptype, stress the final
+		-- syllable if needed and add й, effectively using the short type.
+		sg2 = com.maybe_stress_final_syllable(presstem) .. "й"
+	elseif imptype == "long" then
+		if accent == "a" then
+			sg2 = presstem .. "и"
+		else
+			sg2 = com.remove_stress(presstem) .. "и́"
+		end
+	elseif rfind(presstem, "[дтсзлн]$") then
+		sg2 = com.maybe_stress_final_syllable(presstem) .. "ь"
+	else
+		sg2 = com.maybe_stress_final_syllable(presstem)
+	end
+	add_imperative(base, sg2)
+end
+
+
 local function add_pres_futr(base, stem, sg1, sg2, sg3, pl1, pl2, pl3)
 	add(base.forms, "pres_futr_1sg", stem, sg1)
 	add(base.forms, "pres_futr_2sg", stem, sg2)
@@ -255,7 +307,7 @@ local function stress_present_endings_per_accent(endings, accent)
 end
 
 
-local function add_present_e(base, stem, accent, use_y_endings)
+local function add_present_e(base, stem, accent, use_y_endings, no_add_imp)
 	local endings
 	if use_y_endings == "all" or rfind(stem, com.vowel_c .. AC .. "?$") then
 		endings = {"ю", "єш", base.is_refl and "єть" or "є", {"єм", "ємо"}, "єте", "ють"}
@@ -266,17 +318,20 @@ local function add_present_e(base, stem, accent, use_y_endings)
 	end
 	endings = stress_present_endings_per_accent(endings, accent)
 	add_pres_futr(base, stem, unpack(endings))
+	if not no_add_imp then
+		add_imperative_from_present(base, stem, accent)
+	end
 end
 
 
-local function add_present_i(base, stem, accent)
+local function add_present_i(base, stem, accent, no_add_imp)
 	local endings
-	local iotated_type
+	local iotated_type, iotated_stem
 	if rfind(stem, com.vowel_c .. AC .. "?$") then
 		endings = {"ю", "їш", "їть", {"їм", "їмо"}, "їте", "ять"}
 		iotated_type = "none"
 	else
-		local iotated_stem = com.iotate(stem)
+		iotated_stem = com.iotate(stem)
 		endings = {rfind(iotated_stem, com.hushing_c .. "$") and "у" or "ю", "иш", "ить",
 			{"им", "имо"}, "ите", rfind(stem, com.hushing_c .. "$") and "ать" or "ять"}
 		if stem == iotated_stem then
@@ -298,6 +353,9 @@ local function add_present_i(base, stem, accent)
 		add_pres_futr(base, iotated_stem, s1, {}, {}, {}, {}, p3)
 		add_pres_futr(base, stem, {}, s2, s3, p1, p2, {})
 	end
+	if not no_add_imp then
+		add_imperative_from_present(base, stem, accent)
+	end
 end
 
 
@@ -315,19 +373,12 @@ local function add_default_past(base, stem)
 end
 
 
-local function add_imperative(base, sg2)
-	add(base.forms, "impr_2sg", sg2, "")
-	local stem, ac = rmatch(sg2, "^(.-)и(" .. AC .. "?)$")
-	if stem then
-		local vowel = "і" .. ac
-		add(base.forms, "impr_1pl", stem, {vowel .. "м", vowel .. "мо"})
-		add(base.forms, "impr_2pl", stem, {vowel .. "ть"})
-	elseif rfind(sg2, com.vowel_c .. AC .. "?$") then
-		error("Invalid 2sg imperative, ends in vowel other than -и: '" .. sg2 .. "'")
-	else
-		add(base.forms, "impr_1pl", sg2, "мо")
-		add(base.forms, "impr_2pl", sg2, "те")
+local function add_ppp(base, stem)
+	if base.is_refl or base.no_ppp or base.trans ~= "tr" then
+		return
 	end
+	add(base.forms, "past_pasv_part", stem, "ий")
+	add(base.forms, "past_pasv_part_impers", stem, "о")
 end
 
 
@@ -341,23 +392,78 @@ local function add_moving_ppp(base, stem)
 		last_syl = com.remove_stress(last_syl)
 		stem = stembase .. last_syl
 	end
-	add(base.forms, "past_pasv_part", stem, "ий")
-	add(base.forms, "past_pasv_part_impers", stem, "о")
+	add_ppp(base, stem)
 end
 
 
 local conjs = {}
 
 
-conjs["1a"] = function(base, lemma)
+conjs["1"] = function(base, lemma, accent)
 	local stem = rmatch(lemma, "^(.*[аяі]́?)ти$")
 	if not stem then
-		error("Unrecognized lemma for class 1a: '" .. lemma .. "'")
+		error("Unrecognized lemma for class 1: '" .. lemma .. "'")
+	end
+	if accent ~= "a" then
+		error("Only accent a allowed for class 1: '" .. base.conj .. "'")
 	end
 	add_present_e(base, stem, "a")
 	add_default_past(base, stem)
-	add_imperative(base, stem .. "й")
 	add_moving_ppp(base, stem .. "н")
+end
+
+
+conjs["2"] = function(base, lemma, accent)
+	local stem, suffix = rmatch(lemma, "^(.*[ую]́?)(ва́?)ти$")
+	if not stem then
+		error("Unrecognized lemma for class 2: '" .. lemma .. "'")
+	end
+	if accent ~= "a" and accent ~= "b" then
+		error("Only accent a or b allowed for class 2: '" .. base.conj .. "'")
+	end
+	if accent == "b" and suffix ~= "ва́" then
+		error("For class 2b, lemma must be end-stressed: '" .. lemma .. "'")
+	end
+	local stressed_stem = com.maybe_stress_final_syllable(stem)
+	add_present_e(base, accent == "a" and stressed_stem or stem, accent)
+	add_default_past(base, stem .. suffix)
+	if com.is_stressed(suffix) then
+		local pppstem = rsub(stem, "^(.*)([ую])$",
+			function(a, b) return a .. ( b == "у" and "о́" or "ьо́") end)
+		add_ppp(base, pppstem .. "ван")
+	else
+		add_ppp(base, stem .. "ван")
+	end
+end
+
+
+conjs["3"] = function(base, lemma, accent)
+end
+
+
+conjs["4"] = function(base, lemma, accent)
+	local stem, suffix = rmatch(lemma, "^(.*)([иї]́?)ти$")
+	if not stem then
+		error("Unrecognized lemma for class 4: '" .. lemma .. "'")
+	end
+	if (accent == "b" or accent == "c") and not com.is_stressed(suffix) then
+		error("For class 4b or 4c, lemma must be end-stressed: '" .. lemma .. "'")
+	end
+	if accent == "a" and com.is_stressed(suffix) then
+		error("For class 4a, lemma must be stem-stressed: '" .. lemma .. "'")
+	end
+	local stem_is_vocalic = rfind(stem, com.vowel_c .. AC .. "?$")
+	if rfind(suffix, "^ї") and not stem_is_vocalic then
+		error("Ending -їти can only be used with a vocalic stem: '" .. lemma .. "'")
+	end
+	local stressed_stem = com.maybe_stress_final_syllable(stem)
+	add_present_i(base, stressed_stem, accent)
+	add_default_past(base, stem .. suffix)
+	if accent == "b" then
+		add_ppp(base, com.iotate(stem) .. (stem_is_vocalic and "є́н" or "е́н"))
+	else
+		add_ppp(base, com.iotate(stressed_stem) .. (stem_is_vocalic and "єн" or "ен"))
+	end
 end
 
 
@@ -376,13 +482,27 @@ local function parse_indicator_and_form_spec(angle_bracket_spec)
 	else
 		conj = conjarg
 	end
-	if conj ~= "irreg" then
+	if conj == "irreg" then
+		base.conjnum = "irreg"
+	else
 		conj, base.conj_star = rsubb(conj, "%*", "")
-		if not rfind(conj, "^[0-9]+°?[abc]$") then
+		base.conjnum, base.conjmod, base.accent = rmatch(conj, "^([0-9]+)([°()]*)([abc])$")
+		if not base.conjnum then
 			error("Invalid format for conjugation, should be e.g. '1a', '4b' or '6°c': '" .. conj .. "'")
 		end
-		if not conjs[conj] then
-			error("Unrecognized conjugation: '" .. conj .. "'")
+		if not conjs[base.conjnum] then
+			error("Unrecognized conjugation: '" .. base.conjnum .. "'")
+		end
+		if base.conjnum == "3" then
+			if base.conjmod ~= "" and base.conjmod ~= "°" and base.conjmod ~= "(°)" then
+				error("Unrecognized conjugation modifier: '" .. base.conjmod .. "'")
+			end
+		elseif base.conjnum == "6" then
+			if base.conjmod ~= "" and base.conjmod ~= "°" then
+				error("Unrecognized conjugation modifier: '" .. base.conjmod .. "'")
+			end
+		elseif base.conjmod ~= "" then
+			error("Conjugation modifiers only allowed for conjugations 3 and 6: '" .. base.conjmod .. "'")
 		end
 	end
 	base.conj = conj
@@ -493,8 +613,34 @@ local function parse_word_spec(text)
 end
 
 
+local function add_infinitive(base, lemma)
+	add(base.forms, "infinitive", lemma, "")
+	-- Alternative infinitive in -ть only exists for lemmas ending in unstressed -ти
+	-- and preceded by a vowel. Not уме́рти, not нести́.
+	if rfind(lemma, com.vowel_c .. AC .. "?ти$") then
+		add(base.forms, "infinitive", rsub(lemma, "ти$", "ть"), "")
+	end
+end
+
+
 local function add_reflexive_suffix(base)
-	-- FIXME: Implement me
+	if not base.is_refl then
+		return
+	end
+	for slot, formvals in pairs(base.forms) do
+		base.forms[slot] = iut.flatmap_forms(formvals, function(form)
+			if rfind(slot, "adv_part$") then
+				-- pp. 235-236 of Routledge's "Ukrainian: A Comprehensive Grammar" say that
+				-- -ся becomes -сь after adverbial participles. I take this to mean that
+				-- the -ся form doesn't occur. FIXME: Verify this.
+				return {form .. "сь"}
+			elseif rfind(form, com.vowel_c .. AC .. "?[вй]?$") then
+				return {form .. "ся", form .. "сь"}
+			else
+				return {form .. "ся"}
+			end
+		end)
+	end
 end
 
 
@@ -512,7 +658,8 @@ local function process_overrides(forms, args)
 end
 
 
-local function add_alt_infinitive(base)
+-- Used for manual specification using {{uk-conj-table}}.
+local function augment_with_alt_infinitive(base)
 	local newinf = {}
 	local forms = base.forms
 	if forms.infinitive then
@@ -530,6 +677,7 @@ local function add_alt_infinitive(base)
 end
 
 
+-- Used for manual specification using {{uk-conj-table}}.
 local function set_reflexive_flag(base)
 	if base.forms.infinitive then
 		for _, inf in ipairs(base.forms.infinitive) do
@@ -611,6 +759,11 @@ local function add_categories(base)
 		table.insert(base.categories, "Ukrainian imperfective verbs")
 		table.insert(base.categories, "Ukrainian perfective verbs")
 		table.insert(base.categories, "Ukrainian biaspectual verbs")
+	end
+	if base.trans == "tr" then
+		table.insert(base.categories, "Ukrainian transitive verbs")
+	elseif base.trans == "intr" then
+		table.insert(base.categories, "Ukrainian intransitive verbs")
 	end
 	if base.is_refl then
 		table.insert(base.categories, "Ukrainian reflexive verbs")
@@ -781,12 +934,27 @@ local function make_table(base)
 	end
 
 	local ann_parts = {}
+	if base.conj == "irreg" then
+		table.insert(ann_parts, "irregular")
+	else
+		table.insert(ann_parts, "class " .. base.conj)
+	end
 	table.insert(ann_parts,
 		base.aspect == "impf" and "imperfective" or
 		base.aspect == "pf" and "perfective" or
 		"biaspectual")
+	if base.trans then
+		table.insert(ann_parts,
+			base.trans == "tr" and "transitive" or "intransitive")
+	end
 	if base.is_refl then
 		table.insert(ann_parts, "reflexive")
+	end
+	if base.impers then
+		table.insert(ann_parts, "impersonal")
+	end
+	if base.conj ~= "irreg" and base.irreg then
+		table.insert(ann_parts, "irregular")
 	end
 	forms.annotation = " (" .. table.concat(ann_parts, ", ") .. ")"
 
@@ -835,7 +1003,8 @@ function export.do_generate_forms(parent_args, pos, from_headword, def)
 	base.forms = {}
 	lemma = normalize_lemma(base, lemma)
 	detect_indicator_and_form_spec(base, lemma)
-	conjs[base.conj](base, lemma)
+	add_infinitive(base, lemma)
+	conjs[base.conjnum](base, lemma, base.accent)
 	if base.is_refl then
 		add_reflexive_suffix(base)
 	end
@@ -872,7 +1041,7 @@ function export.do_generate_forms_manual(parent_args, pos, from_headword, def)
 		forms = {}
 	}
 	process_overrides(base.forms, args)
-	add_alt_infinitive(base)
+	augment_with_alt_infinitive(base)
 	set_reflexive_flag(base)
 	set_present_future(base)
 	add_categories(base)
