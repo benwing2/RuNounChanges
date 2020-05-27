@@ -24,12 +24,13 @@ TERMINOLOGY:
 
 local lang = require("Module:languages").getByCode("uk")
 local m_links = require("Module:links")
+local m_table = require("Module:table")
 local m_table_tools = require("Module:table tools")
 local m_string_utilities = require("Module:string utilities")
 local m_script_utilities = require("Module:script utilities")
 local iut = require("Module:inflection utilities")
 local m_para = require("Module:parameters")
-local com = require("Module:uk-common")
+local com = require("Module:User:Benwing2/uk-common")
 
 local current_title = mw.title.getCurrentTitle()
 local NAMESPACE = current_title.nsText
@@ -194,8 +195,45 @@ local function is_table_of_strings(forms)
 end
 
 
-local function add(forms, slot, stems, endings)
+local function skip_slot(base, slot)
+	if slot == "infinitive" then
+		return false
+	end
+	if base.nopres and (rfind(slot, "pres") or rfind(slot, "futr")) then
+		return true
+	end
+	if base.nopast and rfind(slot, "past") then
+		return true
+	end
+	if base.noimp and rfind(slot, "impr") then
+		return true
+	end
+	if base.impers then
+		if rfind(slot, "3sg") or rfind(slot, "adv_part") or slot == "past_pasv_part_impers" or slot == "past_n" then
+			return false
+		else
+			return true
+		end
+	end
+	if (base.only3 or base.only3pl) and rfind(slot, "[12]") then
+		return true
+	end
+	if (base.onlypl or base.only3pl) and (rfind(slot, "sg") or rfind(slot, "^past_[mfn]$")) then
+		return true
+	end
+	if base.only3orpl and rfind(slot, "[12]sg") then
+		return true
+	end
+	return false
+end
+
+
+local function add(base, slot, stems, endings)
+	local forms = base.forms
 	if stems == nil then
+		return
+	end
+	if skip_slot(base, slot) then
 		return
 	end
 	if type(stems) == "string" and type(endings) == "string" then
@@ -228,21 +266,18 @@ end
 
 
 local function add_imperative(base, sg2)
-	if base.noimp or base.only3 or base.impers then
-		return
-	end
-	add(base.forms, "impr_2sg", sg2, "")
+	add(base, "impr_2sg", sg2, "")
 	-- "Long" imperatives end in -и or occasionally -ї (e.g. труї́ from труї́ти, ви́труї from ви́труїти)
 	local stem, vowel, ac = rmatch(sg2, "^(.-)([иї])(" .. AC .. "?)$")
 	if stem then
 		local acvowel = (vowel == "и" and "і" or "ї") .. ac
-		add(base.forms, "impr_1pl", stem, {acvowel .. "м", acvowel .. "мо"})
-		add(base.forms, "impr_2pl", stem, {acvowel .. "ть"})
+		add(base, "impr_1pl", stem, {acvowel .. "м", acvowel .. "мо"})
+		add(base, "impr_2pl", stem, {acvowel .. "ть"})
 	elseif is_vocalic(sg2) then
 		error("Invalid 2sg imperative, ends in vowel other than -и or -ї: '" .. sg2 .. "'")
 	else
-		add(base.forms, "impr_1pl", sg2, "мо")
-		add(base.forms, "impr_2pl", sg2, "те")
+		add(base, "impr_1pl", sg2, "мо")
+		add(base, "impr_2pl", sg2, "те")
 	end
 end
 
@@ -281,22 +316,14 @@ end
 
 
 local function add_pres_futr(base, stem, sg1, sg2, sg3, pl1, pl2, pl3)
-	if base.nopres then
-		return
-	end
-	if not base.impers and not base.only3 then
-		add(base.forms, "pres_futr_1sg", stem, sg1)
-		add(base.forms, "pres_futr_2sg", stem, sg2)
-	end
-	add(base.forms, "pres_futr_3sg", stem, sg3)
-	if not base.impers and not base.only3 then
-		add(base.forms, "pres_futr_1pl", stem, pl1)
-		add(base.forms, "pres_futr_2pl", stem, pl2)
-	end
-	if not base.impers then
-		add(base.forms, "pres_futr_3pl", stem, pl3)
-	end
+	add(base, "pres_futr_1sg", stem, sg1)
+	add(base, "pres_futr_2sg", stem, sg2)
+	add(base, "pres_futr_3sg", stem, sg3)
+	add(base, "pres_futr_1pl", stem, pl1)
+	add(base, "pres_futr_2pl", stem, pl2)
+	add(base, "pres_futr_3pl", stem, pl3)
 	-- Do the present adverbial participle, which is based on the third plural present.
+	-- FIXME: Do impersonal verbs have this participle?
 	if base.aspect ~= "pf" and type(pl3) == "string" then
 		local pl3base = rmatch(pl3, "^(.-)ть$")
 		if not pl3base then
@@ -307,7 +334,7 @@ local function add_pres_futr(base, stem, sg1, sg2, sg3, pl1, pl2, pl3)
 			pl3base = com.remove_stress(pl3base)
 			ending = "чи́"
 		end
-		add(base.forms, "pres_adv_part", stem, pl3base .. ending)
+		add(base, "pres_adv_part", stem, pl3base .. ending)
 	end
 end
 
@@ -403,15 +430,11 @@ end
 
 
 local function add_past(base, msgstem, reststem)
-	if not base.impers then
-		add(base.forms, "past_m", msgstem, "")
-		add(base.forms, "past_f", reststem, base.past_accent == "b" and "а́" or "а")
-	end
-	add(base.forms, "past_n", reststem, base.past_accent == "b" and "о́" or "о")
-	if not base.impers then
-		add(base.forms, "past_pl", reststem, base.past_accent == "b" and "и́" or "и")
-	end
-	add(base.forms, "past_adv_part", msgstem, "ши")
+	add(base, "past_m", msgstem, "")
+	add(base, "past_f", reststem, base.past_accent == "b" and "а́" or "а")
+	add(base, "past_n", reststem, base.past_accent == "b" and "о́" or "о")
+	add(base, "past_pl", reststem, base.past_accent == "b" and "и́" or "и")
+	add(base, "past_adv_part", msgstem, "ши")
 end
 
 
@@ -424,12 +447,14 @@ local function add_ppp(base, stem)
 	if base.is_refl or not base.ppp or base.trans ~= "tr" then
 		return
 	end
-	add(base.forms, "past_pasv_part", stem, "ий")
-	add(base.forms, "past_pasv_part_impers", stem, "о")
+	if not base.impers then
+		add(base, "past_pasv_part", stem, "ий")
+	end
+	add(base, "past_pasv_part_impers", stem, "о")
 end
 
 
-local function add_retracted_ppp(base, stem)
+local function add_retractable_ppp(base, stem)
 	if base.retractedppp then
 		local stembase, last_syl = rmatch(stem, "^(.-)(" .. com.vowel_c .. AC .. "?[нт])$")
 		if not stembase then
@@ -478,7 +503,7 @@ conjs["1"] = function(base, lemma, accent)
 	end
 	add_present_e(base, stem, "a")
 	add_default_past(base, stem)
-	add_retracted_ppp(base, stem .. "н")
+	add_retractable_ppp(base, stem .. "н")
 end
 
 
@@ -508,8 +533,7 @@ end
 
 conjs["3"] = function(base, lemma, accent)
 	local stem, suffix, ac = rmatch(lemma, "^(.*)(ну)(́?)ти$")
-	if stem then
-	else
+	if not stem then
 		stem, ac = rmatch(lemma, "^(.*г)ти(́?)$")
 		if not stem then
 			error("Unrecognized lemma for class 3: '" .. lemma .. "'")
@@ -561,19 +585,29 @@ conjs["4"] = function(base, lemma, accent)
 			error("і-modifier can only be used with stem ending in -о: '" .. lemma .. "'")
 		end
 		sg2 = com.maybe_stress_final_syllable(rsub(stem, "о(́?)$", "і%1й"))
-	elseif suffix == "ї" then
+	elseif base.yi then
+		if suffix ~= "ї" then
+			error("'ї' can only be used with stem ending in -ї: '" .. lemma .. "'")
+		end
 		if accent == "a" then -- ви́труїти, impv ви́труї; default would be ви́труй
 			sg2 = stem .. "ї"
 		else
 			sg2 = stem .. "ї́" -- труї́ти, impv труї́; default would be тру́й
 		end
+		-- NOTE: строїти has three different meanings with three different imperatives:
+		-- (1) стро́їти "to align, adjust, arrange": impv строй
+		-- (2) стро́їти "to connect in three": impv стрій
+		-- (3) строї́ти "to flow": impv строї́
 	end
 	add_present_i(base, stressed_stem, accent, sg2)
 	add_default_past(base, stem .. suffix .. ac)
-	if accent == "b" then
-		add_ppp(base, com.iotate(stem) .. (stem_is_vocalic and "є́н" or "е́н"))
-	else
+	if accent == "a" then
 		add_ppp(base, com.iotate(stressed_stem) .. (stem_is_vocalic and "єн" or "ен"))
+	else
+		-- By default, stress will retract one syllable if accent is c but not b,
+		-- but this can be overridden in both directions using 'retractedppp' (for b)
+		-- or '-retractedppp' (for c).
+		add_retractable_ppp(base, com.remove_stress(com.iotate(stem)) .. (stem_is_vocalic and "є́н" or "е́н"))
 	end
 end
 
@@ -596,12 +630,18 @@ conjs["5"] = function(base, lemma, accent)
 	end
 	add_present_i(base, stressed_stem, accent, sg2)
 	add_default_past(base, stem .. suffix .. ac)
-	add_retracted_ppp(base, (suffix == "і" and com.iotate(stem) .. "е" or stem .. suffix) .. ac .. "н")
+	add_retractable_ppp(base, (suffix == "і" and com.iotate(stem) .. "е" or stem .. suffix) .. ac .. "н")
 end
 
 
 conjs["6"] = function(base, lemma, accent)
-	local stem, suffix, ac = separate_stem_suffix_accent(lemma, "6", accent, "^(.*)([іая])(́?)ти$")
+	-- хоті́ти is anomalous in that it's 6a.
+	local stem, suffix, ac = rmatch(lemma, "^(.*хот)(і)(́)ти$")
+	if stem and accent == "a" then
+		base.irreg = true
+	else
+		stem, suffix, ac = separate_stem_suffix_accent(lemma, "6", accent, "^(.*)([іая])(́?)ти$")
+	end
 	local stem_is_vocalic = is_vocalic(stem)
 	if suffix == "я" and not stem_is_vocalic then
 		error("Ending -яти can only be used with a vocalic stem: '" .. lemma .. "'")
@@ -620,7 +660,7 @@ conjs["6"] = function(base, lemma, accent)
 	add_present_e(base, stressed_stem, accent,
 		base.conjmod == "" and not stem_is_vocalic and "1sg3pl", sg2)
 	add_default_past(base, stem .. suffix .. ac)
-	add_retracted_ppp(base, stem .. (suffix == "і" and "е" or suffix) .. ac .. "н")
+	add_retractable_ppp(base, stem .. (suffix == "і" and "е" or suffix) .. ac .. "н")
 end
 
 
@@ -684,6 +724,224 @@ conjs["8"] = function(base, lemma, accent)
 end
 
 
+conjs["9"] = function(base, lemma, accent)
+	local stem, suffix = rmatch(lemma, "^(.*)(е́?р)ти$")
+	if not stem then
+		error("Unrecognized lemma for class 9: '" .. lemma .. "'")
+	end
+	if accent ~= "a" and accent ~= "b" then
+		error("Only accent a or b allowed for class 9: '" .. base.conj .. "'")
+	end
+	local pres_stem
+	if base.conj_star then
+		pres_stem = rsub(stem, "^(.*)(.)$", "%1і%2")
+	else
+		pres_stem = stem
+	end
+	add_present_e(base, pres_stem .. "р", accent)
+	local stressed_stem = com.maybe_stress_final_syllable(stem .. suffix)
+	add_past(base, stressed_stem, stressed_stem .. "л")
+	add_ppp(base, stressed_stem .. "т")
+end
+
+
+conjs["10"] = function(base, lemma, accent)
+	local stem, suffix, ac = separate_stem_suffix_accent(lemma, "10", accent, "^(.*)(о[лр]о)(́?)ти$")
+	if accent ~= "a" and accent ~= "c" then
+		error("Only accent a or c allowed for class 10: '" .. base.conj .. "'")
+	end
+	local stressed_stem = com.maybe_stress_final_syllable(rsub(stem .. suffix, "о$", ""))
+	add_present_e(base, stressed_stem, accent, "1sg3pl")
+	add_default_past(base, stem .. suffix .. ac)
+	-- If explicit present stem given (e.g. for моло́ти), use it/them in the н-participle.
+	local n_ppps
+	if base.pres_stems then
+		n_ppps = {}
+		for _, pres_stem in ipairs(base.pres_stems) do
+			table.insert(n_ppps, pres_stem .. "ен")
+		end
+	else
+		n_ppps = stressed_stem .. "ен"
+	end
+	local t_ppp = stressed_stem .. "от"
+	if base.conj == "н" then
+		add_ppp(base, n_ppps)
+	elseif base.conj == "т" then
+		add_ppp(base, t_ppp)
+	else
+		add_ppp(base, n_ppps)
+		add_ppp(base, t_ppp)
+	end
+end
+
+
+conjs["11"] = function(base, lemma, accent)
+	local stem, suffix, ac = separate_stem_suffix_accent(lemma, "11", accent, "^(.*)(и)(́?)ти$")
+	if accent ~= "a" and accent ~= "b" then
+		error("Only accent a or b allowed for class 11: '" .. base.conj .. "'")
+	end
+	local pres_stem
+	if base.conj_star then
+		pres_stem = rsub(stem, "^(.*)(.)$", "%1і%2")
+	else
+		pres_stem = stem
+	end
+	if rfind(pres_stem, "л$") then
+		pres_stem = pres_stem .. "л"
+	else
+		pres_stem = pres_stem .. "'"
+	end
+	local full_stem = stem .. suffix .. ac
+	add_present_e(base, pres_stem, accent, "all", full_stem .. "й")
+	add_default_past(base, full_stem)
+	add_ppp(base, full_stem .. "т")
+end
+
+
+conjs["12"] = function(base, lemma, accent)
+	local stem = rmatch(lemma, "^(.*" .. com.vowel_c .. AC .. "?)ти$")
+	if not stem then
+		error("Unrecognized lemma for class 12: '" .. lemma .. "'")
+	end
+	if accent ~= "a" and accent ~= "b" then
+		error("Only accent a or b allowed for class 12: '" .. base.conj .. "'")
+	end
+	add_present_e(base, stem, accent)
+	add_default_past(base, stem)
+	add_ppp(base, stem .. "т")
+end
+
+
+conjs["13"] = function(base, lemma, accent)
+	local stem = rmatch(lemma, "^(.*а)ва́ти$")
+	if not stem then
+		error("Unrecognized lemma for class 13: '" .. lemma .. "'")
+	end
+	if accent ~= "b" then
+		error("Only accent b allowed for class 13: '" .. base.conj .. "'")
+	end
+	add_present_e(base, stem, accent)
+	local full_stem = stem .. "ва́"
+	add_default_past(base, full_stem)
+	add_retractable_ppp(base, full_stem .. "н")
+end
+
+
+conjs["14"] = function(base, lemma, accent)
+	-- -сти occurs in п'я́сти́ and роз(і)п'я́сти́
+	local stem = rmatch(lemma, "^(.*[ая]́?)с?ти́?$")
+	if not stem then
+		error("Unrecognized lemma for class 14: '" .. lemma .. "'")
+	end
+	if not base.pres_stems then
+		error("With class 14, must specify explicit present stem using 'pres:STEM'")
+	end
+	add_present_e(base, "foo", accent)
+	local stressed_stem = com.maybe_stress_final_syllable(stem)
+	add_default_past(base, stressed_stem)
+	add_retractable_ppp(base, stressed_stem .. "т")
+end
+
+
+conjs["15"] = function(base, lemma, accent)
+	local stem = rmatch(lemma, "^(.*" .. com.vowel_c .. AC .. "?)ти$")
+	if not stem then
+		error("Unrecognized lemma for class 15: '" .. lemma .. "'")
+	end
+	if accent ~= "a" then
+		error("Only accent a allowed for class 15: '" .. base.conj .. "'")
+	end
+	add_present_e(base, stem .. "н", accent)
+	add_default_past(base, stem)
+	add_ppp(base, stem .. "т")
+end
+
+
+conjs["irreg"] = function(base, lemma, accent)
+	local prefix = rmatch(lemma, "^(.*)да́?ти$")
+	if prefix then
+		local stressed_prefix = com.is_stressed(prefix)
+		if stressed_prefix then
+			add_pres_futr(base, prefix, "дам", "даси", "дасть", "дамо", "дасте", "дадуть")
+			add_imperative(base, prefix .. "дай")
+			add_default_past(base, prefix .. "да")
+			add_retractable_ppp(base, prefix .. "дан") -- ви́даний from ви́дати
+		else
+			add_pres_futr(base, prefix, "да́м", "даси́", "да́сть", "дамо́", "дасте́", "даду́ть")
+			add_imperative(base, prefix .. "да́й")
+			add_default_past(base, prefix .. "да́")
+			add_retractable_ppp(base, prefix .. "да́н") -- e.g. пере́даний from переда́ти
+		end
+		return
+	end
+	prefix = rmatch(lemma, "^(.*)ї́?сти$")
+	if prefix then
+		local stressed_prefix = com.is_stressed(prefix)
+		if stressed_prefix then
+			add_pres_futr(base, prefix, "їм", "їси", "їсть", "їмо", "їсте", "їдять")
+			add_imperative(base, prefix .. "їж")
+			add_default_past(base, prefix .. "ї")
+			add_ppp(base, prefix .. "їден") -- ви́їдений from ви́їсти
+		else
+			add_pres_futr(base, prefix, "ї́м", "їси́", "ї́сть", "їмо́", "їсте́", "їдя́ть")
+			add_imperative(base, prefix .. "ї́ж")
+			add_default_past(base, prefix .. "ї́")
+			add_ppp(base, prefix .. "ї́ден") -- e.g. прої́дений from прої́сти
+		end
+		return
+	end
+	prefix = rmatch(lemma, "^(.*)бу́?ти$")
+	if prefix then
+		local stressed_prefix = com.is_stressed(prefix)
+		if prefix == "" then
+			error("Can't handle unprefixed irregular verb бу́ти yet")
+		end
+		add_present_e(base, prefix .. (stressed_prefix and "буд" or "бу́д"), "a")
+		add_default_past(base, prefix .. (stressed_prefix and "бу" or "бу́"))
+		add_ppp(base, prefix .. (stressed_prefix and "бут" or "бу́т")) -- e.g. забу́тий from забу́ти
+		return
+	end
+	prefix = rmatch(lemma, "^(.*)ї́?хати$")
+	if prefix then
+		local stressed_prefix = com.is_stressed(prefix)
+		add_present_e(base, prefix .. (stressed_prefix and "їд" or "ї́д"), accent)
+		add_default_past(base, prefix .. (stressed_prefix and "їха" or "ї́ха"))
+		-- no PPP
+		return
+	end
+	prefix = rmatch(lemma, "^(.*)жи́?ти$")
+	if prefix then
+		local stressed_prefix = com.is_stressed(prefix)
+		add_present_e(base, prefix .. "жив", stressed_prefix and "a" or "b")
+		add_default_past(base, prefix .. (stressed_prefix and "жи" or "жи́"))
+		add_ppp(base, prefix .. (stressed_prefix and "жит" or "жи́т")) -- e.g. пережи́тий from пережи́ти
+		return
+	end
+	prefix = rmatch(lemma, "^(.*)бі́?гти$")
+	if prefix then
+		local stressed_prefix = com.is_stressed(prefix)
+		add_present_i(base, prefix .. "біж", stressed_prefix and "a" or "b")
+		local past_msg = prefix .. (stressed_prefix and "біг" or "бі́г")
+		add_past(base, past_msg, past_msg .. "л")
+		-- no PPP
+		return
+	end
+	prefix = rmatch(lemma, "^(п?і)ти́$")
+	if not prefix then
+		prefix = rmatch(lemma, "^(.*й)ти́?$")
+	end
+	if prefix then
+		local stressed_prefix = com.is_stressed(prefix)
+		add_present_e(base, com.maybe_stress_final_syllable(prefix .. "д"),
+			stressed_prefix and "a" or (prefix == "і" or prefix == "й") and "b" or "c")
+		add_past(base, prefix .. (stressed_prefix and "шов" or "шо́в"), com.maybe_stress_final_syllable(prefix .. "шл"))
+		add_retractable_ppp(base, prefix .. (stressed_prefix and "ден" or "де́н")) -- e.g. пере́йдений from перейти́
+		return
+	end
+	error("Unrecognized irregular verb: '" .. lemma .. "'")
+end
+
+
 local function parse_indicator_and_form_spec(angle_bracket_spec)
 	local inside = rmatch(angle_bracket_spec, "^<(.*)>$")
 	assert(inside)
@@ -714,7 +972,7 @@ local function parse_indicator_and_form_spec(angle_bracket_spec)
 	base.conj = conj
 	for i=2,#parts do
 		local part = parts[i]
-		if part == "impf" or part == "pf" then
+		if part == "impf" or part == "pf" or part == "both" then
 			if base.aspect then
 				error("Can't specify aspect twice: '" .. inside .. "'")
 			end
@@ -754,11 +1012,31 @@ local function parse_indicator_and_form_spec(angle_bracket_spec)
 				error("Can't specify '-pres' twice: " .. inside .. "'")
 			end
 			base.nopres = true
+		elseif part == "-past" then
+			if base.nopast then
+				error("Can't specify '-past' twice: " .. inside .. "'")
+			end
+			base.nopast = true
 		elseif part == "3only" then
 			if base.only3 then
 				error("Can't specify '3only' twice: " .. inside .. "'")
 			end
 			base.only3 = true
+		elseif part == "plonly" then
+			if base.onlypl then
+				error("Can't specify 'plonly' twice: " .. inside .. "'")
+			end
+			base.onlypl = true
+		elseif part == "3plonly" then
+			if base.only3pl then
+				error("Can't specify '3plonly' twice: " .. inside .. "'")
+			end
+			base.only3pl = true
+		elseif part == "3orplonly" then
+			if base.only3orpl then
+				error("Can't specify '3orplonly' twice: " .. inside .. "'")
+			end
+			base.only3orpl = true
 		elseif part == "с" or part == "д" or part == "т" or part == "ст" or part == "в" or part == "н" then
 			if base.cons then
 				error("Can't specify consonant modifier twice: " .. inside .. "'")
@@ -769,6 +1047,11 @@ local function parse_indicator_and_form_spec(angle_bracket_spec)
 				error("Can't specify і-modifier twice: " .. inside .. "'")
 			end
 			base.i = part == "і" -- Latin i in base.i
+		elseif part == "ї" then -- Cyrillic ї 
+			if base.yi ~= nil then
+				error("Can't specify 'ї' twice: " .. inside .. "'")
+			end
+			base.yi = true
 		elseif rfind(part, "^pres:") then
 			part = rsub(part, "^pres:", "")
 			base.pres_stems = rsplit(part, ":", true)
@@ -782,28 +1065,27 @@ end
 
 -- Separate out reflexive suffix, check that multisyllabic lemmas have stress, and add stress
 -- to monosyllabic lemmas if needed.
-local function normalize_lemma(base, lemma)
-	base.orig_lemma = lemma
-	lemma = com.add_monosyllabic_stress(lemma)
-	if not rfind(lemma, AC) then
+local function normalize_lemma(base)
+	base.orig_lemma = base.lemma
+	base.lemma = com.add_monosyllabic_stress(base.lemma)
+	if not rfind(base.lemma, AC) then
 		error("Multisyllabic lemma '" .. base.orig_lemma .. "' needs an accent")
 	end
-	local active_verb, refl = rmatch(lemma, "^(.*)(с[яь])$")
+	local active_verb, refl = rmatch(base.lemma, "^(.*)(с[яь])$")
 	if active_verb then
 		base.is_refl = true
-		lemma = active_verb
+		base.lemma = active_verb
 	end
-	if rfind(lemma, "ть$") then
+	if rfind(base.lemma, "ть$") then
 		if refl == "сь" then
 			error("Reflexive infinitive lemma in -тьсь not possible, use -тися, -тись or ться: '" .. base.orig_lemma)
 		end
-		lemma = rsub(lemma, "ть$", "ти")
+		base.lemma = rsub(base.lemma, "ть$", "ти")
 	end
-	return lemma
 end
 
 
-local function detect_indicator_and_form_spec(base, lemma)
+local function detect_indicator_and_form_spec(base)
 	if not base.aspect then
 		error("Aspect of 'pf' or 'impf' must be specified")
 	end
@@ -821,12 +1103,16 @@ local function detect_indicator_and_form_spec(base, lemma)
 	elseif base.trans == "tr" then
 		error("Must specify 'ppp' or '-ppp' with transitive verbs")
 	end
-	if base.ppp and base.retractedppp == nil and base.conjnum ~= "14" then
-		-- Will be ignored when add_retracted_ppp() isn't called.
-		base.retractedppp = true
+	if base.ppp and base.retractedppp == nil then
+		if base.conjnum == "14" or base.conjnum == "4" and base.accent == "b" then
+			-- Does not retract normally, but can.
+		else
+			-- Will be ignored when add_retractable_ppp() isn't called.
+			base.retractedppp = true
+		end
 	end
 	if base.cons then
-		if base.conjnum == "3" and rfind(base.cons, "^[тн]$") then
+		if (base.conjnum == "3" or base.conjnum == "10") and rfind(base.cons, "^[тн]$") then
 			-- ok
 		elseif base.conjnum == "7" and (rfind(base.cons, "^[сдтв]$") or base.cons == "ст") then
 			-- ok
@@ -840,6 +1126,10 @@ local function detect_indicator_and_form_spec(base, lemma)
 		else
 			error("і-modifier can't be specified with class " .. base.conjnum)
 		end
+	elseif base.yi then
+		if base.conjnum ~= "4" then
+			error("'ї' can only be specified with class 4")
+		end
 	elseif base.conjnum == "7" or base.conjnum == "8" then
 		base.i = true
 	end
@@ -851,7 +1141,7 @@ local function detect_indicator_and_form_spec(base, lemma)
 		if base.conjmod ~= "" and base.conjmod ~= "°" then
 			error("Unrecognized conjugation modifier for class 6: '" .. base.conjmod .. "'")
 		end
-	elseif base.conjmod ~= "" then
+	elseif base.conjmod and base.conjmod ~= "" then
 		error("Conjugation modifiers only allowed for conjugations 3 and 6: '" .. base.conjmod .. "'")
 	end
 	if base.pres_stems and base.conjnum ~= "14" then
@@ -874,33 +1164,91 @@ local function detect_indicator_and_form_spec(base, lemma)
 end
 
 
-local function parse_word_spec(text)
-	local segments = iut.parse_balanced_segment_run(text, "<", ">")
+local function detect_all_indicator_and_form_specs(alternant_spec)
+	for _, base in ipairs(alternant_spec.alternants) do
+		detect_indicator_and_form_spec(base)
+		if not alternant_spec.aspect then
+			alternant_spec.aspect = base.aspect
+		elseif alternant_spec.aspect ~= base.aspect then
+			alternant_spec.aspect = "both"
+		end
+		if alternant_spec.is_refl == nil then
+			alternant_spec.is_refl = base.is_refl
+		elseif alternant_spec.is_refl ~= base.is_refl then
+			error("With multiple alternants, all must agree on reflexivity")
+		end
+		if not alternant_spec.trans then
+			alternant_spec.trans = base.trans
+		elseif alternant_spec.trans ~= base.trans then
+			alternant_spec.trans = "mixed"
+		end
+		for _, prop in ipairs({"nopres", "noimp", "nopast", "impers", "only3", "onlypl", "only3pl", "only3orpl"}) do
+			if alternant_spec[prop] == nil then
+				alternant_spec[prop] = base[prop]
+			elseif alternant_spec[prop] ~= base[prop] then
+				alternant_spec[prop] = false
+			end
+		end
+	end
+end
+
+
+local function parse_word_spec(segments)
 	if #segments ~= 3 or segments[3] ~= "" then
 		error("Verb spec must be of the form 'LEMMA<CONJ.SPECS>': '" .. text .. "'")
 	end
 	local lemma = segments[1]
 	local base = parse_indicator_and_form_spec(segments[2])
-	return base, lemma
+	base.lemma = lemma
+	return base
 end
 
 
-local function add_infinitive(base, lemma)
-	add(base.forms, "infinitive", lemma, "")
+-- Parse an alternant, e.g. "((ви́сіти<5a.impf.intr>,висі́ти<5b.impf.intr>))". The return value is a table of the form
+-- {
+--   alternants = {WORD_SPEC, WORD_SPEC, ...}
+-- }
+--
+-- where WORD_SPEC describes a given alternant and is as returned by parse_word_spec().
+local function parse_alternant(alternant)
+	local parsed_alternants = {}
+	local alternant_text = rmatch(alternant, "^%(%((.*)%)%)$")
+	local segments = iut.parse_balanced_segment_run(alternant_text, "<", ">")
+	local comma_separated_groups = iut.split_alternating_runs(segments, ",")
+	local alternant_spec = {alternants = {}}
+	for _, comma_separated_group in ipairs(comma_separated_groups) do
+		table.insert(alternant_spec.alternants, parse_word_spec(comma_separated_group))
+	end
+	return alternant_spec
+end
+
+
+local function parse_alternant_or_word_spec(text)
+	if rfind(text, "^%(%((.*)%)%)$") then
+		return parse_alternant(text)
+	else
+		local segments = iut.parse_balanced_segment_run(text, "<", ">")
+		return {alternants = {parse_word_spec(segments)}}
+	end
+end
+
+
+local function add_infinitive(base)
+	add(base, "infinitive", base.lemma, "")
 	-- Alternative infinitive in -ть only exists for lemmas ending in unstressed -ти
 	-- and preceded by a vowel. Not уме́рти, not нести́.
-	if rfind(lemma, com.vowel_c .. AC .. "?ти$") then
-		add(base.forms, "infinitive", rsub(lemma, "ти$", "ть"), "")
+	if rfind(base.lemma, com.vowel_c .. AC .. "?ти$") then
+		add(base, "infinitive", rsub(base.lemma, "ти$", "ть"), "")
 	end
 end
 
 
-local function add_reflexive_suffix(base)
-	if not base.is_refl then
+local function add_reflexive_suffix(alternant_spec)
+	if not alternant_spec.is_refl then
 		return
 	end
-	for slot, formvals in pairs(base.forms) do
-		base.forms[slot] = iut.flatmap_forms(formvals, function(form)
+	for slot, formvals in pairs(alternant_spec.forms) do
+		alternant_spec.forms[slot] = iut.flatmap_forms(formvals, function(form)
 			if rfind(slot, "adv_part$") then
 				-- pp. 235-236 of Routledge's "Ukrainian: A Comprehensive Grammar" say that
 				-- -ся becomes -сь after adverbial participles. I take this to mean that
@@ -931,9 +1279,9 @@ end
 
 
 -- Used for manual specification using {{uk-conj-table}}.
-local function augment_with_alt_infinitive(base)
+local function augment_with_alt_infinitive(alternant_spec)
 	local newinf = {}
-	local forms = base.forms
+	local forms = alternant_spec.forms
 	if forms.infinitive then
 		forms.infinitive = iut.flatmap_forms(forms.infinitive, function(inf)
 			inf = com.add_monosyllabic_stress(inf)
@@ -950,32 +1298,20 @@ end
 
 
 -- Used for manual specification using {{uk-conj-table}}.
-local function set_reflexive_flag(base)
-	if base.forms.infinitive then
-		for _, inf in ipairs(base.forms.infinitive) do
+local function set_reflexive_flag(alternant_spec)
+	if alternant_spec.forms.infinitive then
+		for _, inf in ipairs(alternant_spec.forms.infinitive) do
 			if rfind(inf.form, "с[яь]$") then
-				base.is_refl = true
+				alternant_spec.is_refl = true
 			end
 		end
 	end
 end
 
 
-local function set_present_future(base)
-	if base.nopres then
-		return
-	end
-	local function skip_slot(slot)
-		if base.only3 and not rfind(slot, "3") then
-			return true
-		end
-		if base.impers and not rfind(slot, "3sg") then
-			return true
-		end
-		return false
-	end
-	local forms = base.forms
-	if base.aspect == "pf" then
+local function set_present_future(alternant_spec)
+	local forms = alternant_spec.forms
+	if alternant_spec.aspect == "pf" then
 		for suffix, _ in pairs(futr_suffixes) do
 			forms["futr_" .. suffix] = forms["pres_futr_" .. suffix]
 		end
@@ -988,7 +1324,7 @@ local function set_present_future(base)
 			for _, inf in ipairs(forms.infinitive) do
 				for slot_suffix, _ in pairs(futr_suffixes) do
 					local futrslot = "futr_" .. slot_suffix
-					if not skip_slot(futrslot) then
+					if not skip_slot(alternant_spec, futrslot) then
 						iut.insert_form(forms, futrslot, {
 							form = "[[" .. budu_forms[slot_suffix] .. "]] [[" ..
 								com.initial_alternation(inf.form, budu_forms[slot_suffix]) .. "]]",
@@ -1011,16 +1347,12 @@ local function set_present_future(base)
 				end
 				for slot_suffix, futr_suffix in pairs(futr_sufs) do
 					local futrslot = "futr_" .. slot_suffix
-					if not skip_slot(futrslot) then
-						if rfind(infstem, "ти́?$") then
-							if type(futr_suffix) ~= "table" then
-								futr_suffix = {futr_suffix}
-							end
-							for _, fs in ipairs(futr_suffix) do
-								iut.insert_form(forms, futrslot, {
-									form = infstem .. fs
-								})
-							end
+					if rfind(infstem, "ти́?$") then
+						if type(futr_suffix) ~= "table" then
+							futr_suffix = {futr_suffix}
+						end
+						for _, fs in ipairs(futr_suffix) do
+							add(alternant_spec, futrslot, infstem, fs)
 						end
 					end
 				end
@@ -1030,31 +1362,46 @@ local function set_present_future(base)
 end
 
 
-local function add_categories(base)
-	base.categories = {}
-	if base.aspect == "impf" then
-		table.insert(base.categories, "Ukrainian imperfective verbs")
-	elseif base.aspect == "pf" then
-		table.insert(base.categories, "Ukrainian perfective verbs")
+local function add_categories(alternant_spec)
+	local cats = {}
+	local function insert(cattype)
+		table.insert(cats, "Ukrainian " .. cattype .. " verbs")
+	end
+	if alternant_spec.aspect == "impf" then
+		insert("imperfective")
+	elseif alternant_spec.aspect == "pf" then
+		insert("perfective")
 	else
-		assert(base.aspect == "both")
-		table.insert(base.categories, "Ukrainian imperfective verbs")
-		table.insert(base.categories, "Ukrainian perfective verbs")
-		table.insert(base.categories, "Ukrainian biaspectual verbs")
+		assert(alternant_spec.aspect == "both")
+		insert("imperfective")
+		insert("perfective")
+		insert("biaspectual")
 	end
-	if base.trans == "tr" then
-		table.insert(base.categories, "Ukrainian transitive verbs")
-	elseif base.trans == "intr" then
-		table.insert(base.categories, "Ukrainian intransitive verbs")
+	if alternant_spec.trans == "tr" then
+		insert("transitive")
+	elseif alternant_spec.trans == "intr" then
+		insert("intransitive")
+	elseif alternant_spec.trans == "mixed" then
+		insert("transitive")
+		insert("intransitive")
 	end
-	if base.is_refl then
-		table.insert(base.categories, "Ukrainian reflexive verbs")
+	if alternant_spec.is_refl then
+		insert("reflexive")
 	end
+	if alternant_spec.impers then
+		insert("impersonal")
+	end
+	for _, base in ipairs(alternant_spec.alternants) do
+		if base.conj == "irreg" or base.irreg then
+			insert("irregular")
+		end
+	end
+	alternant_spec.categories = cats
 end
 
 
-local function show_forms(base)
-	local forms = base.forms
+local function show_forms(alternant_spec)
+	local forms = alternant_spec.forms
 	local lemmas = {}
 	if forms.infinitive then
 		for _, inf in ipairs(forms.infinitive) do
@@ -1103,7 +1450,7 @@ local function show_forms(base)
 	end
 
 	local all_notes = {}
-	for _, note in ipairs(base.footnotes) do
+	for _, note in ipairs(alternant_spec.footnotes) do
 		local symbol, entry = m_table_tools.get_initial_notes(note)
 		table.insert(all_notes, symbol .. entry)
 	end
@@ -1111,10 +1458,10 @@ local function show_forms(base)
 end
 
 
-local function make_table(base)
-	local forms = base.forms
+local function make_table(alternant_spec)
+	local forms = alternant_spec.forms
 
-	local table_spec = [=[
+	local table_spec_part1 = [=[
 <div class="NavFrame" style="width:60em">
 <div class="NavHead" style="text-align:left; background:#e0e0ff;">{title}{annotation}</div>
 <div class="NavContent">
@@ -1142,10 +1489,26 @@ local function make_table(base)
 | {pres_adv_part}
 | {past_adv_part}
 |- class="rowgroup"
-! 
+]=]
+
+	local table_spec_single_aspect = [=[
+!
 ! [[present tense]]
 ! [[future tense]]
 |-
+]=]
+
+	local table_spec_biaspectual = [=[
+! rowspan="2" |
+! [[present tense|present&nbsp;tense]]&nbsp;(imperfective)
+! [[future tense|future&nbsp;tense]]&nbsp;(imperfective)
+|- class="rowgroup"
+! style="text-align: center;" | [[future tense|future&nbsp;tense]]&nbsp;(perfective)
+! —
+|-
+]=]
+
+	local table_spec_part2 = [=[
 ! [[first-person singular|1st singular]]<br />{ya}
 | {pres_1sg}
 | {futr_1sg}
@@ -1197,6 +1560,10 @@ local function make_table(base)
 | {past_n}
 |{\cl}{notes_clause}</div></div>]=]
 
+	local table_spec = table_spec_part1 ..
+		(alternant_spec.aspect == "both" and table_spec_biaspectual or table_spec_single_aspect) ..
+		table_spec_part2
+
 	local notes_template = [===[
 <div style="width:100%;text-align:left;background:#d9ebff">
 <div style="display:inline-block;text-align:left;padding-left:1em;padding-right:1em">
@@ -1204,8 +1571,8 @@ local function make_table(base)
 </div></div>
 ]===]
 
-	if base.title then
-		forms.title = base.title
+	if alternant_spec.title then
+		forms.title = alternant_spec.title
 	else
 		forms.title = 'Conjugation of <i lang="uk" class="Cyrl">' .. forms.lemma .. '</i>'
 	end
@@ -1215,30 +1582,48 @@ local function make_table(base)
 		forms.past_pasv_part_impers = "<br />impersonal: " .. forms.past_pasv_part_impers
 	end
 
-	if base.manual then
+	if alternant_spec.manual then
 		forms.annotation = ""
 	else
 		local ann_parts = {}
-		if base.conj == "irreg" then
+		local saw_irreg_conj = false
+		local saw_base_irreg = false
+		local all_irreg_conj = true
+		local conjs = {}
+		for _, base in ipairs(alternant_spec.alternants) do
+			m_table.insertIfNot(conjs, base.conj)
+			if base.conj == "irreg" then
+				saw_irreg_conj = true
+			else
+				all_irreg_conj = false
+			end
+			if base.irreg then
+				saw_base_irreg = true
+			end
+		end
+		if all_irreg_conj then
 			table.insert(ann_parts, "irregular")
 		else
-			table.insert(ann_parts, "class " .. base.conj)
+			table.insert(ann_parts, "class " .. table.concat(conjs, " // "))
 		end
 		table.insert(ann_parts,
-			base.aspect == "impf" and "imperfective" or
-			base.aspect == "pf" and "perfective" or
+			alternant_spec.aspect == "impf" and "imperfective" or
+			alternant_spec.aspect == "pf" and "perfective" or
 			"biaspectual")
-		if base.trans then
+		if alternant_spec.trans then
 			table.insert(ann_parts,
-				base.trans == "tr" and "transitive" or "intransitive")
+				alternant_spec.trans == "tr" and "transitive" or
+				alternant_spec.trans == "intr" and "intransitive" or
+				"transitive and intransitive"
+			)
 		end
-		if base.is_refl then
+		if alternant_spec.is_refl then
 			table.insert(ann_parts, "reflexive")
 		end
-		if base.impers then
+		if alternant_spec.impers then
 			table.insert(ann_parts, "impersonal")
 		end
-		if base.conj ~= "irreg" and base.irreg then
+		if saw_base_irreg and not saw_irreg_conj then
 			table.insert(ann_parts, "irregular")
 		end
 		forms.annotation = " (" .. table.concat(ann_parts, ", ") .. ")"
@@ -1256,10 +1641,12 @@ local function make_table(base)
 	forms.ya_ty_vona = tag_text("я / ти / вона")
 	forms.vono = tag_text("воно")
 
-	if base.aspect == "pf" then
+	if alternant_spec.aspect == "pf" then
 		forms.aspect_indicator = "[[perfective aspect]]"
-	else
+	elseif alternant_spec.aspect == "impf" then
 		forms.aspect_indicator = "[[imperfective aspect]]"
+	else
+		forms.aspect_indicator = "[[biaspectual]]"
 	end
 
 	forms.notes_clause = forms.footnote ~= "" and
@@ -1283,21 +1670,24 @@ function export.do_generate_forms(parent_args, pos, from_headword, def)
 	end
 
 	local args = m_para.process(parent_args, params)
-	local base, lemma = parse_word_spec(args[1])
-	base.title = args.title
-	base.footnotes = args.footnote
-	base.forms = {}
-	lemma = normalize_lemma(base, lemma)
-	detect_indicator_and_form_spec(base, lemma)
-	add_infinitive(base, lemma)
-	conjs[base.conjnum](base, lemma, base.accent)
-	if base.is_refl then
-		add_reflexive_suffix(base)
+	local alternant_spec = parse_alternant_or_word_spec(args[1])
+	alternant_spec.title = args.title
+	alternant_spec.footnotes = args.footnote
+	alternant_spec.forms = {}
+	for _, base in ipairs(alternant_spec.alternants) do
+		base.forms = alternant_spec.forms
+		normalize_lemma(base)
 	end
-	process_overrides(base.forms, args)
-	set_present_future(base)
-	add_categories(base)
-	return base
+	detect_all_indicator_and_form_specs(alternant_spec)
+	for _, base in ipairs(alternant_spec.alternants) do
+		add_infinitive(base)
+		conjs[base.conjnum](base, base.lemma, base.accent)
+	end
+	add_reflexive_suffix(alternant_spec)
+	process_overrides(alternant_spec.forms, args)
+	set_present_future(alternant_spec)
+	add_categories(alternant_spec)
+	return alternant_spec
 end
 
 
@@ -1316,22 +1706,22 @@ function export.do_generate_forms_manual(parent_args, pos, from_headword, def)
 	end
 
 	local args = m_para.process(parent_args, params)
-	if args.aspect ~= "pf" and args.aspect ~= "impf" then
-		error("Aspect '" .. args.aspect .. "' must be 'pf' or 'impf'")
+	if args.aspect ~= "pf" and args.aspect ~= "impf" and args.aspect ~= "both" then
+		error("Aspect '" .. args.aspect .. "' must be 'pf', 'impf' or 'both'")
 	end
-	local base = {
+	local alternant_spec = {
 		aspect = args.aspect,
 		title = args.title,
 		footnotes = args.footnote,
 		forms = {},
 		manual = true,
 	}
-	process_overrides(base.forms, args)
-	augment_with_alt_infinitive(base)
-	set_reflexive_flag(base)
-	set_present_future(base)
-	add_categories(base)
-	return base
+	process_overrides(alternant_spec.forms, args)
+	augment_with_alt_infinitive(alternant_spec)
+	set_reflexive_flag(alternant_spec)
+	set_present_future(alternant_spec)
+	add_categories(alternant_spec)
+	return alternant_spec
 end
 
 
@@ -1339,9 +1729,9 @@ end
 -- user-specified arguments and generate a displayable table of the conjugated forms.
 function export.show(frame)
 	local parent_args = frame:getParent().args
-	local base = export.do_generate_forms(parent_args)
-	show_forms(base)
-	return make_table(base) .. require("Module:utilities").format_categories(base.categories, lang)
+	local alternant_spec = export.do_generate_forms(parent_args)
+	show_forms(alternant_spec)
+	return make_table(alternant_spec) .. require("Module:utilities").format_categories(alternant_spec.categories, lang)
 end
 
 
@@ -1349,9 +1739,9 @@ end
 -- manually-specified inflections and generate a displayable table of the conjugated forms.
 function export.show_manual(frame)
 	local parent_args = frame:getParent().args
-	local base = export.do_generate_forms_manual(parent_args)
-	show_forms(base)
-	return make_table(base) .. require("Module:utilities").format_categories(base.categories, lang)
+	local alternant_spec = export.do_generate_forms_manual(parent_args)
+	show_forms(alternant_spec)
+	return make_table(alternant_spec) .. require("Module:utilities").format_categories(alternant_spec.categories, lang)
 end
 
 
@@ -1359,16 +1749,16 @@ end
 -- "SLOT=FORM,FORM,...|SLOT=FORM,FORM,...|...". Embedded pipe symbols (as might occur
 -- in embedded links) are converted to <!>. If INCLUDE_PROPS is given, also include
 -- additional properties (currently, only "|aspect=ASPECT"). This is for use by bots.
-local function concat_forms(base, include_props)
+local function concat_forms(alternant_spec, include_props)
 	local ins_text = {}
 	for slot, _ in pairs(output_verb_slots) do
-		local formtext = com.concat_forms_in_slot(base.forms[slot])
+		local formtext = com.concat_forms_in_slot(alternant_spec.forms[slot])
 		if formtext then
 			table.insert(ins_text, slot .. "=" .. formtext)
 		end
 	end
 	if include_props then
-		table.insert(ins_text, "aspect=" .. base.aspect)
+		table.insert(ins_text, "aspect=" .. alternant_spec.aspect)
 	end
 	return table.concat(ins_text, "|")
 end
@@ -1380,8 +1770,8 @@ end
 function export.generate_forms(frame)
 	local include_props = frame.args["include_props"]
 	local parent_args = frame:getParent().args
-	local base = export.do_generate_forms(parent_args)
-	return concat_forms(base, include_props)
+	local alternant_spec = export.do_generate_forms(parent_args)
+	return concat_forms(alternant_spec, include_props)
 end
 
 
