@@ -444,7 +444,7 @@ end
 
 
 local function add_ppp(base, stem)
-	if base.is_refl or not base.ppp or base.trans ~= "tr" then
+	if base.is_refl or not base.ppp or base.trans == "intr" then
 		return
 	end
 	if not base.impers then
@@ -977,7 +977,7 @@ local function parse_indicator_and_form_spec(angle_bracket_spec)
 				error("Can't specify aspect twice: '" .. inside .. "'")
 			end
 			base.aspect = part
-		elseif part == "tr" or part == "intr" then
+		elseif part == "tr" or part == "intr" or part == "mixed" then
 			if base.trans then
 				error("Can't specify transitivity twice: " .. inside .. "'")
 			end
@@ -1097,11 +1097,11 @@ local function detect_indicator_and_form_spec(base)
 		error("Transitivity of 'tr' or 'intr' must be specified")
 	end
 	if base.ppp ~= nil then
-		if base.trans ~= "tr" then
-			error("Can only specify 'ppp' or '-ppp' with transitive verbs")
+		if base.trans == "intr" then
+			error("Can't specify 'ppp' or '-ppp' with intransitive verbs")
 		end
-	elseif base.trans == "tr" then
-		error("Must specify 'ppp' or '-ppp' with transitive verbs")
+	elseif base.trans ~= "intr" then
+		error("Must specify 'ppp' or '-ppp' with transitive or mixed-transitive verbs")
 	end
 	if base.ppp and base.retractedppp == nil then
 		if base.conjnum == "14" or base.conjnum == "4" and base.accent == "b" then
