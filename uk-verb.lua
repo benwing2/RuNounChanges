@@ -30,7 +30,7 @@ local m_string_utilities = require("Module:string utilities")
 local m_script_utilities = require("Module:script utilities")
 local iut = require("Module:inflection utilities")
 local m_para = require("Module:parameters")
-local com = require("Module:User:Benwing2/uk-common")
+local com = require("Module:uk-common")
 
 local current_title = mw.title.getCurrentTitle()
 local NAMESPACE = current_title.nsText
@@ -161,6 +161,15 @@ local function combine_stem_ending(stem, ending)
 end
 
 
+local function generate_form(form, footnote)
+	if footnote then
+		return {form = form, footnotes = {footnote}}
+	else
+		return form
+	end
+end
+
+
 local function is_vocalic(stem)
 	return rfind(stem, com.vowel_c .. AC .. "?$")
 end
@@ -265,19 +274,21 @@ local function add(base, slot, stems, endings)
 end
 
 
-local function add_imperative(base, sg2)
-	add(base, "impr_2sg", sg2, "")
+local function add_imperative(base, sg2, footnote)
+	local sg2form = generate_form(sg2, footnote)
+	add(base, "impr_2sg", sg2form, "")
 	-- "Long" imperatives end in -и or occasionally -ї (e.g. труї́ from труї́ти, ви́труї from ви́труїти)
 	local stem, vowel, ac = rmatch(sg2, "^(.-)([иї])(" .. AC .. "?)$")
 	if stem then
 		local acvowel = (vowel == "и" and "і" or "ї") .. ac
-		add(base, "impr_1pl", stem, {acvowel .. "м", acvowel .. "мо"})
-		add(base, "impr_2pl", stem, {acvowel .. "ть"})
+		local stemform = generate_form(stem, footnote)
+		add(base, "impr_1pl", stemform, {acvowel .. "м", acvowel .. "мо"})
+		add(base, "impr_2pl", stemform, {acvowel .. "ть"})
 	elseif is_vocalic(sg2) then
 		error("Invalid 2sg imperative, ends in vowel other than -и or -ї: '" .. sg2 .. "'")
 	else
-		add(base, "impr_1pl", sg2, "мо")
-		add(base, "impr_2pl", sg2, "те")
+		add(base, "impr_1pl", sg2form, "мо")
+		add(base, "impr_2pl", sg2form, "те")
 	end
 end
 
@@ -874,6 +885,24 @@ conjs["irreg"] = function(base, lemma, accent)
 		end
 		return
 	end
+	prefix = rmatch(lemma, "^(.*по)ві́?сти́?$")
+	if prefix then
+		local stressed_prefix = com.is_stressed(prefix)
+		if stressed_prefix then
+			add_pres_futr(base, prefix, "вім", "віси", "вість", "вімо", "вісте", "відять")
+			add_imperative(base, prefix .. "відж", "[lc]")
+			add_imperative(base, prefix .. "віж", "[lc]")
+			add_default_past(base, prefix .. "ві")
+			-- no PPP
+		else
+			add_pres_futr(base, prefix, "ві́м", "віси́", "ві́сть", "вімо́", "вісте́", "відя́ть")
+			add_imperative(base, prefix .. "ві́дж", "[lc]")
+			add_imperative(base, prefix .. "ві́ж", "[lc]")
+			add_default_past(base, prefix .. "ві́")
+			-- no PPP
+		end
+		return
+	end
 	prefix = rmatch(lemma, "^(.*)ї́?сти$")
 	if prefix then
 		local stressed_prefix = com.is_stressed(prefix)
@@ -906,6 +935,23 @@ conjs["irreg"] = function(base, lemma, accent)
 		local stressed_prefix = com.is_stressed(prefix)
 		add_present_e(base, prefix .. (stressed_prefix and "їд" or "ї́д"), accent)
 		add_default_past(base, prefix .. (stressed_prefix and "їха" or "ї́ха"))
+		-- no PPP
+		return
+	end
+	prefix = rmatch(lemma, "^(.*)шиби́?ти$")
+	if prefix then
+		local stressed_prefix = com.is_stressed(prefix)
+		add_present_e(base, prefix .. "шиб", stressed_prefix and "a" or "b")
+		local past_msg = prefix .. (stressed_prefix and "шиб" or "ши́б")
+		add_past(base, past_msg, past_msg .. "л")
+		add_ppp(base, prefix .. (stressed_prefix and "шиблен" or "ши́блен")) -- e.g. проши́блений from прошиби́ти
+		return
+	end
+	prefix = rmatch(lemma, "^(.*соп)і́ти$")
+	if prefix then
+		add_pres_futr(base, prefix, "лю́", "е́ш", "е́", {"е́м", "емо́"}, "ете́", "ля́ть")
+		add_imperative(base, prefix .. "и́")
+		add_default_past(base, prefix .. "і́")
 		-- no PPP
 		return
 	end
@@ -1100,7 +1146,7 @@ local function detect_indicator_and_form_spec(base)
 		if base.trans == "intr" then
 			error("Can't specify 'ppp' or '-ppp' with intransitive verbs")
 		end
-	elseif base.trans ~= "intr" then
+	elseif base.trans and base.trans ~= "intr" then
 		error("Must specify 'ppp' or '-ppp' with transitive or mixed-transitive verbs")
 	end
 	if base.ppp and base.retractedppp == nil then
@@ -1391,9 +1437,11 @@ local function add_categories(alternant_spec)
 	if alternant_spec.impers then
 		insert("impersonal")
 	end
-	for _, base in ipairs(alternant_spec.alternants) do
-		if base.conj == "irreg" or base.irreg then
-			insert("irregular")
+	if alternant_spec.alternants then -- not when manual
+		for _, base in ipairs(alternant_spec.alternants) do
+			if base.conj == "irreg" or base.irreg then
+				insert("irregular")
+			end
 		end
 	end
 	alternant_spec.categories = cats
@@ -1401,6 +1449,11 @@ end
 
 
 local function show_forms(alternant_spec)
+	local footnote_obj = {
+		notes = {},
+		seen_notes = {},
+		noteindex = 1,
+	}
 	local forms = alternant_spec.forms
 	local lemmas = {}
 	if forms.infinitive then
@@ -1438,6 +1491,24 @@ local function show_forms(alternant_spec)
 				tr = com.translit_no_links(uk_text)
 				local trentry, trnotes = m_table_tools.get_notes(tr)
 				tr = require("Module:script utilities").tag_translit(trentry, lang, "default", " style=\"color: #888;\"") .. trnotes
+				if form.footnotes then
+					local link_indices = {}
+					for _, footnote in ipairs(form.footnotes) do
+						footnote = iut.expand_footnote(footnote)
+						local this_noteindex = footnote_obj.seen_notes[footnote]
+						if not this_noteindex then
+							-- Generate a footnote index.
+							this_noteindex = footnote_obj.noteindex
+							footnote_obj.noteindex = footnote_obj.noteindex + 1
+							table.insert(footnote_obj.notes, '<sup style="color: red">' .. this_noteindex .. '</sup>' .. footnote)
+							footnote_obj.seen_notes[footnote] = this_noteindex
+						end
+						m_table.insertIfNot(link_indices, this_noteindex)
+					end
+					local footnote_text = '<sup style="color: red">' .. table.concat(link_indices, ",") .. '</sup>'
+					link = link .. footnote_text
+					tr = tr .. footnote_text
+				end
 				table.insert(uk_spans, link)
 				table.insert(tr_spans, tr)
 			end
@@ -1449,7 +1520,7 @@ local function show_forms(alternant_spec)
 		end
 	end
 
-	local all_notes = {}
+	local all_notes = footnote_obj.notes
 	for _, note in ipairs(alternant_spec.footnotes) do
 		local symbol, entry = m_table_tools.get_initial_notes(note)
 		table.insert(all_notes, symbol .. entry)
