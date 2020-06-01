@@ -133,12 +133,13 @@ end
 
 
 function export.iotate(stem)
-	stem = rsub(stem, "[сх]$", "ш")
 	stem = rsub(stem, "с[кт]$", "щ")
+	stem = rsub(stem, "з[дгґ]$", "ждж")
+	stem = rsub(stem, "к?т$", "ч")
+	stem = rsub(stem, "зк$", "жч")
 	stem = rsub(stem, "[кц]$", "ч")
-	stem = rsub(stem, "т$", "ч")
+	stem = rsub(stem, "[сх]$", "ш")
 	stem = rsub(stem, "[гз]$", "ж")
-	stem = rsub(stem, "зд$", "ждж")
 	stem = rsub(stem, "д$", "дж")
 	stem = rsub(stem, "([бвмпф])$", "%1л")
 	return stem
