@@ -150,60 +150,6 @@ local function stress_ending(ending)
 end
 
 
-local function combine_stem_ending(stem, ending)
-	if stem == "?" then
-		return "?"
-	elseif com.is_stressed(ending) then
-		return com.remove_stress(stem) .. ending
-	else
-		return stem .. ending
-	end
-end
-
-
-local function generate_form(form, footnote)
-	if footnote then
-		return {form = form, footnotes = {footnote}}
-	else
-		return form
-	end
-end
-
-
-local function is_vocalic(stem)
-	return rfind(stem, com.vowel_c .. AC .. "?$")
-end
-
-
-local function convert_to_general_form(word_or_words)
-	if type(word_or_words) == "string" then
-		return {{form = word_or_words}}
-	elseif word_or_words.form then
-		return {word_or_words}
-	else
-		local retval = {}
-		for _, form in ipairs(word_or_words) do
-			if type(form) == "string" then
-				table.insert(retval, {form = form})
-			else
-				table.insert(retval, form)
-			end
-		end
-		return retval
-	end
-end
-
-
-local function is_table_of_strings(forms)
-	for _, form in ipairs(forms) do
-		if type(form) ~= "string" then
-			return false
-		end
-	end
-	return true
-end
-
-
 local function skip_slot(base, slot)
 	if slot == "infinitive" then
 		return false
@@ -238,53 +184,24 @@ end
 
 
 local function add(base, slot, stems, endings)
-	local forms = base.forms
-	if stems == nil then
-		return
-	end
 	if skip_slot(base, slot) then
 		return
 	end
-	if type(stems) == "string" and type(endings) == "string" then
-		iut.insert_form(forms, slot, {form = combine_stem_ending(stems, endings)})
-	elseif type(stems) == "string" and is_table_of_strings(endings) then
-		for _, ending in ipairs(endings) do
-			iut.insert_form(forms, slot, {form = combine_stem_ending(stems, ending)})
-		end
-	else
-		stems = convert_to_general_form(stems)
-		endings = convert_to_general_form(endings)
-		for _, stem in ipairs(stems) do
-			for _, ending in ipairs(endings) do
-				local footnotes = nil
-				if stem.footnotes and ending.footnotes then
-					footnotes = m_table.shallowcopy(stem.footnotes)
-					for _, footnote in ipairs(ending.footnotes) do
-						m_table.insertIfNot(footnotes, footnote)
-					end
-				elseif stem.footnotes then
-					footnotes = stem.footnotes
-				elseif ending.footnotes then
-					footnotes = ending.footnotes
-				end
-				iut.insert_form(forms, slot, {form = combine_stem_ending(stem.form, ending.form), footnotes = footnotes})
-			end
-		end
-	end
+	iut.add_forms(base.forms, slot, stems, endings, com.combine_stem_ending)
 end
 
 
 local function add_imperative(base, sg2, footnote)
-	local sg2form = generate_form(sg2, footnote)
+	local sg2form = com.generate_form(sg2, footnote)
 	add(base, "impr_2sg", sg2form, "")
 	-- "Long" imperatives end in -и or occasionally -ї (e.g. труї́ from труї́ти, ви́труї from ви́труїти)
 	local stem, vowel, ac = rmatch(sg2, "^(.-)([иї])(" .. AC .. "?)$")
 	if stem then
 		local acvowel = (vowel == "и" and "і" or "ї") .. ac
-		local stemform = generate_form(stem, footnote)
+		local stemform = com.generate_form(stem, footnote)
 		add(base, "impr_1pl", stemform, {acvowel .. "м", acvowel .. "мо"})
 		add(base, "impr_2pl", stemform, {acvowel .. "ть"})
-	elseif is_vocalic(sg2) then
+	elseif com.is_vocalic(sg2) then
 		error("Invalid 2sg imperative, ends in vowel other than -и or -ї: '" .. sg2 .. "'")
 	else
 		add(base, "impr_1pl", sg2form, "мо")
@@ -307,7 +224,7 @@ local function add_imperative_from_present(base, presstem, accent)
 		end
 	end
 	local sg2
-	if is_vocalic(presstem) then
+	if com.is_vocalic(presstem) then
 		-- If the stem ends in a vowel, then regardless of imptype, stress the final
 		-- syllable if needed and add й, effectively using the short type.
 		sg2 = com.maybe_stress_final_syllable(presstem) .. "й"
@@ -373,7 +290,7 @@ local function add_present_e(base, stem, accent, use_y_endings, overriding_imp, 
 		return
 	end
 	local endings
-	if use_y_endings == "all" or is_vocalic(stem) then
+	if use_y_endings == "all" or com.is_vocalic(stem) then
 		endings = {"ю", "єш", base.is_refl and "єть" or "є", {"єм", "ємо"}, "єте", "ють"}
 	elseif use_y_endings == "1sg3pl" and not rfind(stem, com.hushing_c .. "$") then
 		endings = {"ю", "еш", base.is_refl and "еть" or "е", {"ем", "емо"}, "ете", "ють"}
@@ -404,7 +321,7 @@ local function add_present_i(base, stem, accent, overriding_imp, no_override_ste
 	end
 	local endings
 	local iotated_type, iotated_stem
-	if is_vocalic(stem) then
+	if com.is_vocalic(stem) then
 		endings = {"ю", "їш", "їть", {"їм", "їмо"}, "їте", "ять"}
 		iotated_type = "none"
 	else
@@ -583,7 +500,7 @@ end
 
 conjs["4"] = function(base, lemma, accent)
 	local stem, suffix, ac = separate_stem_suffix_accent(lemma, "4", accent, "^(.*)([иї])(́?)ти$")
-	local stem_is_vocalic = is_vocalic(stem)
+	local stem_is_vocalic = com.is_vocalic(stem)
 	if suffix == "ї" and not stem_is_vocalic then
 		error("Ending -їти can only be used with a vocalic stem: '" .. lemma .. "'")
 	elseif suffix ~= "ї" and stem_is_vocalic then
@@ -625,7 +542,7 @@ end
 
 conjs["5"] = function(base, lemma, accent)
 	local stem, suffix, ac = separate_stem_suffix_accent(lemma, "5", accent, "^(.*)([іая])(́?)ти$")
-	local stem_is_vocalic = is_vocalic(stem)
+	local stem_is_vocalic = com.is_vocalic(stem)
 	if suffix == "я" and not stem_is_vocalic then
 		error("Ending -яти can only be used with a vocalic stem: '" .. lemma .. "'")
 	elseif suffix ~= "я" and stem_is_vocalic then
@@ -653,7 +570,7 @@ conjs["6"] = function(base, lemma, accent)
 	else
 		stem, suffix, ac = separate_stem_suffix_accent(lemma, "6", accent, "^(.*)([іая])(́?)ти$")
 	end
-	local stem_is_vocalic = is_vocalic(stem)
+	local stem_is_vocalic = com.is_vocalic(stem)
 	if suffix == "я" and not stem_is_vocalic then
 		error("Ending -яти can only be used with a vocalic stem: '" .. lemma .. "'")
 	elseif suffix ~= "я" and stem_is_vocalic then

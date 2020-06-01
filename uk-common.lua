@@ -146,6 +146,11 @@ function export.iotate(stem)
 end
 
 
+function export.is_vocalic(stem)
+	return rfind(stem, export.vowel_c .. AC .. "?$")
+end
+
+
 -- Given a list of forms (each of which is a table of the form {form=FORM, footnotes=FOOTNOTES}),
 -- concatenate into a SLOT=FORM,FORM,... string, replacing embedded | signs with <!>.
 function export.concat_forms_in_slot(forms)
@@ -157,6 +162,26 @@ function export.concat_forms_in_slot(forms)
 		return table.concat(new_vals, ",")
 	else
 		return nil
+	end
+end
+
+
+function export.combine_stem_ending(stem, ending)
+	if stem == "?" then
+		return "?"
+	elseif export.is_stressed(ending) then
+		return export.remove_stress(stem) .. ending
+	else
+		return stem .. ending
+	end
+end
+
+
+function export.generate_form(form, footnote)
+	if footnote then
+		return {form = form, footnotes = {footnote}}
+	else
+		return form
 	end
 end
 

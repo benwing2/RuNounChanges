@@ -263,4 +263,66 @@ function export.expand_footnote(note)
 end
 
 
+local function convert_to_general_form(word_or_words)
+	if type(word_or_words) == "string" then
+		return {{form = word_or_words}}
+	elseif word_or_words.form then
+		return {word_or_words}
+	else
+		local retval = {}
+		for _, form in ipairs(word_or_words) do
+			if type(form) == "string" then
+				table.insert(retval, {form = form})
+			else
+				table.insert(retval, form)
+			end
+		end
+		return retval
+	end
+end
+
+
+local function is_table_of_strings(forms)
+	for _, form in ipairs(forms) do
+		if type(form) ~= "string" then
+			return false
+		end
+	end
+	return true
+end
+
+
+function export.add_forms(forms, slot, stems, endings, combine_stem_ending)
+	if stems == nil or endings == nil then
+		return
+	end
+	if type(stems) == "string" and type(endings) == "string" then
+		export.insert_form(forms, slot, {form = combine_stem_ending(stems, endings)})
+	elseif type(stems) == "string" and is_table_of_strings(endings) then
+		for _, ending in ipairs(endings) do
+			export.insert_form(forms, slot, {form = combine_stem_ending(stems, ending)})
+		end
+	else
+		stems = convert_to_general_form(stems)
+		endings = convert_to_general_form(endings)
+		for _, stem in ipairs(stems) do
+			for _, ending in ipairs(endings) do
+				local footnotes = nil
+				if stem.footnotes and ending.footnotes then
+					footnotes = m_table.shallowcopy(stem.footnotes)
+					for _, footnote in ipairs(ending.footnotes) do
+						m_table.insertIfNot(footnotes, footnote)
+					end
+				elseif stem.footnotes then
+					footnotes = stem.footnotes
+				elseif ending.footnotes then
+					footnotes = ending.footnotes
+				end
+				export.insert_form(forms, slot, {form = combine_stem_ending(stem.form, ending.form), footnotes = footnotes})
+			end
+		end
+	end
+end
+
+
 return export
