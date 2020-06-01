@@ -1613,7 +1613,7 @@ def find_modifiable_lang_section(text, lang, pagemsg):
     sectail = ""
 
   # Split off categories at end
-  mm = re.match(r"^(.*?\n)(\n*(\[\[Category:[^\]]+\]\]\n*)*)$",
+  mm = re.match(r"^(.*?\n)(\n*((?:\[\[Category:[^\[\]\n]+\]\]|\{\{(?:c|C|cat|cln|topic|topics|categorize|catlangname|catlangcode)\|[^{}\n]*\}\})\n*)*)$",
       secbody, re.S)
   if mm:
     secbody, secbodytail = mm.group(1), mm.group(2)
