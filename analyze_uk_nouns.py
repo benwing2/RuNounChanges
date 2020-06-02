@@ -6,40 +6,18 @@ import pywikibot, re, sys, codecs, argparse
 import blib
 from blib import getparam, rmparam, msg, site, tname
 
+import uklib
+
 import find_regex
 
 
-AC = u"\u0301"
-vowels = u"аеиоуіяєїю"
-vowels_c = "[" + vowels + "]"
-non_vowels_c = "[^" + vowels + "]"
-
-def is_end_stressed(word):
-  return not not re.search(AC + non_vowels_c + "*$", word)
-
-def is_unstressed(word):
-  return AC not in word
-
-def is_multi_stressed(word):
-  num_stresses = sum(1 if x == AC else 0 for x in word)
-  return num_stresses > 1
-
-def is_monosyllabic(word):
-  return len(re.sub(non_vowels_c, "", word)) <= 1
-
-def add_monosyllabic_stress(word):
-  if is_monosyllabic(word):
-    return re.sub("(" + vowels_c + ")", r"\1" + AC, word)
-  else:
-    return word
-
-def param_is_end_stressed(param):
-  values = [add_monosyllabic_stress(word) for word in re.split(", *", param)]
-  if any(is_unstressed(v) for v in values):
+def param_is_end_stressed(param, possible_endings=[]):
+  values = [uklib.add_monosyllabic_stress(word) for word in re.split(", *", param)]
+  if any(uklib.is_unstressed(v) for v in values):
     return "unknown"
-  if any(is_multi_stressed(v) for v in values):
+  if any(uklib.is_mixed_stressed(v, possible_endings) for v in values):
     return "mixed"
-  end_stresses = [is_end_stressed(v) for v in values]
+  end_stresses = [uklib.is_end_stressed(v, possible_endings) for v in values]
   if all(end_stresses):
     return True
   if any(end_stresses):
@@ -63,7 +41,9 @@ stress_patterns = [
 genitive_singular_endings = [u"а", u"я", u"у", u"ю", u"і", u"ї", u"и"]
 dative_singular_endings = [u"у", u"ю", u"ові", u"еві", u"єві", u"і", u"ї"]
 locative_singular_endings = [u"у", u"ю", u"ові", u"еві", u"єві", u"і", u"ї"]
-vocative_singular_endings = [u"е", u"є", u"у", u"ю", u"о"]
+vocative_singular_endings = [u"е", u"є", u"у", u"ю", u"о", u"я"]
+genitive_plural_endings = [u"ей", u"єй", u"ів", u"їв", u"ь", ""]
+instrumental_plural_endings = [u"ами", u"ями", u"ьми"]
 
 def process_text_on_page(index, pagetitle, text):
   def pagemsg(txt):
@@ -95,23 +75,25 @@ def process_text_on_page(index, pagetitle, text):
         pagemsg("WARNING: Multiple genders: %s" % unicode(t))
     if tn == "uk-decl-noun":
       def fetch(param):
-        val = getparam(t, param)
+        val = getparam(t, param).strip()
         return blib.remove_links(val)
       nom_sg = fetch("1")
       gen_sg = fetch("3")
       gen_sg_end_stressed = param_is_end_stressed(gen_sg)
       dat_sg = fetch("5")
-      dat_sg_end_stressed = param_is_end_stressed(dat_sg)
+      dat_sg_end_stressed = param_is_end_stressed(dat_sg, dative_singular_endings)
       acc_sg = fetch("7")
       acc_sg_end_stressed = param_is_end_stressed(acc_sg)
       loc_sg = fetch("11")
-      loc_sg_end_stressed = param_is_end_stressed(loc_sg)
+      loc_sg_end_stressed = param_is_end_stressed(loc_sg, locative_singular_endings)
       voc_sg = fetch("13")
       voc_sg_end_stressed = param_is_end_stressed(voc_sg)
       nom_pl = fetch("2")
       nom_pl_end_stressed = param_is_end_stressed(nom_pl)
       gen_pl = fetch("4")
+      gen_pl_end_stressed = param_is_end_stressed(gen_pl)
       ins_pl = fetch("10")
+      ins_pl_end_stressed = param_is_end_stressed(ins_pl, instrumental_plural_endings)
       loc_pl = fetch("12")
       loc_pl_end_stressed = param_is_end_stressed(loc_pl)
       if (gen_sg_end_stressed == "unknown" or
@@ -136,11 +118,11 @@ def process_text_on_page(index, pagetitle, text):
       elif "a" in seen_patterns and "c" in seen_patterns:
         seen_patterns = ["a", "c"]
       def fetch_endings(param, endings):
-        paramval = getparam(t, param)
+        paramval = fetch(param)
         values = re.split(", *", paramval)
         found_endings = []
         for v in values:
-          v = v.replace(AC, "")
+          v = v.replace(uklib.AC, "")
           for ending in endings:
             if v.endswith(ending):
               found_endings.append(ending)
@@ -153,16 +135,23 @@ def process_text_on_page(index, pagetitle, text):
       dat_sg_endings = fetch_endings("5", dative_singular_endings)
       loc_sg_endings = fetch_endings("11", locative_singular_endings)
       voc_sg_endings = fetch_endings("13", vocative_singular_endings)
+      gen_pl_endings = fetch_endings("4", genitive_plural_endings)
 
       def canon(val):
         return re.sub(", *", "/", val)
+      def stress(endstressed):
+        return (
+          "endstressed" if endstressed == True else
+          "stemstressed" if endstressed == False else "mixed"
+        )
 
-      pagemsg("%s\tgender:%s\tanimacy:%s\taccent:%s\tvoc_sg:%s\tplurale_tantum:%s\tgen_sg:%s\tdat_sg:%s\tloc_sg:%s\tvoc_sg:%s\t%s || \"?\" || %s || %s || %s || %s || %s || %s || || " % (
+      pagemsg("%s\tgender:%s\tanimacy:%s\taccent:%s\tgen_sg:%s\tdat_sg:%s\tloc_sg:%s\tvoc_sg:%s\tgen_pl:%s\tplurale_tantum:%s\tgen_sg:%s\tdat_sg:%s\tloc_sg:%s\tvoc_sg:%s\tgen_pl:%s\t%s || \"?\" || %s || %s || %s || %s || %s || %s || || " % (
         head, gender, animacy, ":".join(seen_patterns),
-        "endstressed" if voc_sg_end_stressed == True else
-        "stemstressed" if voc_sg_end_stressed == False else "mixed",
-        plurale_tantum, gen_sg_endings, dat_sg_endings, loc_sg_endings,
-        voc_sg_endings, canon(nom_sg), canon(gen_sg), canon(loc_sg),
+        stress(gen_sg_end_stressed), stress(dat_sg_end_stressed),
+        stress(loc_sg_end_stressed), stress(voc_sg_end_stressed),
+        stress(gen_pl_end_stressed), plurale_tantum,
+        gen_sg_endings, dat_sg_endings, loc_sg_endings, voc_sg_endings,
+        gen_pl_endings, canon(nom_sg), canon(gen_sg), canon(loc_sg),
         canon(voc_sg), canon(nom_pl), canon(gen_pl), canon(ins_pl)))
 
 
