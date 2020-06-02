@@ -186,4 +186,79 @@ function export.generate_form(form, footnote)
 end
 
 
+function export.show_forms(forms, lemmas, footnotes, slots_table)
+	local footnote_obj = {
+		notes = {},
+		seen_notes = {},
+		noteindex = 1,
+	}
+	local accel_lemma = lemmas[1]
+	forms.lemma = #lemmas > 0 and table.concat(lemmas, ", ") or mw.title.getCurrentTitle().text
+
+	local m_table_tools = require("Module:table tools")
+	for slot, accel_form in pairs(slots_table) do
+		local formvals = forms[slot]
+		if formvals then
+			local uk_spans = {}
+			local tr_spans = {}
+			for i, form in ipairs(formvals) do
+				-- FIXME, this doesn't necessarily work correctly if there is an
+				-- embedded link in form.form.
+				local uk_text = export.remove_monosyllabic_stress(form.form)
+				local link, tr
+				if form.form == "—" or form.form == "?" then
+					link = uk_text
+				else
+					local accel_obj
+					if accel_lemma and not form.no_accel then
+						accel_obj = {
+							form = accel_form,
+							lemma = accel_lemma,
+						}
+					end
+					local ukentry, uknotes = m_table_tools.get_notes(uk_text)
+					link = m_links.full_link{lang = lang, term = ukentry,
+						tr = "-", accel = accel_obj} .. uknotes
+				end
+				tr = export.translit_no_links(uk_text)
+				local trentry, trnotes = m_table_tools.get_notes(tr)
+				tr = require("Module:script utilities").tag_translit(trentry, lang, "default", " style=\"color: #888;\"") .. trnotes
+				if form.footnotes then
+					local link_indices = {}
+					for _, footnote in ipairs(form.footnotes) do
+						footnote = require("Module:inflection utilities").expand_footnote(footnote)
+						local this_noteindex = footnote_obj.seen_notes[footnote]
+						if not this_noteindex then
+							-- Generate a footnote index.
+							this_noteindex = footnote_obj.noteindex
+							footnote_obj.noteindex = footnote_obj.noteindex + 1
+							table.insert(footnote_obj.notes, '<sup style="color: red">' .. this_noteindex .. '</sup>' .. footnote)
+							footnote_obj.seen_notes[footnote] = this_noteindex
+						end
+						m_table.insertIfNot(link_indices, this_noteindex)
+					end
+					local footnote_text = '<sup style="color: red">' .. table.concat(link_indices, ",") .. '</sup>'
+					link = link .. footnote_text
+					tr = tr .. footnote_text
+				end
+				table.insert(uk_spans, link)
+				table.insert(tr_spans, tr)
+			end
+			local uk_span = table.concat(uk_spans, ", ")
+			local tr_span = table.concat(tr_spans, ", ")
+			forms[slot] = uk_span .. "<br />" .. tr_span
+		else
+			forms[slot] = "—"
+		end
+	end
+
+	local all_notes = footnote_obj.notes
+	for _, note in ipairs(footnotes) do
+		local symbol, entry = m_table_tools.get_initial_notes(note)
+		table.insert(all_notes, symbol .. entry)
+	end
+	forms.footnote = table.concat(all_notes, "<br />")
+end
+
+
 return export

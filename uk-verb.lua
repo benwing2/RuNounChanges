@@ -12,7 +12,7 @@ Authorship: Ben Wing <benwing2>
 TERMINOLOGY:
 
 -- "slot" = A particular combination of tense/mood/person/number/gender/etc.
-	 Example slot names for nouns are "pres_1sg" (present first singular) and
+	 Example slot names for verbs are "pres_1sg" (present first singular) and
 	 "past_pasv_part_impers" (impersonal past passive participle).
 	 Each slot is filled with zero or more forms.
 
@@ -25,7 +25,6 @@ TERMINOLOGY:
 local lang = require("Module:languages").getByCode("uk")
 local m_links = require("Module:links")
 local m_table = require("Module:table")
-local m_table_tools = require("Module:table tools")
 local m_string_utilities = require("Module:string utilities")
 local m_script_utilities = require("Module:script utilities")
 local iut = require("Module:inflection utilities")
@@ -1359,6 +1358,10 @@ local function add_categories(alternant_spec)
 			if base.conj == "irreg" or base.irreg then
 				insert("irregular")
 			end
+			if base.conj ~= "irreg" then
+				insert("class " .. base.conj)
+				insert("class " .. rsub(base.conj, "^([0-9]+).*", "%1"))
+			end
 		end
 	end
 	alternant_spec.categories = cats
@@ -1366,83 +1369,13 @@ end
 
 
 local function show_forms(alternant_spec)
-	local footnote_obj = {
-		notes = {},
-		seen_notes = {},
-		noteindex = 1,
-	}
-	local forms = alternant_spec.forms
 	local lemmas = {}
-	if forms.infinitive then
-		for _, inf in ipairs(forms.infinitive) do
+	if alternant_spec.forms.infinitive then
+		for _, inf in ipairs(alternant_spec.forms.infinitive) do
 			table.insert(lemmas, com.remove_monosyllabic_stress(inf.form))
 		end
 	end
-	local accel_lemma = lemmas[1]
-	forms.lemma = #lemmas > 0 and table.concat(lemmas, ", ") or PAGENAME
-
-	for slot, accel_form in pairs(output_verb_slots) do
-		local formvals = forms[slot]
-		if formvals then
-			local uk_spans = {}
-			local tr_spans = {}
-			for i, form in ipairs(formvals) do
-				-- FIXME, this doesn't necessarily work correctly if there is an
-				-- embedded link in form.form.
-				local uk_text = com.remove_monosyllabic_stress(form.form)
-				local link, tr
-				if form.form == "—" or form.form == "?" then
-					link = uk_text
-				else
-					local accel_obj
-					if accel_lemma and not form.no_accel then
-						accel_obj = {
-							form = accel_form,
-							lemma = accel_lemma,
-						}
-					end
-					local ukentry, uknotes = m_table_tools.get_notes(uk_text)
-					link = m_links.full_link{lang = lang, term = ukentry,
-						tr = "-", accel = accel_obj} .. uknotes
-				end
-				tr = com.translit_no_links(uk_text)
-				local trentry, trnotes = m_table_tools.get_notes(tr)
-				tr = require("Module:script utilities").tag_translit(trentry, lang, "default", " style=\"color: #888;\"") .. trnotes
-				if form.footnotes then
-					local link_indices = {}
-					for _, footnote in ipairs(form.footnotes) do
-						footnote = iut.expand_footnote(footnote)
-						local this_noteindex = footnote_obj.seen_notes[footnote]
-						if not this_noteindex then
-							-- Generate a footnote index.
-							this_noteindex = footnote_obj.noteindex
-							footnote_obj.noteindex = footnote_obj.noteindex + 1
-							table.insert(footnote_obj.notes, '<sup style="color: red">' .. this_noteindex .. '</sup>' .. footnote)
-							footnote_obj.seen_notes[footnote] = this_noteindex
-						end
-						m_table.insertIfNot(link_indices, this_noteindex)
-					end
-					local footnote_text = '<sup style="color: red">' .. table.concat(link_indices, ",") .. '</sup>'
-					link = link .. footnote_text
-					tr = tr .. footnote_text
-				end
-				table.insert(uk_spans, link)
-				table.insert(tr_spans, tr)
-			end
-			local uk_span = table.concat(uk_spans, ", ")
-			local tr_span = table.concat(tr_spans, ", ")
-			forms[slot] = uk_span .. "<br />" .. tr_span
-		else
-			forms[slot] = "—"
-		end
-	end
-
-	local all_notes = footnote_obj.notes
-	for _, note in ipairs(alternant_spec.footnotes) do
-		local symbol, entry = m_table_tools.get_initial_notes(note)
-		table.insert(all_notes, symbol .. entry)
-	end
-	forms.footnote = table.concat(all_notes, "<br />")
+	com.show_forms(alternant_spec.forms, lemmas, alternant_spec.footnotes, output_verb_slots)
 end
 
 
@@ -1643,8 +1576,48 @@ local function make_table(alternant_spec)
 end
 
 
--- Externally callable function to parse and decline a verb given user-specified arguments.
--- Return value is WORD_SPEC, an object where the declined forms are in `WORD_SPEC.forms`
+-- Implementation of template 'uk-verb cat'.
+function export.catboiler(frame)
+	local SUBPAGENAME = mw.title.getCurrentTitle().subpageText
+
+	local cats = {}
+
+	local cls, variant, pattern = rmatch(SUBPAGENAME, "^Ukrainian class ([0-9]*)(°?)([abc]?) verbs")
+	local text = nil
+	if not cls then
+		error("Invalid category name, should be e.g. \"Ukrainian class 3a verbs\"")
+	end
+	if pattern == "" then
+		table.insert(cats, "Ukrainian verbs by class|" .. cls .. variant)
+		text = "This category contains Ukrainian class " .. cls .. " verbs."
+	else
+		table.insert(cats, "Ukrainian verbs by class and accent pattern|" .. cls .. pattern)
+		table.insert(cats, "Ukrainian class " .. cls .. " verbs|" .. pattern)
+		text = "This category contains Ukrainian class " .. cls .. " verbs of " ..
+			"accent pattern " .. pattern .. (
+			variant == "" and "" or " and variant " .. variant) .. ". " .. (
+			pattern == "a" and "With this pattern, all forms are stem-stressed."
+			or pattern == "b" and "With this pattern, all forms are ending-stressed."
+			or "With this pattern, the first singular present indicative and all forms " ..
+			"outside of the present indicative are ending-stressed, while the remaining " ..
+			"forms of the present indicative are stem-stressed.").. (
+			variant == "" and "" or
+			cls == "3" and " The variant code indicates that the -н of the stem " ..
+			"is missing in most non-present-tense forms." or
+			" The variant code indicates that the present tense is not " ..
+			"[[Appendix:Glossary#iotation|iotated]]. (In most verbs of this class, " ..
+			"the present tense is iotated, e.g. писа́ти with present tense " ..
+			"пишу́, пи́шеш, пи́ше, etc.)")
+	end
+
+	return text	.. "\n" ..
+		mw.getCurrentFrame():expandTemplate{title="uk-categoryTOC", args={}}
+		.. require("Module:utilities").format_categories(cats, lang, nil, nil, "force")
+end
+
+
+-- Externally callable function to parse and conjugate a verb given user-specified arguments.
+-- Return value is WORD_SPEC, an object where the conjugated forms are in `WORD_SPEC.forms`
 -- for each slot. If there are no values for a slot, the slot key will be missing. The value
 -- for a given slot is a list of objects {form=FORM, footnotes=FOOTNOTES}.
 function export.do_generate_forms(parent_args, pos, from_headword, def)
@@ -1679,8 +1652,8 @@ function export.do_generate_forms(parent_args, pos, from_headword, def)
 end
 
 
--- Externally callable function to parse and decline a verb given user-specified arguments.
--- Return value is WORD_SPEC, an object where the declined forms are in `WORD_SPEC.forms`
+-- Externally callable function to parse and conjugate a verb where all forms are given manually.
+-- Return value is WORD_SPEC, an object where the conjugated forms are in `WORD_SPEC.forms`
 -- for each slot. If there are no values for a slot, the slot key will be missing. The value
 -- for a given slot is a list of objects {form=FORM, footnotes=FOOTNOTES}.
 function export.do_generate_forms_manual(parent_args, pos, from_headword, def)
@@ -1723,7 +1696,7 @@ function export.show(frame)
 end
 
 
--- Entry point for {{uk-conj-table}}. Template-callable function to parse and conjugate a verb given
+-- Entry point for {{uk-conj-manual}}. Template-callable function to parse and conjugate a verb given
 -- manually-specified inflections and generate a displayable table of the conjugated forms.
 function export.show_manual(frame)
 	local parent_args = frame:getParent().args
@@ -1751,7 +1724,7 @@ local function concat_forms(alternant_spec, include_props)
 	return table.concat(ins_text, "|")
 end
 
--- Template-callable function to parse and decline a noun given user-specified arguments and return
+-- Template-callable function to parse and conjugate a verb given user-specified arguments and return
 -- the forms as a string "SLOT=FORM,FORM,...|SLOT=FORM,FORM,...|...". Embedded pipe symbols (as might
 -- occur in embedded links) are converted to <!>. If |include_props=1 is given, also include
 -- additional properties (currently, only "|aspect=ASPECT"). This is for use by bots.
