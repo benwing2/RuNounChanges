@@ -3,195 +3,297 @@ Ukrainian declensions:
 ==Masculine==
 
 {|class="wikitable"
-! Noun !! Meaning !! Gen sg. !! Loc sg. !! Voc sg. !! Nom pl. !! Gen pl. !! Ins. Pl !! Notes
+! Noun !! Meaning !! Gen sg. !! Loc sg. !! Voc sg. !! Nom pl. !! Gen pl. !! Ins. Pl !! Similar nouns !! Notes
 |-
-| colspan=10 || Accent a
+! colspan=10 style="text-align: center;" | Accent a
 |-
-| біс<hum> || "demon" || бі́са || бі́сові/бі́сі || бі́се || бі́си || бі́сів || бі́сами || ||
+| біс<pr> || "demon" || бі́са || бі́сові/бі́сі || бі́се || бі́си || бі́сів || бі́сами || абази́н<pr> "Abaza", журналі́ст<pr> "journalist", корабе́л<pr> "shipbuilder", президе́нт<pr> "president", сусі́д<pr> "neighbor", член<pr> "member", etc. || 
 |-
-| бе́ркут<anml> || "golden eagle" || бе́ркута || бе́ркутові/бе́ркуті || бе́ркуте || бе́ркути || бе́ркутів || бе́ркутами || драко́н<anml> "dragon", го́луб<anml> "pigeon" ||
+| кия́нин<pr.in> || "Kievan" || кия́нина || кия́нинові/кия́нині || кия́нине || кия́ни || кия́н || кия́нами || росія́нин<pr.in> "Russian" ||
 |-
-| самого́н<genu> || "moonshine, samogon" || самого́ну || самого́ні || самого́не || самого́ни || самого́нів || самого́нами || вокза́л<genu> "train station" || Occurrence of loc sg. in -ові appears correlated with animate or personal nouns; for example, го́луб "pigeon" (animate) and го́луб "pet name for a man" (personal) have it, but го́луб ("pigeon-like figure") doesn't have it.
+| во́рон<anml> || "raven" || во́рона || во́ронові/во́роні || во́роне || во́рони || во́ронів || во́ронами || гад<anml> "reptile", драко́н<anml> "dragon", etc. || 
 |-
-| со́кіл || "falcon" || со́кола || со́колі || со́коле || соко́ли || соко́лів || соко́лами ||
+| бана́н<> || "banana" || бана́на || бана́ні || бана́не || бана́ни || бана́нів || бана́нами || во́лос<> "a hair", дива́н<> "sofa", докуме́нт<> "document", пилосо́с<> "vacuum cleaner", etc. || 
+|-
+| бі́знес<genu> || "business" || бі́знесу || бі́знесі || бі́знесе || бі́знеси || бі́знесів || бі́знесами || батальйо́н<genu> "battalion", вид<genu> "kind, sort", ви́рус<genu> "virus", вокза́л<genu> "train station", град<genu> "hail", обі́д<genu> "dinner, lunch", рестора́н<genu> "restaurant", etc. || 
+|-
+| дев'яси́л<genu:a> || "inula, elecampane" || дев'яси́лу/дев'яси́ла || дев'яси́лі || дев'яси́ле || дев'яси́ли || дев'яси́лів || дев'яси́лами || || 
+|-
+| вертолі́т<io> || "helicopter" || вертольо́та || вертольо́ті || вертольо́те || вертольо́ти || вертольо́тів || вертольо́тами || о́бід<io> "rim" || 
+|-
+| брід<io.genu> || "ford" || бро́ду || бро́ді || бро́де || бро́ди || бро́дів || бро́дами || ви́хід<io.genu> "exit", дзвін<io.genu> "bell", на́рід<io.genu> "people", підхі́д<io.genu> "approach", при́від<io.genu> "occasion", приві́д<io.genu> "bringing" || 
+|-
+| ву́гол<*> || "angle" || ву́гла || ву́глі || ву́гле || ву́гли || ву́глів || ву́глами || || 
+|-
+| де́рен<*.genu> || "sod" || де́рну || де́рні || де́рне || де́рни || де́рнів || де́рнами || те́рен<*.genu> "sloe, blackthorn" || 
+|-
+| ха́ос<sg> || "chaos, mess" || ха́осу || ха́осу/ха́осі || ха́осе || - || - || - || смара́гд<sg> "emerald (substance)", ве́рес<sg> "heather", го́лод<sg> "hunger", тис<sg> "yew (wood)", many others || 
+|-
+| ((ру́син<pr>,руси́н<b.pr>)) || "Rusyn" || ру́сина/русина́ || ру́синові/ру́сині/русино́ві/русині́ || ру́сине/руси́не || ру́сини/русини́ || ру́синів/русині́в || ру́синами/русина́ми || || 
+|-
+| ((христия́нин<pr.in>,християни́н<pr.in>)) || "Christian" || христия́нина/християни́на || христия́нинові/христия́нині/християни́нові/християни́ні || христия́нине/християни́не || христия́ни || христия́н || христия́нами || || the plural is only христия́н- because the -ин is removed and when stressed, stress has to shift to the left
+|-
+| вид<genu.locú> || "face, appearance" || ви́ду || виду́ || ви́де || ви́ди || ви́дів || ви́дами || || 
+|-
+| со́кіл<anml.io.plstem:соко́л.loci> || "falcon" || со́кола || со́колі || со́коле || соко́ли || соко́лів || соко́лами || || movi.info strongly disagrees; indicates special voc sg соко́ле and end stress in pl
+|-
+| за́хід<sg.io.loci> || "west" || за́ходу || за́ході || за́ходе || - || - || - || схід<sg.io.loci> "east" || 
+|-
+| по́піл<sg.ie.loci> || "ash" || по́пелу || по́пелі || по́пеле || - || - || - || || 
+|-
+| пил<sg.locú> || "dust" || пи́лу || пилу́ || пи́ле || - || - || - || || 
+|-
+| вус<nompla:y> || "moustache" || ву́са || ву́сі || ву́се || ву́са/ву́си || ву́сів || ву́сами || || 
 |-
 | лу́чник<hum> || "archer" || лу́чника || лу́чникові/лу́чнику || лу́чнику || лу́чники || лу́чників || лу́чниками || ||
 |-
-| за́мок<*.genu.loc+ovi> || "castle" || за́мку || за́мку/за́мкові || за́мку || за́мки || за́мків || за́мками || || reducible
+| за́мок<*.genu> || "castle" || за́мку || за́мку/за́мкові || за́мку || за́мки || за́мків || за́мками || || reducible; loc у/ові or ові/у is normal in inanimate reducibles in -к
 |-
 | знак || "symbol, omen" || зна́ка || зна́ку || зна́ку || зна́ки || зна́ків || зна́ками || банк "bank" ||
 |-
-| біль<M.і.genu> || "ache, pain" || бо́лю || бо́лю/бо́лі || бо́лю || бо́лі || бо́лів || бо́лями ||
+| біль<M.і.genu> || "ache, pain" || бо́лю || бо́лю/бо́лі || бо́лю || бо́лі || бо́лів || бо́лями || ||
+|-
+| ведмі́дь<M.anml.ie> || "bear" || ведме́дя || ведме́деві/ведме́дю/ведме́ді || ведме́дю || ведме́ді || ведме́дів || ведме́дями || || soft
 |-
 | друг<voce.plsoft.plstem:друз> || "friend" || дру́га || дру́гові/дру́гу || дру́же || дру́зі || дру́зів || дру́зями || || Irregular stem and soft declension in plural.
 |-
-| colspan=10 || Accent b
+! colspan=10 style="text-align: center;" | Accent b
 |-
-| кит<b.anml> || "whale" || кита́ || кито́ві/киті́ || ки́те || кити́ || киті́в || кита́ми
+| кіт<b.anml.io.locovi> || "tomcat" || кота́ || кото́ві || ко́те || коти́ || коті́в || кота́ми || ||  in movi.info, loc sg is normal
 |-
-| брат<b.hum> || "brother" || брата́ || брато́ві/браті́ || бра́те || брати́ || браті́в || брата́ми
+| брат<b.pr> || "brother" || брата́ || брато́ві/браті́ || бра́те || брати́ || браті́в || брата́ми || || 
 |-
-| бик<b.anml.voce> || "bull" || бика́ || бико́ві/бику́ || би́че || бики́ || бикі́в || бика́ми
+| посо́л<b*.pr> || "ambassador" || посла́ || посло́ві/послі́ || по́сле || посли́ || послі́в || посла́ми || || 
 |-
-| бик&lt;b> || "support? cauldron?" || бика́ || бику́ || бику́ || бики́ || бикі́в || бика́ми
+| плазу́н<b.anml> || "reptile, worm" || плазуна́ || плазуно́ві/плазуні́ || плазу́не || плазуни́ || плазуні́в || плазуна́ми || бара́н "ram", кажа́н<b.anml> "bat", слон<b.anml> "elephant", кит<b.anml> "whale", etc. || 
+|-
+| оре́л<b*.anml> || "eagle" || орла́ || орло́ві/орлі́ || о́рле || орли́ || орлі́в || орла́ми || || 
+|-
+| дрізд<b.anml.io> || "thrush (bird)" || дрозда́ || дроздо́ві/дрозді́ || дро́зде || дрозди́ || дрозді́в || дрозда́ми || || 
+|-
+| каву́н<b> || "watermelon" || кавуна́ || кавуні́ || каву́не || кавуни́ || кавуні́в || кавуна́ми || кут<b> "corner", лист<b> "leaf", хрест<b> "cross" || 
+|-
+| живі́т<b.io> || "belly, stomach" || живота́ || животі́ || живо́те || животи́ || животі́в || живота́ми || плід<b.io> "fetus" || 
+|-
+| бур'я́н<b.genu> || "weed" || бур'яну́ || бур'яні́ || бур'я́не || бур'яни́ || бур'яні́в || бур'яна́ми || || 
+|-
+| коте́л<b*> || "cauldron" || котла́ || котлі́ || ко́тле || котли́ || котлі́в || котла́ми || хребе́т<b*> "spine" || 
+|-
+| ву́зол<b*> || "knot" || вузла́ || вузлі́ || ву́зле || вузли́ || вузлі́в || вузла́ми || || 
+|-
+| пес<b*.anml> || "dog" || пса || псо́ві/псі || псе || пси || псів || пса́ми || || 
+|-
+| сон<b*.genu.vocu> || "sleep, dream" || сну || сні || сну || сни || снів || сна́ми || || 
+|-
+| тютю́н<b.sg> || "tobacco" || тютюну́ || тютюну́/тютюні́ || тютю́не || - || - || - || чаву́н<b.sg> "cast iron" || 
+|-
+| суд<b.génu> || "court (of law)" || су́ду || суді́ || су́де || суди́ || суді́в || суда́ми || || 
+|-
+| віл<b.anml.io.loci> || "ox, bullock" || вола́ || волі́ || во́ле || воли́ || волі́в || вола́ми || || in movi.info, loc sg is normal
+|-
+| хвіст<b.io.locu:i> || "tail" || хвоста́ || хвосту́/хвості́ || хво́сте || хвости́ || хвості́в || хвоста́ми || || 
+|-
+| стіл<b.io.gena.génu.loci:u> || "table" || стола́/сто́лу || столі́/столу́ || сто́ле || столи́ || столі́в || стола́ми || || 
+|-
+| міст<b,c.génu.gená.lóci.locú> || "bridge" || моста́/мо́сту || мосту́/мо́сті || мо́сте || мости́ || мості́в || моста́ми || || Slovozmina says dative singular only end-stressed but mova.info says dative singular either stem or end stressed
+|-
+| ба́тяр || "tramp, vagabond" (semi-soft) || батяра́ || батяре́ві/батярі́ || батя́ре || батярі́ || батярі́в || батяра́ми || ||
+|-
+| colspan=10| -- This is one is not semi-soft but "слю́сар" is, gen sg.: слю́сар'''я''', dat. (слю́сареві or) слю́сар'''ю'''. The ending "і" is common with hard endings as well (р, ж, ш, щ, ц can be both hard and soft, unlike Russian - with all but "р", in Ukrainian soft "р" never ends with -рь). --[[User:Atitarev|Anatoli T.]] <sup>([[User talk:Atitarev|обсудить]]</sup>/<sup>[[Special:Contributions/Atitarev|вклад]])</sup> 06:09, 15 May 2020 (UTC)<br />
+-- To clarify, ending -ів can be attached to р, ж, ш, щ, ц making them palatalised) --[[User:Atitarev|Anatoli T.]] <sup>([[User talk:Atitarev|обсудить]]</sup>/<sup>[[Special:Contributions/Atitarev|вклад]])</sup> 06:10, 15 May 2020 (UTC)<br />
+-- Oops, sorry, more clarification needed. ба́тяр must be indeed "semi-soft", since the plural is батярі́, "слю́сар" would then be considered "soft". (I'm feeling like an amateur). --[[User:Atitarev|Anatoli T.]] <sup>([[User talk:Atitarev|обсудить]]</sup>/<sup>[[Special:Contributions/Atitarev|вклад]])</sup> 06:26, 15 May 2020 (UTC)
+|-
+| кома́р || "mosquito" (semi-soft?) || комара́ || комаро́ві/комарі́ || кома́ре || комарі́ || комарі́в || комара́ми || ||
+|-
+| colspan=10 | Loc sg. has -о́ві here but -е́ві with ба́тяр. Predictable or not?
+|-
+| цар || "king, emperor" || царя́ || царю́/царе́ві/царі́ || ца́рю || царі́ || царі́в || царя́ми || || soft
+|-
+| бик<b.anml.voce> || "bull" || бика́ || бико́ві/бику́ || би́че || бики́ || бикі́в || бика́ми || ||
+|-
+| бик&lt;b> || "support? cauldron?" || бика́ || бику́ || бику́ || бики́ || бикі́в || бика́ми || ||
+|-
+| замо́к || "lock" || замка́ || замку́/замко́ві || замку́ || замки́ || замкі́в || замка́ми || || reducible
 |-
 | знак || "sign" || знаку́ || знаку́ || зна́ку || знаки́ || знакі́в || знака́ми || || Has alternative accent pattern c, which may be the reason for the stem-stressed voc sg.
 |-
-| жук || "beetle" || жука́ || жуко́ві/жуку́ || жу́че || жуки́ || жукі́в || жука́ми
+| жук || "beetle" || жука́ || жуко́ві/жуку́ || жу́че || жуки́ || жукі́в || жука́ми || ||
 |-
-| ба́тяр || "tramp, vagabond" (semi-soft) || батяра́ || батяре́ві/батярі́ || батя́ре || батярі́ || батярі́в || батяра́ми -- This is one is not semi-soft but "слю́сар" is, gen sg.: слю́сар'''я''', dat. (слю́сареві or) слю́сар'''ю'''. The ending "і" is common with hard endings as well (р, ж, ш, щ, ц can be both hard and soft, unlike Russian - with all but "р", in Ukrainian soft "р" never ends with -рь). --[[User:Atitarev|Anatoli T.]] <sup>([[User talk:Atitarev|обсудить]]</sup>/<sup>[[Special:Contributions/Atitarev|вклад]])</sup> 06:09, 15 May 2020 (UTC) -- To clarify, ending -ів can be attached to р, ж, ш, щ, ц making them palatalised) --[[User:Atitarev|Anatoli T.]] <sup>([[User talk:Atitarev|обсудить]]</sup>/<sup>[[Special:Contributions/Atitarev|вклад]])</sup> 06:10, 15 May 2020 (UTC) -- Oops, sorry, more clarification needed. ба́тяр must be indeed "semi-soft", since the plural is батярі́, "слю́сар" would then be considered "soft". (I'm feeling like an amateur). --[[User:Atitarev|Anatoli T.]] <sup>([[User talk:Atitarev|обсудить]]</sup>/<sup>[[Special:Contributions/Atitarev|вклад]])</sup> 06:26, 15 May 2020 (UTC)
+| коро́ль || "king" || короля́ || короле́ві/королю́/королі́ || коро́лю || королі́ || королі́в || короля́ми || || soft
 |-
-| кома́р || "mosquito" (semi-soft?) || комара́ || комаро́ві/комарі́ || кома́ре || комарі́ || комарі́в || комара́ми || || Loc sg. has -о́ві here but -е́ві with ба́тяр. Predictable or not?
+| день || "day" || дня || дні/дню || дню || дні || днів || дня́ми || || soft, reducible
 |-
-| цар || "king, emperor" (soft) || царя́ || царю́/царе́ві/царі́ || ца́рю || царі́ || царі́в || царя́ми
+| солове́й || "nightingale" || солов'я́ || солов'ї́/солов'ю́/солов'є́ві || солов'ю́ || солов'ї́ || солов'ї́в || солов'я́ми || || soft, reducible
 |-
-| коро́ль (soft) (gen sg. короля́ || короле́ві/королю́/королі́ || коро́лю || королі́ || королі́в || короля́ми
+! colspan=10 style="text-align: center;" | Accent c
 |-
-| замо́к || "lock" (reducible) || замка́ || замку́/замко́ві || замку́ || замки́ || замкі́в || замка́ми
+| чорт<c.pr> || "devil" || чо́рта || чо́ртові/чо́рті || чо́рте || чорти́ || чорті́в || чорта́ми || пан<c.pr> "lord, sir", сват<c.pr> "go-between", чин<c.pr> || 
 |-
-| день || "day" (soft, reducible) || дня || дні/дню || дню || дні || днів || дня́ми
+| со́кіл<c.pr.io> || "boy or man with celebrated beauty or courage" || со́кола || со́колові/со́колі || со́коле || соколи́ || соколі́в || сокола́ми || || 
 |-
-| пес || "dog" (reducible) || пса || псо́ві/псі || псе || пси || псів || пса́ми
+| по́їзд<c> || "train" || по́їзда || по́їзді || по́їзде || поїзди́ || поїзді́в || поїзда́ми || го́род<c> "walled town, citadel", рот<c> "mouth", спис<c> "lance" || 
 |-
-| colspan=10 || Accent c
+| го́лос<c.genu> || "voice" || го́лосу || го́лосі || го́лосе || голоси́ || голосі́в || голоса́ми || ліс<c.genu> "forest", світ<c.genu> "world", склад<c.genu> "syllable", час<c.genu> "time" || 
 |-
-| го́род<c> || "city, citadel" || го́рода || го́роді || го́роде || городи́ || городі́в || города́ми
+| віз<c.io> || "cart" || во́за || во́зі || во́зе || вози́ || возі́в || воза́ми || ніс<c.io> "nose" || 
 |-
-| ((до́говір<a.io>,догові́р<c.io>)) || "treaty" || до́гово́ру || до́гово́рі || до́гово́ре || до́говори́ || до́говорі́в || до́говора́ми ||
+| піт<c.io.genu> || "sweat" || по́ту || по́ті || по́те || поти́ || поті́в || пота́ми || || 
 |-
-| знак || "sign" || зна́ку || зна́ку || зна́ку || знаки́ || знакі́в || знака́ми
+| син<c.pr.vocu.locovi:i:u> || "son" || си́на || си́нові/си́ні/си́ну || си́ну || сини́ || сині́в || сина́ми || дід<c.pr.vocu.locovi:i:u> "grandfather" || in movi.info, loc sg is normal but irreg voc sg verified
 |-
-| бік<c.і.genu.loc+і,у́> || "side" || бо́ку || бо́ці/боку́ || бо́ку || боки́ || бокі́в || бока́ми
+| пан<c.pr.locovi:u.vocply:ove> || "lord, sir" || па́на || па́нові/па́ну || па́не || пани́ || пані́в || пана́ми || || in movi.info, loc sg is normal but irreg voc pl verified
 |-
-| час<c.genu> || "time, tense" || ча́су || ча́сі || ча́се || часи́ || часі́в || часа́ми || сир<c.genu> "cheese", го́лос<c.genu> "voice"
+| аеропо́рт<c.genu.locú> || "airport" || аеропо́рту || аеропорту́ || аеропо́рте || аеропорти́ || аеропорті́в || аеропорта́ми || авіапо́рт<c.genu.locú> "airport", мед<c.genu.locú> "honey", сад<c.genu.locú> "garden" || 
 |-
-| бе́рег<c.loci> || "shore, bank" || бе́рега || бе́резі || бе́регу || береги́ || берегі́в || берега́ми
+| дріт<c.io.genu.locu:i> || "wire" || дро́ту || дро́ту/дро́ті || дро́те || дроти́ || дроті́в || дрота́ми || || 
 |-
-| бог<c.locovi:i:u.voce> || "god" || бо́га || бо́гові/бо́зі/бо́гу || бо́же || боги́ || богі́в || бога́ми
+| лід<c.io.genu.locú> || "ice" || льо́ду || льоду́ || льо́де || льоди́ || льоді́в || льода́ми || || stem льод-
 |-
-| син<c.locovi:i:u.vocu> || "son" || си́на || си́нові/си́ні/си́ну || си́ну || сини́ || сині́в || сина́ми
+| рід<c.io.genu.locú:i> || "gender; family; tribe" || ро́ду || роду́/ро́ді || ро́де || роди́ || роді́в || рода́ми || || 
 |-
-| ба́тько<c.M> || "father" (masc.) || ба́тька || ба́тькові/ба́тьку || ба́тьку || батьки́ || батькі́в || батька́ми
+| плід<c.io.gená:u.loci:u> || "fruit" || плода́/пло́ду || пло́ді/пло́ду || пло́де || плоди́ || плоді́в || плода́ми || || 
 |-
-| чай<c.locju:ji> || "tea" (soft) || ча́ю || ча́ю/ча́ї || ча́ю || чаї́, voc pl. чаї́в || чая́ми
+| раз<c.genu.genpliv:-> || "instance, occurrence" || ра́зу || ра́зі || ра́зе || рази́ || разі́в/раз || раза́ми || || 
 |-
-| colspan=10 || Accent e
+| знак || "sign" || зна́ку || зна́ку || зна́ку || знаки́ || знакі́в || знака́ми || ||
 |-
-| кість || "bone" || ко́сті/ко́сти || ко́сті || ко́сте || ко́сті || косте́й || костя́м || костя́ми/кістьми́ || || Ins pl. is irregular (as in Russian {{m|ru|кость}}). Gen sg. has two forms; not typical.
+| бік<c.і.genu.loc+і,у́> || "side" || бо́ку || бо́ці/боку́ || бо́ку || боки́ || бокі́в || бока́ми || ||
+|-
+| бе́рег<c.loci> || "shore, bank" || бе́рега || бе́резі || бе́регу || береги́ || берегі́в || берега́ми || ||
+|-
+| бог<c.locovi:i:u.voce> || "god" || бо́га || бо́гові/бо́зі/бо́гу || бо́же || боги́ || богі́в || бога́ми || ||
+|-
+| ба́тько<c.M> || "father" || ба́тька || ба́тькові/ба́тьку || ба́тьку || батьки́ || батькі́в || батька́ми || || masculine
+|-
+| чай<c.locju:ji> || "tea" || ча́ю || ча́ю/ча́ї || ча́ю || чаї́ || чаї́в || чая́ми || || soft
+|-
+! colspan=10 style="text-align: center;" | Accent e
+|-
+| кість || "bone" || ко́сті/ко́сти || ко́сті || ко́сте || ко́сті || косте́й || костя́ми/кістьми́ || ||
+|-
+| colspan=10| Ins pl. is irregular (as in Russian {{m|ru|кость}}). Gen sg. has two forms; not typical.
 |}
 
 ==Feminine==
 {|class="wikitable"
-! Noun !! Meaning !! Gen sg. !! Loc sg. !! Voc sg. !! Nom pl. !! Gen pl. !! Ins. Pl !! Notes
+! Noun !! Meaning !! Gen sg. !! Loc sg. !! Voc sg. !! Nom pl. !! Gen pl. !! Ins. Pl !! Similar nouns !! Notes
 |-
-| colspan=10 || Accent a
+! colspan=10 style="text-align: center;" | Accent a
 |-
-| ли́па<> || "linden tree" || ли́пи || ли́пі || ли́по || ли́пи || лип || ли́пами
+| ли́па<> || "linden tree" || ли́пи || ли́пі || ли́по || ли́пи || лип || ли́пами || ||
 |-
 | шко́ла<і> || "school" || шко́ли || шко́лі || шко́ло || шко́ли || шкіл || шко́лами || || Note о -> і in loanword.
 |-
-| соба́ка<anml> || "dog" (masc. or fem.) || соба́ки || соба́ці || соба́ко || соба́ки || соба́к || соба́ками
+| соба́ка<anml> || "dog" || соба́ки || соба́ці || соба́ко || соба́ки || соба́к || соба́ками || || masc. or fem.
 |-
-| бі́лка<*.an> || "squirrel" || бі́лки || бі́лки || бі́локи
+| кни́га<> || "book" || кни́ги || кни́зі || кни́го || кни́ги || книг || кни́гами || ||
 |-
-| кни́га<> || "book" || кни́ги || кни́зі || кни́го || кни́ги || книг || кни́гами
+| бі́лка<*.an> || "squirrel" || бі́лки || бі́лки || бі́лко || бі́лки || бі́лок || бі́лками || || reducible
 |-
-| ча́ша<> || "bowl, cup" (semi-soft) || ча́ші || ча́ші || ча́шо || ча́ші || чаш || ча́шами
+| ча́ша<> || "bowl, cup" || ча́ші || ча́ші || ча́шо || ча́ші || чаш || ча́шами || || semi-soft
 |-
-| боги́ня<hum> || "goddess" (soft) || боги́ні || боги́ні || боги́не || боги́ні || боги́нь || боги́нями
+| боги́ня<hum> || "goddess" || боги́ні || боги́ні || боги́не || боги́ні || боги́нь || боги́нями || ||
 |-
-| блаки́ть<F.sg> || "blue" (fem., soft) || блаки́ті || блаки́ті || блаки́те || блаки́ті || блаки́тей || блаки́тями || ins sg. блаки́ттю '''[predictable?]''' -- Yes, - ттю is predictable, -ття corresponds to Russian -тьё/-тье/-тие (neuter endings), -ння to Russian -нье/-ние/-ньё. Inflected -ттю to Russian -тью, etc. --[[User:Atitarev|Anatoli T.]] <sup>([[User talk:Atitarev|обсудить]]</sup>/<sup>[[Special:Contributions/Atitarev|вклад]])</sup> 06:14, 15 May 2020 (UTC)
-| о́бласть<F> || "province" (soft) || о́бласті || о́бласті || о́бласте || о́бласті || областе́й || о́бластями || ins sg. о́бластю || || Is end stress in genitive plural predictable? блаки́ть is given in Slovozmina as having no plural, so блаки́тей may be a mistake.
+| блаки́ть<F.sg> || "blue" || блаки́ті || блаки́ті || блаки́те || блаки́ті || блаки́тей || блаки́тями || || soft; ins sg. блаки́ттю ('''[predictable?]''')
 |-
-| вісь<F.stem:ос> || "axis/axle" (soft) || о́сі || о́сі || о́се || о́сі || осе́й || о́сями || || ins sg. ві́ссю; end stress in genitive plural.
+| colspan=10 |-- Yes, - ттю is predictable, -ття corresponds to Russian -тьё/-тье/-тие (neuter endings), -ння to Russian -нье/-ние/-ньё. Inflected -ттю to Russian -тью, etc. --[[User:Atitarev|Anatoli T.]] <sup>([[User talk:Atitarev|обсудить]]</sup>/<sup>[[Special:Contributions/Atitarev|вклад]])</sup> 06:14, 15 May 2020 (UTC)
+|-
+| о́бласть<F> || "province" (soft) || о́бласті || о́бласті || о́бласте || о́бласті || областе́й || о́бластями || || ins sg. о́бластю
+|-
+| colspan=10 | Is end stress in genitive plural predictable? блаки́ть is given in Slovozmina as having no plural, so блаки́тей may be a mistake.
+|-
+| вісь<F.stem:ос> || "axis/axle" || о́сі || о́сі || о́се || о́сі || осе́й || о́сями || || soft; ins sg. ві́ссю; end stress in genitive plural.
+|-
 | ва́нна<+> || "bathroom" || ва́нної || ва́нній || ва́нна || ва́нні || ва́нних || ва́нними || || This is an adjectival declension.
 |-
-| colspan=10 || Accent b
+! colspan=10 style="text-align: center;" | Accent b
 |-
-| зима́<> || "winter" || зими́ || зимі́ || зимо́ || зими́ || зим || зима́ми
+| зима́<> || "winter" || зими́ || зимі́ || зимо́ || зими́ || зим || зима́ми || ||
 |-
-| colspan=10 || Accent c
+! colspan=10 style="text-align: center;" | Accent c
 |-
-| ба́ба<c.hum> || "grandmother" || ба́би || ба́бі || ба́бо || баби́ || баб/бабі́в || баба́ми
+| ба́ба<c.hum> || "grandmother" || ба́би || ба́бі || ба́бо || баби́ || баб/бабі́в || баба́ми || ||
 |-
-| ба́ба<c> || "ritual bread, babka" || ба́би || ба́бі || ба́бо || баби́ || баб only || баба́ми
+| ба́ба<c> || "ritual bread, babka" || ба́би || ба́бі || ба́бо || баби́ || баб only || баба́ми || ||
 |-
-| бджі́лка<c*.anml> || "bee (dim.)" (reducible) || бджі́лки || бджі́лці || бджі́лко || бджілкі́ || бджіло́к || бджіла́ми
+| бджі́лка<c*.anml> || "bee (dim.)" || бджі́лки || бджі́лці || бджі́лко || бджілкі́ || бджіло́к || бджіла́ми || || reducible
 |-
-| моли́тва<c*> || "prayer" (reducible) || моли́тви || моли́тві || моли́тво || молитві́ || молито́в || молитва́ми
+| моли́тва<c*> || "prayer" || моли́тви || моли́тві || моли́тво || молитві́ || молито́в || молитва́ми || || reducible
 |-
-| ма́ти<c.hum.stem:ма́тер.і> || "mother" || ма́тері || ма́тері || ма́ти || матері́ || матері́в || матеря́ми || acc sg. ма́тір, ins sg. ма́тір'ю
+| ма́ти<c.hum.stem:ма́тер.і> || "mother" || ма́тері || ма́тері || ма́ти || матері́ || матері́в || матеря́ми || || acc sg. ма́тір, ins sg. ма́тір'ю
 |-
-| colspan=10 || Accent d
+! colspan=10 style="text-align: center;" | Accent d
 |-
-| бджола́<d.anml.і> || "bee" || бджоли́ || бджолі́ || бджо́ло || бджо́ли || бджіл || бджо́лами
+| бджола́<d.anml.і> || "bee" || бджоли́ || бджолі́ || бджо́ло || бджо́ли || бджіл || бджо́лами || ||
 |-
-| вода́<d> || "water" || води́ || воді́ || во́до || во́ди || вод || во́дами
+| вода́<d> || "water" || води́ || воді́ || во́до || во́ди || вод || во́дами || ||
 |-
-| гора́<d.і> || "mountain" || гори́ || горі́ || го́ро || го́ри || гір || го́рами
+| гора́<d.і> || "mountain" || гори́ || горі́ || го́ро || го́ри || гір || го́рами || ||
 |-
-| стіна́<d> || "wall" || стіни́ || стіні́ || сті́но || сті́ни || стін || сті́нами || трава́ "grass"
+| стіна́<d> || "wall" || стіни́ || стіні́ || сті́но || сті́ни || стін || сті́нами || трава́ "grass" ||
 |-
-| сова́ || "owl" || сови́ || сові́ || со́во || со́ви || сов || со́вами
+| сова́ || "owl" || сови́ || сові́ || со́во || со́ви || сов || со́вами || ||
 |-
-| множина́ || "plural" || множини́ || множині́ || множи́но || множи́ни || множи́н || множи́нами
+| множина́ || "plural" || множини́ || множині́ || множи́но || множи́ни || множи́н || множи́нами || ||
 |-
-| земля́ || "land, earth; country, state (of Germany)" (soft) || землі́ || землі́ || зе́мле || зе́млі || земе́ль || зе́млями
+| кислота́ || "acid" || кислоти́ || кислоті́ || кислото́ || кисло́ти || кисло́т || кисло́тами || кропива́ || per mova.info; Slovozmina has кисло́то
 |-
-| colspan=10 || Accent d'
+| земля́ || "land, earth; country, state (of Germany)" || землі́ || землі́ || зе́мле || зе́млі || земе́ль || зе́млями || || soft
 |-
-| борода́ || "beard, chin" || бороди́ || бороді́ || бо́родо || бо́роди || борі́д || бо́родами || acc sg. бо́роду
+! colspan=10 style="text-align: center;" | Accent d'
 |-
-| голова́ || "head" || голови́ || голові́ || го́лово || го́лови || голі́в || го́ловами || acc sg. го́лову
+| борода́ || "beard, chin" || бороди́ || бороді́ || бо́родо || бо́роди || борі́д || бо́родами || || acc sg. бо́роду
 |-
-| середа́ || "Wednesday" || середи́ || середі́ || се́редо || се́реди || се́ред || се́редами || acc sg. се́реду
+| голова́ || "head" || голови́ || голові́ || го́лово || го́лови || голі́в || го́ловами || || acc sg. го́лову
 |-
-| colspan=10 || Accent f
+| середа́ || "Wednesday" || середи́ || середі́ || се́редо || се́реди || се́ред || се́редами || || acc sg. се́реду
 |-
-| щока́ || "cheek" || щоки́ || щоці́ || що́ко || що́ки || щік || щока́ми
+! colspan=10 style="text-align: center;" | Accent f
+|-
+| щока́ || "cheek" || щоки́ || щоці́ || що́ко || що́ки || щік || щока́ми || ||
 |-
 | сльоза́ || "tear (of the eyes)" || сльози́ || сльозі́ || сльозо́ || сльо́зи || сліз || сльоза́ми/слізьми́/слі́зьми || || Ins pl. is irregular. Vocative appears irregular; are we sure it's correct?
 |-
-| colspan=10 || Accent f'
+! colspan=10 style="text-align: center;" | Accent f'
 |-
-| нога́ || "leg, foot" (acc sg. но́гу, gen sg. ноги́ || нозі́ || но́го || но́ги || ніг || нога́ми || acc sg. но́гу
+| нога́ || "leg, foot" || ноги́ || нозі́ || но́го || но́ги || ніг || нога́ми || || acc sg. но́гу
 |-
-| рука́ || "hand" || руки́ || руці́ || ру́ко || ру́ки || рук || рука́ми || acc sg. ру́ку
+| рука́ || "hand" || руки́ || руці́ || ру́ко || ру́ки || рук || рука́ми || || acc sg. ру́ку
 |-
-| губа́ || "lip" || губи́ || губі́ || гу́бо || гу́би || губ/губі́в || губа́ми || acc sg. гу́бу; gen pl. is irregular.
+| губа́ || "lip" || губи́ || губі́ || гу́бо || гу́би || губ/губі́в || губа́ми || || acc sg. гу́бу; gen pl. is irregular.
 |}
 
 ==Neuter==
 {|class="wikitable"
-! Noun !! Meaning !! Gen sg. !! Loc sg. !! Voc sg. !! Nom pl. !! Gen pl. !! Ins. Pl !! Notes
+! Noun !! Meaning !! Gen sg. !! Loc sg. !! Voc sg. !! Nom pl. !! Gen pl. !! Ins. Pl !! Similar nouns !! Notes
 |-
-| colspan=10 || Accent a
+! colspan=10 style="text-align: center;" | Accent a
 |-
-| о́ко<> || "unit of weight" || о́ка || о́ку || о́ко || о́ка || ок || о́ками
+| о́ко<> || "unit of weight" || о́ка || о́ку || о́ко || о́ка || ок || о́ками || ||
 |-
-| го́рло<> || "throat" || го́рла || го́рлі || го́рло || го́рла || горл, dat. pl. го́рлами
+| го́рло<> || "throat" || го́рла || го́рлі || го́рло || го́рла || горл || го́рлами || ||
 |-
-| о́зеро<plstem:озе́р> || "lake" || о́зера || о́зері || о́зеро || озе́ра || озе́р || озе́рами || || Note irregular accent in plural.
+| о́зеро<plstem:озе́р> || "lake" || о́зера || о́зері || о́зеро || озе́ра || озе́р || озе́рами || || irregular accent in plural
 |-
-| де́рево<plstem:дере́в> || "tree" || де́рева || де́реві || де́рево || дере́ва || дере́в || дере́вами || || Note irregular accent in plural.
+| де́рево<plstem:дере́в> || "tree" || де́рева || де́реві || де́рево || дере́ва || дере́в || дере́вами || || irregular accent in plural
 |-
-| бажа́ння<N> || "desire, wish" (neut.) || бажа́ння || бажа́нні/бажа́нню || бажа́ння || бажа́нь || бажа́ннями
+| бажа́ння<N> || "desire, wish" (neut.) || бажа́ння || бажа́нні/бажа́нню || бажа́ння || бажа́ння || бажа́нь || бажа́ннями || ||
 |-
-| colspan=10 || Accent c
+! colspan=10 style="text-align: center;" | Accent c
 |-
-| боло́то || "swamp" || боло́та || боло́ті/боло́ту || боло́то || болота́ || болі́т || болота́ми
+| боло́то || "swamp" || боло́та || боло́ті/боло́ту || боло́то || болота́ || болі́т || болота́ми || ||
 |-
-| сло́во || "word" || сло́ва || сло́ві || сло́во || слова́ || слі́в || слова́ми
+| сло́во || "word" || сло́ва || сло́ві || сло́во || слова́ || слі́в || слова́ми || ||
 |-
-| мо́ре || "sea" (soft) || мо́ря || мо́рі/мо́рю || мо́ре || моря́ || морі́в || моря́ми
+| мо́ре || "sea" (soft) || мо́ря || мо́рі/мо́рю || мо́ре || моря́ || морі́в || моря́ми || ||
 |-
-| colspan=10 || Accent d
+! colspan=10 style="text-align: center;" | Accent d
 |-
-| багно́ || "bog, swamp" || багна́ || багну́/багні́ || багно́ || ба́гна || ба́гон || ба́гнами
+| жало́ || "sting" || жала́ || жалі́ || жало́ || жа́ла || жал || жа́лами || перо́ "pen, feature", вино́ "wine" || Pattern a "жа́ло" also possible. Loc sg. alternation #жалу́ not possible.
 |-
-| жало́ || "sting" || жала́ || жалі́ || жало́ || жа́ла, gen. pl жал || жа́лами || перо́ "pen, feature", вино́ "wine" || Pattern a "жа́ло" also possible. Loc sg. alternation #жалу́ not possible.
+| багно́ || "bog, swamp" || багна́ || багну́/багні́ || багно́ || ба́гна || ба́гон || ба́гнами || || reducible
 |-
-| colspan=10 || Accent e
+! colspan=10 style="text-align: center;" | Accent e
 |-
 | о́ко || "eye" || о́ка || о́ці || о́ко || о́чі || оче́й || очи́ма || || acc pl. ві́чі/о́чі; note irregular plural stem as well as irregular forms in nom pl, acc pl and ins pl.
 |}
@@ -246,29 +348,66 @@ Ukrainian declensions:
 * о́ко "eye" pl. о́чи (gen pl. оче́й)
 * друг "friend" pl. дру́зі (gen pl. дру́зів); treated as soft in pl.
 
+
 ==Ending alternations:==
 * Masculine nouns in д/т/с/з/н/л:
+** Example nouns:
+*** ((ру́син<pr>,руси́н<b.pr>)) "Rusyn", ((христия́нин<pr.in>,християни́н<pr.in>)) "Christian" [in the latter, the plural is only христия́н- because the -ин is removed and when stressed, stress has to shift to the left], ((алфа́віт<>,алфаві́т<>)) "alphabet"
+*** біс<pr> "demon" (similarly абази́н<pr> "Abaza", журналі́ст<pr> "journalist", корабе́л<pr> "shipbuilder", президе́нт<pr> "president", сусі́д<pr> "neighbor", член<pr> "member" and many others), кия́нин<pr.in> "Kievan" (similarly росія́нин<pr.in> "Russian"), во́рон<anml> "raven" (similarly гад<anml> "reptile", драко́н<anml> "dragon" and many others), бана́н<> "banana" (similarly во́лос<> "a hair", дива́н<> "sofa", докуме́нт<> "document", пилосо́с<> "vacuum cleaner", etc.), бі́знес<genu> "business" (similarly батальйо́н<genu> "battalion", вид<genu> "kind, sort", ви́рус<genu> "virus", вокза́л<genu> "train station", град<genu> "hail", обі́д<genu> "dinner, lunch", рестора́н<genu> "restaurant", etc.), дев'яси́л<genu:a> "inula, elecampane", вертолі́т<io> "helicoper" [stem вертольо́т-] (similarly о́бід<io> "rim"), брід<io.genu> "ford" (similarly ви́хід<io.genu> "exit", дзвін<io.genu> "bell", на́рід<io.genu> "people", підхі́д<io.genu> "approach", при́від<io.genu> "occasion", приві́д<io.genu> "bringing"), ву́гол<*> "angle", де́рен<*.genu> "sod" (similarly те́рен<*.genu> "sloe, blackthorn")
+*** брат<b.pr> "brother", посо́л<b*.pr> "ambassador", плазу́н<b.anml> "reptile, worm" (similarly бара́н "ram", кажа́н<b.anml> "bat", слон<b.anml> "elephant", кит<b.anml> "whale", etc.), оре́л<b*.anml> "eagle", дрізд<b.anml.io> "thrush (bird)", каву́н&lt;b> "watermelon" (similarly кут&lt;b> "corner", лист&lt;b> "leaf", хрест&lt;b> "cross"), живі́т<b.io> "belly, stomach" (similarly плід<b.io> "fetus"), бур'я́н<b.genu> "weed", коте́л<b*> "cauldron" (similarly хребе́т<b*> "spine")
+*** чорт<c.pr> "devil" (similarly пан<c.pr> "lord, sir", сват<c.pr> "go-between", чин<c.pr>), со́кіл<c.pr.io> "boy or man with celebrated beauty or courage", по́їзд<c> "train" (similarly го́род<c> "walled town, citadel", рот<c> "mouth", спис<c> "lance"), го́лос<c.genu> "voice" (similarly ліс<c.genu> "forest", світ<c.genu> "world", склад<c.genu> "syllable", час<c.genu> "time"), віз<c.io> "cart" (similarly ніс<c.io> "nose"), піт<c.io.genu> "sweat"
+*** Singular only: 
+** Exceptional nouns:
+*** Personal nouns: син<c.pr.vocu.locovi:i:u> "son" and identically declined дід<c.pr.vocu.locovi:i:u> "grandfather"; пан<c.pr.locovi:u.vocply:ove> "lord, sir"
+*** Animal nouns: віл<b.anml.io.loci> "ox, bullock", со́кіл<anml.io.plstem:соко́л.loci> "falcon", кіт<b.anml.io.locovi> "tomcat"
+*** Inanimate singular/plural nouns with locative -у: аеропо́рт<c.genu.locú> "airport" (and авіапо́рт<c.genu.locú> "airport"), вид<genu.locú> "face, appearance", дріт<c.io.genu.locu:i> "wire", лід<c.io.genu.locú> "ice" (stem льод-), міст<b,c.génu.gená.lóci.locú> "bridge" [Slovozmina says dative singular only end-stressed but mova.info says dative singular either stem or end stressed], мед<c.genu.locú> "honey" (also сад<c.genu.locú> "garden"), рід<c.io.genu.locú:i> "gender; family; tribe", хвіст<b.io.locu:i> "tail", плід<c.io.gená:u.loci:u> "fruit", стіл<b.io.gena.génu.loci:u> "table".
+*** Inanimate singular-only nouns with locative -і: за́хід<sg.io.loci> "west" (similarly схід<sg.io.loci> "east"), по́піл<sg.ie.loci> "ash"
+*** Inanimate singular-only nouns with locative -у: пил<sg.locú> "dust"
+*** Inanimate nouns with plural -а: вус<nompla:y> "moustache"
+*** Inanimate nouns with special genitive plural: раз<c.genu.genpliv:-> "instance, occurrence"
+*** Inanimate nouns with special genitive singular: суд<b.génu> "court (of law)"
+*** ву́зол<b*> "knot" with unusual nom sg stress.
+*** сон<b*.genu.vocu> "sleep, dream", пес<b*.anml> "dog" with nonsyllabic stem
 ** Vocative singular:
-*** Almost all inanimate nouns (274 of 275) have vocative -е. Only exception: сон<b*.genu.vocu>. All have stem stress except сон, which necessarily has end stress as its stem is nonsyllabic.
+*** Almost all inanimate singular/plural nouns (274 of 275) and all singular-only nouns (44) have vocative -е. Only exception: сон<b*.genu.vocu> "sleep, dream". All have stem stress except сон, which necessarily has end stress as its stem is nonsyllabic.
 *** All animal nouns (26) have vocative -е. All have stem stress except пес<b*>, with nonsyllabic stem.
-*** Almost all personal nouns (65 of 67) have vocative -е. All of these have stem stress (56 accent a, 3 accent b, 5 accent c, 1 accent a/b). Note: ((ру́син<pr>,руси́н<b.pr>)) (vocative ру́сине/руси́не), брат<b.pr> (vocative бра́те), плазу́н<b.pr> (vocative плазу́не), посо́л<b*.pr> (vocative по́сле), со́кіл<c.pr.io> "boy or man with celebrated beauty or courage" (vocative со́коле), чорт<c.pr> (vocative чо́рте) (similarly пан<c.pr>, сват<c.pr>, чин<c.pr>). Exceptions: син<c.pr.vocu.locovi:i:u> "son" (vocative си́ну), and дід<c.pr.vocu.locovi:i:u> "grandfather" is declined identically.
+*** Almost all personal nouns (65 of 67) have vocative -е. All of these have stem stress. Two exceptions have vocative in -у: син<c.pr.vocu.locovi:i:u> "son" (vocative си́ну), and дід<c.pr.vocu.locovi:i:u> "grandfather" declined identically.
 ** Locative singular:
-*** Most inanimate nouns (261 of 275) have locative singular -і. Six have locative singular -у, and eight more -у/-і (or -і/-у). In these, the locative singular in -у tends to be end-stressed (but not always), and tends to cooccur with genitive in -у. Examples: аеропо́рт<c.genu.locú> "airport" (and авіапо́рт<c.genu.locú> "airport"), вид<genu.locú> "face, appearance", дріт<c.io.genu.locu:i> "wire", лід<c.io.genu.locú> "ice" (stem льод-), міст<b,c.génu.gená.lóci.locú> "bridge" [Slovozmina says dative singular only end-stressed but mova.info says dative singular either stem or end stressed], мед<c.genu.locú> "honey" (also сад<c.genu.locú> "garden"), рід<c.io.genu.locú:i> "gender; family; tribe", хвіст<b.io.locu:i>, плід<c.io.gená:u.loci:u> "fruit", стіл<b.io.gena.génu.loci:u> "table", ха́ос<sg.genu.locu:i> "chaos, mess" (also смара́гд<sg.genu.locu:i>).
-*** Most personal nouns (62 of 67) have locative singular in -ові and -і. 
-** Genitive singular:
-*** суд<b.génu> "court (of law)"
+*** Most inanimate singular/plural nouns (261 of 275) have locative singular -і. In all these nouns, the stress follows the accent pattern. Six have locative singular -у, and eight more -у/-і (or -і/-у). In these, the locative singular in -у tends to be end-stressed (but not always), and tends to cooccur with genitive in -у.
+*** Almost all singular-only nouns (40 of 44) have locative singular in -у or -і. All of them are inanimate and have genitive singular in -у. Of the remaining 4, 3 have locative singular only in -і and one only in -у.
+*** Most personal nouns (64 of 67) have locative singular in -ові and -і. In all nouns, the stress follows the accent pattern. Exceptional nouns: син<c.pr.vocu.locovi:i:u> "son" and identically declined дід<c.pr.vocu.locovi:i:u> "grandfather"; пан<c.pr.locovi:u> "lord, sir".
+*** Most animal nouns (23 of 26) have locative singular in -ові and -і. All have stem stress in accent a and c, ending stress in accent b. Exceptional nouns: віл<b.anml.io.loci> "ox, bullock", со́кіл<anml.io.plstem:соко́л.loci> "falcon", кіт<b.anml.io.locovi> "tomcat".
+
+* Masculine nouns in р:
+** In general, there are three types: (1) hard endings, nom pl in -и; (2) semisoft endings, generally like hard endings except nom pl in -і, but note батя́р which also has soft -е́ві in dat/loc sg and soft -ем in ins sg; (3) soft endings. Among those ending in -р, there are 70 total hard nouns, 7 soft nouns and 3 semi-soft nouns.
+** Example nouns:
+*** Example hard nouns: до́лар<>, кур'є́р<pr>, собо́р<genu>, сир<c.genu>, та́бір<c.io.genu>, чабе́р<b*.gena:u>, щур<b.anml>
+*** Example semi-soft nouns: звір<anml.nompli> "beast", кома́р<b.anml.nompli> "mosquito"
+*** Example soft nouns: бібліоте́кар<pr.soft> "librarian", ліхта́р<b.soft> "lantern", лі́кар<c.pr.soft> "doctor", цар<b.pr.soft> "king, emperor"
+** Exceptional nouns:
+*** четве́р<b.stem:четве́рг> "Thursday"; actually a velar-stem noun with normal velar-stem loc sg четвергу́ and voc sg also четвергу́.
+*** ба́тяр<b.pr.nompli.datevi:u.locevi:i.insem> "ruffian"
+*** двір<b.génu.gena.locu:i> "yard, court"
+*** двір<b.génu> "(royal) court"
+*** ві́тер<c*.locu:i> "wind"
+** Vocative singular: All hard and semi-soft nouns have vocative singular in -е, always stem-stressed. All soft nouns have vocative singular in -ю, always stem-stressed: e.g. лихта́р<b.soft> "lantern" (voc sg. лихта́рю).
+** Locative singular: All hard personal and animal nouns have locative singular in -ові/-і. All soft personal nouns (no animal nouns observed) have locative singular in -еві/-ю/-і. Of the semi-soft nouns, two have locative singular in -ові/-і like hard nouns, and one (ба́тяр) has locative sinuglar in -еві/-і. All hard inanimate nouns have locative singular in -і (except two with locative singular in -у/-і; see above) and all soft inanimate nouns (only two observed) have locative singular in -ю/-і. Stress always agrees with the accent pattern.
 
 * Masculine nouns in a velar:
 ** Vocative singular:
 *** Almost all inanimate nouns (140 of 142) have vocative -у. Only exception I can find: будя́к (accent b, voc будя́че) and луг (accent a, voc лу́же). Of these, 104 are accent a, all with stem-stressed vocative; 25 are accent b, of which 22 have ending-stressed vocative and 3 have stem-stressed vocative (гріх voc грі́ху, знак [accent b or c] voc зна́ку, цвях voc цвя́ху); 11 are accent c, all with stem-stressed vocative.
 *** Of 17 animal nouns, 11 have vocative -е with first palatalization, all of which are accent b or c, and all are stem-stressed except for лоша́к (accent b, voc лошаче́). Stem-stressed vocatives are always stressed on the last syllable. The other 6 have vocative in -у, stem-stressed, and are all accent a except for птах (accent c, voc пта́ху).
 *** Of 51 personal nouns, 39 have vocative -у, variably accents a and b; 27 have accent a, all with stem-stressed vocative, and 12 have accent b, all with ending-stressed vocative. 10 have vocative -е with first palatalization, all with stem-stressed vocative, variably accents a, b and c (one is accent c: бог, voc бо́же). Two have either -у or -е (чех, accent a, voc че́ху/че́ше; робітни́к, accent b, voc робі́тнику/робітнику́/робітни́че).
-*** Conclusion: Default for velar-stem nouns should be voc sg in -у, with no stress retraction. If "voce" is given, first palatalization should be triggered and stress should (maybe) retract onto the last syllable by default. To control stress position, use "vocé" to indicate end stress and "vocè" to indicate stem stress. Exceptions: будя́к<b.voce>, луг<voce>, гріх<b.vocù>, знак<b,c.vоcù>, цвях<b.vоcù>, лоша́к<b.anml.vocé>, бог<c.voce>, чех<vocu:e>, робітни́к<b.pr.voc:робі́тнику:~у́:робитни́че>
+*** Conclusion: Default for velar-stem nouns should be voc sg in -у, with no stress retraction. If "voce" is given, first palatalization should be triggered and stress should (maybe) retract onto the last syllable by default. To control stress position, use "vocé" to indicate end stress and "vocè" to indicate stem stress. Exceptions: будя́к<b.voce>, луг<voce>, гріх<b.vocù>, знак<b,c.vоcù>, цвях<b.vоcù>, лоша́к<b.anml.vocé>, бог<c.voce>, чех<vocu:e>, робітни́к<b.pr.voc:робі́тнику:~у́:робитни́че>
 ** Locative singular:
 *** Of 142 inanimate nouns, 76 have locative -у, 38 have locative -у or -ові, 17 have locative -і (which triggers second palatalization), and there are a smattering of various other types. 105 are accent a (all stem-stressed), 25 are accent b (all end-stressed), 11 are accent c (evenly distributed between end-stressed, stem-stressed and mixed; for this accent pattern, locative -і is always stem-stressed, locative -у tends to prefer end-stressed). The 38 with locative -у or -ові are all reduciblenouns ending in -ок, while the 76 with locative -у only do not appear to include reducible nouns.
 *** Of 17 animal nouns, 10 have locative -у or -ові (in that order), while 7 have locative -ові or -у (in that order). All 10 in locative -у or -ові are accent b or c with vocative -е, while 6 of the 7 in locative -ові or -у are accent a with vocative -у (the only exception is жук, with accent b and vocative -е).
 *** Of 51 personal nouns, 48 have locative -ові or -у (in that order), while there is one representative each of 3 other variants. 35 are accent a (all stem-stressed), 15 are accent b (all ending-stressed), and 1 is accent c (stem-stressed).
 *** Conclusion: Inanimate velar-stem nouns should have loc sg in -у if non-reducible, -у or -ові if reducible, with stress following the accent pattern....
+
+* Masculine nouns in a hushing consonant (ш, ж, ч, щ):
+** Vocative singular: All 28 nouns are stem-stressed. 7 of 8 nouns in -ж have vocative singular in -е (only exception is ґандж "defect", which is given vocative -е in mova.info). 19 of 20 nouns in ш/ч/щ have vocative singular in -у (only exception is кіш "basket", which is given vocative -у in mova.info).
+** Locative singular: All 19 inanimate nouns have locative singular in -і/у or -у/і. 8 of 9 personal/animal nouns have locative singular in -еві/у/і (6 of 9, all personal) or -і/еві/у (3 of 9, all animal). Only exception: муж "husband" with locative singular in -еві/і (given as -і/у/еві in mova.info).
 
 * у vs. а in gen sg. of masc (and neuter?) nouns: Semantically determined; must be manually specified
 
