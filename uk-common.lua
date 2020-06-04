@@ -33,6 +33,21 @@ export.hushing = "чшжщЧШЖЩ"
 export.hushing_c = "[" .. export.hushing .. "]"
 
 
+local first_palatalization = {
+	["к"] = "ч",
+	["г"] = "ж",
+	["х"] = "ш",
+	["ц"] = "ч",
+}
+
+
+local second_palatalization = {
+	["к"] = "ц",
+	["г"] = "з",
+	["х"] = "с",
+}
+
+
 function export.translit_no_links(text)
 	return m_uk_translit.tr(m_links.remove_links(text))
 end
@@ -143,6 +158,24 @@ function export.iotate(stem)
 	stem = rsub(stem, "д$", "дж")
 	stem = rsub(stem, "([бвмпф])$", "%1л")
 	return stem
+end
+
+
+function export.apply_first_palatalization(word)
+	return rsub(word, "^(.*)([кгхц])$",
+		function(prefix, lastchar) return prefix .. first_palatalization[lastchar] end
+	)
+end
+
+
+function export.apply_second_palatalization(word)
+	return rsub(word, "^(.*)([кгх])$",
+		function(prefix, lastchar) return prefix .. second_palatalization[lastchar] end
+	)
+end
+
+
+function export.reduce(word)
 end
 
 
