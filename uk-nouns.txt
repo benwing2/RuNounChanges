@@ -203,6 +203,8 @@ Ukrainian declensions:
 | colspan=10 | Is end stress in genitive plural predictable? блаки́ть is given in Slovozmina as having no plural, so блаки́тей may be a mistake.
 |-
 | вісь<F.stem:ос> || "axis/axle" || о́сі || о́сі || о́се || о́сі || осе́й || о́сями || || soft; ins sg. ві́ссю; end stress in genitive plural.
+|
+| ((ді́вчина<pr.plstem:ді́вчат.nompla>,дівчи́на<pr.plstem:дівча́т.nompla>)) || "girl, daughter" || ді́вчини/дівчи́ни || ді́вчині/дівчи́ні || ді́вчино/дівчи́но || ді́вчата/дівча́та || ді́вчат/дівча́т || ді́вчатами/дівча́тами || || 
 |-
 | ва́нна<+> || "bathroom" || ва́нної || ва́нній || ва́нна || ва́нні || ва́нних || ва́нними || || This is an adjectival declension.
 |-
@@ -237,6 +239,10 @@ Ukrainian declensions:
 | множина́ || "plural" || множини́ || множині́ || множи́но || множи́ни || множи́н || множи́нами || ||
 |-
 | кислота́ || "acid" || кислоти́ || кислоті́ || кислото́ || кисло́ти || кисло́т || кисло́тами || кропива́ || per mova.info; Slovozmina has кисло́то
+|-
+| сестра́<d*.pr.genpl:се́стер:сесте́р> || "sister" || сестри́ || сестрі́ || се́стро || се́стри || се́стер/сесте́р || се́страми || медсестра́<d*.pr.genpl:медсе́стер:медсесте́р> "nurse" || 
+|-
+| ((війна́<d*.io>,війна́<d>)) || "war" || війни́ || війні́ || війно́ || ві́йни || во́єн/війн || ві́йнами || || 
 |-
 | земля́ || "land, earth; country, state (of Germany)" || землі́ || землі́ || зе́мле || зе́млі || земе́ль || зе́млями || || soft
 |-
@@ -380,15 +386,18 @@ Ukrainian declensions:
 
 * Masculine nouns in р:
 ** In general, there are three types: (1) hard endings, nom pl in -и; (2) semisoft endings, generally like hard endings except nom pl in -і, but note батя́р which also has soft -е́ві in dat/loc sg and soft -ем in ins sg; (3) soft endings. Among those ending in -р, there are 70 total hard nouns, 7 soft nouns and 3 semi-soft nouns.
+** FIXME: ворота́р should be pr, and disallow an; све́кор fix headword; пугач split etym
 ** Example nouns:
-*** Example hard nouns: до́лар<>, кур'є́р<pr>, собо́р<genu>, сир<c.genu>, та́бір<c.io.genu>, чабе́р<b*.gena:u>, щур<b.anml>
-*** Example semi-soft nouns: звір<anml.nompli> "beast", кома́р<b.anml.nompli> "mosquito"
-*** Example soft nouns: бібліоте́кар<pr.soft> "librarian", ліхта́р<b.soft> "lantern", лі́кар<c.pr.soft> "doctor", цар<b.pr.soft> "king, emperor"
+*** Example hard nouns: до́лар<> "dollar" (also абажу́р<> "lampshade", комп'ю́тер<> "computer", метр<> "meter", семіна́р<> "seminar", etc.), кур'є́р<pr> "courier" (also інве́стор<pr> "investor", лі́дер<pr> "leader", мер<pr> "mayor", пивова́р<pr> "brewer", etc.), собо́р<genu> "cathedral", ви́бір<io.genu> "choice" (also про́стір<io.genu> "space", твір<io.genu> "work, composition"), све́кор<*.pr> "wife's father-in-law", цу́кор<*.genu> "sugar", щур<b.anml> "rat", вуго́р<b*.anml> "eel", вуго́р<b*> "pimple", чабе́р<b*.gena:u> "savory", а́втор<c.pr> "author" (also дире́ктор<c.pr> "director, manager"), се́ктор<c> "sector" (also тра́ктор<c> "tractor"), ве́чір<c.io> "evening", сир<c.genu> "cheese", та́бір<c.io.genu> "camp" (also ко́лір<c.io.genu>, stem ко́льор-)
+*** Example hard singular-only nouns [genu is default here]: дур<sg> "foolishness" (also кефі́р<sg> "kefir", etc. with locative -у/-і), зір<sg.io.loci> "vision, sight" (also кір<sg.io.loci> "measles", спір<sg.io.loci> "speed, agility", словотві́р<sg.io.loci> "word formation"), папі́р<sg.ie.loci> "paper"
+*** Example semi-soft (nom pl only) nouns: звір<anml.nompli> "beast", кома́р<b.anml.nompli> "mosquito"
+*** Example semi-soft noun: ба́тяр<b.pr.semisoft> "ruffian" (only one)
+*** Example soft nouns: бібліоте́кар<pr.soft> "librarian" (also ти́тар<pr.soft> "church warden"), цви́нтар<soft> "cemetery", цар<b.pr.soft> "king, emperor" (also ворота́р<b.pr.soft> "goalkeeper", пролета́р<b.pr.soft> "proletarian"), ліхта́р<b.soft> "lantern", лі́кар<c.pr.soft> "doctor"
 ** Exceptional nouns:
 *** четве́р<b.stem:четве́рг> "Thursday"; actually a velar-stem noun with normal velar-stem loc sg четвергу́ and voc sg also четвергу́.
-*** ба́тяр<b.pr.nompli.datevi:u.locevi:i.insem> "ruffian"
-*** двір<b.génu.gena.locu:i> "yard, court"
-*** двір<b.génu> "(royal) court"
+*** ((до́говір<io>,догові́р<c.io>)) "treaty, contract"
+*** двір<b.io.génu.gena.locu:i> "yard, court"
+*** двір<b.io.génu> "(royal) court"
 *** ві́тер<c*.locu:i> "wind"
 ** Vocative singular: All hard and semi-soft nouns have vocative singular in -е, always stem-stressed. All soft nouns have vocative singular in -ю, always stem-stressed: e.g. лихта́р<b.soft> "lantern" (voc sg. лихта́рю).
 ** Locative singular: All hard personal and animal nouns have locative singular in -ові/-і. All soft personal nouns (no animal nouns observed) have locative singular in -еві/-ю/-і. Of the semi-soft nouns, two have locative singular in -ові/-і like hard nouns, and one (ба́тяр) has locative sinuglar in -еві/-і. All hard inanimate nouns have locative singular in -і (except two with locative singular in -у/-і; see above) and all soft inanimate nouns (only two observed) have locative singular in -ю/-і. Stress always agrees with the accent pattern.
@@ -406,8 +415,43 @@ Ukrainian declensions:
 *** Conclusion: Inanimate velar-stem nouns should have loc sg in -у if non-reducible, -у or -ові if reducible, with stress following the accent pattern....
 
 * Masculine nouns in a hushing consonant (ш, ж, ч, щ):
-** Vocative singular: All 28 nouns are stem-stressed. 7 of 8 nouns in -ж have vocative singular in -е (only exception is ґандж "defect", which is given vocative -е in mova.info). 19 of 20 nouns in ш/ч/щ have vocative singular in -у (only exception is кіш "basket", which is given vocative -у in mova.info).
-** Locative singular: All 19 inanimate nouns have locative singular in -і/у or -у/і. 8 of 9 personal/animal nouns have locative singular in -еві/у/і (6 of 9, all personal) or -і/еві/у (3 of 9, all animal). Only exception: муж "husband" with locative singular in -еві/і (given as -і/у/еві in mova.info).
+** Example nouns:
+*** това́риш<pr> "comrade", криж<> "cross", о́воч<genu> "vegetable", фюзеля́ж<genu> "fuselage", аборда́ж<sg> "boarding (a ship)", слуха́ч<b.pr> "listener" (and others in -а́ч), вуж<b.anml> "grass snake" (also хрущ<b.anml> "cockchafer"), ключ<b> "key" (also м'яч<b> "ball", меч<b> "sword", плащ<b> "raincoat", пуга́ч<b> "popgun"), автогара́ж<b> "garage", ніж<b.io> "knife", дощ<b.genu> "rain", вірш<c> "poem"
+** Exceptional nouns:
+*** кіш<b.voce> "basket"
+*** муж<c.locevi:i> "husband"
+** Vocative singular: All 29 nouns are stem-stressed. 8 of 9 nouns in -ж have vocative singular in -е (only exception is ґандж "defect", which is given vocative -е in mova.info). 19 of 20 nouns in ш/ч/щ have vocative singular in -у (only exception is кіш "basket", which is given vocative -у in mova.info).
+** Locative singular: All 20 inanimate nouns (including one singular-only) have locative singular in -і/у or -у/і. 8 of 9 personal/animal nouns have locative singular in -еві/у/і (6 of 9, all personal) or -і/еві/у (3 of 9, all animal). Only exception: муж "husband" with locative singular in -еві/і (given as -і/у/еві in mova.info).
+
+* Masculine nouns in ць:
+** Example nouns:
+*** америка́нець<*.pr> "American" [stem америка́нц-] (ні́мець<*.pr> "German" and many other nationality nouns; ви́борець<*.pr> "voter"), англі́єць<*.pr> "Englishman" [stem англі́йц-] (also кита́єць<*.pr> "male Chinese person"), брази́лець<*.pr> "Brazilian" [stem брази́льц-], оселе́дець<*.anml> "herring", па́лець<*> "finger" [stem па́льц-], пе́рець<*.genju> "pepper", ((та́нець<*.genju>,тане́ць<b*.genju>)) "dance", купе́ць<b*.pr> "merchant, tradesman", ссаве́ць<b*.anml> "mammal", кіне́ць<b*> "end" (also оліве́ць<b*> "pencil"), стіле́ць<b*> "pencil" [stem стільц-], вдове́ць<b*.pr.i> "widower" [stem вдівц-], за́єць<c*.anml> "hare"
+** Exceptional nouns:
+*** горобе́ць<b*.anml.voce> "sparrow", хло́пець<*.pr.voce> "boy"
+*** ((оте́ць<b*.pr.stem:вітц.voc:о́тче>,оте́ць<b*.pr.voce>)) "father"
+*** грець<b.pr> "player" (mova.info confirms, with example кова́ль)
+*** черне́ць<b*.pr.stem:ченц.voce> "monk"
+** Vocative singular: 41 of 45 nouns have vocative singular in -ю. Of the 41 in -ю, the stress follows the accent pattern in all but грець<b.pr> "player", which is the only non-reducible noun among the accent-b nouns (see below under masculine nouns in -ь other than -ць). The remaining 4 in -е are all stem-stressed despite 3 of the 4 being accent b. (Vocative in -е always seems to trigger stem stress and first palatalization.)
+** Locative singular: All 28 personal nouns and all 4 animal nouns have locative singular in -еві/ю/і (in some order; the given order is preferred by Slovozmina). All 12 inanimate nouns have locative singular in -ю/-і (in some order; the given order is preferred by Slovozmina). In all nouns, the stress follows the accent pattern.
+
+* Masculine nouns in -ь (other than -ць):
+** Example nouns:
+*** Accent a: автомобі́ль<M> "car", ведмі́дь<M.anml.ie>, ко́рінь<M.ie> "root" (also кре́мінь<M.ie> "flint"), во́день<M.sg.genju> "hydrogen", біль<M.io.genju> "ache, pain" "bear" у́чень<M.*.pr> "student, pupil", кі́готь<M.*> "claw" (also лі́коть<M.*> "elbow", ні́готь<M.*> "fingernail/toenail")
+*** Accent b: ферзь<M.b.pr> "queen (in chess)", джміль<M.b.anml.ie> "bumblebee", ячмі́нь<M.b.sg.ie> "stye (in the eye)", ячмі́нь<M.b.ie.genju> "barley", вого́нь<M.b*.genju> "fire"
+*** Accent c: учи́тель<M.c.pr> "teacher", жаль<M.c.genju>
+** Exceptions:
+*** кінь<d.anml.io.locevi:i.genplej.insplьmi:jami> "horse" [ins pl. кі́ньми/ко́нями]
+*** гість<e,a.pr.io.genpléj.inspljami:ьmi> "guest" [ins pl. гостя́ми/го́стями/гістьми́/гі́стьми]
+** Vocative singular: The vocative ending is always -ю except for ка́мінь "stone (material)", with vocative ка́мінь, which I think is a mistake. In accent pattern b, it's stem-stressed in 7 cases and end-stressed in 8 cases. Among the 8 end-stressed cases, 6 are reducible, and the other 2 are both ячмі́нь (stem ячмен-). mova.info agrees with this and adds курі́нь (stem куре́н-) as also having an end-stressed vocative, which Slovozmina agrees with. Among the 7 stem-stressed accent b cases, none are reducible (and none end in -нь or -інь; one, джміль, ends in -іль with stem джмел-). mova.info adds коші́ль to this class, which Slovozmina believes is accent pattern a. Conclusion: It's end-stressed in accent b reducible nouns and nouns in -інь, and stem-stressed in all other cases (which includes besides the accent b nouns, 44 accent a nouns, 3 accent c nouns, 1 accent d noun and 1 accent a/e noun).
+** Locative singular: As above, all 10 personal nouns and 9 of 10 animal nouns have locative in -еві/-ю/-і (the preferred order on Slovozmina) or a permutation, and all 43 inanimate nouns have locative in -ю/-і (the preferred order on Slovozmina). In all nouns, the stress follows the accent pattern. The one exception is кінь "horse", with locative singular in -еві/-і.
+** Genitive plural: Of the non-singular-only nouns, 54 end in -ів, 2 in -ей, which have to be overridden manually. In all nouns, the stress follows the accent pattern, except for гість, which is either pattern e or a but has genitive plural in -е́й only (this may be a general characteristic of genitives in -е́й).
+
+
+
+
+
+
+
 
 * у vs. а in gen sg. of masc (and neuter?) nouns: Semantically determined; must be manually specified
 
@@ -420,3 +464,6 @@ Ukrainian declensions:
 * Accusative singular = genitive singular for masculine nouns referring to people or animals, including neuter-form masculine nouns like {{m|uk|ба́тько}} but not feminine-form masculine nouns like {{m|uk|соба́ка}} where the accusative is already different from the nominative.
 *: {{re|Benwing2}} I don't quite understand this part. This is probably related to the issue already resolved about animals and humans. --[[User:Atitarev|Anatoli T.]] <sup>([[User talk:Atitarev|обсудить]]</sup>/<sup>[[Special:Contributions/Atitarev|вклад]])</sup> 05:03, 22 May 2020 (UTC)
 ::: {{ping|Atitarev}} I meant "genitive singular" not nominative singular. [[User:Benwing2|Benwing2]] ([[User talk:Benwing2|talk]]) 05:58, 22 May 2020 (UTC)
+
+==Reducible alternations:==
+* і -> nothing: ще́бінь, pl. ще́бні; сту́пінь, pl. сту́пені/сту́пні
