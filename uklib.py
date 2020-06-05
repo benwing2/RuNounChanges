@@ -25,7 +25,7 @@ def is_monosyllabic(word):
   return len(re.sub(non_vowels_c, "", word)) <= 1
 
 def add_monosyllabic_stress(word):
-  if is_monosyllabic(word):
+  if is_monosyllabic(word) and not is_stressed(word):
     return re.sub("(" + vowels_c + ")", r"\1" + AC, word)
   else:
     return word
