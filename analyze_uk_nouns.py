@@ -54,14 +54,14 @@ def process_text_on_page(index, pagetitle, text):
   pagemsg("Processing")
 
   parsed = blib.parse_text(text)
-  head = None
+  heads = None
   plurale_tantum = False
   animacy = "unknown"
   gender = "unknown"
   for t in parsed.filter_templates():
     tn = tname(t)
     if tn == "uk-noun":
-      head = getparam(t, "1")
+      heads = blib.fetch_param_chain(t, "1", "head")
       gender_and_animacy = getparam(t, "2")
       plurale_tantum = False
       animacy = "unknown"
@@ -78,7 +78,14 @@ def process_text_on_page(index, pagetitle, text):
 
     def fetch(param):
       val = getparam(t, param).strip()
-      return blib.remove_links(val)
+      val = blib.remove_links(val)
+      vals = re.split(r",\s*", val)
+      retval = []
+      for v in vals:
+        # Remove final footnote symbols are per [[Module:table tools]]
+        v = re.sub(ur"[*~@#$%^&+0-9_\u00A1-\u00BF\u00D7\u00F7\u2010-\u2027\u2030-\u205E\u2070-\u20CF\u2100-\u2B5F\u2E00-\u2E3F]*$", "", v)
+        retval.append(v)
+      return ", ".join(retval)
 
     def matches(is_end_stressed, should_be_end_stressed):
       return (is_end_stressed == "mixed" or should_be_end_stressed is None or
@@ -106,8 +113,20 @@ def process_text_on_page(index, pagetitle, text):
         "endstressed" if endstressed == True else
         "stemstressed" if endstressed == False else "mixed"
       )
+    def check_multi_stressed(maxparam):
+      for i in xrange(1, maxparam + 1):
+        val = getparam(t, str(i))
+        vals = re.split(r",\s*", val)
+        for v in vals:
+          if uklib.is_multi_stressed(v):
+            pagemsg("WARNING: Param %s=%s has multiple stresses: %s" % (
+              (str(i), val, unicode(t))))
+          if uklib.needs_accent(v):
+            pagemsg("WARNING: Param %s=%s has missing stress: %s" % (
+              (str(i), val, unicode(t))))
 
     if tn == "uk-decl-noun":
+      check_multi_stressed(14)
       nom_sg = fetch("1")
       gen_sg = fetch("3")
       gen_sg_end_stressed = param_is_end_stressed(gen_sg)
@@ -144,9 +163,17 @@ def process_text_on_page(index, pagetitle, text):
             matches(loc_pl_end_stressed, accents["locpl"])):
           seen_patterns.append(pattern)
       if "a" in seen_patterns and "b" in seen_patterns:
+        # If a and b apply, most others can apply as well
         seen_patterns = ["a", "b"]
       elif "a" in seen_patterns and "c" in seen_patterns:
+        # If a and c apply, e can apply as well
         seen_patterns = ["a", "c"]
+      elif "a" in seen_patterns and "d" in seen_patterns:
+        # If a and d apply, d' can apply as well
+        seen_patterns = ["a", "d"]
+      elif "b" in seen_patterns and "d" in seen_patterns:
+        # If b and d apply, f can apply as well
+        seen_patterns = ["b", "d"]
       gen_sg_endings = fetch_endings("3", genitive_singular_endings)
       dat_sg_endings = fetch_endings("5", dative_singular_endings)
       ins_sg_endings = fetch_endings("9", instrumental_singular_endings)
@@ -155,8 +182,11 @@ def process_text_on_page(index, pagetitle, text):
       nom_pl_endings = fetch_endings("2", nominative_plural_endings)
       gen_pl_endings = fetch_endings("4", genitive_plural_endings)
 
+      if not heads:
+        pagemsg("WARNING: No head found")
+        heads = [pagetitle]
       pagemsg("%s\tgender:%s\tanimacy:%s\taccent:%s\tgen_sg:%s\tdat_sg:%s\tloc_sg:%s\tvoc_sg:%s\tgen_pl:%s\tnumber:both\tgen_sg:%s\tdat_sg:%s\tloc_sg:%s\tvoc_sg:%s\tnom_pl:%s\tgen_pl:%s\t| %s || \"?\" || %s || %s || %s || %s || %s || %s || || " % (
-        head, gender, animacy, ":".join(seen_patterns),
+        "/".join(heads), gender, animacy, ":".join(seen_patterns),
         stress(gen_sg_end_stressed), stress(dat_sg_end_stressed),
         stress(loc_sg_end_stressed), stress(voc_sg_end_stressed),
         stress(gen_pl_end_stressed),
@@ -166,6 +196,7 @@ def process_text_on_page(index, pagetitle, text):
         canon(ins_pl)))
 
     elif tn == "uk-decl-noun-unc":
+      check_multi_stressed(7)
       nom_sg = fetch("1")
       gen_sg = fetch("2")
       gen_sg_end_stressed = param_is_end_stressed(gen_sg)
@@ -199,14 +230,18 @@ def process_text_on_page(index, pagetitle, text):
       loc_sg_endings = fetch_endings("6", locative_singular_endings)
       voc_sg_endings = fetch_endings("7", vocative_singular_endings)
 
+      if not heads:
+        pagemsg("WARNING: No head found")
+        heads = [pagetitle]
       pagemsg("%s\tgender:%s\tanimacy:%s\taccent:%s\tgen_sg:%s\tdat_sg:%s\tloc_sg:%s\tvoc_sg:%s\tgen_pl:-\tnumber:sg\tgen_sg:%s\tdat_sg:%s\tloc_sg:%s\tvoc_sg:%s\tnom_pl:-\tgen_pl:-\t| %s || \"?\" || %s || %s || %s || - || - || - || || " % (
-        head, gender, animacy, ":".join(seen_patterns),
+        "/".join(heads), gender, animacy, ":".join(seen_patterns),
         stress(gen_sg_end_stressed), stress(dat_sg_end_stressed),
         stress(loc_sg_end_stressed), stress(voc_sg_end_stressed),
         gen_sg_endings, dat_sg_endings, loc_sg_endings, voc_sg_endings,
         canon(nom_sg), canon(gen_sg), canon(loc_sg), canon(voc_sg)))
 
     elif tn == "uk-decl-noun-pl":
+      check_multi_stressed(7)
       nom_pl = fetch("1")
       nom_pl_end_stressed = param_is_end_stressed(nom_pl)
       gen_pl = fetch("2")
@@ -231,8 +266,11 @@ def process_text_on_page(index, pagetitle, text):
       nom_pl_endings = fetch_endings("1", nominative_plural_endings)
       gen_pl_endings = fetch_endings("2", genitive_plural_endings)
 
+      if not heads:
+        pagemsg("WARNING: No head found")
+        heads = [pagetitle]
       pagemsg("%s\tgender:%s\tanimacy:%s\taccent:%s\tgen_sg:-\tdat_sg:-\tloc_sg:-\tvoc_sg:-\tgen_pl:%s\tnumber:pl\tgen_sg:-\tdat_sg:-\tloc_sg:-\tvoc_sg:-\tnom_pl:%s\tgen_pl:%s\t| %s || \"?\" || - || - || - || %s || %s || %s || || " % (
-        head, gender, animacy, ":".join(seen_patterns),
+        "/".join(heads), gender, animacy, ":".join(seen_patterns),
         stress(gen_pl_end_stressed),
         nom_pl_endings, gen_pl_endings,
         canon(nom_pl), canon(nom_pl), canon(gen_pl), canon(ins_pl)))
