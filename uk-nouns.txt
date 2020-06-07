@@ -7,171 +7,240 @@ Ukrainian declensions:
 |-
 ! colspan=10 style="text-align: center;" | Accent a
 |-
-| біс<pr> || "demon" || бі́са || бі́сові/бі́сі || бі́се || бі́си || бі́сів || бі́сами || абази́н<pr> "Abaza", журналі́ст<pr> "journalist", корабе́л<pr> "shipbuilder", президе́нт<pr> "president", сусі́д<pr> "neighbor", член<pr> "member", etc. || 
+| {{User:Benwing2/uk-ndecl|біс<pr>}}
+| "demon" || бі́са || бі́сові/бі́сі || бі́се || бі́си || бі́сів || бі́сами || абази́н<pr> "Abaza", журналі́ст<pr> "journalist", корабе́л<pr> "shipbuilder", президе́нт<pr> "president", сусі́д<pr> "neighbor", член<pr> "member", etc. || 
 |-
-| кия́нин<pr.in> || "Kievan" || кия́нина || кия́нинові/кия́нині || кия́нине || кия́ни || кия́н || кия́нами || росія́нин<pr.in> "Russian" ||
+| {{User:Benwing2/uk-ndecl|кия́нин<pr.in>}}
+| "Kievan" || кия́нина || кия́нинові/кия́нині || кия́нине || кия́ни || кия́н || кия́нами || росія́нин<pr.in> "Russian" ||
 |-
-| во́рон<anml> || "raven" || во́рона || во́ронові/во́роні || во́роне || во́рони || во́ронів || во́ронами || гад<anml> "reptile", драко́н<anml> "dragon", etc. || 
+| {{User:Benwing2/uk-ndecl|во́рон<anml>}}
+| "raven" || во́рона || во́ронові/во́роні || во́роне || во́рони || во́ронів || во́ронами || гад<anml> "reptile", драко́н<anml> "dragon", etc. || 
 |-
-| бана́н<> || "banana" || бана́на || бана́ні || бана́не || бана́ни || бана́нів || бана́нами || во́лос<> "a hair", дива́н<> "sofa", докуме́нт<> "document", пилосо́с<> "vacuum cleaner", etc. || 
+| {{User:Benwing2/uk-ndecl|бана́н<>}}
+| "banana" || бана́на || бана́ні || бана́не || бана́ни || бана́нів || бана́нами || во́лос<> "a hair", дива́н<> "sofa", докуме́нт<> "document", пилосо́с<> "vacuum cleaner", etc. || 
 |-
-| бі́знес<genu> || "business" || бі́знесу || бі́знесі || бі́знесе || бі́знеси || бі́знесів || бі́знесами || батальйо́н<genu> "battalion", вид<genu> "kind, sort", ви́рус<genu> "virus", вокза́л<genu> "train station", град<genu> "hail", обі́д<genu> "dinner, lunch", рестора́н<genu> "restaurant", etc. || 
+| {{User:Benwing2/uk-ndecl|бі́знес<genu>}}
+| "business" || бі́знесу || бі́знесі || бі́знесе || бі́знеси || бі́знесів || бі́знесами || батальйо́н<genu> "battalion", вид<genu> "kind, sort", ви́рус<genu> "virus", вокза́л<genu> "train station", град<genu> "hail", обі́д<genu> "dinner, lunch", рестора́н<genu> "restaurant", etc. || 
 |-
-| дев'яси́л<genu:a> || "inula, elecampane" || дев'яси́лу/дев'яси́ла || дев'яси́лі || дев'яси́ле || дев'яси́ли || дев'яси́лів || дев'яси́лами || || 
+| {{User:Benwing2/uk-ndecl|дев'яси́л<genu:a>}}
+| "inula, elecampane" || дев'яси́лу/дев'яси́ла || дев'яси́лі || дев'яси́ле || дев'яси́ли || дев'яси́лів || дев'яси́лами || || 
 |-
-| вертолі́т<io> || "helicopter" || вертольо́та || вертольо́ті || вертольо́те || вертольо́ти || вертольо́тів || вертольо́тами || о́бід<io> "rim" || 
+| {{User:Benwing2/uk-ndecl|вертолі́т<io>}}
+| "helicopter" || вертольо́та || вертольо́ті || вертольо́те || вертольо́ти || вертольо́тів || вертольо́тами || о́бід<io> "rim" || 
 |-
-| брід<io.genu> || "ford" || бро́ду || бро́ді || бро́де || бро́ди || бро́дів || бро́дами || ви́хід<io.genu> "exit", дзвін<io.genu> "bell", на́рід<io.genu> "people", підхі́д<io.genu> "approach", при́від<io.genu> "occasion", приві́д<io.genu> "bringing" || 
+| {{User:Benwing2/uk-ndecl|брід<io.genu>}}
+| "ford" || бро́ду || бро́ді || бро́де || бро́ди || бро́дів || бро́дами || ви́хід<io.genu> "exit", дзвін<io.genu> "bell", на́рід<io.genu> "people", підхі́д<io.genu> "approach", при́від<io.genu> "occasion", приві́д<io.genu> "bringing" || 
 |-
-| ву́гол<*> || "angle" || ву́гла || ву́глі || ву́гле || ву́гли || ву́глів || ву́глами || || 
+| {{User:Benwing2/uk-ndecl|ву́гол<*>}}
+| "angle" || ву́гла || ву́глі || ву́гле || ву́гли || ву́глів || ву́глами || || 
 |-
-| де́рен<*.genu> || "sod" || де́рну || де́рні || де́рне || де́рни || де́рнів || де́рнами || те́рен<*.genu> "sloe, blackthorn" || 
+| {{User:Benwing2/uk-ndecl|де́рен<*.genu>}}
+| "sod" || де́рну || де́рні || де́рне || де́рни || де́рнів || де́рнами || те́рен<*.genu> "sloe, blackthorn" || 
 |-
-| ха́ос<sg> || "chaos, mess" || ха́осу || ха́осу/ха́осі || ха́осе || - || - || - || смара́гд<sg> "emerald (substance)", ве́рес<sg> "heather", го́лод<sg> "hunger", тис<sg> "yew (wood)", many others || 
+| {{User:Benwing2/uk-ndecl|ха́ос<sg>}}
+| "chaos, mess" || ха́осу || ха́осу/ха́осі || ха́осе || - || - || - || смара́гд<sg> "emerald (substance)", ве́рес<sg> "heather", го́лод<sg> "hunger", тис<sg> "yew (wood)", many others || 
 |-
-| ((ру́син<pr>,руси́н<b.pr>)) || "Rusyn" || ру́сина/русина́ || ру́синові/ру́сині/русино́ві/русині́ || ру́сине/руси́не || ру́сини/русини́ || ру́синів/русині́в || ру́синами/русина́ми || || 
+| {{User:Benwing2/uk-ndecl|((ру́син<pr>,руси́н<b.pr>))}}
+| "Rusyn" || ру́сина/русина́ || ру́синові/ру́сині/русино́ві/русині́ || ру́сине/руси́не || ру́сини/русини́ || ру́синів/русині́в || ру́синами/русина́ми || || 
 |-
-| ((христия́нин<pr.in>,християни́н<pr.in>)) || "Christian" || христия́нина/християни́на || христия́нинові/христия́нині/християни́нові/християни́ні || христия́нине/християни́не || христия́ни || христия́н || христия́нами || || the plural is only христия́н- because the -ин is removed and when stressed, stress has to shift to the left
+| {{User:Benwing2/uk-ndecl|((христия́нин<pr.in>,християни́н<pr.in>))}}
+| "Christian" || христия́нина/християни́на || христия́нинові/христия́нині/християни́нові/християни́ні || христия́нине/християни́не || христия́ни || христия́н || христия́нами || || the plural is only христия́н- because the -ин is removed and when stressed, stress has to shift to the left
 |-
-| вид<genu.locú> || "face, appearance" || ви́ду || виду́ || ви́де || ви́ди || ви́дів || ви́дами || || 
+| {{User:Benwing2/uk-ndecl|вид<genu.locú>}}
+| "face, appearance" || ви́ду || виду́ || ви́де || ви́ди || ви́дів || ви́дами || || 
 |-
-| со́кіл<anml.io.plstem:соко́л.loci> || "falcon" || со́кола || со́колі || со́коле || соко́ли || соко́лів || соко́лами || || movi.info strongly disagrees; indicates special voc sg соко́ле and end stress in pl
+| {{User:Benwing2/uk-ndecl|со́кіл<anml.io.plstem:соко́л.loci>}}
+| "falcon" || со́кола || со́колі || со́коле || соко́ли || соко́лів || соко́лами || || movi.info strongly disagrees; indicates special voc sg соко́ле and end stress in pl
 |-
-| за́хід<sg.io.loci> || "west" || за́ходу || за́ході || за́ходе || - || - || - || схід<sg.io.loci> "east" || 
+| {{User:Benwing2/uk-ndecl|за́хід<sg.io.loci>}}
+| "west" || за́ходу || за́ході || за́ходе || - || - || - || схід<sg.io.loci> "east" || 
 |-
-| по́піл<sg.ie.loci> || "ash" || по́пелу || по́пелі || по́пеле || - || - || - || || 
+| {{User:Benwing2/uk-ndecl|по́піл<sg.ie.loci>}}
+| "ash" || по́пелу || по́пелі || по́пеле || - || - || - || || 
 |-
-| пил<sg.locú> || "dust" || пи́лу || пилу́ || пи́ле || - || - || - || || 
+| {{User:Benwing2/uk-ndecl|пил<sg.locú>}}
+| "dust" || пи́лу || пилу́ || пи́ле || - || - || - || || 
 |-
-| вус<nompla:y> || "moustache" || ву́са || ву́сі || ву́се || ву́са/ву́си || ву́сів || ву́сами || || 
+| {{User:Benwing2/uk-ndecl|вус<nompla:y>}}
+| "moustache" || ву́са || ву́сі || ву́се || ву́са/ву́си || ву́сів || ву́сами || || 
 |-
-| лу́чник<hum> || "archer" || лу́чника || лу́чникові/лу́чнику || лу́чнику || лу́чники || лу́чників || лу́чниками || ||
+| {{User:Benwing2/uk-ndecl|лу́чник<hum>}}
+| "archer" || лу́чника || лу́чникові/лу́чнику || лу́чнику || лу́чники || лу́чників || лу́чниками || ||
 |-
-| за́мок<*.genu> || "castle" || за́мку || за́мку/за́мкові || за́мку || за́мки || за́мків || за́мками || || reducible; loc у/ові or ові/у is normal in inanimate reducibles in -к
+| {{User:Benwing2/uk-ndecl|за́мок<*.genu>}}
+| "castle" || за́мку || за́мку/за́мкові || за́мку || за́мки || за́мків || за́мками || || reducible; loc у/ові or ові/у is normal in inanimate reducibles in -к
 |-
-| знак || "symbol, omen" || зна́ка || зна́ку || зна́ку || зна́ки || зна́ків || зна́ками || банк "bank" ||
+| {{User:Benwing2/uk-ndecl|знак}}
+| "symbol, omen" || зна́ка || зна́ку || зна́ку || зна́ки || зна́ків || зна́ками || банк "bank" ||
 |-
-| біль<M.і.genu> || "ache, pain" || бо́лю || бо́лю/бо́лі || бо́лю || бо́лі || бо́лів || бо́лями || ||
+| {{User:Benwing2/uk-ndecl|біль<M.i.genu>}}
+| "ache, pain" || бо́лю || бо́лю/бо́лі || бо́лю || бо́лі || бо́лів || бо́лями || ||
 |-
-| ведмі́дь<M.anml.ie> || "bear" || ведме́дя || ведме́деві/ведме́дю/ведме́ді || ведме́дю || ведме́ді || ведме́дів || ведме́дями || || soft
+| {{User:Benwing2/uk-ndecl|ведмі́дь<M.anml.ie>}}
+| "bear" || ведме́дя || ведме́деві/ведме́дю/ведме́ді || ведме́дю || ведме́ді || ведме́дів || ведме́дями || || soft
 |-
-| друг<voce.plsoft.plstem:друз> || "friend" || дру́га || дру́гові/дру́гу || дру́же || дру́зі || дру́зів || дру́зями || || Irregular stem and soft declension in plural.
+| {{User:Benwing2/uk-ndecl|друг<voce.plsoft.plstem:друз>}}
+| "friend" || дру́га || дру́гові/дру́гу || дру́же || дру́зі || дру́зів || дру́зями || || Irregular stem and soft declension in plural.
 |-
 ! colspan=10 style="text-align: center;" | Accent b
 |-
-| кіт<b.anml.io.locovi> || "tomcat" || кота́ || кото́ві || ко́те || коти́ || коті́в || кота́ми || ||  in movi.info, loc sg is normal
+| {{User:Benwing2/uk-ndecl|кіт<b.anml.io.locovi>}}
+| "tomcat" || кота́ || кото́ві || ко́те || коти́ || коті́в || кота́ми || ||  in movi.info, loc sg is normal
 |-
-| брат<b.pr> || "brother" || брата́ || брато́ві/браті́ || бра́те || брати́ || браті́в || брата́ми || || 
+| {{User:Benwing2/uk-ndecl|брат<b.pr>}}
+| "brother" || брата́ || брато́ві/браті́ || бра́те || брати́ || браті́в || брата́ми || || 
 |-
-| посо́л<b*.pr> || "ambassador" || посла́ || посло́ві/послі́ || по́сле || посли́ || послі́в || посла́ми || || 
+| {{User:Benwing2/uk-ndecl|посо́л<b*.pr>}}
+| "ambassador" || посла́ || посло́ві/послі́ || по́сле || посли́ || послі́в || посла́ми || || 
 |-
-| плазу́н<b.anml> || "reptile, worm" || плазуна́ || плазуно́ві/плазуні́ || плазу́не || плазуни́ || плазуні́в || плазуна́ми || бара́н "ram", кажа́н<b.anml> "bat", слон<b.anml> "elephant", кит<b.anml> "whale", etc. || 
+| {{User:Benwing2/uk-ndecl|плазу́н<b.anml>}}
+| "reptile, worm" || плазуна́ || плазуно́ві/плазуні́ || плазу́не || плазуни́ || плазуні́в || плазуна́ми || бара́н "ram", кажа́н<b.anml> "bat", слон<b.anml> "elephant", кит<b.anml> "whale", etc. || 
 |-
-| оре́л<b*.anml> || "eagle" || орла́ || орло́ві/орлі́ || о́рле || орли́ || орлі́в || орла́ми || || 
+| {{User:Benwing2/uk-ndecl|оре́л<b*.anml>}}
+| "eagle" || орла́ || орло́ві/орлі́ || о́рле || орли́ || орлі́в || орла́ми || || 
 |-
-| дрізд<b.anml.io> || "thrush (bird)" || дрозда́ || дроздо́ві/дрозді́ || дро́зде || дрозди́ || дрозді́в || дрозда́ми || || 
+| {{User:Benwing2/uk-ndecl|дрізд<b.anml.io>}}
+| "thrush (bird)" || дрозда́ || дроздо́ві/дрозді́ || дро́зде || дрозди́ || дрозді́в || дрозда́ми || || 
 |-
-| каву́н<b> || "watermelon" || кавуна́ || кавуні́ || каву́не || кавуни́ || кавуні́в || кавуна́ми || кут<b> "corner", лист<b> "leaf", хрест<b> "cross" || 
+| {{User:Benwing2/uk-ndecl|каву́н<b>}}
+| "watermelon" || кавуна́ || кавуні́ || каву́не || кавуни́ || кавуні́в || кавуна́ми || кут&lt;b> "corner", лист&lt;b> "leaf", хрест&lt;b> "cross" || 
 |-
-| живі́т<b.io> || "belly, stomach" || живота́ || животі́ || живо́те || животи́ || животі́в || живота́ми || плід<b.io> "fetus" || 
+| {{User:Benwing2/uk-ndecl|живі́т<b.io>}}
+| "belly, stomach" || живота́ || животі́ || живо́те || животи́ || животі́в || живота́ми || плід<b.io> "fetus" || 
 |-
-| бур'я́н<b.genu> || "weed" || бур'яну́ || бур'яні́ || бур'я́не || бур'яни́ || бур'яні́в || бур'яна́ми || || 
+| {{User:Benwing2/uk-ndecl|бур'я́н<b.genu>}}
+| "weed" || бур'яну́ || бур'яні́ || бур'я́не || бур'яни́ || бур'яні́в || бур'яна́ми || || 
 |-
-| коте́л<b*> || "cauldron" || котла́ || котлі́ || ко́тле || котли́ || котлі́в || котла́ми || хребе́т<b*> "spine" || 
+| {{User:Benwing2/uk-ndecl|коте́л<b*>}}
+| "cauldron" || котла́ || котлі́ || ко́тле || котли́ || котлі́в || котла́ми || хребе́т<b*> "spine" || 
 |-
-| ву́зол<b*> || "knot" || вузла́ || вузлі́ || ву́зле || вузли́ || вузлі́в || вузла́ми || || 
+| {{User:Benwing2/uk-ndecl|ву́зол<b*>}}
+| "knot" || вузла́ || вузлі́ || ву́зле || вузли́ || вузлі́в || вузла́ми || || 
 |-
-| пес<b*.anml> || "dog" || пса || псо́ві/псі || псе || пси || псів || пса́ми || || 
+| {{User:Benwing2/uk-ndecl|пес<b*.anml>}}
+| "dog" || пса || псо́ві/псі || псе || пси || псів || пса́ми || || 
 |-
-| сон<b*.genu.vocu> || "sleep, dream" || сну || сні || сну || сни || снів || сна́ми || || 
+| {{User:Benwing2/uk-ndecl|сон<b*.genu.vocu>}}
+| "sleep, dream" || сну || сні || сну || сни || снів || сна́ми || || 
 |-
-| тютю́н<b.sg> || "tobacco" || тютюну́ || тютюну́/тютюні́ || тютю́не || - || - || - || чаву́н<b.sg> "cast iron" || 
+| {{User:Benwing2/uk-ndecl|тютю́н<b.sg>}}
+| "tobacco" || тютюну́ || тютюну́/тютюні́ || тютю́не || - || - || - || чаву́н<b.sg> "cast iron" || 
 |-
-| суд<b.génu> || "court (of law)" || су́ду || суді́ || су́де || суди́ || суді́в || суда́ми || || 
+| {{User:Benwing2/uk-ndecl|суд<b.génu>}}
+| "court (of law)" || су́ду || суді́ || су́де || суди́ || суді́в || суда́ми || || 
 |-
-| віл<b.anml.io.loci> || "ox, bullock" || вола́ || волі́ || во́ле || воли́ || волі́в || вола́ми || || in movi.info, loc sg is normal
+| {{User:Benwing2/uk-ndecl|віл<b.anml.io.loci>}}
+| "ox, bullock" || вола́ || волі́ || во́ле || воли́ || волі́в || вола́ми || || in movi.info, loc sg is normal
 |-
-| хвіст<b.io.locu:i> || "tail" || хвоста́ || хвосту́/хвості́ || хво́сте || хвости́ || хвості́в || хвоста́ми || || 
+| {{User:Benwing2/uk-ndecl|хвіст<b.io.locu:i>}}
+| "tail" || хвоста́ || хвосту́/хвості́ || хво́сте || хвости́ || хвості́в || хвоста́ми || || 
 |-
-| стіл<b.io.gena.génu.loci:u> || "table" || стола́/сто́лу || столі́/столу́ || сто́ле || столи́ || столі́в || стола́ми || || 
+| {{User:Benwing2/uk-ndecl|стіл<b.io.gena.génu.loci:u>}}
+| "table" || стола́/сто́лу || столі́/столу́ || сто́ле || столи́ || столі́в || стола́ми || || 
 |-
-| міст<b,c.génu.gená.lóci.locú> || "bridge" || моста́/мо́сту || мосту́/мо́сті || мо́сте || мости́ || мості́в || моста́ми || || Slovozmina says dative singular only end-stressed but mova.info says dative singular either stem or end stressed
+| {{User:Benwing2/uk-ndecl|міст<b,c.génu.gená.lóci.locú>}}
+| "bridge" || моста́/мо́сту || мосту́/мо́сті || мо́сте || мости́ || мості́в || моста́ми || || Slovozmina says dative singular only end-stressed but mova.info says dative singular either stem or end stressed
 |-
-| ба́тяр || "tramp, vagabond" (semi-soft) || батяра́ || батяре́ві/батярі́ || батя́ре || батярі́ || батярі́в || батяра́ми || ||
+| {{User:Benwing2/uk-ndecl|ба́тяр}}
+| "tramp, vagabond" (semi-soft) || батяра́ || батяре́ві/батярі́ || батя́ре || батярі́ || батярі́в || батяра́ми || ||
 |-
 | colspan=10| -- This is one is not semi-soft but "слю́сар" is, gen sg.: слю́сар'''я''', dat. (слю́сареві or) слю́сар'''ю'''. The ending "і" is common with hard endings as well (р, ж, ш, щ, ц can be both hard and soft, unlike Russian - with all but "р", in Ukrainian soft "р" never ends with -рь). --[[User:Atitarev|Anatoli T.]] <sup>([[User talk:Atitarev|обсудить]]</sup>/<sup>[[Special:Contributions/Atitarev|вклад]])</sup> 06:09, 15 May 2020 (UTC)<br />
 -- To clarify, ending -ів can be attached to р, ж, ш, щ, ц making them palatalised) --[[User:Atitarev|Anatoli T.]] <sup>([[User talk:Atitarev|обсудить]]</sup>/<sup>[[Special:Contributions/Atitarev|вклад]])</sup> 06:10, 15 May 2020 (UTC)<br />
 -- Oops, sorry, more clarification needed. ба́тяр must be indeed "semi-soft", since the plural is батярі́, "слю́сар" would then be considered "soft". (I'm feeling like an amateur). --[[User:Atitarev|Anatoli T.]] <sup>([[User talk:Atitarev|обсудить]]</sup>/<sup>[[Special:Contributions/Atitarev|вклад]])</sup> 06:26, 15 May 2020 (UTC)
 |-
-| кома́р || "mosquito" (semi-soft?) || комара́ || комаро́ві/комарі́ || кома́ре || комарі́ || комарі́в || комара́ми || ||
+| {{User:Benwing2/uk-ndecl|кома́р}}
+| "mosquito" (semi-soft?) || комара́ || комаро́ві/комарі́ || кома́ре || комарі́ || комарі́в || комара́ми || ||
 |-
 | colspan=10 | Loc sg. has -о́ві here but -е́ві with ба́тяр. Predictable or not?
 |-
-| цар || "king, emperor" || царя́ || царю́/царе́ві/царі́ || ца́рю || царі́ || царі́в || царя́ми || || soft
+| {{User:Benwing2/uk-ndecl|цар}}
+| "king, emperor" || царя́ || царю́/царе́ві/царі́ || ца́рю || царі́ || царі́в || царя́ми || || soft
 |-
-| бик<b.anml.voce> || "bull" || бика́ || бико́ві/бику́ || би́че || бики́ || бикі́в || бика́ми || ||
+| {{User:Benwing2/uk-ndecl|бик<b.anml.voce>}}
+| "bull" || бика́ || бико́ві/бику́ || би́че || бики́ || бикі́в || бика́ми || ||
 |-
-| бик&lt;b> || "support? cauldron?" || бика́ || бику́ || бику́ || бики́ || бикі́в || бика́ми || ||
+| {{User:Benwing2/uk-ndecl|бик<b>}}
+| "support? cauldron?" || бика́ || бику́ || бику́ || бики́ || бикі́в || бика́ми || ||
 |-
-| замо́к || "lock" || замка́ || замку́/замко́ві || замку́ || замки́ || замкі́в || замка́ми || || reducible
+| {{User:Benwing2/uk-ndecl|замо́к}}
+| "lock" || замка́ || замку́/замко́ві || замку́ || замки́ || замкі́в || замка́ми || || reducible
 |-
-| знак || "sign" || знаку́ || знаку́ || зна́ку || знаки́ || знакі́в || знака́ми || || Has alternative accent pattern c, which may be the reason for the stem-stressed voc sg.
+| {{User:Benwing2/uk-ndecl|знак}}
+| "sign" || знаку́ || знаку́ || зна́ку || знаки́ || знакі́в || знака́ми || || Has alternative accent pattern c, which may be the reason for the stem-stressed voc sg.
 |-
-| жук || "beetle" || жука́ || жуко́ві/жуку́ || жу́че || жуки́ || жукі́в || жука́ми || ||
+| {{User:Benwing2/uk-ndecl|жук}}
+| "beetle" || жука́ || жуко́ві/жуку́ || жу́че || жуки́ || жукі́в || жука́ми || ||
 |-
-| коро́ль || "king" || короля́ || короле́ві/королю́/королі́ || коро́лю || королі́ || королі́в || короля́ми || || soft
+| {{User:Benwing2/uk-ndecl|коро́ль}}
+| "king" || короля́ || короле́ві/королю́/королі́ || коро́лю || королі́ || королі́в || короля́ми || || soft
 |-
-| день || "day" || дня || дні/дню || дню || дні || днів || дня́ми || || soft, reducible
+| {{User:Benwing2/uk-ndecl|день}}
+| "day" || дня || дні/дню || дню || дні || днів || дня́ми || || soft, reducible
 |-
-| солове́й || "nightingale" || солов'я́ || солов'ї́/солов'ю́/солов'є́ві || солов'ю́ || солов'ї́ || солов'ї́в || солов'я́ми || || soft, reducible
+| {{User:Benwing2/uk-ndecl|солове́й}}
+| "nightingale" || солов'я́ || солов'ї́/солов'ю́/солов'є́ві || солов'ю́ || солов'ї́ || солов'ї́в || солов'я́ми || || soft, reducible
 |-
 ! colspan=10 style="text-align: center;" | Accent c
 |-
-| чорт<c.pr> || "devil" || чо́рта || чо́ртові/чо́рті || чо́рте || чорти́ || чорті́в || чорта́ми || пан<c.pr> "lord, sir", сват<c.pr> "go-between", чин<c.pr> || 
+| {{User:Benwing2/uk-ndecl|чорт<c.pr>}}
+| "devil" || чо́рта || чо́ртові/чо́рті || чо́рте || чорти́ || чорті́в || чорта́ми || пан<c.pr> "lord, sir", сват<c.pr> "go-between", чин<c.pr> || 
 |-
-| со́кіл<c.pr.io> || "boy or man with celebrated beauty or courage" || со́кола || со́колові/со́колі || со́коле || соколи́ || соколі́в || сокола́ми || || 
+| {{User:Benwing2/uk-ndecl|со́кіл<c.pr.io>}}
+| "boy or man with celebrated beauty or courage" || со́кола || со́колові/со́колі || со́коле || соколи́ || соколі́в || сокола́ми || || 
 |-
-| по́їзд<c> || "train" || по́їзда || по́їзді || по́їзде || поїзди́ || поїзді́в || поїзда́ми || го́род<c> "walled town, citadel", рот<c> "mouth", спис<c> "lance" || 
+| {{User:Benwing2/uk-ndecl|по́їзд<c>}}
+| "train" || по́їзда || по́їзді || по́їзде || поїзди́ || поїзді́в || поїзда́ми || го́род<c> "walled town, citadel", рот<c> "mouth", спис<c> "lance" || 
 |-
-| го́лос<c.genu> || "voice" || го́лосу || го́лосі || го́лосе || голоси́ || голосі́в || голоса́ми || ліс<c.genu> "forest", світ<c.genu> "world", склад<c.genu> "syllable", час<c.genu> "time" || 
+| {{User:Benwing2/uk-ndecl|го́лос<c.genu>}}
+| "voice" || го́лосу || го́лосі || го́лосе || голоси́ || голосі́в || голоса́ми || ліс<c.genu> "forest", світ<c.genu> "world", склад<c.genu> "syllable", час<c.genu> "time" || 
 |-
-| віз<c.io> || "cart" || во́за || во́зі || во́зе || вози́ || возі́в || воза́ми || ніс<c.io> "nose" || 
+| {{User:Benwing2/uk-ndecl|віз<c.io>}}
+| "cart" || во́за || во́зі || во́зе || вози́ || возі́в || воза́ми || ніс<c.io> "nose" || 
 |-
-| піт<c.io.genu> || "sweat" || по́ту || по́ті || по́те || поти́ || поті́в || пота́ми || || 
+| {{User:Benwing2/uk-ndecl|піт<c.io.genu>}}
+| "sweat" || по́ту || по́ті || по́те || поти́ || поті́в || пота́ми || || 
 |-
-| син<c.pr.vocu.locovi:i:u> || "son" || си́на || си́нові/си́ні/си́ну || си́ну || сини́ || сині́в || сина́ми || дід<c.pr.vocu.locovi:i:u> "grandfather" || in movi.info, loc sg is normal but irreg voc sg verified
+| {{User:Benwing2/uk-ndecl|син<c.pr.vocu.locovi:i:u>}}
+| "son" || си́на || си́нові/си́ні/си́ну || си́ну || сини́ || сині́в || сина́ми || дід<c.pr.vocu.locovi:i:u> "grandfather" || in movi.info, loc sg is normal but irreg voc sg verified
 |-
-| пан<c.pr.locovi:u.vocply:ove> || "lord, sir" || па́на || па́нові/па́ну || па́не || пани́ || пані́в || пана́ми || || in movi.info, loc sg is normal but irreg voc pl verified
+| {{User:Benwing2/uk-ndecl|пан<c.pr.locovi:u.vocply:ove>}}
+| "lord, sir" || па́на || па́нові/па́ну || па́не || пани́ || пані́в || пана́ми || || in movi.info, loc sg is normal but irreg voc pl verified
 |-
-| аеропо́рт<c.genu.locú> || "airport" || аеропо́рту || аеропорту́ || аеропо́рте || аеропорти́ || аеропорті́в || аеропорта́ми || авіапо́рт<c.genu.locú> "airport", мед<c.genu.locú> "honey", сад<c.genu.locú> "garden" || 
+| {{User:Benwing2/uk-ndecl|аеропо́рт<c.genu.locú>}}
+| "airport" || аеропо́рту || аеропорту́ || аеропо́рте || аеропорти́ || аеропорті́в || аеропорта́ми || авіапо́рт<c.genu.locú> "airport", мед<c.genu.locú> "honey", сад<c.genu.locú> "garden" || 
 |-
-| дріт<c.io.genu.locu:i> || "wire" || дро́ту || дро́ту/дро́ті || дро́те || дроти́ || дроті́в || дрота́ми || || 
+| {{User:Benwing2/uk-ndecl|дріт<c.io.genu.locu:i>}}
+| "wire" || дро́ту || дро́ту/дро́ті || дро́те || дроти́ || дроті́в || дрота́ми || || 
 |-
-| лід<c.io.genu.locú> || "ice" || льо́ду || льоду́ || льо́де || льоди́ || льоді́в || льода́ми || || stem льод-
+| {{User:Benwing2/uk-ndecl|лід<c.io.genu.locú>}}
+| "ice" || льо́ду || льоду́ || льо́де || льоди́ || льоді́в || льода́ми || || stem льод-
 |-
-| рід<c.io.genu.locú:i> || "gender; family; tribe" || ро́ду || роду́/ро́ді || ро́де || роди́ || роді́в || рода́ми || || 
+| {{User:Benwing2/uk-ndecl|рід<c.io.genu.locú:i>}}
+| "gender; family; tribe" || ро́ду || роду́/ро́ді || ро́де || роди́ || роді́в || рода́ми || || 
 |-
-| плід<c.io.gená:u.loci:u> || "fruit" || плода́/пло́ду || пло́ді/пло́ду || пло́де || плоди́ || плоді́в || плода́ми || || 
+| {{User:Benwing2/uk-ndecl|плід<c.io.gená:u.loci:u>}}
+| "fruit" || плода́/пло́ду || пло́ді/пло́ду || пло́де || плоди́ || плоді́в || плода́ми || || 
 |-
-| раз<c.genu.genpliv:-> || "instance, occurrence" || ра́зу || ра́зі || ра́зе || рази́ || разі́в/раз || раза́ми || || 
+| {{User:Benwing2/uk-ndecl|раз<c.genu.genpliv:->}}
+| "instance, occurrence" || ра́зу || ра́зі || ра́зе || рази́ || разі́в/раз || раза́ми || || 
 |-
-| знак || "sign" || зна́ку || зна́ку || зна́ку || знаки́ || знакі́в || знака́ми || ||
+| {{User:Benwing2/uk-ndecl|знак}}
+| "sign" || зна́ку || зна́ку || зна́ку || знаки́ || знакі́в || знака́ми || ||
 |-
-| бік<c.і.genu.loc+і,у́> || "side" || бо́ку || бо́ці/боку́ || бо́ку || боки́ || бокі́в || бока́ми || ||
+| {{User:Benwing2/uk-ndecl|бік<c.i.genu.loc+і,у́>}}
+| "side" || бо́ку || бо́ці/боку́ || бо́ку || боки́ || бокі́в || бока́ми || ||
 |-
-| бе́рег<c.loci> || "shore, bank" || бе́рега || бе́резі || бе́регу || береги́ || берегі́в || берега́ми || ||
+| {{User:Benwing2/uk-ndecl|бе́рег<c.loci>}}
+| "shore, bank" || бе́рега || бе́резі || бе́регу || береги́ || берегі́в || берега́ми || ||
 |-
-| бог<c.locovi:i:u.voce> || "god" || бо́га || бо́гові/бо́зі/бо́гу || бо́же || боги́ || богі́в || бога́ми || ||
+| {{User:Benwing2/uk-ndecl|бог<c.locovi:i:u.voce>}}
+| "god" || бо́га || бо́гові/бо́зі/бо́гу || бо́же || боги́ || богі́в || бога́ми || ||
 |-
-| ба́тько<c.M> || "father" || ба́тька || ба́тькові/ба́тьку || ба́тьку || батьки́ || батькі́в || батька́ми || || masculine
+| {{User:Benwing2/uk-ndecl|ба́тько<c.M>}}
+| "father" || ба́тька || ба́тькові/ба́тьку || ба́тьку || батьки́ || батькі́в || батька́ми || || masculine
 |-
-| чай<c.locju:ji> || "tea" || ча́ю || ча́ю/ча́ї || ча́ю || чаї́ || чаї́в || чая́ми || || soft
-|-
-! colspan=10 style="text-align: center;" | Accent e
-|-
-| кість || "bone" || ко́сті/ко́сти || ко́сті || ко́сте || ко́сті || косте́й || костя́ми/кістьми́ || ||
-|-
-| colspan=10| Ins pl. is irregular (as in Russian {{m|ru|кость}}). Gen sg. has two forms; not typical.
+| {{User:Benwing2/uk-ndecl|чай<c.locju:ji>}}
+| "tea" || ча́ю || ча́ю/ча́ї || ча́ю || чаї́ || чаї́в || чая́ми || || soft
 |}
 
 ==Feminine==
@@ -208,37 +277,41 @@ Ukrainian declensions:
 |-
 | ва́нна<+> || "bathroom" || ва́нної || ва́нній || ва́нна || ва́нні || ва́нних || ва́нними || || This is an adjectival declension.
 |-
+| гру́ди<F.pl.genpléj.insplьmí> || "chest, breast" || - || - || - || гру́ди || груде́й || грудьми́ || || 
+|-
 ! colspan=10 style="text-align: center;" | Accent b
 |-
 | зима́<> || "winter" || зими́ || зимі́ || зимо́ || зими́ || зим || зима́ми || ||
 |-
+| стаття́<genpl:стате́й> || "article, item" || статті́ || статті́ || статте́ || статті́ || стате́й || стаття́ми || || 
+|-
 ! colspan=10 style="text-align: center;" | Accent c
 |-
-| ба́ба<c.hum> || "grandmother" || ба́би || ба́бі || ба́бо || баби́ || баб/бабі́в || баба́ми || ||
+| ба́ба<c.pr> || "grandmother" || ба́би || ба́бі || ба́бо || баби́ || баб/бабі́в || баба́ми || ||
 |-
-| ба́ба<c> || "ritual bread, babka" || ба́би || ба́бі || ба́бо || баби́ || баб only || баба́ми || ||
+| ба́ба<c> || "ritual bread, babka" || ба́би || ба́бі || ба́бо || баби́ || баб || баба́ми || ||
 |-
 | бджі́лка<c*.anml> || "bee (dim.)" || бджі́лки || бджі́лці || бджі́лко || бджілкі́ || бджіло́к || бджіла́ми || || reducible
 |-
 | моли́тва<c*> || "prayer" || моли́тви || моли́тві || моли́тво || молитві́ || молито́в || молитва́ми || || reducible
 |-
-| ма́ти<c.hum.stem:ма́тер.і> || "mother" || ма́тері || ма́тері || ма́ти || матері́ || матері́в || матеря́ми || || acc sg. ма́тір, ins sg. ма́тір'ю
+| ма́ти<c.pr.stem:ма́тер.i> || "mother" || ма́тері || ма́тері || ма́ти || матері́ || матері́в || матеря́ми || || acc sg. ма́тір, ins sg. ма́тір'ю
 |-
 ! colspan=10 style="text-align: center;" | Accent d
 |-
-| бджола́<d.anml.і> || "bee" || бджоли́ || бджолі́ || бджо́ло || бджо́ли || бджіл || бджо́лами || ||
+| бджола́<d.anml.i> || "bee" || бджоли́ || бджолі́ || бджо́ло || бджо́ли || бджіл || бджо́лами || ||
 |-
 | вода́<d> || "water" || води́ || воді́ || во́до || во́ди || вод || во́дами || ||
 |-
-| гора́<d.і> || "mountain" || гори́ || горі́ || го́ро || го́ри || гір || го́рами || ||
+| гора́<d.i> || "mountain" || гори́ || горі́ || го́ро || го́ри || гір || го́рами || ||
 |-
 | стіна́<d> || "wall" || стіни́ || стіні́ || сті́но || сті́ни || стін || сті́нами || трава́ "grass" ||
 |-
-| сова́ || "owl" || сови́ || сові́ || со́во || со́ви || сов || со́вами || ||
+| сова́<d.anml> || "owl" || сови́ || сові́ || со́во || со́ви || сов || со́вами || ||
 |-
-| множина́ || "plural" || множини́ || множині́ || множи́но || множи́ни || множи́н || множи́нами || ||
+| множина́<d> || "plural" || множини́ || множині́ || множи́но || множи́ни || множи́н || множи́нами || ||
 |-
-| кислота́ || "acid" || кислоти́ || кислоті́ || кислото́ || кисло́ти || кисло́т || кисло́тами || кропива́ || per mova.info; Slovozmina has кисло́то
+| кислота́<d.vocó???> || "acid" || кислоти́ || кислоті́ || кислото́ || кисло́ти || кисло́т || кисло́тами || кропива́ || per mova.info; Slovozmina has кисло́то
 |-
 | сестра́<d*.pr.genpl:се́стер:сесте́р> || "sister" || сестри́ || сестрі́ || се́стро || се́стри || се́стер/сесте́р || се́страми || медсестра́<d*.pr.genpl:медсе́стер:медсесте́р> "nurse" || 
 |-
@@ -248,15 +321,21 @@ Ukrainian declensions:
 |-
 ! colspan=10 style="text-align: center;" | Accent d'
 |-
-| борода́ || "beard, chin" || бороди́ || бороді́ || бо́родо || бо́роди || борі́д || бо́родами || || acc sg. бо́роду
+| борода́<d'.i.genpl:борі́д> || "beard, chin" || бороди́ || бороді́ || бо́родо || бо́роди || борі́д || бо́родами || || acc sg. бо́роду
 |-
-| голова́ || "head" || голови́ || голові́ || го́лово || го́лови || голі́в || го́ловами || || acc sg. го́лову
+| голова́<d'.i.genpl:голі́в> || "head" || голови́ || голові́ || го́лово || го́лови || голі́в || го́ловами || || acc sg. го́лову
 |-
-| середа́ || "Wednesday" || середи́ || середі́ || се́редо || се́реди || се́ред || се́редами || || acc sg. се́реду
+| середа́<d'> || "Wednesday" || середи́ || середі́ || се́редо || се́реди || се́ред || се́редами || || acc sg. се́реду
+|-
+! colspan=10 style="text-align: center;" | Accent e
+|-
+| кість || "bone" || ко́сті/ко́сти || ко́сті || ко́сте || ко́сті || косте́й || костя́ми/кістьми́ || ||
+|-
+| colspan=10| Ins pl. is irregular (as in Russian {{m|ru|кость}}). Gen sg. has two forms; not typical.
 |-
 ! colspan=10 style="text-align: center;" | Accent f
 |-
-| щока́ || "cheek" || щоки́ || щоці́ || що́ко || що́ки || щік || щока́ми || ||
+| щока́<f.i> || "cheek" || щоки́ || щоці́ || що́ко || що́ки || щік || щока́ми || ||
 |-
 | сльоза́ || "tear (of the eyes)" || сльози́ || сльозі́ || сльозо́ || сльо́зи || сліз || сльоза́ми/слізьми́/слі́зьми || || Ins pl. is irregular. Vocative appears irregular; are we sure it's correct?
 |-
@@ -403,20 +482,23 @@ Ukrainian declensions:
 ** Locative singular: All hard personal and animal nouns have locative singular in -ові/-і. All soft personal nouns (no animal nouns observed) have locative singular in -еві/-ю/-і. Of the semi-soft nouns, two have locative singular in -ові/-і like hard nouns, and one (ба́тяр) has locative sinuglar in -еві/-і. All hard inanimate nouns have locative singular in -і (except two with locative singular in -у/-і; see above) and all soft inanimate nouns (only two observed) have locative singular in -ю/-і. Stress always agrees with the accent pattern.
 
 * Masculine nouns in a velar:
+** Exceptions:
+*** Vocative in -е: чех<pr.locu.vocu:e> "male Czech person", будя́к<b.voce> "thistle", бог<c.pr.locovi:u:i.voce> "god"
+*** Locative singular in -і: звук<loci> "sound (music, linguistics)" (also капелю́х<loci> "hat", стяг<loci> "flag; ribbon"), крок<genu.loci> "step" (also звук<genu.loci> "sound (auditory sensation)", о́бсяг<genu.loci> "volume, size", по́верх<genu.loci> "floor, story", рух<genu.loci> "movement, motion"), звук<sg.loci> "sound (uncountable)" (also о́дяг<sg.loci> "clothing"), ріг<io.loci> "horn (object)" (also порі́г<io.loci> "threshold"), ріг<io.genu.loci> "horn (material); outer corner", дух<sg.loci:ovi> "sprit", вік<sg.loci:ú[''ві́ці'' is normally used with {{m|uk|у}}, and ''віку́'' with {{m|uk|на}}]> "age, lifetime", саундтре́к<genu.loci:u:ovi> "soundtrack", кожу́х<a,c.loci> "sheepskin coat; casing", рік<a,c.genu.loci> "year", ланцюг<b.loci> "chain", кула́к<b.locu:i> "fist" (also язи́к<b.locu:i> "tongue"), пирі́г<b.io.locu:i> "pie", бе́рег<c.loci> "shore, coast", вік<c.genu.loci> "century", бік<c.io.genu.loci:ú> "side" (also стіг<c.io.genu.loci:ú> "haystack"), луг<c.genu.loci:ú.voce> "meadow"
 ** Vocative singular:
 *** Almost all inanimate nouns (140 of 142) have vocative -у. Only exception I can find: будя́к (accent b, voc будя́че) and луг (accent a, voc лу́же). Of these, 104 are accent a, all with stem-stressed vocative; 25 are accent b, of which 22 have ending-stressed vocative and 3 have stem-stressed vocative (гріх voc грі́ху, знак [accent b or c] voc зна́ку, цвях voc цвя́ху); 11 are accent c, all with stem-stressed vocative.
 *** Of 17 animal nouns, 11 have vocative -е with first palatalization, all of which are accent b or c, and all are stem-stressed except for лоша́к (accent b, voc лошаче́). Stem-stressed vocatives are always stressed on the last syllable. The other 6 have vocative in -у, stem-stressed, and are all accent a except for птах (accent c, voc пта́ху).
-*** Of 51 personal nouns, 39 have vocative -у, variably accents a and b; 27 have accent a, all with stem-stressed vocative, and 12 have accent b, all with ending-stressed vocative. 10 have vocative -е with first palatalization, all with stem-stressed vocative, variably accents a, b and c (one is accent c: бог, voc бо́же). Two have either -у or -е (чех, accent a, voc че́ху/че́ше; робітни́к, accent b, voc робі́тнику/робітнику́/робітни́че).
-*** Conclusion: Default for velar-stem nouns should be voc sg in -у, with no stress retraction. If "voce" is given, first palatalization should be triggered and stress should (maybe) retract onto the last syllable by default. To control stress position, use "vocé" to indicate end stress and "vocè" to indicate stem stress. Exceptions: будя́к<b.voce>, луг<voce>, гріх<b.vocù>, знак<b,c.vоcù>, цвях<b.vоcù>, лоша́к<b.anml.vocé>, бог<c.voce>, чех<vocu:e>, робітни́к<b.pr.voc:робі́тнику:~у́:робитни́че>
+*** Of 51 personal nouns, 39 have vocative -у, variably accents a and b; 27 have accent a, all with stem-stressed vocative, and 12 have accent b, all with ending-stressed vocative. 10 have vocative -е with first palatalization, all with stem-stressed vocative, variably accents a, b and c (one is accent c: бог, voc бо́же). Two have either -у or -е (чех, accent a, voc че́ху/че́ше; робітни́к, accent b, voc робітнику́/робітни́че).
+*** Conclusion: Default for velar-stem nouns should be voc sg in -у, with no stress retraction. If "voce" is given, first palatalization should be triggered and stress should retract onto the last stem syllable. Exceptions: будя́к<b.voce>, луг<voce>, гріх<b.vócu>, знак<b,c.vócu>, цвях<b.vócu>, лоша́к<b.anml.vocé>, бог<c.voce>, чех<vocu:e>, робітни́к<b.pr.voc:~у́:~~е>.
 ** Locative singular:
-*** Of 142 inanimate nouns, 76 have locative -у, 38 have locative -у or -ові, 17 have locative -і (which triggers second palatalization), and there are a smattering of various other types. 105 are accent a (all stem-stressed), 25 are accent b (all end-stressed), 11 are accent c (evenly distributed between end-stressed, stem-stressed and mixed; for this accent pattern, locative -і is always stem-stressed, locative -у tends to prefer end-stressed). The 38 with locative -у or -ові are all reduciblenouns ending in -ок, while the 76 with locative -у only do not appear to include reducible nouns.
+*** Of 142 inanimate nouns, 76 have locative -у, 38 have locative -у or -ові, 17 have locative -і (which triggers second palatalization), and there are a smattering of various other types. 105 are accent a (all stem-stressed), 25 are accent b (all end-stressed), 11 are accent c (evenly distributed between end-stressed, stem-stressed and mixed; for this accent pattern, locative -і is always stem-stressed, locative -у tends to prefer end-stressed). The 38 with locative -у or -ові are all reducible nouns ending in -ок, while the 76 with locative -у only do not appear to include reducible nouns.
 *** Of 17 animal nouns, 10 have locative -у or -ові (in that order), while 7 have locative -ові or -у (in that order). All 10 in locative -у or -ові are accent b or c with vocative -е, while 6 of the 7 in locative -ові or -у are accent a with vocative -у (the only exception is жук, with accent b and vocative -е).
 *** Of 51 personal nouns, 48 have locative -ові or -у (in that order), while there is one representative each of 3 other variants. 35 are accent a (all stem-stressed), 15 are accent b (all ending-stressed), and 1 is accent c (stem-stressed).
 *** Conclusion: Inanimate velar-stem nouns should have loc sg in -у if non-reducible, -у or -ові if reducible, with stress following the accent pattern....
 
 * Masculine nouns in a hushing consonant (ш, ж, ч, щ):
 ** Example nouns:
-*** това́риш<pr> "comrade", криж<> "cross", о́воч<genu> "vegetable", фюзеля́ж<genu> "fuselage", аборда́ж<sg> "boarding (a ship)", слуха́ч<b.pr> "listener" (and others in -а́ч), вуж<b.anml> "grass snake" (also хрущ<b.anml> "cockchafer"), ключ<b> "key" (also м'яч<b> "ball", меч<b> "sword", плащ<b> "raincoat", пуга́ч<b> "popgun"), автогара́ж<b> "garage", ніж<b.io> "knife", дощ<b.genu> "rain", вірш<c> "poem"
+*** това́риш<pr> "comrade", криж<> "cross", о́воч<genu> "vegetable", фюзеля́ж<genu> "fuselage", аборда́ж<sg> "boarding (a ship)", слуха́ч<b.pr> "listener" (and others in -а́ч), вуж<b.anml> "grass snake" (also хрущ<b.anml> "cockchafer"), ключ&lt;b> "key" (also м'яч&lt;b> "ball", меч&lt;b> "sword", плащ&lt;b> "raincoat", пуга́ч&lt;b> "popgun"), автогара́ж&lt;b> "garage", ніж<b.io> "knife", дощ<b.genu> "rain", вірш<c> "poem"
 ** Exceptional nouns:
 *** кіш<b.voce> "basket"
 *** муж<c.locevi:i> "husband"
@@ -425,7 +507,7 @@ Ukrainian declensions:
 
 * Masculine nouns in ць:
 ** Example nouns:
-*** америка́нець<*.pr> "American" [stem америка́нц-] (ні́мець<*.pr> "German" and many other nationality nouns; ви́борець<*.pr> "voter"), англі́єць<*.pr> "Englishman" [stem англі́йц-] (also кита́єць<*.pr> "male Chinese person"), брази́лець<*.pr> "Brazilian" [stem брази́льц-], оселе́дець<*.anml> "herring", па́лець<*> "finger" [stem па́льц-], пе́рець<*.genju> "pepper", ((та́нець<*.genju>,тане́ць<b*.genju>)) "dance", купе́ць<b*.pr> "merchant, tradesman", ссаве́ць<b*.anml> "mammal", кіне́ць<b*> "end" (also оліве́ць<b*> "pencil"), стіле́ць<b*> "pencil" [stem стільц-], вдове́ць<b*.pr.i> "widower" [stem вдівц-], за́єць<c*.anml> "hare"
+*** америка́нець<*.pr> "American" [stem америка́нц-] (ні́мець<*.pr> "German" and many other nationality nouns; ви́борець<*.pr> "voter"), англі́єць<*.pr> "Englishman" [stem англі́йц-] (also кита́єць<*.pr> "male Chinese person"), брази́лець<*.pr> "Brazilian" [stem брази́льц-], оселе́дець<*.anml> "herring", па́лець<*> "finger" [stem па́льц-], пе́рець<*.genju> "pepper", ((та́нець<*.genju>,тане́ць<b*.genju>)) "dance", купе́ць<b*.pr> "merchant, tradesman", ссаве́ць<b*.anml> "mammal", кіне́ць<b*> "end" (also оліве́ць<b*> "pencil"), стіле́ць<b*> "pencil" [stem стільц-], чепе́ць<b*.i> "bonnet" [stem чіпц-], вдове́ць<b*.pr.i> "widower" [stem вдівц-], боє́ць<b*.pr.i> "fighter" [stem бійц-], за́єць<c*.anml> "hare"
 ** Exceptional nouns:
 *** горобе́ць<b*.anml.voce> "sparrow", хло́пець<*.pr.voce> "boy"
 *** ((оте́ць<b*.pr.stem:вітц.voc:о́тче>,оте́ць<b*.pr.voce>)) "father"
@@ -436,17 +518,20 @@ Ukrainian declensions:
 
 * Masculine nouns in -ь (other than -ць):
 ** Example nouns:
-*** Accent a: автомобі́ль<M> "car", ведмі́дь<M.anml.ie>, ко́рінь<M.ie> "root" (also кре́мінь<M.ie> "flint"), во́день<M.sg.genju> "hydrogen", біль<M.io.genju> "ache, pain" "bear" у́чень<M.*.pr> "student, pupil", кі́готь<M.*> "claw" (also лі́коть<M.*> "elbow", ні́готь<M.*> "fingernail/toenail")
-*** Accent b: ферзь<M.b.pr> "queen (in chess)", джміль<M.b.anml.ie> "bumblebee", ячмі́нь<M.b.sg.ie> "stye (in the eye)", ячмі́нь<M.b.ie.genju> "barley", вого́нь<M.b*.genju> "fire"
+*** Accent a: автомобі́ль<M> "car" (also готе́ль<M> "hotel", жо́лудь<M> "acorn"), прия́тель<M.pr> "friend", лосо́сь<M.anml> "salmon" (also го́голь<M.anml> "goldeneye (duck)", лось<M.anml> "elk", ґедзь<M.anml> "horsefly"), ведмі́дь<M.anml.ie>, ко́рінь<M.ie> "root" (also ка́мінь<M.ie> "stone (object)", кре́мінь<M.ie> "flint", ре́мінь<M.ie> "belt, strap", сту́пінь<M.ie> "degree"), во́день<M.sg> "hydrogen" (also ель<M.sg> "ale", etc.), ка́мінь<M.sg.ie> "stone (subtance)", біль<M.io.genju> "ache, pain", ведмі́дь<M.anml.ie> "bear" (also ле́бідь<M.anml.ie> "swan"), у́чень<M.*.pr> "student, pupil" (also в'я́зень<M.*.pr> "prisoner"), пі́вень<M.*.anml> "rooster", кі́готь<M.*> "claw" (also лі́коть<M.*> "elbow", ні́готь<M.*> "fingernail/toenail", бе́резень<M.*> "March", ве́ресень<M.*> "September", пі́вдень "noon"), ((сту́пінь<M.ie>,сту́пінь<M.*>)) "step"
+*** Accent b: ферзь<M.b.pr> "queen (in chess)" (also коро́ль<M.b.pr> "king", курку́ль<M.b.pr> "miser"), кара́сь<M.b.anml> "crucian carp", джміль<M.b.anml.ie> "bumblebee", ячмі́нь<M.b.sg.ie> "stye (in the eye)", ячмі́нь<M.b.ie.genju> "barley", день<M.b*> "day" (also пень<M.b*> "stump, stub", корабе́ль<M.b*> "ship"), жураве́ль<M.b*.anml> "crane", вого́нь<M.b*.genju> "fire"
 *** Accent c: учи́тель<M.c.pr> "teacher", жаль<M.c.genju>
 ** Exceptions:
 *** кінь<d.anml.io.locevi:i.genplej.insplьmi:jami> "horse" [ins pl. кі́ньми/ко́нями]
 *** гість<e,a.pr.io.genpléj.inspljami:ьmi> "guest" [ins pl. гостя́ми/го́стями/гістьми́/гі́стьми]
+*** ((пе́рстень<M.*.stem:персн>,пе́рстень<M.[rare]>)) "ring"
 ** Vocative singular: The vocative ending is always -ю except for ка́мінь "stone (material)", with vocative ка́мінь, which I think is a mistake. In accent pattern b, it's stem-stressed in 7 cases and end-stressed in 8 cases. Among the 8 end-stressed cases, 6 are reducible, and the other 2 are both ячмі́нь (stem ячмен-). mova.info agrees with this and adds курі́нь (stem куре́н-) as also having an end-stressed vocative, which Slovozmina agrees with. Among the 7 stem-stressed accent b cases, none are reducible (and none end in -нь or -інь; one, джміль, ends in -іль with stem джмел-). mova.info adds коші́ль to this class, which Slovozmina believes is accent pattern a. Conclusion: It's end-stressed in accent b reducible nouns and nouns in -інь, and stem-stressed in all other cases (which includes besides the accent b nouns, 44 accent a nouns, 3 accent c nouns, 1 accent d noun and 1 accent a/e noun).
 ** Locative singular: As above, all 10 personal nouns and 9 of 10 animal nouns have locative in -еві/-ю/-і (the preferred order on Slovozmina) or a permutation, and all 43 inanimate nouns have locative in -ю/-і (the preferred order on Slovozmina). In all nouns, the stress follows the accent pattern. The one exception is кінь "horse", with locative singular in -еві/-і.
 ** Genitive plural: Of the non-singular-only nouns, 54 end in -ів, 2 in -ей, which have to be overridden manually. In all nouns, the stress follows the accent pattern, except for гість, which is either pattern e or a but has genitive plural in -е́й only (this may be a general characteristic of genitives in -е́й).
 
-
+* Masculine nouns in -й:
+** Example nouns:
+*** трамва́й<> "tram", геро́й<pr> "hero", змій<anml> "dragon", музе́й<genju> "museum", солове́й<b*.anml> [stem солов']
 
 
 
@@ -466,4 +551,4 @@ Ukrainian declensions:
 ::: {{ping|Atitarev}} I meant "genitive singular" not nominative singular. [[User:Benwing2|Benwing2]] ([[User talk:Benwing2|talk]]) 05:58, 22 May 2020 (UTC)
 
 ==Reducible alternations:==
-* і -> nothing: ще́бінь, pl. ще́бні; сту́пінь, pl. сту́пені/сту́пні
+* і -> nothing: ще́бінь "gravel", gen sg. ще́бню in mova.info (given ще́беню in Slovozmina and sum.in.ua, and as щебе́ню (or щебеню́?) in slovnyk.ua); сту́пінь "step", gen sg. сту́пеня/сту́пня in Slovozmina (given as сту́пінь сту́пеня or ступі́нь ступня́ in mova.info, and as сту́пі́нь unaccented ступеня/coll. ступня in sum.in.ua, and as сту́пінь unaccented ступеня/coll. ступня in slovnyk.ua)
