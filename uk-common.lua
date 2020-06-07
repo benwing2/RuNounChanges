@@ -27,10 +27,20 @@ local AC = u(0x0301) -- acute =  ́
 export.vowel = "аеиоуіїяєюАЕИОУІЇЯЄЮ"
 export.vowel_c = "[" .. export.vowel .. "]"
 export.non_vowel_c = "[^" .. export.vowel .. "]"
-export.cons = "бцдфгґчйклмнпрствшхзжьщ'БЦДФГҐЧЙКЛМНПРСТВШХЗЖЬЩ"
-export.cons_c = "[" .. export.cons .. "]"
+export.cons_except_hushing_or_ts = "бдфгґйклмнпрствхзь'БДФГҐЙКЛМНПРСТВХЗЬ"
+export.cons_except_hushing_or_ts_c = "[" .. export.cons_except_hushing_or_ts .. "]"
 export.hushing = "чшжщЧШЖЩ"
 export.hushing_c = "[" .. export.hushing .. "]"
+export.hushing_or_ts = export.hushing .. "цЦ"
+export.hushing_or_ts_c = "[" .. export.hushing_or_ts .. "]"
+export.cons = export.cons_except_hushing_or_ts .. export.hushing_or_ts
+export.cons_c = "[" .. export.cons .. "]"
+-- Cyrillic velar consonants
+export.velar = "кгґхКГҐХ"
+export.velar_c = "[" .. export.velar .. "]"
+-- uppercase Cyrillic consonants
+export.uppercase = "АЕИОУІЇЯЄЮБЦДФГҐЧЙКЛМНПРСТВШХЗЖЬЩ"
+export.uppercase_c = "[" .. export.uppercase .. "]"
 
 
 local first_palatalization = {
@@ -53,20 +63,29 @@ function export.translit_no_links(text)
 end
 
 
-function export.needs_accents(word)
-	if rfind(word, AC) then
-		return false
-	-- A word needs accents if it contains more than one vowel
-	elseif not export.is_monosyllabic(word) then
-		return true
-	else
-		return false
+function export.needs_accents(text)
+	for _, word in ipairs(rsplit(text, "%s+")) do
+		-- A word needs accents if it contains no accent and has more than one vowel
+		if not rfind(word, AC) and not export.is_monosyllabic(word) then
+			return true
+		end
 	end
+	return false
 end
 
 
 function export.is_stressed(word)
 	return rfind(word, AC)
+end
+
+
+function export.is_multi_stressed(text)
+	for _, word in ipairs(rsplit(text, "[%s%-]+")) do
+		if ulen(rsub(word, "[^́]", "")) > 1 then
+			return true
+		end
+	end
+	return false
 end
 
 
@@ -176,6 +195,42 @@ end
 
 
 function export.reduce(word)
+	local pre, letter, post = rmatch(word, "^(.*)([оОеЕєЄіІ])́?(" .. export.cons_c .. "+)$")
+	if not pre then
+		return nil
+	end
+	if letter == "о" or letter == "О" then
+		-- FIXME, what about when the accent is on the removed letter?
+		if post == "й" or post == "Й" then
+			-- FIXME, is this correct?
+			return nil
+		end
+		letter = ""
+	else
+		local is_upper = rfind(post, export.uppercase_c)
+		if letter == "є" or letter == "Є" then
+			-- англі́єц -> англі́йц-
+			letter = is_upper and "Й" or "й"
+		elseif post == "й" or post == "Й" then
+			-- солове́й -> солов'-
+			letter = "'"
+			post = ""
+		elseif (rfind(post, export.velar_c .. "$") and rfind(pre, export.cons_except_hushing_or_ts_c .. "$")) or
+			(rfind(post, "[^йЙ" .. export.velar .. "]$") and rfind(pre, "[лЛ]$")) then
+			-- FIXME, is this correct? This logic comes from ru-common.lua. The second clause that
+			-- adds ь after л is needed but I'm not sure about the first one.
+			letter = is_upper and "Ь" or "ь"
+		else
+			letter = ""
+		end
+	end
+	return pre .. letter .. post
+end
+
+
+function export.dereduce(word)
+	-- FIXME!
+	return word
 end
 
 

@@ -11,11 +11,11 @@ Authorship: Ben Wing <benwing2>
 
 TERMINOLOGY:
 
--- "slot" = A particular combination of case/gender/number.
-	 Example slot names for adjectives are "gen_f" (genitive feminine singular) and
-	 "loc_p" (locative plural). Each slot is filled with zero or more forms.
+-- "slot" = A particular combination of case/number.
+	 Example slot names for nouns are "gen_" (genitive singular) and
+	 "voc_p" (vocative plural). Each slot is filled with zero or more forms.
 
--- "form" = The conjugated Ukrainian form representing the value of a given slot.
+-- "form" = The declined Ukrainian form representing the value of a given slot.
 
 -- "lemma" = The dictionary form of a given Ukrainian term. Generally the nominative
      masculine singular, but may occasionally be another form if the nominative
@@ -27,8 +27,8 @@ local m_table = require("Module:table")
 local m_string_utilities = require("Module:string utilities")
 local iut = require("Module:inflection utilities")
 local m_para = require("Module:parameters")
-local com = require("Module:uk-common")
-local m_uk_translit = require("Module:uk-translit")
+local com = require("Module:User:Benwing2/uk-common")
+local m_uk_translit = require("Module:User:Benwing2/uk-translit")
 
 local current_title = mw.title.getCurrentTitle()
 local NAMESPACE = current_title.nsText
@@ -45,6 +45,7 @@ local usub = mw.ustring.sub
 local uupper = mw.ustring.upper
 
 local AC = u(0x0301) -- acute =  ́
+local DOTUNDER = u(0x0323) -- dotunder =  ̣
 
 
 -- version of rsubn() that discards all but the first return value
@@ -67,54 +68,62 @@ local function tag_text(text)
 end
 
 
-local output_adjective_slots = {
-	-- used with all variants
-	nom_m = "nom|m|s",
-	nom_f = "nom|f|s",
-	nom_n = "nom|n|s",
-	-- not used with special
+local output_noun_slots = {
+	nom_s = "nom|s",
+	gen_s = "gen|s",
+	dat_s = "dat|s",
+	acc_s = "acc|s",
+	ins_s = "ins|s",
+	loc_s = "loc|s",
+	voc_s = "voc|s",
 	nom_p = "nom|p",
-	-- the following two only used with special
-	nom_mp = "nom|m//n|p",
-	nom_fp = "nom|f|p",
-	-- the following 10 used with all variants
-	gen_m = "gen|m//n|s",
-	gen_f = "gen|f|s",
 	gen_p = "gen|p",
-	dat_m = "dat|m//n|s",
-	dat_f = "dat|f|s",
 	dat_p = "dat|p",
-	acc_m_an = "an|acc|m|s",
-	acc_m_in = "in|acc|m|s",
-	acc_f = "acc|f|s",
-	acc_n = "acc|n|s",
-	-- the following two not used with special == "dva"
-	acc_p_an = "an|acc|p",
-	acc_p_in = "in|acc|p",
-	-- the following four only used with special == "dva"
-	acc_mp_an = "an|acc|m//n|p",
-	acc_mp_in = "in|acc|m//n|p",
-	acc_fp_an = "an|acc|f|p",
-	acc_fp_in = "in|acc|f|p",
-	-- the following two gendered plurals are only used with special == "cdva"
-	acc_mp = "acc|m//n|p",
-	acc_fp = "acc|f|p",
-	-- the next six are used with all variants
-	ins_m = "ins|m//n|s",
-	ins_f = "ins|f|s",
+	acc_p = "acc|p",
 	ins_p = "ins|p",
-	loc_m = "loc|m//n|s",
-	loc_f = "loc|f|s",
 	loc_p = "loc|p",
+	voc_p = "voc|p",
 }
 
 
-local input_adjective_slots = {}
-for slot, _ in pairs(output_adjective_slots) do
-	if not rfind(slot, "_[ai]n$") then
-		table.insert(input_adjective_slots, slot)
-	end
-end
+local input_params_to_slots_both = {
+	[1] = "nom_s",
+	[2] = "nom_p",
+	[3] = "gen_s",
+	[4] = "gen_p",
+	[5] = "dat_s",
+	[6] = "dat_p",
+	[7] = "acc_s",
+	[8] = "acc_p",
+	[9] = "ins_s",
+	[10] = "ins_p",
+	[11] = "loc_s",
+	[12] = "loc_p",
+	[13] = "voc_s",
+	[14] = "voc_p",
+}
+
+
+local input_params_to_slots_sg = {
+	[1] = "nom_s",
+	[2] = "gen_s",
+	[3] = "dat_s",
+	[4] = "acc_s",
+	[5] = "ins_s",
+	[6] = "loc_s",
+	[7] = "voc_s",
+}
+
+
+local input_params_to_slots_pl = {
+	[1] = "nom_p",
+	[2] = "gen_p",
+	[3] = "dat_p",
+	[4] = "acc_p",
+	[5] = "ins_p",
+	[6] = "loc_p",
+	[7] = "voc_p",
+}
 
 
 local cases = {
@@ -129,122 +138,180 @@ local cases = {
 
 
 local accented_cases = {
-	["nóm"] = "nom",
-	["gén"] = "gen",
-	["dát"] = "dat",
-	["ácc"] = "acc",
-	["íns"] = "ins",
-	["lóc"] = "loc",
-	["vóc"] = "voc",
+	["nóm"] = "nom",
+	["gén"] = "gen",
+	["dát"] = "dat",
+	["ácc"] = "acc",
+	["íns"] = "ins",
+	["lóc"] = "loc",
+	["vóc"] = "voc",
 }
 
 
+-- Stress patterns indicate where the stress goes for forms of each possible slot.
+-- "-" means stem stress, "+" means ending stress. The field "stress" indicates
+-- where to put the stem stress if the lemma doesn't include it. It applies primarily
+-- to types d and f and variants of them. For example, lemma множина́ (type d) has
+-- plural множи́ни (last-syllable stress), but lemma борода́ (type d') has plural
+-- бо́роди (first-syllable stress).
 local stress_patterns = {}
 
 stress_patterns["a"] = {
-	nom_sg="-", gen_sg="-", dat_sg="-", acc_sg="-", ins_sg="-", loc_sg="-",
-	nom_pl="-", gen_pl="-", dat_pl="-",             ins_pl="-", loc_pl="-",
+	nom_s="-", gen_s="-", dat_s="-", acc_s="-", ins_s="-", loc_s="-", voc_s="-",
+	nom_p="-", gen_p="-", dat_p="-",            ins_p="-", loc_p="-", voc_p="-",
+	stress = nil,
 }
 
-stress_patterns["b"] = {
-	nom_sg="+", gen_sg="+", dat_sg="+", acc_sg="+", ins_sg="+", loc_sg="+",
-	nom_pl="+", gen_pl="+", dat_pl="+",             ins_pl="+", loc_pl="+",
+stress_patterns["b"]={
+	nom_s="+", gen_s="+", dat_s="+", acc_s="+", ins_s="+", loc_s="+", voc_s="+",
+	nom_p="+", gen_p="+", dat_p="+",            ins_p="+", loc_p="+", voc_p="+",
+	stress = "last",
 }
 
-stress_patterns["b'"] = {
-	nom_sg="+", gen_sg="+", dat_sg="+", acc_sg="+", ins_sg="-", loc_sg="+",
-	nom_pl="+", gen_pl="+", dat_pl="+",             ins_pl="+", loc_pl="+",
+stress_patterns["b'"]={
+	nom_s="+", gen_s="+", dat_s="+", acc_s="+", ins_s="-", loc_s="+", voc_s="+",
+	nom_p="+", gen_p="+", dat_p="+",            ins_p="+", loc_p="+", voc_p="+",
+	stress = "last",
 }
 
-stress_patterns["c"] = {
-	nom_sg="-", gen_sg="-", dat_sg="-", acc_sg="-", ins_sg="-", loc_sg="-",
-	nom_pl="+", gen_pl="+", dat_pl="+",             ins_pl="+", loc_pl="+",
+stress_patterns["c"]={
+	nom_s="-", gen_s="-", dat_s="-", acc_s="-", ins_s="-", loc_s="-", voc_s="-",
+	nom_p="+", gen_p="+", dat_p="+",            ins_p="+", loc_p="+", voc_p="-",
+	stress = nil,
 }
 
-stress_patterns["d"] = {
-	nom_sg="+", gen_sg="+", dat_sg="+", acc_sg="+", ins_sg="+", loc_sg="+",
-	nom_pl="-", gen_pl="-", dat_pl="-",             ins_pl="-", loc_pl="-",
+stress_patterns["d"]={
+	nom_s="+", gen_s="+", dat_s="+", acc_s="+", ins_s="+", loc_s="+", voc_s="+",
+	nom_p="-", gen_p="-", dat_p="-",            ins_p="-", loc_p="-", voc_p="+",
+	stress = "last",
 }
 
-stress_patterns["d'"] = {
-	nom_sg="+", gen_sg="+", dat_sg="+", acc_sg="-", ins_sg="+", loc_sg="+",
-	nom_pl="-", gen_pl="-", dat_pl="-",             ins_pl="-", loc_pl="-",
+stress_patterns["d'"]={
+	nom_s="+", gen_s="+", dat_s="+", acc_s="-", ins_s="+", loc_s="+", voc_s="+",
+	nom_p="-", gen_p="-", dat_p="-",            ins_p="-", loc_p="-", voc_p="+",
+	stress = "first",
 }
 
-stress_patterns["e"] = {
-	nom_sg="-", gen_sg="-", dat_sg="-", acc_sg="-", ins_sg="-", loc_sg="-",
-	nom_pl="-", gen_pl="+", dat_pl="+",             ins_pl="+", loc_pl="+",
+stress_patterns["e"]={
+	nom_s="-", gen_s="-", dat_s="-", acc_s="-", ins_s="-", loc_s="-", voc_s="-",
+	nom_p="-", gen_p="+", dat_p="+",            ins_p="+", loc_p="+", voc_p="-",
+	stress = nil,
 }
 
-stress_patterns["f"] = {
-	nom_sg="+", gen_sg="+", dat_sg="+", acc_sg="+", ins_sg="+", loc_sg="+",
-	nom_pl="-", gen_pl="+", dat_pl="+",             ins_pl="+", loc_pl="+",
+stress_patterns["f"]={
+	nom_s="+", gen_s="+", dat_s="+", acc_s="+", ins_s="+", loc_s="+", voc_s="+",
+	nom_p="-", gen_p="+", dat_p="+",            ins_p="+", loc_p="+", voc_p="+",
+	stress = "first",
 }
 
-stress_patterns["f'"] = {
-	nom_sg="+", gen_sg="+", dat_sg="+", acc_sg="-", ins_sg="+", loc_sg="+",
-	nom_pl="-", gen_pl="+", dat_pl="+",             ins_pl="+", loc_pl="+",
+stress_patterns["f'"]={
+	nom_s="+", gen_s="+", dat_s="+", acc_s="-", ins_s="+", loc_s="+", voc_s="+",
+	nom_p="-", gen_p="+", dat_p="+",            ins_p="+", loc_p="+", voc_p="+",
+	stress = "first",
 }
 
-stress_patterns["f''"] = {
-	nom_sg="+", gen_sg="+", dat_sg="+", acc_sg="+", ins_sg="-", loc_sg="+",
-	nom_pl="-", gen_pl="+", dat_pl="+",             ins_pl="+", loc_pl="+",
+stress_patterns["f''"]={
+	nom_s="+", gen_s="+", dat_s="+", acc_s="+", ins_s="-", loc_s="+", voc_s="+",
+	nom_p="-", gen_p="+", dat_p="+",            ins_p="+", loc_p="+", voc_p="+",
+	stress = "first",
 }
 
 
-
-
-local function stress_ending(ending)
-	if type(ending) == "string" then
-		return com.maybe_stress_initial_syllable(ending)
-	else
-		for i, e in ipairs(ending) do
-			ending[i] = com.maybe_stress_initial_syllable(e)
+local function add(base, slot, stress, endings, footnote)
+	if not endings then
+		return
+	end
+	if type(endings) == "string" then
+		endings = {endings}
+	end
+	local slot_is_plural = rfind(slot, "_p$")
+	local stress_for_slot
+	local stress_pattern_set = stress_patterns[stress.stress]
+	if not stress_pattern_set then
+		error("Internal error: Unrecognized stress pattern " .. stress.stress)
+	end
+	local stress_for_slot
+	if slot == "acc_p" then
+		-- This only applies when an override of acc_p is given.
+		if base.animacy == "in" then
+			stress_for_slot = stress_pattern_set.nom_p
+		elseif base.animacy == "pr" then
+			stress_for_slot = stress_pattern_set.gen_p
+		elseif stress_pattern_set.nom_p == stress_pattern_set.gen_p then
+			stress_for_slot = stress_pattern_set.nom_p
+		else
+			for _, ending in ipairs(endings) do
+				if not rfind(ending, AC) and not rfind(ending, DOTUNDER) then
+					error("For animacy 'anml' and stress pattern " .. stress.stress .. ", must explicitly specify stress of override")
+				end
+			end
+			-- All endings have explicit stress, so it doesn't matter.
+			stress_for_slot = stress_pattern_set.nom_p
 		end
-		return ending
+	else
+		stress_for_slot = stress_pattern_set[slot]
+		if not stress_for_slot then
+			error("Internal error: Don't know stress for pattern " .. stress.stress .. ", slot " .. slot)
+		end
+	end
+	for _, ending in ipairs(endings) do
+		local stem
+		if rfind(ending, "^ь?" .. com.vowel_c) then
+			stem = slot_is_plural and stress.pl_vowel_stem or stress.vowel_stem
+		else
+			stem = slot_is_plural and stress.pl_nonvowel_stem or stress.nonvowel_stem
+		end
+		if rfind(ending, DOTUNDER) then
+			-- DOTUNDER indicates stem stress in all cases
+			ending = rsub(ending, DOTUNDER, "")
+		elseif stress_for_slot == "+" then
+			ending = com.maybe_stress_initial_syllable(ending)
+		end
+		if slot == "voc_s" and rfind(ending, "^е́?$") then
+			stem = com.apply_first_palatalization(stem)
+		elseif (slot == "dat_s" or slot == "loc_s") and rfind(ending, "^і́?$") then
+			stem = com.apply_second_palatalization(stem)
+		end
+		ending = com.generate_form(ending, footnote)
+		iut.add_forms(base.this_forms, slot, stem, ending, com.combine_stem_ending)
 	end
 end
 
 
-local function add(base, slot, stress, stems, endings)
-	local stress_for_slot = stress_patterns[stress.stress]
-	if not stress_for_slot[slot] then
-		error("Internal error: Don't know stress for pattern " .. stress .. ", slot " .. slot)
-	end
-	if stress_for_slot == "+" then
-		endings = stress_ending(endings)
-	end
-	iut.add_forms(base.this_forms, slot, stems, endings, com.combine_stem_ending)
-end
-
-
-local function process_slot_overrides(base, stem, do_case)
-	for case, overrides in pairs(base.overrides) do
-		if do_case(case) then
-			base.this_forms[case] = nil
+local function process_slot_overrides(base, do_slot)
+	for slot, overrides in pairs(base.overrides) do
+		if do_slot(slot) then
+			base.this_forms[slot] = nil
+			local slot_is_plural = rfind(slot, "_p$")
 			for _, override in ipairs(overrides) do
 				if override.full then
 					for _, value in ipairs(override.values) do
 						if value:find("~") then
-							local stem_to_sub = stem
-							if com.is_stressed(value) then
-								stem_to_sub = com.remove_stress(stem_to_sub)
+							local stem
+							local ending = rsub(value, ".*~+", "")
+							if rfind(ending, "^ь?" .. com.vowel_c) then
+								stem = slot_is_plural and stress.pl_vowel_stem or stress.vowel_stem
+							else
+								stem = slot_is_plural and stress.pl_nonvowel_stem or stress.nonvowel_stem
 							end
-							value = rsub(value, "~~~", com.apply_second_palatalization(stem_to_sub))
-							value = rsub(value, "~~", com.apply_first_palatalization(stem_to_sub))
-							value = rsub(value, "~", stem_to_sub)
+							if com.is_stressed(ending) then
+								stem = com.remove_stress(stem)
+							end
+							value = rsub(value, "~~~", com.apply_second_palatalization(stem))
+							value = rsub(value, "~~", com.apply_first_palatalization(stem))
+							value = rsub(value, "~", stem)
 						end
-						iut.insert_form(base.this_forms, case, {form = value})
+						iut.insert_form(base.this_forms, slot, {form = value})
 					end
 				else
 					for _, value in ipairs(override.values) do
-						if override.stemstressed or com.is_stressed(value) then
-							iut.insert_form(base.this_forms, case, {form = com.combine_stem_ending(stem, value)})
-							-- Leave stem stressed and value as-is.
-						else
-							for _, stress in ipairs(base.stresses) do
-								add(base, case, stress, stem, value)
-							end
+						if override.stemstressed then
+							-- Signal not to add a stress to the ending even if the stress pattern
+							-- calls for it.
+							value = value .. DOTUNDER
+						end
+						for _, stress in ipairs(base.stresses) do
+							add(base, slot, stress, value)
 						end
 					end
 				end
@@ -254,43 +321,42 @@ local function process_slot_overrides(base, stem, do_case)
 end
 
 
-local function add_decl_with_acc(base, stem,
+local function add_decl(base,
 	nom_s, gen_s, dat_s, acc_s, ins_s, loc_s, voc_s,
 	nom_p, gen_p, dat_p, ins_p, loc_p, footnote
 )
-	local footnoted_stem = com.generate_form(stem, footnote)
 	for _, stress in ipairs(base.stresses) do
-		add(base, "nom_s", stress, footnoted_stem, nom_s)
-		add(base, "gen_s", stress, footnoted_stem, gen_s)
-		add(base, "dat_s", stress, footnoted_stem, dat_s)
-		add(base, "acc_s", stress, footnoted_stem, acc_s)
-		add(base, "ins_s", stress, footnoted_stem, ins_s)
-		add(base, "loc_s", stress, footnoted_stem, loc_s)
-		add(base, "voc_s", stress, footnoted_stem, voc_s)
-		add(base, "nom_p", stress, footnoted_stem, nom_p)
-		add(base, "gen_p", stress, footnoted_stem, gen_p)
-		add(base, "dat_p", stress, footnoted_stem, dat_p)
-		add(base, "ins_p", stress, footnoted_stem, ins_p)
-		add(base, "loc_p", stress, footnoted_stem, loc_p)
+		add(base, "nom_s", stress, nom_s, footnote)
+		add(base, "gen_s", stress, gen_s, footnote)
+		add(base, "dat_s", stress, dat_s, footnote)
+		add(base, "acc_s", stress, acc_s, footnote)
+		add(base, "ins_s", stress, ins_s, footnote)
+		add(base, "loc_s", stress, loc_s, footnote)
+		add(base, "voc_s", stress, voc_s, footnote)
+		add(base, "nom_p", stress, nom_p, footnote)
+		add(base, "gen_p", stress, gen_p, footnote)
+		add(base, "dat_p", stress, dat_p, footnote)
+		add(base, "ins_p", stress, ins_p, footnote)
+		add(base, "loc_p", stress, loc_p, footnote)
 	end
 
-	local function is_non_derived_case(case)
-		return case ~= "voc_p" and case ~= "acc_s" and case ~= "acc_p"
+	local function is_non_derived_slot(slot)
+		return slot ~= "voc_p" and slot ~= "acc_s" and slot ~= "acc_p"
 	end
 
-	local function is_derived_case(case)
-		return not is_non_derived_case(case)
+	local function is_derived_slot(slot)
+		return not is_non_derived_slot(slot)
 	end
 
-	-- Handle slot overrides for the non-derived cases. Do this before generating the derived
-	-- cases so overrides of the source cases (e.g. nom_p) propagate to the derived cases.
-	process_slot_overrides(base, stem, is_non_derived_case)
+	-- Handle overrides for the non-derived slots. Do this before generating the derived
+	-- slots so overrides of the source slots (e.g. nom_p) propagate to the derived slots.
+	process_slot_overrides(base, is_non_derived_slot)
 
 	-- Generate the remaining slots that are derived from other slots.
 	iut.insert_forms(base.this_forms, "voc_p", base.this_forms["nom_p"])
-	if base.gender == "m" then
+	if rfind(base.decl, "%-m$") then
 		iut.insert_forms(base.this_forms, "acc_s", base.this_forms[base.animacy == "in" and "nom_s" or "gen_s"])
-	elseif base.gender == "n" then
+	elseif rfind(base.decl, "%-n$") then
 		iut.insert_forms(base.this_forms, "acc_s", base.this_forms["nom_s"])
 	end
 	if base.animacy == "in" or base.animacy == "anml" then
@@ -300,78 +366,27 @@ local function add_decl_with_acc(base, stem,
 		iut.insert_forms(base.this_forms, "acc_p", base.this_forms["gen_p"])
 	end
 
-	-- Handle slot overrides for derived cases, to allow them to be overridden.
-	process_slot_overrides(base, stem, is_derived_case)
-end
-	
+	-- Handle overrides for derived slots, to allow them to be overridden.
+	process_slot_overrides(base, is_derived_slot)
 
-local function add_decl(base, stem,
-	nom_s, gen_s, dat_s, ins_s, loc_s, voc_s,
-	nom_p, gen_p, dat_p, ins_p, loc_p, footnote
-)
-	add_decl_with_acc(base, stem,
-		nom_s, gen_s, dat_s, nil, ins_s, loc_s, voc_s,
-		nom_p, gen_p, dat_p, ins_p, loc_p, footnote
-	)
-end
-
-
-local function maybe_stress_endings(suffix, endings)
-	if com.is_stressed(suffix) then
-		for i, e in ipairs(endings) do
-			endings[i] = stress_ending(e)
-		end
+	for slot, _ in pairs(output_noun_slots) do
+		iut.insert_forms(base.forms, slot, base.this_forms[slot])
 	end
 end
 
 
 local decls = {}
 
-decls["hard-m"] = function(base, lemma)
-	add_decl(base, lemma, "", "а", {"ові", "у"}, "ом", {"ові", "і"}, "е",
+
+decls["hard-m"] = function(base)
+	local gen_s = base.number == "sg" and "у" or "а" -- may be overridden
+	local loc_s =
+		base.animacy == "in" and base.number == "sg" and {"у", "і"} or
+		base.animacy == "in" and "і" or
+		{"ові", "і"}
+	local voc_s = "е̣"
+	add_decl(base, "", gen_s, {"ові", "у"}, nil, "ом", loc_s, voc_s,
 		"и", "ів", "ам", "ами", "ах")
-end
-
-
-decls["poss"] = function(base, lemma)
-	local ending_prefix
-	local stem, suffix
-
-	while true do
-		stem, suffix = rmatch(lemma, "^(.*)(і́?в)$")
-		if stem then
-			ending_prefix = "ов"
-			break
-		end
-		stem, suffix = rmatch(lemma, "^(.*)(ї́?в)$")
-		if stem then
-			ending_prefix = "єв"
-			break
-		end
-		stem, suffix = rmatch(lemma, "^(.*)([иї]́?н)$")
-		if stem then
-			ending_prefix = suffix
-			break
-		end
-		error("Unrecognized possessive adjective lemma, should end in '-ів', '-їв', '-ин' or '-їн': '" .. lemma .. "'")
-	end
-
-	local endings = {
-		"а", "е", "і", --nom
-		"ого", "ої", "их", --gen
-		"ому", "ій", "им", --dat
-		"у", --acc
-		"им", "ою", "ими", --ins
-		{"ому", "ім"}, "ій", "их", --loc
-	}
-	if com.is_stressed(suffix) then
-		ending_prefix = com.maybe_stress_initial_syllable(ending_prefix)
-	end
-	-- Do the nominative singular separately from the rest, which may have
-	-- a different stem ending (e.g. -ов vs. -ів).
-	add_normal_decl(base, stem, suffix)
-	add_normal_decl(base, stem .. ending_prefix, nil, unpack(endings))
-	-- FIXME: Are there 'old' endings here too?
 end
 
 
@@ -387,11 +402,12 @@ local function parse_override(part)
 		error("Internal error: unrecognized case in override: '" .. part .. "'")
 	end
 	local rest = usub(part, 4)
+	local slot
 	if rfind(rest, "^pl") then
 		rest = rsub(part, "^pl", "")
-		case = case .. "_p"
+		slot = case .. "_p"
 	else
-		case = case .. "_s"
+		slot = case .. "_s"
 	end
 	if rfind(rest, "^:") then
 		retval.full = true
@@ -399,16 +415,16 @@ local function parse_override(part)
 	end
 	retval.values = rsplit(rest, ":")
 	for i, value in ipairs(retval.values) do
-		retval[i] = m_uk_translit.reverse_tr(value)
+		retval.values[i] = m_uk_translit.reverse_tr(value)
 	end
-	return case, retval
+	return slot, retval
 end
 
 
 local function parse_indicator_spec(angle_bracket_spec)
 	local inside = rmatch(angle_bracket_spec, "^<(.*)>$")
 	assert(inside)
-	local base = {overrides = {}}
+	local base = {overrides = {}, this_forms = {}}
 	if inside ~= "" then
 		local parts = rsplit(inside, ".", true)
 		for _, part in ipairs(parts) do
@@ -440,17 +456,25 @@ local function parse_indicator_spec(angle_bracket_spec)
 				local patterns = rsplit(part, ",")
 				for i, pattern in ipairs(patterns) do
 					local pat, reducible = rsubb(pattern, "%*", "")
-					if not stress_patterns[pat] then
+					if pat == "" then
+						pat = nil
+					end
+					if pat and not stress_patterns[pat] then
 						error("Unrecognized stress pattern '" .. pat .. "': '" .. inside .. "'")
 					end
 					patterns[i] = {stress = pat, reducible = reducible}
 				end
 				base.stresses = patterns
-			elseif part == "soft" then
-				if base.soft then
-					error("Can't specify 'soft' twice: '" .. inside .. "'")
+			elseif part == "soft" or part == "semisoft" then
+				if base.rtype then
+					error("Can't specify 'р' type ('soft' or 'semisoft') more than once: '" .. inside .. "'")
 				end
-				base.soft = true
+				base.rtype = part
+			elseif part == "t" or part == "en" then
+				if base.rtype then
+					error("Can't specify neuter indicator ('t' or 'en') more than once: '" .. inside .. "'")
+				end
+				base.neutertype = part
 			elseif part == "plsoft" then
 				if base.plsoft then
 					error("Can't specify 'plsoft' twice: '" .. inside .. "'")
@@ -474,11 +498,11 @@ local function parse_indicator_spec(angle_bracket_spec)
 			elseif #part > 3 then
 				local prefix = usub(part, 1, 3)
 				if cases[prefix] or accented_cases[prefix] then
-					local case, override = parse_override(part)
-					if base.overrides[case] then
-						table.insert(base.overrides[case], override)
+					local slot, override = parse_override(part)
+					if base.overrides[slot] then
+						table.insert(base.overrides[slot], override)
 					else
-						base.overrides[case] = {override}
+						base.overrides[slot] = {override}
 					end
 				else
 					error("Unrecognized indicator '" .. part .. "': '" .. inside .. "'")
@@ -503,13 +527,238 @@ local function normalize_lemma(base)
 end
 
 
-local function detect_indicator_spec(base)
-	if rfind(base.lemma, "й$") then
-		base.decl = "normal"
-	elseif rfind(base.lemma, "[вн]$") then
-		base.decl = "poss"
+local function apply_vowel_alternation(base, stem)
+	if base.ialt == "io" or base.ialt == "ie" then
+		local modstem = rsub(stem, "(.)і(́?" .. com.cons_c .. "*)$",
+			function(pre, post)
+				if base.ialt == "io" and (pre == "л" or pre == "Л") then
+					-- ко́лір, gen sg. ко́льору; вертолі́т, gen sg. вертольо́та
+					return pre .. "ьо" .. post
+				elseif base.ialt == "io" then
+					return pre .. "о" .. post
+				else
+					return pre .. "е" .. post
+				end
+			end
+		)
+		if modstem == stem then
+			error("Indicator '" .. base.ialt .. "' can't be applied because stem '" .. stem .. "' doesn't have an і as its last vowel")
+		end
+		return modstem
+	elseif base.ialt == "i" then
+		local modstem = rsub(stem, "[ое](́?" .. com.cons_c .. "*)$", "і%1")
+		if modstem == stem then
+			error("Indicator 'i' can't be applied because stem '" .. stem .. "' doesn't have an о or е as its last vowel")
+		end
+		return modstem
 	else
-		error("Unrecognized adjective lemma: '" .. base.lemma .. "'")
+		return stem
+	end
+end
+
+
+local function add_stress_for_pattern(stress, stem)
+	local where_stress = stress_patterns[stress.stress].stress
+	if where_stress == "last" then
+		return com.maybe_stress_final_syllable(stem)
+	elseif where_stress == "first" then
+		return com.maybe_stress_initial_syllable(stem)
+	elseif not com.is_stressed(stem) then
+		error("Something wrong: Stress pattern " .. stress.stress .. " but stem .. '" .. stem .. "' doesn't have stress")
+	else
+		return stem
+	end
+end
+
+
+local function detect_indicator_spec(base)
+	-- Set default values.
+	base.number = base.number or "both"
+	base.animacy = base.animacy or "in"
+
+	-- Check for indicators that don't make sense given the context.
+	if base.rtype and not rfind(base.lemma, "р$") then
+		error("'р' type indicator '" .. base.rtype .. "' can only be specified with a lemma ending in -р")
+	end
+	if base.remove_in and not rfind(base.lemma, "и́?н$") then
+		error("'in' can only be specified with a lemma ending in -ин")
+	end
+	if base.neutertype then
+		if not rfind(base.lemma, "я́?$") then
+			error("Neuter-type indicator '" .. base.neutertype .. "' can only be specified with a lemma ending in -я")
+		end
+		if base.neutertype == "en" and not rfind(base.lemma, "м'я́?$") then
+			error("Neuter-type indicator 'en' can only be specified with a lemma ending in -м'я")
+		end
+		if base.gender and base.gender ~= "N" then
+			error("Neuter-type indicator '" .. base.neutertype .. "' can't specified with non-neuter gender indicator '" .. base.gender .. "'")
+		end
+		base.gender = "N"
+	end
+
+	-- Determine declension
+	local stem, ac
+	while true do
+		stem = rmatch(base.lemma, "^(.*)ь$")
+		if stem then
+			if not base.gender then
+				error("For lemma ending in -ь, gender M or F must be given")
+			elseif base.gender == "N" then
+				error("For lemma ending in -ь, gender N not allowed")
+			elseif base.gender == "M" then
+				base.decl = "soft-m"
+			else
+				base.decl = "third-f"
+			end
+			base.nonvowel_stem = stem
+			break
+		end
+		stem = rmatch(base.lemma, "^(.*)й$")
+		if stem then
+			base.decl = "j-m"
+			base.nonvowel_stem = stem
+			base.stem_for_reduce = base.lemma
+			break
+		end
+		stem = rmatch(base.lemma, "^(.*" .. com.hushing_c .. ")$")
+		if stem then
+			if base.gender == "N" then
+				error("For lemma ending in a hushing consonant, gender N not allowed")
+			elseif base.gender == "F" then
+				base.decl = "semisoft-f"
+			else
+				base.decl = "semisoft-m"
+			end
+			base.nonvowel_stem = stem
+			break
+		end
+		stem = rmatch(base.lemma, "^(.*)а(́?)$")
+		if stem then
+			base.decl = "hard-f"
+			base.vowel_stem = stem
+			break
+		end
+		stem = rmatch(base.lemma, "^(.*)я(́?)$")
+		if stem then
+			if base.gender == "F" or base.gender == "M" then
+				base.decl = "soft-f"
+			elseif base.gender == "N" then
+				base.decl = "fourth-n"
+			elseif rfind(stem, "'я$") or rfind(stem, "(.)%1я$") then
+				base.decl = "fourth-n"
+			else
+				base.decl = "soft-f"
+			end
+			base.vowel_stem = stem
+			break
+		end
+		stem = rmatch(base.lemma, "^(.*)о(́?)$")
+		if stem then
+			if base.gender == "M" then
+				base.decl = "o-m"
+			elseif base.gender == "F" then
+				error("For lemma ending in -о, gender F not allowed")
+			else
+				base.decl = "hard-n"
+			end
+			base.vowel_stem = stem
+		end
+		stem = rmatch(base.lemma, "^(.*)е(́?)$")
+		if stem then
+			base.decl = "soft-n"
+			base.vowel_stem = stem
+		end
+		stem = rmatch(base.lemma, "^(.*" .. com.cons_c .. ")$")
+		if stem then
+			if base.gender == "N" then
+				error("For lemma ending in a consonant, gender N not allowed")
+			elseif base.gender == "F" then
+				base.decl = "third-f"
+			elseif base.rtype == "soft" then
+				base.decl = "soft-m"
+			elseif base.rtype == "semisoft" then
+				base.decl = "semisoft-m"
+			else
+				base.decl = "hard-m"
+			end
+			base.nonvowel_stem = stem
+			break
+		end
+		error("Unrecognized ending for lemma: '" .. base.lemma .. "'")
+	end
+
+	-- Determine stress and stems
+	if not base.stresses then
+		if ac == AC then
+			base.stresses = {{stress = "b"}}
+		else
+			base.stresses = {{stress = "a"}}
+		end
+	end
+	for _, stress in ipairs(base.stresses) do
+		if not stress.stress then
+			if stress.reducible and rfind(base.lemma, "[еоєі]́" .. com.cons_c .. "ь?$") then
+				-- reducible with stress on the reducible vowel
+				stress.stress = "b"
+			else
+				stress.stress = "a"
+			end
+		end
+		if base.vowel_stem then
+			if ac == "AC" and stress_patterns[stress.stress].nom_sg ~= "+" then
+				error("Stress pattern " .. stress.stress .. " requires a stem-stressed lemma, not end-stressed: '" .. base.lemma .. "'")
+			elseif ac ~= "AC" and stress_patterns[stress.stress].nom_sg == "+" then
+				error("Stress pattern " .. stress.stress .. " requires an end-stressed lemma, not stem-stressed: '" .. base.lemma .. "'")
+			end
+			if base.stem then
+				error("Can't specify 'stem:' with lemma ending in a vowel")
+			end
+			stress.vowel_stem = base.vowel_stem
+			if stress.reducible then
+				stress.nonvowel_stem = com.dereduce(base.vowel_stem, stress_patterns[stress.stress].gen_pl == "+")
+				if not stress.nonvowel_stem then
+					error("Unable to dereduce stem '" .. base.vowel_stem .. "'")
+				end
+			else
+				stress.nonvowel_stem = base.vowel_stem
+			end
+			stress.nonvowel_stem = apply_vowel_alternation(base, stress.nonvowel_stem)
+		else
+			stress.nonvowel_stem = base.nonvowel_stem
+			if base.stem then
+				stress.vowel_stem = base.stem
+			elseif stress.reducible then
+				local stem_to_reduce = base.stem_for_reduce or base.nonvowel_stem
+				stress.vowel_stem = com.reduce(stem_to_reduce)
+				if not stress.vowel_stem then
+					error("Unable to reduce stem '" .. stem_to_reduce .. "'")
+				end
+			else
+				stress.vowel_stem = base.nonvowel_stem
+			end
+			stress.vowel_stem = apply_vowel_alternation(base, stress.vowel_stem)
+		end
+		if base.plstem then
+			stress.pl_vowel_stem = base.plstem
+			if base.reducible then
+				stress.pl_nonvowel_stem = com.dereduce(base.plstem, stress_patterns[stress.stress].gen_pl == "+")
+				if not stress.pl_nonvowel_stem then
+					error("Unable to dereduce stem '" .. base.plstem .. "'")
+				end
+			else
+				stress.pl_nonvowel_stem = base.plstem
+			end
+		elseif base.remove_in then
+			stress.pl_vowel_stem = com.maybe_stress_final_syllable(rsub(stress.vowel_stem, "и́?н$", ""))
+			stress.pl_nonvowel_stem = stress.pl_vowel_stem
+		else
+			stress.pl_vowel_stem = stress.vowel_stem
+			stress.pl_nonvowel_stem = stress.nonvowel_stem
+		end
+		stress.vowel_stem = add_stress_for_pattern(stress, stress.vowel_stem)
+		stress.nonvowel_stem = add_stress_for_pattern(stress, stress.nonvowel_stem)
+		stress.pl_vowel_stem = add_stress_for_pattern(stress, stress.pl_vowel_stem)
+		stress.pl_nonvowel_stem = add_stress_for_pattern(stress, stress.pl_nonvowel_stem)
 	end
 end
 
@@ -517,16 +766,19 @@ end
 local function detect_all_indicator_specs(alternant_spec)
 	for _, base in ipairs(alternant_spec.alternants) do
 		detect_indicator_spec(base)
+		if not alternant_spec.number then
+			alternant_spec.number = base.number
+		elseif alternant_spec.number ~= base.number then
+			alternant_spec.number = "both"
+		end
 	end
 end
 
 
 local function parse_word_spec(segments)
 	local indicator_spec
-	if #segments == 1 then
-		indicator_spec = "<>"
-	elseif #segments ~= 3 or segments[3] ~= "" then
-		error("Adjective spec must be of the form 'LEMMA' or 'LEMMA<SPECS>': '" .. text .. "'")
+	if #segments ~= 3 or segments[3] ~= "" then
+		error("Noun spec must be of the form 'LEMMA<SPECS>': '" .. table.concat(segments) .. "'")
 	else
 		indicator_spec = segments[2]
 	end
@@ -537,7 +789,7 @@ local function parse_word_spec(segments)
 end
 
 
--- Parse an alternant, e.g. "((родо́вий,родови́й))". The return value is a table of the form
+-- Parse an alternant, e.g. "((ру́син<pr>,руси́н<b.pr>))". The return value is a table of the form
 -- {
 --   alternants = {WORD_SPEC, WORD_SPEC, ...}
 -- }
@@ -566,12 +818,22 @@ local function parse_alternant_or_word_spec(text)
 end
 
 
-local function process_overrides(forms, args)
-	for _, slot in ipairs(input_adjective_slots) do
-		if args[slot] then
+local function process_manual_overrides(forms, args, number, unknown_stress)
+	local params_to_slots_map =
+		number == "sg" and input_params_to_slots_sg or
+		number == "pl" and input_params_to_slots_pl or
+		input_params_to_slots_both
+	for param, slot in pairs(params_to_slots_map) do
+		if args[param] then
 			forms[slot] = nil
-			if args[slot] ~= "-" and args[slot] ~= "—" then
-				for _, form in ipairs(rsplit(args[slot], "%s*,%s*")) do
+			if args[param] ~= "-" and args[param] ~= "—" then
+				for _, form in ipairs(rsplit(args[param], "%s*,%s*")) do
+					if com.is_multi_stressed(form) then
+						error("Multi-stressed form '" .. form .. "' in slot '" .. slot .. "' not allowed; use singly-stressed forms separated by commas")
+					end
+					if not unknown_stress and not rfind(form, "^%-") and com.needs_accents(form) then
+						error("Stress required in multisyllabic form '" .. form .. "' in slot '" .. slot .. "'; if stress is truly unknown, use unknown_stress=1")
+					end
 					iut.insert_form(forms, slot, {form=form})
 				end
 			end
@@ -580,37 +842,15 @@ local function process_overrides(forms, args)
 end
 
 
-local function set_accusative(alternant_spec)
-	local forms = alternant_spec.forms
-	iut.insert_forms(forms, "acc_n", forms["nom_n"])
-	iut.insert_forms(forms, "acc_m_an", forms["gen_m"])
-	iut.insert_forms(forms, "acc_m_in", forms["nom_m"])
-	iut.insert_forms(forms, "acc_p_an", forms["gen_p"])
-	iut.insert_forms(forms, "acc_p_in", forms["nom_p"])
-end
-
-
 local function add_categories(alternant_spec)
 	local cats = {}
 	local function insert(cattype)
-		table.insert(cats, "Ukrainian " .. cattype .. " adjectives")
+		table.insert(cats, "Ukrainian " .. cattype)
 	end
-	if alternant_spec.alternants then -- not when manual
-		for _, base in ipairs(alternant_spec.alternants) do
-			if base.conj == "poss" then
-				insert("possessive")
-			elseif rfind(base.lemma, "ци́?й$") then
-				insert("ц-stem")
-			elseif rfind(base.lemma, "ий$") then
-				insert("hard-stem stem-stressed")
-			elseif rfind(base.lemma, "и́й$") then
-				insert("hard-stem ending-stressed")
-			elseif rfind(base.lemma, "і́?й$") then
-				insert("soft-stem")
-			elseif rfind(base.lemma, "ї́?й$") then
-				insert("vowel-stem")
-			end
-		end
+	if alternant_spec.number == "sg" then
+		insert("uncountable nouns")
+	elseif alternant_spec.number == "pl" then
+		insert("pluralia tantum")
 	end
 	alternant_spec.categories = cats
 end
@@ -618,68 +858,122 @@ end
 
 local function show_forms(alternant_spec)
 	local lemmas = {}
-	if alternant_spec.forms.nom_m then
-		for _, nom_m in ipairs(alternant_spec.forms.nom_m) do
-			table.insert(lemmas, com.remove_monosyllabic_stress(nom_m.form))
+	if alternant_spec.forms.nom_s then
+		for _, nom_s in ipairs(alternant_spec.forms.nom_s) do
+			table.insert(lemmas, com.remove_monosyllabic_stress(nom_s.form))
+		end
+	elseif alternant_spec.forms.nom_p then
+		for _, nom_p in ipairs(alternant_spec.forms.nom_p) do
+			table.insert(lemmas, com.remove_monosyllabic_stress(nom_p.form))
 		end
 	end
-	com.show_forms(alternant_spec.forms, lemmas, alternant_spec.footnotes, output_adjective_slots)
+	com.show_forms(alternant_spec.forms, lemmas, alternant_spec.footnotes, output_noun_slots)
 end
 
 
 local function make_table(alternant_spec)
 	local forms = alternant_spec.forms
 
-	local table_spec = [=[
-<div>
-<div class="NavFrame" style="display: inline-block; min-width: 70em">
-<div class="NavHead" style="background:#eff7ff">{title}{annotation}</div>
+	local table_spec_both = [=[
+<div class="NavFrame" style="display: inline-block;min-width: 45em">
+<div class="NavHead" style="background:#eff7ff" >{title}</div>
 <div class="NavContent">
-{\op}| border="1px solid #000000" style="border-collapse:collapse;background:#F9F9F9;text-align:center; min-width:70em" class="inflection-table"
+{\op}| style="background:#F9F9F9;text-align:center;min-width:45em" class="inflection-table"
 |-
-! style="width:20%;background:#d9ebff" colspan="2" | 
-! style="background:#d9ebff" | masculine
-! style="background:#d9ebff" | neuter
-! style="background:#d9ebff" | feminine
+! style="width:33%;background:#d9ebff" | 
+! style="background:#d9ebff" | singular
 ! style="background:#d9ebff" | plural
 |-
-! style="background:#eff7ff" colspan="2" | nominative
-| {nom_m}
-| {nom_n}
-| {nom_f}
+!style="background:#eff7ff"|nominative
+| {nom_s}
 | {nom_p}
 |-
-! style="background:#eff7ff" colspan="2" | genitive
-| colspan="2" | {gen_m}
-| {gen_f}
+!style="background:#eff7ff"|genitive
+| {gen_s}
 | {gen_p}
 |-
-! style="background:#eff7ff" colspan="2" | dative
-| colspan="2" | {dat_m}
-| {dat_f}
+!style="background:#eff7ff"|dative
+| {dat_s}
 | {dat_p}
 |-
-! style="background:#eff7ff" rowspan="2" | accusative
-! style="background:#eff7ff" | animate
-| {acc_m_an}
-| rowspan="2" | {acc_n}
-| rowspan="2" | {acc_f}
-| {acc_p_an}
+!style="background:#eff7ff"|accusative
+| {acc_s}
+| {acc_p}
 |-
-! style="background:#eff7ff" | inanimate
-| {acc_m_in}
-| {acc_p_in}
-|-
-! style="background:#eff7ff" colspan="2" | instrumental
-| colspan="2" | {ins_m}
-| {ins_f}
+!style="background:#eff7ff"|instrumental
+| {ins_s}
 | {ins_p}
 |-
-! style="background:#eff7ff" colspan="2" | locative
-| colspan="2" | {loc_m}
-| {loc_f}
+!style="background:#eff7ff"|locative
+| {loc_s}
 | {loc_p}
-|{\cl}{notes_clause}</div></div></div>]=]
+|-
+!style="background:#eff7ff"|vocative
+| {voc_s}
+| {voc_p}
+|{\cl}{notes_clause}</div></div>]=]
+
+	local table_spec_sg = [=[
+<div class="NavFrame" style="width:30em">
+<div class="NavHead" style="background:#eff7ff">{title}</div>
+<div class="NavContent">
+{\op}| style="background:#F9F9F9;text-align:center;width:30em" class="inflection-table"
+|-
+! style="width:33%;background:#d9ebff" | 
+! style="background:#d9ebff" | singular
+|-
+!style="background:#eff7ff"|nominative
+| {nom_s}
+|-
+!style="background:#eff7ff"|genitive
+| {gen_s}
+|-
+!style="background:#eff7ff"|dative
+| {dat_s}
+|-
+!style="background:#eff7ff"|accusative
+| {acc_s}
+|-
+!style="background:#eff7ff"|instrumental
+| {ins_s}
+|-
+!style="background:#eff7ff"|locative
+| {loc_s}
+|-
+!style="background:#eff7ff"|vocative
+| {voc_s}
+|{\cl}{notes_clause}</div></div>]=]
+
+	local table_spec_pl = [=[
+<div class="NavFrame" style="width:30em">
+<div class="NavHead" style="background:#eff7ff">{title}</div>
+<div class="NavContent">
+{\op}| style="background:#F9F9F9;text-align:center;width:30em" class="inflection-table"
+|-
+! style="width:33%;background:#d9ebff" | 
+! style="background:#d9ebff" | plural
+|-
+!style="background:#eff7ff"|nominative
+| {nom_p}
+|-
+!style="background:#eff7ff"|genitive
+| {gen_p}
+|-
+!style="background:#eff7ff"|dative
+| {dat_p}
+|-
+!style="background:#eff7ff"|accusative
+| {acc_p}
+|-
+!style="background:#eff7ff"|instrumental
+| {ins_p}
+|-
+!style="background:#eff7ff"|locative
+| {loc_p}
+|-
+!style="background:#eff7ff"|vocative
+| {voc_p}
+|{\cl}{notes_clause}</div></div>]=]
 
 	local notes_template = [===[
 <div style="width:100%;text-align:left;background:#d9ebff">
@@ -694,128 +988,26 @@ local function make_table(alternant_spec)
 		forms.title = 'Declension of <i lang="uk" class="Cyrl">' .. forms.lemma .. '</i>'
 	end
 
-	if alternant_spec.manual then
-		forms.annotation = ""
-	else
-		local ann_parts = {}
-		local decls = {}
-		for _, base in ipairs(alternant_spec.alternants) do
-			if base.decl == "poss" then
-				m_table.insertIfNot(decls, "possessive")
-			elseif rfind(base.lemma, "и́?й$") then
-				m_table.insertIfNot(decls, "hard")
-			else
-				m_table.insertIfNot(decls, "soft")
-			end
-		end
-		table.insert(ann_parts, table.concat(decls, " // "))
-		forms.annotation = " (" .. table.concat(ann_parts, ", ") .. ")"
-	end
-
+	local table_spec =
+		alternant_spec.number == "sg" and table_spec_sg or
+		alternant_spec.number == "pl" and table_spec_pl or
+		table_spec_both
 	forms.notes_clause = forms.footnote ~= "" and
 		m_string_utilities.format(notes_template, forms) or ""
 	return m_string_utilities.format(table_spec, forms)
 end
 
 
-local stem_expl = {
-	["ц-stem"] = "-ц",
-	["vowel-stem"] = "a vowel, or -й or -ь",
-	["soft-stem"] = "a soft consonant",
-	["hard-stem"] = "a hard consonant",
-	["possessive"] = "-ов, -єв, -ин or -їн",
-}
-
--- Implementation of template 'ruadjcatboiler'.
-function export.catboiler(frame)
-	local SUBPAGENAME = mw.title.getCurrentTitle().subpageText
-	local params = {
-		[1] = {required = true},
-		[2] = {required = true},
-		[3] = {},
-		[4] = {},
-		[5] = {},
-	}
-
-	local parent_args = frame:getParent().args
-	local args = m_para.process(parent_args, params)
-
-	local cats = {}
-
-	local function insert(cat)
-	    table.insert(cats, "Ukrainian " .. rsub(cat, "~", "adjectives"))
-	end
-
-	local maintext, misctext
-	if args[1] == "adj" then
-		local stem, stress = rmatch(SUBPAGENAME, "^Ukrainian ([^ ]*) ([^ *]*)-stressed adjectives")
-		if not stem then
-			stem = rmatch(SUBPAGENAME, "^Ukrainian ([^ ]*) adjectives")
-			stress = ""
-		end
-		if not stem then
-			error("Invalid category name, should be e.g. \"Ukrainian hard-stem ending-stressed adjectives\"")
-		end
-		local stresstext = stress == "stem" and
-			"The adjectives in this category have stress on the stem." or
-			stress == "ending" and
-			"The adjectives in this category have stress on the endings." or
-			"All adjectives of this type have stress on the stem."
-		local endingtext = "ending in the nominative in masculine singular " .. args[2] .. ", feminine singular " .. args[3] .. ", neuter singular " .. args[4] .. " and plural " .. args[5] .. "."
-		local stemtext
-		if not stem_expl[stem] then
-			error("Invalid stem type " .. stem)
-		end
-		stemtext = " The stem ends in " .. stem_expl[stem] .. "."
-
-		maintext = stem .. " ~, " .. endingtext .. stemtext .. " " .. stresstext
-		insert("~ by stem type and stress|" .. stem .. " " .. stress)
-	elseif args[1] == "irreg" then
-		local irregularity = rmatch(SUBPAGENAME, "^Ukrainian adjectives with irregular (.*)")
-		if not irregularity then
-			error("Invalid category name, should be e.g. \"Ukrainian adjectives with irregular nominative masculine singular\"")
-		end
-		maintext = "~ with irregular " .. irregularity .. " (possibly along with other cases)."
-		insert("~ by irregularity|" .. irregularity)
-	elseif args[1] == "misc" then
-		misctext = args[2]
-		local sort_key = rmatch(SUBPAGENAME, "^Ukrainian adjectives with (.*)")
-		if not sort_key then
-			sort_key = rmatch(SUBPAGENAME, "^Ukrainian adjectives by (.*)")
-		end
-		if not sort_key then
-			sort_key = rmatch(SUBPAGENAME, "^Ukrainian adjectives (.*)")
-		end
-		if not sort_key then
-			sort_key = rmatch(SUBPAGENAME, "^Ukrainian (.*)")
-		end
-		if not sort_key then
-			error("Invalid category name, should begin with \"Ukrainian\": " .. SUBPAGENAME)
-		end
-		insert("~|" .. sort_key)
-	else
-		error("Unknown 'uk-adj cat' type " .. (args[1] or "(empty)"))
-	end
-
-	return (misctext or "This category contains Ukrainian " .. rsub(maintext, "~", "adjectives"))
-		.. "\n" ..
-		mw.getCurrentFrame():expandTemplate{title="uk-categoryTOC", args={}}
-		.. require("Module:utilities").format_categories(cats, lang, nil, nil, "force")
-end
-
--- Externally callable function to parse and decline an adjective given user-specified arguments.
+-- Externally callable function to parse and decline a noun given user-specified arguments.
 -- Return value is WORD_SPEC, an object where the declined forms are in `WORD_SPEC.forms`
 -- for each slot. If there are no values for a slot, the slot key will be missing. The value
 -- for a given slot is a list of objects {form=FORM, footnotes=FOOTNOTES}.
 function export.do_generate_forms(parent_args, pos, from_headword, def)
 	local params = {
-		[1] = {required = true, default = "си́ній"},
+		[1] = {required = true, default = "віз<c.io>"},
 		footnote = {list = true},
 		title = {},
 	}
-	for _, slot in ipairs(input_adjective_slots) do
-		params[slot] = {}
-	end
 
 	local args = m_para.process(parent_args, params)
 	local alternant_spec = parse_alternant_or_word_spec(args[1])
@@ -828,27 +1020,62 @@ function export.do_generate_forms(parent_args, pos, from_headword, def)
 	end
 	detect_all_indicator_specs(alternant_spec)
 	for _, base in ipairs(alternant_spec.alternants) do
-		decls[base.decl](base, base.lemma)
+		if not decls[base.decl] then
+			error("Internal error: Unrecognized declension type '" .. base.decl .. "'")
+		end
+		decls[base.decl](base)
 	end
-	process_overrides(alternant_spec.forms, args)
-	set_accusative(alternant_spec)
 	add_categories(alternant_spec)
 	return alternant_spec
 end
 
 
--- Externally callable function to parse and decline an adjective where all forms
+-- Externally callable function to parse and decline a noun where all forms
 -- are given manually. Return value is WORD_SPEC, an object where the declined
 -- forms are in `WORD_SPEC.forms` for each slot. If there are no values for a
 -- slot, the slot key will be missing. The value for a given slot is a list of
 -- objects {form=FORM, footnotes=FOOTNOTES}.
-function export.do_generate_forms_manual(parent_args, pos, from_headword, def)
+function export.do_generate_forms_manual(parent_args, number, pos, from_headword, def)
+	if number ~= "sg" and number ~= "pl" and number ~= "both" then
+		error("Internal error: number (arg 1) must be 'sg', 'pl' or 'both': '" .. number .. "'")
+	end
+
 	local params = {
 		footnote = {list = true},
 		title = {},
+		unknown_stress = {type = "boolean"},
 	}
-	for _, slot in ipairs(input_adjective_slots) do
-		params[slot] = {}
+	if number == "both" then
+		params[1] = {required = true, default = "жук"}
+		params[2] = {required = true, default = "жуки́"}
+		params[3] = {required = true, default = "жука́"}
+		params[4] = {required = true, default = "жукі́в"}
+		params[5] = {required = true, default = "жуко́ві, жуку́"}
+		params[6] = {required = true, default = "жука́м"}
+		params[7] = {required = true, default = "жука́"}
+		params[8] = {required = true, default = "жуки́, жукі́в"}
+		params[9] = {required = true, default = "жуко́м"}
+		params[10] = {required = true, default = "жука́ми"}
+		params[11] = {required = true, default = "жуко́ві, жуку́"}
+		params[12] = {required = true, default = "жука́х"}
+		params[13] = {required = true, default = "жу́че"}
+		params[14] = {required = true, default = "жуки́"}
+	elseif number == "sg" then
+		params[1] = {required = true, default = "лист"}
+		params[2] = {required = true, default = "ли́сту"}
+		params[3] = {required = true, default = "ли́сту, ли́стові"}
+		params[4] = {required = true, default = "лист"}
+		params[5] = {required = true, default = "ли́стом"}
+		params[6] = {required = true, default = "ли́сті, ли́сту"}
+		params[7] = {required = true, default = "ли́сте"}
+	else
+		params[1] = {required = true, default = "две́рі"}
+		params[2] = {required = true, default = "двере́й"}
+		params[3] = {required = true, default = "две́рям"}
+		params[4] = {required = true, default = "две́рі"}
+		params[5] = {required = true, default = "дверми́, двери́ма"}
+		params[6] = {required = true, default = "две́рях"}
+		params[7] = {required = true, default = "две́рі"}
 	end
 
 	local args = m_para.process(parent_args, params)
@@ -856,16 +1083,16 @@ function export.do_generate_forms_manual(parent_args, pos, from_headword, def)
 		title = args.title,
 		footnotes = args.footnote,
 		forms = {},
+		number = number,
 		manual = true,
 	}
-	process_overrides(alternant_spec.forms, args)
-	set_accusative(alternant_spec)
+	process_overrides(alternant_spec.forms, args, alternant_spec.number, args.unknown_stress)
 	add_categories(alternant_spec)
 	return alternant_spec
 end
 
 
--- Entry point for {{uk-adecl}}. Template-callable function to parse and conjugate an adjective given
+-- Entry point for {{uk-ndecl}}. Template-callable function to parse and decline a noun given
 -- user-specified arguments and generate a displayable table of the declined forms.
 function export.show(frame)
 	local parent_args = frame:getParent().args
@@ -875,11 +1102,16 @@ function export.show(frame)
 end
 
 
--- Entry point for {{uk-adecl-manual}}. Template-callable function to parse and conjugate an adjective given
--- manually-specified inflections and generate a displayable table of the declined forms.
+-- Entry point for {{uk-decl-noun}}, {{uk-decl-noun-unc}} and {{uk-decl-noun-pl}}.
+-- Template-callable function to parse and decline a noun given manually-specified inflections
+-- and generate a displayable table of the declined forms.
 function export.show_manual(frame)
+	local iparams = {
+		[1] = {required = true},
+	}
+	local iargs = m_para.process(frame.args, iparams)
 	local parent_args = frame:getParent().args
-	local alternant_spec = export.do_generate_forms_manual(parent_args)
+	local alternant_spec = export.do_generate_forms_manual(parent_args, iargs[1])
 	show_forms(alternant_spec)
 	return make_table(alternant_spec) .. require("Module:utilities").format_categories(alternant_spec.categories, lang)
 end
@@ -891,7 +1123,7 @@ end
 -- additional properties (currently, none). This is for use by bots.
 local function concat_forms(alternant_spec, include_props)
 	local ins_text = {}
-	for slot, _ in pairs(output_adjective_slots) do
+	for slot, _ in pairs(output_noun_slots) do
 		local formtext = com.concat_forms_in_slot(alternant_spec.forms[slot])
 		if formtext then
 			table.insert(ins_text, slot .. "=" .. formtext)
@@ -900,14 +1132,18 @@ local function concat_forms(alternant_spec, include_props)
 	return table.concat(ins_text, "|")
 end
 
--- Template-callable function to parse and decline an adjective given user-specified arguments and return
+-- Template-callable function to parse and decline a noun given user-specified arguments and return
 -- the forms as a string "SLOT=FORM,FORM,...|SLOT=FORM,FORM,...|...". Embedded pipe symbols (as might
 -- occur in embedded links) are converted to <!>. If |include_props=1 is given, also include
 -- additional properties (currently, none). This is for use by bots.
 function export.generate_forms(frame)
+	local iparams = {
+		[1] = {required = true},
+	}
+	local iargs = m_para.process(frame.args, iparams)
 	local include_props = frame.args["include_props"]
 	local parent_args = frame:getParent().args
-	local alternant_spec = export.do_generate_forms(parent_args)
+	local alternant_spec = export.do_generate_forms(parent_args, iargs[1])
 	return concat_forms(alternant_spec, include_props)
 end
 
