@@ -437,6 +437,19 @@ end
 declprops["hard-m"] = {desc = "hard masc-form"}
 
 
+decls["semisoft-m"] = function(base, stress)
+	local gen_s = base.number == "sg" and "у" or "а" -- may be overridden
+	local loc_s = base.animacy ~= "in" and {"еві", "у", "і"} or {"у", "і"}
+	-- FIXME: Should vocative singular in -у be end-stressed if reducible, parallel
+	-- to soft nouns? I don't have any examples of reducible nouns in -ч, ш or щ.
+	local voc_s = rfind(stress.vowel_stem, "ж$") and "е" or "у̣" -- dot underneath у
+	add_decl(base, stress, nom_s, gen_s, {"еві", "у"}, nil, "ем", loc_s, voc_s,
+		"і", "ів", "ам", "ами", "ах")
+end
+
+declprops["semisoft-m"] = {desc = "semisoft masc-form"}
+
+
 decls["soft-m"] = function(base, stress)
 	local nom_s = rfind(stress.nonvowel_stem, "р$") and "" or "ь"
 	local gen_s = base.number == "sg" and "ю" or "я" -- may be overridden
@@ -444,7 +457,7 @@ decls["soft-m"] = function(base, stress)
 	-- More weird conditions: vocative singular in accent b is end-stressed if
 	-- reducible or ending in -інь (from Proto-Slavic nouns in -y), stem-stressed
 	-- otherwise.
-	local voc_s = (stress.reducible or rfind(stress.vowel_stem, "і́?нь")) and "ю" or "ю̣"
+	local voc_s = (stress.reducible or rfind(stress.vowel_stem, "і́?нь$")) and "ю" or "ю̣"
 	add_decl(base, stress, nom_s, gen_s, {"еві", "ю"}, nil, "ем", loc_s, voc_s,
 		"і", "ів", "ям", "ями", "ях")
 end
