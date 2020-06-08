@@ -4,6 +4,7 @@ local m_string_utilities = require("Module:string utilities")
 local m_table = require("Module:table")
 
 local rsplit = mw.text.split
+local rfind = mw.ustring.find
 local rmatch = mw.ustring.match
 local rsubn = mw.ustring.gsub
 
@@ -125,7 +126,8 @@ end
 
 
 -- Insert a form (an object of the form {form=FORM, footnotes=FOOTNOTES}) into a list of such
--- forms. If the form is already present, the footnotes of the existing and new form are combined.
+-- forms. If the form is already present, the footnotes of the existing and new form might be combined
+-- (specifically, footnotes in the new form beginning with ! will be combined).
 function export.insert_form_into_list(list, form)
 	-- Don't do anything if the form object or the form inside it is nil. This simplifies
 	-- form insertion in the presence of declension generating functions that may return nil,
@@ -135,20 +137,45 @@ function export.insert_form_into_list(list, form)
 	end
 	for _, listform in ipairs(list) do
 		if listform.form == form.form then
-			-- Form already present; combine footnotes.
-			if form.footnotes and #form.footnotes > 0 then
-				if not listform.footnotes then
-					listform.footnotes = {}
-				end
+			-- Form already present; maybe combine footnotes.
+			if form.footnotes then
+				-- The behavior here has changed; track cases where the old behavior might
+				-- be needed by adding ! to the footnote.
+				require("Module:debug").track("inflection-utilities/combining-footnotes")
+				local any_footnotes_with_bang = false
 				for _, footnote in ipairs(form.footnotes) do
-					m_table.insertIfNot(listform.footnotes, footnote)
+					if rfind(footnote, "^%[!") then
+						any_footnotes_with_bang = true
+						break
+					end
+				end
+				if any_footnotes_with_bang then
+					if not listform.footnotes then
+						listform.footnotes = {}
+					else
+						listform.footnotes = m_table.shallowcopy(listform.footnotes)
+					end
+					for _, footnote in ipairs(form.footnotes) do
+						local already_seen = false
+						if rfind(footnote, "^%[!") then
+							for _, existing_footnote in ipairs(listform.footnotes) do
+								if rsub(existing_footnote, "^%[!", "") == rsub(footnote, "^%[!", "") then
+									already_seen = true
+									break
+								end
+							end
+							if not already_seen then
+								table.insert(listform.footnotes, footnote)
+							end
+						end
+					end
 				end
 			end
 			return
 		end
 	end
-	-- Form not found. Clone because we may modify the footnotes in-place.
-	table.insert(list, m_table.deepcopy(form, true))
+	-- Form not found.
+	table.insert(list, form)
 end
 
 -- Insert a form (an object of the form {form=FORM, footnotes=FOOTNOTES}) into the given slot in
@@ -206,9 +233,7 @@ function export.flatmap_forms(forms, fun)
 	for _, form in ipairs(forms) do
 		local funret = fun(form.form)
 		for _, fr in ipairs(funret) do
-			-- Clone the footnotes so we don't end up with two or more entries sharing
-			-- the same footnote object, since the footnotes are mutated in-place.
-			local newform = {form=fr, footnotes=m_table.shallowcopy(form.footnotes)}
+			local newform = {form=fr, footnotes=form.footnotes}
 			export.insert_form_into_list(retval, newform)
 		end
 	end
@@ -243,7 +268,7 @@ end
 -- Expand a given footnote (as specified by the user, including the surrounding brackets)
 -- into the form to be inserted into the final generated table.
 function export.expand_footnote(note)
-	local notetext = rmatch(note, "^%[(.*)%]$")
+	local notetext = rmatch(note, "^%[!?(.*)%]$")
 	assert(notetext)
 	if footnote_abbrevs[notetext] then
 		notetext = footnote_abbrevs[notetext]
@@ -253,7 +278,11 @@ function export.expand_footnote(note)
 			if i % 2 == 0 then
 				split_notes[i] = footnote_abbrevs[split_note]
 				if not split_notes[i] then
-					error("Unrecognized footnote abbrev: <" .. split_note .. ">")
+					-- Don't error for now, because HTML might be in the footnote.
+					-- Instead we should switch the syntax here to e.g. <<a>> to avoid
+					-- conflicting with HTML.
+					split_notes[i] = "<" .. split_note .. ">"
+					--error("Unrecognized footnote abbrev: <" .. split_note .. ">")
 				end
 			end
 		end
@@ -283,8 +312,8 @@ end
 
 
 local function is_table_of_strings(forms)
-	for _, form in ipairs(forms) do
-		if type(form) ~= "string" then
+	for k, v in pairs(forms) do
+		if type(k) ~= "number" or type(v) ~= "string" then
 			return false
 		end
 	end
