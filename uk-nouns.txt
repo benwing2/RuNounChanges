@@ -127,6 +127,16 @@ Ukrainian declensions:
 | {{User:Benwing2/uk-ndecl|друг<pr.voce.plsoft.plstem:друз>}}
 | "friend" || дру́га || дру́гові/дру́гу || дру́же || дру́зі || дру́зів || дру́зями || || Irregular stem and soft declension in plural.
 |-
+| криж<> || "cross" || кри́жа || кри́жу/кри́жі || кри́же || кри́жі || кри́жів || кри́жами || || 
+|-
+| това́риш<pr> || "comrade" || това́риша || това́ришеві/това́ришу/това́риші || това́ришу || това́риші || това́ришів || това́ришами || || 
+|-
+| о́воч<genu> || "vegetable" || о́вочу || о́вочу/о́вочі || о́вочу || о́вочі || о́вочів || о́вочами || || 
+|-
+| фюзеля́ж<genu> || "fuselage" || фюзеля́жу || фюзеля́жі/фюзеля́жу || фюзеля́же || фюзеля́жі || фюзеля́жів || фюзеля́жами || || 
+|-
+| аборда́ж<sg> || "boarding (a ship)" || аборда́жу || аборда́жі/аборда́жу || аборда́же || - || - || - || || 
+|-
 | {{User:Benwing2/uk-ndecl|па́лець<*>}}
 | "finger" || па́льця || па́льці/па́льцю || па́льцю || па́льці || па́льців || па́льцями || || 
 |-
@@ -307,6 +317,22 @@ Ukrainian declensions:
 | {{User:Benwing2/uk-ndecl|знак<b,c.genu.vócu>}}
 | "sign" || зна́ку/знаку́ || зна́ку/знаку́ || зна́ку || знаки́ || знакі́в || знака́ми || || 
 |-
+| ключ<b> || "key" || ключа́ || ключу́/ключі́ || клю́чу || ключі́ || ключі́в || ключа́ми || м'яч&lt;b> "ball", меч&lt;b> "sword", плащ&lt;b> "raincoat", пуга́ч&lt;b> "popgun" || 
+|-
+| автогара́ж<b> || "garage" || автогаража́ || автогаражі́/автогаражу́ || автогара́же || автогаражі́ || автогаражі́в || автогаража́ми || || 
+|-
+| слуха́ч<b.pr> || "listener" || слухача́ || слухаче́ві/слухачу́/слухачі́ || слуха́чу || слухачі́ || слухачі́в || слухача́ми || others in -а́ч || 
+|-
+| хрущ<b.anml> || "cockchafer" || хруща́ || хрущі́/хруще́ві/хрущу́ || хру́щу || хрущі́ || хрущі́в || хруща́ми || || 
+|-
+| вуж<b.anml> || "grass snake" || вужа́ || вужі́/вуже́ві/вужу́ || ву́же || вужі́ || вужі́в || вужа́ми || || 
+|-
+| дощ<b.genu> || "rain" || дощу́ || дощі́/дощу́ || до́щу || дощі́ || дощі́в || доща́ми || || 
+|-
+| ніж<b.io> || "knife" || ножа́ || ножі́/ножу́ || но́же || ножі́ || ножі́в || ножа́ми || || 
+|-
+| кіш<b.io.voce> || "basket" || коша́ || коші́/кошу́ || ко́ше || коші́ || коші́в || коша́ми || гріш<b.io.voce> "groschen" || 
+|-
 | {{User:Benwing2/uk-ndecl|грець<b.pr>}}
 | "player" || греця́ || греце́ві/грецю́/греці́ || гре́цю || греці́ || греці́в || греця́ми || || 
 |-
@@ -443,6 +469,10 @@ Ukrainian declensions:
 |-
 | {{User:Benwing2/uk-ndecl|шлях<c.genu.ínsom.insóm.locú>}}
 | "way, path" || шля́ху || шляху́ || шля́ху || шляхи́ || шляхі́в || шляха́ми || || 
+|-
+| вірш<c> || "poem" || ві́рша || ві́ршу/ві́рші || ві́ршу || вірші́ || вірші́в || вірша́ми || || 
+|-
+| муж<c.locevi:i> || "husband" || му́жа || му́жеві/му́жі || му́же || мужі́ || мужі́в || мужа́ми || || 
 |-
 | {{User:Benwing2/uk-ndecl|мі́сяць<M.c>}}
 | "month, moon" || мі́сяця || мі́сяці/мі́сяцю || мі́сяцю || місяці́ || місяці́в || місяця́ми || || 
@@ -753,7 +783,6 @@ Ukrainian declensions:
 ** Vocative singular: 41 of 45 nouns have vocative singular in -ю. Of the 41 in -ю, the stress follows the accent pattern in all but грець<b.pr> "player", which is the only non-reducible noun among the accent-b nouns (see below under masculine nouns in -ь other than -ць). The remaining 4 in -е are all stem-stressed despite 3 of the 4 being accent b. (Vocative in -е always seems to trigger stem stress and first palatalization.)
 ** Locative singular: All 28 personal nouns and all 4 animal nouns have locative singular in -еві/ю/і (in some order; the given order is preferred by Slovozmina). All 12 inanimate nouns have locative singular in -ю/-і (in some order; the given order is preferred by Slovozmina). In all nouns, the stress follows the accent pattern.
 
-
 * Masculine nouns in -ь (other than -ць):
 ** Example nouns:
 *** Accent a: автомобі́ль<M> "car" (also готе́ль<M> "hotel", жо́лудь<M> "acorn"), прия́тель<M.pr> "friend", лосо́сь<M.anml> "salmon" (also го́голь<M.anml> "goldeneye (duck)", лось<M.anml> "elk", ґедзь<M.anml> "horsefly"), ко́рінь<M.ie> "root" (also ка́мінь<M.ie> "stone (object)", кре́мінь<M.ie> "flint", ре́мінь<M.ie> "belt, strap", сту́пінь<M.ie> "degree"), ель<M.sg> "ale", во́день<M.*.sg> "hydrogen", ка́мінь<M.sg.ie> "stone (subtance)", біль<M.io.genju> "ache, pain", ведмі́дь<M.anml.ie> "bear" (also ле́бідь<M.anml.ie> "swan"), у́чень<M.*.pr> "student, pupil" (also в'я́зень<M.*.pr> "prisoner"), пі́вень<M.*.anml> "rooster", кі́готь<M.*> "claw" (also лі́коть<M.*> "elbow", ні́готь<M.*> "fingernail/toenail", бе́резень<M.*> "March", ве́ресень<M.*> "September", пі́вдень "noon"), ((сту́пінь<M.ie>,сту́пінь<M.*>)) "step"
@@ -769,11 +798,17 @@ Ukrainian declensions:
 
 * Masculine nouns in -й:
 ** Example nouns:
-*** трамва́й<> "tram", геро́й<pr> "hero", змій<anml> "dragon", музе́й<genju> "museum", солове́й<b*.anml> [stem солов']
+*** трамва́й<> "tram", геро́й<pr> "hero" (also євре́й<pr> "Jew", лиході́й<pr> "villain", ґей<pr> "gay person"), змій<anml> "dragon", музе́й<genju> "museum", рай<sg> "paradise" (also ка́лій<sg> "potassium"), покі́й<io.genu> "calm, rest; room, chamber", воді́й<b.pr> "driver (of a vehicle)" (also буга́й<b.pr> "large, strong man (derogatory)"), буга́й<b.anml> "bull; bittern", солове́й<b*.anml> [stem солов'], чай<c> "tea", рій<c.io> "squad (military)"
+** Exceptional nouns:
+*** ((зло́дій<pr>,зло́дій<pr.plstem:злоді́>)) "thief", рій<c.io.genju:já.locjú> "swarm, crowd", край<c.locji:jú> "edge; place; country" (also гай<c.locji:jú> "grove"), край<c.locji> "krai"
+** Vocative singular: The vocative ending is always -ю (except in adjectival nouns, which aren't being considered here). Always stem-stressed except in солове́й, which is the only reducible noun; hence the same logic applies as for regular soft nouns.
+** Locative singular: In general, as for regular soft nouns, personal and animate nouns have -єві/-ю/-ї (the preferred order on Slovozmina) or a permutation, and inanimate nouns have -ю/-ї (the preferred order on Slovozmina) or a permutation. There are some exceptions, listed above.
 
 
-
-
+* Adjectival nouns:
+** Masculine examples: лю́тий<+> "February", хво́рий<+.pr> "ill person, patient"
+** Feminine examples: ва́нна<+> "bathroom", вагі́тна<+.pr> "pregnant woman"
+** Neuter examples: майбу́тнє<+.sg> "the future"
 
 
 * у vs. а in gen sg. of masc (and neuter?) nouns: Semantically determined; must be manually specified
