@@ -265,9 +265,12 @@ function export.combine_stem_ending(stem, ending)
 end
 
 
-function export.generate_form(form, footnote)
-	if footnote then
-		return {form = form, footnotes = {footnote}}
+function export.generate_form(form, footnotes)
+	if type(footnotes) == "string" then
+		footnotes = {footnotes}
+	end
+	if footnotes then
+		return {form = form, footnotes = footnotes}
 	else
 		return form
 	end
