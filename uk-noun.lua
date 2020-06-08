@@ -46,6 +46,8 @@ local uupper = mw.ustring.upper
 
 local AC = u(0x0301) -- acute =  ́
 local DOTUNDER = u(0x0323) -- dotunder =  ̣
+local accents = AC .. DOTUNDER
+local accents_c = "[" .. accents .. "]"
 
 
 -- version of rsubn() that discards all but the first return value
@@ -217,10 +219,46 @@ stress_patterns["f''"]={
 }
 
 
-local function add(base, slot, stress, endings, footnote)
+local function combine_footnotes(notes1, notes2)
+	if not notes1 and not notes2 then
+		return nil
+	end
+	if not notes1 then
+		return notes2
+	end
+	if not notes2 then
+		return notes1
+	end
+	local combined = m_table.shallowcopy(notes1)
+	for _, note in ipairs(notes2) do
+		m_table.insertIfNot(combined, note)
+	end
+	return combined
+end
+
+
+-- Maybe modify the stem and/or ending in certain special cases:
+-- 1. Final -е in vocative singular triggers first palatalization of the stem and causes
+--    accent retraction.
+-- 2. Final -і in dative/locative singular triggers second palatalization.
+local function apply_special_cases(slot, stem, ending)
+	if slot == "voc_s" and rfind(ending, "^е" .. accents_c .. "?$") then
+		stem = com.apply_first_palatalization(stem)
+		if ending == "е" then
+			ending = ending .. DOTUNDER
+		end
+	elseif (slot == "dat_s" or slot == "loc_s") and rfind(ending, "^і" .. accents_c .. "?$") then
+		stem = com.apply_second_palatalization(stem)
+	end
+	return stem, ending
+end
+
+
+local function add(base, slot, stress, endings, footnotes)
 	if not endings then
 		return
 	end
+	footnotes = combine_footnotes(base.footnotes, footnotes)
 	if type(endings) == "string" then
 		endings = {endings}
 	end
@@ -261,18 +299,14 @@ local function add(base, slot, stress, endings, footnote)
 		else
 			stem = slot_is_plural and stress.pl_nonvowel_stem or stress.nonvowel_stem
 		end
+		stem, ending = apply_special_cases(slot, stem, ending)
 		if rfind(ending, DOTUNDER) then
 			-- DOTUNDER indicates stem stress in all cases
 			ending = rsub(ending, DOTUNDER, "")
 		elseif stress_for_slot == "+" then
 			ending = com.maybe_stress_initial_syllable(ending)
 		end
-		if slot == "voc_s" and rfind(ending, "^е́?$") then
-			stem = com.apply_first_palatalization(stem)
-		elseif (slot == "dat_s" or slot == "loc_s") and rfind(ending, "^і́?$") then
-			stem = com.apply_second_palatalization(stem)
-		end
-		ending = com.generate_form(ending, footnote)
+		ending = com.generate_form(ending, footnotes)
 		iut.add_forms(base.this_forms, slot, stem, ending, com.combine_stem_ending)
 	end
 end
@@ -284,11 +318,13 @@ local function process_slot_overrides(base, do_slot)
 			base.this_forms[slot] = nil
 			local slot_is_plural = rfind(slot, "_p$")
 			for _, override in ipairs(overrides) do
-				if override.full then
-					for _, value in ipairs(override.values) do
-						if value:find("~") then
+				for _, value in ipairs(override.values) do
+					local form = value.form
+					local combined_notes = combine_footnotes(base.footnotes, value.footnotes)
+					if override.full then
+						if form:find("~") then
 							local stem
-							local ending = rsub(value, ".*~+", "")
+							local ending = rsub(form, ".*~+", "")
 							if rfind(ending, "^ь?" .. com.vowel_c) then
 								stem = slot_is_plural and stress.pl_vowel_stem or stress.vowel_stem
 							else
@@ -297,21 +333,19 @@ local function process_slot_overrides(base, do_slot)
 							if com.is_stressed(ending) then
 								stem = com.remove_stress(stem)
 							end
-							value = rsub(value, "~~~", com.apply_second_palatalization(stem))
-							value = rsub(value, "~~", com.apply_first_palatalization(stem))
-							value = rsub(value, "~", stem)
+							form = rsub(value, "~~~", com.apply_second_palatalization(stem))
+							form = rsub(value, "~~", com.apply_first_palatalization(stem))
+							form = rsub(value, "~", stem)
 						end
-						iut.insert_form(base.this_forms, slot, {form = value})
-					end
-				else
-					for _, value in ipairs(override.values) do
+						iut.insert_form(base.this_forms, slot, form, combined_notes)
+					else
 						if override.stemstressed then
 							-- Signal not to add a stress to the ending even if the stress pattern
 							-- calls for it.
-							value = value .. DOTUNDER
+							form = form .. DOTUNDER
 						end
 						for _, stress in ipairs(base.stresses) do
-							add(base, slot, stress, value)
+							add(base, slot, stress, form, combined_notes)
 						end
 					end
 				end
@@ -321,25 +355,26 @@ local function process_slot_overrides(base, do_slot)
 end
 
 
-local function add_decl(base,
+local function add_decl(base, stress,
 	nom_s, gen_s, dat_s, acc_s, ins_s, loc_s, voc_s,
-	nom_p, gen_p, dat_p, ins_p, loc_p, footnote
+	nom_p, gen_p, dat_p, ins_p, loc_p, footnotes
 )
-	for _, stress in ipairs(base.stresses) do
-		add(base, "nom_s", stress, nom_s, footnote)
-		add(base, "gen_s", stress, gen_s, footnote)
-		add(base, "dat_s", stress, dat_s, footnote)
-		add(base, "acc_s", stress, acc_s, footnote)
-		add(base, "ins_s", stress, ins_s, footnote)
-		add(base, "loc_s", stress, loc_s, footnote)
-		add(base, "voc_s", stress, voc_s, footnote)
-		add(base, "nom_p", stress, nom_p, footnote)
-		add(base, "gen_p", stress, gen_p, footnote)
-		add(base, "dat_p", stress, dat_p, footnote)
-		add(base, "ins_p", stress, ins_p, footnote)
-		add(base, "loc_p", stress, loc_p, footnote)
-	end
+	add(base, "nom_s", stress, nom_s, footnotes)
+	add(base, "gen_s", stress, gen_s, footnotes)
+	add(base, "dat_s", stress, dat_s, footnotes)
+	add(base, "acc_s", stress, acc_s, footnotes)
+	add(base, "ins_s", stress, ins_s, footnotes)
+	add(base, "loc_s", stress, loc_s, footnotes)
+	add(base, "voc_s", stress, voc_s, footnotes)
+	add(base, "nom_p", stress, nom_p, footnotes)
+	add(base, "gen_p", stress, gen_p, footnotes)
+	add(base, "dat_p", stress, dat_p, footnotes)
+	add(base, "ins_p", stress, ins_p, footnotes)
+	add(base, "loc_p", stress, loc_p, footnotes)
+end
 
+
+local function handle_derived_slots_and_overrides(base)
 	local function is_non_derived_slot(slot)
 		return slot ~= "voc_p" and slot ~= "acc_s" and slot ~= "acc_p"
 	end
@@ -376,22 +411,65 @@ end
 
 
 local decls = {}
+local declprops = {}
 
 
-decls["hard-m"] = function(base)
+decls["hard-m"] = function(base, stress)
+	local velar = rfind(stress.vowel_stem, com.velar_c .. "$")
 	local gen_s = base.number == "sg" and "у" or "а" -- may be overridden
 	local loc_s =
-		base.animacy == "in" and base.number == "sg" and {"у", "і"} or
-		base.animacy == "in" and "і" or
-		{"ові", "і"}
-	local voc_s = "е̣"
-	add_decl(base, "", gen_s, {"ові", "у"}, nil, "ом", loc_s, voc_s,
-		"и", "ів", "ам", "ами", "ах")
+		-- these conditions seem weird but it's what I observed
+		velar and (base.animacy ~= "in" or stress.reducible) and {"ові", "у"} or
+		velar and "у" or
+		base.animacy ~= "in" and {"ові", "і"} or
+		base.number == "sg" and {"у", "і"} or
+		"і"
+	local voc_s =
+		-- these conditions also seem weird but it's what I observed
+		velar and base.animacy == "anml" and stress.stress == "b" and "е" or
+		velar and "у" or
+		"е"
+	local gen_p = base.remove_in and "" or "ів"
+	add_decl(base, stress, "", gen_s, {"ові", "у"}, nil, "ом", loc_s, voc_s,
+		"и", gen_p, "ам", "ами", "ах")
+end
+
+declprops["hard-m"] = {desc = "hard masc-form"}
+
+
+decls["soft-m"] = function(base, stress)
+	local nom_s = rfind(stress.nonvowel_stem, "р$") and "" or "ь"
+	local gen_s = base.number == "sg" and "ю" or "я" -- may be overridden
+	local loc_s = base.animacy ~= "in" and {"еві", "ю", "і"} or {"ю", "і"}
+	-- More weird conditions: vocative singular in accent b is end-stressed if
+	-- reducible or ending in -інь (from Proto-Slavic nouns in -y), stem-stressed
+	-- otherwise.
+	local voc_s = (stress.reducible or rfind(stress.vowel_stem, "і́?нь")) and "ю" or "ю̣"
+	add_decl(base, stress, nom_s, gen_s, {"еві", "ю"}, nil, "ем", loc_s, voc_s,
+		"і", "ів", "ям", "ями", "ях")
+end
+
+declprops["soft-m"] = {desc = "soft masc-form"}
+
+
+local function fetch_footnotes(separated_group)
+	local footnotes
+	for j = 2, #separated_group - 1, 2 do
+		if separated_group[j + 1] ~= "" then
+			error("Extraneous text after bracketed footnotes: '" .. table.concat(separated_group) .. "'")
+		end
+		if not footnotes then
+			footnotes = {}
+		end
+		table.insert(footnotes, separated_group[j])
+	end
+	return footnotes
 end
 
 
-local function parse_override(part)
-	local retval = {}
+local function parse_override(segments)
+	local retval = {values = {}}
+	local part = segments[1]
 	local case = usub(part, 1, 3)
 	if cases[case] then
 		-- ok
@@ -399,12 +477,12 @@ local function parse_override(part)
 		case = accented_cases[case]
 		retval.stemstressed = true
 	else
-		error("Internal error: unrecognized case in override: '" .. part .. "'")
+		error("Internal error: unrecognized case in override: '" .. table.concat(segments) .. "'")
 	end
 	local rest = usub(part, 4)
 	local slot
 	if rfind(rest, "^pl") then
-		rest = rsub(part, "^pl", "")
+		rest = rsub(rest, "^pl", "")
 		slot = case .. "_p"
 	else
 		slot = case .. "_s"
@@ -413,9 +491,20 @@ local function parse_override(part)
 		retval.full = true
 		rest = rsub(rest, "^:", "")
 	end
-	retval.values = rsplit(rest, ":")
-	for i, value in ipairs(retval.values) do
-		retval.values[i] = m_uk_translit.reverse_tr(value)
+	segments[1] = rest
+	local colon_separated_groups = iut.split_alternating_runs(segments, ":")
+	for i, colon_separated_group in ipairs(colon_separated_groups) do
+		local value = {}
+		local form = colon_separated_group[1]
+		if form == "" then
+			error("Use - to indicate an empty ending for slot '" .. slot .. "': '" .. table.concat(segments .. "'"))
+		elseif form == "-" then
+			value.form = ""
+		else
+			value.form = m_uk_translit.reverse_tr(form)
+		end
+		value.footnotes = fetch_footnotes(colon_separated_group)
+		table.insert(retval.values, value)
 	end
 	return slot, retval
 end
@@ -426,9 +515,26 @@ local function parse_indicator_spec(angle_bracket_spec)
 	assert(inside)
 	local base = {overrides = {}, this_forms = {}}
 	if inside ~= "" then
-		local parts = rsplit(inside, ".", true)
-		for _, part in ipairs(parts) do
-			if part == "M" or part == "F" or part == "N" then
+		local segments = iut.parse_balanced_segment_run(inside, "[", "]")
+		local dot_separated_groups = iut.split_alternating_runs(segments, "%.")
+		for i, dot_separated_group in ipairs(dot_separated_groups) do
+			local part = dot_separated_group[1]
+			local case_prefix = usub(part, 1, 3)
+			if cases[case_prefix] or accented_cases[case_prefix] then
+				local slot, override = parse_override(dot_separated_group)
+				if base.overrides[slot] then
+					table.insert(base.overrides[slot], override)
+				else
+					base.overrides[slot] = {override}
+				end
+			elseif part == "" then
+				if #dot_separated_group == 1 then
+					error("Blank indicator: '" .. inside .. "'")
+				end
+				base.footnotes = fetch_footnotes(dot_separated_group)
+			elseif #dot_separated_group > 1 then
+				error("Footnotes only allowed with slot overrides or by themselves: '" .. table.concat(dot_separated_group) .. "'")
+			elseif part == "M" or part == "F" or part == "N" then
 				if base.gender then
 					error("Can't specify gender twice: '" .. inside .. "'")
 				end
@@ -495,18 +601,6 @@ local function parse_indicator_spec(angle_bracket_spec)
 					error("Can't specify plural stem twice: '" .. inside .. "'")
 				end
 				base.plstem = rsub(part, "^plstem:", "")
-			elseif #part > 3 then
-				local prefix = usub(part, 1, 3)
-				if cases[prefix] or accented_cases[prefix] then
-					local slot, override = parse_override(part)
-					if base.overrides[slot] then
-						table.insert(base.overrides[slot], override)
-					else
-						base.overrides[slot] = {override}
-					end
-				else
-					error("Unrecognized indicator '" .. part .. "': '" .. inside .. "'")
-				end
 			else
 				error("Unrecognized indicator '" .. part .. "': '" .. inside .. "'")
 			end
@@ -564,7 +658,7 @@ local function add_stress_for_pattern(stress, stem)
 	elseif where_stress == "first" then
 		return com.maybe_stress_initial_syllable(stem)
 	elseif not com.is_stressed(stem) then
-		error("Something wrong: Stress pattern " .. stress.stress .. " but stem .. '" .. stem .. "' doesn't have stress")
+		error("Something wrong: Stress pattern " .. stress.stress .. " but stem '" .. stem .. "' doesn't have stress")
 	else
 		return stem
 	end
@@ -602,8 +696,17 @@ local function detect_indicator_spec(base)
 		stem = rmatch(base.lemma, "^(.*)ь$")
 		if stem then
 			if not base.gender then
-				error("For lemma ending in -ь, gender M or F must be given")
-			elseif base.gender == "N" then
+				if rfind(base.lemma, "[еє]́?ць$") then
+					base.gender = "M"
+				elseif rfind(base.lemma, "тель$") then
+					base.gender = "M"
+				elseif rfind(base.lemma, "ість$") then
+					base.gender = "F"
+				else
+					error("For lemma ending in -ь other than -ець/-єць/-тель/-ість, gender M or F must be given")
+				end
+			end
+			if base.gender == "N" then
 				error("For lemma ending in -ь, gender N not allowed")
 			elseif base.gender == "M" then
 				base.decl = "soft-m"
@@ -690,10 +793,16 @@ local function detect_indicator_spec(base)
 	-- Determine stress and stems
 	if not base.stresses then
 		if ac == AC then
-			base.stresses = {{stress = "b"}}
+			base.stresses = {{stress = "b", reducible = false}}
 		else
-			base.stresses = {{stress = "a"}}
+			base.stresses = {{stress = "a", reducible = false}}
 		end
+	end
+	if base.stem then
+		base.stem = com.add_monosyllabic_stress(base.stem)
+	end
+	if base.plstem then
+		base.plstem = com.add_monosyllabic_stress(base.plstem)
 	end
 	for _, stress in ipairs(base.stresses) do
 		if not stress.stress then
@@ -702,6 +811,14 @@ local function detect_indicator_spec(base)
 				stress.stress = "b"
 			else
 				stress.stress = "a"
+			end
+		end
+		if stress.stress ~= "b" then
+			if base.stem and com.needs_accents(base.stem) then
+				error("Explicit stem needs an accent with stress pattern " .. stress.stress .. ": '" .. base.stem .. "'")
+			end
+			if base.plstem and com.needs_accents(base.plstem) then
+				error("Explicit plural stem needs an accent with stress pattern " .. stress.stress .. ": '" .. base.plstem .. "'")
 			end
 		end
 		if base.vowel_stem then
@@ -876,7 +993,7 @@ local function make_table(alternant_spec)
 
 	local table_spec_both = [=[
 <div class="NavFrame" style="display: inline-block;min-width: 45em">
-<div class="NavHead" style="background:#eff7ff" >{title}</div>
+<div class="NavHead" style="background:#eff7ff" >{title}{annotation}</div>
 <div class="NavContent">
 {\op}| style="background:#F9F9F9;text-align:center;min-width:45em" class="inflection-table"
 |-
@@ -915,7 +1032,7 @@ local function make_table(alternant_spec)
 
 	local table_spec_sg = [=[
 <div class="NavFrame" style="width:30em">
-<div class="NavHead" style="background:#eff7ff">{title}</div>
+<div class="NavHead" style="background:#eff7ff">{title}{annotation}</div>
 <div class="NavContent">
 {\op}| style="background:#F9F9F9;text-align:center;width:30em" class="inflection-table"
 |-
@@ -946,7 +1063,7 @@ local function make_table(alternant_spec)
 
 	local table_spec_pl = [=[
 <div class="NavFrame" style="width:30em">
-<div class="NavHead" style="background:#eff7ff">{title}</div>
+<div class="NavHead" style="background:#eff7ff">{title}{annotation}</div>
 <div class="NavContent">
 {\op}| style="background:#F9F9F9;text-align:center;width:30em" class="inflection-table"
 |-
@@ -988,6 +1105,55 @@ local function make_table(alternant_spec)
 		forms.title = 'Declension of <i lang="uk" class="Cyrl">' .. forms.lemma .. '</i>'
 	end
 
+	local annotation
+	if alternant_spec.manual then
+		annotation = alternant_spec.number == "sg" and "sg-only" or
+			alternant_spec.number == "pl" and "pl-only" or
+			""
+	else
+		local annparts = {}
+		local animacies = {}
+		local decldescs = {}
+		local patterns = {}
+		local reducible = nil
+		for _, base in ipairs(alternant_spec.alternants) do
+			if base.animacy == "in" then
+				m_table.insertIfNot(animacies, "inan")
+			elseif base.animacy == "anml" then
+				m_table.insertIfNot(animacies, "animal")
+			else
+				assert(base.animacy == "pr")
+				m_table.insertIfNot(animacies, "pers")
+			end
+			m_table.insertIfNot(decldescs, declprops[base.decl].desc)
+			for _, stress in ipairs(base.stresses) do
+				if reducible == nil then
+					reducible = stress.reducible
+				elseif reducible ~= stress.reducible then
+					reducible = "mixed"
+				end
+				m_table.insertIfNot(patterns, stress.stress)
+			end
+		end
+		table.insert(annparts, table.concat(animacies, "/"))
+		if alternant_spec.number ~= "both" then
+			table.insert(annparts, alternant_spec.number == "sg" and "sg-only" or "pl-only")
+		end
+		table.insert(annparts, table.concat(decldescs, " // "))
+		table.insert(annparts, "accent-" .. table.concat(patterns, "/"))
+		if reducible == "mixed" then
+			table.insert(annparts, "mixed-reduc")
+		elseif reducible then
+			table.insert(annparts, "reduc")
+		end
+		annotation = table.concat(annparts, " ")
+	end
+	if annotation == "" then
+		forms.annotation = ""
+	else
+		forms.annotation = " (<span style=\"font-size: smaller;\">" .. annotation .. "</span>)"
+	end
+
 	local table_spec =
 		alternant_spec.number == "sg" and table_spec_sg or
 		alternant_spec.number == "pl" and table_spec_pl or
@@ -1020,10 +1186,13 @@ function export.do_generate_forms(parent_args, pos, from_headword, def)
 	end
 	detect_all_indicator_specs(alternant_spec)
 	for _, base in ipairs(alternant_spec.alternants) do
-		if not decls[base.decl] then
-			error("Internal error: Unrecognized declension type '" .. base.decl .. "'")
+		for _, stress in ipairs(base.stresses) do
+			if not decls[base.decl] then
+				error("Internal error: Unrecognized declension type '" .. base.decl .. "'")
+			end
+			decls[base.decl](base, stress)
 		end
-		decls[base.decl](base)
+		handle_derived_slots_and_overrides(base)
 	end
 	add_categories(alternant_spec)
 	return alternant_spec
