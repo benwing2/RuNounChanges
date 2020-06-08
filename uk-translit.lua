@@ -59,6 +59,8 @@ function export.reverse_tr(text)--reverse-translit any words or phrases
 	end
 	reverse_tt['ʺ'] = "'"
 	reverse_tt['ʹ'] = "ь"
+	reverse_tt['y'] = "и"
+	reverse_tt['Y'] = "И"
 	text = rsub(text, '.', acute_decomposer)
 	text = rsub(text, '[Jj][aeiu]', reverse_tt)
 	text = rsub(text, '[Šš]č', reverse_tt)
