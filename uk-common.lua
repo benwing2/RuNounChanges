@@ -228,9 +228,32 @@ function export.reduce(word)
 end
 
 
-function export.dereduce(word)
-	-- FIXME!
-	return word
+function export.dereduce(stem, epenthetic_stress)
+	if epenthetic_stress then
+		stem = export.remove_stress(stem)
+	end
+	-- We don't require there to be two consonants at the end because of ону́ка (gen pl ону́ок).
+	local pre, letter, post = rmatch(stem, "^(.*)(.)(" .. export.cons_c .. ")$")
+	if not pre then
+		return nil
+	end
+	local is_upper = rfind(post, export.uppercase_c)
+	local epvowel
+	if rfind(letter, export.velar_c) or rfind(post, export.velar_c) or rfind(post, "[вВ]") then
+		epvowel = is_upper and "О" or "о"
+	elseif rfind(letter, "[йЙ]") then
+		epvowel = is_upper and "Є" or "є"
+		letter = ""
+	else
+		if rfind(letter, "[ьЬ]") then
+			letter = ""
+		end
+		epvowel = is_upper and "Е" or "е"
+	end
+	if epenthetic_stress then
+		epvowel = epvowel .. AC
+	end
+	return pre .. letter .. epvowel .. post
 end
 
 
