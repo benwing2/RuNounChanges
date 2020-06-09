@@ -164,55 +164,55 @@ stress_patterns["a"] = {
 	stress = nil,
 }
 
-stress_patterns["b"]={
+stress_patterns["b"] = {
 	nom_s="+", gen_s="+", dat_s="+", acc_s="+", ins_s="+", loc_s="+", voc_s="+",
 	nom_p="+", gen_p="+", dat_p="+",            ins_p="+", loc_p="+", voc_p="+",
 	stress = "last",
 }
 
-stress_patterns["b'"]={
+stress_patterns["b'"] = {
 	nom_s="+", gen_s="+", dat_s="+", acc_s="+", ins_s="-", loc_s="+", voc_s="+",
 	nom_p="+", gen_p="+", dat_p="+",            ins_p="+", loc_p="+", voc_p="+",
 	stress = "last",
 }
 
-stress_patterns["c"]={
+stress_patterns["c"] = {
 	nom_s="-", gen_s="-", dat_s="-", acc_s="-", ins_s="-", loc_s="-", voc_s="-",
 	nom_p="+", gen_p="+", dat_p="+",            ins_p="+", loc_p="+", voc_p="-",
 	stress = nil,
 }
 
-stress_patterns["d"]={
+stress_patterns["d"] = {
 	nom_s="+", gen_s="+", dat_s="+", acc_s="+", ins_s="+", loc_s="+", voc_s="+",
 	nom_p="-", gen_p="-", dat_p="-",            ins_p="-", loc_p="-", voc_p="+",
 	stress = "last",
 }
 
-stress_patterns["d'"]={
+stress_patterns["d'"] = {
 	nom_s="+", gen_s="+", dat_s="+", acc_s="-", ins_s="+", loc_s="+", voc_s="+",
 	nom_p="-", gen_p="-", dat_p="-",            ins_p="-", loc_p="-", voc_p="+",
 	stress = "first",
 }
 
-stress_patterns["e"]={
+stress_patterns["e"] = {
 	nom_s="-", gen_s="-", dat_s="-", acc_s="-", ins_s="-", loc_s="-", voc_s="-",
 	nom_p="-", gen_p="+", dat_p="+",            ins_p="+", loc_p="+", voc_p="-",
 	stress = nil,
 }
 
-stress_patterns["f"]={
+stress_patterns["f"] = {
 	nom_s="+", gen_s="+", dat_s="+", acc_s="+", ins_s="+", loc_s="+", voc_s="+",
 	nom_p="-", gen_p="+", dat_p="+",            ins_p="+", loc_p="+", voc_p="+",
 	stress = "first",
 }
 
-stress_patterns["f'"]={
+stress_patterns["f'"] = {
 	nom_s="+", gen_s="+", dat_s="+", acc_s="-", ins_s="+", loc_s="+", voc_s="+",
 	nom_p="-", gen_p="+", dat_p="+",            ins_p="+", loc_p="+", voc_p="+",
 	stress = "first",
 }
 
-stress_patterns["f''"]={
+stress_patterns["f''"] = {
 	nom_s="+", gen_s="+", dat_s="+", acc_s="+", ins_s="-", loc_s="+", voc_s="+",
 	nom_p="-", gen_p="+", dat_p="+",            ins_p="+", loc_p="+", voc_p="+",
 	stress = "first",
@@ -337,7 +337,7 @@ local function process_slot_overrides(base, do_slot)
 							form = rsub(value, "~~", com.apply_first_palatalization(stem))
 							form = rsub(value, "~", stem)
 						end
-						iut.insert_form(base.this_forms, slot, form, combined_notes)
+						iut.insert_form(base.this_forms, slot, {form = form, footnotes = combined_notes})
 					else
 						if override.stemstressed then
 							-- Signal not to add a stress to the ending even if the stress pattern
@@ -431,7 +431,8 @@ decls["hard-m"] = function(base, stress)
 		"е"
 	local gen_p = base.remove_in and "" or "ів"
 	add_decl(base, stress, "", gen_s, {"ові", "у"}, nil, "ом", loc_s, voc_s,
-		"и", gen_p, "ам", "ами", "ах")
+		base.plsoft and "і" or "и", gen_p, base.plsoft and "ям" or "ам",
+		base.plsoft and "ями" or "ами", base.plsoft and "ях" or "ах")
 end
 
 declprops["hard-m"] = {desc = "hard masc-form"}
@@ -443,7 +444,7 @@ decls["semisoft-m"] = function(base, stress)
 	-- FIXME: Should vocative singular in -у be end-stressed if reducible, parallel
 	-- to soft nouns? I don't have any examples of reducible nouns in -ч, ш or щ.
 	local voc_s = rfind(stress.vowel_stem, "ж$") and "е" or "у̣" -- dot underneath у
-	add_decl(base, stress, nom_s, gen_s, {"еві", "у"}, nil, "ем", loc_s, voc_s,
+	add_decl(base, stress, "", gen_s, {"еві", "у"}, nil, "ем", loc_s, voc_s,
 		"і", "ів", "ам", "ами", "ах")
 end
 
@@ -463,6 +464,35 @@ decls["soft-m"] = function(base, stress)
 end
 
 declprops["soft-m"] = {desc = "soft masc-form"}
+
+
+decls["j-m"] = function(base, stress)
+	local gen_s = base.number == "sg" and "ю" or "я" -- may be overridden
+	local loc_s = base.animacy ~= "in" and {"єві", "ю", "ї"} or {"ю", "ї"}
+	-- As with soft nouns, vocative singular in accent b is end-stressed if
+	-- reducible, stem-stressed otherwise.
+	local voc_s = stress.reducible and "ю" or "ю̣"
+	add_decl(base, stress, "й", gen_s, {"єві", "ю"}, nil, "єм", loc_s, voc_s,
+		"ї", "їв", "ям", "ями", "ях")
+end
+
+declprops["j-m"] = {desc = "j-stem masc-form"}
+
+
+decls["hard-f"] = function(base, stress)
+	add_decl(base, stress, "а", "и", "і", "у", "ою", "і", "о̣",
+		"и", "", "ам", "ами", "ах")
+end
+
+declprops["hard-f"] = {desc = "hard fem-form"}
+
+
+decls["semisoft-f"] = function(base, stress)
+	add_decl(base, stress, "а", "і", "і", "у", "ею", "і", "е",
+		"і", "", "ам", "ами", "ах")
+end
+
+declprops["semisoft-f"] = {desc = "semisoft fem-form"}
 
 
 local function fetch_footnotes(separated_group)
@@ -547,11 +577,11 @@ local function parse_indicator_spec(angle_bracket_spec)
 				base.footnotes = fetch_footnotes(dot_separated_group)
 			elseif #dot_separated_group > 1 then
 				error("Footnotes only allowed with slot overrides or by themselves: '" .. table.concat(dot_separated_group) .. "'")
-			elseif part == "M" or part == "F" or part == "N" then
-				if base.gender then
+			elseif part == "M" or part == "MF" or part == "F" or part == "N" then
+				if base.explicit_gender then
 					error("Can't specify gender twice: '" .. inside .. "'")
 				end
-				base.gender = part
+				base.explicit_gender = part
 			elseif part == "sg" or part == "pl" then
 				if base.number then
 					error("Can't specify number twice: '" .. inside .. "'")
@@ -653,7 +683,7 @@ local function apply_vowel_alternation(base, stem)
 		end
 		return modstem
 	elseif base.ialt == "i" then
-		local modstem = rsub(stem, "[ое](́?" .. com.cons_c .. "*)$", "і%1")
+		local modstem = rsub(stem, "ь?[ое](́?" .. com.cons_c .. "*)$", "і%1")
 		if modstem == stem then
 			error("Indicator 'i' can't be applied because stem '" .. stem .. "' doesn't have an о or е as its last vowel")
 		end
@@ -682,6 +712,7 @@ local function detect_indicator_spec(base)
 	-- Set default values.
 	base.number = base.number or "both"
 	base.animacy = base.animacy or "in"
+	base.gender = base.explicit_gender
 
 	-- Check for indicators that don't make sense given the context.
 	if base.rtype and not rfind(base.lemma, "р$") then
@@ -719,8 +750,8 @@ local function detect_indicator_spec(base)
 					error("For lemma ending in -ь other than -ець/-єць/-тель/-ість, gender M or F must be given")
 				end
 			end
-			if base.gender == "N" then
-				error("For lemma ending in -ь, gender N not allowed")
+			if base.gender == "N" or base.gender == "MF" then
+				error("For lemma ending in -ь, gender " .. base.gender .. " not allowed")
 			elseif base.gender == "M" then
 				base.decl = "soft-m"
 			else
@@ -732,62 +763,76 @@ local function detect_indicator_spec(base)
 		stem = rmatch(base.lemma, "^(.*)й$")
 		if stem then
 			base.decl = "j-m"
+			base.gender = base.gender or "M"
 			base.nonvowel_stem = stem
 			base.stem_for_reduce = base.lemma
 			break
 		end
 		stem = rmatch(base.lemma, "^(.*" .. com.hushing_c .. ")$")
 		if stem then
-			if base.gender == "N" then
-				error("For lemma ending in a hushing consonant, gender N not allowed")
+			if base.gender == "N" or base.gender == "MF" then
+				error("For lemma ending in a hushing consonant, gender " .. base.gender .. " not allowed")
 			elseif base.gender == "F" then
-				base.decl = "semisoft-f"
+				base.decl = "third-f"
 			else
+				base.gender = "M"
 				base.decl = "semisoft-m"
 			end
 			base.nonvowel_stem = stem
 			break
 		end
-		stem = rmatch(base.lemma, "^(.*)а(́?)$")
+		stem, ac = rmatch(base.lemma, "^(.*" .. com.hushing_c .. ")а(́?)$")
 		if stem then
-			base.decl = "hard-f"
+			base.decl = "semisoft-f"
+			base.gender = base.gender or "F"
 			base.vowel_stem = stem
 			break
 		end
-		stem = rmatch(base.lemma, "^(.*)я(́?)$")
+		stem, ac = rmatch(base.lemma, "^(.*)а(́?)$")
 		if stem then
-			if base.gender == "F" or base.gender == "M" then
+			base.decl = "hard-f"
+			base.gender = base.gender or "F"
+			base.vowel_stem = stem
+			break
+		end
+		stem, ac = rmatch(base.lemma, "^(.*)я(́?)$")
+		if stem then
+			if base.gender == "M" or base.gender == "F" or base.gender == "MF" then
 				base.decl = "soft-f"
 			elseif base.gender == "N" then
 				base.decl = "fourth-n"
 			elseif rfind(stem, "'я$") or rfind(stem, "(.)%1я$") then
 				base.decl = "fourth-n"
+				base.gender = "N"
 			else
 				base.decl = "soft-f"
+				base.gender = "F"
 			end
 			base.vowel_stem = stem
 			break
 		end
-		stem = rmatch(base.lemma, "^(.*)о(́?)$")
+		stem, ac = rmatch(base.lemma, "^(.*)о(́?)$")
 		if stem then
 			if base.gender == "M" then
 				base.decl = "o-m"
-			elseif base.gender == "F" then
-				error("For lemma ending in -о, gender F not allowed")
+			elseif base.gender == "F" or base.gender == "MF" then
+				error("For lemma ending in -о, gender " .. base.gender .. " not allowed")
 			else
 				base.decl = "hard-n"
+				base.gender = "N"
 			end
 			base.vowel_stem = stem
 		end
-		stem = rmatch(base.lemma, "^(.*)е(́?)$")
+		stem, ac = rmatch(base.lemma, "^(.*)е(́?)$")
 		if stem then
 			base.decl = "soft-n"
+			base.gender = base.gender or "N"
 			base.vowel_stem = stem
 		end
 		stem = rmatch(base.lemma, "^(.*" .. com.cons_c .. ")$")
 		if stem then
-			if base.gender == "N" then
-				error("For lemma ending in a consonant, gender N not allowed")
+			if base.gender == "N" or base.gender == "MF" then
+				error("For lemma ending in a consonant, gender " .. base.gender .. " not allowed")
 			elseif base.gender == "F" then
 				base.decl = "third-f"
 			elseif base.rtype == "soft" then
@@ -797,6 +842,7 @@ local function detect_indicator_spec(base)
 			else
 				base.decl = "hard-m"
 			end
+			base.gender = base.gender or "M"
 			base.nonvowel_stem = stem
 			break
 		end
@@ -806,7 +852,7 @@ local function detect_indicator_spec(base)
 	-- Determine stress and stems
 	if not base.stresses then
 		if ac == AC then
-			base.stresses = {{stress = "b", reducible = false}}
+			base.stresses = {{stress = "d", reducible = false}}
 		else
 			base.stresses = {{stress = "a", reducible = false}}
 		end
@@ -818,8 +864,20 @@ local function detect_indicator_spec(base)
 		base.plstem = com.add_monosyllabic_stress(base.plstem)
 	end
 	for _, stress in ipairs(base.stresses) do
+		local function dereduce(stem)
+			local dereduced_stem = com.dereduce(stem, stress_patterns[stress.stress].gen_p == "+")
+			if not dereduced_stem then
+				error("Unable to dereduce stem '" .. stem .. "'")
+			end
+			if rfind(base.lemma, "я́?$") then
+				dereduced_stem = dereduced_stem .. "ь"
+			end
+			return dereduced_stem
+		end
 		if not stress.stress then
-			if stress.reducible and rfind(base.lemma, "[еоєі]́" .. com.cons_c .. "ь?$") then
+			if ac == AC then
+				stress.stress = "d"
+			elseif stress.reducible and rfind(base.lemma, "[еоєі]́" .. com.cons_c .. "ь?$") then
 				-- reducible with stress on the reducible vowel
 				stress.stress = "b"
 			else
@@ -844,15 +902,13 @@ local function detect_indicator_spec(base)
 				error("Can't specify 'stem:' with lemma ending in a vowel")
 			end
 			stress.vowel_stem = base.vowel_stem
+			-- Apply vowel alternation first in cases like війна́ -> во́єн;
+			-- apply_vowel_alternation() will throw an error if the vowel being
+			-- modified isn't the last vowel in the stem.
+			stress.nonvowel_stem = apply_vowel_alternation(base, base.vowel_stem) 
 			if stress.reducible then
-				stress.nonvowel_stem = com.dereduce(base.vowel_stem, stress_patterns[stress.stress].gen_pl == "+")
-				if not stress.nonvowel_stem then
-					error("Unable to dereduce stem '" .. base.vowel_stem .. "'")
-				end
-			else
-				stress.nonvowel_stem = base.vowel_stem
+				stress.nonvowel_stem = dereduce(stress.nonvowel_stem)
 			end
-			stress.nonvowel_stem = apply_vowel_alternation(base, stress.nonvowel_stem)
 		else
 			stress.nonvowel_stem = base.nonvowel_stem
 			if base.stem then
@@ -871,10 +927,7 @@ local function detect_indicator_spec(base)
 		if base.plstem then
 			stress.pl_vowel_stem = base.plstem
 			if base.reducible then
-				stress.pl_nonvowel_stem = com.dereduce(base.plstem, stress_patterns[stress.stress].gen_pl == "+")
-				if not stress.pl_nonvowel_stem then
-					error("Unable to dereduce stem '" .. base.plstem .. "'")
-				end
+				stress.pl_nonvowel_stem = dereduce(base.plstem)
 			else
 				stress.pl_nonvowel_stem = base.plstem
 			end
