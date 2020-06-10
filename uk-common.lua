@@ -241,11 +241,18 @@ function export.dereduce(stem, epenthetic_stress)
 	local epvowel
 	if rfind(letter, export.velar_c) or rfind(post, export.velar_c) or rfind(post, "[вВ]") then
 		epvowel = is_upper and "О" or "о"
+	elseif rfind(post, "['ьЬ]") then
+		-- сім'я́ -> gen pl сіме́й
+		-- ескадри́лья -> gen pl ескадри́лей
+		epvowel = rfind(letter, export.uppercase_c) and "Е" or "е"
+		post = ""
 	elseif rfind(letter, "[йЙ]") then
+		-- яйце́ -> gen pl я́єць
 		epvowel = is_upper and "Є" or "є"
 		letter = ""
 	else
 		if rfind(letter, "[ьЬ]") then
+			-- кільце́ -> gen pl кі́лець
 			letter = ""
 		end
 		epvowel = is_upper and "Е" or "е"

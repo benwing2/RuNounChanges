@@ -45,6 +45,7 @@ local usub = mw.ustring.sub
 local uupper = mw.ustring.upper
 
 local AC = u(0x0301) -- acute =  ́
+local CFLEX = u(0x0302) -- circumflex =  ̂
 local DOTUNDER = u(0x0323) -- dotunder =  ̣
 local accents = AC .. DOTUNDER
 local accents_c = "[" .. accents .. "]"
@@ -239,10 +240,10 @@ end
 
 -- Maybe modify the stem and/or ending in certain special cases:
 -- 1. Final -е in vocative singular triggers first palatalization of the stem and causes
---    accent retraction.
+--    accent retraction (except when base.no_retract_e, i.e. in neuters and soft feminines)
 -- 2. Final -і in dative/locative singular triggers second palatalization.
-local function apply_special_cases(slot, stem, ending)
-	if slot == "voc_s" and rfind(ending, "^е" .. accents_c .. "?$") then
+local function apply_special_cases(base, slot, stem, ending)
+	if slot == "voc_s" and not base.no_retract_e and rfind(ending, "^е" .. accents_c .. "?$") then
 		stem = com.apply_first_palatalization(stem)
 		if ending == "е" then
 			ending = ending .. DOTUNDER
@@ -299,7 +300,7 @@ local function add(base, slot, stress, endings, footnotes)
 		else
 			stem = slot_is_plural and stress.pl_nonvowel_stem or stress.nonvowel_stem
 		end
-		stem, ending = apply_special_cases(slot, stem, ending)
+		stem, ending = apply_special_cases(base, slot, stem, ending)
 		if rfind(ending, DOTUNDER) then
 			-- DOTUNDER indicates stem stress in all cases
 			ending = rsub(ending, DOTUNDER, "")
@@ -391,8 +392,6 @@ local function handle_derived_slots_and_overrides(base)
 	iut.insert_forms(base.this_forms, "voc_p", base.this_forms["nom_p"])
 	if rfind(base.decl, "%-m$") then
 		iut.insert_forms(base.this_forms, "acc_s", base.this_forms[base.animacy == "in" and "nom_s" or "gen_s"])
-	elseif rfind(base.decl, "%-n$") then
-		iut.insert_forms(base.this_forms, "acc_s", base.this_forms["nom_s"])
 	end
 	if base.animacy == "in" or base.animacy == "anml" then
 		iut.insert_forms(base.this_forms, "acc_p", base.this_forms["nom_p"])
@@ -479,6 +478,27 @@ end
 declprops["j-m"] = {desc = "j-stem masc-form"}
 
 
+decls["o-m"] = function(base, stress)
+	local velar = rfind(stress.vowel_stem, com.velar_c .. "$")
+	local loc_s =
+		-- these conditions are partly based on analogy with the neuter;
+		-- only four masculines in -о that I know of (not counting proper
+		-- names): ба́тько "father", дя́дько "uncle", та́то "dad",
+		-- солове́йко "nightingale"; all animate
+		velar and base.animacy ~= "in" and {"ові", "у"} or
+		velar and "у" or
+		base.animacy ~= "in" and {"ові", "і"} or
+		"і"
+	local voc_s =
+		velar and base.animacy ~= "in" and "у" or
+		"о"
+	add_decl(base, stress, "о", "а", "у", nil, "ом", loc_sg, voc_sg,
+		"и", "ів", "ам", "ами", "ах")
+end
+
+declprops["o-m"] = {desc = "o-stem masc-form"}
+
+
 decls["hard-f"] = function(base, stress)
 	add_decl(base, stress, "а", "и", "і", "у", "ою", "і", "о̣",
 		"и", "", "ам", "ами", "ах")
@@ -493,6 +513,64 @@ decls["semisoft-f"] = function(base, stress)
 end
 
 declprops["semisoft-f"] = {desc = "semisoft fem-form"}
+
+
+decls["soft-f"] = function(base, stress)
+	base.no_retract_e = true
+	local voc_s = rfind(stress.vowel_stem, "у́с$") and "ю" or -- бабу́ся, мату́ся, ду́ся, Катру́ся, etc.
+		"е"
+	add_decl(base, stress, "я", "і", "і", "ю", "ею", "і", voc_s,
+		"і", rfind(stress.pl_nonvowel_stem, "[сздтлнц]$") and "ь" or "", "ям", "ями", "ях")
+end
+
+declprops["soft-f"] = {desc = "soft fem-form"}
+
+
+decls["j-f"] = function(base, stress)
+	base.no_retract_e = true
+	add_decl(base, stress, "я", "ї", "ї", "ю", "єю", "ї", "є",
+		"ї", "й", "ям", "ями", "ях")
+end
+
+declprops["j-f"] = {desc = "j-stem fem-form"}
+
+
+decls["hard-n"] = function(base, stress)
+	base.no_retract_e = true
+	local velar = rfind(stress.vowel_stem, com.velar_c .. "$")
+	local loc_s =
+		-- these conditions are partly based on analogy with the masculine
+		-- (including o-m); only one neuter animate I can find (со́нечко "ladybug")
+		velar and base.animacy ~= "in" and {"ові", "у"} or
+		velar and "у" or
+		base.animacy ~= "in" and {"ові", "і"} or
+		"і"
+	local voc_s =
+		velar and base.animacy ~= "in" and "у" or
+		"о"
+	add_decl(base, stress, "о", "а", "у", "о", "ом", loc_sg, voc_sg,
+		"а", "", "ам", "ами", "ах")
+end
+
+declprops["hard-n"] = {desc = "hard neut-form"}
+
+
+decls["semisoft-n"] = function(base, stress)
+	base.no_retract_e = true
+	add_decl(base, stress, "е", "а", "у", "е", "ем", {"у", "і"}, "е",
+		"а", "", "ам", "ами", "ах")
+end
+
+declprops["semisoft-n"] = {desc = "semisoft neut-form"}
+
+
+decls["soft-n"] = function(base, stress)
+	base.no_retract_e = true
+	add_decl(base, stress, "е", "я", "ю", "е", "ем", {"ю", "і"}, "е",
+		"я", rfind(stress.pl_nonvowel_stem, "[сздтлнц]$") and "ь" or "", "ям", "ями", "ях")
+end
+
+declprops["soft-n"] = {desc = "soft neut-form"}
 
 
 local function fetch_footnotes(separated_group)
@@ -599,7 +677,7 @@ local function parse_indicator_spec(angle_bracket_spec)
 				base.ialt = part
 			elseif rfind(part, "^[a-f]'*%*?$") or rfind(part, "^[a-f]'*%*?,") or
 				rfind(part, "^%*$") or rfind(part, "^%*,") then
-				if base.stresses then 
+				if base.stresses then
 					error("Can't specify stress pattern indicator twice: '" .. inside .. "'")
 				end
 				local patterns = rsplit(part, ",")
@@ -797,16 +875,17 @@ local function detect_indicator_spec(base)
 		end
 		stem, ac = rmatch(base.lemma, "^(.*)я(́?)$")
 		if stem then
-			if base.gender == "M" or base.gender == "F" or base.gender == "MF" then
-				base.decl = "soft-f"
-			elseif base.gender == "N" then
+			if base.gender == "N" then
 				base.decl = "fourth-n"
-			elseif rfind(stem, "'я$") or rfind(stem, "(.)%1я$") then
+			elseif not base.gender and (rfind(stem, "'я$") or rfind(stem, "(.)%1я$")) then
 				base.decl = "fourth-n"
 				base.gender = "N"
+			elseif rfind(stem, com.vowel_c .. "$") or rfind(stem, "['ь]$") then
+				base.decl = "j-f"
+				base.gender = base.gender or "F"
 			else
 				base.decl = "soft-f"
-				base.gender = "F"
+				base.gender = base.gender or "F"
 			end
 			base.vowel_stem = stem
 			break
@@ -821,6 +900,12 @@ local function detect_indicator_spec(base)
 				base.decl = "hard-n"
 				base.gender = "N"
 			end
+			base.vowel_stem = stem
+		end
+		stem, ac = rmatch(base.lemma, "^(.*" .. com.hushing_c .. ")е(́?)$")
+		if stem then
+			base.decl = "semisoft-n"
+			base.gender = base.gender or "N"
 			base.vowel_stem = stem
 		end
 		stem, ac = rmatch(base.lemma, "^(.*)е(́?)$")
@@ -869,9 +954,6 @@ local function detect_indicator_spec(base)
 			if not dereduced_stem then
 				error("Unable to dereduce stem '" .. stem .. "'")
 			end
-			if rfind(base.lemma, "я́?$") then
-				dereduced_stem = dereduced_stem .. "ь"
-			end
 			return dereduced_stem
 		end
 		if not stress.stress then
@@ -893,24 +975,24 @@ local function detect_indicator_spec(base)
 			end
 		end
 		if base.vowel_stem then
-			if ac == "AC" and stress_patterns[stress.stress].nom_sg ~= "+" then
+			if ac == AC and stress_patterns[stress.stress].nom_s ~= "+" then
 				error("Stress pattern " .. stress.stress .. " requires a stem-stressed lemma, not end-stressed: '" .. base.lemma .. "'")
-			elseif ac ~= "AC" and stress_patterns[stress.stress].nom_sg == "+" then
+			elseif ac ~= AC and stress_patterns[stress.stress].nom_s == "+" then
 				error("Stress pattern " .. stress.stress .. " requires an end-stressed lemma, not stem-stressed: '" .. base.lemma .. "'")
 			end
 			if base.stem then
 				error("Can't specify 'stem:' with lemma ending in a vowel")
 			end
-			stress.vowel_stem = base.vowel_stem
+			stress.vowel_stem = add_stress_for_pattern(stress, base.vowel_stem)
 			-- Apply vowel alternation first in cases like війна́ -> во́єн;
 			-- apply_vowel_alternation() will throw an error if the vowel being
 			-- modified isn't the last vowel in the stem.
-			stress.nonvowel_stem = apply_vowel_alternation(base, base.vowel_stem) 
+			stress.nonvowel_stem = apply_vowel_alternation(base, stress.vowel_stem)
 			if stress.reducible then
 				stress.nonvowel_stem = dereduce(stress.nonvowel_stem)
 			end
 		else
-			stress.nonvowel_stem = base.nonvowel_stem
+			stress.nonvowel_stem = add_stress_for_pattern(stress, base.nonvowel_stem)
 			if base.stem then
 				stress.vowel_stem = base.stem
 			elseif stress.reducible then
@@ -923,13 +1005,15 @@ local function detect_indicator_spec(base)
 				stress.vowel_stem = base.nonvowel_stem
 			end
 			stress.vowel_stem = apply_vowel_alternation(base, stress.vowel_stem)
+			stress.vowel_stem = add_stress_for_pattern(stress, stress.vowel_stem)
 		end
 		if base.plstem then
-			stress.pl_vowel_stem = base.plstem
-			if base.reducible then
-				stress.pl_nonvowel_stem = dereduce(base.plstem)
+			local stressed_plstem = add_stress_for_pattern(stress, base.plstem)
+			stress.pl_vowel_stem = stressed_plstem
+			if stress.reducible then
+				stress.pl_nonvowel_stem = dereduce(stressed_plstem)
 			else
-				stress.pl_nonvowel_stem = base.plstem
+				stress.pl_nonvowel_stem = stressed_plstem
 			end
 		elseif base.remove_in then
 			stress.pl_vowel_stem = com.maybe_stress_final_syllable(rsub(stress.vowel_stem, "и́?н$", ""))
@@ -938,10 +1022,6 @@ local function detect_indicator_spec(base)
 			stress.pl_vowel_stem = stress.vowel_stem
 			stress.pl_nonvowel_stem = stress.nonvowel_stem
 		end
-		stress.vowel_stem = add_stress_for_pattern(stress, stress.vowel_stem)
-		stress.nonvowel_stem = add_stress_for_pattern(stress, stress.nonvowel_stem)
-		stress.pl_vowel_stem = add_stress_for_pattern(stress, stress.pl_vowel_stem)
-		stress.pl_nonvowel_stem = add_stress_for_pattern(stress, stress.pl_nonvowel_stem)
 	end
 end
 
@@ -1063,7 +1143,7 @@ local function make_table(alternant_spec)
 <div class="NavContent">
 {\op}| style="background:#F9F9F9;text-align:center;min-width:45em" class="inflection-table"
 |-
-! style="width:33%;background:#d9ebff" | 
+! style="width:33%;background:#d9ebff" |
 ! style="background:#d9ebff" | singular
 ! style="background:#d9ebff" | plural
 |-
@@ -1102,7 +1182,7 @@ local function make_table(alternant_spec)
 <div class="NavContent">
 {\op}| style="background:#F9F9F9;text-align:center;width:30em" class="inflection-table"
 |-
-! style="width:33%;background:#d9ebff" | 
+! style="width:33%;background:#d9ebff" |
 ! style="background:#d9ebff" | singular
 |-
 !style="background:#eff7ff"|nominative
@@ -1133,7 +1213,7 @@ local function make_table(alternant_spec)
 <div class="NavContent">
 {\op}| style="background:#F9F9F9;text-align:center;width:30em" class="inflection-table"
 |-
-! style="width:33%;background:#d9ebff" | 
+! style="width:33%;background:#d9ebff" |
 ! style="background:#d9ebff" | plural
 |-
 !style="background:#eff7ff"|nominative
