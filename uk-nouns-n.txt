@@ -1,0 +1,181 @@
+Ukrainian declensions:
+
+==Neuter==
+{|class="wikitable"
+! Noun !! Meaning !! Gen sg. !! Loc sg. !! Voc sg. !! Nom pl. !! Gen pl. !! Ins. Pl !! Similar nouns !! Notes
+|-
+! colspan=10 style="text-align: center;" | Accent a
+|-
+| {{User:Benwing2/uk-ndecl|аба́тство<>}}
+| "abbey" || аба́тства || аба́тстві || аба́тство || аба́тства || аба́тств || аба́тствами || го́рло<> "throat", ра́ло<> "plow" || 
+|-
+| {{User:Benwing2/uk-ndecl|о́лово<sg>}}
+| "tin" || о́лова || о́лові || о́лово || - || - || - || ві́но<sg> "bride price", пи́во<sg> "beer", сві́тло<sg> "light", etc. || 
+|-
+| {{User:Benwing2/uk-ndecl|крі́сло<*>}}
+| "armchair" || крі́сла || крі́слі || крі́сло || крі́сла || крі́сел || крі́слами || || 
+|-
+| {{User:Benwing2/uk-ndecl|свя́то<a,c>}}
+| "holiday" || свя́та || свя́ті || свя́то || свя́та/свята́ || свят || свя́тами/свята́ми || || 
+|-
+| {{User:Benwing2/uk-ndecl|((стреме́но<>,стремено́<>))}}
+| "stirrup" || стреме́на/стремена́ || стреме́ні/стремені́ || стре́мено/стремено́ || стреме́на || стреме́н || стреме́нами || ((жа́ло<>,жало́<>)) "sting" || 
+|-
+| {{User:Benwing2/uk-ndecl|((копи́то<>,копито́<b>))}}
+| "roof" || копи́та/копита́ || копи́ті/копиті́ || копи́то/копито́ || копи́та/копита́ || копи́т || копи́тами/копита́ми || || 
+|-
+| {{User:Benwing2/uk-ndecl|би́дло<sg.datovi:u>}}
+| "cattle" || би́дла || би́длі || би́дло || - || - || - || бо́рошно<sg.datovi:u> "flour", залі́зо<sg.datovi:u> "iron", зо́лото<sg.datovi:u> "gold", м'я́со<sg.datovi:u> "meat", пе́кло<sg.datovi:u> "hell", сві́тло<sg.datovi:u> "light", со́нечко<sg.datovi:u> "sun (endearing)", ті́сто<sg.datovi:u> "dough" || 
+|-
+| {{User:Benwing2/uk-ndecl|ву́хо<datovi:u,loci:u,inspl:ву́хами:вуши́ма>}}
+| "ear" || ву́ха || ву́сі/ву́ху || ву́хо || ву́ха || вух || ву́хами/вуши́ма || || 
+|-
+| {{User:Benwing2/uk-ndecl|лі́жко<*.datovi:u>}}
+| "bed" || лі́жка || лі́жку || лі́жко || лі́жка || лі́жок || лі́жками || яє́чко<*.datovi:u> "testicle, small egg" || 
+|-
+| {{User:Benwing2/uk-ndecl|со́нечко<anml.datovi:u>}}
+| "ladybug" || со́нечка || со́нечкові/со́нечку || со́нечку || со́нечка || со́нечок || со́нечками || || 
+|-
+| {{User:Benwing2/uk-ndecl|ли́хо<datovi:u.locovi:u>}}
+| "disaster, trouble" || ли́ха || ли́ху/ли́хові || ли́хо || ли́ха || лих || ли́хами || || 
+|-
+| {{User:Benwing2/uk-ndecl|я́блуко<datovi:u>}}
+| "apple" || я́блука || я́блуку || я́блуко || я́блука || я́блук || я́блуками || лю́стерко<locovi:u> "small, handheld mirror", о́ко<datovi:u> "unit of weight/volume" || 
+|-
+| {{User:Benwing2/uk-ndecl|колі́но<locu:i.insplamy:ьmý>}}
+| "knee" || колі́на || колі́ні/колі́ну || колі́но || колі́на || колі́н || колі́нами/коліньми́ || || 
+|-
+| {{User:Benwing2/uk-ndecl|ко́лесо<i.plstem:коле́с.locu:i.insplamy:ьmy>}}
+| "wheel" || ко́леса || ко́лесі/ко́лесу || ко́лесо || коле́са || колі́с || коле́сами/колі́сьми || || 
+|-
+| {{User:Benwing2/uk-ndecl|ре́шето<i.plstem:реше́т.locu:i>}}
+| "sieve" || ре́шета || ре́шету/ре́шеті || ре́шето || реше́та || реші́т || реше́тами || || 
+|-
+| {{User:Benwing2/uk-ndecl|де́рево<plstem:дере́в>}}
+| "tree" || де́рева || де́реві || де́рево || дере́ва || дере́в || дере́вами || || 
+|-
+| {{User:Benwing2/uk-ndecl|о́зеро<plstem:озе́р>}}
+| "?" || о́зера || о́зері || о́зеро || озе́ра || озе́р || озе́рами || || 
+|-
+| {{User:Benwing2/uk-ndecl|прі́звище<>}}
+| "surname" || прі́звища || прі́звищі/прі́звищу || прі́звище || прі́звища || прі́звищ || прі́звищами || лето́вище<> "airfield (dialectal)", ло́же<> "wooden handgun stock", etc. || 
+|-
+| {{User:Benwing2/uk-ndecl|віко́нце<*>}}
+| "small window" || віко́нця || віко́нці/віко́нцю || віко́нце || віко́нця || віко́нець || віко́нцями || || 
+|-
+| {{User:Benwing2/uk-ndecl|со́нце<loci>}}
+| "sun" || со́нця || со́нці || со́нце || со́нця || сонць || со́нцями || || 
+|-
+| {{User:Benwing2/uk-ndecl|го́ре<sg.loci>}}
+| "grief, trouble" || го́ря || го́рі || го́ре || - || - || - || || 
+|-
+| {{User:Benwing2/uk-ndecl|((озе́рце<*>,озерце́<b*>))}}
+| "small lake" || озе́рця/озерця́ || озе́рці/озе́рцю/озерці́/озерцю́ || озе́рце/озерце́ || озе́рця/озерця́ || озе́рець/озере́ць || озе́рцями/озерця́ми || || 
+|-
+| {{User:Benwing2/uk-ndecl|бажа́ння<N>}}
+| "desire, wish" (neut.) || бажа́ння || бажа́нні/бажа́нню || бажа́ння || бажа́ння || бажа́нь || бажа́ннями || ||
+|-
+! colspan=10 style="text-align: center;" | Accent c
+|-
+| {{User:Benwing2/uk-ndecl|ді́ло<c>}}
+| "business, affair" || ді́ла || ді́лі || ді́ло || діла́ || діл || діла́ми || лі́то<c> "summer", сі́но<c> "hay", ті́ло<c> "body" || 
+|-
+| {{User:Benwing2/uk-ndecl|сло́во<c.i>}}
+| "word" || сло́ва || сло́ві || сло́во || слова́ || слів || слова́ми || || 
+|-
+| {{User:Benwing2/uk-ndecl|мі́сто<c.datovi:u.locovi:u:i>}}
+| "place" || мі́ста || мі́сті/мі́стові/мі́сту || мі́сто || міста́ || міст || міста́ми || || 
+|-
+| {{User:Benwing2/uk-ndecl|не́бо<c.plstem:небе́с.datovi:u>}}
+| "sky, heaven" || не́ба || не́бі || не́бо || небеса́ || небе́с || небеса́ми || || 
+|-
+| {{User:Benwing2/uk-ndecl|боло́то<c.i.locu:i>}}
+| "swamp" || боло́та || боло́ті/боло́ту || боло́то || болота́ || болі́т || болота́ми || долото́<i.locu:i> "chisel", село́<i.locu:i> "village", чоло́<i.locu:i> "forehead" || 
+|-
+| {{User:Benwing2/uk-ndecl|ма́сло<c*.genpl:ма́сел>}}
+| "?" || ма́сла || ма́слі || ма́сло || масла́ || ма́сел || масла́ми || срі́бло<c*.genpl:срі́бел> || 
+|-
+| {{User:Benwing2/uk-ndecl|мі́сце<c.loci>}}
+| "place; room" || мі́сця || мі́сці || мі́сце || місця́ || місць || місця́ми || || 
+|-
+| {{User:Benwing2/uk-ndecl|се́рце<c.genpl:серде́ць:серць>}}
+| "heart" || се́рця || се́рці/се́рцю || се́рце || серця́ || серде́ць/серць || серця́ми || || 
+|-
+| {{User:Benwing2/uk-ndecl|мо́ре<c.genpliv>}}
+| "sea" || мо́ря || мо́рі/мо́рю || мо́ре || моря́ || морі́в || моря́ми || || 
+|-
+| {{User:Benwing2/uk-ndecl|по́ле<c.genpl:полів:піль>}}
+| "field" || по́ля || по́лю/по́лі || по́ле || поля́ || полі́в/піль || поля́ми || || 
+|-
+! colspan=10 style="text-align: center;" | Accent d
+|-
+| {{User:Benwing2/uk-ndecl|вино́<>}}
+| "wine" || вина́ || вині́ || вино́ || ви́на || вин || ви́нами || гальмо́<> "brake", гніздо́<> "nest", джерело́<> "spring", перо́<> "feather" || 
+|-
+| {{User:Benwing2/uk-ndecl|відро́<*>}}
+| "bucket" || відра́ || відрі́ || відро́ || ві́дра || ві́дер || ві́драми || житло́<*> "dwelling", судно́<*> "ship", число́<*> "number" k|| 
+|-
+| {{User:Benwing2/uk-ndecl|майно́<sg>}}
+| "property" || майна́ || майні́ || майно́ || - || - || - || пшоно́<sg> "millet" || 
+|-
+| {{User:Benwing2/uk-ndecl|((зерно́<*>,зе́рно<*>))}}
+| "grain" || зерна́/зе́рна || зерні́/зе́рні || зерно́/зе́рно || зе́рна || зе́рен || зе́рнами || || 
+|-
+| {{User:Benwing2/uk-ndecl|вікно́<*.locu:i>}}
+| "window" || вікна́ || вікні́/вікну́ || вікно́ || ві́кна || ві́кон || ві́кнами || багно́<*.locu:i> "bog, swamp" || 
+|-
+| {{User:Benwing2/uk-ndecl|гімно́<sg.locu:i>}}
+| "shit" || гімна́ || гімні́/гімну́ || гімно́ || - || - || - || || 
+|-
+| {{User:Benwing2/uk-ndecl|крило́<locu:i.insplamy:ьmý>}}
+| "wing" || крила́ || крилу́/крилі́ || крило́ || кри́ла || крил || кри́лами/крильми́ || || 
+|-
+| {{User:Benwing2/uk-ndecl|скло<*.plstem:стекл.locu:i>}}
+| "glass" || скла || склі/склу || скло || сте́кла || сте́кол || сте́клами || || 
+|-
+| {{User:Benwing2/uk-ndecl|стегно́<*.locu:i.genpl:сте́ген:сте́гон>}}
+| "thigh" || стегна́ || стегні́/стегну́ || стегно́ || сте́гна || сте́ген/сте́гон || сте́гнами || || 
+|-
+| {{User:Benwing2/uk-ndecl|молоко́<sg.loci>}}
+| "milk" || молока́ || молоці́ || молоко́ || - || - || - || || 
+|-
+| {{User:Benwing2/uk-ndecl|лице́<loci>}}
+| "face" || лиця́ || лиці́ || лице́ || ли́ця || лиць || ли́цями || || 
+|-
+| {{User:Benwing2/uk-ndecl|кільце́<*>}}
+| "ring" || кільця́ || кільцю́/кільці́ || кільце́ || кі́льця || кі́лець || кі́льцями || || 
+|-
+| {{User:Benwing2/uk-ndecl|яйце́<*>}}
+| "face" || яйця́ || яйці́/яйцю́ || яйце́ || я́йця || яє́ць || я́йцями || || 
+|-
+! colspan=10 style="text-align: center;" | Accent e
+|-
+| {{User:Benwing2/uk-ndecl|о́ко<e.plstem:оч.loci.nompli.genplej.accpl:о́чі:ві́чі.insplýma>}}
+| "eye" || о́ка || о́ці || о́ко || о́чі || оче́й || очи́ма || || 
+|}
+
+
+* Neuter nouns in о:
+** FIXME: стремено accent
+** Example nouns:
+*** Accent a: аба́тство<> "abbey" (also го́рло<> "throat", ра́ло<> "plow"), о́лово<sg> "tin" (also ві́но<sg> "bride price", пи́во<sg> "beer", сві́тло<sg> "light", etc.), крі́сло<*> "armchair", свя́то<a,c> "holiday"
+*** Accent c: ді́ло<c> "business, affair" (also лі́то<c> "summer", сі́но<c> "hay", ті́ло<c> "body"), сло́во<c.i> "word"
+*** Accent d: вино́<> "wine" (also гальмо́<> "brake", гніздо́<> "nest", джерело́<> "spring", перо́<> "feather"), відро́<*> "bucket" (also житло́<*> "dwelling", судно́<*> "ship", число́<*> "number"), майно́<sg> "property" (also пшоно́<sg> "millet")
+*** Multiple stresses/accent patterns: ((стреме́но<>,стремено́<>)) "stirrup", (also ((жа́ло<>,жало́<>)) "sting"), ((копи́то<>,копито́<b>)) "hoof", ((зерно́<*>,зе́рно<*>)) "grain"
+** Exceptional nouns:
+*** Dat sg in -ові/-у: би́дло<sg.datovi:u> "cattle" (also бо́рошно<sg.datovi:u> "flour", залі́зо<sg.datovi:u> "iron", зо́лото<sg.datovi:u> "gold", м'я́со<sg.datovi:u> "meat", пе́кло<sg.datovi:u> "hell", сві́тло<sg.datovi:u> "light", со́нечко<sg.datovi:u> "sun (endearing)", ті́сто<sg.datovi:u> "dough"), ву́хо<datovi:u,loci:u,inspl:ву́хами:вуши́ма> "ear", лі́жко<*.datovi:u> "bed" (also яє́чко<*.datovi:u> "testicle, small egg"), со́нечко<anml.datovi:u> "ladybug", ли́хо<datovi:u.locovi:u> "disaster, trouble", мі́сто<c.datovi:u.locovi:u:i> "city", не́бо<c.plstem:небе́с.datovi:u> "sky, heaven", я́блуко<datovi:u> "apple" (also лю́стерко<locovi:u> "small, handheld mirror", о́ко<datovi:u> "unit of weight/volume")
+*** Loc sg in -у/-і: боло́то<c.i.locu:i> "swamp" (also долото́<i.locu:i> "chisel", село́<i.locu:i> "village", чоло́<i.locu:i> "forehead"), вікно́<*.locu:i> "window", ву́хо (see above), гімно́<sg.loci:u> "shit", колі́но<locu:i.insplamy:ьmý> "knee", ко́лесо<i.plstem:коле́с.locu:i.insplamy:ьmy> "wheel", [FIXME: е->і needs to apply here to special plstem, but і->о should not apply to special plstem in со́кіл; figure out how to handle this], крило́<locu:i.insplamy:ьmý> "wing", ре́шето<i.plstem:реше́т.locu:i> "sieve", скло<*.plstem:стекл.locu:i> "glass", стегно́<*.locu:i.genpl:сте́ген:сте́гон> "thigh"
+*** Loc sg in -і with a velar: молоко́<sg.loci> "milk", око́<e.plstem:оч.loci.nompli.genplej.accpl:о́чі:ві́чі.insplýma> "eye"
+*** Other: де́рево<plstem:дере́в> "tree", о́зеро<plstem:озе́р> "lake", ма́сло<c*.genpl:ма́сел> "butter" (also срі́бло<c*.genpl:срі́бел> "silver")
+
+
+
+* Neuter nouns in hushing consonant + е:
+** Example nouns: прі́звище<> "surname" (also лето́вище<> "airfield (dialectal)", ло́же<> "wooden handgun stock", etc.)
+
+* Neuter nouns in non-hushing consonant + е:
+** Example nouns: со́нце<loci> "sun", віко́нце<*> "small window", го́ре<sg.loci> "grief, trouble", мі́сце<c.loci> "place; room", лице́<loci> "face", кільце́<*> "ring", яйце́<*> "egg", ((озе́рце<*>,озерце́<b*>)) "small lake?"
+** Exceptional nouns: се́рце<c.genpl:серде́ць:серць> "heart", мо́ре<c.genpliv> "sea", по́ле<c.genpl:полі́в:піль> "field"
+
+
+
