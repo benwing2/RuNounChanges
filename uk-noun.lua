@@ -549,10 +549,10 @@ decls["third-f"] = function(base, stress)
 	local nom_sg = rfind(stress.nonvowel_stem, "[сздтлнц]$") and "ь" or ""
 	add_decl(base, stress, nom_sg, "і", "і", nom_sg, nil, "і", "е",
 		"і", "ей", "ям", "ями", "ях")
-	local ins_s_stem = stem.nonvowel_stem
-	local pre_stem, final_cons = rmatch(ins_s_stem, "^(.*)([дтсзнлчшжщ])$")
+	local ins_s_stem = stress.nonvowel_stem
+	local pre_stem, final_cons = rmatch(ins_s_stem, "^(.*)([сздтлнцчшжщ])$")
 	if pre_stem then
-		if rfind(pre_stem, com.vowel_c .. "$") then
+		if rfind(pre_stem, com.vowel_c .. AC .. "?$") then
 			-- vowel + doublable cons; double the cons
 			ins_s_stem = ins_s_stem .. final_cons
 		end
@@ -561,7 +561,7 @@ decls["third-f"] = function(base, stress)
 	else
 		ins_s_stem = ins_s_stem .. "'"
 	end
-	add(base, "ins_s", stress, "ю", nil, ins_sg_stem)
+	add(base, "ins_s", stress, "ю", nil, ins_s_stem)
 end
 
 declprops["third-f"] = {desc = "3rd-decl fem-form"}
