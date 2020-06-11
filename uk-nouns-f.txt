@@ -16,8 +16,8 @@ Ukrainian declensions:
 | "fish" || ри́би || ри́бі || ри́бо || ри́би || риб || ри́бами || віве́ра<anml> "civet" || 
 |-
 | {{User:Benwing2/uk-ndecl|шко́ла<i>}}
-| "school" || шко́ли || шко́лі || шко́ло || шко́ли || шкіл || шко́лами || робо́та<i>
- "work", я́года<i> "berry" || 
+| "school" || шко́ли || шко́лі || шко́ло || шко́ли || шкіл || шко́лами || робо́та&lt;i>
+ "work", я́года&lt;i> "berry" || 
 |-
 | {{User:Benwing2/uk-ndecl|бере́за<i>}}
 | "birch" || бере́зи || бере́зі || бере́зо || бере́зи || бері́з || бере́зами || || 
@@ -127,7 +127,7 @@ Ukrainian declensions:
 | {{User:Benwing2/uk-ndecl|бабу́ся<pr>}}
 | "grandmother (dim.)" || бабу́сі || бабу́сі || бабу́сю || бабу́сі || бабу́сь || бабу́сями || мату́ся<pr> "mother (dim.)", ду́ся<pr> "darling" and names in -у́ся || 
 |-
-| {{User:Benwing2/uk-ndecl|ескадри́лья<>}}
+| {{User:Benwing2/uk-ndecl|ескадри́лья<*>}}
 | "squadron" || ескадри́льї || ескадри́льї || ескадри́льє || ескадри́льї || ескадри́лей || ескадри́льями || || 
 |- 
 | {{User:Benwing2/uk-ndecl|ку́хня<*>}}
@@ -164,10 +164,10 @@ Ukrainian declensions:
 | {{User:Benwing2/uk-ndecl|зима́<b.vocó>}}
 | "winter" || зими́ || зимі́ || зимо́ || зими́ || зим || зима́ми || біда́<b.vocó> "misfortune" ||
 |-
-| {{User:Benwing2/uk-ndecl|гілля́<b.genpliv>}}
+| {{User:Benwing2/uk-ndecl|гілля́<F.b.genpliv>}}
 | "side sprout" || гіллі́ || гіллі́ || гілле́ || гіллі́ || гіллі́в || гілля́ми || || 
 |-
-| {{User:Benwing2/uk-ndecl|стаття́<b.genpl:стате́й>}}
+| {{User:Benwing2/uk-ndecl|стаття́<F.b.genpl:стате́й>}}
 | "article, item" || статті́ || статті́ || статте́ || статті́ || стате́й || стаття́ми || || 
 |-
 | {{User:Benwing2/uk-ndecl|шестірня́<b*.plstem:шестерн>}}
@@ -214,7 +214,7 @@ Ukrainian declensions:
 | "poverty" || бідноти́ || бідноті́ || бідно́то || - || - || - || бузина́<sg> "elder (tree)", кора́<sg> "bark", кропива́<sg> "nettle", etc. || 
 |-
 | {{User:Benwing2/uk-ndecl|гора́<i>}}
-| "mountain" || гори́ || горі́ || го́ро || го́ри || гір || го́рами || лоза́<i> "willow" || 
+| "mountain" || гори́ || горі́ || го́ро || го́ри || гір || го́рами || лоза́&lt;i> "willow" || 
 |-
 | {{User:Benwing2/uk-ndecl|вдова́<pr.i>}}
 | "widow" || вдови́ || вдові́ || вдо́во || вдо́ви || вдів || вдо́вами || || 
@@ -270,7 +270,7 @@ Ukrainian declensions:
 | {{User:Benwing2/uk-ndecl|зоря́<i.vóce>}}
 | "star; dawn" || зорі́ || зорі́ || зо́ре || зо́рі || зір || зо́рями || || 
 |-
-| {{User:Benwing2/uk-ndecl|сім'я́<genpl:сіме́й>}}
+| {{User:Benwing2/uk-ndecl|сім'я́<F.genpl:сіме́й>}}
 | "?" || сім'ї́ || сім'ї́ || сім'є́ || сі́м'ї || сіме́й || сі́м'ями || || 
 |-
 | {{User:Benwing2/uk-ndecl|свиня́<anml.genpléj.insplьmy:jamy>}}
@@ -279,7 +279,7 @@ Ukrainian declensions:
 | {{User:Benwing2/uk-ndecl|свиня́<pr.genpléj.insplьmy:ьmý:jamy>}}
 | "swine (person)" || свині́ || свині́ || свине́ || сви́ні || свине́й || сви́ньми/свиньми́/сви́нями || || 
 |-
-| {{User:Benwing2/uk-ndecl|суддя́<pr.vóce.genpliv>}}
+| {{User:Benwing2/uk-ndecl|суддя́<MF.pr.vóce.genpliv>}}
 | "judge" || судді́ || судді́ || су́дде || су́дді || су́ддів || су́ддями || || 
 |-
 ! colspan=10 style="text-align: center;" | Accent d'
@@ -317,7 +317,7 @@ Ukrainian declensions:
 |-
 ! colspan=10 style="text-align: center;" | Accent f
 |-
-| {{User:Benwing2/uk-ndecl|сльоза́<f.i.vocó.insplamy:ьmý:ьmy>}}
+| {{User:Benwing2/uk-ndecl|сльоза́<f.i.vocó.insplamy:ьmy.ínsplьmy>}}
 | "tear (of the eye)" || сльози́ || сльозі́ || сльозо́ || сльо́зи || сліз || сльоза́ми/слізьми́/слі́зьми || || 
 |-
 | {{User:Benwing2/uk-ndecl|брова́<f.i.vocó>}}
@@ -341,10 +341,10 @@ Ukrainian declensions:
 
 * Feminine nouns in coronal or labial + а:
 ** Example nouns:
-*** Accent a: годи́на<> "hour" (also і́стина<> "truth", ду́ма<> "thought", плане́та<> "planet", etc.), мужчи́на<M.pr> "man", ри́ба<anml> "fish" (also віве́ра<anml> "civet"), шко́ла<i> "school" (also робо́та<i> "work", я́года<i> "berry"), бере́за<i> "birch", осо́ба<pr.i> "person", коро́ва<anml.i> "cow", соло́ма<sg> "straw" (also фа́уна<sg> "fauna"), ку́чма<*> "tall sheepskin hat", підо́швa<*.genpl:підошо́в> "sole"
+*** Accent a: годи́на<> "hour" (also і́стина<> "truth", ду́ма<> "thought", плане́та<> "planet", etc.), мужчи́на<M.pr> "man", ри́ба<anml> "fish" (also віве́ра<anml> "civet"), шко́ла&lt;i> "school" (also робо́та&lt;i> "work", я́года&lt;i> "berry"), бере́за&lt;i> "birch", осо́ба<pr.i> "person", коро́ва<anml.i> "cow", соло́ма<sg> "straw" (also фа́уна<sg> "fauna"), ку́чма<*> "tall sheepskin hat", підо́швa<*.genpl:підошо́в> "sole"
 *** Accent b:
 *** Accent c: ха́та<c> "house, hut"
-*** Accent d: висота́<> "height" (also вода́<> "water", глава́<> "head", глибина́<> "depth", ковбаса́<> "sausage", роса́<> "dew", стіна́<> "wall", стріла́<> "arrow", etc.), глава́<pr> "head, chief", оса́<anml> "wasp", біднота́<sg> "poverty" (also бузина́<sg> "elder (tree)", кора́<sg> "bark", кропива́<sg> "nettle", etc.), гора́<i> "mountain" (also лоза́<i> "willow"), вдова́<pr.i> "widow", бджола́<anml.i> "bee" (also коза́<anml.i> "goat"), весна́<*> "spring (season)" (also мітла́<*> "broom", тюрма́<*> "prison")
+*** Accent d: висота́<> "height" (also вода́<> "water", глава́<> "head", глибина́<> "depth", ковбаса́<> "sausage", роса́<> "dew", стіна́<> "wall", стріла́<> "arrow", etc.), глава́<pr> "head, chief", оса́<anml> "wasp", біднота́<sg> "poverty" (also бузина́<sg> "elder (tree)", кора́<sg> "bark", кропива́<sg> "nettle", etc.), гора́&lt;i> "mountain" (also лоза́&lt;i> "willow"), вдова́<pr.i> "widow", бджола́<anml.i> "bee" (also коза́<anml.i> "goat"), весна́<*> "spring (season)" (also мітла́<*> "broom", тюрма́<*> "prison")
 *** Accent d': середа́<d'> "Wednesday", коса́<d'.i> "braided hair; scythe", борозна́<d'*> "furrow", голова́<d'.i.genpl:голі́в> "head" [note: voc sg го́лово] (also борода́<d'.i.genpl:борі́д> "beard, chin", борона́<d'.i.genpl:борі́н> "harrow", сковорода́<d'.i.genpl:сковорі́д> "frying pan", сторона́<d'.i.genpl:сторі́н> "side"), голова́<MF.pr.d'.i.genpl:голі́в> "chairman, chief"
 *** Accent e:
 *** Accent f:
@@ -359,7 +359,7 @@ Ukrainian declensions:
 
 * Feminine nouns in velar + а:
 ** Example nouns:
-*** Accent a: кни́га<> "book" (also нау́ка "science"), соба́ка<anml> "dog", доро́га<i> "road", ка́лька<*> "tracing paper; calque", австрали́йка<*.pr> "Australian woman", ону́ка<*> "granddaughter", фі́зика<sg> "physics"
+*** Accent a: кни́га<> "book" (also нау́ка "science"), соба́ка<anml> "dog", доро́га&lt;i> "road", ка́лька<*> "tracing paper; calque", австрали́йка<*.pr> "Australian woman", ону́ка<*> "granddaughter", фі́зика<sg> "physics"
 *** Accent b:
 *** Accent c: го́лка<c*> "needle" (also гі́лка<c*> "twig", ля́лька<c*> "doll, puppet", моли́тва<c*> "prayer", це́рква<c*> "church", etc.), ді́вка<c*.pr> "girl" (also ті́тка<c*.pr> "aunt", etc.), ка́чка<c*.anml> "duck" (also ла́стівка<c*.anml> "swallow", etc.)
 *** Accent d: блоха́<anml.i> "flea", дочка́<*.pr> "daughter"
@@ -389,12 +389,14 @@ Ukrainian declensions:
 * Feminine nouns in я:
 ** Example nouns: іде́я<> "idea", а́кція<> "action" (also tons of others), амфі́бія<anml> "amphibian", болни́ця<> "hospital", їда́льня<*> "dining room", вече́ря<> "supper", бабу́ся<pr> "grandmother (dim.)" [voc sg бабу́сю] (also мату́ся<pr> "mother (dim.)", ду́ся<pr> "darling" and names in -у́ся),
 ескадри́лья<*>, ку́хня<*> "kitchen", пі́сня<c*> "song" (also ша́бля<c*> "saber"), змія́<anml> "snake"
-** Exceptional nouns: вівця́<*.anml.genpl:ове́ць> "sheep", гілля́<b.genpliv> "side sprout", земля́<d'*.vóce.genpl:земе́ль> "land", зоря́<i.vóce> "star; dawn", сім'я́<genpl:сіме́й> "family", свиня́<anml.genpléj.insplьmy:jamy> "pig, sow", свиня́<pr.genpléj.insplьmy:ьmý:jamy> "swine (person)", стаття́<b.genpl:стате́й> "article", суддя́<pr.vóce.genpliv> "judge", шестірня́<b*.plstem:шестерн> "gear", ні́здря<genpliv> "nostril", леге́ня<genplь:iv> "lung"
+** Exceptional nouns: вівця́<*.anml.genpl:ове́ць> "sheep", гілля́<F.b.genpliv> "side sprout", земля́<d'*.vóce.genpl:земе́ль> "land", зоря́<i.vóce> "star; dawn", сім'я́<F.genpl:сіме́й> "family", свиня́<anml.genpléj.insplьmy:jamy> "pig, sow", свиня́<pr.genpléj.insplьmy:ьmý:jamy> "swine (person)", стаття́<F.b.genpl:стате́й> "article", суддя́<MF.pr.vóce.genpliv> "judge", шестірня́<b*.plstem:шестерн> "gear", ні́здря<genpliv> "nostril", леге́ня<genplь:iv> "lung"
 
 
 * Feminine nouns in a soft consonant:
-** FIXME: кість gen headword; тварина two meanings; сарана́ (fix defn to be plural), пизда́ has loc sg in -у (a mistake), уста (or вуста?), небеса (animacy p)
-** Example nouns:
-** Exceptional nouns:
-*** кість<io.e.geni:y.insplamy:ьmy> "bone"
+** Example nouns: моде́ль<F> "model", я́кість<F.io> "quality, property" (also ці́нність<F.io> "value", etc.), о́сінь<F.ie> "autumn", бла́кить<F.sg> "blue", смерть<F.e> "death" (also кисть<F.e> "hand")
 
+
+* Feminine nouns in a hushing or labial consonant:
+** Example nouns: по́дорож<F> "journey" (also зу́стріч<F> "meeting"), верф<F> "shipyard", жовч<F.sg> "bile", любо́в<F.sg> "love" (also кров<F.sg> "blood"), пі́вніч<F.io> "midnight", річ<F.e.ie> "thing" (also піч<F.e.ie> "oven"), ніч<F.e.io> "night"
+** Exceptional nouns:
+*** о́бласть<F.genpléj> "oblast, province", сіль<F.io.genpléj> "salt", кість<F.io.e.geni:y.insplamy:ьmy> "bone", вісь<F.io.e.stem:ос> "axis, axle", пості́ль<F.ie.nom:по́стіль:пості́ль.ins:по́стіллю:посте́лею> "bed"

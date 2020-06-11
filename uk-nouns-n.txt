@@ -27,13 +27,13 @@ Ukrainian declensions:
 | {{User:Benwing2/uk-ndecl|би́дло<sg.datovi:u>}}
 | "cattle" || би́дла || би́длі || би́дло || - || - || - || бо́рошно<sg.datovi:u> "flour", залі́зо<sg.datovi:u> "iron", зо́лото<sg.datovi:u> "gold", м'я́со<sg.datovi:u> "meat", пе́кло<sg.datovi:u> "hell", сві́тло<sg.datovi:u> "light", со́нечко<sg.datovi:u> "sun (endearing)", ті́сто<sg.datovi:u> "dough" || 
 |-
-| {{User:Benwing2/uk-ndecl|ву́хо<datovi:u,loci:u,inspl:ву́хами:вуши́ма>}}
+| {{User:Benwing2/uk-ndecl|ву́хо<datovi:u.loci:u.inspl:ву́хами:вуши́ма>}}
 | "ear" || ву́ха || ву́сі/ву́ху || ву́хо || ву́ха || вух || ву́хами/вуши́ма || || 
 |-
 | {{User:Benwing2/uk-ndecl|лі́жко<*.datovi:u>}}
 | "bed" || лі́жка || лі́жку || лі́жко || лі́жка || лі́жок || лі́жками || яє́чко<*.datovi:u> "testicle, small egg" || 
 |-
-| {{User:Benwing2/uk-ndecl|со́нечко<anml.datovi:u>}}
+| {{User:Benwing2/uk-ndecl|со́нечко<*.anml.datovi:u>}}
 | "ladybug" || со́нечка || со́нечкові/со́нечку || со́нечку || со́нечка || со́нечок || со́нечками || || 
 |-
 | {{User:Benwing2/uk-ndecl|ли́хо<datovi:u.locovi:u>}}
@@ -104,7 +104,7 @@ Ukrainian declensions:
 | {{User:Benwing2/uk-ndecl|мо́ре<c.genpliv>}}
 | "sea" || мо́ря || мо́рі/мо́рю || мо́ре || моря́ || морі́в || моря́ми || || 
 |-
-| {{User:Benwing2/uk-ndecl|по́ле<c.genpl:полів:піль>}}
+| {{User:Benwing2/uk-ndecl|по́ле<c.genpl:полі́в:піль>}}
 | "field" || по́ля || по́лю/по́лі || по́ле || поля́ || полі́в/піль || поля́ми || || 
 |-
 ! colspan=10 style="text-align: center;" | Accent d
@@ -156,12 +156,11 @@ Ukrainian declensions:
 
 
 * Neuter nouns in о:
-** FIXME: стремено accent
 ** Example nouns:
 *** Accent a: аба́тство<> "abbey" (also го́рло<> "throat", ра́ло<> "plow"), о́лово<sg> "tin" (also ві́но<sg> "bride price", пи́во<sg> "beer", сві́тло<sg> "light", etc.), крі́сло<*> "armchair", свя́то<a,c> "holiday"
 *** Accent c: ді́ло<c> "business, affair" (also лі́то<c> "summer", сі́но<c> "hay", ті́ло<c> "body"), сло́во<c.i> "word"
 *** Accent d: вино́<> "wine" (also гальмо́<> "brake", гніздо́<> "nest", джерело́<> "spring", перо́<> "feather"), відро́<*> "bucket" (also житло́<*> "dwelling", судно́<*> "ship", число́<*> "number"), майно́<sg> "property" (also пшоно́<sg> "millet")
-*** Multiple stresses/accent patterns: ((стреме́но<>,стремено́<>)) "stirrup", (also ((жа́ло<>,жало́<>)) "sting"), ((копи́то<>,копито́<b>)) "hoof", ((зерно́<*>,зе́рно<*>)) "grain"
+*** Multiple stresses/accent patterns: ((стреме́но<>,стремено́<>)) "stirrup", (also ((жа́ло<>,жало́<>)) "sting"), ((копи́то<>,копито́&lt;b>)) "hoof", ((зерно́<*>,зе́рно<*>)) "grain"
 ** Exceptional nouns:
 *** Dat sg in -ові/-у: би́дло<sg.datovi:u> "cattle" (also бо́рошно<sg.datovi:u> "flour", залі́зо<sg.datovi:u> "iron", зо́лото<sg.datovi:u> "gold", м'я́со<sg.datovi:u> "meat", пе́кло<sg.datovi:u> "hell", сві́тло<sg.datovi:u> "light", со́нечко<sg.datovi:u> "sun (endearing)", ті́сто<sg.datovi:u> "dough"), ву́хо<datovi:u,loci:u,inspl:ву́хами:вуши́ма> "ear", лі́жко<*.datovi:u> "bed" (also яє́чко<*.datovi:u> "testicle, small egg"), со́нечко<anml.datovi:u> "ladybug", ли́хо<datovi:u.locovi:u> "disaster, trouble", мі́сто<c.datovi:u.locovi:u:i> "city", не́бо<c.plstem:небе́с.datovi:u> "sky, heaven", я́блуко<datovi:u> "apple" (also лю́стерко<locovi:u> "small, handheld mirror", о́ко<datovi:u> "unit of weight/volume")
 *** Loc sg in -у/-і: боло́то<c.i.locu:i> "swamp" (also долото́<i.locu:i> "chisel", село́<i.locu:i> "village", чоло́<i.locu:i> "forehead"), вікно́<*.locu:i> "window", ву́хо (see above), гімно́<sg.loci:u> "shit", колі́но<locu:i.insplamy:ьmý> "knee", ко́лесо<i.plstem:коле́с.locu:i.insplamy:ьmy> "wheel", [FIXME: е->і needs to apply here to special plstem, but і->о should not apply to special plstem in со́кіл; figure out how to handle this], крило́<locu:i.insplamy:ьmý> "wing", ре́шето<i.plstem:реше́т.locu:i> "sieve", скло<*.plstem:стекл.locu:i> "glass", стегно́<*.locu:i.genpl:сте́ген:сте́гон> "thigh"
@@ -179,3 +178,13 @@ Ukrainian declensions:
 
 
 
+* Neuter nouns in -я:
+** Example nouns: значе́ння<>, зап'я́стя<>, обли́ччя<>, пові́тря<sg>, знання́<>, молоття́<sg>, переми́р'я<>
+** Exceptional nouns: ((гі́лля<sg.loci>,гілля́<sg>)) "branches, brushwood" (also ((нада́ння<sg.loci>,надання́<sg>)) "donation", ((смі́ття<sg.loci>,сміття́<sg>)) "garbage"), весі́лля<loci.genpliv:ь> "wedding", життя́<locju:i.genpliv> "life"
+
+* Neuter nouns in -я (t-stems):
+** Example nouns: ягня́<t>, порося́<t>
+
+* Neuter nouns in -я (n-stems):
+** Example nouns: ви́м'я<en>, ті́м'я<en>
+** Exceptional nouns: ім'я́<en.plstem:іме́н.plhard.gen:і́мені:ім'я́.dat:і́мені:ім'ю́.ins:і́менем:ім'я́м.loc:і́мені:ім'ю́>
