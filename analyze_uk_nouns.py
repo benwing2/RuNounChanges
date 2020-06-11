@@ -124,6 +124,11 @@ def process_text_on_page(index, pagetitle, text):
           if uklib.needs_accent(v):
             pagemsg("WARNING: Param %s=%s has missing stress: %s" % (
               (str(i), val, unicode(t))))
+    def ins_sg_note(ins_sg):
+      if re.search(u"[чшжщфвбмпь]$", heads[0]) and gender == "f":
+        return "ins_sg=%s " % canon(ins_sg)
+      else:
+        return ""
 
     if tn == "uk-decl-noun":
       check_multi_stressed(14)
@@ -185,7 +190,7 @@ def process_text_on_page(index, pagetitle, text):
       if not heads:
         pagemsg("WARNING: No head found")
         heads = [pagetitle]
-      pagemsg("%s\tgender:%s\tanimacy:%s\taccent:%s\tgen_sg:%s\tdat_sg:%s\tloc_sg:%s\tvoc_sg:%s\tgen_pl:%s\tnumber:both\tgen_sg:%s\tdat_sg:%s\tloc_sg:%s\tvoc_sg:%s\tnom_pl:%s\tgen_pl:%s\t| %s || \"?\" || %s || %s || %s || %s || %s || %s || || " % (
+      pagemsg("%s\tgender:%s\tanimacy:%s\taccent:%s\tgen_sg:%s\tdat_sg:%s\tloc_sg:%s\tvoc_sg:%s\tgen_pl:%s\tnumber:both\tgen_sg:%s\tdat_sg:%s\tloc_sg:%s\tvoc_sg:%s\tnom_pl:%s\tgen_pl:%s\t| %s || \"?\" || %s || %s || %s || %s || %s || %s || %s|| " % (
         "/".join(heads), gender, animacy, ":".join(seen_patterns),
         stress(gen_sg_end_stressed), stress(dat_sg_end_stressed),
         stress(loc_sg_end_stressed), stress(voc_sg_end_stressed),
@@ -193,7 +198,7 @@ def process_text_on_page(index, pagetitle, text):
         gen_sg_endings, dat_sg_endings, loc_sg_endings, voc_sg_endings,
         nom_pl_endings, gen_pl_endings, canon(nom_sg), canon(gen_sg),
         canon(loc_sg), canon(voc_sg), canon(nom_pl), canon(gen_pl),
-        canon(ins_pl)))
+        canon(ins_pl), ins_sg_note(ins_sg)))
 
     elif tn == "uk-decl-noun-unc":
       check_multi_stressed(7)
@@ -233,12 +238,12 @@ def process_text_on_page(index, pagetitle, text):
       if not heads:
         pagemsg("WARNING: No head found")
         heads = [pagetitle]
-      pagemsg("%s\tgender:%s\tanimacy:%s\taccent:%s\tgen_sg:%s\tdat_sg:%s\tloc_sg:%s\tvoc_sg:%s\tgen_pl:-\tnumber:sg\tgen_sg:%s\tdat_sg:%s\tloc_sg:%s\tvoc_sg:%s\tnom_pl:-\tgen_pl:-\t| %s || \"?\" || %s || %s || %s || - || - || - || || " % (
+      pagemsg("%s\tgender:%s\tanimacy:%s\taccent:%s\tgen_sg:%s\tdat_sg:%s\tloc_sg:%s\tvoc_sg:%s\tgen_pl:-\tnumber:sg\tgen_sg:%s\tdat_sg:%s\tloc_sg:%s\tvoc_sg:%s\tnom_pl:-\tgen_pl:-\t| %s || \"?\" || %s || %s || %s || - || - || - || %s|| " % (
         "/".join(heads), gender, animacy, ":".join(seen_patterns),
         stress(gen_sg_end_stressed), stress(dat_sg_end_stressed),
         stress(loc_sg_end_stressed), stress(voc_sg_end_stressed),
         gen_sg_endings, dat_sg_endings, loc_sg_endings, voc_sg_endings,
-        canon(nom_sg), canon(gen_sg), canon(loc_sg), canon(voc_sg)))
+        canon(nom_sg), canon(gen_sg), canon(loc_sg), canon(voc_sg), ins_sg_note(ins_sg)))
 
     elif tn == "uk-decl-noun-pl":
       check_multi_stressed(7)
