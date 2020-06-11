@@ -139,20 +139,65 @@ Ukrainian declensions:
 | {{User:Benwing2/uk-ndecl|леге́ня<genplь:iv>}}
 | "lung" || леге́ні || леге́ні || леге́не || леге́ні || леге́нь/леге́нів || леге́нями || || 
 |-
-| {{User:Benwing2/uk-ndecl|блаки́ть<F.sg>}}
-| "blue" || блаки́ті || блаки́ті || блаки́те || блаки́ті || блаки́тей || блаки́тями || || soft; ins sg. блаки́ттю ('''[predictable?]''')
+| {{User:Benwing2/uk-ndecl|ві́дповідь<F>}}
+| "reply" || ві́дповіді || ві́дповіді || ві́дповіде || ві́дповіді || ві́дповідей || ві́дповідями || бусо́ль<F> "compass", га́лузь<F> "branch, twig", мить<F> "moment", моде́ль<F> "model", роль<F> "role", сталь<F> "steel", тінь<F> "shadow", ціль<F> "target, goal" || 
+|-
+| {{User:Benwing2/uk-ndecl|моде́ль<F.pr>}}
+| "model (person)" || моде́лі || моде́лі || моде́ле || моде́лі || моде́лей || моде́лями || || 
+|-
+| {{User:Benwing2/uk-ndecl|форе́ль<F.anml>}}
+| "trout" || форе́лі || форе́лі || форе́ле || форе́лі || форе́лей || форе́лями || макре́ль<F.anml> "mackerel" || 
+|-
+| {{User:Benwing2/uk-ndecl|я́кість<io>}}
+| "quality, property" || я́кості || я́кості || я́косте || я́кості || я́костей || я́костями || ці́нність<io> "value", ва́ртість<io> "value, worth", etc. || 
+|-
+| {{User:Benwing2/uk-ndecl|о́сінь<F.ie>}}
+| "autumn" || о́сені || о́сені || о́сене || о́сені || о́сеней || о́сенями || || 
+|-
+| {{User:Benwing2/uk-ndecl|па́м'ять<F.sg>}}
+| "memory" || па́м'яті || па́м'яті || па́м'яте || - || - || - || бла́кить<F.sg> "blue", мідь<F.sg> "copper", па́морозь<F.sg> "hoarfrost", суть<F.sg> "essence, gist" || 
 |-
 | colspan=10 |-- Yes, - ттю is predictable, -ття corresponds to Russian -тьё/-тье/-тие (neuter endings), -ння to Russian -нье/-ние/-ньё. Inflected -ттю to Russian -тью, etc. --[[User:Atitarev|Anatoli T.]] <sup>([[User talk:Atitarev|обсудить]]</sup>/<sup>[[Special:Contributions/Atitarev|вклад]])</sup> 06:14, 15 May 2020 (UTC)
 |-
-| {{User:Benwing2/uk-ndecl|о́бласть<F>}}
-| {{User:Benwing2/uk-ndecl|"province" (soft)}}
-| о́бласті || о́бласті || о́бласте || о́бласті || областе́й || о́бластями || || ins sg. о́бластю
+| {{User:Benwing2/uk-ndecl|міць<F.sg.io>}}
+| "power, strength" || мо́ці || мо́ці || мо́це || - || - || - || по́хіть "lust" || 
 |-
-| colspan=10 | Is end stress in genitive plural predictable? блаки́ть is given in Slovozmina as having no plural, so блаки́тей may be a mistake.
+| {{User:Benwing2/uk-ndecl|со́вість<sg>}}
+| "conscience" || со́вісті || со́вісті || со́вісте || - || - || - || у́часть<F.sg> "participation, share" || 
 |-
-| {{User:Benwing2/uk-ndecl|вісь<F.stem:ос>}}
-| "axis/axle" || о́сі || о́сі || о́се || о́сі || осе́й || о́сями || || soft; ins sg. ві́ссю; end stress in genitive plural.
-|
+| {{User:Benwing2/uk-ndecl|вла́сність<sg.io>}}
+| "property, belongings" || вла́сності || вла́сності || вла́сносте || - || - || - || му́жність<sg.io> "courage", ще́дрість<sg.io> "generosity" and many other abstract nouns || 
+|-
+| {{User:Benwing2/uk-ndecl|((смі́ливість<sg.io>,сміли́вість<sg.io>))}}
+| "boldness, courage" || смі́ливості/сміли́вості || смі́ливості/сміли́вості || смі́ливосте/сміли́восте || - || - || - || || 
+|-
+| {{User:Benwing2/uk-ndecl|о́бласть<F.genpléj>}}
+| "oblast, province" || о́бласті || о́бласті || о́бласте || о́бласті || областе́й || о́бластями || || 
+|-
+| {{User:Benwing2/uk-ndecl|сіль<F.io.genpléj>}}
+| "salt" || со́лі || со́лі || со́ле || со́лі || соле́й || со́лями || || 
+|-
+| {{User:Benwing2/uk-ndecl|пості́ль<F.ie.nom:по́стіль:пості́ль.acc:по́стіль:пості́ль.ins:по́стіллю:посте́лею>}}
+| "bed" || посте́лі || посте́лі || посте́ле || посте́лі || посте́лей || посте́лями || || 
+|-
+| {{User:Benwing2/uk-ndecl|по́дорож<F>}}
+| "journey" || по́дорожі || по́дорожі || по́дороже || по́дорожі || по́дорожей || по́дорожами || зу́стріч<F> "meeting" || 
+|-
+| {{User:Benwing2/uk-ndecl|верф<F>}}
+| "shipyard" || ве́рфі || ве́рфі || ве́рфе || ве́рфі || ве́рфей || ве́рфями || || 
+|-
+| {{User:Benwing2/uk-ndecl|жовч<F.sg>}}
+| "bile" || жо́вчі || жо́вчі || жо́вче || - || - || - || || 
+|-
+| {{User:Benwing2/uk-ndecl|любо́в<F.sg>}}
+| "love" || любо́ві || любо́ві || любо́ве || - || - || - || кров<F.sg> "blood" || 
+|-
+| {{User:Benwing2/uk-ndecl|пі́вніч<F.io>}}
+| "midnight" || пі́вночі || пі́вночі || пі́вноче || пі́вночі || пі́вночей || пі́вночами || || 
+|-
+| {{User:Benwing2/uk-ndecl|міч<F.sg.io>}}
+| "power, strength" || мо́чі || мо́чі || мо́че || - || - || - || || 
+|-
 | {{User:Benwing2/uk-ndecl|ва́нна<+>}}
 | "bathroom" || ва́нної || ва́нній || ва́нна || ва́нні || ва́нних || ва́нними || || This is an adjectival declension.
 |-
@@ -310,10 +355,20 @@ Ukrainian declensions:
 | {{User:Benwing2/uk-ndecl|ми́ша<e.anml.genplej>}}
 | "mouse" || ми́ші || ми́ші || ми́ше || ми́ші || мише́й || миша́ми || || 
 |-
-| {{User:Benwing2/uk-ndecl|кість}}
-| "bone" || ко́сті/ко́сти || ко́сті || ко́сте || ко́сті || косте́й || костя́ми/кістьми́ || ||
+| {{User:Benwing2/uk-ndecl|смерть<F.e>}}
+| "death" || сме́рті || сме́рті || сме́рте || сме́рті || смерте́й || смертя́ми || кисть<F.e> "hand" || 
 |-
-| colspan=10| Ins pl. is irregular (as in Russian {{m|ru|кость}}). Gen sg. has two forms; not typical.
+| {{User:Benwing2/uk-ndecl|кість<F.e.io.geni:y.inspljamy:ьmy>}}
+| "bone" || ко́сті/ко́сти || ко́сті || ко́сте || ко́сті || косте́й || костя́ми/кістьми́ || || 
+|-
+| {{User:Benwing2/uk-ndecl|вісь<F.e.stem:ос>}}
+| "axis, axle" || о́сі || о́сі || о́се || о́сі || осе́й || о́сями || || 
+|-
+| {{User:Benwing2/uk-ndecl|річ<F.e.ie>}}
+| "thing" || ре́чі || ре́чі || ре́че || ре́чі || рече́й || реча́ми || піч<F.e.ie> "oven" || 
+|-
+| {{User:Benwing2/uk-ndecl|ніч<F.e.io>}}
+| "night" || но́чі || но́чі || но́че || но́чі || ноче́й || ноча́ми || || 
 |-
 ! colspan=10 style="text-align: center;" | Accent f
 |-
@@ -392,11 +447,12 @@ Ukrainian declensions:
 ** Exceptional nouns: вівця́<*.anml.genpl:ове́ць> "sheep", гілля́<F.b.genpliv> "side sprout", земля́<d'*.vóce.genpl:земе́ль> "land", зоря́<i.vóce> "star; dawn", сім'я́<F.genpl:сіме́й> "family", свиня́<anml.genpléj.insplьmy:jamy> "pig, sow", свиня́<pr.genpléj.insplьmy:ьmý:jamy> "swine (person)", стаття́<F.b.genpl:стате́й> "article", суддя́<MF.pr.vóce.genpliv> "judge", шестірня́<b*.plstem:шестерн> "gear", ні́здря<genpliv> "nostril", леге́ня<genplь:iv> "lung"
 
 
+
 * Feminine nouns in a soft consonant:
-** Example nouns: моде́ль<F> "model", я́кість<F.io> "quality, property" (also ці́нність<F.io> "value", etc.), о́сінь<F.ie> "autumn", бла́кить<F.sg> "blue", смерть<F.e> "death" (also кисть<F.e> "hand")
+** Example nouns: ві́дповідь<F> "reply" (also бусо́ль<F> "compass", га́лузь<F> "branch, twig", мить<F> "moment", моде́ль<F> "model", роль<F> "role", сталь<F> "steel", тінь<F> "shadow", ціль<F> "target, goal"), моде́ль<F.pr> "model (person)", форе́ль<F.anml> "trout" (also макре́ль<F.anml> "mackerel"), я́кість<io> "quality, property" (also ці́нність<io> "value", ва́ртість<io> "value, worth", etc.), о́сінь<F.ie> "autumn", па́м'ять<F.sg> "memory" (also бла́кить<F.sg> "blue", мідь<F.sg> "copper", па́морозь<F.sg> "hoarfrost", суть<F.sg> "essence, gist"), міць<F.sg.io> "power, strength" (also по́хіть "lust"), со́вість<sg> "conscience" (also у́часть<F.sg> "participation, share"), вла́сність<sg.io> "property, belongings" (also му́жність<sg.io> "courage", ще́дрість<sg.io> "generosity" and many other abstract nouns), ((смі́ливість<sg.io>,сміли́вість<sg.io>)) "boldness, courage", смерть<F.e> "death" (also кисть<F.e> "hand")
+** Exceptional nouns:
+*** о́бласть<F.genpléj> "oblast, province", сіль<F.io.genpléj> "salt", кість<F.e.io.geni:y.insplamy:ьmy> "bone", вісь<F.e.io.stem:ос> "axis, axle", пості́ль<F.ie.nom:по́стіль:пості́ль.ins:по́стіллю:посте́лею> "bed"
 
 
 * Feminine nouns in a hushing or labial consonant:
-** Example nouns: по́дорож<F> "journey" (also зу́стріч<F> "meeting"), верф<F> "shipyard", жовч<F.sg> "bile", любо́в<F.sg> "love" (also кров<F.sg> "blood"), пі́вніч<F.io> "midnight", річ<F.e.ie> "thing" (also піч<F.e.ie> "oven"), ніч<F.e.io> "night"
-** Exceptional nouns:
-*** о́бласть<F.genpléj> "oblast, province", сіль<F.io.genpléj> "salt", кість<F.io.e.geni:y.insplamy:ьmy> "bone", вісь<F.io.e.stem:ос> "axis, axle", пості́ль<F.ie.nom:по́стіль:пості́ль.ins:по́стіллю:посте́лею> "bed"
+** Example nouns: по́дорож<F> "journey" (also зу́стріч<F> "meeting"), верф<F> "shipyard", жовч<F.sg> "bile", любо́в<F.sg> "love" (also кров<F.sg> "blood"), пі́вніч<F.io> "midnight", міч<F.sg.io> "power, strength", річ<F.e.ie> "thing" (also піч<F.e.ie> "oven"), ніч<F.e.io> "night"
