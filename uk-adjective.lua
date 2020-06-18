@@ -15,7 +15,7 @@ TERMINOLOGY:
 	 Example slot names for adjectives are "gen_f" (genitive feminine singular) and
 	 "loc_p" (locative plural). Each slot is filled with zero or more forms.
 
--- "form" = The conjugated Ukrainian form representing the value of a given slot.
+-- "form" = The declined Ukrainian form representing the value of a given slot.
 
 -- "lemma" = The dictionary form of a given Ukrainian term. Generally the nominative
      masculine singular, but may occasionally be another form if the nominative
@@ -104,6 +104,7 @@ local output_adjective_slots = {
 	loc_m = "loc|m//n|s",
 	loc_f = "loc|f|s",
 	loc_p = "loc|p",
+	short = "short|form",
 }
 
 
@@ -367,7 +368,7 @@ local function parse_word_spec(segments)
 	if #segments == 1 then
 		indicator_spec = "<>"
 	elseif #segments ~= 3 or segments[3] ~= "" then
-		error("Adjective spec must be of the form 'LEMMA' or 'LEMMA<SPECS>': '" .. text .. "'")
+		error("Adjective spec must be of the form 'LEMMA' or 'LEMMA<SPECS>': '" .. table.concat(segments) .. "'")
 	else
 		indicator_spec = segments[2]
 	end
@@ -519,8 +520,16 @@ local function make_table(alternant_spec)
 ! style="background:#eff7ff" colspan="2" | locative
 | colspan="2" | {loc_m}
 | {loc_f}
-| {loc_p}
+| {loc_p}{short_clause}
 |{\cl}{notes_clause}</div></div></div>]=]
+
+	local short_form_template = [=[
+
+|-
+! style="height:0.2em;background:#d9ebff" colspan="6" |
+|-
+! style="background:#eff7ff" colspan="2" | short form
+| colspan="4" | {short}]=]
 
 	local notes_template = [===[
 <div style="width:100%;text-align:left;background:#d9ebff">
@@ -555,6 +564,8 @@ local function make_table(alternant_spec)
 
 	forms.notes_clause = forms.footnote ~= "" and
 		m_string_utilities.format(notes_template, forms) or ""
+	forms.short_clause = forms.short ~= "—" and
+		m_string_utilities.format(short_form_template, forms) or ""
 	return m_string_utilities.format(table_spec, forms)
 end
 
@@ -644,10 +655,11 @@ function export.catboiler(frame)
 		.. require("Module:utilities").format_categories(cats, lang, nil, nil, "force")
 end
 
--- Externally callable function to parse and decline an adjective given user-specified arguments.
--- Return value is WORD_SPEC, an object where the declined forms are in `WORD_SPEC.forms`
--- for each slot. If there are no values for a slot, the slot key will be missing. The value
--- for a given slot is a list of objects {form=FORM, footnotes=FOOTNOTES}.
+-- Externally callable function to parse and decline an adjective given
+-- user-specified arguments. Return value is WORD_SPEC, an object where the
+-- declined forms are in `WORD_SPEC.forms` for each slot. If there are no values
+-- for a slot, the slot key will be missing. The value for a given slot is a
+-- list of objects {form=FORM, footnotes=FOOTNOTES}.
 function export.do_generate_forms(parent_args, pos, from_headword, def)
 	local params = {
 		[1] = {required = true, default = "си́ній"},
@@ -678,11 +690,11 @@ function export.do_generate_forms(parent_args, pos, from_headword, def)
 end
 
 
--- Externally callable function to parse and decline an adjective where all forms
--- are given manually. Return value is WORD_SPEC, an object where the declined
--- forms are in `WORD_SPEC.forms` for each slot. If there are no values for a
--- slot, the slot key will be missing. The value for a given slot is a list of
--- objects {form=FORM, footnotes=FOOTNOTES}.
+-- Externally callable function to parse and decline an adjective where all
+-- forms are given manually. Return value is WORD_SPEC, an object where the
+-- declined forms are in `WORD_SPEC.forms` for each slot. If there are no values
+-- for a slot, the slot key will be missing. The value for a given slot is a
+-- list of objects {form=FORM, footnotes=FOOTNOTES}.
 function export.do_generate_forms_manual(parent_args, pos, from_headword, def)
 	local params = {
 		footnote = {list = true},
@@ -706,8 +718,9 @@ function export.do_generate_forms_manual(parent_args, pos, from_headword, def)
 end
 
 
--- Entry point for {{uk-adecl}}. Template-callable function to parse and conjugate an adjective given
--- user-specified arguments and generate a displayable table of the declined forms.
+-- Entry point for {{uk-adecl}}. Template-callable function to parse and decline 
+-- an adjective given user-specified arguments and generate a displayable table
+-- of the declined forms.
 function export.show(frame)
 	local parent_args = frame:getParent().args
 	local alternant_spec = export.do_generate_forms(parent_args)
@@ -716,8 +729,9 @@ function export.show(frame)
 end
 
 
--- Entry point for {{uk-adecl-manual}}. Template-callable function to parse and conjugate an adjective given
--- manually-specified inflections and generate a displayable table of the declined forms.
+-- Entry point for {{uk-adecl-manual}}. Template-callable function to parse and
+-- decline an adjective given manually-specified inflections and generate a
+-- displayable table of the declined forms.
 function export.show_manual(frame)
 	local parent_args = frame:getParent().args
 	local alternant_spec = export.do_generate_forms_manual(parent_args)
@@ -727,9 +741,10 @@ end
 
 
 -- Concatenate all forms of all slots into a single string of the form
--- "SLOT=FORM,FORM,...|SLOT=FORM,FORM,...|...". Embedded pipe symbols (as might occur
--- in embedded links) are converted to <!>. If INCLUDE_PROPS is given, also include
--- additional properties (currently, none). This is for use by bots.
+-- "SLOT=FORM,FORM,...|SLOT=FORM,FORM,...|...". Embedded pipe symbols (as might
+-- occur in embedded links) are converted to <!>. If INCLUDE_PROPS is given,
+-- also include additional properties (currently, none). This is for use by
+-- bots.
 local function concat_forms(alternant_spec, include_props)
 	local ins_text = {}
 	for slot, _ in pairs(output_adjective_slots) do
@@ -741,10 +756,12 @@ local function concat_forms(alternant_spec, include_props)
 	return table.concat(ins_text, "|")
 end
 
--- Template-callable function to parse and decline an adjective given user-specified arguments and return
--- the forms as a string "SLOT=FORM,FORM,...|SLOT=FORM,FORM,...|...". Embedded pipe symbols (as might
--- occur in embedded links) are converted to <!>. If |include_props=1 is given, also include
--- additional properties (currently, none). This is for use by bots.
+-- Template-callable function to parse and decline an adjective given
+-- user-specified arguments and return the forms as a string
+-- "SLOT=FORM,FORM,...|SLOT=FORM,FORM,...|...". Embedded pipe symbols (as might
+-- occur in embedded links) are converted to <!>. If |include_props=1 is given,
+-- also include additional properties (currently, none). This is for use by
+-- bots.
 function export.generate_forms(frame)
 	local include_props = frame.args["include_props"]
 	local parent_args = frame:getParent().args
