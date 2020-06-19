@@ -108,6 +108,28 @@ local output_adjective_slots = {
 }
 
 
+local output_adjective_slots_surname = {
+	nom_m = "nom|m|s",
+	nom_f = "nom|f|s",
+	nom_p = "nom|p",
+	gen_m = "gen|m|s",
+	gen_f = "gen|f|s",
+	gen_p = "gen|p",
+	dat_m = "dat|m|s",
+	dat_f = "dat|f|s",
+	dat_p = "dat|p",
+	acc_m = "acc|m|s",
+	acc_f = "acc|f|s",
+	acc_p = "acc|p",
+	ins_m = "ins|m|s",
+	ins_f = "ins|f|s",
+	ins_p = "ins|p",
+	loc_m = "loc|m|s",
+	loc_f = "loc|f|s",
+	loc_p = "loc|p",
+}
+
+
 local input_adjective_slots = {}
 for slot, _ in pairs(output_adjective_slots) do
 	if not rfind(slot, "_[ai]n$") then
@@ -116,8 +138,19 @@ for slot, _ in pairs(output_adjective_slots) do
 end
 
 
+local function get_output_adjective_slots(base)
+	if base.surname then
+		return output_adjective_slots_surname
+	else
+		return output_adjective_slots
+	end
+end
+
+
 local function add(base, slot, stems, endings)
-	iut.add_forms(base.forms, slot, stems, endings, com.combine_stem_ending)
+	if get_output_adjective_slots(base)[slot] then
+		iut.add_forms(base.forms, slot, stems, endings, com.combine_stem_ending)
+	end
 end
 
 
@@ -322,10 +355,16 @@ local function parse_indicator_spec(angle_bracket_spec)
 		local parts = rsplit(inside, ".", true)
 		for _, part in ipairs(parts) do
 			if part == "old" then
+				if base.old then
+					error("Can't specify 'old' twice: '" .. inside .. "'")
+				end
 				base.old = true
+			elseif part == "surname" then
+				if base.surname then
+					error("Can't specify 'surname' twice: '" .. inside .. "'")
+				end
+				base.surname = true
 			else
-				-- Once we support surnames, we probably will recognize other
-				-- indicators.
 				error("Unrecognized indicator '" .. part .. "': '" .. inside .. "'")
 			end
 		end
@@ -359,6 +398,11 @@ end
 local function detect_all_indicator_specs(alternant_spec)
 	for _, base in ipairs(alternant_spec.alternants) do
 		detect_indicator_spec(base)
+		if alternant_spec.surname == nil then
+			alternant_spec.surname = base.surname or false
+		elseif alternant_spec.surname ~= (base.surname or false) then
+			error("If 'surname' is specified in one alternant, it must be specified in all of them")
+		end
 	end
 end
 
@@ -424,11 +468,16 @@ end
 
 local function set_accusative(alternant_spec)
 	local forms = alternant_spec.forms
-	iut.insert_forms(forms, "acc_n", forms["nom_n"])
-	iut.insert_forms(forms, "acc_m_an", forms["gen_m"])
-	iut.insert_forms(forms, "acc_m_in", forms["nom_m"])
-	iut.insert_forms(forms, "acc_p_an", forms["gen_p"])
-	iut.insert_forms(forms, "acc_p_in", forms["nom_p"])
+	if alternant_spec.surname then
+		iut.insert_forms(forms, "acc_m", forms["gen_m"])
+		iut.insert_forms(forms, "acc_p", forms["gen_p"])
+	else
+		iut.insert_forms(forms, "acc_n", forms["nom_n"])
+		iut.insert_forms(forms, "acc_m_an", forms["gen_m"])
+		iut.insert_forms(forms, "acc_m_in", forms["nom_m"])
+		iut.insert_forms(forms, "acc_p_an", forms["gen_p"])
+		iut.insert_forms(forms, "acc_p_in", forms["nom_p"])
+	end
 end
 
 
@@ -465,7 +514,9 @@ local function show_forms(alternant_spec)
 			table.insert(lemmas, com.remove_monosyllabic_stress(nom_m.form))
 		end
 	end
-	com.show_forms(alternant_spec.forms, lemmas, alternant_spec.footnotes, output_adjective_slots)
+	com.show_forms(alternant_spec.forms, lemmas, alternant_spec.footnotes,
+		get_output_adjective_slots(alternant_spec)
+	)
 end
 
 
@@ -523,6 +574,49 @@ local function make_table(alternant_spec)
 | {loc_p}{short_clause}
 |{\cl}{notes_clause}</div></div></div>]=]
 
+	local table_spec_surname = [=[
+<div>
+<div class="NavFrame" style="display: inline-block; min-width: 55em">
+<div class="NavHead" style="background:#eff7ff">{title}{annotation}</div>
+<div class="NavContent">
+{\op}| border="1px solid #000000" style="border-collapse:collapse;background:#F9F9F9;text-align:center; min-width:55em" class="inflection-table"
+|-
+! style="background:#d9ebff" | 
+! style="background:#d9ebff" | masculine
+! style="background:#d9ebff" | feminine
+! style="background:#d9ebff" | plural
+|-
+! style="background:#eff7ff" | nominative
+| {nom_m}
+| {nom_f}
+| {nom_p}
+|-
+! style="background:#eff7ff" | genitive
+| {gen_m}
+| {gen_f}
+| {gen_p}
+|-
+! style="background:#eff7ff" | dative
+| {dat_m}
+| {dat_f}
+| {dat_p}
+|-
+! style="background:#eff7ff" | accusative
+| {acc_m}
+| {acc_f}
+| {acc_p}
+|-
+! style="background:#eff7ff" | instrumental
+| {ins_m}
+| {ins_f}
+| {ins_p}
+|-
+! style="background:#eff7ff" | locative
+| {loc_m}
+| {loc_f}
+| {loc_p}
+|{\cl}{notes_clause}</div></div></div>]=]
+
 	local short_form_template = [=[
 
 |-
@@ -564,9 +658,11 @@ local function make_table(alternant_spec)
 
 	forms.notes_clause = forms.footnote ~= "" and
 		m_string_utilities.format(notes_template, forms) or ""
-	forms.short_clause = forms.short ~= "—" and
+	forms.short_clause = forms.short and forms.short ~= "—" and
 		m_string_utilities.format(short_form_template, forms) or ""
-	return m_string_utilities.format(table_spec, forms)
+	return m_string_utilities.format(
+		alternant_spec.surname and table_spec_surname or table_spec, forms
+	)
 end
 
 
@@ -747,7 +843,7 @@ end
 -- bots.
 local function concat_forms(alternant_spec, include_props)
 	local ins_text = {}
-	for slot, _ in pairs(output_adjective_slots) do
+	for slot, _ in pairs(get_output_adjective_slots(alternant_spec)) do
 		local formtext = com.concat_forms_in_slot(alternant_spec.forms[slot])
 		if formtext then
 			table.insert(ins_text, slot .. "=" .. formtext)
