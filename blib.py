@@ -207,7 +207,7 @@ def dump(page):
 def expand_text(tempcall, pagetitle, pagemsg, verbose):
   if verbose:
     pagemsg("Expanding text: %s" % tempcall)
-  result = try_repeatedly(lambda: site.expand_text(tempcall, title=pagetitle), pagemsg, "expand text: %s" % tempcall)
+  result = try_repeatedly(lambda: site.expand_text(tempcall, title=pagetitle), pagemsg, "expand text: %s" % tempcall, bad_value_ret='<strong class="error">Invalid title</strong>')
   if verbose:
     pagemsg("Raw result is %s" % result)
   if result.startswith('<strong class="error">'):
@@ -1039,7 +1039,7 @@ def getEtymLanguageData():
     etym_languages_byCode[etyl["code"]] = etyl
     etym_languages_byCanonicalName[etyl["canonicalName"]] = etyl
 
-def try_repeatedly(fun, pagemsg, operation="save", max_tries=10, sleep_time=5):
+def try_repeatedly(fun, pagemsg, operation="save", bad_value_ret=None, max_tries=10, sleep_time=5):
   num_tries = 0
   while True:
     try:
@@ -1047,8 +1047,14 @@ def try_repeatedly(fun, pagemsg, operation="save", max_tries=10, sleep_time=5):
     except KeyboardInterrupt as e:
       raise
     except pywikibot.exceptions.InvalidTitle as e:
-      raise
+      pagemsg("WARNING: Invalid title, skipping")
+      traceback.print_exc(file=sys.stdout)
+      return bad_value_ret
     except Exception as e:
+      if "invalidtitle" in unicode(e):
+        pagemsg("WARNING: Invalid title, skipping")
+        traceback.print_exc(file=sys.stdout)
+        return bad_value_ret
       #except (pywikibot.exceptions.Error, StandardError) as e:
       pagemsg("WARNING: Error when trying to %s: %s" % (operation, unicode(e)))
       errmsg("WARNING: Error when trying to %s: %s" % (operation, unicode(e)))
@@ -1065,21 +1071,10 @@ def try_repeatedly(fun, pagemsg, operation="save", max_tries=10, sleep_time=5):
         sleep_time *= 2
 
 def safe_page_text(page, pagemsg):
-  try:
-    existing_text = try_repeatedly(lambda: page.text, pagemsg, "fetch page text")
-  except pywikibot.exceptions.InvalidTitle as e:
-    pagemsg("WARNING: Invalid title, skipping")
-    traceback.print_exc(file=sys.stdout)
-    existing_text = ""
-  return unicode(existing_text)
+  return try_repeatedly(lambda: page.text, pagemsg, "fetch page text", bad_value_ret="")
 
 def safe_page_exists(page, pagemsg):
-  try:
-    return try_repeatedly(lambda: page.exists(), pagemsg, "determine if page exists")
-  except pywikibot.exceptions.InvalidTitle as e:
-    pagemsg("WARNING: Invalid title, skipping")
-    traceback.print_exc(file=sys.stdout)
-    return False
+  return try_repeatedly(lambda: page.exists(), pagemsg, "determine if page exists", bad_value_ret=False)
 
 # Process link-like templates containing foreign text in specified language(s),
 # on pages from STARTFROM to (but not including) UPTO, either page names or
@@ -1576,8 +1571,7 @@ def process_links(save, verbose, lang, longlang, cattype, startFrom, upTo,
 
 def find_lang_section(pagename, lang, pagemsg):
   page = pywikibot.Page(site, pagename)
-  if not try_repeatedly(lambda: page.exists(), pagemsg,
-      "check page existence"):
+  if safe_page_exists(page, pagemsg):
     pagemsg("Page %s doesn't exist" % pagename)
     return False
 
