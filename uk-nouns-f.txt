@@ -207,9 +207,6 @@ Ukrainian declensions:
 | {{User:Benwing2/uk-ndecl|міч<F.sg.io>}}
 | "power, strength" || мо́чі || мо́чі || мо́че || - || - || - || || 
 |-
-| {{User:Benwing2/uk-ndecl|ва́нна<+>}}
-| "bathroom" || ва́нної || ва́нній || ва́нна || ва́нні || ва́нних || ва́нними || || This is an adjectival declension.
-|-
 | {{User:Benwing2/uk-ndecl|нови́ни<F.pl>}}
 | "news" || - || - || - || нови́ни || нови́н || нови́нами || || 
 |-
@@ -231,10 +228,19 @@ Ukrainian declensions:
 | {{User:Benwing2/uk-ndecl|две́рі<#.pl.3rd.insplýma:mý>}}
 | "door(s)" || - || - || - || две́рі || двере́й || дверми́/двери́ма || || 
 |-
+| {{User:Benwing2/uk-ndecl|ва́нна<+>}}
+| "bathroom" || ва́нної || ва́нній || ва́нна || ва́нні || ва́нних || ва́нними || || This is an adjectival declension.
+|-
+| {{User:Benwing2/uk-ndecl|((ча́йна<+>,чайна́<+>))}}
+| "teahouse" || ча́йної/чайно́ї || ча́йній/чайні́й || ча́йна/чайна́ || ча́йні/чайні́ || ча́йних/чайни́х || ча́йними/чайни́ми || || 
+|-
+| {{User:Benwing2/uk-ndecl|вагі́тна<+.pr>}}
+| "pregnant woman" || вагі́тної || вагі́тній || вагі́тна || вагі́тні || вагі́тних || вагі́тними || || 
+|-
 ! colspan=10 style="text-align: center;" | Accent b
 |-
-| {{User:Benwing2/uk-ndecl|зима́<b.vocó>}}
-| "winter" || зими́ || зимі́ || зимо́ || зими́ || зим || зима́ми || біда́<b.vocó> "misfortune" ||
+| {{User:Benwing2/uk-ndecl|зима́<b>}}
+| "winter" || зими́ || зимі́ || зимо́ || зими́ || зим || зима́ми || біда́&lt;b> "misfortune" ||
 |-
 | {{User:Benwing2/uk-ndecl|гілля́<F.b.genpliv>}}
 | "side sprout" || гіллі́ || гіллі́ || гілле́ || гіллі́ || гіллі́в || гілля́ми || || 
@@ -434,7 +440,7 @@ Ukrainian declensions:
 *** Multiple stresses or accent patterns: ((ба́тьківщина<>,батьківщи́на<>)) "homeland" (also ((ха́лепа<>,хале́па<>)) "trouble"), ((сосна́<*>,со́сна<*.genpl:со́сон>)) "pine", сестра́<*,*#.pr> "sister" (also медсестра́<*,*#.pr> "nurse")
 ** Exceptional nouns:
 *** ((ді́вчина<pr.plstem:ді́вчат.nompla>,дівчи́на<pr.plstem:дівча́т.nompla>)) "girl, daughter", люди́на<#.pr.plsoft.plstem:люд.insplьmý> "person; mensch", війна́<vocó.genpl:во́єн:війн> "war", дити́на<#.pr.plsoft.plstem:діт.insplьmy> "child", сльоза́<f.i.vocó.insplamy:ьmy.ínsplьmy> "tear (of the eye)", гра<*.plstem:ігр> "game, play"
-*** With end-stressed voc sg: зима́<b.vocó> "winter" (also біда́<b.vocó> "misfortune"), війнá (see previous), гроза́<vocó> "thunder; danger", сарана́<sg.vocó> "locusts (collective)" (also тварина́<sg.vocó> "livestock", боротьба́<sg.vocó> "struggle"), сльоза́ (see above), брова́<f.i.vocó> "eyebrow", гра (see above)
+*** With end-stressed voc sg: зима́&lt;b> "winter" (also біда́&lt;b> "misfortune"), війна́ (see previous), гроза́<vocó> "thunder; danger", сарана́<sg.vocó> "locusts (collective)" (also тварина́<sg.vocó> "livestock", боротьба́<sg.vocó> "struggle"), сльоза́ (see above), брова́<f.i.vocó> "eyebrow", гра (see above)
 *** With genitive plural - or -ів: ба́ба<c.pr.genpl-:iv> "grandmother", губа́<f'.genpl-:iv> "lip", ма́ма<a,c.pr.genpl-:ív.ínsplamy> "mom"
 
 

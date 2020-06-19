@@ -1,0 +1,463 @@
+Ukrainian declensions:
+
+==Masculine==
+
+{|class="wikitable"
+! Noun !! Meaning !! Gen sg. !! Loc sg. !! Voc sg. !! Nom pl. !! Gen pl. !! Ins. Pl !! Similar nouns !! Notes
+|-
+! colspan=10 style="text-align: center;" | Accent b
+|-
+| {{User:Benwing2/uk-ndecl|каву́н<b>}}
+| "watermelon" || кавуна́ || кавуні́ || каву́не || кавуни́ || кавуні́в || кавуна́ми || кут&lt;b> "corner", лист&lt;b> "leaf", хрест&lt;b> "cross", горб&lt;b> "hump", гриб&lt;b> "mushroom", серп&lt;b> "sickle" || 
+|-
+| {{User:Benwing2/uk-ndecl|брат<b.pr>}}
+| "brother" || брата́ || брато́ві/браті́ || бра́те || брати́ || браті́в || брата́ми || раб<b.pr> "slave" || 
+|-
+| {{User:Benwing2/uk-ndecl|плазу́н<b.anml>}}
+| "reptile, worm" || плазуна́ || плазуно́ві/плазуні́ || плазу́не || плазуни́ || плазуні́в || плазуна́ми || бара́н "ram", кажа́н<b.anml> "bat", слон<b.anml> "elephant", кит<b.anml> "whale", сом<b.anml> "catfish", etc. || 
+|-
+| {{User:Benwing2/uk-ndecl|живі́т<b.io>}}
+| "belly, stomach" || живота́ || животі́ || живо́те || животи́ || животі́в || живота́ми || сніп<b.io> "sheaf" || 
+|-
+| {{User:Benwing2/uk-ndecl|піп<b.pr.io>}}
+| "priest" || попа́ || попі́/попо́ві || по́пе || попи́ || попі́в || попа́ми || || 
+|-
+| {{User:Benwing2/uk-ndecl|дрізд<b.anml.io>}}
+| "thrush (bird)" || дрозда́ || дроздо́ві/дрозді́ || дро́зде || дрозди́ || дрозді́в || дрозда́ми || || 
+|-
+| {{User:Benwing2/uk-ndecl|тютю́н<b.sg>}}
+| "tobacco" || тютюну́ || тютюну́/тютюні́ || тютю́не || - || - || - || чаву́н<b.sg> "cast iron" || 
+|-
+| {{User:Benwing2/uk-ndecl|суд<b.génu>}}
+| "court (of law)" || су́ду || суді́ || су́де || суди́ || суді́в || суда́ми || || 
+|-
+| {{User:Benwing2/uk-ndecl|віл<b.anml.io.loci>}}
+| "ox, bullock" || вола́ || волі́ || во́ле || воли́ || волі́в || вола́ми || || in movi.info, loc sg is normal
+|-
+| {{User:Benwing2/uk-ndecl|хвіст<b.io.locu:i>}}
+| "tail" || хвоста́ || хвосту́/хвості́ || хво́сте || хвости́ || хвості́в || хвоста́ми || || 
+|-
+| {{User:Benwing2/uk-ndecl|стіл<b.io.gena.génu.loci:u>}}
+| "table" || стола́/сто́лу || столі́/столу́ || сто́ле || столи́ || столі́в || стола́ми || || 
+|-
+| {{User:Benwing2/uk-ndecl|кіт<b.anml.io.locovi>}}
+| "tomcat" || кота́ || кото́ві || ко́те || коти́ || коті́в || кота́ми || ||  in movi.info, loc sg is normal
+|-
+| {{User:Benwing2/uk-ndecl|бур'я́н<b.genu>}}
+| "weed" || бур'яну́ || бур'яні́ || бур'я́не || бур'яни́ || бур'яні́в || бур'яна́ми || || 
+|-
+| {{User:Benwing2/uk-ndecl|хлів<b.locu:i>}}
+| "barn, stable, cowshed, pigsty; stall (for animals)" || хліва́ || хліву́/хліві́ || хлі́ве || хліви́ || хліві́в || хліва́ми || || 
+|-
+| {{User:Benwing2/uk-ndecl|коте́л<*>}}
+| "cauldron" || котла́ || котлі́ || ко́тле || котли́ || котлі́в || котла́ми || хребе́т<*> "spine" || 
+|-
+| {{User:Benwing2/uk-ndecl|посо́л<*.pr>}}
+| "ambassador" || посла́ || посло́ві/послі́ || по́сле || посли́ || послі́в || посла́ми || || 
+|-
+| {{User:Benwing2/uk-ndecl|оре́л<*.anml>}}
+| "eagle" || орла́ || орло́ві/орлі́ || о́рле || орли́ || орлі́в || орла́ми || || 
+|-
+| {{User:Benwing2/uk-ndecl|пес<*.anml>}}
+| "dog" || пса || псо́ві/псі || псе || пси || псів || пса́ми || || 
+|-
+| {{User:Benwing2/uk-ndecl|ву́зол<b*>}}
+| "knot" || вузла́ || вузлі́ || ву́зле || вузли́ || вузлі́в || вузла́ми || || 
+|-
+| {{User:Benwing2/uk-ndecl|сон<*.genu.vocu>}}
+| "sleep, dream" || сну || сні || сну || сни || снів || сна́ми || || 
+|-
+| {{User:Benwing2/uk-ndecl|плід<b.stem:плод>}}
+| "fetus" || плода́ || плоді́ || пло́де || плоди́ || плоді́в || плода́ми || || 
+|-
+| {{User:Benwing2/uk-ndecl|міст<b,c.io.génu.gená.lóci.locú>}}
+| "bridge" || моста́/мо́сту || мосту́/мо́сті || мо́сте || мости́ || мості́в || моста́ми || || Slovozmina says dative singular only end-stressed but mova.info says dative singular either stem or end stressed
+|-
+| {{User:Benwing2/uk-ndecl|щур<b.anml>}}
+| "rat" || щура́ || щуро́ві/щурі́ || щу́ре || щури́ || щурі́в || щура́ми || || 
+|-
+| {{User:Benwing2/uk-ndecl|вуго́р<*>}}
+| "pimple" || вугра́ || вугрі́ || ву́гре || вугри́ || вугрі́в || вугра́ми || || 
+|-
+| {{User:Benwing2/uk-ndecl|вуго́р<*.anml>}}
+| "eel" || вугра́ || вугро́ві/вугрі́ || ву́гре || вугри́ || вугрі́в || вугра́ми || || 
+|-
+| {{User:Benwing2/uk-ndecl|чабе́р<*.gena:u>}}
+| "savory" || чабра́/чабру́ || чабрі́ || ча́бре || чабри́ || чабрі́в || чабра́ми || || 
+|-
+| {{User:Benwing2/uk-ndecl|хаба́р<b.nompli>}}
+| "bribe" || хабара́ || хабаро́ві/хабарі́ || хаба́ре || хабарі́ || хабарі́в || хабара́ми || || 
+|-
+| {{User:Benwing2/uk-ndecl|кома́р<b.anml.nompli>}}
+| "mosquito" || комара́ || комаро́ві/комарі́ || кома́ре || комарі́ || комарі́в || комара́ми || || 
+|-
+| {{User:Benwing2/uk-ndecl|батя́р<b.pr.semisoft>}}
+| "ruffian" || батяра́ || батяре́ві/батярі́ || батя́ре || батярі́ || батярі́в || батяра́ми || || 
+|-
+| colspan=10| -- This is one is not semi-soft but "слю́сар" is, gen sg.: слю́сар'''я''', dat. (слю́сареві or) слю́сар'''ю'''. The ending "і" is common with hard endings as well (р, ж, ш, щ, ц can be both hard and soft, unlike Russian - with all but "р", in Ukrainian soft "р" never ends with -рь). --[[User:Atitarev|Anatoli T.]] <sup>([[User talk:Atitarev|обсудить]]</sup>/<sup>[[Special:Contributions/Atitarev|вклад]])</sup> 06:09, 15 May 2020 (UTC)<br />
+-- To clarify, ending -ів can be attached to р, ж, ш, щ, ц making them palatalised) --[[User:Atitarev|Anatoli T.]] <sup>([[User talk:Atitarev|обсудить]]</sup>/<sup>[[Special:Contributions/Atitarev|вклад]])</sup> 06:10, 15 May 2020 (UTC)<br />
+-- Oops, sorry, more clarification needed. ба́тяр must be indeed "semi-soft", since the plural is батярі́, "слю́сар" would then be considered "soft". (I'm feeling like an amateur). --[[User:Atitarev|Anatoli T.]] <sup>([[User talk:Atitarev|обсудить]]</sup>/<sup>[[Special:Contributions/Atitarev|вклад]])</sup> 06:26, 15 May 2020 (UTC)
+|-
+| {{User:Benwing2/uk-ndecl|ліхта́р<b.soft>}}
+| "lantern" || ліхтаря́ || ліхтарю́/ліхтарі́ || ліхта́рю || ліхтарі́ || ліхтарі́в || ліхтаря́ми || || 
+|-
+| {{User:Benwing2/uk-ndecl|цар<b.pr.soft>}}
+| "king" || царя́ || царе́ві/царю́/царі́ || ца́рю || царі́ || царі́в || царя́ми || ворота́р<b.pr.soft> "goalkeeper", пролета́р<b.pr.soft> "proletarian" || 
+|-
+| {{User:Benwing2/uk-ndecl|піска́р<b.anml.soft>}}
+| "minnow" || піскаря́ || піскаре́ві/піскарю́/піскарі́ || піска́рю || піскарі́ || піскарі́в || піскаря́ми || || 
+|-
+| {{User:Benwing2/uk-ndecl|янта́р<b.sg.soft>}}
+| "amber (resin)" || янтарю́ || янтарю́/янтарі́ || янта́рю || - || - || - || || 
+|-
+| {{User:Benwing2/uk-ndecl|янта́р<b.soft.genju>}}
+| "amber (product)" || янтарю́ || янтарю́/янтарі́ || янта́рю || янтарі́ || янтарі́в || янтаря́ми || || 
+|-
+| {{User:Benwing2/uk-ndecl|четве́р<b.stem:четве́рг>}}
+| "Thursday" || четверга́ || четвергу́ || четвергу́ || четверги́ || четвергі́в || четверга́ми || || 
+|-
+| {{User:Benwing2/uk-ndecl|двір<b.io.génu.gena.locu:i>}}
+| "yard, court" || дво́ру/двора́ || дворі́ || дво́ре || двори́ || дворі́в || двора́ми || || 
+|-
+| {{User:Benwing2/uk-ndecl|двір<b.io.génu>}}
+| "(royal) court" || дво́ру || двору́/дворі́ || дво́ре || двори́ || дворі́в || двора́ми || || 
+|-
+| {{User:Benwing2/uk-ndecl|буря́к<b>}}
+| "beet" || буряка́ || буряку́ || буряку́ || буряки́ || бурякі́в || буряка́ми || || 
+|-
+| {{User:Benwing2/uk-ndecl|пастерна́к<b.sg>}}
+| "parsnip" || пастернаку́ || пастернаку́ || пастернаку́ || - || - || - || || 
+|-
+| {{User:Benwing2/uk-ndecl|будівни́к<b.pr>}}
+| "builder, construction worker" || будівника́ || будівнико́ві/будівнику́ || будівнику́ || будівники́ || будівникі́в || будівника́ми || стари́к<b.pr> "old man", трудівни́к<b.pr> "worker", жени́х<b.pr> "bridegroom", etc. || 
+|-
+| {{User:Benwing2/uk-ndecl|їжа́к<b.anml>}}
+| "hedgehog" || їжака́ || їжаку́/їжако́ві || їжа́че || їжаки́ || їжакі́в || їжака́ми || іша́к<b.anml> "donkey", бик<b.anml> "bull", борсу́к<b.anml> "badger", жук<b.anml> "beetle", лоша́к<b.anml> "hinny, young horse", паву́к<b.anml> "spider", пацю́к<b.anml> "rat", суда́к<b.anml> "zander", черв'я́к<b.anml> "worm" || 
+|-
+| {{User:Benwing2/uk-ndecl|візо́к<*>}}
+| "cart, trolley" || візка́ || візку́/візко́ві || візку́ || візки́ || візкі́в || візка́ми || замо́к<*> "lock", мішо́к<*> "sack" || 
+|-
+| {{User:Benwing2/uk-ndecl|бузо́к<*.genu:a>}}
+| "lilac" || бузку́/бузка́ || бузко́ві/бузку́ || бузку́ || бузки́ || бузкі́в || бузка́ми || || 
+|-
+| {{User:Benwing2/uk-ndecl|будя́к<b.voce>}}
+| "thistle" || будяка́ || будяку́ || будя́че || будяки́ || будякі́в || будяка́ми || || 
+|-
+| {{User:Benwing2/uk-ndecl|коза́к<b.pr.voce>}}
+| "Cossack" || козака́ || козако́ві/козаку́ || коза́че || козаки́ || козакі́в || козака́ми || жук<b.pr.voce> "rogue, crook", кула́к<b.pr.voce> "kulak", бурла́к<b.pr.voce> "burlak" || 
+|-
+| {{User:Benwing2/uk-ndecl|робітни́к<b.pr.vocu:e>}}
+| "worker" || робітника́ || робітнико́ві/робітнику́ || робітнику́/робітни́че || робітники́ || робітникі́в || робітника́ми || || 
+|-
+| {{User:Benwing2/uk-ndecl|ланцю́г<b.loci>}}
+| "chain" || ланцюга́ || ланцюзі́ || ланцюгу́ || ланцюги́ || ланцюгі́в || ланцюга́ми || || 
+|-
+| {{User:Benwing2/uk-ndecl|кула́к<b.locu:i>}}
+| "fist" || кулака́ || кулаку́/кулаці́ || кулаку́ || кулаки́ || кулакі́в || кулака́ми || язи́к<b.locu:i> "tongue" || 
+|-
+| {{User:Benwing2/uk-ndecl|пирі́г<b.io.locu:i>}}
+| "pie" || пирога́ || пирогу́/пирозі́ || пирогу́ || пироги́ || пирогі́в || пирога́ми || баті́г<b.io.locu:i> "whip" || 
+|-
+| {{User:Benwing2/uk-ndecl|гріх<b.vócu>}}
+| "sin" || гріха́ || гріху́ || грі́ху || гріхи́ || гріхі́в || гріха́ми || цвях<b.vócu> "nail" || 
+|-
+| {{User:Benwing2/uk-ndecl|ключ<b>}}
+| "key" || ключа́ || ключу́/ключі́ || клю́чу || ключі́ || ключі́в || ключа́ми || м'яч&lt;b> "ball", меч&lt;b> "sword", плащ&lt;b> "raincoat", пуга́ч&lt;b> "popgun" || 
+|-
+| {{User:Benwing2/uk-ndecl|автогара́ж<b>}}
+| "garage" || автогаража́ || автогаражі́/автогаражу́ || автогара́же || автогаражі́ || автогаражі́в || автогаража́ми || || 
+|-
+| {{User:Benwing2/uk-ndecl|сіна́ж<b.sg>}}
+| "silage" || сінажу́ || сінажу́/сінажі́ || сіна́же || - || - || - || || 
+|-
+| {{User:Benwing2/uk-ndecl|слуха́ч<b.pr>}}
+| "listener" || слухача́ || слухаче́ві/слухачу́/слухачі́ || слуха́чу || слухачі́ || слухачі́в || слухача́ми || others in -а́ч || 
+|-
+| {{User:Benwing2/uk-ndecl|хрущ<b.anml>}}
+| "cockchafer" || хруща́ || хрущі́/хруще́ві/хрущу́ || хру́щу || хрущі́ || хрущі́в || хруща́ми || пави́ч<b.anml> "peacock" || 
+|-
+| {{User:Benwing2/uk-ndecl|вуж<b.anml>}}
+| "grass snake" || вужа́ || вужі́/вуже́ві/вужу́ || ву́же || вужі́ || вужі́в || вужа́ми || || 
+|-
+| {{User:Benwing2/uk-ndecl|дощ<b.genu>}}
+| "rain" || дощу́ || дощі́/дощу́ || до́щу || дощі́ || дощі́в || доща́ми || кума́ч<b.genu> "bright red cloth" || 
+|-
+| {{User:Benwing2/uk-ndecl|ніж<b.io>}}
+| "knife" || ножа́ || ножі́/ножу́ || но́же || ножі́ || ножі́в || ножа́ми || || 
+|-
+| {{User:Benwing2/uk-ndecl|кіш<b.io.voce>}}
+| "basket" || коша́ || коші́/кошу́ || ко́ше || коші́ || коші́в || коша́ми || гріш<b.io.voce> "groschen" || 
+|-
+| {{User:Benwing2/uk-ndecl|грець<b.pr>}}
+| "player" || греця́ || греце́ві/грецю́/греці́ || гре́цю || греці́ || греці́в || греця́ми || || 
+|-
+| {{User:Benwing2/uk-ndecl|кіне́ць<*>}}
+| "end" || кінця́ || кінці́/кінцю́ || кінцю́ || кінці́ || кінці́в || кінця́ми || оліве́ць<*> "pencil" || 
+|-
+| {{User:Benwing2/uk-ndecl|стіле́ць<*>}}
+| "pencil" || стільця́ || стільці́/стільцю́ || стільцю́ || стільці́ || стільці́в || стільця́ми || || 
+|-
+| {{User:Benwing2/uk-ndecl|вале́ць<*,d*>}}
+| "roller, shaft" || вальця́ || вальці́/вальцю́ || вальцю́ || ва́льці/вальці́ || ва́льців/вальці́в || ва́льцями/вальця́ми || || 
+|-
+| {{User:Benwing2/uk-ndecl|купе́ць<*.pr>}}
+| "merchant" || купця́ || купце́ві/купці́/купцю́ || купцю́ || купці́ || купці́в || купця́ми || || 
+|-
+| {{User:Benwing2/uk-ndecl|ссаве́ць<*.anml>}}
+| "mammal" || ссавця́ || ссавце́ві/ссавці́/ссавцю́ || ссавцю́ || ссавці́ || ссавці́в || ссавця́ми || || 
+|-
+| {{User:Benwing2/uk-ndecl|чепе́ць<*.i>}}
+| "bonnet" || чіпця́ || чіпці́/чіпцю́ || чіпцю́ || чіпці́ || чіпці́в || чіпця́ми || || 
+|-
+| {{User:Benwing2/uk-ndecl|вдове́ць<*.pr.i>}}
+| "widower" || вдівця́ || вдівце́ві/вдівцю́/вдівці́ || вдівцю́ || вдівці́ || вдівці́в || вдівця́м || авіахі́мовець<*.pr.i> "aerochemist" || 
+|-
+| {{User:Benwing2/uk-ndecl|боє́ць<*.pr.i>}}
+| "fighter" || бійця́ || бійце́ві/бійцю́/бійці́ || бійцю́ || бійці́ || бійці́в || бійця́м || || 
+|-
+| {{User:Benwing2/uk-ndecl|горобе́ць<*.anml.voce>}}
+| "sparrow" || горобця́ || горобце́ві/горобцю́/горобці́ || горо́бче || горобці́ || горобці́в || горобця́ми || || 
+|-
+| {{User:Benwing2/uk-ndecl|швець<*.pr.stem:шевц.voce>}}
+| "shoemaker" || шевця́ || шевце́ві/шевцю́/шевці́ || ше́вче || шевці́ || шевці́в || шевця́ми || || 
+|-
+| {{User:Benwing2/uk-ndecl|черне́ць<*.pr.stem:ченц.voce>}}
+| "monk" || ченця́ || ченце́ві/ченцю́/ченці́ || че́нче || ченці́ || ченці́в || ченця́ми || || 
+|-
+| {{User:Benwing2/uk-ndecl|((оте́ць<*.pr.stem:вітц.voc:о́тче>,оте́ць<*.pr.voce>))}}
+| "father" || отця́/вітця́ || отце́ві/вітце́ві/отці́/вітці́/отцю́/вітцю́ || о́тче || отці́/вітці́ || отці́в/вітці́в || отця́ми/вітця́ми || || 
+|-
+| {{User:Benwing2/uk-ndecl|ферзь<M.b.pr>}}
+| "queen (in chess)" || ферзя́ || ферзе́ві/ферзю́/ферзі́ || фе́рзю || ферзі́ || ферзі́в || ферзя́ми || коро́ль<M.b.pr> "king", курку́ль<M.b.pr> "miser", діду́сь<M.b.pr> "grandfather (diminutive-endearing)" || 
+|-
+| {{User:Benwing2/uk-ndecl|кара́сь<M.b.anml>}}
+| "crucian carp" || карася́ || карасе́ві/карасю́/карасі́ || кара́сю || карасі́ || карасі́в || карася́ми || || 
+|-
+| {{User:Benwing2/uk-ndecl|джміль<M.b.anml.ie>}}
+| "bumblebee" || джмеля́ || джмеле́ві/джмелю́/джмелі́ || джме́лю || джмелі́ || джмелі́в || джмеля́ми || || 
+|-
+| {{User:Benwing2/uk-ndecl|ячмі́нь<M.b.sg.ie.genja>}}
+| "stye (in the eye)" || ячменя́ || ячмені́/ячменю́ || ячменю́ || - || - || - || || 
+|-
+| {{User:Benwing2/uk-ndecl|ячмі́нь<M.b.ie.genju>}}
+| "barley" || ячменю́ || ячмені́ || ячменю́ || ячмені́ || ячмені́в || ячменя́ми || || 
+|-
+| {{User:Benwing2/uk-ndecl|день<M.*>}}
+| "day" || дня || дні/дню || дню || дні || днів || дня́ми || пень<M.*> "stump, stub", корабе́ль<M.*> "ship" || 
+|-
+| {{User:Benwing2/uk-ndecl|жураве́ль<M.*.anml>}}
+| "crane" || журавля́ || журавле́ві/журавлі́/журавлю́ || журавлю́ || журавлі́ || журавлі́в || журавля́ми || || 
+|-
+| {{User:Benwing2/uk-ndecl|вого́нь<M.*.genju>}}
+| "fire" || вогню́ || вогні́/вогню́ || вогню́ || вогні́ || вогні́в || вогня́ми || || 
+|-
+| {{User:Benwing2/uk-ndecl|воді́й<b.pr>}}
+| "driver (of a vehicle)" || водія́ || водіє́ві/водії́/водію́ || воді́ю || водії́ || водії́в || водія́ми || буга́й<b.pr> "large, strong man (derogatory)" || 
+|-
+| {{User:Benwing2/uk-ndecl|буга́й<b.anml>}}
+| "bull; bittern" || бугая́ || бугаї́/бугаю́/бугає́ві || буга́ю || бугаї́ || бугаї́в || бугая́ми || || 
+|-
+| {{User:Benwing2/uk-ndecl|солове́й<*.anml>}}
+| "nightingale" || солов'я́ || солов'ї́/солов'ю́/солов'є́ві || солов'ю́ || солов'ї́ || солов'ї́в || солов'я́ми || || 
+|-
+| {{User:Benwing2/uk-ndecl|Харко́<M.surname>}}
+| "Kharko (surname)" || Харка́ || Харко́ві, Харку́ || Харко́, Харку́ || Харки́ || Харкі́в || Харка́ми || || 
+|-
+! colspan=10 style="text-align: center;" | Accent c
+|-
+| {{User:Benwing2/uk-ndecl|по́їзд<c>}}
+| "train" || по́їзда || по́їзді || по́їзде || поїзди́ || поїзді́в || поїзда́ми || го́род<c> "walled town, citadel", рот<c> "mouth", спис<c> "lance", ки́лим<c> "rug", лоб<c> "forehead", лом<c> "crowbar", хліб<c> "bread", че́реп<c> "skull" || 
+|-
+| {{User:Benwing2/uk-ndecl|чорт<c.pr>}}
+| "devil" || чо́рта || чо́ртові/чо́рті || чо́рте || чорти́ || чорті́в || чорта́ми || сват<c.pr> "go-between", чин<c.pr> || 
+|-
+| {{User:Benwing2/uk-ndecl|віз<c.io>}}
+| "cart" || во́за || во́зі || во́зе || вози́ || возі́в || воза́ми || ніс<c.io> "nose" || 
+|-
+| {{User:Benwing2/uk-ndecl|со́кіл<c.pr.io>}}
+| "boy or man with celebrated beauty or courage" || со́кола || со́колові/со́колі || со́коле || соколи́ || соколі́в || сокола́ми || || 
+|-
+| {{User:Benwing2/uk-ndecl|го́лос<c.genu>}}
+| "voice" || го́лосу || го́лосі || го́лосе || голоси́ || голосі́в || голоса́ми || ліс<c.genu> "forest", світ<c.genu> "world", склад<c.genu> "syllable", час<c.genu> "time", скарб<c.genu> "treasure, goods", том<c.genu> "volume" || 
+|-
+| {{User:Benwing2/uk-ndecl|піт<c.io.genu>}}
+| "sweat" || по́ту || по́ті || по́те || поти́ || поті́в || пота́ми || грім<c.io.genu> "thunder; roar", дім<c.io.genu> "house" || 
+|-
+| {{User:Benwing2/uk-ndecl|кат<c.pr.loci>}}
+| "executioner" || ка́та || ка́ті || ка́те || кати́ || каті́в || ката́ми || || 
+|-
+| {{User:Benwing2/uk-ndecl|син<c.pr.vocu.locovi:i:u>}}
+| "son" || си́на || си́нові/си́ні/си́ну || си́ну || сини́ || сині́в || сина́ми || дід<c.pr.vocu.locovi:i:u> "grandfather" || in movi.info, loc sg is normal but irreg voc sg verified
+|-
+| {{User:Benwing2/uk-ndecl|пан<c.pr.locovi:u.vocply:ove>}}
+| "lord, sir" || па́на || па́нові/па́ну || па́не || пани́ || пані́в || пана́ми || || in movi.info, loc sg is normal but irreg voc pl verified
+|-
+| {{User:Benwing2/uk-ndecl|аеропо́рт<c.genu.locú>}}
+| "airport" || аеропо́рту || аеропорту́ || аеропо́рте || аеропорти́ || аеропорті́в || аеропорта́ми || авіапо́рт<c.genu.locú> "airport", мед<c.genu.locú> "honey", сад<c.genu.locú> "garden", дим<c.genu.locú> "smoke", степ<c.genu.locú> "steppe" || 
+|-
+| {{User:Benwing2/uk-ndecl|чан<c.loci:ú>}}
+| "vat" || ча́на || ча́ні/чану́ || ча́не || чани́ || чані́в || чана́ми || || 
+|-
+| {{User:Benwing2/uk-ndecl|о́стрів<c.io.datu.locu:i>}}
+| "island" || о́строва || о́строві/о́строву || о́строве || острови́ || острові́в || острова́ми || dat sg о́строву || 
+|-
+| {{User:Benwing2/uk-ndecl|дріт<c.io.genu.locu:i>}}
+| "wire" || дро́ту || дро́ту/дро́ті || дро́те || дроти́ || дроті́в || дрота́ми || || 
+|-
+| {{User:Benwing2/uk-ndecl|лід<c.io.genu.locú>}}
+| "ice" || льо́ду || льоду́ || льо́де || льоди́ || льоді́в || льода́ми || || stem льод-
+|-
+| {{User:Benwing2/uk-ndecl|рів<c.io.genu.datu.locú>}}
+| "ditch" || ро́ву || рову́ || ро́ве || рови́ || рові́в || рова́ми || dat sg ро́ву || 
+|-
+| {{User:Benwing2/uk-ndecl|рід<c.io.genu.locú:i>}}
+| "gender; family; tribe" || ро́ду || роду́/ро́ді || ро́де || роди́ || роді́в || рода́ми || || 
+|-
+| {{User:Benwing2/uk-ndecl|хліб<c.nompla:y>}}
+| "grain" || хлі́ба || хлі́бі || хлі́бе || хліба́/хліби́ || хлібі́в || хліба́ми || || 
+|-
+| {{User:Benwing2/uk-ndecl|плід<c.stem:плод.gená:u.loci:u>}}
+| "fruit" || плода́/пло́ду || пло́ді/пло́ду || пло́де || плоди́ || плоді́в || плода́ми || || 
+|-
+| {{User:Benwing2/uk-ndecl|раз<c.genu.genpliv:->}}
+| "instance, occurrence" || ра́зу || ра́зі || ра́зе || рази́ || разі́в/раз || раза́ми || || 
+|-
+| {{User:Benwing2/uk-ndecl|жупа́н<c,b>}}
+| "robe" || жупа́на/жупана́ || жупа́ні/жупані́ || жупа́не || жупани́ || жупані́в || жупана́ми || туз<c,b> "ace" || 
+|-
+| {{User:Benwing2/uk-ndecl|туз<c,b.pr>}}
+| "big shot" || ту́за/туза́ || ту́зі/тузі́ || ту́зе || тузи́ || тузі́в || туза́ми || || 
+|-
+| {{User:Benwing2/uk-ndecl|се́ктор<c>}}
+| "sector" || се́ктора || се́кторі || се́кторе || сектори́ || секторі́в || сектора́ми || тра́ктор<c> "tractor" || 
+|-
+| {{User:Benwing2/uk-ndecl|а́втор<c.pr>}}
+| "author" || а́втора || а́второві/а́вторі || а́вторе || автори́ || авторі́в || автора́ми || дире́ктор<c.pr> "director, manager" || 
+|-
+| {{User:Benwing2/uk-ndecl|ве́чір<c.io>}}
+| "evening" || ве́чора || ве́чорі || ве́чоре || вечори́ || вечорі́в || вечора́ми || || 
+|-
+| {{User:Benwing2/uk-ndecl|сир<c.genu>}}
+| "cheese" || си́ру || си́рі || си́ре || сири́ || сирі́в || сира́ми || || 
+|-
+| {{User:Benwing2/uk-ndecl|та́бір<c.io.genu>}}
+| "camp" || та́бору || та́борі || та́боре || табори́ || таборі́в || табора́ми || ко́лір<c.io.genu> "color" [stem ко́льор-] || 
+|-
+| {{User:Benwing2/uk-ndecl|я́кір<c.io.soft>}}
+| "anchor" || я́коря || я́корю/я́корі || я́корю || якорі́ || якорі́в || якоря́ми || || 
+|-
+| {{User:Benwing2/uk-ndecl|лі́кар<c.pr.soft>}}
+| "doctor" || лі́каря || лі́кареві/лі́карю/лі́карі || лі́карю || лікарі́ || лікарі́в || лікаря́ми || || 
+|-
+| {{User:Benwing2/uk-ndecl|ві́тер<c*.genu.locu:i>}}
+| "wind" || ві́тру || ві́тру/ві́трі || ві́тре || вітри́ || вітрі́в || вітра́ми || || 
+|-
+| {{User:Benwing2/uk-ndecl|птах<c.anml>}}
+| "bird" || пта́ха || пта́хові/пта́ху || пта́ху || птахи́ || птахі́в || птаха́ми || || 
+|-
+| {{User:Benwing2/uk-ndecl|дах<c.genu>}}
+| "roof" || да́ху || да́ху || да́ху || дахи́ || дахі́в || даха́ми || нічлі́г<c.genu> "lodging for the night", шовк<c.genu> "silk" || 
+|-
+| {{User:Benwing2/uk-ndecl|вовк<c.anml.voce>}}
+| "wolf" || во́вка || во́вку/во́вкові || во́вче || вовки́ || вовкі́в || вовка́ми || крук<c.anml.voce> "raven" || 
+|-
+| {{User:Benwing2/uk-ndecl|бог<c.pr.locovi:u:i.voce>}}
+| "god" || бо́га || бо́гові/бо́зі/бо́гу || бо́же || боги́ || богі́в || бога́ми || || 
+|-
+| {{User:Benwing2/uk-ndecl|бе́рег<c.loci>}}
+| "shore, coast" || бе́рега || бе́резі || бе́регу || береги́ || берегі́в || берега́ми || || 
+|-
+| {{User:Benwing2/uk-ndecl|вік<c.genu.loci>}}
+| "century" || ві́ку || ві́ці || ві́ку || віки́ || вікі́в || віка́ми || || 
+|-
+| {{User:Benwing2/uk-ndecl|сніг<c.genu.locú>}}
+| "snow" || сні́гу || снігу́ || сні́гу || сніги́ || снігі́в || сніга́ми || полк<c.genu.locú> "regiment" || 
+|-
+| {{User:Benwing2/uk-ndecl|сік<c.io.genu.locú>}}
+| "juice, sap" || со́ку || соку́ || со́ку || соки́ || сокі́в || сока́ми || || 
+|-
+| {{User:Benwing2/uk-ndecl|бік<c.io.genu.loci:ú>}}
+| "side" || бо́ку || бо́ці/боку́ || бо́ку || боки́ || бокі́в || бока́ми || стіг<c.io.genu.loci:ú> "haystack" || 
+|-
+| {{User:Benwing2/uk-ndecl|луг<c.genu.loci:ú.voce>}}
+| "meadow" || лу́гу || лу́зі/лугу́ || лу́же || луги́ || лугі́в || луга́ми || || 
+|-
+| {{User:Benwing2/uk-ndecl|шлях<c.genu.ínsom.insóm.locú>}}
+| "way, path" || шля́ху || шляху́ || шля́ху || шляхи́ || шляхі́в || шляха́ми || || 
+|-
+| {{User:Benwing2/uk-ndecl|знак<c,b.genu.vócu>}}
+| "sign" || зна́ку/знаку́ || зна́ку/знаку́ || зна́ку || знаки́ || знакі́в || знака́ми || || 
+|-
+| {{User:Benwing2/uk-ndecl|страх<c,b.genu.lóci.locú.vócu>}}
+| "fear" || стра́ху/страху́ || стра́сі/страху́ || стра́ху || страхи́ || страхі́в || страха́ми || || 
+|-
+| {{User:Benwing2/uk-ndecl|страх<c,b.pr.vócu>}}
+| "monster" || стра́ха/страха́ || стра́хові/стра́ху/стрхо́ві/страху́ || стра́ху || страхи́ || страхі́в || страха́ми || || 
+|-
+| {{User:Benwing2/uk-ndecl|вірш<c>}}
+| "poem" || ві́рша || ві́ршу/ві́рші || ві́ршу || вірші́ || вірші́в || вірша́ми || || 
+|-
+| {{User:Benwing2/uk-ndecl|муж<c.pr.locevi:i>}}
+| "husband" || му́жа || му́жеві/му́жі || му́же || мужі́ || мужі́в || мужа́ми || || 
+|-
+| {{User:Benwing2/uk-ndecl|((не́біж<c.io.pr>,небі́ж<c.io.pr>))}}
+| "nephew" || не́божа/небо́жа || не́божеві/не́божу/не́божі/небо́жеві/небо́жу/небо́жі || не́боже/небо́же || небожі́ || небожі́в || небожа́ми || || 
+|-
+| {{User:Benwing2/uk-ndecl|плач<c,b.genu.vócu>}}
+| "crying, weeping, cry" || пла́чу/плачу́ || пла́чу/пла́чі/плачу́/плачі́ || пла́чу || плачі́ || плачі́в || плача́ми || || 
+|-
+| {{User:Benwing2/uk-ndecl|мі́сяць<M.c>}}
+| "month, moon" || мі́сяця || мі́сяці/мі́сяцю || мі́сяцю || місяці́ || місяці́в || місяця́ми || || 
+|-
+| {{User:Benwing2/uk-ndecl|за́єць<c*.anml>}}
+| "hare" || за́йця || за́йці/за́йцеві/за́йцю || за́йцю || зайці́ || зайці́в || зайця́ми || || 
+|-
+| {{User:Benwing2/uk-ndecl|учи́тель<c.pr>}}
+| "teacher" || учи́теля || учи́телеві/учи́телю/учи́телі || учи́телю || учителі́ || учителі́в || учителя́ми || || 
+|-
+| {{User:Benwing2/uk-ndecl|жаль<M.c,b.genju>}}
+| "sorrow" || жа́лю/жалю́ || жа́лі/жа́лю/жалі́/жалю́ || жа́лю || жалі́ || жалі́в || жаля́ми || || 
+|-
+| {{User:Benwing2/uk-ndecl|((пе́рстень<M.*.stem:персн>,пе́рстень<M.[rare]>))}}
+| "ring" || пе́рсня/пе́рстеня || пе́рсню/пе́рсні/пе́рстеню/пе́рстені || пе́рсню/пе́рстеню || пе́рсні/пе́рстені || пе́рснів/пе́рстенів || пе́рснями/пе́рстенями || || 
+|-
+| {{User:Benwing2/uk-ndecl|чай<c.genju>}}
+| "tea" || ча́ю || ча́ю/ча́ї || ча́ю || чаї́ || чаї́в || чая́ми || урожа́й<c.genju> "crop, harvest" || 
+|-
+| {{User:Benwing2/uk-ndecl|рій<c.io.genju>}}
+| "squad (military)" || ро́ю || рою́, ро́ї || ро́ю || рої́ || рої́в || роя́ми || || 
+|-
+| {{User:Benwing2/uk-ndecl|рій<c.io.genju:já.locjú>}}
+| "swarm, crowd" || ро́ю/роя́ || рою́ || ро́ю || рої́ || рої́в || роя́ми || || 
+|-
+| {{User:Benwing2/uk-ndecl|буй<c.locju:jevi:ji>}}
+| "buoy" || бу́ю || бу́ю/бу́єві/бу́ї || бу́ю || буї́ || буї́в || буя́ми || || 
+|-
+| {{User:Benwing2/uk-ndecl|край<c.genju.locji:jú>}}
+| "edge; place; country" || кра́ю || краю́/кра́ї || кра́ю || краї́ || краї́в || края́ми || гай<c.genju.locji:jú> "grove" || 
+|-
+| {{User:Benwing2/uk-ndecl|край<c.genju.locji>}}
+| "krai" || кра́ю || кра́ї || кра́ю || краї́ || краї́в || края́ми || || 
+|-
+| {{User:Benwing2/uk-ndecl|ба́тько<c.M.pr>}}
+| "father" || ба́тька || ба́тькові/ба́тьку || ба́тьку || батьки́ || батькі́в || батька́ми || || 
+|-
+| {{User:Benwing2/uk-ndecl|дя́дько<c.M.pr>}}
+| "uncle" || дя́дька || дя́дькові/дя́дьку || дя́дьку || дядьки́ || дядькі́в || дядька́ми || || 
+|-
+! colspan=10 style="text-align: center;" | Accent d
+|-
+| {{User:Benwing2/uk-ndecl|((ове́с<d*.nompla.stem:вівс>,ове́с<*.stem:вівс>))}}
+| "oats" || вівса́ || вівсі́ || ві́все || ві́вса/вівси́ || ві́всів/вівсі́в || ві́всами/вівса́ми || || 
+|-
+| {{User:Benwing2/uk-ndecl|кінь<M.d.anml.io.locevi:i.genplej.insplьmy:jamy>}}
+| "horse" || коня́ || коні́/коне́ві || ко́ню || ко́ні || ко́ней || кі́ньми/ко́нями || || 
+|-
+! colspan=10 style="text-align: center;" | Accent e
+|-
+| {{User:Benwing2/uk-ndecl|зуб<e>}}
+| "tooth" || зу́ба || зу́бі || зу́бе || зу́би || зубі́в || зуба́ми || || 
+|-
+| {{User:Benwing2/uk-ndecl|гість<M.e,a.pr.io.genpléj.inspljamy:ьmy>}}
+| "guest" || го́стя || го́стеві/го́стю/го́сті || го́стю || го́сті || госте́й || гостя́ми/го́стями/гістьми́/гі́стьми || || 
+|}

@@ -69,8 +69,14 @@ Ukrainian declensions:
 | {{User:Benwing2/uk-ndecl|го́ре<sg.loci>}}
 | "grief, trouble" || го́ря || го́рі || го́ре || - || - || - || || 
 |-
+| {{User:Benwing2/uk-ndecl|((кро́сенце<*>,кросе́нце<*>))}}
+| "small loom" || кро́сенця/кросе́нця || кро́сенцю/кро́сенці/кросе́нцю/кросе́нці || кро́сенце/кросе́нце || кро́сенця/кросе́нця || кро́сенець/кросе́нець || кро́сенцями/кросе́нцями || || 
+|-
+| {{User:Benwing2/uk-ndecl|((де́нце<*>,денце́<*>))}}
+| "bottom (diminutive/endearing)" || де́нця/денця́ || де́нцю/де́нці/денцю́/денці́ || де́нце/денце́ || де́нця || де́нець || де́нцями || || 
+|-
 | {{User:Benwing2/uk-ndecl|((озе́рце<*>,озерце́<b*>))}}
-| "small lake" || озе́рця/озерця́ || озе́рці/озе́рцю/озерці́/озерцю́ || озе́рце/озерце́ || озе́рця/озерця́ || озе́рець/озере́ць || озе́рцями/озерця́ми || || 
+| "small lake" || озе́рця/озерця́ || озе́рці/озе́рцю/озерці́/озерцю́ || озе́рце/озерце́ || озе́рця/озерця́ || озе́рець/озере́ць || озе́рцями/озерця́ми || ((дере́вце<*>,деревце́<b*>)) "tree (diminutive/endearing)", ((ті́льце<*>,тільце́<b*>)) "body (diminutive/endearing)", ((копи́тце<*>,копитце́<b*>)) "hoof (diminutive/endearing)" || 
 |-
 | {{User:Benwing2/uk-ndecl|зна́чення<>}}
 | "importance, significance; meaning" || зна́чення || зна́ченні/зна́ченню || зна́чення || зна́чення || зна́чень || зна́ченнями || бажа́ння<> "desire, wish" || 
@@ -85,7 +91,10 @@ Ukrainian declensions:
 | "air" || пові́тря || пові́трі/пові́трю || пові́тря || - || - || - || || 
 |-
 | {{User:Benwing2/uk-ndecl|переми́р'я<>}}
-| "ceasefire" || переми́р'я || переми́р'ї/переми́р'ю || переми́р'я || переми́р'я || переми́р'їв || переми́р'ями || || 
+| "ceasefire" || переми́р'я || переми́р'ї/переми́р'ю || переми́р'я || переми́р'я || переми́р'їв || переми́р'ями || верхі́в'я<> "uppermost point, upper reaches"; взгі́р'я<> "hill; forested slope" || 
+|-
+| {{User:Benwing2/uk-ndecl|ві́стря<N.*.loci>}}
+| "tip; blade" || ві́стря || ві́стрі || ві́стря || ві́стря || ві́стер || ві́стрями || || 
 |-
 | {{User:Benwing2/uk-ndecl|вугі́лля<genpliv>}}
 | "coal" || вугі́лля || вугі́ллю/вугі́ллі || вугі́лля || вугі́лля || вугі́ллів || вугі́ллями || || 
@@ -105,6 +114,9 @@ Ukrainian declensions:
 | {{User:Benwing2/uk-ndecl|дро́ва<pl>}}
 | "firewood" || - || - || - || дро́ва || дров || дро́вами || || 
 |-
+| {{User:Benwing2/uk-ndecl|майбу́тнє<+.sg>}}
+| "future" || майбу́тнього || майбу́тньому/майбу́тнім || майбу́тнє || - || - || - || || 
+|-
 ! colspan=10 style="text-align: center;" | Accent b
 |-
 | {{User:Benwing2/uk-ndecl|знання́<>}}
@@ -112,6 +124,9 @@ Ukrainian declensions:
 |-
 | {{User:Benwing2/uk-ndecl|молоття́<sg>}}
 | "grinding" || молоття́ || молотті́ || молоття́ || - || - || - || || 
+|-
+| {{User:Benwing2/uk-ndecl|війя́<N.locju:i>}}
+| "drawbar (of a bullock cart)" || війя́ || війю́/війї́ || війя́ || війя́ || війї́в || війя́ми || || 
 |-
 | {{User:Benwing2/uk-ndecl|життя́<locju:i.genpliv>}}
 | "life" || життя́ || житті́/життю́ || життя́ || життя́ || житті́в || життя́ми || || 
@@ -196,14 +211,14 @@ Ukrainian declensions:
 | "face" || лиця́ || лиці́ || лице́ || ли́ця || лиць || ли́цями || || 
 |-
 | {{User:Benwing2/uk-ndecl|кільце́<*>}}
-| "ring" || кільця́ || кільцю́/кільці́ || кільце́ || кі́льця || кі́лець || кі́льцями || || 
+| "ring" || кільця́ || кільцю́/кільці́ || кільце́ || кі́льця || кі́лець || кі́льцями || гільце́<*> "ceremonial Ukrainian wedding tree" || 
 |-
 | {{User:Benwing2/uk-ndecl|яйце́<*#>}}
-| "egg" || яйця́ || яйці́/яйцю́ || яйце́ || я́йця || яє́ць || я́йцями || || 
+| "egg" || яйця́ || яйці́/яйцю́ || яйце́ || я́йця || яє́ць || я́йцями || війце́<*#> "drawbar (of the harness of a plow)" || 
 |-
 ! colspan=10 style="text-align: center;" | Accent e
 |-
-| {{User:Benwing2/uk-ndecl|о́ко<e.plstem:оч.loci.nompli.genplej.accpl:о́чі:ві́чі.insplýma>}}
+| {{User:Benwing2/uk-ndecl|о́ко<e.plstem:оч.loci.nompli.genplej.accpl:о́чі:ві́чі.insplýma>}}
 | "eye" || о́ка || о́ці || о́ко || о́чі || оче́й || очи́ма || || 
 |-
 ! colspan=10 style="text-align: center;" | Accent f
@@ -224,7 +239,7 @@ FIXME: Typo in desc of цапеня́ (got -> goat)
 ** Exceptional nouns:
 *** Dat sg in -ові/-у: би́дло<sg.datovi:u> "cattle" (also бо́рошно<sg.datovi:u> "flour", залі́зо<sg.datovi:u> "iron", зо́лото<sg.datovi:u> "gold", м'я́со<sg.datovi:u> "meat", пе́кло<sg.datovi:u> "hell", сві́тло<sg.datovi:u> "light", со́нечко<sg.datovi:u> "sun (endearing)", ті́сто<sg.datovi:u> "dough"), ву́хо<datovi:u.loci:u.inspl:ву́хами:вуши́ма> "ear", лі́жко<*.datovi:u> "bed" (also яє́чко<*.datovi:u> "testicle, small egg", люсте́рко<*.datovi:u> "small, handheld mirror"), со́нечко<*.anml.datovi:u> "ladybug", ли́хо<datovi:u.locovi:u> "disaster, trouble", мі́сто<c.datovi:u.locovi:u:i> "city", не́бо<c.plstem:небе́с.datovi:u> "sky, heaven", я́блуко<datovi:u> "apple" (also о́ко<datovi:u> "unit of weight/volume")
 *** Loc sg in -у/-і: боло́то<c.i.locu:i> "swamp" (also долото́<i.locu:i> "chisel", село́<i.locu:i> "village", чоло́<i.locu:i> "forehead"), вікно́<*.locu:i> "window", ву́хо (see above), гімно́<sg.loci:u> "shit", колі́но<locu:i.insplamy:ьmý> "knee", ко́лесо<i.plstem:коле́с.locu:i.insplamy:ьmy> "wheel", [FIXME: е->і needs to apply here to special plstem, but і->о should not apply to special plstem in со́кіл; figure out how to handle this], крило́<locu:i.insplamy:ьmý> "wing", ре́шето<i.plstem:реше́т.locu:i> "sieve", скло<*.plstem:стекл.locu:i> "glass", стегно́<*.locu:i.genpl:сте́ген:сте́гон> "thigh"
-*** Loc sg in -і with a velar: молоко́<sg.loci> "milk", око́<e.plstem:оч.loci.nompli.genplej.accpl:о́чі:ві́чі.insplýma> "eye"
+*** Loc sg in -і with a velar: молоко́<sg.loci> "milk", око́<e.plstem:оч.loci.nompli.genplej.accpl:о́чі:ві́чі.insplýma> "eye"
 *** Other: де́рево<plstem:дере́в> "tree", о́зеро<plstem:озе́р> "lake", ма́сло<c*#> "butter" (also срі́бло<c*#> "silver")
 
 
