@@ -34,7 +34,7 @@ Ukrainian declensions:
 | {{User:Benwing2/uk-ndecl|ку́чма<*>}}
 | "tall sheepskin hat" || ку́чми || ку́чмі || ку́чмо || ку́чми || ку́чем || ку́чмами || || 
 |-
-| {{User:Benwing2/uk-ndecl|підо́шва<*.genpl:підошо́в>}}
+| {{User:Benwing2/uk-ndecl|підо́шва<*#>}}
 | "sole" || підо́шви || підо́шві || підо́шво || підо́шви || підошо́в || підо́швами || || 
 |-
 | {{User:Benwing2/uk-ndecl|((ба́тьківщина<>,батьківщи́на<>))}}
@@ -43,13 +43,13 @@ Ukrainian declensions:
 | {{User:Benwing2/uk-ndecl|((ді́вчина<pr.plstem:ді́вчат.nompla>,дівчи́на<pr.plstem:дівча́т.nompla>))}}
 | "girl, daughter" || ді́вчини/дівчи́ни || ді́вчині/дівчи́ні || ді́вчино/дівчи́но || ді́вчата/дівча́та || ді́вчат/дівча́т || ді́вчатами/дівча́тами || || 
 |-
-| {{User:Benwing2/uk-ndecl|люди́на<pr.plstem:люд.genpléj.insplьmý>}}
+| {{User:Benwing2/uk-ndecl|люди́на<#.pr.plsoft.plstem:люд.insplьmý>}}
 | "person; mensch" || люди́ни || люди́ні || люди́но || лю́ди || люде́й || людьми́ || || 
 |-
-| {{User:Benwing2/uk-ndecl|дити́на<pr.plstem:дит.genpléj.insplьmy>}}
+| {{User:Benwing2/uk-ndecl|дити́на<#.pr.plsoft.plstem:діт.insplьmy>}}
 | "child" || дити́ни || дити́ні || дити́но || ді́ти || діте́й || ді́тьми || || 
 |-
-| {{User:Benwing2/uk-ndecl|ма́ма<a,c.pr.genpl-:iv>}}
+| {{User:Benwing2/uk-ndecl|ма́ма<a,c.pr.genpl-:ív.ínsplamy>}}
 | "mom" || ма́ми || ма́мі || ма́мо || ма́ми/мами́ || мам/мамі́в || ма́мами || || 
 |-
 | {{User:Benwing2/uk-ndecl|кни́га<>}}
@@ -67,7 +67,7 @@ Ukrainian declensions:
 | {{User:Benwing2/uk-ndecl|австралі́йка<*.pr>}}
 | "female Australian" || австралі́йки || австралі́йці || австралі́йко || австралі́йки || австралі́йок || австралі́йками || || 
 |-
-| {{User:Benwing2/uk-ndecl|ону́ка<*>}}
+| {{User:Benwing2/uk-ndecl|ону́ка<*.pr>}}
 | "granddaughter" || ону́ки || ону́ці || ону́ко || ону́ки || ону́ок || ону́ками || || 
 |-
 | {{User:Benwing2/uk-ndecl|фі́зика<sg>}}
@@ -100,7 +100,7 @@ Ukrainian declensions:
 | {{User:Benwing2/uk-ndecl|ї́жа<sg>}}
 | "food" || ї́жі || ї́жі || ї́же || - || - || - || ти́ша<sg> "silence" || 
 |-
-| {{User:Benwing2/uk-ndecl|во́ша<anml.genplej>}}
+| {{User:Benwing2/uk-ndecl|во́ша<anml.genplej.insplamy:ýma>}}
 | "louse" || во́ші || во́ші || во́ше || во́ші || во́шей || во́шами/воши́ма || || 
 |-
 | {{User:Benwing2/uk-ndecl|іде́я<>}}
@@ -139,6 +139,9 @@ Ukrainian declensions:
 | {{User:Benwing2/uk-ndecl|леге́ня<genplь:iv>}}
 | "lung" || леге́ні || леге́ні || леге́не || леге́ні || леге́нь/леге́нів || леге́нями || || 
 |-
+| {{User:Benwing2/uk-ndecl|те́сля<M.pr.genpliv>}}
+| "carpenter, joiner" || те́слі || те́слі || те́сле || те́слі || те́слів || те́слями || || 
+|-
 | {{User:Benwing2/uk-ndecl|ві́дповідь<F>}}
 | "reply" || ві́дповіді || ві́дповіді || ві́дповіде || ві́дповіді || ві́дповідей || ві́дповідями || бусо́ль<F> "compass", га́лузь<F> "branch, twig", мить<F> "moment", моде́ль<F> "model", роль<F> "role", сталь<F> "steel", тінь<F> "shadow", ціль<F> "target, goal" || 
 |-
@@ -149,13 +152,10 @@ Ukrainian declensions:
 | "trout" || форе́лі || форе́лі || форе́ле || форе́лі || форе́лей || форе́лями || макре́ль<F.anml> "mackerel" || 
 |-
 | {{User:Benwing2/uk-ndecl|я́кість<io>}}
-| "quality, property" || я́кості || я́кості || я́косте || я́кості || я́костей || я́костями || ці́нність<io> "value", ва́ртість<io> "value, worth", etc. || 
-|-
-| {{User:Benwing2/uk-ndecl|о́сінь<F.ie>}}
-| "autumn" || о́сені || о́сені || о́сене || о́сені || о́сеней || о́сенями || || 
+| "quality, property" || я́кості/я́кости || я́кості || я́косте || я́кості || я́костей || я́костями || ці́нність<io> "value", ва́ртість<io> "value, worth", etc. || 
 |-
 | {{User:Benwing2/uk-ndecl|па́м'ять<F.sg>}}
-| "memory" || па́м'яті || па́м'яті || па́м'яте || - || - || - || бла́кить<F.sg> "blue", мідь<F.sg> "copper", па́морозь<F.sg> "hoarfrost", суть<F.sg> "essence, gist" || 
+| "memory" || па́м'яті || па́м'яті || па́м'яте || - || - || - || блаки́ть<F.sg> "blue", мідь<F.sg> "copper", па́морозь<F.sg> "hoarfrost", суть<F.sg> "essence, gist" || 
 |-
 | colspan=10 |-- Yes, - ттю is predictable, -ття corresponds to Russian -тьё/-тье/-тие (neuter endings), -ння to Russian -нье/-ние/-ньё. Inflected -ттю to Russian -тью, etc. --[[User:Atitarev|Anatoli T.]] <sup>([[User talk:Atitarev|обсудить]]</sup>/<sup>[[Special:Contributions/Atitarev|вклад]])</sup> 06:14, 15 May 2020 (UTC)
 |-
@@ -163,22 +163,31 @@ Ukrainian declensions:
 | "power, strength" || мо́ці || мо́ці || мо́це || - || - || - || по́хіть "lust" || 
 |-
 | {{User:Benwing2/uk-ndecl|со́вість<sg>}}
-| "conscience" || со́вісті || со́вісті || со́вісте || - || - || - || у́часть<F.sg> "participation, share" || 
+| "conscience" || со́вісті/со́вісти || со́вісті || со́вісте || - || - || - || || 
+|-
+| {{User:Benwing2/uk-ndecl|у́часть<F.sg>}}
+| "conscience" || у́часті/у́части || у́часті || у́часте || - || - || - || || 
 |-
 | {{User:Benwing2/uk-ndecl|вла́сність<sg.io>}}
-| "property, belongings" || вла́сності || вла́сності || вла́сносте || - || - || - || му́жність<sg.io> "courage", ще́дрість<sg.io> "generosity" and many other abstract nouns || 
+| "property, belongings" || вла́сності/вла́сности || вла́сності || вла́сносте || - || - || - || му́жність<sg.io> "courage", ще́дрість<sg.io> "generosity" and many other abstract nouns || 
 |-
 | {{User:Benwing2/uk-ndecl|((смі́ливість<sg.io>,сміли́вість<sg.io>))}}
-| "boldness, courage" || смі́ливості/сміли́вості || смі́ливості/сміли́вості || смі́ливосте/сміли́восте || - || - || - || || 
+| "boldness, courage" || смі́ливості/смі́ливости/сміли́вості/сміли́вости || смі́ливості/сміли́вості || смі́ливосте/сміли́восте || - || - || - || || 
 |-
-| {{User:Benwing2/uk-ndecl|о́бласть<F.genpléj>}}
-| "oblast, province" || о́бласті || о́бласті || о́бласте || о́бласті || областе́й || о́бластями || || 
+| {{User:Benwing2/uk-ndecl|о́бласть<F.#>}}
+| "oblast, province" || о́бласті || о́бласті/о́бласти || о́бласте || о́бласті || областе́й || о́бластями || || 
 |-
-| {{User:Benwing2/uk-ndecl|сіль<F.io.genpléj>}}
+| {{User:Benwing2/uk-ndecl|сіль<F.#.io.geni:y>}}
 | "salt" || со́лі || со́лі || со́ле || со́лі || соле́й || со́лями || || 
+|-
+| {{User:Benwing2/uk-ndecl|о́сінь<F.ie.geni:y>}}
+| "autumn" || о́сені || о́сені || о́сене || о́сені || о́сеней || о́сенями || || 
 |-
 | {{User:Benwing2/uk-ndecl|пості́ль<F.ie.nom:по́стіль:пості́ль.acc:по́стіль:пості́ль.ins:по́стіллю:посте́лею>}}
 | "bed" || посте́лі || посте́лі || посте́ле || посте́лі || посте́лей || посте́лями || || 
+|-
+| {{User:Benwing2/uk-ndecl|вісь<F.#.stem:ос>}}
+| "axis, axle" || о́сі || о́сі || о́се || о́сі || осе́й || о́сями || || 
 |-
 | {{User:Benwing2/uk-ndecl|по́дорож<F>}}
 | "journey" || по́дорожі || по́дорожі || по́дороже || по́дорожі || по́дорожей || по́дорожами || зу́стріч<F> "meeting" || 
@@ -201,8 +210,26 @@ Ukrainian declensions:
 | {{User:Benwing2/uk-ndecl|ва́нна<+>}}
 | "bathroom" || ва́нної || ва́нній || ва́нна || ва́нні || ва́нних || ва́нними || || This is an adjectival declension.
 |-
-| {{User:Benwing2/uk-ndecl|гру́ди<F.pl.genpléj.insplьmý>}}
+| {{User:Benwing2/uk-ndecl|нови́ни<F.pl>}}
+| "news" || - || - || - || нови́ни || нови́н || нови́нами || || 
+|-
+| {{User:Benwing2/uk-ndecl|но́жиці<F.pl>}}
+| "scissors" || - || - || - || но́жиці || но́жиць || но́жицями || || 
+|-
+| {{User:Benwing2/uk-ndecl|но́чви<F.*.pl>}}
+| "washing tub" || - || - || - || но́чви || но́чов || но́чвами || || 
+|-
+| {{User:Benwing2/uk-ndecl|коно́плі<F.*#.pl>}}
+| "hemp" || - || - || - || коно́плі || конопе́ль || коно́плями || || 
+|-
+| {{User:Benwing2/uk-ndecl|сі́ні<#.pl.3rd.nomply.insplьmy>}}
+| "washing tub" || - || - || - || но́чви || но́чов || но́чвами || || 
+|-
+| {{User:Benwing2/uk-ndecl|гру́ді<#.pl.3rd.nomply.insplьmý>}}
 | "chest, breast" || - || - || - || гру́ди || груде́й || грудьми́ || || 
+|-
+| {{User:Benwing2/uk-ndecl|две́рі<#.pl.3rd.insplýma:mý>}}
+| "door(s)" || - || - || - || две́рі || двере́й || дверми́/двери́ма || || 
 |-
 ! colspan=10 style="text-align: center;" | Accent b
 |-
@@ -241,7 +268,7 @@ Ukrainian declensions:
 | {{User:Benwing2/uk-ndecl|пі́сня<c*>}}
 | "song" || пі́сні || пі́сні || пі́сне || пісні́ || пісе́нь || пісня́ми || ша́бля<c*> "saber" || 
 |-
-| {{User:Benwing2/uk-ndecl|ма́ти<c.pr.stem:ма́тер.i>}}
+| {{User:Benwing2/uk-ndecl|ма́тір<F.c.pr.ie.nom:ма́ти.voc:ма́ти.genpliv>}}
 | "mother" || ма́тері || ма́тері || ма́ти || матері́ || матері́в || матеря́ми || || acc sg. ма́тір, ins sg. ма́тір'ю
 |-
 ! colspan=10 style="text-align: center;" | Accent d
@@ -277,13 +304,13 @@ Ukrainian declensions:
 | "thunder; danger" || грози́ || грозі́ || грозо́ || гро́зи || гроз || гро́зами || || 
 |-
 | {{User:Benwing2/uk-ndecl|сарана́<sg.vocó>}}
-| "locusts (collective)" || сарани́ || сарані́ || сарано́ || - || - || - || тварина́<vocó> "livestock", боротьба́<vocó> "struggle" || 
+| "locusts (collective)" || сарани́ || сарані́ || сарано́ || - || - || - || тварина́<sg.vocó> "livestock", боротьба́<sg.vocó> "struggle" || 
 |-
 | {{User:Benwing2/uk-ndecl|((сосна́<*>,со́сна<*.genpl:со́сон>))}}
 | "pine" || со́сни/сосни́ || со́сні/сосні́ || со́сно || со́сни || со́сен/со́сон || со́снами || || 
 |-
-| {{User:Benwing2/uk-ndecl|сестра́<*.pr.genpl:се́стер:сесте́р>}}
-| "sister" || сестри́ || сестрі́ || се́стро || се́стри || се́стер/сесте́р || се́страми || медсестра́<*.pr.genpl:медсе́стер:медсесте́р> "nurse" || 
+| {{User:Benwing2/uk-ndecl|сестра́<*,*#.pr>}}
+| "sister" || сестри́ || сестрі́ || се́стро || се́стри || се́стер/сесте́р || се́страми || медсестра́<*,#*.pr> "nurse" || 
 |-
 | {{User:Benwing2/uk-ndecl|війна́<vocó.genpl:во́єн:війн>}}
 | "war" || війни́ || війні́ || війно́ || ві́йни || во́єн/війн || ві́йнами || || 
@@ -316,12 +343,12 @@ Ukrainian declensions:
 | "star; dawn" || зорі́ || зорі́ || зо́ре || зо́рі || зір || зо́рями || || 
 |-
 | {{User:Benwing2/uk-ndecl|сім'я́<F.genpl:сіме́й>}}
-| "?" || сім'ї́ || сім'ї́ || сім'є́ || сі́м'ї || сіме́й || сі́м'ями || || 
+| "family" || сім'ї́ || сім'ї́ || сім'є́ || сі́м'ї || сіме́й || сі́м'ями || || 
 |-
 | {{User:Benwing2/uk-ndecl|свиня́<anml.genpléj.insplьmy:jamy>}}
 | "pig, sow" || свині́ || свині́ || свине́ || сви́ні || свине́й || сви́ньми/сви́нями || || 
 |-
-| {{User:Benwing2/uk-ndecl|свиня́<pr.genpléj.insplьmy:ьmý:jamy>}}
+| {{User:Benwing2/uk-ndecl|свиня́<pr.genpléj.insplьmy:ьmý:jamy>}}
 | "swine (person)" || свині́ || свині́ || свине́ || сви́ні || свине́й || сви́ньми/свиньми́/сви́нями || || 
 |-
 | {{User:Benwing2/uk-ndecl|суддя́<MF.pr.vóce.genpliv>}}
@@ -338,16 +365,16 @@ Ukrainian declensions:
 | {{User:Benwing2/uk-ndecl|борозна́<d'*>}}
 | "furrow" || борозни́ || борозні́ || бо́розно || бо́розни || бо́розен || бо́рознами || || acc sg бо́розну
 |-
-| {{User:Benwing2/uk-ndecl|голова́<d'.i.genpl:голі́в>}}
-| "head" || голови́ || голові́ || го́лово || го́лови || голі́в || го́ловами || борода́<d'.i.genpl:борі́д> "beard, chin", борона́<d'.i.genpl:борі́н> "harrow", сковорода́<d'.i.genpl:сковорі́д> "frying pan", сторона́<d'.i.genpl:сторі́н> "side" || acc sg го́лову
+| {{User:Benwing2/uk-ndecl|голова́<d'#.i>}}
+| "head" || голови́ || голові́ || го́лово || го́лови || голі́в || го́ловами || борода́<d'#.i> "beard, chin", борона́<d'#.i> "harrow", сковорода́<d'#.i> "frying pan", сторона́<d'#.i> "side" || acc sg го́лову
 |-
-| {{User:Benwing2/uk-ndecl|голова́<MF.pr.d'.i.genpl:голі́в>}}
+| {{User:Benwing2/uk-ndecl|голова́<MF.d'#.pr.i>}}
 | "chairman, chief" || голови́ || голові́ || го́лово || го́лови || голі́в || го́ловами || || acc sg го́лову
 |-
 | {{User:Benwing2/uk-ndecl|душа́<d'>}}
 | "soul, spirit" || душі́ || душі́ || ду́ше || ду́ші || душ || ду́шами || || 
 |-
-| {{User:Benwing2/uk-ndecl|земля́<d'*.vóce.genpl:земе́ль>}}
+| {{User:Benwing2/uk-ndecl|земля́<d'*#.vóce>}}
 | "land, earth; country, state (of Germany)" || землі́ || землі́ || зе́мле || зе́млі || земе́ль || зе́млями || || 
 |-
 ! colspan=10 style="text-align: center;" | Accent e
@@ -355,14 +382,14 @@ Ukrainian declensions:
 | {{User:Benwing2/uk-ndecl|ми́ша<e.anml.genplej>}}
 | "mouse" || ми́ші || ми́ші || ми́ше || ми́ші || мише́й || миша́ми || || 
 |-
-| {{User:Benwing2/uk-ndecl|смерть<F.e>}}
-| "death" || сме́рті || сме́рті || сме́рте || сме́рті || смерте́й || смертя́ми || кисть<F.e> "hand" || 
+| {{User:Benwing2/uk-ndecl|кисть<F.e>}}
+| "death" || ки́сті || ки́сті/ки́сти || ки́сте || ки́сті || кисте́й || кистя́ми || || 
 |-
-| {{User:Benwing2/uk-ndecl|кість<F.e.io.geni:y.inspljamy:ьmy>}}
+| {{User:Benwing2/uk-ndecl|смерть<F.e.geni:y>}}
+| "death" || сме́рті || сме́рті/сме́рти || сме́рте || сме́рті || смерте́й || смертя́ми || || 
+|-
+| {{User:Benwing2/uk-ndecl|кість<F.e.io.inspljamy:ьmy>}}
 | "bone" || ко́сті/ко́сти || ко́сті || ко́сте || ко́сті || косте́й || костя́ми/кістьми́ || || 
-|-
-| {{User:Benwing2/uk-ndecl|вісь<F.e.stem:ос>}}
-| "axis, axle" || о́сі || о́сі || о́се || о́сі || осе́й || о́сями || || 
 |-
 | {{User:Benwing2/uk-ndecl|річ<F.e.ie>}}
 | "thing" || ре́чі || ре́чі || ре́че || ре́чі || рече́й || реча́ми || піч<F.e.ie> "oven" || 
@@ -372,7 +399,7 @@ Ukrainian declensions:
 |-
 ! colspan=10 style="text-align: center;" | Accent f
 |-
-| {{User:Benwing2/uk-ndecl|сльоза́<f.i.vocó.insplamy:ьmy.ínsplьmy>}}
+| {{User:Benwing2/uk-ndecl|сльоза́<f.i.vocó.insplamy:ьmy.ínsplьmy>}}
 | "tear (of the eye)" || сльози́ || сльозі́ || сльозо́ || сльо́зи || сліз || сльоза́ми/слізьми́/слі́зьми || || 
 |-
 | {{User:Benwing2/uk-ndecl|брова́<f.i.vocó>}}
@@ -396,25 +423,25 @@ Ukrainian declensions:
 
 * Feminine nouns in coronal or labial + а:
 ** Example nouns:
-*** Accent a: годи́на<> "hour" (also і́стина<> "truth", ду́ма<> "thought", плане́та<> "planet", etc.), мужчи́на<M.pr> "man", ри́ба<anml> "fish" (also віве́ра<anml> "civet"), шко́ла&lt;i> "school" (also робо́та&lt;i> "work", я́года&lt;i> "berry"), бере́за&lt;i> "birch", осо́ба<pr.i> "person", коро́ва<anml.i> "cow", соло́ма<sg> "straw" (also фа́уна<sg> "fauna"), ку́чма<*> "tall sheepskin hat", підо́швa<*.genpl:підошо́в> "sole"
+*** Accent a: годи́на<> "hour" (also і́стина<> "truth", ду́ма<> "thought", плане́та<> "planet", etc.), мужчи́на<M.pr> "man", ри́ба<anml> "fish" (also віве́ра<anml> "civet"), шко́ла&lt;i> "school" (also робо́та&lt;i> "work", я́года&lt;i> "berry"), бере́за&lt;i> "birch", осо́ба<pr.i> "person", коро́ва<anml.i> "cow", соло́ма<sg> "straw" (also фа́уна<sg> "fauna"), ку́чма<*> "tall sheepskin hat", підо́швa<#*> "sole"
 *** Accent b:
 *** Accent c: ха́та<c> "house, hut"
 *** Accent d: висота́<> "height" (also вода́<> "water", глава́<> "head", глибина́<> "depth", ковбаса́<> "sausage", роса́<> "dew", стіна́<> "wall", стріла́<> "arrow", etc.), глава́<pr> "head, chief", оса́<anml> "wasp", біднота́<sg> "poverty" (also бузина́<sg> "elder (tree)", кора́<sg> "bark", кропива́<sg> "nettle", etc.), гора́&lt;i> "mountain" (also лоза́&lt;i> "willow"), вдова́<pr.i> "widow", бджола́<anml.i> "bee" (also коза́<anml.i> "goat"), весна́<*> "spring (season)" (also мітла́<*> "broom", тюрма́<*> "prison")
-*** Accent d': середа́<d'> "Wednesday", коса́<d'.i> "braided hair; scythe", борозна́<d'*> "furrow", голова́<d'.i.genpl:голі́в> "head" [note: voc sg го́лово] (also борода́<d'.i.genpl:борі́д> "beard, chin", борона́<d'.i.genpl:борі́н> "harrow", сковорода́<d'.i.genpl:сковорі́д> "frying pan", сторона́<d'.i.genpl:сторі́н> "side"), голова́<MF.pr.d'.i.genpl:голі́в> "chairman, chief"
+*** Accent d': середа́<d'> "Wednesday", коса́<d'.i> "braided hair; scythe", борозна́<d'*> "furrow", голова́<d'#.i> "head" [note: voc sg го́лово] (also борода́<d'#.i> "beard, chin", борона́<d'#.i> "harrow", сковорода́<d'#.i> "frying pan", сторона́<d'#.i> "side"), голова́<MF.d'#.pr.i> "chairman, chief"
 *** Accent e:
 *** Accent f:
 *** Accent f':
-*** Multiple stresses or accent patterns: ((ба́тьківщина<>,батьківщи́на<>)) "homeland" (also ((ха́лепа<>,хале́па<>)) "trouble"), ((сосна́<*>,со́сна<*.genpl:со́сон>)) "pine", сестра́<*.pr.genpl:се́стер:сесте́р> "sister" (also медсестра́<*.pr.genpl:медсе́стер:медсесте́р> "nurse")
+*** Multiple stresses or accent patterns: ((ба́тьківщина<>,батьківщи́на<>)) "homeland" (also ((ха́лепа<>,хале́па<>)) "trouble"), ((сосна́<*>,со́сна<*.genpl:со́сон>)) "pine", сестра́<*,*#.pr> "sister" (also медсестра́<*,*#.pr> "nurse")
 ** Exceptional nouns:
-*** ((ді́вчина<pr.plstem:ді́вчат.nompla>,дівчи́на<pr.plstem:дівча́т.nompla>)) "girl, daughter", люди́на<pr.plstem:люд.genpléj.insplьmý> "person; mensch", війна́<vocó.genpl:во́єн:війн> "war", дити́на<pr.plstem:дит.genpléj.insplьmy> "child", сльоза́<f.i.vocó.insplamy:ьmý:ьmy> "tear (of the eye)", гра<*.plstem:ігр> "game, play"
-*** With end-stressed voc sg: зима́<b.vocó> "winter" (also біда́<b.vocó> "misfortune"), війнá (see previous), гроза́<vocó> "thunder; danger", сарана́<sg.vocó> "locusts (collective)" (also тварина́<vocó> "livestock", боротьба́<vocó> "struggle"), сльоза́ (see above), брова́<f.i.vocó> "eyebrow", гра (see above)
-*** With genitive plural - or -ів: ба́ба<c.pr.genpl-:iv> "grandmother", губа́<f'.genpl-:iv> "lip", ма́ма<a,c.pr.genpl-:iv> "mom"
+*** ((ді́вчина<pr.plstem:ді́вчат.nompla>,дівчи́на<pr.plstem:дівча́т.nompla>)) "girl, daughter", люди́на<#.pr.plsoft.plstem:люд.insplьmý> "person; mensch", війна́<vocó.genpl:во́єн:війн> "war", дити́на<#.pr.plsoft.plstem:діт.insplьmy> "child", сльоза́<f.i.vocó.insplamy:ьmy.ínsplьmy> "tear (of the eye)", гра<*.plstem:ігр> "game, play"
+*** With end-stressed voc sg: зима́<b.vocó> "winter" (also біда́<b.vocó> "misfortune"), війнá (see previous), гроза́<vocó> "thunder; danger", сарана́<sg.vocó> "locusts (collective)" (also тварина́<sg.vocó> "livestock", боротьба́<sg.vocó> "struggle"), сльоза́ (see above), брова́<f.i.vocó> "eyebrow", гра (see above)
+*** With genitive plural - or -ів: ба́ба<c.pr.genpl-:iv> "grandmother", губа́<f'.genpl-:iv> "lip", ма́ма<a,c.pr.genpl-:ív.ínsplamy> "mom"
 
 
 
 * Feminine nouns in velar + а:
 ** Example nouns:
-*** Accent a: кни́га<> "book" (also нау́ка "science"), соба́ка<anml> "dog", доро́га&lt;i> "road", ка́лька<*> "tracing paper; calque", австрали́йка<*.pr> "Australian woman", ону́ка<*> "granddaughter", фі́зика<sg> "physics"
+*** Accent a: кни́га<> "book" (also нау́ка "science"), соба́ка<anml> "dog", доро́га&lt;i> "road", ка́лька<*> "tracing paper; calque", австрали́йка<*.pr> "Australian woman", ону́ка<*.pr> "granddaughter", фі́зика<sg> "physics"
 *** Accent b:
 *** Accent c: го́лка<c*> "needle" (also гі́лка<c*> "twig", ля́лька<c*> "doll, puppet", моли́тва<c*> "prayer", це́рква<c*> "church", etc.), ді́вка<c*.pr> "girl" (also ті́тка<c*.pr> "aunt", etc.), ка́чка<c*.anml> "duck" (also ла́стівка<c*.anml> "swallow", etc.)
 *** Accent d: блоха́<anml.i> "flea", дочка́<*.pr> "daughter"
@@ -438,20 +465,20 @@ Ukrainian declensions:
 *** Accent e:
 *** Accent f:
 *** Accent f':
-** Exceptional nouns: во́ша<anml.genplej> "louse", ми́ша<e.anml.genplej> "mouse"
+** Exceptional nouns: во́ша<anml.genplej.insplamy:ýma> "louse", ми́ша<e.anml.genplej> "mouse"
 
 
 * Feminine nouns in я:
 ** Example nouns: іде́я<> "idea", а́кція<> "action" (also tons of others), амфі́бія<anml> "amphibian", болни́ця<> "hospital", їда́льня<*> "dining room", вече́ря<> "supper", бабу́ся<pr> "grandmother (dim.)" [voc sg бабу́сю] (also мату́ся<pr> "mother (dim.)", ду́ся<pr> "darling" and names in -у́ся),
 ескадри́лья<*>, ку́хня<*> "kitchen", пі́сня<c*> "song" (also ша́бля<c*> "saber"), змія́<anml> "snake"
-** Exceptional nouns: вівця́<*.anml.genpl:ове́ць> "sheep", гілля́<F.b.genpliv> "side sprout", земля́<d'*.vóce.genpl:земе́ль> "land", зоря́<i.vóce> "star; dawn", сім'я́<F.genpl:сіме́й> "family", свиня́<anml.genpléj.insplьmy:jamy> "pig, sow", свиня́<pr.genpléj.insplьmy:ьmý:jamy> "swine (person)", стаття́<F.b.genpl:стате́й> "article", суддя́<MF.pr.vóce.genpliv> "judge", шестірня́<b*.plstem:шестерн> "gear", ні́здря<genpliv> "nostril", леге́ня<genplь:iv> "lung"
+** Exceptional nouns: вівця́<*.anml.genpl:ове́ць> "sheep", гілля́<F.b.genpliv> "side sprout", земля́<d'*#.vóce> "land", зоря́<i.vóce> "star; dawn", сім'я́<F.genpl:сіме́й> "family", свиня́<anml.genpléj.insplьmy:jamy> "pig, sow", свиня́<pr.genpléj.insplьmy:ьmý:jamy> "swine (person)", стаття́<F.b.genpl:стате́й> "article", суддя́<MF.pr.vóce.genpliv> "judge", шестірня́<b*.plstem:шестерн> "gear", ні́здря<genpliv> "nostril", леге́ня<genplь:iv> "lung"
 
 
 
 * Feminine nouns in a soft consonant:
-** Example nouns: ві́дповідь<F> "reply" (also бусо́ль<F> "compass", га́лузь<F> "branch, twig", мить<F> "moment", моде́ль<F> "model", роль<F> "role", сталь<F> "steel", тінь<F> "shadow", ціль<F> "target, goal"), моде́ль<F.pr> "model (person)", форе́ль<F.anml> "trout" (also макре́ль<F.anml> "mackerel"), я́кість<io> "quality, property" (also ці́нність<io> "value", ва́ртість<io> "value, worth", etc.), о́сінь<F.ie> "autumn", па́м'ять<F.sg> "memory" (also бла́кить<F.sg> "blue", мідь<F.sg> "copper", па́морозь<F.sg> "hoarfrost", суть<F.sg> "essence, gist"), міць<F.sg.io> "power, strength" (also по́хіть "lust"), со́вість<sg> "conscience" (also у́часть<F.sg> "participation, share"), вла́сність<sg.io> "property, belongings" (also му́жність<sg.io> "courage", ще́дрість<sg.io> "generosity" and many other abstract nouns), ((смі́ливість<sg.io>,сміли́вість<sg.io>)) "boldness, courage", смерть<F.e> "death" (also кисть<F.e> "hand")
+** Example nouns: ві́дповідь<F> "reply" (also бусо́ль<F> "compass", га́лузь<F> "branch, twig", мить<F> "moment", моде́ль<F> "model", роль<F> "role", сталь<F> "steel", тінь<F> "shadow", ціль<F> "target, goal"), моде́ль<F.pr> "model (person)", форе́ль<F.anml> "trout" (also макре́ль<F.anml> "mackerel"), я́кість<io> "quality, property" (also ці́нність<io> "value", ва́ртість<io> "value, worth", etc.), о́сінь<F.ie.geni:y> "autumn", па́м'ять<F.sg> "memory" (also блаки́ть<F.sg> "blue", мідь<F.sg> "copper", па́морозь<F.sg> "hoarfrost", суть<F.sg> "essence, gist"), міць<F.sg.io> "power, strength" (also по́хіть "lust"), со́вість<sg> "conscience", у́часть<F.sg> "participation, share", вла́сність<sg.io> "property, belongings" (also му́жність<sg.io> "courage", ще́дрість<sg.io> "generosity" and many other abstract nouns), ((смі́ливість<sg.io>,сміли́вість<sg.io>)) "boldness, courage", кисть<F.e> "hand", смерть<F.e.geni:y> "death"
 ** Exceptional nouns:
-*** о́бласть<F.genpléj> "oblast, province", сіль<F.io.genpléj> "salt", кість<F.e.io.geni:y.insplamy:ьmy> "bone", вісь<F.e.io.stem:ос> "axis, axle", пості́ль<F.ie.nom:по́стіль:пості́ль.ins:по́стіллю:посте́лею> "bed"
+*** о́бласть<F.#> "oblast, province", сіль<F.#.io.geni:y> "salt", кість<F.e.io.inspljamy:ьmy> "bone", вісь<F.#.io.stem:ос> "axis, axle", пості́ль<F.ie.nom:по́стіль:пості́ль.acc:по́стіль:пості́ль.ins:по́стіллю:посте́лею> "bed"
 
 
 * Feminine nouns in a hushing or labial consonant:
