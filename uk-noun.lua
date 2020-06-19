@@ -179,19 +179,19 @@ stress_patterns["b'"] = {
 
 stress_patterns["c"] = {
 	nom_s="-", gen_s="-", dat_s="-", acc_s="-", ins_s="-", loc_s="-", voc_s="-",
-	nom_p="+", gen_p="+", dat_p="+",            ins_p="+", loc_p="+", voc_p="-",
+	nom_p="+", gen_p="+", dat_p="+",            ins_p="+", loc_p="+", voc_p="+",
 	stress = nil,
 }
 
 stress_patterns["d"] = {
 	nom_s="+", gen_s="+", dat_s="+", acc_s="+", ins_s="+", loc_s="+", voc_s="+",
-	nom_p="-", gen_p="-", dat_p="-",            ins_p="-", loc_p="-", voc_p="+",
+	nom_p="-", gen_p="-", dat_p="-",            ins_p="-", loc_p="-", voc_p="-",
 	stress = "last",
 }
 
 stress_patterns["d'"] = {
 	nom_s="+", gen_s="+", dat_s="+", acc_s="-", ins_s="+", loc_s="+", voc_s="+",
-	nom_p="-", gen_p="-", dat_p="-",            ins_p="-", loc_p="-", voc_p="+",
+	nom_p="-", gen_p="-", dat_p="-",            ins_p="-", loc_p="-", voc_p="-",
 	stress = "first",
 }
 
@@ -203,13 +203,13 @@ stress_patterns["e"] = {
 
 stress_patterns["f"] = {
 	nom_s="+", gen_s="+", dat_s="+", acc_s="+", ins_s="+", loc_s="+", voc_s="+",
-	nom_p="-", gen_p="+", dat_p="+",            ins_p="+", loc_p="+", voc_p="+",
+	nom_p="-", gen_p="+", dat_p="+",            ins_p="+", loc_p="+", voc_p="-",
 	stress = "first",
 }
 
 stress_patterns["f'"] = {
 	nom_s="+", gen_s="+", dat_s="+", acc_s="-", ins_s="+", loc_s="+", voc_s="+",
-	nom_p="-", gen_p="+", dat_p="+",            ins_p="+", loc_p="+", voc_p="+",
+	nom_p="-", gen_p="+", dat_p="+",            ins_p="+", loc_p="+", voc_p="-",
 	stress = "first",
 }
 
@@ -268,7 +268,7 @@ local function add(base, slot, stress, endings, footnotes, explicit_stem)
 	if skip_slot(base, slot) then
 		return
 	end
-	footnotes = combine_footnotes(base.footnotes, footnotes)
+	footnotes = combine_footnotes(combine_footnotes(base.footnotes, stress.footnotes), footnotes)
 	if type(endings) == "string" then
 		endings = {endings}
 	end
@@ -331,6 +331,10 @@ local function add(base, slot, stress, endings, footnotes, explicit_stem)
 		elseif stress_for_slot == "+" then
 			ending = com.maybe_stress_initial_syllable(ending)
 		end
+		if com.is_nonsyllabic(stem) then
+			-- If stem is nonsyllabic, the ending must receive stress.
+			ending = com.maybe_stress_initial_syllable(ending)
+		end
 		ending = com.generate_form(ending, footnotes)
 		iut.add_forms(base.this_forms, slot, stem, ending, com.combine_stem_ending)
 	end
@@ -365,7 +369,9 @@ local function process_slot_overrides(base, do_slot)
 							form = rsub(value, "~~", com.apply_first_palatalization(stem))
 							form = rsub(value, "~", stem)
 						end
-						iut.insert_form(base.this_forms, slot, {form = form, footnotes = combined_notes})
+						if form ~= "" then
+							iut.insert_form(base.this_forms, slot, {form = form, footnotes = combined_notes})
+						end
 					else
 						if override.stemstressed then
 							-- Signal not to add a stress to the ending even if the stress pattern
@@ -404,7 +410,7 @@ end
 
 local function handle_derived_slots_and_overrides(base)
 	local function is_non_derived_slot(slot)
-		return slot ~= "voc_p" and slot ~= "acc_s" and slot ~= "acc_p"
+		return slot ~= "voc_s" and slot ~= "voc_p" and slot ~= "acc_s" and slot ~= "acc_p"
 	end
 
 	local function is_derived_slot(slot)
@@ -417,7 +423,7 @@ local function handle_derived_slots_and_overrides(base)
 
 	-- Generate the remaining slots that are derived from other slots.
 	iut.insert_forms(base.this_forms, "voc_p", base.this_forms["nom_p"])
-	if rfind(base.decl, "%-m$") then
+	if rfind(base.decl, "%-m$") or base.gender == "M" and base.decl == "adj" then
 		iut.insert_forms(base.this_forms, "acc_s", base.this_forms[base.animacy == "inan" and "nom_s" or "gen_s"])
 	end
 	if base.animacy == "inan" or base.animacy == "anml" then
@@ -425,6 +431,9 @@ local function handle_derived_slots_and_overrides(base)
 	end
 	if base.animacy == "pr" or base.animacy == "anml" then
 		iut.insert_forms(base.this_forms, "acc_p", base.this_forms["gen_p"])
+	end
+	if base.surname then
+		iut.insert_forms(base.this_forms, "voc_s", base.this_forms["nom_s"])
 	end
 
 	-- Handle overrides for derived slots, to allow them to be overridden.
@@ -439,10 +448,14 @@ end
 local decls = {}
 local declprops = {}
 
+local function default_genitive_u(base)
+	return base.number == "sg" and not rfind(base.lemma, "^" .. com.uppercase_c)
+end
+
 
 decls["hard-m"] = function(base, stress)
 	local velar = rfind(stress.vowel_stem, com.velar_c .. "$")
-	local gen_s = base.number == "sg" and "у" or "а" -- may be overridden
+	local gen_s = default_genitive_u(base) and "у" or "а" -- may be overridden
 	local loc_s =
 		-- these conditions seem weird but it's what I observed
 		velar and (base.animacy ~= "inan" or stress.reducible) and {"ові", "у"} or
@@ -470,11 +483,11 @@ declprops["hard-m"] = {desc = "hard masc-form"}
 
 
 decls["semisoft-m"] = function(base, stress)
-	local gen_s = base.number == "sg" and "у" or "а" -- may be overridden
+	local gen_s = default_genitive_u(base) and "у" or "а" -- may be overridden
 	local loc_s = base.animacy ~= "inan" and {"еві", "у", "і"} or {"у", "і"}
 	-- FIXME: Should vocative singular in -у be end-stressed if reducible, parallel
 	-- to soft nouns? I don't have any examples of reducible nouns in -ч, ш or щ.
-	local voc_s = rfind(stress.vowel_stem, "ж$") and "е" or "у̣" -- dot underneath у
+	local voc_s = rfind(stress.vowel_stem, "[рж]$") and "е" or "у̣" -- dot underneath у
 	add_decl(base, stress, "", gen_s, {"еві", "у"}, nil, "ем", loc_s, voc_s,
 		"і", "ів", "ам", "ами", "ах")
 end
@@ -484,12 +497,14 @@ declprops["semisoft-m"] = {desc = "semisoft masc-form"}
 
 decls["soft-m"] = function(base, stress)
 	local nom_s = rfind(stress.nonvowel_stem, "р$") and "" or "ь"
-	local gen_s = base.number == "sg" and "ю" or "я" -- may be overridden
+	local gen_s = default_genitive_u(base) and "ю" or "я" -- may be overridden
 	local loc_s = base.animacy ~= "inan" and {"еві", "ю", "і"} or {"ю", "і"}
 	-- More weird conditions: vocative singular in accent b is end-stressed if
 	-- reducible or ending in -інь (from Proto-Slavic nouns in -y), stem-stressed
 	-- otherwise.
-	local voc_s = (stress.reducible or rfind(stress.vowel_stem, "і́?нь$")) and "ю" or "ю̣"
+	local voc_s = (stress.reducible or (
+		rfind(stress.nonvowel_stem, "і́?н$") and rfind(stress.vowel_stem, "е́?н$")
+	)) and "ю" or "ю̣"
 	add_decl(base, stress, nom_s, gen_s, {"еві", "ю"}, nil, "ем", loc_s, voc_s,
 		"і", "ів", "ям", "ями", "ях")
 end
@@ -498,12 +513,12 @@ declprops["soft-m"] = {desc = "soft masc-form"}
 
 
 decls["j-m"] = function(base, stress)
-	local gen_s = base.number == "sg" and "ю" or "я" -- may be overridden
-	local loc_s = base.animacy ~= "inan" and {"єві", "ю", "ї"} or {"ю", "ї"}
+	local gen_s = default_genitive_u(base) and "ю" or "я" -- may be overridden
+	local loc_s = base.animacy ~= "inan" and {"ю", "єві", "ї"} or {"ю", "ї"}
 	-- As with soft nouns, vocative singular in accent b is end-stressed if
 	-- reducible, stem-stressed otherwise.
 	local voc_s = stress.reducible and "ю" or "ю̣"
-	add_decl(base, stress, "й", gen_s, {"єві", "ю"}, nil, "єм", loc_s, voc_s,
+	add_decl(base, stress, "й", gen_s, {"ю", "єві"}, nil, "єм", loc_s, voc_s,
 		"ї", "їв", "ям", "ями", "ях")
 end
 
@@ -511,7 +526,6 @@ declprops["j-m"] = {desc = "j-stem masc-form"}
 
 
 decls["o-m"] = function(base, stress)
-	base.no_retract_e = true
 	local velar = rfind(stress.vowel_stem, com.velar_c .. "$")
 	local hushing = rfind(stress.vowel_stem, com.hushing_c .. "$")
 	local loc_s =
@@ -544,16 +558,25 @@ decls["o-m"] = function(base, stress)
 		velar and base.animacy ~= "inan" and "у" or
 		hushing and base.animacy ~= "inan" and "е" or
 		"о"
-	add_decl(base, stress, "о", "а", "у", nil, ins_s, loc_s, voc_s,
+	add_decl(base, stress, "о", "а", {"ові", "у"}, nil, ins_s, loc_s, voc_s,
 		"и", "ів", "ам", "ами", "ах")
 end
 
-declprops["o-m"] = {desc = "o-stem masc-form"}
+declprops["o-m"] = {desc = "masc in -о"}
 
 
 decls["hard-f"] = function(base, stress)
-	add_decl(base, stress, "а", "и", "і", "у", "ою", "і", "о̣",
-		"и", "", "ам", "ами", "ах")
+	-- Vocative singular in stress pattern b is end-stressed; stem-stressed otherwise.
+	local voc_sg = stress.stress == "b" and "о" or "о̣"
+	add_decl(base, stress, "а", "и", "і", "у", "ою", "і", voc_sg)
+	if base.plsoft then
+		-- люди́на, дити́на
+		add_decl(base, stress, nil, nil, nil, nil, nil, nil, nil,
+			"и", "ей", "ям", "ями", "ях")
+	else
+		add_decl(base, stress, nil, nil, nil, nil, nil, nil, nil,
+			"и", "", "ам", "ами", "ах")
+	end
 end
 
 declprops["hard-f"] = {desc = "hard fem-form"}
@@ -590,9 +613,13 @@ declprops["j-f"] = {desc = "j-stem fem-form"}
 decls["third-f"] = function(base, stress)
 	base.no_retract_e = true
 	local nom_sg = rfind(stress.nonvowel_stem, "[сздтлнц]$") and "ь" or ""
+	-- All third-decl feminine nouns ending in -сть appear to have two possible genitive
+	-- singulars, at least per Slovozmina. Some other third-decl nouns (о́сінь "autumn",
+	-- сіль "salt" and смерть "death") behave the same way, but most don't.
+	local gen_sg = rfind(stress.vowel_stem, "ст$") and {"і", "и"} or "і"
 	local hushing = rfind(stress.vowel_stem, "[чшжщ]$")
 	local plvowel = hushing and "а" or "я"
-	add_decl(base, stress, nom_sg, "і", "і", nom_sg, nil, "і", "е",
+	add_decl(base, stress, nom_sg, gen_sg, "і", nom_sg, nil, "і", "е",
 		"і", "ей", plvowel .. "м", plvowel .. "ми", plvowel .. "х")
 	local ins_s_stem = stress.nonvowel_stem
 	local pre_stem, final_cons = rmatch(ins_s_stem, "^(.*)([сздтлнцчшжщ])$")
@@ -653,7 +680,7 @@ declprops["soft-n"] = {desc = "soft neut-form"}
 
 
 decls["fourth-n"] = function(base, stress)
-	local loc_sg = rfind(stress.vowel_stem, "'$") and "ї" or "і"
+	local loc_sg = rfind(stress.vowel_stem, "['й]$") and "ї" or "і"
 	if not rfind(stress.stress, "^[bdf]") then
 		loc_sg = {"ю", loc_sg}
 	end
@@ -664,7 +691,7 @@ decls["fourth-n"] = function(base, stress)
 	else
 		local gen_pl =
 			rfind(stress.pl_nonvowel_stem, "[сздтлнц]$") and "ь" or
-			rfind(stress.pl_vowel_stem, "'$") and "їв" or
+			rfind(stress.pl_vowel_stem, "['й]$") and "їв" or
 			""
 		add_decl(base, stress, nil, nil, nil, nil, nil, nil, nil,
 			"я", gen_pl, "ям", "ями", "ях")
@@ -687,11 +714,70 @@ declprops["en-n"] = {desc = "n-stem neut-form"}
 
 
 decls["t-n"] = function(base, stress)
-	add_decl(base, stress, "я", "яти", "яті", "я", "ям", "яті", "я",
-		"ята", "ят", "ятам", "ятами", "ятах")
+	-- Most t-stem neuters end in -я́, but there's at least лоша́ as well.
+	local v = rfind(stress.vowel_stem, com.hushing_c .. "$") and "а" or "я"
+	add_decl(base, stress, v, v .. "ти", v .. "ті", v, v .. "м", v .. "ті", v,
+		v .. "та", v .. "т", v .. "там", v .. "тами", v .. "тах")
 end
 
 declprops["t-n"] = {desc = "t-stem neut-form"}
+
+
+decls["adj"] = function(base, stress)
+	local adj_alternant_spec = require("Module:uk-adjective").do_generate_forms({base.lemma})
+	local function copy(from_slot, to_slot)
+		base.this_forms[to_slot] = adj_alternant_spec.forms[from_slot]
+	end
+	if base.number ~= "pl" then
+		if base.gender == "M" then
+			copy("nom_m", "nom_s")
+			copy("gen_m", "gen_s")
+			copy("dat_m", "dat_s")
+			copy("ins_m", "ins_s")
+			copy("loc_m", "loc_s")
+		elseif base.gender == "F" then
+			copy("nom_f", "nom_s")
+			copy("gen_f", "gen_s")
+			copy("dat_f", "dat_s")
+			copy("acc_f", "acc_s")
+			copy("ins_f", "ins_s")
+			copy("loc_f", "loc_s")
+		elseif base.gender == "N" then
+			copy("nom_n", "nom_s")
+			copy("gen_m", "gen_s")
+			copy("dat_m", "dat_s")
+			copy("acc_n", "acc_s")
+			copy("ins_m", "ins_s")
+			copy("loc_m", "loc_s")
+		else
+			error("Internal error: Unrecognized gender: " .. base.gender)
+		end
+		iut.insert_forms(base.this_forms, "voc_s", base.this_forms["nom_s"])
+	end
+	if base.number ~= "sg" then
+		copy("nom_p", "nom_p")
+		copy("gen_p", "gen_p")
+		copy("dat_p", "dat_p")
+		copy("ins_p", "ins_p")
+		copy("loc_p", "loc_p")
+	end
+end
+
+declprops["adj"] = {descfun =
+	function(base)
+		if base.number == "pl" then
+			return "adj"
+		elseif base.gender == "M" then
+			return "adj masc"
+		elseif base.gender == "F" then
+			return "adj fem"
+		elseif base.gender == "N" then
+			return "adj neut"
+		else
+			error("Internal error: Unrecognized gender: " .. base.gender)
+		end
+	end
+}
 
 
 local function fetch_footnotes(separated_group)
@@ -818,8 +904,31 @@ local function parse_indicator_spec(angle_bracket_spec)
 					error("Blank indicator: '" .. inside .. "'")
 				end
 				base.footnotes = fetch_footnotes(dot_separated_group)
+			elseif rfind(part, "^[a-f]'*[*#]*$") or rfind(part, "^[a-f]'*[*#]*,") or
+				rfind(part, "^[*#]*$") or rfind(part, "^[*#]*,") then
+				if base.stresses then
+					error("Can't specify stress pattern indicator twice: '" .. inside .. "'")
+				end
+				local comma_separated_groups = iut.split_alternating_runs(dot_separated_group, ",")
+				local patterns = {}
+				for i, comma_separated_group in ipairs(comma_separated_groups) do
+					local pattern = comma_separated_group[1]
+					local pat, reducible = rsubb(pattern, "%*", "")
+					pat, genpl_reversed = rsubb(pat, "#", "")
+					if pat == "" then
+						pat = nil
+					end
+					if pat and not stress_patterns[pat] then
+						error("Unrecognized stress pattern '" .. pat .. "': '" .. inside .. "'")
+					end
+					table.insert(patterns, {
+						stress = pat, reducible = reducible, genpl_reversed = genpl_reversed,
+						footnotes = fetch_footnotes(comma_separated_group)
+					})
+				end
+				base.stresses = patterns
 			elseif #dot_separated_group > 1 then
-				error("Footnotes only allowed with slot overrides or by themselves: '" .. table.concat(dot_separated_group) .. "'")
+				error("Footnotes only allowed with slot overrides, stress patterns or by themselves: '" .. table.concat(dot_separated_group) .. "'")
 			elseif part == "M" or part == "MF" or part == "F" or part == "N" then
 				if base.explicit_gender then
 					error("Can't specify gender twice: '" .. inside .. "'")
@@ -840,24 +949,6 @@ local function parse_indicator_spec(angle_bracket_spec)
 					error("Can't specify і-alternation indicator twice: '" .. inside .. "'")
 				end
 				base.ialt = part
-			elseif rfind(part, "^[a-f]'*[*#]*$") or rfind(part, "^[a-f]'*[*#]*,") or
-				rfind(part, "^[*#]*$") or rfind(part, "^[*#]*,") then
-				if base.stresses then
-					error("Can't specify stress pattern indicator twice: '" .. inside .. "'")
-				end
-				local patterns = rsplit(part, ",")
-				for i, pattern in ipairs(patterns) do
-					local pat, reducible = rsubb(pattern, "%*", "")
-					pat, genpl_reversed = rsubb(pat, "#", "")
-					if pat == "" then
-						pat = nil
-					end
-					if pat and not stress_patterns[pat] then
-						error("Unrecognized stress pattern '" .. pat .. "': '" .. inside .. "'")
-					end
-					patterns[i] = {stress = pat, reducible = reducible, genpl_reversed = genpl_reversed}
-				end
-				base.stresses = patterns
 			elseif part == "soft" or part == "semisoft" then
 				if base.rtype then
 					error("Can't specify 'р' type ('soft' or 'semisoft') more than once: '" .. inside .. "'")
@@ -888,6 +979,16 @@ local function parse_indicator_spec(angle_bracket_spec)
 					error("Can't specify '3rd' twice: '" .. inside .. "'")
 				end
 				base.thirddecl = true
+			elseif part == "surname" then
+				if base.surname then
+					error("Can't specify 'surname' twice: '" .. inside .. "'")
+				end
+				base.surname = true
+			elseif part == "+" then
+				if base.adj then
+					error("Can't specify '+' twice: '" .. inside .. "'")
+				end
+				base.adj = true
 			elseif rfind(part, "^stem:") then
 				if base.stem then
 					error("Can't specify stem twice: '" .. inside .. "'")
@@ -919,25 +1020,53 @@ end
 
 
 local function apply_vowel_alternation(base, stem)
-	if base.ialt == "io" or base.ialt == "ie" then
-		local modstem = rsub(stem, "(.)і(́?" .. com.cons_c .. "*)$",
-			function(pre, post)
-				if base.ialt == "io" and (pre == "л" or pre == "Л") then
+	if base.ialt == "io" then
+		local modstem = rsub(stem, "(.?)([іІ])(́?" .. com.cons_c .. "*)$",
+			function(pre, vowel, post)
+				if pre == "л" or pre == "Л" then
 					-- ко́лір, gen sg. ко́льору; вертолі́т, gen sg. вертольо́та
 					return pre .. "ьо" .. post
-				elseif base.ialt == "io" then
+				elseif vowel == "і" then
 					return pre .. "о" .. post
 				else
-					return pre .. "е" .. post
+					return pre .. "О" .. post
 				end
 			end
 		)
 		if modstem == stem then
-			error("Indicator '" .. base.ialt .. "' can't be applied because stem '" .. stem .. "' doesn't have an і as its last vowel")
+			error("Indicator 'io' can't be applied because stem '" .. stem .. "' doesn't have an і as its last vowel")
+		end
+		return modstem
+	elseif base.ialt == "ie" then
+		local modstem = rsub(stem, "([іїІЇ])(́?" .. com.cons_c .. "*)$",
+			function(vowel, post)
+				if vowel == "і" then
+					-- ведмі́дь gen sg. ведме́дя
+					return "е" .. post
+				elseif vowel == "І" then
+					return "Е" .. post
+				elseif vowel == "ї" then
+					-- Ки́їв gen sg. Ки́єва
+					return "є" .. post
+				else
+					return "Є" .. post
+				end
+			end
+		)
+		if modstem == stem then
+			error("Indicator 'ie' can't be applied because stem '" .. stem .. "' doesn't have an і or ї as its last vowel")
 		end
 		return modstem
 	elseif base.ialt == "i" then
-		local modstem = rsub(stem, "ь?[ое](́?" .. com.cons_c .. "*)$", "і%1")
+		local modstem = rsub(stem, "ь?([оеОЕ])(́?" .. com.cons_c .. "*)$",
+			function(vowel, post)
+				if vowel == "о" or vowel == "е" then
+					return "і" .. post
+				else
+					return "І" .. post
+				end
+			end
+		)
 		if modstem == stem then
 			error("Indicator 'i' can't be applied because stem '" .. stem .. "' doesn't have an о or е as its last vowel")
 		end
@@ -965,7 +1094,9 @@ end
 local function check_for_bad_indicators_and_set_defaults(base)
 	-- Set default values.
 	base.number = base.number or "both"
-	base.animacy = base.animacy or base.neutertype == "t" and "anml" or "inan"
+	base.animacy = base.animacy or base.surname and "pr" or
+		base.neutertype == "t" and "anml" or
+		"inan"
 	base.gender = base.explicit_gender
 
 	-- Check for indicators that don't make sense given the context.
@@ -985,8 +1116,8 @@ local function check_for_bad_indicators_and_set_defaults(base)
 		base.gender = "F"
 	end
 	if base.neutertype then
-		if not rfind(base.lemma, "я́?$") then
-			error("Neuter-type indicator '" .. base.neutertype .. "' can only be specified with a lemma ending in -я")
+		if not rfind(base.lemma, "я́?$") and not rfind(base.lemma, com.hushing_c .. "а́?$") then
+			error("Neuter-type indicator '" .. base.neutertype .. "' can only be specified with a lemma ending in -я or hushing consonat + -а")
 		end
 		if base.neutertype == "en" and not rfind(base.lemma, "м'я́?$") then
 			error("Neuter-type indicator 'en' can only be specified with a lemma ending in -м'я")
@@ -1088,6 +1219,127 @@ local function synthesize_singular_lemma(base)
 end
 
 
+-- For an adjectival lemma, synthesize the masc singular form.
+local function synthesize_adj_lemma(base)
+	local stem, ac
+	local gender, number
+	while true do
+		-- Masculine
+		stem, ac = rmatch(base.lemma, "^(.*)[иії](́?)й$")
+		if stem then
+			gender = "M"
+			break
+		end
+		-- Feminine
+		stem, ac = rmatch(base.lemma, "^(.*)а(́?)$")
+		if stem then
+			base.lemma = stem .. "и" .. ac .. "й"
+			gender = "F"
+			break
+		end
+		stem, ac = rmatch(base.lemma, "^(.*ц)я(́?)$")
+		if stem then
+			base.lemma = stem .. "и" .. ac .. "й"
+			gender = "F"
+			break
+		end
+		stem, ac = rmatch(base.lemma, "^(.*" .. com.vowel .. AC .. "?)я(́?)$")
+		if stem then
+			base.lemma = stem .. "ї" .. ac .. "й"
+			gender = "F"
+			break
+		end
+		stem, ac = rmatch(base.lemma, "^(.*)я(́?)$")
+		if stem then
+			base.lemma = stem .. "і" .. ac .. "й"
+			gender = "F"
+			break
+		end
+		-- Neuter
+		stem, ac = rmatch(base.lemma, "^(.*)е(́?)$")
+		if stem then
+			base.lemma = stem .. "и" .. ac .. "й"
+			gender = "N"
+			break
+		end
+		stem, ac = rmatch(base.lemma, "^(.*ц)е(́?)$")
+		if stem then
+			base.lemma = stem .. "и" .. ac .. "й"
+			gender = "N"
+			break
+		end
+		stem, ac = rmatch(base.lemma, "^(.*" .. com.vowel .. AC .. "?)є(́?)$")
+		if stem then
+			base.lemma = stem .. "ї" .. ac .. "й"
+			gender = "N"
+			break
+		end
+		stem, ac = rmatch(base.lemma, "^(.*)є(́?)$")
+		if stem then
+			base.lemma = stem .. "і" .. ac .. "й"
+			gender = "N"
+			break
+		end
+		-- Plural
+		stem, ac = rmatch(base.lemma, "^(.*ц)і(́?)$")
+		if stem then
+			base.lemma = stem .. "и" .. ac .. "й"
+			number = "pl"
+			break
+		end
+		stem, ac = rmatch(base.lemma, "^(.*" .. com.vowel .. AC .. "?)ї(́?)$")
+		if stem then
+			base.lemma = stem .. "ї" .. ac .. "й"
+			number = "pl"
+			break
+		end
+		stem, ac = rmatch(base.lemma, "^(.*)і(́?)$")
+		if stem then
+			if base.soft then
+				base.lemma = stem .. "і" .. ac .. "й"
+			else
+				base.lemma = stem .. "и" .. ac .. "й"
+			end
+			number = "pl"
+			break
+		end
+		error("Don't recognize ending of adjectival lemma '" .. base.lemma .. "'")
+	end
+	if gender then
+		if base.gender and base.gender ~= gender then
+			error("Explicit gender '" .. base.gender .. "' disagrees with detected gender '" .. gender .. "'")
+		end
+		base.gender = gender
+	end
+	if number then
+		if base.number and base.number ~= number then
+			error("Explicit number '" .. base.number .. "' disagrees with detected number '" .. number .. "'")
+		end
+		base.number = number
+	end
+
+	-- Now set the stress pattern if not given.
+	if not base.stresses then
+		base.stresses = {{reducible = false, genpl_reversed = false}}
+	end
+	for _, stress in ipairs(base.stresses) do
+		if not stress.stress then
+			if ac == AC then
+				stress.stress = "b"
+			else
+				stress.stress = "a"
+			end
+		end
+		-- Set the stems.
+		stress.vowel_stem = stem
+		stress.nonvowel_stem = stem
+		stress.pl_vowel_stem = stem
+		stress.pl_nonvowel_stem = stem
+	end
+	base.decl = "adj"
+end
+
+
 -- Determine the declension based on the lemma and whatever gender has been already given,
 -- and set the gender to a default if not given. The declension is set in base.decl.
 -- In the process, we set either base.vowel_stem (if the lemma ends in a vowel) or
@@ -1122,7 +1374,10 @@ local function determine_declension_and_gender(base)
 		stem = rmatch(base.lemma, "^(.*)й$")
 		if stem then
 			base.decl = "j-m"
-			base.gender = base.gender or "M"
+			if base.gender and base.gender ~= "M" then
+				error("For lemma ending in -й, gender " .. base.gender .. " not allowed")
+			end
+			base.gender = "M"
 			base.nonvowel_stem = stem
 			base.stem_for_reduce = base.lemma
 			break
@@ -1142,14 +1397,23 @@ local function determine_declension_and_gender(base)
 		end
 		stem, ac = rmatch(base.lemma, "^(.*" .. com.hushing_c .. ")а(́?)$")
 		if stem then
-			base.decl = "semisoft-f"
-			base.gender = base.gender or "F"
+			if base.neutertype == "t" then
+				base.decl = "t-n"
+			elseif base.gender == "N" then
+				error("For lemma ending in a hushing consonant + -а, gender N not allowed unless spec 't' is given")
+			else
+				base.decl = "semisoft-f"
+				base.gender = base.gender or "F"
+			end
 			base.vowel_stem = stem
 			break
 		end
 		stem, ac = rmatch(base.lemma, "^(.*)а(́?)$")
 		if stem then
 			base.decl = "hard-f"
+			if base.gender == "N" then
+				error("For lemma ending in -а, gender N not allowed")
+			end
 			base.gender = base.gender or "F"
 			base.vowel_stem = stem
 			break
@@ -1191,6 +1455,9 @@ local function determine_declension_and_gender(base)
 		stem, ac = rmatch(base.lemma, "^(.*" .. com.hushing_c .. ")е(́?)$")
 		if stem then
 			base.decl = "semisoft-n"
+			if base.gender == "F" or base.gender == "MF" then
+				error("For lemma ending in -е, gender " .. base.gender .. " not allowed")
+			end
 			base.gender = base.gender or "N"
 			base.vowel_stem = stem
 			break
@@ -1198,6 +1465,9 @@ local function determine_declension_and_gender(base)
 		stem, ac = rmatch(base.lemma, "^(.*)е(́?)$")
 		if stem then
 			base.decl = "soft-n"
+			if base.gender == "F" or base.gender == "MF" then
+				error("For lemma ending in -е, gender " .. base.gender .. " not allowed")
+			end
 			base.gender = base.gender or "N"
 			base.vowel_stem = stem
 			break
@@ -1261,13 +1531,16 @@ local function determine_stress_and_stems(base)
 			return dereduced_stem
 		end
 		if not stress.stress then
-			if rfind(base.lemma, "я́$") and base.gender == "N" then
+			if base.gender == "M" and rfind(base.lemma, "[ое]́$") then
+				-- masculine in -о or -е
 				stress.stress = "b"
-			elseif ac == AC then
-				stress.stress = "d"
 			elseif stress.reducible and rfind(base.lemma, "[еоєі]́" .. com.cons_c .. "ь?$") then
 				-- reducible with stress on the reducible vowel
 				stress.stress = "b"
+			elseif rfind(base.lemma, "[ая]́$") and base.gender == "N" then
+				stress.stress = "b"
+			elseif ac == AC then
+				stress.stress = "d"
 			else
 				stress.stress = "a"
 			end
@@ -1357,11 +1630,15 @@ end
 
 local function detect_indicator_spec(base)
 	check_for_bad_indicators_and_set_defaults(base)
-	if base.number == "pl" then
-		synthesize_singular_lemma(base)
+	if base.adj then
+		synthesize_adj_lemma(base)
+	else
+		if base.number == "pl" then
+			synthesize_singular_lemma(base)
+		end
+		determine_declension_and_gender(base)
+		determine_stress_and_stems(base)
 	end
-	determine_declension_and_gender(base)
-	determine_stress_and_stems(base)
 end
 
 
@@ -1612,7 +1889,12 @@ local function make_table(alternant_spec)
 				assert(base.animacy == "pr")
 				m_table.insertIfNot(animacies, "pers")
 			end
-			m_table.insertIfNot(decldescs, declprops[base.decl].desc)
+			local props = declprops[base.decl]
+			if props.descfun then
+				m_table.insertIfNot(decldescs, props.descfun(base))
+			else
+				m_table.insertIfNot(decldescs, props.desc)
+			end
 			for _, stress in ipairs(base.stresses) do
 				if reducible == nil then
 					reducible = stress.reducible
