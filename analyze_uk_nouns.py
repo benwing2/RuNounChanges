@@ -6,18 +6,19 @@ import pywikibot, re, sys, codecs, argparse
 import blib
 from blib import getparam, rmparam, msg, site, tname
 
-import uklib
+import uklib as uk
 
 import find_regex
 
+AC = u"\u0301"
 
 def param_is_end_stressed(param, possible_endings=[]):
-  values = [uklib.add_monosyllabic_stress(word) for word in re.split(", *", param)]
-  if any(uklib.is_unstressed(v) for v in values):
+  values = [uk.add_monosyllabic_stress(word) for word in re.split(", *", param)]
+  if any(uk.is_unstressed(v) for v in values):
     return "unknown"
-  if any(uklib.is_mixed_stressed(v, possible_endings) for v in values):
+  if any(uk.is_mixed_stressed(v, possible_endings) for v in values):
     return "mixed"
-  end_stresses = [uklib.is_end_stressed(v, possible_endings) for v in values]
+  end_stresses = [uk.is_end_stressed(v, possible_endings) for v in values]
   if all(end_stresses):
     return True
   if any(end_stresses):
@@ -60,21 +61,42 @@ def process_text_on_page(index, pagetitle, text):
   gender = "unknown"
   for t in parsed.filter_templates():
     tn = tname(t)
-    if tn == "uk-noun":
+    if tn in ["uk-noun", "uk-proper noun"]:
       heads = blib.fetch_param_chain(t, "1", "head")
-      gender_and_animacy = getparam(t, "2")
+      gender_and_animacy = blib.fetch_param_chain(t, "2", "g")
       plurale_tantum = False
-      animacy = "unknown"
-      gender = "unknown"
+      animacy = []
+      gender = []
       if gender_and_animacy:
-        gender_and_animacy_parts = gender_and_animacy.split("-")
-        gender = gender_and_animacy_parts[0]
-        if len(gender_and_animacy_parts) > 1:
-          animacy = gender_and_animacy_parts[1]
-        if len(gender_and_animacy_parts) > 2 and gender_and_animacy_parts[2] == "p":
-          plurale_tantum = True
-      if getparam(t, "g2"):
-        pagemsg("WARNING: Multiple genders: %s" % unicode(t))
+        for ga in gender_and_animacy:
+          gender_and_animacy_parts = ga.split("-")
+          g = gender_and_animacy_parts[0]
+          if g not in gender:
+            gender.append(g)
+          if len(gender_and_animacy_parts) > 1:
+            a = gender_and_animacy_parts[1]
+            if a not in animacy:
+              animacy.append(a)
+          if len(gender_and_animacy_parts) > 2 and gender_and_animacy_parts[2] == "p":
+            plurale_tantum = True
+      if not animacy:
+        animacy = "unknown"
+      elif len(animacy) > 1:
+        pagemsg("WARNING: Multiple animacies: %s" % ",".join(animacy))
+      animacy = animacy[0]
+      if not gender:
+        gender = "unknown"
+      elif set(gender) == {"m", "f"}:
+        gender = "MF"
+      else:
+        if len(gender) > 1:
+          pagemsg("WARNING: Multiple genders: %s" % ",".join(gender))
+        gender = gender[0]
+        if gender in ["m", "f", "n"]:
+          gender = gender.upper()
+        else:
+          pagemsg("WARNING: Unknown gender: %s" % gender)
+          gender = "unknown"
 
     def fetch(param):
       val = getparam(t, param).strip()
@@ -84,7 +106,7 @@ def process_text_on_page(index, pagetitle, text):
       for v in vals:
         # Remove final footnote symbols are per [[Module:table tools]]
         v = re.sub(ur"[*~@#$%^&+0-9_\u00A1-\u00BF\u00D7\u00F7\u2010-\u2027\u2030-\u205E\u2070-\u20CF\u2100-\u2B5F\u2E00-\u2E3F]*$", "", v)
-        retval.append(v)
+        retval.append(uk.add_monosyllabic_stress(v))
       return ", ".join(retval)
 
     def matches(is_end_stressed, should_be_end_stressed):
@@ -96,7 +118,7 @@ def process_text_on_page(index, pagetitle, text):
       values = re.split(", *", paramval)
       found_endings = []
       for v in values:
-        v = v.replace(uklib.AC, "")
+        v = v.replace(uk.AC, "")
         for ending in endings:
           if v.endswith(ending):
             found_endings.append(ending)
@@ -118,10 +140,10 @@ def process_text_on_page(index, pagetitle, text):
         val = getparam(t, str(i))
         vals = re.split(r",\s*", val)
         for v in vals:
-          if uklib.is_multi_stressed(v):
+          if uk.is_multi_stressed(v):
             pagemsg("WARNING: Param %s=%s has multiple stresses: %s" % (
               (str(i), val, unicode(t))))
-          if uklib.needs_accent(v):
+          if uk.needs_accent(v):
             pagemsg("WARNING: Param %s=%s has missing stress: %s" % (
               (str(i), val, unicode(t))))
     def ins_sg_note(ins_sg):
@@ -129,6 +151,124 @@ def process_text_on_page(index, pagetitle, text):
         return "ins_sg=%s " % canon(ins_sg)
       else:
         return ""
+
+    def truncate_extra_forms(form):
+      return re.sub(",.*", "", form)
+
+    def infer_animacy(nom_pl, gen_pl, acc_pl):
+      nom_pl_vals = set(nom_pl.split(", "))
+      gen_pl_vals = set(gen_pl.split(", "))
+      acc_pl_vals = set(acc_pl.split(", "))
+      if acc_pl_vals == nom_pl_vals:
+        return "in"
+      elif acc_pl_vals == gen_pl_vals:
+        return "pr"
+      elif acc_pl_vals == nom_pl_vals | gen_pl_vals:
+        return "anml"
+      else:
+        pagemsg("WARNING: Can't infer animacy: nom_pl=%s, gen_pl=%s, acc_pl=%s" % (
+          nom_pl, gen_pl, acc_pl))
+        return "unknown"
+
+    def infer_gender(lemma):
+      if re.search(u"[ое]́?$", lemma) or re.search(ur"(.)\1я́?$", lemma) or re.search(u"'я́?$", lemma):
+        return "N"
+      elif re.search(u"[ая]́?$", lemma) or re.search(u"ість$", lemma):
+        return "F"
+      elif re.search(u"(тель|[еє]́?ць)$", lemma):
+        return "M"
+      elif re.search(u"ь$", lemma):
+        return None
+      elif re.search(uk.cons_c + "$", lemma):
+        return "M"
+      else:
+        pagemsg("WARNING: Unrecognized lemma ending: %s" % lemma)
+        return None
+
+    def default_stress(lemma, gender, reducible):
+      if re.search(u"я́$", lemma) and gender == "N":
+        return "b"
+      elif re.search(AC + "$", lemma):
+        return "d"
+      elif reducible and re.search(u"[еоєі]́" + uk.cons_c + u"ь?$", lemma):
+        return "b"
+      else:
+        return "a"
+
+    def apply_vowel_alternation(stem, ialt):
+      if ialt == "io":
+        modstem = re.sub(u"(.*[лЛ])і(́?" + uk.cons_c + "*)$", ur"\1ьо\2", stem)
+        if modstem == stem:
+          modstem = re.sub(u"(.*)і(́?" + uk.cons_c + "*)$", ur"\1о\2", stem)
+      elif ialt == "ie":
+        modstem = re.sub(u"(.*)і(́?" + uk.cons_c + "*)$", ur"\1е\2", stem)
+      else:
+        assert ialt == "i"
+        modstem = re.sub(u"ь?[ое](́?" + uk.cons_c + "*)$", ur"і\1", stem)
+      if modstem == stem:
+        return None
+      return modstem
+
+    def infer_alternations(nom_sg, gen_sg, gen_pl):
+      nom_sg = uk.remove_accents(truncate_extra_forms(nom_sg))
+      gen_sg = uk.remove_accents(truncate_extra_forms(gen_sg))
+      gen_pl = gen_pl and uk.remove_accents(truncate_extra_forms(gen_pl))
+      m = re.search(u"^(.*)[аяео]$", nom_sg)
+      if m:
+        vowel_stem = m.group(1)
+        if re.search(uk.vowel_c + "$", vowel_stem):
+          vowel_stem += u"й"
+        if not gen_pl:
+          return "same"
+        nonvowel_stem = re.sub(u"ь$", "", gen_pl)
+        # Special handling for e.g. зна́чення gen pl зна́чень
+        if vowel_stem == nonvowel_stem or vowel_stem == nonvowel_stem + nonvowel_stem[-1]:
+          return "same"
+        dereduced_stem = uk.dereduce(vowel_stem, True)
+        if dereduced_stem and uk.remove_accents(dereduced_stem) == nonvowel_stem:
+          return "reducible"
+        elif apply_vowel_alternation(vowel_stem, "i") == nonvowel_stem:
+          return "i"
+        else:
+          pagemsg("WARNING: Unable to determine relationship between nom_sg %s and gen_pl %s" %
+            (nom_sg, gen_pl))
+          return None
+      else:
+        nonvowel_stem = re.sub(u"ь$", "", nom_sg)
+        vowel_stem = re.sub(u"[аяуюиії]$", "", gen_sg)
+        if re.search(uk.vowel_c + "$", vowel_stem):
+          vowel_stem += u"й"
+        if vowel_stem == nonvowel_stem:
+          return "same"
+        if uk.reduce(nonvowel_stem) == vowel_stem:
+          return "reducible"
+        elif apply_vowel_alternation(nonvowel_stem, "io") == vowel_stem:
+          return "io"
+        elif apply_vowel_alternation(nonvowel_stem, "ie") == vowel_stem:
+          return "ie"
+        else:
+          pagemsg("WARNING: Unable to determine relationship between nom_sg %s and gen_sg %s" %
+            (nom_sg, gen_sg))
+          return None
+
+    def construct_defaulted_seen_patterns(seen_patterns, lemma, gender, reducible):
+      defaulted_seen_patterns = []
+      if seen_patterns == ["b", "c"]:
+        seen_patterns = ["c", "b"]
+      elif seen_patterns == ["b", "d"]:
+        seen_patterns = ["d", "b"]
+      for pattern in seen_patterns:
+        defstress = default_stress(lemma, gender, reducible)
+        if defstress == pattern:
+          if reducible:
+            defaulted_seen_patterns.append("*")
+          elif len(seen_patterns) > 1:
+            defaulted_seen_patterns.append(pattern)
+        elif reducible:
+          defaulted_seen_patterns.append(pattern + "*")
+        else:
+          defaulted_seen_patterns.append(pattern)
+      return defaulted_seen_patterns
 
     if tn == "uk-decl-noun":
       check_multi_stressed(14)
@@ -149,6 +289,8 @@ def process_text_on_page(index, pagetitle, text):
       nom_pl_end_stressed = param_is_end_stressed(nom_pl)
       gen_pl = fetch("4")
       gen_pl_end_stressed = param_is_end_stressed(gen_pl)
+      acc_pl = fetch("8")
+      acc_pl_end_stressed = param_is_end_stressed(acc_pl)
       ins_pl = fetch("10")
       ins_pl_end_stressed = param_is_end_stressed(ins_pl, instrumental_plural_endings)
       loc_pl = fetch("12")
@@ -199,6 +341,37 @@ def process_text_on_page(index, pagetitle, text):
         nom_pl_endings, gen_pl_endings, canon(nom_sg), canon(gen_sg),
         canon(loc_sg), canon(voc_sg), canon(nom_pl), canon(gen_pl),
         canon(ins_pl), ins_sg_note(ins_sg)))
+      if len(heads) > 1:
+        pagemsg("WARNING: Multiple heads, not inferring declension: %s" % ",".join(heads))
+        continue
+      if gender == "unknown" or animacy == "unknown":
+        pagemsg("WARNING: Unknown gender or animacy, not inferring declension")
+        continue
+      defan = infer_animacy(nom_pl, gen_pl, acc_pl)
+      if defan != animacy:
+        pagemsg("WARNING: Inferred animacy %s != explicit animacy %s, not inferring declension" %
+            (defan, animacy))
+        continue
+      lemma = heads[0]
+      parts = []
+      defg = infer_gender(lemma)
+      if gender != defg:
+        parts.append(gender)
+      alternation = infer_alternations(nom_sg, gen_sg, gen_pl)
+      reducible = alternation == "reducible"
+      defaulted_seen_patterns = construct_defaulted_seen_patterns(seen_patterns, lemma, gender, reducible)
+      if defaulted_seen_patterns:
+        parts.append(",".join(defaulted_seen_patterns))
+      if animacy != "in":
+        parts.append(animacy)
+      if alternation in ["i", "ie", "io"]:
+        parts.append(alternation)
+      if gender == "M":
+        if re.search(u"у́?$", gen_sg):
+          parts.append("genu")
+        elif re.search(u"ю́?$", gen_sg):
+          parts.append("genju")
+      pagemsg("Inferred declension %s<%s>" % (lemma, ".".join(parts)))
 
     elif tn == "uk-decl-noun-unc":
       check_multi_stressed(7)
@@ -220,30 +393,60 @@ def process_text_on_page(index, pagetitle, text):
           voc_sg_end_stressed == "unknown"):
         pagemsg("WARNING: Missing stresses, can't determine accent pattern: %s" % unicode(t))
         continue
+      if not heads:
+        pagemsg("WARNING: No head found")
+        heads = [pagetitle]
+      lemma = heads[0]
       seen_patterns = []
       for pattern, accents in stress_patterns:
-        if pattern not in ["a", "b", "d'"]:
+        if pattern not in ["a", "d" if re.search(u"[аяео]́?$", lemma) else "b", "d'"]:
           continue
         if (matches(ins_sg_end_stressed, accents["inssg"]) and
             matches(acc_sg_end_stressed, accents["accsg"])):
           seen_patterns.append(pattern)
       if "a" in seen_patterns and "b" in seen_patterns:
         seen_patterns = ["a", "b"]
+      if "a" in seen_patterns and "d" in seen_patterns:
+        seen_patterns = ["a", "d"]
       gen_sg_endings = fetch_endings("2", genitive_singular_endings)
       dat_sg_endings = fetch_endings("3", dative_singular_endings)
       ins_sg_endings = fetch_endings("5", instrumental_singular_endings)
       loc_sg_endings = fetch_endings("6", locative_singular_endings)
       voc_sg_endings = fetch_endings("7", vocative_singular_endings)
 
-      if not heads:
-        pagemsg("WARNING: No head found")
-        heads = [pagetitle]
       pagemsg("%s\tgender:%s\tanimacy:%s\taccent:%s\tgen_sg:%s\tdat_sg:%s\tloc_sg:%s\tvoc_sg:%s\tgen_pl:-\tnumber:sg\tgen_sg:%s\tdat_sg:%s\tloc_sg:%s\tvoc_sg:%s\tnom_pl:-\tgen_pl:-\t| %s || \"?\" || %s || %s || %s || - || - || - || %s|| " % (
         "/".join(heads), gender, animacy, ":".join(seen_patterns),
         stress(gen_sg_end_stressed), stress(dat_sg_end_stressed),
         stress(loc_sg_end_stressed), stress(voc_sg_end_stressed),
         gen_sg_endings, dat_sg_endings, loc_sg_endings, voc_sg_endings,
         canon(nom_sg), canon(gen_sg), canon(loc_sg), canon(voc_sg), ins_sg_note(ins_sg)))
+
+      if len(heads) > 1:
+        pagemsg("WARNING: Multiple heads, not inferring declension: %s" % ",".join(heads))
+        continue
+      if gender == "unknown" or animacy == "unknown":
+        pagemsg("WARNING: Unknown gender or animacy, not inferring declension")
+        continue
+      parts = []
+      defg = infer_gender(lemma)
+      if gender != defg:
+        parts.append(gender)
+      alternation = infer_alternations(nom_sg, gen_sg, None)
+      reducible = alternation == "reducible"
+      defaulted_seen_patterns = construct_defaulted_seen_patterns(seen_patterns, lemma, gender, reducible)
+      if defaulted_seen_patterns:
+        parts.append(",".join(defaulted_seen_patterns))
+      if animacy != "in":
+        parts.append(animacy)
+      parts.append("sg")
+      if alternation in ["i", "ie", "io"]:
+        parts.append(alternation)
+      if gender == "M" and re.search("^" + uk.uppercase_c, lemma):
+        if re.search(u"у́?$", gen_sg):
+          parts.append("genu")
+        elif re.search(u"ю́?$", gen_sg):
+          parts.append("genju")
+      pagemsg("Inferred declension %s<%s>" % (lemma, ".".join(parts)))
 
     elif tn == "uk-decl-noun-pl":
       check_multi_stressed(7)
