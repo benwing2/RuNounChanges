@@ -1091,7 +1091,7 @@ local function add_stress_for_pattern(stress, stem)
 end
 
 
-local function check_for_bad_indicators_and_set_defaults(base)
+local function set_defaults_and_check_bad_indicators(base)
 	-- Set default values.
 	base.number = base.number or "both"
 	base.animacy = base.animacy or base.surname and "pr" or
@@ -1099,33 +1099,60 @@ local function check_for_bad_indicators_and_set_defaults(base)
 		"inan"
 	base.gender = base.explicit_gender
 
-	-- Check for indicators that don't make sense given the context.
-	if base.rtype and not rfind(base.lemma, "р$") then
-		error("'р' type indicator '" .. base.rtype .. "' can only be specified with a lemma ending in -р")
-	end
-	if base.remove_in and not rfind(base.lemma, "и́?н$") then
-		error("'in' can only be specified with a lemma ending in -ин")
-	end
+	-- Set some further defaults and check for certain bad indicator/number/gender combinations.
 	if base.thirddecl then
 		if base.number ~= "pl" then
 			error("'3rd' can only be specified along with 'pl'")
 		end
 		if base.gender and base.gender ~= "F" then
-			error("'3rd' can't specified with non-neuter gender indicator '" .. base.gender .. "'")
+			error("'3rd' can't specified with non-feminine gender indicator '" .. base.gender .. "'")
 		end
 		base.gender = "F"
 	end
 	if base.neutertype then
-		if not rfind(base.lemma, "я́?$") and not rfind(base.lemma, com.hushing_c .. "а́?$") then
-			error("Neuter-type indicator '" .. base.neutertype .. "' can only be specified with a lemma ending in -я or hushing consonat + -а")
-		end
-		if base.neutertype == "en" and not rfind(base.lemma, "м'я́?$") then
-			error("Neuter-type indicator 'en' can only be specified with a lemma ending in -м'я")
-		end
 		if base.gender and base.gender ~= "N" then
 			error("Neuter-type indicator '" .. base.neutertype .. "' can't specified with non-neuter gender indicator '" .. base.gender .. "'")
 		end
 		base.gender = "N"
+	end
+end
+
+
+local function undo_vowel_alternation(base, stem)
+	if base.ialt == "io" then
+		local modstem = rsub(stem, "ь?([оО])(́?" .. com.cons_c .. "*)$",
+			function(vowel, post)
+				if vowel == "о" then
+					return "і" .. post
+				else
+					return "І" .. post
+				end
+			end
+		)
+		if modstem == stem then
+			error("Indicator 'io' can't be undone because stem '" .. stem .. "' doesn't have an о as its last vowel")
+		end
+		return modstem
+	elseif base.ialt == "ie" then
+		local modstem = rsub(stem, "([еЕєЄ])(́?" .. com.cons_c .. "*)$",
+			function(vowel, post)
+				local reverse_vowel = {
+					["е"] = "і",
+					["Е"] = "І",
+					["є"] = "ї",
+					["Є"] = "Ї",
+				}
+				return reverse_vowel[vowel] .. post
+			end
+		)
+		if modstem == stem then
+			error("Indicator 'ie' can't be undone because stem '" .. stem .. "' doesn't have an е or є as its last vowel")
+		end
+		return modstem
+	elseif base.ialt == "i" then
+		error("Don't currently know how to undo 'i' vowel alternation")
+	else
+		return stem
 	end
 end
 
@@ -1138,6 +1165,14 @@ local function synthesize_singular_lemma(base)
 	local stem, ac
 	while true do
 		-- Check neuter endings.
+		if base.neutertype == "t" then
+			stem, ac = rmatch(base.lemma, "^(.*[яа])(́)та$")
+			if stem then
+				base.lemma = stem .. ac
+				break
+			end
+			error("Unrecognized lemma for 't' indicator: '" .. base.lemma .. "'")
+		end
 		stem, ac = rmatch(base.lemma, "^(.*" .. com.hushing_c .. ")а(́?)$")
 		if stem then
 			base.lemma = stem .. "е" .. ac
@@ -1162,7 +1197,7 @@ local function synthesize_singular_lemma(base)
 				error("For plural-only lemma in -и, need to specify the gender: '" .. base.lemma .. "'")
 			end
 			if base.gender == "M" then
-				base.lemma = stem
+				base.lemma = undo_vowel_alternation(base, stem)
 			else
 				base.lemma = stem .. "а" .. ac
 			end
@@ -1185,6 +1220,7 @@ local function synthesize_singular_lemma(base)
 				else
 					base.lemma = stem
 				end
+				base.lemma = undo_vowel_alternation(base, base.lemma)
 			elseif base.gender == "F" or base.gender == "MF" then
 				if base.thirddecl then
 					if rfind(stem, "[дтсзлнц]$") then
@@ -1192,6 +1228,7 @@ local function synthesize_singular_lemma(base)
 					else
 						base.lemma = stem
 					end
+					base.lemma = undo_vowel_alternation(base, base.lemma)
 				else
 					base.lemma = stem .. "я" .. ac
 				end
@@ -1337,6 +1374,25 @@ local function synthesize_adj_lemma(base)
 		stress.pl_nonvowel_stem = stem
 	end
 	base.decl = "adj"
+end
+
+
+local function check_indicators_match_lemma(base)
+	-- Check for indicators that don't make sense given the context.
+	if base.rtype and not rfind(base.lemma, "р$") then
+		error("'р' type indicator '" .. base.rtype .. "' can only be specified with a lemma ending in -р")
+	end
+	if base.remove_in and not rfind(base.lemma, "и́?н$") then
+		error("'in' can only be specified with a lemma ending in -ин")
+	end
+	if base.neutertype then
+		if not rfind(base.lemma, "я́?$") and not rfind(base.lemma, com.hushing_c .. "а́?$") then
+			error("Neuter-type indicator '" .. base.neutertype .. "' can only be specified with a lemma ending in -я or hushing consonant + -а")
+		end
+		if base.neutertype == "en" and not rfind(base.lemma, "м'я́?$") then
+			error("Neuter-type indicator 'en' can only be specified with a lemma ending in -м'я")
+		end
+	end
 end
 
 
@@ -1629,13 +1685,14 @@ end
 
 
 local function detect_indicator_spec(base)
-	check_for_bad_indicators_and_set_defaults(base)
+	set_defaults_and_check_bad_indicators(base)
 	if base.adj then
 		synthesize_adj_lemma(base)
 	else
 		if base.number == "pl" then
 			synthesize_singular_lemma(base)
 		end
+		check_indicators_match_lemma(base)
 		determine_declension_and_gender(base)
 		determine_stress_and_stems(base)
 	end
@@ -1933,6 +1990,37 @@ local function make_table(alternant_spec)
 end
 
 
+local function compute_headword_genders(alternant_spec)
+	local genders = {}
+	local number
+	if alternant_spec.number == "pl" then
+		number = "-p"
+	else
+		number = ""
+	end
+	for _, base in ipairs(alternant_spec.alternants) do
+		local animacy = base.animacy
+		if animacy == "inan" then
+			animacy = "in"
+		end
+		if base.gender == "MF" then
+			m_table.insertIfNot(genders, "m-" .. animacy .. number)
+			m_table.insertIfNot(genders, "f-" .. animacy .. number)
+		elseif base.gender == "M" then
+			m_table.insertIfNot(genders, "m-" .. animacy .. number)
+		elseif base.gender == "F" then
+			m_table.insertIfNot(genders, "f-" .. animacy .. number)
+		elseif base.gender == "N" then
+			m_table.insertIfNot(genders, "n-" .. animacy .. number)
+		else
+			error("Internal error: Unrecognized gender '" ..
+				(base.gender or "nil") .. "'")
+		end
+	end
+	return genders
+end
+
+
 -- Externally callable function to parse and decline a noun given user-specified arguments.
 -- Return value is WORD_SPEC, an object where the declined forms are in `WORD_SPEC.forms`
 -- for each slot. If there are no values for a slot, the slot key will be missing. The value
@@ -1944,11 +2032,21 @@ function export.do_generate_forms(parent_args, pos, from_headword, def)
 		title = {},
 	}
 
+	if from_headword then
+		params["g"] = {list = true}
+		params["f"] = {list = true}
+		params["m"] = {list = true}
+		params["adj"] = {list = true}
+		params["dim"] = {list = true}
+		params["id"] = {}
+	end
+
 	local args = m_para.process(parent_args, params)
 	local alternant_spec = parse_alternant_or_word_spec(args[1])
 	alternant_spec.title = args.title
 	alternant_spec.footnotes = args.footnote
 	alternant_spec.forms = {}
+	alternant_spec.args = args
 	for _, base in ipairs(alternant_spec.alternants) do
 		base.forms = alternant_spec.forms
 		normalize_lemma(base)
@@ -1964,6 +2062,7 @@ function export.do_generate_forms(parent_args, pos, from_headword, def)
 		handle_derived_slots_and_overrides(base)
 	end
 	add_categories(alternant_spec)
+	alternant_spec.genders = compute_headword_genders(alternant_spec)
 	return alternant_spec
 end
 
@@ -2058,7 +2157,7 @@ end
 -- Concatenate all forms of all slots into a single string of the form
 -- "SLOT=FORM,FORM,...|SLOT=FORM,FORM,...|...". Embedded pipe symbols (as might occur
 -- in embedded links) are converted to <!>. If INCLUDE_PROPS is given, also include
--- additional properties (currently, none). This is for use by bots.
+-- additional properties (currently, g= for headword genders). This is for use by bots.
 local function concat_forms(alternant_spec, include_props)
 	local ins_text = {}
 	for slot, _ in pairs(output_noun_slots) do
@@ -2067,8 +2166,12 @@ local function concat_forms(alternant_spec, include_props)
 			table.insert(ins_text, slot .. "=" .. formtext)
 		end
 	end
+	if include_props then
+		table.insert(ins_text, "g=" .. table.concat(alternant_spec.genders, ","))
+	end
 	return table.concat(ins_text, "|")
 end
+
 
 -- Template-callable function to parse and decline a noun given user-specified arguments and return
 -- the forms as a string "SLOT=FORM,FORM,...|SLOT=FORM,FORM,...|...". Embedded pipe symbols (as might
