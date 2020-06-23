@@ -24,6 +24,7 @@ TERMINOLOGY:
 
 local lang = require("Module:languages").getByCode("uk")
 local m_table = require("Module:table")
+local m_links = require("Module:links")
 local m_string_utilities = require("Module:string utilities")
 local iut = require("Module:inflection utilities")
 local m_para = require("Module:parameters")
@@ -88,6 +89,10 @@ local output_noun_slots = {
 	voc_p = "voc|p",
 }
 
+
+local output_noun_slots_with_linked = m_table.shallowcopy(output_noun_slots)
+output_noun_slots_with_linked["nom_s_linked"] = "nom|s"
+output_noun_slots_with_linked["nom_p_linked"] = "nom|p"
 
 local input_params_to_slots_both = {
 	[1] = "nom_s",
@@ -441,6 +446,18 @@ local function handle_derived_slots_and_overrides(base)
 
 	for slot, _ in pairs(output_noun_slots) do
 		iut.insert_forms(base.forms, slot, base.this_forms[slot])
+		-- Compute linked versions of potential lemma slots, for use in {{uk-noun}}.
+		-- We substitute the original lemma (before removing links) for forms that
+		-- are the same as the lemma, if the original lemma has links.
+		if slot == "nom_s" or slot == "nom_p" then
+			iut.insert_forms(base.forms, slot .. "_linked", iut.map_forms(base.this_forms[slot], function(form)
+				if form == base.orig_lemma_no_links and rfind(base.orig_lemma, "%[%[") then
+					return base.orig_lemma
+				else
+					return form
+				end
+			end))
+		end
 	end
 end
 
@@ -1012,7 +1029,8 @@ end
 -- lemmas if needed.
 local function normalize_lemma(base)
 	base.orig_lemma = base.lemma
-	base.lemma = com.add_monosyllabic_stress(base.lemma)
+	base.orig_lemma_no_links = com.add_monosyllabic_stress(m_links.remove_links(base.lemma))
+	base.lemma = base.orig_lemma_no_links
 	if not rfind(base.lemma, AC) then
 		error("Multisyllabic lemma '" .. base.orig_lemma .. "' needs an accent")
 	end
@@ -1805,7 +1823,8 @@ local function show_forms(alternant_spec)
 			table.insert(lemmas, com.remove_monosyllabic_stress(nom_p.form))
 		end
 	end
-	com.show_forms(alternant_spec.forms, lemmas, alternant_spec.footnotes, output_noun_slots)
+	com.show_forms(alternant_spec.forms, lemmas, alternant_spec.footnotes,
+		output_noun_slots_with_linked)
 end
 
 
@@ -2160,7 +2179,7 @@ end
 -- additional properties (currently, g= for headword genders). This is for use by bots.
 local function concat_forms(alternant_spec, include_props)
 	local ins_text = {}
-	for slot, _ in pairs(output_noun_slots) do
+	for slot, _ in pairs(output_noun_slots_with_linked) do
 		local formtext = com.concat_forms_in_slot(alternant_spec.forms[slot])
 		if formtext then
 			table.insert(ins_text, slot .. "=" .. formtext)
