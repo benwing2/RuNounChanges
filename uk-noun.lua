@@ -26,9 +26,9 @@ local lang = require("Module:languages").getByCode("uk")
 local m_table = require("Module:table")
 local m_links = require("Module:links")
 local m_string_utilities = require("Module:string utilities")
-local iut = require("Module:inflection utilities")
+local iut = require("Module:User:Benwing2/inflection utilities")
 local m_para = require("Module:parameters")
-local com = require("Module:uk-common")
+local com = require("Module:User:Benwing2/uk-common")
 local m_uk_translit = require("Module:uk-translit")
 
 local current_title = mw.title.getCurrentTitle()
@@ -260,9 +260,9 @@ local function apply_special_cases(base, slot, stem, ending)
 end
 
 
-local function skip_slot(base, slot)
-	return base.number == "sg" and rfind(slot, "_p$") or
-		base.number == "pl" and rfind(slot, "_s$")
+local function skip_slot(number, slot)
+	return number == "sg" and rfind(slot, "_p$") or
+		number == "pl" and rfind(slot, "_s$")
 end
 
 
@@ -270,7 +270,7 @@ local function add(base, slot, stress, endings, footnotes, explicit_stem)
 	if not endings then
 		return
 	end
-	if skip_slot(base, slot) then
+	if skip_slot(base.number, slot) then
 		return
 	end
 	footnotes = combine_footnotes(combine_footnotes(base.footnotes, stress.footnotes), footnotes)
@@ -341,18 +341,18 @@ local function add(base, slot, stress, endings, footnotes, explicit_stem)
 			ending = com.maybe_stress_initial_syllable(ending)
 		end
 		ending = com.generate_form(ending, footnotes)
-		iut.add_forms(base.this_forms, slot, stem, ending, com.combine_stem_ending)
+		iut.add_forms(base.forms, slot, stem, ending, com.combine_stem_ending)
 	end
 end
 
 
 local function process_slot_overrides(base, do_slot)
 	for slot, overrides in pairs(base.overrides) do
-		if skip_slot(base, slot) then
+		if skip_slot(base.number, slot) then
 			error("Override specified for invalid slot '" .. slot .. "' due to '" .. base.number .. "' number restriction")
 		end
 		if do_slot(slot) then
-			base.this_forms[slot] = nil
+			base.forms[slot] = nil
 			local slot_is_plural = rfind(slot, "_p$")
 			for _, override in ipairs(overrides) do
 				for _, value in ipairs(override.values) do
@@ -375,7 +375,7 @@ local function process_slot_overrides(base, do_slot)
 							form = rsub(value, "~", stem)
 						end
 						if form ~= "" then
-							iut.insert_form(base.this_forms, slot, {form = form, footnotes = combined_notes})
+							iut.insert_form(base.forms, slot, {form = form, footnotes = combined_notes})
 						end
 					else
 						if override.stemstressed then
@@ -427,37 +427,34 @@ local function handle_derived_slots_and_overrides(base)
 	process_slot_overrides(base, is_non_derived_slot)
 
 	-- Generate the remaining slots that are derived from other slots.
-	iut.insert_forms(base.this_forms, "voc_p", base.this_forms["nom_p"])
+	iut.insert_forms(base.forms, "voc_p", base.forms["nom_p"])
 	if rfind(base.decl, "%-m$") or base.gender == "M" and base.decl == "adj" then
-		iut.insert_forms(base.this_forms, "acc_s", base.this_forms[base.animacy == "inan" and "nom_s" or "gen_s"])
+		iut.insert_forms(base.forms, "acc_s", base.forms[base.animacy == "inan" and "nom_s" or "gen_s"])
 	end
 	if base.animacy == "inan" or base.animacy == "anml" then
-		iut.insert_forms(base.this_forms, "acc_p", base.this_forms["nom_p"])
+		iut.insert_forms(base.forms, "acc_p", base.forms["nom_p"])
 	end
 	if base.animacy == "pr" or base.animacy == "anml" then
-		iut.insert_forms(base.this_forms, "acc_p", base.this_forms["gen_p"])
+		iut.insert_forms(base.forms, "acc_p", base.forms["gen_p"])
 	end
 	if base.surname then
-		iut.insert_forms(base.this_forms, "voc_s", base.this_forms["nom_s"])
+		iut.insert_forms(base.forms, "voc_s", base.forms["nom_s"])
 	end
 
 	-- Handle overrides for derived slots, to allow them to be overridden.
 	process_slot_overrides(base, is_derived_slot)
 
-	for slot, _ in pairs(output_noun_slots) do
-		iut.insert_forms(base.forms, slot, base.this_forms[slot])
-		-- Compute linked versions of potential lemma slots, for use in {{uk-noun}}.
-		-- We substitute the original lemma (before removing links) for forms that
-		-- are the same as the lemma, if the original lemma has links.
-		if slot == "nom_s" or slot == "nom_p" then
-			iut.insert_forms(base.forms, slot .. "_linked", iut.map_forms(base.this_forms[slot], function(form)
-				if form == base.orig_lemma_no_links and rfind(base.orig_lemma, "%[%[") then
-					return base.orig_lemma
-				else
-					return form
-				end
-			end))
-		end
+	-- Compute linked versions of potential lemma slots, for use in {{uk-noun}}.
+	-- We substitute the original lemma (before removing links) for forms that
+	-- are the same as the lemma, if the original lemma has links.
+	for slot in ipairs({"nom_s", "nom_p"}) do
+		iut.insert_forms(base.forms, slot .. "_linked", iut.map_forms(base.forms[slot], function(form)
+			if form == base.orig_lemma_no_links and rfind(base.orig_lemma, "%[%[") then
+				return base.orig_lemma
+			else
+				return form
+			end
+		end))
 	end
 end
 
@@ -741,9 +738,9 @@ declprops["t-n"] = {desc = "t-stem neut-form"}
 
 
 decls["adj"] = function(base, stress)
-	local adj_alternant_spec = require("Module:uk-adjective").do_generate_forms({base.lemma})
+	local adj_alternant_spec = require("Module:User:Benwing2/uk-adjective").do_generate_forms({base.lemma})
 	local function copy(from_slot, to_slot)
-		base.this_forms[to_slot] = adj_alternant_spec.forms[from_slot]
+		base.forms[to_slot] = adj_alternant_spec.forms[from_slot]
 	end
 	if base.number ~= "pl" then
 		if base.gender == "M" then
@@ -769,7 +766,7 @@ decls["adj"] = function(base, stress)
 		else
 			error("Internal error: Unrecognized gender: " .. base.gender)
 		end
-		iut.insert_forms(base.this_forms, "voc_s", base.this_forms["nom_s"])
+		iut.insert_forms(base.forms, "voc_s", base.forms["nom_s"])
 	end
 	if base.number ~= "sg" then
 		copy("nom_p", "nom_p")
@@ -849,7 +846,6 @@ The object returned for 'lócji:jú' looks like this:
 Note that all forms (full or partial) are reverse-transliterated, and full forms are
 normalized by adding an accent to monosyllabic forms.
 ]=]
-  
 local function parse_override(segments)
 	local retval = {values = {}}
 	local part = segments[1]
@@ -899,10 +895,69 @@ local function parse_override(segments)
 end
 
 
+--[=[
+Parse an indicator spec (text consisting of angle brackets and zero or more
+dot-separated indicators within them). Return value is an object of the form
+
+{
+  overrides = {
+    SLOT = {OVERRIDE, OVERRIDE, ...}, -- as returned by parse_override()
+	...
+  },
+  forms = {}, -- forms for a single spec alternant; see `forms` below
+  footnotes = {"FOOTNOTE", "FOOTNOTE", ...}, -- may be missing
+  stresses = { -- may be missing
+	{
+	  stress = "STRESS", -- "a", "b", etc.
+	  reducible = TRUE_OR_FALSE,
+	  genpl_reversed = TRUE_OR_FALSE,
+	  footnotes = {"FOOTNOTE", "FOOTNOTE", ...}, -- may be missing
+	  -- The following fields are filled in by determine_stress_and_stems()
+	  vowel_stem = "STEM",
+	  nonvowel_stem = "STEM",
+	  pl_vowel_stem = "STEM",
+	  pl_nonvowel_stem = "STEM",
+	},
+	...
+  },
+  explicit_gender = "GENDER", -- "M", "F", "N", "MF"; may be missing
+  number = "NUMBER", -- "sg", "pl"; may be missing
+  animacy = "ANIMACY", -- "inan", "anml", "pr"; may be missing
+  ialt = "VOWEL_ALTERNATION", -- "i", "ie", "io"; may be missing
+  rtype = "RTYPE", -- "soft", "semisoft"; may be missing
+  neutertype = "NEUTERTYPE", -- "t", "en"; may be missing
+  plsoft = true, -- may be missing
+  plhard = true, -- may be missing
+  remove_in = true, -- may be missing
+  thirddecl = true, -- may be missing
+  surname = true, -- may be missing
+  adj = true, -- may be missing
+  stem = "STEM", -- may be missing
+  plstem = "PLSTEM", -- may be missing
+
+  -- The following additional fields are added by other functions:
+  orig_lemma = "ORIGINAL-LEMMA", -- as given by the user
+  orig_lemma_no_links = "ORIGINAL-LEMMA-NO-LINKS", -- links removed, monosyllabic stress added
+  lemma = "LEMMA", -- `orig_lemma_no_links`, converted to singular form if plural
+  forms = {
+	SLOT = {
+	  {
+		form = "FORM",
+		footnotes = {"FOOTNOTE", "FOOTNOTE", ...} -- may be missing
+	  },
+	  ...
+	},
+	...
+  },
+  decl = "DECL", -- declension, e.g. "hard-m"
+  vowel_stem = "VOWEL-STEM", -- derived from vowel-ending lemmas
+  nonvowel_stem = "NONVOWEL-STEM", -- derived from non-vowel-ending lemmas
+}
+]=]
 local function parse_indicator_spec(angle_bracket_spec)
 	local inside = rmatch(angle_bracket_spec, "^<(.*)>$")
 	assert(inside)
-	local base = {overrides = {}, this_forms = {}}
+	local base = {overrides = {}, forms = {}}
 	if inside ~= "" then
 		local segments = iut.parse_balanced_segment_run(inside, "[", "]")
 		local dot_separated_groups = iut.split_alternating_runs(segments, "%.")
@@ -972,7 +1027,7 @@ local function parse_indicator_spec(angle_bracket_spec)
 				end
 				base.rtype = part
 			elseif part == "t" or part == "en" then
-				if base.rtype then
+				if base.neutertype then
 					error("Can't specify neuter indicator ('t' or 'en') more than once: '" .. inside .. "'")
 				end
 				base.neutertype = part
@@ -1022,18 +1077,6 @@ local function parse_indicator_spec(angle_bracket_spec)
 		end
 	end
 	return base
-end
-
-
--- Check that multisyllabic lemmas have stress, and add stress to monosyllabic
--- lemmas if needed.
-local function normalize_lemma(base)
-	base.orig_lemma = base.lemma
-	base.orig_lemma_no_links = com.add_monosyllabic_stress(m_links.remove_links(base.lemma))
-	base.lemma = base.orig_lemma_no_links
-	if not rfind(base.lemma, AC) then
-		error("Multisyllabic lemma '" .. base.orig_lemma .. "' needs an accent")
-	end
 end
 
 
@@ -1112,9 +1155,11 @@ end
 local function set_defaults_and_check_bad_indicators(base)
 	-- Set default values.
 	base.number = base.number or "both"
-	base.animacy = base.animacy or base.surname and "pr" or
-		base.neutertype == "t" and "anml" or
-		"inan"
+	if not base.adj then
+		base.animacy = base.animacy or base.surname and "pr" or
+			base.neutertype == "t" and "anml" or
+			"inan"
+	end
 	base.gender = base.explicit_gender
 
 	-- Set some further defaults and check for certain bad indicator/number/gender combinations.
@@ -1717,39 +1762,221 @@ local function detect_indicator_spec(base)
 end
 
 
-local function detect_all_indicator_specs(alternant_spec)
-	for _, base in ipairs(alternant_spec.alternants) do
-		detect_indicator_spec(base)
-		if not alternant_spec.number then
-			alternant_spec.number = base.number
-		elseif alternant_spec.number ~= base.number then
-			alternant_spec.number = "both"
+local function map_word_specs(alternant_multiword_spec, fun)
+	for _, alternant_or_word_spec in ipairs(alternant_multiword_spec.alternant_or_word_specs) do
+		if alternant_or_word_spec.alternants then
+			for _, multiword_spec in ipairs(alternant_or_word_spec.alternants) do
+				for _, word_spec in ipairs(multiword_spec.word_specs) do
+					fun(word_spec)
+				end
+			end
+		else
+			fun(alternant_or_word_spec)
 		end
 	end
 end
 
 
-local function parse_word_spec(segments)
-	local indicator_spec
-	if #segments ~= 3 or segments[3] ~= "" then
-		error("Noun spec must be of the form 'LEMMA<SPECS>': '" .. table.concat(segments) .. "'")
-	else
-		indicator_spec = segments[2]
+local function detect_all_indicator_specs(alternant_multiword_spec)
+	map_word_specs(alternant_multiword_spec, function(base)
+		detect_indicator_spec(base)
+		if not alternant_multiword_spec.number then
+			alternant_multiword_spec.number = base.number
+		elseif alternant_multiword_spec.number ~= base.number then
+			alternant_multiword_spec.number = "both"
+		end
+	end)
+end
+
+
+local propagate_multiword_animacies
+
+
+local function propagate_alternant_animacies(alternant_spec)
+	local seen_animacy
+	for _, multiword_spec in ipairs(alternant_spec.alternants) do
+		propagate_multiword_animacies(multiword_spec)
+		if seen_animacy == nil then
+			seen_animacy = multiword_spec.animacy
+		elseif multiword_spec.animacy and seen_animacy ~= multiword_spec.animacy then
+			seen_animacy = "mixed"
+		end
 	end
-	local lemma = segments[1]
-	local base = parse_indicator_spec(indicator_spec)
-	base.lemma = lemma
-	return base
+	alternant_spec.animacy = seen_animacy
+end
+
+
+propagate_multiword_animacies = function(multiword_spec)
+	local seen_animacy = nil
+	local last_seen_noun_pos = 1
+	local word_specs = multiword_spec.alternant_or_word_specs or multiword_spec.word_specs
+	for i = 1, #word_specs do
+		if word_specs[i].alternants then
+			propagate_alternant_animacies(word_specs[i])
+			integrate_animacy = true
+		end
+		if word_specs[i].animacy then
+			for j = last_seen_noun_pos + 1, i - 1 do
+				word_specs[j].animacy = word_specs[i].animacy
+			end
+			last_seen_noun_pos = i
+			if seen_animacy == nil then
+				seen_animacy = word_specs[i].animacy
+			elseif seen_animacy ~= word_specs[i].animacy then
+				seen_animacy = "mixed"
+			end
+		end
+	end
+	for i = last_seen_noun_pos + 1, #word_specs do
+		word_specs[i].animacy = word_specs[last_seen_noun_pos].animacy
+	end
+	multiword_spec.animacy = seen_animacy
+end
+
+
+local function propagate_animacies_downward(alternant_multiword_spec, animacy)
+	local animacy1 = alternant_multiword_spec.animacy or animacy
+	for _, alternant_or_word_spec in ipairs(alternant_multiword_spec.alternant_or_word_specs) do
+		local animacy2 = alternant_or_word_spec.animacy or animacy1
+		if alternant_or_word_spec.alternants then
+			for _, multiword_spec in ipairs(alternant_or_word_spec.alternants) do
+				local animacy3 = multiword_spec.animacy or animacy2
+				for _, word_spec in ipairs(multiword_spec.word_specs) do
+					local animacy4 = word_spec.animacy or animacy3
+					if animacy4 == "mixed" then
+						error("Attempt to assign mixed animacy to word")
+					end
+					word_spec.animacy = animacy4
+				end
+			end
+		else
+			if animacy2 == "mixed" then
+				error("Attempt to assign mixed animacy to word")
+			end
+			alternant_or_word_spec.animacy = animacy2
+		end
+	end
+end
+
+
+local function determine_noun_status(alternant_multiword_spec)
+	for i, alternant_or_word_spec in ipairs(alternant_multiword_spec.alternant_or_word_specs) do
+		if alternant_or_word_spec.alternants then
+			local is_noun = false
+			for _, multiword_spec in ipairs(alternant_or_word_spec.alternants) do
+				for j, word_spec in ipairs(multiword_spec.word_specs) do
+					if not word_spec.adj then
+						multiword_spec.first_noun = j
+						is_noun = true
+						break
+					end
+				end
+			end
+			if is_noun then
+				alternant_multiword_spec.first_noun = i
+			end
+		elseif not alternant_or_word_spec.adj then
+			alternant_multiword_spec.first_noun = i
+			return
+		end
+	end
+end
+
+
+--[=[
+Parse a multiword spec such as "[[медичний|меди́чна]]<+> [[сестра́]]<*,*#.pr>".
+The return value is a table of the form
+{
+  word_specs = {WORD_SPEC, WORD_SPEC, ...},
+  post_text = "TEXT-AT-END",
+}
+--
+where WORD_SPEC describes an individual declined word and "TEXT-AT-END" is any raw text that
+may occur after all declined words. Each WORD_SPEC is of the form returned
+by parse_indicator_spec():
+--
+{
+  lemma = "LEMMA",
+  before_text = "TEXT-BEFORE-WORD",
+  before_text_no_links = "TEXT-BEFORE-WORD-NO-LINKS",
+  -- Fields as described in parse_indicator_spec()
+  forms = {...},
+  overrides = {...},
+  stresses = {...},
+  ...
+}
+
+For example, the return value for "[[медичний|меди́чна]]<+> [[сестра́]]<*,*#.pr>" is
+{
+  word_specs = {
+    {
+      lemma = "[[медичний|меди́чна]]",
+      overrides = {},
+      adj = true,
+      before_text = "",
+      before_text_no_links = "",
+      forms = {},
+    },
+    {
+      lemma = "[[сестра́]]",
+      overrides = {},
+	  stresses = {
+		{
+		  reducible = true,
+		  genpl_reversed = false,
+		},
+		{
+		  reducible = true,
+		  genpl_reversed = true,
+		},
+	  },
+	  animacy = "pr",
+      before_text = " ",
+      before_text_no_links = " ",
+      forms = {},
+    },
+  },
+  post_text = "",
+}
+]=]
+local function parse_multiword_spec(segments)
+	local multiword_spec = {
+		word_specs = {}
+	}
+	for i = 2, #segments - 1, 2 do
+		local bracketed_runs = iut.parse_balanced_segment_run(segments[i - 1], "[", "]")
+		local space_separated_groups = iut.split_alternating_runs(bracketed_runs, "[ %-]", "preserve splitchar")
+		local before_text = {}
+		local lemma
+		for j, space_separated_group in ipairs(space_separated_groups) do
+			if j == #space_separated_groups then
+				lemma = table.concat(space_separated_group)
+				if lemma == "" then
+					error("Word is blank: '" .. table.concat(segments) .. "'")
+				end
+			else
+				table.insert(before_text, table.concat(space_separated_group))
+			end
+		end
+		local base = parse_indicator_spec(segments[i])
+		base.before_text = table.concat(before_text)
+		base.before_text_no_links = m_links.remove_links(base.before_text)
+		base.lemma = lemma
+		table.insert(multiword_spec.word_specs, base)
+	end
+	multiword_spec.post_text = segments[#segments]
+	multiword_spec.post_text_no_links = m_links.remove_links(multiword_spec.post_text)
+	return multiword_spec
 end
 
 
 --[=[
 Parse an alternant, e.g. "((ру́син<pr>,руси́н<b.pr>))". The return value is a table of the form
 {
-  alternants = {WORD_SPEC, WORD_SPEC, ...}
+  alternants = {MULTIWORD_SPEC, MULTIWORD_SPEC, ...}
 }
 
-where WORD_SPEC describes a given alternant and is as returned by parse_word_spec().
+where MULTIWORD_SPEC describes a given alternant and is as returned by parse_multiword_spec().
 ]=]
 local function parse_alternant(alternant)
 	local parsed_alternants = {}
@@ -1758,18 +1985,148 @@ local function parse_alternant(alternant)
 	local comma_separated_groups = iut.split_alternating_runs(segments, ",")
 	local alternant_spec = {alternants = {}}
 	for _, comma_separated_group in ipairs(comma_separated_groups) do
-		table.insert(alternant_spec.alternants, parse_word_spec(comma_separated_group))
+		table.insert(alternant_spec.alternants, parse_multiword_spec(comma_separated_group))
 	end
 	return alternant_spec
 end
 
 
-local function parse_alternant_or_word_spec(text)
-	if rfind(text, "^%(%((.*)%)%)$") then
-		return parse_alternant(text)
-	else
-		local segments = iut.parse_balanced_segment_run(text, "<", ">")
-		return {alternants = {parse_word_spec(segments)}}
+--[=[
+Top-level parsing function. Parse a multiword spec that may have alternants in it.
+The return value is a table of the form
+{
+  alternant_or_word_specs = {ALTERNANT_OR_WORD_SPEC, ALTERNANT_OR_WORD_SPEC, ...}
+  post_text = "TEXT-AT-END",
+  post_text_no_links = "TEXT-AT-END-NO-LINKS",
+}
+
+where ALTERNANT_OR_WORD_SPEC is either an alternant spec as returned by parse_alternant()
+or a multiword spec as described in the comment above parse_multiword_spec(). An alternant spec
+looks as follows:
+{
+  alternants = {MULTIWORD_SPEC, MULTIWORD_SPEC, ...},
+  before_text = "TEXT-BEFORE-ALTERNANT",
+  before_text_no_links = "TEXT-BEFORE-ALTERNANT",
+}
+i.e. it is like what is returned by parse_alternant() but has extra `before_text`
+and `before_text_no_links` fields.
+]=]
+local function parse_alternant_multiword_spec(text)
+	local alternant_multiword_spec = {alternant_or_word_specs = {}}
+	local alternant_segments = m_string_utilities.capturing_split(text, "(%(%(.-%)%))")
+	local last_post_text, last_post_text_no_links
+	for i = 1, #alternant_segments do
+		if i % 2 == 1 then
+			local segments = iut.parse_balanced_segment_run(alternant_segments[i], "<", ">")
+			local multiword_spec = parse_multiword_spec(segments)
+			for _, word_spec in ipairs(multiword_spec.word_specs) do
+				table.insert(alternant_multiword_spec.alternant_or_word_specs, word_spec)
+			end
+			last_post_text = multiword_spec.post_text
+			last_post_text_no_links = multiword_spec.post_text_no_links
+		else
+			local alternant_spec = parse_alternant(alternant_segments[i])
+			alternant_spec.before_text = last_post_text
+			alternant_spec.before_text_no_links = last_post_text_no_links
+			table.insert(alternant_multiword_spec.alternant_or_word_specs, alternant_spec)
+		end
+	end
+	alternant_multiword_spec.post_text = last_post_text
+	alternant_multiword_spec.post_text_no_links = last_post_text_no_links
+	return alternant_multiword_spec
+end
+
+
+-- Check that multisyllabic lemmas have stress, and add stress to monosyllabic
+-- lemmas if needed.
+local function normalize_all_lemmas(alternant_multiword_spec)
+	map_word_specs(alternant_multiword_spec, function(base)
+		base.orig_lemma = base.lemma
+		base.orig_lemma_no_links = com.add_monosyllabic_stress(m_links.remove_links(base.lemma))
+		base.lemma = base.orig_lemma_no_links
+		if not rfind(base.lemma, AC) then
+			error("Multisyllabic lemma '" .. base.orig_lemma .. "' needs an accent")
+		end
+	end)
+end
+
+
+local function decline_noun(base)
+	for _, stress in ipairs(base.stresses) do
+		if not decls[base.decl] then
+			error("Internal error: Unrecognized declension type '" .. base.decl .. "'")
+		end
+		decls[base.decl](base, stress)
+	end
+	handle_derived_slots_and_overrides(base)
+end
+
+
+local decline_multiword_or_alternant_multiword_spec
+
+
+-- Decline alternants in ALTERNANT_SPEC (an object as returned by parse_alternant()).
+-- This sets the form values in `ALTERNANT_SPEC.forms` for all slots. (If a given slot has
+-- no values, it will not be present in `ALTERNANT_SPEC.forms`).
+local function decline_alternants(alternant_spec, overall_number)
+	alternant_spec.forms = {}
+	for _, multiword_spec in ipairs(alternant_spec.alternants) do
+		decline_multiword_or_alternant_multiword_spec(multiword_spec, overall_number)
+		for slot, _ in pairs(output_noun_slots_with_linked) do
+			if not skip_slot(overall_number, slot) then
+				iut.insert_forms(alternant_spec.forms, slot, multiword_spec.forms[slot])
+			end
+		end
+	end
+end
+
+
+local function append_forms(formtable, slot, forms, before_text)
+	local ret_forms = {}
+	for _, old_form in ipairs(formtable[slot]) do
+		for _, form in ipairs(forms) do
+			-- Do a shallow copy of the footnotes because we may modify them in-place.
+			local new_form = {form=old_form.form .. before_text .. form.form,
+				footnotes=combine_footnotes(old_form.footnotes, form.footnotes)}
+			table.insert(ret_forms, new_form)
+		end
+	end
+	formtable[slot] = ret_forms
+end
+
+
+decline_multiword_or_alternant_multiword_spec = function(multiword_spec, overall_number)
+	multiword_spec.forms = {}
+	for slot, _ in pairs(output_noun_slots_with_linked) do
+		if not skip_slot(overall_number, slot) then
+			multiword_spec.forms[slot] = {{form=""}}
+		end
+	end
+
+	local is_alternant_multiword = not not multiword_spec.alternant_or_word_specs
+	for _, word_spec in ipairs(is_alternant_multiword and multiword_spec.alternant_or_word_specs or multiword_spec.word_specs) do
+		if word_spec.alternants then
+			decline_alternants(word_spec, overall_number)
+		else
+			decline_noun(word_spec)
+		end
+		for slot, _ in pairs(output_noun_slots_with_linked) do
+			if not skip_slot(overall_number, slot) and word_spec.forms[slot] then
+				append_forms(multiword_spec.forms, slot, word_spec.forms[slot],
+					rfind(slot, "linked") and word_spec.before_text or word_spec.before_text_no_links
+				)
+			end
+		end
+	end
+	if multiword_spec.post_text ~= "" then
+		local pseudoform = {{form=""}}
+		for slot, _ in pairs(output_noun_slots_with_linked) do
+			if not skip_slot(overall_number, slot) then
+				append_forms(multiword_spec.forms, slot, pseudoform,
+					rfind(slot, "linked") and multiword_spec.post_text or multiword_spec.post_text_no_links
+				)
+			end
+		end
 	end
 end
 
@@ -1798,38 +2155,38 @@ local function process_manual_overrides(forms, args, number, unknown_stress)
 end
 
 
-local function add_categories(alternant_spec)
+local function add_categories(alternant_multiword_spec)
 	local cats = {}
 	local function insert(cattype)
 		table.insert(cats, "Ukrainian " .. cattype)
 	end
-	if alternant_spec.number == "sg" then
+	if alternant_multiword_spec.number == "sg" then
 		insert("uncountable nouns")
-	elseif alternant_spec.number == "pl" then
+	elseif alternant_multiword_spec.number == "pl" then
 		insert("pluralia tantum")
 	end
-	alternant_spec.categories = cats
+	alternant_multiword_spec.categories = cats
 end
 
 
-local function show_forms(alternant_spec)
+local function show_forms(alternant_multiword_spec)
 	local lemmas = {}
-	if alternant_spec.forms.nom_s then
-		for _, nom_s in ipairs(alternant_spec.forms.nom_s) do
+	if alternant_multiword_spec.forms.nom_s then
+		for _, nom_s in ipairs(alternant_multiword_spec.forms.nom_s) do
 			table.insert(lemmas, com.remove_monosyllabic_stress(nom_s.form))
 		end
-	elseif alternant_spec.forms.nom_p then
-		for _, nom_p in ipairs(alternant_spec.forms.nom_p) do
+	elseif alternant_multiword_spec.forms.nom_p then
+		for _, nom_p in ipairs(alternant_multiword_spec.forms.nom_p) do
 			table.insert(lemmas, com.remove_monosyllabic_stress(nom_p.form))
 		end
 	end
-	com.show_forms(alternant_spec.forms, lemmas, alternant_spec.footnotes,
+	com.show_forms(alternant_multiword_spec.forms, lemmas, alternant_multiword_spec.footnotes,
 		output_noun_slots_with_linked)
 end
 
 
-local function make_table(alternant_spec)
-	local forms = alternant_spec.forms
+local function make_table(alternant_multiword_spec)
+	local forms = alternant_multiword_spec.forms
 
 	local table_spec_both = [=[
 <div class="NavFrame" style="display: inline-block;min-width: 45em">
@@ -1939,16 +2296,16 @@ local function make_table(alternant_spec)
 </div></div>
 ]===]
 
-	if alternant_spec.title then
-		forms.title = alternant_spec.title
+	if alternant_multiword_spec.title then
+		forms.title = alternant_multiword_spec.title
 	else
 		forms.title = 'Declension of <i lang="uk" class="Cyrl">' .. forms.lemma .. '</i>'
 	end
 
 	local annotation
-	if alternant_spec.manual then
-		annotation = alternant_spec.number == "sg" and "sg-only" or
-			alternant_spec.number == "pl" and "pl-only" or
+	if alternant_multiword_spec.manual then
+		annotation = alternant_multiword_spec.number == "sg" and "sg-only" or
+			alternant_multiword_spec.number == "pl" and "pl-only" or
 			""
 	else
 		local annparts = {}
@@ -1956,7 +2313,7 @@ local function make_table(alternant_spec)
 		local decldescs = {}
 		local patterns = {}
 		local reducible = nil
-		for _, base in ipairs(alternant_spec.alternants) do
+		local function do_word_spec(base)
 			if base.animacy == "inan" then
 				m_table.insertIfNot(animacies, "inan")
 			elseif base.animacy == "anml" then
@@ -1980,9 +2337,23 @@ local function make_table(alternant_spec)
 				m_table.insertIfNot(patterns, stress.stress)
 			end
 		end
+		local key_entry = alternant_multiword_spec.first_noun or 1
+		if #alternant_multiword_spec.alternant_or_word_specs >= key_entry then
+			local alternant_or_word_spec = alternant_multiword_spec.alternant_or_word_specs[key_entry]
+			if alternant_or_word_spec.alternants then
+				for _, multiword_spec in ipairs(alternant_or_word_spec.alternants) do
+					key_entry = multiword_spec.first_noun or 1
+					if #multiword_spec.word_specs >= key_entry then
+						do_word_spec(multiword_spec.word_specs[key_entry])
+					end
+				end
+			else
+				do_word_spec(alternant_or_word_spec)
+			end
+		end
 		table.insert(annparts, table.concat(animacies, "/"))
-		if alternant_spec.number ~= "both" then
-			table.insert(annparts, alternant_spec.number == "sg" and "sg-only" or "pl-only")
+		if alternant_multiword_spec.number ~= "both" then
+			table.insert(annparts, alternant_multiword_spec.number == "sg" and "sg-only" or "pl-only")
 		end
 		table.insert(annparts, table.concat(decldescs, " // "))
 		table.insert(annparts, "accent-" .. table.concat(patterns, "/"))
@@ -2000,8 +2371,8 @@ local function make_table(alternant_spec)
 	end
 
 	local table_spec =
-		alternant_spec.number == "sg" and table_spec_sg or
-		alternant_spec.number == "pl" and table_spec_pl or
+		alternant_multiword_spec.number == "sg" and table_spec_sg or
+		alternant_multiword_spec.number == "pl" and table_spec_pl or
 		table_spec_both
 	forms.notes_clause = forms.footnote ~= "" and
 		m_string_utilities.format(notes_template, forms) or ""
@@ -2009,15 +2380,15 @@ local function make_table(alternant_spec)
 end
 
 
-local function compute_headword_genders(alternant_spec)
+local function compute_headword_genders(alternant_multiword_spec)
 	local genders = {}
 	local number
-	if alternant_spec.number == "pl" then
+	if alternant_multiword_spec.number == "pl" then
 		number = "-p"
 	else
 		number = ""
 	end
-	for _, base in ipairs(alternant_spec.alternants) do
+	map_word_specs(alternant_multiword_spec, function(base)
 		local animacy = base.animacy
 		if animacy == "inan" then
 			animacy = "in"
@@ -2035,7 +2406,7 @@ local function compute_headword_genders(alternant_spec)
 			error("Internal error: Unrecognized gender '" ..
 				(base.gender or "nil") .. "'")
 		end
-	end
+	end)
 	return genders
 end
 
@@ -2061,28 +2432,19 @@ function export.do_generate_forms(parent_args, pos, from_headword, def)
 	end
 
 	local args = m_para.process(parent_args, params)
-	local alternant_spec = parse_alternant_or_word_spec(args[1])
-	alternant_spec.title = args.title
-	alternant_spec.footnotes = args.footnote
-	alternant_spec.forms = {}
-	alternant_spec.args = args
-	for _, base in ipairs(alternant_spec.alternants) do
-		base.forms = alternant_spec.forms
-		normalize_lemma(base)
-	end
-	detect_all_indicator_specs(alternant_spec)
-	for _, base in ipairs(alternant_spec.alternants) do
-		for _, stress in ipairs(base.stresses) do
-			if not decls[base.decl] then
-				error("Internal error: Unrecognized declension type '" .. base.decl .. "'")
-			end
-			decls[base.decl](base, stress)
-		end
-		handle_derived_slots_and_overrides(base)
-	end
-	add_categories(alternant_spec)
-	alternant_spec.genders = compute_headword_genders(alternant_spec)
-	return alternant_spec
+	local alternant_multiword_spec = parse_alternant_multiword_spec(args[1])
+	alternant_multiword_spec.title = args.title
+	alternant_multiword_spec.footnotes = args.footnote
+	alternant_multiword_spec.args = args
+	normalize_all_lemmas(alternant_multiword_spec)
+	detect_all_indicator_specs(alternant_multiword_spec)
+	propagate_multiword_animacies(alternant_multiword_spec)
+	propagate_animacies_downward(alternant_multiword_spec, "inan")
+	determine_noun_status(alternant_multiword_spec)
+	decline_multiword_or_alternant_multiword_spec(alternant_multiword_spec, alternant_multiword_spec.number)
+	add_categories(alternant_multiword_spec)
+	alternant_multiword_spec.genders = compute_headword_genders(alternant_multiword_spec)
+	return alternant_multiword_spec
 end
 
 
@@ -2152,9 +2514,9 @@ end
 -- user-specified arguments and generate a displayable table of the declined forms.
 function export.show(frame)
 	local parent_args = frame:getParent().args
-	local alternant_spec = export.do_generate_forms(parent_args)
-	show_forms(alternant_spec)
-	return make_table(alternant_spec) .. require("Module:utilities").format_categories(alternant_spec.categories, lang)
+	local alternant_multiword_spec = export.do_generate_forms(parent_args)
+	show_forms(alternant_multiword_spec)
+	return make_table(alternant_multiword_spec) .. require("Module:utilities").format_categories(alternant_multiword_spec.categories, lang)
 end
 
 
