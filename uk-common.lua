@@ -23,6 +23,11 @@ end
 
 local AC = u(0x0301) -- acute =  ́
 
+export.VAR1 = u(0xFFF0)
+export.VAR2 = u(0xFFF1)
+export.VAR3 = u(0xFFF2)
+export.var_code_c = "[" .. export.VAR1 .. export.VAR2 .. export.VAR3 .. "]"
+
 
 export.vowel = "аеиоуіїяєюАЕИОУІЇЯЄЮ"
 export.vowel_c = "[" .. export.vowel .. "]"
@@ -91,6 +96,11 @@ end
 
 function export.remove_stress(word)
 	return rsub(word, AC, "")
+end
+
+
+function export.remove_variant_codes(word)
+	return rsub(word, export.var_code_c, "")
 end
 
 
@@ -307,16 +317,43 @@ function export.generate_form(form, footnotes)
 end
 
 
-function export.show_forms(forms, lemmas, footnotes, slots_table)
-	local footnote_obj = {
+function export.create_footnote_obj()
+	return {
 		notes = {},
 		seen_notes = {},
 		noteindex = 1,
 	}
+end
+
+
+function export.get_footnote_text(form, footnote_obj)
+	if not form.footnotes then
+		return ""
+	end
+	local link_indices = {}
+	for _, footnote in ipairs(form.footnotes) do
+		footnote = require("Module:inflection utilities").expand_footnote(footnote)
+		local this_noteindex = footnote_obj.seen_notes[footnote]
+		if not this_noteindex then
+			-- Generate a footnote index.
+			this_noteindex = footnote_obj.noteindex
+			footnote_obj.noteindex = footnote_obj.noteindex + 1
+			table.insert(footnote_obj.notes, '<sup style="color: red">' .. this_noteindex .. '</sup>' .. footnote)
+			footnote_obj.seen_notes[footnote] = this_noteindex
+		end
+		m_table.insertIfNot(link_indices, this_noteindex)
+	end
+	return '<sup style="color: red">' .. table.concat(link_indices, ",") .. '</sup>'
+end
+
+
+function export.show_forms(forms, lemmas, footnotes, slots_table)
+	local footnote_obj = export.create_footnote_obj()
 	local accel_lemma = lemmas[1]
 	forms.lemma = #lemmas > 0 and table.concat(lemmas, ", ") or mw.title.getCurrentTitle().text
 
 	local m_table_tools = require("Module:table tools")
+	local m_script_utilities = require("Module:script utilities")
 	for slot, accel_form in pairs(slots_table) do
 		local formvals = forms[slot]
 		if formvals then
@@ -325,7 +362,7 @@ function export.show_forms(forms, lemmas, footnotes, slots_table)
 			for i, form in ipairs(formvals) do
 				-- FIXME, this doesn't necessarily work correctly if there is an
 				-- embedded link in form.form.
-				local uk_text = export.remove_monosyllabic_stress(form.form)
+				local uk_text = export.remove_variant_codes(export.remove_monosyllabic_stress(form.form))
 				local link, tr
 				if form.form == "—" or form.form == "?" then
 					link = uk_text
@@ -343,22 +380,9 @@ function export.show_forms(forms, lemmas, footnotes, slots_table)
 				end
 				tr = export.translit_no_links(uk_text)
 				local trentry, trnotes = m_table_tools.get_notes(tr)
-				tr = require("Module:script utilities").tag_translit(trentry, lang, "default", " style=\"color: #888;\"") .. trnotes
+				tr = m_script_utilities.tag_translit(trentry, lang, "default", " style=\"color: #888;\"") .. trnotes
 				if form.footnotes then
-					local link_indices = {}
-					for _, footnote in ipairs(form.footnotes) do
-						footnote = require("Module:inflection utilities").expand_footnote(footnote)
-						local this_noteindex = footnote_obj.seen_notes[footnote]
-						if not this_noteindex then
-							-- Generate a footnote index.
-							this_noteindex = footnote_obj.noteindex
-							footnote_obj.noteindex = footnote_obj.noteindex + 1
-							table.insert(footnote_obj.notes, '<sup style="color: red">' .. this_noteindex .. '</sup>' .. footnote)
-							footnote_obj.seen_notes[footnote] = this_noteindex
-						end
-						m_table.insertIfNot(link_indices, this_noteindex)
-					end
-					local footnote_text = '<sup style="color: red">' .. table.concat(link_indices, ",") .. '</sup>'
+					local footnote_text = export.get_footnote_text(form, footnote_obj)
 					link = link .. footnote_text
 					tr = tr .. footnote_text
 				end

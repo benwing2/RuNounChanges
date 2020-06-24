@@ -431,11 +431,25 @@ local function handle_derived_slots_and_overrides(base)
 	if rfind(base.decl, "%-m$") or base.gender == "M" and base.decl == "adj" then
 		iut.insert_forms(base.forms, "acc_s", base.forms[base.animacy == "inan" and "nom_s" or "gen_s"])
 	end
-	if base.animacy == "inan" or base.animacy == "anml" then
-		iut.insert_forms(base.forms, "acc_p", base.forms["nom_p"])
+	local function tag_with_variant(variant)
+		return function(form) return form .. variant end
 	end
-	if base.animacy == "pr" or base.animacy == "anml" then
+	local function maybe_tag_with_variant(forms, variant)
+		if base.multiword then
+			return iut.map_forms(forms, tag_with_variant(variant))
+		else
+			return forms
+		end
+	end
+	if base.animacy == "inan" then
+		iut.insert_forms(base.forms, "acc_p", base.forms["nom_p"])
+	elseif base.animacy == "pr" then
 		iut.insert_forms(base.forms, "acc_p", base.forms["gen_p"])
+	elseif base.animacy == "anml" then
+		iut.insert_forms(base.forms, "acc_p", maybe_tag_with_variant(base.forms["nom_p"], com.VAR1))
+		iut.insert_forms(base.forms, "acc_p", maybe_tag_with_variant(base.forms["gen_p"], com.VAR2))
+	else
+		error("Internal error: Unrecognized animacy: " .. (base.animacy or "nil"))
 	end
 	if base.surname then
 		iut.insert_forms(base.forms, "voc_s", base.forms["nom_s"])
@@ -1154,8 +1168,8 @@ end
 
 local function set_defaults_and_check_bad_indicators(base)
 	-- Set default values.
-	base.number = base.number or "both"
 	if not base.adj then
+		base.number = base.number or "both"
 		base.animacy = base.animacy or base.surname and "pr" or
 			base.neutertype == "t" and "anml" or
 			"inan"
@@ -1778,84 +1792,95 @@ end
 
 
 local function detect_all_indicator_specs(alternant_multiword_spec)
+	local is_multiword = #alternant_multiword_spec.alternant_or_word_specs > 1
 	map_word_specs(alternant_multiword_spec, function(base)
 		detect_indicator_spec(base)
-		if not alternant_multiword_spec.number then
-			alternant_multiword_spec.number = base.number
-		elseif alternant_multiword_spec.number ~= base.number then
-			alternant_multiword_spec.number = "both"
-		end
+		base.multiword = is_multiword
 	end)
 end
 
 
-local propagate_multiword_animacies
+local propagate_multiword_properties
 
 
-local function propagate_alternant_animacies(alternant_spec)
-	local seen_animacy
+local function propagate_alternant_properties(alternant_spec, property, mixed_value)
+	local seen_property
 	for _, multiword_spec in ipairs(alternant_spec.alternants) do
-		propagate_multiword_animacies(multiword_spec)
-		if seen_animacy == nil then
-			seen_animacy = multiword_spec.animacy
-		elseif multiword_spec.animacy and seen_animacy ~= multiword_spec.animacy then
-			seen_animacy = "mixed"
+		propagate_multiword_properties(multiword_spec, property, mixed_value)
+		if seen_property == nil then
+			seen_property = multiword_spec[property]
+		elseif multiword_spec[property] and seen_property ~= multiword_spec[property] then
+			seen_property = mixed_value
 		end
 	end
-	alternant_spec.animacy = seen_animacy
+	alternant_spec[property] = seen_property
 end
 
 
-propagate_multiword_animacies = function(multiword_spec)
-	local seen_animacy = nil
-	local last_seen_noun_pos = 1
+propagate_multiword_properties = function(multiword_spec, property, mixed_value)
+	local seen_property = nil
+	local last_seen_noun_pos = 0
 	local word_specs = multiword_spec.alternant_or_word_specs or multiword_spec.word_specs
 	for i = 1, #word_specs do
+		local is_nounal
 		if word_specs[i].alternants then
-			propagate_alternant_animacies(word_specs[i])
-			integrate_animacy = true
+			propagate_alternant_properties(word_specs[i], property, mixed_value)
+			is_nounal = not not word_specs[i][property]
+		else
+			is_nounal = not word_specs[i].adj
 		end
-		if word_specs[i].animacy then
+		if is_nounal then
+			if not word_specs[i][property] then
+				error("Internal error: noun-type word spec without " .. property .. " set")
+			end
 			for j = last_seen_noun_pos + 1, i - 1 do
-				word_specs[j].animacy = word_specs[i].animacy
+				word_specs[j][property] = word_specs[j][property] or word_specs[i][property]
 			end
 			last_seen_noun_pos = i
-			if seen_animacy == nil then
-				seen_animacy = word_specs[i].animacy
-			elseif seen_animacy ~= word_specs[i].animacy then
-				seen_animacy = "mixed"
+			if seen_property == nil then
+				seen_property = word_specs[i][property]
+			elseif seen_property ~= word_specs[i][property] then
+				seen_property = mixed_value
 			end
 		end
 	end
-	for i = last_seen_noun_pos + 1, #word_specs do
-		word_specs[i].animacy = word_specs[last_seen_noun_pos].animacy
+	if last_seen_noun_pos > 0 then
+		for i = last_seen_noun_pos + 1, #word_specs do
+			word_specs[i][property] = word_specs[i][property] or word_specs[last_seen_noun_pos][property]
+		end
 	end
-	multiword_spec.animacy = seen_animacy
+	multiword_spec[property] = seen_property
 end
 
 
-local function propagate_animacies_downward(alternant_multiword_spec, animacy)
-	local animacy1 = alternant_multiword_spec.animacy or animacy
+local function propagate_properties_downward(alternant_multiword_spec, property, default_propval)
+	local propval1 = alternant_multiword_spec[property] or default_propval
 	for _, alternant_or_word_spec in ipairs(alternant_multiword_spec.alternant_or_word_specs) do
-		local animacy2 = alternant_or_word_spec.animacy or animacy1
+		local propval2 = alternant_or_word_spec[property] or propval1
 		if alternant_or_word_spec.alternants then
 			for _, multiword_spec in ipairs(alternant_or_word_spec.alternants) do
-				local animacy3 = multiword_spec.animacy or animacy2
+				local propval3 = multiword_spec[property] or propval2
 				for _, word_spec in ipairs(multiword_spec.word_specs) do
-					local animacy4 = word_spec.animacy or animacy3
-					if animacy4 == "mixed" then
-						error("Attempt to assign mixed animacy to word")
+					local propval4 = word_spec[property] or propval3
+					if propval4 == "mixed" then
+						error("Attempt to assign mixed " .. property .. " to word")
 					end
-					word_spec.animacy = animacy4
+					word_spec[property] = propval4
 				end
 			end
 		else
-			if animacy2 == "mixed" then
-				error("Attempt to assign mixed animacy to word")
+			if propval2 == "mixed" then
+				error("Attempt to assign mixed " .. property .. " to word")
 			end
-			alternant_or_word_spec.animacy = animacy2
+			alternant_or_word_spec[property] = propval2
 		end
 	end
+end
+
+
+local function propagate_properties(alternant_multiword_spec, property, default_propval, mixed_value)
+	propagate_multiword_properties(alternant_multiword_spec, property, mixed_value)
+	propagate_properties_downward(alternant_multiword_spec, property, default_propval)
 end
 
 
@@ -2081,14 +2106,28 @@ local function decline_alternants(alternant_spec, overall_number)
 end
 
 
+local function get_variants(form)
+	return
+		form:find(com.VAR1) and "var1" or
+		form:find(com.VAR2) and "var2" or
+		form:find(com.VAR3) and "var3" or
+		nil
+end
+
+
 local function append_forms(formtable, slot, forms, before_text)
 	local ret_forms = {}
 	for _, old_form in ipairs(formtable[slot]) do
 		for _, form in ipairs(forms) do
-			-- Do a shallow copy of the footnotes because we may modify them in-place.
-			local new_form = {form=old_form.form .. before_text .. form.form,
-				footnotes=combine_footnotes(old_form.footnotes, form.footnotes)}
-			table.insert(ret_forms, new_form)
+			local old_form_vars = get_variants(old_form.form)
+			local form_vars = get_variants(form.form)
+			if old_form_vars and form_vars and old_form_vars ~= form_vars then
+				-- Reject combination due to non-matching variant codes.
+			else
+				local new_form = {form=old_form.form .. before_text .. form.form,
+					footnotes=combine_footnotes(old_form.footnotes, form.footnotes)}
+				table.insert(ret_forms, new_form)
+			end
 		end
 	end
 	formtable[slot] = ret_forms
@@ -2438,8 +2477,10 @@ function export.do_generate_forms(parent_args, pos, from_headword, def)
 	alternant_multiword_spec.args = args
 	normalize_all_lemmas(alternant_multiword_spec)
 	detect_all_indicator_specs(alternant_multiword_spec)
-	propagate_multiword_animacies(alternant_multiword_spec)
-	propagate_animacies_downward(alternant_multiword_spec, "inan")
+	propagate_properties(alternant_multiword_spec, "animacy", "inan", "mixed")
+	propagate_properties(alternant_multiword_spec, "number", "both", "both")
+	-- The default of "M" should apply only to plural adjectives, where it doesn't matter.
+	propagate_properties(alternant_multiword_spec, "gender", "M", "mixed")
 	determine_noun_status(alternant_multiword_spec)
 	decline_multiword_or_alternant_multiword_spec(alternant_multiword_spec, alternant_multiword_spec.number)
 	add_categories(alternant_multiword_spec)
