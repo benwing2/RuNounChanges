@@ -26,9 +26,9 @@ local lang = require("Module:languages").getByCode("uk")
 local m_table = require("Module:table")
 local m_links = require("Module:links")
 local m_string_utilities = require("Module:string utilities")
-local iut = require("Module:User:Benwing2/inflection utilities")
+local iut = require("Module:inflection utilities")
 local m_para = require("Module:parameters")
-local com = require("Module:User:Benwing2/uk-common")
+local com = require("Module:uk-common")
 local m_uk_translit = require("Module:uk-translit")
 
 local current_title = mw.title.getCurrentTitle()
@@ -461,7 +461,7 @@ local function handle_derived_slots_and_overrides(base)
 	-- Compute linked versions of potential lemma slots, for use in {{uk-noun}}.
 	-- We substitute the original lemma (before removing links) for forms that
 	-- are the same as the lemma, if the original lemma has links.
-	for slot in ipairs({"nom_s", "nom_p"}) do
+	for _, slot in ipairs({"nom_s", "nom_p"}) do
 		iut.insert_forms(base.forms, slot .. "_linked", iut.map_forms(base.forms[slot], function(form)
 			if form == base.orig_lemma_no_links and rfind(base.orig_lemma, "%[%[") then
 				return base.orig_lemma
@@ -752,7 +752,7 @@ declprops["t-n"] = {desc = "t-stem neut-form"}
 
 
 decls["adj"] = function(base, stress)
-	local adj_alternant_spec = require("Module:User:Benwing2/uk-adjective").do_generate_forms({base.lemma})
+	local adj_alternant_spec = require("Module:uk-adjective").do_generate_forms({base.lemma})
 	local function copy(from_slot, to_slot)
 		base.forms[to_slot] = adj_alternant_spec.forms[from_slot]
 	end
@@ -937,7 +937,7 @@ dot-separated indicators within them). Return value is an object of the form
   explicit_gender = "GENDER", -- "M", "F", "N", "MF"; may be missing
   number = "NUMBER", -- "sg", "pl"; may be missing
   animacy = "ANIMACY", -- "inan", "anml", "pr"; may be missing
-  ialt = "VOWEL_ALTERNATION", -- "i", "ie", "io"; may be missing
+  ialt = "VOWEL_ALTERNATION", -- "i", "ie", "ijo", "io"; may be missing
   rtype = "RTYPE", -- "soft", "semisoft"; may be missing
   neutertype = "NEUTERTYPE", -- "t", "en"; may be missing
   plsoft = true, -- may be missing
@@ -1030,7 +1030,7 @@ local function parse_indicator_spec(angle_bracket_spec)
 					error("Can't specify animacy twice: '" .. inside .. "'")
 				end
 				base.animacy = part
-			elseif part == "i" or part == "io" or part == "ie" then
+			elseif part == "i" or part == "io" or part == "ijo" or part == "ie" then
 				if base.ialt then
 					error("Can't specify і-alternation indicator twice: '" .. inside .. "'")
 				end
@@ -1096,20 +1096,25 @@ end
 
 local function apply_vowel_alternation(base, stem)
 	if base.ialt == "io" then
-		local modstem = rsub(stem, "(.?)([іІ])(́?" .. com.cons_c .. "*)$",
-			function(pre, vowel, post)
-				if pre == "л" or pre == "Л" then
-					-- ко́лір, gen sg. ко́льору; вертолі́т, gen sg. вертольо́та
-					return pre .. "ьо" .. post
-				elseif vowel == "і" then
-					return pre .. "о" .. post
+		-- ріг, gen sg. ро́га; плід, gen sg. плода́/пло́ду
+		local modstem = rsub(stem, "([іІ])(́?" .. com.cons_c .. "*)$",
+			function(vowel, post)
+				if vowel == "і" then
+					return "о" .. post
 				else
-					return pre .. "О" .. post
+					return "О" .. post
 				end
 			end
 		)
 		if modstem == stem then
 			error("Indicator 'io' can't be applied because stem '" .. stem .. "' doesn't have an і as its last vowel")
+		end
+		return modstem
+	elseif base.ialt == "ijo" then
+		-- ко́лір, gen sg. ко́льору; вертолі́т, gen sg. вертольо́та
+		local modstem = rsub(stem, "і(́?" .. com.cons_c .. "*)$", "ьо%1")
+		if modstem == stem then
+			error("Indicator 'ijo' can't be applied because stem '" .. stem .. "' doesn't have an і as its last vowel")
 		end
 		return modstem
 	elseif base.ialt == "ie" then
@@ -1197,7 +1202,7 @@ end
 
 local function undo_vowel_alternation(base, stem)
 	if base.ialt == "io" then
-		local modstem = rsub(stem, "ь?([оО])(́?" .. com.cons_c .. "*)$",
+		local modstem = rsub(stem, "([оО])(́?" .. com.cons_c .. "*)$",
 			function(vowel, post)
 				if vowel == "о" then
 					return "і" .. post
@@ -1207,7 +1212,13 @@ local function undo_vowel_alternation(base, stem)
 			end
 		)
 		if modstem == stem then
-			error("Indicator 'io' can't be undone because stem '" .. stem .. "' doesn't have an о as its last vowel")
+			error("Indicator 'io' can't be undone because stem '" .. stem .. "' doesn't have о as its last vowel")
+		end
+		return modstem
+	elseif base.ialt == "ijo" then
+		local modstem = rsub(stem, "ьо(́?" .. com.cons_c .. "*)$", "і%1")
+		if modstem == stem then
+			error("Indicator 'ijo' can't be undone because stem '" .. stem .. "' doesn't have ьо as its last vowel")
 		end
 		return modstem
 	elseif base.ialt == "ie" then
@@ -1223,7 +1234,7 @@ local function undo_vowel_alternation(base, stem)
 			end
 		)
 		if modstem == stem then
-			error("Indicator 'ie' can't be undone because stem '" .. stem .. "' doesn't have an е or є as its last vowel")
+			error("Indicator 'ie' can't be undone because stem '" .. stem .. "' doesn't have е or є as its last vowel")
 		end
 		return modstem
 	elseif base.ialt == "i" then
@@ -1803,10 +1814,10 @@ end
 local propagate_multiword_properties
 
 
-local function propagate_alternant_properties(alternant_spec, property, mixed_value)
+local function propagate_alternant_properties(alternant_spec, property, mixed_value, nouns_only)
 	local seen_property
 	for _, multiword_spec in ipairs(alternant_spec.alternants) do
-		propagate_multiword_properties(multiword_spec, property, mixed_value)
+		propagate_multiword_properties(multiword_spec, property, mixed_value, nouns_only)
 		if seen_property == nil then
 			seen_property = multiword_spec[property]
 		elseif multiword_spec[property] and seen_property ~= multiword_spec[property] then
@@ -1817,26 +1828,28 @@ local function propagate_alternant_properties(alternant_spec, property, mixed_va
 end
 
 
-propagate_multiword_properties = function(multiword_spec, property, mixed_value)
+propagate_multiword_properties = function(multiword_spec, property, mixed_value, nouns_only)
 	local seen_property = nil
-	local last_seen_noun_pos = 0
+	local last_seen_nounal_pos = 0
 	local word_specs = multiword_spec.alternant_or_word_specs or multiword_spec.word_specs
 	for i = 1, #word_specs do
 		local is_nounal
 		if word_specs[i].alternants then
 			propagate_alternant_properties(word_specs[i], property, mixed_value)
 			is_nounal = not not word_specs[i][property]
-		else
+		elseif nouns_only then
 			is_nounal = not word_specs[i].adj
+		else
+			is_nounal = not not word_specs[i][property]
 		end
 		if is_nounal then
 			if not word_specs[i][property] then
 				error("Internal error: noun-type word spec without " .. property .. " set")
 			end
-			for j = last_seen_noun_pos + 1, i - 1 do
+			for j = last_seen_nounal_pos + 1, i - 1 do
 				word_specs[j][property] = word_specs[j][property] or word_specs[i][property]
 			end
-			last_seen_noun_pos = i
+			last_seen_nounal_pos = i
 			if seen_property == nil then
 				seen_property = word_specs[i][property]
 			elseif seen_property ~= word_specs[i][property] then
@@ -1844,9 +1857,9 @@ propagate_multiword_properties = function(multiword_spec, property, mixed_value)
 			end
 		end
 	end
-	if last_seen_noun_pos > 0 then
-		for i = last_seen_noun_pos + 1, #word_specs do
-			word_specs[i][property] = word_specs[i][property] or word_specs[last_seen_noun_pos][property]
+	if last_seen_nounal_pos > 0 then
+		for i = last_seen_nounal_pos + 1, #word_specs do
+			word_specs[i][property] = word_specs[i][property] or word_specs[last_seen_nounal_pos][property]
 		end
 	end
 	multiword_spec[property] = seen_property
@@ -1879,7 +1892,8 @@ end
 
 
 local function propagate_properties(alternant_multiword_spec, property, default_propval, mixed_value)
-	propagate_multiword_properties(alternant_multiword_spec, property, mixed_value)
+	propagate_multiword_properties(alternant_multiword_spec, property, mixed_value, "nouns only")
+	propagate_multiword_properties(alternant_multiword_spec, property, mixed_value, false)
 	propagate_properties_downward(alternant_multiword_spec, property, default_propval)
 end
 
