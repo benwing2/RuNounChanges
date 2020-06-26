@@ -44,6 +44,7 @@ local rsubn = mw.ustring.gsub
 local ulen = mw.ustring.len
 local usub = mw.ustring.sub
 local uupper = mw.ustring.upper
+local ulower = mw.ustring.lower
 
 local AC = u(0x0301) -- acute =  ́
 local CFLEX = u(0x0302) -- circumflex =  ̂
@@ -507,8 +508,22 @@ decls["hard-m"] = function(base, stress)
 	end
 end
 
-declprops["hard-m"] = {desc = "hard masc-form"}
-
+declprops["hard-m"] = {
+	desc = function(base, stress)
+		if rfind(stress.vowel_stem, com.velar_c .. "$") then
+			return "velar masc-form"
+		else
+			return "hard masc-form"
+		end
+	end,
+	cat = function(base, stress)
+		if rfind(stress.vowel_stem, com.velar_c .. "$") then
+			return "velar-stem masculine-form"
+		else
+			return "hard masculine-form"
+		end
+	end
+}
 
 decls["semisoft-m"] = function(base, stress)
 	local gen_s = default_genitive_u(base) and "у" or "а" -- may be overridden
@@ -520,7 +535,10 @@ decls["semisoft-m"] = function(base, stress)
 		"і", "ів", "ам", "ами", "ах")
 end
 
-declprops["semisoft-m"] = {desc = "semisoft masc-form"}
+declprops["semisoft-m"] = {
+	desc = "semisoft masc-form",
+	cat = "semisoft masculine-form",
+}
 
 
 decls["soft-m"] = function(base, stress)
@@ -537,7 +555,10 @@ decls["soft-m"] = function(base, stress)
 		"і", "ів", "ям", "ями", "ях")
 end
 
-declprops["soft-m"] = {desc = "soft masc-form"}
+declprops["soft-m"] = {
+	desc = "soft masc-form",
+	cat = "soft masculine-form",
+}
 
 
 decls["j-m"] = function(base, stress)
@@ -550,7 +571,10 @@ decls["j-m"] = function(base, stress)
 		"ї", "їв", "ям", "ями", "ях")
 end
 
-declprops["j-m"] = {desc = "j-stem masc-form"}
+declprops["j-m"] = {
+	desc = "j-stem masc-form",
+	cat = "j-stem masculine-form",
+}
 
 
 decls["o-m"] = function(base, stress)
@@ -590,7 +614,10 @@ decls["o-m"] = function(base, stress)
 		"и", "ів", "ам", "ами", "ах")
 end
 
-declprops["o-m"] = {desc = "masc in -о"}
+declprops["o-m"] = {
+	desc = "masc in -о",
+	cat = {"masculine nouns in -о", "masculine ~ nouns in -о"},
+}
 
 
 decls["hard-f"] = function(base, stress)
@@ -607,7 +634,10 @@ decls["hard-f"] = function(base, stress)
 	end
 end
 
-declprops["hard-f"] = {desc = "hard fem-form"}
+declprops["hard-f"] = {
+	desc = "hard fem-form",
+	cat = "hard feminine-form",
+}
 
 
 decls["semisoft-f"] = function(base, stress)
@@ -615,7 +645,10 @@ decls["semisoft-f"] = function(base, stress)
 		"і", "", "ам", "ами", "ах")
 end
 
-declprops["semisoft-f"] = {desc = "semisoft fem-form"}
+declprops["semisoft-f"] = {
+	desc = "semisoft fem-form",
+	cat = "semisoft feminine-form",
+}
 
 
 decls["soft-f"] = function(base, stress)
@@ -626,7 +659,10 @@ decls["soft-f"] = function(base, stress)
 		"і", rfind(stress.pl_nonvowel_stem, "[сздтлнц]$") and "ь" or "", "ям", "ями", "ях")
 end
 
-declprops["soft-f"] = {desc = "soft fem-form"}
+declprops["soft-f"] = {
+	desc = "soft fem-form",
+	cat = "soft feminine-form",
+}
 
 
 decls["j-f"] = function(base, stress)
@@ -635,7 +671,10 @@ decls["j-f"] = function(base, stress)
 		"ї", "й", "ям", "ями", "ях")
 end
 
-declprops["j-f"] = {desc = "j-stem fem-form"}
+declprops["j-f"] = {
+	desc = "j-stem fem-form",
+	cat = "j-stem feminine-form",
+}
 
 
 decls["third-f"] = function(base, stress)
@@ -664,7 +703,10 @@ decls["third-f"] = function(base, stress)
 	add(base, "ins_s", stress, "ю", nil, ins_s_stem)
 end
 
-declprops["third-f"] = {desc = "3rd-decl fem-form"}
+declprops["third-f"] = {
+	desc = "3rd-decl fem-form",
+	cat = "third-declension feminine-form",
+}
 
 
 decls["hard-n"] = function(base, stress)
@@ -686,7 +728,22 @@ decls["hard-n"] = function(base, stress)
 		"а", "", "ам", "ами", "ах")
 end
 
-declprops["hard-n"] = {desc = "hard neut-form"}
+declprops["hard-n"] = {
+	desc = function(base, stress)
+		if rfind(stress.vowel_stem, com.velar_c .. "$") then
+			return "velar neut-form"
+		else
+			return "hard neut-form"
+		end
+	end,
+	cat = function(base, stress)
+		if rfind(stress.vowel_stem, com.velar_c .. "$") then
+			return "velar-stem neuter-form"
+		else
+			return "hard neuter-form"
+		end
+	end
+}
 
 
 decls["semisoft-n"] = function(base, stress)
@@ -695,7 +752,10 @@ decls["semisoft-n"] = function(base, stress)
 		"а", "", "ам", "ами", "ах")
 end
 
-declprops["semisoft-n"] = {desc = "semisoft neut-form"}
+declprops["semisoft-n"] = {
+	desc = "semisoft neut-form",
+	cat = "semisoft neuter-form",
+}
 
 
 decls["soft-n"] = function(base, stress)
@@ -704,7 +764,10 @@ decls["soft-n"] = function(base, stress)
 		"я", rfind(stress.pl_nonvowel_stem, "[сздтлнц]$") and "ь" or "", "ям", "ями", "ях")
 end
 
-declprops["soft-n"] = {desc = "soft neut-form"}
+declprops["soft-n"] = {
+	desc = "soft neut-form",
+	cat = "soft neuter-form",
+}
 
 
 decls["fourth-n"] = function(base, stress)
@@ -726,7 +789,10 @@ decls["fourth-n"] = function(base, stress)
 	end
 end
 
-declprops["fourth-n"] = {desc = "4th-decl neut-form"}
+declprops["fourth-n"] = {
+	desc = "4th-decl neut-form",
+	cat = "fourth-declension neuter-form",
+}
 
 
 decls["en-n"] = function(base, stress)
@@ -738,21 +804,38 @@ decls["en-n"] = function(base, stress)
 	add(base, "loc_s", stress, "і", nil, n_stem)
 end
 
-declprops["en-n"] = {desc = "n-stem neut-form"}
+declprops["en-n"] = {
+	desc = "n-stem neut-form",
+	cat = "n-stem neuter-form",
+}
 
 
 decls["t-n"] = function(base, stress)
-	-- Most t-stem neuters end in -я́, but there's at least лоша́ as well.
+	-- Most t-stem neuters end in -я́, but there's also лоша́, курча́, двіча́, ...
 	local v = rfind(stress.vowel_stem, com.hushing_c .. "$") and "а" or "я"
 	add_decl(base, stress, v, v .. "ти", v .. "ті", v, v .. "м", v .. "ті", v,
 		v .. "та", v .. "т", v .. "там", v .. "тами", v .. "тах")
 end
 
-declprops["t-n"] = {desc = "t-stem neut-form"}
+declprops["t-n"] = {
+	desc = "t-stem neut-form",
+	cat = "t-stem neuter-form",
+}
 
 
 decls["adj"] = function(base, stress)
-	local adj_alternant_spec = require("Module:uk-adjective").do_generate_forms({base.lemma})
+	local props = {}
+	if base.ialt then
+		table.insert(props, base.ialt)
+	end
+	if base.surname then
+		table.insert(props, "surname")
+	end
+	local propspec = table.concat(props, ".")
+	if propspec ~= "" then
+		propspec = "<" .. propspec .. ">"
+	end
+	local adj_alternant_spec = require("Module:uk-adjective").do_generate_forms({base.lemma .. propspec})
 	local function copy(from_slot, to_slot)
 		base.forms[to_slot] = adj_alternant_spec.forms[from_slot]
 	end
@@ -763,6 +846,7 @@ decls["adj"] = function(base, stress)
 			copy("dat_m", "dat_s")
 			copy("ins_m", "ins_s")
 			copy("loc_m", "loc_s")
+			copy("voc_m", "voc_s")
 		elseif base.gender == "F" then
 			copy("nom_f", "nom_s")
 			copy("gen_f", "gen_s")
@@ -770,6 +854,7 @@ decls["adj"] = function(base, stress)
 			copy("acc_f", "acc_s")
 			copy("ins_f", "ins_s")
 			copy("loc_f", "loc_s")
+			copy("voc_f", "voc_s")
 		elseif base.gender == "N" then
 			copy("nom_n", "nom_s")
 			copy("gen_m", "gen_s")
@@ -777,10 +862,13 @@ decls["adj"] = function(base, stress)
 			copy("acc_n", "acc_s")
 			copy("ins_m", "ins_s")
 			copy("loc_m", "loc_s")
+			copy("voc_n", "voc_s")
 		else
 			error("Internal error: Unrecognized gender: " .. base.gender)
 		end
-		iut.insert_forms(base.forms, "voc_s", base.forms["nom_s"])
+		if not base.forms.voc_s then
+			iut.insert_forms(base.forms, "voc_s", base.forms["nom_s"])
+		end
 	end
 	if base.number ~= "sg" then
 		copy("nom_p", "nom_p")
@@ -791,8 +879,8 @@ decls["adj"] = function(base, stress)
 	end
 end
 
-declprops["adj"] = {descfun =
-	function(base)
+declprops["adj"] = {
+	desc = function(base, stress)
 		if base.number == "pl" then
 			return "adj"
 		elseif base.gender == "M" then
@@ -804,7 +892,35 @@ declprops["adj"] = {descfun =
 		else
 			error("Internal error: Unrecognized gender: " .. base.gender)
 		end
-	end
+	end,
+	cat = function(base, stress)
+		local gender
+		if base.number == "pl" then
+			gender = "plural-only"
+		elseif base.gender == "M" then
+			gender = "masculine"
+		elseif base.gender == "F" then
+			gender = "feminine"
+		elseif base.gender == "N" then
+			gender = "neuter"
+		else
+			error("Internal error: Unrecognized gender: " .. base.gender)
+		end
+		local stemtype
+		if rfind(base.lemma, "ци́?й$") then
+			stemtype = "c-stem"
+		elseif rfind(base.lemma, "и́?й$") then
+			stemtype = "hard"
+		elseif rfind(base.lemma, "і́?й$") then
+			stemtype = "soft"
+		elseif rfind(base.lemma, "ї́?й$") then
+			stemtype = "j-stem"
+		else
+			stemtype = "possessive"
+		end
+
+		return {"adjectival nouns", stemtype .. " " .. gender .. " adjectival ~ nouns"}
+	end,
 }
 
 
@@ -1094,69 +1210,6 @@ local function parse_indicator_spec(angle_bracket_spec)
 end
 
 
-local function apply_vowel_alternation(base, stem)
-	if base.ialt == "io" then
-		-- ріг, gen sg. ро́га; плід, gen sg. плода́/пло́ду
-		local modstem = rsub(stem, "([іІ])(́?" .. com.cons_c .. "*)$",
-			function(vowel, post)
-				if vowel == "і" then
-					return "о" .. post
-				else
-					return "О" .. post
-				end
-			end
-		)
-		if modstem == stem then
-			error("Indicator 'io' can't be applied because stem '" .. stem .. "' doesn't have an і as its last vowel")
-		end
-		return modstem
-	elseif base.ialt == "ijo" then
-		-- ко́лір, gen sg. ко́льору; вертолі́т, gen sg. вертольо́та
-		local modstem = rsub(stem, "і(́?" .. com.cons_c .. "*)$", "ьо%1")
-		if modstem == stem then
-			error("Indicator 'ijo' can't be applied because stem '" .. stem .. "' doesn't have an і as its last vowel")
-		end
-		return modstem
-	elseif base.ialt == "ie" then
-		local modstem = rsub(stem, "([іїІЇ])(́?" .. com.cons_c .. "*)$",
-			function(vowel, post)
-				if vowel == "і" then
-					-- ведмі́дь gen sg. ведме́дя
-					return "е" .. post
-				elseif vowel == "І" then
-					return "Е" .. post
-				elseif vowel == "ї" then
-					-- Ки́їв gen sg. Ки́єва
-					return "є" .. post
-				else
-					return "Є" .. post
-				end
-			end
-		)
-		if modstem == stem then
-			error("Indicator 'ie' can't be applied because stem '" .. stem .. "' doesn't have an і or ї as its last vowel")
-		end
-		return modstem
-	elseif base.ialt == "i" then
-		local modstem = rsub(stem, "ь?([оеОЕ])(́?" .. com.cons_c .. "*)$",
-			function(vowel, post)
-				if vowel == "о" or vowel == "е" then
-					return "і" .. post
-				else
-					return "І" .. post
-				end
-			end
-		)
-		if modstem == stem then
-			error("Indicator 'i' can't be applied because stem '" .. stem .. "' doesn't have an о or е as its last vowel")
-		end
-		return modstem
-	else
-		return stem
-	end
-end
-
-
 local function add_stress_for_pattern(stress, stem)
 	local where_stress = stress_patterns[stress.stress].stress
 	if where_stress == "last" then
@@ -1351,6 +1404,16 @@ local function synthesize_adj_lemma(base)
 	while true do
 		-- Masculine
 		stem, ac = rmatch(base.lemma, "^(.*)[иії](́?)й$")
+		if stem then
+			gender = "M"
+			break
+		end
+		stem, ac = rmatch(base.lemma, "^(.*[оеєії]́?в)$")
+		if stem then
+			gender = "M"
+			break
+		end
+		stem, ac = rmatch(base.lemma, "^(.*[иії]́?н)$")
 		if stem then
 			gender = "M"
 			break
@@ -1717,7 +1780,7 @@ local function determine_stress_and_stems(base)
 			-- Apply vowel alternation first in cases like війна́ -> во́єн;
 			-- apply_vowel_alternation() will throw an error if the vowel being
 			-- modified isn't the last vowel in the stem.
-			stress.nonvowel_stem = apply_vowel_alternation(base, stress.nonvowel_stem)
+			stress.nonvowel_stem, stress.origvowel = com.apply_vowel_alternation(base.ialt, stress.nonvowel_stem)
 			if stress.reducible then
 				stress.nonvowel_stem = dereduce(stress.nonvowel_stem)
 			end
@@ -1734,7 +1797,7 @@ local function determine_stress_and_stems(base)
 			else
 				stress.vowel_stem = base.nonvowel_stem
 			end
-			stress.vowel_stem = apply_vowel_alternation(base, stress.vowel_stem)
+			stress.vowel_stem, stress.origvowel = com.apply_vowel_alternation(base.ialt, stress.vowel_stem)
 			stress.vowel_stem = add_stress_for_pattern(stress, stress.vowel_stem)
 		end
 		if base.plstem then
@@ -1754,7 +1817,7 @@ local function determine_stress_and_stems(base)
 				-- "falcon" has both і -> о alternation (vowel stem со́кол-) and special
 				-- plstem соко́л-, but we can't and don't want to apply an і -> о
 				-- alternation to the plstem.
-				stress.pl_nonvowel_stem = apply_vowel_alternation(base, stressed_plstem)
+				stress.pl_nonvowel_stem = com.apply_vowel_alternation(base.ialt, stressed_plstem)
 				if stress.reducible then
 					stress.pl_nonvowel_stem = dereduce(stress.pl_nonvowel_stem)
 				end
@@ -1891,6 +1954,28 @@ local function propagate_properties_downward(alternant_multiword_spec, property,
 end
 
 
+--[=[
+Propagate `property` (one of "animacy", "gender" or "number") from nouns to adjacent
+adjectives. We proceed as follows:
+1. We assume the properties in question are already set on all nouns. This should happen
+   in set_defaults_and_check_bad_indicators().
+2. We first propagate properties upwards and sideways. We recurse downwards from the top.
+   When we encounter a multiword spec, we proceed left to right looking for a noun.
+   When we find a noun, we fetch its property (recursing if the noun is an alternant),
+   and propagate it to any adjectives to its left, up to the next noun to the left.
+   When we have processed the last noun, we also propagate its property value to any
+   adjectives to the right (to handle e.g. [[лунь польовий]] "hen harrier", where the
+   adjective польовий should inherit the 'animal' animacy of лунь). Finally, we set
+   the property value for the multiword spec itself by combining all the non-nil
+   properties of the individual elements. If all non-nil properties have the same value,
+   the result is that value, otherwise it is `mixed_value` (which is "mixed" for animacy
+   and gender, but "both" for number).
+3. When we encounter an alternant spec in this process, we recursively process each
+   alternant (which is a multiword spec) using the previous step, and combine any
+   non-nil properties we encounter the same way as for multiword specs.
+4. The effect of steps 2 and 3 is to set the property of each alternant and multiword
+   spec based on its children or its neighbors. 
+]=]
 local function propagate_properties(alternant_multiword_spec, property, default_propval, mixed_value)
 	propagate_multiword_properties(alternant_multiword_spec, property, mixed_value, "nouns only")
 	propagate_multiword_properties(alternant_multiword_spec, property, mixed_value, false)
@@ -2208,15 +2293,125 @@ local function process_manual_overrides(forms, args, number, unknown_stress)
 end
 
 
-local function add_categories(alternant_multiword_spec)
+-- Compute the categories to add the noun to, as well as the annotation to display in the
+-- declension title bar. We combine the code to do these functions as both categories and
+-- title bar contain similar information.
+local function compute_categories_and_annotation(alternant_multiword_spec)
 	local cats = {}
 	local function insert(cattype)
-		table.insert(cats, "Ukrainian " .. cattype)
+		m_table.insertIfNot(cats, "Ukrainian " .. cattype)
 	end
 	if alternant_multiword_spec.number == "sg" then
 		insert("uncountable nouns")
 	elseif alternant_multiword_spec.number == "pl" then
 		insert("pluralia tantum")
+	end
+	local annotation
+	if alternant_multiword_spec.manual then
+		alternant_multiword_spec.annotation =
+			alternant_multiword_spec.number == "sg" and "sg-only" or
+			alternant_multiword_spec.number == "pl" and "pl-only" or
+			""
+	else
+		local annparts = {}
+		local animacies = {}
+		local decldescs = {}
+		local vowelalts = {}
+		local patterns = {}
+		local reducible = nil
+		local function do_word_spec(base)
+			if base.animacy == "inan" then
+				m_table.insertIfNot(animacies, "inan")
+			elseif base.animacy == "anml" then
+				m_table.insertIfNot(animacies, "animal")
+			else
+				assert(base.animacy == "pr")
+				m_table.insertIfNot(animacies, "pers")
+			end
+			for _, stress in ipairs(base.stresses) do
+				local props = declprops[base.decl]
+				local desc = props.desc
+				if type(desc) == "function" then
+					desc = desc(base, stress)
+				end
+				m_table.insertIfNot(decldescs, desc)
+				local cats = props.cat
+				if type(cats) == "function" then
+					cats = cats(base, stress)
+				end
+				if type(cats) == "string" then
+					cats = {cats .. " nouns", cats .. " ~ nouns"}
+				end
+				for _, cat in ipairs(cats) do
+					cat = rsub(cat, "~", "accent-" .. stress.stress)
+					insert(cat)
+				end
+				local vowelalt
+				if base.ialt == "ie" then
+					vowelalt = "і-е"
+				elseif base.ialt == "io" then
+					vowelalt = "і-о"
+				elseif base.ialt == "ijo" then
+					vowelalt = "і-ьо"
+				elseif base.ialt == "i" then
+					if not stress.origvowel then
+						error("Internal error: Original vowel not set along with 'i' code")
+					end
+					vowelalt = ulower(stress.origvowel) .. "-і"
+				end
+				if vowelalt then
+					m_table.insertIfNot(vowelalts, vowelalt)
+					insert("nouns with " .. vowelalt .. " alternation")
+				end
+				if reducible == nil then
+					reducible = stress.reducible
+				elseif reducible ~= stress.reducible then
+					reducible = "mixed"
+				end
+				if stress.reducible then
+					insert("nouns with reducible stem")
+				end
+				m_table.insertIfNot(patterns, stress.stress)
+				insert("nouns with accent pattern " .. stress.stress)
+			end
+		end
+		local key_entry = alternant_multiword_spec.first_noun or 1
+		if #alternant_multiword_spec.alternant_or_word_specs >= key_entry then
+			local alternant_or_word_spec = alternant_multiword_spec.alternant_or_word_specs[key_entry]
+			if alternant_or_word_spec.alternants then
+				for _, multiword_spec in ipairs(alternant_or_word_spec.alternants) do
+					key_entry = multiword_spec.first_noun or 1
+					if #multiword_spec.word_specs >= key_entry then
+						do_word_spec(multiword_spec.word_specs[key_entry])
+					end
+				end
+			else
+				do_word_spec(alternant_or_word_spec)
+			end
+		end
+		if #animacies > 0 then
+			table.insert(annparts, table.concat(animacies, "/"))
+		end
+		if alternant_multiword_spec.number ~= "both" then
+			table.insert(annparts, alternant_multiword_spec.number == "sg" and "sg-only" or "pl-only")
+		end
+		if #decldescs == 0 then
+			table.insert(annparts, "indecl")
+		else
+			table.insert(annparts, table.concat(decldescs, " // "))
+		end
+		if #patterns > 0 then
+			table.insert(annparts, "accent-" .. table.concat(patterns, "/"))
+		end
+		if #vowelalts > 0 then
+			table.insert(annparts, table.concat(vowelalts, "/"))
+		end
+		if reducible == "mixed" then
+			table.insert(annparts, "mixed-reduc")
+		elseif reducible then
+			table.insert(annparts, "reduc")
+		end
+		alternant_multiword_spec.annotation = table.concat(annparts, " ")
 	end
 	alternant_multiword_spec.categories = cats
 end
@@ -2355,68 +2550,7 @@ local function make_table(alternant_multiword_spec)
 		forms.title = 'Declension of <i lang="uk" class="Cyrl">' .. forms.lemma .. '</i>'
 	end
 
-	local annotation
-	if alternant_multiword_spec.manual then
-		annotation = alternant_multiword_spec.number == "sg" and "sg-only" or
-			alternant_multiword_spec.number == "pl" and "pl-only" or
-			""
-	else
-		local annparts = {}
-		local animacies = {}
-		local decldescs = {}
-		local patterns = {}
-		local reducible = nil
-		local function do_word_spec(base)
-			if base.animacy == "inan" then
-				m_table.insertIfNot(animacies, "inan")
-			elseif base.animacy == "anml" then
-				m_table.insertIfNot(animacies, "animal")
-			else
-				assert(base.animacy == "pr")
-				m_table.insertIfNot(animacies, "pers")
-			end
-			local props = declprops[base.decl]
-			if props.descfun then
-				m_table.insertIfNot(decldescs, props.descfun(base))
-			else
-				m_table.insertIfNot(decldescs, props.desc)
-			end
-			for _, stress in ipairs(base.stresses) do
-				if reducible == nil then
-					reducible = stress.reducible
-				elseif reducible ~= stress.reducible then
-					reducible = "mixed"
-				end
-				m_table.insertIfNot(patterns, stress.stress)
-			end
-		end
-		local key_entry = alternant_multiword_spec.first_noun or 1
-		if #alternant_multiword_spec.alternant_or_word_specs >= key_entry then
-			local alternant_or_word_spec = alternant_multiword_spec.alternant_or_word_specs[key_entry]
-			if alternant_or_word_spec.alternants then
-				for _, multiword_spec in ipairs(alternant_or_word_spec.alternants) do
-					key_entry = multiword_spec.first_noun or 1
-					if #multiword_spec.word_specs >= key_entry then
-						do_word_spec(multiword_spec.word_specs[key_entry])
-					end
-				end
-			else
-				do_word_spec(alternant_or_word_spec)
-			end
-		end
-		table.insert(annparts, table.concat(animacies, "/"))
-		if alternant_multiword_spec.number ~= "both" then
-			table.insert(annparts, alternant_multiword_spec.number == "sg" and "sg-only" or "pl-only")
-		end
-		table.insert(annparts, table.concat(decldescs, " // "))
-		table.insert(annparts, "accent-" .. table.concat(patterns, "/"))
-		if reducible == "mixed" then
-			table.insert(annparts, "mixed-reduc")
-		elseif reducible then
-			table.insert(annparts, "reduc")
-		end
-		annotation = table.concat(annparts, " ")
-	end
+	local annotation = alternant_multiword_spec.annotation
 	if annotation == "" then
 		forms.annotation = ""
 	else
@@ -2497,7 +2631,7 @@ function export.do_generate_forms(parent_args, pos, from_headword, def)
 	propagate_properties(alternant_multiword_spec, "gender", "M", "mixed")
 	determine_noun_status(alternant_multiword_spec)
 	decline_multiword_or_alternant_multiword_spec(alternant_multiword_spec, alternant_multiword_spec.number)
-	add_categories(alternant_multiword_spec)
+	compute_categories_and_annotation(alternant_multiword_spec)
 	alternant_multiword_spec.genders = compute_headword_genders(alternant_multiword_spec)
 	return alternant_multiword_spec
 end
@@ -2560,7 +2694,7 @@ function export.do_generate_forms_manual(parent_args, number, pos, from_headword
 		manual = true,
 	}
 	process_manual_overrides(alternant_spec.forms, args, alternant_spec.number, args.unknown_stress)
-	add_categories(alternant_spec)
+	compute_categories_and_annotation(alternant_spec)
 	return alternant_spec
 end
 
