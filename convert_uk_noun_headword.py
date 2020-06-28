@@ -1,0 +1,97 @@
+#!/usr/bin/env python
+#coding: utf-8
+
+import pywikibot, re, sys, codecs, argparse
+
+import blib
+from blib import getparam, rmparam, msg, site, tname
+
+import uklib as uk
+
+AC = u"\u0301"
+
+def process_page(page, index, parsed):
+  pagetitle = unicode(page.title())
+  global args
+  def pagemsg(txt):
+    msg("Page %s %s: %s" % (index, pagetitle, txt))
+  def expand_text(tempcall):
+    return blib.expand_text(tempcall, pagetitle, pagemsg, args.verbose)
+
+  notes = []
+  pagemsg("Processing")
+
+  heads = None
+  headt = None
+  headtn = None
+  gender_and_animacy = None
+  genitives = None
+  plurals = None
+  for t in parsed.filter_templates():
+    tn = tname(t)
+    if tn in ["uk-noun", "uk-proper noun"]:
+      if heads:
+        pagemsg("WARNING: Encountered headword twice without declension: %s" % unicode(t))
+        return
+      headt = t
+      headtn = tn
+      heads = blib.fetch_param_chain(t, "1", "head")
+      gender_and_animacy = blib.fetch_param_chain(t, "2", "g")
+      genitives = blib.fetch_param_chain(t, "3", "gen")
+      plurals = blib.fetch_param_chain(t, "4", "pl")
+    if tn == "uk-ndecl":
+      if not heads:
+        pagemsg("WARNING: Encountered decl without headword: %s" % unicode(t))
+        return
+      generate_template = re.sub(r"^\{\{uk-ndecl\|", "{{User:Benwing2/uk-generate-prod-noun-props|",
+          unicode(t))
+      result = expand_text(generate_template)
+      if not result:
+        return
+      new_forms = blib.split_generate_args(result)
+      new_g = new_forms["g"].split(",")
+      def compare(old, new, stuff, nocanon=False):
+        if not nocanon:
+          old = [uk.remove_monosyllabic_stress(x) for x in old]
+          new = [uk.remove_monosyllabic_stress(x) for x in new]
+        if set(old) != set(new):
+          pagemsg("WARNING: Old %ss %s disagree with new %ss %s: head=%s, decl=%s" % (
+            stuff, ",".join(old), stuff, ",".join(new), unicode(headt), unicode(t)))
+          return False
+        return True
+      if not compare(gender_and_animacy, new_g, "gender", nocanon=True):
+        heads = None
+        continue
+      is_plural = [x.endswith("-p") for x in new_g]
+      if any(is_plural) and not all(is_plural):
+        pagemsg("WARNING: Mixture of plural-only and non-plural-only genders, can't process: %s" %
+            unicode(t))
+        return
+      is_plural = any(is_plural)
+      if is_plural:
+        if (not compare(heads, new_forms.get("nom_p", "-").split(","), "nom pl") or
+            not compare(genitives, new_forms.get("gen_p", "-").split(","), "gen pl")):
+          heads = None
+          continue
+      else:
+        if (not compare(heads, new_forms.get("nom_s", "-").split(","), "nom sg") or
+            not compare(genitives, new_forms.get("gen_s", "-").split(","), "gen sg") or
+            # 'uk-proper noun' headwords don't have nominative plural set
+            headtn == "uk-noun" and not compare(plurals, new_forms.get("nom_p", "-").split(","), "nom pl")):
+          heads = None
+          continue
+      decl = getparam(t, "1")
+      blib.set_param_chain(headt, [decl], "1", "head")
+      blib.remove_param_chain(headt, "2", "g")
+      blib.remove_param_chain(headt, "3", "gen")
+      blib.remove_param_chain(headt, "4", "pl")
+      notes.append("convert {{uk-noun}} to new style using decl %s" % decl)
+      heads = None
+  return unicode(parsed), notes
+
+parser = blib.create_argparser("Convert {{uk-noun}} to new style", include_pagefile=True)
+args = parser.parse_args()
+start, end = blib.parse_start_end(args.start, args.end)
+
+blib.do_pagefile_cats_refs(args, start, end, process_page,
+    default_cats=["Ukrainian proper nouns"], edit=True)
