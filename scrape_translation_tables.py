@@ -17,7 +17,7 @@ def process_page(page, index):
     tn = tname(t)
     if tn in ["t", "t+", "t-", "t+check", "t-check"]:
       trans = blib.remove_links(getparam(t, "2"))
-      if trans not in seen_trans:
+      if trans and trans not in seen_trans:
         seen_trans.append(trans)
   for trans in seen_trans:
     def pagemsg_with_trans(txt):
