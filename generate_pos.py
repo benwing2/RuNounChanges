@@ -8,6 +8,7 @@ class Peeker:
   def __init__(self, lineiter):
     self.lineiter = lineiter
     self.next_lines = []
+    self.lineno = 0
 
   def peek_next_line(self, n):
     while len(self.next_lines) < n + 1:
@@ -24,10 +25,12 @@ class Peeker:
       retval = self.next_lines[0]
       del self.next_lines[0]
       # print "get_next_line(): return cached %s" % retval
+      self.lineno += 1
       return retval
     try:
       retval = next(self.lineiter)
       # print "get_next_line(): return new %s" % retval
+      self.lineno += 1
       return retval
     except StopIteration:
       # print "get_next_line(): return None"
