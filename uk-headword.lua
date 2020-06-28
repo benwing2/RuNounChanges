@@ -70,8 +70,6 @@ function export.show(frame)
 	data.unknown_stress = args.unknown_stress
 	data.frame = frame
 
-	local character_categories = {}
-
 	if args.unknown_stress then
 		table.insert(data.inflections, {label = "unknown stress"})
 	end
@@ -80,34 +78,37 @@ function export.show(frame)
 		check_if_accents_needed(heads, data)
 	end
 
-	for _, head in ipairs(heads) do
-		if mw.ustring.match(head, "'") then
-			table.insert(character_categories, "Ukrainian terms spelled with '")
-		end
-	end
-
 	if pos_functions[poscat] then
 		pos_functions[poscat].func(args, data)
 	end
 
-	return require("Module:headword").full_headword(data) ..
-			require("Module:utilities").format_categories(character_categories, lang)
-end
-
-
-local function get_raw_forms(forms)
-	local raw_forms = {}
-	if forms then
-		for _, form in ipairs(forms) do
-			table.insert(raw_forms, com.remove_monosyllabic_stress(form.form))
+	for _, head in ipairs(data.heads) do
+		if rfind(head, "'") then
+			table.insert(data.categories, "Ukrainian terms spelled with '")
+			break
 		end
 	end
-	if #raw_forms == 0 then
-		raw_forms = {"-"}
+
+	if not rfind(poscat, " forms?$") then
+		for _, head in ipairs(data.heads) do
+			-- Don't trigger on prefixes or suffixes.
+			if (rfind(head, " ") or rfind(head, ".%-.")) then
+				table.insert(data.categories, "Ukrainian multiword terms")
+				break
+			end
+		end
 	end
-	return raw_forms
+
+	return require("Module:headword").full_headword(data) .. (data.extra_text or "")
 end
-	
+
+
+local function make_gloss_text(text)
+	return '<span class="gloss-brac">(</span>' ..
+		'<span class="gloss-content">' .. text ..
+		'</span><span class="gloss-brac">)</span>'
+end
+
 
 local function get_noun_pos(is_proper)
 	return {
@@ -133,13 +134,40 @@ local function get_noun_pos(is_proper)
 				local parargs = data.frame:getParent().args
 				local alternant_spec = require("Module:uk-noun").do_generate_forms(parargs, nil, true)
 				args = alternant_spec.args
+				local footnote_obj
+
+				local function get_raw_forms(forms)
+					local raw_forms = {}
+					if forms then
+						for _, form in ipairs(forms) do
+							local text = com.remove_monosyllabic_stress(form.form)
+							if form.footnotes then
+								if not footnote_obj then
+									footnote_obj = com.create_footnote_obj()
+								end
+								local footnote_text = com.get_footnote_text(form, footnote_obj)
+								if rfind(text, "%[%[") then
+									text = text .. footnote_text
+								else
+									text = "[[" .. text .. "]]" .. footnote_text
+								end
+							end
+							table.insert(raw_forms, text)
+						end
+					end
+					if #raw_forms == 0 then
+						raw_forms = {"-"}
+					end
+					return raw_forms
+				end
+
 				if alternant_spec.number == "pl" then
-					data.heads = get_raw_forms(alternant_spec.forms.nom_p)
+					data.heads = get_raw_forms(alternant_spec.forms.nom_p_linked)
 					genitives = get_raw_forms(alternant_spec.forms.gen_p)
 					plurals = {"-"}
 					genitive_plurals = {"-"}
 				else
-					data.heads = get_raw_forms(alternant_spec.forms.nom_s)
+					data.heads = get_raw_forms(alternant_spec.forms.nom_s_linked)
 					genitives = get_raw_forms(alternant_spec.forms.gen_s)
 					if alternant_spec.number == "sg" then
 						plurals = {"-"}
@@ -154,6 +182,14 @@ local function get_noun_pos(is_proper)
 				else
 					data.genders = alternant_spec.genders
 				end
+
+				local notes_segments = {}
+				if footnote_obj then
+					for _, note in ipairs(footnote_obj.notes) do
+						table.insert(notes_segments, " " .. make_gloss_text(note))
+					end
+				end
+				data.extra_text = table.concat(notes_segments, "")
 			else
 				check_if_accents_needed(data.heads, data)
 				data.genders = args[2]
