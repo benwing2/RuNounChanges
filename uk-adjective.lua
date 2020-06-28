@@ -127,6 +127,9 @@ local output_adjective_slots_surname = {
 	loc_m = "loc|m|s",
 	loc_f = "loc|f|s",
 	loc_p = "loc|p",
+	voc_m = "voc|m|s",
+	voc_f = "voc|f|s",
+	voc_p = "voc|p",
 }
 
 
@@ -177,6 +180,13 @@ local function add_normal_decl(base, stem,
 	add(base, "loc_m", stem, loc_m)
 	add(base, "loc_f", stem, loc_f)
 	add(base, "loc_p", stem, loc_p)
+end
+
+
+local function add_vocative(base, stem, voc_m, voc_f, voc_p)
+	add(base, "voc_m", stem, voc_m)
+	add(base, "voc_f", stem, voc_f)
+	add(base, "voc_p", stem, voc_p)
 end
 
 
@@ -347,6 +357,47 @@ decls["poss"] = function(base, lemma)
 end
 
 
+decls["surname"] = function(base, lemma)
+	local ending_prefix
+	local stem, suffix
+
+	while true do
+		stem, suffix = rmatch(lemma, "^(.*)([ії]́?в)$")
+		if stem then
+			ending_prefix = com.apply_vowel_alternation(base.ialt, suffix)
+			break
+		end
+		stem, suffix = rmatch(lemma, "^(.*)(о́?в)$")
+		if stem then
+			ending_prefix = suffix
+			break
+		end
+		stem, suffix = rmatch(lemma, "^(.*)([иії]́?н)$")
+		if stem then
+			ending_prefix = suffix
+			break
+		end
+		error("Unrecognized possessive surname lemma, should end in '-ів', '-їв', '-ов', '-ин', '-ін' or '-їн': '" .. lemma .. "'")
+	end
+
+	local endings = {
+		"а", nil, "и", --nom
+		"а", "ої", "их", --gen
+		"у", "ій", "им", --dat
+		"у", --acc
+		"им", "ою", "ими", --ins
+		{"у", "і"}, "ій", "их", --loc
+	}
+	-- Do the nominative singular separately from the rest, which may have
+	-- a different stem ending (e.g. -ов vs. -ів).
+	add_normal_decl(base, stem, suffix)
+	add_normal_decl(base, stem .. ending_prefix, nil, unpack(endings))
+	add_vocative(base, stem, suffix)
+	add_vocative(base, stem .. ending_prefix, "е", "а", "и")
+	-- FIXME: Are there 'old' endings here too?
+end
+
+
 local function parse_indicator_spec(angle_bracket_spec)
 	local inside = rmatch(angle_bracket_spec, "^<(.*)>$")
 	assert(inside)
@@ -364,6 +415,11 @@ local function parse_indicator_spec(angle_bracket_spec)
 					error("Can't specify 'surname' twice: '" .. inside .. "'")
 				end
 				base.surname = true
+			elseif part == "io" or part == "ie" then
+				if base.ialt then
+					error("Can't specify і-alternation indicator twice: '" .. inside .. "'")
+				end
+				base.ialt = part
 			else
 				error("Unrecognized indicator '" .. part .. "': '" .. inside .. "'")
 			end
@@ -385,10 +441,17 @@ end
 
 
 local function detect_indicator_spec(base)
+	if base.ialt and not base.surname then
+		error("Vowel alternation spec '" .. base.ialt .. "' can only be specified with 'surname'")
+	end
 	if rfind(base.lemma, "й$") then
 		base.decl = "normal"
 	elseif rfind(base.lemma, "[вн]$") then
-		base.decl = "poss"
+		if base.surname then
+			base.decl = "surname"
+		else
+			base.decl = "poss"
+		end
 	else
 		error("Unrecognized adjective lemma: '" .. base.lemma .. "'")
 	end
@@ -614,8 +677,16 @@ local function make_table(alternant_spec)
 ! style="background:#eff7ff" | locative
 | {loc_m}
 | {loc_f}
-| {loc_p}
+| {loc_p}{vocative_clause}
 |{\cl}{notes_clause}</div></div></div>]=]
+
+	local vocative_template = [=[
+
+|-
+! style="background:#eff7ff" | vocative
+| {voc_m}
+| {voc_f}
+| {voc_p}]=]
 
 	local short_form_template = [=[
 
@@ -644,7 +715,9 @@ local function make_table(alternant_spec)
 		local ann_parts = {}
 		local decls = {}
 		for _, base in ipairs(alternant_spec.alternants) do
-			if base.decl == "poss" then
+			if base.decl == "surname" then
+				m_table.insertIfNot(decls, "surname")
+			elseif base.decl == "poss" then
 				m_table.insertIfNot(decls, "possessive")
 			elseif rfind(base.lemma, "и́?й$") then
 				m_table.insertIfNot(decls, "hard")
@@ -658,6 +731,8 @@ local function make_table(alternant_spec)
 
 	forms.notes_clause = forms.footnote ~= "" and
 		m_string_utilities.format(notes_template, forms) or ""
+	forms.vocative_clause = forms.voc_m and forms.voc_m ~= "—" and
+		m_string_utilities.format(vocative_template, forms) or ""
 	forms.short_clause = forms.short and forms.short ~= "—" and
 		m_string_utilities.format(short_form_template, forms) or ""
 	return m_string_utilities.format(
@@ -673,6 +748,18 @@ local stem_expl = {
 	["hard-stem"] = "a hard consonant",
 	["possessive"] = "-ов, -єв, -ин or -їн",
 }
+
+
+export.adj_decl_endings = {
+	["hard stem-stressed"] = {"-ий", "-а", "-е", "-і"},
+	["hard ending-stressed"] = {"-и́й", "-а́", "-е́", "-і́"},
+	["soft"] = {"-ій", "-я", "-є", "-і"},
+	["c-stem"] = {"-ий", "-я", "-е", "-і"},
+	["j-stem"] = {"-їй", "-я", "-є", "-ї"},
+	["possessive"] = {"-", "-а", "-е", "-і"},
+	["surname"] = {"-", "-а", "(nil)", "-и"},
+}
+
 
 -- Implementation of template 'ruadjcatboiler'.
 function export.catboiler(frame)

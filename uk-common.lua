@@ -156,6 +156,12 @@ function export.is_nonsyllabic(word)
 end
 
 
+-- Check if word ends in a vowel.
+function export.ends_in_vowel(stem)
+	return rfind(stem, export.vowel_c .. AC .. "?$")
+end
+
+
 -- If word is unstressed, add stress onto initial syllable.
 function export.maybe_stress_initial_syllable(word)
 	if not rfind(word, AC) then
@@ -274,8 +280,68 @@ function export.dereduce(stem, epenthetic_stress)
 end
 
 
-function export.is_vocalic(stem)
-	return rfind(stem, export.vowel_c .. AC .. "?$")
+function export.apply_vowel_alternation(ialt, stem)
+	local modstem, origvowel
+	if ialt == "io" then
+		-- ріг, gen sg. ро́га; плід, gen sg. плода́/пло́ду
+		modstem = rsub(stem, "([іІ])(́?" .. export.cons_c .. "*)$",
+			function(vowel, post)
+				origvowel = vowel
+				if vowel == "і" then
+					return "о" .. post
+				else
+					return "О" .. post
+				end
+			end
+		)
+		if modstem == stem then
+			error("Indicator 'io' can't be applied because stem '" .. stem .. "' doesn't have an і as its last vowel")
+		end
+	elseif ialt == "ijo" then
+		-- ко́лір, gen sg. ко́льору; вертолі́т, gen sg. вертольо́та
+		modstem = rsub(stem, "і(́?" .. export.cons_c .. "*)$", "ьо%1")
+		if modstem == stem then
+			error("Indicator 'ijo' can't be applied because stem '" .. stem .. "' doesn't have an і as its last vowel")
+		end
+		origvowel = "і"
+	elseif ialt == "ie" then
+		modstem = rsub(stem, "([іїІЇ])(́?" .. export.cons_c .. "*)$",
+			function(vowel, post)
+				origvowel = vowel
+				if vowel == "і" then
+					-- ведмі́дь gen sg. ведме́дя
+					return "е" .. post
+				elseif vowel == "І" then
+					return "Е" .. post
+				elseif vowel == "ї" then
+					-- Ки́їв gen sg. Ки́єва
+					return "є" .. post
+				else
+					return "Є" .. post
+				end
+			end
+		)
+		if modstem == stem then
+			error("Indicator 'ie' can't be applied because stem '" .. stem .. "' doesn't have an і or ї as its last vowel")
+		end
+	elseif ialt == "i" then
+		modstem = rsub(stem, "ь?([оеОЕ])(́?" .. export.cons_c .. "*)$",
+			function(vowel, post)
+				origvowel = vowel
+				if vowel == "о" or vowel == "е" then
+					return "і" .. post
+				else
+					return "І" .. post
+				end
+			end
+		)
+		if modstem == stem then
+			error("Indicator 'i' can't be applied because stem '" .. stem .. "' doesn't have an о or е as its last vowel")
+		end
+	else
+		return stem, nil
+	end
+	return modstem, origvowel
 end
 
 

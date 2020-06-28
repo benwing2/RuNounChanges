@@ -200,7 +200,7 @@ local function add_imperative(base, sg2, footnote)
 		local stemform = com.generate_form(stem, footnote)
 		add(base, "impr_1pl", stemform, {acvowel .. "м", acvowel .. "мо"})
 		add(base, "impr_2pl", stemform, {acvowel .. "ть"})
-	elseif com.is_vocalic(sg2) then
+	elseif com.ends_in_vowel(sg2) then
 		error("Invalid 2sg imperative, ends in vowel other than -и or -ї: '" .. sg2 .. "'")
 	else
 		add(base, "impr_1pl", sg2form, "мо")
@@ -223,7 +223,7 @@ local function add_imperative_from_present(base, presstem, accent)
 		end
 	end
 	local sg2
-	if com.is_vocalic(presstem) then
+	if com.ends_in_vowel(presstem) then
 		-- If the stem ends in a vowel, then regardless of imptype, stress the final
 		-- syllable if needed and add й, effectively using the short type.
 		sg2 = com.maybe_stress_final_syllable(presstem) .. "й"
@@ -289,7 +289,7 @@ local function add_present_e(base, stem, accent, use_y_endings, overriding_imp, 
 		return
 	end
 	local endings
-	if use_y_endings == "all" or com.is_vocalic(stem) then
+	if use_y_endings == "all" or com.ends_in_vowel(stem) then
 		endings = {"ю", "єш", base.is_refl and "єть" or "є", {"єм", "ємо"}, "єте", "ють"}
 	elseif use_y_endings == "1sg3pl" and not rfind(stem, com.hushing_c .. "$") then
 		endings = {"ю", "еш", base.is_refl and "еть" or "е", {"ем", "емо"}, "ете", "ють"}
@@ -320,7 +320,7 @@ local function add_present_i(base, stem, accent, overriding_imp, no_override_ste
 	end
 	local endings
 	local iotated_type, iotated_stem
-	if com.is_vocalic(stem) then
+	if com.ends_in_vowel(stem) then
 		endings = {"ю", "їш", "їть", {"їм", "їмо"}, "їте", "ять"}
 		iotated_type = "none"
 	else
@@ -499,10 +499,10 @@ end
 
 conjs["4"] = function(base, lemma, accent)
 	local stem, suffix, ac = separate_stem_suffix_accent(lemma, "4", accent, "^(.*)([иї])(́?)ти$")
-	local stem_is_vocalic = com.is_vocalic(stem)
-	if suffix == "ї" and not stem_is_vocalic then
+	local stem_ends_in_vowel = com.ends_in_vowel(stem)
+	if suffix == "ї" and not stem_ends_in_vowel then
 		error("Ending -їти can only be used with a vocalic stem: '" .. lemma .. "'")
-	elseif suffix ~= "ї" and stem_is_vocalic then
+	elseif suffix ~= "ї" and stem_ends_in_vowel then
 		error("Ending -їти must be used with a vocalic stem: '" .. lemma .. "'")
 	end
 	local stressed_stem = com.maybe_stress_final_syllable(stem)
@@ -529,22 +529,22 @@ conjs["4"] = function(base, lemma, accent)
 	add_present_i(base, stressed_stem, accent, sg2)
 	add_default_past(base, stem .. suffix .. ac)
 	if accent == "a" then
-		add_ppp(base, com.iotate(stressed_stem) .. (stem_is_vocalic and "єн" or "ен"))
+		add_ppp(base, com.iotate(stressed_stem) .. (stem_ends_in_vowel and "єн" or "ен"))
 	else
 		-- By default, stress will retract one syllable if accent is c but not b,
 		-- but this can be overridden in both directions using 'retractedppp' (for b)
 		-- or '-retractedppp' (for c).
-		add_retractable_ppp(base, com.remove_stress(com.iotate(stem)) .. (stem_is_vocalic and "є́н" or "е́н"))
+		add_retractable_ppp(base, com.remove_stress(com.iotate(stem)) .. (stem_ends_in_vowel and "є́н" or "е́н"))
 	end
 end
 
 
 conjs["5"] = function(base, lemma, accent)
 	local stem, suffix, ac = separate_stem_suffix_accent(lemma, "5", accent, "^(.*)([іая])(́?)ти$")
-	local stem_is_vocalic = com.is_vocalic(stem)
-	if suffix == "я" and not stem_is_vocalic then
+	local stem_ends_in_vowel = com.ends_in_vowel(stem)
+	if suffix == "я" and not stem_ends_in_vowel then
 		error("Ending -яти can only be used with a vocalic stem: '" .. lemma .. "'")
-	elseif suffix ~= "я" and stem_is_vocalic then
+	elseif suffix ~= "я" and stem_ends_in_vowel then
 		error("Ending -яти must be used with a vocalic stem: '" .. lemma .. "'")
 	end
 	local stressed_stem = com.maybe_stress_final_syllable(stem)
@@ -569,10 +569,10 @@ conjs["6"] = function(base, lemma, accent)
 	else
 		stem, suffix, ac = separate_stem_suffix_accent(lemma, "6", accent, "^(.*)([іая])(́?)ти$")
 	end
-	local stem_is_vocalic = com.is_vocalic(stem)
-	if suffix == "я" and not stem_is_vocalic then
+	local stem_ends_in_vowel = com.ends_in_vowel(stem)
+	if suffix == "я" and not stem_ends_in_vowel then
 		error("Ending -яти can only be used with a vocalic stem: '" .. lemma .. "'")
-	elseif suffix ~= "я" and stem_is_vocalic then
+	elseif suffix ~= "я" and stem_ends_in_vowel then
 		error("Ending -яти must be used with a vocalic stem: '" .. lemma .. "'")
 	end
 	local stressed_stem = com.maybe_stress_final_syllable(stem)
@@ -585,7 +585,7 @@ conjs["6"] = function(base, lemma, accent)
 		base.irreg = true
 	end
 	add_present_e(base, stressed_stem, accent,
-		base.conjmod == "" and not stem_is_vocalic and "1sg3pl", sg2)
+		base.conjmod == "" and not stem_ends_in_vowel and "1sg3pl", sg2)
 	add_default_past(base, stem .. suffix .. ac)
 	add_retractable_ppp(base, stem .. (suffix == "і" and "е" or suffix) .. ac .. "н")
 end
