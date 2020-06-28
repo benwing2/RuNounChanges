@@ -2299,7 +2299,7 @@ local stem_gender_endings = {
 	},
 }
 
--- Implementation of template 'runouncatboiler'.
+-- Implementation of template 'ru-noun cat'.
 function export.catboiler(frame)
 	local SUBPAGENAME = mw.title.getCurrentTitle().subpageText
 	local args = clone_args(frame)
@@ -2384,7 +2384,7 @@ function export.catboiler(frame)
 		if not stem then
 			error("Invalid category name, should be e.g. \"Russian velar-stem masculine accent-a adjectival nouns\"")
 		end
-		local stemtext
+		local stemtext, possessive
 		if rfind(stem, "possessive") then
 			possessive = "possessive "
 			stem = rsub(stem, " possessive", "")
@@ -2465,7 +2465,7 @@ function export.catboiler(frame)
 	return "This category contains Russian " .. rsub(maintext, "~", pos .. "s")
 		.. "\n" ..
 		mw.getCurrentFrame():expandTemplate{title="ru-categoryTOC", args={}}
-		.. table.concat(categories, "")
+		.. table.concat(categories, "") .. "__EXPECTUNUSEDCATEGORY__"
 end
 
 --------------------------------------------------------------------------
