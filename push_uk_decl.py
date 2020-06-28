@@ -27,6 +27,8 @@ def compare_form(slot, orig, repl, pagemsg):
 
 def compare_forms(origforms, replforms, pagemsg):
   for slot in set(replforms.keys() + origforms.keys()):
+    if slot.endswith("_linked"):
+      continue
     if slot not in origforms:
       pagemsg("WARNING: for replacement %s, form %s=%s in replacement forms but missing in original forms" % (
         tempcall, slot, replforms[slot]))
@@ -95,8 +97,13 @@ lines = [x.strip() for x in codecs.open(args.declfile, "r", "utf-8")]
 
 def yield_decls():
   for line in lines:
-    for m in re.finditer(r"\(\(.*?\)\)|[^| \[\]]+<.*?\>", line):
-      yield m.group(0)
+    found_ndecl_style = False
+    for m in re.finditer(r"\{\{(?:User:Benwing2/)?uk-ndecl\|(.*?)\}\}", line):
+      found_ndecl_style = True
+      yield m.group(1)
+    if not found_ndecl_style:
+      for m in re.finditer(r"\(\(.*?\)\)|[^| \[\]]+<.*?\>", line):
+        yield m.group(0)
 
 for index, decl in blib.iter_items(yield_decls(), start, end):
   if decl.startswith("(("):
