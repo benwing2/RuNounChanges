@@ -4,13 +4,33 @@
 import re, sys, codecs, argparse
 
 from blib import msg, errmsg, remove_links
+import uklib
 import bglib
 import generate_pos
 
+lang = None
+langname = None
+module = None
+
 parser = argparse.ArgumentParser(description="Generate adjective stubs.")
 parser.add_argument('--direcfile', help="File containing directives.")
+parser.add_argument('--lang', help="Language: uk or bg")
 parser.add_argument('--pos', help="Specify part of speech (v, n, pn, adj, adjform, adv, pcl, pred, prep, conj, int) instead of including it as first field.")
 args = parser.parse_args()
+
+if args.lang == "uk":
+  lang = "uk"
+  langname = "Ukrainian"
+  module = uklib
+  nomcase = "nom"
+elif args.lang == "bg":
+  lang = "bg"
+  langname = "Bulgarian"
+  module = bglib
+  nomcase = "indef"
+else:
+  raise ValueError("Unrecognized language '%s': Should be 'uk' or 'bg'" % args.lang)
+
 
 pos_to_full_pos = {
   # The first four are special-cased
@@ -95,11 +115,11 @@ opt_arg_regex = r"^(%s):(.*)" % "|".join(props)
 # is --, the etym section will be omitted (used for participles and such).
 # For substantivized adjectives, the etym section can begin with sm:, sf:
 # sn: or sp: for substantivized masculine, feminine, neuter or plural, and
-# the etym section will say "Substantivized [gender] of {{m|bg|TERM}}."
+# the etym section will say "Substantivized [gender] of {{m|uk|TERM}}."
 # For borrowed terms, the field should be prefixed with a language code
 # followed by a colon, e.g. "fr:attitude". If what follows contains no + sign,
-# the etym section will use {{bor|bg|LANG|TERM}}; else {{affix|...}} will be
-# used; e.g. "fr:spectral+-ный" becomes {{affix|bg|spectral|-ный|lang1=fr}}.
+# the etym section will use {{bor|uk|LANG|TERM}}; else {{affix|...}} will be
+# used; e.g. "fr:spectral+-ный" becomes {{affix|uk|spectral|-ный|lang1=fr}}.
 # The etym section can begin with ?, indicating that the etymology is
 # uncertain (it will be prefixed with "Perhaps from" or "Perhaps borrowed from"
 # as appropriate), or with <<, indicating an ultimate etymology (it will be
@@ -112,7 +132,7 @@ opt_arg_regex = r"^(%s):(.*)" % "|".join(props)
 # a space will be added after any comma not followed by a space. Use \; to
 # indicate a literal semicolon. Each definition can begin with one or
 # labels, which are placed at the beginning of the definition using
-# {{lb|bg|...}}. The following are recognized:
+# {{lb|uk|...}}. The following are recognized:
 #
 # + = relational
 # # = figurative
@@ -149,12 +169,12 @@ opt_arg_regex = r"^(%s):(.*)" % "|".join(props)
 #    optionally followed by a definition (the definition is for the
 #    augmentative term, not the source term)
 # 4. "gn:REMAINDER", for a given name; generates
-#    {{given name|bg|REMAINDER}}.
+#    {{given name|uk|REMAINDER}}.
 #
 # In place of a normal definition, the definition can consist of a single
 # "-", in which case a request for definition is substituted, or begin with
 # "ux:", in which case the remainder of the line is a usage example and
-# is substituted into {{uxi|bg|...}}.
+# is substituted into {{uxi|uk|...}}.
 #
 # (describe additional specs)
 
@@ -168,7 +188,7 @@ def increase_indent(text):
   return re.sub("^=(.*)=$", r"==\1==", text, 0, re.M)
 
 def fatal(line, text):
-  errmsg("ERROR: Processing line: %s" % line)
+  errmsg("ERROR: Processing line %s: %s" % (peeker.lineno, line))
   errmsg("ERROR: %s" % text)
   raise ValueError
 
@@ -181,7 +201,7 @@ def process_line(line, etymnum=None, skip_pronun=False):
     if word.startswith("-") or word.endswith("-"):
       # Allow unstressed prefix (e.g. разо-) and unstressed suffix (e.g. -овать)
       return
-    if bglib.needs_accents(word, split_dash=True):
+    if module.needs_accents(word, split_dash=True):
       error("Word %s missing an accent" % word)
 
   els = do_split(r"\s+", line)
@@ -198,10 +218,16 @@ def process_line(line, etymnum=None, skip_pronun=False):
   # the declension, and \u for underscore elsewhere
   els = [el.replace(r"\s", " ") if i == 2 and (pos in ["n", "pn", "adj"]) else el.replace("_", " ").replace(r"\u", "_") for i, el in enumerate(els)]
   if pos == "v":
-    if len(els) < 6:
-      error("Expected six fields, saw only %s" % len(els))
-    term, etym, aspect, pairedverb, conj, defns = els[0], els[1], els[2], els[3], els[4], els[5]
-    remainder = els[6:]
+    if lang == "bg":
+      if len(els) < 6:
+        error("Expected six fields, saw only %s" % len(els))
+      term, etym, aspect, pairedverb, conj, defns = els[0], els[1], els[2], els[3], els[4], els[5]
+      remainder = els[6:]
+    else:
+      if len(els) < 5:
+        error("Expected five fields, saw only %s" % len(els))
+      term, etym, conj, pairedverb, defns = els[0], els[1], els[2], els[3], els[4]
+      remainder = els[5:]
   elif pos in ["n", "pn", "adj"]:
     if len(els) < 4:
       error("Expected four fields, saw only %s" % len(els))
@@ -220,10 +246,12 @@ def process_line(line, etymnum=None, skip_pronun=False):
   # For pronunciation purposes, we remove the links but keep the
   # secondary/tertiary accents. For headword purposes, we remove the
   # secondary/tertiary accents but keep the links. For declension
-  # purposes (other than bg-noun), we remove everything (but still leave
+  # purposes (other than uk-noun), we remove everything (but still leave
   # primary accents).
   pronterm = remove_links(term).split(",")
-  term = bglib.remove_non_primary_accents(term)
+  if skip_pronun and skip_pronun != True:
+    pronterm = skip_pronun
+  term = module.remove_non_primary_accents(term)
   headterm = term.split(",")
   headterm_parts = []
   for num, ht in enumerate(headterm):
@@ -244,7 +272,7 @@ def process_line(line, etymnum=None, skip_pronun=False):
   if etym == "?":
     error("Etymology consists of bare question mark")
   elif etym == "-":
-    etymtext = "%s{{rfe|bg}}\n\n" % etymheader
+    etymtext = "%s{{rfe|%s}}\n\n" % (etymheader, lang)
   elif etym == "--":
     if etymnum:
       etymtext = etymheader + "\n"
@@ -252,21 +280,21 @@ def process_line(line, etymnum=None, skip_pronun=False):
       etymtext = ""
   elif re.search(r"^(part|adj|partadj)([fnp]):", etym):
     m = re.search(r"^(part|adj|partadj)([fnp]):(.*)", etym)
-    forms = {"f":["indef|f|s"], "n":["indef|n|s"], "p":["indef|p"]}
-    infleclines = ["# {{inflection of|bg|%s||%s}}" %
-        (m.group(3), form) for form in forms[m.group(2)]]
+    forms = {"f":["%s|f|s" % nomcase], "n":["%s|n|s" % nomcase], "p":["%s|p" % nomcase]}
+    infleclines = ["# {{inflection of|%s|%s||%s}}" %
+        (lang, m.group(3), form) for form in forms[m.group(2)]]
     if m.group(1) in ["adj", "partadj"]:
       adjinfltext = """===Adjective===
-{{head|bg|adjective form|head=%s}}
+{{head|%s|adjective form|head=%s}}
 
-%s\n\n""" % (headterm, "\n".join(infleclines))
+%s\n\n""" % (lang, headterm, "\n".join(infleclines))
     else:
       adjinfltext = ""
     if m.group(1) in ["part", "partadj"]:
       partinfltext = """===Participle===
-{{head|bg|participle form|head=%s}}
+{{head|%s|participle form|head=%s}}
 
-%s\n\n""" % (headterm, "\n".join(infleclines))
+%s\n\n""" % (lang, headterm, "\n".join(infleclines))
     else:
       partinfltext = ""
     adjformtext = partinfltext + adjinfltext
@@ -280,18 +308,18 @@ def process_line(line, etymnum=None, skip_pronun=False):
       etymtext = "{{acronym|%s||%s}}." % (fullexpr, meaning)
     elif etym.startswith("deverb:"):
       _, sourceterm = do_split(":", etym)
-      etymtext = "Deverbal from {{m|bg|%s}}." % sourceterm
+      etymtext = "Deverbal from {{m|%s|%s}}." % (lang, sourceterm)
     elif etym.startswith("ppp:"):
       _, sourceterm = do_split(":", etym)
-      etymtext = "Past passive participle of {{m|bg|%s}}." % sourceterm
+      etymtext = "Past passive participle of {{m|%s|%s}}." % (lang, sourceterm)
     elif etym.startswith("back:"):
       _, sourceterm = do_split(":", etym)
-      etymtext = "{{back-form|bg|%s}}" % sourceterm
+      etymtext = "{{back-form|%s|%s}}" % (lang, sourceterm)
     elif etym.startswith("raw:"):
       etymtext = re.sub(", *", ", ", re.sub("^raw:", "", etym))
     elif etym.startswith("inh:"):
       _, inhlang, inhterm = do_split(":", etym)
-      etymtext = "Inherited from {{inh|bg|%s|%s}}." % (inhlang, inhterm)
+      etymtext = "Inherited from {{inh|%s|%s|%s}}." % (lang, inhlang, inhterm)
     elif ":" in etym and "+" not in etym:
       if etym.startswith("?"):
         prefix = "Perhaps borrowed from "
@@ -304,7 +332,7 @@ def process_line(line, etymnum=None, skip_pronun=False):
       m = re.search(r"^([a-zA-Z.-]+):(.*)", etym)
       if not m:
         error("Bad etymology form: %s" % etym)
-      etymtext = "%s{{bor|bg|%s|%s}}." % (prefix, m.group(1), m.group(2))
+      etymtext = "%s{{bor|%s|%s|%s}}." % (prefix, lang, m.group(1), m.group(2))
     else:
       prefix = ""
       suffix = ""
@@ -322,7 +350,7 @@ def process_line(line, etymnum=None, skip_pronun=False):
         etym = m.group(2)
       else:
         langtext = ""
-      etymtext = "%s{{affix|bg|%s%s}}%s" % (prefix,
+      etymtext = "%s{{affix|%s|%s%s}}%s" % (prefix, lang,
           "|".join(do_split(r"\+", re.sub(", *", ", ", etym))), langtext,
           suffix)
     etymtext = "%s%s\n\n" % (etymheader, etymtext)
@@ -330,7 +358,7 @@ def process_line(line, etymnum=None, skip_pronun=False):
   # Create definition
   if re.search(opt_arg_regex, defns):
     error("Found optional-argument prefix in definition: %s" % defns)
-  defntext, addlprops = generate_pos.generate_defn(defns, pos_to_full_pos[pos].lower(), "bg")
+  defntext, addlprops = generate_pos.generate_defn(defns, pos_to_full_pos[pos].lower(), lang)
   if not defntext:
     error(addlprops)
   split_defntext = re.split("'''", defntext)
@@ -341,55 +369,96 @@ def process_line(line, etymnum=None, skip_pronun=False):
   if pos == "v":
     if len(term) > 1:
       error("Multiple terms not currently supported: %s" % ",".join(term))
-    if aspect not in ["impf", "pf", "both"]:
-      error("Bad aspect '%s', expected 'impf', 'pf' or 'both'" % aspect)
-    reflexiveonly = False
-    if conj.startswith("ro"):
-      reflexiveonly = True
-      conj = conj[2:]
-    conjparts = conj.split(".")
-    is_impers = "impers" in conjparts
-    non_refl_verb = re.sub(u" с[еи]$", "", term[0])
-    if conjparts[0] in ["1", "2"]:
-      if is_impers:
-        if not re.search(u"[еи]́?$", non_refl_verb):
-          error(u"Impersonal conjugation 1/2 verb %s should end in -е or -и" % term[0])
+    if lang == "bg":
+      # Bulgarian verb handling
+      if aspect not in ["impf", "pf", "both"]:
+        error("Bad aspect '%s', expected 'impf', 'pf' or 'both'" % aspect)
+      reflexiveonly = False
+      if conj.startswith("ro"):
+        reflexiveonly = True
+        conj = conj[2:]
+      conjparts = conj.split(".")
+      is_impers = "impers" in conjparts
+      non_refl_verb = re.sub(u" с[еи]$", "", term[0])
+      if conjparts[0] in ["1", "2"]:
+        if is_impers:
+          if not re.search(u"[еи]́?$", non_refl_verb):
+            error(u"Impersonal conjugation 1/2 verb %s should end in -е or -и" % term[0])
+        else:
+          if not re.search(u"[ая]́?$", non_refl_verb):
+            error(u"Conjugation 1/2 verb %s should end in -а or -я" % term[0])
+        conjclass = "%s.%s." % (conjparts[0], conjparts[1])
+        restconjparts = conjparts[2:]
+      elif conjparts[0] == "irreg":
+        conjclass = "%s." % conjparts[0]
+        restconjparts = conjparts[1:]
       else:
-        if not re.search(u"[ая]́?$", non_refl_verb):
-          error(u"Conjugation 1/2 verb %s should end in -а or -я" % term[0])
-      conjclass = "%s.%s." % (conjparts[0], conjparts[1])
-      restconjparts = conjparts[2:]
-    elif conjparts[0] == "irreg":
-      conjclass = "%s." % conjparts[0]
-      restconjparts = conjparts[1:]
+        if is_impers:
+          if not re.search(u"[ая]$", non_refl_verb):
+            error(u"Impersonal conjugation 3 verb %s should end in -а or -я" % term[0])
+        else:
+          if not re.search(u"[ая]м$", non_refl_verb):
+            error(u"Conjugation 3 verb %s should end in -ам or -ям" % term[0])
+        conjclass = ""
+        restconjparts = conjparts
+      has_transitivity = "tr" in restconjparts or "intr" in restconjparts
+      is_reflexive = re.search(u" (се|си)$", term[0])
+      if (is_reflexive or reflexiveonly) and has_transitivity:
+        error("Reflexive verb %s can't be specified as transitive or intransitive: %s" % (term[0], conj))
+      elif not (is_reflexive or reflexiveonly) and not has_transitivity:
+        error("Non-reflexive verb %s must be specified as transitive or intransitive: %s" % (term[0], conj))
+      restconj = ".".join(restconjparts)
+      conj = conjclass + aspect + (".%s" % restconj if restconj not in ["-", ""] else "")
+      conjlines = []
+      if not reflexiveonly:
+        conjlines.append("{{bg-conj|%s<%s>}}" % (term[0], conj))
+      oui = addlprops.get("oui", [])
+      if ("(refl)" in defns or "(reflexive)" in defns or term[0] + u" се" in oui) and not is_reflexive:
+        reflconj = re.sub(r"\.(tr|intr)", "", conj)
+        conjlines.append(u"{{bg-conj|%s се<%s>}}" % (term[0], reflconj))
+      if ("(reflsi)" in defns or term[0] + u" си" in oui) and not is_reflexive:
+        reflconj = re.sub(r"\.(tr|intr)", "", conj)
+        conjlines.append(u"{{bg-conj|%s си<%s>}}" % (term[0], reflconj))
+      conjtext = "\n".join(conjlines)
+
     else:
-      if is_impers:
-        if not re.search(u"[ая]$", non_refl_verb):
-          error(u"Impersonal conjugation 3 verb %s should end in -а or -я" % term[0])
-      else:
-        if not re.search(u"[ая]м$", non_refl_verb):
-          error(u"Conjugation 3 verb %s should end in -ам or -ям" % term[0])
-      conjclass = ""
-      restconjparts = conjparts
-    has_transitivity = "tr" in restconjparts or "intr" in restconjparts
-    is_reflexive = re.search(u" (се|си)$", term[0])
-    if (is_reflexive or reflexiveonly) and has_transitivity:
-      error("Reflexive verb %s can't be specified as transitive or intransitive: %s" % (term[0], conj))
-    elif not (is_reflexive or reflexiveonly) and not has_transitivity:
-      error("Non-reflexive verb %s must be specified as transitive or intransitive: %s" % (term[0], conj))
-    restconj = ".".join(restconjparts)
-    conj = conjclass + aspect + (".%s" % restconj if restconj not in ["-", ""] else "")
-    conjlines = []
-    if not reflexiveonly:
-      conjlines.append("{{bg-conj|%s<%s>}}" % (term[0], conj))
-    oui = addlprops.get("oui", [])
-    if ("(refl)" in defns or "(reflexive)" in defns or term[0] + u" се" in oui) and not is_reflexive:
-      reflconj = re.sub(r"\.(tr|intr)", "", conj)
-      conjlines.append(u"{{bg-conj|%s се<%s>}}" % (term[0], reflconj))
-    if ("(reflsi)" in defns or term[0] + u" си" in oui) and not is_reflexive:
-      reflconj = re.sub(r"\.(tr|intr)", "", conj)
-      conjlines.append(u"{{bg-conj|%s си<%s>}}" % (term[0], reflconj))
-    conjtext = "\n".join(conjlines)
+      # Ukrainian verb handling
+      conjparts = conj.split(".")
+      if not re.search(u"ти(с[яь])?$", term[0]):
+        error("Term %s is supposed to be a verb but doesn't end that way" % term[0])
+      non_refl_verb = re.sub(u"с[яь]$", "", term[0])
+      if (conjparts[0] == "1a" and not re.search(u"[аяі]́?ти$", non_refl_verb) or
+          conjparts[0] in ["2a", "2b"] and not re.search(u"[ую]ва́?ти$", non_refl_verb) or
+          conjparts[0] == "3a" and not re.search(u"нути$", non_refl_verb) or
+          conjparts[0] in ["3b", "3c"] and not re.search(u"ну́ти$", non_refl_verb) or
+          conjparts[0] == "4a" and not re.search(u"[иї]ти$", non_refl_verb) or
+          conjparts[0] in ["4b", "4c"] and not re.search(u"[иї]́ти$", non_refl_verb) or
+          conjparts[0] in ["5a", "6a"] and not re.search(u"[аія]ти$", non_refl_verb) or
+          conjparts[0] in ["5b", "5c", "6b", "6c"] and not re.search(u"[аія]́ти$", non_refl_verb)):
+          error("Unrecognized ending for conjugation %s verb %s" % (conjparts[0], term[0]))
+          if not re.search(u"[ая]м$", non_refl_verb):
+            error(u"Conjugation 3 verb %s should end in -ам or -ям" % term[0])
+      has_transitivity = "tr" in conjparts or "intr" in conjparts
+      has_ppp_spec = "ppp" in conjparts or "-ppp" in conjparts
+      is_reflexive = re.search(u"с[яь]$", term[0])
+      if is_reflexive and has_transitivity:
+        error("Reflexive verb %s can't be specified as transitive or intransitive: %s" % (term[0], conj))
+      elif not is_reflexive and not has_transitivity:
+        error("Non-reflexive verb %s must be specified as transitive or intransitive: %s" % (term[0], conj))
+      if has_ppp_spec and has_transitivity:
+        error("Reflexive verb %s can't be specified for having/not having a PPP: %s" % (term[0], conj))
+      elif not has_ppp_spec and not has_transitivity:
+        error("Non-reflexive verb %s must be specified as transitive or intransitive: %s" % (term[0], conj))
+      aspect = None
+      for a in ["impf", "pf", "both"]:
+        if a in conjparts:
+          if aspect:
+            error("Two aspects '%s' and '%s' seen for %s: %s" (aspect, a, term[0], conj))
+          aspect = a
+      if not aspect:
+        error("No aspect in conjugation %s of term %s" % (conj, term[0]))
+      conjtext = "{{%s-conj|%s<%s>}}" % (lang, term[0], conj)
+
     if pairedverb != "-":
       hconjtext = "|%s=%s" % ("impf" if aspect == "pf" else "pf", pairedverb)
     else:
@@ -399,7 +468,7 @@ def process_line(line, etymnum=None, skip_pronun=False):
   # Create declension
   is_invar_gender = None
   if pos in ["n", "pn", "adj"]:
-    if decl.startswith("?!"):
+    if lang == "bg" and decl.startswith("?!"):
       decl = decl[2:]
       attn_comp_text = "{{attn|bg|does this have a comparative?}}"
     else:
@@ -407,40 +476,67 @@ def process_line(line, etymnum=None, skip_pronun=False):
     if decl.startswith("inv:"):
       is_invar_gender = re.sub("^inv:", "", decl)
     else:
-      if "(m)" in decl:
-        gender = "m"
-      elif "(f)" in decl:
-        gender = "f"
-      elif "(n)" in decl:
-        gender = "n"
-      elif "/n:pl" in decl:
-        gender = "p"
-      elif re.search(u"[ая]́?$", term[0]):
-        gender = "f"
-      elif re.search(u"[еоиую]́?$", term[0]):
-        gender = "n"
+      if lang == "bg":
+        # Bulgarian noun handling
+        if "(m)" in decl:
+          gender = "m"
+        elif "(f)" in decl:
+          gender = "f"
+        elif "(n)" in decl:
+          gender = "n"
+        elif "/n:pl" in decl:
+          gender = "p"
+        elif re.search(u"[ая]́?$", term[0]):
+          gender = "f"
+        elif re.search(u"[еоиую]́?$", term[0]):
+          gender = "n"
+        else:
+          gender = "m"
+        # decltext is the term+declension as used in the declension template,
+        # hdecltext is the "declension" (actually just extra props such as |adv=го́ло)
+        # as used in the headword template
+        if decl.startswith("!"):
+          decl = decl[1:]
+          decltext = decl
+        else:
+          if len(term) > 1:
+            error("With multiple terms, must use ! with explicit declension")
+          if not decl.startswith("<"):
+            error("Declension must start with '<' or '!': %s" % decl)
+          decltext = "%s%s" % (term[0], decl)
+        # Eliminate masculine/feminine equiv, adjective/adverb, etc. from actual decl
+        decltext = re.sub(r"\|([mf]|adv|absn|adj|dim|g)[0-9]*=[^|]*?(?=\||$)", "", decltext)
+        # Eliminate declension from hdecltext
+        hdecltext = re.sub(r"^.*?(?=\||$)", "", decl)
+        noun_header_text = "%s|%s%s" % (headterm, gender, hdecltext)
+
       else:
-        gender = "m"
-      # decltext is the term+declension as used in the declension template,
-      # hdecltext is the "declension" (actually just extra props such as |adv=го́ло)
-      # as used in the headword template
-      if decl.startswith("!"):
-        decl = decl[1:]
-        decltext = decl
-      else:
-        if len(term) > 1:
-          error("With multiple terms, must use ! with explicit declension")
-        if not decl.startswith("<"):
-          error("Declension must start with '<' or '!': %s" % decl)
-        decltext = "%s%s" % (term[0], decl)
-      # Eliminate masculine/feminine equiv, adjective/adverb, etc. from actual decl
-      decltext = re.sub(r"\|([mf]|adv|absn|adj|dim|g)[0-9]*=[^|]*?(?=\||$)", "", decltext)
-      # Eliminate declension from hdecltext
-      hdecltext = re.sub(r"^.*?(?=\||$)", "", decl)
+        # Ukrainian noun handling
+        # decltext is the term+declension as used in the declension template,
+        # hdecltext is the term+declension+extra props (such as |adv=го́ло)
+        # as used in the headword template
+        if decl.startswith("!"):
+          decl = decl[1:]
+          hdecltext = decl
+        else:
+          if len(term) > 1:
+            error("With multiple terms, must use ! with explicit declension")
+          if not decl.startswith("<"):
+            error("Declension must start with '<' or '!': %s" % decl)
+          hdecltext = "%s%s" % (term[0], decl)
+        # Eliminate masculine/feminine equiv, adjective/adverb, etc. from actual decl
+        decltext = re.sub(r"\|([mf]|adv|absn|adj|dim|g)[0-9]*=[^|]*?(?=\||$)", "", hdecltext)
+        noun_header_text = hdecltext
+        # Eliminate declension from hdecltext
+        hdecltext = re.sub(r"^.*?(?=\||$)", "", decl)
 
   for t in term:
-    if pos == "adj" and not is_invar_gender and re.search(u"[аеоуяю]́?$", t):
-      error(u"Term %s is supposed to be an adjective but ends in vowel other than -и" % t)
+    if lang == "bg":
+      if pos == "adj" and not is_invar_gender and re.search(u"[аеоуяю]́?$", t):
+        error(u"Term %s is supposed to be an adjective but ends in vowel other than -и" % t)
+    else:
+      if pos == "adj" and not is_invar_gender and not re.search(u"[оіїє]́?в$|[иії]́?[нй]$", t):
+        error("Term %s is supposed to be an adjective but doesn't end in adjectival ending" % t)
     if pos == "adj" and not is_invar_gender and re.search("r\|(m|f|adj|g)", hdecltext):
       error("Term %s is supposed to be an adjective but has noun properties in the declension: %s" % (t, hdecltext))
     if pos == "n" and not is_invar_gender and re.search(r"\|(adv|absn)", hdecltext):
@@ -463,9 +559,9 @@ def process_line(line, etymnum=None, skip_pronun=False):
   cattext = ""
   filetext = ""
   if len(pronterm) > 1:
-    prontext = "".join("* {{bg-IPA|%s|ann=y}}\n" % pt for pt in pronterm)
+    prontext = "".join("* {{%s-IPA|%s|ann=y}}\n" % (lang, pt) for pt in pronterm)
   else:
-    prontext = "* {{bg-IPA|%s}}\n" % pronterm[0]
+    prontext = "* {{%s-IPA|%s}}\n" % (lang, pronterm[0])
   notetext = ""
   for synantrel in remainder:
     if synantrel.startswith("#"):
@@ -495,7 +591,7 @@ def process_line(line, etymnum=None, skip_pronun=False):
             links.append(synant)
           else:
             check_stress(synant)
-            links.append("{{l|bg|%s}}" % synant)
+            links.append("{{l|%s|%s}}" % (lang, synant))
         lines.append("* %s%s\n" % (sensetext, ", ".join(links)))
       synantguts = "====%s====\n%s\n" % (
           "Synonyms" if sartype == "syn" else "Antonyms",
@@ -509,7 +605,7 @@ def process_line(line, etymnum=None, skip_pronun=False):
       check_stress(vals)
       for i, pron in enumerate(do_split(",", vals)):
         check_stress(pron)
-        prontext += "* {{bg-IPA|%s}}\n" % pron
+        prontext += "* {{%s-IPA|%s}}\n" % (lang, pron)
     elif sartype == "comp":
       comptext = ""
       for i, comp in enumerate(do_split(",", vals)):
@@ -527,7 +623,7 @@ def process_line(line, etymnum=None, skip_pronun=False):
       defn, labels = generate_pos.parse_off_labels(vals)
       if defn:
         labels = labels + [defn]
-      notetext += " {{tlb|bg|%s}}" % "|".join(labels)
+      notetext += " {{tlb|%s|%s}}" % (lang, "|".join(labels))
     elif sartype == "alt":
       lines = []
       for altform in do_split(",", vals):
@@ -535,54 +631,54 @@ def process_line(line, etymnum=None, skip_pronun=False):
           lines.append("* %s\n" % altform)
         else:
           check_stress(altform)
-          lines.append("* {{l|bg|%s}}\n" % altform)
+          lines.append("* {{l|%s|%s}}\n" % (lang, altform))
       alttext = "===Alternative forms===\n%s\n" % "".join(lines)
     elif sartype == "part":
       verbs, parttypes, partdecl = do_split(":", vals)
       infleclines = []
       for verb in do_split(",", verbs):
         for parttype in do_split(",", parttypes):
-          infleclines.append("# {{bg-participle of|%s||%s}}" % (verb, parttype))
+          infleclines.append("# {{%s-participle of|%s||%s}}" % (lang, verb, parttype))
       parttext = """===Participle===
-{{head|bg|participle|head=%s}}
+{{head|%s|participle|head=%s}}
 
-%s\n\n""" % (headterm, "\n".join(infleclines))
+%s\n\n""" % (lang, headterm, "\n".join(infleclines))
       if "adv" in parttype:
         partdecltext = ""
       elif len(term) > 1:
         error("Don't yet know how to handle participle with multiple terms")
       else:
         partdecltext = """====Declension====
-{{bg-adecl|%s%s}}\n\n""" % (term[0], partdecl)
+{{%s-adecl|%s%s}}\n\n""" % (lang, term[0], partdecl)
       parttext += partdecltext
     elif sartype == "nadjf":
       check_stress(vals)
       nadjftext = """===Adjective===
-{{head|bg|adjective form|head=%s}}
+{{head|%s|adjective form|head=%s}}
 
-# {{inflection of|bg|%s||indef|n|s}}\n\n""" % (headterm, vals)
+# {{inflection of|%s|%s||%s|n|s}}\n\n""" % (lang, headterm, lang, vals, nomcase)
     elif sartype == "ppp":
       check_stress(vals)
       ppptext = """===Participle===
-{{bg-part|%s|pass}}
+{{%s-part|%s|pass}}
 
-# {{inflection of|bg|%s||indef|m|s|past|pass|part}}\n\n""" % (headterm, vals)
+# {{inflection of|%s|%s||%s|m|s|past|pass|part}}\n\n""" % (lang, headterm, lang, vals, nomcase)
     elif sartype == "wiki":
       for val in do_split(",", vals):
         if val:
-          wikitext += "{{wikipedia|lang=bg|%s}}\n" % val
+          wikitext += "{{wikipedia|lang=%s|%s}}\n" % (lang, val)
         else:
-          wikitext += "{{wikipedia|lang=bg}}\n"
+          wikitext += "{{wikipedia|lang=%s}}\n" % lang
     elif sartype == "enwiki":
       assert vals
       for val in do_split(",", vals):
         enwikitext += "{{wikipedia|%s}}\n" % val
     elif sartype == "cat":
       assert vals
-      cattext += "".join("[[Category:Bulgarian %s]]\n" % val for val in do_split(",", vals))
+      cattext += "".join("[[Category:%s %s]]\n" % (langname, val) for val in do_split(",", vals))
     elif sartype == "tcat":
       assert vals
-      cattext += "".join("{{C|bg|%s}}\n" % val for val in do_split(",", vals))
+      cattext += "".join("{{C|%s|%s}}\n" % (lang, val) for val in do_split(",", vals))
     elif sartype == "usage":
       assert vals
       usageline = re.sub(", *", ", ", vals)
@@ -616,19 +712,19 @@ def process_line(line, etymnum=None, skip_pronun=False):
               for impfpfverb in impfpfverbs:
                 check_stress(impfpfverb)
               if "|" in impfpfverbs[0]:
-                links.append("{{l|bg|%s}}" % impfpfverbs[0])
+                links.append("{{l|%s|%s}}" % (lang, impfpfverbs[0]))
               else:
-                links.append("{{l|bg|%s|g=impf}}" % impfpfverbs[0])
+                links.append("{{l|%s|%s|g=impf}}" % (lang, impfpfverbs[0]))
               for pf in impfpfverbs[1:]:
                 if "|" in pf:
-                  links.append("{{l|bg|%s}}" % pf)
+                  links.append("{{l|%s|%s}}" % (lang, pf))
                 else:
-                  links.append("{{l|bg|%s|g=pf}}" % pf)
+                  links.append("{{l|%s|%s|g=pf}}" % (lang, pf))
             elif derrel.startswith("{"):
               links.append(derrel)
             else:
               check_stress(derrel)
-              links.append("{{l|bg|%s}}" % derrel)
+              links.append("{{l|%s|%s}}" % (lang, derrel))
           lines.append("* %s\n" % ", ".join(links))
         derrelguts = "====%s====\n%s\n" % (
             "Derived terms" if sartype == "der" else
@@ -655,66 +751,66 @@ def process_line(line, etymnum=None, skip_pronun=False):
 
   if is_invar_gender:
     if pos == "n":
-      maintext = """{{bg-noun|%s|%s|indecl=1}}%s
+      maintext = """{{%s-noun|%s|%s|%s}}%s
 
 %s
-""" % (headterm, is_invar_gender, notetext, defntext)
+""" % (lang, headterm, is_invar_gender, "indecl=1" if lang == "bg" else "-", notetext, defntext)
     elif pos == "pn":
-      maintext = """{{bg-proper noun|%s|%s|indecl=1}}%s
+      maintext = """{{%s-proper noun|%s|%s|%s}}%s
 
 %s
-""" % (headterm, is_invar_gender, notetext, defntext)
+""" % (lang, headterm, is_invar_gender,  "indecl=1" if lang == "bg" else "-", notetext, defntext)
     elif pos == "adj":
-      maintext = """{{bg-adj|%s|indecl=1}}
+      maintext = """{{%s-adj|%s|indecl=1}}
 
 %s
-""" % (headterm, defntext)
+""" % (lang, headterm, defntext)
     else:
       error("Invalid part of speech for indeclinable")
   else:
     if pos == "n":
-      maintext = """{{bg-noun|%s|%s%s}}%s
+      maintext = """{{%s-noun|%s}}%s
 
 %s
 ====Declension====
-{{bg-ndecl|%s}}
+{{%s-ndecl|%s}}
 
-""" % (headterm, gender, hdecltext, notetext, defntext, decltext)
+""" % (lang, noun_header_text, notetext, defntext, lang, decltext)
     elif pos == "pn":
-      maintext = """{{bg-proper noun|%s|%s%s}}%s
+      maintext = """{{%s-proper noun|%s}}%s
 
 %s
 ====Declension====
-{{bg-ndecl|%s}}
+{{%s-ndecl|%s}}
 
-""" % (headterm, gender, hdecltext, notetext, defntext, decltext)
+""" % (lang, noun_header_text, notetext, defntext, lang, decltext)
     elif pos == "adj":
-      maintext = """{{bg-adj|%s%s}}%s
+      maintext = """{{%s-adj|%s%s}}%s
 
 %s
 ====Declension====
-{{bg-adecl|%s}}%s
+{{%s-adecl|%s}}%s
 
-""" % (headterm, hdecltext, notetext, defntext, decltext, attn_comp_text)
+""" % (lang, headterm, hdecltext, notetext, defntext, lang, decltext, attn_comp_text)
     elif pos == "v":
-      maintext = """{{bg-verb|%s|%s}}%s
+      maintext = """{{%s-verb|%s|%s}}%s
 
 %s
 ====Conjugation====
 %s
 
-""" % (headterm, hconjtext, notetext, defntext, conjtext)
+""" % (lang, headterm, hconjtext, notetext, defntext, conjtext)
     elif pos == "adv":
-      maintext = """{{bg-adv|%s%s}}%s
+      maintext = """{{%s-adv|%s%s}}%s
 
 %s
-""" % (headterm, comptext, notetext, defntext)
+""" % (lang, headterm, comptext, notetext, defntext)
     else:
       full_pos = pos_to_full_pos[pos]
-      maintext = """{{head|bg|%s|head=%s}}%s
+      maintext = """{{head|%s|%s|head=%s}}%s
 
 %s
-""" % (full_pos.lower(), headterm, notetext, defntext)
+""" % (lang, full_pos.lower(), headterm, notetext, defntext)
 
   if defns == "--":
     maintext = ""
@@ -731,12 +827,12 @@ def process_line(line, etymnum=None, skip_pronun=False):
 
   usagetext = "===Usage notes===\n%s\n\n" % "\n".join(usagelines) if usagelines else ""
 
-  headertext = """%s==Bulgarian==
+  headertext = """%s==%s==
 %s%s%s
-""" % (alsotext, enwikitext, wikitext, filetext)
+""" % (alsotext, langname, enwikitext, wikitext, filetext)
 
   prontext = "===Pronunciation===\n%s\n" % prontext
-  if skip_pronun == "attop":
+  if skip_pronun and skip_pronun != True:
     headertext = "%s%s" % (headertext, prontext)
   if skip_pronun:
     prontext = ""
@@ -752,12 +848,29 @@ def process_line(line, etymnum=None, skip_pronun=False):
   if etymnum:
     bodytext = etymtext + increase_indent(bodytext)
 
-  footertext = "%s\n" % cattext
+  footertext = cattext
 
   return headertext, bodytext, footertext
 
 peeker = generate_pos.Peeker(codecs.open(args.direcfile, "r", "utf-8"))
 nextpage = 0
+
+def get_lemmas(line):
+  line_els = do_split(r"\s+", line)
+  if args.pos:
+    lemmas = line_els[0]
+  else:
+    if len(line_els) < 2:
+      fatal(line, "Not enough elements in line")
+    lemmas = line_els[1]
+  starts_with_exclamation_point = False
+  if lemmas.startswith("!"):
+    starts_with_exclamation_point = True
+    lemmas = lemmas[1:]
+  lemmas = remove_links(lemmas).split(",")
+  first_lemma_no_accents = module.remove_accents(lemmas[0])
+  return lemmas, first_lemma_no_accents, starts_with_exclamation_point
+
 while True:
   line = peeker.get_next_line()
   if line == None:
@@ -766,19 +879,15 @@ while True:
   if line.startswith("#"):
     continue
   line = line.strip()
-  els = do_split(r"\s+", line)
-  if args.pos:
-    lemma = els[0]
-  else:
-    lemma = els[1]
-  lemma = lemma.replace("_", " ")
-  if lemma.startswith("!"):
-    error("Out-of-place exclamation point in lemma: %s" % lemma)
-  lemma = remove_links(lemma)
-  seen_lemmas = {lemma}
-  lemma = bglib.remove_accents(lemma).split(",")[0]
-  morelines = []
-  single_etym = False
+  lemmas, first_lemma_no_accents, starts_with_exclamation_point = get_lemmas(line)
+  if starts_with_exclamation_point:
+    error("Out-of-place exclamation point in lemma")
+  etym_sections = []
+  etym_lines = [line]
+  prev_pronuns = None
+  pronuns = lemmas
+  pronuns_at_top = True
+
   while True:
     nextline = peeker.peek_next_line(0)
     if nextline == None:
@@ -788,44 +897,52 @@ while True:
       peeker.get_next_line()
       continue
     nextline = nextline.strip()
-    nextline_els = do_split(r"\s+", nextline)
-    if args.pos:
-      nextline_lemma = nextline_els[0]
-    else:
-      if len(nextline_els) < 2:
-        fatal(nextline, "Not enough elements in line")
-      nextline_lemma = nextline_els[1]
-    starts_with_exclamation_point = False
-    if nextline_lemma.startswith("!"):
-      starts_with_exclamation_point = True
-      nextline_lemma = nextline_lemma[1:]
-    nextline_lemma_with_accents = remove_links(nextline_lemma)
-    nextline_lemma = bglib.remove_accents(nextline_lemma_with_accents).split(",")[0]
-    if starts_with_exclamation_point and lemma == nextline_lemma:
-      single_etym = True
-    elif lemma != nextline_lemma:
+    nextline_lemmas, nextline_first_lemma_no_accents, starts_with_exclamation_point = get_lemmas(nextline)
+    if starts_with_exclamation_point and first_lemma_no_accents != nextline_first_lemma_no_accents:
+      error("If lemma %s starts with exclamation point, it must be the same as previous lemma %s without accents" % (
+        ",".join(nextline_lemmas), ",".join(lemmas)))
+    if first_lemma_no_accents != nextline_first_lemma_no_accents:
       break
+    if not starts_with_exclamation_point:
+      etym_sections.append((etym_lines, pronuns))
+      if prev_pronuns and set(prev_pronuns) != set(pronuns):
+        pronuns_at_top = False
+      prev_pronuns = pronuns
+      etym_lines = []
+      pronuns = []
+    etym_lines.append(nextline)
+    for l in nextline_lemmas:
+      if l not in pronuns:
+        pronuns.append(l)
     peeker.get_next_line()
-    morelines.append(nextline)
-    seen_lemmas.add(nextline_lemma_with_accents)
+
+  if etym_lines:
+    etym_sections.append((etym_lines, pronuns))
+    if prev_pronuns and set(prev_pronuns) != set(pronuns):
+      pronuns_at_top = False
 
   nextpage += 1
 
   def output_page(text):
     msg("Page %s %s: ------- begin text --------\n%s\n------- end text --------" % (
-      nextpage, lemma, text.rstrip("\n")))
+      nextpage, first_lemma_no_accents, text.rstrip("\n")))
 
-  if morelines:
-    headertext, bodytext1, footertext = process_line(line, None if single_etym else 1,
-        skip_pronun="attop" if len(seen_lemmas) == 1 and not single_etym else False)
-    morebodytext = []
-    for etymnum, nextline in enumerate(morelines):
-      headertext2, bodytext2, footertext2 = process_line(
-        nextline, None if single_etym else etymnum + 2,
-        skip_pronun=single_etym or len(seen_lemmas) == 1
+  overall_headertext = ""
+  overall_bodytext = ""
+  overall_footertext = ""
+  for etymnum, (etym_section, pronuns) in enumerate(etym_sections):
+    for lemmanum, lemmaline in enumerate(etym_section):
+      skip_pronun = (
+        True if lemmanum > 0 else
+        True if pronuns_at_top and etymnum > 0 else
+        pronuns if pronuns_at_top else
+        False
       )
-      morebodytext.append(bodytext2)
-    output_page("%s%s%s%s" % (headertext, bodytext1, "".join(morebodytext), footertext))
-  else:
-    headertext, bodytext, footertext = process_line(line)
-    output_page("%s%s%s" % (headertext, bodytext, footertext))
+      headertext, bodytext, footertext = process_line(lemmaline,
+          None if len(etym_sections) == 1 or lemmanum > 0 else etymnum + 1,
+          skip_pronun=skip_pronun)
+      if etymnum == 0 and lemmanum == 0:
+        overall_headertext = headertext
+      overall_bodytext += bodytext
+      overall_footertext += footertext
+  output_page("%s%s%s" % (overall_headertext, overall_bodytext, overall_footertext))
