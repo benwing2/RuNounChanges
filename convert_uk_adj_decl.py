@@ -38,7 +38,7 @@ def process_page(page, index, parsed):
         notes.append("add Ukrainian adjective declension for %s" % head)
     elif tn == "uk-decl-adj":
       word = getparam(t, "1") + getparam(t, "2")
-      if uklib.needs_accent(word):
+      if uklib.needs_accents(word):
         pagemsg("WARNING: Word %s needs accent: %s" % (word, origt))
         continue
       t.add("1", word)

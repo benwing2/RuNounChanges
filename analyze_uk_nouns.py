@@ -143,7 +143,7 @@ def process_text_on_page(index, pagetitle, text):
           if uk.is_multi_stressed(v):
             pagemsg("WARNING: Param %s=%s has multiple stresses: %s" % (
               (str(i), val, unicode(t))))
-          if uk.needs_accent(v):
+          if uk.needs_accents(v):
             pagemsg("WARNING: Param %s=%s has missing stress: %s" % (
               (str(i), val, unicode(t))))
     def ins_sg_note(ins_sg):
