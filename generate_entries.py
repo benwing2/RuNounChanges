@@ -70,6 +70,7 @@ props = [
   "tcat",
   "usage",
   "file",
+  "ref",
 ]
 
 opt_arg_regex = r"^(%s):(.*)" % "|".join(props)
@@ -182,7 +183,7 @@ opt_arg_regex = r"^(%s):(.*)" % "|".join(props)
 # a backslash, and remove such backslashes
 def do_split(sep, text):
   elems = re.split(r"(?<![\\])%s" % sep, text)
-  return [re.sub(r"\\(%s)" % sep, r"\1", elem) for elem in elems]
+  return [re.sub(r"\\n", "\n", re.sub(r"\\(%s)" % sep, r"\1", elem)) for elem in elems]
 
 def increase_indent(text):
   return re.sub("^=(.*)=$", r"==\1==", text, 0, re.M)
@@ -192,7 +193,13 @@ def fatal(line, text):
   errmsg("ERROR: %s" % text)
   raise ValueError
 
-def process_line(line, etymnum=None, skip_pronun=False):
+# Generate page text for a given LINE. Return three values: HEADERTEXT, BODYTEXT, FOOTERTEXT.
+# ETYMNUM is the number of the etymology section to insert in the etymology header,
+# or None to not do this. If ETYMNUM is given, all sections are indented one more level.
+# PRONUNS is a list of terms to use to generate the pronunciation, or None to not incldue
+# a pronunciation section.  PRONUNS_AT_TOP should be True to place the pronunciations
+# above the etymology (which only makes sense when ETYMNUM == 1), else False.
+def process_line(line, etymnum, pronuns, pronuns_at_top):
   def error(text):
     fatal(line, text)
 
@@ -226,7 +233,7 @@ def process_line(line, etymnum=None, skip_pronun=False):
     else:
       if len(els) < 5:
         error("Expected five fields, saw only %s" % len(els))
-      term, etym, conj, pairedverb, defns = els[0], els[1], els[2], els[3], els[4]
+      term, etym, pairedverb, conj, defns = els[0], els[1], els[2], els[3], els[4]
       remainder = els[5:]
   elif pos in ["n", "pn", "adj"]:
     if len(els) < 4:
@@ -248,9 +255,6 @@ def process_line(line, etymnum=None, skip_pronun=False):
   # secondary/tertiary accents but keep the links. For declension
   # purposes (other than uk-noun), we remove everything (but still leave
   # primary accents).
-  pronterm = remove_links(term).split(",")
-  if skip_pronun and skip_pronun != True:
-    pronterm = skip_pronun
   term = module.remove_non_primary_accents(term)
   headterm = term.split(",")
   headterm_parts = []
@@ -268,6 +272,7 @@ def process_line(line, etymnum=None, skip_pronun=False):
 
   # Handle etymology
   adjformtext = ""
+  plformtext = ""
   etymheader = "===Etymology%s===\n" % (etymnum and " %s" % etymnum or "")
   if etym == "?":
     error("Etymology consists of bare question mark")
@@ -298,6 +303,18 @@ def process_line(line, etymnum=None, skip_pronun=False):
     else:
       partinfltext = ""
     adjformtext = partinfltext + adjinfltext
+    if etymnum:
+      etymtext = etymheader + "\n"
+    else:
+      etymtext = ""
+  elif re.search(r"^pl:", etym):
+    m = re.search(r"^pl:(.*)", etym)
+    forms = "%s|p" % nomcase
+    inflecline = "# {{inflection of|%s|%s||%s}}" % (lang, m.group(1), forms)
+    plformtext = """===Noun===
+{{head|%s|noun form|head=%s}}
+
+%s\n\n""" % (lang, headterm, inflecline)
     if etymnum:
       etymtext = etymheader + "\n"
     else:
@@ -350,6 +367,8 @@ def process_line(line, etymnum=None, skip_pronun=False):
         etym = m.group(2)
       else:
         langtext = ""
+      if "{{" in etym:
+        error("Saw {{ in etymology text, probably needs to be prefixed with 'raw:': %s" % etym)
       etymtext = "%s{{affix|%s|%s%s}}%s" % (prefix, lang,
           "|".join(do_split(r"\+", re.sub(", *", ", ", etym))), langtext,
           suffix)
@@ -445,10 +464,10 @@ def process_line(line, etymnum=None, skip_pronun=False):
         error("Reflexive verb %s can't be specified as transitive or intransitive: %s" % (term[0], conj))
       elif not is_reflexive and not has_transitivity:
         error("Non-reflexive verb %s must be specified as transitive or intransitive: %s" % (term[0], conj))
-      if has_ppp_spec and has_transitivity:
+      if is_reflexive and has_ppp_spec:
         error("Reflexive verb %s can't be specified for having/not having a PPP: %s" % (term[0], conj))
-      elif not has_ppp_spec and not has_transitivity:
-        error("Non-reflexive verb %s must be specified as transitive or intransitive: %s" % (term[0], conj))
+      elif not is_reflexive and not has_ppp_spec and "tr" in conjparts:
+        error("Non-reflexive transitive verb %s must be specified for having/not having a PPP: %s" % (term[0], conj))
       aspect = None
       for a in ["impf", "pf", "both"]:
         if a in conjparts:
@@ -523,6 +542,8 @@ def process_line(line, etymnum=None, skip_pronun=False):
             error("With multiple terms, must use ! with explicit declension")
           if not decl.startswith("<"):
             error("Declension must start with '<' or '!': %s" % decl)
+          if decl == "<>":
+            decl = ""
           hdecltext = "%s%s" % (term[0], decl)
         # Eliminate masculine/feminine equiv, adjective/adverb, etc. from actual decl
         decltext = re.sub(r"\|([mf]|adv|absn|adj|dim|g)[0-9]*=[^|]*?(?=\||$)", "", hdecltext)
@@ -556,12 +577,15 @@ def process_line(line, etymnum=None, skip_pronun=False):
   comptext = ""
   wikitext = ""
   enwikitext = ""
+  reftext = ""
   cattext = ""
   filetext = ""
-  if len(pronterm) > 1:
-    prontext = "".join("* {{%s-IPA|%s|ann=y}}\n" % (lang, pt) for pt in pronterm)
+  if not pronuns:
+    prontext = ""
+  elif len(pronuns) > 1:
+    prontext = "".join("* {{%s-IPA|%s|ann=y}}\n" % (lang, p) for p in pronuns)
   else:
-    prontext = "* {{%s-IPA|%s}}\n" % (lang, pronterm[0])
+    prontext = "* {{%s-IPA|%s}}\n" % (lang, pronuns[0])
   notetext = ""
   for synantrel in remainder:
     if synantrel.startswith("#"):
@@ -602,10 +626,13 @@ def process_line(line, etymnum=None, skip_pronun=False):
         anttext = synantguts
     elif sartype == "pron":
       prontext = ""
-      check_stress(vals)
-      for i, pron in enumerate(do_split(",", vals)):
+      prons = do_split(",", vals)
+      for pron in prons:
         check_stress(pron)
-        prontext += "* {{%s-IPA|%s}}\n" % (lang, pron)
+      if len(prons) > 1:
+        prontext = "".join("* {{%s-IPA|%s|ann=y}}\n" % (lang, p) for p in prons)
+      else:
+        prontext = "* {{%s-IPA|%s}}\n" % (lang, prons[0])
     elif sartype == "comp":
       comptext = ""
       for i, comp in enumerate(do_split(",", vals)):
@@ -675,10 +702,14 @@ def process_line(line, etymnum=None, skip_pronun=False):
         enwikitext += "{{wikipedia|%s}}\n" % val
     elif sartype == "cat":
       assert vals
-      cattext += "".join("[[Category:%s %s]]\n" % (langname, val) for val in do_split(",", vals))
+      cattext += "{{cln|%s|%s}}\n" % (lang, "|".join(do_split(",", vals)))
     elif sartype == "tcat":
       assert vals
-      cattext += "".join("{{C|%s|%s}}\n" % (lang, val) for val in do_split(",", vals))
+      cattext += "{{topics|%s|%s}}\n" % (lang, "|".join(do_split(",", vals)))
+    elif sartype == "ref":
+      assert vals
+      for val in do_split(",", vals):
+        reftext += "* {{%s}}\n" % val
     elif sartype == "usage":
       assert vals
       usageline = re.sub(", *", ", ", vals)
@@ -749,6 +780,8 @@ def process_line(line, etymnum=None, skip_pronun=False):
   dertext = dertext or ""
   seetext = seetext or ""
 
+  if reftext:
+    reftext = "===References===\n%s\n" % reftext
   if is_invar_gender:
     if pos == "n":
       maintext = """{{%s-noun|%s|%s|%s}}%s
@@ -831,20 +864,21 @@ def process_line(line, etymnum=None, skip_pronun=False):
 %s%s%s
 """ % (alsotext, langname, enwikitext, wikitext, filetext)
 
-  prontext = "===Pronunciation===\n%s\n" % prontext
-  if skip_pronun and skip_pronun != True:
+  if prontext:
+    prontext = "===Pronunciation===\n%s\n" % prontext
+  if pronuns_at_top:
+    assert etymnum == 1
     headertext = "%s%s" % (headertext, prontext)
-  if skip_pronun:
     prontext = ""
 
   if etymnum:
     inside_etymtext = ""
   else:
     inside_etymtext = etymtext
-  bodytext = """%s%s%s%s%s%s===%s===
-%s%s%s%s%s%s%s%s""" % (
-    alttext, inside_etymtext, prontext, parttext, ppptext, adjformtext, pos_to_full_pos[pos],
-    maintext, usagetext, syntext, anttext, dertext, nadjftext, reltext, seetext)
+  bodytext = """%s%s%s%s%s%s%s===%s===
+%s%s%s%s%s%s%s%s%s""" % (
+    alttext, inside_etymtext, prontext, parttext, ppptext, adjformtext, plformtext, pos_to_full_pos[pos],
+    maintext, usagetext, syntext, anttext, dertext, nadjftext, reltext, seetext, reftext)
   if etymnum:
     bodytext = etymtext + increase_indent(bodytext)
 
@@ -932,15 +966,11 @@ while True:
   overall_footertext = ""
   for etymnum, (etym_section, pronuns) in enumerate(etym_sections):
     for lemmanum, lemmaline in enumerate(etym_section):
-      skip_pronun = (
-        True if lemmanum > 0 else
-        True if pronuns_at_top and etymnum > 0 else
-        pronuns if pronuns_at_top else
-        False
-      )
+      skip_pronun = lemmanum > 0 or pronuns_at_top and etymnum > 0
       headertext, bodytext, footertext = process_line(lemmaline,
           None if len(etym_sections) == 1 or lemmanum > 0 else etymnum + 1,
-          skip_pronun=skip_pronun)
+          None if skip_pronun else pronuns,
+          pronuns_at_top and etymnum == 0 and len(etym_sections) > 1)
       if etymnum == 0 and lemmanum == 0:
         overall_headertext = headertext
       overall_bodytext += bodytext
