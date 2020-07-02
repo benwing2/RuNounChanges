@@ -265,6 +265,24 @@ function export.map_form_or_forms(forms, fn, first_only)
 end
 
 
+function export.combine_footnotes(notes1, notes2)
+	if not notes1 and not notes2 then
+		return nil
+	end
+	if not notes1 then
+		return notes2
+	end
+	if not notes2 then
+		return notes1
+	end
+	local combined = m_table.shallowcopy(notes1)
+	for _, note in ipairs(notes2) do
+		m_table.insertIfNot(combined, note)
+	end
+	return combined
+end
+
+
 -- Expand a given footnote (as specified by the user, including the surrounding brackets)
 -- into the form to be inserted into the final generated table.
 function export.expand_footnote(note)
@@ -349,6 +367,179 @@ function export.add_forms(forms, slot, stems, endings, combine_stem_ending)
 				end
 				export.insert_form(forms, slot, {form = combine_stem_ending(stem.form, ending.form), footnotes = footnotes})
 			end
+		end
+	end
+end
+
+
+--[=[
+Parse a multiword spec such as "[[медичний|меди́чна]]<+> [[сестра́]]<*,*#.pr> (in Ukrainian).
+The return value is a table of the form
+{
+  word_specs = {WORD_SPEC, WORD_SPEC, ...},
+  post_text = "TEXT-AT-END",
+}
+
+where WORD_SPEC describes an individual declined word and "TEXT-AT-END" is any raw text that
+may occur after all declined words. Each WORD_SPEC is of the form returned
+by parse_indicator_spec():
+
+{
+  lemma = "LEMMA",
+  before_text = "TEXT-BEFORE-WORD",
+  before_text_no_links = "TEXT-BEFORE-WORD-NO-LINKS",
+  -- Fields as described in parse_indicator_spec()
+  ...
+}
+
+For example, the return value for "[[медичний|меди́чна]]<+> [[сестра́]]<*,*#.pr>" is
+{
+  word_specs = {
+    {
+      lemma = "[[медичний|меди́чна]]",
+      overrides = {},
+      adj = true,
+      before_text = "",
+      before_text_no_links = "",
+      forms = {},
+    },
+    {
+      lemma = "[[сестра́]]",
+      overrides = {},
+	  stresses = {
+		{
+		  reducible = true,
+		  genpl_reversed = false,
+		},
+		{
+		  reducible = true,
+		  genpl_reversed = true,
+		},
+	  },
+	  animacy = "pr",
+      before_text = " ",
+      before_text_no_links = " ",
+      forms = {},
+    },
+  },
+  post_text = "",
+}
+]=]
+local function parse_multiword_spec(segments, parse_indicator_spec, allow_default_indicator)
+	local multiword_spec = {
+		word_specs = {}
+	}
+	if allow_default_indicator and #segments == 1 then
+		table.insert(segments, "<>")
+		table.insert(segments, "")
+	end
+	for i = 2, #segments - 1, 2 do
+		local bracketed_runs = iut.parse_balanced_segment_run(segments[i - 1], "[", "]")
+		local space_separated_groups = iut.split_alternating_runs(bracketed_runs, "[ %-]", "preserve splitchar")
+		local before_text = {}
+		local lemma
+		for j, space_separated_group in ipairs(space_separated_groups) do
+			if j == #space_separated_groups then
+				lemma = table.concat(space_separated_group)
+				if lemma == "" then
+					error("Word is blank: '" .. table.concat(segments) .. "'")
+				end
+			else
+				table.insert(before_text, table.concat(space_separated_group))
+			end
+		end
+		local base = parse_indicator_spec(segments[i])
+		base.before_text = table.concat(before_text)
+		base.before_text_no_links = require("Module:links").remove_links(base.before_text)
+		base.lemma = lemma
+		table.insert(multiword_spec.word_specs, base)
+	end
+	multiword_spec.post_text = segments[#segments]
+	multiword_spec.post_text_no_links = require("Module:links").remove_links(multiword_spec.post_text)
+	return multiword_spec
+end
+
+
+--[=[
+Parse an alternant, e.g. "((родо́вий,родови́й))" or "((ру́син<pr>,руси́н<b.pr>))" (both in Ukrainian).
+The return value is a table of the form
+{
+  alternants = {MULTIWORD_SPEC, MULTIWORD_SPEC, ...}
+}
+
+where MULTIWORD_SPEC describes a given alternant and is as returned by parse_multiword_spec().
+]=]
+local function parse_alternant(alternant, parse_indicator_spec, allow_default_indicator)
+	local parsed_alternants = {}
+	local alternant_text = rmatch(alternant, "^%(%((.*)%)%)$")
+	local segments = export.parse_balanced_segment_run(alternant_text, "<", ">")
+	local comma_separated_groups = export.split_alternating_runs(segments, ",")
+	local alternant_spec = {alternants = {}}
+	for _, comma_separated_group in ipairs(comma_separated_groups) do
+		table.insert(alternant_spec.alternants,
+			parse_multiword_spec(comma_separated_group, parse_indicator_spec, allow_default_indicator))
+	end
+	return alternant_spec
+end
+
+
+--[=[
+Top-level parsing function. Parse a multiword spec that may have alternants in it.
+The return value is a table of the form
+{
+  alternant_or_word_specs = {ALTERNANT_OR_WORD_SPEC, ALTERNANT_OR_WORD_SPEC, ...}
+  post_text = "TEXT-AT-END",
+  post_text_no_links = "TEXT-AT-END-NO-LINKS",
+}
+
+where ALTERNANT_OR_WORD_SPEC is either an alternant spec as returned by parse_alternant()
+or a multiword spec as described in the comment above parse_multiword_spec(). An alternant spec
+looks as follows:
+{
+  alternants = {MULTIWORD_SPEC, MULTIWORD_SPEC, ...},
+  before_text = "TEXT-BEFORE-ALTERNANT",
+  before_text_no_links = "TEXT-BEFORE-ALTERNANT",
+}
+i.e. it is like what is returned by parse_alternant() but has extra `before_text`
+and `before_text_no_links` fields.
+]=]
+function export.parse_alternant_multiword_spec(text, parse_indicator_spec, allow_default_indicator)
+	local alternant_multiword_spec = {alternant_or_word_specs = {}}
+	local alternant_segments = m_string_utilities.capturing_split(text, "(%(%(.-%)%))")
+	local last_post_text, last_post_text_no_links
+	for i = 1, #alternant_segments do
+		if i % 2 == 1 then
+			local segments = export.parse_balanced_segment_run(alternant_segments[i], "<", ">")
+			local multiword_spec = parse_multiword_spec(segments, parse_indicator_spec, allow_default_indicator)
+			for _, word_spec in ipairs(multiword_spec.word_specs) do
+				table.insert(alternant_multiword_spec.alternant_or_word_specs, word_spec)
+			end
+			last_post_text = multiword_spec.post_text
+			last_post_text_no_links = multiword_spec.post_text_no_links
+		else
+			local alternant_spec = parse_alternant(alternant_segments[i],
+				parse_indicator_spec, allow_default_indicator)
+			alternant_spec.before_text = last_post_text
+			alternant_spec.before_text_no_links = last_post_text_no_links
+			table.insert(alternant_multiword_spec.alternant_or_word_specs, alternant_spec)
+		end
+	end
+	alternant_multiword_spec.post_text = last_post_text
+	alternant_multiword_spec.post_text_no_links = last_post_text_no_links
+	return alternant_multiword_spec
+end
+
+
+function export.map_word_specs(alternant_multiword_spec, fun)
+	for _, alternant_or_word_spec in ipairs(alternant_multiword_spec.alternant_or_word_specs) do
+		if alternant_or_word_spec.alternants then
+			for _, multiword_spec in ipairs(alternant_or_word_spec.alternants) do
+				for _, word_spec in ipairs(multiword_spec.word_specs) do
+					fun(word_spec)
+				end
+			end
+		else
+			fun(alternant_or_word_spec)
 		end
 	end
 end

@@ -226,32 +226,17 @@ stress_patterns["f''"] = {
 }
 
 
-local function combine_footnotes(notes1, notes2)
-	if not notes1 and not notes2 then
-		return nil
-	end
-	if not notes1 then
-		return notes2
-	end
-	if not notes2 then
-		return notes1
-	end
-	local combined = m_table.shallowcopy(notes1)
-	for _, note in ipairs(notes2) do
-		m_table.insertIfNot(combined, note)
-	end
-	return combined
-end
-
-
 -- Maybe modify the stem and/or ending in certain special cases:
--- 1. Final -е in vocative singular triggers first palatalization of the stem and causes
---    accent retraction (except when base.no_retract_e, i.e. in neuters and soft feminines)
+-- 1. Final -е in vocative singular triggers first palatalization of the stem
+--	  (except for hard nouns in -ц, like абзац and палац) and causes accent retraction
+--	  (except when base.no_retract_e, i.e. in neuters and soft feminines).
 -- 2. Final -і in dative/locative singular triggers second palatalization.
 local function apply_special_cases(base, slot, stem, ending)
-	if slot == "voc_s" and not base.no_retract_e and rfind(ending, "^е" .. accents_c .. "?$") then
-		stem = com.apply_first_palatalization(stem)
-		if ending == "е" then
+	if slot == "voc_s" and rfind(ending, "^е" .. accents_c .. "?$") then
+		if not base.no_palatalize_c or not rfind(stem, "ц$") then
+			stem = com.apply_first_palatalization(stem)
+		end
+		if ending == "е" and not base.no_retract_e then
 			ending = ending .. DOTUNDER
 		end
 	elseif (slot == "dat_s" or slot == "loc_s") and rfind(ending, "^і" .. accents_c .. "?$") then
@@ -274,7 +259,7 @@ local function add(base, slot, stress, endings, footnotes, explicit_stem)
 	if skip_slot(base.number, slot) then
 		return
 	end
-	footnotes = combine_footnotes(combine_footnotes(base.footnotes, stress.footnotes), footnotes)
+	footnotes = iut.combine_footnotes(iut.combine_footnotes(base.footnotes, stress.footnotes), footnotes)
 	if type(endings) == "string" then
 		endings = {endings}
 	end
@@ -358,7 +343,7 @@ local function process_slot_overrides(base, do_slot)
 			for _, override in ipairs(overrides) do
 				for _, value in ipairs(override.values) do
 					local form = value.form
-					local combined_notes = combine_footnotes(base.footnotes, value.footnotes)
+					local combined_notes = iut.combine_footnotes(base.footnotes, value.footnotes)
 					if override.full then
 						if form:find("~") then
 							local stem
@@ -483,6 +468,7 @@ end
 
 
 decls["hard-m"] = function(base, stress)
+	base.no_palatalize_c = true
 	local velar = rfind(stress.vowel_stem, com.velar_c .. "$")
 	local gen_s = default_genitive_u(base) and "у" or "а" -- may be overridden
 	local loc_s =
@@ -497,13 +483,13 @@ decls["hard-m"] = function(base, stress)
 		velar and base.animacy == "anml" and stress.stress == "b" and "е" or
 		velar and "у" or
 		"е"
-	local gen_p =
-		base.remove_in and "" or
-		com.ends_in_vowel(stress.pl_vowel_stem) and "їв" or "ів"
+	-- handle soft stem ending in vowel (хазя́їн, pl. хазяї́;
+	-- зуб "tooth, cog" alt nom pl. зу́б'я, gen pl зу́б'їв)
+	local plvowel = com.ends_in_vowel(stress.pl_vowel_stem) or rfind(stress.pl_vowel_stem, "'$")
+	local gen_p = base.remove_in and "" or plvowel and "їв" or "ів"
 	add_decl(base, stress, "", gen_s, {"ові", "у"}, nil, "ом", loc_s, voc_s)
 	if base.plsoft then
-		-- handle soft stem ending in vowel (хазя́їн, pl. хазяї́)
-		local nom_p = com.ends_in_vowel(stress.pl_vowel_stem) and "ї" or "і"
+		local nom_p = plvowel and "ї" or "і"
 		add_decl(base, stress, nil, nil, nil, nil, nil, nil, nil,
 			nom_p, gen_p, "ям", "ями", "ях")
 	else
@@ -528,6 +514,7 @@ declprops["hard-m"] = {
 		end
 	end
 }
+
 
 decls["semisoft-m"] = function(base, stress)
 	local gen_s = default_genitive_u(base) and "у" or "а" -- may be overridden
@@ -628,14 +615,37 @@ local function get_stem_type(stress)
 	end
 end
 
+local function o_m_desc(base, stress, soft)
+	local gender
+	if base.gender == "M" then
+		gender = "masc"
+	elseif base.gender == "MF" then
+		gender = "masc/fem"
+	elseif base.gender == "F" then
+		gender = "fem"
+	else
+		error("Internal error: Bad gender '" .. base.gender .. "' for o-m type")
+	end
+	return (soft and "soft" or rsub(get_stem_type(stress), "%-stem$", "")) .. " " .. gender .. " in -о"
+end
+
+local function o_m_cat(base, stress, soft)
+	local stem_type = soft and "soft" or get_stem_type(stress)
+	local cats = {}
+	if base.gender == "M" or base.gender == "MF" then
+		table.insert(cats, stem_type .. " masculine nouns in -о")
+		table.insert(cats, stem_type .. " masculine ~ nouns in -о")
+	end
+	if base.gender == "F" or base.gender == "MF" then
+		table.insert(cats, stem_type .. " feminine nouns in -о")
+		table.insert(cats, stem_type .. " feminine ~ nouns in -о")
+	end
+	return cats
+end
+
 declprops["o-m"] = {
-	desc = function(base, stress)
-		return rsub(get_stem_type(stress), "%-stem$", "") .. " masc in -о"
-	end,
-	cat = function(base, stress)
-		local stem_type = get_stem_type(stress)
-		return {stem_type .. " masculine nouns in -о", stem_type .. " masculine ~ nouns in -о"}
-	end,
+	desc = o_m_desc,
+	cat = o_m_cat,
 }
 
 
@@ -645,12 +655,13 @@ decls["soft-o-m"] = function(base, stress)
 end
 
 declprops["soft-o-m"] = {
-	desc = "soft masc in -о",
-	cat = {"soft masculine nouns in -о", "soft masculine ~ nouns in -о"},
+	desc = function(base, stress) return o_m_desc(base, stress, "soft") end,
+	cat = function(base, stress) return o_m_cat(base, stress, "soft") end,
 }
 
 
 decls["hard-f"] = function(base, stress)
+	base.no_palatalize_c = true
 	-- Vocative singular in stress pattern b is end-stressed; stem-stressed otherwise.
 	local voc_sg = stress.stress == "b" and "о" or "о̣"
 	add_decl(base, stress, "а", "и", "і", "у", "ою", "і", voc_sg)
@@ -753,12 +764,23 @@ declprops["semisoft-o-f"] = {
 
 decls["hard-n"] = function(base, stress)
 	base.no_retract_e = true
+	base.no_palatalize_c = true
 	local velar = rfind(stress.vowel_stem, com.velar_c .. "$")
+	-- Dictionaries disagree on whether neuter animates have -о or -а in the
+	-- accusative singular. Both appear possible, with -о maybe more common.
+	-- Neuter animates in -е appear to always have -е in the accusative singular.
+	local acc_s = base.animacy ~= "inan" and {"о", "а"} or "о"
+	-- All neuter animates appear to have dative singular in -ові/-у; several
+	-- neuter inanimates do too, but the majority appear to have just -у
+	local dat_s = base.animacy ~= "inan" and {"ові", "у"} or "у"
 	local loc_s =
 		-- these conditions are partly based on analogy with the masculine (including o-m);
-		-- neuter animates: со́нечко "ladybug", риби́сько "big fish" (animal);
-		-- дівчи́сько "girl", баби́сько "nasty grandmother", діти́ська (pl.) "children"
-		-- (personal)
+		-- neuter animates:
+		-- animal: со́нечко "ladybug", риби́сько "big fish", густя́ко "goose (endearing diminutive)",
+		--   чу́до "fabulous creature", чудо́висько "monster (animal)";
+		-- personal: ча́до "child" (archaic/jocular), ла́до "beloved, darling"
+		--   (when referring to a child), дівчи́сько "girl", баби́сько "nasty grandmother",
+		--   діти́ська (pl.) "children"
 		velar and base.animacy ~= "inan" and {"ові", "у"} or
 		velar and "у" or
 		base.animacy ~= "inan" and {"ові", "і"} or
@@ -766,7 +788,7 @@ decls["hard-n"] = function(base, stress)
 	local voc_s =
 		velar and base.animacy ~= "inan" and "у" or
 		"о"
-	add_decl(base, stress, "о", "а", "у", "о", "ом", loc_s, voc_s,
+	add_decl(base, stress, "о", "а", dat_s, acc_s, "ом", loc_s, voc_s,
 		"а", "", "ам", "ами", "ах")
 end
 
@@ -837,14 +859,16 @@ decls["fourth-n"] = function(base, stress)
 	if not rfind(stress.stress, "^[bdf]") then
 		loc_sg = {"ю", loc_sg}
 	end
+	local gen_pl_end_stressed = rfind(stress.stress, "^[bcef]")
 	add_decl(base, stress, "я", "я", "ю", "я", "ям", loc_sg, "я")
 	if base.plhard then
 		add_decl(base, stress, nil, nil, nil, nil, nil, nil, nil,
-			"а", "", "ам", "ами", "ах")
+			"а", gen_pl_end_stressed and "ів" or "", "ам", "ами", "ах")
 	else
 		local gen_pl =
-			rfind(stress.pl_nonvowel_stem, "[сздтлнц]$") and "ь" or
 			rfind(stress.pl_vowel_stem, "['й]$") and "їв" or
+			gen_pl_end_stressed and "ів" or
+			rfind(stress.pl_nonvowel_stem, "[сздтлнц]$") and "ь" or
 			""
 		add_decl(base, stress, nil, nil, nil, nil, nil, nil, nil,
 			"я", gen_pl, "ям", "ями", "ях")
@@ -1408,10 +1432,11 @@ local function synthesize_singular_lemma(base)
 			end
 			break
 		end
-		stem, ac = rmatch(base.lemma, "^(.*)і(́?)$")
+		local vowel
+		stem, vowel, ac = rmatch(base.lemma, "^(.*)([ії])(́?)$")
 		if stem then
 			if not base.gender then
-				error("For plural-only lemma in -і, need to specify the gender: '" .. base.lemma .. "'")
+				error("For plural-only lemma in -" .. vowel .. ", need to specify the gender: '" .. base.lemma .. "'")
 			end
 			if base.gender == "M" then
 				if rfind(stem, "[дтсзлнц]$") then
@@ -1419,9 +1444,11 @@ local function synthesize_singular_lemma(base)
 				elseif rfind(stem, "р$") then
 					base.lemma = stem
 					if not base.rtype then
-						-- add an override to cause the -і to appear
-						table.insert(base.overrides, {values = {{form = "і"}}})
+						-- add an override to cause the -і/-ї to appear
+						table.insert(base.overrides, {values = {{form = vowel}}})
 					end
+				elseif vowel == "ї" then
+					base.lemma = stem .. "й"
 				else
 					base.lemma = stem
 				end
@@ -1434,11 +1461,13 @@ local function synthesize_singular_lemma(base)
 						base.lemma = stem
 					end
 					base.lemma = undo_vowel_alternation(base, base.lemma)
+				elseif rfind(stem, com.hushing_c .. "$") then
+					base.lemma = stem .. "а" .. ac
 				else
 					base.lemma = stem .. "я" .. ac
 				end
 			else
-				error("Don't know how to handle neuter plural-only nouns in -і: '" .. base.lemma .. "'")
+				error("Don't know how to handle neuter plural-only nouns in -" .. vowel .. ": '" .. base.lemma .. "'")
 			end
 			break
 		end
@@ -1626,10 +1655,10 @@ local function determine_declension_and_gender(base)
 					base.gender = "M"
 				elseif rfind(base.lemma, "тель$") then
 					base.gender = "M"
-				elseif rfind(base.lemma, "ість$") then
+				elseif rfind(base.lemma, "[ії]сть$") then
 					base.gender = "F"
 				else
-					error("For lemma ending in -ь other than -ець/-єць/-тель/-ість, gender M or F must be given")
+					error("For lemma ending in -ь other than -ець/-єць/-тель/-ість/-їсть, gender M or F must be given")
 				end
 			end
 			if base.gender == "N" or base.gender == "MF" then
@@ -1821,8 +1850,8 @@ local function determine_stress_and_stems(base)
 			return dereduced_stem
 		end
 		if not stress.stress then
-			if base.gender == "M" and rfind(base.lemma, "[ое]́$") then
-				-- masculine in -о or -е
+			if base.gender ~= "N" and rfind(base.lemma, "[ое]́$") then
+				-- masculine or feminine in -о or -е
 				stress.stress = "b"
 			elseif stress.reducible and rfind(base.lemma, "[еоєі]́" .. com.cons_c .. "ь?$") then
 				-- reducible with stress on the reducible vowel
@@ -1939,24 +1968,9 @@ local function detect_indicator_spec(base)
 end
 
 
-local function map_word_specs(alternant_multiword_spec, fun)
-	for _, alternant_or_word_spec in ipairs(alternant_multiword_spec.alternant_or_word_specs) do
-		if alternant_or_word_spec.alternants then
-			for _, multiword_spec in ipairs(alternant_or_word_spec.alternants) do
-				for _, word_spec in ipairs(multiword_spec.word_specs) do
-					fun(word_spec)
-				end
-			end
-		else
-			fun(alternant_or_word_spec)
-		end
-	end
-end
-
-
 local function detect_all_indicator_specs(alternant_multiword_spec)
 	local is_multiword = #alternant_multiword_spec.alternant_or_word_specs > 1
-	map_word_specs(alternant_multiword_spec, function(base)
+	iut.map_word_specs(alternant_multiword_spec, function(base)
 		detect_indicator_spec(base)
 		base.multiword = is_multiword
 	end)
@@ -2096,164 +2110,10 @@ local function determine_noun_status(alternant_multiword_spec)
 end
 
 
---[=[
-Parse a multiword spec such as "[[медичний|меди́чна]]<+> [[сестра́]]<*,*#.pr>".
-The return value is a table of the form
-{
-  word_specs = {WORD_SPEC, WORD_SPEC, ...},
-  post_text = "TEXT-AT-END",
-}
---
-where WORD_SPEC describes an individual declined word and "TEXT-AT-END" is any raw text that
-may occur after all declined words. Each WORD_SPEC is of the form returned
-by parse_indicator_spec():
---
-{
-  lemma = "LEMMA",
-  before_text = "TEXT-BEFORE-WORD",
-  before_text_no_links = "TEXT-BEFORE-WORD-NO-LINKS",
-  -- Fields as described in parse_indicator_spec()
-  forms = {...},
-  overrides = {...},
-  stresses = {...},
-  ...
-}
-
-For example, the return value for "[[медичний|меди́чна]]<+> [[сестра́]]<*,*#.pr>" is
-{
-  word_specs = {
-    {
-      lemma = "[[медичний|меди́чна]]",
-      overrides = {},
-      adj = true,
-      before_text = "",
-      before_text_no_links = "",
-      forms = {},
-    },
-    {
-      lemma = "[[сестра́]]",
-      overrides = {},
-	  stresses = {
-		{
-		  reducible = true,
-		  genpl_reversed = false,
-		},
-		{
-		  reducible = true,
-		  genpl_reversed = true,
-		},
-	  },
-	  animacy = "pr",
-      before_text = " ",
-      before_text_no_links = " ",
-      forms = {},
-    },
-  },
-  post_text = "",
-}
-]=]
-local function parse_multiword_spec(segments)
-	local multiword_spec = {
-		word_specs = {}
-	}
-	for i = 2, #segments - 1, 2 do
-		local bracketed_runs = iut.parse_balanced_segment_run(segments[i - 1], "[", "]")
-		local space_separated_groups = iut.split_alternating_runs(bracketed_runs, "[ %-]", "preserve splitchar")
-		local before_text = {}
-		local lemma
-		for j, space_separated_group in ipairs(space_separated_groups) do
-			if j == #space_separated_groups then
-				lemma = table.concat(space_separated_group)
-				if lemma == "" then
-					error("Word is blank: '" .. table.concat(segments) .. "'")
-				end
-			else
-				table.insert(before_text, table.concat(space_separated_group))
-			end
-		end
-		local base = parse_indicator_spec(segments[i])
-		base.before_text = table.concat(before_text)
-		base.before_text_no_links = m_links.remove_links(base.before_text)
-		base.lemma = lemma
-		table.insert(multiword_spec.word_specs, base)
-	end
-	multiword_spec.post_text = segments[#segments]
-	multiword_spec.post_text_no_links = m_links.remove_links(multiword_spec.post_text)
-	return multiword_spec
-end
-
-
---[=[
-Parse an alternant, e.g. "((ру́син<pr>,руси́н<b.pr>))". The return value is a table of the form
-{
-  alternants = {MULTIWORD_SPEC, MULTIWORD_SPEC, ...}
-}
-
-where MULTIWORD_SPEC describes a given alternant and is as returned by parse_multiword_spec().
-]=]
-local function parse_alternant(alternant)
-	local parsed_alternants = {}
-	local alternant_text = rmatch(alternant, "^%(%((.*)%)%)$")
-	local segments = iut.parse_balanced_segment_run(alternant_text, "<", ">")
-	local comma_separated_groups = iut.split_alternating_runs(segments, ",")
-	local alternant_spec = {alternants = {}}
-	for _, comma_separated_group in ipairs(comma_separated_groups) do
-		table.insert(alternant_spec.alternants, parse_multiword_spec(comma_separated_group))
-	end
-	return alternant_spec
-end
-
-
---[=[
-Top-level parsing function. Parse a multiword spec that may have alternants in it.
-The return value is a table of the form
-{
-  alternant_or_word_specs = {ALTERNANT_OR_WORD_SPEC, ALTERNANT_OR_WORD_SPEC, ...}
-  post_text = "TEXT-AT-END",
-  post_text_no_links = "TEXT-AT-END-NO-LINKS",
-}
-
-where ALTERNANT_OR_WORD_SPEC is either an alternant spec as returned by parse_alternant()
-or a multiword spec as described in the comment above parse_multiword_spec(). An alternant spec
-looks as follows:
-{
-  alternants = {MULTIWORD_SPEC, MULTIWORD_SPEC, ...},
-  before_text = "TEXT-BEFORE-ALTERNANT",
-  before_text_no_links = "TEXT-BEFORE-ALTERNANT",
-}
-i.e. it is like what is returned by parse_alternant() but has extra `before_text`
-and `before_text_no_links` fields.
-]=]
-local function parse_alternant_multiword_spec(text)
-	local alternant_multiword_spec = {alternant_or_word_specs = {}}
-	local alternant_segments = m_string_utilities.capturing_split(text, "(%(%(.-%)%))")
-	local last_post_text, last_post_text_no_links
-	for i = 1, #alternant_segments do
-		if i % 2 == 1 then
-			local segments = iut.parse_balanced_segment_run(alternant_segments[i], "<", ">")
-			local multiword_spec = parse_multiword_spec(segments)
-			for _, word_spec in ipairs(multiword_spec.word_specs) do
-				table.insert(alternant_multiword_spec.alternant_or_word_specs, word_spec)
-			end
-			last_post_text = multiword_spec.post_text
-			last_post_text_no_links = multiword_spec.post_text_no_links
-		else
-			local alternant_spec = parse_alternant(alternant_segments[i])
-			alternant_spec.before_text = last_post_text
-			alternant_spec.before_text_no_links = last_post_text_no_links
-			table.insert(alternant_multiword_spec.alternant_or_word_specs, alternant_spec)
-		end
-	end
-	alternant_multiword_spec.post_text = last_post_text
-	alternant_multiword_spec.post_text_no_links = last_post_text_no_links
-	return alternant_multiword_spec
-end
-
-
 -- Check that multisyllabic lemmas have stress, and add stress to monosyllabic
 -- lemmas if needed.
 local function normalize_all_lemmas(alternant_multiword_spec)
-	map_word_specs(alternant_multiword_spec, function(base)
+	iut.map_word_specs(alternant_multiword_spec, function(base)
 		base.orig_lemma = base.lemma
 		base.orig_lemma_no_links = com.add_monosyllabic_stress(m_links.remove_links(base.lemma))
 		base.lemma = base.orig_lemma_no_links
@@ -2278,9 +2138,9 @@ end
 local decline_multiword_or_alternant_multiword_spec
 
 
--- Decline alternants in ALTERNANT_SPEC (an object as returned by parse_alternant()).
--- This sets the form values in `ALTERNANT_SPEC.forms` for all slots. (If a given slot has
--- no values, it will not be present in `ALTERNANT_SPEC.forms`).
+-- Decline alternants in ALTERNANT_SPEC (an object as returned by parse_alternant() in
+-- inflection-utils.lua). This sets the form values in `ALTERNANT_SPEC.forms` for all slots.
+-- (If a given slot has no values, it will not be present in `ALTERNANT_SPEC.forms`).
 local function decline_alternants(alternant_spec, overall_number)
 	alternant_spec.forms = {}
 	for _, multiword_spec in ipairs(alternant_spec.alternants) do
@@ -2317,7 +2177,7 @@ local function append_forms(formtable, slot, forms, before_text)
 				-- Reject combination due to non-matching variant codes.
 			else
 				local new_form = {form=old_form.form .. before_text .. form.form,
-					footnotes=combine_footnotes(old_form.footnotes, form.footnotes)}
+					footnotes=iut.combine_footnotes(old_form.footnotes, form.footnotes)}
 				table.insert(ret_forms, new_form)
 			end
 		end
@@ -2684,7 +2544,7 @@ local function compute_headword_genders(alternant_multiword_spec)
 	else
 		number = ""
 	end
-	map_word_specs(alternant_multiword_spec, function(base)
+	iut.map_word_specs(alternant_multiword_spec, function(base)
 		local animacy = base.animacy
 		if animacy == "inan" then
 			animacy = "in"
@@ -2764,11 +2624,7 @@ function export.catboiler(frame)
 
 	local function get_stem_gender_text(stem, genderspec)
 		local gender = genderspec
-		if gender == "masculine in -о" then
-			gender = "masculine"
-		elseif gender == "feminine in -е" then
-			gender = "feminine"
-		end
+		gender = rsub(gender, " in %-[ое]$", "")
 		if not stem_gender_endings[gender] then
 			error("Invalid gender '" .. gender .. "'")
 		end
@@ -2784,10 +2640,8 @@ function export.catboiler(frame)
 				stem_to_declension[stem] or gender == "feminine" and "first" or "second"
 			) .. " declension."
 		local genderdesc
-		if genderspec == "masculine in -о" then
-			genderdesc = "masculine ~ ending in -о"
-		elseif genderspec == "feminine in -е" then
-			genderdesc = "feminine ~ ending in -е"
+		if rfind(genderspec, "in %-[ое]$") then
+			genderdesc = rsub(genderspec, "in (%-[ое])$", "~ ending in %1")
 		else
 			genderdesc = "usually " .. gender .. " ~"
 		end
@@ -2832,7 +2686,7 @@ function export.catboiler(frame)
 	end
 
 	local maintext
-	local stem, gender, stress
+	local stem, gender, stress, ending
 	while true do
 		if args[1] then
 			maintext = "~ " .. args[1]
@@ -2841,12 +2695,11 @@ function export.catboiler(frame)
 		end
 		stem, gender, stress, pos = rmatch(SUBPAGENAME, "^Ukrainian (.-) (.-)%-form accent%-(.-) (.*)s$")
 		if not stem then
-			stem, stress, pos = rmatch(SUBPAGENAME, "^Ukrainian (.-) masculine accent%-(.-) (.*)s in %-о$")
-			gender = "masculine in -о"
-		end
-		if not stem then
-			stem, stress, pos = rmatch(SUBPAGENAME, "^Ukrainian (.-) feminine accent%-(.-) (.*)s in %-е$")
-			gender = "feminine in -е"
+			-- check for e.g. 'Ukrainian hard masculine accent-a nouns in -о'
+			stem, gender, stress, pos, ending = rmatch(SUBPAGENAME, "^Ukrainian (.-) ([a-z]+ine) accent%-(.-) (.*)s in %-([ое])$")
+			if stem then
+				gender = gender .. " in -" .. ending
+			end
 		end
 		if stem then
 			local stem_gender_text = get_stem_gender_text(stem, gender)
@@ -2863,12 +2716,11 @@ function export.catboiler(frame)
 		end
 		stem, gender, pos = rmatch(SUBPAGENAME, "^Ukrainian (.-) (.-)%-form (.*)s$")
 		if not stem then
-			stem, pos = rmatch(SUBPAGENAME, "^Ukrainian (.-) masculine (.*)s in %-о$")
-			gender = "masculine in -о"
-		end
-		if not stem then
-			stem, pos = rmatch(SUBPAGENAME, "^Ukrainian (.-) feminine (.*)s in %-е$")
-			gender = "feminine in -е"
+			-- check for e.g. 'Ukrainian hard masculine nouns in -о'
+			stem, gender, pos, ending = rmatch(SUBPAGENAME, "^Ukrainian (.-) ([a-z]+ine) (.*)s in %-([ое])$")
+			if stem then
+				gender = gender .. " in -" .. ending
+			end
 		end
 		if stem then
 			maintext = get_stem_gender_text(stem, gender)
@@ -2964,7 +2816,7 @@ function export.do_generate_forms(parent_args, pos, from_headword, def)
 	end
 
 	local args = m_para.process(parent_args, params)
-	local alternant_multiword_spec = parse_alternant_multiword_spec(args[1])
+	local alternant_multiword_spec = iut.parse_alternant_multiword_spec(args[1], parse_indicator_spec)
 	alternant_multiword_spec.title = args.title
 	alternant_multiword_spec.footnotes = args.footnote
 	alternant_multiword_spec.args = args
