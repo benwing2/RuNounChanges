@@ -195,6 +195,7 @@ def generate_defn(defns, pos, lang):
       else:
         defnline = re.sub(r", *", ", ", defn)
       defnline = re.sub(r"\(\((.*?)\)\)", r"{{m|%s|\1}}" % lang, defnline)
+      defnline = re.sub(r"g<<(.*?)>>", r"{{gloss|\1}}", defnline)
       defnline = re.sub(r"<<(.*?)>>", r"{{i|\1}}", defnline)
       defnline = re.sub(r"g\((.*?)\)", r"{{glossary|\1}}", defnline)
       defnlines.append("# %s%s\n" % (prefix, defnline))
