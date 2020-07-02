@@ -652,14 +652,10 @@ def process_line(line, etymnum, pronuns, pronuns_at_top):
         labels = labels + [defn]
       notetext += " {{tlb|%s|%s}}" % (lang, "|".join(labels))
     elif sartype == "alt":
-      lines = []
-      for altform in do_split(",", vals):
-        if altform.startswith("{"):
-          lines.append("* %s\n" % altform)
-        else:
-          check_stress(altform)
-          lines.append("* {{l|%s|%s}}\n" % (lang, altform))
-      alttext = "===Alternative forms===\n%s\n" % "".join(lines)
+      if "{{" in vals:
+        alttext += "* %s\n" % vals
+      else:
+        alttext += "* {{alter|%s|%s}}\n" % (lang, vals.replace(",", "|"))
     elif sartype == "part":
       verbs, parttypes, partdecl = do_split(":", vals)
       infleclines = []
@@ -780,6 +776,8 @@ def process_line(line, etymnum, pronuns, pronuns_at_top):
   dertext = dertext or ""
   seetext = seetext or ""
 
+  if alttext:
+    alttext = "===Alternative forms===\n%s\n" % alttext
   if reftext:
     reftext = "===References===\n%s\n" % reftext
   if is_invar_gender:
