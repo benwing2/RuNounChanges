@@ -569,27 +569,34 @@ declprops["j-m"] = {
 
 
 decls["o-m"] = function(base, stress)
+	local unstressed_lo =
+		rfind(stress.vowel_stem, "л$") and stress_patterns[stress.stress].nom_s == "-"
 	local velar = rfind(stress.vowel_stem, com.velar_c .. "$")
 	local hushing = rfind(stress.vowel_stem, com.hushing_c .. "$")
 	local loc_s =
 		-- these conditions are partly based on analogy with the neuter;
 		-- masculines in -о (not counting proper names):
-		-- ба́тько "father", дя́дько "uncle", дя́дьо "uncle", та́то "dad",
-		-- громи́ло "bully", леда́що "lazy person, sluggard" (MN),
-		-- міня́йло "moneychanger" (N per sum.in.ua, M per Slovozmina, mova.info and Slovnyk),
-		-- вайло́ "clumsy person, oaf" (MF), хлопчи́сько "boy" (MN), пани́сько "nasty sir",
-		-- бідачи́сько "wretched man" (MN), чорти́сько "big devil",
-		-- діди́сько "large/nasty grandfather?", попи́сько "nasty priest",
-		-- парубчи́сько "young man (pej.)", простачи́сько "simpleton?" (all personal);
-		-- солове́йко "nightingale", вовчи́сько "large wolf", коти́сько "large cat",
-		-- пси́сько "large dog", барани́сько "large ram", бичи́сько "large bull",
-		-- кабани́сько "large boar", соми́сько "large catfish", кони́сько "large horse",
-		-- etc. (animal);
-		-- чуби́сько "large forehead", вітри́сько "big wind?", голоси́сько "big voice",
-		-- хвости́сько "large tail", кожуши́сько "big fur coat", ножи́сько "big knife?",
-		-- тютюни́сько "nasty tobacco", чоботи́сько "large boot" (pl. чоботи́ська),
-		-- хліби́сько "large bread/loaf", батожи́сько "?", etc.; кулачи́ще "big fist" (MN),
-		-- замчи́ще/за́мчище "large castle; site of former castle" (MN) (inanimate)
+		-- (1) in -ко: ба́тько "father", дя́дько "uncle", "сонько́" (MF) "sleepyhead",
+		--     солове́йко "nightingale"
+		-- (2) in -ьо: дя́дьо "uncle", не́ньо "dad";
+		-- (3) in -то, -до: та́то "dad";
+		-- (4) in vowel + -ло: громи́ло "bully, thug", зубри́ло "rote memorizer, mechanical studier",
+		--     чуди́ло "eccentric person, kook, weirdo", бурми́ло "clumsy person, oaf, klutz",
+		--     страши́ло/страши́дло "scary monster" (MN), базі́кало "chatterbox, braggart" (MN)
+		-- (5) in cons + -ло: міня́йло "moneychanger" (N per sum.in.ua, M per Horokh,
+		--     mova.info and Slovnyk), вайло́ "clumsy person, oaf, klutz" (M per Horokh and
+		--     Slovnyk's declension table, MF per sum.in.ua, MN per mova.info),
+		--     трепло́ "chatterbox, braggart" (N or M per Horokh, N only per other sources)
+		-- (6) in -що: леда́що "lazy person, sluggard" (MN)
+		-- (7) in -и́сько: хлопчи́сько "boy" (MN), пани́сько "nasty sir", бідачи́сько "wretched man" (MN),
+		--     чорти́сько "big devil", діди́сько "large/nasty grandfather?", попи́сько "nasty priest",
+		--     парубчи́сько "young man (pej.)", простачи́сько "simpleton?" (all personal);
+		--     вовчи́сько "large wolf", коти́сько "large cat", пси́сько "large dog", барани́сько "large ram",
+		--     бичи́сько "large bull", кабани́сько "large boar", соми́сько "large catfish", кони́сько "large horse",
+		--     etc. (animal); чуби́сько "large forehead", вітри́сько "big wind?", голоси́сько "big voice",
+		--     хвости́сько "large tail", кожуши́сько "big fur coat", ножи́сько "big knife?",
+		--     тютюни́сько "nasty tobacco", чоботи́сько "large boot" (pl. чоботи́ська),
+		--     хліби́сько "large bread/loaf", батожи́сько "?",etc.
 		velar and base.animacy ~= "inan" and {"ові", "у"} or
 		hushing and base.animacy ~= "inan" and {"еві", "у", "і"} or
 		velar and "у" or
@@ -599,10 +606,10 @@ decls["o-m"] = function(base, stress)
 	local ins_s = hushing and "ем" or "ом"
 	local voc_s =
 		velar and base.animacy ~= "inan" and "у" or
-		hushing and base.animacy ~= "inan" and "е" or
+		(unstressed_lo or (hushing and base.animacy ~= "inan")) and "е" or
 		"о"
 	add_decl(base, stress, "о", "а", {"ові", "у"}, nil, ins_s, loc_s, voc_s,
-		"и", "ів", "ам", "ами", "ах")
+		unstressed_lo and "а" or "и", unstressed_lo and "" or "ів", "ам", "ами", "ах")
 end
 
 local function get_stem_type(stress)
@@ -657,6 +664,30 @@ end
 declprops["soft-o-m"] = {
 	desc = function(base, stress) return o_m_desc(base, stress, "soft") end,
 	cat = function(base, stress) return o_m_cat(base, stress, "soft") end,
+}
+
+
+decls["semisoft-e-m"] = function(base, stress)
+	base.no_retract_e = true
+	-- Known examples: вовчи́ще "big wolf" (animate), діди́ще "big grandfather",
+	-- дружи́ще "old buddy, pal, chap" (animate);
+	-- вітри́ще "big wind", доми́ще "big house" (also N per mova.info), кулачи́ще "big fist" (MN),
+	-- замчи́ще/за́мчище "large castle; site of former castle" (MN) (inanimate)
+	-- The animate values are based only on баби́ще but have parallels in
+	-- semisoft masculine nouns.
+	local dat_s =
+		base.animacy ~= "inan" and {"еві", "у"} or
+		 "у"
+	local loc_s =
+		base.animacy ~= "inan" and {"еві", "у", "і"} or
+		 {"у", "і"}
+	add_decl(base, stress, "е", "а", dat_s, "е", "ем", loc_s, "е",
+		"а", "", "ам", "ами", "ах")
+end
+
+declprops["semisoft-e-m"] = {
+	desc = "semisoft masc in -е",
+	cat = {"semisoft masculine nouns in -е", "semisoft masculine ~ nouns in -е"},
 }
 
 
@@ -750,13 +781,14 @@ declprops["third-f"] = {
 }
 
 
-decls["semisoft-o-f"] = function(base, stress)
+decls["semisoft-e-f"] = function(base, stress)
+	-- at least баби́ще (which can also be neuter, with neuter declension)
 	base.no_retract_e = true
 	add_decl(base, stress, "е", "і", "і", "е", "ею", "і", "е",
 		"і", "", "ам", "ами", "ах")
 end
 
-declprops["semisoft-o-f"] = {
+declprops["semisoft-e-f"] = {
 	desc = "semisoft fem in -е",
 	cat = {"semisoft feminine nouns in -е", "semisoft feminine ~ nouns in -е"},
 }
@@ -813,7 +845,7 @@ declprops["hard-n"] = {
 decls["semisoft-n"] = function(base, stress)
 	base.no_retract_e = true
 	-- The animate values are based only on баби́ще but have parallels in
-	-- semisoft masculine nouns.
+	-- semisoft masculine nouns. (страхо́вище?)
 	local dat_s =
 		base.animacy ~= "inan" and {"еві", "у"} or
 		 "у"
@@ -856,10 +888,10 @@ declprops["j-n"] = {
 
 decls["fourth-n"] = function(base, stress)
 	local loc_sg = rfind(stress.vowel_stem, "['й]$") and "ї" or "і"
-	if not rfind(stress.stress, "^[bdf]") then
+	if stress_patterns[stress.stress].loc_sg == "-" then
 		loc_sg = {"ю", loc_sg}
 	end
-	local gen_pl_end_stressed = rfind(stress.stress, "^[bcef]")
+	local gen_pl_end_stressed = stress_patterns[stress.stress].gen_pl == "+"
 	add_decl(base, stress, "я", "я", "ю", "я", "ям", loc_sg, "я")
 	if base.plhard then
 		add_decl(base, stress, nil, nil, nil, nil, nil, nil, nil,
@@ -1741,15 +1773,13 @@ local function determine_declension_and_gender(base)
 		end
 		stem, ac = rmatch(base.lemma, "^(.*)о(́?)$")
 		if stem then
-			if base.gender == "M" then
+			if base.gender == "M" or base.gender == "F" or base.gender == "MF" then
 				if rfind(stem, "ь$") then
 					stem = rsub(stem, "ь$", "")
 					base.decl = "soft-o-m"
 				else
 					base.decl = "o-m"
 				end
-			elseif base.gender == "F" or base.gender == "MF" then
-				error("For lemma ending in -о, gender " .. base.gender .. " not allowed")
 			else
 				base.decl = "hard-n"
 				base.gender = "N"
@@ -1759,8 +1789,10 @@ local function determine_declension_and_gender(base)
 		end
 		stem, ac = rmatch(base.lemma, "^(.*" .. com.hushing_c .. ")е(́?)$")
 		if stem then
-			if base.gender == "F" then
-				base.decl = "semisoft-o-f"
+			if base.gender == "M" then
+				base.decl = "semisoft-e-m"
+			elseif base.gender == "F" then
+				base.decl = "semisoft-e-f"
 			else
 				base.decl = "semisoft-n"
 				if base.gender == "MF" then
@@ -2077,7 +2109,7 @@ adjectives. We proceed as follows:
    alternant (which is a multiword spec) using the previous step, and combine any
    non-nil properties we encounter the same way as for multiword specs.
 4. The effect of steps 2 and 3 is to set the property of each alternant and multiword
-   spec based on its children or its neighbors. 
+   spec based on its children or its neighbors.
 ]=]
 local function propagate_properties(alternant_multiword_spec, property, default_propval, mixed_value)
 	propagate_multiword_properties(alternant_multiword_spec, property, mixed_value, "nouns only")
