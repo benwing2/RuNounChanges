@@ -434,8 +434,8 @@ local function parse_multiword_spec(segments, parse_indicator_spec, allow_defaul
 		table.insert(segments, "")
 	end
 	for i = 2, #segments - 1, 2 do
-		local bracketed_runs = iut.parse_balanced_segment_run(segments[i - 1], "[", "]")
-		local space_separated_groups = iut.split_alternating_runs(bracketed_runs, "[ %-]", "preserve splitchar")
+		local bracketed_runs = export.parse_balanced_segment_run(segments[i - 1], "[", "]")
+		local space_separated_groups = export.split_alternating_runs(bracketed_runs, "[ %-]", "preserve splitchar")
 		local before_text = {}
 		local lemma
 		for j, space_separated_group in ipairs(space_separated_groups) do
