@@ -510,7 +510,10 @@ function export.parse_alternant_multiword_spec(text, parse_indicator_spec, allow
 	for i = 1, #alternant_segments do
 		if i % 2 == 1 then
 			local segments = export.parse_balanced_segment_run(alternant_segments[i], "<", ">")
-			local multiword_spec = parse_multiword_spec(segments, parse_indicator_spec, allow_default_indicator)
+			local multiword_spec = parse_multiword_spec(segments, parse_indicator_spec,
+				-- Don't set allow_default_indicator if alternants are present and we're
+				-- processing the non-alternant text.
+				allow_default_indicator and #alternant_segments == 1)
 			for _, word_spec in ipairs(multiword_spec.word_specs) do
 				table.insert(alternant_multiword_spec.alternant_or_word_specs, word_spec)
 			end
@@ -527,6 +530,79 @@ function export.parse_alternant_multiword_spec(text, parse_indicator_spec, allow
 	alternant_multiword_spec.post_text = last_post_text
 	alternant_multiword_spec.post_text_no_links = last_post_text_no_links
 	return alternant_multiword_spec
+end
+
+
+-- Decline alternants in ALTERNANT_SPEC (an object as returned by parse_alternant()).
+-- This sets the form values in `ALTERNANT_SPEC.forms` for all slots.
+-- (If a given slot has no values, it will not be present in `ALTERNANT_SPEC.forms`).
+local function decline_alternants(alternant_spec, props)
+	alternant_spec.forms = {}
+	for _, multiword_spec in ipairs(alternant_spec.alternants) do
+		export.decline_multiword_or_alternant_multiword_spec(multiword_spec, props)
+		for slot, _ in pairs(props.slot_table) do
+			if not props.skip_slot(slot) then
+				export.insert_forms(alternant_spec.forms, slot, multiword_spec.forms[slot])
+			end
+		end
+	end
+end
+
+
+local function append_forms(formtable, slot, forms, before_text, get_variants)
+	if not forms then
+		return
+	end
+	local old_forms = formtable[slot] or {{form = ""}}
+	local ret_forms = {}
+	for _, old_form in ipairs(old_forms) do
+		for _, form in ipairs(forms) do
+			local old_form_vars = get_variants(old_form.form)
+			local form_vars = get_variants(form.form)
+			if old_form_vars and form_vars and old_form_vars ~= form_vars then
+				-- Reject combination due to non-matching variant codes.
+			else
+				local new_form = {form=old_form.form .. before_text .. form.form,
+					footnotes=export.combine_footnotes(old_form.footnotes, form.footnotes)}
+				table.insert(ret_forms, new_form)
+			end
+		end
+	end
+	formtable[slot] = ret_forms
+end
+
+
+function export.decline_multiword_or_alternant_multiword_spec(multiword_spec, props)
+	multiword_spec.forms = {}
+
+	local is_alternant_multiword = not not multiword_spec.alternant_or_word_specs
+	for _, word_spec in ipairs(is_alternant_multiword and multiword_spec.alternant_or_word_specs or multiword_spec.word_specs) do
+		if word_spec.alternants then
+			decline_alternants(word_spec, props)
+		else
+			props.decline_word_spec(word_spec)
+		end
+		for slot, _ in pairs(props.slot_table) do
+			if not props.skip_slot(slot) then
+				append_forms(multiword_spec.forms, slot, word_spec.forms[slot],
+					rfind(slot, "linked") and word_spec.before_text or word_spec.before_text_no_links,
+					props.get_variants
+				)
+			end
+		end
+	end
+	if multiword_spec.post_text ~= "" then
+		local pseudoform = {{form=""}}
+		for slot, _ in pairs(props.slot_table) do
+			-- If slot is empty or should be skipped, don't try to append post-text.
+			if not props.skip_slot(slot) and multiword_spec.forms[slot] then
+				append_forms(multiword_spec.forms, slot, pseudoform,
+					rfind(slot, "linked") and multiword_spec.post_text or multiword_spec.post_text_no_links,
+					props.get_variants
+				)
+			end
+		end
+	end
 end
 
 
