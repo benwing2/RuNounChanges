@@ -496,7 +496,7 @@ def process_line(line, etymnum, pronuns, pronuns_at_top):
       is_invar_gender = re.sub("^inv:", "", decl)
     else:
       if lang == "bg":
-        # Bulgarian noun handling
+        # Bulgarian noun/adjective handling
         if "(m)" in decl:
           gender = "m"
         elif "(f)" in decl:
@@ -530,7 +530,7 @@ def process_line(line, etymnum, pronuns, pronuns_at_top):
         noun_header_text = "%s|%s%s" % (headterm, gender, hdecltext)
 
       else:
-        # Ukrainian noun handling
+        # Ukrainian noun/adjective handling
         # decltext is the term+declension as used in the declension template,
         # hdecltext is the term+declension+extra props (such as |adv=го́ло)
         # as used in the headword template
@@ -542,7 +542,7 @@ def process_line(line, etymnum, pronuns, pronuns_at_top):
             error("With multiple terms, must use ! with explicit declension")
           if not decl.startswith("<"):
             error("Declension must start with '<' or '!': %s" % decl)
-          if decl == "<>":
+          if pos == "adj" and decl == "<>":
             decl = ""
           hdecltext = "%s%s" % (term[0], decl)
         # Eliminate masculine/feminine equiv, adjective/adverb, etc. from actual decl
@@ -913,7 +913,7 @@ while True:
   line = line.strip()
   lemmas, first_lemma_no_accents, starts_with_exclamation_point = get_lemmas(line)
   if starts_with_exclamation_point:
-    error("Out-of-place exclamation point in lemma")
+    fatal(line, "Out-of-place exclamation point in lemma: %s" % line)
   etym_sections = []
   etym_lines = [line]
   prev_pronuns = None
@@ -931,7 +931,7 @@ while True:
     nextline = nextline.strip()
     nextline_lemmas, nextline_first_lemma_no_accents, starts_with_exclamation_point = get_lemmas(nextline)
     if starts_with_exclamation_point and first_lemma_no_accents != nextline_first_lemma_no_accents:
-      error("If lemma %s starts with exclamation point, it must be the same as previous lemma %s without accents" % (
+      fatal(line, "If lemma %s starts with exclamation point, it must be the same as previous lemma %s without accents" % (
         ",".join(nextline_lemmas), ",".join(lemmas)))
     if first_lemma_no_accents != nextline_first_lemma_no_accents:
       break
