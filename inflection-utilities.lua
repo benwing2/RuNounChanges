@@ -621,4 +621,130 @@ function export.map_word_specs(alternant_multiword_spec, fun)
 end
 
 
+function export.generate_form(form, footnotes)
+	if type(footnotes) == "string" then
+		footnotes = {footnotes}
+	end
+	if footnotes then
+		return {form = form, footnotes = footnotes}
+	else
+		return form
+	end
+end
+
+
+function export.create_footnote_obj()
+	return {
+		notes = {},
+		seen_notes = {},
+		noteindex = 1,
+	}
+end
+
+
+function export.get_footnote_text(form, footnote_obj)
+	if not form.footnotes then
+		return ""
+	end
+	local link_indices = {}
+	for _, footnote in ipairs(form.footnotes) do
+		footnote = export.expand_footnote(footnote)
+		local this_noteindex = footnote_obj.seen_notes[footnote]
+		if not this_noteindex then
+			-- Generate a footnote index.
+			this_noteindex = footnote_obj.noteindex
+			footnote_obj.noteindex = footnote_obj.noteindex + 1
+			table.insert(footnote_obj.notes, '<sup style="color: red">' .. this_noteindex .. '</sup>' .. footnote)
+			footnote_obj.seen_notes[footnote] = this_noteindex
+		end
+		m_table.insertIfNot(link_indices, this_noteindex)
+	end
+	return '<sup style="color: red">' .. table.concat(link_indices, ",") .. '</sup>'
+end
+
+
+--[=[
+Convert the forms in `forms` (a list of form objects, each of which is a table of the form
+{ form = FORM, footnotes = FOOTNOTE_LIST_OR_NIL, no_accel = TRUE_TO_SUPPRESS_ACCELERATORS })
+into strings. Each form list turns into a string consisting of a comma-separated list of
+linked forms, with accelerators (unless `no_accel` is set in a given form). `lemmas` is the
+list of lemmas, used in the accelerators. `slots_table` is a table of slots and associated
+accelerator inflections. `props` is a table used in generating the strings, as follows:
+{ lang = LANG_OBJECT, canonicalize = FUNCTION_TO_CANONICALIZE_EACH_FORM }.
+If `allow_footnote_symbols` is given, footnote symbols attached to forms (e.g. numbers,
+asterisk) are separated off, placed outside the links, and superscripted. In this case,
+`footnotes` should be a list of footnotes (preceded by footnote symbols, which are
+superscripted). These footnotes are combined with any footnotes found in the forms and
+placed into `forms.footnotes`.
+]=]
+function export.show_forms_with_translit(forms, lemmas, slots_table, props, footnotes, allow_footnote_symbols)
+	local footnote_obj = export.create_footnote_obj()
+	local accel_lemma = lemmas[1]
+	forms.lemma = #lemmas > 0 and table.concat(lemmas, ", ") or mw.title.getCurrentTitle().text
+
+	local m_links = require("Module:links")
+	local m_table_tools = require("Module:table tools")
+	local m_script_utilities = require("Module:script utilities")
+	for slot, accel_form in pairs(slots_table) do
+		local formvals = forms[slot]
+		if formvals then
+			local orig_spans = {}
+			local tr_spans = {}
+			for i, form in ipairs(formvals) do
+				local orig_text = props.canonicalize(form.form)
+				local link, tr
+				if form.form == "—" or form.form == "?" then
+					link = orig_text
+				else
+					local accel_obj
+					if accel_lemma and not form.no_accel then
+						accel_obj = {
+							form = accel_form,
+							lemma = accel_lemma,
+						}
+					end
+					local origentry, orignotes
+					if allow_footnote_symbols then
+						origentry, orignotes = m_table_tools.get_notes(orig_text)
+					else
+						origentry, orignotes = orig_text, ""
+					end
+					link = m_links.full_link{lang = props.lang, term = origentry,
+						tr = "-", accel = accel_obj} .. orignotes
+				end
+				tr = props.lang:transliterate(m_links.remove_links(orig_text))
+				local trentry, trnotes
+				if allow_footnote_symbols then
+					trentry, trnotes = m_table_tools.get_notes(tr)
+				else
+					trentry, trnotes = tr, ""
+				end
+				tr = m_script_utilities.tag_translit(trentry, props.lang, "default", " style=\"color: #888;\"") .. trnotes
+				if form.footnotes then
+					local footnote_text = export.get_footnote_text(form, footnote_obj)
+					link = link .. footnote_text
+					tr = tr .. footnote_text
+				end
+				table.insert(orig_spans, link)
+				table.insert(tr_spans, tr)
+			end
+			local orig_span = table.concat(orig_spans, ", ")
+			local tr_span = table.concat(tr_spans, ", ")
+			forms[slot] = orig_span .. "<br />" .. tr_span
+		else
+			forms[slot] = "—"
+		end
+	end
+
+	local all_notes = footnote_obj.notes
+	if foonotes then
+		for _, note in ipairs(footnotes) do
+			local symbol, entry = m_table_tools.get_initial_notes(note)
+			table.insert(all_notes, symbol .. entry)
+		end
+	end
+	forms.footnote = table.concat(all_notes, "<br />")
+end
+
+
 return export
