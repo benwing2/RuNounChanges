@@ -1049,14 +1049,14 @@ end
 
 local function detect_indicator_and_form_spec(base)
 	if not base.aspect then
-		error("Aspect of 'pf' or 'impf' must be specified")
+		error("Aspect of 'pf', 'impf' or 'both' must be specified")
 	end
 	if base.is_refl then
 		if base.trans then
 			error("Can't specify transitivity with reflexive verb, they're always intransitive: '" .. base.orig_lemma .. "'")
 		end
 	elseif not base.trans then
-		error("Transitivity of 'tr' or 'intr' must be specified")
+		error("Transitivity of 'tr', 'intr' or 'mixed' must be specified")
 	end
 	if base.ppp ~= nil then
 		if base.trans == "intr" then
@@ -1240,7 +1240,7 @@ local function process_overrides(forms, args)
 end
 
 
--- Used for manual specification using {{uk-conj-table}}.
+-- Used for manual specification using {{uk-conj-manual}}.
 local function augment_with_alt_infinitive(alternant_spec)
 	local newinf = {}
 	local forms = alternant_spec.forms
@@ -1259,7 +1259,7 @@ local function augment_with_alt_infinitive(alternant_spec)
 end
 
 
--- Used for manual specification using {{uk-conj-table}}.
+-- Used for manual specification using {{uk-conj-manual}}.
 local function set_reflexive_flag(alternant_spec)
 	if alternant_spec.forms.infinitive then
 		for _, inf in ipairs(alternant_spec.forms.infinitive) do
@@ -1582,7 +1582,7 @@ function export.catboiler(frame)
 
 	local cats = {}
 
-	local cls, variant, pattern = rmatch(SUBPAGENAME, "^Ukrainian class ([0-9]*)(°?)([abc]?) verbs")
+	local cls, variant, pattern = rmatch(SUBPAGENAME, "^Ukrainian class ([0-9]*)([()%[%]°]*)([abc]?) verbs")
 	local text = nil
 	if not cls then
 		error("Invalid category name, should be e.g. \"Ukrainian class 3a verbs\"")
@@ -1602,12 +1602,18 @@ function export.catboiler(frame)
 			"outside of the present indicative are ending-stressed, while the remaining " ..
 			"forms of the present indicative are stem-stressed.").. (
 			variant == "" and "" or
-			cls == "3" and " The variant code indicates that the -н of the stem " ..
+			cls == "3" and variant == "°" and " The variant code indicates that the -н of the stem " ..
 			"is missing in most non-present-tense forms." or
+			cls == "3" and (variant == "(°)" or variant == "[°]") and
+			" The variant code indicates that the -н of the stem " ..
+			"is optionally missing in most non-present-tense forms." or
+			cls == "6" and variant == "°" and
 			" The variant code indicates that the present tense is not " ..
 			"[[Appendix:Glossary#iotation|iotated]]. (In most verbs of this class, " ..
 			"the present tense is iotated, e.g. писа́ти with present tense " ..
-			"пишу́, пи́шеш, пи́ше, etc.)")
+			"пишу́, пи́шеш, пи́ше, etc.)" or
+			error("Unrecognized variant code " .. variant .. " for class " .. cls)
+			)
 	end
 
 	return text	.. "\n" ..
