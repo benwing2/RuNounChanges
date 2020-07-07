@@ -2167,86 +2167,12 @@ local function decline_noun(base)
 end
 
 
-local decline_multiword_or_alternant_multiword_spec
-
-
--- Decline alternants in ALTERNANT_SPEC (an object as returned by parse_alternant() in
--- inflection-utils.lua). This sets the form values in `ALTERNANT_SPEC.forms` for all slots.
--- (If a given slot has no values, it will not be present in `ALTERNANT_SPEC.forms`).
-local function decline_alternants(alternant_spec, overall_number)
-	alternant_spec.forms = {}
-	for _, multiword_spec in ipairs(alternant_spec.alternants) do
-		decline_multiword_or_alternant_multiword_spec(multiword_spec, overall_number)
-		for slot, _ in pairs(output_noun_slots_with_linked) do
-			if not skip_slot(overall_number, slot) then
-				iut.insert_forms(alternant_spec.forms, slot, multiword_spec.forms[slot])
-			end
-		end
-	end
-end
-
-
 local function get_variants(form)
 	return
 		form:find(com.VAR1) and "var1" or
 		form:find(com.VAR2) and "var2" or
 		form:find(com.VAR3) and "var3" or
 		nil
-end
-
-
-local function append_forms(formtable, slot, forms, before_text)
-	if not forms then
-		return
-	end
-	local old_forms = formtable[slot] or {{form = ""}}
-	local ret_forms = {}
-	for _, old_form in ipairs(old_forms) do
-		for _, form in ipairs(forms) do
-			local old_form_vars = get_variants(old_form.form)
-			local form_vars = get_variants(form.form)
-			if old_form_vars and form_vars and old_form_vars ~= form_vars then
-				-- Reject combination due to non-matching variant codes.
-			else
-				local new_form = {form=old_form.form .. before_text .. form.form,
-					footnotes=iut.combine_footnotes(old_form.footnotes, form.footnotes)}
-				table.insert(ret_forms, new_form)
-			end
-		end
-	end
-	formtable[slot] = ret_forms
-end
-
-
-decline_multiword_or_alternant_multiword_spec = function(multiword_spec, overall_number)
-	multiword_spec.forms = {}
-
-	local is_alternant_multiword = not not multiword_spec.alternant_or_word_specs
-	for _, word_spec in ipairs(is_alternant_multiword and multiword_spec.alternant_or_word_specs or multiword_spec.word_specs) do
-		if word_spec.alternants then
-			decline_alternants(word_spec, overall_number)
-		else
-			decline_noun(word_spec)
-		end
-		for slot, _ in pairs(output_noun_slots_with_linked) do
-			if not skip_slot(overall_number, slot) then
-				append_forms(multiword_spec.forms, slot, word_spec.forms[slot],
-					rfind(slot, "linked") and word_spec.before_text or word_spec.before_text_no_links
-				)
-			end
-		end
-	end
-	if multiword_spec.post_text ~= "" then
-		local pseudoform = {{form=""}}
-		for slot, _ in pairs(output_noun_slots_with_linked) do
-			-- If slot is empty or should be skipped, don't try to append post-text.
-			if not skip_slot(overall_number, slot) and multiword_spec.forms[slot] then
-				append_forms(multiword_spec.forms, slot, pseudoform,
-					rfind(slot, "linked") and multiword_spec.post_text or multiword_spec.post_text_no_links
-				)
-			end
-		end
-	end
 end
 
 
@@ -2859,7 +2785,15 @@ function export.do_generate_forms(parent_args, pos, from_headword, def)
 	-- The default of "M" should apply only to plural adjectives, where it doesn't matter.
 	propagate_properties(alternant_multiword_spec, "gender", "M", "mixed")
 	determine_noun_status(alternant_multiword_spec)
-	decline_multiword_or_alternant_multiword_spec(alternant_multiword_spec, alternant_multiword_spec.number)
+	local decline_props = {
+		skip_slot = function(slot)
+			return skip_slot(alternant_multiword_spec.number, slot)
+		end,
+		slot_table = output_noun_slots_with_linked,
+		get_variants = get_variants,
+		decline_word_spec = decline_noun,
+	}
+	iut.decline_multiword_or_alternant_multiword_spec(alternant_multiword_spec, decline_props)
 	compute_categories_and_annotation(alternant_multiword_spec)
 	alternant_multiword_spec.genders = compute_headword_genders(alternant_multiword_spec)
 	return alternant_multiword_spec
