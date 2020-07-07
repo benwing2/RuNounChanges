@@ -23,6 +23,7 @@ TERMINOLOGY:
 ]=]
 
 local lang = require("Module:languages").getByCode("uk")
+local m_links = require("Module:links")
 local m_table = require("Module:table")
 local m_string_utilities = require("Module:string utilities")
 local iut = require("Module:inflection utilities")
@@ -107,6 +108,9 @@ local output_adjective_slots = {
 	short = "short|form",
 }
 
+local output_adjective_slots_with_linked = m_table.shallowcopy(output_adjective_slots)
+output_adjective_slots_with_linked["nom_m_linked"] = "nom|m|s"
+
 
 local output_adjective_slots_surname = {
 	nom_m = "nom|m|s",
@@ -132,6 +136,9 @@ local output_adjective_slots_surname = {
 	voc_p = "voc|p",
 }
 
+local output_adjective_slots_surname_with_linked = m_table.shallowcopy(output_adjective_slots_surname)
+output_adjective_slots_surname_with_linked["nom_m_linked"] = "nom|m|s"
+
 
 local input_adjective_slots = {}
 for slot, _ in pairs(output_adjective_slots) do
@@ -141,11 +148,11 @@ for slot, _ in pairs(output_adjective_slots) do
 end
 
 
-local function get_output_adjective_slots(base)
+local function get_output_adjective_slots(base, with_linked)
 	if base.surname then
-		return output_adjective_slots_surname
+		return with_linked and output_adjective_slots_surname_with_linked or output_adjective_slots_surname
 	else
-		return output_adjective_slots
+		return with_linked and output_adjective_slots_with_linked or output_adjective_slots
 	end
 end
 
@@ -213,7 +220,7 @@ end
 
 local decls = {}
 
-decls["normal"] = function(base, lemma)
+decls["normal"] = function(base)
 	local normal_endings, old_endings
 	local stem, suffix
 
@@ -237,7 +244,7 @@ decls["normal"] = function(base, lemma)
 	end
 
 	-- semi-soft in -ций
-	stem, suffix = rmatch(lemma, "^(.*ц)(и́?й)$")
+	stem, suffix = rmatch(base.lemma, "^(.*ц)(и́?й)$")
 	if stem then
 		normal_endings = {
 			"ий", "я", "е", "і", --nom
@@ -256,7 +263,7 @@ decls["normal"] = function(base, lemma)
 	end
 
 	-- hard in -ий
-	stem, suffix = rmatch(lemma, "^(.*)(и́?й)$")
+	stem, suffix = rmatch(base.lemma, "^(.*)(и́?й)$")
 	if stem then
 		normal_endings = {
 			"ий", "а", "е", "і", --nom
@@ -275,7 +282,7 @@ decls["normal"] = function(base, lemma)
 	end
 
 	-- soft in -ій
-	stem, suffix = rmatch(lemma, "^(.*)(і́?й)$")
+	stem, suffix = rmatch(base.lemma, "^(.*)(і́?й)$")
 	if stem then
 		normal_endings = {
 			"ій", "я", "є", "і", --nom
@@ -294,7 +301,7 @@ decls["normal"] = function(base, lemma)
 	end
 
 	-- soft-after-vowel in -їй
-	stem, suffix = rmatch(lemma, "^(.*)(ї́?й)$")
+	stem, suffix = rmatch(base.lemma, "^(.*)(ї́?й)$")
 	if stem then
 		normal_endings = {
 			"їй", "я", "є", "ї", --nom
@@ -312,25 +319,25 @@ decls["normal"] = function(base, lemma)
 		return
 	end
 
-	error("Unrecognized adjective lemma, should end in '-ий', '-ій' or '-їй': '" .. lemma .. "'")
+	error("Unrecognized adjective lemma, should end in '-ий', '-ій' or '-їй': '" .. base.lemma .. "'")
 end
 
-decls["poss"] = function(base, lemma)
+decls["poss"] = function(base)
 	local ending_prefix
 	local stem, suffix
 
 	while true do
-		stem, suffix = rmatch(lemma, "^(.*)([ії]́?в)$")
+		stem, suffix = rmatch(base.lemma, "^(.*)([ії]́?в)$")
 		if stem then
 			ending_prefix = com.apply_vowel_alternation(base.ialt, suffix)
 			break
 		end
-		stem, suffix = rmatch(lemma, "^(.*)([иї]́?н)$")
+		stem, suffix = rmatch(base.lemma, "^(.*)([иї]́?н)$")
 		if stem then
 			ending_prefix = suffix
 			break
 		end
-		error("Unrecognized possessive adjective lemma, should end in '-ів', '-їв', '-ин' or '-їн': '" .. lemma .. "'")
+		error("Unrecognized possessive adjective lemma, should end in '-ів', '-їв', '-ин' or '-їн': '" .. base.lemma .. "'")
 	end
 
 	local endings = {
@@ -352,27 +359,27 @@ decls["poss"] = function(base, lemma)
 end
 
 
-decls["surname"] = function(base, lemma)
+decls["surname"] = function(base)
 	local ending_prefix
 	local stem, suffix
 
 	while true do
-		stem, suffix = rmatch(lemma, "^(.*)([ії]́?в)$")
+		stem, suffix = rmatch(base.lemma, "^(.*)([ії]́?в)$")
 		if stem then
 			ending_prefix = com.apply_vowel_alternation(base.ialt, suffix)
 			break
 		end
-		stem, suffix = rmatch(lemma, "^(.*)(о́?в)$")
+		stem, suffix = rmatch(base.lemma, "^(.*)(о́?в)$")
 		if stem then
 			ending_prefix = suffix
 			break
 		end
-		stem, suffix = rmatch(lemma, "^(.*)([иії]́?н)$")
+		stem, suffix = rmatch(base.lemma, "^(.*)([иії]́?н)$")
 		if stem then
 			ending_prefix = suffix
 			break
 		end
-		error("Unrecognized possessive surname lemma, should end in '-ів', '-їв', '-ов', '-ин', '-ін' or '-їн': '" .. lemma .. "'")
+		error("Unrecognized possessive surname lemma, should end in '-ів', '-їв', '-ов', '-ин', '-ін' or '-їн': '" .. base.lemma .. "'")
 	end
 
 	local endings = {
@@ -396,7 +403,7 @@ end
 local function parse_indicator_spec(angle_bracket_spec)
 	local inside = rmatch(angle_bracket_spec, "^<(.*)>$")
 	assert(inside)
-	local base = {}
+	local base = {forms = {}}
 	if inside ~= "" then
 		local parts = rsplit(inside, ".", true)
 		for _, part in ipairs(parts) do
@@ -427,7 +434,7 @@ end
 -- Check that multisyllabic lemmas have stress, and add stress to monosyllabic
 -- lemmas if needed.
 local function normalize_all_lemmas(alternant_multiword_spec)
-	map_word_specs(alternant_multiword_spec, function(base)
+	iut.map_word_specs(alternant_multiword_spec, function(base)
 		base.orig_lemma = base.lemma
 		base.orig_lemma_no_links = com.add_monosyllabic_stress(m_links.remove_links(base.lemma))
 		base.lemma = base.orig_lemma_no_links
@@ -464,82 +471,16 @@ local function detect_all_indicator_specs(alternant_multiword_spec)
 		elseif alternant_multiword_spec.surname ~= (base.surname or false) then
 			error("If 'surname' is specified in one alternant, it must be specified in all of them")
 		end
-	end
+	end)
 end
 
 
-local function parse_word_spec(segments)
-	local indicator_spec
-	if #segments == 1 then
-		indicator_spec = "<>"
-	elseif #segments ~= 3 or segments[3] ~= "" then
-		error("Adjective spec must be of the form 'LEMMA' or 'LEMMA<SPECS>': '" .. table.concat(segments) .. "'")
-	else
-		indicator_spec = segments[2]
+local function decline_adjective(base)
+	if not decls[base.decl] then
+		error("Internal error: Unrecognized declension type '" .. base.decl .. "'")
 	end
-	local lemma = segments[1]
-	local base = parse_indicator_spec(indicator_spec)
-	base.lemma = lemma
-	return base
-end
-
-
--- Parse an alternant, e.g. "((родо́вий,родови́й))". The return value is a table of the form
--- {
---   alternants = {WORD_SPEC, WORD_SPEC, ...}
--- }
---
--- where WORD_SPEC describes a given alternant and is as returned by parse_word_spec().
-local function parse_alternant(alternant)
-	local parsed_alternants = {}
-	local alternant_text = rmatch(alternant, "^%(%((.*)%)%)$")
-	local segments = iut.parse_balanced_segment_run(alternant_text, "<", ">")
-	local comma_separated_groups = iut.split_alternating_runs(segments, ",")
-	local alternant_spec = {alternants = {}}
-	for _, comma_separated_group in ipairs(comma_separated_groups) do
-		table.insert(alternant_spec.alternants, parse_word_spec(comma_separated_group))
-	end
-	return alternant_spec
-end
-
-
-local function parse_alternant_or_word_spec(text)
-	if rfind(text, "^%(%((.*)%)%)$") then
-		return parse_alternant(text)
-	else
-		local segments = iut.parse_balanced_segment_run(text, "<", ">")
-		return {alternants = {parse_word_spec(segments)}}
-	end
-end
-
-
-local function decline_noun(base)
-	for _, stress in ipairs(base.stresses) do
-		if not decls[base.decl] then
-			error("Internal error: Unrecognized declension type '" .. base.decl .. "'")
-		end
-		decls[base.decl](base, stress)
-	end
-	handle_derived_slots_and_overrides(base)
-end
-
-
-local decline_multiword_or_alternant_multiword_spec
-
-
--- Decline alternants in ALTERNANT_SPEC (an object as returned by parse_alternant() in
--- inflection-utils.lua). This sets the form values in `ALTERNANT_SPEC.forms` for all slots.
--- (If a given slot has no values, it will not be present in `ALTERNANT_SPEC.forms`).
-local function decline_alternants(alternant_spec, overall_number)
-	alternant_spec.forms = {}
-	for _, multiword_spec in ipairs(alternant_spec.alternants) do
-		decline_multiword_or_alternant_multiword_spec(multiword_spec, overall_number)
-		for slot, _ in pairs(output_noun_slots_with_linked) do
-			if not skip_slot(overall_number, slot) then
-				iut.insert_forms(alternant_spec.forms, slot, multiword_spec.forms[slot])
-			end
-		end
-	end
+	decls[base.decl](base)
+	-- handle_derived_slots_and_overrides(base)
 end
 
 
@@ -549,61 +490,6 @@ local function get_variants(form)
 		form:find(com.VAR2) and "var2" or
 		form:find(com.VAR3) and "var3" or
 		nil
-end
-
-
-local function append_forms(formtable, slot, forms, before_text)
-	if not forms then
-		return
-	end
-	local old_forms = formtable[slot] or {{form = ""}}
-	local ret_forms = {}
-	for _, old_form in ipairs(old_forms) do
-		for _, form in ipairs(forms) do
-			local old_form_vars = get_variants(old_form.form)
-			local form_vars = get_variants(form.form)
-			if old_form_vars and form_vars and old_form_vars ~= form_vars then
-				-- Reject combination due to non-matching variant codes.
-			else
-				local new_form = {form=old_form.form .. before_text .. form.form,
-					footnotes=iut.combine_footnotes(old_form.footnotes, form.footnotes)}
-				table.insert(ret_forms, new_form)
-			end
-		end
-	end
-	formtable[slot] = ret_forms
-end
-
-
-decline_multiword_or_alternant_multiword_spec = function(multiword_spec, overall_number)
-	multiword_spec.forms = {}
-
-	local is_alternant_multiword = not not multiword_spec.alternant_or_word_specs
-	for _, word_spec in ipairs(is_alternant_multiword and multiword_spec.alternant_or_word_specs or multiword_spec.word_specs) do
-		if word_spec.alternants then
-			decline_alternants(word_spec, overall_number)
-		else
-			decline_noun(word_spec)
-		end
-		for slot, _ in pairs(output_noun_slots_with_linked) do
-			if not skip_slot(overall_number, slot) then
-				append_forms(multiword_spec.forms, slot, word_spec.forms[slot],
-					rfind(slot, "linked") and word_spec.before_text or word_spec.before_text_no_links
-				)
-			end
-		end
-	end
-	if multiword_spec.post_text ~= "" then
-		local pseudoform = {{form=""}}
-		for slot, _ in pairs(output_noun_slots_with_linked) do
-			-- If slot is empty or should be skipped, don't try to append post-text.
-			if not skip_slot(overall_number, slot) and multiword_spec.forms[slot] then
-				append_forms(multiword_spec.forms, slot, pseudoform,
-					rfind(slot, "linked") and multiword_spec.post_text or multiword_spec.post_text_no_links
-				)
-			end
-		end
-	end
 end
 
 
@@ -621,9 +507,9 @@ local function process_overrides(forms, args)
 end
 
 
-local function set_accusative(alternant_spec)
-	local forms = alternant_spec.forms
-	if alternant_spec.surname then
+local function set_accusative(alternant_multiword_spec)
+	local forms = alternant_multiword_spec.forms
+	if alternant_multiword_spec.surname then
 		iut.insert_forms(forms, "acc_m", forms["gen_m"])
 		iut.insert_forms(forms, "acc_p", forms["gen_p"])
 	else
@@ -636,13 +522,13 @@ local function set_accusative(alternant_spec)
 end
 
 
-local function add_categories(alternant_spec)
+local function add_categories(alternant_multiword_spec)
 	local cats = {}
 	local function insert(cattype)
 		table.insert(cats, "Ukrainian " .. cattype .. " adjectives")
 	end
-	if alternant_spec.alternants then -- not when manual
-		for _, base in ipairs(alternant_spec.alternants) do
+	if not alternant_multiword_spec.manual then
+		iut.map_word_specs(alternant_multiword_spec, function(base)
 			if base.decl == "poss" then
 				insert("possessive")
 			elseif rfind(base.lemma, "ци́?й$") then
@@ -656,27 +542,27 @@ local function add_categories(alternant_spec)
 			elseif rfind(base.lemma, "ї́?й$") then
 				insert("vowel-stem")
 			end
-		end
+		end)
 	end
-	alternant_spec.categories = cats
+	alternant_multiword_spec.categories = cats
 end
 
 
-local function show_forms(alternant_spec)
+local function show_forms(alternant_multiword_spec)
 	local lemmas = {}
-	if alternant_spec.forms.nom_m then
-		for _, nom_m in ipairs(alternant_spec.forms.nom_m) do
+	if alternant_multiword_spec.forms.nom_m then
+		for _, nom_m in ipairs(alternant_multiword_spec.forms.nom_m) do
 			table.insert(lemmas, com.remove_monosyllabic_stress(nom_m.form))
 		end
 	end
-	com.show_forms(alternant_spec.forms, lemmas, alternant_spec.footnotes,
-		get_output_adjective_slots(alternant_spec)
+	com.show_forms(alternant_multiword_spec.forms, lemmas, alternant_multiword_spec.footnotes,
+		get_output_adjective_slots(alternant_multiword_spec)
 	)
 end
 
 
-local function make_table(alternant_spec)
-	local forms = alternant_spec.forms
+local function make_table(alternant_multiword_spec)
+	local forms = alternant_multiword_spec.forms
 
 	local table_spec = [=[
 <div>
@@ -795,18 +681,18 @@ local function make_table(alternant_spec)
 </div></div>
 ]===]
 
-	if alternant_spec.title then
-		forms.title = alternant_spec.title
+	if alternant_multiword_spec.title then
+		forms.title = alternant_multiword_spec.title
 	else
 		forms.title = 'Declension of <i lang="uk" class="Cyrl">' .. forms.lemma .. '</i>'
 	end
 
-	if alternant_spec.manual then
+	if alternant_multiword_spec.manual then
 		forms.annotation = ""
 	else
 		local ann_parts = {}
 		local decls = {}
-		for _, base in ipairs(alternant_spec.alternants) do
+		iut.map_word_specs(alternant_multiword_spec, function(base)
 			if base.decl == "surname" then
 				m_table.insertIfNot(decls, "surname")
 			elseif base.decl == "poss" then
@@ -816,7 +702,7 @@ local function make_table(alternant_spec)
 			else
 				m_table.insertIfNot(decls, "soft")
 			end
-		end
+		end)
 		table.insert(ann_parts, table.concat(decls, " // "))
 		forms.annotation = " (" .. table.concat(ann_parts, ", ") .. ")"
 	end
@@ -828,7 +714,7 @@ local function make_table(alternant_spec)
 	forms.short_clause = forms.short and forms.short ~= "—" and
 		m_string_utilities.format(short_form_template, forms) or ""
 	return m_string_utilities.format(
-		alternant_spec.surname and table_spec_surname or table_spec, forms
+		alternant_multiword_spec.surname and table_spec_surname or table_spec, forms
 	)
 end
 
@@ -953,14 +839,19 @@ function export.do_generate_forms(parent_args, pos, from_headword, def)
 	alternant_multiword_spec.forms = {}
 	normalize_all_lemmas(alternant_multiword_spec)
 	detect_all_indicator_specs(alternant_multiword_spec)
-	decline_multiword_or_alternant_multiword_spec(alternant_multiword_spec)
-	for _, base in ipairs(alternant_spec.alternants) do
-		decls[base.decl](base, base.lemma)
-	end
-	process_overrides(alternant_spec.forms, args)
-	set_accusative(alternant_spec)
-	add_categories(alternant_spec)
-	return alternant_spec
+	local decline_props = {
+		skip_slot = function(slot)
+			return false
+		end,
+		slot_table = get_output_adjective_slots(alternant_multiword_spec, "with linked"),
+		get_variants = get_variants,
+		decline_word_spec = decline_adjective,
+	}
+	iut.decline_multiword_or_alternant_multiword_spec(alternant_multiword_spec, decline_props)
+	process_overrides(alternant_multiword_spec.forms, args)
+	set_accusative(alternant_multiword_spec)
+	add_categories(alternant_multiword_spec)
+	return alternant_multiword_spec
 end
 
 
