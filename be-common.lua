@@ -92,8 +92,13 @@ function export.is_final_stressed(word)
 end
 
 
--- Make a word unstressed, appropriately handling akanye and yakanye. PRE_TONIC indicates
--- whether ё should be converted to я (PRE_TONIC is true) or е (otherwise).
+-- Make a word unstressed, appropriately handling akanye and yakanye on the
+-- stressed syllable. PRE_TONIC indicates whether ё should be converted to я
+-- (PRE_TONIC is true) or е (otherwise). This has no effect on unstressed
+-- syllables, although in some cases they need to change (in particular,
+-- я in the pre-tonic syllabic might need to change to underlying е, and
+-- other changes might be necessary if the stress is going to be moved onto
+-- a different syllable of the word).
 function export.make_unstressed(word, pre_tonic)
 	local destresser = pre_tonic and pre_tonic_destresser or destresser
 	-- ё may occur in unstressed syllables, e.g. ра́дыё "radio". э may occur in
@@ -110,32 +115,107 @@ function export.make_unstressed(word, pre_tonic)
 end
 
 
--- Move the stress notionally left one syllable from an unspecified syllable to the right
--- of the given word to the last syllable of the word. Doing this stresses the last syllable
--- and may cause a vowel alternation. If `vowel_alternant` is given, it should be "ao"
--- (in Latin letters) to indicate a change from Cyrillic а -> о or я —> ё, and "ae"
--- (in Latin letters) to indicate a change from Cyrillic а -> э or я -> е.
+-- Move the stress notionally left one syllable from an unspecified syllable to
+-- the right of the given stem to the last syllable of the stem. Doing this
+-- stresses the last syllable and may cause a vowel alternation. If
+-- `vowel_alternant` is given, it should be "ao" (in Latin letters) to indicate
+-- a change from Cyrillic а -> о or я —> ё, and "ae" (in Latin letters) to
+-- indicate a change from Cyrillic а -> э or я -> е.
 function export.move_stress_left_onto_last_syllable(stem, vowel_alternant)
-	if rfind(word, AC) then
+	local orig_stem = stem
+	if rfind(stem, AC) then
 		error("Stem '" .. stem .. "' already has stress on it")
 	end
 	stem = rsub(stem, "(" .. export.vowel_c .. ")(" .. export.non_vowel_c .. "-)$", "%1" .. AC .. "%2")
 	if vowel_alternant == "ao" then
 		local new_stem = rsub(stem, "([ая])́", {["а"] = "о", ["я"] = "ё"})
 		if new_stem == stem then
-			error("Indicator 'ao' can't be applied because stem '" .. stem .. "' doesn't have an а or я as its last vowel")
+			error("Indicator 'ao' can't be applied because stem '" .. orig_stem .. "' doesn't have an а or я as its last vowel")
 		end
 		stem = new_stem
 	elseif vowel_alternant == "ae" then
 		local new_stem = rsub(stem, "([ая])́", {["а"] = "э", ["я"] = "е"})
 		if new_stem == stem then
-			error("Indicator 'ae' can't be applied because stem '" .. stem .. "' doesn't have an а or я as its last vowel")
+			error("Indicator 'ae' can't be applied because stem '" .. orig_stem .. "' doesn't have an а or я as its last vowel")
 		end
 		stem = new_stem
+	elseif vowel_alternant then
+		error("Unrecognized vowel alternant '" .. vowel_alternant .. "'")
 	end
 	-- An е that was two syllables to the left of the stress must turn into я.
 	stem = rsub(stem, "е(" .. export.non_vowel_c .. "*" .. export.vowel_c ..
 		export.non_vowel_c .. "*)$", "я%1")
+	return stem
+end
+
+
+-- Move the stress notionally left one syllable from the last syllable to the
+-- preceding one. Doing this may cause a vowel alternation. If `vowel_alternant`
+-- is given, it should be "ao" (in Latin letters) to indicate a change from
+-- Cyrillic а -> о or я —> ё, and "ae" (in Latin letters) to indicate a change
+-- from Cyrillic а -> э or я -> е.
+function export.move_stress_left_off_of_last_syllable(stem, vowel_alternant)
+	local non_last_syllable, last_syllable = rmatch(stem, "^(.*)(" .. export.vowel_c .. export.non_vowel_c .. "*)$")
+	non_last_syllable = export.move_stress_left_onto_last_syllable(non_last_syllable, vowel_alternant)
+	last_syllable = export.make_unstressed(last_syllable)
+	return non_last_syllable .. last_syllable
+end
+
+
+-- Move the stress notionally from the last syllable of the given stem to an
+-- unspecified syllable directly to its right. Doing this destresses the last
+-- syllable and may cause a vowel alternation. If `vowel_alternant` is given,
+-- it should be have the value "ae" (in Latin letters) to indicate a change
+-- from Cyrillic я -> underlying е in the syllable preceding the last syllable.
+function export.move_stress_right_off_of_last_syllable(stem, vowel_alternant)
+	local orig_stem = stem
+	if not rfind(stem, "[́ёЁ]" .. export.non_vowel_c .. "*$") then
+		error("Stem '" .. stem .. "' doesn't have stress on the last syllable")
+	end
+	if rfind(stem, AC .. ".*" .. export.vowel_c) then
+		error("Stem '" .. stem .. "' has stress on a syllable other than the last")
+	end
+	stem = export.make_unstressed(stem, "pre-tonic")
+	if vowel_alternant == "ae" then
+		local new_stem = rsub(stem, "я(" .. export.non_vowel_c .. "*" .. export.vowel_c ..
+			export.non_vowel_c .. "*)$", "е%1")
+		if new_stem == stem then
+			error("Indicator 'ae' can't be applied because stem '" .. orig_stem .. "' doesn't have a я as its next-to-last vowel")
+		end
+		stem = new_stem
+	elseif vowel_alternant then
+		error("Unrecognized vowel alternant '" .. vowel_alternant .. "'")
+	end
+	return stem
+end
+
+
+-- Move the stress notionally from the last syllable of the given stem to an
+-- unspecified syllable two positions to its right. Doing this destresses the
+-- last syllable and may cause a vowel alternation.
+function export.move_stress_right_twice_off_of_last_syllable(stem)
+	local orig_stem = stem
+	if not rfind(stem, "[́ёЁ]" .. export.non_vowel_c .. "*$") then
+		error("Stem '" .. stem .. "' doesn't have stress on the last syllable")
+	end
+	if rfind(stem, AC .. ".*" .. export.vowel_c) then
+		error("Stem '" .. stem .. "' has stress on a syllable other than the last")
+	end
+	return export.make_unstressed(stem)
+end
+
+
+-- Move the stress notionally from an unspecified syllable directly to the
+-- right of the last syllable of the stem to a position one syllable farther
+-- to the right. This has no effect except when `vowel_alternant` is given.
+-- In this case it should be have the value "ae" (in Latin letters) to indicate
+-- a change from Cyrillic я -> underlying е in the last syllable of the stem.
+function export.move_stress_right_when_stem_unstressed(stem, vowel_alternant)
+	if vowel_alternant == "ae" then
+		return rsub(stem, "я(" .. export.non_vowel_c .. "*)$", "е%1")
+	elseif vowel_alternant then
+		error("Unrecognized vowel alternant '" .. vowel_alternant .. "'")
+	end
 	return stem
 end
 
