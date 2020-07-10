@@ -23,7 +23,6 @@ TERMINOLOGY:
 ]=]
 
 local lang = require("Module:languages").getByCode("uk")
-local m_links = require("Module:links")
 local m_table = require("Module:table")
 local m_string_utilities = require("Module:string utilities")
 local m_script_utilities = require("Module:script utilities")

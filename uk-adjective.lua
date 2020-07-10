@@ -61,11 +61,6 @@ local function rsubb(term, foo, bar)
 end
 
 
-local function tag_text(text)
-	return m_script_utilities.tag_text(text, lang)
-end
-
-
 local output_adjective_slots = {
 	-- used with all variants
 	nom_m = "nom|m|s",
