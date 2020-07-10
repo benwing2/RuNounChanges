@@ -22,6 +22,7 @@ end
 
 
 local AC = u(0x0301) -- acute =  ́
+local GR = u(0x0300) -- acute =  `
 
 export.VAR1 = u(0xFFF0)
 export.VAR2 = u(0xFFF1)
@@ -46,11 +47,13 @@ export.velar_c = "[" .. export.velar .. "]"
 -- uppercase Cyrillic consonants
 export.uppercase = "АЕИОУІЇЯЄЮБЦДФГҐЧЙКЛМНПРСТВШХЗЖЬЩ"
 export.uppercase_c = "[" .. export.uppercase .. "]"
+export.accents_c = "[" .. AC .. GR .. "]"
 
 
 local first_palatalization = {
 	["к"] = "ч",
 	["г"] = "ж",
+	["ґ"] = "ж",
 	["х"] = "ш",
 	["ц"] = "ч",
 }
@@ -59,6 +62,7 @@ local first_palatalization = {
 local second_palatalization = {
 	["к"] = "ц",
 	["г"] = "з",
+	["ґ"] = "з",
 	["х"] = "с",
 }
 
@@ -68,11 +72,32 @@ function export.translit_no_links(text)
 end
 
 
+local grave_decomposer = {
+	["ѐ"] = "е" .. GR,
+	["Ѐ"] = "Е" .. GR,
+	["ѝ"] = "и" .. GR,
+	["Ѝ"] = "И" .. GR,
+}
+
+-- decompose precomposed Cyrillic chars w/grave accent; not necessary for
+-- acute accent as there aren't precomposed Cyrillic chars w/acute accent,
+-- and undesirable for precomposed й, й, ї, Ї, etc.
+function export.decompose_grave(text)
+	return rsub(text, "[ѐЀѝЍ]", grave_decomposer)
+end
+
+
 function export.needs_accents(text)
-	for _, word in ipairs(rsplit(text, "%s+")) do
+	text = export.decompose_grave(text)
+	for _, word_with_hyphens in ipairs(rsplit(text, "%s+")) do
 		-- A word needs accents if it contains no accent and has more than one vowel
-		if not rfind(word, AC) and not export.is_monosyllabic(word) then
-			return true
+		-- and doesn't begin or end with a hyphen (marking a prefix or suffix)
+		if not rfind(word_with_hyphens, "^%-") and not rfind(word_with_hyphens, "%-$") then
+			for _, word in ipairs(rsplit(word_with_hyphens, "%-")) do
+				if not rfind(word, export.accents_c) and not export.is_monosyllabic(word) then
+					return true
+				end
+			end
 		end
 	end
 	return false
@@ -133,7 +158,8 @@ end
 
 -- If word is monosyllabic, add stress to the vowel.
 function export.add_monosyllabic_stress(word)
-	if export.is_monosyllabic(word) and not rfind(word, "^%-") and not rfind(word, AC) then
+	if export.is_monosyllabic(word) and not rfind(word, "^%-") and
+		not rfind(word, "%-$") and not rfind(word, AC) then
 		word = rsub(word, "(" .. export.vowel_c .. ")", "%1" .. AC)
 	end
 	return word
@@ -142,7 +168,8 @@ end
 
 -- If word is monosyllabic, remove stress from the vowel.
 function export.remove_monosyllabic_stress(word)
-	if export.is_monosyllabic(word) and not rfind(word, "^%-") then
+	if export.is_monosyllabic(word) and not rfind(word, "^%-") and
+		not rfind(word, "%-$") then
 		return export.remove_stress(word)
 	end
 	return word
@@ -197,14 +224,14 @@ end
 
 
 function export.apply_first_palatalization(word)
-	return rsub(word, "^(.*)([кгхц])$",
+	return rsub(word, "^(.*)([кгґхц])$",
 		function(prefix, lastchar) return prefix .. first_palatalization[lastchar] end
 	)
 end
 
 
 function export.apply_second_palatalization(word)
-	return rsub(word, "^(.*)([кгх])$",
+	return rsub(word, "^(.*)([кгґх])$",
 		function(prefix, lastchar) return prefix .. second_palatalization[lastchar] end
 	)
 end
@@ -283,14 +310,18 @@ end
 function export.apply_vowel_alternation(ialt, stem)
 	local modstem, origvowel
 	if ialt == "io" then
-		-- ріг, gen sg. ро́га; плід, gen sg. плода́/пло́ду
-		modstem = rsub(stem, "([іІ])(́?" .. export.cons_c .. "*)$",
+		-- ріг, gen sg. ро́га; плід, gen sg. плода́/пло́ду; безкра́їсть gen sg. безкра́йості
+		modstem = rsub(stem, "([іІїЇ])(́?" .. export.cons_c .. "*)$",
 			function(vowel, post)
 				origvowel = vowel
 				if vowel == "і" then
 					return "о" .. post
-				else
+				elseif vowel == "І" then
 					return "О" .. post
+				elseif vowel == "ї" then
+					return "йо" .. post
+				else
+					return "Йо" .. post
 				end
 			end
 		)
@@ -383,93 +414,32 @@ function export.generate_form(form, footnotes)
 end
 
 
-function export.create_footnote_obj()
-	return {
-		notes = {},
-		seen_notes = {},
-		noteindex = 1,
+function export.u_v_alternation_msg(frame)
+	local params = {
+		[1] = {}
 	}
+	local parargs = frame:getParent().args
+	local args = require("Module:parameters").process(parargs, params)
+	local alternant = args[1] or mw.title.getCurrentTitle().text
+	local ualt, valt, ufirst
+	if rfind(alternant, "^[вВ]") then
+		valt = alternant
+		ualt = rsub(export.add_monosyllabic_stress(valt), "^([вВ])", {["в"] = "у", ["В"] = "У"})
+		ufirst = false
+	else
+		ualt = alternant
+		valt = export.remove_monosyllabic_stress(rsub(ualt, "^([уУ])", {["у"] = "в", ["У"] = "В"}))
+		ufirst = true
+	end
+	ualt = m_links.full_link({lang = lang, term = ualt}, "term") .. " (used after consonants or at the beginning of a clause)"
+	valt = m_links.full_link({lang = lang, term = valt}, "term") .. " (used after vowels)"
+	local first, second
+	if ufirst then
+		first, second = ualt, valt
+	else
+		first, second = valt, ualt
+	end
+	return "The forms " .. first .. " and " .. second .. " differ in pronunciation but are considered variants of the same word."
 end
-
-
-function export.get_footnote_text(form, footnote_obj)
-	if not form.footnotes then
-		return ""
-	end
-	local link_indices = {}
-	for _, footnote in ipairs(form.footnotes) do
-		footnote = require("Module:inflection utilities").expand_footnote(footnote)
-		local this_noteindex = footnote_obj.seen_notes[footnote]
-		if not this_noteindex then
-			-- Generate a footnote index.
-			this_noteindex = footnote_obj.noteindex
-			footnote_obj.noteindex = footnote_obj.noteindex + 1
-			table.insert(footnote_obj.notes, '<sup style="color: red">' .. this_noteindex .. '</sup>' .. footnote)
-			footnote_obj.seen_notes[footnote] = this_noteindex
-		end
-		m_table.insertIfNot(link_indices, this_noteindex)
-	end
-	return '<sup style="color: red">' .. table.concat(link_indices, ",") .. '</sup>'
-end
-
-
-function export.show_forms(forms, lemmas, footnotes, slots_table)
-	local footnote_obj = export.create_footnote_obj()
-	local accel_lemma = lemmas[1]
-	forms.lemma = #lemmas > 0 and table.concat(lemmas, ", ") or mw.title.getCurrentTitle().text
-
-	local m_table_tools = require("Module:table tools")
-	local m_script_utilities = require("Module:script utilities")
-	for slot, accel_form in pairs(slots_table) do
-		local formvals = forms[slot]
-		if formvals then
-			local uk_spans = {}
-			local tr_spans = {}
-			for i, form in ipairs(formvals) do
-				-- FIXME, this doesn't necessarily work correctly if there is an
-				-- embedded link in form.form.
-				local uk_text = export.remove_variant_codes(export.remove_monosyllabic_stress(form.form))
-				local link, tr
-				if form.form == "—" or form.form == "?" then
-					link = uk_text
-				else
-					local accel_obj
-					if accel_lemma and not form.no_accel then
-						accel_obj = {
-							form = accel_form,
-							lemma = accel_lemma,
-						}
-					end
-					local ukentry, uknotes = m_table_tools.get_notes(uk_text)
-					link = m_links.full_link{lang = lang, term = ukentry,
-						tr = "-", accel = accel_obj} .. uknotes
-				end
-				tr = export.translit_no_links(uk_text)
-				local trentry, trnotes = m_table_tools.get_notes(tr)
-				tr = m_script_utilities.tag_translit(trentry, lang, "default", " style=\"color: #888;\"") .. trnotes
-				if form.footnotes then
-					local footnote_text = export.get_footnote_text(form, footnote_obj)
-					link = link .. footnote_text
-					tr = tr .. footnote_text
-				end
-				table.insert(uk_spans, link)
-				table.insert(tr_spans, tr)
-			end
-			local uk_span = table.concat(uk_spans, ", ")
-			local tr_span = table.concat(tr_spans, ", ")
-			forms[slot] = uk_span .. "<br />" .. tr_span
-		else
-			forms[slot] = "—"
-		end
-	end
-
-	local all_notes = footnote_obj.notes
-	for _, note in ipairs(footnotes) do
-		local symbol, entry = m_table_tools.get_initial_notes(note)
-		table.insert(all_notes, symbol .. entry)
-	end
-	forms.footnote = table.concat(all_notes, "<br />")
-end
-
 
 return export
