@@ -314,7 +314,7 @@ local function add_present_i(base, stem, accent, overriding_imp, no_override_ste
 	end
 	if type(stem) == "table" then
 		for _, st in ipairs(stems) do
-			add_present_e(base, st, accent, no_add_imp, true)
+			add_present_i(base, st, accent, overriding_imp, true)
 		end
 		return
 	end
@@ -450,7 +450,7 @@ conjs["2"] = function(base, lemma, accent)
 	add_default_past(base, stem .. suffix)
 	if com.is_stressed(suffix) then
 		local pppstem = rsub(stem, "^(.*)([ую])$",
-			function(a, b) return a .. ( b == "у" and "о́" or "ьо́") end)
+			function(a, b) return a .. (b == "у" and "о́" or "ьо́") end)
 		add_ppp(base, pppstem .. "ван")
 	else
 		add_ppp(base, stem .. "ван")
@@ -936,89 +936,89 @@ local function parse_indicator_and_form_spec(angle_bracket_spec)
 		local part = parts[i]
 		if part == "impf" or part == "pf" or part == "both" then
 			if base.aspect then
-				error("Can't specify aspect twice: '" .. inside .. "'")
+				error("Can't specify aspect twice: " .. angle_bracket_spec)
 			end
 			base.aspect = part
 		elseif part == "tr" or part == "intr" or part == "mixed" then
 			if base.trans then
-				error("Can't specify transitivity twice: " .. inside .. "'")
+				error("Can't specify transitivity twice: " .. angle_bracket_spec)
 			end
 			base.trans = part
 		elseif part == "ppp" or part == "-ppp" then
 			if base.ppp ~= nil then
-				error("Can't specify past passive participle indicator twice: " .. inside .. "'")
+				error("Can't specify past passive participle indicator twice: " .. angle_bracket_spec)
 			end
 			base.ppp = part == "ppp"
 		elseif part == "retractedppp" or part == "-retractedppp" then
 			if base.retractedppp ~= nil then
-				error("Can't specify retracted past passive participle indicator twice: " .. inside .. "'")
+				error("Can't specify retracted past passive participle indicator twice: " .. angle_bracket_spec)
 			end
 			base.retractedppp = part == "retractedppp"
 		elseif part == "impers" then
 			if base.impers then
-				error("Can't specify 'impers' twice: " .. inside .. "'")
+				error("Can't specify 'impers' twice: " .. angle_bracket_spec)
 			end
 			base.impers = true
 		elseif part == "longimp" or part == "shortimp" then
 			if base.imptype then
-				error("Can't specify imperative type twice: " .. inside .. "'")
+				error("Can't specify imperative type twice: " .. angle_bracket_spec)
 			end
 			base.imptype = part
 		elseif part == "-imp" then
 			if base.noimp then
-				error("Can't specify '-imp' twice: " .. inside .. "'")
+				error("Can't specify '-imp' twice: " .. angle_bracket_spec)
 			end
 			base.noimp = true
 		elseif part == "-pres" then
 			if base.nopres then
-				error("Can't specify '-pres' twice: " .. inside .. "'")
+				error("Can't specify '-pres' twice: " .. angle_bracket_spec)
 			end
 			base.nopres = true
 		elseif part == "-past" then
 			if base.nopast then
-				error("Can't specify '-past' twice: " .. inside .. "'")
+				error("Can't specify '-past' twice: " .. angle_bracket_spec)
 			end
 			base.nopast = true
 		elseif part == "3only" then
 			if base.only3 then
-				error("Can't specify '3only' twice: " .. inside .. "'")
+				error("Can't specify '3only' twice: " .. angle_bracket_spec)
 			end
 			base.only3 = true
 		elseif part == "plonly" then
 			if base.onlypl then
-				error("Can't specify 'plonly' twice: " .. inside .. "'")
+				error("Can't specify 'plonly' twice: " .. angle_bracket_spec)
 			end
 			base.onlypl = true
 		elseif part == "3plonly" then
 			if base.only3pl then
-				error("Can't specify '3plonly' twice: " .. inside .. "'")
+				error("Can't specify '3plonly' twice: " .. angle_bracket_spec)
 			end
 			base.only3pl = true
 		elseif part == "3orplonly" then
 			if base.only3orpl then
-				error("Can't specify '3orplonly' twice: " .. inside .. "'")
+				error("Can't specify '3orplonly' twice: " .. angle_bracket_spec)
 			end
 			base.only3orpl = true
 		elseif part == "с" or part == "д" or part == "т" or part == "ст" or part == "в" or part == "н" then
 			if base.cons then
-				error("Can't specify consonant modifier twice: " .. inside .. "'")
+				error("Can't specify consonant modifier twice: " .. angle_bracket_spec)
 			end
 			base.cons = part
 		elseif part == "і" or part == "-і" then -- Cyrillic і
 			if base.i ~= nil then
-				error("Can't specify і-modifier twice: " .. inside .. "'")
+				error("Can't specify і-modifier twice: " .. angle_bracket_spec)
 			end
 			base.i = part == "і" -- Latin i in base.i
 		elseif part == "ї" then -- Cyrillic ї 
 			if base.yi ~= nil then
-				error("Can't specify 'ї' twice: " .. inside .. "'")
+				error("Can't specify 'ї' twice: " .. angle_bracket_spec)
 			end
 			base.yi = true
 		elseif rfind(part, "^pres:") then
 			part = rsub(part, "^pres:", "")
 			base.pres_stems = rsplit(part, ":", true)
 		else
-			error("Unrecognized indicator '" .. part .. "': '" .. inside .. "'")
+			error("Unrecognized indicator '" .. part .. "': " .. angle_bracket_spec)
 		end
 	end
 	return base
@@ -1375,7 +1375,14 @@ local function show_forms(alternant_spec)
 			table.insert(lemmas, com.remove_monosyllabic_stress(inf.form))
 		end
 	end
-	com.show_forms(alternant_spec.forms, lemmas, alternant_spec.footnotes, output_verb_slots)
+	local props = {
+		lang = lang,
+		canonicalize = function(form)
+			return com.remove_monosyllabic_stress(form)
+		end,
+	}
+	iut.show_forms_with_translit(alternant_spec.forms, lemmas,
+		output_verb_slots, props, alternant_spec.footnotes, "allow footnote symbols")
 end
 
 

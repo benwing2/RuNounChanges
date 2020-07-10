@@ -2355,8 +2355,15 @@ local function show_forms(alternant_multiword_spec)
 			table.insert(lemmas, com.remove_monosyllabic_stress(nom_p.form))
 		end
 	end
-	com.show_forms(alternant_multiword_spec.forms, lemmas, alternant_multiword_spec.footnotes,
-		output_noun_slots_with_linked)
+	local props = {
+		lang = lang,
+		canonicalize = function(form)
+			return com.remove_variant_codes(com.remove_monosyllabic_stress(form))
+		end,
+	}
+	iut.show_forms_with_translit(alternant_multiword_spec.forms, lemmas,
+		output_noun_slots_with_linked, props, alternant_multiword_spec.footnotes,
+		"allow footnote symbols")
 end
 
 
