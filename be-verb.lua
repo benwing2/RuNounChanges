@@ -194,33 +194,54 @@ local function combine_stem_ending(stem, ending)
 end
 
 
-local function add_default_stem(base, slot, endings)
+local function palatalize_td(stem)
+	stem = rsub(stem, "т$", "ц")
+	stem = rsub(stem, "д$", "дз")
+	return stem
+end
+
+
+local function add(base, slot, stem, ending)
 	if skip_slot(base, slot) then
 		return
 	end
-	if type(endings) == "table" then
-		for _, ending in ipairs(endings) do
-			add_default_stem(base, slot, ending)
+	if type(ending) == "table" then
+		for _, e in ipairs(ending) do
+			add(base, slot, stem, e)
 		end
 		return
 	end
-	local stressed_ending = com.is_stressed(endings)
+	if rfind(ending, "^[яеіёюь]") then
+		if type(stem) == "table" then
+			local new_form = palatalize_td(stem.form)
+			if new_form ~= stem.form then
+				stem = m_table.shallowcopy(stem)
+				stem.form = new_form
+			end
+		else
+			stem = palatalize_td(stem)
+		end
+	end
+	iut.add_forms(base.forms, slot, stem, ending, com.combine_stem_ending)
+end
+
+
+local function add_default_stem(base, slot, ending)
+	if type(ending) == "table" then
+		for _, e in ipairs(ending) do
+			add_default_stem(base, slot, e)
+		end
+		return
+	end
+	local stressed_ending = com.is_stressed(ending)
 	local stem
 	if stressed_ending then
-		stem = com.is_monosyllabic(endings) and base.unstressed_stem or
+		stem = com.is_monosyllabic(ending) and base.unstressed_stem or
 			base.unstressed_2pl_stem
 	else
 		stem = base.stressed_stem
 	end
-	iut.add_forms(base.forms, slot, stem, endings, com.combine_stem_ending)
-end
-
-
-local function add(base, slot, stems, endings)
-	if skip_slot(base, slot) then
-		return
-	end
-	iut.add_forms(base.forms, slot, stems, endings, com.combine_stem_ending)
+	add(base.forms, slot, stem, ending)
 end
 
 
@@ -248,8 +269,8 @@ local function add_imperative_from_present(base, accent)
 	end
 	local sg2
 	if com.ends_in_vowel(base.stressed_stem) then
-		-- If the stem ends in a vowel, then regardless of imptype, stress the final
-		-- syllable if needed and add й, effectively using the short type.
+		-- If the stem ends in a vowel, then regardless of imptype, use the stressed
+		-- stem and add й, effectively using the short type.
 		sg2 = base.stressed_stem .. "й"
 	elseif imptype == "long" then
 		vowel = rfind(base.stressed_stem, com.always_hard_c .. "$") and "ы" or "і"
@@ -290,7 +311,7 @@ local function add_pres_adv_part(base, pl3)
 end
 
 
-local function add_pres_futr(base, stem, sg1, sg2, sg3, pl1, pl2, pl3)
+local function add_pres_futr(base, sg1, sg2, sg3, pl1, pl2, pl3)
 	add_default_stem(base, "pres_futr_1sg", sg1)
 	add_default_stem(base, "pres_futr_2sg", sg2)
 	add_default_stem(base, "pres_futr_3sg", sg3)
@@ -338,7 +359,8 @@ local function add_present_e(base, stem, accent, use_y_endings, overriding_imp, 
 			accent == "b" and "яце́" or "еце", iotated and "ю́ць" or "у́ць"}
 	end
 	destress_present_endings_per_accent(endings, accent)
-	add_pres_futr(base, stem, unpack(endings))
+	construct_stems(base)
+	add_pres_futr(base, unpack(endings))
 	if overriding_imp == false then
 		-- do nothing
 	elseif overriding_imp then
@@ -355,7 +377,7 @@ local function add_present_i(base, stem, accent, overriding_imp, no_override_ste
 	end
 	if type(stem) == "table" then
 		for _, st in ipairs(stems) do
-			add_present_e(base, st, accent, no_add_imp, true)
+			add_present_i(base, st, accent, overriding_imp, true)
 		end
 		return
 	end
@@ -462,7 +484,6 @@ local function separate_stem_suffix_accent(lemma, class, accent, regex)
 	else
 		base.stressed_stem = stem
 	end
-	construct_stems(base)
 	return stem, suffix, ac
 end
 
@@ -479,33 +500,53 @@ conjs["1"] = function(base, lemma, accent)
 		error("Only accent a allowed for class 1: '" .. base.conj .. "'")
 	end
 	local full_stem = stem .. suffix .. accent
-	add_present_e(base, full_stem, "a")
+	base.stressed_stem = full_stem
+	add_present_e(base, "a")
 	add_default_past(base, full_stem)
 	add_retractable_ppp(base, full_stem .. (suffix == "е" or suffix == "э") and "т" or "н")
 end
 
 
 conjs["2"] = function(base, lemma, accent)
-	local stem, suffix = rmatch(lemma, "^(.*[ую]́?)(ва́?)ти$")
-	if not stem then
-		error("Unrecognized lemma for class 2: '" .. lemma .. "'")
+	if base.vowel_alternant then
+		error("Can't specify vowel alternants with class 2 verbs: " .. base.vowel_alternant)
+	end
+	base.vowel_alternant = "ao"
+	local stem, suffix = rmatch(lemma, "^(.*)([ая]ва́)ць$")
+	local pres_stem
+	if stem then
+		if suffix == "ава́" then
+			pres_stem = stem .. "у"
+		else
+			pres_stem = stem .. "ю"
+		end
+		if accent == "a" then
+			base.stressed_stem = com.move_stress_left_onto_last_syllable(pres_stem)
+		else
+			base.unstressed_stem = pres_stem
+		end
+	else
+		stem, suffix = rmatch(lemma, "^(.*)([ае]ва)ць$")
+		if stem then
+			if suffix == "ава" then
+				pres_stem = stem .. "у"
+			else
+				pres_stem = stem .. "ю"
+			end
+			base.stressed_stem = pres_stem
+			if accent == "b" then
+				error("For class 2b, lemma must be end-stressed: '" .. lemma .. "'")
+			end
+		else
+			error("Unrecognized lemma for class 2: '" .. lemma .. "'")
+		end
 	end
 	if accent ~= "a" and accent ~= "b" then
 		error("Only accent a or b allowed for class 2: '" .. base.conj .. "'")
 	end
-	if accent == "b" and suffix ~= "ва́" then
-		error("For class 2b, lemma must be end-stressed: '" .. lemma .. "'")
-	end
-	local stressed_stem = com.maybe_stress_final_syllable(stem)
-	add_present_e(base, accent == "a" and stressed_stem or stem, accent)
+	add_present_e(base, accent)
 	add_default_past(base, stem .. suffix)
-	if com.is_stressed(suffix) then
-		local pppstem = rsub(stem, "^(.*)([ую])$",
-			function(a, b) return a .. ( b == "у" and "о́" or "ьо́") end)
-		add_ppp(base, pppstem .. "ван")
-	else
-		add_ppp(base, stem .. "ван")
-	end
+	add_retractable_ppp(stem .. suffix .. "н")
 end
 
 
@@ -947,7 +988,7 @@ local function parse_indicator_and_form_spec(angle_bracket_spec)
 		base.conjnum = "irreg"
 	else
 		conj, base.conj_star = rsubb(conj, "%*", "")
-		base.conjnum, base.conjmod, base.accent = rmatch(conj, "^([0-9]+)([°()%[%]]*)([abc])$")
+		base.conjnum, base.conjmod, base.accent = rmatch(conj, "^([0-9]+)(°?)([abc])$")
 		if not base.conjnum then
 			error("Invalid format for conjugation, should be e.g. '1a', '4b' or '6°c': '" .. conj .. "'")
 		end
@@ -968,11 +1009,18 @@ local function parse_indicator_and_form_spec(angle_bracket_spec)
 				error("Can't specify transitivity twice: " .. inside .. "'")
 			end
 			base.trans = part
-		elseif part == "ppp" or part == "-ppp" then
+		elseif rfind(part, "^ppp") or part == "-ppp" then
 			if base.ppp ~= nil then
 				error("Can't specify past passive participle indicator twice: " .. inside .. "'")
 			end
-			base.ppp = part == "ppp"
+			if part == "-ppp" then
+				base.ppp = false
+			else
+				base.ppp = rsub(part, "^ppp", "")
+				if base.ppp == "" then
+					base.ppp = "+"
+				elseif base.ppp ~= "+" and base.ppp ~= "-" and base.ppp ~= "+-" and base.ppp ~= "-+" then
+					error("Invalid value for past passive participle indicator: " .. inside .. 
 		elseif part == "retractedppp" or part == "-retractedppp" then
 			if base.retractedppp ~= nil then
 				error("Can't specify retracted past passive participle indicator twice: " .. inside .. "'")

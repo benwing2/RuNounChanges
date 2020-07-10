@@ -256,6 +256,18 @@ function export.remove_monosyllabic_accents(word)
 end
 
 
+function export.iotate(stem)
+	stem = rsub(stem, "с[ктц]$", "шч")
+	stem = rsub(stem, "[ктц]$", "ч")
+	stem = rsub(stem, "[сх]$", "ш")
+	stem = rsub(stem, "[гґз]$", "ж")
+	stem = rsub(stem, "дз?$", "дж")
+	stem = rsub(stem, "([бўмпф])$", "%1л")
+	stem = rsub(stem, "в$", "ўл")
+	return stem
+end
+
+
 -- Handles the alternation between initial і/у and й/ў.
 function export.initial_alternation(word, previous)
 	if type(word) == "table" then
