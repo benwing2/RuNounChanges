@@ -24,7 +24,7 @@ export.velar = "кгґх"
 export.velar_c = "[" .. export.velar .. "]"
 export.always_hard = "ршчж"
 export.always_hard_c = "[" .. export.always_hard .. "]"
-export.cons = "бдфгґйклмнпрствхзчшжўь'БДФГҐЙКЛМНПРСТВХЗЧШЖЎЬ"
+export.cons = "бцдфгґйклмнпрствхзчшжўь'БЦДФГҐЙКЛМНПРСТВХЗЧШЖЎЬ"
 export.cons_c = "[" .. export.cons .. "]"
 
 
@@ -98,8 +98,14 @@ end
 
 
 -- Check if word ends in a vowel.
-function export.ends_in_vowel(stem)
-	return rfind(stem, export.vowel_c .. AC .. "?$")
+function export.ends_in_vowel(word)
+	return rfind(word, export.vowel_c .. AC .. "?$")
+end
+
+
+-- Check if word ends in an always-hard consonant.
+function export.ends_always_hard(word)
+	return rfind(word, export.always_hard_c .. "$")
 end
 
 
@@ -223,6 +229,9 @@ end
 -- a change from Cyrillic я -> underlying е in the last syllable of the stem.
 function export.move_stress_right_when_stem_unstressed(stem, vowel_alternant)
 	if vowel_alternant == "ae" then
+		if not rfind(stem, "[яа](" .. export.non_vowel_c .. "*)$") then
+			error("Indicator 'ae' can't be applied because stem '" .. stem .. "' doesn't have an а or я as its last vowel")
+		end
 		return rsub(stem, "я(" .. export.non_vowel_c .. "*)$", "е%1")
 	elseif vowel_alternant then
 		error("Unrecognized vowel alternant '" .. vowel_alternant .. "'")
