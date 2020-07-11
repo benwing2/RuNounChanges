@@ -3,6 +3,7 @@ local export = {}
 local u = mw.ustring.char
 local rsplit = mw.text.split
 local rfind = mw.ustring.find
+local rmatch = mw.ustring.match
 local rsubn = mw.ustring.gsub
 local ulen = mw.ustring.len
 
@@ -21,6 +22,10 @@ export.vowel_c = "[" .. export.vowel .. "]"
 export.non_vowel_c = "[^" .. export.vowel .. "]"
 export.velar = "кгґх"
 export.velar_c = "[" .. export.velar .. "]"
+export.always_hard = "ршчж"
+export.always_hard_c = "[" .. export.always_hard .. "]"
+export.cons = "бдфгґйклмнпрствхзчшжўь'БДФГҐЙКЛМНПРСТВХЗЧШЖЎЬ"
+export.cons_c = "[" .. export.cons .. "]"
 
 
 export.VAR1 = u(0xFFF0)
@@ -92,6 +97,12 @@ function export.is_final_stressed(word)
 end
 
 
+-- Check if word ends in a vowel.
+function export.ends_in_vowel(stem)
+	return rfind(stem, export.vowel_c .. AC .. "?$")
+end
+
+
 -- Make a word unstressed, appropriately handling akanye and yakanye on the
 -- stressed syllable. PRE_TONIC indicates whether ё should be converted to я
 -- (PRE_TONIC is true) or е (otherwise). This has no effect on unstressed
@@ -128,13 +139,13 @@ function export.move_stress_left_onto_last_syllable(stem, vowel_alternant)
 	end
 	stem = rsub(stem, "(" .. export.vowel_c .. ")(" .. export.non_vowel_c .. "-)$", "%1" .. AC .. "%2")
 	if vowel_alternant == "ao" then
-		local new_stem = rsub(stem, "([ая])́", {["а"] = "о", ["я"] = "ё"})
+		local new_stem = rsub(stem, "([ая]́)", {["а́"] = "о́", ["я́"] = "ё"})
 		if new_stem == stem then
 			error("Indicator 'ao' can't be applied because stem '" .. orig_stem .. "' doesn't have an а or я as its last vowel")
 		end
 		stem = new_stem
 	elseif vowel_alternant == "ae" then
-		local new_stem = rsub(stem, "([ая])́", {["а"] = "э", ["я"] = "е"})
+		local new_stem = rsub(stem, "([ая]́)", {["а́"] = "э́", ["я́"] = "е́"})
 		if new_stem == stem then
 			error("Indicator 'ae' can't be applied because stem '" .. orig_stem .. "' doesn't have an а or я as its last vowel")
 		end
@@ -238,12 +249,17 @@ end
 
 
 -- If word is monosyllabic, add an accent mark to the vowel. Don't affect ёЁ.
-function export.add_monosyllabic_stress(word)
+function export.add_monosyllabic_accent(word)
 	if export.is_monosyllabic(word) and not rfind(word, "^%-") and not rfind(word, "%-$") and
 		not export.is_stressed(word) then
 		word = rsub(word, "(" .. export.vowel_c .. ")", "%1" .. AC)
 	end
 	return word
+end
+
+
+function export.add_monosyllabic_stress(word)
+	return export.add_monosyllabic_accent(word)
 end
 
 

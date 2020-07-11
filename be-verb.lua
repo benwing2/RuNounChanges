@@ -33,7 +33,7 @@ local m_string_utilities = require("Module:string utilities")
 local m_script_utilities = require("Module:script utilities")
 local iut = require("Module:inflection utilities")
 local m_para = require("Module:parameters")
-local com = require("Module:be-common")
+local com = require("Module:User:Benwing2/be-common")
 
 local current_title = mw.title.getCurrentTitle()
 local NAMESPACE = current_title.nsText
@@ -117,6 +117,20 @@ local budu_forms = {
 }
 
 
+local allowed_class_7_specs = {
+	["д"] = "d",
+	["d"] = "d",
+	["т"] = "t",
+	["t"] = "t",
+	["с"] = "s",
+	["s"] = "s",
+	["ст"] = "st",
+	["st"] = "st",
+	["б"] = "b",
+	["b"] = "b",
+}
+
+
 local function destress_ending(ending)
 	if type(ending) == "string" then
 		return com.make_unstressed(ending)
@@ -130,6 +144,13 @@ end
 
 
 local function construct_stems(base, accent)
+	if base.pres_stem then
+		if accent == "a" or accent == "c" then
+			base.stressed_stem = base.pres_stem
+		else
+			base.unstressed_stem = base.pres_stem
+		end
+	end
 	if accent == "b" or accent == "c" then
 		if base.unstressed_stem then
 			base.stressed_stem = com.move_stress_left_onto_last_syllable(
@@ -166,7 +187,7 @@ local function skip_slot(base, slot)
 		return true
 	end
 	if base.impers then
-		if rfind(slot, "3sg") or rfind(slot, "adv_part") or slot == "past_pasv_part_impers" or slot == "past_n" then
+		if rfind(slot, "3sg") or rfind(slot, "adv_part") or slot == "past_n" then
 			return false
 		else
 			return true
@@ -222,7 +243,7 @@ local function add(base, slot, stem, ending)
 			stem = palatalize_td(stem)
 		end
 	end
-	iut.add_forms(base.forms, slot, stem, ending, com.combine_stem_ending)
+	iut.add_forms(base.forms, slot, stem, ending, combine_stem_ending)
 end
 
 
@@ -241,14 +262,14 @@ local function add_default_stem(base, slot, ending)
 	else
 		stem = base.stressed_stem
 	end
-	add(base.forms, slot, stem, ending)
+	add(base, slot, stem, ending)
 end
 
 
 local function add_imperative(base, sg2, footnote)
-	local sg2form = com.generate_form(sg2, footnote)
+	local sg2form = iut.generate_form(sg2, footnote)
 	add(base, "impr_sg", sg2form, "")
-	add(base, "impr_sg", sg2form, "це")
+	add(base, "impr_pl", sg2form, "це")
 end
 
 
@@ -279,8 +300,10 @@ local function add_imperative_from_present(base, accent)
 		else
 			sg2 = base.unstressed_stem .. vowel .. AC
 		end
-	elseif rfind(presstem, com.always_hard_c .. "$") then
+	elseif rfind(base.stressed_stem, com.always_hard_c .. "$") then
 		sg2 = base.stressed_stem
+	elseif rfind(base.stressed_stem, "в$") then
+		sg2 = rsub(base.stressed_stem, "в$", "ў")
 	else
 		sg2 = base.stressed_stem .. "ь"
 	end
@@ -289,23 +312,29 @@ end
 
 
 local function add_pres_adv_part(base, pl3)
-	if base.aspect ~= "pf" and type(pl3) == "string" then
-		local pl3base = rmatch(pl3, "^(.-)ць$")
-		if not pl3base then
-			error("Invalid third-plural ending, doesn't end in -ць: '" .. pl3 .. "'")
-		end
-		for _, parttype in ipairs(rsplit(pl3, "")) do
-			local ending
-			if parttype == "-" then
-				ending = com.make_unstressed(pl3) .. "чы"
-			elseif parttype == "!" then
-				ending = com.add_monosyllabic_stress(pl3) .. "чы"
-			elseif parttype == "+" then
-				ending = com.make_unstressed(pl3) .. "чы́"
-			else
-				error("Internal error: Unrecognized present adverbial participle indicator '" .. parttype .. "'")
+	if base.aspect ~= "pf" then
+		if type(base.pradp) == "table" then
+			for _, pradp in ipairs(base.pradp) do
+				add(base, "pres_adv_part", pradp, "")
 			end
-			add_default_stem(base, "pres_adv_part", ending)
+		elseif type(pl3) == "string" then
+			local pl3base = rmatch(pl3, "^(.-)ць$")
+			if not pl3base then
+				error("Invalid third-plural ending, doesn't end in -ць: '" .. pl3 .. "'")
+			end
+			for _, parttype in ipairs(rsplit(base.pradp, "")) do
+				local ending
+				if parttype == "-" then
+					ending = com.make_unstressed(pl3base) .. "чы"
+				elseif parttype == "!" then
+					ending = com.add_monosyllabic_accent(pl3base) .. "чы"
+				elseif parttype == "+" then
+					ending = com.make_unstressed(pl3base) .. "чы́"
+				else
+					error("Internal error: Unrecognized present adverbial participle indicator '" .. parttype .. "'")
+				end
+				add_default_stem(base, "pres_adv_part", ending)
+			end
 		end
 	end
 end
@@ -336,30 +365,22 @@ local function destress_present_endings_per_accent(endings, accent)
 end
 
 
-local function add_present_e(base, stem, accent, use_y_endings, overriding_imp, no_override_stem)
-	if not no_override_stem then
-		stem = base.pres_stems or stem
-	end
-	if type(stem) == "table" then
-		for _, st in ipairs(stem) do
-			add_present_e(base, st, accent, use_y_endings, overriding_imp, true)
-		end
-		return
-	end
+local function add_present_e(base, accent, use_y_endings, overriding_imp)
+	construct_stems(base, accent)
 	-- Determine the stressed endings. We will then destress the endings as appropriate for the
 	-- accent pattern.
 	local endings
-	if rfind(stem, com.always_hard_c .. "$") then
+	if rfind(base.stressed_stem, com.always_hard_c .. "$") then
 		-- р or hushing sounds need non-iotated variants.
 		endings = {"у́", "э́ш", base.is_refl and "э́ць" or "э́", "о́м", "аце́", "у́ць"}
 	else
 		-- The iotated 1sg/3pl sometimes occur after consonants, e.g. in сы́паць (сы́плю, сы́плеш, ...).
-		local iotated = use_y_endings or com.ends_in_vowel(stem) or rfind(stem, "['ь]$")
+		local iotated = use_y_endings or com.ends_in_vowel(base.stressed_stem) or
+			rfind(base.stressed_stem, "['ь]$")
 		endings = {iotated and "ю́" or "у́", "е́ш", base.is_refl and "е́ць" or "е́", "ём",
 			accent == "b" and "яце́" or "еце", iotated and "ю́ць" or "у́ць"}
 	end
 	destress_present_endings_per_accent(endings, accent)
-	construct_stems(base)
 	add_pres_futr(base, unpack(endings))
 	if overriding_imp == false then
 		-- do nothing
@@ -371,43 +392,41 @@ local function add_present_e(base, stem, accent, use_y_endings, overriding_imp, 
 end
 
 
-local function add_present_i(base, stem, accent, overriding_imp, no_override_stem)
-	if not no_override_stem then
-		stem = base.pres_stems or stem
-	end
-	if type(stem) == "table" then
-		for _, st in ipairs(stems) do
-			add_present_i(base, st, accent, overriding_imp, true)
-		end
-		return
-	end
+local function add_present_i(base, accent, overriding_imp)
+	construct_stems(base, accent)
+	-- Determine the stressed endings. We will then destress the endings as appropriate for the
+	-- accent pattern.
 	local endings
-	local iotated_type, iotated_stem
-	if com.ends_in_vowel(stem) then
-		endings = {"ю", "їш", "їть", {"їм", "їмо"}, "їте", "ять"}
-		iotated_type = "none"
+	local iotated, iotated_stem
+	if rfind(base.stressed_stem, com.always_hard_c .. "$") then
+		-- р or hushing sounds need non-iotated variants.
+		endings = {"у́", "ы́ш", "ы́ць", "ы́м", "ыце́", "а́ць"}
+		iotated = false
 	else
+		local stem = accent == "a" and base.stressed_stem or base.unstressed_stem
 		iotated_stem = com.iotate(stem)
-		endings = {rfind(iotated_stem, com.hushing_c .. "$") and "у" or "ю", "иш", "ить",
-			{"им", "имо"}, "ите", rfind(stem, com.hushing_c .. "$") and "ать" or "ять"}
-		if stem == iotated_stem then
-			iotated_type = "none"
-		elseif rfind(iotated_stem, "л$") then
-			iotated_type = "1sg3pl"
-		else
-			iotated_type = "1sg"
-		end
+		endings = {rfind(iotated_stem, com.always_hard_c .. "$") and "у́" or "ю́", "і́ш", "і́ць",
+			"і́м", "іце́", rfind(stem, com.always_hard_c .. "$") and "а́ць" or "я́ць"}
+		iotated = stem ~= iotated_stem
 	end
-	endings = stress_present_endings_per_accent(endings, accent)
+	destress_present_endings_per_accent(endings, accent)
 	local s1, s2, s3, p1, p2, p3 = unpack(endings)
-	if iotated_type == "none" then
-		add_pres_futr(base, stem, s1, s2, s3, p1, p2, p3)
-	elseif iotated_type == "1sg" then
-		add_pres_futr(base, iotated_stem, s1, {}, {}, {}, {}, {})
-		add_pres_futr(base, stem, {}, s2, s3, p1, p2, p3)
+	if not iotated then
+		add_pres_futr(base, s1, s2, s3, p1, p2, p3)
 	else
-		add_pres_futr(base, iotated_stem, s1, {}, {}, {}, {}, p3)
-		add_pres_futr(base, stem, {}, s2, s3, p1, p2, {})
+		local orig_stem = accent == "a" and base.stressed_stem or base.unstressed_stem
+		if accent == "a" then
+			base.stressed_stem = iotated_stem
+		else
+			base.unstressed_stem = iotated_stem
+		end
+		add_pres_futr(base, s1, {}, {}, {}, {}, {})
+		if accent == "a" then
+			base.stressed_stem = orig_stem
+		else
+			base.unstressed_stem = orig_stem
+		end
+		add_pres_futr(base, {}, s2, s3, p1, p2, p3)
 	end
 	if overriding_imp == false then
 		-- do nothing
@@ -437,17 +456,24 @@ local function add_ppp(base, stem)
 	if base.is_refl or not base.ppp or base.trans == "intr" then
 		return
 	end
-	if not base.impers then
+	if type(base.ppp) == "table" then
+		for _, ppp in ipairs(base.ppp) do
+			add(base, "past_pasv_part", ppp, "")
+		end
+	elseif not base.impers then
 		add(base, "past_pasv_part", stem, "ы")
 	end
 end
 
 
 local function add_retractable_ppp(base, stem)
+	if not base.ppp then
+		return
+	end
 	if base.ppp == "+" then
 		add_ppp(base, stem)
 	else
-		local retracted_stem = export.move_stress_left_off_of_last_syllable(stem, base.vowel_alternant)
+		local retracted_stem = com.move_stress_left_off_of_last_syllable(stem, base.vowel_alternant)
 		if base.ppp == "+-" then
 			add_ppp(base, stem)
 			add_ppp(base, retracted_stem)
@@ -492,18 +518,18 @@ local conjs = {}
 
 
 conjs["1"] = function(base, lemma, accent)
-	local stem, suffix, accent = rmatch(lemma, "^(.*)([аяеэ])(́?)ць$")
+	local stem, suffix, ac = rmatch(lemma, "^(.*)([аяеэ])(́?)ць$")
 	if not stem then
 		error("Unrecognized lemma for class 1: '" .. lemma .. "'")
 	end
 	if accent ~= "a" then
 		error("Only accent a allowed for class 1: '" .. base.conj .. "'")
 	end
-	local full_stem = stem .. suffix .. accent
+	local full_stem = stem .. suffix .. ac
 	base.stressed_stem = full_stem
 	add_present_e(base, "a")
 	add_default_past(base, full_stem)
-	add_retractable_ppp(base, full_stem .. (suffix == "е" or suffix == "э") and "т" or "н")
+	add_retractable_ppp(base, full_stem .. ((suffix == "е" or suffix == "э") and "т" or "н"))
 end
 
 
@@ -511,7 +537,6 @@ conjs["2"] = function(base, lemma, accent)
 	if base.vowel_alternant then
 		error("Can't specify vowel alternants with class 2 verbs: " .. base.vowel_alternant)
 	end
-	base.vowel_alternant = "ao"
 	local stem, suffix = rmatch(lemma, "^(.*)([ая]ва́)ць$")
 	local pres_stem
 	if stem then
@@ -546,7 +571,8 @@ conjs["2"] = function(base, lemma, accent)
 	end
 	add_present_e(base, accent)
 	add_default_past(base, stem .. suffix)
-	add_retractable_ppp(stem .. suffix .. "н")
+	base.vowel_alternant = "ao"
+	add_retractable_ppp(base, stem .. suffix .. "н")
 end
 
 
@@ -597,8 +623,8 @@ conjs["4"] = function(base, lemma, accent)
 		add_ppp(base, com.iotate(stressed_stem) .. (stem_ends_in_vowel and "єн" or "ен"))
 	else
 		-- By default, stress will retract one syllable if accent is c but not b,
-		-- but this can be overridden in both directions using 'retractedppp' (for b)
-		-- or '-retractedppp' (for c).
+		-- but this can be overridden in both directions using 'ppp-' (for b)
+		-- or 'ppp+' (for c).
 		add_retractable_ppp(base, com.remove_stress(com.iotate(stem)) .. (stem_ends_in_vowel and "є́н" or "е́н"))
 	end
 end
@@ -745,23 +771,20 @@ conjs["10"] = function(base, lemma, accent)
 	local stressed_stem = com.maybe_stress_final_syllable(rsub(stem .. suffix, "о$", ""))
 	add_present_e(base, stressed_stem, accent, "1sg3pl")
 	add_default_past(base, stem .. suffix .. ac)
-	-- If explicit present stem given (e.g. for моло́ти), use it/them in the н-participle.
-	local n_ppps
-	if base.pres_stems then
-		n_ppps = {}
-		for _, pres_stem in ipairs(base.pres_stems) do
-			table.insert(n_ppps, pres_stem .. "ен")
-		end
+	-- If explicit present stem given (e.g. for моло́ти), use it in the н-participle.
+	local n_ppp
+	if base.pres_stem then
+		n_ppp = base.pres_stem .. "ен"
 	else
-		n_ppps = stressed_stem .. "ен"
+		n_ppp = stressed_stem .. "ен"
 	end
 	local t_ppp = stressed_stem .. "от"
 	if base.conj == "н" then
-		add_ppp(base, n_ppps)
+		add_ppp(base, n_ppp)
 	elseif base.conj == "т" then
 		add_ppp(base, t_ppp)
 	else
-		add_ppp(base, n_ppps)
+		add_ppp(base, n_ppp)
 		add_ppp(base, t_ppp)
 	end
 end
@@ -825,7 +848,7 @@ conjs["14"] = function(base, lemma, accent)
 	if not stem then
 		error("Unrecognized lemma for class 14: '" .. lemma .. "'")
 	end
-	if not base.pres_stems then
+	if not base.pres_stem then
 		error("With class 14, must specify explicit present stem using 'pres:STEM'")
 	end
 	add_present_e(base, "foo", accent)
@@ -1001,96 +1024,107 @@ local function parse_indicator_and_form_spec(angle_bracket_spec)
 		local part = parts[i]
 		if part == "impf" or part == "pf" or part == "both" then
 			if base.aspect then
-				error("Can't specify aspect twice: '" .. inside .. "'")
+				error("Can't specify aspect twice: " .. angle_bracket_spec)
 			end
 			base.aspect = part
 		elseif part == "tr" or part == "intr" or part == "mixed" then
 			if base.trans then
-				error("Can't specify transitivity twice: " .. inside .. "'")
+				error("Can't specify transitivity twice: " .. angle_bracket_spec)
 			end
 			base.trans = part
 		elseif rfind(part, "^ppp") or part == "-ppp" then
 			if base.ppp ~= nil then
-				error("Can't specify past passive participle indicator twice: " .. inside .. "'")
+				error("Can't specify past passive participle indicator twice: " .. angle_bracket_spec)
 			end
 			if part == "-ppp" then
 				base.ppp = false
+			elseif rfind(part, "^ppp:") then
+				base.ppp = rsplit(rsub(part, "^pradp:", ""), ":")
 			else
 				base.ppp = rsub(part, "^ppp", "")
-				if base.ppp == "" then
-					base.ppp = "+"
-				elseif base.ppp ~= "+" and base.ppp ~= "-" and base.ppp ~= "+-" and base.ppp ~= "-+" then
-					error("Invalid value for past passive participle indicator: " .. inside .. 
-		elseif part == "retractedppp" or part == "-retractedppp" then
-			if base.retractedppp ~= nil then
-				error("Can't specify retracted past passive participle indicator twice: " .. inside .. "'")
+				if base.ppp ~= "" and base.ppp ~= "+" and base.ppp ~= "-" and base.ppp ~= "+-" and base.ppp ~= "-+" then
+					error("Invalid value for past passive participle indicator: " .. angle_bracket_spec)
+				end
 			end
-			base.retractedppp = part == "retractedppp"
+		elseif rfind(part, "^pradp") then
+			if base.pradp ~= nil then
+				error("Can't specify present adverbial participle indicator twice: " .. angle_bracket_spec)
+			end
+			if rfind(part, "^pradp:") then
+				base.pradp = rsplit(rsub(part, "^pradp:", ""), ":")
+			else
+				base.pradp = rsub(part, "^pradp", "")
+				local seen_indicators = {}
+				for _, indicator in rsplit(base.pradp, "") do
+					if seen_indicators[indicator] then
+						error("Repeated present adverbial participle indicator in spec '" .. part .. "'")
+					elseif indicator ~= "-" and indicator ~= "+" and indicator ~= "!" then
+						error("Unrecognized present adverbial participle indicator '" .. indicator .. "' in spec '" .. part .. "'")
+					else
+						seen_indicators[indicator] = indicator
+					end
+				end
+			end
 		elseif part == "impers" then
 			if base.impers then
-				error("Can't specify 'impers' twice: " .. inside .. "'")
+				error("Can't specify 'impers' twice: " .. angle_bracket_spec)
 			end
 			base.impers = true
 		elseif part == "longimp" or part == "shortimp" then
 			if base.imptype then
-				error("Can't specify imperative type twice: " .. inside .. "'")
+				error("Can't specify imperative type twice: " .. angle_bracket_spec)
 			end
 			base.imptype = part
 		elseif part == "-imp" then
 			if base.noimp then
-				error("Can't specify '-imp' twice: " .. inside .. "'")
+				error("Can't specify '-imp' twice: " .. angle_bracket_spec)
 			end
 			base.noimp = true
 		elseif part == "-pres" then
 			if base.nopres then
-				error("Can't specify '-pres' twice: " .. inside .. "'")
+				error("Can't specify '-pres' twice: " .. angle_bracket_spec)
 			end
 			base.nopres = true
 		elseif part == "-past" then
 			if base.nopast then
-				error("Can't specify '-past' twice: " .. inside .. "'")
+				error("Can't specify '-past' twice: " .. angle_bracket_spec)
 			end
 			base.nopast = true
 		elseif part == "3only" then
 			if base.only3 then
-				error("Can't specify '3only' twice: " .. inside .. "'")
+				error("Can't specify '3only' twice: " .. angle_bracket_spec)
 			end
 			base.only3 = true
 		elseif part == "plonly" then
 			if base.onlypl then
-				error("Can't specify 'plonly' twice: " .. inside .. "'")
+				error("Can't specify 'plonly' twice: " .. angle_bracket_spec)
 			end
 			base.onlypl = true
 		elseif part == "3plonly" then
 			if base.only3pl then
-				error("Can't specify '3plonly' twice: " .. inside .. "'")
+				error("Can't specify '3plonly' twice: " .. angle_bracket_spec)
 			end
 			base.only3pl = true
 		elseif part == "3orplonly" then
 			if base.only3orpl then
-				error("Can't specify '3orplonly' twice: " .. inside .. "'")
+				error("Can't specify '3orplonly' twice: " .. angle_bracket_spec)
 			end
 			base.only3orpl = true
-		elseif part == "с" or part == "д" or part == "т" or part == "ст" or part == "в" or part == "н" then
+		elseif allowed_class_7_specs[part] then
 			if base.cons then
-				error("Can't specify consonant modifier twice: " .. inside .. "'")
+				error("Can't specify consonant modifier twice: " .. angle_bracket_spec)
 			end
-			base.cons = part
-		elseif part == "і" or part == "-і" then -- Cyrillic і
-			if base.i ~= nil then
-				error("Can't specify і-modifier twice: " .. inside .. "'")
+			base.cons = allowed_class_7_specs[part]
+		elseif part == "ae" or part == "ao" then
+			if base.vowel_alternant then
+				error("Can't specify vowel alternant twice: " .. angle_bracket_spec)
 			end
-			base.i = part == "і" -- Latin i in base.i
-		elseif part == "ї" then -- Cyrillic ї 
-			if base.yi ~= nil then
-				error("Can't specify 'ї' twice: " .. inside .. "'")
-			end
-			base.yi = true
+			base.vowel_alternant = part
 		elseif rfind(part, "^pres:") then
 			part = rsub(part, "^pres:", "")
-			base.pres_stems = rsplit(part, ":", true)
+			base.pres_stem = rsub(part, "^pres:", "")
 		else
-			error("Unrecognized indicator '" .. part .. "': '" .. inside .. "'")
+			error("Unrecognized indicator '" .. part .. "': " .. angle_bracket_spec)
 		end
 	end
 	return base
@@ -1101,7 +1135,7 @@ end
 -- to monosyllabic lemmas if needed.
 local function normalize_lemma(base)
 	base.orig_lemma = base.lemma
-	base.lemma = com.add_monosyllabic_stress(base.lemma)
+	base.lemma = com.add_monosyllabic_accent(base.lemma)
 	if not rfind(base.lemma, AC) then
 		error("Multisyllabic lemma '" .. base.orig_lemma .. "' needs an accent")
 	end
@@ -1137,12 +1171,22 @@ local function detect_indicator_and_form_spec(base)
 	elseif base.trans and base.trans ~= "intr" and base.aspect ~= "impf" then
 		error("Must specify 'ppp' or '-ppp' with perfective transitive or mixed-transitive verbs")
 	end
-	if base.ppp and base.retractedppp == nil then
-		if base.conjnum == "14" or base.conjnum == "4" and base.accent == "b" then
-			-- Does not retract normally, but can.
+	if base.ppp == "" then
+		if base.conjnum == "4" then
+			if base.accent == "b" then
+				base.ppp = "+"
+			else
+				base.ppp = "-"
+			end
 		else
-			-- Will be ignored when add_retractable_ppp() isn't called.
-			base.retractedppp = true
+			base.ppp = "+"
+		end
+	end
+	if not base.pradp then
+		if base.accent == "a" then
+			base.pradp = "-"
+		else
+			base.pradp = "+"
 		end
 	end
 	if base.cons then
@@ -1153,19 +1197,6 @@ local function detect_indicator_and_form_spec(base)
 		else
 			error("Consonant modifier '" .. base.cons .. "' can't be specified with class " .. base.conjnum)
 		end
-	end
-	if base.i ~= nil then
-		if rfind(base.conjnum, "^[4578]$") then
-			-- ok
-		else
-			error("і-modifier can't be specified with class " .. base.conjnum)
-		end
-	elseif base.yi then
-		if base.conjnum ~= "4" then
-			error("'ї' can only be specified with class 4")
-		end
-	elseif base.conjnum == "7" or base.conjnum == "8" then
-		base.i = true
 	end
 	if base.conjnum == "3" then
 		if base.conjmod ~= "" and base.conjmod ~= "°" and base.conjmod ~= "(°)" and base.conjmod ~= "[°]" then
@@ -1178,14 +1209,17 @@ local function detect_indicator_and_form_spec(base)
 	elseif base.conjmod and base.conjmod ~= "" then
 		error("Conjugation modifiers only allowed for conjugations 3 and 6: '" .. base.conjmod .. "'")
 	end
-	if base.pres_stems and base.conjnum ~= "14" then
+	if base.pres_stem and base.conjnum ~= "14" then
 		base.irreg = true
 	end
-	if (base.accent == "a" or base.accent == "c") and base.pres_stems then
-		for _, pres_stem in ipairs(base.pres_stems) do
-			if not com.is_stressed(pres_stem) then
-				error("Explicit present stem '" .. pres_stem .. "' must have an accent")
+	if base.pres_stem then
+		if base.accent == "a" or base.accent == "c" then
+			base.pres_stem = com.add_monosyllabic_accent(base.pres_stem)
+			if not com.is_stressed(base.pres_stem) then
+				error("With accent pattern " .. base.accent .. ", explicit present stem '" .. base.pres_stem .. "' must have an accent")
 			end
+		elseif com.is_stressed(base.pres_stem) then
+			error("With accent pattern b, explicit present stem .. '" .. base.pres_stem .. "' should not have an accent")
 		end
 	end
 	if not base.past_accent then
