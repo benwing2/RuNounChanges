@@ -14,8 +14,21 @@ local function rsub(term, foo, bar)
 end
 
 
+-- apply rsub() repeatedly until no change
+local function rsub_repeatedly(term, foo, bar)
+	while true do
+		local new_term = rsub(term, foo, bar)
+		if new_term == term then
+			return term
+		end
+		term = new_term
+	end
+end
+
+
 local AC = u(0x0301) -- acute =  ́
 local GR = u(0x0300) -- acute =  ̀
+local DOTBELOW = u(0x0323) -- dot below =  ̣
 
 export.vowel = "аеіоуяэыёюАЕІОУЯЭЫЁЮ"
 export.vowel_c = "[" .. export.vowel .. "]"
@@ -53,10 +66,21 @@ destresser["О"] = "А"
 destresser["э"] = "а"
 destresser["Э"] = "А"
 
-local pre_tonic_stresser = mw.clone(destresser)
-pre_tonic_stresser["ё"] = "я"
-pre_tonic_stresser["Ё"] = "Я"
+local pre_tonic_destresser = mw.clone(destresser)
+pre_tonic_destresser["ё"] = "я"
+pre_tonic_destresser["Ё"] = "Я"
+pre_tonic_destresser["е"] = "я"
+pre_tonic_destresser["Е"] = "Я"
 
+local ae_stresser = {
+	["а"] = ["э"],
+	["я"] = ["е"],
+}
+
+local ao_stresser = {
+	["а"] = ["о"],
+	["я"] = ["ё"],
+}
 
 -- Remove acute and grave accents; don't affect ёЁ.
 function export.remove_accents(word)
@@ -106,6 +130,123 @@ end
 -- Check if word ends in an always-hard consonant.
 function export.ends_always_hard(word)
 	return rfind(word, export.always_hard_c .. "$")
+end
+
+--[=[
+
+HANDLING BELARUSIAN VOWEL ALTERNATIONS:
+
+We proceed as follows:
+
+1. Call mark_stressed_vowels_in_unstressed_syllables() to attach a stress mark
+   (acute accent) to monosyllabic vowels and to stressed ё vowels, and attach
+   a special signal (DOTBELOW) to vowels that are in positions they should not be
+   (о э ё in unstressed syllables, е directly before the stress), so that they
+   are never converted to their destressed equivalent.
+2. Attempt to reconstruct, as much as possible, the underlying vowels of the word.
+   This is normally done using apply_vowel_alternation().
+3. Move the stress mark elsewhere in the word (e.g. by removing the stress mark and
+   appending a stressed suffix).
+4. Call destress_vowels_after_stress_movement() to convert the word to its final
+   form. This turns о э ё in unstressed syllables and е directly before the stress
+   into other vowels, taking care not to do this if DOTBELOW follows the vowel.
+   After that, it undoes the changes made in mark_stressed_vowels_in_unstressed_syllables().
+]=]
+
+-- Apply a vowel_alternant specification ("ao", "ae" or nil) to the vowel directly
+-- preceding the stress.
+function export.apply_vowel_alternation(word, vowel_alternant)
+	if vowel_alternant == "ao" then
+		local new_word = rsub(word, "([ая])(" .. export.non_vowel_c .. "*" .. export.vowel_c .. AC .. ")",
+			function(a_vowel, rest)
+				return ao_stresser[a_vowel] .. rest
+			end
+		)
+		if new_word == word then
+			error("Indicator 'ao' can't be applied because word '" .. orig_word .. "' doesn't have an а or я as its last vowel")
+		end
+		return new_word
+	elseif vowel_alternant == "ae" then
+		local new_word = rsub(word, "([ая])(" .. export.non_vowel_c .. "*" .. export.vowel_c .. AC .. ")",
+			function(a_vowel, rest)
+				return ae_stresser[a_vowel] .. rest
+			end
+		)
+		if new_word == word then
+			error("Indicator 'ae' can't be applied because word '" .. orig_word .. "' doesn't have an а or я as its last vowel")
+		end
+		return new_word
+	elseif vowel_alternant then
+		error("Unrecognized vowel alternant '" .. vowel_alternant .. "'")
+	else
+		return word
+	end
+end
+
+
+-- Mark vowels that should only occur in stressed syllables (э, о, ё) but
+-- actually occur in unstressed syllables with a dot-below. Also mark е
+-- that occurs directly before the stress in this fashion, and add an acute
+-- accent to stressed ё. We determine whether an ё is stressed as follows:
+-- (1) If an acute accent already occurs, an ё isn't marked with an acute
+--     accent (e.g. ра́дыё).
+-- (2) Otherwise, mark only the last ё with an acute, as multiple ё sounds
+--     can occur (at least, in Russian this is the case, as in трёхколёсный).
+function export.mark_stressed_vowels_in_unstressed_syllables(word)
+	if export.is_nonsyllabic(word) then
+		return word
+	end
+	if export.is_multi_stressed(word) then
+		error("Word " .. word .. " has multiple accent marks")
+	end
+	if export.has_grave_accents(word) then
+		error("Word " .. word .. " has grave accents")
+	end
+	word = export.add_monosyllabic_accent(word)
+	if not rfind(word, AC) then
+		if rfind(word, "[ёЁ]") then
+			word = rsub(word, "([ёЁ])(.-)$", "%1" .. AC .. "%2")
+		else
+			error("Multisyllabic word " .. word .. "missing an accent")
+		end
+	end
+
+	word = rsub(word, "([эоёЭОЁ])([^́])", "%1" .. DOTBELOW .. "%2")
+	word = rsub(word, "([эоёЭОЁ])$", "%1" .. DOTBELOW)
+	word = rsub(word, "([еЕ])(" .. export.non_vowel_c .. "*" .. export.vowel_c .. AC .. ")",
+		"%1" .. DOTBELOW .. "%2")
+	return word
+end
+
+
+-- Undo extra diacritics added by `mark_stressed_vowels_in_unstressed_syllables`.
+function export.undo_mark_stressed_vowels_in_unstressed_syllables(word)
+	word = rsub(word, DOTBELOW, "")
+	word = rsub(word, "([ёЁ])́", "%1")
+	return word
+end
+
+
+-- Destress vowels in unstressed syllables. Vowels followed by DOTBELOW are unchanged;
+-- otherwise, о -> а; э -> а; ё -> я directly before the stress, otherwise е;
+-- е -> я directly before the stress. After that, remove extra diacritics added by
+-- mark_stressed_vowels_in_unstressed_syllables().
+function export.destress_vowels_after_stress_movement(word)
+	word = rsub_repeatedly(word, "([эоёЭОЁ])([^" .. AC .. DOTBELOW .. "])",
+		function(vowel, rest)
+			return destresser[vowel] .. rest
+		end
+	)
+	word = rsub(word, "([эоёЭОЁ])$", destresser)
+	word = rsub(word, "([еЕ])(" .. export.non_vowel_c .. "*" .. export.vowel_c .. AC .. ")",
+		function(vowel, rest)
+			if not rfind(rest, "^" .. DOTBELOW) then
+				return pre_tonic_destresser[vowel] .. rest
+			else
+				return vowel .. rest
+			end
+		end)
+	return export.undo_mark_stressed_vowels_in_unstressed_syllables(word)
 end
 
 
@@ -250,10 +391,22 @@ function export.is_multi_stressed(text)
 end
 
 
+-- Check if word is nonsyllabic.
+function export.is_nonsyllabic(word)
+	return not rfind(word, export.vowel_c)
+end
+
+
 -- Check if word is monosyllabic (also includes words without vowels).
 function export.is_monosyllabic(word)
 	local num_syl = ulen(rsub(word, export.non_vowel_c, ""))
 	return num_syl <= 1
+end
+
+
+-- Check if word has grave accents.
+function export.has_grave_accents(word)
+	return rfind(word, "[̀ѐЀѝЍ]")
 end
 
 
