@@ -109,6 +109,15 @@ function export.is_stressed(word)
 end
 
 
+-- Return whether the word has an acute accent. Use this in preference to is_stressed()
+-- once mark_stressed_vowels_in_unstressed_syllables() has been called, because
+-- is_accented() will correctly ignore ё/Ё in unstressed syllables (those in stressed
+-- syllables are marked with an acute accent).
+function export.is_accented(word)
+	return rfind(word, AC)
+end
+
+
 function export.is_initial_stressed(word)
 	return rfind(word, "^" .. export.non_vowel_c .. "*" .. export.vowel_c .. AC) or
 		not rfind(word, AC) and rfind(word, "^" .. export.non_vowel_c .. "*[ёЁ]")
@@ -247,6 +256,30 @@ function export.destress_vowels_after_stress_movement(word)
 			end
 		end)
 	return export.undo_mark_stressed_vowels_in_unstressed_syllables(word)
+end
+
+
+-- If word is lacking an accent, add it onto the initial syllable.
+-- This assumes the word has been processed by mark_stressed_vowels_in_unstressed_syllables(),
+-- so that even the ё vowel gets stress.
+function export.maybe_accent_initial_syllable(word)
+	if not rfind(word, AC) then
+		-- accent first syllable
+		word = rsub(word, "^(.-" .. export.vowel_c .. ")", "%1" .. AC)
+	end
+	return word
+end
+
+
+-- If word is lacking an accent, add it onto the final syllable.
+-- This assumes the word has been processed by mark_stressed_vowels_in_unstressed_syllables(),
+-- so that even the ё vowel gets stress.
+function export.maybe_accent_final_syllable(word)
+	if not rfind(word, AC) then
+		-- accent last syllable
+		word = rsub(word, "(.*" .. export.vowel_c .. ")", "%1" .. AC)
+	end
+	return word
 end
 
 
