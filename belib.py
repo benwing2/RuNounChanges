@@ -25,19 +25,20 @@ composed_grave_vowel = u"ѐЀѝЍ"
 vowel = u"аеіоуёэыяюАЕІОУЁЭЫЯЮ" + composed_grave_vowel
 vowel_c = "[" + vowel + "]"
 non_vowel_c = "[^" + vowel + "]"
-cons_except_hushing_or_ts = u"бдфгґйклмнпрствхзь'БДФГҐЙКЛМНПРСТВХЗЬ"
+cons_except_hushing_or_ts = u"бдфгґйклмнпрствхзўь'БДФГҐЙКЛМНПРСТВХЗЎЬ"
 cons_except_hushing_or_ts_c = "[" + cons_except_hushing_or_ts + "]"
 hushing = u"чшжщЧШЖЩ"
 hushing_c = "[" + hushing + "]"
 hushing_or_ts = hushing + u"цЦ"
 hushing_or_ts_c = "[" + hushing_or_ts + "]"
 cons = cons_except_hushing_or_ts + hushing_or_ts
+always_hard = u"чшжрЧШЖР"
 cons_c = "[" + cons + "]"
 # Cyrillic velar consonants
 velar = u"кгґхКГҐХ"
 velar_c = "[" + velar + "]"
-# uppercase Cyrillic consonants
-uppercase = u"АЕІОУЁЭЫЯЮБЦДФГҐЧЙКЛМНПРСТВШХЗЖЬЩ"
+# uppercase Cyrillic letters
+uppercase = u"АЕІОУЁЭЫЯЮБЦДФГҐЧЙКЛМНПРСТВШХЗЖЬЩЎ"
 uppercase_c = "[" + uppercase + "]"
 
 grave_deaccenter = {
@@ -123,7 +124,113 @@ def is_end_stressed(word, possible_endings=[]):
     ending = remove_accents(ending)
     if not word.endswith(ending) and remove_accents(word).endswith(ending):
       return True
-  return not not re.search(AC + non_vowel_c + "*$", word)
+  return not not re.search(u"[ё" + AC + "]" + non_vowel_c + "*$", word)
 
 def is_mixed_stressed(word, possible_endings=[]):
   return is_multi_stressed(word) and is_end_stressed(word, possible_endings)
+
+def reduce(word):
+  m = re.search(u"^(.*)([оОёЁаАэЭеЕ])́?(" + cons_c + "+)$", word)
+  if not m:
+    return None
+  pre, letter, post = m.groups()
+  if letter in [u"о", u"О", u"а", u"А", u"э", u"Э"]:
+    # FIXME, what about when the accent is on the removed letter?
+    if post in [u"й", u"Й"]:
+      # FIXME, is this correct?
+      return None
+    # аўто́рак -> аўто́рк-, вы́нятак -> вы́нятк-, ло́жак -> ло́жк-
+    # алжы́рац -> алжы́рц-
+    # міні́стар -> міні́стр-
+    letter = ""
+  else:
+    is_upper = re.search(uppercase_c, post)
+    if re.search(vowel_c + AC + "?$", pre):
+      # аўстралі́ец -> аўстралі́йц-
+      # аўстры́ец -> аўстры́йц-
+      # еўрапе́ец -> еўрапе́йц
+      letter = is_upper and u"Й" or u"й"
+    elif post in [u"й", u"Й"]:
+      if letter in u"вВ":
+        # салаве́й -> салаў-
+        letter = ""
+      elif letter in u"бБпПфФмМ":
+        # верабе́й -> вераб'-
+        letter = "'"
+      elif is_upper:
+        letter = pre
+      else:
+        # вуле́й -> вулл-
+        letter = pre.lower()
+      post = ""
+    elif ((re.search(velar_c + "$", post) and re.search(cons_except_hushing_or_ts_c + "$", pre)) or
+      (re.search(u"[^йЙ" + velar + "]$", post) and re.search(u"[лЛ]$", pre))):
+      # For the first part: князёк -> князьк-
+      # For the second part: алёс -> альс-, відэ́лец -> відэ́льц-
+      # Both at once: матылёк -> матыльк-
+      letter = is_upper and u"Ь" or u"ь"
+    else:
+      # пёс -> пс-
+      # асёл -> асл-, бу́сел -> бу́сл-
+      # бабёр -> бабр-, шва́гер -> шва́гр-
+      # італья́нец -> італья́нц-
+      letter = ""
+    # адзёр -> адр-
+    # ірла́ндзец -> ірла́ндц-
+    pre = re.sub(u"([Дд])з$", r"\1", pre)
+    # кацёл -> катл-, ве́цер -> ве́тр-
+    pre = re.sub(u"ц$", u"т", pre)
+    pre = re.sub(u"Ц$", u"Т", pre)
+  # ало́вак -> ало́ўк-, авёс -> аўс-, чо́вен -> чо́ўн-, ядло́вец -> ядло́ўц-
+  # NOTE: любо́ў -> любв- but we need to handle this elsewhere as it also applies
+  # to non-reduced nouns, e.g. во́страў -> во́страв-
+  pre = re.sub(u"в$", u"ў", pre)
+  pre = re.sub(u"В$", u"Ў", pre)
+  return pre + letter + post
+
+def dereduce(stem, epenthetic_stress):
+  if epenthetic_stress:
+    stem = remove_accents(stem)
+  m = re.search("^(.*)(" + cons_c + ")(" + cons_c + ")$", stem)
+  if not m:
+    return None
+  pre, letter, post = m.groups()
+  is_upper = post in uppercase
+  if letter in u"ьйЬЙ":
+    letter = ""
+    if post in u"цЦ" or not epenthetic_stress:
+      epvowel = is_upper and u"Е" or u"е"
+    else:
+      epvowel = is_upper and u"Ё" or u"ё"
+  elif letter in cons_except_hushing_or_ts and post in velar or letter in velar:
+    if epenthetic_stress:
+      epvowel = is_upper and u"О́" or u"о́"
+    else:
+      epvowel = is_upper and u"А" or u"а"
+  elif post in u"цЦ":
+    if letter in always_hard:
+      if epenthetic_stress:
+        # FIXME, is this right?
+        epvowel = is_upper and u"Э" or u"э"
+      else:
+        epvowel = is_upper and u"А" or u"а"
+    else:
+      epvowel = is_upper and u"Е" or u"е"
+  elif epenthetic_stress:
+    if letter in always_hard:
+      epvowel = is_upper and u"О́" or u"о́"
+    else:
+      epvowel = is_upper and u"Ё" or u"ё"
+  elif letter in always_hard:
+    epvowel = is_upper and u"А" or u"а"
+  else:
+    epvowel = is_upper and u"Е" or u"е"
+  if epenthetic_stress:
+    if not is_stressed(epvowel):
+      epvowel += AC
+  if letter == u"ў":
+    letter = u"в"
+  elif letter == u"Ў":
+    letter = u"В"
+  stem = pre + letter + epvowel + post
+  return stem
