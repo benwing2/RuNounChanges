@@ -9,11 +9,6 @@ Authorship: Ben Wing <benwing2>
 
 --[=[
 
-WARNING: A lot of the code in this module is carried over from [[Module:uk-verb]]
-and not yet converted for Belarusian. Currently, only the portion of the code that
-supports {{be-conj-manual}} as well as classes 1 through 9 of {{be-conj}}
-is properly converted and tested.
-
 TERMINOLOGY:
 
 -- "slot" = A particular combination of tense/mood/person/number/gender/etc.
@@ -34,7 +29,7 @@ local m_string_utilities = require("Module:string utilities")
 local m_script_utilities = require("Module:script utilities")
 local iut = require("Module:inflection utilities")
 local m_para = require("Module:parameters")
-local com = require("Module:User:Benwing2/be-common")
+local com = require("Module:be-common")
 
 local current_title = mw.title.getCurrentTitle()
 local NAMESPACE = current_title.nsText
@@ -74,6 +69,7 @@ end
 
 local output_verb_slots = {
 	["infinitive"] = "inf",
+	["pres_actv_part"] = "pres|act|part",
 	["past_pasv_part"] = "past|pass|part",
 	["pres_adv_part"] = "pres|adv|part",
 	["past_adv_part"] = "past|adv|part",
@@ -256,7 +252,7 @@ local function add_imperative_from_present(base, presstem)
 	elseif imptype == "long" then
 		vowel = com.ends_always_hard(presstem) and "ы" or "і"
 		if base.accent == "a" then
-			sg2 = presstem .. vowel
+			sg2 = palatalize_td(presstem) .. vowel
 		else
 			sg2 = palatalize_td(com.remove_accents(presstem)) .. vowel .. AC
 		end
@@ -280,11 +276,15 @@ local function add_pres_adv_part(base, stem, pl3)
 				end
 			end
 		elseif type(pl3) == "string" then
+			local pradp = base.pradp
+			if not pradp then
+				pradp = com.is_accented(pl3) and "+" or "-"
+			end
 			local pl3base = rmatch(pl3, "^(.-)ць$")
 			if not pl3base then
 				error("Invalid third-plural ending, doesn't end in -ць: '" .. pl3 .. "'")
 			end
-			for _, parttype in ipairs(rsplit(base.pradp, "")) do
+			for _, parttype in ipairs(rsplit(pradp, "")) do
 				local ending
 				if parttype == "-" then
 					ending = com.remove_accents(pl3base) .. "чы"
@@ -333,7 +333,7 @@ local function add_present_e(base, stem, variant, overriding_imp)
 	-- accent pattern.
 	local endings
 	local iotated_stem = variant == "iotate" and com.iotate(stem) or stem
-	if com.ends_always_hard(stem) then
+	if com.ends_always_hard(stem) or com.ends_always_hard(iotated_stem) then
 		-- р or hushing sounds need non-iotated variants.
 		endings = {"у́", "э́ш", base.is_refl and "э́ць" or "э́", "о́м", "аце́", "у́ць"}
 	else
@@ -688,7 +688,7 @@ end
 
 
 conjs["10"] = function(base)
-	local stem, suffix, ac = separate_stem_suffix_accent(base, "^(.*)([ао][лр][аo])(́?)ць$")
+	local stem, suffix, ac = separate_stem_suffix_accent(base, "^(.*)([ао][лр][ао])(́?)ць$")
 	if base.accent ~= "a" and base.accent ~= "c" then
 		error("Only accent a or c allowed for class 10: '" .. base.conj .. "'")
 	end
@@ -705,11 +705,10 @@ conjs["10"] = function(base)
 	end
 	n_ppp = n_stem .. "он"
 	local t_ppp = stressed_stem .. "от"
-	-- FIXME, fix use of base.conj in uk-verb
 	for _, indicator in ipairs(rsplit(base.ppp_ending, "")) do
-		if indicator == "н" then
+		if indicator == "n" then
 			add_ppp(base, n_ppp)
-		elseif indicator == "т" then
+		elseif indicator == "t" then
 			add_ppp(base, t_ppp)
 		end
 	end
@@ -765,8 +764,8 @@ conjs["13"] = function(base)
 	if base.accent ~= "b" then
 		error("Only accent b allowed for class 13: '" .. base.conj .. "'")
 	end
-	add_present_e(base, stem)
 	local full_stem = stem .. "ва́"
+	add_present_e(base, stem, nil, full_stem .. "й")
 	add_default_past(base, full_stem)
 	add_retractable_ppp(base, full_stem .. "н")
 end
@@ -792,8 +791,9 @@ conjs["15"] = function(base)
 	if not stem then
 		error("Unrecognized lemma for class 15: '" .. base.orig_lemma .. "'")
 	end
-	if base.accent ~= "a" then
-		error("Only accent a allowed for class 15: '" .. base.conj .. "'")
+	-- заста́цца is class 15b
+	if base.accent ~= "a" and base.accent ~= "b" then
+		error("Only accent a or b allowed for class 15: '" .. base.conj .. "'")
 	end
 	add_present_e(base, stem .. "н")
 	add_default_past(base, stem)
@@ -873,26 +873,46 @@ conjs["irreg"] = function(base)
 		add_default_past_ppp("е́ха") -- no PPP
 		return
 	end
-	prefix = rmatch(base.lemma, "^(.*)бе́?гчы$")
+	local root
+	prefix, root = rmatch(base.lemma, "^(.*)(бе́?г)чы$")
 	if prefix then
 		local stressed_prefix = com.is_accented(prefix)
+		if not stressed_prefix then
+			root = com.remove_accents(root)
+		end
+		local iotated_root = com.iotate(root)
 		base.accent = stressed_prefix and "a" or "b"
-		add_present_i(base, prefix .. "біж")
+		if not base.pradp then
+			base.pradp = "!+"
+		end
+		if stressed_prefix then
+			add_pres_futr(base, prefix .. root, "у", {}, {}, {}, {}, "уць")
+			add_pres_futr(base, prefix .. iotated_root, {}, "ыш", "ыць", "ым", "ыце", {})
+		else
+			add_pres_futr(base, prefix .. root, "у́", {}, {}, {}, {}, "у́ць")
+			add_pres_futr(base, prefix .. iotated_root, {}, "ы́ш", "ы́ць", "ы́м", "ы́це", {})
+		end
+		add_imperative(base, prefix .. iotated_root .. (stressed_prefix and "ы" or "ы́"))
 		local past_msg = prefix .. (stressed_prefix and "бег" or "бе́г")
 		add_past(base, past_msg, past_msg .. "л")
 		-- no PPP
 		return
 	end
-	prefix = rmatch(base.lemma, "^(п?і)ти́$")
-	if not prefix then
-		prefix = rmatch(base.lemma, "^(.*й)ти́?$")
+	prefix = rmatch(base.lemma, "^(.*)лга́?ць")
+	if prefix then
+		local stressed_prefix = com.is_accented(prefix)
+		base.accent = stressed_prefix and "a" or "b"
+		add_present_e(base, com.maybe_accent_final_syllable(prefix .. "лг"), "iotate")
+		add_default_past_ppp("лга́") -- no PPP
+		return
 	end
+	prefix = rmatch(base.lemma, "^(.*[іый])сці́?$")
 	if prefix then
 		local stressed_prefix = com.is_accented(prefix)
 		base.accent = stressed_prefix and "a" or (prefix == "і" or prefix == "й") and "b" or "c"
-		add_present_e(base, com.maybe_stress_final_syllable(prefix .. "д"))
-		add_past(base, prefix .. (stressed_prefix and "шов" or "шо́в"), com.maybe_stress_final_syllable(prefix .. "шл"))
-		add_retractable_ppp(base, prefix .. (stressed_prefix and "ден" or "де́н")) -- e.g. пере́йдений from перейти́
+		add_present_e(base, com.maybe_accent_final_syllable(prefix .. "д"))
+		add_past(base, prefix .. (stressed_prefix and "шоў" or "шо́ў"), com.maybe_accent_final_syllable(prefix .. "шл"))
+		-- no PPP
 		return
 	end
 	error("Unrecognized irregular verb: '" .. base.orig_lemma .. "'")
@@ -952,25 +972,30 @@ local function parse_indicator_and_form_spec(angle_bracket_spec)
 				base.ppp = rsub(part, "^ppp", "")
 				local seen_plus_minus = {}
 				local seen_t_n = {}
-				for _, indicator in ipairs(rsplit(base.ppp, "")) do
-					if indicator == "+" or indicator == "-" then
-						if m_table.contains(seen_plus_minus, indicator) then
-							error("Repeated past passive participle +/- indicator in spec '" .. part .. "'")
+				if base.ppp ~= "" then
+					for _, indicator in ipairs(rsplit(base.ppp, "")) do
+						if indicator == "+" or indicator == "-" then
+							if m_table.contains(seen_plus_minus, indicator) then
+								error("Repeated past passive participle +/- indicator in spec '" .. part .. "'")
+							else
+								table.insert(seen_plus_minus, indicator)
+							end
+						elseif indicator == "t" or indicator == "n" then
+							if m_table.contains(seen_t_n, indicator) then
+								error("Repeated past passive participle t/n indicator in spec '" .. part .. "'")
+							else
+								table.insert(seen_t_n, indicator)
+							end
 						else
-							table.insert(seen_plus_minus, indicator)
+							error("Unrecognized past passive participle indicator '" .. indicator .. "' in spec '" .. part .. "'")
 						end
-					elseif indicator == "t" or indicator == "n" then
-						if m_table.contains(seen_t_n, indicator) then
-							error("Repeated past passive participle t/n indicator in spec '" .. part .. "'")
-						else
-							table.insert(seen_t_n, indicator)
-						end
-					else
-						error("Unrecognized past passive participle indicator '" .. indicator .. "' in spec '" .. part .. "'")
+					end
+					base.ppp = table.concat(seen_plus_minus)
+					base.ppp_ending = table.concat(seen_t_n)
+					if base.ppp_ending == "" then
+						base.ppp_ending = nil
 					end
 				end
-				base.ppp = table.concat(seen_plus_minus)
-				base.ppp_ending = table.concat(seen_t_n)
 			end
 		elseif rfind(part, "^pradp") then
 			if base.pradp ~= nil then
@@ -1067,7 +1092,7 @@ end
 local function normalize_lemma(base)
 	base.orig_lemma = base.lemma
 	base.lemma = com.add_monosyllabic_accent(base.lemma)
-	if not rfind(base.lemma, AC) then
+	if not com.is_stressed(base.lemma) then
 		error("Multisyllabic lemma '" .. base.orig_lemma .. "' needs an accent")
 	end
 	base.lemma = com.mark_stressed_vowels_in_unstressed_syllables(base.lemma)
@@ -1117,19 +1142,15 @@ local function detect_indicator_and_form_spec(base)
 			base.ppp = "+"
 		end
 	end
+	-- Don't set default for base.pradp here. It depends on base.accent, which
+	-- may not be set till we call the conjugation function (at least in the case
+	-- of "irreg").
 	if base.conjnum == "10" then
-		if base.ppp_ending == "" then
+		if not base.ppp_ending then
 			base.ppp_ending = "t"
 		end
-	elseif base.ppp_ending ~= "" then
-		error("Can only specify 't' or 'n' with 'ppp' with class 10")
-	end
-	if not base.pradp then
-		if base.accent == "b" then
-			base.pradp = "+"
-		else
-			base.pradp = "-"
-		end
+	elseif base.ppp_ending then
+		error("Can only specify 't' or 'n' with 'ppp' with class 10: '" .. base.ppp_ending .. "'")
 	end
 	if base.cons and base.conjnum ~= "7" then
 		error("Consonant modifier '" .. base.cons .. "' can only be specified with class 7")
@@ -1148,11 +1169,19 @@ local function detect_indicator_and_form_spec(base)
 	if base.pres_stem then
 		if base.accent == "a" or base.accent == "c" then
 			base.pres_stem = com.add_monosyllabic_accent(base.pres_stem)
-			if not com.is_accented(base.pres_stem) then
+			if not com.is_stressed(base.pres_stem) then
 				error("With accent pattern " .. base.accent .. ", explicit present stem '" .. base.pres_stem .. "' must have an accent")
+			base.pres_stem = com.mark_stressed_vowels_in_unstressed_syllables(base.pres_stem)
 			end
-		elseif com.is_accented(base.pres_stem) then
-			error("With accent pattern b, explicit present stem .. '" .. base.pres_stem .. "' should not have an accent")
+		else
+			if com.is_accented(base.pres_stem) then
+				error("With accent pattern b, explicit present stem .. '" .. base.pres_stem .. "' should not have an accent")
+			end
+			-- Add a fictitious vowel at the end so that mark_stressed_vowels_in_unstressed_syllables()
+			-- will function correctly, then remove it.
+			base.pres_stem = base.pres_stem .. "а́"
+			base.pres_stem = com.mark_stressed_vowels_in_unstressed_syllables(base.pres_stem)
+			base.pres_stem = rsub(base.pres_stem, "а́$", "")
 		end
 	end
 	if not base.past_accent then
@@ -1196,7 +1225,7 @@ end
 
 local function parse_word_spec(segments)
 	if #segments ~= 3 or segments[3] ~= "" then
-		error("Verb spec must be of the form 'LEMMA<CONJ.SPECS>': '" .. text .. "'")
+		error("Verb spec must be of the form 'LEMMA<CONJ.SPECS>': '" .. table.concat(segments) .. "'")
 	end
 	local lemma = segments[1]
 	local base = parse_indicator_and_form_spec(segments[2])
@@ -1392,6 +1421,10 @@ local function make_table(alternant_spec)
 ! [[participles]]
 ! [[present tense]]
 ! [[past tense]]
+|-
+! [[active]]
+| {pres_actv_part}
+| &mdash;<!--absent-->
 |-
 ! [[passive]]
 | &mdash;<!--absent-->
