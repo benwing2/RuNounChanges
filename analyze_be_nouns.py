@@ -12,23 +12,26 @@ import find_regex
 
 AC = u"\u0301"
 
-def param_is_end_stressed(param, possible_endings=[]):
-  values = [be.add_monosyllabic_stress(word) for word in re.split(", *", param)]
-  if any(be.is_unstressed(v) for v in values):
+possible_vowel_alternations = ["ae", "ao"]#, "yo"
+
+def param_is_end_accented(param, possible_endings=[]):
+  # add_monosyllabic_accent already called
+  values = re.split(", *", param)
+  if any(not be.is_accented(v) for v in values):
     return "unknown"
-  if any(be.is_mixed_stressed(v, possible_endings) for v in values):
+  if any(be.is_mixed_accented(v, possible_endings) for v in values):
     return "mixed"
-  end_stresses = [be.is_end_stressed(v, possible_endings) for v in values]
-  if all(end_stresses):
+  end_accents = [be.is_end_accented(v, possible_endings) for v in values]
+  if all(end_accents):
     return True
-  if any(end_stresses):
+  if any(end_accents):
     return "mixed"
   return False
 
 def is_undefined(word):
   return word in ["", "-", u"-", u"—"]
 
-stress_patterns = [
+accent_patterns = [
   ("a", {"inssg": False, "accsg": None, "nompl": False, "locpl": False}),
   ("b", {"inssg": True, "accsg": True, "nompl": True, "locpl": True}),
   ("c", {"inssg": False, "accsg": None, "nompl": True, "locpl": True}),
@@ -105,7 +108,8 @@ def process_text_on_page(index, pagetitle, text):
       for v in vals:
         # Remove final footnote symbols are per [[Module:table tools]]
         v = re.sub(ur"[*~@#$%^&+0-9_\u00A1-\u00BF\u00D7\u00F7\u2010-\u2027\u2030-\u205E\u2070-\u20CF\u2100-\u2B5F\u2E00-\u2E3F]*$", "", v)
-        retval.append(be.add_monosyllabic_stress(v))
+        v = be.mark_stressed_vowels_in_unstressed_syllables(v, pagemsg)
+        retval.append(be.add_monosyllabic_accent(v))
       return ", ".join(retval)
 
     def matches(is_end_stressed, should_be_end_stressed):
@@ -128,7 +132,8 @@ def process_text_on_page(index, pagetitle, text):
       return ":".join(found_endings)
 
     def canon(val):
-      return re.sub(", *", "/", val)
+      values = re.split(", *", val)
+      return "/".join(be.undo_mark_stressed_vowels_in_unstressed_syllables(v) for v in values)
     def stress(endstressed):
       return (
         "endstressed" if endstressed == True else
@@ -203,7 +208,7 @@ def process_text_on_page(index, pagetitle, text):
           u"я": u"е́",
           u"Я": u"Е́",
         }
-        modstem = re.sub(u"^(.*)([аАяЯ])(" + be.cons_c + u"*)$",
+        modstem = re.sub(u"^(.*)([аАяЯ])(" + be.cons_c + "*(?:" + be.vowel_c + AC + u"|ё)" + be.cons_c + "*)$",
           lambda m: m.group(1) + ae_alternation[m.group(2)] + destress_after_stress(m.group(3)),
           stem
         )
@@ -214,7 +219,7 @@ def process_text_on_page(index, pagetitle, text):
           u"я": u"ё",
           u"Я": u"Ё",
         }
-        modstem = re.sub(u"^(.*)([аАяЯ])(" + be.cons_c + u"*)$",
+        modstem = re.sub(u"^(.*)([аАяЯ])(" + be.cons_c + "*(?:" + be.vowel_c + AC + "|ё)" + be.cons_c + "*)$",
           lambda m: m.group(1) + ao_alternation[m.group(2)] + destress_after_stress(m.group(3)),
           stem
         )
@@ -223,7 +228,7 @@ def process_text_on_page(index, pagetitle, text):
           u"ы": u"о́",
           u"Ы": u"О́",
         }
-        modstem = re.sub(u"^(.*)([ыЫ])(" + be.cons_c + u"*)$",
+        modstem = re.sub(u"^(.*)([ыЫ])(" + be.cons_c + "*(?:" + be.vowel_c + AC + "|ё)" + be.cons_c + "*)$",
           lambda m: m.group(1) + yo_alternation[m.group(2)] + destress_after_stress(m.group(3)),
           stem
         )
@@ -236,15 +241,30 @@ def process_text_on_page(index, pagetitle, text):
     def infer_alternations(nom_sg, nom_pl):
       nom_sg = truncate_extra_forms(nom_sg)
       nom_pl = truncate_extra_forms(nom_pl)
-      m = re.search(u"^(.*)([аяео]́|ё)$", nom_sg)
-      if m:
-        sg_stem = m.group(1)
+      if re.search(u"^.*[аяеёо]́$", nom_sg):
         m = re.search(u"^(.*)[ыіая]$", nom_pl)
         if m:
           pl_stem = m.group(1)
-          for valt in ["ae", "ao", "yo"]:
-            if apply_vowel_alternation(sg_stem, valt) == pl_stem:
-              return valt
+          for valt in possible_vowel_alternations:
+            valt_nom_sg = be.apply_vowel_alternation(nom_sg, valt)
+            if valt_nom_sg:
+              valt_nom_sg = re.sub(u"[аяеёо]́$", "", valt_nom_sg)
+              valt_nom_sg = be.maybe_accent_final_syllable(valt_nom_sg)
+              valt_nom_sg = be.destress_vowels_after_stress_movement(valt_nom_sg)
+              if valt_nom_sg == be.undo_mark_stressed_vowels_in_unstressed_syllables(pl_stem):
+                return valt
+      m = re.search(u"^(.*" + be.cons_c + u")ь?$", nom_sg)
+      if m:
+        nom_sg = m.group(1)
+        nom_sg = re.sub(u"й$", "", nom_sg)
+        if re.search(u"я" + be.cons_c + "*" + be.vowel_c + AC + be.cons_c + "*$", nom_sg):
+          nom_sg = be.apply_vowel_alternation(nom_sg, "ae")
+          m = re.search(u"^.*([ыіая]́)$", nom_pl)
+          if m:
+            nom_sg = be.remove_accents(nom_sg) + m.group(1)
+            nom_sg = be.destress_vowels_after_stress_movement(nom_sg)
+            if nom_sg == be.undo_mark_stressed_vowels_in_unstressed_syllables(nom_pl):
+              return "ae"
       return None
 
     def infer_reducible(nom_sg, gen_sg, gen_pl):
@@ -261,11 +281,20 @@ def process_text_on_page(index, pagetitle, text):
           return "same"
         nonvowel_stem = re.sub(u"ў$", u"в", re.sub(u"ь$", "", gen_pl))
         # Special handling for e.g. зна́чення gen pl зна́чень
-        if vowel_stem == nonvowel_stem or vowel_stem == nonvowel_stem + nonvowel_stem[-1]:
+        if (be.remove_accents(vowel_stem) == be.remove_accents(nonvowel_stem) or
+            be.remove_accents(vowel_stem) == be.remove_accents(nonvowel_stem) + nonvowel_stem[-1]):
           return "same"
-        dereduced_stem = be.dereduce(vowel_stem, epenthetic_stress)
-        if dereduced_stem == nonvowel_stem:
+        if be.dereduce(vowel_stem, epenthetic_stress) == nonvowel_stem:
           return "reducible"
+        elif (be.remove_accents(vowel_stem) + u"ав" == be.remove_accents(nonvowel_stem) or
+            be.remove_accents(vowel_stem) + u"яв" == be.remove_accents(nonvowel_stem)):
+          return "au"
+        elif be.apply_vowel_alternation(vowel_stem, "ae") == nonvowel_stem:
+          return "ae"
+        elif be.apply_vowel_alternation(vowel_stem, "ao") == nonvowel_stem:
+          return "ao"
+        elif be.apply_vowel_alternation(vowel_stem, "yo") == nonvowel_stem:
+          return "yo"
         else:
           pagemsg("WARNING: Unable to determine relationship between nom_sg %s and gen_pl %s" %
             (nom_sg, gen_pl))
@@ -275,57 +304,63 @@ def process_text_on_page(index, pagetitle, text):
         vowel_stem = re.sub(u"в$", u"ў", re.sub(u"[аяуюыі]́?$", "", gen_sg))
         if re.search(be.vowel_c + AC + "?$", vowel_stem):
           vowel_stem += u"й"
-        if vowel_stem == nonvowel_stem:
+        if be.remove_accents(vowel_stem) == be.remove_accents(nonvowel_stem):
           return "same"
         if be.reduce(nonvowel_stem) == vowel_stem:
           return "reducible"
+        elif be.apply_vowel_alternation(vowel_stem, "ae") == nonvowel_stem:
+          return "ae"
+        elif be.apply_vowel_alternation(vowel_stem, "ao") == nonvowel_stem:
+          return "ao"
+        elif be.apply_vowel_alternation(vowel_stem, "yo") == nonvowel_stem:
+          return "yo"
         else:
           pagemsg("WARNING: Unable to determine relationship between nom_sg %s and gen_sg %s" %
             (nom_sg, gen_sg))
           return None
 
-    def construct_defaulted_seen_patterns(seen_patterns, lemma, gender, reducible):
+    def construct_defaulted_seen_patterns(seen_patterns, lemma, gender, reducible, au):
       defaulted_seen_patterns = []
       if seen_patterns == ["b", "c"]:
         seen_patterns = ["c", "b"]
       elif seen_patterns == ["b", "d"]:
         seen_patterns = ["d", "b"]
+      au = au and u"(ў)" or ""
+      reducible = reducible and "*" or ""
       for pattern in seen_patterns:
         defstress = default_stress(lemma, gender, reducible)
         if defstress == pattern:
-          if reducible:
-            defaulted_seen_patterns.append("*")
+          if reducible or au:
+            defaulted_seen_patterns.append(reducible + au)
           elif len(seen_patterns) > 1:
             defaulted_seen_patterns.append(pattern)
-        elif reducible:
-          defaulted_seen_patterns.append(pattern + "*")
         else:
-          defaulted_seen_patterns.append(pattern)
+          defaulted_seen_patterns.append(pattern + reducible + au)
       return defaulted_seen_patterns
 
     if tn == "be-decl-noun":
       check_multi_stressed(14)
       nom_sg = fetch("1")
       gen_sg = fetch("3")
-      gen_sg_end_stressed = param_is_end_stressed(gen_sg)
+      gen_sg_end_stressed = param_is_end_accented(gen_sg)
       dat_sg = fetch("5")
-      dat_sg_end_stressed = param_is_end_stressed(dat_sg, dative_singular_endings)
+      dat_sg_end_stressed = param_is_end_accented(dat_sg, dative_singular_endings)
       acc_sg = fetch("7")
-      acc_sg_end_stressed = param_is_end_stressed(acc_sg)
+      acc_sg_end_stressed = param_is_end_accented(acc_sg)
       ins_sg = fetch("9")
-      ins_sg_end_stressed = param_is_end_stressed(ins_sg, instrumental_singular_endings)
+      ins_sg_end_stressed = param_is_end_accented(ins_sg, instrumental_singular_endings)
       loc_sg = fetch("11")
-      loc_sg_end_stressed = param_is_end_stressed(loc_sg, locative_singular_endings)
+      loc_sg_end_stressed = param_is_end_accented(loc_sg, locative_singular_endings)
       nom_pl = fetch("2")
-      nom_pl_end_stressed = param_is_end_stressed(nom_pl)
+      nom_pl_end_stressed = param_is_end_accented(nom_pl)
       gen_pl = fetch("4")
-      gen_pl_end_stressed = param_is_end_stressed(gen_pl)
+      gen_pl_end_stressed = param_is_end_accented(gen_pl)
       acc_pl = fetch("8")
-      acc_pl_end_stressed = param_is_end_stressed(acc_pl)
+      acc_pl_end_stressed = param_is_end_accented(acc_pl)
       ins_pl = fetch("10")
-      ins_pl_end_stressed = param_is_end_stressed(ins_pl, instrumental_plural_endings)
+      ins_pl_end_stressed = param_is_end_accented(ins_pl, instrumental_plural_endings)
       loc_pl = fetch("12")
-      loc_pl_end_stressed = param_is_end_stressed(loc_pl)
+      loc_pl_end_stressed = param_is_end_accented(loc_pl)
       if (gen_sg_end_stressed == "unknown" or
           acc_sg_end_stressed == "unknown" or
           nom_pl_end_stressed == "unknown" or
@@ -333,7 +368,7 @@ def process_text_on_page(index, pagetitle, text):
         pagemsg("WARNING: Missing stresses, can't determine accent pattern: %s" % unicode(t))
         continue
       seen_patterns = []
-      for pattern, accents in stress_patterns:
+      for pattern, accents in accent_patterns:
         if (matches(ins_sg_end_stressed, accents["inssg"]) and
             matches(acc_sg_end_stressed, accents["accsg"]) and
             matches(nom_pl_end_stressed, accents["nompl"]) and
@@ -386,8 +421,10 @@ def process_text_on_page(index, pagetitle, text):
       if gender != defg:
         parts.append(gender)
       alternation = infer_alternations(nom_sg, nom_pl)
-      reducible = infer_reducible(nom_sg, gen_sg, gen_pl) == "reducible"
-      defaulted_seen_patterns = construct_defaulted_seen_patterns(seen_patterns, lemma, gender, reducible)
+      result = infer_reducible(nom_sg, gen_sg, gen_pl)
+      reducible = result == "reducible"
+      au = result == "au"
+      defaulted_seen_patterns = construct_defaulted_seen_patterns(seen_patterns, lemma, gender, reducible, au)
       if defaulted_seen_patterns:
         parts.append(",".join(defaulted_seen_patterns))
       if animacy != "in":
@@ -405,15 +442,15 @@ def process_text_on_page(index, pagetitle, text):
       check_multi_stressed(7)
       nom_sg = fetch("1")
       gen_sg = fetch("2")
-      gen_sg_end_stressed = param_is_end_stressed(gen_sg)
+      gen_sg_end_stressed = param_is_end_accented(gen_sg)
       dat_sg = fetch("3")
-      dat_sg_end_stressed = param_is_end_stressed(dat_sg, dative_singular_endings)
+      dat_sg_end_stressed = param_is_end_accented(dat_sg, dative_singular_endings)
       acc_sg = fetch("4")
-      acc_sg_end_stressed = param_is_end_stressed(acc_sg)
+      acc_sg_end_stressed = param_is_end_accented(acc_sg)
       ins_sg = fetch("5")
-      ins_sg_end_stressed = param_is_end_stressed(ins_sg, instrumental_singular_endings)
+      ins_sg_end_stressed = param_is_end_accented(ins_sg, instrumental_singular_endings)
       loc_sg = fetch("6")
-      loc_sg_end_stressed = param_is_end_stressed(loc_sg, locative_singular_endings)
+      loc_sg_end_stressed = param_is_end_accented(loc_sg, locative_singular_endings)
       if (gen_sg_end_stressed == "unknown" or
           acc_sg_end_stressed == "unknown"):
         pagemsg("WARNING: Missing stresses, can't determine accent pattern: %s" % unicode(t))
@@ -423,7 +460,7 @@ def process_text_on_page(index, pagetitle, text):
         heads = [pagetitle]
       lemma = heads[0]
       seen_patterns = []
-      for pattern, accents in stress_patterns:
+      for pattern, accents in accent_patterns:
         if pattern not in ["a", "d" if re.search(u"[аяео]́?$", lemma) else "b", "d'"]:
           continue
         if (matches(ins_sg_end_stressed, accents["inssg"]) and
@@ -455,8 +492,10 @@ def process_text_on_page(index, pagetitle, text):
       defg = infer_gender(lemma)
       if gender != defg:
         parts.append(gender)
-      reducible = infer_reducible(nom_sg, gen_sg, None) == "reducible"
-      defaulted_seen_patterns = construct_defaulted_seen_patterns(seen_patterns, lemma, gender, reducible)
+      result = infer_reducible(nom_sg, gen_sg, None)
+      reducible = result == "reducible"
+      assert result != "au"
+      defaulted_seen_patterns = construct_defaulted_seen_patterns(seen_patterns, lemma, gender, reducible, False)
       if defaulted_seen_patterns:
         parts.append(",".join(defaulted_seen_patterns))
       if animacy != "in":
@@ -472,19 +511,19 @@ def process_text_on_page(index, pagetitle, text):
     elif tn == "be-decl-noun-pl":
       check_multi_stressed(7)
       nom_pl = fetch("1")
-      nom_pl_end_stressed = param_is_end_stressed(nom_pl)
+      nom_pl_end_stressed = param_is_end_accented(nom_pl)
       gen_pl = fetch("2")
-      gen_pl_end_stressed = param_is_end_stressed(gen_pl)
+      gen_pl_end_stressed = param_is_end_accented(gen_pl)
       ins_pl = fetch("5")
-      ins_pl_end_stressed = param_is_end_stressed(ins_pl, instrumental_plural_endings)
+      ins_pl_end_stressed = param_is_end_accented(ins_pl, instrumental_plural_endings)
       loc_pl = fetch("6")
-      loc_pl_end_stressed = param_is_end_stressed(loc_pl)
+      loc_pl_end_stressed = param_is_end_accented(loc_pl)
       if (nom_pl_end_stressed == "unknown" or
           loc_pl_end_stressed == "unknown"):
         pagemsg("WARNING: Missing stresses, can't determine accent pattern: %s" % unicode(t))
         continue
       seen_patterns = []
-      for pattern, accents in stress_patterns:
+      for pattern, accents in accent_patterns:
         if pattern not in ["a", "b", "e"]:
           continue
         if (matches(nom_pl_end_stressed, accents["nompl"]) and
