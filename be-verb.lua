@@ -173,47 +173,12 @@ local function skip_slot(base, slot)
 end
 
 
-local function combine_stem_ending(stem, ending)
-	if stem == "?" then
-		return "?"
-	else
-		if com.is_accented(ending) then
-			stem = com.remove_accents(stem)
-		end
-		return com.destress_vowels_after_stress_movement(stem .. ending)
-	end
-end
-
-
-local function palatalize_td(stem)
-	stem = rsub(stem, "т$", "ц")
-	stem = rsub(stem, "д$", "дз")
-	return stem
-end
-
-
 local function add(base, slot, stem, ending)
 	if skip_slot(base, slot) then
 		return
 	end
-	if type(ending) == "table" then
-		for _, e in ipairs(ending) do
-			add(base, slot, stem, e)
-		end
-		return
-	end
-	if rfind(ending, "^[яеіёюь]") then
-		if type(stem) == "table" then
-			local new_form = palatalize_td(stem.form)
-			if new_form ~= stem.form then
-				stem = m_table.shallowcopy(stem)
-				stem.form = new_form
-			end
-		else
-			stem = palatalize_td(stem)
-		end
-	end
-	iut.add_forms(base.forms, slot, stem, ending, combine_stem_ending)
+	iut.add_forms(base.forms, slot, stem, ending,
+		com.combine_stem_ending_into_external_form)
 end
 
 
@@ -250,18 +215,15 @@ local function add_imperative_from_present(base, presstem)
 		-- presstem and add й, effectively using the short type.
 		sg2 = presstem .. "й"
 	elseif imptype == "long" then
-		vowel = com.ends_always_hard(presstem) and "ы" or "і"
-		if base.accent == "a" then
-			sg2 = palatalize_td(presstem) .. vowel
-		else
-			sg2 = palatalize_td(com.remove_accents(presstem)) .. vowel .. AC
-		end
+		vowel = com.ends_always_hard(presstem) and "ы" or "і" .. (
+			base.accent == "a" and "" or AC)
+		sg2 = com.combine_stem_ending(presstem, vowel)
 	elseif com.ends_always_hard(presstem) then
 		sg2 = presstem
 	elseif rfind(presstem, "в$") then
 		sg2 = rsub(presstem, "в$", "ў")
 	else
-		sg2 = palatalize_td(presstem) .. "ь"
+		sg2 = com.combine_stem_ending(presstem, "ь")
 	end
 	add_imperative(base, sg2)
 end
@@ -629,7 +591,7 @@ conjs["7"] = function(base)
 		past_msg = rsub(past_msg, "([еэ]́)", {["е́"] = "ё́", ["э́"] = "о́"})
 	end
 	add_past(base, past_msg, past_rest)
-	add_retractable_ppp(base, com.remove_accents(stem) .. palatalize_td(last_cons) .. "ё́н")
+	add_retractable_ppp(base, com.combine_stem_ending(stem .. last_cons, "ё́н"))
 end
 
 
