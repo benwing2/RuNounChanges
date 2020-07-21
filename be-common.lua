@@ -8,6 +8,7 @@ local rsubn = mw.ustring.gsub
 local ulen = mw.ustring.len
 local ulower = mw.ustring.lower
 local uupper = mw.ustring.upper
+local usub = mw.ustring.sub
 
 -- version of rsubn() that discards all but the first return value
 local function rsub(term, foo, bar)
@@ -35,13 +36,15 @@ local DOTBELOW = u(0x0323) -- dot below =  ̣
 export.vowel = "аеіоуяэыёюАЕІОУЯЭЫЁЮ"
 export.vowel_c = "[" .. export.vowel .. "]"
 export.non_vowel_c = "[^" .. export.vowel .. "]"
-export.velar = "кгґх"
+export.velar = "кгґхКГҐХ"
 export.velar_c = "[" .. export.velar .. "]"
-export.always_hard = "ршчж"
+export.always_hard = "ршчжРШЧЖ"
 export.always_hard_c = "[" .. export.always_hard .. "]"
-export.upper_cons = "БЦДФГҐЙКЛМНПРСТВХЗЧШЖЎЬ"
-export.lower_cons = "бцдфгґйклмнпрствхзчшжўь"
-export.cons = export.upper_cons .. export.lower_cons .. "'"
+export.always_hard_or_ts = export.always_hard .. "цЦ"
+export.always_hard_or_ts_c = "[" .. export.always_hard_or_ts .. "]"
+export.cons_except_always_hard_or_ts = "бдфгґйклмнпствхзўьБДФГҐЙКЛМНПСТВХЗЎЬ'"
+export.cons_except_always_hard_or_ts_c = "[" .. export.cons_except_always_hard_or_ts .. "]"
+export.cons = export.always_hard .. export.cons_except_always_hard_or_ts .. "цЦ"
 export.cons_c = "[" .. export.cons .. "]"
 
 
@@ -85,6 +88,23 @@ local ao_stresser = {
 	["а"] = "о",
 	["я"] = "ё",
 }
+
+local first_palatalization = {
+	["к"] = "ч",
+	["г"] = "ж",
+	["ґ"] = "ж",
+	["х"] = "ш",
+	["ц"] = "ч",
+}
+
+
+local second_palatalization = {
+	["к"] = "ц",
+	["г"] = "з",
+	["ґ"] = "з",
+	["х"] = "с",
+}
+
 
 -- Remove acute and grave accents; don't affect ёЁ.
 function export.remove_accents(word)
@@ -143,6 +163,11 @@ end
 -- Check if word ends in an always-hard consonant.
 function export.ends_always_hard(word)
 	return rfind(word, export.always_hard_c .. "$")
+end
+
+-- Check if word ends in an always-hard consonant or ц.
+function export.ends_always_hard_or_ts(word)
+	return rfind(word, export.always_hard_or_ts_c .. "$")
 end
 
 --[=[
@@ -375,6 +400,196 @@ function export.iotate(stem)
 	stem = rsub(stem, "([бўмпф])$", "%1л")
 	stem = rsub(stem, "в$", "ўл")
 	return stem
+end
+
+
+function export.apply_first_palatalization(word)
+	return rsub(word, "^(.*)([кгґхц])$",
+		function(prefix, lastchar) return prefix .. first_palatalization[lastchar] end
+	)
+end
+
+
+function export.apply_second_palatalization(word)
+	return rsub(word, "^(.*)([кгґх])$",
+		function(prefix, lastchar) return prefix .. second_palatalization[lastchar] end
+	)
+end
+
+
+function export.palatalize_td(stem)
+	stem = rsub(stem, "т$", "ц")
+	stem = rsub(stem, "д$", "дз")
+	return stem
+end
+
+
+function export.combine_stem_ending(stem, ending)
+	if stem == "?" then
+		return "?"
+	end
+	if export.is_accented(ending) then
+		stem = export.remove_accents(stem)
+	end
+	if rfind(ending, "^[яеіёюь]") then
+		stem = export.palatalize_td(stem)
+	end
+	return stem .. ending
+end
+
+
+function export.combine_stem_ending_into_external_form(stem, ending)
+	return export.destress_vowels_after_stress_movement(
+		export.combine_stem_ending(stem, ending)
+	)
+end
+
+
+-- Remove the vowel between the last two consonants of a stem.
+-- Used especially in masculine and third-declension feminine nouns to
+-- generate the stem that is used before endings beginning with a vowel.
+-- This is based on the corresponding function in [[Module:ru-common]],
+-- adapted for Belarusian phonology and orthography.
+function export.reduce(stem)
+	local pre, letter, post = rmatch(stem, "^(.+)([оОёЁаАэЭеЕ])́?(" .. export.cons_c .. "+)$")
+	if not pre then
+		return nil
+	end
+	if rfind(letter, "[оОаАэЭ]") then
+		-- FIXME, what about when the accent is on the removed letter?
+		if rfind(post, "^[йЙ]$") then
+			-- FIXME, is this correct?
+			return nil
+		end
+		-- аўто́рак -> аўто́рк-, вы́нятак -> вы́нятк-, ло́жак -> ло́жк-
+		-- алжы́рац -> алжы́рц-
+		-- міні́стар -> міні́стр-
+		letter = ""
+	else
+		local is_upper = rfind(post, "%u")
+		if export.ends_in_vowel(pre) then
+			-- аўстралі́ец -> аўстралі́йц-
+			-- аўстры́ец -> аўстры́йц-
+			-- еўрапе́ец -> еўрапе́йц
+			letter = is_upper and "Й" or "й"
+		elseif rfind(post, "[йЙ]") then
+			if rfind(pre, "[вВ]$") then
+				-- салаве́й -> салаў-
+				letter = ""
+			elseif rfind(pre, "[uбБпПфФмМ]$") then
+				-- верабе́й -> вераб'-
+				letter = "'"
+			elseif is_upper then
+				letter = usub(pre, -1)
+			else
+				-- вуле́й -> вулл-
+				letter = ulower(usub(pre, -1))
+			end
+			post = ""
+		elseif rfind(post, export.velar_c .. "$") and rfind(pre, export.cons_except_always_hard_or_ts_c .. "$") or
+			rfind(post, "[^йЙ" .. export.velar .. "]$") and rfind(pre, "[лЛ]$") then
+			-- For the first part: князёк -> князьк-
+			-- For the second part: алёс -> альс-, відэ́лец -> відэ́льц-
+			-- Both at once: матылёк -> матыльк-
+			letter = is_upper and "Ь" or "ь"
+		else
+			-- пёс -> пс-
+			-- асёл -> асл-, бу́сел -> бу́сл-
+			-- бабёр -> бабр-, шва́гер -> шва́гр-
+			-- італья́нец -> італья́нц-
+			letter = ""
+		end
+		-- адзёр -> адр-
+		-- ірла́ндзец -> ірла́ндц-
+		pre = rsub(pre, "([Дд])[Зз]$", r"%1")
+		-- кацёл -> катл-, ве́цер -> ве́тр-
+		pre = rsub(pre, "ц$", "т")
+		pre = rsub(pre, "Ц$", "Т")
+	end
+	-- ало́вак -> ало́ўк-, авёс -> аўс-, чо́вен -> чо́ўн-, ядло́вец -> ядло́ўц-
+	-- NOTE: любо́ў -> любв- but we need to handle this elsewhere as it also applies
+	-- to non-reduced nouns, e.g. во́страў -> во́страв-
+	pre = rsub(pre, "в$", "ў")
+	pre = rsub(pre, "В$", "Ў")
+	return pre .. letter .. post
+end
+
+
+-- Add an epenthetic vowel between the last two consonants of the stem.
+-- Used especially in feminine and neuter nouns to generate the genitive
+-- plural. `epenthetic_stress` is true if the inserted vowel should bear
+-- the stress according to the accent pattern of the noun. This is based
+-- on the corresponding function in [[Module:ru-common]], adapted for
+-- Belarusian phonology and orthography.
+function export.dereduce(stem, epenthetic_stress)
+	if epenthetic_stress then
+		stem = export.remove_accents(stem)
+	end
+	-- FIXME, any cases where we have to dereduce a sequence Cдз -> CVдз?
+	local pre, letter, post = rmatch(stem, "^(.*)(" .. export.cons_c .. ")(" .. export.cons_c .. ")$")
+	if not pre then
+		return nil
+	end
+	local epvowel
+	local is_upper = rfind(post, "%u")
+	if rfind(letter, "[ьйЬЙ]") then
+		letter = ""
+		if rfind(post, "[цЦ]") or not epenthetic_stress then
+			epvowel = "е"
+		else
+			epvowel = "ё"
+		end
+	elseif rfind(letter, export.cons_except_always_hard_or_ts_c) and rfind(post, export.velar_c) or rfind(letter, export.velar_c) then
+		if epenthetic_stress then
+			epvowel = "о"
+		else
+			epvowel = "а"
+		end
+	elseif rfind(post, "[цЦ]") then
+		if export.ends_always_hard(letter) then
+			if epenthetic_stress then
+				-- FIXME, is this right?
+				epvowel = "э"
+			else
+				epvowel = "а"
+			end
+		else
+			epvowel = "е"
+		end
+	elseif epenthetic_stress then
+		if export.ends_always_hard(letter) then
+			epvowel = "о"
+		else
+			epvowel = "ё"
+		end
+	elseif export.ends_always_hard(letter) then
+		epvowel = "а"
+	else
+		epvowel = "е"
+	end
+	if letter == "ў" then
+		letter = "в"
+	elseif letter == "Ў" then
+		letter = "В"
+	end
+	if rfind(epvowel, "[её]") then
+		if letter == "т" then
+			letter = "ц"
+		elseif letter == "Т" then
+			letter = "Ц"
+		elseif letter == "д" then
+			letter = "дз"
+		elseif letter == "Д" then
+			letter = is_upper and "ДЗ" or "Дз"
+		end
+	end
+	if is_upper then
+		epvowel = upper(epvowel)
+	end
+	if epenthetic_stress then
+		epvowel = epvowel .. AC
+	end
+	return pre .. letter .. epvowel .. post
 end
 
 
