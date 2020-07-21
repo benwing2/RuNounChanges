@@ -197,47 +197,6 @@ def process_text_on_page(index, pagetitle, text):
       else:
         return "a"
 
-    def destress_after_stress(vowel):
-       return vowel.replace(AC, "").replace(u"ё", u"е").replace(u"о", u"а").replace(u"э", u"а")
-
-    def apply_vowel_alternation(stem, valt):
-      if valt == "ae":
-        ae_alternation = {
-          u"а": u"э́",
-          u"А": u"Э́",
-          u"я": u"е́",
-          u"Я": u"Е́",
-        }
-        modstem = re.sub(u"^(.*)([аАяЯ])(" + be.cons_c + "*(?:" + be.vowel_c + AC + u"|ё)" + be.cons_c + "*)$",
-          lambda m: m.group(1) + ae_alternation[m.group(2)] + destress_after_stress(m.group(3)),
-          stem
-        )
-      elif valt == "ao":
-        ao_alternation = {
-          u"а": u"о́",
-          u"А": u"О́",
-          u"я": u"ё",
-          u"Я": u"Ё",
-        }
-        modstem = re.sub(u"^(.*)([аАяЯ])(" + be.cons_c + "*(?:" + be.vowel_c + AC + "|ё)" + be.cons_c + "*)$",
-          lambda m: m.group(1) + ao_alternation[m.group(2)] + destress_after_stress(m.group(3)),
-          stem
-        )
-      elif valt == "yo":
-        yo_alternation = {
-          u"ы": u"о́",
-          u"Ы": u"О́",
-        }
-        modstem = re.sub(u"^(.*)([ыЫ])(" + be.cons_c + "*(?:" + be.vowel_c + AC + "|ё)" + be.cons_c + "*)$",
-          lambda m: m.group(1) + yo_alternation[m.group(2)] + destress_after_stress(m.group(3)),
-          stem
-        )
-      else:
-        assert False
-      if modstem == stem:
-        return None
-      return modstem
-
     def infer_alternations(nom_sg, nom_pl):
       nom_sg = truncate_extra_forms(nom_sg)
       nom_pl = truncate_extra_forms(nom_pl)
@@ -267,18 +226,23 @@ def process_text_on_page(index, pagetitle, text):
               return "ae"
       return None
 
+    def vowel_stem_from_vowel_ending_nom_sg(nom_sg):
+      m = re.search(u"^(.*)[аяеоё]" + AC + "?$", nom_sg)
+      assert m
+      vowel_stem = m.group(1)
+      if re.search(be.vowel_c + AC + "?$", vowel_stem):
+        vowel_stem += u"й"
+      return vowel_stem
+
     def infer_reducible(nom_sg, gen_sg, gen_pl):
       nom_sg = truncate_extra_forms(nom_sg)
       gen_sg = truncate_extra_forms(gen_sg)
       gen_pl = gen_pl and truncate_extra_forms(gen_pl)
-      m = re.search(u"^(.*)[аяеоё](" + AC + "?)$", nom_sg)
-      if m:
-        vowel_stem = m.group(1)
-        epenthetic_stress = m.group(2) == AC
-        if re.search(be.vowel_c + AC + "?$", vowel_stem):
-          vowel_stem += u"й"
+      if re.search(u"[аяеоё]́?$", nom_sg):
+        epenthetic_stress = nom_sg.endswith(AC)
         if not gen_pl:
           return "same"
+        vowel_stem = vowel_stem_from_vowel_ending_nom_sg(nom_sg)
         nonvowel_stem = re.sub(u"ў$", u"в", re.sub(u"ь$", "", gen_pl))
         # Special handling for e.g. зна́чення gen pl зна́чень
         if (be.remove_accents(vowel_stem) == be.remove_accents(nonvowel_stem) or
@@ -286,38 +250,44 @@ def process_text_on_page(index, pagetitle, text):
           return "same"
         if be.dereduce(vowel_stem, epenthetic_stress) == nonvowel_stem:
           return "reducible"
-        elif (be.remove_accents(vowel_stem) + u"ав" == be.remove_accents(nonvowel_stem) or
+        if (be.remove_accents(vowel_stem) + u"ав" == be.remove_accents(nonvowel_stem) or
             be.remove_accents(vowel_stem) + u"яв" == be.remove_accents(nonvowel_stem)):
           return "au"
-        elif be.apply_vowel_alternation(vowel_stem, "ae") == nonvowel_stem:
-          return "ae"
-        elif be.apply_vowel_alternation(vowel_stem, "ao") == nonvowel_stem:
-          return "ao"
-        elif be.apply_vowel_alternation(vowel_stem, "yo") == nonvowel_stem:
-          return "yo"
-        else:
-          pagemsg("WARNING: Unable to determine relationship between nom_sg %s and gen_pl %s" %
-            (nom_sg, gen_pl))
-          return None
+        for valt in possible_vowel_alternations:
+          valt_nom_sg = be.apply_vowel_alternation(nom_sg, valt)
+          if valt_nom_sg:
+            valt_vowel_stem = vowel_stem_from_vowel_ending_nom_sg(valt_nom_sg)
+            if be.remove_accents(valt_vowel_stem) == be.remove_accents(nonvowel_stem):
+              return "same"
+            if (be.remove_accents(valt_vowel_stem) + u"ав" == be.remove_accents(nonvowel_stem) or
+                be.remove_accents(valt_vowel_stem) + u"яв" == be.remove_accents(nonvowel_stem)):
+              return "au"
+        pagemsg("WARNING: Unable to determine relationship between nom_sg %s and gen_pl %s" %
+          (nom_sg, gen_pl))
+        return None
       else:
         nonvowel_stem = re.sub(u"ь$", "", nom_sg)
         vowel_stem = re.sub(u"в$", u"ў", re.sub(u"[аяуюыі]́?$", "", gen_sg))
         if re.search(be.vowel_c + AC + "?$", vowel_stem):
           vowel_stem += u"й"
-        if be.remove_accents(vowel_stem) == be.remove_accents(nonvowel_stem):
-          return "same"
         if be.reduce(nonvowel_stem) == vowel_stem:
           return "reducible"
-        elif be.apply_vowel_alternation(vowel_stem, "ae") == nonvowel_stem:
-          return "ae"
-        elif be.apply_vowel_alternation(vowel_stem, "ao") == nonvowel_stem:
-          return "ao"
-        elif be.apply_vowel_alternation(vowel_stem, "yo") == nonvowel_stem:
-          return "yo"
-        else:
-          pagemsg("WARNING: Unable to determine relationship between nom_sg %s and gen_sg %s" %
-            (nom_sg, gen_sg))
+        nom_sg = re.sub(u"[йь]$", "", nom_sg)
+        nom_sg = re.sub(u"ў$", u"в", nom_sg)
+        m = re.search(u"([аяуюыі]́?)$", gen_sg)
+        if not m:
+          pagemsg("WARNING: Unrecognized genitive singular ending: %s" % gen_sg)
           return None
+        ending = m.group(1)
+        if be.is_accented(ending):
+          nom_sg = be.remove_accents(nom_sg)
+        nom_sg += ending
+        if (be.destress_vowels_after_stress_movement(nom_sg) ==
+            be.undo_mark_stressed_vowels_in_unstressed_syllables(gen_sg)):
+          return "same"
+        pagemsg("WARNING: Unable to determine relationship between nom_sg %s and gen_sg %s" %
+          (nom_sg, gen_sg))
+        return None
 
     def construct_defaulted_seen_patterns(seen_patterns, lemma, gender, reducible, au):
       defaulted_seen_patterns = []
