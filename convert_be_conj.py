@@ -29,8 +29,8 @@ be_conj_slots = [
 ]
 
 def compare_form(slot, orig, repl, pagemsg):
-  origforms = [be.remove_monosyllabic_stress(x) for x in re.split(", *", orig)]
-  replforms = [be.remove_monosyllabic_stress(x) for x in re.split(", *", repl)]
+  origforms = [be.remove_monosyllabic_accents(x) for x in re.split(", *", orig)]
+  replforms = [be.remove_monosyllabic_accents(x) for x in re.split(", *", repl)]
   return set(origforms) == set(replforms)
 
 def compare_forms(autoconj, origforms, replforms, pagemsg):
