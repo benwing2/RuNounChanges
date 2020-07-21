@@ -25,7 +25,7 @@
 import pywikibot, re, sys, codecs, argparse
 
 import blib
-from blib import getparam, rmparam, msg, site
+from blib import getparam, rmparam, msg, site, rsub_repeatedly
 
 # blib.getData()
 
@@ -52,13 +52,6 @@ RINGBELOW = u"\u0325" # ring below
 CEDILLA = u"\u0327" # cedilla =  ̧
 OGONEK = u"\u0328" # ogonek =  ̨
 DOUBLEINVBREVE = u"\u0361" # double inverted breve
-
-def rsub_repeatedly(fr, to, text):
-  while True:
-    newtext = re.sub(fr, to, text)
-    if newtext == text:
-      return text
-    text = newtext
 
 def hy_remove_accents(text):
   text = re.sub(u"[՞՜՛՟]", "", text)
