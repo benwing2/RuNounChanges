@@ -60,6 +60,13 @@ def errmsgn(text):
   msgn(text)
   errmsgn(text)
 
+def rsub_repeatedly(fr, to, text):
+  while True:
+    newtext = re.sub(fr, to, text)
+    if newtext == text:
+      return text
+    text = newtext
+
 def parse_text(text):
   return mwparserfromhell.parser.Parser().parse(text, skip_style_tags=True)
 
