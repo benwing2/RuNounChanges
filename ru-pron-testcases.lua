@@ -1,578 +1,628 @@
 local tests = require('Module:UnitTests')
 local m_ru_pron = require('Module:ru-pron')
 local m_links = require('Module:links')
-local m_ru_translit = require('Module:ru-translit')
 
 local lang = require('Module:languages').getByCode('ru')
 
-function tests:check_pron(Cyrl, IPA, Cyrl_word, pos, gem)
-	local origtext, transformed_text = m_ru_translit.apply_tr_fixes(Cyrl)
+local function tag_IPA(IPA)
+	return '<span class="IPA">' .. IPA:gsub('|', '&#124;') .. '</span>'
+end
+
+local options = { display = tag_IPA }
+function tests:check_pron(respelling, IPA, orig_spelling, pos, gem, zhpal)
 	self:equals(
-		m_links.full_link(Cyrl_word or Cyrl, Cyrl_word or Cyrl, lang, nil, nil, nil, { tr = '-' }, true) ..
-			(Cyrl_word and (" (respelled " .. Cyrl .. ")") or "") .. (pos and ", pos=" .. pos or "") .. (gem and ", gem=" .. gem or ""),
-		m_ru_pron.ipa(transformed_text, nil, gem, nil, pos),
+		m_links.full_link({lang = lang, term = orig_spelling or respelling, tr = '-'}, nil, true) ..
+			(orig_spelling and (" (respelled " .. require("Module:script_utilities").tag_text(respelling, lang) .. ")" ) or "") ..
+			(pos and ", pos=" .. pos or "") ..
+			(gem and ", gem=" .. gem or "") ..
+			(zhpal and ", zhpal=" .. zhpal or ""),
+		m_ru_pron.ipa_string(respelling, nil, gem, nil, pos, zhpal),
 		IPA,
-		{nowiki=true}
+		options
 	)
 end
 
 function tests:test_pron()
+	-- Each such case should be a list of between two and six elements. The
+	-- elements are, respectively:
+	--
+	-- { RESPELLING, DESIRED_IPA, ORIG_SPELLING, POS, GEM, ZHPAL }
+	--
+	-- RESPELLING is the phonetically-respelled Cyrillic text, as passed to
+	-- {{ru-IPA}} (which in most cases is identical to the original Cyrillic
+	-- text but with appropriate accents).
+	--
+	-- DESIRED_IPA is the IPA that should be generated, without any brackets.
+	-- If there are multiple outputs, separate them with comma + space.
+	--
+	-- ORIG_SPELLING is the actual accented spelling of the Cyrillic text, or
+	-- nil/omitted if it's the same as the respelling (which is usually the
+	-- case).
+	--
+	-- POS is the value of the pos= parameter (part of speech) to {{ru-IPA}}.
+	-- 
+	-- GEM is the value of the gem= parameter (gemination) to {{ru-IPA}}.
+	-- 
+	-- ZHPAL is the value of the zhpal= parameter (controls display of
+	-- palatalized variants of зж/жж sequences) to {{ru-IPA}}.
+	--
+	-- RESPELLING and DESIRED_IPA are required. The others are optional; if
+	-- not present, substitute nil or just leave it out entirely if it's the
+	-- last parameter in the list.
+	local cases = {
+ 		{ "а́втор-исполни́тель", "ˈaftər ɨspɐlˈnʲitʲɪlʲ" },
+ 		{ "ни с того́ ни с сего́", "nʲɪ‿s‿tɐˈvo nʲɪ‿sʲ‿sʲɪˈvo" },
+ 		{ "рас(с)тёгивать", "rɐsʲ(ː)ˈtʲɵɡʲɪvətʲ", "расстёгивать" },
+	-- handling of unstressed дцат -- as if дцыт.
+ 		{ "двадцатиле́тний", "dvət͡s(ː)ɨtʲɪˈlʲetʲnʲɪj"},
+ 		{ "двадца́тый", "dvɐˈt͡s(ː)atɨj"},
+ 		{ "два́дцать семь", "ˈdvat͡s(ː)ɨt͡sʲ sʲemʲ"},
 	-- handling of стл -- in стлив but not elsewhere
-	self:check_pron("счастли́вый", "ɕːɪs⁽ʲ⁾ˈlʲivɨj")
-	self:check_pron("костля́вый", "kɐstˈlʲavɨj")
-	self:check_pron("истле́ть", "ɪstˈlʲetʲ")
+ 		{ "счастли́вый", "ɕːɪs⁽ʲ⁾ˈlʲivɨj" },
+ 		{ "костля́вый", "kɐstˈlʲavɨj" },
+ 		{ "истле́ть", "ɪstˈlʲetʲ" },
 	-- optional palatalization of final -ся (currently only after л)
-	self:check_pron("роди́лся", "rɐˈdʲils⁽ʲ⁾ə")
-	self:check_pron("Зо́ся", "ˈzosʲə")
+ 		{ "роди́лся", "rɐˈdʲils⁽ʲ⁾ə" },
+ 		{ "Зо́ся", "ˈzosʲə" },
 	-- palatalization before consonants in imperative forms
-	self:check_pron("вы́сыпьте", "ˈvɨsɨp⁽ʲ⁾tʲe")
-	self:check_pron("рассы́пься", "rɐˈsːɨp⁽ʲ⁾sʲə")
-	self:check_pron("знако́мьтесь", "znɐˈkom⁽ʲ⁾tʲɪsʲ")
-	self:check_pron("ме́тьте", "ˈmʲetʲːe")
+ 		{ "вы́сыпьте", "ˈvɨsɨp⁽ʲ⁾tʲe" },
+ 		{ "рассы́пься", "rɐˈsːɨp⁽ʲ⁾sʲə" },
+ 		{ "знако́мьтесь", "znɐˈkom⁽ʲ⁾tʲɪsʲ" },
+ 		{ "ме́тьте", "ˈmʲetʲːe" },
 	-- also should geminate even not directly after the stress
-	self:check_pron("вы́гладьте", "ˈvɨɡlətʲːe")
-	self:check_pron("отме́ться", "ɐtˈmʲetʲ͡sʲsʲə", nil, "imp")
-	self:check_pron("бро́сься", "ˈbrosʲːə")
-	self:check_pron("оби́дься", "ɐˈbʲitʲ͡sʲsʲə", nil, "imp")
+ 		{ "вы́гладьте", "ˈvɨɡlətʲːe" },
+ 		{ "отме́ться", "ɐtˈmʲet͡sʲsʲə", nil, "imp" },
+ 		{ "бро́сься", "ˈbrosʲːə" },
+ 		{ "оби́дься", "ɐˈbʲit͡sʲsʲə", nil, "imp" },
 	-- unstressed а before final -е
-	self:check_pron("элева́торе", "ɨlʲɪˈvatərʲe", nil, "pre")
+ 		{ "элева́торе", "ɪlʲɪˈvatərʲe", nil, "pre" },
 	-- fronting after two a's or u's in successive syllables
-	self:check_pron("включа́ть", "fklʲʉˈt͡ɕætʲ")
-	self:check_pron("умоля́ющий", "ʊmɐˈlʲæjʉɕːɪj")
+ 		{ "включа́ть", "fklʲʉˈt͡ɕætʲ" },
+ 		{ "умоля́ющий", "ʊmɐˈlʲæjʉɕːɪj" },
 	-- palatal assimilation in дм
-	self:check_pron("седми́ца", "sʲɪdʲˈmʲit͡sə")
+ 		{ "седми́ца", "sʲɪdʲˈmʲit͡sə" },
 	-- tie bar in дн, тн
-	self:check_pron("сего́дня", "sʲɪˈvodʲ͡nʲa")
+ 		{ "сего́дня", "sʲɪˈvodʲnʲə" },
 	-- optional palatalization assimilation in тл, syllable division before cluster (Avanesov has a tie bar here)
-	self:check_pron("светле́ть", "s⁽ʲ⁾vʲɪˈt⁽ʲ⁾lʲetʲ")
+ 		{ "светле́ть", "s⁽ʲ⁾vʲɪˈt⁽ʲ⁾lʲetʲ" },
 	-- optional palatalization assimilation in см
-	self:check_pron("сейсми́чный", "sʲɪjs⁽ʲ⁾ˈmʲit͡ɕnɨj")
+ 		{ "сейсми́чный", "sʲɪjs⁽ʲ⁾ˈmʲit͡ɕnɨj" },
 	-- optional palatalization assimilation in св
-	self:check_pron("сверло́", "s⁽ʲ⁾vʲɪrˈlo")
+ 		{ "сверло́", "s⁽ʲ⁾vʲɪrˈlo" },
 	-- optional palatalization assimilation in сб
-	self:check_pron("сбива́ть", "z⁽ʲ⁾bʲɪˈvatʲ")
+ 		{ "сбива́ть", "z⁽ʲ⁾bʲɪˈvatʲ" },
 	-- optional palatalization assimilation in ств, тв
-	self:check_pron("противобо́рстве", "prətʲɪvɐˈbors⁽ʲ⁾t⁽ʲ⁾vʲe", nil, "pre")
-	self:check_pron("рукоприкла́дстве", "rʊkəprʲɪˈklat͡st⁽ʲ⁾vʲe", nil, "pre")
-	self:check_pron("самоутвержде́ние", "səməʊt⁽ʲ⁾vʲɪrʐˈdʲenʲɪje", nil, "n")
-	-- optional palatalization assimilation in сдв, дв (?)
-	self:check_pron("сдвиг", "z⁽ʲ⁾d⁽ʲ⁾vʲik")
+ 		{ "противобо́рстве", "prətʲɪvɐˈborstvʲe", nil, "pre" },
+ 		{ "рукоприкла́дстве", "rʊkəprʲɪˈklat͡st⁽ʲ⁾vʲe", nil, "pre" },
+ 		{ "самоутвержде́ние", "səməʊtvʲɪrʐˈdʲenʲɪje", nil, "n" },
+	-- optional palatalization assimilation in сдв, дв (? },
+ 		{ "сдвиг", "z⁽ʲ⁾d⁽ʲ⁾vʲik" },
 	-- ч should be hard in чш
-	self:check_pron("лу́чший", "ˈlut͡ʂʂɨj")
+ 		{ "лу́чший", "ˈlut͡ʂʂɨj" },
 	-- as per talk re Тогане
-	self:check_pron("Зимба́бвэ", "zʲɪmˈbabvɛ", "Зимба́бве")
-	self:check_pron("То́го", "ˈtoɡə")
-	self:check_pron("того́", "tɐˈvo")
+ 		{ "Зимба́бвэ", "zʲɪmˈbabvɛ", "Зимба́бве" },
+ 		{ "То́го", "ˈtoɡə" },
+ 		{ "того́", "tɐˈvo" },
 	-- gemination should be optional
-	self:check_pron("нра̀вственно-эти́ческий", "ˌnrafstvʲɪn(ː)ə ɨˈtʲit͡ɕɪskʲɪj")
+ 		{ "нра̀вственно-эти́ческий", "ˌnrafstvʲɪn(ː)ə ɪˈtʲit͡ɕɪskʲɪj" },
 	-- -ка- should be stressed
-	self:check_pron("эн-ка-вэ-дэ́", "ɛn ka vɛ ˈdɛ")
+ 		{ "эн-ка-вэ-дэ́", "ɛn ka vɛ ˈdɛ" },
 	-- comma shouldn't interfere with destressing же
-	self:check_pron("то же, что", "ˈto‿ʐɨ | ʂto")
+ 		{ "то же, что", "ˈto‿ʐɨ | ʂto" },
 	-- ё + э + no other vowels used to cause problems
-	self:check_pron("гёрлфрэнд", "ˈɡʲɵrlfrɨnt", "гёрлфренд")
+ 		{ "гёрлфрэнд", "ˈɡʲɵrlfrɨnt", "гёрлфренд" },
 	-- [j] not optional in such positions
-	self:check_pron("в Япо́нии", "v‿jɪˈponʲɪɪ", nil, "n")
+ 		{ "в Япо́нии", "v‿jɪˈponʲɪɪ", nil, "n" },
+ 	-- double pronunciations for occurrences of жж, зж
+ 		{ "жжёт", "ʐːot, ʑːɵt" },
+ 		{ "брюзжа́ть", "brʲʊˈʐːatʲ, brʲʉˈʑːætʲ" },
+ 	-- but not at prefix boundaries
+ 		{ "сжать", "ʐːatʲ" },
+ 		{ "разже́чь", "rɐˈʐːɛt͡ɕ" },
+ 		{ "разжа́ть", "rɐˈʐːatʲ" },
+ 	-- manual specification of zhpal=
+ 		{ "брюзжа́ть", "brʲʊˈʐːatʲ", nil, nil, nil, "n" },
+ 		{ "разжа́ть", "rɐˈʐːatʲ, rɐˈʑːætʲ", nil, nil, nil, "y" },
 	-- final -е
-	-- compare to моро́женая, a word in -нои or -наи (or обы́чаи)
-	self:check_pron("моро́женое", "mɐˈroʐɨnəjə", nil, "n")
+	-- compare to моро́женая, a word in -нои or -наи (or обы́чаи },
+ 		{ "моро́женое", "mɐˈroʐɨnəjə", nil, "n" },
 	-- compare to собра́ния, о собра́нии
-	self:check_pron("собра́ние", "sɐˈbranʲɪje", nil, "n")
+ 		{ "собра́ние", "sɐˈbranʲɪje", nil, "n" },
 	-- compare to всле́дствия, о всле́дствии
-	self:check_pron("всле́дствие", "ˈfs⁽ʲ⁾lʲet͡stvʲɪje", nil, "n")
+ 		{ "всле́дствие", "ˈfs⁽ʲ⁾lʲet͡stvʲɪje", nil, "n" },
 	-- compare to сча́стья, о го́стье, го́стьи
-	self:check_pron("сча́стье", "ˈɕːæsʲtʲje", nil, "n")
+ 		{ "сча́стье", "ˈɕːæsʲtʲje", nil, "n" },
 	-- compare to со́лнца, брето́нца, о брето́нце, брето́нцы
-	self:check_pron("со́лнце", "ˈsont͡sə", nil, "n")
+ 		{ "со́лнце", "ˈsont͡sə", nil, "n" },
 	-- compare to се́рдца, две́рца, о две́рце, две́рцы
-	self:check_pron("се́рдце", "ˈsʲert͡sə", nil, "n")
+ 		{ "се́рдце", "ˈsʲert͡sə", nil, "n" },
 	-- compare to ло́жа, до́жи
-	self:check_pron("ло́же", "ˈloʐə", nil, "n")
+ 		{ "ло́же", "ˈloʐə", nil, "n" },
 	-- compare to по́ля, до́ли
-	self:check_pron("по́ле", "ˈpolʲe", nil, "n")
+ 		{ "по́ле", "ˈpolʲe", nil, "n" },
 	-- compare to жили́ща, пи́ща, о пи́ще, пи́щи
-	self:check_pron("жили́ще", "ʐɨˈlʲiɕːe", nil, "n")
+ 		{ "жили́ще", "ʐɨˈlʲiɕːe", nil, "n" },
 	-- compare to ве́ча, встре́чи
-	self:check_pron("ве́че", "ˈvʲet͡ɕe", nil, "n")
+ 		{ "ве́че", "ˈvʲet͡ɕe", nil, "n" },
 	-- compare to Гео́ргия, Гео́ргии
-	self:check_pron("а́вторские", "ˈaftərskʲɪɪ", nil, "a")
+ 		{ "а́вторские", "ˈaftərskʲɪje", nil, "a" },
 	-- compare to Алба́ния, Алба́нии, си́нее
-	self:check_pron("да́нные", "ˈdanːɨɪ", nil, "a")
+ 		{ "да́нные", "ˈdanːɨje", nil, "a" },
 	-- compare to Абисси́ния, Абисси́нии
-	self:check_pron("си́нее", "ˈsʲinʲɪje", nil, "a")
+ 		{ "си́нее", "ˈsʲinʲɪje", nil, "a" },
 	-- compare to ли́сья, ли́сьи
-	self:check_pron("ли́сье", "ˈlʲisʲjə", nil, "a")
+ 		{ "ли́сье", "ˈlʲisʲjə", nil, "a" },
 	-- compare to рази́ня, рази́не, си́ни
-	self:check_pron("си́не", "ˈsʲinʲe", nil, "a")
+ 		{ "си́не", "ˈsʲinʲe", nil, "a" },
 	-- compare to Гвине́я, о Гвине́е, Гвине́и
-	self:check_pron("дурне́е", "dʊrˈnʲeje", nil, "c")
+ 		{ "дурне́е", "dʊrˈnʲeje", nil, "c" },
 	-- compare to По́льша, о По́льше, По́льши
-	self:check_pron("бо́льше", "ˈbolʲʂɨ", nil, "c")
+ 		{ "бо́льше", "ˈbolʲʂɨ", nil, "c" },
 	-- compare to до́жа, о до́же, до́жи
-	self:check_pron("доро́же", "dɐˈroʐɨ", nil, "c")
+ 		{ "доро́же", "dɐˈroʐɨ", nil, "c" },
 	-- compare to сме́рча, о сме́рче, сме́рчи
-	self:check_pron("ле́хче", "ˈlʲext͡ɕe", "ле́гче", "c")
+ 		{ "ле́хче", "ˈlʲext͡ɕe", "ле́гче", "c" },
 	-- compare to гу́ща, о гу́ще, гу́щи
-	self:check_pron("гу́ще", "ˈɡuɕːe", nil, "c")
+ 		{ "гу́ще", "ˈɡuɕːe", nil, "c" },
 	-- compare to неде́ля, неде́ле, неде́ли
-	self:check_pron("досе́ле", "dɐˈsʲelʲe", nil, "adv")
+ 		{ "досе́ле", "dɐˈsʲelʲe", nil, "adv" },
 	-- compare to ста́жа, о ста́же, ста́жи
-	self:check_pron("та́кже", "ˈtaɡʐɨ", nil, "adv")
+ 		{ "та́кже", "ˈtaɡʐɨ", nil, "adv" },
 	-- compare to да́ча, о да́че, да́чи
-	self:check_pron("ина́че", "ɪˈnat͡ɕe", nil, "adv")
+ 		{ "ина́че", "ɪˈnat͡ɕe", nil, "adv" },
 	-- compare to ве́ща, ве́ще, ве́щи (from ве́щий)
-	self:check_pron("злове́ще", "zlɐˈvʲeɕːe", nil, "adv")
+ 		{ "злове́ще", "zlɐˈvʲeɕːe", nil, "adv" },
 	-- compare to пла́ца, пла́це, пла́цы
-	self:check_pron("вкра́тце", "ˈfkrat͡sːɨ", nil, "adv")
+ 		{ "вкра́тце", "ˈfkrat͡sːɨ", nil, "adv" },
 	-- compare to тя́тя, о тя́те, тя́ти
-	self:check_pron("не пла́чьте", "nʲɪ‿ˈplat͡ɕtʲe", nil, "v")
+ 		{ "не пла́чьте", "nʲɪ‿ˈplat͡ɕtʲe", nil, "v" },
 	-- compare to тётя, о тёте, тёти
-	self:check_pron("дава́йте", "dɐˈvajtʲe", nil, "v")
+ 		{ "дава́йте", "dɐˈvajtʲe", nil, "v" },
 	-- compare to сбо́я, сбо́е, сбо́и
-	self:check_pron("дво́е", "ˈdvoje", nil, "mid")
+ 		{ "дво́е", "ˈdvoje", nil, "mid" },
 	-- compare to сбо́я, сбо́е, сбо́и
-	self:check_pron("дво́е", "ˈdvojə", nil, "low")
-	-- compare to ши́ре (from широко́), зве́ря, о зве́ре, зве́ри
-	self:check_pron("четы́ре", "t͡ɕɪˈtɨrʲe", nil, "mid")
+ 		{ "дво́е", "ˈdvojə", nil, "low" },
+	-- compare to ши́ре (from широко́ },, зве́ря, о зве́ре, зве́ри
+ 		{ "четы́ре", "t͡ɕɪˈtɨrʲe", nil, "mid" },
 	-- compare to тётя, о тёте, тёти, пло́ти
-	self:check_pron("о го́де", "ɐ‿ˈɡodʲe", nil, "pre")
+ 		{ "о го́де", "ɐ‿ˈɡodʲe", nil, "pre" },
 	-- compare to вы́игрыша, вы́игрыши
-	self:check_pron("о вы́игрыше", "ɐ‿ˈvɨɪɡrɨʂɨ", nil, "pre")
+ 		{ "о вы́игрыше", "ɐ‿ˈvɨɪɡrɨʂɨ", nil, "pre" },
 	-- compare to такела́жа, колла́жа, о колла́же, колла́жи
-	self:check_pron("о такела́же", "ɐ‿təkʲɪˈlaʐɨ", nil, "pre")
+ 		{ "о такела́же", "ɐ‿təkʲɪˈlaʐɨ", nil, "pre" },
 	-- compare to да́ча, о да́че, да́чи
-	self:check_pron("о пла́че", "ɐ‿ˈplat͡ɕe", nil, "pre")
+ 		{ "о пла́че", "ɐ‿ˈplat͡ɕe", nil, "pre" },
 	-- compare to австрали́йца, австрали́йци
-	self:check_pron("об австрали́йце", "ɐb‿əfstrɐˈlʲijt͡sɨ", nil, "pre")
+ 		{ "об австрали́йце", "ɐb‿əfstrɐˈlʲijt͡sɨ", nil, "pre" },
 	-- compare to сбо́я, о сбо́е, сбо́и
-	self:check_pron("о бо́е", "ɐ‿ˈboje", nil, "pre")
+ 		{ "о бо́е", "ɐ‿ˈboje", nil, "pre" },
 	-- compare to ине́я, ине́и
-	self:check_pron("об и́нее", "ɐˈb‿ɨnʲɪje", nil, "pre")
+ 		{ "об и́нее", "ɐˈb‿ɨnʲɪje", nil, "pre" },
 	-- compare to пля́жа, пля́же, пля́жи
-	self:check_pron("кня́же", "ˈknʲaʐɨ", nil, "voc")
+ 		{ "кня́же", "ˈknʲaʐɨ", nil, "voc" },
 	-- compare to ха́рча, о ха́рче, сме́рча, о сме́рче, сме́рчи
-	self:check_pron("ста́рче", "ˈstart͡ɕe", nil, "voc")
+ 		{ "ста́рче", "ˈstart͡ɕe", nil, "voc" },
 	-- compare to ды́ня, o ды́не, ды́ни
-	self:check_pron("сы́не", "ˈsɨnʲe", nil, "voc")
+ 		{ "сы́не", "ˈsɨnʲe", nil, "voc" },
 	-- compare to сбо́я, о сбо́е, сбо́и
-	self:check_pron("ко̀е-кто́", "ˌko(j)ɪ ˈkto", nil, "pro")
+ 		{ "ко̀е-кто́", "ˌko(j)ɪ ˈkto", nil, "pro" },
 	-- compare to ки́я, о ки́и
-	self:check_pron("каки́е-нибудь лека́рства", "kɐˈkʲiɪ‿nʲɪbʊtʲ lʲɪˈkarstvə", nil, "pro")
-	self:check_pron("си́ние воротнички́", "ˈsʲinʲɪɪ vərətʲnʲɪt͡ɕˈkʲi")
+ 		{ "каки́е-нибудь лека́рства", "kɐˈkʲiɪ‿nʲɪbʊtʲ lʲɪˈkarstvə", nil, "pro" },
+ 		{ "си́ние воротнички́", "ˈsʲinʲɪɪ vərətʲnʲɪt͡ɕˈkʲi" },
 	-- case involving multiple parts of speech
-	self:check_pron("Адриати́ческое мо́ре", "ɐdrʲɪɐˈtʲit͡ɕɪskəjə ˈmorʲe", nil, "a/n")
+ 		{ "Адриати́ческое мо́ре", "ɐdrʲɪɐˈtʲit͡ɕɪskəjə ˈmorʲe", nil, "a/n" },
 	-- end of final -е
 
-	self:check_pron("компа̀кт-ди́ск", "kɐmˌpaɡd ˈdʲisk")
-	self:check_pron("воѐнно-морско́й", "vɐˌjenːə mɐrˈskoj")
-	self:check_pron("ра́нчо", "ˈranʲt͡ɕɵ")
-	self:check_pron("а не то", "ɐ‿nʲɪ‿ˈto")
-	self:check_pron("а как же", "ɐ‿ˈkaɡ‿ʐɨ")
-	self:check_pron("а̂ капэ́лла", "a kɐˈpɛl(ː)ə", "а капе́лла", nil, "opt")
-	self:check_pron("о-а-э́", "o a ˈɛ")
-	self:check_pron("лёгкий", "ˈlʲɵxʲkʲɪj")
-	self:check_pron("мя́гкий", "ˈmʲæxʲkʲɪj")
-	self:check_pron("не́‿за‿што", "ˈnʲe‿zə‿ʂtə", "не́ за что")
-	self:check_pron("град идёт", "ɡrat ɪˈdʲɵt")
-	self:check_pron("гра̂д‿идёт", "ɡrad‿ɨˈdʲɵt", "град идёт")
-	self:check_pron("град‿идёт", "ɡrəd‿ɨˈdʲɵt", "град идёт")
-	self:check_pron("ро́г‿изоби́лия", "ˈroɡ‿ɨzɐˈbʲilʲɪjə", "ро́г изоби́лия")
-	self:check_pron("приводи́ть в замеша́тельство", "prʲɪvɐˈdʲidʲ v‿zəmʲɪˈʂatʲɪlʲstvə")
-	self:check_pron("ты ве́ришь в Бо́га", "tɨ ˈvʲerʲɪʐ ˈv‿boɡə")
-	self:check_pron("муж Ва́ли", "muʂ ˈvalʲɪ")
-	self:check_pron("брат вдовы́", "brad vdɐˈvɨ")
-	self:check_pron("ваш взор", "vaʐ vzor")
-	self:check_pron("от взгля́дов", "ɐd‿ˈvzɡlʲadəf")
-	self:check_pron("волк ка́ждый год линя́ет", "volk ˈkaʐdɨj ɡot lʲɪˈnʲæ(j)ɪt")
-	self:check_pron("сча́стливо", "ˈɕːaslʲɪvə, ˈɕːæsʲlʲɪvə")
-	self:check_pron("да́вя̣т", "ˈdavʲət", "да́вят")
-	self:check_pron("посме́шища̣м", "pɐsˈmʲeʂɨɕːəm", "посмешищам")
-	self:check_pron("код Мо́рзэ", "kot ˈmorzɨ", "код Мо́рзе")
-	self:check_pron("наря́д на ку́хню", "nɐˈrʲat nɐ‿ˈkuxnʲʊ")
-	self:check_pron("ждать щу́ку", "ʐdat͡ɕ ˈɕːukʊ")
-	self:check_pron("за́пись Шу́берта", "ˈzapʲɪɕ ˈʂubʲɪrtə")
-	self:check_pron("гусь жа́ренный", "ɡuʑ ˈʐarʲɪn(ː)ɨj")
-	self:check_pron("туз черве́й", "tuɕ t͡ɕɪrˈvʲej")
-	self:check_pron("о̀ргкомите́т", "ˌorkːəmʲɪˈtʲet")
-	self:check_pron("То́кио же", "ˈtokʲɪo‿ʐɨ")
-	self:check_pron("ве́псский", "ˈvʲepsːkʲɪj")
-	self:check_pron("Черке́сск", "t͡ɕɪrˈkʲesːk")
-	self:check_pron("ада́жио", "ɐˈdaʐɨo")
-	self:check_pron("арпе́джио", "ɐrˈpʲed͡ʐʐɨo")
-	self:check_pron("с глаз доло́й — из се́рдца вон", "ˈz‿ɡlaz dɐˈloj | ɪs‿ˈsʲert͡sə von")
-	self:check_pron("аппле́т", "ɐˈplʲet")
-	self:check_pron("Киргизста́н", "kʲɪrɡʲɪˈstan")
-	self:check_pron("жжёт", "ˈʐːot")
-	self:check_pron("друг к дру́гу", "druɡ ˈɡ‿druɡʊ")
-	self:check_pron("(и) пода́вно", "(i) pɐˈdavnə")
-	self:check_pron("рабфа́к", "rɐpˈfak")
-	self:check_pron("со́бственник", "ˈsopstvʲɪnʲ(ː)ɪk")
-	self:check_pron("твё́рдость", "ˈtvʲɵrdəsʲtʲ")
-	self:check_pron("просчё́т", "prɐˈɕːɵt")
-	self:check_pron("кало́сс", "kɐˈlos")
-	self:check_pron("Иоа́нн", "ɪɐˈan")
-	self:check_pron("йе́ти", "ˈjetʲɪ")
-	self:check_pron("а̀нгло-норма́ннский", "ˌanɡlə nɐrˈmanskʲɪj")
-	self:check_pron("фуррь", "furʲ")
-	self:check_pron("ха́о̂с", "ˈxaos", "ха́ос")
-	self:check_pron("эвфеми́зм", "ɨfʲɪˈmʲizm")
-	self:check_pron("хору́гвь", "xɐˈrukfʲ")
-	self:check_pron("по абази́ну", "pɐ‿ɐbɐˈzʲinʊ")
-	self:check_pron("под абази́ном", "pəd‿əbɐˈzʲinəm")
-	self:check_pron("подсти́лка", "pɐtʲ͡sʲˈsʲtʲilkə")
-	self:check_pron("э́ллипс", "ˈɛlʲɪps")
-	self:check_pron("иди́ллия", "ɪˈdʲilʲɪjə")
-	self:check_pron("-ин", "ɪn")
-	self:check_pron("фойе́", "fɐˈjːe", nil, nil, "y")
-	self:check_pron("льстец", "lʲsʲtʲet͡s")
-	self:check_pron("инсти́нкт", "ɪn⁽ʲ⁾ˈsʲtʲinkt")
-	self:check_pron("ни́ндзя", "ˈnʲinʲdʲ͡zʲzʲə")
-	self:check_pron("Хэйлунцзя́н", "xɨjlʊnʲˈdʲ͡zʲzʲan")
-	self:check_pron("проце́нтщик", "prɐˈt͡sɛnʲɕːɪk")
-	self:check_pron("брюзжа́ть", "brʲʊˈʐːatʲ")
-	self:check_pron("львёнок", "ˈlʲvʲɵnək")
-	self:check_pron("помпе́зный", "pɐm⁽ʲ⁾ˈpʲeznɨj")
-	self:check_pron("любви́", "lʲʊbˈvʲi, lʲʉbʲˈvʲi")
-	self:check_pron("обвини́тельный", "ɐbvʲɪˈnʲitʲɪlʲnɨj")
-	self:check_pron("вбира́ть", "v⁽ʲ⁾bʲɪˈratʲ")
-	self:check_pron("впечатли́тельный", "f⁽ʲ⁾pʲɪt͡ɕɪtˈlʲitʲɪlʲnɨj")
-	self:check_pron("дѐло в то́м, што", "ˌdʲelə ˈf‿tom | ʂto", "де́ло в то́м, что")
-	self:check_pron("де́вственная плева́", "ˈdʲefstvʲɪn(ː)əjə plʲɪˈva")
-	self:check_pron("хуаця́о", "xʊɐˈtʲ͡sʲao")
-	self:check_pron("Цю́рих", "ˈtʲ͡sʲʉrʲɪx")
-	self:check_pron("тайцзицюа́нь", "təjdʲ͡zʲzʲɪtʲ͡sʲʊˈanʲ")
-	self:check_pron("Цзили́нь", "dʲ͡zʲzʲɪˈlʲinʲ")
-	self:check_pron("будь што бу́дет", "but͡ɕ ʂto ˈbudʲɪt", "будь что бу́дет")
-	self:check_pron("дух бодр, плоть же не́мощна", "duɣ bodr | ˈplod͡ʑ‿ʐɨ ˈnʲeməɕːnə")
-	self:check_pron("Пи́тсбург", "ˈpʲid͡zbʊrk")
-	self:check_pron("Ло̀с-А́нджелес", "ˌlos ˈand͡ʐʐɨlʲɪs")
-	self:check_pron("АльДжази́ра", "ɐlʲd͡ʐʐɐˈzʲirə", "Аль-Джази́ра")
-	self:check_pron("Петрозаво́дск", "pʲɪtrəzɐˈvot͡sk")
-	self:check_pron("Джо́рджтаун", "ˈd͡ʐʐort͡ʂʂtəʊn")
-	self:check_pron("Нджаме́на", "nd͡ʐʐɐˈmʲenə")
-	self:check_pron("муншту́к", "mʊnʂˈtuk", "мундшту́к")
-	self:check_pron("Джордж", "d͡ʐʐort͡ʂʂ")
-	self:check_pron("Гуйчжо́у", "ɡʊjˈd͡ʐʐoʊ")
-	self:check_pron("Чжэцзя́н", "d͡ʐʐɨˈdʲ͡zʲzʲan")
-	self:check_pron("аге́нтство", "ɐˈɡʲent͡stvə")
-	self:check_pron("с жено́й", "ʐ‿ʐɨˈnoj")
-	self:check_pron("без ша́пки", "bʲɪʂ‿ˈʂapkʲɪ")
-	self:check_pron("отста́вка", "ɐt͡sˈstafkə")
-	self:check_pron("отстегну́ть", "ɐtʲ͡sʲsʲtʲɪɡˈnutʲ")
-	self:check_pron("подсласти́тель", "pət͡sslɐˈsʲtʲitʲɪlʲ")
-	self:check_pron("о́тзвук", "ˈod͡zzvʊk")
-	self:check_pron("коттэ́дж", "kɐˈtɛt͡ʂʂ", "котте́дж")
-	self:check_pron("подсчёт", "pɐt͡ɕˈɕːɵt")
-	self:check_pron("отсчи́тываться", "ɐt͡ɕˈɕːitɨvət͡sə")
-	self:check_pron("отжи́ть", "ɐd͡ʐˈʐɨtʲ")
-	self:check_pron("таджи́к", "tɐd͡ʐˈʐɨk")
-	self:check_pron("дщерь", "t͡ɕɕːerʲ")
-	self:check_pron("тще́тно", "ˈt͡ɕɕːetnə")
-	self:check_pron("мла́дший", "ˈmlat͡ʂʂɨj")
-	self:check_pron("отшиби́ть", "ɐt͡ʂʂɨˈbʲitʲ")
-	self:check_pron("пядь земли́", "pʲædʲ͡zʲ zʲɪˈmlʲi")
-	self:check_pron("под сту́лом", "pɐt͡s‿ˈstuləm")
-	self:check_pron("надзо́р", "nɐd͡zˈzor")
-	self:check_pron("отсю́да", "ɐtʲ͡sʲˈsʲudə")
-	self:check_pron("отсу́да", "ɐt͡sˈsudə", "отсю́да")
-	self:check_pron("вѐт/слу́жба", "ˌvʲet͡sˈsluʐbə", "вѐтслу́жба")
-	self:check_pron("куро́ртник", "kʊˈrort⁽ʲ⁾nʲɪk")
-	self:check_pron("сболтнёшь", "zbɐlt⁽ʲ⁾ˈnʲɵʂ")
-	self:check_pron("сболтну́ть", "zbɐltˈnutʲ")
-	self:check_pron("спу́тник", "ˈsputʲnʲɪk")
-	self:check_pron("расчерти́ть", "rəɕt͡ɕɪrˈtʲitʲ")
-	self:check_pron("убе́жищa", "ʊˈbʲeʐɨɕːə")
-	self:check_pron("уда́ча", "ʊˈdat͡ɕə")
-	self:check_pron("тро́лль", "ˈtrolʲ")
-	self:check_pron("подча́с", "pɐˈt͡ɕːas")
-	self:check_pron("в ссо́ри", "ˈf‿sːorʲɪ", "в ссо́ре")
-	-- self:check_pron("четырё̀хле́тний", "t͡ɕɪtɨˌrʲɵxˈlʲet⁽ʲ⁾nʲɪj") -- should there be a syllable boundary between x and l?
-	self:check_pron("подтрибу́нный", "pətːrʲɪˈbunːɨj")
-	self:check_pron("што́-то", "ˈʂto‿tə", "что́-то")
-	self:check_pron("не всё то зо́лото", "nʲɪ‿ˈfsʲɵ to ˈzolətə")
-	self:check_pron("не по нутру́", "nʲɪ‿pə‿nʊˈtru")
-	self:check_pron("в то вре́мя как", "ˈf‿to ˈvrʲemʲə kak")
-	self:check_pron("не к ме́сту", "nʲɪ‿k‿ˈmʲestʊ")
-	self:check_pron("де́сять за́поведей", "ˈdʲesʲɪdʲ͡zʲ ˈzapəvʲɪdʲɪj")
-	self:check_pron("мно́го бу́дешь знать", "ˈmnoɡə ˈbudʲɪʐ znatʲ")
-	self:check_pron("вою́ю", "vɐˈjʉjʊ")
-	self:check_pron("безъя́тие", "bʲɪzˈjætʲɪje", nil, "n")
-	self:check_pron("То́кио", "ˈtokʲɪo")
-	self:check_pron("розе́ттский ка́мень", "rɐˈzʲet͡skʲɪj ˈkamʲɪnʲ")
-	self:check_pron("от я́блони", "ɐt‿ˈjablənʲɪ")
-	self:check_pron("от А́ни", "ɐˈt‿anʲɪ")
-	self:check_pron("дама́сский", "dɐˈmasːkʲɪj")
-	self:check_pron("ельча́нин", "(j)ɪlʲˈt͡ɕænʲɪn")
-	self:check_pron("коменда́нтский ча́с", "kəmʲɪnˈdan(t)skʲɪj ˈt͡ɕas")
-	self:check_pron("а̀нгло-норма́ннский", "ˌanɡlə nɐrˈmanskʲɪj")
-	self:check_pron("исла́ндский", "ɪsˈlan(t)skʲɪj")
-	self:check_pron("коопера́ция", "kɐɐpʲɪˈrat͡sɨjə")
-	self:check_pron("съе́ӂӂая", "ˈsjeʑːɪjə", "съе́зжая")
-	self:check_pron("сѣдло́", "sʲɪdˈlo")
-	self:check_pron("сѣ̈дла", "ˈsʲɵdlə")
-	self:check_pron("мне жа́рко", "mnʲe ˈʐarkə")
-	self:check_pron("на вку́с и на цвет това́рищей нет", "nɐ‿ˈfkus i nɐ‿ˈt͡svʲet tɐˈvarʲɪɕːɪj nʲet")
-	self:check_pron("ма́стер на все ру́ки", "ˈmasʲtʲɪr nɐ‿ˈfsʲe ˈrukʲɪ")
-	self:check_pron("мля", "mlʲa")
-	self:check_pron("четырё̀хзвёздный", "t͡ɕɪtɨˌrʲɵɣzˈvʲɵznɨj")
-	self:check_pron("сегрегациони́сский", "sʲɪɡrʲɪɡət͡sɨɐˈnʲisːkʲɪj", "сегрегациони́стский")
-	self:check_pron("сегрегациони́стский", "sʲɪɡrʲɪɡət͡sɨɐˈnʲist͡skʲɪj")
-	self:check_pron("пья́нка", "ˈp⁽ʲ⁾jankə")
-	self:check_pron("нѐореали́зм", "ˌnʲeərʲɪɐˈlʲizm")
-	self:check_pron("ре́гентша", "ˈrʲeɡʲɪnt͡ʂʂə")
-	self:check_pron("нра́вственный", "ˈnrafstvʲɪn(ː)ɨj")
-	self:check_pron("што́-лѝбо", "ˈʂto ˌlʲibə", "что́-лѝбо")
-	self:check_pron("гроздь", "ɡrosʲtʲ")
-	self:check_pron("ружьё", "rʊʐˈjɵ")
-	self:check_pron("фильм", "fʲilʲm")
-	self:check_pron("взаѝмопонима́ние", "vzɐˌiməpənʲɪˈmanʲɪje", nil, "n")
-	self:check_pron("скамья́", "skɐm⁽ʲ⁾ˈja")
-	self:check_pron("славянофи́льство", "sləvʲɪnɐˈfʲilʲstvə")
-	self:check_pron("сельдь", "sʲelʲtʲ")
-	self:check_pron("секво́йя", "sʲɪkˈvojːə")
-	self:check_pron("ро́жью", "ˈroʐjʊ")
-	self:check_pron("Ю̀жно-Африка́нская Респу́блика", "ˌjuʐnə ɐfrʲɪˈkanskəjə rʲɪˈspublʲɪkə")
-	self:check_pron("Дза̀уджика́у", "ˌd͡zzaʊd͡ʐʐɨˈkaʊ")
-	self:check_pron("Вели́кая Арме́ния", "vʲɪˈlʲikəjə ɐrˈmʲenʲɪjə")
-	self:check_pron("Асунсьо́н", "ɐsʊn⁽ʲ⁾ˈsʲjɵn")
-	self:check_pron("Амударья́", "ɐmʊdɐˈrʲja")
-	self:check_pron("та́ять", "ˈta(j)ɪtʲ")
-	self:check_pron("Арха́нгельск", "ɐrˈxanɡʲɪlʲsk")
-	self:check_pron("нецелесообра́зный", "nʲɪt͡sɨlʲɪsɐɐˈbraznɨj")
-	self:check_pron("тьфу", "tʲfu")
-	self:check_pron("съезд", "sjest")
-	self:check_pron("съёмка", "ˈsjɵmkə")
-	self:check_pron("предвкуше́ние", "prʲɪtfkʊˈʂɛnʲɪje", nil, "n")
-	self:check_pron("файрво́лл", "fɐjrˈvol")
-	self:check_pron("элѐктроэнэ́ргия", "ɨˌlʲektrəɨˈnɛrɡʲɪjə","электроэне́ргия")
-	self:check_pron("нало̀гоплате́льщик", "nɐˌloɡəplɐˈtʲelʲɕːɪk","налогоплате́льщик")
-	self:check_pron("НЭП", "nɛp")
-	self:check_pron("Вьентья́н", "vʲjɪnʲˈtʲjan")
-	self:check_pron("шпиль", "ʂpʲilʲ")
-	self:check_pron("ка-гэ-бэ́", "ka ɡɛ ˈbɛ", "КГБ")
-	self:check_pron("презре́нный", "prʲɪzˈrʲenːɨj")
-	self:check_pron("несоверше́нный", "nʲɪsəvʲɪrˈʂɛnːɨj")
-	self:check_pron("пятсо́т", "pʲɪt͡sˈsot", "пятьсо́т")
-	self:check_pron("шестьдеся́т", "ʂɨzʲdʲɪˈsʲat")
-	self:check_pron("пятьдеся́т", "pʲɪdʲɪˈsʲat")
-	self:check_pron("сʔу́женный", "ˈsʔuʐɨn(ː)ɨj", "су́женный")
-	self:check_pron("съу́женный", "ˈsʔuʐɨn(ː)ɨj", "су́женный")
-	self:check_pron("воӂӂа́", "vɐˈʑːa", "вожжа́")
-	self:check_pron("дро́ӂӂи", "ˈdroʑːɪ", "дро́жжи")
-	self:check_pron("погля́дывать", "pɐˈɡlʲadɨvətʲ")
-	self:check_pron("до встре́чи", "dɐ‿ˈfstrʲet͡ɕɪ")
-	self:check_pron("варьи́ровать", "vɐˈrʲjirəvətʲ")
-	self:check_pron("юла́", "jʊˈla")
-	self:check_pron("валя́ться", "vɐˈlʲat͡sːə")
-	self:check_pron("подде́ржка", "pɐˈdʲːerʂkə")
-	self:check_pron("сверхинтере́сный", "svʲɪrxɨnʲtʲɪˈrʲesnɨj")
-	self:check_pron("вещдо́к", "vʲɪʑːˈdok")
-	self:check_pron("яйцо́", "(j)ɪjˈt͡so")
-	self:check_pron("ещё", "(j)ɪˈɕːɵ")
-	self:check_pron("за́яц", "ˈza(j)ɪt͡s")
-	self:check_pron("отдохну́ть", "ɐdːɐxˈnutʲ")
-	self:check_pron("до́чь бы", "ˈdod͡ʑ‿bɨ")
-	self:check_pron("де́йственный", "ˈdʲejstvʲɪn(ː)ɨj")
-	self:check_pron("я", "ja")
-	self:check_pron("дождь", "doʂtʲ")
-	self:check_pron("дощ", "doɕː", "дождь")
-	self:check_pron("ночь", "not͡ɕ")
-	self:check_pron("смеёшься", "smʲɪˈjɵʂsʲə")
-	self:check_pron("ничья́", "nʲɪˈt͡ɕja")
-	self:check_pron("аа́к", "ɐˈak")
-	self:check_pron("аа́м", "ɐˈam")
-	self:check_pron("аа́нгич", "ɐˈanɡʲɪt͡ɕ")
-	self:check_pron("ааро́новец", "ɐɐˈronəvʲɪt͡s")
-	self:check_pron("ааро́новщина", "ɐɐˈronəfɕːɪnə")
-	self:check_pron("а́ба", "ˈabə")
-	self:check_pron("абава́н", "ɐbɐˈvan", "аба-ва́н")
-	self:check_pron("абавуа́", "ɐbəvʊˈa", "аба-вуа́")
-	self:check_pron("абажу́р", "ɐbɐˈʐur")
-	self:check_pron("аба́з", "ɐˈbas")
-	self:check_pron("абаза́", "ɐbɐˈza")
-	self:check_pron("абази́н", "ɐbɐˈzʲin")
-	self:check_pron("абази́нка", "ɐbɐˈzʲinkə")
-	self:check_pron("абази́я", "ɐbɐˈzʲijə")
-	self:check_pron("аба́к", "ɐˈbak")
-	self:check_pron("абака́", "ɐbɐˈka")
-	self:check_pron("абако́ст", "ɐbɐˈkost", "аба-ко́ст")
-	self:check_pron("абаку́мыч", "ɐbɐˈkumɨt͡ɕ")
-	self:check_pron("Аба́лкин", "ɐˈbalkʲɪn")
-	self:check_pron("абало́н", "ɐbɐˈlon")
-	self:check_pron("абандо́н", "ɐbɐnˈdon")
-	self:check_pron("абарогно́з", "ɐbərɐɡˈnos")
-	self:check_pron("абато́н", "ɐbɐˈton")
-	self:check_pron("абаша́", "ɐbɐˈʂa")
-	self:check_pron("абба́си", "ɐˈbasʲɪ")
-	self:check_pron("абба́т", "ɐˈbat")
-	self:check_pron("аббати́са", "ɐbɐˈtʲisə")
-	self:check_pron("абба́тство", "ɐˈbat͡stvə")
-	self:check_pron("аббревиату́ра", "ɐbrʲɪvʲɪɐˈturə")
-	self:check_pron("аббревиа́ция", "ɐbrʲɪvʲɪˈat͡sɨjə")
-	self:check_pron("абда́л", "ɐbˈdal")
-	self:check_pron("абдери́т", "ɐbdʲɪˈrʲit")
-	self:check_pron("абде́ст", "ɐbˈdʲest")
-	self:check_pron("абдика́ция", "ɐbdʲɪˈkat͡sɨjə")
-	self:check_pron("абдо́мен", "ɐbˈdomʲɪn")
-	self:check_pron("абдукта́нт", "ɐbdʊkˈtant")
-	self:check_pron("абду́ктор", "ɐbˈduktər")
-	self:check_pron("абду́кция", "ɐbˈdukt͡sɨjə")
-	self:check_pron("абэвэ́га", "ɐbɨˈvɛɡə")
-	self:check_pron("а́белев", "ˈabʲɪlʲɪf")
-	self:check_pron("абе́лия", "ɐˈbʲelʲɪjə")
-	self:check_pron("абельмо́ш", "ɐbʲɪlʲˈmoʂ")
-	self:check_pron("аберра́ция", "ɐbʲɪˈrat͡sɨjə")
-	self:check_pron("абе́с", "ɐˈbʲes")
-	self:check_pron("абесси́в", "ɐbʲɪˈsʲif")
-	self:check_pron("абза́ц", "ɐbˈzat͡s")
-	self:check_pron("абиети́н", "ɐbʲɪ(j)ɪˈtʲin")
-	self:check_pron("аби́лка", "ɐˈbʲilkə")
-	self:check_pron("абисса́ль", "ɐbʲɪˈsalʲ")
-	self:check_pron("абисси́нец", "ɐbʲɪˈsʲinʲɪt͡s")
-	self:check_pron("абитурие́нт", "ɐbʲɪtʊrʲɪˈjent")
-	self:check_pron("абитурие́нтка", "ɐbʲɪtʊrʲɪˈjentkə")
-	self:check_pron("аблакта́ция", "ɐblɐkˈtat͡sɨjə")
-	self:check_pron("аблакти́рование", "ɐblɐkˈtʲirəvənʲɪje", nil, "n")
-	self:check_pron("аблактиро́вка", "ɐbləktʲɪˈrofkə")
-	self:check_pron("аблати́в", "ɐblɐˈtʲif")
-	self:check_pron("абла́ут", "ɐˈblaʊt")
-	self:check_pron("абляти́в", "ɐblʲɪˈtʲif")
-	self:check_pron("абля́ция", "ɐˈblʲat͡sɨjə")
-	self:check_pron("аболициони́зм", "ɐbəlʲɪt͡sɨɐˈnʲizm")
-	self:check_pron("аболициони́ст", "ɐbəlʲɪt͡sɨɐˈnʲist")
-	self:check_pron("аболициони́стка", "ɐbəlʲɪt͡sɨɐˈnʲistkə")
-	self:check_pron("абонеме́нт", "ɐbənʲɪˈmʲent")
-	self:check_pron("абоне́нт", "ɐbɐˈnʲent")
-	self:check_pron("аборда́ж", "ɐbɐrˈdaʂ")
-	self:check_pron("абориге́н", "ɐbərʲɪˈɡʲen")
-	self:check_pron("або́рт", "ɐˈbort")
-	self:check_pron("абрази́в", "ɐbrɐˈzʲif")
-	self:check_pron("абрази́вность", "ɐbrɐˈzʲivnəsʲtʲ")
-	self:check_pron("абра́зия", "ɐˈbrazʲɪjə")
-	self:check_pron("абракада́бра", "ɐbrəkɐˈdabrə")
-	self:check_pron("абрико́с", "ɐbrʲɪˈkos")
-	self:check_pron("абрикоти́н", "ɐbrʲɪkɐˈtʲin")
-	self:check_pron("а́брис", "ˈabrʲɪs")
-	self:check_pron("аброга́ция", "ɐbrɐˈɡat͡sɨjə")
-	self:check_pron("абса́нс", "ɐpˈsans")
-	self:check_pron("абси́да", "ɐpˈsʲidə")
-	self:check_pron("абсолю́т", "ɐpsɐˈlʲut")
-	self:check_pron("абсолютиза́ция", "ɐpsəlʲʉtʲɪˈzat͡sɨjə")
-	self:check_pron("абсолютизи́рование", "ɐpsəlʲʉtʲɪˈzʲirəvənʲɪje", nil, "n")
-	self:check_pron("абсолютизи́ровать", "ɐpsəlʲʉtʲɪˈzʲirəvətʲ")
-	self:check_pron("абсолюти́зм", "ɐpsəlʲʉˈtʲizm")
-	self:check_pron("абсолюти́ст", "ɐpsəlʲʉˈtʲist")
-	self:check_pron("абсолю́тность", "ɐpsɐˈlʲutnəsʲtʲ")
-	self:check_pron("абсолю́тный", "ɐpsɐˈlʲutnɨj")
-	self:check_pron("абсорба́т", "ɐpsɐrˈbat")
-	self:check_pron("абсорбе́нт", "ɐpsɐrˈbʲent")
-	self:check_pron("абсо́рбер", "ɐpˈsorbʲɪr")
-	self:check_pron("абсорби́рование", "ɐpsɐrˈbʲirəvənʲɪje", nil, "n")
-	self:check_pron("абсорби́ровать", "ɐpsɐrˈbʲirəvətʲ")
-	self:check_pron("абсорби́роваться", "ɐpsɐrˈbʲirəvət͡sə")
-	self:check_pron("абсо́рбция", "ɐpˈsorpt͡sɨjə")
-	self:check_pron("абстине́нт", "ɐpsʲtʲɪˈnʲent")
-	self:check_pron("абстине́нция", "ɐpsʲtʲɪˈnʲent͡sɨjə")
-	self:check_pron("абстраги́рование", "ɐpstrɐˈɡʲirəvənʲɪje", nil, "n")
-	self:check_pron("абстраги́ровать", "ɐpstrɐˈɡʲirəvətʲ")
-	self:check_pron("абстра́кт", "ɐpˈstrakt")
-	self:check_pron("абстра́ктность", "ɐpˈstraktnəsʲtʲ")
-	self:check_pron("абстра́ктный", "ɐpˈstraktnɨj")
-	self:check_pron("абстракциони́зм", "ɐpstrəkt͡sɨɐˈnʲizm")
-	self:check_pron("абстракциони́ст", "ɐpstrəkt͡sɨɐˈnʲist")
-	self:check_pron("абстра́кция", "ɐpˈstrakt͡sɨjə")
-	self:check_pron("абсу́рд", "ɐpˈsurt")
-	self:check_pron("абсурди́зм", "ɐpsʊrˈdʲizm")
-	self:check_pron("абсурди́ст", "ɐpsʊrˈdʲist")
-	self:check_pron("абсу́рдность", "ɐpˈsurdnəsʲtʲ")
-	self:check_pron("абсу́рдный", "ɐpˈsurdnɨj")
-	self:check_pron("абсце́сс", "ɐpˈst͡sɛs")
-	self:check_pron("абсци́сса", "ɐpˈst͡sɨsːə")
-	self:check_pron("абули́я", "ɐbʊˈlʲijə")
-	self:check_pron("абха́з", "ɐpˈxas")
-	self:check_pron("аванга́рд", "ɐvɐnˈɡart")
-	self:check_pron("аванпо́ст", "ɐvɐnˈpost")
-	self:check_pron("ава́нс", "ɐˈvans")
-	self:check_pron("авансце́на", "ɐvɐnˈst͡sɛnə")
-	self:check_pron("авантю́ра", "ɐvɐnʲˈtʲurə")
-	self:check_pron("авантюри́зм", "ɐvənʲtʲʉˈrʲizm")
-	self:check_pron("авантюри́ст", "ɐvənʲtʲʉˈrʲist")
-	self:check_pron("авантюри́стка", "ɐvənʲtʲʉˈrʲistkə")
-	self:check_pron("ава́рец", "ɐˈvarʲɪt͡s")
-	self:check_pron("ава́рия", "ɐˈvarʲɪjə")
-	self:check_pron("авата́р", "ɐvɐˈtar")
-	self:check_pron("авгу́р", "ɐvˈɡur")
-	self:check_pron("а́вгуст", "ˈavɡʊst")
-	self:check_pron("А́вель", "ˈavʲɪlʲ")
-	self:check_pron("авеню́", "ɐvʲɪˈnʲu")
-	self:check_pron("авиаба́за", "ɐvʲɪɐˈbazə")
-	self:check_pron("авиабиле́т", "ɐvʲɪəbʲɪˈlʲet")
-	self:check_pron("авиабрига́да", "ɐvʲɪəbrʲɪˈɡadə")
-	self:check_pron("авиагоризо́нт", "ɐvʲɪəɡərʲɪˈzont")
-	self:check_pron("авиадиви́зия", "ɐvʲɪədʲɪˈvʲizʲɪjə")
-	self:check_pron("авиазвено́", "ɐvʲɪəzvʲɪˈno")
-	self:check_pron("авиакомпа́ния", "ɐvʲɪəkɐmˈpanʲɪjə")
-	self:check_pron("авиако́рпус", "ɐvʲɪɐˈkorpʊs")
-	self:check_pron("авиали́ния", "ɐvʲɪɐˈlʲinʲɪjə")
-	self:check_pron("авиама́тка", "ɐvʲɪɐˈmatkə")
-	self:check_pron("авианалёт", "ɐvʲɪənɐˈlʲɵt")
-	self:check_pron("авиано́сец", "ɐvʲɪɐˈnosʲɪt͡s")
-	self:check_pron("авиаотря́д", "ɐvʲɪɐɐˈtrʲat")
-	self:check_pron("авиапо́лк", "ɐvʲɪɐˈpolk")
-	self:check_pron("авиапо́чта", "ɐvʲɪɐˈpot͡ɕtə")
-	self:check_pron("авиапредприя́тие", "ɐvʲɪəprʲɪtprʲɪˈjætʲɪje", nil, "n")
-	self:check_pron("авиа́тор", "ɐvʲɪˈatər")
-	self:check_pron("авиауда́р", "ɐvʲɪəʊˈdar")
-	self:check_pron("авиа́ция", "ɐvʲɪˈat͡sɨjə")
-	self:check_pron("ага́р-ага́р", "ɐˈɡar ɐˈɡar")
-	self:check_pron("заво́д подря́дчик", "zɐˈvot pɐˈdrʲæt͡ɕːɪk", "заво́д-подря́дчик")
-	self:check_pron("пингпо́нг", "pʲɪnkˈponk", "пинг-по́нг")
-	self:check_pron("пти́ца-адъюта́нт", "ˈptʲit͡sə ɐdjʊˈtant")
-	self:check_pron("в чём де́ло", "ˈf‿t͡ɕɵm ˈdʲelə")
-	self:check_pron("голосовы́е свя́зки", "ɡələsɐˈvɨɪ ˈsvʲaskʲɪ", nil, "a")
-	self:check_pron("да́мы и господа́", "ˈdamɨ i ɡəspɐˈda")
-	self:check_pron("ссо́ра", "ˈsːorə")
-	self:check_pron("введе́ние", "vʲːɪˈdʲenʲɪje", nil, "n")
-	self:check_pron("ввод", "vːot")
-	self:check_pron("гру́зчик", "ˈɡruɕːɪk")
-	self:check_pron("то́нна", "ˈtonːə")
-	self:check_pron("наедине́", "nə(j)ɪdʲɪˈnʲe")
-	self:check_pron("поеди́нок", "pə(j)ɪˈdʲinək")
+ 		{ "компа̀кт-ди́ск", "kɐmˌpaɡd ˈdʲisk" },
+ 		{ "воѐнно-морско́й", "vɐˌjenːə mɐrˈskoj" },
+ 		{ "ра́нчо", "ˈranʲt͡ɕɵ" },
+ 		{ "а не то", "ɐ‿nʲɪ‿ˈto" },
+ 		{ "а как же", "ɐ‿ˈkaɡ‿ʐɨ" },
+ 		{ "а̂ капэ́лла", "a kɐˈpɛl(ː)ə", "а капе́лла", nil, "opt" },
+ 		{ "о-а-э́", "o a ˈɛ" },
+ 		{ "лёгкий", "ˈlʲɵxʲkʲɪj" },
+ 		{ "мя́гкий", "ˈmʲæxʲkʲɪj" },
+ 		{ "не́‿за‿што", "ˈnʲe‿zə‿ʂtə", "не́ за что" },
+ 		{ "град идёт", "ɡrat ɪˈdʲɵt" },
+ 		{ "гра̂д‿идёт", "ɡrad‿ɨˈdʲɵt", "град идёт" },
+ 		{ "град‿идёт", "ɡrəd‿ɨˈdʲɵt", "град идёт" },
+ 		{ "ро́г‿изоби́лия", "ˈroɡ‿ɨzɐˈbʲilʲɪjə", "ро́г изоби́лия" },
+ 		{ "приводи́ть в замеша́тельство", "prʲɪvɐˈdʲidʲ v‿zəmʲɪˈʂatʲɪlʲstvə" },
+ 		{ "ты ве́ришь в Бо́га", "tɨ ˈvʲerʲɪʐ ˈv‿boɡə" },
+ 		{ "муж Ва́ли", "muʂ ˈvalʲɪ" },
+ 		{ "брат вдовы́", "brad vdɐˈvɨ" },
+ 		{ "ваш взор", "vaʐ vzor" },
+ 		{ "от взгля́дов", "ɐd‿ˈvzɡlʲadəf" },
+ 		{ "волк ка́ждый год линя́ет", "volk ˈkaʐdɨj ɡot lʲɪˈnʲæ(j)ɪt" },
+ 		{ "сча́стливо", "ˈɕːaslʲɪvə, ˈɕːæsʲlʲɪvə" },
+ 		{ "да́вя̣т", "ˈdavʲət", "да́вят" },
+ 		{ "посме́шища̣м", "pɐsˈmʲeʂɨɕːəm", "посмешищам" },
+ 		{ "код Мо́рзэ", "kot ˈmorzɛ", "код Мо́рзе" },
+ 		{ "наря́д на ку́хню", "nɐˈrʲat nɐ‿ˈkuxnʲʊ" },
+ 		{ "ждать щу́ку", "ʐdat͡ɕ ˈɕːukʊ" },
+ 		{ "за́пись Шу́берта", "ˈzapʲɪɕ ˈʂubʲɪrtə" },
+ 		{ "гусь жа́ренный", "ɡuʑ ˈʐarʲɪn(ː)ɨj" },
+ 		{ "туз черве́й", "tuɕ t͡ɕɪrˈvʲej" },
+ 		{ "о̀ргкомите́т", "ˌorkːəmʲɪˈtʲet", nil, nil, "y"},
+ 		{ "То́кио же", "ˈtokʲɪo‿ʐɨ" },
+ 		{ "ве́псский", "ˈvʲepsːkʲɪj" },
+ 		{ "Черке́сск", "t͡ɕɪrˈkʲesːk" },
+ 		{ "ада́жио", "ɐˈdaʐɨo" },
+ 		{ "арпе́джио", "ɐrˈpʲed͡ʐʐɨo" },
+ 		{ "с глаз доло́й — из се́рдца вон", "ˈz‿ɡlaz dɐˈloj | ɪs‿ˈsʲert͡sə von" },
+ 		{ "аппле́т", "ɐˈplʲet" },
+ 		{ "Киргизста́н", "kʲɪrɡʲɪˈstan" },
+ 		{ "друг к дру́гу", "druɡ ˈɡ‿druɡʊ" },
+ 		{ "(и) пода́вно", "(i) pɐˈdavnə" },
+ 		{ "рабфа́к", "rɐpˈfak" },
+ 		{ "со́бственник", "ˈsopstvʲɪnʲ(ː)ɪk" },
+ 		{ "твё́рдость", "ˈtvʲɵrdəsʲtʲ" },
+ 		{ "просчё́т", "prɐˈɕːɵt" },
+ 		{ "кало́сс", "kɐˈlos" },
+ 		{ "Иоа́нн", "ɪɐˈan" },
+ 		{ "йе́ти", "ˈjetʲɪ" },
+ 		{ "а̀нгло-норма́ннский", "ˌanɡlə nɐrˈmanskʲɪj" },
+ 		{ "фуррь", "furʲ" },
+ 		{ "ха́о̂с", "ˈxaos", "ха́ос" },
+ 		{ "эвфеми́зм", "ɪfʲɪˈmʲizm" },
+ 		{ "хору́гвь", "xɐˈrukfʲ" },
+ 		{ "по абази́ну", "pɐ‿ɐbɐˈzʲinʊ" },
+ 		{ "под абази́ном", "pəd‿əbɐˈzʲinəm" },
+ 		{ "подсти́лка", "pɐt͡sʲˈsʲtʲilkə" },
+ 		{ "э́ллипс", "ˈɛlʲɪps" },
+ 		{ "иди́ллия", "ɪˈdʲilʲɪjə" },
+ 		{ "-ин", "ʲɪn" },
+ 		{ "фойе́", "fɐˈjːe", nil, nil, "y" },
+ 		{ "льстец", "lʲsʲtʲet͡s" },
+ 		{ "инсти́нкт", "ɪn⁽ʲ⁾ˈsʲtʲinkt" },
+ 		{ "ни́ндзя", "ˈnʲinʲd͡zʲzʲə" },
+ 		{ "Хэйлунцзя́н", "xɨjlʊnʲˈd͡zʲzʲan" },
+ 		{ "проце́нтщик", "prɐˈt͡sɛnʲɕːɪk" },
+ 		{ "львёнок", "ˈlʲvʲɵnək" },
+ 		{ "помпе́зный", "pɐm⁽ʲ⁾ˈpʲeznɨj" },
+ 		{ "любви́", "lʲʊbˈvʲi, lʲʉbʲˈvʲi" },
+ 		{ "обвини́тельный", "ɐbvʲɪˈnʲitʲɪlʲnɨj" },
+ 		{ "вбира́ть", "v⁽ʲ⁾bʲɪˈratʲ" },
+ 		{ "впечатли́тельный", "f⁽ʲ⁾pʲɪt͡ɕɪtˈlʲitʲɪlʲnɨj" },
+ 		{ "дѐло в то́м, што", "ˌdʲelə ˈf‿tom | ʂto", "де́ло в то́м, что" },
+ 		{ "де́вственная плева́", "ˈdʲefstvʲɪn(ː)əjə plʲɪˈva" },
+ 		{ "хуаця́о", "xʊɐˈt͡sʲao" },
+ 		{ "Цю́рих", "ˈt͡sʲʉrʲɪx" },
+ 		{ "тайцзицюа́нь", "təjd͡zʲzʲɪt͡sʲʊˈanʲ" },
+ 		{ "Цзили́нь", "d͡zʲzʲɪˈlʲinʲ" },
+ 		{ "будь што бу́дет", "but͡ɕ ʂto ˈbudʲɪt", "будь что бу́дет" },
+ 		{ "дух бодр, плоть же не́мощна", "duɣ bodr | ˈplod͡ʑ‿ʐɨ ˈnʲeməɕːnə" },
+ 		{ "Пи́тсбург", "ˈpʲid͡zbʊrk" },
+ 		{ "Ло̀с-А́нджелес", "ˌlos ˈand͡ʐʐɨlʲɪs" },
+ 		{ "АльДжази́ра", "ɐlʲd͡ʐʐɐˈzʲirə", "Аль-Джази́ра" },
+ 		{ "Петрозаво́дск", "pʲɪtrəzɐˈvot͡sk" },
+ 		{ "Джо́рджтаун", "ˈd͡ʐʐort͡ʂʂtəʊn" },
+ 		{ "Нджаме́на", "nd͡ʐʐɐˈmʲenə" },
+ 		{ "муншту́к", "mʊnʂˈtuk", "мундшту́к" },
+ 		{ "Джордж", "d͡ʐʐort͡ʂʂ" },
+ 		{ "Гуйчжо́у", "ɡʊjˈd͡ʐʐoʊ" },
+ 		{ "Чжэцзя́н", "d͡ʐʐɨˈd͡zʲzʲan" },
+ 		{ "аге́нтство", "ɐˈɡʲent͡stvə" },
+ 		{ "с жено́й", "ʐ‿ʐɨˈnoj" },
+ 		{ "без ша́пки", "bʲɪʂ‿ˈʂapkʲɪ" },
+ 		{ "отста́вка", "ɐt͡sˈstafkə" },
+ 		{ "отстегну́ть", "ɐt͡sʲsʲtʲɪɡˈnutʲ" },
+ 		{ "подсласти́тель", "pət͡sslɐˈsʲtʲitʲɪlʲ" },
+ 		{ "о́тзвук", "ˈod͡zzvʊk" },
+ 		{ "коттэ́дж", "kɐˈtɛt͡ʂʂ", "котте́дж" },
+ 		{ "подсчёт", "pɐt͡ɕˈɕːɵt" },
+ 		{ "отсчи́тываться", "ɐt͡ɕˈɕːitɨvət͡sə" },
+ 		{ "отжи́ть", "ɐd͡ʐˈʐɨtʲ" },
+ 		{ "таджи́к", "tɐd͡ʐˈʐɨk" },
+ 		{ "дщерь", "t͡ɕɕːerʲ" },
+ 		{ "тще́тно", "ˈt͡ɕɕːetnə" },
+ 		{ "мла́дший", "ˈmlat͡ʂʂɨj" },
+ 		{ "отшиби́ть", "ɐt͡ʂʂɨˈbʲitʲ" },
+ 		{ "пядь земли́", "pʲæd͡zʲ zʲɪˈmlʲi" },
+ 		{ "под сту́лом", "pɐt͡s‿ˈstuləm" },
+ 		{ "надзо́р", "nɐd͡zˈzor" },
+ 		{ "отсю́да", "ɐt͡sʲˈsʲudə" },
+ 		{ "отсу́да", "ɐt͡sˈsudə", "отсю́да" },
+ 		{ "вѐт/слу́жба", "ˌvʲet͡sˈsluʐbə", "вѐтслу́жба" },
+ 		{ "куро́ртник", "kʊˈrort⁽ʲ⁾nʲɪk" },
+ 		{ "сболтнёшь", "zbɐlt⁽ʲ⁾ˈnʲɵʂ" },
+ 		{ "сболтну́ть", "zbɐltˈnutʲ" },
+ 		{ "спу́тник", "ˈsputʲnʲɪk" },
+ 		{ "расчерти́ть", "rəɕt͡ɕɪrˈtʲitʲ" },
+ 		{ "убе́жищa", "ʊˈbʲeʐɨɕːə" },
+ 		{ "уда́ча", "ʊˈdat͡ɕə" },
+ 		{ "тро́лль", "ˈtrolʲ" },
+ 		{ "подча́с", "pɐˈt͡ɕːas" },
+ 		{ "в ссо́ри", "ˈf‿sːorʲɪ", "в ссо́ре" },
+	--	{ "четырё̀хле́тний", "t͡ɕɪtɨˌrʲɵxˈlʲet⁽ʲ⁾nʲɪj" }, -- should there be a syllable boundary between x and l?
+ 		{ "подтрибу́нный", "pətːrʲɪˈbunːɨj" },
+ 		{ "што́-то", "ˈʂto‿tə", "что́-то" },
+ 		{ "не всё то зо́лото", "nʲɪ‿ˈfsʲɵ to ˈzolətə" },
+ 		{ "не по нутру́", "nʲɪ‿pə‿nʊˈtru" },
+ 		{ "в то вре́мя как", "ˈf‿to ˈvrʲemʲə kak" },
+ 		{ "не к ме́сту", "nʲɪ‿k‿ˈmʲestʊ" },
+ 		{ "де́сять за́поведей", "ˈdʲesʲɪd͡zʲ ˈzapəvʲɪdʲɪj" },
+ 		{ "мно́го бу́дешь знать", "ˈmnoɡə ˈbudʲɪʐ znatʲ" },
+ 		{ "вою́ю", "vɐˈjʉjʊ" },
+ 		{ "безъя́тие", "bʲɪzˈjætʲɪje", nil, "n" },
+ 		{ "То́кио", "ˈtokʲɪo" },
+ 		{ "розе́ттский ка́мень", "rɐˈzʲet͡skʲɪj ˈkamʲɪnʲ" },
+ 		{ "от я́блони", "ɐt‿ˈjablənʲɪ" },
+ 		{ "от А́ни", "ɐˈt‿anʲɪ" },
+ 		{ "дама́сский", "dɐˈmasːkʲɪj" },
+ 		{ "ельча́нин", "(j)ɪlʲˈt͡ɕænʲɪn" },
+ 		{ "коменда́нтский ча́с", "kəmʲɪnˈdan(t)skʲɪj ˈt͡ɕas" },
+ 		{ "а̀нгло-норма́ннский", "ˌanɡlə nɐrˈmanskʲɪj" },
+ 		{ "исла́ндский", "ɪsˈlan(t)skʲɪj" },
+ 		{ "коопера́ция", "kɐɐpʲɪˈrat͡sɨjə" },
+ 		{ "съе́ӂӂая", "ˈsjeʑːɪjə", "съе́зжая" },
+ 		{ "сѣдло́", "sʲɪdˈlo" },
+ 		{ "сѣ̈дла", "ˈsʲɵdlə" },
+ 		{ "мне жа́рко", "mnʲe ˈʐarkə" },
+ 		{ "на вку́с и на цвет това́рищей нет", "nɐ‿ˈfkus i nɐ‿ˈt͡svʲet tɐˈvarʲɪɕːɪj nʲet" },
+ 		{ "ма́стер на все ру́ки", "ˈmasʲtʲɪr nɐ‿ˈfsʲe ˈrukʲɪ" },
+ 		{ "мля", "mlʲa" },
+ 		{ "четырё̀хзвёздный", "t͡ɕɪtɨˌrʲɵɣzˈvʲɵznɨj" },
+ 		{ "сегрегациони́сский", "sʲɪɡrʲɪɡət͡sɨɐˈnʲisːkʲɪj", "сегрегациони́стский" },
+ 		{ "сегрегациони́стский", "sʲɪɡrʲɪɡət͡sɨɐˈnʲist͡skʲɪj" },
+ 		{ "пья́нка", "ˈp⁽ʲ⁾jankə" },
+ 		{ "нѐореали́зм", "ˌnʲeərʲɪɐˈlʲizm" },
+ 		{ "ре́гентша", "ˈrʲeɡʲɪnt͡ʂʂə" },
+ 		{ "нра́вственный", "ˈnrafstvʲɪn(ː)ɨj" },
+ 		{ "што́-лѝбо", "ˈʂto ˌlʲibə", "что́-лѝбо" },
+ 		{ "гроздь", "ɡrosʲtʲ" },
+ 		{ "ружьё", "rʊʐˈjɵ" },
+ 		{ "фильм", "fʲilʲm" },
+ 		{ "взаѝмопонима́ние", "vzɐˌiməpənʲɪˈmanʲɪje", nil, "n" },
+ 		{ "скамья́", "skɐˈm⁽ʲ⁾ja" },
+ 		{ "славянофи́льство", "sləvʲɪnɐˈfʲilʲstvə" },
+ 		{ "сельдь", "sʲelʲtʲ" },
+ 		{ "секво́йя", "sʲɪkˈvojːə" },
+ 		{ "ро́жью", "ˈroʐjʊ" },
+ 		{ "Ю̀жно-Африка́нская Респу́блика", "ˌjuʐnə ɐfrʲɪˈkanskəjə rʲɪˈspublʲɪkə" },
+ 		{ "Дза̀уджика́у", "ˌd͡zzaʊd͡ʐʐɨˈkaʊ" },
+ 		{ "Вели́кая Арме́ния", "vʲɪˈlʲikəjə ɐrˈmʲenʲɪjə" },
+ 		{ "Асунсьо́н", "ɐsʊn⁽ʲ⁾ˈsʲjɵn" },
+ 		{ "Амударья́", "ɐmʊdɐˈrʲja" },
+ 		{ "та́ять", "ˈta(j)ɪtʲ" },
+ 		{ "Арха́нгельск", "ɐrˈxanɡʲɪlʲsk" },
+ 		{ "нецелесообра́зный", "nʲɪt͡sɨlʲɪsɐɐˈbraznɨj" },
+ 		{ "тьфу", "tʲfu" },
+ 		{ "съезд", "sjest" },
+ 		{ "съёмка", "ˈsjɵmkə" },
+ 		{ "предвкуше́ние", "prʲɪtfkʊˈʂɛnʲɪje", nil, "n" },
+ 		{ "файрво́лл", "fɐjrˈvol" },
+ 		{ "элѐктроэнэ́ргия", "ɪˌlʲektrəɪˈnɛrɡʲɪjə", "электроэне́ргия" },
+ 		{ "нало̀гоплате́льщик", "nɐˌloɡəplɐˈtʲelʲɕːɪk", "налогоплате́льщик" },
+ 		{ "НЭП", "nɛp" },
+ 		{ "Вьентья́н", "v⁽ʲ⁾jɪnʲˈtʲjan" },
+ 		{ "шпиль", "ʂpʲilʲ" },
+ 		{ "ка-гэ-бэ́", "ka ɡɛ ˈbɛ", "КГБ" },
+ 		{ "презре́нный", "prʲɪzˈrʲenːɨj" },
+ 		{ "несоверше́нный", "nʲɪsəvʲɪrˈʂɛnːɨj" },
+ 		{ "пятсо́т", "pʲɪt͡sˈsot", "пятьсо́т" },
+ 		{ "шестьдеся́т", "ʂɨzʲdʲɪˈsʲat" },
+ 		{ "пятьдеся́т", "pʲɪdʲɪˈsʲat" },
+ 		{ "сʔу́женный", "ˈsʔuʐɨn(ː)ɨj", "су́женный" },
+ 		{ "съу́женный", "ˈsʔuʐɨn(ː)ɨj", "су́женный" },
+ 		{ "воӂӂа́", "vɐˈʑːa", "вожжа́" },
+ 		{ "дро́ӂӂи", "ˈdroʑːɪ", "дро́жжи" },
+ 		{ "погля́дывать", "pɐˈɡlʲadɨvətʲ" },
+ 		{ "до встре́чи", "dɐ‿ˈfstrʲet͡ɕɪ" },
+ 		{ "варьи́ровать", "vɐˈrʲjirəvətʲ" },
+ 		{ "юла́", "jʊˈla" },
+ 		{ "валя́ться", "vɐˈlʲat͡sːə" },
+ 		{ "подде́ржка", "pɐˈdʲːerʂkə" },
+ 		{ "сверхинтере́сный", "svʲɪrxɨnʲtʲɪˈrʲesnɨj" },
+ 		{ "вещдо́к", "vʲɪʑːˈdok" },
+ 		{ "яйцо́", "(j)ɪjˈt͡so" },
+ 		{ "ещё", "(j)ɪˈɕːɵ" },
+ 		{ "за́яц", "ˈza(j)ɪt͡s" },
+ 		{ "отдохну́ть", "ɐdːɐxˈnutʲ" },
+ 		{ "до́чь бы", "ˈdod͡ʑ‿bɨ" },
+ 		{ "де́йственный", "ˈdʲejstvʲɪn(ː)ɨj" },
+ 		{ "я", "ja" },
+ 		{ "дождь", "doʂtʲ" },
+ 		{ "дощ", "doɕː", "дождь" },
+ 		{ "ночь", "not͡ɕ" },
+ 		{ "смеёшься", "smʲɪˈjɵʂsʲə" },
+ 		{ "ничья́", "nʲɪˈt͡ɕja" },
+ 		{ "аа́к", "ɐˈak" },
+ 		{ "аа́м", "ɐˈam" },
+ 		{ "аа́нгич", "ɐˈanɡʲɪt͡ɕ" },
+ 		{ "ааро́новец", "ɐɐˈronəvʲɪt͡s" },
+ 		{ "ааро́новщина", "ɐɐˈronəfɕːɪnə" },
+ 		{ "а́ба", "ˈabə" },
+ 		{ "абава́н", "ɐbɐˈvan", "аба-ва́н" },
+ 		{ "абавуа́", "ɐbəvʊˈa", "аба-вуа́" },
+ 		{ "абажу́р", "ɐbɐˈʐur" },
+ 		{ "аба́з", "ɐˈbas" },
+ 		{ "абаза́", "ɐbɐˈza" },
+ 		{ "абази́н", "ɐbɐˈzʲin" },
+ 		{ "абази́нка", "ɐbɐˈzʲinkə" },
+ 		{ "абази́я", "ɐbɐˈzʲijə" },
+ 		{ "аба́к", "ɐˈbak" },
+ 		{ "абака́", "ɐbɐˈka" },
+ 		{ "абако́ст", "ɐbɐˈkost", "аба-ко́ст" },
+ 		{ "абаку́мыч", "ɐbɐˈkumɨt͡ɕ" },
+ 		{ "Аба́лкин", "ɐˈbalkʲɪn" },
+ 		{ "абало́н", "ɐbɐˈlon" },
+ 		{ "абандо́н", "ɐbɐnˈdon" },
+ 		{ "абарогно́з", "ɐbərɐɡˈnos" },
+ 		{ "абато́н", "ɐbɐˈton" },
+ 		{ "абаша́", "ɐbɐˈʂa" },
+ 		{ "абба́си", "ɐˈbasʲɪ" },
+ 		{ "абба́т", "ɐˈbat" },
+ 		{ "аббати́са", "ɐbɐˈtʲisə" },
+ 		{ "абба́тство", "ɐˈbat͡stvə" },
+ 		{ "аббревиату́ра", "ɐbrʲɪvʲɪɐˈturə" },
+ 		{ "аббревиа́ция", "ɐbrʲɪvʲɪˈat͡sɨjə" },
+ 		{ "абда́л", "ɐbˈdal" },
+ 		{ "абдери́т", "ɐbdʲɪˈrʲit" },
+ 		{ "абде́ст", "ɐbˈdʲest" },
+ 		{ "абдика́ция", "ɐbdʲɪˈkat͡sɨjə" },
+ 		{ "абдо́мен", "ɐbˈdomʲɪn" },
+ 		{ "абдукта́нт", "ɐbdʊkˈtant" },
+ 		{ "абду́ктор", "ɐbˈduktər" },
+ 		{ "абду́кция", "ɐbˈdukt͡sɨjə" },
+ 		{ "абэвэ́га", "ɐbɨˈvɛɡə" },
+ 		{ "а́белев", "ˈabʲɪlʲɪf" },
+ 		{ "абе́лия", "ɐˈbʲelʲɪjə" },
+ 		{ "абельмо́ш", "ɐbʲɪlʲˈmoʂ" },
+ 		{ "аберра́ция", "ɐbʲɪˈrat͡sɨjə" },
+ 		{ "абе́с", "ɐˈbʲes" },
+ 		{ "абесси́в", "ɐbʲɪˈsʲif" },
+ 		{ "абза́ц", "ɐbˈzat͡s" },
+ 		{ "абиети́н", "ɐbʲɪ(j)ɪˈtʲin" },
+ 		{ "аби́лка", "ɐˈbʲilkə" },
+ 		{ "абисса́ль", "ɐbʲɪˈsalʲ" },
+ 		{ "абисси́нец", "ɐbʲɪˈsʲinʲɪt͡s" },
+ 		{ "абитурие́нт", "ɐbʲɪtʊrʲɪˈjent" },
+ 		{ "абитурие́нтка", "ɐbʲɪtʊrʲɪˈjentkə" },
+ 		{ "аблакта́ция", "ɐblɐkˈtat͡sɨjə" },
+ 		{ "аблакти́рование", "ɐblɐkˈtʲirəvənʲɪje", nil, "n" },
+ 		{ "аблактиро́вка", "ɐbləktʲɪˈrofkə" },
+ 		{ "аблати́в", "ɐblɐˈtʲif" },
+ 		{ "абла́ут", "ɐˈblaʊt" },
+ 		{ "абляти́в", "ɐblʲɪˈtʲif" },
+ 		{ "абля́ция", "ɐˈblʲat͡sɨjə" },
+ 		{ "аболициони́зм", "ɐbəlʲɪt͡sɨɐˈnʲizm" },
+ 		{ "аболициони́ст", "ɐbəlʲɪt͡sɨɐˈnʲist" },
+ 		{ "аболициони́стка", "ɐbəlʲɪt͡sɨɐˈnʲistkə" },
+ 		{ "абонеме́нт", "ɐbənʲɪˈmʲent" },
+ 		{ "абоне́нт", "ɐbɐˈnʲent" },
+ 		{ "аборда́ж", "ɐbɐrˈdaʂ" },
+ 		{ "абориге́н", "ɐbərʲɪˈɡʲen" },
+ 		{ "або́рт", "ɐˈbort" },
+ 		{ "абрази́в", "ɐbrɐˈzʲif" },
+ 		{ "абрази́вность", "ɐbrɐˈzʲivnəsʲtʲ" },
+ 		{ "абра́зия", "ɐˈbrazʲɪjə" },
+ 		{ "абракада́бра", "ɐbrəkɐˈdabrə" },
+ 		{ "абрико́с", "ɐbrʲɪˈkos" },
+ 		{ "абрикоти́н", "ɐbrʲɪkɐˈtʲin" },
+ 		{ "а́брис", "ˈabrʲɪs" },
+ 		{ "аброга́ция", "ɐbrɐˈɡat͡sɨjə" },
+ 		{ "абса́нс", "ɐpˈsans" },
+ 		{ "абси́да", "ɐpˈsʲidə" },
+ 		{ "абсолю́т", "ɐpsɐˈlʲut" },
+ 		{ "абсолютиза́ция", "ɐpsəlʲʉtʲɪˈzat͡sɨjə" },
+ 		{ "абсолютизи́рование", "ɐpsəlʲʉtʲɪˈzʲirəvənʲɪje", nil, "n" },
+ 		{ "абсолютизи́ровать", "ɐpsəlʲʉtʲɪˈzʲirəvətʲ" },
+ 		{ "абсолюти́зм", "ɐpsəlʲʉˈtʲizm" },
+ 		{ "абсолюти́ст", "ɐpsəlʲʉˈtʲist" },
+ 		{ "абсолю́тность", "ɐpsɐˈlʲutnəsʲtʲ" },
+ 		{ "абсолю́тный", "ɐpsɐˈlʲutnɨj" },
+ 		{ "абсорба́т", "ɐpsɐrˈbat" },
+ 		{ "абсорбе́нт", "ɐpsɐrˈbʲent" },
+ 		{ "абсо́рбер", "ɐpˈsorbʲɪr" },
+ 		{ "абсорби́рование", "ɐpsɐrˈbʲirəvənʲɪje", nil, "n" },
+ 		{ "абсорби́ровать", "ɐpsɐrˈbʲirəvətʲ" },
+ 		{ "абсорби́роваться", "ɐpsɐrˈbʲirəvət͡sə" },
+ 		{ "абсо́рбция", "ɐpˈsorpt͡sɨjə" },
+ 		{ "абстине́нт", "ɐpsʲtʲɪˈnʲent" },
+ 		{ "абстине́нция", "ɐpsʲtʲɪˈnʲent͡sɨjə" },
+ 		{ "абстраги́рование", "ɐpstrɐˈɡʲirəvənʲɪje", nil, "n" },
+ 		{ "абстраги́ровать", "ɐpstrɐˈɡʲirəvətʲ" },
+ 		{ "абстра́кт", "ɐpˈstrakt" },
+ 		{ "абстра́ктность", "ɐpˈstraktnəsʲtʲ" },
+ 		{ "абстра́ктный", "ɐpˈstraktnɨj" },
+ 		{ "абстракциони́зм", "ɐpstrəkt͡sɨɐˈnʲizm" },
+ 		{ "абстракциони́ст", "ɐpstrəkt͡sɨɐˈnʲist" },
+ 		{ "абстра́кция", "ɐpˈstrakt͡sɨjə" },
+ 		{ "абсу́рд", "ɐpˈsurt" },
+ 		{ "абсурди́зм", "ɐpsʊrˈdʲizm" },
+ 		{ "абсурди́ст", "ɐpsʊrˈdʲist" },
+ 		{ "абсу́рдность", "ɐpˈsurdnəsʲtʲ" },
+ 		{ "абсу́рдный", "ɐpˈsurdnɨj" },
+ 		{ "абсце́сс", "ɐpˈst͡sɛs" },
+ 		{ "абсци́сса", "ɐpˈst͡sɨsːə" },
+ 		{ "абули́я", "ɐbʊˈlʲijə" },
+ 		{ "абха́з", "ɐpˈxas" },
+ 		{ "аванга́рд", "ɐvɐnˈɡart" },
+ 		{ "аванпо́ст", "ɐvɐnˈpost" },
+ 		{ "ава́нс", "ɐˈvans" },
+ 		{ "авансце́на", "ɐvɐnˈst͡sɛnə" },
+ 		{ "авантю́ра", "ɐvɐnʲˈtʲurə" },
+ 		{ "авантюри́зм", "ɐvənʲtʲʉˈrʲizm" },
+ 		{ "авантюри́ст", "ɐvənʲtʲʉˈrʲist" },
+ 		{ "авантюри́стка", "ɐvənʲtʲʉˈrʲistkə" },
+ 		{ "ава́рец", "ɐˈvarʲɪt͡s" },
+ 		{ "ава́рия", "ɐˈvarʲɪjə" },
+ 		{ "авата́р", "ɐvɐˈtar" },
+ 		{ "авгу́р", "ɐvˈɡur" },
+ 		{ "а́вгуст", "ˈavɡʊst" },
+ 		{ "А́вель", "ˈavʲɪlʲ" },
+ 		{ "авеню́", "ɐvʲɪˈnʲu" },
+ 		{ "авиаба́за", "ɐvʲɪɐˈbazə" },
+ 		{ "авиабиле́т", "ɐvʲɪəbʲɪˈlʲet" },
+ 		{ "авиабрига́да", "ɐvʲɪəbrʲɪˈɡadə" },
+ 		{ "авиагоризо́нт", "ɐvʲɪəɡərʲɪˈzont" },
+ 		{ "авиадиви́зия", "ɐvʲɪədʲɪˈvʲizʲɪjə" },
+ 		{ "авиазвено́", "ɐvʲɪəzvʲɪˈno" },
+ 		{ "авиакомпа́ния", "ɐvʲɪəkɐmˈpanʲɪjə" },
+ 		{ "авиако́рпус", "ɐvʲɪɐˈkorpʊs" },
+ 		{ "авиали́ния", "ɐvʲɪɐˈlʲinʲɪjə" },
+ 		{ "авиама́тка", "ɐvʲɪɐˈmatkə" },
+ 		{ "авианалёт", "ɐvʲɪənɐˈlʲɵt" },
+ 		{ "авиано́сец", "ɐvʲɪɐˈnosʲɪt͡s" },
+ 		{ "авиаотря́д", "ɐvʲɪɐɐˈtrʲat" },
+ 		{ "авиапо́лк", "ɐvʲɪɐˈpolk" },
+ 		{ "авиапо́чта", "ɐvʲɪɐˈpot͡ɕtə" },
+ 		{ "авиапредприя́тие", "ɐvʲɪəprʲɪtprʲɪˈjætʲɪje", nil, "n" },
+ 		{ "авиа́тор", "ɐvʲɪˈatər" },
+ 		{ "авиауда́р", "ɐvʲɪəʊˈdar" },
+ 		{ "авиа́ция", "ɐvʲɪˈat͡sɨjə" },
+ 		{ "ага́р-ага́р", "ɐˈɡar ɐˈɡar" },
+ 		{ "заво́д подря́дчик", "zɐˈvot pɐˈdrʲæt͡ɕːɪk", "заво́д-подря́дчик" },
+ 		{ "пингпо́нг", "pʲɪnkˈponk", "пинг-по́нг" },
+ 		{ "пти́ца-адъюта́нт", "ˈptʲit͡sə ɐdjʊˈtant" },
+ 		{ "в чём де́ло", "ˈf‿t͡ɕɵm ˈdʲelə" },
+ 		{ "голосовы́е свя́зки", "ɡələsɐˈvɨɪ ˈsvʲaskʲɪ", nil, "a" },
+ 		{ "да́мы и господа́", "ˈdamɨ i ɡəspɐˈda" },
+ 		{ "ссо́ра", "ˈsːorə" },
+ 		{ "введе́ние", "vʲːɪˈdʲenʲɪje", nil, "n" },
+ 		{ "ввод", "vːot" },
+ 		{ "гру́зчик", "ˈɡruɕːɪk" },
+ 		{ "то́нна", "ˈtonːə" },
+ 		{ "наедине́", "nə(j)ɪdʲɪˈnʲe" },
+ 		{ "поеди́нок", "pə(j)ɪˈdʲinək" },
 	-- palatal assimilation
-	self:check_pron("степь", "sʲtʲepʲ")
-	self:check_pron("здесь", "zʲdʲesʲ")
-	self:check_pron("по́нчик", "ˈponʲt͡ɕɪk")
-	self:check_pron("ка́менщик", "ˈkamʲɪnʲɕːɪk")
-	self:check_pron("снег", "sʲnʲek")
-	self:check_pron("снести́", "sʲnʲɪˈsʲtʲi")
-	self:check_pron("толстя́к", "tɐlˈs⁽ʲ⁾tʲak")
-	self:check_pron("о́ползни", "ˈopəlz⁽ʲ⁾nʲɪ")
-	self:check_pron("злить", "z⁽ʲ⁾lʲitʲ")
-	self:check_pron("подня́ть", "pɐdʲˈnʲætʲ")
-	self:check_pron("отня́ть", "ɐtʲˈnʲætʲ")
-	self:check_pron("ви́нтик", "ˈvʲinʲtʲɪk")
-	self:check_pron("пе́нсия", "ˈpʲen⁽ʲ⁾sʲɪjə")
-	self:check_pron("с(ь)ни́керс", "ˈs⁽ʲ⁾nʲikʲɪrs", "сни́керс")
+ 		{ "степь", "sʲtʲepʲ" },
+ 		{ "здесь", "zʲdʲesʲ" },
+ 		{ "по́нчик", "ˈponʲt͡ɕɪk" },
+ 		{ "ка́менщик", "ˈkamʲɪnʲɕːɪk" },
+ 		{ "снег", "sʲnʲek" },
+ 		{ "снести́", "sʲnʲɪˈsʲtʲi" },
+ 		{ "толстя́к", "tɐlˈs⁽ʲ⁾tʲak" },
+ 		{ "о́ползни", "ˈopəlz⁽ʲ⁾nʲɪ" },
+ 		{ "злить", "z⁽ʲ⁾lʲitʲ" },
+ 		{ "подня́ть", "pɐdʲˈnʲætʲ" },
+ 		{ "отня́ть", "ɐtʲˈnʲætʲ" },
+ 		{ "ви́нтик", "ˈvʲinʲtʲɪk" },
+ 		{ "пе́нсия", "ˈpʲen⁽ʲ⁾sʲɪjə" },
+ 		{ "с(ь)ни́керс", "ˈs⁽ʲ⁾nʲikʲɪrs", "сни́керс" },
 	-- gemination of certain sequences
-	self:check_pron("расщепи́ть", "rəɕːɪˈpʲitʲ")
-	self:check_pron("сшить", "ʂːɨtʲ")
-	self:check_pron("сжать", "ʐːatʲ")
-	self:check_pron("отцепи́ть", "ɐt͡sːɨˈpʲitʲ")
-	self:check_pron("отчёт", "ɐˈt͡ɕːɵt")
+ 		{ "расщепи́ть", "rəɕːɪˈpʲitʲ" },
+ 		{ "сшить", "ʂːɨtʲ" },
+ 		{ "отцепи́ть", "ɐt͡sːɨˈpʲitʲ" },
+ 		{ "отчёт", "ɐˈt͡ɕːɵt" },
 	-- consonants eliminated in certain clusters
-	self:check_pron("здра́ствуй", "ˈzdrastvʊj", "здра́вствуй")
-	self:check_pron("чу́ствовать", "ˈt͡ɕustvəvətʲ", "чу́вствовать")
-	self:check_pron("по́здно", "ˈpoznə")
-	self:check_pron("уздцы́", "ʊˈst͡sɨ")
-	self:check_pron("голла́ндцы", "ɡɐˈlant͡sɨ")
-	self:check_pron("ланша́фт", "lɐnˈʂaft", "ландша́фт")
-	self:check_pron("рентге́н", "rʲɪnˈɡʲen")
-	self:check_pron("сердчи́шко", "sʲɪrˈt͡ɕiʂkə")
-	self:check_pron("счастли́вый", "ɕːɪs⁽ʲ⁾ˈlʲivɨj")
-	self:check_pron("ме́стный", "ˈmʲesnɨj")
-	self:check_pron("улыба́ется", "ʊlɨˈba(j)ɪt͡sə")
-	self:check_pron("чёрный", "ˈt͡ɕɵrnɨj")
-	self:check_pron("у́зко", "ˈuskə")
+ 		{ "здра́ствуй", "ˈzdrastvʊj", "здра́вствуй" },
+ 		{ "чу́ствовать", "ˈt͡ɕustvəvətʲ", "чу́вствовать" },
+ 		{ "по́здно", "ˈpoznə" },
+ 		{ "уздцы́", "ʊˈst͡sɨ" },
+ 		{ "голла́ндцы", "ɡɐˈlant͡sɨ" },
+ 		{ "ланша́фт", "lɐnˈʂaft", "ландша́фт" },
+ 		{ "рентге́н", "rʲɪnˈɡʲen" },
+ 		{ "сердчи́шко", "sʲɪrˈt͡ɕiʂkə" },
+ 		{ "счастли́вый", "ɕːɪs⁽ʲ⁾ˈlʲivɨj" },
+ 		{ "ме́стный", "ˈmʲesnɨj" },
+ 		{ "улыба́ется", "ʊlɨˈba(j)ɪt͡sə" },
+ 		{ "чёрный", "ˈt͡ɕɵrnɨj" },
+ 		{ "у́зко", "ˈuskə" },
+ 	}
+ 	
+ 	self:iterate(cases, "check_pron")
 end
 
 return tests
