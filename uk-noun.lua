@@ -1231,6 +1231,7 @@ local function parse_indicator_spec(angle_bracket_spec)
 				for i, comma_separated_group in ipairs(comma_separated_groups) do
 					local pattern = comma_separated_group[1]
 					local pat, reducible = rsubb(pattern, "%*", "")
+					local genpl_reversed
 					pat, genpl_reversed = rsubb(pat, "#", "")
 					if pat == "" then
 						pat = nil
@@ -2767,6 +2768,7 @@ function export.do_generate_forms(parent_args, pos, from_headword, def)
 	}
 
 	if from_headword then
+		params["lemma"] = {list = true}
 		params["g"] = {list = true}
 		params["f"] = {list = true}
 		params["m"] = {list = true}
