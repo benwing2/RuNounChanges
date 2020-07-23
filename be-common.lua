@@ -31,7 +31,10 @@ end
 
 local AC = u(0x0301) -- acute =  ́
 local GR = u(0x0300) -- acute =  ̀
+local CFLEX = u(0x0302) -- circumflex =  ̂
 local DOTBELOW = u(0x0323) -- dot below =  ̣
+export.accents = AC .. CFLEX .. DOTBELOW
+export.accents_c = "[" .. export.accents .. "]"
 
 export.vowel = "аеіоуяэыёюАЕІОУЯЭЫЁЮ"
 export.vowel_c = "[" .. export.vowel .. "]"
@@ -156,9 +159,13 @@ end
 
 -- Check if word ends in a vowel.
 function export.ends_in_vowel(word)
-	return rfind(word, export.vowel_c .. AC .. "?$")
+	return rfind(word, export.vowel_c .. export.accents_c .. "*$")
 end
 
+-- Check if word ends in a velar.
+function export.ends_in_velar(word)
+	return rfind(word, export.velar_c .. "$")
+end
 
 -- Check if word ends in an always-hard consonant.
 function export.ends_always_hard(word)
@@ -257,19 +264,27 @@ function export.mark_stressed_vowels_in_unstressed_syllables(word)
 end
 
 
--- Undo extra diacritics added by `mark_stressed_vowels_in_unstressed_syllables`.
+-- Undo extra diacritics added by `mark_stressed_vowels_in_unstressed_syllables` or
+-- otherwise (e.g. CFLEX).
 function export.undo_mark_stressed_vowels_in_unstressed_syllables(word)
 	word = rsub(word, DOTBELOW, "")
+	word = rsub(word, CFLEX, "")
 	word = rsub(word, "([ёЁ])́", "%1")
 	return word
 end
 
 
 -- Destress vowels in unstressed syllables. Vowels followed by DOTBELOW are unchanged;
--- otherwise, о -> а; э -> а; ё -> я directly before the stress, otherwise е;
--- е -> я directly before the stress. After that, remove extra diacritics added by
--- mark_stressed_vowels_in_unstressed_syllables().
+-- otherwise, о -> а; э -> а; ё -> я directly before the stress or when followed by
+-- CFLEX, otherwise е; е -> я directly before the stress. After that, remove extra
+-- diacritics added by mark_stressed_vowels_in_unstressed_syllables().
 function export.destress_vowels_after_stress_movement(word)
+	-- Handle ё + CFLEX. This assumes that a stress mark comes between ё and CFLEX,
+	-- which will normally be the case if maybe_accent_initial_syllable() or
+	-- maybe_accent_final_syllable() is used to add stress. We remove the CFLEX after
+	-- destressing the syllable; a CFLEX after a stressed syllable will get removed by
+	-- undo_mark_stressed_vowels_in_unstressed_syllables().
+	word = rsub(word, "([ёЁ])" .. CFLEX, pre_tonic_destresser)
 	word = rsub_repeatedly(word, "([эоёЭОЁ])([^" .. AC .. DOTBELOW .. "])",
 		function(vowel, rest)
 			return destresser[vowel] .. rest
@@ -501,7 +516,7 @@ function export.reduce(stem)
 		end
 		-- адзёр -> адр-
 		-- ірла́ндзец -> ірла́ндц-
-		pre = rsub(pre, "([Дд])[Зз]$", r"%1")
+		pre = rsub(pre, "([Дд])[Зз]$", "%1")
 		-- кацёл -> катл-, ве́цер -> ве́тр-
 		pre = rsub(pre, "ц$", "т")
 		pre = rsub(pre, "Ц$", "Т")
