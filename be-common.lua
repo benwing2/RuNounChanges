@@ -198,34 +198,74 @@ We proceed as follows:
    After that, it undoes the changes made in mark_stressed_vowels_in_unstressed_syllables().
 ]=]
 
--- Apply a vowel_alternant specification ("ao", "ae" or nil) to the vowel directly
--- preceding the stress.
-function export.apply_vowel_alternation(word, vowel_alternant)
-	if vowel_alternant == "ao" then
-		local new_word = rsub(word, "([ая])(" .. export.non_vowel_c .. "*" .. export.vowel_c .. AC .. ")",
-			function(a_vowel, rest)
-				return ao_stresser[a_vowel] .. rest
-			end
-		)
-		if new_word == word then
-			error("Indicator 'ao' can't be applied because word '" .. word .. "' doesn't have an а or я directly before the stress")
-		end
-		return new_word
-	elseif vowel_alternant == "ae" then
-		local new_word = rsub(word, "([ая])(" .. export.non_vowel_c .. "*" .. export.vowel_c .. AC .. ")",
-			function(a_vowel, rest)
-				return ae_stresser[a_vowel] .. rest
-			end
-		)
-		if new_word == word then
-			error("Indicator 'ae' can't be applied because word '" .. word .. "' doesn't have an а or я directly before the stress")
-		end
-		return new_word
-	elseif vowel_alternant then
-		error("Unrecognized vowel alternant '" .. vowel_alternant .. "'")
-	else
+-- Apply one or more vowel alternant specifications ("ao"/"ao2"/"ao3", "ae"/"ae2"/"ae3",
+-- "avo"/"avo2"/"avo3", "yo"/"yo2"/"yo3", "oy" or "voa") to the given word.
+function export.apply_vowel_alternation(word, vowel_alternants)
+	if not vowel_alternants then
 		return word
 	end
+	for _, valt in ipairs(vowel_alternants) do
+		if rfind(valt, "^av?[eo][23]?$") or rfind(valt, "^yo[23]?$") then
+			local re, errmsg
+			if rfind(valt, "[^23]$") then
+				re = export.non_vowel_c .. "*" .. export.vowel_c .. AC
+				errmsg = "directly before the stress"
+			elseif rfind(valt, "2$") then
+				re = export.non_vowel_c .. "*" .. export.vowel_c .. export.non_vowel_c .. "*" .. export.vowel_c .. AC
+				errmsg = "two syllables before the stress"
+			elseif rfind(valt, "3$") then
+				re = export.non_vowel_c .. "*" .. export.vowel_c .. export.non_vowel_c .. "*" .. export.vowel_c .. export.non_vowel_c .. "*" .. export.vowel_c
+				errmsg = "three syllables before the stress"
+			else
+				error("Unrecognized vowel alternant '" .. valt .. "'")
+			end
+			local new_word, req_vowel
+			if rfind(valt, "^a[eo]") then
+				new_word = rsub(word, "([аАяЯ])(" .. re .. ")",
+					function(a_vowel, rest)
+						local stresser = rfind(valt, "^ao") and ao_stresser or ae_stresser
+						return stresser[a_vowel] .. rest
+					end
+				)
+				req_vowel = "а or я"
+			elseif rfind(valt, "^avo") then
+				new_word = rsub(word, "([аА])(" .. re .. ")",
+					function(a_vowel, rest)
+						return (a_vowel == "а" and "в" or "В") .. CFLEX .. "о" .. rest
+					end
+				)
+				req_vowel = "а"
+			elseif rfind(valt, "^yo") then
+				new_word = rsub(word, "([ыЫ])(" .. re .. ")",
+					function(y_vowel, rest)
+						return (y_vowel == "ы" and "о" or "О") .. CFLEX .. rest
+					end
+				)
+				req_vowel = "ы"
+			else
+				error("Unrecognized vowel alternant '" .. valt .. "'")
+			end
+			if new_word == word then
+				error("Indicator '" .. valt .. "' can't be applied because word '" .. word .. "' doesn't have an " .. req_vowel .. " " .. errmsg)
+			end
+			word = new_word
+		elseif valt == "oy" then
+			local new_word = rsub(word, "([оО]́)", "%1" .. CFLEX)
+			if new_word == word then
+				error("Indicator 'oy' can't be applied because word '" .. word .. "' doesn't have a stressed о")
+			end
+			word = new_word
+		elseif valt == "voa" then
+			local new_word = rsub(word, "([вВ])о́", "%1" .. CFLEX .. "о́")
+			if new_word == word then
+				error("Indicator 'voa' can't be applied because word '" .. word .. "' doesn't have a stressed во")
+			end
+			word = new_word
+		else
+			error("Unrecognized vowel alternant '" .. valt .. "'")
+		end
+	end
+	return word
 end
 
 
@@ -285,6 +325,8 @@ function export.destress_vowels_after_stress_movement(word)
 	-- destressing the syllable; a CFLEX after a stressed syllable will get removed by
 	-- undo_mark_stressed_vowels_in_unstressed_syllables().
 	word = rsub(word, "([ёЁ])" .. CFLEX, pre_tonic_destresser)
+	-- Handle о + CFLEX; same idea as above.
+	word = rsub(word, "([оО])" .. CFLEX, function(o_vowel) return o_vowel == "о" and "ы" or "Ы" end)
 	word = rsub_repeatedly(word, "([эоёЭОЁ])([^" .. AC .. DOTBELOW .. "])",
 		function(vowel, rest)
 			return destresser[vowel] .. rest
@@ -299,6 +341,8 @@ function export.destress_vowels_after_stress_movement(word)
 				return vowel .. rest
 			end
 		end)
+	-- Handle в + CFLEX + non-о, which loses the в. Do this after converting unstressed о to а.
+	word = rsub_repeatedly(word, "([вВ])" .. CFLEX .. "([^оО])", "%2")
 	return export.undo_mark_stressed_vowels_in_unstressed_syllables(word)
 end
 
@@ -547,7 +591,12 @@ function export.dereduce(stem, epenthetic_stress)
 	end
 	local epvowel
 	local is_upper = rfind(post, "%u")
-	if rfind(letter, "[ьйЬЙ]") then
+	if post == "'" then
+		-- сям'я́ "family" -> сяме́й
+		post = "й"
+		epvowel = "е"
+	elseif rfind(letter, "[ьйЬЙ]") then
+		-- аўстралі́йка "Australian woman" -> аўстралі́ек
 		letter = ""
 		if rfind(post, "[цЦ]") or not epenthetic_stress then
 			epvowel = "е"
@@ -572,12 +621,12 @@ function export.dereduce(stem, epenthetic_stress)
 			epvowel = "е"
 		end
 	elseif epenthetic_stress then
-		if export.ends_always_hard(letter) then
+		if export.ends_always_hard_or_ts(letter) then
 			epvowel = "о"
 		else
 			epvowel = "ё"
 		end
-	elseif export.ends_always_hard(letter) then
+	elseif export.ends_always_hard_or_ts(letter) then
 		epvowel = "а"
 	else
 		epvowel = "е"
