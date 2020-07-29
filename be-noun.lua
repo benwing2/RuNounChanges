@@ -28,7 +28,7 @@ local m_links = require("Module:links")
 local m_string_utilities = require("Module:string utilities")
 local iut = require("Module:inflection utilities")
 local m_para = require("Module:parameters")
-local com = require("Module:User:Benwing2/be-common")
+local com = require("Module:be-common")
 local m_be_translit = require("Module:be-translit")
 
 local current_title = mw.title.getCurrentTitle()
@@ -141,6 +141,7 @@ local cases = {
 	ins = true,
 	loc = true,
 	voc = true,
+	count = true,
 }
 
 
@@ -151,52 +152,57 @@ local accented_cases = {
 	["ácc"] = "acc",
 	["íns"] = "ins",
 	["lóc"] = "loc",
+	["cóunt"] = "count",
 }
 
 
 -- Stress patterns indicate where the stress goes for forms of each possible slot.
 -- "-" means stem stress, "+" means ending stress. The field "stress" indicates
 -- where to put the stem stress if the lemma doesn't include it. It applies primarily
--- to types d and f and variants of them. For example, lemma множина́ (type d) has
--- plural множи́ни (last-syllable stress), but lemma борода́ (type d') has plural
--- бо́роди (first-syllable stress).
+-- to types d and f and variants of them. For example, lemma галава́ (type d) has
+-- plural гало́вы (last-syllable stress), but lemma старана́ (type f) has plural
+-- сто́раны (first-syllable stress).
 local stress_patterns = {}
 
 stress_patterns["a"] = {
-	nom_s="-", gen_s="-", dat_s="-", acc_s="-", ins_s="-", loc_s="-",
+	nom_s="-", gen_s="-", dat_s="-", acc_s="-", ins_s="-", loc_s="-", count = "-",
 	nom_p="-", gen_p="-", dat_p="-",            ins_p="-", loc_p="-",
 	stress = nil,
 }
 
 stress_patterns["b"] = {
-	nom_s="+", gen_s="+", dat_s="+", acc_s="+", ins_s="+", loc_s="+",
+	nom_s="+", gen_s="+", dat_s="+", acc_s="+", ins_s="+", loc_s="+", count = "+",
 	nom_p="+", gen_p="+", dat_p="+",            ins_p="+", loc_p="+",
 	stress = "last",
 }
 
 stress_patterns["c"] = {
-	nom_s="-", gen_s="-", dat_s="-", acc_s="-", ins_s="-", loc_s="-",
+	nom_s="-", gen_s="-", dat_s="-", acc_s="-", ins_s="-", loc_s="-", count = "-",
 	nom_p="+", gen_p="+", dat_p="+",            ins_p="+", loc_p="+",
 	stress = nil,
 }
 
 stress_patterns["d"] = {
-	nom_s="+", gen_s="+", dat_s="+", acc_s="+", ins_s="+", loc_s="+",
+	nom_s="+", gen_s="+", dat_s="+", acc_s="+", ins_s="+", loc_s="+", count = "+",
 	nom_p="-", gen_p="-", dat_p="-",            ins_p="-", loc_p="-",
 	stress = "last",
 }
 
 stress_patterns["e"] = {
-	nom_s="-", gen_s="-", dat_s="-", acc_s="-", ins_s="-", loc_s="-",
+	nom_s="-", gen_s="-", dat_s="-", acc_s="-", ins_s="-", loc_s="-", count = "-",
 	nom_p="-", gen_p="+", dat_p="+",            ins_p="+", loc_p="+",
 	stress = nil,
 }
 
 stress_patterns["f"] = {
-	nom_s="+", gen_s="+", dat_s="+", acc_s="+", ins_s="+", loc_s="+",
+	nom_s="+", gen_s="+", dat_s="+", acc_s="+", ins_s="+", loc_s="+", count = "+",
 	nom_p="-", gen_p="+", dat_p="+",            ins_p="+", loc_p="+",
 	stress = "first",
 }
+
+
+local count_footnote_msg = "[used with the numbers 2, 3, 4 and higher numbers after 20 ending in 2, 3, and 4]"
+
 
 -- Maybe modify the stem and/or ending in certain special cases:
 -- * Final -е in dative/locative singular triggers second palatalization.
@@ -218,8 +224,8 @@ end
 
 
 local function skip_slot(number, slot)
-	return number == "sg" and rfind(slot, "_p$") or
-		number == "pl" and rfind(slot, "_s$")
+	return number == "sg" and (slot == "count" or rfind(slot, "_p$")) or
+		number == "pl" and (slot == "count" or rfind(slot, "_s$"))
 end
 
 
@@ -315,7 +321,6 @@ local function process_slot_overrides(base, do_slot)
 		end
 		if do_slot(slot) then
 			base.forms[slot] = nil
-			local slot_is_plural = rfind(slot, "_p$")
 			for _, override in ipairs(overrides) do
 				for _, value in ipairs(override.values) do
 					local form = value.form
@@ -342,7 +347,7 @@ end
 
 
 local function add_decl(base, stress,
-	nom_s, gen_s, dat_s, acc_s, ins_s, loc_s,
+	nom_s, gen_s, dat_s, acc_s, ins_s, loc_s, count,
 	nom_p, gen_p, dat_p, ins_p, loc_p, footnotes
 )
 	add(base, "nom_s", stress, nom_s, footnotes)
@@ -351,6 +356,8 @@ local function add_decl(base, stress,
 	add(base, "acc_s", stress, acc_s, footnotes)
 	add(base, "ins_s", stress, ins_s, footnotes)
 	add(base, "loc_s", stress, loc_s, footnotes)
+	local count_footnotes = {count_footnote_msg}
+	add(base, "count", stress, count, iut.combine_footnotes(count_footnotes, footnotes))
 	add(base, "nom_p", stress, nom_p, footnotes)
 	add(base, "gen_p", stress, gen_p, footnotes)
 	add(base, "dat_p", stress, dat_p, footnotes)
@@ -375,16 +382,6 @@ local function handle_derived_slots_and_overrides(base)
 	-- Generate the remaining slots that are derived from other slots.
 	if not base.forms["acc_s"] and (rfind(base.decl, "%-m$") or base.gender == "M" and base.decl == "adj") then
 		iut.insert_forms(base.forms, "acc_s", base.forms[base.animacy == "inan" and "nom_s" or "gen_s"])
-	end
-	local function tag_with_variant(variant)
-		return function(form) return form .. variant end
-	end
-	local function maybe_tag_with_variant(forms, variant)
-		if base.multiword then
-			return iut.map_forms(forms, tag_with_variant(variant))
-		else
-			return forms
-		end
 	end
 	if base.animacy == "inan" then
 		iut.insert_forms(base.forms, "acc_p", base.forms["nom_p"])
@@ -423,31 +420,59 @@ local function add_soft_sign(nonvowel_stem)
 	rfind(nonvowel_stem, "й$") and "" or "ь"
 end
 
+local function genitive_pl_ending(stress, default_ending, is_soft)
+	local ending = stress.genpl_ending or default_ending
+	if ending == "null" then
+		return is_soft and add_soft_sign(stress.pl_nonvowel_stem) or ""
+	elseif ending == "w" then
+		-- circumflex above means it irregularly turns into -яў when unstressed
+		return is_soft and "ё̂ў" or "оў"
+	elseif ending == "j" then
+		-- If is_soft, use -ей after ц, not -эй.
+		return (com.ends_always_hard_or_ts(stress.pl_vowel_stem) and not is_soft) and "эй" or "ей"
+	else
+		error("Internal error: Unrecognized ending spec: " .. (ending or "nil"))
+	end
+end
+
+-- Add standard plural endings. `normal_type` should be "soft" or "hard" indicating
+-- the default type of endings, if not overridden by the codes 'plsoft' or 'plhard'.
+-- `gen_p_type` indicates the default type of genitive plural endings ("null", "w" or "j").
+-- `nom_p`, if given, overrides the normal nominative plural ending when the ending type
+-- isn't changed by `plsoft` or `plhard`.
+local function add_plural(base, stress, normal_type, gen_p_type, nom_p)
+	local ending_type = base.plsoft and "soft" or base.plhard and "hard" or normal_type
+	local normal_nom_p =
+		(ending_type == "soft" or com.ends_in_velar(stress.pl_vowel_stem)) and "і" or "ы"
+	nom_p = ending_type == normal_type and nom_p or normal_nom_p
+	local gen_p = genitive_pl_ending(stress, gen_p_type, ending_type == "soft")
+	if ending_type == "soft" then
+		add_decl(base, stress, nil, nil, nil, nil, nil, nil, nil,
+			nom_p, gen_p, "ям", "ямі", "ях")
+	else
+		add_decl(base, stress, nil, nil, nil, nil, nil, nil, nil,
+			nom_p, gen_p, "ам", "амі", "ах")
+	end
+end
+
+	
 decls["hard-m"] = function(base, stress)
+	local velar_sg = com.ends_in_velar(stress.vowel_stem)
 	local always_hard_or_ts = com.ends_always_hard_or_ts(stress.vowel_stem)
 	local gen_s = default_genitive_u(base) and "у" or "а" -- may be overridden
 	local loc_s =
-		com.ends_in_velar(stress.vowel_stem) and "у" or
+		velar_sg and "у" or
 		always_hard_or_ts and base.animacy == "pr" and "у" or
 		always_hard_or_ts and "ы" or
 		"е"
-	add_decl(base, stress, "", gen_s, "у", nil, "ом", loc_s)
-	if base.plsoft then
-		-- circumflex above means it irregularly turns into -яў when unstressed
-		local gen_p = stress.genpl_ending == "null" and
-			add_soft_sign(stress.pl_nonvowel_stem) or "ё̂ў"
-		add_decl(base, stress, nil, nil, nil, nil, nil, nil,
-			"і", gen_p, "ям", "ямі", "ях")
-	else
-		local nom_p =
-			base.remove_in and com.ends_always_hard_or_ts(stress.pl_vowel_stem) and "ы" or
-			base.remove_in and "е" or
-			com.ends_in_velar(stress.pl_vowel_stem) and "і" or
-			"ы"
-		local gen_p = (base.remove_in or stress.genpl_ending == "null") and "" or "оў"
-		add_decl(base, stress, nil, nil, nil, nil, nil, nil,
-			nom_p, gen_p, "ам", "амі", "ах")
-	end
+	local count = velar_sg and "і" or "ы"
+	add_decl(base, stress, "", gen_s, "у", nil, "ом", loc_s, count)
+	local special_nom_p = 
+		base.remove_in and com.ends_always_hard_or_ts(stress.pl_vowel_stem) and "ы" or
+		base.remove_in and "е" or
+		nil
+	local gen_p_type = base.remove_in and "null" or "w"
+	add_plural(base, stress, "hard", gen_p_type, special_nom_p)
 end
 
 local function get_stem_type(stress, short)
@@ -472,11 +497,8 @@ decls["soft-m"] = function(base, stress)
 	local nom_s = add_soft_sign(stress.nonvowel_stem)
 	local gen_s = default_genitive_u(base) and "ю" or "я" -- may be overridden
 	local loc_s = base.animacy == "pr" and "ю" or "і"
-	-- circumflex above means it irregularly turns into -яў when unstressed
-	local gen_p = stress.genpl_ending == "null" and
-		add_soft_sign(stress.pl_nonvowel_stem) or "ё̂ў"
-	add_decl(base, stress, nom_s, gen_s, "ю", nil, "ём", loc_s,
-		"і", gen_p, "ям", "ямі", "ях")
+	add_decl(base, stress, nom_s, gen_s, "ю", nil, "ём", loc_s, "і")
+	add_plural(base, stress, "soft", "w")
 end
 
 declprops["soft-m"] = {
@@ -496,10 +518,8 @@ decls["a-m"] = function(base, stress)
 		-- inanimate masculines in -а.
 		always_hard_or_ts and "ы" or
 		"е"
-	local nom_p = com.ends_in_velar(stress.pl_vowel_stem) and "і" or "ы"
-	local gen_p = stress.genpl_ending == "null" and "" or "оў"
-	add_decl(base, stress, "о", gen_s, "у", "у", "ом", loc_s,
-		nom_p, gen_p, "ам", "амі", "ах")
+	add_decl(base, stress, "о", gen_s, "у", "у", "ом", loc_s, gen_s)
+	add_plural(base, stress, "hard", "w")
 end
 
 local function a_m_desc(base, stress)
@@ -520,23 +540,26 @@ declprops["a-m"] = {
 }
 
 
+local function maybe_tag_ins_s_with_variant(base, ins_s_endings)
+	if base.multiword then
+		assert(type(ins_s_endings) == "table")
+		assert(#ins_s_endings == 2)
+		local ending1, ending2 = unpack(ins_s_endings)
+		return {ending1 .. com.VAR1, ending2 .. com.VAR2}
+	else
+		return ins_s_endings
+	end
+end
+
 decls["hard-f"] = function(base, stress)
 	local always_hard_or_ts = com.ends_always_hard_or_ts(stress.vowel_stem)
 	local gen_s = com.ends_in_velar(stress.vowel_stem) and "і" or "ы"
 	-- This -е will trigger second palatalization (see apply_special_cases()),
 	-- and if after final -к will be transformed into stressed -э́ or unstressed -ы.
 	local dat_loc_s = always_hard_or_ts and "ы" or "е"
-	add_decl(base, stress, "а", gen_s, dat_loc_s, "у", {"ой", "ою"}, dat_loc_s)
-	if base.plsoft then
-		-- люди́на, дити́на
-		add_decl(base, stress, nil, nil, nil, nil, nil, nil,
-			"і", "ей", "ям", "ямі", "ях")
-	else
-		local nom_p = com.ends_in_velar(stress.pl_vowel_stem) and "і" or "ы"
-		local gen_p = stress.genpl_ending == "w" and "оў" or ""
-		add_decl(base, stress, nil, nil, nil, nil, nil, nil,
-			nom_p, gen_p, "ам", "амі", "ах")
-	end
+	local ins_s = maybe_tag_ins_s_with_variant(base, {"ой", "ою"})
+	add_decl(base, stress, "а", gen_s, dat_loc_s, "у", ins_s, dat_loc_s, gen_s)
+	add_plural(base, stress, "hard", base.plsoft and "j" or "null")
 end
 
 declprops["hard-f"] = {
@@ -550,10 +573,9 @@ declprops["hard-f"] = {
 
 
 decls["soft-f"] = function(base, stress)
-	local gen_p = stress.genpl_ending == "w" and "ё̂ў" or
-		add_soft_sign(stress.pl_nonvowel_stem)
-	add_decl(base, stress, "я", "і", "і", "ю", {"ё̂й", "ё̂ю"}, "і",
-		"і", gen_p, "ям", "ямі", "ях")
+	local ins_s = maybe_tag_ins_s_with_variant(base, {"ё̂й", "ё̂ю"})
+	add_decl(base, stress, "я", "і", "і", "ю", ins_s, "і", "і")
+	add_plural(base, stress, "soft", "null")
 end
 
 declprops["soft-f"] = {
@@ -563,9 +585,8 @@ declprops["soft-f"] = {
 
 
 decls["hard-third-f"] = function(base, stress)
-	local gen_p = stress.genpl_ending == "w" and "оў" or "эй"
-	add_decl(base, stress, "", "ы", "ы", "", nil, "ы",
-		"ы", gen_p, "ам", "амі", "ах")
+	add_decl(base, stress, "", "ы", "ы", "", nil, "ы", "ы")
+	add_plural(base, stress, "hard", "j")
 	local ins_s_stem = stress.nonvowel_stem
 	local ins_s
 	local pre_stem, final_cons = rmatch(ins_s_stem, "^(.*)([чшжц])$")
@@ -596,10 +617,8 @@ declprops["hard-third-f"] = {
 decls["soft-third-f"] = function(base, stress)
 	local nom_s = rfind(stress.nonvowel_stem, "ў$") and "" or
 		add_soft_sign(stress.pl_nonvowel_stem)
-	-- circumflex above means it irregularly turns into -яў when unstressed
-	local gen_p = stress.genpl_ending == "w" and "ё̂ў" or "ей"
-	add_decl(base, stress, nom_s, "і", "і", nom_s, nil, "і",
-		"і", gen_p, "ям", "ямі", "ях")
+	add_decl(base, stress, nom_s, "і", "і", nom_s, nil, "і", "і")
+	add_plural(base, stress, "soft", "j")
 	local ins_s_stem = stress.nonvowel_stem
 	local pre_stem, final_cons = rmatch(ins_s_stem, "^(.*)(дз)$")
 	if pre_stem and com.ends_in_vowel(pre_stem) then
@@ -626,24 +645,18 @@ declprops["soft-third-f"] = {
 
 
 decls["hard-n"] = function(base, stress)
+	local velar_sg = com.ends_in_velar(stress.vowel_stem)
+	local always_hard_or_ts = com.ends_always_hard_or_ts(stress.vowel_stem)
+	local acc_s = base.animacy ~= "inan" and "а" or "о"
 	local loc_s =
-		com.ends_in_velar(stress.vowel_stem) and "у" or
-		com.ends_always_hard_or_ts(stress.vowel_stem) and "ы" or
+		velar_sg and "у" or
+		always_hard_or_ts and base.animacy == "pr" and "у" or
+		always_hard_or_ts and "ы" or
 		"е"
-	add_decl(base, stress, "о", "а", "у", "о", "ом", loc_s)
-	if base.plsoft then
-		--  кале́на "knee" pl. кале́ні; дно "bottom" alt pl. до́нья
-		-- circumflex above means it irregularly turns into -яў when unstressed
-		local gen_p = stress.genpl_ending == "null" and
-			add_soft_sign(stress.pl_nonvowel_stem) or "ё̂ў"
-		add_decl(base, stress, nil, nil, nil, nil, nil, nil,
-			"і", gen_p, "ям", "ямі", "ях")
-	else
-		local nom_p = com.ends_in_velar(stress.pl_vowel_stem) and "і" or "ы"
-		local gen_p = stress.genpl_ending == "null" and "" or "оў"
-		add_decl(base, stress, nil, nil, nil, nil, nil, nil,
-			nom_p, gen_p, "ам", "амі", "ах")
-	end
+	local count = velar_sg and "і" or "ы"
+	add_decl(base, stress, "о", "а", "у", acc_s, "ом", loc_s, count)
+	-- plsoft: кале́на "knee" pl. кале́ні; дно "bottom" alt pl. до́нья
+	add_plural(base, stress, "hard", "w")
 end
 
 declprops["hard-n"] = {
@@ -665,19 +678,9 @@ declprops["hard-n"] = {
 
 
 local function soft_or_fourth_n(base, stress, nom_s)
-	add_decl(base, stress, nom_s, "я", "ю", nom_s, "ём", "і")
-	if base.plhard then
-		local gen_p = stress.genpl_ending == "null" and "" or "оў"
-		-- зе́рне alt pl. зерня́ты
-		add_decl(base, stress, nil, nil, nil, nil, nil, nil,
-			"ы", gen_p, "ам", "амі", "ах")
-	else
-		-- circumflex above means it irregularly turns into -яў when unstressed
-		local gen_p = stress.genpl_ending == "null" and
-			add_soft_sign(stress.pl_nonvowel_stem) or "ё̂ў"
-		add_decl(base, stress, nil, nil, nil, nil, nil, nil,
-			"і", gen_p, "ям", "ямі", "ях")
-	end
+	add_decl(base, stress, nom_s, "я", "ю", nom_s, "ём", "і", "і")
+	-- plhard: зе́рне alt pl. зерня́ты
+	add_plural(base, stress, "soft", "w")
 end
 
 decls["soft-n"] = function(base, stress)
@@ -701,8 +704,9 @@ declprops["fourth-n"] = {
 
 
 decls["n-n"] = function(base, stress)
-	local gen_p = stress.genpl_ending == "w" and "оў" or ""
-	add_decl(base, stress, "я", "ені", "ені", "я", "енем", "ені",
+	local gen_p = genitive_pl_ending(stress, "null")
+	-- FIXME, do we need to support plsoft, and if so, how?
+	add_decl(base, stress, "я", "ені", "ені", "я", "енем", "ені", "ені",
 		"ёны", "ён" .. gen_p, "ёнам", "ёнамі", "ёнах")
 end
 
@@ -718,8 +722,9 @@ decls["t-n"] = function(base, stress)
 	local always_hard = com.ends_always_hard(stress.vowel_stem)
 	local v = always_hard and "а" or "я"
 	local ins_s = always_hard and "ом" or "ём"
-	local gen_p = stress.genpl_ending == "w" and "оў" or ""
-	add_decl(base, stress, v, v .. "ці", v .. "ці", v, ins_s, v .. "ці",
+	local gen_p = genitive_pl_ending(stress, "null")
+	-- FIXME, do we need to support plsoft, and if so, how?
+	add_decl(base, stress, v, v .. "ці", v .. "ці", v, ins_s, v .. "ці", v .. "ці",
 		v .. "ты", v .. "т" .. gen_p, v .. "там", v .. "тамі", v .. "тах")
 end
 
@@ -741,7 +746,12 @@ decls["adj"] = function(base, stress)
 	if propspec ~= "" then
 		propspec = "<" .. propspec .. ">"
 	end
-	local adj_alternant_spec = require("Module:be-adjective").do_generate_forms({base.lemma .. propspec})
+	-- If multiword, add variant codes to feminine adjectival instrumental
+	-- singular forms so we only get adjective -й endings with noun -й endings
+	-- and adjective -ю endings with noun -ю endings.
+	local adj_alternant_spec = require("Module:be-adjective").do_generate_forms(
+		{base.lemma .. propspec}, nil, nil, nil, base.multiword
+	)
 	local function copy(from_slot, to_slot)
 		-- Copy forms from the origin adjective slot to the destination noun slot.
 		-- The adjective code doesn't currently call mark_stressed_vowels_in_unstressed_syllables
@@ -758,6 +768,7 @@ decls["adj"] = function(base, stress)
 			copy("dat_m", "dat_s")
 			copy("ins_m", "ins_s")
 			copy("loc_m", "loc_s")
+			copy("gen_m", "count")
 		elseif base.gender == "F" then
 			copy("nom_f", "nom_s")
 			copy("gen_f", "gen_s")
@@ -765,6 +776,7 @@ decls["adj"] = function(base, stress)
 			copy("acc_f", "acc_s")
 			copy("ins_f", "ins_s")
 			copy("loc_f", "loc_s")
+			copy("gen_f", "count")
 		elseif base.gender == "N" then
 			copy("nom_n", "nom_s")
 			copy("gen_m", "gen_s")
@@ -772,6 +784,7 @@ decls["adj"] = function(base, stress)
 			copy("acc_n", "acc_s")
 			copy("ins_m", "ins_s")
 			copy("loc_m", "loc_s")
+			copy("gen_n", "count")
 		else
 			error("Internal error: Unrecognized gender: " .. base.gender)
 		end
@@ -887,18 +900,28 @@ normalized by adding an accent to monosyllabic forms.
 local function parse_override(segments)
 	local retval = {values = {}}
 	local part = segments[1]
+	local offset = 4
 	local case = usub(part, 1, 3)
 	if cases[case] then
 		-- ok
 	elseif accented_cases[case] then
 		case = accented_cases[case]
 		retval.stemstressed = true
+	elseif rfind(part, "^count") then
+		case = "count"
+		offset = 6
+	elseif rfind(part, "^cóunt") then
+		case = "count"
+		offset = 6
+		retval.stemstressed = true
 	else
 		error("Internal error: unrecognized case in override: '" .. table.concat(segments) .. "'")
 	end
-	local rest = usub(part, 4)
+	local rest = usub(part, offset)
 	local slot
-	if rfind(rest, "^pl") then
+	if case == "count" then
+		slot = "count"
+	elseif rfind(rest, "^pl") then
 		rest = rsub(rest, "^pl", "")
 		slot = case .. "_p"
 	else
@@ -1013,8 +1036,8 @@ local function parse_indicator_spec(angle_bracket_spec)
 					error("Blank indicator: '" .. inside .. "'")
 				end
 				base.footnotes = fetch_footnotes(dot_separated_group)
-			elseif rfind(part, "^[a-f][*#()ў%-]*$") or rfind(part, "^[a-f][*#()ў%-]*,") or
-				rfind(part, "^[*#()ў%-]*$") or rfind(part, "^[*#()ў%-]*,") then
+			elseif rfind(part, "^[a-f][*#()ўй%-]*$") or rfind(part, "^[a-f][*#()ўй%-]*,") or
+				rfind(part, "^[*#()ўй%-]*$") or rfind(part, "^[*#()ўй%-]*,") then
 				if base.stresses then
 					error("Can't specify stress pattern indicator twice: '" .. inside .. "'")
 				end
@@ -1023,14 +1046,25 @@ local function parse_indicator_spec(angle_bracket_spec)
 				for i, comma_separated_group in ipairs(comma_separated_groups) do
 					local pattern = comma_separated_group[1]
 					local pat, reducible = rsubb(pattern, "%*", "")
-					local genpl_reversed, genpl_ending_null, genpl_ending_w
+					local genpl_reversed, genpl_ending_null, genpl_ending_w, genpl_ending_j
 					pat, genpl_reversed = rsubb(pat, "#", "")
 					pat, genpl_ending_null = rsubb(pat, "%(%-%)", "")
 					pat, genpl_ending_w = rsubb(pat, "%(ў%)", "")
+					pat, genpl_ending_j = rsubb(pat, "%(й%)", "")
 					if genpl_ending_null and genpl_ending_w then
 						error("Can't specify both (-) and (ў) in the same stress pattern indicator: '" .. inside .. "'")
 					end
-					local genpl_ending = genpl_ending_null and "null" or genpl_ending_w and "w" or nil
+					if genpl_ending_null and genpl_ending_j then
+						error("Can't specify both (-) and (й) in the same stress pattern indicator: '" .. inside .. "'")
+					end
+					if genpl_ending_w and genpl_ending_j then
+						error("Can't specify both (ў) and (й) in the same stress pattern indicator: '" .. inside .. "'")
+					end
+					local genpl_ending =
+						genpl_ending_null and "null" or
+						genpl_ending_w and "w" or
+						genpl_ending_j and "j" or
+						nil
 					if pat == "" then
 						pat = nil
 					end
@@ -1335,7 +1369,7 @@ local function synthesize_adj_lemma(base)
 			break
 		end
 		-- Plural
-		stem, vowel, ac = rmatch(base.lemma, "^(.*)([ыі])(́?)е$")
+		stem, vowel, ac = rmatch(base.lemma, "^(.*)([ыі])(́?)я$")
 		if stem then
 			base.lemma = stem .. vowel .. ac
 			number = "pl"
@@ -1480,10 +1514,10 @@ local function determine_declension_and_gender(base)
 	stem = rmatch(base.lemma, "^(.*)о́$")
 	if stem then
 		base.decl = "hard-n"
-		if base.gender and base.gender ~= "N" then
+		if base.gender == "F" or base.gender == "MF" then
 			error("For lemma ending in -о́, gender " .. base.gender .. " not allowed")
 		end
-		base.gender = "N"
+		base.gender = base.gender or "N"
 		base.vowel_stem = stem
 		return
 	end
@@ -1532,10 +1566,9 @@ end
 -- will compute multiple sets of stems. The reason is that the stems may vary depending
 -- on the stress pattern and reducibility. The dependency on reducibility should be
 -- obvious but there is also dependency on the stress pattern in that in stress patterns
--- d, d', f and f' the lemma is given in end-stressed form but some other forms need to
+-- d and f the lemma is given in end-stressed form but some other forms need to
 -- be stem-stressed. We make the stems stressed on the last syllable for pattern d
--- (множина́ pl. множи́ни) but but on the first syllable for the remaining patterns
--- (голова́ pl. го́лови, сковорода́ pl. ско́вороди, both pattern d').
+-- (галава́ pl. гало́вы) but but on the first syllable for pattern f (старана́ pl. сто́раны).
 local function determine_stress_and_stems(base)
 	if not base.stresses then
 		base.stresses = {{reducible = false, genpl_reversed = false}}
@@ -1752,8 +1785,8 @@ adjectives. We proceed as follows:
    When we find a noun, we fetch its property (recursing if the noun is an alternant),
    and propagate it to any adjectives to its left, up to the next noun to the left.
    When we have processed the last noun, we also propagate its property value to any
-   adjectives to the right (to handle e.g. [[лунь польовий]] "hen harrier", where the
-   adjective польовий should inherit the 'animal' animacy of лунь). Finally, we set
+   adjectives to the right (to handle e.g. [[пустальга звычайная]] "common kestrel", where
+   the adjective польовий should inherit the 'animal' animacy of лунь). Finally, we set
    the property value for the multiword spec itself by combining all the non-nil
    properties of the individual elements. If all non-nil properties have the same value,
    the result is that value, otherwise it is `mixed_value` (which is "mixed" for animacy
@@ -1819,15 +1852,6 @@ local function decline_noun(base)
 end
 
 
-local function get_variants(form)
-	return
-		form:find(com.VAR1) and "var1" or
-		form:find(com.VAR2) and "var2" or
-		form:find(com.VAR3) and "var3" or
-		nil
-end
-
-
 local function process_manual_overrides(forms, args, number, unknown_stress)
 	local params_to_slots_map =
 		number == "sg" and input_params_to_slots_sg or
@@ -1837,9 +1861,7 @@ local function process_manual_overrides(forms, args, number, unknown_stress)
 		if args[param] then
 			forms[slot] = nil
 			if args[param] ~= "-" and args[param] ~= "—" then
-				local footnotes = slot == "count" and {
-					"[used with the numbers 2, 3, 4 and higher numbers ending in 2, 3, and 4]"
-				} or nil
+				local footnotes = slot == "count" and {count_footnote_msg} or nil
 				for _, form in ipairs(rsplit(args[param], "%s*,%s*")) do
 					if com.is_multi_stressed(form) then
 						error("Multi-stressed form '" .. form .. "' in slot '" .. slot .. "' not allowed; use singly-stressed forms separated by commas")
@@ -2210,8 +2232,6 @@ local function compute_headword_genders(alternant_multiword_spec)
 		local animacy = base.animacy
 		if animacy == "inan" then
 			animacy = "in"
-		else
-			animacy = "an"
 		end
 		if base.gender == "MF" then
 			m_table.insertIfNot(genders, "m-" .. animacy .. number)
@@ -2233,7 +2253,7 @@ end
 
 local stem_expl = {
 	["hard"] = "a hard consonant",
-	["velar-stem"] = "a velar (-к, -г or –x)",
+	["velar-stem"] = "a velar (-к, -г or -х)",
 	["soft"] = "a soft consonant",
 	["n-stem"] = "-м (with -ен- or -ён- in some forms)",
 	["t-stem"] = "-я or -а (with -т- or -ц- in most forms)",
@@ -2242,7 +2262,8 @@ local stem_expl = {
 }
 
 local stem_to_declension = {
-	["third-declension"] = "third",
+	["hard third-declension"] = "third",
+	["soft third-declension"] = "third",
 	["fourth-declension"] = "fourth",
 	["t-stem"] = "fourth",
 	["n-stem"] = "fourth",
@@ -2258,16 +2279,26 @@ local stem_gender_endings = {
 		["hard"]              = {"-а", "-ы"},
 		["velar-stem"]        = {"a velar", "-і"},
 		["soft"]              = {"-я", "-і"},
-		["third-declension"]  = {"-ь, -р, -ў or a hushing consonant", "-і"},
+		["hard third-declension"]  = {"-р or a hushing consonant", "-ы"},
+		["soft third-declension"]  = {"-ь or -ў", "-і"},
 	},
     neuter = {
-		["hard"]              = {"-а" or "-о", "-ы"},
-		["velar-stem"]        = {"-а" or "-о", "-і"},
-		["soft"]              = {"-е" or "-ё", "-і"},
+		["hard"]              = {"-а or -о", "-ы"},
+		["velar-stem"]        = {"-а or -о", "-і"},
+		["soft"]              = {"-е or -ё", "-і"},
 		["fourth-declension"] = {"-я", "-і"},
 		["t-stem"]            = {"-я or -а", "-ты"},
 		["n-stem"]            = {"-я", "-ёны"},
 	},
+}
+
+local vowel_alternation_expl = {
+	["а-е"] = "unstressed -а- in the lemma and stressed -э- in some remaining forms, or unstressed -я- in the lemma and stressed or unstressed -е- in some remaining forms",
+	["а-о"] = "unstressed -а- in the lemma and stressed -о- in some remaining forms, or unstressed -я- in the lemma and stressed -ё- in some remaining forms",
+	["а-во"] = "unstressed (usually word-initial) а- in the lemma and stressed во- in some remaining forms",
+	["во-а"] = "stressed (usually word-initial) во- in the lemma and unstressed а- in some remaining forms",
+	["о-ы"] = "stressed -о- in the lemma and unstressed -ы- in some remaining forms",
+	["ы-о"] = "unstressed -ы- in the lemma and stressed -о- in some remaining forms",
 }
 
 -- Implementation of template 'be-noun cat'.
@@ -2280,7 +2311,7 @@ function export.catboiler(frame)
 
 	local function get_stem_gender_text(stem, genderspec)
 		local gender = genderspec
-		gender = rsub(gender, " in %-[ое]$", "")
+		gender = rsub(gender, " in %-[ао]$", "")
 		if not stem_gender_endings[gender] then
 			error("Invalid gender '" .. gender .. "'")
 		end
@@ -2296,8 +2327,8 @@ function export.catboiler(frame)
 				stem_to_declension[stem] or gender == "feminine" and "first" or "second"
 			) .. " declension."
 		local genderdesc
-		if rfind(genderspec, "in %-[ое]$") then
-			genderdesc = rsub(genderspec, "in (%-[ое])$", "~ ending in %1")
+		if rfind(genderspec, "in %-[ао]$") then
+			genderdesc = rsub(genderspec, "in (%-[ао])$", "~ ending in %1")
 		else
 			genderdesc = "usually " .. gender .. " ~"
 		end
@@ -2349,10 +2380,11 @@ function export.catboiler(frame)
 			pos = get_pos()
 			break
 		end
-		stem, gender, stress, pos = rmatch(SUBPAGENAME, "^Belarusian (.-) (.-)%-form accent%-(.-) (.*)s$")
+		-- First group is .* to capture e.g. "hard third-declension".
+		stem, gender, stress, pos = rmatch(SUBPAGENAME, "^Belarusian (.*) (.-)%-form accent%-(.-) (.*)s$")
 		if not stem then
-			-- check for e.g. 'Belarusian hard masculine accent-a nouns in -о'
-			stem, gender, stress, pos, ending = rmatch(SUBPAGENAME, "^Belarusian (.-) ([a-z]+ine) accent%-(.-) (.*)s in %-([ое])$")
+			-- check for e.g. 'Belarusian hard masculine accent-a nouns in -а'
+			stem, gender, stress, pos, ending = rmatch(SUBPAGENAME, "^Belarusian (.-) ([a-z]+ine) accent%-(.-) (.*)s in %-([ао])$")
 			if stem then
 				gender = gender .. " in -" .. ending
 			end
@@ -2370,10 +2402,11 @@ function export.catboiler(frame)
 			maintext = "indeclinable ~, which normally have the same form for all cases and numbers."
 			break
 		end
-		stem, gender, pos = rmatch(SUBPAGENAME, "^Belarusian (.-) (.-)%-form (.*)s$")
+		-- First group is .* to capture e.g. "hard third-declension".
+		stem, gender, pos = rmatch(SUBPAGENAME, "^Belarusian (.*) (.-)%-form (.*)s$")
 		if not stem then
-			-- check for e.g. 'Belarusian hard masculine nouns in -о'
-			stem, gender, pos, ending = rmatch(SUBPAGENAME, "^Belarusian (.-) ([a-z]+ine) (.*)s in %-([ое])$")
+			-- check for e.g. 'Belarusian hard masculine nouns in -а'
+			stem, gender, pos, ending = rmatch(SUBPAGENAME, "^Belarusian (.-) ([a-z]+ine) (.*)s in %-([ао])$")
 			if stem then
 				gender = gender .. " in -" .. ending
 			end
@@ -2428,11 +2461,14 @@ function export.catboiler(frame)
 			insert("~ by accent pattern|" .. stress)
 			break
 		end
-		local altfrom, altto
-		pos, altfrom, altto = rmatch(SUBPAGENAME, "^Belarusian (.*)s with (.*)%-(.*) alternation$")
-		if altfrom then
-			maintext = "~ with vowel alternation between " .. altfrom .. " in the lemma and " .. altto .. " in the last syllable of some or all remaining forms."
-			insert("~ by vowel alternation|" .. altfrom .. "-" .. altto)
+		local alternation
+		pos, alternation = rmatch(SUBPAGENAME, "^Belarusian (.*)s with (.*%-.*) alternation$")
+		if alternation then
+			if not vowel_alternation_expl[alternation] then
+				error("Invalid vowel alternation '" .. alternation .. "'")
+			end
+			maintext = "~ with vowel alternation between " .. vowel_alternation_expl[alternation] .. "."
+			insert("~ by vowel alternation|" .. alternation)
 			break
 		end
 		error("Unrecognized Belarusian noun category name")
@@ -2463,6 +2499,7 @@ function export.do_generate_forms(parent_args, pos, from_headword, def)
 	}
 
 	if from_headword then
+		params["lemma"] = {list = true}
 		params["g"] = {list = true}
 		params["f"] = {list = true}
 		params["m"] = {list = true}
@@ -2488,7 +2525,7 @@ function export.do_generate_forms(parent_args, pos, from_headword, def)
 			return skip_slot(alternant_multiword_spec.number, slot)
 		end,
 		slot_table = output_noun_slots_with_linked,
-		get_variants = get_variants,
+		get_variants = com.get_variants,
 		decline_word_spec = decline_noun,
 	}
 	iut.decline_multiword_or_alternant_multiword_spec(alternant_multiword_spec, decline_props)
@@ -2600,7 +2637,7 @@ end
 local function concat_forms(alternant_spec, include_props)
 	local ins_text = {}
 	for slot, _ in pairs(output_noun_slots_with_linked) do
-		local formtext = com.concat_forms_in_slot(alternant_spec.forms[slot])
+		local formtext = iut.concat_forms_in_slot(alternant_spec.forms[slot])
 		if formtext then
 			table.insert(ins_text, slot .. "=" .. formtext)
 		end

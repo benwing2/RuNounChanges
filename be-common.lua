@@ -109,14 +109,23 @@ local second_palatalization = {
 }
 
 
--- Remove acute and grave accents; don't affect ёЁ.
-function export.remove_accents(word)
-	return rsub(word, "[́̀ѐЀѝЍ]", deaccenter)
+local function get_variants(form)
+	return
+		form:find(export.VAR1) and "var1" or
+		form:find(export.VAR2) and "var2" or
+		form:find(export.VAR3) and "var3" or
+		nil
 end
 
 
 function export.remove_variant_codes(word)
 	return rsub(word, export.var_code_c, "")
+end
+
+
+-- Remove acute and grave accents; don't affect ёЁ.
+function export.remove_accents(word)
+	return rsub(word, "[́̀ѐЀѝЍ]", deaccenter)
 end
 
 
