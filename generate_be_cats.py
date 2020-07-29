@@ -10,11 +10,14 @@ site = pywikibot.Site()
 def msg(text):
   print text.encode('utf-8')
 
-noun_stress_patterns = ["a", "b", "c", "d", "d'", "e", "f", "f'"]
+noun_stress_patterns = ["a", "b", "c", "d", "e", "f"]
+adj_stress_patterns = ["a", "b"]
 noun_genders = ["masculine", "feminine", "neuter"]
-noun_stem_types = ["hard", "soft", "velar-stem", "semisoft", "j-stem", "third-declension",
-    "fourth-declension", "t-stem", "n-stem"]
-vowel_alts = [u"і-е", u"і-о", u"і-ьо", u"е-і", u"о-і"]
+adj_genders = noun_genders + ["plural-only"]
+noun_stem_types = ["hard", "soft", "velar-stem", "soft third-declension",
+    "hard third-declension", "fourth-declension", "t-stem", "n-stem"]
+adj_stem_types = ["hard", "soft", "velar-stem", "possessive", "surname"]
+vowel_alts = [u"а-е", u"а-о", u"а-во", u"ы-о", u"о-ы", u"во-а"]
 
 def create_cat(cat, catargs, extratext=None):
   global args
@@ -68,10 +71,10 @@ if args.pos == "noun":
   for gender in noun_genders:
     for stem_type in noun_stem_types:
       create_cat("%s %s-form ~" % (stem_type, gender), [])
-      create_cat(u"%s masculine ~ in -о" % stem_type, [])
+      create_cat(u"%s masculine ~ in -а" % stem_type, [])
       for stress in noun_stress_patterns:
         create_cat("%s %s-form accent-%s ~" % (stem_type, gender, stress), [])
-        create_cat(u"%s masculine accent-%s ~ in -о" % (stem_type, stress), [])
+        create_cat(u"%s masculine accent-%s ~ in -а" % (stem_type, stress), [])
   create_cat("adjectival ~", ["with adjectival endings."])
   for gender in adj_genders:
     for stem_type in adj_stem_types:
