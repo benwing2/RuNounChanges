@@ -130,7 +130,7 @@ def process_page(page, index, pos):
 
       k = endk
     else:
-      m = re.search(r"=\s*(Noun|Proper noun|Pronoun|Determiner|Verb|Adverb|Interjection|Conjunction)\s*=", subsections[k])
+      m = re.search(r"=\s*(Noun|Proper noun|Pronoun|Determiner|Verb|Adjective|Adverb|Interjection|Conjunction)\s*=", subsections[k])
       if m:
         last_pos = m.group(1)
       if re.search(r"=\s*(Declension|Inflection|Conjugation)\s*=", subsections[k]):
