@@ -95,7 +95,7 @@ def process_page(page, index, parsed):
       blib.remove_param_chain(headt, "3", "gen")
       blib.remove_param_chain(headt, "4", "pl")
       blib.remove_param_chain(headt, "5", "genpl")
-      notes.append("convert {{%s-noun}} to new style using decl %s" % (args.lang, decl))
+      notes.append("convert {{%s}} to new style using decl %s" % (unicode(headt.name), decl))
       heads = None
   return unicode(parsed), notes
 
