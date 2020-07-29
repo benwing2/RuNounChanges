@@ -8,6 +8,7 @@ import blib
 from blib import rmparam, getparam, msg, site, tname
 
 import uklib as uk
+import belib as be
 
 uk_decl_noun_slots = [
   "nom_s", "nom_p", "gen_s", "gen_p", "dat_s", "dat_p",
@@ -17,6 +18,16 @@ uk_decl_noun_unc_slots = [
   "nom_s", "gen_s", "dat_s", "acc_s", "ins_s", "loc_s", "voc_s"
 ]
 uk_decl_noun_pl_slots = [
+  "nom_p", "gen_p", "dat_p", "acc_p", "ins_p", "loc_p", "voc_p"
+]
+be_decl_noun_slots = [
+  "nom_s", "nom_p", "gen_s", "gen_p", "dat_s", "dat_p",
+  "acc_s", "acc_p", "ins_s", "ins_p", "loc_s", "loc_p",
+  "voc_s", "voc_p"]
+be_decl_noun_unc_slots = [
+  "nom_s", "gen_s", "dat_s", "acc_s", "ins_s", "loc_s", "voc_s"
+]
+be_decl_noun_pl_slots = [
   "nom_p", "gen_p", "dat_p", "acc_p", "ins_p", "loc_p", "voc_p"
 ]
 
@@ -30,6 +41,8 @@ def compare_forms(origforms, replforms, pagemsg):
     if slot.endswith("_linked"):
       continue
     if slot not in origforms:
+      if slot == "count":
+        continue
       pagemsg("WARNING: for replacement %s, form %s=%s in replacement forms but missing in original forms" % (
         tempcall, slot, replforms[slot]))
       return False
@@ -37,9 +50,22 @@ def compare_forms(origforms, replforms, pagemsg):
       pagemsg("WARNING: for predicted %s, form %s=%s in original forms but missing in replacement forms" % (
         tempcall, slot, origforms[slot]))
       return False
-    if not compare_form(slot, origforms[slot], replforms[slot], pagemsg):
+    origform = origforms[slot]
+    if slot == "ins_s" and args.lang == "be":
+      # Add alternative feminine instrumental singular in -ю to original forms
+      # if not already present.
+      forms = origform.split(",")
+      newforms = []
+      for form in forms:
+        newforms.append(form)
+        if form.endswith(u"й"):
+          altform = re.sub(u"й$", u"ю", form)
+          if altform not in forms:
+            newforms.append(altform)
+      origform = ",".join(newforms)
+    if not compare_form(slot, origform, replforms[slot], pagemsg):
       pagemsg("WARNING: for predicted %s, form %s=%s in replacement forms but =%s in original forms" % (
-        tempcall, slot, replforms[slot], origforms[slot]))
+        tempcall, slot, replforms[slot], origform))
       return False
   return True
 
@@ -53,15 +79,15 @@ def replace_decl(page, index, parsed, decl, declforms):
     tn = tname(t)
     forms = {}
 
-    if tn == "uk-decl-noun":
+    if tn == args.lang + "-decl-noun":
       number = ""
-      getslots = uk_decl_noun_slots
-    elif tn == "uk-decl-noun-unc":
+      getslots = uk_decl_noun_slots if args.lang == "uk" else be_decl_noun_slots
+    elif tn == args.lang + "-decl-noun-unc":
       number = "sg"
-      getslots = uk_decl_noun_unc_slots
-    elif tn == "uk-decl-noun-pl":
+      getslots = uk_decl_noun_unc_slots if args.lang == "uk" else be_decl_noun_unc_slots
+    elif tn == args.lang + "-decl-noun-pl":
       number = "pl"
-      getslots = uk_decl_noun_pl_slots
+      getslots = uk_decl_noun_pl_slots if args.lang == "uk" else be_decl_noun_pl_slots
     else:
       continue
 
@@ -69,17 +95,22 @@ def replace_decl(page, index, parsed, decl, declforms):
     for slot in getslots:
       if slot:
         form = getparam(t, i).strip()
+        if not form:
+          continue
         form = blib.remove_links(form)
         # eliminate spaces around commas
         form = re.sub(r"\s*,\s*", ",", form)
         slotforms = form.split(",")
-        slotforms = [uk.add_monosyllabic_stress(f) for f in slotforms]
+        slotforms = [
+            (uk.add_monosyllabic_stress(f) if args.lang == "uk" else be.add_monosyllabic_accent(f))
+            for f in slotforms
+          ]
         forms[slot] = ",".join(slotforms)
       i += 1
 
     if compare_forms(forms, declforms, pagemsg):
       origt = unicode(t)
-      t.name = "uk-ndecl"
+      t.name = args.lang + "-ndecl"
       del t.params[:]
       t.add("1", decl)
       newt = unicode(t)
@@ -90,15 +121,19 @@ def replace_decl(page, index, parsed, decl, declforms):
 
 parser = blib.create_argparser("Replace manual declensions with given automatic ones")
 parser.add_argument("--declfile", help="File containing replacement declensions")
+parser.add_argument("--lang", required=True, help="Language (uk or be)")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
+
+if args.lang not in ["uk", "be"]:
+  raise ValueError("Unrecognized language: %s" % args.lang)
 
 lines = [x.strip() for x in codecs.open(args.declfile, "r", "utf-8")]
 
 def yield_decls():
   for line in lines:
     found_ndecl_style = False
-    for m in re.finditer(r"\{\{(?:User:Benwing2/)?uk-ndecl\|(.*?)\}\}", line):
+    for m in re.finditer(r"\{\{(?:User:Benwing2/)?" + args.lang + "-ndecl\|(.*?)\}\}", line):
       found_ndecl_style = True
       yield m.group(1)
     if not found_ndecl_style:
@@ -106,6 +141,7 @@ def yield_decls():
         yield m.group(0)
 
 for index, decl in blib.iter_items(yield_decls(), start, end):
+  module = uk if args.lang == "uk" else be
   if decl.startswith("(("):
     m = re.search(r"^\(\((.*)\)\)$", decl)
     subdecls = m.group(1).split(",")
@@ -117,18 +153,18 @@ for index, decl in blib.iter_items(yield_decls(), start, end):
     msg("WARNING: Can't extract lemma from decl: %s" % decl)
     pagename = "UNKNOWN"
   else:
-    pagename = uk.remove_accents(blib.remove_links(m.group(1)))
+    pagename = module.remove_accents(blib.remove_links(m.group(1)))
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagename, txt))
   def expand_text(tempcall):
     return blib.expand_text(tempcall, pagename, pagemsg, args.verbose)
-  tempcall = "{{uk-generate-noun-forms|%s}}" % decl
+  tempcall = "{{%s-generate-noun-forms|%s}}" % (args.lang, decl)
   result = expand_text(tempcall)
   if not result:
     continue
   predforms = blib.split_generate_args(result)
   lemma = predforms["nom_s"] if "nom_s" in predforms else predforms["nom_p"]
-  real_pagename = re.sub(",.*", "", uk.remove_accents(blib.remove_links(lemma)))
+  real_pagename = re.sub(",.*", "", module.remove_accents(blib.remove_links(lemma)))
   page = pywikibot.Page(site, real_pagename)
   def do_replace_decl(page, index, parsed):
     return replace_decl(page, index, parsed, decl, predforms)
