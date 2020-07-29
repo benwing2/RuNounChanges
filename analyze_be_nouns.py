@@ -36,10 +36,8 @@ accent_patterns = [
   ("b", {"inssg": True, "accsg": True, "nompl": True, "locpl": True}),
   ("c", {"inssg": False, "accsg": None, "nompl": True, "locpl": True}),
   ("d", {"inssg": True, "accsg": True, "nompl": False, "locpl": False}),
-  ("d'", {"inssg": True, "accsg": False, "nompl": False, "locpl": False}),
   ("e", {"inssg": False, "accsg": None, "nompl": False, "locpl": True}),
   ("f", {"inssg": True, "accsg": True, "nompl": False, "locpl": True}),
-  ("f'", {"inssg": True, "accsg": False, "nompl": False, "locpl": True}),
 ]
 
 genitive_singular_endings = [u"а", u"я", u"у", u"ю", u"і", u"ы"]
@@ -151,7 +149,7 @@ def process_text_on_page(index, pagetitle, text):
             pagemsg("WARNING: Param %s=%s has missing stress: %s" % (
               (str(i), val, unicode(t))))
     def ins_sg_note(ins_sg):
-      if re.search(u"[чшжщфвбмпь]$", heads[0]) and gender == "f":
+      if re.search(u"[чшжрць]$", heads[0]) and gender == "f":
         return "ins_sg=%s " % canon(ins_sg)
       else:
         return ""
@@ -173,12 +171,12 @@ def process_text_on_page(index, pagetitle, text):
         return "unknown"
 
     def infer_gender(lemma):
-      if re.search(u"[ое]́?$", lemma) or re.search(ur"(.)\1я́?$", lemma) or re.search(u"'я́?$", lemma):
+      if re.search(u"[оеё]́?$", lemma) or re.search(u"мя́?$", lemma):
         return "N"
-      elif re.search(u"[ая]́?$", lemma) or re.search(u"ість$", lemma):
+      elif re.search(u"[цс]тва$", lemma):
+        return "N"
+      elif re.search(u"[ая]́?$", lemma) or re.search(u"асць$", lemma):
         return "F"
-      elif re.search(u"(тель|[еє]́?ць)$", lemma):
-        return "M"
       elif re.search(u"ь$", lemma):
         return None
       elif re.search(be.cons_c + "$", lemma):
@@ -192,7 +190,7 @@ def process_text_on_page(index, pagetitle, text):
         return "b"
       elif re.search(AC + "$", lemma):
         return "d"
-      elif reducible and re.search(u"[еоєі]́" + be.cons_c + u"ь?$", lemma):
+      elif "*" in reducible and re.search(u"[еоэаё]́" + be.cons_c + u"ь?$", lemma):
         return "b"
       else:
         return "a"
@@ -227,51 +225,85 @@ def process_text_on_page(index, pagetitle, text):
       return None
 
     def vowel_stem_from_vowel_ending_nom_sg(nom_sg):
-      m = re.search(u"^(.*)[аяеоё]" + AC + "?$", nom_sg)
+      m = re.search(u"^(.*)[аяеоё]́?$", nom_sg)
       assert m
       vowel_stem = m.group(1)
       if re.search(be.vowel_c + AC + "?$", vowel_stem):
         vowel_stem += u"й"
       return vowel_stem
 
-    def infer_reducible(nom_sg, gen_sg, gen_pl):
+    def compare_stems(marked_stem, unmarked_stem):
+      return (be.destress_vowels_after_stress_movement(marked_stem) ==
+        be.undo_mark_stressed_vowels_in_unstressed_syllables(unmarked_stem))
+
+    def infer_reducible(nom_sg, gen_sg, gen_pl, gender, seen_patterns):
+      if len(seen_patterns) > 1:
+        pagemsg("WARNING: Multiple patterns %s, not inferring reducible" %
+            ",".join(seen_patterns))
+        return None
+      if len(seen_patterns) == 0:
+        pagemsg("WARNING: No patterns, not inferring reducible")
+        return None
+      seen_pattern = seen_patterns[0]
       nom_sg = truncate_extra_forms(nom_sg)
       gen_sg = truncate_extra_forms(gen_sg)
-      gen_pl = gen_pl and truncate_extra_forms(gen_pl)
+      gen_pls = gen_pl and re.split(", *", gen_pl) or []
       if re.search(u"[аяеоё]́?$", nom_sg):
-        epenthetic_stress = nom_sg.endswith(AC)
-        if not gen_pl:
-          return "same"
+        epenthetic_stress = seen_pattern in ["b", "c", "e", "f"]
         vowel_stem = vowel_stem_from_vowel_ending_nom_sg(nom_sg)
-        nonvowel_stem = re.sub(u"ў$", u"в", re.sub(u"ь$", "", gen_pl))
-        # Special handling for e.g. зна́чення gen pl зна́чень
-        if (be.remove_accents(vowel_stem) == be.remove_accents(nonvowel_stem) or
-            be.remove_accents(vowel_stem) == be.remove_accents(nonvowel_stem) + nonvowel_stem[-1]):
-          return "same"
-        if be.dereduce(vowel_stem, epenthetic_stress) == nonvowel_stem:
-          return "reducible"
-        if (be.remove_accents(vowel_stem) + u"ав" == be.remove_accents(nonvowel_stem) or
-            be.remove_accents(vowel_stem) + u"яв" == be.remove_accents(nonvowel_stem)):
-          return "au"
-        for valt in possible_vowel_alternations:
-          valt_nom_sg = be.apply_vowel_alternation(nom_sg, valt)
-          if valt_nom_sg:
-            valt_vowel_stem = vowel_stem_from_vowel_ending_nom_sg(valt_nom_sg)
-            if be.remove_accents(valt_vowel_stem) == be.remove_accents(nonvowel_stem):
-              return "same"
-            if (be.remove_accents(valt_vowel_stem) + u"ав" == be.remove_accents(nonvowel_stem) or
-                be.remove_accents(valt_vowel_stem) + u"яв" == be.remove_accents(nonvowel_stem)):
-              return "au"
-        pagemsg("WARNING: Unable to determine relationship between nom_sg %s and gen_pl %s" %
-          (nom_sg, gen_pl))
-        return None
+        if seen_pattern in ["b", "d"]:
+          vowel_stem = be.maybe_accent_final_syllable(vowel_stem)
+        else:
+          vowel_stem = be.maybe_accent_initial_syllable(vowel_stem)
+        retvals = []
+        for gen_pl in gen_pls:
+          nonvowel_stem = re.sub(u"ў$", u"в", re.sub(u"ь$", "", gen_pl))
+          if compare_stems(vowel_stem, nonvowel_stem):
+            retvals.append("(-)" if gender == "N" else "")
+            continue
+          if compare_stems(be.dereduce(vowel_stem, epenthetic_stress) or "", nonvowel_stem):
+            retvals.append("*(-)" if gender == "N" else "*")
+            continue
+          if compare_stems(be.dereduce(vowel_stem, not epenthetic_stress) or "", nonvowel_stem):
+            retvals.append("*#(-)" if gender == "N" else "*#")
+            continue
+          if (compare_stems(vowel_stem + u"ав", nonvowel_stem) or
+              compare_stems(vowel_stem + u"яв", nonvowel_stem)):
+            if epenthetic_stress:
+              retvals.append("#" if gender == "N" else u"#(ў)")
+            else:
+              retvals.append("" if gender == "N" else u"(ў)")
+            continue
+          if (compare_stems(be.remove_accents(vowel_stem) + u"о́в", nonvowel_stem) or
+              compare_stems(be.remove_accents(vowel_stem) + u"ё́в", nonvowel_stem)):
+            if epenthetic_stress:
+              retvals.append("" if gender == "N" else u"(ў)")
+            else:
+              retvals.append("#" if gender == "N" else u"#(ў)")
+            continue
+          #for valt in possible_vowel_alternations:
+          #  valt_nom_sg = be.apply_vowel_alternation(nom_sg, valt)
+          #  if valt_nom_sg:
+          #    valt_vowel_stem = vowel_stem_from_vowel_ending_nom_sg(valt_nom_sg)
+          #    if be.remove_accents(valt_vowel_stem) == be.remove_accents(nonvowel_stem):
+          #      retvals.append("(-)" if gender == "N" else "")
+          #      break
+          #    if (be.remove_accents(valt_vowel_stem) + u"ав" == be.remove_accents(nonvowel_stem) or
+          #        be.remove_accents(valt_vowel_stem) + u"яв" == be.remove_accents(nonvowel_stem)):
+          #      retvals.append("" if gender == "N" else u"(ў)")
+          #      break
+          #else: # no break
+          pagemsg("WARNING: Unable to determine relationship between nom_sg %s and gen_pl %s" %
+            (nom_sg, gen_pl))
+        return ",".join(retvals)
       else:
+        orig_nom_sg = nom_sg
         nonvowel_stem = re.sub(u"ь$", "", nom_sg)
         vowel_stem = re.sub(u"в$", u"ў", re.sub(u"[аяуюыі]́?$", "", gen_sg))
         if re.search(be.vowel_c + AC + "?$", vowel_stem):
           vowel_stem += u"й"
-        if be.reduce(nonvowel_stem) == vowel_stem:
-          return "reducible"
+        if compare_stems(be.reduce(nonvowel_stem) or "", vowel_stem):
+          return "*"
         nom_sg = re.sub(u"[йь]$", "", nom_sg)
         nom_sg = re.sub(u"ў$", u"в", nom_sg)
         m = re.search(u"([аяуюыі]́?)$", gen_sg)
@@ -284,29 +316,32 @@ def process_text_on_page(index, pagetitle, text):
         nom_sg += ending
         if (be.destress_vowels_after_stress_movement(nom_sg) ==
             be.undo_mark_stressed_vowels_in_unstressed_syllables(gen_sg)):
-          return "same"
+          return ""
         pagemsg("WARNING: Unable to determine relationship between nom_sg %s and gen_sg %s" %
-          (nom_sg, gen_sg))
+          (orig_nom_sg, gen_sg))
         return None
 
-    def construct_defaulted_seen_patterns(seen_patterns, lemma, gender, reducible, au):
+    def construct_defaulted_seen_patterns(seen_patterns, lemma, gender, reducible):
       defaulted_seen_patterns = []
       if seen_patterns == ["b", "c"]:
         seen_patterns = ["c", "b"]
       elif seen_patterns == ["b", "d"]:
         seen_patterns = ["d", "b"]
-      au = au and u"(ў)" or ""
-      reducible = reducible and "*" or ""
+      if len(seen_patterns) > 1 and "," in reducible:
+        pagemsg("WARNING: Multiple accent patterns %s and reducible specs %s, not taking Cartesian product" %
+            (",".join(seen_patterns), reducible))
+        reducible = ""
       for pattern in seen_patterns:
-        defstress = default_stress(lemma, gender, reducible)
-        if defstress == pattern:
-          if reducible or au:
-            defaulted_seen_patterns.append(reducible + au)
-          elif len(seen_patterns) > 1:
-            defaulted_seen_patterns.append(pattern)
-        else:
-          defaulted_seen_patterns.append(pattern + reducible + au)
-      return defaulted_seen_patterns
+        for red in reducible.split(","):
+          defstress = default_stress(lemma, gender, red)
+          if defstress == pattern:
+            if len(seen_patterns) > 1:
+              defaulted_seen_patterns.append(pattern + red)
+            else:
+              defaulted_seen_patterns.append(red)
+          else:
+            defaulted_seen_patterns.append(pattern + red)
+      return ",".join(defaulted_seen_patterns)
 
     if tn == "be-decl-noun":
       check_multi_stressed(14)
@@ -381,7 +416,7 @@ def process_text_on_page(index, pagetitle, text):
         pagemsg("WARNING: Unknown gender or animacy, not inferring declension")
         continue
       defan = infer_animacy(nom_pl, gen_pl, acc_pl)
-      if defan != animacy:
+      if not (defan == "in" and animacy == "in" or defan == "an" and animacy in ["pr", "anml"]):
         pagemsg("WARNING: Inferred animacy %s != explicit animacy %s, not inferring declension" %
             (defan, animacy))
         continue
@@ -391,12 +426,15 @@ def process_text_on_page(index, pagetitle, text):
       if gender != defg:
         parts.append(gender)
       alternation = infer_alternations(nom_sg, nom_pl)
-      result = infer_reducible(nom_sg, gen_sg, gen_pl)
-      reducible = result == "reducible"
-      au = result == "au"
-      defaulted_seen_patterns = construct_defaulted_seen_patterns(seen_patterns, lemma, gender, reducible, au)
+      def apply_alternations(form):
+        forms = re.split(", *", form)
+        forms = [be.apply_vowel_alternation(form, alternation) or form for form in forms]
+        return ", ".join(forms)
+      nom_sg = apply_alternations(nom_sg)
+      reducible = infer_reducible(nom_sg, gen_sg, gen_pl, gender, seen_patterns) or ""
+      defaulted_seen_patterns = construct_defaulted_seen_patterns(seen_patterns, lemma, gender, reducible)
       if defaulted_seen_patterns:
-        parts.append(",".join(defaulted_seen_patterns))
+        parts.append(defaulted_seen_patterns)
       if animacy != "in":
         parts.append(animacy)
       if alternation in ["ae", "ao", "yo"]:
@@ -431,7 +469,7 @@ def process_text_on_page(index, pagetitle, text):
       lemma = heads[0]
       seen_patterns = []
       for pattern, accents in accent_patterns:
-        if pattern not in ["a", "d" if re.search(u"[аяео]́?$", lemma) else "b", "d'"]:
+        if pattern not in ["a", "d" if re.search(u"[аяеёо]́?$", lemma) else "b"]:
           continue
         if (matches(ins_sg_end_stressed, accents["inssg"]) and
             matches(acc_sg_end_stressed, accents["accsg"])):
@@ -462,12 +500,10 @@ def process_text_on_page(index, pagetitle, text):
       defg = infer_gender(lemma)
       if gender != defg:
         parts.append(gender)
-      result = infer_reducible(nom_sg, gen_sg, None)
-      reducible = result == "reducible"
-      assert result != "au"
-      defaulted_seen_patterns = construct_defaulted_seen_patterns(seen_patterns, lemma, gender, reducible, False)
+      reducible = infer_reducible(nom_sg, gen_sg, None, gender, seen_patterns) or ""
+      defaulted_seen_patterns = construct_defaulted_seen_patterns(seen_patterns, lemma, gender, reducible)
       if defaulted_seen_patterns:
-        parts.append(",".join(defaulted_seen_patterns))
+        parts.append(defaulted_seen_patterns)
       if animacy != "in":
         parts.append(animacy)
       parts.append("sg")
