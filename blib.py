@@ -1605,12 +1605,17 @@ def find_modifiable_lang_section(text, lang, pagemsg):
     return None
   j = lang_j
 
+  secbody, sectail = split_trailing_separator_and_categories(sections[j])
+
+  return sections, j, secbody, sectail, has_non_lang
+
+def split_trailing_separator_and_categories(sectext):
   # Extract off trailing separator
-  mm = re.match(r"^(.*?\n)(\n*--+\n*)$", sections[j], re.S)
+  mm = re.match(r"^(.*?\n)(\n*--+\n*)$", sectext, re.S)
   if mm:
     secbody, sectail = mm.group(1), mm.group(2)
   else:
-    secbody = sections[j]
+    secbody = sectext
     sectail = ""
 
   # Split off categories at end
@@ -1620,7 +1625,7 @@ def find_modifiable_lang_section(text, lang, pagemsg):
     secbody, secbodytail = mm.group(1), mm.group(2)
     sectail = secbodytail + sectail
 
-  return sections, j, secbody, sectail, has_non_lang
+  return secbody, sectail
 
 def split_text_into_sections(pagetext, lang):
   # Split into sections
