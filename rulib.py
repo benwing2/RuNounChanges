@@ -179,6 +179,10 @@ deaccenter = grave_deaccenter.copy()
 deaccenter[AC] = "" # acute accent
 deaccenter[DI] = "" # diaeresis
 
+def remove_grave_accents(word):
+  # remove grave accents
+  return re.sub("([" + GR + u"ѐЀѝЍ])", lambda m: grave_deaccenter[m.group(1)], word)
+
 def remove_accents(word):
   # remove pronunciation accents (not diaeresis)
   return re.sub("([" + pron_accents + u"ѐЀѝЍ])",
