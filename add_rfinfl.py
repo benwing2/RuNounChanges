@@ -44,14 +44,14 @@ def bg_lemma_is_indeclinable(t, pagemsg):
   return False
 
 def ru_lemma_is_indeclinable(t, pagemsg):
-  if tname(t) == "ru-noun" and getparam(t, "3") == "-":
+  if tname(t) in ["ru-noun", "ru-proper noun"] and getparam(t, "3") == "-":
     return True
   if tname(t) == "ru-adj" and getparam(t, "indecl"):
     return True
   return False
 
 def uk_lemma_is_indeclinable(t, pagemsg):
-  if tname(t) == "uk-noun":
+  if tname(t) in ["uk-noun", "uk-proper noun"]:
     if getparam(t, "3") == "-":
       return True
     headword = getparam(t, "1")
