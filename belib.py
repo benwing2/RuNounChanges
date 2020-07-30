@@ -25,21 +25,20 @@ stress_accents = AC + GR
 opt_accent = "[" + accents + "]*"
 
 composed_grave_vowel = u"ѐЀѝЍ"
-vowel = u"аеіоуёэыяюАЕІОУЁЭЫЯЮ" + composed_grave_vowel
+vowel = u"аеіоуяэыёюАЕІОУЯЭЫЁЮ" + composed_grave_vowel
 vowel_c = "[" + vowel + "]"
 non_vowel_c = "[^" + vowel + "]"
-cons_except_hushing_or_ts = u"бдфгґйклмнпрствхзўь'БДФГҐЙКЛМНПРСТВХЗЎЬ"
-cons_except_hushing_or_ts_c = "[" + cons_except_hushing_or_ts + "]"
-hushing = u"чшжщЧШЖЩ"
-hushing_c = "[" + hushing + "]"
-hushing_or_ts = hushing + u"цЦ"
-hushing_or_ts_c = "[" + hushing_or_ts + "]"
-cons = cons_except_hushing_or_ts + hushing_or_ts
-always_hard = u"чшжрЧШЖР"
-cons_c = "[" + cons + "]"
 # Cyrillic velar consonants
 velar = u"кгґхКГҐХ"
 velar_c = "[" + velar + "]"
+always_hard = u"ршчжРШЧЖ"
+always_hard_c = "[" + always_hard + "]"
+always_hard_or_ts = always_hard + u"цЦ"
+always_hard_or_ts_c = "[" + always_hard_or_ts + "]"
+cons_except_always_hard_or_ts = u"бдфгґйклмнпствхзўьБДФГҐЙКЛМНПСТВХЗЎЬ'"
+cons_except_always_hard_or_ts_c = "[" + cons_except_always_hard_or_ts + "]"
+cons = always_hard + cons_except_always_hard_or_ts + u"цЦ"
+cons_c = "[" + cons + "]"
 # uppercase Cyrillic letters
 uppercase = u"АЕІОУЁЭЫЯЮБЦДФГҐЧЙКЛМНПРСТВШХЗЖЬЩЎ"
 uppercase_c = "[" + uppercase + "]"
@@ -79,6 +78,10 @@ ao_stresser = {
   u"я": u"ё",
 }
 
+def remove_grave_accents(word):
+  # remove grave accents
+  return re.sub("([" + GR + u"ѐЀѝЍ])", lambda m: grave_deaccenter[m.group(1)], word)
+
 def remove_accents(word):
   # remove pronunciation accents
   return re.sub("([" + pron_accents + u"ѐЀѝЍ])",
@@ -116,6 +119,12 @@ def is_monosyllabic(word):
   return len(re.sub(non_vowel_c, "", word)) <= 1
 
 def add_monosyllabic_accent(word):
+  if is_monosyllabic(word) and not is_accented(word):
+    return re.sub("(" + vowel_c + ")", r"\1" + AC, word)
+  else:
+    return word
+
+def add_monosyllabic_stress(word):
   if is_monosyllabic(word) and not is_stressed(word):
     return re.sub("(" + vowel_c + ")", r"\1" + AC, word)
   else:
@@ -125,6 +134,16 @@ def remove_monosyllabic_accents(word):
   if is_monosyllabic(word) and not word.startswith("-"):
     return remove_accents(word)
   return word
+
+def iotate(stem):
+  stem = re.sub(u"с[ктц]$", u"шч", stem)
+  stem = re.sub(u"[ктц]$", u"ч", stem)
+  stem = re.sub(u"[сх]$", u"ш", stem)
+  stem = re.sub(u"[гґз]$", u"ж", stem)
+  stem = re.sub(u"дз?$", u"дж", stem)
+  stem = re.sub(u"([бўмпф])$", ur"\1л", stem)
+  stem = re.sub(u"в$", u"ўл", stem)
+  return stem
 
 # Does a phrase of connected text need accents? We need to split by word
 # and check each one.
@@ -308,7 +327,7 @@ def reduce(word):
         # вуле́й -> вулл-
         letter = pre[-1].lower()
       post = ""
-    elif ((re.search(velar_c + "$", post) and re.search(cons_except_hushing_or_ts_c + "$", pre)) or
+    elif ((re.search(velar_c + "$", post) and re.search(cons_except_always_hard_or_ts_c + "$", pre)) or
       (re.search(u"[^йЙ" + velar + "]$", post) and re.search(u"[лЛ]$", pre))):
       # For the first part: князёк -> князьк-
       # For the second part: алёс -> альс-, відэ́лец -> відэ́льц-
@@ -341,13 +360,17 @@ def dereduce(stem, epenthetic_stress):
     return None
   pre, letter, post = m.groups()
   is_upper = post in uppercase
-  if letter in u"ьйЬЙ":
+  if post == "'":
+    # сям'я́ "family" -> сяме́й
+    post = u"й"
+    epvowel = u"е"
+  elif letter in u"ьйЬЙ":
     letter = ""
     if post in u"цЦ" or not epenthetic_stress:
       epvowel = u"е"
     else:
       epvowel = u"ё"
-  elif letter in cons_except_hushing_or_ts and post in velar or letter in velar:
+  elif letter in cons_except_always_hard_or_ts and post in velar or letter in velar:
     if epenthetic_stress:
       epvowel = u"о"
     else:
