@@ -853,8 +853,8 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
       pagemsg("WARNING: Inflection %s has multiple accents" % infl)
 
   # Check whether parameter PARAM of template T matches VALUE.
-  def compare_param(t, param, value, valuetr, issue_warnings=True,
-      allow_stress_mismatch=False):
+  def compare_param(t, param, value, valuetr, param_is_head,
+      issue_warnings=True, allow_stress_mismatch=False):
     value = rulib.remove_monosyllabic_accents(value)
     valuetr = rulib.remove_tr_monosyllabic_accents(valuetr)
     paramval = rulib.remove_monosyllabic_accents(blib.remove_links(getparam(t, param)))
@@ -865,7 +865,7 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
       pagemsg_if(issue_warnings, "WARNING: Value %s to compare to param %s=%s has multiple accents" % (
         value, param, paramval))
     # If checking the lemma param, substitute page name if missing.
-    if not paramval and param in ["1", "2", "head"]:
+    if not paramval and param_is_head and param in ["1", "2", "head"]:
       paramval = pagename
     # Allow cases where the parameter says e.g. апатичный (missing an accent)
     # and the value compared to is e.g. апати́чный (with an accent).
@@ -888,7 +888,7 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
           unicode(t)))
     # Now, if there's a match, check the translit
     if matches:
-      if param in ["1", "2", "head"]:
+      if param_is_head and param in ["1", "2", "head"]:
         trparam = "tr"
       elif param.startswith("head"):
         trparam = re.sub("^head", "tr", param)
@@ -954,7 +954,8 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
       # that have matched so we can check if any are left over
       for infl, infltr in inflections:
         for param in headparams:
-          if compare_param(t, param, infl, infltr, issue_warnings=issue_warnings):
+          if compare_param(t, param, infl, infltr, param_is_head=True,
+              issue_warnings=issue_warnings):
             some_match = True
             headparams.remove(param)
             break
@@ -1512,7 +1513,7 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
                   lang_param = lang_in_1 and "1" or "lang"
                   if (not deftemp_needs_lang or
                         compare_param(t, lang_param, "ru", None,
-                          issue_warnings=issue_warnings)):
+                          param_is_head=False, issue_warnings=issue_warnings)):
                     for param in t.params:
                       pnam = pname(param)
                       pvalue = unicode(param.value)
@@ -1718,10 +1719,10 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
                 lang_param = lang_in_1 and "1" or "lang"
                 lemma_param = lang_in_1 and "2" or "1"
                 if (compare_param(t, lemma_param, lemma, lemmatr,
-                      issue_warnings=issue_warnings) and
+                      param_is_head=True, issue_warnings=issue_warnings) and
                     (not deftemp_needs_lang or
                       compare_param(t, lang_param, "ru", None,
-                        issue_warnings=issue_warnings))):
+                        param_is_head=False, issue_warnings=issue_warnings))):
                   defn_templates_for_inserting_in_same_section.append(t)
                   defn_templates_for_inserting_in_same_template.append(t)
                   if isinstance(deftemp_param, basestring):
@@ -1740,7 +1741,7 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
                       issue_warnings=issue_warnings) and
                     (not deftemp_needs_lang or
                       compare_param(t, lang_param, "ru", None,
-                        issue_warnings=issue_warnings))):
+                        param_is_head=False, issue_warnings=issue_warnings))):
                   defn_templates_for_inserting_in_same_section.append(t)
 
               # Check for singular in any existing definition templates
@@ -2094,11 +2095,11 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
               lemma_param = lang_in_1 and "2" or "1"
               if (
                 (compare_param(t, lemma_param, lemma, lemmatr,
-                  allow_stress_mismatch=allow_stress_mismatch) or
+                  param_is_head=True, allow_stress_mismatch=allow_stress_mismatch) or
                   check_for_sg_pl_pairs and check_for_matching_sg_pl_pair(
                     getparam(t, lemma_param), lemma)) and
                 (not deftemp_needs_lang or
-                  compare_param(t, lang_param, "ru", None))
+                  compare_param(t, lang_param, "ru", None, param_is_head=False))
               ):
                 retval.append(t)
             return retval
