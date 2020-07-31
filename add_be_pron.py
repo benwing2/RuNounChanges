@@ -13,13 +13,6 @@ import belib as be
 from belib import AC, GR
 import ru_reverse_translit
 
-vowel_list = u"aeiouyɛəäëöü"
-ipa_vowel_list = vowel_list + u"ɐɪʊɨæɵʉ"
-ipa_vowels_re = "[" + ipa_vowel_list + "]"
-ipa_vowels_c = "([" + ipa_vowel_list + "])"
-non_ipa_vowels_re = "[^ " + ipa_vowel_list + "]"
-non_ipa_vowels_non_accent_re = u"[^ ˈˌ" + ipa_vowel_list + "]"
-
 # Original comment from Lua:
 # [words which will be treated as accentless (i.e. their vowels will be
 # reduced), and which will liaise with a preceding or following word;
@@ -96,176 +89,10 @@ applied_manual_pronun_mappings = set()
 # "WARNING: Would save and unable to match mapping" and check whether the
 # pronunciation that is generated automatically is correct.
 manual_pronun_mapping = [
-    (u"^авиакорпус", u"а̀виакорпус"),
-    (u"^авиаполк", [u"авиаполк", u"а̀виаполк"]),
-    (u"^авиазве́н", u"а̀виазве́н"),
-    (u"^авиаэскадри́лий", u"а̀виаэскадри́лий"),
-    (u"^автозапра́вочн(.*?) ста́нц", ur"а̀втозапра́вочн\1 ста́нц"),
-    (u"^автозапчаст", ur"а̀втозапчаст"),
-    (u"^автоко́льц", [u"автоко́льц", u"а̀втоко́льц"]),
-    (u"^автоколе́ц", [u"автоколе́ц", u"а̀втоколе́ц"]),
-    (u"^аминокисло́т", u"амѝнокисло́т"),
-    (u"^ампер-час", u"ампѐр-час"),
-    (u"^антител", u"а̀нтител"),
-    (u"^антивеще́ств", u"а̀нтивеще́ств"),
-    (u"^анте́нн(.*?) радио(локаци)", [ur"phon=антэ́нн\1 ра̀дио\2", ur"phon=антэ́нн\1 ра̀дио̂\2"]),
-    (u"^аэронавигацио́нн(.*?) ог", ur"а̀эронавигацио́нн\1 ог"),
-    (u"^(бальза́м.*?) на́ душу", ur"\1 на́‿душу"),
-    # For бензозаправочная колонка, бензозаправочная станция
-    (u"^бензозапра́вочн", u"бѐнзозапра́вочн"),
-    (u"^блокпост", u"бло̀кпост"),
-    # override pronunciation бох/Бох
-    (u"^([Бб]о́?г(а|у|ом|е|и|о́в|а́м|а́ми|а́х))$", ur"\1"),
-    (u"^бронекатер", u"бро̀некатер"),
-    (u"^бронестёк", u"бро̀нестёк"),
-    # the following helps with бухгалтерская кинга, also forms like
-    # бухгалтера́ of бухга́лтер, where the automatic headword->pronun mapping
-    # fails and reverse-translit leaves out spelling pronun бухгалтера́
-    (u"^бухг(а́?лтер)", [
-      ur"phon=буг\1",
-      ur"буɣ\1",
-      ur"бухг\1"]),
-    (u"^ветврач", u"вѐтврач"),
-    (u"^видеои́гр", [u"вѝдеои́гр", u"вѝдео̂и́гр"]),
-    (u"^вое́?нно-", u"воѐнно-"),
-    (u"^вольноопределя́ющ", u"во̀льноопределя́ющ"),
-    (u"^(вредоно́сн.*?) ПО$", ur"phon=\1 пэ-о́"),
-    (u"^гендиректор", u"гѐндиректор"),
-    (u"^гидромёт", [u"гидромёт", u"гѝдромёт"]),
-    (u"город([ао])́(.*?)-геро́", ur"город\1̀\2-геро́"), # го́род-геро́й
-    (u"^госвласт", u"го̀свласт"),
-    (u"^госдепартамент", u"го̀сдепартамент"),
-    (u"^го́спод", [u"го́спод", u"ɣо́спод"]),
-    (u"^Го́спод", [u"Го́спод", u"ɣо́спод"]),
-    (u"^госсекретар", u"го̀ссекретар"),
-    (u"^(гражда́нск.*? войн.* в) США$", ur"\1 сэ-шэ-а́"),
-    # Need to handle гэ́канье manually; has two pronunciations, one requiring
-    # tr= and one not; FIXME, addpron.py doesn't create a pronunciation for
-    # гэ́каний|tr=hɛ́kanij at all and lists both pronunciations for both cases
-    # for the other non-lemma forms.
-    (u"^дезоксирибонуклеи́нов(.*?) кисл", ur"phon=дэзоксирѝбонуклеи́нов\1 кисл"),
-    (u"^детсад", [u"дѐтсад", u"детсад"]),
-    # This adds доӂӂ- pronunciations to non-lemma forms (lemma has an
-    # accent, до́ждь)
-    (u"^дожд(я́|ю́|ём|е́|и́|е́й|я́м|я́ми|я́х)$", [ur"дожд\1", ur"доӂӂ\1"]),
-    (u"^дождевик", [u"дождевик", u"доӂӂевик"]),
-    (u"^дождев(.*? че́?рв)", [ur"дождев\1", ur"доӂӂев\1"]),
-    (u"^дрожж", [u"дроӂӂ", u"дрожж"]),
-    (u"^жа(ле́?)", ur"phon=же\1"),
-    (u"^заво́д(.*?)-подря́дчик", ur"заво̀д\1-подря́дчик"),
-    (u"^загранпаспорт", u"загра̀нпаспорт"),
-    # reverse-translit would produce ёркширский тэрье́р etc.
-    (u"^(йо́ркширск.*?) терье́р", ur"phon=\1 тэрье́р"),
-    (u"^квартирохозя́", u"квартѝрохозя́"),
-    (u"^киберво́йн", u"кѝберво́йн"),
-    # This adds доӂӂ- pronunciations as for дождь above
-    (u"^(кисло́тн.*? )дожд", [ur"\1дожд", ur"\1доӂӂ"]),
-    (u"^кни́г(.*?) за семью́ печа́тям", ur"кни́г\1 за семью́ печа́тя̣м"),
-    # NOTE: The following remains unapplied because the non-lemma forms
-    # haven't been created yet
-    (u"^коми-зыря́н", u"ко̀ми-зыря́н"),
-    (u"^лесополо́с", u"лѐсополо́с"),
-    (u"^лесостеп", u"лѐсостеп"),
-    (u"^лимфодренаж", u"лѝмфодренаж"),
-    (u"^льносем", u"льно̀сем"),
-    (u"^лю́к(.*?) фотопулемёт", ur"лю́к\1 фо̀топулемёт"),
-    (u"^мало(заме́т.*? бомбардиро́вщик)", [ur"ма̀ло\1"]),
-    (u"^мало(россия́н)", [ur"ма̀ло\1", ur"мало\1"]),
-    # genitive plural of межсезо́нье; FIXME, should be handled correctly
-    (u"^межсезо́ний$", u"мѐжсезо́ний"),
-    (u"^меж(ъягоди́чн.*? скла́д)", [ur"мѐж\1", ur"мѐш\1", ur"меж\1"]),
-    (u"^микрово́лн", u"мѝкрово́лн"),
-    (u"^микро(волно́в.*? пе́?ч)", ur"мѝкро\1"),
-    (u"^мозжеч(ко́в.*? минда́лин)", [ur"мозжеч\1", ur"моӂӂеч\1"]),
-    (u"^моче(испуска́тельн.*? кана́л)", ur"мо̀че\1"),
-    (u"^мундштук", u"phon=мунштук"),
-    (u"^(носов.*? )радио(прозра́чн.*? обтека́т.*? )анте́нны радиолокац",
-      ur"phon=\1ра̀дио\2антэ́нны ра̀диолокац"),
-    (u"^не́рвно-паралити́ческ(.*?) га́з", u"нѐрвно-паралити́ческ(.*?) га́з"),
-    (u"^несча́стий$", u"неща́стий"),
-    # нетопырь handled correctly without override
-    (u"^ново(англича́н)", ur"но̀во\1"),
-    (u"^обезьяно([лч])", ur"обезья̀но\1"),
-    # паремия handled correctly without override
-    (u"^(пере́дн.*?) бронеперегоро́д", ur"\1 бро̀неперегоро́д"),
-    # forms of перейти́
-    (u"^перейд", [u"перейд", u"phon=перед"]),
-    (u"^пионерлагер", u"поинѐрлагер"),
-    (u"^(пла́н.*?) Б$", ur"\1 бэ́"),
-    #(u"^подна́йм", u"по̀дна́йм"),
-    (u"^политкаторжа́н", u"полѝткаторжа́н"),
-    (u"^полу(в[её]д)", ur"по̀лу\1"),
-    (u"^полу(ве́?к)", ur"по̀лу\1"),
-    (u"^полу(го́?д)", ur"по̀лу\1"),
-    (u"^полу(дю́жин)", ur"по̀лу\1"),
-    (u"^полу(им)", ur"по̀лу\1"),
-    (u"^полу(килом)", ur"по̀лу\1"),
-    (u"^полу(ли́тр)", ur"по̀лу\1"),
-    (u"^полу(лю́?д|челов)", ur"по̀лу\1"),
-    (u"^полу(ме́сяц)", ur"по̀лу\1"),
-    (u"^полу(ме́тр)", ur"по̀лу\1"),
-    (u"^полу(миллио́н)", ur"по̀лу\1"),
-    (u"^полу(ос)", ur"по̀лу\1"),
-    (u"^полу(остров)", [ur"по̀лу\1", ur"полу\1"]),
-    (u"^полу(очк)", ur"по̀лу\1"),
-    (u"^полу(со́т)", ur"по̀лу\1"),
-    (u"^полу(ты́сяч)", ur"по̀лу\1"),
-    (u"^полу(ча́?с)", ur"по̀лу\1"),
-    (u"^после(обе́денн.*? вре́?м)", ur"по̀сле\1"),
-    (u"^пост(травмат.*?) стре́сс", ur"phon=по̀ст\1 стрэ́сс"),
-    (u"^пра(воохрани́тельн.*? о́рган)", [ur"пра̀\1", ur"пра\1"]),
-    (u"^пра(материк)", ur"пра̀\1"),
-    (u"^пресс(-секретар)", ur"прѐсс\1"),
-    (u"^(прибо́р.*? управле́ния) фото", ur"\1 фо̀то"),
-    (u"^про́волок(.)", ur"про́вол(о)к\1"),
-    (u"^прое́зж(.*? ча́?ст)", [ur"прое́зж\1", ur"прое́ӂӂ\1"]),
-    (u"^противополо́ж", [u"противополо́ж", u"про̀тивополо́ж"]),
-    (u"^радиово́лн", [u"ра̀диово́лн", u"ра̀дио̂во́лн"]),
-    (u"^радио(локацио́нн.*? дальноме́р)", [ur"ра̀дио\1", ur"ра̀дио̂\1"]),
-    (u"^раке́т(.*?)-носи́тел", ur"ракѐт\1-носи́тел"),
-    # not correctly handled as form of расстава́ться
-    (u"^расста([юё])", ur"^рас(с)та\1"),
-    # forms of расчеса́ть
-    (u"^расче́ш", [u"расче́ш", u"раще́ш"]),
-    (u"^расчёс", [u"расчёс", u"ращёс"]),
-    # раджа handled correctly without override
-    (u"^рибонуклеи́нов(.*?) кисл", ur"рѝбонуклеи́нов\1 кисл"),
-    (u"^романтик", (u"романтик", "{{i|romantic meeting}} ", "")),
-    (u"^санузл", [u"санузл", u"са̀нузл", u"са̀нъузл"]),
-    (u"^сверх(лю́?д)", ur"свѐрх\1"), # from сверхчелове́к
-    (u"^сверх(но́в.*? зв)", ur"свѐрх\1"),
-    (u"^скучн([аы]́)$", [(ur"phon=скушн\1", "{{a|Moscow}} ", ""), (ur"скучн\1", "{{a|Saint Petersburg}} ", "")]),
-    (u"^сёгу́н", [u"сё̂гу́н", (u"сегу́н", "", " {{i|uncommon or fast and casual speech}}")]),
-    (u"^соцсет", u"со̀цсет"),
-    (u"^суперзвёзд", u"су̀перзвёзд"), # суперзвезда́
-    (u"^счётши", u"щчётши"), # form of счесть
-    (u"^(су́?д.*? на подво́дных )кры́льях", ur"\1кры́лья̣х"),
-    (u"^тео́ри(.*?) ха́оса", ur"тео́ри\1 ха́о̂са"),
-    (u"^трёх(эта́жн.*? сло́?в)", ur"трё̀х\1"),
-    (u"^турбо(реакти́вн.*? дви́гат)", ur"ту̀рбо\1"),
-    (u"^(уто́пленн.*? )воз(духозабо́рник)", ur"\1во̀з\2"),
-    # override pronunciation у́к(о)р, which should apply only to base form
-    (u"^(у́кр(а|у|ом|е|ы|ов|ам|ами|ах))$", ur"\1"),
-    (u"^ультракоротко(волно́в.*?) радио(ста́нц)",
-        [ur"у̀льтракоротко\1 радио\2", ur"у̀льтракоро̀тко\1 радио\2"]),
-    (u"^ум([ауоеы])́(.*?)-ра́зум", ur"ум\1̀\2-ра́зум"), # forms of у́м-ра́зум
-    (u"^человеко(обра́зн.*? обезья́н)", ur"человѐко\1"),
-    (u"^четырёх(та́кт.*? дви́гател)", ur"четырё̀х\1"),
-    (u"^четверг", [u"четверг", u"phon=четверьг"]),
-    (u"^шеф-повар", u"шѐф-повар"),
-    (u"^(шпио́нск.*?) ПО$", ur"phon=\1 пэ-о́"),
-    # щавель handled correctly without override
-    (u"^электро(магни́тн.*?) взаимо(де́йств)", ur"элѐктро\1 взаѝмо\2"),
-    # for various expressions like гравитационное взаимодействие; this
-    # must follow the previous entry for электромагнитное взаимодействие,
-    # so that entry takes precendence
-    (u" взаимоде́йств", u" взаѝмоде́йств"),
-    (u"^электро(поезд)", ur"элѐктро\1"),
-    # numerals
-    (u"^((?:.*? )?)пятьдеся́т((?: .*?)?)$", [ur"\1пятьдеся́т\2|gem=opt", (ur"phon=\1пееся́т\2", "{{i|colloquial or fast speech}} ", "")]),
-    (u"^((?:.*? )?)шестьдеся́т", [ur"\1шестьдеся́т", (ur"phon=\1шееся́т", "{{i|colloquial or fast speech}} ", "")]),
-    (u"^((?:.*? )?)се́мьдесят", [ur"\1се́мьдесят", ur"phon=\1се́мдесят"]),
-    (u"^((?:.*? )?)во́семьдесят", [ur"\1во́семьдесят", ur"phon=\1во́семдесят"]),
+]
+
+allowed_l3_headings_when_multiple_etyms = [
+  "References"
 ]
 
 # Make sure there are two trailing newlines
@@ -283,7 +110,7 @@ def contains_non_cyrillic_non_latin(text):
   # significance as phonological characters. FIXME: We allow Latin h as a
   # substitute for ɣ, we should allow it here and not have it trigger
   # contains_latin() by itself.
-  return re.sub(ur"[\u0300\u0301\u0302\u0308\u0307\u0323 \-,.?!()_/‿ɣɕʑЀ-ԧꚀ-ꚗa-zščžáéíóúýàèìòùỳɛě]", "", text.lower()) != ""
+  return re.sub(ur"[\u0300\u0301\u0302\u0308\u0307\u0323 \-,.?!()_/‿ɣɕʑЀ-ԧꚀ-ꚗ'a-zščžáéíóúýàèìòùỳɛě]", "", text.lower()) != ""
 
 def canonicalize_monosyllabic_pronun(pronun):
   # Do nothing if there are multiple words
@@ -908,17 +735,17 @@ def process_section(section, indentlevel, headword_pronuns,
   def canonicalize_pronun(pron, paramname):
     newpron = re.sub(u"ё́", u"ё", pron)
     newpron = re.sub(AC + "+", AC, newpron)
+    ournotes = []
     if newpron != pron:
-      notes.append("remove extra accents from %s= (be-IPA)" % paramname)
+      ournotes.append("remove extra accents from %s= (be-IPA)" % paramname)
       pron = newpron
     # We want to go word-by-word and check to see if the headword word is
     # the same as the be-IPA word but has additional accents in it, and
     # if so copy the headword word to the be-IPA word. One way to do that
     # is to check that the be-IPA word has no accents and that the headword
     # word minus accents is the same as the be-IPA word.
-    if not bad_char_msgs and len(headword_pronuns) == 1 and not headword_pronuns[0][1]:
-      # FIXME, handle translit here
-      hwords = re.split(r"([\s\-]+)", headword_pronuns[0][0])
+    if not bad_char_msgs and len(headword_pronuns) == 1:
+      hwords = re.split(r"([\s\-]+)", headword_pronuns[0])
       pronwords = re.split(r"([\s\-]+)", pron)
       changed = False
       if len(hwords) == len(pronwords):
@@ -931,25 +758,26 @@ def process_section(section, indentlevel, headword_pronuns,
             pronwords[i] = hword
       if changed:
         pron = "".join(pronwords)
-        notes.append("copy accents from headword to %s= (be-IPA)" % paramname)
-    return pron
+        ournotes.append("copy accents from headword to %s= (be-IPA)" % paramname)
+    return pron, ournotes
 
   parsed = blib.parse_text(section)
   for t in parsed.filter_templates():
     if unicode(t.name) == "be-IPA":
       origt = unicode(t)
-      arg1 = getparam(t, "1")
-      if arg1:
-        newarg1 = canonicalize_pronun(arg1, "1")
-        if arg1 != newarg1:
-          t.add("1", newarg1)
-          arg1 = newarg1
-        if be.is_monosyllabic(arg1) and re.sub(AC, "", arg1) == pagetitle:
-          notes.append("remove 1= because monosyllabic and same as pagetitle modulo accents (be-IPA)")
-          rmparam(t, "1")
-        elif re.search(u"ё", arg1) and arg1 == pagetitle:
-          notes.append(u"remove 1= because same as pagetitle and has ё (be-IPA)")
-          rmparam(t, "1")
+      arg1 = getparam(t, "1") or pagetitle
+      newarg1, their_notes = canonicalize_pronun(arg1, "1")
+      if arg1 != newarg1:
+        t.add("1", newarg1)
+        arg1 = newarg1
+      if be.is_monosyllabic(arg1) and re.sub(AC, "", arg1) == pagetitle:
+        notes.append("remove 1= because monosyllabic and same as pagetitle modulo accents (be-IPA)")
+        rmparam(t, "1")
+      elif re.search(u"ё", arg1) and arg1 == pagetitle:
+        notes.append(u"remove 1= because same as pagetitle and has ё (be-IPA)")
+        rmparam(t, "1")
+      else:
+        notes.extend(their_notes)
       newt = unicode(t)
       if newt != origt:
         pagemsg("Replaced %s with %s" % (origt, newt))
@@ -985,7 +813,7 @@ def process_section(section, indentlevel, headword_pronuns,
       pagemsg("WARNING: Existing pronunciation template (w/o grave accent) has different pronunciation %s from headword-derived pronunciation %s" %
             (joined_foundpronuns, joined_headword_pronuns))
     elif set(foundpronuns) != set(headword_pronuns):
-      pagemsg("WARNING: Existing pronunciation template has different pronunciation %s from headword-derived pronunciation %s, but only in gem=" %
+      pagemsg("WARNING: Existing pronunciation template has different pronunciation %s from headword-derived pronunciation %s, but only in grave accents" %
             (joined_foundpronuns, joined_headword_pronuns))
 
     return section, notes, was_unable_to_match
@@ -1091,7 +919,13 @@ def process_page_text(index, text, pagetitle):
             continue
           seen_etym_1 = True
           expected_etym_num += 1
-          if l3split[k] != "===Etymology %s===\n" % expected_etym_num:
+          m = re.search(r"^===(.*)===\n$", l3split[k])
+          if not m:
+            pagemsg("WARNING: Bad L3 header with multiple etymologies: %s" % l3split[k].replace("\n", ""))
+            break
+          header = m.group(1)
+          if (header != "Etymology %s" % expected_etym_num and
+              header not in allowed_l3_headings_when_multiple_etyms):
             pagemsg("WARNING: Misformatted page with multiple etymologies, expected ===Etymology %s=== but found %s" % (
               expected_etym_num, l3split[k].replace("\n", "")))
             break
