@@ -1153,14 +1153,14 @@ def process_lemma(index, pagetitle, forms):
   for t in parsed.filter_templates():
     tname = unicode(t.name)
     tempcall = None
-    if tname == "ru-conj":
-      tempcall = re.sub(r"^\{\{ru-conj", "{{ru-generate-verb-forms",
+    if tname == "be-conj":
+      tempcall = re.sub(r"^\{\{be-conj", "{{be-generate-verb-forms",
           unicode(t))
-    elif tname == "ru-noun-table":
-      tempcall = re.sub(r"^\{\{ru-noun-table", "{{ru-generate-noun-args",
+    elif tname == "be-ndecl":
+      tempcall = re.sub(r"^\{\{be-ndecl", "{{be-generate-noun-forms",
           unicode(t))
-    elif tname == "ru-decl-adj":
-      tempcall = re.sub(r"^\{\{ru-decl-adj", "{{ru-generate-adj-forms",
+    elif tname == "be-adecl":
+      tempcall = re.sub(r"^\{\{be-adecl", "{{be-generate-adj-forms",
           unicode(t))
     if tempcall:
       result = expand_text(tempcall)
@@ -1172,7 +1172,7 @@ def process_lemma(index, pagetitle, forms):
       for form in forms:
         if form in result_args:
           for formpagename in re.split(",", result_args[form]):
-            formpagename = be.remove_accents(re.sub("//.*", "", formpagename))
+            formpagename = be.remove_accents(formpagename)
             formpage = pywikibot.Page(site, formpagename)
             if not formpage.exists():
               pagemsg("WARNING: Form page %s doesn't exist, skipping" % formpagename)
@@ -1201,8 +1201,6 @@ parser = blib.create_argparser("Add pronunciation sections to Belarusian Wiktion
 parser.add_argument('--lemma-file', help="File containing lemmas to process, one per line; non-lemma forms will be done")
 parser.add_argument('--lemmas', help="List of comma-separated lemmas to process; non-lemma forms will be done")
 parser.add_argument("--forms", help="Form codes of non-lemma forms to process in conjunction with --lemmas and --lemma-file.")
-parser.add_argument('--tempfile', help="File containing templates and headwords for quick offline reprocessing, one per line")
-parser.add_argument('--override-IPA', action="store_true", help="Change IPA to be-IPA even when pronunciations can't be reconciled")
 parser.add_argument('--override-pronun', action="store_true", help="Override existing pronunciations")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
@@ -1215,32 +1213,23 @@ form_aliases = {
     "futr_1sg", "futr_2sg", "futr_3sg", "futr_1pl", "futr_2pl", "futr_3pl"
   ],
   "impr": ["impr_sg", "impr_pl"],
-  "past": [
-    "past_m", "past_f", "past_n", "past_pl",
-    "past_m_short", "past_f_short", "past_n_short", "past_pl_short"
-  ],
+  "past": ["past_m", "past_f", "past_n", "past_pl"],
   "part": [
-    "pres_actv_part", "past_actv_part", "pres_pasv_part", "past_pasv_part",
-    "pres_adv_part", "past_adv_part", "past_adv_part_short"
+    "pres_actv_part", "past_pasv_part",
+    "pres_adv_part", "past_adv_part",
   ],
   "all-verb": ["pres", "futr", "impr", "past", "part"],
-  "sg": [
-    "nom_sg", "gen_sg", "dat_sg", "acc_sg", "acc_sg_an", "acc_sg_in",
-      "ins_sg", "pre_sg"
-  ],
-  "pl": [
-    "nom_pl", "gen_pl", "dat_pl", "acc_pl", "acc_pl_an", "acc_pl_in",
-      "ins_pl", "pre_pl"
-  ],
+  "sg": ["nom_s", "gen_s", "dat_s", "acc_s", "ins_s", "loc_s", "voc_s"],
+  "pl": ["nom_p", "gen_p", "dat_p", "acc_p", "ins_p", "loc_p", "voc_p"],
   "all-noun": ["sg", "pl"],
   "long": [
     "nom_m", "nom_f", "nom_n", "nom_p", "nom_mp", "nom_fp",
-    "gen_m", "gen_f", "gen_p", "gen_mp", "gen_fp",
-    "dat_m", "dat_f", "dat_p", "dat_mp", "dat_fp",
+    "gen_m", "gen_f", "gen_p",
+    "dat_m", "dat_f", "dat_p",
     "acc_m_an", "acc_m_in", "acc_f", "acc_n", "acc_p_an", "acc_p_in",
     "acc_mp_an", "acc_mp_in", "acc_fp_an", "acc_fp_in", "acc_mp", "acc_fp",
-    "ins_m", "ins_f", "ins_p", "ins_mp", "ins_fp",
-    "pre_m", "pre_f", "pre_p", "pre_mp", "pre_fp",
+    "ins_m", "ins_f", "ins_p",
+    "loc_m", "loc_f", "loc_p",
   ],
   "short": ["short_m", "short_f", "short_n", "short_p"],
   "all-adj": ["long", "short"],
@@ -1269,31 +1258,6 @@ if args.lemma_file or args.lemmas:
     lemmas = blib.iter_items(re.split(",", args.lemmas.decode("utf-8")), start, end)
   for i, lemma in lemmas:
     process_lemma(i, be.remove_accents(lemma), forms)
-
-elif args.tempfile:
-  lines = [x.strip() for x in codecs.open(args.tempfile, "r", "utf-8")]
-  for line in lines:
-    m = re.search(r"^Page ([0-9]+) (.*?): .*Processing raw IPA (.*) for headword\(s\) (.*)$", line)
-    if not m:
-      msg("WARNING: Unrecognized line: %s" % line)
-    else:
-      index, pagetitle, ipa_templates, headwords = m.groups()
-      ipa_templates = re.split(r"\+\+", ipa_templates)
-      headwords = re.split(r"\+\+", headwords)
-      headword_args = []
-      for i in xrange(len(headwords)):
-        if i == 0:
-          headword_args.append(headwords[i])
-        else:
-          headword_args.append("head%s=%s" % (i+1, headwords[i]))
-      text = """
-==Belarusian==
-
-%s
-
-{{ru-noun|%s}}
-""" % ("\n".join(ipa_templates), "|".join(headword_args))
-      process_page_text(index, text, pagetitle)
 
 else:
   blib.do_pagefile_cats_refs(args, start, end, process_page,
