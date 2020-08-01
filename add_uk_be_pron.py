@@ -9,7 +9,8 @@ from collections import Counter
 import blib
 from blib import getparam, rmparam, msg, site
 
-import belib as be
+import belib
+import uklib
 from belib import AC, GR
 import ru_reverse_translit
 
@@ -92,7 +93,7 @@ manual_pronun_mapping = [
 ]
 
 allowed_l3_headings_when_multiple_etyms = [
-  "References"
+  "References", "Further reading"
 ]
 
 # Make sure there are two trailing newlines
@@ -115,7 +116,7 @@ def contains_non_cyrillic_non_latin(text):
 def canonicalize_monosyllabic_pronun(pronun):
   # Do nothing if there are multiple words
   if pronun not in accentless['pre'] and not re.search(r"[\s\-]", pronun):
-    return be.add_monosyllabic_stress(pronun)
+    return com.add_monosyllabic_stress(pronun)
   else:
     return pronun
 
@@ -129,12 +130,12 @@ def remove_list_duplicates(l):
 def get_first_param(t):
   lang = getparam(t, "lang")
   if lang:
-    if lang == "be":
+    if lang == args.lang:
       return "1"
     else:
       return None
   else:
-    if getparam(t, "1") == "be":
+    if getparam(t, "1") == args.lang:
       return "2"
     else:
       return None
@@ -159,26 +160,26 @@ def get_headword_pronuns(parsed, pagetitle, pagemsg, expand_text):
   for t in parsed.filter_templates():
     check_extra_heads = False
     tname = unicode(t.name)
-    if tname in ["be-adj", "be-adv", "be-verb"]:
+    if tname in ["%s-adj" % args.lang, "%s-adv" % args.lang, "%s-verb" % args.lang]:
       head = getparam(t, "1") or pagetitle
       append_headword(head)
       check_extra_heads = True
-    elif tname in ["be-phrase"]:
+    elif tname in ["%s-phrase" % args.lang]:
       head = getparam(t, "head") or getparam(t, "1") or pagetitle
       append_headword(head)
       check_extra_heads = True
-    elif tname == "head" and getparam(t, "1") == "be" and getparam(t, "2") == "letter":
+    elif tname == "head" and getparam(t, "1") == args.lang and getparam(t, "2") == "letter":
       pagemsg("WARNING: Skipping page with letter headword")
       return None
-    elif tname == "head" and getparam(t, "1") == "be":
+    elif tname == "head" and getparam(t, "1") == args.lang:
       head = getparam(t, "head") or pagetitle
       append_headword(head)
       check_extra_heads = True
-    elif tname in ["be-noun", "be-proper noun"]:
+    elif tname in ["%s-noun" % args.lang, "%s-proper noun" % args.lang]:
       param1 = getparam(t, "1")
       if "<" in param1:
         parsed_t = blib.parse_text(unicode(t)).filter_templates()[0]
-        blib.set_template_name(parsed_t, "be-generate-noun-forms")
+        blib.set_template_name(parsed_t, "%s-generate-noun-forms" % args.lang)
         blib.remove_param_chain(parsed_t, "adj", "adj")
         blib.remove_param_chain(parsed_t, "dim", "dim")
         blib.remove_param_chain(parsed_t, "m", "m")
@@ -207,16 +208,16 @@ def get_headword_pronuns(parsed, pagetitle, pagemsg, expand_text):
   # Canonicalize by removing links and final !, ?
   headword_pronuns = [re.sub("[!?]$", "", blib.remove_links(x)) for x in headword_pronuns]
   for pronun in headword_pronuns:
-    if be.remove_accents(pronun) != pagetitle:
+    if com.remove_accents(pronun) != pagetitle:
       pagemsg("WARNING: Headword pronun %s doesn't match page title, skipping" % pronun)
       return None
 
   # Check for acronym/non-syllabic.
   for pronun in headword_pronuns:
-    if be.is_nonsyllabic(pronun):
+    if com.is_nonsyllabic(pronun):
       pagemsg("WARNING: Pronunciation is non-syllabic, skipping: %s" % pronun)
       return None
-    if re.search("[" + be.uppercase + u"ЀЍ][" + be.AC + be.GR + "]?[" + be.uppercase + u"ЀЍ]", pronun):
+    if re.search("[" + com.uppercase + u"ЀЍ][" + AC + GR + "]?[" + com.uppercase + u"ЀЍ]", pronun):
       pagemsg("WARNING: Pronunciation may be an acronym, please check: %s" % pronun)
 
   # Canonicalize headword pronuns. If a single monosyllabic word, add accent
@@ -227,12 +228,12 @@ def get_headword_pronuns(parsed, pagetitle, pagemsg, expand_text):
   # word, remove the one without the accent.
 
   def headwords_same_but_first_maybe_lacks_accents(h1, h2):
-    if be.remove_accents(h1) == be.remove_accents(h2) and len(h1) < len(h2):
+    if com.remove_accents(h1) == com.remove_accents(h2) and len(h1) < len(h2):
       h1words = re.split(r"([\s\-]+)", h1)
       h2words = re.split(r"([\s\-]+)", h2)
       if len(h1words) == len(h2words):
         for i in xrange(len(h1words)):
-          if not (h1words[i] == h2words[i] or not be.is_accented(h1words[i]) and be.remove_accents(h2words[i]) == h1words[i]):
+          if not (h1words[i] == h2words[i] or not com.is_accented(h1words[i]) and com.remove_accents(h2words[i]) == h1words[i]):
             return False
       return True
     return False
@@ -262,7 +263,7 @@ def pronun_matches(hpron, foundpron, pagemsg):
   origfoundpron = foundpron
   if hpron == foundpron or not foundpron:
     return True
-  foundpron = be.remove_grave_accents(foundpron)
+  foundpron = com.remove_grave_accents(foundpron)
   if hpron == foundpron:
     pagemsg("Matching headword pronun %s to found pronun %s after removing grave accents from the latter" %
       (orighpron, origfoundpron))
@@ -276,7 +277,7 @@ def pronun_matches(hpron, foundpron, pagemsg):
 
   return False
 
-# Simple class to hold pronunciation found in be-IPA, along with the text
+# Simple class to hold pronunciation found in uk/be-IPA, along with the text
 # before and after. Lots of boilerplate to support equality and hashing.
 # Based on http://stackoverflow.com/questions/390250/elegant-ways-to-support-equivalence-equality-in-python-classes
 class FoundPronun(object):
@@ -309,7 +310,7 @@ class FoundPronun(object):
 # Match up the stems of headword pronunciations and found pronunciations.
 # On entry, HEADWORD_PRONUNS is a list of values extracted from headwords;
 # FOUND_PRONUNS is a list of FoundPronun objects, each one listing a
-# pronunciation from {{be-IPA}} (which may be empty) along with the text
+# pronunciation from {{uk/be-IPA}} (which may be empty) along with the text
 # before and after the pronunciation on the same line, minus any '* ' at
 # the beginning.
 #
@@ -319,7 +320,7 @@ class FoundPronun(object):
 # headword and FOUNDPRONSTEMS is a list of the corresponding
 # found-pronunciation stems. (Each such stem is actually a FoundPronun object,
 # with the pre-text and post-text coming from the corresponding text before
-# and after the {{be-IPA}} template where the pronunciation was found.)
+# and after the {{uk/be-IPA}} template where the pronunciation was found.)
 # We return a list of stem tuples because there may be multiple stems to
 # consider for each headword -- including reduced and dereduced variants
 # (e.g. for автазапра́вка with corresponding pronunciation а̀втазапра́вка we
@@ -389,9 +390,9 @@ def match_headword_and_found_pronuns(headword_pronuns, found_pronuns, pagemsg,
     stem_for_reduce = re.sub(u"[аяеоёьыі]́?$", "", nom)
     epenthetic_vowel = nom.endswith(AC)
     if re.search(u"[аяеоёьыі]́?$", nom):
-      reduced_stem = be.dereduce(stem_for_reduce, epenthetic_vowel)
+      reduced_stem = com.dereduce(stem_for_reduce, epenthetic_vowel)
     else:
-      reduced_stem = be.reduce(stem_for_reduce)
+      reduced_stem = com.reduce(stem_for_reduce)
     return reduced_stem
 
   # Apply a function to a list of found pronunciations. Don't include
@@ -426,7 +427,7 @@ def match_headword_and_found_pronuns(headword_pronuns, found_pronuns, pagemsg,
     append_stem_foundstems(get_reduced_stem(hpron),
       frob_foundprons(foundprons, get_reduced_stem))
     # Also check for adjectival stem
-    adj_ending_regex = u"([ыі]́?|[ая]́?я|[аоя]́?е|[ыі]́?я)$"
+    adj_ending_regex = u"([ыі]́?|[ая]́?я|[аоя]́?е|[ыі]́?я)$" if args.lang == "be" else u"([иі]́?й|[аяеєі]́)$"
     adjstem = re.sub(adj_ending_regex, "", hpron)
     if adjstem != hpron:
       foundpronstems = frob_foundprons(foundprons,
@@ -437,15 +438,15 @@ def match_headword_and_found_pronuns(headword_pronuns, found_pronuns, pagemsg,
       # If adjectival, dereduce with both stressed and unstressed epenthetic
       # vowel
       for epvowel in [False, True]:
-        deredstem = be.dereduce(adjstem, epvowel)
+        deredstem = com.dereduce(adjstem, epvowel)
         deredfoundpronstems = frob_foundprons(foundpronstems,
-            lambda x:be.dereduce(x, epvowel))
+            lambda x:com.dereduce(x, epvowel))
         append_stem_foundstems(deredstem, deredfoundpronstems)
         pagemsg("Adding adjectival dereduced stem mapping %s->%s" % (
           deredstem, ",".join(unicode(x) for x in deredfoundpronstems)))
     # Also check for verbal stem; peel off parts that don't occur in all
     # forms of the verb
-    verb_ending_regex = u"(ава́?|ну́?|[аеыіяо]́?)ц(ь|ца)?$"
+    verb_ending_regex = u"(ава́?|ну́?|[аеыіяо]́?)ц(ь|ца)?$" if args.lang == "be" else u"(ува́?|ну́?|[аеиіїяо]́?)т[иь](ся)?$"
     verbstem = re.sub(verb_ending_regex, "", hpron)
     if verbstem != hpron:
       foundpronstems = frob_foundprons(foundprons,
@@ -453,9 +454,9 @@ def match_headword_and_found_pronuns(headword_pronuns, found_pronuns, pagemsg,
       append_stem_foundstems(verbstem, foundpronstems)
       pagemsg("Adding verbal stem mapping %s->%s" % (
         verbstem, ",".join(unicode(x) for x in foundpronstems)))
-      iotstem = be.iotate(verbstem)
+      iotstem = com.iotate(verbstem)
       iotfoundpronstems = frob_foundprons(foundpronstems,
-          lambda x:be.iotate(x))
+          lambda x:com.iotate(x))
       append_stem_foundstems(iotstem, iotfoundpronstems)
       pagemsg("Adding verbal iotated stem mapping %s->%s" % (
         iotstem, ",".join(unicode(x) for x in iotfoundpronstems)))
@@ -486,7 +487,7 @@ def get_lemmas_of_form_page(parsed):
     if (tname in ["inflection of", "comparative of", "superlative of"]):
       first_param = get_first_param(t)
     if first_param:
-      lemma = be.remove_accents(blib.remove_links(getparam(t, first_param)))
+      lemma = com.remove_accents(blib.remove_links(getparam(t, first_param)))
       lemmas.add(lemma)
   return lemmas
 
@@ -498,10 +499,11 @@ lemma_headword_to_pronun_mapping_cache = {}
 
 # Look up the lemmas of all inflection-of templates in PARSED (the contents
 # of an etym section), and for each such lemma, fetch a mapping from
-# headword-derived stems to pronunciations as found in the be-IPA templates.
+# headword-derived stems to pronunciations as found in the uk/be-IPA templates.
 # Return PRONUNMAPPING, a map as described above.
 def lookup_pronun_mapping(parsed, pagemsg):
   lemmas = get_lemmas_of_form_page(parsed)
+  pron_temp_name = args.lang + "-IPA"
   all_pronunmappings = {}
   for lemma in lemmas:
     # Need to create our own expand_text() with the page title set to the
@@ -527,20 +529,20 @@ def lookup_pronun_mapping(parsed, pagemsg):
       foundpronuns = []
 
       # Find the pronunciations but also get pre-text and post-text
-      for m in re.finditer(r"^(.*)(\{\{be-IPA(?:\|[^}]*)?\}\})(.*)$",
+      for m in re.finditer(r"^(.*)(\{\{%s(?:\|[^}]*)?\}\})(.*)$" % pron_temp_name,
           newpage.text, re.M):
         pretext = m.group(1)
-        beIPA = m.group(2)
+        ipa_temp_text = m.group(2)
         posttext = m.group(3)
         wholeline = m.group(0)
         if not pretext.startswith("* "):
-          pagemsg("WARNING: be-IPA doesn't start with '* ': %s" % wholeline)
+          pagemsg("WARNING: %s doesn't start with '* ': %s" % (pron_temp_name, wholeline))
         pretext = re.sub(r"^\*?\s*", "", pretext) # remove '* ' from beginning
         if pretext or posttext:
-          pagemsg("WARNING: pre-text or post-text with be-IPA: %s" % wholeline)
-        beIPA_t = blib.parse_text(beIPA).filter_templates()[0]
-        assert unicode(beIPA_t.name) == "be-IPA"
-        foundpronun = be.add_monosyllabic_stress(getparam(beIPA_t, "1"))
+          pagemsg("WARNING: pre-text or post-text with %s: %s" % (pron_temp_name, wholeline))
+        ipa_t = blib.parse_text(ipa_temp_text).filter_templates()[0]
+        assert unicode(ipa_t.name) == pron_temp_name
+        foundpronun = com.add_monosyllabic_stress(getparam(ipa_t, "1"))
         foundpronuns.append(FoundPronun(foundpronun, pretext, posttext))
       pronunmapping = match_headword_and_found_pronuns(headwords, foundpronuns,
           pagemsg, expand_text)
@@ -572,6 +574,7 @@ def process_section(section, indentlevel, headword_pronuns,
 
   pronunmapping = lookup_pronun_mapping(parsed, pagemsg)
 
+  pron_temp_name = args.lang + "-IPA"
   pronun_lines = []
   bad_char_msgs = []
   # Figure out how many headword variants there are, and if there is more
@@ -583,9 +586,9 @@ def process_section(section, indentlevel, headword_pronuns,
   matched_hpron = set()
   manually_subbed_pronun = False
   # List of pronunciations to insert into comment message; approximately
-  # the same as what goes inside {{be-IPA}}, except we don't include the
+  # the same as what goes inside {{uk/be-IPA}}, except we don't include the
   # ann= parameter and we do include the pronunciation even if we leave
-  # it out in {{be-IPA}} because it's the same as the page title.
+  # it out in {{uk/be-IPA}} because it's the same as the page title.
   pronuns_for_comment = []
   for pronun in headword_pronuns:
     # Signal from within append_pronun_line() that we encountered badness
@@ -596,7 +599,7 @@ def process_section(section, indentlevel, headword_pronuns,
     orig_pronun = pronun
 
     def canonicalize_annotation(ann):
-       return be.remove_grave_accents(re.sub("[" + GR + u"‿]", "", ann))
+       return com.remove_grave_accents(re.sub("[" + GR + u"‿]", "", ann))
 
     def append_pronun_line(pronun, pre="", post=""):
       if len(annotations_set) > 1:
@@ -621,7 +624,7 @@ def process_section(section, indentlevel, headword_pronuns,
       if "." in pronun:
         pagemsg("WARNING: Pronunciation has dot in it, skipping: %s" % pronun)
         bad_pronun_need_to_return[0] = True
-      if be.needs_accents(pronun, split_dash=True):
+      if com.needs_accents(pronun, split_dash=True):
         for allow_regex in allow_unaccented:
           if re.search(allow_regex, pagetitle):
             pagemsg("Pronunciation lacks accents but pagetitle in allow_unaccented, allowing: %s"
@@ -648,12 +651,12 @@ def process_section(section, indentlevel, headword_pronuns,
         pronuns_for_comment.append(pronun_for_comment)
 
       if (
-         be.is_monosyllabic(pronun) and re.sub(AC, "", pronun) == pagetitle or
+         com.is_monosyllabic(pronun) and re.sub(AC, "", pronun) == pagetitle or
          re.search(u"ё", pronun) and pronun == pagetitle):
-        pronun = "* %s{{be-IPA%s}}%s\n" % (pre, headword_annparam,
+        pronun = "* %s{{%s%s}}%s\n" % (pre, pron_temp_name, headword_annparam,
             post)
       else:
-        pronun = "* %s{{be-IPA|%s%s}}%s\n" % (pre, pronun, headword_annparam,
+        pronun = "* %s{{%s|%s%s}}%s\n" % (pre, pron_temp_name, pronun, headword_annparam,
             post)
       if pronun not in pronun_lines:
         pronun_lines.append(pronun)
@@ -719,7 +722,7 @@ def process_section(section, indentlevel, headword_pronuns,
 
   for t in parsed.filter_templates():
     tname = unicode(t.name)
-    if tname in ["be-IPA-manual"]:
+    if tname in ["%s-IPA-manual" % args.lang]:
       pagemsg("WARNING: Found %s template, skipping" % tname)
       return None
   if (re.search(r"[Aa]bbreviation", section) and not
@@ -737,13 +740,13 @@ def process_section(section, indentlevel, headword_pronuns,
     newpron = re.sub(AC + "+", AC, newpron)
     ournotes = []
     if newpron != pron:
-      ournotes.append("remove extra accents from %s= (be-IPA)" % paramname)
+      ournotes.append("remove extra accents from %s= (%s)" % (paramname, pron_temp_name))
       pron = newpron
     # We want to go word-by-word and check to see if the headword word is
-    # the same as the be-IPA word but has additional accents in it, and
-    # if so copy the headword word to the be-IPA word. One way to do that
-    # is to check that the be-IPA word has no accents and that the headword
-    # word minus accents is the same as the be-IPA word.
+    # the same as the uk/be-IPA word but has additional accents in it, and
+    # if so copy the headword word to the uk/be-IPA word. One way to do that
+    # is to check that the uk/be-IPA word has no accents and that the headword
+    # word minus accents is the same as the uk/be-IPA word.
     if not bad_char_msgs and len(headword_pronuns) == 1:
       hwords = re.split(r"([\s\-]+)", headword_pronuns[0])
       pronwords = re.split(r"([\s\-]+)", pron)
@@ -752,29 +755,32 @@ def process_section(section, indentlevel, headword_pronuns,
         for i in xrange(len(hwords)):
           hword = hwords[i]
           pronword = pronwords[i]
-          if (len(hword) > len(pronword) and not be.is_accented(pronword) and
-              be.remove_accents(hword) == pronword):
+          if (len(hword) > len(pronword) and not com.is_accented(pronword) and
+              com.remove_accents(hword) == pronword):
             changed = True
             pronwords[i] = hword
       if changed:
         pron = "".join(pronwords)
-        ournotes.append("copy accents from headword to %s= (be-IPA)" % paramname)
+        ournotes.append("copy accents from headword to %s= (%s)" % (
+          paramname, pron_temp_name))
     return pron, ournotes
 
   parsed = blib.parse_text(section)
   for t in parsed.filter_templates():
-    if unicode(t.name) == "be-IPA":
+    if unicode(t.name) == pron_temp_name:
       origt = unicode(t)
       arg1 = getparam(t, "1") or pagetitle
       newarg1, their_notes = canonicalize_pronun(arg1, "1")
       if arg1 != newarg1:
         t.add("1", newarg1)
         arg1 = newarg1
-      if be.is_monosyllabic(arg1) and re.sub(AC, "", arg1) == pagetitle:
-        notes.append("remove 1= because monosyllabic and same as pagetitle modulo accents (be-IPA)")
+      if com.is_monosyllabic(arg1) and re.sub(AC, "", arg1) == pagetitle:
+        notes.append("remove 1= because monosyllabic and same as pagetitle modulo accents (%s)" %
+            pron_temp_name)
         rmparam(t, "1")
       elif re.search(u"ё", arg1) and arg1 == pagetitle:
-        notes.append(u"remove 1= because same as pagetitle and has ё (be-IPA)")
+        notes.append(u"remove 1= because same as pagetitle and has ё (%s)" %
+            pron_temp_name)
         rmparam(t, "1")
       else:
         notes.extend(their_notes)
@@ -785,7 +791,7 @@ def process_section(section, indentlevel, headword_pronuns,
 
   overrode_existing_pronun = False
   if args.override_pronun:
-    pronun_line_re = r"^(\* .*\{\{be-IPA(?:\|([^}]*))?\}\}.*)\n"
+    pronun_line_re = r"^(\* .*\{\{%s(?:\|([^}]*))?\}\}.*)\n" % pron_temp_name
     for m in re.finditer(pronun_line_re, section, re.M):
       overrode_existing_pronun = True
       pagemsg("WARNING: Removing pronunciation due to --override-pronun: %s" %
@@ -793,7 +799,7 @@ def process_section(section, indentlevel, headword_pronuns,
     section = re.sub(pronun_line_re, "", section, 0, re.M)
 
   foundpronuns = []
-  for m in re.finditer(r"(\{\{be-IPA(?:\|([^}]*))?\}\})", section):
+  for m in re.finditer(r"(\{\{%s(?:\|([^}]*))?\}\})" % pron_temp_name, section):
     template_text = m.group(1)
     pagemsg("Already found pronunciation template: %s" % template_text)
     template = blib.parse_text(template_text).filter_templates()[0]
@@ -807,8 +813,8 @@ def process_section(section, indentlevel, headword_pronuns,
       pagemsg("WARNING: Fewer existing pronunciations (%s) than headword-derived pronunciations (%s): existing %s, headword-derived %s" % (
         len(foundpronuns), len(headword_pronuns),
         joined_foundpronuns, joined_headword_pronuns))
-    headword_pronuns_no_grave = [be.remove_grave_accents(x) for x in headword_pronuns]
-    foundpronuns_no_grave = [be.remove_grave_accents(x) for x in foundpronuns]
+    headword_pronuns_no_grave = [com.remove_grave_accents(x) for x in headword_pronuns]
+    foundpronuns_no_grave = [com.remove_grave_accents(x) for x in foundpronuns]
     if set(foundpronuns_no_grave) != set(headword_pronuns_no_grave):
       pagemsg("WARNING: Existing pronunciation template (w/o grave accent) has different pronunciation %s from headword-derived pronunciation %s" %
             (joined_foundpronuns, joined_headword_pronuns))
@@ -831,7 +837,7 @@ def process_section(section, indentlevel, headword_pronuns,
   # could happen when audio but not IPA is present, or when we deleted the
   # pronunciation because of --override-pronun
   if re.search(r"^===+Pronunciation===+$", section, re.M):
-    pagemsg("Found pronunciation section without be-IPA or IPA")
+    pagemsg("Found pronunciation section without %s or IPA" % pron_temp_name)
     section = re.sub(r"^(===+Pronunciation===+)\n", r"\1\n%s" %
         "".join(pronun_lines), section, 1, re.M)
   else:
@@ -876,16 +882,17 @@ def process_page_text(index, text, pagetitle):
 
   notes = []
 
-  foundbelarusian = False
+  pron_temp_name = args.lang + "-IPA"
+  foundlang = False
   was_unable_to_match = False
   sections = re.split("(^==[^=]*==\n)", text, 0, re.M)
   orig_text = text
   for j in xrange(2, len(sections), 2):
-    if sections[j-1] == "==Belarusian==\n":
-      if foundbelarusian:
-        pagemsg("WARNING: Found multiple Belarusian sections")
+    if sections[j-1] == "==%s==\n" % langname:
+      if foundlang:
+        pagemsg("WARNING: Found multiple %s sections" % langname)
         return None
-      foundbelarusian = True
+      foundlang = True
 
       need_l3_pronun = False
       if "===Pronunciation 1===" in sections[j]:
@@ -965,18 +972,18 @@ def process_page_text(index, text, pagetitle):
         if need_per_section_pronuns and numpronunsecs == 1:
           pagemsg("Multiple etymologies, converting combined pronunciation to split pronunciation (deleting combined pronun)")
           # Remove existing pronunciation section; but make sure it's safe
-          # to do so (must have nothing but be-IPA templates in it, and the
+          # to do so (must have nothing but uk/be-IPA templates in it, and the
           # pronunciations in them must match what's expected)
           m = re.search(r"(^===Pronunciation===\n)(.*?)(^==|\Z)", etymsections[0], re.M | re.S)
           if not m:
             pagemsg("WARNING: Can't find ===Pronunciation=== section when it should be there, logic error?")
             return None
-          if not re.search(r"^(\* \{\{be-IPA(?:\|([^}]*))?\}\}\n)*$", m.group(2)):
+          if not re.search(r"^(\* \{\{%s(?:\|([^}]*))?\}\}\n)*$" % pron_temp_name, m.group(2)):
             pagemsg("WARNING: Pronunciation section to be removed contains extra stuff (e.g. manual IPA or audio), can't remove: <%s>\n" % (
               m.group(1) + m.group(2)))
             return None
           foundpronuns = []
-          for m in re.finditer(r"(\{\{be-IPA(?:\|([^}]*))?\}\})", m.group(2)):
+          for m in re.finditer(r"(\{\{%s(?:\|([^}]*))?\}\})" % pron_temp_name, m.group(2)):
             # FIXME, not right, should do what we do above with foundpronuns
             # where we work with the actual parsed template
             foundpronuns.append(m.group(2) or pagetitle)
@@ -1006,7 +1013,7 @@ def process_page_text(index, text, pagetitle):
         # without split etymologies, because it wraps everything in an
         # "Etymology 1" section.
         # FIXME: When we move the whole section to the top, it could be
-        # incorrect to do so if the be-IPA isn't just the headword, e.g. if
+        # incorrect to do so if the uk/be-IPA isn't just the headword, e.g. if
         # it has a strange spelling, or phon= or gem=, etc. We should probably
         # check for this.
         if not need_per_section_pronuns:
@@ -1089,8 +1096,8 @@ def process_page_text(index, text, pagetitle):
         was_unable_to_match = was_unable_to_match or section_unable_to_match
         text = "".join(sections)
 
-  if not foundbelarusian:
-    pagemsg("WARNING: Can't find Belarusian section")
+  if not foundlang:
+    pagemsg("WARNING: Can't find %s section" % langname)
     return None
 
   return text, notes, was_unable_to_match
@@ -1153,14 +1160,14 @@ def process_lemma(index, pagetitle, forms):
   for t in parsed.filter_templates():
     tname = unicode(t.name)
     tempcall = None
-    if tname == "be-conj":
-      tempcall = re.sub(r"^\{\{be-conj", "{{be-generate-verb-forms",
+    if tname == "%s-conj" % args.lang:
+      tempcall = re.sub(r"^\{\{%s-conj" % args.lang, "{{%s-generate-verb-forms" % args.lang,
           unicode(t))
-    elif tname == "be-ndecl":
-      tempcall = re.sub(r"^\{\{be-ndecl", "{{be-generate-noun-forms",
+    elif tname == "%s-ndecl" % args.lang:
+      tempcall = re.sub(r"^\{\{%s-ndecl" % args.lang, "{{%s-generate-noun-forms" % args.lang,
           unicode(t))
-    elif tname == "be-adecl":
-      tempcall = re.sub(r"^\{\{be-adecl", "{{be-generate-adj-forms",
+    elif tname == "%s-adecl" % args.lang:
+      tempcall = re.sub(r"^\{\{%s-adecl" % args.lang, "{{%s-generate-adj-forms" % args.lang,
           unicode(t))
     if tempcall:
       result = expand_text(tempcall)
@@ -1172,7 +1179,7 @@ def process_lemma(index, pagetitle, forms):
       for form in forms:
         if form in result_args:
           for formpagename in re.split(",", result_args[form]):
-            formpagename = be.remove_accents(formpagename)
+            formpagename = com.remove_accents(formpagename)
             formpage = pywikibot.Page(site, formpagename)
             if not formpage.exists():
               pagemsg("WARNING: Form page %s doesn't exist, skipping" % formpagename)
@@ -1197,13 +1204,21 @@ def read_pages(filename, start, end):
         page = line
     yield i, page
 
-parser = blib.create_argparser("Add pronunciation sections to Belarusian Wiktionary entries", include_pagefile=True)
+parser = blib.create_argparser("Add pronunciation sections to Ukrainian or Belarusian Wiktionary entries", include_pagefile=True)
 parser.add_argument('--lemma-file', help="File containing lemmas to process, one per line; non-lemma forms will be done")
 parser.add_argument('--lemmas', help="List of comma-separated lemmas to process; non-lemma forms will be done")
+parser.add_argument('--lang', help="Language (be or uk)", choices=['be', 'uk'], required=True)
 parser.add_argument("--forms", help="Form codes of non-lemma forms to process in conjunction with --lemmas and --lemma-file.")
 parser.add_argument('--override-pronun', action="store_true", help="Override existing pronunciations")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
+
+if args.lang == 'uk':
+  langname = 'Ukrainian'
+  com = uklib
+else:
+  langname = 'Belarusian'
+  com = belib
 
 form_aliases = {
   "pres": [
@@ -1231,7 +1246,7 @@ form_aliases = {
     "ins_m", "ins_f", "ins_p",
     "loc_m", "loc_f", "loc_p",
   ],
-  "short": ["short_m", "short_f", "short_n", "short_p"],
+  "short": args.lang == 'uk' and ["short"] or ["short_m", "short_f", "short_n", "short_p"],
   "all-adj": ["long", "short"],
   "all": ["all-verb", "all-noun", "all-adj"]
 }
@@ -1257,11 +1272,11 @@ if args.lemma_file or args.lemmas:
   else:
     lemmas = blib.iter_items(re.split(",", args.lemmas.decode("utf-8")), start, end)
   for i, lemma in lemmas:
-    process_lemma(i, be.remove_accents(lemma), forms)
+    process_lemma(i, com.remove_accents(lemma), forms)
 
 else:
   blib.do_pagefile_cats_refs(args, start, end, process_page,
-      default_cats=["Belarusian lemmas", "Belarusian non-lemma forms"], edit=True)
+      default_cats=[langname + " lemmas", langname + " non-lemma forms"], edit=True)
 
 def subval_to_string(subval):
   if type(subval) is tuple:

@@ -51,6 +51,10 @@ grave_deaccenter = {
 deaccenter = grave_deaccenter.copy()
 deaccenter[AC] = "" # acute accent
 
+def remove_grave_accents(word):
+  # remove grave accents
+  return re.sub("([" + GR + u"ѐЀѝЍ])", lambda m: grave_deaccenter[m.group(1)], word)
+
 def remove_accents(word):
   # remove pronunciation accents
   return re.sub("([" + pron_accents + u"ѐЀѝЍ])",
@@ -67,9 +71,15 @@ def is_unstressed(word):
 def is_stressed(word):
   return AC in word
 
+def is_accented(word):
+  return AC in word
+
 def is_multi_stressed(word):
   num_stresses = sum(1 if x == AC else 0 for x in word)
   return num_stresses > 1
+
+def is_nonsyllabic(word):
+  return len(re.sub(non_vowel_c, "", word)) == 0
 
 def is_monosyllabic(word):
   return len(re.sub(non_vowel_c, "", word)) <= 1
@@ -116,6 +126,18 @@ def is_end_stressed(word, possible_endings=[]):
 
 def is_mixed_stressed(word, possible_endings=[]):
   return is_multi_stressed(word) and is_end_stressed(word, possible_endings)
+
+def iotate(stem):
+  stem = re.sub(u"с[кт]$", u"щ", stem)
+  stem = re.sub(u"з[дгґ]$", u"ждж", stem)
+  stem = re.sub(u"к?т$", u"ч", stem)
+  stem = re.sub(u"зк$", u"жч", stem)
+  stem = re.sub(u"[кц]$", u"ч", stem)
+  stem = re.sub(u"[сх]$", u"ш", stem)
+  stem = re.sub(u"[гз]$", u"ж", stem)
+  stem = re.sub(u"д$", u"дж", stem)
+  stem = re.sub(u"([бвмпф])$", ur"\1л", stem)
+  return stem
 
 def reduce(word):
   m = re.search(u"^(.*)([оОеЕєЄіІ])́?(" + cons_c + "+)$", word)
