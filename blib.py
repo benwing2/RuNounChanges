@@ -291,7 +291,8 @@ def new_do_edit(index, page, func=None, null=False, save=False, verbose=False, d
             page.text = new
             if save:
               p.pagemsg("Saving with comment = %s" % comment)
-              page.save(comment = comment)
+              try_repeatedly(lambda: page.save(comment=comment), p.pagemsg,
+                "save page")
             else:
               p.pagemsg("Would save with comment = %s" % comment)
           elif null:
@@ -368,7 +369,8 @@ def do_edit(page, index, func=None, null=False, save=False, verbose=False, diff=
             page.text = new
             if save:
               pagemsg("Saving with comment = %s" % comment)
-              page.save(comment = comment)
+              try_repeatedly(lambda: page.save(comment=comment), pagemsg,
+                "save page")
             else:
               pagemsg("Would save with comment = %s" % comment)
           elif null:
@@ -419,7 +421,8 @@ def do_process_text(pagetitle, pagetext, index, func=None, verbose=False):
               pagemsg('Replacing <%s> with <%s>' % (pagetext, new))
             #if save:
             #  pagemsg("Saving with comment = %s" % comment)
-            #  page.save(comment = comment)
+            #  try_repeatedly(lambda: page.save(comment=comment), pagemsg,
+            #    "save page")
             #else:
             pagemsg("Would save with comment = %s" % comment)
           else:
