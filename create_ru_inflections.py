@@ -285,7 +285,7 @@
 # 81. Inserts "animate acc pl" instead of just "acc pl" into посла́ form of
 #     посо́л "ambassador", which is only animate; посо́л with genitive
 #     посо́ла "salting" is inanimate.
-# 82. Don't warn on known singular/plurale tantum cases either in
+# 82. (DONE) Don't warn on known singular/plurale tantum cases either in
 #     allow_in_same_etym_section or not_in_same_etym_section.
 # 83. (DONE) Properly handle participles with multiple translits.
 # 84. (DONE) Properly handle ===Alternative forms=== before etymology
@@ -293,6 +293,10 @@
 # 85. (DONE) Handle newlines in template names.
 # 86. (DONE EXCEPT один, два AND COMPOUNDS) Support generating inflections for cardinal/collective numerals.
 # 87. (DONE) Support один, два, оба and compounds.
+# 88. (DONE) Gather warnings and output again if 'would save' or 'saving'.
+# 89. (DONE) Handle 'infl of'.
+# 90. (DONE) Warn on misplaced semicolon in tag set.
+# 91. Handle 'head|ru|noun form'.
 
 import pywikibot, re, sys, codecs, argparse, time
 import traceback
@@ -455,6 +459,7 @@ allow_in_same_etym_section = [
     (u"волосы", u"волос"),
     (u"выборы", u"выбор"),
     (u"выходные", u"выходной"),
+    (u"гонки", u"гонка"),
     (u"горелки", u"горелка"), # at least partly related
     (u"деньги", u"деньга"),
     (u"домашние", u"домашний"),
@@ -467,6 +472,7 @@ allow_in_same_etym_section = [
     (u"капли", u"капля"),
     (u"карты", u"карта"),
     (u"коньки", u"конёк"),
+    (u"коронавирусы", u"коронавирус"),
     (u"кости", u"кость"),
     (u"кракозябры", u"кракозябра"),
     (u"курсы", u"курс"),
@@ -491,9 +497,11 @@ allow_in_same_etym_section = [
     (u"осадки", u"осадок"),
     (u"опилки", u"опилка"),
     (u"отбросы", u"отброс"),
+    (u"отговоры", u"отговор"),
     (u"падонки", u"падонак"),
     (u"пики", u"пика"),
     (u"подтяжки", u"подтяжка"),
+    (u"позывные", u"позывной"),
     (u"покои", u"покой"),
     (u"полдни", u"полдень"),
     (u"почести", u"почесть"),
@@ -544,6 +552,7 @@ not_in_same_etym_section = [
     (u"кеды", u"кед"),
     (u"клещи", u"клещ"),
     (u"козлы", u"козёл"),
+    (u"ладушки", u"ладушка"),
     (u"латы", u"лат"),
     (u"нары", u"нар"),
     (u"нарды", u"нард"),
@@ -590,6 +599,7 @@ allow_defn_in_same_subsection = [
     (u"мнение", u"мненье"),
     (u"нуль", u"ноль"),
     (u"обличие", u"обличье"),
+    (u"ожидание", u"ожиданье"),
     (u"огонь", u"огнь"),
     (u"остыть", u"остынуть"),
     (u"пение", u"пенье"),
@@ -601,8 +611,10 @@ allow_defn_in_same_subsection = [
     (u"рождение", u"рожденье"),
     (u"свёкор", u"свёкр"),
     (u"свёкла", u"свекла"),
+    (u"служение", u"служенье"),
     (u"собрание", u"собранье"),
     (u"соление", u"соленье"),
+    (u"сражение", u"сраженье"),
     (u"судия", u"судья"),
     (u"уединение", u"уединенье"),
     (u"уголь", u"угль"),
@@ -634,11 +646,15 @@ allow_defn_in_same_subsection = [
     (u"мучиться", u"мучаться"),
 ]
 
-def check_re_sub(pagemsg, action, refrom, reto, text, numsub=1, flags=0):
+def check_re_sub(warnfun, action, refrom, reto, text, numsub=1, flags=0):
   newtext = re.sub(refrom, reto, text, numsub, flags)
   if newtext == text:
-    pagemsg("WARNING: When %s, no substitution occurred" % action)
+    warnfun("When %s, no substitution occurred" % action)
   return newtext
+
+def issue_warning(warning, pagemsg, warnings):
+  warnings.append(warning)
+  pagemsg("WARNING: %s" % warning)
 
 # Make sure there is one trailing newline
 def ensure_one_trailing_nl(text):
@@ -647,6 +663,10 @@ def ensure_one_trailing_nl(text):
 # Make sure there are two trailing newlines
 def ensure_two_trailing_nl(text):
   return re.sub(r"\n*$", r"\n\n", text)
+
+# Given a list of strings, construct a regexp that matches any of them.
+def construct_alternant_re(items):
+  return "(?:%s)" % "|".join(re.escape(item) for item in items)
 
 # Compare two values but first normalize them to composed form.
 # This is important when comparing translits because translit taken directly
@@ -657,12 +677,12 @@ def compare_normalized(x, y):
 
 # Return a tuple (RU, TR) with TR set to a blank string if it's redundant.
 # If TR is already blank on entry, it is just returned.
-def check_for_redundant_translit(ru, tr, pagemsg, expand_text):
+def check_for_redundant_translit(ru, tr, pagemsg, warnfun, expand_text):
   if not tr:
     return ru, tr
   autotr = expand_text("{{xlit|ru|%s}}" % ru)
   if not autotr:
-    pagemsg("WARNING: Error generating translit for %s" % ru)
+    warnfun("Error generating translit for %s" % ru)
     return ru, tr
   if compare_normalized(autotr, tr):
     pagemsg("Removing redundant translit %s from Russian %s" % (tr, ru))
@@ -677,7 +697,7 @@ def check_for_redundant_translit(ru, tr, pagemsg, expand_text):
 # FIXME: If either the lemma specifies manual translit or TR is given,
 # we should consider transliterating the other one in case of redundant
 # manual translit.
-def lemma_matches(lemma, ru, tr, pagemsg, expand_text):
+def lemma_matches(lemma, ru, tr, warnfun, expand_text):
   if "//" in lemma:
     lemru, lemtr = re.split("//", lemma, 1)
   else:
@@ -688,16 +708,16 @@ def lemma_matches(lemma, ru, tr, pagemsg, expand_text):
     if tr and not lemtr:
       lemtr = expand_text("{{xlit|ru|%s}}" % lemru)
       if not lemtr:
-        pagemsg("WARNING: Error generating translit for %s" % lemru)
+        warnfun("Error generating translit for %s" % lemru)
         return False
     elif lemtr and not tr:
       tr = expand_text("{{xlit|ru|%s}}" % ru)
       if not tr:
-        pagemsg("WARNING: Error generating translit for %s" % ru)
+        warnfun("Error generating translit for %s" % ru)
         return False
     trmatches = not tr and not lemtr or compare_normalized(tr, lemtr)
     if not trmatches:
-      pagemsg("WARNING: Value %s matches lemma %s of ru-(proper )noun+, but translit %s doesn't match %s" % (
+      warnfun("Value %s matches lemma %s of ru-(proper )noun+, but translit %s doesn't match %s" % (
         ru, lemru, tr, lemtr))
     else:
       return True
@@ -726,14 +746,17 @@ pages_already_erased = set()
 # "|foo=bar" (or e.g. "|foo=bar|baz=bat" for more than one parameter).
 #
 # DEFTEMP is the definitional template that points to the base form (e.g.
-# "inflection of" or "ru-participle of"). DEFTEMP_PARAM is a parameter
-# or parameters to add to the created DEFTEMP template, similar to
-# HEADTEMP_PARAM; or it should be a list of inflection codes (e.g.
-# ['2', 's', 'pres', 'ind']). DEFTEMP_NEEDS_LANG indicates whether the
-# definition template specified by DEFTEMP needs to have a 'lang'/'1'
-# parameter with value 'ru'. DEFTEMP_ALLOWS_MULTIPLE_TAG_SETS indicates
-# whether multiple tag sets can be inserted into the definitional template
-# (True for {{inflection of}}, currently false for {{ru-participle of}}).
+# "inflection of" or "ru-participle of"). DEFTEMP can be a list of such
+# templates (e.g. ["inflection of", "infl of"]), which will all be
+# recognized; the first list item will be used when generating new entries.
+# DEFTEMP_PARAM is a parameter or parameters to add to the created DEFTEMP
+# template, similar to HEADTEMP_PARAM; or it should be a list of inflection
+# codes (e.g. ['2', 's', 'pres', 'ind']). DEFTEMP_NEEDS_LANG indicates
+# whether the definition template specified by DEFTEMP needs to have a
+# 'lang'/'1' parameter with value 'ru'. DEFTEMP_ALLOWS_MULTIPLE_TAG_SETS
+# indicates whether multiple tag sets can be inserted into the definitional
+# template (True for {{inflection of}}, currently false for
+# {{ru-participle of}}).
 #
 # GENDER should be a list of genders to use in adding or updating gender
 # (assumed to be parameter g= in HEADTEMP if it's a "head|" headword template,
@@ -776,6 +799,8 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
     lemmas_to_overwrite=[], lemmas_to_not_overwrite=[],
     allow_stress_mismatch_in_defn=False, past_f_end_stressed=False):
 
+  warnings = []
+
   # Remove any links that may esp. appear in the lemma, since the
   # accented version of the lemma as it appears in the lemma's headword
   # template often has links in it when the form is multiword.
@@ -794,12 +819,14 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
   assert len(pagenames) == 1
   pagename = list(pagenames)[0]
 
-  def pagemsg(text, simple=False, fun=msg):
+  def format_pagemsg_text(text, simple=False):
     if simple:
-      fun("Page %s %s: %s" % (index, pagename, text))
+      return text
     else:
-      fun("Page %s %s: %s: %s %s, %s %s%s" % (index, pagename, text, infltype,
-        joined_infls_with_tr(), lemmatype, lemma, " (%s)" % lemmatr if lemmatr else ""))
+      return "%s: %s %s, %s %s%s" % (text, infltype, joined_infls_with_tr(),
+          lemmatype, lemma, " (%s)" % lemmatr if lemmatr else "")
+  def pagemsg(text, simple=False, fun=msg):
+    fun("Page %s %s: %s" % (index, pagename, format_pagemsg_text(text, simple)))
   def pagemsg_if(doit, text, simple=False):
     if doit:
       pagemsg(text, simple=simple)
@@ -808,16 +835,21 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
     pagemsg(txt, fun=errmsg)
   def expand_text(tempcall):
     return blib.expand_text(tempcall, pagename, pagemsg, verbose)
+  def warn(warning, simple=False, err=False):
+    text = format_pagemsg_text(warning, simple)
+    issue_warning(text, errpagemsg if err else pagemsg, warnings)
+  def warn_if(doit, warning, simple=False, err=False):
+    if doit:
+      warn(warning, simple=simple, err=err)
 
   for (skip_form, skip_lemma) in skip_form_pages:
     if skip_form == pagename and skip_lemma == rulib.remove_accents(lemma):
-      pagemsg("WARNING: Skipping form because in skip_form_pages for lemma %s"
-          % skip_lemma)
-      return
+      warn("Skipping form because in skip_form_pages for lemma %s" % skip_lemma)
+      return warnings
 
   # Remove any redundant manual translit
-  lemma, lemmatr = check_for_redundant_translit(lemma, lemmatr, pagemsg, expand_text)
-  inflections = [check_for_redundant_translit(infl, infltr, pagemsg, expand_text) for infl, infltr in inflections]
+  lemma, lemmatr = check_for_redundant_translit(lemma, lemmatr, pagemsg, warn, expand_text)
+  inflections = [check_for_redundant_translit(infl, infltr, pagemsg, warn, expand_text) for infl, infltr in inflections]
 
   is_participle = "_part" in infltype
   is_adverbial_participle = "adv_part" in infltype
@@ -831,7 +863,8 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
   generic_infltype = ("participle" if is_participle else
       re.sub(" form.*", " form", infltype) if " form" in infltype else infltype)
 
-  deftemp_uses_inflection_of = deftemp == "inflection of"
+  if type(deftemp) is not list:
+    deftemp = [deftemp]
   headtemp_is_head = headtemp.startswith("head|")
   first_gender_param = "g" if headtemp_is_head else "2"
 
@@ -839,7 +872,7 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
     if infl == "-":
       pagemsg("Not creating %s entry - for %s %s%s" % (
         infltype, lemmatype, lemma, " (%s)" % lemmatr if lemmatr else ""))
-      return
+      return warnings
 
   # Prepare to create page
   pagemsg("Creating entry")
@@ -847,10 +880,10 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
 
   # Warn on multi-stressed words
   if rulib.is_multi_stressed(lemma):
-    pagemsg("WARNING: Lemma %s has multiple accents" % lemma)
+    warn("Lemma %s has multiple accents" % lemma)
   for infl, infltr in inflections:
     if rulib.is_multi_stressed(infl):
-      pagemsg("WARNING: Inflection %s has multiple accents" % infl)
+      warn("Inflection %s has multiple accents" % infl)
 
   # Check whether parameter PARAM of template T matches VALUE.
   def compare_param(t, param, value, valuetr, param_is_head,
@@ -859,10 +892,10 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
     valuetr = rulib.remove_tr_monosyllabic_accents(valuetr)
     paramval = rulib.remove_monosyllabic_accents(blib.remove_links(getparam(t, param)))
     if rulib.is_multi_stressed(paramval):
-      pagemsg_if(issue_warnings, "WARNING: Param %s=%s has multiple accents: %s" % (
+      warn_if(issue_warnings, "Param %s=%s has multiple accents: %s" % (
         param, paramval, unicode(t)))
     if rulib.is_multi_stressed(value):
-      pagemsg_if(issue_warnings, "WARNING: Value %s to compare to param %s=%s has multiple accents" % (
+      warn_if(issue_warnings, "Value %s to compare to param %s=%s has multiple accents" % (
         value, param, paramval))
     # If checking the lemma param, substitute page name if missing.
     if not paramval and param_is_head and param in ["1", "2", "head"]:
@@ -883,7 +916,7 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
       valueaccents = rulib.number_of_accents(value)
       paramvalaccents = rulib.number_of_accents(paramval)
       if valueaccents != paramvalaccents:
-        pagemsg_if(issue_warnings, "WARNING: Value %s (%s accents) matches param %s=%s (%s accents) except for accents, and different numbers of accents: %s" % (
+        warn_if(issue_warnings, "Value %s (%s accents) matches param %s=%s (%s accents) except for accents, and different numbers of accents: %s" % (
           value, valueaccents, param, paramval, paramvalaccents,
           unicode(t)))
     # Now, if there's a match, check the translit
@@ -904,7 +937,7 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
         return True
       if valuetr == trparamval:
         return True
-      pagemsg_if(issue_warnings, "WARNING: Value %s matches param %s=%s, but translit %s doesn't match param %s=%s: %s" % (
+      warn_if(issue_warnings, "Value %s matches param %s=%s, but translit %s doesn't match param %s=%s: %s" % (
         value, param, paramval, valuetr, trparam, trparamval, unicode(t)))
       return False
     return False
@@ -921,7 +954,7 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
     if tname(t) in ["ru-noun+", "ru-proper noun+"]:
       lemmaarg = rulib.fetch_noun_lemma(t, expand_text)
       if lemmaarg is None:
-        pagemsg_if(issue_warnings, "WARNING: Error generating noun forms when %s" % purpose)
+        warn_if(issue_warnings, "Error generating noun forms when %s" % purpose)
         return False
       else:
         lemmas = set(re.split(",", lemmaarg))
@@ -930,7 +963,7 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
         for infl, infltr in inflections:
           for lem in lemmas:
             if lemma_matches(lem, infl, infltr,
-                lambda x:pagemsg_if(issue_warnings, x),
+                lambda x:warn_if(issue_warnings, x),
                 expand_text):
               some_match = True
               lemmas.remove(lem)
@@ -964,15 +997,15 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
       left_over_heads = headparams
 
     if some_match and not all_match:
-      pagemsg_if(issue_warnings, "WARNING: Some but not all inflections %s match template when %s: %s" %
+      warn_if(issue_warnings, "Some but not all inflections %s match template when %s: %s" %
           (joined_infls_with_tr(), purpose, unicode(t)))
     elif all_match and left_over_heads:
       if fail_when_left_over_heads:
-        pagemsg_if(issue_warnings, "WARNING: All inflections %s match template, but extra heads in template when %s, treating as a non-match: %s" %
+        warn_if(issue_warnings, "All inflections %s match template, but extra heads in template when %s, treating as a non-match: %s" %
             (joined_infls_with_tr(), purpose, unicode(t)))
         return False
       else:
-        pagemsg_if(issue_warnings, "WARNING: All inflections %s match template, but extra heads in template when %s: %s" %
+        warn_if(issue_warnings, "All inflections %s match template, but extra heads in template when %s: %s" %
             (joined_infls_with_tr(), purpose, unicode(t)))
     return all_match
 
@@ -1024,7 +1057,7 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
 
     # 4. Synthesize definition template.
     new_defn_template = "{{%s%s|%s%s%s}}" % (
-      deftemp, "|ru" if deftemp_needs_lang else "",
+      deftemp[0], "|ru" if deftemp_needs_lang else "",
       lemma, "|tr=%s" % lemmatr if lemmatr else "",
       deftemp_param if isinstance(deftemp_param, basestring) else "||" + "|".join(deftemp_param))
 
@@ -1047,7 +1080,7 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
       def combine_adj_infl_and_tr(infl, infltr):
         decls = []
         for onetr in re.split(", *", infltr or ""):
-          ru, tr = check_for_redundant_translit(infl, onetr, pagemsg, expand_text)
+          ru, tr = check_for_redundant_translit(infl, onetr, pagemsg, warn, expand_text)
           if tr:
             decls += ["%s//%s" % (ru, tr)]
           else:
@@ -1067,7 +1100,7 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
         new_decl_template_parts.append("{{ru-decl-adj|%s|%s}}\n" % (param1, part_short_decls[0]))
       else:
         if len(part_short_decls) > 1:
-          pagemsg("WARNING: Unable to combine multiple inflections %s into single ru-decl-adj because of differing short decls %s" %
+          warn("Unable to combine multiple inflections %s into single ru-decl-adj because of differing short decls %s" %
               joined_infls_with_tr(), " ".join(part_short_decls))
         for part_short_decl, (infl, infltr) in zip(part_short_decl, inflections):
           new_decl_template_parts.append("{{ru-decl-adj|%s|%s}}\n" % (
@@ -1096,9 +1129,9 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
   try:
     existing_text = blib.try_repeatedly(lambda: page.text, pagemsg, "fetch page text")
   except pywikibot.exceptions.InvalidTitle as e:
-    pagemsg("WARNING: Invalid title, skipping")
+    warn("Invalid title, skipping")
     traceback.print_exc(file=sys.stdout)
-    return
+    return warnings
 
   if not blib.try_repeatedly(lambda: page.exists(), pagemsg,
       "check page existence"):
@@ -1158,16 +1191,17 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
 
         if program_args.overwrite_page:
           if pagename in pages_already_erased:
-            pagemsg("WARNING: Not overwriting page, already overwritten previously")
+            warn("Not overwriting page, already overwritten previously")
           elif "==Etymology 1==" in sections[i] and not program_args.overwrite_etymologies:
-            errpagemsg("WARNING: Found ==Etymology 1== in page text, not overwriting, skipping form")
-            return
+            warn("Found ==Etymology 1== in page text, not overwriting, skipping form",
+                err=True)
+            return warnings
           elif "{{audio|" in sections[i]:
-            errpagemsg("WARNING: {{audio|...}} in page text, not overwriting, skipping form")
-            return
+            warn("{{audio|...}} in page text, not overwriting, skipping form", err=True)
+            return warnings
           elif pagename in lemmas_to_not_overwrite:
-            errpagemsg("WARNING: Page in --lemmas-to-not-overwrite, not overwriting, skipping form")
-            return
+            warn("Page in --lemmas-to-not-overwrite, not overwriting, skipping form", err=True)
+            return warnings
           else:
             parsed = blib.parse_text(sections[i])
             found_lemma = []
@@ -1185,11 +1219,11 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
                 found_lemma.append(getparam(t, "2") if tnam == "head" else
                     tnam)
             if found_lemma:
-              errpagemsg("WARNING: Page appears to have a lemma on it, not overwriting, skipping form: lemmas = %s"
-              % ",".join(found_lemma))
-              return
+              warn("Page appears to have a lemma on it, not overwriting, skipping form: lemmas = %s"
+              % ",".join(found_lemma), err=True)
+              return warnings
             notes.append("overwrite section")
-            pagemsg("WARNING: Overwriting entire Russian section")
+            warn("Overwriting entire Russian section")
             # Preserve {{also|...}}
             sections[i] = re.sub(r"^((\s*\{\{also\|.*?\}\}\s*)?).*$", r"\1",
                 sections[i], 0, re.S)
@@ -1201,7 +1235,7 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
           for t in parsed.filter_templates():
             if is_lemma_template(t):
               if template_head_matches(t, inflections, "checking for lemma"):
-                pagemsg("WARNING: Creating non-lemma form and found matching lemma template: %s" % unicode(t))
+                warn("Creating non-lemma form and found matching lemma template: %s" % unicode(t))
               if is_noun_form:
                 tnam = tname(t)
                 if tnam in ["ru-noun", "ru-proper noun"] and any([re.search(r"\bp\b", x) for x in blib.fetch_param_chain(t, "2", "g")]):
@@ -1209,13 +1243,29 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
                 elif tnam in ["ru-noun+", "ru-proper noun+"]:
                   args = rulib.fetch_noun_args(t, expand_text)
                   if args is None:
-                    pagemsg("WARNING: Error expanding template when checking for plurale tantum nouns: %s" %
+                    warn("Error expanding template when checking for plurale tantum nouns: %s" %
                         unicode(t))
                   elif args["n"] == "p":
                     found_plurale_tantum_lemma = True
 
         if found_plurale_tantum_lemma and is_noun_form and is_noun_adj_plural:
-          pagemsg("WARNING: Found plurale tantum lemma and creating plural noun form, might need to add lemmas to allow_in_same_etym_section")
+          pllemmas = set(rulib.remove_accents(infl) for infl, infltr in inflections)
+          sglemma = rulib.remove_accents(lemma)
+          for pllemma in pllemmas:
+            is_known_about = False
+            for lemma1, lemma2 in allow_in_same_etym_section:
+              if lemma1 == pllemma and lemma2 == sglemma:
+                pagemsg("Found plurale tantum lemma and creating plural noun form, found the pair in allow_in_same_etym_section")
+                is_known_about = True
+                break
+            if not is_known_about:
+              for lemma1, lemma2 in not_in_same_etym_section:
+                if lemma1 == pllemma and lemma2 == sglemma:
+                  pagemsg("Found plurale tantum lemma and creating plural noun form, found the pair in not_in_same_etym_section")
+                  is_known_about = True
+                  break
+            if not is_known_about:
+              warn("Found plurale tantum lemma and creating plural noun form, might need to add lemmas to allow_in_same_etym_section or not_in_same_etym_section")
 
         subsections = re.split("(^===+[^=\n]+===+\n)", sections[i], 0, re.M)
 
@@ -1288,7 +1338,7 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
                   m = re.search(r"\b([mfn])\b", new)
                   new_mf = m and m.group(1)
                   if existing_mf and new_mf and existing_mf != new_mf:
-                    pagemsg("WARNING: Can't modify mf gender from %s to %s" % (
+                    warn("Can't modify mf gender from %s to %s" % (
                         existing_mf, new_mf))
                     return False, "true gender"
                   new_mf = new_mf or existing_mf
@@ -1299,7 +1349,7 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
                   m = re.search(r"\b(an|in)\b", new)
                   new_an = m and m.group(1)
                   if existing_an and new_an and existing_an != new_an:
-                    pagemsg("WARNING: Can't modify animacy from %s to %s" % (
+                    warn("Can't modify animacy from %s to %s" % (
                         existing_an, new_an))
                     return False, "animacy"
                   new_an = new_an or existing_an
@@ -1314,7 +1364,7 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
                   if not new_p:
                     new_p = "s"
                   if existing_p and new_p and existing_p != new_p:
-                    pagemsg("WARNING: Can't modify plurality from %s to %s" % (
+                    warn("Can't modify plurality from %s to %s" % (
                         existing_p, new_p))
                     return False, "plurality"
                   new_p = new_p or existing_p
@@ -1373,7 +1423,7 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
                       if harmonization_problem not in harmonization_problems:
                         harmonization_problems.append(harmonization_problem)
                     else:
-                      pagemsg("WARNING: Unable to modify %s in existing genders %s to match new gender %s" % (
+                      warn("Unable to modify %s in existing genders %s to match new gender %s" % (
                         ",".join(harmonization_problems),
                         ",".join(existing_genders), g))
                   if not found_compat:
@@ -1444,7 +1494,7 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
                 #  if existing == value:
                 #    pass
                 #  elif existing:
-                #    pagemsg("WARNING: Can't modify %s from %s to %s" % (
+                #    warn("Can't modify %s from %s to %s" % (
                 #        param, existing, value))
                 #    return False
                 ## Now update params
@@ -1473,6 +1523,9 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
                     tag_sets.append(cur_tag_set)
                     cur_tag_set = []
                   else:
+                    if ";" in tag:
+                      warn("Found semicolon in tag '%s' in tags %s" % (
+                        tag, "|".join(tags)))
                     cur_tag_set.append(tag)
                 tag_sets.append(cur_tag_set)
                 return tag_sets
@@ -1507,7 +1560,7 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
               # FIXME, should this check the lemma?
               def check_for_given_inflection_tag(parsed, tag):
                 for t in parsed.filter_templates():
-                  if tname(t) != deftemp:
+                  if tname(t) not in deftemp:
                     continue
                   lang_in_1 = deftemp_needs_lang and not t.has("lang")
                   lang_param = lang_in_1 and "1" or "lang"
@@ -1634,7 +1687,7 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
                 for tag_set_no, split_tag_set_group in enumerate(split_tag_sets):
                   for indiv_tag_set in split_tag_set_group:
                     if set(indiv_tag_set) > inflset:
-                      pagemsg_if(issue_warnings, "WARNING: Found actual inflection %s in template %s whose codes are a superset of intended codes %s, accepting" % (
+                      warn_if(issue_warnings, "Found actual inflection %s in template %s whose codes are a superset of intended codes %s, accepting" % (
                         "|".join(indiv_tag_set), unicode(t), "|".join(infls)))
                       return True, tag_set_no
                 # See if there's a subset match.
@@ -1650,7 +1703,7 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
                             "|".join(indiv_tag_set), unicode(t), "|".join(infls)))
                           return "update", tag_set_no
                         else:
-                          pagemsg_if(issue_warnings, "WARNING: Found actual inflection %s in template %s whose codes are a subset of intended codes %s and could update aspect except that multipart tags are present" % (
+                          warn_if(issue_warnings, "Found actual inflection %s in template %s whose codes are a subset of intended codes %s and could update aspect except that multipart tags are present" % (
                             "|".join(indiv_tag_set), unicode(t), "|".join(infls)))
                 return False, 0
 
@@ -1713,7 +1766,7 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
               defn_templates_for_inserting_in_same_section = []
               defn_templates_for_inserting_in_same_template = []
               for t in parsed.filter_templates():
-                if tname(t) != deftemp:
+                if tname(t) not in deftemp:
                   continue
                 lang_in_1 = deftemp_needs_lang and not t.has("lang")
                 lang_param = lang_in_1 and "1" or "lang"
@@ -1753,7 +1806,7 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
               # Make sure there's exactly one headword template.
               if (len(infl_headword_templates_for_already_present_entry) > 1
                   or len(infl_headword_templates_for_inserting_in_same_section) > 1):
-                pagemsg("WARNING: Found multiple inflection headword templates for %s; taking no action"
+                warn("Found multiple inflection headword templates for %s; taking no action"
                     % (infltype))
                 need_outer_break = True
                 break
@@ -1791,7 +1844,7 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
                     # If different numbers of existing vs. wanted decl
                     # templates, exit with a warning
                     if len(decl_templates) != len(new_decl_template_parts):
-                      pagemsg("WARNING: Found %s existing participial decl templates %s but want %s new decl templates %s" %
+                      warn("Found %s existing participial decl templates %s but want %s new decl templates %s" %
                           (len(decl_templates),
                           " ".join(unicode(t) for t in decl_templates),
                           len(new_decl_template_parts),
@@ -1818,7 +1871,7 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
                             subsections[check_subsection + 1] = unicode(subsecparsed)
                             sections[i] = "".join(subsections)
                             continue
-                        pagemsg("WARNING: Existing decl %s and wanted decl %s differ and can't fix" %
+                        warn("Existing decl %s and wanted decl %s differ and can't fix" %
                           (unicode(declt), unicode(newdeclt)))
 
                     return False
@@ -1894,36 +1947,36 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
                       len(defn_templates_for_inserting_in_same_template) > 0 and
                       # FIXME, when is deftemp_param a string?
                       not isinstance(deftemp_param, basestring)):
-                    check_fix_defn_params(defn_templates_for_inserting_in_same_template[-1],
-                      -1, deftemp_param)
+                    defn_template_to_modify = defn_templates_for_inserting_in_same_template[-1]
+                    check_fix_defn_params(defn_template_to_modify, -1, deftemp_param)
                     pagemsg("Insert new tag set into existing {{%s}}" % (
-                        deftemp))
+                        tname(defn_template_to_modify)))
                     # FIXME, this might not occur in these circumstances
                     inserted = insert_part_decl_if_needed()
                     comment = "%s new tag set into existing {{%s}}: %s %s, %s %s" % (
                         "Insert declension in existing entry and insert" if inserted else "Insert",
-                        deftemp, infltype, joined_infls, lemmatype, lemma)
+                        tname(defn_template_to_modify), infltype, joined_infls, lemmatype, lemma)
                   else:
                     # If there's already a defn line present, insert after
                     # any such defn lines. Else, insert at beginning.
-                    if re.search(r"^# \{\{%s\|" % deftemp, subsections[j], re.M):
+                    if re.search(r"^# \{\{%s\|" % construct_alternant_re(deftemp), subsections[j], re.M):
                       if not subsections[j].endswith("\n"):
                         subsections[j] += "\n"
-                      subsections[j] = check_re_sub(pagemsg, "inserting definition into existing section",
-                          r"(^(# \{\{%s\|.*\n)+)" % deftemp,
+                      subsections[j] = check_re_sub(warn, "inserting definition into existing section",
+                          r"(^(# \{\{%s\|.*\n)+)" % construct_alternant_re(deftemp),
                           r"\1# %s\n" % new_defn_template, subsections[j],
                           1, re.M)
                     else:
-                      subsections[j] = check_re_sub(pagemsg, "inserting definition into existing section",
+                      subsections[j] = check_re_sub(warn, "inserting definition into existing section",
                           r"^#", "# %s\n#" % new_defn_template,
                           subsections[j], 1, re.M)
                     sections[i] = ''.join(subsections)
                     pagemsg("Insert new defn with {{%s}} at beginning after any existing such defns" % (
-                        deftemp))
+                        deftemp[0]))
                     inserted = insert_part_decl_if_needed()
                     comment = "%s new defn with {{%s}} at beginning after any existing such defns: %s %s, %s %s" % (
                         "Insert declension in existing entry and insert" if inserted else "Insert",
-                        deftemp, infltype, joined_infls, lemmatype, lemma)
+                        deftemp[0], infltype, joined_infls, lemmatype, lemma)
                   need_outer_break = True
                   break
 
@@ -2088,7 +2141,7 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
               check_for_sg_pl_pairs=False):
             retval = []
             for t in parsed.filter_templates():
-              if tname(t) != deftemp:
+              if tname(t) not in deftemp:
                 continue
               lang_in_1 = deftemp_needs_lang and not t.has("lang")
               lang_param = lang_in_1 and "1" or "lang"
@@ -2161,7 +2214,7 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
                   if tname(t) in ["ru-noun+", "ru-proper noun+"]:
                     otherlemmaarg = rulib.fetch_noun_lemma(t, expand_text)
                     if otherlemmaarg is None:
-                      pagemsg("WARNING: Error generating noun forms when %s" % purpose)
+                      warn("Error generating noun forms when %s" % purpose)
                     else:
                       otherlemmas = set(re.split(",", otherlemmaarg))
                       for otherlemma in otherlemmas:
@@ -2225,7 +2278,7 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
                         any([re.search(r"\bp\b", y) for y in blib.fetch_param_chain(t, "2", "g")]))):
                     found_plural_noun_form = True
             if found_plural_noun_form or found_plurale_tantum_lemma:
-              pagemsg("WARNING: Creating new etymology for plural noun form and found existing plural noun form or noun lemma")
+              warn("Creating new etymology for plural noun form and found existing plural noun form or noun lemma")
 
           pagemsg("Exists and has Russian section, appending to end of section")
           # [FIXME! Conceivably instead of inserting at end we should insert
@@ -2307,12 +2360,12 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
         if not program_args.overwrite_page:
           notes.append("formerly empty")
         if pagehead.lower().startswith("#redirect"):
-          pagemsg("WARNING: Page is redirect, overwriting")
+          warn("Page is redirect, overwriting")
           notes.append("overwrite redirect")
           pagehead = re.sub(r"#redirect *\[\[(.*?)\]\] *(<!--.*?--> *)*\n*",
               r"{{also|\1}}\n", pagehead, 0, re.I)
         elif not program_args.overwrite_page:
-          pagemsg("WARNING: No language sections in current page")
+          warn("No language sections in current page")
         sections += [newsection]
 
     # End of loop over sections in existing page; rejoin sections
@@ -2351,11 +2404,16 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
       comment = notestext
   if page.text != existing_text:
     if save:
+      for warning in warnings:
+        pagemsg("WARNING: Saving and issued the following warnings: %s" % warning, simple=True)
       pagemsg("Saving with comment = %s" % comment, simple=True)
       blib.try_repeatedly(lambda: page.save(comment=comment), pagemsg,
           "save page")
     else:
+      for warning in warnings:
+        pagemsg("WARNING: Would save and issued the following warnings: %s" % warning, simple=True)
       pagemsg("Would save with comment = %s" % comment, simple=True)
+  return warnings
 
 # Parse a noun/verb/adv form spec (from the user), one or more forms separated
 # by commas, possibly including aliases. INFL_DICT is a dictionary
@@ -3147,7 +3205,7 @@ def create_forms(lemmas_to_process, lemmas_no_jo, lemmas_to_overwrite,
                         past_f_end_stressed = saw_end_stressed_past_f
                     else:
                       header_pos = pos.capitalize()
-                      deftemp = "inflection of"
+                      deftemp = ["inflection of", "infl of"]
                       deftemp_needs_lang = True
                       deftemp_allows_multiple_tag_sets = True
                       our_headtemp = headtemp
