@@ -291,12 +291,18 @@
 # 84. (DONE) Properly handle ===Alternative forms=== before etymology
 #     when moving from one to multiple etymologies.
 # 85. (DONE) Handle newlines in template names.
-# 86. (DONE EXCEPT один, два AND COMPOUNDS) Support generating inflections for cardinal/collective numerals.
+# 86. (DONE EXCEPT один, два AND COMPOUNDS) Support generating inflections for
+#     cardinal/collective numerals.
 # 87. (DONE) Support один, два, оба and compounds.
 # 88. (DONE) Gather warnings and output again if 'would save' or 'saving'.
 # 89. (DONE) Handle 'infl of'.
 # 90. (DONE) Warn on misplaced semicolon in tag set.
-# 91. Handle 'head|ru|noun form'.
+# 91. (DONE) Handle 'head|ru|noun form' by converting to 'ru-noun form'.
+# 92. Remove monosyllabic accent from existing lemma in 'inflection of'.
+# 93. (DONE) Combine tag sets into multipart tag sets using [[Module:accel]]
+#     algorithm.
+# 94. (DONE) Change saving code to use blib.do_edit() so --diff works.
+# 95. (DONE) Use blib.split_trailing_separator_and_categories().
 
 import pywikibot, re, sys, codecs, argparse, time
 import traceback
@@ -307,6 +313,9 @@ from blib import getparam, rmparam, tname, pname, msg, errmsg, site
 from collections import OrderedDict
 
 import rulib
+import infltags
+
+tag_to_dimension_table = infltags.fetch_tag_to_dimension_table()
 
 verbose = True
 
@@ -1123,26 +1132,30 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
     entrytextl4 = "\n" + newposl4
     newsection = "==Russian==\n" + entrytext
 
-  comment = None
-  notes = []
+  def print_warnings():
+    if program_args.save:
+      for warning in warnings:
+        pagemsg("WARNING: Saving and issued the following warnings: %s" % warning, simple=True)
+    else:
+      for warning in warnings:
+        pagemsg("WARNING: Would save and issued the following warnings: %s" % warning, simple=True)
 
-  try:
-    existing_text = blib.try_repeatedly(lambda: page.text, pagemsg, "fetch page text")
-  except pywikibot.exceptions.InvalidTitle as e:
-    warn("Invalid title, skipping")
-    traceback.print_exc(file=sys.stdout)
-    return warnings
+  def do_add_infl(page, index, parsed):
+    comment = None
+    notes = []
 
-  if not blib.try_repeatedly(lambda: page.exists(), pagemsg,
-      "check page existence"):
-    # Page doesn't exist. Create it.
-    pagemsg("Creating page")
-    comment = "Create page for Russian %s %s of %s, pos=%s" % (
-        infltype, joined_infls, lemma, pos)
-    page.text = newsection
-    if verbose:
-      pagemsg("New text is [[%s]]" % page.text)
-  else: # Page does exist
+    existing_text = blib.safe_page_text(page, pagemsg)
+    if not blib.safe_page_exists(page, pagemsg):
+      # Page doesn't exist. Create it.
+      pagemsg("Creating page")
+      comment = "Create page for Russian %s %s of %s, pos=%s" % (
+          infltype, joined_infls, lemma, pos)
+      #if verbose:
+      #  pagemsg("New text is [[%s]]" % newsection)
+      print_warnings()
+      return newsection, comment
+
+    # Page does exist
     pagetext = existing_text
 
     # Split off interwiki links at end
@@ -1173,21 +1186,12 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
       if not m:
         pagemsg("Can't find language name in text: [[%s]]" % (sections[i]))
       elif m.group(1) == "Russian":
-        # Extract off trailing separator
-        mm = re.match(r"^(.*?\n)(\n*--+\n*)$", sections[i], re.S)
-        if mm:
-          # Note that this changes the number of sections, which is seemingly
-          # a problem because the for-loop above calculates the end point
-          # at the beginning of the loop, but is not actually a problem
-          # because we always break after processing the Russian section.
-          sections[i:i+1] = [mm.group(1), mm.group(2)]
-
-        # Split off categories at end
-        mm = re.match(r"^(.*?\n)(\n*(\[\[Category:[^\]]+\]\]\n*)*)$",
-            sections[i], re.S)
-        if mm:
-          # See comment above.
-          sections[i:i+1] = [mm.group(1), mm.group(2)]
+        secbody, sectail = blib.split_trailing_separator_and_categories(sections[i])
+        # Note that this changes the number of sections, which is seemingly
+        # a problem because the for-loop above calculates the end point
+        # at the beginning of the loop, but is not actually a problem
+        # because we always break after processing the Russian section.
+        sections[i:i+1] = [secbody, sectail]
 
         if program_args.overwrite_page:
           if pagename in pages_already_erased:
@@ -1228,6 +1232,26 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
             sections[i] = re.sub(r"^((\s*\{\{also\|.*?\}\}\s*)?).*$", r"\1",
                 sections[i], 0, re.S)
             pages_already_erased.add(pagename)
+
+        # Convert {{head|ru|noun form}} into {{ru-noun form}}, which we may
+        # process later. Currently we do this always; we need to do it at least
+        # for nouns and adjectives, since adjectives look for occurrences of
+        # {{ru-noun form}}.
+        parsed = blib.parse_text(sections[i])
+        for t in parsed.filter_templates():
+          if tname(t) == "head" and getparam(t, "1") == "ru" and getparam(t, "2") == "noun form":
+            head = getparam(t, "head") or pagename
+            t.add("1", head) # 1= is already set
+            rmparam(t, "head")
+            g = getparam(t, "g")
+            if g:
+              t.add("2", g) # 2= is already set
+            else:
+              rmparam(t, "2")
+            rmparam(t, "g")
+            blib.set_template_name(t, "ru-noun form")
+            notes.append("convert {{head|ru|noun form}} to {{ru-noun form}}")
+        sections[i] = unicode(parsed)
 
         # When creating non-lemma forms, warn about matching lemma template
         if is_lemma_template:
@@ -1614,6 +1638,12 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
                 else:
                   tag_sets[tag_set_no] = infls
                 tags = join_inflection_tag_sets(tag_sets)
+
+                # Now combine adjacent tags into multipart tags.
+                tags, this_notes = infltags.combine_adjacent_tags_into_multipart(
+                  tags, tag_to_dimension_table, pagemsg, warn
+                )
+                notes.extend(this_notes)
 
                 # Erase all params.
                 del t.params[:]
@@ -2387,32 +2417,26 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
 
     if page.text == newtext:
       pagemsg("No change in text")
-    elif verbose:
-      pagemsg("Replacing <%s> with <%s>" % (page.text, newtext),
-          simple = True)
+    #elif verbose:
+    #  pagemsg("Replacing <%s> with <%s>" % (page.text, newtext),
+    #      simple = True)
     else:
       pagemsg("Text has changed")
-    page.text = newtext
 
-  # Executed whether creating new page or modifying existing page.
-  # Check for changed text and save if so.
-  notestext = '; '.join(notes)
-  if notestext:
-    if comment:
-      comment += " (%s)" % notestext
-    else:
-      comment = notestext
-  if page.text != existing_text:
-    if save:
-      for warning in warnings:
-        pagemsg("WARNING: Saving and issued the following warnings: %s" % warning, simple=True)
-      pagemsg("Saving with comment = %s" % comment, simple=True)
-      blib.try_repeatedly(lambda: page.save(comment=comment), pagemsg,
-          "save page")
-    else:
-      for warning in warnings:
-        pagemsg("WARNING: Would save and issued the following warnings: %s" % warning, simple=True)
-      pagemsg("Would save with comment = %s" % comment, simple=True)
+    print_warnings()
+
+    notestext = '; '.join(blib.group_notes(notes))
+    if notestext:
+      if comment:
+        comment += " (%s)" % notestext
+      else:
+        comment = notestext
+
+    return newtext, comment
+
+  blib.do_edit(page, index, do_add_infl, save=program_args.save,
+      verbose=program_args.verbose, diff=program_args.diff)
+
   return warnings
 
 # Parse a noun/verb/adv form spec (from the user), one or more forms separated
