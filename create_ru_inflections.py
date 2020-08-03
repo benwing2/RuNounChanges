@@ -301,8 +301,10 @@
 # 92. Remove monosyllabic accent from existing lemma in 'inflection of'.
 # 93. (DONE) Combine tag sets into multipart tag sets using [[Module:accel]]
 #     algorithm.
-# 94. (DONE) Change saving code to use blib.do_edit() so --diff works.
-# 95. (DONE) Use blib.split_trailing_separator_and_categories().
+# 94. (DONE) Canonicalize tags to our preferred variants when combining.
+# 95. (DONE) Change saving code to use blib.do_edit() so --diff works.
+# 96. (DONE) Use blib.split_trailing_separator_and_categories().
+# 97. Standardize using include_pagefile=True.
 
 import pywikibot, re, sys, codecs, argparse, time
 import traceback
@@ -315,9 +317,25 @@ from collections import OrderedDict
 import rulib
 import infltags
 
-tag_to_dimension_table = infltags.fetch_tag_to_dimension_table()
-
 verbose = True
+
+# We prefer the following tag variants (instead of e.g. 'pasv' for passive
+# or 'ptcp' for participle).
+preferred_tag_variants = {
+  "nom", "gen", "dat", "acc", "ins", "pre", "par", "loc", "voc",
+  "m", "f", "n",
+  "s", "p",
+  "in", "an",
+  "1", "2", "3",
+  "pres", "past", "fut",
+  "ind", "imp",
+  "act", "pass",
+  "short", "adv", "part"
+}
+
+tag_to_dimension_table, tag_to_canonical_form_table = (
+  infltags.fetch_tag_tables(preferred_tag_variants)
+)
 
 AC = u"\u0301" # acute accent
 GR = u"\u0300" # grave accent
@@ -344,6 +362,7 @@ skip_form_pages = [
     (u"попа", u"поп"), # wrongly adds an-acc-sg
     (u"кисы", u"киса"), # wrongly adds in-acc-pl
     (u"трёпла", u"трепло"), # wrongly adds in-acc-pl
+    (u"чухи", u"чуха"), # wrongly adds in-acc-pl
 ]
 
 # Used to manually assign forms to lemmas when there are stress variants.
@@ -1199,13 +1218,13 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
           elif "==Etymology 1==" in sections[i] and not program_args.overwrite_etymologies:
             warn("Found ==Etymology 1== in page text, not overwriting, skipping form",
                 err=True)
-            return warnings
+            return
           elif "{{audio|" in sections[i]:
             warn("{{audio|...}} in page text, not overwriting, skipping form", err=True)
-            return warnings
+            return
           elif pagename in lemmas_to_not_overwrite:
             warn("Page in --lemmas-to-not-overwrite, not overwriting, skipping form", err=True)
-            return warnings
+            return
           else:
             parsed = blib.parse_text(sections[i])
             found_lemma = []
@@ -1225,7 +1244,7 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
             if found_lemma:
               warn("Page appears to have a lemma on it, not overwriting, skipping form: lemmas = %s"
               % ",".join(found_lemma), err=True)
-              return warnings
+              return
             notes.append("overwrite section")
             warn("Overwriting entire Russian section")
             # Preserve {{also|...}}
@@ -1240,6 +1259,7 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
         parsed = blib.parse_text(sections[i])
         for t in parsed.filter_templates():
           if tname(t) == "head" and getparam(t, "1") == "ru" and getparam(t, "2") == "noun form":
+            origt = unicode(t)
             head = getparam(t, "head") or pagename
             t.add("1", head) # 1= is already set
             rmparam(t, "head")
@@ -1250,7 +1270,32 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
               rmparam(t, "2")
             rmparam(t, "g")
             blib.set_template_name(t, "ru-noun form")
+            pagemsg("Replaced %s with %s" % (origt, unicode(t)))
             notes.append("convert {{head|ru|noun form}} to {{ru-noun form}}")
+        sections[i] = unicode(parsed)
+
+        # Canonicalize tags in {{inflection of}} to those in
+        # preferred_tag_variants.
+        parsed = blib.parse_text(sections[i])
+        for t in parsed.filter_templates():
+          if tname(t) not in deftemp:
+            continue
+          origt = unicode(t)
+          lang_in_1 = deftemp_needs_lang and not t.has("lang")
+          lang_param = lang_in_1 and "1" or "lang"
+          if (not deftemp_needs_lang or
+              compare_param(t, lang_param, "ru", None, param_is_head=False)):
+            for param in t.params:
+              pnam = pname(param)
+              pvalue = unicode(param.value)
+              if (pnam not in ["1", "2"] and not (lang_in_1 and pnam == "3")
+                  and re.search("^[0-9]+$", pnam)):
+                if pvalue in tag_to_canonical_form_table:
+                   param.value = tag_to_canonical_form_table[pvalue]
+            newt = unicode(t)
+            if origt != newt:
+              pagemsg("Replaced %s with %s" % (origt, newt))
+              notes.append("canonicalize tags in {{%s}}" % tname(t))
         sections[i] = unicode(parsed)
 
         # When creating non-lemma forms, warn about matching lemma template
@@ -1641,7 +1686,8 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
 
                 # Now combine adjacent tags into multipart tags.
                 tags, this_notes = infltags.combine_adjacent_tags_into_multipart(
-                  tags, tag_to_dimension_table, pagemsg, warn
+                  tags, tag_to_dimension_table, pagemsg, warn,
+                  tag_to_canonical_form_table=tag_to_canonical_form_table
                 )
                 notes.extend(this_notes)
 
@@ -2420,10 +2466,10 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
     #elif verbose:
     #  pagemsg("Replacing <%s> with <%s>" % (page.text, newtext),
     #      simple = True)
+    #  print_warnings()
     else:
       pagemsg("Text has changed")
-
-    print_warnings()
+      print_warnings()
 
     notestext = '; '.join(blib.group_notes(notes))
     if notestext:
