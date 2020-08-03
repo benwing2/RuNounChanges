@@ -7,6 +7,7 @@ from blib import site
 
 semicolon_tags = [';', ';<!--\n-->']
 
+# FIXME, generate this automatically.
 multipart_list_tag_to_parts = {
   "1s": ["1", "s"],
   "2s": ["2", "s"],
@@ -46,21 +47,45 @@ def combine_tag_set_group(group):
     result.extend(tag_set)
   return result
 
-def fetch_tag_to_dimension_table():
+# Fetch and return two sorts of tables from Wiktionary form data:
+# (1) tag_to_dimension_table: Mapping from tags to dimensions. Only tags in
+#     the same dimension can be combined into a multipart tag.
+# (2) tag_to_canonical_form_table: Mapping from tags to canonical tags, e.g.
+#     form 'pasv' to 'pass'. `preferred_tag_variants` is used in computing this:
+#     it is a set of preferred tag variants when more than one exist. If a
+#     variant exists in this set, all other variants will be mapped to this one.
+#     Otherwise, they will be mapped to the first listed shortcut.
+#     NOTE: Currently this table is used in combine_adjacent_tags_into_multipart
+#     to compare tags but not to convert all tags to their canonical form.
+# These tables should be passed to combine_adjacent_tags_into_multipart().
+def fetch_tag_tables(preferred_tag_variants=set()):
   jsonstr = site.expand_text(u"{{#invoke:User:Benwing2/form of|dump_form_of_data}}")
   jsondata = json.loads(jsonstr)
-  tag_to_dimension = {}
+  tag_to_dimension_table = {}
+  tag_to_canonical_form_table = {}
   def process_data(data):
     for tag, tagdata in data["tags"].iteritems():
       if "tag_type" in tagdata:
-        tag_to_dimension[tag] = tagdata["tag_type"]
+        tag_to_dimension_table[tag] = tagdata["tag_type"]
+      if "shortcuts" in tagdata and len(tagdata["shortcuts"]) > 0:
+        canon_variant = tagdata["shortcuts"][0]
+        all_variants = set(tagdata["shortcuts"] + [tag])
+        for variant in all_variants:
+          if variant in preferred_tag_variants:
+            canon_variant = variant
+            break
+        all_variants -= {canon_variant}
+        for variant in all_variants:
+          tag_to_canonical_form_table[variant] = canon_variant
+
     for shortcut, tag in data["shortcuts"].iteritems():
       # shortcuts contain entries like "mfn" -> "m//f//n" and "2p" -> ["2", "p"]
       if isinstance(tag, basestring) and tag in data["tags"]:
-        tag_to_dimension[shortcut] = data["tags"][tag]["tag_type"]
+        tag_to_dimension_table[shortcut] = data["tags"][tag]["tag_type"]
+
   process_data(jsondata["data"])
   process_data(jsondata["data2"])
-  return tag_to_dimension
+  return tag_to_dimension_table, tag_to_canonical_form_table
 
 # When multiple tag sets separated by semicolon, combine adjacent
 # ones that differ in only one tag in a given dimension. Repeat this
@@ -76,6 +101,7 @@ def combine_adjacent_tags_into_multipart(tags, tag_to_dimension_table,
   tag_to_canonical_form_table={},
 ):
   notes = []
+  origtags = tags
   while True:
     # First, canonicalize 1s etc. into 1|s
     canonicalized_tags = []
@@ -181,7 +207,8 @@ def combine_adjacent_tags_into_multipart(tags, tag_to_dimension_table,
                 # No break, we either match perfectly or are combinable
                 if mismatch_ind is None:
                   warn("Two identical tag sets: %s and %s in %s" % (
-                    "|".join(cur_tag_set), "|".join(tag_set), unicode(t)))
+                    "|".join(cur_tag_set), "|".join(tag_set), "|".join(origtags)
+                  ))
                   del tag_sets[tag_ind]
                   break
                 else:
