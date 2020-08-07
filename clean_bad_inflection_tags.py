@@ -629,57 +629,9 @@ def remove_comment_continuations(text):
 
 form_of_dimensions_to_tags = {}
 # Map from tag to dimension it's in, derived from form-of data
-form_of_combinable_tags_by_dimension = {}
+form_of_combinable_tags_by_dimension = None
 # Map from tag to its canonical form, derived from form-of data
-form_of_tag_to_canonical_form = {}
-
-def set_form_of_tables():
-  global form_of_combinable_tags_by_dimension
-  global form_of_tag_to_canonical_form
-  form_of_combinable_tags_by_dimension = {
-    tag: dim for dim, tagdict in form_of_dimensions_to_tags.iteritems() for tag in tagdict
-  }
-  form_of_tag_to_canonical_form = {
-    tag: canontag for dim, tagdict in form_of_dimensions_to_tags.iteritems() for tag, canontag in tagdict.iteritems()
-  }
-  #for tag, dim in form_of_combinable_tags_by_dimension.iteritems():
-  #  print "form_of_combinable_tags_by_dimension[%s] = %s" % (tag, dim)
-  #for tag, canontag in form_of_tag_to_canonical_form.iteritems():
-  #  print "form_of_tag_to_canonical_form[%s] = %s" % (tag, canontag)
-
-def parse_form_of_data(lines):
-  curtag = None
-  tag_type = None
-  shortcuts = None
-  for line in lines:
-    line = line.strip()
-    m = re.search('^tags\["(.*?)"\] = \{$', line)
-    if m:
-      curtag = m.group(1)
-      good_tags.add(curtag)
-    if line == "}":
-      if curtag and tag_type:
-        aliases = (shortcuts or []) + [curtag]
-        if tag_type not in form_of_dimensions_to_tags:
-          form_of_dimensions_to_tags[tag_type] = {}
-        canon_alias = aliases[0]
-        for alias in aliases:
-          form_of_dimensions_to_tags[tag_type][alias] = canon_alias
-      curtag = None
-      tag_type = None
-      shortcuts = None
-    m = re.search('^\s*tag_type = "(.*?)",$', line)
-    if m:
-      tag_type = m.group(1)
-    m = re.search('^\s*shortcuts = \{(.*?)\},$', line)
-    if m:
-      shortcuts = [x.strip().strip('"') for x in m.group(1).split(',')]
-      for shortcut in shortcuts:
-        good_tags.add(shortcut)
-    m = re.search('^\s*shortcuts\["(.*?)"\] =', line)
-    if m:
-      good_tags.add(m.group(1))
-
+form_of_tag_to_canonical_form = None
 
 ####### Statistics #######
 
@@ -697,10 +649,10 @@ num_tag_sets = 0
 
 def record_stats_on_tag_set(tag_set):
   global args
-  if args.use_form_of_groups:
-    combinable_tags_by_dimension_table = form_of_combinable_tags_by_dimension
-  else:
+  if args.no_use_form_of_data:
     combinable_tags_by_dimension_table = combinable_tags_by_dimension_across_semicolon
+  else:
+    combinable_tags_by_dimension_table = form_of_combinable_tags_by_dimension
 
   global num_tag_sets
   num_tag_sets += 1
@@ -734,10 +686,10 @@ def output_stats_on_tag_set():
 # they are (which means we can't move a tag across such a tag).
 def sort_tags(tags):
   global args
-  if args.use_form_of_groups:
-    combinable_tags_by_dimension_table = form_of_combinable_tags_by_dimension
-  else:
+  if args.no_use_form_of_data:
     combinable_tags_by_dimension_table = combinable_tags_by_dimension_across_semicolon
+  else:
+    combinable_tags_by_dimension_table = form_of_combinable_tags_by_dimension
   # split into groups of sortable tags.
   tag_groups = []
   tag_group = []
@@ -852,12 +804,12 @@ def process_text_on_page(pagetitle, index, text):
   global tag_to_canonical_form_table
   global combinable_tags_by_dimension_table
 
-  if args.use_form_of_groups:
-    tag_to_canonical_form_table = form_of_tag_to_canonical_form
-    combinable_tags_by_dimension_table = form_of_combinable_tags_by_dimension
-  else:
+  if args.no_use_form_of_data:
     tag_to_canonical_form_table = tag_to_canonical_form_across_semicolon
     combinable_tags_by_dimension_table = combinable_tags_by_dimension_across_semicolon
+  else:
+    tag_to_canonical_form_table = form_of_tag_to_canonical_form
+    combinable_tags_by_dimension_table = form_of_combinable_tags_by_dimension
 
   def convert_raw_section(text, section_langcode, infer_langcode):
     def parse_gloss_from_posttext(posttext):
@@ -1586,7 +1538,7 @@ parser.add_argument("--textfile", help="File containing page text or defn line t
 parser.add_argument("--matching-textfile", help="File containing defn lines to match against; if we change a line not listed, output a warnings.")
 parser.add_argument("--langcode", help="Specify lang code to use, instead of inferring it from headings.")
 parser.add_argument("--form-of-files", help="Comma-separated list of files containing form-of data.")
-parser.add_argument("--use-form-of-groups", help="Use groups specified in form-of data for combining across semicolons.",
+parser.add_argument("--no-use-form-of-data", help="Don't use automatically-derived form-of data.",
     action="store_true")
 parser.add_argument("--combine-adjacent", help="Combine adjacent calls to 'inflection of'.", action="store_true")
 parser.add_argument("--convert-raw", help="Convert raw inflection definitions to {{inflection of}}.", action="store_true")
@@ -1622,12 +1574,16 @@ if args.matching_textfile:
     text for title, text in fetch_page_titles_and_text(args.matching_textfile)
   )
 
-if args.form_of_files:
-  files = args.form_of_files.split(',')
-  for f in files:
-    with codecs.open(f, 'r', "utf-8") as fp:
-      parse_form_of_data(fp)
-  set_form_of_tables()
+if not args.no_use_form_of_data:
+  form_of_combinable_tags_by_dimension, form_of_tag_to_canonical_form = (
+    infltags.fetch_tag_tables()
+  )
+  for tag in form_of_combinable_tags_by_dimension:
+    good_tags.add(tag)
+  #for tag, dim in form_of_combinable_tags_by_dimension.iteritems():
+  #  print "form_of_combinable_tags_by_dimension[%s] = %s" % (tag, dim)
+  #for tag, canontag in form_of_tag_to_canonical_form.iteritems():
+  #  print "form_of_tag_to_canonical_form[%s] = %s" % (tag, canontag)
 
 if args.textfile:
   titles_and_text = fetch_page_titles_and_text(args.textfile)
