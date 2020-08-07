@@ -305,6 +305,8 @@
 # 95. (DONE) Change saving code to use blib.do_edit() so --diff works.
 # 96. (DONE) Use blib.split_trailing_separator_and_categories().
 # 97. Standardize using include_pagefile=True.
+# 98. Warn if both acc|p and {an,in}|acc|p occur in the same tag set or ideally
+#     in the same set of defn lines; same with acc|s and {an,in}|acc|s
 
 import pywikibot, re, sys, codecs, argparse, time
 import traceback
@@ -393,6 +395,8 @@ manual_split_form_list = [
     # split algorithm doesn't currently handle adjectives correctly
     (u"^Пика́ссо прямоуго́льчат", u"Пика́ссо прямоуго́льчатый"),
     (u"^Пикассо́ прямоуго́льчат", u"Пикассо́ прямоуго́льчатый"),
+    # combined entry with при́вод type c(1) and приво́д type a.
+    (u"^привод", u"при́вод"),
     (u"^програ́ммн.*обеспе́чен", u"програ́ммное обеспе́чение"),
     (u"^програ́ммн.*обеспече́н", u"програ́ммное обеспече́ние"),
     (u"^пу́рпур", u"пу́рпурный"),
@@ -1684,12 +1688,13 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
                   tag_sets[tag_set_no] = infls
                 tags = join_inflection_tag_sets(tag_sets)
 
-                # Now combine adjacent tags into multipart tags.
-                tags, this_notes = infltags.combine_adjacent_tags_into_multipart(
-                  tags, tag_to_dimension_table, pagemsg, warn,
-                  tag_to_canonical_form_table=tag_to_canonical_form_table
-                )
-                notes.extend(this_notes)
+                if deftemp_allows_multiple_tag_sets:
+                  # Now combine adjacent tags into multipart tags.
+                  tags, this_notes = infltags.combine_adjacent_tags_into_multipart(
+                    tags, tag_to_dimension_table, pagemsg, warn,
+                    tag_to_canonical_form_table=tag_to_canonical_form_table
+                  )
+                  notes.extend(this_notes)
 
                 # Erase all params.
                 del t.params[:]
