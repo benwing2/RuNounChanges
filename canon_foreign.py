@@ -24,10 +24,12 @@ show_template=True
 def nfd_form(txt):
   return unicodedata.normalize("NFD", unicode(txt))
 
-def template_changelog_name(template):
+def template_changelog_name(template, lang):
   tname = unicode(template.name)
   if tname == "head":
     return "head|%s|%s" % (getparam(template, "1"), getparam(template, "2"))
+  elif getparam(template, "1") == lang:
+    return "%s|%s" % (tname, lang)
   else:
     return tname
 
@@ -43,7 +45,7 @@ def template_changelog_name(template):
 # name of the parameter into which canonicalized foreign text is saved;
 # PARAMTR is the name of the parameter in this template containing the Latin
 # text. All four are used only in status messages and ACTIONS.
-def do_canon_param(pagetitle, index, template, fromparam, toparam, paramtr,
+def do_canon_param(pagetitle, index, template, lang, fromparam, toparam, paramtr,
     foreign, latin, translit_module):
   actions = []
   tname = unicode(template.name)
@@ -110,10 +112,10 @@ def do_canon_param(pagetitle, index, template, fromparam, toparam, paramtr,
       latintrtext))
     if fromparam == toparam:
       actions.append("%s %s=%s -> %s in {{%s}}" % (actionop, fromparam, foreign,
-        canonforeign, template_changelog_name(template)))
+        canonforeign, template_changelog_name(template, lang)))
     else:
       actions.append("%s %s=%s -> %s=%s in {{%s}}" % (actionop, fromparam, foreign,
-        toparam, canonforeign, template_changelog_name(template)))
+        toparam, canonforeign, template_changelog_name(template, lang)))
     if (translit_module.remove_diacritics(canonforeign) !=
         translit_module.remove_diacritics(foreign)):
       msgs = ""
@@ -133,7 +135,7 @@ def do_canon_param(pagetitle, index, template, fromparam, toparam, paramtr,
   elif translit and translit == canonlatin:
     pagemsg("Removing redundant translit for %s -> %s%s" % (
         foreign, newforeign, latintrtext))
-    actions.append("remove redundant %s=%s in {{%s}}" % (paramtr, latin, template_changelog_name(template)))
+    actions.append("remove redundant %s=%s in {{%s}}" % (paramtr, latin, template_changelog_name(template, lang)))
     canonlatin = True
   else:
     if translit:
@@ -157,7 +159,7 @@ def do_canon_param(pagetitle, index, template, fromparam, toparam, paramtr,
         actionop="self-canon"
       pagemsg("%s Latin %s -> %s: foreign %s -> %s (auto-translit %s)" % (
           operation, latin, canonlatin, foreign, newforeign, translit))
-      actions.append("%s %s=%s -> %s in {{%s}}" % (actionop, paramtr, latin, canonlatin, template_changelog_name(template)))
+      actions.append("%s %s=%s -> %s in {{%s}}" % (actionop, paramtr, latin, canonlatin, template_changelog_name(template, lang)))
 
   return (canonforeign, canonlatin, actions)
 
@@ -179,7 +181,7 @@ def add_param_handling_head(template, param, value):
 # [FROMPARAM, TOPARAM], where FROMPARAM may be "page title") and Latin
 # parameter PARAMTR. Return False if PARAM has no value, else list of
 # changelog actions.
-def canon_param(pagetitle, index, template, param, paramtr, translit_module):
+def canon_param(pagetitle, index, template, lang, param, paramtr, translit_module):
   if isinstance(param, list):
     fromparam, toparam = param
   else:
@@ -190,7 +192,7 @@ def canon_param(pagetitle, index, template, param, paramtr, translit_module):
   if not foreign:
     return False
   canonforeign, canonlatin, actions = do_canon_param(pagetitle, index,
-      template, fromparam, toparam, paramtr, foreign, latin, translit_module)
+      template, lang, fromparam, toparam, paramtr, foreign, latin, translit_module)
   oldtempl = "%s" % unicode(template)
   if canonforeign:
     add_param_handling_head(template, toparam, canonforeign)
@@ -248,12 +250,12 @@ def sort_group_changelogs(actions):
 # is a script code or list of script codes to remove from templates.
 # TRANSLIT_MODULE is the module handling transliteration,
 # match-canonicalization and removal of diacritics.
-def canon_links(save, verbose, cattype, lang, longlang, script,
-    translit_module, startFrom, upTo, pages_to_do=[]):
+def canon_one_page_links(pagetitle, index, text, lang, script, translit_module,
+    templates_seen, templates_changed):
   if not isinstance(script, list):
     script = [script]
   def process_param(pagetitle, index, pagetext, template, templang, param, paramtr):
-    result = canon_param(pagetitle, index, template, param, paramtr, translit_module)
+    result = canon_param(pagetitle, index, template, lang, param, paramtr, translit_module)
     scvalue = getparam(template, "sc")
     if scvalue in script:
       tname = unicode(template.name)
@@ -266,13 +268,12 @@ def canon_links(save, verbose, cattype, lang, longlang, script,
       template.remove("sc")
       msg("Page %s %s: Replaced %s with %s" %
           (index, pagetitle, oldtempl, unicode(template)))
-      newresult = ["remove sc=%s in {{%s}}" % (scvalue, template_changelog_name(template))]
+      newresult = ["remove sc=%s in {{%s}}" % (scvalue, template_changelog_name(template, lang))]
       if result != False:
         result = result + newresult
       else:
         result = newresult
     return result
 
-  return blib.process_links(save, verbose, lang, longlang, cattype,
-      startFrom, upTo, process_param, sort_group_changelogs,
-      pages_to_do=pages_to_do)
+  return blib.process_one_page_links(pagetitle, index, text, process_param, [lang],
+      templates_seen, templates_changed, join_actions=sort_group_changelogs)

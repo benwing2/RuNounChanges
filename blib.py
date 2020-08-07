@@ -1120,24 +1120,22 @@ def safe_page_exists(page, pagemsg):
 # and the templates are comma-separated.
 #
 # If QUIET, don't output the list of processed templates at the end.
-def process_links(save, verbose, lang, longlang, cattype, startFrom, upTo,
-    process_param, join_actions=None, split_templates="[,]",
-    pages_to_do=[], quiet=False):
-  templates_changed = {}
-  templates_seen = {}
 
-  if isinstance(lang, basestring):
-    lang = [lang]
+# Process the link-like templates on the given page with the given text.
+# Returns the changed text along with a changelog message.
+def process_one_page_links(pagetitle, index, text, process_param,
+  langs, templates_seen, templates_changed, join_actions=None,
+  split_templates="[,]"):
 
   # Process the link-like templates on the page with the given title and text,
   # calling PROCESSFN for each pair of foreign/Latin. Return a list of
   # changelog actions.
-  def do_process_one_page_links(pagetitle, index, pagetext, processfn):
+  def do_process_one_page_links(pagetitle, index, parsed, processfn):
     def pagemsg(text):
       msg("Page %s %s: %s" % (index, pagetitle, text))
 
     actions = []
-    for template in pagetext.filter_templates():
+    for template in parsed.filter_templates():
       def getp(param):
         return getparam(template, param)
       tempname = unicode(template.name).strip()
@@ -1147,7 +1145,7 @@ def process_links(save, verbose, lang, longlang, cattype, startFrom, upTo,
         if type(param) is not list and not getp(param):
           return False
         saw_template[0] = True
-        result = processfn(pagetitle, index, pagetext, template, tlang, param, trparam)
+        result = processfn(pagetitle, index, parsed, template, tlang, param, trparam)
         if result and isinstance(result, list):
           actions.extend(result)
           changed_template[0] = True
@@ -1155,7 +1153,7 @@ def process_links(save, verbose, lang, longlang, cattype, startFrom, upTo,
         return False
 
       did_template = False
-      if "grc" in lang:
+      if "grc" in langs:
         # Special-casing for Ancient Greek
         did_template = True
         def dogrcparam(trparam):
@@ -1177,7 +1175,7 @@ def process_links(save, verbose, lang, longlang, cattype, startFrom, upTo,
           dogrcparam("tr")
         else:
           did_template = False
-      if "ru" in lang:
+      if "ru" in langs:
         # Special-casing for Russian
         if tempname in ["ru-participle of", "ru-abbrev of", "ru-etym abbrev of",
             "ru-acronym of", "ru-etym acronym of", "ru-initialism of",
@@ -1194,48 +1192,9 @@ def process_links(save, verbose, lang, longlang, cattype, startFrom, upTo,
         elif tempname == "ru-ux":
           doparam("1", "ru")
           did_template = True
-      if "bg" in lang:
+      #if "bg" in langs:
         # Special-casing for Bulgarian
-        if tempname in ["bg-noun"]:
-          if getp("head"):
-            doparam("head", "bg")
-          elif getp("sg"):
-            doparam("sg", "bg")
-          else:
-            doparam(["page title", "head"], "bg")
-          did_template = True
-        elif tempname in ["bg-adj", "bg-proper noun"]:
-          if getp("head"):
-            doparam("head", "bg")
-          else:
-            doparam(["page title", "head"], "bg")
-          did_template = True
-        elif tempname in ["bg-verb"]:
-          if getp("head"):
-            doparam("head", "bg")
-          else:
-            doparam(["page title", "head"], "bg")
-          doparam("pf", "bg", "pftr")
-          doparam("pf2", "bg", "pf2tr")
-          doparam("pf3", "bg", "pf3tr")
-          doparam("impf", "bg", "impftr")
-          doparam("impf2", "bg", "impf2tr")
-          doparam("impf3", "bg", "impf3tr")
-          did_template = True
-        elif tempname in ["bg-phrase"]:
-          if getp("head"):
-            doparam("head", "bg")
-          elif getp("1"):
-            doparam("1", "bg")
-          else:
-            doparam(["page title", "1"], "bg")
-          did_template = True
-        elif tempname in ["bg-verb-form", "bg-noun-form", "bg-adj-form"]:
-          if getp("head"):
-            doparam("head", "bg", "2")
-          else:
-            doparam(["page title", "head"], "bg", "2")
-          did_template = True
+        # FIXME, implement this
 
       # Skip {{attention|LANG|FOO}} or {{etyl|LANG|FOO}} or {{audio|FOO|lang=LANG}}
       # or {{lb|LANG|FOO}} or {{context|FOO|lang=LANG}} or {{Babel-2|LANG|FOO}}
@@ -1276,7 +1235,7 @@ def process_links(save, verbose, lang, longlang, cattype, startFrom, upTo,
       # Look for {{head|LANG|...|head=<FOREIGNTEXT>}}
       elif tempname == "head":
         tlang = getp("1")
-        if tlang in lang:
+        if tlang in langs:
           if getp("head"):
             doparam("head", tlang)
           else:
@@ -1291,7 +1250,7 @@ def process_links(save, verbose, lang, longlang, cattype, startFrom, upTo,
       # Look for {{t|LANG|<PAGENAME>|alt=<FOREIGNTEXT>}}
       elif tempname in ["t", "t+", "t-", "t+check", "t-check"]:
         tlang = getp("1")
-        if tlang in lang:
+        if tlang in langs:
           if getp("alt"):
             doparam("alt", tlang)
           else:
@@ -1321,7 +1280,7 @@ def process_links(save, verbose, lang, longlang, cattype, startFrom, upTo,
         if not tlang:
           tlang = getp("1")
           offset = 1
-        if tlang in lang:
+        if tlang in langs:
           templates_seen[tempname] = templates_seen.get(tempname, 0) + 1
           # Don't just do cases up through where there's a numbered param
           # because there may be holes.
@@ -1334,7 +1293,7 @@ def process_links(save, verbose, lang, longlang, cattype, startFrom, upTo,
               doparam(str(i + offset), tlang, "tr" + str(i))
       elif tempname == "form of":
         tlang = getp("lang")
-        if tlang in lang:
+        if tlang in langs:
           if getp("3"):
             doparam("3", tlang)
           else:
@@ -1343,31 +1302,31 @@ def process_links(save, verbose, lang, longlang, cattype, startFrom, upTo,
       # the following parameter is used for the translation.
       elif tempname in ["ux", "usex", "uxi", "quote"]:
         tlang = getp("1")
-        if tlang in lang:
+        if tlang in langs:
           doparam("2", tlang)
       elif tempname == "Q":
         tlang = getp("1")
-        if tlang in lang:
+        if tlang in langs:
           doparam("quote", tlang)
       elif tempname == "lang":
         tlang = getp("1")
-        if tlang in lang:
+        if tlang in langs:
           doparam("2", tlang, None)
       elif tempname in ["w", "wikipedia", "wp"]:
         tlang = getp("lang")
-        if tlang in lang and getp("2"):
+        if tlang in langs and getp("2"):
           # Can't replace param 1 (page linked to), but it's OK to frob the
           # display text
           doparam("2", tlang, None)
       elif tempname in ["w2"]:
         tlang = getp("1")
-        if tlang in lang and getp("3"):
+        if tlang in langs and getp("3"):
           # Can't replace param 2 (page linked to), but it's OK to frob the
           # display text
           doparam("3", tlang, "tr")
       elif tempname in ["cardinalbox", "ordinalbox"]:
         tlang = getp("1")
-        if tlang in lang:
+        if tlang in langs:
           # FUCKME: This is a complicated template, might be doing it wrong
           doparam("5", tlang, None)
           doparam("6", tlang, None)
@@ -1385,13 +1344,13 @@ def process_links(save, verbose, lang, longlang, cattype, startFrom, upTo,
           "quote-newsgroup", "quote-song", "quote-us-patent", "quote-video",
           "quote-web", "quote-wikipedia"]:
         tlang = getp("lang") or getp("language")
-        if tlang in lang:
+        if tlang in langs:
           if getp("passage") or getp("text"):
             doparam("passage" if getp("passage") else "text", tlang,
               "transliteration" if getp("transliteration") else "tr")
       elif tempname == "alter":
         tlang = getp("1")
-        if tlang in lang:
+        if tlang in langs:
           i = 1
           while True:
             if getp("alt" + str(i)):
@@ -1404,21 +1363,21 @@ def process_links(save, verbose, lang, longlang, cattype, startFrom, upTo,
       elif tempname in ["der2", "der3", "der4", "der5", "rel2", "rel3", "rel4",
           "rel5", "hyp2", "hyp3", "hyp4", "hyp5"]:
         tlang = getp("lang")
-        if tlang in lang:
+        if tlang in langs:
           i = 1
           while getp(str(i)):
             doparam(str(i), tlang, None)
             i += 1
       elif tempname == "elements":
         tlang = getp("lang")
-        if tlang in lang:
+        if tlang in langs:
           doparam("2", tlang, None)
           doparam("4", tlang, None)
           doparam("next2", tlang, None)
           doparam("prev2", tlang, None)
       elif tempname in ["bor", "borrowing"] and getp("lang"):
         tlang = getp("1")
-        if tlang in lang:
+        if tlang in langs:
           if getp("alt"):
             doparam("alt", tlang)
           elif getp("3"):
@@ -1428,7 +1387,7 @@ def process_links(save, verbose, lang, longlang, cattype, startFrom, upTo,
       elif tempname in ["der", "derived", "inh", "inherited", "bor", "borrowing",
           "calque", "cal", "calq", "clq", "loan translation"]:
         tlang = getp("2")
-        if tlang in lang:
+        if tlang in langs:
           if getp("alt"):
             doparam("alt", tlang)
           elif getp("4"):
@@ -1440,7 +1399,7 @@ def process_links(save, verbose, lang, longlang, cattype, startFrom, upTo,
           # If "1" matches, don't do templates with a lang= as well,
           # e.g. we don't want to do {{hyphenation|ru|men|lang=sh}} in
           # Russian because it's actually lang sh.
-          getp("1") in lang and not getp("lang")):
+          getp("1") in langs and not getp("lang")):
         tlang = getp("1")
         # Look for:
         #   {{m|LANG|<PAGENAME>|<FOREIGNTEXT>}}
@@ -1455,7 +1414,7 @@ def process_links(save, verbose, lang, longlang, cattype, startFrom, upTo,
       # Look for any other template with "lang=LANG" in it. But beware of
       # {{borrowing|en|<ENGLISHTEXT>|lang=LANG}}.
       elif (#tempname in ["term", "plural of", "definite of", "feminine of", "diminutive of"] and
-          getp("lang") in lang):
+          getp("lang") in langs):
         tlang = getp("lang")
         # Look for:
         #   {{term|lang=LANG|<PAGENAME>|<FOREIGNTEXT>}}
@@ -1473,111 +1432,110 @@ def process_links(save, verbose, lang, longlang, cattype, startFrom, upTo,
         templates_changed[tempname] = templates_changed.get(tempname, 0) + 1
     return actions
 
-  # Process the link-like templates on the given page with the given text.
-  # Returns the changed text along with a changelog message.
-  def process_one_page_links(pagetitle, index, text):
-    actions = []
-    newtext = [unicode(text)]
+  actions = []
+  newtext = [text]
+  parsed = parse_text(text)
 
-    def pagemsg(text):
-      msg("Page %s %s: %s" % (index, pagetitle, text))
+  def pagemsg(txt):
+    msg("Page %s %s: %s" % (index, pagetitle, txt))
 
-    # First split up any templates with commas in the Latin
-    if split_templates:
-      def process_param_for_splitting(pagetitle, index, pagetext, template, tlang, param, paramtr):
-        if isinstance(param, list):
-          fromparam, toparam = param
-        else:
-          fromparam = param
-        if fromparam == "page title":
-          foreign = pagetitle
-        else:
-          foreign = getparam(template, fromparam)
-        latin = getparam(template, paramtr)
-        if (re.search(split_templates, latin) and not
-            re.search(split_templates, foreign)):
-          trs = re.split("\\s*" + split_templates + "\\s*", latin)
-          oldtemp = unicode(template)
-          newtemps = []
-          for tr in trs:
-            addparam(template, paramtr, tr)
-            newtemps.append(unicode(template))
-          newtemp = ", ".join(newtemps)
-          old_newtext = newtext[0]
-          pagemsg("Splitting template %s into %s" % (oldtemp, newtemp))
-          new_newtext = old_newtext.replace(oldtemp, newtemp)
-          if old_newtext == new_newtext:
-            pagemsg("WARNING: Unable to locate old template when splitting trs on commas: %s"
-                % oldtemp)
-          elif len(new_newtext) - len(old_newtext) != len(newtemp) - len(oldtemp):
-            pagemsg("WARNING: Length mismatch when splitting template on tr commas, may have matched multiple templates: old=%s, new=%s" % (
-              oldtemp, newtemp))
-          newtext[0] = new_newtext
-          return ["split %s=%s" % (paramtr, latin)]
-        return []
+  # First split up any templates with commas in the Latin
+  if split_templates:
+    def process_param_for_splitting(pagetitle, index, parsed, template, tlang, param, paramtr):
+      if isinstance(param, list):
+        fromparam, toparam = param
+      else:
+        fromparam = param
+      if fromparam == "page title":
+        foreign = pagetitle
+      else:
+        foreign = getparam(template, fromparam)
+      latin = getparam(template, paramtr)
+      if (re.search(split_templates, latin) and not
+          re.search(split_templates, foreign)):
+        trs = re.split("\\s*" + split_templates + "\\s*", latin)
+        oldtemp = unicode(template)
+        newtemps = []
+        for tr in trs:
+          addparam(template, paramtr, tr)
+          newtemps.append(unicode(template))
+        newtemp = ", ".join(newtemps)
+        old_newtext = newtext[0]
+        pagemsg("Splitting template %s into %s" % (oldtemp, newtemp))
+        new_newtext = old_newtext.replace(oldtemp, newtemp)
+        if old_newtext == new_newtext:
+          pagemsg("WARNING: Unable to locate old template when splitting trs on commas: %s"
+              % oldtemp)
+        elif len(new_newtext) - len(old_newtext) != len(newtemp) - len(oldtemp):
+          pagemsg("WARNING: Length mismatch when splitting template on tr commas, may have matched multiple templates: old=%s, new=%s" % (
+            oldtemp, newtemp))
+        newtext[0] = new_newtext
+        return ["split %s=%s" % (paramtr, latin)]
+      return []
 
-      actions += do_process_one_page_links(pagetitle, index, text,
-          process_param_for_splitting)
-      text = parse_text(newtext[0])
+    actions += do_process_one_page_links(pagetitle, index, parsed,
+        process_param_for_splitting)
+    parsed = parse_text(newtext[0])
 
-    actions += do_process_one_page_links(pagetitle, index, text, process_param)
-    if not join_actions:
-      changelog = '; '.join(actions)
-    else:
-      changelog = join_actions(actions)
-    #if len(terms_processed) > 0:
-    pagemsg("Change log = %s" % changelog)
-    return text, changelog
-
-  def process_one_page_links_wrapper(page, index, text):
-    return process_one_page_links(unicode(page.title()), index, text)
-
-  if "," in cattype:
-    cattypes = cattype.split(",")
+  actions += do_process_one_page_links(pagetitle, index, parsed, process_param)
+  if not join_actions:
+    changelog = group_notes(actions)
   else:
-    cattypes = [cattype]
-  for cattype in cattypes:
-    if cattype in ["translation", "links"]:
-      if cattype == "translation":
-        templates = ["t", "t+", "t-", "t+check", "t-check"]
-      else:
-        templates = ["l", "m", "term", "link", "mention"]
-      for template in templates:
-        msg("Processing template %s" % template)
-        errmsg("Processing template %s" % template)
-        for index, page in references("Template:%s" % template, startFrom, upTo):
-          do_edit(page, index, process_one_page_links_wrapper, save=save,
-              verbose=verbose)
-    elif cattype == "pages":
-      for index, pagename in iter_items(pages_to_do, startFrom, upTo):
-        page = pywikibot.Page(site, pagename)
-        do_edit(page, index, process_one_page_links_wrapper, save=save,
-            verbose=verbose)
-    elif cattype == "pagetext":
-      for index, current in iter_items(pages_to_do, startFrom, upTo,
-          get_name=lambda x:x[0]):
-        pagetitle, pagetext = current
-        do_process_text(pagetitle, pagetext, index, process_one_page_links,
-            verbose=verbose)
-    else:
-      if cattype == "vocab":
-        cats = ["%s lemmas" % longlang, "%s non-lemma forms" % longlang]
-      elif cattype == "borrowed":
-        cats = [subcat for subcat, index in
-            cat_subcats("Terms derived from %s" % longlang)]
-      else:
-        cats = [cattype]
-        #raise ValueError("Category type '%s' should be 'vocab', 'borrowed', 'translation', 'links', 'pages' or 'pagetext'")
-      for index, page in cat_articles(cats, startFrom, upTo):
-        do_edit(page, index, process_one_page_links_wrapper, save=save,
-            verbose=verbose)
-  if not quiet:
-    msg("Templates seen:")
-    for template, count in sorted(templates_seen.items(), key=lambda x:-x[1]):
-      msg("  %s = %s" % (template, count))
-    msg("Templates processed:")
-    for template, count in sorted(templates_changed.items(), key=lambda x:-x[1]):
-      msg("  %s = %s" % (template, count))
+    changelog = join_actions(actions)
+  #if len(terms_processed) > 0:
+  pagemsg("Change log = %s" % changelog)
+  return unicode(parsed), changelog
+
+#def process_one_page_links_wrapper(page, index, text):
+#  return process_one_page_links(unicode(page.title()), index, text)
+#
+#if "," in cattype:
+#  cattypes = cattype.split(",")
+#else:
+#  cattypes = [cattype]
+#for cattype in cattypes:
+#  if cattype in ["translation", "links"]:
+#    if cattype == "translation":
+#      templates = ["t", "t+", "t-", "t+check", "t-check"]
+#    else:
+#      templates = ["l", "m", "term", "link", "mention"]
+#    for template in templates:
+#      msg("Processing template %s" % template)
+#      errmsg("Processing template %s" % template)
+#      for index, page in references("Template:%s" % template, startFrom, upTo):
+#        do_edit(page, index, process_one_page_links_wrapper, save=save,
+#            verbose=verbose)
+#  elif cattype == "pages":
+#    for index, pagename in iter_items(pages_to_do, startFrom, upTo):
+#      page = pywikibot.Page(site, pagename)
+#      do_edit(page, index, process_one_page_links_wrapper, save=save,
+#          verbose=verbose)
+#  elif cattype == "pagetext":
+#    for index, current in iter_items(pages_to_do, startFrom, upTo,
+#        get_name=lambda x:x[0]):
+#      pagetitle, pagetext = current
+#      do_process_text(pagetitle, pagetext, index, process_one_page_links,
+#          verbose=verbose)
+#  else:
+#    if cattype == "vocab":
+#      cats = ["%s lemmas" % longlang, "%s non-lemma forms" % longlang]
+#    elif cattype == "borrowed":
+#      cats = [subcat for subcat, index in
+#          cat_subcats("Terms derived from %s" % longlang)]
+#    else:
+#      cats = [cattype]
+#      #raise ValueError("Category type '%s' should be 'vocab', 'borrowed', 'translation', 'links', 'pages' or 'pagetext'")
+#    for index, page in cat_articles(cats, startFrom, upTo):
+#      do_edit(page, index, process_one_page_links_wrapper, save=save,
+#          verbose=verbose)
+
+def output_process_links_template_counts(templates_seen, templates_changed):
+  msg("Templates seen:")
+  for template, count in sorted(templates_seen.items(), key=lambda x:-x[1]):
+    msg("  %s = %s" % (template, count))
+  msg("Templates processed:")
+  for template, count in sorted(templates_changed.items(), key=lambda x:-x[1]):
+    msg("  %s = %s" % (template, count))
 
 def find_lang_section(pagename, lang, pagemsg):
   page = pywikibot.Page(site, pagename)
