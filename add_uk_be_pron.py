@@ -160,7 +160,8 @@ def get_headword_pronuns(parsed, pagetitle, pagemsg, expand_text):
   for t in parsed.filter_templates():
     check_extra_heads = False
     tname = unicode(t.name)
-    if tname in ["%s-adj" % args.lang, "%s-adv" % args.lang, "%s-verb" % args.lang]:
+    if (tname in ["%s-adj" % args.lang, "%s-adv" % args.lang, "%s-verb" % args.lang] or
+        args.lang == "bg" and tname in ["bg-noun", "bg-proper noun"]):
       head = getparam(t, "1") or pagetitle
       append_headword(head)
       check_extra_heads = True
@@ -175,7 +176,7 @@ def get_headword_pronuns(parsed, pagetitle, pagemsg, expand_text):
       head = getparam(t, "head") or pagetitle
       append_headword(head)
       check_extra_heads = True
-    elif tname in ["%s-noun" % args.lang, "%s-proper noun" % args.lang]:
+    elif args.lang != "bg" and tname in ["%s-noun" % args.lang, "%s-proper noun" % args.lang]:
       param1 = getparam(t, "1")
       if "<" in param1:
         parsed_t = blib.parse_text(unicode(t)).filter_templates()[0]
@@ -310,7 +311,7 @@ class FoundPronun(object):
 # Match up the stems of headword pronunciations and found pronunciations.
 # On entry, HEADWORD_PRONUNS is a list of values extracted from headwords;
 # FOUND_PRONUNS is a list of FoundPronun objects, each one listing a
-# pronunciation from {{uk/be-IPA}} (which may be empty) along with the text
+# pronunciation from {{*-IPA}} (which may be empty) along with the text
 # before and after the pronunciation on the same line, minus any '* ' at
 # the beginning.
 #
@@ -320,7 +321,7 @@ class FoundPronun(object):
 # headword and FOUNDPRONSTEMS is a list of the corresponding
 # found-pronunciation stems. (Each such stem is actually a FoundPronun object,
 # with the pre-text and post-text coming from the corresponding text before
-# and after the {{uk/be-IPA}} template where the pronunciation was found.)
+# and after the {{*-IPA}} template where the pronunciation was found.)
 # We return a list of stem tuples because there may be multiple stems to
 # consider for each headword -- including reduced and dereduced variants
 # (e.g. for автазапра́вка with corresponding pronunciation а̀втазапра́вка we
@@ -421,32 +422,45 @@ def match_headword_and_found_pronuns(headword_pronuns, found_pronuns, pagemsg,
     def append_stem_foundstems(stem, foundpronunstems):
       if stem and foundpronunstems:
         stems.append((stem, foundpronunstems))
-    append_stem_foundstems(re.sub(u"[аяеоёьыій]́?$", "", hpron),
-      frob_foundprons(foundprons, lambda x:re.sub(u"[аяеоёьыій]́?$", "", x)))
+    # Do noun stem
+    noun_ending_regex = (
+      u"[аяеоёьыій]́?$" if args.lang == "be" else
+      u"[аяеоьиіїй]́?$" if args.lang == "uk" else
+      u"[аяеоьий]́?$"
+    )
+    append_stem_foundstems(re.sub(noun_ending_regex, "", hpron),
+      frob_foundprons(foundprons, lambda x:re.sub(noun_ending_regex, "", x)))
     # Also compute reduced/unreduced stem
     append_stem_foundstems(get_reduced_stem(hpron),
       frob_foundprons(foundprons, get_reduced_stem))
     # Also check for adjectival stem
-    adj_ending_regex = u"([ыі]́?|[ая]́?я|[аоя]́?е|[ыі]́?я)$" if args.lang == "be" else u"([иі]́?й|[аяеєі]́)$"
-    adjstem = re.sub(adj_ending_regex, "", hpron)
-    if adjstem != hpron:
-      foundpronstems = frob_foundprons(foundprons,
-          lambda x:re.sub(adj_ending_regex, "", x))
-      append_stem_foundstems(adjstem, foundpronstems)
-      pagemsg("Adding adjectival stem mapping %s->%s" % (
-        adjstem, ",".join(unicode(x) for x in foundpronstems)))
-      # If adjectival, dereduce with both stressed and unstressed epenthetic
-      # vowel
-      for epvowel in [False, True]:
-        deredstem = com.dereduce(adjstem, epvowel)
-        deredfoundpronstems = frob_foundprons(foundpronstems,
-            lambda x:com.dereduce(x, epvowel))
-        append_stem_foundstems(deredstem, deredfoundpronstems)
-        pagemsg("Adding adjectival dereduced stem mapping %s->%s" % (
-          deredstem, ",".join(unicode(x) for x in deredfoundpronstems)))
+    if args.lang != "bg": # Adjectives look like nouns in Bulgarian
+      adj_ending_regex = (
+        u"([ыі]́?|[ая]́?я|[аоя]́?е|[ыі]́?я)$" if args.lang == "be" else
+        u"([иії]́?й|[аяеєі]́)$"
+      )
+      adjstem = re.sub(adj_ending_regex, "", hpron)
+      if adjstem != hpron:
+        foundpronstems = frob_foundprons(foundprons,
+            lambda x:re.sub(adj_ending_regex, "", x))
+        append_stem_foundstems(adjstem, foundpronstems)
+        pagemsg("Adding adjectival stem mapping %s->%s" % (
+          adjstem, ",".join(unicode(x) for x in foundpronstems)))
+        # If adjectival, dereduce with both stressed and unstressed epenthetic
+        # vowel
+        for epvowel in [False, True]:
+          deredstem = com.dereduce(adjstem, epvowel)
+          deredfoundpronstems = frob_foundprons(foundpronstems,
+              lambda x:com.dereduce(x, epvowel))
+          append_stem_foundstems(deredstem, deredfoundpronstems)
+          pagemsg("Adding adjectival dereduced stem mapping %s->%s" % (
+            deredstem, ",".join(unicode(x) for x in deredfoundpronstems)))
     # Also check for verbal stem; peel off parts that don't occur in all
     # forms of the verb
-    verb_ending_regex = u"(ава́?|ну́?|[аеыіяо]́?)ц(ь|ца)?$" if args.lang == "be" else u"(ува́?|ну́?|[аеиіїяо]́?)т[иь](ся)?$"
+    verb_ending_regex = (
+      u"(ава́?|ну́?|[аеыіяо]́?)ц(ь|ца)?$" if args.lang == "be" else
+      u"(ува́?|ну́?|[аеиіїяо]́?)т[иь](ся)?$" if args.lang == "uk" else
+      u"([мая]́?)( с[еи])?$")
     verbstem = re.sub(verb_ending_regex, "", hpron)
     if verbstem != hpron:
       foundpronstems = frob_foundprons(foundprons,
@@ -1204,10 +1218,10 @@ def read_pages(filename, start, end):
         page = line
     yield i, page
 
-parser = blib.create_argparser("Add pronunciation sections to Ukrainian or Belarusian Wiktionary entries", include_pagefile=True)
+parser = blib.create_argparser("Add pronunciation sections to Ukrainian, Belarusian or Bulgarian Wiktionary entries", include_pagefile=True)
 parser.add_argument('--lemma-file', help="File containing lemmas to process, one per line; non-lemma forms will be done")
 parser.add_argument('--lemmas', help="List of comma-separated lemmas to process; non-lemma forms will be done")
-parser.add_argument('--lang', help="Language (be or uk)", choices=['be', 'uk'], required=True)
+parser.add_argument('--lang', help="Language (uk, be, bg)", choices=['uk', 'be', 'bg'], required=True)
 parser.add_argument("--forms", help="Form codes of non-lemma forms to process in conjunction with --lemmas and --lemma-file.")
 parser.add_argument('--override-pronun', action="store_true", help="Override existing pronunciations")
 args = parser.parse_args()
@@ -1216,40 +1230,93 @@ start, end = blib.parse_start_end(args.start, args.end)
 if args.lang == 'uk':
   langname = 'Ukrainian'
   com = uklib
-else:
+elif args.lang == 'be':
   langname = 'Belarusian'
   com = belib
+elif args.lang == 'bg':
+  langname = 'Bulgarian'
+  com = bglib
+else:
+  raise ValueError("Internal error: Unrecognized --lang %s" % args.lang)
 
-form_aliases = {
-  "pres": [
-    "pres_1sg", "pres_2sg", "pres_3sg", "pres_1pl", "pres_2pl", "pres_3pl"
-  ],
-  "futr": [
-    "futr_1sg", "futr_2sg", "futr_3sg", "futr_1pl", "futr_2pl", "futr_3pl"
-  ],
-  "impr": ["impr_sg", "impr_pl"],
-  "past": ["past_m", "past_f", "past_n", "past_pl"],
-  "part": [
-    "pres_actv_part", "past_pasv_part",
-    "pres_adv_part", "past_adv_part",
-  ],
-  "all-verb": ["pres", "futr", "impr", "past", "part"],
-  "sg": ["nom_s", "gen_s", "dat_s", "acc_s", "ins_s", "loc_s", "voc_s"],
-  "pl": ["nom_p", "gen_p", "dat_p", "acc_p", "ins_p", "loc_p", "voc_p"],
-  "all-noun": ["sg", "pl"],
-  "long": [
-    "nom_m", "nom_f", "nom_n", "nom_p", "nom_mp", "nom_fp",
-    "gen_m", "gen_f", "gen_p",
-    "dat_m", "dat_f", "dat_p",
-    "acc_m_an", "acc_m_in", "acc_f", "acc_n", "acc_p_an", "acc_p_in",
-    "acc_mp_an", "acc_mp_in", "acc_fp_an", "acc_fp_in", "acc_mp", "acc_fp",
-    "ins_m", "ins_f", "ins_p",
-    "loc_m", "loc_f", "loc_p",
-  ],
-  "short": args.lang == 'uk' and ["short"] or ["short_m", "short_f", "short_n", "short_p"],
-  "all-adj": ["long", "short"],
-  "all": ["all-verb", "all-noun", "all-adj"]
-}
+if args.lang == 'bg':
+  form_aliases = {
+    "pres": [
+      "pres_1sg", "pres_2sg", "pres_3sg", "pres_1pl", "pres_2pl", "pres_3pl"
+    ],
+    "impf": [
+      "impf_1sg", "impf_2sg", "impf_3sg", "impf_1pl", "impf_2pl", "impf_3pl"
+    ],
+    "aor": [
+      "aor_1sg", "aor_2sg", "aor_3sg", "aor_1pl", "aor_2pl", "aor_3pl"
+    ],
+    "impv": ["impv_sg", "impv_pl"],
+    "prap": [
+      "prap_ind_m_sg", "prap_def_sub_m_sg", "prap_def_obj_m_sg",
+      "prap_ind_f_sg", "prap_def_f_sg", "prap_ind_n_sg", "prap_def_n_sg",
+      "prap_ind_pl", "prap_def_pl",
+    ],
+    "paap": [
+      "paap_ind_m_sg", "paap_def_sub_m_sg", "paap_def_obj_m_sg",
+      "paap_ind_f_sg", "paap_def_f_sg", "paap_ind_n_sg", "paap_def_n_sg",
+      "paap_ind_pl", "paap_def_pl",
+    ],
+    "paip": [
+      "paip_m_sg", "paip_f_sg", "paip_n_sg", "paip_pl",
+    ],
+    "ppp": [
+      "ppp_ind_m_sg", "ppp_def_sub_m_sg", "ppp_def_obj_m_sg",
+      "ppp_ind_f_sg", "ppp_def_f_sg", "ppp_ind_n_sg", "ppp_def_n_sg",
+      "ppp_ind_pl", "ppp_def_pl",
+    ],
+    "vn": [
+      "vn_ind_sg", "vn_def_sg", "vn_ind_pl", "vn_def_pl",
+    ],
+    "part": [
+      "prap", "paap", "paip", "ppp", "advp",
+    ],
+    "all-verb": ["pres", "impf", "aor", "impv", "part", "vn"],
+    "sg": ["ind_sg", "def_sub_sg", "def_obj_sg", "voc_sg", "acc_sg", "gen_sg", "dat_sg"],
+    "pl": ["voc_pl", "acc_pl", "gen_pl", "dat_pl", "ind_pl", "def_pl", "count"],
+    "all-noun": ["sg", "pl"],
+    "adj-sg": [
+      "ind_m_sg", "def_sub_m_sg", "def_obj_m_sg", "ind_f_sg", "def_f_sg",
+      "ind_n_sg", "def_n_sg", "voc_m_sg"
+    ],
+    "adj-pl": ["ind_pl", "def_pl"],
+    "all-adj": ["adj-sg", "adj-pl"],
+  }
+else:
+  form_aliases = {
+    "pres": [
+      "pres_1sg", "pres_2sg", "pres_3sg", "pres_1pl", "pres_2pl", "pres_3pl"
+    ],
+    "futr": [
+      "futr_1sg", "futr_2sg", "futr_3sg", "futr_1pl", "futr_2pl", "futr_3pl"
+    ],
+    "impr": ["impr_sg", "impr_pl"],
+    "past": ["past_m", "past_f", "past_n", "past_pl"],
+    "part": [
+      "pres_actv_part", "past_pasv_part",
+      "pres_adv_part", "past_adv_part",
+    ],
+    "all-verb": ["pres", "futr", "impr", "past", "part"],
+    "sg": ["nom_s", "gen_s", "dat_s", "acc_s", "ins_s", "loc_s", "voc_s"],
+    "pl": ["nom_p", "gen_p", "dat_p", "acc_p", "ins_p", "loc_p", "voc_p", "count"],
+    "all-noun": ["sg", "pl"],
+    "long": [
+      "nom_m", "nom_f", "nom_n", "nom_p", "nom_mp", "nom_fp",
+      "gen_m", "gen_f", "gen_p",
+      "dat_m", "dat_f", "dat_p",
+      "acc_m_an", "acc_m_in", "acc_f", "acc_n", "acc_p_an", "acc_p_in",
+      "acc_mp_an", "acc_mp_in", "acc_fp_an", "acc_fp_in", "acc_mp", "acc_fp",
+      "ins_m", "ins_f", "ins_p",
+      "loc_m", "loc_f", "loc_p",
+    ],
+    "short": args.lang == 'uk' and ["short"] or ["short_m", "short_f", "short_n", "short_p"],
+    "all-adj": ["long", "short"],
+    "all": ["all-verb", "all-noun", "all-adj"]
+  }
 
 def parse_form_aliases(forms):
   retval = []
