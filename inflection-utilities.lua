@@ -737,13 +737,28 @@ function export.show_forms_with_translit(forms, lemmas, slots_table, props, foot
 	end
 
 	local all_notes = footnote_obj.notes
-	if foonotes then
+	if footnotes then
 		for _, note in ipairs(footnotes) do
 			local symbol, entry = m_table_tools.get_initial_notes(note)
 			table.insert(all_notes, symbol .. entry)
 		end
 	end
 	forms.footnote = table.concat(all_notes, "<br />")
+end
+
+
+-- Given a list of forms (each of which is a table of the form {form=FORM, footnotes=FOOTNOTES}),
+-- concatenate into a SLOT=FORM,FORM,... string, replacing embedded | signs with <!>.
+function export.concat_forms_in_slot(forms)
+	if forms then
+		local new_vals = {}
+		for _, v in ipairs(forms) do
+			table.insert(new_vals, rsub(v.form, "|", "<!>"))
+		end
+		return table.concat(new_vals, ",")
+	else
+		return nil
+	end
 end
 
 
