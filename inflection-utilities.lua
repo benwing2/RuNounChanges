@@ -1,5 +1,6 @@
 local export = {}
 
+local m_links = require("Module:links")
 local m_string_utilities = require("Module:string utilities")
 local m_table = require("Module:table")
 
@@ -110,13 +111,19 @@ function export.split_alternating_runs(segment_runs, splitchar, preserve_splitch
 end
 
 
--- Given a list of forms (each of which is a table of the form {form=FORM, footnotes=FOOTNOTES}),
--- concatenate into a SLOT=FORM,FORM,... string, replacing embedded | signs with <!>.
+-- Given a list of forms (each of which is a table of the form
+-- {form=FORM, translit=MANUAL_TRANSLIT, footnotes=FOOTNOTES}), concatenate into a
+-- SLOT=FORM//TRANSLIT,FORM//TRANSLIT,... string (or SLOT=FORM,FORM,... if no translit),
+-- replacing embedded | signs with <!>.
 function export.concat_forms_in_slot(forms)
 	if forms then
 		local new_vals = {}
 		for _, v in ipairs(forms) do
-			table.insert(new_vals, rsub(v.form, "|", "<!>"))
+			local form = v.form
+			if v.translit then
+				form = form .. "//" .. v.translit
+			end
+			table.insert(new_vals, rsub(form, "|", "<!>"))
 		end
 		return table.concat(new_vals, ",")
 	else
@@ -125,9 +132,10 @@ function export.concat_forms_in_slot(forms)
 end
 
 
--- Insert a form (an object of the form {form=FORM, footnotes=FOOTNOTES}) into a list of such
--- forms. If the form is already present, the footnotes of the existing and new form might be combined
--- (specifically, footnotes in the new form beginning with ! will be combined).
+-- Insert a form (an object of the form {form=FORM, translit=MANUAL_TRANSLIT, footnotes=FOOTNOTES})
+-- into a list of such forms. If the form is already present, the footnotes of the existing and
+-- new form might be combined (specifically, footnotes in the new form beginning with ! will be
+-- combined).
 function export.insert_form_into_list(list, form)
 	-- Don't do anything if the form object or the form inside it is nil. This simplifies
 	-- form insertion in the presence of declension generating functions that may return nil,
@@ -136,7 +144,7 @@ function export.insert_form_into_list(list, form)
 		return
 	end
 	for _, listform in ipairs(list) do
-		if listform.form == form.form then
+		if listform.form == form.form and listform.translit == form.translit then
 			-- Form already present; maybe combine footnotes.
 			if form.footnotes then
 				-- The behavior here has changed; track cases where the old behavior might
@@ -178,8 +186,8 @@ function export.insert_form_into_list(list, form)
 	table.insert(list, form)
 end
 
--- Insert a form (an object of the form {form=FORM, footnotes=FOOTNOTES}) into the given slot in
--- the given form table.
+-- Insert a form (an object of the form {form=FORM, translit=MANUAL_TRANSLIT, footnotes=FOOTNOTES})
+-- into the given slot in the given form table.
 function export.insert_form(formtable, slot, form)
 	-- Don't do anything if the form object or the form inside it is nil. This simplifies
 	-- form insertion in the presence of declension generating functions that may return nil,
@@ -194,8 +202,9 @@ function export.insert_form(formtable, slot, form)
 end
 
 
--- Insert a list of forms (each of which is an object of the form {form=FORM, footnotes=FOOTNOTES})
--- into the given slot in the given form table. FORMS can be nil.
+-- Insert a list of forms (each of which is an object of the form
+-- {form=FORM, translit=MANUAL_TRANSLIT, footnotes=FOOTNOTES}) into the given slot in the given
+-- form table. FORMS can be nil.
 function export.insert_forms(formtable, slot, forms)
 	if not forms then
 		return
@@ -207,15 +216,20 @@ end
 
 
 -- Map a function over the form values in FORMS (a list of objects of the form
--- {form=FORM, footnotes=FOOTNOTES}). Use insert_form_into_list() to insert them into
--- the returned list in case two different forms map to the same thing.
+-- {form=FORM, translit=MANUAL_TRANSLIT, footnotes=FOOTNOTES}). The function is called with
+-- two arguments, the original form and manual translit; if manual translit isn't relevant,
+-- it's fine to declare the function with only one argument. The return value is either a
+-- single value (the new form) or two values (the new form and new manual translit).
+-- Use insert_form_into_list() to insert them into the returned list in case two different
+-- forms map to the same thing.
 function export.map_forms(forms, fun)
 	if not forms then
 		return nil
 	end
 	local retval = {}
 	for _, form in ipairs(forms) do
-		local newform = {form=fun(form.form), footnotes=form.footnotes}
+		local newform, newtranslit = fun(form.form, form.translit)
+		newform = {form=newform, translit=newtranslit, footnotes=form.footnotes}
 		export.insert_form_into_list(retval, newform)
 	end
 	return retval
@@ -223,17 +237,26 @@ end
 
 
 -- Map a list-returning function over the form values in FORMS (a list of objects of the form
--- {form=FORM, footnotes=FOOTNOTES}). Use insert_form_into_list() to insert them into
--- the returned list in case two different forms map to the same thing.
+-- {form=FORM, translit=MANUAL_TRANSLIT, footnotes=FOOTNOTES}). The function is called witih
+-- two arguments, the original form and manual translit; if manual translit isn't relevant,
+-- it's fine to declare the function with only one argument. The return value is either a
+-- list of forms or a list of objects of the form {form=FORM, translit=MANUAL_TRANSLIT}.
+-- Use insert_form_into_list() to insert them into the returned list in case two different
+-- forms map to the same thing.
 function export.flatmap_forms(forms, fun)
 	if not forms then
 		return nil
 	end
 	local retval = {}
 	for _, form in ipairs(forms) do
-		local funret = fun(form.form)
+		local funret = fun(form.form, form.translit)
 		for _, fr in ipairs(funret) do
-			local newform = {form=fr, footnotes=form.footnotes}
+			local newform
+			if type(fr) == "table" then
+				newform = {form=fr.form, translit=fr.translit, footnotes=form.footnotes}
+			else
+				newform = {form=fr, footnotes=form.footnotes}
+			end
 			export.insert_form_into_list(retval, newform)
 		end
 	end
@@ -242,16 +265,23 @@ end
 
 
 -- Map a function over the form values in FORMS (a single string, a single object of the form
--- {form=FORM, footnotes=FOOTNOTES}, or a list of either of the previous two types). If
--- FIRST_ONLY is given and FORMS is a list, only map over the first element. Return value is
--- of the same form as FORMS.
+-- {form=FORM, translit=MANUAL_TRANSLIT, footnotes=FOOTNOTES}, or a list of either of the
+-- previous two types). If FIRST_ONLY is given and FORMS is a list, only map over the first
+-- element. Return value is of the same form as FORMS. The function is called with two
+-- arguments, the original form and manual translit; if manual translit isn't relevant,
+-- it's fine to declare the function with only one argument. The return value is either a
+-- single value (the new form) or two values (the new form and new manual translit).
 function export.map_form_or_forms(forms, fn, first_only)
 	if forms == nil then
 		return nil
 	elseif type(forms) == "string" then
 		return forms == "?" and "?" or fn(forms)
 	elseif forms.form then
-		return {form = forms.form == "?" and "?" or fn(forms.form), footnotes = forms.footnotes}
+		if forms.form == "?" then
+			return {form = "?", footnotes = forms.footnotes}
+		end
+		local newform, newtranslit = fn(forms.form, forms.translit)
+		return {form=newform, translit=newtranslit, footnotes=forms.footnotes}
 	else
 		local retval = {}
 		for i, form in ipairs(forms) do
@@ -339,7 +369,8 @@ local function is_table_of_strings(forms)
 end
 
 
-function export.add_forms(forms, slot, stems, endings, combine_stem_ending)
+function export.add_forms(forms, slot, stems, endings, combine_stem_ending,
+	lang, combine_stem_ending_tr)
 	if stems == nil or endings == nil then
 		return
 	end
@@ -365,7 +396,17 @@ function export.add_forms(forms, slot, stems, endings, combine_stem_ending)
 				elseif ending.footnotes then
 					footnotes = ending.footnotes
 				end
-				export.insert_form(forms, slot, {form = combine_stem_ending(stem.form, ending.form), footnotes = footnotes})
+				local new_form = combine_stem_ending(stem.form, ending.form)
+				local new_translit
+				if stem.translit or ending.translit then
+					if not lang or not combine_stem_ending_tr then
+						error("Internal error: With manual translit, 'lang' and 'combine_stem_ending_tr' must be passed to 'add_forms'")
+					end
+					local stem_tr = stem.translit or lang:transliterate(m_links.remove_links(stem.form))
+					local ending_tr = ending.translit or lang:transliterate(m_links.remove_links(ending.form))
+					new_translit = combine_stem_ending_tr(stem_tr, ending_tr)
+				end
+				export.insert_form(forms, slot, {form = new_form, translit = new_translit, footnotes = footnotes})
 			end
 		end
 	end
@@ -450,12 +491,12 @@ local function parse_multiword_spec(segments, parse_indicator_spec, allow_defaul
 		end
 		local base = parse_indicator_spec(segments[i])
 		base.before_text = table.concat(before_text)
-		base.before_text_no_links = require("Module:links").remove_links(base.before_text)
+		base.before_text_no_links = m_links.remove_links(base.before_text)
 		base.lemma = lemma
 		table.insert(multiword_spec.word_specs, base)
 	end
 	multiword_spec.post_text = segments[#segments]
-	multiword_spec.post_text_no_links = require("Module:links").remove_links(multiword_spec.post_text)
+	multiword_spec.post_text_no_links = m_links.remove_links(multiword_spec.post_text)
 	return multiword_spec
 end
 
@@ -549,22 +590,36 @@ local function decline_alternants(alternant_spec, props)
 end
 
 
-local function append_forms(formtable, slot, forms, before_text, get_variants)
+local function append_forms(props, formtable, slot, forms, before_text, before_text_no_links)
 	if not forms then
 		return
 	end
 	local old_forms = formtable[slot] or {{form = ""}}
 	local ret_forms = {}
+	local before_text_translit
 	for _, old_form in ipairs(old_forms) do
 		for _, form in ipairs(forms) do
-			local old_form_vars = get_variants(old_form.form)
-			local form_vars = get_variants(form.form)
+			local old_form_vars = props.get_variants(old_form.form)
+			local form_vars = props.get_variants(form.form)
 			if old_form_vars and form_vars and old_form_vars ~= form_vars then
 				-- Reject combination due to non-matching variant codes.
 			else
-				local new_form = {form=old_form.form .. before_text .. form.form,
-					footnotes=export.combine_footnotes(old_form.footnotes, form.footnotes)}
-				table.insert(ret_forms, new_form)
+				local new_form = old_form.form .. before_text .. form.form
+				local new_translit
+				if old_form.translit or form.translit then
+					if not props.lang then
+						error("Internal error: If manual translit is given, 'props.lang' must be set")
+					end
+					if not before_text_translit then
+						before_text_translit = props.lang:transliterate(before_text_no_links)
+					end
+					local old_translit = old_form.translit or props.lang:transliterate(m_links.remove_links(old_form.form))
+					local translit = form.translit or props.lang:transliterate(m_links.remove_links(form.form))
+					new_translit = old_translit .. before_text_translit .. translit
+				end
+				local new_footnotes = export.combine_footnotes(old_form.footnotes, form.footnotes)
+				table.insert(ret_forms, {form=new_form, translit=new_translit,
+					footnotes=new_footnotes})
 			end
 		end
 	end
@@ -584,9 +639,9 @@ function export.decline_multiword_or_alternant_multiword_spec(multiword_spec, pr
 		end
 		for slot, _ in pairs(props.slot_table) do
 			if not props.skip_slot(slot) then
-				append_forms(multiword_spec.forms, slot, word_spec.forms[slot],
+				append_forms(props, multiword_spec.forms, slot, word_spec.forms[slot],
 					rfind(slot, "linked") and word_spec.before_text or word_spec.before_text_no_links,
-					props.get_variants
+					word_spec.before_text_no_links
 				)
 			end
 		end
@@ -596,9 +651,9 @@ function export.decline_multiword_or_alternant_multiword_spec(multiword_spec, pr
 		for slot, _ in pairs(props.slot_table) do
 			-- If slot is empty or should be skipped, don't try to append post-text.
 			if not props.skip_slot(slot) and multiword_spec.forms[slot] then
-				append_forms(multiword_spec.forms, slot, pseudoform,
+				append_forms(props, multiword_spec.forms, slot, pseudoform,
 					rfind(slot, "linked") and multiword_spec.post_text or multiword_spec.post_text_no_links,
-					props.get_variants
+					multiword_spec.post_text_no_links
 				)
 			end
 		end
@@ -665,11 +720,12 @@ end
 
 --[=[
 Convert the forms in `forms` (a list of form objects, each of which is a table of the form
-{ form = FORM, footnotes = FOOTNOTE_LIST_OR_NIL, no_accel = TRUE_TO_SUPPRESS_ACCELERATORS })
-into strings. Each form list turns into a string consisting of a comma-separated list of
-linked forms, with accelerators (unless `no_accel` is set in a given form). `lemmas` is the
-list of lemmas, used in the accelerators. `slots_table` is a table of slots and associated
-accelerator inflections. `props` is a table used in generating the strings, as follows:
+{ form = FORM, translit = MANUAL_TRANSLIT_OR_NIL, footnotes = FOOTNOTE_LIST_OR_NIL,
+no_accel = TRUE_TO_SUPPRESS_ACCELERATORS }) into strings. Each form list turns into a string
+consisting of a comma-separated list of linked forms, with accelerators (unless `no_accel`
+is set in a given form). `lemmas` is the list of lemmas, used in the accelerators.
+`slots_table` is a table of slots and associated accelerator inflections. `props` is a table
+used in generating the strings, as follows:
 { lang = LANG_OBJECT, canonicalize = FUNCTION_TO_CANONICALIZE_EACH_FORM }.
 If `allow_footnote_symbols` is given, footnote symbols attached to forms (e.g. numbers,
 asterisk) are separated off, placed outside the links, and superscripted. In this case,
@@ -680,9 +736,18 @@ placed into `forms.footnotes`.
 function export.show_forms_with_translit(forms, lemmas, slots_table, props, footnotes, allow_footnote_symbols)
 	local footnote_obj = export.create_footnote_obj()
 	local accel_lemma = lemmas[1]
+	local accel_lemma_translit
+	if type(accel_lemma) == "table" then
+		accel_lemma_translit = accel_lemma.translit
+		accel_lemma = accel_lemma.form
+	end
+	for i, lemma in ipairs(lemmas) do
+		if type(lemma) == "table" then
+			lemmas[i] = lemma.form
+		end
+	end
 	forms.lemma = #lemmas > 0 and table.concat(lemmas, ", ") or mw.title.getCurrentTitle().text
 
-	local m_links = require("Module:links")
 	local m_table_tools = require("Module:table tools")
 	local m_script_utilities = require("Module:script utilities")
 	for slot, accel_form in pairs(slots_table) do
@@ -700,7 +765,9 @@ function export.show_forms_with_translit(forms, lemmas, slots_table, props, foot
 					if accel_lemma and not form.no_accel then
 						accel_obj = {
 							form = accel_form,
+							translit = form.translit,
 							lemma = accel_lemma,
+							lemma_translit = accel_lemma_translit,
 						}
 					end
 					local origentry, orignotes
@@ -712,7 +779,7 @@ function export.show_forms_with_translit(forms, lemmas, slots_table, props, foot
 					link = m_links.full_link{lang = props.lang, term = origentry,
 						tr = "-", accel = accel_obj} .. orignotes
 				end
-				tr = props.lang:transliterate(m_links.remove_links(orig_text))
+				tr = form.translit or props.lang:transliterate(m_links.remove_links(orig_text))
 				local trentry, trnotes
 				if allow_footnote_symbols then
 					trentry, trnotes = m_table_tools.get_notes(tr)
@@ -744,21 +811,6 @@ function export.show_forms_with_translit(forms, lemmas, slots_table, props, foot
 		end
 	end
 	forms.footnote = table.concat(all_notes, "<br />")
-end
-
-
--- Given a list of forms (each of which is a table of the form {form=FORM, footnotes=FOOTNOTES}),
--- concatenate into a SLOT=FORM,FORM,... string, replacing embedded | signs with <!>.
-function export.concat_forms_in_slot(forms)
-	if forms then
-		local new_vals = {}
-		for _, v in ipairs(forms) do
-			table.insert(new_vals, rsub(v.form, "|", "<!>"))
-		end
-		return table.concat(new_vals, ",")
-	else
-		return nil
-	end
 end
 
 
