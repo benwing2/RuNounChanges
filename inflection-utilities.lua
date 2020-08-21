@@ -466,7 +466,8 @@ For example, the return value for "[[медичний|меди́чна]]<+> [[с
   post_text = "",
 }
 ]=]
-local function parse_multiword_spec(segments, parse_indicator_spec, allow_default_indicator)
+local function parse_multiword_spec(segments, parse_indicator_spec, allow_default_indicator,
+	allow_blank_lemma)
 	local multiword_spec = {
 		word_specs = {}
 	}
@@ -482,7 +483,7 @@ local function parse_multiword_spec(segments, parse_indicator_spec, allow_defaul
 		for j, space_separated_group in ipairs(space_separated_groups) do
 			if j == #space_separated_groups then
 				lemma = table.concat(space_separated_group)
-				if lemma == "" then
+				if lemma == "" and not allow_blank_lemma then
 					error("Word is blank: '" .. table.concat(segments) .. "'")
 				end
 			else
@@ -510,7 +511,8 @@ The return value is a table of the form
 
 where MULTIWORD_SPEC describes a given alternant and is as returned by parse_multiword_spec().
 ]=]
-local function parse_alternant(alternant, parse_indicator_spec, allow_default_indicator)
+local function parse_alternant(alternant, parse_indicator_spec, allow_default_indicator,
+	allow_blank_lemma)
 	local parsed_alternants = {}
 	local alternant_text = rmatch(alternant, "^%(%((.*)%)%)$")
 	local segments = export.parse_balanced_segment_run(alternant_text, "<", ">")
@@ -518,7 +520,8 @@ local function parse_alternant(alternant, parse_indicator_spec, allow_default_in
 	local alternant_spec = {alternants = {}}
 	for _, comma_separated_group in ipairs(comma_separated_groups) do
 		table.insert(alternant_spec.alternants,
-			parse_multiword_spec(comma_separated_group, parse_indicator_spec, allow_default_indicator))
+			parse_multiword_spec(comma_separated_group, parse_indicator_spec, allow_default_indicator,
+				allow_blank_lemma))
 	end
 	return alternant_spec
 end
@@ -544,7 +547,7 @@ looks as follows:
 i.e. it is like what is returned by parse_alternant() but has extra `before_text`
 and `before_text_no_links` fields.
 ]=]
-function export.parse_alternant_multiword_spec(text, parse_indicator_spec, allow_default_indicator)
+function export.parse_alternant_multiword_spec(text, parse_indicator_spec, allow_default_indicator, allow_blank_lemma)
 	local alternant_multiword_spec = {alternant_or_word_specs = {}}
 	local alternant_segments = m_string_utilities.capturing_split(text, "(%(%(.-%)%))")
 	local last_post_text, last_post_text_no_links
@@ -554,7 +557,8 @@ function export.parse_alternant_multiword_spec(text, parse_indicator_spec, allow
 			local multiword_spec = parse_multiword_spec(segments, parse_indicator_spec,
 				-- Don't set allow_default_indicator if alternants are present and we're
 				-- processing the non-alternant text.
-				allow_default_indicator and #alternant_segments == 1)
+				allow_default_indicator and #alternant_segments == 1,
+				allow_blank_lemma)
 			for _, word_spec in ipairs(multiword_spec.word_specs) do
 				table.insert(alternant_multiword_spec.alternant_or_word_specs, word_spec)
 			end
@@ -562,7 +566,7 @@ function export.parse_alternant_multiword_spec(text, parse_indicator_spec, allow
 			last_post_text_no_links = multiword_spec.post_text_no_links
 		else
 			local alternant_spec = parse_alternant(alternant_segments[i],
-				parse_indicator_spec, allow_default_indicator)
+				parse_indicator_spec, allow_default_indicator, allow_blank_lemma)
 			alternant_spec.before_text = last_post_text
 			alternant_spec.before_text_no_links = last_post_text_no_links
 			table.insert(alternant_multiword_spec.alternant_or_word_specs, alternant_spec)
@@ -599,8 +603,8 @@ local function append_forms(props, formtable, slot, forms, before_text, before_t
 	local before_text_translit
 	for _, old_form in ipairs(old_forms) do
 		for _, form in ipairs(forms) do
-			local old_form_vars = props.get_variants(old_form.form)
-			local form_vars = props.get_variants(form.form)
+			local old_form_vars = props.get_variants and props.get_variants(old_form.form) or ""
+			local form_vars = props.get_variants and props.get_variants(form.form) or ""
 			if old_form_vars and form_vars and old_form_vars ~= form_vars then
 				-- Reject combination due to non-matching variant codes.
 			else
@@ -741,12 +745,15 @@ function export.show_forms_with_translit(forms, lemmas, slots_table, props, foot
 		accel_lemma_translit = accel_lemma.translit
 		accel_lemma = accel_lemma.form
 	end
-	for i, lemma in ipairs(lemmas) do
+	local lemma_forms = {}
+	for _, lemma in ipairs(lemmas) do
 		if type(lemma) == "table" then
-			lemmas[i] = lemma.form
+			table.insert(lemma_forms, lemma.form)
+		else
+			table.insert(lemma_forms, lemma)
 		end
 	end
-	forms.lemma = #lemmas > 0 and table.concat(lemmas, ", ") or mw.title.getCurrentTitle().text
+	forms.lemma = #lemma_forms > 0 and table.concat(lemma_forms, ", ") or mw.title.getCurrentTitle().text
 
 	local m_table_tools = require("Module:table tools")
 	local m_script_utilities = require("Module:script utilities")
@@ -756,7 +763,7 @@ function export.show_forms_with_translit(forms, lemmas, slots_table, props, foot
 			local orig_spans = {}
 			local tr_spans = {}
 			for i, form in ipairs(formvals) do
-				local orig_text = props.canonicalize(form.form)
+				local orig_text = props.canonicalize and props.canonicalize(form.form) or form.form
 				local link, tr
 				if form.form == "—" or form.form == "?" then
 					link = orig_text
