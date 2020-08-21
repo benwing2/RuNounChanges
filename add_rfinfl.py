@@ -6,6 +6,10 @@ import pywikibot, re, sys, codecs, argparse
 import blib
 from blib import getparam, rmparam, msg, site, tname
 
+AA = u"\u093e"
+M = u"\u0901"
+IND_AA = u"आ"
+
 pos_to_headword_template = {
   "be": {
     "noun": "be-noun",
@@ -31,26 +35,32 @@ pos_to_headword_template = {
     "adjective": "uk-adj",
     "verb": "uk-verb",
   },
+  "hi": {
+    "noun": "hi-noun",
+    "proper noun": "hi-proper noun",
+    "adjective": "hi-adj",
+    "verb": "hi-verb",
+  },
 }
 
-def be_lemma_is_indeclinable(t, pagemsg):
+def be_lemma_is_indeclinable(t, pagetitle, pagemsg):
   if tname(t) == "be-noun" and getparam(t, "decl") in ["off", "no", "indeclinable"]:
     return True
   return False
 
-def bg_lemma_is_indeclinable(t, pagemsg):
+def bg_lemma_is_indeclinable(t, pagetitle, pagemsg):
   if getparam(t, "indecl"):
     return True
   return False
 
-def ru_lemma_is_indeclinable(t, pagemsg):
+def ru_lemma_is_indeclinable(t, pagetitle, pagemsg):
   if tname(t) in ["ru-noun", "ru-proper noun"] and getparam(t, "3") == "-":
     return True
   if tname(t) == "ru-adj" and getparam(t, "indecl"):
     return True
   return False
 
-def uk_lemma_is_indeclinable(t, pagemsg):
+def uk_lemma_is_indeclinable(t, pagetitle, pagemsg):
   if tname(t) in ["uk-noun", "uk-proper noun"]:
     if getparam(t, "3") == "-":
       return True
@@ -62,11 +72,25 @@ def uk_lemma_is_indeclinable(t, pagemsg):
     return True
   return False
 
+def hi_lemma_is_indeclinable(t, pagetitle, pagemsg):
+  if tname(t) in ["hi-noun", "hi-proper noun"]:
+    return False
+  if tname(t) == "hi-adj":
+    pagename = blib.remove_links(getparam(t, "head") or pagetitle)
+    # If the lemma doesn't end with any of the declinable suffixes, it's
+    # definitely indeclinable. Some indeclinable adjectives end with these
+    # same suffixes, but we have no way to know that these are indeclinable,
+    # so assume declinable.
+    return not (pagename.endswith(AA) or pagename.endswith(IND_AA) or
+        pagename.endswith(AA + M))
+  return False
+
 lemma_is_indeclinable = {
   "be": be_lemma_is_indeclinable,
   "bg": bg_lemma_is_indeclinable,
   "ru": ru_lemma_is_indeclinable,
   "uk": uk_lemma_is_indeclinable,
+  "hi": hi_lemma_is_indeclinable,
 }
 
 pos_to_nonlemma_template = {
@@ -74,6 +98,7 @@ pos_to_nonlemma_template = {
   "bg": "(bg-verbal noun|bg-verbal noun form|bg-part|bg-part form)",
   "ru": u"(ru-noun form|ru-.*alt-ё|ru-verb-cform)",
   "uk": None,
+  "hi": "(hi-verb-form|hi-noun-form|hi-adj-form)",
 }
 
 pos_to_infl_template = {
@@ -101,6 +126,20 @@ pos_to_infl_template = {
     "verb": "uk-conj.*",
     "adjective": "(uk-decl-adj.*|uk-adj-.*)",
   },
+  "hi": {
+    "noun": "(hi-decl-noun|hi-noun-.*)",
+    "proper noun": "(hi-decl-noun|hi-noun-.*)",
+    "verb": "hi-conj.*",
+    "adjective": "(hi-decl-adj.*|hi-adj-.*)",
+  },
+}
+
+pos_to_infl_template_exclude = {
+  "hi": {
+    "noun": "hi-noun-form",
+    "proper noun": "hi-noun-form",
+    "adjective": "hi-adj-form",
+  }
 }
 
 lang_to_name = {
@@ -108,6 +147,7 @@ lang_to_name = {
   "bg": "Bulgarian",
   "ru": "Russian",
   "uk": "Ukrainian",
+  "hi": "Hindi",
 }
 
 def get_indentation_level(header):
@@ -163,16 +203,18 @@ def process_page(page, index, lang, pos):
           if saw_head:
             pagemsg("WARNING: Found two heads under one POS section: second is %s" % unicode(t))
           saw_head = True
-          if tn != "head" and lemma_is_indeclinable[lang](t, pagemsg):
+          if tn != "head" and lemma_is_indeclinable[lang](t, pagetitle, pagemsg):
             pagemsg("Headword template is indeclinable: %s" % unicode(t))
             head_is_indeclinable = True
             break
         if re.search("^" + pos_to_infl_template[lang][pos] + "$", tn):
-          if inflt:
-            pagemsg("WARNING: Found two inflection templates under one POS section: %s and %s" % (
-              unicode(inflt), unicode(t)))
-          inflt = t
-          pagemsg("Found %s inflection: %s" % (pos, unicode(t)))
+          exclude_re = pos_to_infl_template_exclude.get(lang, {}).get(pos, None)
+          if not exclude_re or not re.search("^" + exclude_re + "$", tn):
+            if inflt:
+              pagemsg("WARNING: Found two inflection templates under one POS section: %s and %s" % (
+                unicode(inflt), unicode(t)))
+            inflt = t
+            pagemsg("Found %s inflection: %s" % (pos, unicode(t)))
         if tn in ["inflection of", "infl of"]:
           pagemsg("Saw 'inflection of': %s" % unicode(t))
           saw_inflection_of = True
