@@ -127,31 +127,6 @@ local function skip_slot(number, slot)
 end
 
 
-local function split_term_respelling(term)
-	if rfind(term, "//") then
-		local split = rsplit(term, "//")
-		if #split ~= 2 then
-			error("Term with respelling should have only one // in it: " .. term)
-		end
-		return unpack(split)
-	else
-		return term, nil
-	end
-end
-
-
-local function transliterate_respelling(phon)
-	if not phon then
-		return nil
-	end
-	local hindi_range = "[ऀ-ॿ*]" -- 0x0900 to 0x097f; include *, which is a translit signal
-	if rfind(phon, "^%-?" .. hindi_range) then
-		return rsub(lang:transliterate(phon), "%.", "")
-	end
-	return phon -- already transliterated
-end
-
-
 local function add(base, stem, translit_stem, slot, ending, footnotes)
 	if not ending then
 		return
@@ -206,7 +181,7 @@ local function process_slot_overrides(base)
 		for _, override in ipairs(overrides) do
 			for _, value in ipairs(override.values) do
 				local form = value.form
-				local tr = transliterate_respelling(value.phon_form)
+				local tr = com.transliterate_respelling(value.phon_form)
 				local combined_notes = iut.combine_footnotes(base.footnotes, value.footnotes)
 				assert(override.full)
 				if form ~= "" then
@@ -223,12 +198,12 @@ local function add_decl(base, stem, translit_stem, dir_s, obl_s, voc_s, dir_p, o
 )
 	if not stem then
 		stem = base.lemma
-		translit_stem = transliterate_respelling(base.phon_lemma) or lang:transliterate(base.lemma)
+		translit_stem = com.transliterate_respelling(base.phon_lemma) or lang:transliterate(base.lemma)
 	end
 	local plstem, pl_translit_stem = stem, translit_stem
 	if base.plstem then
 		plstem = base.plstem
-		pl_translit_stem = transliterate_respelling(base.pl_phon_stem) or lang:transliterate(base.plstem)
+		pl_translit_stem = com.transliterate_respelling(base.pl_phon_stem) or lang:transliterate(base.plstem)
 	end
 	add(base, stem, translit_stem, "dir_s", dir_s, footnotes)
 	add(base, stem, translit_stem, "obl_s", obl_s, footnotes)
@@ -257,20 +232,6 @@ local function handle_derived_slots_and_overrides(base)
 end
 
 
-local function strip_ending(base, ending)
-	local stem = rmatch(base.lemma, "^(.*)" .. ending .. "$")
-	if not stem then
-		error("Internal error: Lemma " .. base.lemma .. " should end in " .. ending)
-	end
-	local ending_translit = lang:transliterate(ending)
-	local translit_stem = rmatch(base.lemma_translit, "^(.*)" .. ending_translit .. "$")
-	if not translit_stem then
-		error("Internal error: Unable to strip ending " .. ending .. " (transliterated " .. ending_translit .. ") from transliteration " .. base.lemma_translit)
-	end
-	return stem, translit_stem	
-end
-
-
 local decls = {}
 local declprops = {}
 
@@ -293,13 +254,13 @@ declprops["c-f"] = {
 }
 
 decls["ā-m"] = function(base)
-	local stem, translit_stem = strip_ending(base, AA)
+	local stem, translit_stem = com.strip_ending(base, AA)
 	add_decl(base, stem, translit_stem, AA, E, E, E, ON, O)
 end
 
 -- E.g. तेंदुआ "leopard"
 decls["ind-ā-m"] = function(base)
-	local stem, translit_stem = strip_ending(base, "आ")
+	local stem, translit_stem = com.strip_ending(base, "आ")
 	add_decl(base, stem, translit_stem, "आ", "ए", "ए", "ए", "ओं", "ओ")
 end
 
@@ -317,7 +278,7 @@ declprops["unmarked-ā-m"] = {
 
 -- E.g. रेस्तराँ "restaurant"
 decls["unmarked-ān-m"] = function(base)
-	local stem, translit_stem = strip_ending(base, AA .. M)
+	local stem, translit_stem = com.strip_ending(base, AA .. M)
 	add_decl(base, stem, translit_stem, AA .. M, AA .. M, AA .. M, AA .. M, AA .. "ओं", AA .. "ओं")
 end
 
@@ -327,7 +288,7 @@ declprops["unmarked-ān-m"] = {
 }
 
 decls["ind-unmarked-ān-m"] = function(base)
-	local stem, translit_stem = strip_ending(base, "आँ")
+	local stem, translit_stem = com.strip_ending(base, "आँ")
 	add_decl(base, stem, translit_stem, "आँ", "आँ", "आँ", "आँ", "आओं", "आओं")
 end
 
@@ -338,13 +299,13 @@ declprops["ind-unmarked-ān-m"] = {
 
 -- E.g. ख़ानसामाँ "butler, cook"
 decls["ān-m"] = function(base)
-	local stem, translit_stem = strip_ending(base, AA .. M)
+	local stem, translit_stem = com.strip_ending(base, AA .. M)
 	add_decl(base, stem, translit_stem, AA .. M, EN, EN, EN, ON, ON)
 end
 
 -- E.g. कुआँ "well"
 decls["ind-ān-m"] = function(base)
-	local stem, translit_stem = strip_ending(base, "आँ")
+	local stem, translit_stem = com.strip_ending(base, "आँ")
 	add_decl(base, stem, translit_stem, "आँ", "एँ", "एँ", "एँ", "ओं", "ओं")
 end
 
@@ -356,12 +317,12 @@ end
 -- are added after the vowel.
 
 decls["ān-f"] = function(base)
-	local stem, translit_stem = strip_ending(base, AA .. M)
+	local stem, translit_stem = com.strip_ending(base, AA .. M)
 	add_decl(base, stem, translit_stem, AA .. M, AA .. M, AA .. M, AA .. "एँ", AA .. "ओं", AA .. "ओं")
 end
 
 decls["ind-ān-f"] = function(base)
-	local stem, translit_stem = strip_ending(base, "आँ")
+	local stem, translit_stem = com.strip_ending(base, "आँ")
 	add_decl(base, stem, translit_stem, "आँ", "आँ", "आँ", "आएँ", "आओं", "आओं")
 end
 
@@ -375,59 +336,59 @@ end
 
 -- E.g. प्रधान मंत्री "prime minister"
 decls["ī-m"] = function(base)
-	local stem, translit_stem = strip_ending(base, II)
+	local stem, translit_stem = com.strip_ending(base, II)
 	add_decl(base, stem, translit_stem, II, II, II, II, I .. "यों", I .. "यो")
 end
 
 -- E.g. भाई "brother"
 decls["ind-ī-m"] = function(base)
-	local stem, translit_stem = strip_ending(base, "ई")
+	local stem, translit_stem = com.strip_ending(base, "ई")
 	add_decl(base, stem, translit_stem, "ई", "ई", "ई", "ई", "इयों", "इयो")
 end
 
 decls["īn-m"] = function(base)
-	local stem, translit_stem = strip_ending(base, II .. N)
+	local stem, translit_stem = com.strip_ending(base, II .. N)
 	add_decl(base, stem, translit_stem, II .. N, II .. N, II .. N, II .. N, I .. "यों", I .. "यों")
 end
 
 decls["ind-īn-m"] = function(base)
-	local stem, translit_stem = strip_ending(base, "ईं")
+	local stem, translit_stem = com.strip_ending(base, "ईं")
 	add_decl(base, stem, translit_stem, "ईं", "ईं", "ईं", "ईं", "इयों", "इयों")
 end
 
 decls["ī-f"] = function(base)
-	local stem, translit_stem = strip_ending(base, II)
+	local stem, translit_stem = com.strip_ending(base, II)
 	add_decl(base, stem, translit_stem, II, II, II, I .. "याँ", I .. "यों", I .. "यो")
 end
 
 -- E.g. दवाई "medicine", डोई "wooden ladle", तेंदुई "female leopard", मिठाई "sweet, dessert"
 decls["ind-ī-f"] = function(base)
-	local stem, translit_stem = strip_ending(base, "ई")
+	local stem, translit_stem = com.strip_ending(base, "ई")
 	add_decl(base, stem, translit_stem, "ई", "ई", "ई", "इयाँ", "इयों", "इयो")
 end
 
 decls["īn-f"] = function(base)
-	local stem, translit_stem = strip_ending(base, II .. N)
+	local stem, translit_stem = com.strip_ending(base, II .. N)
 	add_decl(base, stem, translit_stem, II .. N, II .. N, II .. N, I .. "याँ", I .. "यों", I .. "यों")
 end
 
 decls["ind-īn-f"] = function(base)
-	local stem, translit_stem = strip_ending(base, "ईं")
+	local stem, translit_stem = com.strip_ending(base, "ईं")
 	add_decl(base, stem, translit_stem, "ईं", "ईं", "ईं", "इयाँ", "इयों", "इयों")
 end
 
 decls["iyā-f"] = function(base)
-	local stem, translit_stem = strip_ending(base, "या")
+	local stem, translit_stem = com.strip_ending(base, "या")
 	add_decl(base, stem, translit_stem, "या", "या", "या", "याँ", "यों", "यो")
 end
 
 decls["iyān-f"] = function(base)
-	local stem, translit_stem = strip_ending(base, "याँ")
+	local stem, translit_stem = com.strip_ending(base, "याँ")
 	add_decl(base, stem, translit_stem, "याँ", "याँ", "याँ", "याँ", "यों", "यों")
 end
 
 decls["o-m"] = function(base)
-	local stem, translit_stem = strip_ending(base, O)
+	local stem, translit_stem = com.strip_ending(base, O)
 	add_decl(base, stem, translit_stem, O, O, O, O, ON, O)
 end
 
@@ -440,43 +401,43 @@ decls["u-f"] = function(base)
 end
 
 decls["ū-m"] = function(base)
-	local stem, translit_stem = strip_ending(base, UU)
+	local stem, translit_stem = com.strip_ending(base, UU)
 	add_decl(base, stem, translit_stem, UU, UU, UU, UU, U .. "ओं", U .. "ओ")
 end
 
 decls["ind-ū-m"] = function(base)
-	local stem, translit_stem = strip_ending(base, "ऊ")
+	local stem, translit_stem = com.strip_ending(base, "ऊ")
 	add_decl(base, stem, translit_stem, "ऊ", "ऊ", "ऊ", "ऊ", "उओं", "उओ")
 end
 
 decls["ūn-m"] = function(base)
-	local stem, translit_stem = strip_ending(base, UU .. M)
+	local stem, translit_stem = com.strip_ending(base, UU .. M)
 	add_decl(base, stem, translit_stem, UU .. M, UU .. M, UU .. M, UU .. M, U .. "ओं", U .. "ओं")
 end
 
 decls["ind-ūn-m"] = function(base)
-	local stem, translit_stem = strip_ending(base, "ऊँ")
+	local stem, translit_stem = com.strip_ending(base, "ऊँ")
 	add_decl(base, stem, translit_stem, "ऊँ", "ऊँ", "ऊँ", "ऊँ", "उओं", "उओं")
 end
 
 decls["ū-f"] = function(base)
-	local stem, translit_stem = strip_ending(base, UU)
+	local stem, translit_stem = com.strip_ending(base, UU)
 	add_decl(base, stem, translit_stem, UU, UU, UU, U .. "एँ", U .. "ओं", U .. "ओ")
 end
 
 decls["ind-ū-f"] = function(base)
-	local stem, translit_stem = strip_ending(base, "ऊ")
+	local stem, translit_stem = com.strip_ending(base, "ऊ")
 	add_decl(base, stem, translit_stem, "ऊ", "ऊ", "ऊ", "उएँ", "उओं", "उओ")
 end
 
 -- E.g. जूँ "louse"
 decls["ūn-f"] = function(base)
-	local stem, translit_stem = strip_ending(base, UU .. M)
+	local stem, translit_stem = com.strip_ending(base, UU .. M)
 	add_decl(base, stem, translit_stem, UU .. M, UU .. M, UU .. M, U .. "एँ", U .. "ओं", U .. "ओं")
 end
 
 decls["ind-ūn-f"] = function(base)
-	local stem, translit_stem = strip_ending(base, "ऊँ")
+	local stem, translit_stem = com.strip_ending(base, "ऊँ")
 	add_decl(base, stem, translit_stem, "ऊँ", "ऊँ", "ऊँ", "उएँ", "उओं", "उओं")
 end
 
@@ -486,7 +447,7 @@ end
 
 -- E.g. प्रातः "morning"
 decls["h-m"] = function(base)
-	local stem, translit_stem = strip_ending(base, H)
+	local stem, translit_stem = com.strip_ending(base, H)
 	add_decl(base, stem, translit_stem, H, H, H, H, ON, O)
 end
 
@@ -567,7 +528,7 @@ local function parse_override(segments)
 		elseif form == "-" then
 			value.form = ""
 		else
-			value.form, value.phon_form = split_term_respelling(form)
+			value.form, value.phon_form = com.split_term_respelling(form)
 		end
 		value.footnotes = fetch_footnotes(colon_separated_group)
 		table.insert(retval.values, value)
@@ -671,7 +632,7 @@ local function parse_indicator_spec(angle_bracket_spec)
 				if base.plstem then
 					error("Can't specify plural stem twice: '" .. inside .. "'")
 				end
-				base.plstem, base.pl_phon_stem = split_term_respelling(rsub(part, "^plstem:", ""))
+				base.plstem, base.pl_phon_stem = com.split_term_respelling(rsub(part, "^plstem:", ""))
 			else
 				error("Unrecognized indicator '" .. part .. "': '" .. inside .. "'")
 			end
@@ -1022,7 +983,7 @@ end
 -- the pagename for blank lemmas.
 local function normalize_all_lemmas(alternant_multiword_spec)
 	iut.map_word_specs(alternant_multiword_spec, function(base)
-		base.lemma, base.phon_lemma = split_term_respelling(base.lemma)
+		base.lemma, base.phon_lemma = com.split_term_respelling(base.lemma)
 		if base.lemma == "" then
 			base.lemma = PAGENAME
 		end
@@ -1031,7 +992,7 @@ local function normalize_all_lemmas(alternant_multiword_spec)
 		base.lemma = base.orig_lemma_no_links
 		local translit
 		if base.phon_lemma then
-			base.lemma_translit = transliterate_respelling(base.phon_lemma)
+			base.lemma_translit = com.transliterate_respelling(base.phon_lemma)
 		else
 			base.lemma_translit = lang:transliterate(base.lemma)
 		end
@@ -1058,8 +1019,8 @@ local function process_manual_overrides(forms, args, number)
 			forms[slot] = nil
 			if args[param] ~= "-" and args[param] ~= "—" then
 				for _, form in ipairs(rsplit(args[param], "%s*,%s*")) do
-					local hi, phon = split_term_respelling(form)
-					local tr = phon and transliterate_respelling(phon) or nil
+					local hi, phon = com.split_term_respelling(form)
+					local tr = phon and com.transliterate_respelling(phon) or nil
 					iut.insert_form(forms, slot, {form=form, translit=tr})
 				end
 			end
