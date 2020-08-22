@@ -86,7 +86,7 @@ local noun_slots = {
 }
 
 
-local noun_slots_with_linked = m_table.shallowcopy(output_noun_slots)
+local noun_slots_with_linked = m_table.shallowcopy(noun_slots)
 noun_slots_with_linked["dir_s_linked"] = "dir|s"
 noun_slots_with_linked["dir_p_linked"] = "dir|p"
 
@@ -144,28 +144,55 @@ local function transliterate_respelling(phon)
 	if not phon then
 		return nil
 	end
-	return rsub(lang:transliterate(phon), "%.", "")
+	local hindi_range = "[ऀ-ॿ*]" -- 0x0900 to 0x097f; include *, which is a translit signal
+	if rfind(phon, "^%-?" .. hindi_range) then
+		return rsub(lang:transliterate(phon), "%.", "")
+	end
+	return phon -- already transliterated
 end
 
 
-local function combine_stem_ending(stem, ending)
-	return rsub(stem, VIRAMA .. "$", "") .. ending
-end
-
-
-local function add(base, stem, phon_stem, ending, footnotes)
+local function add(base, stem, translit_stem, slot, ending, footnotes)
 	if not ending then
 		return
 	end
 	if skip_slot(base.number, slot) then
 		return
 	end
-	footnotes = iut.combine_footnotes(base.footnotes, footnotes)
-	ending = iut.generate_form(ending, footnotes)
-	if phon_stem and stem ~= phon_stem then
-		stem = {form = stem, translit = transliterate_respelling(phon_stem)}
+
+	local function combine_stem_ending(stem, ending)
+		if ending == "" then
+			return stem
+		-- When adding a non-null ending, remove final '-a' from the stem, but only
+		-- if the transliterated lemma also ended in '-a'. This way, a noun like
+		-- पुनश्च transliterated 'punaśca' "postscript" gets oblique plural transliterated
+		-- 'punaścõ' with dropped '-a', but मई transliterated 'maī' "May" with
+		-- transliterated stem 'ma' and ending singular ending '-ī' doesn't get the
+		-- '-a' dropped. A third case we need to handle correctly is इंटरव्यू "interview";
+		-- if we truncate the final ू  '-ū' and then transliterate, we get 'iṇṭarvya'
+		-- with extra '-a' that may appear in the transliteration if we're not careful.
+		elseif rfind(stem, "a$") and rfind(base.lemma_translit, "a$") then
+			return rsub(stem, "a$", "") .. ending
+		elseif rfind(stem, VIRAMA .. "$") and rfind(base.lemma, VIRAMA .. "$") then
+			return rsub(stem, VIRAMA .. "$", "") .. ending
+		else
+			return stem .. ending
+		end
 	end
-	iut.add_forms(base.forms, slot, stem, ending, combine_stem_ending, lang,
+
+	footnotes = iut.combine_footnotes(base.footnotes, footnotes)
+	local ending_obj = iut.generate_form(ending, footnotes)
+	if translit_stem then
+		-- Check to see if manual translit for form would be same as auto translit
+		-- and if so, remove it, so it doesn't get propagated to accelerators.
+		local form_with_ending = combine_stem_ending(stem, ending)
+		local form_with_ending_translit = lang:transliterate(form_with_ending)
+		local translit_with_ending = combine_stem_ending(translit_stem, lang:transliterate(ending))
+		if form_with_ending_translit ~= translit_with_ending then
+			stem = {form = stem, translit = translit_stem}
+		end
+	end
+	iut.add_forms(base.forms, slot, stem, ending_obj, combine_stem_ending, lang,
 		combine_stem_ending)
 end
 
@@ -191,27 +218,24 @@ local function process_slot_overrides(base)
 end
 
 
-local function add_decl(base, dir_s, obl_s, voc_s, dir_p, obl_p, voc_p,
+local function add_decl(base, stem, translit_stem, dir_s, obl_s, voc_s, dir_p, obl_p, voc_p,
 	footnotes
 )
-	local stem, phon_stem
-	if type(base) == "table" then
-		base, stem, phon_stem = unpack(base)
-	else
-		stem = base.stem
-		phon_stem = base.phon_stem
+	if not stem then
+		stem = base.lemma
+		translit_stem = transliterate_respelling(base.phon_lemma) or lang:transliterate(base.lemma)
 	end
-	local plstem, pl_phon_stem = stem, phon_stem
+	local plstem, pl_translit_stem = stem, translit_stem
 	if base.plstem then
 		plstem = base.plstem
-		pl_phon_stem = base.pl_phon_stem
+		pl_translit_stem = transliterate_respelling(base.pl_phon_stem) or lang:transliterate(base.plstem)
 	end
-	add(base, stem, phon_stem, "dir_s", dir_s, footnotes)
-	add(base, stem, phon_stem, "obl_s", obl_s, footnotes)
-	add(base, stem, phon_stem, "voc_s", voc_s, footnotes)
-	add(base, plstem, pl_phon_stem, "dir_p", dir_p, footnotes)
-	add(base, plstem, pl_phon_stem, "obl_p", obl_p, footnotes)
-	add(base, plstem, pl_phon_stem, "voc_p", voc_p, footnotes)
+	add(base, stem, translit_stem, "dir_s", dir_s, footnotes)
+	add(base, stem, translit_stem, "obl_s", obl_s, footnotes)
+	add(base, stem, translit_stem, "voc_s", voc_s, footnotes)
+	add(base, plstem, pl_translit_stem, "dir_p", dir_p, footnotes)
+	add(base, plstem, pl_translit_stem, "obl_p", obl_p, footnotes)
+	add(base, plstem, pl_translit_stem, "voc_p", voc_p, footnotes)
 end
 
 
@@ -238,14 +262,12 @@ local function strip_ending(base, ending)
 	if not stem then
 		error("Internal error: Lemma " .. base.lemma .. " should end in " .. ending)
 	end
-	local phon_stem
-	if base.phon_lemma then
-		phon_stem = rmatch(base.phon_lemma, "^(.*)" .. ending .. "$")
-		if not phon_stem then
-			error("Phonetic lemma respelling " .. base.phon_lemma .. " should end in " .. ending)
-		end
+	local ending_translit = lang:transliterate(ending)
+	local translit_stem = rmatch(base.lemma_translit, "^(.*)" .. ending_translit .. "$")
+	if not translit_stem then
+		error("Internal error: Unable to strip ending " .. ending .. " (transliterated " .. ending_translit .. ") from transliteration " .. base.lemma_translit)
 	end
-	return stem, phon_stem
+	return stem, translit_stem	
 end
 
 
@@ -253,199 +275,229 @@ local decls = {}
 local declprops = {}
 
 decls["c-m"] = function(base)
-	add_decl(base, "", "", "", "", ON, O)
+	add_decl(base, nil, nil, "", "", "", "", ON, O)
 end
 
 declprops["c-m"] = {
-	desc = "masc cons-stem"
-	cat = "masculine consonant-stem ~"
+	desc = "masc cons-stem",
+	cat = "masculine consonant-stem ~",
 }
 
 decls["c-f"] = function(base)
-	add_decl(base, "", "", "", EN, ON, O)
+	add_decl(base, nil, nil, "", "", "", EN, ON, O)
 end
 
-declprops["c-m"] = {
-	desc = "fem cons-stem"
-	cat = "feminine consonant-stem ~"
+declprops["c-f"] = {
+	desc = "fem cons-stem",
+	cat = "feminine consonant-stem ~",
 }
 
 decls["ā-m"] = function(base)
-	local stem, phon_stem = strip_ending(base, AA)
-	add_decl({base, stem, phon_stem}, AA, E, E, E, ON, O)
+	local stem, translit_stem = strip_ending(base, AA)
+	add_decl(base, stem, translit_stem, AA, E, E, E, ON, O)
 end
 
 -- E.g. तेंदुआ "leopard"
 decls["ind-ā-m"] = function(base)
-	local stem, phon_stem = strip_ending(base, "आ")
-	add_decl({base, stem, phon_stem}, "आ", "ए", "ए", "ए", "ओं", "ओ")
+	local stem, translit_stem = strip_ending(base, "आ")
+	add_decl(base, stem, translit_stem, "आ", "ए", "ए", "ए", "ओं", "ओ")
 end
 
 decls["unmarked-ā-m"] = function(base)
-	add_decl(base, "", "", "", "", "ओं", "ओ")
+	add_decl(base, nil, nil, "", "", "", "", "ओं", "ओ")
 end
 
 declprops["unmarked-ā-m"] = {
-	desc = "masc unmarked ā-stem"
-	cat = "masculine unmarked ā-stem ~"
+	desc = "masc unmarked ā-stem",
+	cat = "masculine unmarked ā-stem ~",
 }
 
 -- No need for ind-unmarked-ā-m because declension is "unmarked", i.e. all endings
 -- are added after the vowel.
 
+-- E.g. रेस्तराँ "restaurant"
+decls["unmarked-ān-m"] = function(base)
+	local stem, translit_stem = strip_ending(base, AA .. M)
+	add_decl(base, stem, translit_stem, AA .. M, AA .. M, AA .. M, AA .. M, AA .. "ओं", AA .. "ओं")
+end
+
+declprops["unmarked-ān-m"] = {
+	desc = "masc unmarked ā̃-stem",
+	cat = "masculine unmarked ā̃-stem ~",
+}
+
+decls["ind-unmarked-ān-m"] = function(base)
+	local stem, translit_stem = strip_ending(base, "आँ")
+	add_decl(base, stem, translit_stem, "आँ", "आँ", "आँ", "आँ", "आओं", "आओं")
+end
+
+declprops["ind-unmarked-ān-m"] = {
+	desc = "masc ind unmarked ā̃-stem",
+	cat = "masculine independent unmarked ā̃-stem ~",
+}
+
 -- E.g. ख़ानसामाँ "butler, cook"
 decls["ān-m"] = function(base)
-	local stem, phon_stem = strip_ending(base, AA .. M)
-	add_decl({base, stem, phon_stem}, AA .. M, EN, EN, EN, ON, EN)
+	local stem, translit_stem = strip_ending(base, AA .. M)
+	add_decl(base, stem, translit_stem, AA .. M, EN, EN, EN, ON, ON)
 end
 
 -- E.g. कुआँ "well"
 decls["ind-ān-m"] = function(base)
-	local stem, phon_stem = strip_ending(base, "आँ")
-	add_decl({base, stem, phon_stem}, "आँ", "एँ", "एँ", "एँ", "ओं", "ओं")
+	local stem, translit_stem = strip_ending(base, "आँ")
+	add_decl(base, stem, translit_stem, "आँ", "एँ", "एँ", "एँ", "ओं", "ओं")
 end
 
 decls["ā-f"] = function(base)
-	add_decl(base, "", "", "", "एँ", "ओं", "ओ")
+	add_decl(base, nil, nil, "", "", "", "एँ", "ओं", "ओ")
 end
 
 -- No need for ind-ā-f because declension is "unmarked", i.e. all endings
 -- are added after the vowel.
 
 decls["ān-f"] = function(base)
-	local stem, phon_stem = strip_ending(base, AA .. M)
-	add_decl({base, stem, phon_stem}, AA .. M, AA .. M, AA .. M, AA .. "एँ", AA .. "ओं", AA .. "ओं")
+	local stem, translit_stem = strip_ending(base, AA .. M)
+	add_decl(base, stem, translit_stem, AA .. M, AA .. M, AA .. M, AA .. "एँ", AA .. "ओं", AA .. "ओं")
 end
 
 decls["ind-ān-f"] = function(base)
-	local stem, phon_stem = strip_ending(base, "आँ")
-	add_decl({base, stem, phon_stem}, "आँ", "आँ", "आँ", "आएँ", "आओं", "आओं")
+	local stem, translit_stem = strip_ending(base, "आँ")
+	add_decl(base, stem, translit_stem, "आँ", "आँ", "आँ", "आएँ", "आओं", "आओं")
 end
 
 decls["i-m"] = function(base)
-	add_decl(base, "", "", "", "", "यों", "यो")
+	add_decl(base, nil, nil, "", "", "", "", "यों", "यो")
 end
 
 decls["i-f"] = function(base)
-	add_decl(base, "", "", "", "याँ", "यों", "यो")
+	add_decl(base, nil, nil, "", "", "", "याँ", "यों", "यो")
 end
 
 -- E.g. प्रधान मंत्री "prime minister"
 decls["ī-m"] = function(base)
-	local stem, phon_stem = strip_ending(base, II)
-	add({base, stem, phon_stem}, II, II, II, II, I .. "यों", I .. "यो")
+	local stem, translit_stem = strip_ending(base, II)
+	add_decl(base, stem, translit_stem, II, II, II, II, I .. "यों", I .. "यो")
 end
 
 -- E.g. भाई "brother"
 decls["ind-ī-m"] = function(base)
-	local stem, phon_stem = strip_ending(base, "ई")
-	add({base, stem, phon_stem}, "ई", "ई", "ई", "ई", "इयों", "इयो")
+	local stem, translit_stem = strip_ending(base, "ई")
+	add_decl(base, stem, translit_stem, "ई", "ई", "ई", "ई", "इयों", "इयो")
 end
 
 decls["īn-m"] = function(base)
-	local stem, phon_stem = strip_ending(base, II .. N)
-	add({base, stem, phon_stem}, II .. N, II .. N, II .. N, II .. N, I .. "यों", I .. "यों")
+	local stem, translit_stem = strip_ending(base, II .. N)
+	add_decl(base, stem, translit_stem, II .. N, II .. N, II .. N, II .. N, I .. "यों", I .. "यों")
 end
 
 decls["ind-īn-m"] = function(base)
-	local stem, phon_stem = strip_ending(base, "ईं")
-	add({base, stem, phon_stem}, "ईं", "ईं", "ईं", "ईं", "इयों", "इयों")
+	local stem, translit_stem = strip_ending(base, "ईं")
+	add_decl(base, stem, translit_stem, "ईं", "ईं", "ईं", "ईं", "इयों", "इयों")
 end
 
 decls["ī-f"] = function(base)
-	local stem, phon_stem = strip_ending(base, II)
-	add({base, stem, phon_stem}, II, II, II, I .. "याँ", I .. "यों", I .. "यो")
+	local stem, translit_stem = strip_ending(base, II)
+	add_decl(base, stem, translit_stem, II, II, II, I .. "याँ", I .. "यों", I .. "यो")
 end
 
 -- E.g. दवाई "medicine", डोई "wooden ladle", तेंदुई "female leopard", मिठाई "sweet, dessert"
 decls["ind-ī-f"] = function(base)
-	local stem, phon_stem = strip_ending(base, "ई")
-	add({base, stem, phon_stem}, "ई", "ई", "ई", "इयाँ", "इयों", "इयो")
+	local stem, translit_stem = strip_ending(base, "ई")
+	add_decl(base, stem, translit_stem, "ई", "ई", "ई", "इयाँ", "इयों", "इयो")
 end
 
 decls["īn-f"] = function(base)
-	local stem, phon_stem = strip_ending(base, II .. N)
-	add({base, stem, phon_stem}, II .. N, II .. N, II .. N, I .. "याँ", I .. "यों", I .. "यों")
+	local stem, translit_stem = strip_ending(base, II .. N)
+	add_decl(base, stem, translit_stem, II .. N, II .. N, II .. N, I .. "याँ", I .. "यों", I .. "यों")
 end
 
 decls["ind-īn-f"] = function(base)
-	local stem, phon_stem = strip_ending(base, "ईं")
-	add({base, stem, phon_stem}, "ईं", "ईं", "ईं", "इयाँ", "इयों", "इयों")
+	local stem, translit_stem = strip_ending(base, "ईं")
+	add_decl(base, stem, translit_stem, "ईं", "ईं", "ईं", "इयाँ", "इयों", "इयों")
 end
 
 decls["iyā-f"] = function(base)
-	local stem, phon_stem = strip_ending(base, "या")
-	add_decl({base, stem, phon_stem}, "या", "या", "या", "याँ", "यों", "यो")
+	local stem, translit_stem = strip_ending(base, "या")
+	add_decl(base, stem, translit_stem, "या", "या", "या", "याँ", "यों", "यो")
 end
 
 decls["iyān-f"] = function(base)
-	local stem, phon_stem = strip_ending(base, "याँ")
-	add_decl({base, stem, phon_stem}, "याँ", "याँ", "याँ", "याँ", "यों", "यों")
+	local stem, translit_stem = strip_ending(base, "याँ")
+	add_decl(base, stem, translit_stem, "याँ", "याँ", "याँ", "याँ", "यों", "यों")
 end
 
 decls["o-m"] = function(base)
-	local stem, phon_stem = strip_ending(base, O)
-	add_decl({base, stem, phon_stem}, O, O, O, O, ON, O)
+	local stem, translit_stem = strip_ending(base, O)
+	add_decl(base, stem, translit_stem, O, O, O, O, ON, O)
 end
 
 decls["u-m"] = function(base)
-	add_decl(base, "", "", "", "", "ओं", "ओ")
+	add_decl(base, nil, nil, "", "", "", "", "ओं", "ओ")
 end
 
 decls["u-f"] = function(base)
-	add_decl(base, "", "", "", "एँ", "ओं", "ओ")
+	add_decl(base, nil, nil, "", "", "", "एँ", "ओं", "ओ")
 end
 
 decls["ū-m"] = function(base)
-	local stem, phon_stem = strip_ending(base, UU)
-	add_decl({base, stem, phon_stem}, UU, UU, UU, UU, U .. "ओं", U .. "ओ")
+	local stem, translit_stem = strip_ending(base, UU)
+	add_decl(base, stem, translit_stem, UU, UU, UU, UU, U .. "ओं", U .. "ओ")
 end
 
 decls["ind-ū-m"] = function(base)
-	local stem, phon_stem = strip_ending(base, "ऊ")
-	add_decl({base, stem, phon_stem}, "ऊ", "ऊ", "ऊ", "ऊ", "उओं", "उओ")
+	local stem, translit_stem = strip_ending(base, "ऊ")
+	add_decl(base, stem, translit_stem, "ऊ", "ऊ", "ऊ", "ऊ", "उओं", "उओ")
 end
 
 decls["ūn-m"] = function(base)
-	local stem, phon_stem = strip_ending(base, UU .. M)
-	add_decl({base, stem, phon_stem}, UU .. M, UU .. M, UU .. M, UU .. M, U .. "ओं", U .. "ओं")
+	local stem, translit_stem = strip_ending(base, UU .. M)
+	add_decl(base, stem, translit_stem, UU .. M, UU .. M, UU .. M, UU .. M, U .. "ओं", U .. "ओं")
 end
 
 decls["ind-ūn-m"] = function(base)
-	local stem, phon_stem = strip_ending(base, "ऊँ")
-	add_decl({base, stem, phon_stem}, "ऊँ", "ऊँ", "ऊँ", "ऊँ", "उओं", "उओं")
+	local stem, translit_stem = strip_ending(base, "ऊँ")
+	add_decl(base, stem, translit_stem, "ऊँ", "ऊँ", "ऊँ", "ऊँ", "उओं", "उओं")
 end
 
 decls["ū-f"] = function(base)
-	local stem, phon_stem = strip_ending(base, UU)
-	add_decl({base, stem, phon_stem}, UU, UU, UU, U .. "एँ", U .. "ओं", U .. "ओ")
+	local stem, translit_stem = strip_ending(base, UU)
+	add_decl(base, stem, translit_stem, UU, UU, UU, U .. "एँ", U .. "ओं", U .. "ओ")
 end
 
 decls["ind-ū-f"] = function(base)
-	local stem, phon_stem = strip_ending(base, "ऊ")
-	add_decl({base, stem, phon_stem}, "ऊ", "ऊ", "ऊ", "उएँ", "उओं", "उओ")
+	local stem, translit_stem = strip_ending(base, "ऊ")
+	add_decl(base, stem, translit_stem, "ऊ", "ऊ", "ऊ", "उएँ", "उओं", "उओ")
 end
 
 -- E.g. जूँ "louse"
 decls["ūn-f"] = function(base)
-	local stem, phon_stem = strip_ending(base, UU .. M)
-	add_decl({base, stem, phon_stem}, UU .. M, UU .. M, UU .. M, U .. "एँ", U .. "ओं", U .. "ओं")
+	local stem, translit_stem = strip_ending(base, UU .. M)
+	add_decl(base, stem, translit_stem, UU .. M, UU .. M, UU .. M, U .. "एँ", U .. "ओं", U .. "ओं")
 end
 
 decls["ind-ūn-f"] = function(base)
-	local stem, phon_stem = strip_ending(base, "ऊँ")
-	add_decl({base, stem, phon_stem}, "ऊँ", "ऊँ", "ऊँ", "उएँ", "उओं", "उओं")
+	local stem, translit_stem = strip_ending(base, "ऊँ")
+	add_decl(base, stem, translit_stem, "ऊँ", "ऊँ", "ऊँ", "उएँ", "उओं", "उओं")
 end
 
 decls["r-m"] = function(base)
-	add_decl(base, "", "", "", "", "ओं", "ओ")
+	add_decl(base, nil, nil, "", "", "", "", "ओं", "ओ")
 end
 
 -- E.g. प्रातः "morning"
 decls["h-m"] = function(base)
-	local stem, phon_stem = strip_ending(base, H)
-	add_decl(base, H, H, H, H, ON, O)
+	local stem, translit_stem = strip_ending(base, H)
+	add_decl(base, stem, translit_stem, H, H, H, H, ON, O)
 end
+
+decls["indecl"] = function(base)
+	add_decl(base, nil, nil, "", "", "", "", "", "")
+end
+
+declprops["indecl"] = {
+	desc = "indecl",
+	cat = "indeclinable ~",
+}
 
 
 local function fetch_footnotes(separated_group)
@@ -600,6 +652,11 @@ local function parse_indicator_spec(angle_bracket_spec)
 				end
 				base.adj = true
 				error("Adjectival declensions not implemented yet")
+			elseif part == "$" then
+				if base.indecl then
+					error("Can't specify '$' twice: '" .. inside .. "'")
+				end
+				base.indecl = true
 			elseif part == "unmarked" then
 				if base.unmarked then
 					error("Can't specify 'unmarked' twice: '" .. inside .. "'")
@@ -653,9 +710,6 @@ local function set_defaults_and_check_bad_indicators(base)
 		if base.gender == "F" then
 			error("Can't specify F gender with 'unmarked' indicator")
 		end
-		if not rfind(base.lemma, AA .. "$") and not rfind(base.lemma, "आ$") then
-			error("With 'unmarked' indicator, lemma must end in " .. AA .. " or आ: " .. base.lemma)
-		end
 		base.gender = "M"
 	end
 	if rfind(base.lemma, "[" .. O .. H .. R .. "]$") then
@@ -664,8 +718,11 @@ local function set_defaults_and_check_bad_indicators(base)
 		end
 		base.gender = "M"
 	end
-	if not base.gender then
-		error("Unless lemma is in " .. O .. ", " .. H .. " or " .. R .. " or 'iya' or 'unmarked' specified, gender must be given: " .. base.lemma)
+	if not base.gender and not base.indecl then
+		error("Unless lemma is in " .. O .. ", " .. H .. " or " .. R .. " or 'iya', 'unmarked' or '$' specified, gender must be given: " .. base.lemma)
+	end
+	if base.adj and base.indecl then
+		error("Can't specify both '+' and '$' on the same lemma " .. base.lemma)
 	end
 end
 
@@ -689,13 +746,23 @@ local function determine_declension(base)
 	if base.decl then
 		return
 	end
-	if base.gender == "M" then
-		if rfind(base.lemma, AA .. "$") then
-			if base.unmarked then
+	if base.indecl then
+		base.decl = "indecl"
+	elseif base.adj then
+		base.decl = "adj"
+	elseif base.gender == "M" then
+		if base.unmarked then
+			if rfind(base.lemma, AA .. "$") or rfind(base.lemma, "आ$") then
 				base.decl = "unmarked-ā-m"
+			elseif rfind(base.lemma, AA .. M .. "$") then
+				base.decl = "unmarked-ān-m"
+			elseif rfind(base.lemma, "आँ$") then
+				base.decl = "ind-unmarked-ān-m"
 			else
-				base.decl = "ā-m"
+				error("With 'unmarked' indicator, lemma must end in " .. AA .. ", " .. AA .. M .. ", आ or आँ: " .. base.lemma)
 			end
+		elseif rfind(base.lemma, AA .. "$") then
+			base.decl = "ā-m"
 		elseif rfind(base.lemma, "आ$") then
 			base.decl = "ind-ā-m"
 		elseif rfind(base.lemma, AA .. M .. "$") then
@@ -730,6 +797,7 @@ local function determine_declension(base)
 			base.decl = "h-m"
 		else
 			base.decl = "c-m"
+		end
 	else
 		assert(base.gender == "F")
 		if base.iya then
@@ -779,7 +847,6 @@ local function detect_indicator_spec(base)
 		if base.number == "pl" then
 			synthesize_singular_lemma(base)
 		end
-		check_indicators_match_lemma(base)
 		determine_declension(base)
 	end
 end
@@ -821,7 +888,7 @@ propagate_multiword_properties = function(multiword_spec, property, mixed_value,
 			propagate_alternant_properties(word_specs[i], property, mixed_value)
 			is_nounal = not not word_specs[i][property]
 		elseif nouns_only then
-			is_nounal = not word_specs[i].adj
+			is_nounal = not word_specs[i].adj and not word_specs[i].indecl
 		else
 			is_nounal = not not word_specs[i][property]
 		end
@@ -903,25 +970,49 @@ local function propagate_properties(alternant_multiword_spec, property, default_
 end
 
 
+-- Find the first noun in a multiword expression and set alternant_multiword_spec.first_noun
+-- to the index of that noun. Also find the first adjective and set alternant_multiword_spec.first_adj
+-- similarly. If there is a first noun, we use its properties to determine the overall expression's
+-- properties; otherwise we use the first adjective's properties, otherwise the first word's properties.
+-- If the "word" located this way is not an alternant spec, we just use its properties directly, otherwise
+-- we use the properties of the first noun (or failing that the first adjective, or failing that the
+-- first word) in each alternative alternant in the alternant spec. For this reason, we need to set the
+-- the .first_noun of and .first_adj of each multiword expression embedded in the first noun alternant spec,
+-- and the .first_adj of each multiword expression in each adjective alternant spec leading up to the
+-- first noun alternant spec.
 local function determine_noun_status(alternant_multiword_spec)
 	for i, alternant_or_word_spec in ipairs(alternant_multiword_spec.alternant_or_word_specs) do
 		if alternant_or_word_spec.alternants then
-			local is_noun = false
+			local alternant_type
 			for _, multiword_spec in ipairs(alternant_or_word_spec.alternants) do
 				for j, word_spec in ipairs(multiword_spec.word_specs) do
-					if not word_spec.adj then
-						multiword_spec.first_noun = j
-						is_noun = true
-						break
+					if not word_spec.indecl then
+						if not word_spec.adj then
+							multiword_spec.first_noun = j
+							alternant_type = "noun"
+							break
+						elseif not multiword_spec.first_adj then
+							multiword_spec.first_adj = j
+							if not alternant_type then
+								alternant_type = "adj"
+							end
+						end
 					end
 				end
 			end
-			if is_noun then
+			if alternant_type == "noun" then
 				alternant_multiword_spec.first_noun = i
+				return
+			elseif alternant_type == "adj" and not alternant_multiword_spec.first_adj then
+				alternant_multiword_spec.first_adj = i
 			end
-		elseif not alternant_or_word_spec.adj then
-			alternant_multiword_spec.first_noun = i
-			return
+		elseif not alternant_or_word_spec.indecl then
+			if not alternant_or_word_spec.adj then
+				alternant_multiword_spec.first_noun = i
+				return
+			elseif not alternant_multiword_spec.first_adj then
+				alternant_multiword_spec.first_adj = i
+			end
 		end
 	end
 end
@@ -938,17 +1029,21 @@ local function normalize_all_lemmas(alternant_multiword_spec)
 		base.orig_lemma = base.lemma
 		base.orig_lemma_no_links = m_links.remove_links(base.lemma)
 		base.lemma = base.orig_lemma_no_links
+		local translit
+		if base.phon_lemma then
+			base.lemma_translit = transliterate_respelling(base.phon_lemma)
+		else
+			base.lemma_translit = lang:transliterate(base.lemma)
+		end
 	end)
 end
 
 
 local function decline_noun(base)
-	for _, stress in ipairs(base.stresses) do
-		if not decls[base.decl] then
-			error("Internal error: Unrecognized declension type '" .. base.decl .. "'")
-		end
-		decls[base.decl](base, stress)
+	if not decls[base.decl] then
+		error("Internal error: Unrecognized declension type '" .. base.decl .. "'")
 	end
+	decls[base.decl](base)
 	handle_derived_slots_and_overrides(base)
 end
 
@@ -985,8 +1080,6 @@ local function compute_category_and_desc(base)
 	local cat_gender = gender == "m" and "masculine" or "feminine"
 	local desc_gender = gender == "m" and "masc" or "fem"
 	local ind, stem = rmatch(rest, "^(ind%-)(.*)$")
-	if ind then
-		ind = " independent "
 	if not ind then
 		stem = rest
 	end
@@ -1029,13 +1122,16 @@ local function compute_categories_and_annotation(alternant_multiword_spec)
 			if base.plstem then
 				insert("nouns with irregular plural stem")
 			end
+			if base.phon_lemma and base.lemma ~= base.phon_lemma then
+				insert("nouns with phonetic respelling")
+			end
 		end
-		local key_entry = alternant_multiword_spec.first_noun or 1
+		local key_entry = alternant_multiword_spec.first_noun or alternant_multiword_spec.first_adj or 1
 		if #alternant_multiword_spec.alternant_or_word_specs >= key_entry then
 			local alternant_or_word_spec = alternant_multiword_spec.alternant_or_word_specs[key_entry]
 			if alternant_or_word_spec.alternants then
 				for _, multiword_spec in ipairs(alternant_or_word_spec.alternants) do
-					key_entry = multiword_spec.first_noun or 1
+					key_entry = multiword_spec.first_noun or multiword_spec.first_adj or 1
 					if #multiword_spec.word_specs >= key_entry then
 						do_word_spec(multiword_spec.word_specs[key_entry])
 					end
@@ -1062,12 +1158,12 @@ end
 
 
 local function show_forms(alternant_multiword_spec)
-	local lemmas = alternant_multiword_spec.dir_s or alternant_multiword_spec.dir_p or {}
+	local lemmas = alternant_multiword_spec.forms.dir_s or alternant_multiword_spec.forms.dir_p or {}
 	local props = {
 		lang = lang,
 	}
 	iut.show_forms_with_translit(alternant_multiword_spec.forms, lemmas,
-		output_noun_slots_with_linked, props, alternant_multiword_spec.footnotes,
+		noun_slots_with_linked, props, alternant_multiword_spec.footnotes,
 		"allow footnote symbols")
 end
 
@@ -1160,6 +1256,8 @@ local function make_table(alternant_multiword_spec)
 		alternant_multiword_spec.number == "sg" and table_spec_sg or
 		alternant_multiword_spec.number == "pl" and table_spec_pl or
 		table_spec_both
+	forms.notes_clause = forms.footnote ~= "" and
+		m_string_utilities.format(notes_template, forms) or ""
 	return m_string_utilities.format(table_spec, forms)
 end
 
@@ -1238,7 +1336,31 @@ function export.catboiler(frame)
 			pos = get_pos()
 			break
 		end
-		error("Implement me")
+
+		local gender, stem
+		gender, stem, pos = rmatch(SUBPAGENAME, "^Hindi.- ([a-z]+ine) (independent unmarked [^ %-]*%-stem) (.*)s$")
+		if not gender then
+			gender, stem, pos = rmatch(SUBPAGENAME, "^Hindi.- ([a-z]+ine) (independent [^ %-]*%-stem) (.*)s$")
+		end
+		if not gender then
+			gender, stem, pos = rmatch(SUBPAGENAME, "^Hindi.- ([a-z]+ine) (unmarked [^ %-]*%-stem) (.*)s$")
+		end
+		if not gender then
+			gender, stem, pos = rmatch(SUBPAGENAME, "^Hindi.- ([a-z]+ine) ([^ %-]*%-stem) (.*)s$")
+		end
+		if gender then
+			maintext = gender .. " " .. stem .. " ~."
+			if rfind(stem, "independent") then
+				maintext = maintext .. " Here, 'independent' means that the stem ending directly " ..
+				"follows a vowel and so uses the independent Devanagari form of the vowel that begins the ending."
+			end
+			if rfind(stem, "unmarked") then
+				maintext = maintext .. " Here, 'unmarked' means that the endings are added onto the full direct singular form " ..
+				"without removing the stem ending (although final nasalization, if present, will move to the ending)."
+			end
+			insert("~ by gender and stem type|" .. rsub(rsub(stem, "independent ", ""), "unmarked ", ""))
+			break
+		end
 		error("Unrecognized Hindi noun category name")
 	end
 
@@ -1292,7 +1414,8 @@ function export.do_generate_forms(parent_args, pos, from_headword, def)
 		skip_slot = function(slot)
 			return skip_slot(alternant_multiword_spec.number, slot)
 		end,
-		slot_table = output_noun_slots_with_linked,
+		slot_table = noun_slots_with_linked,
+		lang = lang,
 		decline_word_spec = decline_noun,
 	}
 	iut.decline_multiword_or_alternant_multiword_spec(alternant_multiword_spec, decline_props)
@@ -1324,9 +1447,9 @@ function export.do_generate_forms_manual(parent_args, number, pos, from_headword
 		params[5] = {required = true, default = "तारीख़"}
 		params[6] = {required = true, default = "तवारीख़ो"}
 	elseif number == "sg" then
-		params[1] = {required = true, default = "तारीख़"}
-		params[2] = {required = true, default = "तारीख़"}
-		params[3] = {required = true, default = "तारीख़"}
+		params[1] = {required = true, default = "अदला-बदला"}
+		params[2] = {required = true, default = "अदले-बदले"}
+		params[3] = {required = true, default = "अदले-बदले"}
 	else
 		params[1] = {required = true, default = "लोग"}
 		params[2] = {required = true, default =	"लोगों"}
@@ -1380,7 +1503,7 @@ end
 -- additional properties (currently, g= for headword genders). This is for use by bots.
 local function concat_forms(alternant_spec, include_props)
 	local ins_text = {}
-	for slot, _ in pairs(output_noun_slots_with_linked) do
+	for slot, _ in pairs(noun_slots_with_linked) do
 		local formtext = iut.concat_forms_in_slot(alternant_spec.forms[slot])
 		if formtext then
 			table.insert(ins_text, slot .. "=" .. formtext)
