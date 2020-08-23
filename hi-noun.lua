@@ -29,10 +29,6 @@ local m_string_utilities = require("Module:string utilities")
 local iut = require("Module:inflection utilities")
 local m_para = require("Module:parameters")
 
-local current_title = mw.title.getCurrentTitle()
-local NAMESPACE = current_title.nsText
-local PAGENAME = current_title.text
-
 local u = mw.ustring.char
 local rsplit = mw.text.split
 local rfind = mw.ustring.find
@@ -128,47 +124,11 @@ end
 
 
 local function add(base, stem, translit_stem, slot, ending, footnotes)
-	if not ending then
-		return
-	end
 	if skip_slot(base.number, slot) then
 		return
 	end
 
-	local function combine_stem_ending(stem, ending)
-		if ending == "" then
-			return stem
-		-- When adding a non-null ending, remove final '-a' from the stem, but only
-		-- if the transliterated lemma also ended in '-a'. This way, a noun like
-		-- पुनश्च transliterated 'punaśca' "postscript" gets oblique plural transliterated
-		-- 'punaścõ' with dropped '-a', but मई transliterated 'maī' "May" with
-		-- transliterated stem 'ma' and ending singular ending '-ī' doesn't get the
-		-- '-a' dropped. A third case we need to handle correctly is इंटरव्यू "interview";
-		-- if we truncate the final ू  '-ū' and then transliterate, we get 'iṇṭarvya'
-		-- with extra '-a' that may appear in the transliteration if we're not careful.
-		elseif rfind(stem, "a$") and rfind(base.lemma_translit, "a$") then
-			return rsub(stem, "a$", "") .. ending
-		elseif rfind(stem, VIRAMA .. "$") and rfind(base.lemma, VIRAMA .. "$") then
-			return rsub(stem, VIRAMA .. "$", "") .. ending
-		else
-			return stem .. ending
-		end
-	end
-
-	footnotes = iut.combine_footnotes(base.footnotes, footnotes)
-	local ending_obj = iut.generate_form(ending, footnotes)
-	if translit_stem then
-		-- Check to see if manual translit for form would be same as auto translit
-		-- and if so, remove it, so it doesn't get propagated to accelerators.
-		local form_with_ending = combine_stem_ending(stem, ending)
-		local form_with_ending_translit = lang:transliterate(form_with_ending)
-		local translit_with_ending = combine_stem_ending(translit_stem, lang:transliterate(ending))
-		if form_with_ending_translit ~= translit_with_ending then
-			stem = {form = stem, translit = translit_stem}
-		end
-	end
-	iut.add_forms(base.forms, slot, stem, ending_obj, combine_stem_ending, lang,
-		combine_stem_ending)
+	com.add_form(base, stem, translit_stem, slot, ending, footnotes)
 end
 
 
@@ -198,12 +158,12 @@ local function add_decl(base, stem, translit_stem, dir_s, obl_s, voc_s, dir_p, o
 )
 	if not stem then
 		stem = base.lemma
-		translit_stem = com.transliterate_respelling(base.phon_lemma) or lang:transliterate(base.lemma)
+		translit_stem = base.lemma_translit
 	end
 	local plstem, pl_translit_stem = stem, translit_stem
 	if base.plstem then
 		plstem = base.plstem
-		pl_translit_stem = com.transliterate_respelling(base.pl_phon_stem) or lang:transliterate(base.plstem)
+		pl_translit_stem = base.pl_translit_stem
 	end
 	add(base, stem, translit_stem, "dir_s", dir_s, footnotes)
 	add(base, stem, translit_stem, "obl_s", obl_s, footnotes)
@@ -254,8 +214,14 @@ declprops["c-f"] = {
 }
 
 decls["ā-m"] = function(base)
-	local stem, translit_stem = com.strip_ending(base, AA)
-	add_decl(base, stem, translit_stem, AA, E, E, E, ON, O)
+	if rfind(base.lemma, "या$") then
+		local stem, translit_stem = com.strip_ending(base, "या$")
+		local op = {"ए", "ये"} -- oblique/plural
+		add_decl(base, stem, translit_stem, "या", op, op, op, "यों", "यो")
+	else
+		local stem, translit_stem = com.strip_ending(base, AA)
+		add_decl(base, stem, translit_stem, AA, E, E, E, ON, O)
+	end
 end
 
 -- E.g. तेंदुआ "leopard"
@@ -551,13 +517,19 @@ dot-separated indicators within them). Return value is an object of the form
   explicit_gender = "GENDER", -- "M", "F"; may be missing
   number = "NUMBER", -- "sg", "pl"; may be missing
   adj = true, -- may be missing
-  stem = "STEM", -- may be missing
+  indecl = true, -- may be missing
+  unmarked = true, -- may be missing
+  iya = true, -- may be missing
   plstem = "PLSTEM", -- may be missing
+  pl_phon_stem = "PLSTEM-PHONETIC-RESPELLING", -- as specified by the user; may be missing
+  pl_translit_stem = "PLSTEM-TRANSLIT", -- translit of pl_phon_stem (if present) or plstem; may be missing
 
   -- The following additional fields are added by other functions:
-  orig_lemma = "ORIGINAL-LEMMA", -- as given by the user
-  orig_lemma_no_links = "ORIGINAL-LEMMA-NO-LINKS", -- links removed, monosyllabic stress added
+  orig_lemma = "ORIGINAL-LEMMA", -- as given by the user or taken from pagename
+  orig_lemma_no_links = "ORIGINAL-LEMMA-NO-LINKS", -- links removed
   lemma = "LEMMA", -- `orig_lemma_no_links`, converted to singular form if plural
+  phon_lemma = "LEMMA-PHONETIC-RESPELLING", -- as specified by the user; may be missing
+  lemma_translit = "LEMMA-TRANSLIT", -- translit of phon_lemma (if present) or lemma
   forms = {
 	SLOT = {
 	  {
@@ -568,9 +540,7 @@ dot-separated indicators within them). Return value is an object of the form
 	},
 	...
   },
-  decl = "DECL", -- declension, e.g. "hard-m"
-  vowel_stem = "VOWEL-STEM", -- derived from vowel-ending lemmas
-  nonvowel_stem = "NONVOWEL-STEM", -- derived from non-vowel-ending lemmas
+  decl = "DECL", -- declension, e.g. "ind-ūn-f"
 }
 ]=]
 local function parse_indicator_spec(angle_bracket_spec)
@@ -633,6 +603,7 @@ local function parse_indicator_spec(angle_bracket_spec)
 					error("Can't specify plural stem twice: '" .. inside .. "'")
 				end
 				base.plstem, base.pl_phon_stem = com.split_term_respelling(rsub(part, "^plstem:", ""))
+				base.pl_translit_stem = com.transliterate_respelling(base.pl_phon_stem) or lang:transliterate(base.plstem)
 			else
 				error("Unrecognized indicator '" .. part .. "': '" .. inside .. "'")
 			end
@@ -648,7 +619,6 @@ local function set_defaults_and_check_bad_indicators(base)
 		base.number = base.number or "both"
 	end
 	base.gender = base.explicit_gender
-	base.decl = base.explicit_decl
 	if base.iya then
 		if base.adj then
 			error("Can't specify both '+' and 'iya'")
@@ -657,7 +627,7 @@ local function set_defaults_and_check_bad_indicators(base)
 			error("Can't specify M gender with 'iyā' indicator")
 		end
 		if not rfind(base.lemma, I .. "याँ?$") then
-			error("With 'iyā' indicator, lemma must end in " .. I .. "या or याँ: " .. base.lemma)
+			error("With 'iyā' indicator, lemma must end in " .. I .. "या or " .. I .. "याँ: " .. base.lemma)
 		end
 		base.gender = "F"
 	end
@@ -979,27 +949,6 @@ local function determine_noun_status(alternant_multiword_spec)
 end
 
 
--- Normalize all lemmas, splitting out phonetic respellings and substituting
--- the pagename for blank lemmas.
-local function normalize_all_lemmas(alternant_multiword_spec)
-	iut.map_word_specs(alternant_multiword_spec, function(base)
-		base.lemma, base.phon_lemma = com.split_term_respelling(base.lemma)
-		if base.lemma == "" then
-			base.lemma = PAGENAME
-		end
-		base.orig_lemma = base.lemma
-		base.orig_lemma_no_links = m_links.remove_links(base.lemma)
-		base.lemma = base.orig_lemma_no_links
-		local translit
-		if base.phon_lemma then
-			base.lemma_translit = com.transliterate_respelling(base.phon_lemma)
-		else
-			base.lemma_translit = lang:transliterate(base.lemma)
-		end
-	end)
-end
-
-
 local function decline_noun(base)
 	if not decls[base.decl] then
 		error("Internal error: Unrecognized declension type '" .. base.decl .. "'")
@@ -1059,10 +1008,11 @@ end
 local function compute_categories_and_annotation(alternant_multiword_spec)
 	local cats = {}
 	local function insert(cattype)
+		cattype = rsub(cattype, "~", alternant_multiword_spec.pos)
 		m_table.insertIfNot(cats, "Hindi " .. cattype)
 	end
 	if alternant_multiword_spec.number == "sg" then
-		insert("uncountable nouns")
+		insert("uncountable ~")
 	elseif alternant_multiword_spec.number == "pl" then
 		insert("pluralia tantum")
 	end
@@ -1077,14 +1027,13 @@ local function compute_categories_and_annotation(alternant_multiword_spec)
 		local decldescs = {}
 		local function do_word_spec(base)
 			local cat, desc = compute_category_and_desc(base)
-			cat = rsub(cat, "~", alternant_multiword_spec.pos)
 			insert(cat)
 			m_table.insertIfNot(decldescs, desc)
 			if base.plstem then
-				insert("nouns with irregular plural stem")
+				insert("~ with irregular plural stem")
 			end
 			if base.phon_lemma and base.lemma ~= base.phon_lemma then
-				insert("nouns with phonetic respelling")
+				insert("~ with phonetic respelling")
 			end
 		end
 		local key_entry = alternant_multiword_spec.first_noun or alternant_multiword_spec.first_adj or 1
@@ -1111,7 +1060,7 @@ local function compute_categories_and_annotation(alternant_multiword_spec)
 		end
 		alternant_multiword_spec.annotation = table.concat(annparts, " ")
 		if #decldescs > 1 then
-			insert("nouns with multiple declensions")
+			insert("~ with multiple declensions")
 		end
 	end
 	alternant_multiword_spec.categories = cats
@@ -1142,15 +1091,15 @@ local function make_table(alternant_multiword_spec)
 ! style="background:#d9ebff" | singular
 ! style="background:#d9ebff" | plural
 |-
-!style="background:#eff7ff"|direct
+!style="background:#eff7ff" | direct
 | {dir_s}
 | {dir_p}
 |-
-!style="background:#eff7ff"|oblique
+!style="background:#eff7ff" | oblique
 | {obl_s}
 | {obl_p}
 |-
-!style="background:#eff7ff"|vocative
+!style="background:#eff7ff" | vocative
 | {voc_s}
 | {voc_p}
 |{\cl}{notes_clause}</div></div>]=]
@@ -1164,13 +1113,13 @@ local function make_table(alternant_multiword_spec)
 ! style="width:33%;background:#d9ebff" |
 ! style="background:#d9ebff" | singular
 |-
-!style="background:#eff7ff"|direct
+!style="background:#eff7ff" | direct
 | {dir_s}
 |-
-!style="background:#eff7ff"|oblique
+!style="background:#eff7ff" | oblique
 | {obl_s}
 |-
-!style="background:#eff7ff"|vocative
+!style="background:#eff7ff" | vocative
 | {voc_s}
 |{\cl}{notes_clause}</div></div>]=]
 
@@ -1183,13 +1132,13 @@ local function make_table(alternant_multiword_spec)
 ! style="width:33%;background:#d9ebff" |
 ! style="background:#d9ebff" | plural
 |-
-!style="background:#eff7ff"|direct
+!style="background:#eff7ff" | direct
 | {dir_p}
 |-
-!style="background:#eff7ff"|oblique
+!style="background:#eff7ff" | oblique
 | {obl_p}
 |-
-!style="background:#eff7ff"|vocative
+!style="background:#eff7ff" | vocative
 | {voc_p}
 |{\cl}{notes_clause}</div></div>]=]
 
@@ -1299,15 +1248,15 @@ function export.catboiler(frame)
 		end
 
 		local gender, stem
-		gender, stem, pos = rmatch(SUBPAGENAME, "^Hindi.- ([a-z]+ine) (independent unmarked [^ %-]*%-stem) (.*)s$")
+		gender, stem, pos = rmatch(SUBPAGENAME, "^Hindi ([a-z]+ine) (independent unmarked [^ %-]*%-stem) (.*)s$")
 		if not gender then
-			gender, stem, pos = rmatch(SUBPAGENAME, "^Hindi.- ([a-z]+ine) (independent [^ %-]*%-stem) (.*)s$")
+			gender, stem, pos = rmatch(SUBPAGENAME, "^Hindi ([a-z]+ine) (independent [^ %-]*%-stem) (.*)s$")
 		end
 		if not gender then
-			gender, stem, pos = rmatch(SUBPAGENAME, "^Hindi.- ([a-z]+ine) (unmarked [^ %-]*%-stem) (.*)s$")
+			gender, stem, pos = rmatch(SUBPAGENAME, "^Hindi ([a-z]+ine) (unmarked [^ %-]*%-stem) (.*)s$")
 		end
 		if not gender then
-			gender, stem, pos = rmatch(SUBPAGENAME, "^Hindi.- ([a-z]+ine) ([^ %-]*%-stem) (.*)s$")
+			gender, stem, pos = rmatch(SUBPAGENAME, "^Hindi ([a-z]+ine) ([^ %-]*%-stem) (.*)s$")
 		end
 		if gender then
 			maintext = gender .. " " .. stem .. " ~."
@@ -1341,7 +1290,7 @@ end
 -- Externally callable function to parse and decline a noun given user-specified arguments.
 -- Return value is WORD_SPEC, an object where the declined forms are in `WORD_SPEC.forms`
 -- for each slot. If there are no values for a slot, the slot key will be missing. The value
--- for a given slot is a list of objects {form=FORM, footnotes=FOOTNOTES}.
+-- for a given slot is a list of objects {form=FORM, translit=TRANSLIT, footnotes=FOOTNOTES}.
 function export.do_generate_forms(parent_args, pos, from_headword, def)
 	local params = {
 		[1] = {required = true, default = "दुनिया<iyā>"},
@@ -1364,7 +1313,7 @@ function export.do_generate_forms(parent_args, pos, from_headword, def)
 	alternant_multiword_spec.footnotes = args.footnote
 	alternant_multiword_spec.pos = pos or "nouns"
 	alternant_multiword_spec.args = args
-	normalize_all_lemmas(alternant_multiword_spec)
+	com.normalize_all_lemmas(alternant_multiword_spec)
 	detect_all_indicator_specs(alternant_multiword_spec)
 	propagate_properties(alternant_multiword_spec, "number", "both", "both")
 	-- The default of "M" should apply only to plural adjectives, where it doesn't matter.
@@ -1390,7 +1339,7 @@ end
 -- are given manually. Return value is WORD_SPEC, an object where the declined
 -- forms are in `WORD_SPEC.forms` for each slot. If there are no values for a
 -- slot, the slot key will be missing. The value for a given slot is a list of
--- objects {form=FORM, footnotes=FOOTNOTES}.
+-- objects {form=FORM, translit=TRANSLIT, footnotes=FOOTNOTES}.
 function export.do_generate_forms_manual(parent_args, number, pos, from_headword, def)
 	if number ~= "sg" and number ~= "pl" and number ~= "both" then
 		error("Internal error: number (arg 1) must be 'sg', 'pl' or 'both': '" .. number .. "'")
@@ -1459,8 +1408,10 @@ end
 
 
 -- Concatenate all forms of all slots into a single string of the form
--- "SLOT=FORM,FORM,...|SLOT=FORM,FORM,...|...". Embedded pipe symbols (as might occur
--- in embedded links) are converted to <!>. If INCLUDE_PROPS is given, also include
+-- "SLOT=FORM,FORM,...|SLOT=FORM,FORM,...|...". Each FORM is either a string in Devanagari or
+-- (if manual translit is present) a specification of the form "FORM//TRANSLIT" where FORM is the
+-- Devanagari representation of the form and TRANSLIT its manual transliteration. Embedded pipe symbols
+-- (as might occur in embedded links) are converted to <!>. If INCLUDE_PROPS is given, also include
 -- additional properties (currently, g= for headword genders). This is for use by bots.
 local function concat_forms(alternant_spec, include_props)
 	local ins_text = {}
@@ -1478,9 +1429,7 @@ end
 
 
 -- Template-callable function to parse and decline a noun given user-specified arguments and return
--- the forms as a string "SLOT=FORM,FORM,...|SLOT=FORM,FORM,...|...". Embedded pipe symbols (as might
--- occur in embedded links) are converted to <!>. If |include_props=1 is given, also include
--- additional properties (currently, none). This is for use by bots.
+-- the forms as a string of the same form as documented in concat_forms() above.
 function export.generate_forms(frame)
 	local include_props = frame.args["include_props"]
 	local parent_args = frame:getParent().args
