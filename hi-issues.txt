@@ -1,0 +1,165 @@
+रिआया: plurale tantum?
+कारख़ाना, कारखाना: regular or unmarked? guessing regular
+क़िला, किला: regular or unmarked? guessing regular
+ज़हर: should the translit be zahar not zahr? I changed it this way.
+ज्यादा, ज़्यादा: can this adj be declined?
+दवाख़ाना: regular or unmarked? guessing regular
+टॅकनोलॉजी: should this really be transcribed ṭĕkanolŏjī? not ṭĕknolŏjī?
+नेत्र: is tr=netr correct? pronunciation disagrees with translit.
+पारंपरिक: should this be tr=pāramparik?
+असमीकरण: should this be tr=asamīkaraṇ not tr=asamīkraṇ?
+ऊष्मीकरण: should this be tr=ūṣmīkaraṇ?
+भूमंडलीय ऊष्मीकरण: should this be tr=bhūmaṇḍalīya ūṣmīkaraṇ not tr=bhūmaṇḍalīya ūṣmīkraṇ?
+तटस्थीकरण: should this be tr=taṭasthīkaraṇ?
+ध्रुवीकरण: should this be tr=dhruvīkaraṇ?
+निरस्त्रीकरण: should this be tr=nirastrīkaraṇ?
+प्रत्यक्षीकरण: should this be tr=pratyakṣīkaraṇ?
+मशीनीकरण: should this be tr=maśīnīkaraṇ?
+वर्गीकरण: should this be tr=vargīkaraṇ?
+संक्षिप्तीकरण: should this be tr=saṅkṣiptīkaraṇ?
+प्रांगार द्विजारेय: m or f? and is |tr=prāṅgār dvijārey correct?
+प्रायापिज़्म: m or f? and is |tr=prāyāpizm correct?
+प्रिय: is the rendered pronunciation /pɾiː.jᵊ/ correct?
+फ़ख़्र: is tr=faxr correct?
+फेफडे: should this be deleted since we have फेफड़ा?
+बीज गणित: m or f? and is |tr=bīja gaṇita correct?
+बौद्ध धर्म: translit by default is ''bauddh dharma'', presumably should actually be ''bauddh dharm'', the correct translit
+हिन्दू धर्म: same issue as with बौद्ध धर्म
+भिन्नता: is manual tr=bhinntā correct?
+भौर: m or f? and is |tr=bhaura correct?
+मंडलवक: m or f? and is |tr=maṇḍalavak correct?
+मदहोश: is tr=madahośa correct? also the definitions are redundant.
+मायने: plurale tantum needing phonetic respelling (note to self)
+युरेनस: I have deleted tr=yūrainas as wrong, please verify, thanks! Also what is the gender?
+योनि सेक्स: I have deleted |tr=yonī seks as wrong, please verify, thanks! Also what is the gender?
+राजनीतिज्ञ: auto tr=rājnītigy with final -gy is correct?
+वलयिन: m or f? and is |tr=valayin correct?
+शैतानवादी: I have deleted |tr=śaitanavadi as wrong, please verify, thanks! Also what is the gender?
+श्वेता: I have deleted |tr=śveta as wrong. Is the noun श्वेता with meaning "white" correct? Should it be "whiteness" or "the color white", or an adjective?
+संयोजन: I have deleted |tr=saṅyojan as wrong, please verify.
+संवेदना: I have deleted |tr=samvednā, please verify.
+समाचारपत्र: Please verify tr=samācārpatr, thanks!
+सर्वनाम: Pronunciation ''sarvanām'' disagrees with translit ''sarvnām''.
+साँई, सांई: Auto translit sānī is probably wrong. When fixed, remove manual translit from सांई.
+सिंह: Is auto translit siṅh correct?
+सैकता: m or f? and is |tr=saikatā correct?
+सोणिये: This is messed up; not nominative form.
+सौंदर्यशास्त्र: Is auto translit tr= saũdaryaśāstr correct?
+हीमप्रपात: m or f? and is |tr=hīmprapāt correct?
+हुस्न: Pronunciation ''husna'' disagrees with translit ''husn''.
+
+
+
+Issues #2:
+
+अंतरिक्ष: "outer space", "the heavens"; masculine plurale tantum; is current declension correct?
+अत्फ़ाल: "children"; masculine; should this be plurale tantum? How declined?
+जटा: "dreadlocks"; feminine; should this be plurale tantum? how declined?
+अंडकोष: Syllable division wrong; should be ''aṇḍ.koṣ''. Needs to take possible onsets into consideration when dividing syllables (as is currently done e.g. in [[Module:uk-pronunciation]]).
+अंटार्कटिका: Same as previous; syllable division wrong; should be ''aṇ.ṭārk.ṭi.kā''.
+औलाद: "offspring", "children"; feminine plurale tantum; how declined?
+अवाम: "the public"; masculine plurale tantum; how declined?
+अहबाब: "friends", "companions"; masculine plurale tantum; how declined?
+उमरा: "people of high rank"; masculine plurale tantum; how declined?
+एशियाई खेल: "Asian Games"; masculine plurale tantum; how declined?
+ऐनक: "glasses, spectacles"; feminine plurale tantum; how declined?
+काग़ज़ात: "documents, papers"; masculine plurale tantum (is gender correct?); how declined?
+काली-पीली: "taxicabs, taxis"; feminine plurale tantum; how declined?
+किंतु-परंतु: "ifs and buts"; masculine plurale tantum; how declined?
+किमी: "km" (??); masculine plurale tantum; how declined?
+ख़ुशख़बरी: "good news"; feminine plurale tantum; how declined?
+गाली-गलौज: "abuse and cursing"; feminine plurale tantum; how declined?
+गोरू:"cattle"; masculine plurale tantum; how declined?
+छोले भटूरे: "chhole bhature"; masculine plurale tantum; how declined?
+जज़्बात: "feelings, emotions"; masculine plurale tantum (is gender correct?); how declined?
+प्रजा: "subjects", "people"; feminine plurale tantum; how declined?
+फ़ीस: "fees"; feminine plurale tantum; how declined?
+भाई-बहन: "siblings"; masculine plurale tantum; how declined?
+माँ-बाप: "parents"; masculine plurale tantum; how declined?
+माता-पिता: "parents"; masculine plurale tantum; how declined?
+मायने: "meanings, nuances"; masculine plurale tantum; how declined?
+मुजाहिदीन: "mujahideen"; masculine plurale tantum; how declined?
+
+
+अंटार्कटिका: gender?
+अगरतला: gender?
+इस्तांबुल: gender? also is tr=istānbul (not auto tr=istāmbul) correct?
+ईटानगर: gender?
+एमएलए: how declined? and is tr=emele correct? (auto tr=emaelae)
+कोयंबतूर: gender?
+ख़ैबर पख़्तूनख़्वा: gender?
+ग़ुस्लख़ाना: should this be tr=guslxānā?
+तिरुवनंतपुरम: gender?
+दक्षिण अमरीका: gender?
+दक्षिण एशिया: gender?
+पुत्रजया: gender?
+प्रांगार द्विजारेय: gender?
+प्रायापिज़्म: gender?
+बुलंदशहर, शहर: śahr or śahar? translit and pronun disagree
+बैतनिय्याह: gender?
+बोत्सवाना: gender?
+वहम: tr=vahm or tr=vahma? translit and pronun disagree
+संयुक्त राजशाही: gender?
+संलयन: tr=sanlayan or tr=sãlayan?
+हंगरी: gender?
+हीमप्रपात: gender?
+हुस्न: tr=husn or tr=husna? translit and pronun disagree
+सहस्र: tr=sahasr or tr=sahasra? translit and pronun disagree
+समुदाय: how is this pronounced? pronun and translit disagree
+शाह: how is this pronounced? pronun and translit disagree
+रहस्य: how is this pronounced? pronun disagrees with translit and Urdu
+रस्म: how is this pronounced? pronun gives [ˈɾə.səm]|[ɾəsm] but it has a virama
+रत्न: how is this pronounced? pronun gives [ɾəˈt̪ən̪] only but it has a virama
+तत्त्व: pronunciation and translit disagree
+दलदल: tr=daldal, tr=daladal, or both?
+नागरिकता: tr=nāgriktā, tr=nāgrikatā or both?
+उड़िया: guessing this is feminine as a language.
+उइग़ुर: guessing this is feminine as a language.
+ख्मेर: guessing this is feminine as a language.
+कोकबोरोक: is this masculine or feminine as a language? Given as masculine.
+चेक: guessing this is feminine as a language.
+चेचेन: guessing this is feminine as a language.
+जर्मन: guessing this is feminine as a language.
+डच: guessing this is feminine as a language.
+तमिल: guessing this is feminine as a language.
+तातार: guessing this is feminine as a language.
+थाई: guessing this is feminine as a language.
+पोलिश: guessing this is feminine as a language.
+हिंदको: is this masculine or feminine as a language? Given as masculine.
+बंगला: is this masculine or feminine as a language? Given as masculine.
+बड़ो: guessing this is feminine as a language.
+रेख़ता: is this masculine or feminine as a language style? Given as masculine.
+लोजबान: guessing this is feminine as a language.
+सामी: does this actually mean "Semites, Semitic people" or "Semitic person"?
+सिंहला: guessing this is feminine as a language.
+स्कॉट्स: is this masculine or feminine as a language style? Given as masculine.
+स्पेनी, कोरियाई, हिन्दुस्तानी: is this masculine or feminine as a language style? Given as masculine but I changed it to feminine.
+स्लोवेनियन, इंडोनेशियन, बम्बैया: guessing this is feminine as a language.
+अरोरा, अस्थाना, ओबामा, कच्छारा, कुशवाहा,  एशिया, ऑस्ट्रिया, ओझा, बनिया, मराठा, ओशिआनिया, कनाडा, कन्हैया, कलकत्ता, क़ाहिरा, कातालोनिया, कान्हा, कुशवाहा, कृष्णा, कॅटलोनिया, कोटा, कोरिया, कोलकाता, गया, गुप्ता, गोवा/गोआ, चाइना, झा, तेलंगाना, दशहरा, धतूरा, पोखरा, फ़्लोरिडा, बोलिविया, मंगोलिया, मखीजा, मथुरा, मराठवाडा, मल्होत्रा, महात्मा, मादरेचा, मित्रा, म्यान्मा, यहूदा, रशिया, रेख़ता, वागरेचा, शर्मा, श्रीलंका, सक्सेना, सिसोदिया, सोमालिया, हड़प्पा, etc.: Can I assume that all masculine place names in -ā are regular rather than unmarked? I have made this assumption. What about masculine personal names, surnames and castes?
+ओझा, कायस्थ, क्षत्रिय, खत्री, जाट, दे, ब्राह्मण, मराठा: are these caste names masculine or feminine? Given as masculine. Also it appears the names can be both caste names and names of members of the caste (except ब्राह्मण?). I assume the latter can be masculine or feminine based on sense, like names of ethnicities (except क्षत्रिय, which appears to have feminine क्षत्रियण).
+अरोरा: are these caste names masculine or feminine? Given as feminine.
+कन्नड़: This has two pronuns, one with final ''-a'', I'm assuming it should have two translits.
+केरल: Should this have translit/pronun ''kerala''? Urdu equivalent کیرلا has final ''-a''.
+अग्रवाल, अरोरा, असलम, आडवाणी, ओबामा, कच्छारा, कुशवाहा, कपूर, केजरीवाल, कैफ, खंडेलवाल, ख़ान, गाँधी, गांगुली, गुप्ता, गॉर्डन, चंद, चौधरी, जलाल, झा, तेंदुलकर, त्रिपाठी, त्रिमूर्ति, त्रिवेदी, बंसल, बच्चन, मखीजा, मल्होत्रा, मादरेचा, मित्रा, वागरेचा, शर्मा, शिंदे, सक्सेना, सरनाईक, सरवटे, सिसोदिया, सेठ, हार्वर्ड, हिंगड, etc.: Surnames are generally given as masculine, should they actually be masculine/feminine by sense?
+गुजरात: this has two etymologies, one a state "Gujarat" and one a city "Gujrat" but both given with the same pronun; should they be different?
+पुराना नियम: is this declined differently in the oblique sg?
+बंजारा: defined as "the Banjara or Lambadi people", should it actually be "member of the Banjara or Lambadi people"?
+बक़रीद: should this be tr=baqarīd not default tr=baqrīd?
+मित्र: should this be tr=mitr not default tr=mitra? Urdu is متر without any final vowel, which is normally indicated.
+मोंटेनीगरो: gender? given as masculine but with attention note asking to check gender.
+यहूदा इस्करियोती: does the first part decline differently in the oblique?
+रोमानिया, सेंट लूसिया: given as feminine, is this correct? most countries in -yā are masculine.
+ऑस्ट्रिया: given as both masc and fem, is this correct? most countries in -yā are masculine.
+लैला और मजनू: I have marked this as masculine singular-only, is that correct?
+विराटनगर: I have changed the tr to tr=virāṭnagar, correct?
+शाहमुखी: I have assumed this to be feminine as other scripts appear to be feminine.
+शिंदे, शिगात्से, सरवटे: How is this declined? I have assumed it to be indeclinable.
+शिव: Given with two pronunciations, one with final long ''-ā''. Is this correct? Maybe it's actually a final short ''-a''? The translit needs to be updated.
+शुक्र: How should it be pronounced and transliterated? Presumably as tr=śukr not default tr=śukra, per the Urdu شکر?
+हवाई: Is feminine correct? It's marked as "check this".
+अति (likewise अभिव्यक्ति): Given with pronun like this: {{temp|hi-IPA||अती}} Is this intended to indicate two pronuns, one with short final ''-i'' and the other with long final ''-ī''? If so it doesn't work.
+अतिसंवेदनशील: This has translit atisãvedanśīl but the pronunciation uses a respelling to indicate /ə.t̪ɪ.səm.ʋeː.d̪ən.ʃiːl/, without a nasal vowel before the ''v''. Is this correct and/or normal? If normal, should we fix the translit to not make it a nasal vowel?
+अग्निशस्त्र: pronun has respelling अग्नीशस्त्र indicating a long ''-ī-'' in the middle. Is this correct and/or normal? The same respelling is not done to अग्निशमन, अग्निपरीक्षा or अग्निशामक
+अज्ञेयवाद: at this point it has pronun respelling अज्ञेय॰वाद, which has no effect. Is this correct? Same for अज्ञेयवादी with pronun respelling अज्ञेय॰वादी.
+अनुपस्थित: pronun has respelling अनूपस्थित indicating a long ''-ū-'' in the middle. Is this correct and/or normal? There are a large number of other words in ''anu-'' without similar respelling.
+अम्लता (likewise अम्लपित्त): Given with two pronuns अम्ल-ता and अम्लता. This causes two pronuns /əm.lᵊ.t̪ɑː/, [ə̃m.l̪ᵊ.t̪äː] and /əm.lə.t̪ɑː/, [ə̃m.l̪ə.t̪äː]. This appears to indicate that reduced schwa is phonemic. Should we be transliterating it as ''ă''?
