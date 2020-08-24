@@ -118,9 +118,8 @@ local declprops = {}
 decls["1"] = function(base)
 	if rfind(base.lemma, "या$") then
 		local stem, translit_stem = com.strip_ending(base, "या")
-		local opm = {"ए", "ये"} -- oblique/plural masculine
-		local f = {"ई", "यी"} -- feminine
-		add_decl(base, stem, translit_stem, "या", opm, opm, opm, opm, opm, f, f, f, f, f, f)
+		add_decl(base, stem, translit_stem, "या", "ए", "ए", "ए", "ए", "ए", "ई", "ई", "ई", "ई", "ई", "ई")
+		add_decl(base, stem, translit_stem, nil, "ये", "ये", "ये", "ये", "ये", "यी", "यी", "यी", "यी", "यी", "यी")
 	else
 		local stem, translit_stem = com.strip_ending(base, AA)
 		add_decl(base, stem, translit_stem, AA, E, E, E, E, E, II, II, II, II, II, II)
@@ -139,8 +138,8 @@ declprops["ind-1"] = {
 
 decls["2"] = function(base)
 	local stem, translit_stem = com.strip_ending(base, "या")
-	local opm = {"ए", "ये"} -- oblique/plural masculine
-	add_decl(base, stem, translit_stem, "या", opm, opm, opm, opm, opm, "या", "या", "या", "या", "या", "या")
+	add_decl(base, stem, translit_stem, "या", "ए", "ए", "ए", "ए", "ए", "या", "या", "या", "या", "या", "या")
+	add_decl(base, stem, translit_stem, nil, "ये", "ये", "ये", "ये", "ये")
 end
 
 decls["3"] = function(base)
@@ -305,10 +304,10 @@ local function make_table(alternant_multiword_spec)
 	local forms = alternant_multiword_spec.forms
 
 	local table_spec = [=[
-<div class="NavFrame" style="display: inline-block;min-width: 70em">
+<div class="NavFrame" style="display: inline-block;min-width: 50em">
 <div class="NavHead" style="background:#eff7ff" >{title}{annotation}</div>
 <div class="NavContent">
-{\op}| style="background:#F9F9F9;text-align:center;min-width:70em" class="inflection-table"
+{\op}| style="background:#F9F9F9;text-align:center;min-width:50em" class="inflection-table"
 |-
 ! rowspan="2" style="width:20%;background:#d9ebff" |
 ! colspan="2" style="background:#d9ebff" | masculine

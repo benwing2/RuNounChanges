@@ -129,3 +129,6 @@ function export.normalize_all_lemmas(alternant_multiword_spec)
 		end
 	end)
 end
+
+
+return export
