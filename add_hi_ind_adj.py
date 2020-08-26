@@ -8,6 +8,7 @@ from blib import getparam, rmparam, tname, pname, msg, site
 
 AA = u"\u093e"
 M = u"\u0901"
+N = u"\u0902"
 IND_AA = u"आ"
 
 def hi_adj_is_indeclinable(t, pagetitle):
@@ -18,7 +19,8 @@ def hi_adj_is_indeclinable(t, pagetitle):
     # same suffixes, but we have no way to know that these are indeclinable,
     # so assume declinable.
     return not (pagename.endswith(AA) or pagename.endswith(IND_AA) or
-        pagename.endswith(AA + M))
+        pagename.endswith(AA + M) or pagename.endswith(IND_AA + M) or
+        pagename.endswith(AA + N) or pagename.endswith(IND_AA + N))
   return False
 
 def process_page(page, index, parsed):
@@ -32,13 +34,16 @@ def process_page(page, index, parsed):
   pagemsg("Processing")
 
   saw_potentially_declinable_adjective = False
-  saw_hi_adj_auto = False
+  saw_hi_adecl = False
+  saw_hi_adj_with_translit = False
   headt = None
   for t in parsed.filter_templates():
     tn = tname(t)
     origt = unicode(t)
     if tn == "hi-adj":
       headt = t
+      if getparam(t, "tr") or getparam(t, "tr2") or getparam(t, "tr3"):
+        saw_hi_adj_with_translit = True
       if hi_adj_is_indeclinable(t, pagetitle):
         if not getparam(t, "ind"):
           t.add("ind", "1")
@@ -48,10 +53,12 @@ def process_page(page, index, parsed):
         pagemsg("Skipping potentially declinable adjective: %s" % unicode(t))
       if unicode(t) != origt:
         pagemsg("Replaced %s with %s" % (origt, unicode(t)))
-    elif tn == "hi-adj-auto":
-      saw_hi_adj_auto = True
-  if saw_potentially_declinable_adjective and not saw_hi_adj_auto:
+    elif tn == "hi-adecl":
+      saw_hi_adecl = True
+  if saw_potentially_declinable_adjective and not saw_hi_adecl:
     pagemsg("WARNING: Potentially declinable adjective and no declension template: %s" % unicode(headt))
+  if saw_potentially_declinable_adjective and saw_hi_adecl and saw_hi_adj_with_translit:
+    pagemsg("WARNING: Declinable adjective with manual translit: %s" % unicode(headt))
 
   return unicode(parsed), notes
 

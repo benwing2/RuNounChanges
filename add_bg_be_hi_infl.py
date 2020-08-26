@@ -45,6 +45,7 @@ hi_pos_to_old_style_infl_template_prefix = {
 
 # Hindi vowel diacritics; don't display nicely on their own
 M = u"\u0901"
+N = u"\u0902"
 I = u"\u093f"
 AA = u"\u093e"
 
@@ -115,9 +116,9 @@ def process_page(index, pagetitle, text, pos):
             if not found_hi_head_needing_manual:
               if hi_head_gender not in ["m", "f"]:
                 found_hi_head_needing_manual = "Gender %s unrecognized or required manual evaluation" % hi_head_gender
-              elif hi_head_gender == "m" and re.search("(" + AA + "|" + AA + M + u"|आँ|आ)$", newhead):
+              elif hi_head_gender == "m" and re.search("[" + AA + u"आ][" + M + N + "]?$", newhead):
                 found_hi_head_needing_manual = u"Masculine head %s ends in -ā or -ā̃, needs manual evaluation" % newhead
-              elif hi_head_gender == "f" and re.search(I + u"याँ?$", newhead):
+              elif hi_head_gender == "f" and re.search(I + u"या" + "[" + M + N + "]?$", newhead):
                 found_hi_head_needing_manual = u"Feminine head %s ends in -iyā or -iyā̃, needs manual evaluation" % newhead
           else:
             newhead = getparam(t, "1")
