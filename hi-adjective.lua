@@ -42,10 +42,15 @@ local uupper = mw.ustring.upper
 
 -- vowel diacritics; don't display nicely on their own
 local M = u(0x0901)
+local N = u(0x0902)
 local AA = u(0x093e)
+local AAM = AA .. M
 local E = u(0x0947)
+local EN = E .. N
 local I = u(0x093f)
 local II = u(0x0940)
+local IIN = II .. N
+local TILDE = u(0x0303)
 
 
 -- version of rsubn() that discards all but the first return value
@@ -115,7 +120,7 @@ end
 local decls = {}
 local declprops = {}
 
-decls["1"] = function(base)
+decls["ā"] = function(base)
 	if rfind(base.lemma, "या$") then
 		local stem, translit_stem = com.strip_ending(base, "या")
 		add_decl(base, stem, translit_stem, "या", "ए", "ए", "ए", "ए", "ए", "ई", "ई", "ई", "ई", "ई", "ई")
@@ -126,25 +131,25 @@ decls["1"] = function(base)
 	end
 end
 
-decls["ind-1"] = function(base)
+decls["ind-ā"] = function(base)
 	local stem, translit_stem = com.strip_ending(base, "आ")
 	add_decl(base, stem, translit_stem, "आ", "ए", "ए", "ए", "ए", "ए", "ई", "ई", "ई", "ई", "ई", "ई")
 end
 
-declprops["ind-1"] = {
-	desc = "ind type-1",
-	cat = "independent type-1 ~",
-}
-
-decls["2"] = function(base)
-	local stem, translit_stem = com.strip_ending(base, "या")
-	add_decl(base, stem, translit_stem, "या", "ए", "ए", "ए", "ए", "ए", "या", "या", "या", "या", "या", "या")
-	add_decl(base, stem, translit_stem, nil, "ये", "ये", "ये", "ये", "ये")
+decls["ān"] = function(base)
+	if rfind(base.lemma, "याँ$") then
+		local stem, translit_stem = com.strip_ending(base, "याँ")
+		add_decl(base, stem, translit_stem, "याँ", "एँ", "एँ", "एँ", "एँ", "एँ", "ईं", "ईं", "ईं", "ईं", "ईं", "ईं")
+		add_decl(base, stem, translit_stem, nil, "यें", "यें", "यें", "यें", "यें", "यीं", "यीं", "यीं", "यीं", "यीं", "यीं")
+	else
+		local stem, translit_stem = com.strip_ending(base, AAM)
+		add_decl(base, stem, translit_stem, AAM, EN, EN, EN, EN, EN, IIN, IIN, IIN, IIN, IIN, IIN)
+	end
 end
 
-decls["3"] = function(base)
-	local stem, translit_stem = com.strip_ending(base, "याँ")
-	add_decl(base, stem, translit_stem, "याँ", "यें", "यें", "यें", "यें", "यें", "यीं", "यीं", "यीं", "यीं", "यीं", "यीं")
+decls["ind-ān"] = function(base)
+	local stem, translit_stem = com.strip_ending(base, "आँ")
+	add_decl(base, stem, translit_stem, "आँ", "एँ", "एँ", "एँ", "एँ", "एँ", "ईं", "ईं", "ईं", "ईं", "ईं", "ईं")
 end
 
 decls["indecl"] = function(base)
@@ -165,11 +170,11 @@ local function parse_indicator_spec(angle_bracket_spec)
 	if inside ~= "" then
 		local parts = rsplit(inside, ".", true)
 		for _, part in ipairs(parts) do
-			if part == "1" or part == "2" or part == "$" then
-				if base.explicit_decl then
-					error("Can't specify explicit declension '" .. part .. "' twice: '" .. inside .. "'")
+			if part == "$" then
+				if base.indecl then
+					error("Can't specify '$' twice: '" .. inside .. "'")
 				end
-				base.explicit_decl = part
+				base.indecl = true
 			else
 				error("Unrecognized indicator '" .. part .. "': '" .. inside .. "'")
 			end
@@ -180,30 +185,16 @@ end
 
 
 local function detect_indicator_spec(base)
-	if base.explicit_decl == "$" then
+	if base.indecl == "$" then
 		base.decl = "indecl"
-	elseif base.explicit_decl == "1" then
-		if rfind(base.lemma, AA .. "$") then
-			base.decl = "1"
-		elseif rfind(base.lemma, "अ$") then
-			base.decl = "ind-1"
-		else
-			error("With '1' indicator, lemma must end in " .. AA .. " or अ:" .. base.lemma)
-		end
-	elseif base.explicit_decl == "2" then
-		if rfind(base.lemma, "या$") then
-			base.decl = "2"
-		else
-			error("With '2' indicator, lemma must end in या:" .. base.lemma)
-		end
-	elseif rfind(base.lemma, I .. "या$") then
-		base.decl = "2"
 	elseif rfind(base.lemma, AA .. "$") then
-		base.decl = "1"
+		base.decl = "ā"
 	elseif rfind(base.lemma, "अ$") then
-		base.decl = "ind-1"
-	elseif rfind(base.lemma, AA .. M .. "$") then
-		base.decl = "3"
+		base.decl = "ind-ā"
+	elseif rfind(base.lemma, AAM .. "$") then
+		base.decl = "ān"
+	elseif rfind(base.lemma, "अँ$") then
+		base.decl = "ind-ān"
 	else
 		error("Unrecognized adjective lemma: " .. base.lemma)
 	end
@@ -245,10 +236,16 @@ local function compute_category_and_desc(base)
 	if props then
 		return props.cat, props.desc
 	end
-	if not rfind(base.decl, "^[123]$") then
-		error("Internal error: Don't know how to parse decl '" .. base.decl .. "'")
+	local ind, stem = rmatch(base.decl, "^(ind%-)(.*)$")
+	if not ind then
+		stem = basel.decl
 	end
-	return "type-" .. base.decl .. " ~", "type-" .. base.decl
+	stem = rsub(stem, "n$", TILDE)
+	if ind then
+		return "independent " .. stem .. "-stem ~", "ind " .. stem .. "-stem"
+	else
+		return stem .. "-stem ~", stem .. "-stem"
+	end
 end
 
 
@@ -365,10 +362,10 @@ end
 
 
 export.adj_decl_endings = {
-	["type-1"] = {AA, E, II},
-	["independent type-1"] = {"अ", "ए", "ई"},
-	["type-2"] = {"या", "ए or ये", "या"},
-	["type-3"] = {"याँ", "यें", "यीं"},
+	["ā-stem"] = {AA, E, II},
+	["independent ā-stem"] = {"अ", "ए", "ई"},
+	["ā̃-stem"] = {AAM, EN, IIN},
+	["independent ā̃-stem"] = {"अँ", "एँ", "ईं"},
 }
 
 
@@ -425,24 +422,24 @@ function export.catboiler(frame)
 			break
 		end
 
-		local typ
-		typ, pos = rmatch(SUBPAGENAME, "^Hindi (independent type-[1-9]) (.*)s$")
-		if not typ then
-			typ, pos = rmatch(SUBPAGENAME, "^Hindi (type-[1-9]) (.*)s$")
+		local stem
+		stem, pos = rmatch(SUBPAGENAME, "^Hindi (independent [^ %-]*%-stem) (.*)s$")
+		if not stem then
+			stem, pos = rmatch(SUBPAGENAME, "^Hindi ([^ %-]*%-stem) (.*)s$")
 		end
-		if typ then
-			if not export.adj_decl_endings[typ] then
-				error("Unrecognized adjective type in category name: '" .. typ .. "'")
+		if stem then
+			if not export.adj_decl_endings[stem] then
+				error("Unrecognized adjective stem type in category name: '" .. stem .. "'")
 			end
-			local mdir, mop, f = unpack(export.adj_decl_endings[typ])
+			local mdir, mop, f = unpack(export.adj_decl_endings[stem])
 			local endingtext = "ending in " .. mdir .. " in the direct masculine singular, in " .. mop .. " in the remaining masculine forms, and in " .. f .. " in all feminine forms."
 
-			maintext = typ .. " ~, " .. endingtext
-			if rfind(typ, "independent") then
+			maintext = stem .. " ~, " .. endingtext
+			if rfind(stem, "independent") then
 				maintext = maintext .. " Here, 'independent' means that the stem ending directly " ..
 				"follows a vowel and so uses the independent Devanagari form of the vowel that begins the ending."
 			end
-			insert("~ by type|" .. rsub(typ, ".*type%-", ""))
+			insert("~ by stem type|" .. rsub(stem, "independent ", ""))
 			break
 		end
 		error("Unrecognized Hindi adjective category name")
