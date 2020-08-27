@@ -149,6 +149,14 @@ Issues #2:
 
 Issues more:
 
+General:
+
+* Should we standardize on chandrabindu as the main article when there are chandrabindu/anusvara alternatives and the character doesn't go above the line? E.g. महँगा is alt form of महंगा, मूँछ is alt form of मूंछ, साँस is alt form of सांस, etc. but conversely सांप is alt form of साँप, अंधेरा is alt form of अँधेरा, etc. What about explicit n vs. anusvara? E.g. शान्त is alt form of शांत, सम्पूर्ण is alt form of संपूर्ण, हिन्द is alt form of हिंद, अत्यन्त is alt form of अत्यंत, अन्तर्गत is alt form of अंतर्गत, etc. but conversely समंदर is alt form of समन्दर, हिंदुस्तानी is alt form of हिन्दुस्तानी, हिंदू is alt form of हिन्दू, etc.. हिंद vs. हिन्दू are related but have opposing tendencies in alt forms.
+* Planning on deleting old, unused Hindi conjugation templates i.e. [[Template:hi-conj-simp]], [[Template:hi-conj-1]], [[Template:hi-conj-main]], [[Template:hi-conj-c]], [[Template:hi-conj-no-aspect]], [[Template:hi-conj-v-m]], [[Template:hi-conj-v-f]], [[Template:hi-conj-v-i-m]], [[Template:hi-conj-v-i-f]], [[Template:hi-conj-head]]. Will then rename [[Template:hi-conj]] to [[Template:hi-conj-c]] so I can reuse [[Template:hi-conj]] for an upcoming automatic module. I notice there is currently an automatic module at [[Module:hi-conj]] and [[Module:hi-conj/data]] with corresponding template [[Template:hi-conj-auto]], but it's unused. I will reuse as much stuff as I can from these existing modules as well as the currently existing templates that are in use, e.g. [[Template:hi-conj-v]], [[Template:hi-conj-i]], [[Template:hi-conj-e]], [[Template:hi-conj-u]], [[Template:hi-conj-c]] (renamed from [[Template:hi-conj]]). Is this OK?
+
+Specific:
+
+
 * अर्जेन्टीना, अर्जेंटीना: Note to self: Put main at अर्जेण्टीना.
 * अल्पसंख्यक: Still syllabifies badly as /əl.p.səŋ.kʰjək/ with respelling अल्प-संख्यक. Same for ऑक्सफ़ोर्ड with respelling ऑक्स-फ़ोर्ड, syllabified as /ɔk.s.pʰoːɾɖ/.
 * असंवेदनशील: Pronunciation says /ə.səm.ʋeː.d̪ən.ʃiːl/ but translit asãvedanśīl. Is the pronunciation normal in cases of anusvara + ''v''? If normal, should we fix the translit to not make it a nasal vowel? Same issue in अतिसंवेदनशील, संवेदनशील, असंवैधानिक, संवैधानिक.
@@ -186,3 +194,5 @@ Issues more:
 * सर्वसाधारण: Translit was sarvasādhāraṇ, I changed it to sarvsādhāraṇ, and pronun accordingly. Likewise सर्वहारा.
 * सिंहला: Pronun given as /sɪ̃ʱ.lɑː/. Correct?
 * स्वायत्तता: Pronun given as /sʋɑː.jət̪t̪.t̪ɑː/. Does it really have three t's in a row?
+* आगरा, उड़ीसा, ओडिशा, ऊपरवाला, ओझा, कन्हैया, कान्हा, कृष्णा, कलकत्ता, कोटा, कोलकाता, गया, गोआ, गोवा, तेलंगाना, दशहरा, धतूरा, नोएडा, पटना, पोखरा, बँटवारा, बनिया, ब्रह्मा, मथुरा, मराठवाडा, मराठा, महात्मा, रेख़्ता, श्रीलंका, हड़प्पा, हरियाण: Proper nouns that I didn't change to 'unmarked' because they appear derived from common nouns or I have questions about them. Please let me know if they should be 'unmarked'.
+* निकारागुआ: Can this really be either masc or fem?
