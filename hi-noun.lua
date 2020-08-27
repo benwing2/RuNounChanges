@@ -28,6 +28,7 @@ local m_links = require("Module:links")
 local m_string_utilities = require("Module:string utilities")
 local iut = require("Module:inflection utilities")
 local m_para = require("Module:parameters")
+local com = require("Module:hi-common")
 
 local u = mw.ustring.char
 local rsplit = mw.text.split
@@ -215,9 +216,9 @@ declprops["c-f"] = {
 
 decls["ā-m"] = function(base)
 	if rfind(base.lemma, "या$") then
-		local stem, translit_stem = com.strip_ending(base, "या$")
-		local op = {"ए", "ये"} -- oblique/plural
-		add_decl(base, stem, translit_stem, "या", op, op, op, "यों", "यो")
+		local stem, translit_stem = com.strip_ending(base, "या")
+		add_decl(base, stem, translit_stem, "या", "ए", "ए", "ए", "यों", "यो")
+		add_decl(base, stem, translit_stem, nil, "ये", "ये", "ये")
 	else
 		local stem, translit_stem = com.strip_ending(base, AA)
 		add_decl(base, stem, translit_stem, AA, E, E, E, ON, O)
