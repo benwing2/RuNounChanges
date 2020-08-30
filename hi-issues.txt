@@ -196,3 +196,81 @@ Specific:
 * स्वायत्तता: Pronun given as /sʋɑː.jət̪t̪.t̪ɑː/. Does it really have three t's in a row?
 * आगरा, उड़ीसा, ओडिशा, ऊपरवाला, ओझा, कन्हैया, कान्हा, कृष्णा, कलकत्ता, कोटा, कोलकाता, गया, गोआ, गोवा, तेलंगाना, दशहरा, धतूरा, नोएडा, पटना, पोखरा, बँटवारा, बनिया, ब्रह्मा, मथुरा, मराठवाडा, मराठा, महात्मा, रेख़्ता, श्रीलंका, हड़प्पा, हरियाण: Proper nouns that I didn't change to 'unmarked' because they appear derived from common nouns or I have questions about them. Please let me know if they should be 'unmarked'.
 * निकारागुआ: Can this really be either masc or fem?
+
+
+
+issues #5:
+
+आंते: plurale tantum?
+आदान-प्रदान: how declined? do both parts decline?
+आमना-सामना: how declined? do both parts decline?
+आमिक्षा: plurale tantum?
+इस्म-ए-शरीफ़: how declined? noun + adjective.
+उत्तराधर: plurale tantum?
+उमरा: masculine plurale tantum ending in ''-ā'': how declined?
+एमएलए: how declined?
+ऐनक: feminine plurale tantum ending in a consonant: how declined?
+ऐसी तैसी: how declined? do both parts decline?
+औलाद: feminine plurale tantum ending in a consonant: how declined? 
+कच्चा लोहा: do both parts decline? obl is कच्चे लोहे?
+काला कच्चू: do both parts decline?
+काला कलूटा, काला कोयला (adjective): do both parts decline?
+काला कीकर: do both parts decline?
+
+anusvara forms to change?
+
+* आँकड़ा -> आंकड़ा
+* खण्ड -> खंड
+* घुँघरू -> घुंघरू
+* चाँदी -> चांदी
+* दाँत -> दांत
+* बाँस -> बांस ??
+* बाँह -> बांह ??
+* भाँग -> भांग
+* मँगवाना -> मंगवाना
+* माँ -> मां ???
+* माँग -> मांग
+* माँगना -> मांगना
+* मूँग -> मूंग
+* राँची -> रांची
+* लँगड़ा -> लंगड़ा
+* हँसना -> हंसना ??
+* हँसाना -> हंसाना ??
+* हाँ -> हां ???
+* हालाँकि -> हालांकि
+* अँधेरा -> अंधेरा
+* आँसू -> आंसू
+* आनन्द -> आनंद
+* आरम्भ -> आरंभ
+* इन्द्र -> इंद्र
+* उसांस -> उसाँस ???
+* चन्द्रबिन्दु -> चंद्रबिंदु
+* चाँटा -> चांटा
+* चुम्बन -> चुंबन
+* टाँग -> टांग
+* तन्दूर -> तंदूर
+* पाँच -> पांच
+* पाँचवाँ -> पांचवाँ ? (no alt form currently)
+* पाँव -> पांव ???
+* पूँछ -> पूंछ
+* बाँह -> बांह ??
+* महँगा vs. महंगा ?? which one is better?
+* महँगाई and महंगा are main forms, inconsistent
+* main forms मुँह, मुँह काला करना, मुँह मीठा करना, मुँहतोड़, मुँहतोड़ जवाब, मुँहमाँगा, मुँहासा
+* समन्दर -> समंदर
+* साँप -> सांप
+* main form सल्लू साँप
+* सौगन्द -> सौगंध
+* हिन्दुस्तानी -> हिंदुस्तानी
+* हिन्दू -> हिंदू
+
+
+
+
+issues #6:
+
+अमानवीयता: is tr=amānavīyatā correct?
+अम्लता: Note to self: implement + for reduced schwa
+कुंडली: Note to self: don't display same lemma twice
+गुणसूत्रबिंदु: Note to self: needs +
+हबक्क़ूक़: long or short u? pronun disagrees with translit
