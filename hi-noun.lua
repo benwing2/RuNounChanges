@@ -427,6 +427,30 @@ declprops["indecl"] = {
 	cat = "indeclinable ~",
 }
 
+decls["adj"] = function(base, stress)
+	local adj_alternant_spec = require("Module:hi-adjective").do_generate_forms(
+		{base.lemma .. "//" .. base.lemma_translit}
+	)
+	local function copy(from_slot, to_slot)
+		base.forms[to_slot] = adj_alternant_spec.forms[from_slot]
+	end
+	if base.number ~= "pl" then
+		copy("dir_m_s", "dir_s")
+		copy("obl_m_s", "obl_s")
+		copy("voc_m_s", "voc_s")
+	end
+	if base.number ~= "sg" then
+		copy("dir_m_p", "dir_p")
+		copy("obl_m_p", "obl_p")
+		copy("voc_m_p", "voc_p")
+	end
+end
+
+declprops["adj"] = {
+	desc = "adj",
+	cat = "adjectival ~",
+}
+
 
 local function fetch_footnotes(separated_group)
 	local footnotes
@@ -583,7 +607,6 @@ local function parse_indicator_spec(angle_bracket_spec)
 					error("Can't specify '+' twice: '" .. inside .. "'")
 				end
 				base.adj = true
-				error("Adjectival declensions not implemented yet")
 			elseif part == "$" then
 				if base.indecl then
 					error("Can't specify '$' twice: '" .. inside .. "'")
@@ -662,13 +685,78 @@ end
 -- For a plural-only lemma, synthesize a likely singular lemma. It doesn't have to be
 -- theoretically correct as long as it generates all the correct plural forms.
 local function synthesize_singular_lemma(base)
-	error("Implement me")
+	if not base.gender then
+		error("For plural-only lemma, need to specify the gender: '" .. base.lemma .. "'")
+	end
+	if base.gender == "M" then
+		if rfind(base.lemma, E .. "$") then
+			local stem, translit_stem = com.strip_ending(base, E)
+			base.lemma = stem .. AA
+			base.lemma_translit = translit_stem .. "ā"
+			return
+		end
+		if rfind(base.lemma, "ए$") then
+			-- FIXME, what about -iyā -> -ie?
+			local stem, translit_stem = com.strip_ending(base, "ए")
+			base.lemma = stem .. "अ"
+			base.lemma_translit = translit_stem .. "ā"
+			return
+		end
+		local ending = rmatch(base.lemma, "(" .. E .. "[" .. M .. N .. "])$")
+		if ending then
+			local stem, translit_stem = com.strip_ending(base, ending)
+			base.lemma = stem .. AA .. M
+			base.lemma_translit = translit_stem .. "ā̃"
+			return
+		end
+		local ending = rmatch(base.lemma, "(ए[" .. M .. N .. "])$")
+		if ending then
+			local stem, translit_stem = com.strip_ending(base, ending)
+			base.lemma = stem .. "अ" .. M
+			base.lemma_translit = translit_stem .. "ā̃"
+			return
+		end
+		-- Otherwise, singular same as plural and lemma is already correct.
+	else
+		assert(base.gender == "F")
+		local ending = rmatch(base.lemma, "(" .. E .. "[" .. M .. N .. "])$")
+		if ending then
+			local stem, translit_stem = com.strip_ending(base, ending)
+			base.lemma = stem
+			base.lemma_translit = translit_stem
+			return
+		end
+		local ending = rmatch(base.lemma, "(ए[" .. M .. N .. "])$")
+		if ending then
+			local stem, translit_stem = com.strip_ending(base, ending)
+			base.lemma = stem
+			base.lemma_translit = translit_stem
+			return
+		end
+		local ending = rmatch(base.lemma, "(या[" .. M .. N .. "])$")
+		if ending then
+			-- This may or may not produce the "right" singular but regardless,
+			-- the plural will be correct, which is all that matters.
+			local stem, translit_stem = com.strip_ending(base, ending)
+			base.lemma = stem
+			base.lemma_translit = translit_stem
+			return
+		end
+		-- We seem to have an endingless plural, e.g. औलाद. Add an override to the dir_p slot
+		-- to force this form.
+		if not base.overrides.dir_p then
+			base.overrides.dir_p = {}
+		end
+		table.insert(base.overrides.dir_p, {full = true, values = {{form = base.lemma, phon_form = base.lemma_translit}}})
+	end
 end
 
 
 -- For an adjectival lemma, synthesize the masc singular form.
 local function synthesize_adj_lemma(base)
-	error("Implement me")
+	if not rfind(base.lemma, "[अ" .. AA .. "][" .. M .. N .. "]?$") then
+		error("Unrecognized adjectival lemma: " .. base.lemma)
+	end
 end
 
 
@@ -1033,7 +1121,7 @@ local function compute_categories_and_annotation(alternant_multiword_spec)
 			if base.plstem then
 				insert("~ with irregular plural stem")
 			end
-			if base.phon_lemma and base.lemma ~= base.phon_lemma then
+			if lang:transliterate(base.lemma) ~= base.lemma_translit then
 				insert("~ with phonetic respelling")
 			end
 		end
