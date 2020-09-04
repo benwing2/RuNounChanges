@@ -748,9 +748,9 @@ function export.show_forms_with_translit(forms, lemmas, slots_table, props, foot
 	local lemma_forms = {}
 	for _, lemma in ipairs(lemmas) do
 		if type(lemma) == "table" then
-			table.insert(lemma_forms, lemma.form)
+			m_table.insertIfNot(lemma_forms, lemma.form)
 		else
-			table.insert(lemma_forms, lemma)
+			m_table.insertIfNot(lemma_forms, lemma)
 		end
 	end
 	forms.lemma = #lemma_forms > 0 and table.concat(lemma_forms, ", ") or mw.title.getCurrentTitle().text
