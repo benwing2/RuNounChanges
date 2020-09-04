@@ -84,12 +84,36 @@ function export.transliterate_respelling(phon)
 end
 
 
-function export.add_form(base, stem, translit_stem, slot, ending, footnotes)
+function export.add_form(base, stem, translit_stem, slot, ending, footnotes, link_words)
 	if not ending then
 		return
 	end
 
 	local function combine_stem_ending(stem, ending)
+		if ending == "" then
+			return stem
+		elseif rfind(stem, VIRAMA .. "$") and rfind(base.lemma, VIRAMA .. "$") then
+			stem = rsub(stem, VIRAMA .. "$", "")
+		end
+		if stem == "" or rfind(stem, "[" .. vowels .. "]$") then
+			-- A diacritic at the beginning of the ending should be converted to its independent form
+			-- if the stem does not end in a consonant.
+			if rfind(ending, "^[" .. diacritics .. "]") then
+				local ending_first = usub(ending, 1, 1)
+				ending = (diacritic_to_independent[ending_first] or ending_first) .. usub(ending, 2)
+			end
+		end
+		-- Don't convert independent letters to diacritics after consonants because of cases like मई
+		-- where the independent letter belongs after the consonant.
+		local result = stem .. ending
+		if link_words then
+			-- Add links around the words.
+			result = "[[" .. rsub(result, " ", "]] [[") .. "]]"
+		end
+		return result
+	end
+
+	local function combine_stem_ending_tr(stem, ending)
 		if ending == "" then
 			return stem
 		-- When adding a non-null ending, remove final '-a' from the stem, but only
@@ -109,19 +133,7 @@ function export.add_form(base, stem, translit_stem, slot, ending, footnotes)
 		elseif rfind(stem, "a$") and rfind(base.lemma_translit, "aḥ?$") and
 			rfind(ending, "^[" .. transliterated_diacritics .. "]") then
 			stem = rsub(stem, "a$", "")
-		elseif rfind(stem, VIRAMA .. "$") and rfind(base.lemma, VIRAMA .. "$") then
-			stem = rsub(stem, VIRAMA .. "$", "")
 		end
-		if stem == "" or rfind(stem, "[" .. vowels .. "]$") then
-			-- A diacritic at the beginning of the ending should be converted to its independent form
-			-- if the stem does not end in a consonant.
-			if rfind(ending, "^[" .. diacritics .. "]") then
-				local ending_first = usub(ending, 1, 1)
-				ending = (diacritic_to_independent[ending_first] or ending_first) .. usub(ending, 2)
-			end
-		end
-		-- Don't convert independent letters to diacritics after consonants because of cases like मई
-		-- where the independent letter belongs after the consonant.
 		return stem .. ending
 	end
 
@@ -135,17 +147,22 @@ function export.add_form(base, stem, translit_stem, slot, ending, footnotes)
 end
 
 
+function export.strip_ending_from_stem(stem, translit_stem, ending)
+	local new_stem = rmatch(stem, "^(.*)" .. ending .. "$")
+	if not new_stem then
+		error("Internal error: Lemma or stem " .. stem .. " should end in " .. ending)
+	end
+	local ending_translit = lang:transliterate(ending)
+	local new_translit_stem = rmatch(translit_stem, "^(.*)" .. ending_translit .. "$")
+	if not new_translit_stem then
+		error("Unable to strip ending " .. ending .. " (transliterated " .. ending_translit .. ") from transliteration " .. translit_stem)
+	end
+	return new_stem, new_translit_stem
+end
+
+
 function export.strip_ending(base, ending)
-	local stem = rmatch(base.lemma, "^(.*)" .. ending .. "$")
-	if not stem then
-		error("Internal error: Lemma " .. base.lemma .. " should end in " .. ending)
-	end
-	ending_translit = lang:transliterate(ending)
-	local translit_stem = rmatch(base.lemma_translit, "^(.*)" .. ending_translit .. "$")
-	if not translit_stem then
-		error("Unable to strip ending " .. ending .. " (transliterated " .. ending_translit .. ") from transliteration " .. base.lemma_translit)
-	end
-	return stem, translit_stem	
+	return export.strip_ending_from_stem(base.lemma, base.lemma_translit, ending)
 end
 
 

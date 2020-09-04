@@ -65,7 +65,6 @@ local function rsub(term, foo, bar)
 	return retval
 end
 
-
 -- version of rsubn() that returns a 2nd argument boolean indicating whether
 -- a substitution was made.
 local function rsubb(term, foo, bar)
@@ -74,6 +73,34 @@ local function rsubb(term, foo, bar)
 end
 
 
+local irreg_perf = {
+	["कर"] = "की",
+	["जा"] = "गय",
+	["ले"] = "ली",
+	["दे"] = "दी",
+	["हो"] = "हु",
+}
+
+local irreg_perf_tr = {
+	["कर"] = "kī",
+	["जा"] = "gay",
+	["ले"] = "lī",
+	["दे"] = "dī",
+	["हो"] = "hu",
+}
+
+local irreg_subj = {
+	["दे"] = "द",
+	["ले"] = "ल",
+	["पी"] = "पिय",
+}
+
+local irreg_subj_tr = {
+	["दे"] = "d",
+	["ले"] = "l",
+	["पी"] = "piy",
+}
+
 local verb_slots = {
 	stem = "stem",
 	conj = "conj|form",
@@ -81,10 +108,10 @@ local verb_slots = {
 }
 
 local function add_slot_gendered(slot_prefix, tag_suffix)
-	verb_slots[slot_prefix .. "_m_s"] = tag_suffix == "-" and "-" or "dir|m|s|" .. tag_suffix
-	verb_slots[slot_prefix .. "_m_p"] = tag_suffix == "-" and "-" or "obl|m|s|" .. tag_suffix .. "|;|m|p|" .. tag_suffix
-	verb_slots[slot_prefix .. "_f_s"] = tag_suffix == "-" and "-" or "dir|f|s|" .. tag_suffix
-	verb_slots[slot_prefix .. "_f_p"] = tag_suffix == "-" and "-" or "obl|f|s|" .. tag_suffix .. "|;|f|p|" .. tag_suffix
+	verb_slots[slot_prefix .. "_ms"] = tag_suffix == "-" and "-" or "dir|m|s|" .. tag_suffix
+	verb_slots[slot_prefix .. "_mp"] = tag_suffix == "-" and "-" or "obl|m|s|" .. tag_suffix .. "|;|m|p|" .. tag_suffix
+	verb_slots[slot_prefix .. "_fs"] = tag_suffix == "-" and "-" or "dir|f|s|" .. tag_suffix
+	verb_slots[slot_prefix .. "_fp"] = tag_suffix == "-" and "-" or "obl|f|s|" .. tag_suffix .. "|;|f|p|" .. tag_suffix
 end
 
 local function add_slot_personal(slot_prefix, tag_suffix)
@@ -135,21 +162,33 @@ for _, mood in ipairs({"pfv", "prog"}) do
 	add_slot_gendered(mood .. "_cfact", "-")
 end
 
-local adjective_slots_with_linked = m_table.shallowcopy(adjective_slots)
-adjective_slots_with_linked["inf_m_s_linked"] = adjective_slots["inf_m_s"]
-
-
-local function skip_slot(number, slot)
-	return false
-end
+local verb_slots_with_linked = m_table.shallowcopy(verb_slots)
+verb_slots_with_linked["inf_ms_linked"] = verb_slots["inf_ms"]
 
 
 local function add(base, stem, translit_stem, slot, ending, footnotes)
-	if skip_slot(base.number, slot) then
-		return
+	local function doadd(new_stem, new_translit_stem, new_ending)
+		com.add_form(base, new_stem or stem, new_translit_stem or translit_stem, slot, new_ending or ending, footnotes, "link words")
+	end
+	-- Implement sandhi changes after stem ending in -ī.
+	if rfind(stem, "[" .. II .. I .. "]$") then
+		local stem_butlast, translit_stem_butlast = com.strip_ending_from_stem(stem, translit_stem,
+			rfind(stem, II .. "$") and II or I)
+		local ending_first = usub(ending, 1, 1)
+		if ending_first == AA or ending_first == E then
+			doadd(stem_butlast .. I, translit_stem_butlast .. "i")
+			doadd(stem_butlast .. I .. "य", translit_stem_butlast .. "iy")
+			return
+		elseif ending_first == II then
+			doadd(stem_butlast, translit_stem_butlast)
+			return
+		end
+	elseif rfind(stem, "[" .. AA .. O .. "आऔ]$") and rfind(ending, "^" .. AA) then
+		doadd(stem .. "य", translit_stem .. "y")
+
 	end
 
-	com.add_form(base, stem, translit_stem, slot, ending, footnotes)
+	doadd()
 end
 
 
@@ -158,10 +197,10 @@ local function add_conj_gendered(base, slot_prefix, stem, translit_stem, m_s, m_
 		stem = base.stem
 		translit_stem = base.stem_translit
 	end
-	add(base, stem, translit_stem, slot_prefix .. "_m_s", m_s, footnotes)
-	add(base, stem, translit_stem, slot_prefix .. "_m_p", m_p, footnotes)
-	add(base, stem, translit_stem, slot_prefix .. "_f_s", f_s, footnotes)
-	add(base, stem, translit_stem, slot_prefix .. "_f_p", f_p, footnotes)
+	add(base, stem, translit_stem, slot_prefix .. "_ms", m_s, footnotes)
+	add(base, stem, translit_stem, slot_prefix .. "_mp", m_p, footnotes)
+	add(base, stem, translit_stem, slot_prefix .. "_fs", f_s, footnotes)
+	add(base, stem, translit_stem, slot_prefix .. "_fp", f_p, footnotes)
 end
 
 
@@ -198,27 +237,6 @@ local function add_conj_gendered_personal(base, slot_prefix, stem, translit_stem
 	add(base, stem, translit_stem, slot_prefix .. "_3pf", p3f, footnotes)
 end
 
-local function process_slot_overrides(base)
-	for slot, overrides in pairs(base.overrides) do
-		if skip_slot(base.number, slot) then
-			error("Override specified for invalid slot '" .. slot .. "' due to '" .. base.number .. "' number restriction")
-		end
-		base.forms[slot] = nil
-		for _, override in ipairs(overrides) do
-			for _, value in ipairs(override.values) do
-				local form = value.form
-				local tr = com.transliterate_respelling(value.phon_form)
-				local combined_notes = iut.combine_footnotes(base.footnotes, value.footnotes)
-				assert(override.full)
-				if form ~= "" then
-					iut.insert_form(base.forms, slot, {form = form, translit = tr, footnotes = combined_notes})
-				end
-			end
-		end
-	end
-end
-
-
 local function handle_derived_slots_and_overrides(base)
 	process_slot_overrides(base)
 
@@ -237,7 +255,16 @@ local function handle_derived_slots_and_overrides(base)
 end
 
 
-local function conjugate(base)
+local conjs = {}
+local conjprops = {}
+
+conjs["normal"] = function(base)
+	local perf = irreg_perf[base.stem] or base.stem
+	local trperf = irreg_perf_tr[base.stem] or base.stem_translit
+
+	local subj = irreg_subj[base.stem] or base.stem
+	local trsubj = irreg_subj_tr[base.stem] or base.stem_translit
+
 	-- Undeclined forms
 	add(base, base.stem, base.stem_translit, "stem", "")
 	add(base, base.stem, base.stem_translit, "conj", "कर")
@@ -252,10 +279,10 @@ local function conjugate(base)
 
 	-- Non-aspectual
 	add_conj_gendered(base, "ind_perf", perf, trperf, AA, E, II, IIN)
-	add_conj_gendered_personal("ind_fut", nil, nil,
+	add_conj_gendered_personal("ind_fut", subj, trsubj,
 		UUM .. "गा", E .. "गा", E .. "गा", EN .. "गे", O .. "गे", EN .. "गे",
 		UUM .. "गी", E .. "गी", E .. "गी", EN .. "गी", O .. "गी", EN .. "गी")
-	add_conj_personal("subj", nil, nil, UUM, E, E, EM, O, EM)
+	add_conj_personal("subj", subj, trsubj, UUM, E, E, EM, O, EM)
 	add_conj_gendered("cfact", nil, nil, "ता", "ते", "ती", "तीं")
 	add_conj_personal("imp_pres", nil, nil, nil, "", E, nil, O, I .. "ए")
 	add_conj_personal("imp_fut", nil, nil, nil, I .. "यो", E, nil, "ना", I .. "एगा")
@@ -319,6 +346,11 @@ local function conjugate(base)
 end
 
 
+conjs["invar"] = function(base)
+	error("Implement me")
+end
+
+
 local function fetch_footnotes(separated_group)
 	local footnotes
 	for j = 2, #separated_group - 1, 2 do
@@ -334,68 +366,6 @@ local function fetch_footnotes(separated_group)
 end
 
 --[=[
-Parse a single override spec and return two values: the slot the override applies to,
-and an object describing the override spec. The input is actually a list where the footnotes have been separated out. For example, given the spec 'oblpl:हज़ारों:हज़ारहा[rare]',
-the input will be a list {"oblpl:हज़ारों:हज़ारहा", "[rare]", ""}. The object returned for
-this example looks like this:
-
-{
-  full = true,
-  values = {
-    {
-      form = "हज़ारों"
-    },
-    {
-      form = "हज़ारहा",
-      footnotes = {"[rare]"}
-    }
-  }
-}
-]=]
-local function parse_override(segments)
-	local retval = {values = {}}
-	local part = segments[1]
-	local offset = 4
-	local case = usub(part, 1, 3)
-	if cases[case] then
-		-- ok
-	else
-		error("Internal error: unrecognized case in override: '" .. table.concat(segments) .. "'")
-	end
-	local rest = usub(part, offset)
-	local slot
-	if rfind(rest, "^pl") then
-		rest = rsub(rest, "^pl", "")
-		slot = case .. "_p"
-	else
-		slot = case .. "_s"
-	end
-	if rfind(rest, "^:") then
-		retval.full = true
-		rest = rsub(rest, "^:", "")
-	else
-		error("Suffix overrides not currently supported: " .. part)
-	end
-	segments[1] = rest
-	local colon_separated_groups = iut.split_alternating_runs(segments, ":")
-	for i, colon_separated_group in ipairs(colon_separated_groups) do
-		local value = {}
-		local form = colon_separated_group[1]
-		if form == "" then
-			error("Use - to indicate an empty ending for slot '" .. slot .. "': '" .. table.concat(segments .. "'"))
-		elseif form == "-" then
-			value.form = ""
-		else
-			value.form, value.phon_form = com.split_term_respelling(form)
-		end
-		value.footnotes = fetch_footnotes(colon_separated_group)
-		table.insert(retval.values, value)
-	end
-	return slot, retval
-end
-
-
---[=[
 Parse an indicator spec (text consisting of angle brackets and zero or more
 dot-separated indicators within them). Return value is an object of the form
 
@@ -409,7 +379,7 @@ dot-separated indicators within them). Return value is an object of the form
   explicit_gender = "GENDER", -- "M", "F"; may be missing
   number = "NUMBER", -- "sg", "pl"; may be missing
   adj = true, -- may be missing
-  indecl = true, -- may be missing
+  invar = true, -- may be missing
   unmarked = true, -- may be missing
   iya = true, -- may be missing
   plstem = "PLSTEM", -- may be missing
@@ -444,58 +414,18 @@ local function parse_indicator_spec(angle_bracket_spec)
 		local dot_separated_groups = iut.split_alternating_runs(segments, "%.")
 		for i, dot_separated_group in ipairs(dot_separated_groups) do
 			local part = dot_separated_group[1]
-			local case_prefix = usub(part, 1, 3)
-			if cases[case_prefix] then
-				local slot, override = parse_override(dot_separated_group)
-				if base.overrides[slot] then
-					table.insert(base.overrides[slot], override)
-				else
-					base.overrides[slot] = {override}
-				end
-			elseif part == "" then
+			if part == "" then
 				if #dot_separated_group == 1 then
 					error("Blank indicator: '" .. inside .. "'")
 				end
 				base.footnotes = fetch_footnotes(dot_separated_group)
 			elseif #dot_separated_group > 1 then
 				error("Footnotes only allowed with slot overrides or by themselves: '" .. table.concat(dot_separated_group) .. "'")
-			elseif part == "M" or part == "F" then
-				if base.explicit_gender then
-					error("Can't specify gender twice: '" .. inside .. "'")
-				end
-				base.explicit_gender = part
-			elseif part == "sg" or part == "pl" then
-				if base.number then
-					error("Can't specify number twice: '" .. inside .. "'")
-				end
-				base.number = part
-			elseif part == "+" then
-				if base.adj then
-					error("Can't specify '+' twice: '" .. inside .. "'")
-				end
-				base.adj = true
-				error("Adjectival declensions not implemented yet")
 			elseif part == "$" then
-				if base.indecl then
+				if base.invar then
 					error("Can't specify '$' twice: '" .. inside .. "'")
 				end
-				base.indecl = true
-			elseif part == "unmarked" then
-				if base.unmarked then
-					error("Can't specify 'unmarked' twice: '" .. inside .. "'")
-				end
-				base.unmarked = true
-			elseif part == "iyā" then
-				if base.iya then
-					error("Can't specify 'iyā' twice: '" .. inside .. "'")
-				end
-				base.iya = true
-			elseif rfind(part, "^plstem:") then
-				if base.plstem then
-					error("Can't specify plural stem twice: '" .. inside .. "'")
-				end
-				base.plstem, base.pl_phon_stem = com.split_term_respelling(rsub(part, "^plstem:", ""))
-				base.pl_translit_stem = com.transliterate_respelling(base.pl_phon_stem) or lang:transliterate(base.plstem)
+				base.invar = true
 			else
 				error("Unrecognized indicator '" .. part .. "': '" .. inside .. "'")
 			end
@@ -506,59 +436,15 @@ end
 
 
 local function set_defaults_and_check_bad_indicators(base)
-	-- Set default values.
-	if not base.adj then
-		base.number = base.number or "both"
-	end
-	base.gender = base.explicit_gender
-	if base.iya then
-		if base.adj then
-			error("Can't specify both '+' and 'iya'")
-		end
-		if base.gender == "M" then
-			error("Can't specify M gender with 'iyā' indicator")
-		end
-		if not rfind(base.lemma, I .. "याँ?$") then
-			error("With 'iyā' indicator, lemma must end in " .. I .. "या or " .. I .. "याँ: " .. base.lemma)
-		end
-		base.gender = "F"
-	end
-	if base.unmarked then
-		if base.adj then
-			error("Can't specify both '+' and 'unmarked'")
-		end
-		if base.iya then
-			error("Can't specify both 'iya' and 'unmarked'")
-		end
-		if base.gender == "F" then
-			error("Can't specify F gender with 'unmarked' indicator")
-		end
-		base.gender = "M"
-	end
-	if rfind(base.lemma, "[" .. O .. H .. R .. "]$") then
-		if base.gender == "F" then
-			error("Can't specify F gender with lemma ending in " .. O .. ", " .. H .. " or " .. R .. ": " .. base.lemma)
-		end
-		base.gender = "M"
-	end
-	if not base.gender and not base.indecl then
-		error("Unless lemma is in " .. O .. ", " .. H .. " or " .. R .. " or 'iya', 'unmarked' or '$' specified, gender must be given: " .. base.lemma)
-	end
-	if base.adj and base.indecl then
-		error("Can't specify both '+' and '$' on the same lemma " .. base.lemma)
-	end
 end
 
 
 local function detect_indicator_spec(base)
 	set_defaults_and_check_bad_indicators(base)
-	if base.adj then
-		synthesize_adj_lemma(base)
+	if base.invar then
+		base.decl = "invar"
 	else
-		if base.number == "pl" then
-			synthesize_singular_lemma(base)
-		end
-		determine_declension(base)
+		base.decl = "normal"
 	end
 end
 
@@ -572,189 +458,12 @@ local function detect_all_indicator_specs(alternant_multiword_spec)
 end
 
 
-local propagate_multiword_properties
-
-
-local function propagate_alternant_properties(alternant_spec, property, mixed_value, nouns_only)
-	local seen_property
-	for _, multiword_spec in ipairs(alternant_spec.alternants) do
-		propagate_multiword_properties(multiword_spec, property, mixed_value, nouns_only)
-		if seen_property == nil then
-			seen_property = multiword_spec[property]
-		elseif multiword_spec[property] and seen_property ~= multiword_spec[property] then
-			seen_property = mixed_value
-		end
+local function conjugate_verb(base)
+	if not conjs[base.conj] then
+		error("Internal error: Unrecognized conjugation type '" .. base.conj .. "'")
 	end
-	alternant_spec[property] = seen_property
-end
-
-
-propagate_multiword_properties = function(multiword_spec, property, mixed_value, nouns_only)
-	local seen_property = nil
-	local last_seen_nounal_pos = 0
-	local word_specs = multiword_spec.alternant_or_word_specs or multiword_spec.word_specs
-	for i = 1, #word_specs do
-		local is_nounal
-		if word_specs[i].alternants then
-			propagate_alternant_properties(word_specs[i], property, mixed_value)
-			is_nounal = not not word_specs[i][property]
-		elseif nouns_only then
-			is_nounal = not word_specs[i].adj and not word_specs[i].indecl
-		else
-			is_nounal = not not word_specs[i][property]
-		end
-		if is_nounal then
-			if not word_specs[i][property] then
-				error("Internal error: noun-type word spec without " .. property .. " set")
-			end
-			for j = last_seen_nounal_pos + 1, i - 1 do
-				word_specs[j][property] = word_specs[j][property] or word_specs[i][property]
-			end
-			last_seen_nounal_pos = i
-			if seen_property == nil then
-				seen_property = word_specs[i][property]
-			elseif seen_property ~= word_specs[i][property] then
-				seen_property = mixed_value
-			end
-		end
-	end
-	if last_seen_nounal_pos > 0 then
-		for i = last_seen_nounal_pos + 1, #word_specs do
-			word_specs[i][property] = word_specs[i][property] or word_specs[last_seen_nounal_pos][property]
-		end
-	end
-	multiword_spec[property] = seen_property
-end
-
-
-local function propagate_properties_downward(alternant_multiword_spec, property, default_propval)
-	local propval1 = alternant_multiword_spec[property] or default_propval
-	for _, alternant_or_word_spec in ipairs(alternant_multiword_spec.alternant_or_word_specs) do
-		local propval2 = alternant_or_word_spec[property] or propval1
-		if alternant_or_word_spec.alternants then
-			for _, multiword_spec in ipairs(alternant_or_word_spec.alternants) do
-				local propval3 = multiword_spec[property] or propval2
-				for _, word_spec in ipairs(multiword_spec.word_specs) do
-					local propval4 = word_spec[property] or propval3
-					if propval4 == "mixed" then
-						error("Attempt to assign mixed " .. property .. " to word")
-					end
-					word_spec[property] = propval4
-				end
-			end
-		else
-			if propval2 == "mixed" then
-				error("Attempt to assign mixed " .. property .. " to word")
-			end
-			alternant_or_word_spec[property] = propval2
-		end
-	end
-end
-
-
---[=[
-Propagate `property` (one of "animacy", "gender" or "number") from nouns to adjacent
-adjectives. We proceed as follows:
-1. We assume the properties in question are already set on all nouns. This should happen
-   in set_defaults_and_check_bad_indicators().
-2. We first propagate properties upwards and sideways. We recurse downwards from the top.
-   When we encounter a multiword spec, we proceed left to right looking for a noun.
-   When we find a noun, we fetch its property (recursing if the noun is an alternant),
-   and propagate it to any adjectives to its left, up to the next noun to the left.
-   When we have processed the last noun, we also propagate its property value to any
-   adjectives to the right (to handle e.g. [[пустальга звычайная]] "common kestrel", where
-   the adjective польовий should inherit the 'animal' animacy of лунь). Finally, we set
-   the property value for the multiword spec itself by combining all the non-nil
-   properties of the individual elements. If all non-nil properties have the same value,
-   the result is that value, otherwise it is `mixed_value` (which is "mixed" for animacy
-   and gender, but "both" for number).
-3. When we encounter an alternant spec in this process, we recursively process each
-   alternant (which is a multiword spec) using the previous step, and combine any
-   non-nil properties we encounter the same way as for multiword specs.
-4. The effect of steps 2 and 3 is to set the property of each alternant and multiword
-   spec based on its children or its neighbors.
-]=]
-local function propagate_properties(alternant_multiword_spec, property, default_propval, mixed_value)
-	propagate_multiword_properties(alternant_multiword_spec, property, mixed_value, "nouns only")
-	propagate_multiword_properties(alternant_multiword_spec, property, mixed_value, false)
-	propagate_properties_downward(alternant_multiword_spec, property, default_propval)
-end
-
-
--- Find the first noun in a multiword expression and set alternant_multiword_spec.first_noun
--- to the index of that noun. Also find the first adjective and set alternant_multiword_spec.first_adj
--- similarly. If there is a first noun, we use its properties to determine the overall expression's
--- properties; otherwise we use the first adjective's properties, otherwise the first word's properties.
--- If the "word" located this way is not an alternant spec, we just use its properties directly, otherwise
--- we use the properties of the first noun (or failing that the first adjective, or failing that the
--- first word) in each alternative alternant in the alternant spec. For this reason, we need to set the
--- the .first_noun of and .first_adj of each multiword expression embedded in the first noun alternant spec,
--- and the .first_adj of each multiword expression in each adjective alternant spec leading up to the
--- first noun alternant spec.
-local function determine_noun_status(alternant_multiword_spec)
-	for i, alternant_or_word_spec in ipairs(alternant_multiword_spec.alternant_or_word_specs) do
-		if alternant_or_word_spec.alternants then
-			local alternant_type
-			for _, multiword_spec in ipairs(alternant_or_word_spec.alternants) do
-				for j, word_spec in ipairs(multiword_spec.word_specs) do
-					if not word_spec.indecl then
-						if not word_spec.adj then
-							multiword_spec.first_noun = j
-							alternant_type = "noun"
-							break
-						elseif not multiword_spec.first_adj then
-							multiword_spec.first_adj = j
-							if not alternant_type then
-								alternant_type = "adj"
-							end
-						end
-					end
-				end
-			end
-			if alternant_type == "noun" then
-				alternant_multiword_spec.first_noun = i
-				return
-			elseif alternant_type == "adj" and not alternant_multiword_spec.first_adj then
-				alternant_multiword_spec.first_adj = i
-			end
-		elseif not alternant_or_word_spec.indecl then
-			if not alternant_or_word_spec.adj then
-				alternant_multiword_spec.first_noun = i
-				return
-			elseif not alternant_multiword_spec.first_adj then
-				alternant_multiword_spec.first_adj = i
-			end
-		end
-	end
-end
-
-
-local function decline_noun(base)
-	if not decls[base.decl] then
-		error("Internal error: Unrecognized declension type '" .. base.decl .. "'")
-	end
-	decls[base.decl](base)
+	conjs[base.conj](base)
 	handle_derived_slots_and_overrides(base)
-end
-
-
-local function process_manual_overrides(forms, args, number)
-	local params_to_slots_map =
-		number == "sg" and input_params_to_slots_sg or
-		number == "pl" and input_params_to_slots_pl or
-		input_params_to_slots_both
-	for param, slot in pairs(params_to_slots_map) do
-		if args[param] then
-			forms[slot] = nil
-			if args[param] ~= "-" and args[param] ~= "—" then
-				for _, form in ipairs(rsplit(args[param], "%s*,%s*")) do
-					local hi, phon = com.split_term_respelling(form)
-					local tr = phon and com.transliterate_respelling(phon) or nil
-					iut.insert_form(forms, slot, {form=form, translit=tr})
-				end
-			end
-		end
-	end
 end
 
 
@@ -834,7 +543,7 @@ local function compute_categories_and_annotation(alternant_multiword_spec)
 			table.insert(annparts, alternant_multiword_spec.number == "sg" and "sg-only" or "pl-only")
 		end
 		if #decldescs == 0 then
-			table.insert(annparts, "indecl")
+			table.insert(annparts, "invar")
 		else
 			table.insert(annparts, table.concat(decldescs, " // "))
 		end
@@ -859,68 +568,440 @@ end
 
 
 local function make_table(alternant_multiword_spec)
-	local forms = alternant_multiword_spec.forms
+	local table_spec_impersonal = [=[
+{| class="inflection-table vsSwitcher" data-toggle-category="inflection" style="background:#F9F9F9; text-align:center; border: 1px solid #CCC; min-width: 20em"
+|- style="background: #d9ebff;"
+! class="vsToggleElement" style="text-align: left;" colspan="100%" | Impersonal forms of {inf_raw}
+|- class="vsHide"
+| style="width: 5em; background: #E6F2FF;" rowspan=1 colspan=100% | ''Undeclined''
+|- class="vsHide"
+| style="width: 5em; background: #E6F2FF;" rowspan=1 colspan=2 | ''Stem''
+| colspan="100%" | {stem}
+|- class="vsHide"
+| style="width: 5em; background: #E6F2FF;" rowspan=1 colspan=2 | ''Conjunctive''
+| colspan="100%" | {conj}
+|- class="vsHide"
+| style="width: 5em; background: #E6F2FF;" rowspan=1 colspan=2 | ''Progressive''
+| colspan="100%" | {prog}
+|- class="vsHide"
+| style="width: 5em; background: #E6F2FF;" rowspan=1 colspan=100% | ''Participles''
+|- class="vsHide"
+|- class="vsHide"
+| style="background:#E6F2FF" colspan=2 |
+| style="background: #D4D4D4;" | {m} {s}
+| style="background: #D4D4D4;" | {m} {p}
+| style="background: #D4D4D4;" | {f} {s}
+| style="background: #D4D4D4;" | {f} {p}
+|- class="vsHide"
+| style="width: 5em; background: #E6F2FF;" rowspan=1 colspan=2 | ''Infinitive''
+| {inf_ms}
+| {inf_mp}
+| {inf_fs}
+| {inf_fp}
+|- class="vsHide"
+| style="width: 5em; background: #E6F2FF;" rowspan=1 colspan=2 | ''Habitual''
+| {hab_ms}
+| {hab_mp}
+| {hab_fs}
+| {hab_fp}
+|- class="vsHide"
+| style="width: 5em; background: #E6F2FF;" rowspan=1 colspan=2 | ''Perfective''
+| {pfv_ms}
+| {pfv_mp}
+| {pfv_fs}
+| {pfv_fp}
+|- class="vsHide"
+| style="width: 5em; background: #E6F2FF;" rowspan=1 colspan=2 | ''Prospective<br>Agentive''
+| {agent_ms}
+| {agent_mp}
+| {agent_fs}
+| {agent_fp}
+|- class="vsHide"
+| style="width: 5em; background: #E6F2FF;" rowspan=1 colspan=2 | ''Adjectival''
+| {adj_ms}
+| {adj_mp}
+| {adj_fs}
+| {adj_fp}
+|{\cl}
+]=]
 
-	local table_spec_both = [=[
-<div class="NavFrame" style="display: inline-block;min-width: 45em">
-<div class="NavHead" style="background:#eff7ff" >{title}{annotation}</div>
-<div class="NavContent">
-{\op}| style="background:#F9F9F9;text-align:center;min-width:45em" class="inflection-table"
-|-
-! style="width:33%;background:#d9ebff" |
-! style="background:#d9ebff" | singular
-! style="background:#d9ebff" | plural
-|-
-!style="background:#eff7ff" | direct
-| {dir_s}
-| {dir_p}
-|-
-!style="background:#eff7ff" | oblique
-| {obl_s}
-| {obl_p}
-|-
-!style="background:#eff7ff" | vocative
-| {voc_s}
-| {voc_p}
-|{\cl}{notes_clause}</div></div>]=]
-
-	local table_spec_sg = [=[
-<div class="NavFrame" style="width:30em">
-<div class="NavHead" style="background:#eff7ff">{title}{annotation}</div>
-<div class="NavContent">
-{\op}| style="background:#F9F9F9;text-align:center;width:30em" class="inflection-table"
-|-
-! style="width:33%;background:#d9ebff" |
-! style="background:#d9ebff" | singular
-|-
-!style="background:#eff7ff" | direct
-| {dir_s}
-|-
-!style="background:#eff7ff" | oblique
-| {obl_s}
-|-
-!style="background:#eff7ff" | vocative
-| {voc_s}
-|{\cl}{notes_clause}</div></div>]=]
-
-	local table_spec_pl = [=[
-<div class="NavFrame" style="width:30em">
-<div class="NavHead" style="background:#eff7ff">{title}{annotation}</div>
-<div class="NavContent">
-{\op}| style="background:#F9F9F9;text-align:center;width:30em" class="inflection-table"
-|-
-! style="width:33%;background:#d9ebff" |
-! style="background:#d9ebff" | plural
-|-
-!style="background:#eff7ff" | direct
-| {dir_p}
-|-
-!style="background:#eff7ff" | oblique
-| {obl_p}
-|-
-!style="background:#eff7ff" | vocative
-| {voc_p}
-|{\cl}{notes_clause}</div></div>]=]
+	local table_spec_personal = [=[
+{| class="inflection-table vsSwitcher" data-toggle-category="inflection" style="background:#F9F9F9; text-align:center; border: 1px solid #CCC; min-width: 20em"
+|- style="background: #d9ebff;"
+! class="vsToggleElement" style="text-align: left;" colspan="100%" | Personal forms of {inf_raw}
+|- class="vsHide" style="background: #DFEEFF;"
+| rowspan=2 |
+| rowspan=2 |
+| rowspan=2 |
+| colspan=3 | '''Singular'''
+| colspan=3 | '''Plural'''
+|- class="vsHide" style="background: #DFEEFF;"
+| '''1<sup>st</sup>'''<br><span lang="hi" class="Deva">[[मैं]]</span>
+| '''2<sup>nd</sup>'''<br><span lang="hi" class="Deva">[[तू]]</span>
+| '''3<sup>rd</sup>'''<br><span lang="hi" class="Deva">[[यह]]/[[वह]]</span>
+| '''1<sup>st</sup>'''<br><span lang="hi" class="Deva">[[हम]]</span>
+| '''2<sup>nd</sup>'''<br><span lang="hi" class="Deva">[[तुम]]</span>
+| '''3<sup>rd</sup>'''<br><span lang="hi" class="Deva">[[ये]]/[[वे]]/[[आप]]</span>
+|- class="vsHide"
+| style="width: 5em; background: #E6F2FF;" rowspan=1 colspan=100% | ''Non-Aspectual''
+|- class="vsHide"
+| style="width: 5em; background: #E6F2FF;" rowspan=4 colspan=1 | ''Indicative''
+| style="width: 5em; background: #E6F2FF;" rowspan=2 colspan=1 | {PERF}
+| style="width: 1em; background: #D4D4D4;" | {m}
+| colspan=3 | {ind_perf_ms}
+| colspan=3 | {ind_perf_mp}
+|- class="vsHide"
+| style="width: 1em; background: #D4D4D4;" | {f}
+| colspan=3 | {ind_perf_fs}
+| colspan=3 | {ind_perf_fp}
+|- class="vsHide"
+| style="width: 5em; background: #E6F2FF;" rowspan=2 colspan=1 | {FUT}
+| style="width: 1em; background: #D4D4D4;" | {m}
+| {ind_fut_1sm}
+| {ind_fut_2sm}
+| {ind_fut_3sm}
+| {ind_fut_1pm}
+| {ind_fut_2pm}
+| {ind_fut_3pm}
+|- class="vsHide"
+| style="width: 1em; background: #D4D4D4;" | {f}
+| {ind_fut_1sf}
+| {ind_fut_2sf}
+| {ind_fut_3sf}
+| {ind_fut_1pf}
+| {ind_fut_2pf}
+| {ind_fut_3pf}
+|- class="vsHide"
+| style="width: 5em; background: #E6F2FF;" rowspan=1 colspan=1 | ''Subjunctive''
+| style="width: 5em; background: #E6F2FF;" rowspan=1 colspan=2 | {PRS_FUT}
+| {subj_1s}
+| {subj_2s}
+| {subj_3s}
+| {subj_1p}
+| {subj_2p}
+| {subj_3p}
+|- class="vsHide"
+| style="width: 5em; background: #E6F2FF;" rowspan=2 colspan=1 | ''Contrafactual''
+| style="width: 5em; background: #E6F2FF;" rowspan=2 colspan=1 | {PRS_PST}
+| style="width: 1em; background: #D4D4D4;" | {m}
+| colspan=3 | {cfact_ms}
+| colspan=3 | {cfact_mp}
+|- class="vsHide"
+| style="width: 1em; background: #D4D4D4;" | {f}
+| colspan=3 | {cfact_fs}
+| colspan=3 | {cfact_fp}
+|- class="vsHide"
+| style="width: 5em; background: #E6F2FF;" rowspan=2 colspan=1 | ''Imperative''
+| style="width: 5em; background: #E6F2FF;" rowspan=1 colspan=2 | {PRS}
+|
+| {imp_pres_2s}
+| {imp_pres_3s}
+|
+| {imp_pres_2p}
+| {imp_pres_3p}
+|- class="vsHide"
+| style="width: 5em; background: #E6F2FF;" rowspan=1 colspan=2 | {FUT}
+|
+| {imp_fut_2s}
+| {imp_fut_3s}
+|
+| {imp_fut_2p}
+| {imp_fut_3p}
+|- class="vsHide"
+| style="width: 5em; background: #E6F2FF;" rowspan=1 colspan=100% | ''Habitual''
+|- class="vsHide"
+| style="width: 5em; background: #E6F2FF;" rowspan=4 colspan=1 | ''Indicative''
+| style="width: 5em; background: #E6F2FF;" rowspan=2 colspan=1 | {PRS}
+| style="width: 1em; background: #D4D4D4;" | {m}
+| {hab_ind_pres_1sm}
+| {hab_ind_pres_2sm}
+| {hab_ind_pres_3sm}
+| {hab_ind_pres_1pm}
+| {hab_ind_pres_2pm}
+| {hab_ind_pres_3pm}
+|- class="vsHide"
+| style="width: 1em; background: #D4D4D4;" | {f}
+| {hab_ind_pres_1sf}
+| {hab_ind_pres_2sf}
+| {hab_ind_pres_3sf}
+| {hab_ind_pres_1pf}
+| {hab_ind_pres_2pf}
+| {hab_ind_pres_3pf}
+|- class="vsHide"
+| style="width: 5em; background: #E6F2FF;" rowspan=2 colspan=1 | {PST}
+| style="width: 1em; background: #D4D4D4;" | {m}
+| colspan=3 | {hab_ind_past_ms}
+| colspan=3 | {hab_ind_past_mp}
+|- class="vsHide"
+| style="width: 1em; background: #D4D4D4;" | {f}
+| colspan=3 | {hab_ind_past_fs}
+| colspan=3 | {hab_ind_past_fp}
+|- class="vsHide"
+| style="width: 5em; background: #E6F2FF;" rowspan=2 colspan=1 | ''Presumptive''
+| style="width: 5em; background: #E6F2FF;" rowspan=2 colspan=1 | {PRS_PST}
+| style="width: 1em; background: #D4D4D4;" | {m}
+| {hab_presumptive_1sm}
+| {hab_presumptive_2sm}
+| {hab_presumptive_3sm}
+| {hab_presumptive_1pm}
+| {hab_presumptive_2pm}
+| {hab_presumptive_3pm}
+|- class="vsHide"
+| style="width: 1em; background: #D4D4D4;" | {f}
+| {hab_presumptive_1sf}
+| {hab_presumptive_2sf}
+| {hab_presumptive_3sf}
+| {hab_presumptive_1pf}
+| {hab_presumptive_2pf}
+| {hab_presumptive_3pf}
+|- class="vsHide"
+| style="width: 5em; background: #E6F2FF;" rowspan=2 colspan=1 | ''Subjunctive''
+| style="width: 5em; background: #E6F2FF;" rowspan=2 colspan=1 | {PRS}
+| style="width: 1em; background: #D4D4D4;" | {m}
+| {hab_subj_1sm}
+| {hab_subj_2sm}
+| {hab_subj_3sm}
+| {hab_subj_1pm}
+| {hab_subj_2pm}
+| {hab_subj_3pm}
+|- class="vsHide"
+| style="width: 1em; background: #D4D4D4;" | {f}
+| {hab_subj_1sf}
+| {hab_subj_2sf}
+| {hab_subj_3sf}
+| {hab_subj_1pf}
+| {hab_subj_2pf}
+| {hab_subj_3pf}
+|- class="vsHide"
+| style="width: 5em; background: #E6F2FF;" rowspan=2 colspan=1 | ''Contrafactual''
+| style="width: 5em; background: #E6F2FF;" rowspan=2 colspan=1 | {PRS_PST}
+| style="width: 1em; background: #D4D4D4;" | {m}
+| colspan=3 | {hab_cfact_ms}
+| colspan=3 | {hab_cfact_mp}
+|- class="vsHide"
+| style="width: 1em; background: #D4D4D4;" | {f}
+| colspan=3 | {hab_cfact_fs}
+| colspan=3 | {hab_cfact_fp}
+|- class="vsHide"
+| style="width: 5em; background: #E6F2FF;" rowspan=1 colspan=100% | ''Perfective''
+|- class="vsHide"
+| style="width: 5em; background: #E6F2FF;" rowspan=6 colspan=1 | ''Indicative''
+| style="width: 5em; background: #E6F2FF;" rowspan=2 colspan=1 | {PRS}
+| style="width: 1em; background: #D4D4D4;" | {m}
+| {pfv_ind_pres_1sm}
+| {pfv_ind_pres_2sm}
+| {pfv_ind_pres_3sm}
+| {pfv_ind_pres_1pm}
+| {pfv_ind_pres_2pm}
+| {pfv_ind_pres_3pm}
+|- class="vsHide"
+| style="width: 1em; background: #D4D4D4;" | {f}
+| {pfv_ind_pres_1sf}
+| {pfv_ind_pres_2sf}
+| {pfv_ind_pres_3sf}
+| {pfv_ind_pres_1pf}
+| {pfv_ind_pres_2pf}
+| {pfv_ind_pres_3pf}
+|- class="vsHide"
+| style="width: 5em; background: #E6F2FF;" rowspan=2 colspan=1 | {PST}
+| style="width: 1em; background: #D4D4D4;" | {m}
+| colspan=3 | {pfv_ind_past_ms}
+| colspan=3 | {pfv_ind_past_mp}
+|- class="vsHide"
+| style="width: 1em; background: #D4D4D4;" | {f}
+| colspan=3 | {pfv_ind_past_fs}
+| colspan=3 | {pfv_ind_past_fp}
+|- class="vsHide"
+| style="width: 5em; background: #E6F2FF;" rowspan=2 colspan=1 | {FUT}
+| style="width: 1em; background: #D4D4D4;" | {m}
+| {pfv_ind_fut_1sm}
+| {pfv_ind_fut_2sm}
+| {pfv_ind_fut_3sm}
+| {pfv_ind_fut_1pm}
+| {pfv_ind_fut_2pm}
+| {pfv_ind_fut_3pm}
+|- class="vsHide"
+| style="width: 1em; background: #D4D4D4;" | {f}
+| {pfv_ind_fut_1sf}
+| {pfv_ind_fut_2sf}
+| {pfv_ind_fut_3sf}
+| {pfv_ind_fut_1pf}
+| {pfv_ind_fut_2pf}
+| {pfv_ind_fut_3pf}
+|- class="vsHide"
+| style="width: 5em; background: #E6F2FF;" rowspan=2 colspan=1 | ''Presumptive''
+| style="width: 5em; background: #E6F2FF;" rowspan=2 colspan=1 | {PRS_PST}
+| style="width: 1em; background: #D4D4D4;" | {m}
+| {pfv_presumptive_1sm}
+| {pfv_presumptive_2sm}
+| {pfv_presumptive_3sm}
+| {pfv_presumptive_1pm}
+| {pfv_presumptive_2pm}
+| {pfv_presumptive_3pm}
+|- class="vsHide"
+| style="width: 1em; background: #D4D4D4;" | {f}
+| {pfv_presumptive_1sf}
+| {pfv_presumptive_2sf}
+| {pfv_presumptive_3sf}
+| {pfv_presumptive_1pf}
+| {pfv_presumptive_2pf}
+| {pfv_presumptive_3pf}
+|- class="vsHide"
+| style="width: 5em; background: #E6F2FF;" rowspan=4 colspan=1 | ''Subjunctive''
+| style="width: 5em; background: #E6F2FF;" rowspan=2 colspan=1 | {PRS}
+| style="width: 1em; background: #D4D4D4;" | {m}
+| {pfv_subj_pres_1sm}
+| {pfv_subj_pres_2sm}
+| {pfv_subj_pres_3sm}
+| {pfv_subj_pres_1pm}
+| {pfv_subj_pres_2pm}
+| {pfv_subj_pres_3pm}
+|- class="vsHide"
+| style="width: 1em; background: #D4D4D4;" | {f}
+| {pfv_subj_pres_1sf}
+| {pfv_subj_pres_2sf}
+| {pfv_subj_pres_3sf}
+| {pfv_subj_pres_1pf}
+| {pfv_subj_pres_2pf}
+| {pfv_subj_pres_3pf}
+|- class="vsHide"
+| style="width: 5em; background: #E6F2FF;" rowspan=2 colspan=1 | {FUT}
+| style="width: 1em; background: #D4D4D4;" | {m}
+| {pfv_subj_fut_1sm}
+| {pfv_subj_fut_2sm}
+| {pfv_subj_fut_3sm}
+| {pfv_subj_fut_1pm}
+| {pfv_subj_fut_2pm}
+| {pfv_subj_fut_3pm}
+|- class="vsHide"
+| style="width: 1em; background: #D4D4D4;" | {f}
+| {pfv_subj_fut_1sf}
+| {pfv_subj_fut_2sf}
+| {pfv_subj_fut_3sf}
+| {pfv_subj_fut_1pf}
+| {pfv_subj_fut_2pf}
+| {pfv_subj_fut_3pf}
+|- class="vsHide"
+| style="width: 5em; background: #E6F2FF;" rowspan=2 colspan=1 | ''Contrafactual''
+| style="width: 5em; background: #E6F2FF;" rowspan=2 colspan=1 | {PRS_PST}
+| style="width: 1em; background: #D4D4D4;" | {m}
+| colspan=3 | {pfv_cfact_ms}
+| colspan=3 | {pfv_cfact_mp}
+|- class="vsHide"
+| style="width: 1em; background: #D4D4D4;" | {f}
+| colspan=3 | {pfv_cfact_fs}
+| colspan=3 | {pfv_cfact_fp}
+|- class="vsHide"
+| style="width: 5em; background: #E6F2FF;" rowspan=1 colspan=100% | ''Progressive''
+|- class="vsHide"
+| style="width: 5em; background: #E6F2FF;" rowspan=6 colspan=1 | ''Indicative''
+| style="width: 5em; background: #E6F2FF;" rowspan=2 colspan=1 | {PRS}
+| style="width: 1em; background: #D4D4D4;" | {m}
+| {prog_ind_pres_1sm}
+| {prog_ind_pres_2sm}
+| {prog_ind_pres_3sm}
+| {prog_ind_pres_1pm}
+| {prog_ind_pres_2pm}
+| {prog_ind_pres_3pm}
+|- class="vsHide"
+| style="width: 1em; background: #D4D4D4;" | {f}
+| {prog_ind_pres_1sf}
+| {prog_ind_pres_2sf}
+| {prog_ind_pres_3sf}
+| {prog_ind_pres_1pf}
+| {prog_ind_pres_2pf}
+| {prog_ind_pres_3pf}
+|- class="vsHide"
+| style="width: 5em; background: #E6F2FF;" rowspan=2 colspan=1 | {PST}
+| style="width: 1em; background: #D4D4D4;" | {m}
+| colspan=3 | {prog_ind_past_ms}
+| colspan=3 | {prog_ind_past_mp}
+|- class="vsHide"
+| style="width: 1em; background: #D4D4D4;" | {f}
+| colspan=3 | {prog_ind_past_fs}
+| colspan=3 | {prog_ind_past_fp}
+|- class="vsHide"
+| style="width: 5em; background: #E6F2FF;" rowspan=2 colspan=1 | {FUT}
+| style="width: 1em; background: #D4D4D4;" | {m}
+| {prog_ind_fut_1sm}
+| {prog_ind_fut_2sm}
+| {prog_ind_fut_3sm}
+| {prog_ind_fut_1pm}
+| {prog_ind_fut_2pm}
+| {prog_ind_fut_3pm}
+|- class="vsHide"
+| style="width: 1em; background: #D4D4D4;" | {f}
+| {prog_ind_fut_1sf}
+| {prog_ind_fut_2sf}
+| {prog_ind_fut_3sf}
+| {prog_ind_fut_1pf}
+| {prog_ind_fut_2pf}
+| {prog_ind_fut_3pf}
+|- class="vsHide"
+| style="width: 5em; background: #E6F2FF;" rowspan=2 colspan=1 | ''Presumptive''
+| style="width: 5em; background: #E6F2FF;" rowspan=2 colspan=1 | {PRS_PST}
+| style="width: 1em; background: #D4D4D4;" | {m}
+| {prog_presumptive_1sm}
+| {prog_presumptive_2sm}
+| {prog_presumptive_3sm}
+| {prog_presumptive_1pm}
+| {prog_presumptive_2pm}
+| {prog_presumptive_3pm}
+|- class="vsHide"
+| style="width: 1em; background: #D4D4D4;" | {f}
+| {prog_presumptive_1sf}
+| {prog_presumptive_2sf}
+| {prog_presumptive_3sf}
+| {prog_presumptive_1pf}
+| {prog_presumptive_2pf}
+| {prog_presumptive_3pf}
+|- class="vsHide"
+| style="width: 5em; background: #E6F2FF;" rowspan=4 colspan=1 | ''Subjunctive''
+| style="width: 5em; background: #E6F2FF;" rowspan=2 colspan=1 | {PRS}
+| style="width: 1em; background: #D4D4D4;" | {m}
+| {prog_subj_pres_1sm}
+| {prog_subj_pres_2sm}
+| {prog_subj_pres_3sm}
+| {prog_subj_pres_1pm}
+| {prog_subj_pres_2pm}
+| {prog_subj_pres_3pm}
+|- class="vsHide"
+| style="width: 1em; background: #D4D4D4;" | {f}
+| {prog_subj_pres_1sf}
+| {prog_subj_pres_2sf}
+| {prog_subj_pres_3sf}
+| {prog_subj_pres_1pf}
+| {prog_subj_pres_2pf}
+| {prog_subj_pres_3pf}
+|- class="vsHide"
+| style="width: 5em; background: #E6F2FF;" rowspan=2 colspan=1 | {FUT}
+| style="width: 1em; background: #D4D4D4;" | {m}
+| {prog_subj_fut_1sm}
+| {prog_subj_fut_2sm}
+| {prog_subj_fut_3sm}
+| {prog_subj_fut_1pm}
+| {prog_subj_fut_2pm}
+| {prog_subj_fut_3pm}
+|- class="vsHide"
+| style="width: 1em; background: #D4D4D4;" | {f}
+| {prog_subj_fut_1sf}
+| {prog_subj_fut_2sf}
+| {prog_subj_fut_3sf}
+| {prog_subj_fut_1pf}
+| {prog_subj_fut_2pf}
+| {prog_subj_fut_3pf}
+|- class="vsHide"
+| style="width: 5em; background: #E6F2FF;" rowspan=2 colspan=1 | ''Contrafactual''
+| style="width: 5em; background: #E6F2FF;" rowspan=2 colspan=1 | {PRS_PST}
+| style="width: 1em; background: #D4D4D4;" | {m}
+| colspan=3 | {prog_cfact_ms}
+| colspan=3 | {prog_cfact_mp}
+|- class="vsHide"
+| style="width: 1em; background: #D4D4D4;" | {f}
+| colspan=3 | {prog_cfact_fs}
+| colspan=3 | {prog_cfact_fp}
+|{\cl}]=]
+	-- FIXME: Figure out how to add notes clause
 
 	local notes_template = [===[
 <div style="width:100%;text-align:left;background:#d9ebff">
@@ -929,6 +1010,30 @@ local function make_table(alternant_multiword_spec)
 </div></div>
 ]===]
 
+	local forms = alternant_multiword_spec.forms
+
+	local function make_gender_abbr(title, text)
+		return '<span class="gender"><abbr title="' .. title .. '">' .. text .. '</abbr></span>'
+	end
+	local function make_tense_aspect_abbr(title, text)
+		local template = [=[
+''<abbr style="font-variant: small-caps; text-transform: lowercase;" title="{title}">{text}</abbr>'']=]
+		return m_string_utilities.format(template, {title = title, text = text})
+	end
+	forms.m = make_gender_abbr("masculine gender", "m")
+	forms.f = make_gender_abbr("feminine gender", "f")
+	forms.s = make_gender_abbr("singular number", "s")
+	forms.p = make_gender_abbr("plural number", "p")
+	forms.PERF = make_tense_aspect_abbr("Perfect", "PERF")
+	forms.PST = make_tense_aspect_abbr("Past", "PST")
+	forms.FUT = make_tense_aspect_abbr("Future", "FUT")
+	forms.PRS = make_tense_aspect_abbr("Present", "PRS")
+	forms.PRS_FUT = make_tense_aspect_abbr("Present/Future", "PRS<br />FUT")
+	forms.PRS_PST = make_tense_aspect_abbr("Present/Past", "PRS<br />PST")
+
+	forms.notes_clause = forms.footnote ~= "" and
+		m_string_utilities.format(notes_template, forms) or ""
+	return m_string_utilities.format(table_spec, forms)
 	if alternant_multiword_spec.title then
 		forms.title = alternant_multiword_spec.title
 	else
@@ -952,29 +1057,7 @@ local function make_table(alternant_multiword_spec)
 end
 
 
-local function compute_headword_genders(alternant_multiword_spec)
-	local genders = {}
-	local number
-	if alternant_multiword_spec.number == "pl" then
-		number = "-p"
-	else
-		number = ""
-	end
-	iut.map_word_specs(alternant_multiword_spec, function(base)
-		if base.gender == "M" then
-			m_table.insertIfNot(genders, "m" .. number)
-		elseif base.gender == "F" then
-			m_table.insertIfNot(genders, "f" .. number)
-		else
-			error("Internal error: Unrecognized gender '" ..
-				(base.gender or "nil") .. "'")
-		end
-	end)
-	return genders
-end
-
-
--- Implementation of template 'hi-noun cat'.
+-- Implementation of template 'hi-verb cat'.
 function export.catboiler(frame)
 	local SUBPAGENAME = mw.title.getCurrentTitle().subpageText
 	local params = {
@@ -988,7 +1071,7 @@ function export.catboiler(frame)
 			pos = rmatch(SUBPAGENAME, "^Hindi.- ([^ ]*)s$")
 		end
 		if not pos then
-			error("Invalid category name, should be e.g. \"Hindi nouns with ...\" or \"Hindi ... nouns\"")
+			error("Invalid category name, should be e.g. \"Hindi verbs with ...\" or \"Hindi ... verbs\"")
 		end
 		return pos
 	end
@@ -1027,30 +1110,6 @@ function export.catboiler(frame)
 			break
 		end
 
-		local gender, stem
-		gender, stem, pos = rmatch(SUBPAGENAME, "^Hindi ([a-z]+ine) (independent unmarked [^ %-]*%-stem) (.*)s$")
-		if not gender then
-			gender, stem, pos = rmatch(SUBPAGENAME, "^Hindi ([a-z]+ine) (independent [^ %-]*%-stem) (.*)s$")
-		end
-		if not gender then
-			gender, stem, pos = rmatch(SUBPAGENAME, "^Hindi ([a-z]+ine) (unmarked [^ %-]*%-stem) (.*)s$")
-		end
-		if not gender then
-			gender, stem, pos = rmatch(SUBPAGENAME, "^Hindi ([a-z]+ine) ([^ %-]*%-stem) (.*)s$")
-		end
-		if gender then
-			maintext = gender .. " " .. stem .. " ~."
-			if rfind(stem, "independent") then
-				maintext = maintext .. " Here, 'independent' means that the stem ending directly " ..
-				"follows a vowel and so uses the independent Devanagari form of the vowel that begins the ending."
-			end
-			if rfind(stem, "unmarked") then
-				maintext = maintext .. " Here, 'unmarked' means that the endings are added onto the full direct singular form " ..
-				"without removing the stem ending (although final nasalization, if present, will move to the ending)."
-			end
-			insert("~ by gender and stem type|" .. rsub(rsub(stem, "independent ", ""), "unmarked ", ""))
-			break
-		end
 		error("Unrecognized Hindi noun category name")
 	end
 
@@ -1073,16 +1132,13 @@ end
 -- for a given slot is a list of objects {form=FORM, translit=TRANSLIT, footnotes=FOOTNOTES}.
 function export.do_generate_forms(parent_args, pos, from_headword, def)
 	local params = {
-		[1] = {required = true, default = "दुनिया<iyā>"},
+		[1] = {required = true, default = "करना"},
 		footnote = {list = true},
 		title = {},
 	}
 
 	if from_headword then
 		params["lemma"] = {list = true}
-		params["g"] = {list = true}
-		params["f"] = {list = true}
-		params["m"] = {list = true}
 		params["id"] = {}
 	end
 
@@ -1091,15 +1147,10 @@ function export.do_generate_forms(parent_args, pos, from_headword, def)
 		nil, "allow blank lemma")
 	alternant_multiword_spec.title = args.title
 	alternant_multiword_spec.footnotes = args.footnote
-	alternant_multiword_spec.pos = pos or "nouns"
+	alternant_multiword_spec.pos = pos or "verbs"
 	alternant_multiword_spec.args = args
 	com.normalize_all_lemmas(alternant_multiword_spec)
 	detect_all_indicator_specs(alternant_multiword_spec)
-	propagate_properties(alternant_multiword_spec, "number", "both", "both")
-	-- The default of "M" should apply only to plural adjectives, where it doesn't matter.
-	-- FIXME: This may be wrong for Hindi.
-	propagate_properties(alternant_multiword_spec, "gender", "M", "mixed")
-	determine_noun_status(alternant_multiword_spec)
 	local decline_props = {
 		skip_slot = function(slot)
 			return skip_slot(alternant_multiword_spec.number, slot)
@@ -1115,75 +1166,13 @@ function export.do_generate_forms(parent_args, pos, from_headword, def)
 end
 
 
--- Externally callable function to parse and decline a noun where all forms
--- are given manually. Return value is WORD_SPEC, an object where the declined
--- forms are in `WORD_SPEC.forms` for each slot. If there are no values for a
--- slot, the slot key will be missing. The value for a given slot is a list of
--- objects {form=FORM, translit=TRANSLIT, footnotes=FOOTNOTES}.
-function export.do_generate_forms_manual(parent_args, number, pos, from_headword, def)
-	if number ~= "sg" and number ~= "pl" and number ~= "both" then
-		error("Internal error: number (arg 1) must be 'sg', 'pl' or 'both': '" .. number .. "'")
-	end
-
-	local params = {
-		footnote = {list = true},
-		title = {},
-	}
-	if number == "both" then
-		params[1] = {required = true, default = "तारीख़"}
-		params[2] = {required = true, default = "तवारीख़"}
-		params[3] = {required = true, default = "तारीख़"}
-		params[4] = {required = true, default = "तवारीख़ों"}
-		params[5] = {required = true, default = "तारीख़"}
-		params[6] = {required = true, default = "तवारीख़ो"}
-	elseif number == "sg" then
-		params[1] = {required = true, default = "अदला-बदला"}
-		params[2] = {required = true, default = "अदले-बदले"}
-		params[3] = {required = true, default = "अदले-बदले"}
-	else
-		params[1] = {required = true, default = "लोग"}
-		params[2] = {required = true, default =	"लोगों"}
-		params[3] = {required = true, default = "लोगो"}
-	end
-
-
-	local args = m_para.process(parent_args, params)
-	local alternant_spec = {
-		title = args.title,
-		footnotes = args.footnote,
-		forms = {},
-		number = number,
-		pos = pos or "nouns",
-		manual = true,
-	}
-	process_manual_overrides(alternant_spec.forms, args, alternant_spec.number)
-	compute_categories_and_annotation(alternant_spec)
-	return alternant_spec
-end
-
-
--- Entry point for {{hi-ndecl}}. Template-callable function to parse and decline a noun given
--- user-specified arguments and generate a displayable table of the declined forms.
+-- Entry point for {{hi-conj}}. Template-callable function to parse and conjugate a verb given
+-- user-specified arguments and generate a displayable table of the conjugated forms.
 function export.show(frame)
 	local parent_args = frame:getParent().args
 	local alternant_multiword_spec = export.do_generate_forms(parent_args)
 	show_forms(alternant_multiword_spec)
 	return make_table(alternant_multiword_spec) .. require("Module:utilities").format_categories(alternant_multiword_spec.categories, lang)
-end
-
-
--- Entry point for {{hi-ndecl-manual}}, {{hi-ndecl-manual-sg}} and {{hi-ndecl-manual-pl}}.
--- Template-callable function to parse and decline a noun given manually-specified inflections
--- and generate a displayable table of the declined forms.
-function export.show_manual(frame)
-	local iparams = {
-		[1] = {required = true},
-	}
-	local iargs = m_para.process(frame.args, iparams)
-	local parent_args = frame:getParent().args
-	local alternant_spec = export.do_generate_forms_manual(parent_args, iargs[1])
-	show_forms(alternant_spec)
-	return make_table(alternant_spec) .. require("Module:utilities").format_categories(alternant_spec.categories, lang)
 end
 
 
