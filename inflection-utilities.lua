@@ -138,7 +138,7 @@ end
 -- combined).
 function export.insert_form_into_list(list, form)
 	-- Don't do anything if the form object or the form inside it is nil. This simplifies
-	-- form insertion in the presence of declension generating functions that may return nil,
+	-- form insertion in the presence of inflection generating functions that may return nil,
 	-- such as generate_noun_vocative() and generate_noun_count_form().
 	if not form or not form.form then
 		return
@@ -190,7 +190,7 @@ end
 -- into the given slot in the given form table.
 function export.insert_form(formtable, slot, form)
 	-- Don't do anything if the form object or the form inside it is nil. This simplifies
-	-- form insertion in the presence of declension generating functions that may return nil,
+	-- form insertion in the presence of inflection generating functions that may return nil,
 	-- such as generate_noun_vocative() and generate_noun_count_form().
 	if not form or not form.form then
 		return
@@ -317,7 +317,9 @@ end
 -- into the form to be inserted into the final generated table.
 function export.expand_footnote(note)
 	local notetext = rmatch(note, "^%[!?(.*)%]$")
-	assert(notetext)
+	if not notetext then
+		error("Internal error: Footnote should be surrounded by brackets: " .. note)
+	end
 	if footnote_abbrevs[notetext] then
 		notetext = footnote_abbrevs[notetext]
 	else
@@ -421,8 +423,8 @@ The return value is a table of the form
   post_text = "TEXT-AT-END",
 }
 
-where WORD_SPEC describes an individual declined word and "TEXT-AT-END" is any raw text that
-may occur after all declined words. Each WORD_SPEC is of the form returned
+where WORD_SPEC describes an individual inflected word and "TEXT-AT-END" is any raw text that
+may occur after all inflected words. Each WORD_SPEC is of the form returned
 by parse_indicator_spec():
 
 {
@@ -516,7 +518,7 @@ local function parse_alternant(alternant, parse_indicator_spec, allow_default_in
 	local parsed_alternants = {}
 	local alternant_text = rmatch(alternant, "^%(%((.*)%)%)$")
 	local segments = export.parse_balanced_segment_run(alternant_text, "<", ">")
-	local comma_separated_groups = export.split_alternating_runs(segments, ",")
+	local comma_separated_groups = export.split_alternating_runs(segments, "%s*,%s*")
 	local alternant_spec = {alternants = {}}
 	for _, comma_separated_group in ipairs(comma_separated_groups) do
 		table.insert(alternant_spec.alternants,
@@ -578,13 +580,13 @@ function export.parse_alternant_multiword_spec(text, parse_indicator_spec, allow
 end
 
 
--- Decline alternants in ALTERNANT_SPEC (an object as returned by parse_alternant()).
+-- Inflect alternants in ALTERNANT_SPEC (an object as returned by parse_alternant()).
 -- This sets the form values in `ALTERNANT_SPEC.forms` for all slots.
 -- (If a given slot has no values, it will not be present in `ALTERNANT_SPEC.forms`).
-local function decline_alternants(alternant_spec, props)
+local function inflect_alternants(alternant_spec, props)
 	alternant_spec.forms = {}
 	for _, multiword_spec in ipairs(alternant_spec.alternants) do
-		export.decline_multiword_or_alternant_multiword_spec(multiword_spec, props)
+		export.inflect_multiword_or_alternant_multiword_spec(multiword_spec, props)
 		for slot, _ in pairs(props.slot_table) do
 			if not props.skip_slot(slot) then
 				export.insert_forms(alternant_spec.forms, slot, multiword_spec.forms[slot])
@@ -631,15 +633,17 @@ local function append_forms(props, formtable, slot, forms, before_text, before_t
 end
 
 
-function export.decline_multiword_or_alternant_multiword_spec(multiword_spec, props)
+function export.inflect_multiword_or_alternant_multiword_spec(multiword_spec, props)
 	multiword_spec.forms = {}
 
 	local is_alternant_multiword = not not multiword_spec.alternant_or_word_specs
 	for _, word_spec in ipairs(is_alternant_multiword and multiword_spec.alternant_or_word_specs or multiword_spec.word_specs) do
 		if word_spec.alternants then
-			decline_alternants(word_spec, props)
-		else
+			inflect_alternants(word_spec, props)
+		elseif props.decline_word_spec then
 			props.decline_word_spec(word_spec)
+		else
+			props.inflect_word_spec(word_spec)
 		end
 		for slot, _ in pairs(props.slot_table) do
 			if not props.skip_slot(slot) then
@@ -662,6 +666,11 @@ function export.decline_multiword_or_alternant_multiword_spec(multiword_spec, pr
 			end
 		end
 	end
+end
+
+
+function export.decline_multiword_or_alternant_multiword_spec(multiword_spec, props)
+	return export.inflect_multiword_or_alternant_multiword_spec(multiword_spec, props)
 end
 
 
@@ -769,7 +778,7 @@ function export.show_forms_with_translit(forms, lemmas, slots_table, props, foot
 					link = orig_text
 				else
 					local accel_obj
-					if accel_lemma and not form.no_accel then
+					if accel_lemma and not form.no_accel and accel_form ~= "-" then
 						accel_obj = {
 							form = accel_form,
 							translit = form.translit,
