@@ -511,7 +511,7 @@ local function parse_before_or_post_text(props, text, segments, lemma_is_last)
 		elseif rfind(component, "//") then
 			-- Manual translit or respelling specified.
 			if not props.lang then
-				error("Internal error: If manual translit is given, 'props.lang' must be set")
+				error("Manual translit not allowed for this language; if this is incorrect, 'props.lang' must be set internally")
 			end
 			saw_manual_translit = true
 			local split = rsplit(component, "//")
@@ -670,14 +670,33 @@ be inflected, and may have alternants indicated using double parens. Examples:
 "" (for any number of Hindi adjectives, where the lemma is omitted and taken from the pagename, and the angle bracket spec <> is assumed)
 "काला<+>धन<M>" (Hindi, for [[कालाधन]] "black money")
 
-`props` is an object specifying properties used during parsing.
-FIXME: Fill in.
+`props` is an object specifying properties used during parsing, as follows:
+{
+  parse_indicator_spec = FUNCTION_TO_PARSE_AN_INDICATOR_SPEC (required; takes one argument,
+                           a string surrounded by angle brackets, and should return a
+						   word_spec object containing properties describing the indicators
+						   inside of the angle brackets),
+  lang = LANG_OBJECT (only needed if manual translit or respelling may be present using //),
+  transliterate_respelling = FUNCTION_TO_TRANSLITERATE_RESPELLING (only needed of respelling
+                               is allowed in place of manual translit after //; takes one
+							   argument, the respelling or translit, and should return the
+							   transliteration of any resplling but return any translit
+							   unchanged),
+  allow_default_indicator = BOOLEAN_OR_NIL (true if the indicator in angle brackets can
+                              be omitted and will be automatically added at the end of the
+							  multiword text (if no alternants) or at the end of each
+							  alternant (if alternants present),
+  allow_blank_lemma = BOOLEAN_OR_NIL (true if a blank lemma is allowed; in such a case, the
+                        calling function should substitute a default lemma, typically taken
+						from the pagename)
+}
 
 The return value is a table of the form
 {
   alternant_or_word_specs = {ALTERNANT_OR_WORD_SPEC, ALTERNANT_OR_WORD_SPEC, ...}
   post_text = "TEXT-AT-END",
   post_text_no_links = "TEXT-AT-END-NO-LINKS",
+  post_text_translit = "TRANSLIT-OF-TEXT-AT-END" (or nil),
 }
 
 where ALTERNANT_OR_WORD_SPEC is either an alternant spec as returned by parse_alternant()
@@ -687,6 +706,7 @@ looks as follows:
   alternants = {MULTIWORD_SPEC, MULTIWORD_SPEC, ...},
   before_text = "TEXT-BEFORE-ALTERNANT",
   before_text_no_links = "TEXT-BEFORE-ALTERNANT",
+  before_text_translit = "TRANSLIT-OF-TEXT-BEFORE-ALTERNANT" (or nil),
 }
 i.e. it is like what is returned by parse_alternant() but has extra `before_text`
 and `before_text_no_links` fields.
