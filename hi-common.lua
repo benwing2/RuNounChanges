@@ -34,7 +34,7 @@ local R = u(0x0943)
 local VIRAMA = u(0x094d)
 local TILDE = u(0x0303)
 
-local diacritic_to_independent = {
+export.diacritic_to_independent = {
 	[AA] = "आ", [I] = "इ", [II] = "ई", [U] = "उ", [UU] = "ऊ",
 	[R] = "ऋ", [E] = "ए", [AI] = "ऐ", [O] = "ओ", [AU] = "औ",
 }
@@ -46,10 +46,10 @@ for dia, ind in pairs(diacritic_to_independent) do
 	table.insert(diacritic_list, dia)
 end
 
-local diacritics = table.concat(diacritic_list)
-local independents = table.concat(independent_list) .. "अ"
-local vowels = diacritics .. independents
-local transliterated_diacritics = "aāãeẽiīĩoõuūũṛ" .. TILDE
+export.diacritics = table.concat(diacritic_list)
+export.independents = table.concat(independent_list) .. "अ"
+export.vowels = export.diacritics .. export.independents
+export.transliterated_diacritics = "aāãeẽiīĩoõuūũṛ" .. TILDE
 
 
 -- version of rsubn() that discards all but the first return value
@@ -95,12 +95,12 @@ function export.add_form(base, stem, translit_stem, slot, ending, footnotes, lin
 		elseif rfind(stem, VIRAMA .. "$") and rfind(base.lemma, VIRAMA .. "$") then
 			stem = rsub(stem, VIRAMA .. "$", "")
 		end
-		if stem == "" or rfind(stem, "[" .. vowels .. "]$") then
+		if stem == "" or rfind(stem, "[" .. export.vowels .. "]$") then
 			-- A diacritic at the beginning of the ending should be converted to its independent form
 			-- if the stem does not end in a consonant.
-			if rfind(ending, "^[" .. diacritics .. "]") then
+			if rfind(ending, "^[" .. export.diacritics .. "]") then
 				local ending_first = usub(ending, 1, 1)
-				ending = (diacritic_to_independent[ending_first] or ending_first) .. usub(ending, 2)
+				ending = (export.diacritic_to_independent[ending_first] or ending_first) .. usub(ending, 2)
 			end
 		end
 		-- Don't convert independent letters to diacritics after consonants because of cases like मई
@@ -131,7 +131,7 @@ function export.add_form(base, stem, translit_stem, slot, ending, footnotes, lin
 		-- (Devanagari) ending, and checks to see if the stem ends in '-a' and the ending
 		-- begins with a Devanagari diacritic; in this case, it's correct to elide the '-a'.
 		elseif rfind(stem, "a$") and rfind(base.lemma_translit, "aḥ?$") and
-			rfind(ending, "^[" .. transliterated_diacritics .. "]") then
+			rfind(ending, "^[" .. export.transliterated_diacritics .. "]") then
 			stem = rsub(stem, "a$", "")
 		end
 		return stem .. ending

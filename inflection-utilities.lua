@@ -29,6 +29,52 @@ local footnote_abbrevs = {
 }
 
 
+--[=[
+In order to understand the following parsing code, you need to understand how inflected
+text specs work. They are intended to work with inflected text where individual words to
+be inflected may be followed by inflection specs in angle brackets. The format of the
+text inside of the angle brackets is up to the individual language and part-of-speech
+specific implementation. A real-world example is as follows:
+"[[медичний|меди́чна]]<+> [[сестра́]]<*,*#.pr>". This is the inflection of a multiword
+expression "меди́чна сестра́", which means "nurse" (literally "medical sister"), consisting
+of two words: the adjective меди́чна ("medical" in the feminine singular) and the noun
+сестра́ ("sister"). The specs in angle brackets follow each word to be inflected; for
+example, <+> means that the preceding word should be declined as an adjective.
+
+The code below works in terms of balanced expressions, which are bounded by delimiters
+such as < > or [ ]. The intention is to allow separators such as spaces to be embedded
+inside of delimiters; such embedded separators will not be parsed as separators.
+For example, Ukrainian noun specs allow footnotes in brackets to be inserted inside of
+angle brackets; something like "меди́чна<+> сестра́<pr.[this is a footnote]>" is legal,
+as is "[[медичний|меди́чна]]<+> [[сестра́]]<pr.[this is an <i>italicized footnote</i>]>",
+and the parsing code should not be confused by the embedded brackets, spaces or angle
+brackets.
+
+The parsing is done by two functions, which work in close concert:
+parse_balanced_segment_run() and split_alternating_runs(). To illustrate, consider
+the following:
+
+parse_balanced_segment_run("foo<M.proper noun> bar<F>", "<", ">") =
+  {"foo", "<M.proper noun>", " bar", "<F>", ""}
+
+then
+
+split_alternating_runs({"foo", "<M.proper noun>", " bar", "<F>", ""}, " ") =
+  {{"foo", "<M.proper noun>", ""}, {"bar", "<F>", ""}}
+
+Here, we start out with a typical inflected text spec "foo<M.proper noun> bar<F>",
+call parse_balanced_segment_run() on it, and call split_alternating_runs() on the
+result. The output of parse_balanced_segment_run() is a list where even-numbered
+segments are bounded by the bracket-like characters passed into the function,
+and odd-numbered segments consist of the surrounding text. split_alternating_runs()
+is called on this, and splits *only* the odd-numbered segments, grouping all
+segments between the specified character. Note that the inner lists output by
+split_alternating_runs() are themselves in the same format as the output of
+parse_balanced_segment_run(), with bracket-bounded text in the even-numbered segments.
+Hence, such lists can be passed again to split_alternating_runs().
+]=]
+
+
 -- Parse a string containing matched instances of parens, brackets or the like.
 -- Return a list of strings, alternating between textual runs not containing the
 -- open/close characters and runs beginning and ending with the open/close
@@ -68,25 +114,54 @@ function export.parse_balanced_segment_run(segment_run, open, close)
 	return text_and_specs
 end
 
+--[=[
+Split a list of alternating textual runs of the format returned by
+`parse_balanced_segment_run` on `splitchar`. This only splits the odd-numbered
+textual runs (the portions between the balanced open/close characters).
+The return value is a list of lists, where each list contains an odd number of
+elements, where the even-numbered elements of the sublists are the original
+balanced textual run portions. For example, if we do
 
--- Split a list of alternating textual runs of the format returned by
--- `parse_balanced_segment_run` on `splitchar`. This only splits the odd-numbered
--- textual runs (the portions between the balanced open/close characters).
--- The return value is a list of lists, where each list contains an odd number of
--- elements, where the even-numbered elements of the sublists are the original
--- balanced textual run portions. For example, if we do
---
--- parse_balanced_segment_run("foo[x[1]][2]/baz:bar[3]", "[", "]") =
---   {"foo", "[x[1]]", "", "[2]", "/baz:bar", "[3]", ""}
---
--- then
---
--- split_alternating_runs({"foo", "[x[1]]", "", "[2]", "/baz:bar", "[3]", ""}, ":") =
---   {{"foo", "[x[1]]", "", "[2]", "/baz"}, {"bar", "[2]", ""}}
---
--- Note that each element of the outer list is of the same form as the input,
--- consisting of alternating textual runs where the even-numbered segments
--- are balanced runs, and can in turn be passed to split_alternating_runs().
+parse_balanced_segment_run("foo<M.proper noun> bar<F>", "<", ">") =
+  {"foo", "<M.proper noun>", " bar", "<F>", ""}
+
+then
+
+split_alternating_runs({"foo", "<M.proper noun>", " bar", "<F>", ""}, " ") =
+  {{"foo", "<M.proper noun>", ""}, {"bar", "<F>", ""}}
+
+Note that we did not touch the text "<M.proper noun>" even though it contains a space
+in it, because it is an even-numbered element of the input list. This is intentional and
+allows for embedded separators inside of brackets/parens/etc. Note also that the inner
+lists in the return value are of the same form as the input list (i.e. they consist of
+alternating textual runs where the even-numbered segments are balanced runs), and can in
+turn be passed to split_alternating_runs().
+
+If `preserve_splitchar` is passed in, the split character is included in the output,
+as follows:
+
+split_alternating_runs({"foo", "<M.proper noun>", " bar", "<F>", ""}, " ", true) =
+  {{"foo", "<M.proper noun>", ""}, {" "}, {"bar", "<F>", ""}}
+
+Consider what happens if the original string has multiple spaces between brackets,
+and multiple sets of brackets without spaces between them.
+
+parse_balanced_segment_run("foo[dated][low colloquial] baz-bat quux xyzzy[archaic]", "[", "]") =
+  {"foo", "[dated]", "", "[low colloquial]", " baz-bat quux xyzzy", "[archaic]", ""}
+
+then
+
+split_alternating_runs({"foo", "[dated]", "", "[low colloquial]", " baz-bat quux xyzzy", "[archaic]", ""}, "[ %-]") =
+  {{"foo", "[dated]", "", "[low colloquial]", ""}, {"baz"}, {"bat"}, {"quux"}, {"xyzzy", "[archaic]", ""}}
+
+If `preserve_splitchar` is passed in, the split character is included in the output,
+as follows:
+
+split_alternating_runs({"foo", "[dated]", "", "[low colloquial]", " baz bat quux xyzzy", "[archaic]", ""}, "[ %-]", true) =
+  {{"foo", "[dated]", "", "[low colloquial]", ""}, {" "}, {"baz"}, {"-"}, {"bat"}, {" "}, {"quux"}, {" "}, {"xyzzy", "[archaic]", ""}}
+
+As can be seen, the even-numbered elements in the outer list are one-element lists consisting of the separator text.
+]=]
 function export.split_alternating_runs(segment_runs, splitchar, preserve_splitchar)
 	local grouped_runs = {}
 	local run = {}
@@ -415,22 +490,87 @@ function export.add_forms(forms, slot, stems, endings, combine_stem_ending,
 end
 
 
+local function parse_before_or_post_text(props, text, segments, lemma_is_last)
+	-- Call parse_balanced_segment_run() to keep multiword links together.
+	local bracketed_runs = export.parse_balanced_segment_run(text, "[", "]")
+	-- Split on space or hyphen. Use preserve_splitchar so we know whether the separator was
+	-- a space or hyphen.
+	local space_separated_groups = export.split_alternating_runs(bracketed_runs, "[ %-]", "preserve splitchar")
+
+	local parsed_components = {}
+	local parsed_components_translit = {}
+	local saw_manual_translit = false
+	local lemma
+	for j, space_separated_group in ipairs(space_separated_groups) do
+		local component = table.concat(space_separated_group)
+		if lemma_is_last and j == #space_separated_groups then
+			lemma = component
+			if lemma == "" and not props.allow_blank_lemma then
+				error("Word is blank: '" .. table.concat(segments) .. "'")
+			end
+		elseif rfind(component, "//") then
+			-- Manual translit or respelling specified.
+			if not props.lang then
+				error("Internal error: If manual translit is given, 'props.lang' must be set")
+			end
+			saw_manual_translit = true
+			local split = rsplit(component, "//")
+			if #split ~= 2 then
+				error("Term with translit or respelling should have only one // in it: " .. component)
+			end
+			local translit
+			component, translit = unpack(split)
+			if props.transliterate_respelling then
+				translit = props.transliterate_respelling(translit)
+			end
+			table.insert(parsed_components, component)
+			table.insert(parsed_components_translit, translit)
+		else
+			table.insert(parsed_components, component)
+			table.insert(parsed_components_translit, false) -- signal that it may need later transliteration
+		end
+	end
+
+	if saw_manual_translit then
+		for j, parsed_component in ipairs(parsed_components) do
+			if not parsed_components_translit[j] then
+				parsed_components_translit[j] = props.lang:transliterate(parsed_component)
+			end
+		end
+	end
+
+	text = table.concat(parsed_components)
+	local translit
+	if saw_manual_translit then
+		translit = table.concat(parsed_components_translit)
+	end
+	return text, translit, lemma
+end
+
+
 --[=[
-Parse a multiword spec such as "[[медичний|меди́чна]]<+> [[сестра́]]<*,*#.pr> (in Ukrainian).
+Parse a segmented multiword spec such as "[[медичний|меди́чна]]<+> [[сестра́]]<*,*#.pr>" (in Ukrainian).
+"Segmented" here means it is broken up on <...> segments using parse_balanced_segment_run(text, "<", ">"),
+e.g. the above text would be passed in as {"[[медичний|меди́чна]]", "<+>", " [[сестра́]]", "<*,*#.pr>", ""}.
+
 The return value is a table of the form
 {
   word_specs = {WORD_SPEC, WORD_SPEC, ...},
   post_text = "TEXT-AT-END",
+  post_text_no_links = "TEXT-AT-END-NO-LINKS",
+  post_text_translit = "MANUAL-TRANSLIT-OF-TEXT-AT-END" or nil (if no manual translit or respelling was specified in the post-text)
 }
 
-where WORD_SPEC describes an individual inflected word and "TEXT-AT-END" is any raw text that
-may occur after all inflected words. Each WORD_SPEC is of the form returned
-by parse_indicator_spec():
+where WORD_SPEC describes an individual inflected word and "TEXT-AT-END" is any raw text that may occur
+after all inflected words. Individual words or linked text (including multiword text) may be given manual
+transliteration or respelling in languages that support this using TEXT//TRANSLIT or TEXT//RESPELLING.
+Each WORD_SPEC is of the form returned by parse_indicator_spec():
 
 {
   lemma = "LEMMA",
   before_text = "TEXT-BEFORE-WORD",
   before_text_no_links = "TEXT-BEFORE-WORD-NO-LINKS",
+  before_text_translit = "MANUAL-TRANSLIT-OF-TEXT-BEFORE-WORD" or nil (if no manual translit or respelling was specified in the before-text)
   -- Fields as described in parse_indicator_spec()
   ...
 }
@@ -466,39 +606,31 @@ For example, the return value for "[[медичний|меди́чна]]<+> [[с
     },
   },
   post_text = "",
+  post_text_no_links = "",
 }
 ]=]
-local function parse_multiword_spec(segments, parse_indicator_spec, allow_default_indicator,
-	allow_blank_lemma)
+local function parse_multiword_spec(segments, props, disable_allow_default_indicator)
 	local multiword_spec = {
 		word_specs = {}
 	}
-	if allow_default_indicator and #segments == 1 then
+	if not disable_allow_default_indicator and props.allow_default_indicator and #segments == 1 then
 		table.insert(segments, "<>")
 		table.insert(segments, "")
 	end
+	-- Loop over every other segment. The even-numbered segments are angle-bracket specs while
+	-- the odd-numbered segments are the text between them.
 	for i = 2, #segments - 1, 2 do
-		local bracketed_runs = export.parse_balanced_segment_run(segments[i - 1], "[", "]")
-		local space_separated_groups = export.split_alternating_runs(bracketed_runs, "[ %-]", "preserve splitchar")
-		local before_text = {}
-		local lemma
-		for j, space_separated_group in ipairs(space_separated_groups) do
-			if j == #space_separated_groups then
-				lemma = table.concat(space_separated_group)
-				if lemma == "" and not allow_blank_lemma then
-					error("Word is blank: '" .. table.concat(segments) .. "'")
-				end
-			else
-				table.insert(before_text, table.concat(space_separated_group))
-			end
-		end
-		local base = parse_indicator_spec(segments[i])
-		base.before_text = table.concat(before_text)
+		local before_text, before_text_translit, lemma =
+			parse_before_or_post_text(props, segments[i - 1], segments, "lemma is last")
+		local base = props.parse_indicator_spec(segments[i])
+		base.before_text = before_text
 		base.before_text_no_links = m_links.remove_links(base.before_text)
+		base.before_text_translit = before_text_translit
 		base.lemma = lemma
 		table.insert(multiword_spec.word_specs, base)
 	end
-	multiword_spec.post_text = segments[#segments]
+	multiword_spec.post_text, multiword_spec.post_text_translit =
+		parse_before_or_post_text(props, segments[#segments], segments)
 	multiword_spec.post_text_no_links = m_links.remove_links(multiword_spec.post_text)
 	return multiword_spec
 end
@@ -513,24 +645,34 @@ The return value is a table of the form
 
 where MULTIWORD_SPEC describes a given alternant and is as returned by parse_multiword_spec().
 ]=]
-local function parse_alternant(alternant, parse_indicator_spec, allow_default_indicator,
-	allow_blank_lemma)
+local function parse_alternant(alternant, props)
 	local parsed_alternants = {}
 	local alternant_text = rmatch(alternant, "^%(%((.*)%)%)$")
 	local segments = export.parse_balanced_segment_run(alternant_text, "<", ">")
 	local comma_separated_groups = export.split_alternating_runs(segments, "%s*,%s*")
 	local alternant_spec = {alternants = {}}
 	for _, comma_separated_group in ipairs(comma_separated_groups) do
-		table.insert(alternant_spec.alternants,
-			parse_multiword_spec(comma_separated_group, parse_indicator_spec, allow_default_indicator,
-				allow_blank_lemma))
+		table.insert(alternant_spec.alternants, parse_multiword_spec(comma_separated_group, props))
 	end
 	return alternant_spec
 end
 
 
 --[=[
-Top-level parsing function. Parse a multiword spec that may have alternants in it.
+Top-level parsing function. Parse text describing one or more inflected words.
+`text` is the inflected text to parse, which generally has <...> specs following words to
+be inflected, and may have alternants indicated using double parens. Examples:
+
+"[[медичний|меди́чна]]<+> [[сестра́]]<*,*#.pr>" (Ukrainian, for [[медична сестра]] "nurse (lit. medical sister)")
+"((ру́син<pr>,руси́н<b.pr>))" (Ukrainian, for [[русин]] "Rusyn")
+"पंचायती//पंचाय*ती राज<M>" (Hindi, for [[पंचायती राज]] "village council", with phonetic respelling in the before-text component)
+"((<M>,<M.plstem:फ़तूह.dirpl:फ़तूह>))" (Hindi, for [[फ़तह]] "win, victory", on that page, where the lemma is omitted and taken from the pagename)
+"" (for any number of Hindi adjectives, where the lemma is omitted and taken from the pagename, and the angle bracket spec <> is assumed)
+"काला<+>धन<M>" (Hindi, for [[कालाधन]] "black money")
+
+`props` is an object specifying properties used during parsing.
+FIXME: Fill in.
+
 The return value is a table of the form
 {
   alternant_or_word_specs = {ALTERNANT_OR_WORD_SPEC, ALTERNANT_OR_WORD_SPEC, ...}
@@ -549,34 +691,46 @@ looks as follows:
 i.e. it is like what is returned by parse_alternant() but has extra `before_text`
 and `before_text_no_links` fields.
 ]=]
-function export.parse_alternant_multiword_spec(text, parse_indicator_spec, allow_default_indicator, allow_blank_lemma)
+function export.parse_inflected_text(text, props)
 	local alternant_multiword_spec = {alternant_or_word_specs = {}}
 	local alternant_segments = m_string_utilities.capturing_split(text, "(%(%(.-%)%))")
-	local last_post_text, last_post_text_no_links
+	local last_post_text, last_post_text_no_links, last_post_text_translit
 	for i = 1, #alternant_segments do
 		if i % 2 == 1 then
 			local segments = export.parse_balanced_segment_run(alternant_segments[i], "<", ">")
-			local multiword_spec = parse_multiword_spec(segments, parse_indicator_spec,
-				-- Don't set allow_default_indicator if alternants are present and we're
-				-- processing the non-alternant text.
-				allow_default_indicator and #alternant_segments == 1,
-				allow_blank_lemma)
+			-- Disable allow_default_indicator if alternants are present and we're processing
+			-- the non-alternant text. Otherwise we will try to treat the non-alternant text
+			-- surrounding the alternants as an inflected word rather than as raw text.
+			local multiword_spec = parse_multiword_spec(segments, props, #alternant_segments ~= 1)
 			for _, word_spec in ipairs(multiword_spec.word_specs) do
 				table.insert(alternant_multiword_spec.alternant_or_word_specs, word_spec)
 			end
 			last_post_text = multiword_spec.post_text
 			last_post_text_no_links = multiword_spec.post_text_no_links
+			last_post_text_translit = multiword_spec.post_text_translit
 		else
-			local alternant_spec = parse_alternant(alternant_segments[i],
-				parse_indicator_spec, allow_default_indicator, allow_blank_lemma)
+			local alternant_spec = parse_alternant(alternant_segments[i], props)
 			alternant_spec.before_text = last_post_text
 			alternant_spec.before_text_no_links = last_post_text_no_links
+			alternant_spec.before_text_translit = last_post_text_translit
 			table.insert(alternant_multiword_spec.alternant_or_word_specs, alternant_spec)
 		end
 	end
 	alternant_multiword_spec.post_text = last_post_text
 	alternant_multiword_spec.post_text_no_links = last_post_text_no_links
+	alternant_multiword_spec.post_text_translit = last_post_text_translit
 	return alternant_multiword_spec
+end
+
+
+-- Older entry point. FIXME: Convert all uses of this to use export.parse_inflected_text instead. 
+function export.parse_alternant_multiword_spec(text, parse_indicator_spec, allow_default_indicator, allow_blank_lemma)
+	local props = {
+		parse_indicator_spec = parse_indicator_spec,
+		allow_default_indicator = allow_default_indicator,
+		allow_blank_lemma = allow_blank_lemma,
+	}
+	return export.parse_inflection_spec(text, props)
 end
 
 
