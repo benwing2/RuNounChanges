@@ -74,8 +74,10 @@ def uk_lemma_is_indeclinable(t, pagetitle, pagemsg):
 
 def hi_lemma_is_indeclinable(t, pagetitle, pagemsg):
   if tname(t) in ["hi-noun", "hi-proper noun"]:
-    return False
+    return not not getparam(t, "ind")
   if tname(t) == "hi-adj":
+    if getparam(t, "ind"):
+      return True
     pagename = blib.remove_links(getparam(t, "head") or pagetitle)
     # If the lemma doesn't end with any of the declinable suffixes, it's
     # definitely indeclinable. Some indeclinable adjectives end with these
@@ -127,10 +129,10 @@ pos_to_infl_template = {
     "adjective": "(uk-decl-adj.*|uk-adj-.*)",
   },
   "hi": {
-    "noun": "(hi-decl-noun|hi-noun-.*)",
-    "proper noun": "(hi-decl-noun|hi-noun-.*)",
+    "noun": "hi-ndecl",
+    "proper noun": "hi-ndecl",
     "verb": "hi-conj.*",
-    "adjective": "(hi-decl-adj.*|hi-adj-.*)",
+    "adjective": "hi-adecl",
   },
 }
 
