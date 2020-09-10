@@ -534,7 +534,8 @@ local function parse_before_or_post_text(props, text, segments, lemma_is_last)
 	if saw_manual_translit then
 		for j, parsed_component in ipairs(parsed_components) do
 			if not parsed_components_translit[j] then
-				parsed_components_translit[j] = props.lang:transliterate(parsed_component)
+				parsed_components_translit[j] =
+					props.lang:transliterate(m_links.remove_links(parsed_component))
 			end
 		end
 	end
@@ -750,7 +751,7 @@ function export.parse_alternant_multiword_spec(text, parse_indicator_spec, allow
 		allow_default_indicator = allow_default_indicator,
 		allow_blank_lemma = allow_blank_lemma,
 	}
-	return export.parse_inflection_spec(text, props)
+	return export.parse_inflected_text(text, props)
 end
 
 
@@ -770,23 +771,23 @@ local function inflect_alternants(alternant_spec, props)
 end
 
 
-local function append_forms(props, formtable, slot, forms, before_text, before_text_no_links)
+local function append_forms(props, formtable, slot, forms, before_text, before_text_no_links,
+	before_text_translit)
 	if not forms then
 		return
 	end
 	local old_forms = formtable[slot] or {{form = ""}}
 	local ret_forms = {}
-	local before_text_translit
 	for _, old_form in ipairs(old_forms) do
 		for _, form in ipairs(forms) do
 			local old_form_vars = props.get_variants and props.get_variants(old_form.form) or ""
 			local form_vars = props.get_variants and props.get_variants(form.form) or ""
-			if old_form_vars and form_vars and old_form_vars ~= form_vars then
+			if old_form_vars ~= "" and form_vars ~= "" and old_form_vars ~= form_vars then
 				-- Reject combination due to non-matching variant codes.
 			else
 				local new_form = old_form.form .. before_text .. form.form
 				local new_translit
-				if old_form.translit or form.translit then
+				if old_form.translit or before_text_translit or form.translit then
 					if not props.lang then
 						error("Internal error: If manual translit is given, 'props.lang' must be set")
 					end
@@ -823,7 +824,7 @@ function export.inflect_multiword_or_alternant_multiword_spec(multiword_spec, pr
 			if not props.skip_slot(slot) then
 				append_forms(props, multiword_spec.forms, slot, word_spec.forms[slot],
 					rfind(slot, "linked") and word_spec.before_text or word_spec.before_text_no_links,
-					word_spec.before_text_no_links
+					word_spec.before_text_no_links, word_spec.before_text_translit
 				)
 			end
 		end
@@ -835,7 +836,7 @@ function export.inflect_multiword_or_alternant_multiword_spec(multiword_spec, pr
 			if not props.skip_slot(slot) and multiword_spec.forms[slot] then
 				append_forms(props, multiword_spec.forms, slot, pseudoform,
 					rfind(slot, "linked") and multiword_spec.post_text or multiword_spec.post_text_no_links,
-					multiword_spec.post_text_no_links
+					multiword_spec.post_text_no_links, multiword_spec.post_text_translit
 				)
 			end
 		end

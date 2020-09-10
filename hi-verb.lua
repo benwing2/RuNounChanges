@@ -112,10 +112,10 @@ local verb_slots = {
 }
 
 local function add_slot_gendered(slot_prefix, tag_suffix)
-	verb_slots[slot_prefix .. "_ms"] = tag_suffix == "-" and "-" or "dir|m|s|" .. tag_suffix
-	verb_slots[slot_prefix .. "_mp"] = tag_suffix == "-" and "-" or "obl|m|s|" .. tag_suffix .. "|;|m|p|" .. tag_suffix
-	verb_slots[slot_prefix .. "_fs"] = tag_suffix == "-" and "-" or "dir|f|s|" .. tag_suffix
-	verb_slots[slot_prefix .. "_fp"] = tag_suffix == "-" and "-" or "obl|f|s|" .. tag_suffix .. "|;|f|p|" .. tag_suffix
+	verb_slots[slot_prefix .. "_ms"] = tag_suffix == "-" and "-" or "m|s|" .. tag_suffix
+	verb_slots[slot_prefix .. "_mp"] = tag_suffix == "-" and "-" or "m|p|" .. tag_suffix
+	verb_slots[slot_prefix .. "_fs"] = tag_suffix == "-" and "-" or "f|s|" .. tag_suffix
+	verb_slots[slot_prefix .. "_fp"] = tag_suffix == "-" and "-" or "f|p|" .. tag_suffix
 end
 
 local function add_slot_personal(slot_prefix, tag_suffix)
@@ -182,7 +182,15 @@ end
 
 local function add(base, stem, translit_stem, slot, ending, footnotes)
 	local function doadd(new_stem, new_translit_stem, new_ending)
-		com.add_form(base, new_stem or stem, new_translit_stem or translit_stem, slot, new_ending or ending, footnotes, "link words")
+		new_ending = new_ending or ending
+		if new_ending and base.notlast then
+			-- If we're not the last verb in a multiword expression, chop off
+			-- anything after a space. This is to handle verbs like [[हिलना-डुलना]],
+			-- which have e.g. nonaspectual future indicative 1sg masc हिलूँगा-डुलूँगा
+			-- but perfective future indicative 1sg masc हिला-डुला हूँगा.
+			new_ending = rsub(new_ending, " .*", "")
+		end
+		com.add_form(base, new_stem or stem, new_translit_stem or translit_stem, slot, new_ending, footnotes, "link words")
 	end
 	if ending then
 		if rfind(stem, "[" .. II .. I .. "]$") then
@@ -327,11 +335,11 @@ conjs["normal"] = function(base)
 		UUM .. "गी", E .. "गी", E .. "गी", EN .. "गी", O .. "गी", EN .. "गी")
 	if base.stem == "हो" then
 		add_conj_gendered_personal(base, "ind_fut", "", "",
-			"हूँगा", "होगा ", "होगा", "होंगे", "होगे", "होंगे", 
-			"हूँगी", "होगी ", "होगी ", "होंगी", "होगी", "होंगी")
+			"हूँगा", "होगा", "होगा", "होंगे", "होगे", "होंगे",
+			"हूँगी", "होगी", "होगी", "होंगी", "होगी", "होंगी")
 		add_conj_gendered_personal(base, "presum", "", "",
-			"हूँगा", "होगा ", "होगा", "होंगे", "होगे", "होंगे", 
-			"हूँगी", "होगी ", "होगी ", "होंगी", "होगी", "होंगी")
+			"हूँगा", "होगा", "होगा", "होंगे", "होगे", "होंगे",
+			"हूँगी", "होगी", "होगी", "होंगी", "होगी", "होंगी")
 		add_conj_personal(base, "ind_pres", "", "", "हूँ", "है", "है", "हैं", "हो", "हैं")
 		add_conj_gendered(base, "ind_impf", "थ", "th", AA, E, II, IIN)
 		add_conj_personal(base, "subj_pres", "", "", "हूँ", "हो", "हो", "हों", "हो", "हों")
@@ -374,49 +382,44 @@ conjs["normal"] = function(base)
 		"ता होता", "ते होते", "ती होती", "ती होतीं")
 
 	-- Perfective
-	add_conj_gendered_personal(base, "pfv_ind_pres", perf, trperf, 
+	add_conj_gendered_personal(base, "pfv_ind_pres", perf, trperf,
 		AA .. " हूँ", AA .. " है", AA .. " है", E .. " हैं", E .. " हो", E .. " हैं",
 		II .. " हूँ", II .. " है", II .. " है", II .. " हैं", II .. " हो", II .. " हैं")
-	add_conj_gendered(base, "pfv_ind_past", perf, trperf, 
+	add_conj_gendered(base, "pfv_ind_past", perf, trperf,
 		AA .. " था", E .. " थे", II .. " थी", II .. " थीं")
-	add_conj_gendered_personal(base, "pfv_ind_fut", perf, trperf, 
+	add_conj_gendered_personal(base, "pfv_ind_fut", perf, trperf,
 		AA .. " हूँगा", AA .. " होगा", AA .. " होगा", E .. " होंगे", E .. " होगे", E .. " होंगे",
 		II .. " हूँगी", II .. " होगी", II .. " होगी", II .. " होंगी", II .. " होगी", II .. " होंगी")
-	add_conj_gendered_personal(base, "pfv_presum", perf, trperf, 
+	add_conj_gendered_personal(base, "pfv_presum", perf, trperf,
 		AA .. " हूँगा", AA .. " होगा", AA .. " होगा", E .. " होंगे", E .. " होगे", E .. " होंगे",
 		II .. " हूँगी", II .. " होगी", II .. " होगी", II .. " होंगी", II .. " होगी", II .. " होंगी")
-	add_conj_gendered_personal(base, "pfv_subj_pres", perf, trperf, 
+	add_conj_gendered_personal(base, "pfv_subj_pres", perf, trperf,
 		AA .. " हूँ", AA .. " हो", AA .. " हो", E .. " हों", E .. " हो", E .. " हों",
 		II .. " हूँ", II .. " हो", II .. " हो", II .. " हों", II .. " हो", II .. " हों")
-	add_conj_gendered_personal(base, "pfv_subj_fut", perf, trperf, 
+	add_conj_gendered_personal(base, "pfv_subj_fut", perf, trperf,
 		AA .. " होऊँ", AA .. " होए", AA .. " होए", E .. " होएँ", E .. " होओ", E .. " होएँ",
 		II .. " होऊँ", II .. " होए", II .. " होए", II .. " होएँ", II .. " होओ", II .. " होएँ")
 	add_conj_gendered(base, "pfv_cfact", perf, trperf, AA .. " होता", E .. " होते", II .. " होती", II .. " होतीं")
 
 	-- Progressive
-	add_conj_gendered_personal(base, "prog_ind_pres", nil, nil, 
+	add_conj_gendered_personal(base, "prog_ind_pres", nil, nil,
 		" रहा हूँ", " रहा है", " रहा है", " रहे हैं", " रहे हो", " रहे हैं",
 		" रही हूँ", " रही है", " रही है", " रही हैं", " रही हो", " रही हैं")
-	add_conj_gendered(base, "prog_ind_past", nil, nil, 
+	add_conj_gendered(base, "prog_ind_past", nil, nil,
 		" रहा था", " रहे थे", " रही थी", " रही थीं")
-	add_conj_gendered_personal(base, "prog_ind_fut", nil, nil, 
+	add_conj_gendered_personal(base, "prog_ind_fut", nil, nil,
 		" रहा हूँगा", " रहा होगा", " रहा होगा", " रहे होंगे", " रहे होगे", " रहे होंगे",
 		" रही हूँगी", " रही होगी", " रही होगी", " रही होंगी", " रही होगी", " रही होंगी")
-	add_conj_gendered_personal(base, "prog_presum", nil, nil, 
+	add_conj_gendered_personal(base, "prog_presum", nil, nil,
 		" रहा हूँगा", " रहा होगा", " रहा होगा", " रहे होंगे", " रहे होगे", " रहे होंगे",
 		" रही हूँगी", " रही होगी", " रही होगी", " रही होंगी", " रही होगी", " रही होंगी")
-	add_conj_gendered_personal(base, "prog_subj_pres", nil, nil, 
+	add_conj_gendered_personal(base, "prog_subj_pres", nil, nil,
 		" रहा हूँ", " रहा हो", " रहा हो", " रहे हों", " रहे हो", " रहे हों",
 		" रही हूँ", " रही हो", " रही हो", " रही हों", " रही हो", " रही हों")
-	add_conj_gendered_personal(base, "prog_subj_fut", nil, nil, 
+	add_conj_gendered_personal(base, "prog_subj_fut", nil, nil,
 		" रहा होऊँ", " रहा होए", " रहा होए", " रहे होएँ", " रहे होओ", " रहे होएँ",
 		" रही होऊँ", " रही होए", " रही होए", " रही होएँ", " रही होओ", " रही होएँ")
 	add_conj_gendered(base, "prog_cfact", nil, nil, " रहा होता", " रहे होते", " रही होती", " रही होतीं")
-end
-
-
-conjs["invar"] = function(base)
-	error("Implement me")
 end
 
 
@@ -448,7 +451,6 @@ dot-separated indicators within them). Return value is an object of the form
   explicit_gender = "GENDER", -- "M", "F"; may be missing
   number = "NUMBER", -- "sg", "pl"; may be missing
   adj = true, -- may be missing
-  invar = true, -- may be missing
   unmarked = true, -- may be missing
   iya = true, -- may be missing
   plstem = "PLSTEM", -- may be missing
@@ -490,11 +492,6 @@ local function parse_indicator_spec(angle_bracket_spec)
 				base.footnotes = fetch_footnotes(dot_separated_group)
 			elseif #dot_separated_group > 1 then
 				error("Footnotes only allowed with slot overrides or by themselves: '" .. table.concat(dot_separated_group) .. "'")
-			elseif part == "$" then
-				if base.invar then
-					error("Can't specify '$' twice: '" .. inside .. "'")
-				end
-				base.invar = true
 			else
 				error("Unrecognized indicator '" .. part .. "': '" .. inside .. "'")
 			end
@@ -504,27 +501,43 @@ local function parse_indicator_spec(angle_bracket_spec)
 end
 
 
-local function set_defaults_and_check_bad_indicators(base)
-	-- Nothing here currently.
-end
-
-
 local function detect_indicator_spec(base)
-	set_defaults_and_check_bad_indicators(base)
-	if base.invar then
-		base.conj = "invar"
-	else
-		base.conj = "normal"
-	end
+	base.conj = "normal"
 	base.stem, base.stem_translit = com.strip_ending(base, "ना")
 end
 
 
 local function detect_all_indicator_specs(alternant_multiword_spec)
-	local is_multiword = #alternant_multiword_spec.alternant_or_word_specs > 1
 	iut.map_word_specs(alternant_multiword_spec, function(base)
 		detect_indicator_spec(base)
 	end)
+
+	-- Set notlast=true on verbs that aren't the last one in a multiword expression, and
+	-- multiword=true on all verbs in multiword expressions (as well as at top level), so
+	-- we can properly handle verbs like [[हिलना-डुलना]].
+	for i, alternant_or_word_spec in ipairs(alternant_multiword_spec.alternant_or_word_specs) do
+		if alternant_or_word_spec.alternants then
+			for _, multiword_spec in ipairs(alternant_or_word_spec.alternants) do
+				for j, word_spec in ipairs(multiword_spec.word_specs) do
+					if j < #multiword_spec.word_specs then
+						word_spec.notlast = true
+					end
+					if #multiword_spec.word_specs > 1 then
+						word_spec.multiword = true
+						alternant_multiword_spec.multiword = true
+					end
+				end
+			end
+		else
+			if i < #alternant_multiword_spec.alternant_or_word_specs then
+				alternant_or_word_spec.notlast = true
+			end
+			if #alternant_multiword_spec.alternant_or_word_specs > 1 then
+				alternant_or_word_spec.multiword = true
+				alternant_multiword_spec.multiword = true
+			end
+		end
+	end
 end
 
 
@@ -533,31 +546,11 @@ local function conjugate_verb(base)
 		error("Internal error: Unrecognized conjugation type '" .. base.conj .. "'")
 	end
 	conjs[base.conj](base)
+	if base.multiword then
+		-- See comment in add_variant_codes() for the purpose of this.
+		com.add_variant_codes(base)
+	end
 	handle_derived_slots_and_overrides(base)
-end
-
-
-local function compute_category_and_desc(base)
-	local props = conjprops[base.conj]
-	if props then
-		return props.cat, props.desc
-	end
-	local rest, gender = rmatch(base.conj, "^(.+)%-([mf])$")
-	if not gender then
-		error("Internal error: Don't know how to parse conj '" .. base.conj .. "'")
-	end
-	local cat_gender = gender == "m" and "masculine" or "feminine"
-	local desc_gender = gender == "m" and "masc" or "fem"
-	local ind, stem = rmatch(rest, "^(ind%-)(.*)$")
-	if not ind then
-		stem = rest
-	end
-	stem = rsub(stem, "n$", TILDE)
-	if ind then
-		return cat_gender .. " independent " .. stem .. "-stem ~", desc_gender .. " ind " .. stem .. "-stem"
-	else
-		return cat_gender .. " " .. stem .. "-stem ~", desc_gender .. " " .. stem .. "-stem"
-	end
 end
 
 
@@ -588,10 +581,18 @@ end
 
 
 local function show_forms(alternant_multiword_spec)
-	local lemmas = alternant_multiword_spec.forms.dir_s or alternant_multiword_spec.forms.dir_p or {}
+	local lemmas = alternant_multiword_spec.forms.inf_ms or {}
 	local props = {
 		lang = lang,
 	}
+	if alternant_multiword_spec.multiword then
+		-- Remove variant codes that were added to ensure only parallel variants in
+		-- multiword expressions like [[हिलना-डुलना]] get generated. See com.add_variant_codes()
+		-- for more information.
+		props.canonicalize = function(form)
+			return com.remove_variant_codes(form)
+		end
+	end
 	iut.show_forms_with_translit(alternant_multiword_spec.forms, lemmas,
 		verb_slots_with_linked, props, alternant_multiword_spec.footnotes,
 		"allow footnote symbols")
@@ -1218,8 +1219,14 @@ function export.do_generate_forms(parent_args, pos, from_headword, def)
 	end
 
 	local args = m_para.process(parent_args, params)
-	local alternant_multiword_spec = iut.parse_alternant_multiword_spec(args[1], parse_indicator_spec,
-		"allow default indicator", "allow blank lemma")
+	local parse_props = {
+		parse_indicator_spec = parse_indicator_spec,
+		lang = lang,
+		transliterate_respelling = com.transliterate_respelling,
+		allow_default_indicator = true,
+		allow_blank_lemma = true,
+	}
+	local alternant_multiword_spec = iut.parse_inflected_text(args[1], parse_props)
 	alternant_multiword_spec.title = args.title
 	alternant_multiword_spec.footnotes = args.footnote
 	alternant_multiword_spec.pos = pos or "verbs"
@@ -1231,6 +1238,10 @@ function export.do_generate_forms(parent_args, pos, from_headword, def)
 		slot_table = verb_slots_with_linked,
 		lang = lang,
 		inflect_word_spec = conjugate_verb,
+		-- Return the variant code that was added to ensure only parallel variants in
+		-- multiword expressions like [[हिलना-डुलना]] get generated. See com.add_variant_codes()
+		-- for more information.
+		get_variants = alternant_multiword_spec.multiword and com.get_variants or nil,
 	}
 	iut.inflect_multiword_or_alternant_multiword_spec(alternant_multiword_spec, inflect_props)
 	compute_categories_and_annotation(alternant_multiword_spec)

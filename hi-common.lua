@@ -6,7 +6,8 @@ Authorship: Ben Wing <benwing2>
 
 ]=]
 
-local iut = require("Module:inflection utilities")
+local m_links = require("Module:links")
+local iut = require("Module:User:Benwing2/inflection utilities")
 
 local lang = require("Module:languages").getByCode("hi")
 
@@ -19,6 +20,13 @@ local rfind = mw.ustring.find
 local rmatch = mw.ustring.match
 local rsubn = mw.ustring.gsub
 local usub = mw.ustring.sub
+
+-- version of rsubn() that discards all but the first return value
+local function rsub(term, foo, bar)
+	local retval = rsubn(term, foo, bar)
+	return retval
+end
+
 
 -- vowel diacritics; don't display nicely on their own
 local AA = u(0x093e)
@@ -41,7 +49,7 @@ export.diacritic_to_independent = {
 
 local diacritic_list = {}
 local independent_list = {}
-for dia, ind in pairs(diacritic_to_independent) do
+for dia, ind in pairs(export.diacritic_to_independent) do
 	table.insert(independent_list, ind)
 	table.insert(diacritic_list, dia)
 end
@@ -52,12 +60,24 @@ export.vowels = export.diacritics .. export.independents
 export.transliterated_diacritics = "aāãeẽiīĩoõuūũṛ" .. TILDE
 
 
--- version of rsubn() that discards all but the first return value
-local function rsub(term, foo, bar)
-	local retval = rsubn(term, foo, bar)
-	return retval
-end
+-- variant codes
+export.VAR1 = u(0xFFF0)
+export.VAR2 = u(0xFFF1)
+export.VAR3 = u(0xFFF2)
+export.VAR4 = u(0xFFF3)
+export.VAR5 = u(0xFFF4)
+export.VAR6 = u(0xFFF5)
+export.var_code_c = "[" .. export.VAR1 .. export.VAR2 .. export.VAR3 .. export.VAR4 .. export.VAR5 .. export.VAR6 .. "]"
+export.not_var_code_c = "[^" .. export.VAR1 .. export.VAR2 .. export.VAR3 .. export.VAR4 .. export.VAR5 .. export.VAR6 .. "]"
 
+export.index_to_variant_code = {
+	[1] = export.VAR1,
+	[2] = export.VAR2,
+	[3] = export.VAR3,
+	[4] = export.VAR4,
+	[5] = export.VAR5,
+	[6] = export.VAR6,
+}
 
 function export.split_term_respelling(term)
 	if rfind(term, "//") then
@@ -90,22 +110,25 @@ function export.add_form(base, stem, translit_stem, slot, ending, footnotes, lin
 	end
 
 	local function combine_stem_ending(stem, ending)
+		local result
 		if ending == "" then
-			return stem
-		elseif rfind(stem, VIRAMA .. "$") and rfind(base.lemma, VIRAMA .. "$") then
-			stem = rsub(stem, VIRAMA .. "$", "")
-		end
-		if stem == "" or rfind(stem, "[" .. export.vowels .. "]$") then
-			-- A diacritic at the beginning of the ending should be converted to its independent form
-			-- if the stem does not end in a consonant.
-			if rfind(ending, "^[" .. export.diacritics .. "]") then
-				local ending_first = usub(ending, 1, 1)
-				ending = (export.diacritic_to_independent[ending_first] or ending_first) .. usub(ending, 2)
+			result = stem
+		else
+			if rfind(stem, VIRAMA .. "$") and rfind(base.lemma, VIRAMA .. "$") then
+				stem = rsub(stem, VIRAMA .. "$", "")
 			end
+			if stem == "" or rfind(stem, "[" .. export.vowels .. "]$") then
+				-- A diacritic at the beginning of the ending should be converted to its independent form
+				-- if the stem does not end in a consonant.
+				if rfind(ending, "^[" .. export.diacritics .. "]") then
+					local ending_first = usub(ending, 1, 1)
+					ending = (export.diacritic_to_independent[ending_first] or ending_first) .. usub(ending, 2)
+				end
+			end
+			-- Don't convert independent letters to diacritics after consonants because of cases like मई
+			-- where the independent letter belongs after the consonant.
+			result = stem .. ending
 		end
-		-- Don't convert independent letters to diacritics after consonants because of cases like मई
-		-- where the independent letter belongs after the consonant.
-		local result = stem .. ending
 		if link_words then
 			-- Add links around the words.
 			result = "[[" .. rsub(result, " ", "]] [[") .. "]]"
@@ -143,7 +166,7 @@ function export.add_form(base, stem, translit_stem, slot, ending, footnotes, lin
 		stem = {form = stem, translit = translit_stem}
 	end
 	iut.add_forms(base.forms, slot, stem, ending_obj, combine_stem_ending, lang,
-		combine_stem_ending)
+		combine_stem_ending_tr)
 end
 
 
@@ -175,7 +198,7 @@ function export.normalize_all_lemmas(alternant_multiword_spec)
 			base.lemma = PAGENAME
 		end
 		base.orig_lemma = base.lemma
-		base.orig_lemma_no_links = require("Module:links").remove_links(base.lemma)
+		base.orig_lemma_no_links = m_links.remove_links(base.lemma)
 		base.lemma = base.orig_lemma_no_links
 		local translit
 		if base.phon_lemma then
@@ -207,12 +230,45 @@ Hence it has oblique plural कालेधनों, which has incorrect defaul
 function export.remove_redundant_translit(alternant_multiword_spec)
 	for slot, forms in pairs(alternant_multiword_spec.forms) do
 		alternant_multiword_spec.forms[slot] = iut.map_forms(forms, function(form, translit)
-			if translit and lang:transliterate(form) == translit then
+			if translit and lang:transliterate(m_links.remove_links(form)) == translit then
 				return form, nil
 			else
 				return form, translit
 			end
 		end)
+	end
+end
+
+
+function export.get_variants(form)
+	return rsub(form, export.not_var_code_c, "")
+end
+
+
+function export.remove_variant_codes(form)
+	return rsub(form, export.var_code_c, "")
+end
+
+
+-- Add variant codes to all slots with more than one form. The intention of variant
+-- codes is to prevent there being N^2 slot variants in a verb like [[हिलना-डुलना]] in
+-- slots that normally have N variants. Rather than combining all variants of [[हिलना]]
+-- with all variants of [[डुलना]] for the given slot, we only want to combine parallel
+-- variants. We implement this by tagging each variant with a "variant code" character
+-- and rejecting combinations with mismatching variant code characters.
+function export.add_variant_codes(base)
+	for slot, forms in pairs(base.forms) do
+		if #forms > 1 then
+			local index = 0
+			base.forms[slot] = iut.map_forms(forms, function(form, translit)
+				index = index + 1
+				local varcode = export.index_to_variant_code[index]
+				if not varcode then
+					error("Internal error: Encountered too many variants (" .. #forms .. "), no more variant codes available")
+				end
+				return form .. varcode, translit
+			end)
+		end
 	end
 end
 
