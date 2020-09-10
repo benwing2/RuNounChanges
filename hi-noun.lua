@@ -639,7 +639,7 @@ end
 
 local function set_defaults_and_check_bad_indicators(base)
 	-- Set default values.
-	if not base.adj then
+	if not base.adj and not base.indecl then
 		base.number = base.number or "both"
 	end
 	base.gender = base.explicit_gender
@@ -673,7 +673,7 @@ local function set_defaults_and_check_bad_indicators(base)
 		end
 		base.gender = "M"
 	end
-	if not base.gender and not base.indecl then
+	if not base.gender and not base.adj and not base.indecl then
 		error("Unless lemma is in " .. O .. ", " .. H .. " or " .. R .. " or 'iya', 'unmarked' or '$' specified, gender must be given: " .. base.lemma)
 	end
 	if base.adj and base.indecl then
@@ -757,6 +757,8 @@ local function synthesize_adj_lemma(base)
 	if not rfind(base.lemma, "[अ" .. AA .. "][" .. M .. N .. "]?$") then
 		error("Unrecognized adjectival lemma: " .. base.lemma)
 	end
+	base.gender = "M"
+	base.decl = "adj"
 end
 
 
@@ -766,10 +768,9 @@ local function determine_declension(base)
 	if base.decl then
 		return
 	end
+	assert(not base.adj)
 	if base.indecl then
 		base.decl = "indecl"
-	elseif base.adj then
-		base.decl = "adj"
 	elseif base.gender == "M" then
 		if base.unmarked then
 			if rfind(base.lemma, AA .. "$") or rfind(base.lemma, "आ$") then
@@ -1396,8 +1397,13 @@ function export.do_generate_forms(parent_args, pos, from_headword, def)
 	end
 
 	local args = m_para.process(parent_args, params)
-	local alternant_multiword_spec = iut.parse_alternant_multiword_spec(args[1], parse_indicator_spec,
-		nil, "allow blank lemma")
+	local parse_props = {
+		parse_indicator_spec = parse_indicator_spec,
+		lang = lang,
+		transliterate_respelling = transliterate_respelling,
+		allow_blank_lemma = true,
+	}
+	local alternant_multiword_spec = iut.parse_inflected_text(args[1], parse_props)
 	alternant_multiword_spec.title = args.title
 	alternant_multiword_spec.footnotes = args.footnote
 	alternant_multiword_spec.pos = pos or "nouns"
@@ -1409,15 +1415,16 @@ function export.do_generate_forms(parent_args, pos, from_headword, def)
 	-- FIXME: This may be wrong for Hindi.
 	propagate_properties(alternant_multiword_spec, "gender", "M", "mixed")
 	determine_noun_status(alternant_multiword_spec)
-	local decline_props = {
+	local inflect_props = {
 		skip_slot = function(slot)
 			return skip_slot(alternant_multiword_spec.number, slot)
 		end,
 		slot_table = noun_slots_with_linked,
 		lang = lang,
-		decline_word_spec = decline_noun,
+		inflect_word_spec = decline_noun,
 	}
-	iut.decline_multiword_or_alternant_multiword_spec(alternant_multiword_spec, decline_props)
+	iut.inflect_multiword_or_alternant_multiword_spec(alternant_multiword_spec, inflect_props)
+	com.remove_redundant_translit(alternant_multiword_spec)
 	compute_categories_and_annotation(alternant_multiword_spec)
 	alternant_multiword_spec.genders = compute_headword_genders(alternant_multiword_spec)
 	return alternant_multiword_spec
