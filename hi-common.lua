@@ -153,7 +153,7 @@ function export.add_form(base, stem, translit_stem, slot, ending, footnotes, lin
 		-- correctly that handles all of the above cases requires access to the original
 		-- (Devanagari) ending, and checks to see if the stem ends in '-a' and the ending
 		-- begins with a Devanagari diacritic; in this case, it's correct to elide the '-a'.
-		elseif rfind(stem, "a$") and rfind(base.lemma_translit, "aḥ?$") and
+		elseif base.lemma_translit and rfind(stem, "a$") and rfind(base.lemma_translit, "aḥ?$") and
 			rfind(ending, "^[" .. export.transliterated_diacritics .. "]") then
 			stem = rsub(stem, "a$", "")
 		end
@@ -175,10 +175,13 @@ function export.strip_ending_from_stem(stem, translit_stem, ending)
 	if not new_stem then
 		error("Internal error: Lemma or stem " .. stem .. " should end in " .. ending)
 	end
-	local ending_translit = lang:transliterate(ending)
-	local new_translit_stem = rmatch(translit_stem, "^(.*)" .. ending_translit .. "$")
-	if not new_translit_stem then
-		error("Unable to strip ending " .. ending .. " (transliterated " .. ending_translit .. ") from transliteration " .. translit_stem)
+	local new_translit_stem
+	if translit_stem then
+		local ending_translit = lang:transliterate(ending)
+		new_translit_stem = rmatch(translit_stem, "^(.*)" .. ending_translit .. "$")
+		if not new_translit_stem then
+			error("Unable to strip ending " .. ending .. " (transliterated " .. ending_translit .. ") from transliteration " .. translit_stem)
+		end
 	end
 	return new_stem, new_translit_stem
 end
@@ -190,8 +193,16 @@ end
 
 
 -- Normalize all lemmas, splitting out phonetic respellings and substituting
--- the pagename for blank lemmas.
-function export.normalize_all_lemmas(alternant_multiword_spec)
+-- the pagename for blank lemmas. Set `lemma_translit` to the transliteration of the
+-- respelling, or (if `always_transliterate` is given) to the transliteration of the
+-- lemma. `always_transliterate` should be specified for nouns and adjectives, where the
+-- lemma transliteration should be carried over to all remaining forms (hence since अंकल
+-- is transliterated 'aṅkal', the oblique plural अंकलों should be 'aṅkalõ' not #'aṅklõ',
+-- the default transliteration). But it should not be specified for verbs, where this
+-- carry-over doesn't apply: even though उगालना has transliteration 'ugalnā', the
+-- perfective participle उगला has default transliteration 'uglā' not the carry-over
+-- transliteration #'ugalā'.
+function export.normalize_all_lemmas(alternant_multiword_spec, always_transliterate)
 	iut.map_word_specs(alternant_multiword_spec, function(base)
 		base.lemma, base.phon_lemma = export.split_term_respelling(base.lemma)
 		if base.lemma == "" then
@@ -200,10 +211,9 @@ function export.normalize_all_lemmas(alternant_multiword_spec)
 		base.orig_lemma = base.lemma
 		base.orig_lemma_no_links = m_links.remove_links(base.lemma)
 		base.lemma = base.orig_lemma_no_links
-		local translit
 		if base.phon_lemma then
 			base.lemma_translit = export.transliterate_respelling(base.phon_lemma)
-		else
+		elseif always_transliterate then
 			base.lemma_translit = lang:transliterate(base.lemma)
 		end
 	end)
@@ -211,13 +221,13 @@ end
 
 
 --[=[
-Remove redundant translit. We need to do all declension using manual translit
-because declined forms of words like अचकन "jacket" and कालाधन "blood money" may
-need manual translit, even though the base form itself doesn't need manual
-translit. For example, अचकन has default translit ''ackan'', which is correct,
-but the oblique plural अचकनों has default translit ''acaknõ'', which is incorrect
-(correct is ''ackanõ'', with stem translit as in the base). In general, such
-words need manual translit that forces the stem of the inflected form to have
+Remove redundant translit. We need to do all declension of nouns and adjectives using
+manual translit because declined forms of nouns like अचकन "jacket" and कालाधन
+"black money" may need manual translit, even though the base form itself doesn't
+need manual translit. For example, अचकन has default translit ''ackan'', which is
+correct, but the oblique plural अचकनों has default translit ''acaknõ'', which is
+incorrect (correct is ''ackanõ'', with stem translit as in the base). In general,
+such words need manual translit that forces the stem of the inflected form to have
 the same translit as the stem of the base form. We want to remove redundant
 manual translit so that accelerator-generated entries don't have unnecessary
 manual translit in them. Finally, we need to remove redundant manual translit at

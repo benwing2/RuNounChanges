@@ -80,7 +80,7 @@ end
 
 local irreg_perf = {
 	["कर"] = "की",
-	["जा"] = "गय",
+	["जा"] = "ग*", --  this is a special sign to request independent endings in some cases
 	["ले"] = "ली",
 	["दे"] = "दी",
 	["हो"] = "हु",
@@ -92,17 +92,12 @@ local irreg_subj = {
 	["पी"] = "पिय",
 }
 
-local irreg_fam_imp = {
-	["ले"] = "लो",
-	["दे"] = "दो",
-	["पी"] = "पियो",
-}
-
 local irreg_polite_imp = {
-	["कर"] = "कीज",
+	["कर"] = {"कीज", "कर"},
 	["ले"] = "लीज",
 	["दे"] = "दीज",
 	["पी"] = "पीज",
+	["हो"] = {"हो", "हूज"},
 }
 
 local verb_slots = {
@@ -112,8 +107,8 @@ local verb_slots = {
 }
 
 local function add_slot_gendered(slot_prefix, tag_suffix)
-	verb_slots[slot_prefix .. "_ms"] = tag_suffix == "-" and "-" or "m|s|" .. tag_suffix
-	verb_slots[slot_prefix .. "_mp"] = tag_suffix == "-" and "-" or "m|p|" .. tag_suffix
+	verb_slots[slot_prefix .. "_ms"] = tag_suffix == "-" and "-" or "m|dir|s|" .. tag_suffix
+	verb_slots[slot_prefix .. "_mp"] = tag_suffix == "-" and "-" or "m|p|" .. tag_suffix .. "|;|m|obl|s|" .. tag_suffix
 	verb_slots[slot_prefix .. "_fs"] = tag_suffix == "-" and "-" or "f|s|" .. tag_suffix
 	verb_slots[slot_prefix .. "_fp"] = tag_suffix == "-" and "-" or "f|p|" .. tag_suffix
 end
@@ -187,27 +182,34 @@ local function add(base, stem, translit_stem, slot, ending, footnotes)
 			-- If we're not the last verb in a multiword expression, chop off
 			-- anything after a space. This is to handle verbs like [[हिलना-डुलना]],
 			-- which have e.g. nonaspectual future indicative 1sg masc हिलूँगा-डुलूँगा
-			-- but perfective future indicative 1sg masc हिला-डुला हूँगा.
-			new_ending = rsub(new_ending, " .*", "")
+			-- but perfective future indicative 1sg masc हिला-डुला हूँगा. Also, as a
+			-- special case, the conjunctive form should be e.g. हिल-डुलकर or हिल-डुलके,
+			-- effectively with a null ending on the first verb.
+			if slot == "conj" then
+				new_ending = ""
+			else
+				new_ending = rsub(new_ending, " .*", "")
+			end
 		end
-		com.add_form(base, new_stem or stem, new_translit_stem or translit_stem, slot, new_ending, footnotes, "link words")
+		com.add_form(base, new_stem or stem, new_translit_stem or translit_stem, slot,
+			new_ending, footnotes, "link words")
 	end
 	if ending then
 		if rfind(stem, "[" .. II .. I .. "]$") then
 			-- Implement sandhi changes after stem ending in -ī or -i.
-			local stem_butlast, translit_stem_butlast = com.strip_ending_from_stem(stem, translit_stem,
-				rfind(stem, II .. "$") and II or I)
+			local stem_butlast, translit_stem_butlast =
+				com.strip_ending_from_stem(stem, translit_stem, rfind(stem, II .. "$") and II or I)
 			local ending_first = usub(ending, 1, 1)
 			if ending_first == AA or ending_first == E then
 				-- FIXME: Should this happen before all vowels? E.g. 1sg subj सिऊँ or सियूँ?
-				doadd(stem_butlast .. I, translit_stem_butlast .. "i")
-				doadd(stem_butlast .. I .. "य", translit_stem_butlast .. "iy")
+				doadd(stem_butlast .. I .. "य", translit_stem_butlast and translit_stem_butlast .. "iy")
+				doadd(stem_butlast .. I, translit_stem_butlast and translit_stem_butlast .. "i")
 				return
 			elseif ending_first == II then
 				doadd(stem_butlast, translit_stem_butlast)
 				return
 			elseif rfind(ending_first, "[" .. com.vowels .. "]") then
-				doadd(stem_butlast .. I, translit_stem_butlast .. "i")
+				doadd(stem_butlast .. I, translit_stem_butlast and translit_stem_butlast .. "i")
 				return
 			end
 		elseif rfind(stem, "[" .. UU .. U .. "]$") then
@@ -219,12 +221,31 @@ local function add(base, stem, translit_stem, slot, ending, footnotes)
 				doadd(stem_butlast, translit_stem_butlast)
 				return
 			elseif rfind(ending_first, "[" .. com.vowels .. "]") then
-				doadd(stem_butlast .. U, translit_stem_butlast .. "u")
+				doadd(stem_butlast .. U, translit_stem_butlast and translit_stem_butlast .. "u")
 				return
 			end
 		elseif rfind(stem, "[" .. AA .. O .. "आऔ]$") and rfind(ending, "^" .. AA) then
-			-- Implement sandhi changes after stem ending in -ā or -o.
-			doadd(stem .. "य", translit_stem .. "y")
+			-- Implement sandhi changes after stem ending in -ā or -o and ending beginning in -ā.
+			doadd(stem .. "य", translit_stem and translit_stem .. "y")
+			return
+		elseif rfind(stem, "[" .. E .. "ए]$") and rfind(ending, "^" .. AA) then
+			-- Implement sandhi changes after stem ending in -e and ending beginning in -ā.
+			doadd(stem .. "य", translit_stem and translit_stem .. "y")
+			doadd()
+			return
+		elseif rfind(stem, "%*$") then -- special hacks for ग(य)-, perfective stem of जाना
+			local stem_butlast, translit_stem_butlast =
+				com.strip_ending_from_stem(stem, translit_stem, "%*")
+			if rfind(ending, "^" .. E) then
+				-- Use full translit_stem rather than stripping off the final 'a' that should be there
+				doadd(stem_butlast, translit_stem, rsub(ending, "^" .. E, "ए"))
+				doadd(stem_butlast .. "य", translit_stem and translit_stem .. "y")
+			elseif rfind(ending, "^" .. II) then
+				doadd(stem_butlast, translit_stem, rsub(ending, "^" .. II, "ई"))
+				doadd(stem_butlast .. "य", translit_stem and translit_stem .. "y")
+			else
+				doadd(stem_butlast .. "य", translit_stem and translit_stem .. "y")
+			end
 			return
 		end
 	end
@@ -304,8 +325,7 @@ conjs["normal"] = function(base)
 	local function fetch_irreg(irreg_table)
 		if irreg_table[base.stem] then
 			local stem = irreg_table[base.stem]
-			local trstem = lang:transliterate(stem)
-			return stem, trstem
+			return stem, nil
 		else
 			return base.stem, base.stem_translit
 		end
@@ -348,23 +368,27 @@ conjs["normal"] = function(base)
 		add_conj_personal(base, "subj", subj, trsubj, UUM, E, E, EM, O, EM)
 	end
 	add_conj_gendered(base, "cfact", nil, nil, "ता", "ते", "ती", "तीं")
-	local defective_imp = subj ~= base.stem -- लेना, देना, पीना
-	if defective_imp then
-		add_conj_personal(base, "imp_pres", nil, nil, nil, "")
-		add_conj_personal(base, "imp_pres", subj, trsubj, nil, nil, nil, nil, O)
-	else
-		add_conj_personal(base, "imp_pres", nil, nil, nil, "", E, nil, O, EM)
+
+	-- FIXME! These are likely wrong for देना, लेना, पीना.
+	add_conj_personal(base, "imp_pres", nil, nil, nil, "")
+	add_conj_personal(base, "imp_pres", subj, trsubj, nil, nil, E, nil, O)
+	add_conj_personal(base, "imp_fut", nil, nil, nil, I .. "यो")
+	add_conj_personal(base, "imp_fut", subj, trsubj, nil, nil, E)
+	add_conj_personal(base, "imp_fut", nil, nil, nil, nil, nil, nil, "ना")
+	-- There may be more than one possible polite imperative stem, particularly for
+	-- irregular verbs. Loop over them.
+	if type(polite_imp) ~= "table" then
+		polite_imp = {polite_imp}
 	end
-	add_conj_personal(base, "imp_pres", polite_imp, tr_polite_imp, nil, nil, nil, nil, nil, I .. "ये")
-	add_conj_personal(base, "imp_pres", polite_imp, tr_polite_imp, nil, nil, nil, nil, nil, I .. "ए")
-	if polite_imp ~= base.stem then
-		add_conj_personal(base, "imp_pres", polite_imp, tr_polite_imp, nil, nil, nil, nil, nil, I .. "येगा")
-		add_conj_personal(base, "imp_pres", polite_imp, tr_polite_imp, nil, nil, nil, nil, nil, I .. "एगा")
+	if tr_polite_imp and type(tr_polite_imp) ~= "table" then
+		tr_polite_imp = {tr_polite_imp}
 	end
-	if not defective_imp then
-		add_conj_personal(base, "imp_fut", nil, nil, nil, I .. "यो", E, nil, "ना", EM)
-		add_conj_personal(base, "imp_fut", nil, nil, nil, nil, nil, nil, nil, I .. "येगा")
-		add_conj_personal(base, "imp_fut", nil, nil, nil, nil, nil, nil, nil, I .. "एगा")
+	for i, polimp in ipairs(polite_imp) do
+		local tr_polimp = tr_polite_imp and tr_polite_imp[i]
+		add_conj_personal(base, "imp_pres", polimp, tr_polimp, nil, nil, nil, nil, nil, I .. "ए")
+		add_conj_personal(base, "imp_pres", polimp, tr_polimp, nil, nil, nil, nil, nil, I .. "ये")
+		add_conj_personal(base, "imp_fut", polimp, tr_polimp, nil, nil, nil, nil, nil, I .. "एगा")
+		add_conj_personal(base, "imp_fut", polimp, tr_polimp, nil, nil, nil, nil, nil, I .. "येगा")
 	end
 
 	-- Habitual
@@ -462,7 +486,7 @@ dot-separated indicators within them). Return value is an object of the form
   orig_lemma_no_links = "ORIGINAL-LEMMA-NO-LINKS", -- links removed
   lemma = "LEMMA", -- `orig_lemma_no_links`, converted to singular form if plural
   phon_lemma = "LEMMA-PHONETIC-RESPELLING", -- as specified by the user; may be missing
-  lemma_translit = "LEMMA-TRANSLIT", -- translit of phon_lemma (if present) or lemma
+  lemma_translit = "LEMMA-TRANSLIT", -- translit of phon_lemma (if present)
   forms = {
 	SLOT = {
 	  {
@@ -568,7 +592,7 @@ local function compute_categories_and_annotation(alternant_multiword_spec)
 		alternant_multiword_spec.annotation = ""
 	else
 		local function do_word_spec(base)
-			if lang:transliterate(base.lemma) ~= base.lemma_translit then
+			if base.lemma_translit and lang:transliterate(base.lemma) ~= base.lemma_translit then
 				insert("~ with phonetic respelling")
 			end
 		end
@@ -722,7 +746,15 @@ local function make_table(alternant_multiword_spec)
 |
 | {imp_pres_2p}
 | {imp_pres_3p}
-{imp_fut_table}|- class="vsHide"
+|- class="vsHide"
+| style="width: 5em; background: #E6F2FF;" rowspan=1 colspan=2 | {FUT}
+|
+| {imp_fut_2s}
+| {imp_fut_3s}
+|
+| {imp_fut_2p}
+| {imp_fut_3p}
+|- class="vsHide"
 | style="width: 5em; background: #E6F2FF;" rowspan=1 colspan=100% | ''Habitual''
 |- class="vsHide"
 | style="width: 5em; background: #E6F2FF;" rowspan=4 colspan=1 | ''Indicative''
@@ -1073,17 +1105,6 @@ local function make_table(alternant_multiword_spec)
 | {subj_fut_2p}
 | {subj_fut_3p}]=]
 
-	local imp_fut_table = [=[
-|- class="vsHide"
-| style="width: 5em; background: #E6F2FF;" rowspan=1 colspan=2 | {FUT}
-|
-| {imp_fut_2s}
-| {imp_fut_3s}
-|
-| {imp_fut_2p}
-| {imp_fut_3p}
-]=]
-
 	local notes_template = [===[
 <div style="width:100%;text-align:left;background:#d9ebff">
 <div style="display:inline-block;text-align:left;padding-left:1em;padding-right:1em">
@@ -1123,11 +1144,6 @@ local function make_table(alternant_multiword_spec)
 	else
 		forms.subj_table = m_string_utilities.format(combined_subj, forms)
 		forms.pres_impf_table = pres_impf_table_missing
-	end
-	if forms.imp_fut_2sg ~= "—" then
-		forms.imp_fut_table = m_string_utilities.format(imp_fut_table, forms)
-	else
-		forms.imp_fut_table = ""
 	end
 	return m_string_utilities.format(table_spec, forms)
 end
