@@ -29,9 +29,9 @@ local m_table = require("Module:table")
 local m_links = require("Module:links")
 local m_string_utilities = require("Module:string utilities")
 local m_script_utilities = require("Module:script utilities")
-local iut = require("Module:User:Benwing2/inflection utilities")
+local iut = require("Module:inflection utilities")
 local m_para = require("Module:parameters")
-local com = require("Module:User:Benwing2/hi-common")
+local com = require("Module:hi-common")
 
 local u = mw.ustring.char
 local rsplit = mw.text.split
@@ -101,14 +101,16 @@ local irreg_polite_imp = {
 }
 
 local verb_slots = {
+	inf = "inf",
+	inf_obl = "obl|inf",
 	stem = "stem",
 	conj = "conj|form",
 	prog = "prog|form",
 }
 
 local function add_slot_gendered(slot_prefix, tag_suffix)
-	verb_slots[slot_prefix .. "_ms"] = tag_suffix == "-" and "-" or "m|dir|s|" .. tag_suffix
-	verb_slots[slot_prefix .. "_mp"] = tag_suffix == "-" and "-" or "m|p|" .. tag_suffix .. "|;|m|obl|s|" .. tag_suffix
+	verb_slots[slot_prefix .. "_ms"] = tag_suffix == "-" and "-" or "m|s|" .. tag_suffix
+	verb_slots[slot_prefix .. "_mp"] = tag_suffix == "-" and "-" or "m|p|" .. tag_suffix
 	verb_slots[slot_prefix .. "_fs"] = tag_suffix == "-" and "-" or "f|s|" .. tag_suffix
 	verb_slots[slot_prefix .. "_fp"] = tag_suffix == "-" and "-" or "f|p|" .. tag_suffix
 end
@@ -132,10 +134,10 @@ local function add_slot_gendered_personal(slot_prefix, tag_suffix)
 	end
 end
 
-add_slot_gendered("inf", "inf")
+add_slot_gendered("inf", "inf|part")
 add_slot_gendered("hab", "hab|part")
 add_slot_gendered("pfv", "pfv|part")
-add_slot_gendered("agent", "agentive|part")
+add_slot_gendered("agent", "prospective//agentive|part")
 add_slot_gendered("adj", "-")
 
 add_slot_personal("ind_pres", "pres|ind") -- only for होना
@@ -175,7 +177,7 @@ local function tag_text(text)
 end
 
 
-local function add(base, stem, translit_stem, slot, ending, footnotes)
+local function add(base, stem, translit_stem, slot, ending, footnotes, double_word)
 	local function doadd(new_stem, new_translit_stem, new_ending)
 		new_ending = new_ending or ending
 		if new_ending and base.notlast then
@@ -192,7 +194,7 @@ local function add(base, stem, translit_stem, slot, ending, footnotes)
 			end
 		end
 		com.add_form(base, new_stem or stem, new_translit_stem or translit_stem, slot,
-			new_ending, footnotes, "link words")
+			new_ending, footnotes, "link words", double_word)
 	end
 	if ending then
 		if rfind(stem, "[" .. II .. I .. "]$") then
@@ -307,11 +309,12 @@ local function handle_derived_slots_and_overrides(base)
 	-- We substitute the original lemma (before removing links) for forms that
 	-- are the same as the lemma, if the original lemma has links.
 	for _, slot in ipairs({"inf_ms"}) do
-		iut.insert_forms(base.forms, slot .. "_linked", iut.map_forms(base.forms[slot], function(form)
-			if form == base.orig_lemma_no_links and rfind(base.orig_lemma, "%[%[") then
-				return base.orig_lemma
+		iut.insert_forms(base.forms, slot .. "_linked", iut.map_forms(base.forms[slot], function(form, translit)
+			if form == base.orig_lemma_no_links and translit == base.lemma_translit
+				and rfind(base.orig_lemma, "%[%[") then
+				return base.orig_lemma, base.lemma_translit
 			else
-				return form
+				return form, translit
 			end
 		end))
 	end
@@ -337,9 +340,11 @@ conjs["normal"] = function(base)
 
 	-- Undeclined forms
 	add(base, base.stem, base.stem_translit, "stem", "")
+	add(base, base.stem, base.stem_translit, "inf", "ना")
+	add(base, base.stem, base.stem_translit, "inf_obl", "ने")
 	add(base, base.stem, base.stem_translit, "conj", "कर")
 	add(base, base.stem, base.stem_translit, "conj", "के")
-	add(base, base.stem, base.stem_translit, "prog", "ते")
+	add(base, base.stem, base.stem_translit, "prog", "ते", nil, "double word")
 
 	-- Participles
 	add_conj_gendered(base, "inf", nil, nil, "ना", "ने", "नी", "नीं")
@@ -398,7 +403,7 @@ conjs["normal"] = function(base)
 	add_conj_gendered(base, "hab_ind_past", nil, nil, "ता था", "ते थे", "ती थी", "ती थीं")
 	add_conj_gendered_personal(base, "hab_presum", nil, nil,
 		"ता हूँगा", "ता होगा", "ता होगा", "ते होंगे", "ते होगे", "ते होंगे",
-		"ती हूँगी", "ती होगी", "ती होगी", "ती होंगीं", "ती होगी", "ती होंगी")
+		"ती हूँगी", "ती होगी", "ती होगी", "ती होंगी", "ती होगी", "ती होंगी")
 	add_conj_gendered_personal(base, "hab_subj", nil, nil,
 		"ता हूँ", "ता हो", "ता हो", "ते हों", "ते हो", "ते हों",
 		"ती हूँ", "ती हो", "ती हो", "ती हों", "ती हो", "ती हों")
@@ -466,20 +471,8 @@ Parse an indicator spec (text consisting of angle brackets and zero or more
 dot-separated indicators within them). Return value is an object of the form
 
 {
-  overrides = {
-    SLOT = {OVERRIDE, OVERRIDE, ...}, -- as returned by parse_override()
-	...
-  },
   forms = {}, -- forms for a single spec alternant; see `forms` below
   footnotes = {"FOOTNOTE", "FOOTNOTE", ...}, -- may be missing
-  explicit_gender = "GENDER", -- "M", "F"; may be missing
-  number = "NUMBER", -- "sg", "pl"; may be missing
-  adj = true, -- may be missing
-  unmarked = true, -- may be missing
-  iya = true, -- may be missing
-  plstem = "PLSTEM", -- may be missing
-  pl_phon_stem = "PLSTEM-PHONETIC-RESPELLING", -- as specified by the user; may be missing
-  pl_translit_stem = "PLSTEM-TRANSLIT", -- translit of pl_phon_stem (if present) or plstem; may be missing
 
   -- The following additional fields are added by other functions:
   orig_lemma = "ORIGINAL-LEMMA", -- as given by the user or taken from pagename
@@ -634,6 +627,12 @@ local function make_table(alternant_multiword_spec)
 | style="width: 5em; background: #E6F2FF;" rowspan=1 colspan=2 | ''Stem''
 | colspan="100%" | {stem}
 |- class="vsHide"
+| style="width: 5em; background: #E6F2FF;" rowspan=1 colspan=2 | ''Infinitive''
+| colspan="100%" | {inf}
+|- class="vsHide"
+| style="width: 5em; background: #E6F2FF;" rowspan=1 colspan=2 | ''Oblique Infinitive''
+| colspan="100%" | {inf_obl}
+|- class="vsHide"
 | style="width: 5em; background: #E6F2FF;" rowspan=1 colspan=2 | ''Conjunctive''
 | colspan="100%" | {conj}
 |- class="vsHide"
@@ -699,7 +698,7 @@ local function make_table(alternant_multiword_spec)
 | '''2<sup>nd</sup>'''<br><span lang="hi" class="Deva">[[तुम]]</span>
 | '''3<sup>rd</sup>'''<br><span lang="hi" class="Deva">[[ये]]/[[वे]]/[[आप]]</span>
 |- class="vsHide"
-| style="width: 5em; background: #E6F2FF;" rowspan=1 colspan=100% | ''Non-Aspectual''
+| style="width: 5em; background: #C0E4C0;" rowspan=1 colspan=100% | ''Non-Aspectual''
 |- class="vsHide"
 {pres_impf_table}| style="width: 5em; background: #E6F2FF;" rowspan=2 colspan=1 | {PERF}
 | style="width: 1em; background: #D4D4D4;" | {m}
@@ -726,7 +725,7 @@ local function make_table(alternant_multiword_spec)
 | {ind_fut_1pf}
 | {ind_fut_2pf}
 | {ind_fut_3pf}
-{subj_table}
+{presum_table}{subj_table}
 |- class="vsHide"
 | style="width: 5em; background: #E6F2FF;" rowspan=2 colspan=1 | ''Contrafactual''
 | style="width: 5em; background: #E6F2FF;" rowspan=2 colspan=1 | {PRS_PST}
@@ -755,7 +754,7 @@ local function make_table(alternant_multiword_spec)
 | {imp_fut_2p}
 | {imp_fut_3p}
 |- class="vsHide"
-| style="width: 5em; background: #E6F2FF;" rowspan=1 colspan=100% | ''Habitual''
+| style="width: 5em; background: #C0E4C0;" rowspan=1 colspan=100% | ''Habitual''
 |- class="vsHide"
 | style="width: 5em; background: #E6F2FF;" rowspan=4 colspan=1 | ''Indicative''
 | style="width: 5em; background: #E6F2FF;" rowspan=2 colspan=1 | {PRS}
@@ -830,7 +829,7 @@ local function make_table(alternant_multiword_spec)
 | colspan=3 | {hab_cfact_fs}
 | colspan=3 | {hab_cfact_fp}
 |- class="vsHide"
-| style="width: 5em; background: #E6F2FF;" rowspan=1 colspan=100% | ''Perfective''
+| style="width: 5em; background: #C0E4C0;" rowspan=1 colspan=100% | ''Perfective''
 |- class="vsHide"
 | style="width: 5em; background: #E6F2FF;" rowspan=6 colspan=1 | ''Indicative''
 | style="width: 5em; background: #E6F2FF;" rowspan=2 colspan=1 | {PRS}
@@ -939,7 +938,7 @@ local function make_table(alternant_multiword_spec)
 | colspan=3 | {pfv_cfact_fs}
 | colspan=3 | {pfv_cfact_fp}
 |- class="vsHide"
-| style="width: 5em; background: #E6F2FF;" rowspan=1 colspan=100% | ''Progressive''
+| style="width: 5em; background: #C0E4C0;" rowspan=1 colspan=100% | ''Progressive''
 |- class="vsHide"
 | style="width: 5em; background: #E6F2FF;" rowspan=6 colspan=1 | ''Indicative''
 | style="width: 5em; background: #E6F2FF;" rowspan=2 colspan=1 | {PRS}
@@ -1075,6 +1074,27 @@ local function make_table(alternant_multiword_spec)
 | style="width: 5em; background: #E6F2FF;" rowspan=4 colspan=1 | ''Indicative''
 ]=]
 
+	local presum_table = [=[
+|- class="vsHide"
+| style="width: 5em; background: #E6F2FF;" rowspan=2 colspan=1 | ''Presumptive''
+| style="width: 5em; background: #E6F2FF;" rowspan=2 colspan=1 | {PRS_PST}
+| style="width: 1em; background: #D4D4D4;" | {m}
+| {presum_1sm}
+| {presum_2sm}
+| {presum_3sm}
+| {presum_1pm}
+| {presum_2pm}
+| {presum_3pm}
+|- class="vsHide"
+| style="width: 1em; background: #D4D4D4;" | {f}
+| {presum_1sf}
+| {presum_2sf}
+| {presum_3sf}
+| {presum_1pf}
+| {presum_2pf}
+| {presum_3pf}
+]=]
+
 	local combined_subj = [=[
 |- class="vsHide"
 | style="width: 5em; background: #E6F2FF;" rowspan=1 colspan=1 | ''Subjunctive''
@@ -1138,12 +1158,14 @@ local function make_table(alternant_multiword_spec)
 	local table_spec = table_spec_impersonal .. table_spec_personal
 	forms.notes_clause = forms.footnote ~= "" and
 		m_string_utilities.format(notes_template, forms) or ""
-	if forms.ind_pres_1s ~= "—" then
+	if forms.ind_pres_1s ~= "—" then -- होना
 		forms.subj_table = m_string_utilities.format(split_subj, forms)
 		forms.pres_impf_table = m_string_utilities.format(pres_impf_table, forms)
+		forms.presum_table = m_string_utilities.format(presum_table, forms)
 	else
 		forms.subj_table = m_string_utilities.format(combined_subj, forms)
 		forms.pres_impf_table = pres_impf_table_missing
+		forms.presum_table = ""
 	end
 	return m_string_utilities.format(table_spec, forms)
 end
@@ -1194,7 +1216,6 @@ function export.catboiler(frame)
 	end
 
 	local maintext
-	local stem, gender, stress, ending
 	while true do
 		if args[1] then
 			maintext = "~ " .. args[1]
@@ -1224,7 +1245,7 @@ end
 -- for a given slot is a list of objects {form=FORM, translit=TRANSLIT, footnotes=FOOTNOTES}.
 function export.do_generate_forms(parent_args, pos, from_headword, def)
 	local params = {
-		[1] = {required = true, default = "करना"},
+		[1] = {},
 		footnote = {list = true},
 		title = {},
 	}
@@ -1235,6 +1256,19 @@ function export.do_generate_forms(parent_args, pos, from_headword, def)
 	end
 
 	local args = m_para.process(parent_args, params)
+	local PAGENAME = mw.title.getCurrentTitle().text
+
+	if not args[1] then
+		if PAGENAME == "hi-conj" then
+			args[1] = def or "करना"
+		else
+			args[1] = PAGENAME
+			-- If pagename has spaces in it, add links around each word
+			if args[1]:find(" ") then
+				args[1] = "[[" .. rsub(args[1], " ", "]] [[") .. "]]"
+			end
+		end
+	end
 	local parse_props = {
 		parse_indicator_spec = parse_indicator_spec,
 		lang = lang,
@@ -1250,7 +1284,6 @@ function export.do_generate_forms(parent_args, pos, from_headword, def)
 	com.normalize_all_lemmas(alternant_multiword_spec)
 	detect_all_indicator_specs(alternant_multiword_spec)
 	local inflect_props = {
-		skip_slot = function(slot) return false end,
 		slot_table = verb_slots_with_linked,
 		lang = lang,
 		inflect_word_spec = conjugate_verb,
@@ -1258,6 +1291,9 @@ function export.do_generate_forms(parent_args, pos, from_headword, def)
 		-- multiword expressions like [[हिलना-डुलना]] get generated. See com.add_variant_codes()
 		-- for more information.
 		get_variants = alternant_multiword_spec.multiword and com.get_variants or nil,
+		-- We add links around the generated verbal forms rather than allow the entire multiword
+		-- expression to be a link, so ensure that user-specified links get included as well.
+		include_user_specified_links = true,
 	}
 	iut.inflect_multiword_or_alternant_multiword_spec(alternant_multiword_spec, inflect_props)
 	compute_categories_and_annotation(alternant_multiword_spec)
