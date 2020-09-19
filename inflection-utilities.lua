@@ -29,6 +29,11 @@ local footnote_abbrevs = {
 }
 
 
+function export.remove_redundant_links(text)
+	-- remove redundant link surrounding entire form
+	return rsub(text, "^%[%[([^%[%]|]*)%]%]$", "%1")
+end
+
 --[=[
 In order to understand the following parsing code, you need to understand how inflected
 text specs work. They are intended to work with inflected text where individual words to
@@ -763,7 +768,7 @@ local function inflect_alternants(alternant_spec, props)
 	for _, multiword_spec in ipairs(alternant_spec.alternants) do
 		export.inflect_multiword_or_alternant_multiword_spec(multiword_spec, props)
 		for slot, _ in pairs(props.slot_table) do
-			if not props.skip_slot(slot) then
+			if not props.skip_slot or not props.skip_slot(slot) then
 				export.insert_forms(alternant_spec.forms, slot, multiword_spec.forms[slot])
 			end
 		end
@@ -821,9 +826,10 @@ function export.inflect_multiword_or_alternant_multiword_spec(multiword_spec, pr
 			props.inflect_word_spec(word_spec)
 		end
 		for slot, _ in pairs(props.slot_table) do
-			if not props.skip_slot(slot) then
+			if not props.skip_slot or not props.skip_slot(slot) then
 				append_forms(props, multiword_spec.forms, slot, word_spec.forms[slot],
-					rfind(slot, "linked") and word_spec.before_text or word_spec.before_text_no_links,
+					(rfind(slot, "linked") or props.include_user_specified_links) and
+					word_spec.before_text or word_spec.before_text_no_links,
 					word_spec.before_text_no_links, word_spec.before_text_translit
 				)
 			end
@@ -833,9 +839,10 @@ function export.inflect_multiword_or_alternant_multiword_spec(multiword_spec, pr
 		local pseudoform = {{form=""}}
 		for slot, _ in pairs(props.slot_table) do
 			-- If slot is empty or should be skipped, don't try to append post-text.
-			if not props.skip_slot(slot) and multiword_spec.forms[slot] then
+			if (not props.skip_slot or not props.skip_slot(slot)) and multiword_spec.forms[slot] then
 				append_forms(props, multiword_spec.forms, slot, pseudoform,
-					rfind(slot, "linked") and multiword_spec.post_text or multiword_spec.post_text_no_links,
+					(rfind(slot, "linked") or props.include_user_specified_links) and
+					multiword_spec.post_text or multiword_spec.post_text_no_links,
 					multiword_spec.post_text_no_links, multiword_spec.post_text_translit
 				)
 			end
@@ -929,6 +936,7 @@ function export.show_forms_with_translit(forms, lemmas, slots_table, props, foot
 		accel_lemma_translit = accel_lemma.translit
 		accel_lemma = accel_lemma.form
 	end
+	accel_lemma = accel_lemma and m_links.remove_links(accel_lemma) or nil
 	local lemma_forms = {}
 	for _, lemma in ipairs(lemmas) do
 		if type(lemma) == "table" then
@@ -952,20 +960,25 @@ function export.show_forms_with_translit(forms, lemmas, slots_table, props, foot
 				if form.form == "—" or form.form == "?" then
 					link = orig_text
 				else
+					local origentry, orignotes
+					if allow_footnote_symbols then
+						origentry, orignotes = m_table_tools.get_notes(orig_text)
+					else
+						origentry, orignotes = orig_text, ""
+					end
+					-- remove redundant link surrounding entire form
+					origentry = export.remove_redundant_links(origentry)
 					local accel_obj
-					if accel_lemma and not form.no_accel and accel_form ~= "-" then
+					-- check if form still has links; if so, don't add accelerators
+					-- because the resulting entries will be wrong
+					if accel_lemma and not form.no_accel and accel_form ~= "-" and
+						not rfind(origentry, "%[%[") then
 						accel_obj = {
 							form = accel_form,
 							translit = form.translit,
 							lemma = accel_lemma,
 							lemma_translit = accel_lemma_translit,
 						}
-					end
-					local origentry, orignotes
-					if allow_footnote_symbols then
-						origentry, orignotes = m_table_tools.get_notes(orig_text)
-					else
-						origentry, orignotes = orig_text, ""
 					end
 					link = m_links.full_link{lang = props.lang, term = origentry,
 						tr = "-", accel = accel_obj} .. orignotes
