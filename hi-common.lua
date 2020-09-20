@@ -7,7 +7,7 @@ Authorship: Ben Wing <benwing2>
 ]=]
 
 local m_links = require("Module:links")
-local iut = require("Module:User:Benwing2/inflection utilities")
+local iut = require("Module:inflection utilities")
 
 local lang = require("Module:languages").getByCode("hi")
 
@@ -104,7 +104,7 @@ function export.transliterate_respelling(phon)
 end
 
 
-function export.add_form(base, stem, translit_stem, slot, ending, footnotes, link_words)
+function export.add_form(base, stem, translit_stem, slot, ending, footnotes, link_words, double_word)
 	if not ending then
 		return
 	end
@@ -133,31 +133,45 @@ function export.add_form(base, stem, translit_stem, slot, ending, footnotes, lin
 			-- Add links around the words.
 			result = "[[" .. rsub(result, " ", "]] [[") .. "]]"
 		end
-		return result
+		if double_word then
+			-- hack to support the progressive form of verbs, which is e.g. करते-करते
+			return result .. "-" .. result
+		else
+			return result
+		end
 	end
 
 	local function combine_stem_ending_tr(stem, ending)
+		local result
 		if ending == "" then
-			return stem
-		-- When adding a non-null ending, remove final '-a' from the stem, but only
-		-- if the transliterated lemma also ended in '-a'. This way, a noun like
-		-- पुनश्च transliterated 'punaśca' "postscript" gets oblique plural transliterated
-		-- 'punaścõ' with dropped '-a', but मई transliterated 'maī' "May" with
-		-- transliterated stem 'ma' and ending singular ending '-ī' doesn't get the
-		-- '-a' dropped. A third case we need to handle correctly is इंटरव्यू "interview";
-		-- if we truncate the final ू  '-ū' and then transliterate, we get 'iṇṭarvya'
-		-- with extra '-a' that may appear in the transliteration if we're not careful.
-		--
-		-- HACK! Handle प्रातः correctly by checking specially for lemma_translit ending
-		-- in -a or -aḥ and ending starting with a vowel. The proper way to do this
-		-- correctly that handles all of the above cases requires access to the original
-		-- (Devanagari) ending, and checks to see if the stem ends in '-a' and the ending
-		-- begins with a Devanagari diacritic; in this case, it's correct to elide the '-a'.
-		elseif base.lemma_translit and rfind(stem, "a$") and rfind(base.lemma_translit, "aḥ?$") and
-			rfind(ending, "^[" .. export.transliterated_diacritics .. "]") then
-			stem = rsub(stem, "a$", "")
+			result = stem
+		else
+			-- When adding a non-null ending, remove final '-a' from the stem, but only
+			-- if the transliterated lemma also ended in '-a'. This way, a noun like
+			-- पुनश्च transliterated 'punaśca' "postscript" gets oblique plural transliterated
+			-- 'punaścõ' with dropped '-a', but मई transliterated 'maī' "May" with
+			-- transliterated stem 'ma' and ending singular ending '-ī' doesn't get the
+			-- '-a' dropped. A third case we need to handle correctly is इंटरव्यू "interview";
+			-- if we truncate the final ू  '-ū' and then transliterate, we get 'iṇṭarvya'
+			-- with extra '-a' that may appear in the transliteration if we're not careful.
+			--
+			-- HACK! Handle प्रातः correctly by checking specially for lemma_translit ending
+			-- in -a or -aḥ and ending starting with a vowel. The proper way to do this
+			-- correctly that handles all of the above cases requires access to the original
+			-- (Devanagari) ending, and checks to see if the stem ends in '-a' and the ending
+			-- begins with a Devanagari diacritic; in this case, it's correct to elide the '-a'.
+			if base.lemma_translit and rfind(stem, "a$") and rfind(base.lemma_translit, "aḥ?$") and
+				rfind(ending, "^[" .. export.transliterated_diacritics .. "]") then
+				stem = rsub(stem, "a$", "")
+			end
+			result = stem .. ending
 		end
-		return stem .. ending
+		if double_word then
+			-- hack to support the progressive form of verbs, which is e.g. करते-करते
+			return result .. "-" .. result
+		else
+			return result
+		end
 	end
 
 	footnotes = iut.combine_footnotes(base.footnotes, footnotes)
