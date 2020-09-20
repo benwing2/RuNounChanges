@@ -29,9 +29,9 @@ local m_table = require("Module:table")
 local m_links = require("Module:links")
 local m_string_utilities = require("Module:string utilities")
 local m_script_utilities = require("Module:script utilities")
-local iut = require("Module:inflection utilities")
+local iut = require("Module:User:Benwing2/inflection utilities")
 local m_para = require("Module:parameters")
-local com = require("Module:hi-common")
+local com = require("Module:User:Benwing2/hi-common")
 
 local u = mw.ustring.char
 local rsplit = mw.text.split
@@ -51,7 +51,6 @@ local AA = u(0x093e)
 local AI = u(0x0948)
 local AU = u(0x094c)
 local E = u(0x0947)
-local EM = E .. M
 local EN = E .. N
 local I = u(0x093f)
 local II = u(0x0940)
@@ -100,7 +99,7 @@ local irreg_polite_imp = {
 	["हो"] = {"हो", "हूज"},
 }
 
-local verb_slots = {
+local verb_slots_impers = {
 	inf = "inf",
 	inf_obl = "obl|inf",
 	stem = "stem",
@@ -108,14 +107,19 @@ local verb_slots = {
 	prog = "prog|form",
 }
 
-local function add_slot_gendered(slot_prefix, tag_suffix)
+local verb_slots_pers = {
+}
+
+local function add_slot_gendered(slot_prefix, tag_suffix, verb_slots)
+	verb_slots = verb_slots or verb_slots_pers
 	verb_slots[slot_prefix .. "_ms"] = tag_suffix == "-" and "-" or "m|s|" .. tag_suffix
 	verb_slots[slot_prefix .. "_mp"] = tag_suffix == "-" and "-" or "m|p|" .. tag_suffix
 	verb_slots[slot_prefix .. "_fs"] = tag_suffix == "-" and "-" or "f|s|" .. tag_suffix
 	verb_slots[slot_prefix .. "_fp"] = tag_suffix == "-" and "-" or "f|p|" .. tag_suffix
 end
 
-local function add_slot_personal(slot_prefix, tag_suffix)
+local function add_slot_personal(slot_prefix, tag_suffix, verb_slots)
+	verb_slots = verb_slots or verb_slots_pers
 	for _, num in ipairs({"s", "p"}) do
 		for _, pers in ipairs({"1", "2", "3"}) do
 			verb_slots[slot_prefix .. "_" .. pers .. num] = tag_suffix == "-" and "-" or pers .. "|" .. num .. "|" .. tag_suffix
@@ -123,7 +127,8 @@ local function add_slot_personal(slot_prefix, tag_suffix)
 	end
 end
 
-local function add_slot_gendered_personal(slot_prefix, tag_suffix)
+local function add_slot_gendered_personal(slot_prefix, tag_suffix, verb_slots)
+	verb_slots = verb_slots or verb_slots_pers
 	for _, num in ipairs({"s", "p"}) do
 		for _, pers in ipairs({"1", "2", "3"}) do
 			for _, gender in ipairs({"m", "f"}) do
@@ -134,11 +139,11 @@ local function add_slot_gendered_personal(slot_prefix, tag_suffix)
 	end
 end
 
-add_slot_gendered("inf", "inf|part")
-add_slot_gendered("hab", "hab|part")
-add_slot_gendered("pfv", "pfv|part")
-add_slot_gendered("agent", "prospective//agentive|part")
-add_slot_gendered("adj", "-")
+add_slot_gendered("inf", "inf|part", verb_slots_impers)
+add_slot_gendered("hab", "hab|part", verb_slots_impers)
+add_slot_gendered("pfv", "pfv|part", verb_slots_impers)
+add_slot_gendered("agent", "prospective//agentive|part", verb_slots_impers)
+add_slot_gendered("adj", "-", verb_slots_impers)
 
 add_slot_personal("ind_pres", "pres|ind") -- only for होना
 add_slot_gendered("ind_impf", "impf|ind") -- only for होना
@@ -168,8 +173,15 @@ for _, mood in ipairs({"pfv", "prog"}) do
 	add_slot_gendered(mood .. "_cfact", "-")
 end
 
-local verb_slots_with_linked = m_table.shallowcopy(verb_slots)
-verb_slots_with_linked["inf_ms_linked"] = verb_slots["inf_ms"]
+verb_slots_impers["inf_ms_linked"] = verb_slots_impers["inf_ms"]
+
+local all_verb_slots = {}
+for k, v in pairs(verb_slots_impers) do
+	all_verb_slots[k] = v
+end
+for k, v in pairs(verb_slots_pers) do
+	all_verb_slots[k] = v
+end
 
 
 local function tag_text(text)
@@ -177,8 +189,13 @@ local function tag_text(text)
 end
 
 
+local function term_link(hi, tr)
+    return m_links.full_link({term = hi, tr = tr, lang = lang}, "term")
+end
+
+
 local function add(base, stem, translit_stem, slot, ending, footnotes, double_word)
-	local function doadd(new_stem, new_translit_stem, new_ending)
+	local function doadd(new_stem, new_translit_stem, new_ending, slot_footnotes)
 		new_ending = new_ending or ending
 		if new_ending and base.notlast then
 			-- If we're not the last verb in a multiword expression, chop off
@@ -194,7 +211,7 @@ local function add(base, stem, translit_stem, slot, ending, footnotes, double_wo
 			end
 		end
 		com.add_form(base, new_stem or stem, new_translit_stem or translit_stem, slot,
-			new_ending, footnotes, "link words", double_word)
+			new_ending, iut.combine_footnotes(slot_footnotes, footnotes), "link words", double_word)
 	end
 	if ending then
 		if rfind(stem, "[" .. II .. I .. "]$") then
@@ -204,8 +221,28 @@ local function add(base, stem, translit_stem, slot, ending, footnotes, double_wo
 			local ending_first = usub(ending, 1, 1)
 			if ending_first == AA or ending_first == E then
 				-- FIXME: Should this happen before all vowels? E.g. 1sg subj सिऊँ or सियूँ?
-				doadd(stem_butlast .. I .. "य", translit_stem_butlast and translit_stem_butlast .. "iy")
-				doadd(stem_butlast .. I, translit_stem_butlast and translit_stem_butlast .. "i")
+				local form_stem = stem_butlast .. I
+				local form_tr = translit_stem_butlast and translit_stem_butlast .. "i"
+				local function link(form_ending)
+					return term_link(form_stem .. form_ending, form_tr and form_tr .. lang:transliterate(form_ending))
+				end
+				local aae_c = "[" .. AA .. E .. "]"
+				local y_footnote
+				if rfind(ending, "^" .. aae_c .. "$") or rfind(ending, "^" .. aae_c .. " ") then
+					y_footnote = {"[the participles " .. link("या") .. " and " .. link("ये") ..
+						" can also be spelled without the ''y'': " .. link("आ") .. " and " .. link("ए") .. "]"}
+				elseif rfind(slot, "^ind_fut") then
+					y_footnote = {"[the forms " .. link("येगा") .. ", " .. link("येंगे") .. ", " ..
+						link("येगी") .. " and " .. link("येंगी") .. " can also be spelled without the ''y'': " ..
+						link("एगा") .. ", " .. link("एँगे") .. ", " .. link("एगी") .. " and " .. link("एँगी") .. "]"}
+				elseif rfind(slot, "^subj") then
+					y_footnote = {"[the forms " .. link("ये") .. " and " .. link("यें") ..
+					" can also be spelled without the ''y'': " .. link("ए") .. " and " .. link("एँ") .. "]"}
+				else
+					error("Internal error: Don't know what to do with ending " .. ending .. " for slot " .. slot)
+				end
+				doadd(form_stem .. "य", form_tr and form_tr .. "y", nil, y_footnote)
+				-- doadd(form_stem, form_tr)
 				return
 			elseif ending_first == II then
 				doadd(stem_butlast, translit_stem_butlast)
@@ -231,9 +268,14 @@ local function add(base, stem, translit_stem, slot, ending, footnotes, double_wo
 			doadd(stem .. "य", translit_stem and translit_stem .. "y")
 			return
 		elseif rfind(stem, "[" .. E .. "ए]$") and rfind(ending, "^" .. AA) then
+			local function link(form_ending)
+				return term_link(stem .. form_ending, translit_stem and translit_stem .. lang:transliterate(form_ending))
+			end
 			-- Implement sandhi changes after stem ending in -e and ending beginning in -ā.
-			doadd(stem .. "य", translit_stem and translit_stem .. "y")
-			doadd()
+			local y_footnote = {"[the participle " .. link("या") .. " can also be spelled without the ''y'': " ..
+				link("आ") .. "]"}
+			doadd(stem .. "य", translit_stem and translit_stem .. "y", nil, y_footnote)
+			-- doadd()
 			return
 		elseif rfind(stem, "%*$") then -- special hacks for ग(य)-, perfective stem of जाना
 			local stem_butlast, translit_stem_butlast =
@@ -368,9 +410,9 @@ conjs["normal"] = function(base)
 		add_conj_personal(base, "ind_pres", "", "", "हूँ", "है", "है", "हैं", "हो", "हैं")
 		add_conj_gendered(base, "ind_impf", "थ", "th", AA, E, II, IIN)
 		add_conj_personal(base, "subj_pres", "", "", "हूँ", "हो", "हो", "हों", "हो", "हों")
-		add_conj_personal(base, "subj_fut", nil, nil, UUM, E, E, EM, O, EM)
+		add_conj_personal(base, "subj_fut", nil, nil, UUM, E, E, EN, O, EN)
 	else
-		add_conj_personal(base, "subj", subj, trsubj, UUM, E, E, EM, O, EM)
+		add_conj_personal(base, "subj", subj, trsubj, UUM, E, E, EN, O, EN)
 	end
 	add_conj_gendered(base, "cfact", nil, nil, "ता", "ते", "ती", "तीं")
 
@@ -390,10 +432,14 @@ conjs["normal"] = function(base)
 	end
 	for i, polimp in ipairs(polite_imp) do
 		local tr_polimp = tr_polite_imp and tr_polite_imp[i]
-		add_conj_personal(base, "imp_pres", polimp, tr_polimp, nil, nil, nil, nil, nil, I .. "ए")
-		add_conj_personal(base, "imp_pres", polimp, tr_polimp, nil, nil, nil, nil, nil, I .. "ये")
-		add_conj_personal(base, "imp_fut", polimp, tr_polimp, nil, nil, nil, nil, nil, I .. "एगा")
-		add_conj_personal(base, "imp_fut", polimp, tr_polimp, nil, nil, nil, nil, nil, I .. "येगा")
+		local function link(form_ending)
+			return term_link(polimp .. form_ending, tr_polimp and tr_polimp .. lang:transliterate(form_ending))
+		end
+		local y_footnote = {
+			"[the forms " .. link(I .. "ये") .. " and " .. link(I .. "येगा") .. " can also be spelled without the ''y'': " ..
+			link(I .. "ए") .. " and " .. link(I .. "एगा") .. "]"}
+		add_conj_personal(base, "imp_pres", polimp, tr_polimp, nil, nil, nil, nil, nil, I .. "ये", y_footnote)
+		add_conj_personal(base, "imp_fut", polimp, tr_polimp, nil, nil, nil, nil, nil, I .. "येगा", y_footnote)
 	end
 
 	-- Habitual
@@ -452,27 +498,12 @@ conjs["normal"] = function(base)
 end
 
 
-local function fetch_footnotes(separated_group)
-	local footnotes
-	for j = 2, #separated_group - 1, 2 do
-		if separated_group[j + 1] ~= "" then
-			error("Extraneous text after bracketed footnotes: '" .. table.concat(separated_group) .. "'")
-		end
-		if not footnotes then
-			footnotes = {}
-		end
-		table.insert(footnotes, separated_group[j])
-	end
-	return footnotes
-end
-
 --[=[
 Parse an indicator spec (text consisting of angle brackets and zero or more
 dot-separated indicators within them). Return value is an object of the form
 
 {
   forms = {}, -- forms for a single spec alternant; see `forms` below
-  footnotes = {"FOOTNOTE", "FOOTNOTE", ...}, -- may be missing
 
   -- The following additional fields are added by other functions:
   orig_lemma = "ORIGINAL-LEMMA", -- as given by the user or taken from pagename
@@ -501,17 +532,9 @@ local function parse_indicator_spec(angle_bracket_spec)
 		local segments = iut.parse_balanced_segment_run(inside, "[", "]")
 		local dot_separated_groups = iut.split_alternating_runs(segments, "%.")
 		for i, dot_separated_group in ipairs(dot_separated_groups) do
+			-- No indicators allowed currently.
 			local part = dot_separated_group[1]
-			if part == "" then
-				if #dot_separated_group == 1 then
-					error("Blank indicator: '" .. inside .. "'")
-				end
-				base.footnotes = fetch_footnotes(dot_separated_group)
-			elseif #dot_separated_group > 1 then
-				error("Footnotes only allowed with slot overrides or by themselves: '" .. table.concat(dot_separated_group) .. "'")
-			else
-				error("Unrecognized indicator '" .. part .. "': '" .. inside .. "'")
-			end
+			error("Unrecognized indicator '" .. part .. "': '" .. inside .. "'")
 		end
 	end
 	return base
@@ -611,114 +634,117 @@ local function show_forms(alternant_multiword_spec)
 		end
 	end
 	iut.show_forms_with_translit(alternant_multiword_spec.forms, lemmas,
-		verb_slots_with_linked, props, alternant_multiword_spec.footnotes,
-		"allow footnote symbols")
+		verb_slots_impers, props, alternant_multiword_spec.footnotes_impers)
+	alternant_multiword_spec.forms.footnote_impers = alternant_multiword_spec.forms.footnote
+	iut.show_forms_with_translit(alternant_multiword_spec.forms, lemmas,
+		verb_slots_pers, props, alternant_multiword_spec.footnotes_pers)
+	alternant_multiword_spec.forms.footnote_pers = alternant_multiword_spec.forms.footnote
 end
 
 
 local function make_table(alternant_multiword_spec)
 	local table_spec_impersonal = [=[
-{| class="inflection-table vsSwitcher" data-toggle-category="inflection" style="background:#F9F9F9; text-align:center; border: 1px solid #CCC; min-width: 20em"
-|- style="background: #d9ebff;"
-! class="vsToggleElement" style="text-align: left;" colspan="100%" | Impersonal forms of {inf_raw}
-|- class="vsHide"
-| style="width: 5em; background: #E6F2FF;" rowspan=1 colspan=100% | ''Undeclined''
-|- class="vsHide"
-| style="width: 5em; background: #E6F2FF;" rowspan=1 colspan=2 | ''Stem''
+<div class="NavFrame">
+<div class="NavHead hi-table-title" style="background: #d9ebff;">Impersonal forms of {inf_raw}</div>
+<div class="NavContent">
+{\op}| class="inflection-table inflection-hi inflection-verb" data-toggle-category="inflection"
+|-
+| class="hi-tense-aspect-cell" rowspan=1 colspan=100% | ''Undeclined''
+|-
+| class="hi-tense-aspect-cell" rowspan=1 colspan=2 | ''Stem''
 | colspan="100%" | {stem}
-|- class="vsHide"
-| style="width: 5em; background: #E6F2FF;" rowspan=1 colspan=2 | ''Infinitive''
+|-
+| class="hi-tense-aspect-cell" rowspan=1 colspan=2 | ''Infinitive''
 | colspan="100%" | {inf}
-|- class="vsHide"
-| style="width: 5em; background: #E6F2FF;" rowspan=1 colspan=2 | ''Oblique Infinitive''
+|-
+| class="hi-tense-aspect-cell" rowspan=1 colspan=2 | ''Oblique Infinitive''
 | colspan="100%" | {inf_obl}
-|- class="vsHide"
-| style="width: 5em; background: #E6F2FF;" rowspan=1 colspan=2 | ''Conjunctive''
+|-
+| class="hi-tense-aspect-cell" rowspan=1 colspan=2 | ''Conjunctive''
 | colspan="100%" | {conj}
-|- class="vsHide"
-| style="width: 5em; background: #E6F2FF;" rowspan=1 colspan=2 | ''Progressive''
+|-
+| class="hi-tense-aspect-cell" rowspan=1 colspan=2 | ''Progressive''
 | colspan="100%" | {prog}
-|- class="vsHide"
-| style="width: 5em; background: #E6F2FF;" rowspan=1 colspan=100% | ''Participles''
-|- class="vsHide"
-|- class="vsHide"
-| style="background:#E6F2FF" colspan=2 |
-| style="background: #D4D4D4;" | {m} {s}
-| style="background: #D4D4D4;" | {m} {p}
-| style="background: #D4D4D4;" | {f} {s}
-| style="background: #D4D4D4;" | {f} {p}
-|- class="vsHide"
-| style="width: 5em; background: #E6F2FF;" rowspan=1 colspan=2 | ''Infinitive''
+|-
+| class="hi-tense-aspect-cell" rowspan=1 colspan=100% | ''Participles''
+|-
+|- class="hi-part-gender-number-header"
+| class="hi-tense-aspect-cell" colspan=2 |
+| {m} {s}
+| {m} {p}
+| {f} {s}
+| {f} {p}
+|-
+| class="hi-tense-aspect-cell" rowspan=1 colspan=2 | ''Infinitive''
 | {inf_ms}
 | {inf_mp}
 | {inf_fs}
 | {inf_fp}
-|- class="vsHide"
-| style="width: 5em; background: #E6F2FF;" rowspan=1 colspan=2 | ''Habitual''
+|-
+| class="hi-tense-aspect-cell" rowspan=1 colspan=2 | ''Habitual''
 | {hab_ms}
 | {hab_mp}
 | {hab_fs}
 | {hab_fp}
-|- class="vsHide"
-| style="width: 5em; background: #E6F2FF;" rowspan=1 colspan=2 | ''Perfective''
+|-
+| class="hi-tense-aspect-cell" rowspan=1 colspan=2 | ''Perfective''
 | {pfv_ms}
 | {pfv_mp}
 | {pfv_fs}
 | {pfv_fp}
-|- class="vsHide"
-| style="width: 5em; background: #E6F2FF;" rowspan=1 colspan=2 | ''Prospective<br>Agentive''
+|-
+| class="hi-tense-aspect-cell" rowspan=1 colspan=2 | ''Prospective<br>Agentive''
 | {agent_ms}
 | {agent_mp}
 | {agent_fs}
 | {agent_fp}
-|- class="vsHide"
-| style="width: 5em; background: #E6F2FF;" rowspan=1 colspan=2 | ''Adjectival''
+|-
+| class="hi-tense-aspect-cell" rowspan=1 colspan=2 | ''Adjectival''
 | {adj_ms}
 | {adj_mp}
 | {adj_fs}
 | {adj_fp}
-|{\cl}
-]=]
+|{\cl}{notes_clause}</div></div>]=]
 
 	local table_spec_personal = [=[
-{| class="inflection-table vsSwitcher" data-toggle-category="inflection" style="background:#F9F9F9; text-align:center; border: 1px solid #CCC; min-width: 20em"
-|- style="background: #d9ebff;"
-! class="vsToggleElement" style="text-align: left;" colspan="100%" | Personal forms of {inf_raw}
-|- class="vsHide" style="background: #DFEEFF;"
+<div class="NavFrame">
+<div class="NavHead hi-table-title" style="background: #d9ebff;">Personal forms of {inf_raw}</div>
+<div class="NavContent">
+{\op}| class="inflection-table inflection-hi inflection-verb" data-toggle-category="inflection"
+|- class="hi-table-header"
 | rowspan=2 |
 | rowspan=2 |
 | rowspan=2 |
 | colspan=3 | '''Singular'''
 | colspan=3 | '''Plural'''
-|- class="vsHide" style="background: #DFEEFF;"
+|- class="hi-table-header"
 | '''1<sup>st</sup>'''<br><span lang="hi" class="Deva">[[मैं]]</span>
 | '''2<sup>nd</sup>'''<br><span lang="hi" class="Deva">[[तू]]</span>
 | '''3<sup>rd</sup>'''<br><span lang="hi" class="Deva">[[यह]]/[[वह]]</span>
 | '''1<sup>st</sup>'''<br><span lang="hi" class="Deva">[[हम]]</span>
 | '''2<sup>nd</sup>'''<br><span lang="hi" class="Deva">[[तुम]]</span>
 | '''3<sup>rd</sup>'''<br><span lang="hi" class="Deva">[[ये]]/[[वे]]/[[आप]]</span>
-|- class="vsHide"
-| style="width: 5em; background: #C0E4C0;" rowspan=1 colspan=100% | ''Non-Aspectual''
-|- class="vsHide"
-{pres_impf_table}| style="width: 5em; background: #E6F2FF;" rowspan=2 colspan=1 | {PERF}
-| style="width: 1em; background: #D4D4D4;" | {m}
+|-
+| class="hi-sec-div" rowspan=1 colspan=100% | ''Non-Aspectual''
+{pres_impf_table}| class="hi-tense-aspect-cell" rowspan=2 colspan=1 | {PERF}
+| class="hi-mf-cell" | {m}
 | colspan=3 | {ind_perf_ms}
 | colspan=3 | {ind_perf_mp}
-|- class="vsHide"
-| style="width: 1em; background: #D4D4D4;" | {f}
+|- class="hi-row-f"
+| class="hi-mf-cell" | {f}
 | colspan=3 | {ind_perf_fs}
 | colspan=3 | {ind_perf_fp}
-|- class="vsHide"
-| style="width: 5em; background: #E6F2FF;" rowspan=2 colspan=1 | {FUT}
-| style="width: 1em; background: #D4D4D4;" | {m}
+|- class="hi-row-m"
+| class="hi-tense-aspect-cell" rowspan=2 colspan=1 | {FUT}
+| class="hi-mf-cell" | {m}
 | {ind_fut_1sm}
 | {ind_fut_2sm}
 | {ind_fut_3sm}
 | {ind_fut_1pm}
 | {ind_fut_2pm}
 | {ind_fut_3pm}
-|- class="vsHide"
-| style="width: 1em; background: #D4D4D4;" | {f}
+|- class="hi-row-f"
+| class="hi-mf-cell" | {f}
 | {ind_fut_1sf}
 | {ind_fut_2sf}
 | {ind_fut_3sf}
@@ -726,367 +752,368 @@ local function make_table(alternant_multiword_spec)
 | {ind_fut_2pf}
 | {ind_fut_3pf}
 {presum_table}{subj_table}
-|- class="vsHide"
-| style="width: 5em; background: #E6F2FF;" rowspan=2 colspan=1 | ''Contrafactual''
-| style="width: 5em; background: #E6F2FF;" rowspan=2 colspan=1 | {PRS_PST}
-| style="width: 1em; background: #D4D4D4;" | {m}
+|- class="hi-row-m"
+| class="hi-tense-aspect-cell" rowspan=2 colspan=1 | ''Contrafactual''
+| class="hi-tense-aspect-cell" rowspan=2 colspan=1 | {PRS_PST}
+| class="hi-mf-cell" | {m}
 | colspan=3 | {cfact_ms}
 | colspan=3 | {cfact_mp}
-|- class="vsHide"
-| style="width: 1em; background: #D4D4D4;" | {f}
+|- class="hi-row-f"
+| class="hi-mf-cell" | {f}
 | colspan=3 | {cfact_fs}
 | colspan=3 | {cfact_fp}
-|- class="vsHide"
-| style="width: 5em; background: #E6F2FF;" rowspan=2 colspan=1 | ''Imperative''
-| style="width: 5em; background: #E6F2FF;" rowspan=1 colspan=2 | {PRS}
+|-
+| class="hi-tense-aspect-cell" rowspan=2 colspan=1 | ''Imperative''
+| class="hi-tense-aspect-cell" rowspan=1 colspan=2 | {PRS}
 |
 | {imp_pres_2s}
 | {imp_pres_3s}
 |
 | {imp_pres_2p}
 | {imp_pres_3p}
-|- class="vsHide"
-| style="width: 5em; background: #E6F2FF;" rowspan=1 colspan=2 | {FUT}
+|-
+| class="hi-tense-aspect-cell" rowspan=1 colspan=2 | {FUT}
 |
 | {imp_fut_2s}
 | {imp_fut_3s}
 |
 | {imp_fut_2p}
 | {imp_fut_3p}
-|- class="vsHide"
-| style="width: 5em; background: #C0E4C0;" rowspan=1 colspan=100% | ''Habitual''
-|- class="vsHide"
-| style="width: 5em; background: #E6F2FF;" rowspan=4 colspan=1 | ''Indicative''
-| style="width: 5em; background: #E6F2FF;" rowspan=2 colspan=1 | {PRS}
-| style="width: 1em; background: #D4D4D4;" | {m}
+|-
+| class="hi-sec-div" rowspan=1 colspan=100% | ''Habitual''
+|- class="hi-row-m"
+| class="hi-tense-aspect-cell" rowspan=4 colspan=1 | ''Indicative''
+| class="hi-tense-aspect-cell" rowspan=2 colspan=1 | {PRS}
+| class="hi-mf-cell" | {m}
 | {hab_ind_pres_1sm}
 | {hab_ind_pres_2sm}
 | {hab_ind_pres_3sm}
 | {hab_ind_pres_1pm}
 | {hab_ind_pres_2pm}
 | {hab_ind_pres_3pm}
-|- class="vsHide"
-| style="width: 1em; background: #D4D4D4;" | {f}
+|- class="hi-row-f"
+| class="hi-mf-cell" | {f}
 | {hab_ind_pres_1sf}
 | {hab_ind_pres_2sf}
 | {hab_ind_pres_3sf}
 | {hab_ind_pres_1pf}
 | {hab_ind_pres_2pf}
 | {hab_ind_pres_3pf}
-|- class="vsHide"
-| style="width: 5em; background: #E6F2FF;" rowspan=2 colspan=1 | {PST}
-| style="width: 1em; background: #D4D4D4;" | {m}
+|- class="hi-row-m"
+| class="hi-tense-aspect-cell" rowspan=2 colspan=1 | {PST}
+| class="hi-mf-cell" | {m}
 | colspan=3 | {hab_ind_past_ms}
 | colspan=3 | {hab_ind_past_mp}
-|- class="vsHide"
-| style="width: 1em; background: #D4D4D4;" | {f}
+|- class="hi-row-f"
+| class="hi-mf-cell" | {f}
 | colspan=3 | {hab_ind_past_fs}
 | colspan=3 | {hab_ind_past_fp}
-|- class="vsHide"
-| style="width: 5em; background: #E6F2FF;" rowspan=2 colspan=1 | ''Presumptive''
-| style="width: 5em; background: #E6F2FF;" rowspan=2 colspan=1 | {PRS_PST}
-| style="width: 1em; background: #D4D4D4;" | {m}
+|- class="hi-row-m"
+| class="hi-tense-aspect-cell" rowspan=2 colspan=1 | ''Presumptive''
+| class="hi-tense-aspect-cell" rowspan=2 colspan=1 | {PRS_PST}
+| class="hi-mf-cell" | {m}
 | {hab_presum_1sm}
 | {hab_presum_2sm}
 | {hab_presum_3sm}
 | {hab_presum_1pm}
 | {hab_presum_2pm}
 | {hab_presum_3pm}
-|- class="vsHide"
-| style="width: 1em; background: #D4D4D4;" | {f}
+|- class="hi-row-f"
+| class="hi-mf-cell" | {f}
 | {hab_presum_1sf}
 | {hab_presum_2sf}
 | {hab_presum_3sf}
 | {hab_presum_1pf}
 | {hab_presum_2pf}
 | {hab_presum_3pf}
-|- class="vsHide"
-| style="width: 5em; background: #E6F2FF;" rowspan=2 colspan=1 | ''Subjunctive''
-| style="width: 5em; background: #E6F2FF;" rowspan=2 colspan=1 | {PRS}
-| style="width: 1em; background: #D4D4D4;" | {m}
+|- class="hi-row-m"
+| class="hi-tense-aspect-cell" rowspan=2 colspan=1 | ''Subjunctive''
+| class="hi-tense-aspect-cell" rowspan=2 colspan=1 | {PRS}
+| class="hi-mf-cell" | {m}
 | {hab_subj_1sm}
 | {hab_subj_2sm}
 | {hab_subj_3sm}
 | {hab_subj_1pm}
 | {hab_subj_2pm}
 | {hab_subj_3pm}
-|- class="vsHide"
-| style="width: 1em; background: #D4D4D4;" | {f}
+|- class="hi-row-f"
+| class="hi-mf-cell" | {f}
 | {hab_subj_1sf}
 | {hab_subj_2sf}
 | {hab_subj_3sf}
 | {hab_subj_1pf}
 | {hab_subj_2pf}
 | {hab_subj_3pf}
-|- class="vsHide"
-| style="width: 5em; background: #E6F2FF;" rowspan=2 colspan=1 | ''Contrafactual''
-| style="width: 5em; background: #E6F2FF;" rowspan=2 colspan=1 | {PRS_PST}
-| style="width: 1em; background: #D4D4D4;" | {m}
+|- class="hi-row-m"
+| class="hi-tense-aspect-cell" rowspan=2 colspan=1 | ''Contrafactual''
+| class="hi-tense-aspect-cell" rowspan=2 colspan=1 | {PRS_PST}
+| class="hi-mf-cell" | {m}
 | colspan=3 | {hab_cfact_ms}
 | colspan=3 | {hab_cfact_mp}
-|- class="vsHide"
-| style="width: 1em; background: #D4D4D4;" | {f}
+|- class="hi-row-f"
+| class="hi-mf-cell" | {f}
 | colspan=3 | {hab_cfact_fs}
 | colspan=3 | {hab_cfact_fp}
-|- class="vsHide"
-| style="width: 5em; background: #C0E4C0;" rowspan=1 colspan=100% | ''Perfective''
-|- class="vsHide"
-| style="width: 5em; background: #E6F2FF;" rowspan=6 colspan=1 | ''Indicative''
-| style="width: 5em; background: #E6F2FF;" rowspan=2 colspan=1 | {PRS}
-| style="width: 1em; background: #D4D4D4;" | {m}
+|-
+| class="hi-sec-div" rowspan=1 colspan=100% | ''Perfective''
+|- class="hi-row-m"
+| class="hi-tense-aspect-cell" rowspan=6 colspan=1 | ''Indicative''
+| class="hi-tense-aspect-cell" rowspan=2 colspan=1 | {PRS}
+| class="hi-mf-cell" | {m}
 | {pfv_ind_pres_1sm}
 | {pfv_ind_pres_2sm}
 | {pfv_ind_pres_3sm}
 | {pfv_ind_pres_1pm}
 | {pfv_ind_pres_2pm}
 | {pfv_ind_pres_3pm}
-|- class="vsHide"
-| style="width: 1em; background: #D4D4D4;" | {f}
+|- class="hi-row-f"
+| class="hi-mf-cell" | {f}
 | {pfv_ind_pres_1sf}
 | {pfv_ind_pres_2sf}
 | {pfv_ind_pres_3sf}
 | {pfv_ind_pres_1pf}
 | {pfv_ind_pres_2pf}
 | {pfv_ind_pres_3pf}
-|- class="vsHide"
-| style="width: 5em; background: #E6F2FF;" rowspan=2 colspan=1 | {PST}
-| style="width: 1em; background: #D4D4D4;" | {m}
+|- class="hi-row-m"
+| class="hi-tense-aspect-cell" rowspan=2 colspan=1 | {PST}
+| class="hi-mf-cell" | {m}
 | colspan=3 | {pfv_ind_past_ms}
 | colspan=3 | {pfv_ind_past_mp}
-|- class="vsHide"
-| style="width: 1em; background: #D4D4D4;" | {f}
+|- class="hi-row-f"
+| class="hi-mf-cell" | {f}
 | colspan=3 | {pfv_ind_past_fs}
 | colspan=3 | {pfv_ind_past_fp}
-|- class="vsHide"
-| style="width: 5em; background: #E6F2FF;" rowspan=2 colspan=1 | {FUT}
-| style="width: 1em; background: #D4D4D4;" | {m}
+|- class="hi-row-m"
+| class="hi-tense-aspect-cell" rowspan=2 colspan=1 | {FUT}
+| class="hi-mf-cell" | {m}
 | {pfv_ind_fut_1sm}
 | {pfv_ind_fut_2sm}
 | {pfv_ind_fut_3sm}
 | {pfv_ind_fut_1pm}
 | {pfv_ind_fut_2pm}
 | {pfv_ind_fut_3pm}
-|- class="vsHide"
-| style="width: 1em; background: #D4D4D4;" | {f}
+|- class="hi-row-f"
+| class="hi-mf-cell" | {f}
 | {pfv_ind_fut_1sf}
 | {pfv_ind_fut_2sf}
 | {pfv_ind_fut_3sf}
 | {pfv_ind_fut_1pf}
 | {pfv_ind_fut_2pf}
 | {pfv_ind_fut_3pf}
-|- class="vsHide"
-| style="width: 5em; background: #E6F2FF;" rowspan=2 colspan=1 | ''Presumptive''
-| style="width: 5em; background: #E6F2FF;" rowspan=2 colspan=1 | {PRS_PST}
-| style="width: 1em; background: #D4D4D4;" | {m}
+|- class="hi-row-m"
+| class="hi-tense-aspect-cell" rowspan=2 colspan=1 | ''Presumptive''
+| class="hi-tense-aspect-cell" rowspan=2 colspan=1 | {PRS_PST}
+| class="hi-mf-cell" | {m}
 | {pfv_presum_1sm}
 | {pfv_presum_2sm}
 | {pfv_presum_3sm}
 | {pfv_presum_1pm}
 | {pfv_presum_2pm}
 | {pfv_presum_3pm}
-|- class="vsHide"
-| style="width: 1em; background: #D4D4D4;" | {f}
+|- class="hi-row-f"
+| class="hi-mf-cell" | {f}
 | {pfv_presum_1sf}
 | {pfv_presum_2sf}
 | {pfv_presum_3sf}
 | {pfv_presum_1pf}
 | {pfv_presum_2pf}
 | {pfv_presum_3pf}
-|- class="vsHide"
-| style="width: 5em; background: #E6F2FF;" rowspan=4 colspan=1 | ''Subjunctive''
-| style="width: 5em; background: #E6F2FF;" rowspan=2 colspan=1 | {PRS}
-| style="width: 1em; background: #D4D4D4;" | {m}
+|- class="hi-row-m"
+| class="hi-tense-aspect-cell" rowspan=4 colspan=1 | ''Subjunctive''
+| class="hi-tense-aspect-cell" rowspan=2 colspan=1 | {PRS}
+| class="hi-mf-cell" | {m}
 | {pfv_subj_pres_1sm}
 | {pfv_subj_pres_2sm}
 | {pfv_subj_pres_3sm}
 | {pfv_subj_pres_1pm}
 | {pfv_subj_pres_2pm}
 | {pfv_subj_pres_3pm}
-|- class="vsHide"
-| style="width: 1em; background: #D4D4D4;" | {f}
+|- class="hi-row-f"
+| class="hi-mf-cell" | {f}
 | {pfv_subj_pres_1sf}
 | {pfv_subj_pres_2sf}
 | {pfv_subj_pres_3sf}
 | {pfv_subj_pres_1pf}
 | {pfv_subj_pres_2pf}
 | {pfv_subj_pres_3pf}
-|- class="vsHide"
-| style="width: 5em; background: #E6F2FF;" rowspan=2 colspan=1 | {FUT}
-| style="width: 1em; background: #D4D4D4;" | {m}
+|- class="hi-row-m"
+| class="hi-tense-aspect-cell" rowspan=2 colspan=1 | {FUT}
+| class="hi-mf-cell" | {m}
 | {pfv_subj_fut_1sm}
 | {pfv_subj_fut_2sm}
 | {pfv_subj_fut_3sm}
 | {pfv_subj_fut_1pm}
 | {pfv_subj_fut_2pm}
 | {pfv_subj_fut_3pm}
-|- class="vsHide"
-| style="width: 1em; background: #D4D4D4;" | {f}
+|- class="hi-row-f"
+| class="hi-mf-cell" | {f}
 | {pfv_subj_fut_1sf}
 | {pfv_subj_fut_2sf}
 | {pfv_subj_fut_3sf}
 | {pfv_subj_fut_1pf}
 | {pfv_subj_fut_2pf}
 | {pfv_subj_fut_3pf}
-|- class="vsHide"
-| style="width: 5em; background: #E6F2FF;" rowspan=2 colspan=1 | ''Contrafactual''
-| style="width: 5em; background: #E6F2FF;" rowspan=2 colspan=1 | {PRS_PST}
-| style="width: 1em; background: #D4D4D4;" | {m}
+|- class="hi-row-m"
+| class="hi-tense-aspect-cell" rowspan=2 colspan=1 | ''Contrafactual''
+| class="hi-tense-aspect-cell" rowspan=2 colspan=1 | {PRS_PST}
+| class="hi-mf-cell" | {m}
 | colspan=3 | {pfv_cfact_ms}
 | colspan=3 | {pfv_cfact_mp}
-|- class="vsHide"
-| style="width: 1em; background: #D4D4D4;" | {f}
+|- class="hi-row-f"
+| class="hi-mf-cell" | {f}
 | colspan=3 | {pfv_cfact_fs}
 | colspan=3 | {pfv_cfact_fp}
-|- class="vsHide"
-| style="width: 5em; background: #C0E4C0;" rowspan=1 colspan=100% | ''Progressive''
-|- class="vsHide"
-| style="width: 5em; background: #E6F2FF;" rowspan=6 colspan=1 | ''Indicative''
-| style="width: 5em; background: #E6F2FF;" rowspan=2 colspan=1 | {PRS}
-| style="width: 1em; background: #D4D4D4;" | {m}
+|-
+| class="hi-sec-div" rowspan=1 colspan=100% | ''Progressive''
+|- class="hi-row-m"
+| class="hi-tense-aspect-cell" rowspan=6 colspan=1 | ''Indicative''
+| class="hi-tense-aspect-cell" rowspan=2 colspan=1 | {PRS}
+| class="hi-mf-cell" | {m}
 | {prog_ind_pres_1sm}
 | {prog_ind_pres_2sm}
 | {prog_ind_pres_3sm}
 | {prog_ind_pres_1pm}
 | {prog_ind_pres_2pm}
 | {prog_ind_pres_3pm}
-|- class="vsHide"
-| style="width: 1em; background: #D4D4D4;" | {f}
+|- class="hi-row-f"
+| class="hi-mf-cell" | {f}
 | {prog_ind_pres_1sf}
 | {prog_ind_pres_2sf}
 | {prog_ind_pres_3sf}
 | {prog_ind_pres_1pf}
 | {prog_ind_pres_2pf}
 | {prog_ind_pres_3pf}
-|- class="vsHide"
-| style="width: 5em; background: #E6F2FF;" rowspan=2 colspan=1 | {PST}
-| style="width: 1em; background: #D4D4D4;" | {m}
+|- class="hi-row-m"
+| class="hi-tense-aspect-cell" rowspan=2 colspan=1 | {PST}
+| class="hi-mf-cell" | {m}
 | colspan=3 | {prog_ind_past_ms}
 | colspan=3 | {prog_ind_past_mp}
-|- class="vsHide"
-| style="width: 1em; background: #D4D4D4;" | {f}
+|- class="hi-row-f"
+| class="hi-mf-cell" | {f}
 | colspan=3 | {prog_ind_past_fs}
 | colspan=3 | {prog_ind_past_fp}
-|- class="vsHide"
-| style="width: 5em; background: #E6F2FF;" rowspan=2 colspan=1 | {FUT}
-| style="width: 1em; background: #D4D4D4;" | {m}
+|- class="hi-row-m"
+| class="hi-tense-aspect-cell" rowspan=2 colspan=1 | {FUT}
+| class="hi-mf-cell" | {m}
 | {prog_ind_fut_1sm}
 | {prog_ind_fut_2sm}
 | {prog_ind_fut_3sm}
 | {prog_ind_fut_1pm}
 | {prog_ind_fut_2pm}
 | {prog_ind_fut_3pm}
-|- class="vsHide"
-| style="width: 1em; background: #D4D4D4;" | {f}
+|- class="hi-row-f"
+| class="hi-mf-cell" | {f}
 | {prog_ind_fut_1sf}
 | {prog_ind_fut_2sf}
 | {prog_ind_fut_3sf}
 | {prog_ind_fut_1pf}
 | {prog_ind_fut_2pf}
 | {prog_ind_fut_3pf}
-|- class="vsHide"
-| style="width: 5em; background: #E6F2FF;" rowspan=2 colspan=1 | ''Presumptive''
-| style="width: 5em; background: #E6F2FF;" rowspan=2 colspan=1 | {PRS_PST}
-| style="width: 1em; background: #D4D4D4;" | {m}
+|- class="hi-row-m"
+| class="hi-tense-aspect-cell" rowspan=2 colspan=1 | ''Presumptive''
+| class="hi-tense-aspect-cell" rowspan=2 colspan=1 | {PRS_PST}
+| class="hi-mf-cell" | {m}
 | {prog_presum_1sm}
 | {prog_presum_2sm}
 | {prog_presum_3sm}
 | {prog_presum_1pm}
 | {prog_presum_2pm}
 | {prog_presum_3pm}
-|- class="vsHide"
-| style="width: 1em; background: #D4D4D4;" | {f}
+|- class="hi-row-f"
+| class="hi-mf-cell" | {f}
 | {prog_presum_1sf}
 | {prog_presum_2sf}
 | {prog_presum_3sf}
 | {prog_presum_1pf}
 | {prog_presum_2pf}
 | {prog_presum_3pf}
-|- class="vsHide"
-| style="width: 5em; background: #E6F2FF;" rowspan=4 colspan=1 | ''Subjunctive''
-| style="width: 5em; background: #E6F2FF;" rowspan=2 colspan=1 | {PRS}
-| style="width: 1em; background: #D4D4D4;" | {m}
+|- class="hi-row-m"
+| class="hi-tense-aspect-cell" rowspan=4 colspan=1 | ''Subjunctive''
+| class="hi-tense-aspect-cell" rowspan=2 colspan=1 | {PRS}
+| class="hi-mf-cell" | {m}
 | {prog_subj_pres_1sm}
 | {prog_subj_pres_2sm}
 | {prog_subj_pres_3sm}
 | {prog_subj_pres_1pm}
 | {prog_subj_pres_2pm}
 | {prog_subj_pres_3pm}
-|- class="vsHide"
-| style="width: 1em; background: #D4D4D4;" | {f}
+|- class="hi-row-f"
+| class="hi-mf-cell" | {f}
 | {prog_subj_pres_1sf}
 | {prog_subj_pres_2sf}
 | {prog_subj_pres_3sf}
 | {prog_subj_pres_1pf}
 | {prog_subj_pres_2pf}
 | {prog_subj_pres_3pf}
-|- class="vsHide"
-| style="width: 5em; background: #E6F2FF;" rowspan=2 colspan=1 | {FUT}
-| style="width: 1em; background: #D4D4D4;" | {m}
+|- class="hi-row-m"
+| class="hi-tense-aspect-cell" rowspan=2 colspan=1 | {FUT}
+| class="hi-mf-cell" | {m}
 | {prog_subj_fut_1sm}
 | {prog_subj_fut_2sm}
 | {prog_subj_fut_3sm}
 | {prog_subj_fut_1pm}
 | {prog_subj_fut_2pm}
 | {prog_subj_fut_3pm}
-|- class="vsHide"
-| style="width: 1em; background: #D4D4D4;" | {f}
+|- class="hi-row-f"
+| class="hi-mf-cell" | {f}
 | {prog_subj_fut_1sf}
 | {prog_subj_fut_2sf}
 | {prog_subj_fut_3sf}
 | {prog_subj_fut_1pf}
 | {prog_subj_fut_2pf}
 | {prog_subj_fut_3pf}
-|- class="vsHide"
-| style="width: 5em; background: #E6F2FF;" rowspan=2 colspan=1 | ''Contrafactual''
-| style="width: 5em; background: #E6F2FF;" rowspan=2 colspan=1 | {PRS_PST}
-| style="width: 1em; background: #D4D4D4;" | {m}
+|- class="hi-row-m"
+| class="hi-tense-aspect-cell" rowspan=2 colspan=1 | ''Contrafactual''
+| class="hi-tense-aspect-cell" rowspan=2 colspan=1 | {PRS_PST}
+| class="hi-mf-cell" | {m}
 | colspan=3 | {prog_cfact_ms}
 | colspan=3 | {prog_cfact_mp}
-|- class="vsHide"
-| style="width: 1em; background: #D4D4D4;" | {f}
+|- class="hi-row-f"
+| class="hi-mf-cell" | {f}
 | colspan=3 | {prog_cfact_fs}
 | colspan=3 | {prog_cfact_fp}
-|{\cl}]=]
-	-- FIXME: Figure out how to add notes clause
+|{\cl}{notes_clause}</div></div>]=]
 
 	local pres_impf_table = [=[
-| style="width: 5em; background: #E6F2FF;" rowspan=7 colspan=1 | ''Indicative''
-| style="width: 5em; background: #E6F2FF;" rowspan=1 colspan=2 | {PRS}
+|-
+| class="hi-tense-aspect-cell" rowspan=7 colspan=1 | ''Indicative''
+| class="hi-tense-aspect-cell" rowspan=1 colspan=2 | {PRS}
 | {ind_pres_1s}
 | {ind_pres_2s}
 | {ind_pres_3s}
 | {ind_pres_1p}
 | {ind_pres_2p}
 | {ind_pres_3p}
-|- class="vsHide"
-| style="width: 5em; background: #E6F2FF;" rowspan=2 colspan=1 | {IMPF}
-| style="width: 1em; background: #D4D4D4;" | {m}
+|- class="hi-row-m"
+| class="hi-tense-aspect-cell" rowspan=2 colspan=1 | {IMPF}
+| class="hi-mf-cell" | {m}
 | colspan=3 | {ind_impf_ms}
 | colspan=3 | {ind_impf_mp}
-|- class="vsHide"
-| style="width: 1em; background: #D4D4D4;" | {f}
+|- class="hi-row-f"
+| class="hi-mf-cell" | {f}
 | colspan=3 | {ind_impf_fs}
 | colspan=3 | {ind_impf_fp}
-|- class="vsHide"
+|- class="hi-row-m"
 ]=]
 
 	local pres_impf_table_missing = [=[
-| style="width: 5em; background: #E6F2FF;" rowspan=4 colspan=1 | ''Indicative''
+|- class="hi-row-m"
+| class="hi-tense-aspect-cell" rowspan=4 colspan=1 | ''Indicative''
 ]=]
 
 	local presum_table = [=[
-|- class="vsHide"
-| style="width: 5em; background: #E6F2FF;" rowspan=2 colspan=1 | ''Presumptive''
-| style="width: 5em; background: #E6F2FF;" rowspan=2 colspan=1 | {PRS_PST}
-| style="width: 1em; background: #D4D4D4;" | {m}
+|- class="hi-row-m"
+| class="hi-tense-aspect-cell" rowspan=2 colspan=1 | ''Presumptive''
+| class="hi-tense-aspect-cell" rowspan=2 colspan=1 | {PRS_PST}
+| class="hi-mf-cell" | {m}
 | {presum_1sm}
 | {presum_2sm}
 | {presum_3sm}
 | {presum_1pm}
 | {presum_2pm}
 | {presum_3pm}
-|- class="vsHide"
-| style="width: 1em; background: #D4D4D4;" | {f}
+|- class="hi-row-f"
+| class="hi-mf-cell" | {f}
 | {presum_1sf}
 | {presum_2sf}
 | {presum_3sf}
@@ -1096,9 +1123,9 @@ local function make_table(alternant_multiword_spec)
 ]=]
 
 	local combined_subj = [=[
-|- class="vsHide"
-| style="width: 5em; background: #E6F2FF;" rowspan=1 colspan=1 | ''Subjunctive''
-| style="width: 5em; background: #E6F2FF;" rowspan=1 colspan=2 | {PRS_FUT}
+|-
+| class="hi-tense-aspect-cell" rowspan=1 colspan=1 | ''Subjunctive''
+| class="hi-tense-aspect-cell" rowspan=1 colspan=2 | {PRS_FUT}
 | {subj_1s}
 | {subj_2s}
 | {subj_3s}
@@ -1107,17 +1134,17 @@ local function make_table(alternant_multiword_spec)
 | {subj_3p}]=]
 
 	local split_subj = [=[
-|- class="vsHide"
-| style="width: 5em; background: #E6F2FF;" rowspan=2 colspan=1 | ''Subjunctive''
-| style="width: 5em; background: #E6F2FF;" rowspan=1 colspan=2 | {PRS}
+|-
+| class="hi-tense-aspect-cell" rowspan=2 colspan=1 | ''Subjunctive''
+| class="hi-tense-aspect-cell" rowspan=1 colspan=2 | {PRS}
 | {subj_pres_1s}
 | {subj_pres_2s}
 | {subj_pres_3s}
 | {subj_pres_1p}
 | {subj_pres_2p}
 | {subj_pres_3p}
-|- class="vsHide"
-| style="width: 5em; background: #E6F2FF;" rowspan=1 colspan=2 | {FUT}
+|-
+| class="hi-tense-aspect-cell" rowspan=1 colspan=2 | {FUT}
 | {subj_fut_1s}
 | {subj_fut_2s}
 | {subj_fut_3s}
@@ -1126,8 +1153,8 @@ local function make_table(alternant_multiword_spec)
 | {subj_fut_3p}]=]
 
 	local notes_template = [===[
-<div style="width:100%;text-align:left;background:#d9ebff">
-<div style="display:inline-block;text-align:left;padding-left:1em;padding-right:1em">
+<div class="hi-footnote-outer-div">
+<div class="hi-footnote-inner-div">
 {footnote}
 </div></div>
 ]===]
@@ -1155,7 +1182,14 @@ local function make_table(alternant_multiword_spec)
 	forms.PRS_PST = make_tense_aspect_abbr("Present/Past", "PRS<br />PST")
 	forms.inf_raw = tag_text(forms.lemma)
 
-	local table_spec = table_spec_impersonal .. table_spec_personal
+	-- Now format the impersonal table.
+	forms.footnote = forms.footnote_impers
+	forms.notes_clause = forms.footnote ~= "" and
+		m_string_utilities.format(notes_template, forms) or ""
+	local formatted_table_impers = m_string_utilities.format(table_spec_impersonal, forms)
+
+	-- Now format the personal table.
+	forms.footnote = forms.footnote_pers
 	forms.notes_clause = forms.footnote ~= "" and
 		m_string_utilities.format(notes_template, forms) or ""
 	if forms.ind_pres_1s ~= "—" then -- होना
@@ -1167,7 +1201,10 @@ local function make_table(alternant_multiword_spec)
 		forms.pres_impf_table = pres_impf_table_missing
 		forms.presum_table = ""
 	end
-	return m_string_utilities.format(table_spec, forms)
+	local formatted_table_pers = m_string_utilities.format(table_spec_personal, forms)
+
+	-- Concatenate both.
+	return require("Module:TemplateStyles")("Module:User:Benwing2/hi-verb/style.css") .. formatted_table_impers .. formatted_table_pers
 end
 
 
@@ -1246,7 +1283,8 @@ end
 function export.do_generate_forms(parent_args, pos, from_headword, def)
 	local params = {
 		[1] = {},
-		footnote = {list = true},
+		footnote_impers = {list = true},
+		footnote_pers = {list = true},
 		title = {},
 	}
 
@@ -1278,13 +1316,14 @@ function export.do_generate_forms(parent_args, pos, from_headword, def)
 	}
 	local alternant_multiword_spec = iut.parse_inflected_text(args[1], parse_props)
 	alternant_multiword_spec.title = args.title
-	alternant_multiword_spec.footnotes = args.footnote
+	alternant_multiword_spec.footnotes_impers = args.footnote_impers
+	alternant_multiword_spec.footnotes_pers = args.footnote_pers
 	alternant_multiword_spec.pos = pos or "verbs"
 	alternant_multiword_spec.args = args
 	com.normalize_all_lemmas(alternant_multiword_spec)
 	detect_all_indicator_specs(alternant_multiword_spec)
 	local inflect_props = {
-		slot_table = verb_slots_with_linked,
+		slot_table = all_verb_slots,
 		lang = lang,
 		inflect_word_spec = conjugate_verb,
 		-- Return the variant code that was added to ensure only parallel variants in
