@@ -123,6 +123,9 @@ function export.add_form(base, stem, translit_stem, slot, ending, footnotes, lin
 				if rfind(ending, "^[" .. export.diacritics .. "]") then
 					local ending_first = usub(ending, 1, 1)
 					ending = (export.diacritic_to_independent[ending_first] or ending_first) .. usub(ending, 2)
+					-- Diacritic e goes above the line and requires anusvara, but independent e does not
+					-- go above the line and prefers chandrabindu in endings.
+					ending = rsub(ending, "एं", "एँ")
 				end
 			end
 			-- Don't convert independent letters to diacritics after consonants because of cases like मई
