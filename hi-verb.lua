@@ -645,7 +645,7 @@ end
 local function make_table(alternant_multiword_spec)
 	local table_spec_impersonal = [=[
 <div class="NavFrame">
-<div class="NavHead hi-table-title" style="background: #d9ebff;">Impersonal forms of {inf_raw}</div>
+<div class="NavHead hi-table-title" style="background: #d9ebff; width: 27em;">Impersonal forms of {inf_raw}</div>
 <div class="NavContent">
 {\op}| class="inflection-table inflection-hi inflection-verb" data-toggle-category="inflection"
 |-
@@ -706,51 +706,67 @@ local function make_table(alternant_multiword_spec)
 | {adj_fp}
 |{\cl}{notes_clause}</div></div>]=]
 
+	local person_number_header_two_row = [=[
+|- class="hi-table-header"
+| rowspan=2 |
+| rowspan=2 |
+| class="hi-mf-cell" rowspan=2 |
+]=]
+
+	local person_number_header_sg_pl_headers = [=[
+| colspan=3 | '''Singular'''
+| colspan=1 | '''Singular/Plural'''
+| colspan=2 | '''Plural/Formal'''
+]=]
+
+	local person_number_header_table_div = [=[
+|- class="hi-table-header"
+]=]
+
+	local person_number_header_pers_num_headers = [=[
+| '''1<sup>st</sup>'''<br><span lang="hi" class="Deva">[[मैं]]</span>
+| '''2<sup>nd</sup> intimate'''<br><span lang="hi" class="Deva">[[तू]]</span>
+| '''3<sup>rd</sup>'''<br><span lang="hi" class="Deva">[[यह]]/[[वह]]</span>
+| '''2<sup>nd</sup> familiar'''<br><span lang="hi" class="Deva">[[तुम]]</span>
+| '''1<sup>st</sup>'''<br><span lang="hi" class="Deva">[[हम]]</span>
+| '''2<sup>nd</sup> formal, 3<sup>rd</sup>'''<br><span lang="hi" class="Deva">[[ये]]/[[वे]]/[[आप]]</span>
+]=]
+
+	local person_number_header =
+		person_number_header_table_div .. person_number_header_two_row .. person_number_header_sg_pl_headers ..
+		person_number_header_table_div .. person_number_header_pers_num_headers
+	local reversed_person_number_header =
+		person_number_header_table_div .. person_number_header_two_row .. person_number_header_pers_num_headers ..
+		person_number_header_table_div .. person_number_header_sg_pl_headers
+
 	local table_spec_personal = [=[
 <div class="NavFrame">
-<div class="NavHead hi-table-title" style="background: #d9ebff;">Personal forms of {inf_raw}</div>
+<div class="NavHead hi-table-title" style="background: #d9ebff; width: 47em;">Personal forms of {inf_raw}</div>
 <div class="NavContent">
 {\op}| class="inflection-table inflection-hi inflection-verb" data-toggle-category="inflection"
-|- class="hi-table-header"
-| rowspan=2 |
-| rowspan=2 |
-| rowspan=2 |
-| colspan=3 | '''Singular'''
-| colspan=3 | '''Plural'''
-|- class="hi-table-header"
-| '''1<sup>st</sup>'''<br><span lang="hi" class="Deva">[[मैं]]</span>
-| '''2<sup>nd</sup>'''<br><span lang="hi" class="Deva">[[तू]]</span>
-| '''3<sup>rd</sup>'''<br><span lang="hi" class="Deva">[[यह]]/[[वह]]</span>
-| '''1<sup>st</sup>'''<br><span lang="hi" class="Deva">[[हम]]</span>
-| '''2<sup>nd</sup>'''<br><span lang="hi" class="Deva">[[तुम]]</span>
-| '''3<sup>rd</sup>'''<br><span lang="hi" class="Deva">[[ये]]/[[वे]]/[[आप]]</span>
 |-
 | class="hi-sec-div" rowspan=1 colspan=100% | ''Non-Aspectual''
-{pres_impf_table}| class="hi-tense-aspect-cell" rowspan=2 colspan=1 | {PERF}
+{person_number_header}{pres_impf_table}| class="hi-tense-aspect-cell" rowspan=2 colspan=1 | {PERF}
 | class="hi-mf-cell" | {m}
 | colspan=3 | {ind_perf_ms}
 | colspan=3 | {ind_perf_mp}
 |- class="hi-row-f"
 | class="hi-mf-cell" | {f}
-| colspan=3 | {ind_perf_fs}
-| colspan=3 | {ind_perf_fp}
+| colspan=4 | {ind_perf_fs}
+| colspan=2 | {ind_perf_fp}
 |- class="hi-row-m"
 | class="hi-tense-aspect-cell" rowspan=2 colspan=1 | {FUT}
 | class="hi-mf-cell" | {m}
 | {ind_fut_1sm}
-| {ind_fut_2sm}
-| {ind_fut_3sm}
-| {ind_fut_1pm}
+| colspan=2 | {ind_fut_2sm}
 | {ind_fut_2pm}
-| {ind_fut_3pm}
+| colspan=2 | {ind_fut_1pm}
 |- class="hi-row-f"
 | class="hi-mf-cell" | {f}
 | {ind_fut_1sf}
-| {ind_fut_2sf}
-| {ind_fut_3sf}
-| {ind_fut_1pf}
+| colspan=2 | {ind_fut_2sf}
 | {ind_fut_2pf}
-| {ind_fut_3pf}
+| colspan=2 | {ind_fut_1pf}
 {presum_table}{subj_table}
 |- class="hi-row-m"
 | class="hi-tense-aspect-cell" rowspan=2 colspan=1 | ''Contrafactual''
@@ -760,24 +776,26 @@ local function make_table(alternant_multiword_spec)
 | colspan=3 | {cfact_mp}
 |- class="hi-row-f"
 | class="hi-mf-cell" | {f}
-| colspan=3 | {cfact_fs}
-| colspan=3 | {cfact_fp}
+| colspan=4 | {cfact_fs}
+| colspan=2 | {cfact_fp}
 |-
 | class="hi-tense-aspect-cell" rowspan=2 colspan=1 | ''Imperative''
-| class="hi-tense-aspect-cell" rowspan=1 colspan=2 | {PRS}
+| class="hi-tense-aspect-cell" rowspan=1 colspan=1 | {PRS}
+| class="hi-mf-cell" | {mf}
 |
 | {imp_pres_2s}
 | {imp_pres_3s}
-|
 | {imp_pres_2p}
+|
 | {imp_pres_3p}
 |-
-| class="hi-tense-aspect-cell" rowspan=1 colspan=2 | {FUT}
+| class="hi-tense-aspect-cell" rowspan=1 colspan=1 | {FUT}
+| class="hi-mf-cell" | {mf}
 |
 | {imp_fut_2s}
 | {imp_fut_3s}
-|
 | {imp_fut_2p}
+|
 | {imp_fut_3p}
 |-
 | class="hi-sec-div" rowspan=1 colspan=100% | ''Habitual''
@@ -786,19 +804,15 @@ local function make_table(alternant_multiword_spec)
 | class="hi-tense-aspect-cell" rowspan=2 colspan=1 | {PRS}
 | class="hi-mf-cell" | {m}
 | {hab_ind_pres_1sm}
-| {hab_ind_pres_2sm}
-| {hab_ind_pres_3sm}
-| {hab_ind_pres_1pm}
+| colspan=2 | {hab_ind_pres_2sm}
 | {hab_ind_pres_2pm}
-| {hab_ind_pres_3pm}
+| colspan=2 | {hab_ind_pres_1pm}
 |- class="hi-row-f"
 | class="hi-mf-cell" | {f}
 | {hab_ind_pres_1sf}
-| {hab_ind_pres_2sf}
-| {hab_ind_pres_3sf}
-| {hab_ind_pres_1pf}
+| colspan=2 | {hab_ind_pres_2sf}
 | {hab_ind_pres_2pf}
-| {hab_ind_pres_3pf}
+| colspan=2 | {hab_ind_pres_1pf}
 |- class="hi-row-m"
 | class="hi-tense-aspect-cell" rowspan=2 colspan=1 | {PST}
 | class="hi-mf-cell" | {m}
@@ -806,44 +820,36 @@ local function make_table(alternant_multiword_spec)
 | colspan=3 | {hab_ind_past_mp}
 |- class="hi-row-f"
 | class="hi-mf-cell" | {f}
-| colspan=3 | {hab_ind_past_fs}
-| colspan=3 | {hab_ind_past_fp}
+| colspan=4 | {hab_ind_past_fs}
+| colspan=2 | {hab_ind_past_fp}
 |- class="hi-row-m"
 | class="hi-tense-aspect-cell" rowspan=2 colspan=1 | ''Presumptive''
 | class="hi-tense-aspect-cell" rowspan=2 colspan=1 | {PRS_PST}
 | class="hi-mf-cell" | {m}
 | {hab_presum_1sm}
-| {hab_presum_2sm}
-| {hab_presum_3sm}
-| {hab_presum_1pm}
+| colspan=2 | {hab_presum_2sm}
 | {hab_presum_2pm}
-| {hab_presum_3pm}
+| colspan=2 | {hab_presum_1pm}
 |- class="hi-row-f"
 | class="hi-mf-cell" | {f}
 | {hab_presum_1sf}
-| {hab_presum_2sf}
-| {hab_presum_3sf}
-| {hab_presum_1pf}
+| colspan=2 | {hab_presum_2sf}
 | {hab_presum_2pf}
-| {hab_presum_3pf}
+| colspan=2 | {hab_presum_1pf}
 |- class="hi-row-m"
 | class="hi-tense-aspect-cell" rowspan=2 colspan=1 | ''Subjunctive''
 | class="hi-tense-aspect-cell" rowspan=2 colspan=1 | {PRS}
 | class="hi-mf-cell" | {m}
 | {hab_subj_1sm}
-| {hab_subj_2sm}
-| {hab_subj_3sm}
-| {hab_subj_1pm}
+| colspan=2 | {hab_subj_2sm}
 | {hab_subj_2pm}
-| {hab_subj_3pm}
+| colspan=2 | {hab_subj_1pm}
 |- class="hi-row-f"
 | class="hi-mf-cell" | {f}
 | {hab_subj_1sf}
-| {hab_subj_2sf}
-| {hab_subj_3sf}
-| {hab_subj_1pf}
+| colspan=2 | {hab_subj_2sf}
 | {hab_subj_2pf}
-| {hab_subj_3pf}
+| colspan=2 | {hab_subj_1pf}
 |- class="hi-row-m"
 | class="hi-tense-aspect-cell" rowspan=2 colspan=1 | ''Contrafactual''
 | class="hi-tense-aspect-cell" rowspan=2 colspan=1 | {PRS_PST}
@@ -852,28 +858,24 @@ local function make_table(alternant_multiword_spec)
 | colspan=3 | {hab_cfact_mp}
 |- class="hi-row-f"
 | class="hi-mf-cell" | {f}
-| colspan=3 | {hab_cfact_fs}
-| colspan=3 | {hab_cfact_fp}
+| colspan=4 | {hab_cfact_fs}
+| colspan=2 | {hab_cfact_fp}
 |-
 | class="hi-sec-div" rowspan=1 colspan=100% | ''Perfective''
-|- class="hi-row-m"
+{person_number_header}|- class="hi-row-m"
 | class="hi-tense-aspect-cell" rowspan=6 colspan=1 | ''Indicative''
 | class="hi-tense-aspect-cell" rowspan=2 colspan=1 | {PRS}
 | class="hi-mf-cell" | {m}
 | {pfv_ind_pres_1sm}
-| {pfv_ind_pres_2sm}
-| {pfv_ind_pres_3sm}
-| {pfv_ind_pres_1pm}
+| colspan=2 | {pfv_ind_pres_2sm}
 | {pfv_ind_pres_2pm}
-| {pfv_ind_pres_3pm}
+| colspan=2 | {pfv_ind_pres_1pm}
 |- class="hi-row-f"
 | class="hi-mf-cell" | {f}
 | {pfv_ind_pres_1sf}
-| {pfv_ind_pres_2sf}
-| {pfv_ind_pres_3sf}
-| {pfv_ind_pres_1pf}
+| colspan=2 | {pfv_ind_pres_2sf}
 | {pfv_ind_pres_2pf}
-| {pfv_ind_pres_3pf}
+| colspan=2 | {pfv_ind_pres_1pf}
 |- class="hi-row-m"
 | class="hi-tense-aspect-cell" rowspan=2 colspan=1 | {PST}
 | class="hi-mf-cell" | {m}
@@ -881,78 +883,62 @@ local function make_table(alternant_multiword_spec)
 | colspan=3 | {pfv_ind_past_mp}
 |- class="hi-row-f"
 | class="hi-mf-cell" | {f}
-| colspan=3 | {pfv_ind_past_fs}
-| colspan=3 | {pfv_ind_past_fp}
+| colspan=4 | {pfv_ind_past_fs}
+| colspan=2 | {pfv_ind_past_fp}
 |- class="hi-row-m"
 | class="hi-tense-aspect-cell" rowspan=2 colspan=1 | {FUT}
 | class="hi-mf-cell" | {m}
 | {pfv_ind_fut_1sm}
-| {pfv_ind_fut_2sm}
-| {pfv_ind_fut_3sm}
-| {pfv_ind_fut_1pm}
+| colspan=2 | {pfv_ind_fut_2sm}
 | {pfv_ind_fut_2pm}
-| {pfv_ind_fut_3pm}
+| colspan=2 | {pfv_ind_fut_1pm}
 |- class="hi-row-f"
 | class="hi-mf-cell" | {f}
 | {pfv_ind_fut_1sf}
-| {pfv_ind_fut_2sf}
-| {pfv_ind_fut_3sf}
-| {pfv_ind_fut_1pf}
+| colspan=2 | {pfv_ind_fut_2sf}
 | {pfv_ind_fut_2pf}
-| {pfv_ind_fut_3pf}
+| colspan=2 | {pfv_ind_fut_1pf}
 |- class="hi-row-m"
 | class="hi-tense-aspect-cell" rowspan=2 colspan=1 | ''Presumptive''
 | class="hi-tense-aspect-cell" rowspan=2 colspan=1 | {PRS_PST}
 | class="hi-mf-cell" | {m}
 | {pfv_presum_1sm}
-| {pfv_presum_2sm}
-| {pfv_presum_3sm}
-| {pfv_presum_1pm}
+| colspan=2 | {pfv_presum_2sm}
 | {pfv_presum_2pm}
-| {pfv_presum_3pm}
+| colspan=2 | {pfv_presum_1pm}
 |- class="hi-row-f"
 | class="hi-mf-cell" | {f}
 | {pfv_presum_1sf}
-| {pfv_presum_2sf}
-| {pfv_presum_3sf}
-| {pfv_presum_1pf}
+| colspan=2 | {pfv_presum_2sf}
 | {pfv_presum_2pf}
-| {pfv_presum_3pf}
+| colspan=2 | {pfv_presum_1pf}
 |- class="hi-row-m"
 | class="hi-tense-aspect-cell" rowspan=4 colspan=1 | ''Subjunctive''
 | class="hi-tense-aspect-cell" rowspan=2 colspan=1 | {PRS}
 | class="hi-mf-cell" | {m}
 | {pfv_subj_pres_1sm}
-| {pfv_subj_pres_2sm}
-| {pfv_subj_pres_3sm}
-| {pfv_subj_pres_1pm}
+| colspan=2 | {pfv_subj_pres_2sm}
 | {pfv_subj_pres_2pm}
-| {pfv_subj_pres_3pm}
+| colspan=2 | {pfv_subj_pres_1pm}
 |- class="hi-row-f"
 | class="hi-mf-cell" | {f}
 | {pfv_subj_pres_1sf}
-| {pfv_subj_pres_2sf}
-| {pfv_subj_pres_3sf}
-| {pfv_subj_pres_1pf}
+| colspan=2 | {pfv_subj_pres_2sf}
 | {pfv_subj_pres_2pf}
-| {pfv_subj_pres_3pf}
+| colspan=2 | {pfv_subj_pres_1pf}
 |- class="hi-row-m"
 | class="hi-tense-aspect-cell" rowspan=2 colspan=1 | {FUT}
 | class="hi-mf-cell" | {m}
 | {pfv_subj_fut_1sm}
-| {pfv_subj_fut_2sm}
-| {pfv_subj_fut_3sm}
-| {pfv_subj_fut_1pm}
+| colspan=2 | {pfv_subj_fut_2sm}
 | {pfv_subj_fut_2pm}
-| {pfv_subj_fut_3pm}
+| colspan=2 | {pfv_subj_fut_1pm}
 |- class="hi-row-f"
 | class="hi-mf-cell" | {f}
 | {pfv_subj_fut_1sf}
-| {pfv_subj_fut_2sf}
-| {pfv_subj_fut_3sf}
-| {pfv_subj_fut_1pf}
+| colspan=2 | {pfv_subj_fut_2sf}
 | {pfv_subj_fut_2pf}
-| {pfv_subj_fut_3pf}
+| colspan=2 | {pfv_subj_fut_1pf}
 |- class="hi-row-m"
 | class="hi-tense-aspect-cell" rowspan=2 colspan=1 | ''Contrafactual''
 | class="hi-tense-aspect-cell" rowspan=2 colspan=1 | {PRS_PST}
@@ -961,8 +947,8 @@ local function make_table(alternant_multiword_spec)
 | colspan=3 | {pfv_cfact_mp}
 |- class="hi-row-f"
 | class="hi-mf-cell" | {f}
-| colspan=3 | {pfv_cfact_fs}
-| colspan=3 | {pfv_cfact_fp}
+| colspan=4 | {pfv_cfact_fs}
+| colspan=2 | {pfv_cfact_fp}
 |-
 | class="hi-sec-div" rowspan=1 colspan=100% | ''Progressive''
 |- class="hi-row-m"
@@ -970,19 +956,15 @@ local function make_table(alternant_multiword_spec)
 | class="hi-tense-aspect-cell" rowspan=2 colspan=1 | {PRS}
 | class="hi-mf-cell" | {m}
 | {prog_ind_pres_1sm}
-| {prog_ind_pres_2sm}
-| {prog_ind_pres_3sm}
-| {prog_ind_pres_1pm}
+| colspan=2 | {prog_ind_pres_2sm}
 | {prog_ind_pres_2pm}
-| {prog_ind_pres_3pm}
+| colspan=2 | {prog_ind_pres_1pm}
 |- class="hi-row-f"
 | class="hi-mf-cell" | {f}
 | {prog_ind_pres_1sf}
-| {prog_ind_pres_2sf}
-| {prog_ind_pres_3sf}
-| {prog_ind_pres_1pf}
+| colspan=2 | {prog_ind_pres_2sf}
 | {prog_ind_pres_2pf}
-| {prog_ind_pres_3pf}
+| colspan=2 | {prog_ind_pres_1pf}
 |- class="hi-row-m"
 | class="hi-tense-aspect-cell" rowspan=2 colspan=1 | {PST}
 | class="hi-mf-cell" | {m}
@@ -990,78 +972,62 @@ local function make_table(alternant_multiword_spec)
 | colspan=3 | {prog_ind_past_mp}
 |- class="hi-row-f"
 | class="hi-mf-cell" | {f}
-| colspan=3 | {prog_ind_past_fs}
-| colspan=3 | {prog_ind_past_fp}
+| colspan=4 | {prog_ind_past_fs}
+| colspan=2 | {prog_ind_past_fp}
 |- class="hi-row-m"
 | class="hi-tense-aspect-cell" rowspan=2 colspan=1 | {FUT}
 | class="hi-mf-cell" | {m}
 | {prog_ind_fut_1sm}
-| {prog_ind_fut_2sm}
-| {prog_ind_fut_3sm}
-| {prog_ind_fut_1pm}
+| colspan=2 | {prog_ind_fut_2sm}
 | {prog_ind_fut_2pm}
-| {prog_ind_fut_3pm}
+| colspan=2 | {prog_ind_fut_1pm}
 |- class="hi-row-f"
 | class="hi-mf-cell" | {f}
 | {prog_ind_fut_1sf}
-| {prog_ind_fut_2sf}
-| {prog_ind_fut_3sf}
-| {prog_ind_fut_1pf}
+| colspan=2 | {prog_ind_fut_2sf}
 | {prog_ind_fut_2pf}
-| {prog_ind_fut_3pf}
+| colspan=2 | {prog_ind_fut_1pf}
 |- class="hi-row-m"
 | class="hi-tense-aspect-cell" rowspan=2 colspan=1 | ''Presumptive''
 | class="hi-tense-aspect-cell" rowspan=2 colspan=1 | {PRS_PST}
 | class="hi-mf-cell" | {m}
 | {prog_presum_1sm}
-| {prog_presum_2sm}
-| {prog_presum_3sm}
-| {prog_presum_1pm}
+| colspan=2 | {prog_presum_2sm}
 | {prog_presum_2pm}
-| {prog_presum_3pm}
+| colspan=2 | {prog_presum_1pm}
 |- class="hi-row-f"
 | class="hi-mf-cell" | {f}
 | {prog_presum_1sf}
-| {prog_presum_2sf}
-| {prog_presum_3sf}
-| {prog_presum_1pf}
+| colspan=2 | {prog_presum_2sf}
 | {prog_presum_2pf}
-| {prog_presum_3pf}
+| colspan=2 | {prog_presum_1pf}
 |- class="hi-row-m"
 | class="hi-tense-aspect-cell" rowspan=4 colspan=1 | ''Subjunctive''
 | class="hi-tense-aspect-cell" rowspan=2 colspan=1 | {PRS}
 | class="hi-mf-cell" | {m}
 | {prog_subj_pres_1sm}
-| {prog_subj_pres_2sm}
-| {prog_subj_pres_3sm}
-| {prog_subj_pres_1pm}
+| colspan=2 | {prog_subj_pres_2sm}
 | {prog_subj_pres_2pm}
-| {prog_subj_pres_3pm}
+| colspan=2 | {prog_subj_pres_1pm}
 |- class="hi-row-f"
 | class="hi-mf-cell" | {f}
 | {prog_subj_pres_1sf}
-| {prog_subj_pres_2sf}
-| {prog_subj_pres_3sf}
-| {prog_subj_pres_1pf}
+| colspan=2 | {prog_subj_pres_2sf}
 | {prog_subj_pres_2pf}
-| {prog_subj_pres_3pf}
+| colspan=2 | {prog_subj_pres_1pf}
 |- class="hi-row-m"
 | class="hi-tense-aspect-cell" rowspan=2 colspan=1 | {FUT}
 | class="hi-mf-cell" | {m}
 | {prog_subj_fut_1sm}
-| {prog_subj_fut_2sm}
-| {prog_subj_fut_3sm}
-| {prog_subj_fut_1pm}
+| colspan=2 | {prog_subj_fut_2sm}
 | {prog_subj_fut_2pm}
-| {prog_subj_fut_3pm}
+| colspan=2 | {prog_subj_fut_1pm}
 |- class="hi-row-f"
 | class="hi-mf-cell" | {f}
 | {prog_subj_fut_1sf}
-| {prog_subj_fut_2sf}
-| {prog_subj_fut_3sf}
-| {prog_subj_fut_1pf}
+| colspan=2 | {prog_subj_fut_2sf}
 | {prog_subj_fut_2pf}
-| {prog_subj_fut_3pf}
+| colspan=2 | {prog_subj_fut_1pf}
 |- class="hi-row-m"
 | class="hi-tense-aspect-cell" rowspan=2 colspan=1 | ''Contrafactual''
 | class="hi-tense-aspect-cell" rowspan=2 colspan=1 | {PRS_PST}
@@ -1070,20 +1036,19 @@ local function make_table(alternant_multiword_spec)
 | colspan=3 | {prog_cfact_mp}
 |- class="hi-row-f"
 | class="hi-mf-cell" | {f}
-| colspan=3 | {prog_cfact_fs}
-| colspan=3 | {prog_cfact_fp}
-|{\cl}{notes_clause}</div></div>]=]
+| colspan=4 | {prog_cfact_fs}
+| colspan=2 | {prog_cfact_fp}
+{reversed_person_number_header}|{\cl}{notes_clause}</div></div>]=]
 
 	local pres_impf_table = [=[
 |-
 | class="hi-tense-aspect-cell" rowspan=7 colspan=1 | ''Indicative''
-| class="hi-tense-aspect-cell" rowspan=1 colspan=2 | {PRS}
+| class="hi-tense-aspect-cell" rowspan=1 colspan=1 | {PRS}
+| class="hi-mf-cell" | {mf}
 | {ind_pres_1s}
-| {ind_pres_2s}
-| {ind_pres_3s}
-| {ind_pres_1p}
+| colspan=2 | {ind_pres_2s}
 | {ind_pres_2p}
-| {ind_pres_3p}
+| colspan=2 | {ind_pres_1p}
 |- class="hi-row-m"
 | class="hi-tense-aspect-cell" rowspan=2 colspan=1 | {IMPF}
 | class="hi-mf-cell" | {m}
@@ -1091,8 +1056,8 @@ local function make_table(alternant_multiword_spec)
 | colspan=3 | {ind_impf_mp}
 |- class="hi-row-f"
 | class="hi-mf-cell" | {f}
-| colspan=3 | {ind_impf_fs}
-| colspan=3 | {ind_impf_fp}
+| colspan=4 | {ind_impf_fs}
+| colspan=2 | {ind_impf_fp}
 |- class="hi-row-m"
 ]=]
 
@@ -1107,50 +1072,43 @@ local function make_table(alternant_multiword_spec)
 | class="hi-tense-aspect-cell" rowspan=2 colspan=1 | {PRS_PST}
 | class="hi-mf-cell" | {m}
 | {presum_1sm}
-| {presum_2sm}
-| {presum_3sm}
-| {presum_1pm}
+| colspan=2 | {presum_2sm}
 | {presum_2pm}
-| {presum_3pm}
+| colspan=2 | {presum_1pm}
 |- class="hi-row-f"
 | class="hi-mf-cell" | {f}
 | {presum_1sf}
-| {presum_2sf}
-| {presum_3sf}
-| {presum_1pf}
+| colspan=2 | {presum_2sf}
 | {presum_2pf}
-| {presum_3pf}
+| colspan=2 | {presum_1pf}
 ]=]
 
 	local combined_subj = [=[
 |-
 | class="hi-tense-aspect-cell" rowspan=1 colspan=1 | ''Subjunctive''
-| class="hi-tense-aspect-cell" rowspan=1 colspan=2 | {PRS_FUT}
+| class="hi-tense-aspect-cell" rowspan=1 colspan=1 | {PRS_FUT}
+| class="hi-mf-cell" | {mf}
 | {subj_1s}
-| {subj_2s}
-| {subj_3s}
-| {subj_1p}
+| colspan=2 | {subj_2s}
 | {subj_2p}
-| {subj_3p}]=]
+| colspan=2 | {subj_1p}]=]
 
 	local split_subj = [=[
 |-
 | class="hi-tense-aspect-cell" rowspan=2 colspan=1 | ''Subjunctive''
-| class="hi-tense-aspect-cell" rowspan=1 colspan=2 | {PRS}
+| class="hi-tense-aspect-cell" rowspan=1 colspan=1 | {PRS}
+| class="hi-mf-cell" | {mf}
 | {subj_pres_1s}
-| {subj_pres_2s}
-| {subj_pres_3s}
-| {subj_pres_1p}
+| colspan=2 | {subj_pres_2s}
 | {subj_pres_2p}
-| {subj_pres_3p}
+| colspan=2 | {subj_pres_1p}
 |-
-| class="hi-tense-aspect-cell" rowspan=1 colspan=2 | {FUT}
+| class="hi-tense-aspect-cell" rowspan=1 colspan=1 | {FUT}
+| class="hi-mf-cell" | {mf}
 | {subj_fut_1s}
-| {subj_fut_2s}
-| {subj_fut_3s}
-| {subj_fut_1p}
+| colspan=2 | {subj_fut_2s}
 | {subj_fut_2p}
-| {subj_fut_3p}]=]
+| colspan=2 | {subj_fut_1p}]=]
 
 	local notes_template = [===[
 <div class="hi-footnote-outer-div">
@@ -1171,6 +1129,7 @@ local function make_table(alternant_multiword_spec)
 	end
 	forms.m = make_gender_abbr("masculine gender", "m")
 	forms.f = make_gender_abbr("feminine gender", "f")
+	forms.mf = forms.m .. "<br />" .. forms.f
 	forms.s = make_gender_abbr("singular number", "s")
 	forms.p = make_gender_abbr("plural number", "p")
 	forms.PERF = make_tense_aspect_abbr("Perfect", "PERF")
@@ -1201,6 +1160,8 @@ local function make_table(alternant_multiword_spec)
 		forms.pres_impf_table = pres_impf_table_missing
 		forms.presum_table = ""
 	end
+	forms.person_number_header = person_number_header
+	forms.reversed_person_number_header = reversed_person_number_header
 	local formatted_table_pers = m_string_utilities.format(table_spec_personal, forms)
 
 	-- Concatenate both.
