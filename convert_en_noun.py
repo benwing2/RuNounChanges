@@ -14,6 +14,7 @@ def pluralize(noun):
   return noun + "s"
 
 def process_text_on_page(index, pagetitle, text):
+  global args
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
@@ -86,8 +87,12 @@ def process_text_on_page(index, pagetitle, text):
           for i in range(firstparam, 30):
             rmparam(t, str(i))
           plurals = []
+      if args.prefer_s:
+        for i in range(1, 30):
+          if default_plural == pagetitle + "s" and getparam(t, str(i)) == "+":
+            t.add(str(i), "s")
       if unicode(t) != origt:
-        t.add("new", "1")
+        #t.add("new", "1")
         pagemsg("Replaced %s with %s" % (origt, unicode(t)))
         notes.append("convert {{en-noun}} to new form with smarter default plural algorithm")
         plurals_with_s = []
@@ -127,6 +132,7 @@ def process_text_on_page(index, pagetitle, text):
 
 parser = blib.create_argparser("Convert {{en-noun}} plurals to new format",
   include_pagefile=True, include_stdin=True)
+parser.add_argument('--prefer-s', help="Prefer 's' over '+'", action="store_true")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
