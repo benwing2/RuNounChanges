@@ -28,7 +28,7 @@ which produces
 {{hi-ndecl|तौलिया<F.iyā>}}
 
 ===Explicit term===
-You can explicitly specify the term to decline. This allows you, for example, to decline a term on a different page from the page of the term being declined. It is also necessary when more than one part of a term declines (see below), or when one word of a multiword term needs phonetic respelling (see below). For example, the above declension of {{m|hi|पिता||father}} could be specified as follows:
+You can explicitly specify the term to decline. This allows you, for example, to decline a term on a different page from the page of the term being declined. It is also necessary when more than one part of a term declines (see below), or when one word of a multiword term needs phonetic respelling (see [[#Multiword terms|multiword terms]] below). For example, the above declension of {{m|hi|पिता||father}} could be specified as follows:
 :{{temp|hi-ndecl|पिता<M.unmarked>}}
 
 ===Phonetic respelling===
@@ -38,10 +38,90 @@ Some terms have nonstandard transliterations. This can be indicated using phonet
 which produces
 
 {{hi-ndecl|अंतराल//अंत*राल<M>}}
-
 Here, we use phonetic respelling with a <code>*</code> in it to force the transliteration ''antarāl'' instead of the default ''antrāl''.
 
-You can also specify the transliteration directly after <code>//</code>, but using respelling is preferred.
+You can also specify the transliteration directly after <code>//</code>, but using respelling is preferred, e.g. the above could be written as 
+:{{temp|hi-ndecl|//antarāl<M>}}
+
+In addition, you can explicitly specify the term to decline along with the respelling, e.g. the above could also be written as
+:{{temp|hi-ndecl|अंतराल//अंत*राल<M>}}
+See the section on [[#Explicit term|explicit terms]] above.
+
+===Singular-only, plural-only===
+Use the indicator <code>sg</code> for singular-only nouns, and <code>pl</code> for plural-only nouns. An example is {{m|hi|मायने||meaning(s), nuance(s)}}:
+:{{temp|hi-ndecl|<M.pl>}}
+
+which produces
+
+{{hi-ndecl|मायने<M.pl>}}
+
+===Multiword terms===
+Multiword terms like {{m|hi|अदला-बदला||exchange, swapping}} can be declined by placing <code><...></code> after each word, e.g.:
+:{{temp|hi-ndecl|अदला<M.sg>-बदला<M.sg>}}
+
+which produces
+
+{{hi-ndecl|अदला<M.sg>-बदला<M.sg>}}
+Words are separated by spaces or hyphens, and <code><...></code> indicators apply to individual words. Words without any indicators following them are assumed to be invariable. For example, the term {{m|hi|काली मिर्च||black pepper}} would be specified as follows:
+:{{temp|hi-ndecl|काली मिर्च<F>}}
+or simply
+:{{temp|hi-ndecl|<F>}}
+since omitting the term is equivalent to specifying the page name as the term. Both produce the following:
+
+{{hi-ndecl|काली मिर्च<F>}}
+[[#Phonetic respelling|Phonetic respelling]] applies to individual words. For example, for {{m|hi|बंदी प्रत्यक्षीकरण||[[habeas corpus]]|tr=bandī pratyakṣīkaraṇ}}, which requires phonetic respelling of the last word, use the following:
+:{{temp|hi-ndecl|बंदी प्रत्यक्षीकरण//प्रत्यक्षीक*रण<M>}}
+
+which produces
+
+{{hi-ndecl|बंदी प्रत्यक्षीकरण//प्रत्यक्षीक*रण<M>}}
+Here only the last word is resplled.
+
+Respelling can be used on words without indicators, for example in {{m|hi|पंचायती राज||village council}}, where the first word is invariable and needs respelling:
+:{{temp|hi-ndecl|पंचायती//पंचाय*ती राज<M>}}
+
+which produces
+
+{{hi-ndecl|पंचायती//पंचाय*ती राज<M>}}
+
+===Adjectival declensions===
+Use <code><+></code> after a word to indicate that it should be declined as an adjective. This is particularly useful in adjective-noun multiword terms such as {{m|hi|कच्चा लोहा||pig iron}}:
+:{{temp|hi-ndecl|कच्चा<+> लोहा<M>}}
+
+which produces
+
+{{hi-ndecl|कच्चा<+> लोहा<M>}}
+You can use the same notation even with an adjective-noun combination is written as a single word, e.g. {{m|hi|कालाधन||black money}}:
+:{{temp|hi-ndecl|काला<+>धन<M>}}
+
+which produces
+
+{{hi-ndecl|काला<+>धन<M>}}
+
+===Alternations===
+Some nouns have more than one possible declension. An example is {{m|hi|ख़लीफ़ा||caliph}}, which can be declined either as an "unmarked" noun in ''-ā'' (direct plural ख़लीफ़ा, oblique plural ख़लीफ़ाओं) or a regular noun in ''-ā'' (direct plural ख़लीफ़े, oblique plural ख़लीफ़ों). To specify this, use the following notation:
+:{{temp|hi-ndecl|((<M.unmarked>,<M>))}}
+
+which produces
+
+{{hi-ndecl|((ख़लीफ़ा<M.unmarked>,ख़लीफ़ा<M>))}}
+The general syntax is comma-separated alternatives inside of double parentheses.
+
+There are almost no restrictions on what can be used as an alternative. The genders do not have to agree; for example, to decline the word {{m|hi|टिकट||ticket]}, which can be either masculine or feminine, use the following:
+:{{temp|hi-ndecl|((<M>,<F>))}}
+
+which produces
+
+{{hi-ndecl|((टिट<M>,टिट<F>))}}
+It is even allowed to include a multiword term as an alternative. An example where this is useful is {{m|hi|कीड़ा-मकोड़ा||insect, [[creepy-crawly]]}}, where the first part can either decline or be used invariably:
+:{{temp|hi-ndecl|((कीड़ा<M>-मकोड़ा<M>,<M>))}}
+
+which produces
+
+{{hi-ndecl|((कीड़ा<M>-मकोड़ा<M>,<M>))}}
+
+===Overrides===
+Some words are irregular in some of their forms. Syntax is provided to override 
 
 {{hi-ndecl|((कीड़ा<M>-मकोड़ा<M>,<M>))}}
 {{hi-ndecl|काला<+> पहाड़<M>}}
@@ -50,6 +130,15 @@ You can also specify the transliteration directly after <code>//</code>, but usi
 {{hi-ndecl|((<M>,<M.plstem:फ़तूह.dirpl:फ़तूह>))}}
 {{hi-ndecl|<M.plstem:अहम.dirpl:अहं>}}
 {{hi-ndecl|<M.plstem:ओम.dirpl:ॐ>}}
+{{hi-ndecl|((<M.pl>,भाई<M.pl>-बहन<F.pl>))}}
+{{hi-ndecl|((लेखा<M>-जोखा<M>,<M>))}}
+{{hi-ndecl|कच्चा<+> लोहा<M>}}
+{{hi-ndecl|((<M>,<M.dirpl:जवाहिरात, जवाहरात, जवाहर.plstem: जवाहिरात, जवाहरात, जवाहर>))}}
+{{hi-ndecl|((<M.plstem:तवारीख़>,<M>))}}
+
+
+
+
 <includeonly>
 [[Category:Hindi noun inflection-table templates]]
 </includeonly>
