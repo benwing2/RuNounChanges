@@ -44,6 +44,7 @@ local ulower = mw.ustring.lower
 -- vowel diacritics; don't display nicely on their own
 local M = u(0x0901)
 local N = u(0x0902)
+local MN_c = "[" .. M .. N .. "]"
 local H = u(0x0903)
 local AA = u(0x093e)
 local E = u(0x0947)
@@ -193,6 +194,15 @@ local function handle_derived_slots_and_overrides(base)
 end
 
 
+local function fetch_final_mn(base)
+	local mn = rmatch(base.lemma, "(" .. MN_c .. ")$")
+	if not mn then
+		error("Internal error: Lemma " .. base.lemma .. " should end in nasal vowel")
+	end
+	return mn
+end
+
+
 local decls = {}
 local declprops = {}
 
@@ -245,8 +255,10 @@ declprops["unmarked-ā-m"] = {
 
 -- E.g. रेस्तराँ "restaurant"
 decls["unmarked-ān-m"] = function(base)
-	local stem, translit_stem = com.strip_ending(base, AA .. M)
-	add_decl(base, stem, translit_stem, AA .. M, AA .. M, AA .. M, AA .. M, AA .. "ओं", AA .. "ओं")
+	local mn = fetch_final_mn(base)
+	local ending = AA .. mn
+	local stem, translit_stem = com.strip_ending(base, ending)
+	add_decl(base, stem, translit_stem, ending, ending, ending, ending, AA .. "ओं", AA .. "ओं")
 end
 
 declprops["unmarked-ān-m"] = {
@@ -255,8 +267,10 @@ declprops["unmarked-ān-m"] = {
 }
 
 decls["ind-unmarked-ān-m"] = function(base)
-	local stem, translit_stem = com.strip_ending(base, "आँ")
-	add_decl(base, stem, translit_stem, "आँ", "आँ", "आँ", "आँ", "आओं", "आओं")
+	local mn = fetch_final_mn(base)
+	local ending = "आ" .. mn
+	local stem, translit_stem = com.strip_ending(base, ending)
+	add_decl(base, stem, translit_stem, ending, ending, ending, ending, "आओं", "आओं")
 end
 
 declprops["ind-unmarked-ān-m"] = {
@@ -266,14 +280,18 @@ declprops["ind-unmarked-ān-m"] = {
 
 -- E.g. ख़ानसामाँ "butler, cook"
 decls["ān-m"] = function(base)
-	local stem, translit_stem = com.strip_ending(base, AA .. M)
-	add_decl(base, stem, translit_stem, AA .. M, EN, EN, EN, ON, ON)
+	local mn = fetch_final_mn(base)
+	local ending = AA .. mn
+	local stem, translit_stem = com.strip_ending(base, ending)
+	add_decl(base, stem, translit_stem, ending, EN, EN, EN, ON, ON)
 end
 
 -- E.g. कुआँ "well"
 decls["ind-ān-m"] = function(base)
-	local stem, translit_stem = com.strip_ending(base, "आँ")
-	add_decl(base, stem, translit_stem, "आँ", "एँ", "एँ", "एँ", "ओं", "ओं")
+	local mn = fetch_final_mn(base)
+	local ending = "आ" .. mn
+	local stem, translit_stem = com.strip_ending(base, ending)
+	add_decl(base, stem, translit_stem, ending, "एँ", "एँ", "एँ", "ओं", "ओं")
 end
 
 decls["ā-f"] = function(base)
@@ -284,13 +302,17 @@ end
 -- are added after the vowel.
 
 decls["ān-f"] = function(base)
-	local stem, translit_stem = com.strip_ending(base, AA .. M)
-	add_decl(base, stem, translit_stem, AA .. M, AA .. M, AA .. M, AA .. "एँ", AA .. "ओं", AA .. "ओं")
+	local mn = fetch_final_mn(base)
+	local ending = AA .. mn
+	local stem, translit_stem = com.strip_ending(base, ending)
+	add_decl(base, stem, translit_stem, ending, ending, ending, AA .. "एँ", AA .. "ओं", AA .. "ओं")
 end
 
 decls["ind-ān-f"] = function(base)
-	local stem, translit_stem = com.strip_ending(base, "आँ")
-	add_decl(base, stem, translit_stem, "आँ", "आँ", "आँ", "आएँ", "आओं", "आओं")
+	local mn = fetch_final_mn(base)
+	local ending = "आ" .. mn
+	local stem, translit_stem = com.strip_ending(base, ending)
+	add_decl(base, stem, translit_stem, ending, ending, ending, "आएँ", "आओं", "आओं")
 end
 
 decls["i-m"] = function(base)
@@ -350,13 +372,20 @@ decls["iyā-f"] = function(base)
 end
 
 decls["iyān-f"] = function(base)
-	local stem, translit_stem = com.strip_ending(base, "याँ")
-	add_decl(base, stem, translit_stem, "याँ", "याँ", "याँ", "याँ", "यों", "यों")
+	local mn = fetch_final_mn(base)
+	local ending = "या" .. mn
+	local stem, translit_stem = com.strip_ending(base, ending)
+	add_decl(base, stem, translit_stem, ending, ending, ending, ending, "यों", "यों")
 end
 
 decls["o-m"] = function(base)
 	local stem, translit_stem = com.strip_ending(base, O)
 	add_decl(base, stem, translit_stem, O, O, O, O, ON, O)
+end
+
+decls["on-m"] = function(base)
+	local stem, translit_stem = com.strip_ending(base, ON)
+	add_decl(base, stem, translit_stem, ON, ON, ON, ON, ON, ON)
 end
 
 decls["u-m"] = function(base)
@@ -378,13 +407,17 @@ decls["ind-ū-m"] = function(base)
 end
 
 decls["ūn-m"] = function(base)
-	local stem, translit_stem = com.strip_ending(base, UU .. M)
-	add_decl(base, stem, translit_stem, UU .. M, UU .. M, UU .. M, UU .. M, U .. "ओं", U .. "ओं")
+	local mn = fetch_final_mn(base)
+	local ending = UU .. mn
+	local stem, translit_stem = com.strip_ending(base, ending)
+	add_decl(base, stem, translit_stem, ending, ending, ending, ending, U .. "ओं", U .. "ओं")
 end
 
 decls["ind-ūn-m"] = function(base)
-	local stem, translit_stem = com.strip_ending(base, "ऊँ")
-	add_decl(base, stem, translit_stem, "ऊँ", "ऊँ", "ऊँ", "ऊँ", "उओं", "उओं")
+	local mn = fetch_final_mn(base)
+	local ending = "ऊ" .. mn
+	local stem, translit_stem = com.strip_ending(base, ending)
+	add_decl(base, stem, translit_stem, ending, ending, ending, ending, "उओं", "उओं")
 end
 
 decls["ū-f"] = function(base)
@@ -399,13 +432,17 @@ end
 
 -- E.g. जूँ "louse"
 decls["ūn-f"] = function(base)
-	local stem, translit_stem = com.strip_ending(base, UU .. M)
-	add_decl(base, stem, translit_stem, UU .. M, UU .. M, UU .. M, U .. "एँ", U .. "ओं", U .. "ओं")
+	local mn = fetch_final_mn(base)
+	local ending = UU .. mn
+	local stem, translit_stem = com.strip_ending(base, ending)
+	add_decl(base, stem, translit_stem, ending, ending, ending, U .. "एँ", U .. "ओं", U .. "ओं")
 end
 
 decls["ind-ūn-f"] = function(base)
-	local stem, translit_stem = com.strip_ending(base, "ऊँ")
-	add_decl(base, stem, translit_stem, "ऊँ", "ऊँ", "ऊँ", "उएँ", "उओं", "उओं")
+	local mn = fetch_final_mn(base)
+	local ending = "ऊ" .. mn
+	local stem, translit_stem = com.strip_ending(base, ending)
+	add_decl(base, stem, translit_stem, ending, ending, ending, "उएँ", "उओं", "उओं")
 end
 
 decls["r-m"] = function(base)
@@ -702,14 +739,14 @@ local function synthesize_singular_lemma(base)
 			base.lemma_translit = translit_stem .. "ā"
 			return
 		end
-		local ending = rmatch(base.lemma, "(" .. E .. "[" .. M .. N .. "])$")
+		local ending = rmatch(base.lemma, "(" .. E .. MN_c .. ")$")
 		if ending then
 			local stem, translit_stem = com.strip_ending(base, ending)
 			base.lemma = stem .. AA .. M
 			base.lemma_translit = translit_stem .. "ā̃"
 			return
 		end
-		local ending = rmatch(base.lemma, "(ए[" .. M .. N .. "])$")
+		local ending = rmatch(base.lemma, "(ए" .. MN_c .. ")$")
 		if ending then
 			local stem, translit_stem = com.strip_ending(base, ending)
 			base.lemma = stem .. "अ" .. M
@@ -719,22 +756,34 @@ local function synthesize_singular_lemma(base)
 		-- Otherwise, singular same as plural and lemma is already correct.
 	else
 		assert(base.gender == "F")
-		local ending = rmatch(base.lemma, "(" .. E .. "[" .. M .. N .. "])$")
+		local function add_dir_p_override()
+			-- Add an override to force the direct plural to match. This is needed below
+			-- in case the lemma ends in anusvara instead of chandrabindu (because the
+			-- declension functions generate a direct plural with chandrabindu) and also
+			-- when the direct plural is the same as the singular.
+			if not base.overrides.dir_p then
+				base.overrides.dir_p = {}
+			end
+			table.insert(base.overrides.dir_p, {full = true, values = {{form = base.lemma, phon_form = base.lemma_translit}}})
+		end
+		local ending = rmatch(base.lemma, "(" .. EN .. ")$")
 		if ending then
 			local stem, translit_stem = com.strip_ending(base, ending)
 			base.lemma = stem
 			base.lemma_translit = translit_stem
 			return
 		end
-		local ending = rmatch(base.lemma, "(ए[" .. M .. N .. "])$")
+		local ending = rmatch(base.lemma, "(ए" .. MN_c .. ")$")
 		if ending then
+			add_dir_p_override() -- in case lemma ends in anusvara
 			local stem, translit_stem = com.strip_ending(base, ending)
 			base.lemma = stem
 			base.lemma_translit = translit_stem
 			return
 		end
-		local ending = rmatch(base.lemma, "(या[" .. M .. N .. "])$")
+		local ending = rmatch(base.lemma, "(या " .. MN_c  .. ")$")
 		if ending then
+			add_dir_p_override() -- in case lemma ends in anusvara
 			-- This may or may not produce the "right" singular but regardless,
 			-- the plural will be correct, which is all that matters.
 			local stem, translit_stem = com.strip_ending(base, ending)
@@ -744,17 +793,14 @@ local function synthesize_singular_lemma(base)
 		end
 		-- We seem to have an endingless plural, e.g. औलाद. Add an override to the dir_p slot
 		-- to force this form.
-		if not base.overrides.dir_p then
-			base.overrides.dir_p = {}
-		end
-		table.insert(base.overrides.dir_p, {full = true, values = {{form = base.lemma, phon_form = base.lemma_translit}}})
+		add_dir_p_override()
 	end
 end
 
 
 -- For an adjectival lemma, synthesize the masc singular form.
 local function synthesize_adj_lemma(base)
-	if not rfind(base.lemma, "[अ" .. AA .. "][" .. M .. N .. "]?$") then
+	if not rfind(base.lemma, "[अ" .. AA .. "]" .. MN_c .. "?$") then
 		error("Unrecognized adjectival lemma: " .. base.lemma)
 	end
 	base.gender = "M"
@@ -775,20 +821,21 @@ local function determine_declension(base)
 		if base.unmarked then
 			if rfind(base.lemma, AA .. "$") or rfind(base.lemma, "आ$") then
 				base.decl = "unmarked-ā-m"
-			elseif rfind(base.lemma, AA .. M .. "$") then
+			elseif rfind(base.lemma, AA .. MN_c .. "$") then
 				base.decl = "unmarked-ān-m"
-			elseif rfind(base.lemma, "आँ$") then
+			elseif rfind(base.lemma, "आ" .. MN_c .. "$") then
 				base.decl = "ind-unmarked-ān-m"
 			else
-				error("With 'unmarked' indicator, lemma must end in " .. AA .. ", " .. AA .. M .. ", आ or आँ: " .. base.lemma)
+				error("With 'unmarked' indicator, lemma must end in " .. AA .. ", " .. AA .. M .. ", " ..
+					AA .. N .. ", आ, आँ: or आं " .. base.lemma)
 			end
 		elseif rfind(base.lemma, AA .. "$") then
 			base.decl = "ā-m"
 		elseif rfind(base.lemma, "आ$") then
 			base.decl = "ind-ā-m"
-		elseif rfind(base.lemma, AA .. M .. "$") then
+		elseif rfind(base.lemma, AA .. MN_c .. "$") then
 			base.decl = "ān-m"
-		elseif rfind(base.lemma, "आँ$") then
+		elseif rfind(base.lemma, "आ" .. MN_c .. "$") then
 			base.decl = "ind-ān-m"
 		elseif rfind(base.lemma, I .. "$") then
 			base.decl = "i-m"
@@ -802,15 +849,17 @@ local function determine_declension(base)
 			base.decl = "ind-īn-m"
 		elseif rfind(base.lemma, O .. "$") then
 			base.decl = "o-m"
+		elseif rfind(base.lemma, O .. N .. "$") then
+			base.decl = "on-m"
 		elseif rfind(base.lemma, U .. "$") then
 			base.decl = "u-m"
 		elseif rfind(base.lemma, UU .. "$") then
 			base.decl = "ū-m"
 		elseif rfind(base.lemma, "ऊ$") then
 			base.decl = "ind-ū-m"
-		elseif rfind(base.lemma, UU .. M .. "$") then
+		elseif rfind(base.lemma, UU .. MN_c .. "$") then
 			base.decl = "ūn-m"
-		elseif rfind(base.lemma, "ऊँ$") then
+		elseif rfind(base.lemma, "ऊ" .. MN_c .. "$") then
 			base.decl = "ind-ūn-m"
 		elseif rfind(base.lemma, R .. "$") then
 			base.decl = "r-m"
@@ -822,16 +871,16 @@ local function determine_declension(base)
 	else
 		assert(base.gender == "F")
 		if base.iya then
-			if rfind(base.lemma, M .. "$") then
+			if rfind(base.lemma, MN_c .. "$") then
 				base.decl = "iyān-f"
 			else
 				base.decl = "iyā-f"
 			end
 		elseif rfind(base.lemma, AA .. "$") or rfind(base.lemma, "आ$") then
 			base.decl = "ā-f"
-		elseif rfind(base.lemma, AA .. M .. "$") then
+		elseif rfind(base.lemma, AA .. MN_c .. "$") then
 			base.decl = "ān-f"
-		elseif rfind(base.lemma, "आँ$") then
+		elseif rfind(base.lemma, "आ" .. MN_c .. "$") then
 			base.decl = "ind-ān-f"
 		elseif rfind(base.lemma, I .. "$") then
 			base.decl = "i-f"
@@ -849,9 +898,9 @@ local function determine_declension(base)
 			base.decl = "ū-f"
 		elseif rfind(base.lemma, "ऊ$") then
 			base.decl = "ind-ū-f"
-		elseif rfind(base.lemma, UU .. M .. "$") then
+		elseif rfind(base.lemma, UU .. MN_c .. "$") then
 			base.decl = "ūn-f"
-		elseif rfind(base.lemma, "ऊँ$") then
+		elseif rfind(base.lemma, "ऊ" .. MN_c .. "$") then
 			base.decl = "ind-ūn-f"
 		else
 			base.decl = "c-f"
@@ -874,10 +923,8 @@ end
 
 
 local function detect_all_indicator_specs(alternant_multiword_spec)
-	local is_multiword = #alternant_multiword_spec.alternant_or_word_specs > 1
 	iut.map_word_specs(alternant_multiword_spec, function(base)
 		detect_indicator_spec(base)
-		base.multiword = is_multiword
 	end)
 end
 
@@ -1400,7 +1447,7 @@ function export.do_generate_forms(parent_args, pos, from_headword, def)
 	local parse_props = {
 		parse_indicator_spec = parse_indicator_spec,
 		lang = lang,
-		transliterate_respelling = transliterate_respelling,
+		transliterate_respelling = com.transliterate_respelling,
 		allow_blank_lemma = true,
 	}
 	local alternant_multiword_spec = iut.parse_inflected_text(args[1], parse_props)
@@ -1408,7 +1455,7 @@ function export.do_generate_forms(parent_args, pos, from_headword, def)
 	alternant_multiword_spec.footnotes = args.footnote
 	alternant_multiword_spec.pos = pos or "nouns"
 	alternant_multiword_spec.args = args
-	com.normalize_all_lemmas(alternant_multiword_spec)
+	com.normalize_all_lemmas(alternant_multiword_spec, "always transliterate")
 	detect_all_indicator_specs(alternant_multiword_spec)
 	propagate_properties(alternant_multiword_spec, "number", "both", "both")
 	-- The default of "M" should apply only to plural adjectives, where it doesn't matter.
