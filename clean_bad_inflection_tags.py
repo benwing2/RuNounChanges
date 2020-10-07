@@ -60,24 +60,6 @@ skip_pages = [
   u"ادائیں"
 ]
 
-inflection_of_templates = [
-  "inflection of",
-  "infl of",
-  "noun form of",
-  "verb form of",
-  "adj form of",
-  "participle of"
-]
-
-tags_to_templates = {
-  ("p",): "plural of",
-  ("f",): "feminine of",
-  ("aug",): "augmentative of",
-  ("dim",): "diminutive of",
-  ("alternative", "form"): "alternative form of",
-  ("pfv",): "perfective form of",
-}
-
 joiner_tags = ['and', 'or', '/', ',', '&']
 
 tags_for_raw_and_form_of_conversion = [
@@ -624,9 +606,6 @@ num_templates_with_bad_tags = 0
 
 matching_textfile_lines = set()
 
-def remove_comment_continuations(text):
-  return text.replace("<!--\n-->", "").strip()
-
 form_of_dimensions_to_tags = {}
 # Map from tag to dimension it's in, derived from form-of data
 form_of_combinable_tags_by_dimension = None
@@ -1076,131 +1055,8 @@ def process_text_on_page(pagetitle, index, text):
     else:
       text = convert_form_of(text)
 
-  def combine_adjacent(text):
-    subsections = re.split("(^==+[^=\n]+==+\n)", text, 0, re.M)
-    for j in xrange(0, len(subsections), 2):
-      for template in inflection_of_templates:
-        def combine_adjacent_inflections(m):
-          inflections = re.split(r"(\{\{%s\|.*\}\})" % template, m.group(0))
-          prev_lang = None
-          prev_lemma = None
-          prev_alt = None
-          prev_tr = None
-          prev_gloss = None
-          prev_tags = None
-          prev_misc_params = None
-          j = 1
-          while j < len(inflections):
-            parsed = blib.parse_text(inflections[j])
-            templates = list(parsed.filter_templates())
-            assert len(templates) > 0
-            t = templates[0]
-            assert tname(t) == template
-            if t.has("lang"):
-              this_lang = getparam(t, "lang")
-              this_lemma = getparam(t, "1")
-              this_alt = getparam(t, "2")
-              first_tag = 3
-            else:
-              this_lang = getparam(t, "1")
-              this_lemma = getparam(t, "2")
-              this_alt = getparam(t, "3")
-              first_tag = 4
-            this_tr = getparam(t, "tr")
-            this_gloss = getparam(t, "t") or getparam(t, "gloss")
-            this_misc_params = []
-            this_tags = []
-            for param in t.params:
-            # Extract the tags and the non-tag parameters.
-              pname = unicode(param.name).strip()
-              pval = unicode(param.value).strip()
-              if re.search("^[0-9]+$", pname):
-                if int(pname) >= first_tag:
-                  if pval:
-                    this_tags.append(pval)
-              elif pname not in ["lang", "tr", "alt", "t", "gloss"]:
-                this_misc_params.append((pname, pval, param.showkey))
-            if (prev_lang == this_lang and prev_lemma == this_lemma and
-                prev_alt == this_alt and prev_tr == this_tr and
-                prev_gloss == this_gloss and prev_misc_params == this_misc_params):
-              # Can combine prev with this.
-              this_tags = prev_tags + [";"] + this_tags
-              notes.append("combined adjacent calls to {{%s}}" % template)
-
-              # Erase all params.
-              del t.params[:]
-
-              # Put back new params.
-              # Strip comment continuations and line breaks. Such cases generally have linebreaks after semicolons
-              # as well, but we remove those. (FIXME, consider preserving them.)
-              t.add("1", remove_comment_continuations(this_lang))
-              t.add("2", remove_comment_continuations(this_lemma))
-              this_tr = remove_comment_continuations(this_tr)
-              if this_tr:
-                t.add("tr", this_tr)
-              t.add("3", remove_comment_continuations(this_alt))
-              next_tag_param = 4
-              for tag in this_tags:
-                t.add(str(next_tag_param), tag)
-                next_tag_param += 1
-              this_gloss = remove_comment_continuations(this_gloss)
-              if this_gloss:
-                t.add("t", this_gloss)
-              for pname, pval, showkey in this_misc_params:
-                t.add(pname, pval, showkey=showkey, preserve_spacing=False)
-
-              # Replace prev + this with combination.
-              pagemsg("Replaced %s + %s with %s" % (inflections[j - 2],
-                inflections[j], unicode(t)))
-              inflections[j] = unicode(parsed)
-              del inflections[j-2:j]
-              # Don't increment j; this happened effectively because we
-              # deleted the preceding {{inflection of}}/etc. call
-            elif prev_lang:
-              if prev_lang != this_lang:
-                difftype = "languages"
-              elif prev_lemma != this_lemma:
-                difftype = "lemmas"
-              elif prev_alt != this_alt:
-                difftype = "alt display texts"
-              elif prev_tr != this_tr:
-                difftype = "transliterations"
-              elif prev_gloss != this_gloss:
-                difftype = "glosses"
-              else:
-                difftype = "misc params"
-              pagemsg("Unable to combine %s with %s because %s differ" % (
-                inflections[j - 2], inflections[j], difftype))
-              j += 2
-            else:
-              j += 2
-
-            prev_lang = this_lang
-            prev_lemma = this_lemma
-            prev_alt = this_alt
-            prev_tr = this_tr
-            prev_gloss = this_gloss
-            prev_tags = this_tags
-            prev_misc_params = this_misc_params
-
-          return "".join(inflections)
-
-        # Look for adjacent calls to {{inflection of}} with the same
-        # definition line text preceding (usually #). Inside of
-        # {{inflection of}}, allow balanced sets of {{...}} template
-        # calls. We only want {{inflection of}} calls that span the
-        # entire line; we want to disallow lines like
-        #   # {{inflection of|...}}: foo bar {{g|m}}
-        newsubsection = re.sub(r"^([#*]+) \{\{%s\|(?:[^{}\n]|\{\{[^{}\n]*\}\})*\}\}(?:\n\1 \{\{%s\|(?:[^{}\n]|\{\{[^{}\n]*\}\})*\}\})+$" %
-            (template, template),
-            combine_adjacent_inflections, subsections[j], 0, re.M)
-        if args.verbose and newsubsection != subsections[j]:
-          pagemsg("Replaced <<%s>> with <<%s>>" % (subsections[j], newsubsection))
-        subsections[j] = newsubsection
-    return "".join(subsections)
-
   if args.combine_adjacent:
-    text = combine_adjacent(text)
+    text = infltags.combine_adjacent_inflection_of_calls(text, notes, pagemsg, args.verbose)
 
   parsed = blib.parse_text(text)
 
@@ -1210,33 +1066,11 @@ def process_text_on_page(pagetitle, index, text):
     origt = unicode(t)
     tn = tname(t)
 
-    if tn in inflection_of_templates:
+    if tn in infltags.inflection_of_templates:
 
       # (1) Extract the tags and the non-tag parameters. Remove empty tags.
-
-      params = []
-      if getparam(t, "lang"):
-        lang = getparam(t, "lang")
-        term_param = 1
-        notes.append("moved lang= in {{%s}} to 1=" % tn)
-      else:
-        lang = getparam(t, "1")
-        term_param = 2
-      tr = getparam(t, "tr")
-      term = getparam(t, str(term_param))
-      alt = getparam(t, "alt") or getparam(t, str(term_param + 1))
-      tags = []
-      for param in t.params:
-        pname = unicode(param.name).strip()
-        pval = unicode(param.value).strip()
-        if re.search("^[0-9]+$", pname):
-          if int(pname) >= term_param + 2:
-            if pval:
-              tags.append(pval)
-            else:
-              notes.append("removed empty tags from {{%s}}" % tn)
-        elif pname not in ["lang", "tr", "alt"]:
-          params.append((pname, pval, param.showkey))
+      tags, params, lang, term, tr, alt = infltags.extract_tags_and_nontag_params_from_inflection_of(
+          t, notes)
 
       # (2) Canonicalize tags on a tag-by-tag basis. This may involve applying the
       # replacements listed in tag_replacements or subtag_replacements, and may
@@ -1474,44 +1308,8 @@ def process_text_on_page(pagetitle, index, text):
           tags = new_tags
 
       # (7) Put back the new parameters.
-
-      # Erase all params.
-      del t.params[:]
-
-      # Put back new params.
-
-      # Strip comment continuations and line breaks. Such cases generally
-      # have linebreaks after semicolons as well, but we remove those.
-      # (FIXME, consider preserving them.)
-      t.add("1", remove_comment_continuations(lang))
-      t.add("2", remove_comment_continuations(term))
-      tr = remove_comment_continuations(tr)
-      if tr:
-        t.add("tr", tr)
-
-      if tuple(tags) in tags_to_templates:
-        tempname = tags_to_templates[tuple(tags)]
-        # Convert to more specific template, e.g. {{plural of}}.
-        blib.set_template_name(t, tempname)
-        altparam = remove_comment_continuations(alt)
-        if altparam:
-          t.add("3", altparam)
-        notes.append("replaced {{inflection of|...|%s}} with {{%s}}" % (
-          "|".join(tags), tempname))
-
-      else:
-        t.add("3", remove_comment_continuations(alt))
-        next_tag_param = 4
-
-        # Put back the tags into the template and note stats on bad tags
-        for tag in tags:
-          t.add(str(next_tag_param), tag)
-          next_tag_param += 1
-
-      # Finally, put back misc. tags.
-      for pname, pval, showkey in params:
-        t.add(pname, pval, showkey=showkey, preserve_spacing=False)
-
+      infltags.put_back_new_inflection_of_params(t, notes, tags, params, lang, term, tr, alt,
+        convert_to_more_specific_template=True)
       if origt != unicode(t):
         if not notes:
           notes.append("canonicalized {{%s}}" % tn)
