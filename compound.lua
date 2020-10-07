@@ -159,11 +159,16 @@ local function pluralize(pos)
 	return pos
 end
 
+local function make_entry_name_no_links(lang, term)
+	-- Remove links and call lang:makeEntryName(term).
+	return lang:makeEntryName(m_links.remove_links(term))
+end
+
 local function link_term(terminfo, display_term, lang, sc, sort_key, force_cat)
 	local terminfo_new = require("Module:table").shallowcopy(terminfo)
 	local result
 
-	terminfo_new.term = display_term	
+	terminfo_new.term = display_term
 	if terminfo_new.lang then
 		result = require("Module:etymology").format_derived(lang, terminfo_new, sort_key, nil, force_cat)
 	else
@@ -171,11 +176,11 @@ local function link_term(terminfo, display_term, lang, sc, sort_key, force_cat)
 		terminfo_new.sc = terminfo_new.sc or sc
 		result = m_links.full_link(terminfo_new, "term", false)
 	end
-	
+
 	if terminfo_new.q then
 		result = result .. " " .. require("Module:qualifier").format_qualifier(terminfo_new.q)
 	end
-	
+
 	return result
 end
 
@@ -239,7 +244,7 @@ local function get_affix_type(lang, sc, part)
 	if not part then
 		return nil, nil
 	end
-	
+
 	local scode, thyph, dhyph = get_template_and_display_hyphens(part, lang, sc)
 	thyph = "([" .. thyph .. "])"
 	local hyphen_space_hyphen = thyph .. " " .. thyph
@@ -332,22 +337,22 @@ end
 
 function export.show_affixes(lang, sc, parts, pos, sort_key, nocat, lit, force_cat)
 	pos = pos or "word"
-	
+
 	pos = pluralize(pos)
-	
+
 	-- Process each part
 	local parts_formatted = {}
 	local categories = {}
 	local whole_words = 0
-	
+
 	for i, part in ipairs_with_gaps(parts) do
 		part = part or {}
 		local part_lang = part.lang or lang
 		local part_sc = part.sc or sc
-		
+
 		-- Is it an affix, and if so, what type of affix?
 		local affix_type, display_term = get_affix_type(part_lang, part_sc, part.term)
-		
+
 		-- Make a link for the part
 		if display_term == "" then
 			-- If a bare ^ was specified, then insert a blank string. A + will still
@@ -357,40 +362,40 @@ function export.show_affixes(lang, sc, parts, pos, sort_key, nocat, lit, force_c
 		else
 			table.insert(parts_formatted, link_term(part, display_term, lang, sc, sort_key, force_cat))
 		end
-		
+
 		if affix_type then
 			-- Make a sort key
 			-- For the first part, use the second part as the sort key
 			local part_sort_base = nil
 			local part_sort = part.sort or sort_key
-			
+
 			if i == 1 and parts[2] and parts[2].term then
 				local part2_lang = parts[2].lang or lang
 				local part2_sc = parts[2].sc or sc
 				local part2_affix_type, part2_display_term = get_affix_type(part2_lang, part2_sc, parts[2].term)
-				part_sort_base = part2_lang:makeEntryName(part2_display_term)
+				part_sort_base = make_entry_name_no_links(part2_lang, part2_display_term)
 			end
-			
+
 			if affix_type == "infix" then affix_type = "interfix" end
-			
+
 			if part.pos and rfind(part.pos, "patronym") then
 				table.insert(categories, {cat="patronymics", sort_key=part_sort, sort_base=part_sort_base})
 			end
-			
+
 			if pos ~= "words" and part.pos and rfind(part.pos, "diminutive") then
 				table.insert(categories, {cat="diminutive " .. pos, sort_key=part_sort, sort_base=part_sort_base})
 			end
-			
-			table.insert(categories, {cat=pos .. " " .. affix_type .. "ed with " .. part_lang:makeEntryName(display_term) .. (part.id and " (" .. part.id .. ")" or ""), sort_key=part_sort, sort_base=part_sort_base})
+
+			table.insert(categories, {cat=pos .. " " .. affix_type .. "ed with " .. make_entry_name_no_links(part_lang, display_term) .. (part.id and " (" .. part.id .. ")" or ""), sort_key=part_sort, sort_base=part_sort_base})
 		else
 			whole_words = whole_words + 1
-			
+
 			if whole_words == 2 then
 				table.insert(categories, "compound " .. pos)
 			end
 		end
 	end
-	
+
 	-- If there are no categories, then there were no actual affixes, only regular words.
 	-- This function does not support compounds (yet?), so show an error.
 	if #categories == 0 then
@@ -403,13 +408,13 @@ end
 
 function export.show_compound(lang, sc, parts, pos, sort_key, nocat, lit, force_cat)
 	pos = pos or "word"
-	
+
 	pos = pluralize(pos)
-	
+
 	local parts_formatted = {}
 	local categories = {}
 	table.insert(categories, "compound " .. pos)
-	
+
 	-- Make links out of all the parts
 	local whole_words = 0
 	for i, part in ipairs(parts) do
@@ -424,7 +429,7 @@ function export.show_compound(lang, sc, parts, pos, sort_key, nocat, lit, force_
 		-- (but pay attention to the detected affix type for certain
 		-- tracking purposes)
 		if affix_type == "infix" then
-			table.insert(categories, {cat=pos .. " interfixed with " .. part_lang:makeEntryName(display_term), sort_key=part.sort or sort_key})
+			table.insert(categories, {cat=pos .. " interfixed with " .. make_entry_name_no_links(part_lang, display_term), sort_key=part.sort or sort_key})
 		else
 			display_term = part.term
 			if affix_type then
@@ -445,7 +450,7 @@ function export.show_compound(lang, sc, parts, pos, sort_key, nocat, lit, force_
 	elseif whole_words == 0 then
 		require("Module:debug").track("compound/looks like confix")
 	end
-	
+
 	return concat_parts(lang, parts_formatted, categories, nocat, sort_key, lit, force_cat)
 end
 
@@ -454,10 +459,10 @@ function export.show_compound_like(lang, sc, parts, sort_key, text, oftext, cat,
 	local parts_formatted = {}
 	local categories = {}
 
-	if cat then	
+	if cat then
 		table.insert(categories, cat)
 	end
-	
+
 	-- Make links out of all the parts
 	for i, part in ipairs(parts) do
 		table.insert(parts_formatted, link_term(part, part.term, lang, sc, sort_key, force_cat))
@@ -513,7 +518,7 @@ end
 local function insert_affix_category(categories, lang, pos, affix_type, part, sort_key, sort_base)
 	if part.term then
 		local part_lang = part.lang or lang
-		local cat = pos .. " " .. affix_type .. "ed with " .. part_lang:makeEntryName(part.term) .. (part.id and " (" .. part.id .. ")" or "")
+		local cat = pos .. " " .. affix_type .. "ed with " .. make_entry_name_no_links(part_lang, part.term) .. (part.id and " (" .. part.id .. ")" or "")
 		if sort_key or sort_base then
 			table.insert(categories, {cat=cat, sort_key=sort_key, sort_base=sort_base})
 		else
@@ -526,20 +531,20 @@ end
 function export.show_circumfix(lang, sc, prefix, base, suffix, pos, sort_key, nocat, lit, force_cat)
 	local categories = {}
 	pos = pos or "word"
-	
+
 	pos = pluralize(pos)
-	
+
 	-- Hyphenate the affixes
 	make_part_affix(prefix, lang, sc, "prefix")
 	make_part_affix(suffix, lang, sc, "suffix")
-	
+
 	track_wrong_affix_type("circumfix", prefix, lang, sc, "prefix", "prefix")
 	track_wrong_affix_type("circumfix", base, lang, sc, nil, "base")
 	track_wrong_affix_type("circumfix", suffix, lang, sc, "suffix", "suffix")
-	
+
 	-- Create circumfix term
 	local circumfix = nil
-	
+
 	if prefix.term and suffix.term then
 		circumfix = prefix.term .. " " .. suffix.term
 		prefix.alt = prefix.alt or prefix.term
@@ -547,58 +552,58 @@ function export.show_circumfix(lang, sc, prefix, base, suffix, pos, sort_key, no
 		prefix.term = circumfix
 		suffix.term = circumfix
 	end
-	
+
 	-- Make links out of all the parts
 	local parts_formatted = {}
 	local sort_base
 	if base.term then
-		sort_base = (base.lang or lang):makeEntryName(base.term)
+		sort_base = make_entry_name_no_links(base.lang or lang, base.term)
 	end
-	
+
 	table.insert(parts_formatted, link_term(prefix, prefix.term, lang, sc, sort_key, force_cat))
 	table.insert(parts_formatted, link_term(base, base.term, lang, sc, sort_key, force_cat))
 	table.insert(parts_formatted, link_term(suffix, suffix.term, lang, sc, sort_key, force_cat))
-	
+
 	-- Insert the categories
-	table.insert(categories, {cat=pos .. " circumfixed with " .. (prefix.lang or lang):makeEntryName(circumfix), sort_key=sort_key, sort_base=sort_base})
-	
+	table.insert(categories, {cat=pos .. " circumfixed with " .. make_entry_name_no_links(prefix.lang or lang, circumfix), sort_key=sort_key, sort_base=sort_base})
+
 	return concat_parts(lang, parts_formatted, categories, nocat, sort_key, lit, force_cat)
 end
 
 
 function export.show_confix(lang, sc, prefix, base, suffix, pos, sort_key, nocat, lit, force_cat)
 	pos = pos or "word"
-	
+
 	pos = pluralize(pos)
-	
+
 	-- Hyphenate the affixes
 	make_part_affix(prefix, lang, sc, "prefix")
 	make_part_affix(suffix, lang, sc, "suffix")
-	
+
 	track_wrong_affix_type("confix", prefix, lang, sc, "prefix", "prefix")
 	track_wrong_affix_type("confix", base, lang, sc, nil, "base")
 	track_wrong_affix_type("confix", suffix, lang, sc, "suffix", "suffix")
-	
+
 	-- Make links out of all the parts
 	local parts_formatted = {}
 	local prefix_sort_base
 	if base and base.term then
-		prefix_sort_base = (base.lang or lang):makeEntryName(base.term)
+		prefix_sort_base = make_entry_name_no_links(base.lang or lang, base.term)
 	elseif suffix.term then
-		prefix_sort_base = (suffix.lang or lang):makeEntryName(suffix.term)
+		prefix_sort_base = make_entry_name_no_links(suffix.lang or lang, suffix.term)
 	end
 	local categories = {}
-	
+
 	table.insert(parts_formatted, link_term(prefix, prefix.term, lang, sc, sort_key, force_cat))
 	insert_affix_category(categories, lang, pos, "prefix", prefix, sort_key, prefix_sort_base)
-	
+
 	if base then
 		table.insert(parts_formatted, link_term(base, base.term, lang, sc, sort_key, force_cat))
 	end
-	
+
 	table.insert(parts_formatted, link_term(suffix, suffix.term, lang, sc, sort_key, force_cat))
 	insert_affix_category(categories, lang, pos, "suffix", suffix)
-	
+
 	return concat_parts(lang, parts_formatted, categories, nocat, sort_key, lit, force_cat)
 end
 
@@ -606,38 +611,38 @@ end
 function export.show_infix(lang, sc, base, infix, pos, sort_key, nocat, lit, force_cat)
 	local categories = {}
 	pos = pos or "word"
-	
+
 	pos = pluralize(pos)
-	
+
 	-- Hyphenate the affixes
 	make_part_affix(infix, lang, sc, "infix")
-	
+
 	track_wrong_affix_type("infix", base, lang, sc, nil, "base")
 	track_wrong_affix_type("infix", infix, lang, sc, "infix", "infix")
-	
+
 	-- Make links out of all the parts
 	local parts_formatted = {}
-	
+
 	table.insert(parts_formatted, link_term(base, base.term, lang, sc, sort_key, force_cat))
 	table.insert(parts_formatted, link_term(infix, infix.term, lang, sc, sort_key, force_cat))
-	
+
 	-- Insert the categories
 	insert_affix_category(categories, lang, pos, "infix", infix)
-	
+
 	return concat_parts(lang, parts_formatted, categories, nocat, sort_key, lit, force_cat)
 end
 
 
 function export.show_prefixes(lang, sc, prefixes, base, pos, sort_key, nocat, lit, force_cat)
 	pos = pos or "word"
-	
+
 	pos = pluralize(pos)
-	
+
 	-- Hyphenate the affixes
 	for i, prefix in ipairs(prefixes) do
 		make_part_affix(prefix, lang, sc, "prefix")
 	end
-	
+
 	for i, prefix in ipairs(prefixes) do
 		track_wrong_affix_type("prefix", prefix, lang, sc, "prefix", "prefix")
 	end
@@ -648,24 +653,24 @@ function export.show_prefixes(lang, sc, prefixes, base, pos, sort_key, nocat, li
 	local parts_formatted = {}
 	local first_sort_base = nil
 	local categories = {}
-	
+
 	if prefixes[2] then
-		first_sort_base = (prefixes[2].lang or lang):makeEntryName(prefixes[2].term)
+		first_sort_base = make_entry_name_no_links(prefixes[2].lang or lang, prefixes[2].term)
 	elseif base then
-		first_sort_base = (base.lang or lang):makeEntryName(base.term)
+		first_sort_base = make_entry_name_no_links(base.lang or lang, base.term)
 	end
 
 	for i, prefix in ipairs(prefixes) do
 		table.insert(parts_formatted, link_term(prefix, prefix.term, lang, sc, sort_key, force_cat))
 		insert_affix_category(categories, lang, pos, "prefix", prefix, sort_key, i == 1 and first_sort_base or nil)
 	end
-	
+
 	if base then
 		table.insert(parts_formatted, link_term(base, base.term, lang, sc, sort_key, force_cat))
 	else
 		table.insert(parts_formatted, "")
 	end
-	
+
 	return concat_parts(lang, parts_formatted, categories, nocat, sort_key, lit, force_cat)
 end
 
@@ -673,44 +678,44 @@ end
 function export.show_suffixes(lang, sc, base, suffixes, pos, sort_key, nocat, lit, force_cat)
 	local categories = {}
 	pos = pos or "word"
-	
+
 	pos = pluralize(pos)
-	
+
 	-- Hyphenate the affixes
 	for i, suffix in ipairs(suffixes) do
 		make_part_affix(suffix, lang, sc, "suffix")
 	end
-	
+
 	track_wrong_affix_type("suffix", base, lang, sc, nil, "base")
 
 	for i, suffix in ipairs(suffixes) do
 		track_wrong_affix_type("suffix", suffix, lang, sc, "suffix", "suffix")
 	end
-	
+
 	-- Make links out of all the parts
 	local parts_formatted = {}
-	
+
 	if base then
 		table.insert(parts_formatted, link_term(base, base.term, lang, sc, sort_key, force_cat))
 	else
 		table.insert(parts_formatted, "")
 	end
-	
+
 	for i, suffix in ipairs(suffixes) do
 		table.insert(parts_formatted, link_term(suffix, suffix.term, lang, sc, sort_key, force_cat))
 	end
-	
+
 	-- Insert the categories
 	for i, suffix in ipairs(suffixes) do
 		if suffix.term then
 			insert_affix_category(categories, lang, pos, "suffix", suffix)
 		end
-		
+
 		if suffix.pos and rfind(suffix.pos, "patronym") then
 			table.insert(categories, "patronymics")
 		end
 	end
-	
+
 	return concat_parts(lang, parts_formatted, categories, nocat, sort_key, lit, force_cat)
 end
 
@@ -718,21 +723,21 @@ end
 function export.show_transfix(lang, sc, base, transfix, pos, sort_key, nocat, lit, force_cat)
 	local categories = {}
 	pos = pos or "word"
-	
+
 	pos = pluralize(pos)
-	
+
 	-- Hyphenate the affixes
 	make_part_affix(transfix, lang, sc, "transfix")
-	
+
 	-- Make links out of all the parts
 	local parts_formatted = {}
-	
+
 	table.insert(parts_formatted, link_term(base, base.term, lang, sc, sort_key, force_cat))
 	table.insert(parts_formatted, link_term(transfix, transfix.term, lang, sc, sort_key, force_cat))
-	
+
 	-- Insert the categories
 	insert_affix_category(categories, lang, pos, "transfix", transfix)
-	
+
 	return concat_parts(lang, parts_formatted, categories, nocat, sort_key, lit, force_cat)
 end
 
@@ -749,7 +754,7 @@ function export.make_affix(term, lang, sc, affix_type)
 		affix_type == "interfix" or affix_type == "transfix") then
 		error("Internal error: Invalid affix type " .. (affix_type or "(nil)"))
 	end
-	
+
 	if not term then
 		return nil
 	end
@@ -758,23 +763,23 @@ function export.make_affix(term, lang, sc, affix_type)
 	if usub(term, 1, 1) == "^" then
 		return usub(term, 2)
 	end
-		
+
 	if affix_type == "circumfix" or affix_type == "transfix" then
 		return term
 	elseif affix_type == "interfix" then
 		affix_type = "infix"
 	end
-	
+
 	local scode, thyph, dhyph = get_template_and_display_hyphens(term, lang, sc)
 	thyph = "([" .. thyph .. "])"
-	
+
 	-- Remove an asterisk if the morpheme is reconstructed and add it in the end.
 	local reconstructed = ""
 	if term:find("^%*") then 
 		reconstructed = "*"
 		term = term:gsub("^%*", "")
 	end
-	
+
 	local beginning_hyphen = rmatch(term, "^" .. thyph .. ".*$")
 	local ending_hyphen = rmatch(term, "^.*" .. thyph .. "$")
 	local beginning_dhyph = dhyph(scode, beginning_hyphen)
@@ -809,11 +814,8 @@ function export.make_affix(term, lang, sc, affix_type)
 	else
 		error("Internal error: Bad affix type " .. affix_type)
 	end
-	
+
 	return reconstructed .. term
 end
 
 return export
-
--- For Vim, so we get 4-space tabs
--- vim: set ts=4 sw=4 noet:
