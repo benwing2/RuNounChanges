@@ -82,11 +82,11 @@ if __name__ == "__main__":
   origpages = {}
 
   if args.origfile:
-    origlines = codecs.open(args.origfile, "r", "utf-8")
+    origlines = codecs.open(args.origfile.decode("utf-8"), "r", "utf-8")
     for pagename, text in find_regex.yield_text_from_find_regex(origlines, args.verbose):
       origpages[pagename] = text
 
-  lines = codecs.open(args.direcfile, "r", "utf-8")
+  lines = codecs.open(args.direcfile.decode("utf-8"), "r", "utf-8")
 
   pagename_and_text = find_regex.yield_text_from_find_regex(lines, args.verbose)
   for index, (pagename, text) in blib.iter_items(pagename_and_text, start, end,
@@ -97,7 +97,7 @@ if __name__ == "__main__":
     else:
       def do_process_page(page, index, parsed):
         return process_page(index, page, text, origcontents,
-            args.verbose, args.comment.decode('utf-8'), args.lang_only,
+            args.verbose, args.comment.decode("utf-8"), args.lang_only and args.lang_only.decode("utf-8"),
             args.allow_page_creation)
       blib.do_edit(pywikibot.Page(site, pagename), index, do_process_page,
           save=args.save, verbose=args.verbose, diff=args.diff)
