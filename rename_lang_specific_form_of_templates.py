@@ -7,6 +7,21 @@ import traceback, pprint
 import blib
 from blib import getparam, rmparam, msg, errandmsg, site, tname
 
+import infltags
+
+# We prefer the following tag variants (instead of e.g. 'pasv' for passive
+# or 'ptcp' for participle).
+preferred_tag_variants = {
+  "pres", "past", "fut",
+  "act", "pass",
+  "part"
+}
+
+tag_to_dimension_table, tag_to_canonical_form_table = (
+  infltags.fetch_tag_tables(preferred_tag_variants)
+)
+
+
 from misc_templates_to_rewrite import misc_templates_to_rewrite
 
 # STILL TO DO:
@@ -194,7 +209,41 @@ round_2_templates = [
   "tr-inflection of",
 ]
 
-templates_to_actually_do = round_1_templates
+zh_templates_under_1000 = [
+  "zh-cls",
+  "zh-con",
+  "zh-det",
+  "zh-infix",
+  "zh-interj",
+  "zh-inter",
+  "zh-num",
+  "zh-particle",
+  "zh-phrase",
+  "zh-post",
+  "zh-pref",
+  "zh-prep",
+  "zh-pronoun",
+  "zh-proverb",
+  "zh-punctuation mark",
+  "zh-suf",
+]
+
+zh_templates_1000_and_over = [
+  "zh-adj",
+  "zh-adjective",
+  "zh-adv",
+  "zh-adverb",
+  "zh-hanzi",
+  "zh-idiom",
+  "zh-noun",
+  "zh-proper noun",
+  "zh-proper",
+  "zh-propn",
+  "zh-verb",
+]
+
+#templates_to_actually_do = round_1_templates
+templates_to_actually_do = zh_templates_under_1000
 
 # List of templates and their behavior w.r.t. initial caps
 # final period. One of the following:
@@ -2011,19 +2060,19 @@ hu_grammar_table = {
   "ela": "ela",
   "del": "del",
   "abl": "abl",
-  "pos": "poss",
-  "1s": ["1s", "spos"],
-  "2s": ["2s", "spos"],
-  "3s": ["3s", "spos"],
-  "4s": ["1p", "spos"],
-  "5s": ["2p", "spos"],
-  "6s": ["3p", "spos"],
-  "1p": ["1s", "mpos"],
-  "2p": ["2s", "mpos"],
-  "3p": ["3s", "mpos"],
-  "4p": ["1p", "mpos"],
-  "5p": ["2p", "mpos"],
-  "6p": ["3p", "mpos"],
+  "pos": [],
+  "1s": ["1", "s", "spos", "poss"],
+  "2s": ["2", "s", "spos", "poss"],
+  "3s": ["3", "s", "spos", "poss"],
+  "4s": ["1", "p", "spos", "poss"],
+  "5s": ["2", "p", "spos", "poss"],
+  "6s": ["3", "p", "spos", "poss"],
+  "1p": ["1", "s", "mpos", "poss"],
+  "2p": ["2", "s", "mpos", "poss"],
+  "3p": ["3", "s", "mpos", "poss"],
+  "4p": ["1", "p", "mpos", "poss"],
+  "5p": ["2", "p", "mpos", "poss"],
+  "6p": ["3", "p", "mpos", "poss"],
   "1": "1",
   "2": "2",
   "3": "3",
@@ -2056,7 +2105,7 @@ hu_specs = [
 
   ("hu-participle", (
     "participle of",
-    ("error-if", ("present-except", ["1", "2"])),
+    ("error-if", ("present-except", ["1", "2", "t", "id"])),
     ("set", "1", [
       "hu",
       ("copy", "1"),
@@ -2075,8 +2124,15 @@ hu_specs = [
         "ve": "adv",
         u"ván": "adv",
         u"vén": "adv",
+        "ta": "verbal",
+        "te": "verbal",
+        "otta": "verbal",
+        "ette": "verbal",
+        u"ötte": "verbal",
       }),
     ]),
+    ("copy", "t"),
+    ("copy", "id"),
   )),
 ]
 
@@ -2238,6 +2294,20 @@ ka_specs = [
   ("ka-verbal of", "ka-verbal for"),
 ]
 
+def ku_headword(template, pos):
+  return (template,
+    ("head",
+      ("comment", "rename {{__TEMPNAME__}} to {{head|ku|%s}}" % pos),
+      ("error-if", ("present-except", ["head", "sort", "1"])),
+      ("set", "1", [
+        "ku",
+        pos,
+      ]),
+      ("copy", "1", "head"),
+      ("copy", "head"),
+      ("copy", "sort"),
+  ))
+
 ku_specs = [
   # NOTE: Has automatic, non-controllable initial caps and final period.
   # Both ignored.
@@ -2288,6 +2358,12 @@ ku_specs = [
       }),
     ]),
   )),
+  ku_headword("ku-adv", "adverb"),
+  ku_headword("ku-interj", "interjection"),
+  ku_headword("ku-noun-form", "noun form"),
+  ku_headword("ku-phrase", "phrase"),
+  ku_headword("ku-prep", "preposition"),
+  ku_headword("ku-suffix", "suffix"),
 ]
 
 liv_specs = [
@@ -3892,6 +3968,48 @@ tr_specs = [
 
 ur_specs = hi_ur_specs("ur")
 
+def zh_headword(template, pos):
+  return (template,
+    ("head",
+      ("comment", "rename {{__TEMPNAME__}} to {{head|zh|%s}}" % pos),
+      ("error-if", ("present-except", [])),
+      ("set", "1", [
+        "zh",
+        pos,
+      ])
+    )
+  )
+
+zh_specs = [
+  zh_headword("zh-adj", "adjective"),
+  zh_headword("zh-adjective", "adjective"),
+  zh_headword("zh-adv", "adverb"),
+  zh_headword("zh-adverb", "adverb"),
+  zh_headword("zh-cls", "classifier"),
+  zh_headword("zh-con", "conjunction"),
+  zh_headword("zh-det", "determiner"),
+  zh_headword("zh-hanzi", "Han character"),
+  zh_headword("zh-idiom", "idiom"),
+  zh_headword("zh-infix", "infix"),
+  zh_headword("zh-interj", "interjection"),
+  zh_headword("zh-inter", "interjection"),
+  zh_headword("zh-noun", "noun"),
+  zh_headword("zh-num", "numeral"),
+  zh_headword("zh-particle", "particle"),
+  zh_headword("zh-phrase", "phrase"),
+  zh_headword("zh-post", "postposition"),
+  zh_headword("zh-pref", "prefix"),
+  zh_headword("zh-prep", "preposition"),
+  zh_headword("zh-pronoun", "pronoun"),
+  zh_headword("zh-proper noun", "proper noun"),
+  zh_headword("zh-proper", "proper noun"),
+  zh_headword("zh-propn", "proper noun"),
+  zh_headword("zh-proverb", "proverb"),
+  zh_headword("zh-punctuation mark", "punctuation mark"),
+  zh_headword("zh-suf", "suffix"),
+  zh_headword("zh-verb", "verb"),
+]
+
 templates_to_rename_specs = (
   art_blk_specs +
   bg_specs +
@@ -3942,6 +4060,7 @@ templates_to_rename_specs = (
   tr_specs +
   ur_specs +
   misc_templates_to_rewrite +
+  zh_specs +
   []
 )
 
@@ -4035,7 +4154,7 @@ def rewrite_person_number_of(t, pagemsg, comment):
 post_rewrite_hooks = [
   rewrite_to_foo_form_of,
   rewrite_to_participle_of,
-  rewrite_person_number_of,
+  #rewrite_person_number_of,
 ]
 
 templates_to_rename_map = {}
@@ -4319,6 +4438,7 @@ def expand_spec(spec, t, pagemsg):
   return newname, expanded_specs, comment
 
 def process_page(page, index, parsed):
+  global args
   pagetitle = unicode(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
@@ -4368,7 +4488,39 @@ def process_page(page, index, parsed):
     if unicode(t) != origt:
       pagemsg("Replaced <%s> with <%s>" % (origt, unicode(t)))
 
-  return unicode(parsed), notes
+  text = unicode(parsed)
+
+  if args.lang_for_combine_inflection_of:
+    retval = blib.find_modifiable_lang_section(text, args.lang_for_combine_inflection_of, pagemsg)
+    if retval is None:
+      pagemsg("WARNING: Couldn't find %s section" % args.lang_for_combine_inflection_of)
+      return text, notes
+    sections, j, secbody, sectail, has_non_lang = retval
+    secbody = infltags.combine_adjacent_inflection_of_calls(secbody, notes, pagemsg, verbose=args.verbose)
+    parsed = blib.parse_text(secbody)
+    for t in parsed.filter_templates():
+      tn = tname(t)
+      if tn in infltags.inflection_of_templates:
+        origt = unicode(t)
+        tags, params, lang, term, tr, alt = infltags.extract_tags_and_nontag_params_from_inflection_of(
+            t, notes)
+        # Now combine adjacent tags into multipart tags.
+        def warn(text):
+          pagemsg("WARNING: %s" % text)
+        tags, this_notes = infltags.combine_adjacent_tags_into_multipart(
+          tags, tag_to_dimension_table, pagemsg, warn,
+          tag_to_canonical_form_table=tag_to_canonical_form_table
+        )
+        notes.extend(this_notes)
+        infltags.put_back_new_inflection_of_params(t, notes, tags, params, lang, term, tr, alt,
+          convert_to_more_specific_template=False)
+        if unicode(t) != origt:
+          pagemsg("Replaced %s with %s" % (origt, unicode(t)))
+    secbody = unicode(parsed)
+    sections[j] = secbody + sectail
+    text = "".join(sections)
+
+  return text, notes
 
 def process_page_for_check_ignore(page, index, template, ignore_type):
   pagetitle = unicode(page.title())
@@ -4409,11 +4561,13 @@ def process_page_for_check_ignore(page, index, template, ignore_type):
       if not foundit:
         errandpagemsg("WARNING: Couldn't find form-of template on page: %s" % unicode(t))
 
-parser = blib.create_argparser("Rename various lang-specific form-of templates to more general variants")
+parser = blib.create_argparser("Rename various lang-specific form-of templates to more general variants",
+    include_pagefile=True)
 parser.add_argument('--do-all', help="Do all templates instead of default list",
     action="store_true")
 parser.add_argument('--do-specified', help="Do specified comma-separated templates instead of default list")
 parser.add_argument('--check-ignores', help="Check whether there may be problems ignoring intial cap or final dot", action="store_true")
+parser.add_argument('--lang-for-combine-inflection-of', help="Language name of section whose {{inflection of}} calls will be combined")
 parser.add_argument('--check-ignores-include-ucdot', help="Whether checking ignore issues, include type 'ucdot' to see whether it can be converted to 'lcnodot'", action="store_true")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
@@ -4442,7 +4596,5 @@ if args.check_ignores:
               ignore_type)
 
 else:
-  for template in templates_to_actually_do:
-    errandmsg("Processing references to Template:%s" % template)
-    for i, page in blib.references("Template:%s" % template, start, end):
-      blib.do_edit(page, i, process_page, save=args.save, verbose=args.verbose)
+  blib.do_pagefile_cats_refs(args, start, end, process_page, edit=True,
+      default_refs=["Template:%s" % template for template in templates_to_actually_do])
