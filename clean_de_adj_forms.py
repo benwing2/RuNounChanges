@@ -71,7 +71,7 @@ def process_text_on_page(index, pagetitle, text):
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
-  if not re.search(r"\{\{head\|de\|adjective (|comparative |superlative )form", text):
+  if not re.search(r"\{\{head\|de\|(adjective (|comparative |superlative )|participle )form", text):
     return
 
   pagemsg("Processing")
@@ -119,11 +119,14 @@ def process_text_on_page(index, pagetitle, text):
       return t
 
     if tn == "head" and getparam(t, "1") == "de" and getparam(t, "2") in [
-        "adjective form", "adjective comparative form", "adjective superlative form"]:
+        "adjective form", "adjective comparative form", "adjective superlative form",
+        "participle form"]:
       if headt:
         pagemsg("WARNING: Saw two head templates, skipping: %s and %s" % (unicode(headt), origt))
         return
       headt = t
+    elif tn == "head" and getparam(t, "1") == "de" and getparam(t, "2") == "verb form":
+      pagemsg("Allowing and ignoring {{head|de|verb form}}: %s" % origt)
     elif tn == "head":
       pagemsg("WARNING: Saw unrecognized head template, skipping: %s" % origt)
       return
