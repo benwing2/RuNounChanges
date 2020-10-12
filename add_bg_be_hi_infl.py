@@ -6,8 +6,6 @@ import pywikibot, re, sys, codecs, argparse
 import blib
 from blib import getparam, rmparam, msg, site, tname
 
-import find_regex
-
 pos_to_headword_template = {
   "noun": "%s-noun",
   "proper noun": "%s-proper noun",
@@ -43,6 +41,12 @@ hi_pos_to_old_style_infl_template_prefix = {
   "adjective": "hi-adj-auto",
 }
 
+lang_to_langname = {
+  "be": "Belarusian",
+  "bg": "Bulgarian",
+  "hi": "Hindi",
+}
+
 # Hindi vowel diacritics; don't display nicely on their own
 M = u"\u0901"
 N = u"\u0902"
@@ -52,7 +56,7 @@ AA = u"\u093e"
 def get_indentation_level(header):
   return len(re.sub("[^=].*", "", header, 0, re.S))
 
-def process_page(index, pagetitle, text, pos):
+def process_text_on_page(index, pagetitle, text, pos):
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
@@ -60,6 +64,8 @@ def process_page(index, pagetitle, text, pos):
   notes = []
 
   pagemsg("Processing")
+
+  origtext = text
 
   secbody, sectail = blib.split_trailing_separator_and_categories(text)
 
@@ -178,8 +184,8 @@ def process_page(index, pagetitle, text, pos):
                 subsections[l + 1] = infl + final_newlines
                 pagemsg("Replaced existing decl text <%s> with <%s>" % (
                   sectext, infl))
-                notes.append("replace decl text <%s> with <%s>" % (
-                  sectext, infl))
+                notes.append("replace %s decl text <%s> with <%s>" % (
+                  lang_to_langname[args.lang], sectext.strip(), infl))
               break
           else: # no break
             insert_k = k + 2
@@ -194,6 +200,7 @@ def process_page(index, pagetitle, text, pos):
             ]
             pagemsg("Inserted level-%s inflection section with inflection <%s>" % (
               level + 1, infl))
+            notes.append("insert level-%s %s inflection <%s>" % (level + 1, lang_to_langname[args.lang], infl))
             endk += 2 # for the two subsections we inserted
 
       k = endk
@@ -213,23 +220,21 @@ def process_page(index, pagetitle, text, pos):
   secbody = "".join(subsections)
   text = secbody + sectail
   text = re.sub("\n\n\n+", "\n\n", text)
-  pagemsg("------- begin text --------")
-  msg(text.rstrip('\n'))
-  msg("------- end text --------")
+  if origtext != text:
+    notes.append("condense 3+ newlines into 2")
+  return text, notes
 
-parser = blib.create_argparser("Add Bulgarian/Belarusian/Hindi noun/verb/adjective inflections")
+parser = blib.create_argparser("Add Bulgarian/Belarusian/Hindi noun/verb/adjective inflections",
+    include_pagefile=True, include_stdin=True)
 parser.add_argument("--pos", required=True, help="Part of speech (noun, proper noun, verb, adjective)")
 parser.add_argument("--lang", required=True, help="Language (bg, be, hi)")
-parser.add_argument('--direcfile', required=True, help="File containing output from find_regex.py.")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
 if args.lang not in ["bg", "be", "hi"]:
   raise ValueError("Unrecognized language: %s" % args.lang)
 
-lines = codecs.open(args.direcfile, "r", "utf-8")
+def do_process_text_on_page(index, pagetitle, text):
+  return process_text_on_page(index, pagetitle, text, args.pos)
 
-pagename_and_text = find_regex.yield_text_from_find_regex(lines, args.verbose)
-for index, (pagename, text) in blib.iter_items(pagename_and_text, start, end,
-    get_name=lambda x:x[0]):
-  process_page(index, pagename, text, args.pos)
+blib.do_pagefile_cats_refs(args, start, end, do_process_text_on_page, edit=True, stdin=True)

@@ -6,8 +6,6 @@ from blib import getparam, rmparam, msg, errmsg, errandmsg, site
 
 import pywikibot, re, sys, codecs, argparse
 
-import find_regex
-
 def process_page(index, page, contents, lang, verbose, comment):
   pagetitle = unicode(page.title())
   def pagemsg(txt):
@@ -56,7 +54,7 @@ if __name__ == "__main__":
 
   lines = codecs.open(args.direcfile, "r", "utf-8")
 
-  pagename_and_text = find_regex.yield_text_from_find_regex(lines, args.verbose)
+  pagename_and_text = blib.yield_text_from_find_regex(lines, args.verbose)
   for index, (pagename, text) in blib.iter_items(pagename_and_text, start, end,
       get_name=lambda x:x[0]):
     def do_process_page(page, index, parsed):

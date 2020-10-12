@@ -8,8 +8,6 @@ from blib import getparam, rmparam, msg, errandmsg, site, tname, pname
 
 import lalib
 
-import find_regex
-
 pos_to_template = {
   "noun form": "la-noun-form",
   "noun forms": "la-noun-form",
@@ -67,7 +65,7 @@ start, end = blib.parse_start_end(args.start, args.end)
 
 lines = codecs.open(args.direcfile, "r", "utf-8")
 
-pagename_and_text = find_regex.yield_text_from_find_regex(lines, args.verbose)
+pagename_and_text = blib.yield_text_from_find_regex(lines, args.verbose)
 for index, (pagename, text) in blib.iter_items(pagename_and_text, start, end,
     get_name=lambda x:x[0]):
   process_page(index, pagename, text)

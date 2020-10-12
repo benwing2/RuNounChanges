@@ -8,8 +8,6 @@ from blib import getparam, rmparam, tname, pname, msg, site
 
 import rulib
 
-import find_regex
-
 def add_rel_adj_or_dim_to_noun_page(nounpage, index, new_adj_or_dims, param, desc):
   notes = []
   pagetitle = unicode(nounpage.title())
@@ -260,7 +258,7 @@ if args.direcfile:
       add_rel_adj_or_dim_to_noun(index, adjs_or_dims, noun, 'dim', 'diminutive')
 elif args.textfile:
   lines = codecs.open(args.textfile, "r", "utf-8")
-  pagename_and_text = find_regex.yield_text_from_find_regex(lines, args.verbose)
+  pagename_and_text = blib.yield_text_from_find_regex(lines, args.verbose)
   for index, (pagename, text) in blib.iter_items(pagename_and_text, start, end,
       get_name=lambda x:x[0]):
     if args.pos == "reladj":

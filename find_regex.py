@@ -69,67 +69,6 @@ def process_text_on_page(index, pagetitle, text, regex, invert, verbose,
         if include_text:
           pagemsg("-------- begin text ---------\n%s-------- end text --------" % text_to_search)
 
-def yield_text_from_find_regex(lines, verbose):
-  in_multiline = False
-  while True:
-    try:
-      line = next(lines)
-    except StopIteration:
-      break
-    if in_multiline and re.search("^-+ end text -+$", line):
-      in_multiline = False
-      yield pagename, "".join(templines)
-    elif in_multiline:
-      if line.rstrip('\n').endswith(':'):
-        if verbose:
-          errmsg("WARNING: Possible missing ----- end text -----: %s" % line.rstrip('\n'))
-      templines.append(line)
-    else:
-      line = line.rstrip('\n')
-      if line.endswith(':'):
-        pagename = "Template:%s" % line[:-1]
-        in_multiline = True
-        templines = []
-      else:
-        m = re.search("^Page [0-9]+ (.*): -+ begin text -+$", line)
-        if m:
-          pagename = m.group(1)
-          in_multiline = True
-          templines = []
-        elif verbose:
-          msg("Skipping: %s" % line)
-
-def yield_text_from_diff(lines, verbose):
-  in_multiline = False
-  while True:
-    try:
-      line = next(lines)
-    except StopIteration:
-      break
-    if in_multiline and re.search("^Page [0-9]+", line):
-      in_multiline = False
-      yield pagename, "".join(templines)
-    elif in_multiline:
-      templines.append(line)
-    else:
-      line = line.rstrip('\n')
-      m = re.search("^Page [0-9]+ (.*): Diff:$", line)
-      if m:
-        pagename = m.group(1)
-        in_multiline = True
-        templines = []
-      elif verbose:
-        msg("Skipping: %s" % line)
-
-def yield_pages_in_cats(cats, recursive, start, end):
-  for cat in cats:
-    for index, page in blib.cat_articles(cat, start, end):
-      yield index, page
-    if recursive:
-      for i, subcat in blib.cat_subcats(cat, start, end, recurse=True):
-        for j, page in blib.cat_articles(subcat, start, end):
-          yield j, page
-
 def search_pages(args, regex, invert, input_from_output, input_from_diff, start,
     end, lang_only):
 
@@ -139,7 +78,7 @@ def search_pages(args, regex, invert, input_from_output, input_from_diff, start,
 
   if input_from_output:
     lines = codecs.open(input_from_output, "r", "utf-8")
-    pagename_and_text = yield_text_from_find_regex(lines, verbose)
+    pagename_and_text = blib.yield_text_from_find_regex(lines, verbose)
     for index, (pagename, text) in blib.iter_items(pagename_and_text, start, end,
         get_name=lambda x:x[0]):
       do_process_text_on_page(index, pagename, text)
@@ -147,7 +86,7 @@ def search_pages(args, regex, invert, input_from_output, input_from_diff, start,
 
   if input_from_diff:
     lines = codecs.open(input_from_diff, "r", "utf-8")
-    pagename_and_text = yield_text_from_diff(lines, verbose)
+    pagename_and_text = blib.yield_text_from_diff(lines, verbose)
     for index, (pagename, text) in blib.iter_items(pagename_and_text, start, end,
         get_name=lambda x:x[0]):
       do_process_text_on_page(index, pagename, text)

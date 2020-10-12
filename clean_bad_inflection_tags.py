@@ -763,7 +763,7 @@ def canonicalize_raw_tag(tag, shorten, pagemsg, add_to_bad_tags_split_canon=Fals
     return None
   return canonicalize_tag(tag, shorten, pagemsg, add_to_bad_tags_split_canon)
 
-def process_text_on_page(pagetitle, index, text):
+def process_text_on_page(index, pagetitle, text):
   global args
 
   def pagemsg(txt):
@@ -1325,13 +1325,8 @@ def process_text_on_page(pagetitle, index, text):
 
   return unicode(parsed), notes
 
-def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
-  text = unicode(page.text)
-  return process_text_on_page(pagetitle, index, text)
-
 parser = blib.create_argparser("Clean up bad inflection tags",
-  include_pagefile=True)
+  include_pagefile=True, include_stdin=True)
 parser.add_argument("--textfile", help="File containing page text or defn line text to process.")
 parser.add_argument("--matching-textfile", help="File containing defn lines to match against; if we change a line not listed, output a warnings.")
 parser.add_argument("--langcode", help="Specify lang code to use, instead of inferring it from headings.")
@@ -1387,13 +1382,13 @@ if args.textfile:
   titles_and_text = fetch_page_titles_and_text(args.textfile)
   for index, (pagetitle, pagetext) in blib.iter_items(titles_and_text, start,
       end, get_name=lambda title_and_text: title_and_text[0]):
-    newtext, notes = process_text_on_page(pagetitle, index, pagetext)
+    newtext, notes = process_text_on_page(index, pagetitle, pagetext)
     if newtext and newtext != pagetext:
       msg("Page %s %s: Would save with comment = %s" % (index, pagetitle,
         "; ".join(blib.group_notes(notes))))
 
 else:
-  blib.do_pagefile_cats_refs(args, start, end, process_page, edit=True)
+  blib.do_pagefile_cats_refs(args, start, end, process_text_on_page, edit=True, stdin=True)
 
 output_stats_on_tag_set()
 
