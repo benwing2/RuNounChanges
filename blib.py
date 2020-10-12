@@ -211,6 +211,45 @@ def dump(page):
   old = page.get(get_redirect=True)
   msg(u'Contents of [[{0}]]:\n{1}\n----------'.format(page.title(), old))
 
+def handle_process_page_retval(retval, existing_text, pagemsg, verbose, do_diff):
+  has_changed = False
+
+  if retval is None:
+    new = None
+    comment = None
+  else:
+    new, comment = retval
+
+  if type(comment) is list:
+    comment = "; ".join(group_notes(comment))
+
+  if new:
+    new = unicode(new)
+
+    # Canonicalize shaddas when comparing pages so we don't do saves
+    # that only involve different shadda orders.
+    has_changed = reorder_shadda(existing_text) != reorder_shadda(new)
+    if has_changed:
+      if do_diff:
+        pagemsg("Diff:")
+        oldlines = existing_text.splitlines(True)
+        newlines = new.splitlines(True)
+        diff = difflib.unified_diff(oldlines, newlines)
+        dangling_newline = False
+        for line in diff:
+          dangling_newline = not line.endswith('\n')
+          sys.stdout.write(line.encode('utf-8'))
+          if dangling_newline:
+            sys.stdout.write("\n")
+        if dangling_newline:
+          sys.stdout.write("\\ No newline at end of file\n")
+        #pywikibot.showDiff(existing_text, new, context=3)
+      elif verbose:
+        pagemsg("Replacing <%s> with <%s>" % (existing_text, new))
+      assert comment
+
+  return new, comment, has_changed
+
 def expand_text(tempcall, pagetitle, pagemsg, verbose):
   if verbose:
     pagemsg("Expanding text: %s" % tempcall)
@@ -255,58 +294,24 @@ def new_do_edit(index, page, func=None, null=False, save=False, verbose=False, d
         if verbose:
           p.pagemsg("Begin processing")
         retval = func(page, index, parse(page))
-        if retval is None:
-          new = None
-          comment = None
-        else:
-          new, comment = retval
-
-        if type(comment) is list:
-          comment = "; ".join(group_notes(comment))
-
-        if new:
-          new = unicode(new)
-
-          # Canonicalize shaddas when comparing pages so we don't do saves
-          # that only involve different shadda orders.
-          if reorder_shadda(page.text) != reorder_shadda(new):
-            if diff:
-              p.pagemsg('Diff:')
-              oldlines = page.text.splitlines(True)
-              newlines = new.splitlines(True)
-              diff = difflib.unified_diff(oldlines, newlines)
-              dangling_newline = False
-              for line in diff:
-                dangling_newline = not line.endswith('\n')
-                sys.stdout.write(line.encode('utf-8'))
-                if dangling_newline:
-                  sys.stdout.write("\n")
-              if dangling_newline:
-                sys.stdout.write("\\ No newline at end of file\n")
-              #pywikibot.showDiff(page.text, new, context=3)
-            elif verbose:
-              p.pagemsg('Replacing <%s> with <%s>' % (page.text, new))
-            assert comment
-
-            page.text = new
-            if save:
-              p.pagemsg("Saving with comment = %s" % comment)
-              try_repeatedly(lambda: page.save(comment=comment), p.pagemsg,
-                "save page")
-            else:
-              p.pagemsg("Would save with comment = %s" % comment)
-          elif null:
-            p.pagemsg('Purged page cache')
-            page.purge(forcelinkupdate = True)
+        new, comment, has_changed = handle_process_page_retval(retval, page.text, p.pagemsg, verbose, diff)
+        if has_changed:
+          page.text = new
+          if save:
+            p.pagemsg("Saving with comment = %s" % comment)
+            try_repeatedly(lambda: page.save(comment=comment), p.pagemsg,
+              "save page")
           else:
-            p.pagemsg('Skipped, no changes')
+            p.pagemsg("Would save with comment = %s" % comment)
         elif null:
-          p.pagemsg('Purged page cache')
+          p.pagemsg("Purged page cache")
           page.purge(forcelinkupdate = True)
+        elif comment:
+          p.pagemsg("Skipped: %s" % comment)
         else:
-          p.pagemsg('Skipped: %s' % comment)
+          p.pagemsg("Skipped, no changes")
       else:
-        p.pagemsg('Purged page cache')
+        p.pagemsg("Purged page cache")
         page.purge(forcelinkupdate = True)
     except (pywikibot.LockedPage, pywikibot.NoUsername):
       p.errandpagemsg('WARNING: Skipped, page is protected')
@@ -333,58 +338,25 @@ def do_edit(page, index, func=None, null=False, save=False, verbose=False, diff=
         if verbose:
           pagemsg("Begin processing")
         retval = func(page, index, parse(page))
-        if retval is None:
-          new = None
-          comment = None
-        else:
-          new, comment = retval
 
-        if type(comment) is list:
-          comment = "; ".join(group_notes(comment))
-
-        if new:
-          new = unicode(new)
-
-          # Canonicalize shaddas when comparing pages so we don't do saves
-          # that only involve different shadda orders.
-          if reorder_shadda(page.text) != reorder_shadda(new):
-            if diff:
-              pagemsg('Diff:')
-              oldlines = page.text.splitlines(True)
-              newlines = new.splitlines(True)
-              diff = difflib.unified_diff(oldlines, newlines)
-              dangling_newline = False
-              for line in diff:
-                dangling_newline = not line.endswith('\n')
-                sys.stdout.write(line.encode('utf-8'))
-                if dangling_newline:
-                  sys.stdout.write("\n")
-              if dangling_newline:
-                sys.stdout.write("\\ No newline at end of file\n")
-              #pywikibot.showDiff(page.text, new, context=3)
-            elif verbose:
-              pagemsg('Replacing <%s> with <%s>' % (page.text, new))
-            assert comment
-
-            page.text = new
-            if save:
-              pagemsg("Saving with comment = %s" % comment)
-              try_repeatedly(lambda: page.save(comment=comment), pagemsg,
-                "save page")
-            else:
-              pagemsg("Would save with comment = %s" % comment)
-          elif null:
-            pagemsg('Purged page cache')
-            page.purge(forcelinkupdate = True)
+        new, comment, has_changed = handle_process_page_retval(retval, page.text, pagemsg, verbose, diff)
+        if has_changed:
+          page.text = new
+          if save:
+            pagemsg("Saving with comment = %s" % comment)
+            try_repeatedly(lambda: page.save(comment=comment), pagemsg,
+              "save page")
           else:
-            pagemsg('Skipped, no changes')
+            pagemsg("Would save with comment = %s" % comment)
         elif null:
-          pagemsg('Purged page cache')
+          pagemsg("Purged page cache")
           page.purge(forcelinkupdate = True)
+        elif comment:
+          pagemsg("Skipped: %s" % comment)
         else:
-          pagemsg('Skipped: %s' % comment)
+          pagemsg("Skipped, no changes")
       else:
-        pagemsg('Purged page cache')
+        pagemsg("Purged page cache")
         page.purge(forcelinkupdate = True)
     except (pywikibot.LockedPage, pywikibot.NoUsername):
       errandpagemsg('WARNING: Skipped, page is protected')
@@ -563,8 +535,8 @@ def cat_subcats(page, startsort=None, endsort=None, recurse=False):
   for i, current in iter_items(pageiter, startsort, endsort):
     yield i, current
 
-def prefix(prefix, startsort = None, endsort = None, namespace = None):
-  pageiter = site.prefixindex(prefix, namespace)
+def prefix_pages(prefix, startsort = None, endsort = None, namespace = None):
+  pageiter = site.allpages(prefix=prefix, namespace=namespace)
   for i, current in iter_items(pageiter, startsort, endsort):
     yield i, current
 
@@ -784,15 +756,21 @@ def create_argparser(desc, include_pagefile=False, include_stdin=False,
     parser.add_argument("--cats", help="List of categories to process, comma-separated.")
     parser.add_argument("--do-subcats", action="store_true",
       help="When processing categories, do subcategories instead of pages belong to the category.")
+    parser.add_argument("--do-pages-and-subcats", action="store_true",
+      help="When processing categories, do the category and subcategories instead of pages belong to the category.")
     parser.add_argument("--recursive", action="store_true",
       help="In conjunction with --cats, recursively process pages in subcategories.")
     parser.add_argument("--refs", help="List of references to process, comma-separated.")
     parser.add_argument("--specials", help="Special pages to do, comma-separated.")
+    parser.add_argument("--prefix-pages", help="Do pages with these prefixes, comma-separated.")
+    parser.add_argument("--prefix-namespace", help="Namespace of pages to do using --prefix-pages.")
     parser.add_argument("--ref-namespaces", help="List of namespace(s) to restrict --refs to.")
     parser.add_argument("--filter-pages", help="Regex to use to filter page names.")
     parser.add_argument("--filter-pages-not", help="Regex to use to filter page names; only includes pages not matching this regex.")
   if include_stdin:
     parser.add_argument("--stdin", help="Read dump from stdin.", action="store_true")
+    parser.add_argument("--find-regex", help="Stdin data is as output by find_regex.py.", action="store_true")
+    parser.add_argument("--no-output", help="In conjunction with --find-regex, don't output processed text.", action = "store_true")
   return parser
 
 def init_argparser(desc):
@@ -858,8 +836,8 @@ def parse_start_end(startsort, endsort):
 # The pages iterated over will be:
 #
 # 1. Those from the dump on stdin if stdin=True and --stdin is given.
-# 2. Else, the pages in --pages, --pagefile, --cats and/or --refs if any of
-#    those arguments are given.
+# 2. Else, the pages in --pages, --pagefile, --cats, --refs, --specials and/or
+#    --prefix-pages if any of those arguments are given.
 # 3. Else, pages in the category/categories in default_cats[] and/or pages
 #    referring to the page(s) specified in default_refs[], if either argument
 #    is given.
@@ -919,9 +897,26 @@ def do_pagefile_cats_refs(args, start, end, process, default_cats=[],
       if only_lang and "==%s==" % only_lang not in text:
         return None, None
       return process(index, pagetitle, text)
-    parse_dump(sys.stdin, do_process_text_on_page, start, end)
+    if args.find_regex:
+      utf8_stdin = (line.decode("utf-8") for line in sys.stdin)
+      pagetitle_and_text = yield_text_from_find_regex(utf8_stdin, args.verbose)
+      for index, (pagetitle, text) in iter_items(pagetitle_and_text, start, end,
+          get_name=lambda x:x[0]):
+        def pagemsg(txt):
+          msg("Page %s %s: %s" % (index, pagetitle, txt))
+        retval = do_process_text_on_page(index, pagetitle, text)
+        new, comment, has_changed = handle_process_page_retval(retval, text, pagemsg, args.verbose, args.diff)
+        if new and edit:
+          if has_changed:
+            pagemsg("Would save with comment = %s" % comment)
+          if not args.no_output:
+            pagemsg("------- begin text --------")
+            msg(new.rstrip("\n"))
+            msg("------- end text --------")
+    else:
+      parse_dump(sys.stdin, do_process_text_on_page, start, end)
 
-  elif args.pages or args.pagefile or args.cats or args.refs or args.specials:
+  elif args.pages or args.pagefile or args.cats or args.refs or args.specials or args.prefix_pages:
     if args.pages:
       pages = [x.decode("utf-8") for x in re.split(r",(?! )", args.pages)]
       for i, page in iter_items(pages, start, end):
@@ -932,7 +927,11 @@ def do_pagefile_cats_refs(args, start, end, process, default_cats=[],
         process_page(pywikibot.Page(site, page), i)
     if args.cats:
       for cat in [x.decode("utf-8") for x in re.split(r",(?! )", args.cats)]:
-        if args.do_subcats:
+        if args.do_pages_and_subcats:
+          process_page(pywikibot.Page(site, "Category:" + cat), 1)
+          for i, subcat in cat_subcats(cat, start, end, recurse=args.recursive):
+            process_page(subcat, i + 1)
+        elif args.do_subcats:
           for i, subcat in cat_subcats(cat, start, end, recurse=args.recursive):
             process_page(subcat, i)
         else:
@@ -947,11 +946,17 @@ def do_pagefile_cats_refs(args, start, end, process, default_cats=[],
       for special in re.split(",(?! )", args.specials):
         for i, page in query_special_pages(special, start, end):
           process_page(page, i)
+    if args.prefix_pages:
+      for prefix in [x.decode("utf-8") for x in re.split(r",(?! )", args.prefix_pages)]:
+        namespace = args.prefix_namespace
+        if namespace and re.search("^[0-9]+$", namespace):
+          namespace = int(namespace)
+        for i, page in prefix_pages(prefix, start, end, namespace):
+          process_page(page, i)
 
   else:
-    if not args.cats and not args.refs:
-      if not default_cats and not default_refs:
-        raise ValueError("One of --pages, --pagefile, --cats or --refs should be specified")
+    if not default_cats and not default_refs:
+      raise ValueError("One of --pages, --pagefile, --cats, --refs, --specials or --prefix-pages should be specified")
     for cat in default_cats:
       for i, page in cat_articles(cat, start, end):
         process_page(page, i)
@@ -1742,7 +1747,7 @@ def parse_dump(fp, pagecallback, startsort=None, endsort=None,
 
   def mycallback(title, text):
     retval = item_handler.should_process(title)
-    if retval == None:
+    if retval is None:
       raise DumpExitException
     if retval != False:
       pagecallback(retval, title, text)
@@ -1752,3 +1757,64 @@ def parse_dump(fp, pagecallback, startsort=None, endsort=None,
     xml.sax.parse(fp, handler)
   except DumpExitException as e:
     return
+
+def yield_text_from_find_regex(lines, verbose):
+  in_multiline = False
+  while True:
+    try:
+      line = next(lines)
+    except StopIteration:
+      break
+    if in_multiline and re.search("^-+ end text -+$", line):
+      in_multiline = False
+      yield pagename, "".join(templines)
+    elif in_multiline:
+      if line.rstrip('\n').endswith(':'):
+        if verbose:
+          errmsg("WARNING: Possible missing ----- end text -----: %s" % line.rstrip('\n'))
+      templines.append(line)
+    else:
+      line = line.rstrip('\n')
+      if line.endswith(':'):
+        pagename = "Template:%s" % line[:-1]
+        in_multiline = True
+        templines = []
+      else:
+        m = re.search("^Page [0-9]+ (.*): -+ begin text -+$", line)
+        if m:
+          pagename = m.group(1)
+          in_multiline = True
+          templines = []
+        elif verbose:
+          msg("Skipping: %s" % line)
+
+def yield_text_from_diff(lines, verbose):
+  in_multiline = False
+  while True:
+    try:
+      line = next(lines)
+    except StopIteration:
+      break
+    if in_multiline and re.search("^Page [0-9]+", line):
+      in_multiline = False
+      yield pagename, "".join(templines)
+    elif in_multiline:
+      templines.append(line)
+    else:
+      line = line.rstrip('\n')
+      m = re.search("^Page [0-9]+ (.*): Diff:$", line)
+      if m:
+        pagename = m.group(1)
+        in_multiline = True
+        templines = []
+      elif verbose:
+        msg("Skipping: %s" % line)
+
+def yield_pages_in_cats(cats, recursive, start, end):
+  for cat in cats:
+    for index, page in cat_articles(cat, start, end):
+      yield index, page
+    if recursive:
+      for i, subcat in cat_subcats(cat, start, end, recurse=True):
+        for j, page in cat_articles(subcat, start, end):
+          yield j, page
