@@ -18,22 +18,31 @@ def process_page(page, index, lang, langname):
   pagemsg("Processing")
 
   text = unicode(page.text)
-  newtext = re.sub(r"\[\[Category:%s:([^|\[\]{}]*)\|([^|\[\]{}]*)\]\]" % lang, r"{{topics|%s|\1|sort=\2}}" % lang, text)
+  newtext = re.sub(r"\[\[CAT:(%s:.*?)\]\]" % lang, r"[[Category:\1]]", text)
   if newtext != text:
-    notes.append("templatize topical categories with sort key for lang=%s using {{topics}}" % lang)
+    notes.append("standardize [[CAT:%s:...]] to [[Category:%s:...]]" % (lang, lang))
     text = newtext
-  newtext = re.sub(r"\[\[Category:%s:([^|\[\]{}]*)\]\]" % lang, r"{{topics|%s|\1}}" % lang, text)
+  newtext = re.sub(r"\[\[CAT:(%s .*?)\]\]" % langname, r"[[Category:\1]]", text)
   if newtext != text:
-    notes.append("templatize topical categories for lang=%s using {{topics}}" % lang)
+    notes.append("standardize [[CAT:%s ...]] to [[Category:%s ...]]" % (langname, langname))
     text = newtext
-  newtext = re.sub(r"\{\{(?:C|c|top|topic|catlangcode)\|%s\|(.*?)\}\}" % lang, r"{{topics|%s|\1}}" % lang, text)
+
+  newtext = re.sub(r"\[\[Category:%s:([^|\[\]{}]*)\|([^|\[\]{}]*)\]\]" % lang, r"{{C|%s|\1|sort=\2}}" % lang, text)
   if newtext != text:
-    notes.append("standardize templatized topical categories for lang=%s using {{topics}}" % lang)
+    notes.append("templatize topical categories with sort key for lang=%s using {{C}}" % lang)
+    text = newtext
+  newtext = re.sub(r"\[\[Category:%s:([^|\[\]{}]*)\]\]" % lang, r"{{C|%s|\1}}" % lang, text)
+  if newtext != text:
+    notes.append("templatize topical categories for lang=%s using {{C}}" % lang)
+    text = newtext
+  newtext = re.sub(r"\{\{(?:c|top|topic|topics|catlangcode)\|%s\|(.*?)\}\}" % lang, r"{{C|%s|\1}}" % lang, text)
+  if newtext != text:
+    notes.append("standardize templatized topical categories for lang=%s using {{C}}" % lang)
     text = newtext
   while True:
-    newtext = re.sub(r"\{\{topics\|%s\|([^=\[\]{}]*)\}\}\n\{\{topics\|%s\|([^=\[\]{}]*)\}\}" % (lang, lang), r"{{topics|%s|\1|\2}}" % lang, text)
+    newtext = re.sub(r"\{\{C\|%s\|([^=\[\]{}]*)\}\}\n\{\{C\|%s\|([^=\[\]{}]*)\}\}" % (lang, lang), r"{{C|%s|\1|\2}}" % lang, text)
     if newtext != text:
-      notes.append("combine templatized topical categories for lang=%s using {{topics}}" % lang)
+      notes.append("combine templatized topical categories for lang=%s using {{C}}" % lang)
       text = newtext
     else:
       break
