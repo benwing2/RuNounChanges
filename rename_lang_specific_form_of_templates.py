@@ -4437,9 +4437,8 @@ def expand_spec(spec, t, pagemsg):
 
   return newname, expanded_specs, comment
 
-def process_page(page, index, parsed):
+def process_text_on_page(index, pagetitle, text):
   global args
-  pagetitle = unicode(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
@@ -4449,7 +4448,9 @@ def process_page(page, index, parsed):
   # We do want to change user pages with these templates on them.
   if blib.page_should_be_ignored(pagetitle, allow_user_pages=True):
     pagemsg("WARNING: Page has a prefix or suffix indicating it should not be touched, skipping")
-    return None, None
+    return
+
+  parsed = blib.parse_text(text)
 
   for t in parsed.filter_templates():
     origt = unicode(t)
@@ -4562,7 +4563,7 @@ def process_page_for_check_ignore(page, index, template, ignore_type):
         errandpagemsg("WARNING: Couldn't find form-of template on page: %s" % unicode(t))
 
 parser = blib.create_argparser("Rename various lang-specific form-of templates to more general variants",
-    include_pagefile=True)
+    include_pagefile=True, include_stdin=True)
 parser.add_argument('--do-all', help="Do all templates instead of default list",
     action="store_true")
 parser.add_argument('--do-specified', help="Do specified comma-separated templates instead of default list")
@@ -4596,5 +4597,5 @@ if args.check_ignores:
               ignore_type)
 
 else:
-  blib.do_pagefile_cats_refs(args, start, end, process_page, edit=True,
+  blib.do_pagefile_cats_refs(args, start, end, process_text_on_page, edit=True, stdin=True,
       default_refs=["Template:%s" % template for template in templates_to_actually_do])

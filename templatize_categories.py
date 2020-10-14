@@ -6,10 +6,7 @@ import pywikibot, re, sys, codecs, argparse
 import blib
 from blib import getparam, rmparam, tname, pname, msg, site
 
-import uklib
-
-def process_page(page, index, lang, langname):
-  pagetitle = unicode(page.title())
+def process_text_on_page(index, pagetitle, text, lang, langname):
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
@@ -17,7 +14,6 @@ def process_page(page, index, lang, langname):
 
   pagemsg("Processing")
 
-  text = unicode(page.text)
   newtext = re.sub(r"\[\[CAT:(%s:.*?)\]\]" % lang, r"[[Category:\1]]", text)
   if newtext != text:
     notes.append("standardize [[CAT:%s:...]] to [[Category:%s:...]]" % (lang, lang))
@@ -69,12 +65,12 @@ def process_page(page, index, lang, langname):
 
   return text, notes
 
-parser = blib.create_argparser(u"Templatize categories", include_pagefile=True)
+parser = blib.create_argparser(u"Templatize categories", include_pagefile=True, include_stdin=True)
 parser.add_argument("--lang", help="Code of language to templatize", required=True)
 parser.add_argument("--langname", help="Name of language to templatize", required=True)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-def do_process_page(page, index, parsed):
-  return process_page(page, index, args.lang, args.langname)
-blib.do_pagefile_cats_refs(args, start, end, do_process_page, default_cats=[args.langname + " lemmas"], edit=True)
+def do_process_text_on_page(index, pagetitle, text):
+  return process_text_on_page(index, pagetitle, text, args.lang, args.langname)
+blib.do_pagefile_cats_refs(args, start, end, do_process_page, default_cats=[args.langname + " lemmas"], edit=True, stdin=True)

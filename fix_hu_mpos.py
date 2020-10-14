@@ -6,8 +6,7 @@ import pywikibot, re, sys, codecs, argparse
 import blib
 from blib import getparam, rmparam, tname, pname, msg, site
 
-def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
+def process_text_on_page(index, pagetitle, text):
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
@@ -15,7 +14,6 @@ def process_page(page, index, parsed):
 
   notes = []
 
-  text = unicode(page.text)
   retval = blib.find_modifiable_lang_section(text, "Hungarian", pagemsg)
   if retval is None:
     pagemsg("WARNING: Couldn't find Hungarian section")
@@ -60,9 +58,9 @@ def process_page(page, index, parsed):
   return text, notes
 
 parser = blib.create_argparser("Correct n=sg -> n=isg in {{hu-infl-nom}} in the context of {{inflection of|hu|...|mpos|poss}}",
-  include_pagefile=True)
+  include_pagefile=True, include_stdin=True)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-blib.do_pagefile_cats_refs(args, start, end, process_page, edit=True,
+blib.do_pagefile_cats_refs(args, start, end, process_text_on_page, edit=True, stdin=True,
   default_cats=["Hungarian terms with a singularia tantum parameter"])

@@ -7,8 +7,6 @@ import pywikibot, re, sys, codecs, argparse
 import blib
 from blib import getparam, rmparam, tname, pname, msg, site
 
-import belib
-
 hu_lemma_template_mapping = {
   "hu-noun": "noun",
   "hu-verb": "verb",
@@ -77,8 +75,7 @@ def add_category(secbody, sectail, pagemsg, notes, cat):
   pagemsg("Added %s" % newtext)
   return secbody.rstrip("\n") + "\n", "\n" + sectail + "\n\n" + separator.lstrip("\n")
 
-def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
+def process_text_on_page(index, pagetitle, text):
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
@@ -89,7 +86,6 @@ def process_page(page, index, parsed):
     return
   hu_pages_seen.add(pagetitle)
   pagemsg("Processing")
-  text = unicode(page.text)
 
   retval = blib.find_modifiable_lang_section(text, "Hungarian", pagemsg)
   if retval is None:
@@ -177,12 +173,12 @@ def process_page(page, index, parsed):
   return "".join(sections), notes
 
 parser = blib.create_argparser(u"Add multi-lemma categories to Hungarian terms",
-    include_pagefile=True)
+    include_pagefile=True, include_stdin=True)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-blib.do_pagefile_cats_refs(args, start, end, process_page,
-    default_cats=["Hungarian lemmas", "Hungarian non-lemma forms"], edit=True)
+blib.do_pagefile_cats_refs(args, start, end, process_text_on_page,
+    default_cats=["Hungarian lemmas", "Hungarian non-lemma forms"], edit=True, stdin=True)
 
 for pair, count in sorted(hu_pos_pos_pairs.items(), key=lambda x:-x[1]):
   msg("| %s || %s || %s" % (pair[0], pair[1], count))

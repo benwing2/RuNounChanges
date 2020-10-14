@@ -10,8 +10,7 @@ AA = u"\u093e"
 M = u"\u0901"
 IND_AA = u"आ"
 
-def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
+def process_text_on_page(index, pagetitle, text):
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
@@ -22,6 +21,8 @@ def process_page(page, index, parsed):
   if ":" in pagetitle:
     pagemsg("Skipping non-mainspace page")
     return
+
+  parsed = blib.parse_text(text)
 
   for t in parsed.filter_templates():
     origt = unicode(t)
@@ -43,9 +44,9 @@ def process_page(page, index, parsed):
   return unicode(parsed), notes
 
 parser = blib.create_argparser(u"Convert old Hindi adjective declension templates to new ones",
-    include_pagefile=True)
+    include_pagefile=True, include_stdin=True)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-blib.do_pagefile_cats_refs(args, start, end, process_page,
-    default_refs=["Template:hi-adj-1", "Template:hi-adj-auto"], edit=True)
+blib.do_pagefile_cats_refs(args, start, end, process_text_on_page,
+    default_refs=["Template:hi-adj-1", "Template:hi-adj-auto"], edit=True, stdin=True)

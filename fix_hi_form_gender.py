@@ -6,15 +6,16 @@ import pywikibot, re, sys, codecs, argparse
 import blib
 from blib import getparam, rmparam, tname, pname, msg, site
 
-def process_page(page, index, parsed):
+def process_text_on_page(index, pagetitle, text):
   global args
-  pagetitle = unicode(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
+  pagemsg("Processing")
+
   notes = []
 
-  pagemsg("Processing")
+  parsed = blib.parse_text(text)
 
   for t in parsed.filter_templates():
     tn = tname(t)
@@ -39,9 +40,9 @@ def process_page(page, index, parsed):
   return unicode(parsed), notes
 
 parser = blib.create_argparser("Fix genders in Hindi noun/verb/adjective forms",
-  include_pagefile=True)
+  include_pagefile=True, include_stdin=True)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-blib.do_pagefile_cats_refs(args, start, end, process_page, edit=True,
+blib.do_pagefile_cats_refs(args, start, end, process_text_on_page, edit=True, stdin=True,
     default_cats=["Pages with module errors"])
