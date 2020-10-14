@@ -246,7 +246,7 @@ def handle_process_page_retval(retval, existing_text, pagemsg, verbose, do_diff)
         #pywikibot.showDiff(existing_text, new, context=3)
       elif verbose:
         pagemsg("Replacing <%s> with <%s>" % (existing_text, new))
-      assert comment
+      assert comment, "Text has changed without a comment specified"
 
   return new, comment, has_changed
 
@@ -906,13 +906,19 @@ def do_pagefile_cats_refs(args, start, end, process, default_cats=[],
           msg("Page %s %s: %s" % (index, pagetitle, txt))
         retval = do_process_text_on_page(index, pagetitle, text)
         new, comment, has_changed = handle_process_page_retval(retval, text, pagemsg, args.verbose, args.diff)
-        if new and edit:
+        new = new or text
+        if has_changed:
+          assert edit, "Changed text without edit=True given"
+        if edit:
           if has_changed:
             pagemsg("Would save with comment = %s" % comment)
+          else:
+            pagemsg("Skipped, no changes")
           if not args.no_output:
-            pagemsg("------- begin text --------")
-            msg(new.rstrip("\n"))
-            msg("------- end text --------")
+            final_newline = ""
+            if not new.endswith("\n"):
+              final_newline = "\n"
+            pagemsg("------- begin text --------%s%s------- end text --------" % (new, final_newline))
     else:
       parse_dump(sys.stdin, do_process_text_on_page, start, end)
 
