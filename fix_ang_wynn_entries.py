@@ -6,10 +6,13 @@ import pywikibot, re, sys, codecs, argparse
 import blib
 from blib import getparam, rmparam, msg, site, tname, pname
 
-def process_page(index, pagetitle, text):
+def process_text_on_page(index, pagetitle, text):
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
+  notes = []
+
+  origtext = text
   parsed = blib.parse_text(text)
   head = None
   for t in parsed.filter_templates():
@@ -23,9 +26,6 @@ def process_page(index, pagetitle, text):
     if newhead:
       if head:
         pagemsg("WARNING: Saw head=%s and newhead=%s, skipping" % (head, newhead))
-        pagemsg("------- begin text --------")
-        msg(text.rstrip('\n'))
-        msg("------- end text --------")
         return
       head = newhead
   if u"ƿ" not in head:
@@ -37,37 +37,26 @@ def process_page(index, pagetitle, text):
       if saw_altspell:
         pagemsg("WARNING: Saw multiple {{alternative spelling of}}, skipping: %s and %s" % (
           unicode(saw_altspell), unicode(t)))
-        pagemsg("------- begin text --------")
-        msg(text.rstrip('\n'))
-        msg("------- end text --------")
         return
       saw_altspell = unicode(t)
       if getparam(t, "1") != "ang":
         pagemsg("WARNING: {{alternative spelling of}} without language 'ang', skipping: %s" % unicode(t))
-        pagemsg("------- begin text --------")
-        msg(text.rstrip('\n'))
-        msg("------- end text --------")
         return
       param2 = getparam(t, "2")
       should_param2 = blib.remove_links(head).replace(u"ƿ", "w")
       if param2 != should_param2:
         origt = unicode(t)
         t.add("2", should_param2)
-        pagemsg("Replacing %s with %s" % (origt, unicode(t)))
+        pagemsg("Replaced %s with %s" % (origt, unicode(t)))
+        notes.append("fix 2= in {{alternative spelling of}} in wynn Old English entries")
   text = re.sub("\n\n+", "\n\n", unicode(parsed))
-  pagemsg("------- begin text --------")
-  msg(text.rstrip('\n'))
-  msg("------- end text --------")
-  return
+  if origtext != text and not notes:
+    notes.append("condense 3+ newlines to 2")
+  return text, notes
 
-parser = blib.create_argparser("Fix Old English adjective headwords to new format")
-parser.add_argument('--direcfile', help="File containing output from find_regex.py.")
+parser = blib.create_argparser("Fix {{alternative spelling of}} in wynn Old English entries",
+  include_pagefile=True, include_stdin=True)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-lines = codecs.open(args.direcfile, "r", "utf-8")
-
-pagename_and_text = blib.yield_text_from_find_regex(lines, args.verbose)
-for index, (pagename, text) in blib.iter_items(pagename_and_text, start, end,
-    get_name=lambda x:x[0]):
-  process_page(index, pagename, text)
+blib.do_pagefile_cats_refs(args, start, end, process_text_on_page, edit=True, stdin=True)

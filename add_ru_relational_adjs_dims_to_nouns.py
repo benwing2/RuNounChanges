@@ -235,11 +235,10 @@ def snarf_diminutives(index, pagetitle, text):
   else:
     process_section_for_diminutive_snarf(index, pagetitle, secbody, False)
 
-parser = blib.create_argparser("Add relational adjectives or diminutives to corresponding Russian noun",
-  include_pagefile=True)
-parser.add_argument('--direcfile', help="File of adjectives/diminutives and nouns")
+parser = blib.create_argparser("Snarf Russian relational adjectives or diminutives or add to corresponding noun",
+  include_pagefile=True, include_stdin=True)
+parser.add_argument('--direcfile', help="File of adjectives/diminutives and nouns, from a previous run of same script")
 parser.add_argument('--pos', help="Part of speech ('reladj' or 'dim')", required=True)
-parser.add_argument('--textfile', help="File of find_regex output")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
@@ -256,12 +255,10 @@ if args.direcfile:
       add_rel_adj_or_dim_to_noun(index, adjs_or_dims, noun, 'adj', 'relational adjective')
     else:
       add_rel_adj_or_dim_to_noun(index, adjs_or_dims, noun, 'dim', 'diminutive')
-elif args.textfile:
-  lines = codecs.open(args.textfile, "r", "utf-8")
-  pagename_and_text = blib.yield_text_from_find_regex(lines, args.verbose)
-  for index, (pagename, text) in blib.iter_items(pagename_and_text, start, end,
-      get_name=lambda x:x[0]):
+else:
+  def process_text_on_page(index, pagename, text):
     if args.pos == "reladj":
       snarf_relational_adjs(index, pagename, text)
     else:
       snarf_diminutives(index, pagename, text)
+  blib.do_pagefile_cats_refs(args, start, end, process_text_on_page, stdin=True)

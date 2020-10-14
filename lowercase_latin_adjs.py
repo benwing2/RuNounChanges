@@ -8,7 +8,7 @@ from blib import getparam, rmparam, msg, errandmsg, site, tname, pname
 
 import lalib
 
-def process_page(index, pagename, text):
+def process_text_on_page(index, pagename, text):
   pagename = pagename[0].lower() + pagename[1:]
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagename, txt))
@@ -17,11 +17,10 @@ def process_page(index, pagename, text):
 
   pagemsg("Processing")
 
+  notes = []
+
   if "==Etymology 1==" in text:
     pagemsg("WARNING: Saw Etymology 1, can't handle yet")
-    pagemsg("------- begin text --------")
-    msg(text.rstrip('\n'))
-    msg("------- end text --------")
     return
 
   parsed = blib.parse_text(text)
@@ -36,16 +35,14 @@ def process_page(index, pagename, text):
         param1 = param1[0].lower() + param1[1:]
         origt = unicode(t)
         t.add("1", param1)
-        pagemsg("Replacing %s with %s" % (origt, unicode(t)))
+        pagemsg("Replaced %s with %s" % (origt, unicode(t)))
   text = unicode(parsed)
 
   subsections = re.split("(^==+[^=\n]+==+\n)", text, 0, re.M)
   if len(subsections) < 3:
     pagemsg("Something wrong, only one subsection")
-    pagemsg("------- begin text --------")
-    msg(text.rstrip('\n'))
-    msg("------- end text --------")
     return
+  notes.append("lowercase Latin adjective")
   if orig_headword:
     alter_line = "* {{alter|la|%s||alternative case form}}" % orig_headword
     if "==Alternative forms==" in subsections[1]:
@@ -55,20 +52,13 @@ def process_page(index, pagename, text):
         "===Alternative forms===\n",
         alter_line + "\n\n"
       ]
+    notes.append("add uppercase equivalent as alternative case form")
 
-  text = "".join(subsections)
-  pagemsg("------- begin text --------")
-  msg(text.rstrip('\n'))
-  msg("------- end text --------")
+  return text, notes
 
-parser = blib.create_argparser("Lowercase adjectives from find_regex.py output")
-parser.add_argument('--direcfile', help="File containing output from find_regex.py.")
+parser = blib.create_argparser("Lowercase Latin adjectives; use with find_regex.py")
+    include_pagefile=True, include_stdin=True)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-lines = codecs.open(args.direcfile, "r", "utf-8")
-
-pagename_and_text = blib.yield_text_from_find_regex(lines, args.verbose)
-for index, (pagename, text) in blib.iter_items(pagename_and_text, start, end,
-    get_name=lambda x:x[0]):
-  process_page(index, pagename, text)
+blib.do_pagefile_cats_refs(args, start, end, process_text_on_page, edit=True, stdin=True)

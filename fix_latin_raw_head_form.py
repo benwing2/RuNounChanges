@@ -27,13 +27,15 @@ pos_to_template = {
   "suffix forms": "la-suffix-form",
 }
 
-def process_page(index, pagename, text):
+def process_text_on_page(index, pagename, text):
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagename, txt))
   def errandpagemsg(txt):
     errandmsg("Page %s %s: %s" % (index, pagename, txt))
 
   pagemsg("Processing")
+
+  notes = []
 
   parsed = blib.parse_text(text)
   for t in parsed.filter_templates():
@@ -52,20 +54,13 @@ def process_page(index, pagename, text):
       rmparam(t, "2")
       t.add("FIXME", "1")
       pagemsg("Replaced %s with %s" % (origt, unicode(t)))
-  text = unicode(parsed)
+      notes.append("replace {{head|la|%s}} with {{%s}}" % (pos, tname(t)))
 
-  pagemsg("------- begin text --------")
-  msg(text.rstrip('\n'))
-  msg("------- end text --------")
+  return unicode(parsed), notes
 
-parser = blib.create_argparser("Fix Latin raw-form {{head|la|... form}} usages")
-parser.add_argument('--direcfile', help="File containing output from find_regex.py.")
+parser = blib.create_argparser("Fix Latin raw-form {{head|la|... form}} usages",
+    include_pagefile=True, include_stdin=True)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-lines = codecs.open(args.direcfile, "r", "utf-8")
-
-pagename_and_text = blib.yield_text_from_find_regex(lines, args.verbose)
-for index, (pagename, text) in blib.iter_items(pagename_and_text, start, end,
-    get_name=lambda x:x[0]):
-  process_page(index, pagename, text)
+blib.do_pagefile_cats_refs(args, start, end, process_text_on_page, edit=True, stdin=True)

@@ -8,7 +8,7 @@ from blib import getparam, rmparam, msg, errandmsg, site, tname, pname
 
 import lalib
 
-def process_page(index, pagename, text):
+def process_text_on_page(index, pagename, text):
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagename, txt))
   def errandpagemsg(txt):
@@ -22,25 +22,13 @@ def process_page(index, pagename, text):
   else:
     separator = ""
 
-  def combine_text_separator(text, separator):
-    if separator:
-      return (text + separator).rstrip('\n') + '\n'
-    else:
-      return text.rstrip('\n')
-
   if "==Etymology 1==" in text:
     pagemsg("Already saw multiple etym sections")
-    pagemsg("------- begin text --------")
-    msg(combine_text_separator(text, separator))
-    msg("------- end text --------")
     return
 
   subsections = re.split("(^==+[^=\n]+==+\n)", text, 0, re.M)
   if len(subsections) < 3:
     pagemsg("WARNING: Something wrong, only one subsection")
-    pagemsg("------- begin text --------")
-    msg(combine_text_separator(text, separator))
-    msg("------- end text --------")
     return
 
   def increase_indent(subsecs):
@@ -75,18 +63,16 @@ def process_page(index, pagename, text):
     text = ("\n===Etymology 1===\n\n" + new_subsecs1.strip() +
       "\n\n===Etymology 2===\n\n" + new_subsecs2.strip())
 
-  pagemsg("------- begin text --------")
-  msg(combine_text_separator(text, separator))
-  msg("------- end text --------")
+  notes.append("double Latin etymology section")
 
-parser = blib.create_argparser("Double etym sections in find_regex.py output")
-parser.add_argument('--direcfile', help="File containing output from find_regex.py.")
+  if separator:
+    return (text + separator).rstrip('\n') + '\n\n', notes
+  else:
+    return text.rstrip('\n'), notes
+
+parser = blib.create_argparser("Double latin etym sections",
+    include_pagefile=True, include_stdin=True)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-lines = codecs.open(args.direcfile, "r", "utf-8")
-
-pagename_and_text = blib.yield_text_from_find_regex(lines, args.verbose)
-for index, (pagename, text) in blib.iter_items(pagename_and_text, start, end,
-    get_name=lambda x:x[0]):
-  process_page(index, pagename, text)
+blib.do_pagefile_cats_refs(args, start, end, process_text_on_page, edit=True, stdin=True)

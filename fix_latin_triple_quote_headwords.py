@@ -16,13 +16,15 @@ header_to_headword_form_template = {
   "Proper noun": "la-proper noun-form",
 }
 
-def process_page(index, pagename, text):
+def process_text_on_page(index, pagename, text):
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagename, txt))
   def errandpagemsg(txt):
     errandmsg("Page %s %s: %s" % (index, pagename, txt))
 
   pagemsg("Processing")
+
+  notes = []
 
   subsections = re.split("(^==+[^=\n]+==+\n)", text, 0, re.M)
   if len(subsections) < 3:
@@ -41,6 +43,7 @@ def process_page(index, pagename, text):
           header, m.group(0)))
         return m.group(0)
       template = header_to_headword_form_template[header]
+      notes.append("replace raw %s headword with {{%s}}" % (header, template))
       if m.group(2):
         return "{{%s|%s|g=%s}}" % (template, headword, m.group(2))
       else:
@@ -49,19 +52,11 @@ def process_page(index, pagename, text):
     subsections[k] = re.sub(r"^'''(.*?)'''(?: \{\{g\|([^{}|\n]*?)\}\})?$",
         replace_triple_quote_header, subsections[k], 0, re.M)
 
-  text = "".join(subsections)
-  pagemsg("------- begin text --------")
-  msg(text.rstrip('\n'))
-  msg("------- end text --------")
+  return "".join(subsections), notes
 
-parser = blib.create_argparser("Fix raw Latin triple-quote headwords based on section header")
-parser.add_argument('--direcfile', help="File containing output from find_regex.py.")
+parser = blib.create_argparser("Fix raw Latin triple-quote headwords based on section header",
+    include_pagefile=True, include_stdin=True)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-lines = codecs.open(args.direcfile, "r", "utf-8")
-
-pagename_and_text = blib.yield_text_from_find_regex(lines, args.verbose)
-for index, (pagename, text) in blib.iter_items(pagename_and_text, start, end,
-    get_name=lambda x:x[0]):
-  process_page(index, pagename, text)
+blib.do_pagefile_cats_refs(args, start, end, process_text_on_page, edit=True, stdin=True)

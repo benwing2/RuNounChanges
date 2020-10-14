@@ -55,7 +55,7 @@ def canonicalize_tr(tr):
   return tr
 
 
-def process_page_text(index, pagetitle, text):
+def process_text_on_page(index, pagetitle, text):
   global args
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
@@ -162,31 +162,10 @@ def process_page_text(index, pagetitle, text):
 
   return unicode(parsed), notes
 
-def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
-  text = unicode(page.text)
-  return process_page_text(index, pagetitle, text)
-
-def process_find_regex_page(index, pagetitle, text):
-  def pagemsg(txt):
-    msg("Page %s %s: %s" % (index, pagetitle, txt))
-  newtext, notes = process_page_text(index, pagetitle, text)
-  pagemsg("------- begin text --------")
-  msg(text.rstrip('\n'))
-  msg("------- end text --------")
-
 parser = blib.create_argparser("Remove redundant translit from Hindi headwords and check translit against phonetic respelling",
-  include_pagefile=True)
+  include_pagefile=True, include_stdin=True)
 parser.add_argument('--direcfile', help="File containing output from find_regex.py.")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-if args.direcfile:
-  lines = codecs.open(args.direcfile, "r", "utf-8")
-
-  pagename_and_text = blib.yield_text_from_find_regex(lines, args.verbose)
-  for index, (pagename, text) in blib.iter_items(pagename_and_text, start, end,
-      get_name=lambda x:x[0]):
-    process_find_regex_page(index, pagename, text)
-blib.do_pagefile_cats_refs(args, start, end, process_page, edit=True,
-  default_cats=["Hindi lemmas"])
+blib.do_pagefile_cats_refs(args, start, end, process_text_on_page, default_cats=["Hindi lemmas"], edit=True, stdin=True)

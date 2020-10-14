@@ -8,11 +8,13 @@ from blib import getparam, rmparam, tname, msg, site
 
 import lalib
 
-def process_page(index, pagetitle, text):
+def process_text_on_page(index, pagetitle, text):
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
   pagemsg("Processing")
+
+  notes = []
 
   def fix_up_section(sectext, indent):
     subsections = re.split("(^%s[^=\n]+=+\n)" % indent, sectext, 0, re.M)
@@ -56,6 +58,8 @@ def process_page(index, pagetitle, text):
         "\n\n%sNoun%s\n{{la-noun|%s%s}}\n\n%s\n%s=Declension=%s\n{{la-ndecl|%s}}\n\n" % (
           indent, indent, param1, gspec, "".join(defn_parts), indent, indent,
           param1))
+      notes.append("add noun section with {{la-noun|%s|%s}} to substantivized Latin adjective" %
+          (param1, gspec))
     if not saw_adecl:
       pagemsg("WARNING: Saw no {{la-adecl}} in section")
     return "".join(subsections)
@@ -71,18 +75,11 @@ def process_page(index, pagetitle, text):
       etym_sections[k] = fix_up_section(etym_sections[k], "====")
     text = "".join(etym_sections)
 
-  pagemsg("------- begin text --------")
-  msg(text.rstrip('\n'))
-  msg("------- end text --------")
+  return text, notes
 
-parser = blib.create_argparser("Lowercase adjectives from find_regex.py output")
-parser.add_argument('--direcfile', help="File containing output from find_regex.py.")
+parser = blib.create_argparser("Add noun to substantivized Latin adjectives",
+    include_pagefile=True, include_stdin=True)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-lines = codecs.open(args.direcfile, "r", "utf-8")
-
-pagename_and_text = blib.yield_text_from_find_regex(lines, args.verbose)
-for index, (pagename, text) in blib.iter_items(pagename_and_text, start, end,
-    get_name=lambda x:x[0]):
-  process_page(index, pagename, text)
+blib.do_pagefile_cats_refs(args, start, end, process_text_on_page, edit=True, stdin=True)

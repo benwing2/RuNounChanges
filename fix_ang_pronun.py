@@ -57,7 +57,7 @@ def process_section(index, pagetitle, sectext):
     pagemsg("WARNING: Didn't see pronunciation for headword %s <new> {{ang-IPA|%s}} <end>" % (
       ",".join(head), "|".join(head)))
 
-def process_page(index, pagetitle, text):
+def process_text_on_page(index, pagetitle, text):
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
@@ -136,8 +136,7 @@ def process_section_for_modification(index, pagetitle, sectext, indent_level, ne
   subsecs[k:k] = [newsec]
   return "".join(subsecs)
 
-def process_page_for_modification(page, index, text, new_pronuns):
-  pagetitle = unicode(page.title())
+def process_page_for_modification(index, pagetitle, text, new_pronuns):
   if pagetitle not in new_pronuns:
     return
   def pagemsg(txt):
@@ -145,7 +144,6 @@ def process_page_for_modification(page, index, text, new_pronuns):
 
   pagemsg("Processing")
 
-  text = unicode(page.text)
   retval = blib.find_modifiable_lang_section(text, "Old English", pagemsg)
   if retval is None:
     pagemsg("WARNING: Couldn't find Old English section")
@@ -180,19 +178,14 @@ def process_page_for_modification(page, index, text, new_pronuns):
   return "".join(sections), "add pronunciation(s) to Old English lemma(s)"
 
 parser = blib.create_argparser("Find Old English heads and pronuns or fix them",
-    include_pagefile=True)
-parser.add_argument('--direcfile', help="File containing output from find_regex.py.")
+    include_pagefile=True, include_stdin=True)
 parser.add_argument('--new-pronuns', help="File containing new pronuns.")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
 if not args.new_pronuns:
-  lines = codecs.open(args.direcfile, "r", "utf-8")
-
-  pagename_and_text = blib.yield_text_from_find_regex(lines, args.verbose)
-  for index, (pagename, text) in blib.iter_items(pagename_and_text, start, end,
-      get_name=lambda x:x[0]):
-    process_page(index, pagename, text)
+  blib.do_pagefile_cats_refs(args, start, end, process_text_on_page,
+      default_cats=["Old English lemmas"], stdin=True)
 else:
   lines = codecs.open(args.new_pronuns, "r", "utf-8")
   new_pronuns = {}
@@ -224,8 +217,8 @@ else:
       else:
         new_pronuns[pagename].append((headword, new_pronun))
 
-  def do_process_page_for_modification(page, index, parsed):
-    return process_page_for_modification(page, index, parsed, new_pronuns)
+  def do_process_page_for_modification(index, pagetitle, text):
+    return process_page_for_modification(index, pagetitle, text, new_pronuns)
 
   blib.do_pagefile_cats_refs(args, start, end, do_process_page_for_modification,
-      default_cats=["Old English lemmas"], edit=1)
+      default_cats=["Old English lemmas"], stdin=True, edit=True)

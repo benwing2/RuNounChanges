@@ -123,25 +123,15 @@ def check_for_bad_subsections(secbody, pagemsg):
         pagemsg("WARNING: Saw %s at level %s but expected %s" % (
           subsections[k].strip(), indentation[k], expected_indentation))
 
-def process_sectext(index, pagetitle, secbody):
+def process_text_on_page(index, pagetitle, text):
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
-  check_for_bad_etym_sections(secbody, pagemsg)
-  check_for_bad_subsections(secbody, pagemsg)
+  check_for_bad_etym_sections(text, pagemsg)
+  check_for_bad_subsections(text, pagemsg)
 
-parser = blib.create_argparser("Find misformatted sections of various sorts")
-#    include_pagefile=True, include_stdin=True)
-#parser.add_argument('--lang', help="Language to look under.", required=True)
-parser.add_argument('--direcfile', help="File containing output from find_regex.py.", required=True)
+parser = blib.create_argparser("Find misformatted sections of various sorts; should be run on language-specific output from find_regex.py",
+  include_pagefile=True, include_stdin=True)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-lines = codecs.open(args.direcfile, "r", "utf-8")
-
-pagename_and_text = blib.yield_text_from_find_regex(lines, args.verbose)
-for index, (pagename, text) in blib.iter_items(pagename_and_text, start, end,
-    get_name=lambda x:x[0]):
-  process_sectext(index, pagename, text)
-#
-#blib.do_pagefile_cats_refs(args, start, end, process_text_on_page,
-#    stdin=True, default_cats=["Latin lemmas"])
+blib.do_pagefile_cats_refs(args, start, end, process_text_on_page, stdin=True)
