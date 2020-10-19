@@ -15,9 +15,15 @@ start, end = blib.parse_start_end(args.start, args.end)
 
 def process_page(page, index):
   global args
-  if args.ignore_non_mainspace and ':' in unicode(page.title()):
+  pagetitle = unicode(page.title())
+  def pagemsg(txt):
+    msg("Page %s %s: %s" % (index, pagetitle, txt))
+  if args.ignore_non_mainspace and ':' in pagetitle:
     return
-  # msg("Page %s %s: Null-saving" % (index, unicode(page.title())))
+  if not blib.safe_page_exists(page, pagemsg):
+    pagemsg("WARNING: Page doesn't exist, null-saving it would create it")
+    return
+  # pagemsg("Null-saving")
   page.save(comment="null save")
 
 blib.do_pagefile_cats_refs(args, start, end, process_page)
