@@ -17,6 +17,20 @@
 import blib, re, codecs
 from blib import msg, errmsg, site
 import pywikibot
+from pywikibot.data.api import APIError
+
+def delete_page(page, comment, errandpagemsg):
+  for i in range(11):
+    try:
+      page.delete(comment)
+      return
+    except APIError as e:
+      if "missingtitle" in unicode(e):
+        errandpagemsg("WARNING: APIError due to page no longer existing, skipping: %s" % e)
+        return
+      if i == 10:
+        raise e
+      errandpagemsg("WARNING: APIError, try #%s: %s" % (i + 1, e))
 
 def process_page(page, index, args, comment):
   pagetitle = unicode(page.title())
@@ -37,7 +51,7 @@ def process_page(page, index, args, comment):
   this_comment = comment or 'delete empty category'
   if page.exists():
     if args.save:
-      page.delete('%s (content was "%s")' % (this_comment, unicode(page.text)))
+      delete_page(page, '%s (content was "%s")' % (this_comment, unicode(page.text)), errandpagemsg)
       errandpagemsg("Deleted (comment=%s)" % this_comment)
     else:
       pagemsg("Would delete (comment=%s)" % this_comment)
