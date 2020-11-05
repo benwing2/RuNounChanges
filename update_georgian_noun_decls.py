@@ -6,8 +6,6 @@ import pywikibot, re, sys, codecs, argparse
 import blib
 from blib import getparam, rmparam, msg, errandmsg, site, tname, pname
 
-import lalib
-
 def process_text_on_page(index, pagetitle, text):
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
