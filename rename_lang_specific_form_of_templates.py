@@ -2251,6 +2251,32 @@ is_specs = [
 
 it_specs = [
   ("it-adj form of", romance_adj_form_of("it")),
+  ("it-noun-pl", (
+    "head",
+    ("comment", "rename {{__TEMPNAME__}} to {{head|it|noun plural form}}"),
+    ("error-if", ("present-except", ["head", "1", "g"])),
+    ("set", "1", [
+      "it",
+      "noun plural form",
+    ]),
+    ("copy", "head"),
+    ("set", "g",
+      ("lookup", "1", {
+        "m": "m-p",
+        "f": "f-p",
+        "mf": "mf-p",
+        "": [],
+      }),
+    ),
+    ("set", "g",
+      ("lookup", "g", {
+        "m": "m-p",
+        "f": "f-p",
+        "mf": "mf-p",
+        "": [],
+      }),
+    ),
+  ))
 ]
 
 ja_specs = [
