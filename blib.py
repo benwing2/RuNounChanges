@@ -507,14 +507,19 @@ def get_contributions(user, startsort=None, endsort=None, max=None, ns=None):
     yield i, current
 
 def yield_articles(page, seen, startsort=None, prune_cats_regex=None, recurse=False):
-  # Doesn't allow for prune_cats_regex, doesn't correctly ignore subcats and pages that may be seen multiple times
-  # for article in page.articles(startsort=startsort, recurse=recurse):
-  #   yield article
-  for subcat in yield_subcats(page, seen, prune_cats_regex=prune_cats_regex, do_this_page=True, recurse=recurse):
-    for article in subcat.articles(startsort=startsort):
+  if not recurse:
+    # Only use when non-recursive. Has a recurse= flag but doesn't allow for prune_cats_regex, doesn't correctly
+    # ignore subcats and pages that may be seen multiple times.
+    for article in page.articles(startsort=startsort):
       if article not in seen:
         seen.add(article)
         yield article
+  else:
+    for subcat in yield_subcats(page, seen, prune_cats_regex=prune_cats_regex, do_this_page=True, recurse=True):
+      for article in subcat.articles(startsort=startsort):
+        if article not in seen:
+          seen.add(article)
+          yield article
 
 def raw_cat_articles(page, seen, startsort=None, prune_cats_regex=None, recurse=False):
   if type(page) is list:
@@ -959,7 +964,7 @@ def do_pagefile_cats_refs(args, start, end, process, default_cats=[],
             final_newline = ""
             if not new.endswith("\n"):
               final_newline = "\n"
-            pagemsg("------- begin text --------%s%s------- end text --------" % (new, final_newline))
+            pagemsg("------- begin text --------\n%s%s------- end text --------" % (new, final_newline))
     else:
       parse_dump(sys.stdin, do_process_text_on_page, start, end)
 
