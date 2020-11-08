@@ -72,11 +72,17 @@ def base_default_verb_forms(verb):
 
   return s_form, ing_form, ed_form
 
+def split_first_rest(form):
+  m = re.search("^(.*?)( .*)$", form)
+  if m:
+    return m.groups()
+  else:
+    return None, None
+
 def default_verb_forms(verb):
   full_s_form, full_ing_form, full_ed_form = base_default_verb_forms(verb)
   if " " in verb:
-    m = re.search("^(.*?)( .*)$", verb)
-    first, rest = m.groups()
+    first, rest = split_first_rest(verb)
     first_s_form, first_ing_form, first_ed_form = base_default_verb_forms(first)
     return full_s_form, full_ing_form, full_ed_form, first_s_form + rest, first_ing_form + rest, first_ed_form + rest
   else:
@@ -118,9 +124,11 @@ def process_text_on_page(index, pagetitle, text):
       legacy = False
       converted = False
 
-      new_default_s, new_default_ing, new_default_ed, split_default_s, split_default_ing, split_default_ed = (
+      default_s, default_ing, default_ed, split_default_s, split_default_ing, split_default_ed = (
         default_verb_forms(pagename)
       )
+
+      dont_touch = ["+", "++", "*", "++*"]
 
       if par3 and par4 and par3 == par4 and not getparam(t, "past_ptc_qual") and not getparam(t, "past_ptc1_qual"):
         pagemsg("Removing redundant 4=%s: %s" % (par4, unicode(t)))
@@ -156,8 +164,8 @@ def process_text_on_page(index, pagetitle, text):
           pres_3sg_form = pagename + "s"
           pres_ptc_form = pagename + "ing"
           past_form = pagename + "d"
-        elif par1 == "++":
-          pagemsg("Template has 1=++, not touching: %s" % unicode(t))
+        elif par1 in dont_touch:
+          pagemsg("Template has 1=%s, not touching: %s" % (par1, unicode(t)))
           continue
         else:
           pres_3sg_form = pagename + "s"
@@ -197,15 +205,16 @@ def process_text_on_page(index, pagetitle, text):
             pres_ptc_form = par1 + "ing"
             past_form = par1 + "d"
 
-
       if not pres_3sg_form or not pres_ptc_form or not past_form:
         assert not pres_3sg_form and not pres_ptc_form and not past_form
-        if pres_3sg_form in ["+", "++"] or pres_ptc_form in ["+", "++"] or past_form in ["+", "++"]:
-          pagemsg("Template + or ++, not touching: %s" % unicode(t))
+        if pres_3sg_form in dont_touch or pres_ptc_form in dont_touch or past_form in dont_touch:
+          pagemsg("Template %s, not touching: %s" % (" or ".join(dont_touch), unicode(t)))
           continue
-        pres_3sg_form = par1 or pagename + "s"
-        pres_ptc_form = par2 or pagename + "ing"
-        past_form = par3 or pagename + "ed"
+        pres_3sg_form = par1 or default_s
+        pres_ptc_form = par2 or default_ing
+        past_form = par3 or default_ed
+
+      past_ptc_form = par4 or past_form
 
       m = re.search("([bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ])$", pagename)
       if m:
@@ -217,7 +226,7 @@ def process_text_on_page(index, pagetitle, text):
         double_plus_ing = double_last_cons_stem + "ing"
         double_plus_ed = double_last_cons_stem + "ed"
       elif double_last_cons_stem:
-        double_plus_s = new_default_s
+        double_plus_s = default_s
         double_plus_ing = double_last_cons_stem + "ing"
         double_plus_ed = double_last_cons_stem + "ed"
       else:
@@ -247,7 +256,7 @@ def process_text_on_page(index, pagetitle, text):
 
       has4 = not not getparam(t, "4")
 
-      if pres_3sg_form == new_default_s and pres_ptc_form == new_default_ing and past_form == new_default_ed:
+      if pres_3sg_form == default_s and pres_ptc_form == default_ing and past_form == default_ed:
         pagemsg("Converting %s to all-default format" % unicode(t))
         if has4:
           t.add("1", "")
@@ -273,31 +282,99 @@ def process_text_on_page(index, pagetitle, text):
         converted = True
       else:
         new_code = None
+        new_code_msg = None
+        remove4 = False
         if pres_3sg_form == double_plus_s and pres_ptc_form == double_plus_ing and past_form == double_plus_ed:
           new_code = "++"
         elif pres_3sg_form == split_default_s and pres_ptc_form == split_default_ing and past_form == split_default_ed:
           new_code = "*"
         elif pres_3sg_form == double_plus_star_s and pres_ptc_form == double_plus_star_ing and past_form == double_plus_star_ed:
           new_code = "++*"
+        elif " " in pagename:
+          first, rest = split_first_rest(pagename)
+          default_first_s, default_first_ing, default_first_ed = base_default_verb_forms(first)
+          first_s, rest_s = split_first_rest(pres_3sg_form)
+          first_ing, rest_ing = split_first_rest(pres_ptc_form)
+          first_ed, rest_ed = split_first_rest(past_form)
+          first_en, rest_en = split_first_rest(past_ptc_form)
+          rest_unmatch = False
+          if rest_s != rest:
+            pagemsg("WARNING: Skipping because rest of 1=%s doesn't match pagename: %s" % (pres_3sg_form, unicode(t)))
+            rest_unmatch = True
+          elif rest_ing != rest:
+            pagemsg("WARNING: Skipping because rest of 2=%s doesn't match pagename: %s" % (pres_ptc_form, unicode(t)))
+            rest_unmatch = True
+          elif rest_ed != rest:
+            pagemsg("WARNING: Skipping because rest of 3=%s doesn't match pagename: %s" % (past_form, unicode(t)))
+            rest_unmatch = True
+          elif rest_en != rest:
+            pagemsg("WARNING: Skipping because rest of 4=%s doesn't match pagename: %s" % (past_ptc_form, unicode(t)))
+            rest_unmatch = True
+          if not rest_unmatch:
+            if first_s == default_first_s:
+              first_s = ""
+            if first_ing == default_first_ing:
+              first_ing = ""
+            if first_ed == default_first_ed:
+              first_ed = ""
+            if first_en == default_first_ed:
+              first_en = ""
+            inside_forms = [first_s, first_ing, first_ed, first_en]
+            while inside_forms and not inside_forms[-1]:
+              del inside_forms[-1]
+            if len(inside_forms) == 4 and inside_forms[2] == inside_forms[3]:
+              del inside_forms[3]
+            if not inside_forms:
+              pagemsg("WARNING: Something wrong, all-default multiword {{en-verb}} should have been caught above: %s" % unicode(t))
+            else:
+              head = getparam(t, "head")
+              if head:
+                if blib.remove_links(head) != pagename:
+                  pagemsg("WARNING: head %s doesn't agree with pagename after links removed: %s" % (head, unicode(t)))
+                else:
+                  if "[[" not in head:
+                    pagemsg("No links in head %s, removing redundant head: %s" % (head, unicode(t)))
+                    notes.append("remove redundant head=")
+                    rmparam(t, "head")
+                  else:
+                    m = re.search(r"^(\[\[.*?\]\]|.*?)( .*)$", head)
+                    if not m:
+                      pagemsg("WARNING: Something wrong, can't match first and rest of head %s: %s" % (head, unicode(t)))
+                    if m:
+                      firsthead, resthead = m.groups()
+                      if blib.remove_links(firsthead) == first and blib.remove_links(resthead) == rest:
+                        new_code = "%s<%s>%s" % (firsthead, ",".join(inside_forms), resthead)
+                        new_code_msg = "'%s'" % new_code
+                        pagemsg("Removing head %s, links moved into 1=: %s" % (head, unicode(t)))
+                        notes.append("move head= links into 1=")
+                        rmparam(t, "head")
+              if not new_code:
+                new_code = "%s<%s>%s" % (first, ",".join(inside_forms), rest)
+                new_code_msg = "'%s'" % new_code
+              remove4 = True
 
         if new_code:
-          pagemsg("Converting %s to %s format" % (unicode(t), new_code))
+          pagemsg("Converting %s to %s" % (unicode(t), new_code_msg or "%s format" % new_code))
           t.add("1", new_code)
           rmparam(t, "pres_3sg")
           rmparam(t, "pres_3sg1")
-          if has4:
+          if has4 and not remove4:
             t.add("2", "")
           else:
             rmparam(t, "2")
           rmparam(t, "pres_ptc")
           rmparam(t, "pres_ptc1")
-          if has4:
+          if has4 and not remove4:
             t.add("3", "")
           else:
             rmparam(t, "3")
           rmparam(t, "past")
           rmparam(t, "past1")
-          notes.append("convert {{en-verb}} to use %s" % new_code)
+          if remove4:
+            rmparam(t, "4")
+            rmparam(t, "past_ptc")
+            rmparam(t, "past_ptc1")
+          notes.append("convert {{en-verb}} to use %s" % new_code_msg or new_code)
           converted = True
 
       if legacy and not converted:
