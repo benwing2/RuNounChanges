@@ -21,7 +21,7 @@ function export.show(frame)
 	local poscat = frame.args[1] or error("Part of speech has not been specified. Please pass parameter 1 to the module invocation.")
 	
 	local params = {
-		["head"] = {list = true, default = ""},
+		["head"] = {list = true},
 		["suff"] = {type = "boolean"},
 		["sort"] = {},
 	}
@@ -383,7 +383,8 @@ pos_functions["nouns"] = {
 		-- There are plural forms to show, so show them
 		local pl_parts = {label = "plural", accel = {form = "p"}}
 		
-		local function check_ies(pl, stem)			local newplural, nummatches = stem:gsub("([^aeiou])y$","%1ies")
+		local function check_ies(pl, stem)
+			local newplural, nummatches = stem:gsub("([^aeiou])y$","%1ies")
 			return nummatches > 0 and pl == newplural
 		end
 		local stem = PAGENAME
@@ -590,11 +591,7 @@ pos_functions["verbs"] = {
 		local par3 = args[3][1]
 		local par4 = args[4][1]
 		
-		local pres_3sg_forms = {label = "third-person singular simple present", accel = {form = "3|s|pres"}}
-		local pres_ptc_forms = {label = "present participle", accel = {form = "pres|ptcp"}}
-		local past_forms = {label = "simple past", accel = {form = "past"}}
-		local past_ptc_forms = {label = "past participle", accel = {form = "past|ptcp"}}
-		local pres_3sg_form, pres_ptc_form, past_form, past_ptc_form
+		local pres_3sgs, pres_ptcs, pasts, past_ptcs
 
 		local pagename = args.pagename or PAGENAME
 
@@ -700,44 +697,89 @@ pos_functions["verbs"] = {
 			if par2 or par3 or par4 then
 				error("Can't specify 2=, 3= or 4= when 1= contains angle brackets: " .. par1)
 			end
+			local iut = require("Module:inflection utilities")
 			local function parse_indicator_spec(angle_bracket_spec)
 				local inside = angle_bracket_spec:match("^<(.*)>$")
 				assert(inside)
-				local parts = mw.text.split(inside, "%s*,%s*")
-				if #parts > 4 then
+				local segments = iut.parse_balanced_segment_run(inside, "[", "]")
+				local comma_separated_groups = iut.split_alternating_runs(segments, ",")
+				if #comma_separated_groups > 4 then
 					error("Too many comma-separated parts in indicator spec: " .. angle_bracket_spec)
 				end
-				local s_form, ing_form, ed_form, en_form = unpack(parts)
-				local function ine(arg)
-					if arg == "*" or arg == "++*" then
-						error("* and ++* not allowed inside of indicator specs: " .. angle_bracket_spec)
+
+				local function fetch_qualifiers(separated_group)
+					local qualifiers
+					for j = 2, #separated_group - 1, 2 do
+						if separated_group[j + 1] ~= "" then
+							error("Extraneous text after bracketed qualifiers: '" .. table.concat(separated_group) .. "'")
+						end
+						if not qualifiers then
+							qualifiers = {}
+						end
+						table.insert(qualifiers, separated_group[j])
 					end
-					return arg ~= "" and arg or nil
+					return qualifiers
 				end
-				s_form = ine(s_form)
-				ing_form = ine(ing_form)
-				ed_form = ine(ed_form)
-				en_form = ine(en_form)
-				if s_form == "++" and not ing_form and not ed_form then
-					ing_form = "++"
-					ed_form = "++"
+
+				local function fetch_specs(comma_separated_group)
+					if not comma_separated_group then
+						return {{}}
+					end
+					local specs = {}
+					
+					local colon_separated_groups = iut.split_alternating_runs(comma_separated_group, ":")
+					for _, colon_separated_group in ipairs(colon_separated_groups) do
+						local form = colon_separated_group[1]
+						if form == "*" or form == "++*" then
+							error("* and ++* not allowed inside of indicator specs: " .. angle_bracket_spec)
+						end
+						if form == "" then
+							form = nil
+						end
+						table.insert(specs, {form = form, qualifiers = fetch_qualifiers(colon_separated_group)})
+					end
 				end
+
+				local s_specs = fetch_specs(comma_separated_groups[1])
+				local ing_specs = fetch_specs(comma_separated_groups[2])
+				local ed_specs = fetch_specs(comma_separated_groups[3])
+				local en_specs = fetch_specs(comma_separated_groups[4])
+				for _, spec in ipairs(s_specs) do
+					if spec.form == "++" and #ing_specs == 1 and not ing_specs[1].form and not ing_specs[1].qualifiers
+						and not ed_specs[1].form and not ed_specs[1].qualifiers then
+						ing_specs[1].form = "++"
+						ed_specs[1].form = "++"
+						break
+					end
+				end
+
 				return {
 					forms = {},
-					s_form = s_form,
-					ing_form = ing_form,
-					ed_form = ed_form,
-					en_form = en_form,
+					s_specs = s_specs,
+					ing_specs = ing_specs,
+					ed_specs = ed_specs,
+					en_specs = en_specs,
 				}
 			end
 
 			local parse_props = {
 				parse_indicator_spec = parse_indicator_spec,
 			}
-			local iut = require("Module:inflection utilities")
 			local alternant_multiword_spec = iut.parse_inflected_text(par1, parse_props)
+
+			-- Remove any links from the lemma, but remember the original form
+			-- so we can use it below in the 'lemma_linked' form.
+			iut.map_word_specs(alternant_multiword_spec, function(base)
+				if base.lemma == "" then
+					base.lemma = pagename
+				end
+				base.orig_lemma = base.lemma
+				base.lemma = require("Module:links").remove_links(base.lemma)
+			end)
+
 			local all_verb_slots = {
 				lemma = "infinitive",
+				lemma_linked = "infinitive",
 				s_form = "3|s|pres",
 				ing_form = "pres|ptcp",
 				ed_form = "past",
@@ -745,27 +787,30 @@ pos_functions["verbs"] = {
 			}
 			local function conjugate_verb(base)
 				local def_s_form, def_ing_form, def_ed_form = base_default_verb_forms(base.lemma)
-				local function combine_stem_ending(stem, ending)
-					return stem
+
+				local function process_specs(slot, specs, default_form, canonicalize_plusplus)
+					for _, spec in ipairs(specs) do
+						local form = spec.form
+						if not form or form == "+" then
+							form = default_form
+						elseif form == "++" then
+							form = canonicalize_plusplus()
+						end
+						iut.insert_form(base.forms, slot, {form = form, footnotes = spec.qualifiers})
+					end
 				end
-				local s_form = base.s_form
-				if not s_form or s_form == "+" then
-					s_form = def_s_form
-				elseif s_form == "++" then
-					s_form = compute_plusplus_s_form(base.lemma, def_s_form)
-				end
-				local ing_form = base.ing_form
-				if not ing_form or ing_form == "+" then
-					ing_form = def_ing_form
-				elseif ing_form == "++" then
-					ing_form = compute_double_last_cons_stem(base.lemma) .. "ing"
-				end
-				local ed_form = base.ed_form
-				if not ed_form or ed_form == "+" then
-					ed_form = def_ed_form
-				elseif ed_form == "++" then
-					ed_form = compute_double_last_cons_stem(base.lemma) .. "ed"
-				end
+
+				process_specs("s_form", base.s_specs, def_s_form,
+					function() return compute_plusplus_s_form(base.lemma, def_s_form) end)
+				process_specs("ing_form", base.ing_specs, def_ing_form,
+					function() return compute_double_last_cons_stem(base.lemma) .. "ing" end)
+				process_specs("ed_form", base.ed_specs, def_ed_form,
+					function() return compute_double_last_cons_stem(base.lemma) .. "ed" end)
+
+				-- GOT HERE
+				-- NOTE: Maybe reinstate the check for any overriding past ptc forms or qualifiers, if none
+				-- found then the past tense and past participle are identical; otherwise we need to copy all past tense
+				-- forms and qualifiers to the past participle if none.
 				local en_form = base.en_form
 				if not en_form then
 					en_form = ed_form
@@ -779,44 +824,64 @@ pos_functions["verbs"] = {
 				iut.add_forms(base.forms, "ing_form", ing_form, "", combine_stem_ending)
 				iut.add_forms(base.forms, "ed_form", ed_form, "", combine_stem_ending)
 				iut.add_forms(base.forms, "en_form", en_form, "", combine_stem_ending)
+				-- Add linked version of lemma for use in head=.
+				iut.insert_forms(base.forms, "lemma_linked", iut.map_forms(base.forms.lemma, function(form)
+					if form == base.lemma and base.orig_lemma:find("%[%[") then
+						return base.orig_lemma
+					else
+						return form
+					end
+				end))
 			end
 			local inflect_props = {
 				slot_table = all_verb_slots,
 				inflect_word_spec = conjugate_verb,
 			}
 			iut.inflect_multiword_or_alternant_multiword_spec(alternant_multiword_spec, inflect_props)
-			local function fetch_form(slot)
+			local function fetch_forms(slot)
+				local forms = {}
 				if not alternant_multiword_spec.forms[slot] or #alternant_multiword_spec.forms[slot] == 0 then
 					error("Internal error: Something wrong, no forms for slot '" .. slot .. "'")
 				end
-				if #alternant_multiword_spec.forms[slot] > 1 then
-					error("Can't currently support multiple forms for slot '" .. slot .. "'")
+				for i, form in ipairs(alternant_multiword_spec.forms[slot]) do
+					if not form then
+						error("Internal error: Something wrong, missing form in position " .. i .. " for slot '" .. slot .. "'")
+					end
+					table.insert(forms, form.form)
 				end
-				local form = alternant_multiword_spec.forms[slot][1].form
-				if not form then
-					error("Internal error: Something wrong, missing form in first position for slot '" .. slot .. "'")
-				end
-				return form
+				return forms
 			end
-			pres_3sg_form = fetch_form("s_form")
-			pres_ptc_form = fetch_form("ing_form")
-			past_form = fetch_form("ed_form")
-			past_ptc_form = fetch_form("en_form")
-
+			pres_3sgs = fetch_forms("s_form")
+			pres_ptcs = fetch_forms("ing_form")
+			pasts = fetch_forms("ed_form")
+			past_ptcs = fetch_forms("en_form")
+			-- Use the "linked" form of the lemma as the head if no head= explicitly given.
+			-- If no links in this form and it has multiple words, autolink the individual words.
+			-- The user can override this using head=.
+			if #data.heads == 0 then
+				for _, lemma_obj in ipairs(alternant_multiword_spec.forms.lemma_linked) do
+					local lemma = lemma_obj.form
+					if not lemma:find("%[%[") then
+						local m_headword = require("Module:headword")
+						if m_headword.head_is_multiword(lemma) then
+							lemma = m_headword.add_multiword_links(lemma)
+						end
+					end
+					table.insert(data.heads, lemma)
+				end
+			end
 		else
+			local pres_3sg, pres_ptc, past
+
 			if par1 and not par2 and not par3 then
 				-- Use of a single parameter other than "++", "*" or "++*" is now the "legacy" format,
 				-- and no longer supported.
-				if par1 == "es" then
-					error("Legacy parameter 1=es no longer supported, just use 'en-verb' without params")
-				elseif par1 == "ies" then
-					error("Legacy parameter 1=ies no longer supported, just use 'en-verb' without params")
-				elseif par1 == "d" then
-					error("Legacy parameter 1=d no longer supported, just use 'en-verb' without params")
+				if par1 == "es" or par1 == "ies" or par1 == "d" then
+					error("Legacy parameter 1=es/ies/d no longer supported, just use 'en-verb' without params")
 				elseif par1 == "++" or par1 == "*" or par1 == "++*" then
-					pres_3sg_form = canonicalize_s_form(par1)
-					pres_ptc_form = canonicalize_ing_form(par1)
-					past_form = canonicalize_ed_form(par1)
+					pres_3sg = canonicalize_s_form(par1)
+					pres_ptc = canonicalize_ing_form(par1)
+					past = canonicalize_ed_form(par1)
 				else
 					error("Legacy parameter 1=STEM no longer supported, just use 'en-verb' without params")
 				end
@@ -828,95 +893,83 @@ pos_functions["verbs"] = {
 				end
 			end
 
-			if not pres_3sg_form or not pres_ptc_form or not past_form then
+			if not pres_3sg or not pres_ptc or not past then
 				-- Either all three should be set above, or none of them.
-				assert(not pres_3sg_form and not pres_ptc_form and not past_form)
+				assert(not pres_3sg and not pres_ptc and not past)
 
 				if par1 then
-					pres_3sg_form = canonicalize_s_form(par1)
+					pres_3sg = canonicalize_s_form(par1)
 				else
-					pres_3sg_form = new_default_s
+					pres_3sg = new_default_s
 				end
 
 				if par2 then
-					pres_ptc_form = canonicalize_ing_form(par2)
+					pres_ptc = canonicalize_ing_form(par2)
 				else
-					pres_ptc_form = new_default_ing
+					pres_ptc = new_default_ing
 				end
 
 				if par3 then
-					past_form = canonicalize_ed_form(par3)
+					past = canonicalize_ed_form(par3)
 				else
-					past_form = new_default_ed
+					past = new_default_ed
 				end
 			end
 
 			if par4 then
-				past_ptc_form = canonicalize_ed_form(par4)
+				past_ptc = canonicalize_ed_form(par4)
 			else
-				past_ptc_form = past_form
+				past_ptc = past
+			end
+
+			pres_3sgs = {pres_3sg}
+			pres_ptcs = {pres_ptc}
+			pasts = {past}
+			past_ptcs = {past_ptc}
+		end
+
+		local pres_3sg_infls, pres_ptc_infls, past_infls, past_ptc_infls
+
+		local function collect_forms(label, accel_form, defaults, explicits, qualifiers, canonicalize)
+			if defaults[1] == "-" then
+				return {label = "no " .. label}
+			else
+				local into_table = {label = label, accel = {form = accel_form}}
+				local maxindex = math.max(#defaults, explicits.maxindex)
+				table.insert(into_table, {term = defaults[1], qualifiers = {qualifiers[1]}})
+
+				-- Present 3rd singular
+				for i = 2, maxindex do
+					local explicit_form = canonicalize(explicits[i])
+		
+					if explicit_form then
+						table.insert(into_table, {term = explicit_form, qualifiers = {qualifiers[i]}})
+					elseif defaults[i] then
+						table.insert(into_table, defaults[i])
+					end
+				end
+
+				return into_table
 			end
 		end
 
-		table.insert(pres_ptc_forms, {term = pres_ptc_form, qualifiers = {args["pres_ptc_qual"][1]}})
-		table.insert(pres_3sg_forms, {term = pres_3sg_form, qualifiers = {args["pres_3sg_qual"][1]}})
-		table.insert(past_forms, {term = past_form, qualifiers = {args["past_qual"][1]}})
-		
-		-- Present 3rd singular
-		for i = 2, args[1].maxindex do
-			local form = canonicalize_s_form(args[1][i])
-			local qual = args["pres_3sg_qual"][i]
-
-			if form then
-				table.insert(pres_3sg_forms, {term = form, qualifiers = {qual}})
-			end
-		end
-		
-		-- Present participle
-		for i = 2, args[2].maxindex do
-			local form = canonicalize_ing_form(args[2][i])
-			local qual = args["pres_ptc_qual"][i]
-			
-			if form then
-				table.insert(pres_ptc_forms, {term = form, qualifiers = {qual}})
-			end
-		end
-		
-		-- Past
-		for i = 2, args[3].maxindex do
-			local form = canonicalize_ed_form(args[3][i])
-			local qual = args["past_qual"][i]
-			
-			if form then
-				table.insert(past_forms, {term = form, qualifiers = {qual}})
-			end
-		end
-		
-		-- Past participle
-		local found_past_ptc = false
-		local qual = args["past_ptc_qual"][1]
-		table.insert(past_ptc_forms, {term = past_ptc_form, qualifiers = {qual}})
-		if past_ptc_form ~= past_form or qual then
-			found_past_ptc = true
-		end
-		for i = 2, args[4].maxindex do
-			local form = canonicalize_ed_form(args[4][i])
-			local qual = args["past_ptc_qual"][i]
-
-			if form then
-				table.insert(past_ptc_forms, {term = form, qualifiers = {qual}})
-				found_past_ptc = true
-			end
-		end
+		local pres_3sg_infls = collect_forms("third-person singular simple present", "3|s|pres",
+			pres_3sgs, args[1], args.pres_3sg_qual, canonicalize_s_form)
+		local pres_ptc_infls = collect_forms("present participle", "pres|ptcp",
+			pres_ptcs, args[2], args.pres_ptc_qual, canonicalize_ing_form)
+		local past_infls = collect_forms("simple past", "past",
+			pasts, args[3], args.past_qual, canonicalize_ed_form)
+		local past_ptc_infls = collect_forms("past participle", "past|ptcp",
+			past_ptcs, args[4], args.past_ptc_qual, canonicalize_ed_form)
 		
 		-- Are the past forms identical to the past participle forms?
 		local identical = true
 		
-		if #past_forms ~= #past_ptc_forms then
+		if #past_infls ~= #past_ptc_infls then
 			identical = false
 		else
-			for key, val in ipairs(past_forms) do
-				if past_ptc_forms[key].term ~= val.term or past_ptc_forms[key].qual ~= val.qual then
+			for key, val in ipairs(past_infls) do
+				if past_ptc_infls[key].term ~= val.term or past_ptc_infls[key].qual ~= val.qual then
 					identical = false
 					break
 				end
@@ -924,16 +977,20 @@ pos_functions["verbs"] = {
 		end
 		
 		-- Insert the forms
-		table.insert(data.inflections, pres_3sg_forms)
-		table.insert(data.inflections, pres_ptc_forms)
+		table.insert(data.inflections, pres_3sg_infls)
+		table.insert(data.inflections, pres_ptc_infls)
 		
-		if not found_past_ptc or identical then
-			past_forms.label = "simple past and past participle"
-			past_forms.accel = {form = "past|and|past|ptcp"}
-			table.insert(data.inflections, past_forms)
+		if identical then
+			if past_ptcs[1] == "-" then
+				past_infls.label = "no simple past or past participle"
+			else
+				past_infls.label = "simple past and past participle"
+				past_infls.accel = {form = "past|and|past|ptcp"}
+			end
+			table.insert(data.inflections, past_infls)
 		else
-			table.insert(data.inflections, past_forms)
-			table.insert(data.inflections, past_ptc_forms)
+			table.insert(data.inflections, past_infls)
+			table.insert(data.inflections, past_ptc_infls)
 		end
 	end
 }
