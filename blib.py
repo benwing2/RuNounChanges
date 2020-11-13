@@ -813,10 +813,10 @@ def create_argparser(desc, include_pagefile=False, include_stdin=False,
     parser.add_argument("--ref-namespaces", help="List of namespace(s) to restrict --refs to.")
     parser.add_argument("--filter-pages", help="Regex to use to filter page names.")
     parser.add_argument("--filter-pages-not", help="Regex to use to filter page names; only includes pages not matching this regex.")
+    parser.add_argument("--find-regex", help="Output as by find_regex.py.", action="store_true")
+    parser.add_argument("--no-output", help="In conjunction with --find-regex, don't output processed text.", action = "store_true")
   if include_stdin:
     parser.add_argument("--stdin", help="Read dump from stdin.", action="store_true")
-    parser.add_argument("--find-regex", help="Stdin data is as output by find_regex.py.", action="store_true")
-    parser.add_argument("--no-output", help="In conjunction with --find-regex, don't output processed text.", action = "store_true")
   return parser
 
 def init_argparser(desc):
@@ -902,9 +902,29 @@ def do_pagefile_cats_refs(args, start, end, process, default_cats=[],
   args_ref_namespaces = args.ref_namespaces and args.ref_namespaces.decode("utf-8")
   args_filter_pages = args.filter_pages and args.filter_pages.decode("utf-8")
   args_filter_pages_not = args.filter_pages_not and args.filter_pages_not.decode("utf-8")
+
+  def do_handle_find_regex_retval(retval, text, pagemsg):
+    new, comment, has_changed = handle_process_page_retval(retval, text, pagemsg, args.verbose, args.diff)
+    new = new or text
+    if has_changed:
+      assert edit, "Changed text without edit=True given"
+    if edit:
+      if has_changed:
+        pagemsg("Would save with comment = %s" % comment)
+      else:
+        pagemsg("Skipped, no changes")
+      if not args.no_output:
+        final_newline = ""
+        if not new.endswith("\n"):
+          final_newline = "\n"
+        pagemsg("------- begin text --------\n%s%s------- end text --------" % (new, final_newline))
+
   def process_page(page, i):
+    pagetext = [None]
+    pagetitle = unicode(page.title())
+    def pagemsg(txt):
+      msg("Page %s %s: %s" % (i, pagetitle, txt))
     if filter_pages or args_filter_pages:
-      pagetitle = unicode(page.title())
       if filter_pages and not filter_pages(pagetitle):
         return
       if args_filter_pages and not re.search(args_filter_pages, pagetitle):
@@ -913,26 +933,25 @@ def do_pagefile_cats_refs(args, start, end, process, default_cats=[],
         return
     def do_process_page(page, index, parsed=None):
       if stdin:
-        pagetitle = unicode(page.title())
-        def pagemsg(txt):
-          msg("Page %s %s: %s" % (index, pagetitle, txt))
-        text = safe_page_text(page, pagemsg)
-        if only_lang and "==%s==" % only_lang not in text:
+        pagetext[0] = safe_page_text(page, pagemsg)
+        if only_lang and "==%s==" % only_lang not in pagetext[0]:
           return None, None
-        return process(index, pagetitle, text)
+        return process(index, pagetitle, pagetext[0])
       else:
         if only_lang:
-          pagetitle = unicode(page.title())
-          def pagemsg(txt):
-            msg("Page %s %s: %s" % (index, pagetitle, txt))
-          text = safe_page_text(page, pagemsg)
-          if "==%s==" % only_lang not in text:
+          pagetext[0] = safe_page_text(page, pagemsg)
+          if "==%s==" % only_lang not in pagetext[0]:
             return None, None
         if edit:
           return process(page, index, parsed)
         else:
           return process(page, index)
-    if edit:
+
+    if args.find_regex:
+      retval = do_process_page(page, i)
+      pagetext[0] = safe_page_text(page, pagemsg)
+      do_handle_find_regex_retval(retval, pagetext[0], pagemsg)
+    elif edit:
       do_edit(page, i, do_process_page, save=args.save, verbose=args.verbose,
           diff=args.diff)
     else:
@@ -951,20 +970,7 @@ def do_pagefile_cats_refs(args, start, end, process, default_cats=[],
         def pagemsg(txt):
           msg("Page %s %s: %s" % (index, pagetitle, txt))
         retval = do_process_text_on_page(index, pagetitle, text)
-        new, comment, has_changed = handle_process_page_retval(retval, text, pagemsg, args.verbose, args.diff)
-        new = new or text
-        if has_changed:
-          assert edit, "Changed text without edit=True given"
-        if edit:
-          if has_changed:
-            pagemsg("Would save with comment = %s" % comment)
-          else:
-            pagemsg("Skipped, no changes")
-          if not args.no_output:
-            final_newline = ""
-            if not new.endswith("\n"):
-              final_newline = "\n"
-            pagemsg("------- begin text --------\n%s%s------- end text --------" % (new, final_newline))
+        do_handle_find_regex_retval(retval, text, pagemsg)
     else:
       parse_dump(sys.stdin, do_process_text_on_page, start, end)
 
