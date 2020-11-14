@@ -4755,7 +4755,7 @@ make_table = function(forms, title, perf, intr, impers, notes, internal_notes, o
 | ]=] .. disp.past_f .. [=[
 
 |-
-! style="background-color:#ffffe0; text-align:left;" | [[средний род|neuter]] (<span lang="ru" class="Cyrl">оно́</span>)
+! style="background-color: #ffffe0;" | [[средний род|neuter]] (<span lang="ru" class="Cyrl">оно́</span>)
 | ]=] .. disp.past_n .. [=[
 
 |}
