@@ -1523,7 +1523,7 @@ generate_forms_1 = function(args, per_word_info)
 		-- If we're conjugating a suffix, insert a pseudoconsonant at the beginning
 		-- of all forms, so they get conjugated as if ending in a consonant.
 		-- We remove the pseudoconsonant later.
-		local is_suffix = rfind(lemma, "^%-")
+		local is_suffix = lemma ~= "-" and rfind(lemma, "^%-")
 		args.any_suffix = args.any_suffix or is_suffix
 		local asif_prefix = args["asif_prefix" .. n] or args.asif_prefix or is_suffix and PSEUDOCONS
 		if asif_prefix then
@@ -1538,7 +1538,9 @@ generate_forms_1 = function(args, per_word_info)
 		args.thisn = args["n" .. n] or args.n
 
 		-- Check for explicit allow-unaccented indication.
-		lemma, args.allow_unaccented = rsubb(lemma, "^%*", "")
+		local allow_unaccented
+		lemma, allow_unaccented = rsubb(lemma, "^%*", "")
+		args.allow_unaccented = args.allow_unaccented or allow_unaccented
 		if args.allow_unaccented then
 			track("allow-unaccented")
 		end
@@ -1547,6 +1549,10 @@ generate_forms_1 = function(args, per_word_info)
 		lemma = m_links.remove_links(lemma)
 		args.lemma_no_links = lemma
 		args.lemmatr = lemmatr
+		if args.lemma then
+			-- Explicit lemma given.
+			args.explicit_lemma, args.explicit_lemmatr = nom.split_russian_tr(args.lemma)
+		end
 
 		-- Treat suffixes without an accent, and suffixes with an accent on the
 		-- initial hyphen, as if they were preceded with a *, which overrides
@@ -2299,7 +2305,7 @@ local stem_gender_endings = {
 	},
 }
 
--- Implementation of template 'ru-noun cat'.
+-- Implementation of template 'runouncatboiler'.
 function export.catboiler(frame)
 	local SUBPAGENAME = mw.title.getCurrentTitle().subpageText
 	local args = clone_args(frame)
@@ -2384,7 +2390,7 @@ function export.catboiler(frame)
 		if not stem then
 			error("Invalid category name, should be e.g. \"Russian velar-stem masculine accent-a adjectival nouns\"")
 		end
-		local stemtext, possessive
+		local stemtext
 		if rfind(stem, "possessive") then
 			possessive = "possessive "
 			stem = rsub(stem, " possessive", "")
@@ -4748,8 +4754,6 @@ local function show_form(forms, old, is_lemma, accel_form, lemma_forms)
 		elseif ishyp then
 			-- no accelerator for hypothetical forms
 			ruspan = m_links.full_link({lang = lang, term = nil, alt = ruentry, tr = "-"}, "hypothetical")
-		elseif old then
-			ruspan = m_links.full_link({lang = lang, term = com.remove_jo(ruentry), alt = not ruentry:find("[[", 1, true) and ruentry, tr = "-", accel = accel})
 		else
 			ruspan = m_links.full_link({lang = lang, term = ruentry, tr = "-", accel = accel})
 		end
@@ -4886,7 +4890,8 @@ make_table = function(args)
 	data.number = args.nonumber and "" or numbers[args.n]
 
 	local lemma_forms = args[args.n == "p" and "nom_pl" or "nom_sg"]
-	data.lemma = show_form(args[args.n == "p" and "nom_pl_linked" or "nom_sg_linked"], args.old, "lemma", nil, nil)
+	data.lemma = show_form(args.explicit_lemma and {{args.explicit_lemma, args.explicit_lemmatr}} or
+		args[args.n == "p" and "nom_pl_linked" or "nom_sg_linked"], args.old, "lemma", nil, nil)
 	data.title = args.title or strutils.format(args.old and old_title_temp or title_temp, data)
 
 	local sg_an_in_equal = ut.equals(args.acc_sg_an, args.acc_sg_in)
