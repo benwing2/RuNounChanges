@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# Move text outside of {{RQ:RQ:RJfrs AmtrPqr}} inside, with some renaming of
+# Move text outside of {{RQ:RJfrs AmtrPqr}} inside, with some renaming of
 # templates and args. Specifically, we replace:
 #
 # #* {{RQ:RJfrs AmtrPqr|II|071}}
@@ -16,8 +16,6 @@ import mwparserfromhell as mw
 
 import blib
 from blib import getparam, rmparam, set_template_name, msg, errmsg, site
-
-import rulib
 
 def process_page(page, index, parsed):
   pagetitle = unicode(page.title())
