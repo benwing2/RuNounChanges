@@ -210,7 +210,7 @@ end
 
 local function add_imperative_from_present(base, presstem, accent)
 	local imptype = base.imptype
-	if not base.imptype then
+	if not imptype then
 		if accent == "b" or accent == "c" then
 			imptype = "long"
 		elseif rfind(presstem, "^ви́") then
@@ -485,9 +485,9 @@ conjs["3"] = function(base, lemma, accent)
 	-- May need to stress final syllable in case of nonsyllabic stem, e.g. for гну́ти.
 	local n_ppp = com.maybe_stress_final_syllable(stressed_stem .. "нен")
 	local t_ppp = com.maybe_stress_final_syllable(stressed_stem .. "нут")
-	if base.conj == "н" then
+	if base.cons == "н" then
 		add_ppp(base, n_ppp)
-	elseif base.conj == "т" then
+	elseif base.cons == "т" then
 		add_ppp(base, t_ppp)
 	else
 		add_ppp(base, n_ppp)
@@ -625,7 +625,7 @@ conjs["7"] = function(base, lemma, accent)
 		past_rest = past_msg .. "л"
 	end
 	if base.i then
-		past_msg = rsub(past_msg, "[еоя](́?" .. com.cons_c .. "+)$", "і%1")
+		past_msg = rsub(past_msg, "[ео](́?" .. com.cons_c .. "+)$", "і%1")
 	end
 	add_past(base, past_msg, past_rest)
 	add_ppp(base, stressed_stem .. last_cons .. "ен")
@@ -746,8 +746,8 @@ conjs["13"] = function(base, lemma, accent)
 	if accent ~= "b" then
 		error("Only accent b allowed for class 13: '" .. base.conj .. "'")
 	end
-	add_present_e(base, stem, accent)
 	local full_stem = stem .. "ва́"
+	add_present_e(base, stem, accent, nil, full_stem .. "й")
 	add_default_past(base, full_stem)
 	add_retractable_ppp(base, full_stem .. "н")
 end
@@ -848,7 +848,7 @@ conjs["irreg"] = function(base, lemma, accent)
 	prefix = rmatch(lemma, "^(.*)ї́?хати$")
 	if prefix then
 		local stressed_prefix = com.is_stressed(prefix)
-		add_present_e(base, prefix .. (stressed_prefix and "їд" or "ї́д"), accent)
+		add_present_e(base, prefix .. (stressed_prefix and "їд" or "ї́д"), "a")
 		add_default_past(base, prefix .. (stressed_prefix and "їха" or "ї́ха"))
 		-- no PPP
 		return
@@ -962,7 +962,7 @@ local function parse_indicator_and_form_spec(angle_bracket_spec)
 			if base.imptype then
 				error("Can't specify imperative type twice: " .. angle_bracket_spec)
 			end
-			base.imptype = part
+			base.imptype = rsub(part, "imp$", "")
 		elseif part == "-imp" then
 			if base.noimp then
 				error("Can't specify '-imp' twice: " .. angle_bracket_spec)
