@@ -545,9 +545,10 @@ end
 
 local function show_forms(alternant_multiword_spec)
 	local lemmas = {}
-	if alternant_multiword_spec.forms.nom_m then
-		for _, nom_m in ipairs(alternant_multiword_spec.forms.nom_m) do
-			table.insert(lemmas, com.remove_monosyllabic_stress(nom_m.form))
+	local lemmaform = alternant_multiword_spec.forms.nom_m or alternant_multiword_spec.forms.nom_p 
+	if lemmaform then
+		for _, form in ipairs(lemmaform) do
+			table.insert(lemmas, com.remove_monosyllabic_stress(form.form))
 		end
 	end
 	local props = {
@@ -659,12 +660,51 @@ local function make_table(alternant_multiword_spec)
 | {loc_p}{vocative_clause}
 |{\cl}{notes_clause}</div></div></div>]=]
 
+	local table_spec_plonly = [=[
+<div>
+<div class="NavFrame" style="display: inline-block; min-width: 25em">
+<div class="NavHead" style="background:#eff7ff">{title}{annotation}</div>
+<div class="NavContent">
+{\op}| border="1px solid #000000" style="border-collapse:collapse;background:#F9F9F9;text-align:center; min-width:25em" class="inflection-table"
+|-
+! style="width:50%;background:#d9ebff" colspan="2" | 
+! style="background:#d9ebff" | plural
+|-
+! style="background:#eff7ff" colspan="2" | nominative
+| {nom_p}
+|-
+! style="background:#eff7ff" colspan="2" | genitive
+| {gen_p}
+|-
+! style="background:#eff7ff" colspan="2" | dative
+| {dat_p}
+|-
+! style="background:#eff7ff" rowspan="2" | accusative
+! style="background:#eff7ff" | animate
+| {acc_p_an}
+|-
+! style="background:#eff7ff" | inanimate
+| {acc_p_in}
+|-
+! style="background:#eff7ff" colspan="2" | instrumental
+| {ins_p}
+|-
+! style="background:#eff7ff" colspan="2" | locative
+| {loc_p}{vocative_clause}
+|{\cl}{notes_clause}</div></div></div>]=]
+
 	local vocative_template = [=[
 
 |-
 ! style="background:#eff7ff" | vocative
 | {voc_m}
 | {voc_f}
+| {voc_p}]=]
+
+	local vocative_plonly_template = [=[
+
+|-
+! style="background:#eff7ff" | vocative
 | {voc_p}]=]
 
 	local short_form_template = [=[
@@ -710,12 +750,20 @@ local function make_table(alternant_multiword_spec)
 
 	forms.notes_clause = forms.footnote ~= "" and
 		m_string_utilities.format(notes_template, forms) or ""
-	forms.vocative_clause = forms.voc_m and forms.voc_m ~= "—" and
-		m_string_utilities.format(vocative_template, forms) or ""
+	forms.vocative_clause =
+		alternant_multiword_spec.special ~= "plonly" and
+		forms.voc_m and forms.voc_m ~= "—" and
+		m_string_utilities.format(vocative_template, forms) or
+		alternant_multiword_spec.special == "plonly" and
+		forms.voc_p and forms.voc_p ~= "—" and
+		m_string_utilities.format(vocative_plonly_template, forms) or
+		""
 	forms.short_clause = forms.short and forms.short ~= "—" and
 		m_string_utilities.format(short_form_template, forms) or ""
 	return m_string_utilities.format(
-		alternant_multiword_spec.surname and table_spec_surname or table_spec, forms
+		alternant_multiword_spec.surname and table_spec_surname or
+		alternant_multiword_spec.special == "plonly" and table_spec_plonly or
+		table_spec, forms
 	)
 end
 
@@ -863,6 +911,7 @@ end
 -- list of objects {form=FORM, footnotes=FOOTNOTES}.
 function export.do_generate_forms_manual(parent_args, pos, from_headword, def)
 	local params = {
+		special = {},
 		footnote = {list = true},
 		title = {},
 	}
@@ -872,6 +921,7 @@ function export.do_generate_forms_manual(parent_args, pos, from_headword, def)
 
 	local args = m_para.process(parent_args, params)
 	local alternant_spec = {
+		special = args.special,
 		title = args.title,
 		footnotes = args.footnote,
 		forms = {},
