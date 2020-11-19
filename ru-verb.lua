@@ -976,45 +976,6 @@ function export.show(frame)
 	return make_table(forms, title, perf, intr, impers, notes, internal_notes, old) .. m_utilities.format_categories(categories, lang)
 end
 
--- Implementation of template 'ruverbcatboiler'.
-function export.catboiler(frame)
-	local SUBPAGENAME = mw.title.getCurrentTitle().subpageText
-
-	local cats = {}
-
-	local cls, variant, pattern = rmatch(SUBPAGENAME, "^Russian class ([0-9]*)(°?)([abc]?) verbs")
-	local text = nil
-	if not cls then
-		error("Invalid category name, should be e.g. \"Russian class 3a verbs\"")
-	end
-	if pattern == "" then
-		table.insert(cats, "Russian verbs by class|" .. cls .. variant)
-		text = "This category contains Russian class " .. cls .. " verbs."
-	else
-		table.insert(cats, "Russian verbs by class and accent pattern|" .. cls .. pattern)
-		table.insert(cats, "Russian class " .. cls .. " verbs|" .. pattern)
-		text = "This category contains Russian class " .. cls .. " verbs of " ..
-			"accent pattern " .. pattern .. (
-			variant == "" and "" or " and variant " .. variant) .. ". " .. (
-			pattern == "a" and "With this pattern, all forms are stem-stressed."
-			or pattern == "b" and "With this pattern, all forms are ending-stressed."
-			or "With this pattern, the first singular present indicative and all forms " ..
-			"outside of the present indicative are ending-stressed, while the remaining " ..
-			"forms of the present indicative are stem-stressed.").. (
-			variant == "" and "" or
-			cls == "3" and " The variant code indicates that the -н of the stem " ..
-			"is missing in most non-present-tense forms." or
-			" The variant code indicates that the present tense is not " ..
-			"[[Appendix:Glossary#iotation|iotated]]. (In most verbs of this class, " ..
-			"the present tense is iotated, e.g. иска́ть with present tense " ..
-			"ищу́, и́щешь, и́щет, etc.)")
-	end
-
-	return text	.. "\n" ..
-		mw.getCurrentFrame():expandTemplate{title="ru-categoryTOC", args={}}
-		.. m_utilities.format_categories(cats, lang, nil, nil, "force")
-end
-
 --[=[
 	Functions for working with stems, paradigms, Russian/translit
 ]=]
@@ -4764,6 +4725,3 @@ make_table = function(forms, title, perf, intr, impers, notes, internal_notes, o
 end
 
 return export
-
--- For Vim, so we get 4-space tabs
--- vim: set ts=4 sw=4 noet:

@@ -1675,169 +1675,168 @@ end
 -- determine_stress_and_stems().
 local function determine_declension_and_gender(base)
 	-- Determine declension and set gender
-	while true do
-		stem = rmatch(base.lemma, "^(.*)ь$")
-		if stem then
-			if not base.gender then
-				if rfind(base.lemma, "[еє]́?ць$") then
-					base.gender = "M"
-				elseif rfind(base.lemma, "тель$") then
-					base.gender = "M"
-				elseif rfind(base.lemma, "[ії]сть$") then
-					base.gender = "F"
-				else
-					error("For lemma ending in -ь other than -ець/-єць/-тель/-ість/-їсть, gender M or F must be given")
-				end
-			end
-			if base.gender == "N" or base.gender == "MF" then
-				error("For lemma ending in -ь, gender " .. base.gender .. " not allowed")
-			elseif base.gender == "M" then
-				base.decl = "soft-m"
-			else
-				base.decl = "third-f"
-			end
-			base.nonvowel_stem = stem
-			break
-		end
-		stem = rmatch(base.lemma, "^(.*)й$")
-		if stem then
-			base.decl = "j-m"
-			if base.gender and base.gender ~= "M" then
-				error("For lemma ending in -й, gender " .. base.gender .. " not allowed")
-			end
-			base.gender = "M"
-			base.nonvowel_stem = stem
-			base.stem_for_reduce = base.lemma
-			break
-		end
-		stem = rmatch(base.lemma, "^(.*" .. com.hushing_c .. ")$")
-		if stem then
-			if base.gender == "N" or base.gender == "MF" then
-				error("For lemma ending in a hushing consonant, gender " .. base.gender .. " not allowed")
-			elseif base.gender == "F" then
-				base.decl = "third-f"
-			else
+	local stem
+	stem = rmatch(base.lemma, "^(.*)ь$")
+	if stem then
+		if not base.gender then
+			if rfind(base.lemma, "[еє]́?ць$") then
 				base.gender = "M"
-				base.decl = "semisoft-m"
-			end
-			base.nonvowel_stem = stem
-			break
-		end
-		stem, ac = rmatch(base.lemma, "^(.*" .. com.hushing_c .. ")а(́?)$")
-		if stem then
-			if base.neutertype == "t" then
-				base.decl = "t-n"
-			elseif base.gender == "N" then
-				error("For lemma ending in a hushing consonant + -а, gender N not allowed unless spec 't' is given")
+			elseif rfind(base.lemma, "тель$") then
+				base.gender = "M"
+			elseif rfind(base.lemma, "[ії]сть$") then
+				base.gender = "F"
 			else
-				base.decl = "semisoft-f"
-				base.gender = base.gender or "F"
+				error("For lemma ending in -ь other than -ець/-єць/-тель/-ість/-їсть, gender M or F must be given")
 			end
-			base.vowel_stem = stem
-			break
 		end
-		stem, ac = rmatch(base.lemma, "^(.*)а(́?)$")
-		if stem then
-			base.decl = "hard-f"
-			if base.gender == "N" then
-				error("For lemma ending in -а, gender N not allowed")
-			end
+		if base.gender == "N" or base.gender == "MF" then
+			error("For lemma ending in -ь, gender " .. base.gender .. " not allowed")
+		elseif base.gender == "M" then
+			base.decl = "soft-m"
+		else
+			base.decl = "third-f"
+		end
+		base.nonvowel_stem = stem
+		return
+	end
+	stem = rmatch(base.lemma, "^(.*)й$")
+	if stem then
+		base.decl = "j-m"
+		if base.gender and base.gender ~= "M" then
+			error("For lemma ending in -й, gender " .. base.gender .. " not allowed")
+		end
+		base.gender = "M"
+		base.nonvowel_stem = stem
+		base.stem_for_reduce = base.lemma
+		return
+	end
+	stem = rmatch(base.lemma, "^(.*" .. com.hushing_c .. ")$")
+	if stem then
+		if base.gender == "N" or base.gender == "MF" then
+			error("For lemma ending in a hushing consonant, gender " .. base.gender .. " not allowed")
+		elseif base.gender == "F" then
+			base.decl = "third-f"
+		else
+			base.gender = "M"
+			base.decl = "semisoft-m"
+		end
+		base.nonvowel_stem = stem
+		return
+	end
+	stem = rmatch(base.lemma, "^(.*" .. com.hushing_c .. ")а́?$")
+	if stem then
+		if base.neutertype == "t" then
+			base.decl = "t-n"
+		elseif base.gender == "N" then
+			error("For lemma ending in a hushing consonant + -а, gender N not allowed unless spec 't' is given")
+		else
+			base.decl = "semisoft-f"
 			base.gender = base.gender or "F"
-			base.vowel_stem = stem
-			break
 		end
-		stem, ac = rmatch(base.lemma, "^(.*)я(́?)$")
-		if stem then
-			if base.neutertype == "en" then
-				base.decl = "en-n"
-			elseif base.neutertype == "t" then
-				base.decl = "t-n"
-			elseif base.gender == "N" then
-				base.decl = "fourth-n"
-			elseif not base.gender and (rfind(stem, "'$") or rfind(stem, "(.)%1$")) then
-				base.decl = "fourth-n"
-				base.gender = "N"
-			elseif rfind(stem, com.vowel_c .. AC .. "?$") or rfind(stem, "['ьй]$") then
-				base.decl = "j-f"
-				base.gender = base.gender or "F"
+		base.vowel_stem = stem
+		return
+	end
+	stem = rmatch(base.lemma, "^(.*)а́?$")
+	if stem then
+		base.decl = "hard-f"
+		if base.gender == "N" then
+			error("For lemma ending in -а, gender N not allowed")
+		end
+		base.gender = base.gender or "F"
+		base.vowel_stem = stem
+		return
+	end
+	stem = rmatch(base.lemma, "^(.*)я́?$")
+	if stem then
+		if base.neutertype == "en" then
+			base.decl = "en-n"
+		elseif base.neutertype == "t" then
+			base.decl = "t-n"
+		elseif base.gender == "N" then
+			base.decl = "fourth-n"
+		elseif not base.gender and (rfind(stem, "'$") or rfind(stem, "(.)%1$")) then
+			base.decl = "fourth-n"
+			base.gender = "N"
+		elseif rfind(stem, com.vowel_c .. AC .. "?$") or rfind(stem, "['ьй]$") then
+			base.decl = "j-f"
+			base.gender = base.gender or "F"
+		else
+			base.decl = "soft-f"
+			base.gender = base.gender or "F"
+		end
+		base.vowel_stem = stem
+		return
+	end
+	stem = rmatch(base.lemma, "^(.*)о́?$")
+	if stem then
+		if base.gender == "M" or base.gender == "F" or base.gender == "MF" then
+			if rfind(stem, "ь$") then
+				stem = rsub(stem, "ь$", "")
+				base.decl = "soft-o-m"
 			else
-				base.decl = "soft-f"
-				base.gender = base.gender or "F"
+				base.decl = "o-m"
 			end
-			base.vowel_stem = stem
-			break
+		else
+			base.decl = "hard-n"
+			base.gender = "N"
 		end
-		stem, ac = rmatch(base.lemma, "^(.*)о(́?)$")
-		if stem then
-			if base.gender == "M" or base.gender == "F" or base.gender == "MF" then
-				if rfind(stem, "ь$") then
-					stem = rsub(stem, "ь$", "")
-					base.decl = "soft-o-m"
-				else
-					base.decl = "o-m"
-				end
-			else
-				base.decl = "hard-n"
-				base.gender = "N"
-			end
-			base.vowel_stem = stem
-			break
-		end
-		stem, ac = rmatch(base.lemma, "^(.*" .. com.hushing_c .. ")е(́?)$")
-		if stem then
-			if base.gender == "M" then
-				base.decl = "semisoft-e-m"
-			elseif base.gender == "F" then
-				base.decl = "semisoft-e-f"
-			else
-				base.decl = "semisoft-n"
-				if base.gender == "MF" then
-					error("For lemma ending in -е, gender " .. base.gender .. " not allowed")
-				end
-				base.gender = base.gender or "N"
-			end
-			base.vowel_stem = stem
-			break
-		end
-		stem, ac = rmatch(base.lemma, "^(.*)е(́?)$")
-		if stem then
-			base.decl = "soft-n"
-			if base.gender == "F" or base.gender == "MF" then
+		base.vowel_stem = stem
+		return
+	end
+	stem = rmatch(base.lemma, "^(.*" .. com.hushing_c .. ")е́?$")
+	if stem then
+		if base.gender == "M" then
+			base.decl = "semisoft-e-m"
+		elseif base.gender == "F" then
+			base.decl = "semisoft-e-f"
+		else
+			base.decl = "semisoft-n"
+			if base.gender == "MF" then
 				error("For lemma ending in -е, gender " .. base.gender .. " not allowed")
 			end
 			base.gender = base.gender or "N"
-			base.vowel_stem = stem
-			break
 		end
-		stem, ac = rmatch(base.lemma, "^(.*)є(́?)$")
-		if stem then
-			base.decl = "j-n"
-			if base.gender == "F" or base.gender == "MF" then
-				error("For lemma ending in -є, gender " .. base.gender .. " not allowed")
-			end
-			base.gender = base.gender or "N"
-			base.vowel_stem = stem
-			break
-		end
-		stem = rmatch(base.lemma, "^(.*" .. com.cons_c .. ")$")
-		if stem then
-			if base.gender == "N" or base.gender == "MF" then
-				error("For lemma ending in a consonant, gender " .. base.gender .. " not allowed")
-			elseif base.gender == "F" then
-				base.decl = "third-f"
-			elseif base.rtype == "soft" then
-				base.decl = "soft-m"
-			elseif base.rtype == "semisoft" then
-				base.decl = "semisoft-m"
-			else
-				base.decl = "hard-m"
-			end
-			base.gender = base.gender or "M"
-			base.nonvowel_stem = stem
-			break
-		end
-		error("Unrecognized ending for lemma: '" .. base.lemma .. "'")
+		base.vowel_stem = stem
+		return
 	end
+	stem = rmatch(base.lemma, "^(.*)е́?$")
+	if stem then
+		base.decl = "soft-n"
+		if base.gender == "F" or base.gender == "MF" then
+			error("For lemma ending in -е, gender " .. base.gender .. " not allowed")
+		end
+		base.gender = base.gender or "N"
+		base.vowel_stem = stem
+		return
+	end
+	stem = rmatch(base.lemma, "^(.*)є́?$")
+	if stem then
+		base.decl = "j-n"
+		if base.gender == "F" or base.gender == "MF" then
+			error("For lemma ending in -є, gender " .. base.gender .. " not allowed")
+		end
+		base.gender = base.gender or "N"
+		base.vowel_stem = stem
+		return
+	end
+	stem = rmatch(base.lemma, "^(.*" .. com.cons_c .. ")$")
+	if stem then
+		if base.gender == "N" or base.gender == "MF" then
+			error("For lemma ending in a consonant, gender " .. base.gender .. " not allowed")
+		elseif base.gender == "F" then
+			base.decl = "third-f"
+		elseif base.rtype == "soft" then
+			base.decl = "soft-m"
+		elseif base.rtype == "semisoft" then
+			base.decl = "semisoft-m"
+		else
+			base.decl = "hard-m"
+		end
+		base.gender = base.gender or "M"
+		base.nonvowel_stem = stem
+		return
+	end
+	error("Unrecognized ending for lemma: '" .. base.lemma .. "'")
 end
 
 
@@ -1865,6 +1864,7 @@ local function determine_stress_and_stems(base)
 	if base.plstem then
 		base.plstem = com.add_monosyllabic_stress(base.plstem)
 	end
+	local end_stressed_lemma = rfind(base.lemma, AC .. "$")
 	for _, stress in ipairs(base.stresses) do
 		local function dereduce(stem)
 			local epenthetic_stress = stress_patterns[stress.stress].gen_p == "+"
@@ -1886,7 +1886,7 @@ local function determine_stress_and_stems(base)
 				stress.stress = "b"
 			elseif rfind(base.lemma, "[ая]́$") and base.gender == "N" then
 				stress.stress = "b"
-			elseif ac == AC then
+			elseif end_stressed_lemma then
 				stress.stress = "d"
 			else
 				stress.stress = "a"
@@ -1902,9 +1902,9 @@ local function determine_stress_and_stems(base)
 		end
 		local lemma_is_vowel_stem = not not base.vowel_stem
 		if base.vowel_stem then
-			if ac == AC and stress_patterns[stress.stress].nom_s ~= "+" then
+			if end_stressed_lemma and stress_patterns[stress.stress].nom_s ~= "+" then
 				error("Stress pattern " .. stress.stress .. " requires a stem-stressed lemma, not end-stressed: '" .. base.lemma .. "'")
-			elseif ac ~= AC and stress_patterns[stress.stress].nom_s == "+" then
+			elseif not end_stressed_lemma and stress_patterns[stress.stress].nom_s == "+" then
 				error("Stress pattern " .. stress.stress .. " requires an end-stressed lemma, not stem-stressed: '" .. base.lemma .. "'")
 			end
 			if base.stem then
@@ -2204,10 +2204,12 @@ local function compute_categories_and_annotation(alternant_multiword_spec)
 	local function insert(cattype)
 		m_table.insertIfNot(cats, "Ukrainian " .. cattype)
 	end
-	if alternant_multiword_spec.number == "sg" then
-		insert("uncountable nouns")
-	elseif alternant_multiword_spec.number == "pl" then
-		insert("pluralia tantum")
+	if alternant_multiword_spec.pos == "noun" then
+		if alternant_multiword_spec.number == "sg" then
+			insert("uncountable nouns")
+		elseif alternant_multiword_spec.number == "pl" then
+			insert("pluralia tantum")
+		end
 	end
 	local annotation
 	if alternant_multiword_spec.manual then
@@ -2528,234 +2530,6 @@ local function compute_headword_genders(alternant_multiword_spec)
 end
 
 
-local stem_expl = {
-	["hard"] = "a hard consonant",
-	["velar-stem"] = "a velar (-к, -г or –x)",
-	["semisoft"] = "a hushing consonant (-ш, -ж, -ч or -щ)",
-	["soft"] = "a soft consonant",
-	["c-stem"] = "-ц",
-	["j-stem"] = "conceptual -й",
-	["n-stem"] = "-м' (with -ен- in some forms)",
-	["t-stem"] = "-я or -а (with -т- in most forms)",
-	["possessive"] = "-ов, -єв, -ин or -їн",
-	["surname"] = "-ов, -ів, -їв, -єв, -ин, -ін or -їн",
-}
-
-local stem_to_declension = {
-	["third-declension"] = "third",
-	["fourth-declension"] = "fourth",
-	["t-stem"] = "fourth",
-	["n-stem"] = "fourth",
-}
-
-local stem_gender_endings = {
-    masculine = {
-		["hard"]              = {"a hard consonant", "-и"},
-		["velar-stem"]        = {"a velar", "-и"},
-		["semisoft"]          = {"a hushing consonant or -р", "-і"},
-		["soft"]              = {"-ь or -р", "-і"},
-		["j-stem"]            = {"-й", "-ї"},
-	},
-    feminine = {
-		["hard"]              = {"-а", "-и"},
-		["semisoft"]          = {"-а", "-і"},
-		["soft"]              = {"-я", "-і"},
-		["j-stem"]            = {"-я", "-ї"},
-		["third-declension"]  = {"-ь, -р, a labial, or a hushing consonant", "-і"},
-	},
-    neuter = {
-		["hard"]              = {"-о", "-а"},
-		["velar-stem"]        = {"-о", "-а"},
-		["semisoft"]          = {"-е", "-а"},
-		["soft"]              = {"-е", "-я"},
-		["j-stem"]            = {"-є", "-я"},
-		["fourth-declension"] = {"-я", "-я"},
-		["t-stem"]            = {"-я or -а", "-та"},
-		["n-stem"]            = {"-я", "-я"},
-	},
-}
-
--- Implementation of template 'uk-noun cat'.
-function export.catboiler(frame)
-	local SUBPAGENAME = mw.title.getCurrentTitle().subpageText
-	local params = {
-		[1] = {},
-	}
-	local args = m_para.process(frame:getParent().args, params)
-
-	local function get_stem_gender_text(stem, genderspec)
-		local gender = genderspec
-		gender = rsub(gender, " in %-[ое]$", "")
-		if not stem_gender_endings[gender] then
-			error("Invalid gender '" .. gender .. "'")
-		end
-		local endings = stem_gender_endings[gender][stem]
-		if not endings then
-			error("Invalid stem type '" .. stem .. "'")
-		end
-		local sgending, plending = endings[1], endings[2]
-		local stemtext = stem_expl[stem] and " The stem ends in " .. stem_expl[stem] .. "." or ""
-		local decltext =
-			rfind(stem, "declension") and "" or
-			" This is traditionally considered to belong to the " .. (
-				stem_to_declension[stem] or gender == "feminine" and "first" or "second"
-			) .. " declension."
-		local genderdesc
-		if rfind(genderspec, "in %-[ое]$") then
-			genderdesc = rsub(genderspec, "in (%-[ое])$", "~ ending in %1")
-		else
-			genderdesc = "usually " .. gender .. " ~"
-		end
-		return stem .. ", " .. genderdesc .. ", normally ending in " .. sgending .. " in the nominative singular " ..
-			" and " .. plending .. " in the nominative plural." .. stemtext .. decltext
-	end
-
-	local function get_pos()
-		local pos = rmatch(SUBPAGENAME, "^Ukrainian.- ([^ ]*)s ")
-		if not pos then
-			pos = rmatch(SUBPAGENAME, "^Ukrainian.- ([^ ]*)s$")
-		end
-		if not pos then
-			error("Invalid category name, should be e.g. \"Ukrainian nouns with ...\" or \"Ukrainian ... nouns\"")
-		end
-		return pos
-	end
-
-	local function get_sort_key()
-		local pos, sort_key = rmatch(SUBPAGENAME, "^Ukrainian.- ([^ ]*)s with (.*)$")
-		if sort_key then
-			return sort_key
-		end
-		pos, sort_key = rmatch(SUBPAGENAME, "^Ukrainian ([^ ]*)s (.*)$")
-		if sort_key then
-			return sort_key
-		end
-		return rsub(SUBPAGENAME, "^Ukrainian ", "")
-	end
-
-	local cats = {}, pos
-
-	-- Insert the category CAT (a string) into the categories. String will
-	-- have "Ukrainian " prepended and ~ substituted for the plural part of speech.
-	local function insert(cat, atbeg)
-		local fullcat = "Ukrainian " .. rsub(cat, "~", pos .. "s")
-		if atbeg then
-			table.insert(cats, 1, fullcat)
-		else
-			table.insert(cats, fullcat)
-		end
-	end
-
-	local maintext
-	local stem, gender, stress, ending
-	while true do
-		if args[1] then
-			maintext = "~ " .. args[1]
-			pos = get_pos()
-			break
-		end
-		stem, gender, stress, pos = rmatch(SUBPAGENAME, "^Ukrainian (.-) (.-)%-form accent%-(.-) (.*)s$")
-		if not stem then
-			-- check for e.g. 'Ukrainian hard masculine accent-a nouns in -о'
-			stem, gender, stress, pos, ending = rmatch(SUBPAGENAME, "^Ukrainian (.-) ([a-z]+ine) accent%-(.-) (.*)s in %-([ое])$")
-			if stem then
-				gender = gender .. " in -" .. ending
-			end
-		end
-		if stem then
-			local stem_gender_text = get_stem_gender_text(stem, gender)
-			local accent_text = " This " .. pos .. " is stressed according to accent pattern " ..
-				rsub(stress, "'", "&#39;") .. " (see [[Template:uk-ndecl]])."
-			maintext = stem_gender_text .. accent_text
-			insert("~ by stem type, gender and accent pattern|" .. get_sort_key())
-			break
-		end
-		pos = rmatch(SUBPAGENAME, "^Ukrainian indeclinable (.*)s$")
-		if pos then
-			maintext = "indeclinable ~, which normally have the same form for all cases and numbers."
-			break
-		end
-		stem, gender, pos = rmatch(SUBPAGENAME, "^Ukrainian (.-) (.-)%-form (.*)s$")
-		if not stem then
-			-- check for e.g. 'Ukrainian hard masculine nouns in -о'
-			stem, gender, pos, ending = rmatch(SUBPAGENAME, "^Ukrainian (.-) ([a-z]+ine) (.*)s in %-([ое])$")
-			if stem then
-				gender = gender .. " in -" .. ending
-			end
-		end
-		if stem then
-			maintext = get_stem_gender_text(stem, gender)
-			insert("~ by stem type and gender|" .. get_sort_key())
-			break
-		end
-		stem, gender, stress, pos = rmatch(SUBPAGENAME, "^Ukrainian (.*) (.-) adjectival accent%-(.-) (.*)s$")
-		if not stem then
-			stem, gender, pos = rmatch(SUBPAGENAME, "^Ukrainian (.*) (.-) adjectival (.*)s$")
-		end
-		if stem then
-			local adj_decl_endings = require("Module:uk-adjective").adj_decl_endings
-			if not stem_expl[stem] then
-				error("Invalid stem type '" .. stem .. "'")
-			end
-			local stemtext = " The stem ends in " .. stem_expl[stem] .. "."
-			local stresstext = stress == "a" and
-				"This " .. pos .. " is stressed according to accent pattern a (stress on the stem)." or
-				stress == "b" and
-				"This " .. pos .. " is stressed according to accent pattern b (stress on the ending)." or
-				"All ~ of this class are stressed according to accent pattern a (stress on the stem)."
-			local stemspec
-			if stem == "hard" then
-				stemspec = stress == "a" and "hard stem-stressed" or "hard ending-stressed"
-			else
-				stemspec = stem
-			end
-			local endings = adj_decl_endings[stemspec]
-			if not endings then
-				error("Invalid stem spec '" .. stem .. "'")
-			end
-			local m, f, n, pl = unpack(endings)
-			local sg =
-				gender == "masculine" and m or
-				gender == "feminine" and f or
-				gender == "neuter" and n or
-				nil
-			maintext = stem .. " " .. gender .. " ~, with adjectival endings, ending in " ..
-				(sg and sg .. " in the nominative singular and " or "") ..
-				pl .. " in the nominative plural." .. stemtext .. " " .. stresstext
-			insert("~ by stem type, gender and accent pattern|" .. get_sort_key())
-			break
-		end
-		local stress
-		pos, stress = rmatch(SUBPAGENAME, "^Ukrainian (.*)s with accent pattern (.*)$")
-		if stress then
-			maintext = "~ with accent pattern " .. rsub(stress, "'", "&#39;") ..
-				" (see [[Template:uk-ndecl]])."
-			insert("~ by accent pattern|" .. stress)
-			break
-		end
-		local altfrom, altto
-		pos, altfrom, altto = rmatch(SUBPAGENAME, "^Ukrainian (.*)s with (.*)%-(.*) alternation$")
-		if altfrom then
-			maintext = "~ with vowel alternation between " .. altfrom .. " in the lemma and " .. altto .. " in the last syllable of some or all remaining forms."
-			insert("~ by vowel alternation|" .. altfrom .. "-" .. altto)
-			break
-		end
-		error("Unrecognized Ukrainian noun category name")
-	end
-
-	insert("~|" .. get_sort_key(), "at beginning")
-
-	local categories = {}
-	for _, cat in ipairs(cats) do
-		table.insert(categories, "[[Category:" .. cat .. "]]")
-	end
-
-	return "This category contains Ukrainian " .. rsub(maintext, "~", pos .. "s")
-		.. "\n" ..
-		mw.getCurrentFrame():expandTemplate{title="uk-categoryTOC", args={}}
-		.. table.concat(categories, "")
-end
-
 -- Externally callable function to parse and decline a noun given user-specified arguments.
 -- Return value is WORD_SPEC, an object where the declined forms are in `WORD_SPEC.forms`
 -- for each slot. If there are no values for a slot, the slot key will be missing. The value
@@ -2765,6 +2539,7 @@ function export.do_generate_forms(parent_args, pos, from_headword, def)
 		[1] = {required = true, default = "віз<c.io>"},
 		footnote = {list = true},
 		title = {},
+		pos = {default = "noun"},
 	}
 
 	if from_headword then
@@ -2780,6 +2555,7 @@ function export.do_generate_forms(parent_args, pos, from_headword, def)
 	local args = m_para.process(parent_args, params)
 	local alternant_multiword_spec = iut.parse_alternant_multiword_spec(args[1], parse_indicator_spec)
 	alternant_multiword_spec.title = args.title
+	alternant_multiword_spec.pos = args.pos or pos
 	alternant_multiword_spec.footnotes = args.footnote
 	alternant_multiword_spec.args = args
 	normalize_all_lemmas(alternant_multiword_spec)
@@ -2818,6 +2594,7 @@ function export.do_generate_forms_manual(parent_args, number, pos, from_headword
 		footnote = {list = true},
 		title = {},
 		unknown_stress = {type = "boolean"},
+		pos = {default = "noun"},
 	}
 	if number == "both" then
 		params[1] = {required = true, default = "жук"}
@@ -2856,6 +2633,7 @@ function export.do_generate_forms_manual(parent_args, number, pos, from_headword
 	local alternant_spec = {
 		title = args.title,
 		footnotes = args.footnote,
+		pos = args.pos or pos,
 		forms = {},
 		number = number,
 		manual = true,

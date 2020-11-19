@@ -114,24 +114,27 @@ function make_comparatives(params, data)
 	-- Go over each parameter given and create a comparative and superlative form
 	for i, val in ipairs(params) do
 		local comp = val[1]
-		local sup = val[2]
+		local comp_qual = val[2]
+		local sup = val[3]
+		local sup_qual = val[4]
+		local comp_part, sup_part
 		
 		if comp == "more" and PAGENAME ~= "many" and PAGENAME ~= "much" then
-			table.insert(comp_parts, "[[more]] " .. PAGENAME)
-			table.insert(sup_parts, "[[most]] " .. PAGENAME)
+			comp_part = "[[more]] " .. PAGENAME
+			sup_part = "[[most]] " .. PAGENAME
 		elseif comp == "further" and PAGENAME ~= "far" then
-			table.insert(comp_parts, "[[further]] " .. PAGENAME)
-			table.insert(sup_parts, "[[furthest]] " .. PAGENAME)
+			comp_part = "[[further]] " .. PAGENAME
+			sup_part = "[[furthest]] " .. PAGENAME
 		elseif comp == "er" then
-			table.insert(comp_parts, stem .. "er")
-			table.insert(sup_parts, stem .. "est")
+			comp_part = stem .. "er"
+			sup_part = stem .. "est"
 		elseif comp == "-" or sup == "-" then
 			-- Allowing '-' makes it more flexible to not have some forms
 			if comp ~= "-" then
-				table.insert(comp_parts, comp)
+				comp_part = comp
 			end
 			if sup ~= "-" then
-				table.insert(sup_parts, sup)
+				sup_part = sup
 			end
 		else
 			-- If the full comparative was given, but no superlative, then
@@ -144,8 +147,15 @@ function make_comparatives(params, data)
 				end
 			end
 			
-			table.insert(comp_parts, comp)
-			table.insert(sup_parts, sup)
+			comp_part = comp
+			sup_part = sup
+		end
+
+		if comp_part then
+			table.insert(comp_parts, {term = comp_part, qualifiers = {comp_qual}})
+		end
+		if sup_part then
+			table.insert(sup_parts, {term = sup_part, qualifiers = {sup_qual}})
 		end
 	end
 	
@@ -156,7 +166,9 @@ end
 pos_functions["adjectives"] = {
 	params = {
 		[1] = {list = true, allow_holes = true},
+		["comp_qual"] = {list = "comp=_qual", allow_holes = true},
 		["sup"] = {list = true, allow_holes = true},
+		["sup_qual"] = {list = "sup=_qual", allow_holes = true},
 		},
 	func = function(args, data)
 		local shift = 0
@@ -181,10 +193,12 @@ pos_functions["adjectives"] = {
 		
 		for i = 1, args[1].maxindex - shift do
 			local comp = args[1][i + shift]
+			local comp_qual = args["comp_qual"][i + shift]
 			local sup = args["sup"][i]
+			local sup_qual = args["sup_qual"][i + shift]
 			
 			if comp or sup then
-				table.insert(params, {comp, sup})
+				table.insert(params, {comp, comp_qual, sup, sup_qual})
 			end
 		end
 		
@@ -217,7 +231,9 @@ pos_functions["adjectives"] = {
 pos_functions["adverbs"] = {
 	params = {
 		[1] = {list = true, allow_holes = true},
+		["comp_qual"] = {list = "comp=_qual", allow_holes = true},
 		["sup"] = {list = true, allow_holes = true},
+		["sup_qual"] = {list = "sup=_qual", allow_holes = true},
 		},
 	func = function(args, data)
 		local shift = 0
@@ -235,10 +251,12 @@ pos_functions["adverbs"] = {
 		
 		for i = 1, args[1].maxindex - shift do
 			local comp = args[1][i + shift]
+			local comp_qual = args["comp_qual"][i + shift]
 			local sup = args["sup"][i]
+			local sup_qual = args["sup_qual"][i + shift]
 			
 			if comp or sup then
-				table.insert(params, {comp, sup})
+				table.insert(params, {comp, comp_qual, sup, sup_qual})
 			end
 		end
 		
@@ -617,7 +635,7 @@ pos_functions["verbs"] = {
 
 		------------------------------------------- UTILITY FUNCTIONS #2 ------------------------------------------
 
-		-- These functions are used in both in the separate-parameter format and in the override params such as past_ptc2=.
+		-- These functions are used in both in the separate-parameter format and in the override params such as past_ptc2=. 
 
 		local new_default_s, new_default_ing, new_default_ed, split_default_s, split_default_ing, split_default_ed =
 			default_verb_forms(pagename)
@@ -763,7 +781,7 @@ pos_functions["verbs"] = {
 				local en_specs = fetch_specs(comma_separated_groups[4])
 				for _, spec in ipairs(s_specs) do
 					if spec.form == "++" and #ing_specs == 1 and not ing_specs[1].form and not ing_specs[1].qualifiers
-						and #ed_specs == 1 and ed_specs[1].form and not ed_specs[1].qualifiers then
+						and #ed_specs == 1 and not ed_specs[1].form and not ed_specs[1].qualifiers then
 						ing_specs[1].form = "++"
 						ed_specs[1].form = "++"
 						break
@@ -816,7 +834,22 @@ pos_functions["verbs"] = {
 						elseif form == "++" then
 							form = canonicalize_plusplus()
 						end
-						iut.insert_form(base.forms, slot, {form = form, footnotes = spec.qualifiers})
+						-- If there's a ~ in the form, substitute it with the lemma,
+						-- but make sure to first replace % in the lemma with %% so that
+						-- it doesn't get interpreted as a capture replace expression.
+						if form:find("~") then
+							-- Assign to a var because gsub returns multiple values.
+							local subbed_lemma = base.lemma:gsub("%%", "%%%%")
+							form = form:gsub("~", subbed_lemma)
+						end
+						-- If the form is -, don't insert any forms, which will result
+						-- in there being no overall forms (in fact it will be nil).
+						-- We check for that down below and substitute a single "-" as
+						-- the form, which in turn gets turned into special labels like
+						-- "no present participle".
+						if form ~= "-" then
+							iut.insert_form(base.forms, slot, {form = form, footnotes = spec.qualifiers})
+						end
 					end
 				end
 
@@ -859,10 +892,20 @@ pos_functions["verbs"] = {
 
 			-- (4) Fetch the forms and put the conjugated lemmas in data.heads if not explicitly given.
 
-			pres_3sgs = alternant_multiword_spec.forms.s_form
-			pres_ptcs = alternant_multiword_spec.forms.ing_form
-			pasts = alternant_multiword_spec.forms.ed_form
-			past_ptcs = alternant_multiword_spec.forms.en_form
+			local function fetch_forms(slot)
+				local forms = alternant_multiword_spec.forms[slot]
+				-- See above. This should only occur if the user explicitly used -
+				-- for a spec.
+				if not forms or #forms == 0 then
+					forms = {{form = "-"}}
+				end
+				return forms
+			end
+
+			pres_3sgs = fetch_forms("s_form")
+			pres_ptcs = fetch_forms("ing_form")
+			pasts = fetch_forms("ed_form")
+			past_ptcs = fetch_forms("en_form")
 			-- Use the "linked" form of the lemma as the head if no head= explicitly given.
 			-- If no links in this form and it has multiple words, autolink the individual words.
 			-- The user can override this using head=.
