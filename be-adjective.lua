@@ -496,9 +496,10 @@ end
 
 local function show_forms(alternant_multiword_spec)
 	local lemmas = {}
-	if alternant_multiword_spec.forms.nom_m then
-		for _, nom_m in ipairs(alternant_multiword_spec.forms.nom_m) do
-			table.insert(lemmas, com.remove_monosyllabic_accents(nom_m.form))
+	local lemmaform = alternant_multiword_spec.forms.nom_m or alternant_multiword_spec.forms.nom_p 
+	if lemmaform then
+		for _, form in ipairs(lemmaform) do
+			table.insert(lemmas, com.remove_monosyllabic_accents(form.form))
 		end
 	end
 	props = {
@@ -610,6 +611,39 @@ local function make_table(alternant_multiword_spec)
 | {loc_p}
 |{\cl}{notes_clause}</div></div></div>]=]
 
+	local table_spec_plonly = [=[
+<div>
+<div class="NavFrame" style="display: inline-block; min-width: 25em">
+<div class="NavHead" style="background:#eff7ff">{title}{annotation}</div>
+<div class="NavContent">
+{\op}| border="1px solid #000000" style="border-collapse:collapse;background:#F9F9F9;text-align:center; min-width:25em" class="inflection-table"
+|-
+! style="width:50%;background:#d9ebff" colspan="2" | 
+! style="background:#d9ebff" | plural
+|-
+! style="background:#eff7ff" colspan="2" | nominative
+| {nom_p}
+|-
+! style="background:#eff7ff" colspan="2" | genitive
+| {gen_p}
+|-
+! style="background:#eff7ff" colspan="2" | dative
+| {dat_p}
+|-
+! style="background:#eff7ff" rowspan="2" | accusative
+! style="background:#eff7ff" | animate
+| {acc_p_an}
+|-
+! style="background:#eff7ff" | inanimate
+| {acc_p_in}
+|-
+! style="background:#eff7ff" colspan="2" | instrumental
+| {ins_p}
+|-
+! style="background:#eff7ff" colspan="2" | locative
+| {loc_p}
+|{\cl}{notes_clause}</div></div></div>]=]
+
 	local short_form_template = [=[
 
 |-
@@ -661,7 +695,9 @@ local function make_table(alternant_multiword_spec)
 	forms.short_clause = forms.short_m and forms.short_m ~= "—" and
 		m_string_utilities.format(short_form_template, forms) or ""
 	return m_string_utilities.format(
-		alternant_multiword_spec.surname and table_spec_surname or table_spec, forms
+		alternant_multiword_spec.surname and table_spec_surname or
+		alternant_multiword_spec.special == "plonly" and table_spec_plonly or
+		table_spec, forms
 	)
 end
 
@@ -823,6 +859,7 @@ end
 -- list of objects {form=FORM, footnotes=FOOTNOTES}.
 function export.do_generate_forms_manual(parent_args, pos, from_headword, def)
 	local params = {
+		special = {},
 		footnote = {list = true},
 		title = {},
 	}
@@ -832,6 +869,7 @@ function export.do_generate_forms_manual(parent_args, pos, from_headword, def)
 
 	local args = m_para.process(parent_args, params)
 	local alternant_spec = {
+		special = args.special,
 		title = args.title,
 		footnotes = args.footnote,
 		forms = {},
@@ -874,7 +912,7 @@ end
 local function concat_forms(alternant_spec, include_props)
 	local ins_text = {}
 	for slot, _ in pairs(get_output_adjective_slots(alternant_spec)) do
-		local formtext = com.concat_forms_in_slot(alternant_spec.forms[slot])
+		local formtext = iut.concat_forms_in_slot(alternant_spec.forms[slot])
 		if formtext then
 			table.insert(ins_text, slot .. "=" .. formtext)
 		end
