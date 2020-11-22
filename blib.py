@@ -1153,43 +1153,24 @@ def safe_page_text(page, pagemsg):
 def safe_page_exists(page, pagemsg):
   return try_repeatedly(lambda: page.exists(), pagemsg, "determine if page exists", bad_value_ret=False)
 
-# Process link-like templates containing foreign text in specified language(s),
-# on pages from STARTFROM to (but not including) UPTO, either page names or
-# 0-based integers. Save changes if SAVE is true. VERBOSE is passed to
-# blib.do_edit and will (e.g.) show exact changes. PROCESS_PARAM is the
-# function called, which is called with seven arguments: The page, its index
-# (an integer), the page text, the template on the page, the language code of
-# the template, the param in the template containing the foreign text and the
-# param containing the Latin transliteration, or None if there is no such
-# parameter. NOTE: The param may be an array ["page title", PARAM] for a case
-# where the param value should be fetched from the page title and saved to
-# PARAM. The function should return a list of changelog strings if changes
-# were made, and something else otherwise (e.g. False). Changelog strings for
-# all templates will be joined together using JOIN_ACTIONS; if not supplied,
+# Process link-like templates containing foreign text in specified language(s).
+#  PROCESS_PARAM is the function called, which is called with seven arguments: The page, its index
+# (an integer), the page text, the template on the page, the language code of the template, the param
+# in the template containing the foreign text and the param containing the Latin transliteration, or
+# None if there is no such parameter. NOTE: The param may be an array ["page title", PARAM] for a case
+# where the param value should be fetched from the page title and saved to PARAM. The function should
+# return a list of changelog strings if changes were made, and something else otherwise (e.g. False).
+# Changelog strings for all templates will be joined together using JOIN_ACTIONS; if not supplied,
 # they will be separated by a semi-colon.
 #
-# LANG should be a short language code (e.g. 'ru', 'ar', 'grc') or list of
-# such codes; only templates referencing the specified language(s) will be
-# processed. LONGLANG is a canonical language name (e.g. "Russian", "Arabic",
-# "Ancient Greek"), and is used only when CATTYPE is 'vocab' or 'borrowed'
-# (see following). CATTYPE is either 'vocab' (do lemmas and non-lemma pages
-# for the language in LONGLANG), 'borrowed' (do pages for terms borrowed from
-# LONGLANG), 'translation' (do pages containing references to any of the 5
-# standard translation templates), 'pagetext' (do the pages in PAGES_TO_DO,
-# a list of (TITLE, TEXT) entries); for doing off-line runs; nothing saved),
-# 'pages' (do the pages in PAGES_TO_DO, a list of page titles), or an
-# arbitrary category name. It can also be a comma-separated list of any of
-# the above.
+# Returns two values: the changed text along with a changelog message.
 #
-# If SPLIT_TEMPLATES, then if the transliteration contains multiple entries
-# separated the regex in SPLIT_TEMPLATES with optional spaces on either end,
-# the template is split into multiple copies, each with one of the entries,
-# and the templates are comma-separated.
+# LANGS contains the language code(s) of the languages to do; only templates referencing the specified
+# language(s) will be processed.
 #
-# If QUIET, don't output the list of processed templates at the end.
-
-# Process the link-like templates on the given page with the given text.
-# Returns the changed text along with a changelog message.
+# If SPLIT_TEMPLATES, then if the transliteration contains multiple entries separated by the regex
+# in SPLIT_TEMPLATES with optional spaces on either end, the template is split into multiple copies,
+# each with one of the entries, and the templates are comma-separated.
 def process_one_page_links(pagetitle, index, text, process_param,
   langs, templates_seen, templates_changed, join_actions=None,
   split_templates="[,]"):
@@ -1550,7 +1531,7 @@ def process_one_page_links(pagetitle, index, text, process_param,
   else:
     changelog = join_actions(actions)
   #if len(terms_processed) > 0:
-  pagemsg("Change log = %s" % changelog)
+  #pagemsg("Change log = %s" % changelog)
   return unicode(parsed), changelog
 
 #def process_one_page_links_wrapper(page, index, text):
@@ -1837,18 +1818,18 @@ def yield_text_from_find_regex(lines, verbose):
       templines.append(line)
     else:
       line = line.rstrip('\n')
-      if line.endswith(':'):
-        pagename = "Template:%s" % line[:-1]
+      #if line.endswith(':'):
+      #  pagename = "Template:%s" % line[:-1]
+      #  in_multiline = True
+      #  templines = []
+      #else:
+      m = re.search("^Page [0-9]+ (.*): -+ begin text -+$", line)
+      if m:
+        pagename = m.group(1)
         in_multiline = True
         templines = []
-      else:
-        m = re.search("^Page [0-9]+ (.*): -+ begin text -+$", line)
-        if m:
-          pagename = m.group(1)
-          in_multiline = True
-          templines = []
-        elif verbose:
-          msg("Skipping: %s" % line)
+      elif verbose:
+        msg("Skipping: %s" % line)
 
 def yield_text_from_diff(lines, verbose):
   in_multiline = False
