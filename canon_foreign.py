@@ -275,5 +275,6 @@ def canon_one_page_links(pagetitle, index, text, lang, script, translit_module,
         result = newresult
     return result
 
-  return blib.process_one_page_links(pagetitle, index, text, process_param, [lang],
-      templates_seen, templates_changed, join_actions=sort_group_changelogs)
+  text, actions = blib.process_one_page_links(index, pagetitle, text, [lang], process_param,
+      templates_seen, templates_changed, split_templates="[,]")
+  return text, sort_group_changelogs(actions)
