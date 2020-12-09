@@ -208,16 +208,6 @@ def process_text_on_page(index, pagetitle, pagetext):
   if not args.stdin:
     pagemsg("Processing")
 
-  # Split into (sub)sections
-  splitsections = re.split("(^===*[^=\n]+=*==\n)", pagetext, 0, re.M)
-  # Extract off pagehead and recombine section headers with following text
-  pagehead = splitsections[0]
-  sections = []
-  for i in xrange(1, len(splitsections)):
-    if (i % 2) == 1:
-      sections.append("")
-    sections[-1] += splitsections[i]
-
   def sub_link(m, langname, link_langcode, link_langcode_remove_accents, origtext, add_sclb):
     linktext = m.group(0)
     link = m.group(1)
@@ -449,9 +439,23 @@ def process_text_on_page(index, pagetitle, pagetext):
     pagemsg("Replacing <%s> with <%s>" % (origtext, newtext))
     return newtext
 
+  if args.do_all_sections:
+    pagehead = ""
+    sections = [pagetext]
+  else:
+    # Split into (sub)sections
+    splitsections = re.split("(^===*[^=\n]+=*==\n)", pagetext, 0, re.M)
+    # Extract off pagehead and recombine section headers with following text
+    pagehead = splitsections[0]
+    sections = []
+    for i in xrange(1, len(splitsections)):
+      if (i % 2) == 1:
+        sections.append("")
+      sections[-1] += splitsections[i]
+
   # Go through each section in turn, looking for Descendants sections
   for i in xrange(len(sections)):
-    if re.match("^===*Descendants=*==\n", sections[i]):
+    if args.do_all_sections or re.match("^===*Descendants=*==\n", sections[i]):
       text = sections[i]
       text = re.sub(ur"^(\*+:?)( *(?:→ *)?)(Serbo-Croat(?:ian):|\{\{desc(?:\|.*?)?\|sh(?:\|.*?)?\|-(?:\|.*?)?\}\})((?:\n\1[*:] *(?:Latin|Roman|Cyrillic): *(?:\[\[[^\[\]\n]*?\]\]|\{\{[lm]\|sh\|[^{}\n]*?\}\}))+)",
          replace_serbo_croatian_with_desc, text, 0, re.M)
@@ -463,6 +467,7 @@ def process_text_on_page(index, pagetitle, pagetext):
 
 parser = blib.create_argparser("Use {{desc}} for descendants in place of LANG {{l|CODE|...}} or LANG [[LINK]]",
   include_pagefile=True, include_stdin=True)
+parser.add_argument("--do-all-sections", action="store_true", help="Do all sections, not only Descendants sections")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
