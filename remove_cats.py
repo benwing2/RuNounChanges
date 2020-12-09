@@ -17,8 +17,8 @@ def process_text_on_page(index, pagetitle, text):
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
-  if ":" in pagetitle and not re.search("^(Appendix|Reconstruction|Citations):", pagetitle):
-    return
+  #if ":" in pagetitle and not re.search("^(Appendix|Reconstruction|Citations):", pagetitle):
+  #  return
 
   origtext = text
   pagemsg("Processing")
@@ -82,7 +82,7 @@ def process_text_on_page(index, pagetitle, text):
         text_to_remove.append(unicode(t))
   text = unicode(parsed)
 
-  for m in re.finditer(r"\[\[(?:Category|CAT):(.*?)\]\]\n?", text):
+  for m in re.finditer(r"\[\[(?:Category|category|CAT):(.*?)\]\]\n?", text):
     cat = m.group(1)
     cat = re.sub(r"\|.*", "", cat)
     if should_remove_cat(cat):
