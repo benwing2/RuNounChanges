@@ -20,6 +20,7 @@ def process_page(page, index, templates, paramspecs, negate, from_to,
 
   paramset = paramspecs and set(paramspecs) or set()
 
+  lines_output = 0
   for t in parsed.filter_templates():
     if from_to:
       temptext = "<from> %s <to> %s <end>" % (unicode(t), unicode(t))
@@ -29,6 +30,7 @@ def process_page(page, index, templates, paramspecs, negate, from_to,
     if tn in templates:
       if not paramspecs and not countparams:
         pagemsg("Found %s template: %s" % (tn, temptext))
+        lines_output += 1
       else:
         seen_params = set()
         counted_param_values = counted_param_values_by_template[tn]
@@ -42,11 +44,13 @@ def process_page(page, index, templates, paramspecs, negate, from_to,
             if pvalue not in counted_param_values[pname]:
               pagemsg("Found new value %s=%s for %s template: %s" %
                   (pname, pvalue, tn, temptext))
+              lines_output += 1
             counted_param_values[pname][pvalue] += 1
           if negate:
             if pname not in paramset:
               pagemsg("Found %s template with unrecognized param %s=%s: %s" %
                   (tn, pname, pvalue, temptext))
+              lines_output += 1
           elif paramspecs:
             for spec in paramspecs:
               found = False
@@ -60,6 +64,7 @@ def process_page(page, index, templates, paramspecs, negate, from_to,
               if found:
                 pagemsg("Found %s template with %s=%s: %s" %
                     (tn, pname, pvalue, temptext))
+                lines_output += 1
         # Also output occurrences of missing params when !PARAM given
         if paramspecs:
           for spec in paramspecs:
@@ -67,6 +72,7 @@ def process_page(page, index, templates, paramspecs, negate, from_to,
               if not getparam(t, spec[1]):
                 pagemsg("Found %s template with param %s missing or blank: %s" %
                     (tn, spec[1], temptext))
+                lines_output += 1
         # Also track occurrences of params in countparams not occurring
         if countparams:
           for countparam in countparams:
@@ -76,7 +82,10 @@ def process_page(page, index, templates, paramspecs, negate, from_to,
               if None not in counted_param_values[countparam]:
                 pagemsg("Found new value %s=(unseen) for %s template: %s" %
                     (countparam, tn, temptext))
+                lines_output += 1
               counted_param_values[countparam][None] += 1
+  if lines_output > 0:
+    pagemsg("Output %s lines" % lines_output)
 
 parser = blib.create_argparser("Find templates with specified params",
     include_pagefile=True)
