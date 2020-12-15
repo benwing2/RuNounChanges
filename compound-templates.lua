@@ -75,7 +75,9 @@ local function parse_args(args, allow_compat, hack_params)
 		["id"] = {list = true, allow_holes = true, require_index = true},
 		["alt"] = {list = true, allow_holes = true, require_index = true},
 		["q"] = {list = true, allow_holes = true, require_index = true},
-		["lit"] = {list = true, allow_holes = true, require_index = true},
+		["lit"] = {},
+		-- Note, lit1=, lit2=, ... are different from lit=
+		["partlit"] = {list = "lit", allow_holes = true, require_index = true},
 		["pos"] = {},
 		-- Note, pos1=, pos2=, ... are different from pos=
 		["partpos"] = {list = "pos", allow_holes = true, require_index = true},
@@ -90,6 +92,7 @@ local function parse_args(args, allow_compat, hack_params)
 		["pos"] = {},
 		["sort"] = {},
 		["nocat"] = {type = "boolean"},
+		["force_cat"] = {type = "boolean"},
 	}
 
 	if hack_params then
@@ -112,7 +115,7 @@ local function get_parsed_part(template, args, terms, i)
 	local ts = args["ts"][i]
 	local gloss = args["t"][i]
 	local pos = args["partpos"][i]
-	local lit = args["lit"][i]
+	local lit = args["partlit"][i]
 	local q = args["q"][i]
 	local g = args["g"][i]
 
@@ -171,7 +174,7 @@ function export.affix(frame)
 		end
 	end
 	
-	return m_compound.show_affixes(lang, sc, parts, args["pos"], args["sort"], args["nocat"])
+	return m_compound.show_affixes(lang, sc, parts, args["pos"], args["sort"], args["nocat"], args["lit"], args["force_cat"])
 end
 
 
@@ -190,7 +193,7 @@ function export.compound(frame)
 		end
 	end
 	
-	return m_compound.show_compound(lang, sc, parts, args["pos"], args["sort"], args["nocat"])
+	return m_compound.show_compound(lang, sc, parts, args["pos"], args["sort"], args["nocat"], args["lit"], args["force_cat"])
 end
 
 
@@ -218,7 +221,7 @@ function export.compound_like(frame)
 		end
 	end
 	
-	return m_compound.show_compound_like(lang, sc, parts, args["sort"], text, oftext, cat)
+	return m_compound.show_compound_like(lang, sc, parts, args["sort"], text, oftext, cat, args["lit"], args["force_cat"])
 end
 
 
@@ -241,7 +244,7 @@ function export.interfix_compound(frame)
 		end
 	end
 	
-	return m_compound.show_interfix_compound(lang, sc, base1, interfix, base2, args["pos"], args["sort"], args["nocat"])
+	return m_compound.show_interfix_compound(lang, sc, base1, interfix, base2, args["pos"], args["sort"], args["nocat"], args["lit"], args["force_cat"])
 end
 
 
@@ -264,7 +267,7 @@ function export.circumfix(frame)
 		end
 	end
 		
-	return m_compound.show_circumfix(lang, sc, prefix, base, suffix, args["pos"], args["sort"], args["nocat"])
+	return m_compound.show_circumfix(lang, sc, prefix, base, suffix, args["pos"], args["sort"], args["nocat"], args["lit"], args["force_cat"])
 end
 
 
@@ -286,7 +289,7 @@ function export.confix(frame)
 		end
 	end
 		
-	return m_compound.show_confix(lang, sc, prefix, base, suffix, args["pos"], args["sort"], args["nocat"])
+	return m_compound.show_confix(lang, sc, prefix, base, suffix, args["pos"], args["sort"], args["nocat"], args["lit"], args["force_cat"])
 end
 
 
@@ -307,7 +310,7 @@ function export.infix(frame)
 		end
 	end
 	
-	return m_compound.show_infix(lang, sc, base, infix, args["pos"], args["sort"], args["nocat"])
+	return m_compound.show_infix(lang, sc, base, infix, args["pos"], args["sort"], args["nocat"], args["lit"], args["force_cat"])
 end
 
 
@@ -332,7 +335,7 @@ function export.prefix(frame)
 		end
 	end
 	
-	return m_compound.show_prefixes(lang, sc, prefixes, base, args["pos"], args["sort"], args["nocat"])
+	return m_compound.show_prefixes(lang, sc, prefixes, base, args["pos"], args["sort"], args["nocat"], args["lit"], args["force_cat"])
 end
 
 
@@ -352,7 +355,7 @@ function export.suffix(frame)
 		end
 	end
 	
-	return m_compound.show_suffixes(lang, sc, base, suffixes, args["pos"], args["sort"], args["nocat"])
+	return m_compound.show_suffixes(lang, sc, base, suffixes, args["pos"], args["sort"], args["nocat"], args["lit"], args["force_cat"])
 end
 
 
@@ -366,6 +369,7 @@ function export.transfix(frame)
 		["pos"] = {},
 		["sc"] = {},
 		["sort"] = {},
+		["lit"] = {},
 	}
 	
 	local args = require("Module:parameters").process(frame:getParent().args, params)
@@ -376,7 +380,7 @@ function export.transfix(frame)
 	local base = {term = args[2]}
 	local transfix = {term = args[3]}
 	
-	return m_compound.show_transfix(lang, sc, base, transfix, args["pos"], args["sort"], args["nocat"])
+	return m_compound.show_transfix(lang, sc, base, transfix, args["pos"], args["sort"], args["nocat"], args["lit"], args["force_cat"])
 end
 
 
@@ -431,7 +435,7 @@ function export.derivsee(frame)
 		return frame:callParserFunction{
 			name = "#categorytree",
 			args = {
-				"Terms derived from the PIE root " .. term .. (id and " (" .. id .. ")" or ""),
+				"Terms derived from the Proto-Indo-European root " .. term .. (id and " (" .. id .. ")" or ""),
 				depth = 0,
 				class = "\"derivedterms\"",
 				mode = mode,
