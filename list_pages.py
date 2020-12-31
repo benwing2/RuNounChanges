@@ -12,11 +12,7 @@ args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
 if args.namespace:
-  ns = args.namespace
-  if re.search('^[0-9]+$', ns):
-    ns = int(ns)
-  else:
-    ns = unicode(ns)
+  ns = args.namespace.decode("utf-8")
   for i, page in blib.iter_items(site.allpages(
     start=start if isinstance(start, basestring) else '!', namespace=ns,
     filterredir=False), start, end):

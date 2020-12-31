@@ -500,9 +500,9 @@ def references(page, startsort = None, endsort = None, namespaces = None,
   for i, current in iter_items(pages, startsort, endsort):
     yield i, current
 
-def get_contributions(user, startsort=None, endsort=None, max=None, ns=None):
+def get_contributions(user, startsort=None, endsort=None, max=None, namespaces=None):
   """Get contributions for a given user."""
-  itemiter = site.usercontribs(user=user, namespaces=ns, total=max)
+  itemiter = site.usercontribs(user=user, namespaces=namespaces, total=max)
   for i, current in iter_items(itemiter, startsort, endsort, get_name=lambda item: item['title']):
     yield i, current
 
@@ -580,12 +580,12 @@ def cat_subcats(page, startsort=None, endsort=None, seen=None, prune_cats_regex=
   for i, current in iter_items(pageiter, startsort, endsort):
     yield i, current
 
-def prefix_pages(prefix, startsort = None, endsort = None, namespace = None):
+def prefix_pages(prefix, startsort=None, endsort=None, namespace=None):
   pageiter = site.allpages(prefix=prefix, namespace=namespace)
   for i, current in iter_items(pageiter, startsort, endsort):
     yield i, current
 
-def query_special_pages(specialpage, startsort = None, endsort = None):
+def query_special_pages(specialpage, startsort=None, endsort=None):
   for i, current in iter_items(site.querypage(specialpage), startsort, endsort):
     yield i, current
 
@@ -899,7 +899,7 @@ def parse_start_end(startsort, endsort):
 def do_pagefile_cats_refs(args, start, end, process, default_cats=[],
     default_refs=[], edit=False, stdin=False, only_lang=None,
     filter_pages=None, ref_namespaces=None):
-  args_ref_namespaces = args.ref_namespaces and args.ref_namespaces.decode("utf-8")
+  args_ref_namespaces = args.ref_namespaces and args.ref_namespaces.decode("utf-8").split(",")
   args_filter_pages = args.filter_pages and args.filter_pages.decode("utf-8")
   args_filter_pages_not = args.filter_pages_not and args.filter_pages_not.decode("utf-8")
 
@@ -1010,9 +1010,7 @@ def do_pagefile_cats_refs(args, start, end, process, default_cats=[],
           process_page(page, i)
     if args.prefix_pages:
       for prefix in [x.decode("utf-8") for x in re.split(r",(?! )", args.prefix_pages)]:
-        namespace = args.prefix_namespace
-        if namespace and re.search("^[0-9]+$", namespace):
-          namespace = int(namespace)
+        namespace = args.prefix_namespace and args.prefix_namespace.decode("utf-8") or None
         for i, page in prefix_pages(prefix, start, end, namespace):
           process_page(page, i)
 
