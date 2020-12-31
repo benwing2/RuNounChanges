@@ -23,14 +23,14 @@ import blib
 from blib import getparam, rmparam, msg, site
 
 def process_text_on_page(index, pagetitle, text, regex, invert, verbose,
-    include_text, all_matches, include_non_mainspace, lang_only):
+    include_text, all_matches, mainspace_only, lang_only):
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
   if verbose:
     pagemsg("Processing")
 
-  if not include_non_mainspace and ":" in pagetitle:
+  if mainspace_only and ":" in pagetitle:
     if verbose:
       pagemsg("WARNING: Colon in page title, skipping page")
     return
@@ -73,7 +73,7 @@ def search_pages(args, regex, invert, input_from_diff, start, end, lang_only):
 
   def do_process_text_on_page(index, title, text):
     process_text_on_page(index, title, text, regex, invert, args.verbose,
-        args.text, args.all, args.include_non_mainspace, lang_only)
+        args.text, args.all, args.mainspace_only, lang_only)
 
   if input_from_diff:
     lines = codecs.open(input_from_diff, "r", "utf-8")
@@ -95,7 +95,7 @@ if __name__ == "__main__":
   parser.add_argument('--input-from-diff', help="Use the specified file as input, a previous output of a job run with --diff.")
   parser.add_argument('--all', help="Include all matches.", action="store_true")
   parser.add_argument('--text', help="Include surrounding text.", action="store_true")
-  parser.add_argument('--include-non-mainspace', help="Don't skip non-mainspace pages. Defaults to true if --namespaces is given.", action='store_true')
+  parser.add_argument('--mainspace-only', help="Skip non-mainspace pages.", action='store_true')
   parser.add_argument('--lang-only', help="Only search the specified language section.")
   args = parser.parse_args()
   start, end = blib.parse_start_end(args.start, args.end)
