@@ -2,9 +2,12 @@
 # -*- coding: utf-8 -*-
 
 import pywikibot, re, sys, codecs, argparse
+import unicodedata
 
 import blib
 from blib import getparam, rmparam, msg, errmsg, site, tname, pname
+
+allowed_reading_types = ["goon", "kanon", "toon", "soon", "kanyoon", "on", "kun", "nanori"]
 
 def process_text_on_page(index, pagetitle, text):
   global args
@@ -30,45 +33,168 @@ def process_text_on_page(index, pagetitle, text):
   if not blib.safe_page_exists(spelling_page, pagemsg_with_spelling):
     pagemsg_with_spelling("Spelling page doesn't exist, skipping")
     return
-  text = blib.safe_page_text(spelling_page, pagemsg_with_spelling)
-  retval = blib.find_modifiable_lang_section(text, lang, pagemsg_with_spelling)
+  spelling_page_text = blib.safe_page_text(spelling_page, pagemsg_with_spelling)
+  retval = blib.find_modifiable_lang_section(spelling_page_text, lang, pagemsg_with_spelling)
   if retval is None:
-    pagemsg("WARNING: Couldn't find %s section" % lang)
+    pagemsg_with_spelling("WARNING: Couldn't find %s section" % lang)
     return
   sections, j, secbody, sectail, has_non_lang = retval
 
   parsed = blib.parse_text(secbody)
   saw_readings_template = False
+  reading_types = []
   for t in parsed.filter_templates():
     tn = tname(t)
     if tn == "%s-readings" % langcode:
       saw_readings_template = True
-      reading_types = []
-      for reading_type in ["goon", "kanon", "toon", "soon", "kanyoon", "on", "kun", "nanori"]:
+      for reading_type in allowed_reading_types:
         readings = getparam(t, reading_type).strip()
         if readings:
           readings = re.split(r"\s*,\s*", readings)
           readings = [re.sub("[<-].*", "", r) for r in readings]
           if reading in readings:
             reading_types.append(reading_type)
-      if reading_types:
-        contents = "{{%s-readingcat|%s|%s|%s}}" % (langcode, spelling, reading, "|".join(reading_types))
-        comment = 'Created page with "%s"' % contents
-        if args.save:
-          spelling_page.text = contents
-          try:
-            spelling_page.save(comment)
-            errandpagemsg_with_spelling("Created page, comment = %s" % comment)
-          except pywikibot.exceptions.LockedPage as e:
-            errandpagemsg_with_spelling("WARNING: Error when trying to save: %s" % unicode(e))
-        else:
-          pagemsg_with_spelling("Would create, comment = %s" % comment)
-      else:
+      if not reading_types:
         pagemsg_with_spelling("WARNING: Can't find reading %s among readings listed in %s" %
           (reading, unicode(t).replace("\n", r"\n")))
 
   if not saw_readings_template:
     pagemsg_with_spelling("WARNING: Couldn't find reading template {{%s-readings}}" % langcode)
+
+  if reading_types:
+    contents = "{{auto cat|%s}}" % "|".join(reading_types)
+    if text:
+      comment = 'Overwrite page with "%s"' % contents
+    else:
+      comment = 'Create page with "%s"' % contents
+    return contents, comment
+  else:
+    pagemsg_with_spelling("WARNING: Can't find reading %s on page" % reading)
+
+  for i, contents_page in blib.cat_articles(re.sub("^Category:", "", pagetitle)):
+    contents_title = unicode(contents_page.title())
+    def pagemsg_with_contents(txt):
+      pagemsg("%s: %s" % (contents_title, txt))
+    def errandpagemsg_with_contents(txt):
+      pagemsg_with_contents(txt)
+      errmsg("Page %s %s: %s: %s" % (index, pagetitle, contents_title, txt))
+    contents_page_text = blib.safe_page_text(contents_page, pagemsg_with_contents)
+    retval = blib.find_modifiable_lang_section(contents_page_text, lang, pagemsg_with_contents)
+    if retval is None:
+      pagemsg_with_contents("WARNING: Couldn't find %s section" % lang)
+      return
+    sections, j, secbody, sectail, has_non_lang = retval
+
+    saw_kanjitab = False
+    must_continue = False
+    for ch in contents_title:
+      if 0xD800 <= ord(ch) <= 0xDFFF:
+        pagemsg_with_contents("WARNING: Surrogates in page name, skipping: %s" % ord(ch))
+        must_continue = True
+        break
+    if must_continue:
+      continue
+    chars_in_contents_title = [x for x in contents_title]
+    for i, ch in enumerate(chars_in_contents_title):
+      if ch == u"々": # kanji repeat char
+        if i == 0:
+          pagemsg_with_contents(u"Repeat char 々 found at beginning of contents title")
+          must_continue = True
+          break
+        else:
+          chars_in_contents_title[i] = chars_in_contents_title[i - 1]
+    if must_continue:
+      continue
+    kanji_in_contents_title = [x for x in chars_in_contents_title if unicodedata.name(x).startswith("CJK UNIFIED IDEOGRAPH")]
+    parsed = blib.parse_text(secbody)
+    for t in parsed.filter_templates():
+      tn = tname(t)
+      if tn == "%s-kanjitab" % langcode:
+        saw_kanjitab = True
+        readings = []
+        for i in range(1, 10):
+          contents_reading = getparam(t, str(i))
+          if contents_reading:
+            readings.append(contents_reading)
+        if len(kanji_in_contents_title) != len(readings):
+          pagemsg_with_contents("WARNING: Saw %s chars in contents title but %s readings %s, skipping: %s" % (
+            len(kanji_in_contents_title), len(readings), ",".join(readings), unicode(t)))
+          continue
+        yomi = getparam(t, "yomi")
+        if not yomi:
+          pagemsg_with_contents("WARNING: No yomi, skipping: %s" % unicode(t))
+          continue
+        if "," in yomi:
+          yomi = yomi.split(",")
+          if len(yomi) != len(kanji_in_contents_title):
+            pagemsg_with_contents("WARNING: %s values in yomi=%s but %s chars in contents, skipping: %s" % (
+              len(yomi), ",".join(yomi), len(kanji_in_contents_title), unicode(t)))
+            continue
+        saw_spelling_in_contents = False
+        must_continue = False
+        for i, (ch, contents_reading) in enumerate(zip(kanji_in_contents_title, readings)):
+          if ch == spelling:
+            saw_spelling_in_contents = True
+            if contents_reading == reading:
+              if type(yomi) is list:
+                reading_type = yomi[i]
+              else:
+                reading_type = yomi
+              yomi_to_canonical_reading_type = {
+                "o": "on",
+                "on": "on",
+                "kanon": "kanon",
+                "goon": "goon",
+                "soon": "soon",
+                "toon": "toon",
+                "kan": "kanyoon",
+                "kanyo": "kanyoon",
+                "kanyoon": "kanyoon",
+                "k": "kun",
+                "kun": "kun",
+                "juku": "jukujikun",
+                "jukuji": "jukujikun",
+                "jukujikun": "jukujikun",
+                "n": "nanori",
+                "nanori": "nanori",
+                "ok": "jubakoyomi",
+                "j": "jubakoyomi",
+                "ko": "yutoyomi",
+                "y": "yutoyomi",
+                "irr": "irregular",
+                "irreg": "irregular",
+                "irregular": "irregular",
+              }
+              if reading_type not in yomi_to_canonical_reading_type:
+                pagemsg_with_contents("WARNING: Unrecognized reading type %s: %s" % (reading_type, unicode(t)))
+                must_continue = True
+                break
+              reading_type = yomi_to_canonical_reading_type[reading_type]
+              if reading_type not in allowed_reading_types:
+                pagemsg_with_contents("WARNING: Disallowed reading type %s: %s" % (reading_type, unicode(t)))
+                must_continue = True
+                break
+              pagemsg_with_contents("Appending reading type %s based on %s" % (reading_type, unicode(t)))
+              if reading_type not in reading_types:
+                reading_types.append(reading_type)
+        if must_continue:
+          continue
+        if not saw_spelling_in_contents:
+          pagemsg_with_contents("WARNING: Didn't see spelling in contents: %s" % unicode(t))
+          continue
+    if not saw_kanjitab:
+      pagemsg_with_contents("WARNING: Didn't see {{%s-kanjitab}}" % langcode)
+
+  if reading_types:
+    contents = "{{auto cat|%s}}" % "|".join(reading_types)
+    if text:
+      comment = 'Overwrite page with "%s"' % contents
+    else:
+      comment = 'Create page with "%s"' % contents
+    return contents, comment
+  else:
+    pagemsg_with_spelling("WARNING: Can't find reading %s by looking through category contents" % reading)
+
 
 parser = blib.create_argparser("Create 'Japanese terms spelled with FOO read as BAR' categories",
   include_pagefile=True, include_stdin=True)
