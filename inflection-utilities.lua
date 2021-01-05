@@ -422,18 +422,18 @@ function export.expand_footnote(note)
 end
 
 
-local function convert_to_general_form(word_or_words)
+function export.convert_to_general_form(word_or_words, footnotes)
 	if type(word_or_words) == "string" then
-		return {{form = word_or_words}}
+		return {{form = word_or_words, footnotes = footnotes}}
 	elseif word_or_words.form then
-		return {word_or_words}
+		return {export.generate_form(word_or_words, footnotes)}
 	else
 		local retval = {}
 		for _, form in ipairs(word_or_words) do
 			if type(form) == "string" then
-				table.insert(retval, {form = form})
+				table.insert(retval, {form = form, footnotes = footnotes})
 			else
-				table.insert(retval, form)
+				table.insert(retval, export.generate_form(form, footnotes))
 			end
 		end
 		return retval
@@ -452,19 +452,19 @@ end
 
 
 function export.add_forms(forms, slot, stems, endings, combine_stem_ending,
-	lang, combine_stem_ending_tr)
+	lang, combine_stem_ending_tr, footnotes)
 	if stems == nil or endings == nil then
 		return
 	end
 	if type(stems) == "string" and type(endings) == "string" then
-		export.insert_form(forms, slot, {form = combine_stem_ending(stems, endings)})
+		export.insert_form(forms, slot, {form = combine_stem_ending(stems, endings), footnotes = footnotes})
 	elseif type(stems) == "string" and is_table_of_strings(endings) then
 		for _, ending in ipairs(endings) do
-			export.insert_form(forms, slot, {form = combine_stem_ending(stems, ending)})
+			export.insert_form(forms, slot, {form = combine_stem_ending(stems, ending), footnotes = footnotes})
 		end
 	else
-		stems = convert_to_general_form(stems)
-		endings = convert_to_general_form(endings)
+		stems = export.convert_to_general_form(stems)
+		endings = export.convert_to_general_form(endings, footnotes)
 		for _, stem in ipairs(stems) do
 			for _, ending in ipairs(endings) do
 				local footnotes = nil
@@ -797,10 +797,10 @@ local function append_forms(props, formtable, slot, forms, before_text, before_t
 						error("Internal error: If manual translit is given, 'props.lang' must be set")
 					end
 					if not before_text_translit then
-						before_text_translit = props.lang:transliterate(before_text_no_links)
+						before_text_translit = props.lang:transliterate(before_text_no_links) or ""
 					end
-					local old_translit = old_form.translit or props.lang:transliterate(m_links.remove_links(old_form.form))
-					local translit = form.translit or props.lang:transliterate(m_links.remove_links(form.form))
+					local old_translit = old_form.translit or props.lang:transliterate(m_links.remove_links(old_form.form)) or ""
+					local translit = form.translit or props.lang:transliterate(m_links.remove_links(form.form)) or ""
 					new_translit = old_translit .. before_text_translit .. translit
 				end
 				local new_footnotes = export.combine_footnotes(old_form.footnotes, form.footnotes)
@@ -876,7 +876,19 @@ function export.generate_form(form, footnotes)
 		footnotes = {footnotes}
 	end
 	if footnotes then
-		return {form = form, footnotes = footnotes}
+		if type(form) == "table" then
+			form = m_table.shallowcopy(form)
+			form.footnotes = m_table.shallowcopy(form.footnotes)
+			if not form.footnotes then
+				form.footnotes = {}
+			end
+			for _, footnote in ipairs(footnotes) do
+				table.insert(form.footnotes, footnote)
+			end
+			return form
+		else
+			return {form = form, footnotes = footnotes}
+		end
 	else
 		return form
 	end
@@ -915,20 +927,33 @@ end
 
 --[=[
 Convert the forms in `forms` (a list of form objects, each of which is a table of the form
-{ form = FORM, translit = MANUAL_TRANSLIT_OR_NIL, footnotes = FOOTNOTE_LIST_OR_NIL,
-no_accel = TRUE_TO_SUPPRESS_ACCELERATORS }) into strings. Each form list turns into a string
-consisting of a comma-separated list of linked forms, with accelerators (unless `no_accel`
-is set in a given form). `lemmas` is the list of lemmas, used in the accelerators.
-`slots_table` is a table of slots and associated accelerator inflections. `props` is a table
-used in generating the strings, as follows:
-{ lang = LANG_OBJECT, canonicalize = FUNCTION_TO_CANONICALIZE_EACH_FORM }.
-If `allow_footnote_symbols` is given, footnote symbols attached to forms (e.g. numbers,
-asterisk) are separated off, placed outside the links, and superscripted. In this case,
-`footnotes` should be a list of footnotes (preceded by footnote symbols, which are
-superscripted). These footnotes are combined with any footnotes found in the forms and
-placed into `forms.footnotes`.
+{ form = FORM, translit = MANUAL_TRANSLIT_OR_NIL, footnotes = FOOTNOTE_LIST_OR_NIL, no_accel = TRUE_TO_SUPPRESS_ACCELERATORS })
+into strings. Each form list turns into a string consisting of a comma-separated list of linked forms, with accelerators
+(unless `no_accel` is set in a given form). `lemmas` is the list of lemmas, used in the accelerators. `slots_table` is a
+table of slots and associated accelerator inflections. `props` is a table used in generating the strings, as follows:
+{
+  lang = LANG_OBJECT,
+  include_translit = BOOLEAN,
+  canonicalize = FUNCTION_TO_CANONICALIZE_EACH_FORM,
+  transform_link = FUNCTION_TO_TRANSFORM_EACH_LINK,
+  join_spans = FUNCTION_TO_JOIN_SPANS,
+  allow_footnote_symbols = BOOLEAN,
+  footnotes = EXTRA_FOOTNOTES,
+}
+If `include_translit` is given, transliteration is included in the generated strings.
+`canonicalize` is an optional function of one argument (a form) to canonicalize each form before processing; it can return nil
+  for no change.
+`transform_link` is an optional function to transform a linked form prior to further processing; it is passed three arguments
+  (slot, link, link_tr) and should return the transformed link (or if translit is active, it should return the transformed link
+  and corresponding translit). It can return nil for no change.
+`join_spans` is an optional function of three arguments (slot, orig_spans, tr_spans) where the spans in question are after
+  linking and footnote processing. It should return a string (the joined spans) or nil for the default algorithm, which separately
+  joins the orig_spans and tr_spans with commas and puts a newline between them.
+If `allow_footnote_symbols` is given, footnote symbols attached to forms (e.g. numbers, asterisk) are separated off, placed outside
+the links, and superscripted. In this case, `footnotes` should be a list of footnotes (preceded by footnote symbols, which are
+superscripted). These footnotes are combined with any footnotes found in the forms and placed into `forms.footnotes`.
 ]=]
-function export.show_forms_with_translit(forms, lemmas, slots_table, props, footnotes, allow_footnote_symbols)
+function export.show_forms(forms, lemmas, slots_table, props)
 	local footnote_obj = export.create_footnote_obj()
 	local accel_lemma = lemmas[1]
 	local accel_lemma_translit
@@ -954,17 +979,18 @@ function export.show_forms_with_translit(forms, lemmas, slots_table, props, foot
 		if formvals then
 			local orig_spans = {}
 			local tr_spans = {}
+			local orignotes, trnotes = "", ""
 			for i, form in ipairs(formvals) do
 				local orig_text = props.canonicalize and props.canonicalize(form.form) or form.form
-				local link, tr
+				local link
 				if form.form == "—" or form.form == "?" then
 					link = orig_text
 				else
-					local origentry, orignotes
-					if allow_footnote_symbols then
+					local origentry
+					if props.allow_footnote_symbols then
 						origentry, orignotes = m_table_tools.get_notes(orig_text)
 					else
-						origentry, orignotes = orig_text, ""
+						origentry = orig_text
 					end
 					-- remove redundant link surrounding entire form
 					origentry = export.remove_redundant_links(origentry)
@@ -975,46 +1001,79 @@ function export.show_forms_with_translit(forms, lemmas, slots_table, props, foot
 						not rfind(origentry, "%[%[") then
 						accel_obj = {
 							form = accel_form,
-							translit = form.translit,
+							translit = props.include_translit and form.translit or nil,
 							lemma = accel_lemma,
-							lemma_translit = accel_lemma_translit,
+							lemma_translit = props.include_translit and accel_lemma_translit or nil,
 						}
 					end
-					link = m_links.full_link{lang = props.lang, term = origentry,
-						tr = "-", accel = accel_obj} .. orignotes
+					link = m_links.full_link{lang = props.lang, term = origentry, tr = "-", accel = accel_obj}
 				end
-				tr = form.translit or props.lang:transliterate(m_links.remove_links(orig_text))
-				local trentry, trnotes
-				if allow_footnote_symbols then
+				local tr = props.include_translit and (form.translit or props.lang:transliterate(m_links.remove_links(orig_text))) or nil
+				local trentry
+				if props.allow_footnote_symbols and tr then
 					trentry, trnotes = m_table_tools.get_notes(tr)
 				else
-					trentry, trnotes = tr, ""
+					trentry = tr
 				end
-				tr = m_script_utilities.tag_translit(trentry, props.lang, "default", " style=\"color: #888;\"") .. trnotes
+				if props.transform_link then
+					local newlink, newtr = props.transform_link(slot, link, tr)
+					if newlink then
+						link, tr = newlink, newtr
+					end
+				end
+				link = link .. orignotes
+				tr = tr and m_script_utilities.tag_translit(trentry, props.lang, "default", " style=\"color: #888;\"") .. trnotes or nil
 				if form.footnotes then
 					local footnote_text = export.get_footnote_text(form, footnote_obj)
 					link = link .. footnote_text
-					tr = tr .. footnote_text
+					tr = tr and tr .. footnote_text or nil
 				end
 				table.insert(orig_spans, link)
-				table.insert(tr_spans, tr)
+				if tr then
+					table.insert(tr_spans, tr)
+				end
 			end
-			local orig_span = table.concat(orig_spans, ", ")
-			local tr_span = table.concat(tr_spans, ", ")
-			forms[slot] = orig_span .. "<br />" .. tr_span
+			local joined_spans
+			if props.join_spans then
+				joined_spans = props.join_spans(slot, orig_spans, tr_spans)
+			end
+			if not joined_spans then
+				local orig_span = table.concat(orig_spans, ", ")
+				local tr_span
+				if #tr_spans > 0 then
+					tr_span = table.concat(tr_spans, ", ")
+				end
+				if tr_span then
+					joined_spans = orig_span .. "<br />" .. tr_span
+				else
+					joined_spans = orig_span
+				end
+			end
+			forms[slot] = joined_spans
 		else
 			forms[slot] = "—"
 		end
 	end
 
 	local all_notes = footnote_obj.notes
-	if footnotes then
-		for _, note in ipairs(footnotes) do
+	if props.footnotes then
+		for _, note in ipairs(props.footnotes) do
 			local symbol, entry = m_table_tools.get_initial_notes(note)
 			table.insert(all_notes, symbol .. entry)
 		end
 	end
 	forms.footnote = table.concat(all_notes, "<br />")
+end
+
+
+--[=[
+Older entry point. Same as `show_forms` but automatically sets include_translit = true in props.
+]=]
+function export.show_forms_with_translit(forms, lemmas, slots_table, props, footnotes, allow_footnote_symbols)
+	props.footnotes = footnotes
+	props.allow_footnote_symbols = allow_footnote_symbols
+	props.include_translit = true
+	return export.show_forms(forms, lemmas, slots_table, props)
 end
 
 
