@@ -28,7 +28,9 @@ def process_text_on_page(index, pagetitle, text):
       blib.set_template_name(t, "auto cat")
       notes.append("{{autocat}} -> {{auto cat}}")
     elif tn == "langcatboiler":
-      m = re.search("^Category:(.*) language$", pagetitle)
+      m = re.search("^Category:(.* Language)$", pagetitle)
+      if not m:
+        m = re.search("^Category:(.*) language$", pagetitle)
       if not m:
         pagemsg("WARNING: Can't parse page title")
         continue
@@ -46,11 +48,18 @@ def process_text_on_page(index, pagetitle, text):
       non_numbered_params = []
       for param in t.params:
         pn = pname(param)
-        pv = unicode(param.value)
-        if pn == "1":
+        pv = unicode(param.value).strip()
+        if pn == "1" or not pv:
           pass
         elif re.search("^[0-9]+$", pn):
           numbered_params.append(pv)
+        elif pn not in ["setwiki", "setwikt", "setsister", "entryname"]:
+          pagemsg("WARNING: Unrecognized param %s=%s, skipping: %s" % (pn, pv, unicode(t)))
+          return
+        elif (pn in ["setwiki", "setsister"] and pv == langname + " language" or
+            pn == "entryname" and pv == langname or
+            pn == "setwikt" and pv == langobj["code"]):
+          pagemsg("WARNING: Unnecessary param %s=%s, omitting: %s" % (pn, pv, unicode(t)))
         else:
           non_numbered_params.append((pn, pv))
       if len(numbered_params) == 0:
