@@ -551,6 +551,20 @@ function export.add_multiple_forms(forms, slot, sets_of_forms, combine_stem_endi
 end
 		
 
+local function iterate_slot_list_or_table(props, do_slot)
+	if props.slot_list then
+		for _, slot_and_accel_form in ipairs(props.slot_list) do
+			local slot, accel_form = unpack(slot_and_accel_form)
+			do_slot(slot, accel_form)
+		end
+	else
+		for slot, accel_form in pairs(props.slot_table) do
+			do_slot(slot, accel_form)
+		end
+	end
+end
+
+
 local function parse_before_or_post_text(props, text, segments, lemma_is_last)
 	-- Call parse_balanced_segment_run() to keep multiword links together.
 	local bracketed_runs = export.parse_balanced_segment_run(text, "[", "]")
@@ -823,11 +837,11 @@ local function inflect_alternants(alternant_spec, props)
 	alternant_spec.forms = {}
 	for _, multiword_spec in ipairs(alternant_spec.alternants) do
 		export.inflect_multiword_or_alternant_multiword_spec(multiword_spec, props)
-		for slot, _ in pairs(props.slot_table) do
+		iterate_slot_list_or_table(props, function(slot)
 			if not props.skip_slot or not props.skip_slot(slot) then
 				export.insert_forms(alternant_spec.forms, slot, multiword_spec.forms[slot])
 			end
-		end
+		end)
 	end
 end
 
@@ -881,7 +895,7 @@ function export.inflect_multiword_or_alternant_multiword_spec(multiword_spec, pr
 		else
 			props.inflect_word_spec(word_spec)
 		end
-		for slot, _ in pairs(props.slot_table) do
+		iterate_slot_list_or_table(props, function(slot)
 			if not props.skip_slot or not props.skip_slot(slot) then
 				append_forms(props, multiword_spec.forms, slot, word_spec.forms[slot],
 					(rfind(slot, "linked") or props.include_user_specified_links) and
@@ -889,11 +903,11 @@ function export.inflect_multiword_or_alternant_multiword_spec(multiword_spec, pr
 					word_spec.before_text_no_links, word_spec.before_text_translit
 				)
 			end
-		end
+		end)
 	end
 	if multiword_spec.post_text ~= "" then
 		local pseudoform = {{form=""}}
-		for slot, _ in pairs(props.slot_table) do
+		iterate_slot_list_or_table(props, function(slot)
 			-- If slot is empty or should be skipped, don't try to append post-text.
 			if (not props.skip_slot or not props.skip_slot(slot)) and multiword_spec.forms[slot] then
 				append_forms(props, multiword_spec.forms, slot, pseudoform,
@@ -902,7 +916,7 @@ function export.inflect_multiword_or_alternant_multiword_spec(multiword_spec, pr
 					multiword_spec.post_text_no_links, multiword_spec.post_text_translit
 				)
 			end
-		end
+		end)
 	end
 end
 
@@ -953,6 +967,7 @@ function export.get_footnote_text(form, footnote_obj)
 		end
 		m_table.insertIfNot(link_indices, this_noteindex)
 	end
+	table.sort(link_indices)
 	return '<sup style="color: red">' .. table.concat(link_indices, ",") .. '</sup>'
 end
 
@@ -961,10 +976,12 @@ end
 Convert the forms in `forms` (a list of form objects, each of which is a table of the form
 { form = FORM, translit = MANUAL_TRANSLIT_OR_NIL, footnotes = FOOTNOTE_LIST_OR_NIL, no_accel = TRUE_TO_SUPPRESS_ACCELERATORS })
 into strings. Each form list turns into a string consisting of a comma-separated list of linked forms, with accelerators
-(unless `no_accel` is set in a given form). `lemmas` is the list of lemmas, used in the accelerators. `slots_table` is a
-table of slots and associated accelerator inflections. `props` is a table used in generating the strings, as follows:
+(unless `no_accel` is set in a given form). `props` is a table used in generating the strings, as follows:
 {
   lang = LANG_OBJECT,
+  lemmas = LEMMAS,
+  slot_table = SLOT_TABLE,
+  slot_list = SLOT_LIST,
   include_translit = BOOLEAN,
   canonicalize = FUNCTION_TO_CANONICALIZE_EACH_FORM,
   transform_link = FUNCTION_TO_TRANSFORM_EACH_LINK,
@@ -972,6 +989,10 @@ table of slots and associated accelerator inflections. `props` is a table used i
   allow_footnote_symbols = BOOLEAN,
   footnotes = EXTRA_FOOTNOTES,
 }
+`lemmas` is the list of lemmas, used in the accelerators.
+`slot_list` is a list of two-element lists of slots and associated accelerator inflections.
+`slot_table` is a table mapping slots to associated accelerator inflections.
+  (One of `slot_list` or `slot_table` must be given.)
 If `include_translit` is given, transliteration is included in the generated strings.
 `canonicalize` is an optional function of one argument (a form) to canonicalize each form before processing; it can return nil
   for no change.
@@ -985,9 +1006,9 @@ If `allow_footnote_symbols` is given, footnote symbols attached to forms (e.g. n
 the links, and superscripted. In this case, `footnotes` should be a list of footnotes (preceded by footnote symbols, which are
 superscripted). These footnotes are combined with any footnotes found in the forms and placed into `forms.footnotes`.
 ]=]
-function export.show_forms(forms, lemmas, slots_table, props)
+function export.show_forms(forms, props)
 	local footnote_obj = export.create_footnote_obj()
-	local accel_lemma = lemmas[1]
+	local accel_lemma = props.lemmas[1]
 	local accel_lemma_translit
 	if type(accel_lemma) == "table" then
 		accel_lemma_translit = accel_lemma.translit
@@ -995,7 +1016,7 @@ function export.show_forms(forms, lemmas, slots_table, props)
 	end
 	accel_lemma = accel_lemma and m_links.remove_links(accel_lemma) or nil
 	local lemma_forms = {}
-	for _, lemma in ipairs(lemmas) do
+	for _, lemma in ipairs(props.lemmas) do
 		if type(lemma) == "table" then
 			m_table.insertIfNot(lemma_forms, lemma.form)
 		else
@@ -1006,7 +1027,7 @@ function export.show_forms(forms, lemmas, slots_table, props)
 
 	local m_table_tools = require("Module:table tools")
 	local m_script_utilities = require("Module:script utilities")
-	for slot, accel_form in pairs(slots_table) do
+	local function do_slot(slot, accel_form)
 		local formvals = forms[slot]
 		if formvals then
 			local orig_spans = {}
@@ -1087,6 +1108,8 @@ function export.show_forms(forms, lemmas, slots_table, props)
 		end
 	end
 
+	iterate_slot_list_or_table(props, do_slot)
+
 	local all_notes = footnote_obj.notes
 	if props.footnotes then
 		for _, note in ipairs(props.footnotes) do
@@ -1101,11 +1124,13 @@ end
 --[=[
 Older entry point. Same as `show_forms` but automatically sets include_translit = true in props.
 ]=]
-function export.show_forms_with_translit(forms, lemmas, slots_table, props, footnotes, allow_footnote_symbols)
+function export.show_forms_with_translit(forms, lemmas, slot_table, props, footnotes, allow_footnote_symbols)
+	props.lemmas = lemmas
+	props.slot_table = slot_table
 	props.footnotes = footnotes
 	props.allow_footnote_symbols = allow_footnote_symbols
 	props.include_translit = true
-	return export.show_forms(forms, lemmas, slots_table, props)
+	return export.show_forms(forms, props)
 end
 
 
