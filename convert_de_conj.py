@@ -352,17 +352,18 @@ def process_text_on_page(index, pagetitle, text):
       subiistem = getparam(t, "4")
       pp = getparam(t, "5")
       aux = getparam(t, "6")
+      ends_in_sxz = getparam(t, "7")
       seppref = getparam(t, "pref")
       if seppref:
         seppref = seppref.replace("&#32;", " ").replace("&nbsp;", " ")
         seppref_with_underscore = seppref.replace(" ", "_")
         if seppref_with_underscore.endswith("_"):
-          lemma_with_dot = "%s%s%s" % (seppref_with_underscore, presstem, tn[-3:])
+          lemma_with_dot = "%s%sen" % (seppref_with_underscore, infstem)
         else:
-          lemma_with_dot = "%s.%s%s" % (seppref_with_underscore, presstem, tn[-3:])
-        lemma = "%s%s%s" % (seppref, presstem, tn[-3:])
+          lemma_with_dot = "%s.%sen" % (seppref_with_underscore, infstem)
+        lemma = "%s%sen" % (seppref, infstem)
       else:
-        lemma_with_dot = "%s%s" % (presstem, tn[-3:])
+        lemma_with_dot = "%sen" % infstem
         lemma = lemma_with_dot
       auxval = parse_aux(aux)
       parts = []
@@ -384,7 +385,7 @@ def process_text_on_page(index, pagetitle, text):
       must_continue = False
       for param in t.params:
         pn = pname(param)
-        if pn not in ["1", "2", "3", "4", "5", "6", "pref"]:
+        if pn not in ["1", "2", "3", "4", "5", "6", "7", "pref"]:
           pagemsg("WARNING: Unrecognized param %s=%s" % (pn, unicode(param.value)))
           must_continue = True
           break
