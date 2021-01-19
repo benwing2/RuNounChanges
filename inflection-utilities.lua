@@ -375,6 +375,8 @@ function export.map_form_or_forms(forms, fn, first_only)
 end
 
 
+-- Combine two sets of footnotes. If either is nil, just return the other, and if both are nil,
+-- return nil.
 function export.combine_footnotes(notes1, notes2)
 	if not notes1 and not notes2 then
 		return nil
@@ -422,18 +424,47 @@ function export.expand_footnote(note)
 end
 
 
-function export.convert_to_general_form(word_or_words, footnotes)
+-- Combine a form (either a string or a table {form = FORM, footnotes = FOOTNOTES, ...}) with footnotes.
+-- Do the minimal amount of work; e.g. if FOOTNOTES is nil, just return FORM.
+function export.combine_form_and_footnotes(form, footnotes)
+	if type(footnotes) == "string" then
+		footnotes = {footnotes}
+	end
+	if footnotes then
+		if type(form) == "table" then
+			form = m_table.shallowcopy(form)
+			form.footnotes = export.combine_footnotes(form.footnotes, footnotes)
+			return form
+		else
+			return {form = form, footnotes = footnotes}
+		end
+	else
+		return form
+	end
+end
+
+
+-- Older entry point. FIXME: Obsolete me.
+function export.generate_form(form, footnotes)
+	return export.combine_form_and_footnotes(form, footnotes)
+end
+
+
+-- Combine a single form (either a string or object {form = FORM, footnotes = FOOTNOTES, ...}) or a list of same
+-- along with footnotes and return a list of forms where each returned form is an object
+-- {form = FORM, footnotes = FOOTNOTES, ...}.
+function export.convert_to_general_list_form(word_or_words, footnotes)
 	if type(word_or_words) == "string" then
 		return {{form = word_or_words, footnotes = footnotes}}
 	elseif word_or_words.form then
-		return {export.generate_form(word_or_words, footnotes)}
+		return {export.combine_form_and_footnotes(word_or_words, footnotes)}
 	else
 		local retval = {}
 		for _, form in ipairs(word_or_words) do
 			if type(form) == "string" then
 				table.insert(retval, {form = form, footnotes = footnotes})
 			else
-				table.insert(retval, export.generate_form(form, footnotes))
+				table.insert(retval, export.combine_form_and_footnotes(form, footnotes))
 			end
 		end
 		return retval
@@ -463,8 +494,8 @@ function export.add_forms(forms, slot, stems, endings, combine_stem_ending,
 			export.insert_form(forms, slot, {form = combine_stem_ending(stems, ending), footnotes = footnotes})
 		end
 	else
-		stems = export.convert_to_general_form(stems)
-		endings = export.convert_to_general_form(endings, footnotes)
+		stems = export.convert_to_general_list_form(stems)
+		endings = export.convert_to_general_list_form(endings, footnotes)
 		for _, stem in ipairs(stems) do
 			for _, ending in ipairs(endings) do
 				local footnotes = nil
@@ -494,6 +525,31 @@ function export.add_forms(forms, slot, stems, endings, combine_stem_ending,
 	end
 end
 
+
+function export.add_multiple_forms(forms, slot, sets_of_forms, combine_stem_ending,
+	lang, combine_stem_ending_tr, footnotes)
+	if #sets_of_forms == 0 then
+		return
+	elseif #sets_of_forms == 1 then
+		local formset = iut.convert_to_general_list_form(sets_of_forms[1], footnotes)
+		export.insert_forms(forms, slot, formset)
+	elseif #sets_of_forms == 2 then
+		local stems = sets_of_forms[1]
+		local endings = sets_of_forms[2]
+		export.add_forms(forms, slot, stems, endings, combine_stem_ending,
+			lang, combine_stem_ending_tr, footnotes)
+	else
+		local prev = sets_of_forms[1]
+		for i=2,#sets_of_forms do
+			local tempdest = {}
+			export.add_forms(tempdest, slot, prev, sets_of_forms[i], combine_stem_ending,
+				lang, combine_stem_ending_tr, i == #sets_of_forms and footnotes or nil)
+			prev = tempdest[slot]
+		end
+		export.insert_forms(forms, slot, prev)
+	end
+end
+		
 
 local function parse_before_or_post_text(props, text, segments, lemma_is_last)
 	-- Call parse_balanced_segment_run() to keep multiword links together.
@@ -867,30 +923,6 @@ function export.map_word_specs(alternant_multiword_spec, fun)
 		else
 			fun(alternant_or_word_spec)
 		end
-	end
-end
-
-
-function export.generate_form(form, footnotes)
-	if type(footnotes) == "string" then
-		footnotes = {footnotes}
-	end
-	if footnotes then
-		if type(form) == "table" then
-			form = m_table.shallowcopy(form)
-			form.footnotes = m_table.shallowcopy(form.footnotes)
-			if not form.footnotes then
-				form.footnotes = {}
-			end
-			for _, footnote in ipairs(footnotes) do
-				table.insert(form.footnotes, footnote)
-			end
-			return form
-		else
-			return {form = form, footnotes = footnotes}
-		end
-	else
-		return form
 	end
 end
 
