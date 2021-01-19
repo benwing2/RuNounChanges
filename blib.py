@@ -1721,12 +1721,16 @@ def replace_in_text(text, curr, repl, pagemsg, count=-1, no_found_repl_check=Fal
 def split_generate_args(tempresult):
   args = {}
   for arg in re.split(r"\|", tempresult):
-    name, value = arg.split("=")
-    value = value.replace("<!>", "|").replace("<->", "=")
-    # With manually specified declensions, we get back "-" for unspecified
-    # forms, which need to be omitted; otherwise they're automatically omitted.
-    if value != "-":
-      args[name] = value
+    values = arg.split("=")
+    if len(values) != 2:
+      errandmsg("WARNING: Bad value '%s' during split_generate_args" % values)
+    else:
+      name, value = values
+      value = value.replace("<!>", "|").replace("<->", "=")
+      # With manually specified declensions, we get back "-" for unspecified
+      # forms, which need to be omitted; otherwise they're automatically omitted.
+      if value != "-":
+        args[name] = value
   return args
 
 def compare_new_and_old_template_forms(origt, newt, generate_old_forms, generate_new_forms, pagemsg, errandpagemsg):
