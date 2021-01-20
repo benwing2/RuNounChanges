@@ -408,7 +408,7 @@ function export.normalize_tags(tags, recombine_multitags, do_track)
 end
 
 
-local function normalize_pos(pos)
+function export.normalize_pos(pos)
 	return m_pos[pos] or pos
 end
 
@@ -487,7 +487,7 @@ function export.fetch_lang_categories(lang, tags, terminfo, POS)
 	local categories = {}
 
 	local normalized_tags = export.normalize_tags(tags, "recombine multitags")
-	POS = normalize_pos(POS)
+	POS = export.normalize_pos(POS)
 
 	local function make_function_table()
 		return {
@@ -526,10 +526,10 @@ function export.fetch_lang_categories(lang, tags, terminfo, POS)
 				"recombine multitags")
 			return m_table.deepEqualsList(normalized_tags, normalized_spec_tags), 3
 		elseif predicate == "p=" then
-			return POS == normalize_pos(spec[2]), 3
+			return POS == export.normalize_pos(spec[2]), 3
 		elseif predicate == "pany" then
 			for _, specpos in ipairs(spec[2]) do
-				if POS == normalize_pos(specpos) then
+				if POS == export.normalize_pos(specpos) then
 					return true, 3
 				end
 			end
@@ -569,7 +569,7 @@ function export.fetch_lang_categories(lang, tags, terminfo, POS)
 			-- Substitute POS request with user-specified part of speech
 			-- or default
 			spec = rsub(spec, "<<p=(.-)>>", function(default)
-				return POS or normalize_pos(default)
+				return POS or export.normalize_pos(default)
 			end)
 			table.insert(categories, lang:getCanonicalName() .. " " .. spec)
 			return true
