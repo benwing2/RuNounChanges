@@ -119,6 +119,60 @@ function export.parse_balanced_segment_run(segment_run, open, close)
 	return text_and_specs
 end
 
+
+-- Like parse_balanced_segment_run() but accepts multiple sets of delimiters. For example,
+--
+-- parse_multi_delimiter_balanced_segment_run("foo[bar(baz[bat])], quux<glorp>", {{"[", "]"}, {"(", ")"}, {"<", ">"}}) =
+--		{"foo", "[bar(baz[bat])]", ", quux", "<glorp>", ""}.
+function export.parse_multi_delimiter_balanced_segment_run(segment_run, delimiter_pairs)
+	local open_to_close_map = {}
+	local open_close_items = {}
+	for _, open_close in ipairs(delimiter_pairs) do
+		local open, close = unpack(open_close)
+		open_to_close_map[open] = close
+		table.insert(open_close_items, "%" .. open)
+		table.insert(open_close_items, "%" .. close)
+	end
+	local open_close_pattern = "([" .. table.concat(open_close_items) .. "])"
+	local break_on_open_close = m_string_utilities.capturing_split(segment_run, open_close_pattern)
+	local text_and_specs = {}
+	local level = 0
+	local seg_group = {}
+	local open_at_level_zero
+	for i, seg in ipairs(break_on_open_close) do
+		if i % 2 == 0 then
+			table.insert(seg_group, seg)
+			if level == 0 then
+				if not open_to_close_map[seg] then
+					error("Unmatched " .. seg .. " sign: '" .. segment_run .. "'")
+				end
+				assert(open_at_level_zero == nil)
+				open_at_level_zero = seg
+				level = level + 1
+			elseif seg == open_at_level_zero then
+				level = level + 1
+			elseif seg == open_to_close_map[open_at_level_zero] then
+				level = level - 1
+				assert(level >= 0)
+				if level == 0 then
+					table.insert(text_and_specs, table.concat(seg_group))
+					seg_group = {}
+					open_at_level_zero = nil
+				end
+			end
+		elseif level > 0 then
+			table.insert(seg_group, seg)
+		else
+			table.insert(text_and_specs, seg)
+		end
+	end
+	if level > 0 then
+		error("Unmatched " .. open_at_level_zero .. " sign: '" .. segment_run .. "'")
+	end
+	return text_and_specs
+end
+
+
 --[=[
 Split a list of alternating textual runs of the format returned by
 `parse_balanced_segment_run` on `splitchar`. This only splits the odd-numbered
