@@ -402,12 +402,12 @@ function export.form_of_t(frame)
 	
 	local text = args["notext"] and "" or iargs[1]
 	if args["cap"] or iargs["withcap"] and not args["nocap"] then
-		text = m_form_of.ucfirst(text)
+		text = require("Module:string utilities").ucfirst(text)
 	end
 
 	return construct_form_of_text(iargs, args, term_param, compat,
 		function(lang, terminfo)
-			return m_form_of.format_form_of(text, terminfo, iargs["posttext"]), {}
+			return m_form_of.format_form_of {text = text, terminfo = terminfo, posttext = iargs["posttext"]}, {}
 		end
 	)
 end
@@ -429,11 +429,14 @@ local function construct_tagged_form_of_text(iargs, args, term_param, compat, ta
 		function(lang, terminfo)
 			local lang_cats =
 				args["nocat"] and {} or m_form_of.fetch_lang_categories(lang, tags, terminfo, args["p"])
-			return m_form_of.tagged_inflections(
-				tags, terminfo, args["notext"],
-				args["cap"] or iargs["withcap"] and not args["nocap"], iargs["posttext"],
-				joiner
-			), lang_cats
+			return m_form_of.tagged_inflections {
+				tags = tags,
+				terminfo = terminfo,
+				notext = args["notext"],
+				capfirst = args["cap"] or iargs["withcap"] and not args["nocap"],
+				posttext = iargs["posttext"],
+				joiner = joiner
+			}, lang_cats
 		end
 	)
 end
@@ -552,7 +555,7 @@ intended for templates that allow the user to specify a set of inflection tags.
 It works similarly to form_of_t() and tagged_form_of_t() except that the
 calling convention for the calling template is
 	{{TEMPLATE|LANG|MAIN_ENTRY_LINK|MAIN_ENTRY_DISPLAY_TEXT|TAG|TAG|...}}
-instead of 
+instead of
 	{{TEMPLATE|LANG|MAIN_ENTRY_LINK|MAIN_ENTRY_DISPLAY_TEXT|GLOSS}}
 Note that there isn't a numbered parameter for the gloss, but it can still
 be specified using t= or gloss=.
@@ -702,6 +705,3 @@ function export.normalize_pos(frame)
 end
 
 return export
-
--- For Vim, so we get 4-space tabs
--- vim: set ts=4 sw=4 noet:

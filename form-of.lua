@@ -126,24 +126,35 @@ function export.ucfirst(text)
 end
 
 
-function export.format_form_of(text, terminfo, posttext)
+function export.format_form_of(data, terminfo, posttext)
+	if type(data) ~= "table" then
+		data = {
+			text = data,
+			terminfo = terminfo,
+			posttext = posttext,
+			terminfo_face = "term",
+		}
+	end
+
+	local text_classes = data.text_classes or "form-of-definition use-with-mention"
+	local terminfo_classes = data.text_classes or "form-of-definition-link"
 	local parts = {}
-	table.insert(parts, "<span class='form-of-definition use-with-mention'>")
-	table.insert(parts, text)
-	if text ~= "" and terminfo then
+	table.insert(parts, "<span class='" .. text_classes .. "'>")
+	table.insert(parts, data.text)
+	if data.text ~= "" and data.terminfo then
 		table.insert(parts, " ")
 	end
-	if terminfo then
-		table.insert(parts, "<span class='form-of-definition-link'>")
-		if type(terminfo) == "string" then
-			table.insert(parts, terminfo)
+	if data.terminfo then
+		table.insert(parts, "<span class='" .. terminfo_classes .. "'>")
+		if type(data.terminfo) == "string" then
+			table.insert(parts, data.terminfo)
 		else
-			table.insert(parts, m_links.full_link(terminfo, "term", false))
+			table.insert(parts, m_links.full_link(data.terminfo, data.terminfo_face, false))
 		end
 		table.insert(parts, "</span>")
 	end
-	if posttext then
-		table.insert(parts, posttext)
+	if data.posttext then
+		table.insert(parts, data.posttext)
 	end
 	table.insert(parts, "</span>")
 	return table.concat(parts)
@@ -629,11 +640,21 @@ function export.fetch_lang_categories(lang, tags, terminfo, POS)
 end
 
 
-function export.tagged_inflections(tags, terminfo, notext, capfirst, posttext, joiner)
+function export.tagged_inflections(data, terminfo, notext, capfirst, posttext, joiner)
+	if not data.tags then
+		data = {
+			tags = data,
+			terminfo = terminfo,
+			notext = notext,
+			capfirst = capfirst,
+			posttext = posttext,
+			joiner = joiner,
+		}
+	end
 	local cur_infl = {}
 	local inflections = {}
 
-	local ntags = export.normalize_tags(tags, nil, "do-track")
+	local ntags = export.normalize_tags(data.tags, nil, "do-track")
 
 	for i, tagspec in ipairs(ntags) do
 		if tagspec == ";" then
@@ -643,7 +664,7 @@ function export.tagged_inflections(tags, terminfo, notext, capfirst, posttext, j
 
 			cur_infl = {}
 		else
-			local to_insert = export.get_tag_display_form(tagspec, joiner)
+			local to_insert = export.get_tag_display_form(tagspec, data.joiner)
 			-- Maybe insert a space before inserting the display form
 			-- of the tag. We insert a space if
 			-- (a) we're not the first tag; and
@@ -688,19 +709,21 @@ function export.tagged_inflections(tags, terminfo, notext, capfirst, posttext, j
 		table.insert(inflections, table.concat(cur_infl))
 	end
 
+	local format_data = require("Module:table").shallowcopy(data)
+
 	if #inflections == 1 then
-		return export.format_form_of(
-			notext and "" or ((capfirst and export.ucfirst(inflections[1]) or inflections[1]) ..
-				(terminfo and " of" or "")),
-			terminfo, posttext
-		)
+		format_data.text =
+			data.notext and "" or ((data.capfirst and require("Module:string utilities").ucfirst(inflections[1]) or inflections[1]) ..
+				(data.terminfo and " of" or ""))
+		return export.format_form_of(format_data)
 	else
-		local link = export.format_form_of(
-			notext and "" or ((capfirst and "Inflection" or "inflection") ..
-				(terminfo and " of" or "")),
-			terminfo, (posttext or "") .. ":"
-		)
-		return link .."\n## <span class='form-of-definition use-with-mention'>" .. table.concat(inflections, "</span>\n## <span class='form-of-definition use-with-mention'>") .. "</span>"
+		format_data.text = data.notext and "" or ((data.capfirst and "Inflection" or "inflection") ..
+			(data.terminfo and " of" or ""))
+		format_data.posttext = (data.posttext or "") .. ":"
+		local link = export.format_form_of(format_data)
+		local text_classes = data.text_classes or "form-of-definition use-with-mention"
+		return link .."\n## <span class='" .. text_classes .. "'>" ..
+			table.concat(inflections, "</span>\n## <span class='" .. text_classes .. "'>") .. "</span>"
 	end
 end
 
@@ -747,7 +770,13 @@ function export.to_Wikidata_IDs(tags, skip_tags_without_ids)
 end
 
 
-return export
+function export.dump_form_of_data(frame)
+	local data = {
+		data = require("Module:form of/data"),
+		data2 = require("Module:form of/data2")
+	}
+	return require("Module:JSON").toJSON(data)
+end
 
--- For Vim, so we get 4-space tabs
--- vim: set ts=4 sw=4 noet:
+
+return export
