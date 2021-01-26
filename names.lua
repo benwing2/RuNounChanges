@@ -56,8 +56,107 @@ local translit_name_type_list = {
 local translit_name_types = m_table.listToSet(translit_name_type_list)
 
 local param_mods = {"t", "alt", "tr", "ts", "pos", "lit", "id", "sc", "g", "q"}
+local param_mod_set = m_table.listToSet(param_mods)
 
 
+local function track(page)
+	require("Module:debug").track("names/" .. page)
+end
+
+
+--[=[
+Fetch a term and associated properties and return a terminfo object that can be passed to full_link()
+in [[Module:links]]. The properties are specified using separate parameters, where the term itself is
+specified by `pname` and `index` (e.g. "f2") and the various properties are specified by parameters with
+the property name appended, e.g. "f2tr". It is assumed that the arguments themselves have already been
+processed using [[Module:parameters]] to that e.g. all "f" parameters ("f", "f2", "f3", ...) are contained
+in a list in args["f"], and similarly all "fNtr" parameters ("ftr", "f2tr", "f3tr", ...) are contained in
+a list in args["ftr"].
+* `args` is the arguments returned by [[Module:parameters]]
+* `pname` is the basic parameter prefix, e.g. "f" or "varof"
+* `index` says to pull out the index'th parameter of this type
+* `lang` is the language to store in the returned terminfo structure
+* `term` can be used to override the term itself; if not specified, the term comes from the `pname`
+  parameter in `args`
+]=]
+local function get_terminfo(lang, args, pname, index, term)
+	local function fetch(mod)
+		return args[pname .. mod] and args[pname .. mod][index]
+	end
+	local sc = require("Module:scripts").getByCode(fetch("sc"), pname .. (index == 1 and "" or index) .. "sc")
+	local g = fetch("g")
+	g = g and rsplit(g, ",") or {}
+	
+	return {
+		lang = lang, term = term or fetch(""), alt = fetch("alt"), tr = fetch("tr"), ts = fetch("ts"), id = fetch("id"),
+		gloss = fetch("t"), pos = fetch("pos"), lit = fetch("lit"), g = g, sc = sc, q = fetch("q") 
+	}
+end
+
+
+--[=[
+Fetch a term and associated properties and return a terminfo object that can be passed to full_link()
+in [[Module:links]]. This works with parameters of the form 'Karlheinz' or 'Kunigunde<q:medieval, now rare>' or
+'non:Óláfr' or 'ru:Фру́нзе<tr:Frúnzɛ><q:rare>' where the modifying properties are contained in <...>
+specifications after the term. `term` is the full parameter value including any angle brackets and colons;
+`pname` is the name of the parameter that this value comes from, for error purposes; and `deflang` is a
+language object used in the return value when the language isn't specified (e.g. in the examples 'Karlheinz'
+and 'Kunigunde<q:medieval, now rare>' above).
+]=]
+local function get_term_with_annotations(term, pname, deflang)
+	local iut = require("Module:inflection utilities")
+	local run = iut.parse_balanced_segment_run(term, "<", ">")
+	local function parse_err(msg)
+		error(msg .. ": " .. pname .. "= " .. table.concat(run))
+	end
+	if #run == 1 and run[1] == "" then
+		error("Blank form for param '" .. pname .. "' not allowed")
+	end
+	local terminfo = {}
+	local lang, form = run[1]:match("^(.-):(.*)$")
+	if lang then
+		terminfo.lang = m_languages.getByCode(lang, pname, "allow etym lang")
+		terminfo.term = form
+	else
+		terminfo.lang = deflang
+		terminfo.term = run[1]
+	end
+
+	for i = 2, #run - 1, 2 do
+		if run[i + 1] ~= "" then
+			parse_err("Extraneous text '" .. run[i + 1] .. "' after modifier")
+		end
+		local modtext = run[i]:match("^<(.*)>$")
+		if not modtext then
+			parse_err("Internal error: Modifier '" .. modtext .. "' isn't surrounded by angle brackets")
+		end
+		local prefix, arg = modtext:match("^([a-z]+):(.*)$")
+		if not prefix then
+			parse_err("Modifier " .. run[i] .. " lacks a prefix, should begin with one of '" ..
+				table.concat(param_mods, ":', '") .. ":'")
+		end
+		if param_mod_set[prefix] then
+			if terminfo[prefix] then
+				parse_err("Modifier '" .. prefix .. "' occurs twice, second occurrence " .. run[i])
+			end
+			terminfo[prefix] = arg
+		else
+			parse_err("Unrecognized prefix '" .. prefix .. "' in modifier " .. run[i])
+		end
+	end
+	return terminfo
+end
+
+
+--[=[
+Join the terms in `terms` (where each is a terminfo structure suitable for passing to full_link() or language_link()
+in [[Module:links]] using the conjugation in `conj` (defaulting to "or"). Joining is done using serialCommaJoin()
+in [[Module:table]], so that e.g. two terms are joined as "TERM or TERM" while three terms are joined as
+"TERM, TERM or TERM" with special CSS spans before the final "or" to allow an "Oxford comma" to appear if configured
+appropriately. If `include_langname` is given, the language of the first term will be prepended to the joined
+terms. If `do_language_link` is given, or if a given term's language is English, the link will be constructed
+using language_link() in [[Module:links]]; otherwise, with full_link().
+]=]
 local function join_terms(terms, include_langname, do_language_link, conj)
 	local links = {}
 	local langnametext
@@ -80,21 +179,18 @@ local function join_terms(terms, include_langname, do_language_link, conj)
 end
 
 
-local function get_terminfo(lang, args, pname, index, term)
-	local function fetch(mod)
-		return args[pname .. mod] and args[pname .. mod][index]
-	end
-	local sc = require("Module:scripts").getByCode(fetch("sc"), pname .. (index == 1 and "" or index) .. "sc")
-	local g = fetch("g")
-	g = g and rsplit(g, ",") or {}
-	
-	return {
-		lang = lang, term = term or fetch(""), alt = fetch("alt"), tr = fetch("tr"), ts = fetch("ts"), id = fetch("id"),
-		gloss = fetch("t"), pos = fetch("pos"), lit = fetch("lit"), g = g, sc = sc, q = fetch("q") 
-	}
-end
-
-
+--[=[
+Gather the parameters for multiple names, each specified using a set of parameters, an link each name using
+full_link() (for foreign names) or language_link() (for English names), joining the names using
+serialCommaJoin() in [[Module:table]] with the conjugation `conj` (defaulting to "or"). This can be used,
+for example, to fetch and join all the masculine equivalent names for a feminine given name. Each name is
+specified using parameters beginning with `pname` in `args`, and `lang` is the language of the names, for
+use in linking them. For example, if `pname` is "m" (for masculine equivalent names), the names themselves
+will be contained in arguments "m", "m2", "m3", ...; the associated manual transliterations will be contained
+in "mtr", "m2tr", "m3tr", ...; etc. This function assumes that the parameters have already been parsed by
+[[Module:parameters]] and gathered into lists, so that e.g. all "mN" parameters are in a list in args["m"],
+all "mNtr" parameters are in a list in args["mtr"], etc.
+]=]
 local function join_names(lang, args, pname, conj)
 	local term_objs = {}
 	local i = 1
@@ -118,6 +214,7 @@ local function join_names(lang, args, pname, conj)
 	end
 	return join_terms(term_objs, nil, do_language_link, conj), #term_objs
 end
+
 
 local function get_eqtext(args)
 	local eqsegs = {}
@@ -153,71 +250,117 @@ local function get_eqtext(args)
 	return m_table.serialCommaJoin(eqtextsegs)
 end
 
+
 local function get_fromtext(lang, args)
+	local catparts = {}
 	local fromsegs = {}
 	local i = 1
-	local last_fromseg = nil
-	while args.from[i] do
-		local from = args.from[i]
+
+	local function parse_from(from)
+		local unrecognized = false
 		local prefix, suffix
 		if from == "surnames" then
 			prefix = "transferred from the "
 			suffix = "surname"
+			table.insert(catparts, from)
 		elseif from == "place names" then
 			prefix = "transferred from the "
 			suffix = "place name"
+			table.insert(catparts, from)
 		elseif from == "coinages" then
 			prefix = "originating "
 			suffix = "as a coinage"
+			table.insert(catparts, from)
 		elseif from == "the Bible" then
 			prefix = "originating "
 			suffix = "from the Bible"
+			table.insert(catparts, from)
 		else
 			prefix = "from "
-			local fromlang, fromterm = rmatch(from, "^(.-):(.*)$")
-			if fromlang then
-				fromlang = m_languages.getByCode(fromlang, "from" .. (i == 1 and "" or i), "allow etym lang")
+			if from:find(":") then
+				local terminfo = get_term_with_annotations(from, "from" .. (i == 1 and "" or i), lang)
 				local fromlangname = ""
-				if fromlang:getCode() ~= lang:getCode() then
-					-- If name is derived from another name in the same language, don't include lang name after text "from ".
-					fromlangname = fromlang:getCanonicalName() .. " "
+				if terminfo.lang:getCode() ~= lang:getCode() then
+					-- If name is derived from another name in the same language, don't include lang name after text "from "
+					-- or create a category like "German male given names derived from German".
+					local canonical_name = terminfo.lang:getCanonicalName()
+					fromlangname = canonical_name .. " "
+					table.insert(catparts, canonical_name)
 				end
-				local terminfo = get_terminfo(m_languages.getNonEtymological(fromlang), args, "from", i, fromterm)
+				terminfo.lang = m_languages.getNonEtymological(terminfo.lang)
 				suffix = fromlangname .. m_links.full_link(terminfo, nil, true)
-			elseif rfind(from, " languages$") then
+			elseif from:find(" languages$") then
+				local family = from:match("^(.*) languages$")
+				if require("Module:families").getByCanonicalName(family) then
+					table.insert(catparts, from)
+				else
+					unrecognized = true
+				end
 				suffix = "the " .. from
 			else
+				if m_languages.getByCanonicalName(from, nil, "allow etym") then
+					table.insert(catparts, from)
+				else
+					unrecognized = true
+				end
 				suffix = from
 			end
 		end
-		if last_fromseg and last_fromseg.prefix ~= prefix then
-			table.insert(fromsegs, last_fromseg)
-			last_fromseg = nil
+		if unrecognized then
+			track("unrecognized from")
+			track("unrecognized from/" .. from)
 		end
-		if not last_fromseg then
-			last_fromseg = {prefix = prefix, suffixes = {}}
+		return prefix, suffix
+	end
+
+	local last_fromseg = nil
+	while args.from[i] do
+		local rawfrom = args.from[i]
+		local froms = rsplit(rawfrom, "%s+<<%s+")
+		if #froms == 1 then
+			local prefix, suffix = parse_from(froms[1])
+			if last_fromseg and (last_fromseg.has_multiple_froms or last_fromseg.prefix ~= prefix) then
+				table.insert(fromsegs, last_fromseg)
+				last_fromseg = nil
+			end
+			if not last_fromseg then
+				last_fromseg = {prefix = prefix, suffixes = {}}
+			end
+			table.insert(last_fromseg.suffixes, suffix)
+		else
+			if last_fromseg then
+				table.insert(fromsegs, last_fromseg)
+				last_fromseg = nil
+			end
+			local first_suffixpart = ""
+			local rest_suffixparts = {}
+			for j, from in ipairs(froms) do
+				local prefix, suffix = parse_from(from)
+				if j == 1 then
+					first_suffixpart = prefix .. suffix
+				else
+					table.insert(rest_suffixparts, prefix .. suffix)
+				end
+			end
+			local full_suffix = first_suffixpart .. "(" .. table.concat(rest_suffixparts, ", in turn ") .. ")"
+			last_fromseg = {prefix = "", has_multiple_froms = true, suffixes = {full_suffix}}
 		end
-		table.insert(last_fromseg.suffixes, suffix)
 		i = i + 1
 	end
 	table.insert(fromsegs, last_fromseg)
 	local fromtextsegs = {}
 	for _, fromseg in ipairs(fromsegs) do
-		table.insert(fromtextsegs, fromseg.prefix ..
-			m_table.serialCommaJoin(fromseg.suffixes, {conj = "or"}))
+		table.insert(fromtextsegs, fromseg.prefix ..  m_table.serialCommaJoin(fromseg.suffixes, {conj = "or"}))
 	end
-	return m_table.serialCommaJoin(fromtextsegs, {conj = "or"})
+	return m_table.serialCommaJoin(fromtextsegs, {conj = "or"}), catparts
 end
+
 
 -- The entry point for {{given name}}.
 function export.given_name(frame)
 	local parent_args = frame:getParent().args
 	local compat = parent_args.lang
 	local offset = compat and 0 or 1
-
-	local function track(page)
-		require("Module:debug").track("given name/" .. page)
-	end
 
 	local params = {
 		[compat and "lang" or 1] = { required = true, default = "und" },
@@ -310,13 +453,18 @@ function export.given_name(frame)
 		table.insert(textsegs, ", " .. xlittext)
 		need_comma = true
 	end
+	local from_catparts = {}
 	if #args.from > 0 then
 		if need_comma then
 			table.insert(textsegs, ",")
 		end
 		need_comma = true
 		table.insert(textsegs, " ")
-		table.insert(textsegs, get_fromtext(lang, args))
+		local textseg, this_catparts = get_fromtext(lang, args)
+		for _, catpart in ipairs(this_catparts) do
+			m_table.insertIfNot(from_catparts, catpart)
+		end
+		table.insert(textsegs, textseg)
 	end
 	
 	if meaningtext ~= "" then
@@ -373,36 +521,8 @@ function export.given_name(frame)
 				insert_cats_gender("female")
 			end
 			table.insert(categories, langname .. isdim .. g .. " given names")
-			for i, from in ipairs(args.from) do
-				local same_from_lang
-				local fromcatform
-				local fromlang, fromterm = rmatch(from, "^(.-):(.*)$")
-				if fromlang then
-					fromlang = m_languages.getByCode(fromlang, "from" .. (i == 1 and "" or i), "allow etym lang")
-					fromcatform = fromlang:getCanonicalName()
-					-- If name is derived from another name in the same language, don't create a category like
-					-- "German male given names from German".
-					same_from_lang = fromlang:getCode() == lang:getCode()
-				elseif from == "surnames" or from == "place names" or from == "coinages" or from == "the Bible" then
-					fromcatform = from
-				else
-					local family = rmatch(from, "^(.*) languages$")
-					if family then
-						if require("Module:families").getByCanonicalName(family) then
-							fromcatform = from
-						end
-					elseif m_languages.getByCanonicalName(from, nil, "allow etym") then
-						fromcatform = from
-					end
-				end
-				if fromcatform then
-					if not same_from_lang then
-						table.insert(categories, langname .. isdim .. g .. " given names from " .. fromcatform)
-					end
-				else
-					track("unrecognized from")
-					track("unrecognized from/" .. from)
-				end
+			for _, catpart in ipairs(from_catparts) do
+				table.insert(categories, langname .. isdim .. g .. " given names from " .. catpart)
 			end
 		end
 		insert_cats_gender(args.gender)
