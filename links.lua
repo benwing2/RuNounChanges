@@ -379,6 +379,11 @@ function export.format_link_annotations(data, face)
 		table_insert(annotations, "literally " .. export.mark(data.lit, "gloss"))
 	end
 
+	-- Original meaning
+	if data.orig then
+		table_insert(annotations, "originally " .. export.mark(data.orig, "gloss"))
+	end
+
 	if #annotations > 0 then
 		table_insert(output, " " .. export.mark(table_concat(annotations, ", "), "annotations"))
 	end
