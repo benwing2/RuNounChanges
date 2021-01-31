@@ -296,20 +296,13 @@ def process_text_on_page(index, pagetitle, text):
   # Split off templates, tables, in each case allowing one nested template;
   # also split off comments and stuff after dashes and between quotes.
   template_table_split_re = ur'''(\{\{(?:[^{}]|\{\{[^{}]*\}\})*\}\}|\{\|(?:[^{}]|\{\{[^{}]*\}\})*\|\}|<!--.*-->| +(?:[-–—=]|&[mn]dash;) +[^\n]*|\(?(?<!')''[^'\n]*?''\)?|"[^"\n]*?"|“[^\n]*?”|‘[^\n]*?’)'''
-  sections = re.split("(^==[^\n=]*==\n)", text, 0, re.M)
-  newtext = text
-  for j in xrange(2, len(sections), 2):
-    m = re.search("^==(.*?)==\n$", sections[j - 1])
-    if not m:
-      pagemsg("WARNING: Something wrong, can't parse section from %s" %
-        sections[j - 1].strip())
-      continue
-    thislangname = m.group(1)
+
+  def do_section(sectext, thislangname):
     if thislangname in thislangnames:
       thislangcode, this_remove_accents, this_charset, this_ignore_translit = (
           language_names_to_properties[thislangname])
 
-      subsections = re.split("(^==.*==\n)", sections[j], 0, re.M)
+      subsections = re.split("(^==.*==\n)", sectext, 0, re.M)
       for k in xrange(2, len(subsections), 2):
         m = re.search("^===*([^=]*)=*==\n$", subsections[k-1])
         subsectitle = m.group(1).strip()
@@ -482,11 +475,12 @@ def process_text_on_page(index, pagetitle, text):
               for ll in xrange(0, len(split_line), 2):
                 subline = split_line[ll]
                 replaced = False
+                # Ignore links beginning with a colon (category links and such)
                 if this_ignore_translit == "latin":
                   new_subline = unobfuscate_brackets(
-                      rsub_repeatedly(r"^(.*?)(\[\[(.*?)\]\])", sub_raw_latin_link, subline))
+                      rsub_repeatedly(r"^(.*?)(\[\[([^:].*?)\]\])", sub_raw_latin_link, subline))
                 else:
-                  new_subline = re.sub(r"\[\[([^A-Za-z]*?)\]\](?: \(([^()|]*?)\))?", sub_raw_link, subline)
+                  new_subline = re.sub(r"\[\[([^:A-Za-z][^A-Za-z]*?)\]\](?: \(([^()|]*?)\))?", sub_raw_link, subline)
                 if new_subline != subline:
                   pagemsg("Replacing %s with %s in %s section in %s" %
                     (subline, new_subline, subsectitle, thislangname))
@@ -509,9 +503,23 @@ def process_text_on_page(index, pagetitle, text):
                   subsections[k] = "".join(split_text)
                   assert subsections[k][0] == "\n"
                   subsections[k] = subsections[k][1:]
-                  sections[j] = "".join(subsections)
+                  sectext = "".join(subsections)
 
-  newtext = "".join(sections)
+    return sectext
+
+  if args.single_lang:
+    newtext = do_section(text, args.single_lang)
+  else:
+    sections = re.split("(^==[^\n=]*==\n)", text, 0, re.M)
+    for j in xrange(2, len(sections), 2):
+      m = re.search("^==(.*?)==\n$", sections[j - 1])
+      if not m:
+        pagemsg("WARNING: Something wrong, can't parse section from %s" %
+          sections[j - 1].strip())
+        continue
+      thislangname = m.group(1)
+      sections[j] = do_section(sections[j], thislangname)
+    newtext = "".join(sections)
 
   return newtext, "Replace raw links with templated links: %s" % ",".join(subbed_links)
 
@@ -519,6 +527,7 @@ if __name__ == "__main__":
   parser = blib.create_argparser("Replace raw links with templated links",
     include_pagefile=True, include_stdin=True)
   parser.add_argument('--langs', help="Language codes for languages to do, comma-separated")
+  parser.add_argument('--single-lang', help="Text is of this language, without header")
   args = parser.parse_args()
   start, end = blib.parse_start_end(args.start, args.end)
 
