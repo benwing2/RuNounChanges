@@ -52,22 +52,24 @@ def process_text_on_page(index, pagetitle, text, regex, invert, verbose,
         break
 
   if text_to_search:
+    found_match = False
     if all_matches:
       for m in re.finditer(regex, text_to_search, re.M):
+        found_match = True
         pagemsg("Found match for regex: %s" % m.group(0))
     else:
       m = re.search(regex, text_to_search, re.M)
-      if not text_to_search.endswith("\n"):
-        text_to_search += "\n"
       if m:
+        found_match = True
         if not invert:
           pagemsg("Found match for regex: %s" % m.group(0))
-          if include_text:
-            pagemsg("-------- begin text ---------\n%s-------- end text --------" % text_to_search)
-      elif invert:
-        pagemsg("Didn't find match for regex: %s" % regex)
-        if include_text:
-          pagemsg("-------- begin text ---------\n%s-------- end text --------" % text_to_search)
+    if not found_match and invert:
+      pagemsg("Didn't find match for regex: %s" % regex)
+    if include_text:
+      if not text_to_search.endswith("\n"):
+        text_to_search += "\n"
+      if found_match == (not invert):
+        pagemsg("-------- begin text ---------\n%s-------- end text --------" % text_to_search)
 
 def search_pages(args, regex, invert, input_from_diff, start, end, lang_only):
 
