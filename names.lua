@@ -5,6 +5,8 @@ local m_table = require("Module:table")
 
 local export = {}
 
+local enlang = m_languages.getByCode("en")
+
 local rfind = mw.ustring.find
 local rmatch = mw.ustring.match
 local rsubn = mw.ustring.gsub
@@ -17,19 +19,19 @@ local force_cat = true
 FIXME:
 
 1. from=the Bible (DONE)
-2. origin=18th century
+2. origin=18th century [DONE]
 3. popular= (DONE)
 4. varoftype= (DONE)
 5. eqtype= [DONE]
 6. dimoftype= [DONE]
 7. from=de:Elisabeth (same language) (DONE)
 8. blendof=, blendof2= [DONE]
-9. varform, dimform
-10. from=English < Latin
+9. varform, dimform [DONE]
+10. from=English < Latin [DONE]
 11. usage=rare -> categorize as rare?
-12. dimeq= (also vareq=?)
-13. fromtype=
-14. <tr:...> and similar params
+12. dimeq= (also vareq=?) [DONE]
+13. fromtype= [DONE]
+14. <tr:...> and similar params [DONE]
 ]=]
 
 -- version of rsubn() that discards all but the first return value
@@ -64,181 +66,197 @@ local function track(page)
 end
 
 
+
 --[=[
-Fetch a term and associated properties and return a terminfo object that can be passed to full_link()
-in [[Module:links]]. The properties are specified using separate parameters, where the term itself is
-specified by `pname` and `index` (e.g. "f2") and the various properties are specified by parameters with
-the property name appended, e.g. "f2tr". It is assumed that the arguments themselves have already been
-processed using [[Module:parameters]] to that e.g. all "f" parameters ("f", "f2", "f3", ...) are contained
-in a list in args["f"], and similarly all "fNtr" parameters ("ftr", "f2tr", "f3tr", ...) are contained in
-a list in args["ftr"].
-* `args` is the arguments returned by [[Module:parameters]]
-* `pname` is the basic parameter prefix, e.g. "f" or "varof"
-* `index` says to pull out the index'th parameter of this type
-* `lang` is the language to store in the returned terminfo structure
-* `term` can be used to override the term itself; if not specified, the term comes from the `pname`
-  parameter in `args`
+Parse a term and associated properties. This works with parameters of the form 'Karlheinz' or
+'Kunigunde<q:medieval, now rare>' or 'non:Óláfr' or 'ru:Фру́нзе<tr:Frúnzɛ><q:rare>' where the modifying properties
+are contained in <...> specifications after the term. `term` is the full parameter value including any angle brackets
+and colons; `pname` is the name of the parameter that this value comes from, for error purposes; `deflang` is a
+language object used in the return value when the language isn't specified (e.g. in the examples 'Karlheinz' and
+'Kunigunde<q:medieval, now rare>' above); `allow_explicit_lang` indicates whether the language can be explicitly given
+(e.g. in the examples 'non:Óláfr' or 'ru:Фру́нзе<tr:Frúnzɛ><q:rare>' above).
+
+Normally the return value is an object with properties '.term' (a terminfo object that can be passed to full_link() in
+[[Module:links]]) and '.q' (a qualifier). However, if `allow_multiple_terms` is given, multiple comma-separated names
+can be given in `term`, and the return value is a list of objects of the form described just above.
 ]=]
-local function get_terminfo(lang, args, pname, index, term)
-	local function fetch(mod)
-		return args[pname .. mod] and args[pname .. mod][index]
+local function parse_term_with_annotations(term, pname, deflang, allow_explicit_lang, allow_multiple_terms)
+	local function parse_single_run_with_annotations(run)
+		local function parse_err(msg)
+			error(msg .. ": " .. pname .. "= " .. table.concat(run))
+		end
+		if #run == 1 and run[1] == "" then
+			error("Blank form for param '" .. pname .. "' not allowed")
+		end
+		local termobj = {term = {}}
+		local lang, form = run[1]:match("^(.-):(.*)$")
+		if lang then
+			if not allow_explicit_lang then
+				parse_err("Explicit language '" .. lang .. "' not allowed for this parameter")
+			end
+			termobj.term.lang = m_languages.getByCode(lang, pname, "allow etym lang")
+			termobj.term.term = form
+		else
+			termobj.term.lang = deflang
+			termobj.term.term = run[1]
+		end
+
+		for i = 2, #run - 1, 2 do
+			if run[i + 1] ~= "" then
+				parse_err("Extraneous text '" .. run[i + 1] .. "' after modifier")
+			end
+			local modtext = run[i]:match("^<(.*)>$")
+			if not modtext then
+				parse_err("Internal error: Modifier '" .. modtext .. "' isn't surrounded by angle brackets")
+			end
+			local prefix, arg = modtext:match("^([a-z]+):(.*)$")
+			if not prefix then
+				parse_err("Modifier " .. run[i] .. " lacks a prefix, should begin with one of '" ..
+					table.concat(param_mods, ":', '") .. ":'")
+			end
+			if param_mod_set[prefix] then
+				local obj_to_set
+				if prefix == "q" or prefix == "eq" then
+					obj_to_set = termobj
+				else
+					obj_to_set = termobj.term
+				end
+				if obj_to_set[prefix] then
+					parse_err("Modifier '" .. prefix .. "' occurs twice, second occurrence " .. run[i])
+				end
+				if prefix == "t" then
+					termobj.term.gloss = arg
+				elseif prefix == "g" then
+					termobj.term.genders = rsplit(arg, ",")
+				elseif prefix == "sc" then
+					termobj.term.sc = require("Module:scripts").getByCode(arg, pname)
+				elseif prefix == "eq" then
+					termobj.eq = parse_term_with_annotations(arg, pname .. ".eq", false, "allow multiple terms")
+				else
+					obj_to_set[prefix] = arg
+				end
+			else
+				parse_err("Unrecognized prefix '" .. prefix .. "' in modifier " .. run[i])
+			end
+		end
+		return termobj
 	end
-	local sc = require("Module:scripts").getByCode(fetch("sc"), pname .. (index == 1 and "" or index) .. "sc")
-	local g = fetch("g")
-	g = g and rsplit(g, ",") or {}
-	
-	return {
-		lang = lang, term = term or fetch(""), alt = fetch("alt"), tr = fetch("tr"), ts = fetch("ts"), id = fetch("id"),
-		gloss = fetch("t"), pos = fetch("pos"), lit = fetch("lit"), g = g, sc = sc, q = fetch("q") 
-	}
-end
 
-
---[=[
-Fetch a term and associated properties and return a terminfo object that can be passed to full_link()
-in [[Module:links]]. This works with parameters of the form 'Karlheinz' or 'Kunigunde<q:medieval, now rare>' or
-'non:Óláfr' or 'ru:Фру́нзе<tr:Frúnzɛ><q:rare>' where the modifying properties are contained in <...>
-specifications after the term. `term` is the full parameter value including any angle brackets and colons;
-`pname` is the name of the parameter that this value comes from, for error purposes; and `deflang` is a
-language object used in the return value when the language isn't specified (e.g. in the examples 'Karlheinz'
-and 'Kunigunde<q:medieval, now rare>' above).
-]=]
-local function get_term_with_annotations(term, pname, deflang)
 	local iut = require("Module:inflection utilities")
 	local run = iut.parse_balanced_segment_run(term, "<", ">")
-	local function parse_err(msg)
-		error(msg .. ": " .. pname .. "= " .. table.concat(run))
-	end
-	if #run == 1 and run[1] == "" then
-		error("Blank form for param '" .. pname .. "' not allowed")
-	end
-	local terminfo = {}
-	local lang, form = run[1]:match("^(.-):(.*)$")
-	if lang then
-		terminfo.lang = m_languages.getByCode(lang, pname, "allow etym lang")
-		terminfo.term = form
+	if allow_multiple_terms then
+		local comma_separated_runs = iut.split_alternating_runs(run, "%s*,%s*")
+		local termobjs = {}
+		for _, comma_separated_run in ipairs(comma_separated_runs) do
+			table.insert(termobjs, parse_single_run_with_annotations(comma_separated_run))
+		end
+		return termobjs
 	else
-		terminfo.lang = deflang
-		terminfo.term = run[1]
+		return parse_single_run_with_annotations(run)
 	end
-
-	for i = 2, #run - 1, 2 do
-		if run[i + 1] ~= "" then
-			parse_err("Extraneous text '" .. run[i + 1] .. "' after modifier")
-		end
-		local modtext = run[i]:match("^<(.*)>$")
-		if not modtext then
-			parse_err("Internal error: Modifier '" .. modtext .. "' isn't surrounded by angle brackets")
-		end
-		local prefix, arg = modtext:match("^([a-z]+):(.*)$")
-		if not prefix then
-			parse_err("Modifier " .. run[i] .. " lacks a prefix, should begin with one of '" ..
-				table.concat(param_mods, ":', '") .. ":'")
-		end
-		if param_mod_set[prefix] then
-			if terminfo[prefix] then
-				parse_err("Modifier '" .. prefix .. "' occurs twice, second occurrence " .. run[i])
-			end
-			terminfo[prefix] = arg
-		else
-			parse_err("Unrecognized prefix '" .. prefix .. "' in modifier " .. run[i])
-		end
-	end
-	return terminfo
 end
 
 
 --[=[
-Join the terms in `terms` (where each is a terminfo structure suitable for passing to full_link() or language_link()
-in [[Module:links]] using the conjugation in `conj` (defaulting to "or"). Joining is done using serialCommaJoin()
-in [[Module:table]], so that e.g. two terms are joined as "TERM or TERM" while three terms are joined as
-"TERM, TERM or TERM" with special CSS spans before the final "or" to allow an "Oxford comma" to appear if configured
-appropriately. If `include_langname` is given, the language of the first term will be prepended to the joined
-terms. If `do_language_link` is given, or if a given term's language is English, the link will be constructed
-using language_link() in [[Module:links]]; otherwise, with full_link().
+Link a single term. If `do_language_link` is given and a given term's language is English, the link will be constructed
+using language_link() in [[Module:links]]; otherwise, with full_link(). Each term in `terms` is an object as returned
+by parse_term_with_annotations(), i.e. it contains fields '.term' (a terminfo structure suitable for passing to
+full_link() or language_link()), optional '.q' (a qualifier) and optional '.eq' (a list of objects of the same form as
+`termobj`).
+]=]
+local function link_one_term(termobj, do_language_link)
+	termobj.term.lang = m_languages.getNonEtymological(termobj.term.lang)
+	local link
+	if do_language_link and termobj.term.lang:getCode() == "en" then
+		link = m_links.language_link(termobj.term, nil, true)
+	else
+		link = m_links.full_link(termobj.term, nil, true)
+	end
+	if termobj.q then
+		link = require("Module:qualifier").format_qualifier(termobj.q) .. " " .. link
+	end
+	if termobj.eq then
+		local eqtext = {}
+		for _, eqobj in ipairs(termobj.eq) do
+			table.insert(eqtext, link_one_term(eqobj, true))
+		end
+		link = link .. " [=" .. m_table.serialCommaJoin(eqtext, {conj = "or"}) .. "]"
+	end
+	return link
+end
+
+
+--[=[
+Link the terms in `terms`, and join them using the conjunction in `conj` (defaulting to "or"). Joining is done using
+serialCommaJoin() in [[Module:table]], so that e.g. two terms are joined as "TERM or TERM" while three terms are joined
+as "TERM, TERM or TERM" with special CSS spans before the final "or" to allow an "Oxford comma" to appear if configured
+appropriately. (However, if `conj` is the special value ", ", joining is done directly using that value.)
+If `include_langname` is given, the language of the first term will be prepended to the joined terms. If
+`do_language_link` is given and a given term's language is English, the link will be constructed using language_link()
+in [[Module:links]]; otherwise, with full_link(). Each term in `terms` is an object as returned by
+parse_term_with_annotations(), i.e. it contains fields '.term' (a terminfo structure suitable for passing to full_link()
+or language_link()), optional '.q' (a qualifier) and optional '.eq' (a list of objects of the same form as in `terms`).
 ]=]
 local function join_terms(terms, include_langname, do_language_link, conj)
 	local links = {}
 	local langnametext
-	for _, term in ipairs(terms) do
+	for _, termobj in ipairs(terms) do
 		if include_langname and not langnametext then
-			langnametext = term.lang:getCanonicalName() .. " "
+			langnametext = termobj.term.lang:getCanonicalName() .. " "
 		end
-		term.lang = m_languages.getNonEtymological(term.lang)
-		if do_language_link and term.lang:getCode() == "en" then
-			link = m_links.language_link(term, nil, true)
-		else
-			link = m_links.full_link(term, nil, true)
-		end
-		if term.q then
-			link = require("Module:qualifier").format_qualifier(term.q) .. " " .. link
-		end
-		table.insert(links, link)
+		table.insert(links, link_one_term(termobj, do_language_link))
 	end
-	return (langnametext or "") .. m_table.serialCommaJoin(links, {conj = conj or "or"})
+	local joined_terms
+	if conj == ", " then
+		joined_terms = table.concat(links, conj)
+	else
+		joined_terms = m_table.serialCommaJoin(links, {conj = conj or "or"})
+	end
+	return (langnametext or "") .. joined_terms
 end
 
 
 --[=[
-Gather the parameters for multiple names, each specified using a set of parameters, an link each name using
-full_link() (for foreign names) or language_link() (for English names), joining the names using
-serialCommaJoin() in [[Module:table]] with the conjugation `conj` (defaulting to "or"). This can be used,
-for example, to fetch and join all the masculine equivalent names for a feminine given name. Each name is
-specified using parameters beginning with `pname` in `args`, and `lang` is the language of the names, for
-use in linking them. For example, if `pname` is "m" (for masculine equivalent names), the names themselves
-will be contained in arguments "m", "m2", "m3", ...; the associated manual transliterations will be contained
-in "mtr", "m2tr", "m3tr", ...; etc. This function assumes that the parameters have already been parsed by
-[[Module:parameters]] and gathered into lists, so that e.g. all "mN" parameters are in a list in args["m"],
-all "mNtr" parameters are in a list in args["mtr"], etc.
+Gather the parameters for multiple names and link each name using full_link() (for foreign names) or language_link()
+(for English names), joining the names using serialCommaJoin() in [[Module:table]] with the conjunction `conj`
+(defaulting to "or"). (However, if `conj` is the special value ", ", joining is done directly using that value.)
+This can be used, for example, to fetch and join all the masculine equivalent names for a feminine given name. Each
+name is specified using parameters beginning with `pname` in `args`, e.g. "m", "m2", "m3", etc. `lang` is a language
+object specifying the language of the names (defaulting to English), for use in linking them. If `allow_explicit_lang`
+is given, the language of the terms can be specified explicitly by prefixing a term with a language code, e.g.
+'sv:Björn' or 'la:[[Nicolaus|Nīcolāī]]'. This function assumes that the parameters have already been parsed by
+[[Module:parameters]] and gathered into lists, so that e.g. all "mN" parameters are in a list in args["m"].
 ]=]
-local function join_names(lang, args, pname, conj)
-	local term_objs = {}
-	local i = 1
+local function join_names(lang, args, pname, conj, allow_explicit_lang)
+	local termobjs = {}
 	local do_language_link = false
 	if not lang then
-		lang = m_languages.getByCode("en")
+		lang = enlang
 		do_language_link = true
 	end
 
-	-- Find the maximum index among any of the list parameters.
-	local maxmaxindex = #args[pname]
-	for _, mod in ipairs(param_mods) do
-		local v = args[pname .. mod]
-		if type(v) == "table" and v.maxindex and v.maxindex > maxmaxindex then
-			maxmaxindex = v.maxindex
-		end
+	for i, term in ipairs(args[pname]) do
+		table.insert(termobjs, parse_term_with_annotations(term, pname .. (i == 1 and "" or i), lang, allow_explicit_lang))
 	end
-
-	for i = 1, maxmaxindex do
-		table.insert(term_objs, get_terminfo(lang, args, pname, i))
-	end
-	return join_terms(term_objs, nil, do_language_link, conj), #term_objs
+	return join_terms(termobjs, nil, do_language_link, conj), #term_objs
 end
 
 
 local function get_eqtext(args)
 	local eqsegs = {}
-	local i = 1
 	local lastlang = nil
 	local last_eqseg = {}
-	while args.eq[i] do
-		local eqlang, eqterm = rmatch(args.eq[i], "^(.-):(.*)$")
-		if not eqlang then
-			eqlang = "en"
-			eqterm = args.eq[i]
-		end
-		if lastlang and lastlang ~= eqlang then
+	for i, term in ipairs(args.eq) do
+		local termobj = parse_term_with_annotations(term, "eq" .. (i == 1 and "" or i), enlang, "allow explicit lang")
+		local termlang = termobj.term.lang:getCode()
+		if lastlang and lastlang ~= termlang then
 			if #last_eqseg > 0 then
 				table.insert(eqsegs, last_eqseg)
 			end
 			last_eqseg = {}
 		end
-		lastlang = eqlang
-		local terminfo = get_terminfo(
-			m_languages.getByCode(eqlang, "eq" .. (i == 1 and "" or i), "allow etym lang"),
-			args, "eq", i, eqterm)
-		table.insert(last_eqseg, terminfo)
-		i = i + 1
+		lastlang = termlang
+		table.insert(last_eqseg, termobj)
 	end
 	if #last_eqseg > 0 then
 		table.insert(eqsegs, last_eqseg)
@@ -247,7 +265,7 @@ local function get_eqtext(args)
 	for _, eqseg in ipairs(eqsegs) do
 		table.insert(eqtextsegs, join_terms(eqseg, "include langname"))
 	end
-	return m_table.serialCommaJoin(eqtextsegs)
+	return m_table.serialCommaJoin(eqtextsegs, {conj = "or"})
 end
 
 
@@ -278,17 +296,17 @@ local function get_fromtext(lang, args)
 		else
 			prefix = "from "
 			if from:find(":") then
-				local terminfo = get_term_with_annotations(from, "from" .. (i == 1 and "" or i), lang)
+				local termobj = parse_term_with_annotations(from, "from" .. (i == 1 and "" or i), lang, "allow explicit lang")
 				local fromlangname = ""
-				if terminfo.lang:getCode() ~= lang:getCode() then
+				if termobj.term.lang:getCode() ~= lang:getCode() then
 					-- If name is derived from another name in the same language, don't include lang name after text "from "
 					-- or create a category like "German male given names derived from German".
-					local canonical_name = terminfo.lang:getCanonicalName()
+					local canonical_name = termobj.term.lang:getCanonicalName()
 					fromlangname = canonical_name .. " "
 					table.insert(catparts, canonical_name)
 				end
-				terminfo.lang = m_languages.getNonEtymological(terminfo.lang)
-				suffix = fromlangname .. m_links.full_link(terminfo, nil, true)
+				termobj.term.lang = m_languages.getNonEtymological(termobj.term.lang)
+				suffix = fromlangname .. link_one_term(termobj)
 			elseif from:find(" languages$") then
 				local family = from:match("^(.*) languages$")
 				if require("Module:families").getByCanonicalName(family) then
@@ -342,7 +360,7 @@ local function get_fromtext(lang, args)
 					table.insert(rest_suffixparts, prefix .. suffix)
 				end
 			end
-			local full_suffix = first_suffixpart .. "(" .. table.concat(rest_suffixparts, ", in turn ") .. ")"
+			local full_suffix = first_suffixpart .. " (in turn " .. table.concat(rest_suffixparts, ", in turn ") .. ")"
 			last_fromseg = {prefix = "", has_multiple_froms = true, suffixes = {full_suffix}}
 		end
 		i = i + 1
@@ -369,6 +387,7 @@ function export.given_name(frame)
 		-- second gender
 		["or"] = {},
 		["usage"] = {},
+		["origin"] = {},
 		["popular"] = {},
 		["populartype"] = {},
 		["meaning"] = { list = true },
@@ -376,31 +395,32 @@ function export.given_name(frame)
 		-- initial article: A or An
 		["A"] = {},
 		["sort"] = {},
+		["from"] = { list = true },
 		[2 + offset] = { alias_of = "from", list = true },
+		["fromtype"] = {},
 		["xlit"] = { list = true },
-		["xlitalt"] = { list = "xlit=alt", allow_holes = true },
+		["eq"] = { list = true },
+		["eqtype"] = {},
+		["varof"] = { list = true },
+		["varoftype"] = {},
+		["var"] = { alias_of = "varof", list = true },
+		["vartype"] = { alias_of = "varoftype" },
+		["varform"] = { list = true },
+		["dimof"] = { list = true },
+		["dimoftype"] = {},
+		["dim"] = { alias_of = "dimof", list = true },
+		["dimtype"] = { alias_of = "dimoftype" },
+		["diminutive"] = { alias_of = "dimof", list = true },
+		["diminutivetype"] = { alias_of = "dimoftype" },
+		["dimform"] = { list = true },
+		["blend"] = { list = true },
+		["blendtype"] = {},
+		["m"] = { list = true },
+		["mtype"] = {},
+		["f"] = { list = true },
+		["ftype"] = {},
 	}
 
-	local function add_list_param(pname, alias_of)
-		params[pname] = { list = true, alias_of = alias_of }
-		for _, mod in ipairs(param_mods) do
-			params[pname .. mod] = { list = pname .. "=" .. mod, allow_holes = true,
-				alias_of = alias_of and alias_of .. mod or nil }
-		end
-		params[pname .. "type"] = { alias_of = alias_of and alias_of .. "type" or nil }
-	end
-
-	add_list_param("from")
-	add_list_param("dimof")
-	add_list_param("dim", "dimof")
-	add_list_param("diminutive", "dimof")
-	add_list_param("eq")
-	add_list_param("varof")
-	add_list_param("var", "varof")
-	add_list_param("blend")
-	add_list_param("m")
-	add_list_param("f")
-	
 	local args = require("Module:parameters").process(parent_args, params)
 	
 	local textsegs = {}
@@ -410,18 +430,19 @@ function export.given_name(frame)
 		return args[param] and args[param] .. " " or ""
 	end
 
-	local dimtext, numdims = join_names(lang, args, "dim")
+	local dimoftext, numdims = join_names(lang, args, "dimof")
 	local xlittext = join_names(nil, args, "xlit")
 	local blendtext = join_names(lang, args, "blend", "and")
 	local varoftext = join_names(lang, args, "varof")
 	local mtext = join_names(lang, args, "m")
 	local ftext = join_names(lang, args, "f")
+	local varformtext, numvarforms = join_names(lang, args, "varform", ", ")
+	local dimformtext, numdimforms = join_names(lang, args, "dimform", ", ")
 	local meaningsegs = {}
 	for _, meaning in ipairs(args.meaning) do
 		table.insert(meaningsegs, '"' .. meaning .. '"')
 	end
 	local meaningtext = m_table.serialCommaJoin(meaningsegs, {conj = "or"})
-
 	local eqtext = get_eqtext(args)
 
 	table.insert(textsegs, "<span class='use-with-mention'>")
@@ -447,7 +468,7 @@ function export.given_name(frame)
 		"[[given name]]")
 	local need_comma = false
 	if numdims > 0 then
-		table.insert(textsegs, " " .. dimtext)
+		table.insert(textsegs, " " .. dimoftext)
 		need_comma = true
 	elseif xlittext ~= "" then
 		table.insert(textsegs, ", " .. xlittext)
@@ -459,7 +480,7 @@ function export.given_name(frame)
 			table.insert(textsegs, ",")
 		end
 		need_comma = true
-		table.insert(textsegs, " ")
+		table.insert(textsegs, " " .. fetch_typetext("fromtype"))
 		local textseg, this_catparts = get_fromtext(lang, args)
 		for _, catpart in ipairs(this_catparts) do
 			m_table.insertIfNot(from_catparts, catpart)
@@ -473,6 +494,13 @@ function export.given_name(frame)
 		end
 		need_comma = true
 		table.insert(textsegs, " " .. fetch_typetext("meaningtype") .. "meaning " .. meaningtext)
+	end
+	if args.origin then
+		if need_comma then
+			table.insert(textsegs, ",")
+		end
+		need_comma = true
+		table.insert(textsegs, " of " .. args.origin .. " origin")
 	end
 	if args.usage then
 		if need_comma then
@@ -498,6 +526,12 @@ function export.given_name(frame)
 	end
 	if eqtext ~= "" then
 		table.insert(textsegs, ", " .. fetch_typetext("eqtype") .. "equivalent to " .. eqtext)
+	end
+	if varformtext ~= "" then
+		table.insert(textsegs, "; variant form" .. (numvarforms > 1 and "s" or "") .. " " .. varformtext
+	end
+	if dimformtext ~= "" then
+		table.insert(textsegs, "; diminutive form" .. (numdimforms > 1 and "s" or "") .. " " .. dimformtext
 	end
 	table.insert(textsegs, "</span>")
 
