@@ -12,7 +12,7 @@ local rmatch = mw.ustring.match
 local rsubn = mw.ustring.gsub
 local rsplit = mw.text.split
 
-local force_cat = true
+local force_cat = false -- for testing
 
 --[=[
 
@@ -57,7 +57,7 @@ local translit_name_type_list = {
 }
 local translit_name_types = m_table.listToSet(translit_name_type_list)
 
-local param_mods = {"t", "alt", "tr", "ts", "pos", "lit", "id", "sc", "g", "q"}
+local param_mods = {"t", "alt", "tr", "ts", "pos", "lit", "id", "sc", "g", "q", "eq"}
 local param_mod_set = m_table.listToSet(param_mods)
 
 
@@ -131,7 +131,7 @@ local function parse_term_with_annotations(term, pname, deflang, allow_explicit_
 				elseif prefix == "sc" then
 					termobj.term.sc = require("Module:scripts").getByCode(arg, pname)
 				elseif prefix == "eq" then
-					termobj.eq = parse_term_with_annotations(arg, pname .. ".eq", false, "allow multiple terms")
+					termobj.eq = parse_term_with_annotations(arg, pname .. ".eq", enlang, false, "allow multiple terms")
 				else
 					obj_to_set[prefix] = arg
 				end
@@ -238,7 +238,7 @@ local function join_names(lang, args, pname, conj, allow_explicit_lang)
 	for i, term in ipairs(args[pname]) do
 		table.insert(termobjs, parse_term_with_annotations(term, pname .. (i == 1 and "" or i), lang, allow_explicit_lang))
 	end
-	return join_terms(termobjs, nil, do_language_link, conj), #term_objs
+	return join_terms(termobjs, nil, do_language_link, conj), #termobjs
 end
 
 
@@ -334,7 +334,7 @@ local function get_fromtext(lang, args)
 	local last_fromseg = nil
 	while args.from[i] do
 		local rawfrom = args.from[i]
-		local froms = rsplit(rawfrom, "%s+<<%s+")
+		local froms = rsplit(rawfrom, "%s+<%s+")
 		if #froms == 1 then
 			local prefix, suffix = parse_from(froms[1])
 			if last_fromseg and (last_fromseg.has_multiple_froms or last_fromseg.prefix ~= prefix) then
@@ -360,7 +360,7 @@ local function get_fromtext(lang, args)
 					table.insert(rest_suffixparts, prefix .. suffix)
 				end
 			end
-			local full_suffix = first_suffixpart .. " (in turn " .. table.concat(rest_suffixparts, ", in turn ") .. ")"
+			local full_suffix = first_suffixpart .. " [in turn " .. table.concat(rest_suffixparts, ", in turn ") .. "]"
 			last_fromseg = {prefix = "", has_multiple_froms = true, suffixes = {full_suffix}}
 		end
 		i = i + 1
@@ -392,6 +392,7 @@ function export.given_name(frame)
 		["populartype"] = {},
 		["meaning"] = { list = true },
 		["meaningtype"] = {},
+		["q"] = {},
 		-- initial article: A or An
 		["A"] = {},
 		["sort"] = {},
@@ -527,11 +528,14 @@ function export.given_name(frame)
 	if eqtext ~= "" then
 		table.insert(textsegs, ", " .. fetch_typetext("eqtype") .. "equivalent to " .. eqtext)
 	end
+	if args.q then
+		table.insert(textsegs, ", " .. args.q)
+	end
 	if varformtext ~= "" then
-		table.insert(textsegs, "; variant form" .. (numvarforms > 1 and "s" or "") .. " " .. varformtext
+		table.insert(textsegs, "; variant form" .. (numvarforms > 1 and "s" or "") .. " " .. varformtext)
 	end
 	if dimformtext ~= "" then
-		table.insert(textsegs, "; diminutive form" .. (numdimforms > 1 and "s" or "") .. " " .. dimformtext
+		table.insert(textsegs, "; diminutive form" .. (numdimforms > 1 and "s" or "") .. " " .. dimformtext)
 	end
 	table.insert(textsegs, "</span>")
 
@@ -573,15 +577,20 @@ function export.given_name(frame)
 		m_utilities.format_categories(categories, lang, args.sort, nil, force_cat)
 end
 
--- The entry point for {{name translit}}.
+-- The entry point for {{name translit}} and {{name respelling}}.
 function export.name_translit(frame)
+    local iparams = {
+        ["desctext"] = {required = true},
+    }
+    local iargs = require("Module:parameters").process(frame.args, iparams)
+
 	local parent_args = frame:getParent().args
 
 	local params = {
-		[1] = { required = true },
-		[2] = { required = true },
+		[1] = { required = true, default = "en" },
+		[2] = { required = true, default = "ru" },
 		[3] = { list = true },
-		["type"] = { required = true },
+		["type"] = { required = true, list = true, default = "patronymic" },
 		["alt"] = { list = true, allow_holes = true },
 		["t"] = { list = true, allow_holes = true },
 		["gloss"] = { list = true, alias_of = "t", allow_holes = true },
@@ -595,27 +604,78 @@ function export.name_translit(frame)
 		["eq"] = { list = true, allow_holes = true },
 		["dim"] = { type = "boolean" },
 		["aug"] = { type = "boolean" },
+		["nocap"] = { type = "boolean" },
 		["sort"] = {},
 	}
 	
 	local args = require("Module:parameters").process(parent_args, params)
 	local lang = m_languages.getByCode(args[1], 1)
-	local source = m_languages.getByCode(args[2], 2, "allow etym")
-	local sourcelang = m_languages.getNonEtymological(source)
+	local sources = {}
+	local source_non_etym_langs = {}
+	for _, source in ipairs(rsplit(args[2], "%s*,%s*")) do
+		local sourcelang = m_languages.getByCode(source, 2, "allow etym")
+		table.insert(sources, sourcelang)
+		table.insert(source_non_etym_langs, m_languages.getNonEtymological(sourcelang))
+	end
 
-	local ty = args["type"]
-	if not translit_name_types[ty] then
-		local quoted_types = {}
-		for _, nametype in ipairs(translit_name_type_list) do
-			table.insert(quoted_types, "'" .. nametype .. "'")
+	local nametypes = {}
+	for _, typearg in ipairs(args["type"]) do
+		for _, ty in ipairs(rsplit(typearg, "%s*,%s*")) do
+			if not translit_name_types[ty] then
+				local quoted_types = {}
+				for _, nametype in ipairs(translit_name_type_list) do
+					table.insert(quoted_types, "'" .. nametype .. "'")
+				end
+				error("Unrecognized type '" .. ty .. "': It should be one of " ..
+					m_table.serialCommaJoin(quoted_types, {conj = "or"}))
+			end
+			table.insert(nametypes, ty)
 		end
-		error("Unrecognized type '" .. ty .. "': It should be one of " ..
-			m_table.serialCommaJoin(quoted_types, {conj = "or"}))
+	end
+
+	-- Find the maximum index among any of the list parameters, to determine how many names are given.
+	local maxmaxindex = #args[3]
+	for k, v in pairs(args) do
+		if type(v) == "table" and v.maxindex and v.maxindex > maxmaxindex then
+			maxmaxindex = v.maxindex
+		end
 	end
 
 	local textsegs = {}
-	table.insert(textsegs, "<span class='use-with-mention'>A transliteration of the ")
-	table.insert(textsegs, source:getCanonicalName() .. " " .. ty)
+	table.insert(textsegs, "<span class='use-with-mention'>")
+	local desctext = iargs.desctext
+	if not args.nocap then
+		desctext = mw.getContentLanguage():ucfirst(desctext)
+	end
+	table.insert(textsegs, desctext)
+	table.insert(textsegs, " of ")
+	local langsegs = {}
+	for i, source in ipairs(sources) do
+		local sourcename = source:getCanonicalName()
+		local function get_source_link()
+			if args[3][1] then
+				return m_links.language_link {
+					lang = source_non_etym_langs[i], term = args[3][1], alt = sourcename, tr = "-"
+				}
+			else
+				return sourcename
+			end
+		end
+		
+		if i == 1 then
+			-- If at least one name is given, we say "A transliteration of the LANG surname FOO", linking LANG to FOO.
+			-- Otherwise we say "A transliteration of a LANG surname".
+			if maxmaxindex > 0 then
+				table.insert(langsegs, "the " .. get_source_link())
+			else
+				table.insert(langsegs, require("Module:string utilities").add_indefinite_article(sourcename))
+			end
+		else
+			table.insert(langsegs, get_source_link())
+		end
+	end
+	table.insert(textsegs, m_table.serialCommaJoin(langsegs, {conj = "or"}))
+	table.insert(textsegs, " " .. m_table.serialCommaJoin(nametypes))
 	if args.dim then
 		table.insert(textsegs, " [[diminutive]]")
 	elseif args.aug then
@@ -624,23 +684,17 @@ function export.name_translit(frame)
 	table.insert(textsegs, " ")
 	local names = {}
 
-	-- Find the maximum index among any of the list parameters.
-	local maxmaxindex = #args[3]
-	for k, v in pairs(args) do
-		if type(v) == "table" and v.maxindex and v.maxindex > maxmaxindex then
-			maxmaxindex = v.maxindex
-		end
-	end
-
 	local embedded_comma = false
 
 	for i = 1, maxmaxindex do
 		local sc = require("Module:scripts").getByCode(args["sc"][i], true)
 		
-		local linked_term = m_links.full_link({
-			lang = sourcelang, term = args[3][i], alt = args["alt"][i], id = args["id"][i], sc = sc, tr = args["tr"][i],
-			ts = args["ts"][i], gloss = args["t"][i], genders = args["g"][i] and rsplit(args["g"][i], ",") or {}
-		}, "term")
+		local terminfo = {
+			lang = source_non_etym_langs[1], term = args[3][i], alt = args["alt"][i], id = args["id"][i], sc = sc,
+			tr = args["tr"][i], ts = args["ts"][i], gloss = args["t"][i],
+			genders = args["g"][i] and rsplit(args["g"][i], ",") or {}
+		}
+		local linked_term = m_links.full_link(terminfo, "term")
 		if  args["q"][i] then
 			linked_term = require("Module:qualifier").format_qualifier(args["q"][i]) .. " " .. linked_term
 		end
@@ -663,26 +717,31 @@ function export.name_translit(frame)
 	table.insert(textsegs, "</span>")
 
 	local categories = {}
-	local function insert_cats(isdim)
-		local function insert_cats_type(ty)
-			if ty == "unisex given name" then
-				insert_cats_type("male given name")
-				insert_cats_type("female given name")
+	for _, nametype in ipairs(nametypes) do
+		local function insert_cats(isdim)
+			local function insert_cats_type(ty)
+				if ty == "unisex given name" then
+					insert_cats_type("male given name")
+					insert_cats_type("female given name")
+				end
+				for i, source in ipairs(sources) do
+					table.insert(categories, lang:getCode() .. ":" .. source:getCanonicalName() .. " " .. isdim .. ty .. "s")
+					local sourcelang = source_non_etym_langs[i]
+					if source:getCode() ~= sourcelang:getCode() then
+						-- etymology language
+						table.insert(categories, lang:getCode() .. ":" .. sourcelang:getCanonicalName() .. " " .. isdim .. ty .. "s")
+					end
+				end
 			end
-			table.insert(categories, lang:getCode() .. ":" .. source:getCanonicalName() .. " " .. isdim .. ty .. "s")
-			if source:getCode() ~= sourcelang:getCode() then
-				-- etymology language
-				table.insert(categories, lang:getCode() .. ":" .. sourcelang:getCanonicalName() .. " " .. isdim .. ty .. "s")
-			end
+			insert_cats_type(nametype)
 		end
-		insert_cats_type(args["type"])
-	end
-	insert_cats("")
-	if args.dim then
-		insert_cats("diminutives of ")
-	end
-	if args.aug then
-		insert_cats("augmentatives of ")
+		insert_cats("")
+		if args.dim then
+			insert_cats("diminutives of ")
+		end
+		if args.aug then
+			insert_cats("augmentatives of ")
+		end
 	end
 
 	return table.concat(textsegs, "") ..
