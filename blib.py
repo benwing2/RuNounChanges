@@ -917,7 +917,7 @@ def do_pagefile_cats_refs(args, start, end, process, default_cats=[],
         final_newline = ""
         if not new.endswith("\n"):
           final_newline = "\n"
-        pagemsg("------- begin text --------\n%s%s------- end text --------" % (new, final_newline))
+        pagemsg("-------- begin text --------\n%s%s-------- end text --------" % (new, final_newline))
 
   def process_page(page, i):
     pagetext = [None]

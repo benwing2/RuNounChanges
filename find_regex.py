@@ -69,7 +69,7 @@ def process_text_on_page(index, pagetitle, text, regex, invert, verbose,
       if not text_to_search.endswith("\n"):
         text_to_search += "\n"
       if found_match == (not invert):
-        pagemsg("-------- begin text ---------\n%s-------- end text --------" % text_to_search)
+        pagemsg("-------- begin text --------\n%s-------- end text --------" % text_to_search)
 
 def search_pages(args, regex, invert, input_from_diff, start, end, lang_only):
 
