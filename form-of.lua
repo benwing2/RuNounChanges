@@ -119,12 +119,6 @@ local function rsub(term, foo, bar)
 	return retval
 end
 
--- FIXME! Change callers of this to directly call [[Module:string utilities]].
-
-function export.ucfirst(text)
-	return require("Module:string utilities").ucfirst(text)
-end
-
 
 function export.format_form_of(data, terminfo, posttext)
 	if type(data) ~= "table" then
