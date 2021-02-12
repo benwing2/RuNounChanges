@@ -413,6 +413,91 @@ function export.normalize_tags(tags, recombine_multitags, do_track)
 end
 
 
+-- Split a tag set containing two-level multipart tags into one or more tag sets not containing such tags.
+-- Single-level multipart tags are left alone. (If we need to, a slight modification of the following code
+-- will also split single-level multipart tags.) This assumes that multipart tags are represented as lists
+-- and two-level multipart tags are represented as lists of lists, as is output by normalize_tags().
+function export.split_two_level_multipart_tag_set(tag_set)
+	-- This would be a whole lot easier in Python, with built-in support for
+	-- slicing and array concatenation.
+	for i, tag in ipairs(tag_set) do
+		if type(tag) == "table" and type(tag[1]) == "table" then
+			-- We found a two-level multipart tag.
+			-- (1) Extract the preceding tags.
+			local pre_tags = {}
+			for j=1,i-1 do
+				table.insert(pre_tags, tag_set[j])
+			end
+			-- (2) Extract the following tags.
+			local post_tags = {}
+			for j=i+1,#tag_set do
+				table.insert(post_tags, tag_set[j])
+			end
+			-- (3) Loop over each tag set alternant in the two-level multipart tag.
+			-- For each alternant, form the tag set consisting of pre_tags + alternant + post_tags,
+			-- and recursively split that tag set.
+			local resulting_tag_sets = {}
+			for _, first_level_tag_set in ipairs(tag) do
+				local expanded_tag_set = {}
+				for _, pre_tag in ipairs(pre_tags) do
+					table.insert(expanded_tag_set, pre_tag)
+				end
+				for _, second_level_tag in ipairs(first_level_tag_set) do
+					table.insert(expanded_tag_set, second_level_tag)
+				end
+				for _, post_tag in ipairs(post_tags) do
+					table.insert(expanded_tag_set, post_tag)
+				end
+				for _, split_tag_set in ipairs(split_two_level_multipart_tag_set(expanded_tag_set)) do
+					table.insert(resulting_tag_sets, split_tag_set)
+				end
+			end
+			return resulting_tag_sets
+		end
+	end
+
+	return {tag_set}
+end
+
+
+-- Given a list of tags, split into tag sets (separated by semicolons in the initial list of tags).
+function export.split_tags_into_tag_sets(tags)
+	local tag_set_group = {}
+	local cur_tag_set = {}
+	for _, tag in ipairs(tags) do
+		if tag == ";" then
+			if #cur_tag_set > 0 then
+				table.insert(tag_set_group, cur_tag_set)
+			end
+			cur_tag_set = {}
+		else
+			table.insert(cur_tag_set, tag)
+		end
+	end
+	if #cur_tag_set > 0 then
+		table.insert(tag_set_group, cur_tag_set)
+	end
+	return tag_set_group
+end
+
+
+-- Given a list of tags, split into tag sets (separated by semicolons in the initial list of tags).
+-- Then, potentially split each tag set into multiple tag sets if there are any two-level multipart
+-- tags in those tag sets.
+function export.split_tags_into_tag_sets_and_expand_two_level_multipart_tags(tags)
+	-- First, split into tag sets.
+	local tag_sets = export.split_tags_into_tag_sets(tags)
+	-- Now split any two-level multipart tags.
+	local resulting_tag_sets = {}
+	for _, tag_set in ipairs(tag_sets) do
+		for _, resulting_tag_set in ipairs(export.split_two_level_multipart_tag_set(tag_set)) do
+			table.insert(resulting_tag_sets, resulting_tag_set)
+		end
+	end
+	return resulting_tag_sets
+end
+
+
 function export.normalize_pos(pos)
 	return m_pos[pos] or pos
 end
@@ -486,150 +571,232 @@ function export.get_tag_display_form(tagspec, joiner)
 end
 
 
+-- Return true if the list `tags1`, treated as a set, is a subset of the list `tags2`, also
+-- treated as a set.
+local function is_subset(tags1, tags2)
+	tags1 = m_table.listToSet(tags1)
+	tags2 = m_table.listToSet(tags2)
+	for tag, _ in pairs(tags1) do
+		if not tags2[tag] then
+			return false
+		end
+	end
+	return true
+end
+
+
+-- Compute and return the appropriate categories for the tags in `tags` (user-specified tags,
+-- which may consist of multiple tag sets separated by semicolons) and the language in `lang`.
+-- This checks both language-specific and language-agnostic category specs in [[Module:form of/cats]].
+-- `POS` is the user-specified part of speech, if any, and `terminfo` is currently unused.
 function export.fetch_lang_categories(lang, tags, terminfo, POS)
 	local m_cats = mw.loadData("Module:form of/cats")
 
 	local categories = {}
 
-	local normalized_tags = export.normalize_tags(tags, "recombine multitags")
+	local normalized_tags = export.normalize_tags(tags)
+	local split_tag_sets = export.split_tags_into_tag_sets_and_expand_two_level_multipart_tags(normalized_tags)
 	POS = export.normalize_pos(POS)
 
-	local function make_function_table()
-		return {
-			lang=lang,
-			tags=normalized_tags,
-			term=term,
-			p=POS
-		}
-	end
-
-	local function check_condition(spec)
-		if type(spec) == "boolean" then
-			return spec
-		elseif type(spec) ~= "table" then
-			error("Wrong type of condition " .. spec .. ": " .. type(spec))
+	-- Loop over each tag set and compute categories for each one.
+	for _, tag_set in ipairs(split_tag_sets) do
+		local function make_function_table()
+			return {
+				lang=lang,
+				tags=normalized_tags,
+				term=term,
+				p=POS
+			}
 		end
-		local predicate = spec[1]
-		if predicate == "has" then
-			return m_table.contains(normalized_tags, normalize_tag(spec[2])), 3
-		elseif predicate == "hasall" then
-			for _, tag in ipairs(spec[2]) do
-				if not m_table.contains(normalized_tags, normalize_tag(tag)) then
-					return false, 3
-				end
-			end
-			return true, 3
-		elseif predicate == "hasany" then
-			for _, tag in ipairs(spec[2]) do
-				if m_table.contains(normalized_tags, normalize_tag(tag)) then
-					return true, 3
-				end
-			end
-			return false, 3
-		elseif predicate == "tags=" then
-			local normalized_spec_tags = export.normalize_tags(spec[2],
-				"recombine multitags")
-			return m_table.deepEqualsList(normalized_tags, normalized_spec_tags), 3
-		elseif predicate == "p=" then
-			return POS == export.normalize_pos(spec[2]), 3
-		elseif predicate == "pany" then
-			for _, specpos in ipairs(spec[2]) do
-				if POS == export.normalize_pos(specpos) then
-					return true, 3
-				end
-			end
-			return false, 3
-		elseif predicate == "pexists" then
-			return POS ~= nil, 2
-		elseif predicate == "not" then
-			local condval = check_condition(spec[2])
-			return not condval, 3
-		elseif predicate == "and" then
-			local condval = check_condition(spec[2])
-			if condval then
-				condval = check_condition(spec[3])
-			end
-			return condval, 4
-		elseif predicate == "or" then
-			local condval = check_condition(spec[2])
-			if not condval then
-				condval = check_condition(spec[3])
-			end
-			return condval, 4
-		elseif predication == "call" then
-			local fn = m_functions.cat_functions[spec[2]]
-			if not fn then
-				error("No condition function named '" .. spec[2] .. "'")
-			end
-			return fn(make_function_table()), 3
-		else
-			error("Unrecognized predicate: " .. predicate)
-		end
-	end
 
-	local function process_spec(spec)
-		if not spec then
+		-- Given a tag from the current tag set (which may be a list in case of a multipart tag),
+		-- and a tag from a categorization spec, check that the two match.
+		-- (1) If both are strings, we just check for equality.
+		-- (2) If the spec tag is a string and the tag set tag is a list (i.e. it originates from a
+		-- multipart tag), we check that the spec tag is in the list. This is because we want to treat
+		-- multipart tags in user-specified tag sets as if the user had specified multiple tag sets.
+		-- For example, if the user said "1//3|s|pres|ind" and the categorization spec says {"has", "1"},
+		-- we want this to match, because "1//3|s|pres|ind" should be treated equivalently to two tag
+		-- sets "1|s|pres|ind" and "3|s|pres|ind", and the former matches the categorization spec.
+		-- (3) If the spec tag is a list (i.e. it originates from a multipart tag), we check that the
+		-- tag set tag is also a list and is a superset of the spec tag. For example, if the categorization
+		-- spec says {"has", "1//3"}, then the tag set tag must be a multipart tag that has both "1" and "3"
+		-- in it. "1//3" works, as does "1//2//3".
+		local function tag_set_tag_matches_spec_tag(tag_set_tag, spec_tag)
+			if type(spec_tag) == "list" then
+				if type(tag_set_tag) == "list" and is_subset(spec_tag, tag_set_tag) then
+					return true
+				end
+			elseif type(tag_set_tag) == "list" then
+				if m_table.contains(tag_set_tag, spec_tag) then
+					return true
+				end
+			elseif tag_set_tag == spec_tag then
+				return true
+			end
 			return false
-		elseif type(spec) == "string" then
-			-- Substitute POS request with user-specified part of speech
-			-- or default
-			spec = rsub(spec, "<<p=(.-)>>", function(default)
-				return POS or export.normalize_pos(default)
-			end)
-			table.insert(categories, lang:getCanonicalName() .. " " .. spec)
-			return true
-		elseif type(spec) ~= "table" then
-			error("Wrong type of specification " .. spec .. ": " .. type(spec))
 		end
-		local predicate = spec[1]
-		if predicate == "multi" then
-			-- WARNING! #spec doesn't work for objects loaded from loadData()
-			for i, sp in ipairs(spec) do
-				if i > 1 then
-					process_spec(sp)
-				end
-			end
-			return true
-		elseif predicate == "cond" then
-			-- WARNING! #spec doesn't work for objects loaded from loadData()
-			for i, sp in ipairs(spec) do
-				if i > 1 and process_spec(sp) then
+
+		-- Check that the current tag set matches the given spec tag. This means that any of the tags
+		-- in the current tag set match, according to tag_set_tag_matches_spec_tag(); see above. If the
+		-- current tag set contains only string tags (i.e. no multipart tags), and the spec tag is a
+		-- string (i.e. not a multipart tag), this boils down to list containment, but it gets more
+		-- complex when multipart tags are present.
+		local function tag_set_matches_spec_tag(spec_tag)
+			tag = normalize_tag(tag)
+			for _, tag_set_tag in ipairs(tag_set) do
+				if tag_set_tag_matches_spec_tag(tag_set_tag, spec_tag) then
 					return true
 				end
 			end
 			return false
-		elseif predicate == "call" then
-			local fn = m_functions.cat_functions[spec[2]]
-			if not fn then
-				error("No spec function named '" .. spec[2] .. "'")
-			end
-			return process_spec(fn(make_function_table()))
-		else
-			local condval, ifspec = check_condition(spec)
-			if condval then
-				process_spec(spec[ifspec])
-				return true
-			else
-				process_spec(spec[ifspec + 1])
-				return false
-			end
 		end
-	end
 
-	local langspecs = m_cats[lang:getCode()]
-	if langspecs then
-		for _, spec in ipairs(langspecs) do
-			process_spec(spec)
+		-- Check whether the given spec matches the current tag set. Two values are returned:
+		-- (1) whether the spec matches the tag set; (2) the index of the category to add if
+		-- the spec matches.
+		local function check_condition(spec)
+			if type(spec) == "boolean" then
+				return spec
+			elseif type(spec) ~= "table" then
+				error("Wrong type of condition " .. spec .. ": " .. type(spec))
+			end
+			local predicate = spec[1]
+			if predicate == "has" then
+				return tag_set_matches_spec_tag(spec[2]), 3
+			elseif predicate == "hasall" then
+				for _, tag in ipairs(spec[2]) do
+					if not tag_set_matches_spec_tag(tag) then
+						return false, 3
+					end
+				end
+				return true, 3
+			elseif predicate == "hasany" then
+				for _, tag in ipairs(spec[2]) do
+					if tag_set_matches_spec_tag(tag) then
+						return true, 3
+					end
+				end
+				return false, 3
+			elseif predicate == "tags=" then
+				local normalized_spec_tags = export.normalize_tags(spec[2])
+				if #tag_set ~= #normalized_spec_tags then
+					return false, 3
+				end
+				for i=1,#tag_set do
+					if not tag_set_tag_matches_spec_tag(tag_set[i], normalized_spec_tags[i]) then
+						return false, 3
+					end
+				end
+				return true, 3
+			elseif predicate == "p=" then
+				return POS == export.normalize_pos(spec[2]), 3
+			elseif predicate == "pany" then
+				for _, specpos in ipairs(spec[2]) do
+					if POS == export.normalize_pos(specpos) then
+						return true, 3
+					end
+				end
+				return false, 3
+			elseif predicate == "pexists" then
+				return POS ~= nil, 2
+			elseif predicate == "not" then
+				local condval = check_condition(spec[2])
+				return not condval, 3
+			elseif predicate == "and" then
+				local condval = check_condition(spec[2])
+				if condval then
+					condval = check_condition(spec[3])
+				end
+				return condval, 4
+			elseif predicate == "or" then
+				local condval = check_condition(spec[2])
+				if not condval then
+					condval = check_condition(spec[3])
+				end
+				return condval, 4
+			elseif predication == "call" then
+				local fn = m_functions.cat_functions[spec[2]]
+				if not fn then
+					error("No condition function named '" .. spec[2] .. "'")
+				end
+				return fn(make_function_table()), 3
+			else
+				error("Unrecognized predicate: " .. predicate)
+			end
 		end
-	end
-	if lang:getCode() ~= "und" then
-		local langspecs = m_cats["und"]
+
+		-- Process a given spec. This checks any conditions in the spec against the
+		-- tag set, and insert any resulting categories into `categories`. Return value
+		-- is true if the outermost condition evaluated to true and a category was inserted
+		-- (this is used in {"cond" ...} conditions, which stop when a subcondition evaluates
+		-- to true).
+		local function process_spec(spec)
+			if not spec then
+				return false
+			elseif type(spec) == "string" then
+				-- Substitute POS request with user-specified part of speech
+				-- or default
+				spec = rsub(spec, "<<p=(.-)>>", function(default)
+					return POS or export.normalize_pos(default)
+				end)
+				table.insert(categories, lang:getCanonicalName() .. " " .. spec)
+				return true
+			elseif type(spec) ~= "table" then
+				error("Wrong type of specification " .. spec .. ": " .. type(spec))
+			end
+			local predicate = spec[1]
+			if predicate == "multi" then
+				-- WARNING! #spec doesn't work for objects loaded from loadData()
+				for i, sp in ipairs(spec) do
+					if i > 1 then
+						process_spec(sp)
+					end
+				end
+				return true
+			elseif predicate == "cond" then
+				-- WARNING! #spec doesn't work for objects loaded from loadData()
+				for i, sp in ipairs(spec) do
+					if i > 1 and process_spec(sp) then
+						return true
+					end
+				end
+				return false
+			elseif predicate == "call" then
+				local fn = m_functions.cat_functions[spec[2]]
+				if not fn then
+					error("No spec function named '" .. spec[2] .. "'")
+				end
+				return process_spec(fn(make_function_table()))
+			else
+				local condval, ifspec = check_condition(spec)
+				if condval then
+					process_spec(spec[ifspec])
+					return true
+				else
+					process_spec(spec[ifspec + 1])
+					-- FIXME: Are we sure this is correct?
+					return false
+				end
+			end
+		end
+
+		local langspecs = m_cats[lang:getCode()]
 		if langspecs then
 			for _, spec in ipairs(langspecs) do
 				process_spec(spec)
 			end
 		end
+		if lang:getCode() ~= "und" then
+			local langspecs = m_cats["und"]
+			if langspecs then
+				for _, spec in ipairs(langspecs) do
+					process_spec(spec)
+				end
+			end
+		end
 	end
+
 	return categories
 end
 
