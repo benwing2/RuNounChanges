@@ -2739,16 +2739,23 @@ From {{bor|es|fr|carmin}}.
 Page 129 Caro: Found match for regex: =
 Page 129 Caro: -------- begin text ---------
 
-===Etymology===
-From the {{BAR|es|la}} proper noun {{m|la|Carus}} from the Latin adjective {{m|la|carus}}.
-
 ===Pronunciation===
 * {{es-IPA}}
 
-===Proper noun===
+===Etymology 1===
+{{clipping|es|Carolina}}.
+
+====Proper noun====
 {{es-proper noun}}
 
 # {{given name|es|female|diminutive=Carolina}}
+
+===Etymology 2===
+From {{bor|es|la|Carus}}, a [[cognomen]] (a type of surname), from {{m|la|carus||dear}}.
+
+====Proper noun====
+{{es-proper noun}}
+
 # [[Carus]]
 -------- end text --------
 Page 130 carpelar: Found match for regex: =
@@ -5100,8 +5107,6 @@ From {{af|es|lang1=grc|κλέπτω|t1=to steal|-manía}}.
 ====Related terms====
 * {{l|es|cleptómano}}
 * {{l|es|cleptomaníaco}}
-
-[[Category:Spanish words suffixed with -manía]]
 -------- end text --------
 Page 242 cliente: Found match for regex: =
 Page 242 cliente: -------- begin text ---------
@@ -13273,7 +13278,7 @@ Page 656 Eurídice: -------- begin text ---------
 {{wikipedia|lang=es}}
 
 ===Etymology===
-From {{bor|es|la|Eurydice}}, from {{FOO|es|grc|Εὐρυδίκη}}.
+From {{bor|es|la|Eurydice}}, from {{der|es|grc|Εὐρυδίκη}}.
 
 ===Proper noun===
 {{es-proper noun|f}}
@@ -13681,7 +13686,7 @@ Page 680 fachada: Found match for regex: =
 Page 680 fachada: -------- begin text ---------
 
 ===Etymology===
-From {{m|es|facha||figure, aspect}} (itself from Italian {{m|it|faccia}}) or from {{FOO|es|it|facciata}}.
+Borrowed from {{bor|es|it|facciata}}. Synchronically analyzable as {{af|es|facha|t1=figure, aspect|-ada}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -14179,7 +14184,7 @@ Page 705 filipéndula: -------- begin text ---------
 {{wikipedia|Filipendula vulgaris|lang=es}}
 
 ===Etymology===
-From {{FOO|es|la|filum||filum}} + {{m|la|pendula||pendant}}.
+From {{der|es|la|fīlum||filum}} + {{m|la|pendula||pendant}}.
 
 ===Noun===
 {{es-noun|f}}
@@ -14818,8 +14823,7 @@ Page 737 fogoso: Found match for regex: =
 Page 737 fogoso: -------- begin text ---------
 
 ===Etymology===
-Borrowed from {{FOO|es|fr|fougueux}}, from {{m|fr|fougue}} + {{m|fr|-eux}},
-from {{FOO|es|it|foga}}, from {{FOO|es|la|fuga}}.
+{{cal|es|fr|fougueux}}, from {{af|es|fuego|t1=fire|-oso}}. The occurrence of {{m|es|fuego}} is an error; the original term is derived from {{der|es|fr|fougue||enthusiasm}}, from {{der|es|it|foga}}, from {{der|es|la|fuga||escape, flight, avoidance}}, cognate with {{cog|en|fugue}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -14854,7 +14858,7 @@ Page 739 follar: Found match for regex: =
 Page 739 follar: -------- begin text ---------
 
 ===Etymology===
-Probably from {{inh|es|la|follis||bellows}} (whence English {{m|en|folly}} and {{m|en|fool}}), according to the Real Academia Española, among others.  Less likely is {{inh|es|VL.||fullāre|to speed up}} (from {{FOO|es|la|fullo}}), according to the Institut d'Estudis Catalans.
+Probably from {{inh|es|la|follis||bellows}} (whence English {{m|en|folly}} and {{m|en|fool}}), according to the Real Academia Española, among others.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -15209,7 +15213,7 @@ Page 756 frijolero: Found match for regex: =
 Page 756 frijolero: -------- begin text ---------
 
 ===Etymology===
-From {{suffix|es|frijol|ero}}. The slur is a [[calque]] of {{FOO|es|en|beaner}}, in reference to the [[refried beans]] present in the Chicano diet.
+From {{suffix|es|frijol|ero}}. The slur is a {{cal|es|en|beaner|nocap=1}}, in reference to the [[refried beans]] present in the Chicano diet.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -16169,7 +16173,7 @@ Page 802 geriatría: -------- begin text ---------
 {{wikipedia|lang=es}}
 
 ===Etymology===
-From {{FOO|es|grc|γῆρας}} "old age" + {{m|es|-iatría}}.
+From {{der|es|grc|γῆρας||old age}} + {{m|es|-iatría}}.
 
 ===Noun===
 {{es-noun|f|-}}
@@ -16756,7 +16760,7 @@ Page 833 guajillo: Found match for regex: =
 Page 833 guajillo: -------- begin text ---------
 
 ===Etymology===
-{{FOO|es|nah|huaxin}} + {{af|es|-illo}}
+From {{af|es|lang1=nah|huaxin|-illo}}.
 
 ===Noun===
 {{es-noun|m}}
@@ -19811,7 +19815,7 @@ Page 989 intruso: Found match for regex: =
 Page 989 intruso: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|ML.|intrusus}}, from {{FOO|es|la|intrudere}}, from {{m|la|in-}} + {{m|la|trudere}}.
+From {{bor|es|ML.|intrūsus}}, perfect passive participle of {{m|la|intrūdō}}, from {{der|es|la|in-}} + {{m|la|trūdō||to thrust}}.
 
 ===Adjective===
 {{es-adj|f=intrusa}}
@@ -22297,7 +22301,7 @@ Page 1117 m.: Found match for regex: =
 Page 1117 m.: -------- begin text ---------
 
 ===Etymology===
-Abbreviation of {{FOO|es|la|meridies||noon}}.
+Abbreviation of {{der|es|la|meridiēs||noon}}.
 
 ===Noun===
 {{head|es|noun}}
@@ -22489,7 +22493,7 @@ Page 1128 mallo: Found match for regex: =
 Page 1128 mallo: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|la|malleus}}.
+From {{inh|es|la|malleus}}.
 
 ===Noun===
 {{es-noun|m}}
@@ -22590,7 +22594,7 @@ Page 1134 mamá: Found match for regex: =
 Page 1134 mamá: -------- begin text ---------
 
 ===Etymology===
-Adapted from {{FOO|es|fr|maman}}.
+Adapted from {{bor|es|fr|maman}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -22765,7 +22769,7 @@ Page 1142 maná: Found match for regex: =
 Page 1142 maná: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|LL.|manna}}, from {{FOO|es|grc|μάννα}}, from {{FOO|es|he|מן|tr=mān||'manna}}.
+From {{bor|es|LL.|manna}}, from {{der|es|grc|μάννα}}, from {{der|es|he|מָן|tr=mān}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -22914,7 +22918,7 @@ Page 1149 marbete: Found match for regex: =
 Page 1149 marbete: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|xaa|مرباط||bag on the belt}}, from {{FOO|es|ar|مِرْبَط||rope, hawser}}.
+From {{inh|es|osp}}, from {{der|es|xaa|مرباط||bag on the belt}}, from {{der|es|ar|مِرْبَط||rope, hawser}}.
 
 ===Noun===
 {{es-noun|m}}
@@ -22928,7 +22932,7 @@ Page 1150 Marcelino: Found match for regex: =
 Page 1150 Marcelino: -------- begin text ---------
 
 ===Etymology===
-{{FOO|es|la|Marcellinus}}, derived from {{m|la|Marcellus}}.
+From {{bor|es|la|Mārcellīnus}}, diminutive of {{m|la|Mārcellus}}, in turn a diminutive of {{m|la|Mārcus}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -22938,7 +22942,7 @@ Page 1150 Marcelino: -------- begin text ---------
 ===Proper noun===
 {{head|es|proper noun|m}}
 
-# {{given name|es|male}}.
+# {{given name|es|male}}
 
 ====Related terms====
 * {{l|es|Marcelo}}
@@ -22947,28 +22951,59 @@ Page 1150 Marcelino: -------- begin text ---------
 Page 1151 marco: Found match for regex: =
 Page 1151 marco: -------- begin text ---------
 
-===Etymology===
-From {{FOO|es|gem-pro|*markō}}; see also [[mark]] and Old High German {{m|goh|marka}}.
-
 ===Pronunciation===
 * {{es-IPA}}
 * {{hyphenation|es|mar|co}}
 
-===Noun===
+===Etymology 1===
+From {{bor|es|ML.|marcus}}, from {{der|es|frk|*marku||boundary, border}}, from {{der|es|gem-pro|*markō}}.
+
+====Noun====
 {{es-noun|m}}
 
 # [[frame]]
-# [[mark]] {{gloss|German currency}}
+# [[framework]]
 
-====Derived terms====
+=====See also=====
+* {{l|es|portarretrato}}
+
+===Etymology 2===
+From {{bor|es|ML.|marcus}}, from {{der|es|frk|*mark||mark, sign}}, from {{der|es|gem-pro|*marką}}. Cognate with {{cog|en|mark}}, {{cog|de|Mark}}.
+
+====Noun====
+{{es-noun|m}}
+
+# [[standard]] of [[weight]]
+
+===Etymology 3===
+From {{bor|es|de|Mark}}.
+
+====Noun====
+{{es-noun|m}}
+
+# [[mark]] {{gloss|former German currency}}
+
+=====Derived terms=====
 {{col3|es
 |marco alemán
 }}
 
-====See also====
-* {{sense|frame}} {{l|es|portarretrato}}
+===Etymology 4===
+From {{bor|es|fi|markka}}.
 
-===Verb===
+====Noun====
+{{es-noun|m}}
+
+# [[markka]] {{gloss|former Finnish currency}}
+
+=====Derived terms=====
+{{col3|es
+|marco alemán
+}}
+
+===Etymology 5===
+
+====Verb====
 {{head|es|verb form}}
 
 # {{es-verb form of|ending=ar|mood=indicative|tense=present|pers=1|number=singular|marcar}}
@@ -23015,7 +23050,7 @@ Page 1154 marinar: Found match for regex: =
 Page 1154 marinar: -------- begin text ---------
 
 ===Etymology===
-From {{m|es|marino}}, from {{FOO|es|la|marīnus}}, from {{m|la|mare||sea}}, from {{FOO|es|ine-pro|*móri}}.
+From {{bor|es|fr|mariner}}, from {{der|es|it|marinare}}, ultimately from {{der|es|la|([[aqua]]) [[marinus|marīna]]||brine|lit=sea water}}, from {{m|la|marīnus||marine, of the sea}}, from {{m|la|mare||sea}}, from {{der|es|ine-pro|*móri}}.
 
 ===Verb===
 {{es-verb|marin|ar}}
@@ -23358,7 +23393,7 @@ Page 1171 matraca: -------- begin text ---------
 {{wikipedia|lang=es}}
 
 ===Etymology===
-From dialectal {{FOO|es|ar|مَطْرَق}}. See {{cog|arc|מטרקא|tr=mṭrqʾ}} for more.
+From dialectal {{der|es|ar|مَطْرَق}}<!-- not sure if taken directly or indirectly -->. See {{cog|arc|מטרקא|tr=mṭrqʾ}} for more.
 
 ===Noun===
 {{es-noun|f|matracas}}
@@ -23391,7 +23426,7 @@ Page 1173 matula: Found match for regex: =
 Page 1173 matula: -------- begin text ---------
 
 ===Etymology===
-{{FOO|es|ar|مَفْتُول||tightly twisted}}.
+From {{der|es|ar|مَفْتُول||tightly twisted}}<!-- not sure if taken directly or indirectly -->
 
 ===Noun===
 {{es-noun|f}}
@@ -23406,18 +23441,18 @@ Page 1174 Máximo: -------- begin text ---------
 * {{es-IPA}}
 
 ===Etymology===
-From the {{FOO|es|la|cognomen}} and saint's name [[Maximus]].
+From {{bor|es|la|Maximus}}, a [[cognomen]] and saint's name.
 
 ===Proper noun===
 {{es-proper noun|m}}
 
-# {{given name|es|male}}.
+# {{given name|es|male}}
 -------- end text --------
 Page 1175 maya: Found match for regex: =
 Page 1175 maya: -------- begin text ---------
 
 ===Etymology 1===
-Originally from {{BAR|es|yua}}
+Originally from {{bor|es|yua}}.
 
 ====Adjective====
 {{es-adj}}
@@ -23451,7 +23486,7 @@ Page 1176 mayordomo: Found match for regex: =
 Page 1176 mayordomo: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|la|maior}} {{m|la|domus}}.
+From {{bor|es|LL.|[[maior]] [[domūs]]|lit=principal (servant) of the house}}.
 
 ===Noun===
 {{es-noun|m}}
@@ -23469,8 +23504,8 @@ Page 1177 mazapán: -------- begin text ---------
 ===Etymology===
 Two possible theories:
 
-* From {{FOO|es|xaa|بسمة}}, from {{FOO|es|grc|παξαμάδιον||cookie}}, with influence from {{m|es|masa||mass}} and {{m|es|pan||bread}}
-* {{FOO|es|it|marzapane}}, thought originally to come from [[w:Mottama|Martaban]] ({{m|my|မုတ္ထမ}}), a Burmese port known for its spice exports, with influence from {{FOO|es|it|pane}}.
+* From {{inh|es|osp}}, from {{der|es|xaa|بسمة}}, from {{der|es|grc|παξαμάδιον||cookie}}, with influence from {{m|es|masa||mass}} and {{m|es|pan||bread}}.
+* From {{bor|es|it|marzapane}}, thought to be derived from {{der|es|ar|مَرْطَبَان||spice box}}, from [[w:Mottama|Martaban]] ({{m|my|မုတ္ထမ}}), a Burmese port known for its spice exports, with influence from {{der|es|it|pane}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -23513,7 +23548,7 @@ Page 1179 mecanografía: -------- begin text ---------
 {{wikipedia|lang=es}}
 
 ===Etymology===
-From {{FOO|es|grc|μηχανή}} "machine" + {{m|es|-grafía}}.
+From {{der|es|grc|μηχανή||machine}} + {{af|es|-grafía}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -23532,14 +23567,12 @@ From {{FOO|es|grc|μηχανή}} "machine" + {{m|es|-grafía}}.
 
 ===Further reading===
 * {{R:DRAE 2001}}
-
-[[Category:Spanish words suffixed with -grafía]]
 -------- end text --------
 Page 1180 mecanógrafo: Found match for regex: =
 Page 1180 mecanógrafo: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|grc|μηχανή||machine}} {{suffix|es||grafo}}.
+From {{der|es|grc|μηχανή||machine}} + {{af|es|-grafo}}, or a {{back-form|es|mecanografía|nocap=1}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -23597,7 +23630,7 @@ Page 1183 mediocridad: Found match for regex: =
 Page 1183 mediocridad: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|la|mediocritās}}.
+From {{bor|es|la|mediocritās}} (genitive singular {{m|la|mediocritātis}}).
 
 ===Pronunciation===
 * {{rhymes|es|ad}}
@@ -23629,7 +23662,7 @@ Page 1185 megalomanía: -------- begin text ---------
 {{wikipedia|lang=es}}
 
 ===Etymology===
-From {{FOO|es|grc|μεγαλο-}}, from {{m|grc|μέγας}} "great" + {{m|es|-manía}}.
+From {{der|es|grc|μεγαλο-}} (from {{m|grc|μέγας||great}}) + {{af|es|-manía}}.
 
 ===Noun===
 {{es-noun|f|-}}
@@ -23645,7 +23678,7 @@ Page 1186 megalómano: Found match for regex: =
 Page 1186 megalómano: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|grc|μεγαλο-}}, from {{m|grc|μέγας}} "great" + {{m|es|-mano}}.
+From {{der|es|grc|μεγαλο-}} (from {{m|grc|μέγας||great}}) + {{af|es|-mano}}, or a {{back-form|es|megalomanía|nocap=1}}.
 
 ===Noun===
 {{es-noun|m|f=megalómana}}
@@ -23654,8 +23687,6 @@ From {{FOO|es|grc|μεγαλο-}}, from {{m|grc|μέγας}} "great" + {{m|es|-m
 
 ====Related terms====
 * {{l|es|megalomanía}}
-
-[[Category:Spanish words suffixed with -mano]]
 -------- end text --------
 Page 1187 meigo: Found match for regex: =
 Page 1187 meigo: -------- begin text ---------
@@ -23686,7 +23717,7 @@ Page 1189 melomanía: Found match for regex: =
 Page 1189 melomanía: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|grc|μέλος}} "song" + {{m|es|-manía}}.
+From {{af|es|lang1=grc|μέλος|t1=song|-manía}}.
 
 ===Noun===
 {{es-noun|f|-}}
@@ -23695,14 +23726,12 @@ From {{FOO|es|grc|μέλος}} "song" + {{m|es|-manía}}.
 
 ====Related terms====
 * {{l|es|melómano}}
-
-[[Category:Spanish words suffixed with -manía]]
 -------- end text --------
 Page 1190 meloncillo: Found match for regex: =
 Page 1190 meloncillo: -------- begin text ---------
 
 ===Etymology===
-From {{m|es|melón}}, from {{FOO|es|la|melo}}, {{m|la|melonis}}.
+From {{af|es|melón|-cillo}}, from {{der|es|la|mēlō}} (genitive singular {{m|la|mēlōnis}}).
 
 ===Noun===
 {{es-noun|m}}
@@ -23719,7 +23748,7 @@ Page 1191 melómano: Found match for regex: =
 Page 1191 melómano: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|grc|μέλος}} "song" + {{m|es|-mano}}.
+From {{af|es|lang1=grc|μέλος|t1=song|-mano}}, or {{back-form|es|melomanía|nocap=1}}.
 
 ===Noun===
 {{es-noun|m|f=melómana}}
@@ -23730,7 +23759,6 @@ From {{FOO|es|grc|μέλος}} "song" + {{m|es|-mano}}.
 * {{l|es|melomanía}}
 
 [[Category:Spanish 4-syllable words]]
-[[Category:Spanish words suffixed with -mano]]
 -------- end text --------
 Page 1192 membranáceo: Found match for regex: =
 Page 1192 membranáceo: -------- begin text ---------
@@ -23771,7 +23799,7 @@ Page 1194 menarquia: -------- begin text ---------
 {{wikipedia|lang=es}}
 
 ===Etymology===
-First attested in German as {{m|de|Menarche}}, from {{FOO|es|grc|μήν}}, μηνός (''mēnos'', “month”) + {{m|grc|ἀρχή||beginning}} {{suffix|es||ia}}.
+From {{bor|es|de|Menarche}}, from {{der|es|grc|μήν||month}} (genitive singular {{m|grc|μηνός}}) + {{m|grc|ἀρχή||beginning}} + Spanish {{af|es|-ia}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -23810,7 +23838,7 @@ Page 1196 mendigar: Found match for regex: =
 Page 1196 mendigar: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|la|mendicāre}}, present active infinitive of {{m|la|mendīcō}}.
+From {{inh|es|la|mendīcāre}}, present active infinitive of {{m|la|mendīcō}}.
 
 ===Verb===
 {{es-verb|mendig|ar|pret=mendigué}}
@@ -23867,7 +23895,7 @@ Page 1199 mentecato: Found match for regex: =
 Page 1199 mentecato: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|la|mente captus}}.
+{{slbor|es|la|mente captus|lit=taken in the mind}}.
 
 ===Adjective===
 {{es-adj|f=mentecata}}
@@ -24295,7 +24323,7 @@ Page 1222 Miño: -------- begin text ---------
 [[File:PonteVellaOurense2.jpg|thumb|247px|río Miño]]
 
 ===Etymology===
-From {{FOO|es|la|Minius}}.
+From {{inh|es|la|Minius}}.<!-- ''i'' is unexpected and suggests a possible borrowing but palatal raising caused by ñ seems more likely -->
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -24393,7 +24421,7 @@ Page 1226 mofeta: Found match for regex: =
 Page 1226 mofeta: -------- begin text ---------
 
 ===Etymology===
-From {{bor|es|it|mofeta||pestilential exhalation}} and {{m|it|moffetta||skunk}}, from {{FOO|es|la|mephitis}} from which English {{m|en|mephitic}} descended.
+From {{bor|es|it|mofeta||pestilential exhalation}} and {{m|it|moffetta||skunk}}, from {{der|es|la|mephitis||sulphurous exhalation}}, from which {{cog|en|mephitic}} descended.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -24431,7 +24459,7 @@ Page 1228 mole: -------- begin text ---------
 * {{audio|es|Es-mole.ogg}}
 
 ===Etymology 1===
-From {{FOO|es|la|mollis}}; cognate with {{m|es|muelle}}.
+{{slbor|es|la|mollis}}; cognate with {{m|es|muelle}}.
 
 ====Adjective====
 {{es-adj}}
@@ -24440,7 +24468,7 @@ From {{FOO|es|la|mollis}}; cognate with {{m|es|muelle}}.
 #: {{syn|es|muelle}}
 
 ===Etymology 2===
-From Latin {{m|la|moles}}.
+Borrowed from {{bor|es|la|mōlēs}}.
 
 ====Noun====
 {{es-noun|f}}
@@ -24451,7 +24479,7 @@ From Latin {{m|la|moles}}.
 
 ===Etymology 3===
 {{wikipedia|Mole|Mole (stew)|lang=es}}
-From {{FOO|es|nci|mōlli||sauce, something ground}}.
+From {{bor|es|nci|mōlli||sauce, something ground}}.
 
 ====Noun====
 {{es-noun|m}}
@@ -24479,7 +24507,7 @@ Page 1229 molicie: Found match for regex: =
 Page 1229 molicie: -------- begin text ---------
 
 ===Etymology===
-Borrowed from {{FOO|es|la|mollitiēs}}, from {{m|la|mollis||soft, delicate}}. See also {{m|es|mollez}}.
+Borrowed from {{bor|es|la|mollitiēs}}, from {{m|la|mollis||soft, delicate}}. See also {{m|es|mollez}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -24494,7 +24522,7 @@ Page 1230 molusco: -------- begin text ---------
 {{wikipedia|lang=es}}
 
 ===Etymology===
-From the phylum name {{m|mul|Mollusca}}, from {{FOO|es|la|molluscus||soft}}, from {{m|la|mollis||soft, delicate}}.
+Singularization of {{der|es|mul|Mollusca}}, the phylum name, from {{der|es|la|molluscus||soft}}, from {{m|la|mollis||soft, delicate}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -24521,7 +24549,7 @@ Page 1231 momento: -------- begin text ---------
 {{wikipedia|lang=es}}
 
 ===Etymology===
-From {{bor|es|la|momentum}}.
+From {{bor|es|la|mōmentum}}.
 
 ===Noun===
 {{es-noun|m}}
@@ -24556,9 +24584,7 @@ Page 1232 monaguillo: Found match for regex: =
 Page 1232 monaguillo: -------- begin text ---------
 
 ===Etymology===
-From {{m|es|monacillo}}, which is from {{FOO|es|LL.|monachellus}}, from late {{der|es|grc|μοναχός||single, solitary}}.
-
-Influenced from older {{m|es|mónago}} ''("monk)'', itself from {{FOO|es|LL.|monăchus}}.
+From {{m|es|monacillo}}, from {{der|es|VL.|*monachellus}}, diminutive of {{der|es|LL.|monachus||monk}}, from late {{der|es|grc|μοναχός||single, solitary}}. Influenced by older {{m|es|mónago||monk}}, from the same source.
 
 ===Noun===
 {{es-noun|m}}
@@ -24570,7 +24596,7 @@ Page 1233 Monge: Found match for regex: =
 Page 1233 Monge: -------- begin text ---------
 
 ===Etymology===
-From {{BAR|es|pt}}. {{doublet|es|Monje}}.
+From {{bor|es|pt|Monge}}. {{doublet|es|Monje}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -24585,9 +24611,6 @@ From {{BAR|es|pt}}. {{doublet|es|Monje}}.
 * 43rd most common surname in Costa Rica
 * 1,053rd most common surname in Mexico
 * 571st most common surname in Spain
-
-===See also===
-* [[Monje]] (from Spanish {{m|es|monje}})
 
 ----
 
@@ -24662,7 +24685,7 @@ Page 1238 Montserrat: Found match for regex: =
 Page 1238 Montserrat: -------- begin text ---------
 
 ===Etymology===
-{{FOO|es|ca|mont||hill}} + {{m|ca|serrat||jagged}}.
+From {{bor|es|ca|Montserrat}}, from {{m|ca|mont||hill}} + {{m|ca|serrat||jagged}}.
 
 ===Pronunciation===
 * {{es-IPA|montserrath}}
@@ -24670,15 +24693,15 @@ Page 1238 Montserrat: -------- begin text ---------
 ===Proper noun===
 {{es-proper noun|f}}
 
-# A [[hill]] near Barcelona in [[Catalonia]], the site of a [[monastery]].
-# {{given name|es|female|from=place names|from2=Catalan}}, shortened from ''[[María]] (de) Montserrat'', a Roman Catholic epithet of the [[Virgin Mary]] as the patron of Catalonia.
-# {{l|en|Montserrat}} (the island)
+# {{place|mountain range|acomm/Catalonia|c/Spain|near [[Barcelona]], the site of a [[monastery]]|t=Montserrat}}
+# {{place|island/and/overseas territory|c/United Kingdom|t=Montserrat}}
+# {{given name|es|female|from=place names|from2=Catalan}}, shortened from ''[[María]] (de) Montserrat'', a Roman Catholic epithet of the [[Virgin Mary]] as the patron of Catalonia
 -------- end text --------
 Page 1239 montículo: Found match for regex: =
 Page 1239 montículo: -------- begin text ---------
 
 ===Etymology===
-Borrowed from {{FOO|es|LL.|monticulus}}, from {{FOO|es|la|mōns}}, ''montis'' (“mountain”).
+Borrowed from {{bor|es|LL.|monticulus}}, diminutive of {{der|es|la|mōns||mountain}} (genitive singular {{m|la|montis}}).
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -24700,7 +24723,7 @@ Page 1240 monzón: -------- begin text ---------
 {{wikipedia|lang=es}}
 
 ===Etymology===
-From {{FOO|es|pt|monção}}, from {{FOO|es|ar|مَوْسِم||season}}.
+From {{bor|es|pt|monção}}, from {{der|es|ar|مَوْسِم||season}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -24716,7 +24739,7 @@ Page 1241 morador: Found match for regex: =
 Page 1241 morador: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|la|morātor}}.
+From {{bor|es|la|morātor}} (genitive singular {{m|la|morātoris}})<!-- possibly an inheritance -->.
 
 ===Adjective===
 {{es-adj|f=moradora|mpl=moradores}}
@@ -24732,7 +24755,7 @@ Page 1242 morapio: Found match for regex: =
 Page 1242 morapio: -------- begin text ---------
 
 ===Etymology===
-{{FOO|es|ar|مُرَبَّة||preserved fruit}}.
+From {{der|es|ar|مُرَبَّة||preserved fruit}}<!-- unclear if passed through Old Spanish; probably so -->.
 
 ===Noun===
 {{es-noun|m}}
@@ -24744,7 +24767,7 @@ Page 1243 morboso: Found match for regex: =
 Page 1243 morboso: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|la|morbōsus||diseased}}, from {{m|la|morbus||disease}}.
+From {{bor|es|la|morbōsus||diseased}}, from {{m|la|morbus||disease}}.
 
 ===Adjective===
 {{es-adj|f=morbosa}}
@@ -24761,7 +24784,7 @@ Page 1244 morganático: Found match for regex: =
 Page 1244 morganático: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|LL.|morganaticus}}.
+From {{bor|es|ML.|morganāticus}}, from {{der|es|LL.|[[mātrimōnium]] [[ad]] [[morganaticus|morganāticam]]}}.
 
 ===Adjective===
 {{es-adj|f=morganática}}
@@ -24773,7 +24796,7 @@ Page 1245 morsa: -------- begin text ---------
 {{wikipedia|lang=es}}
 
 ===Etymology===
-From {{der|es|fr|morse}}, from {{BAR|es|smi}} {{m|se|morša}}.
+From {{bor|es|fr|morse}}, from {{der|es|se|morša}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -24796,7 +24819,7 @@ Page 1246 mortero: Found match for regex: =
 Page 1246 mortero: -------- begin text ---------
 
 ===Etymology===
-From {{BAR|es|la}} ''[[mortarium|mortārium]]''. Cognate with {{cog|en|mortar}}.
+From {{inh|es|la|mortārium}}. Cognate with {{cog|en|mortar}}.
 
 ===Noun===
 {{es-noun|m}}
@@ -24840,7 +24863,7 @@ Page 1248 moráceo: Found match for regex: =
 Page 1248 moráceo: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|la|morus||moral}} + {{m|es|-aceo}}.
+From {{der|es|la|mōrus|t1=mulberry tree}} + {{m|es|-aceo}}.
 
 ===Adjective===
 {{es-adj|f=morácea}}
@@ -24852,7 +24875,7 @@ Page 1249 mota: Found match for regex: =
 Page 1249 mota: -------- begin text ---------
 
 ===Etymology===
-{{unk|es|title=Uncertain}}; possibly borrowed from {{BAR|es|gem}}, cognate to {{cog|it|mota}}, {{cog|en|mud}}, {{cog|nl|modder}}<ref> Worcester, Joseph Emerson (1910: Worcester's academic dictionary: a new etymological dictionary of the English language, p. 371</ref>. Or, possibly from {{BAR|es|xib}}.<ref>{{R:ine:Roberts|page=227}}</ref>
+{{unk|es|title=Uncertain}}; possibly borrowed from {{bor|es|gem}}, cognate to {{cog|it|mota}}, {{cog|en|mud}}, {{cog|nl|modder}}<ref> Worcester, Joseph Emerson (1910: Worcester's academic dictionary: a new etymological dictionary of the English language, p. 371</ref>. Or, possibly from {{bor|es|xib}}.<ref>{{R:ine:Roberts|page=227}}</ref>
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -24883,7 +24906,7 @@ Page 1250 motocicleta: Found match for regex: =
 Page 1250 motocicleta: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|fr|motocyclette||motorcycle}}.
+From {{bor|es|fr|motocyclette||motorcycle}}.
 
 ===Pronunciation===
 * {{a|Castillian}} {{IPA|es|/motoθiˈkleta/}}
@@ -24896,7 +24919,7 @@ From {{FOO|es|fr|motocyclette||motorcycle}}.
 #: {{syn|es|moto}}
 
 ===Usage notes===
-Usually just ''{{l|es|moto}}'' in casual speech.
+Usually just {{m|es|moto}} in casual speech.
 
 ===Related terms===
 * {{l|es|motociclismo}}
@@ -24907,7 +24930,7 @@ Page 1251 moyote: Found match for regex: =
 Page 1251 moyote: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|nci|mōyōtl||mosquito}}.
+From {{bor|es|nci|mōyōtl||mosquito}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -24930,7 +24953,7 @@ Page 1252 moái: -------- begin text ---------
 {{wikipedia|lang=es}}
 
 ===Etymology===
-From {{FOO|es|rap|mo'ai||statue, figurine}}.
+From {{bor|es|rap|mo'ai||statue, figurine}}.
 
 ===Pronunciation===
 * {{IPA|es|[moˈa.i]}}
@@ -24948,7 +24971,7 @@ Page 1253 moño: Found match for regex: =
 Page 1253 moño: -------- begin text ---------
 
 ===Etymology===
-Apparently from {{BAR|es|qfa-sub-ibe}} word *''mūnn-'' ("bump, lump").
+Apparently from the {{bor|es|qfa-sub-ibe}} word {{m|und|*mūnn-||bump, lump}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -25000,7 +25023,7 @@ From {{inh|es|la|mollis|mollis, mollem|soft}}, from earlier {{m|la||*molduis}}, 
 * {{l|es|mullir}}
 
 ===Etymology 2===
-From {{FOO|es|ca|moll||mole, jetty}}, from {{FOO|es|la|mōles||mass, mole, jetty}}. Cognate with {{cog|en|mole||massive structure used as a breakwater or pier}}.
+From {{bor|es|ca|moll||mole, jetty}}, from {{der|es|la|mōles||mass, mole, jetty}}. Cognate with {{cog|en|mole||massive structure used as a breakwater or pier}}.
 
 ====Noun====
 {{es-noun|m}}
@@ -25032,15 +25055,15 @@ Page 1255 muermo: -------- begin text ---------
 {{wikipedia|Glanders}}
 
 ===Etymology===
-From {{FOO|es|la|morbus||disease, illness}}. {{doublet|es|morbo}}.
+From {{inh|es|la|morbus||disease, illness}}. {{doublet|es|morbo}}.
 
 ===Noun===
 {{es-noun|m}}
 
-# {{lb|es|veterinary medicine}} [[glanders|Glanders]].
-# {{lb|es|colloquial}} A [[bore]]
-# {{lb|es|colloquial}} [[boredom|Boredom]].
-# [[drug|Drug]]-induced [[lethargy]].
+# {{lb|es|veterinary medicine}} [[glanders]]
+# {{lb|es|colloquial}} a [[bore]]
+# {{lb|es|colloquial}} [[boredom]]
+# [[drug]]-induced [[lethargy]]
 
 ====Derived terms====
 * {{l|es|muermoso}}
@@ -25052,7 +25075,7 @@ Page 1256 muesca: Found match for regex: =
 Page 1256 muesca: -------- begin text ---------
 
 ===Etymology===
-From {{m|es|moscar}}, from {{FOO|es|VL.|*mossicare|}}, from {{FOO|es|la|morsicare}}.
+{{back-form|es|moscar}}, from {{der|es|VL.|*mossicāre}}, from {{der|es|la|morsicāre}}, present active infinitive of {{m|la|morsicō||to nibble, to chew}}.
 
 ===Noun===
 {{es-noun|f}}
@@ -25067,18 +25090,18 @@ Page 1257 mufla: -------- begin text ---------
 [[Image:Ausbrennofen.jpg|thumb|mufla]]
 
 ===Etymology===
-From {{FOO|es|fr|moufle}}.
+From {{bor|es|fr|moufle}}.
 
 ===Noun===
 {{es-noun|f}}
 
-# [[muffle]] (a [[kiln]] or [[furnace]], often electric, with no direct flames)
+# [[muffle]] {{gl|a [[kiln]] or [[furnace]], often electric, with no direct flames}}
 -------- end text --------
 Page 1258 mulcer: Found match for regex: =
 Page 1258 mulcer: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|la|mulcēre}}, present active infinitive of {{m|la|mulceō}}.
+From {{bor|es|la|mulcēre}}, present active infinitive of {{m|la|mulceō}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -25086,9 +25109,11 @@ From {{FOO|es|la|mulcēre}}, present active infinitive of {{m|la|mulceō}}.
 ===Verb===
 {{es-verb|mulc|er|pres=mulzo}}
 
-# {{lb|es|transitive}} to [[soothe]], [[soften]], [[comfort]], [[appease]]; [[caress]], [[charm]], [[flatter]], [[delight]]; [[alleviate]], [[relieve]], [[assuage]], [[mitigate]].
-# {{lb|es|transitive}} to [[graze]], [[touch]], [[stroke]] or [[move]] [[lightly]] or [[gently]].
-# {{lb|es|transitive}} to [[make]] [[sweet]] or [[pleasant]].
+# {{lb|es|transitive}} to [[soothe]], to [[soften]], to [[comfort]], to [[appease]]
+# {{lb|es|transitive}} to [[caress]], to [[charm]], to [[flatter]], to [[delight]]
+# {{lb|es|transitive}} to [[alleviate]], to [[relieve]], to [[assuage]], to [[mitigate]]
+# {{lb|es|transitive}} to [[graze]], to [[touch]], to [[stroke]] or [[move]] [[lightly]] or [[gently]]
+# {{lb|es|transitive}} to [[make]] [[sweet]] or [[pleasant]]
 
 ====Conjugation====
 {{es-conj-er|mul|p=-cer}}
@@ -25109,7 +25134,7 @@ Page 1259 mulcédine: Found match for regex: =
 Page 1259 mulcédine: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|la|mulcēdō}}, ''mulcēdinis''.
+From {{bor|es|la|mulcēdō}} (genitive singular {{m|la|mulcēdinis}}).
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -25130,7 +25155,7 @@ Page 1260 mulá: -------- begin text ---------
 {{wikipedia|lang=es}}
 
 ===Etymology===
-From {{FOO|es|ar|مَوْلَى||vicar, guardian}}.
+From {{bor|es|ar|مَوْلَى||vicar, guardian}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -25144,7 +25169,7 @@ Page 1261 munificencia: Found match for regex: =
 Page 1261 munificencia: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|la|munificentia}}.
+From {{bor|es|la|mūnificentia}}.
 
 ===Noun===
 {{es-noun|f}}
@@ -25156,7 +25181,7 @@ Page 1262 munificente: Found match for regex: =
 Page 1262 munificente: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|la|munificens|munifĭcens}}.
+From {{bor|es|la|mūnificēns}} (genitive singular {{m|la|mūnificēntis}}).
 
 ===Adjective===
 {{es-adj}}
@@ -25174,7 +25199,7 @@ Page 1263 musaka: -------- begin text ---------
 * {{l|es|musaca}}
 
 ===Etymology===
-{{BAR|es|el}}
+Borrowed from {{bor|es|el|μουσακάς}}, from {{der|es|tr|musakka}}, from {{der|es|ar|مُسَقَّعَة||chilled}}.
 
 ===Noun===
 {{es-noun|f}}
@@ -25188,7 +25213,7 @@ Page 1264 musaraña: -------- begin text ---------
 {{wikipedia|lang=es}}
 
 ===Etymology===
-From {{FOO|es|la|mūs}} {{m|la|arāneus|lit=spider mouse}} (compare {{cog|fr|musaraigne}}) because the bite of some shrews can be venomous. Ending influenced by {{cog|es|araña||spider}}.
+From {{bor|es|la|[[mūs]] [[arāneus]]|lit=spider mouse}} (compare {{cog|fr|musaraigne}}) because the bite of some shrews can be venomous. Ending influenced by {{cog|es|araña||spider}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -25228,7 +25253,7 @@ Page 1266 Muñoz: Found match for regex: =
 Page 1266 Muñoz: -------- begin text ---------
 
 ===Etymology===
-From {{suffix|es|Muño|t1=given name|ez}}, Muño being the name of a hill in Spain, from {{FOO|es|la|monere}}.
+From {{suffix|es|Muño|t1=given name|ez}}, from the name of a hill in Spain, from {{der|es|la|monere}}.
 
 ===Proper noun===
 {{es-proper noun}}
@@ -25242,7 +25267,7 @@ Page 1267 muñón: Found match for regex: =
 Page 1267 muñón: -------- begin text ---------
 
 ===Etymology===
-{{unk|es}}, possibly from {{BAR|es|qfa-sub-ibe}}; compare {{m|es|muñeca||wrist}} and {{m|es|moño||bun}}.
+{{unk|es}}, possibly from {{der|es|qfa-sub-ibe}}; compare {{m|es|muñeca||wrist}} and {{m|es|moño||bun}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -25266,7 +25291,7 @@ Page 1268 máncer: Found match for regex: =
 Page 1268 máncer: -------- begin text ---------
 
 ===Etymology===
-From {{bor|es|EL.|manzer}}, from {{FOO|es|he|ממזר|tr=mamzér}}.
+From {{bor|es|EL.|manzer}}, from {{der|es|he|ממזר|tr=mamzér}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -26677,7 +26702,7 @@ Page 1337 ofidio: Found match for regex: =
 Page 1337 ofidio: -------- begin text ---------
 
 ===Etymology===
-From {{m|es|Ophidia}}, an alternative name of the suborder {{m|mul|Serpentes}}, from {{FOO|es|grc|ὀφίδιον}}, diminutive of {{m|grc|ὄφις||snake}}.
+Singularization of {{der|es|mul|Ophidia}}, an alternative name of the suborder {{m|mul|Serpentes}}, from {{der|es|grc|ὀφίδιον}}, diminutive of {{m|grc|ὄφις||snake}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -26746,7 +26771,7 @@ Page 1341 olimpiada: -------- begin text ---------
 * {{l|es|olimpíada}}
 
 ===Etymology===
-From {{FOO|es|la|olympias}} (genitive singular {{m|la|olympiadis}}), from {{FOO|es|grc|ὀλυμπιάς}}.
+From {{der|es|la|olympias}} (genitive singular {{m|la|olympiadis}}), from {{der|es|grc|ὀλυμπιάς}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -27353,7 +27378,7 @@ Page 1370 otorrinolaringología: -------- begin text ---------
 {{wikipedia|lang=es}}
 
 ===Etymology===
-From {{FOO|es|grc|οὖς}}, ὠτός (''ōtos'', “ear”) + {{m|grc|ῥίς}}, ῥινός (''rhinos'', “nose”) + {{m|grc|λάρυγξ}}, λάρυγγος (''larungos'', “throat”) {{suffix|es||logía}}.
+From {{der|es|grc|οὖς||ear}} (genitive singular {{m|grc|ὠτός}}) + {{m|grc|ῥίς||nose}} (genitive singular {{m|grc|ῥινός}}) + {{m|grc|λάρυγξ||throat}} (genitive singular {{m|grc|λάρυγγος}}) {{suffix|es||logía}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -27373,7 +27398,7 @@ Page 1371 otorrinolaringólogo: Found match for regex: =
 Page 1371 otorrinolaringólogo: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|grc|οὖς}}, ὠτός (''ōtos'', “ear”) + {{m|grc|ῥίς}}, ῥινός (''rhinos'', “nose”) + {{m|grc|λάρυγξ}}, λάρυγγος (''larungos'', “throat”) {{suffix|es||logo}}.
+From {{der|es|grc|οὖς||ear}} (genitive singular {{m|grc|ὠτός}}) + {{m|grc|ῥίς||nose}} (genitive singular {{m|grc|ῥινός}}) + {{m|grc|λάρυγξ||throat}} (genitive singular {{m|grc|λάρυγγος}}) {{suffix|es||logo}}, or a {{back-form|es|otorrinolaringología|nocap=1}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -28852,7 +28877,7 @@ Page 1452 perifolio: Found match for regex: =
 Page 1452 perifolio: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|osp|cerifolio}} or {{m|osp|cerfollo}}, with influence from {{m|es|perejil}}, from {{FOO|es|la|caerefolium}}, from {{FOO|es|grc|χαιρέφυλλον}}.
+From {{inh|es|osp|cerifolio}} or {{m|osp|cerfollo}}, with influence from {{m|es|perejil}}, from {{der|es|la|caerefolium}}, from {{der|es|grc|χαιρέφυλλον}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -30564,7 +30589,7 @@ Page 1541 premostrar: Found match for regex: =
 Page 1541 premostrar: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|la|praemōnstrāre}}, present active infinitive of {{m|la|praemōnstrō}}.
+{{slbor|es|la|praemōnstrāre}}, present active infinitive of {{m|la|praemōnstrō}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -30595,7 +30620,7 @@ Page 1542 presbicia: Found match for regex: =
 Page 1542 presbicia: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|fr|presbyte}}, from {{FOO|es|grc|πρέσβυς||old}}.
+From {{af|es|lang1=fr|presbyte|t1=farsighted|-ia}}, from {{der|es|grc|πρέσβυς||old}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -30700,7 +30725,7 @@ Page 1548 primera: Found match for regex: =
 Page 1548 primera: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|la|primarius|primarĭus}}
+From {{m|es|primero||first}}, from {{der|es|la|prīmārius}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -30727,7 +30752,7 @@ Page 1549 pringar: Found match for regex: =
 Page 1549 pringar: -------- begin text ---------
 
 ===Etymology===
-Of uncertain origin; possibly from {{FOO|es|VL.|*pendicare|pendicāre}}, from {{FOO|es|la|pendō|pendere|to hang}}.
+Of uncertain origin; possibly from {{inh|es|VL.|*pendicāre}}, from {{der|es|la|pendō||to hang}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -30813,7 +30838,7 @@ Page 1553 proferir: Found match for regex: =
 Page 1553 proferir: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|la|prōferre}}, {{inflection of|la|prōferō||pres|actv|inf}}.
+{{slbor|es|la|prōferre}}, present active infinitive of {{m|la|prōferō}}.
 
 ===Verb===
 {{es-verb|profer|ir|pres=profiero}}
@@ -30847,7 +30872,7 @@ Page 1555 prohijar: Found match for regex: =
 Page 1555 prohijar: -------- begin text ---------
 
 ===Etymology===
-{{FOO|es|la|pro||for}}, and {{m|la|filius|filĭus|son}}.
+From {{af|es|pro-|hijo|t2=son|-ar}}, from {{der|es|la|prō||for}} +  {{m|la|fīlius||son}}.
 
 ===Verb===
 {{es-verb|prohij|ar|pres=prohíjo}}
@@ -30875,7 +30900,7 @@ Page 1557 proletariado: Found match for regex: =
 Page 1557 proletariado: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|la|proletarius||a man whose only wealth is his offspring, or whose sole service to the state is as father}}, from {{m|la|proles||offspring, posterity}}.
+From {{af|es|lang1=la|prōlētārius|t1=a man whose only wealth is his offspring, or whose sole service to the state is as father|-ado}}, from {{m|la|prōlēs||offspring, posterity}}.
 
 ===Noun===
 {{es-noun|m}}
@@ -31079,7 +31104,7 @@ Page 1569 psicópata: -------- begin text ---------
 * {{l|es|sicópata}}
 
 ===Etymology===
-From {{confix|es|psico|pata}}. First coined in {{etyl|de|-}}, from {{FOO|es|grc|ψυχή}} "soul" + {{m|grc|πάθος}} "suffering".
+From {{bor|es|de|Psychopath}}, from {{der|es|grc|ψυχή||soul}} + {{m|grc|πάθος||suffering}}. Synchronically analyzable as {{confix|es|psico|pata}}.
 
 ===Pronunciation===
 * {{es-IPA|sicópata}}
@@ -31152,7 +31177,7 @@ Page 1572 pucta: Found match for regex: =
 Page 1572 pucta: -------- begin text ---------
 
 ===Etymology===
-Variant of Spanish {{m|es|puta}}, derived from {{FOO|es|la|puta||[[girl]], young [[woman]]}}.
+Variant of {{m|es|puta}}.
 
 ===Noun===
 {{es-noun|f}}
@@ -31240,7 +31265,7 @@ Page 1577 pulque: -------- begin text ---------
 {{wikipedia|lang=es}}
 
 ===Etymology===
-{{unk|es|title=Uncertain}}. The {{etyl|nci|-}} term for pulque was {{m|nci|octli}}, or specifically {{m|nci|iztac}} {{m|nci|octli||white pulque}}. ''Pulque'' may be a Spanish derivation of {{FOO|es|nci|poliuhqui}} {{m|nci|octli||spoiled pulque, spoiled wine}}, from {{m|nci|poliuhqui||something lost}}.
+{{unk|es|title=Uncertain}}. The Classical Nahuatl term for pulque was {{m|nci|octli}}, or specifically {{m|nci|[[iztac]] [[octli]]||white pulque}}. ''Pulque'' may be a Spanish derivation of {{der|es|nci|[[poliuhqui]] [[octli]]|lit=spoiled pulque, spoiled wine}}, from {{m|nci|poliuhqui||something lost}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -31267,7 +31292,7 @@ Page 1578 puntuar: Found match for regex: =
 Page 1578 puntuar: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|la|punctum}}.
+From {{bor|es|ML.|pūnctuō||to mark with a point, to prick}}.
 
 ===Verb===
 {{es-verb|puntu|ar|pres=puntúo}}
@@ -31302,7 +31327,7 @@ Page 1580 puridad: Found match for regex: =
 Page 1580 puridad: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|LL.|pūritās}}, ''pūritātis'', from {{FOO|es|la|pūrus||pure}}. Cf. also the older or rarer variants, {{m|es|poridad}} and {{m|es|poridat}}, inherited from Old Spanish and later modified.
+From {{bor|es|LL.|pūritās}} (genitive singular {{m|la|pūritātis}}), from {{der|es|la|pūrus||pure}}. Cf. also the older or rarer variants, {{m|es|poridad}} and {{m|es|poridat}}, inherited from Old Spanish and later modified.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -31321,7 +31346,7 @@ Page 1581 puya: -------- begin text ---------
 * {{es-IPA}}
 
 ===Etymology 1===
-From {{inh|es|VL.|*pugia}}, from {{FOO|es|la|pugio|pugiō}}.
+From {{inh|es|VL.|*pūgia}}, from {{der|es|la|pūgiō||dagger}}.
 
 ====Noun====
 {{es-noun|f}}
@@ -31348,7 +31373,7 @@ Page 1582 párrafo: Found match for regex: =
 Page 1582 párrafo: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|la|paragraphus}}.
+{{slbor|es|LL.|paragraphus}} (15th century), from {{der|es|grc|παράγραφος}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -32019,7 +32044,7 @@ Page 1617 Ramos: Found match for regex: =
 Page 1617 Ramos: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|la|rāmōs}}, accusative plural of {{m|la|rāmus||branch}}.
+Literally, "branches", from {{m|es|ramo||branch}}, from {{der|es|la|rāmus||branch}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -32040,7 +32065,7 @@ Page 1618 Ramón: -------- begin text ---------
 {{wikipedia|lang=es}}
 
 ===Etymology===
-From {{BAR|es|fro}}, from {{BAR|es|frk}}, from {{FOO|es|gem-pro|*raginą||advice}} + {{m|gem-pro|*mundō||protection}}.
+From {{der|es|fro|Raimunt}}, from {{der|es|frk|*Raginmund}}, from {{der|es|gem-pro|*raginą||advice}} + {{m|gem-pro|*mundō||protection}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -32065,7 +32090,7 @@ Page 1619 rancho: Found match for regex: =
 Page 1619 rancho: -------- begin text ---------
 
 ===Etymology===
-From {{m|es|rancharse}}, from {{m|es|arranchar}}, from {{BAR|es|fr}} ''[[ranger]]'', from {{m|fr|rang}}, from {{der|es|frk|*hring}}.
+{{deverbal|es|rancharse||to get ready, to settle in a place}}; 16th century military terminology from {{der|es|[[se]] [[ranger]]||to arrange onself}}, from {{m|fr|rang||row, line}}, from {{der|es|frk|*hring}}.
 
 ===Noun===
 {{es-noun|m}}
@@ -32095,7 +32120,7 @@ Page 1620 rancio: Found match for regex: =
 Page 1620 rancio: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|la|rancidus}}.
+From {{inh|es|la|rancidus}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -32120,7 +32145,7 @@ Page 1621 rapsoda: -------- begin text ---------
 * {{l|es|rapsodo}}
 
 ===Etymology===
-From {{FOO|es|grc|ῥαψωδός}}. See {{l|es|rapsodia}}.
+From {{bor|es|grc|ῥαψωδός}}. See {{l|es|rapsodia}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -32141,7 +32166,7 @@ Page 1622 rapsodia: -------- begin text ---------
 {{wikipedia|lang=es}}
 
 ===Etymology===
-From {{FOO|es|la|rhapsōdia}}, from {{FOO|es|grc|ῥαψῳδία}}, from {{m|grc|ῥάπτω}} "I stitch, sew" + {{m|grc|ᾠδή}} "song".
+From {{bor|es|la|rhapsōdia}}, from {{der|es|grc|ῥαψῳδία}}, from {{m|grc|ῥάπτω||to stitch, to sew}} + {{m|grc|ᾠδή||song}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -32162,7 +32187,7 @@ Page 1623 raquis: -------- begin text ---------
 {{wikipedia|lang=es}}
 
 ===Etymology===
-From {{FOO|es|grc|ῥάχις}}.
+From {{bor|es|grc|ῥάχις}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -32178,7 +32203,7 @@ Page 1624 rebanar: Found match for regex: =
 Page 1624 rebanar: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|la|rapinare}} and thus from the same source as English {{m|en|rapine}}.
+From {{inh|es|VL.|*rapīnāre}}, present active infinitive of {{m|la|*rapīnō}}, from {{der|es|la|rapīna||plunder, rapine}}, and thus from the same source as {{cog|en|rapine}}.
 
 ===Verb===
 {{es-verb|reban|ar}}
@@ -32318,7 +32343,7 @@ From {{FOO|es|la|re-}} + {{m|la|cinctus||surrounded}}.
 # [[pen]]
 
 ====Derived terms====
-* {{l|es|recinto privado}} {{g|m}}
+* {{l|es|recinto privado|g=m}}
 -------- end text --------
 Page 1631 reclusión perpetua: Found match for regex: =
 Page 1631 reclusión perpetua: -------- begin text ---------
@@ -32335,7 +32360,7 @@ Page 1632 recolar: Found match for regex: =
 Page 1632 recolar: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|la|recōlāre}}, present active infinitive of {{m|la|recōlō}}.
+From {{inh|es|la|recōlāre}}, present active infinitive of {{m|la|recōlō}}.
 
 ===Verb===
 {{es-verb|recol|ar|pres=recuelo}}
@@ -32367,7 +32392,7 @@ Page 1634 redención: Found match for regex: =
 Page 1634 redención: -------- begin text ---------
 
 ===Etymology===
-Borrowed from {{FOO|es|la|redemptiō}}, ''redemptiōnis''.
+{{slbor|es|la|redēmptiō}} (genitive singular {{m|la|redēmptiōnis}}).
 
 ===Noun===
 {{es-noun|f|redenciones}}
@@ -32378,7 +32403,7 @@ Page 1635 referir: Found match for regex: =
 Page 1635 referir: -------- begin text ---------
 
 ===Etymology===
-From {{BAR|es|la}} ''[[referre]]''.
+{{slbor|es|la|referō}}.
 
 ===Verb===
 {{es-verb|refer|ir|pres=refiero}}
