@@ -21321,7 +21321,7 @@ Page 1062 lamprea: -------- begin text ---------
 {{wikipedia|lang=es}}
 
 ===Etymology===
-From {{BAR|es|ML.}} ''lampreda'', of uncertain origin: possibly from {{BAR|es|LL.}} ''[[lampetra]]'', from a combination of ''[[lambere]]'' ("lick") + ''[[petra]]'' ("stone"). Compare Italian ''[[lampreda]]'', French ''[[lamproie]]'' and Portuguese ''[[lampreia]]''.
+From {{inh|es|VL.|*lamprēda}} (attested as {{der|es|ML.|lampreda}}), of uncertain origin: possibly from {{der|es|LL.|lampetra}}, from a combination of {{der|es|la|lambō||to lick}} and {{m|la|petra||stone}}. Compare {{cog|it|lampreda}}, {{cog|fr|lamproie}} and {{cog|pt|lampreia}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -22133,7 +22133,7 @@ Page 1107 Lope: -------- begin text ---------
 {{wikipedia|dab=Lope|lang=en}}
 
 ===Etymology===
-From the {{BAR|es|la}} proper name {{m|la|Lupus}}.<ref name="faure">''Lope''; in: Roberto Faure, ''Diccionario de nombres propios'', 2007, {{ISBN|978-84-670-2375-6}}</ref>
+From {{inh|es|la|Lupus|lit=wolf}}, a proper name. Preservation of ''p'' unexpected.<ref name="faure">''Lope''; in: Roberto Faure, ''Diccionario de nombres propios'', 2007, {{ISBN|978-84-670-2375-6}}</ref>
 
 ===Proper noun===
 {{es-proper noun|m}}
@@ -22328,7 +22328,7 @@ Page 1119 Macarena: -------- begin text ---------
 {{wikipedia|Macarena (name)|Macarena (given name)}}
 
 ===Etymology===
-It is {{unk|es|title=disputed}} whether it comes from {{der|es|grc|μακάριος||blessed, happy}}, or from the homonymous neighborhood in Seville, from {{BAR|es|ar}}.
+It is {{unk|es|title=disputed}} whether it comes from {{der|es|grc|μακάριος||blessed, happy}}, or from the homonymous neighborhood in Seville, from {{der|es|ar}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -22570,7 +22570,7 @@ Page 1133 mamey: Found match for regex: =
 Page 1133 mamey: -------- begin text ---------
 
 ===Etymology===
-From {{BAR|es|tnq}}.
+From {{bor|es|tnq}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -22698,7 +22698,7 @@ Page 1139 manteca: Found match for regex: =
 Page 1139 manteca: -------- begin text ---------
 
 ===Etymology===
-{{unknown|es|Uncertain}}. Possibly from {{der|es|la|mantica}} or of {{BAR|es|xib}}/{{BAR|es|xce}} origin. Compare {{cog|pt|manteiga}}.
+{{unknown|es|Uncertain}}. Possibly from {{der|es|la|mantica}} or of {{der|es|xib|-}}/{{der|es|xce|-}} origin. Compare {{cog|pt|manteiga}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -23301,7 +23301,7 @@ Page 1167 masoquismo: -------- begin text ---------
 {{wikipedia|lang=es}}
 
 ===Etymology===
-Coined in {{BAR|es|de}} as {{m|de|Masochismus}} by neurologist [[w:Richard von Krafft-Ebing|Richard von Krafft-Ebing]], from the name of [[w:Leopold von Sacher-Masoch|Leopold von Sacher-Masoch]], an Austrian writer whose novella ''[[w:Venus in Furs|Venus in Furs]]'' (German: ''Venus im Pelz'') explores a [[sadomasochistic]] relationship.
+From {{bor|es|de|Masochismus}}; coined by neurologist [[w:Richard von Krafft-Ebing|Richard von Krafft-Ebing]] from the name of [[w:Leopold von Sacher-Masoch|Leopold von Sacher-Masoch]], an Austrian writer whose novella ''[[w:Venus in Furs|Venus in Furs]]'' (German: ''Venus im Pelz'') explores a [[sadomasochistic]] relationship.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -24176,14 +24176,14 @@ Page 1214 millar: Found match for regex: =
 Page 1214 millar: -------- begin text ---------
 
 ===Etymology===
-From {{BAR|es|la}} ''[[milliare]]''.
+From {{inh|es|la|mīlliāre}}.
 
 ===Noun===
 {{es-noun|m|millares}}
 
-# A unit or group of [[one thousand]].
-# A [[thousandish]]
-# A large, indeterminate number.
+# a unit or group of [[one thousand]]
+# a [[thousandish]]
+# a large, indeterminate number
 
 ====Related terms====
 * {{l|es|mil}}
@@ -24269,7 +24269,7 @@ Page 1219 mitimae: Found match for regex: =
 Page 1219 mitimae: -------- begin text ---------
 
 ===Etymology===
-{{BAR|es|qu}}
+From {{bor|es|qu}}.
 
 ===Noun===
 {{es-noun|mf}}
@@ -24383,7 +24383,7 @@ Page 1224 Modesto: -------- begin text ---------
 {{wikipedia|dab=Modest|lang=en}}
 
 ===Etymology===
-''Modesto'' and {{m|es|Modesta}} stem from the {{BAR|es|la}} proper noun {{m|la|Modestus}}/{{m|la|Modesta}}.<ref name="faure">''Modesto''; in: Roberto Faure, ''Diccionario de nombres propios'', 2007, {{ISBN|978-84-670-2375-6}}</ref>
+From {{bor|es|la|Modestus|lit=modest}}.<ref name="faure">''Modesto''; in: Roberto Faure, ''Diccionario de nombres propios'', 2007, {{ISBN|978-84-670-2375-6}}</ref>
 
 ===Proper noun===
 {{es-proper noun|m}}
@@ -24435,7 +24435,7 @@ Page 1227 mogate: Found match for regex: =
 Page 1227 mogate: -------- begin text ---------
 
 ===Etymology===
-From {{inh|es|osp}}, from {{der|es|xaa|مغطّة}}, from the {{BAR|es|ar}} root {{m|ar|غطو||to plug}}.
+From {{inh|es|osp}}, from {{der|es|xaa|مُغَطّة}}, from the {{der|es|ar|-}} root {{m|ar|غ ط و||to cover, to wrap}}.
 
 ===Noun===
 {{es-noun|m}}
@@ -24662,7 +24662,7 @@ Page 1237 Montoya: -------- begin text ---------
 {{wikipedia|lang=es}}
 
 ===Etymology===
-From {{bor|es|eu|Montoya}}. Named after a hamlet in {{BAR|es|eu}} country.
+From {{bor|es|eu|Montoya}}, named after a hamlet.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -25572,7 +25572,7 @@ Page 1281 Natalia: Found match for regex: =
 Page 1281 Natalia: -------- begin text ---------
 
 ===Etymology===
-Of {{BAR|es|la}} origin, cognate to [[Natalie]].
+From {{bor|es|LL.|Nātālia}}, name of a saint, from {{der|es|la|nātālis||of birth}}. Cognate to {{cog|fr|Natalie}} and {{cog|en|Natalie}}.
 
 ===Proper noun===
 {{es-proper noun|f}}
@@ -25589,12 +25589,12 @@ Page 1282 Natalio: Found match for regex: =
 Page 1282 Natalio: -------- begin text ---------
 
 ===Etymology===
-Of {{BAR|es|la}} origin.
+From {{bor|es|la|Nātālius}}, name of an antipope, or created as the masculine version of {{m|es|Natalia}}.
 
 ===Proper noun===
 {{es-proper noun|m}}
 
-# {{given name|es|male}}. The masculine form of [[Natalia]].
+# {{given name|es|male|f=Natalia}}
 -------- end text --------
 Page 1283 naturalidad: Found match for regex: =
 Page 1283 naturalidad: -------- begin text ---------
@@ -25789,12 +25789,12 @@ Page 1294 Nilda: Found match for regex: =
 Page 1294 Nilda: -------- begin text ---------
 
 ===Etymology===
-Short form of {{BAR|es|gem}} given names composed of a first element ending in -n and the second element {{m|ang|hild||battle}}, such as [[Brunilda]], [[Zunilda]] or [[Leonilda]].
+Short form of {{der|es|gem|-}} given names composed of a first element ending in -n and the second element {{m|ang|hild||battle}}, such as {{m|es|Brunilda}}, {{m|es|Zunilda}} or {{m|es|Leonilda}}.
 
 ===Proper noun===
 {{es-proper noun|f}}
 
-# {{given name|es|female}}.
+# {{given name|es|female}}
 
 ====See also====
 * {{l|es|Hilda}}
@@ -26233,7 +26233,7 @@ Page 1315 Obama: Found match for regex: =
 Page 1315 Obama: -------- begin text ---------
 
 ===Etymology===
-From {{BAR|es|luo}}.
+From {{bor|es|luo}}.
 
 ===Proper noun===
 {{head|es|proper noun}}
@@ -27741,7 +27741,7 @@ Page 1391 palangana: Found match for regex: =
 Page 1391 palangana: -------- begin text ---------
 
 ===Etymology===
-Possibly borrowed from {{BAR|es|mop}}.
+Possibly borrowed from {{bor|es|mop}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -29452,7 +29452,7 @@ Borrowed from {{bor|es|la|pyra||pyre}}, from {{der|es|grc|πυρά}}, from {{m
 # [[pyre]]
 
 ===Etymology 2===
-From {{BAR|es|rmq}}.
+From {{bor|es|rmq}}.
 
 ====Noun====
 {{es-noun|f}}
@@ -29480,7 +29480,7 @@ Page 1485 piragua: Found match for regex: =
 Page 1485 piragua: -------- begin text ---------
 
 ===Etymology===
-From {{BAR|es|car}}.
+From {{bor|es|car}}.
 
 ===Noun===
 {{es-noun|f}}
@@ -29546,7 +29546,7 @@ Page 1488 pistacho: -------- begin text ---------
 * {{l|es|pistache}}
 
 ===Etymology===
-From {{bor|es|fr|pistache}} or {{bor|es|it|pistacchio}}, both via {{BAR|es|la}}, from {{BAR|es|grc}}, and ultimately of {{BAR|es|ira}} origin.
+From {{bor|es|fr|pistache}} or {{bor|es|it|pistacchio}}, from {{der|es|la|pistācium}}, from {{der|es|grc|πιστάκιον}}, from {{m|grc|πιστάκη||pistachio tree}}, from {{der|es|ira|-}}. See {{cog|en|pistachio}} for more.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -29554,7 +29554,7 @@ From {{bor|es|fr|pistache}} or {{bor|es|it|pistacchio}}, both via {{BAR|es|la}},
 ===Noun===
 {{es-noun|m}}
 
-# [[pistachio]] (''nut'')
+# [[pistachio]] {{i|nut}}
 
 ====Derived terms====
 * {{l|es|pistachero}}
@@ -29663,7 +29663,7 @@ Page 1495 piñén: Found match for regex: =
 Page 1495 piñén: -------- begin text ---------
 
 ===Etymology===
-From {{BAR|es|arn}}.
+From {{bor|es|arn}}.
 
 ===Noun===
 {{es-noun|m|-}}
@@ -29677,7 +29677,7 @@ Page 1496 placebo: Found match for regex: =
 Page 1496 placebo: -------- begin text ---------
 
 ===Etymology===
-From {{BAR|es|la}}.
+From medical {{bor|es|NL.|placēbō}}, from {{der|es|la|placēbō|lit=I will please}}.
 
 ===Noun===
 {{es-noun|m}}
@@ -29862,7 +29862,7 @@ Page 1505 plátano: -------- begin text ---------
 * {{es-IPA}}
 
 ===Etymology 1===
-From one of the {{BAR|es|sai-car}} languages, probably influenced by the tree name descended from Latin {{m|la|platanus}}.
+From one of the {{bor|es|sai-car|-}} languages, probably influenced by the tree name descended from {{der|es|la|platanus||plane tree}}, from {{der|es|grc|πλάτανος}}.
 
 ====Noun====
 {{es-noun|m}}
@@ -29901,7 +29901,7 @@ Page 1506 pléroma: Found match for regex: =
 Page 1506 pléroma: -------- begin text ---------
 
 ===Etymology===
-From {{BAR|es|grc}} {{m|el|πλήρωμα}}.
+From {{bor|es|grc|πλήρωμα}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -30696,7 +30696,7 @@ Page 1547 preñar: Found match for regex: =
 Page 1547 preñar: -------- begin text ---------
 
 ===Etymology===
-From an unattested {{BAR|es|la}} root *''praegnāre'', from {{m|la|praegnās}}.
+From {{inh|es|VL.|*praegnāre}} (attested in Medieval Latin), back-formed from {{der|es|la|praegnāns||pregnant}}, from earlier {{m|la|praegnās}}, formed from {{m|la|prae-||before}} and the root of {{m|la|gnāscor||to be born}}, from {{der|es|itc-pro|*gnāskōr}}, from {{der|es|ine-pro|*ǵenh₁-}}.
 
 ===Verb===
 {{es-verb|preñ|ar}}
@@ -31309,7 +31309,7 @@ Page 1579 pureza: Found match for regex: =
 Page 1579 pureza: -------- begin text ---------
 
 ===Etymology===
-From {{suffix|es|puro|eza}} or {{BAR|es|la}} ''pūritia'' < {{m|la|pūrus}}.
+From {{suffix|es|puro|eza}} or descended directly from {{inh|es|la|pūritia}}; in either case, from {{m|la|pūrus||pure}}.
 
 ===Noun===
 {{es-noun|f}}
@@ -31638,7 +31638,7 @@ Page 1597 quena: Found match for regex: =
 Page 1597 quena: -------- begin text ---------
 
 ===Etymology===
-{{BAR|es|qu}}
+From {{bor|es|qu}}.
 
 ===Noun===
 {{es-noun|f}}
@@ -33048,12 +33048,12 @@ Page 1670 Rizos: -------- begin text ---------
 {{wikipedia}}
 
 ===Etymology===
-From {{BAR|es|el}}.
+From {{bor|es|el}}.
 
 ===Proper noun===
 {{es-proper noun}}
 
-# {{surname|en}} from Greek.
+# {{surname|en}} from Greek
 -------- end text --------
 Page 1671 roca: Found match for regex: =
 Page 1671 roca: -------- begin text ---------
@@ -33062,7 +33062,7 @@ Page 1671 roca: -------- begin text ---------
 * {{es-IPA}}
 
 ===Etymology 1===
-From {{der|es|ML.|rocca}}, from {{der|es|VL.|*rocca}}, of uncertain origin, probably {{BAR|es|cel}} and most likely pre-Roman {{BAR|es|qfa-sub}}.
+From {{der|es|ML.|rocca}}, from {{der|es|VL.|*rocca}}, of uncertain origin, probably {{der|es|cel|-}} and most likely pre-Roman {{der|es|qfa-sub|-}}.
 
 Cognate with {{cog|it|rocca}}, {{cog|en|rock}}, {{cog|fr|roche}}, and {{cog|br|r'och}}.
 
@@ -33742,7 +33742,7 @@ Page 1701 Sancho: Found match for regex: =
 Page 1701 Sancho: -------- begin text ---------
 
 ===Etymology===
-From {{BAR|es|eu}} ''[[Santxo]]''. Alternatively, possibly from the {{inh|es|LL.|Sanctius}}, from {{der|es|la|sanctus}}.
+From {{bor|es|eu|Santxo}}. Alternatively, possibly from the {{inh|es|LL.|Sānctius}}, from {{der|es|la|sānctus}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -33760,7 +33760,7 @@ Page 1702 sancochar: Found match for regex: =
 Page 1702 sancochar: -------- begin text ---------
 
 ===Etymology===
-From {{BAR|es|osp}} {{m|la|soncocho}}, from {{m|es|son-}} + {{m|es|cocho}} (older past participle of modern Spanish {{m|es|cocer}}).
+From {{af|es|lang1=osp|soncocho|-ar}}, from {{m|osp|son-}} + {{m|osp|cocho}}, former past participle of {{m|osp|cozer||to cook}} (compare modern {{cog|es|cocer}}).
 
 ===Verb===
 {{es-verb|sancoch|ar}}
@@ -33774,7 +33774,7 @@ Page 1703 Sandra: Found match for regex: =
 Page 1703 Sandra: -------- begin text ---------
 
 ===Etymology===
-From the {{BAR|es|it}} short form of [[Alessandra]]. Compare {{m|es|Alejandra}}.
+From {{bor|es|it|Sandra}}, short form of {{m|it|Alessandra}}, from {{der|es|grc|Ἀλεξάνδρα}}. Compare {{cog|es|Alejandra}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -33828,7 +33828,7 @@ Page 1706 sapo: Found match for regex: =
 Page 1706 sapo: -------- begin text ---------
 
 ===Etymology===
-{{unk|es}}, possibly from {{BAR|es|xib}}, cognate with {{cog|eu|apo}}.
+{{unk|es}}, possibly from {{bor|es|xib}}, cognate with {{cog|eu|apo}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -34652,12 +34652,12 @@ Page 1746 simaruba: Found match for regex: =
 Page 1746 simaruba: -------- begin text ---------
 
 ===Etymology===
-From a {{BAR|es|sai-car}} language; compare {{cog|fr|simarouba}}.
+From a {{bor|es|sai-car|-}} language; compare {{cog|fr|simarouba}}.
 
 ===Noun===
 {{es-noun|f}}
 
-# {{lb|es|Argentina|Colombia|Costa Rica|Ecuador|Venezuela}} A plant in the genus {{taxlink|Simarouba|genus|noshow=1}}.
+# {{lb|es|Argentina|Colombia|Costa Rica|Ecuador|Venezuela}} a plant in the genus {{taxlink|Simarouba|genus|noshow=1}}
 #: {{syn|es|aceituno}}
 
 [[Category:Spanish 4-syllable words]]
@@ -35923,7 +35923,7 @@ Page 1812 Suárez: Found match for regex: =
 Page 1812 Suárez: -------- begin text ---------
 
 ===Etymology===
-Literally "son of {{m|es|Suero}}", from a name {{m|und|*Sŏrus}} in {{BAR|es|qfa-sub-ibe}}.
+Literally "son of {{m|es|Suero}}", from a name {{m|und|*Sŏrus}} in {{der|es|qfa-sub-ibe|-}}.
 
 ===Proper noun===
 {{es-proper noun}}
@@ -36150,7 +36150,7 @@ Page 1824 tabaco: Found match for regex: =
 Page 1824 tabaco: -------- begin text ---------
 
 ===Etymology===
-Either from {{BAR|es|ar}} or from {{BAR|es|tnq}}. See {{cog|en|tobacco}} for more.
+Either from {{bor|es|ar}} or from {{bor|es|tnq}}. See {{cog|en|tobacco}} for more.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -36208,7 +36208,7 @@ Page 1827 tacha: Found match for regex: =
 Page 1827 tacha: -------- begin text ---------
 
 ===Etymology===
-From {{bor|es|VL.|*tacca}}, {{m|la|*tecca}}, of {{BAR|es|gem}} origin, from {{der|es|got|𐍄𐌰𐌹𐌺𐌽𐍃||mark, sign}}, from {{der|es|gem-pro|*taiknaz}}, {{m|gem-pro|*taikniz||sign, mark}}, from {{der|es|ine-pro|*deyḱ-}}. Influenced by forms related to {{cog|frk|*[[stakjan]], *[[stakkjan]]|to stick, attach}} and {{cog|got|𐍃𐍄𐌰𐌺𐍃||mark}}. See {{l|fr|attacher}}. Cognate with {{cog|goh|zeihhan||sign, symbol, feature}}, {{cog|ang|tācn||sign, marker}}. More at {{l|en|token}}.
+From {{bor|es|VL.|*tacca}}, {{m|la|*tecca}}, of {{der|es|gem|-}} origin, from {{der|es|got|𐍄𐌰𐌹𐌺𐌽𐍃||mark, sign}}, from {{der|es|gem-pro|*taiknaz}}, {{m|gem-pro|*taikniz||sign, mark}}, from {{der|es|ine-pro|*deyḱ-}}. Influenced by forms related to {{cog|frk|*[[stakjan]], *[[stakkjan]]|to stick, attach}} and {{cog|got|𐍃𐍄𐌰𐌺𐍃||mark}}. See {{l|fr|attacher}}. Cognate with {{cog|goh|zeihhan||sign, symbol, feature}}, {{cog|ang|tācn||sign, marker}}. More at {{l|en|token}}.
 
 ===Noun===
 {{es-noun|f}}
@@ -36477,7 +36477,7 @@ Page 1839 tapera: Found match for regex: =
 Page 1839 tapera: -------- begin text ---------
 
 ===Etymology===
-From {{BAR|es|gn}}.
+From {{bor|es|gn}}.
 
 ===Noun===
 {{es-noun|f}}
@@ -36530,7 +36530,7 @@ Page 1843 tarifa: Found match for regex: =
 Page 1843 tarifa: -------- begin text ---------
 
 ===Etymology===
-From {{BAR|es|xaa}}, from Classical {{der|es|ar|تَعْرِفَة}}.
+From {{inh|es|osp}}, from {{der|es|xaa}}, from Classical {{der|es|ar|تَعْرِفَة}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -38726,7 +38726,7 @@ Page 1948 tutuma: -------- begin text ---------
 [[Image:Totumas 1.jpg|Two tutumas|thumb|right]]
 
 ===Etymology===
-From {{BAR|es|ciy}}.
+From {{bor|es|ciy}}.
 
 ===Alternative forms===
 * {{l|es|totuma}}
@@ -38817,7 +38817,7 @@ Page 1951 txiki: Found match for regex: =
 Page 1951 txiki: -------- begin text ---------
 
 ===Etymology===
-{{BAR|es|eu}}
+From {{bor|es|eu}}.
 
 ===Adjective===
 {{es-adj}}
@@ -38836,7 +38836,7 @@ Page 1952 tá: -------- begin text ---------
 * {{l|es|ta}}
 
 ===Etymology===
-{{clipping|es|está}}, or borrowed from {{BAR|es|pt}}.
+{{clipping|es|está}}, or borrowed from {{bor|es|pt|tá}}.
 
 ===Interjection===
 {{es-interj}}
@@ -38853,7 +38853,7 @@ Page 1953 Támesis: -------- begin text ---------
 {{wikipedia|lang=es}}
 
 ===Etymology===
-From {{bor|es|la|Tamesis}}, ultimately of {{BAR|es|cel}} origin.
+From {{bor|es|la|Tamesis}}, ultimately of {{der|es|cel|-}} origin.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -39518,7 +39518,7 @@ Page 1981 Velasco: -------- begin text ---------
 {{wikipedia}}
 
 ===Etymology===
-From {{BAR|es|eu}}.
+From {{bor|es|eu}}.
 
 ===Proper noun===
 {{es-proper noun}}
@@ -40282,7 +40282,7 @@ Page 2023 Vásquez: -------- begin text ---------
 * {{l|es|Vázquez}}
 
 ===Etymology===
-From Medieval {{bor|es|gl|Vaasquez}}, from an earlier {{suffix|gl|Velasco|ez|nocat=1}}.<ref>{{cite-book|author=Lidia Becker|title=Hispano-romanisches Namenbuch|url=https://books.google.com/books?id=b7MSDzZuuGUC|accessdate=31 July 2018|year=2009|publisher=Walter de Gruyter|isbn=978-3-484-55523-5|page=260}}</ref> ''Velasco'' and ''Belasco'' are Romance forms of a name in {{der|es|qfa-sub-ibe}} (probably {{BAR|es|xib}} or {{BAR|es|eu}}). {{doublet|es|Velázquez|Blázquez|Valesco}}.
+From Medieval {{bor|es|gl|Vaasquez}}, from an earlier {{suffix|gl|Velasco|ez|nocat=1}}.<ref>{{cite-book|author=Lidia Becker|title=Hispano-romanisches Namenbuch|url=https://books.google.com/books?id=b7MSDzZuuGUC|accessdate=31 July 2018|year=2009|publisher=Walter de Gruyter|isbn=978-3-484-55523-5|page=260}}</ref> {{m|es|Velasco}} and {{m|es|Belasco}} are Romance forms of a name in {{der|es|qfa-sub-ibe|-}} (probably {{der|es|xib}} or {{der|es|eu}}). {{doublet|es|Velázquez|Blázquez|Valesco}}.
 
 ===Proper noun===
 {{es-proper noun}}
@@ -40703,7 +40703,7 @@ Page 2045 yaguareté: -------- begin text ---------
 [[Image:Panthera onca.jpg|thumb|yaguareté]]
 
 ===Etymology===
-Either from {{bor|es|gn|jaguarete}} or from {{BAR|es|tpw}}.
+Either from {{bor|es|gn|jaguarete}} or from {{bor|es|tpw}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -40947,7 +40947,7 @@ Page 2056 yuca: Found match for regex: =
 Page 2056 yuca: -------- begin text ---------
 
 ===Etymology===
-From {{BAR|es|tnq}}.
+From {{bor|es|tnq}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -41055,7 +41055,7 @@ Page 2061 zafacón: Found match for regex: =
 Page 2061 zafacón: -------- begin text ---------
 
 ===Etymology===
-Possibly from {{BAR|es|en}} WWII slogan "Save a can" accompanying the many recycling containers, but this origin is disputed with others citing an Arabic origin which better matches the spelling starting with z, rather than s.<!--this needs to show the Arabic word that is referred to-->
+Possibly from {{bor|es|en|[[save|Save]] [[a]] [[can]]}}, a WWII slogan accompanying the many recycling containers, but this origin is disputed with others citing an Arabic origin which better matches the spelling starting with z, rather than s.<!--this needs to show the Arabic word that is referred to-->
 
 ===Noun===
 {{es-noun|m|zafacones}}
@@ -41123,7 +41123,7 @@ Page 2065 Zamora: -------- begin text ---------
 {{wikipedia|lang=es}}
 
 ===Etymology===
-From {{BAR|es|got}}.
+From {{der|es|got}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -41160,7 +41160,7 @@ Page 2067 zancada: Found match for regex: =
 Page 2067 zancada: -------- begin text ---------
 
 ===Etymology===
-From {{BAR|es|fa}}.
+From {{bor|es|fa}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -41174,7 +41174,7 @@ Page 2068 zarigüeya: Found match for regex: =
 Page 2068 zarigüeya: -------- begin text ---------
 
 ===Etymology===
-From Brazilian {{bor|es|pt|çarigueia}}, from {{BAR|es|gn}}.
+From Brazilian {{bor|es|pt|çarigueia}}, from {{der|es|gn}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -41206,7 +41206,7 @@ Page 2070 zigurat: -------- begin text ---------
 {{wikipedia|lang=es}}
 
 ===Etymology===
-From {{BAR|es|akk}}.
+From {{bor|es|akk|𒅆𒂍𒉪|tr=ziqqurratu}}, from {{m|akk|𒁲 𒊑|tr=zaqāru|lit=to build high}}.
 
 ===Pronunciation===
 * {{es-IPA|zigurath}}
@@ -41378,7 +41378,7 @@ Page 2078 Zulma: Found match for regex: =
 Page 2078 Zulma: -------- begin text ---------
 
 ===Etymology===
-Possibly from the {{BAR|es|ar}} name ''[[Suleiman]]'' ( =[[Solomon]]). The name is popular in [[Latin America]] because of an [[Argentine]] actress of that name.
+Possibly from {{der|es|ar|سُلَيْمَان||[[Solomon]]}}; see that entry for more. The name is popular in [[Latin America]] because of an [[Argentine]] actress of that name.
 
 ===Proper noun===
 {{es-proper noun|f}}
@@ -41451,7 +41451,7 @@ Page 2081 zurrón: Found match for regex: =
 Page 2081 zurrón: -------- begin text ---------
 
 ===Etymology===
-Possibly from {{BAR|es|qfa-sub-ibe}} (compare {{cog|eu|zorro||sack}}). Cognate with {{cog|ast|zurrón}}, {{cog|ca|sarró}}, {{cog|gl|zurrón}}, {{cog|mwl|çurron}}, and {{cog|oc|sarroû}}, {{cog|pt|surrão}}.
+Possibly from {{der|es|qfa-sub-ibe|-}} (compare {{cog|eu|zorro||sack}}). Cognate with {{cog|ast|zurrón}}, {{cog|ca|sarró}}, {{cog|gl|zurrón}}, {{cog|mwl|çurron}}, and {{cog|oc|sarroû}}, {{cog|pt|surrão}}.
 
 ===Noun===
 {{es-noun|m|zurrones}}
@@ -41537,11 +41537,7 @@ Page 2085 Álvaro: Found match for regex: =
 Page 2085 Álvaro: -------- begin text ---------
 
 ===Etymology===
-''Álvaro'' and {{m|es|Álvara}} stem from the {{BAR|es|LL.}} proper name {{m|la|Alvarus}}, from Spanish-[[Visigothic]].
-The Germanic proper name consists of two parts:
-The first part stems from ''*all-'' ("all") or from ''*adal-'' ("noble").
-The second part stems from ''*-wardą'' ("protection, defense").
-However, there exist other etymologies.
+From {{inh|es|LL.|Alvarus}}, from Spanish-[[Visigothic]]. The Germanic proper name consists of two parts. The first part may stem from {{der|es|gem-pro|*allaz||all}} or {{m|gem-pro|*aþalaz||noble}}. The second part may stem from {{der|es|gem-pro|*wardō||protection, lookout}}. However, there exist other etymologies.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -41549,7 +41545,7 @@ However, there exist other etymologies.
 ===Proper noun===
 {{es-proper noun|m}}
 
-# {{given name|es|male}}.
+# {{given name|es|male}}
 
 ====Derived terms====
 * {{l|es|Álvarez}}
@@ -41570,7 +41566,7 @@ Page 2086 ángelus: -------- begin text ---------
 {{wikipedia|lang=es}}
 
 ===Etymology===
-From {{bor|es|la|angelus}} {{m|la|domini|Dominī|lit=the Lord's angel}}, the prayer's opening words.
+From {{bor|es|la|[[angelus]] [[dominus|Dominī]]|lit=the Lord's angel}}, the prayer's opening words.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -41855,7 +41851,7 @@ Page 2100 Íñigo: -------- begin text ---------
 {{wikipedia|lang=en}}
 
 ===Etymology===
-Attested as ''Enneco'', ''Ennego'' and other variants in medieval documents.<ref name="faure">''Íñigo''; in: Roberto Faure, ''Diccionario de nombres propios'', 2007, {{ISBN|978-84-670-2375-6}}</ref> Probably from the {{BAR|es|eu}} proper name ''Ennece''.<ref name="faure"/> A relationship with the Latin proper name {{m|la|Ignatius}} is very unlikely.<ref name="faure"/> Basque cognates are {{m|eu|Eneko}} and {{m|eu|Eneka}}.
+Attested as ''Enneco'', ''Ennego'' and other variants in medieval documents.<ref name="faure">''Íñigo''; in: Roberto Faure, ''Diccionario de nombres propios'', 2007, {{ISBN|978-84-670-2375-6}}</ref> Probably from the {{der|es|eu|Ennece}}, a proper name.<ref name="faure"/> A relationship with the Latin proper name {{m|la|Ignatius}} is very unlikely.<ref name="faure"/> Basque cognates are {{m|eu|Eneko}} and {{m|eu|Eneka}}.
 
 The Spanish family name {{m|es|Íñiguez}} is derived from ''Íñigo'' and the suffix {{m|es|-ez}}.
 
