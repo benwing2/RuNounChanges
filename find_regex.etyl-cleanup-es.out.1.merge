@@ -17165,7 +17165,7 @@ Page 853 güiro: Found match for regex: =
 Page 853 güiro: -------- begin text ---------
 
 ===Etymology===
-From {{BAR|es|tnq}}.
+From {{bor|es|tnq}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -17521,7 +17521,7 @@ Page 869 hato: Found match for regex: =
 Page 869 hato: -------- begin text ---------
 
 ===Etymology===
-Originally {{m|es||*fato}}, from a {{BAR|es|gem}} language, compare {{cog|goh|faz|t=container; vessel}}, {{cog|non|fat|t=vessel; cover; blanket; garment}}, {{cog|en|fat|t=container; vessel; vat}}.
+Originally {{m|es||*fato}}, from a {{der|es|gem|-}} language, compare {{cog|goh|faz|t=container; vessel}}, {{cog|non|fat|t=vessel; cover; blanket; garment}}, {{cog|en|fat|t=container; vessel; vat}}.
 
 ===Noun===
 {{es-noun|m}}
@@ -18631,7 +18631,7 @@ Page 924 huincha: -------- begin text ---------
 * {{l|es|wincha}}
 
 ===Etymology===
-From {{BAR|es|qu}}.
+From {{bor|es|qu}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -18821,7 +18821,7 @@ Page 933 Iberia: -------- begin text ---------
 * {{es-IPA}}
 
 ===Etymology 1===
-From {{bor|es|la|Ibēria}}, from {{der|es|grc|Ἰβηρία}}, after the river {{m|grc|Ἶβηρος}}, which itself came from a native {{BAR|es|xce}} name for the river {{m|xce|*Ibēr}} (modern {{m|es|Ebro}}).
+From {{bor|es|la|Ibēria}}, from {{der|es|grc|Ἰβηρία}}, after the river {{m|grc|Ἶβηρος}}, which itself came from {{der|es|xce|*Ibēr}}, native name for the river (modern {{m|es|Ebro}}).
 
 ====Proper noun====
 {{es-proper noun|f}}
@@ -20111,7 +20111,7 @@ Page 1004 jabalina: -------- begin text ---------
 * {{audio|es|LL-Q1321 (spa)-Millars-jabalina.wav|Audio (Spain)}}
 
 ===Etymology 1===
-From {{BAR|es|fro}} {{m|fr|javeline}}, of {{BAR|es|cel}} origin.
+From {{bor|es|fr|javeline}}, from {{der|es|fro|javelline}}, diminutive of {{m|fro|javelot||spear}}, from {{der|es|VL.|*gabalottus}}, from {{der|es|cel-gau|*gabalos}} (compare {{cog|sga|gabul||fork}}, {{cog|cy|gafl}}), from {{der|es|cel-pro|*gabalos||fork, forked branch}}, from {{der|es|ine-pro|*gʰabʰlos||fork, branch of tree}}.
 
 ====Noun====
 {{es-noun|f}}
@@ -20238,7 +20238,7 @@ Page 1010 jaiba: Found match for regex: =
 Page 1010 jaiba: -------- begin text ---------
 
 ===Etymology===
-From {{BAR|es|tnq}}.
+From {{bor|es|tnq}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -20375,7 +20375,7 @@ Page 1017 jarana: Found match for regex: =
 Page 1017 jarana: -------- begin text ---------
 
 ===Etymology===
-From {{m|es|arana||cheating}}, which is probably from {{BAR|es|qu}}.
+From {{m|es|arana||cheating}}, which is probably from {{der|es|qu}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -21006,7 +21006,7 @@ Page 1047 jíbaro: -------- begin text ---------
 * {{qualifier|obsolete}}: {{l|es|gíbaro}}
 
 ===Etymology===
-From a {{BAR|es|sai-jiv}} word meaning "person".
+From {{bor|es|sai-jiv|xivar||people}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -21015,9 +21015,9 @@ From a {{BAR|es|sai-jiv}} word meaning "person".
 {{es-noun|m|f=jíbara}}
 
 # [[Jivaroan]]
-# {{lb|es|Puerto Rico}} One of the original [[Canarian]] settlers of [[Puerto Rico]] who lived as [[farmer]]s in the [[mountainous]] regions.
-# {{lb|es|Puerto Rico}} An [[ignorant]] person from a [[rural]] area.
-# {{lb|es|Colombia|Venezuela}} A [[drug]] [[trafficker]].
+# {{lb|es|Puerto Rico}} one of the original [[Canarian]] settlers of [[Puerto Rico]] who lived as [[farmer]]s in the [[mountainous]] regions
+# {{lb|es|Puerto Rico}} an [[ignorant]] person from a [[rural]] area
+# {{lb|es|Colombia|Venezuela}} [[drug]] [[trafficker]]
 #: {{syn|es|narcotraficante}}
 
 ===Noun===
@@ -21096,7 +21096,7 @@ Page 1051 kimchi: Found match for regex: =
 Page 1051 kimchi: -------- begin text ---------
 
 ===Etymology===
-From {{BAR|es|ko}}.
+Borrowed from {{bor|es|ko|김치}}. See there for more information.
 
 ===Pronunciation===
 * {{es-IPA}}
