@@ -2592,7 +2592,7 @@ Page 123 cardelino: Found match for regex: =
 Page 123 cardelino: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|la|carduēlis}}.
+From {{af|es|cardēlis|lang1=la|-ino|pos2=diminutive}}, from a variant of {{m|la|carduēlis||goldfinch}}.
 
 ===Noun===
 {{es-noun|m}}
@@ -3277,7 +3277,7 @@ Page 154 cebar: Found match for regex: =
 Page 154 cebar: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|la|cibāre}}, present active infinitive of {{m|la|cibō}}.
+From {{inh|es|la|cibāre}}, present active infinitive of {{m|la|cibō}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -3325,7 +3325,7 @@ Page 155 cebo: -------- begin text ---------
 * {{homophones|es|sebo}} {{qualifier|non-Castilian dialects}}
 
 ===Etymology 1===
-From {{FOO|es|la|cibus||food, fodder}}. Compare {{cog|it|cibo||food}}.
+From {{inh|es|la|cibus||food, fodder}}. Compare {{cog|it|cibo||food}}.
 
 ====Noun====
 {{es-noun|m}}
@@ -4212,7 +4212,7 @@ Page 199 chichí: -------- begin text ---------
 #: {{syn|es|pipí|pichí}}
 
 ===Etymology 2===
-From {{bor|es|nah|chichi||suckle}}.
+From {{bor|es|nci|chichi||suckle}}.
 
 ===Noun===
 {{es-noun|m}}
@@ -4346,9 +4346,9 @@ Page 206 chiltoma: Found match for regex: =
 Page 206 chiltoma: -------- begin text ---------
 
 ===Etymology===
-Perhaps from {{FOO|es|nah|chiltotl}}, {{m|nah|chiltototl|chīltōtōtl|brightly-coloured bird}}, from {{m|nah|chilli|chīlli}} + {{m|nah|tototl|tōtōtl}}; compare {{m|nah|chiltic}}, {{m|nah|chichiltic|chīchīltic|the colour red}}.
+Perhaps from {{der|es|nci|chiltotl}}, {{m|nci|chīltōtōtl||brightly-coloured bird}}, from {{m|nci|chīlli}} + {{m|nci|tōtōtl}}; compare {{m|nci|chiltic}}, {{m|nnci|chīchīltic||the colour red}}.
 
-Alternatively, perhaps from {{m|nah|chilli||chili, pepper}} + {{m|nah|tomatl||tomatillo}}.<ref>William Woys Weaver, ''100 Vegetables and Where They Came From'' (2000, {{ISBN|1565122380}}, page 48: The word ''chiltoma'' (pronounced cheel-TOE-ma) is a term of Nahuatl origin that combines two separate words into one: ''chil'' (pepper) and ''tomatl'' (tomatillo).</ref>
+Alternatively, perhaps from {{m|nci|chilli||chili, pepper}} + {{m|nci|tomatl||tomatillo}}.<ref>William Woys Weaver, ''100 Vegetables and Where They Came From'' (2000, {{ISBN|1565122380}}, page 48: The word ''chiltoma'' (pronounced cheel-TOE-ma) is a term of Nahuatl origin that combines two separate words into one: ''chil'' (pepper) and ''tomatl'' (tomatillo).</ref>
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -6170,7 +6170,7 @@ Page 290 congrio: Found match for regex: =
 Page 290 congrio: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|la|conger}}, {{m|la|congri}}.
+From {{bor|es|la|conger}}, {{m|la|congri}}.
 
 ===Noun===
 {{es-noun|m}}
@@ -8477,7 +8477,7 @@ Page 414 desfigurar: Found match for regex: =
 Page 414 desfigurar: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|la|dis-}} + {{m|la|figura}}.
+From {{af|es|des-|figura|-ar}}.
 
 ===Verb===
 {{es-verb|desfigur|ar}}
@@ -8516,7 +8516,7 @@ Page 416 desleír: Found match for regex: =
 Page 416 desleír: -------- begin text ---------
 
 ===Etymology===
-{{FOO|es|la|delere}}, present active infinitive of {{m|la|dēleō}}.
+{{slbor|es|la|dēlēre}}, present active infinitive of {{m|la|dēleō||to destroy}}, adapted to {{af|es|des-}}.
 
 ===Verb===
 {{es-verb|desle|ír|pres=deslío}}
@@ -8532,7 +8532,7 @@ Page 417 despachar: Found match for regex: =
 Page 417 despachar: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|fro|despechier}} (compare modern {{m|fr|dépêcher}}).
+From {{bor|es|prv|despachar}}, from {{der|es|fro|despeechier||to remove impediments}} (compare modern {{cog|fr|dépêcher}}), from {{m|fro|des-}} + {{m|fro|empeechier||to obstruct, to impede}}, from {{der|es|LL.|impedicō||to impede}}, from {{m|la|pedica||shackle}}.
 
 ===Verb===
 {{es-verb|despach|ar}}
@@ -8541,7 +8541,7 @@ From {{FOO|es|fro|despechier}} (compare modern {{m|fr|dépêcher}}).
 # to [[send]] or [[ship]]
 # (''store'') to [[attend]] or [[serve]]
 # to [[dismiss]]
-#: ''"'''Despacharon''' los estudiantes"'' &mdash; ''"They '''dismissed''' the students"''
+#: {{uxi|es|'''Despacharon''' los estudiantes|They '''dismissed''' the students}}
 # to [[finish off]]
 # to [[kill off]]
 
@@ -8552,7 +8552,7 @@ Page 418 despechar: Found match for regex: =
 Page 418 despechar: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|la|dēspectāre}}, present active infinitive of {{m|la|dēspectō}}.
+From {{inh|es|la|dēspectāre}}, present active infinitive of {{m|la|dēspectō||to despise|lit=to look down upon}}.
 
 ===Verb===
 {{es-verb|despech|ar}}
@@ -8567,7 +8567,7 @@ Page 419 despecho: Found match for regex: =
 Page 419 despecho: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|la|despectus}}. Cognate with {{cog|en|despite}}.
+From {{inh|es|la|despectus}}. Cognate with {{cog|en|despite}}.
 
 ===Noun===
 {{es-noun|m}}
@@ -8583,7 +8583,7 @@ Page 420 despectivo: Found match for regex: =
 Page 420 despectivo: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|la|despectus}}. Cognate with {{cog|en|despised}}.
+From {{bor|es|ML.|dēspectīvus||disrespectful}}. Cognate with {{cog|en|despised}}.
 
 ===Adjective===
 {{es-adj|f=despectiva}}
@@ -8594,29 +8594,29 @@ Page 421 despedir: Found match for regex: =
 Page 421 despedir: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|la|de}} + {{m|la|expetere}}, from {{m|la|peto|petere}}.<ref>http://lema.rae.es/drae/?val=despedir Real Academia Española</ref>
+From {{der|es|osp|espedir||to ask to leave}}, influenced by {{af|es|des-}}, from {{m|la|expetō||to claim, to demand}}, from {{m|la|petō||to request, to seek}}.
 
 ===Verb===
 {{es-verb|desped|ir|pres=despido}}
 
-# to [[dismiss]].
-# to [[fire]] from a job.
-#: ''Está usted [[despedido]].''
-#:: You're fired.
-# {{lb|es|reflexive|with “de”}} to say [[goodbye]] (to someone).
+# to [[dismiss]]
+# to [[fire]] from a job
+#: {{ux|es|Está usted [[despedido]].|You're fired.}}
+# {{lb|es|reflexive|with “de”}} to say [[goodbye]] (to someone)
 #: {{ux|es|'''Despídete''' de ellos.|'''Say goodbye''' to them.}}
 
 ====Conjugation====
 {{es-conj-ir|desp|d|p=e-i|combined=1}}
 
 ===References===
-<references />
+* {{R:DRAE}}
+* {{R:es:Roberts:2014}}
 -------- end text --------
 Page 422 despejar: Found match for regex: =
 Page 422 despejar: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|pt|despejar}}, from {{m|pt|des-}} + {{m|pt|pejar}}, of obscure origin.
+From {{bor|es|pt|despejar}}, from {{m|pt|des-}} + {{m|pt|pejar}}, of obscure origin.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -8625,7 +8625,7 @@ From {{FOO|es|pt|despejar}}, from {{m|pt|des-}} + {{m|pt|pejar}}, of obscure ori
 {{es-verb|despej|ar}}
 
 # to [[clear]], to [[remove]]
-#: '''''Despejó''' todas las dudas.'' — “She [or "he" or "it"] removed all doubts.”
+#: {{uxi|es|'''Despejó''' todas las dudas.|She [or "he" or "it"] removed all doubts.}}
 # {{lb|es|reflexive}} to [[clear up]]
 # {{lb|es|reflexive}} to [[get away]], to [[leave]]
 # {{lb|es|reflexive}} to get a clear mind, clear one's thoughts
@@ -8640,7 +8640,7 @@ Page 423 desperdiciar: Found match for regex: =
 Page 423 desperdiciar: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|la|disperdere}}, present active infinitive of {{m|la|disperdō}}.
+From {{af|es|desperdicio|-ar}}, from {{der|es|LL.|disperditiō||losing}}, from {{der|es|la|disperdō||to lose completely}}.
 
 ===Verb===
 {{es-verb|desperdici|ar}}
@@ -8666,7 +8666,7 @@ Inflected form of {{m|es|despertar||to awake}}.
 # {{es-verb form of|ending=ar|mood=indicative|tense=present|pers=1|number=singular|despertar}}
 
 ===Etymology 2===
-From {{FOO|es|VL.|de}} + {{m|la|*expertus}} for {{FOO|es|la|experrectus}}.
+From {{der|es|la|dē-}} + {{der|es|VL.|*expertus}}, for {{der|es|la|experrēctus}}, past active participle of {{m|la|expergīscor||to awaken}}.
 
 ====Adjective====
 {{es-adj|f=despierta}}
@@ -8839,7 +8839,7 @@ Page 432 dialecto: Found match for regex: =
 Page 432 dialecto: -------- begin text ---------
 
 ===Etymology===
-Borrowed from {{bor|es|la|dialectos}}, from {{FOO|es|grc|διάλεκτος}}.
+Borrowed from {{bor|es|la|dialectos}}, from {{der|es|grc|διάλεκτος}}.
 
 ===Noun===
 {{es-noun|m}}
@@ -8856,7 +8856,7 @@ Page 433 diamante: -------- begin text ---------
 * {{es-IPA}}
 
 ===Etymology 1===
-From {{FOO|es|LL.|diamas}}, alteration of {{FOO|es|la|adamās}}, (see {{m|es|adamante}}), from {{FOO|es|grc|ἀδάμᾱς}} "unconquerable, invincible". More at [[diamond]].
+From {{der|es|fro|diamant}}, from {{der|es|la|adamās||hardest steel; diamond}} (genitive singular {{m|la|adamantis}}), influenced by {{m|grc|δια-}}; from {{der|es|grc|ἀδάμᾱς||unconquerable, invincible}}. More at {{cog|en|diamond}}.
 
 ====Noun====
 {{es-noun|m}}
@@ -8874,7 +8874,7 @@ From {{FOO|es|LL.|diamas}}, alteration of {{FOO|es|la|adamās}}, (see {{m|es|ada
 {{table:suits/es}}
 
 ===Etymology 2===
-A [[calque]] of {{FOO|es|nl|diamant}}, used by {{w|Dirck Voskens}} who first cut it around 1700, presumably naming it by analogy with the larger [[pearl]].
+{{cal|es|nl|diamant}}, used by {{w|Dirck Voskens}} who first cut it around 1700, presumably naming it by analogy with the larger [[pearl]].
 
 ====Noun====
 {{es-noun|m}}
@@ -10844,7 +10844,7 @@ Page 528 enflaquecer: Found match for regex: =
 Page 528 enflaquecer: -------- begin text ---------
 
 ===Etymology===
-From {{af|es|en-|flaco|t2=thin|-ecer}}, from {{FOO|es|la|flaccus}}.
+From {{af|es|en-|flaco|t2=thin|-ecer}}, from {{der|es|la|flaccus}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -10950,7 +10950,7 @@ Page 533 ensañar: Found match for regex: =
 Page 533 ensañar: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|la|insania}}.
+From {{inh|es|VL.|*īnsāniāre}}, from {{m|la|īnsānia||craziness}}, from {{m|la|sānus||sane}}.
 
 ===Verb===
 {{es-verb|ensañ|ar}}
@@ -10966,7 +10966,7 @@ Page 534 entenebrecer: Found match for regex: =
 Page 534 entenebrecer: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|la|tenebrescere|gloss=darken}}, originally from [[tenebra]] (''darkness'').
+From {{af|es|en-}} + {{der|es|la|tenebrēscō||to darken, to become dark}} (a borrowing), from {{m|la|tenebrae||darkness}}. Compare inherited {{cog|es|tinieblas}}.
 
 ===Verb===
 {{es-verb|entenebrec|er|pres=entenebrezco}}
@@ -10986,7 +10986,7 @@ Page 535 enteritis: -------- begin text ---------
 {{wikipedia|lang=es}}
 
 ===Etymology===
-From {{FOO|es|grc|ἔντερον||intestine}}, {{suffix|es||itis}}.
+From {{der|es|grc|ἔντερον||intestine}} {{suffix|es||itis}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -11018,8 +11018,7 @@ Page 537 enterobiasis: -------- begin text ---------
 {{wikipedia|lang=es}}
 
 ===Etymology===
-From [[Enterobius]], from {{prefix|es|entero|bium}} (these from {{FOO|es|grc|ἔντερον||intestine}}, + {{m|grc|βίος||life}}) + {{m|grc|-σις||action, process}}.
-<!-- {{suffix||cito|lang=es}}.-->
+From {{af|es|lang1=mul|Enterobius|t1=genus of pinworms|-iasis}}, from {{der|es|grc|ἔντερον||intestine}} + {{m|grc|βίος||life}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -11028,15 +11027,13 @@ From [[Enterobius]], from {{prefix|es|entero|bium}} (these from {{FOO|es|grc|ἔ
 {{es-noun|m|enterobiasis}}
 
 # {{lb|es|cytology}} {{l|en|enterobiasis}}
-
-[[Category:Spanish words suffixed with -sis]]
 -------- end text --------
 Page 538 enterocito: Found match for regex: {
 Page 538 enterocito: -------- begin text ---------
 {{wikipedia|lang=es}}
 
 ===Etymology===
-From {{FOO|es|grc|ἔντερον||intestine}}, {{suffix|es||cito}}.
+From {{der|es|grc|ἔντερον||intestine}}, {{suffix|es||cito}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -11284,7 +11281,7 @@ Page 553 epistolar: Found match for regex: =
 Page 553 epistolar: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|la|epistularis|epistolāris}}, from {{m|es|epistola}} "letter".
+From {{bor|es|la|epistolāris}}, from {{m|es|epistola||letter}}, from {{der|es|grc|ἐπιστολή||message, letter}}.
 
 ===Adjective===
 {{es-adj|pl=epistolares}}
@@ -11457,7 +11454,7 @@ Page 562 equinodermo: -------- begin text ---------
 {{wikipedia|lang=es}}
 
 ===Etymology===
-From the phylum name {{m|es|Echinodermata}}, from {{FOO|es|grc|ἐχῖνος||hedgehog, sea urchin}} + {{m|grc|δέρμα||skin, hide}}.
+From {{der|es|la|echinoderma}} (compare the phylum name {{m|mul|Echinodermata}}), from {{der|es|grc|ἐχῖνος||hedgehog, sea urchin}} + {{m|grc|δέρμα||skin, hide}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -11791,7 +11788,7 @@ Page 578 escandir: Found match for regex: =
 Page 578 escandir: -------- begin text ---------
 
 ===Etymology===
-{{FOO|es|la|scandō}}.
+From {{bor|es|LL.|scandō||to scan (verses)}}, from {{der|es|la|scandō||to climb}}.
 
 ===Verb===
 {{es-verb|escand|ir}}
@@ -11805,7 +11802,7 @@ Page 579 escapulario: Found match for regex: =
 Page 579 escapulario: -------- begin text ---------
 
 ===Etymology===
-From {{bor|es|la|scapulāris}}, referencing the back.
+From {{bor|es|la|scapulāris||of the back}}.
 
 ===Noun===
 {{es-noun|m}}
@@ -11822,7 +11819,7 @@ Page 580 escarabajo: Found match for regex: =
 Page 580 escarabajo: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|VL.|scarabaius}}, from {{FOO|es|la|scarabaeus}} "beetle", from {{FOO|es|grc|κάραβος}} "beetle". Cognate with {{cog|en|scarab}}.
+From {{inh|es|osp|escaravayo}}, from {{inh|es|VL.|*scarabaius}}, from {{inh|es|la|scarabaeus||scarab, beetle}}, from {{der|es|grc|κάραβος||crab, beetle}}. Cognate with {{cog|en|scarab}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -11863,12 +11860,12 @@ Page 582 escarmiento: Found match for regex: =
 Page 582 escarmiento: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|osp|escarnir}}.
+Apocope of {{m|es|escarnimiento}}, from {{der|es|osp|escarnir||to mock}}, from {{der|es|VL.|*scarnīre}}, from a hypothetical {{der|es|got|tr=*skaírnjan}}. 
 
 ===Noun===
 {{es-noun|m}}
 
-# [[punishment]], [[example]]
+# [[punishment]], [[warning]], [[lesson]]
 
 ====Related terms====
 * {{l|es|escarmentar}}
@@ -11886,7 +11883,7 @@ Page 583 escatología: -------- begin text ---------
 
 ===Etymology 1===
 {{wikipedia|lang=es|Escatología (religión)|Escatología}}
-From {{FOO|es|grc|ἔσχατος||last}} {{suffix|es||logía}}.
+From {{der|es|grc|ἔσχατος||last}} {{suffix|es||logía}}.
 
 ====Noun====
 {{es-noun|f|-}}
@@ -11898,7 +11895,7 @@ From {{FOO|es|grc|ἔσχατος||last}} {{suffix|es||logía}}.
 
 ===Etymology 2===
 {{wikipedia|lang=es|Escatología (fisiología)|Escatología}}
-From {{FOO|es|grc|σκῶρ}}, σκατός (''skatos'', “excrement”) {{suffix|es||logía}}.
+From {{der|es|grc|σκῶρ||excrement}} (genitive singular {{m|grc|σκατός}}) {{suffix|es||logía}}.
 
 ====Noun====
 {{es-noun|f|-}}
@@ -11987,7 +11984,7 @@ Page 588 esclarecer: Found match for regex: =
 Page 588 esclarecer: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|la|ex-}} + {{m|la|clārēscere}}, present active infinitive of {{m|la|clārēscō}}.
+From {{af|es|es-|clarecer}}, from {{der|es|la|clārēscere}}, present active infinitive of {{m|la|clārēscō}}.
 
 ===Verb===
 {{es-verb|esclarec|er|pres=esclarezco}}
@@ -12649,7 +12646,7 @@ Page 623 estampida: Found match for regex: =
 Page 623 estampida: -------- begin text ---------
 
 ===Etymology===
-Borrowed from {{BAR|es|oc}} or {{BAR|es|pro}} {{m|oc|estampida}}, from {{m|oc|estampier}}, from {{FOO|es|got|𐍃𐍄𐌰𐌼𐍀𐌾𐌰𐌽}}, from {{FOO|es|gem-pro|*stampōną}}, from {{FOO|es|ine-pro|*stembʰ-||to trample down}}.
+Borrowed from {{bor|es|oc|estampida}}, from {{m|oc|estampier}}, from {{der|es|got|𐍃𐍄𐌰𐌼𐍀𐌾𐌰𐌽}}, from {{der|es|gem-pro|*stampōną}}, from {{der|es|ine-pro|*stembʰ-||to trample down}}.
 
 ===Noun===
 {{es-noun|f}}
@@ -13046,7 +13043,7 @@ Page 644 estuche: Found match for regex: =
 Page 644 estuche: -------- begin text ---------
 
 ===Etymology===
-From {{bor|es|oc|estug}}, of {{BAR|es|gem}} origin, compare {{cog|gmh|stūche}}.
+From {{bor|es|oc|estug}}, of {{der|es|gem|-}} origin, compare {{cog|gmh|stūche}}.
 
 ===Pronunciation===
 * {{rhymes|es|utʃe}}
@@ -14412,7 +14409,7 @@ From {{bor|es|nl|Vlaming}}.
 {{es-adj|f=flamenca}}
 
 # [[Flemish]]
-# {{lb|es|attributive}} {{l|en|flamenco}}
+# {{lb|es|relational}} {{l|en|flamenco}}
 # {{lb|es|colloquial}} [[insolent]], [[cheeky]]
 
 ===Noun===
@@ -14737,17 +14734,17 @@ Page 732 Florio: Found match for regex: =
 Page 732 Florio: -------- begin text ---------
 
 ===Etymology===
-''Florio'' and {{m|es|Floria}} stem from the {{FOO|es|la|Florius}}/{{m|la|Floria}}, which are derived from the Latin proper name {{m|la|Florus}}.
-
-Cognates include: {{cog|es|Floro}}, {{cog|la|Flora}}.
+A variant of {{m|es|Floro}}, a pseudo-Latinism.
 
 ===Proper noun===
 {{es-proper noun|m}}
 
-# {{given name|es|male}}.
+# {{given name|es|male}}
 
 ====Related terms====
 * {{l|es|Floria}}
+
+{{cln|es|pseudo-Latinisms}}
 -------- end text --------
 Page 733 Floro: Found match for regex: =
 Page 733 Floro: -------- begin text ---------
@@ -15942,7 +15939,7 @@ Page 789 garrapata: Found match for regex: =
 Page 789 garrapata: -------- begin text ---------
 
 ===Etymology===
-From {{inh|es|osp|caparra}} (< {{FOO|es|VL.|*crabrus}} < {{m|la|crābrō||hornet}}), or of pre-Roman origin.
+Per Roberts, probably a metathesis and apocope of {{m|es|*gacaparrata}}, from {{der|es|osp|caparra}}, of pre-Roman origin; compare {{cog|eu|gaparra}}, {{m|eu|kaparra||bramble}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -15984,7 +15981,7 @@ Page 791 gaseoducto: -------- begin text ---------
 {{wikipedia|lang=es}}
 
 ===Etymology===
-From {{m|es|gas||gas}} and {{FOO|es|la|ductus||conducting}}; formed in analogy with {{m|es|oleoducto||oil pipeline}}.
+From {{m|es|gas||gas}} and {{der|es|la|ductus||conducting}}; formed in analogy with {{m|es|oleoducto||oil pipeline}}.
 
 ===Noun===
 {{es-noun|m}}
@@ -15996,7 +15993,7 @@ Page 792 gasoducto: -------- begin text ---------
 {{wikipedia|lang=es}}
 
 ===Etymology===
-From {{m|es|gas||gas}} and {{FOO|es|la|ductus||conducting}}; formed according to the model of {{m|es|oleoducto||oil pipeline}}.
+From {{m|es|gas||gas}} and {{der|es|la|ductus||conducting}}; formed according to the model of {{m|es|oleoducto||oil pipeline}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -16060,7 +16057,7 @@ Page 796 gañivete: Found match for regex: =
 Page 796 gañivete: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|fr|canif||penknife}}.
+From {{der|es|fro|canivet}}, from late {{der|es|ang|cnīf||knife}} + {{m|fro|-et}}, from {{der|es|non|knívr}}, from {{der|es|gem-pro|*knībaz}}.
 
 ===Noun===
 {{es-noun|m}}
@@ -16194,7 +16191,7 @@ Page 803 gerifalte: -------- begin text ---------
 [[Image:Falco_rusticolus.jpg|thumb|gerifalte]]
 
 ===Etymology===
-From {{FOO|es|fro|girfaut}}, {{m|fro|gerfault}} or Provencal {{m|oc|gerfalt}}, {{m|oc|gerfalc}}, both from Old Norse {{FOO|es|non|geirfalki}}, from {{m|non|geiri}} (a type of dart) + {{m|non|falki}} (a hawk, because of the resemblance to the bird's plumage).
+From {{der|es|fro|girfaut}}, {{m|fro|gerfault}} or {{der|es|prv|gerfalt}}, {{m|oc|gerfalc}}, both from {{der|es|non|geirfalki}}, from {{m|non|geiri||a type of dart}} + {{m|non|falki||hawk}} (because of the resemblance to the bird's plumage).
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -16217,7 +16214,7 @@ Page 804 Germán: Found match for regex: =
 Page 804 Germán: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|la|germānus||brother}} or {{m|la|Germānus||man from Germania}}. Cognate with {{cog|fr|Germain|}}.
+Probably a blend of {{der|es|la|germānus||brother}} with {{der|es|gem|-}}, from {{der|es|frk|*werru||quarrel, war}} + {{m|gmw-pro|*mann||man}}. Cognate with {{cog|fr|Germain}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -16225,7 +16222,7 @@ From {{FOO|es|la|germānus||brother}} or {{m|la|Germānus||man from Germania}}. 
 ===Proper noun===
 {{es-proper noun|m}}
 
-# {{given name|es|male}}, in Spanish speaking countries.
+# {{given name|es|male}}, in Spanish speaking countries
 
 ====See also====
 * [[Gershu]]
@@ -16242,9 +16239,7 @@ From {{bor|es|la|gerundium}}.
 ===Noun===
 {{es-noun|m}}
 
-# {{lb|es|grammar}} A certain [[impersonal]] form of a [[verb]] in various languages.
-# {{lb|es|grammar}} ''Specifically,'' a Spanish verbal adjective, ending in ''-ando'', ''-iendo'', or ''-yendo''.
-# {{lb|es|grammar}} ''Specifically,'' a Latin [[gerund]].
+# {{lb|es|grammar}} [[gerund]], [[present participle]]
 
 ===References===
 * {{R:DRAE 2001}}
@@ -16640,7 +16635,7 @@ Page 827 greña: Found match for regex: =
 Page 827 greña: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|osp|greñon}}, from {{FOO|es|ML.|*grennio}}, {{m|la|grennionis}}, from {{BAR|es|cel}} {{m|la|*green||facial hair}}, from {{FOO|es|ine-pro|*gʰregʰwos||grey}}.
+Back-formation from {{der|es|osp|greñon}}, from {{der|es|ML.|*grenniō}}, {{m|la|grenniōnis}}, ultimately from {{der|es|cel-pro|*grendo-||mustache, beard}}, from {{der|es|ine-pro|*gʰren-|t=facial hair}}. Compare {{cog|mga|grend}}, {{cog|ga|greann}}.
 
 ===Noun===
 {{es-noun|f}}
@@ -16741,7 +16736,7 @@ Page 832 guaje: Found match for regex: =
 Page 832 guaje: -------- begin text ---------
 
 ===Etymology===
-From {{bor|es|nah|uaxin}}.
+From {{bor|es|nci|huāxin}}.
 
 ===Adjective===
 {{es-adj|mf}}
@@ -16760,7 +16755,7 @@ Page 833 guajillo: Found match for regex: =
 Page 833 guajillo: -------- begin text ---------
 
 ===Etymology===
-From {{af|es|lang1=nah|huaxin|-illo}}.
+From {{af|es|lang1=nci|huāxin|-illo}}.
 
 ===Noun===
 {{es-noun|m}}
@@ -16805,7 +16800,7 @@ Page 835 guamil: Found match for regex: =
 Page 835 guamil: -------- begin text ---------
 
 ===Etymology===
-From {{bor|es|nah|huac-milli||dry field}}.
+From {{bor|es|nci|huac-milli||dry field}}.
 
 ===Noun===
 {{es-noun|m|guamiles}}
@@ -16835,7 +16830,7 @@ Page 837 guanche: -------- begin text ---------
 {{wikipedia|lang=es}}
 
 ===Etymology===
-From {{FOO|es|gnc|guanchinet|}}, from {{m|gnc|guan||person}} + {{m|gnc|Chinet||Tenerife}}, referring originally to [[Tenerife]] island inhabitants.
+From {{der|es|gnc|guanchinet}}, from {{m|gnc|guan||person}} + {{m|gnc|Chinet||Tenerife}}, referring originally to [[Tenerife]] island inhabitants.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -16943,7 +16938,7 @@ Page 842 guarén: Found match for regex: =
 Page 842 guarén: -------- begin text ---------
 
 ===Etymology===
-From {{BAR|es|arn}}.
+From {{bor|es|arn}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -16959,7 +16954,7 @@ Page 843 guasa: Found match for regex: =
 Page 843 guasa: -------- begin text ---------
 
 ===Etymology===
-From {{BAR|es|car}} slang.
+From {{bor|es|car}} slang.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -16982,7 +16977,7 @@ Page 844 gubia: Found match for regex: =
 Page 844 gubia: -------- begin text ---------
 
 ===Etymology===
-From {{der|es|LL.|gulbia}}, {{m|la|gubia}}, from {{BAR|es|cel-gau}}. Compare {{cog|mga|gulba||beak}}. Cognate with {{cog|en|gouge}}.
+From {{der|es|LL.|gulbia}}, {{m|la|gubia}}, from {{der|es|cel-gau|*gulbiā}}, from {{der|es|cel-pro|*gulbā}}, {{m|cel-pro|*gulbīnos||beak, bill}}. See the late term for more information. Compare {{cog|mga|gulba||beak}}, {{cog|en|gouge}}.
 
 ===Noun===
 {{es-noun|f}}
@@ -19679,7 +19674,7 @@ Page 982 insecto: Found match for regex: =
 Page 982 insecto: -------- begin text ---------
 
 ===Etymology===
-Borrowed from {{FOO|es|la|insectus}}.
+Borrowed from {{bor|es|la|īnsecta||insects}} (attested in Pliny only in the plural), a calque of {{m|grc|ἔντομα||insects|lit=dissected}}, from their segmented bodies, from {{m|grc|εν-}} + {{m|grc|τόμος||slice}}; calqued based on {{m|la|īnsectus||notched, dissected}}, past passive participle of {{m|la|īnsecō}}.
 
 ===Noun===
 {{es-noun|m}}
@@ -19915,7 +19910,7 @@ Page 994 iridio: -------- begin text ---------
 {{elements|es|Ir|osmio|Os|platino|Pt}}
 
 ===Etymology===
-From {{FOO|es|la|Īris}}, from {{FOO|es|grc|Ἶρις||Iris}}, goddess of [[rainbow]]s, {{suffix|es||io}}, iridium was named after her for its colorful compounds.
+From {{bor|es|NL.|īridium}}, from {{der|es|la|Īris||Iris, goddess of rainbows}} (genitive singular {{m|la|Īridis}}), from {{der|es|grc|Ἶρις}}, due to the bright color of many of its salts}}; cf. also {{af|es|-io}}, element-forming suffix.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -21998,7 +21993,7 @@ Page 1100 litio: -------- begin text ---------
 {{elements|es|Li|helio|He|berilio|Be}}
 
 ===Etymology===
-From {{FOO|es|grc|λίθος||stone}} {{suffix|es||io}}, to reflect the element's discovery in solid mineral, as opposed to [[potassium]], discovered in plant ashes, and [[sodium]], often found in animal blood.
+From {{bor|es|NL.|lithium}}, from {{der|es|grc|λίθος||stone}} {{suffix|es||io}}, to reflect the element's discovery in solid mineral, as opposed to [[potassium]], discovered in plant ashes, and [[sodium]], often found in animal blood.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -22254,7 +22249,7 @@ Page 1115 luto: Found match for regex: =
 Page 1115 luto: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|la|lūctus}}.
+Probably a {{slbor|es|la|lūctus|nocap=1}}, rather than an inheritance.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -22350,7 +22345,7 @@ Page 1120 machar: Found match for regex: =
 Page 1120 machar: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|la|marculus}}, diminutive of {{m|la|marcus||hammer}}, related to {{m|la|malleus||mallet}}.
+From {{af|es|macho|t1=sledgehammer|-ar}}, from {{der|es|la|marculus||hammer}}, possibly a diminutive of {{m|la|marcus||hammer}}, although the latter is attested late and may be a back-formation from {{m|la|marculus}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -22386,7 +22381,7 @@ Page 1122 macizo: Found match for regex: =
 Page 1122 macizo: -------- begin text ---------
 
 ===Etymology===
-{{FOO|es|la|massa}} + {{m|es|-izo}}.
+From a hypothetical earlier {{m|es||*massizo}}, from {{inh|es|VL.|*massīcius}} (compare {{cog|fro|massiz}}, {{cog|pt|maciço}}, {{cog|ca|massís}}, {{cog|it|massicio}}), from {{der|es|la|massa||mass}}, from {{der|es|grc|μᾶζα||barley cake}}; see there for more information.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -22482,7 +22477,7 @@ Page 1127 maledicencia: Found match for regex: =
 Page 1127 maledicencia: -------- begin text ---------
 
 ===Etymology===
-{{FOO|es|la|maledīcō||to speak badly of}}
+From {{bor|es|la|maledīcentia||speaking badly of}}, from {{m|la|maledīcō||to speak badly of}}.
 
 ===Noun===
 {{es-noun|f}}
@@ -22523,7 +22518,7 @@ Page 1130 malvavisco: Found match for regex: =
 Page 1130 malvavisco: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|la|malva}} + {{m|la|hibiscum}}. From ''malva'' come English {{m|en|mallow}} and {{m|en|mauve}}. From ''hibiscum'' comes English {{m|en|hibiscus}}.
+From {{bor|es|ML.|malvaviscus}}, from {{der|es|la|malva||mallow}} + {{m|la|hibiscum||marshmallow}}, from {{der|es|grc|ἱβίσκος}}. Cognate with {{cog|en|mallow}}, {{m|en|mauve}}, {{m|en|hibiscus}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -23152,7 +23147,7 @@ Page 1159 Marsella: -------- begin text ---------
 {{wikipedia|lang=es}}
 
 ===Etymology===
-See {{FOO|es|fr|Marseille}}
+Ultimately from {{der|es|la|Massilia}}, from {{der|es|grc|Μασσαλία}}. See {{cog|fr|Marseille}} for more information.
 
 ===Proper noun===
 {{es-proper noun|f}}
@@ -23209,7 +23204,7 @@ Page 1162 Martín: Found match for regex: =
 Page 1162 Martín: -------- begin text ---------
 
 ===Etymology===
-{{FOO|es|la|Martinus||of or like Mars" or "little Mars}}, {{m|la|Mars|Mars, Martis}} + {{m|la|-inus}} (diminutive suffix.
+Ultimately from {{der|es|la|Mārtīnus|lit=of or like Mars}}, from {{m|la|Mārs}} (genitive singular {{m|la|Mārtis}}) + {{m|la|-īnus}}. Probably derived from {{der|es|fro|Martin}}, after {{w|Martin of Tours}}, due to the lack of expected final ''-o''.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -23232,7 +23227,7 @@ Page 1163 Marín: Found match for regex: =
 Page 1163 Marín: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|la|marinus}}.
+Ultimately from {{der|es|la|marīnus||marine, of the sea}}. The reason for the lack of expected final ''-o'' is unclear.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -23618,13 +23613,12 @@ Page 1182 Mecayapan: -------- begin text ---------
 * {{l|es|Mecayapa}} (''obsolete'')
 
 ===Etymology===
-From {{BAR|es|nah}}.
+From {{bor|es|nci}}.
 
 ===Proper noun===
 {{head|es|proper nouns}}
 
-# The town of [[Mecayapan#English|Mecayapan]].
-# The municipality of the same name.
+# {{place|es|municipality/and/city|s/Veracruz|c/Mexico|t=Mecayapan}}
 -------- end text --------
 Page 1183 mediocridad: Found match for regex: =
 Page 1183 mediocridad: -------- begin text ---------
@@ -24135,7 +24129,7 @@ Page 1212 milanesa: -------- begin text ---------
 {{wikipedia}}
 
 ===Etymology===
-See {{FOO|es|it|Milano}}.
+Literally, "Milanese". Feminine due to a {{cal|es|it|([[cotoletta]] [[alla]]) [[milanese]]|nocap=1|lit=cutlet Milanese style}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -24287,7 +24281,7 @@ Page 1220 mitote: -------- begin text ---------
 {{wikipedia|lang=es}}
 
 ===Etymology===
-From {{bor|es|nah|mihtotl||dance}}.
+From {{bor|es|nci|mihtotl||dance}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -27570,7 +27564,7 @@ Page 1382 oyamel: -------- begin text ---------
 {{wikipedia|lang=es}}
 
 ===Etymology===
-From a {{BAR|es|nah}} source, cf. {{cog|nci|oyametl}}.
+From a {{bor|es|nah|-}} source, cf. {{cog|nci|oyametl}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -27765,7 +27759,7 @@ Page 1392 paliacate: Found match for regex: =
 Page 1392 paliacate: -------- begin text ---------
 
 ===Etymology===
-From {{der|es|nah|pal||color}} + {{m|nah|yacatl||nose}}.
+From {{der|es|nci|pal||color}} + {{m|nci|yacatl||nose}}.
 
 ===Noun===
 {{es-noun|m}}
@@ -28376,7 +28370,7 @@ Page 1424 paxte: Found match for regex: =
 Page 1424 paxte: -------- begin text ---------
 
 ===Etymology===
-{{BAR|es|nah}}
+From {{bor|es|nci}}.
 
 ===Noun===
 {{es-noun|m}}
@@ -28406,7 +28400,7 @@ From {{af|es|paño|-ero}}, from {{der|es|la|pannus}}.
 ===Adjective===
 {{es-adj|f=pañera}}
 
-# {{lb|es|attributive}} [[textile]], [[cloth]]
+# {{lb|es|relational}} [[textile]], [[cloth]]
 
 ===Further reading===
 * {{R:DRAE 2001}}
@@ -29532,7 +29526,7 @@ Borrowed from {{bor|es|qu|pishku}}, {{m|qu|pisqu}}.
 # {{female equivalent of|es|pisco|t=turkey}}
 
 ===Etymology 2===
-From {{BAR|es|nah}} {{m|nci|pixca}}.<ref>[http://lema.rae.es/damer/?key=pixca ASALE]</ref>
+From {{bor|es|nci|pixca}}.<ref>[http://lema.rae.es/damer/?key=pixca ASALE]</ref>
 
 ====Noun====
 {{es-noun|m}}
@@ -31234,7 +31228,7 @@ Page 1576 pulpo: -------- begin text ---------
 {{wikipedia|lang=es}}
 
 ===Etymology===
-From {{FOO|es|la|polypūs||cuttlefish, polyp}} (compare {{cog|ca|polp}}, {{m|ca|pop}}, {{cog|fr|poulpe}}, {{cog|gl|polbo}}, {{cog|it|polpo}}, {{cog|pt|polvo}}), from a variant of {{FOO|es|grc|πολύπους|lit=many footed}}, from {{m|grc|πολύς||many}} + {{m|grc|πούς||foot}}. {{doublet|es|pólipo}}.
+From {{inh|es|la|polypūs||cuttlefish, polyp}} (compare {{cog|ca|polp}}, {{m|ca|pop}}, {{cog|fr|poulpe}}, {{cog|gl|polbo}}, {{cog|it|polpo}}, {{cog|pt|polvo}}), from a variant of {{der|es|grc|πολύπους|lit=many footed}}, from {{m|grc|πολύς||many}} + {{m|grc|πούς||foot}}. {{doublet|es|pólipo}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -32226,7 +32220,7 @@ Page 1625 rebeco: Found match for regex: =
 Page 1625 rebeco: -------- begin text ---------
 
 ===Etymology===
-From earlier {{m|es|rebezo}} (1475), {{m|es|robezo}} (1434), from Old Spanish {{m|osp|ueko}}, from {{FOO|es|LL.|hybicum}}, from {{FOO|es|la|ibex}}; influenced by Old Spanish {{m|es|reveso|revesso}} ‘feisty, untamed’.<ref>"Etimología de ''rebeco'' ‘gamuza’ y de ''reveso'' ‘rebeco’ y ‘(pez) rémora’", ''Boletin de la Real Academia Española'', 81 (2001), 223-53.</ref>
+From earlier {{m|es|rebezo}} (1475), {{m|es|robezo}} (1434), from a cross between {{der|es|osp|ueco}} (attested in Navarre in the 11th century) and {{m|osp|revesso}}, {{m|osp|reveso}}, {{m|osp|revezo||untamed, rebel}}. The former is from {{der|es|LL.|hybicum}}, from {{der|es|la|ibex}}; the latter's origin is {{unk|es|nocap=1}}.<ref>"Etimología de ''rebeco'' ‘gamuza’ y de ''reveso'' ‘rebeco’ y ‘(pez) rémora’", ''Boletin de la Real Academia Española'', 81 (2001), 223-53.</ref>
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -32294,7 +32288,7 @@ Page 1628 rebullir: Found match for regex: =
 Page 1628 rebullir: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|la|rebullīre}}.
+From {{inh|es|la|rebullīre}}.
 
 ===Verb===
 {{es-verb|rebull|ir}}
@@ -32308,7 +32302,7 @@ Page 1629 rebuznar: Found match for regex: =
 Page 1629 rebuznar: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|VL.|*rebucinare}}, from {{FOO|es|la|re-}} + {{m|la|bucinare}}.
+From {{inh|es|VL.|*rebūcināre}}, from {{der|es|la|re-}} + {{m|la|būcinō||to sound a trumpet}}, from {{m|la|būcina||bugle, war trumpet}}.
 
 ===Verb===
 {{es-verb|rebuzn|ar}}
@@ -32329,7 +32323,7 @@ Page 1630 recinto: Found match for regex: =
 Page 1630 recinto: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|la|re-}} + {{m|la|cinctus||surrounded}}.
+From {{der|es|la|re-}} + {{m|la|cīnctus||surrounded}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -32349,12 +32343,12 @@ Page 1631 reclusión perpetua: Found match for regex: =
 Page 1631 reclusión perpetua: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|la|reclusio perpetua||permanent imprisonment}}.
+Literally, "permanent imprisonment".
 
 ===Noun===
 {{es-noun|f|head=[[reclusión]] [[perpetua]]|reclusiones perpetuas}}
 
-# a particular kind of sentence of [[imprisonment]] in the Philippines, Argentina, and several other countries.
+# a particular kind of sentence of [[imprisonment]] in the Philippines, Argentina, and several other countries
 -------- end text --------
 Page 1632 recolar: Found match for regex: =
 Page 1632 recolar: -------- begin text ---------
@@ -32378,7 +32372,7 @@ Page 1633 recuadrar: Found match for regex: =
 Page 1633 recuadrar: -------- begin text ---------
 
 ===Etymology===
-{{FOO|es|la|quadrare}}.
+From {{af|es|recuadro|-ar}}, from {{der|es|la|re-}} + {{m|la|quadrus||square}}, possibly a back-formation from {{m|la|quadrō||to make square, to put in order, to accord}}.
 
 ===Verb===
 {{es-verb|recuadr|ar}}
@@ -32442,7 +32436,7 @@ Page 1637 regaliz: Found match for regex: =
 Page 1637 regaliz: -------- begin text ---------
 
 ===Etymology===
-By [[metathesis]] from {{FOO|es|LL.|liquiritia}}, from {{FOO|es|grc|γλυκύρριζα||sweet root}}
+By [[metathesis]] from {{der|es|LL.|liquirītia}}, from {{der|es|grc|γλυκύρριζα||sweet root}}, influenced by {{m|la|liquor||liquid}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -32464,7 +32458,7 @@ Page 1638 regatear: Found match for regex: =
 Page 1638 regatear: -------- begin text ---------
 
 ===Etymology===
-From {{m|es|recatear}}, from {{m|es|recatar}}, from {{FOO|es|VL.|*recaptare}}, from {{FOO|es|la|re}} + {{m|la|captare||to take}}.
+From {{m|es|recatear}}, from {{m|es|recatar}}, from {{der|es|VL.|*recaptāre}}, from {{der|es|la|re-}} + {{m|la|captō||to take}}.
 
 ===Verb===
 {{es-verb|regate|ar}}
@@ -32486,7 +32480,7 @@ Page 1639 regente: -------- begin text ---------
 {{wikipedia|lang=es}}
 
 ===Etymology===
-Borrowed from {{FOO|es|la|regente}}, singular ablative of {{m|la|regens|regēns}}.
+Borrowed from {{bor|es|la|regēns}} (genitive singular {{m|la|regentis}}).
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -32520,7 +32514,7 @@ Page 1640 rehusar: -------- begin text ---------
 * {{homophones|es|reusar}}
 
 ===Etymology===
-From {{FOO|es|VL.|*refusāre}}, present active infinitive of {{m|la|*refusō}}, from a blend of {{etyl|la|fr}} {{m|la|refutō}} and {{m|la|recusō}}.
+From {{inh|es|VL.|*refūsāre}}, present active infinitive of {{m|la|*refūsō}}, from a blend of {{der|es|la|refūtō}} and {{m|la|recūsō}}.
 
 ===Verb===
 {{es-verb|rehus|ar|pres=rehúso}}
@@ -32534,7 +32528,7 @@ Page 1641 rehén: Found match for regex: =
 Page 1641 rehén: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|ar|رَهِين}}.
+From {{der|es|ar|رَهِين}}.<!-- may be inherited through Old Spanish and filtered through Andalusian Arabic -->
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -32644,7 +32638,7 @@ Page 1647 rencor: Found match for regex: =
 Page 1647 rencor: -------- begin text ---------
 
 ===Etymology===
-From {{m|es|rancor}}, from {{FOO|es|la|rancor}}, {{m|la|rancoris}}.
+From {{m|es|rancor}}, from {{der|es|la|rancor}} (genitive singular {{m|la|rancōris}}).
 
 ===Pronunciation===
 * {{rhymes|es|oɾ}}
@@ -32664,7 +32658,7 @@ Page 1648 renegar: Found match for regex: =
 Page 1648 renegar: -------- begin text ---------
 
 ===Etymology===
-{{FOO|es|ML.|renegare}}, from {{FOO|es|la|re-}} + {{m|la|negare}}
+From {{bor|es|ML.|renegāre}}, present active infinitive of {{m|la|renegō}}, from {{der|es|la|re-}} + {{m|la|negō||to deny}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -32759,7 +32753,7 @@ Page 1652 resolver: Found match for regex: =
 Page 1652 resolver: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|la|resolvere}}, present active infinitive of {{m|la|resolvō}}. Cognate with {{cog|en|resolve}}.
+From {{bor|es|la|resolvere}}, present active infinitive of {{m|la|resolvō}}. Cognate with {{cog|en|resolve}}.
 
 ===Verb===
 {{es-verb|resolv|er|pres=resuelvo|part=resuelto}}
@@ -32782,7 +32776,7 @@ Page 1653 resorte: Found match for regex: =
 Page 1653 resorte: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|fr|ressort}}.
+From {{bor|es|fr|ressort}}.
 
 ===Noun===
 {{es-noun|m}}
@@ -32903,7 +32897,7 @@ Page 1660 retortijón: Found match for regex: =
 Page 1660 retortijón: -------- begin text ---------
 
 ===Etymology===
-From {{m|es|retortijar}}, from {{m|es|re-}} + {{BAR|es|VL.}} *''tortiliāre'', from {{FOO|es|la|tortilis||twisted, coiled}}. Cf. French {{m|fr|tortiller}}, Italian {{m|it|tortiglione}}.
+From {{af|es|retortijar|-ón}}, from {{m|es|re-}} + {{der|es|VL.|*tortiliāre}}, from {{der|es|la|tortilis||twisted, coiled}}. Cf. {{cog|fr|tortiller}}, {{cog|it|tortiglione}}.
 
 ===Noun===
 {{es-noun|m|retortijones}}
@@ -32918,7 +32912,7 @@ Page 1661 retrete: Found match for regex: =
 Page 1661 retrete: -------- begin text ---------
 
 ===Etymology===
-From {{BAR|es|prv}} or {{BAR|es|ca}} (compare {{cog|ca|retret}}).
+From {{bor|es|prv}} or {{bor|es|ca|retret}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -32926,7 +32920,7 @@ From {{BAR|es|prv}} or {{BAR|es|ca}} (compare {{cog|ca|retret}}).
 ===Noun===
 {{es-noun|m}}
 
-# {{l|en|toilet}}
+# [[toilet]]
 #: {{syn|es|inodoro|aseo|baño|excusado|servicio|wáter}}
 
 [[Category:Spanish 3-syllable words]]
@@ -32950,7 +32944,7 @@ Page 1663 revertir: Found match for regex: =
 Page 1663 revertir: -------- begin text ---------
 
 ===Etymology===
-{{FOO|es|la|reverto}}, from {{m|la|re-}} + {{m|la|verto||to turn}}.
+From {{bor|es|la|revertō}}, from {{m|la|re-}} + {{m|la|vertō||to turn}}.
 
 ===Verb===
 {{es-verb|revert|ir|pres=revierto}}
@@ -32985,7 +32979,7 @@ Page 1665 Ricardo: Found match for regex: =
 Page 1665 Ricardo: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|got|𐍂𐌴𐌹𐌺𐍃||ruler}} + {{m|got|𐌷𐌰𐍂𐌳𐌿𐍃||hard}}; respectively from {{FOO|es|gem-pro|*rīks}} and {{FOO|es|gem-pro|*harduz}}.
+From {{bor|es|ML.|Ricardus}}, from {{der|es|gem|-}}, perhaps from  {{der|es|got|𐍂𐌴𐌹𐌺𐍃||ruler}} + {{m|got|𐌷𐌰𐍂𐌳𐌿𐍃||hard}}; respectively from {{der|es|gem-pro|*rīks}} and {{m|gem-pro|*harduz}}.
 
 ===Proper noun===
 {{es-proper noun|m}}
@@ -33003,7 +32997,7 @@ Page 1666 rigor: Found match for regex: =
 Page 1666 rigor: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|la|rigor}}, ''rigoris''.
+From {{bor|es|la|rigor}} (genitive singular {{m|la|rigōris}}).
 
 ===Noun===
 {{es-noun|m|rigores}}
@@ -33014,7 +33008,7 @@ Page 1667 rino-: Found match for regex: =
 Page 1667 rino-: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|grc|ῥίς}}, ῥινός (''rhinos'') "nose".
+From {{der|es|grc|ῥίς||nose}} (genitive singular {{m|grc|ῥινός}}).
 
 ===Prefix===
 {{head|es|prefix}}
@@ -33103,7 +33097,7 @@ Page 1672 rollo: Found match for regex: =
 Page 1672 rollo: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|la|rotulus}}, through a {{BAR|es|VL.}} *''rotlu'' > *''rollu''. {{doublet|es|rótulo}}. Cognate with {{cog|en|roll}} and {{m|en|role}}.
+From {{inh|es|VL.|*rollus}}, from {{der|es|la|rotulus}}. {{doublet|es|rótulo}}. Cognate with {{cog|en|roll}} and {{m|en|role}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -33147,7 +33141,7 @@ Page 1673 rombencéfalo: Found match for regex: =
 Page 1673 rombencéfalo: -------- begin text ---------
 
 ===Etymology===
-From {{BAR|es|grc}} ''rhombos'' [[hind]] and ''encephalos'' [[brain]].
+From {{der|es|grc|ῥόμβος||[[rhombus]], [[spinning top]]}} + {{m|grc|ἐγκέφαλος||brain|lit=inside the head}}.
 
 ===Noun===
 {{es-noun|m}}
@@ -33205,7 +33199,7 @@ Page 1677 rorcual: -------- begin text ---------
 [[Image:LMazzuca Fin Whale.jpg|thumb|rorcual]]
 
 ===Etymology===
-{{FOO|es|fr|rorqual}}, from {{FOO|es|no|røyrkval||furrow whale}}, from {{FOO|es|non|reyðarhvalr}}.
+From {{bor|es|fr|rorqual}}, from {{der|es|no|røyrkval||furrow whale}}, from {{der|es|non|reyðarhvalr}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -33213,7 +33207,7 @@ Page 1677 rorcual: -------- begin text ---------
 ===Noun===
 {{es-noun|m|rorcuales}}
 
-# [[rorqual]] (whale)
+# [[rorqual]] {{i|whale}}
 
 ====Derived terms====
 * {{l|es|rorcual aliblanco}}
@@ -33227,7 +33221,7 @@ Page 1678 roñoso: Found match for regex: =
 Page 1678 roñoso: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|la|aerūginōsus}}.
+From {{inh|es|la|aerūginōsus}}.
 
 ===Adjective===
 {{es-adj|f=roñosa}}
@@ -33248,7 +33242,7 @@ Page 1679 rubidio: Found match for regex: =
 Page 1679 rubidio: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|la|rubidus||blonde}}, because under spectroscopic analysis it has two red stripes.
+From {{bor|es|NL.|rubidium}}, from {{der|es|la|rubidus||blonde}}, because under spectroscopic analysis it has two red stripes; cf. also the element-forming suffix {{af|es|-io}}.
 
 ===Pronunciation===
 * {{audio|es|LL-Q1321 (spa)-Millars-rubidio.wav|Audio}}
@@ -33267,7 +33261,7 @@ Page 1680 rubí: -------- begin text ---------
 {{wikipedia|lang=es}}
 
 ===Etymology===
-From older {{m|es|rubín}}, from {{BAR|es|ML.}} ''*rubīnus'', based on {{FOO|es|la|rubeus}} "red".
+15th-century borrowing from {{bor|es|ca|robí}}, from {{der|es|fro|rubin}}, from {{der|es|ML.|rubīnus}}, from {{der|es|la|rubeus||red}} + {{m|la|-īnus|pos=diminutive}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -33302,7 +33296,7 @@ Page 1682 rédito: Found match for regex: =
 Page 1682 rédito: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|la|reditus}}.
+From {{bor|es|la|reditus}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -33327,7 +33321,7 @@ Page 1683 rígor mortis: -------- begin text ---------
 {{wikipedia|lang=es}}
 
 ===Etymology===
-From {{FOO|es|la|rigor}} {{m|la|mortis|lit=stiffness of death}}.
+From {{bor|es|la|[[rigor]] [[mors|mortis]]|lit=stiffness of death}}.
 
 ===Pronunciation===
 * {{IPA|es|/ˈri.ɣoɾ ˈmoɾ.tis/}}
@@ -33346,8 +33340,8 @@ Page 1684 Sabadell: -------- begin text ---------
 
 ===Etymology===
 Predominant theories are:
-* From {{FOO|es|ca|ceba||onion}}, from {{FOO|es|la|cepulla}}. The onion appears on the city's crest.
-* From {{FOO|es|ca|dissabte}}, from {{FOO|es|la|sabbatum}} (diminutive {{FOO|es|la|sabbatellum}}), since market festivals were held on Saturday.
+* From {{der|es|ca|ceba||onion}}, from {{der|es|la|cēpa}}. The onion appears on the city's crest.
+* From {{der|es|VL.|*sabbatellum}}, diminutive of {{der|es|la|sabbatum||Saturday}} (compare {{cog|ca|dissabte}}), since market festivals were held on Saturday.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -33365,7 +33359,7 @@ Page 1685 sabina: -------- begin text ---------
 {{wikipedia|lang=es}}
 
 ===Etymology===
-From {{FOO|es|la|sabina}}.
+From {{bor|es|la|sabīna}}.
 
 ===Noun===
 {{es-noun|f}}
@@ -33392,7 +33386,7 @@ Page 1686 sacar: Found match for regex: =
 Page 1686 sacar: -------- begin text ---------
 
 ===Etymology===
-Perhaps from {{FOO|es|got|𐍃𐌰𐌺𐌰𐌽||dispute, rebuke}}. Compare "sake" in English {{m|en|forsake}}.
+Perhaps from {{der|es|got|𐍃𐌰𐌺𐌰𐌽||to dispute, to rebuke}}. Compare {{cog|ang|to argue, to accuse}} and {{cog|en|forsake}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -33505,7 +33499,7 @@ Page 1687 sachar: Found match for regex: =
 Page 1687 sachar: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|la|sarculo}}.
+From {{inh|es|la|sarculō||to weed}}, from {{m|la|sarculum||hoe}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -33525,7 +33519,7 @@ Page 1688 sacramental: Found match for regex: =
 Page 1688 sacramental: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|EL.|sacrāmentālis}}.
+From {{bor|es|EL.|sacrāmentālis}}.
 
 ===Noun===
 {{es-noun|m|sacramentales}}
@@ -33543,7 +33537,7 @@ Page 1689 sacristán: Found match for regex: =
 Page 1689 sacristán: -------- begin text ---------
 
 ===Etymology===
-From Medieval {{BAR|es|la}} ''*sacristanus'', from {{m|la|sacra}} "sacred objects".
+From {{bor|es|ML.|sacristānus}}, from {{m|la|sacrista||servant of god, member of a religious community in charge of vestments, ornaments and vessels}}, from {{der|es|la|sacer||sacred}} (genitive singular {{m|la|sacrī}}) + {{der|es|LL.|-ista}}, from {{der|es|grc|-ιστής}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -33567,7 +33561,7 @@ Page 1690 Safo: -------- begin text ---------
 {{wikipedia|lang=es|Safo de Mitilene}}
 
 ===Etymology===
-From {{FOO|es|la|Sapphō}}, from {{FOO|es|grc|Σαπφώ|}}.
+From {{bor|es|la|Sapphō}}, from {{der|es|grc|Σαπφώ}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -33587,7 +33581,7 @@ Page 1691 sagacidad: Found match for regex: =
 Page 1691 sagacidad: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|la|sagācitās}}.
+From {{bor|es|la|sagācitās}} (genitive singular {{m|la|sagācitātis}}).
 
 ===Noun===
 {{es-noun|f|sagacidades}}
@@ -33695,7 +33689,7 @@ Page 1697 salpresar: Found match for regex: =
 Page 1697 salpresar: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|la|sal||salt}} and {{m|la|pressāre||to apply}}, {{inflection of|la|pressō||pres|actv|inf}}.
+From {{der|es|la|sal||salt}} + {{m|la|pressō||to press, to apply}}.
 
 ===Verb===
 {{es-verb|salpres|ar}}
@@ -33721,7 +33715,7 @@ Page 1699 saltillo: Found match for regex: =
 Page 1699 saltillo: -------- begin text ---------
 
 ===Etymology===
-[[Appendix:Glossary#diminutive|Diminutive]] of {{m|es|salto||a jump}}, from {{FOO|es|la|saltus}}, from {{m|la|saliō||to jump}}, from {{FOO|es|ine-pro|*sal-yo-}}. Related to English {{m|es|sally}}.
+From {{af|es|salto|t1=jump|-illo|pos2=diminutive}}, from {{der|es|la|saltus}}, from {{m|la|saliō||to jump}}, from {{der|es|ine-pro|*sal-yo-}}. Related to {{cog|es|sally}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -33730,7 +33724,7 @@ Page 1699 saltillo: -------- begin text ---------
 ===Noun===
 {{es-noun|m}}
 
-# [[#English|saltillo]].
+# [[#English|saltillo]]
 -------- end text --------
 Page 1700 salubre: Found match for regex: =
 Page 1700 salubre: -------- begin text ---------
@@ -33812,7 +33806,7 @@ Page 1705 sanguja: Found match for regex: =
 Page 1705 sanguja: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|la|sanguisūga||leech|lit=bloodsucker}} (compare {{cog|fr|sangsue}}, {{cog|it|sanguisuga}}, {{cog|pt|sanguessuga}}), from {{m|la|sanguis||blood}} + {{m|la|sūgō||to suck}}.
+From {{inh|es|la|sanguisūga||leech|lit=bloodsucker}} (compare {{cog|fr|sangsue}}, {{cog|it|sanguisuga}}, {{cog|pt|sanguessuga}}), from {{m|la|sanguis||blood}} + {{m|la|sūgō||to suck}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -33882,7 +33876,7 @@ Page 1707 sarampión: Found match for regex: =
 Page 1707 sarampión: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|la|sirimpione}}, singular ablative of {{m|la|sirimpio}}, a kind of skin rash.
+From {{inh|es|la|sirimpiō||a kind of skin rash}} (genitive singular {{m|la|sirimpiōnis}}).
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -33940,7 +33934,7 @@ Page 1710 sargento: -------- begin text ---------
 {{wikipedia|lang=es}}
 
 ===Etymology===
-From {{inh|es|osp|sargente}}, from {{FOO|es|frm|sergent}}, from {{FOO|es|fro|sergeant}}, {{m|fro|sergent}}, {{m|fro|serjant}}, {{m|fro|sergient}} or {{m|fro|sergant||sergeant, servant}}, from {{FOO|es|ML.|serviens|serviēns, servientem|a servant, a vassal, a soldier or an apparitor}}, from {{FOO|es|la|serviēns||serving}}, present participle of {{m|la|servio|serviō, servīre|to serve or to be a slave to}}, from {{m|la|servus||a slave, a serf or a servant}}, perhaps from {{BAR|es|ett}}; compare Etruscan proper names {{m|ett|𐌔𐌄𐌓𐌅𐌉}} or {{m|ett|𐌔𐌄𐌓𐌅𐌄}}<ref>{{R:Online Etymology Dictionary|serve}}</ref>; or from {{FOO|es|itc-pro|*serwo}}, from {{FOO|es|ine-pro|*serwoh₂}}. {{doublet|es|sirviente}}.
+From {{inh|es|osp|sargente}}, from {{der|es|frm|sergent}}, from {{der|es|fro|sergeant}}, {{m|fro|sergent}}, {{m|fro|serjant}}, {{m|fro|sergient}}, {{m|fro|sergant||sergeant, servant}}, from {{der|es|ML.|serviēns||servant, vassal, soldier, apparitor}} (genitive singular {{m|la|servientis}}), from {{der|es|la|serviēns||serving}}, present participle of {{m|la|serviō||to serve or to be a slave to}}, from {{m|la|servus||a slave, a serf or a servant}}, perhaps from {{der|es|ett}}; compare Etruscan proper names {{m|ett|𐌔𐌄𐌓𐌅𐌉}} or {{m|ett|𐌔𐌄𐌓𐌅𐌄}}<ref>{{R:Online Etymology Dictionary|serve}}</ref>; or from {{der|es|itc-pro|*serwo}}, from {{der|es|ine-pro|*serwoh₂}}. {{doublet|es|sirviente}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -34509,7 +34503,7 @@ Page 1739 sicómoro: Found match for regex: =
 Page 1739 sicómoro: -------- begin text ---------
 
 ===Etymology===
-From {{bor|es|la|sȳcomorus}}, from {{FOO|es|grc|σῦκον||fig}} + {{m|grc|μόρος||black mulberry}}.
+From {{bor|es|la|sȳcomorus}}, from {{der|es|grc|σῦκον||fig}} + {{m|grc|μόρος||black mulberry}}.
 
 ===Noun===
 {{es-noun|m}}
@@ -34674,7 +34668,7 @@ Page 1747 simbiosis: Found match for regex: =
 Page 1747 simbiosis: -------- begin text ---------
 
 ===Etymology===
-{{FOO|es|grc|σύν||with}} + {{m|grc|βίωσις}}
+From {{bor|es|NL.|symbiosis}}, from {{der|es|grc|σῠμβῐ́ωσῐς||a living together, companionship}}, from {{m|grc|συμβιόω||to live together}}, from {{m|grc|συν-||with}} + {{m|grc|βῐ́ος||life}}.
 
 ===Noun===
 {{es-noun|f|simbiosis}}
@@ -34974,7 +34968,7 @@ Page 1763 soja: -------- begin text ---------
 * {{l|es|soya}}
 
 ===Etymology===
-From Dutch ''soja''; from the Satsuma dialect そや ''soya'' [soja], which is the topicalized form of {{m|ja|醤油|tr={{l|ja|そい}}, soi}} [soj] (cognate to the standard {{BAR|es|ja}} word {{m|ja|醤油|tr={{l|ja|しょうゆ}}, shōyu}}); from Old to Middle Japanese {{m|ja|醤油|tr={{l|ja|しやうゆ}}, shiyauyu}}; from {{FOO|es|ltc|醬油|tr=tsjàng-yuw}}; from {{m|ltc|醬||bean paste}} + {{m|ltc|油||oil}}.
+From {{bor|es|nl|soja}}; from the Satsuma dialectal {{der|es|ja|そや|tr=soya}}, which is the topicalized form of {{m|ja|醤油|tr={{l|ja|そい}}, soi}} (cognate to standard {{der|es|ja|醤油|tr={{l|ja|しょうゆ}}, shōyu}}), from {{der|es|ja-mid-lat|醤油|tr={{l|ja|しやうゆ}}, shiyauyu}}, {{glossary|orthographic borrowing}} from {{der|es|ltc|醬油|tr=tsjàng-yuw}}, from {{m|ltc|醬||bean paste}} + {{m|ltc|油||oil}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -35005,7 +34999,7 @@ Page 1764 solaz: Found match for regex: =
 Page 1764 solaz: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|la|sōlācium}}, possibly through an {{FOO|es|pro|solatz}}.
+From {{der|es|la|sōlācium}}, possibly through {{der|es|pro|solatz}}.
 
 ===Noun===
 {{es-noun|f|solaces}}
@@ -35019,14 +35013,12 @@ Page 1765 solenoide: Found match for regex: =
 Page 1765 solenoide: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|LL.|sōlēn||pipe, tube}} + {{m|la|-oide}}.
+From {{der|es|la|sōlēn||pipe, tube}}, from {{der|es|grc|σωλήν}}, + {{af|es|-oide}}.
 
 ===Noun===
 {{es-noun|m}}
 
 # [[solenoid]]
-
-[[Category:Spanish words suffixed with -oide]]
 -------- end text --------
 Page 1766 sololoy: Found match for regex: [
 Page 1766 sololoy: -------- begin text ---------
@@ -35049,7 +35041,7 @@ Page 1767 solsticio: Found match for regex: =
 Page 1767 solsticio: -------- begin text ---------
 
 ===Etymology===
-From {{bor|es|la|solstitium}}.
+From {{bor|es|la|sōlstitium}}.
 
 ===Noun===
 {{es-noun|m}}
@@ -35063,7 +35055,7 @@ Page 1768 somatología: Found match for regex: =
 Page 1768 somatología: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|grc|σῶμα||body}} {{suffix|es||logía}}.
+From {{der|es|grc|σῶμα||body}} (genitive singular {{m|grc|σώματος}}) {{suffix|es||logía}}.
 
 ===Noun===
 {{es-noun|f|-}}
@@ -35074,7 +35066,7 @@ Page 1769 sonaja: Found match for regex: =
 Page 1769 sonaja: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|VL.|*sonacŭlum}}, from {{FOO|es|la|sonare}}.
+From {{inh|es|VL.|*sonācŭlum}}, from {{der|es|la|sonō||to sound}}.
 
 ===Noun===
 {{es-noun|f}}
@@ -35091,7 +35083,7 @@ Page 1770 sondar: Found match for regex: =
 Page 1770 sondar: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|la|subundare}}, {{m|la|sub}} + {{m|la|undare}}.
+From {{bor|es|fr|sonder}}, from {{der|es|fro|sonder}}, from {{m|fro|sonde||sounding line}}, extracted from {{der|es|ang|sundline||sounding line}}, from {{m|ang|sund||water, sea, swimming, sound (channel)}} from {{der|es|gem-pro|*sundą||swimming; sound}}, cognate with {{cog|en|swim}}. An alternative theory derives it from a hypothetical {{cog|VL.|*subundāre}}, from {{cog|la|sub-}} + {{m|la|undō||to surge, to swell}}, from {{m|la|unda||wave}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -35099,7 +35091,7 @@ From {{FOO|es|la|subundare}}, {{m|la|sub}} + {{m|la|undare}}.
 ===Verb===
 {{es-verb|sond|ar}}
 
-# to [[sound]]
+# to [[sound]] {{gl|to probe the depth of water with a weighted rope or similar}}
 # {{lb|es|transitive}} to [[catheterize]]
 
 ====Conjugation====
@@ -35117,7 +35109,7 @@ Page 1771 sonriente: Found match for regex: =
 Page 1771 sonriente: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|la|subridentem}}, accusative of {{m|la|subridens}}, present active participle of {{m|la|subridere||to smile}}.
+From {{inh|es|la|subrīdēns}} (genitive singular {{m|la|subrīdentis}}), present active participle of {{m|la|subrīdeō||to smile}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -35366,7 +35358,7 @@ Page 1787 sueco: Found match for regex: =
 Page 1787 sueco: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|la|suecus}}.
+From {{bor|es|ML.|Suecus}}, ultimately from {{der|es|la|Suiōnēs||Swedes}} (in {{w|Tacitus}}); cognate with {{cog|ang|Swēon||Swedes}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -35441,7 +35433,7 @@ Page 1789 suero: Found match for regex: =
 Page 1789 suero: -------- begin text ---------
 
 ===Etymology===
-Perhaps from {{BAR|es|qfa-sub-ibe}} word *''sŏrus'', or more likely from an Iberian {{BAR|es|VL.}} *''sorum'', from an alteration from {{FOO|es|la|serum}}. Compare {{cog|pt|soro}}. See also {{m|es|Suárez}}.
+Perhaps from {{bor|es|qfa-sub-ibe|-}} {{m|und|*''sŏrus}}, or more likely from an Iberian {{der|es|VL.|*sorum}}, from an alteration of {{der|es|la|serum}}. Compare {{cog|pt|soro}}. See also {{cog|es|Suárez}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -35465,7 +35457,7 @@ Page 1790 sufragio: Found match for regex: =
 Page 1790 sufragio: -------- begin text ---------
 
 ===Etymology===
-Borrowed from {{BAR|es|ML.}} < {{FOO|es|la|suffrāgium}}.
+Borrowed from {{bor|es|la|suffrāgium}}.
 
 ===Noun===
 {{es-noun|m}}
@@ -35480,7 +35472,7 @@ Page 1791 sufrútice: Found match for regex: =
 Page 1791 sufrútice: -------- begin text ---------
 
 ===Etymology===
-From the {{FOO|es|la|suffruticem}}, the accusative singular form of {{m|la|suffrutex}}. Cognate with the {{cog|en|suffrutex}} and the {{etyl|it|-}} {{m|es|suffrutice}}.
+From {{bor|es|NL.|suffrutex}} (genitive singular {{m|la|suffruticis}}), from {{der|es|la|frutex||bush, shrub}}. Cognate with {{cog|en|suffrutex}} and the {{cog|it|suffrutice}}.
 
 ===Noun===
 {{es-noun|m}}
@@ -35492,7 +35484,7 @@ Page 1792 sui generis: Found match for regex: =
 Page 1792 sui generis: -------- begin text ---------
 
 ===Etymology===
-From {{BAR|es|la}}.
+From {{bor|es|la|[[suus|suī]] [[genus|generis]]|lit=of its (own) kind}}.
 
 ===Pronunciation===
 * {{IPA|es|/swi ˈxeneɾis/}}
@@ -35593,7 +35585,7 @@ Page 1796 sumir: Found match for regex: =
 Page 1796 sumir: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|la|sūmere}}, present active infinitive of {{m|la|sumō}}.
+From {{inh|es|la|sūmere}}, present active infinitive of {{m|la|sumō}}.
 
 ===Verb===
 {{es-verb|sum|ir}}
@@ -36022,7 +36014,7 @@ Page 1817 séquito: Found match for regex: =
 Page 1817 séquito: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|la|sequi}}, present active infinitive of {{m|la|sequor||to follow}}.
+From {{bor|es|ML.|sequitus||retinue, escort}}, from {{der|es|it-oit|seguito||retinue, entourage, followers}}, past participle of {{m|it|seguire||to follow}}, from {{der|es|la|sequor||to follow}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -36040,7 +36032,7 @@ Page 1818 sésamo: -------- begin text ---------
 {{wikipedia|lang=es}}
 
 ===Etymology===
-From {{bor|es|la|sēsamum}}, from {{der|es|grc|σήσαμον}}, of {{BAR|es|sem}} origin.
+From {{bor|es|la|sēsamum}}, from {{der|es|grc|σήσαμον}}, from Old {{der|es|arc|שושמא|tr=šūššmā}}, shortening of {{m|arc|שומשומא|tr=šumššumā}}, from {{der|es|akk|𒃻𒈦𒌑𒈬|ts=šamaššammū|sc=Xsux}}, {{m|akk|𒊭𒈦𒌑𒈨|sc=Xsux|ts=šamaššammi|lit=oil plant}}. See {{cog|en|sesame}} for more information.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -36181,7 +36173,7 @@ Page 1825 Tabasco: Found match for regex: =
 Page 1825 Tabasco: -------- begin text ---------
 
 ===Etymology===
-From {{BAR|es|nah}}; see {{cog|en|Tabasco}}.
+{{unk|es|title=Uncertain}}; see {{cog|en|Tabasco}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -36590,7 +36582,7 @@ Page 1845 tarántula: -------- begin text ---------
 [[Image:Cuban Tarantula.jpg|thumb|Una tarántula en Cuba.]]
 
 ===Etymology===
-From {{FOO|es|la|tarantula}}, from {{m|la|Tarentum}}.
+From {{bor|es|ML.|tarantula||wolf spider}}, from {{der|es|it|tarantola}}, from {{m|it|Taranto||Taranto (city in Italy where wolf spiders are frequently found)}}, from {{der|es|la|Tarentum}}, from {{der|es|grc|Τάρας}} (genitive singular {{m|la|Τάραντος}}), possibly from {{der|es|xil|darandos||oak}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -36607,7 +36599,7 @@ Page 1846 tasar: Found match for regex: =
 Page 1846 tasar: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|la|taxare}}.
+{{slbor|es|la|taxō||to estimate, to evaluate, to tax}}.
 
 ===Pronunciation===
 {{es-IPA}}
@@ -36627,7 +36619,7 @@ Page 1847 tataranieto: Found match for regex: {
 Page 1847 tataranieto: -------- begin text ---------
 {{wikipedia|lang=es}}
 ===Etymology===
-From {{m|es|tras}} + {{FOO|es|osp|trasnieto}}.
+From {{af|es|tras-|lang2=osp|trasnieto|t2=great-grandchild}}, from {{m|osp|tras-}} + {{m|osp|nieto||grandson}}, formed from {{m|osp|nieta||granddaughter}}, from {{der|es|VL.|*nepta}}, from {{der|es|la|neptis}}, from {{der|es|ine-pro|*néptih₂}}. Compare {{cog|la|nepōs||grandson, grandaughter, nephew, niece}} (genitive singular {{m|la|nepōtis}}).
 
 ===Noun===
 {{es-noun|m|f=tataranieta}}
@@ -36658,7 +36650,7 @@ Page 1848 tatemar: -------- begin text ---------
 * {{alter|es|tlatemar}}
 
 ===Etymology===
-{{FOO|es|nah|tlatemati||to burn}}.
+From {{bor|es|nci|tlatemati||to burn}}.
 
 ===Verb===
 {{es-verb|tatem|ar}}
@@ -36677,7 +36669,7 @@ Page 1849 taxcal: Found match for regex: =
 Page 1849 taxcal: -------- begin text ---------
 
 ===Etymology===
-Shortened from {{FOO|es|nci|tlaxcalchiquihuitl||basket for carrying tortillas}}, from {{m|nci|tlaxcalli||tortilla}} + {{m|nci|chiquihuitl||basket}}.
+Shortened from {{der|es|nci|tlaxcalchiquihuitl||basket for carrying tortillas}}, from {{m|nci|tlaxcalli||tortilla}} + {{m|nci|chiquihuitl||basket}}.
 
 ===Pronunciation===
 * {{es-IPA|tascal}}, {{es-IPA}}
@@ -36686,7 +36678,7 @@ Shortened from {{FOO|es|nci|tlaxcalchiquihuitl||basket for carrying tortillas}},
 ===Noun===
 {{es-noun|m|taxcales}}
 
-# {{lb|es|Mexico}} A [[basket]] used to carry or store [[tortilla]]s.
+# {{lb|es|Mexico}} a [[basket]] used to carry or store [[tortilla]]s
 
 ===See also===
 * {{l|es|chiquihuite}}
@@ -36699,7 +36691,7 @@ Page 1850 taxonomía: -------- begin text ---------
 {{wikipedia|lang=es}}
 
 ===Etymology===
-First coined in {{BAR|es|fr}} as {{m|fr|taxinomie}}, from {{FOO|es|grc|τάξις}} "arrangement".
+From {{bor|es|fr|taxonomie}}, alternative form of {{m|fr|taxinomie}}, from {{der|es|grc|τάξις||arrangement}}, + {{der|es|fr|-nomie}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -36776,7 +36768,7 @@ Page 1853 tecno-: Found match for regex: =
 Page 1853 tecno-: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|grc|τεχνο-}}, from {{m|grc|τέχνη}} "art, craft".
+From {{bor|es|grc|τεχνο-}}, from {{m|grc|τέχνη||art, craft}}.
 
 ===Prefix===
 {{head|es|prefix}}
@@ -36791,7 +36783,7 @@ Page 1854 tecol: -------- begin text ---------
 {{wikipedia|lang=es}}
 
 ===Etymology===
-From {{FOO|es|nci|tletl||fire}} + {{m|nci|ocuilin||worm}}, for its reddish color.
+From {{der|es|nci|tletl||fire}} + {{m|nci|ocuilin||worm}}, for its reddish color.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -36858,7 +36850,7 @@ Page 1856 tejocote: -------- begin text ---------
 [[File:Tejocotes2.jpg|thumb|tejocotes [2]]]
 
 ===Etymology===
-From {{FOO|es|nci|texocotl|lit=stone fruit}}, from {{m|nci|tetl||stone}} + {{m|nci|xocotl||plum, fruit}}.
+From {{bor|es|nci|texocotl|lit=stone fruit}}, from {{m|nci|tetl||stone}} + {{m|nci|xocotl||plum, fruit}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -36914,7 +36906,7 @@ Page 1859 temazcal: -------- begin text ---------
 * {{l|es|temascal}}, {{l|es|temescal}}
 
 ===Etymology===
-From {{FOO|es|nci|temāzcalli||sweat lodge, sweat bath}}, from {{m|nci|tēma||to pour, bathe by pouring}} + {{m|nci|calli||house, structure}}.
+From {{bor|es|nci|temāzcalli||sweat lodge, sweat bath}}, from {{m|nci|tēma||to pour, bathe by pouring}} + {{m|nci|calli||house, structure}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -36937,7 +36929,7 @@ Page 1860 tempestad: Found match for regex: =
 Page 1860 tempestad: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|osp|tempestat}}, from {{inh|es|la|tempestās|tempestās, tempesātem|weather, storm, tempest}}, from {{m|la|tempus||time}}.
+From {{inh|es|osp|tempestat}}, likely a borrowing (rather than an inheritance) from {{der|es|la|tempestās||weather, storm, tempest}} (genitive singular {{m|la|tempestātis}}), from {{m|la|tempus||time}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -36959,7 +36951,7 @@ Page 1861 tenacidad: Found match for regex: =
 Page 1861 tenacidad: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|la|tenacitas}}, ''tenacitatis''.
+From {{bor|es|la|tenācitās}} (genitive singular {{m|la|tenācitātis}}).
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -36977,7 +36969,7 @@ Page 1862 teneso: -------- begin text ---------
 {{elements|es|Ts|livermorio|Lv|oganesón|Og}}
 
 ===Etymology===
-Coined by consensus in 2017. Based on {{FOO|es|en|tennessine}}, following the pattern of the [[halogen]]s {{m|es|cloro||chlorine}}, {{m|es|yodo||iodine}}, {{m|es|bromo||bromine}} and {{m|es|astato||astatine}}.
+Coined by consensus in 2017. {{pcal|es|en|tennessine}}, following the pattern of the [[halogen]]s {{m|es|cloro||chlorine}}, {{m|es|yodo||iodine}}, {{m|es|bromo||bromine}} and {{m|es|astato||astatine}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -36993,7 +36985,7 @@ Page 1863 tenia: Found match for regex: =
 Page 1863 tenia: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|la|taenia|taenĭa}}, from {{FOO|es|grc|ταινία||ribbon, tape}}.
+From {{bor|es|la|taenĭa}}, from {{der|es|grc|ταινία||ribbon, tape}}.
 
 ===Noun===
 {{es-noun|f}}
@@ -37007,7 +36999,7 @@ Page 1864 tenis de mesa: Found match for regex: =
 Page 1864 tenis de mesa: -------- begin text ---------
 
 ===Etymology===
-A calque of {{FOO|es|en|table tennis}}, from {{compound|es|tenis|mesa|t1=tennis|t2=table}}.
+{{cal|es|en|table tennis}}, from {{compound|es|tenis|mesa|t1=tennis|t2=table}}.
 
 ===Noun===
 {{es-noun|m|head=[[tenis]] de [[mesa]]|-}}
@@ -37027,7 +37019,7 @@ Page 1865 Tenochtitlán: -------- begin text ---------
 * {{l|es|Tenochtitlan}}
 
 ===Etymology===
-From {{FOO|es|nci|Tenochtitlan}}.
+From {{bor|es|nci|Tenochtitlan}}.
 
 ===Proper noun===
 {{es-proper noun|m}}
@@ -37038,7 +37030,7 @@ Page 1866 tenso: Found match for regex: =
 Page 1866 tenso: -------- begin text ---------
 
 ===Etymology===
-Borrowed from {{BAR|es|la}} ''[[tensus]]''. Compare {{m|es|tieso}}.
+Borrowed from {{bor|es|la|tēnsus}}. {{doublet|es|tieso}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -37064,7 +37056,7 @@ Page 1867 teo-: Found match for regex: =
 Page 1867 teo-: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|grc|θεός||god}}.
+From {{der|es|grc|θεός||god}}.
 
 ===Pronunciation===
 * {{IPA|es|[te̞.o̞]}} (stressed after this prefix)
@@ -37087,7 +37079,7 @@ Page 1868 teobroma: Found match for regex: =
 Page 1868 teobroma: -------- begin text ---------
 
 ===Etymology===
-From the genus name {{m|mul|Theobroma}}, based on {{FOO|es|grc|θεός||god}} + {{m|grc|βρῶμα||food}}.
+From {{bor|es|mul|Theobroma}}, the genus name, based on {{der|es|grc|θεός||god}} + {{m|grc|βρῶμα||food}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -37103,7 +37095,7 @@ Page 1869 teocinte: Found match for regex: =
 Page 1869 teocinte: -------- begin text ---------
 
 ===Etymology===
-From {{BAR|es|nci}}, apparently from {{m|nci|teōtl||god}} + {{m|nci|cintli||dried maize}}.
+apparently from {{der|es|nci|teōtl||god}} + {{m|nci|cintli||dried maize}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -37130,7 +37122,7 @@ Page 1870 tepezcuintle: -------- begin text ---------
 * {{l|es|tepezcuinte}}<!--used in a book published in costa rica, RAE says central america-->
 
 ===Etymology===
-From {{FOO|es|nci|tepetl||mountain, hill}} + {{m|nci|itzcuīntli||dog}}.
+From {{der|es|nci|tepetl||mountain, hill}} + {{m|nci|itzcuīntli||dog}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -37148,7 +37140,7 @@ Page 1871 terapeuta: Found match for regex: =
 Page 1871 terapeuta: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|grc|θεραπευτής||attendant}}.
+From {{bor|es|grc|θεραπευτής||attendant}}.
 
 ===Noun===
 {{es-noun|mf}}
@@ -37163,7 +37155,7 @@ Page 1872 terco: Found match for regex: =
 Page 1872 terco: -------- begin text ---------
 
 ===Etymology===
-Attested from the fifteenth century, probably cognate with {{cog|it|tirchio}} and {{cog|ca|enterch||stiff, rigid}}. Several farther etymologies have been suggested<ref>{{cite-book|title=A History of the Spanish Lexicon: A Linguistic Perspective|author=Steven N. Dworkin|pages=35-6|year=2012}}</ref>: a shared proto-Romance word from {{der|es|cel-pro|*terkos||scarce, meagre}}, compare {{cog|ga|tearc||meagre}} and {{cog|cy|taerc}}); a derivation from {{BAR|es|it}} {{compound|it|pirchio|tirato|pos1=''dialectal''|t1=stingy|t2=avaricious|nocat=1}}<ref>{{cite-book|title=Dizionario Garzanti Italiano|publisher=Garzanti Libri|year=1998|}}</ref>; or, reversing the usual derivation, from ''(rare)'' {{m|es|entercar}} (whence {{m|es|entercarse}}), syncopated from ''(rare, 16th. c)'' *enternegar, from {{inh|es|la|internecō||to slaughter}}; or from {{FOO|es|la|tricae||trivia}}, via a verb derived in {{BAR|es|VL.}}. As the word has no mediaeval attestation, a southern European borrowing from dialectal Italian may be most likely; of the proto-Romance theories, derivation from {{m|la|internecō}} is phonetically the easiest.
+Attested from the fifteenth century, probably cognate with {{cog|it|tirchio}} and {{cog|ca|enterch||stiff, rigid}}. Several farther etymologies have been suggested<ref>{{cite-book|title=A History of the Spanish Lexicon: A Linguistic Perspective|author=Steven N. Dworkin|pages=35-6|year=2012}}</ref>: a shared proto-Romance word from {{der|es|cel-pro|*terkos||scarce, meagre}}, compare {{cog|ga|tearc||meagre}} and {{cog|cy|taerc}}); a derivation from {{der|es|it|-}} {{compound|it|pirchio|tirato|pos1=dialectal|t1=stingy|t2=avaricious|nocat=1}}<ref>{{cite-book|title=Dizionario Garzanti Italiano|publisher=Garzanti Libri|year=1998|}}</ref>; or, reversing the usual derivation, from rare {{m|es|entercar}} (whence {{m|es|entercarse}}), syncopated from rare 16th. century {{m|es|*enternegar}}, from {{der|es|la|internecō||to slaughter}}; or from {der|es|la|tricae||trivia}}, via a verb derived in {{der|es|VL.|-}}. As the word has no mediaeval attestation, a southern European borrowing from dialectal Italian may be most likely; of the proto-Romance theories, derivation from {{m|la|internecō}} is phonetically the easiest.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -37190,7 +37182,7 @@ Page 1873 tereré: -------- begin text ---------
 {{wikipedia|lang=es}}
 
 ===Etymology===
-From {{BAR|es|gn}}.
+From {{bor|es|gn}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -37207,7 +37199,7 @@ Page 1874 terraplenar: Found match for regex: =
 Page 1874 terraplenar: -------- begin text ---------
 
 ===Etymology===
-From the noun {{m|es|terraplén||embankment}}, from {{FOO|es|fr|terre plein}}, from {{FOO|es|la|terra}} + {{m|la|planus}}.
+From the noun {{m|es|terraplén||embankment}}, from {{der|es|fr|terre plein}}, from {{der|es|la|terra}} + {{m|la|plānus}}.
 
 ===Verb===
 {{es-verb|terraplen|ar}}
@@ -37221,7 +37213,7 @@ Page 1875 testamentario: Found match for regex: =
 Page 1875 testamentario: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|la|testāmentārius||of or belonging to wills}}.
+From {{bor|es|la|testāmentārius||of or belonging to wills}}.
 
 ===Adjective===
 {{es-adj|f=testamentaria}}
@@ -37235,7 +37227,7 @@ Page 1876 testimoniar: Found match for regex: =
 Page 1876 testimoniar: -------- begin text ---------
 
 ===Etymology===
-{{FOO|es|la|testimōnium}}
+From {{bor|es|ML.|testimōniō||to bear witness, to attest}}.
 
 ===Verb===
 {{es-verb|testimoni|ar}}
@@ -37316,7 +37308,7 @@ Page 1881 tianguis: -------- begin text ---------
 {{wikipedia|lang=es}}
 
 ===Etymology===
-From {{FOO|es|nci|tiyānquiztli||it is a street market; marketplace}}, perhaps through an unsuffixed [[possessive]] form, cf. {{m|nci|īntiyānquiz||it is their street market; marketplace}}.
+From {{bor|es|nci|tiyānquiztli||it is a street market; marketplace}}, perhaps through an unsuffixed [[possessive]] form, cf. {{m|nci|īntiyānquiz||it is their street market; marketplace}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -37338,7 +37330,7 @@ Page 1882 Tierra: -------- begin text ---------
 {{wikipedia|lang=es}}
 
 ===Etymology===
-From {{FOO|es|la|terra||land, earth}}.
+From {{inh|es|la|terra||land, earth}}.
 
 ===Proper noun===
 {{es-proper noun|f}}
@@ -37360,7 +37352,7 @@ Page 1883 tilcuate: -------- begin text ---------
 * {{l|es|tilcoate}}
 
 ===Etymology===
-From {{bor|es|nah|tlīlcōātl}}.
+From {{bor|es|nci|tlīlcōātl}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -37397,7 +37389,7 @@ Page 1885 tinaja: Found match for regex: =
 Page 1885 tinaja: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|VL.|*tinacla}}, from {{m|la|tinacula}}, from {{FOO|es|la|tīna}}.
+From {{inh|es|VL.|*tīnacla}}, from {{m|la|*tīnacula}}, diminutive of {{der|es|la|tīna}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -37412,7 +37404,7 @@ Page 1886 tiranosaurio: Found match for regex: =
 Page 1886 tiranosaurio: -------- begin text ---------
 
 ===Etymology===
-From {{bor|es|NL.|tyrannosaurus}}, from {{FOO|es|grc|τύραννος}} "tyrant" + {{m|grc|σαῦρος}} "lizard".
+From {{bor|es|NL.|tyrannosaurus}}, from {{der|es|grc|τύραννος||tyrant}} + {{m|grc|σαῦρος||lizard}}.
 
 ===Pronunciation===
 * {{es-IPA|tiránosáurio}}
@@ -37431,7 +37423,7 @@ Page 1887 titipuchal: Found match for regex: =
 Page 1887 titipuchal: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|nah|tliltic||black thing}} and {{m|nah|potzalli||large quantity of land}}.
+From {{der|es|nci|tliltic||black thing}} and {{m|nci|potzalli||large quantity of land}}.
 
 ===Noun===
 {{es-noun|m|titipuchales}}
@@ -37442,7 +37434,7 @@ Page 1888 titán: Found match for regex: =
 Page 1888 titán: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|la|titan}}, from {{FOO|es|grc|Τιτάν}}.
+From {{bor|es|la|Tītān}}, from {{der|es|grc|Τῑτᾱ́ν}}.
 
 ===Noun===
 {{es-noun|m|titanes}}
@@ -37455,7 +37447,7 @@ Page 1889 tlacoyo: -------- begin text ---------
 {{wikipedia|lang=es}}
 
 ===Etymology===
-From {{bor|es|nah|tlahtlaōyoh}}.
+From {{bor|es|nci|tlahtlaōyoh}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -37573,7 +37565,7 @@ Page 1895 tojo: Found match for regex: =
 Page 1895 tojo: -------- begin text ---------
 
 ===Etymology===
-From {{BAR|es|qfa-sub-ibe}} *''toju'' or similar; compare {{cog|pt|tojo}}, {{cog|ast|toxu}}, {{cog|gl|toxo}}.
+From {{bor|es|qfa-sub-ibe|-}} {{m|und|*toju}} or similar; compare {{cog|pt|tojo}}, {{cog|ast|toxu}}, {{cog|gl|toxo}}.
 
 ===Noun===
 {{es-noun|m}}
@@ -37589,7 +37581,7 @@ Page 1896 toldo: -------- begin text ---------
 * {{es-IPA}}
 
 ===Etymology 1===
-From {{FOO|es|fro|tialz||area between the stern and mainmast}}, from {{der|es|gem-pro|*teldą}}; see also Middle Dutch {{m|dum|telt}}, Old High German {{m|goh|zelt}} Old Norse {{m|non|tjald}}. Cognate with {{cog|en|tilt||tent fabric and covering}}.
+From {{der|es|fro|tialz||area between the stern and mainmast}}, from {{der|es|gem-pro|*teldą}}; see also {{cog|dum|telt}}, {{cog|goh|zelt}} and {{cog|non|tjald}}. Cognate with {{cog|en|tilt||tent fabric and covering}}.
 
 ====Noun====
 {{es-noun|m}}
@@ -37617,7 +37609,7 @@ Page 1897 toller: Found match for regex: =
 Page 1897 toller: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|la|tollere}}, present active infinitive of {{m|la|tollō}}. {{doublet|es|tullir}}.
+From {{bor|es|la|tollere}}, present active infinitive of {{m|la|tollō}}. {{doublet|es|tullir}}.
 
 ===Verb===
 {{es-verb|toll|er}}
@@ -37694,7 +37686,7 @@ Page 1900 tonel: Found match for regex: =
 Page 1900 tonel: -------- begin text ---------
 
 ===Etymology===
-From {{BAR|es|fro}} {{m|fr|tonel}}, diminutive of {{m|fro|tone||large barrel}}, from {{FOO|es|LL.|tunna}}, from {{BAR|es|cel-pro}} {{m|la|*tunna||hide, skin}}.
+From {{der|es|fro|tonel||barrel}}, diminutive of {{m|fro|tone||large barrel}}, from {{der|es|LL.|tunna}}, from {{der|es|cel-pro|*tunna||hide, skin}}.
 
 ===Pronunciation===
 * {{rhymes|es|el}}
@@ -37718,7 +37710,7 @@ Page 1901 tonsurar: Found match for regex: =
 Page 1901 tonsurar: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|la|tonsurāre}}.
+From {{bor|es|LL.|tōnsūrāre}}, present active infinitive of {{m|la|tōnsūrō}}, from {{der|es|la|tōnsūra||shearing, shaving}}.
 
 ===Verb===
 {{es-verb|tonsur|ar}}
@@ -37758,7 +37750,7 @@ Page 1903 topo: -------- begin text ---------
 * {{rhymes|es|opo}}
 
 ===Etymology 1===
-From {{FOO|es|la|talpa}}. Cognate with {{cog|en|taupe}}.
+From {{inh|es|la|talpa}}. Cognate with {{cog|en|taupe}}.
 
 ====Noun====
 {{es-noun|m}}
@@ -37787,7 +37779,7 @@ Page 1904 topógrafo: Found match for regex: =
 Page 1904 topógrafo: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|grc|τόπος||place}} + {{m|es|-grafo}}.
+From {{der|es|grc|τόπος||place}} + {{m|es|-grafo}}.
 
 ===Noun===
 {{es-noun|m|f=topógrafa}}
@@ -37884,7 +37876,7 @@ Page 1910 traficante: Found match for regex: =
 Page 1910 traficante: -------- begin text ---------
 
 ===Etymology===
-Obsolete present participle of {{m|es|traficar||to smuggle}}, from {{FOO|es|it|trafficare}}.
+Obsolete present participle of {{m|es|traficar||to smuggle}}, from {{der|es|it|trafficare}}.
 
 ===Adjective===
 {{es-adj}}
@@ -38116,7 +38108,7 @@ Page 1920 trastornar: Found match for regex: =
 Page 1920 trastornar: -------- begin text ---------
 
 ===Etymology===
-{{m|es|tras|tras-}}, from {{FOO|es|la|trans}}, + {{m|es|tornar||to return}}, from {{FOO|es|la|tornare}}.
+From {{af|es|tras-|tornar}}, from {{der|es|la|trāns||across}} + {{m|es|la|tornō||to turn}}.
 
 ===Verb===
 {{es-verb|trastorn|ar}}
@@ -38160,7 +38152,7 @@ Page 1922 tremedal: Found match for regex: =
 Page 1922 tremedal: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|la|tremere}}.
+From {{inh|es|osp|tremendal}}, from {{der|es|la|tremendus||to be trembled at}} + {{m|la|-ālis}}, from {{m|la|tremō||to tremble, to quake}}. Later form influenced by e.g. {{m|es|robledal||oak grove}}, from {{m+|la|rōborētum||oak grove}} + {{m|la|-ālis}}.
 
 ===Noun===
 {{es-noun|m|tremedales}}
@@ -38564,7 +38556,7 @@ Page 1942 tuna: -------- begin text ---------
 * {{es-IPA}}
 
 ===Etymology 1===
-From {{BAR|es|tnq}}.
+From {{bor|es|tnq}}.
 
 ====Noun====
 {{es-noun|f}}
@@ -38578,7 +38570,7 @@ From {{BAR|es|tnq}}.
 * {{U:es:false friend|atún|gloss=a kind of fish}}
 
 ===Etymology 2===
-From {{FOO|es|fr|tune}}, possibly from {{m|fr|[[roi]] [[de]] [[Thunes]]||king of Tunis}}, a title used by leaders of vagabonds.
+From {{bor|es|fr|tune}}, possibly from {{m|fr|[[roi]] [[de]] [[Thunes]]||king of Tunis}}, a title used by leaders of vagabonds.
 
 ====Noun====
 {{es-noun|f}}
@@ -38592,12 +38584,12 @@ From {{FOO|es|fr|tune}}, possibly from {{m|fr|[[roi]] [[de]] [[Thunes]]||king of
 * {{pedia|Tuna (music)}}
 
 ===Etymology 3===
-Conjugated form of infinitive {{l|es|tunar}}
+{{nonlemma}}
 
 ====Verb====
 {{head|es|verb form}}
 
-# {{rfdef|es}}
+# {{es-verb form of|tunar|ending=-ar|mood=indicative|tense=present|number=s|person=3}}
 
 [[Category:Spanish terms with multiple etymologies]]
 [[Category:es:Cacti]]
@@ -39038,7 +39030,7 @@ Page 1960 ultranza: Found match for regex: =
 Page 1960 ultranza: -------- begin text ---------
 
 ===Etymology===
-Derived from {{FOO|es|la|ultrā}} <ref>{{R:DRAE}}</ref>
+From {{af|es|lang1=la|ultrā|-anza}}.<ref>{{R:DRAE}}</ref>
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -39129,7 +39121,7 @@ Page 1965 uro: Found match for regex: =
 Page 1965 uro: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|la|urus}}.
+16th-century borrowing from {{bor|es|la|ūrus}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -39146,7 +39138,9 @@ Page 1966 Uruguay: -------- begin text ---------
 {{wikipedia|lang=es}}
 
 ===Etymology===
-Disputed; {{FOO|es|gn|urugua||shellfish}} {{m|gn|y||water}} or {{m|gn|uru||kind of bird}} {{m|gn|gua||from}} {{m|gn|y||water}}.
+Disputed, either:
+* {{der|es|gn|[[urugua]] [[y]]|lit=water shellfish}}, from {{m|gn|urugua||shellfish}} + {{m|gn|y||water}}; or
+* {{der|es|gn|[[uru]] [[gua]] [[y]]|lit=type of water bird}} from {{m|gn|uru||type of bird}} + {{m|gn|gua||from}} + {{m|gn|y||water}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -39174,7 +39168,7 @@ Page 1967 usarse: Found match for regex: =
 Page 1967 usarse: -------- begin text ---------
 
 ===Etymology===
-From {{BAR|es|la}} ''[[usus]]''.
+{{af|es|usar|se}}
 
 ===Verb===
 {{es-verb|us|ar|ref=y}}
@@ -39192,7 +39186,7 @@ Page 1968 usurero: Found match for regex: =
 Page 1968 usurero: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|la|ūsūrārius}}.
+Probably a {{slbor|es|la|ūsūrārius|nocap=1}}.
 
 ===Noun===
 {{es-noun|m|f=usurera}}
@@ -39277,7 +39271,7 @@ Page 1972 valefacer: Found match for regex: =
 Page 1972 valefacer: -------- begin text ---------
 
 ===Etymology===
-Alternatively from {{FOO|es|la|valefacere}}, present active infinitive of {{m|la|valefaciō|| I say farewell}}, from {{m|la|valeō||to be worth}} + {{m|la|faciō||to make, to do}}, using the conjugation model of {{m|es|hacer}}. And from {{m|es|vale||[[IOU]], [[voucher]]}} + {{m|es|hacer||to make, do}}, analogously after the paradigm of {{m|es|abolefacer|| to destroy}}, {{m|es|arefacer||to make [[arid]]; to [[dry]] (up), [[wither]]}}, {{m|es|asuefacer|| to [[accustom]], [[habituate]], [[inure]] to}}, {{m|es|benefacer||to do good; [[benefit]], [[bless]]}}, {{m|es|calefacer|| to make [[calid]]; [[warm]], [[heat]]; [[rouse]], [[excite]] }}, {{m|es|estupefacer||to make or become stupid}}, {{m|es|malefacer||to do evil or harm; [[injure]]}}, {{m|es|madefacer|| to [[wet]], [[moisten]]; [[soak]], [[steep]]; [[intoxicate]]}}, {{m|es|molifacer||to make soft}}, {{m|es|patefacer|| to [[open]], throw open}}, {{m|es|putrefacer|| to make [[putrid]]; [[putrify]], [[rot]]}}, {{m|es|rubefacer||to make [[red]] or [[ruddy]]; [[redden]]}} and {{m|es|satisfacer|| to make [[satiated]]; [[satisfy]], [[content]]}}.
+From {{bor|es|la|valefaciō||to say farewell}}, interpreted as if a compound of {{af|es|vale|t1=[[voucher]], [[IOU]]|faciō|lang2=la|t2=to make, to do}}, on the model of {{m|es|arefacer||to make [[arid]], to [[dry]] (up), to [[wither]]}}, {{m|es|benefacer||to do good, to [[benefit]], to [[bless]]}}, {{m|es|estupefacer||to make or become stupid}}, and others.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -39285,41 +39279,22 @@ Alternatively from {{FOO|es|la|valefacere}}, present active infinitive of {{m|la
 ===Verb===
 {{es-verb|valefac|er|pres=valefago|pret=valefice|part=valefecho}}
 
-# To make an [[IOU]]
-# To make a [[bill of exchange]]; a [[negotiable instrument]]; a [[promissory note]] or [[note payable]]
-# To [[vouch]]
-## To [[take responsibility]] for; to express [[confidence]] in; to [[witness]]; to [[obtest]].
-## To warrant; to maintain by affirmations; to attest; to affirm; to avouch.
-##* Atterbury
-##*: Le aferieron verecundia al '''valefacer''' la verdad de la relación; y despues al acreditarla.
-##*:: They made him ashamed to '''vouch''' the truth of the relation, and afterwards to credit it.
-##* Shelley Mary
-##*: Las lágrimas que sufundieron los ojos de mi hermana en cuanto hube mencionado a nuestro amigo, y su erubeciente colorado parecían '''valefacer''' la verdad de los rumores que alcanzaran mis oídos.
-##*:: The tears that suffused my sister's eyes when I mentioned our friend, and her heightened colour seemed to '''vouch''' for the truth of the reports that had reached me.
-##: ''Puedo '''valefacer''' que el encuentro tomó lugar''.
-##:: ''I can '''vouch''' that the match took place.''
-## To back; to support; to confirm.
-##* Milton
-##*: Un madeciente horror frígido / A esas tan audaces palabras '''valefizo''' él con fazaña audacĺsima.
-##*:: Me damp horror chilled / At such bold words '''vouched''' with a deed so bold.
-## To call into court to warrant and defend, or to make good a warranty of title.
-##* Blackstone
-##*: Él '''valeface''' al inquilino en secuencia, quien '''valeface''' sobre el valefacendo común.
-##*:: He '''vouches''' the tenant in tail, who '''vouches''' over the common vouchee.
-## To bear witness; to give testimony or full attestation.
-##* Jonathan Swift
-##*: No le ha él de creer hasta haya el elector de Hanóver de '''valefacer''' aquello que sea vero de entre lo que ella ha {{...}} aseverado.
-##*:: He will not believe her until the elector of Hanover shall '''vouch''' for the truth of what she has {{...}} affirmed.
-## To call as a witness.
-##* Dryden
-##*: '''Valefagan''' las silentes estrellas y consciente luna.
-##*:: '''Vouch''' the silent stars and conscious moon.
-## To assert; to aver; to declare.
-# To [[voucher]]
-## To establish the [[authenticity]] of; to [[vouch]] for.
-## To provide a vouch for (an expenditure).
-## To provide (a beneficiary) with a voucher.
-# {{lb|es|literary}} To say farewell
+# to make an [[IOU]]
+# to make a [[bill of exchange]]; a [[negotiable instrument]]; a [[promissory note]] or [[note payable]]
+# to [[vouch]] for
+## to [[take responsibility]] for; to express [[confidence]] in; to [[witness]]; to [[obtest]]
+## to warrant; to maintain by affirmations; to attest; to affirm; to avouch
+##: {{ux|es|Puedo '''valefacer''' que el encuentro tomó lugar.|I can '''vouch''' that the match took place.}}
+## to back, to support, to confirm
+## to call into court to warrant and defend, or to make good a warranty of title.
+## to bear witness; to give testimony or full attestation
+## to call as a witness
+## to assert, to declare
+# to [[voucher]]
+## to establish the [[authenticity]] of; to [[vouch]] for
+## to provide a vouch for (an expenditure)
+## to provide (a beneficiary) with a voucher
+# {{lb|es|literary}} to say farewell
 
 ====Conjugation====
 {{es-conj-er|p=hacer|valef}}
@@ -39348,7 +39323,7 @@ Page 1973 valsar: Found match for regex: =
 Page 1973 valsar: -------- begin text ---------
 
 ===Etymology===
-From the noun {{m|es|vals||waltz}}, from {{FOO|es|de|Waltzer}}, from {{m|de|walzen||to dance}}, from {{FOO|es|goh|walzan||to turn}}, from {{FOO|es|gem-pro|*walt-||to turn}}, from {{FOO|es|ine-pro|*wel-||to turn}}.
+From the noun {{m|es|vals||waltz}}, from {{der|es|de|Walzer||waltz}}, from {{m|de|walzen||to dance}}, from {{der|es|goh|walzan||to turn}}, from {{der|es|gem-pro|*walt-||to turn}}, from {{der|es|ine-pro|*wel-||to turn}}.
 
 ===Verb===
 {{es-verb|vals|ar}}
@@ -39365,7 +39340,7 @@ Page 1974 vamos: Found match for regex: =
 Page 1974 vamos: -------- begin text ---------
 
 ===Etymology===
-Conjugated form from {{FOO|es|la|vadimus}}.
+{{nonlemma}}
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -39399,7 +39374,7 @@ Page 1976 varar: Found match for regex: =
 Page 1976 varar: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|la|vara}}.
+Possibly from {{inh|es|la|vārō||to bend into a curve}}. Semantic evolution unclear.
 
 ===Verb===
 {{es-verb|var|ar}}
@@ -39415,6 +39390,9 @@ From {{FOO|es|la|vara}}.
 * {{l|es|varada}}
 * {{l|es|varado}}
 
+===References===
+* {{R:es:Roberts:2014}}
+
 ----
 
 -------- end text --------
@@ -39422,7 +39400,7 @@ Page 1977 varicela: Found match for regex: =
 Page 1977 varicela: -------- begin text ---------
 {{wikipedia|lang=es}}
 ===Etymology===
-From {{bor|es|NL.|varicella}}, a false diminutive of Medieval Latin ''variola''.
+From {{bor|es|NL.|varicella}}, a false diminutive of {{der|es|ML.|variola||pock, pustule}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -39586,7 +39564,7 @@ Page 1984 venera: Found match for regex: =
 Page 1984 venera: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|ML.|veneria}}, from {{FOO|es|la|Venus}}. {{doublet|es|vieira}}.
+From {{bor|es|ML.|veneria}}, from {{der|es|la|Venus}}. {{doublet|es|vieira}}.
 
 ===Noun===
 {{es-noun|f}}
@@ -39642,7 +39620,7 @@ Page 1987 veraz: Found match for regex: =
 Page 1987 veraz: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|la|vērācem}}, singular accusative of {{m|la|vērāx}}, ''vērācis'' (“speaking truly, truthful”).
+From {{bor|es|la|vērāx||speaking truly, truthful}} (genitive singular {{m|la|vērācis}}).
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -39656,7 +39634,7 @@ From {{FOO|es|la|vērācem}}, singular accusative of {{m|la|vērāx}}, ''vērāc
 # [[truthful]], [[veracious]]
 
 ====Derived terms====
-* {{l|es|veracidad}} {{g|f}}
+* {{l|es|veracidad|g=f}}
 
 ====Related terms====
 * {{l|es|verdad}}
@@ -39684,7 +39662,7 @@ Page 1990 verdolaga: Found match for regex: =
 Page 1990 verdolaga: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|mxi||tr=berdiláqaš}}, from {{FOO|es|la|portulaca}}, with influence from Spanish {{m|es|verde}} and Mozarabic {{m|mxi||tr=yiláqa}}.
+From {{der|es|mxi||tr=berdiláqaš}} (also written {{m|mxi|tr=*berdolaca}}), from {{der|es|la|portulāca}}, with influence from {{cog|es|verde}} and {{cog|mxi||tr=yiláqa}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -39692,7 +39670,7 @@ From {{FOO|es|mxi||tr=berdiláqaš}}, from {{FOO|es|la|portulaca}}, with influen
 ===Noun===
 {{es-noun|f}}
 
-# [[common purslane]], a plant of species ''[[Portulaca oleracea]]''.
+# [[common purslane]], a plant of species ''[[Portulaca oleracea]]''
 
 [[Category:Spanish 4-syllable words]]
 [[Category:es:Vegetables]]
@@ -39701,7 +39679,7 @@ Page 1991 verdugo: Found match for regex: =
 Page 1991 verdugo: -------- begin text ---------
 
 ===Etymology===
-Of uncertain origin. Possibly from a {{FOO|es|VL.|*virdūcu-}}, from {{m|la|*virde}}, from {{FOO|es|la|viridem||green}}, with the meaning of “a green stick used to beat someone.”
+Of uncertain origin. Possibly from a {{inh|es|VL.|*virdūcus}}, from {{m|la|*virde}}, from {{der|es|la|viridis||green}}, with the meaning of "a green stick used to beat someone".
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -39762,7 +39740,7 @@ Page 1994 veza: Found match for regex: =
 Page 1994 veza: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|la|vicia}}.
+From {{inh|es|la|vicia}}.
 
 ===Noun===
 {{es-noun|f}}
@@ -39780,12 +39758,12 @@ Page 1995 viario: Found match for regex: =
 Page 1995 viario: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|la|viarius}}.
+From {{bor|es|la|viārius||related to roads}}.
 
 ===Adjective===
 {{es-adj|f=viaria}}
 
-# [[road]], [[street]], [[highway]] (attributive)
+# {{lb|es|relational}} [[road]], [[street]], [[highway]]
 
 ====Related terms====
 * {{l|es|vía}}
@@ -39797,7 +39775,7 @@ Page 1996 viburno: Found match for regex: =
 Page 1996 viburno: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|la|viburnum}}.
+From {{bor|es|la|vīburnum}}.
 
 ===Noun===
 {{es-noun|m}}
@@ -39810,18 +39788,19 @@ Page 1997 vicario: Found match for regex: =
 Page 1997 vicario: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|la|vicārius}}.
+From {{bor|es|la|vicārius}}.
 
 ===Noun===
 {{es-noun|m}}
 
+# [[substitute]]
 # [[vicar]]
 -------- end text --------
 Page 1998 vice-: Found match for regex: =
 Page 1998 vice-: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|la|vice}}, ablative of {{m|la|vicis}}.
+From {{der|es|la|vice||in place of}}, from the ablative of {{m|la|vicis||alternation, turn}}.
 
 ===Prefix===
 {{head|es|prefix}}
@@ -39835,21 +39814,21 @@ Page 1999 viciar: Found match for regex: =
 Page 1999 viciar: -------- begin text ---------
 
 ===Etymology===
-Borrowed from {{BAR|es|la}} ''[[vitiare|vitiāre]]'', present active infinitive of {{m|la|vitiō}}.
+Borrowed from {{bor|es|la|vitiāre}}, present active infinitive of {{m|la|vitiō||to corrupt, to dishonor}}.
 
 ===Verb===
 {{es-verb|vici|ar}}
 
-# to {{l|en|addict}} {{gloss|to cause someone to become addicted}}
+# to [[addict]] {{gloss|to cause someone to become addicted}}
 #: {{ux|es|Sus amigos lo '''viciaron''' en las drogas.|translation=His friends '''addicted''' him to drugs.}}
 #: {{ux|es|Este juego me vició.|translation=This game '''got''' me '''addicted'''.}}
-# {{lb|es|intransitive}} to be {{l|en|addictive}}
+# {{lb|es|intransitive}} to be [[addictive]]
 #: {{ux|es|Los cigarrillos '''vician'''.|translation=Cigarettes '''are addictive'''.}}
-# to {{l|en|spoil}}; to {{l|en|corrupt}}
+# to [[spoil]]; to [[corrupt]]
 #: {{ux|es|El hedor vició la habitación.|translation=The stench '''spoiled''' the room.}}
-# to {{l|en|adulterate}}, {{l|en|distort}}
+# to [[adulterate]], to [[distort]]
 #: {{ux|es|Los dados fueron '''viciados'''.|translation=The dice have been '''adultered'''.}}
-# {{lb|es|reflexive}} to {{l|en|degrade}}, to {{l|en|fade}}
+# {{lb|es|reflexive}} to [[degrade]], to [[fade]]
 #: {{ux|es|Las baterías se vician con el uso.|translation=Batteries degrade with use.}}
 
 ====Conjugation====
@@ -39882,7 +39861,7 @@ Page 2002 Vigo: -------- begin text ---------
 [[Image:Vigo dende o monte do castro.jpg|thumb|250px|Vigo]]
 
 ===Etymology===
-From the Roman name, {{FOO|es|la|vicus}} {{m|la|spacorum}}.
+From the Roman name, {{bor|es|la|[[vicus|Vīcus]] [[Spaci|Spacōrum]]|lit=village of the Spaci}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -39902,7 +39881,7 @@ Page 2003 vihuela: Found match for regex: =
 Page 2003 vihuela: -------- begin text ---------
 
 ===Etymology===
-Cf. {{m|es|viola}}. Probably from {{FOO|es|pro|viola}} (cf. modern Occitan {{m|oc|viula}}), possibly from a {{FOO|es|ML.|vitula}}. Compare also Italian and Portuguese {{m|it|viola}}, French {{m|fr|vielle}}, {{m|fr|viole}}.
+Probably from {{der|es|pro|viola}} (cf. modern {{cog|oc|viula}}), possibly from {{der|es|ML.|vitula}}. Compare also {{cog|it|viola}}, {{cog|pt|viola}}, {{cog|fr|vielle}}, {{m|fr|viole}}. {{doublet|es|viola}}.
 
 ===Noun===
 {{es-noun|f}}
@@ -39929,14 +39908,14 @@ From {{bor|es|la|vinculum||tie, bond}}, from {{suffix|la|vinciō|ulum|t1=bind, f
 * {{l|es|desvincular}}
 
 ====See also====
-* [[cuña]]
-* [[enchufe]]
+* {{l|es|cuña}}
+* {{l|es|enchufe}}
 -------- end text --------
 Page 2005 vinicultor: Found match for regex: =
 Page 2005 vinicultor: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|la|vīnum||wine}} + {{m|la|cultor}}, ''cultōris'' (“cultivator, tiller”).
+From {{der|es|la|vīnum||wine}} + {{m|la|cultor||cultivator, tiller}} (genitive singular {{m|la|cultōris}}).
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -39962,7 +39941,7 @@ Page 2006 vinicultura: Found match for regex: =
 Page 2006 vinicultura: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|la|vīnum||wine}} {{suffix|es||cultura}}, on pattern of words such as {{m|es|agricultura}}.
+From {{der|es|la|vīnum||wine}} {{suffix|es||cultura}}, on pattern of words such as {{m|es|agricultura}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -39986,7 +39965,7 @@ Page 2007 vinícola: Found match for regex: =
 Page 2007 vinícola: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|la|vīnum||wine}} {{suffix|es||cola}} ("cultivation").
+From {{der|es|la|vīnum||wine}} {{suffix|es||cola||cultivation}}; cf. {{m+|la|agricola||agriculturalist, cultivator}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -39994,7 +39973,7 @@ From {{FOO|es|la|vīnum||wine}} {{suffix|es||cola}} ("cultivation").
 ===Adjective===
 {{es-adj|mf}}
 
-# [[winemaking]], [[winegrowing]] {{gloss|attributive}}
+# {{lb|es|relational}} [[winemaking]], [[winegrowing]]
 
 ===Noun===
 {{es-noun|mf}}
@@ -40015,7 +39994,7 @@ Page 2008 viruela: Found match for regex: =
 Page 2008 viruela: -------- begin text ---------
 {{wikipedia|lang=es}}
 ===Etymology===
-From {{BAR|es|ML.}} or {{FOO|es|LL.|variola}}, based on {{FOO|es|la|varius}} "speckled, variegated".
+From {{inh|es|LL.|variola}}, based on {{der|es|la|varius||speckled, variegated}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -40036,7 +40015,7 @@ Page 2009 visigodo: Found match for regex: =
 Page 2009 visigodo: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|LL.|Visigothus}}.
+{{slbor|es|LL.|Visigothus}}.
 
 ===Pronunciation===
 * {{rhymes|es|odo}}
@@ -40079,7 +40058,7 @@ Page 2011 viticultor: Found match for regex: =
 Page 2011 viticultor: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|la|vītis||vine, grapevine}} + {{m|la|cultor}}, ''cultōris'' (“cultivator, tiller”).
+From {{der|es|la|vītis||vine, grapevine}} + {{m|la|cultor||cultivator, tiller}} (genitive singular {{m|la|cultōris}}).
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -40775,9 +40754,9 @@ Page 2047 yayo: Found match for regex: =
 Page 2047 yayo: -------- begin text ---------
 
 ===Etymology===
-{{unk|es}} origin, perhaps from whimsical slang by youth. A prevailing theory, given the term's ultimate origin in [[Aragon]] and Catalan-speaking territories, is derivation from {{der|es|ca|jajo||grandpa}}. It seems the first form generated was {{m|ca|*jaja||grandma}}, from which the masculine form was derived. This would come from {{FOO|es|ca|avia||grandmother}} (from {{FOO|es|VL.|*aviōla}}, feminine diminutive of {{m|la|avus||grandfather}}), and from juvenile [[palatalization]] would generate something like {{m|ca|*ai̯a}}. The common phenomenon of syllabic repetition in children's language (cf. {{m|en|papa}}, {{m|en|baba}}, etc.) would then cause the form {{m|ca|jaja}} above, which would then be spread into Spanish and masculinized.
+{{unk|es}} origin, perhaps from whimsical slang by youth. A prevailing theory, given the term's ultimate origin in [[Aragon]] and [[Catalan]]-speaking territories, is derivation from {{bor|es|ca|jajo||grandpa}}. It seems the first form generated was {{m|ca|*jaja||grandma}}, from which the masculine form was derived. This would come from {{der|es|ca|avia||grandmother}} (from {{der|es|VL.|*aviōla}}, feminine diminutive of {{m|la|avus||grandfather}}), and from juvenile [[palatalization]] would generate something like {{m|ca|*ai̯a}}. The common phenomenon of syllabic repetition in children's language (cf. {{m|en|papa}}, {{m|en|baba}}, etc.) would then cause the form {{m|ca|jaja}} above, which would then be spread into Spanish and masculinized.
 
-Otherwise, perhaps masculinized from {{FOO|es|el|γιαγιά||grandmother}}.
+Otherwise, perhaps masculinized from {{der|es|el|γιαγιά||grandmother}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -40797,7 +40776,7 @@ Otherwise, perhaps masculinized from {{FOO|es|el|γιαγιά||grandmother}}.
 -------- end text --------
 Page 2048 yelmo: Found match for regex: =
 Page 2048 yelmo: -------- begin text ---------
-
+[[File:Greek_-_Corinthian-Type_Helmet_-_Walters_542303.jpg|thumb|right|200px|Ancient Greek Helmet (yelmo)]]
 ===Etymology===
 From {{inh|es|la|helmus}}, borrowed from {{bor|la|frk|*helm||helmet}}, from {{der|es|gem-pro|*helmaz}}.
 
@@ -40806,7 +40785,6 @@ From {{inh|es|la|helmus}}, borrowed from {{bor|la|frk|*helm||helmet}}, from {{de
 
 ===Noun===
 {{es-noun|m}}
-[[File:Greek_-_Corinthian-Type_Helmet_-_Walters_542303.jpg|thumb|right|200px|Ancient Greek Helmet (yelmo)]]
 
 # an ancient [[helmet]] that covers head and face
 #: {{syn|es|casco}}
@@ -41005,7 +40983,7 @@ Page 2058 zabordar: Found match for regex: =
 Page 2058 zabordar: -------- begin text ---------
 
 ===Etymology===
-From {{m|es|za}} (corruption of {{FOO|es|la|sub||low}}) + {{m|es|abordar}}.
+From {{m|es|za}} (corruption of {{der|es|la|sub||low}}) + {{m|es|abordar}}.
 
 ===Verb===
 {{es-verb|zabord|ar}}
@@ -41054,7 +41032,7 @@ Page 2060 Zacatecas: Found match for regex: =
 Page 2060 Zacatecas: -------- begin text ---------
 
 ===Etymology===
-From {{bor|es|nah|zacatecah|zacatēcah|people of the place of grass}}, from {{m|nah|zacatl||grass}}.
+From {{bor|es|nci|zacatēcah||people of the place of grass}}, from {{m|nah|zacatl||grass}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -41245,7 +41223,7 @@ Page 2071 Zinacantán: Found match for regex: =
 Page 2071 Zinacantán: -------- begin text ---------
 
 ===Etymology===
-From {{bor|es|nah|Tzinacantlan||place of bats}}, from {{m|nah|tzinacan||bat}} + {{m|nah|-tlan}}. Compare {{m+|tzo|sots'leb}} (the local language of Zinacantán) with the same meaning.
+From {{bor|es|nci|Tzinacantlan||place of bats}}, from {{m|nci|tzinacan||bat}} + {{m|nci|-tlan}}. Compare {{m+|tzo|sots'leb}} (the local language of Zinacantán) with the same meaning.
 
 ===Proper noun===
 {{es-proper noun|m}}
@@ -41312,9 +41290,9 @@ Page 2075 zorro: -------- begin text ---------
 
 ===Etymology===
 First attested in the 15th century, chiefly in the feminine form {{m|es|zorra}}. Of unclear origin: 
-* perhaps from {{BAR|es|qfa-sub-ibe}}, 
-* perhaps from Middle French sor (“yellowish-brown, reddish-brown, sorrel”), or
-* perhaps from {{FOO|es|eu|azari}}/{{m|eu|azeri||fox}}. 
+* perhaps from {{der|es|qfa-sub-ibe}}, 
+* perhaps from {{der|frm|sor||yellowish-brown, reddish-brown, sorrel}}, or
+* perhaps from {{der|es|eu|azari}}/{{m|eu|azeri||fox}}. 
 * A fourth suggestion, that the term derives from a verb *''zorrar'' from onomatopoeia, is considered "far from convincing" and "unprovable".<ref>'''2012''', ''A History of the Spanish Lexicon: A Linguistic Perspective'' {{ISBN|0199541140}}, page 39: "The initial attestations of Sp. ''zorro''/''zorra'' 'fox' are from the mid fifteenth century and appear almost exclusively in the feminine, employed in ''cancionero'' poetry, with reference to idle, immoral women (cf. mod. ''zorra'' 'prostitute'). {{...}} DCECH may well be right in stating that ''zorro''/''zorra'' secondarily became a euphemistic designation for the dreaded fox (cf. ''raposo'' so used). {{...}} The late initial documentation of ''zorro'' leads to the question [of] whether this word goes back to early Roman Spain or whether it is a later borrowing from Basque, a derivation, as noted above, challenged by Trask (1997: 421). Far from convincing is the unprovable hypothesis in DCECH that ''zorro'' goes back to a verb ''zorrar'' (whose authenticity I have been unable to verify), allegedly of onomatopoeic origin."</ref>
 
 ===Pronunciation===
@@ -41893,7 +41871,7 @@ Page 2101 ñandú: Found match for regex: =
 Page 2101 ñandú: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|gn|ñandu guasu}}.
+From {{bor|es|gn|[[ñandu]] [[guasu]]|lit=big spider}}, perhaps by the similarity between the hair of the [[rhea]] and that of hairy spiders of the {{w|Amazon Basin}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -42001,7 +41979,7 @@ Page 2107 ósmosis: Found match for regex: =
 Page 2107 ósmosis: -------- begin text ---------
 
 ===Etymology===
-From {{FOO|es|grc|ὠσμός}}.
+From {{bor|es|NL.|ōsmosis}}, from {{der|es|grc-koi|ὠσμός|t1=push, thrust}}, from a contracted form of {{der|es|grc|ὠθισμός}}, {{m|grc|ὠστισμός}}, from {{m|grc|ὠθίζω||to push, to thrust}}, from {{m|grc|ὠθέω||to push}}.
 
 ===Noun===
 {{es-noun|f|ósmosis}}
