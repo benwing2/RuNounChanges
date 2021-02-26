@@ -271,7 +271,7 @@ Page 12 arándano: Found match for regex: =
 Page 12 arándano: -------- begin text ---------
 
 ===Etymology===
-Blend of Hispano-{{etyl|cel|es}} {{m|cel-pro|*agranio||sloe}} (compare {{cog|an|arañon}}, {{cog|ca|aranyó}}) and {{der|es|LL.|rodandarum}}, {{m|la|lorandrum}}, variants of {{der|es|la|rhododendron}}, from {{der|es|grc|ῥοδόδενδρον}}, from {{m|grc|ῥόδον||rose}} + {{m|grc|δένδρον||tree}}.
+Blend of Hispano-{{der|es|cel-pro|*agranio||sloe}} (compare {{cog|an|arañon}}, {{cog|ca|aranyó}}) and {{der|es|LL.|rodandarum}}, {{m|la|lorandrum}}, variants of {{der|es|la|rhododendron}}, from {{der|es|grc|ῥοδόδενδρον}}, from {{m|grc|ῥόδον||rose}} + {{m|grc|δένδρον||tree}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -694,7 +694,7 @@ Page 33 Bermúdez: Found match for regex: =
 Page 33 Bermúdez: -------- begin text ---------
 
 ===Etymology===
-{{suffix|es|Bermudo|ez}}, older form ''Vermudo,'' from the {{etyl|gem-sue|es}} name {{w|Veremund}}, from {{der|es|gem-pro|*wīhaz||holy, sacred}} + {{m|gem-pro|*mundō||security, protection}}.  Related to the names {{cog|non|Vímundr}} and {{cog|goh|Wermund}}.
+From {{suffix|es|Bermudo|ez}}, from older {{m|es|Vermudo}} from the {{der|es|gem-sue|-}} name {{w|Veremund}}, from {{der|es|gem-pro|*wīhaz||holy, sacred}} + {{m|gem-pro|*mundō||security, protection}}.  Related to the names {{cog|non|Vímundr}} and {{cog|goh|Wermund}}.
 
 ===Proper noun===
 {{es-proper noun}}
@@ -851,7 +851,7 @@ Page 42 biología: -------- begin text ---------
 {{wikipedia|lang=es}}
 
 ===Etymology===
-From {{confix|es|bio|logía}}, elements derived from {{BAR|es|grc}} and used to coin analogous terms in different languages c. 1800. More at [[biology]].
+From {{confix|es|bio|logía}}, from {{der|es|grc|βίος||life}} + {{m|grc|λόγος||explanation, narrative}} + {{m|grc|-ία}}, elements used to coin analogous terms in different languages c. 1800. See {{cog|en|biology}} for more information.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -2377,7 +2377,7 @@ Page 112 caperuza: Found match for regex: =
 Page 112 caperuza: -------- begin text ---------
 
 ===Etymology===
-From {{BAR|es|LL.}}, {{BAR|es|VL.}} ''capero'' (from {{FOO|es|LL.|cappa}}) + the suffix {{m|la|-uceus|-ucea}}.
+from {{der|es|LL.|cappa}} + an unclear suffix {{m|la||-er-}} + the suffix {{m|la|-uceus|-ūcea}}. Sometimes derived from {{cog|ML.|caperō||hood, esp. as worn by monks of the Franciscan order}} (genitive singular {{m|la|caperōnis}}), but that appears to be a borrowing from {{cog|fro|chaperon||hood}}, with the same unclear suffix.
 
 ===Noun===
 {{es-noun|f}}
@@ -2531,7 +2531,7 @@ Page 120 carabina: -------- begin text ---------
 {{wikipedia|lang=es}}
 
 ===Etymology===
-From {{FOO|es|fr|carabine||carbine}}, -> carabin -> escarrabin (grave digger) -> scarabée, from {{FOO|es|la|scarabaeus||beetle}}, from {{FOO|es|grc|κάραβος||beetle}}.
+From {{bor|es|fr|carabine||carbine}}, from {{der|es|fro|carabin||mounted rifleman}}, perhaps from {{m|fro|escarrabin||corpse bearer during the plague|lit=carrion beetle}}, from {{m|fro|scarabée||dung beetle}}, from {{der|es|la|scarabaeus||beetle}}, from {{der|es|grc|κάραβος||beetle}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -2552,6 +2552,7 @@ From {{FOO|es|fr|carabine||carbine}}, -> carabin -> escarrabin (grave digger) ->
 
 ===Further reading===
 * {{R:DRAE 2001}}
+* {{R:es:Roberts:2014}}
 
 [[Category:Spanish 4-syllable words]]
 [[Category:es:Firearms]]
@@ -5645,7 +5646,7 @@ Page 265 colmillo: Found match for regex: =
 Page 265 colmillo: -------- begin text ---------
 
 ===Etymology===
-From {{BAR|es|la}} root *''collumellum'', from ''[[columella]]''.
+From {{inh|es|VL.|columellus||canine tooth, tusk}} (attested in {{w|Isidore of Seville}}), masculine variant of {{m|la|columella|lit=small column, pillar}}, diminutive of {{m|la|columna||column}}. Used Classically to refer to the grinding teeth of horses in {{w|Varro}} and {{w|Pliny}} in the form {{m|la|[[columellaris|columellārēs]] [[dens|dentēs]]|lit=pillar-formed teeth}}.
 
 ===Noun===
 {{es-noun|m}}
@@ -5944,7 +5945,7 @@ Page 278 compás: -------- begin text ---------
 {{wikipedia|lang=es}}
 
 ===Etymology===
-From {{m|es|compasar}}, from {{FOO|es|la|cum}} + {{m|la|passus}}.
+Apparently from {{der|es|fro|compas}}, perhaps from {{der|es|ML.|compassus||circle, circuit}}, or the medieval Latin term is derived from Old French. In either case, deverbal from {{der|es|VL.|*compassāre||to pace off}}, from {{m|la|com-}} + {{m|la|*passāre||to step}}, from {{der|es|la|passus||step}}, originally the perfect passive participle of {{m|la|pandō||to stretch out}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -5971,6 +5972,7 @@ From {{m|es|compasar}}, from {{FOO|es|la|cum}} + {{m|la|passus}}.
 
 ===Further reading===
 * {{R:DRAE 2001}}
+* {{R:es:Roberts:2014}}
 
 [[Category:Spanish 2-syllable words]]
 [[Category:es:Writing instruments]]
@@ -6051,7 +6053,7 @@ Page 283 conducto auditivo externo: Found match for regex: =
 Page 283 conducto auditivo externo: -------- begin text ---------
 
 ===Etymology===
-Literal meaning "external auditory canal" from {{m|es|conducto||conduct}} + {{m|es|auditivo||auditory}} + {{m|es|externo||external, outer}}, from {{BAR|es|la}}.
+Literally, "external auditory duct", from {{af|es|conducto|t1=duct|auditivo|t2=auditory|externo|t3=external, outer}}.
 
 ===Noun===
 {{es-noun|m|head=[[conducto]] [[auditivo]] [[externo]]|conductos auditivos externos}}
@@ -10082,7 +10084,7 @@ Page 492 User:Eirikr/Sandbox3/ni/sp: Found match for regex: =
 Page 492 User:Eirikr/Sandbox3/ni/sp: -------- begin text ---------
 
 ===Etymology 1===
-From {{FOO|es|la|nec}}.
+From {{inh|es|la|nec}}.
 
 ====Conjunction====
 '''ni ... ni'''
@@ -12395,7 +12397,7 @@ Page 606 espino: -------- begin text ---------
 {{wikipedia|lang=es}}
 
 ===Etymology===
-From {{m|es|espina}}. Compare {{BAR|es|la}} ''[[spinus]]''.
+From {{m|es|espina||thorn}}, on the model of {{der|es|la|spīnus||blackthorn, sloe tree}}.
 
 ===Noun===
 {{es-noun|m}}
@@ -15390,7 +15392,7 @@ From {{inh|es|la|fueram}}, {{m|fuerat}}, first and third person singular active 
 # {{es-verb form of|mood=subj|tense=imp|sera=ra|num=s|pers=3|ending=er|ser}}
 
 ===Etymology 3===
-From active pluperfect conjugations of {{BAR|es|la}} verb {{m|la|eo}}, "I go", influenced by same conjugations of {{l|la|sum}}.
+From the active pluperfect conjugations of {{der|es|la|eō||to go}}, influenced by the corresponding conjugations of {{m|la|sum||to be}}.
 
 ====Verb====
 {{head|es|verb form}}
@@ -15713,13 +15715,16 @@ Page 776 gallardo: Found match for regex: =
 Page 776 gallardo: -------- begin text ---------
 
 ===Etymology===
-From {{bor|es|fr|gaillard||strapping, lively, strong}}, from {{BAR|es|xtg}} {{m|cel-gau|*gal-||strength}}. Compare {{cog|en|Gaylord}}.
+From {{bor|es|fr|gaillard||strapping, lively, strong}}, from {{der|es|fro|gaillart||spirited}}, from {{der|es|VL.|*galia||strength}}, from {{der|es|xtg|cel-gau|*gal-||strength}}. Compare {{cog|en|Gaylord}}.
 
 ===Adjective===
 {{es-adj|f=gallarda}}
 
 # [[gallant]], [[debonair]], [[brave]], [[strapping]], [[dashing]]
 # [[sleek]], [[elegant]]
+
+===References===
+* {{R:es:Roberts:2014}}
 -------- end text --------
 Page 777 galápago: Found match for regex: =
 Page 777 galápago: -------- begin text ---------
@@ -16668,7 +16673,7 @@ Page 823 grial: Found match for regex: =
 Page 823 grial: -------- begin text ---------
 
 ===Etymology===
-From {{bor|es|fr|graal}}, from {{BAR|es|fro}}, from {{der|es|ML.|gradalis}}, of unknown origin.
+From {{der|es|fro|graal}}, {{m|fro|grael}}, from {{der|es|ML.|gradālis||cup}}, of unclear origin. Possibly from {{der|es|VL.|*crātālis}}, from {{m|la|*crātus}}, from {{der|es|grc|κρᾱτήρ||mixing bowl, wassail bowl}}. 
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -16927,7 +16932,7 @@ Page 836 guarda: Found match for regex: =
 Page 836 guarda: -------- begin text ---------
 
 ===Etymology===
-From {{m|es|guardar}} or from {{BAR|es|gem}} *''warda''. Compare {{cog|it|guardia}}, {{cog|fr|garde}}.
+{{deverbal|es|guardar}}, from {{der|es|gem-pro|*wardāną||to guard}}, from {{m|gem-pro|*warduz||guard}}, {{m|gem-pro|*wardaz}}, or directly from the latter. Compare {{cog|it|guardia}}, {{cog|fr|garde}}.
 
 ===Noun===
 {{es-noun|mf}}
@@ -20083,7 +20088,7 @@ Page 996 Iztaccíhuatl: -------- begin text ---------
 {{wikipedia|lang=es}}
 
 ===Etymology===
-From {{der|es|nci|iztāc||white}} + {{m|nci|cihuātl||woman}}. The mountain's name in {{etyl|nci|-}} was {{m|nci|Iztāc tepētl|lit=white mountain}}.
+From {{der|es|nci|iztāc||white}} + {{m|nci|cihuātl||woman}}. The mountain's name in Classical Nahuatl was {{m|nci|Iztāc tepētl|lit=white mountain}}.
 
 ===Pronunciation===
 * {{es-IPA}}
@@ -20321,7 +20326,7 @@ Page 1008 Japón: -------- begin text ---------
 {{wikipedia|lang=es}}
 
 ===Etymology===
-From {{bor|es|nl|Japan}} or {{bor|es|pt|Japão}}, from {{der|es|ms|Jepang}}, from {{BAR|es|zhx}} {{m|zh|日本}} (e.g. Min Nan {{m|nan|Ji̍t-pún}}).
+From {{bor|es|nl|Japan}} or {{bor|es|pt|Japão}}, from {{der|es|ms|Jepang}}, from {{der|es|zhx|-}} {{m|zh|日本}} (e.g. {{cog|nan|Ji̍t-pún}}).
 
 ===Pronunciation===
 * {{es-IPA}}
