@@ -18,9 +18,15 @@ def process_text_on_page(index, pagetitle, text, lang, langname):
   if newtext != text:
     notes.append("standardize [[CAT:%s:...]] to [[Category:%s:...]]" % (lang, lang))
     text = newtext
-  newtext = re.sub(r"\[\[CAT:(%s .*?)\]\]" % langname, r"[[Category:\1]]", text)
+  newtext = re.sub(r"\[\[CAT:(%s[ _].*?)\]\]" % langname, r"[[Category:\1]]", text)
   if newtext != text:
     notes.append("standardize [[CAT:%s ...]] to [[Category:%s ...]]" % (langname, langname))
+    text = newtext
+  def replace_undercores(m):
+    return m.group(0).replace("_", " ")
+  newtext = re.sub(r"\[\[Category:%s_.*?\]\]" % langname, replace_undercores, text)
+  if newtext != text:
+    notes.append("replace underscores with spaces in [[Category:%s_...]]" % langname)
     text = newtext
 
   newtext = re.sub(r"\[\[Category:%s:([^|\[\]{}]*)\|([^|\[\]{}]*)\]\]" % lang, r"{{C|%s|\1|sort=\2}}" % lang, text)
