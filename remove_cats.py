@@ -21,7 +21,6 @@ def process_text_on_page(index, pagetitle, text):
   #  return
 
   origtext = text
-  pagemsg("Processing")
   notes = []
   removed_cats = []
 
