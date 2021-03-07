@@ -1,5 +1,9 @@
 local export = {}
 
+local m_IPA = require("Module:IPA")
+
+local lang = require("Module:languages").getByCode("es")
+
 local u = mw.ustring.char
 local rfind = mw.ustring.find
 local rsubn = mw.ustring.gsub
@@ -47,6 +51,13 @@ local function rsub(term, foo, bar)
 	return retval
 end
 
+-- version of rsubn() that returns a 2nd argument boolean indicating whether
+-- a substitution was made.
+local function rsubb(term, foo, bar)
+	local retval, nsubs = rsubn(term, foo, bar)
+	return retval, nsubs > 0
+end
+
 -- apply rsub() repeatedly until no change
 local function rsub_repeatedly(term, foo, bar)
 	while true do
@@ -65,13 +76,20 @@ end
 -- "distincion-yeismo": distinción + yeísmo
 -- "seseo-lleismo": seseo + lleísmo
 -- "seseo-yeismo": seseo + yeísmo
--- "rioplatense": Rioplatense
+-- "rioplatense-sheismo": Rioplatense with /ʃ/ (Buenos Aires)
+-- "rioplatense-zheismo": Rioplatense with /ʒ/
 function export.IPA(text, style, phonetic, do_debug)
 	local debug = {}
 
-	local distincion = style == "distincion-lleismo" or style == "distinction-yeismo"
-	local lleismo = style == "distinction-lleismo" or style == "sesio-lleismo"
-	local rioplat = style == "rioplatense"
+	local distincion = style == "distincion-lleismo" or style == "distincion-yeismo"
+	local lleismo = style == "distincion-lleismo" or style == "seseo-lleismo"
+	local rioplat = style == "rioplatense-sheismo" or style == "rioplatense-zheismo"
+	local sheismo = style == "rioplatense-sheismo"
+	local distincion_different = false
+	local lleismo_different = false
+	local need_rioplat = false
+	local initial_hi = false
+	local sheismo_different = false
 
 	text = ulower(text or mw.title.getCurrentTitle().text)
 	-- decompose everything but ñ and ü
@@ -122,14 +140,13 @@ function export.IPA(text, style, phonetic, do_debug)
 	--determining whether "y" is a consonant or a vowel
 	text = rsub(text, "y(" .. V .. ")", "ɟ%1") -- not the real sound
 	text = rsub(text, "y", "i")
-	text = rsub(text, "#hi(" .. V .. ")", rioplat and "#j%1" or "#ɟ%1")
 
 	--x
 	text = rsub(text, "#x", "s") -- xenofobia, xilófono, etc.
 	text = rsub(text, "x", "ks")
 
 	--c, g, q
-	text = rsub(text, "c([ie])", (distincion and "θ" or "s") .. "%1")
+	text = rsub(text, "c([ie])", (distincion and "θ" or "z") .. "%1") -- not the real LatAm sound
 	text = rsub(text, "gü([ie])", "ɡw%1")
 	text = rsub(text, "gu([ie])", "ɡ%1") -- special IPA g, not normal g
 	text = rsub(text, "g([ie])", "x%1") -- must happen after handling of x above
@@ -138,6 +155,10 @@ function export.IPA(text, style, phonetic, do_debug)
 	text = rsub(text, "qu([ie])", "k%1")
 	text = rsub(text, "ü", "u") -- [[Düsseldorf]], [[hübnerita]], obsolete [[freqüentemente]], etc.
 	text = rsub(text, "q", "k") -- [[quark]], [[Qatar]], [[burqa]], [[Iraq]], etc.
+	text = rsub(text, "z", distincion and "θ" or "z") -- not the real LatAm sound
+	if text:find("[θz]") then
+		distincion_different = true
+	end
 
 	table.insert(debug, text)
 
@@ -152,19 +173,22 @@ function export.IPA(text, style, phonetic, do_debug)
 	text = rsub(text, "[cgjñrvy]",
 		--["g"]="ɡ":  U+0067 LATIN SMALL LETTER G → U+0261 LATIN SMALL LETTER SCRIPT G
 		{["c"]="k", ["g"]="ɡ", ["j"]="x", ["ñ"]="ɲ", ["r"]="ɾ", ["v"]="b" })
+	text, initial_hi = rsubb(text, "#h?i(" .. V .. ")", rioplat and "#j%1" or "#ɟ%1")
+
+	-- double l
+	text, lleismo_different = rsubb(text, "ll", lleismo and "ʎ" or "ɟ")
 
 	-- trill in #r, lr, nr, sr, rr
 	text = rsub(text, "ɾɾ", "r")
 	-- FIXME: does this also apply to /θr/ (e.g. [[Azrael]], [[cruzrojista]])?
-	text = rsub(text, "([#lns])ɾ", "%1r")
-
-	-- double l
-	text = rsub(text, "ll", lleismo and "ʎ" or "ɟ")
+	text = rsub(text, "([#lnsz])ɾ", "%1r")
 
 	-- reduce any remaining double consonants ([[Addis Abeba]], [[cappa]], [[descender]] in Latin America ...);
 	-- do this before handling of -nm- e.g. in [[inmigración]], which generates a double consonant, and do this
 	-- before voicing stops before obstruents, to avoid problems with [[cappa]] and [[crackear]]
 	text = rsub(text, "(" .. C .. ")%1", "%1")
+	-- also reduce sz (Latin American in [[fascinante]], etc.)
+	text = rsub(text, "sz", "s")
 
 	-- voiceless stop to voiced before obstruent or nasal; but intercept -ts-, -tz-
 	local voice_stop = { ["p"] = "b", ["t"] = "d", ["k"] = "ɡ" }
@@ -173,7 +197,6 @@ function export.IPA(text, style, phonetic, do_debug)
 		function(stop, after) return voice_stop[stop] .. after end)
 	text = rsub(text, "!", "t")
 
-	text = rsub(text, "z", distincion and "θ" or "z") -- not the real LatAm sound
 	text = rsub(text, "n([# .]*[bpm])", "m%1")
 
 	table.insert(debug, text)
@@ -271,115 +294,112 @@ function export.IPA(text, style, phonetic, do_debug)
 	--make all primary stresses but the last one be secondary
 	text = rsub_repeatedly(text, "ˈ(.+)ˈ", "ˌ%1ˈ")
 
-	local variants = {}
+	if not initial_hi and rfind(text, "[ʎɟ]") then
+		sheismo_different = true
+	end
 	if rioplat then
-		local sh_variant = rsub(text, "ɟ", "ʃ")
-		local zh_variant = rsub(text, "ɟ", "ʒ")
-		if sh_variant == zh_variant then
-			table.insert(variants, sh_variant)
+		if sheismo then
+			text = rsub(text, "ɟ", "ʃ")
 		else
-			table.insert(variants, sh_variant)
-			table.insert(variants, zh_variant)
+			text = rsub(text, "ɟ", "ʒ")
 		end
-	else
-		table.insert(variants, text)
 	end
 
-	for i, text in ipairs(variants) do
-		--phonetic transcription
-		if phonetic then
-			-- θ, s, f before voiced consonants
-			local voiced = "mnɲbdɟɡʎ"
-			local r = "ɾr"
-			local tovoiced = {
-				["θ"] = "θ̬",
-				["s"] = "z",
-				["f"] = "v",
-			}
-			local function voice(sound, following)
-				return tovoiced[sound] .. following
-			end
-			text = rsub(text, "([θs])(" .. separator_c .. "*[" .. voiced .. r .. "])", voice)
-			text = rsub(text, "(f)(" .. separator_c .. "*[" .. voiced .. "])", voice)
-
-			-- fricative vs. stop allophones; first convert stops to fricatives, then back to stops
-			-- after nasals and sometimes after l
-			local stop_to_fricative = {["b"] = "β", ["d"] = "ð", ["ɟ"] = "ʝ", ["ɡ"] = "ɣ"}
-			local fricative_to_stop = {["β"] = "b", ["ð"] = "d", ["ʝ"] = "ɟ", ["ɣ"] = "ɡ"}
-			text = rsub(text, "[bdɟɡ]", stop_to_fricative)
-			text = rsub(text, "([mnɲ]" .. separator_c .. "*)([βɣ])",
-				function(nasal, fricative) return nasal .. fricative_to_stop[fricative] end
-			)
-			text = rsub(text, "([lʎmnɲ]" .. separator_c .. "*)([ðʝ])",
-				function(nasal_l, fricative) return nasal_l .. fricative_to_stop[fricative] end
-			)
-			text = rsub(text, "(##" .. ipa_stress_c .. "*)([βɣðʝ])",
-				function(stress, fricative) return stress .. fricative_to_stop[fricative] end
-			)
-			text = rsub(text, "[td]", {["t"] = "t̪", ["d"] = "d̪"})
-
-			-- nasal assimilation before consonants
-			local labiodental, dentialveolar, dental, alveolopalatal, palatal, velar =
-				"ɱ", "n̪", "n̟", "nʲ", "ɲ", "ŋ"
-			local nasal_assimilation = {
-				["f"] = labiodental,
-				["t"] = dentialveolar, ["d"] = dentialveolar,
-				["θ"] = dental,
-				["ĉ"] = alveolopalatal,
-				["ʃ"] = alveolopalatal,
-				["ɟ"] = palatal, ["ʎ"] = palatal,
-				["k"] = velar, ["x"] = velar, ["ɡ"] = velar,
-			}
-			text = rsub(text, "n(" .. separator_c .. "*)(.)",
-				function(stress, following) return (nasal_assimilation[following] or "n") .. stress .. following end
-			)
-
-			-- lateral assimilation before consonants
-			text = rsub(text, "l(" .. separator_c .. "*)(.)",
-				function(stress, following)
-					local l = "l"
-					if following == "t" or following == "d" then -- dentialveolar
-						l = "l̪"
-					elseif following == "θ" then -- dental
-						l = "l̟"
-					elseif following == "ĉ" or following == "ʃ" then -- alveolopalatal
-						l = "lʲ"
-					end
-					return l .. stress .. following
-				end)
-
-			--semivowels
-			text = rsub(text, "([aeouãẽõũ][iĩ])", "%1̯")
-			text = rsub(text, "([aeioãẽĩõ][uũ])", "%1̯")
-			
-			-- voiced fricatives are actually approximants
-			text = rsub(text, "([βðɣ])", "%1̝")
-
-			if rioplat then
-				text = rsub(text, "s(" .. separator_c .. "*" .. C .. ")", "ħ%1") -- not the real symbol
-				text = rsub(text, "z(" .. separator_c .. "*" .. C .. ")", "ɦ%1")
-			end
-		end
-
-		table.insert(debug, text)
-
-		-- remove silent "h" and convert fake symbols to real ones
-		local final_conversions =  {
-			["h"] = "",   -- silent "h"
-			["ħ"] = "h",  -- fake aspirated "h" to real "h"
-			["ĉ"] = "t͡ʃ", -- fake "ch" to real "ch"
-			["ɟ"] = "ɟ͡ʝ", -- fake "y" to real "y"
+	--phonetic transcription
+	if phonetic then
+		-- θ, s, f before voiced consonants
+		local voiced = "mnɲbdɟɡʎ"
+		local r = "ɾr"
+		local tovoiced = {
+			["θ"] = "θ̬",
+			["s"] = "z",
+			["f"] = "v",
 		}
-		text = rsub(text, "[hħĉɟ]", final_conversions)
+		local function voice(sound, following)
+			return tovoiced[sound] .. following
+		end
+		text = rsub(text, "([θs])(" .. separator_c .. "*[" .. voiced .. r .. "])", voice)
+		text = rsub(text, "(f)(" .. separator_c .. "*[" .. voiced .. "])", voice)
 
-		-- remove # symbols at word and text boundaries
-		text = rsub(text, "#", "")
+		-- fricative vs. stop allophones; first convert stops to fricatives, then back to stops
+		-- after nasals and sometimes after l
+		local stop_to_fricative = {["b"] = "β", ["d"] = "ð", ["ɟ"] = "ʝ", ["ɡ"] = "ɣ"}
+		local fricative_to_stop = {["β"] = "b", ["ð"] = "d", ["ʝ"] = "ɟ", ["ɣ"] = "ɡ"}
+		text = rsub(text, "[bdɟɡ]", stop_to_fricative)
+		text = rsub(text, "([mnɲ]" .. separator_c .. "*)([βɣ])",
+			function(nasal, fricative) return nasal .. fricative_to_stop[fricative] end
+		)
+		text = rsub(text, "([lʎmnɲ]" .. separator_c .. "*)([ðʝ])",
+			function(nasal_l, fricative) return nasal_l .. fricative_to_stop[fricative] end
+		)
+		text = rsub(text, "(##" .. ipa_stress_c .. "*)([βɣðʝ])",
+			function(stress, fricative) return stress .. fricative_to_stop[fricative] end
+		)
+		text = rsub(text, "[td]", {["t"] = "t̪", ["d"] = "d̪"})
 
-		variants[i] = text
+		-- nasal assimilation before consonants
+		local labiodental, dentialveolar, dental, alveolopalatal, palatal, velar =
+			"ɱ", "n̪", "n̟", "nʲ", "ɲ", "ŋ"
+		local nasal_assimilation = {
+			["f"] = labiodental,
+			["t"] = dentialveolar, ["d"] = dentialveolar,
+			["θ"] = dental,
+			["ĉ"] = alveolopalatal,
+			["ʃ"] = alveolopalatal,
+			["ɟ"] = palatal, ["ʎ"] = palatal,
+			["k"] = velar, ["x"] = velar, ["ɡ"] = velar,
+		}
+		text = rsub(text, "n(" .. separator_c .. "*)(.)",
+			function(stress, following) return (nasal_assimilation[following] or "n") .. stress .. following end
+		)
+
+		-- lateral assimilation before consonants
+		text = rsub(text, "l(" .. separator_c .. "*)(.)",
+			function(stress, following)
+				local l = "l"
+				if following == "t" or following == "d" then -- dentialveolar
+					l = "l̪"
+				elseif following == "θ" then -- dental
+					l = "l̟"
+				elseif following == "ĉ" or following == "ʃ" then -- alveolopalatal
+					l = "lʲ"
+				end
+				return l .. stress .. following
+			end)
+
+		--semivowels
+		text = rsub(text, "([aeouãẽõũ][iĩ])", "%1̯")
+		text = rsub(text, "([aeioãẽĩõ][uũ])", "%1̯")
+		
+		-- voiced fricatives are actually approximants
+		text = rsub(text, "([βðɣ])", "%1̝")
+
+		if rioplat then
+			text = rsub(text, "s(" .. separator_c .. "*" .. C .. ")", "ħ%1") -- not the real symbol
+			text = rsub(text, "z(" .. separator_c .. "*" .. C .. ")", "ɦ%1")
+		end
 	end
+
+	table.insert(debug, text)
+
+	-- remove silent "h" and convert fake symbols to real ones
+	local final_conversions =  {
+		["h"] = "",   -- silent "h"
+		["ħ"] = "h",  -- fake aspirated "h" to real "h"
+		["ĉ"] = "t͡ʃ", -- fake "ch" to real "ch"
+		["ɟ"] = phonetic and "ɟ͡ʝ" or "ʝ", -- fake "y" to real "y"
+	}
+	text = rsub(text, "[hħĉɟ]", final_conversions)
+
+	-- remove # symbols at word and text boundaries
+	text = rsub(text, "#", "")
 
 	local ret = {
-		variants = variants
+		text = text,
+		distincion_different = distincion_different, 
+		lleismo_different = lleismo_different,
+		need_rioplat = initial_hi or sheismo_different,
+		sheismo_different = sheismo_different,
 	}
 	if do_debug == "yes" then
 		ret.debug = table.concat(debug, " ||| ")
@@ -394,20 +414,70 @@ function export.show(frame)
 	}
 	local parargs = frame:getParent().args
 	local args = require("Module:parameters").process(parargs, params)
-	...
-end
+	local phonemic = {}
+	local phonetic = {}
+	local expressed_styles = {}
+	local function dostyle(style)
+		phonemic[style] = export.IPA(args[1], style, false, args.debug)
+		phonetic[style] = export.IPA(args[1], style, true, args.debug)
+	end
+	local function express_style(tag, style)
+		if not phonemic[style] then
+			dostyle(style)
+		end
+		table.insert(expressed_styles, {
+			tag = tag,
+			phonemic = phonemic[style],
+			phonetic = phonetic[style],
+		})
+	end
+	dostyle("distincion-lleismo")
+	local distincion_different = phonemic["distincion-lleismo"].distincion_different
+	local lleismo_different = phonemic["distincion-lleismo"].lleismo_different
+	local need_rioplat = phonemic["distincion-lleismo"].need_rioplat
+	local sheismo_different = phonemic["distincion-lleismo"].sheismo_different
+	if not distincion_different and not lleismo_different then
+		if not need_rioplat then
+			express_style(false, "distincion-lleismo")
+		else
+			express_style("everywhere but Argentina and Uruguay", "distincion-lleismo")
+		end
+	elseif distincion_different and not lleismo_different then
+		express_style("Spain", "distincion-lleismo")
+		express_style("Latin America", "seseo-lleismo")
+	elseif not distincion_different and lleismo_different then
+		express_style("most of Spain and Latin America", "distincion-yeismo")
+		express_style("rural northern Spain, Andes Mountains", "distincion-lleismo")
+	else
+		express_style("most of Spain", "distincion-yeismo")
+		express_style("most of Latin America", "seseo-yeismo")
+		express_style("rural northern Spain", "distincion-lleismo")
+		express_style("Andes Mountains", "seseo-lleismo")
+	end
+	if need_rioplat then
+		if sheismo_different then
+			express_style("Buenos Aires and environs", "rioplatense-sheismo")
+			express_style("elsewhere in Argentina and Uruguay", "rioplatense-zheismo")
+		else
+			express_style("Argentina and Uruguay", "rioplatense-sheismo")
+		end
+	end
+		
+	local lines = {}
+	for i, expressed_style in ipairs(expressed_styles) do
+		local pronunciations = {}
+		table.insert(pronunciations, {
+			pron = "/" .. expressed_style.phonemic.text .. "/",
+			qualifiers = expressed_style.tag and {expressed_style.tag} or nil,
+		})
+		table.insert(pronunciations, {
+			pron = "[" .. expressed_style.phonetic.text .. "]",
+		})
+		local bullet = i > 1 and "* " or ""
+		table.insert(lines, bullet .. m_IPA.format_IPA_full(lang, pronunciations))
+	end
 
-
-function export.LatinAmerica(frame)
-	return export.show(frame, true)
-end
-
-function export.phonetic(frame)
-	return export.show(frame, false, true)
-end
-
-function export.phoneticLatinAmerica(frame)
-	return export.show(frame, true, true)
+	return table.concat(lines, "\n") .. "\n"
 end
 
 return export
