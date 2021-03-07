@@ -346,6 +346,7 @@ function export.IPA(text, style, phonetic, do_debug)
 			["θ"] = dental,
 			["ĉ"] = alveolopalatal,
 			["ʃ"] = alveolopalatal,
+			["ʒ"] = alveolopalatal,
 			["ɟ"] = palatal, ["ʎ"] = palatal,
 			["k"] = velar, ["x"] = velar, ["ɡ"] = velar,
 		}
@@ -372,7 +373,7 @@ function export.IPA(text, style, phonetic, do_debug)
 		text = rsub(text, "([aeioãẽĩõ][uũ])", "%1̯")
 		
 		-- voiced fricatives are actually approximants
-		text = rsub(text, "([βðɣ])", "%1̝")
+		text = rsub(text, "([βðɣ])", "%1̞")
 
 		if rioplat then
 			text = rsub(text, "s(" .. separator_c .. "*" .. C .. ")", "ħ%1") -- not the real symbol
@@ -393,6 +394,7 @@ function export.IPA(text, style, phonetic, do_debug)
 
 	-- remove # symbols at word and text boundaries
 	text = rsub(text, "#", "")
+	text = mw.ustring.toNFC(text)
 
 	local ret = {
 		text = text,
@@ -409,7 +411,7 @@ end
 
 function export.show(frame)
 	local params = {
-		[1] = {required = true, default = "cebolla"},
+		[1] = {},
 		["debug"] = {type = "boolean"},
 	}
 	local parargs = frame:getParent().args
@@ -417,9 +419,10 @@ function export.show(frame)
 	local phonemic = {}
 	local phonetic = {}
 	local expressed_styles = {}
+	local text = args[1] or mw.title.getCurrentTitle().text
 	local function dostyle(style)
-		phonemic[style] = export.IPA(args[1], style, false, args.debug)
-		phonetic[style] = export.IPA(args[1], style, true, args.debug)
+		phonemic[style] = export.IPA(text, style, false, args.debug)
+		phonetic[style] = export.IPA(text, style, true, args.debug)
 	end
 	local function express_style(tag, style)
 		if not phonemic[style] then
@@ -477,7 +480,7 @@ function export.show(frame)
 		table.insert(lines, bullet .. m_IPA.format_IPA_full(lang, pronunciations))
 	end
 
-	return table.concat(lines, "\n") .. "\n"
+	return table.concat(lines, "\n")
 end
 
 return export
