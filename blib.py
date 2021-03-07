@@ -439,6 +439,7 @@ def page_should_be_ignored(pagetitle, allow_user_pages=False):
     return True
   return False
 
+# FIXME: Deprecated. Eliminate.
 def iter_pages(pageiter, startsort = None, endsort = None, key = None):
   i = 0
   t = None
@@ -676,21 +677,26 @@ class ProcessItems(object):
 
     return retval
 
-def iter_items(items, startsort=None, endsort=None, get_name=get_page_name,
+def iter_items(items, startsort=None, endsort=None, get_name=get_page_name, get_index=None,
     skip_ignorable_pages=False):
   i = 0
   t = None
   steps = 50
   skipsteps = 1000
+  actual_startsort = None
   tstart = datetime.datetime.now()
 
   for current in items:
     i += 1
+    if get_index:
+      index = get_index(current)
+    else:
+      index = i
 
     if startsort != None:
       should_skip = False
       if isinstance(startsort, int):
-        if i < startsort:
+        if index < startsort:
           should_skip = True
       elif get_name(current) < startsort:
         should_skip = True
@@ -699,9 +705,12 @@ def iter_items(items, startsort=None, endsort=None, get_name=get_page_name,
           pywikibot.output("skipping %s" % str(i))
         continue
 
+    actual_startsort = i
+    actual_endsort = None
+
     if endsort != None:
       if isinstance(endsort, int):
-        if i > endsort:
+        if index > endsort:
           break
       elif get_name(current) > endsort:
         break
@@ -711,16 +720,17 @@ def iter_items(items, startsort=None, endsort=None, get_name=get_page_name,
 
     if skip_ignorable_pages and page_should_be_ignored(get_name(current)):
       pywikibot.output("Page %s %s: page has a prefix or suffix indicating it should not be touched, skipping" % (
-        i, get_name(current)))
+        index, get_name(current)))
     else:
-      yield i, current
+      yield index, current
 
     if i % steps == 0:
       tdisp = ""
 
-      actual_startsort = startsort or 1
-      if isinstance(endsort, int) and isinstance(actual_startsort, int):
+      if isinstance(endsort, int):
         t = datetime.datetime.now()
+        startsort_as_int = startsort if isinstance(startsort, int) else 1
+        actual_endsort = endsort - (startsort_as_int - actual_startsort)
         # Logically:
         #
         # time_so_far = t - tstart
@@ -729,10 +739,17 @@ def iter_items(items, startsort=None, endsort=None, get_name=get_page_name,
         # remaining_pages = endsort - i
         # remaining_time = time_per_page * remaining_pages
         #
-        # We do the same but multiply before dividing, for increased precision and
-        # due to the inability to multiply or divide timedeltas by floats.
-        remaining_pages = endsort - i
-        pages_so_far = i - startsort + 1
+        # We do the same but multiply before dividing, for increased precision and due to the inability
+        # to multiply or divide timedeltas by floats. We also use the actual startsort (i.e. the actual
+        # index of the first page relative to the pages seen in the input stream, in case get_index() is
+        # supplied and e.g. the indices supplied by get_index() are offset significantly compared with
+        # the ordering in the input stream), and adjust the supplied `endsort` value by the difference
+        # between the supplied `startsort` and observed actual first page. This way, for example, if the
+        # get_index() indices start at 80000 and `startsort` = 82000 and `endsort` = 85000, we will
+        # correctly account for there being 3000 pages to do. NOTE: If the indices supplied by get_index()
+        # have gaps in them or are completely out of order, our calculations will be incorrect.
+        remaining_pages = actual_endsort - i
+        pages_so_far = i - actual_startsort + 1
         remaining_time = (t - tstart) * remaining_pages / pages_so_far
         seconds_left = remaining_time.seconds
         hours_left_in_day = seconds_left // 3600
@@ -759,7 +776,7 @@ def iter_items(items, startsort=None, endsort=None, get_name=get_page_name,
         )
         tdisp = ", est. %s left" % time_left_str
 
-      pywikibot.output(str(i) + "/" + str(endsort) + tdisp)
+      pywikibot.output(str(i) + "/" + str(actual_endsort) + tdisp)
 
 def group_notes(notes):
   if isinstance(notes, basestring):
@@ -798,6 +815,7 @@ def create_argparser(desc, include_pagefile=False, include_stdin=False,
   if include_pagefile:
     parser.add_argument("--pagefile", help="File listing pages to process.")
     parser.add_argument("--pages", help="List of pages to process, comma-separated.")
+    parser.add_argument("--pages-from-find-regex", help="Read pages to process (and their indices) from previous find_regex.py output.")
     parser.add_argument("--cats", help="List of categories to process, comma-separated.")
     parser.add_argument("--do-subcats", action="store_true",
       help="When processing categories, do subcategories instead of pages belong to the category.")
@@ -964,9 +982,9 @@ def do_pagefile_cats_refs(args, start, end, process, default_cats=[],
       return process(index, pagetitle, text)
     if args.find_regex:
       utf8_stdin = (line.decode("utf-8") for line in sys.stdin)
-      pagetitle_and_text = yield_text_from_find_regex(utf8_stdin, args.verbose)
-      for index, (pagetitle, text) in iter_items(pagetitle_and_text, start, end,
-          get_name=lambda x:x[0]):
+      index_pagetitle_and_text = yield_text_from_find_regex(utf8_stdin, args.verbose)
+      for _, (index, pagetitle, text) in iter_items(index_pagetitle_and_text, start, end,
+          get_name=lambda x:x[1], get_index=lambda x:x[0]):
         def pagemsg(txt):
           msg("Page %s %s: %s" % (index, pagetitle, txt))
         retval = do_process_text_on_page(index, pagetitle, text)
@@ -974,15 +992,23 @@ def do_pagefile_cats_refs(args, start, end, process, default_cats=[],
     else:
       parse_dump(sys.stdin, do_process_text_on_page, start, end)
 
-  elif args.pages or args.pagefile or args.cats or args.refs or args.specials or args.prefix_pages:
+  elif (args.pages or args.pagefile or args.pages_from_find_regex or args.cats or args.refs or
+      args.specials or args.prefix_pages):
     if args.pages:
       pages = [x.decode("utf-8") for x in re.split(r",(?! )", args.pages)]
-      for i, page in iter_items(pages, start, end):
-        process_page(pywikibot.Page(site, page), i)
+      for i, pagetitle in iter_items(pages, start, end):
+        process_page(pywikibot.Page(site, pagetitle), i)
     if args.pagefile:
       pages = [x.rstrip('\n') for x in codecs.open(args.pagefile, "r", "utf-8")]
-      for i, page in iter_items(pages, start, end):
-        process_page(pywikibot.Page(site, page), i)
+      for i, pagetitle in iter_items(pages, start, end):
+        process_page(pywikibot.Page(site, pagetitle), i)
+    if args.pages_from_find_regex:
+      index_pagetitle_and_text = yield_text_from_find_regex(
+        codecs.open(args.pages_from_find_regex, "r", "utf-8"), args.verbose
+      )
+      for _, (i, pagetitle, _) in iter_items(index_pagetitle_and_text, start, end,
+          get_name=lambda x:x[1], get_index=lambda x:x[0]):
+        process_page(pywikibot.Page(site, pagetitle), i)
     if args.cats:
       args_prune_cats = args.prune_cats and args.prune_cats.decode("utf-8") or None
       seen = set()
@@ -1835,7 +1861,7 @@ def yield_text_from_find_regex(lines, verbose):
       break
     if in_multiline and re.search("^-+ end text -+$", line):
       in_multiline = False
-      yield pagename, "".join(templines)
+      yield pagenum, pagename, "".join(templines)
     elif in_multiline:
       if line.rstrip('\n').endswith(':'):
         if verbose:
@@ -1848,9 +1874,10 @@ def yield_text_from_find_regex(lines, verbose):
       #  in_multiline = True
       #  templines = []
       #else:
-      m = re.search("^Page [0-9]+ (.*): -+ begin text -+$", line)
+      m = re.search("^Page ([0-9]+) (.*): -+ begin text -+$", line)
       if m:
-        pagename = m.group(1)
+        pagenum = m.group(1)
+        pagename = m.group(2)
         in_multiline = True
         templines = []
       elif verbose:
@@ -1865,14 +1892,15 @@ def yield_text_from_diff(lines, verbose):
       break
     if in_multiline and re.search("^Page [0-9]+", line):
       in_multiline = False
-      yield pagename, "".join(templines)
+      yield pagenum, pagename, "".join(templines)
     elif in_multiline:
       templines.append(line)
     else:
       line = line.rstrip('\n')
-      m = re.search("^Page [0-9]+ (.*): Diff:$", line)
+      m = re.search("^Page ([0-9]+) (.*): Diff:$", line)
       if m:
-        pagename = m.group(1)
+        pagenum = m.group(1)
+        pagename = m.group(2)
         in_multiline = True
         templines = []
       elif verbose:

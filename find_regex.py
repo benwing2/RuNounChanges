@@ -79,9 +79,9 @@ def search_pages(args, regex, invert, input_from_diff, start, end, lang_only):
 
   if input_from_diff:
     lines = codecs.open(input_from_diff, "r", "utf-8")
-    pagename_and_text = blib.yield_text_from_diff(lines, verbose)
-    for index, (pagename, text) in blib.iter_items(pagename_and_text, start, end,
-        get_name=lambda x:x[0]):
+    index_pagename_and_text = blib.yield_text_from_diff(lines, verbose)
+    for _, (index, pagename, text) in blib.iter_items(index_pagename_and_text, start, end,
+        get_name=lambda x:x[1], get_index=lambda x:x[0]):
       do_process_text_on_page(index, pagename, text)
     return
 

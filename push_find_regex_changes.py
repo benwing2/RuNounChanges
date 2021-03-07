@@ -81,14 +81,14 @@ if __name__ == "__main__":
 
   if args.origfile:
     origlines = codecs.open(args.origfile.decode("utf-8"), "r", "utf-8")
-    for pagename, text in blib.yield_text_from_find_regex(origlines, args.verbose):
+    for index, pagename, text in blib.yield_text_from_find_regex(origlines, args.verbose):
       origpages[pagename] = text
 
   lines = codecs.open(args.direcfile.decode("utf-8"), "r", "utf-8")
 
-  pagename_and_text = blib.yield_text_from_find_regex(lines, args.verbose)
-  for index, (pagename, text) in blib.iter_items(pagename_and_text, start, end,
-      get_name=lambda x:x[0]):
+  index, pagename_and_text = blib.yield_text_from_find_regex(lines, args.verbose)
+  for _, (index, pagename, text) in blib.iter_items(index_pagename_and_text, start, end,
+      get_name=lambda x:x[1], get_index=lambda x:x[0]):
     origcontents = origpages.get(pagename, None)
     if origcontents == text:
       msg("Page %s %s: Skipping contents for %s because no change" % (index, pagename, pagename))

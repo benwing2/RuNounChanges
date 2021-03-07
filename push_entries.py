@@ -54,10 +54,10 @@ if __name__ == "__main__":
 
   lines = codecs.open(args.direcfile, "r", "utf-8")
 
-  pagename_and_text = blib.yield_text_from_find_regex(lines, args.verbose)
-  for index, (pagename, text) in blib.iter_items(pagename_and_text, start, end,
-      get_name=lambda x:x[0]):
+  index_pagename_and_text = blib.yield_text_from_find_regex(lines, args.verbose)
+  for _, (index, pagename, text) in blib.iter_items(index_pagename_and_text, start, end,
+      get_name=lambda x:x[1], get_index=lambda x:x[0]):
     def do_process_page(page, index, parsed):
-      return process_page(index, page, text, args.lang, args.verbose, args.comment.decode('utf-8'))
+      return process_page(index, page, text, args.lang, args.verbose, args.comment.decode("utf-8"))
     blib.do_edit(pywikibot.Page(site, pagename), index, do_process_page,
         save=args.save, verbose=args.verbose, diff=args.diff)
