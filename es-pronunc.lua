@@ -168,7 +168,7 @@ function export.IPA(text, style, phonetic, do_debug)
 	-- 'des.we.saɾ' not #'de.swe.saɾ' (cf. [[desuelo]] /de.swe.lo/ from [[desolar]]).
 	text = rsub(text, "#desh", "!") --temporary symbol
 	text = rsub(text, "sh", "ʃ")
-	text = rsub(text, "!", "#desh") --restore 
+	text = rsub(text, "!", "#desh") --restore
 	text = rsub(text, "#p([st])", "%1") -- [[psicología]], [[pterodáctilo]]
 	text = rsub(text, "[cgjñrvy]",
 		--["g"]="ɡ":  U+0067 LATIN SMALL LETTER G → U+0261 LATIN SMALL LETTER SCRIPT G
@@ -371,7 +371,7 @@ function export.IPA(text, style, phonetic, do_debug)
 		--semivowels
 		text = rsub(text, "([aeouãẽõũ][iĩ])", "%1̯")
 		text = rsub(text, "([aeioãẽĩõ][uũ])", "%1̯")
-		
+
 		-- voiced fricatives are actually approximants
 		text = rsub(text, "([βðɣ])", "%1̞")
 
@@ -398,7 +398,7 @@ function export.IPA(text, style, phonetic, do_debug)
 
 	local ret = {
 		text = text,
-		distincion_different = distincion_different, 
+		distincion_different = distincion_different,
 		lleismo_different = lleismo_different,
 		need_rioplat = initial_hi or sheismo_different,
 		sheismo_different = sheismo_different,
@@ -465,7 +465,7 @@ function export.show(frame)
 			express_style("Argentina and Uruguay", "rioplatense-sheismo")
 		end
 	end
-		
+
 	local lines = {}
 	for i, expressed_style in ipairs(expressed_styles) do
 		local pronunciations = {}
