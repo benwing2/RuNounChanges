@@ -86,7 +86,7 @@ if __name__ == "__main__":
 
   lines = codecs.open(args.direcfile.decode("utf-8"), "r", "utf-8")
 
-  index, pagename_and_text = blib.yield_text_from_find_regex(lines, args.verbose)
+  index_pagename_and_text = blib.yield_text_from_find_regex(lines, args.verbose)
   for _, (index, pagename, text) in blib.iter_items(index_pagename_and_text, start, end,
       get_name=lambda x:x[1], get_index=lambda x:x[0]):
     origcontents = origpages.get(pagename, None)
