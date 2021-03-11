@@ -139,6 +139,7 @@ function export.IPA(text, style, phonetic, do_debug)
 
 	--determining whether "y" is a consonant or a vowel
 	text = rsub(text, "y(" .. V .. ")", "ɟ%1") -- not the real sound
+	text = rsub(text, "uy#", "uY") -- a temporary symbol; replaced with i below
 	text = rsub(text, "y", "i")
 
 	--x
@@ -289,8 +290,10 @@ function export.IPA(text, style, phonetic, do_debug)
 
 	text = table.concat(words, " ")
 
-	--real sound of LatAm Z
-	text = rsub(text, "z", "s")
+	text = rsub(text, "Y", "i") --final -uy
+	text = rsub(text, "z", "s") --real sound of LatAm Z
+	-- suppress syllable mark before IPA stress indicator
+	text = rsub(text, "%.(" .. ipa_stress_c .. ")", "%1")
 	--make all primary stresses but the last one be secondary
 	text = rsub_repeatedly(text, "ˈ(.+)ˈ", "ˌ%1ˈ")
 
@@ -413,6 +416,11 @@ function export.show(frame)
 	local params = {
 		[1] = {},
 		["debug"] = {type = "boolean"},
+		["pre"] = {},
+		["post"] = {},
+		["ref"] = {},
+		["style"] = {},
+		["bullets"] = {type = "number", default = 1},
 	}
 	local parargs = frame:getParent().args
 	local args = require("Module:parameters").process(parargs, params)
@@ -420,50 +428,103 @@ function export.show(frame)
 	local phonetic = {}
 	local expressed_styles = {}
 	local text = args[1] or mw.title.getCurrentTitle().text
+	local need_rioplat
 	local function dostyle(style)
 		phonemic[style] = export.IPA(text, style, false, args.debug)
 		phonetic[style] = export.IPA(text, style, true, args.debug)
 	end
-	local function express_style(tag, style)
+	local function express_style(hidden_tag, tag, style, matching_styles)
+		matching_styles = matching_styles or style
+		if not need_rioplat and not matching_styles:find("rioplatense") then
+			matching_styles = matching_styles .. "-rioplatense-sheismo-zheismo"
+		end
+		-- If style specified, make sure it matches the requested style.
+		local style_matches
+		if not args.style then
+			style_matches = true
+		else
+			local style_parts = rsplit(matching_styles, "%-")
+			local or_styles = rsplit(args.style, "%s*,%s*")
+			for _, or_style in ipairs(or_styles) do
+				local and_styles = rsplit(or_style, "%s*%+%s*")
+				local and_matches = true
+				for _, and_style in ipairs(and_styles) do
+					local negate
+					if and_style:find("^%-") then
+						and_style = and_style:gsub("^%-", "")
+						negate = true
+					end
+					local this_style_matches = false
+					for _, part in ipairs(style_parts) do
+						if part == and_style then
+							this_style_matches = true
+							break
+						end
+					end
+					if negate then
+						this_style_matches = not this_style_matches
+					end
+					if not this_style_matches then
+						and_matches = false
+					end
+				end
+				if and_matches then
+					style_matches = true
+					break
+				end
+			end
+		end
+		if not style_matches then
+			return
+		end
+
 		if not phonemic[style] then
 			dostyle(style)
 		end
-		table.insert(expressed_styles, {
+		local new_style = {
 			tag = tag,
 			phonemic = phonemic[style],
 			phonetic = phonetic[style],
-		})
+		}
+		table.insert(expressed_styles, new_style)
 	end
 	dostyle("distincion-lleismo")
 	local distincion_different = phonemic["distincion-lleismo"].distincion_different
 	local lleismo_different = phonemic["distincion-lleismo"].lleismo_different
-	local need_rioplat = phonemic["distincion-lleismo"].need_rioplat
+	need_rioplat = phonemic["distincion-lleismo"].need_rioplat
 	local sheismo_different = phonemic["distincion-lleismo"].sheismo_different
 	if not distincion_different and not lleismo_different then
 		if not need_rioplat then
-			express_style(false, "distincion-lleismo")
+			express_style(false, false, "distincion-lleismo", "distincion-seseo-lleismo-yeismo")
 		else
-			express_style("everywhere but Argentina and Uruguay", "distincion-lleismo")
+			express_style(false, "everywhere but Argentina and Uruguay", "distincion-lleismo",
+			"distincion-seseo-lleismo-yeismo")
 		end
 	elseif distincion_different and not lleismo_different then
-		express_style("Spain", "distincion-lleismo")
-		express_style("Latin America", "seseo-lleismo")
+		express_style("Spain", "Spain", "distincion-lleismo", "distincion-lleismo-yeismo")
+		express_style("Latin America", "Latin America", "seseo-lleismo", "seseo-lleismo-yeismo")
 	elseif not distincion_different and lleismo_different then
-		express_style("most of Spain and Latin America", "distincion-yeismo")
-		express_style("rural northern Spain, Andes Mountains", "distincion-lleismo")
+		express_style(false, "most of Spain and Latin America", "distincion-yeismo", "distincion-seseo-yeismo")
+		express_style(false, "rural northern Spain, Andes Mountains", "distincion-lleismo", "distincion-seseo-lleismo")
 	else
-		express_style("most of Spain", "distincion-yeismo")
-		express_style("most of Latin America", "seseo-yeismo")
-		express_style("rural northern Spain", "distincion-lleismo")
-		express_style("Andes Mountains", "seseo-lleismo")
+		express_style("Spain", "most of Spain", "distincion-yeismo")
+		express_style("Latin America", "most of Latin America", "seseo-yeismo")
+		express_style("Spain", "rural northern Spain", "distincion-lleismo")
+		express_style("Latin America", "Andes Mountains", "seseo-lleismo")
 	end
 	if need_rioplat then
+		local hidden_tag = distincion_different and "Latin America" or false
 		if sheismo_different then
-			express_style("Buenos Aires and environs", "rioplatense-sheismo")
-			express_style("elsewhere in Argentina and Uruguay", "rioplatense-zheismo")
+			express_style(hidden_tag, "Buenos Aires and environs", "rioplatense-sheismo", "seseo-rioplatense-sheismo")
+			express_style(hidden_tag, "elsewhere in Argentina and Uruguay", "rioplatense-zheismo", "seseo-rioplatense-zheismo")
 		else
-			express_style("Argentina and Uruguay", "rioplatense-sheismo")
+			express_style(hidden_tag, "Argentina and Uruguay", "rioplatense-sheismo", "seseo-rioplatense-sheismo-zheismo")
 		end
+	end
+
+	-- If only one variant, don't indicate the style.
+	if #expressed_styles == 1 then
+		expressed_styles[1].tag = false
 	end
 
 	local lines = {}
@@ -476,8 +537,10 @@ function export.show(frame)
 		table.insert(pronunciations, {
 			pron = "[" .. expressed_style.phonetic.text .. "]",
 		})
-		local bullet = i > 1 and "* " or ""
-		table.insert(lines, bullet .. m_IPA.format_IPA_full(lang, pronunciations))
+		local bullet = string.rep("*", args.bullets) .. " "
+		local pre = i == 1 and args.pre and args.pre .. " " or ""
+		local post = i == 1 and (args.ref or "") .. (args.post and " " .. args.post or "") or ""
+		table.insert(lines, bullet .. pre .. m_IPA.format_IPA_full(lang, pronunciations) .. post)
 	end
 
 	return table.concat(lines, "\n")
