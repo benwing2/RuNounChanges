@@ -486,7 +486,16 @@ function export.show(frame)
 			phonemic = phonemic[style],
 			phonetic = phonetic[style],
 		}
-		table.insert(expressed_styles, new_style)
+		for _, hidden_tag_style in ipairs(expressed_styles) do
+			if hidden_tag_style.tag == hidden_tag then
+				table.insert(hidden_tag_style.styles, new_style)
+				return
+			end
+		end
+		table.insert(expressed_styles, {
+			tag = hidden_tag,
+			styles = {new_style},
+		})
 	end
 	dostyle("distincion-lleismo")
 	local distincion_different = phonemic["distincion-lleismo"].distincion_different
@@ -522,25 +531,66 @@ function export.show(frame)
 		end
 	end
 
-	-- If only one variant, don't indicate the style.
+	-- If only one style group, don't indicate the style.
 	if #expressed_styles == 1 then
 		expressed_styles[1].tag = false
+		if #expressed_styles[1].styles == 1 then
+			expressed_styles[1].styles[1].tag = false
+		end
 	end
 
 	local lines = {}
-	for i, expressed_style in ipairs(expressed_styles) do
+
+	local function format_style(tag, expressed_style, is_first)
 		local pronunciations = {}
 		table.insert(pronunciations, {
 			pron = "/" .. expressed_style.phonemic.text .. "/",
-			qualifiers = expressed_style.tag and {expressed_style.tag} or nil,
+			qualifiers = tag and {tag} or nil,
 		})
 		table.insert(pronunciations, {
 			pron = "[" .. expressed_style.phonetic.text .. "]",
 		})
 		local bullet = string.rep("*", args.bullets) .. " "
-		local pre = i == 1 and args.pre and args.pre .. " " or ""
-		local post = i == 1 and (args.ref or "") .. (args.post and " " .. args.post or "") or ""
-		table.insert(lines, bullet .. pre .. m_IPA.format_IPA_full(lang, pronunciations) .. post)
+		local pre = is_first and args.pre and args.pre .. " " or ""
+		local post = is_first and (args.ref or "") .. (args.post and " " .. args.post or "") or ""
+		return bullet .. pre .. m_IPA.format_IPA_full(lang, pronunciations) .. post
+	end
+
+	for i, style_group in ipairs(expressed_styles) do
+		if #style_group.styles == 1 then
+			style_group.formatted = format_style(style_group.styles[1].tag, style_group.styles[1], i == 1)
+		else
+			style_group.formatted = format_style(style_group.tag, style_group.styles[1], i == 1)
+			for j, style in ipairs(style_group.styles) do
+				style.formatted = format_style(style.tag, style, i == 1 and j == 1)
+			end
+		end
+	end
+
+	local maxlen = 0
+	for i, style_group in ipairs(expressed_styles) do
+		local this_len = ulen(style_group.formatted)
+		if #style_group.styles > 1 then
+			for _, style in ipairs(style_group.styles) do
+				this_len = math.max(this_len, ulen(style.formatted))
+			end
+		end
+		maxlen = math.max(maxlen, this_len)
+	end
+
+	for i, style_group in ipairs(expressed_styles) do
+		if #style_group.styles == 1 then
+			table.insert(lines, style_group.formatted)
+		else
+			local inline = '\n<div class="vsShow" style="display:none">\n' .. style_group.formatted .. "</div>"
+			local full_prons = {}
+			for _, style in ipairs(style_group.styles) do
+				table.insert(full_prons, style.formatted)
+			end
+			local full = '\n<div class="vsHide">\n' .. table.concat(full_prons, "\n") .. "</div>"
+			local em_length = math.floor(maxlen * 0.68) -- from [[Module:grc-pronunciation]]
+			table.insert(lines, '<div class="vsSwitcher" data-toggle-category="pronunciations" style="width: ' .. em_length .. 'em; max-width:100%;"><span class="vsToggleElement" style="float: right;">&nbsp;</span>' .. inline .. full .. "</div>")
+		end
 	end
 
 	return table.concat(lines, "\n")
