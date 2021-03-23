@@ -22,126 +22,57 @@ add_stress = {
   "u": u"ú",
 }
 
+prepositions = {
+  "a",
+  "al",
+  "de",
+  "del",
+  "como",
+  "con",
+  "en",
+  "para",
+  "por",
+}
+
+all_specials = ["first", "second", "first-second", "first-last", "last", "each"]
+
 TEMPCHAR = u"\uFFF1"
 
-def add_ending_to_plurals(plurals, ending):
+old_adj_template = "es-adj-old"
+#old_adj_template = "es-adj"
+
+def add_endings(bases, endings):
+  if bases is None or endings is None:
+    return None
   retval = []
-  for pl in plurals:
-    if type(ending) is list:
-      for en in ending:
-        retval.append(pl + en)
-    else:
-      retval.append(pl + ending)
+  if type(bases) is not list:
+    bases = [bases]
+  if type(endings) is not list:
+    endings = [endings]
+  for base in bases:
+    for ending in endings:
+      retval.append(base + ending)
   return retval
 
-def make_plural(singular, special=None):
-  if special == "first":
-    m = re.search("^(.*?)( .*)$", singular)
-    if not m:
-      return None
-    first, rest = m.groups()
-    first_plural = make_plural(first)
-    if first_plural is None:
-      return None
-    return add_ending_to_plurals(first_plural, rest)
-  elif special == "second":
-    m = re.search("^(.+? )(.+?)( .*)$", singular)
-    if not m:
-      return None
-    first, second, rest = m.groups()
-    second_plural = make_plural(second)
-    if second_plural is None:
-      return None
-    return add_ending_to_plurals(add_ending_to_plurals([first], second_plural), rest)
-  elif special == "first-last":
-    m = re.search("^(.*?)( .* )(.*?)$", singular)
-    if not m:
-      m = re.search("^(.*?)( )(.*)$", singular)
-    if not m:
-      return None
-    first, middle, last = m.groups()
-    first_plural = make_plural(first)
-    if first_plural is None:
-      return None
-    last_plural = make_plural(last)
-    if last_plural is None:
-      return None
-    return add_ending_to_plurals(add_ending_to_plurals(first_plural, middle), last_plural)
-  
-  # ends in unstressed vowel or á, é, ó
-  if re.search(u"[aeiouáéó]$", singular):
-    return [singular + "s"]
-  
-  # ends in í or ú
-  if re.search(u"[íú]$", singular):
-    return [singular + "s", singular + "es"]
-  
-  # ends in a vowel + z
-  if re.search(u"[aeiouáéíóú]z$", singular):
-    return [re.sub("z$", "ces", singular)]
-  
-  # ends in tz
-  if re.search("tz$", singular):
-    return [singular]
-
-  vowels = []
-  # Replace qu before e or i so that the u isn't counted as a vowel.
-  modified_singular = re.sub("qu([ie])", TEMPCHAR + r"\1", singular)
-  for m in re.finditer(u"([aeiouáéíóú])", modified_singular):
-    vowels.append(m.group(1))
-  
-  # ends in s or x with more than 1 syllable, last syllable unstressed
-  if len(vowels) >= 2 and re.search("[sx]$", singular) and re.search("[aeiou]", vowels[-1]):
-    return [singular]
-  
-  # ends in l, r, n, d, z, or j with 3 or more syllables, accented on third to last syllable
-  if len(vowels) >= 3 and re.search("[lrndzj]$", singular) and re.search(u"[áéíóú]", vowels[-3]):
-    return [singular]
-  
-  # ends in a stressed vowel + consonant
-  if re.search(u"[áéíóú][^aeiouáéíóú]$", singular):
-    return [re.sub("(.)(.)$", lambda m: remove_stress[m.group(1)] + m.group(2) + "es", singular)]
-  
-  # ends in a vowel + y, l, r, n, d, j, s, x
-  if re.search("[aeiou][ylrndjsx]$", singular):
-    # two or more vowels: add stress mark to plural
-    if len(vowels) >= 2 and re.search("n$", singular):
-      m = re.search("^(.*)[aeiou]([^aeiou]*[aeiou][nl])$", modified_singular)
-      if m:
-        before_stress, after_stress = m.groups()
-        stress = add_stress.get(vowels[-2], None)
-        if stress:
-          return [re.sub(TEMPCHAR, "qu", before_stress + stress + after_stress + "es")]
-    
-    return [singular + "es"]
-  
-  # ends in a vowel + ch
-  if re.search("[aeiou]ch$", singular):
-    return [singular + "es"]
-  
-  # ends in two consonants
-  if re.search(u"[^aeiouáéíóú][^aeiouáéíóú]$", singular):
-    return [singular + "s"]
-  
-  # ends in a vowel + consonant other than l, r, n, d, z, j, s, or x
-  if re.search("[aeiou][^aeioulrndzjsx]$", singular):
-    return [singular + "s"]
-
-  return None
-
-def make_feminine(form, special=None):
+def handle_multiword(form, special, inflect):
   if special == "first":
     m = re.search("^(.*?)( .*)$", form)
     if not m:
       return None
     first, rest = m.groups()
-    return make_feminine(first) + rest
+    return add_endings(inflect(first), rest)
   elif special == "second":
     m = re.search("^(.+? )(.+?)( .*)$", form)
     if not m:
       return None
     first, second, rest = m.groups()
-    return first + make_feminine(second) + rest
+    return add_endings(add_endings([first], inflect(second)), rest)
+  elif special == "first-second":
+    m = re.search("^([^ ]+)( )([^ ]+)( .*)$", form)
+    if not m:
+      return None
+    first, space, second, rest = m.groups()
+    return add_endings(add_endings(add_endings(inflect(first), space), inflect(second)), rest)
   elif special == "first-last":
     m = re.search("^(.*?)( .* )(.*?)$", form)
     if not m:
@@ -149,7 +80,116 @@ def make_feminine(form, special=None):
     if not m:
       return None
     first, middle, last = m.groups()
-    return make_feminine(first) + middle + make_feminine(last)
+    return add_endings(add_endings(inflect(first), middle), inflect(last))
+  elif special == "last":
+    m = re.search("^(.* )(.*?)$", form)
+    if not m:
+      return None
+    rest, last = m.groups()
+    return add_endings(rest, inflect(last))
+  elif special == "each":
+    if " " not in form:
+      return None
+    terms = form.split(" ")
+    inflected_terms = []
+    for i, term in enumerate(terms):
+      term = inflect(term)
+      if i > 0:
+        term = add_endings(" ", term)
+      inflected_terms.append(term)
+    result = ""
+    for term in inflected_terms:
+      result = add_endings(result, term)
+    return result
+  else:
+    assert not special, "Saw unrecognized special=%s" % special
+
+  m = re.search("^(.*?)( (?:%s))( .*)$" % "|".join(prepositions), form)
+
+  if m:
+    first, space_prep, rest = m.groups()
+    return add_endings(inflect(first), space_prep + rest)
+
+  if " " in form:
+    return handle_multiword(form, "first-last", inflect)
+
+  return None
+
+def make_plural(form, special=None):
+  retval = handle_multiword(form, special, make_plural)
+  if retval:
+    return retval
+  if special:
+    return None
+  
+  # ends in unstressed vowel or á, é, ó
+  if re.search(u"[aeiouáéó]$", form):
+    return [form + "s"]
+  
+  # ends in í or ú
+  if re.search(u"[íú]$", form):
+    return [form + "s", form + "es"]
+  
+  # ends in a vowel + z
+  if re.search(u"[aeiouáéíóú]z$", form):
+    return [re.sub("z$", "ces", form)]
+  
+  # ends in tz
+  if re.search("tz$", form):
+    return [form]
+
+  vowels = []
+  # Replace qu before e or i so that the u isn't counted as a vowel.
+  modified_form = re.sub("qu([ie])", TEMPCHAR + r"\1", form)
+  for m in re.finditer(u"([aeiouáéíóú])", modified_form):
+    vowels.append(m.group(1))
+  
+  # ends in s or x with more than 1 syllable, last syllable unstressed
+  if len(vowels) >= 2 and re.search("[sx]$", form) and re.search("[aeiou]", vowels[-1]):
+    return [form]
+  
+  # ends in l, r, n, d, z, or j with 3 or more syllables, accented on third to last syllable
+  if len(vowels) >= 3 and re.search("[lrndzj]$", form) and re.search(u"[áéíóú]", vowels[-3]):
+    return [form]
+  
+  # ends in a stressed vowel + consonant
+  if re.search(u"[áéíóú][^aeiouáéíóú]$", form):
+    return [re.sub("(.)(.)$", lambda m: remove_stress[m.group(1)] + m.group(2) + "es", form)]
+  
+  # ends in a vowel + y, l, r, n, d, j, s, x
+  if re.search("[aeiou][ylrndjsx]$", form):
+    # two or more vowels: add stress mark to plural
+    if len(vowels) >= 2 and re.search("n$", form):
+      m = re.search("^(.*)[aeiou]([^aeiou]*[aeiou][nl])$", modified_form)
+      if m:
+        before_stress, after_stress = m.groups()
+        stress = add_stress.get(vowels[-2], None)
+        if stress:
+          return [re.sub(TEMPCHAR, "qu", before_stress + stress + after_stress + "es")]
+    
+    return [form + "es"]
+  
+  # ends in a vowel + ch
+  if re.search("[aeiou]ch$", form):
+    return [form + "es"]
+  
+  # ends in two consonants
+  if re.search(u"[^aeiouáéíóú][^aeiouáéíóú]$", form):
+    return [form + "s"]
+  
+  # ends in a vowel + consonant other than l, r, n, d, z, j, s, or x
+  if re.search("[aeiou][^aeioulrndzjsx]$", form):
+    return [form + "s"]
+
+  return None
+
+def make_feminine(form, special=None):
+  retval = handle_multiword(form, special, make_feminine)
+  if retval:
+    assert len(retval) == 1
+    return retval[0]
+  if special:
+    return None
 
   if form.endswith("o"):
     return form[:-1] + "a"
@@ -161,11 +201,26 @@ def make_feminine(form, special=None):
       form
     )
   
-  if re.search(u"([áíó]n|[éí]s|[dtszx]or)$", form):
+  if re.search(u"([áíó]n|[éí]s|[dtszxñ]or|ol)$", form):
     # holgazán, comodín, bretón (not común); francés, kirguís (not mandamás);
-    # volador, agricultor, defensor, avizor, flexor (not posterior, bicolor, mayor, mejor, menor, peor)
+    # volador, agricultor, defensor, avizor, flexor, señor (not posterior, bicolor, mayor, mejor, menor, peor);
+    # español, mongol
     return make_stem(form) + "a"
 
+  return form
+
+def make_masculine(form, special=None):
+  retval = handle_multiword(form, special, make_masculine)
+  if retval:
+    assert len(retval) == 1
+    return retval[0]
+  if special:
+    return None
+
+  if form.endswith("dora"):
+    return form[:-1]
+  if form.endswith("a"):
+    return form[:-1] + "o"
   return form
 
 def process_text_on_page(index, pagetitle, text):
@@ -175,7 +230,7 @@ def process_text_on_page(index, pagetitle, text):
 
   notes = []
 
-  if "es-adj" not in text and "es-noun" not in text:
+  if old_adj_template not in text and "es-noun" not in text:
     return
 
   if ":" in pagetitle:
@@ -190,34 +245,34 @@ def process_text_on_page(index, pagetitle, text):
     tn = tname(t)
     if tn == "es-noun" and args.remove_redundant_noun_args:
       origt = unicode(t)
-      head = getparam(t, "head") or pagetitle
+      lemma = blib.remove_links(getparam(t, "head") or pagetitle)
       if not getparam(t, "2") and (getparam(t, "pl2") or getparam(t, "pl3")):
         pagemsg("WARNING: Saw pl2= or pl3= without 2=: %s" % unicode(t))
         continue
+      g = getparam(t, "1")
       ms = blib.fetch_param_chain(t, "m", "m")
       space_in_m = False
       for m in ms:
         if " " in m:
           space_in_m = True
       mpls = blib.fetch_param_chain(t, "mpl", "mpl")
-      if space_in_m and not mpls:
+      if space_in_m and not mpls and not g.endswith("-p"):
         pagemsg("WARNING: Space in m=%s and old default noun algorithm applying" % ",".join(ms))
       fs = blib.fetch_param_chain(t, "f", "f")
-      fpls = blib.fetch_param_chain(t, "fpl", "fpl")
       space_in_f = False
       for f in fs:
         if " " in f:
           space_in_f = True
       fpls = blib.fetch_param_chain(t, "fpl", "fpl")
-      if space_in_f and not fpls:
+      if space_in_f and not fpls and not g.endswith("-p"):
         pagemsg("WARNING: Space in f=%s and old default noun algorithm applying" % ",".join(fs))
       pls = blib.fetch_param_chain(t, "2", "pl")
-      if not pls:
-        if " " in head:
+      if not pls and not g.endswith("-p"):
+        if " " in lemma:
           pagemsg("WARNING: Space in headword and old default noun algorithm applying")
         continue
       pls_with_def = []
-      defpl = make_plural(head, "noun")
+      defpl = make_plural(lemma)
       if not defpl:
         continue
       if len(defpl) > 1:
@@ -236,8 +291,8 @@ def process_text_on_page(index, pagetitle, text):
             pls_with_def.append(pl)
 
       actual_special = None
-      for special in ["first", "second", "first-last"]:
-        special_pl = make_plural(head, special)
+      for special in all_specials:
+        special_pl = make_plural(lemma, special)
         if special_pl is None:
           continue
         if len(special_pl) > 1 and set(pls) < set(special_pl):
@@ -250,24 +305,98 @@ def process_text_on_page(index, pagetitle, text):
           actual_special = special
           break
 
-      if actual_special:
-        notes.append("replace plural%s %s with *%s in {{es-noun}}" % (
-          "s" if len(pls) > 1 else "", ",".join(pls), actual_special))
-        blib.set_param_chain(t, ["*" + actual_special], "2", "pl")
-      elif pls_with_def == ["+"]:
+      if pls_with_def == ["+"]:
         notes.append("remove redundant plural%s %s from {{es-noun}}" % ("s" if len(pls) > 1 else "", ",".join(pls)))
         blib.remove_param_chain(t, "2", "pl")
+      elif actual_special:
+        notes.append("replace plural%s %s with +%s in {{es-noun}}" % (
+          "s" if len(pls) > 1 else "", ",".join(pls), actual_special))
+        blib.set_param_chain(t, ["+" + actual_special], "2", "pl")
       elif pls_with_def != pls:
         notes.append("replace default plural %s with '+' in {{es-noun}}" % ",".join(defpl))
         blib.set_param_chain(t, pls_with_def, "2", "pl")
 
-      fs = blib.fetch_param_chain(t, "f", "f")
-      if fs:
-        deff = make_feminine(head)
-        fs_with_def = ["+" if f == deff else f for f in fs]
-        if fs_with_def != fs:
-          notes.append("replace default feminine %s with '+' in {{es-noun}}" % deff)
-          blib.set_param_chain(t, fs_with_def, "f", "f")
+      def handle_mf(mf, mf_full, make_mf):
+        mfs = blib.fetch_param_chain(t, mf, mf)
+        mfpls = blib.fetch_param_chain(t, mf + "pl", mf + "pl")
+        if mfs and not any(x.startswith("+") for x in mfs):
+          defmf = make_mf(lemma)
+          if set(mfs) == {defmf}:
+            defpls = make_plural(defmf)
+            ok = False
+            if not mfpls or set(mfpls) == set(defpls):
+              ok = True
+            elif set(mfpls) < set(defpls):
+              pagemsg("WARNING: %pl=%s subset of default=%s, allowing" % (
+                mf, ",".join(mfpls), ",".join(defpls)))
+              ok = True
+            if ok:
+              notes.append("replace %s=%s with '+' in {{es-noun}}" % (mf, ",".join(mfs)))
+              blib.set_param_chain(t, ["+"], mf, mf)
+              blib.remove_param_chain(t, mf + "pl", mf + "pl")
+              return
+          actual_special = None
+          for special in all_specials:
+            special_mf = make_mf(lemma, special)
+            if special_mf is None:
+              continue
+            if mfs == [special_mf]:
+              pagemsg("Found special=%s with special_mf=%s" % (special, special_mf))
+              actual_special = special
+              break
+          if actual_special:
+            if not mfpls:
+              pagemsg("WARNING: Explicit %s=%s matches special=%s but no %s plural" % (
+                mf, ",".join(mfs), actual_special, mf_full))
+            else:
+              special_mfpl = make_plural(special_mf, actual_special)
+              if special_mfpl:
+                if len(special_mfpl) > 1 and set(mfpls) < set(special_mfpl):
+                  pagemsg("WARNING: for %s=%s and special=%s, %spls=%s subset of special_%spl=%s, allowing" % (
+                    mf, ",".join(mfs), actual_special, mf, ",".join(mfpls), mf, ",".join(special_mfpl)))
+                elif set(mfpls) == set(special_mfpl):
+                  pagemsg("Found %s=%s and special=%s, %spls=%s matches special_%spl" % (
+                    mf, ",".join(mfs), actual_special, mf, ",".join(mfpls), mf))
+                else:
+                  pagemsg("WARNING: for %s=%s and special=%s, %spls=%s doesn't match special_%spl=%s" % (
+                    mf, ",".join(mfs), actual_special, mf, ",".join(mfpls), mf, ",".join(special_mfpl)))
+                  actual_special = None
+            if actual_special:
+              notes.append("replace explicit %s %s with special indicator '+%s' in {{es-noun}} and remove explicit %s plural" %
+                  (mf_full, ",".join(mfs), actual_special, mf_full))
+              blib.set_param_chain(t, ["+%s" % actual_special], mf, mf)
+              blib.remove_param_chain(t, mf + "pl", mf + "pl")
+          if not actual_special:
+            defmf = make_mf(lemma)
+            mfs_with_def = ["+" if x == defmf else x for x in mfs]
+            if mfs_with_def != mfs:
+              notes.append("replace default %s %s with '+' in {{es-noun}}" % (mf_full, defmf))
+              blib.set_param_chain(t, mfs_with_def, mf, mf)
+            if mfpls:
+              defpl = [x for y in mfs for x in (make_plural(y) or [])]
+              ok = False
+              if set(defpl) == set(mfpls):
+                ok = True
+              elif len(defpl) > 1 and set(mfpls) < set(defpl):
+                pagemsg("WARNING: for %s=%s, %spl=%s subset of default pl %s, allowing" % (
+                  mf, ",".join(mfs), mf, ",".join(mfpls), ",".join(defpl)))
+                ok = True
+              if ok:
+                pagemsg("Found %s=%s, %spl=%s matches default pl" % (mf, ",".join(mfs), mf, ",".join(mfpls)))
+                notes.append("remove redundant explicit %s plural %s in {{es-noun}}" % (mf_full, ",".join(mfpls)))
+                blib.remove_param_chain(t, mf + "pl", mf + "pl")
+              else:
+                for special in all_specials:
+                  defpl = [x for y in mfs for x in (make_plural(y, special) or [])]
+                  if set(defpl) == set(mfpls):
+                    pagemsg("Found %s=%s, %spl=%s matches special=%s" % (
+                      mf, ",".join(mfs), mf, ",".join(mfpls), special))
+                    notes.append("replace explicit %s plural %s with special indicator '+%s' in {{es-noun}}" %
+                        (mf_full, ",".join(mfpls), special))
+                    blib.set_param_chain(t, ["+%s" % special], mf + "pl", mf + "pl")
+
+      handle_mf("f", "feminine", make_feminine)
+      handle_mf("m", "masculine", make_masculine)
 
       if origt != unicode(t):
         pagemsg("Replaced %s with %s" % (origt, unicode(t)))
@@ -276,14 +405,13 @@ def process_text_on_page(index, pagetitle, text):
 
     if tn == "es-noun" and args.make_multiword_plural_explicit:
       origt = unicode(t)
-      head = getparam(t, "head") or pagetitle
+      lemma = blib.remove_links(getparam(t, "head") or pagetitle)
       def expand_text(tempcall):
         return blib.expand_text(tempcall, pagetitle, pagemsg, args.verbose)
-      if " " in head and not getparam(t, "2"):
+      if " " in lemma and not getparam(t, "2"):
         g = getparam(t, "1")
         if not g.endswith("-p"):
-          explicit_pl = expand_text("{{#invoke:es-headword|make_plural_noun|%s|%s|true}}" % (
-            blib.remove_links(head), g))
+          explicit_pl = expand_text("{{#invoke:es-headword|make_plural_noun|%s|%s|true}}" % (lemma, g))
           if not explicit_pl:
             pagemsg("WARNING: Unable to add explicit plural to multiword noun, make_plural_noun returned an empty string")
             continue
@@ -330,8 +458,9 @@ def process_text_on_page(index, pagetitle, text):
       if origt != unicode(t):
         pagemsg("Replaced %s with %s" % (origt, unicode(t)))
 
-    if tn == "es-adj":
+    if tn == old_adj_template:
       origt = unicode(t)
+      lemma = blib.remove_links(getparam(t, "head") or pagetitle)
       deff = make_feminine(pagetitle)
       defmpl = make_plural(pagetitle)
       fs = []
@@ -340,6 +469,8 @@ def process_text_on_page(index, pagetitle, text):
       fullfs.append(f)
       if f == deff:
         f = "+"
+      elif f == lemma:
+        f = "#"
       fs.append(f)
       f2 = getparam(t, "f2")
       if f2:
@@ -355,8 +486,12 @@ def process_text_on_page(index, pagetitle, text):
         mpls.append(mpl2)
       fullmpls = mpls
       # should really check for subsequence but it never occurs
-      if mpls == defmpl:
+      if set(mpls) == set(defmpl):
         mpls = ["+"]
+      elif set(mpls) < set(defmpl):
+        pagemsg("WARNING: mpls=%s subset of defmpl=%s, replacing with default" % (",".join(mpls), ",".join(defmpl)))
+        mpls = ["+"]
+      mpls = ["#" if x == lemma else x for x in mpls]
       deffpl = [x for f in fullfs for x in make_plural(f)]
       fpls = []
       fpl = getparam(t, "fpl") or getparam(t, "pl") or (getparam(t, "f") or pagetitle) + "s"
@@ -366,10 +501,14 @@ def process_text_on_page(index, pagetitle, text):
         fpls.append(fpl2)
       fullfpls = fpls
       # should really check for subsequence but it never occurs
-      if fpls == deffpl:
+      if set(fpls) == set(deffpl):
         fpls = ["+"]
+      elif set(fpls) < set(deffpl):
+        pagemsg("WARNING: fpls=%s subset of deffpl=%s, replacing with default" % (",".join(fpls), ",".join(deffpl)))
+        fpls = ["+"]
+      fpls = ["#" if x == lemma else x for x in fpls]
       actual_special = None
-      for special in ["first", "second", "first-last"]:
+      for special in all_specials:
         deff = make_feminine(pagetitle, special)
         if deff is None:
           continue
@@ -385,8 +524,12 @@ def process_text_on_page(index, pagetitle, text):
       must_continue = False
       for param in t.params:
         pn = pname(param)
+        pv = unicode(param.value)
+        if pn == "1" and pv in ["m", "mf"]:
+          pagemsg("WARNING: Extraneous param %s=%s in %s, ignoring" % (pn, pv, unicode(t)))
+          continue
         if pn not in ["head", "f", "f2", "pl", "pl2", "mpl", "mpl2", "fpl", "fpl2"]:
-          pagemsg("WARNING: Saw unrecognized param %s=%s in %s" % (pn, unicode(param.value), unicode(t)))
+          pagemsg("WARNING: Saw unrecognized param %s=%s in %s" % (pn, pv, unicode(t)))
           must_continue = True
           break
       if must_continue:
@@ -397,25 +540,27 @@ def process_text_on_page(index, pagetitle, text):
         t.add("head", head)
       if fullfs == [pagetitle] and fullmpls == [pagetitle] and fullfpls == [pagetitle]:
         blib.set_template_name(t, "es-adj-inv")
-      elif actual_special:
-        t.add("sp", actual_special)
       else:
-        if fs != ["+"]:
-          blib.set_param_chain(t, fs, "f", "f")
-
-        if mpls == fpls and ("+" not in mpls or defmpl == deffpl):
-          # masc and fem pl the same
-          if mpls != ["+"]:
-            blib.set_param_chain(t, mpls, "pl", "pl")
+        blib.set_template_name(t, "es-adj")
+        if actual_special:
+          t.add("sp", actual_special)
         else:
-          if mpls != ["+"]:
-            blib.set_param_chain(t, mpls, "mpl", "mpl")
-          if fpls != ["+"]:
-            blib.set_param_chain(t, fpls, "fpl", "fpl")
+          if fs != ["+"]:
+            blib.set_param_chain(t, fs, "f", "f")
+
+          if mpls == fpls and ("+" not in mpls or defmpl == deffpl):
+            # masc and fem pl the same
+            if mpls != ["+"]:
+              blib.set_param_chain(t, mpls, "pl", "pl")
+          else:
+            if mpls != ["+"]:
+              blib.set_param_chain(t, mpls, "mpl", "mpl")
+            if fpls != ["+"]:
+              blib.set_param_chain(t, fpls, "fpl", "fpl")
 
       if origt != unicode(t):
         pagemsg("Replaced %s with %s" % (origt, unicode(t)))
-        notes.append("convert {{es-adj}} to new format")
+        notes.append("convert {{%s}} to new {{%s}} format" % (old_adj_template, tname(t)))
       else:
         pagemsg("No changes to %s" % unicode(t))
 
@@ -431,7 +576,7 @@ start, end = blib.parse_start_end(args.start, args.end)
 if args.remove_redundant_noun_args:
   default_refs=["Template:es-noun"]
 else:
-  default_refs=["Template:es-adj"]
+  default_refs=["Template:%s" % old_adj_template]
 
 blib.do_pagefile_cats_refs(args, start, end, process_text_on_page, edit=True, stdin=True,
   default_refs=default_refs)
