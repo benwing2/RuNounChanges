@@ -932,17 +932,31 @@ pos_functions["verbs"] = {
 		["part"] = {list = true}, --participle
 	},
 	func = function(args, data, tracking_categories)
-		local lemma = require("Module:links").remove_links(data.heads[1] or PAGENAME)
-		local refl_clitic_verb, post = rmatch(lemma, "^(.-)( .*)$")
-		if not refl_clitic_verb then
-			refl_clitic_verb, post = lemma, ""
+		local lemma = data.heads[1] or PAGENAME
+		local refl_clitic_verb, post
+		if lemma:find(" ") then
+			-- Try to preserve the brackets in the part after the verb, but don't do it
+			-- if there aren't the same number of left and right brackets in the verb
+			-- (which means the verb was linked as part of a larger expression).
+			refl_clitic_verb, post = rmatch(lemma, "^(.-)( .*)$")
+			local left_brackets = rsub(refl_clitic_verb, "[^%[]", "")
+			local right_brackets = rsub(refl_clitic_verb, "[^%]]", "")
+			if #left_brackets == #right_brackets then
+				refl_clitic_verb = require("Module:links").remove_links(refl_clitic_verb)
+			else
+				lemma = require("Module:links").remove_links(lemma)
+				refl_clitic_verb, post = rmatch(lemma, "^(.-)( .*)$")
+			end
+		else
+			refl_clitic_verb = require("Module:links").remove_links(lemma)
+			post = nil
 		end
 		local refl_verb, clitic = rmatch(refl_clitic_verb, "^(.-)(l[ao]s?)$")
 		if not refl_verb then
 			refl_verb, clitic = refl_clitic_verb, nil
 		end
 		local verb, refl = rmatch(refl_verb, "^(.-)(se)$")
-		if not refl_verb then
+		if not verb then
 			verb, refl = refl_verb, nil
 		end
 		local base, suffix_vowel = rmatch(verb, "^(.-)([aeiáéí])r$")
@@ -984,7 +998,57 @@ pos_functions["verbs"] = {
 		else
 			def_part = base .. "ido"
 		end
-		-- FIXME: Finish me. Not done.
+		if clitic or refl or post then
+			def_pres = "[[" .. def_pres .. "]]"
+			def_pret = "[[" .. def_pret .. "]]"
+			def_part = "[[" .. def_part .. "]]"
+		end
+		if clitic then
+			def_pres = clitic .. " " .. def_pres
+			def_pret = clitic .. " " .. def_pret
+		end
+		if refl then
+			def_pres = "me " .. def_pres
+			def_pret = "me " .. def_pret
+		end
+		if post then
+			def_pres = def_pres .. post
+			def_pret = def_pret .. post
+			def_part = def_part .. post
+		end
+
+		local function do_verb_form(forms, def_form, label, accel)
+			local retval
+
+			if #forms == 0 then
+				retval = {def_form}
+			elseif #forms == 1 and (forms[1] == "-" or forms[1] == "no") then
+				if forms[1] == "no" then
+					track("verb-form-no")
+				end
+				return {label = "no " .. label}
+			else
+				retval = {}
+				for _, form in ipairs(forms) do
+					if form == "+" then
+						table.insert(retval, def_form)
+					else
+						table.insert(retval, form)
+					end
+				end
+			end
+			retval.label = label
+			retval.accel = {form = accel}
+			return retval
+		end
+
+		table.insert(data.inflections, do_verb_form(args.pres, def_pres, "first-person singular present", "1|s|pres|ind"))
+		table.insert(data.inflections, do_verb_form(args.pret, def_pret, "first-person singular preterite", "1|s|pret|ind"))
+		table.insert(data.inflections, do_verb_form(args.part, def_part, "past participle", "m|s|past|part"))
+		table.insert(data.categories, langname .. " verbs ending in -" .. suffix)
+		if refl then
+			table.insert(data.categories, langname .. " reflexive verbs")
+		end
 	end
 }
 
