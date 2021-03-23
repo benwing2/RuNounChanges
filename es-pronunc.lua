@@ -212,14 +212,14 @@ function export.IPA(text, style, phonetic, do_debug)
 	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*" .. C .. ")(" .. C .. V .. ")", "%1.%2")
 	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*" .. C .. "+)(" .. C .. C .. V .. ")", "%1.%2")
 	text = rsub(text, "([pbktdɡ])%.([lɾ])", ".%1%2")
-	text = rsub(text, "(" .. C .. ")%.s(" .. C .. ")", "%1s.%2")
+	text = rsub_repeatedly(text, "(" .. C .. ")%.s(" .. C .. ")", "%1s.%2")
 	-- Any aeo, or stressed iu, should be syllabically divided from a following aeo or stressed iu.
-	text = rsub(text, "([aeo]" .. accent_c .. "*)([aeo])", "%1.%2")
-	text = rsub(text, "([aeo]" .. accent_c .. "*)(" .. V .. stress_c .. ")", "%1.%2")
+	text = rsub_repeatedly(text, "([aeo]" .. accent_c .. "*)([aeo])", "%1.%2")
+	text = rsub_repeatedly(text, "([aeo]" .. accent_c .. "*)(" .. V .. stress_c .. ")", "%1.%2")
 	text = rsub(text, "([iu]" .. stress_c .. ")([aeo])", "%1.%2")
-	text = rsub(text, "([iu]" .. stress_c .. ")(" .. V .. stress_c .. ")", "%1.%2")
-	text = rsub(text, "i(" .. accent_c .. "*)i", "i%1.i")
-	text = rsub(text, "u(" .. accent_c .. "*)u", "u%1.u")
+	text = rsub_repeatedly(text, "([iu]" .. stress_c .. ")(" .. V .. stress_c .. ")", "%1.%2")
+	text = rsub_repeatedly(text, "i(" .. accent_c .. "*)i", "i%1.i")
+	text = rsub_repeatedly(text, "u(" .. accent_c .. "*)u", "u%1.u")
 
 	table.insert(debug, text)
 
@@ -553,26 +553,32 @@ function export.show(frame)
 		local bullet = string.rep("*", args.bullets) .. " "
 		local pre = is_first and args.pre and args.pre .. " " or ""
 		local post = is_first and (args.ref or "") .. (args.post and " " .. args.post or "") or ""
-		return bullet .. pre .. m_IPA.format_IPA_full(lang, pronunciations) .. post
+		local formatted = bullet .. pre .. m_IPA.format_IPA_full(lang, pronunciations) .. post
+		local formatted_for_len = bullet .. pre .. "IPA(key): " .. (tag and "(" .. tag .. ") " or "") ..
+			"/" .. expressed_style.phonemic.text .. "/, [" .. expressed_style.phonetic.text .. "]" .. post
+		return formatted, formatted_for_len
 	end
 
 	for i, style_group in ipairs(expressed_styles) do
 		if #style_group.styles == 1 then
-			style_group.formatted = format_style(style_group.styles[1].tag, style_group.styles[1], i == 1)
+			style_group.formatted, style_group.formatted_for_len =
+				format_style(style_group.styles[1].tag, style_group.styles[1], i == 1)
 		else
-			style_group.formatted = format_style(style_group.tag, style_group.styles[1], i == 1)
+			style_group.formatted, style_group.formatted_for_len =
+				format_style(style_group.tag, style_group.styles[1], i == 1)
 			for j, style in ipairs(style_group.styles) do
-				style.formatted = format_style(style.tag, style, i == 1 and j == 1)
+				style.formatted, style.formatted_for_len =
+					format_style(style.tag, style, i == 1 and j == 1)
 			end
 		end
 	end
 
 	local maxlen = 0
 	for i, style_group in ipairs(expressed_styles) do
-		local this_len = ulen(style_group.formatted)
+		local this_len = ulen(style_group.formatted_for_len)
 		if #style_group.styles > 1 then
 			for _, style in ipairs(style_group.styles) do
-				this_len = math.max(this_len, ulen(style.formatted))
+				this_len = math.max(this_len, ulen(style.formatted_for_len))
 			end
 		end
 		maxlen = math.max(maxlen, this_len)
