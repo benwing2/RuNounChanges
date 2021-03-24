@@ -964,6 +964,7 @@ pos_functions["verbs"] = {
 			error("Unrecognized verb '" .. verb .. "'")
 		end
 		local suffix = (remove_stress[suffix_vowel] or suffix_vowel) .. "r"
+		local ends_in_vowel = rfind(base, "[aeo]$")
 		local def_pres
 		if suffix == "ar" then
 			def_pres = base .. "o"
@@ -982,7 +983,12 @@ pos_functions["verbs"] = {
 		else
 			def_pres = base .. "o"
 		end
-		local def_pret
+		local pres_stem = rmatch(def_pres, "^(.*)o$")
+		local before_last_vowel, last_vowel, after_last_vowel = rmatch(pres_stem, "^(.*)(" .. V .. ")(.-)$")
+		local def_pres_ie = last_vowel == "e" and before_last_vowel .. "ie" .. after_last_vowel .. "o"
+		-- allow u for jugar -> juego
+		local def_pres_ue = (last_vowel == "o" or last_vowel == "u") and before_last_vowel .. "ue" .. after_last_vowel .. "o"
+		local def_pres_i = last_vowel == "e" and before_last_vowel .. "i" .. after_last_vowel .. "o"
 		if suffix == "ar" then
 			def_pret = base .. "é"
 			def_pret = rsub(def_pret, "gué$", "güé") -- averiguar -> averigüé
@@ -995,29 +1001,44 @@ pos_functions["verbs"] = {
 		local def_part
 		if suffix == "ar" then
 			def_part = base .. "ado"
+		elseif ends_in_vowel then
+			-- reír -> reído, poseer -> poseído, caer -> caído, etc.
+			def_part = base .. "ído"
 		else
 			def_part = base .. "ido"
 		end
 		if clitic or refl or post then
 			def_pres = "[[" .. def_pres .. "]]"
+			def_pres_ie = def_pres_ie and "[[" .. def_pres_ie .. "]]"
+			def_pres_ue = def_pres_ue and "[[" .. def_pres_ue .. "]]"
+			def_pres_i = def_pres_i and "[[" .. def_pres_i .. "]]"
 			def_pret = "[[" .. def_pret .. "]]"
 			def_part = "[[" .. def_part .. "]]"
 		end
 		if clitic then
 			def_pres = clitic .. " " .. def_pres
+			def_pres_ie = def_pres_ie and clitic .. " " .. def_pres_ie
+			def_pres_ue = def_pres_ue and clitic .. " " .. def_pres_ue
+			def_pres_i = def_pres_i and clitic .. " " .. def_pres_i
 			def_pret = clitic .. " " .. def_pret
 		end
 		if refl then
 			def_pres = "me " .. def_pres
+			def_pres_ie = def_pres_ie and "me " .. def_pres_ie
+			def_pres_ue = def_pres_ue and "me " .. def_pres_ue
+			def_pres_i = def_pres_i and "me " .. def_pres_i
 			def_pret = "me " .. def_pret
 		end
 		if post then
 			def_pres = def_pres .. post
+			def_pres_ie = def_pres_ie and def_pres_ie .. post
+			def_pres_ue = def_pres_ue and def_pres_ue .. post
+			def_pres_i = def_pres_i and def_pres_i .. post
 			def_pret = def_pret .. post
 			def_part = def_part .. post
 		end
 
-		local function do_verb_form(forms, def_form, label, accel)
+		local function do_verb_form(forms, def_form, label, accel, special_case)
 			local retval
 
 			if #forms == 0 then
@@ -1033,7 +1054,11 @@ pos_functions["verbs"] = {
 					if form == "+" then
 						table.insert(retval, def_form)
 					else
-						table.insert(retval, form)
+						local spec
+						if special_case then
+							spec = special_case(form)
+						end
+						table.insert(retval, spec or form)
 					end
 				end
 			end
@@ -1042,7 +1067,30 @@ pos_functions["verbs"] = {
 			return retval
 		end
 
-		table.insert(data.inflections, do_verb_form(args.pres, def_pres, "first-person singular present", "1|s|pres|ind"))
+		local function pres_special_case(form)
+			if form == "+ie" then
+				if def_pres_ie then
+					return def_pres_ie
+				else
+					error("To use +ie, verb '" .. verb .. "' should have -e- as the last vowel")
+				end
+			elseif form == "+ue" then
+				if def_pres_ue then
+					return def_pres_ue
+				else
+					error("To use +ue, verb '" .. verb .. "' should have -o- or -u- as the last vowel")
+				end
+			elseif form == "+i" then
+				if def_pres_i then
+					return def_pres_i
+				else
+					error("To use +i, verb '" .. verb .. "' should have -i- as the last vowel")
+				end
+			end
+		end
+
+		table.insert(data.inflections, do_verb_form(args.pres, def_pres, "first-person singular present",
+			"1|s|pres|ind", pres_special_case))
 		table.insert(data.inflections, do_verb_form(args.pret, def_pret, "first-person singular preterite", "1|s|pret|ind"))
 		table.insert(data.inflections, do_verb_form(args.part, def_part, "past participle", "m|s|past|part"))
 		table.insert(data.categories, langname .. " verbs ending in -" .. suffix)
