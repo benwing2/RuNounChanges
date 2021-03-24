@@ -126,7 +126,10 @@ def do_assert(cond, msg=None):
 # (if FIRST is a list) any element of FIRST, and PREF1, because the
 # parameter-handling code checks for both. Finally, it allows gaps in the
 # numbered parameters, because the parameter-handling code allows them.
-def fetch_param_chain(t, first, pref, firstdefault=""):
+def fetch_param_chain(t, first, pref=None, firstdefault=""):
+  if pref is None:
+    assert type(first) is not list, "If pref= is omitted, first= must not be a list"
+    pref = first
   ret = []
   if type(first) is not list:
     first = [first]
@@ -150,7 +153,9 @@ def fetch_param_chain(t, first, pref, firstdefault=""):
       ret.append(val)
   return ret
 
-def append_param_to_chain(t, val, firstparam, parampref, before=None):
+def append_param_to_chain(t, val, firstparam, parampref=None, before=None):
+  if parampref is None:
+    parampref = firstparam
   paramno = 0
   while True:
     paramno += 1
@@ -160,7 +165,9 @@ def append_param_to_chain(t, val, firstparam, parampref, before=None):
       t.add(next_param, val, before=before)
       return next_param
 
-def remove_param_chain(t, firstparam, parampref):
+def remove_param_chain(t, firstparam, parampref=None):
+  if parampref is None:
+    parampref = firstparam
   paramno = 0
   changed = False
   while True:
@@ -173,7 +180,9 @@ def remove_param_chain(t, firstparam, parampref):
     else:
       return changed
 
-def set_param_chain(t, values, firstparam, parampref, before=None):
+def set_param_chain(t, values, firstparam, parampref=None, before=None):
+  if parampref is None:
+    parampref = firstparam
   paramno = 0
   for val in values:
     paramno += 1
