@@ -86,7 +86,7 @@ function export.show(frame)
 	if PAGENAME:find("yre$") then
 		table.insert(data.categories, lang:getCanonicalName() .. ' words ending in "-yre"')
 	end
-	if not PAGENAME:find(" ") and PAGENAME:len() > 25 then
+	if not PAGENAME:find(" ") and PAGENAME:len() >= 25 then
 		table.insert(extra_categories, "Long " .. lang:getCanonicalName() .. ' words')
 	end
 	if PAGENAME:find("^[^aeiou ]*a[^aeiou ]*e[^aeiou ]*i[^aeiou ]*o[^aeiou ]*u[^aeiou ]*$") then
