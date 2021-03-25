@@ -14,10 +14,18 @@ remove_stress = {
   u"ú": "u",
 }
 
+add_stress = {
+  "a": u"á",
+  "e": u"é",
+  "i": u"í",
+  "o": u"ó",
+  "u": u"ú",
+}
+
 vowel = u"aeiouáéíóúý"
 V = "[" + vowel + "]"
 
-def get_def_forms(lemma, pagemsg):
+def get_def_forms(lemma, prep, pagemsg):
   if " " in lemma:
     # Try to preserve the brackets in the part after the verb, but don't do it
     # if there aren't the same number of left and right brackets in the verb
@@ -60,10 +68,18 @@ def get_def_forms(lemma, pagemsg):
     return None
   suffix = remove_stress.get(suffix_vowel, suffix_vowel) + "r"
   ends_in_vowel = re.search("[aeo]$", base)
+  if prep:
+    if blib.remove_links(" " + prep) != blib.remove_links(post):
+      pagemsg("WARNING: Something wrong, prep=%s should match post=%s" % (prep, post))
+      return None
+    if len(" " + prep) > len(post):
+      post = " " + prep
   if suffix == "ar":
     def_pres = base + "o"
+  elif re.search(V + "c$", base):
+    def_pres = base[:-1] + "zco" # parecer -> parezco, aducir -> aduzco; not ejercer -> ejerzo, uncir -> unzo
   elif base.endswith("c"):
-    def_pres = base[:-1] + "zco" # parecer -> parezco, aducir -> aduzco
+    def_pres = base[:-1] + "zo" # ejercer -> ejerzo, uncir -> unzo, torcer -> tuerzo (with +ue)
   elif base.endswith("qu"):
     def_pres = base[:-2] + "co" # delinquir -> delinco
   elif base.endswith("g"):
@@ -80,13 +96,21 @@ def get_def_forms(lemma, pagemsg):
   def_pres_ie = None
   def_pres_ue = None
   def_pres_i = None
+  def_pres_iacc = None
+  def_pres_uacc = None
   m = re.search("^(.*)(" + V + ")(.*?)$", pres_stem)
   if m:
     before_last_vowel, last_vowel, after_last_vowel = m.groups()
     def_pres_ie = last_vowel == "e" and before_last_vowel + "ie" + after_last_vowel + "o" or None
-    # allow u for jugar -> juego
-    def_pres_ue = (last_vowel == "o" or last_vowel == "u") and before_last_vowel + "ue" + after_last_vowel + "o" or None
+    # allow u for jugar -> juego; correctly handle avergonzar -> avergüenzo
+    def_pres_ue = (
+      last_vowel == "o" and before_last_vowel.endswith("g") and before_last_vowel + u"üe" + after_last_vowel + "o" or
+      (last_vowel == "o" or last_vowel == "u") and before_last_vowel + "ue" + after_last_vowel + "o" or
+      None
+    )
     def_pres_i = last_vowel == "e" and before_last_vowel + "i" + after_last_vowel + "o" or None
+    def_pres_iacc = (last_vowel == "e" or last_vowel == "i") and before_last_vowel + u"í" + after_last_vowel + "o" or None
+    def_pres_uacc = last_vowel == "u" and before_last_vowel + u"ú" + after_last_vowel + "o" or None
   if suffix == "ar":
     def_pret = base + u"é"
     def_pret = re.sub(u"gué$", u"güé", def_pret) # averiguar -> averigüé
@@ -103,43 +127,71 @@ def get_def_forms(lemma, pagemsg):
     def_part = base + u"ído"
   else:
     def_part = base + "ido"
-  if clitic or refl or post:
-    def_pres = "[[" + def_pres + "]]"
-    def_pres_ie = def_pres_ie and "[[" + def_pres_ie + "]]"
-    def_pres_ue = def_pres_ue and "[[" + def_pres_ue + "]]"
-    def_pres_i = def_pres_i and "[[" + def_pres_i + "]]"
-    def_pret = "[[" + def_pret + "]]"
-    def_part = "[[" + def_part + "]]"
-  if clitic:
-    def_pres = clitic + " " + def_pres
-    def_pres_ie = def_pres_ie and clitic + " " + def_pres_ie
-    def_pres_ue = def_pres_ue and clitic + " " + def_pres_ue
-    def_pres_i = def_pres_i and clitic + " " + def_pres_i
-    def_pret = clitic + " " + def_pret
-  if refl:
-    def_pres = "me " + def_pres
-    def_pres_ie = def_pres_ie and "me " + def_pres_ie
-    def_pres_ue = def_pres_ue and "me " + def_pres_ue
-    def_pres_i = def_pres_i and "me " + def_pres_i
-    def_pret = "me " + def_pret
-  if post:
-    def_pres = def_pres + post
-    def_pres_ie = def_pres_ie and def_pres_ie + post
-    def_pres_ue = def_pres_ue and def_pres_ue + post
-    def_pres_i = def_pres_i and def_pres_i + post
-    def_pret = def_pret + post
-    def_part = def_part + post
+  #if clitic or refl or post:
+  #  def_pres = "[[" + def_pres + "]]"
+  #  def_pres_ie = def_pres_ie and "[[" + def_pres_ie + "]]"
+  #  def_pres_ue = def_pres_ue and "[[" + def_pres_ue + "]]"
+  #  def_pres_i = def_pres_i and "[[" + def_pres_i + "]]"
+  #  def_pres_iacc = def_pres_iacc and "[[" + def_pres_iacc + "]]"
+  #  def_pres_uacc = def_pres_uacc and "[[" + def_pres_uacc + "]]"
+  #  def_pret = "[[" + def_pret + "]]"
+  #  def_part = "[[" + def_part + "]]"
+  #if clitic:
+  #  def_pres = clitic + " " + def_pres
+  #  def_pres_ie = def_pres_ie and clitic + " " + def_pres_ie
+  #  def_pres_ue = def_pres_ue and clitic + " " + def_pres_ue
+  #  def_pres_i = def_pres_i and clitic + " " + def_pres_i
+  #  def_pres_iacc = def_pres_iacc and clitic + " " + def_pres_iacc
+  #  def_pres_uacc = def_pres_uacc and clitic + " " + def_pres_uacc
+  #  def_pret = clitic + " " + def_pret
+  #if refl:
+  #  def_pres = "me " + def_pres
+  #  def_pres_ie = def_pres_ie and "me " + def_pres_ie
+  #  def_pres_ue = def_pres_ue and "me " + def_pres_ue
+  #  def_pres_i = def_pres_i and "me " + def_pres_i
+  #  def_pres_iacc = def_pres_iacc and "me " + def_pres_iacc
+  #  def_pres_uacc = def_pres_uacc and "me " + def_pres_uacc
+  #  def_pret = "me " + def_pret
+  #if post:
+  #  def_pres = def_pres + post
+  #  def_pres_ie = def_pres_ie and def_pres_ie + post
+  #  def_pres_ue = def_pres_ue and def_pres_ue + post
+  #  def_pres_i = def_pres_i and def_pres_i + post
+  #  def_pres_iacc = def_pres_iacc and def_pres_iacc + post
+  #  def_pres_uacc = def_pres_uacc and def_pres_uacc + post
+  #  def_pret = def_pret + post
+  #  def_part = def_part + post
 
   ret = {}
   ret["verb"] = verb
-  ret["def_pres"] = def_pres
-  ret["def_pres_ie"] = def_pres_ie
-  ret["def_pres_ue"] = def_pres_ue
-  ret["def_pres_i"] = def_pres_i
-  ret["def_pret"] = def_pret
-  ret["def_part"] = def_part
+  ret["clitic"] = clitic
+  ret["refl"] = refl
+  ret["post"] = post
+  ret["pres"] = def_pres
+  ret["pres_ie"] = def_pres_ie
+  ret["pres_ue"] = def_pres_ue
+  ret["pres_i"] = def_pres_i
+  ret["pres_iacc"] = def_pres_iacc
+  ret["pres_uacc"] = def_pres_uacc
+  ret["pret"] = def_pret
+  ret["part"] = def_part
 
   return ret
+
+def make_verb_form_full(form, clitic, refl, post, is_part, do_link):
+  if not form or form.startswith("+") or form == "-":
+    return form
+  if form == "no":
+    return "-"
+  if do_link and (clitic or post or refl and not is_part):
+    form = "[[" + form + "]]"
+  if clitic:
+    form = clitic + " " + form
+  if refl and not is_part:
+    form = "me " + form
+  if post:
+    form = form + post
+  return form
 
 
 def process_text_on_page(index, pagetitle, text):
@@ -182,29 +234,33 @@ def process_text_on_page(index, pagetitle, text):
     if tn == "es-verb":
       origt = unicode(t)
       lemma = getparam(t, "head") or pagetitle
+      if " " in lemma:
+        pagemsg("WARNING: Space in lemma")
       prep = getp("prep")
-      shouldlemma = getp("1") + getp("2") + ("se" if getp("ref") == "y" else "") + (" " + prep if prep else "")
+      shouldlemma = getp("1") + getp("2") + ("se" if getp("ref") == "y" else "") + (" " + blib.remove_links(prep) if prep else "")
       if shouldlemma != blib.remove_links(lemma):
         pagemsg("WARNING: lemma=%s from 1/2/ref != lemma=%s from head or pagetitle: %s" % (
           shouldlemma, blib.remove_links(lemma), unicode(t)))
         continue
-      d = get_def_forms(lemma, pagemsg)
+      d = get_def_forms(lemma, prep, pagemsg)
       if not d:
         continue
       if getp("part2") and not getp("part"):
         pagemsg("WARNING: Saw part2= without part=: %s" % unicode(t))
-        part = [d["def_part"], getp("part2")]
+        part = [d["part"], getp("part2")]
       else:
         part = blib.fetch_param_chain(t, "part")
       pres = blib.fetch_param_chain(t, "pres")
       pret = blib.fetch_param_chain(t, "pret")
-      part = ["+" if x == d["def_part"] else x for x in part]
-      pret = ["+" if x == d["def_pret"] else x for x in pret]
+      part = ["+" if x == d["part"] else x for x in part]
+      pret = ["+" if x == d["pret"] else x for x in pret]
       pres = [
-        "+" if x == d["def_pres"] else
-        "+ie" if x == d["def_pres_ie"] else
-        "+ue" if x == d["def_pres_ue"] else
-        "+i" if x == d["def_pres_i"] else
+        "+" if x == d["pres"] else
+        "+ie" if x == d["pres_ie"] else
+        "+ue" if x == d["pres_ue"] else
+        "+i" if x == d["pres_i"] else
+        u"+í" if x == d["pres_iacc"] else
+        u"+ú" if x == d["pres_uacc"] else
         x for x in pres
       ]
       notes.append("clean up {{es-verb}}")
@@ -217,7 +273,10 @@ def process_text_on_page(index, pagetitle, text):
       if part == ["+"]:
         notes.append("remove redundant participle from {{es-verb}}")
         part = []
-      for vowel_var in ["+ie", "+ue", "+i"]:
+      pres = [make_verb_form_full(x, d["clitic"], d["refl"], "", is_part=False, do_link=not d["post"]) for x in pres]
+      pret = [make_verb_form_full(x, d["clitic"], d["refl"], "", is_part=False, do_link=not d["post"]) for x in pret]
+      part = [make_verb_form_full(x, d["clitic"], d["refl"], "", is_part=True, do_link=not d["post"]) for x in part]
+      for vowel_var in ["+ie", "+ue", "+i", u"+í", u"+ú"]:
         if vowel_var in pres:
           notes.append("replace vowel-varying present with '%s' in {{es-verb}}" % vowel_var)
       if "+" in part:
@@ -240,11 +299,39 @@ def process_text_on_page(index, pagetitle, text):
         continue
 
       del t.params[:]
-      if head:
-        t.add("head", head)
-      blib.set_param_chain(t, pres, "pres")
-      blib.set_param_chain(t, pret, "pret")
-      blib.set_param_chain(t, part, "part")
+      if d["post"]:
+        if d["refl"] and d["clitic"]:
+          accented_verb = re.sub("^(.*)([aei])r$", lambda m: m.group(1) + add_stress[m.group(2)] + "r", d["verb"])
+          if accented_verb != d["verb"]:
+            main_verb = "[[%s|%s]]" % (d["verb"], accented_verb)
+          else:
+            main_verb = "[[%s]]" % d["verb"]
+        else:
+          main_verb = "[[%s]]" % d["verb"]
+        if d["refl"]:
+          main_verb += "[[se]]"
+        if d["clitic"]:
+          main_verb += "[[%s]]" % d["clitic"]
+        if part:
+          angle_brackets = "<%s,%s,%s>" % (":".join(pres), ":".join(pret), ":".join(part))
+        elif pret:
+          angle_brackets = "<%s,%s>" % (":".join(pres), ":".join(pret))
+        elif pres:
+          angle_brackets = "<%s>" % (":".join(pres))
+        else:
+          angle_brackets = "<>"
+        if angle_brackets == "<>":
+          if head:
+            t.add("head", head)
+        else:
+          arg1 = "%s%s%s" % (main_verb, angle_brackets, d["post"])
+          t.add("1", arg1)
+      else:
+        if head:
+          t.add("head", head)
+        blib.set_param_chain(t, pres, "pres")
+        blib.set_param_chain(t, pret, "pret")
+        blib.set_param_chain(t, part, "part")
 
       if origt != unicode(t):
         pagemsg("Replaced %s with %s" % (origt, unicode(t)))
