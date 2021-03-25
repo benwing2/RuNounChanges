@@ -926,7 +926,7 @@ pos_functions["nouns"] = {
 
 
 local function base_default_verb_forms(refl_clitic_verb, categories, post)
-	local ret
+	local ret = {}
 	local refl_verb, clitic = rmatch(refl_clitic_verb, "^(.-)(l[ao]s?)$")
 	if not refl_verb then
 		refl_verb, clitic = refl_clitic_verb, nil
@@ -1024,7 +1024,7 @@ local function base_default_verb_forms(refl_clitic_verb, categories, post)
 	ret.verb = verb
 	ret.refl = refl
 	ret.clitic = clitic
-	ref.suffix = suffix
+	ret.suffix = suffix
 
 	table.insert(categories, langname .. " verbs ending in -" .. suffix)
 	if refl then
@@ -1262,11 +1262,11 @@ pos_functions["verbs"] = {
 				post = nil
 			end
 
-			def_forms = base_default_verb_forms(lemma, data.categories, post)
+			def_forms = base_default_verb_forms(refl_clitic_verb, data.categories, post)
 
 			preses = {{form = def_forms.pres}}
 			prets = {{form = def_forms.pret}}
-			pasts = {{form = def_forms.past}}
+			parts = {{form = def_forms.part}}
 		end
 
 		local function strip_brackets(qualifiers)
@@ -1311,13 +1311,13 @@ pos_functions["verbs"] = {
 							-- format.
 							error("Can't use + in override parameter when using angle-bracket forma")
 						end
-						table.insert(forms, {{form = def_form, footnotes = qual}})
+						table.insert(forms, {form = def_form, footnotes = qual})
 					else
 						local spec
 						if special_case then
-							spec = special_case(form, def_forms)
+							spec = special_case(arg, def_forms)
 						end
-						table.insert(retval, {{form = spec or form, footnotes = qual}})
+						table.insert(forms, {form = spec or arg, footnotes = qual})
 					end
 				end
 			end
