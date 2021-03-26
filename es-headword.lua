@@ -1017,7 +1017,7 @@ local function base_default_verb_forms(refl_clitic_verb, categories, post, alway
 	ret.pres_uacc = last_vowel == "u" and before_last_vowel .. "ú" .. after_last_vowel .. "o"
 	if suffix == "ar" then
 		if rfind(base, "^" .. C .. "*[iu]$") or base == "gui" then -- criar, fiar, guiar, liar, etc.
-			ret.pres = base .. "e"
+			ret.pret = base .. "e"
 		else
 			ret.pret = base .. "é"
 		end
