@@ -7,6 +7,8 @@ local rmatch = mw.ustring.match
 local rsplit = mw.text.split
 local rsubn = mw.ustring.gsub
 
+local m_links = require("Module:links")
+
 local lang = require("Module:languages").getByCode("es")
 local langname = lang:getCanonicalName()
 
@@ -70,6 +72,22 @@ local function rsub_repeatedly(term, foo, bar)
 		end
 		term = new_term
 	end
+end
+
+-- Add links around words in multiword expressions. If always_link, do it even for single-word forms.
+local function add_links(form, always_link)
+	if not form:find("%[%[") then
+		if rfind(form, "[%s%p]") then --optimization to avoid loading [[Module:headword]] on single-word forms
+			local m_headword = require("Module:headword")
+			if m_headword.head_is_multiword(form) then
+				form = m_headword.add_multiword_links(form)
+			end
+		end
+		if always_link and not form:find("%[%[") then
+			form = "[[" .. form .. "]]"
+		end
+	end
+	return form
 end
 
 local function get_special_indicator(form)
@@ -458,7 +476,7 @@ local function do_adjective(args, data, tracking_categories, is_superlative)
 			error("Can't specify inflections with an invariable adjective")
 		end
 	else
-		local lemma = require("Module:links").remove_links(data.heads[1] or PAGENAME)
+		local lemma = m_links.remove_links(data.heads[1] or PAGENAME)
 
 		-- Gather feminines.
 		local argsf = args.f
@@ -687,7 +705,7 @@ pos_functions["nouns"] = {
 			["mfbysense-p"] = true,
 		}
 
-		local lemma = require("Module:links").remove_links(
+		local lemma = m_links.remove_links(
 			(#data.heads > 0 and data.heads[1]) or PAGENAME
 		)
 
@@ -924,8 +942,27 @@ pos_functions["nouns"] = {
 	end
 }
 
+local function make_full(form, def, no_refl, always_link)
+	if not form then
+		return nil
+	end
+	if always_link or def.clitic or (def.refl and not no_refl) or def.post then
+		form = "[[" .. form .. "]]"
+	end
+	if def.clitic then
+		form = "[[" .. def.clitic .. "]] " .. form
+	end
+	if def.refl and not no_refl then
+		form = "[[me]] " .. form
+	end
+	if def.post then
+		form = form .. def.post
+	end
+	return form
+end
 
-local function base_default_verb_forms(refl_clitic_verb, categories, post)
+
+local function base_default_verb_forms(refl_clitic_verb, categories, post, always_link)
 	local ret = {}
 	local refl_verb, clitic = rmatch(refl_clitic_verb, "^(.-)(l[ao]s?)$")
 	if not refl_verb then
@@ -941,10 +978,15 @@ local function base_default_verb_forms(refl_clitic_verb, categories, post)
 	end
 	local suffix = (remove_stress[suffix_vowel] or suffix_vowel) .. "r"
 	local ends_in_vowel = rfind(base, "[aeo]$")
+	if suffix == "ir" and ends_in_vowel then
+		verb = base .. "ír"
+	end
 	if suffix == "ar" then
 		ret.pres = base .. "o"
-	elseif base:find("c$") then
+	elseif base:find(V .. "c$") then
 		ret.pres = rsub(base, "c$", "zco") -- parecer -> parezco, aducir -> aduzco
+	elseif base:find("c$") then
+		ret.pres = rsub(base, "c$", "zo") -- ejercer -> ejerzo, uncir -> unzo
 	elseif base:find("qu$") then
 		ret.pres = rsub(base, "qu$", "co") -- delinquir -> delinco
 	elseif base:find("g$") then
@@ -960,18 +1002,29 @@ local function base_default_verb_forms(refl_clitic_verb, categories, post)
 	end
 	local pres_stem = rmatch(ret.pres, "^(.*)o$")
 	local before_last_vowel, last_vowel, after_last_vowel = rmatch(pres_stem, "^(.*)(" .. V .. ")(.-)$")
-	ret.pres_ie = last_vowel == "e" and before_last_vowel .. "ie" .. after_last_vowel .. "o"
-	-- allow u for jugar -> juego
-	ret.pres_ue = (last_vowel == "o" or last_vowel == "u") and before_last_vowel .. "ue" .. after_last_vowel .. "o"
+	-- allow i for adquirir -> adquiero, inquirir -> inquiero, etc.
+	ret.pres_ie = (last_vowel == "e" or last_vowel == "i") and before_last_vowel .. "ie" .. after_last_vowel .. "o"
+	-- allow u for jugar -> juego; correctly handle avergonzar -> avergüenzo
+	ret.pres_ue = (
+		last_vowel == "o" and before_last_vowel:find("g$") and before_last_vowel .. "üe" .. after_last_vowel .. "o" or
+		(last_vowel == "o" or last_vowel == "u") and before_last_vowel .. "ue" .. after_last_vowel .. "o"
+	)
 	ret.pres_i = last_vowel == "e" and before_last_vowel .. "i" .. after_last_vowel .. "o"
-	ret.pres_iacc = last_vowel == "i" and before_last_vowel .. "í" .. after_last_vowel .. "o"
+	-- allow e for reír -> río, sonreír -> sonrío
+	ret.pres_iacc = (last_vowel == "e" or last_vowel == "i") and before_last_vowel .. "í" .. after_last_vowel .. "o"
 	ret.pres_uacc = last_vowel == "u" and before_last_vowel .. "ú" .. after_last_vowel .. "o"
 	if suffix == "ar" then
-		ret.pret = base .. "é"
+		if rfind(base, "^" .. C .. "*[iu]$") or base == "gui" then -- criar, fiar, guiar, liar, etc.
+			ret.pres = base .. "e"
+		else
+			ret.pret = base .. "é"
+		end
 		ret.pret = rsub(ret.pret, "gué$", "güé") -- averiguar -> averigüé
 		ret.pret = rsub(ret.pret, "gé$", "gué") -- cargar -> cargué
 		ret.pret = rsub(ret.pret, "cé$", "qué") -- marcar -> marqué
 		ret.pret = rsub(ret.pret, "[çz]é$", "cé") -- aderezar/adereçar -> aderecé
+	elseif suffix == "ir" and rfind(base, "^" .. C .. "*u$") then -- fluir, fruir, huir, muir
+		ret.pret = base .. "i"
 	else
 		ret.pret = base .. "í"
 	end
@@ -983,48 +1036,33 @@ local function base_default_verb_forms(refl_clitic_verb, categories, post)
 	else
 		ret.part = base .. "ido"
 	end
-	if clitic or refl or post then
-		ret.pres = "[[" .. ret.pres .. "]]"
-		ret.pres_ie = ret.pres_ie and "[[" .. ret.pres_ie .. "]]"
-		ret.pres_ue = ret.pres_ue and "[[" .. ret.pres_ue .. "]]"
-		ret.pres_i = ret.pres_i and "[[" .. ret.pres_i .. "]]"
-		ret.pres_iacc = ret.pres_iacc and "[[" .. ret.pres_iacc .. "]]"
-		ret.pres_uacc = ret.pres_uacc and "[[" .. ret.pres_uacc .. "]]"
-		ret.pret = "[[" .. ret.pret .. "]]"
-		ret.part = "[[" .. ret.part .. "]]"
+
+	local function full(form, no_refl)
+		return make_full(form, ret, no_refl, always_link)
 	end
-	if clitic then
-		ret.pres = clitic .. " " .. ret.pres
-		ret.pres_ie = ret.pres_ie and clitic .. " " .. ret.pres_ie
-		ret.pres_ue = ret.pres_ue and clitic .. " " .. ret.pres_ue
-		ret.pres_i = ret.pres_i and clitic .. " " .. ret.pres_i
-		ret.pres_iacc = ret.pres_iacc and clitic .. " " .. ret.pres_iacc
-		ret.pres_uacc = ret.pres_uacc and clitic .. " " .. ret.pres_uacc
-		ret.pret = clitic .. " " .. ret.pret
-	end
-	if refl then
-		ret.pres = "me " .. ret.pres
-		ret.pres_ie = ret.pres_ie and "me " .. ret.pres_ie
-		ret.pres_ue = ret.pres_ue and "me " .. ret.pres_ue
-		ret.pres_i = ret.pres_i and "me " .. ret.pres_i
-		ret.pres_iacc = ret.pres_iacc and "me " .. ret.pres_iacc
-		ret.pres_uacc = ret.pres_uacc and "me " .. ret.pres_uacc
-		ret.pret = "me " .. ret.pret
-	end
-	if post then
-		ret.pres = ret.pres .. post
-		ret.pres_ie = ret.pres_ie and ret.pres_ie .. post
-		ret.pres_ue = ret.pres_ue and ret.pres_ue .. post
-		ret.pres_i = ret.pres_i and ret.pres_i .. post
-		ret.pres_iacc = ret.pres_iacc and ret.pres_iacc .. post
-		ret.pres_uacc = ret.pres_uacc and ret.pres_uacc .. post
-		ret.pret = ret.pret .. post
-		ret.part = ret.part .. post
-	end
+
 	ret.verb = verb
+	ret.accented_verb = base .. (add_stress[suffix_vowel] or suffix_vowel) .. "r"
+	if refl and clitic then
+		ret.linked_verb =
+			verb == ret.accented_verb and "[[" .. verb .. "]]" or
+			"[[" .. verb .. "|" .. ret.accented_verb .. "]]"
+		ret.linked_verb = ret.linked_verb .. refl .. clitic
+	else
+		ret.linked_verb = "[[" .. verb .. (refl or "") .. (clitic or "") .. "]]"
+	end
+	ret.full_verb = verb .. (refl or "") .. (clitic or "")
 	ret.refl = refl
 	ret.clitic = clitic
 	ret.suffix = suffix
+	ret.pres = full(ret.pres)
+	ret.pres_ie = full(ret.pres_ie)
+	ret.pres_ue = full(ret.pres_ue)
+	ret.pres_i = full(ret.pres_i)
+	ret.pres_iacc = full(ret.pres_iacc)
+	ret.pres_uacc = full(ret.pres_uacc)
+	ret.pret = full(ret.pret)
+	ret.part = full(ret.part, "no refl")
 
 	table.insert(categories, langname .. " verbs ending in -" .. suffix)
 	if refl then
@@ -1037,13 +1075,13 @@ end
 
 local function pres_special_case(form, def_forms)
 	if form == "+ie" then
-		return def_forms.pres_ie or error("To use +ie, verb '" .. def_forms.verb .. "' should have -e- as the last vowel")
+		return def_forms.pres_ie or error("To use +ie, verb '" .. def_forms.verb .. "' should have -e- or -i- as the last vowel")
 	elseif form == "+ue" then
 		return def_forms.pres_ue or error("To use +ue, verb '" .. def_forms.verb .. "' should have -o- or -u- as the last vowel")
 	elseif form == "+i" then
 		return def_forms.pres_i or error("To use +i, verb '" .. def_forms.verb .. "' should have -e- as the last vowel")
 	elseif form == "+í" then
-		return def_forms.pres_iacc or error("To use +í, verb '" .. def_forms.verb .. "' should have -i- as the last vowel")
+		return def_forms.pres_iacc or error("To use +í, verb '" .. def_forms.verb .. "' should have -i- or -e- as the last vowel")
 	elseif form == "+ú" then
 		return def_forms.pres_uacc or error("To use +ú, verb '" .. def_forms.verb .. "' should have -u- as the last vowel")
 	end
@@ -1060,11 +1098,17 @@ pos_functions["verbs"] = {
 		["part"] = {list = true}, --participle
 		["part_qual"] = {list = "part=_qual", allow_holes = true},
 		["pagename"] = {}, -- for testing
+		["attn"] = {type = "boolean"},
 	},
 	func = function(args, data, tracking_categories)
 		local preses, prets, parts
 		local pagename = args.pagename or PAGENAME
 		local def_forms
+
+		if args.attn then
+			table.insert(tracking_categories, "Requests for attention concerning " .. langname)
+			return
+		end
 
 		if args[1] then
 			-------------------------- ANGLE-BRACKET FORMAT --------------------------
@@ -1109,7 +1153,8 @@ pos_functions["verbs"] = {
 					local colon_separated_groups = iut.split_alternating_runs(comma_separated_group, ":")
 					for _, colon_separated_group in ipairs(colon_separated_groups) do
 						local form = colon_separated_group[1]
-						-- FIXME, what does this do?
+						-- Below, we check for a nil form when replacing with the default, so replace
+						-- blank forms (requesting the default) with nil.
 						if form == "" then
 							form = nil
 						end
@@ -1118,15 +1163,11 @@ pos_functions["verbs"] = {
 					return specs
 				end
 
-				local pres_specs = fetch_specs(comma_separated_groups[1])
-				local pret_specs = fetch_specs(comma_separated_groups[2])
-				local part_specs = fetch_specs(comma_separated_groups[3])
-
 				return {
 					forms = {},
-					pres_specs = pres_specs,
-					pret_specs = pret_specs,
-					part_specs = part_specs,
+					pres_specs = fetch_specs(comma_separated_groups[1]),
+					pret_specs = fetch_specs(comma_separated_groups[2]),
+					part_specs = fetch_specs(comma_separated_groups[3]),
 				}
 			end
 
@@ -1142,8 +1183,11 @@ pos_functions["verbs"] = {
 				if base.lemma == "" then
 					base.lemma = pagename
 				end
-				base.orig_lemma = base.lemma
-				base.lemma = require("Module:links").remove_links(base.lemma)
+				-- Add links to the lemma so the user doesn't specifically need to, since we preserve
+				-- links in multiword lemmas and include links in non-lemma forms rather than allowing
+				-- the entire form to be a link.
+				base.orig_lemma = add_links(base.lemma, "always link")
+				base.lemma = m_links.remove_links(base.lemma)
 			end)
 
 			-- (3) Conjugate the verbs according to the indicator specs parsed above.
@@ -1158,21 +1202,18 @@ pos_functions["verbs"] = {
 			local function conjugate_verb(base)
 				local this_def_forms = base_default_verb_forms(base.lemma, data.categories)
 
-				local function process_specs(slot, specs, default_form, special_case)
+				local function process_specs(slot, specs, default_form, is_part, special_case)
 					for _, spec in ipairs(specs) do
 						local form = spec.form
 						if not form or form == "+" then
 							form = default_form
-						elseif special_case then
-							form = special_case(form, this_def_forms) or form
-						end
-						-- If there's a ~ in the form, substitute it with the lemma,
-						-- but make sure to first replace % in the lemma with %% so that
-						-- it doesn't get interpreted as a capture replace expression.
-						if form:find("~") then
-							-- Assign to a var because gsub returns multiple values.
-							local subbed_lemma = base.lemma:gsub("%%", "%%%%")
-							form = form:gsub("~", subbed_lemma)
+						else
+							local spec_case = special_case and special_case(form, this_def_forms)
+							if spec_case then
+								form = spec_case
+							else
+								form = make_full(form, this_def_forms, is_part)
+							end
 						end
 						-- If the form is -, don't insert any forms, which will result
 						-- in there being no overall forms (in fact it will be nil).
@@ -1180,22 +1221,28 @@ pos_functions["verbs"] = {
 						-- the form, which in turn gets turned into special labels like
 						-- "no present participle".
 						if form ~= "-" then
+							-- Add links so the user doesn't specifically have to do it.
+							form = add_links(form, "always link")
 							iut.insert_form(base.forms, slot, {form = form, footnotes = spec.qualifiers})
 						end
 					end
 				end
 
-				process_specs("pres_form", base.pres_specs, this_def_forms.pres, pres_special_case)
+				process_specs("pres_form", base.pres_specs, this_def_forms.pres, nil, pres_special_case)
 				process_specs("pret_form", base.pret_specs, this_def_forms.pret)
-				process_specs("part_form", base.part_specs, this_def_forms.part)
+				process_specs("part_form", base.part_specs, this_def_forms.part, "is part")
 
 				iut.insert_form(base.forms, "lemma", {form = base.lemma})
 				-- Add linked version of lemma for use in head=. We write this in a general fashion in case
 				-- there are multiple lemma forms (which isn't possible currently at this level, although it's
 				-- possible overall using the ((...,...)) notation).
 				iut.insert_forms(base.forms, "lemma_linked", iut.map_forms(base.forms.lemma, function(form)
-					if form == base.lemma and base.orig_lemma:find("%[%[") then
-						return base.orig_lemma
+					if form == base.lemma then
+						if base.orig_lemma:find("%[%[") then
+							return base.orig_lemma
+						else
+							return this_def_forms.linked_verb
+						end
 					else
 						return form
 					end
@@ -1205,6 +1252,9 @@ pos_functions["verbs"] = {
 			local inflect_props = {
 				slot_table = all_verb_slots,
 				inflect_word_spec = conjugate_verb,
+				-- We add links around the generated verbal forms rather than allow the entire multiword
+				-- expression to be a link, so ensure that user-specified links get included as well.
+				include_user_specified_links = true,
 			}
 			iut.inflect_multiword_or_alternant_multiword_spec(alternant_multiword_spec, inflect_props)
 
@@ -1227,13 +1277,7 @@ pos_functions["verbs"] = {
 			-- The user can override this using head=.
 			if #data.heads == 0 then
 				for _, lemma_obj in ipairs(alternant_multiword_spec.forms.lemma_linked) do
-					local lemma = lemma_obj.form
-					if not lemma:find("%[%[") then
-						local m_headword = require("Module:headword")
-						if m_headword.head_is_multiword(lemma) then
-							lemma = m_headword.add_multiword_links(lemma)
-						end
-					end
+					local lemma = add_links(lemma_obj.form)
 					table.insert(data.heads, lemma)
 				end
 			end
@@ -1241,8 +1285,9 @@ pos_functions["verbs"] = {
 			-------------------------- SEPARATE-PARAM FORMAT --------------------------
 
 			-- Here we just handle the defaults so that both formats can use param overrides.
-			local lemma = data.heads[1] or pagename
-			local refl_clitic_verb, post
+			-- Add links to multiword term unless head= explicitly given.
+			local lemma = data.heads[1] or add_links(pagename)
+			local refl_clitic_verb, orig_refl_clitic_verb, post
 
 			if lemma:find(" ") then
 				-- Try to preserve the brackets in the part after the verb, but don't do it
@@ -1252,17 +1297,29 @@ pos_functions["verbs"] = {
 				local left_brackets = rsub(refl_clitic_verb, "[^%[]", "")
 				local right_brackets = rsub(refl_clitic_verb, "[^%]]", "")
 				if #left_brackets == #right_brackets then
-					refl_clitic_verb = require("Module:links").remove_links(refl_clitic_verb)
+					orig_refl_clitic_verb = refl_clitic_verb
+					refl_clitic_verb = m_links.remove_links(refl_clitic_verb)
 				else
-					lemma = require("Module:links").remove_links(lemma)
+					lemma = m_links.remove_links(lemma)
 					refl_clitic_verb, post = rmatch(lemma, "^(.-)( .*)$")
+					orig_refl_clitic_verb = refl_clitic_verb
 				end
 			else
-				refl_clitic_verb = require("Module:links").remove_links(lemma)
+				refl_clitic_verb = m_links.remove_links(lemma)
 				post = nil
 			end
 
-			def_forms = base_default_verb_forms(refl_clitic_verb, data.categories, post)
+			def_forms = base_default_verb_forms(refl_clitic_verb, data.categories, post, post and "always link")
+
+			if #data.heads == 0 then
+				local head
+				if orig_refl_clitic_verb:find("%[%[") then
+					head = orig_refl_clitic_verb .. (post or "")
+				else
+					head = def_forms.linked_verb .. (post or "")
+				end
+				table.insert(data.heads, head)
+			end
 
 			preses = {{form = def_forms.pres}}
 			prets = {{form = def_forms.pret}}
@@ -1328,7 +1385,10 @@ pos_functions["verbs"] = {
 				local into_table = {label = label, accel = {form = accel_form}}
 				for _, form in ipairs(forms) do
 					local qualifiers = strip_brackets(form.footnotes)
-					table.insert(into_table, {term = form.form, qualifiers = qualifiers})
+					-- Strip redundant brackets surrounding entire form. These may get generated e.g.
+					-- if we use the angle bracket notation with a single word.
+					local stripped_form = rmatch(form.form, "^%[%[([^%[%]]*)%]%]$") or form.form
+					table.insert(into_table, {term = stripped_form, qualifiers = qualifiers})
 				end
 				return into_table
 			end
