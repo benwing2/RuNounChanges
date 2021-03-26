@@ -24,6 +24,7 @@ add_stress = {
 
 vowel = u"aeiouáéíóúý"
 V = "[" + vowel + "]"
+C = "[^" + vowel + "]"
 
 def get_def_forms(lemma, prep, pagemsg):
   if " " in lemma:
@@ -68,6 +69,8 @@ def get_def_forms(lemma, prep, pagemsg):
     return None
   suffix = remove_stress.get(suffix_vowel, suffix_vowel) + "r"
   ends_in_vowel = re.search("[aeo]$", base)
+  if suffix == "ir" and ends_in_vowel:
+    verb = base + u"ír"
   if prep:
     if blib.remove_links(" " + prep) != blib.remove_links(post):
       pagemsg("WARNING: Something wrong, prep=%s should match post=%s" % (prep, post))
@@ -101,22 +104,28 @@ def get_def_forms(lemma, prep, pagemsg):
   m = re.search("^(.*)(" + V + ")(.*?)$", pres_stem)
   if m:
     before_last_vowel, last_vowel, after_last_vowel = m.groups()
-    def_pres_ie = last_vowel == "e" and before_last_vowel + "ie" + after_last_vowel + "o" or None
+    # allow i for adquirir -> adquiero, inquirir -> inquiero, etc.
+    def_pres_ie = last_vowel in ["e", "i"] and before_last_vowel + "ie" + after_last_vowel + "o" or None
     # allow u for jugar -> juego; correctly handle avergonzar -> avergüenzo
     def_pres_ue = (
       last_vowel == "o" and before_last_vowel.endswith("g") and before_last_vowel + u"üe" + after_last_vowel + "o" or
-      (last_vowel == "o" or last_vowel == "u") and before_last_vowel + "ue" + after_last_vowel + "o" or
+      last_vowel in ["o", "u"] and before_last_vowel + "ue" + after_last_vowel + "o" or
       None
     )
     def_pres_i = last_vowel == "e" and before_last_vowel + "i" + after_last_vowel + "o" or None
     def_pres_iacc = (last_vowel == "e" or last_vowel == "i") and before_last_vowel + u"í" + after_last_vowel + "o" or None
     def_pres_uacc = last_vowel == "u" and before_last_vowel + u"ú" + after_last_vowel + "o" or None
   if suffix == "ar":
-    def_pret = base + u"é"
+    if re.search("^" + C + "*[iu]$", base) or base == "gui": # criar, fiar, guiar, liar, etc.
+      def_pret = base + "e"
+    else:
+      def_pret = base + u"é"
     def_pret = re.sub(u"gué$", u"güé", def_pret) # averiguar -> averigüé
     def_pret = re.sub(u"gé$", u"gué", def_pret) # cargar -> cargué
     def_pret = re.sub(u"cé$", u"qué", def_pret) # marcar -> marqué
     def_pret = re.sub(u"[çz]é$", u"cé", def_pret) # aderezar/adereçar -> aderecé
+  elif suffix == "ir" and re.search("^" + C + "*u$", base): # fluir, fruir, huir, muir
+    def_pret = base + "i"
   else:
     def_pret = base + u"í"
   end
@@ -164,6 +173,16 @@ def get_def_forms(lemma, prep, pagemsg):
 
   ret = {}
   ret["verb"] = verb
+  ret["accented_verb"] = base + add_stress.get(suffix_vowel, suffix_vowel) + "r"
+  if refl and clitic:
+    ret["linked_verb"] = (
+      verb == ret["accented_verb"] and "[[" + verb + "]]" or
+      "[[" + verb + "|" + ret.accented_verb + "]]"
+    )
+    ret["linked_verb"] = ret.linked_verb + refl + clitic
+  else:
+    ret["linked_verb"] = "[[" + verb + (refl or "") + (clitic or "") + "]]"
+  ret["full_verb"] = verb + (refl or "") + (clitic or "")
   ret["clitic"] = clitic
   ret["refl"] = refl
   ret["post"] = post
@@ -273,9 +292,6 @@ def process_text_on_page(index, pagetitle, text):
       if part == ["+"]:
         notes.append("remove redundant participle from {{es-verb}}")
         part = []
-      pres = [make_verb_form_full(x, d["clitic"], d["refl"], "", is_part=False, do_link=not d["post"]) for x in pres]
-      pret = [make_verb_form_full(x, d["clitic"], d["refl"], "", is_part=False, do_link=not d["post"]) for x in pret]
-      part = [make_verb_form_full(x, d["clitic"], d["refl"], "", is_part=True, do_link=not d["post"]) for x in part]
       for vowel_var in ["+ie", "+ue", "+i", u"+í", u"+ú"]:
         if vowel_var in pres:
           notes.append("replace vowel-varying present with '%s' in {{es-verb}}" % vowel_var)
@@ -299,19 +315,12 @@ def process_text_on_page(index, pagetitle, text):
         continue
 
       del t.params[:]
-      if d["post"]:
-        if d["refl"] and d["clitic"]:
-          accented_verb = re.sub("^(.*)([aei])r$", lambda m: m.group(1) + add_stress[m.group(2)] + "r", d["verb"])
-          if accented_verb != d["verb"]:
-            main_verb = "[[%s|%s]]" % (d["verb"], accented_verb)
-          else:
-            main_verb = "[[%s]]" % d["verb"]
-        else:
-          main_verb = "[[%s]]" % d["verb"]
-        if d["refl"]:
-          main_verb += "[[se]]"
-        if d["clitic"]:
-          main_verb += "[[%s]]" % d["clitic"]
+      def has_override(forms):
+        return 1 if any(x and not x.startswith("+") for x in forms) else 0
+      num_overrides = has_override(pres) + has_override(pret) + has_override(part)
+
+      if d["post"] or (d["refl"] or d["clitic"]) and num_overrides >= 2:
+        main_verb = d["full_verb"]
         if part:
           angle_brackets = "<%s,%s,%s>" % (":".join(pres), ":".join(pret), ":".join(part))
         elif pret:
@@ -324,11 +333,14 @@ def process_text_on_page(index, pagetitle, text):
           if head:
             t.add("head", head)
         else:
-          arg1 = "%s%s%s" % (main_verb, angle_brackets, d["post"])
+          arg1 = "%s%s%s" % (main_verb, angle_brackets, d["post"] or "")
           t.add("1", arg1)
       else:
         if head:
           t.add("head", head)
+        pres = [make_verb_form_full(x, d["clitic"], d["refl"], "", is_part=False, do_link=True) for x in pres]
+        pret = [make_verb_form_full(x, d["clitic"], d["refl"], "", is_part=False, do_link=True) for x in pret]
+        part = [make_verb_form_full(x, d["clitic"], d["refl"], "", is_part=True, do_link=True) for x in part]
         blib.set_param_chain(t, pres, "pres")
         blib.set_param_chain(t, pret, "pret")
         blib.set_param_chain(t, part, "part")
