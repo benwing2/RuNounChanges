@@ -71,6 +71,8 @@ def get_def_forms(lemma, prep, pagemsg):
   ends_in_vowel = re.search("[aeo]$", base)
   if suffix == "ir" and ends_in_vowel:
     verb = base + u"ír"
+  else:
+    verb = base + suffix
   if prep:
     if blib.remove_links(" " + prep) != blib.remove_links(post):
       pagemsg("WARNING: Something wrong, prep=%s should match post=%s" % (prep, post))
@@ -179,9 +181,11 @@ def get_def_forms(lemma, prep, pagemsg):
       verb == ret["accented_verb"] and "[[" + verb + "]]" or
       "[[" + verb + "|" + ret.accented_verb + "]]"
     )
-    ret["linked_verb"] = ret.linked_verb + refl + clitic
+    ret["linked_verb"] = ret.linked_verb + "[[" + refl + "]][[" + clitic + "]]"
   else:
-    ret["linked_verb"] = "[[" + verb + (refl or "") + (clitic or "") + "]]"
+    ret["linked_verb"] = (
+      "[[" + verb + "]]" + (refl and "[[" + refl + "]]" or "") + (clitic and "[[" + clitic + "]]" or "")
+    )
   ret["full_verb"] = verb + (refl or "") + (clitic or "")
   ret["clitic"] = clitic
   ret["refl"] = refl
