@@ -980,6 +980,8 @@ local function base_default_verb_forms(refl_clitic_verb, categories, post, alway
 	local ends_in_vowel = rfind(base, "[aeo]$")
 	if suffix == "ir" and ends_in_vowel then
 		verb = base .. "ír"
+	else
+		verb = base .. suffix
 	end
 	if suffix == "ar" then
 		ret.pres = base .. "o"
@@ -1047,14 +1049,16 @@ local function base_default_verb_forms(refl_clitic_verb, categories, post, alway
 		ret.linked_verb =
 			verb == ret.accented_verb and "[[" .. verb .. "]]" or
 			"[[" .. verb .. "|" .. ret.accented_verb .. "]]"
-		ret.linked_verb = ret.linked_verb .. refl .. clitic
+		ret.linked_verb = ret.linked_verb .. "[[" .. refl .. "]][[" .. clitic .. "]]"
 	else
-		ret.linked_verb = "[[" .. verb .. (refl or "") .. (clitic or "") .. "]]"
+		ret.linked_verb = "[[" .. verb .. "]]" .. (refl and "[[" .. refl .. "]]" or "") ..
+			(clitic and "[[" .. clitic .. "]]" or "")
 	end
 	ret.full_verb = verb .. (refl or "") .. (clitic or "")
 	ret.refl = refl
 	ret.clitic = clitic
 	ret.suffix = suffix
+	ret.post = post
 	ret.pres = full(ret.pres)
 	ret.pres_ie = full(ret.pres_ie)
 	ret.pres_ue = full(ret.pres_ue)
@@ -1173,6 +1177,7 @@ pos_functions["verbs"] = {
 
 			local parse_props = {
 				parse_indicator_spec = parse_indicator_spec,
+				allow_blank_lemma = true,
 			}
 			local alternant_multiword_spec = iut.parse_inflected_text(args[1], parse_props)
 
@@ -1238,11 +1243,7 @@ pos_functions["verbs"] = {
 				-- possible overall using the ((...,...)) notation).
 				iut.insert_forms(base.forms, "lemma_linked", iut.map_forms(base.forms.lemma, function(form)
 					if form == base.lemma then
-						if base.orig_lemma:find("%[%[") then
-							return base.orig_lemma
-						else
-							return this_def_forms.linked_verb
-						end
+						return this_def_forms.linked_verb
 					else
 						return form
 					end
@@ -1286,7 +1287,7 @@ pos_functions["verbs"] = {
 
 			-- Here we just handle the defaults so that both formats can use param overrides.
 			-- Add links to multiword term unless head= explicitly given.
-			local lemma = data.heads[1] or add_links(pagename)
+			local lemma = data.heads[1] or pagename
 			local refl_clitic_verb, orig_refl_clitic_verb, post
 
 			if lemma:find(" ") then
@@ -1304,7 +1305,9 @@ pos_functions["verbs"] = {
 					refl_clitic_verb, post = rmatch(lemma, "^(.-)( .*)$")
 					orig_refl_clitic_verb = refl_clitic_verb
 				end
+				post = add_links(post, "always link")
 			else
+				orig_refl_clitic_verb = lemma
 				refl_clitic_verb = m_links.remove_links(lemma)
 				post = nil
 			end
