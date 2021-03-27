@@ -74,8 +74,11 @@ local function rsub_repeatedly(term, foo, bar)
 	end
 end
 
--- Add links around words in multiword expressions. If always_link, do it even for single-word forms.
-local function add_links(form, always_link)
+-- Add links around words. If multiword_only, do it only in multiword forms.
+local function add_links(form, multiword_only)
+	if form == "" or form == " " then
+		return form
+	end
 	if not form:find("%[%[") then
 		if rfind(form, "[%s%p]") then --optimization to avoid loading [[Module:headword]] on single-word forms
 			local m_headword = require("Module:headword")
@@ -83,7 +86,7 @@ local function add_links(form, always_link)
 				form = m_headword.add_multiword_links(form)
 			end
 		end
-		if always_link and not form:find("%[%[") then
+		if not multiword_only and not form:find("%[%[") then
 			form = "[[" .. form .. "]]"
 		end
 	end
@@ -942,18 +945,26 @@ pos_functions["nouns"] = {
 	end
 }
 
-local function make_full(form, def, no_refl, always_link)
+local function make_full(form, def, no_refl, no_link)
 	if not form then
 		return nil
 	end
-	if always_link or def.clitic or (def.refl and not no_refl) or def.post then
+	if not no_link then
 		form = "[[" .. form .. "]]"
 	end
 	if def.clitic then
-		form = "[[" .. def.clitic .. "]] " .. form
+		if no_link then
+			form = def.clitic .. " " .. form
+		else
+			form = "[[" .. def.clitic .. "]] " .. form
+		end
 	end
 	if def.refl and not no_refl then
-		form = "[[me]] " .. form
+		if no_link then
+			form = "me " .. form
+		else
+			form = "[[me]] " .. form
+		end
 	end
 	if def.post then
 		form = form .. def.post
@@ -962,7 +973,8 @@ local function make_full(form, def, no_refl, always_link)
 end
 
 
-local function base_default_verb_forms(refl_clitic_verb, categories, post, always_link)
+local function base_default_verb_forms(refl_clitic_verb, categories, post, no_link)
+	always_link = true
 	local ret = {}
 	local refl_verb, clitic = rmatch(refl_clitic_verb, "^(.-)(l[ao]s?)$")
 	if not refl_verb then
@@ -1040,12 +1052,19 @@ local function base_default_verb_forms(refl_clitic_verb, categories, post, alway
 	end
 
 	local function full(form, no_refl)
-		return make_full(form, ret, no_refl, always_link)
+		return make_full(form, ret, no_refl, no_link)
 	end
 
 	ret.verb = verb
 	ret.accented_verb = base .. (add_stress[suffix_vowel] or suffix_vowel) .. "r"
 	if refl and clitic then
+		ret.full_verb = ret.accented_verb .. refl .. clitic
+	else
+		ret.full_verb = verb .. (refl or "") .. (clitic or "")
+	end
+	if no_link then
+		ret.linked_verb = ret.full_verb		
+	elseif refl and clitic then
 		ret.linked_verb =
 			verb == ret.accented_verb and "[[" .. verb .. "]]" or
 			"[[" .. verb .. "|" .. ret.accented_verb .. "]]"
@@ -1054,7 +1073,6 @@ local function base_default_verb_forms(refl_clitic_verb, categories, post, alway
 		ret.linked_verb = "[[" .. verb .. "]]" .. (refl and "[[" .. refl .. "]]" or "") ..
 			(clitic and "[[" .. clitic .. "]]" or "")
 	end
-	ret.full_verb = verb .. (refl or "") .. (clitic or "")
 	ret.refl = refl
 	ret.clitic = clitic
 	ret.suffix = suffix
@@ -1102,6 +1120,8 @@ pos_functions["verbs"] = {
 		["part"] = {list = true}, --participle
 		["part_qual"] = {list = "part=_qual", allow_holes = true},
 		["pagename"] = {}, -- for testing
+		["noautolinktext"] = {type = "boolean"},
+		["noautolinkverb"] = {type = "boolean"},
 		["attn"] = {type = "boolean"},
 	},
 	func = function(args, data, tracking_categories)
@@ -1181,21 +1201,42 @@ pos_functions["verbs"] = {
 			}
 			local alternant_multiword_spec = iut.parse_inflected_text(args[1], parse_props)
 
-			-- (2) Remove any links from the lemma, but remember the original form
+			-- (2) Add links to all before and after text.
+
+			if not args.noautolinktext then
+				alternant_multiword_spec.post_text = add_links(alternant_multiword_spec.post_text)
+				for _, alternant_or_word_spec in ipairs(alternant_multiword_spec.alternant_or_word_specs) do
+					alternant_or_word_spec.before_text = add_links(alternant_or_word_spec.before_text)
+					if alternant_or_word_spec.alternants then
+						for _, multiword_spec in ipairs(alternant_or_word_spec.alternants) do
+							multiword_spec.post_text = add_links(multiword_spec.post_text)
+							for _, word_spec in ipairs(multiword_spec.word_specs) do
+								word_spec.before_text = add_links(word_spec.before_text)
+							end
+						end
+					end
+				end
+			end
+
+			-- (3) Remove any links from the lemma, but remember the original form
 			--     so we can use it below in the 'lemma_linked' form.
 
 			iut.map_word_specs(alternant_multiword_spec, function(base)
 				if base.lemma == "" then
 					base.lemma = pagename
 				end
-				-- Add links to the lemma so the user doesn't specifically need to, since we preserve
-				-- links in multiword lemmas and include links in non-lemma forms rather than allowing
-				-- the entire form to be a link.
-				base.orig_lemma = add_links(base.lemma, "always link")
+				if not args.noautolinkverb then
+					-- Add links to the lemma so the user doesn't specifically need to, since we preserve
+					-- links in multiword lemmas and include links in non-lemma forms rather than allowing
+					-- the entire form to be a link.
+					base.orig_lemma = add_links(base.lemma)
+				else
+					base.orig_lemma = base.lemma
+				end
 				base.lemma = m_links.remove_links(base.lemma)
 			end)
 
-			-- (3) Conjugate the verbs according to the indicator specs parsed above.
+			-- (4) Conjugate the verbs according to the indicator specs parsed above.
 
 			local all_verb_slots = {
 				lemma = "infinitive",
@@ -1205,7 +1246,7 @@ pos_functions["verbs"] = {
 				part_form = "m|s|past|part",
 			}
 			local function conjugate_verb(base)
-				local this_def_forms = base_default_verb_forms(base.lemma, data.categories)
+				local this_def_forms = base_default_verb_forms(base.lemma, data.categories, nil, args.noautolinkverb)
 
 				local function process_specs(slot, specs, default_form, is_part, special_case)
 					for _, spec in ipairs(specs) do
@@ -1217,7 +1258,7 @@ pos_functions["verbs"] = {
 							if spec_case then
 								form = spec_case
 							else
-								form = make_full(form, this_def_forms, is_part)
+								form = make_full(form, this_def_forms, is_part, args.noautolinkverb)
 							end
 						end
 						-- If the form is -, don't insert any forms, which will result
@@ -1226,8 +1267,6 @@ pos_functions["verbs"] = {
 						-- the form, which in turn gets turned into special labels like
 						-- "no present participle".
 						if form ~= "-" then
-							-- Add links so the user doesn't specifically have to do it.
-							form = add_links(form, "always link")
 							iut.insert_form(base.forms, slot, {form = form, footnotes = spec.qualifiers})
 						end
 					end
@@ -1274,11 +1313,9 @@ pos_functions["verbs"] = {
 			prets = fetch_forms("pret_form")
 			parts = fetch_forms("part_form")
 			-- Use the "linked" form of the lemma as the head if no head= explicitly given.
-			-- If no links in this form and it has multiple words, autolink the individual words.
-			-- The user can override this using head=.
 			if #data.heads == 0 then
 				for _, lemma_obj in ipairs(alternant_multiword_spec.forms.lemma_linked) do
-					local lemma = add_links(lemma_obj.form)
+					local lemma = lemma_obj.form
 					table.insert(data.heads, lemma)
 				end
 			end
@@ -1305,14 +1342,16 @@ pos_functions["verbs"] = {
 					refl_clitic_verb, post = rmatch(lemma, "^(.-)( .*)$")
 					orig_refl_clitic_verb = refl_clitic_verb
 				end
-				post = add_links(post, "always link")
+				if not args.noautolinktext then
+					post = add_links(post)
+				end
 			else
 				orig_refl_clitic_verb = lemma
 				refl_clitic_verb = m_links.remove_links(lemma)
 				post = nil
 			end
 
-			def_forms = base_default_verb_forms(refl_clitic_verb, data.categories, post, post and "always link")
+			def_forms = base_default_verb_forms(refl_clitic_verb, data.categories, post, args.noautolinkverb)
 
 			if #data.heads == 0 then
 				local head
