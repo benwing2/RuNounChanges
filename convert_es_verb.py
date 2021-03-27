@@ -186,7 +186,10 @@ def get_def_forms(lemma, prep, pagemsg):
     ret["linked_verb"] = (
       "[[" + verb + "]]" + (refl and "[[" + refl + "]]" or "") + (clitic and "[[" + clitic + "]]" or "")
     )
-  ret["full_verb"] = verb + (refl or "") + (clitic or "")
+  if refl and clitic:
+    ret["full_verb"] = ret["accented_verb"] + refl + clitic
+  else:
+    ret["full_verb"] = verb + (refl or "") + (clitic or "")
   ret["clitic"] = clitic
   ret["refl"] = refl
   ret["post"] = post
