@@ -262,3 +262,6 @@ vivir *
 volver <+ue>
 vérselas <veo,vi,visto>
 vérsele <veo,vi,visto>
+# From verbal expressions beginning with 'no'
+callarse *
+encontrar <+ue>
