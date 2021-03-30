@@ -997,7 +997,7 @@ local function base_default_verb_forms(refl_clitic_verb, categories, post, no_li
 	end
 	if suffix == "ar" then
 		ret.pres = base .. "o"
-	elseif base:find(V .. "c$") then
+	elseif rfind(base, V .. "c$") then
 		ret.pres = rsub(base, "c$", "zco") -- parecer -> parezco, aducir -> aduzco
 	elseif base:find("c$") then
 		ret.pres = rsub(base, "c$", "zo") -- ejercer -> ejerzo, uncir -> unzo
