@@ -289,7 +289,7 @@ def process_text_on_page(index, pagetitle, text):
         u"+ú" if x == d["pres_uacc"] else
         x for x in pres
       ]
-      notes.append("clean up {{es-verb}}")
+      notes.append("convert {{es-verb}} to new format")
       if pres == ["+"]:
         notes.append("remove redundant present from {{es-verb}}")
         pres = []
