@@ -27,6 +27,7 @@ FIXME:
 
 1. Implement no_pres3 for aterir, garantir.
 2. Support concluyo.
+3. Fixes for veo -> ve vs. preveo -> prevé.
 --]=]
 
 local lang = require("Module:languages").getByCode("es")
@@ -34,6 +35,7 @@ local m_string_utilities = require("Module:string utilities")
 local m_links = require("Module:links")
 local m_table = require("Module:table")
 local iut = require("Module:inflection utilities")
+local com = require("Module:es-common")
 
 local rfind = mw.ustring.find
 local rmatch = mw.ustring.match
@@ -44,11 +46,8 @@ local function link_term(term, face)
 end
 
 
-local vowel = "aeiouáéíóúý"
-local V = "[" .. vowel .. "]"
-local SV = "[áéíóúý]" -- stressed vowel
-local W = "[iyuw]" -- glide
-local C = "[^" .. vowel .. ".]"
+local V = com.V
+local C = com.C
 
 
 local all_persons_numbers = {
@@ -90,6 +89,10 @@ local verb_slots_basic = {
 	{"pp_fp", "f|p|past|part"},
 }
 
+local verb_slots_combined = {}
+
+local verb_slot_combined_rows = {}
+
 -- Add entries for a slot with person/number variants.
 -- `verb_slots` is the table to add to.
 -- `slot_prefix` is the prefix of the slot, typically specifying the tense/aspect.
@@ -120,20 +123,18 @@ add_slot_personal(verb_slots_basic, "fut_sub", "fut|sub", person_number_list_bas
 add_slot_personal(verb_slots_basic, "imp", "imp", {"2s", "2sv", "3s", "1p", "2p", "3p"})
 add_slot_personal(verb_slots_basic, "neg_imp", "-", {"2s", "3s", "1p", "2p", "3p"})
 
-add_slot_personal(verb_slots_combined, "infinitive_comb", "inf|combined",
-	{"me", "te", "se", "nos", "os", "lo", "la", "le", "los", "las", "les"})
-add_slot_personal(verb_slots_combined, "gerund_comb", "gerund|combined",
-	{"me", "te", "se", "nos", "os", "lo", "la", "le", "los", "las", "les"})
-add_slot_personal(verb_slots_combined, "imp_2s_comb", "imp|2s|combined",
-	{"me", "te", "nos", "lo", "la", "le", "los", "las", "les"})
-add_slot_personal(verb_slots_combined, "imp_3s_comb", "imp|3s|combined",
-	{"me", "se", "nos", "lo", "la", "le", "los", "las", "les"})
-add_slot_personal(verb_slots_combined, "imp_1p_comb", "imp|1p|combined",
-	{"te", "nos", "os", "lo", "la", "le", "los", "las", "les"})
-add_slot_personal(verb_slots_combined, "imp_2p_comb", "imp|2p|combined",
-	{"me", "nos", "os", "lo", "la", "le", "los", "las", "les"})
-add_slot_personal(verb_slots_combined, "imp_3p_comb", "imp|3p|combined",
-	{"me", "se", "nos", "lo", "la", "le", "los", "las", "les"})
+local function add_combined_slot(basic_slot, tag, pronouns)
+	add_slot_personal(verb_slots_combined, basic_slot .. "_comb", tag_suffix .. "|combined", pronouns)
+	table.insert(verb_slot_combined_rows, {basic_slot, pronouns})
+end
+
+add_combined_slot("infinitive", "inf", {"me", "te", "se", "nos", "os", "lo", "la", "le", "los", "las", "les"})
+add_combined_slot("gerund", "gerund", {"me", "te", "se", "nos", "os", "lo", "la", "le", "los", "las", "les"})
+add_combined_slot("imp_2s", "imp|2s", {"me", "te", "nos", "lo", "la", "le", "los", "las", "les"})
+add_combined_slot("imp_3s", "imp|3s", {"me", "se", "nos", "lo", "la", "le", "los", "las", "les"})
+add_combined_slot("imp_1p", "imp|1p", {"te", "nos", "os", "lo", "la", "le", "los", "las", "les"})
+add_combined_slot("imp_2p", "imp|2p", {"me", "nos", "os", "lo", "la", "le", "los", "las", "les"})
+add_combined_slot("imp_3p", "imp|3p", {"me", "se", "nos", "lo", "la", "le", "los", "las", "les"})
 
 local all_verb_slots = {}
 for _, slot_and_accel in ipairs(verb_slots_basic) do
@@ -755,43 +756,51 @@ local function construct_stems(base)
 end
 
 
-local function add_composed_forms(base)
-	local forms = base.forms
-
-	local function add_composed(tense_mood, index, persnum, auxforms, participle, suffix, footnotes)
-		local pers_auxforms = iut.convert_to_general_list_form(auxforms[index])
-		local linked_pers_auxforms = iut.map_forms(pers_auxforms, function(form) return "[[" .. form .. "]] " end)
-		add4(base, tense_mood .. "_" .. persnum, linked_pers_auxforms, "[[" .. base.pre_pref, participle, "]]" .. suffix, footnotes)
-	end
-
-	local function add_composed_perf(tense_mood, index, persnum, haben_auxforms, sein_auxforms, haben_suffix, sein_suffix)
-		for _, auxform in ipairs(base.aux) do
-			if auxform.form == "haben" then
-				add_composed(tense_mood, index, persnum, haben_auxforms, base.pp, haben_suffix, auxform.footnotes)
+-- Generate the combinations of verb form (infinitive, gerund or various imperatives) + clitic pronoun.
+local function add_combined_forms(base)
+	for _, base_slot_and_pronouns in ipairs(verb_slot_combined_rows) do
+		local base_slot, pronouns = unpack(base_slot_and_pronouns)
+		for _, form in ipairs(base.forms[base_slot]) do
+			-- Figure out that correct accenting of the verb when a clitic pronoun is attached to it. We may need to
+			-- add or remove an accent mark:
+			-- (1) No accent mark currently, none needed: infinitive sentar because of sentarlo; imperative singular
+			--     ten because of tenlo;
+			-- (2) Accent mark currently, still needed: infinitive oír because of oírlo;
+			-- (3) No accent mark currently, accent needed: imperative singular siente -> siénte because of siéntelo;
+			-- (4) Accent mark currently, not needed: imperative singular está -> estálo, sé -> selo.
+			local syllables = com.syllabify(form.form)
+			local sylno = com.stressed_syllable(syllables)
+			table.insert(syllables, "lo")
+			local needs_accent = com.accent_needed(syllables, sylno)
+			if needs_accent then
+				syllables[sylno] = com.add_accent_to_syllable(syllables[sylno])
+			else
+				syllables[sylno] = com.remove_accent_from_syllable(syllables[sylno])
 			end
-			if auxform.form == "sein" then
-				add_composed(tense_mood, index, persnum, sein_auxforms, base.pp, sein_suffix, auxform.footnotes)
+			table.remove(syllables) -- remove added clitic pronoun
+			local reaccented_verb = table.concat(syllables)
+			for _, pronoun in ipairs(pronouns) do
+				local cliticized_verb
+				-- Some further special cases.
+				if base_slot == "imp_1p" and (pronoun == "nos" or pronoun == "os") then
+					-- Final -s disappears: sintamos + nos -> sintámonos, sintamos + os -> sintámoos
+					cliticized_verb = reaccented_verb:gsub("s$", "") .. pronoun
+				elseif base_slot == "imp_2p" and pronoun == "os" then
+					-- Final -d disappears, which may cause an accent to be required:
+					-- haced + os -> haceos, sentid + os -> sentíos
+					if reaccented_verb:find("id$") then
+						cliticized_verb = reaccented_verb:gsub("id$", "íos")
+					else
+						cliticized_verb = reaccented_verb:gsub("d$", "os")
+					end
+				else
+					cliticized_verb = reaccented_verb .. pronoun
+				end
+				iut.insert_form(base.forms, base_slot .. "_comb_" .. pronoun,
+					{form = cliticized_verb, footnotes = form.footnotes})
 			end
 		end
 	end
-
-	local haben_forms = irreg_verbs["haben"]
-	local sein_forms = irreg_verbs["sein"]
-	local werden_forms = irreg_verbs["werden"]
-	for index, persnum in ipairs(person_number_list) do
-		add_composed_perf("perf_ind", index, persnum, haben_forms["pres"], sein_forms["pres"], "", "")
-		add_composed_perf("perf_sub", index, persnum, haben_forms["subi"], sein_forms["subi"], "", "")
-		add_composed_perf("plup_ind", index, persnum, haben_forms["pret"], sein_forms["pret"], "", "")
-		add_composed_perf("plup_sub", index, persnum, haben_forms["subii"], sein_forms["subii"], "", "")
-		for _, mood in ipairs({"ind", "subi", "subii"}) do
-			local tense = mood == "ind" and "pres" or mood
-			add_composed("futi_" .. mood, index, persnum, werden_forms[tense], base.bare_infinitive, "")
-			add_composed_perf("futii_" .. mood, index, persnum, werden_forms[tense], werden_forms[tense], " [[haben]]", " [[sein]]")
-		end
-	end
-
-	add3(base, "futi_inf", "[[" .. base.pre_pref, base.bare_infinitive, "]] [[werden]]")
-	add5(base, "futii_inf", "[[" .. base.pre_pref, base.pp, "]] [[", base.aux, "]] [[werden]]")
 end
 
 local function process_slot_overrides(base)
@@ -813,6 +822,25 @@ local function handle_derived_slots(base)
 			end
 		end))
 	end
+
+	-- Copy subjunctives to imperatives, unless there's an override for the given slot (as with the imp_1p of [[ir]]).
+	for _, persnum in ipairs({"3s", "1p", "3p"}) do
+		local from = "pres_sub_" .. persnum
+		local to = "imp_" .. persnum
+		if not base.overrides[from] then
+			iut.insert_forms(base.forms, to, iut.map_forms(base.forms[from], function(form) return form end))
+		end
+	end
+
+	-- Copy subjunctives to negative imperatives, preceded by "no".
+	for _, persnum in ipairs({"2s", "3s", "1p", "2p", "3p"}) do
+		local from = "pres_sub_" .. persnum
+		local to = "imp_" .. persnum
+		iut.insert_forms(base.forms, to, iut.map_forms(base.forms[from], function(form)
+			return "no [[" .. form .. "]]"
+		end))
+	end
+
 end
 
 
