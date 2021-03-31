@@ -28,6 +28,7 @@ FIXME:
 1. Implement no_pres3 for aterir, garantir.
 2. Support concluyo.
 3. Fixes for veo -> ve vs. preveo -> prevé.
+4. Various more irregular verbs, e.g. predecir, redecir, bendecir, maldecir.
 --]=]
 
 local lang = require("Module:languages").getByCode("es")
@@ -486,7 +487,7 @@ local function replace_reflexive_indicators(slot, form)
 end
 
 
-local function combine_stem_ending(slot, stem, frontback, ending)
+local function combine_stem_ending(base, slot, stem, ending, is_combining_ending)
 	-- Lots of sound changes involving endings beginning with i + vowel
 	if rfind(ending, "^i" .. V) then
 		-- (1) need to raise e -> i, o -> u: dormir -> durmió, durmiera, durmiendo
@@ -506,6 +507,13 @@ local function combine_stem_ending(slot, stem, frontback, ending)
 		if rfind(stem, "[ñy]$") or rfind(stem, "ll$") then
 			ending = ending:gsub("^i", "")
 		end
+
+		-- (5) In the preterite of irregular verbs (likewise for other tenses derived from the preterite stem, i.e.
+		--     imperfect and future subjunctive), initial i absorbed after j (dijeron not #dijieron, likewise for
+		--     condujeron, trajeron). Does not apply in tejer (tejieron not #tejeron).
+		if base.stems.pret_conj == "irreg" and rfind(stem, "j$") then
+			ending = ending:gsub("^i", "")
+		end
 	end
 
 	-- If ending begins with (h)i, it must get an accent after a/e/i/o to prevent the two merging into a diphthong:
@@ -515,63 +523,62 @@ local function combine_stem_ending(slot, stem, frontback, ending)
 		ending = ending:gsub("^(h?)i", "%1í")
 	end
 
-	-- Spelling changes in the stem; it depends on whether the stem given is the pre-front-vowel or
-	-- pre-back-vowel variant, as indicated by `frontback`.
-	local is_front = rfind(ending, "^[eiéí]")
-	if frontback == "front" and not is_front then
-		stem = stem:gsub("c$", "z") -- ejercer -> ejerzo, uncir -> unzo; parecer -> parezco handled by caller
-		stem = stem:gsub("qu$", "c") -- delinquir -> delinco
-		stem = stem:gsub("g$", "j") -- coger -> cojo, afligir -> aflijo
-		stem = stem:gsub("gu$", "g") -- distinguir -> distingo
-		stem = stem:gsub("gü$", "gu") -- may not occur; argüir -> arguyo handled by caller
-	elseif frontback == "back" and is_front then
-		stem = stem:gsub("gu$", "gü") -- averiguar -> averigüé
-		stem = stem:gsub("g", "gu") -- cargar -> cargué
-		stem = stem:gsub("c", "qu") -- marcar -> marqué
-		stem = rsub(stem, "[çz]$", "c") -- aderezar/adereçar -> aderecé
+	if is_combining_ending then
+		-- Spelling changes in the stem; it depends on whether the stem given is the pre-front-vowel or
+		-- pre-back-vowel variant, as indicated by `frontback`. We want these front-back spelling changes to happen
+		-- between stem and ending, not between prefix and stem; the prefix may not have the same "front/backness"
+		-- as the stem.
+		local is_front = rfind(ending, "^[eiéí]")
+		if base.frontback == "front" and not is_front then
+			stem = stem:gsub("c$", "z") -- ejercer -> ejerzo, uncir -> unzo; parecer -> parezco handled by caller
+			stem = stem:gsub("qu$", "c") -- delinquir -> delinco
+			stem = stem:gsub("g$", "j") -- coger -> cojo, afligir -> aflijo
+			stem = stem:gsub("gu$", "g") -- distinguir -> distingo
+			stem = stem:gsub("gü$", "gu") -- may not occur; argüir -> arguyo handled by caller
+		elseif base.frontback == "back" and is_front then
+			stem = stem:gsub("gu$", "gü") -- averiguar -> averigüé
+			stem = stem:gsub("g", "gu") -- cargar -> cargué
+			stem = stem:gsub("c", "qu") -- marcar -> marqué
+			stem = rsub(stem, "[çz]$", "c") -- aderezar/adereçar -> aderecé
+		end
 	end
 
 	return replace_reflexive_indicators(slot, stem .. ending)
 end
 
 
-local function add(base, slot, stems, frontback, endings, footnotes)
+local function add(base, slot, stems, endings, is_combining_ending)
 	if skip_slot(base, slot) then
 		return
 	end
 	local function do_combine_stem_ending(stem, ending)
-		return combine_stem_ending(slot, stem, frontback, ending)
+		return combine_stem_ending(base, slot, stem, ending, is_combining_ending)
 	end
 	iut.add_forms(base.forms, slot, stems, endings, do_combine_stem_ending, nil, nil, base.all_footnotes)
 end
 
 
-local function add_multi(base, slot, frontback, stems_and_endings, footnotes)
-end
-
-
-local function add3(base, slot, prefix, stems, frontback, endings, footnotes)
+local function add3(base, slot, prefix, stems, endings)
 	if skip_slot(base, slot) then
 		return
 	end
 	local first = true
 	local function do_combine_stem_ending(stem, ending)
-		-- We don't want front-back modifications to occur when combining the prefix with the stem,
-		-- which occurs before combining the resulting prefix+stem with the ending, so we set it
-		-- to "neither" the first time around. This is a bit of a hack but prevents unwelcome surprises
-		-- that might otherwise happen.
-		local frontback = first and "neither" or frontback
+		-- We need to distinguish the case of combining prefix with stem vs. stem with ending inside of
+		-- combine_stem_ending(), in particular in the front-back stem handling. The way we do it is a bit
+		-- of a hack but works.
+		local is_combining_ending = not first
 		first = false
-		return combine_stem_ending(slot, stem, frontback, ending)
+		return combine_stem_ending(base, slot, stem, ending, is_combining_ending)
 	end
 	iut.add_multiple_forms(base.forms, slot, {prefix, stems, endings}, do_combine_stem_ending, nil, nil,
 		base.all_footnotes)
 end
 
 
-local function add_single_stem_tense(base, slot_pref, stems, frontback, s1, s2, s3, p1, p2, p3)
+local function add_single_stem_tense(base, slot_pref, stems, s1, s2, s3, p1, p2, p3)
 	local function addit(slot, ending)
-		add3(base, slot_pref .. "_" .. slot, base.prefix, stems, frontback, ending)
+		add3(base, slot_pref .. "_" .. slot, base.prefix, stems, ending)
 	end
 	addit("1s", s1)
 	addit("2s", s2)
@@ -585,7 +592,7 @@ end
 
 local function add_present_indic(base, conj)
 	local function addit(slot, stems, ending)
-		add3(base, "pres_" .. slot, base.prefix, stems, base.frontback, ending)
+		add3(base, "pres_" .. slot, base.prefix, stems, ending)
 	end
 	local s2, s2v, s3, p1, p2, p3
 	if conj == "ar" then
@@ -610,7 +617,7 @@ end
 
 local function add_present_subj(base, conj)
 	local function addit(slot, stems, ending)
-		add3(base, "pres_sub_" .. slot, base.prefix, stems, base.frontback, ending)
+		add3(base, "pres_sub_" .. slot, base.prefix, stems, ending)
 	end
 	local s1, s2, s2v, s3, p1, p2, p3
 	if conj == "ar" then
@@ -632,7 +639,7 @@ end
 
 local function add_imper(base, conj)
 	local function addit(slot, stems, ending)
-		add3(base, "imp_" .. slot, base.prefix, stems, base.frontback, ending)
+		add3(base, "imp_" .. slot, base.prefix, stems, ending)
 	end
 	if conj == "ar" then
 		addit("2s", base.stems.pres3, "a")
@@ -654,48 +661,50 @@ end
 
 local function add_non_present(base, conj)
 	local function add_tense(slot, stem, s1, s2, s3, p1, p2, p3)
-		add_single_stem_tense(base, slot, stem, base.frontback, s1, s2, s3, p1, p2, p3)
+		add_single_stem_tense(base, slot, stem, s1, s2, s3, p1, p2, p3)
 	end
 
-	if base.stems.full_impf then
+	local stems = base.stems
+
+	if stems.full_impf then
 		-- An override needs to be supplied for the impf_1p due to the accent on the stem.
-		add_tense("impf", base.stems.full_impf, "a", "as", "a", {}, "ais", "an")
+		add_tense("impf", stems.full_impf, "a", "as", "a", {}, "ais", "an")
 	elseif conj == "ar" then
-		add_tense("impf", base.stems.impf, "aba", "abas", "aba", "ábamos", "abais", "aban")
+		add_tense("impf", stems.impf, "aba", "abas", "aba", "ábamos", "abais", "aban")
 	else
-		add_tense("impf", base.stems.impf, "ía", "ías", "ía", "íamos", "íais", "ían")
+		add_tense("impf", stems.impf, "ía", "ías", "ía", "íamos", "íais", "ían")
 	end
 
-	if base.stems.pret_conj == "irreg" then
-		add_tense("pret", base.stems.pret, "e", "iste", "o", "imos", "isteis", "ieron")
-	elseif (base.pret_conj or conj) == "ar" then
-		add_tense("pret", base.stems.pret, "é", "aste", "ó", "amos", "asteis", "aron")
+	if stems.pret_conj == "irreg" then
+		add_tense("pret", stems.pret, "e", "iste", "o", "imos", "isteis", "ieron")
+	elseif stems.pret_conj == "ar" then
+		add_tense("pret", stems.pret, "é", "aste", "ó", "amos", "asteis", "aron")
 	else
-		add_tense("pret", base.stems.pret, "í", "iste", "ió", "imos", "isteis", "ieron")
+		add_tense("pret", stems.pret, "í", "iste", "ió", "imos", "isteis", "ieron")
 	end
 
-	if (base.pret_conj or conj) == "ar" then
-		add_tense("impf_sub_ra", base.stems.impf_sub_ra, "ara", "aras", "ara", "áramos", "arais", "aran")
-		add_tense("impf_sub_se", base.stems.impf_sub_se, "ase", "ases", "ase", "ásemos", "aseis", "asen")
-		add_tense("fut_sub", base.stems.fut_sub, "are", "ares", "are", "áremos", "areis", "aren")
+	if stems.pret_conj == "ar" then
+		add_tense("impf_sub_ra", stems.impf_sub_ra, "ara", "aras", "ara", "áramos", "arais", "aran")
+		add_tense("impf_sub_se", stems.impf_sub_se, "ase", "ases", "ase", "ásemos", "aseis", "asen")
+		add_tense("fut_sub", stems.fut_sub, "are", "ares", "are", "áremos", "areis", "aren")
 	else
-		add_tense("impf_sub_ra", base.stems.impf_sub_ra, "iera", "ieras", "iera", "iéramos", "ierais", "ieran")
-		add_tense("impf_sub_se", base.stems.impf_sub_se, "iese", "ieses", "iese", "iésemos", "ieseis", "iesen")
-		add_tense("fut_sub", base.stems.fut_sub, "iere", "ieres", "iere", "iéremos", "iereis", "ieren")
+		add_tense("impf_sub_ra", stems.impf_sub_ra, "iera", "ieras", "iera", "iéramos", "ierais", "ieran")
+		add_tense("impf_sub_se", stems.impf_sub_se, "iese", "ieses", "iese", "iésemos", "ieseis", "iesen")
+		add_tense("fut_sub", stems.fut_sub, "iere", "ieres", "iere", "iéremos", "iereis", "ieren")
 	end
 
-	add_tense("fut", base.stems.fut, "é", "ás", "á", "emos", "éis", "án")
-	add_tense("cond", base.stems.cond, "ía", "ías", "ía", "íamos", "íais", "ían")
+	add_tense("fut", stems.fut, "é", "ás", "á", "emos", "éis", "án")
+	add_tense("cond", stems.cond, "ía", "ías", "ía", "íamos", "íais", "ían")
 
 	-- Do the participles.
 	local function addit(slot, stems, ending)
-		add3(base, slot, base.prefix, stems, base.frontback, ending)
+		add3(base, slot, base.prefix, stems, ending)
 	end
-	addit("gerund", base.stems.pres, conj == "ar" and "ando" or "iendo")
-	addit("pp_ms", base.stems.pp, "o")
-	addit("pp_fs", base.stems.pp, "a")
-	addit("pp_mp", base.stems.pp, "os")
-	addit("pp_fp", base.stems.pp, "as")
+	addit("gerund", stems.pres, conj == "ar" and "ando" or "iendo")
+	addit("pp_ms", stems.pp, "o")
+	addit("pp_fs", stems.pp, "a")
+	addit("pp_mp", stems.pp, "os")
+	addit("pp_fp", stems.pp, "as")
 end
 
 
@@ -750,9 +759,9 @@ local function construct_stems(base)
 	stems.impf_sub_se = stems.impf_sub_se or stems.pret
 	stems.fut_sub = stems.fut_sub or stems.pret
 	stems.pp = stems.pp or base.conj == "ar" and
-		combine_stem_ending("pp_ms", pres_stem, base.frontback, "ad") or
+		combine_stem_ending(base, "pp_ms", pres_stem, "ad", "is combining ending") or
 		-- use combine_stem_ending esp. so we get reído, caído, etc.
-		combine_stem_ending("pp_ms", pres_stem, base.frontback, "id")
+		combine_stem_ending(base, "pp_ms", pres_stem, "id", "is combining ending")
 end
 
 
@@ -805,7 +814,7 @@ end
 
 local function process_slot_overrides(base)
 	for slot, forms in ipairs(base.overrides) do
-		add(base, slot, base.prefix, base.frontback, forms)
+		add(base, slot, base.prefix, forms, false)
 	end
 end
 
