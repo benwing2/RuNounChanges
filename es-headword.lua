@@ -5,37 +5,26 @@ local u = mw.ustring.char
 local rfind = mw.ustring.find
 local rmatch = mw.ustring.match
 local rsplit = mw.text.split
-local rsubn = mw.ustring.gsub
 
 local m_links = require("Module:links")
+local com = require("Module:es-common")
 
 local lang = require("Module:languages").getByCode("es")
 local langname = lang:getCanonicalName()
 
 local PAGENAME = mw.title.getCurrentTitle().text
 
-local TEMPC1 = u(0xFFF1)
-local TEMPC2 = u(0xFFF2)
-local TEMPV1 = u(0xFFF3)
-local DIV = u(0xFFF4)
-local vowel = "aeiouáéíóúý" .. TEMPV1
-local V = "[" .. vowel .. "]"
-local SV = "[áéíóúý]" -- stressed vowel
-local W = "[iyuw]" -- glide
-local C = "[^" .. vowel .. ".]"
+local V = com.V -- vowel regex class
+local SV = com.SV -- stressed vowel regex class
+local C = com.C -- consonant regex class
+
+local rsub = com.rsub
 
 local suffix_categories = {
 	["adjectives"] = true,
 	["adverbs"] = true,
 	["nouns"] = true,
 	["verbs"] = true,
-}
-
-local remove_stress = {
-	["á"] = "a", ["é"] = "e", ["í"] = "i", ["ó"] = "o", ["ú"] = "u", ["ý"] = "y"
-}
-local add_stress = {
-	["a"] = "á", ["e"] = "é", ["i"] = "í", ["o"] = "ó", ["u"] = "ú", ["y"] = "ý"
 }
 
 local allowed_special_indicators = {
@@ -56,23 +45,6 @@ local prepositions = {
 	"para",
 	"por",
 }
-
--- version of rsubn() that discards all but the first return value
-local function rsub(term, foo, bar)
-	local retval = rsubn(term, foo, bar)
-	return retval
-end
-
--- apply rsub() repeatedly until no change
-local function rsub_repeatedly(term, foo, bar)
-	while true do
-		local new_term = rsub(term, foo, bar)
-		if new_term == term then
-			return term
-		end
-		term = new_term
-	end
-end
 
 -- Add links around words. If multiword_only, do it only in multiword forms.
 local function add_links(form, multiword_only)
@@ -282,46 +254,6 @@ function handle_multiword(form, special, inflect)
 end
 
 
--- Syllabify a word. This implements the full syllabification algorithm, based on the corresponding code
--- in [[Module:es-pronunc]]. This is more than is needed for the purpose of this module, which doesn't
--- care so much about syllable boundaries, but won't hurt.
-local function syllabify(word)
-	word = DIV .. word .. DIV
-	-- gu/qu + front vowel; make sure we treat the u as a consonant; a following
-	-- i should not be treated as a consonant ([[alguien]] would become ''álguienes''
-	-- if pluralized)
-	word = rsub(word, "([gq])u([eiéí])", "%1" .. TEMPC2 .. "%2")
-	local vowel_to_glide = { ["i"] = TEMPC1, ["u"] = TEMPC2 }
-	-- i and u between vowels should behave like consonants ([[paranoia]], [[baiano]], [[abreuense]],
-	-- [[alauita]], [[Malaui]], etc.)
-	word = rsub_repeatedly(word, "(" .. V .. ")([iu])(" .. V .. ")",
-		function(v1, iu, v2) return v1 .. vowel_to_glide[iu] .. v2 end
-	)
-	-- y between consonants or after a consonant at the end of the word should behave like a vowel
-	-- ([[ankylosaurio]], [[cryptomeria]], [[brandy]], [[cherry]], etc.)
-	word = rsub_repeatedly(word, "(" .. C .. ")y(" .. C .. ")",
-		function(c1, c2) return c1 .. TEMPV1 .. c2 end
-	)
-
-	word = rsub_repeatedly(word, "(" .. V .. ")(" .. C .. W .. "?" .. V .. ")", "%1.%2")
-	word = rsub_repeatedly(word, "(" .. V .. C .. ")(" .. C .. V .. ")", "%1.%2")
-	word = rsub_repeatedly(word, "(" .. V .. C .. "+)(" .. C .. C .. V .. ")", "%1.%2")
-	word = rsub(word, "([pbcktdg])%.([lr])", ".%1%2")
-	word = rsub_repeatedly(word, "(" .. C .. ")%.s(" .. C .. ")", "%1s.%2")
-	-- Any aeo, or stressed iu, should be syllabically divided from a following aeo or stressed iu.
-	word = rsub_repeatedly(word, "([aeoáéíóúý])([aeoáéíóúý])", "%1.%2")
-	word = rsub_repeatedly(word, "([ií])([ií])", "%1.%2")
-	word = rsub_repeatedly(word, "([uú])([uú])", "%1.%2")
-	word = rsub(word, "([" .. DIV .. TEMPC1 .. TEMPC2 .. TEMPV1 .. "])", {
-		[DIV] = "",
-		[TEMPC1] = "i",
-		[TEMPC2] = "u",
-		[TEMPV1] = "y",
-	})
-	return word
-end
-
-
 local function make_plural(form, special)
 	local retval = handle_multiword(form, special, make_plural)
 	if retval then
@@ -344,7 +276,7 @@ local function make_plural(form, special)
 	-- ends in tz
 	if rfind(form, "tz$") then return {form} end
 
-	local syllables = rsplit(syllabify(form), "%.")
+	local syllables = com.syllabify(form)
 
 	-- ends in s or x with more than 1 syllable, last syllable unstressed
 	if syllables[2] and rfind(form, "[sx]$") and not rfind(syllables[#syllables], SV) then
@@ -359,7 +291,7 @@ local function make_plural(form, special)
 	-- ends in a stressed vowel + consonant
 	if rfind(form, SV .. C .. "$") then
 		return {rsub(form, "(.)(.)$", function(vowel, consonant)
-			return remove_stress[vowel] .. consonant .. "es"
+			return com.remove_stress[vowel] .. consonant .. "es"
 		end)}
 	end
 
@@ -367,20 +299,7 @@ local function make_plural(form, special)
 	if rfind(form, "[aeiou][ylrndjsx]$") then
 		-- two or more syllables: add stress mark to plural; e.g. joven -> jóvenes
 		if syllables[2] and rfind(form, "n$") then
-			-- don't do anything if syllable already stressed
-			if not rfind(syllables[#syllables - 1], SV) then
-				-- prefer to accent an a/e/o in case of a diphthong or triphthong; otherwise, do the
-				-- last i or u in case of a diphthong ui or iu
-				if rfind(syllables[#syllables - 1], "[aeo]") then
-					syllables[#syllables - 1] = rsub(syllables[#syllables - 1], "([aeo])",
-						function(vowel) return add_stress[vowel] end
-					)
-				else
-					syllables[#syllables - 1] = rsub(syllables[#syllables - 1], "^(.*)([iu])",
-						function(before, vowel) return before .. add_stress[vowel] end
-					)
-				end
-			end
+			syllables[#syllables - 1] = com.add_accent_to_syllable(syllables[#syllables - 1])
 			return {table.concat(syllables, "") .. "es"}
 		end
 
@@ -418,7 +337,7 @@ local function make_feminine(form, special)
 			form,
 			"^(.+)(.)(.)$",
 			function (before_stress, stressed_vowel, after_stress)
-				return before_stress .. (remove_stress[stressed_vowel] or stressed_vowel) .. after_stress
+				return before_stress .. (com.remove_stress[stressed_vowel] or stressed_vowel) .. after_stress
 			end)
 	end
 
@@ -976,7 +895,7 @@ end
 local function base_default_verb_forms(refl_clitic_verb, categories, post, no_link)
 	always_link = true
 	local ret = {}
-	local refl_verb, clitic = rmatch(refl_clitic_verb, "^(.-)(l[ao]s?)$")
+	local refl_verb, clitic = rmatch(refl_clitic_verb, "^(.-)(l[aeo]s?)$")
 	if not refl_verb then
 		refl_verb, clitic = refl_clitic_verb, nil
 	end
@@ -988,7 +907,7 @@ local function base_default_verb_forms(refl_clitic_verb, categories, post, no_li
 	if not base then
 		error("Unrecognized verb '" .. verb .. "', doesn't end in -ar, -er or -ir")
 	end
-	local suffix = (remove_stress[suffix_vowel] or suffix_vowel) .. "r"
+	local suffix = (com.remove_stress[suffix_vowel] or suffix_vowel) .. "r"
 	local ends_in_vowel = rfind(base, "[aeo]$")
 	if suffix == "ir" and ends_in_vowel then
 		verb = base .. "ír"
@@ -1056,7 +975,7 @@ local function base_default_verb_forms(refl_clitic_verb, categories, post, no_li
 	end
 
 	ret.verb = verb
-	ret.accented_verb = base .. (add_stress[suffix_vowel] or suffix_vowel) .. "r"
+	ret.accented_verb = base .. (com.add_stress[suffix_vowel] or suffix_vowel) .. "r"
 	if refl and clitic then
 		ret.full_verb = ret.accented_verb .. refl .. clitic
 	else
@@ -1134,6 +1053,10 @@ pos_functions["verbs"] = {
 			return
 		end
 
+		if mw.title.getCurrentTitle().nsText == "Template" and PAGENAME == "es-verb" and not args.pagename then
+			pagename = "averiguar"
+		end
+		
 		if args[1] then
 			-------------------------- ANGLE-BRACKET FORMAT --------------------------
 
@@ -1412,11 +1335,17 @@ pos_functions["verbs"] = {
 						end
 						table.insert(forms, {form = def_form, footnotes = qual})
 					else
-						local spec
+						local form
 						if special_case then
-							spec = special_case(arg, def_forms)
+							form = special_case(arg, def_forms)
 						end
-						table.insert(forms, {form = spec or arg, footnotes = qual})
+						if not form then
+							form = arg
+							if not args.noautolinkverb then
+								form = add_links(form)
+							end
+						end
+						table.insert(forms, {form = form, footnotes = qual})
 					end
 				end
 			end
