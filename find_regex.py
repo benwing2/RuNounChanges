@@ -23,7 +23,7 @@ import blib
 from blib import getparam, rmparam, msg, site
 
 def process_text_on_page(index, pagetitle, text, regex, invert, verbose,
-    include_text, all_matches, mainspace_only, lang_only):
+    include_text, all_matches, mainspace_only, lang_only, from_to):
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
@@ -51,18 +51,24 @@ def process_text_on_page(index, pagetitle, text, regex, invert, verbose,
         text_to_search = sections[j]
         break
 
+  def output_match(m):
+    if from_to:
+      pagemsg("Found match for regex: <from> %s <to> %s <end>" % (m.group(0), m.group(0)))
+    else:
+      pagemsg("Found match for regex: %s" % m.group(0))
+
   if text_to_search:
     found_match = False
     if all_matches:
       for m in re.finditer(regex, text_to_search, re.M):
         found_match = True
-        pagemsg("Found match for regex: %s" % m.group(0))
+        output_match(m)
     else:
       m = re.search(regex, text_to_search, re.M)
       if m:
         found_match = True
         if not invert:
-          pagemsg("Found match for regex: %s" % m.group(0))
+          output_match(m)
     if not found_match and invert:
       pagemsg("Didn't find match for regex: %s" % regex)
     if include_text:
@@ -75,7 +81,7 @@ def search_pages(args, regex, invert, input_from_diff, start, end, lang_only):
 
   def do_process_text_on_page(index, title, text):
     process_text_on_page(index, title, text, regex, invert, args.verbose,
-        args.text, args.all, args.mainspace_only, lang_only)
+        args.text, args.all, args.mainspace_only, lang_only, args.from_to)
 
   if input_from_diff:
     lines = codecs.open(input_from_diff, "r", "utf-8")
@@ -96,6 +102,7 @@ if __name__ == "__main__":
       action="store_true")
   parser.add_argument('--input-from-diff', help="Use the specified file as input, a previous output of a job run with --diff.")
   parser.add_argument('--all', help="Include all matches.", action="store_true")
+  parser.add_argument('--from-to', help="Output in from-to format, for ease in pushing changes.", action="store_true")
   parser.add_argument('--text', help="Include surrounding text.", action="store_true")
   parser.add_argument('--mainspace-only', help="Skip non-mainspace pages.", action='store_true')
   parser.add_argument('--lang-only', help="Only search the specified language section.")
