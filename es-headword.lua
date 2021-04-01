@@ -15,7 +15,7 @@ local langname = lang:getCanonicalName()
 local PAGENAME = mw.title.getCurrentTitle().text
 
 local V = com.V -- vowel regex class
-local SV = com.SV -- stressed vowel regex class
+local AV = com.AV -- accented vowel regex class
 local C = com.C -- consonant regex class
 
 local rsub = com.rsub
@@ -279,19 +279,19 @@ local function make_plural(form, special)
 	local syllables = com.syllabify(form)
 
 	-- ends in s or x with more than 1 syllable, last syllable unstressed
-	if syllables[2] and rfind(form, "[sx]$") and not rfind(syllables[#syllables], SV) then
+	if syllables[2] and rfind(form, "[sx]$") and not rfind(syllables[#syllables], AV) then
 		return {form}
 	end
 
-	-- ends in l, r, n, d, z, or j with 3 or more syllables, accented on third to last syllable
-	if syllables[3] and rfind(form, "[lrndzj]$") and rfind(syllables[#syllables - 2], SV) then
+	-- ends in l, r, n, d, z, or j with 3 or more syllables, stressed on third to last syllable
+	if syllables[3] and rfind(form, "[lrndzj]$") and rfind(syllables[#syllables - 2], AV) then
 		return {form}
 	end
 
-	-- ends in a stressed vowel + consonant
-	if rfind(form, SV .. C .. "$") then
+	-- ends in an accented vowel + consonant
+	if rfind(form, AV .. C .. "$") then
 		return {rsub(form, "(.)(.)$", function(vowel, consonant)
-			return com.remove_stress[vowel] .. consonant .. "es"
+			return com.remove_accent[vowel] .. consonant .. "es"
 		end)}
 	end
 
@@ -337,7 +337,7 @@ local function make_feminine(form, special)
 			form,
 			"^(.+)(.)(.)$",
 			function (before_stress, stressed_vowel, after_stress)
-				return before_stress .. (com.remove_stress[stressed_vowel] or stressed_vowel) .. after_stress
+				return before_stress .. (com.remove_accent[stressed_vowel] or stressed_vowel) .. after_stress
 			end)
 	end
 
@@ -907,7 +907,7 @@ local function base_default_verb_forms(refl_clitic_verb, categories, post, no_li
 	if not base then
 		error("Unrecognized verb '" .. verb .. "', doesn't end in -ar, -er or -ir")
 	end
-	local suffix = (com.remove_stress[suffix_vowel] or suffix_vowel) .. "r"
+	local suffix = (com.remove_accent[suffix_vowel] or suffix_vowel) .. "r"
 	local ends_in_vowel = rfind(base, "[aeo]$")
 	if suffix == "ir" and ends_in_vowel then
 		verb = base .. "ír"
@@ -975,7 +975,7 @@ local function base_default_verb_forms(refl_clitic_verb, categories, post, no_li
 	end
 
 	ret.verb = verb
-	ret.accented_verb = base .. (com.add_stress[suffix_vowel] or suffix_vowel) .. "r"
+	ret.accented_verb = base .. (com.add_accent[suffix_vowel] or suffix_vowel) .. "r"
 	if refl and clitic then
 		ret.full_verb = ret.accented_verb .. refl .. clitic
 	else

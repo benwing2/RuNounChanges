@@ -6,25 +6,25 @@ local TEMPV1 = u(0xFFF3)
 local DIV = u(0xFFF4)
 local vowel = "aeiouáéíóúý" .. TEMPV1
 local V = "[" .. vowel .. "]"
-local SV = "[áéíóúý]" -- stressed vowel
+local AV = "[áéíóúý]" -- accented vowel
 local W = "[iyuw]" -- glide
 local C = "[^" .. vowel .. ".]"
 
 export.vowel = vowel
 export.V = V
-export.SV = SV
+export.AV = AV
 export.W = W 
 export.C = C 
 
-local remove_stress = {
+local remove_accent = {
 	["á"] = "a", ["é"] = "e", ["í"] = "i", ["ó"] = "o", ["ú"] = "u", ["ý"] = "y"
 }
-local add_stress = {
+local add_accent = {
 	["a"] = "á", ["e"] = "é", ["i"] = "í", ["o"] = "ó", ["u"] = "ú", ["y"] = "ý"
 }
 
-export.remove_stress = remove_stress
-export.add_stress = add_stress
+export.remove_accent = remove_accent
+export.add_accent = add_accent
 
 
 -- version of rsubn() that discards all but the first return value
@@ -93,7 +93,7 @@ end
 function export.stressed_syllable(syllables)
 	-- If a syllable is stressed, return it.
 	for i = #syllables, 1, -1 do
-		if rfind(syllables[i], SV) then
+		if rfind(syllables[i], AV) then
 			return i
 		end
 	end
@@ -113,22 +113,22 @@ end
 -- Add an accent to the appropriate vowel in a syllable, if not already accented.
 function export.add_accent_to_syllable(syllable)
 	-- Don't do anything if syllable already stressed.
-	if rfind(syllable, SV) then
+	if rfind(syllable, AV) then
 		return syllable
 	end
 	-- Prefer to accent an a/e/o in case of a diphthong or triphthong (the first one if for some reason
 	-- there are multiple, which should not occur with the standard syllabification algorithm);
 	-- otherwise, do the last i or u in case of a diphthong ui or iu.
 	if rfind(syllable, "[aeo]") then
-		return rsub(syllable, "^(.-)([aeo])", function(prev, v) return prev .. add_stress[v] end)
+		return rsub(syllable, "^(.-)([aeo])", function(prev, v) return prev .. add_accent[v] end)
 	end
-	return rsub(syllable, "^(.*)([iu])", function(prev, v) return prev .. add_stress[v] end)
+	return rsub(syllable, "^(.*)([iu])", function(prev, v) return prev .. add_accent[v] end)
 end
 
 
 -- Remove any accent from a syllable.
 function export.remove_accent_from_syllable(syllable)
-	return rsub(syllable, SV, remove_stress)
+	return rsub(syllable, AV, remove_accent)
 end
 
 
