@@ -25,7 +25,7 @@ TERMINOLOGY:
 
 FIXME:
 
-1. Implement no_pres3 for aterir, garantir.
+1. Implement nopres3 for aterir, garantir. (NOTE: Per RAE, garantir used in all forms in Argentina/Uruguay.)
 2. Support concluyo.
 3. Fixes for veo -> ve vs. preveo -> prevé.
 4. Various more irregular verbs, e.g. predecir, redecir, bendecir, maldecir.
@@ -47,8 +47,9 @@ local function link_term(term, face)
 end
 
 
-local V = com.V
-local C = com.C
+local V = com.V -- vowel regex class
+local AV = com.AV -- accented vowel regex class
+local C = com.C -- consonant regex class
 
 
 local all_persons_numbers = {
@@ -145,10 +146,46 @@ for _, slot_and_accel in ipairs(verb_slots_combined) do
 	table.insert(all_verb_slots, slot_and_accel)
 end
 
-local all_verb_slot_map = {}
-for _, slot in ipairs(all_verb_slots) do
-	all_verb_slot_map[slot[1]] = slot[2]
+local verb_slots_basic_map = {}
+for _, slotaccel in ipairs(verb_slots_basic) do
+	local slot, accel = unpack(slotaccel)
+	verb_slots_basic_map[slot] = accel
 end
+
+local verb_slots_combined_map = {}
+for _, slotaccel in ipairs(verb_slots_basic) do
+	local slot, accel = unpack(slotaccel)
+	verb_slots_combined_map[slot] = accel
+end
+
+local function match_against_verbs(ref_verb, prefixes)
+	return function(verb)
+		for _, prefix in ipairs(prefixes) do
+			if verb == prefix .. ref_verb then
+				return prefix
+			end
+		end
+		return nil
+	end
+end
+
+
+--[=[
+
+Special cases for verbs:
+
+auxiliar, gloriar, afiliar, extasiar, acuantiar, desafiliar: -io or -ío. These can be handled by specifying the
+appropriate params in the conjugation.
+
+diluviar, atardecer, empecer: impersonal; all finite non-3s forms are nonexistent or hypothetical. Handle using
+'.only3s'.
+
+atañer: all finite non-third-person forms are nonexistent or hypothetical. Handle using '.only3sp'.
+
+desposeer: Former module claimed an irregular past participle 'desposeso'. Not per RAE.
+
+rehuir: Handle using +ú.
+]=]
 
 
 local irreg_conjugations = {
@@ -158,11 +195,13 @@ local irreg_conjugations = {
 		forms = {pret = "anduv", pret_conj = "irreg"}
 	},
 	{
+		-- asir, desasir
 		match = "asir",
 		forms = {pres1_and_sub = "asg"}
 	},
 	{
-		match = "brir", -- abrir, cubrir and compounds
+		-- abrir, cubrir and compounds
+		match = "brir",
 		forms = {pp = "biert"}
 	},
 	{
@@ -170,23 +209,62 @@ local irreg_conjugations = {
 		forms = {pres1_and_sub = "quep", pret = "cup", fut = "cabr"}
 	},
 	{
+		-- caer, decaer, descaer, recaer
 		match = "caer",
 		forms = {pres1_and_sub = "caig"}
 	},
 	{
 		match = "^dar",
-		forms = {pres_1s = "doy", pret = "d", pret_conj = "er", pres_sub_1s = "dé", pres_sub_3s = "dé"}
+		forms = {
+			pres_1s = "doy", pret = "d", pret_conj = "er",
+			pres_sub_1s = "dé*", pres_sub_3s = "dé*" -- * signals that the monosyllabic accent must remain
+		}
 	},
 	{
+		-- decir, redecir, entredecir
+		match = match_against_verbs("decir", {"", "re", "entre"}),
+		forms = {
+			pres1_and_sub = "dig", pres3 = "dic", pret = "dij", pret_conj = "irreg",
+			pp = "dich", fut = "dir",
+			imp_2s = "dí" -- need the accent for the compounds; it will be removed in the simplex
+		}
+	},
+	{
+		-- antedecir, interdecir
+		match = match_against_verbs("decir", {"ante", "inter"}),
+		forms = {
+			pres1_and_sub = "dig", pres3 = "dic", pret = "dij", pret_conj = "irreg",
+			pp = "dich", fut = "dir" -- imp_2s regular
+		}
+	},
+	{
+		-- bendecir, maldecir
+		match = match_against_verbs("decir", {"ben", "mal"}),
+		forms = {
+			pres1_and_sub = "dig", pres3 = "dic", pret = "dij", pret_conj = "irreg",
+			pp = {"decid", "dit"} -- imp_2s regular, fut regular
+		}
+	},
+	{
+		-- condecir, contradecir, desdecir, predecir, others?
 		match = "decir",
-		forms = {pres1_and_sub = "dig", pres3 = "dic", pret = "dij", pret_conj = "irreg", pp = "dich", fut = "dir", imp_2s = "di"}
+		forms = {
+			pres1_and_sub = "dig", pres3 = "dic", pret = "dij", pret_conj = "irreg",
+			pp = "dich", fut = {"decir", "dir"} -- imp_2s regular
+		}
+	},
+	{
+		-- FIXME: does this verb really exist? Not in RAE.
+		match = "desnacer",
+		forms = {pp = {"desnacid", "desnat"}}
 	},
 	{
 		match = "^desosar",
 		forms = {pres3 = "deshues"}
 	},
 	{
-		match = "ducir", -- conducir, producir, reducir, traducir, etc.
+		-- conducir, producir, reducir, traducir, etc.
+		match = "ducir",
 		forms = {pret = "duj", pret_conj = "irreg"}
 	},
 	{
@@ -232,10 +310,21 @@ local irreg_conjugations = {
 		}
 	},
 	{
-		match = "hacer",
-		forms = {pres1_and_sub = "hag", pret = "hic", pret_conj = "irreg", pp = "hech", fut = "har", imp_2s = {"hace", "haz"}}
+		match = "satisfacer",
+		forms = {
+			pres1_and_sub = "satisfag", pret = "satisfic", pret_conj = "irreg", pp = "satisfech", fut = "satisfar",
+			imp_2s = {"satisface", "satisfaz"}
+		}
 	},
 	{
+		-- hacer, deshacer, contrahacer, rehacer, facer, desfacer, jacer
+		-- contrahacer/rehacer require an extra accent in the preterite (rehíce, rehízo), but this is handled
+		-- automatically by combine_stem_ending().
+		match = function(verb) return rmatch(verb, "^(.*[hjf])acer$") end,
+		forms = {pres1_and_sub = "ag", pret = "ic", pret_conj = "irreg", pp = "ech", fut = "ar", imp_2s = "az"}
+	},
+	{
+		-- imprimir, reimprimir
 		match = "imprimir",
 		forms = {pp = {"imprimid", "impres"}}
 	},
@@ -275,6 +364,7 @@ local irreg_conjugations = {
 		forms = {pres3 = "uelv", pp = "uelt"}
 	},
 	{
+		-- placer, desplacer
 		match = "placer",
 		forms = {
 			pret_3s = {"plació", {form = "plugo", footnotes = {"[archaic]"}}},
@@ -293,40 +383,49 @@ local irreg_conjugations = {
 		forms = {pres3 = "pued", pret = "pud", pret_conj = "irreg", fut = "podr"}
 	},
 	{
+		-- poner, componer, deponer, imponer, oponer, suponer, many others
 		match = "poner",
-		forms = {pres1_and_sub = "pong", pret = "pus", pret_conj = "irreg", fut = "pondr", imp_2s = "pon"}
+		forms = {
+			pres1_and_sub = "pong", pret = "pus", pret_conj = "irreg", fut = "pondr",
+			imp_2s = "pón" -- need the accent for the compounds; it will be removed in the simplex
+		}
+	},
+	{
+		-- proveer, desproveer
+		match = "proveer",
+		forms = {pp = {"proveíd", "provist"}},
 	},
 	{
 		match = "pudrir",
 		forms = {pp = "podrid"}
 	},
 	{
-		match = "raer",
-		forms = {
-			pres1_and_sub = {"raig", "ray"}, -- only for subjunctive as we override pres_1s
-			pres1_sg = {"ra", "raig", "ray"},
-		}
-	},
-	{
-		match = "rehuir",
-		forms = {pres3 = "rehúy"}
-	},
-	{
-		match = "roer",
-		forms = {pres1_and_sub = {"ro", "roig", "roy"}}
-	},
-	{
-		match = "romper",
-		forms = {pp = "rot"}
-	},
-	{
+		-- querer, desquerer, malquerer
 		match = "querer",
 		forms = {pres3 = "quier", pret = "quis", pret_conj = "irreg", fut = "querr"}
 	},
 	{
+		match = "raer",
+		forms = {
+			pres1_and_sub = {"raig", "ray"}, -- only for subjunctive as we override pres_1s
+			pres_1s = {"raigo", "rayo", "rao"}, -- RAE doesn't allow rao
+		}
+	},
+	{
+		-- roer, corroer
+		match = "roer",
+		forms = {pres1_and_sub = {"ro", "roig", "roy"}}
+	},
+	{
+		-- romper, interromper?
+		match = "romper",
+		forms = {pp = "rot"}
+	},
+	{
+		-- saber, resaber
 		match = "saber",
 		forms = {
-			pres_1s = "sé",
+			pres_1s = "sé*", -- * signals that the monosyllabic accent must remain
 			pres1_and_sub = "sep", -- only for subjunctive as we override pres_1s
 			pret = "sup",
 			pret_conj = "irreg",
@@ -357,8 +456,8 @@ local irreg_conjugations = {
 			pret = "fu",
 			pret_3s = "fue",
 			fut = "ser",
-			imp_2s = "sé",
-			imp_2sv = "sé",
+			imp_2s = "sé*", -- * signals that the monosyllabic accent must remain
+			imp_2sv = "sé*",
 		}
 	},
 	{
@@ -370,16 +469,25 @@ local irreg_conjugations = {
 		}
 	},
 	{
+		-- tener, abstener, contener, detener, obtener, sostener, and many others
 		match = "tener",
-		forms = {pres1_and_sub = "teng", pres3 = "tien", pret = "tuv", pret_conj = "irreg", fut = "tendr", imp_2s = "ten"}
+		forms = {
+			pres1_and_sub = "teng", pres3 = "tien", pret = "tuv", pret_conj = "irreg", fut = "tendr",
+			imp_2s = "tén" -- need the accent for the compounds; it will be removed in the simplex
+		}
 	},
 	{
+		-- traer, atraer, detraer, distraer, extraer, sustraer, and many others
 		match = "traer",
 		forms = {pres1_and_sub = "traig", pret = "traj", pret_conj = "irreg"}
 	},
 	{
+		-- valer, equivaler, prevaler
 		match = "valer",
-		forms = {pres1_and_sub = "valg", fut = "valdr", imp_2s = {"vale", "val"}}
+		forms = {
+			pres1_and_sub = "valg", fut = "valdr",
+			imp_2s = {"vale", "val"} -- RAE does not list val
+		}
 	},
 	{
 		match = "venir",
@@ -387,15 +495,23 @@ local irreg_conjugations = {
 	},
 	{
 		-- We want to match antever etc. but not atrever etc. No way to avoid listing each verb.
-		match = function(verb) return
-			for _, prefix in ipairs({"ante", "entre", "pre", "re", ""}) do
-				if verb == prefix .. "ver" then
-					return prefix
-				end
-			end
-			return nil
-		end,
-		forms = {pres1_and_sub = "ve", impf = "ve", pp = "vist"}
+		match = match_against_verbs("ver", {"ante", "entre", "pre", "re", ""}),
+		forms = {
+			-- we need to override various present indicative forms and add an accent for the compounds;
+			-- not needed for the simplex and in fact the accents will be removed in that case
+			pres_2s = "vés",
+			pres_2sv = "vés",
+			pres_3s = "vé",
+			pres_2p = "véis",
+			pres_3p = "vén",
+			pres1_and_sub = "ve",
+			impf = "ve", pp = "vist"
+		}
+	},
+	{
+		-- yacer, adyacer, subyacer
+		match = "yacer",
+		forms = {pres1_and_sub = {"yazc", "yazg", "yag"}, imp_2s = {"yace", "yaz"}}
 	},
 }
 
@@ -417,7 +533,7 @@ local sich_forms = {
 
 
 local function skip_slot(base, slot)
-	if base.overrides[slot] then
+	if base.basic_overrides[slot] or base.combined_overrides[slot] then
 		-- Skip any slots for which there are overrides.
 		return true
 	end
@@ -431,8 +547,13 @@ local function skip_slot(base, slot)
 		return true
 	end
 
-	if base.only3s and not slot:find("3s") or
-		base.only3sp and not slot:find("3[sp]") then
+	if base.only3s and (not slot:find("3s") or slot:find("^imp")) then
+		-- atardecer
+		return true
+	end
+
+	if base.only3sp and (not slot:find("3[sp]") or slot:find("^imp")) then
+		-- atañer
 		return true
 	end
 
@@ -590,19 +711,19 @@ end
 
 
 
-local function add_present_indic(base, conj)
+local function add_present_indic(base)
 	local function addit(slot, stems, ending)
 		add3(base, "pres_" .. slot, base.prefix, stems, ending)
 	end
 	local s2, s2v, s3, p1, p2, p3
-	if conj == "ar" then
+	if base.conj == "ar" then
 		s2, s2v, s3, p1, p2, p3 = "as", "ás", "a", "amos", "áis", "an"
-	elseif conj == "er" then
+	elseif base.conj == "er" then
 		s2, s2v, s3, p1, p2, p3 = "es", "és", "e", "emos", "éis", "en"
-	elseif conj == "ir" then
+	elseif base.conj == "ir" then
 		s2, s2v, s3, p1, p2, p3 = "es", "ís", "e", "imos", "ís", "en"
 	else
-		error("Internal error: Unrecognized conjugation " .. conj)
+		error("Internal error: Unrecognized conjugation " .. base.conj)
 	end
 
 	addit("1s", base.stem.pres1, "o")
@@ -615,12 +736,12 @@ local function add_present_indic(base, conj)
 end
 
 
-local function add_present_subj(base, conj)
+local function add_present_subj(base)
 	local function addit(slot, stems, ending)
 		add3(base, "pres_sub_" .. slot, base.prefix, stems, ending)
 	end
 	local s1, s2, s2v, s3, p1, p2, p3
-	if conj == "ar" then
+	if base.conj == "ar" then
 		s1, s2, s2v, s3, p1, p2, p3 = "e", "es", "és", "e", "emos", "éis", "en"
 	else
 		-- voseo and tu forms are identical
@@ -637,29 +758,29 @@ local function add_present_subj(base, conj)
 end
 
 
-local function add_imper(base, conj)
+local function add_imper(base)
 	local function addit(slot, stems, ending)
 		add3(base, "imp_" .. slot, base.prefix, stems, ending)
 	end
-	if conj == "ar" then
+	if base.conj == "ar" then
 		addit("2s", base.stems.pres3, "a")
 		addit("2sv", base.stems.pres, "á")
 		addit("2p", base.stems.pres, "ad")
-	elseif conj == "er" then
+	elseif base.conj == "er" then
 		addit("2s", base.stems.pres3, "e")
 		addit("2sv", base.stems.pres, "é")
 		addit("2p", base.stems.pres, "ed")
-	elseif conj == "ir" then
+	elseif base.conj == "ir" then
 		addit("2s", base.stems.pres3, "e")
 		addit("2sv", base.stems.pres, "í")
 		addit("2p", base.stems.pres, "id")
 	else
-		error("Internal error: Unrecognized conjugation " .. conj)
+		error("Internal error: Unrecognized conjugation " .. base.conj)
 	end
 end
 
 
-local function add_non_present(base, conj)
+local function add_non_present(base)
 	local function add_tense(slot, stem, s1, s2, s3, p1, p2, p3)
 		add_single_stem_tense(base, slot, stem, s1, s2, s3, p1, p2, p3)
 	end
@@ -669,7 +790,7 @@ local function add_non_present(base, conj)
 	if stems.full_impf then
 		-- An override needs to be supplied for the impf_1p due to the accent on the stem.
 		add_tense("impf", stems.full_impf, "a", "as", "a", {}, "ais", "an")
-	elseif conj == "ar" then
+	elseif base.conj == "ar" then
 		add_tense("impf", stems.impf, "aba", "abas", "aba", "ábamos", "abais", "aban")
 	else
 		add_tense("impf", stems.impf, "ía", "ías", "ía", "íamos", "íais", "ían")
@@ -708,6 +829,37 @@ local function add_non_present(base, conj)
 end
 
 
+-- Remove monosyllabic accents (e.g. the 3sg preterite of fiar is fio not #fió). Note that there are a
+-- few monosyllabic verb forms that intentionally have an accent, to distinguish them from other words
+-- with the same pronunciation. These are as follows:
+-- (1) [[sé]] 1sg present indicative of [[saber]];
+-- (2) [[sé]] 2sg imperative of [[ser]];
+-- (3) [[dé]] 1sg and 3sg present subjunctive of [[dar]].
+-- For these, a * is added, which indicates that the accent needs to remain. If we see such a *, we remove
+-- it but otherwise leave the form alone.
+local function remove_monosyllabic_accents(base)
+	for _, slotaccel in ipairs(verb_slots_basic) do
+		local slot, accel = unpack(slotaccel)
+		if base.forms[slot] then
+			for _, form in ipairs(base.forms[slot]) do
+				if form.form:find("%*") then -- * means leave alone any accented vowel
+					form.form = form.form:gsub("%*", "")
+				elseif rfind(form.form, SV) and not rfind(form.form, V .. C .. V) then
+					-- Has an accented vowel and no VCV sequence; may be monosyllabic, in which case we need
+					-- to remove the accent. Check # of syllables and remove accent if only 1. Note that
+					-- the checks for accented vowel and VCV sequence are not strictly needed, but are
+					-- optimizations to avoid running the whole syllabification algorithm on every verb form.
+					local syllables = com.syllabify(form.form)
+					if #syllables == 1 then
+						form.form = com.remove_accent_from_syllable(syllables[1])
+					end
+				end
+			end
+		end
+	end
+end
+
+
 local function construct_stems(base)
 	local pres_stem, suffix = rmatch(base.infinitive, "^(.*)([aeií]r)$")
 	if not pres_stem then
@@ -717,7 +869,8 @@ local function construct_stems(base)
 	base.frontback = suffix == "ar" and "back" or "front"
 	local stems = {}
 	base.stems = stems
-	base.overrides = {}
+	base.basic_overrides = {}
+	base.combined_overrides = {}
 	base.prefix = ""
 	for _, irreg_conj in ipairs(irreg_conjugations) do
 		if type(irreg_conj.match) == "function" then
@@ -731,9 +884,12 @@ local function construct_stems(base)
 		if base.prefix then
 			-- we found an irregular verb
 			for stem, forms in pairs(base.forms) do
-				if all_verb_slot_map[stem] then
-					-- an individual form override
-					base.overrides[stem] = forms
+				if verb_slots_basic_map[stem] then
+					-- an individual form override of a basic form
+					base.basic_overrides[stem] = forms
+				elseif verb_slots_combined_map[stem] then
+					-- an individual form override of a combined form
+					base.combined_overrides[stem] = forms
 				elseif stem == "pres3" then
 					if conj == "ar" then
 						stems.pres3 
@@ -812,8 +968,8 @@ local function add_combined_forms(base)
 	end
 end
 
-local function process_slot_overrides(base)
-	for slot, forms in ipairs(base.overrides) do
+local function process_slot_overrides(base, do_basic)
+	for slot, forms in ipairs(do_basic and base.basic_overrides or base.combined_overrides) do
 		add(base, slot, base.prefix, forms, false)
 	end
 end
@@ -840,7 +996,10 @@ local function handle_derived_slots(base)
 			iut.insert_forms(base.forms, to, iut.map_forms(base.forms[from], function(form) return form end))
 		end
 	end
+end
 
+
+local function handle_negative_imperatives(base)
 	-- Copy subjunctives to negative imperatives, preceded by "no".
 	for _, persnum in ipairs({"2s", "3s", "1p", "2p", "3p"}) do
 		local from = "pres_sub_" .. persnum
@@ -849,18 +1008,20 @@ local function handle_derived_slots(base)
 			return "no [[" .. form .. "]]"
 		end))
 	end
-
 end
 
 
 local function conjugate_verb(base)
-	if not conjs[base.conj] then
-		error("Internal error: Unrecognized conjugation type '" .. base.conj .. "'")
-	end
-	conjs[base.conj](base)
-	add_composed_forms(base)
-	process_slot_overrides(base)
+	add_present_indic(base)
+	add_present_subj(base)
+	add_imper(base)
+	add_non_present(base)
 	handle_derived_slots(base)
+	process_slot_overrides(base, "do basic") -- do basic slot overrides
+	remove_monosyllabic_accents(base)
+	handle_negative_imperatives(base)
+	add_combined_forms(base)
+	process_slot_overrides(base, false) -- do combined slot overrides
 end
 
 
