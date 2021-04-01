@@ -180,7 +180,7 @@ appropriate params in the conjugation.
 diluviar, atardecer, empecer: impersonal; all finite non-3s forms are nonexistent or hypothetical. Handle using
 '.only3s'.
 
-atañer: all finite non-third-person forms are nonexistent or hypothetical. Handle using '.only3sp'.
+atañer, concernir: all finite non-third-person forms are nonexistent or hypothetical. Handle using '.only3sp'.
 
 desposeer: Former module claimed an irregular past participle 'desposeso'. Not per RAE.
 
@@ -268,6 +268,11 @@ local irreg_conjugations = {
 		forms = {pret = "duj", pret_conj = "irreg"}
 	},
 	{
+		-- elegir, reelegir; not preelegir, per RAE
+		match = match_against_verbs("elegir", {"", "re"}),
+		forms = {pres3 = "elig", pp = {"elegid", "elect"}}
+	},
+	{
 		match = "^errar",
 		forms = {pres3 = {
 			{form = "yerr", footnotes = {"[Spain]"}},
@@ -292,6 +297,10 @@ local irreg_conjugations = {
 			imp_2s = "está",
 			imp_2sv = "está",
 		}
+	},
+	{
+		match = "garantir",
+		forms = {pres3 = {{form = "garant", footnotes = {"[only used in Argentina and Uruguay]"}}},
 	},
 	{
 		match = "^haber",
@@ -348,6 +357,7 @@ local irreg_conjugations = {
 		}
 	},
 	{
+		-- RAE doesn't list irregular PP manumiso.
 		match = "manumitir",
 		forms = {pp = {"manumitid", "manumis"}}
 	},
@@ -614,6 +624,8 @@ local function combine_stem_ending(base, slot, stem, ending, is_combining_ending
 		-- (1) need to raise e -> i, o -> u: dormir -> durmió, durmiera, durmiendo
 		local raise_vowel = {["e"] = "i", ["o"] = "u"}
 		stem = rsub(stem, "([eo])(" .. C .. "*)$", function(vowel, rest) return raise_vowel[vowel] .. rest end)
+		-- also with stem ending in -gu or -qu (e.g. erguir -> irguió, irguiera, irguiendo)
+		stem = rsub(stem, "([eo])(" .. C .. "*[gq]u)$", function(vowel, rest) return raise_vowel[vowel] .. rest end)
 
 		-- (2) final -i of stem absorbed: sonreír -> sonrió, sonriera, sonriendo; note that this rule may be fed
 		-- by the preceding one (stem sonre- raised to sonri-, then final i absorbed)
@@ -901,8 +913,19 @@ local function construct_stems(base)
 		end
 	end
 
-	stems.pres = stems.pres or pres_stem
-	stems.pres3 = stems.pres3 or stems.pres
+	stems.pres = pres_stem
+	stems.pres3 = stems.pres3 or
+		-- If nopres3 given, pres3 stem should be empty so no forms are generated.
+		base.nopres3 and {} or
+		-- concluir -> concluyo
+		base.conj ~= "ar" and pres_stem:find("u$") and pres_stem .. "y" or
+		-- argüir -> arguyo
+		base.conj ~= "ar" and pres_stem:find("ü$") and rsub(pres_stem, "ü$", "uy") or
+		-- parecer -> parezco; need to generate the "front" variant of the stem as base.frontback == "front"
+		base.conj ~= "ar" and rfind(pres_stem, V .. "c$") and rsub(pres_stem, "c$", "zqu") or
+		-- Don't do anything for ejercer, uncir; the stem remains and combine_stem_ending() will
+		-- automatically convert c -> z in the first singular ejerzo, unzo.
+		pres_stem
 	stems.pres1 = stems.pres1 or stems.pres3
 	stems.impf = stems.impf or stems.pres
 	stems.pret = stems.pret or stems.pres
