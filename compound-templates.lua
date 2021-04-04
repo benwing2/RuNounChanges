@@ -160,13 +160,23 @@ end
 
 
 function export.affix(frame)
-	local args, terms, lang, sc = parse_args(frame:getParent().args)
+	local function hack_params(params)
+		params["type"] = {}
+		params["nocap"] = {type = "boolean"}
+		params["notext"] = {type = "boolean"}
+	end
+
+	local args, terms, lang, sc = parse_args(frame:getParent().args, nil, hack_params)
+
+	if args["type"] and not m_compound.compound_types[args["type"]] then
+		error("Unrecognized compound type: '" .. args["type"] .. "'")
+	end
 
 	local parts = get_parsed_parts("affix", args, terms)
 	
 	-- There must be at least one part to display. If there are gaps, a term
 	-- request will be shown.
-	if not next(parts) then
+	if not next(parts) and not args["type"] then
 		if mw.title.getCurrentTitle().nsText == "Template" then
 			parts = { {term = "prefix-"}, {term = "base"}, {term = "-suffix"} }
 		else
@@ -174,18 +184,29 @@ function export.affix(frame)
 		end
 	end
 	
-	return m_compound.show_affixes(lang, sc, parts, args["pos"], args["sort"], args["nocat"], args["lit"], args["force_cat"])
+	return m_compound.show_affixes(lang, sc, parts, args["pos"], args["sort"],
+		args["type"], args["nocap"], args["notext"], args["nocat"], args["lit"], args["force_cat"])
 end
 
 
 function export.compound(frame)
-	local args, terms, lang, sc = parse_args(frame:getParent().args)
+	local function hack_params(params)
+		params["type"] = {}
+		params["nocap"] = {type = "boolean"}
+		params["notext"] = {type = "boolean"}
+	end
+
+	local args, terms, lang, sc = parse_args(frame:getParent().args, nil, hack_params)
+
+	if args["type"] and not m_compound.compound_types[args["type"]] then
+		error("Unrecognized compound type: '" .. args["type"] .. "'")
+	end
 
 	local parts = get_parsed_parts("compound", args, terms)
 	
 	-- There must be at least one part to display. If there are gaps, a term
 	-- request will be shown.
-	if not next(parts) then
+	if not next(parts) and not args["type"] then
 		if mw.title.getCurrentTitle().nsText == "Template" then
 			parts = { {term = "first"}, {term = "second"} }
 		else
@@ -193,7 +214,8 @@ function export.compound(frame)
 		end
 	end
 	
-	return m_compound.show_compound(lang, sc, parts, args["pos"], args["sort"], args["nocat"], args["lit"], args["force_cat"])
+	return m_compound.show_compound(lang, sc, parts, args["pos"], args["sort"],
+		args["type"], args["nocap"], args["notext"], args["nocat"], args["lit"], args["force_cat"])
 end
 
 

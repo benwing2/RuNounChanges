@@ -1,5 +1,6 @@
 local m_links = require("Module:links")
 local m_utilities = require("Module:utilities")
+local m_lang = require("Module:languages")
 
 local export = {}
 
@@ -148,6 +149,59 @@ for _, script in ipairs(arab_scripts) do
 	display_hyphens[script] = arab_get_display_hyphen
 end
 
+local function glossary_link(entry, text)
+	text = text or entry
+	return "[[Appendix:Glossary#" .. entry .. "|" .. text .. "]]"
+end
+
+
+export.compound_types = {
+	["bahuvrihi"] = {
+		text = glossary_link("bahuvrihi", "bahuvrīhi") .. " compound",
+		cat = "bahuvrihi compounds",
+	},
+	["bahu"] = "bahuvrihi",
+	["bv"] = "bahuvrihi",
+	["karmadharaya"] = {
+		text = glossary_link("karmadharaya", "karmadhāraya") .. " compound",
+		cat = "karmadharaya compounds",
+	},
+	["karma"] = "karmadharaya",
+	["kd"] = "karmadharaya",
+	["tatpurusa"] = {
+		text = glossary_link("tatpurusa", "tatpuruṣa") .. " compound",
+		cat = "tatpurusa compounds",
+	},
+	["tat"] = "tatpurusa",
+	["tp"] = "tatpurusa",
+	["dvandva"] = {
+		text = glossary_link("dvandva") .. " compound",
+		cat = "dvandva compounds",
+	},
+	["dva"] = "dvandva",
+	["alliterative"] = {
+		text = "[[alliterative]] compound",
+		cat = "alliterative compounds",
+	},
+	["allit"] = "alliterative",
+	["antonymous"] = {
+		text = "[[antonymous]] compound",
+		cat = "antonymous compounds",
+	},
+	["ant"] = "antonymous",
+	["rhyming"] = {
+		text = "[[rhyming]] compound",
+		cat = "rhyming compounds",
+	},
+	["rhy"] = "rhyming",
+	["synonymous"] = {
+		text = "[[synonymous]] compound",
+		cat = "synonymous compounds",
+	},
+	["syn"] = "synonymous",
+}
+
+
 local function pluralize(pos)
 	if pos ~= "nouns" and usub(pos, -5) ~= "verbs" and usub(pos, -4) ~= "ives" then
 		if pos:find("[sx]$") then
@@ -161,7 +215,7 @@ end
 
 local function make_entry_name_no_links(lang, term)
 	-- Remove links and call lang:makeEntryName(term).
-	return lang:makeEntryName(m_links.remove_links(term))
+	return m_lang.getNonEtymological(lang):makeEntryName(m_links.remove_links(term))
 end
 
 local function link_term(terminfo, display_term, lang, sc, sort_key, force_cat)
@@ -195,7 +249,7 @@ local function get_template_and_display_hyphens(text, lang, sc)
 	if sc then
 		scode = sc:getCode()
 	else
-		lang = require("Module:languages").getNonEtymological(lang)
+		lang = m_lang.getNonEtymological(lang)
 		-- If we don't call shallowClone here, #possible_scripts always == 0.
 		-- Something weird to do with the metatable that's set on the table,
 		-- coming from loadData.
@@ -335,14 +389,49 @@ local function concat_parts(lang, parts_formatted, categories, nocat, sort_key, 
 end
 
 
-function export.show_affixes(lang, sc, parts, pos, sort_key, nocat, lit, force_cat)
+local function process_compound_type(typ, nocap)
+	local text_sections = {}
+	local categories = {}
+
+	if typ then
+		local typdata = export.compound_types[typ]
+		if type(typdata) == "string" then
+			typdata = export.compound_types[typdata]
+		end
+		if not typdata then
+			error("Internal error: Unrecognized type '" .. typ .. "'")
+		end
+		local text = typdata.text
+		if not nocap then
+			text = require("Module:string utilities").ucfirst(text)
+		end
+		local cat = typdata.cat
+		local oftext = typdata.oftext or "of"
+	
+		if not notext then
+			table.insert(text_sections, text)
+			if #parts > 0 then
+				table.insert(text_sections, " ")
+				table.insert(text_sections, oftext)
+				table.insert(text_sections, " ")
+			end
+		end
+		table.insert(categories, cat)
+	end
+
+	return text_sections, categories
+end
+
+
+function export.show_affixes(lang, sc, parts, pos, sort_key, typ, nocap, notext, nocat, lit, force_cat)
 	pos = pos or "word"
 
 	pos = pluralize(pos)
 
+	local text_sections, categories = process_compound_type(typ, nocap)
+
 	-- Process each part
 	local parts_formatted = {}
-	local categories = {}
 	local whole_words = 0
 
 	for i, part in ipairs_with_gaps(parts) do
@@ -396,23 +485,24 @@ function export.show_affixes(lang, sc, parts, pos, sort_key, nocat, lit, force_c
 		end
 	end
 
-	-- If there are no categories, then there were no actual affixes, only regular words.
-	-- This function does not support compounds (yet?), so show an error.
+	-- If there are no categories, then there were no actual affixes, only a single regular word.
 	if #categories == 0 then
 		error("The parameters did not include any affixes, and the word is not a compound. Please provide at least one affix.")
 	end
 
-	return concat_parts(lang, parts_formatted, categories, nocat, sort_key, lit, force_cat)
+	table.insert(text_sections, concat_parts(lang, parts_formatted, categories, nocat, sort_key, lit, force_cat))
+	return table.concat(text_sections)
 end
 
 
-function export.show_compound(lang, sc, parts, pos, sort_key, nocat, lit, force_cat)
+function export.show_compound(lang, sc, parts, pos, sort_key, typ, nocap, nocat, lit, force_cat)
 	pos = pos or "word"
 
 	pos = pluralize(pos)
 
+	local text_sections, categories = process_compound_type(typ, nocap)
+
 	local parts_formatted = {}
-	local categories = {}
 	table.insert(categories, "compound " .. pos)
 
 	-- Make links out of all the parts
@@ -451,7 +541,8 @@ function export.show_compound(lang, sc, parts, pos, sort_key, nocat, lit, force_
 		require("Module:debug").track("compound/looks like confix")
 	end
 
-	return concat_parts(lang, parts_formatted, categories, nocat, sort_key, lit, force_cat)
+	table.insert(text_sections, concat_parts(lang, parts_formatted, categories, nocat, sort_key, lit, force_cat))
+	return table.concat(text_sections)
 end
 
 
