@@ -913,20 +913,38 @@ local function construct_stems(base)
 		end
 	end
 
+	local function uy_stem =
+		-- concluir -> concluyo, concluyes
+		base.conj ~= "ar" and pres_stem:find("u$") and pres_stem .. "y" or
+		-- argüir -> arguyo, arguyes
+		base.conj ~= "ar" and pres_stem:find("ü$") and rsub(pres_stem, "ü$", "uy") or
+		nil
+
+	local function apply_vowel_alt()
+		if base.vowelalt then
+			local ret = com.apply_vowel_alternation(pres_stem, base.vowelalt)
+			if ret.err then
+				error("To use '" .. base.vowelalt .. "', present stem '" .. pres_stem .. "' " .. ret.err)
+			end
+			return ret.ret
+		end
+	end
+
 	stems.pres = pres_stem
 	stems.pres3 = stems.pres3 or
 		-- If nopres3 given, pres3 stem should be empty so no forms are generated.
 		base.nopres3 and {} or
-		-- concluir -> concluyo
-		base.conj ~= "ar" and pres_stem:find("u$") and pres_stem .. "y" or
-		-- argüir -> arguyo
-		base.conj ~= "ar" and pres_stem:find("ü$") and rsub(pres_stem, "ü$", "uy") or
-		-- parecer -> parezco; need to generate the "front" variant of the stem as base.frontback == "front"
-		base.conj ~= "ar" and rfind(pres_stem, V .. "c$") and rsub(pres_stem, "c$", "zqu") or
-		-- Don't do anything for ejercer, uncir; the stem remains and combine_stem_ending() will
-		-- automatically convert c -> z in the first singular ejerzo, unzo.
+		apply_vowel_alt() or
+		uy_stem or -- concluir, argüir
 		pres_stem
-	stems.pres1 = stems.pres1 or stems.pres3
+	stems.pres1_and_sub = stems.pres1_and_sub or
+		uy_stem or -- concluir, argüir
+		-- parecer -> parezco; need to generate the "front" variant of the stem as base.frontback == "front".
+		-- Don't do anything for ejercer, uncir; the stem remains and combine_stem_ending() will
+		-- automatically convert c -> z in the first singular ejerzo, unzo and subjunctive.
+		base.conj ~= "ar" and rfind(pres_stem, V .. "c$") and rsub(pres_stem, "c$", "zqu") or
+		nil
+	stems.pres1 = stems.pres1 or stems.pres1_and_sub or stems.pres3
 	stems.impf = stems.impf or stems.pres
 	stems.pret = stems.pret or stems.pres
 	stems.pret_conj = stems.pret_conj or base.conj
@@ -1072,7 +1090,7 @@ local function parse_indicator_spec(angle_bracket_spec)
 			return {{}}
 		end
 		local specs = {}
-		
+
 		local colon_separated_groups = iut.split_alternating_runs(comma_separated_group, ":")
 		for _, colon_separated_group in ipairs(colon_separated_groups) do
 			local form = colon_separated_group[1]
@@ -1324,7 +1342,7 @@ local function detect_verb_type(base, verb_types)
 
 	local function set_verb_type()
 		base.verb_types = this_verb_types
-	
+
 		if verb_types then
 			for _, verb_type in ipairs(this_verb_types) do
 				m_table.insertIfNot(verb_types, verb_type)

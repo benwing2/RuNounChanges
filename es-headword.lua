@@ -934,18 +934,11 @@ local function base_default_verb_forms(refl_clitic_verb, categories, post, no_li
 		ret.pres = base .. "o"
 	end
 	local pres_stem = rmatch(ret.pres, "^(.*)o$")
-	local before_last_vowel, last_vowel, after_last_vowel = rmatch(pres_stem, "^(.*)(" .. V .. ")(.-)$")
-	-- allow i for adquirir -> adquiero, inquirir -> inquiero, etc.
-	ret.pres_ie = (last_vowel == "e" or last_vowel == "i") and before_last_vowel .. "ie" .. after_last_vowel .. "o"
-	-- allow u for jugar -> juego; correctly handle avergonzar -> avergüenzo
-	ret.pres_ue = (
-		last_vowel == "o" and before_last_vowel:find("g$") and before_last_vowel .. "üe" .. after_last_vowel .. "o" or
-		(last_vowel == "o" or last_vowel == "u") and before_last_vowel .. "ue" .. after_last_vowel .. "o"
-	)
-	ret.pres_i = last_vowel == "e" and before_last_vowel .. "i" .. after_last_vowel .. "o"
-	-- allow e for reír -> río, sonreír -> sonrío
-	ret.pres_iacc = (last_vowel == "e" or last_vowel == "i") and before_last_vowel .. "í" .. after_last_vowel .. "o"
-	ret.pres_uacc = last_vowel == "u" and before_last_vowel .. "ú" .. after_last_vowel .. "o"
+	ret.pres_ie = com.apply_vowel_alternation(pres_stem, "ie")
+	ret.pres_iu = com.apply_vowel_alternation(pres_stem, "ue")
+	ret.pres_i = com.apply_vowel_alternation(pres_stem, "i")
+	ret.pres_iacc = com.apply_vowel_alternation(pres_stem, "iacc")
+	ret.pres_uacc = com.apply_vowel_alternation(pres_stem, "uacc")
 	if suffix == "ar" then
 		if rfind(base, "^" .. C .. "*[iu]$") or base == "gui" then -- criar, fiar, guiar, liar, etc.
 			ret.pret = base .. "e"
@@ -997,11 +990,11 @@ local function base_default_verb_forms(refl_clitic_verb, categories, post, no_li
 	ret.suffix = suffix
 	ret.post = post
 	ret.pres = full(ret.pres)
-	ret.pres_ie = full(ret.pres_ie)
-	ret.pres_ue = full(ret.pres_ue)
-	ret.pres_i = full(ret.pres_i)
-	ret.pres_iacc = full(ret.pres_iacc)
-	ret.pres_uacc = full(ret.pres_uacc)
+	ret.pres_ie.ret = full(ret.pres_ie.ret)
+	ret.pres_ue.ret = full(ret.pres_ue.ret)
+	ret.pres_i.ret = full(ret.pres_i.ret)
+	ret.pres_iacc.ret = full(ret.pres_iacc.ret)
+	ret.pres_uacc.ret = full(ret.pres_uacc.ret)
 	ret.pret = full(ret.pret)
 	ret.part = full(ret.part, "no refl")
 
@@ -1015,17 +1008,28 @@ end
 
 
 local function pres_special_case(form, def_forms)
+	local ret
 	if form == "+ie" then
-		return def_forms.pres_ie or error("To use +ie, verb '" .. def_forms.verb .. "' should have -e- or -i- as the last vowel")
+		ret = def_forms.pres_ie
 	elseif form == "+ue" then
-		return def_forms.pres_ue or error("To use +ue, verb '" .. def_forms.verb .. "' should have -o- or -u- as the last vowel")
+		ret = def_forms.pres_ue
 	elseif form == "+i" then
-		return def_forms.pres_i or error("To use +i, verb '" .. def_forms.verb .. "' should have -e- as the last vowel")
+		ret = def_forms.pres_i
 	elseif form == "+í" then
-		return def_forms.pres_iacc or error("To use +í, verb '" .. def_forms.verb .. "' should have -i- or -e- as the last vowel")
+		ret = def_forms.pres_iacc
 	elseif form == "+ú" then
-		return def_forms.pres_uacc or error("To use +ú, verb '" .. def_forms.verb .. "' should have -u- as the last vowel")
+		ret = def_forms.pres_uacc
 	end
+	if not form then
+		return nil
+	end
+	if not ret then
+		error("Internal error: Something wrong, should have def_forms entry for vowel alternation " .. form)
+	end
+	if ret.err then
+		error("To use " .. form .. ", verb '" .. def_forms.verb .. "' " .. ret.err)
+	end
+	return ret.ret
 end
 
 

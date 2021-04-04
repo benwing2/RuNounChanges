@@ -49,6 +49,53 @@ end
 export.rsub_repeatedly = rsub_repeatedly
 
 
+-- Apply vowel alternation to stem.
+function export.apply_vowel_alternation(stem, alternation)
+	local ret, err
+	local before_last_vowel, last_vowel, after_last_vowel = rmatch(stem, "^(.*)(" .. V .. ")(.-)$")
+	if alternation == "ie" then
+		if last_vowel == "e" or last_vowel == "i" then
+			-- allow i for adquirir -> adquiero, inquirir -> inquiero, etc.
+			ret = before_last_vowel .. "ie" .. after_last_vowel
+		else
+			err = "should have -e- or -i- as the last vowel"
+		end
+	elseif alternation == "ue" then
+		if last_vowel == "o" or last_vowel == "u" then
+			-- allow u for jugar -> juego; correctly handle avergonzar -> avergüenzo
+			ret = (
+				last_vowel == "o" and before_last_vowel:find("g$") and before_last_vowel .. "üe" .. after_last_vowel or
+				before_last_vowel .. "ue" .. after_last_vowel
+			)
+		else
+			err = "should have -o- or -u- as the last vowel"
+		end
+	elseif alternation == "i" then
+		if last_vowel == "e" then
+			ret = before_last_vowel .. "i" .. after_last_vowel
+		else
+			err = "should have -i- as the last vowel"
+		end
+	elseif alternation == "í" then
+		if last_vowel == "e" or last_vowel == "i" then
+			-- allow e for reír -> río, sonreír -> sonrío
+			ret = before_last_vowel .. "í" .. after_last_vowel
+		else
+			err = "should have -e- or -i- as the last vowel"
+		end
+	elseif alternation == "ú" then
+		if last_vowel == "u" then
+			ret = before_last_vowel .. "ú" .. after_last_vowel
+		else
+			err = "should have -u- as the last vowel"
+		end
+	else
+		error("Internal error: Unrecognized vowel alternation '" .. alternation .. "'")
+	end
+	return {ret = ret, err = err}
+end
+
+
 -- Syllabify a word. This implements the full syllabification algorithm, based on the corresponding code
 -- in [[Module:es-pronunc]]. This is more than is needed for the purpose of this module, which doesn't
 -- care so much about syllable boundaries, but won't hurt.
