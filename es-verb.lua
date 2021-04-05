@@ -52,6 +52,12 @@ local AV = com.AV -- accented vowel regex class
 local C = com.C -- consonant regex class
 
 
+local fut_sub_note = "Mostly obsolete form, now mainly used in legal jargon."
+local pres_sub_voseo_note = "Argentine and Uruguayan " .. link_term("voseo", "term") .. " prefers the " ..
+	link_term("tú", "term") .. " form for the present subjunctive."
+
+local vowel_alternants = m_table.listToSet({"ie", "ue", "i", "í", "ú", "+"})
+
 local all_persons_numbers = {
 	["1s"] = "1|s",
 	["2s"] = "2|s",
@@ -904,7 +910,7 @@ local function construct_stems(base)
 					base.combined_overrides[stem] = forms
 				elseif stem == "pres3" then
 					if conj == "ar" then
-						stems.pres3 
+						stems.pres3
 
 					stems[stem] = forms
 				end
@@ -920,13 +926,18 @@ local function construct_stems(base)
 		base.conj ~= "ar" and pres_stem:find("ü$") and rsub(pres_stem, "ü$", "uy") or
 		nil
 
-	local function apply_vowel_alt()
-		if base.vowelalt then
-			local ret = com.apply_vowel_alternation(pres_stem, base.vowelalt)
-			if ret.err then
-				error("To use '" .. base.vowelalt .. "', present stem '" .. pres_stem .. "' " .. ret.err)
+	-- Convert vowel alternation indicators into stems.
+	if base.vowelalt then
+		for _, alt in ipairs(base.vowelalt) do
+			if alt.form == "+" then
+				alt.form = pres_stem
+			else
+				local ret = com.apply_vowel_alternation(pres_stem, alt.form)
+				if ret.err then
+					error("To use '" .. alt.form .. "', present stem '" .. pres_stem .. "' " .. ret.err)
+				end
+				alt.form = ret.ret
 			end
-			return ret.ret
 		end
 	end
 
@@ -934,7 +945,7 @@ local function construct_stems(base)
 	stems.pres3 = stems.pres3 or
 		-- If nopres3 given, pres3 stem should be empty so no forms are generated.
 		base.nopres3 and {} or
-		apply_vowel_alt() or
+		base.vowelalt or
 		uy_stem or -- concluir, argüir
 		pres_stem
 	stems.pres1_and_sub = stems.pres1_and_sub or
@@ -1085,23 +1096,6 @@ local function parse_indicator_spec(angle_bracket_spec)
 		return footnotes
 	end
 
-	local function fetch_specs(comma_separated_group, transform_form)
-		if not comma_separated_group then
-			return {{}}
-		end
-		local specs = {}
-
-		local colon_separated_groups = iut.split_alternating_runs(comma_separated_group, ":")
-		for _, colon_separated_group in ipairs(colon_separated_groups) do
-			local form = colon_separated_group[1]
-			if transform_form then
-				form = transform_form(form)
-			end
-			table.insert(specs, {form = form, footnotes = fetch_footnotes(colon_separated_group)})
-		end
-		return specs
-	end
-
 	local inside = angle_bracket_spec:match("^<(.*)>$")
 	assert(inside)
 	if inside == "" then
@@ -1110,151 +1104,32 @@ local function parse_indicator_spec(angle_bracket_spec)
 	local segments = iut.parse_balanced_segment_run(inside, "[", "]")
 	local dot_separated_groups = iut.split_alternating_runs(segments, "%.")
 	for i, dot_separated_group in ipairs(dot_separated_groups) do
-		local comma_separated_groups = iut.split_alternating_runs(dot_separated_group, "%s*[,#]%s*", "preserve splitchar")
+		local comma_separated_groups = iut.split_alternating_runs(dot_separated_group, "%s*,%s*")
 		local first_element = comma_separated_groups[1][1]
-		if first_element == "haben" or first_element == "sein" then
-			for j = 1, #comma_separated_groups, 2 do
-				if j > 1 and strip_spaces(comma_separated_groups[j - 1][1]) ~= "," then
-					parse_err("Separator of # not allowed with haben or sein")
+		if vowel_alternants[first_element] then
+			for j = 1, #comma_separated_groups do
+				local alt = comma_separated_groups[j][1]
+				if not vowel_alternants[alt] then
+					parse_err("Unrecognized vowel alternant '" .. alt .. "'")
 				end
-				local aux = comma_separated_groups[j][1]
-				if aux ~= "haben" and aux ~= "sein" then
-					parse_err("Unrecognized auxiliary '" .. aux .. "'")
-				end
-				if base.aux then
-					for _, existing_aux in ipairs(base.aux) do
-						if existing_aux.form == aux then
-							parse_err("Auxiliary '" .. aux .. "' specified twice")
+				if base.vowelalt then
+					for _, existing_alt in ipairs(base.vowelalt) do
+						if existing_alt.form == alt then
+							parse_err("Vowel alternant '" .. alt .. "' specified twice")
 						end
 					end
 				else
-					base.aux = {}
+					base.vowelalt = {}
 				end
-				table.insert(base.aux, {form = aux, footnotes = fetch_footnotes(comma_separated_groups[j])})
+				table.insert(base.vowelalt, {form = alt, footnotes = fetch_footnotes(comma_separated_groups[j])})
 			end
-		elseif first_element == "-ge" or first_element == "+ge" then
-			for j = 1, #comma_separated_groups, 2 do
-				if j > 1 and strip_spaces(comma_separated_groups[j - 1][1]) ~= "," then
-					parse_err("Separator of # not allowed with +ge or -ge")
-				end
-				local prefix = comma_separated_groups[j][1]
-				if prefix ~= "+ge" and prefix ~= "-ge" then
-					parse_err("Unrecognized ge- prefix '" .. prefix .. "'")
-				end
-				local ge_prefix
-				if prefix == "+ge" then
-					ge_prefix = "ge"
-				else
-					ge_prefix = ""
-				end
-				if base.ge_prefix then
-					for _, existing_prefix in ipairs(base.ge_prefix) do
-						if existing_prefix.form == ge_prefix then
-							parse_err("Ge- prefix '" .. prefix .. "' specified twice")
-						end
-					end
-				else
-					base.ge_prefix = {}
-				end
-				table.insert(base.ge_prefix, {form = ge_prefix, footnotes = fetch_footnotes(comma_separated_groups[j])})
-			end
-		elseif #comma_separated_groups > 1 then
-			-- principal parts specified
-			if base.past then
-				parse_err("Can't specify principal parts twice")
-			end
-			local parts = {}
-			assert(#comma_separated_groups[2] == 1)
-			local past_index
-			local first_separator = strip_spaces(comma_separated_groups[2][1])
-			if first_separator == "#" then
-				-- present 3rd singular specified
-				base.pres_23 = fetch_specs(comma_separated_groups[1], function(form)
-					local stem
-					if base.conj == "pretpres" then
-						stem = form
-					else
-						stem = form:match("^(.-)%-$")
-						if not stem then
-							stem = form:match("^(.-)e?t$")
-						end
-					end
-					if stem then
-						return stem
-					else
-						parse_err("Present 3sg form '" .. form .. "' should end in - (for the stem) or -t")
-					end
-				end)
-				past_index = 3
-			else
-				past_index = 1
-			end
-
-			base.past = fetch_specs(comma_separated_groups[past_index], function(form)
-				return form
-			end)
-
-			if #comma_separated_groups < past_index + 2 then
-				parse_err("Missing past participle spec")
-			end
-			assert(#comma_separated_groups[past_index + 1] == 1)
-			if strip_spaces(comma_separated_groups[past_index + 1][1]) ~= "," then
-				parse_err("Only first separator can be a #")
-			end
-			base.pp = fetch_specs(comma_separated_groups[past_index + 2], function(form)
-				if form:find("e[nd]$") or form:find("t$") then
-					return form
-				else
-					parse_err("Past participle '" .. form .. "' should end in -en, -t, or -ed")
-				end
-			end)
-
-			if #comma_separated_groups > past_index + 2 then
-				assert(#comma_separated_groups[past_index + 3] == 1)
-				if strip_spaces(comma_separated_groups[past_index + 3][1]) ~= "," then
-					parse_err("Only first separator can be a #")
-				end
-				base.past_sub = fetch_specs(comma_separated_groups[past_index + 4], function(form)
-					local stem = form:match("^(.-)e$")
-					if not stem then
-						parse_err("Past subjunctive '" .. form .. "' should end in -e")
-					end
-					return stem
-				end)
-				if #comma_separated_groups > past_index + 4 then
-					parse_err("Too many specs given")
-				end
-			end
-		elseif first_element == "pretpres" or first_element == "irreg" then
+		elseif first_element == "nopres3" or first_element == "only3s" or first_element == "only3sp" then
 			if #comma_separated_groups[1] > 1 then
 				parse_err("No footnotes allowed with '" .. first_element .. "' spec")
 			end
-			if base.conj then
-				parse_err("Conjugation specified as '" .. first_element .. "' but already specified or autodetermined as '" .. base.conj .. "'")
-			end
-			base.conj = first_element
-		elseif first_element == "einfix" or first_element == "-einfix" then
-			if #comma_separated_groups[1] > 1 then
-				parse_err("No footnotes allowed with '" .. first_element .. "' spec")
-			end
-			base.unstressed_e_infix = first_element == "einfix"
-		elseif first_element == "shortimp" or first_element == "longimp" or
-			first_element == "only3s" or first_element == "only3sp" or
-			first_element == "nofinite" then
-			if #comma_separated_groups[1] > 1 then
-				parse_err("No footnotes allowed with '" .. first_element .. "' spec")
-			end
+			if base[first_element] then
+				parse_err("Spec '" .. first_element .. "' specified twice")
 			base[first_element] = true
-		elseif first_element == "" or first_element == "inf" then
-			local footnotes = fetch_footnotes(comma_separated_groups[1])
-			if not footnotes then
-				parse_err("Empty spec and 'inf' spec without footnotes not allowed")
-			end
-			if first_element == "inf" then
-				base.infstem_footnotes = footnotes
-			else
-				base.all_footnotes = footnotes
-			end
 		else
 			parse_err("Unrecognized spec '" .. comma_separated_groups[1][1] .. "'")
 		end
@@ -1272,37 +1147,29 @@ local function normalize_all_lemmas(alternant_multiword_spec, from_headword)
 			local PAGENAME = mw.title.getCurrentTitle().text
 			base.lemma = PAGENAME
 		end
-		if base.lemma:find("_") and not base.lemma:find("%[%[") then
-			-- If lemma is multiword and has no links, add links automatically.
-			base.lemma= "[[" .. base.lemma:gsub("_", "]]_[[") .. "]]"
-		end
+		--if base.lemma:find(" ") and not base.lemma:find("%[%[") then
+		--	-- If lemma is multiword and has no links, add links automatically.
+		--	base.lemma= "[[" .. base.lemma:gsub(" ", "]] [[") .. "]]"
+		--end
 		base.orig_lemma = base.lemma
 		base.orig_lemma_no_links = m_links.remove_links(base.lemma)
 		-- Normalize the linked lemma by removing dot, underscore, and <pron> and such indicators.
-		base.linked_lemma = remove_reflexive_indicators(base.lemma:gsub("%.", ""):gsub("_", " "))
+		base.linked_lemma = remove_reflexive_indicators(base.lemma)
 		base.lemma = m_links.remove_links(base.linked_lemma)
 		local lemma = base.orig_lemma_no_links
 		base.pre_pref, base.post_pref = "", ""
-		local prefix, verb = lemma:match("^(.*)_(.-)$")
-		if prefix then
-			prefix = prefix:gsub("_", " ") -- in case of multiple preceding words
-			base.pre_pref = base.pre_pref .. prefix .. " "
-			base.post_pref = base.post_pref .. " " .. prefix
-		else
-			verb = lemma
+		local refl_verb, clitic = rmatch(lemma, "^(.-)(l[aeo]s?)$")
+		if not refl_verb then
+			refl_verb, clitic = refl_clitic_verb, nil
 		end
-		prefix, base.base_verb = verb:match("^(.*)%.(.-)$")
-		if prefix then
-			-- There may be multiple separable prefixes (e.g. [[wiedergutmachen]], ich mache wieder gut)
-			base.pre_pref = base.pre_pref .. prefix:gsub("%.", "")
-			base.post_pref = base.post_pref .. " " .. prefix:gsub("%.", " ")
-		else
-			base.base_verb = verb
+		local verb, refl = rmatch(refl_verb, "^(.-)(se)$")
+		if not verb then
+			verb, refl = refl_verb, nil
 		end
-		if base.pre_pref ~= "" then
-			any_pre_pref = true
-		end
-		if base.only3s then
+		base.verb = verb
+		base.refl = refl
+		base.clitic = clitic
+		if base.refl then
 			alternant_multiword_spec.only3s = true
 		end
 		if base.only3sp then
@@ -1892,239 +1759,428 @@ local notes_template = [=[
 </div></div>
 ]=]
 
-local zu_infinitive_table = [=[
-|-
-! colspan="2" style="background:#d0d0d0" | zu-infinitive
-| colspan="4" | {zu_infinitive}
-]=]
-
 local basic_table = [=[
-<div class="NavFrame" style="">
-<div class="NavHead" style="">Conjugation of {title}</div>
+{description}
+<div class="NavFrame">
+<div class="NavHead" align=center>&nbsp; &nbsp; Conjugation of {title} (See [[Appendix:Spanish verbs]])</div>
 <div class="NavContent">
-{\op}| border="1px solid #000000" style="border-collapse:collapse; background:#fafafa; text-align:center; width:100%" class="inflection-table"
+{\op}| style="background:#F9F9F9;text-align:center;width:100%"
 |-
-! colspan="2" style="background:#d0d0d0" | <span title="Infinitiv">infinitive</span>
-| colspan="4" | {infinitive}
+! colspan="3" style="background:#e2e4c0" | <span title="infinitivo">infinitive</span>
+| colspan="5" | {infinitive}
+
 |-
-! colspan="2" style="background:#d0d0d0" | <span title="Partizip I (Partizip Präsens)">present participle</span>
-| colspan="4" | {pres_part}
+! colspan="3" style="background:#e2e4c0" | <span title="gerundio">gerund</span>
+| colspan="5" | {gerund}
+
 |-
-! colspan="2" style="background:#d0d0d0" | <span title="Partizip II (Partizip Perfekt)">past participle</span>
-| colspan="4" | {perf_part}
-{zu_infinitive_table}|-
-! colspan="2" style="background:#d0d0d0" | <span title="Hilfsverb">auxiliary</span>
-| colspan="4" | {aux}
+! rowspan="3" colspan="2" style="background:#e2e4c0" | <span title="participio (pasado)">past participle</span>
+| colspan="2" style="background:#e2e4c0" |
+! colspan="2" style="background:#e2e4c0" | <span title="masculino">masculine</span>
+! colspan="2" style="background:#e2e4c0" | <span title="femenino">feminine</span>
 |-
-| style="background:#a0ade3" |
-! colspan="2" style="background:#a0ade3" | <span title="Indikativ">indicative</span>
-| style="background:#a0ade3" |
-! colspan="2" style="background:#a0ade3" | <span title="Konjunktiv">subjunctive</span>
+! colspan="2" style="background:#e2e4c0" | singular
+| colspan="2" | {pp_ms}
+| colspan="2" | {pp_fs}
 |-
-! rowspan="3" style="background:#c0cfe4; width:7em" | <span title="Präsens">present</span>
+! colspan="2" style="background:#e2e4c0" | plural
+| colspan="2" | {pp_mp}
+| colspan="2" | {pp_fp}
+
+|-
+! colspan="2" rowspan="2" style="background:#DEDEDE" |
+! colspan="3" style="background:#DEDEDE" | singular
+! colspan="3" style="background:#DEDEDE" | plural
+
+|-
+! style="background:#DEDEDE" | 1st person
+! style="background:#DEDEDE" | 2nd person
+! style="background:#DEDEDE" | 3rd person
+! style="background:#DEDEDE" | 1st person
+! style="background:#DEDEDE" | 2nd person
+! style="background:#DEDEDE" | 3rd person
+
+|-
+! rowspan="6" style="background:#c0cfe4" | <span title="indicativo">indicative</span>
+
+! style="background:#ECECEC;width:12.5%" |
+! style="background:#ECECEC;width:12.5%" | yo
+! style="background:#ECECEC;width:12.5%" | tú<br />vos
+! style="background:#ECECEC;width:12.5%" | él/ella/ello<br />usted
+! style="background:#ECECEC;width:12.5%" | nosotros<br />nosotras
+! style="background:#ECECEC;width:12.5%" | vosotros<br />vosotras
+! style="background:#ECECEC;width:12.5%" | ellos/ellas<br />ustedes
+
+|-
+! style="height:3em;background:#ECECEC" | <span title="presente de indicativo">present</span>
 | {pres_1s}
-| {pres_1p}
-! rowspan="3" style="background:#c0cfe4; width:7em" | <span title="Konjunktiv I (Konjunktiv Präsens)">i</span>
-| {subi_1s}
-| {subi_1p}
-|-
-| {pres_2s}
-| {pres_2p}
-| {subi_2s}
-| {subi_2p}
-|-
+| {pres_2s}{pres_2sv_text}
 | {pres_3s}
+| {pres_1p}
+| {pres_2p}
 | {pres_3p}
-| {subi_3s}
-| {subi_3p}
+
 |-
-| colspan="6" style="background:#d5d5d5; height: .25em" | 
+! style="height:3em;background:#ECECEC" | <span title="pretérito imperfecto (copréterito)">imperfect</span>
+| {impf_1s}
+| {impf_2s}
+| {impf_3s}
+| {impf_1p}
+| {impf_2p}
+| {impf_3p}
+
 |-
-! rowspan="3" style="background:#c0cfe4" | <span title="Präteritum">preterite</span>
+! style="height:3em;background:#ECECEC" | <span title="pretérito perfecto simple (pretérito indefinido)">preterite</span>
 | {pret_1s}
-| {pret_1p}
-! rowspan="3" style="background:#c0cfe4" | <span title="Konjunktiv II (Konjunktiv Präteritum)">ii</span>
-| {subii_1s}
-| {subii_1p}
-|-
 | {pret_2s}
-| {pret_2p}
-| {subii_2s}
-| {subii_2p}
-|-
 | {pret_3s}
+| {pret_1p}
+| {pret_2p}
 | {pret_3p}
-| {subii_3s}
-| {subii_3p}
+
 |-
-| colspan="6" style="background:#d5d5d5; height: .25em" | 
+! style="height:3em;background:#ECECEC" | <span title="futuro simple (futuro imperfecto)">future</span>
+| {fut_1s}
+| {fut_2s}
+| {fut_3s}
+| {fut_1p}
+| {fut_2p}
+| {fut_3p}
+
 |-
-! style="background:#c0cfe4" | <span title="Imperativ">imperative</span>
-| {imp_2s}
+! style="height:3em;background:#ECECEC" | <span title="condicional simple (pospretérito de modo indicativo)">conditional</span>
+| {cond_1s}
+| {cond_2s}
+| {cond_3s}
+| {cond_1p}
+| {cond_2p}
+| {cond_3p}
+
+|-
+! style="background:#DEDEDE;height:.75em" colspan="8" |
+|-
+! rowspan="5" style="background:#c0e4c0" | <span title="subjuntivo">subjunctive</span>
+! style="background:#ECECEC" |
+! style="background:#ECECEC" | yo
+! style="background:#ECECEC" | tú<br />vos
+! style="background:#ECECEC" | él/ella/ello<br />usted
+! style="background:#ECECEC" | nosotros<br />nosotras
+! style="background:#ECECEC" | vosotros<br />vosotras
+! style="background:#ECECEC" | ellos/ellas<br />ustedes
+
+|-
+! style="height:3em;background:#ECECEC" | <span title="presente de subjuntivo">present</span>
+| {pres_sub_1s}
+| {pres_sub_2s}{pres_sub_2sv_text}
+| {pres_sub_3s}
+| {pres_sub_1p}
+| {pres_sub_2p}
+| {pres_sub_3p}
+
+|-
+! style="height:3em;background:#ECECEC" | <span title="pretérito imperfecto de subjuntivo">imperfect</span><br />(ra)
+| {impf_sub_ra_1s}
+| {impf_sub_ra_2s}
+| {impf_sub_ra_3s}
+| {impf_sub_ra_1p}
+| {impf_sub_ra_2p}
+| {impf_sub_ra_3p}
+
+|-
+! style="height:3em;background:#ECECEC" | <span title="pretérito imperfecto de subjuntivo">imperfect</span><br />(se)
+| {impf_sub_se_1s}
+| {impf_sub_se_2s}
+| {impf_sub_se_3s}
+| {impf_sub_se_1p}
+| {impf_sub_se_2p}
+| {impf_sub_se_3p}
+
+|-
+! style="height:3em;background:#ECECEC" | <span title="futuro simple de subjuntivo (futuro de subjuntivo)">future</span><sup style="color:red">1</sup>
+| {fut_sub_1s}
+| {fut_sub_2s}
+| {fut_sub_3s}
+| {fut_sub_1p}
+| {fut_sub_2p}
+| {fut_sub_3p}
+
+|-
+! style="background:#DEDEDE;height:.75em" colspan="8" |
+|-
+! rowspan="6" style="background:#e4d4c0" | <span title="imperativo">imperative</span>
+! style="background:#ECECEC" |
+! style="background:#ECECEC" | —
+! style="background:#ECECEC" | tú<br />vos
+! style="background:#ECECEC" | usted
+! style="background:#ECECEC" | nosotros<br />nosotras
+! style="background:#ECECEC" | vosotros<br />vosotras
+! style="background:#ECECEC" | ustedes
+
+|-
+! style="height:3em;background:#ECECEC" | <span title="imperativo afirmativo">affirmative</span>
+|
+| {imp_2s}{imp_2sv_text}
+| {imp_3s}
+| {imp_1p}
 | {imp_2p}
-| colspan="3" style="background:#e0e0e0" |
+| {imp_3p}
+
+|-
+! style="height:3em;background:#ECECEC" | <span title="imperativo negativo">negative</span>
+|
+| {neg_imp_2s}
+| {neg_imp_3s}
+| {neg_imp_1p}
+| {neg_imp_2p}
+| {neg_imp_3p}
 |{\cl}{notes_clause}</div></div>
 ]=]
 
-local subordinate_clause_table = [=[
-<div class="NavFrame" style="">
-<div class="NavHead" style="">Subordinate-clause forms of {title}</div>
+
+local combined_form_table = [=[
+{description}
+<div class="NavFrame">
+<div class="NavHead" align=center>&nbsp; &nbsp; Selected combined forms of {title}</div>
 <div class="NavContent">
-{\op}| border="1px solid #000000" style="border-collapse:collapse; background:#fafafa; text-align:center; width:100%" class="inflection-table"
+These forms are generated automatically and may not actually be used. Pronoun usage varies by region.
+{\op}| class="inflection-table" style="background:#F9F9F9;text-align:center;width:100%"
+
 |-
-| style="background:#a0ade3" |
-! colspan="2" style="background:#a0ade3" | <span title="Indikativ">indicative</span>
-| style="background:#a0ade3" |
-! colspan="2" style="background:#a0ade3" | <span title="Konjunktiv">subjunctive</span>
+! colspan="2" rowspan="2" style="background:#DEDEDE" |
+! colspan="3" style="background:#DEDEDE" | singular
+! colspan="3" style="background:#DEDEDE" | plural
+
 |-
-! rowspan="3" style="background:#c0cfe4; width:7em" | <span title="Präsens">present</span>
-| {subc_pres_1s}
-| {subc_pres_1p}
-! rowspan="3" style="background:#c0cfe4; width:7em" | <span title="Konjunktiv I (Konjunktiv Präsens)">i</span> 
-| {subc_subi_1s}
-| {subc_subi_1p}
+! style="background:#DEDEDE" | 1st person
+! style="background:#DEDEDE" | 2nd person
+! style="background:#DEDEDE" | 3rd person
+! style="background:#DEDEDE" | 1st person
+! style="background:#DEDEDE" | 2nd person
+! style="background:#DEDEDE" | 3rd person
+
 |-
-| {subc_pres_2s}
-| {subc_pres_2p}
-| {subc_subi_2s}
-| {subc_subi_2p}
+! rowspan="3" style="background:#c0cfe4" | with infinitive {infinitive}
+
 |-
-| {subc_pres_3s}
-| {subc_pres_3p}
-| {subc_subi_3s}
-| {subc_subi_3p}
+! style="height:3em;background:#ECECEC" | dative
+| {infinitive_comb_me}
+| {infinitive_comb_te}
+| {infinitive_comb_le}, {infinitive_comb_se}
+| {infinitive_comb_nos}
+| {infinitive_comb_os}
+| {infinitive_comb_les}, {infinitive_comb_se}
+
 |-
-| colspan="6" style="background:#d5d5d5; height: .25em" | 
+! style="height:3em;background:#ECECEC" | accusative
+| {infinitive_comb_me}
+| {infinitive_comb_te}
+| {infinitive_comb_lo}, {infinitive_comb_la}, {infinitive_comb_se}
+| {infinitive_comb_nos}
+| {infinitive_comb_os}
+| {infinitive_comb_los}, {infinitive_comb_las}, {infinitive_comb_se}
+
 |-
-! rowspan="3" style="background:#c0cfe4" | <span title="Präteritum">preterite</span>
-| {subc_pret_1s}
-| {subc_pret_1p}
-! rowspan="3" style="background:#c0cfe4" | <span title="Konjunktiv II (Konjunktiv Präteritum)">ii</span>
-| {subc_subii_1s}
-| {subc_subii_1p}
+! style="background:#DEDEDE;height:.35em" colspan="8" |
 |-
-| {subc_pret_2s}
-| {subc_pret_2p}
-| {subc_subii_2s}
-| {subc_subii_2p}
+! rowspan="3" style="background:#d0cfa4" | with gerund {gerund}
+
 |-
-| {subc_pret_3s}
-| {subc_pret_3p}
-| {subc_subii_3s}
-| {subc_subii_3p}
+! style="height:3em;background:#ECECEC" | dative
+| {gerund_comb_me}
+| {gerund_comb_te}
+| {gerund_comb_le}, {gerund_comb_se}
+| {gerund_comb_nos}
+| {gerund_comb_os}
+| {gerund_comb_les}, {gerund_comb_se}
+
+|-
+! style="height:3em;background:#ECECEC" | accusative
+| {gerund_comb_me}
+| {gerund_comb_te}
+| {gerund_comb_lo}, {gerund_comb_la}, {gerund_comb_se}
+| {gerund_comb_nos}
+| {gerund_comb_os}
+| {gerund_comb_los}, {gerund_comb_las}, {gerund_comb_se}
+
+|-
+! style="background:#DEDEDE;height:.35em" colspan="8" |
+|-
+! rowspan="3" style="background:#f2caa4" | with informal second-person singular imperative {imp_2s}
+
+|-
+! style="height:3em;background:#ECECEC" | dative
+| {imp_2s_comb_me}
+| {imp_2s_comb_te}
+| {imp_2s_comb_le}
+| {imp_2s_comb_nos}
+| ''not used''
+| {imp_2s_comb_les}
+
+|-
+! style="height:3em;background:#ECECEC" | accusative
+| {imp_2s_comb_me}
+| {imp_2s_comb_te}
+| {imp_2s_comb_lo}, {imp_2s_comb_la}
+| {imp_2s_comb_nos}
+| ''not used''
+| {imp_2s_comb_los}, {imp_2s_comb_las}
+
+|-
+! style="background:#DEDEDE;height:.35em" colspan="8" |
+|-
+! rowspan="3" style="background:#f2caa4" | with formal second-person singular imperative {imp_3s}
+
+|-
+! style="height:3em;background:#ECECEC" | dative
+| {imp_3s_comb_me}
+| ''not used''
+| {imp_3s_comb_le}, {imp_3s_comb_se}
+| {imp_3s_comb_nos}
+| ''not used''
+| {imp_3s_comb_les}
+
+|-
+! style="height:3em;background:#ECECEC" | accusative
+| {imp_3s_comb_me}
+| ''not used''
+| {imp_3s_comb_lo}, {imp_3s_comb_la}, {imp_3s_comb_se}
+| {imp_3s_comb_nos}
+| ''not used''
+| {imp_3s_comb_los}, {imp_3s_comb_las}
+
+|-
+! style="background:#DEDEDE;height:.35em" colspan="8" |
+|-
+! rowspan="3" style="background:#f2caa4" | with first-person plural imperative {imp_1p}
+
+|-
+! style="height:3em;background:#ECECEC" | dative
+| ''not used''
+| {imp_1p_comb_te}
+| {imp_1p_comb_le}
+| {imp_1p_comb_nos}
+| {imp_1p_comb_os}
+| {imp_1p_comb_les}
+
+|-
+! style="height:3em;background:#ECECEC" | accusative
+| ''not used''
+| {imp_1p_comb_te}
+| {imp_1p_comb_lo}, {imp_1p_comb_la}
+| {imp_1p_comb_nos}
+| {imp_1p_comb_os}
+| {imp_1p_comb_los}, {imp_1p_comb_las}
+
+|-
+! style="background:#DEDEDE;height:.35em" colspan="8" |
+|-
+! rowspan="3" style="background:#f2caa4" | with informal second-person plural imperative {imp_2p}
+
+|-
+! style="height:3em;background:#ECECEC" | dative
+| {imp_2p_comb_me}
+| ''not used''
+| {imp_2p_comb_le}
+| {imp_2p_comb_nos}
+| {imp_2p_comb_os}
+| {imp_2p_comb_les}
+
+|-
+! style="height:3em;background:#ECECEC" | accusative
+| {imp_2p_comb_me}
+| ''not used''
+| {imp_2p_comb_lo}, {imp_2p_comb_la}
+| {imp_2p_comb_nos}
+| {imp_2p_comb_os}
+| {imp_2p_comb_los}, {imp_2p_comb_las}
+
+|-
+! style="background:#DEDEDE;height:.35em" colspan="8" |
+|-
+! rowspan="3" style="background:#f2caa4" | with formal second-person plural imperative {imp_3p}
+
+|-
+! style="height:3em;background:#ECECEC" | dative
+| {imp_3p_comb_me}
+| ''not used''
+| {imp_3p_comb_le}
+| {imp_3p_comb_nos}
+| ''not used''
+| {imp_3p_comb_les}, {imp_3p_comb_se}
+
+|-
+! style="height:3em;background:#ECECEC" | accusative
+| {imp_3p_comb_me}
+| ''not used''
+| {imp_3p_comb_lo}, {imp_3p_comb_la}
+| {imp_3p_comb_nos}
+| ''not used''
+| {imp_3p_comb_los}, {imp_3p_comb_las}, {imp_3p_comb_se}
 |{\cl}{notes_clause}</div></div>
 ]=]
 
-local composed_table = [=[
-<div class="NavFrame" style="">
-<div class="NavHead" style="">Composed forms of {title}</div>
+
+local combined_form_reflexive_table = [=[
+{description}
+<div class="NavFrame">
+<div class="NavHead" align=center>&nbsp; &nbsp; Selected combined forms of {title}</div>
 <div class="NavContent">
-{\op}| border="1px solid #000000" style="border-collapse:collapse; background:#fafafa; text-align:center; width:100%" class="inflection-table"
+{| class="inflection-table" style="background:#F9F9F9;text-align:center;width:100%"
+
 |-
-! colspan="6" style="background:#99cc99" | <span title="Perfekt">perfect</span>
+! colspan="2" rowspan="2" style="background:#DEDEDE" |
+! colspan="3" style="background:#DEDEDE" | singular
+! colspan="3" style="background:#DEDEDE" | plural
+
 |-
-! rowspan="3" style="background:#cfedcc; width:7em" | <span title="Indikativ">indicative</span>
-| {perf_ind_1s}
-| {perf_ind_1p}
-! rowspan="3" style="background:#cfedcc; width:7em" | <span title="Konjunktiv">subjunctive</span>
-| {perf_sub_1s}
-| {perf_sub_1p}
+! style="background:#DEDEDE" | 1st person
+! style="background:#DEDEDE" | 2nd person
+! style="background:#DEDEDE" | 3rd person
+! style="background:#DEDEDE" | 1st person
+! style="background:#DEDEDE" | 2nd person
+! style="background:#DEDEDE" | 3rd person
+
 |-
-| {perf_ind_2s}
-| {perf_ind_2p}
-| {perf_sub_2s}
-| {perf_sub_2p}
+! rowspan="2" style="background:#c0cfe4" | Infinitives
+
 |-
-| {perf_ind_3s}
-| {perf_ind_3p}
-| {perf_sub_3s}
-| {perf_sub_3p}
+! style="height:3em;background:#ECECEC" | accusative
+| {infinitive_comb_me}
+| {infinitive_comb_te}
+| {infinitive_comb_se}
+| {infinitive_comb_nos}
+| {infinitive_comb_os}
+| {infinitive_comb_se}
+
 |-
-! colspan="6" style="background:#99CC99" | <span title="Plusquamperfekt">pluperfect</span>
+! style="background:#DEDEDE;height:.35em" colspan="8" |
 |-
-! rowspan="3" style="background:#cfedcc" | <span title="Indikativ">indicative</span>
-| {plup_ind_1s}
-| {plup_ind_1p}
-! rowspan="3" style="background:#cfedcc" | <span title="Konjunktiv">subjunctive</span>
-| {plup_sub_1s}
-| {plup_sub_1p}
+! rowspan="2" style="background:#d0cfa4" | gerunds
+
 |-
-| {plup_ind_2s}
-| {plup_ind_2p}
-| {plup_sub_2s}
-| {plup_sub_2p}
+! style="height:3em;background:#ECECEC" | accusative
+| {gerund_comb_me}
+| {gerund_comb_te}
+| {gerund_comb_se}
+| {gerund_comb_nos}
+| {gerund_comb_os}
+| {gerund_comb_se}
+
 |-
-| {plup_ind_3s}
-| {plup_ind_3p}
-| {plup_sub_3s}
-| {plup_sub_3p}
+! style="background:#DEDEDE;height:.35em" colspan="8" |
 |-
-! colspan="6" style="background:#9999DF" | <span title="Futur I">future i</span>
+! rowspan="2" style="background:#f2caa4" | with positive imperatives
+
 |-
-! rowspan="3" style="background:#ccccff" | <span title="Infinitiv">infinitive</span>
-| rowspan="3" colspan="2" | {futi_inf}
-! rowspan="3" style="background:#ccccff" | <span title="Konjunktiv I (Konjunktiv Präsens)">subjunctive i</span>
-| {futi_subi_1s}
-| {futi_subi_1p}
-|-
-| {futi_subi_2s}
-| {futi_subi_2p}
-|-
-| {futi_subi_3s}
-| {futi_subi_3p}
-|-
-! colspan="6" style="background:#d5d5d5; height: .25em" |
-|-
-! rowspan="3" style="background:#ccccff" | <span title="Indikativ">indicative</span>
-| {futi_ind_1s}
-| {futi_ind_1p}
-! rowspan="3" style="background:#ccccff" | <span title="Konjunktiv II (Konjunktiv Präteritum)">subjunctive ii</span>
-| {futi_subii_1s}
-| {futi_subii_1p}
-|-
-| {futi_ind_2s}
-| {futi_ind_2p}
-| {futi_subii_2s}
-| {futi_subii_2p}
-|-
-| {futi_ind_3s}
-| {futi_ind_3p}
-| {futi_subii_3s}
-| {futi_subii_3p}
-|-
-! colspan="6" style="background:#9999DF" | <span title="Futur II">future ii</span>
-|-
-! rowspan="3" style="background:#ccccff" | <span title="Infinitiv">infinitive</span>
-| rowspan="3" colspan="2" | {futii_inf}
-! rowspan="3" style="background:#ccccff" | <span title="Konjunktiv I (Konjunktiv Präsens)">subjunctive i</span>
-| {futii_subi_1s}
-| {futii_subi_1p}
-|-
-| {futii_subi_2s}
-| {futii_subi_2p}
-|-
-| {futii_subi_3s}
-| {futii_subi_3p}
-|-
-! colspan="6" style="background:#d5d5d5; height: .25em" |
-|-
-! rowspan="3" style="background:#ccccff" | <span title="Indikativ">indicative</span>
-| {futii_ind_1s}
-| {futii_ind_1p}
-! rowspan="3" style="background:#ccccff" | <span title="Konjunktiv II (Konjunktiv Präteritum)">subjunctive ii</span>
-| {futii_subii_1s}
-| {futii_subii_1p}
-|-
-| {futii_ind_2s}
-| {futii_ind_2p}
-| {futii_subii_2s}
-| {futii_subii_2p}
-|-
-| {futii_ind_3s}
-| {futii_ind_3p}
-| {futii_subii_3s}
-| {futii_subii_3p}
-|{\cl}{notes_clause}</div></div>]=]
+! style="height:3em;background:#ECECEC" | accusative
+| ''not used''
+| {imp_2s_comb_te}
+| {imp_3s_comb_se}
+| {imp_1p_comb_nos}
+| {imp_2p_comb_os}
+| {imp_3p_comb_se}
+|{\cl}{notes_clause}</div></div>
+]=]
 
 
 local function make_table(alternant_multiword_spec)
