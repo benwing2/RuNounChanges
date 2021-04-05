@@ -25,10 +25,12 @@ TERMINOLOGY:
 
 FIXME:
 
-1. Implement nopres3 for aterir, garantir. (NOTE: Per RAE, garantir used in all forms in Argentina/Uruguay.)
+1. Implement no_pres_stressed for aterir, garantir. (NOTE: Per RAE, garantir used in all forms in Argentina/Uruguay.)
 2. Support concluyo.
 3. Fixes for veo -> ve vs. preveo -> prevé.
 4. Various more irregular verbs, e.g. predecir, redecir, bendecir, maldecir.
+5. Raising of e -> i, o -> u before -iendo, -ió, etc. occurs only in -ir verbs.
+6. Raising of e -> i, o -> u happens before subjunctive -amos, -áis in -ir verbs.
 --]=]
 
 local lang = require("Module:languages").getByCode("es")
@@ -56,7 +58,9 @@ local fut_sub_note = "Mostly obsolete form, now mainly used in legal jargon."
 local pres_sub_voseo_note = "Argentine and Uruguayan " .. link_term("voseo", "term") .. " prefers the " ..
 	link_term("tú", "term") .. " form for the present subjunctive."
 
-local vowel_alternants = m_table.listToSet({"ie", "ue", "i", "í", "ú", "+"})
+local vowel_alternants = m_table.listToSet({"ie", "ie-i", "ue", "ue-u", "i", "í", "ú", "+"})
+
+local raise_vowel = {["e"] = "i", ["o"] = "u"}
 
 local all_persons_numbers = {
 	["1s"] = "1|s",
@@ -191,13 +195,56 @@ atañer, concernir: all finite non-third-person forms are nonexistent or hypothe
 desposeer: Former module claimed an irregular past participle 'desposeso'. Not per RAE.
 
 rehuir: Handle using +ú.
+
+-ir verbs:
+
+There are several types of vowel alternations:
+
+1. No alternation. Includes some verbs in -e- and -o-, e.g. tra(n)sgredir, abolir, although the stressed
+   forms are rare or disused.
+2. ie: Infinitive has -e-, changing to -ie- when stressed. No raising before i+V. Only hendir, cernir, discernir:
+   discernir -> discierno, discerniendo, discernió, discernamos.
+3. ie-i: Infinitive has -e- or -i-, changing to -ie- when stressed. Raising before i+V and 1p/2p pres subjunctive:
+   sentir -> siento, sintiendo, sintió, sintamos.
+   adquirir -> adquiero, adquiriendo, adquirió, adquiramos.
+4. i: Infinitive has -e-, changing to -i- when stressed. Raising before i+V and 1p/2p pres subjunctive:
+   vestir -> visto, vistiendo, vistió, vistamos. Variant: ceñir -> ciño, ciñendo, ciñó, ciñamos.
+5. ue-u: Infinitive has -o-, changing to -ue- when stressed. Raising before i+V and 1p/2p pres subjunctive:
+   Only dormir, morir and compounds. dormir -> duermo, durmiendo, durmió, durmamos.
+6. ue: This type would be parallel to 'ie' but doesn't appear to exist.
 ]=]
 
+--[=[
+Irregular conjugations.
+
+Each key of `forms` can either be a stem or an individual override form. Each value can either be a string
+(a single stem or form), a list of strings, or a list of objects of the form
+{form = STEM_OR_FORM, footnotes = {FOONOTES}}.
+
+NOTE: Various phonetic modifications occur automatically whenever they are predictable; see combine_stem_ending().
+In particular:
+
+1. Spelling-based modifications (c/z, g/gu, gu/gü, g/j) occur automatically as appropriate for the ending.
+2. Numerous modifications are automatically made before an ending beginning with i + vowel. These include raising
+   of e -> i, o -> u (dormir -> durmiendo, durmió
+The following stems are recognized:
+
+-- pres_unstressed: The present indicative unstressed stem (2s voseo, 1p, 2p). Also controls the imperative 2p
+     and gerund. Defaults to the infinitive stem.
+-- pres_stressed: The present indicative stressed stem (1s, 2s, 3s, 3p). Also controls the imperative 2s.
+     Default is empty if indicator `no_pres_stressed`, else a vowel alternation if such an indicator is given
+	 (e.g. `ue`, `ì`), else infinitive stem + 'y' for verbs in -uir, else the infinitive stem.
+-- pres_sub_unstressed: The present subjunctive unstressed stem (1p, 2p, also 2s voseo for -ar verbs).
+     
+-- 
+
+]=]
 
 local irreg_conjugations = {
 	{
+		-- andar, desandar
 		-- we don't want to match e.g. mandar.
-		match = function(verb) return verb == "andar" and "" or verb == "desandar" and "des" end,
+		match = match_against_verbs("andar", {"", "des"}),
 		forms = {pret = "anduv", pret_conj = "irreg"}
 	},
 	{
@@ -230,7 +277,7 @@ local irreg_conjugations = {
 		-- decir, redecir, entredecir
 		match = match_against_verbs("decir", {"", "re", "entre"}),
 		forms = {
-			pres1_and_sub = "dig", pres3 = "dic", pret = "dij", pret_conj = "irreg",
+			pres1_and_sub = "dig", pres_stressed = "dic", raising_conj = true, pret = "dij", pret_conj = "irreg",
 			pp = "dich", fut = "dir",
 			imp_2s = "dí" -- need the accent for the compounds; it will be removed in the simplex
 		}
@@ -239,7 +286,7 @@ local irreg_conjugations = {
 		-- antedecir, interdecir
 		match = match_against_verbs("decir", {"ante", "inter"}),
 		forms = {
-			pres1_and_sub = "dig", pres3 = "dic", pret = "dij", pret_conj = "irreg",
+			pres1_and_sub = "dig", pres_stressed = "dic", raising_conj = true, pret = "dij", pret_conj = "irreg",
 			pp = "dich", fut = "dir" -- imp_2s regular
 		}
 	},
@@ -247,7 +294,7 @@ local irreg_conjugations = {
 		-- bendecir, maldecir
 		match = match_against_verbs("decir", {"ben", "mal"}),
 		forms = {
-			pres1_and_sub = "dig", pres3 = "dic", pret = "dij", pret_conj = "irreg",
+			pres1_and_sub = "dig", pres_stressed = "dic", raising_conj = true, pret = "dij", pret_conj = "irreg",
 			pp = {"decid", "dit"} -- imp_2s regular, fut regular
 		}
 	},
@@ -255,7 +302,7 @@ local irreg_conjugations = {
 		-- condecir, contradecir, desdecir, predecir, others?
 		match = "decir",
 		forms = {
-			pres1_and_sub = "dig", pres3 = "dic", pret = "dij", pret_conj = "irreg",
+			pres1_and_sub = "dig", pres_stressed = "dic", raising_conj = true, pret = "dij", pret_conj = "irreg",
 			pp = "dich", fut = {"decir", "dir"} -- imp_2s regular
 		}
 	},
@@ -266,7 +313,7 @@ local irreg_conjugations = {
 	},
 	{
 		match = "^desosar",
-		forms = {pres3 = "deshues"}
+		forms = {pres_stressed = "deshues"}
 	},
 	{
 		-- conducir, producir, reducir, traducir, etc.
@@ -276,11 +323,11 @@ local irreg_conjugations = {
 	{
 		-- elegir, reelegir; not preelegir, per RAE
 		match = match_against_verbs("elegir", {"", "re"}),
-		forms = {pres3 = "elig", pp = {"elegid", "elect"}}
+		forms = {pres_stressed = "elig", raising_conj = true, pp = {"elegid", "elect"}}
 	},
 	{
 		match = "^errar",
-		forms = {pres3 = {
+		forms = {pres_stressed = {
 			{form = "yerr", footnotes = {"[Spain]"}},
 			{form = "err", footnotes = {"[Latin America]"}}
 		}}
@@ -306,7 +353,7 @@ local irreg_conjugations = {
 	},
 	{
 		match = "garantir",
-		forms = {pres3 = {{form = "garant", footnotes = {"[only used in Argentina and Uruguay]"}}},
+		forms = {pres_stressed = {{form = "garant", footnotes = {"[only used in Argentina and Uruguay]"}}},
 	},
 	{
 		match = "^haber",
@@ -368,16 +415,27 @@ local irreg_conjugations = {
 		forms = {pp = {"manumitid", "manumis"}}
 	},
 	{
+		-- mecer, remecer
+		-- we don't want to match e.g. adormecer, estremecer
+		match = match_against_verbs("mecer", {"re", ""}),
+		forms = {pres1_and_sub = "mez"}, -- not mezco, as would normally be generated
+	},
+	{
+		-- morir, desmorir, premorir
+		match = "morir",
+		forms = {pres_stressed = "muer", raising_conj = true, pp = "muert"},
+	},
+	{
 		match = "oír",
 		forms = {pres1_and_sub = "oig"}
 	},
 	{
 		match = "^oler",
-		forms = {pres3 = "huel"}
+		forms = {pres_stressed = "huel"}
 	},
 	{
 		match = "olver", -- solver, volver, bolver and derivatives
-		forms = {pres3 = "uelv", pp = "uelt"}
+		forms = {pres_stressed = "uelv", pp = "uelt"}
 	},
 	{
 		-- placer, desplacer
@@ -396,7 +454,7 @@ local irreg_conjugations = {
 	},
 	{
 		match = "poder",
-		forms = {pres3 = "pued", pret = "pud", pret_conj = "irreg", fut = "podr"}
+		forms = {pres_stressed = "pued", pret = "pud", pret_conj = "irreg", fut = "podr"}
 	},
 	{
 		-- poner, componer, deponer, imponer, oponer, suponer, many others
@@ -418,7 +476,7 @@ local irreg_conjugations = {
 	{
 		-- querer, desquerer, malquerer
 		match = "querer",
-		forms = {pres3 = "quier", pret = "quis", pret_conj = "irreg", fut = "querr"}
+		forms = {pres_stressed = "quier", pret = "quis", pret_conj = "irreg", fut = "querr"}
 	},
 	{
 		match = "raer",
@@ -479,7 +537,7 @@ local irreg_conjugations = {
 	{
 		match = "^soler",
 		forms = {
-			pres3 = "suel",
+			pres_stressed = "suel",
 			fut = {{form = "soler", footnotes = {"[rare but acceptable]"}}},
 			fut_sub = {{form = "sol", footnotes = {"[rare but acceptable]"}}},
 		}
@@ -488,7 +546,7 @@ local irreg_conjugations = {
 		-- tener, abstener, contener, detener, obtener, sostener, and many others
 		match = "tener",
 		forms = {
-			pres1_and_sub = "teng", pres3 = "tien", pret = "tuv", pret_conj = "irreg", fut = "tendr",
+			pres1_and_sub = "teng", pres_stressed = "tien", pret = "tuv", pret_conj = "irreg", fut = "tendr",
 			imp_2s = "tén" -- need the accent for the compounds; it will be removed in the simplex
 		}
 	},
@@ -507,7 +565,7 @@ local irreg_conjugations = {
 	},
 	{
 		match = "venir",
-		forms = {pres1_and_sub = "veng", pres3 = "vien", pret = "vin", pret_conj = "irreg", fut = "vendr", imp_2s = "ven"}
+		forms = {pres1_and_sub = "veng", pres_stressed = "vien", raising_conj = true, pret = "vin", pret_conj = "irreg", fut = "vendr", imp_2s = "ven"}
 	},
 	{
 		-- We want to match antever etc. but not atrever etc. No way to avoid listing each verb.
@@ -625,29 +683,30 @@ end
 
 
 local function combine_stem_ending(base, slot, stem, ending, is_combining_ending)
+	if base.stems.raising_conj and (rfind(ending, "^i" .. V) or slot == "pres_sub_1p" or slot == "pres_sub_2p") then
+		-- need to raise e -> i, o -> u: dormir -> durmió, durmiera, durmiendo, durmamos
+		stem = rsub(stem, "([eo])(" .. C .. "*)$", function(vowel, rest) return raise_vowel[vowel] .. rest end)
+		-- also with stem ending in -gu or -qu (e.g. erguir -> irguió, irguiera, irguiendo, irgamos)
+		stem = rsub(stem, "([eo])(" .. C .. "*[gq]u)$", function(vowel, rest) return raise_vowel[vowel] .. rest end)
+	end
+
 	-- Lots of sound changes involving endings beginning with i + vowel
 	if rfind(ending, "^i" .. V) then
-		-- (1) need to raise e -> i, o -> u: dormir -> durmió, durmiera, durmiendo
-		local raise_vowel = {["e"] = "i", ["o"] = "u"}
-		stem = rsub(stem, "([eo])(" .. C .. "*)$", function(vowel, rest) return raise_vowel[vowel] .. rest end)
-		-- also with stem ending in -gu or -qu (e.g. erguir -> irguió, irguiera, irguiendo)
-		stem = rsub(stem, "([eo])(" .. C .. "*[gq]u)$", function(vowel, rest) return raise_vowel[vowel] .. rest end)
-
-		-- (2) final -i of stem absorbed: sonreír -> sonrió, sonriera, sonriendo; note that this rule may be fed
+		-- (1) final -i of stem absorbed: sonreír -> sonrió, sonriera, sonriendo; note that this rule may be fed
 		-- by the preceding one (stem sonre- raised to sonri-, then final i absorbed)
 		stem = stem:gsub("i$", "")
 
-		-- (3) initial i -> y after vowel: poseer -> poseyó, poseyera, poseyendo; concluir -> concluyó, concluyera, concluyendo
+		-- (2) initial i -> y after vowel: poseer -> poseyó, poseyera, poseyendo; concluir -> concluyó, concluyera, concluyendo
 		if rfind(stem, V .. "$") then
 			ending = ending:gsub("^i", "y")
 		end
 
-		-- (4) initial i absorbed after ñ, ll, y: tañer -> tañó, tañera, tañendo
+		-- (3) initial i absorbed after ñ, ll, y: tañer -> tañó, tañera, tañendo; bullir -> bulló, bullera, bullendo
 		if rfind(stem, "[ñy]$") or rfind(stem, "ll$") then
 			ending = ending:gsub("^i", "")
 		end
 
-		-- (5) In the preterite of irregular verbs (likewise for other tenses derived from the preterite stem, i.e.
+		-- (4) In the preterite of irregular verbs (likewise for other tenses derived from the preterite stem, i.e.
 		--     imperfect and future subjunctive), initial i absorbed after j (dijeron not #dijieron, likewise for
 		--     condujeron, trajeron). Does not apply in tejer (tejieron not #tejeron).
 		if base.stems.pret_conj == "irreg" and rfind(stem, "j$") then
@@ -662,6 +721,15 @@ local function combine_stem_ending(base, slot, stem, ending, is_combining_ending
 		ending = ending:gsub("^(h?)i", "%1í")
 	end
 
+	-- If -uir (i.e. -ir with stem ending in -u), a y must be added before endings beginning with a/e/o.
+	if base.conj == "ir" and ending:find("^[aeo]") then
+		if stem:find("u$") then
+			stem = stem .. "y"
+		elseif stem:find("ü$") then -- argüir -> arguyendo
+			stem = stem:gsub("ü$", "uy")
+		end
+	end
+
 	if is_combining_ending then
 		-- Spelling changes in the stem; it depends on whether the stem given is the pre-front-vowel or
 		-- pre-back-vowel variant, as indicated by `frontback`. We want these front-back spelling changes to happen
@@ -669,11 +737,14 @@ local function combine_stem_ending(base, slot, stem, ending, is_combining_ending
 		-- as the stem.
 		local is_front = rfind(ending, "^[eiéí]")
 		if base.frontback == "front" and not is_front then
-			stem = stem:gsub("c$", "z") -- ejercer -> ejerzo, uncir -> unzo; parecer -> parezco handled by caller
-			stem = stem:gsub("qu$", "c") -- delinquir -> delinco
+			-- parecer -> parezco, conducir -> conduzco; use zqu to avoid triggering the following gsub();
+			-- the third line will replace zqu -> zc
+			stem = rsub(stem, "(" .. V .. ")c$", "%1zqu")
+			stem = stem:gsub("c$", "z") -- ejercer -> ejerzo, uncir -> unzo
+			stem = stem:gsub("qu$", "c") -- delinquir -> delinco, parecer -> parezqu- -> parezco
 			stem = stem:gsub("g$", "j") -- coger -> cojo, afligir -> aflijo
 			stem = stem:gsub("gu$", "g") -- distinguir -> distingo
-			stem = stem:gsub("gü$", "gu") -- may not occur; argüir -> arguyo handled by caller
+			stem = stem:gsub("gü$", "gu") -- may not occur; argüir -> arguyo handled above
 		elseif base.frontback == "back" and is_front then
 			stem = stem:gsub("gu$", "gü") -- averiguar -> averigüé
 			stem = stem:gsub("g", "gu") -- cargar -> cargué
@@ -745,12 +816,12 @@ local function add_present_indic(base)
 	end
 
 	addit("1s", base.stem.pres1, "o")
-	addit("2s", base.stem.pres3, s2)
-	addit("2sv", base.stem.pres, s2v)
-	addit("3s", base.stem.pres3, s3)
-	addit("1p", base.stem.pres, p1)
-	addit("2p", base.stem.pres, p2)
-	addit("3p", base.stem.pres3, p3)
+	addit("2s", base.stem.pres_stressed, s2)
+	addit("2sv", base.stem.pres_unstressed, s2v)
+	addit("3s", base.stem.pres_stressed, s3)
+	addit("1p", base.stem.pres_unstressed, p1)
+	addit("2p", base.stem.pres_unstressed, p2)
+	addit("3p", base.stem.pres_stressed, p3)
 end
 
 
@@ -758,21 +829,23 @@ local function add_present_subj(base)
 	local function addit(slot, stems, ending)
 		add3(base, "pres_sub_" .. slot, base.prefix, stems, ending)
 	end
-	local s1, s2, s2v, s3, p1, p2, p3
+	local s1, s2, s2v, s3, p1, p2, p3, voseo_stem
 	if base.conj == "ar" then
+		voseo_stem = base.stems.pres_sub_stressed
 		s1, s2, s2v, s3, p1, p2, p3 = "e", "es", "és", "e", "emos", "éis", "en"
 	else
 		-- voseo and tu forms are identical
+		voseo_stem = base.stems.pres_sub_unstressed
 		s1, s2, s2v, s3, p1, p2, p3 = "a", "as", "as", "a", "amos", "áis", "an"
 	end
 
-	addit("pres_1s", base.stems.pres_sub1, s1)
-	addit("pres_2s", base.stems.pres_sub1, s2)
-	addit("pres_2sv", base.stems.pres_sub, s2v)
-	addit("pres_3s", base.stems.pres_sub1, s3)
-	addit("pres_1p", base.stems.pres_sub, p1)
-	addit("pres_2p", base.stems.pres_sub, p2)
-	addit("pres_3p", base.stems.pres_sub1, p3)
+	addit("pres_1s", base.stems.pres_sub_stressed, s1)
+	addit("pres_2s", base.stems.pres_sub_stressed, s2)
+	addit("pres_2sv", voseo_stem, s2v)
+	addit("pres_3s", base.stems.pres_sub_stressed, s3)
+	addit("pres_1p", base.stems.pres_sub_unstressed, p1)
+	addit("pres_2p", base.stems.pres_sub_unstressed, p2)
+	addit("pres_3p", base.stems.pres_sub_stressed, p3)
 end
 
 
@@ -781,17 +854,17 @@ local function add_imper(base)
 		add3(base, "imp_" .. slot, base.prefix, stems, ending)
 	end
 	if base.conj == "ar" then
-		addit("2s", base.stems.pres3, "a")
-		addit("2sv", base.stems.pres, "á")
-		addit("2p", base.stems.pres, "ad")
+		addit("2s", base.stems.pres_stressed, "a")
+		addit("2sv", base.stems.pres_unstressed, "á")
+		addit("2p", base.stems.pres_unstressed, "ad")
 	elseif base.conj == "er" then
-		addit("2s", base.stems.pres3, "e")
-		addit("2sv", base.stems.pres, "é")
-		addit("2p", base.stems.pres, "ed")
+		addit("2s", base.stems.pres_stressed, "e")
+		addit("2sv", base.stems.pres_unstressed, "é")
+		addit("2p", base.stems.pres_unstressed, "ed")
 	elseif base.conj == "ir" then
-		addit("2s", base.stems.pres3, "e")
-		addit("2sv", base.stems.pres, "í")
-		addit("2p", base.stems.pres, "id")
+		addit("2s", base.stems.pres_stressed, "e")
+		addit("2sv", base.stems.pres_unstressed, "í")
+		addit("2p", base.stems.pres_unstressed, "id")
 	else
 		error("Internal error: Unrecognized conjugation " .. base.conj)
 	end
@@ -839,7 +912,7 @@ local function add_non_present(base)
 	local function addit(slot, stems, ending)
 		add3(base, slot, base.prefix, stems, ending)
 	end
-	addit("gerund", stems.pres, conj == "ar" and "ando" or "iendo")
+	addit("gerund", stems.pres_unstressed, conj == "ar" and "ando" or "iendo")
 	addit("pp_ms", stems.pp, "o")
 	addit("pp_fs", stems.pp, "a")
 	addit("pp_mp", stems.pp, "os")
@@ -879,14 +952,7 @@ end
 
 
 local function construct_stems(base)
-	local pres_stem, suffix = rmatch(base.infinitive, "^(.*)([aeií]r)$")
-	if not pres_stem then
-		error("Unrecognized infinitive: " .. base.infinitive)
-	end
-	base.conj = suffix == "ír" and "ir" or suffix
-	base.frontback = suffix == "ar" and "back" or "front"
-	local stems = {}
-	base.stems = stems
+	local stems = base.stems
 	base.basic_overrides = {}
 	base.combined_overrides = {}
 	base.prefix = ""
@@ -908,10 +974,7 @@ local function construct_stems(base)
 				elseif verb_slots_combined_map[stem] then
 					-- an individual form override of a combined form
 					base.combined_overrides[stem] = forms
-				elseif stem == "pres3" then
-					if conj == "ar" then
-						stems.pres3
-
+				else
 					stems[stem] = forms
 				end
 			end
@@ -919,57 +982,27 @@ local function construct_stems(base)
 		end
 	end
 
-	local function uy_stem =
-		-- concluir -> concluyo, concluyes
-		base.conj ~= "ar" and pres_stem:find("u$") and pres_stem .. "y" or
-		-- argüir -> arguyo, arguyes
-		base.conj ~= "ar" and pres_stem:find("ü$") and rsub(pres_stem, "ü$", "uy") or
-		nil
-
-	-- Convert vowel alternation indicators into stems.
-	if base.vowelalt then
-		for _, alt in ipairs(base.vowelalt) do
-			if alt.form == "+" then
-				alt.form = pres_stem
-			else
-				local ret = com.apply_vowel_alternation(pres_stem, alt.form)
-				if ret.err then
-					error("To use '" .. alt.form .. "', present stem '" .. pres_stem .. "' " .. ret.err)
-				end
-				alt.form = ret.ret
-			end
-		end
-	end
-
-	stems.pres = pres_stem
-	stems.pres3 = stems.pres3 or
-		-- If nopres3 given, pres3 stem should be empty so no forms are generated.
-		base.nopres3 and {} or
+	stems.pres_unstressed = stems.pres_unstressed or base.inf_stem
+	stems.pres_stressed = stems.pres_stressed or
+		-- If no_pres_stressed given, pres_stressed stem should be empty so no forms are generated.
+		base.no_pres_stressed and {} or
 		base.vowelalt or
-		uy_stem or -- concluir, argüir
-		pres_stem
-	stems.pres1_and_sub = stems.pres1_and_sub or
-		uy_stem or -- concluir, argüir
-		-- parecer -> parezco; need to generate the "front" variant of the stem as base.frontback == "front".
-		-- Don't do anything for ejercer, uncir; the stem remains and combine_stem_ending() will
-		-- automatically convert c -> z in the first singular ejerzo, unzo and subjunctive.
-		base.conj ~= "ar" and rfind(pres_stem, V .. "c$") and rsub(pres_stem, "c$", "zqu") or
-		nil
-	stems.pres1 = stems.pres1 or stems.pres1_and_sub or stems.pres3
-	stems.impf = stems.impf or stems.pres
-	stems.pret = stems.pret or stems.pres
+		base.inf_stem
+	stems.pres1 = stems.pres1 or stems.pres1_and_sub or stems.pres_stressed
+	stems.impf = stems.impf or base.inf_stem
+	stems.pret = stems.pret or base.inf_stem
 	stems.pret_conj = stems.pret_conj or base.conj
-	stems.fut = stems.fut or stems.pres
+	stems.fut = stems.fut or base.inf_stem
 	stems.cond = stems.cond or stems.fut
-	stems.pres_sub1 = stems.pres_sub1 or stems.pres1_and_sub or stems.pres1
-	stems.pres_sub = stems.pres_sub or stems.pres1_and_sub or stems.pres
+	stems.pres_sub_stressed = stems.pres_sub_stressed or stems.pres1_and_sub or stems.pres1
+	stems.pres_sub_unstressed = stems.pres_sub_unstressed or stems.pres1_and_sub or stems.pres_unstressed
 	stems.impf_sub_ra = stems.impf_sub_ra or stems.pret
 	stems.impf_sub_se = stems.impf_sub_se or stems.pret
 	stems.fut_sub = stems.fut_sub or stems.pret
 	stems.pp = stems.pp or base.conj == "ar" and
-		combine_stem_ending(base, "pp_ms", pres_stem, "ad", "is combining ending") or
+		combine_stem_ending(base, "pp_ms", base.inf_stem, "ad", "is combining ending") or
 		-- use combine_stem_ending esp. so we get reído, caído, etc.
-		combine_stem_ending(base, "pp_ms", pres_stem, "id", "is combining ending")
+		combine_stem_ending(base, "pp_ms", base.inf_stem, "id", "is combining ending")
 end
 
 
@@ -1123,7 +1156,7 @@ local function parse_indicator_spec(angle_bracket_spec)
 				end
 				table.insert(base.vowelalt, {form = alt, footnotes = fetch_footnotes(comma_separated_groups[j])})
 			end
-		elseif first_element == "nopres3" or first_element == "only3s" or first_element == "only3sp" then
+		elseif first_element == "no_pres_stressed" or first_element == "only3s" or first_element == "only3sp" then
 			if #comma_separated_groups[1] > 1 then
 				parse_err("No footnotes allowed with '" .. first_element .. "' spec")
 			end
@@ -1204,353 +1237,49 @@ local function normalize_all_lemmas(alternant_multiword_spec, from_headword)
 end
 
 
-local function detect_verb_type(base, verb_types)
-	local this_verb_types = {}
-
-	local function set_verb_type()
-		base.verb_types = this_verb_types
-
-		if verb_types then
-			for _, verb_type in ipairs(this_verb_types) do
-				m_table.insertIfNot(verb_types, verb_type)
-			end
-		end
-	end
-
-	if base.conj == "pretpres" then
-		m_table.insertIfNot(this_verb_types, "pretpres")
-		set_verb_type()
-		return
-	elseif base.conj == "irreg" then
-		m_table.insertIfNot(this_verb_types, "irreg")
-		set_verb_type()
-		return
-	end
-
-	local infstem = m_table.deepcopy(base.infstem)
-	local past = m_table.deepcopy(base.past)
-	local pp = m_table.deepcopy(base.pp)
-
-	local function matches_forms(forms, expected, ending_to_chop)
-		expected = expected:gsub("C", not_vowel_c) .. "$"
-		local seen = false
-		for _, form in ipairs(forms) do
-			local stem
-			if ending_to_chop then
-				stem = rmatch(form.form, "^(.*)" .. ending_to_chop .. "$")
-			else
-				stem = form.form
-			end
-			if stem and rfind("#" .. stem, expected) then
-				seen = true
-				form.seen = form.seen or "maybe"
-			end
-		end
-		return seen
-	end
-
-	local function reset_maybes(forms, value)
-		for _, form in ipairs(forms) do
-			if form.seen == "maybe" then
-				form.seen = value
-			end
-		end
-	end
-
-	local function reset_all_maybes(value)
-		reset_maybes(infstem, value)
-		reset_maybes(past, value)
-		reset_maybes(pp, value)
-	end
-
-	local function has_unseen_weak_pp()
-		for _, form in ipairs(pp) do
-			if not form.seen and form.form:find("[dt]$") then
-				return true
-			end
-		end
-		return false
-	end
-
-	local function has_unseen_strong_pp()
-		for _, form in ipairs(pp) do
-			if not form.seen and form.form:find("n$") then
-				return true
-			end
-		end
-		return false
-	end
-
-	local function check(verbtype, infre, pastre, ppre, exclude)
-		if exclude then
-			for _, form in ipairs(infstem) do
-				if exclude(form.form) then
-					return
-				end
-			end
-		end
-		if matches_forms(infstem, infre) and
-			matches_forms(past, pastre) and
-			matches_forms(pp, ppre, "en") then
-			m_table.insertIfNot(this_verb_types, verbtype)
-			reset_all_maybes(true)
-		else
-			reset_all_maybes(false)
-		end
-	end
-
-	local function check_strong()
-		check("1", "Ce[iy]C*", "CieC*", "Cie?C*") -- beigen, bleiben, gedeihen, leihen, meiden, preisen, reiben, reihen,
-			-- scheiden, scheinen, schreiben, schreien, schweigen, speiben, speien, speisen, steigen, treiben, weisen,
-			-- zeihen; use 'Cie?C*' for past participle to handle 'schrien', 'spien'
-		check("1", "Ce[iy]C*", "CiC*", "CiC*") -- beißen/beissen/beyßen/beyssen, bleichen, fleißen/fleissen, gleichen,
-			-- gleiten, greifen, kneifen, kreischen, leiden, pfeifen, reißen/reissen, reiten, scheißen/scheissen,
-			-- schleichen, schleifen, schleißen/schleissen, schmeißen/schmeissen, schneiden/schneyden, schreiten,
-			-- spleißen/spleissen, streichen, streiten, weichen
-		check("2", "CieC*", "CoC*", "CoC*") -- biegen, bieten, fliegen, fliehen, fließen/fliessen, frieren,
-			-- genießen/geniessen, gießen/giessen, kiesen, kriechen, riechen, schieben, schießen/schiessen, schliefen,
-			-- schließen/schliessen, sieden, sprießen/spriessen, stieben, triefen, verdrießen/verdriessen, verlieren,
-			-- wiegen, ziehen
-		check("2", "CauC*", "CoC*", "CoC*") -- krauchen, saufen, saugen
-		check("2", "CüC", "CoC", "CoC") -- lügen, trügen
-		local function exclude_nehmen_sprechen(form)
-			-- need to exclude nehmen, stehlen, befehlen/empfehlen, sprechen, brechen, stechen
-			return rfind(form, vowel_c .. "ch$") or rfind(form, vowel_c .. "h" .. not_vowel_c .. "$")
-		end
-		check("3", "C[ei]CC+", "CaCC+", "C[ou]CC+", exclude_nehmen_sprechen) -- [with e, + o in pp]: bergen, bersten,
-			-- gelten, helfen, schelten, sterben, verderben, werben, werfen; [with i, + u in pp]: binden, brinnen, dringen,
-			-- finden, gelingen, klingen, misslingen, ringen, schlingen, schwinden, schwingen, singen, sinken, springen,
-			-- stinken, trinken, winden, wringen, zwingen; [with i, + o in pp]: rinnen, gewinnen, schwimmen, sinnen,
-			-- spinnen
-		check("3", "C[eiaö]CC+", "CoCC+", "CoCC+", exclude_nehmen_sprechen)
-			-- [with e]: dreschen, fechten, flechten, melken, quellen, schmelzen, schwellen; [with i]: glimmen, klimmen;
-			-- [with a]: schallen (geschallt), erschallen; [with ö]: erlöschen
-		check("3", "quell", "quoll", "quoll") -- need to special-case quellen due to u preceding e
-		check("3", "schind", "schund", "schund") -- need to special-case due to 'u' in past
-		check("4", "C[eäo]C*", "Cah?Ch?", "CoC*") -- [with e]: befehlen, brechen, schrecken, nehmen, sprechen, stechen,
-			-- stecken (gesteckt), stehlen, treffen; [with ä]: gebären; [with o]: kommen
-		check("4", "C[äe]C", "Coh?C", "Coh?C", function(form) return form:find("heb$") end)
-			-- [with ä]: gären, wägen, schwären; [with e]: bewegen, weben, scheren (but not heben)
-		check("5", "C[ei]C*", "CaC", "CeC*") -- [with e, one C]: geben, genesen, geschehen, lesen, meßen, sehen, treten;
-			-- [with e, two C]: essen, fressen, messen, vergessen; [with i, two C]: bitten, sitzen
-		check("5", "C[ei]C*", "Cass", "Cess") -- essen, fressen, messen, sitzen in Swiss spelling
-		check("5", "CieC", "CaC", "CeC") -- liegen
-		check("6", "CaC*", "CuC*", "CaC*") -- backen, fragen (gefragt), graben, laden, mahlen, schaffen, schlagen,
-			-- tragen, wachsen, waschen
-		check("6", "heb", "h[ou]b", "hob") -- we need to special-case this because heben (class 6 per Wikipedia) has the
-			-- exact same vowels as weben (class 4 per Wikipedia)
-		check("6", "schwör", "schw[ou]r", "schwor") -- only strong verb with these vowels
-		check("7", "CaC*", "CieC*", "CaC*") -- blasen, braten, fallen, halten, lassen, raten/rathen, schlafen
-		check("7", "C[aäe]C*", "CiC*", "CaC*") -- [with a]: fangen; [with ä]: hängen; [with e]: gehen
-		check("7", "Ce[iy]C*", "CieC*", "Ce[iy]C*") -- heißen/heissen/heyßen/heyssen
-		check("7", "CauC*", "CieC*", "CauC*") -- hauen, laufen
-		check("7", "CoC*", "CieC*", "CoC*") -- stoßen/stossen
-		check("7", "CuC*", "CieC*", "CuC*") -- rufen
-	end
-
-	for _, form in ipairs(past) do
-		local past_stem = form.form:match("^(.*)te$")
-		if past_stem then
-			if matches_forms(infstem, "#" .. past_stem) then
-				-- Need to run matches_forms() on all possibilities even if earlier ones match,
-				-- to mark the seen forms correctly.
-				local matches_pp = matches_forms(pp, "#" .. past_stem .. "t")
-				matches_pp = matches_forms(pp, "#ge" .. past_stem .. "t") or matches_pp
-				if matches_pp then
-					m_table.insertIfNot(this_verb_types, "weak")
-					form.seen = true
-					reset_all_maybes(true)
-				else
-					reset_all_maybes(false)
-				end
-			end
-		end
-		if not form.seen and form.form:find("ete$") then
-			if matches_forms(infstem, "#" .. past_stem:gsub("e$", "")) then
-				-- Need to run matches_forms() on all possibilities even if earlier ones match,
-				-- to mark the seen forms correctly.
-				local matches_pp = matches_forms(pp, "#" .. past_stem .. "t")
-				matches_pp = matches_forms(pp, "#ge" .. past_stem .. "t") or matches_pp
-				matches_pp = matches_forms(pp, "#" .. past_stem .. "d") or matches_pp
-				matches_pp = matches_forms(pp, "#ge" .. past_stem .. "d") or matches_pp
-				if matches_pp then
-					m_table.insertIfNot(this_verb_types, "weak")
-					form.seen = true
-					reset_all_maybes(true)
-				else
-					reset_all_maybes(false)
-				end
-			end
-		end
-		if past_stem and not form.seen then
-			if not has_unseen_weak_pp() and has_unseen_strong_pp() then
-				m_table.insertIfNot(this_verb_types, "mixed")
-			else
-				m_table.insertIfNot(this_verb_types, "irregweak")
-			end
-			matches_forms(pp, "#" .. past_stem .. "t")
-			matches_forms(pp, "#ge" .. past_stem .. "t")
-			form.seen = true
-			reset_all_maybes(true)
-		end
-		if not form.seen then
-			check_strong()
-		end
-		if not form.seen then
-			if not has_unseen_strong_pp() and has_unseen_weak_pp() then
-				m_table.insertIfNot(this_verb_types, "mixed")
-			else
-				m_table.insertIfNot(this_verb_types, "irregstrong")
-			end
-		end
-	end
-
-	for _, form in ipairs(pp) do
-		if not form.seen then
-			if form.form:find("n$") then
-				if m_table.contains(this_verb_types, "strong") then
-					m_table.insertIfNot(this_verb_types, "irregstrong")
-				elseif m_table.contains(this_verb_types, "weak") then
-					m_table.insertIfNot(this_verb_types, "mixed")
-				end
-			elseif form.form:find("[dt]$") then
-				if m_table.contains(this_verb_types, "weak") then
-					m_table.insertIfNot(this_verb_types, "irregweak")
-				elseif m_table.contains(this_verb_types, "strong") then
-					m_table.insertIfNot(this_verb_types, "mixed")
-				end
-			end
-		end
-	end
-
-	base.verb_types = this_verb_types
-
-	if verb_types then
-		for _, verb_type in ipairs(this_verb_types) do
-			m_table.insertIfNot(verb_types, verb_type)
-		end
-	end
-
-	set_verb_type()
-end
-
-
 local function detect_indicator_spec(base)
 	base.forms = {}
-	base.aux = base.aux or {{form = "haben"}}
-	base.bare_infinitive = {{form = base.base_verb, footnotes = base.infstem_footnotes}}
-	add(base, "infinitive", base.pre_pref, base.bare_infinitive)
+	base.stems = {}
+	local inf_stem, suffix = rmatch(base.infinitive, "^(.*)([aeií]r)$")
+	if not inf_stem then
+		error("Unrecognized infinitive: " .. base.infinitive)
+	end
+	base.inf_stem = inf_stem
+	base.conj = suffix == "ír" and "ir" or suffix
+	base.frontback = suffix == "ar" and "back" or "front"
 
 	if base.only3s and base.only3sp then
 		error("'only3s' and 'only3sp' cannot both be specified")
 	end
 
-	if base.conj == "irreg" then
-		for irregverb, verbobj in pairs(irreg_verbs) do
-			base.insep_prefix = base.base_verb:match("^(.-)" .. irregverb .. "$")
-			if base.insep_prefix then
-				base.irregverb = irregverb
-				base.irregverbobj = verbobj
-				if not base.ge_prefix then
-					if base.insep_prefix ~= "" then
-						base.ge_prefix = {{form = ""}}
-					else
-						base.ge_prefix = {{form = "ge"}}
-					end
+	-- Convert vowel alternation indicators into stems.
+	if base.vowelalt then
+		for _, alt in ipairs(base.vowelalt) do
+			if base.conj == "ir" then
+				local raising = alt.form == "ie-i" or alt.form == "ue-u" or alt.form == "i"
+				if base.stems.raising_conj == nil then
+					base.stems.raising_conj = raising
+				elseif base.stems.raising_conj ~= raising then
+					error("Can't currently support a mixture of raising (e.g. 'ie-i') and non-raising (e.g. 'ie') vowel alternations in -ir verbs")
 				end
-				return
 			end
-		end
-		error("Unrecognized irregular base verb '" .. base.base_verb .. "'")
-	end
-
-	-- The following applies to everything but 'irreg' verbs.
-
-	local infstem, infroot = base.base_verb:match("^((.*)e[lr])n$")
-	if infstem then
-		base.unstressed_el_er = true
-	else
-		infstem, infroot = base.base_verb:match("^((.*)erl)n$") -- [[fensterln]]
-		if infstem then
-			base.unstressed_erl = true
-		else
-			infstem = base.base_verb:match("^(.*)en$")
-			infroot = infstem
-			if not infstem then
-				error("Unrecognized infinitive, should end in -en, -eln, -ern or -erln: '" .. base.base_verb .. "'")
+			if alt.form == "ie-i" or alt.form == "ue-u" then
+				if base.conj ~= "ir" then
+					error("Vowel alternation '" .. alt.form .. "' only supported with -ir verbs")
+				end
+				alt.form = alt.form == "ie-i" and "ie" or "ue"
 			end
-		end
-	end
-	base.infstem = {{form = infstem, footnotes = base.infstem_footnotes}}
-
-	if base.unstressed_e_infix == nil then
-		-- Autodetect whether we need an -e- infix in the pres_2s and pres_3s ([[atmen]], [[eignen]], etc.).
-		-- Almost all such cases have -Cmen or -Cnen where C is a consonant other than r or l and other than the
-		-- following m or n (hence [[meinen]], [[lernen]], [[filmen]], [[schwimmen]] should be excluded); we also
-		-- need to exclue -Vhmen and -Vhnen ([[wohnen]], [[rühmen]]), but not -Chmen and -Chnen ([[zeichnen]]).
-		if base.base_verb:find("[mn]en$") and not base.base_verb:find("([mn])%1en$") and
-			not rfind(base.base_verb, vowel_c .. "[hrl]?[mn]en$") then
-			base.unstressed_e_infix = true
-		end
-	end
-
-	if not base.conj then
-		base.conj = "normal"
-	end
-	if base.conj == "normal" then
-		local weak_past
-		if not base.past then
-			if base.unstressed_e_infix or ends_in_dt(infstem) then
-				weak_past = infstem .. "et"
+			if alt.form == "+" then
+				alt.form = base.inf_stem
 			else
-				weak_past = infstem .. "t"
-			end
-			base.past = {{form = weak_past .. "e"}}
-		end
-		if not base.pp then
-			if not weak_past then
-				error("Internal error: past was explicitly given but not past participle")
-			end
-			if not base.ge_prefix then
-				local no_ge
-				for _, insep_prefix in ipairs(inseparable_prefixes) do
-					-- There must be a vowel following the inseparable prefix; excludes beben, bechern, belfern, bellen, bessern,
-					-- beten, betteln, betten, erben, erden, ernten, erzen, entern, gecken, gehren, gellen, gerben, geten, missen,
-					-- zergen, zerren, etc.
-					if rfind(infroot, "^" .. insep_prefix .. ".*" .. vowel_c .. ".*") and
-						-- Exclude cases like beigen, beichten, beugen, beulen, geifern; this also wrongly excludes
-						-- beirren, which needs -ge.
-						not rfind(infroot, "^[bg]e[iu]" .. not_vowel_c .. "*$") then
-						no_ge = true
-						break
-					end
-					-- Check for -ier preceded by a vowel (excludes bieren, frieren, gieren, schmieren, stieren, zieren, etc.)
-					if not base.unstressed_el_er and not base.unstressed_erl and rfind(infroot, "^.*" .. vowel_c .. ".*ier$") then
-						no_ge = true
-						break
-					end
+				local ret = com.apply_vowel_alternation(base.inf_stem, alt.form)
+				if ret.err then
+					error("To use '" .. alt.form .. "', present stem '" .. base.inf_stem .. "' " .. ret.err)
 				end
-				if no_ge then
-					base.ge_prefix = {{form = ""}}
-				else
-					base.ge_prefix = {{form = "ge"}}
-				end
+				alt.form = ret.ret
 			end
-			base.pp = iut.map_forms(base.ge_prefix, function(form)
-				if base.unstressed_el_er or base.unstressed_erl then
-					return form .. base.base_verb:gsub("n$", "") .. "t"
-				else
-					return form .. weak_past
-				end
-			end)
-		end
-	else
-		if not base.pp then
-			error("For '" .. base.conj .. "' type verbs, past participle must be explicitly given")
 		end
 	end
-
-	add(base, "perf_part", base.pre_pref, base.pp)
 end
 
 
