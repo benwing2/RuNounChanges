@@ -1037,6 +1037,7 @@ into strings. Each form list turns into a string consisting of a comma-separated
   slot_table = SLOT_TABLE,
   slot_list = SLOT_LIST,
   include_translit = BOOLEAN,
+  create_footnote_obj = FUNCTION_TO_CREATE_FOOTNOTE_OBJ,
   canonicalize = FUNCTION_TO_CANONICALIZE_EACH_FORM,
   transform_link = FUNCTION_TO_TRANSFORM_EACH_LINK,
   join_spans = FUNCTION_TO_JOIN_SPANS,
@@ -1048,6 +1049,9 @@ into strings. Each form list turns into a string consisting of a comma-separated
 `slot_table` is a table mapping slots to associated accelerator inflections.
   (One of `slot_list` or `slot_table` must be given.)
 If `include_translit` is given, transliteration is included in the generated strings.
+`create_footnote_obj` is an optional function of no arguments to create the footnote object used to track footnotes;
+  see export.create_footnote_obj(). Customizing it is useful to prepopulate the footnote table using
+  export.get_footnote_text().
 `canonicalize` is an optional function of one argument (a form) to canonicalize each form before processing; it can return nil
   for no change.
 `transform_link` is an optional function to transform a linked form prior to further processing; it is passed three arguments
@@ -1061,7 +1065,7 @@ the links, and superscripted. In this case, `footnotes` should be a list of foot
 superscripted). These footnotes are combined with any footnotes found in the forms and placed into `forms.footnotes`.
 ]=]
 function export.show_forms(forms, props)
-	local footnote_obj = export.create_footnote_obj()
+	local footnote_obj = props.create_footnote_obj and props.create_footnote_obj() or export.create_footnote_obj()
 	local accel_lemma = props.lemmas[1]
 	local accel_lemma_translit
 	if type(accel_lemma) == "table" then
