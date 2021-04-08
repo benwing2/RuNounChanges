@@ -381,13 +381,19 @@ local irreg_conjugations = {
 	},
 	{
 		match = "caber",
-		forms = {pres1_and_sub = "quep", pret = "cup", fut = "cabr"}
+		forms = {pres1_and_sub = "quep", pret = "cup", pret_conj = "irreg", fut = "cabr"}
 	},
 	{
 		-- caer, decaer, descaer, recaer
 		match = "caer",
 		-- use 'caigu' because we're in a front environment; if we use 'caig', we'll get '#caijo'
 		forms = {pres1_and_sub = "caigu"}
+	},
+	{
+		-- cocer, escocer, precocer, etc.
+		match = "cocer",
+		-- override cons_alt, otherwise the verb would be categorized as a c-zc alternating verb
+		forms = {vowel_alt = "ue", pres1 = "cuez", pres_sub_unstressed = "coz", cons_alt = "c-z"}, -- not cozco, as would normally be generated
 	},
 	{
 		match = "^dar",
@@ -600,14 +606,14 @@ local irreg_conjugations = {
 	},
 	{
 		match = "poder",
-		forms = {vowel_alt = "ue", pret = "pud", pret_conj = "irreg", fut = "podr"}
+		forms = {vowel_alt = "ue", pret = "pud", pret_conj = "irreg", fut = "podr", gerund = "pudiendo"}
 	},
 	{
 		-- poner, componer, deponer, imponer, oponer, suponer, many others
 		match = "poner",
 		forms = {
 			-- use 'pongu' because we're in a front environment; if we use 'pong', we'll get '#ponjo'
-			pres1_and_sub = "pongu", pret = "pus", pret_conj = "irreg", fut = "pondr",
+			pres1_and_sub = "pongu", pret = "pus", pret_conj = "irreg", fut = "pondr", pp = "puest",
 			imp_2s = "pón" -- need the accent for the compounds; it will be removed in the simplex
 		}
 	},
@@ -626,7 +632,7 @@ local irreg_conjugations = {
 		forms = {vowel_alt = "ie", pret = "quis", pret_conj = "irreg", fut = "querr"}
 	},
 	{
-		match = "raer",
+		match = "^raer",
 		-- use 'raigu' because we're in a front environment; if we use 'raig', we'll get '#raijo'
 		forms = {pres1_and_sub = {"raigu", "ray"}}
 	},
@@ -693,6 +699,7 @@ local irreg_conjugations = {
 			vowel_alt = "ue",
 			fut = {{form = "soler", footnotes = {"[rare but acceptable]"}}},
 			fut_sub = {{form = "sol", footnotes = {"[rare but acceptable]"}}},
+			pp = {{form = "solid", footnotes = {"[rare but acceptable]"}}},
 		}
 	},
 	{
