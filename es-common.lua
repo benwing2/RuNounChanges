@@ -1,5 +1,12 @@
 local export = {}
 
+local u = mw.ustring.char
+local rsplit = mw.text.split
+local rfind = mw.ustring.find
+local rmatch = mw.ustring.match
+local rsubn = mw.ustring.gsub
+
+
 local TEMPC1 = u(0xFFF1)
 local TEMPC2 = u(0xFFF2)
 local TEMPV1 = u(0xFFF3)
@@ -52,6 +59,9 @@ export.rsub_repeatedly = rsub_repeatedly
 -- Apply vowel alternation to stem.
 function export.apply_vowel_alternation(stem, alternation)
 	local ret, err
+	-- Treat final -gu, -qu as a consonant, so the previous vowel can alternate (e.g. conseguir -> consigo).
+	-- This means a verb in -guar can't have a u-ú alternation but I don't think there are any verbs like that.
+	stem = rsub(stem, "([gq])u$", "%1" .. TEMPC1)
 	local before_last_vowel, last_vowel, after_last_vowel = rmatch(stem, "^(.*)(" .. V .. ")(.-)$")
 	if alternation == "ie" then
 		if last_vowel == "e" or last_vowel == "i" then
@@ -92,6 +102,7 @@ function export.apply_vowel_alternation(stem, alternation)
 	else
 		error("Internal error: Unrecognized vowel alternation '" .. alternation .. "'")
 	end
+	ret = ret:gsub(TEMPC1, "u")
 	return {ret = ret, err = err}
 end
 
@@ -148,6 +159,7 @@ function export.stressed_syllable(syllables)
 	if #syllables == 1 then
 		return 1
 	end
+	local i = #syllables
 	-- Unaccented words ending in a vowel or a vowel + s/n are stressed on the preceding syllable.
 	if rfind(syllables[i], V .. "[sn]?$") then
 		return i - 1
@@ -210,8 +222,9 @@ function export.accent_needed(syllables, sylno)
 	end
 	if sylno < #syllables then
 		if rfind(accented_syllable, "í$") and rfind(unaccented_syllables[sylno + 1], "^h?[aeou]") or
-		rfind(accented_syllable, "ú$") and rfind(unaccented_syllables[sylno + 1], "^h?[aeio]") then
-		return true
+			rfind(accented_syllable, "ú$") and rfind(unaccented_syllables[sylno + 1], "^h?[aeio]") then
+			return true
+		end
 	end
 	return false
 end

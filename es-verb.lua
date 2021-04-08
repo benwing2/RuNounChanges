@@ -38,7 +38,7 @@ FIXME:
 10. Reconcile stems.vowel_alt from irregular verbs with vowel_alt from indicators. May require
     moving the irregular-verb handling code in construct_stems() into detect_indicator_spec(). [DONE]
 11. Implement make_table. [DONE]
-12. Vowel alternation should show u-ue (jugar) and i-ie (adquirir) alternations specially.
+12. Vowel alternation should show u-ue (jugar), i-ie (adquirir), e-í (reír) alternations specially. [DONE]
 13. Handle linking of multiword forms as is done in [[Module:es-headword]].
 14. Implement comparison against previous module.
 15. Implement categorization of irregularities for individual tenses.
@@ -47,18 +47,22 @@ FIXME:
 18. (Possibly) display a "rule" description indicating the types of alternations.
 19. Implement replace_reflexive_indicators().
 20. Implement verbs with attached clitics e.g. [[pasarlo]], [[corrérsela]].
+21. When footnote + tú/vos notation, add a space before tú/vos.
 --]=]
 
 local lang = require("Module:languages").getByCode("es")
 local m_string_utilities = require("Module:string utilities")
 local m_links = require("Module:links")
 local m_table = require("Module:table")
-local iut = require("Module:inflection utilities")
-local com = require("Module:es-common")
+local iut = require("Module:User:Benwing2/inflection utilities")
+local com = require("Module:User:Benwing2/es-common")
+
+local force_cat = true -- set to true for debugging
 
 local rfind = mw.ustring.find
 local rmatch = mw.ustring.match
 local rsplit = mw.text.split
+local rsub = com.rsub
 
 local function link_term(term, face)
 	return m_links.full_link({ lang = lang, term = term }, face)
@@ -70,9 +74,9 @@ local AV = com.AV -- accented vowel regex class
 local C = com.C -- consonant regex class
 
 
-local fut_sub_note = "Mostly obsolete form, now mainly used in legal jargon."
-local pres_sub_voseo_note = "Argentine and Uruguayan " .. link_term("voseo", "term") .. " prefers the " ..
-	link_term("tú", "term") .. " form for the present subjunctive."
+local fut_sub_note = "[mostly obsolete form, now mainly used in legal jargon]"
+local pres_sub_voseo_note = "[Argentine and Uruguayan " .. link_term("voseo", "term") .. " prefers the " ..
+	link_term("tú", "term") .. " form for the present subjunctive]"
 
 local vowel_alternants = m_table.listToSet({"ie", "ie-i", "ue", "ue-u", "i", "í", "ú", "+"})
 local vowel_alternant_to_desc = {
@@ -171,8 +175,8 @@ add_slot_personal(verb_slots_basic, "fut_sub", "fut|sub", person_number_list_bas
 add_slot_personal(verb_slots_basic, "imp", "imp", {"2s", "2sv", "3s", "1p", "2p", "3p"})
 add_slot_personal(verb_slots_basic, "neg_imp", "-", {"2s", "3s", "1p", "2p", "3p"})
 
-local function add_combined_slot(basic_slot, tag, pronouns)
-	add_slot_personal(verb_slots_combined, basic_slot .. "_comb", tag_suffix .. "|combined", pronouns)
+local function add_combined_slot(basic_slot, slot_prefix, pronouns)
+	add_slot_personal(verb_slots_combined, basic_slot .. "_comb", slot_prefix .. "|combined", pronouns)
 	table.insert(verb_slot_combined_rows, {basic_slot, pronouns})
 end
 
@@ -199,7 +203,7 @@ for _, slotaccel in ipairs(verb_slots_basic) do
 end
 
 local verb_slots_combined_map = {}
-for _, slotaccel in ipairs(verb_slots_basic) do
+for _, slotaccel in ipairs(verb_slots_combined) do
 	local slot, accel = unpack(slotaccel)
 	verb_slots_combined_map[slot] = accel
 end
@@ -208,7 +212,7 @@ local function match_against_verbs(ref_verb, prefixes)
 	return function(verb)
 		for _, prefix in ipairs(prefixes) do
 			if verb == prefix .. ref_verb then
-				return prefix
+				return prefix, ref_verb
 			end
 		end
 		return nil
@@ -223,10 +227,10 @@ Special cases for verbs:
 auxiliar, gloriar, afiliar, extasiar, acuantiar, desafiliar: -io or -ío. These can be handled by specifying the
 appropriate params in the conjugation.
 
-diluviar, atardecer, empecer: impersonal; all finite non-3s forms are nonexistent or hypothetical. Handle using
+diluviar, atardecer: impersonal; all finite non-3s forms are nonexistent or hypothetical. Handle using
 '.only3s'.
 
-atañer, concernir: all finite non-third-person forms are nonexistent or hypothetical. Handle using '.only3sp'.
+empecer, atañer, concernir: all finite non-third-person forms are nonexistent or hypothetical. Handle using '.only3sp'.
 
 desnacer: Former module claimed an irregular past participle 'desnato'. Verb is not in RAE at all and barely exists;
 unlikely to have irregular past participle.
@@ -310,12 +314,13 @@ in this function. In particular:
    `ie-i`, `ue-u` or `i` are specified).
 3. Numerous modifications are automatically made before an ending beginning with i + vowel. These include:
    a. final -i of stem absorbed: sonreír -> sonrió, sonriera, sonriendo;
-   b. initial i of ending -> y after vowel and word-initially: poseer -> poseyó, poseyera, poseyendo; ir -> yendo;
-   c. initial i of ending absorbed after ñ, ll, y: tañer -> tañó, tañera, tañendo; bullir -> bulló, bullera, bullendo
-   d. in the preterite of irregular verbs (likewise for other tenses derived from the preterite stem, i.e. imperfect
-      and and future subjunctive), initial i absorbed after j (dijeron not #dijieron, likewise for condujeron,
-	  trajeron). This happens only when stem setting `pret_conj` == "irreg"; this must be set explicitly by irregular
-	  verbs. Does not apply everywhere because of cases like [[tejer]] (tejieron not #tejeron).
+   b. in the preterite of irregular verbs (likewise for other tenses derived from the preterite stem, i.e. imperfect
+      and and future subjunctive), initial i absorbed after j and u (dijeron not #dijieron, likewise for condujeron,
+	  trajeron; also fueron not #fuyeron). This happens only when stem setting `pret_conj` == "irreg"; this must be set
+	  explicitly by irregular verbs. Does not apply everywhere because of cases like regular [[tejer]] (tejieron not
+	  #tejeron), regular [[concluir]] (concluyeron not #conclueron).
+   c. initial i of ending -> y after vowel and word-initially: poseer -> poseyó, poseyera, poseyendo; ir -> yendo;
+   d. initial i of ending absorbed after ñ, ll, y: tañer -> tañó, tañera, tañendo; bullir -> bulló, bullera, bullendo
 4. If the ending begins with (h)i, it gets an accent after a/e/i/o to prevent the two merging into a diphthong:
    caer -> caíste, caímos; reír -> reíste, reímos (pres and pret); re + hice -> rehíce. This does not apply after u,
    e.g. concluir -> concluiste, concluimos.
@@ -366,7 +371,8 @@ local irreg_conjugations = {
 	{
 		-- asir, desasir
 		match = "asir",
-		forms = {pres1_and_sub = "asg"}
+		-- use 'asgu' because we're in a front environment; if we use 'asg', we'll get '#asjo'
+		forms = {pres1_and_sub = "asgu"}
 	},
 	{
 		-- abrir, cubrir and compounds
@@ -380,7 +386,8 @@ local irreg_conjugations = {
 	{
 		-- caer, decaer, descaer, recaer
 		match = "caer",
-		forms = {pres1_and_sub = "caig"}
+		-- use 'caigu' because we're in a front environment; if we use 'caig', we'll get '#caijo'
+		forms = {pres1_and_sub = "caigu"}
 	},
 	{
 		match = "^dar",
@@ -395,7 +402,8 @@ local irreg_conjugations = {
 		forms = {
 			-- for this and variant verbs in -decir, we set cons_alt to false because we don't want the
 			-- verb categorized as a c-zc alternating verb, which would happen by default
-			pres1_and_sub = "dig", vowel_alt = "i", cons_alt = false, pret = "dij", pret_conj = "irreg",
+			-- use 'digu' because we're in a front environment; if we use 'dig', we'll get '#dijo'
+			pres1_and_sub = "digu", vowel_alt = "i", cons_alt = false, pret = "dij", pret_conj = "irreg",
 			pp = "dich", fut = "dir",
 			imp_2s = "dí" -- need the accent for the compounds; it will be removed in the simplex
 		}
@@ -404,7 +412,7 @@ local irreg_conjugations = {
 		-- antedecir, interdecir
 		match = match_against_verbs("decir", {"ante", "inter"}),
 		forms = {
-			pres1_and_sub = "dig", vowel_alt = "i", cons_alt = false, pret = "dij", pret_conj = "irreg",
+			pres1_and_sub = "digu", vowel_alt = "i", cons_alt = false, pret = "dij", pret_conj = "irreg",
 			pp = "dich", fut = "dir" -- imp_2s regular
 		}
 	},
@@ -412,7 +420,7 @@ local irreg_conjugations = {
 		-- bendecir, maldecir
 		match = match_against_verbs("decir", {"ben", "mal"}),
 		forms = {
-			pres1_and_sub = "dig", vowel_alt = "i", cons_alt = false, pret = "dij", pret_conj = "irreg",
+			pres1_and_sub = "digu", vowel_alt = "i", cons_alt = false, pret = "dij", pret_conj = "irreg",
 			pp = {"decid", "dit"} -- imp_2s regular, fut regular
 		}
 	},
@@ -420,7 +428,7 @@ local irreg_conjugations = {
 		-- condecir, contradecir, desdecir, predecir, others?
 		match = "decir",
 		forms = {
-			pres1_and_sub = "dig", vowel_alt = "i", cons_alt = false, pret = "dij", pret_conj = "irreg",
+			pres1_and_sub = "digu", vowel_alt = "i", cons_alt = false, pret = "dij", pret_conj = "irreg",
 			pp = "dich", fut = {"decir", "dir"} -- imp_2s regular
 		}
 	},
@@ -465,8 +473,16 @@ local irreg_conjugations = {
 		}
 	},
 	{
+		-- freír, refreír
+		match = "freír",
+		forms = {vowel_alt = "í", pp = {"freíd", "frit"}}
+	},
+	{
 		match = "garantir",
-		forms = {pres_stressed = {{form = "garant", footnotes = {"[only used in Argentina and Uruguay]"}}},
+		forms = {
+			pres_stressed = {{form = "garant", footnotes = {"[only used in Argentina and Uruguay]"}}},
+			pres1_and_sub = {{form = "garant", footnotes = {"[only used in Argentina and Uruguay]"}}},
+		}
 	},
 	{
 		match = "^haber",
@@ -482,25 +498,35 @@ local irreg_conjugations = {
 			pret_conj = "irreg",
 			imp_2s = {"habe", "he"},
 			imp_2sv = {"habe", "he"},
+			fut = "habr",
 		}
 	},
 	{
 		match = "satisfacer",
 		forms = {
-			-- see below for cons_alt setting
-			pres1_and_sub = "satisfag", cons_alt = false, pret = "satisfic", pret_conj = "irreg",
+			-- see below for cons_alt setting and pres1_and_sub setting
+			pres1_and_sub = "satisfagu", cons_alt = false, pret = "satisfic", pret_conj = "irreg",
 			pp = "satisfech", fut = "satisfar", imp_2s = {"satisface", "satisfaz"}
 		}
 	},
 	{
+		match = match_against_verbs("hacer", {"contra", "re"}),
+		-- contrahacer/rehacer require an extra accent in the preterite (rehíce, rehízo).
+		forms = {
+			-- see below for cons_alt setting and pres1_and_sub setting
+			pres1_and_sub = "hagu", cons_alt = false,
+			pret = "hic", pret_1s = "híce", pret_3s = "hízo", pret_conj = "irreg",
+			pp = "hech", fut = "har", imp_2s = "haz"
+		}
+	},
+	{
 		-- hacer, deshacer, contrahacer, rehacer, facer, desfacer, jacer
-		-- contrahacer/rehacer require an extra accent in the preterite (rehíce, rehízo), but this is handled
-		-- automatically by combine_stem_ending().
-		match = function(verb) return rmatch(verb, "^(.*[hjf])acer$") end,
+		match = function(verb) return rmatch(verb, "^(.*[hjf])(acer)$") end,
 		forms = {
 			-- for these verbs, we set cons_alt to false because we don't want the verb categorized as a
 			-- c-zc alternating verb, which would happen by default
-			pres1_and_sub = "ag", cons_alt = false, pret = "ic", pret_conj = "irreg", pp = "ech",
+			-- use 'agu' because we're in a front environment; if we use 'ag', we'll get '#hajo'
+			pres1_and_sub = "agu", cons_alt = false, pret = "ic", pret_conj = "irreg", pp = "ech",
 			fut = "ar", imp_2s = "az"
 		}
 	},
@@ -523,6 +549,8 @@ local irreg_conjugations = {
 			full_impf = "ib",
 			impf_1p = "íbamos",
 			pret = "fu",
+			pret_conj = "irreg", -- this signals that fu + -ieron -> fueron not fuyeron
+			pret_1s = "fui",
 			pret_3s = "fue",
 			imp_2s = "ve",
 			imp_2sv = "andá",
@@ -544,7 +572,8 @@ local irreg_conjugations = {
 	},
 	{
 		match = "oír",
-		forms = {pres1_and_sub = "oig"}
+		-- use 'oigu' because we're in a front environment; if we use 'oig', we'll get '#oijo'
+		forms = {pres1_and_sub = "oigu"}
 	},
 	{
 		match = "^oler",
@@ -577,7 +606,8 @@ local irreg_conjugations = {
 		-- poner, componer, deponer, imponer, oponer, suponer, many others
 		match = "poner",
 		forms = {
-			pres1_and_sub = "pong", pret = "pus", pret_conj = "irreg", fut = "pondr",
+			-- use 'pongu' because we're in a front environment; if we use 'pong', we'll get '#ponjo'
+			pres1_and_sub = "pongu", pret = "pus", pret_conj = "irreg", fut = "pondr",
 			imp_2s = "pón" -- need the accent for the compounds; it will be removed in the simplex
 		}
 	},
@@ -597,12 +627,14 @@ local irreg_conjugations = {
 	},
 	{
 		match = "raer",
-		forms = {pres1_and_sub = {"raig", "ray"}}
+		-- use 'raigu' because we're in a front environment; if we use 'raig', we'll get '#raijo'
+		forms = {pres1_and_sub = {"raigu", "ray"}}
 	},
 	{
 		-- roer, corroer
 		match = "roer",
-		forms = {pres1_and_sub = {"ro", "roig", "roy"}}
+		-- use 'roigu' because we're in a front environment; if we use 'roig', we'll get '#roijo'
+		forms = {pres1_and_sub = {"ro", "roigu", "roy"}}
 	},
 	{
 		-- romper, interromper?
@@ -623,10 +655,12 @@ local irreg_conjugations = {
 	{
 		match = "salir",
 		forms = {
-			pres1_and_sub = "salg", fut = "saldr", imp_2s = "sal",
+			-- use 'salgu' because we're in a front environment; if we use 'salg', we'll get '#saljo'
+			pres1_and_sub = "salgu", fut = "saldr", imp_2s = "sal",
 			-- These don't exist per the RAE.
 			imp_2s_comb_lo = {}, imp_2s_comb_los = {}, imp_2s_comb_la = {}, imp_2s_comb_las = {},
 			imp_2s_comb_le = {}, imp_2s_comb_les = {},
+		},
 	},
 	{
 		match = "scribir", -- escribir, describir, proscribir, etc.
@@ -646,6 +680,7 @@ local irreg_conjugations = {
 			full_impf = "er",
 			impf_1p = "éramos",
 			pret = "fu",
+			pret_conj = "irreg",
 			pret_3s = "fue",
 			fut = "ser",
 			imp_2s = "sé*", -- * signals that the monosyllabic accent must remain
@@ -664,23 +699,27 @@ local irreg_conjugations = {
 		-- tener, abstener, contener, detener, obtener, sostener, and many others
 		match = "tener",
 		forms = {
-			pres1_and_sub = "teng", vowel_alt = "ie", pret = "tuv", pret_conj = "irreg", fut = "tendr",
+			-- use 'tengu' because we're in a front environment; if we use 'teng', we'll get '#tenjo'
+			pres1_and_sub = "tengu", vowel_alt = "ie", pret = "tuv", pret_conj = "irreg", fut = "tendr",
 			imp_2s = "tén" -- need the accent for the compounds; it will be removed in the simplex
 		}
 	},
 	{
 		-- traer, atraer, detraer, distraer, extraer, sustraer, and many others
 		match = "traer",
-		forms = {pres1_and_sub = "traig", pret = "traj", pret_conj = "irreg"}
+		-- use 'traigu' because we're in a front environment; if we use 'traig', we'll get '#traijo'
+		forms = {pres1_and_sub = "traigu", pret = "traj", pret_conj = "irreg"}
 	},
 	{
 		-- valer, equivaler, prevaler
 		match = "valer",
-		forms = {pres1_and_sub = "valg", fut = "valdr"}
+		-- use 'valgu' because we're in a front environment; if we use 'valg', we'll get '#valjo'
+		forms = {pres1_and_sub = "valgu", fut = "valdr"}
 	},
 	{
 		match = "venir",
 		forms = {
+			-- use 'vengu' because we're in a front environment; if we use 'veng', we'll get '#venjo'
 			pres1_and_sub = "veng", vowel_alt = "ie-i", pret = "vin", pret_conj = "irreg",
 			fut = "vendr", imp_2s = "vén" -- need the accent for the compounds; it will be removed in the simplex
 		}
@@ -697,17 +736,17 @@ local irreg_conjugations = {
 			pres_2p = "véis",
 			pres_3p = "vén",
 			pres1_and_sub = "ve",
-			impf = "ve", pp = "vist"
+			impf = "ve", pp = "vist",
 			imp_2s = "vé" -- need the accent for the compounds; it will be removed in the simplex
 		}
 	},
 	{
 		-- yacer, adyacer, subyacer
 		match = "yacer",
-		forms = {pres1_and_sub = {"yazc", "yazg", "yag"}, imp_2s = {"yace", "yaz"}}
+		-- use 'yazqu/yazgu/yagu' because we're in a front environment; see 'decir' above
+		forms = {pres1_and_sub = {"yazqu", "yazgu", "yagu"}, imp_2s = {"yace", "yaz"}}
 	},
 }
-
 
 local reflexive_masc_forms = {
 	["su"] = {"mi", "tu", "su", "nuestro", "vuestro", "su"},
@@ -732,8 +771,8 @@ local reflexive_forms = {
 }
 
 
-local function skip_slot(base, slot)
-	if (base.basic_overrides[slot] or base.combined_overrides[slot] or
+local function skip_slot(base, slot, allow_overrides)
+	if not allow_overrides and (base.basic_overrides[slot] or base.combined_overrides[slot] or
 		base.refl and base.basic_reflexive_only_overrides[slot]) then
 		-- Skip any slots for which there are overrides.
 		return true
@@ -748,13 +787,13 @@ local function skip_slot(base, slot)
 		return true
 	end
 
-	if base.only3s and (not slot:find("3s") or slot:find("^imp")) then
-		-- atardecer
+	if base.only3s and (not slot:find("3s") or slot:find("^imp_") or slot:find("^neg_imp_")) then
+		-- diluviar, atardecer
 		return true
 	end
 
-	if base.only3sp and (not slot:find("3[sp]") or slot:find("^imp")) then
-		-- atañer
+	if base.only3sp and (not slot:find("3[sp]") or slot:find("^imp_") or slot:find("^neg_imp_")) then
+		-- atañer, concernir
 		return true
 	end
 
@@ -804,8 +843,14 @@ local function replace_reflexive_indicators(slot, form)
 end
 
 
+-- Add the `stem` to the `ending` for the given `slot` and apply any phonetic modifications.
+-- `is_combining_ending` is true if `ending` is actually the ending (this function is also
+-- called to combine prefix + stem). WARNING: This function is written very carefully; changes
+-- to it can easily have unintended consequences.
 local function combine_stem_ending(base, slot, stem, ending, is_combining_ending)
-	if base.stems.raising_conj and (rfind(ending, "^i" .. V) or slot == "pres_sub_1p" or slot == "pres_sub_2p") then
+	if base.stems.raising_conj and (rfind(ending, "^i" .. V) or
+		-- need is_combining_ending here to avoid prefix-stem interactions (refreír)
+		is_combining_ending and (slot == "pres_sub_1p" or slot == "pres_sub_2p")) then
 		-- need to raise e -> i, o -> u: dormir -> durmió, durmiera, durmiendo, durmamos
 		stem = rsub(stem, "([eo])(" .. C .. "*)$", function(vowel, rest) return raise_vowel[vowel] .. rest end)
 		-- also with stem ending in -gu or -qu (e.g. erguir -> irguió, irguiera, irguiendo, irgamos)
@@ -818,35 +863,39 @@ local function combine_stem_ending(base, slot, stem, ending, is_combining_ending
 		-- by the preceding one (stem sonre- raised to sonri-, then final i absorbed)
 		stem = stem:gsub("i$", "")
 
-		-- (2) initial i -> y after vowel and word-initially: poseer -> poseyó, poseyera, poseyendo;
-		-- concluir -> concluyó, concluyera, concluyendo; ir -> yendo
-		if stem == "" or rfind(stem, V .. "$") then
+		-- (2) In the preterite of irregular verbs (likewise for other tenses derived from the preterite stem, i.e.
+		--     imperfect and future subjunctive), initial i absorbed after j (dijeron not #dijieron, likewise for
+		--     condujeron, trajeron) and u (fueron not #fuyeron). Does not apply in regular verb tejer (tejieron not
+		--     #tejeron) and concluir (concluyeron not #conclueron).
+		if base.stems.pret_conj == "irreg" and rfind(stem, "[ju]$") then
+			ending = ending:gsub("^i", "")
+		end
+
+		-- (3) initial i -> y after vowel and word-initially: poseer -> poseyó, poseyera, poseyendo;
+		-- concluir -> concluyó, concluyera, concluyendo; ir -> yendo; but not conseguir/delinquir
+		if stem == "" or (rfind(stem, V .. "$") and not rfind(stem, "[gq]u$")) then
 			ending = ending:gsub("^i", "y")
 		end
 
-		-- (3) initial i absorbed after ñ, ll, y: tañer -> tañó, tañera, tañendo; bullir -> bulló, bullera, bullendo
+		-- (4) initial i absorbed after ñ, ll, y: tañer -> tañó, tañera, tañendo; bullir -> bulló, bullera, bullendo
 		if rfind(stem, "[ñy]$") or rfind(stem, "ll$") then
 			ending = ending:gsub("^i", "")
 		end
-
-		-- (4) In the preterite of irregular verbs (likewise for other tenses derived from the preterite stem, i.e.
-		--     imperfect and future subjunctive), initial i absorbed after j (dijeron not #dijieron, likewise for
-		--     condujeron, trajeron). Does not apply in tejer (tejieron not #tejeron).
-		if base.stems.pret_conj == "irreg" and rfind(stem, "j$") then
-			ending = ending:gsub("^i", "")
-		end
 	end
 
-	-- If ending begins with (h)i, it must get an accent after a/e/i/o to prevent the two merging into a diphthong:
-	-- caer -> caíste, caímos; reír -> reíste, reímos (pres and pret); re + hice -> rehíce. This does not apply
-	-- after u, e.g. concluir -> concluiste, concluimos.
-	if ending:find("^h?i") and stem:find("[aeio]$") then
-		ending = ending:gsub("^(h?)i", "%1í")
+	-- If ending begins with i, it must get an accent after a/e/i/o to prevent the two merging into a diphthong:
+	-- caer -> caíste, caímos; reír -> reíste, reímos (pres and pret). This does not apply after u, e.g.
+	-- concluir -> concluiste, concluimos.
+	if ending:find("^i") and stem:find("[aeio]$") then
+		ending = ending:gsub("^i", "í")
 	end
 
-	-- If -uir (i.e. -ir with stem ending in -u, e.g. concluir), a y must be added before endings beginning with a/e/o.
-	if base.conj == "ir" and ending:find("^[aeo]") then
-		if rfind(stem, "[uú]$") then -- also handle rehuir -> rehúyo; indicator 'ú' will be given.
+	-- If -oír/-uir (i.e. -ir with stem ending in -o/u, e.g. oír, concluir), a y must be added before endings
+	-- beginning with a/e/o. Check for base.stems.pret_conj == "irreg" to exclude stem fu- of [[ir]].
+	if base.conj == "ir" and rfind(ending, "^[aeoáéó]") and base.stems.pret_conj ~= "irreg" then
+		if rfind(stem, "[oú]$") then -- oír -> oye, rehuir -> rehúyo/rehúye (with indicator 'ú')
+			stem = stem .. "y"
+		elseif rfind(stem, "[^gq]u$") then -- concluir, but not conseguir or delinquir
 			stem = stem .. "y"
 		elseif stem:find("ü$") then -- argüir -> arguyendo
 			stem = stem:gsub("ü$", "uy")
@@ -862,7 +911,9 @@ local function combine_stem_ending(base, slot, stem, ending, is_combining_ending
 		if base.frontback == "front" and not is_front then
 			-- parecer -> parezco, conducir -> conduzco; use zqu to avoid triggering the following gsub();
 			-- the third line will replace zqu -> zc
-			stem = rsub(stem, "(" .. V .. ")c$", "%1zqu")
+			if slot ~= "pret_3s" then -- exclude hice -> hizo (not #hizco)
+				stem = rsub(stem, "(" .. V .. ")c$", "%1zqu")
+			end
 			stem = stem:gsub("c$", "z") -- ejercer -> ejerzo, uncir -> unzo
 			stem = stem:gsub("qu$", "c") -- delinquir -> delinco, parecer -> parezqu- -> parezco
 			stem = stem:gsub("g$", "j") -- coger -> cojo, afligir -> aflijo
@@ -870,8 +921,8 @@ local function combine_stem_ending(base, slot, stem, ending, is_combining_ending
 			stem = stem:gsub("gü$", "gu") -- may not occur; argüir -> arguyo handled above
 		elseif base.frontback == "back" and is_front then
 			stem = stem:gsub("gu$", "gü") -- averiguar -> averigüé
-			stem = stem:gsub("g", "gu") -- cargar -> cargué
-			stem = stem:gsub("c", "qu") -- marcar -> marqué
+			stem = stem:gsub("g$", "gu") -- cargar -> cargué
+			stem = stem:gsub("c$", "qu") -- marcar -> marqué
 			stem = rsub(stem, "[çz]$", "c") -- aderezar/adereçar -> aderecé
 		end
 	end
@@ -880,8 +931,8 @@ local function combine_stem_ending(base, slot, stem, ending, is_combining_ending
 end
 
 
-local function add(base, slot, stems, endings, is_combining_ending)
-	if skip_slot(base, slot) then
+local function add(base, slot, stems, endings, is_combining_ending, allow_overrides)
+	if skip_slot(base, slot, allow_overrides) then
 		return
 	end
 	local function do_combine_stem_ending(stem, ending)
@@ -891,8 +942,8 @@ local function add(base, slot, stems, endings, is_combining_ending)
 end
 
 
-local function add3(base, slot, prefix, stems, endings)
-	if skip_slot(base, slot) then
+local function add3(base, slot, prefix, stems, endings, is_combining_ending, allow_overrides)
+	if skip_slot(base, slot, allow_overrides) then
 		return
 	end
 	local first = true
@@ -906,6 +957,20 @@ local function add3(base, slot, prefix, stems, endings)
 	end
 	iut.add_multiple_forms(base.forms, slot, {prefix, stems, endings}, do_combine_stem_ending, nil, nil,
 		base.all_footnotes)
+end
+
+
+local function insert_form(base, slot, form)
+	if not skip_slot(base, slot) then
+		iut.insert_form(base.forms, slot, form)
+	end
+end
+
+
+local function insert_forms(base, slot, forms)
+	if not skip_slot(base, slot) then
+		iut.insert_forms(base.forms, slot, forms)
+	end
 end
 
 
@@ -938,13 +1003,13 @@ local function add_present_indic(base)
 		error("Internal error: Unrecognized conjugation " .. base.conj)
 	end
 
-	addit("1s", base.stem.pres1, "o")
-	addit("2s", base.stem.pres_stressed, s2)
-	addit("2sv", base.stem.pres_unstressed, s2v)
-	addit("3s", base.stem.pres_stressed, s3)
-	addit("1p", base.stem.pres_unstressed, p1)
-	addit("2p", base.stem.pres_unstressed, p2)
-	addit("3p", base.stem.pres_stressed, p3)
+	addit("1s", base.stems.pres1, "o")
+	addit("2s", base.stems.pres_stressed, s2)
+	addit("2sv", base.stems.pres_unstressed, s2v)
+	addit("3s", base.stems.pres_stressed, s3)
+	addit("1p", base.stems.pres_unstressed, p1)
+	addit("2p", base.stems.pres_unstressed, p2)
+	addit("3p", base.stems.pres_stressed, p3)
 end
 
 
@@ -954,21 +1019,21 @@ local function add_present_subj(base)
 	end
 	local s1, s2, s2v, s3, p1, p2, p3, voseo_stem
 	if base.conj == "ar" then
-		voseo_stem = base.stems.pres_sub_stressed
+		voseo_stem = base.stems.pres_sub_unstressed
 		s1, s2, s2v, s3, p1, p2, p3 = "e", "es", "és", "e", "emos", "éis", "en"
 	else
 		-- voseo and tu forms are identical
-		voseo_stem = base.stems.pres_sub_unstressed
+		voseo_stem = base.stems.pres_sub_stressed
 		s1, s2, s2v, s3, p1, p2, p3 = "a", "as", "as", "a", "amos", "áis", "an"
 	end
 
-	addit("pres_1s", base.stems.pres_sub_stressed, s1)
-	addit("pres_2s", base.stems.pres_sub_stressed, s2)
-	addit("pres_2sv", voseo_stem, s2v)
-	addit("pres_3s", base.stems.pres_sub_stressed, s3)
-	addit("pres_1p", base.stems.pres_sub_unstressed, p1)
-	addit("pres_2p", base.stems.pres_sub_unstressed, p2)
-	addit("pres_3p", base.stems.pres_sub_stressed, p3)
+	addit("1s", base.stems.pres_sub_stressed, s1)
+	addit("2s", base.stems.pres_sub_stressed, s2)
+	addit("2sv", voseo_stem, s2v)
+	addit("3s", base.stems.pres_sub_stressed, s3)
+	addit("1p", base.stems.pres_sub_unstressed, p1)
+	addit("2p", base.stems.pres_sub_unstressed, p2)
+	addit("3p", base.stems.pres_sub_stressed, p3)
 end
 
 
@@ -1035,7 +1100,8 @@ local function add_non_present(base)
 	local function addit(slot, stems, ending)
 		add3(base, slot, base.prefix, stems, ending)
 	end
-	addit("gerund", stems.pres_unstressed, conj == "ar" and "ando" or "iendo")
+	insert_form(base, "infinitive", {form = base.verb})
+	addit("gerund", stems.pres_unstressed, base.conj == "ar" and "ando" or "iendo")
 	addit("pp_ms", stems.pp, "o")
 	addit("pp_fs", stems.pp, "a")
 	addit("pp_mp", stems.pp, "os")
@@ -1058,7 +1124,7 @@ local function remove_monosyllabic_accents(base)
 			for _, form in ipairs(base.forms[slot]) do
 				if form.form:find("%*") then -- * means leave alone any accented vowel
 					form.form = form.form:gsub("%*", "")
-				elseif rfind(form.form, SV) and not rfind(form.form, V .. C .. V) then
+				elseif rfind(form.form, AV) and not rfind(form.form, V .. C .. V) then
 					-- Has an accented vowel and no VCV sequence; may be monosyllabic, in which case we need
 					-- to remove the accent. Check # of syllables and remove accent if only 1. Note that
 					-- the checks for accented vowel and VCV sequence are not strictly needed, but are
@@ -1079,6 +1145,10 @@ end
 -- Otherwise, directly modify `base_slot`. The latter case is used for handling reflexive verbs, and in that case
 -- `pronouns` should contain only a single pronoun.
 local function add_forms_with_clitic(base, base_slot, pronouns, do_combined_slots)
+	if not base.forms[base_slot] then
+		-- This can happen, e.g. in only3s/only3sp verbs.
+		return
+	end
 	for _, form in ipairs(base.forms[base_slot]) do
 		-- Figure out that correct accenting of the verb when a clitic pronoun is attached to it. We may need to
 		-- add or remove an accent mark:
@@ -1116,7 +1186,7 @@ local function add_forms_with_clitic(base, base_slot, pronouns, do_combined_slot
 				cliticized_verb = reaccented_verb .. pronoun
 			end
 			if do_combined_slots then
-				iut.insert_form(base.forms, base_slot .. "_comb_" .. pronoun,
+				insert_form(base, base_slot .. "_comb_" .. pronoun,
 					{form = cliticized_verb, footnotes = form.footnotes})
 			else
 				form.form = cliticized_verb
@@ -1139,23 +1209,11 @@ local function add_combined_forms(base)
 end
 
 
--- Generate the combinations of verb form (infinitive, gerund or various imperatives) + clitic pronoun for
--- reflexive verbs.
-local function add_combined_forms(base)
-	for _, base_slot_and_pronouns in ipairs(verb_slot_combined_rows) do
-		local base_slot, pronouns = unpack(base_slot_and_pronouns)
-		if base_slot == "infinitive" or base_slot == "gerund" then
-			add_forms_with_clitic(base, base_slot, pronouns, "do combined slots")
-		end
-	end
-end
-
-
 local function process_slot_overrides(base, do_basic, reflexive_only)
 	local overrides = reflexive_only and base.basic_reflexive_only_overrides or
 		do_basic and base.basic_overrides or base.combined_overrides
-	for slot, forms in ipairs(overrides) do
-		add(base, slot, base.prefix, forms, false)
+	for slot, forms in pairs(overrides) do
+		add(base, slot, base.prefix, forms, false, "allow overrides")
 	end
 end
 
@@ -1172,9 +1230,9 @@ local function add_reflexive_pronouns(base)
 				add_forms_with_clitic(base, slot, {"se"})
 			elseif slot:find("^imp_") then
 				local persnum = slot:match("^imp_(.*)$")
-				add_forms_with_clitic(base, slot, person_number_to_reflexive_pronoun[persnum])
-			elseif slot:find("^pp_") then
-				-- do nothing with past participles
+				add_forms_with_clitic(base, slot, {person_number_to_reflexive_pronoun[persnum]})
+			elseif slot:find("^pp_") or slot == "infinitive_linked" then
+				-- do nothing with past participles or infinitive linked (handled at the end)
 			elseif slot:find("^neg_imp_") then
 				error("Internal error: Should not have forms set for negative imperative at this stage")
 			else
@@ -1188,27 +1246,28 @@ local function add_reflexive_pronouns(base)
 end
 
 
-local function handle_derived_slots(base)
+local function copy_subjunctives_to_imperatives(base)
+	-- Copy subjunctives to imperatives, unless there's an override for the given slot (as with the imp_1p of [[ir]]).
+	for _, persnum in ipairs({"3s", "1p", "3p"}) do
+		local from = "pres_sub_" .. persnum
+		local to = "imp_" .. persnum
+		insert_forms(base, to, iut.map_forms(base.forms[from], function(form) return form end))
+	end
+end
+
+
+local function handle_infinitive_linked(base)
 	-- Compute linked versions of potential lemma slots, for use in {{es-verb}}.
 	-- We substitute the original lemma (before removing links) for forms that
 	-- are the same as the lemma, if the original lemma has links.
 	for _, slot in ipairs({"infinitive"}) do
-		iut.insert_forms(base.forms, slot .. "_linked", iut.map_forms(base.forms[slot], function(form)
+		insert_forms(base, slot .. "_linked", iut.map_forms(base.forms[slot], function(form)
 			if form == base.lemma and rfind(base.linked_lemma, "%[%[") then
 				return base.linked_lemma
 			else
 				return form
 			end
 		end))
-	end
-
-	-- Copy subjunctives to imperatives, unless there's an override for the given slot (as with the imp_1p of [[ir]]).
-	for _, persnum in ipairs({"3s", "1p", "3p"}) do
-		local from = "pres_sub_" .. persnum
-		local to = "imp_" .. persnum
-		if not base.overrides[from] then
-			iut.insert_forms(base.forms, to, iut.map_forms(base.forms[from], function(form) return form end))
-		end
 	end
 end
 
@@ -1217,8 +1276,8 @@ local function generate_negative_imperatives(base)
 	-- Copy subjunctives to negative imperatives, preceded by "no".
 	for _, persnum in ipairs({"2s", "3s", "1p", "2p", "3p"}) do
 		local from = "pres_sub_" .. persnum
-		local to = "imp_" .. persnum
-		iut.insert_forms(base.forms, to, iut.map_forms(base.forms[from], function(form)
+		local to = "neg_imp_" .. persnum
+		insert_forms(base, to, iut.map_forms(base.forms[from], function(form)
 			if form:find("%[%[") then
 				-- already linked, e.g. when reflexive
 				return "[[no]] " .. form
@@ -1245,7 +1304,7 @@ local function copy_imperatives_to_reflexive_combined_forms(base)
 		local from, to = unpack(entry)
 		-- Need to call map_forms() to clone the form objects because insert_forms() doesn't clone them, and may
 		-- side-effect them when inserting footnotes.
-		iut.insert_forms(base.forms, to, iut.map_forms(base.forms[from], function(form) return form end))
+		insert_forms(base, to, iut.map_forms(base.forms[from], function(form) return form end))
 	end
 end
 
@@ -1255,11 +1314,11 @@ local function conjugate_verb(base)
 	add_present_subj(base)
 	add_imper(base)
 	add_non_present(base)
-	handle_derived_slots(base)
 	-- This should happen before add_combined_forms() so overrides of basic forms end up part of the combined forms.
-	-- This should happen after handle_derived_slots() in case we need to override a derived slot (as with the
-	-- imp_1p of [[ir]]).
 	process_slot_overrides(base, "do basic") -- do basic slot overrides
+	-- This should happen after process_slot_overrides() in case a derived slot is based on an override (as with the
+	-- imp_3s of [[dar]], [[estar]]).
+	copy_subjunctives_to_imperatives(base)
 	-- This should happen after process_slot_overrides() because overrides may have accents in them that need to be
 	-- removed. (This happens e.g. for most present indicative forms of [[ver]], which have accents in them for the
 	-- prefixed derived verbs, but the accents shouldn't be present in the base verb.)
@@ -1279,6 +1338,7 @@ local function conjugate_verb(base)
 		copy_imperatives_to_reflexive_combined_forms(base)
 	end
 	process_slot_overrides(base, false) -- do combined slot overrides
+	handle_infinitive_linked(base)
 end
 
 
@@ -1334,6 +1394,7 @@ local function parse_indicator_spec(angle_bracket_spec)
 			end
 			if base[first_element] then
 				parse_err("Spec '" .. first_element .. "' specified twice")
+			end
 			base[first_element] = true
 		else
 			parse_err("Unrecognized spec '" .. comma_separated_groups[1][1] .. "'")
@@ -1365,7 +1426,7 @@ local function normalize_all_lemmas(alternant_multiword_spec, from_headword)
 		base.pre_pref, base.post_pref = "", ""
 		local refl_verb, clitic = rmatch(lemma, "^(.-)(l[aeo]s?)$")
 		if not refl_verb then
-			refl_verb, clitic = refl_clitic_verb, nil
+			refl_verb, clitic = lemma, nil
 		end
 		local verb, refl = rmatch(refl_verb, "^(.-)(se)$")
 		if not verb then
@@ -1376,11 +1437,6 @@ local function normalize_all_lemmas(alternant_multiword_spec, from_headword)
 		base.clitic = clitic
 		if base.refl then
 			alternant_multiword_spec.refl = true
-		end
-		-- Remove <pron> indicators and such.
-		local reconstructed_lemma = remove_reflexive_indicators(base.pre_pref .. base.base_verb)
-		if reconstructed_lemma ~= base.lemma then
-			error("Internal error: Raw lemma '" .. base.lemma .. "' differs from reconstructed lemma '" .. reconstructed_lemma .. "'")
 		end
 		base.from_headword = from_headword
 	end)
@@ -1415,7 +1471,7 @@ local function construct_stems(base)
 	stems.impf = stems.impf or base.inf_stem
 	stems.pret = stems.pret or base.inf_stem
 	stems.pret_conj = stems.pret_conj or base.conj
-	stems.fut = stems.fut or base.inf_stem
+	stems.fut = stems.fut or base.inf_stem .. base.conj
 	stems.cond = stems.cond or stems.fut
 	stems.pres_sub_stressed = stems.pres_sub_stressed or stems.pres1
 	stems.pres_sub_unstressed = stems.pres_sub_unstressed or stems.pres1_and_sub or stems.pres_unstressed
@@ -1432,13 +1488,6 @@ end
 local function detect_indicator_spec(base)
 	base.forms = {}
 	base.stems = {}
-	local inf_stem, suffix = rmatch(base.infinitive, "^(.*)([aeií]r)$")
-	if not inf_stem then
-		error("Unrecognized infinitive: " .. base.infinitive)
-	end
-	base.inf_stem = inf_stem
-	base.conj = suffix == "ír" and "ir" or suffix
-	base.frontback = suffix == "ar" and "back" or "front"
 
 	if base.only3s and base.only3sp then
 		error("'only3s' and 'only3sp' cannot both be specified")
@@ -1447,20 +1496,19 @@ local function detect_indicator_spec(base)
 	base.basic_overrides = {}
 	base.basic_reflexive_only_overrides = {}
 	base.combined_overrides = {}
-	base.prefix = ""
 	for _, irreg_conj in ipairs(irreg_conjugations) do
 		if type(irreg_conj.match) == "function" then
-			base.prefix = irreg_conj.match(base.infinitive)
-		elseif irreg_conj.match:find("^%^") and rsub(irreg_conj.match, "^%^", "") == base.infinitive then
+			base.prefix, base.non_prefixed_verb = irreg_conj.match(base.verb)
+		elseif irreg_conj.match:find("^%^") and rsub(irreg_conj.match, "^%^", "") == base.verb then
 			-- begins with ^, for exact match, and matches
-			base.prefix = ""
+			base.prefix, base.non_prefixed_verb = "", base.verb
 		else
-			base.prefix = rmatch(base.infinitive, "^(.*)" .. irreg_conj.match .. "$")
+			base.prefix, base.non_prefixed_verb = rmatch(base.verb, "^(.*)(" .. irreg_conj.match .. ")$")
 		end
 		if base.prefix then
 			-- we found an irregular verb
 			base.irreg_verb = true
-			for stem, forms in pairs(base.forms) do
+			for stem, forms in pairs(irreg_conj.forms) do
 				if stem:find("^refl_") then
 					stem = stem:gsub("^refl_", "")
 					if not verb_slots_basic_map[stem] then
@@ -1480,10 +1528,19 @@ local function detect_indicator_spec(base)
 			break
 		end
 	end
+	base.prefix = base.prefix or ""
+	base.non_prefixed_verb = base.non_prefixed_verb or base.verb
+	local inf_stem, suffix = rmatch(base.non_prefixed_verb, "^(.*)([aeií]r)$")
+	if not inf_stem then
+		error("Unrecognized infinitive: " .. base.verb)
+	end
+	base.inf_stem = inf_stem
+	base.conj = suffix == "ír" and "ir" or suffix
+	base.frontback = suffix == "ar" and "back" or "front"
 
 	if base.stems.vowel_alt then -- irregular verb with specified vowel alternation
 		if base.vowel_alt then
-			error(base.lemma .. " is a recognized irregular verb, and should not have vowel alternations specified with it")
+			error(base.verb .. " is a recognized irregular verb, and should not have vowel alternations specified with it")
 		end
 		base.vowel_alt = {{alt = base.stems.vowel_alt}}
 	end
@@ -1492,25 +1549,28 @@ local function detect_indicator_spec(base)
 	if base.vowel_alt then
 		for _, alt in ipairs(base.vowel_alt) do
 			if base.conj == "ir" then
-				local raising = alt.alt == "ie-i" or alt.alt == "ue-u" or alt.alt == "i"
+				local raising = alt.alt == "ie-i" or alt.alt == "ue-u" or alt.alt == "i" or alt.alt == "í" or alt.alt == "ú"
 				if base.stems.raising_conj == nil then
 					base.stems.raising_conj = raising
 				elseif base.stems.raising_conj ~= raising then
 					error("Can't currently support a mixture of raising (e.g. 'ie-i') and non-raising (e.g. 'ie') vowel alternations in -ir verbs")
 				end
 			end
-			if alt.alt == "ie-i" or alt.alt == "ue-u" then
-				if base.conj ~= "ir" then
-					error("Vowel alternation '" .. alt.alt .. "' only supported with -ir verbs")
-				end
-				alt.alt = alt.alt == "ie-i" and "ie" or "ue"
-			end
 			if alt.alt == "+" then
 				alt.form = base.inf_stem
 			else
-				local ret = com.apply_vowel_alternation(base.inf_stem, alt.alt)
+				local normalized_alt = alt.alt
+				if alt.alt == "ie-i" or alt.alt == "ue-u" then
+					if base.conj ~= "ir" then
+						error("Vowel alternation '" .. alt.alt .. "' only supported with -ir verbs")
+					end
+					-- ie-i is like i except for the vowel raising before i+V, similarly for ue-u,
+					-- so convert appropriately.
+					normalized_alt = alt.alt == "ie-i" and "ie" or "ue"
+				end
+				local ret = com.apply_vowel_alternation(base.inf_stem, normalized_alt)
 				if ret.err then
-					error("To use '" .. alt.form .. "', present stem '" .. base.inf_stem .. "' " .. ret.err)
+					error("To use '" .. alt.alt .. "', present stem '" .. base.inf_stem .. "' " .. ret.err)
 				end
 				alt.form = ret.ret
 			end
@@ -1548,12 +1608,13 @@ local function add_categories_and_annotation(alternant_multiword_spec, base, mul
 			if forms then
 				for _, form in ipairs(forms) do
 					if not form.form:find("%[%[") then
-						local title = mw.title.new(form.form)
-						if title and not title.exists then
-							insert_cat("verbs with red links in their inflection tables")
-							must_break = true
-							break
-						end
+						--temporarily disable while testing
+						--local title = mw.title.new(form.form)
+						--if title and not title.exists then
+						--	insert_cat("verbs with red links in their inflection tables")
+						--	must_break = true
+						--	break
+						--end
 					end
 				end
 			end
@@ -1564,7 +1625,6 @@ local function add_categories_and_annotation(alternant_multiword_spec, base, mul
 	end
 
 	insert_cat("verbs ending in -" .. base.conj)
-	insert_ann("conj", "-" .. base.conj)
 
 	if base.irreg_verb then
 		insert_ann("irreg", "irregular")
@@ -1584,13 +1644,22 @@ local function add_categories_and_annotation(alternant_multiword_spec, base, mul
 	if not base.vowel_alt then
 		insert_ann("vowel_alt", "non-alternating")
 	else
+		local inf_stem = base.inf_stem:gsub("[gq]u$", "x")
 		for _, alt in ipairs(base.vowel_alt) do
 			if alt.alt == "+" then
 				insert_ann("vowel_alt", "non-alternating")
 			else
-				local desc = vowel_alternant_to_desc[alt.alt] .. " alternation"
+				local desc
+				if alt.alt == "ue" and rfind(inf_stem, "u" .. C .. "*$") then
+					desc = "u-ue alternation" -- jugar
+				elseif alt.alt == "ie" and rfind(inf_stem, "i" .. C .. "*$") then
+					desc = "i-ie alternation" -- adquirir
+				elseif alt.alt == "í" and rfind(inf_stem, "e" .. C .. "*$") then
+					desc = "e-í alternation" -- reír, freír, etc.
+				else
+					desc = vowel_alternant_to_desc[alt.alt] .. " alternation"
+				end
 				insert_ann("vowel_alt", desc)
-				insert_desc(desc)
 				insert_cat("verbs with " .. desc)
 			end
 		end
@@ -1644,13 +1713,12 @@ local function compute_categories_and_annotation(alternant_multiword_spec, from_
 	alternant_multiword_spec.categories = {}
 	local ann = {}
 	alternant_multiword_spec.annotation = ann
-	ann.conj = {}
 	ann.irreg = {}
 	ann.vowel_alt = {}
 	ann.cons_alt = {}
 
 	local multiword_lemma = false
-	for _, form in ipairs(alternant_multiword_spec.forms.infinitve) do
+	for _, form in ipairs(alternant_multiword_spec.forms.infinitive) do
 		if form.form:find(" ") then
 			multiword_lemma = true
 			break
@@ -1658,16 +1726,12 @@ local function compute_categories_and_annotation(alternant_multiword_spec, from_
 	end
 
 	iut.map_word_specs(alternant_multiword_spec, function(base)
-		add_categories_and_annotation(alternant_multiword_spec, multiword_lemma, base, from_headword)
+		add_categories_and_annotation(alternant_multiword_spec, base, multiword_lemma, from_headword)
 	end)
 	local ann_parts = {}
-	local conj = table.concat(ann.conj, " or ")
-	if conj ~= "" then
-		table.insert(ann_parts, conj)
-	end
 	local irreg = table.concat(ann.irreg, " or ")
 	if irreg ~= "" and irreg ~= "regular" then
-		table.insert(ann_parts, conj)
+		table.insert(ann_parts, irreg)
 	end
 	local vowel_alt = table.concat(ann.vowel_alt, " or ")
 	if vowel_alt ~= "" and vowel_alt ~= "non-alternating" then
@@ -1690,15 +1754,19 @@ local function show_forms(alternant_multiword_spec)
 	-- voseo usage. In the latter case, we only do it if there is a distinct pres subjunctive voseo form.
 	local function create_footnote_obj()
 		local obj = iut.create_footnote_obj()
-		export.get_footnote_text({footnotes = {fut_sub_note}}, obj)
-		local separate_pres_sub_2sv = false
-		iut.map_word_specs(alternant_multiword_spec, function(base)
-			if not m_table.deepEquals(base.forms.pres_sub_2s, base.forms.pres_sub_2sv) then
-				separate_pres_sub_2sv = true
-			end
-		end)
-		if separate_pres_sub_2sv then
-			export.get_footnote_text({footnotes = {pres_sub_voseo_note}}, obj)
+		iut.get_footnote_text({footnotes = {fut_sub_note}}, obj)
+		-- Compute whether the tú and voseo variants are different, for each voseo variant.
+		-- We use this later in make_table().
+		for _, slot in ipairs({"pres_2s", "pres_sub_2s", "imp_2s"}) do
+			alternant_multiword_spec["separate_" .. slot .. "v"] = false
+			iut.map_word_specs(alternant_multiword_spec, function(base)
+				if not m_table.deepEquals(base.forms[slot], base.forms[slot .. "v"]) then
+					alternant_multiword_spec["separate_" .. slot .. "v"] = true
+				end
+			end)
+		end
+		if alternant_multiword_spec.separate_pres_sub_2sv then
+			iut.get_footnote_text({footnotes = {pres_sub_voseo_note}}, obj)
 		end
 		return obj
 	end
@@ -1730,8 +1798,7 @@ local pres_sub_2sv_template = '<sup><sup>tú</sup></sup><br />{pres_sub_2sv}<sup
 local imp_2sv_template = '<sup><sup>tú</sup></sup><br />{imp_2sv}<sup><sup>vos</sup></sup>'
 
 local basic_table = [=[
-{description}
-<div class="NavFrame">
+{description}<div class="NavFrame">
 <div class="NavHead" align=center>&nbsp; &nbsp; Conjugation of {title} (See [[Appendix:Spanish verbs]])</div>
 <div class="NavContent">
 {\op}| style="background:#F9F9F9;text-align:center;width:100%"
@@ -1908,8 +1975,7 @@ local basic_table = [=[
 
 
 local combined_form_table = [=[
-{description}
-<div class="NavFrame">
+{description}<div class="NavFrame">
 <div class="NavHead" align=center>&nbsp; &nbsp; Selected combined forms of {title}</div>
 <div class="NavContent">
 These forms are generated automatically and may not actually be used. Pronoun usage varies by region.
@@ -2091,8 +2157,7 @@ These forms are generated automatically and may not actually be used. Pronoun us
 
 
 local combined_form_reflexive_table = [=[
-{description}
-<div class="NavFrame">
+{description}<div class="NavFrame">
 <div class="NavHead" align=center>&nbsp; &nbsp; Selected combined forms of {title}</div>
 <div class="NavContent">
 {| class="inflection-table" style="background:#F9F9F9;text-align:center;width:100%"
@@ -2160,13 +2225,15 @@ local function make_table(alternant_multiword_spec)
 	if alternant_multiword_spec.annotation ~= "" then
 		forms.title = forms.title .. " (" .. alternant_multiword_spec.annotation .. ")"
 	end
+	forms.description = ""
 
 	-- Format the basic table.
 	forms.footnote = alternant_multiword_spec.footnote_basic
 	forms.notes_clause = forms.footnote ~= "" and m_string_utilities.format(notes_template, forms) or ""
-	forms.pres_2sv_text = forms.pres_2s ~= forms.pres_2sv and m_string_utilities.format(pres_2sv_template, forms) or ""
-	forms.pres_sub_2sv_text = forms.pres_sub_2s ~= forms.pres_sub_2sv and m_string_utilities.format(pres_sub_2sv_template, forms) or ""
-	forms.imp_2sv_text = forms.imp_2s ~= forms.imp_2sv and m_string_utilities.format(imp_2sv_template, forms) or ""
+	-- The separate_* values are computed in show_forms().
+	forms.pres_2sv_text = alternant_multiword_spec.separate_pres_2sv and m_string_utilities.format(pres_2sv_template, forms) or ""
+	forms.pres_sub_2sv_text = alternant_multiword_spec.separate_pres_sub_2sv and m_string_utilities.format(pres_sub_2sv_template, forms) or ""
+	forms.imp_2sv_text = alternant_multiword_spec.separate_imp_2sv and m_string_utilities.format(imp_2sv_template, forms) or ""
 	local formatted_basic_table = m_string_utilities.format(basic_table, forms)
 
 	-- Format the combined table.
@@ -2240,7 +2307,8 @@ function export.show(frame)
 	local parent_args = frame:getParent().args
 	local alternant_multiword_spec = export.do_generate_forms(parent_args)
 	show_forms(alternant_multiword_spec)
-	return make_table(alternant_multiword_spec) .. require("Module:utilities").format_categories(alternant_multiword_spec.categories, lang)
+	return make_table(alternant_multiword_spec) ..
+		require("Module:utilities").format_categories(alternant_multiword_spec.categories, lang, nil, nil, force_cat)
 end
 
 
