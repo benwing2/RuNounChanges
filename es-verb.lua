@@ -42,7 +42,7 @@ FIXME:
 13. Handle linking of multiword forms as is done in [[Module:es-headword]].
 14. Implement comparison against previous module.
 15. Implement categorization of irregularities for individual tenses.
-16. Support combined=no.
+16. Support nocomb=1 [DONE].
 17. (Possibly) display irregular forms in a different color, as with the old module.
 18. (Possibly) display a "rule" description indicating the types of alternations.
 19. Implement replace_reflexive_indicators().
@@ -1330,21 +1330,25 @@ local function conjugate_verb(base)
 	-- removed. (This happens e.g. for most present indicative forms of [[ver]], which have accents in them for the
 	-- prefixed derived verbs, but the accents shouldn't be present in the base verb.)
 	remove_monosyllabic_accents(base)
-	-- This should happen before add_reflexive_pronouns() because the combined forms of reflexive verbs don't have
-	-- the reflexive attached.
-	add_combined_forms(base)
+	if not base.nocomb then
+		-- This should happen before add_reflexive_pronouns() because the combined forms of reflexive verbs don't have
+		-- the reflexive attached.
+		add_combined_forms(base)
+	end
 	-- This should happen after remove_monosyllabic_accents() so the * marking the preservation of monosyllabic
 	-- accents doesn't end up in the middle of a word.
 	add_reflexive_pronouns(base)
 	process_slot_overrides(base, "do basic", "do reflexive") -- do reflexive-only basic slot overrides
 	-- This should happen after add_reflexive_pronouns() so negative imperatives get the reflexive pronoun in them.
 	generate_negative_imperatives(base)
-	if base.refl then
-		-- This should happen after process_slot_overrides() for reflexive-only basic slots so the overridden
-		-- forms (e.g. [[idos]]/[[iros]] for [[ir]]) get appropriately copied.
-		copy_imperatives_to_reflexive_combined_forms(base)
+	if not base.nocomb then
+		if base.refl then
+			-- This should happen after process_slot_overrides() for reflexive-only basic slots so the overridden
+			-- forms (e.g. [[idos]]/[[iros]] for [[ir]]) get appropriately copied.
+			copy_imperatives_to_reflexive_combined_forms(base)
+		end
+		process_slot_overrides(base, false) -- do combined slot overrides
 	end
-	process_slot_overrides(base, false) -- do combined slot overrides
 	handle_infinitive_linked(base)
 end
 
@@ -1446,6 +1450,7 @@ local function normalize_all_lemmas(alternant_multiword_spec, from_headword)
 			alternant_multiword_spec.refl = true
 		end
 		base.from_headword = from_headword
+		base.nocomb = alternant_multiword_spec.args.nocomb
 	end)
 	if any_pre_pref then
 		iut.map_word_specs(alternant_multiword_spec, function(base)
@@ -2244,10 +2249,15 @@ local function make_table(alternant_multiword_spec)
 	local formatted_basic_table = m_string_utilities.format(basic_table, forms)
 
 	-- Format the combined table.
-	forms.footnote = alternant_multiword_spec.footnote_combined
-	forms.notes_clause = forms.footnote ~= "" and m_string_utilities.format(notes_template, forms) or ""
-	local combined_table = alternant_multiword_spec.refl and combined_form_reflexive_table or combined_form_table
-	local formatted_combined_table = m_string_utilities.format(combined_table, forms)
+	local formatted_combined_table
+	if alternant_multiword_spec.args.nocomb then
+		formatted_combined_table = ""
+	else
+		forms.footnote = alternant_multiword_spec.footnote_combined
+		forms.notes_clause = forms.footnote ~= "" and m_string_utilities.format(notes_template, forms) or ""
+		local combined_table = alternant_multiword_spec.refl and combined_form_reflexive_table or combined_form_table
+		formatted_combined_table = m_string_utilities.format(combined_table, forms)
+	end
 
 	-- Paste them together.
 	return formatted_basic_table .. formatted_combined_table
@@ -2261,6 +2271,7 @@ end
 function export.do_generate_forms(parent_args, from_headword, def)
 	local params = {
 		[1] = {},
+		["nocomb"] = {type = "boolean"},
 	}
 
 	if from_headword then
