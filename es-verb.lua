@@ -42,12 +42,16 @@ FIXME:
 13. Handle linking of multiword forms as is done in [[Module:es-headword]].
 14. Implement comparison against previous module.
 15. Implement categorization of irregularities for individual tenses.
-16. Support nocomb=1 [DONE].
+16. Support nocomb=1. [DONE]
 17. (Possibly) display irregular forms in a different color, as with the old module.
 18. (Possibly) display a "rule" description indicating the types of alternations.
 19. Implement replace_reflexive_indicators().
 20. Implement verbs with attached clitics e.g. [[pasarlo]], [[corrérsela]].
 21. When footnote + tú/vos notation, add a space before tú/vos.
+22. Fix [[erguir]] so ie-i vowel alternation produces ye- at beginning of word, similarly for errar. Also allow
+    multiple vowel alternation specs in irregular verbs, for errar. Finally, ie should show as e-ye for errar
+    and as e-ye-i for erguir. [DONE]
+23. Figure out why red links in combined forms show up as black not red.
 --]=]
 
 local lang = require("Module:languages").getByCode("es")
@@ -78,12 +82,15 @@ local fut_sub_note = "[mostly obsolete form, now mainly used in legal jargon]"
 local pres_sub_voseo_note = "[Argentine and Uruguayan " .. link_term("voseo", "term") .. " prefers the " ..
 	link_term("tú", "term") .. " form for the present subjunctive]"
 
-local vowel_alternants = m_table.listToSet({"ie", "ie-i", "ue", "ue-u", "i", "í", "ú", "+"})
+local vowel_alternants = m_table.listToSet({"ie", "ie-i", "ye", "ye-i", "ue", "ue-u", "hue", "i", "í", "ú", "+"})
 local vowel_alternant_to_desc = {
 	["ie"] = "e-ie",
 	["ie-i"] = "e-ie-i",
+	["ye"] = "e-ye",
+	["ye-i"] = "e-ye-i",
 	["ue"] = "o-ue",
 	["ue-u"] = "o-ue-u",
+	["hue"] = "o-hue",
 	["i"] = "e-i",
 	["í"] = "i-í",
 	["ú"] = "u-ú",
@@ -270,16 +277,28 @@ There are several types of vowel alternations:
    decebir (obsolete; possibly actually like concebir, i.e. decibo not decebo), preterir (no_pres_stressed),
    premir (obsolete), expremir (obsolete), exir (obsolete), escreuir (obsolete; fix conjugation), escrebir (obsolete),
    agredir; sometimes the stressed forms are rare or disused. (Also embaír, desvaír are no_pres_stressed.)
-2. ie: Infinitive has -e-, changing to -ie- when stressed. No raising before i+V. Only hendir, cernir, discernir,
+2a. ie: Infinitive has -e-, changing to -ie- when stressed. No raising before i+V. Only hendir, cernir, discernir,
    concernir (only3sp); discernir -> discierno, discerniendo, discernió, discernamos.
-3. ie-i: Infinitive has -e- or -i-, changing to -ie- when stressed. Raising before i+V and 1p/2p pres subjunctive:
+2b. ye: Infinitive has -e-, changing to -ye- when stressed. No raising before i+V. Does not occur (cf. errar).
+3a. ie-i: Infinitive has -e- or -i-, changing to -ie- when stressed. Raising before i+V and 1p/2p pres subjunctive:
    sentir -> siento, sintiendo, sintió, sintamos.
    adquirir -> adquiero, adquiriendo, adquirió, adquiramos.
+3b. ye-i: Infinitive has -e-, changing to -ye- when stressed. Raising before i+V and 1p/2p pres subjunctive.
+   Only erguir: erguir -> yergo, irguiendo, irguió, irgamos.
 4. i: Infinitive has -e-, changing to -i- when stressed. Raising before i+V and 1p/2p pres subjunctive:
    vestir -> visto, vistiendo, vistió, vistamos. Variant: ceñir -> ciño, ciñendo, ciñó, ciñamos.
 5. ue-u: Infinitive has -o-, changing to -ue- when stressed. Raising before i+V and 1p/2p pres subjunctive:
    Only dormir, morir and compounds. dormir -> duermo, durmiendo, durmió, durmamos.
 6. ue: This type would be parallel to 'ie' but doesn't appear to exist.
+
+
+---------
+
+
+Verbs to fix (extra forms need to be excised or deleted): The above verbs under type (1) -ir vowel alternations;
+[[neviscar]] (impersonal), [[acaecer]] (third-person only), [[acontecer]] (third-person only),
+[[cellisquear]] (impersonal), [[pintear]] (impersonal? other meaning "to play hookey" given, not in RAE),
+[[diluviar]] (impersonal).
 
 
 ---------
@@ -311,7 +330,7 @@ in this function. In particular:
 2. Raising of e -> i, o -> u in -ir verbs before an ending beginning with i + vowel, as well as in the 1p/2p forms of
    the present subjunctive (dormir -> durmiendo, durmió, durmamos), are handled here. Raising happens only for -ir
    verbs and only when the stem setting `raising_conj` is true (which is normally set to true when vowel alternations
-   `ie-i`, `ue-u` or `i` are specified).
+   `ie-i`, `ye-i`, `ue-u`, `i`, `í` or `ú` are specified).
 3. Numerous modifications are automatically made before an ending beginning with i + vowel. These include:
    a. final -i of stem absorbed: sonreír -> sonrió, sonriera, sonriendo;
    b. in the preterite of irregular verbs (likewise for other tenses derived from the preterite stem, i.e. imperfect
@@ -320,10 +339,11 @@ in this function. In particular:
 	  explicitly by irregular verbs. Does not apply everywhere because of cases like regular [[tejer]] (tejieron not
 	  #tejeron), regular [[concluir]] (concluyeron not #conclueron).
    c. initial i of ending -> y after vowel and word-initially: poseer -> poseyó, poseyera, poseyendo; ir -> yendo;
-   d. initial i of ending absorbed after ñ, ll, y: tañer -> tañó, tañera, tañendo; bullir -> bulló, bullera, bullendo
+   d. initial i of ending -> y after gü, which becomes gu: argüir -> arguyó, arguyera, arguyendo;
+   e. initial i of ending absorbed after ñ, ll, y: tañer -> tañó, tañera, tañendo; bullir -> bulló, bullera, bullendo
 4. If the ending begins with (h)i, it gets an accent after a/e/i/o to prevent the two merging into a diphthong:
-   caer -> caíste, caímos; reír -> reíste, reímos (pres and pret); re + hice -> rehíce. This does not apply after u,
-   e.g. concluir -> concluiste, concluimos.
+   caer -> caíste, caímos; reír -> reíste, reímos (pres and pret). This does not apply after u, e.g.
+   concluir -> concluiste, concluimos.
 5. In -uir verbs (i.e. -ir verbs with stem ending in -u), a y is added before endings beginning with a/e/o:
    concluir -> concluyo, concluyen, concluya, concluyamos. Note that preterite concluyó, gerund concluyendo, etc.
    are handled by a different rule above (3b).
@@ -439,10 +459,6 @@ local irreg_conjugations = {
 		}
 	},
 	{
-		match = "^desosar",
-		forms = {pres_stressed = "deshues", vowel_alt = "ue"} -- specify vowel alt for categorization
-	},
-	{
 		-- conducir, producir, reducir, traducir, etc.
 		match = "ducir",
 		forms = {pret = "duj", pret_conj = "irreg"}
@@ -451,13 +467,6 @@ local irreg_conjugations = {
 		-- elegir, reelegir; not preelegir, per RAE
 		match = match_against_verbs("elegir", {"", "re"}),
 		forms = {vowel_alt = "i", pp = {"elegid", "elect"}}
-	},
-	{
-		match = "^errar",
-		forms = {pres_stressed = {
-			{form = "yerr", footnotes = {"[Spain]"}},
-			{form = "err", footnotes = {"[Latin America]"}}
-		}}
 	},
 	{
 		match = "^estar",
@@ -577,13 +586,10 @@ local irreg_conjugations = {
 		forms = {vowel_alt = "ue-u", pp = "muert"},
 	},
 	{
+		-- oír, desoír, entreoír, trasoír
 		match = "oír",
 		-- use 'oigu' because we're in a front environment; if we use 'oig', we'll get '#oijo'
 		forms = {pres1_and_sub = "oigu"}
-	},
-	{
-		match = "^oler",
-		forms = {pres_stressed = "huel", vowel_alt = "ue"} -- specify vowel alt for categorization
 	},
 	{
 		match = "olver", -- solver, volver, bolver and derivatives
@@ -727,7 +733,10 @@ local irreg_conjugations = {
 		match = "venir",
 		forms = {
 			-- use 'vengu' because we're in a front environment; if we use 'veng', we'll get '#venjo'
-			pres1_and_sub = "veng", vowel_alt = "ie-i", pret = "vin", pret_conj = "irreg",
+			pres1_and_sub = "vengu", vowel_alt = "ie-i", pret = "vin", pret_conj = "irreg",
+			-- uniquely for this verb, pres sub 1p/2p do not raise the vowel even though we are an
+			-- e-ie-i verb (contrast sentir -> sintamos/sintáis)
+			pres_sub_1p = "vengamos", pres_sub_2p = "vengáis",
 			fut = "vendr", imp_2s = "vén" -- need the accent for the compounds; it will be removed in the simplex
 		}
 	},
@@ -855,9 +864,11 @@ end
 -- called to combine prefix + stem). WARNING: This function is written very carefully; changes
 -- to it can easily have unintended consequences.
 local function combine_stem_ending(base, slot, stem, ending, is_combining_ending)
-	if base.stems.raising_conj and (rfind(ending, "^i" .. V) or
-		-- need is_combining_ending here to avoid prefix-stem interactions (refreír)
-		is_combining_ending and (slot == "pres_sub_1p" or slot == "pres_sub_2p")) then
+	if not is_combining_ending then
+		return stem .. ending
+	end
+
+	if base.stems.raising_conj and (rfind(ending, "^i" .. V) or slot == "pres_sub_1p" or slot == "pres_sub_2p") then
 		-- need to raise e -> i, o -> u: dormir -> durmió, durmiera, durmiendo, durmamos
 		stem = rsub(stem, "([eo])(" .. C .. "*)$", function(vowel, rest) return raise_vowel[vowel] .. rest end)
 		-- also with stem ending in -gu or -qu (e.g. erguir -> irguió, irguiera, irguiendo, irgamos)
@@ -884,7 +895,14 @@ local function combine_stem_ending(base, slot, stem, ending, is_combining_ending
 			ending = ending:gsub("^i", "y")
 		end
 
-		-- (4) initial i absorbed after ñ, ll, y: tañer -> tañó, tañera, tañendo; bullir -> bulló, bullera, bullendo
+		-- (4) -gü + ie- -> -guye-: argüir -> arguyó, arguyera, arguyendo
+		if stem:find("gü$") then
+			-- transfer the y to the stem to avoid gü -> gu below in front/back conversions
+			stem = stem:gsub("ü$", "uy")
+			ending = ending:gsub("^i", "")
+		end
+
+		-- (5) initial i absorbed after ñ, ll, y: tañer -> tañó, tañera, tañendo; bullir -> bulló, bullera, bullendo
 		if rfind(stem, "[ñy]$") or rfind(stem, "ll$") then
 			ending = ending:gsub("^i", "")
 		end
@@ -909,32 +927,30 @@ local function combine_stem_ending(base, slot, stem, ending, is_combining_ending
 		end
 	end
 
-	if is_combining_ending then
-		-- Spelling changes in the stem; it depends on whether the stem given is the pre-front-vowel or
-		-- pre-back-vowel variant, as indicated by `frontback`. We want these front-back spelling changes to happen
-		-- between stem and ending, not between prefix and stem; the prefix may not have the same "front/backness"
-		-- as the stem.
-		local is_front = rfind(ending, "^[eiéí]")
-		if base.frontback == "front" and not is_front then
-			-- parecer -> parezco, conducir -> conduzco; use zqu to avoid triggering the following gsub();
-			-- the third line will replace zqu -> zc
-			if slot ~= "pret_3s" then -- exclude hice -> hizo (not #hizco)
-				stem = rsub(stem, "(" .. V .. ")c$", "%1zqu")
-			end
-			stem = stem:gsub("c$", "z") -- ejercer -> ejerzo, uncir -> unzo
-			stem = stem:gsub("qu$", "c") -- delinquir -> delinco, parecer -> parezqu- -> parezco
-			stem = stem:gsub("g$", "j") -- coger -> cojo, afligir -> aflijo
-			stem = stem:gsub("gu$", "g") -- distinguir -> distingo
-			stem = stem:gsub("gü$", "gu") -- may not occur; argüir -> arguyo handled above
-		elseif base.frontback == "back" and is_front then
-			stem = stem:gsub("gu$", "gü") -- averiguar -> averigüé
-			stem = stem:gsub("g$", "gu") -- cargar -> cargué
-			stem = stem:gsub("c$", "qu") -- marcar -> marqué
-			stem = rsub(stem, "[çz]$", "c") -- aderezar/adereçar -> aderecé
+	-- Spelling changes in the stem; it depends on whether the stem given is the pre-front-vowel or
+	-- pre-back-vowel variant, as indicated by `frontback`. We want these front-back spelling changes to happen
+	-- between stem and ending, not between prefix and stem; the prefix may not have the same "front/backness"
+	-- as the stem.
+	local is_front = rfind(ending, "^[eiéí]")
+	if base.frontback == "front" and not is_front then
+		-- parecer -> parezco, conducir -> conduzco; use zqu to avoid triggering the following gsub();
+		-- the third line will replace zqu -> zc
+		if slot ~= "pret_3s" then -- exclude hice -> hizo (not #hizco)
+			stem = rsub(stem, "(" .. V .. ")c$", "%1zqu")
 		end
+		stem = stem:gsub("c$", "z") -- ejercer -> ejerzo, uncir -> unzo
+		stem = stem:gsub("qu$", "c") -- delinquir -> delinco, parecer -> parezqu- -> parezco
+		stem = stem:gsub("g$", "j") -- coger -> cojo, afligir -> aflijo
+		stem = stem:gsub("gu$", "g") -- distinguir -> distingo
+		stem = stem:gsub("gü$", "gu") -- may not occur; argüir -> arguyo handled above
+	elseif base.frontback == "back" and is_front then
+		stem = stem:gsub("gu$", "gü") -- averiguar -> averigüé
+		stem = stem:gsub("g$", "gu") -- cargar -> cargué
+		stem = stem:gsub("c$", "qu") -- marcar -> marqué
+		stem = rsub(stem, "[çz]$", "c") -- aderezar/adereçar -> aderecé
 	end
 
-	return replace_reflexive_indicators(slot, stem .. ending)
+	return stem .. ending
 end
 
 
@@ -1227,9 +1243,6 @@ end
 
 -- Add reflexive pronouns as appropriate to the non-reflexive forms that were generated.
 local function add_reflexive_pronouns(base)
-	if not base.refl then
-		return
-	end
 	for _, slotaccel in ipairs(verb_slots_basic) do
 		local slot, accel = unpack(slotaccel)
 		if base.forms[slot] then
@@ -1335,10 +1348,12 @@ local function conjugate_verb(base)
 		-- the reflexive attached.
 		add_combined_forms(base)
 	end
-	-- This should happen after remove_monosyllabic_accents() so the * marking the preservation of monosyllabic
-	-- accents doesn't end up in the middle of a word.
-	add_reflexive_pronouns(base)
-	process_slot_overrides(base, "do basic", "do reflexive") -- do reflexive-only basic slot overrides
+	if base.refl then
+		-- This should happen after remove_monosyllabic_accents() so the * marking the preservation of monosyllabic
+		-- accents doesn't end up in the middle of a word.
+		add_reflexive_pronouns(base)
+		process_slot_overrides(base, "do basic", "do reflexive") -- do reflexive-only basic slot overrides
+	end
 	-- This should happen after add_reflexive_pronouns() so negative imperatives get the reflexive pronoun in them.
 	generate_negative_imperatives(base)
 	if not base.nocomb then
@@ -1390,14 +1405,14 @@ local function parse_indicator_spec(angle_bracket_spec)
 				end
 				if base.vowel_alt then
 					for _, existing_alt in ipairs(base.vowel_alt) do
-						if existing_alt.alt == alt then
+						if existing_alt.form == alt then
 							parse_err("Vowel alternant '" .. alt .. "' specified twice")
 						end
 					end
 				else
 					base.vowel_alt = {}
 				end
-				table.insert(base.vowel_alt, {alt = alt, footnotes = fetch_footnotes(comma_separated_groups[j])})
+				table.insert(base.vowel_alt, {form = alt, footnotes = fetch_footnotes(comma_separated_groups[j])})
 			end
 		elseif first_element == "no_pres_stressed" or first_element == "only3s" or first_element == "only3sp" then
 			if #comma_separated_groups[1] > 1 then
@@ -1554,37 +1569,41 @@ local function detect_indicator_spec(base)
 		if base.vowel_alt then
 			error(base.verb .. " is a recognized irregular verb, and should not have vowel alternations specified with it")
 		end
-		base.vowel_alt = {{alt = base.stems.vowel_alt}}
+		base.vowel_alt = iut.convert_to_general_list_form(base.stems.vowel_alt)
 	end
 
 	-- Convert vowel alternation indicators into stems.
 	if base.vowel_alt then
-		for _, alt in ipairs(base.vowel_alt) do
+		for _, altform in ipairs(base.vowel_alt) do
+			altform.alt = altform.form -- save original indicator
+			local alt = altform.alt
 			if base.conj == "ir" then
-				local raising = alt.alt == "ie-i" or alt.alt == "ue-u" or alt.alt == "i" or alt.alt == "í" or alt.alt == "ú"
+				local raising = (
+					alt == "ie-i" or alt == "ye-i" or alt == "ue-u" or alt == "i" or alt == "í" or alt == "ú"
+				)
 				if base.stems.raising_conj == nil then
 					base.stems.raising_conj = raising
 				elseif base.stems.raising_conj ~= raising then
 					error("Can't currently support a mixture of raising (e.g. 'ie-i') and non-raising (e.g. 'ie') vowel alternations in -ir verbs")
 				end
 			end
-			if alt.alt == "+" then
-				alt.form = base.inf_stem
+			if alt == "+" then
+				altform.form = base.inf_stem
 			else
-				local normalized_alt = alt.alt
-				if alt.alt == "ie-i" or alt.alt == "ue-u" then
+				local normalized_alt = alt
+				if alt == "ie-i" or alt == "ye-i" or alt == "ue-u" then
 					if base.conj ~= "ir" then
-						error("Vowel alternation '" .. alt.alt .. "' only supported with -ir verbs")
+						error("Vowel alternation '" .. alt .. "' only supported with -ir verbs")
 					end
-					-- ie-i is like i except for the vowel raising before i+V, similarly for ue-u,
+					-- ie-i is like i except for the vowel raising before i+V, similarly for ye-i, ue-u,
 					-- so convert appropriately.
-					normalized_alt = alt.alt == "ie-i" and "ie" or "ue"
+					normalized_alt = alt == "ie-i" and "ie" or alt == "ye-i" and "ye" or "ue"
 				end
 				local ret = com.apply_vowel_alternation(base.inf_stem, normalized_alt)
 				if ret.err then
-					error("To use '" .. alt.alt .. "', present stem '" .. base.inf_stem .. "' " .. ret.err)
+					error("To use '" .. alt .. "', present stem '" .. base.inf_stem .. "' " .. ret.err)
 				end
-				alt.form = ret.ret
+				altform.form = ret.ret
 			end
 		end
 	end
@@ -1643,6 +1662,19 @@ local function add_categories_and_annotation(alternant_multiword_spec, base, mul
 		insert_cat("irregular verbs")
 	else
 		insert_ann("irreg", "regular")
+	end
+
+	if base.only3s then
+		insert_ann("defective", "impersonal")
+		insert_cat("impersonal verbs")
+	elseif base.only3sp then
+		insert_ann("defective", "third-person only")
+		insert_cat("third-person-only verbs")
+	elseif base.no_pres_stressed then
+		insert_ann("defective", "defective")
+		insert_cat("defective verbs")
+	else
+		insert_ann("defective", "regular")
 	end
 
 	if base.clitic then
@@ -1726,6 +1758,7 @@ local function compute_categories_and_annotation(alternant_multiword_spec, from_
 	local ann = {}
 	alternant_multiword_spec.annotation = ann
 	ann.irreg = {}
+	ann.defective = {}
 	ann.vowel_alt = {}
 	ann.cons_alt = {}
 
@@ -1744,6 +1777,10 @@ local function compute_categories_and_annotation(alternant_multiword_spec, from_
 	local irreg = table.concat(ann.irreg, " or ")
 	if irreg ~= "" and irreg ~= "regular" then
 		table.insert(ann_parts, irreg)
+	end
+	local defective = table.concat(ann.defective, " or ")
+	if defective ~= "" and defective ~= "regular" then
+		table.insert(ann_parts, defective)
 	end
 	local vowel_alt = table.concat(ann.vowel_alt, " or ")
 	if vowel_alt ~= "" and vowel_alt ~= "non-alternating" then

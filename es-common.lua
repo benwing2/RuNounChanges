@@ -70,6 +70,12 @@ function export.apply_vowel_alternation(stem, alternation)
 		else
 			err = "should have -e- or -i- as the last vowel"
 		end
+	elseif alternation == "ye" then
+		if last_vowel == "e" then
+			ret = before_last_vowel .. "ye" .. after_last_vowel
+		else
+			err = "should have -e- as the last vowel"
+		end
 	elseif alternation == "ue" then
 		if last_vowel == "o" or last_vowel == "u" then
 			-- allow u for jugar -> juego; correctly handle avergonzar -> avergüenzo
@@ -79,6 +85,12 @@ function export.apply_vowel_alternation(stem, alternation)
 			)
 		else
 			err = "should have -o- or -u- as the last vowel"
+		end
+	elseif alternation == "hue" then
+		if last_vowel == "o" then
+			ret = before_last_vowel .. "hue" .. after_last_vowel
+		else
+			err = "should have -o- as the last vowel"
 		end
 	elseif alternation == "i" then
 		if last_vowel == "e" then
