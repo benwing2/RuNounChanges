@@ -92,7 +92,7 @@ es_conv_verb = {
     "morir": "<>",
     "pudrir": "<>",
     "ir": "<>",
-    "rehuir": u"<+ú>",
+    "rehuir": u"<ú>",
     "salir": "<>",
     "sustituir": "<>",
     "-venir": "<>",
@@ -130,9 +130,9 @@ es_conv_verb = {
   },
 }
 
-def generate_old_verb_forms(template, errandpagemsg, expand_text):
+def generate_old_verb_forms(template, errandpagemsg, expand_text, include_combined):
   generate_template = re.sub(r"\}\}$", "|json=1}}", template)
-  errandpagemsg("generate_template: %s" % generate_template)
+  #errandpagemsg("generate_template: %s" % generate_template)
   result = expand_text(generate_template)
   if not result:
     errandpagemsg("WARNING: Error generating forms, skipping")
@@ -206,6 +206,44 @@ def generate_old_verb_forms(template, errandpagemsg, expand_text):
       else:
         args[key] = k
 
+  if include_combined:
+    generate_combined_template = re.sub(r"\}\}$", "|json_combined=1}}", template)
+    #errandpagemsg("generate_combined_template: %s" % generate_combined_template)
+    result = expand_text(generate_combined_template)
+    if not result:
+      errandpagemsg("WARNING: Error generating forms, skipping")
+      return None
+    forms = json.loads(result)
+    for k, v in forms.iteritems():
+      clitic, slot, base_form = v
+      if slot == "imp_i2s":
+        slot = "imp_2s"
+      elif slot == "imp_f2s":
+        slot = "imp_3s"
+      elif slot == "imp_1p":
+        slot = "imp_1p"
+      elif slot == "imp_i2p":
+        slot = "imp_2p"
+        # For some weird reason, the old code generates both amados (incorrect) and amaos (correct)
+        # and only displays the latter
+        if clitic == "os" and k.endswith("dos"):
+          continue
+      elif slot == "imp_f2p":
+        slot = "imp_3p"
+      elif slot == "inf":
+        slot = "infinitive"
+      elif slot == "ger":
+        slot = "gerund"
+      else:
+        errandpagemsg("WARNING: Unrecognized slot %s: %s" % (slot, result))
+        return None
+
+      slot += "_comb_" + clitic
+      if slot in args:
+        args[slot] += "," + k
+      else:
+        args[slot] = k
+
   return args
 
 old_es_conj_templates = {
@@ -215,15 +253,19 @@ old_es_conj_templates = {
   u"es-conj-ír",
 }
 
-def compare_new_and_old_templates(origt, newt, pagetitle, pagemsg, errandpagemsg):
+def compare_new_and_old_templates(origt, newt, pagetitle, pagemsg, errandpagemsg, include_combined):
   global args
   def expand_text(tempcall):
     return blib.expand_text(tempcall, pagetitle, pagemsg, args.verbose)
 
+  def sort_multiple(v):
+    return ",".join(sorted(v.split(",")))
+
   def generate_old_forms():
-    args = generate_old_verb_forms(origt, errandpagemsg, expand_text)
+    args = generate_old_verb_forms(origt, errandpagemsg, expand_text, include_combined)
     if args:
       args["infinitive"] = pagetitle
+    args = {k: sort_multiple(v) for k, v in args.iteritems()}
     return args
 
   def generate_new_forms():
@@ -233,12 +275,14 @@ def compare_new_and_old_templates(origt, newt, pagetitle, pagemsg, errandpagemsg
       return None
     args = blib.split_generate_args(new_result)
     args = {k: v for k, v in args.iteritems() if not k.startswith("neg_") and k != "infinitive_linked"}
+    args = {k: sort_multiple(v) for k, v in args.iteritems()}
     return args
 
   return blib.compare_new_and_old_template_forms(origt, newt, generate_old_forms,
-    generate_new_forms, pagemsg, errandpagemsg, already_split=True)
+    generate_new_forms, pagemsg, errandpagemsg, already_split=True, show_all=True)
 
-def convert_template_to_new(t, pagetitle, pagemsg, errandpagemsg):
+def convert_template_to_new(t, pagetitle, pagemsg, errandpagemsg, notes):
+  global args
   origt = unicode(t)
   tn = tname(t)
   m = re.search(r"^es-conj(-.*)$", tn)
@@ -251,30 +295,47 @@ def convert_template_to_new(t, pagetitle, pagemsg, errandpagemsg):
     return None
   old_conj_type = getparam(t, "p")
   if not old_conj_type:
-    args = "<>"
+    arg = "<>"
+  elif pagetitle.endswith("cocer"):
+    # special-case cocer, which we treat as irregular (cocer -> cuezo not #cuezco) but would
+    # otherwise have <ue>
+    arg = "<>"
   elif old_conj_type not in es_conv_verb[conj_suffix]:
     pagemsg("WARNING: Unrecognized verb conj %s: %s" % (old_conj_type, unicode(t)))
     return None
   else:
-    args = es_conv_verb[conj_suffix][old_conj_type]
+    arg = es_conv_verb[conj_suffix][old_conj_type]
+  ref = getparam(t, "ref")
   combined = getparam(t, "combined")
   for param in t.params:
     pn = pname(param)
     if pn not in ["p", "1", "2", "ref", "combined"]:
       pagemsg("WARNING: Unrecognized param %s=%s: %s" % (pn, unicode(param.value), unicode(t)))
       return None
+  if arg == "<>":
+    arg = ""
+  if ref and not pagetitle.endswith("se"):
+    arg = pagetitle + "se" + arg
+  elif not ref and pagetitle.endswith("se"):
+    pagemsg("WARNING: Reflexive verb without reflexive conjugation, skipping: %s" % unicode(t))
+    return None
   # Erase all params
   del t.params[:]
-  if args != "<>":
-    t.add("1", args)
+  if arg:
+    t.add("1", arg)
   if not combined:
     t.add("nocomb", "1")
   blib.set_template_name(t, "es-conj")
   pagemsg("Replaced %s with %s" % (origt, unicode(t)))
-  if compare_new_and_old_templates(origt, unicode(t), pagetitle, pagemsg, errandpagemsg):
-    return t
+  is_same = compare_new_and_old_templates(origt, unicode(t), pagetitle, pagemsg, errandpagemsg, combined)
+  if is_same:
+    pass
+  elif args.ignore_differences:
+    pagemsg("WARNING: Comparison doesn't check out, still replacing due to --ignore-differences")
   else:
     return None
+  notes.append("converted {{%s|...}} to %s" % (tn, unicode(t)))
+  return t
 
 def process_page(page, index, parsed):
   pagetitle = unicode(page.title())
@@ -290,8 +351,8 @@ def process_page(page, index, parsed):
   for t in parsed.filter_templates():
     tn = tname(t)
     if tn in old_es_conj_templates:
-      if convert_template_to_new(t, pagetitle, pagemsg, errandpagemsg):
-        notes.append("converted {{%s}} to {{es-conj}}" % tn)
+      if convert_template_to_new(t, pagetitle, pagemsg, errandpagemsg, notes):
+        pass
       else:
         return
 
@@ -299,6 +360,7 @@ def process_page(page, index, parsed):
 
 parser = blib.create_argparser("Convert Spanish verb conj templates to new form",
     include_pagefile=True)
+parser.add_argument("--ignore-differences", action="store_true", help="Convert even when new-old comparison doesn't check out. BE CAREFUL!")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
