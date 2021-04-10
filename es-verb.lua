@@ -40,7 +40,7 @@ FIXME:
 11. Implement make_table. [DONE]
 12. Vowel alternation should show u-ue (jugar), i-ie (adquirir), e-í (reír) alternations specially. [DONE]
 13. Handle linking of multiword forms as is done in [[Module:es-headword]].
-14. Implement comparison against previous module.
+14. Implement comparison against previous module. [DONE]
 15. Implement categorization of irregularities for individual tenses.
 16. Support nocomb=1. [DONE]
 17. (Possibly) display irregular forms in a different color, as with the old module.
@@ -52,6 +52,10 @@ FIXME:
     multiple vowel alternation specs in irregular verbs, for errar. Finally, ie should show as e-ye for errar
     and as e-ye-i for erguir. [DONE]
 23. Figure out why red links in combined forms show up as black not red.
+24. Consider including alternative superseded forms of verbs like [[ciar]] (e.g. pret_3s = cio, ció with footnote).
+25. Allow conjugation of suffixes e.g. -ir, -ecer; need to fix in [[Module:inflection utilities]]. [DONE]
+26. Allow specification of stems esp. so that footnotes can be hung off them; use + for the default.
+27. Don't remove monosyllabic accents when conjugating suffixes.
 --]=]
 
 local lang = require("Module:languages").getByCode("es")
@@ -274,7 +278,7 @@ There are several types of vowel alternations:
    (pres_stressed forms rare), abolir (pres_stressed forms rare), colorir (no_pres_stressed), sumergir, divergir,
    convergir, arrecir (no_pres_stressed), rostir, polir (obsolete), condir (obsolete), possibly ascondir (obsolete),
    atordir (obsolete), sacodir (obsolete), sobrevendir (possible misspelling), empedernir (no_pres_stressed),
-   decebir (obsolete; possibly actually like concebir, i.e. decibo not decebo), preterir (no_pres_stressed),
+   decebir (obsolete; possibly actually like concebir, i.e. decibo not decebo),
    premir (obsolete), expremir (obsolete), exir (obsolete), escreuir (obsolete; fix conjugation), escrebir (obsolete),
    agredir; sometimes the stressed forms are rare or disused. (Also embaír, desvaír are no_pres_stressed.)
 2a. ie: Infinitive has -e-, changing to -ie- when stressed. No raising before i+V. Only hendir, cernir, discernir,
@@ -287,6 +291,7 @@ There are several types of vowel alternations:
    Only erguir: erguir -> yergo, irguiendo, irguió, irgamos.
 4. i: Infinitive has -e-, changing to -i- when stressed. Raising before i+V and 1p/2p pres subjunctive:
    vestir -> visto, vistiendo, vistió, vistamos. Variant: ceñir -> ciño, ciñendo, ciñó, ciñamos.
+   NOTE: preterir (no_pres_stressed).
 5. ue-u: Infinitive has -o-, changing to -ue- when stressed. Raising before i+V and 1p/2p pres subjunctive:
    Only dormir, morir and compounds. dormir -> duermo, durmiendo, durmió, durmamos.
 6. ue: This type would be parallel to 'ie' but doesn't appear to exist.
@@ -298,8 +303,122 @@ There are several types of vowel alternations:
 Verbs to fix (extra forms need to be excised or deleted): The above verbs under type (1) -ir vowel alternations;
 [[neviscar]] (impersonal), [[acaecer]] (third-person only), [[acontecer]] (third-person only),
 [[cellisquear]] (impersonal), [[pintear]] (impersonal? other meaning "to play hookey" given, not in RAE),
-[[diluviar]] (impersonal).
+[[diluviar]] (impersonal). [[desabrir]] (not like abrir, rare in pres_stressed/sub forms), [[jabrir]]
+(not like abrir).
 
+Verbs with existing errors:
+* [[anticuar]] (conjugated without ú) [FORMS TO DELETE]
+* [[aerografiar]]: (conjugated without í) [FORMS TO DELETE]
+* [[afiliar]]: (conjugated with í/+ should be only +) [FORMS TO DELETE]
+* [[agraviar]]: (wrongly has í) [FORMS TO DELETE]
+* [[atesar]]: (wrongly has ie) [FORMS TO DELETE]
+* [[avalentar]]: (wrongly has ie) [FORMS TO DELETE]
+* [[autorregularse]] (conjugated as non-reflexive) [OK]
+* [[auxiliar]]: (conjugated with í/+ should be only +) [FORMS TO DELETE]
+* [[caçar]] (conjugated as -zar) [OK]
+* [[calefacer]] (extra form caleface) [FIX]
+* [[chilenizar]] (conjugated with no cons alternation) [OK]
+* [[comisariar]] (conjugated without í) [FORMS TO DELETE]
+* [[complacer]] (missing complega in imperative 3s) [OK]
+* [[comprehender]] (conjugated as comprender) [OK]
+* [[desafiliar]]: (conjugated with í/+ should be only +) [FORMS TO DELETE]
+* [[desagregar]] (conjugated with no cons alternation) [FORMS TO DELETE]
+* [[desairar]]: (conjugated with í should be only +) [FORMS TO DELETE]
+* [[deseleccionar]] (conjugated as desseleccionar) [OK]
+* [[desestacionalizar]] (conjugated with no cons alternation) [FORMS TO DELETE]
+* [[desgonzar]] (conjugated with no cons alternation) [FORMS TO DELETE]
+* [[desguinzar]] (conjugated with no cons alternation) [FORMS TO DELETE]
+* [[deshacer]] (extra form deshace, desháceme etc.) [OK]
+* [[desnacer]] (extra form desnato etc.) [DELETE PP FORMS]
+* [[desposeer]] (extra form desposeso etc.) [DELETE PP FORMS]
+* [[dezmar]]: (wrongly has ie) [FORMS TO DELETE]
+* [[draftear]] (extraneous param lang=es) [REMOVE PARAM]
+* [[ejemplarizar]] (extraneous param compound=1) [compound -> combined]
+* [[ejercitar]] (extraneous param compound=1) [compound -> combined]
+* [[empecer]] (empezca has imperatives, 1s in its verb form entry) [FIX]
+* [[encentar]]: (wrongly has ie) [OK]
+* [[encubertar]]: (wrongly has ie) [FORMS TO DELETE]
+* [[entrechocar]] (conjugated with no cons alternation) [FORMS TO DELETE]
+* [[entredecir]] (imp_2s has entredice should be entredí; extra future/cond forms entredeciré etc.) [FORMS TO DELETE/FIX]
+* [[escenografiar]]: (conjugated without í) [FORMS TO DELETE]
+* [[estar]] (incorrect combined forms, e.g. éstela instead of estela) [OK]
+* [[extasiar]]: (conjugated with í/+ should be only í) [FORMS TO DELETE]
+* [[facer]] (extra form face, fáceme, etc.) [FIX]
+* [[gloriar]]: (conjugated with í/+ should be only í) [FORMS TO DELETE]
+* [[hacer]] (extra form hace, háceme, etc.) [DELETE hácete]
+* [[homogeneizar]] (extra form homogeneízo) [DELETE homogeneízo, homogeneízas, homogeneíza, homogeneízan, homogeneícen, homogeneícemos]
+* [[ir]] (extraneous param aux=ser) [REMOVE PARAM]
+* [[jacer]] (extra form jace, jáceme, etc.) [FIX]
+* [[jarrear]] (extraneous param impersonal=yes)
+* [[litografiar]]: (conjugated without í) [OK]
+* [[manumitir]] (extra form manumiso, etc.) [FIX; is an adjective]
+* [[mecanografiar]]: (conjugated without í) [FORMS TO DELETE]
+* [[mordiscar]] (conjugated with no cons alternation) [FORMS TO DELETE]
+* [[obsipar]] (conjugated as obispar) [DELETE VERB]
+* [[orificar]] (conjugated as orificiar) [OK]
+* [[placer]] (missing plega in imperative 3s)
+* [[prevaler]] (extra form preval, incorrect form prévalme etc.) [DELETE preval]
+* [[raer]] (extra form rao) [DELETE rao]
+* [[rebordar]] (extraneous param lang=es) [REMOVE PARAM]
+* [[redecir]] (incorrect imp_2s redice instead of redí) [FIX]
+* [[reinstitucionalizar]] (conjugated with no cons alternation) [FORMS TO DELETE]
+* [[reirse]] [DELETE]
+* [[serigrafiar]]: (conjugated without í) [FORMS TO DELETE]
+* [[sobresalir]] (incorrect combined forms e.g. sobrésalme) [OK]
+* [[sustituir]] (extra form sustituto, etc.) [OK]
+* [[valefacer]] (extra form caleface) [FIX]
+* [[valer]] (extra form val, etc.) [OK]
+
+* LOTS OF COMBINED FORMS OF VERBS IN -iar, -uar, -ai-, -au-, -ei-, -eu-, etc.
+Example: afeitar (afeítate, afeítese, afeítense). Need a script to find them.
+
+* [[acostar]]: normally <ue> but in meaning "arrive at the coast", <>
+* [[adecuar]]: <+,ú>
+* [[aerografiar]]: <í>
+* [[aferrar]]: <+,ie[obsolete]>
+* [[afiliar]]: <>
+* [[aforar]]: in meaning "to gauge, to measure": <>; in meaning "otorgar fuero": <ue>
+* [[agraviar]]: <>
+* [[agriar]]: <í,+>
+* [[asolar]]: in meaning "destroy": <ue,+>; in meaning "to dry up": <>
+* [[atentar]]: in meaning "to commit a crime" does not have vowel alt
+* [[atesar]]: <>; possibly <ie> in obsolete meaning "atiesar"
+* [[atestar]]: in meaning "to pack": <ie,+>; in meaning "testify": <>
+* [[autoevacuarse]]: <+,ú>
+* [[auxiliar]]: <>
+* [[avalentar]]: <>
+* [[cimentar]]: <ie,+>
+* [[comisariar]]: <í>
+* [[desafiliar]]: <>
+* [[desaforar]]: "to deprive of fuero": <ue,+[less common]>
+* [[desairar]]: <>
+* [[desmembrar]]: <ie,+>
+* [[dezmar]]: <>
+* [[ejecutoriar]]: <í,+>
+* [[emparentar]]: <í,+>
+* [[encentar]]: <>
+* [[encubertar]]: <>
+* [[engrosar]]: <ue,+>
+* [[escenografiar]]: <í>
+* [[evacuar]]: <+,ú>
+* [[expatriar]]: <í,+>
+* [[extasiar]]: <í>
+* [[gloriar]]: <í>
+* [[hibernar]]: no vowel alt or e-ie; e-ie not in RAE, ask about it
+* [[historiar]]: <í,+>
+* [[invernar]]: <ie,+>
+* [[licuar]]: <+,ú>
+* [[litografiar]]: <í>
+* [[mecanografiar]]: <í>
+* [[paliar]]: <í,+>
+* [[preterir]]: <i.no_pres_stressed>
+* [[promiscuar]]: <+,ú>
+* [[readecuar]]: <+,ú>
+* [[repatriar]]: <í,+>
+* [[serigrafiar]]: <í>
+* [[soterrar]]: <ie,+>
+* [[templar]]: <+,ie[in some parts of Latin America]>
+* [[vidriar]]: <í,+>
 
 ---------
 
@@ -396,7 +515,19 @@ local irreg_conjugations = {
 	},
 	{
 		-- abrir, cubrir and compounds
-		match = "brir",
+		match = function(verb)
+			local prefix, base_verb = rmatch(verb, "^(.*)(brir)$")
+			-- Only match abrir, cubrir and compounds, and don't match desabrir/jabrir
+			if not prefix then
+				return nil
+			elseif not prefix:find("a$") and not prefix:find("cu$") then
+				return nil
+			elseif prefix == "desa" or prefix == "ja" then
+				return nil
+			else
+				return prefix, base_verb
+			end
+		end,
 		forms = {pp = "biert"}
 	},
 	{
@@ -649,8 +780,8 @@ local irreg_conjugations = {
 		forms = {pres1_and_sub = {"ro", "roigu", "roy"}}
 	},
 	{
-		-- romper, interromper?
-		match = "romper",
+		-- romper; not corromper; FIXME: not sure about interromper (obsolete)
+		match = "^romper",
 		forms = {pp = "rot"}
 	},
 	{
@@ -692,7 +823,8 @@ local irreg_conjugations = {
 			full_impf = "er",
 			impf_1p = "éramos",
 			pret = "fu",
-			pret_conj = "irreg",
+			pret_conj = "irreg", -- this signals that fu + -ieron -> fueron not fuyeron
+			pret_1s = "fui",
 			pret_3s = "fue",
 			fut = "ser",
 			imp_2s = "sé*", -- * signals that the monosyllabic accent must remain
@@ -868,7 +1000,8 @@ local function combine_stem_ending(base, slot, stem, ending, is_combining_ending
 		return stem .. ending
 	end
 
-	if base.stems.raising_conj and (rfind(ending, "^i" .. V) or slot == "pres_sub_1p" or slot == "pres_sub_2p") then
+	if base.stems.raising_conj and (rfind(ending, "^i" .. V) or
+		slot == "pres_sub_1p" or slot == "pres_sub_2p" or slot == "pres_sub_2sv") then
 		-- need to raise e -> i, o -> u: dormir -> durmió, durmiera, durmiendo, durmamos
 		stem = rsub(stem, "([eo])(" .. C .. "*)$", function(vowel, rest) return raise_vowel[vowel] .. rest end)
 		-- also with stem ending in -gu or -qu (e.g. erguir -> irguió, irguiera, irguiendo, irgamos)
@@ -938,6 +1071,7 @@ local function combine_stem_ending(base, slot, stem, ending, is_combining_ending
 		if slot ~= "pret_3s" then -- exclude hice -> hizo (not #hizco)
 			stem = rsub(stem, "(" .. V .. ")c$", "%1zqu")
 		end
+		stem = stem:gsub("sc$", "squ") -- evanescer -> evanesco, fosforescer -> fosforesco
 		stem = stem:gsub("c$", "z") -- ejercer -> ejerzo, uncir -> unzo
 		stem = stem:gsub("qu$", "c") -- delinquir -> delinco, parecer -> parezqu- -> parezco
 		stem = stem:gsub("g$", "j") -- coger -> cojo, afligir -> aflijo
@@ -965,21 +1099,28 @@ local function add(base, slot, stems, endings, is_combining_ending, allow_overri
 end
 
 
-local function add3(base, slot, prefix, stems, endings, is_combining_ending, allow_overrides)
+local function add3(base, slot, prefix, stems, endings, allow_overrides)
+	if prefix == "" then
+		return add(base, slot, stems, endings, "is combining ending", allow_overrides)
+	end
+
 	if skip_slot(base, slot, allow_overrides) then
 		return
 	end
-	local first = true
+
+	local is_combining_ending = false
+
 	local function do_combine_stem_ending(stem, ending)
-		-- We need to distinguish the case of combining prefix with stem vs. stem with ending inside of
-		-- combine_stem_ending(), in particular in the front-back stem handling. The way we do it is a bit
-		-- of a hack but works.
-		local is_combining_ending = not first
-		first = false
 		return combine_stem_ending(base, slot, stem, ending, is_combining_ending)
 	end
-	iut.add_multiple_forms(base.forms, slot, {prefix, stems, endings}, do_combine_stem_ending, nil, nil,
-		base.all_footnotes)
+
+	-- Have to reimplement add_multiple_forms() ourselves due to the is_combining_ending
+	-- flag, which needs to be different when adding prefix to stems vs. stems to ending.
+	-- Otherwise we get e.g. #reímpreso instead of reimpreso.
+	local tempdest = {}
+	iut.add_forms(tempdest, slot, prefix, stems, do_combine_stem_ending)
+	is_combining_ending = true
+	iut.add_forms(base.forms, slot, tempdest[slot], endings, do_combine_stem_ending)
 end
 
 
@@ -1042,17 +1183,14 @@ local function add_present_subj(base)
 	end
 	local s1, s2, s2v, s3, p1, p2, p3, voseo_stem
 	if base.conj == "ar" then
-		voseo_stem = base.stems.pres_sub_unstressed
 		s1, s2, s2v, s3, p1, p2, p3 = "e", "es", "és", "e", "emos", "éis", "en"
 	else
-		-- voseo and tu forms are identical
-		voseo_stem = base.stems.pres_sub_stressed
-		s1, s2, s2v, s3, p1, p2, p3 = "a", "as", "as", "a", "amos", "áis", "an"
+		s1, s2, s2v, s3, p1, p2, p3 = "a", "as", "ás", "a", "amos", "áis", "an"
 	end
 
 	addit("1s", base.stems.pres_sub_stressed, s1)
 	addit("2s", base.stems.pres_sub_stressed, s2)
-	addit("2sv", voseo_stem, s2v)
+	addit("2sv", base.stems.pres_sub_unstressed, s2v)
 	addit("3s", base.stems.pres_sub_stressed, s3)
 	addit("1p", base.stems.pres_sub_unstressed, p1)
 	addit("2p", base.stems.pres_sub_unstressed, p2)
@@ -1726,6 +1864,8 @@ local function add_categories_and_annotation(alternant_multiword_spec, base, mul
 		else
 			if rfind(base.inf_stem, V .. "c$") then
 				cons_alt = "c-zc"
+			elseif base.inf_stem:find("sc$") then
+				cons_alt = "hard-soft"
 			elseif base.inf_stem:find("c$") then
 				cons_alt = "c-z"
 			elseif base.inf_stem:find("qu$") then
