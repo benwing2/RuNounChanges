@@ -620,11 +620,16 @@ end
 
 
 local function parse_before_or_post_text(props, text, segments, lemma_is_last)
+	-- If the text begins with a hyphen, include the hyphen in the set of allowed characters
+	-- for an inflected segment. This way, e.g. conjugating "-ir" is treated as a regular
+	-- -ir verb rather than a hyphen + irregular [[ir]].
+	local is_suffix = rfind(text, "^%-")
 	-- Call parse_balanced_segment_run() to keep multiword links together.
 	local bracketed_runs = export.parse_balanced_segment_run(text, "[", "]")
 	-- Split on space or hyphen. Use preserve_splitchar so we know whether the separator was
 	-- a space or hyphen.
-	local space_separated_groups = export.split_alternating_runs(bracketed_runs, "[ %-]", "preserve splitchar")
+	local space_separated_groups = export.split_alternating_runs(bracketed_runs,
+		is_suffix and " " or "[ %-]", "preserve splitchar")
 
 	local parsed_components = {}
 	local parsed_components_translit = {}
