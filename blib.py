@@ -1769,7 +1769,8 @@ def split_generate_args(tempresult):
   return args
 
 def compare_new_and_old_template_forms(origt, newt, generate_old_forms, generate_new_forms, pagemsg, errandpagemsg,
-    already_split=False):
+    already_split=False, show_all=False):
+  bad = False
   old_result = generate_old_forms()
   if old_result is None:
     errandpagemsg("WARNING: Error generating old forms, can't compare")
@@ -1784,17 +1785,27 @@ def compare_new_and_old_template_forms(origt, newt, generate_old_forms, generate
     if form not in new_forms:
       pagemsg("WARNING: for original %s and new %s, form %s=%s in old forms but missing in new forms" % (
         origt, newt, form, old_forms[form]))
-      return False
+      bad = True
+      if not show_all:
+        return False
+      continue
     if form not in old_forms:
       pagemsg("WARNING: for original %s and new %s, form %s=%s in new forms but missing in old forms" % (
         origt, newt, form, new_forms[form]))
-      return False
+      bad = True
+      if not show_all:
+        return False
+      continue
     if new_forms[form] != old_forms[form]:
       pagemsg("WARNING: for original %s and new %s, form %s=%s in old forms but =%s in new forms" % (
         origt, newt, form, old_forms[form], new_forms[form]))
-      return False
-  pagemsg("%s and %s have same forms" % (origt, newt))
-  return True
+      bad = True
+      if not show_all:
+        return False
+      continue
+  if not bad:
+    pagemsg("%s and %s have same forms" % (origt, newt))
+  return not bad
 
 def find_defns(text, langcode):
   lines = text.split("\n")
