@@ -121,12 +121,12 @@ def delete_form_1(page, index, lemma, formind, formval):
 
     newnewsubsec = re.sub(r"^# \{\{inflection of\|[^{}\n]*\}\}\n", remove_inflections, newsubsec, 0, re.M)
     if newnewsubsec != newsubsec:
-      notes.append("removed {{inflection of}} inflection(s) for bad Spanish form(s)")
+      notes.append("removed {{inflection of}} inflection(s) for bad Spanish verb form(s) of [[%s]]" % lemma)
       subsections[k] = newnewsubsec
 
     newnewsubsec = re.sub(r"^# \{\{es-verb form of\|[^{}\n]*\}\}\n", remove_inflections, newsubsec, 0, re.M)
     if newnewsubsec != newsubsec:
-      notes.append("removed {{es-verb form of}} inflection(s) for bad Spanish form(s)")
+      notes.append("removed {{es-verb form of}} inflection(s) for bad Spanish verb form(s) of [[%s]]" % lemma)
       subsections[k] = newnewsubsec
 
   for k in reversed(subsections_to_delete):
@@ -154,8 +154,8 @@ def delete_form_1(page, index, lemma, formind, formval):
       return None, None
     del sections[j]
     del sections[j-1]
-    notes.append("excised %s subsection%s for bad Spanish forms, leaving no Spanish section" %
-      (len(subsections_to_delete), "" if len(subsections_to_delete) == 1 else "s"))
+    notes.append("excised %s subsection%s for bad Spanish verb form(s) of [[%s]], leaving no Spanish section" %
+      (len(subsections_to_delete), "" if len(subsections_to_delete) == 1 else "s", lemma))
     if j > len(sections):
       # We deleted the last section, remove the separator at the end of the
       # previous section.
@@ -203,8 +203,8 @@ def delete_form_1(page, index, lemma, formind, formval):
           deletable_subsec_text)
       return None, None
 
-    notes.append("%s for bad Spanish forms, leaving some subsections remaining" %
-      deletable_subsec_note_text)
+    notes.append("%s for bad Spanish verb form(s) of %s, leaving some subsections remaining" % (
+      deletable_subsec_note_text, lemma))
     text = "".join(sections)
 
   return text, notes
