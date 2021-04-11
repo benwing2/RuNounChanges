@@ -1,0 +1,56 @@
+abeldar: abeldo, abeldas, abelda, abeldan, abelde, abeldes, abelden
+acaecer: acaezco, acaeces, acaecés, acaecemos, acaecéis, acaecías, acaecíamos, acaecíais, acaecí, acaeciste, acaecimos, acaecisteis, acaeceré, acaecerás, acaeceremos, acaeceréis, acaecerías, acaeceríamos, acaeceríais, acaezcas, acaezcás, acaezcamos, acaezcáis, acaecieras, acaeciéramos, acaecierais, acaeciese, acaeciésemos, acaecieseis, acaecieres, acaeciéremos, acaeciereis, acaecé, acaeced
+# edit: acaece, acaecen, acaecía, acaecían, acaeció, acaecieron, acaecerá, acaecerán, acaecería, acaecerían, acaezca, acaezcan, acaeciera, acaecieran, acaeciese, acaeciesen, acaeciere, acaecieren
+acontecer: acontezco, aconteces, acontecés, acontecemos, acontecéis, acontecías, acontecíamos, acontecíais, acontecí, aconteciste, acontecimos, acontecisteis, aconteceré, acontecerás, aconteceremos, aconteceréis, acontecerías, aconteceríamos, aconteceríais, acontezcas, acontezcás, acontezcamos, acontezcáis, acontecieras, aconteciéramos, acontecierais, aconteciese, aconteciésemos, acontecieseis, acontecieres, aconteciéremos, aconteciereis, acontecé, aconteced
+# edit: acontece, acontecen, acontecía, acontecían, aconteció, acontecieron, acontecerá, acontecerán, acontecería, acontecerían, acontezca, acontezcan, aconteciera, acontecieran, aconteciese, aconteciesen, aconteciere, acontecieren
+anticuar: anticuo, anticuas, anticua, anticuan, anticue, anticues, anticuen
+antojar: antojo, antojas, antojás, antojamos, antojáis, antojabas, antojábamos, antojabais, antojé, antojaste, antojamos, antojasteis, antojaré, antojarás, antojaremos, antojaréis, antojarías, antojaríamos, antojaríais, antojes, antojés, antojemos, antojéis, antojaras, antojáramos, antojarais, antojase, antojásemos, antojaseis, antojares, antojáremos, antojareis, antojá, antojad
+# edit: antoja, antojan, antojaba, antojaban, antojó, antojaron, antojará, antojarán, antojaría, antojarían, antoje, antojen, antojara, antojaran, antojase, antojasen, antojare, antojaren
+aerografiar: aerografio, aerografias, aerografia, aerografian, aerografie, aerografies, aerografien
+afiliar: afilío, afilías, afilía, afilían, afilíe, afilíes, afilíen
+agraviar: agravío, agravías, agravía, agravían, agravíe, agravíes, agravíen
+arrecir: arrezco, arreces, arrece, arrecen, arrezca, arrezcas, arrezcás, arrezcamos, arrezcáis, arrezcan
+aserrar: aserro, aserras, aserra, aserran, aserre, aserres, aserren
+atesar: atieso, atiesas, atiesa, atiesan, atiese, atieses, atiesen
+avalentar: avaliento, avalientas, avalienta, avalientan, avaliente, avalientes, avalienten
+auxiliar: auxilío, auxilías, auxilía, auxilían, auxilíe, auxilíes, auxilíen
+balbucir: balbuzco, balbuzca, balbuzcas, balbuzcás, balbuzcamos, balbuzcáis, balbuzcan
+cellisquear: cellisqueo, cellisqueas, cellisqueás, cellisqueamos, cellisqueáis, cellisquean, cellisqueabas, cellisqueábamos, cellisqueabais, cellisqueaban, cellisqueé, cellisqueaste, cellisqueamos, cellisqueasteis, cellisquearon, cellisquearé, cellisquearás, cellisquearemos, cellisquearéis, cellisquearán, cellisquearías, cellisquearíamos, cellisquearíais, cellisquearían, cellisquees, cellisqueés, cellisqueemos, cellisqueéis, cellisqueen, cellisquearas, cellisqueáramos, cellisquearais, cellisquearan, cellisquease, cellisqueásemos, cellisqueaseis, cellisqueasen, cellisqueares, cellisqueáremos, cellisqueareis, cellisquearen, cellisqueá, cellisquead, cellisqueada, cellisqueados, cellisqueadas
+# edit: cellisquea, cellisqueaba, cellisqueó, cellisqueará, cellisquearía, cellisquee, cellisqueara, cellisquease, cellisqueare
+colorir: coloro, colores, colore, coloren, colora, coloras, colorás, coloramos, coloráis, coloran
+comisariar: comisario, comisarias, comisaria, comisarian, comisarie, comisaries, comisarien
+desafiliar: desafilío, desafilías, desafilía, desafilían, desafilíe, desafilíes, desafilíen
+desagregar: desagregé, desagrege, desagreges, desagregemos, desagregéis, desagregen
+desairar: desaíro, desaíras, desaíra, desaíran, desaíre, desaíres, desaíren
+descordar: descordo, descordas, descorda, descordan, descorde, descordes, descorden
+desestacionalizar: desestacionalizé, desestacionalize, desestacionalizes, desestacionalizemos, desestacionalizéis, desestacionalizen
+desgonzar: desgonzé, desgonze, desgonzes, desgonzemos, desgonzéis, desgonzen
+desguinzar: desguinzé, desguinze, desguinzes, desguinzemos, desguinzéis, desguinzen
+desnacer: desnato, desnata, desnatos, desnatas
+desposeer: desposeso, desposesa, desposesos, desposesas
+dezmar: diezmo, diezmas, diezma, diezman, diezme, diezmes, diezmen
+diluviar: diluvio, diluvias, diluviás, diluviamos, diluviáis, diluvian, diluviabas, diluviábamos, diluviabais, diluviaban, diluvié, diluviaste, diluviamos, diluviasteis, diluviaron, diluviaré, diluviarás, diluviaremos, diluviaréis, diluviarán, diluviarías, diluviaríamos, diluviaríais, diluviarían, diluvies, diluviés, diluviemos, diluviéis, diluvien, diluviaras, diluviáramos, diluviarais, diluviaran, diluviase, diluviásemos, diluviaseis, diluviasen, diluviares, diluviáremos, diluviareis, diluviaren, diluviá, diluviad, diluviada, diluviados, diluviadas
+# edit: diluvia, diluviaba, diluvió, diluviará, diluviaría, diluvie, diluviara, diluviase, diluviare
+encubertar: encubierto, encubiertas, encubierta, encubiertan, encubierte, encubiertes, encubierten
+entrechocar: entrechocé, entrechoce, entrechoces, entrechocemos, entrechocéis, entrechocen
+entredecir: entredeciré, entredecirás, entredecirá, entredeciramos, entredeciráis, entredecirán, entredeciría, entredecirías, entredeciríamos, entredeciríais, entredecirían
+escenografiar: escenografio, escenografias, escenografia, escenografian, escenografie, escenografies, escenografien
+extasiar: extasio, extasias, extasia, extasian, extasie, extasies, extasien
+hacerse: hácete
+homogeneizar: homogeneízo, homogeneízas, homogeneíza, homogeneízan, homogeneícen, homogeneícemos
+ferrar: ferro, ferras, ferra, ferran, ferre, ferres, ferren
+gloriar: glorio, glorias, gloria, glorian, glorie, glories, glorien
+incensar: incenso, incensas, incensa, incensan, incense, incenses, incensen
+litografiar: litografio, litografias, litografia, litografian, litografie, litografies, litografien
+mecanografiar: mecanografio, mecanografias, mecanografia, mecanografian, mecanografie, mecanografies, mecanografien
+mordiscar: mordiscé, mordisce, mordisces, mordiscemos, mordiscéis, mordiscen
+neviscar: nevisco, neviscas, neviscás, neviscamos, neviscáis, neviscan, neviscabas, neviscábamos, neviscabais, neviscaban, nevisqué, neviscaste, neviscamos, neviscasteis, neviscaron, neviscaré, neviscarás, neviscaremos, neviscaréis, neviscarán, neviscarías, neviscaríamos, neviscaríais, neviscarían, nevisques, nevisqués, nevisquemos, nevisquéis, nevisquen, neviscaras, neviscáramos, neviscarais, neviscaran, neviscase, neviscásemos, neviscaseis, neviscasen, neviscares, neviscáremos, neviscareis, neviscaren, neviscá, neviscad, neviscada, neviscados, neviscadas
+# edit: nevisca, neviscaba, neviscó, neviscará, neviscaría, nevisque, neviscara, neviscase, neviscare
+# delete: obsipar
+prevaler: preval
+preterir: pretiero, pretieres, pretiere, pretieren, pretiera, pretieras, preterás, preteramos, preteráis, pretieran
+raer: rao
+reinstitucionalizar: reinstitucionalizé, reinstitucionalize, reinstitucionalizes, reinstitucionalizemos, reinstitucionalizéis, reinstitucionalizen
+serigrafiar: serigrafio, serigrafias, serigrafia, serigrafian, serigrafie, serigrafies, serigrafien
+sobrepoblar: sobrepoblo, sobrepoblas, sobrepobla, sobrepoblan, sobrepoble, sobrepobles, sobrepoblen
+usucapir: usucapiendo, usucapo, usucapes, usucapís, usucape, usucapimos, usucapen, usucapía, usucapías, usucapíamos, usucapíais, usucapían, usucapí, usucapiste, usucapió, usucapimos, usucapisteis, usucapieron, usucapiré, usucapirás, usucapirá, usucapiremos, usucapiréis, usucapirán, usucapiría, usucapirías, usucapiríamos, usucapiríais, usucapirían, usucapa, usucapas, usucapás, usucapamos, usucapáis, usucapan, usucapiera, usucapieras, usucapiéramos, usucapierais, usucapieran, usucapiese, usucapieses, usucapiésemos, usucapieseis, usucapiesen, usucapiere, usucapieres, usucapiéremos, usucapiereis, usucapieren, usucapí, usucapid, usucapiéndome, usucapiéndote, usucapiéndole, usucapiéndose, usucapiéndonos, usucapiéndoos, usucapiéndoles, usucapiéndolo, usucapiéndola, usucapiéndolos, usucapiéndolas
