@@ -55,17 +55,18 @@ FIXME:
 24. Consider including alternative superseded forms of verbs like [[ciar]] (e.g. pret_3s = cio, ció with footnote).
 25. Allow conjugation of suffixes e.g. -ir, -ecer; need to fix in [[Module:inflection utilities]]. [DONE]
 26. Allow specification of stems esp. so that footnotes can be hung off them; use + for the default.
-27. Don't remove monosyllabic accents when conjugating suffixes.
+27. Don't remove monosyllabic accents when conjugating suffixes. [DONE]
 --]=]
 
 local lang = require("Module:languages").getByCode("es")
 local m_string_utilities = require("Module:string utilities")
 local m_links = require("Module:links")
 local m_table = require("Module:table")
-local iut = require("Module:User:Benwing2/inflection utilities")
-local com = require("Module:User:Benwing2/es-common")
+local iut = require("Module:inflection utilities")
+local com = require("Module:es-common")
 
-local force_cat = true -- set to true for debugging
+local force_cat = false -- set to true for debugging
+local check_for_red_links = false -- set to false for debugging
 
 local rfind = mw.ustring.find
 local rmatch = mw.ustring.match
@@ -235,9 +236,6 @@ end
 
 Special cases for verbs:
 
-auxiliar, gloriar, afiliar, extasiar, acuantiar, desafiliar: -io or -ío. These can be handled by specifying the
-appropriate params in the conjugation.
-
 diluviar, atardecer: impersonal; all finite non-3s forms are nonexistent or hypothetical. Handle using
 '.only3s'.
 
@@ -307,23 +305,34 @@ Verbs to fix (extra forms need to be excised or deleted): The above verbs under 
 (not like abrir).
 
 Verbs with existing errors:
+* [[abeldar]]: (missing <ie>) [FORMS TO DELETE]
+* [[acaecer]]: (used only in 3rd person) [DELETE ALL FIRST AND SECOND PERSON FORMS]
+* [[acontecer]]: (used only in 3rd person) [DELETE ALL FIRST AND SECOND PERSON FORMS]
 * [[anticuar]] (conjugated without ú) [FORMS TO DELETE]
+* [[antojar]]: (used only in 3rd person) [DELETE ALL FIRST AND SECOND PERSON FORMS]
 * [[aerografiar]]: (conjugated without í) [FORMS TO DELETE]
 * [[afiliar]]: (conjugated with í/+ should be only +) [FORMS TO DELETE]
 * [[agraviar]]: (wrongly has í) [FORMS TO DELETE]
+* [[arrecir]]: (not given as no_pres_stressed) [FORMS TO DELETE]
+* [[aserrar]]: (missing <ie>) [FORMS TO DELETE]
+* [[aspaventar]]: (missing <ie>) [OK]
 * [[atesar]]: (wrongly has ie) [FORMS TO DELETE]
 * [[avalentar]]: (wrongly has ie) [FORMS TO DELETE]
 * [[autorregularse]] (conjugated as non-reflexive) [OK]
 * [[auxiliar]]: (conjugated with í/+ should be only +) [FORMS TO DELETE]
+* [[balbucir]] (pres1_and_sub nonexistent) [DELETE PRES1_AND_SUB FORMS]
 * [[caçar]] (conjugated as -zar) [OK]
 * [[calefacer]] (extra form caleface) [FIX]
+* [[cellisquear]]: (used only in 3rd person singular) [DELETE ALL FIRST AND SECOND PERSON FORMS, ALL 3RD PLURAL FORMS AND ALL PP NON-MS FORMS]
 * [[chilenizar]] (conjugated with no cons alternation) [OK]
+* [[colorir]]: (not given as no_pres_stressed) [FORMS TO DELETE]
 * [[comisariar]] (conjugated without í) [FORMS TO DELETE]
 * [[complacer]] (missing complega in imperative 3s) [OK]
 * [[comprehender]] (conjugated as comprender) [OK]
 * [[desafiliar]]: (conjugated with í/+ should be only +) [FORMS TO DELETE]
 * [[desagregar]] (conjugated with no cons alternation) [FORMS TO DELETE]
 * [[desairar]]: (conjugated with í should be only +) [FORMS TO DELETE]
+* [[descordar]]: (missing <ue>) [FORMS TO DELETE]
 * [[deseleccionar]] (conjugated as desseleccionar) [OK]
 * [[desestacionalizar]] (conjugated with no cons alternation) [FORMS TO DELETE]
 * [[desgonzar]] (conjugated with no cons alternation) [FORMS TO DELETE]
@@ -332,6 +341,7 @@ Verbs with existing errors:
 * [[desnacer]] (extra form desnato etc.) [DELETE PP FORMS]
 * [[desposeer]] (extra form desposeso etc.) [DELETE PP FORMS]
 * [[dezmar]]: (wrongly has ie) [FORMS TO DELETE]
+* [[diluviar]]: (used only in 3rd person singular) [DELETE ALL FIRST AND SECOND PERSON FORMS, ALL 3RD PLURAL FORMS AND ALL PP NON-MS FORMS]
 * [[draftear]] (extraneous param lang=es) [REMOVE PARAM]
 * [[ejemplarizar]] (extraneous param compound=1) [compound -> combined]
 * [[ejercitar]] (extraneous param compound=1) [compound -> combined]
@@ -344,20 +354,25 @@ Verbs with existing errors:
 * [[estar]] (incorrect combined forms, e.g. éstela instead of estela) [OK]
 * [[extasiar]]: (conjugated with í/+ should be only í) [FORMS TO DELETE]
 * [[facer]] (extra form face, fáceme, etc.) [FIX]
+* [[ferrar]]: (missing <ie>) [FORMS TO DELETE]
 * [[gloriar]]: (conjugated with í/+ should be only í) [FORMS TO DELETE]
 * [[hacer]] (extra form hace, háceme, etc.) [DELETE hácete]
 * [[homogeneizar]] (extra form homogeneízo) [DELETE homogeneízo, homogeneízas, homogeneíza, homogeneízan, homogeneícen, homogeneícemos]
+* [[incensar]]: (missing <ie>) [FORMS TO DELETE]
 * [[ir]] (extraneous param aux=ser) [REMOVE PARAM]
 * [[jacer]] (extra form jace, jáceme, etc.) [FIX]
 * [[jarrear]] (extraneous param impersonal=yes)
-* [[litografiar]]: (conjugated without í) [OK]
+* [[litografiar]]: (conjugated without í) [FORMS TO DELETE]
 * [[manumitir]] (extra form manumiso, etc.) [FIX; is an adjective]
 * [[mecanografiar]]: (conjugated without í) [FORMS TO DELETE]
 * [[mordiscar]] (conjugated with no cons alternation) [FORMS TO DELETE]
+* [[neviscar]]: (used only in 3rd person singular) [DELETE ALL FIRST AND SECOND PERSON FORMS, ALL 3RD PLURAL FORMS AND ALL PP NON-MS FORMS]
 * [[obsipar]] (conjugated as obispar) [DELETE VERB]
+* [[obstar]]: (used only in 3rd person) [DELETE ALL FIRST AND SECOND PERSON FORMS]
 * [[orificar]] (conjugated as orificiar) [OK]
-* [[placer]] (missing plega in imperative 3s)
+* [[complacer]], [[placer]] (missing plega in imperative 3s, etc.) [OK]
 * [[prevaler]] (extra form preval, incorrect form prévalme etc.) [DELETE preval]
+* [[preterir]]: (not given as no_pres_stressed) [FORMS TO DELETE]
 * [[raer]] (extra form rao) [DELETE rao]
 * [[rebordar]] (extraneous param lang=es) [REMOVE PARAM]
 * [[redecir]] (incorrect imp_2s redice instead of redí) [FIX]
@@ -365,8 +380,10 @@ Verbs with existing errors:
 * [[reirse]] [DELETE]
 * [[serigrafiar]]: (conjugated without í) [FORMS TO DELETE]
 * [[sobresalir]] (incorrect combined forms e.g. sobrésalme) [OK]
+* [[superpoblar]] (missing <ue>) [FORMS TO DELETE]
 * [[sustituir]] (extra form sustituto, etc.) [OK]
-* [[valefacer]] (extra form caleface) [FIX]
+* [[usucapir]]: (used only in inf and pp) [DELETE ALL FORMS BUT PP]
+* [[valefacer]] (extra form valeface) [FIX]
 * [[valer]] (extra form val, etc.) [OK]
 
 * LOTS OF COMBINED FORMS OF VERBS IN -iar, -uar, -ai-, -au-, -ei-, -eu-, etc.
@@ -378,9 +395,12 @@ Example: afeitar (afeítate, afeítese, afeítense). Need a script to find them.
 * [[aferrar]]: <+,ie[obsolete]>
 * [[afiliar]]: <>
 * [[aforar]]: in meaning "to gauge, to measure": <>; in meaning "otorgar fuero": <ue>
+* [[arrecir]]: <no_pres_stressed>
 * [[agraviar]]: <>
 * [[agriar]]: <í,+>
+* [[aserrar]]: <ie>
 * [[asolar]]: in meaning "destroy": <ue,+>; in meaning "to dry up": <>
+* [[aspaventar]]: <ie>
 * [[atentar]]: in meaning "to commit a crime" does not have vowel alt
 * [[atesar]]: <>; possibly <ie> in obsolete meaning "atiesar"
 * [[atestar]]: in meaning "to pack": <ie,+>; in meaning "testify": <>
@@ -388,14 +408,17 @@ Example: afeitar (afeítate, afeítese, afeítense). Need a script to find them.
 * [[auxiliar]]: <>
 * [[avalentar]]: <>
 * [[cimentar]]: <ie,+>
+* [[colar]]: most meanings <ue> but "canonically confer (an ecclesiastical benefit)" <>
+* [[colorir]]: <no_pres_stressed>
 * [[comisariar]]: <í>
 * [[desafiliar]]: <>
 * [[desaforar]]: "to deprive of fuero": <ue,+[less common]>
 * [[desairar]]: <>
+* [[desolar]]: <ue,+>
 * [[desmembrar]]: <ie,+>
 * [[dezmar]]: <>
 * [[ejecutoriar]]: <í,+>
-* [[emparentar]]: <í,+>
+* [[emparentar]]: <ie,+>
 * [[encentar]]: <>
 * [[encubertar]]: <>
 * [[engrosar]]: <ue,+>
@@ -403,9 +426,12 @@ Example: afeitar (afeítate, afeítese, afeítense). Need a script to find them.
 * [[evacuar]]: <+,ú>
 * [[expatriar]]: <í,+>
 * [[extasiar]]: <í>
+* [[ferrar]]: <ie>
+* [[follar]]: <ue>
 * [[gloriar]]: <í>
 * [[hibernar]]: no vowel alt or e-ie; e-ie not in RAE, ask about it
 * [[historiar]]: <í,+>
+* [[incensar]]: <ie>
 * [[invernar]]: <ie,+>
 * [[licuar]]: <+,ú>
 * [[litografiar]]: <í>
@@ -415,8 +441,10 @@ Example: afeitar (afeítate, afeítese, afeítense). Need a script to find them.
 * [[promiscuar]]: <+,ú>
 * [[readecuar]]: <+,ú>
 * [[repatriar]]: <í,+>
+* [[retrocar]]: <ue,+>
 * [[serigrafiar]]: <í>
 * [[soterrar]]: <ie,+>
+* [[superpoblar]]: <ue>
 * [[templar]]: <+,ie[in some parts of Latin America]>
 * [[vidriar]]: <í,+>
 
@@ -547,10 +575,23 @@ local irreg_conjugations = {
 		forms = {vowel_alt = "ue", pres1 = "cuez", pres_sub_unstressed = "coz", cons_alt = "c-z"}, -- not cozco, as would normally be generated
 	},
 	{
-		match = "^dar",
+		-- dar, desdar
+		match = match_against_verbs("dar", {"", "des"}),
 		forms = {
-			pres_1s = "doy", pret = "d", pret_conj = "er",
-			pres_sub_1s = "dé*", pres_sub_3s = "dé*" -- * signals that the monosyllabic accent must remain
+			-- we need to override various present indicative forms and add an accent for the compounds;
+			-- not needed for the simplex and in fact the accents will be removed in that case
+			pres_1s = "doy",
+			pres_2s = "dás",
+			pres_3s = "dá",
+			pres_2p = "dáis",
+			pres_3p = "dán",
+			pret = "d", pret_conj = "er",
+			pres_sub_1s = "dé*",  -- * signals that the monosyllabic accent must remain
+			pres_sub_2s = "dés",
+			pres_sub_3s = "dé*",
+			pres_sub_2p = "déis",
+			pres_sub_3p = "dén",
+			imp_2s = "dá",
 		}
 	},
 	{
@@ -682,6 +723,17 @@ local irreg_conjugations = {
 		forms = {pp = {"imprimid", "impres"}}
 	},
 	{
+		-- infecir
+		match = "infecir",
+		-- override cons_alt, otherwise the verb would be categorized as a c-zc alternating verb
+		forms = {vowel_alt = "i", pres1 = "infiz", pres_sub_unstressed = "infez", cons_alt = "c-z"}, -- not infizco, as would normally be generated
+	},
+	{
+		match = "infecir",
+		-- override cons_alt, otherwise the verb would be categorized as a c-zc alternating verb
+		forms = {pres1_and_sub = "infez", cons_alt = "c-z"}, -- not mezco, as would normally be generated
+	},
+	{
 		match = "^ir",
 		forms = {
 			pres_1s = "voy",
@@ -702,6 +754,7 @@ local irreg_conjugations = {
 			imp_2sv = "andá",
 			imp_1p = {"vamos", "vayamos"},
 			refl_imp_2p = {"idos", "iros"},
+			imp_2p_comb_os = {"idos", "iros"},
 		}
 	},
 	{
@@ -780,8 +833,16 @@ local irreg_conjugations = {
 		forms = {pres1_and_sub = {"ro", "roigu", "roy"}}
 	},
 	{
-		-- romper; not corromper; FIXME: not sure about interromper (obsolete)
-		match = "^romper",
+		-- romper, entrerromper, arromper, derromper; not corromper; FIXME: not sure about interromper (obsolete)
+		match = function(verb)
+			local prefix, base_verb = rmatch(verb, "^(.*)(romper)$")
+			-- Don't match corromper
+			if prefix == "cor" then
+				return nil
+			else
+				return prefix, base_verb
+			end
+		end,
 		forms = {pp = "rot"}
 	},
 	{
@@ -926,6 +987,11 @@ local function skip_slot(base, slot, allow_overrides)
 		return true
 	end
 
+	if base.only3s and (slot:find("^pp_f") or slot:find("^pp_mp")) then
+		-- diluviar, atardecer, neviscar; impersonal verbs have only masc sing pp
+		return true
+	end
+
 	if not slot:find("[123]") then
 		-- Don't skip non-personal slots.
 		return false
@@ -936,7 +1002,7 @@ local function skip_slot(base, slot, allow_overrides)
 	end
 
 	if base.only3s and (not slot:find("3s") or slot:find("^imp_") or slot:find("^neg_imp_")) then
-		-- diluviar, atardecer
+		-- diluviar, atardecer, neviscar
 		return true
 	end
 
@@ -1285,10 +1351,10 @@ local function remove_monosyllabic_accents(base)
 			for _, form in ipairs(base.forms[slot]) do
 				if form.form:find("%*") then -- * means leave alone any accented vowel
 					form.form = form.form:gsub("%*", "")
-				elseif rfind(form.form, AV) and not rfind(form.form, V .. C .. V) then
-					-- Has an accented vowel and no VCV sequence; may be monosyllabic, in which case we need
-					-- to remove the accent. Check # of syllables and remove accent if only 1. Note that
-					-- the checks for accented vowel and VCV sequence are not strictly needed, but are
+				elseif not rfind(form.form, "^%-") and rfind(form.form, AV) and not rfind(form.form, V .. C .. V) then
+					-- Has an accented vowel and no VCV sequence and not a suffix; may be monosyllabic, in which
+					-- case we need to remove the accent. Check # of syllables and remove accent if only 1. Note
+					-- that the checks for accented vowel and VCV sequence are not strictly needed, but are
 					-- optimizations to avoid running the whole syllabification algorithm on every verb form.
 					local syllables = com.syllabify(form.form)
 					if #syllables == 1 then
@@ -1552,7 +1618,8 @@ local function parse_indicator_spec(angle_bracket_spec)
 				end
 				table.insert(base.vowel_alt, {form = alt, footnotes = fetch_footnotes(comma_separated_groups[j])})
 			end
-		elseif first_element == "no_pres_stressed" or first_element == "only3s" or first_element == "only3sp" then
+		elseif (first_element == "no_pres_stressed" or first_element == "no_pres1_and_sub" or
+				first_element == "only3s" or first_element == "only3sp") then
 			if #comma_separated_groups[1] > 1 then
 				parse_err("No footnotes allowed with '" .. first_element .. "' spec")
 			end
@@ -1631,6 +1698,8 @@ local function construct_stems(base)
 	stems.pres1_and_sub = stems.pres1_and_sub or
 		-- If no_pres_stressed given, the entire subjunctive is missing.
 		base.no_pres_stressed and {} or
+		-- If no_pres1_and_sub given, pres1 and entire subjunctive are missing.
+		base.no_pres1_and_sub and {} or
 		nil
 	stems.pres1 = stems.pres1 or stems.pres1_and_sub or stems.pres_stressed
 	stems.impf = stems.impf or base.inf_stem
@@ -1769,7 +1838,7 @@ local function add_categories_and_annotation(alternant_multiword_spec, base, mul
 		end
 	end
 
-	if not from_headword and not multiword_lemma then
+	if check_for_red_links and not from_headword and not multiword_lemma then
 		for _, slot_and_accel in ipairs(all_verb_slots) do
 			local slot = slot_and_accel[1]
 			local forms = base.forms[slot]
@@ -1777,13 +1846,12 @@ local function add_categories_and_annotation(alternant_multiword_spec, base, mul
 			if forms then
 				for _, form in ipairs(forms) do
 					if not form.form:find("%[%[") then
-						--temporarily disable while testing
-						--local title = mw.title.new(form.form)
-						--if title and not title.exists then
-						--	insert_cat("verbs with red links in their inflection tables")
-						--	must_break = true
-						--	break
-						--end
+						local title = mw.title.new(form.form)
+						if title and not title.exists then
+							insert_cat("verbs with red links in their inflection tables")
+							must_break = true
+						break
+						end
 					end
 				end
 			end
@@ -1808,7 +1876,7 @@ local function add_categories_and_annotation(alternant_multiword_spec, base, mul
 	elseif base.only3sp then
 		insert_ann("defective", "third-person only")
 		insert_cat("third-person-only verbs")
-	elseif base.no_pres_stressed then
+	elseif base.no_pres_stressed or base.no_pres1_and_sub then
 		insert_ann("defective", "defective")
 		insert_cat("defective verbs")
 	else
@@ -1862,7 +1930,9 @@ local function add_categories_and_annotation(alternant_multiword_spec, base, mul
 				cons_alt = "gu-gü"
 			end
 		else
-			if rfind(base.inf_stem, V .. "c$") then
+			if base.no_pres_stressed or base.no_pres1_and_sub then
+				cons_alt = nil -- no c-zc alternation in balbucir or arrecir
+			elseif rfind(base.inf_stem, V .. "c$") then
 				cons_alt = "c-zc"
 			elseif base.inf_stem:find("sc$") then
 				cons_alt = "hard-soft"
@@ -2461,7 +2531,7 @@ function export.do_generate_forms(parent_args, from_headword, def)
 
 	if not args[1] then
 		if PAGENAME == "es-conj" or PAGENAME == "es-verb" then
-			args[1] = def or "auxiliar<í,+>"
+			args[1] = def or "licuar<+,ú>"
 		else
 			args[1] = PAGENAME
 			-- If pagename has spaces in it, add links around each word
