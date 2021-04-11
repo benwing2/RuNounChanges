@@ -39,14 +39,14 @@ FIXME:
     moving the irregular-verb handling code in construct_stems() into detect_indicator_spec(). [DONE]
 11. Implement make_table. [DONE]
 12. Vowel alternation should show u-ue (jugar), i-ie (adquirir), e-í (reír) alternations specially. [DONE]
-13. Handle linking of multiword forms as is done in [[Module:es-headword]].
+13. Handle linking of multiword forms as is done in [[Module:es-headword]]. [DONE]
 14. Implement comparison against previous module. [DONE]
 15. Implement categorization of irregularities for individual tenses.
 16. Support nocomb=1. [DONE]
 17. (Possibly) display irregular forms in a different color, as with the old module.
 18. (Possibly) display a "rule" description indicating the types of alternations.
 19. Implement replace_reflexive_indicators().
-20. Implement verbs with attached clitics e.g. [[pasarlo]], [[corrérsela]].
+20. Implement verbs with attached clitics e.g. [[pasarlo]], [[corrérsela]]. [DONE]
 21. When footnote + tú/vos notation, add a space before tú/vos.
 22. Fix [[erguir]] so ie-i vowel alternation produces ye- at beginning of word, similarly for errar. Also allow
     multiple vowel alternation specs in irregular verbs, for errar. Finally, ie should show as e-ye for errar
@@ -56,14 +56,17 @@ FIXME:
 25. Allow conjugation of suffixes e.g. -ir, -ecer; need to fix in [[Module:inflection utilities]]. [DONE]
 26. Allow specification of stems esp. so that footnotes can be hung off them; use + for the default.
 27. Don't remove monosyllabic accents when conjugating suffixes. [DONE]
+28. If multiword expression with no <>, add <> after first word, as with [[Module:es-headword]]. [DONE]
+29. (Possibly) link the parts of a reflexive or cliticized infinitive, as done in [[Module:es-headword]]. [DONE]
+30. Final fixes to allow [[Module:es-headword]] to use this module.
 --]=]
 
 local lang = require("Module:languages").getByCode("es")
 local m_string_utilities = require("Module:string utilities")
 local m_links = require("Module:links")
 local m_table = require("Module:table")
-local iut = require("Module:inflection utilities")
-local com = require("Module:es-common")
+local iut = require("Module:User:Benwing2/inflection utilities")
+local com = require("Module:User:Benwing2/es-common")
 
 local force_cat = false -- set to true for debugging
 local check_for_red_links = false -- set to false for debugging
@@ -1446,24 +1449,44 @@ local function process_slot_overrides(base, do_basic, reflexive_only)
 end
 
 
--- Add reflexive pronouns as appropriate to the non-reflexive forms that were generated.
-local function add_reflexive_pronouns(base)
+-- Add a reflexive pronoun or fixed clitic, e.g. [[lo]], as appropriate to the base form that were generated.
+-- `do_joined` means to do only the forms where the pronoun is joined to the end of the form; otherwise, do only the
+-- forms where it is not joined and precedes the form.
+local function add_reflexive_or_fixed_clitic_to_forms(base, do_reflexive, do_joined)
 	for _, slotaccel in ipairs(verb_slots_basic) do
 		local slot, accel = unpack(slotaccel)
+		local clitic
+		if not do_reflexive then
+			clitic = base.clitic
+		elseif slot:find("[123]") then
+			local persnum = slot:match("^.*_(.-)$")
+			clitic = person_number_to_reflexive_pronoun[persnum]
+		else
+			clitic = "se"
+		end
 		if base.forms[slot] then
-			if slot == "infinitive" or slot == "gerund" then
-				add_forms_with_clitic(base, slot, {"se"})
-			elseif slot:find("^imp_") then
-				local persnum = slot:match("^imp_(.*)$")
-				add_forms_with_clitic(base, slot, {person_number_to_reflexive_pronoun[persnum]})
-			elseif slot:find("^pp_") or slot == "infinitive_linked" then
-				-- do nothing with past participles or infinitive linked (handled at the end)
+			if slot == "infinitive" or slot == "gerund" or slot:find("^imp_") then
+				if do_joined then
+					add_forms_with_clitic(base, slot, {clitic})
+				end
+			elseif do_reflexive and slot:find("^pp_") or slot == "infinitive_linked" then
+				-- do nothing with reflexive past participles or with infinitive linked (handled at the end)
 			elseif slot:find("^neg_imp_") then
 				error("Internal error: Should not have forms set for negative imperative at this stage")
-			else
-				local persnum = slot:match("^.*_(.-)$")
+			elseif not do_joined then
+				-- Add clitic as separate word before all other forms. Check whether form already has brackets
+				-- (as will be the case if the form has a fixed clitic).
 				for _, form in ipairs(base.forms[slot]) do
-					form.form = "[[" .. person_number_to_reflexive_pronoun[persnum] .. "]] [[" .. form.form .. "]]"
+					if base.args.noautolinkverb then
+						form.form = clitic .. " " .. form.form
+					else
+						local clitic_pref = "[[" .. clitic .. "]] "
+						if form.form:find("%[%[") then
+							form.form = clitic_pref .. form.form
+						else
+							form.form = clitic_pref .. "[[" .. form.form .. "]]"
+						end
+					end
 				end
 			end
 		end
@@ -1503,7 +1526,9 @@ local function generate_negative_imperatives(base)
 		local from = "pres_sub_" .. persnum
 		local to = "neg_imp_" .. persnum
 		insert_forms(base, to, iut.map_forms(base.forms[from], function(form)
-			if form:find("%[%[") then
+			if base.args.noautolinkverb then
+				return "no " .. form
+			elseif form:find("%[%[") then
 				-- already linked, e.g. when reflexive
 				return "[[no]] " .. form
 			else
@@ -1534,6 +1559,18 @@ local function copy_imperatives_to_reflexive_combined_forms(base)
 end
 
 
+local function add_missing_links_to_forms(base)
+	-- Any forms without links should get them now. Redundant ones will be stripped later.
+	for slot, forms in pairs(base.forms) do
+		for _, form in ipairs(forms) do
+			if not form.form:find("%[%[") then
+				form.form = "[[" .. form.form .. "]]"
+			end
+		end
+	end
+end
+
+
 local function conjugate_verb(base)
 	add_present_indic(base)
 	add_present_subj(base)
@@ -1553,13 +1590,24 @@ local function conjugate_verb(base)
 		-- the reflexive attached.
 		add_combined_forms(base)
 	end
+	-- We need to add joined reflexives, then joined and non-joined clitics, then non-joined reflexives, so we get
+	-- [[házmelo]] but [[no]] [[me]] [[lo]] [[haga]].
 	if base.refl then
 		-- This should happen after remove_monosyllabic_accents() so the * marking the preservation of monosyllabic
 		-- accents doesn't end up in the middle of a word.
-		add_reflexive_pronouns(base)
+		add_reflexive_or_fixed_clitic_to_forms(base, "do reflexive", "do joined")
 		process_slot_overrides(base, "do basic", "do reflexive") -- do reflexive-only basic slot overrides
 	end
-	-- This should happen after add_reflexive_pronouns() so negative imperatives get the reflexive pronoun in them.
+	if base.clitic then
+		-- This should happen after reflexives are added.
+		add_reflexive_or_fixed_clitic_to_forms(base, false, "do joined")
+		add_reflexive_or_fixed_clitic_to_forms(base, false, false)
+	end
+	if base.refl then
+		add_reflexive_or_fixed_clitic_to_forms(base, "do reflexive", false)
+	end
+	-- This should happen after add_reflexive_or_fixed_clitic_to_forms() so negative imperatives get the reflexive pronoun
+	-- and clitic in them.
 	generate_negative_imperatives(base)
 	if not base.nocomb then
 		if base.refl then
@@ -1568,6 +1616,9 @@ local function conjugate_verb(base)
 			copy_imperatives_to_reflexive_combined_forms(base)
 		end
 		process_slot_overrides(base, false) -- do combined slot overrides
+	end
+	if not base.args.noautolinkverb then
+		add_missing_links_to_forms(base)
 	end
 	handle_infinitive_linked(base)
 end
@@ -1637,54 +1688,100 @@ local function parse_indicator_spec(angle_bracket_spec)
 end
 
 
--- Normalize all lemmas, splitting off separable prefixes and substituting the pagename for blank lemmas.
-local function normalize_all_lemmas(alternant_multiword_spec, from_headword)
-	local any_pre_pref
+-- Normalize all lemmas, substituting the pagename for blank lemmas and adding links to multiword lemmas.
+local function normalize_all_lemmas(alternant_multiword_spec)
+
+	-- (1) Add links to all before and after text.
+	if not alternant_multiword_spec.args.noautolinktext then
+		alternant_multiword_spec.post_text = com.add_links(alternant_multiword_spec.post_text)
+		for _, alternant_or_word_spec in ipairs(alternant_multiword_spec.alternant_or_word_specs) do
+			alternant_or_word_spec.before_text = com.add_links(alternant_or_word_spec.before_text)
+			if alternant_or_word_spec.alternants then
+				for _, multiword_spec in ipairs(alternant_or_word_spec.alternants) do
+					multiword_spec.post_text = com.add_links(multiword_spec.post_text)
+					for _, word_spec in ipairs(multiword_spec.word_specs) do
+						word_spec.before_text = com.add_links(word_spec.before_text)
+					end
+				end
+			end
+		end
+	end
+
+	-- (2) Remove any links from the lemma, but remember the original form
+	--     so we can use it below in the 'lemma_linked' form.
 	iut.map_word_specs(alternant_multiword_spec, function(base)
 		if base.lemma == "" then
 			local PAGENAME = mw.title.getCurrentTitle().text
 			base.lemma = PAGENAME
 		end
-		--if base.lemma:find(" ") and not base.lemma:find("%[%[") then
-		--	-- If lemma is multiword and has no links, add links automatically.
-		--	base.lemma= "[[" .. base.lemma:gsub(" ", "]] [[") .. "]]"
-		--end
-		base.orig_lemma = base.lemma
-		base.orig_lemma_no_links = m_links.remove_links(base.lemma)
-		-- Normalize the linked lemma by removing dot, underscore, and <pron> and such indicators.
-		base.linked_lemma = remove_reflexive_indicators(base.lemma)
-		base.lemma = m_links.remove_links(base.linked_lemma)
-		local lemma = base.orig_lemma_no_links
-		base.pre_pref, base.post_pref = "", ""
-		local refl_verb, clitic = rmatch(lemma, "^(.-)(l[aeo]s?)$")
+
+		base.user_specified_lemma = base.lemma
+
+		base.lemma = m_links.remove_links(base.lemma)
+		local refl_verb, clitic = rmatch(base.lemma, "^(.-)(l[aeo]s?)$")
 		if not refl_verb then
-			refl_verb, clitic = lemma, nil
+			refl_verb, clitic = base.lemma, nil
 		end
 		local verb, refl = rmatch(refl_verb, "^(.-)(se)$")
 		if not verb then
 			verb, refl = refl_verb, nil
 		end
-		base.verb = verb
+		base.user_specified_verb = verb
 		base.refl = refl
 		base.clitic = clitic
-		if base.refl then
-			alternant_multiword_spec.refl = true
-		end
-		base.from_headword = from_headword
-		base.nocomb = alternant_multiword_spec.args.nocomb
-	end)
-	if any_pre_pref then
-		iut.map_word_specs(alternant_multiword_spec, function(base)
-			base.any_pre_pref = true
-		end)
-	end
-	if alternant_multiword_spec.refl then
-		iut.map_word_specs(alternant_multiword_spec, function(base)
-			if not base.refl then
-				error("If some alternants are reflexive, all must be")
+
+		if base.refl and base.clitic then
+			-- We have to parse the verb suffix to see how to construct the base verb; e.g.
+			-- abrírsela -> abrir but oírsela -> oír. We parse the verb suffix again in all cases
+			-- in detect_indicator_spec(), after splitting off the prefix of irrregular verbs.
+			local actual_verb
+			local inf_stem, suffix = rmatch(base.user_specified_verb, "^(.*)([aáeéií]r)$")
+			if not inf_stem then
+				error("Unrecognized infinitive: " .. base.user_specified_verb)
 			end
-		end)
-	end
+			if suffix == "ír" and inf_stem:find("[aeo]$") then
+				-- accent on suffix should remain
+				base.verb = base.user_specified_verb
+			else
+				base.verb = inf_stem .. com.remove_accent_from_syllable(suffix)
+			end
+		else
+			base.verb = base.user_specified_verb
+		end
+
+		local linked_lemma
+		if alternant_multiword_spec.args.noautolinkverb or base.user_specified_lemma:find("%[%[") then
+			linked_lemma = base.user_specified_lemma
+		elseif base.refl or base.clitic then
+			-- Reconstruct the linked lemma with separate links around base verb, reflexive pronoun and clitic.
+			local linked_verb
+			if base.refl and base.clitic then
+				local actual_verb
+				local inf_stem, suffix = rmatch(base.verb, "^(.*)([aáeéií]r)$")
+				if not inf_stem then
+					error("Unrecognized infinitive: " .. base.verb)
+				end
+				if suffix == "ír" and inf_stem:find("[aeo]$") then
+					-- accent on suffix should remain
+					actual_verb = base.verb
+				else
+					actual_verb = inf_stem .. com.remove_accent_from_syllable(suffix)
+				end
+				linked_verb = base.verb == actual_verb and "[[" .. base.verb .. "]]" or
+					"[[" .. actual_verb .. "|" .. base.verb .. "]]"
+			else
+				linked_verb = "[[" .. base.verb .. "]]"
+			end
+			linked_verb = linked_verb .. (refl and "[[" .. refl .. "]]" or "") ..
+				(clitic and "[[" .. clitic .. "]]" or "")
+		else
+			-- Add links to the lemma so the user doesn't specifically need to, since we preserve
+			-- links in multiword lemmas and include links in non-lemma forms rather than allowing
+			-- the entire form to be a link.
+			linked_lemma = com.add_links(base.user_specified_lemma)
+		end
+		base.linked_lemma = linked_lemma
+	end)
 end
 
 
@@ -1770,7 +1867,8 @@ local function detect_indicator_spec(base)
 		error("Unrecognized infinitive: " .. base.verb)
 	end
 	base.inf_stem = inf_stem
-	base.conj = suffix == "ír" and "ir" or suffix
+	suffix = suffix == "ír" and "ir" or suffix
+	base.conj = suffix
 	base.frontback = suffix == "ar" and "back" or "front"
 
 	if base.stems.vowel_alt then -- irregular verb with specified vowel alternation
@@ -1818,7 +1916,36 @@ local function detect_indicator_spec(base)
 end
 
 
-local function detect_all_indicator_specs(alternant_multiword_spec)
+local function detect_all_indicator_specs(alternant_multiword_spec, from_headword)
+	-- Propagate some settings up or down.
+	iut.map_word_specs(alternant_multiword_spec, function(base)
+		if base.refl then
+			alternant_multiword_spec.refl = true
+		end
+		if base.clitic then
+			alternant_multiword_spec.clitic = true
+		end
+		base.from_headword = from_headword
+		base.args = alternant_multiword_spec.args
+		-- If fixed clitic, don't include combined forms.
+		base.nocomb = alternant_multiword_spec.args.nocomb or base.clitic
+	end)
+
+	if alternant_multiword_spec.refl then
+		iut.map_word_specs(alternant_multiword_spec, function(base)
+			if not base.refl then
+				error("If some alternants are reflexive, all must be")
+			end
+		end)
+	end
+	if alternant_multiword_spec.clitic then
+		iut.map_word_specs(alternant_multiword_spec, function(base)
+			if not base.clitic then
+				error("If some alternants have a clitic, all must")
+			end
+		end)
+	end
+
 	iut.map_word_specs(alternant_multiword_spec, function(base)
 		detect_indicator_spec(base)
 		construct_stems(base)
@@ -2498,7 +2625,7 @@ local function make_table(alternant_multiword_spec)
 
 	-- Format the combined table.
 	local formatted_combined_table
-	if alternant_multiword_spec.args.nocomb then
+	if alternant_multiword_spec.args.nocomb or alternant_multiword_spec.clitic then
 		formatted_combined_table = ""
 	else
 		forms.footnote = alternant_multiword_spec.footnote_combined
@@ -2520,6 +2647,8 @@ function export.do_generate_forms(parent_args, from_headword, def)
 	local params = {
 		[1] = {},
 		["nocomb"] = {type = "boolean"},
+		["noautolinktext"] = {type = "boolean"},
+		["noautolinkverb"] = {type = "boolean"},
 	}
 
 	if from_headword then
@@ -2530,29 +2659,54 @@ function export.do_generate_forms(parent_args, from_headword, def)
 	local args = require("Module:parameters").process(parent_args, params)
 	local PAGENAME = mw.title.getCurrentTitle().text
 
-	if not args[1] then
+	local arg1 = args[1]
+	if not arg1 then
 		if PAGENAME == "es-conj" or PAGENAME == "es-verb" then
-			args[1] = def or "licuar<+,ú>"
+			arg1 = def or "licuar<+,ú>"
 		else
-			args[1] = PAGENAME
-			-- If pagename has spaces in it, add links around each word
-			--if args[1]:find(" ") then
-			--	args[1] = "[[" .. args[1]:gsub(" ", "]] [[") .. "]]"
-			--end
+			arg1 = PAGENAME
 		end
 	end
+
+	if arg1:find(" ") and not arg1:find("<") then
+		-- If multiword lemma without <> already, try to add it after the first word.
+
+		local need_explicit_angle_brackets = false
+		if arg1:find("%(%(") then
+			need_explicit_angle_brackets = true
+		else
+			local refl_clitic_verb, orig_refl_clitic_verb, post
+
+			-- Try to preserve the brackets in the part after the verb, but don't do it
+			-- if there aren't the same number of left and right brackets in the verb
+			-- (which means the verb was linked as part of a larger expression).
+			refl_clitic_verb, post = rmatch(arg1, "^(.-)( .*)$")
+			local left_brackets = rsub(refl_clitic_verb, "[^%[]", "")
+			local right_brackets = rsub(refl_clitic_verb, "[^%]]", "")
+			if #left_brackets == #right_brackets then
+				arg1 = refl_clitic_verb .. "<>" .. post
+			else
+				need_explicit_angle_brackets = true
+			end
+		end
+
+		if need_explicit_angle_brackets then
+			error("Multiword argument without <> and with alternants, a multiword linked verb or unbalanced brackets; please include <> explicitly: " .. arg1)
+		end
+	end
+
 	local parse_props = {
 		parse_indicator_spec = parse_indicator_spec,
 		lang = lang,
 		allow_default_indicator = true,
 		allow_blank_lemma = true,
 	}
-	local escaped_arg1 = escape_reflexive_indicators(args[1])
+	local escaped_arg1 = escape_reflexive_indicators(arg1)
 	local alternant_multiword_spec = iut.parse_inflected_text(escaped_arg1, parse_props)
 	alternant_multiword_spec.pos = pos or "verbs"
 	alternant_multiword_spec.args = args
-	normalize_all_lemmas(alternant_multiword_spec, from_headword)
-	detect_all_indicator_specs(alternant_multiword_spec)
+	normalize_all_lemmas(alternant_multiword_spec)
+	detect_all_indicator_specs(alternant_multiword_spec, from_headword)
 	local inflect_props = {
 		slot_list = all_verb_slots,
 		lang = lang,
@@ -2562,6 +2716,14 @@ function export.do_generate_forms(parent_args, from_headword, def)
 		include_user_specified_links = true,
 	}
 	iut.inflect_multiword_or_alternant_multiword_spec(alternant_multiword_spec, inflect_props)
+
+	-- Remove redundant brackets around entire forms.
+	for slot, forms in pairs(alternant_multiword_spec.forms) do
+		for _, form in ipairs(forms) do
+			form.form = com.strip_redundant_links(form.form)
+		end
+	end
+
 	compute_categories_and_annotation(alternant_multiword_spec, from_headword)
 	return alternant_multiword_spec
 end
