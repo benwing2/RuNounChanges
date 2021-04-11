@@ -329,6 +329,7 @@ Verbs with existing errors:
 * [[comisariar]] (conjugated without í) [FORMS TO DELETE]
 * [[complacer]] (missing complega in imperative 3s) [OK]
 * [[comprehender]] (conjugated as comprender) [OK]
+* [[decebir]] (was conjugated without <i>) [FORMS TO DELETE]
 * [[desafiliar]]: (conjugated with í/+ should be only +) [FORMS TO DELETE]
 * [[desagregar]] (conjugated with no cons alternation) [FORMS TO DELETE]
 * [[desairar]]: (conjugated with í should be only +) [FORMS TO DELETE]
