@@ -153,7 +153,7 @@ function export.show(frame)
 	end
 
 	if pos_functions[poscat] then
-		pos_functions[poscat].func(args, data, tracking_categories)
+		pos_functions[poscat].func(args, data, tracking_categories, frame)
 	end
 
 	if args["json"] then
@@ -934,11 +934,20 @@ local function base_default_verb_forms(refl_clitic_verb, categories, post, no_li
 		ret.pres = base .. "o"
 	end
 	local pres_stem = rmatch(ret.pres, "^(.*)o$")
-	ret.pres_ie = com.apply_vowel_alternation(pres_stem, "ie")
-	ret.pres_iu = com.apply_vowel_alternation(pres_stem, "ue")
-	ret.pres_i = com.apply_vowel_alternation(pres_stem, "i")
-	ret.pres_iacc = com.apply_vowel_alternation(pres_stem, "iacc")
-	ret.pres_uacc = com.apply_vowel_alternation(pres_stem, "uacc")
+
+	local function do_vowel_alt(alt)
+		local retval = com.apply_vowel_alternation(pres_stem, alt)
+		if retval.ret then
+			retval.ret = retval.ret .. "o"
+		end
+		return retval
+	end
+
+	ret.pres_ie = do_vowel_alt("ie")
+	ret.pres_ue = do_vowel_alt("ue")
+	ret.pres_i = do_vowel_alt("i")
+	ret.pres_iacc = do_vowel_alt("í")
+	ret.pres_uacc = do_vowel_alt("ú")
 	if suffix == "ar" then
 		if rfind(base, "^" .. C .. "*[iu]$") or base == "gui" then -- criar, fiar, guiar, liar, etc.
 			ret.pret = base .. "e"
@@ -1009,7 +1018,9 @@ end
 
 local function pres_special_case(form, def_forms)
 	local ret
-	if form == "+ie" then
+	if not form or not form:find("^%+") then
+		return nil
+	elseif form == "+ie" then
 		ret = def_forms.pres_ie
 	elseif form == "+ue" then
 		ret = def_forms.pres_ue
@@ -1020,9 +1031,6 @@ local function pres_special_case(form, def_forms)
 	elseif form == "+ú" then
 		ret = def_forms.pres_uacc
 	end
-	if not form then
-		return nil
-	end
 	if not ret then
 		error("Internal error: Something wrong, should have def_forms entry for vowel alternation " .. form)
 	end
@@ -1032,6 +1040,28 @@ local function pres_special_case(form, def_forms)
 	return ret.ret
 end
 
+
+local function get_headword_inflection(forms, label, accel_form)
+	if forms then
+		local inflection = accel_form and {label = label, accel = {form = accel_form}} or {label = label}
+		for _, form in ipairs(forms) do
+			local qualifiers
+			if form.footnotes then
+				qualifiers = {}
+				for _, footnote in ipairs(form.footnotes) do
+					footnote = footnote:gsub("^%[(.*)%]$", "%1")
+					table.insert(qualifiers, footnote)
+				end
+			end
+			table.insert(inflection, {term = form.form, qualifiers = qualifiers})
+		end
+		return inflection
+	elseif label then
+		return {label = "no " .. label}
+	else
+		return {}
+	end
+end
 
 pos_functions["verbs"] = {
 	params = {
@@ -1046,8 +1076,9 @@ pos_functions["verbs"] = {
 		["noautolinktext"] = {type = "boolean"},
 		["noautolinkverb"] = {type = "boolean"},
 		["attn"] = {type = "boolean"},
+		["new"] = {type = "boolean"},
 	},
-	func = function(args, data, tracking_categories)
+	func = function(args, data, tracking_categories, frame)
 		local preses, prets, parts
 		local pagename = args.pagename or PAGENAME
 		local def_forms
@@ -1061,6 +1092,31 @@ pos_functions["verbs"] = {
 			pagename = "averiguar"
 		end
 		
+		if args.new then
+			local parargs = frame:getParent().args
+			local alternant_multiword_spec = require("Module:es-verb").do_generate_forms(parargs, "from headword")
+			for _, cat in ipairs(alternant_multiword_spec.categories) do
+				table.insert(data.categories, cat)
+			end
+
+			if #data.heads == 0 then
+				for _, head in ipairs(alternant_multiword_spec.forms.infinitive_linked) do
+					table.insert(data.heads, head.form)
+				end
+			end
+			table.insert(data.inflections, get_headword_inflection(alternant_multiword_spec.forms.pres_1s,
+				"first-person singular present", "1|s|pres|ind"))
+			table.insert(data.inflections, get_headword_inflection(alternant_multiword_spec.forms.pret_1s,
+				"first-person singular preterite", "1|s|pret|ind"))
+			table.insert(data.inflections, get_headword_inflection(alternant_multiword_spec.forms.pp_ms,
+				"past participle", "m|s|past|part"))
+			return
+		end
+
+		if #args.pres > 0 or #args.pret > 0 or #args.part > 0 then
+			track("verb-old")
+		end
+
 		if args[1] then
 			-------------------------- ANGLE-BRACKET FORMAT --------------------------
 

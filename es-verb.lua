@@ -58,15 +58,15 @@ FIXME:
 27. Don't remove monosyllabic accents when conjugating suffixes. [DONE]
 28. If multiword expression with no <>, add <> after first word, as with [[Module:es-headword]]. [DONE]
 29. (Possibly) link the parts of a reflexive or cliticized infinitive, as done in [[Module:es-headword]]. [DONE]
-30. Final fixes to allow [[Module:es-headword]] to use this module.
+30. Final fixes to allow [[Module:es-headword]] to use this module. [DONE]
 --]=]
 
 local lang = require("Module:languages").getByCode("es")
 local m_string_utilities = require("Module:string utilities")
 local m_links = require("Module:links")
 local m_table = require("Module:table")
-local iut = require("Module:User:Benwing2/inflection utilities")
-local com = require("Module:User:Benwing2/es-common")
+local iut = require("Module:inflection utilities")
+local com = require("Module:es-common")
 
 local force_cat = false -- set to true for debugging
 local check_for_red_links = false -- set to false for debugging
@@ -1617,10 +1617,12 @@ local function conjugate_verb(base)
 		end
 		process_slot_overrides(base, false) -- do combined slot overrides
 	end
+	-- This should happen before add_missing_links_to_forms() so that the comparison `form == base.lemma`
+	-- in handle_infinitive_linked() works correctly and compares unlinked forms to unlinked forms.
+	handle_infinitive_linked(base)
 	if not base.args.noautolinkverb then
 		add_missing_links_to_forms(base)
 	end
-	handle_infinitive_linked(base)
 end
 
 
@@ -1754,25 +1756,9 @@ local function normalize_all_lemmas(alternant_multiword_spec)
 			linked_lemma = base.user_specified_lemma
 		elseif base.refl or base.clitic then
 			-- Reconstruct the linked lemma with separate links around base verb, reflexive pronoun and clitic.
-			local linked_verb
-			if base.refl and base.clitic then
-				local actual_verb
-				local inf_stem, suffix = rmatch(base.verb, "^(.*)([aáeéií]r)$")
-				if not inf_stem then
-					error("Unrecognized infinitive: " .. base.verb)
-				end
-				if suffix == "ír" and inf_stem:find("[aeo]$") then
-					-- accent on suffix should remain
-					actual_verb = base.verb
-				else
-					actual_verb = inf_stem .. com.remove_accent_from_syllable(suffix)
-				end
-				linked_verb = base.verb == actual_verb and "[[" .. base.verb .. "]]" or
-					"[[" .. actual_verb .. "|" .. base.verb .. "]]"
-			else
-				linked_verb = "[[" .. base.verb .. "]]"
-			end
-			linked_verb = linked_verb .. (refl and "[[" .. refl .. "]]" or "") ..
+			linked_lemma = base.user_specified_verb == base.verb and "[[" .. base.user_specified_verb .. "]]" or
+				"[[" .. base.verb .. "|" .. base.user_specified_verb .. "]]"
+			linked_lemma = linked_lemma .. (refl and "[[" .. refl .. "]]" or "") ..
 				(clitic and "[[" .. clitic .. "]]" or "")
 		else
 			-- Add links to the lemma so the user doesn't specifically need to, since we preserve
@@ -2654,6 +2640,8 @@ function export.do_generate_forms(parent_args, from_headword, def)
 	if from_headword then
 		params["lemma"] = {list = true}
 		params["id"] = {}
+		params["json"] = {} -- ignored
+		params["new"] = {} -- temporary hack; will remove
 	end
 
 	local args = require("Module:parameters").process(parent_args, params)
