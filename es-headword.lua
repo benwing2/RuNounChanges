@@ -118,6 +118,7 @@ function export.show(frame)
 		["head"] = {list = true},
 		["suff"] = {type = "boolean"},
 		["json"] = {type = "boolean"},
+		["id"] = {},
 	}
 
 	local parargs = frame:getParent().args
@@ -139,6 +140,7 @@ function export.show(frame)
 		heads = args["head"],
 		genders = {},
 		inflections = {},
+		id = args["id"],
 	}
 
 	if args["suff"] then

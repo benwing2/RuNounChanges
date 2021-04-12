@@ -1726,8 +1726,12 @@ local function normalize_all_lemmas(alternant_multiword_spec)
 	--     so we can use it below in the 'lemma_linked' form.
 	iut.map_word_specs(alternant_multiword_spec, function(base)
 		if base.lemma == "" then
-			local PAGENAME = mw.title.getCurrentTitle().text
-			base.lemma = PAGENAME
+			base.lemma = alternant_multiword_spec.args.pagename or
+				alternant_multiword_spec.args.head and alternant_multiword_spec.args.head[1]
+			if not base.lemma then
+				local PAGENAME = mw.title.getCurrentTitle().text
+				base.lemma = PAGENAME
+			end
 		end
 
 		base.user_specified_lemma = base.lemma
@@ -2651,9 +2655,18 @@ function export.do_generate_forms(parent_args, from_headword, def)
 	}
 
 	if from_headword then
-		params["lemma"] = {list = true}
+		params["head"] = {list = true}
+		params["pres"] = {list = true} --present
+		params["pres_qual"] = {list = "pres=_qual", allow_holes = true}
+		params["pret"] = {list = true} --preterite
+		params["pret_qual"] = {list = "pret=_qual", allow_holes = true}
+		params["part"] = {list = true} --participle
+		params["part_qual"] = {list = "part=_qual", allow_holes = true}
+		params["pagename"] = {} -- for testing
+		params["attn"] = {type = "boolean"}
 		params["id"] = {}
-		params["json"] = {} -- ignored
+		params["json"] = {}
+		params["pagename"] = {}
 		params["new"] = {} -- temporary hack; will remove
 	end
 
@@ -2661,6 +2674,9 @@ function export.do_generate_forms(parent_args, from_headword, def)
 	local PAGENAME = mw.title.getCurrentTitle().text
 
 	local arg1 = args[1]
+	if not arg1 and from_headword then
+		arg1 = args.pagename or args.head[1]
+	end
 	if not arg1 then
 		if PAGENAME == "es-conj" or PAGENAME == "es-verb" then
 			arg1 = def or "licuar<+,ú>"
