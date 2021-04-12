@@ -111,6 +111,11 @@ def process_text_on_page(index, pagetitle, text):
         headt = None
         continue
 
+      if getparam(headt, "new"):
+        pagemsg("Saw new=, skipping: %s" % unicode(headt))
+        headt = None
+        continue
+
       new_template = blib.parse_text(unicode(t))
       newt = list(new_template.filter_templates())[0]
       blib.set_template_name(newt, "es-verb")
@@ -133,6 +138,10 @@ def process_text_on_page(index, pagetitle, text):
           notes.append("convert {{es-verb}} to new format compatible with {{es-conj}}")
         else:
           pagemsg("No changes to %s" % unicode(headt))
+      headt = None
+
+  if headt:
+    pagemsg("WARNING: Saw {{es-verb}} without {{es-conj}}: %s" % unicode(headt))
 
   return unicode(parsed), notes
 
