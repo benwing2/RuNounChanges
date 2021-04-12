@@ -1113,8 +1113,10 @@ pos_functions["verbs"] = {
 			return
 		end
 
-		if #args.pres > 0 or #args.pret > 0 or #args.part > 0 then
-			track("verb-old")
+		if args[1] then
+			track("verb-old-arg1")
+		elseif #args.pres > 0 or #args.pret > 0 or #args.part > 0 then
+			track("verb-old-multiarg")
 		end
 
 		if args[1] then
