@@ -119,7 +119,7 @@ def push_manual_changes(save, verbose, diff, direcfile, annotation, startFrom, u
             pagemsg("WARNING: Something wrong, length mismatch during replacement: Expected length change=%s, actual=%s, ratio=%.2f, curr=%s, repl=%s"
                 % (repl_curr_diff, newtext_text_diff, ratio, curr_template,
                   repl_template))
-        changelog = "Replaced <%s> with <%s> (%s)" % (truncate(curr_template),
+        changelog = "replace <%s> with <%s> (%s)" % (truncate(curr_template),
             truncate(repl_template), annotation)
         pagemsg("Change log = %s" % changelog)
       return newtext, changelog
