@@ -452,6 +452,19 @@ Example: afeitar (afeítate, afeítese, afeítense). Need a script to find them.
 * [[templar]]: <+,ie[in some parts of Latin America]>
 * [[vidriar]]: <í,+>
 
+Second round of verbs to fix:
+
+* [[apropriar]]: forms point to reflexive [FORMS TO FIX]
+* [[autogobernarse]]: (missing <ie>) [FORMS TO DELETE]
+* [[autorreproducirse]]: (wrongly had regular preterite and impf/fut sub) [FORMS TO DELETE]
+* [[aventarse]]: (missing <ie>) [FORMS TO DELETE]
+* [[aventar]]: forms point to reflexive [FORMS TO FIX]
+* [[culiar]]: yo culio or culío? [VERIFY]
+* [[desnacer]]: delete [[dasnatos]]
+* [[poseer]]: delete [[posesa]], [[posesos]], [[posesas]]
+* [[reproducir]]: (wrongly had regular preterite and impf/fut sub) [FORMS TO DELETE]
+* [[trasgredir]]: (wrongly had <i>) [FORMS TO DELETE]
+
 ---------
 
 
