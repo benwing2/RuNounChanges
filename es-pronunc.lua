@@ -412,6 +412,28 @@ function export.IPA(text, style, phonetic, do_debug)
 	return ret
 end
 
+-- For bot usage; {{#invoke:es-pronunc|IPA_string|SPELLING|style=STYLE|phonetic=PHONETIC|debug=DEBUG}}
+-- where
+--
+--   1. SPELLING is the word or respelling to generate pronunciation for;
+--   2. required parameter style= indicates the pronunciation style to generate
+--      (e.g. "distincion-yeismo" for distinción+yeísmo, as is common in Spain;
+--      see the comment above export.IPA() above for the full list);
+--   3. phonetic=1 specifies to generate the phonetic rather than phonemic pronunciation;
+--   4. debug=1 includes debug text in the output.
+function export.IPA_string(frame)
+	local iparams = {
+		[1] = {},
+		["style"] = {required = true},
+		["phonetic"] = {type = "boolean"},
+		["debug"] = {type = "boolean"},
+	}
+	local iargs = require("Module:parameters").process(frame.args, iparams)
+	local retval = export.IPA(iargs[1], iargs.style, iargs.phonetic, iargs.debug)
+	return retval.text .. (retval.debug and " ||| " .. retval.debug or "")
+end
+
+
 function export.show(frame)
 	local params = {
 		[1] = {},
