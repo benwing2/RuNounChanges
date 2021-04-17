@@ -39,11 +39,24 @@ def process_page(page, index, args, comment):
 
 params = blib.create_argparser("Delete pages", include_pagefile=True)
 params.add_argument("--comment", help="Specify the change comment to use")
+params.add_argument("--direcfile", help="File containing pages to delete, optionally with comments after ' ||| '.")
 args = params.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
 comment = args.comment and args.comment.decode("utf-8")
+direcfile = args.direcfile and args.direcfile.decode("utf-8")
 
-def do_process_page(page, index):
-  return process_page(page, index, args, comment)
-blib.do_pagefile_cats_refs(args, start, end, do_process_page)
+if direcfile:
+  lines = [x.strip() for x in codecs.open(direcfile, "r", "utf-8")]
+  for index, line in blib.iter_items(lines, start, end):
+    if " ||| " in line:
+      pagetitle, page_comment = line.split(" ||| ")
+    else:
+      pagetitle = line
+      page_comment = comment
+    page = pywikibot.Page(site, pagetitle)
+    process_page(page, index, args, page_comment)
+else:
+  def do_process_page(page, index):
+    return process_page(page, index, args, comment)
+  blib.do_pagefile_cats_refs(args, start, end, do_process_page)
