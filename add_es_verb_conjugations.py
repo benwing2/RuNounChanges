@@ -61,7 +61,66 @@ def process_page_for_generate(page, index, verbs):
   msg("%s%s%s %s" % (prefix, verb, spec, linked_rest))
 
 def process_text_on_page_for_full_conj(index, pagename, text, verbs):
-  pass
+  global args
+  def pagemsg(txt):
+    msg("Page %s %s: %s" % (index, pagename, txt))
+  def errandpagemsg(txt):
+    errandmsg("Page %s %s: %s" % (index, pagename, txt))
+
+  pagemsg("Processing")
+
+  notes = []
+
+  if pagename not in verbs:
+    pagemsg("WARNING: Can't find entry, skipping")
+    return
+
+  entry = verbs[pagename]
+  origentry = entry
+  first, rest = pagename.split(" ", 1)
+  restwords = rest.split(" ")
+  def_link = "%s<> %s" % (first, " ".join("[[%s]]" % word for word in restwords))
+  if def_link == entry:
+    pagemsg("Replacing entry '%s' with a blank entry because it's the default" % entry)
+    entry = ""
+  elif re.sub("<.*?>", "<>", entry) == def_link:
+    newentry = blib.remove_links(entry)
+    pagemsg("Replacing entry '%s' with entry without links '%s'" % (entry, newentry))
+    entry = newentry
+
+  parsed = blib.parse_text(text)
+  for t in parsed.filter_templates():
+    tn = tname(t)
+    origt = unicode(t)
+    if tn == "es-verb":
+      if not getparam(t, "attn"):
+        pagemsg("Didn't see attn=1: %s" % unicode(t))
+        continue
+      rmparam(t, "attn")
+      if entry:
+        t.add("1", entry)
+        notes.append("add conjugation '%s' to Spanish verb" % entry)
+      else:
+        notes.append("add conjugation (default) to Spanish verb")
+    if tn == "head" and getparam(t, "1") == "es" and getparam(t, "2") == "verb":
+      head = getparam(t, "head")
+      if head:
+        pagemsg("WARNING: Removing head=%s compared with entry '%s', original entry '%s': %s" %
+            (head, entry, origentry, unicode(t)))
+        rmparam(t, "head")
+      rmparam(t, "2")
+      rmparam(t, "1")
+      blib.set_template_name(t, "es-verb")
+      if entry:
+        t.add("1", entry)
+        notes.append("convert {{head|es|verb}} to {{es-verb|%s}}" % entry)
+      else:
+        notes.append("convert {{head|es|verb}} to {{es-verb}}")
+    if origt != unicode(t):
+      pagemsg("Replaced %s with %s" % (origt, unicode(t)))
+
+  return unicode(parsed), notes
+
 
 def process_text_on_page_for_single_word(index, pagename, text, spec):
   global args
@@ -103,19 +162,24 @@ parser.add_argument("--mode", choices=["full-conj", "single-word", "generate"], 
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-assert args.mode != "full-conj", "'--mode full-conj' not yet supported"
-
 if args.mode == "full-conj":
   verbs = {}
+  lineno = 0
   for line in codecs.open(args.direcfile, "r", encoding="utf-8"):
+    lineno += 1
     line = line.strip()
     if line.startswith("#"):
       continue
-    verb = re.sub("<.*?>", "", line)
+    verb = blib.remove_links(re.sub("<.*?>", "", line))
     verbs[verb] = line
-  def do_process_text_on_page(index, pagename, text):
-    return process_text_on_page_for_full_conj(index, pagename, text, verbs)
-  blib.do_pagefile_cats_refs(args, start, end, do_process_text_on_page, edit=True, stdin=True)
+    def do_process_page(page, index, parsed=None):
+      pagetitle = unicode(page.title())
+      def pagemsg(txt):
+        msg("Page %s %s: %s" % (index, pagetitle, txt))
+      pagetext = blib.safe_page_text(page, pagemsg)
+      return process_text_on_page_for_full_conj(index, pagetitle, pagetext, verbs)
+    page = pywikibot.Page(site, verb)
+    blib.do_edit(page, lineno, do_process_page, save=args.save, verbose=args.verbose, diff=args.diff)
 elif args.mode == "generate":
   verbs = {}
   for line in codecs.open(args.direcfile, "r", encoding="utf-8"):
