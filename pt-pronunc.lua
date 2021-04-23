@@ -1,8 +1,15 @@
+--[[
+This module implements the template {{pt-IPA}}.
+
+Author: Benwing
+
+]]
+
 local export = {}
 
 local m_IPA = require("Module:IPA")
 
-local lang = require("Module:languages").getByCode("es")
+local lang = require("Module:languages").getByCode("pt")
 
 local u = mw.ustring.char
 local rfind = mw.ustring.find
@@ -85,13 +92,11 @@ local function rsub_repeatedly(term, foo, bar)
 end
 
 -- style == one of the following:
--- "distincion-lleismo": distinción + lleísmo
--- "distincion-yeismo": distinción + yeísmo
--- "seseo-lleismo": seseo + lleísmo
--- "seseo-yeismo": seseo + yeísmo
--- "rioplatense-sheismo": Rioplatense with /ʃ/ (Buenos Aires)
--- "rioplatense-zheismo": Rioplatense with /ʒ/
-function export.IPA(text, style, phonetic, do_debug)
+-- "rio": Carioca accent (of Rio de Janeiro)
+-- "sao-paulo": Paulistano accent (of São Paulo)
+-- "lisbon": Lisbon accent
+-- "portugal-non-lisbon": Portugal accent outside of Lisbon
+function export.IPA(text, style, phonetic)
 	local origtext = text
 
 	local function err(msg)
@@ -324,6 +329,7 @@ function export.IPA(text, style, phonetic, do_debug)
 	-- IPA secondary stress mark (ˌ), in turn possibly followed by a tilde (nasalization). After doing everything
 	-- that depends on the position of stress, we will move the IPA stress marks to the beginning of the syllable.
 	text = rsub(text, "[aeo]", {["a"] = "A", ["e"] = "E", ["o"] = "O"})
+	text = rsub(text, DOTOVER, "") -- eliminate DOTOVER; it served its purpose of preventing stress
 
 	-- Nasal vowel handling.
 
@@ -352,11 +358,11 @@ function export.IPA(text, style, phonetic, do_debug)
 	local nasal_termination_to_glide = {["E"] = "y", ["O"] = "w"}
 	-- In ãe, ão, the second letter represents a glide.
 	text = rsub(text, "(A" .. CFLEX .. stress_c .. "*" .. TILDE .. ")([EO])",
-		function(v1, v2) return v1 .. nasal_termination_to_glide[v2] end)
+		function(v1, v2) return v1 .. nasal_termination_to_glide[v2] .. TILDE end)
 	-- Likewise for õe.
-	text = rsub(text, "(O" .. CFLEX .. stress_c .. "*" .. TILDE .. ")E", "%1y")
-	-- Final -em and -ens (stressed or not) pronounced /ẽj(s)/. (Later converted to /ɐ̃j(s)/ in Portugal.)
-	text = rsub(text, "(E" .. CFLEX .. stress_c .. "*" .. TILDE .. ")(s?#)", "%1y%2")
+	text = rsub(text, "(O" .. CFLEX .. stress_c .. "*" .. TILDE .. ")E", "%1y" .. TILDE)
+	-- Final -em and -ens (stressed or not) pronounced /ẽj̃(s)/. (Later converted to /ɐ̃j̃(s)/ in Portugal.)
+	text = rsub(text, "(E" .. CFLEX .. stress_c .. "*" .. TILDE .. ")(s?#)", "%1y" .. TILDE .. "%2")
 
 	-- Oral diphthongs.
 	local vowel_termination_to_glide = {["i"] = "y", ["u"] = "w"}
@@ -405,6 +411,9 @@ function export.IPA(text, style, phonetic, do_debug)
 		err("Stressed e or o not occurring nasalized or in a diphthong must be marked for quality using é/ê or ó/ô")
 	end
 
+	-- Finally, eliminate DOTUNDER, now that we have done all vowel reductions.
+	text = rsub(text, DOTUNDER, "")
+
 	-- s, z
 	-- s in trans + V -> z: [[transação]], [[intransigência]]
 	text = rsub(text, "(trɐ" .. stress_c .. "*" .. TILDE .. ".)s(" .. V .. ")", "%1z%2")
@@ -450,6 +459,12 @@ function export.IPA(text, style, phonetic, do_debug)
 		text = rsub(text, "ʁ", stye == "rio" and "χ" or "h")
 	end
 
+	-- Glides and h. This must precede coda l -> w in Brazil, because <ol> /ow/ cannot be reduced to /o/.
+	text = rsub(text, "ow", "o(w)")
+	text = rsub(text, "y", "j")
+	text = rsub(text, "Y", "(j)") -- epenthesized in [[faz]], [[tres]], etc.
+	text = rsub(text, "h", "")
+
 	-- l
 	if brazil then
 		-- Coda l -> /w/ in Brazil.
@@ -465,12 +480,12 @@ function export.IPA(text, style, phonetic, do_debug)
 		text = rsub(text, "ɲ", "j" .. TILDE)
 	end
 
-	-- Glides and h.
-	text = rsub(text, "y", "j")
-	text = rsub(text, "Y", "(j)") -- epenthesized in [[faz]], [[tres]], etc.
-	text = rsub(text, "h", "")
-
-	-- FIXME: In Portugal, lower e/ɛ -> ɐ before palatals.
+	if style == "lisbon" then
+		-- In Lisbon, lower e -> ɐ before j, including when nasalized.
+		text = rsub(text, "e(" .. accent_c .. "*%.?j)", "ɐ%1")
+		-- In Lisbon, lower e -> ɐ(j) before other palatals.
+		text = rsub(text, "e(" .. stress_c .. "*)(%.?[ʒʃɲʎ])", "ɐ%1(j)%2")
+	end
 
 	-- Stop consonants.
 	if brazil then
@@ -483,7 +498,7 @@ function export.IPA(text, style, phonetic, do_debug)
 		text = rsub_repeatedly(text, "([^#lɫ." .. TILDE .. "]%.?)([bdg])",
 			function(before, bdg) return before .. fricativize_stop[bdg] end
 		)
-		text = rsub_repeatedly(text, "([^#." .. TILDE .. "]%.?)([bg])",
+		text = rsub_repeatedly(text, "([lɫ]%.?)([bg])",
 			function(before, bg) return before .. fricativize_stop[bg] end
 		)
 	end
@@ -504,31 +519,28 @@ function export.IPA(text, style, phonetic, do_debug)
 	return text
 end
 
--- For bot usage; {{#invoke:pt-pronunc|IPA_string|SPELLING|style=STYLE|phonetic=PHONETIC|debug=DEBUG}}
+-- For bot usage; {{#invoke:pt-pronunc|IPA_string|SPELLING|style=STYLE|phonetic=PHONETIC}}
 -- where
 --
 --   1. SPELLING is the word or respelling to generate pronunciation for;
 --   2. required parameter style= indicates the pronunciation style to generate
---      (e.g. "distincion-yeismo" for distinción+yeísmo, as is common in Spain;
+--      (e.g. "rio" for Rio/Carioca pronunciation, "lisbon" for Lisbon pronunciation;
 --      see the comment above export.IPA() above for the full list);
 --   3. phonetic=1 specifies to generate the phonetic rather than phonemic pronunciation;
---   4. debug=1 includes debug text in the output.
 function export.IPA_string(frame)
 	local iparams = {
 		[1] = {},
 		["style"] = {required = true},
 		["phonetic"] = {type = "boolean"},
-		["debug"] = {type = "boolean"},
 	}
 	local iargs = require("Module:parameters").process(frame.args, iparams)
-	return export.IPA(iargs[1], iargs.style, iargs.phonetic, iargs.debug)
+	return export.IPA(iargs[1], iargs.style, iargs.phonetic)
 end
 
 
 function export.show(frame)
 	local params = {
 		[1] = {},
-		["debug"] = {type = "boolean"},
 		["pre"] = {},
 		["post"] = {},
 		["ref"] = {},
@@ -541,22 +553,18 @@ function export.show(frame)
 	local phonetic = {}
 	local expressed_styles = {}
 	local text = args[1] or mw.title.getCurrentTitle().text
-	local need_rioplat
 	local function dostyle(style)
-		phonemic[style] = export.IPA(text, style, false, args.debug)
-		phonetic[style] = export.IPA(text, style, true, args.debug)
+		phonemic[style] = export.IPA(text, style, false)
+		phonetic[style] = export.IPA(text, style, true)
 	end
 	local function express_style(hidden_tag, tag, style, matching_styles)
 		matching_styles = matching_styles or style
-		if not need_rioplat and not matching_styles:find("rioplatense") then
-			matching_styles = matching_styles .. "-rioplatense-sheismo-zheismo"
-		end
 		-- If style specified, make sure it matches the requested style.
 		local style_matches
 		if not args.style then
 			style_matches = true
 		else
-			local style_parts = rsplit(matching_styles, "%-")
+			local style_parts = rsplit(matching_styles, ";")
 			local or_styles = rsplit(args.style, "%s*,%s*")
 			for _, or_style in ipairs(or_styles) do
 				local and_styles = rsplit(or_style, "%s*%+%s*")
@@ -610,38 +618,43 @@ function export.show(frame)
 			styles = {new_style},
 		})
 	end
-	dostyle("distincion-lleismo")
-	local distincion_different = phonemic["distincion-lleismo"].distincion_different
-	local lleismo_different = phonemic["distincion-lleismo"].lleismo_different
-	need_rioplat = phonemic["distincion-lleismo"].need_rioplat
-	local sheismo_different = phonemic["distincion-lleismo"].sheismo_different
-	if not distincion_different and not lleismo_different then
-		if not need_rioplat then
-			express_style(false, false, "distincion-lleismo", "distincion-seseo-lleismo-yeismo")
-		else
-			express_style(false, "everywhere but Argentina and Uruguay", "distincion-lleismo",
-			"distincion-seseo-lleismo-yeismo")
-		end
-	elseif distincion_different and not lleismo_different then
-		express_style("Spain", "Spain", "distincion-lleismo", "distincion-lleismo-yeismo")
-		express_style("Latin America", "Latin America", "seseo-lleismo", "seseo-lleismo-yeismo")
-	elseif not distincion_different and lleismo_different then
-		express_style(false, "most of Spain and Latin America", "distincion-yeismo", "distincion-seseo-yeismo")
-		express_style(false, "rural northern Spain, Andes Mountains", "distincion-lleismo", "distincion-seseo-lleismo")
+	dostyle("rio")
+	dostyle("sao-paulo")
+	dostyle("lisbon")
+	dostyle("portugal-non-lisbon")
+	local rio_sao_paulo_different = phonemic["rio"] ~= phonemic["sao-paulo"]
+	local lisbon_non_lisbon_different = phonemic["lisbon"] ~= phonemic["portugal-non-lisbon"]
+	local sao_paulo_lisbon_different = phonemic["sao-paulo"] ~= phonemic["lisbon"]
+	local rio_lisbon_different = phonemic["rio"] ~= phonemic["lisbon"]
+	local rio_portugal_non_lisbon_different = phonemic["rio"] ~= phonemic["portugal-non-lisbon"]
+
+	if not sao_paulo_lisbon_different and not rio_sao_paulo_different and not lisbon_non_lisbon_different then
+		-- All the same
+		express_style(false, false, "sao-paulo", "rio;sao-paulo;lisbon;portugal-non-lisbon")
+	elseif not rio_lisbon_different and rio_sao_paulo_different and not lisbon_non_lisbon_different then
+		-- All except São Paulo the same (relates to coda-final -s/z, e.g. [[posto]])
+		express_style(false, "Rio and Portugal", "rio", "rio;lisbon;portugal-non-lisbon")
+		express_style(false, "São Paulo", "sao-paulo")
+	elseif not rio_portugal_non_lisbon_different and not rio_sao_paulo_different and lisbon_non_lisbon_different then
+		-- All except Lisbon the same (e.g. in [[bem]])
+		express_style(false, "Brazil and non-Lisbon Portugal", "rio", "rio;sao-paulo;portugal-non-lisbon")
+		express_style(false, "Lisbon", "lisbon")
+	elseif rio_sao_paulo_different and not lisbon_non_lisbon_different then
+		-- Rio vs. São Paulo vs. Portugal
+		express_style("Brazil", "Rio", "rio")
+		express_style("Brazil", "São Paulo", "sao-paulo")
+		express_style("Portugal", "Portugal", "lisbon", "lisbon;portugal-non-lisbon")
+	elseif lisbon_non_lisbon_different and not rio_sao_paulo_different then
+		-- Brazil vs. Lisbon vs. non-Lisbon
+		express_style("Brazil", "Brazil", "rio", "rio;sao-paulo")
+		express_style("Portugal", "Lisbon", "lisbon")
+		express_style("Portugal", "non-Lisbon", "portugal-non-lisbon")
 	else
-		express_style("Spain", "most of Spain", "distincion-yeismo")
-		express_style("Latin America", "most of Latin America", "seseo-yeismo")
-		express_style("Spain", "rural northern Spain", "distincion-lleismo")
-		express_style("Latin America", "Andes Mountains", "seseo-lleismo")
-	end
-	if need_rioplat then
-		local hidden_tag = distincion_different and "Latin America" or false
-		if sheismo_different then
-			express_style(hidden_tag, "Buenos Aires and environs", "rioplatense-sheismo", "seseo-rioplatense-sheismo")
-			express_style(hidden_tag, "elsewhere in Argentina and Uruguay", "rioplatense-zheismo", "seseo-rioplatense-zheismo")
-		else
-			express_style(hidden_tag, "Argentina and Uruguay", "rioplatense-sheismo", "seseo-rioplatense-sheismo-zheismo")
-		end
+		-- all four different
+		express_style("Brazil", "São Paulo", "sao-paulo")
+		express_style("Portugal", "Lisbon", "lisbon")
+		express_style("Brazil", "Rio", "rio")
+		express_style("Portugal", "non-Lisbon", "portugal-non-lisbon")
 	end
 
 	-- If only one style group, don't indicate the style.
