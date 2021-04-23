@@ -41,6 +41,7 @@ local wordsep_c = "[" .. wordsep .. "]"
 local charsep = accent .. "."
 local charsep_c = "[" .. charsep .. "]"
 local C = "[^" .. vowel .. wordsep .. "]" -- consonant
+local C_OR_WORD_BOUNDARY = "[^" .. vowel .. accent .. ".]" -- consonant or word boundary
 local T = "[^" .. vowel .. "lrɾjw" .. separator .. "]" -- obstruent or nasal
 local TEMP1 = u(0xFFF0)
 
@@ -98,15 +99,7 @@ function export.IPA(text, style, phonetic, do_debug)
 		error(msg .. ": " .. origtext)
 	end
 
-	local distincion = style == "distincion-lleismo" or style == "distincion-yeismo"
-	local lleismo = style == "distincion-lleismo" or style == "seseo-lleismo"
-	local rioplat = style == "rioplatense-sheismo" or style == "rioplatense-zheismo"
-	local sheismo = style == "rioplatense-sheismo"
-	local distincion_different = false
-	local lleismo_different = false
-	local need_rioplat = false
-	local initial_hi = false
-	local sheismo_different = false
+	local brazil = style == "rio" or style == "sao-paulo"
 
 	text = ulower(text or mw.title.getCurrentTitle().text)
 	-- decompose everything but ç and ü
@@ -187,9 +180,14 @@ function export.IPA(text, style, phonetic, do_debug)
 	text = rsub(text, "([gq])u", "%1w") -- [[quando]], [[guarda]], etc.
 	text = rsub(text, "[cq]", "k") -- [[Qatar]], [[burqa]], [[Iraq]], etc.
 
+	-- y -> i between non-vowels, cf. [[Itamaraty]] /i.ta.ma.ɾa.ˈt(ʃ)i/, [[Sydney]] respelled 'Sýdjney' or similar
+	-- /ˈsid͡ʒ.nej/ (Brazilian). Most words with y need respelling in any case, but this may help.
+	text = rsub(text, "(" .. C_OR_WORD_BOUNDARY .. ")y(" .. accent_c .. "*" .. C_OR_WORD_BOUNDARY .. ")", "%1i%2")
+
 	-- Reduce double letters to single, except for rr and ss, which map to special single sounds. Do this before
 	-- syllabification so double letters don't get divided across syllables. The case of cci, cce is handled above.
-	-- [[connosco]] will need respelling 'cõnôsco' or 'con.nôsco'. Examples of words with double letters:
+	-- [[connosco]] will need respelling 'cõnôsco' or 'con.nôsco'. Examples of words with double letters
+	-- (Brazilian pronunciation):
 	-- * [[Accra]] no respelling needed /ˈa.kɾɐ/;
 	-- * [[Aleppo]] respelled 'Aléppo' /aˈlɛpu/;
 	-- * [[buffer]] respelled 'bâffer' /ˈbɐ.feʁ/;
@@ -245,22 +243,10 @@ function export.IPA(text, style, phonetic, do_debug)
 	-- Remove the marker preventing syllable division.
 	text = rsub(text, TEMP1, "")
 
-	-- Convert all a -> A, e -> E, o -> O. We will then convert A -> a/ɐ, E -> e/ɛ/ɨ, O -> o/ɔ/u depending on
-	-- accent marks and context. Ultimately all vowels will be one of the nine qualities aɐeɛiɨoɔu and following
-	-- each vowel will either be nothing (no stress), an IPA primary stress mark (ˈ) or an IPA secondary stress mark
-	-- (ˌ), in turn possibly followed by a tilde (nasalization). After doing everything that depends on the position
-	-- of stress, we will move the IPA stress marks to the beginning of the syllable.
-	text = rsub(text, "[aeo]", {["a"] = "A", ["e"] = "E", ["o"] = "O"})
-
-	-- Convert A/E/O as appropriate when followed by a secondary or tertiary stress marker. If a quality is given,
-	-- it takes precedence; otherwise, act as if an acute accent were given.
-	text = rsub(text, "([AEO])(" .. non_primary_stress_c .. ")", "%1" .. AC .. "%2")
 	-- An acute or circumflex not followed by a stress marker has primary stress, so indicate it.
 	text = rsub_repeatedly(text, "(" .. V .. quality_c .. ")([^" .. stress .. "])", "%1ˈ%2")
 	-- All graves indicate secondary stress.
 	text = rsub(text, GR, "ˌ")
-	-- All tildes without explicit quality mark need to get the circumflex.
-	text = rsub(text, "(" .. V .. ")(" .. stress_c .. "*)" .. TILDE, "%1" .. CFLEX .. "%2" .. TILDE)
 
 	-- Add primary stress to the word if not already present. If the word ends in -mente or -zinho, we add two
 	-- primary stresses; the first one will be converted to secondary stress down below.
@@ -274,7 +260,7 @@ function export.IPA(text, style, phonetic, do_debug)
 
 		-- Check for nasal vowel marked with tilde and without non-primary stress; assign stress to the last such
 		-- syllable in case there's more than one tilde, e.g. [[pãozão]]. Note, this can happen in the part before
-		-- -mente, cf. [[anticristãmente]].
+		-- -mente, cf. [[anticristãmente]], and before -zinho, cf. [[coraçãozinho]].
 		for i = #syllables,1,-1 do
 			local changed
 			syllables[i], changed = rsub(syllables[i], "(" .. V .. quality_c .. "*)" .. TILDE, "%1ˈ" .. TILDE)
@@ -285,7 +271,7 @@ function export.IPA(text, style, phonetic, do_debug)
 
 		-- Apply the default stress rule.
 		local sylno
-		if #syllables > 1 and (rfind(word, "[AEO]s?#") or rfind(word, "[AE]m#") or rfind(word, "[AE]ns#")) then
+		if #syllables > 1 and (rfind(word, "[aeo]s?#") or rfind(word, "[ae]m#") or rfind(word, "[ae]ns#")) then
 			sylno = #syllables - 1
 		else
 			sylno = #syllables
@@ -303,7 +289,7 @@ function export.IPA(text, style, phonetic, do_debug)
 		-- accentuation
 		local syllables = rsplit(word, "%.")
 
-		if rfind(word, "mEn%.tE#") or rfind(word, "zi.ɲO#") then
+		if rfind(word, "%.men%.te#") or rfind(word, "%.zi%.ɲo#") then
 			local mente_syllables
 			-- Words ends in -mente or -zinho; add primary stress to the preceding portion as if stressed
 			-- (e.g. [[agitadamente]] -> 'agitádamente') unless already stressed (e.g. [[rapidamente]]
@@ -330,53 +316,95 @@ function export.IPA(text, style, phonetic, do_debug)
 		words[j] = table.concat(syllables, ".")
 	end
 
+	-- Reconstruct the text from the words.
 	text = table.concat(words, " ")
 
-	local function add_accent(sylno)
-		local syl = syllables[sylno]
-		local changed
-		-- If primary vowel is i/u, it always gets an acute. Make sure to choose the first vowel in case of iu/ui.
-		syl, changed = rsubb(syl, "^([^iu]*[iu])", "%1" .. AC)
-		if not changed then
-			-- Nasalized vowels are closed by default (and always in BP).
-			syl, changed = rsubb(syl, "([aeo])([mn])", "%1" .. CFLEX .. "%2")
-		end
-		if not changed and sylno < #syllables and rfind(syl, "[aeo]$") and
-			rfind(syllables[sylno + 1], "^[mn]") then
-			-- Likewise if vowel is followed by nasal + vowel.
-			syl, changed = rsubb(syl, "([aeo])", "%1" .. CFLEX)
-		end
-		if not changed then
-			-- All remaining a's are acute.
-			syl, changed = rsubb(syl, "a", "a" .. AC)
-		end
-		if not changed then
-			-- ei, eu, oi, ou -> êi, êu, ôi, ôu
-			syl, changed = rsubb(syl, "([eo])([iuywY])", "%1" .. CFLEX .. "%2")
-		end
-		if not changed then
-			err("e or o in stressed syllable '" .. syl .. "' of word '" .. word .. "' must be marked as é/ê or ó/ô")
-		end
-		syllables[sylno] = syl
+	-- Vowel quality handling. First convert all a -> A, e -> E, o -> O. We will then convert A -> a/ɐ, E -> e/ɛ/ɨ,
+	-- O -> o/ɔ/u depending on accent marks and context. Ultimately all vowels will be one of the nine qualities
+	-- aɐeɛiɨoɔu and following each vowel will either be nothing (no stress), an IPA primary stress mark (ˈ) or an
+	-- IPA secondary stress mark (ˌ), in turn possibly followed by a tilde (nasalization). After doing everything
+	-- that depends on the position of stress, we will move the IPA stress marks to the beginning of the syllable.
+	text = rsub(text, "[aeo]", {["a"] = "A", ["e"] = "E", ["o"] = "O"})
+
+	-- Nasal vowel handling.
+
+	-- Final unstressed -am (in third-person plural verbs) pronounced like unstressed -ão.
+	text = rsub(text, "Am#", "A" .. TILDE .. "O#")
+	-- Acute accent on final -em ([[além]], [[também]]) and final -ens ([[parabéns]]) does not indicate an open
+	-- pronunciation.
+	text = rsub(text, "E" .. AC .. "(ˈ[mn]s?#)", "E" .. CFLEX .. "%1")
+	-- Vowel + m/n within a syllable gets converted to tilde.
+	text = rsub(text, "(" .. V .. quality_c .. "*" .. stress_c .. "*)[mn]", "%1" .. TILDE)
+	-- Vowel without quality mark + tilde needs to get the circumflex (possibly fed by the previous change).
+	text = rsub(text, "(" .. V .. ")(" .. stress_c .. "*)" .. TILDE, "%1" .. CFLEX .. "%2" .. TILDE)
+	-- Primary-stressed vowel without quality mark + m/n/nh across syllable boundary gets a circumflex, cf. [[cama]],
+	-- [[ano]], [[banho]].
+	text = rsub(text, "(" .. V .. ")(ˈ%.[mnɲ])", "%1" .. CFLEX .. "%2")
+	if brazil then
+		-- Primary-stressed vowel + m/n across syllable boundary gets nasalized in Brazil, cf. [[cama]], [[ano]].
+		text = rsub(text, "(" .. V .. quality_c .. "*)(ˈ%.[mn])", "%1" .. TILDE .. "%2")
+		-- All vowels before nh (always across syllable boundary) get circumflexed and nasalized in Brazil,
+		-- cf. [[ganhar]].
+		text = rsub(text, "(" .. V .. ")(%.ɲ)", "%1" .. CFLEX .. "%2")
+		text = rsub(text, "(" .. V .. quality_c .. "*)(%.ɲ)", "%1" .. TILDE .. "%2")
 	end
 
-	local accent_to_stress_mark = { [AC] = "ˈ", [GR] = "ˌ", [CFLEX] = "" }
+	-- Nasal diphthongs.
+	local nasal_termination_to_glide = {["E"] = "y", ["O"] = "w"}
+	-- In ãe, ão, the second letter represents a glide.
+	text = rsub(text, "(A" .. CFLEX .. stress_c .. "*" .. TILDE .. ")([EO])",
+		function(v1, v2) return v1 .. nasal_termination_to_glide[v2] end)
+	-- Likewise for õe.
+	text = rsub(text, "(O" .. CFLEX .. stress_c .. "*" .. TILDE .. ")E", "%1y")
+	-- Final -em and -ens (stressed or not) pronounced /ẽj(s)/. (Later converted to /ɐ̃j(s)/ in Portugal.)
+	text = rsub(text, "(E" .. CFLEX .. stress_c .. "*" .. TILDE .. ")(s?#)", "%1y%2")
 
-		-- Vowels are nasalized if followed by nasal in same syllable.
-		if phonetic then
-			for i = 1, #syllables do
-				-- first check for two vowels (veinte)
-				syllables[i] = rsub(syllables[i], "(" .. V .. ")(" .. V .. ")([mnɲ])",
-					"%1" .. TILDE .. "%2" .. TILDE .. "%3")
-				-- then for one vowel
-				syllables[i] = rsub(syllables[i], "(" .. V .. ")([mnɲ])", "%1" .. TILDE .. "%2")
-			end
-		end
+	-- Oral diphthongs.
+	local vowel_termination_to_glide = {["i"] = "y", ["u"] = "w"}
+	-- i/u as second part of diphthong becomes glide.
+	text = rsub(text, "(" .. V .. accent_c .. "*" .. ")([iu])",
+		function(v1, v2) return v1 .. vowel_termination_to_glide[v2] end)
+	-- ei, eu, oi, ou -> êi, êu, ôi, ôu
+	text = rsub(text, "([EO])(" .. stress_c .. "*[ywY])", "%1" .. CFLEX .. "%2")
 
-	--determining whether "y" is a consonant or a vowel
-	text = rsub(text, "y(" .. V .. ")", "ɟ%1") -- not the real sound
-	text = rsub(text, "uy#", "uY") -- a temporary symbol; replaced with i below
-	text = rsub(text, "y", "i")
+	-- Convert A/E/O as appropriate when followed by a secondary or tertiary stress marker. If a quality is given,
+	-- it takes precedence; otherwise, act as if an acute accent were given.
+	text = rsub(text, "([AEO])(" .. non_primary_stress_c .. ")", "%1" .. AC .. "%2")
+
+	-- Unstressed syllables.
+	if brazil then
+		-- Final unstressed -e, -o, -a -> /i/ /u/ /ɐ/
+		local brazil_final_vowel = {["A"] = "ɐ", ["E"] = "i", ["O"] = "u"}
+		text = rsub(text, "([AEO])#", function(v) return brazil_final_vowel[v] .. "#" end)
+		-- Remaining unstressed a, e, o without quality mark -> /a/ /e/ /o/.
+		local brazil_unstressed_vowel = {["A"] = "a", ["E"] = "e", ["O"] = "o"}
+		text = rsub(text, "([AEO])([^" .. accent .. "])",
+			function(v, after) return brazil_unstressed_vowel[v] .. after end)
+	else
+		-- Initial unmarked unstressed e- -> /i/
+		text = rsub(text, "#E([^" .. accent .. "])", "#i%1")
+		-- All other unmarked unstressed -e, -o, -a -> /ɨ/ /u/ /ɐ/
+		local portugal_unstressed_vowel = {["A"] = "ɐ", ["E"] = "ɨ", ["O"] = "u"}
+		text = rsub(text, "([AEO])([^" .. accent .. "])",
+			function(v, after) return portugal_unstressed_vowel[v] .. after end)
+	end
+
+	-- Remaining vowels.
+	-- All remaining a -> /a/ (should always be stressed).
+	text = rsub(text, "A([^" .. quality .. "])", "a%1")
+	-- Ignore quality markers on i, u; only one quality.
+	text = rsub(text, "([iu])" .. quality_c, "%1")
+	-- Convert a/e/o + quality marker appropriately.
+	local vowel_quality = {
+		["A" .. AC] = "a", ["A" .. CFLEX] = "ɐ",
+		["E" .. AC] = "ɛ", ["E" .. CFLEX] = "e",
+		["O" .. AC] = "ɔ", ["O" .. CFLEX] = "o",
+	}
+	text = rsub(text, "([AEO]" .. quality_c .. ")", vowel_quality)
+	-- Any remaining E or O (always without quality marker) is an error.
+	if rfind(text, "[EO]") then
+		err("Stressed e or o not occurring nasalized or in a diphthong must be marked for quality using é/ê or ó/ô")
+	end
 
 	-- s, z
 	-- (1) s between vowels or between vowel and voiced consonant
@@ -402,16 +430,6 @@ function export.IPA(text, style, phonetic, do_debug)
 	text = rsub(text, "ç", "s")
 	text = rsub(text, "[cjñrvy]",
 		{["c"]="k", ["j"]="x", ["ñ"]="ɲ", ["r"]="ɾ", ["v"]="b" })
-
-	-- double l
-	text, lleismo_different = rsubb(text, "ll", lleismo and "ʎ" or "ɟ")
-
-	-- reduce any remaining double consonants ([[Addis Abeba]], [[cappa]], [[descender]] in Latin America ...);
-	-- do this before handling of -nm- e.g. in [[inmigración]], which generates a double consonant, and do this
-	-- before voicing stops before obstruents, to avoid problems with [[cappa]] and [[crackear]]
-	text = rsub(text, "(" .. C .. ")%1", "%1")
-	-- also reduce sz (Latin American in [[fascinante]], etc.)
-	text = rsub(text, "sz", "s")
 
 	-- voiceless stop to voiced before obstruent or nasal; but intercept -ts-, -tz-
 	local voice_stop = { ["p"] = "b", ["t"] = "d", ["k"] = "g" }
