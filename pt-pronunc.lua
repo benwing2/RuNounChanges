@@ -42,7 +42,6 @@ local charsep = accent .. "."
 local charsep_c = "[" .. charsep .. "]"
 local C = "[^" .. vowel .. wordsep .. "]" -- consonant
 local C_OR_WORD_BOUNDARY = "[^" .. vowel .. accent .. ".]" -- consonant or word boundary
-local T = "[^" .. vowel .. "lrɾjw" .. separator .. "]" -- obstruent or nasal
 local TEMP1 = u(0xFFF0)
 
 local unstressed_words = require("Module:table").listToSet({
@@ -407,158 +406,105 @@ function export.IPA(text, style, phonetic, do_debug)
 	end
 
 	-- s, z
-	-- (1) s between vowels or between vowel and voiced consonant
-	text = rsub(text, "(" .. V .. charsep_c .. "*)s(" .. wordsep_c .. "*h?[" .. vowel .. "bdgjlʎmnɲŋrɾʁvwyzʒ])", "%1z%2")
-	-- (2) z before voiceless consonant; c and q already removed
-	text = rsub(text, "(" .. V .. charsep_c .. "*)z(" .. wordsep_c .. "*[çfkpsʃt])", "%1s%2")
-	-- (3) phrase final z
-	text = rsub(text, "z##", "s")
+	-- s in trans + V -> z: [[transação]], [[intransigência]]
+	text = rsub(text, "(trɐ" .. stress_c .. "*" .. TILDE .. ".)s(" .. V .. ")", "%1z%2")
+	-- word final z -> s
+	text = rsub(text, "z#", "s#")
+	-- s between vowels (not nasalized) or between vowel and voiced consonant, including across word boundaries;
+	-- may be fed by previous rule
+	text = rsub(text, "(" .. V .. stress_c .. "*%.?)s(" .. wordsep_c .. "*h?[" .. vowel .. "bdgjlʎmnɲŋrɾʁvwyzʒ])", "%1z%2")
+	-- z before voiceless consonant, e.g. [[Nazca]]; c and q already removed
+	text = rsub(text, "z(" .. wordsep_c .. "*[çfkpsʃt])", "%1s%2")
+	if style == "rio" or not brazil then
+		-- Rio or Portugal; coda s/z -> ʃ/ʒ
+		local shibilant = {["s"] = "ʃ", ["z"] = "j"}
+		text = rsub(text, "([sz])([.#])", function(sz, after) return shibilant[sz] .. after end)
+	end
+	text = rsub(text, "ç", "s")
+	text = rsub(text, "j", "ʒ")
+	-- Reduce identical sibilants, including across word boundaries.
+	text = rsub(text, "([szʃʒ])(" .. wordsep_c .. "*)(%1)", "%2%1")
+	if style == "rio" then
+		-- Also reduce shibilant + sibilant ([[descer]], [[as]] [[zonas]]); not in Portugal.
+		text = rsub(text, "ʃ(" .. wordsep_c .. "*s)", "%2")
+		text = rsub(text, "ʒ(" .. wordsep_c .. "*z)", "%2")
+	end
 
 	-- r
-	text = rsub(text, "([#lnsz])r", "%1ʁ")
-	if style == "rio" then
-		text = rsub(text, "([aei])r#", "%1(ʁ)")
-	elif style == "sao-paulo" then
-		text = rsub(text, "([aei])r#", "%1(ɾ)")
+	-- Double rr -> ʁ already handled above.
+	-- Initial r or l/n/s/z + r -> strong r (ʁ).
+	text = rsub(text, "([#lnszʃʒ]%.)r", "%1.ʁ")
+	-- Word-final r in Brazil in verbs (not [[pôr]]) is usually dropped. Use a spelling like 'marh' for [[mar]]
+	-- to prevent this.
+	if style == "sao-paulo" then
+		text = rsub(text, "([aɛei]ˈ)r#", "%1(ɾ)#")
+	elseif brazil then
+		text = rsub(text, "([aɛei]ˈ)r#", "%1(ʁ)#")
+		-- Coda r outside of São Paulo is /ʁ/.
+		text = rsub(text, "r([.#])", "ʁ%1")
 	end
-	if style == "rio" then
-		text = rsub(text, "r([^" .. V .. ")", "ʁ%1")
-	end
+	-- All other r -> /ɾ/.
 	text = rsub(text, "r", "ɾ")
+	if brazil and phonetic then
+		-- "Strong" ʁ is [h] in most of Brazil, [χ] in Rio.
+		text = rsub(text, "ʁ", stye == "rio" and "χ" or "h")
+	end
 
-	text = rsub(text, "ç", "s")
-	text = rsub(text, "ç", "s")
-	text = rsub(text, "[cjñrvy]",
-		{["c"]="k", ["j"]="x", ["ñ"]="ɲ", ["r"]="ɾ", ["v"]="b" })
+	-- l
+	if brazil then
+		-- Coda l -> /w/ in Brazil.
+		text = rsub(text, "l([.#])", "w%1")
+	elseif phonetic then
+		-- Coda l -> [ɫ] in Portugal.
+		text = rsub(text, "l([.#])", "ɫ%1")
+	end
 
-	-- voiceless stop to voiced before obstruent or nasal; but intercept -ts-, -tz-
-	local voice_stop = { ["p"] = "b", ["t"] = "d", ["k"] = "g" }
-	text = rsub(text, "t(" .. separator_c .. "*[szθ])", "!%1") -- temporary symbol
-	text = rsub(text, "([ptk])(" .. separator_c .. "*" .. T .. ")",
-		function(stop, after) return voice_stop[stop] .. after end)
-	text = rsub(text, "!", "t")
+	-- nh
+	if brazil and phonetic then
+		-- [[unha]] pronounced [ˈũ.j̃ɐ]; nasalization of previous vowel handled above
+		text = rsub(text, "ɲ", "j" .. TILDE)
+	end
 
-	text = rsub(text, "n([# .]*[bpm])", "m%1")
+	-- Glides and h.
+	text = rsub(text, "y", "j")
+	text = rsub(text, "Y", "(j)") -- epenthesized in [[faz]], [[tres]], etc.
+	text = rsub(text, "h", "")
 
-	text = rsub(text, "Y", "i") --final -uy
-	text = rsub(text, "z", "s") --real sound of LatAm Z
-	-- suppress syllable mark before IPA stress indicator
+	-- FIXME: In Portugal, lower e/ɛ -> ɐ before palatals.
+
+	-- Stop consonants.
+	if brazil then
+		-- Palatalize t/d + i -> affricates in Brazil.
+		local palatalize_td = {["t"] = "t͡ʃ", ["d"] = "d͡ʒ"}
+		text = rsub(text, "([td])([ij])", function(td, high_vocalic) return palatalize_td[td] .. high_vocalic end)
+	elseif phonetic then
+		-- Fricativize voiced stops in Portugal when not word-initial or after a nasal; also not in /ld/.
+		local fricativize_stop = { ["b"] = "β", ["d"] = "ð", ["g"] = "ɣ" }
+		text = rsub_repeatedly(text, "([^#lɫ." .. TILDE .. "]%.?)([bdg])",
+			function(before, bdg) return before .. fricativize_stop[bdg] end
+		)
+		text = rsub_repeatedly(text, "([^#." .. TILDE .. "]%.?)([bg])",
+			function(before, bg) return before .. fricativize_stop[bg] end
+		)
+	end
+	text = rsub(text, "g", "ɡ") -- U+0261 LATIN SMALL LETTER SCRIPT G
+
+	-- Stress marks.
+	-- Move IPA stress marks to the beginning of the syllable.
+	text = rsub_repeatedly(text, "([#.])([^#.]*)(" .. ipa_stress_c .. ")", "%1%3%2")
+	-- Suppress syllable mark before IPA stress indicator.
 	text = rsub(text, "%.(" .. ipa_stress_c .. ")", "%1")
-	--make all primary stresses but the last one be secondary
-	text = rsub_repeatedly(text, "ˈ(.+)ˈ", "ˌ%1ˈ")
+	-- Make all primary stresses but the last one in a given word be secondary.
+	text = rsub_repeatedly(text, "ˈ([^ #]+)ˈ", "ˌ%1ˈ")
 
-	if not initial_hi and rfind(text, "[ʎɟ]") then
-		sheismo_different = true
-	end
-	if rioplat then
-		if sheismo then
-			text = rsub(text, "ɟ", "ʃ")
-		else
-			text = rsub(text, "ɟ", "ʒ")
-		end
-	end
-
-	--phonetic transcription
-	if phonetic then
-		-- θ, s, f before voiced consonants
-		local voiced = "mnɲbdɟgʎ"
-		local r = "ɾr"
-		local tovoiced = {
-			["θ"] = "θ̬",
-			["s"] = "z",
-			["f"] = "v",
-		}
-		local function voice(sound, following)
-			return tovoiced[sound] .. following
-		end
-		text = rsub(text, "([θs])(" .. separator_c .. "*[" .. voiced .. r .. "])", voice)
-		text = rsub(text, "(f)(" .. separator_c .. "*[" .. voiced .. "])", voice)
-
-		-- fricative vs. stop allophones; first convert stops to fricatives, then back to stops
-		-- after nasals and sometimes after l
-		local stop_to_fricative = {["b"] = "β", ["d"] = "ð", ["ɟ"] = "ʝ", ["g"] = "ɣ"}
-		local fricative_to_stop = {["β"] = "b", ["ð"] = "d", ["ʝ"] = "ɟ", ["ɣ"] = "g"}
-		text = rsub(text, "[bdɟg]", stop_to_fricative)
-		text = rsub(text, "([mnɲ]" .. separator_c .. "*)([βɣ])",
-			function(nasal, fricative) return nasal .. fricative_to_stop[fricative] end
-		)
-		text = rsub(text, "([lʎmnɲ]" .. separator_c .. "*)([ðʝ])",
-			function(nasal_l, fricative) return nasal_l .. fricative_to_stop[fricative] end
-		)
-		text = rsub(text, "(##" .. ipa_stress_c .. "*)([βɣðʝ])",
-			function(stress, fricative) return stress .. fricative_to_stop[fricative] end
-		)
-		text = rsub(text, "[td]", {["t"] = "t̪", ["d"] = "d̪"})
-
-		-- nasal assimilation before consonants
-		local labiodental, dentialveolar, dental, alveolopalatal, palatal, velar =
-			"ɱ", "n̪", "n̟", "nʲ", "ɲ", "ŋ"
-		local nasal_assimilation = {
-			["f"] = labiodental,
-			["t"] = dentialveolar, ["d"] = dentialveolar,
-			["θ"] = dental,
-			["ĉ"] = alveolopalatal,
-			["ʃ"] = alveolopalatal,
-			["ʒ"] = alveolopalatal,
-			["ɟ"] = palatal, ["ʎ"] = palatal,
-			["k"] = velar, ["x"] = velar, ["g"] = velar,
-		}
-		text = rsub(text, "n(" .. separator_c .. "*)(.)",
-			function(stress, following) return (nasal_assimilation[following] or "n") .. stress .. following end
-		)
-
-		-- lateral assimilation before consonants
-		text = rsub(text, "l(" .. separator_c .. "*)(.)",
-			function(stress, following)
-				local l = "l"
-				if following == "t" or following == "d" then -- dentialveolar
-					l = "l̪"
-				elseif following == "θ" then -- dental
-					l = "l̟"
-				elseif following == "ĉ" or following == "ʃ" then -- alveolopalatal
-					l = "lʲ"
-				end
-				return l .. stress .. following
-			end)
-
-		--semivowels
-		text = rsub(text, "([aeouãẽõũ][iĩ])", "%1̯")
-		text = rsub(text, "([aeioãẽĩõ][uũ])", "%1̯")
-
-		-- voiced fricatives are actually approximants
-		text = rsub(text, "([βðɣ])", "%1̞")
-
-		if rioplat then
-			text = rsub(text, "s(" .. separator_c .. "*" .. C .. ")", "ħ%1") -- not the real symbol
-			text = rsub(text, "z(" .. separator_c .. "*" .. C .. ")", "ɦ%1")
-		end
-	end
-
-	-- remove silent "h" and convert fake symbols to real ones
-	local final_conversions =  {
-		["g"] = "ɡ",  -- U+0261 LATIN SMALL LETTER SCRIPT G
-		["h"] = "",   -- silent "h"
-		["ħ"] = "h",  -- fake aspirated "h" to real "h"
-		["ĉ"] = "t͡ʃ", -- fake "ch" to real "ch"
-		["ɟ"] = phonetic and "ɟ͡ʝ" or "ʝ", -- fake "y" to real "y"
-	}
-	text = rsub(text, "[ghħĉɟ]", final_conversions)
-
-	-- remove # symbols at word and text boundaries
+	-- Remove # symbols at word and text boundaries and recompose.
 	text = rsub(text, "#", "")
 	text = mw.ustring.toNFC(text)
 
-	local ret = {
-		text = text,
-		distincion_different = distincion_different,
-		lleismo_different = lleismo_different,
-		need_rioplat = initial_hi or sheismo_different,
-		sheismo_different = sheismo_different,
-	}
-	return ret
+	return text
 end
 
--- For bot usage; {{#invoke:es-pronunc|IPA_string|SPELLING|style=STYLE|phonetic=PHONETIC|debug=DEBUG}}
+-- For bot usage; {{#invoke:pt-pronunc|IPA_string|SPELLING|style=STYLE|phonetic=PHONETIC|debug=DEBUG}}
 -- where
 --
 --   1. SPELLING is the word or respelling to generate pronunciation for;
@@ -575,8 +521,7 @@ function export.IPA_string(frame)
 		["debug"] = {type = "boolean"},
 	}
 	local iargs = require("Module:parameters").process(frame.args, iparams)
-	local retval = export.IPA(iargs[1], iargs.style, iargs.phonetic, iargs.debug)
-	return retval.text .. (retval.debug and " ||| " .. retval.debug or "")
+	return export.IPA(iargs[1], iargs.style, iargs.phonetic, iargs.debug)
 end
 
 
@@ -768,246 +713,6 @@ function export.show(frame)
 	end
 
 	return table.concat(lines, "\n")
-end
-
-return export
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-local export = {}
-
-local gsub = mw.ustring.gsub
-local match = mw.ustring.match
-local gmatch = mw.ustring.gmatch
-local split = mw.text.split
-
-local tokens = {
-	"a", "á", "â", "ã", "à",
-	"b",
-	"c", "ç", "ch",
-	"d",
-	"e", "é", "ê",
-	"f",
-	"g", "gu",
-	"h",
-	"i", "í",
-	"j",
-	"k",
-	"l", "lh",
-	"m",
-	"n", "nh",
-	"ó", "ô", "õ",
-	"p",
-	"qu",
-	"r", "rr",
-	"s", "ss",
-	"t",
-	"u", "ú",
-	"v",
-	"w",
-	"x",
-	"y",
-	"z",
-}
-
-local digraphs = {
-	"ch", "gu", "lh", "nh", "qu", "rr", "ss",
-}
-
-local function spelling_to_IPA(word)
-	word = gsub(word,"ch","ʃ")
-	word = gsub(word,"lh","ʎ")
-	word = gsub(word,"nh","ɲ")
-	word = gsub(word,"rr","ʁ")
-	
-	-- ç vs s vs ss
-	word = gsub(word,"([aáâãàeéêiíoóôõuú])s([aáâãàeéêiíoóôõuú])","%1z%2")
-	word = gsub(word,"ss","s")
-	word = gsub(word,"ç","s")
-	
-	-- c vs g vs qu vs gu
-	word = gsub(word,"([cgq]u?)(.?)",function (a,b)
-		if a=="cu" then
-			return "ku"..b
-		end
-		if a=="c" then
-			if match(b,"[eéêií]") then
-				return "s"..b
-			else
-				return "k"..b
-			end
-		elseif a=="g" then
-			if match(b,"[eéêií]") then
-				return "ʒ"..b
-			else
-				return "ɡ"..b -- U+0261 LATIN SMALL LETTER SCRIPT G
-			end
-		elseif a=="qu" then
-			if match(b,"[eéêií]") then
-				return "k"..b
-			else
-				return "kw"..b
-			end
-		elseif a=="gu" then
-			if match(b,"[eéêií]") then
-				return "ɡ"..b -- U+0261 LATIN SMALL LETTER SCRIPT G
-			else
-				return "ɡw"..b -- U+0261 LATIN SMALL LETTER SCRIPT G
-			end
-		else
-			error("q not followed by u")
-		end
-	end)
-	
-	word = gsub(word,"j","ʒ")
-	
-	-- extract semivowels from diphthongs
-	word = gsub(word,"([aáâãàeéêiíoóôõuú])i","%1j")
-	word = gsub(word,"([aáâãàeéêiíoóôõuú])u","%1w")
-	word = gsub(word,"u([aáâãàeéêiíoóôõuú])i","w%1")
-	word = gsub(word,"(^[áâãàéêíóôõú])(%.+)i([jlmnrwz][s]?)$","%1%2í%3")
-	word = gsub(word,"(^[áâãàéêíóôõú])(%.+)i([aeo][s]?)$","%1%2í%3")
-	word = gsub(word,"(^[áâãàéêíóôõú])(%.+)i([jlmnrwz][s]?)$","%1%2í%3")
-	word = gsub(word,"(^[áâãàéêíóôõú])(%.+)e([jlmnrwz][s]?)$","%1%2ê%3")
-	word = gsub(word,"(^[áâãàéêíóôõú])(%.+)e([j]?[aeo][s]?)$","%1%2ê%3")
-	
-	-- syllabification
-	word = gsub(word,"([aáâãàeéêiíoóôõuú])([^aáâãàeéêiíoóôõuú])","%1.%2")
-	word = gsub(word,"([aáâãàeéêiíoóôõuú])([aáâãàeéêiíoóôõuú])","%1.%2")
-	word = gsub(word,"([aáâãàeéêiíoóôõuú])%.([^aáâãàeéêiíoóôõuú.])([^aáâãàeéêiíoóôõuú.])","%1%2.%3")
-	word = gsub(word,"%.([^aáâãàeéêiíoóôõuú.]+)$","%1")
-	word = gsub(word,"([pbctdɡ])%.([lr])",".%1%2")
-	
-	-- r vs rr
-	word = gsub(word,"%.r",".ʁ")
-	word = gsub(word,"^r",".ʁ")
-	word = gsub(word,"r","ɾ")
-	
-	-- s vs x vs z (/s/ vs /z/ vs /ʃ/ vs /ʒ/)
-	word = gsub(word,"[szx](%.[ckpst])","ʃ%1")
-	word = gsub(word,"[szx]$","ʃ")
-	word = gsub(word,"[szx](%..)","ʒ%1")
-	word = gsub(word,"x","ʃ")
-	
-	-- stress
-	-- All words that I have found that contain more than one
-	-- occurrence of [áâãeéêiíóôõú] are either acute+nasal or
-	-- circumflex+nasal, with the nasal being ão (or õe)
-	if match(word,"[áâãeéêiíóôõú]") then
-		if match(word,"[áéíóúâêô]") then
-			word = gsub(word,"%.([^.]+[áéíóúâêô])","ˈ%1")
-		else
-			word = gsub(word,"%.([^.]+[ãõ])","ˈ%1")
-		end
-	else
-		if match(word,"[iu][sm]?$") or match(word,"[^aáâãàeéêiíoóôõuúms]$") then
-			word = gsub(word,"%.([^.]+)$",function(a)
-				return "ˈ" .. gsub(a,"[aeiou]",{
-					["a"] = "á",
-					["e"] = "é",
-					["i"] = "í",
-					["o"] = "ó",
-					["u"] = "ú",
-				})
-			end)
-		else
-			word = gsub(word,"%.([^.]+%.[^.]+)$","ˈ%1")
-		end
-	end
-	
-	-- ão and õe
-	word = gsub(word,"ão","ɐ̃w̃")
-	word = gsub(word,"õe","õȷ̃")
-	
-	-- nasals
-	word = gsub(word,"([aeéê])m$",{
-		["a"] = "ɐ̃w̃",
-		["e"] = "ɐ̃j̃",
-		["é"] = "ɐ̃j̃",
-		["ê"] = "ɐ̃j̃",
-	})
-	word = gsub(word,"[eé]mʃ$","ɐ̃j̃ʃ")
-	word = gsub(word,"([aâeêiíoôuú])[mn]",{
-		["a"] = "ɐ̃",
-		["â"] = "ɐ̃",
-		["e"] = "ẽ",
-		["ê"] = "ẽ",
-		["i"] = "ĩ",
-		["í"] = "ĩ",
-		["o"] = "õ",
-		["ô"] = "õ",
-		["u"] = "ũ",
-		["ú"] = "ũ",
-	})
-	
-	-- vowels
-	word = gsub(word,"o$","u")
-	word = gsub(word,"[aáâãàeéêiíoóôuú]",{
-		["a"] = "ɐ",
-		["á"] = "a",
-		["â"] = "ɐ",
-		["ã"] = "ɐ̃",
-		["à"] = "a",
-		["e"] = "ɨ",
-		["é"] = "ɛ",
-		["ê"] = "e",
-		["i"] = "i",
-		["í"] = "i",
-		["o"] = "o",
-		["ó"] = "ɔ",
-		["ô"] = "o",
-		["u"] = "u",
-		["ú"] = "u",
-	})
-	
-	word = gsub(word,"l%.","ɫ")
-	word = gsub(word,"l$","ɫ")
-	
-	return word
-end
-
-function export.show(frame)
-	local text = frame.args[1]
-	text = gsub(text,"-","")
-	text = split(text," ")
-	for i,val in ipairs(text) do
-		text[i] = spelling_to_IPA(val)
-	end
-	return table.concat(text," ")
 end
 
 return export
