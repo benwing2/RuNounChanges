@@ -548,6 +548,8 @@ function export.IPA(text, style, phonetic)
 		text = rsub(text, "([lɫ]%.?)ð", "%1d")
 	end
 	text = rsub(text, "g", "ɡ") -- U+0261 LATIN SMALL LETTER SCRIPT G
+	text = rsub(text, "tʃ", "t͡ʃ")
+	text = rsub(text, "dʒ", "d͡ʒ")
 
 	-- Stress marks.
 	-- Move IPA stress marks to the beginning of the syllable.
@@ -622,18 +624,25 @@ function export.show(frame)
 		end
 	end
 
-	local phonemic = {}
 	local phonetic = {}
+	local phonemic_phonetic = {}
 	local expressed_styles = {}
 
 	local function dostyle(style)
-		phonemic[style] = export.IPA(inputs[style], style, false)
-		phonetic[style] = export.IPA(inputs[style], style, true)
+		phonetic[style] = {}
+		phonemic_phonetic[style] = {}
+		local vals = rsplit(inputs[style], ",")
+		for _, val in ipairs(vals) do
+			local phonem = export.IPA(val, style, false)
+			local phonet = export.IPA(val, style, true)
+			table.insert(phonetic[style], phonet)
+			table.insert(phonemic_phonetic[style], {phonemic=phonem, phonetic=phonet})
+		end
 	end
 
 	local function first_available(styles) do
 		for _, style in ipairs(styles) do
-			if phonemic[style] then
+			if phonetic[style] then
 				return style
 			end
 		end
@@ -689,13 +698,12 @@ function export.show(frame)
 			return
 		end
 
-		if not phonemic[style] then
+		if not phonetic[style] then
 			dostyle(style)
 		end
 		local new_style = {
 			tag = tag,
-			phonemic = phonemic[style],
-			phonetic = phonetic[style],
+			phonemic_phonetic = phonemic_phonetic[style],
 		}
 		for _, hidden_tag_style in ipairs(expressed_styles) do
 			if hidden_tag_style.tag == hidden_tag then
@@ -716,10 +724,10 @@ function export.show(frame)
 	end
 
 	local function diff(style1, style2)
-		if not phonemic[style1] or not phonemic[style2] then
+		if not phonetic[style1] or not phonetic[style2] then
 			return false
 		end
-		return phonemic[style1] ~= phonemic[style2]
+		return not m_table.deepEqualsList(phonetic[style1], phonetic[style2])
 	end
 	local rio_sp_different = diff("rio", "sp")
 	local lisbon_nlisbon_different = diff("lisbon", "nlisbon")
@@ -772,19 +780,24 @@ function export.show(frame)
 
 	local function format_style(tag, expressed_style, is_first)
 		local pronunciations = {}
-		table.insert(pronunciations, {
-			pron = "/" .. expressed_style.phonemic.text .. "/",
-			qualifiers = tag and {tag} or nil,
-		})
-		table.insert(pronunciations, {
-			pron = "[" .. expressed_style.phonetic.text .. "]",
-		})
+		local formatted_pronuns = {}
+		for _, phonem_phonet in ipairs(expressed_style.phonemic_phonetic) do
+			table.insert(pronunciations, {
+				pron = "/" .. phonem_phonet.phonemic .. "/",
+				qualifiers = tag and {tag} or nil,
+			})
+			table.insert(formatted_pronuns, "/" .. phonem_phonet.phonemic .. "/")
+			table.insert(pronunciations, {
+				pron = "[" .. phonem_phonet.phonetic .. "]",
+			})
+			table.insert(formatted_pronuns, "[" .. phonem_phonet.phonetic .. "]")
+		end
 		local bullet = string.rep("*", args.bullets) .. " "
 		local pre = is_first and args.pre and args.pre .. " " or ""
 		local post = is_first and (args.ref or "") .. (args.post and " " .. args.post or "") or ""
 		local formatted = bullet .. pre .. m_IPA.format_IPA_full(lang, pronunciations) .. post
 		local formatted_for_len = bullet .. pre .. "IPA(key): " .. (tag and "(" .. tag .. ") " or "") ..
-			"/" .. expressed_style.phonemic.text .. "/, [" .. expressed_style.phonetic.text .. "]" .. post
+			table.concat(formatted_pronuns, ", ") .. post
 		return formatted, formatted_for_len
 	end
 
