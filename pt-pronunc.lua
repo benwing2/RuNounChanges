@@ -348,16 +348,18 @@ function export.IPA(text, style, phonetic)
 			mente_syllables = {}
 			mente_syllables[2] = table.remove(syllables)
 			mente_syllables[1] = table.remove(syllables)
-			accent_word(table.concat(syllables, "."), syllables, "before mente")
-			accent_word(table.concat(mente_syllables, "."), mente_syllables)
-			table.insert(syllables, mente_syllables[1])
-			table.insert(syllables, mente_syllables[2])
+			local before_mente_word = table.concat(syllables, ".") .. "#"
+			local mente_word = table.concat(mente_syllables, ".")
+			accent_word(before_mente_word, syllables, "before mente")
+			accent_word("#" .. mente_word, mente_syllables)
+			-- Reconstruct the word. Put a # instead of . between the two parts so e.g. the vowel at the end
+			-- of the first part is treated as word-final.
+			words[j] = before_mente_word .. mente_word
 		else
 			accent_word(word, syllables)
+			-- Reconstruct the word.
+			words[j] = table.concat(syllables, ".")
 		end
-
-		-- Reconstruct the word.
-		words[j] = table.concat(syllables, ".")
 	end
 
 	-- Reconstruct the text from the words.
@@ -558,11 +560,13 @@ function export.IPA(text, style, phonetic)
 	text = rsub(text, "H", "h")
 
 	-- Stress marks.
+	-- Change # in the middle of a word (words ending in -mente/-zinho) back to period.
+	text = rsub_repeatedly(text, "([^ #])#([^ #])", "%1.%2")
 	-- Move IPA stress marks to the beginning of the syllable.
 	text = rsub_repeatedly(text, "([#.])([^#.]*)(" .. ipa_stress_c .. ")", "%1%3%2")
 	-- Suppress syllable mark before IPA stress indicator.
 	text = rsub(text, "%.(" .. ipa_stress_c .. ")", "%1")
-	-- Make all primary stresses but the last one in a given word be secondary.
+	-- Make all primary stresses but the last one in a given word be secondary. May be fed by the first rule above.
 	text = rsub_repeatedly(text, "ˈ([^ #]+)ˈ", "ˌ%1ˈ")
 
 	-- Remove # symbols at word/text boundaries, as well as _ to force separate interpretation, and recompose.
