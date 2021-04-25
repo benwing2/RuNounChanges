@@ -105,7 +105,7 @@ end
 -- "rio": Carioca accent (of Rio de Janeiro)
 -- "sp": Paulistano accent (of São Paulo)
 -- "lisbon": Lisbon accent
--- "nlisbon": Portugal accent outside of Lisbon
+-- "cpt": Central Portugal accent outside of Lisbon
 function export.IPA(text, style, phonetic)
 	local origtext = text
 
@@ -585,45 +585,7 @@ function export.IPA_string(frame)
 end
 
 
-function export.show(frame)
-	local params = {
-		[1] = {},
-		["br"] = {},
-		["pt"] = {},
-		["rio"] = {},
-		["sp"] = {},
-		["lisbon"] = {},
-		["nlisbon"] = {},
-		["pre"] = {},
-		["post"] = {},
-		["ref"] = {},
-		["style"] = {},
-		["bullets"] = {type = "number", default = 1},
-	}
-	local parargs = frame:getParent().args
-	local args = require("Module:parameters").process(parargs, params)
-	local inputs = {}
-	local all_styles = {"rio", "sp", "lisbon", "nlisbon"}
-	if args.br then
-		inputs.rio = args.br
-		inputs.sp = args.br
-	end
-	if args.pt then
-		inputs.lisbon = args.pt
-		inputs.nlisbon = args.pt
-	end
-	for _, style in ipairs(all_styles) do
-		if args[style] then
-			inputs[style] = args[style]
-		end
-	end
-	if not next(inputs) do
-		local text = args[1] or mw.title.getCurrentTitle().text
-		for _, style in ipairs(all_styles) do
-			inputs[style] = text
-		end
-	end
-
+function export.express_styles(inputs)
 	local phonetic = {}
 	local phonemic_phonetic = {}
 	local expressed_styles = {}
@@ -631,8 +593,7 @@ function export.show(frame)
 	local function dostyle(style)
 		phonetic[style] = {}
 		phonemic_phonetic[style] = {}
-		local vals = rsplit(inputs[style], ",")
-		for _, val in ipairs(vals) do
+		for _, val in ipairs(inputs[style]) do
 			local phonem = export.IPA(val, style, false)
 			local phonet = export.IPA(val, style, true)
 			table.insert(phonetic[style], phonet)
@@ -640,30 +601,30 @@ function export.show(frame)
 		end
 	end
 
-	local function first_available(styles) do
+	local function all_available(styles) do
+		local available_styles = {}
 		for _, style in ipairs(styles) do
 			if phonetic[style] then
-				return style
+				table.insert(available_styles, style)
 			end
 		end
-		error("Internal error: No styles available from " .. table.concat(styles, ","))
+		if #available_styles == 0 then
+			error("Internal error: No styles available from " .. table.concat(styles, ","))
+		end
 	end
 
 	local function express_style(hidden_tag, tag, styles)
-		local style
 		if type(styles) == "string" then
-			style = styles
 			styles = {styles}
-		else
-			style = first_available(styles)
 		end
+		styles = all_available(styles)
+		local style = styles[1]
 
 		-- If style specified, make sure it matches the requested style.
 		local style_matches
 		if not args.style then
 			style_matches = true
 		else
-			local style_parts = rsplit(matching_styles, ";")
 			local or_styles = rsplit(args.style, "%s*,%s*")
 			for _, or_style in ipairs(or_styles) do
 				local and_styles = rsplit(or_style, "%s*%+%s*")
@@ -675,7 +636,7 @@ function export.show(frame)
 						negate = true
 					end
 					local this_style_matches = false
-					for _, part in ipairs(style_parts) do
+					for _, part in ipairs(styles) do
 						if part == and_style then
 							this_style_matches = true
 							break
@@ -698,11 +659,9 @@ function export.show(frame)
 			return
 		end
 
-		if not phonetic[style] then
-			dostyle(style)
-		end
 		local new_style = {
 			tag = tag,
+			represented_styles = styles,
 			phonemic_phonetic = phonemic_phonetic[style],
 		}
 		for _, hidden_tag_style in ipairs(expressed_styles) do
@@ -730,42 +689,42 @@ function export.show(frame)
 		return not m_table.deepEqualsList(phonetic[style1], phonetic[style2])
 	end
 	local rio_sp_different = diff("rio", "sp")
-	local lisbon_nlisbon_different = diff("lisbon", "nlisbon")
+	local lisbon_cpt_different = diff("lisbon", "cpt")
 	local sp_lisbon_different = diff("sp", "lisbon")
 	local rio_lisbon_different = diff("rio", "lisbon")
-	local rio_nlisbon_different = diff("rio", "nlisbon")
+	local rio_cpt_different = diff("rio", "cpt")
 
-	if not sp_lisbon_different and not rio_sp_different and not lisbon_nlisbon_different then
+	if not sp_lisbon_different and not rio_sp_different and not lisbon_cpt_different then
 		-- All the same
 		express_style(false, false, all_styles)
-	elseif not rio_sp_different and not lisbon_nlisbon_different and rio_lisbon_different then
+	elseif not rio_sp_different and not lisbon_cpt_different and rio_lisbon_different then
 		-- Brazil vs. Portugal
 		express_style("Brazil", "Brazil", {"rio", "sp"})
-		express_style("Portugal", "Portugal", {"lisbon", "nlisbon"})
-	elseif not rio_lisbon_different and rio_sp_different and not lisbon_nlisbon_different then
+		express_style("Portugal", "Portugal", {"lisbon", "cpt"})
+	elseif not rio_lisbon_different and rio_sp_different and not lisbon_cpt_different then
 		-- All except São Paulo the same (relates to coda-final -s/z, e.g. [[posto]])
-		express_style(false, "Rio and Portugal", {"rio", "lisbon", "nlisbon"})
+		express_style(false, "Rio and Portugal", {"rio", "lisbon", "cpt"})
 		express_style(false, "São Paulo", "sp")
-	elseif not rio_nlisbon_different and not rio_sp_different and lisbon_nlisbon_different then
+	elseif not rio_cpt_different and not rio_sp_different and lisbon_cpt_different then
 		-- All except Lisbon the same (e.g. in [[bem]])
-		express_style(false, "Brazil and non-Lisbon Portugal", {"rio", "sp", "nlisbon"})
+		express_style(false, "Brazil and non-Lisbon Portugal", {"rio", "sp", "cpt"})
 		express_style(false, "Lisbon", "lisbon")
-	elseif rio_sp_different and not lisbon_nlisbon_different then
+	elseif rio_sp_different and not lisbon_cpt_different then
 		-- São Paulo vs. Rio vs. Portugal
 		express_style("Brazil", "São Paulo", "sp")
 		express_style("Brazil", "Rio", "rio")
-		express_style("Portugal", "Portugal", {"lisbon", "nlisbon"})
-	elseif lisbon_nlisbon_different and not rio_sp_different then
+		express_style("Portugal", "Portugal", {"lisbon", "cpt"})
+	elseif lisbon_cpt_different and not rio_sp_different then
 		-- Brazil vs. Lisbon vs. non-Lisbon
 		express_style("Brazil", "Brazil", {"rio", "sp"})
 		express_style("Portugal", "Lisbon", "lisbon")
-		express_style("Portugal", "non-Lisbon", "nlisbon")
+		express_style("Portugal", "non-Lisbon Central Portugal", "cpt")
 	else
 		-- all four different
 		express_style("Brazil", "São Paulo", "sp")
 		express_style("Portugal", "Lisbon", "lisbon")
 		express_style("Brazil", "Rio", "rio")
-		express_style("Portugal", "non-Lisbon", "nlisbon")
+		express_style("Portugal", "non-Lisbon Central Portugal", "cpt")
 	end
 
 	-- If only one style group, don't indicate the style.
@@ -775,6 +734,55 @@ function export.show(frame)
 			expressed_styles[1].styles[1].tag = false
 		end
 	end
+
+	return expressed_styles
+end
+
+
+function export.show(frame)
+	local params = {
+		[1] = {},
+		["br"] = {},
+		["pt"] = {},
+		["rio"] = {},
+		["sp"] = {},
+		["lisbon"] = {},
+		["cpt"] = {},
+		["pre"] = {},
+		["post"] = {},
+		["ref"] = {},
+		["style"] = {},
+		["bullets"] = {type = "number", default = 1},
+	}
+
+	local parargs = frame:getParent().args
+	local args = require("Module:parameters").process(parargs, params)
+	local inputs = {}
+	local all_styles = {"rio", "sp", "lisbon", "cpt"}
+	if args.br then
+		inputs.rio = args.br
+		inputs.sp = args.br
+	end
+	if args.pt then
+		inputs.lisbon = args.pt
+		inputs.cpt = args.pt
+	end
+	for _, style in ipairs(all_styles) do
+		if args[style] then
+			inputs[style] = args[style]
+		end
+	end
+	if not next(inputs) then
+		local text = args[1] or mw.title.getCurrentTitle().text
+		for _, style in ipairs(all_styles) do
+			inputs[style] = text
+		end
+	end
+
+	for style, input in pairs(inputs) do
+		inputs[style] = rsplit(input, ",")
+	end
+	local expressed_styles = export.express_styles(inputs)
 
 	local lines = {}
 
@@ -843,5 +851,6 @@ function export.show(frame)
 
 	return table.concat(lines, "\n")
 end
+
 
 return export
