@@ -1,8 +1,8 @@
-local tests = require('Module:UnitTests')
-local m_pt_pronunc = require('Module:pt-pronunc')
-local m_links = require('Module:links')
-local m_table = require('Module:table')
-local pt = require('Module:languages').getByCode('pt')
+local tests = require("Module:UnitTests")
+local m_pt_pronunc = require("Module:User:Benwing2/pt-pronunc")
+local m_links = require("Module:links")
+local m_table = require("Module:table")
+local pt = require("Module:languages").getByCode("pt")
 
 local rsplit = mw.text.split
 
@@ -48,10 +48,10 @@ STYLE=PRONUN, or a semicolon-separated list of style-tagged pronunciations.
 
 Examples:
 
-* Hungria	:[ũ.ˈɡɾi.ɐ]
+* Hungria	:[ũˈɡɾi.ɐ]
   This means the word [[Hungria]], respelled the same way (note the omitted respelling before the colon), has the
-  expected phonetic pronunciation [ũ.ˈɡɾi.ɐ] in all styles (dialects). The actual pronunciation for all styles will
-  be generated, and the phonetic output of each in turn will be compared against [ũ.ˈɡɾi.ɐ]. Phonemic output will
+  expected phonetic pronunciation [ũˈɡɾi.ɐ] in all styles (dialects). The actual pronunciation for all styles will
+  be generated, and the phonetic output of each in turn will be compared against [ũˈɡɾi.ɐ]. Phonemic output will
   not be checked.
 * jogging	br=djógguing:/ˈd͡ʒɔ.ɡĩ/
   This means the word [[jogging]] has the respelling 'djógguing' and expected phonemic pronunciation /ˈd͡ʒɔ.ɡĩ/
@@ -62,18 +62,18 @@ Examples:
   Portugal. The phonemic pronunciation for all Brazilian styles (Rio and São Paulo) will be checked against
   /a.bɾɐ̃ˈʒẽ.sjɐ/, and the phonetic pronunciation for all Portugal styles (Lisbon as well as non-Lisbon Central
   Portugal) will be checked against [ɐ.βɾɐ̃ˈʒẽ.sjɐ].
-* ninguém	:br-cpt=/nĩ.ˈɡẽj̃/;lisbon=/nĩ.ˈɡɐ̃j̃/
-  This means the word [[ninguém]], respelled the same way for all styles, has the phonemic pronunciation /nĩ.ˈɡẽj̃/
-  in all styles other than Lisbon, and /nĩ.ˈɡɐ̃j̃/ in Lisbon.
-* long neck	br=lòngh nécke,lòngue nécke:/ˌlõɡ ˈnɛ.ki/,/ˌlõ.ɡi ˈnɛ.ki/
-  This means the term [[long neck]] has two possible respellings 'lòngh nécke' and 'lòngue nécke' in Brazil, with
+* ninguém	:br-cpt=/nĩˈɡẽj̃/;lisbon=/nĩˈɡɐ̃j̃/
+  This means the word [[ninguém]], respelled the same way for all styles, has the phonemic pronunciation /nĩˈɡẽj̃/
+  in all styles other than Lisbon, and /nĩˈɡɐ̃j̃/ in Lisbon.
+* long neck	br=lòngh nécke,lòngue nécke:/ˌlõɡ ˈnɛ.ki/,/ˌlõ.ɡi ˈnɛ.ki/
+  This means the term [[long neck]] has two possible respellings 'lòngh nécke' and 'lòngue nécke' in Brazil, with
   expected respective phonemic pronunciations /ˌlõɡ ˈnɛ.ki/ and /ˌlõ.ɡi ˈnɛ.ki/. Portugal styles will not be
   checked.
-* distinguir	pt=distinguir:[diʃ.tĩˈɡiɾ]	br=distingüir:rio=[d͡ʒiʃ.t͡ʃĩ.ˈɡwi(ʁ)];sp=[d͡ʒis.t͡ʃĩ.ˈɡwi(ɾ)]
+* distinguir	pt=distinguir:[diʃ.tĩˈɡiɾ]	br=distingüir:rio=[d͡ʒiʃ.t͡ʃĩˈɡwi(χ)];sp=[d͡ʒis.t͡ʃĩˈɡwi(ɾ)]
   This means the word [[distinguir]] has respelling 'distinguir' in Portugal with expected phonetic pronunciation
   [diʃ.tĩˈɡiɾ] in Portugal (both Lisbon and elsewhere in Central Portugal), but has the respelling 'distingüir'
-  in Brazil. The Brazilian respelling has different phonetic pronunciations [d͡ʒiʃ.t͡ʃĩ.ˈɡwi(ʁ)] in Rio and
-  [d͡ʒis.t͡ʃĩ.ˈɡwi(ɾ)] in São Paulo.
+  in Brazil. The Brazilian respelling has different phonetic pronunciations [d͡ʒiʃ.t͡ʃĩˈɡwi(χ)] in Rio and
+  [d͡ʒis.t͡ʃĩˈɡwi(ɾ)] in São Paulo.
 ]=]
 local examples = [[
 # cc
@@ -87,23 +87,23 @@ jogging	br=djógguing:/ˈd͡ʒɔ.ɡĩ/
 Beijing	:br=/bejˈʒĩ/
 Wellington	br=Wéllington:/ˈwɛ.lĩ.tõ/
 Washington	br=Wóshington:/ˈwɔ.ʃĩ.tõ/
-distinguir	pt=distinguir:[diʃ.tĩˈɡiɾ]	br=distingüir:rio=[d͡ʒiʃ.t͡ʃĩ.ˈɡwi(ʁ)];sp=[d͡ʒis.t͡ʃĩ.ˈɡwi(ɾ)]
-Hungria	:[ũ.ˈɡɾi.ɐ]
-interrobang	pt=intẹrrobangue:/ĩ.tɛ.ʁuˈbɐ̃.ɡɨ/	br=interrobangue:/ĩ.te.ʁoˈbɐ̃.ɡi/
-linguiça	lingu.iça,lingüiça:/lĩ.ɡuˈi.sɐ/,/lĩ.ˈɡwi.sɐ/
-long neck	br=lòngh nécke,lòngue nécke:/ˌlõɡ ˈnɛ.ki/,/ˌlõ.ɡi ˈnɛ.ki/
-Los_Angeles	br=Los_Ângeles:sp=/loz ˈɐ̃.ʒe.lis/;rio=/loz ˈɐ̃.ʒe.liʃ/
-ninguém	:br-cpt=/nĩ.ˈɡẽj̃/;lisbon=/nĩ.ˈɡɐ̃j̃/
+distinguir	pt=distinguir:[diʃ.tĩˈɡiɾ]	br=distingüir:rio=[d͡ʒiʃ.t͡ʃĩˈɡwi(χ)];sp=[d͡ʒis.t͡ʃĩˈɡwi(ɾ)]
+Hungria	:[ũˈɡɾi.ɐ]
+interrobang	pt=intẹrrobangue:/ĩ.tɛ.ʁuˈbɐ̃.ɡɨ/	br=interrobangue:/ĩ.te.ʁoˈbɐ̃.ɡi/
+linguiça	lingu.iça,lingüiça:/lĩ.ɡuˈi.sɐ/,/lĩˈɡwi.sɐ/
+long neck	br=lòngh nécke,lòngue nécke:/ˌlõɡ ˈnɛ.ki/,/ˌlõ.ɡi ˈnɛ.ki/
+Los Angeles	br=Lộs Ângeles:sp=/loz ˈɐ̃.ʒe.lis/;rio=/loz ˈɐ̃.ʒe.liʃ/
+ninguém	:br-cpt=/nĩˈɡẽj̃/;lisbon=/nĩˈɡɐ̃j̃/
 single	br=síngol:/ˈsĩ.ɡow/
-Stonehenge	br=Stòwnn.rrendj:/ˌstown.ˈhẽd͡ʒ/
-viking	br=víking,víkingue:/ˈvikĩ/,/ˈvikĩ.ɡi/
-zângão :/ˈzɐ̃.ɡɐ̃w̃/
+Stonehenge	sp=Stòwnn.rrendj:[ˌstownˈhẽd͡ʒ]
+viking	br=víking,víkingue:/ˈvi.kĩ/,/ˈvi.kĩ.ɡi/
+zângão	:/ˈzɐ̃.ɡɐ̃w̃/
 # nh
-Congonhinhas	br=Còngonhinhas:/ˌkõ.ɡõˈɲĩ.ɲɐs/
-Congonhinhas	br=Còngonhinhas:[ˌkõ.ɡõˈj̃ĩ.j̃ɐs/
+Congonhinhas	sp=Còngonhinhas:/ˌkõ.ɡõˈɲĩ.ɲɐs/
+Congonhinhas	sp=Còngonhinhas:[ˌkõ.ɡõˈj̃ĩ.j̃ɐs]
 nheengatu	br=nhengatu:/ɲẽ.ɡaˈtu/
 # soft d
-Reguengos de Monsaraz	:pt=[ʁɨˈɣẽɡuʒ ðɨ mõsɐˈɾaʃ]
+Reguengos de Monsaraz	:pt=[ʁɨˈɣẽ.ɡuʒ ðɨ mõ.sɐˈɾaʃ]
 ]]
 
 function tests:check_ipa(spelling, expected, comment)
@@ -115,7 +115,7 @@ function tests:check_ipa(spelling, expected, comment)
 	local expressed_styles = m_pt_pronunc.express_styles(inputs)
 	for _, style_group in ipairs(expressed_styles) do
 		for _, style_obj in ipairs(style_group.styles) do
-			options.comment = style_obj.tag .. (comment or "; " .. comment or "")
+			options.comment = style_obj.tag and style_obj.tag .. (comment and "; " .. comment or "") or comment or ""
 
 			local function get_actual_ipas(ipa_type)
 				local actual_ipas = {}
@@ -159,7 +159,7 @@ function tests:check_ipa(spelling, expected, comment)
 
 			if matches then
 				self:equals(
-					link(word) .. (matching_respellings == word and "" or ", respelled " .. matching_respellings),
+					link(spelling) .. (matching_respellings == spelling and "" or ", respelled " .. matching_respellings),
 					get_actual_ipas(matching_ipa_type),
 					matching_expected_ipas,
 					options
@@ -173,7 +173,7 @@ function tests:check_ipa(spelling, expected, comment)
 					local this_expected_ipas = table.concat(expected[represented_style].ipas, ",")
 					local this_ipa_type = expected[represented_style].type
 					self:equals(
-						link(word) .. (this_respellings == word and "" or ", respelled " .. this_respellings),
+						link(spelling) .. (this_respellings == spelling and "" or ", respelled " .. this_respellings),
 						get_actual_ipas(this_ipa_type),
 						this_expected_ipas,
 						options
@@ -186,7 +186,7 @@ end
 
 local function parse(examples)
 	-- The following is a list of parsed examples where each element is a three-element list of
-	-- {SPELLING, EXPECTED, COMMENT}. SPELLING is the actual spelling of the word; EXPECTED is a table giving
+	-- {SPELLING, EXPECTED, COMMENT}. SPELLING is the actual spelling of the term; EXPECTED is a table giving
 	-- the respellings and associated expected IPA, and COMMENT is an optional comment (if given starting with a
 	-- # sign after a given line) or nil. EXPECTED is a table whose keys are basic styles, e.g. "rio", "lisbon",
 	-- and values are a table with keys 'respellings' (one or more respellings), 'ipas' (corresponding IPA values)
@@ -234,7 +234,7 @@ local function parse(examples)
 						comment = part
 						break
 					end
-					local respelling, styled_ipas = unpack(rsplit(line, ":"))
+					local respelling, styled_ipas = unpack(rsplit(part, ":"))
 					local styles
 					if respelling:find("=") then
 						styles, respelling = unpack(rsplit(respelling, "="))
@@ -248,8 +248,8 @@ local function parse(examples)
 					styles = expand_styles(styles)
 					local style_set = m_table.listToSet(styles)
 					for _, styled_ipa in ipairs(rsplit(styled_ipas, ";")) do
+						local ipa_styles, ipas
 						if styled_ipa:find("=") then
-							local ipa_styles, ipas
 							ipa_styles, ipas = unpack(rsplit(styled_ipa, "="))
 							ipa_styles = expand_styles(ipa_styles)
 						else
@@ -282,6 +282,9 @@ local function parse(examples)
 							expected[ipa_style] = {respellings = respelling, ipas = ipas, type = ipa_type}
 						end
 					end
+				end
+				if not next(expected) then
+					err("No expected pronunciations given")
 				end
 				table.insert(parsed_examples, {spelling, expected, comment})
 			end

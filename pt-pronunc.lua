@@ -8,6 +8,7 @@ Author: Benwing
 local export = {}
 
 local m_IPA = require("Module:IPA")
+local m_table = require("Module:table")
 
 local lang = require("Module:languages").getByCode("pt")
 
@@ -47,9 +48,10 @@ local accent = quality .. stress .. TILDE
 local accent_c = "[" .. accent .. "]"
 local charsep = accent .. "_." .. SYLDIV
 local charsep_c = "[" .. charsep .. "]"
-local wordsep = charset .. " #"
+local wordsep = charsep .. " #"
 local wordsep_c = "[" .. wordsep .. "]"
 local C = "[^" .. vowel .. wordsep .. "]" -- consonant
+local C_NOT_H = "[^h" .. vowel .. wordsep .. "]" -- consonant other than h
 local C_OR_WORD_BOUNDARY = "[^" .. vowel .. charsep .. "]" -- consonant or word boundary
 
 -- Unstressed words with vowel reduction in Brazil and Portugal.
@@ -100,6 +102,8 @@ local function rsub_repeatedly(term, foo, bar)
 		term = new_term
 	end
 end
+
+local all_styles = {"rio", "sp", "lisbon", "cpt"}
 
 -- style == one of the following:
 -- "rio": Carioca accent (of Rio de Janeiro)
@@ -160,7 +164,6 @@ function export.IPA(text, style, phonetic)
 	end
 	-- Make certain monosyllabic words (e.g. [[meu]], [[com]]; also [[a]], [[das]], etc. in Brazil)
 	-- without stress marks be unstressed without vowel reduction.
-	local words = rsplit(text, " ")
 	for i, word in ipairs(words) do
 		if rfind(word, "%-$") and not rfind(word, accent_c) or unstressed_full_vowel_words[word] or
 			brazil and unstressed_full_vowel_words_brazil[word] then
@@ -200,14 +203,13 @@ function export.IPA(text, style, phonetic)
 	-- This should precede syllabification especially so that the latter isn't confused by gu, qu, gü, qü
 	-- also, c -> ç before front vowel ensures that cc e.g. in [[cóccix]], [[occitano]] isn't reduced to single c.
 	text = rsub(text, "c([iey])", "ç%1")
-	text = rsub(text, "gü([iey])", "gw%1")
-	text = rsub(text, "gu([iey])", "g%1")
 	text = rsub(text, "g([iey])", "j%1")
+	text = rsub(text, "gu([iey])", "g%1")
 	-- [[camping]], [[doping]], [[jogging]], [[Bangkok]], [[angstrom]], [[tungstênio]]
 	text = rsub(text, "ng([^aeiouyüwhlr])", "n%1")
 	text = rsub(text, "qu([iey])", "k%1")
-	text = rsub(text, "ü", "u") -- [[Bündchen]], [[hübnerita]], [[freqüentemente]], etc.
-	text = rsub(text, "([gq])u", "%1w") -- [[quando]], [[guarda]], etc.
+	text = rsub(text, "ü", "u") -- [[agüentar]], [[freqüentemente]], [[Bündchen]], [[hübnerita]], etc.
+	text = rsub(text, "([gq])u(" .. V .. ")", "%1w%2") -- [[quando]], [[guarda]], etc.
 	text = rsub(text, "[cq]", "k") -- [[Qatar]], [[burqa]], [[Iraq]], etc.
 
 	-- y -> i between non-vowels, cf. [[Itamaraty]] /i.ta.ma.ɾa.ˈt(ʃ)i/, [[Sydney]] respelled 'Sýdjney' or similar
@@ -228,7 +230,7 @@ function export.IPA(text, style, phonetic)
 	-- * [[Minnesota]] respelled 'Mìnnessôta' /ˌmi.ne.ˈso.tɐ/;
 	-- * [[nutella]] respelled 'nutélla' /nuˈtɛ.lɐ/;
 	-- * [[shopping]] respeled 'shópping' /ˈʃɔ.pĩ/ or 'shóppem' /ˈʃɔ.pẽj̃/;
-	-- * [[Stonehenge]] respelled 'Stòwnn.rrendj' /ˌstown.ˈʁẽd͡ʒ/;
+	-- * [[Stonehenge]] respelled 'Stòwnn.rrendj' /ˌstown.ˈʁẽd͡ʒ/;
 	-- * [[Yunnan]] no respelling needed /ju.ˈnɐ̃/.
 	--
 	-- Note that further processing of r and s happens after syllabification and stress assignment, because we need
@@ -388,8 +390,8 @@ function export.IPA(text, style, phonetic)
 		text = rsub(text, "(" .. V .. quality_c .. "*)(ˈ%.[mn])", "%1" .. TILDE .. "%2")
 		-- All vowels before nh (always across syllable boundary) get circumflexed and nasalized in Brazil,
 		-- cf. [[ganhar]].
-		text = rsub(text, "(" .. V .. ")(%.ɲ)", "%1" .. CFLEX .. "%2")
-		text = rsub(text, "(" .. V .. quality_c .. "*)(%.ɲ)", "%1" .. TILDE .. "%2")
+		text = rsub(text, "(" .. V .. stress_c .. "*)(%.ɲ)", "%1" .. CFLEX .. "%2")
+		text = rsub(text, "(" .. V .. quality_c .. "*" .. stress_c .. "*)(%.ɲ)", "%1" .. TILDE .. "%2")
 	end
 
 	-- Nasal diphthongs.
@@ -459,9 +461,11 @@ function export.IPA(text, style, phonetic)
 	-- z before voiceless consonant, e.g. [[Nazca]]; c and q already removed
 	text = rsub(text, "z(" .. wordsep_c .. "*[çfkpsʃt])", "%1s%2")
 	if style == "rio" or not brazil then
-		-- Rio or Portugal; coda s/z -> ʃ/ʒ
+		-- Rio or Portugal; s/z before consonant (including across word boundaries) or end of utterance -> ʃ/ʒ
 		local shibilant = {["s"] = "ʃ", ["z"] = "j"}
-		text = rsub(text, "([sz])([.#])", function(sz, after) return shibilant[sz] .. after end)
+		text = rsub(text, "([sz])(##)", function(sz, after) return shibilant[sz] .. after end)
+		text = rsub(text, "([sz])(" .. wordsep_c .. "*" .. C_NOT_H .. ")",
+			function(sz, after) return shibilant[sz] .. after end)
 	end
 	text = rsub(text, "ç", "s")
 	text = rsub(text, "j", "ʒ")
@@ -479,7 +483,7 @@ function export.IPA(text, style, phonetic)
 	-- r
 	-- Double rr -> ʁ already handled above.
 	-- Initial r or l/n/s/z + r -> strong r (ʁ).
-	text = rsub(text, "([#" .. TILDE .. "lszʃʒ]%.)r", "%1.ʁ")
+	text = rsub(text, "([#" .. TILDE .. "lszʃʒ]%.?)r", "%1ʁ")
 	-- Word-final r in Brazil in verbs (not [[pôr]]) is usually dropped. Use a spelling like 'marh' for [[mar]]
 	-- to prevent this.
 	if style == "sp" then
@@ -493,10 +497,11 @@ function export.IPA(text, style, phonetic)
 	text = rsub(text, "r", "ɾ")
 	if brazil and phonetic then
 		-- "Strong" ʁ is [h] in most of Brazil, [χ] in Rio.
-		text = rsub(text, "ʁ", stye == "rio" and "χ" or "h")
+		-- Use H because later we remove all <h>.
+		text = rsub(text, "ʁ", style == "rio" and "χ" or "H")
 	end
 
-	-- Glides and h. This must precede coda l -> w in Brazil, because <ol> /ow/ cannot be reduced to /o/.
+	-- Glides. This must precede coda l -> w in Brazil, because <ol> /ow/ cannot be reduced to /o/.
 	-- ou -> o(w) before conversion of remaining diphthongs to vowel-glide combinations so <ow> can be used to
 	-- indicate a non-reducible glide.
 	text = rsub(text, "ou", "o(w)")
@@ -506,7 +511,6 @@ function export.IPA(text, style, phonetic)
 		function(v1, v2) return v1 .. vowel_termination_to_glide[v2] end)
 	text = rsub(text, "y", "j")
 	text = rsub(text, "Y", "(j)") -- epenthesized in [[faz]], [[tres]], etc.
-	text = rsub(text, "h", "")
 
 	-- l
 	if brazil then
@@ -519,7 +523,7 @@ function export.IPA(text, style, phonetic)
 
 	-- nh
 	if brazil and phonetic then
-		-- [[unha]] pronounced [ˈũ.j̃ɐ]; nasalization of previous vowel handled above.
+		-- [[unha]] pronounced [ˈũ.j̃ɐ]; nasalization of previous vowel handled above.
 		-- But initial nh- e.g. [[nhaca]], [[nheengatu]], [[nhoque]] is [ɲ].
 		text = rsub(text, "([^#])ɲ", "%1j" .. TILDE)
 	end
@@ -542,14 +546,16 @@ function export.IPA(text, style, phonetic)
 		-- appropriate contexts.
 		local fricativize_stop = { ["b"] = "β", ["d"] = "ð", ["g"] = "ɣ" }
 		local occlude_fricative = { ["β"] = "b", ["ð"] = "d", ["ɣ"] = "g" }
-		text = rsub("[bdg]", fricativize_stop)
-		text = rsub("##([βðɣ])", function(bdg) return "##" .. occlude_fricative[bdg] end)
-		text = rsub("(" .. TILDE .. "%.?)([βðɣ])", function(bdg) return "%1" .. occlude_fricative[bdg] end)
+		text = rsub(text, "[bdg]", fricativize_stop)
+		text = rsub(text, "##([βðɣ])", function(bdg) return "##" .. occlude_fricative[bdg] end)
+		text = rsub(text, "(" .. TILDE .. "%.?)([βðɣ])", function(before, bdg) return before .. occlude_fricative[bdg] end)
 		text = rsub(text, "([lɫ]%.?)ð", "%1d")
 	end
 	text = rsub(text, "g", "ɡ") -- U+0261 LATIN SMALL LETTER SCRIPT G
 	text = rsub(text, "tʃ", "t͡ʃ")
 	text = rsub(text, "dʒ", "d͡ʒ")
+	text = rsub(text, "h", "")
+	text = rsub(text, "H", "h")
 
 	-- Stress marks.
 	-- Move IPA stress marks to the beginning of the syllable.
@@ -585,7 +591,7 @@ function export.IPA_string(frame)
 end
 
 
-function export.express_styles(inputs)
+function export.express_styles(inputs, args_style)
 	local phonetic = {}
 	local phonemic_phonetic = {}
 	local expressed_styles = {}
@@ -601,31 +607,35 @@ function export.express_styles(inputs)
 		end
 	end
 
-	local function all_available(styles) do
+	local function all_available(styles)
 		local available_styles = {}
 		for _, style in ipairs(styles) do
 			if phonetic[style] then
 				table.insert(available_styles, style)
 			end
 		end
-		if #available_styles == 0 then
-			error("Internal error: No styles available from " .. table.concat(styles, ","))
-		end
+		return available_styles
 	end
 
 	local function express_style(hidden_tag, tag, styles)
+		if hidden_tag == true then
+			hidden_tag = tag
+		end
 		if type(styles) == "string" then
 			styles = {styles}
 		end
 		styles = all_available(styles)
+		if #styles == 0 then
+			return
+		end
 		local style = styles[1]
 
 		-- If style specified, make sure it matches the requested style.
 		local style_matches
-		if not args.style then
+		if not args_style then
 			style_matches = true
 		else
-			local or_styles = rsplit(args.style, "%s*,%s*")
+			local or_styles = rsplit(args_style, "%s*,%s*")
 			for _, or_style in ipairs(or_styles) do
 				local and_styles = rsplit(or_style, "%s*%+%s*")
 				local and_matches = true
@@ -676,15 +686,13 @@ function export.express_styles(inputs)
 		})
 	end
 
-	for _, style in ipairs(all_styles) do
-		if inputs[style] then
-			dostyle(style)
-		end
+	for style, _ in pairs(inputs) do
+		dostyle(style)
 	end
 
 	local function diff(style1, style2)
 		if not phonetic[style1] or not phonetic[style2] then
-			return false
+			return true
 		end
 		return not m_table.deepEqualsList(phonetic[style1], phonetic[style2])
 	end
@@ -699,16 +707,16 @@ function export.express_styles(inputs)
 		express_style(false, false, all_styles)
 	elseif not rio_sp_different and not lisbon_cpt_different and rio_lisbon_different then
 		-- Brazil vs. Portugal
-		express_style("Brazil", "Brazil", {"rio", "sp"})
-		express_style("Portugal", "Portugal", {"lisbon", "cpt"})
+		express_style(true, "Brazil", {"rio", "sp"})
+		express_style(true, "Portugal", {"lisbon", "cpt"})
 	elseif not rio_lisbon_different and rio_sp_different and not lisbon_cpt_different then
 		-- All except São Paulo the same (relates to coda-final -s/z, e.g. [[posto]])
-		express_style(false, "Rio and Portugal", {"rio", "lisbon", "cpt"})
-		express_style(false, "São Paulo", "sp")
+		express_style(true, "Rio and Portugal", {"rio", "lisbon", "cpt"})
+		express_style(true, "São Paulo", "sp")
 	elseif not rio_cpt_different and not rio_sp_different and lisbon_cpt_different then
 		-- All except Lisbon the same (e.g. in [[bem]])
-		express_style(false, "Brazil and non-Lisbon Portugal", {"rio", "sp", "cpt"})
-		express_style(false, "Lisbon", "lisbon")
+		express_style(true, "Brazil and non-Lisbon Portugal", {"rio", "sp", "cpt"})
+		express_style(true, "Lisbon", "lisbon")
 	elseif rio_sp_different and not lisbon_cpt_different then
 		-- São Paulo vs. Rio vs. Portugal
 		express_style("Brazil", "São Paulo", "sp")
@@ -718,21 +726,13 @@ function export.express_styles(inputs)
 		-- Brazil vs. Lisbon vs. non-Lisbon
 		express_style("Brazil", "Brazil", {"rio", "sp"})
 		express_style("Portugal", "Lisbon", "lisbon")
-		express_style("Portugal", "non-Lisbon Central Portugal", "cpt")
+		express_style("Portugal", "non-Lisbon Portugal", "cpt")
 	else
 		-- all four different
 		express_style("Brazil", "São Paulo", "sp")
 		express_style("Portugal", "Lisbon", "lisbon")
 		express_style("Brazil", "Rio", "rio")
-		express_style("Portugal", "non-Lisbon Central Portugal", "cpt")
-	end
-
-	-- If only one style group, don't indicate the style.
-	if #expressed_styles == 1 then
-		expressed_styles[1].tag = false
-		if #expressed_styles[1].styles == 1 then
-			expressed_styles[1].styles[1].tag = false
-		end
+		express_style("Portugal", "non-Lisbon Portugal", "cpt")
 	end
 
 	return expressed_styles
@@ -758,7 +758,6 @@ function export.show(frame)
 	local parargs = frame:getParent().args
 	local args = require("Module:parameters").process(parargs, params)
 	local inputs = {}
-	local all_styles = {"rio", "sp", "lisbon", "cpt"}
 	if args.br then
 		inputs.rio = args.br
 		inputs.sp = args.br
@@ -782,7 +781,7 @@ function export.show(frame)
 	for style, input in pairs(inputs) do
 		inputs[style] = rsplit(input, ",")
 	end
-	local expressed_styles = export.express_styles(inputs)
+	local expressed_styles = export.express_styles(inputs, args.style)
 
 	local lines = {}
 
