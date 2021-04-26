@@ -1,5 +1,5 @@
 local tests = require("Module:UnitTests")
-local m_pt_pronunc = require("Module:User:Benwing2/pt-pronunc")
+local m_pt_pronunc = require("Module:pt-pronunc")
 local m_links = require("Module:links")
 local m_table = require("Module:table")
 local pt = require("Module:languages").getByCode("pt")
@@ -77,8 +77,11 @@ Examples:
 ]=]
 local examples = [[
 # cc
-cóccix	:sp=/ˈkɔk.siks/;rio-pt=/ˈkɔk.sikʃ/
+cóccix	:/ˈkɔk.siks/
 occitano	br=occitano:/ok.siˈtɐ̃.nu/
+# d
+adjetivo	:br=/ad.ʒeˈt͡ʃi.vu/
+Reguengos de Monsaraz	:pt=[ʁɨˈɣẽ.ɡuʒ ðɨ mõ.sɐˈɾaʃ]
 # ng
 abrangência	abrangêncya:br=/a.bɾɐ̃ˈʒẽ.sjɐ/;pt=[ɐ.βɾɐ̃ˈʒẽ.sjɐ]
 camping	br=câmping:/ˈkɐ̃.pĩ/
@@ -99,11 +102,92 @@ Stonehenge	sp=Stòwnn.rrendj:[ˌstownˈhẽd͡ʒ]
 viking	br=víking,víkingue:/ˈvi.kĩ/,/ˈvi.kĩ.ɡi/
 zângão	:/ˈzɐ̃.ɡɐ̃w̃/
 # nh
+banho	:br=/ˈbɐ̃.ɲu/;pt=/ˈbɐ.ɲu/
 Congonhinhas	sp=Còngonhinhas:/ˌkõ.ɡõˈɲĩ.ɲɐs/
 Congonhinhas	sp=Còngonhinhas:[ˌkõ.ɡõˈj̃ĩ.j̃ɐs]
 nheengatu	br=nhengatu:/ɲẽ.ɡaˈtu/
-# soft d
-Reguengos de Monsaraz	:pt=[ʁɨˈɣẽ.ɡuʒ ðɨ mõ.sɐˈɾaʃ]
+# q
+ablaquear	ablaquyar:pt=/ɐ.blɐˈkjaɾ/
+acqua alta	:pt=/ˈa.kwɐ ˈal.tɐ/
+freqüentemente	:br=/fɾeˌkwẽ.t͡ʃiˈmẽ.t͡ʃi/
+obséquio	obzéquyo:br=/obˈzɛ.kju/
+quando	:/ˈkwɐ̃.du/
+que	:br=/ki/;pt=/kɨ/
+québra-nózes	:pt=[ˈkɛ.βɾɐ ˈnɔ.zɨʃ]
+qüiproquó	br=qüìproquó:/ˌkwi.pɾoˈkwɔ/
+# s
+cansar	:sp=/kɐ̃ˈsa(ɾ)/;rio=/kɐ̃ˈsa(ʁ)/;lisbon=/kɐ̃ˈsaɾ/
+intransigente	:br=/ĩ.tɾɐ̃.ziˈʒẽ.t͡ʃi/;pt=/ĩ.tɾɐ̃.ziˈʒẽ.tɨ/
+transação	:br=/tɾɐ̃.zaˈsɐ̃w̃/;pt=/tɾɐ̃.zɐˈsɐ̃w̃/
+# y
+Itamaraty	:br=/i.ta.ma.ɾaˈt͡ʃi/
+Sydney	Sýdjney:br=/ˈsid͡ʒ.nej/
+# -mente
+afortunadamente	:rio=/a.foʁ.tuˌna.daˈmẽ.t͡ʃi/;sp=/a.foɾ.tuˌna.daˈmẽ.t͡ʃi/;pt=[ɐ.fuɾ.tuˌna.ðɐˈmẽ.tɨ]
+alertamente	alértamente:rio=/aˌlɛʁ.taˈmẽ.t͡ʃi/;sp=/aˌlɛɾ.taˈmẽ.t͡ʃi/;pt=/ɐˌlɛɾ.tɐˈmẽ.tɨ/
+anticristãmente	:rio=/ɐ̃.t͡ʃi.kɾiʃˌtɐ̃ˈmẽ.t͡ʃi/;sp=/ɐ̃.t͡ʃi.kɾisˌtɐ̃ˈmẽ.t͡ʃi/;pt=/ɐ̃.ti.kɾiʃˌtɐ̃ˈmẽ.tɨ/
+comummente	comunmente:pt=/kuˌmũˈmẽ.tɨ/
+dormente	dormênte:br=/doʁˈmẽ.t͡ʃi/;sp=/doɾˈmẽ.t͡ʃi/;pt=/duɾˈmẽ.tɨ/
+posteriormente	posteriôrmente:rio=/poʃ.te.ɾiˌoʁˈmẽ.t͡ʃi/;sp=/pos.te.ɾiˌoɾˈmẽ.t͡ʃi/;pt=/puʃ.tɨˌɾjoɾˈmẽ.tɨ/
+# -zinho
+balãozinho	:br=/baˌlɐ̃w̃ˈzĩ.ɲu/
+bauzinho	baúzinho:br=/baˌuˈzĩ.ɲu/
+coraçãozinho	cồraçãozinho:br=/ˌko.ɾaˌsɐ̃w̃ˈzĩ.ɲu/
+finalzinho	:br=/fiˌnawˈzĩ.ɲu/;pt=/fiˌnalˈzi.ɲu/
+homenzinho	:br=/ˌõ.mẽj̃ˈzĩ.ɲu/
+nenenzinho	nenénzinho:br=/neˌnẽj̃ˈzĩ.ɲu/
+pobrezinho	póbrezinho:br=[ˌpɔ.bɾiˈzĩ.j̃u];pt=[ˌpɔ.βɾɨˈzi.ɲu]
+sozinho	sózinho:br=/ˌsɔˈzĩ.ɲu/;pt=/ˌsɔˈzi.ɲu/
+vizinho	br=vizínho:/viˈzĩ.ɲu/	pt=vizínho,vezínho:/viˈzi.ɲu/,/vɨˈzi.ɲu/ -- is /vɨˈzi.ɲu/ really a possibility for Portugal?
+# double letters
+Accra	:/ˈa.kɾɐ/
+Aleppo	Aléppo:br=/aˈlɛ.pu/
+buffer	bâfferh:rio=/ˈbɐ.feʁ/;sp=/ˈbɐ.feɾ/
+cheddar	chéddarh:rio=/ˈʃɛ.daʁ/;sp=/ˈʃɛ.daɾ/
+Hanna	br=Ranna:/ˈʁɐ̃.nɐ/
+jazz	djézz:sp=/ˈd͡ʒɛs/;rio=/ˈd͡ʒɛʃ/
+Minnesota	Mìnnessôta:br=/ˌmi.neˈso.tɐ/
+nutella	nutélla:/nuˈtɛ.lɐ/
+shopping	br=shópping,shóppem:/ˈʃɔ.pĩ/,/ˈʃɔ.pẽj̃/
+Yunnan	:/juˈnɐ̃/
+# multiword expressions
+água mole em pedra dura tanto bate até que fura	água móle em pédra dura tanto bate até que fura:br=/ˈa.ɡwɐ ˈmɔ.li ẽj̃ ˈpɛ.dɾɐ ˈdu.ɾɐ ˈtɐ̃.tu ˈba.t͡ʃi aˈtɛ ki ˈfu.ɾɐ/;lisbon=[ˈa.ɣwɐ ˈmɔ.l(ɨ) ɐ̃j̃ ˈpɛ.ðɾɐ ˈðu.ɾɐ ˈtɐ̃.tu ˈβa.t(ɨ) ɐ.ˈtɛ kɨ ˈfu.ɾɐ]
+era só o que me faltava	éra só o que me faltava:br=/ˈɛ.ɾɐ ˈsɔ u ki mi fawˈta.vɐ/
+# nasal diphthongs
+mães	:rio-pt=/ˈmɐ̃j̃ʃ/;sp=/ˈmɐ̃j̃s/
+põem	põeem:br-cpt=/ˈpõj̃.ẽj̃/;lisbon=/ˈpõj̃.ɐ̃j̃/
+pãozão	:/pɐ̃w̃ˈzɐ̃w̃/
+# nasal vowels
+ano	:br=/ˈɐ̃.nu/;pt=/ˈɐ.nu/
+cama	:br=/ˈkɐ̃.mɐ/;pt=/ˈkɐ.mɐ/
+entendo	:br=/ĩˈtẽ.du/;pt=/ẽˈtẽ.du/
+falámos	:pt=/fɐˈla.muʃ/
+Itapoã	:br=/i.ta.poˈɐ̃/
+parabéns	:sp=/pa.ɾaˈbẽj̃s/;rio=/pa.ɾaˈbẽj̃ʃ/;lisbon=/pɐ.ɾɐˈbɐ̃j̃ʃ/;cpt=/pɐ.ɾɐˈbẽj̃ʃ/
+também	:br-cpt=/tɐ̃ˈbẽj̃/;lisbon=/tɐ̃ˈbɐ̃j̃/
+# syllable division
+saiba	:/ˈsaj.bɐ/
+peixe	:br=/ˈpej.ʃi/;cpt=/ˈpej.ʃɨ/;lisbon=/ˈpɐj.ʃɨ/
+noite	:br=/ˈnoj.t͡ʃi/;pt=/ˈnoj.tɨ/
+Paulo	:/ˈpaw.lu/
+deusa	:/ˈdew.zɐ/
+ouro	:/ˈo(w).ɾu/
+Bombaim	:br=/bõ.baˈĩ/;pt=/bõ.bɐˈĩ/
+Coimbra	:br=/koˈĩ.bɾɐ/
+saindo	:br=/saˈĩ.du/;pt=/sɐˈĩ.du/
+rainha	:br=/ʁaˈĩ.ɲɐ/;pt=/ʁɐˈi.ɲɐ/
+moinho	br=moinho,muinho:/moˈĩ.ɲu/,/muˈĩ.ɲu/	pt=mwinho,mu.inho:/ˈmwi.ɲu/,/muˈi.ɲu/
+sair	:rio=/saˈi(ʁ)/;sp=/saˈi(ɾ)/;pt=/sɐˈiɾ/
+Iaundé	:br=/ja.ũˈdɛ/;pt=/jɐ.ũˈdɛ/
+Raul	:br=/ʁaˈuw/;pt=/ʁɐˈul/
+Jaime	:br=/ˈʒaj.mi/;pt=/ˈʒaj.mɨ/
+queimar	:rio=/kejˈma(ʁ)/;sp=/kejˈma(ɾ)/;cpt=/kejˈmaɾ/;lisbon=/kɐjˈmaɾ/
+fauna	:/ˈfaw.nɐ/
+baile	:br=/ˈbaj.li/;pt=/ˈbaj.lɨ/
+beira	:br-cpt=/ˈbej.ɾɐ/;lisbon=/ˈbɐj.ɾɐ/
+saiu	:br=/saˈiw/;pt=/sɐˈiw/
+saído	:br=/saˈi.du/;pt=/sɐˈi.du/
+ia	:/ˈi.ɐ/
 ]]
 
 function tests:check_ipa(spelling, expected, comment)
@@ -146,7 +230,7 @@ function tests:check_ipa(spelling, expected, comment)
 				local this_respellings = table.concat(expected[represented_style].respellings, ",")
 				local this_expected_ipas = table.concat(expected[represented_style].ipas, ",")
 				local this_ipa_type = expected[represented_style].type
-				if not matching_ipas then
+				if not matching_expected_ipas then
 					matching_respellings = this_respellings
 					matching_expected_ipas = this_expected_ipas
 					matching_ipa_type = this_ipa_type
@@ -172,6 +256,7 @@ function tests:check_ipa(spelling, expected, comment)
 					local this_respellings = table.concat(expected[represented_style].respellings, ",")
 					local this_expected_ipas = table.concat(expected[represented_style].ipas, ",")
 					local this_ipa_type = expected[represented_style].type
+					options.comment = m_pt_pronunc.all_style_descs[represented_style] .. (comment and "; " .. comment or "")
 					self:equals(
 						link(spelling) .. (this_respellings == spelling and "" or ", respelled " .. this_respellings),
 						get_actual_ipas(this_ipa_type),
@@ -199,6 +284,13 @@ local function parse(examples)
 		if line ~= "" then -- skip blank lines
 			local function err(msg)
 				error(msg .. ": " .. line)
+			end
+			local function rsplit2(term, regex)
+				local splitvals = rsplit(term, regex)
+				if #splitvals ~= 2 then
+					err("Expected two parts in '" .. term .. "' when split by '" .. regex .. "'")
+				end
+				return splitvals
 			end
 			if line:find("^#") then
 				-- Line beginning with # is a section header.
@@ -234,10 +326,10 @@ local function parse(examples)
 						comment = part
 						break
 					end
-					local respelling, styled_ipas = unpack(rsplit(part, ":"))
+					local respelling, styled_ipas = unpack(rsplit2(part, ":"))
 					local styles
 					if respelling:find("=") then
-						styles, respelling = unpack(rsplit(respelling, "="))
+						styles, respelling = unpack(rsplit2(respelling, "="))
 					else
 						styles = "all"
 					end
@@ -250,7 +342,7 @@ local function parse(examples)
 					for _, styled_ipa in ipairs(rsplit(styled_ipas, ";")) do
 						local ipa_styles, ipas
 						if styled_ipa:find("=") then
-							ipa_styles, ipas = unpack(rsplit(styled_ipa, "="))
+							ipa_styles, ipas = unpack(rsplit2(styled_ipa, "="))
 							ipa_styles = expand_styles(ipa_styles)
 						else
 							ipa_styles = styles

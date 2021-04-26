@@ -9,6 +9,7 @@ local export = {}
 
 local m_IPA = require("Module:IPA")
 local m_table = require("Module:table")
+local m_strutils = require("Module:string utilities")
 
 local lang = require("Module:languages").getByCode("pt")
 
@@ -53,6 +54,7 @@ local wordsep_c = "[" .. wordsep .. "]"
 local C = "[^" .. vowel .. wordsep .. "]" -- consonant
 local C_NOT_H = "[^h" .. vowel .. wordsep .. "]" -- consonant other than h
 local C_OR_WORD_BOUNDARY = "[^" .. vowel .. charsep .. "]" -- consonant or word boundary
+local voiced_cons = "bdgjlʎmnɲŋrɾʁvwyzʒ" -- voiced sound
 
 -- Unstressed words with vowel reduction in Brazil and Portugal.
 local unstressed_words = require("Module:table").listToSet({
@@ -60,14 +62,13 @@ local unstressed_words = require("Module:table").listToSet({
 	"me", "te", "se", "lhe", "lhes", "nos", "vos", -- unstressed object pronouns
 	"que", -- subordinating conjunctions
 	"e", -- coordinating conjunctions
-	"de", "do", "dos", "no", -- basic prepositions + combinations with articles; [[nos]] above as object pronoun
+	"de", "do", "dos", "no", "por", -- basic prepositions + combinations with articles; [[nos]] above as object pronoun
 })
 
 -- Unstressed words with vowel reduction in Portugal only.
 local unstressed_full_vowel_words_brazil = require("Module:table").listToSet({
 	"a", "as", -- definite articles
 	"da", "das", "na", "nas", -- basic prepositions + combinations with articles
-	"por", -- prepositions
 })
 
 -- Unstressed words without vowel reduction.
@@ -103,7 +104,13 @@ local function rsub_repeatedly(term, foo, bar)
 	end
 end
 
-local all_styles = {"rio", "sp", "lisbon", "cpt"}
+export.all_styles = {"rio", "sp", "lisbon", "cpt"}
+export.all_style_descs = {
+	rio = "Rio",
+	sp = "São Paulo",
+	lisbon = "Lisbon",
+	cpt = "non-Lisbon Portugal"
+}
 
 -- style == one of the following:
 -- "rio": Carioca accent (of Rio de Janeiro)
@@ -189,7 +196,7 @@ function export.IPA(text, style, phonetic)
 
 	-- x
 	text = rsub(text, "#x", "#ʃ") -- xérox, xilofone, etc.
-	text = rsub(text, "x#", "ks#") -- xérox, córtex, etc.
+	text = rsub(text, "x#", "kç#") -- xérox, córtex, etc.
 	text = rsub(text, "(" .. V .. charsep_c .. "*i" .. charsep_c .. "*)x", "%1ʃ") -- baixo, peixe, etc.
 	if rfind(text, "x") then
 		err("x must be respelled z, ch, sh, cs, ss or similar")
@@ -219,19 +226,20 @@ function export.IPA(text, style, phonetic)
 	-- Reduce double letters to single, except for rr, mm, nn and ss, which map to special single sounds. Do this
 	-- before syllabification so double letters don't get divided across syllables. The case of cci, cce is handled
 	-- above. nn always maps to /n/ and mm to /m/ and can be used to force a coda /n/ or /m/. As a result,
-	-- [[connosco]] will need respelling 'comnôsco', 'cõnôsco' or 'con.nôsco'. Examples of words with double letters
-	-- (Brazilian pronunciation):
+	-- [[connosco]] will need respelling 'comnôsco', 'cõnôsco' or 'con.nôsco', and [[comummente]] will similarly
+	-- need respelling e.g. as 'comum.mente' or 'comũmente'. Examples of words with double letters (Brazilian
+	-- pronunciation):
 	-- * [[Accra]] no respelling needed /ˈa.kɾɐ/;
-	-- * [[Aleppo]] respelled 'Aléppo' /aˈlɛpu/;
-	-- * [[buffer]] respelled 'bâffer' /ˈbɐ.feʁ/;
-	-- * [[cheddar]] respelled 'chéddar' /ˈʃɛ.daʁ/;
-	-- * [[Hanna]] respelled 'Ranna' /ˈʁɐ.nɐ/;
+	-- * [[Aleppo]] respelled 'Aléppo' /aˈlɛ.pu/;
+	-- * [[buffer]] respelled 'bâfferh' /ˈbɐ.feʁ/;
+	-- * [[cheddar]] respelled 'chéddarh' /ˈʃɛ.daʁ/;
+	-- * [[Hanna]] respelled 'Ranna' /ˈʁɐ̃.nɐ/;
 	-- * [[jazz]] respelled 'djézz' /ˈd͡ʒɛs/;
-	-- * [[Minnesota]] respelled 'Mìnnessôta' /ˌmi.ne.ˈso.tɐ/;
+	-- * [[Minnesota]] respelled 'Mìnnessôta' /ˌmi.neˈso.tɐ/;
 	-- * [[nutella]] respelled 'nutélla' /nuˈtɛ.lɐ/;
 	-- * [[shopping]] respeled 'shópping' /ˈʃɔ.pĩ/ or 'shóppem' /ˈʃɔ.pẽj̃/;
-	-- * [[Stonehenge]] respelled 'Stòwnn.rrendj' /ˌstown.ˈʁẽd͡ʒ/;
-	-- * [[Yunnan]] no respelling needed /ju.ˈnɐ̃/.
+	-- * [[Stonehenge]] respelled 'Stòwnn.rrendj' /ˌstownˈʁẽd͡ʒ/;
+	-- * [[Yunnan]] no respelling needed /juˈnɐ̃/.
 	--
 	-- Note that further processing of r and s happens after syllabification and stress assignment, because we need
 	-- e.g. to know the distinction between final -s and -z to assign the stress properly.
@@ -242,7 +250,13 @@ function export.IPA(text, style, phonetic)
 	text = rsub(text, "(" .. C .. ")%1", "%1")
 
 	-- Divide words into syllables.
-	-- First, change user-specified . into a special character so we won't move it around.
+	-- First, change user-specified . into a special character so we won't move it around. We need to keep this
+	-- going forward until after we place the stress, so we can correctly handle initial i- + vowel, as in [[ia]],
+	-- [[iate]] and [[Iaundé]]. We need to divide [[ia]] as 'i.a' but [[iate]] as 'ia.te' and [[Iaundé]] as 'Ia.un.dé'.
+	-- In the former case, the stress goes on i but in the latter cases not; so we always divide <ia> as 'i.a',
+	-- and then after stress assignment remove the syllable divider if the <i> isn't stressed. The tricky thing is
+	-- that we want to allow the user to override this by explicitly adding a . between the <i> and <a>. So we need
+	-- to keep the distinction between user-specified . and auto-determined . until after stress assignment.
 	text = rsub(text, "%.", SYLDIV)
 	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*)(" .. C .. W .. "?" .. V .. ")", "%1.%2")
 	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*" .. C .. ")(" .. C .. V .. ")", "%1.%2")
@@ -284,8 +298,6 @@ function export.IPA(text, style, phonetic)
 	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*)(" .. V .. ")", "%1.%2")
 	-- Remove the marker preventing syllable division.
 	text = rsub(text, TEMP1, "")
-	-- Convert user-specified syllable division back to .
-	text = rsub(text, SYLDIV, ".")
 
 	-- An acute or circumflex not followed by a stress marker has primary stress, so indicate it.
 	text = rsub_repeatedly(text, "(" .. V .. quality_c .. ")([^" .. stress .. "])", "%1ˈ%2")
@@ -293,21 +305,22 @@ function export.IPA(text, style, phonetic)
 	text = rsub(text, GR, "ˌ")
 
 	-- Add primary stress to the word if not already present. If the word ends in -mente or -zinho, we add two
-	-- primary stresses; the first one will be converted to secondary stress down below.
-	local function accent_word(word, syllables, before_mente)
+	-- primary stresses; the first one will be converted to secondary stress down below. Note that `syllables` is
+	-- a list that includes the syllable dividers as separate items (either SYLDIV if user-specified, or . if
+	-- auto-added), so the actual syllables are found at indices 1, 3, 5, etc.
+	local function accent_word(word, syllables)
 		-- Check if stress already marked. We check first for primary stress before checking for tilde in case both
 		-- primary stress and tilde occur, e.g. [[bênção]], [[órgão]], [[hétmã]], [[connosco]] respelled 'cõnôsco'.
-		-- If handling the part before -mente, check for any stress marker and do nothing if found.
-		if rfind(word, "ˈ") or before_mente and rfind(word, stress_c) then
+		if rfind(word, "ˈ") then
 			return
 		end
 
 		-- Check for nasal vowel marked with tilde and without non-primary stress; assign stress to the last such
 		-- syllable in case there's more than one tilde, e.g. [[pãozão]]. Note, this can happen in the part before
 		-- -mente, cf. [[anticristãmente]], and before -zinho, cf. [[coraçãozinho]].
-		for i = #syllables,1,-1 do
+		for i = #syllables,1,-2 do -- -2 because of the syllable dividers; see above.
 			local changed
-			syllables[i], changed = rsub(syllables[i], "(" .. V .. quality_c .. "*)" .. TILDE, "%1ˈ" .. TILDE)
+			syllables[i], changed = rsubb(syllables[i], "(" .. V .. quality_c .. "*)" .. TILDE, "%1ˈ" .. TILDE)
 			if changed then
 				return
 			end
@@ -316,7 +329,8 @@ function export.IPA(text, style, phonetic)
 		-- Apply the default stress rule.
 		local sylno
 		if #syllables > 1 and (rfind(word, "[aeo]s?#") or rfind(word, "[ae]m#") or rfind(word, "[ae]ns#")) then
-			sylno = #syllables - 1
+			-- Stress the last syllable but one. The -2 is because of the syllable dividers; see above.
+			sylno = #syllables - 2
 		else
 			sylno = #syllables
 		end
@@ -328,42 +342,50 @@ function export.IPA(text, style, phonetic)
 		syllables[sylno] = rsub(syllables[sylno], "^(.-" .. V .. quality_c .. "*)", "%1ˈ")
 	end
 
+	-- Split the text into words and the words into syllables so we can correctly add stress to words without it.
 	local words = rsplit(text, " ")
 	for j, word in ipairs(words) do
-		-- accentuation
-		local syllables = rsplit(word, "%.")
+		-- Preserve the syllable divider, which may be auto-added or user-specified.
+		local syllables = m_strutils.capturing_split(word, "([." .. SYLDIV .. "])")
 
-		if rfind(word, "%.men%.te#") or rfind(word, "%.zi%.ɲo#") then
+		if rfind(word, "[%." .. SYLDIV .. "]men%.te#") or rfind(word, "[%." .. SYLDIV .. "]zi%.ɲo#") then
 			local mente_syllables
 			-- Words ends in -mente or -zinho; add primary stress to the preceding portion as if stressed
 			-- (e.g. [[agitadamente]] -> 'agitádamente') unless already stressed (e.g. [[rapidamente]]
-			-- respelled 'rápidamente' or `ràpidamente'). The primary stress will be converted to secondary
-			-- stress further below. Essentially, we rip the word apart into two words ('mente'/'zinho' and
-			-- the preceding portion) and stress each one independently. Note that the effect of adding a
-			-- primary stress will also be to cause an error if stressed 'e' or 'o' is not properly marked
-			-- as é/ê or ó/ô; cf. [[certamente]], which must be respelled 'cértamente', and [[posteriormente]],
-			-- which must be respelled 'posteriôrmente', just as with [[certa]] and [[posterior]]. To
-			-- prevent this happening, you can add an accent to -mente or -zinho, e.g. [[dormente]] respelled
-			-- 'dormênte', [[vizinho]] respelled 'vizínho'.
+			-- respelled 'rápidamente'). The primary stress will be converted to secondary stress further below.
+			-- Essentially, we rip the word apart into two words ('mente'/'zinho' and the preceding portion) and
+			-- stress each one independently. Note that the effect of adding a primary stress will also be to cause
+			-- an error if stressed 'e' or 'o' is not properly marked as é/ê or ó/ô; cf. [[certamente]], which must
+			-- be respelled 'cértamente', and [[posteriormente]], which must be respelled 'posteriôrmente', just as
+			-- with [[certa]] and [[posterior]]. To prevent this happening, you can add an accent to -mente or
+			-- -zinho, e.g. [[dormente]] respelled 'dormênte', [[vizinho]] respelled 'vizínho'.
 			mente_syllables = {}
-			mente_syllables[2] = table.remove(syllables)
+			mente_syllables[3] = table.remove(syllables)
+			mente_syllables[2] = table.remove(syllables) -- this will be a syllable divider
 			mente_syllables[1] = table.remove(syllables)
-			local before_mente_word = table.concat(syllables, ".") .. "#"
-			local mente_word = table.concat(mente_syllables, ".")
-			accent_word(before_mente_word, syllables, "before mente")
-			accent_word("#" .. mente_word, mente_syllables)
+			table.remove(syllables) -- this will be a syllable divider
+			accent_word(table.concat(syllables, "") .. "#", syllables)
+			accent_word("#" .. table.concat(mente_syllables, ""), mente_syllables)
 			-- Reconstruct the word. Put a # instead of . between the two parts so e.g. the vowel at the end
-			-- of the first part is treated as word-final.
-			words[j] = before_mente_word .. mente_word
+			-- of the first part is treated as word-final. Don't cache the concat() before accent_word() changes
+			-- the syllables.
+			words[j] = table.concat(syllables, "") .. "#" .. table.concat(mente_syllables, "")
 		else
 			accent_word(word, syllables)
 			-- Reconstruct the word.
-			words[j] = table.concat(syllables, ".")
+			words[j] = table.concat(syllables, "")
 		end
 	end
 
 	-- Reconstruct the text from the words.
 	text = table.concat(words, " ")
+
+	-- Remove hiatus between initial <i> and following vowel ([[Iasmim]]) unless the <i> is stressed ([[ia]]) or the
+	-- user explicitly added a . (converted to SYLDIV above).
+	text = rsub(text, "#i%.(" .. V .. ")", "#y%1")
+
+	-- Convert user-specified syllable division back to period. See comment above when we add SYLDIV.
+	text = rsub(text, SYLDIV, ".")
 
 	-- Vowel quality handling. First convert all a -> A, e -> E, o -> O. We will then convert A -> a/ɐ, E -> e/ɛ/ɨ,
 	-- O -> o/ɔ/u depending on accent marks and context. Ultimately all vowels will be one of the nine qualities
@@ -386,14 +408,16 @@ function export.IPA(text, style, phonetic)
 	text = rsub(text, "(" .. V .. ")(" .. stress_c .. "*)" .. TILDE, "%1" .. CFLEX .. "%2" .. TILDE)
 	-- Primary-stressed vowel without quality mark + m/n/nh across syllable boundary gets a circumflex, cf. [[cama]],
 	-- [[ano]], [[banho]].
-	text = rsub(text, "(" .. V .. ")(ˈ%.[mnɲ])", "%1" .. CFLEX .. "%2")
+	text = rsub(text, "(" .. V .. ")(ˈ%.[mnɲMN])", "%1" .. CFLEX .. "%2")
 	if brazil then
 		-- Primary-stressed vowel + m/n across syllable boundary gets nasalized in Brazil, cf. [[cama]], [[ano]].
-		text = rsub(text, "(" .. V .. quality_c .. "*)(ˈ%.[mn])", "%1" .. TILDE .. "%2")
+		text = rsub(text, "(" .. V .. quality_c .. "*)(ˈ%.[mnMN])", "%1" .. TILDE .. "%2")
 		-- All vowels before nh (always across syllable boundary) get circumflexed and nasalized in Brazil,
 		-- cf. [[ganhar]].
 		text = rsub(text, "(" .. V .. stress_c .. "*)(%.ɲ)", "%1" .. CFLEX .. "%2")
 		text = rsub(text, "(" .. V .. quality_c .. "*" .. stress_c .. "*)(%.ɲ)", "%1" .. TILDE .. "%2")
+		-- Initial unstressed em-/en- before consonant raises to /ĩ/.
+		text = rsub(text, "#E" .. CFLEX .. TILDE, "#i" .. TILDE)
 	end
 
 	-- Nasal diphthongs.
@@ -416,9 +440,11 @@ function export.IPA(text, style, phonetic)
 
 	-- Unstressed syllables.
 	if brazil then
-		-- Final unstressed -e, -o, -a -> /i/ /u/ /ɐ/
-		local brazil_final_vowel = {["A"] = "ɐ", ["E"] = "i", ["O"] = "u"}
-		text = rsub(text, "([AEO])(s?#)", function(v, after) return brazil_final_vowel[v] .. after end)
+		-- Final unstressed -e(s), -o(s) -> /i/ /u/ (including before -mente)
+		local brazil_final_vowel = {["E"] = "i", ["O"] = "u"}
+		text = rsub(text, "([EO])(s?#)", function(v, after) return brazil_final_vowel[v] .. after end)
+		-- Word-final unstressed -a(s) -> /ɐ/ (not before -mente)
+		text = rsub(text, "A(s?#[# ])", function(after) return "ɐ" .. after end)
 		-- Remaining unstressed a, e, o without quality mark -> /a/ /e/ /o/.
 		local brazil_unstressed_vowel = {["A"] = "a", ["E"] = "e", ["O"] = "o"}
 		text = rsub(text, "([AEO])([^" .. accent .. "])",
@@ -459,7 +485,7 @@ function export.IPA(text, style, phonetic)
 	text = rsub(text, "z#", "s#")
 	-- s between vowels (not nasalized) or between vowel and voiced consonant, including across word boundaries;
 	-- may be fed by previous rule
-	text = rsub(text, "(" .. V .. stress_c .. "*%.?)s(" .. wordsep_c .. "*h?[" .. vowel .. "bdgjlʎmnɲŋrɾʁvwyzʒ])", "%1z%2")
+	text = rsub(text, "(" .. V .. stress_c .. "*%.?)s(" .. wordsep_c .. "*h?[" .. vowel .. voiced_cons .. "])", "%1z%2")
 	-- z before voiceless consonant, e.g. [[Nazca]]; c and q already removed
 	text = rsub(text, "z(" .. wordsep_c .. "*[çfkpsʃt])", "%1s%2")
 	if style == "rio" or not brazil then
@@ -486,6 +512,12 @@ function export.IPA(text, style, phonetic)
 	-- Double rr -> ʁ already handled above.
 	-- Initial r or l/n/s/z + r -> strong r (ʁ).
 	text = rsub(text, "([#" .. TILDE .. "lszʃʒ]%.?)r", "%1ʁ")
+	if brazil then
+		-- Coda r before vowel in verbs is /(ɾ)/. FIXME: Verify this.
+		text = rsub(text, "([aɛei]ˈ)r(#" .. wordsep_c .. "*h?" .. V .. ")", "%1(ɾ)%2")
+		-- Coda r before vowel is /ɾ/.
+		text = rsub(text, "r(" .. C .. "*[.#]" .. wordsep_c .. "*h?" .. V .. ")", "%1ɾ%2")
+	end
 	-- Word-final r in Brazil in verbs (not [[pôr]]) is usually dropped. Use a spelling like 'marh' for [[mar]]
 	-- to prevent this.
 	if style == "sp" then
@@ -493,34 +525,46 @@ function export.IPA(text, style, phonetic)
 	elseif brazil then
 		text = rsub(text, "([aɛei]ˈ)r#", "%1(ʁ)#")
 		-- Coda r outside of São Paulo is /ʁ/.
-		text = rsub(text, "r([.#])", "ʁ%1")
+		text = rsub(text, "r(" .. C .. "*[.#])", "ʁ%1")
 	end
 	-- All other r -> /ɾ/.
 	text = rsub(text, "r", "ɾ")
 	if brazil and phonetic then
-		-- "Strong" ʁ is [h] in most of Brazil, [χ] in Rio.
+		-- "Strong" ʁ is [ɦ] in much of Brazil, [ʁ] in Rio. Use R as a temporary symbol.
+		text = rsub(text, "ʁ(" .. wordsep_c .. "*[" .. voiced_cons .. "])", style == "rio" and "R" or "ɦ")
+		-- "Strong" ʁ is [h] in much of Brazil, [χ] in Rio.
 		-- Use H because later we remove all <h>.
 		text = rsub(text, "ʁ", style == "rio" and "χ" or "H")
+		text = rsub(text, "R", "ʁ")
+	end
+
+	if style == "lisbon" then
+		-- In Lisbon, lower e -> ɐ before i in <ei>.
+		text = rsub(text, "e(" .. accent_c .. "*i)", "ɐ%1")
+		-- In Lisbon, lower e -> ɐ before j, including when nasalized.
+		text = rsub(text, "e(" .. accent_c .. "*%.?y)", "ɐ%1")
+		-- In Lisbon, lower e -> ɐ(j) before other palatals.
+		text = rsub(text, "e(" .. stress_c .. "*)(%.?[ʒʃɲʎ])", phonetic and "ɐ%1(ɪ̯)%2" or "ɐ%1(j)%2")
 	end
 
 	-- Glides. This must precede coda l -> w in Brazil, because <ol> /ow/ cannot be reduced to /o/.
 	-- ou -> o(w) before conversion of remaining diphthongs to vowel-glide combinations so <ow> can be used to
 	-- indicate a non-reducible glide.
-	text = rsub(text, "ou", "o(w)")
-	local vowel_termination_to_glide = {["i"] = "y", ["u"] = "w"}
+	text = rsub(text, "o(" .. accent_c .. "*)u", phonetic and "o%1(ʊ̯)" or "o%1(w)")
+	local vowel_termination_to_glide = phonetic and {["i"] = "ɪ̯", ["u"] = "ʊ̯"} or {["i"] = "y", ["u"] = "w"}
 	-- i/u as second part of diphthong becomes glide.
 	text = rsub(text, "(" .. V .. accent_c .. "*" .. ")([iu])",
 		function(v1, v2) return v1 .. vowel_termination_to_glide[v2] end)
 	text = rsub(text, "y", "j")
-	text = rsub(text, "Y", "(j)") -- epenthesized in [[faz]], [[tres]], etc.
+	text = rsub(text, "Y", phonetic and "(ɪ̯)" or "(j)") -- epenthesized in [[faz]], [[tres]], etc.
 
 	-- l
 	if brazil then
 		-- Coda l -> /w/ in Brazil.
-		text = rsub(text, "l([.#])", "w%1")
+		text = rsub(text, "l(" .. C .. "*[.#])", "w%1")
 	elseif phonetic then
 		-- Coda l -> [ɫ] in Portugal.
-		text = rsub(text, "l([.#])", "ɫ%1")
+		text = rsub(text, "l(" .. C .. "*[.#])", "ɫ%1")
 	end
 
 	-- nh
@@ -528,13 +572,6 @@ function export.IPA(text, style, phonetic)
 		-- [[unha]] pronounced [ˈũ.j̃ɐ]; nasalization of previous vowel handled above.
 		-- But initial nh- e.g. [[nhaca]], [[nheengatu]], [[nhoque]] is [ɲ].
 		text = rsub(text, "([^#])ɲ", "%1j" .. TILDE)
-	end
-
-	if style == "lisbon" then
-		-- In Lisbon, lower e -> ɐ before j, including when nasalized.
-		text = rsub(text, "e(" .. accent_c .. "*%.?j)", "ɐ%1")
-		-- In Lisbon, lower e -> ɐ(j) before other palatals.
-		text = rsub(text, "e(" .. stress_c .. "*)(%.?[ʒʃɲʎ])", "ɐ%1(j)%2")
 	end
 
 	-- Stop consonants.
@@ -708,7 +745,7 @@ function export.express_styles(inputs, args_style)
 
 	if not sp_lisbon_different and not rio_sp_different and not lisbon_cpt_different then
 		-- All the same
-		express_style(false, false, all_styles)
+		express_style(false, false, export.all_styles)
 	elseif not rio_sp_different and not lisbon_cpt_different and rio_lisbon_different then
 		-- Brazil vs. Portugal
 		express_style(true, "Brazil", {"rio", "sp"})
@@ -770,14 +807,14 @@ function export.show(frame)
 		inputs.lisbon = args.pt
 		inputs.cpt = args.pt
 	end
-	for _, style in ipairs(all_styles) do
+	for _, style in ipairs(export.all_styles) do
 		if args[style] then
 			inputs[style] = args[style]
 		end
 	end
 	if not next(inputs) then
 		local text = args[1] or mw.title.getCurrentTitle().text
-		for _, style in ipairs(all_styles) do
+		for _, style in ipairs(export.all_styles) do
 			inputs[style] = text
 		end
 	end
