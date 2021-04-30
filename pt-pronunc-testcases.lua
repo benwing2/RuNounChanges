@@ -16,9 +16,7 @@ end
 
 local options = { display = tag_IPA }
 
-local known_basic_style_list = {"rio", "sp", "lisbon", "cpt"}
-local known_basic_styles = m_table.listToSet(known_basic_style_list)
-local known_style_groups = {all = known_basic_style_list, br = {"rio", "sp"}, pt = {"lisbon", "cpt"}}
+local all_style_set = m_table.listToSet(m_pt_pronunc.all_styles)
 
 --[=[
 In the following examples, each line is either a section header beginning with a # or an example.
@@ -27,16 +25,17 @@ Each following field consists of a respelling associated with a particular style
 IPA pronunciation. A style corresponds approximately to a particular dialect and is one of the following:
 
 (1) A "basic style":
-    * "rio" = Rio de Janeiro
+	* "gbr" = "General" Brazilian
     * "sp" = São Paulo
+    * "rio" = Rio de Janeiro
 	* "lisbon" = Lisbon
 	* "cpt" = Portugal outside of Lisbon
 (2) A "combined style":
-    * "br" = Brazil = "rio" + "sp"
+    * "br" = Brazil = "gbr" + "sp" + "rio"
 	* "pt" = Portugal = "lisbon" + "cpt"
 	* "all" = all basic styles
 (3) A "style group", which is a list of hyphen-separated styles;
-    * e.g. "br-cpt" = "br" + "cpt" = "rio" + "sp" + "cpt"
+    * e.g. "br-cpt" = "br" + "cpt" = "gbr" + "sp" + "rio" + "cpt"
 
 If a combined style or style group is specified, the respelling applies to all individual styles.
 
@@ -59,9 +58,9 @@ Examples:
 * abrangência	abrangêncya:br=/a.bɾɐ̃ˈʒẽ.sjɐ/;pt=[ɐ.βɾɐ̃ˈʒẽ.sjɐ]
   This means the word [[abrangência]] has the respelling 'abrangêncya' for all styles, which in turn has the
   expected phonemic pronunciation /a.bɾɐ̃ˈʒẽ.sjɐ/ in Brazil and expected phonetic pronunciation [ɐ.βɾɐ̃ˈʒẽ.sjɐ] in
-  Portugal. The phonemic pronunciation for all Brazilian styles (Rio and São Paulo) will be checked against
-  /a.bɾɐ̃ˈʒẽ.sjɐ/, and the phonetic pronunciation for all Portugal styles (Lisbon as well as non-Lisbon Central
-  Portugal) will be checked against [ɐ.βɾɐ̃ˈʒẽ.sjɐ].
+  Portugal. The phonemic pronunciation for all Brazilian styles ("General" Brazilian, Rio and São Paulo) will be
+  checked against /a.bɾɐ̃ˈʒẽ.sjɐ/, and the phonetic pronunciation for all Portugal styles (Lisbon as well a
+  non-Lisbon Central Portugal) will be checked against [ɐ.βɾɐ̃ˈʒẽ.sjɐ].
 * ninguém	:br-cpt=/nĩˈɡẽj̃/;lisbon=/nĩˈɡɐ̃j̃/
   This means the word [[ninguém]], respelled the same way for all styles, has the phonemic pronunciation /nĩˈɡẽj̃/
   in all styles other than Lisbon, and /nĩˈɡɐ̃j̃/ in Lisbon.
@@ -69,19 +68,59 @@ Examples:
   This means the term [[long neck]] has two possible respellings 'lòngh nécke' and 'lòngue nécke' in Brazil, with
   expected respective phonemic pronunciations /ˌlõɡ ˈnɛ.ki/ and /ˌlõ.ɡi ˈnɛ.ki/. Portugal styles will not be
   checked.
-* distinguir	pt=distinguir:[diʃ.tĩˈɡiɾ]	br=distingüir:rio=[d͡ʒiʃ.t͡ʃĩˈɡwi(χ)];sp=[d͡ʒis.t͡ʃĩˈɡwi(ɾ)]
+* distinguir	pt=distinguir:[diʃ.tĩˈɡiɾ]	br=distingüir:gbr=[d͡ʒis.t͡ʃĩˈɡwi(h)];rio=[d͡ʒiʃ.t͡ʃĩˈɡwi(χ)];sp=[d͡ʒis.t͡ʃĩˈɡwi(ɾ)]
   This means the word [[distinguir]] has respelling 'distinguir' in Portugal with expected phonetic pronunciation
   [diʃ.tĩˈɡiɾ] in Portugal (both Lisbon and elsewhere in Central Portugal), but has the respelling 'distingüir'
-  in Brazil. The Brazilian respelling has different phonetic pronunciations [d͡ʒiʃ.t͡ʃĩˈɡwi(χ)] in Rio and
-  [d͡ʒis.t͡ʃĩˈɡwi(ɾ)] in São Paulo.
+  in Brazil. The Brazilian respelling has different phonetic pronunciations [d͡ʒis.t͡ʃĩˈɡwi(h)] in "General" Brazilian,
+  [d͡ʒiʃ.t͡ʃĩˈɡwi(χ)] in Rio and [d͡ʒis.t͡ʃĩˈɡwi(ɾ)] in São Paulo.
 ]=]
 local examples = [[
+# a
+as pessoas	as pessôas:pt=[ɐʃ pɨˈso.ɐʃ]
+às pessoas	às pessôas:pt=[aʃ pɨˈso.ɐʃ]
+# b
+sobre	sôbre:br=/ˈso.bɾi/;pt=/ˈso.bɾɨ/
+sobre	sôbre:br=[ˈso.bɾi];pt=[ˈso.βɾɨ]
+bulbo	:pt=[ˈbuɫ.βu];br=[ˈbuʊ̯.bu]
+braça	:[ˈbɾa.sɐ]
+
 # cc
 cóccix	:/ˈkɔk.siks/
 occitano	br=occitano:/ok.siˈtɐ̃.nu/
+
 # d
+de	:br=[d͡ʒi];pt=[dɨ]
+praça de Londres	:pt=[ˈpɾa.sɐ ðɨ ˈlõ.dɾɨʃ];rio=[ˈpɾa.sɐ d͡ʒi ˈlõ.dɾiʃ];gbr-sp=[ˈpɾa.sɐ d͡ʒi ˈlõ.dɾis]
+Pedro	Pêdro:br=[ˈpe.dɾu];pt=[ˈpe.ðɾu]
+os dentes	:rio=[uʒ ˈdẽ.t͡ʃiʃ];gbr-sp=[uz ˈdẽ.t͡ʃis];pt=[uʒ ˈðẽ.tɨʃ]
+aldeia	:lisbon=[ɐɫˈdɐɪ̯.ɐ];cpt=[ɐɫˈdeɪ̯.ɐ];br=[aʊ̯ˈdeɪ̯.ɐ]
 adjetivo	:br=/ad.ʒeˈt͡ʃi.vu/
 Reguengos de Monsaraz	:pt=[ʁɨˈɣẽ.ɡuʒ ðɨ mõ.sɐˈɾaʃ]
+
+# e
+pregar	:pt=/pɾɨˈɡaɾ/;gbr-rio=/pɾeˈɡa(ʁ)/;sp=/pɾeˈɡa(ɾ)/
+pregar	pt=prẹgar:/pɾɛˈɡaɾ/
+exame	ezame:pt=/iˈzɐ.mɨ/;br=/eˈzɐ̃.mi/
+exames	ezames:pt=/iˈzɐ.mɨʃ/;rio=/eˈzɐ̃.miʃ/;gbr-sp=/eˈzɐ̃.mis/
+vexame	veshame:pt=/vɨˈʃɐ.mɨ/;br=/veˈʃɐ̃.mi/
+córtex	:pt-sp=/ˈkɔɾ.tɛks/;rio-gbr=/ˈkɔʁ.tɛks/
+
+# g
+guerra	guérra:/ˈɡɛ.ʁɐ/
+a guerra	a guérra:rio=[a ˈɡɛ.χɐ];sp-gbr=[a ˈɡɛ.hɐ];pt=[ɐ ˈɣɛ.ʁɐ]
+guarda	:rio-gbr=/ˈɡwaʁ.dɐ/;sp-pt=/ˈɡwaɾ.dɐ/
+gelo	gêlo:/ˈʒe.lu/
+
+# l, lh
+elo	élo:/ˈɛ.lu/
+anel	anél:pt=/ɐˈnɛl/;br=/aˈnɛw/
+anel	anél:pt=[ɐˈnɛɫ];br=[aˈnɛʊ̯]
+velho	vélho:/ˈvɛ.ʎu/
+conselho	consêlho:lisbon=/kõˈsɐ(j).ʎu/;br-cpt=/kõˈse.ʎu/
+azul e branco	:br=[a.zuʊ̯ i ˈbɾɐ̃.ku];pt=[ɐ.zul i ˈβɾɐ̃.ku]
+bolsa	bôlsa:br=/ˈbow.sɐ/;pt=/ˈbol.sɐ/
+bolsa	bôlsa:br=[ˈboʊ̯.sɐ];pt=[ˈboɫ.sɐ]
+
 # ng
 abrangência	abrangêncya:br=/a.bɾɐ̃ˈʒẽ.sjɐ/;pt=[ɐ.βɾɐ̃ˈʒẽ.sjɐ]
 camping	br=câmping:/ˈkɐ̃.pĩ/
@@ -90,22 +129,24 @@ jogging	br=djógguing:/ˈd͡ʒɔ.ɡĩ/
 Beijing	:br=/bejˈʒĩ/
 Wellington	br=Wéllington:/ˈwɛ.lĩ.tõ/
 Washington	br=Wóshington:/ˈwɔ.ʃĩ.tõ/
-distinguir	pt=distinguir:[diʃ.tĩˈɡiɾ]	br=distingüir:rio=[d͡ʒiʃ.t͡ʃĩˈɡwi(χ)];sp=[d͡ʒis.t͡ʃĩˈɡwi(ɾ)]
+distinguir	pt=distinguir:[diʃ.tĩˈɡiɾ]	br=distingüir:gbr=[d͡ʒis.t͡ʃĩˈɡwi(h)];rio=[d͡ʒiʃ.t͡ʃĩˈɡwi(χ)];sp=[d͡ʒis.t͡ʃĩˈɡwi(ɾ)]
 Hungria	:[ũˈɡɾi.ɐ]
 interrobang	pt=intẹrrobangue:/ĩ.tɛ.ʁuˈbɐ̃.ɡɨ/	br=interrobangue:/ĩ.te.ʁoˈbɐ̃.ɡi/
 linguiça	lingu.iça,lingüiça:/lĩ.ɡuˈi.sɐ/,/lĩˈɡwi.sɐ/
 long neck	br=lòngh nécke,lòngue nécke:/ˌlõɡ ˈnɛ.ki/,/ˌlõ.ɡi ˈnɛ.ki/
-Los Angeles	br=Lộs Ângeles:sp=/loz ˈɐ̃.ʒe.lis/;rio=/loz ˈɐ̃.ʒe.liʃ/
+Los Angeles	br=Lộs Ângeles:gbr-sp=/loz ˈɐ̃.ʒe.lis/;rio=/loz ˈɐ̃.ʒe.liʃ/
 ninguém	:br-cpt=/nĩˈɡẽj̃/;lisbon=/nĩˈɡɐ̃j̃/
 single	br=síngol:/ˈsĩ.ɡow/
 Stonehenge	sp=Stòwnn.rrendj:[ˌstownˈhẽd͡ʒ]
 viking	br=víking,víkingue:/ˈvi.kĩ/,/ˈvi.kĩ.ɡi/
 zângão	:/ˈzɐ̃.ɡɐ̃w̃/
+
 # nh
 banho	:br=/ˈbɐ̃.ɲu/;pt=/ˈbɐ.ɲu/
 Congonhinhas	sp=Còngonhinhas:/ˌkõ.ɡõˈɲĩ.ɲɐs/
 Congonhinhas	sp=Còngonhinhas:[ˌkõ.ɡõˈj̃ĩ.j̃ɐs]
 nheengatu	br=nhengatu:/ɲẽ.ɡaˈtu/
+
 # q
 ablaquear	ablaquyar:pt=/ɐ.blɐˈkjaɾ/
 acqua alta	:pt=/ˈa.kwɐ ˈal.tɐ/
@@ -115,20 +156,70 @@ quando	:/ˈkwɐ̃.du/
 que	:br=/ki/;pt=/kɨ/
 québra-nózes	:pt=[ˈkɛ.βɾɐ ˈnɔ.zɨʃ]
 qüiproquó	br=qüìproquó:/ˌkwi.pɾoˈkwɔ/
+
+# r
+bilro	:rio=[ˈbiʊ̯.χu];pt=[ˈbiɫ.ʁu];gbr-sp=[ˈbiʊ̯.hu]
+carro	:rio=[ˈka.χu];pt=[ˈka.ʁu];gbr-sp=[ˈka.hu]
+genro	:rio=[ˈʒẽ.χu];pt=[ˈʒẽ.ʁu];gbr-sp=[ˈʒẽ.hu]
+Israel	Israél:pt=[iʒ.ʁɐˈɛɫ];gbr-sp=[iz.haˈɛw];rio=[iʒ.χaˈɛw]
+redor	redór:gbr=[heˈdɔh];rio=[χeˈdɔχ];sp=[heˈdɔɾ]
+parte	:rio=[ˈpaχ.t͡ʃi];gbr=[ˈpah.t͡ʃi];sp=[ˈpaɾ.t͡ʃi];pt=[ˈpaɾ.tɨ]
+pardo	:gbr=[ˈpaɦ.du];rio=[ˈpaʁ.du];sp=[ˈpaɾ.du];pt=[ˈpaɾ.ðu]
+workstation	wồrkstêishon:gbr=/ˌwoʁksˈtej.ʃõ/;rio=/ˌwoʁkʃˈtej.ʃõ/
+fazer	fazêr:gbr-rio=/faˈze(ʁ)/;sp=/faˈze(ɾ)/;pt=/fɐˈzeɾ/
+fazer a coisa	fazêr a coisa:br=/faˈze(ɾ) a ˈkoj.zɐ/;pt=/fɐˈzeɾ ɐ ˈkoj.zɐ/
+pôr	:gbr-rio=/ˈpoʁ/;sp-pt=/ˈpoɾ/
+mar	:pt=/ˈmaɾ/	br=marh:gbr-rio=/ˈmaʁ/;sp=/ˈmaɾ/
+
 # s
-cansar	:sp=/kɐ̃ˈsa(ɾ)/;rio=/kɐ̃ˈsa(ʁ)/;lisbon=/kɐ̃ˈsaɾ/
+cansar	:sp=/kɐ̃ˈsa(ɾ)/;gbr-rio=/kɐ̃ˈsa(ʁ)/;lisbon=/kɐ̃ˈsaɾ/
 intransigente	:br=/ĩ.tɾɐ̃.ziˈʒẽ.t͡ʃi/;pt=/ĩ.tɾɐ̃.ziˈʒẽ.tɨ/
 transação	:br=/tɾɐ̃.zaˈsɐ̃w̃/;pt=/tɾɐ̃.zɐˈsɐ̃w̃/
+passo	:/ˈpa.su/
+caso	:/ˈka.zu/
+mesmo	mêsmo:rio-cpt=/ˈmeʒ.mu/;gbr-sp=/ˈmez.mu/;lisbon=/ˈmɐ(j)ʒ.mu/
+está	:rio-pt=/iʃˈta/;sp=/isˈta/
+os árvores	:rio=/uz ˈaʁ.vo.ɾiʃ/;gbr-sp=/uz ˈaɾ.vo.ɾis/;pt=/uz ˈaɾ.vu.ɾɨʃ/
+os habitantes	:rio=/uz a.biˈtɐ̃.t͡ʃiʃ/;gbr-sp=/uz a.biˈtɐ̃.t͡ʃis/;pt=/uz ɐ.biˈtɐ̃.tɨʃ/
+as gentes	:rio=/a ˈʒẽ.t͡ʃiʃ/;gbr-sp=/az ˈʒẽ.t͡ʃis/;pt=/ɐ ˈʒẽ.tɨʃ/
+os sucos	:rio=/u ˈsu.kuʃ/;gbr-sp=/u ˈsu.kus/;pt=/uʃ ˈsu.kuʃ/
+os pés	os péss:rio-pt=/uʃ ˈpɛʃ/;gbr-sp=/us ˈpɛs/
+nós	:rio=/ˈnɔ(j)ʃ/;gbr-sp=/ˈnɔ(j)s/;pt=/ˈnɔʃ/
+nós	nóss:rio-pt=/ˈnɔʃ/;gbr-sp=/ˈnɔs/
+nós	nóhs:rio-pt=/ˈnɔʃ/;gbr-sp=/ˈnɔs/
+excelente	escelente:br=/e.seˈlẽ.t͡ʃi/;pt=/iʃ.sɨˈlẽ.tɨ/
+nascimento	:br=/na.siˈmẽ.tu/;pt=/nɐʃ.siˈmẽ.tu/
+
+# x
+xérox	:br=/ˈʃɛ.ɾɔks/
+baixo	:/ˈbaj.ʃu/
+axé	ashé:br=/aˈʃɛ/;pt=/ɐˈʃɛ/
+
 # y
 Itamaraty	:br=/i.ta.ma.ɾaˈt͡ʃi/
 Sydney	Sýdjney:br=/ˈsid͡ʒ.nej/
+
+# z
+prazo	:/ˈpɾa.zu/
+dez	déz:rio=/ˈdɛ(j)ʃ/;gbr-sp=/ˈdɛ(j)s/;pt=/ˈdɛʃ/
+faz	:rio=/ˈfa(j)ʃ/;gbr-sp=/ˈfa(j)s/;pt=/ˈfaʃ/
+dez árvores	déz árvores:rio=/ˈdɛ(j)z ˈaʁ.vo.ɾiʃ/;gbr-sp=/ˈdɛ(j)z ˈaɾ.vo.ɾis/;pt=/ˈdɛz ˈaɾ.vu.ɾɨʃ/
+dez habitantes	déz habitantes:rio=/ˈdɛ(j)z a.biˈtɐ̃.t͡ʃiʃ/;gbr-sp=/ˈdɛ(j)z a.biˈtɐ̃.t͡ʃis/;pt=/ˈdɛz ɐ.biˈtɐ̃.tɨʃ/
+dez gentes	déz gentes:rio=/ˈdɛ(j) ˈʒẽ.t͡ʃiʃ/;gbr-sp=/ˈdɛ(j)z ˈʒẽ.t͡ʃis/;pt=/ˈdɛ ˈʒẽ.tɨʃ/
+dez sucos	déz sucos:rio=/ˈdɛ(j) ˈsu.kuʃ/;gbr-sp=/ˈdɛ(j) ˈsu.kus/;pt=/ˈdɛʃ ˈsu.kuʃ/
+dez pés	déz péss:rio=/ˈdɛ(j)ʃ ˈpɛʃ/;gbr-sp=/ˈdɛ(j)s ˈpɛs/;pt=/ˈdɛʃ ˈpɛʃ/
+
 # -mente
-afortunadamente	:rio=/a.foʁ.tuˌna.daˈmẽ.t͡ʃi/;sp=/a.foɾ.tuˌna.daˈmẽ.t͡ʃi/;pt=[ɐ.fuɾ.tuˌna.ðɐˈmẽ.tɨ]
-alertamente	alértamente:rio=/aˌlɛʁ.taˈmẽ.t͡ʃi/;sp=/aˌlɛɾ.taˈmẽ.t͡ʃi/;pt=/ɐˌlɛɾ.tɐˈmẽ.tɨ/
-anticristãmente	:rio=/ɐ̃.t͡ʃi.kɾiʃˌtɐ̃ˈmẽ.t͡ʃi/;sp=/ɐ̃.t͡ʃi.kɾisˌtɐ̃ˈmẽ.t͡ʃi/;pt=/ɐ̃.ti.kɾiʃˌtɐ̃ˈmẽ.tɨ/
-comummente	comunmente:pt=/kuˌmũˈmẽ.tɨ/
+afortunadamente	:gbr-rio=/a.foʁ.tuˌna.daˈmẽ.t͡ʃi/;sp=/a.foɾ.tuˌna.daˈmẽ.t͡ʃi/;pt=[ɐ.fuɾ.tuˌna.ðɐˈmẽ.tɨ]
+alertamente	alértamente:gbr-rio=/aˌlɛʁ.taˈmẽ.t͡ʃi/;sp=/aˌlɛɾ.taˈmẽ.t͡ʃi/;pt=/ɐˌlɛɾ.tɐˈmẽ.tɨ/
+anticristãmente	:rio=/ɐ̃.t͡ʃi.kɾiʃˌtɐ̃ˈmẽ.t͡ʃi/;gbr-sp=/ɐ̃.t͡ʃi.kɾisˌtɐ̃ˈmẽ.t͡ʃi/;pt=/ɐ̃.ti.kɾiʃˌtɐ̃ˈmẽ.tɨ/
+comummente	comum.mente:pt=/kuˌmũˈmẽ.tɨ/
 dormente	dormênte:br=/doʁˈmẽ.t͡ʃi/;sp=/doɾˈmẽ.t͡ʃi/;pt=/duɾˈmẽ.tɨ/
-posteriormente	posteriôrmente:rio=/poʃ.te.ɾiˌoʁˈmẽ.t͡ʃi/;sp=/pos.te.ɾiˌoɾˈmẽ.t͡ʃi/;pt=/puʃ.tɨˌɾjoɾˈmẽ.tɨ/
+posteriormente	posteriôrmente:gbr=/pos.te.ɾiˌoʁˈmẽ.t͡ʃi/;rio=/poʃ.te.ɾiˌoʁˈmẽ.t͡ʃi/;sp=/pos.te.ɾiˌoɾˈmẽ.t͡ʃi/;pt=/puʃ.tɨˌɾjoɾˈmẽ.tɨ/
+somente	sómente:br=/ˌsɔˈmẽ.t͡ʃi/;pt=/ˌsɔˈmẽ.tɨ/
+simplesmente	:pt=/ˌsĩ.plɨʒˈmẽ.tɨ/;rio=/ˌsĩ.pliʒˈmẽ.t͡ʃi/;gbr-sp=/ˌsĩ.plizˈmẽ.t͡ʃi/
+audazmente	:gbr-sp=/awˌdazˈmẽ.t͡ʃi/;rio=/awˌdaʒˈmẽ.t͡ʃi/;pt=/ɐwˌdaʒˈmẽ.tɨ/
+
 # -zinho
 balãozinho	:br=/baˌlɐ̃w̃ˈzĩ.ɲu/
 bauzinho	baúzinho:br=/baˌuˈzĩ.ɲu/
@@ -139,55 +230,76 @@ nenenzinho	nenénzinho:br=/neˌnẽj̃ˈzĩ.ɲu/
 pobrezinho	póbrezinho:br=[ˌpɔ.bɾiˈzĩ.j̃u];pt=[ˌpɔ.βɾɨˈzi.ɲu]
 sozinho	sózinho:br=/ˌsɔˈzĩ.ɲu/;pt=/ˌsɔˈzi.ɲu/
 vizinho	br=vizínho:/viˈzĩ.ɲu/	pt=vizínho,vezínho:/viˈzi.ɲu/,/vɨˈzi.ɲu/ -- is /vɨˈzi.ɲu/ really a possibility for Portugal?
+
 # double letters
 Accra	:/ˈa.kɾɐ/
 Aleppo	Aléppo:br=/aˈlɛ.pu/
-buffer	bâfferh:rio=/ˈbɐ.feʁ/;sp=/ˈbɐ.feɾ/
-cheddar	chéddarh:rio=/ˈʃɛ.daʁ/;sp=/ˈʃɛ.daɾ/
+buffer	bâfferh:gbr-rio=/ˈbɐ.feʁ/;sp=/ˈbɐ.feɾ/
+cheddar	chéddarh:gbr-rio=/ˈʃɛ.daʁ/;sp=/ˈʃɛ.daɾ/
 Hanna	br=Ranna:/ˈʁɐ̃.nɐ/
-jazz	djézz:sp=/ˈd͡ʒɛs/;rio=/ˈd͡ʒɛʃ/
+jazz	djézz:gbr-sp=/ˈd͡ʒɛ(j)s/;rio=/ˈd͡ʒɛ(j)ʃ/
 Minnesota	Mìnnessôta:br=/ˌmi.neˈso.tɐ/
 nutella	nutélla:/nuˈtɛ.lɐ/
 shopping	br=shópping,shóppem:/ˈʃɔ.pĩ/,/ˈʃɔ.pẽj̃/
-Yunnan	:/juˈnɐ̃/
+Yunnan	:br=/juˈnɐ̃/;pt=/juˈnan/
+
 # multiword expressions
 água mole em pedra dura tanto bate até que fura	água móle em pédra dura tanto bate até que fura:br=/ˈa.ɡwɐ ˈmɔ.li ẽj̃ ˈpɛ.dɾɐ ˈdu.ɾɐ ˈtɐ̃.tu ˈba.t͡ʃi aˈtɛ ki ˈfu.ɾɐ/;lisbon=[ˈa.ɣwɐ ˈmɔ.l(ɨ) ɐ̃j̃ ˈpɛ.ðɾɐ ˈðu.ɾɐ ˈtɐ̃.tu ˈβa.t(ɨ) ɐ.ˈtɛ kɨ ˈfu.ɾɐ]
 era só o que me faltava	éra só o que me faltava:br=/ˈɛ.ɾɐ ˈsɔ u ki mi fawˈta.vɐ/
+
 # nasal diphthongs
-mães	:rio-pt=/ˈmɐ̃j̃ʃ/;sp=/ˈmɐ̃j̃s/
+mães	:rio-pt=/ˈmɐ̃j̃ʃ/;gbr-sp=/ˈmɐ̃j̃s/
 põem	põeem:br-cpt=/ˈpõj̃.ẽj̃/;lisbon=/ˈpõj̃.ɐ̃j̃/
 pãozão	:/pɐ̃w̃ˈzɐ̃w̃/
+
 # nasal vowels
 ano	:br=/ˈɐ̃.nu/;pt=/ˈɐ.nu/
 cama	:br=/ˈkɐ̃.mɐ/;pt=/ˈkɐ.mɐ/
 entendo	:br=/ĩˈtẽ.du/;pt=/ẽˈtẽ.du/
 falámos	:pt=/fɐˈla.muʃ/
 Itapoã	:br=/i.ta.poˈɐ̃/
-parabéns	:sp=/pa.ɾaˈbẽj̃s/;rio=/pa.ɾaˈbẽj̃ʃ/;lisbon=/pɐ.ɾɐˈbɐ̃j̃ʃ/;cpt=/pɐ.ɾɐˈbẽj̃ʃ/
+parabéns	:gbr-sp=/pa.ɾaˈbẽj̃s/;rio=/pa.ɾaˈbẽj̃ʃ/;lisbon=/pɐ.ɾɐˈbɐ̃j̃ʃ/;cpt=/pɐ.ɾɐˈbẽj̃ʃ/
 também	:br-cpt=/tɐ̃ˈbẽj̃/;lisbon=/tɐ̃ˈbɐ̃j̃/
-# syllable division
+regímen	:br=/ʁeˈʒĩ.mẽj̃/;pt=/ʁɨˈʒi.mɛn/
+Renan	:br=/ʁeˈnɐ̃/;pt=/ʁɨˈnan/
+íon	:br=/ˈi.õ/;pt=/ˈi.ɔn/
+
+# oral diphthongs
 saiba	:/ˈsaj.bɐ/
+saiba	:br=[ˈsaɪ̯.bɐ];pt=[ˈsaɪ̯.βɐ]
 peixe	:br=/ˈpej.ʃi/;cpt=/ˈpej.ʃɨ/;lisbon=/ˈpɐj.ʃɨ/
+peixe	:br=[ˈpeɪ̯.ʃi];cpt=[ˈpeɪ̯.ʃɨ];lisbon=[ˈpɐɪ̯.ʃɨ]
 noite	:br=/ˈnoj.t͡ʃi/;pt=/ˈnoj.tɨ/
+noite	:br=[ˈnoɪ̯.t͡ʃi];pt=[ˈnoɪ̯.tɨ]
 Paulo	:/ˈpaw.lu/
+Paulo	:[ˈpaʊ̯.lu]
 deusa	:/ˈdew.zɐ/
+deusa	:[ˈdeʊ̯.zɐ]
 ouro	:/ˈo(w).ɾu/
+ouro	:[ˈo(ʊ̯).ɾu]
 Bombaim	:br=/bõ.baˈĩ/;pt=/bõ.bɐˈĩ/
 Coimbra	:br=/koˈĩ.bɾɐ/
 saindo	:br=/saˈĩ.du/;pt=/sɐˈĩ.du/
 rainha	:br=/ʁaˈĩ.ɲɐ/;pt=/ʁɐˈi.ɲɐ/
-moinho	br=moinho,muinho:/moˈĩ.ɲu/,/muˈĩ.ɲu/	pt=mwinho,mu.inho:/ˈmwi.ɲu/,/muˈi.ɲu/
-sair	:rio=/saˈi(ʁ)/;sp=/saˈi(ɾ)/;pt=/sɐˈiɾ/
+moinho	br=moinho,muinho:/moˈĩ.ɲu/,/muˈĩ.ɲu/	pt=muinho,mu.inho:/ˈmwi.ɲu/,/muˈi.ɲu/
+sair	:gbr-rio=/saˈi(ʁ)/;sp=/saˈi(ɾ)/;pt=/sɐˈiɾ/
 Iaundé	:br=/ja.ũˈdɛ/;pt=/jɐ.ũˈdɛ/
 Raul	:br=/ʁaˈuw/;pt=/ʁɐˈul/
 Jaime	:br=/ˈʒaj.mi/;pt=/ˈʒaj.mɨ/
-queimar	:rio=/kejˈma(ʁ)/;sp=/kejˈma(ɾ)/;cpt=/kejˈmaɾ/;lisbon=/kɐjˈmaɾ/
+queimar	:gbr-rio=/kejˈma(ʁ)/;sp=/kejˈma(ɾ)/;cpt=/kejˈmaɾ/;lisbon=/kɐjˈmaɾ/
 fauna	:/ˈfaw.nɐ/
 baile	:br=/ˈbaj.li/;pt=/ˈbaj.lɨ/
-beira	:br-cpt=/ˈbej.ɾɐ/;lisbon=/ˈbɐj.ɾɐ/
+beira	:br-cpt=/ˈbe(j).ɾɐ/;lisbon=/ˈbɐj.ɾɐ/
+saia	:/ˈsaj.ɐ/
+saia	:[ˈsaɪ̯.ɐ]
 saiu	:br=/saˈiw/;pt=/sɐˈiw/
+saiu	:br=[saˈiʊ̯];pt=[sɐˈiʊ̯]
 saído	:br=/saˈi.du/;pt=/sɐˈi.du/
+
+# hiatus
+vieira	:br=/viˈe(j).ɾɐ/;lisbon=/ˈvjɐj.ɾɐ/;cpt=/ˈvje(j).ɾɐ/
 ia	:/ˈi.ɐ/
+iogurte	br=i.ogurte,iogurte:gbr-rio=/i.oˈɡuʁ.t͡ʃi/,/joˈɡuʁ.t͡ʃi/;sp=/i.oˈɡuɾ.t͡ʃi/,/joˈɡuɾ.t͡ʃi/	pt=iọgurte:/jɔˈɡuɾ.tɨ/
 ]]
 
 function tests:check_ipa(spelling, expected, comment)
@@ -300,10 +412,10 @@ local function parse(examples)
 				local function expand_styles(styles)
 					local expansion = {}
 					for _, style in ipairs(rsplit(styles, "%-")) do
-						if known_basic_styles[style] then
+						if all_style_set[style] then
 							table.insert(expansion, style)
-						elseif known_style_groups[style] then
-							for _, basic in ipairs(known_style_groups[style]) do
+						elseif m_pt_pronunc.all_style_groups[style] then
+							for _, basic in ipairs(m_pt_pronunc.all_style_groups[style]) do
 								table.insert(expansion, basic)
 							end
 						else
