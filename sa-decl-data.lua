@@ -8,7 +8,7 @@ local match = mw.ustring.match
 
 decl_data["a"] = {
 	detect = function(args)
-		if match(args.lemma, "a" .. sa_utils.accent .. "?$") and (args.g == 'm' or args.g == 'n') then
+		if match(args.lemma, "a" .. sa_utils.accent .. "?$") and (args.g == "m" or args.g == "n") then
 			args.stem = match(args.lemma, "(.+)a" .. sa_utils.accent .. "?$")
 			return true
 		else
@@ -17,74 +17,125 @@ decl_data["a"] = {
 	end
 }
 
+local function conjugate(args, data, sg, du, pl)
+	local cases = {n="nom", a="acc", v="voc", i="ins", d="dat", ab="abl", g="gen", l="loc"}
+	local function process_number(endings, tag)
+		if not endings then
+			return
+		end
+		for _, case in ipairs(cases) do
+			local es = endings[case]
+			if es then
+				if type(es) == "string" and es:find("^%[") then
+					-- copy from another case; skip and handle later
+				else
+					if type(es) == "string" then
+						es = {es}
+					end
+					local forms = {}
+					for i, e in ipairs(es) do
+						local stem, mono, note
+						if type(e) == "table" then
+							stem = e.stem
+							mono = e.mono
+							note = e.note
+							e = e[1]
+						end
+						if e:find("^%+") then
+							if stem then
+								error("Internal error: Can't use + in an ending when stem is explicitly given")
+							end
+							e = e:gsub("^%+", "")
+							stem = args.lemma
+						elseif not stem then
+							stem = args.stem
+						end
+						forms[i] = sa_utils.internal_sandhi({
+							stem = stem, ending = e, has_accent = args.has_accent, recessive = case == "v", mono = mono
+						})
+						if note then
+							forms["note" .. i] = note
+						end
+					end
+					data.forms[cases[case] .. "_" .. tag] = forms
+				end
+			end
+		end
+
+		-- Now handle cases copied from another.
+		for _, case in ipairs(cases) do
+			local es = endings[case]
+			if es then
+				if type(es) == "string" and es:find("^%[") then
+					-- copy from another case; skip and handle later
+					local other_case = es:match("^%[(.*)%]$")
+					if not other_case then
+						error("Internal error: Unrecognized copy case spec " .. es)
+					end
+					local other_slot = other_case .. "_" .. tag
+					local value = data.forms[other_slot]
+					if not value then
+						error("Internal error: Slot '" .. other_slot .. "' to copy from is empty")
+					end
+					local this_slot = cases[case] .. "_" .. tag
+					if data.forms[this_slot] then
+						error("Internal error: A value already exists for slot '" .. this_slot ..
+							"' when copying from '" .. other_slot .. "'")
+					end
+					data.forms[cases[case] .. "_" .. tag] = value
+				end
+			end
+		end
+	end
+
+	process_number(sg, "s")
+	process_number(du, "d")
+	process_number(pl, "p")
+end
+
+
 setmetatable(decl_data["a"], {
 	__call = function(self, args, data)
-		local oxytone = match(args.lemma, "(" .. sa_utils.accent .. "?)$")
+		local oxy = match(args.lemma, "(" .. sa_utils.accent .. "?)$")
 		
 		data.decl_type = "a-stem"
 		
-		if args.g == 'm' then
-			data.forms["nom_s"] = { sa_utils.internal_sandhi({ stem = args.stem, ending = "a" .. oxytone .. "s", has_accent = args.has_accent }) }
-			data.forms["acc_s"] = { sa_utils.internal_sandhi({ stem = args.stem, ending = "a" .. oxytone .. "m", has_accent = args.has_accent }) }
-			data.forms["voc_s"] = { sa_utils.internal_sandhi({ stem = args.stem, ending = "a", recessive = true, has_accent = args.has_accent }) }
-			
-			data.forms["nom_d"] = { sa_utils.internal_sandhi({ stem = args.stem, ending = "O" .. oxytone, has_accent = args.has_accent }) }
-			data.forms["acc_d"] = data.forms["nom_d"]
-			data.forms["voc_d"] = { sa_utils.internal_sandhi({ stem = args.stem, ending = "O", recessive = true, has_accent = args.has_accent }) }
-			
-			data.forms["nom_p"] = {
-				sa_utils.internal_sandhi({ stem = args.stem, ending = "A" .. oxytone .. "s", has_accent = args.has_accent }),
-				sa_utils.internal_sandhi({ stem = args.stem, ending = "A" .. oxytone .. "sas", has_accent = args.has_accent }),
-				note2 = 'Vedic',
-			}
-			data.forms["acc_p"] = { sa_utils.internal_sandhi({ stem = args.stem, ending = "A" .. oxytone .. "n", has_accent = args.has_accent }) }
-			data.forms["voc_p"] = { 
-				sa_utils.internal_sandhi({ stem = args.stem, ending = "As", recessive = true, has_accent = args.has_accent }),
-				sa_utils.internal_sandhi({ stem = args.stem, ending = "Asas", recessive = true, has_accent = args.has_accent }),
-				note2 = 'Vedic',
-			}
+		if args.g == "m" then
+			conjugate(args, data,
+				{ n="a" .. oxy .. "s", a="a" .. oxy .. "m", v="a" },
+				{ n="O" .. oxy, a="O" .. oxy, v="O" },
+				{ n={"A" .. oxy .. "s", {"A" .. oxy .. "sas", note="Vedic"}},
+				  a="A" .. oxy .. "n",
+				  v={"As", {"Asas", note="Vedic"}}
+				})
 		else
-			data.forms["nom_s"] = { sa_utils.internal_sandhi({ stem = args.stem, ending = "a" .. oxytone .. "m", has_accent = args.has_accent }) }
-			data.forms["acc_s"] = { sa_utils.internal_sandhi({ stem = args.stem, ending = "a" .. oxytone .. "m", has_accent = args.has_accent }) }
-			data.forms["voc_s"] = { sa_utils.internal_sandhi({ stem = args.stem, ending = "a", recessive = true, has_accent = args.has_accent }) }
-			
-			data.forms["nom_d"] = { sa_utils.internal_sandhi({ stem = args.stem, ending = "e" .. oxytone, has_accent = args.has_accent }) }
-			data.forms["acc_d"] = data.forms["nom_d"]
-			data.forms["voc_d"] = { sa_utils.internal_sandhi({ stem = args.stem, ending = "e", recessive = true, has_accent = args.has_accent }) }
-			
-			data.forms["nom_p"] = {
-				sa_utils.internal_sandhi({ stem = args.stem, ending = "A" .. oxytone .. "ni", has_accent = args.has_accent }),
-				sa_utils.internal_sandhi({ stem = args.stem, ending = "A" .. oxytone, has_accent = args.has_accent }),
-				note2 = 'Vedic',
-			}
-			data.forms["acc_p"] = data.forms["nom_p"]
-			data.forms["voc_p"] = {
-				sa_utils.internal_sandhi({ stem = args.stem, ending = "Ani", recessive = true, has_accent = args.has_accent }),
-				sa_utils.internal_sandhi({ stem = args.stem, ending = "A", recessive = true, has_accent = args.has_accent }),
-				note2 = 'Vedic',
-			}
+			conjugate(args, data,
+				{ n="a" .. oxy .. "m", a="a" .. oxy .. "m", v="a" },
+				{ n="e" .. oxy, a="e" .. oxy, v="e" },
+				{ n={"A" .. oxy .. "ni", {"A" .. oxy, note="Vedic"}}, a="[nom]", v={"Ani", {"A", note="Vedic"}}}
+				)
 		end
-		data.forms["ins_s"] = { sa_utils.internal_sandhi({ stem = args.stem, ending = "e" .. oxytone .. "na", has_accent = args.has_accent }) }
-		data.forms["dat_s"] = { sa_utils.internal_sandhi({ stem = args.stem, ending = "A" .. oxytone .. "ya", has_accent = args.has_accent }) }
-		data.forms["abl_s"] = { sa_utils.internal_sandhi({ stem = args.stem, ending = "A" .. oxytone .. "t", has_accent = args.has_accent }) }
-		data.forms["gen_s"] = { sa_utils.internal_sandhi({ stem = args.stem, ending = "a" .. oxytone .. "sya", has_accent = args.has_accent }) }
-		data.forms["loc_s"] = { sa_utils.internal_sandhi({ stem = args.stem, ending = "e" .. oxytone, has_accent = args.has_accent }) }
+
+		data.forms["ins_s"] = i="e" .. oxy .. "na",
+		data.forms["dat_s"] = d="A" .. oxy .. "ya",
+		data.forms["abl_s"] = ab="A" .. oxy .. "t",
+		data.forms["gen_s"] = g="a" .. oxy .. "sya",
+		data.forms["loc_s"] = l="e" .. oxy,
 		
-		data.forms["ins_d"] = { sa_utils.internal_sandhi({ stem = args.stem, ending = "A" .. oxytone .. "ByAm", has_accent = args.has_accent }) }
-		data.forms["dat_d"] = data.forms["ins_d"]
-		data.forms["abl_d"] = data.forms["ins_d"]
-		data.forms["gen_d"] = { sa_utils.internal_sandhi({ stem = args.stem, ending = "a" .. oxytone .. "yos", has_accent = args.has_accent }) }
-		data.forms["loc_d"] = data.forms["gen_d"]
+		data.forms["ins_d"] = i="A" .. oxy .. "ByAm",
+		data.forms["dat_d"] = d="[ins]",
+		data.forms["abl_d"] = ab="[ins]",
+		data.forms["gen_d"] = g="a" .. oxy .. "yos",
+		data.forms["loc_d"] = l="[gen]",
 		
 		data.forms["ins_p"] = {
-			sa_utils.internal_sandhi({ stem = args.stem, ending = "E" .. oxytone .. "s", has_accent = args.has_accent }),
-			sa_utils.internal_sandhi({ stem = args.stem, ending = "e" .. oxytone .. "Bis", has_accent = args.has_accent }),
-			note2 = 'Vedic',
+			{ "E" .. oxy .. "s" },
+			{ "e" .. oxy .. "Bis", note = "Vedic" },
 		}
-		data.forms["dat_p"] = { sa_utils.internal_sandhi({ stem = args.stem, ending = "e" .. oxytone .. "Byas", has_accent = args.has_accent }) }
-		data.forms["abl_p"] = data.forms["dat_p"]
-		data.forms["gen_p"] = { sa_utils.internal_sandhi({ stem = args.stem, ending = "A" .. oxytone .. "nAm", has_accent = args.has_accent }) }
-		data.forms["loc_p"] = { sa_utils.internal_sandhi({ stem = args.stem, ending = "e" .. oxytone .. "zu", has_accent = args.has_accent }) }
+		data.forms["dat_p"] = d="e" .. oxy .. "Byas",
+		data.forms["abl_p"] = ab="[dat]",
+		data.forms["gen_p"] = g="A" .. oxy .. "nAm",
+		data.forms["loc_p"] = l="e" .. oxy .. "zu",
 		
 		table.insert(data.categories, "Sanskrit a-stem nouns")
 	end
@@ -103,144 +154,122 @@ decl_data["iu"] = {
 
 setmetatable(decl_data["iu"], {
 	__call = function(self, args, data)
-		local oxytone = match(args.lemma, "(" .. sa_utils.accent .. "?)$")
+		local oxy = match(args.lemma, "(" .. sa_utils.accent .. "?)$")
 		local vowel = match(args.lemma, "([iu])" .. sa_utils.accent .. "?$")
 		
 		data.decl_type = vowel .. "-stem"
 		
-		if args.g == 'm' then
-			data.forms["nom_s"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "s", has_accent = args.has_accent }) }
-			data.forms["acc_s"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "m", has_accent = args.has_accent }) }
+		if args.g == "m" then
+			data.forms["nom_s"] = n="+s",
+			data.forms["acc_s"] = a="+m",
 			data.forms["ins_s"] = {
-				sa_utils.internal_sandhi({ stem = args.lemma, ending = "nA", has_accent = args.has_accent }),
-				sa_utils.internal_sandhi({ stem = args.lemma, ending = "A", has_accent = args.has_accent }),
-				note2 = 'Vedic',
+				{ "+nA" },
+				{ "+A", note = "Vedic" },
 			}
 			data.forms["dat_s"] = {
-				sa_utils.internal_sandhi({ stem = args.stem .. sa_utils.split_diphthong[sa_utils.up_one_grade[vowel .. oxytone]], ending = "e", has_accent = args.has_accent }),
-				sa_utils.internal_sandhi({ stem = args.lemma, ending = "e", has_accent = args.has_accent }),
-				note2 = 'Less common',
+				{ stem = args.stem .. sa_utils.split_diphthong[sa_utils.up_one_grade[vowel .. oxy]], "e" },
+				{ "+e", note = "Less common"},
 			}
-			data.forms["abl_s"] = {
-				sa_utils.internal_sandhi({ stem = args.stem, ending = sa_utils.up_one_grade[vowel .. oxytone] .. 's', has_accent = args.has_accent }),
-				sa_utils.internal_sandhi({ stem = args.lemma, ending = "as", has_accent = args.has_accent }),
-				note2 = 'Less common',
-			}
-			data.forms["gen_s"] = data.forms["abl_s"]
-			data.forms["loc_s"] = { sa_utils.internal_sandhi({ stem = args.stem, ending = "O" .. oxytone, has_accent = args.has_accent }) }
-			data.forms["voc_s"] = { sa_utils.internal_sandhi({ stem = args.stem, ending = sa_utils.up_one_grade[vowel .. oxytone], recessive = true, has_accent = args.has_accent }) }
+			data.forms["abl_s"] = ab={sa_utils.up_one_grade[vowel .. oxy] .. "s", {"+as", note = "Less common"}},
+			data.forms["gen_s"] = g="[abl]",
+			data.forms["loc_s"] = l="O" .. oxy,
+			data.forms["voc_s"] = v=sa_utils.up_one_grade[vowel .. oxy],
 			
-			data.forms["nom_d"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = vowel, has_accent = args.has_accent }) }
-			data.forms["acc_d"] = data.forms["nom_d"]
-			data.forms["ins_d"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "ByAm", has_accent = args.has_accent }) }
-			data.forms["dat_d"] = data.forms["ins_d"]
-			data.forms["abl_d"] = data.forms["ins_d"]
-			data.forms["gen_d"] = { sa_utils.internal_sandhi({ stem = args.stem .. vowel, ending = "o" .. oxytone .. "s", has_accent = args.has_accent }) }
-			data.forms["loc_d"] = data.forms["gen_d"]
-			data.forms["voc_d"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = vowel, recessive = true, has_accent = args.has_accent }) }
+			data.forms["nom_d"] = n="+" .. vowel,
+			data.forms["acc_d"] = a="[nom]",
+			data.forms["ins_d"] = i="+ByAm",
+			data.forms["dat_d"] = d="[ins]",
+			data.forms["abl_d"] = ab="[ins]",
+			data.forms["gen_d"] = g=stem = args.stem .. vowel, "o" .. oxy .. "s",
+			data.forms["loc_d"] = l="[gen]",
+			data.forms["voc_d"] = v="+" .. vowel,
 			
-			data.forms["nom_p"] = { sa_utils.internal_sandhi({ stem = args.stem .. sa_utils.up_one_grade[vowel .. oxytone], ending = "as", has_accent = args.has_accent }) }
-			data.forms["acc_p"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = vowel .. "n", has_accent = args.has_accent }) }
-			data.forms["ins_p"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "Bis", has_accent = args.has_accent }) }
-			data.forms["dat_p"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "Byas", has_accent = args.has_accent }) }
-			data.forms["abl_p"] = data.forms["dat_p"]
-			data.forms["gen_p"] = { sa_utils.internal_sandhi({ stem = args.stem, ending = sa_utils.lengthen[vowel] .. "nA" .. (oxytone ~= '' and '/' or '') .. "m", has_accent = args.has_accent }) }
-			data.forms["loc_p"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "su", has_accent = args.has_accent }) }
-			data.forms["voc_p"] = { sa_utils.internal_sandhi({ stem = args.stem .. sa_utils.up_one_grade[vowel], ending = "as", recessive = true, has_accent = args.has_accent }) }
-		elseif args.g == 'f' then
-			data.forms["nom_s"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "s", has_accent = args.has_accent }) }
-			data.forms["acc_s"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "m", has_accent = args.has_accent }) }
-			data.forms["ins_s"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "A", has_accent = args.has_accent }) }
+			data.forms["nom_p"] = n=stem = args.stem .. sa_utils.up_one_grade[vowel .. oxy], "as",
+			data.forms["acc_p"] = a="+" .. vowel .. "n",
+			data.forms["ins_p"] = i="+Bis",
+			data.forms["dat_p"] = d="+Byas",
+			data.forms["abl_p"] = ab="[dat]",
+			data.forms["gen_p"] = g=sa_utils.lengthen[vowel] .. "nA" .. (oxy ~= "" and "/" or "") .. "m",
+			data.forms["loc_p"] = l="+su",
+			data.forms["voc_p"] = v=stem = args.stem .. sa_utils.up_one_grade[vowel], "as",
+		elseif args.g == "f" then
+			data.forms["nom_s"] = n="+s",
+			data.forms["acc_s"] = a="+m",
+			data.forms["ins_s"] = i="+A",
 			data.forms["dat_s"] = {
-				sa_utils.internal_sandhi({ stem = args.stem .. sa_utils.split_diphthong[sa_utils.up_one_grade[vowel .. oxytone]], ending = "e", has_accent = args.has_accent }),
-				sa_utils.internal_sandhi({ stem = args.lemma, ending = "e", has_accent = args.has_accent }),
-				note2 = 'Less common',
-				sa_utils.internal_sandhi({ stem = args.lemma, ending = "E", has_accent = args.has_accent }),
-				note3 = 'Later Sanskrit',
+				{ stem = args.stem .. sa_utils.split_diphthong[sa_utils.up_one_grade[vowel .. oxy]], "e" },
+				{ "+e", note = "Less common" },
+				{ "+E", note = "Later Sanskrit" },
 			}
-			data.forms["abl_s"] = {
-				sa_utils.internal_sandhi({ stem = args.stem, ending = sa_utils.up_one_grade[vowel .. oxytone] .. 's', has_accent = args.has_accent }),
-				sa_utils.internal_sandhi({ stem = args.lemma, ending = "As", has_accent = args.has_accent }),
-				note2 = 'Later Sanskrit',
+			data.forms["abl_s"] = ab={sa_utils.up_one_grade[vowel .. oxy] .. "s", {"+As", note = "Later Sanskrit"}},
 			}
-			data.forms["gen_s"] = data.forms["abl_s"]
+			data.forms["gen_s"] = g="[abl]",
 			data.forms["loc_s"] = {
-				sa_utils.internal_sandhi({ stem = args.stem, ending = "O" .. oxytone, has_accent = args.has_accent }),
-				sa_utils.internal_sandhi({ stem = args.lemma, ending = "Am", has_accent = args.has_accent }),
-				note2 = 'Later Sanskrit',
+				{ "O" .. oxy },
+				{ "+Am", note = "Later Sanskrit" },
 			}
-			data.forms["voc_s"] = { sa_utils.internal_sandhi({ stem = args.stem, ending = sa_utils.up_one_grade[vowel .. oxytone], recessive = true, has_accent = args.has_accent }) }
+			data.forms["voc_s"] = v=sa_utils.up_one_grade[vowel .. oxy],
 			
-			data.forms["nom_d"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = vowel, has_accent = args.has_accent }) }
-			data.forms["acc_d"] = data.forms["nom_d"]
-			data.forms["ins_d"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "ByAm", has_accent = args.has_accent }) }
-			data.forms["dat_d"] = data.forms["ins_d"]
-			data.forms["abl_d"] = data.forms["ins_d"]
-			data.forms["gen_d"] = { sa_utils.internal_sandhi({ stem = args.stem .. vowel, ending = "o" .. oxytone .. "s", has_accent = args.has_accent }) }
-			data.forms["loc_d"] = data.forms["gen_d"]
-			data.forms["voc_d"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = vowel, recessive = true, has_accent = args.has_accent }) }
+			data.forms["nom_d"] = n="+" .. vowel,
+			data.forms["acc_d"] = a="[nom]",
+			data.forms["ins_d"] = i="+ByAm",
+			data.forms["dat_d"] = d="[ins]",
+			data.forms["abl_d"] = ab="[ins]",
+			data.forms["gen_d"] = g=stem = args.stem .. vowel, "o" .. oxy .. "s",
+			data.forms["loc_d"] = l="[gen]",
+			data.forms["voc_d"] = v="+" .. vowel,
 			
-			data.forms["nom_p"] = { sa_utils.internal_sandhi({ stem = args.stem .. sa_utils.up_one_grade[vowel .. oxytone], ending = "as", has_accent = args.has_accent }) }
-			data.forms["acc_p"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = vowel .. "s", has_accent = args.has_accent }) }
-			data.forms["ins_p"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "Bis", has_accent = args.has_accent }) }
-			data.forms["dat_p"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "Byas", has_accent = args.has_accent }) }
-			data.forms["abl_p"] = data.forms["dat_p"]
-			data.forms["gen_p"] = { sa_utils.internal_sandhi({ stem = args.stem, ending = sa_utils.lengthen[vowel] .. "nA" .. (oxytone ~= '' and '/' or '') .. "m", has_accent = args.has_accent }) }
-			data.forms["loc_p"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "su", has_accent = args.has_accent }) }
-			data.forms["voc_p"] = { sa_utils.internal_sandhi({ stem = args.stem .. sa_utils.up_one_grade[vowel], ending = "as", recessive = true, has_accent = args.has_accent }) }
+			data.forms["nom_p"] = n=stem = args.stem .. sa_utils.up_one_grade[vowel .. oxy], "as",
+			data.forms["acc_p"] = a="+" .. vowel .. "s",
+			data.forms["ins_p"] = i="+Bis",
+			data.forms["dat_p"] = d="+Byas",
+			data.forms["abl_p"] = ab="[dat]",
+			data.forms["gen_p"] = g=sa_utils.lengthen[vowel] .. "nA" .. (oxy ~= "" and "/" or "") .. "m",
+			data.forms["loc_p"] = l="+su",
+			data.forms["voc_p"] = v=stem = args.stem .. sa_utils.up_one_grade[vowel], "as",
 		else
-			data.forms["nom_s"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "", has_accent = args.has_accent }) }
-			data.forms["acc_s"] = data.forms["nom_s"]
+			data.forms["nom_s"] = n="+",
+			data.forms["acc_s"] = a="[nom]",
 			data.forms["ins_s"] = {
-				sa_utils.internal_sandhi({ stem = args.lemma, ending = "nA", has_accent = args.has_accent }),
-				sa_utils.internal_sandhi({ stem = args.lemma, ending = "A", has_accent = args.has_accent }),
-				note2 = 'Vedic',
+				{ "+nA" },
+				{ "+A", note = "Vedic" },
 			}
 			data.forms["dat_s"] = {
-				sa_utils.internal_sandhi({ stem = args.stem .. sa_utils.split_diphthong[sa_utils.up_one_grade[vowel .. oxytone]], ending = "e", has_accent = args.has_accent }),
-				sa_utils.internal_sandhi({ stem = args.lemma, ending = "e", has_accent = args.has_accent }),
-				note2 = 'Less common',
+				{ stem = args.stem .. sa_utils.split_diphthong[sa_utils.up_one_grade[vowel .. oxy]], "e" },
+				{ "+e", note = "Less common" },
 			}
-			data.forms["abl_s"] = {
-				sa_utils.internal_sandhi({ stem = args.stem, ending = sa_utils.up_one_grade[vowel .. oxytone] .. 's', has_accent = args.has_accent }),
-				sa_utils.internal_sandhi({ stem = args.lemma, ending = 'nas', has_accent = args.has_accent }),
-				note2 = 'Later Sanskrit',
-				sa_utils.internal_sandhi({ stem = args.lemma, ending = "as", has_accent = args.has_accent }),
-				note3 = 'Less common',
-			}
-			data.forms["gen_s"] = data.forms["abl_s"]
-			data.forms["loc_s"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "ni" .. oxytone, has_accent = args.has_accent }), note1 = 'Later Sanskrit', }
+			data.forms["abl_s"] = ab={ sa_utils.up_one_grade[vowel .. oxy] .. "s", { "+nas", note = "Later Sanskrit" }, { "+as", note = "Less common" }},
+			data.forms["gen_s"] = g="[abl]",
+			data.forms["loc_s"] = { { "+ni" .. oxy }, note1 = "Later Sanskrit", }
 			data.forms["voc_s"] = {
-				sa_utils.internal_sandhi({ stem = args.lemma, ending = "", recessive = true, has_accent = args.has_accent }),
-				sa_utils.internal_sandhi({ stem = args.stem, ending = sa_utils.up_one_grade[vowel .. oxytone], recessive = true, has_accent = args.has_accent }),
+				{ "+" },
+				{ sa_utils.up_one_grade[vowel .. oxy] },
 			}
 			
-			data.forms["nom_d"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "nI", has_accent = args.has_accent }) }
-			data.forms["acc_d"] = data.forms["nom_d"]
-			data.forms["ins_d"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "ByAm", has_accent = args.has_accent }) }
-			data.forms["dat_d"] = data.forms["ins_d"]
-			data.forms["abl_d"] = data.forms["ins_d"]
-			data.forms["gen_d"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "nos", has_accent = args.has_accent }) }
-			data.forms["loc_d"] = data.forms["gen_d"]
-			data.forms["voc_d"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "nI", recessive = true, has_accent = args.has_accent }) }
+			data.forms["nom_d"] = n="+nI",
+			data.forms["acc_d"] = a="[nom]",
+			data.forms["ins_d"] = i="+ByAm",
+			data.forms["dat_d"] = d="[ins]",
+			data.forms["abl_d"] = ab="[ins]",
+			data.forms["gen_d"] = g="+nos",
+			data.forms["loc_d"] = l="[gen]",
+			data.forms["voc_d"] = v="+nI",
 			
 			data.forms["nom_p"] = {
-				sa_utils.internal_sandhi({ stem = args.lemma, ending = vowel, has_accent = args.has_accent }),
-				sa_utils.internal_sandhi({ stem = args.lemma, ending = "", has_accent = args.has_accent }),
-				sa_utils.internal_sandhi({ stem = args.stem .. sa_utils.lengthen[vowel .. oxytone], ending = "ni", has_accent = args.has_accent }),
-				note3 = 'Later Sanskrit',
+				{ "+" .. vowel },
+				{ "+" },
+				{ stem = args.stem .. sa_utils.lengthen[vowel .. oxy], "ni", note = "Later Sanskrit" },
 			}
-			data.forms["acc_p"] = data.forms["nom_p"]
-			data.forms["ins_p"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "Bis", has_accent = args.has_accent }) }
-			data.forms["dat_p"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "Byas", has_accent = args.has_accent }) }
-			data.forms["abl_p"] = data.forms["dat_p"]
-			data.forms["gen_p"] = { sa_utils.internal_sandhi({ stem = args.stem, ending = sa_utils.lengthen[vowel] .. "nA" .. (oxytone ~= '' and '/' or '') .. "m", has_accent = args.has_accent }) }
-			data.forms["loc_p"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "su", has_accent = args.has_accent }) }
+			data.forms["acc_p"] = a="[nom]",
+			data.forms["ins_p"] = i="+Bis",
+			data.forms["dat_p"] = d="+Byas",
+			data.forms["abl_p"] = ab="[dat]",
+			data.forms["gen_p"] = g=sa_utils.lengthen[vowel] .. "nA" .. (oxy ~= "" and "/" or "") .. "m",
+			data.forms["loc_p"] = l="+su",
 			data.forms["voc_p"] = {
-				sa_utils.internal_sandhi({ stem = args.lemma, ending = vowel, recessive = true, has_accent = args.has_accent }),
-				sa_utils.internal_sandhi({ stem = args.lemma, ending = "", recessive = true, has_accent = args.has_accent }),
-				sa_utils.internal_sandhi({ stem = args.stem .. sa_utils.lengthen[vowel], ending = "ni", recessive = true, has_accent = args.has_accent }),
-				note3 = 'Later Sanskrit',
+				{ "+" .. vowel },
+				{ "+" },
+				{ stem = args.stem .. sa_utils.lengthen[vowel], "ni", note = "Later Sanskrit" },
 			}
 		end
 		
@@ -262,299 +291,278 @@ decl_data["AIU"] = {
 
 setmetatable(decl_data["AIU"], {
 	__call = function(self, args, data)
-		local oxytone = match(args.lemma, "(" .. sa_utils.accent .. "?)$")
+		local oxy = match(args.lemma, "(" .. sa_utils.accent .. "?)$")
 		local vowel = match(args.lemma, "([AIU])" .. sa_utils.accent .. "?$")
 		
 		data.decl_type = SLP_to_IAST.tr(vowel) .. "-stem"
 		
 		if not (args.root or args.compound or args.true_mono) then -- derived stem
-			if vowel == 'A' then
-				data.forms["nom_s"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "", has_accent = args.has_accent }) }
+			if vowel == "A" then
+				data.forms["nom_s"] = n="+",
 				data.forms["ins_s"] = {
-					sa_utils.internal_sandhi({ stem = args.stem, ending = "a" .. oxytone .. "yA", has_accent = args.has_accent }),
-					sa_utils.internal_sandhi({ stem = args.lemma, ending = "", has_accent = args.has_accent }),
-					note2 = 'Vedic',
+					{ "a" .. oxy .. "yA" },
+					{ "+", note = "Vedic" },
 				}
-				data.forms["dat_s"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "yE", has_accent = args.has_accent }) }
-				data.forms["abl_s"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "yAs", has_accent = args.has_accent }) }
-				data.forms["gen_s"] = data.forms["abl_s"]
-				data.forms["loc_s"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "yAm", has_accent = args.has_accent }) }
-				data.forms["voc_s"] = { sa_utils.internal_sandhi({ stem = args.stem, ending = "e", recessive = true, has_accent = args.has_accent }) }
+				data.forms["dat_s"] = d="+yE",
+				data.forms["abl_s"] = ab="+yAs",
+				data.forms["gen_s"] = g="[abl]",
+				data.forms["loc_s"] = l="+yAm",
+				data.forms["voc_s"] = v="e",
 				
-				data.forms["nom_d"] = { sa_utils.internal_sandhi({ stem = args.stem, ending = "e" .. oxytone, has_accent = args.has_accent }) }
-				data.forms["acc_d"] = data.forms["nom_d"]
-				data.forms["gen_d"] = { sa_utils.internal_sandhi({ stem = args.stem, ending = "a" .. oxytone .. "yos", has_accent = args.has_accent }) }
-				data.forms["loc_d"] = data.forms["gen_d"]
-				data.forms["voc_d"] = { sa_utils.internal_sandhi({ stem = args.stem, ending = "e", recessive = true, has_accent = args.has_accent }) }
+				data.forms["nom_d"] = n="e" .. oxy,
+				data.forms["acc_d"] = a="[nom]",
+				data.forms["gen_d"] = g="a" .. oxy .. "yos",
+				data.forms["loc_d"] = l="[gen]",
+				data.forms["voc_d"] = v="e",
 				
-				data.forms["nom_p"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "s", has_accent = args.has_accent }) }
-				data.forms["voc_p"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "s", recessive = true, has_accent = args.has_accent }) }
-			elseif vowel == 'I' then
-				data.forms["nom_s"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "", has_accent = args.has_accent }) }
-				data.forms["ins_s"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "A", has_accent = args.has_accent }) }
-				data.forms["dat_s"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "E", has_accent = args.has_accent }) }
-				data.forms["abl_s"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "As", has_accent = args.has_accent }) }
-				data.forms["gen_s"] = data.forms["abl_s"]
-				data.forms["loc_s"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "Am", has_accent = args.has_accent }) }
-				data.forms["voc_s"] = { sa_utils.internal_sandhi({ stem = args.stem, ending = sa_utils.shorten[vowel], recessive = true, has_accent = args.has_accent }) }
+				data.forms["nom_p"] = n="+s",
+				data.forms["voc_p"] = v="+s",
+			elseif vowel == "I" then
+				data.forms["nom_s"] = n="+",
+				data.forms["ins_s"] = i="+A",
+				data.forms["dat_s"] = d="+E",
+				data.forms["abl_s"] = ab="+As",
+				data.forms["gen_s"] = g="[abl]",
+				data.forms["loc_s"] = l="+Am",
+				data.forms["voc_s"] = v=sa_utils.shorten[vowel],
 				
 				data.forms["nom_d"] = {
-					sa_utils.internal_sandhi({ stem = args.lemma, ending = "O", has_accent = args.has_accent }),
-					sa_utils.internal_sandhi({ stem = args.lemma, ending = "", has_accent = args.has_accent }),
-					note2 = 'Vedic',
+					{ "+O" },
+					{ "+", note = "Vedic" },
 				}
-				data.forms["gen_d"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "os", has_accent = args.has_accent }) }
+				data.forms["gen_d"] = g="+os",
 				data.forms["voc_d"] = {
-					sa_utils.internal_sandhi({ stem = args.lemma, ending = "O", recessive = true, has_accent = args.has_accent }),
-					sa_utils.internal_sandhi({ stem = args.lemma, ending = "", recessive = true, has_accent = args.has_accent }),
-					note2 = 'Vedic',
+					{ "+O" },
+					{ "+", note = "Vedic" },
 				}
 				
 				data.forms["nom_p"] = {
-					sa_utils.internal_sandhi({ stem = args.lemma, ending = "as", has_accent = args.has_accent }),
-					sa_utils.internal_sandhi({ stem = args.lemma, ending = "s", has_accent = args.has_accent }),
-					note2 = 'Vedic',
+					{ "+as" },
+					{ "+s", note = "Vedic" },
 				}
 				data.forms["voc_p"] = {
-					sa_utils.internal_sandhi({ stem = args.lemma, ending = "as", recessive = true, has_accent = args.has_accent }),
-					sa_utils.internal_sandhi({ stem = args.lemma, ending = "s", recessive = true, has_accent = args.has_accent }),
-					note2 = 'Vedic',
+					{ "+as" },
+					{ "+s", note = "Vedic" },
 				}
 			else
-				data.forms["nom_s"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "s", has_accent = args.has_accent }) }
-				data.forms["ins_s"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "A", has_accent = args.has_accent }) }
-				data.forms["dat_s"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "E", has_accent = args.has_accent }) }
-				data.forms["abl_s"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "As", has_accent = args.has_accent }) }
-				data.forms["gen_s"] = data.forms["abl_s"]
-				data.forms["loc_s"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "Am", has_accent = args.has_accent }) }
-				data.forms["voc_s"] = { sa_utils.internal_sandhi({ stem = args.stem, ending = sa_utils.shorten[vowel], recessive = true, has_accent = args.has_accent }) }
+				data.forms["nom_s"] = n="+s",
+				data.forms["ins_s"] = i="+A",
+				data.forms["dat_s"] = d="+E",
+				data.forms["abl_s"] = ab="+As",
+				data.forms["gen_s"] = g="[abl]",
+				data.forms["loc_s"] = l="+Am",
+				data.forms["voc_s"] = v=sa_utils.shorten[vowel],
 				
 				data.forms["nom_d"] = {
-					sa_utils.internal_sandhi({ stem = args.lemma, ending = "O", has_accent = args.has_accent }),
-					sa_utils.internal_sandhi({ stem = args.lemma, ending = "", has_accent = args.has_accent }),
-					note2 = 'Vedic',
+					{ "+O" },
+					{ "+", note = "Vedic" },
 				}
-				data.forms["gen_d"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "os", has_accent = args.has_accent }) }
+				data.forms["gen_d"] = g="+os",
 				data.forms["voc_d"] = {
-					sa_utils.internal_sandhi({ stem = args.lemma, ending = "O", recessive = true, has_accent = args.has_accent }),
-					sa_utils.internal_sandhi({ stem = args.lemma, ending = "", recessive = true, has_accent = args.has_accent }),
-					note2 = 'Vedic',
+					{ "+O" },
+					{ "+", note = "Vedic" },
 				}
 				
 				data.forms["nom_p"] = {
-					sa_utils.internal_sandhi({ stem = args.lemma, ending = "as", has_accent = args.has_accent }),
-					sa_utils.internal_sandhi({ stem = args.lemma, ending = "s", has_accent = args.has_accent }),
-					note2 = 'Vedic',
+					{ "+as" },
+					{ "+s", note = "Vedic" },
 				}
 				data.forms["voc_p"] = {
-					sa_utils.internal_sandhi({ stem = args.lemma, ending = "as", recessive = true, has_accent = args.has_accent }),
-					sa_utils.internal_sandhi({ stem = args.lemma, ending = "s", recessive = true, has_accent = args.has_accent }),
-					note2 = 'Vedic',
+					{ "+as" },
+					{ "+s", note = "Vedic" },
 				}
 			end
-			data.forms["acc_s"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "m", has_accent = args.has_accent }) }
+			data.forms["acc_s"] = a="+m",
 			
-			data.forms["acc_d"] = data.forms["nom_d"]
-			data.forms["ins_d"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "ByAm", has_accent = args.has_accent }) }
-			data.forms["dat_d"] = data.forms["ins_d"]
-			data.forms["abl_d"] = data.forms["ins_d"]
-			data.forms["loc_d"] = data.forms["gen_d"]
+			data.forms["acc_d"] = a="[nom]",
+			data.forms["ins_d"] = i="+ByAm",
+			data.forms["dat_d"] = d="[ins]",
+			data.forms["abl_d"] = ab="[ins]",
+			data.forms["loc_d"] = l="[gen]",
 			
-			data.forms["acc_p"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "s", has_accent = args.has_accent }) }
-			data.forms["ins_p"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "Bis", has_accent = args.has_accent }) }
-			data.forms["dat_p"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "Byas", has_accent = args.has_accent }) }
-			data.forms["abl_p"] = data.forms["dat_p"]
-			data.forms["gen_p"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "nAm", has_accent = args.has_accent }) }
-			data.forms["loc_p"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "su", has_accent = args.has_accent }) }
+			data.forms["acc_p"] = a="+s",
+			data.forms["ins_p"] = i="+Bis",
+			data.forms["dat_p"] = d="+Byas",
+			data.forms["abl_p"] = ab="[dat]",
+			data.forms["gen_p"] = g="+nAm",
+			data.forms["loc_p"] = l="+su",
 		
-		elseif vowel == 'A' then
-			data.forms["nom_s"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "s", has_accent = args.has_accent }) }
-			data.forms["acc_s"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "m", has_accent = args.has_accent }) }
-			data.forms["ins_s"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "", has_accent = args.has_accent }) }
-			data.forms["dat_s"] = { sa_utils.internal_sandhi({ stem = args.stem, ending = "e" .. oxytone, has_accent = args.has_accent }) }
-			data.forms["abl_s"] = { sa_utils.internal_sandhi({ stem = args.stem, ending = "a" .. oxytone .. 's', has_accent = args.has_accent }) }
-			data.forms["gen_s"] = data.forms["abl_s"]
-			data.forms["loc_s"] = { sa_utils.internal_sandhi({ stem = args.stem, ending = "i" .. oxytone, has_accent = args.has_accent }) }
-			data.forms["voc_s"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "s", recessive = true, has_accent = args.has_accent }) }
+		elseif vowel == "A" then
+			data.forms["nom_s"] = n="+s",
+			data.forms["acc_s"] = a="+m",
+			data.forms["ins_s"] = i="+",
+			data.forms["dat_s"] = d="e" .. oxy,
+			data.forms["abl_s"] = ab="a" .. oxy .. "s",
+			data.forms["gen_s"] = g="[abl]",
+			data.forms["loc_s"] = l="i" .. oxy,
+			data.forms["voc_s"] = v="+s",
 			
-			data.forms["nom_d"] = { sa_utils.internal_sandhi({ stem = args.stem, ending = "O" .. oxytone, has_accent = args.has_accent }) }
-			data.forms["acc_d"] = data.forms["nom_d"]
-			data.forms["ins_d"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "ByAm", has_accent = args.has_accent }) }
-			data.forms["dat_d"] = data.forms["ins_d"]
-			data.forms["abl_d"] = data.forms["ins_d"]
-			data.forms["gen_d"] = { sa_utils.internal_sandhi({ stem = args.stem, ending = "o" .. oxytone .. "s", has_accent = args.has_accent }) }
-			data.forms["loc_d"] = data.forms["gen_d"]
-			data.forms["voc_d"] = { sa_utils.internal_sandhi({ stem = args.stem, ending = "O", recessive = true, has_accent = args.has_accent }) }
+			data.forms["nom_d"] = n="O" .. oxy,
+			data.forms["acc_d"] = a="[nom]",
+			data.forms["ins_d"] = i="+ByAm",
+			data.forms["dat_d"] = d="[ins]",
+			data.forms["abl_d"] = ab="[ins]",
+			data.forms["gen_d"] = g="o" .. oxy .. "s",
+			data.forms["loc_d"] = l="[gen]",
+			data.forms["voc_d"] = v="O",
 			
-			data.forms["nom_p"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "s", has_accent = args.has_accent }) }
+			data.forms["nom_p"] = n="+s",
 			data.forms["acc_p"] = {
-				sa_utils.internal_sandhi({ stem = args.lemma, ending = "s", has_accent = args.has_accent }),
-				sa_utils.internal_sandhi({ stem = args.stem, ending = "a" .. oxytone .. "s", has_accent = args.has_accent }),
-				note2 = 'Perhaps',
+				{ "+s" },
+				{ "a" .. oxy .. "s", note = "Perhaps" },
 			}
-			data.forms["ins_p"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "Bis", has_accent = args.has_accent }) }
-			data.forms["dat_p"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "Byas", has_accent = args.has_accent }) }
-			data.forms["abl_p"] = data.forms["dat_p"]
+			data.forms["ins_p"] = i="+Bis",
+			data.forms["dat_p"] = d="+Byas",
+			data.forms["abl_p"] = ab="[dat]",
 			data.forms["gen_p"] = {
-				sa_utils.internal_sandhi({ stem = args.lemma, ending = sa_utils.lengthen[vowel] .. "nAm", has_accent = args.has_accent }),
-				sa_utils.internal_sandhi({ stem = args.lemma, ending = sa_utils.lengthen[vowel] .. "m", has_accent = args.has_accent }),
-				note2 = 'Perhaps',
+				{ "+" .. sa_utils.lengthen[vowel] .. "nAm" },
+				{ "+" .. sa_utils.lengthen[vowel] .. "m", note = "Perhaps" },
 			}
-			data.forms["loc_p"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "su", has_accent = args.has_accent }) }
-			data.forms["voc_p"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "s", recessive = true, has_accent = args.has_accent }) }
+			data.forms["loc_p"] = l="+su",
+			data.forms["voc_p"] = v="+s",
 		elseif args.compound then
 			if match(args.stem, sa_utils.consonant .. sa_utils.consonant .. "$") then
-				data.forms["acc_s"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "am", has_accent = args.has_accent, mono = true }) }
-				data.forms["ins_s"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "A", has_accent = args.has_accent, mono = true }) }
-				data.forms["dat_s"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "e", has_accent = args.has_accent, mono = true }) }
-				data.forms["abl_s"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "as", has_accent = args.has_accent, mono = true }) }
-				data.forms["loc_s"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "i", has_accent = args.has_accent, mono = true }) }
+				data.forms["acc_s"] = a="+am", mono = true,
+				data.forms["ins_s"] = i="+A", mono = true,
+				data.forms["dat_s"] = d="+e", mono = true,
+				data.forms["abl_s"] = ab={{"+as", mono = true}},
+				data.forms["loc_s"] = l="+i", mono = true,
 				
-				data.forms["nom_d"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "O", has_accent = args.has_accent, mono = true }) }
-				data.forms["gen_d"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "os", has_accent = args.has_accent, mono = true }) }
-				data.forms["voc_d"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "O", recessive = true, has_accent = args.has_accent, mono = true }) }
+				data.forms["nom_d"] = n="+O", mono = true,
+				data.forms["gen_d"] = g="+os", mono = true,
+				data.forms["voc_d"] = v="+O", mono = true,
 				
-				data.forms["nom_p"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "as", has_accent = args.has_accent, mono = true }) }
+				data.forms["nom_p"] = n="+as", mono = true,
 				data.forms["gen_p"] = {
-					sa_utils.internal_sandhi({ stem = args.lemma, ending = "Am", has_accent = args.has_accent, mono = true }),
-					sa_utils.internal_sandhi({ stem = args.lemma, ending = "nAm", has_accent = args.has_accent }),
+					{ "+Am", mono = true },
+					{ "+nAm" },
 				}
-				data.forms["voc_p"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "as", recessive = true, has_accent = args.has_accent, mono = true }) }
+				data.forms["voc_p"] = v="+as", mono = true,
 			else
 				data.forms["acc_s"] = {
-					sa_utils.internal_sandhi({ stem = args.lemma, ending = "am", has_accent = args.has_accent, mono = true }),
-					sa_utils.internal_sandhi({ stem = args.lemma, ending = "am", has_accent = args.has_accent }),
+					{ "+am", mono = true },
+					{ "+am" },
 				}
 				data.forms["ins_s"] = {
-					sa_utils.internal_sandhi({ stem = args.lemma, ending = "A", has_accent = args.has_accent, mono = true }),
-					sa_utils.internal_sandhi({ stem = args.lemma, ending = "A", has_accent = args.has_accent }),
+					{ "+A", mono = true },
+					{ "+A" },
 				}
 				data.forms["dat_s"] = {
-					sa_utils.internal_sandhi({ stem = args.lemma, ending = "e", has_accent = args.has_accent, mono = true }),
-					sa_utils.internal_sandhi({ stem = args.lemma, ending = "e", has_accent = args.has_accent }),
+					{ "+e", mono = true },
+					{ "+e" },
 				}
-				data.forms["abl_s"] = {
-					sa_utils.internal_sandhi({ stem = args.lemma, ending = "as", has_accent = args.has_accent, mono = true }),
-					sa_utils.internal_sandhi({ stem = args.lemma, ending = "as", has_accent = args.has_accent }),
-				}
+				data.forms["abl_s"] = ab={ { "+as", mono = true }, "+as" },
 				data.forms["loc_s"] = {
-					sa_utils.internal_sandhi({ stem = args.lemma, ending = "i", has_accent = args.has_accent, mono = true }),
-					sa_utils.internal_sandhi({ stem = args.stem .. sa_utils.semivowel_to_cons[vowel], ending = "i" .. (oxytone ~= '' and '\\' or ''), has_accent = args.has_accent }), -- weird special case
+					{ "+i", mono = true },
+					{ stem = args.stem .. sa_utils.semivowel_to_cons[vowel], "i" .. (oxy ~= "" and "\\" or "") }, -- weird special case
 				}
 				
 				data.forms["nom_d"] = {
-					sa_utils.internal_sandhi({ stem = args.lemma, ending = "O", has_accent = args.has_accent, mono = true }),
-					sa_utils.internal_sandhi({ stem = args.lemma, ending = "O", has_accent = args.has_accent }),
+					{ "+O", mono = true },
+					{ "+O" },
 				}
 				data.forms["gen_d"] = {
-					sa_utils.internal_sandhi({ stem = args.lemma, ending = "os", has_accent = args.has_accent, mono = true }),
-					sa_utils.internal_sandhi({ stem = args.lemma, ending = "os", has_accent = args.has_accent }),
+					{ "+os", mono = true },
+					{ "+os" },
 				}
 				data.forms["voc_d"] = {
-					sa_utils.internal_sandhi({ stem = args.lemma, ending = "O", recessive = true, has_accent = args.has_accent, mono = true }),
-					sa_utils.internal_sandhi({ stem = args.lemma, ending = "O", recessive = true, has_accent = args.has_accent }),
+					{ "+O", mono = true },
+					{ "+O" },
 				}
 				
 				data.forms["nom_p"] = {
-					sa_utils.internal_sandhi({ stem = args.lemma, ending = "as", has_accent = args.has_accent, mono = true }),
-					sa_utils.internal_sandhi({ stem = args.lemma, ending = "as", has_accent = args.has_accent }),
+					{ "+as", mono = true },
+					{ "+as" },
 				}
 				data.forms["gen_p"] = {
-					sa_utils.internal_sandhi({ stem = args.lemma, ending = "Am", has_accent = args.has_accent, mono = true }),
-					sa_utils.internal_sandhi({ stem = args.lemma, ending = "nAm", has_accent = args.has_accent }),
-					sa_utils.internal_sandhi({ stem = args.lemma, ending = "Am", has_accent = args.has_accent }),
+					{ "+Am", mono = true },
+					{ "+nAm" },
+					{ "+Am" },
 				}
 				data.forms["voc_p"] = {
-					sa_utils.internal_sandhi({ stem = args.lemma, ending = "as", recessive = true, has_accent = args.has_accent, mono = true }),
-					sa_utils.internal_sandhi({ stem = args.lemma, ending = "as", recessive = true, has_accent = args.has_accent }),
+					{ "+as", mono = true },
+					{ "+as" },
 				}
 			end
-			data.forms["nom_s"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "s", has_accent = args.has_accent }) }
-			data.forms["gen_s"] = data.forms["abl_s"]
-			data.forms["voc_s"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "s", recessive = true, has_accent = args.has_accent }) }
+			data.forms["nom_s"] = n="+s",
+			data.forms["gen_s"] = g="[abl]",
+			data.forms["voc_s"] = v="+s",
 			
-			data.forms["acc_d"] = data.forms["nom_d"]
-			data.forms["ins_d"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "ByAm", has_accent = args.has_accent }) }
-			data.forms["dat_d"] = data.forms["ins_d"]
-			data.forms["abl_d"] = data.forms["ins_d"]
-			data.forms["loc_d"] = data.forms["gen_d"]
+			data.forms["acc_d"] = a="[nom]",
+			data.forms["ins_d"] = i="+ByAm",
+			data.forms["dat_d"] = d="[ins]",
+			data.forms["abl_d"] = ab="[ins]",
+			data.forms["loc_d"] = l="[gen]",
 			
 			
-			data.forms["acc_p"] = data.forms["nom_p"]
-			data.forms["ins_p"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "Bis", has_accent = args.has_accent }) }
-			data.forms["dat_p"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "Byas", has_accent = args.has_accent }) }
-			data.forms["abl_p"] = data.forms["dat_p"]
-			data.forms["loc_p"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "su", has_accent = args.has_accent }) }
+			data.forms["acc_p"] = a="[nom]",
+			data.forms["ins_p"] = i="+Bis",
+			data.forms["dat_p"] = d="+Byas",
+			data.forms["abl_p"] = ab="[dat]",
+			data.forms["loc_p"] = l="+su",
 		elseif args.true_mono then
-			data.forms["nom_s"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "s", has_accent = args.has_accent }) }
-			data.forms["acc_s"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "am", has_accent = args.has_accent, mono = true }) }
-			data.forms["ins_s"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "A/", has_accent = args.has_accent, mono = true }) }
+			data.forms["nom_s"] = n="+s",
+			data.forms["acc_s"] = a="+am", mono = true,
+			data.forms["ins_s"] = i="+A/", mono = true,
 			data.forms["dat_s"] = {
-				sa_utils.internal_sandhi({ stem = args.lemma, ending = "e/", has_accent = args.has_accent, mono = true }),
-				sa_utils.internal_sandhi({ stem = args.lemma, ending = "E/", has_accent = args.has_accent, mono = true }),
-				note2 = 'Later Sanskrit',
+				{ "+e/", mono = true },
+				{ "+E/", mono = true, note = "Later Sanskrit" },
 			}
-			data.forms["abl_s"] = {
-				sa_utils.internal_sandhi({ stem = args.lemma, ending = "a/s", has_accent = args.has_accent, mono = true }),
-				sa_utils.internal_sandhi({ stem = args.lemma, ending = "A/s", has_accent = args.has_accent, mono = true }),
-				note2 = 'Later Sanskrit',
-			}
-			data.forms["gen_s"] = data.forms["abl_s"]
+			data.forms["abl_s"] = ab={ { "+a/s", mono = true }, { "+A/s", mono = true, note = "Later Sanskrit" } },
+			data.forms["gen_s"] = g="[abl]",
 			data.forms["loc_s"] = {
-				sa_utils.internal_sandhi({ stem = args.lemma, ending = "i/", has_accent = args.has_accent, mono = true }),
-				sa_utils.internal_sandhi({ stem = args.lemma, ending = "A/m", has_accent = args.has_accent, mono = true }),
-				note2 = 'Later Sanskrit',
+				{ "+i/", mono = true },
+				{ "+A/m", mono = true, note = "Later Sanskrit" },
 			}
-			data.forms["voc_s"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "s", recessive = true, has_accent = args.has_accent }) }
+			data.forms["voc_s"] = v="+s",
 			
-			data.forms["nom_d"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "O", has_accent = args.has_accent, mono = true }) }
-			data.forms["acc_d"] = data.forms["nom_d"]
-			data.forms["ins_d"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "ByA/m", has_accent = args.has_accent, mono = true }) }
-			data.forms["dat_d"] = data.forms["ins_d"]
-			data.forms["abl_d"] = data.forms["ins_d"]
-			data.forms["gen_d"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "o/s", has_accent = args.has_accent, mono = true }) }
-			data.forms["loc_d"] = data.forms["gen_d"]
-			data.forms["voc_d"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "O", recessive = true, has_accent = args.has_accent, mono = true }) }
+			data.forms["nom_d"] = n="+O", mono = true,
+			data.forms["acc_d"] = a="[nom]",
+			data.forms["ins_d"] = i="+ByA/m", mono = true,
+			data.forms["dat_d"] = d="[ins]",
+			data.forms["abl_d"] = ab="[ins]",
+			data.forms["gen_d"] = g="+o/s", mono = true,
+			data.forms["loc_d"] = l="[gen]",
+			data.forms["voc_d"] = v="+O", mono = true,
 			
-			data.forms["nom_p"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "as", has_accent = args.has_accent, mono = true }) }
-			data.forms["acc_p"] = data.forms["nom_p"]
-			data.forms["ins_p"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "Bi/s", has_accent = args.has_accent, mono = true }) }
-			data.forms["dat_p"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "Bya/s", has_accent = args.has_accent, mono = true }) }
-			data.forms["abl_p"] = data.forms["dat_p"]
+			data.forms["nom_p"] = n="+as", mono = true,
+			data.forms["acc_p"] = a="[nom]",
+			data.forms["ins_p"] = i="+Bi/s", mono = true,
+			data.forms["dat_p"] = d="+Bya/s", mono = true,
+			data.forms["abl_p"] = ab="[dat]",
 			data.forms["gen_p"] = {
-				sa_utils.internal_sandhi({ stem = args.lemma, ending = "A/m", has_accent = args.has_accent, mono = true }),
-				sa_utils.internal_sandhi({ stem = args.lemma, ending = "nA/m", has_accent = args.has_accent, mono = true }),
-				note2 = 'Later Sanskrit',
+				{ "+A/m", mono = true },
+				{ "+nA/m", mono = true, note = "Later Sanskrit" },
 			}
-			data.forms["loc_p"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "su/", has_accent = args.has_accent, mono = true }) }
-			data.forms["voc_p"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "as", recessive = true, has_accent = args.has_accent, mono = true }) }
+			data.forms["loc_p"] = l="+su/", mono = true,
+			data.forms["voc_p"] = v="+as", mono = true,
 		else
-			data.forms["nom_s"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "s", has_accent = args.has_accent }) }
-			data.forms["acc_s"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "am", has_accent = args.has_accent }) }
-			data.forms["ins_s"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "A", has_accent = args.has_accent }) }
-			data.forms["dat_s"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "e", has_accent = args.has_accent }) }
-			data.forms["abl_s"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "as", has_accent = args.has_accent }) }
-			data.forms["gen_s"] = data.forms["abl_s"]
-			data.forms["loc_s"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "i", has_accent = args.has_accent }) }
-			data.forms["voc_s"] = { sa_utils.internal_sandhi({ stem = args.stem, ending = sa_utils.shorten[vowel], recessive = true, has_accent = args.has_accent }) }
+			data.forms["nom_s"] = n="+s",
+			data.forms["acc_s"] = a="+am",
+			data.forms["ins_s"] = i="+A",
+			data.forms["dat_s"] = d="+e",
+			data.forms["abl_s"] = ab="+as",
+			data.forms["gen_s"] = g="[abl]",
+			data.forms["loc_s"] = l="+i",
+			data.forms["voc_s"] = v=sa_utils.shorten[vowel],
 			
-			data.forms["nom_d"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "A", has_accent = args.has_accent }) }
-			data.forms["acc_d"] = data.forms["nom_d"]
-			data.forms["ins_d"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "ByAm", has_accent = args.has_accent }) }
-			data.forms["dat_d"] = data.forms["ins_d"]
-			data.forms["abl_d"] = data.forms["ins_d"]
-			data.forms["gen_d"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "os", has_accent = args.has_accent }) }
-			data.forms["loc_d"] = data.forms["gen_d"]
-			data.forms["voc_d"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "A", recessive = true, has_accent = args.has_accent }) }
+			data.forms["nom_d"] = n="+A",
+			data.forms["acc_d"] = a="[nom]",
+			data.forms["ins_d"] = i="+ByAm",
+			data.forms["dat_d"] = d="[ins]",
+			data.forms["abl_d"] = ab="[ins]",
+			data.forms["gen_d"] = g="+os",
+			data.forms["loc_d"] = l="[gen]",
+			data.forms["voc_d"] = v="+A",
 			
-			data.forms["nom_p"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "as", has_accent = args.has_accent }) }
-			data.forms["acc_p"] = data.forms["nom_p"]
-			data.forms["ins_p"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "Bis", has_accent = args.has_accent }) }
-			data.forms["dat_p"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "Byas", has_accent = args.has_accent }) }
-			data.forms["abl_p"] = data.forms["dat_p"]
-			data.forms["gen_p"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "nAm", has_accent = args.has_accent }) }
-			data.forms["loc_p"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "su", has_accent = args.has_accent }) }
-			data.forms["voc_p"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "as", recessive = true, has_accent = args.has_accent }) }
+			data.forms["nom_p"] = n="+as",
+			data.forms["acc_p"] = a="[nom]",
+			data.forms["ins_p"] = i="+Bis",
+			data.forms["dat_p"] = d="+Byas",
+			data.forms["abl_p"] = ab="[dat]",
+			data.forms["gen_p"] = g="+nAm",
+			data.forms["loc_p"] = l="+su",
+			data.forms["voc_p"] = v="+as",
 		end
 		
 		table.insert(data.categories, "Sanskrit " .. SLP_to_IAST.tr(vowel) .. "-stem nouns")
@@ -574,77 +582,75 @@ decl_data["f"] = {
 
 setmetatable(decl_data["f"], {
 	__call = function(self, args, data)
-		local oxytone = match(args.lemma, "(" .. sa_utils.accent .. "?)$")
+		local oxy = match(args.lemma, "(" .. sa_utils.accent .. "?)$")
 		
 		data.decl_type = SLP_to_IAST.tr("f") .. "-stem"
 		
-		if not args.r_stem_a and args.g ~= 'n' then
+		if not args.r_stem_a and args.g ~= "n" then
 			error('Please specify the length of the accusative singular vowel with r_stem_a = "a" or "ā".')
 		else
 			args.r_stem_a = IAST_to_SLP.tr(args.r_stem_a)
 		end
 		
-		if args.g == 'n' then
-			data.forms["nom_s"] = { sa_utils.internal_sandhi({ stem = args.stem, ending = "f" .. oxytone, has_accent = args.has_accent }) }
-			data.forms["acc_s"] = data.forms["nom_s"]
-			data.forms["ins_s"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "nA", has_accent = args.has_accent }) }
-			data.forms["dat_s"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "ne", has_accent = args.has_accent }) }
-			data.forms["abl_s"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "nas", has_accent = args.has_accent }) }
-			data.forms["loc_s"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "ni", has_accent = args.has_accent }) }
+		if args.g == "n" then
+			data.forms["nom_s"] = n="f" .. oxy,
+			data.forms["acc_s"] = a="[nom]",
+			data.forms["ins_s"] = i="+nA",
+			data.forms["dat_s"] = d="+ne",
+			data.forms["abl_s"] = ab="+nas",
+			data.forms["loc_s"] = l="+ni",
 			data.forms["voc_s"] = {
-				sa_utils.internal_sandhi({ stem = args.stem, ending = "f", recessive = true, has_accent = args.has_accent }),
-				sa_utils.internal_sandhi({ stem = args.stem, ending = "ar", recessive = true, has_accent = args.has_accent }),
+				{ "f" },
+				{ "ar" },
 			}
 			
-			data.forms["nom_d"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "nI", has_accent = args.has_accent }) }
-			data.forms["gen_d"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "nos", has_accent = args.has_accent }) }
-			data.forms["voc_d"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "nI", recessive = true, has_accent = args.has_accent }) }
+			data.forms["nom_d"] = n="+nI",
+			data.forms["gen_d"] = g="+nos",
+			data.forms["voc_d"] = v="+nI",
 			
-			data.forms["nom_p"] = { sa_utils.internal_sandhi({ stem = args.stem, ending = "F" .. oxytone .. "ni", has_accent = args.has_accent }) }
-			data.forms["acc_p"] = data.forms["nom_p"]
-			data.forms["voc_p"] = { sa_utils.internal_sandhi({ stem = args.stem, ending = "Fni", recessive = true, has_accent = args.has_accent }) }
+			data.forms["nom_p"] = n="F" .. oxy .. "ni",
+			data.forms["acc_p"] = a="[nom]",
+			data.forms["voc_p"] = v="Fni",
 		else
-			data.forms["nom_s"] = { sa_utils.internal_sandhi({ stem = args.stem, ending = "A" .. oxytone, has_accent = args.has_accent }) }
-			data.forms["acc_s"] = { sa_utils.internal_sandhi({ stem = args.stem, ending = args.r_stem_a .. oxytone .. "ram", has_accent = args.has_accent }) }
-			data.forms["ins_s"] = { sa_utils.internal_sandhi({ stem = args.stem, ending = "rA" .. oxytone, has_accent = args.has_accent }) }
-			data.forms["dat_s"] = { sa_utils.internal_sandhi({ stem = args.stem, ending = "re" .. oxytone, has_accent = args.has_accent }) }
-			data.forms["abl_s"] = { sa_utils.internal_sandhi({ stem = args.stem, ending = "u" .. oxytone .. 'r', has_accent = args.has_accent }) }
-			data.forms["loc_s"] = { sa_utils.internal_sandhi({ stem = args.stem, ending = "a" .. oxytone .. "ri", has_accent = args.has_accent }) }
-			data.forms["voc_s"] = { sa_utils.internal_sandhi({ stem = args.stem, ending = "ar", recessive = true, has_accent = args.has_accent }) }
+			data.forms["nom_s"] = n="A" .. oxy,
+			data.forms["acc_s"] = a=args.r_stem_a .. oxy .. "ram",
+			data.forms["ins_s"] = i="rA" .. oxy,
+			data.forms["dat_s"] = d="re" .. oxy,
+			data.forms["abl_s"] = ab="u" .. oxy .. "r",
+			data.forms["loc_s"] = l="a" .. oxy .. "ri",
+			data.forms["voc_s"] = v="ar",
 			
 			data.forms["nom_d"] = {
-				sa_utils.internal_sandhi({ stem = args.stem, ending = args.r_stem_a .. oxytone .. "rO", has_accent = args.has_accent }),
-				sa_utils.internal_sandhi({ stem = args.stem, ending = args.r_stem_a .. oxytone .. "rA", has_accent = args.has_accent }),
-				note2 = "Vedic",
+				{ args.r_stem_a .. oxy .. "rO" },
+				{ args.r_stem_a .. oxy .. "rA", note = "Vedic" },
 			}
-			data.forms["gen_d"] = { sa_utils.internal_sandhi({ stem = args.stem, ending = "ro" .. oxytone .. "s", has_accent = args.has_accent }) }
+			data.forms["gen_d"] = g="ro" .. oxy .. "s",
 			data.forms["voc_d"] = {
-				sa_utils.internal_sandhi({ stem = args.stem, ending = args.r_stem_a .. "rO", recessive = true, has_accent = args.has_accent }),
-				sa_utils.internal_sandhi({ stem = args.stem, ending = args.r_stem_a .. "rA", recessive = true, has_accent = args.has_accent }),
-				note2 = "Vedic",
+				{ args.r_stem_a .. "rO" },
+				{ args.r_stem_a .. "rA", note = "Vedic" },
 			}
 			
-			data.forms["nom_p"] = { sa_utils.internal_sandhi({ stem = args.stem, ending = args.r_stem_a .. oxytone .. "ras", has_accent = args.has_accent }) }
-			if args.g == 'f' then
-				data.forms["acc_p"] = { sa_utils.internal_sandhi({ stem = args.stem, ending = "F" .. oxytone .. "s", has_accent = args.has_accent }) }
+			data.forms["nom_p"] = n=args.r_stem_a .. oxy .. "ras",
+			if args.g == "f" then
+				data.forms["acc_p"] = a="F" .. oxy .. "s",
 			else
-				data.forms["acc_p"] = { sa_utils.internal_sandhi({ stem = args.stem, ending = "F" .. oxytone .. "n", has_accent = args.has_accent }) }
+				data.forms["acc_p"] = a="F" .. oxy .. "n",
 			end
-			data.forms["voc_p"] = { sa_utils.internal_sandhi({ stem = args.stem, ending = args.r_stem_a .. "ras", recessive = true, has_accent = args.has_accent }) }
+			data.forms["voc_p"] = v=args.r_stem_a .. "ras",
 		end
-		data.forms["gen_s"] = data.forms["abl_s"]
+		data.forms["gen_s"] = g="[abl]",
 		
-		data.forms["acc_d"] = data.forms["nom_d"]
-		data.forms["ins_d"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "ByAm", has_accent = args.has_accent }) }
-		data.forms["dat_d"] = data.forms["ins_d"]
-		data.forms["abl_d"] = data.forms["ins_d"]
-		data.forms["loc_d"] = data.forms["gen_d"]
+		data.forms["acc_d"] = a="[nom]",
+		data.forms["ins_d"] = i="+ByAm",
+		data.forms["dat_d"] = d="[ins]",
+		data.forms["abl_d"] = ab="[ins]",
+		data.forms["loc_d"] = l="[gen]",
 		
-		data.forms["ins_p"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "Bis", has_accent = args.has_accent }) }
-		data.forms["dat_p"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "Byas", has_accent = args.has_accent }) }
-		data.forms["abl_p"] = data.forms["dat_p"]
-		data.forms["gen_p"] = { sa_utils.internal_sandhi({ stem = args.stem .. "F", ending = "nA" .. (oxytone ~= '' and '/' or '') .. "m", has_accent = args.has_accent }) }
-		data.forms["loc_p"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "su", has_accent = args.has_accent }) }
+		data.forms["ins_p"] = i="+Bis",
+		data.forms["dat_p"] = d="+Byas",
+		data.forms["abl_p"] = ab="[dat]",
+		data.forms["gen_p"] = g=stem = args.stem .. "F", "nA" .. (oxy ~= "" and "/" or "") .. "m",
+		data.forms["loc_p"] = l="+su",
 		
 		table.insert(data.categories, "Sanskrit " .. SLP_to_IAST.tr("f") .. "-stem nouns")
 	end
@@ -663,82 +669,77 @@ decl_data["[aiu]s"] = {
 
 setmetatable(decl_data["[aiu]s"], {
 	__call = function(self, args, data)
-		local vowel, oxytone = match(args.lemma, "([aiu])(" .. sa_utils.accent .. "?)s$")
+		local vowel, oxy = match(args.lemma, "([aiu])(" .. sa_utils.accent .. "?)s$")
 		
 		data.decl_type = vowel .. "s-stem"
 		
-		if args.g == 'm' or args.g == 'f' then
-			if vowel == 'a' then
-				data.forms["nom_s"] = { sa_utils.internal_sandhi({ stem = args.stem, ending = "A" .. oxytone .. "s", has_accent = args.has_accent }) }
+		if args.g == "m" or args.g == "f" then
+			if vowel == "a" then
+				data.forms["nom_s"] = n="A" .. oxy .. "s",
 				data.forms["acc_s"] = {
-					sa_utils.internal_sandhi({ stem = args.lemma, ending = "am", has_accent = args.has_accent }),
-					sa_utils.internal_sandhi({ stem = args.stem, ending = "A" .. oxytone .. "m", has_accent = args.has_accent }),
-					note2 = "Vedic"
+					{ "+am" },
+					{ "A" .. oxy .. "m", note = "Vedic" },
 				}
 				
 				data.forms["nom_p"] = {
-					sa_utils.internal_sandhi({ stem = args.lemma, ending = "as", has_accent = args.has_accent }),
-					sa_utils.internal_sandhi({ stem = args.stem, ending = "A" .. oxytone .. "s", has_accent = args.has_accent }),
-					note2 = 'Vedic',
+					{ "+as" },
+					{ "A" .. oxy .. "s", note = "Vedic" },
 				}
 				data.forms["voc_p"] = {
-					sa_utils.internal_sandhi({ stem = args.lemma, ending = "as", recessive = true, has_accent = args.has_accent }),
-					sa_utils.internal_sandhi({ stem = args.stem, ending = "A" .. oxytone .. "s", recessive = true, has_accent = args.has_accent }),
-					note2 = 'Vedic',
+					{ "+as" },
+					{ "A" .. oxy .. "s", note = "Vedic" },
 				}
 			else
-				data.forms["nom_s"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "", has_accent = args.has_accent }) }
-				data.forms["acc_s"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "am", has_accent = args.has_accent }) }
+				data.forms["nom_s"] = n="+",
+				data.forms["acc_s"] = a="+am",
 				
-				data.forms["nom_p"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "as", has_accent = args.has_accent }) }
-				data.forms["voc_p"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "as", recessive = true, has_accent = args.has_accent }) }
+				data.forms["nom_p"] = n="+as",
+				data.forms["voc_p"] = v="+as",
 			end
 			
-			data.forms["voc_s"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "", recessive = true, has_accent = args.has_accent }) }
+			data.forms["voc_s"] = v="+",
 			
 			data.forms["nom_d"] = {
-				sa_utils.internal_sandhi({ stem = args.lemma, ending = "O", has_accent = args.has_accent }),
-				sa_utils.internal_sandhi({ stem = args.lemma, ending = "A", has_accent = args.has_accent }),
-				note2 = "Vedic"
+				{ "+O" },
+				{ "+A", note = "Vedic" },
 			}
-			data.forms["acc_d"] = data.forms["nom_d"]
+			data.forms["acc_d"] = a="[nom]",
 			data.forms["voc_d"] = {
-				sa_utils.internal_sandhi({ stem = args.lemma, ending = "O", recessive = true, has_accent = args.has_accent }),
-				sa_utils.internal_sandhi({ stem = args.lemma, ending = "A", recessive = true, has_accent = args.has_accent }),
-				note2 = "Vedic"
+				{ "+O" },
+				{ "+A", note = "Vedic" },
 			}
 		else
-			data.forms["nom_s"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "", has_accent = args.has_accent }) }
-			data.forms["acc_s"] = data.forms["nom_s"]
-			data.forms["voc_s"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "", recessive = true, has_accent = args.has_accent }) }
+			data.forms["nom_s"] = n="+",
+			data.forms["acc_s"] = a="[nom]",
+			data.forms["voc_s"] = v="+",
 			
-			data.forms["nom_d"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "I", has_accent = args.has_accent }) }
-			data.forms["acc_d"] = data.forms["nom_d"]
-			data.forms["voc_d"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "I", recessive = true, has_accent = args.has_accent }) }
+			data.forms["nom_d"] = n="+I",
+			data.forms["acc_d"] = a="[nom]",
+			data.forms["voc_d"] = v="+I",
 			
-			data.forms["nom_p"] = { sa_utils.internal_sandhi({ stem = args.stem .. sa_utils.lengthen[vowel] .. oxytone .. "n", ending = "si", has_accent = args.has_accent }) }
-			data.forms["voc_p"] = { sa_utils.internal_sandhi({ stem = args.stem .. sa_utils.lengthen[vowel] .. "n", ending = "si", recessive = true, has_accent = args.has_accent }) }
+			data.forms["nom_p"] = n=stem = args.stem .. sa_utils.lengthen[vowel] .. oxy .. "n", "si",
+			data.forms["voc_p"] = v=stem = args.stem .. sa_utils.lengthen[vowel] .. "n", "si",
 		end
 		
-		data.forms["ins_s"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "A", has_accent = args.has_accent }) }
-		data.forms["dat_s"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "e", has_accent = args.has_accent }) }
-		data.forms["abl_s"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "as", has_accent = args.has_accent }) }
-		data.forms["gen_s"] = data.forms["abl_s"]
-		data.forms["loc_s"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "i", has_accent = args.has_accent }) }
+		data.forms["ins_s"] = i="+A",
+		data.forms["dat_s"] = d="+e",
+		data.forms["abl_s"] = ab="+as",
+		data.forms["gen_s"] = g="[abl]",
+		data.forms["loc_s"] = l="+i",
 		
-		data.forms["acc_d"] = data.forms["nom_d"]
-		data.forms["ins_d"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "ByAm", has_accent = args.has_accent }) }
-		data.forms["dat_d"] = data.forms["ins_d"]
-		data.forms["abl_d"] = data.forms["ins_d"]
-		data.forms["gen_d"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "os", has_accent = args.has_accent }) }
-		data.forms["loc_d"] = data.forms["gen_d"]
+		data.forms["acc_d"] = a="[nom]",
+		data.forms["ins_d"] = i="+ByAm",
+		data.forms["dat_d"] = d="[ins]",
+		data.forms["abl_d"] = ab="[ins]",
+		data.forms["gen_d"] = g="+os",
+		data.forms["loc_d"] = l="[gen]",
 		
-		data.forms["acc_p"] = data.forms["nom_p"]
-		data.forms["ins_p"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "Bis", has_accent = args.has_accent }) }
-		data.forms["dat_p"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "Byas", has_accent = args.has_accent }) }
-		data.forms["abl_p"] = data.forms["dat_p"]
-		data.forms["gen_p"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "Am", has_accent = args.has_accent }) }
-		data.forms["loc_p"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "su", has_accent = args.has_accent }) }
+		data.forms["acc_p"] = a="[nom]",
+		data.forms["ins_p"] = i="+Bis",
+		data.forms["dat_p"] = d="+Byas",
+		data.forms["abl_p"] = ab="[dat]",
+		data.forms["gen_p"] = g="+Am",
+		data.forms["loc_p"] = l="+su",
 		
 		table.insert(data.categories, "Sanskrit " .. vowel .. "s-stem nouns")
 	end
@@ -757,110 +758,106 @@ decl_data["an"] = {
 
 setmetatable(decl_data["an"], {
 	__call = function(self, args, data)
-		local oxytone = match(args.lemma, "a(" .. sa_utils.accent .. "?)n$")
+		local oxy = match(args.lemma, "a(" .. sa_utils.accent .. "?)n$")
 		
 		data.decl_type = "an-stem"
 		
 		if not match(args.stem, sa_utils.consonant .. sa_utils.consonant .. "$") or args.contract then
-			data.forms["ins_s"] = { sa_utils.internal_sandhi({ stem = args.stem, ending = "nA" .. oxytone, has_accent = args.has_accent }) }
-			data.forms["dat_s"] = { sa_utils.internal_sandhi({ stem = args.stem, ending = "ne" .. oxytone, has_accent = args.has_accent }) }
-			data.forms["abl_s"] = { sa_utils.internal_sandhi({ stem = args.stem, ending = "na" .. oxytone .. "s", has_accent = args.has_accent }) }
-			data.forms["gen_s"] = data.forms["abl_s"]
+			data.forms["ins_s"] = i="nA" .. oxy,
+			data.forms["dat_s"] = d="ne" .. oxy,
+			data.forms["abl_s"] = ab="na" .. oxy .. "s",
+			data.forms["gen_s"] = g="[abl]",
 			data.forms["loc_s"] = {
-				sa_utils.internal_sandhi({ stem = args.stem, ending = "ni" .. oxytone, has_accent = args.has_accent }),
-				sa_utils.internal_sandhi({ stem = args.lemma, ending = "i", has_accent = args.has_accent }),
+				{ "ni" .. oxy },
+				{ "+i" },
 			}
 			
-			data.forms["gen_d"] = { sa_utils.internal_sandhi({ stem = args.stem, ending = "no" .. oxytone .. "s", has_accent = args.has_accent }) }
+			data.forms["gen_d"] = g="no" .. oxy .. "s",
 			
-			if args.g ~= 'm' then
+			if args.g ~= "m" then
 				data.forms["nom_d"] = {
-					sa_utils.internal_sandhi({ stem = args.stem, ending = "nI" .. oxytone, has_accent = args.has_accent }),
-					sa_utils.internal_sandhi({ stem = args.lemma, ending = "I", has_accent = args.has_accent }),
+					{ "nI" .. oxy },
+					{ "+I" },
 				}
 				data.forms["voc_d"] = {
-					sa_utils.internal_sandhi({ stem = args.stem, ending = "nI", recessive = true, has_accent = args.has_accent }),
-					sa_utils.internal_sandhi({ stem = args.lemma, ending = "I", recessive = true, has_accent = args.has_accent }),
+					{ "nI" },
+					{ "+I" },
 				}
 				
-				data.forms["acc_p"] = { sa_utils.internal_sandhi({ stem = args.stem, ending = "A" .. oxytone .. "ni", has_accent = args.has_accent }) }
+				data.forms["acc_p"] = a="A" .. oxy .. "ni",
 			else
 				data.forms["nom_d"] = {
-					sa_utils.internal_sandhi({ stem = args.stem, ending = "A" .. oxytone .. "nO", has_accent = args.has_accent }),
-					sa_utils.internal_sandhi({ stem = args.stem, ending = "A" .. oxytone .. "nA", has_accent = args.has_accent }),
-					note2 = "Vedic"
+					{ "A" .. oxy .. "nO" },
+					{ "A" .. oxy .. "nA", note = "Vedic" },
 				}
 				data.forms["voc_d"] = {
-					sa_utils.internal_sandhi({ stem = args.stem, ending = "AnO", recessive = true, has_accent = args.has_accent }),
-					sa_utils.internal_sandhi({ stem = args.stem, ending = "AnA", recessive = true, has_accent = args.has_accent }),
-					note2 = "Vedic"
+					{ "AnO" },
+					{ "AnA", note = "Vedic" },
 				}
 				
-				data.forms["acc_p"] = { sa_utils.internal_sandhi({ stem = args.stem, ending = "na" .. oxytone .. "s", has_accent = args.has_accent }) }
+				data.forms["acc_p"] = a="na" .. oxy .. "s",
 			end
-			data.forms["gen_p"] = { sa_utils.internal_sandhi({ stem = args.stem, ending = "nA" .. oxytone .. "m", has_accent = args.has_accent }) }
+			data.forms["gen_p"] = g="nA" .. oxy .. "m",
 		else
-			data.forms["ins_s"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "A", has_accent = args.has_accent }) }
-			data.forms["dat_s"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "e", has_accent = args.has_accent }) }
-			data.forms["abl_s"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "as", has_accent = args.has_accent }) }
-			data.forms["gen_s"] = data.forms["abl_s"]
-			data.forms["loc_s"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "i", has_accent = args.has_accent }) }
+			data.forms["ins_s"] = i="+A",
+			data.forms["dat_s"] = d="+e",
+			data.forms["abl_s"] = ab="+as",
+			data.forms["gen_s"] = g="[abl]",
+			data.forms["loc_s"] = l="+i",
 			
-			data.forms["gen_d"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "os", has_accent = args.has_accent }) }
+			data.forms["gen_d"] = g="+os",
 			
-			if args.g ~= 'm' then
-				data.forms["nom_d"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "I", has_accent = args.has_accent }) }
-				data.forms["voc_d"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "I", recessive = true, has_accent = args.has_accent }) }
+			if args.g ~= "m" then
+				data.forms["nom_d"] = n="+I",
+				data.forms["voc_d"] = v="+I",
 				
-				data.forms["acc_p"] = { sa_utils.internal_sandhi({ stem = args.stem, ending = "A" .. oxytone .. "ni", has_accent = args.has_accent }) }
+				data.forms["acc_p"] = a="A" .. oxy .. "ni",
 			else
 				data.forms["nom_d"] = {
-					sa_utils.internal_sandhi({ stem = args.stem, ending = "A" .. oxytone .. "nO", has_accent = args.has_accent }),
-					sa_utils.internal_sandhi({ stem = args.stem, ending = "A" .. oxytone .. "nA", has_accent = args.has_accent }),
-					note2 = "Vedic"
+					{ "A" .. oxy .. "nO" },
+					{ "A" .. oxy .. "nA", note = "Vedic" },
 				}
 				data.forms["voc_d"] = {
-					sa_utils.internal_sandhi({ stem = args.stem, ending = "AnO", recessive = true, has_accent = args.has_accent }),
-					sa_utils.internal_sandhi({ stem = args.stem, ending = "AnA", recessive = true, has_accent = args.has_accent }),
-					note2 = "Vedic"
+					{ "AnO" },
+					{ "AnA", note = "Vedic" },
 				}
 				
-				data.forms["acc_p"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "as", has_accent = args.has_accent }) }
+				data.forms["acc_p"] = a="+as",
 			end
-			data.forms["gen_p"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "Am", has_accent = args.has_accent }) }
+			data.forms["gen_p"] = g="+Am",
 		end
 		
-		if args.g ~= 'm' then
-			data.forms["nom_s"] = { sa_utils.internal_sandhi({ stem = args.stem, ending = "a" .. oxytone, has_accent = args.has_accent }) }
-			data.forms["acc_s"] = data.forms["nom_s"]
+		if args.g ~= "m" then
+			data.forms["nom_s"] = n="a" .. oxy,
+			data.forms["acc_s"] = a="[nom]",
 			data.forms["voc_s"] = {
-				sa_utils.internal_sandhi({ stem = args.lemma, ending = "", recessive = true, has_accent = args.has_accent }),
-				sa_utils.internal_sandhi({ stem = args.stem, ending = "a", recessive = true, has_accent = args.has_accent }),
+				{ "+" },
+				{ "a" },
 			}
 			
-			data.forms["nom_p"] = { sa_utils.internal_sandhi({ stem = args.stem, ending = "A" .. oxytone .. "ni", has_accent = args.has_accent }) }
-			data.forms["voc_p"] = { sa_utils.internal_sandhi({ stem = args.stem, ending = "Ani", recessive = true, has_accent = args.has_accent }) }
+			data.forms["nom_p"] = n="A" .. oxy .. "ni",
+			data.forms["voc_p"] = v="Ani",
 		else
-			data.forms["nom_s"] = { sa_utils.internal_sandhi({ stem = args.stem, ending = "A" .. oxytone, has_accent = args.has_accent }) }
-			data.forms["acc_s"] = { sa_utils.internal_sandhi({ stem = args.stem, ending = "A" .. oxytone .. "nam", has_accent = args.has_accent }) }
-			data.forms["voc_s"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "", recessive = true, has_accent = args.has_accent }) }
+			data.forms["nom_s"] = n="A" .. oxy,
+			data.forms["acc_s"] = a="A" .. oxy .. "nam",
+			data.forms["voc_s"] = v="+",
 			
-			data.forms["nom_p"] = { sa_utils.internal_sandhi({ stem = args.stem, ending = "A" .. oxytone .. "nas", has_accent = args.has_accent }) }
-			data.forms["voc_p"] = { sa_utils.internal_sandhi({ stem = args.stem, ending = "Anas", recessive = true, has_accent = args.has_accent }) }
+			data.forms["nom_p"] = n="A" .. oxy .. "nas",
+			data.forms["voc_p"] = v="Anas",
 		end
 		
-		data.forms["acc_d"] = data.forms["nom_d"]
-		data.forms["acc_d"] = data.forms["nom_d"]
-		data.forms["ins_d"] = { sa_utils.internal_sandhi({ stem = args.stem, ending = "a" .. oxytone .. "ByAm", has_accent = args.has_accent }) }
-		data.forms["dat_d"] = data.forms["ins_d"]
-		data.forms["abl_d"] = data.forms["ins_d"]
+		data.forms["acc_d"] = a="[nom]",
+		data.forms["acc_d"] = a="[nom]",
+		data.forms["ins_d"] = i="a" .. oxy .. "ByAm",
+		data.forms["dat_d"] = d="[ins]",
+		data.forms["abl_d"] = ab="[ins]",
 		
-		data.forms["loc_d"] = data.forms["gen_d"]
+		data.forms["loc_d"] = l="[gen]",
 		
-		data.forms["ins_p"] = { sa_utils.internal_sandhi({ stem = args.stem, ending = "a" .. oxytone .. "Bis", has_accent = args.has_accent }) }
-		data.forms["dat_p"] = { sa_utils.internal_sandhi({ stem = args.stem, ending = "a" .. oxytone .. "Byas", has_accent = args.has_accent }) }
-		data.forms["abl_p"] = data.forms["dat_p"]
-		data.forms["loc_p"] = { sa_utils.internal_sandhi({ stem = args.stem, ending = "a" .. oxytone .. "su", has_accent = args.has_accent }) }
+		data.forms["ins_p"] = i="a" .. oxy .. "Bis",
+		data.forms["dat_p"] = d="a" .. oxy .. "Byas",
+		data.forms["abl_p"] = ab="[dat]",
+		data.forms["loc_p"] = l="a" .. oxy .. "su",
 		
 		table.insert(data.categories, "Sanskrit an-stem nouns")
 	end
@@ -879,60 +876,58 @@ decl_data["in"] = {
 
 setmetatable(decl_data["in"], {
 	__call = function(self, args, data)
-		local oxytone = match(args.lemma, "i(" .. sa_utils.accent .. "?)n$")
+		local oxy = match(args.lemma, "i(" .. sa_utils.accent .. "?)n$")
 		
 		data.decl_type = "in-stem"
 		
-		if args.g ~= 'n' then
-			data.forms["nom_s"] = { sa_utils.internal_sandhi({ stem = args.stem, ending = "I" .. oxytone, has_accent = args.has_accent }) }
-			data.forms["acc_s"] = { sa_utils.internal_sandhi({ stem = args.stem, ending = "i" .. oxytone .. "nam", has_accent = args.has_accent }) }
-			data.forms["voc_s"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "", recessive = true, has_accent = args.has_accent }) }
+		if args.g ~= "n" then
+			data.forms["nom_s"] = n="I" .. oxy,
+			data.forms["acc_s"] = a="i" .. oxy .. "nam",
+			data.forms["voc_s"] = v="+",
 			
 			data.forms["nom_d"] = {
-				sa_utils.internal_sandhi({ stem = args.lemma, ending = "O", has_accent = args.has_accent }),
-				sa_utils.internal_sandhi({ stem = args.lemma, ending = "A", has_accent = args.has_accent }),
-				note2 = "Vedic"
+				{ "+O" },
+				{ "+A", note = "Vedic" },
 			}
 			data.forms["voc_d"] = {
-				sa_utils.internal_sandhi({ stem = args.lemma, ending = "O", recessive = true, has_accent = args.has_accent }),
-				sa_utils.internal_sandhi({ stem = args.lemma, ending = "A", recessive = true, has_accent = args.has_accent }),
-				note2 = "Vedic"
+				{ "+O" },
+				{ "+A", note = "Vedic" },
 			}
 			
-			data.forms["nom_p"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "as", has_accent = args.has_accent }) }
-			data.forms["acc_p"] = data.forms["nom_p"]
-			data.forms["voc_p"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "as", recessive = true, has_accent = args.has_accent }) }
+			data.forms["nom_p"] = n="+as",
+			data.forms["acc_p"] = a="[nom]",
+			data.forms["voc_p"] = v="+as",
 		else
-			data.forms["nom_s"] = { sa_utils.internal_sandhi({ stem = args.stem, ending = "i" .. oxytone, has_accent = args.has_accent }) }
-			data.forms["acc_s"] = data.forms["nom_s"]
-			data.forms["voc_s"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "i", recessive = true, has_accent = args.has_accent }) }
+			data.forms["nom_s"] = n="i" .. oxy,
+			data.forms["acc_s"] = a="[nom]",
+			data.forms["voc_s"] = v="+i",
 			
-			data.forms["nom_d"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "I", has_accent = args.has_accent }) }
-			data.forms["voc_d"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "I", recessive = true, has_accent = args.has_accent }) }
+			data.forms["nom_d"] = n="+I",
+			data.forms["voc_d"] = v="+I",
 			
-			data.forms["nom_p"] = { sa_utils.internal_sandhi({ stem = args.stem, ending = "I" .. oxytone .. "ni", has_accent = args.has_accent }) }
-			data.forms["acc_p"] = data.forms["nom_p"]
-			data.forms["voc_p"] = { sa_utils.internal_sandhi({ stem = args.stem, ending = "Ini", recessive = true, has_accent = args.has_accent }) }
+			data.forms["nom_p"] = n="I" .. oxy .. "ni",
+			data.forms["acc_p"] = a="[nom]",
+			data.forms["voc_p"] = v="Ini",
 		end
 		
-		data.forms["ins_s"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "A", has_accent = args.has_accent }) }
-		data.forms["dat_s"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "e", has_accent = args.has_accent }) }
-		data.forms["abl_s"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "as", has_accent = args.has_accent }) }
-		data.forms["gen_s"] = data.forms["abl_s"]
-		data.forms["loc_s"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "i", has_accent = args.has_accent }) }
+		data.forms["ins_s"] = i="+A",
+		data.forms["dat_s"] = d="+e",
+		data.forms["abl_s"] = ab="+as",
+		data.forms["gen_s"] = g="[abl]",
+		data.forms["loc_s"] = l="+i",
 		
-		data.forms["acc_d"] = data.forms["nom_d"]
-		data.forms["ins_d"] = { sa_utils.internal_sandhi({ stem = args.stem, ending = "i" .. oxytone .. "ByAm", has_accent = args.has_accent }) }
-		data.forms["dat_d"] = data.forms["ins_d"]
-		data.forms["abl_d"] = data.forms["ins_d"]
-		data.forms["gen_d"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "os", has_accent = args.has_accent }) }
-		data.forms["loc_d"] = data.forms["gen_d"]
+		data.forms["acc_d"] = a="[nom]",
+		data.forms["ins_d"] = i="i" .. oxy .. "ByAm",
+		data.forms["dat_d"] = d="[ins]",
+		data.forms["abl_d"] = ab="[ins]",
+		data.forms["gen_d"] = g="+os",
+		data.forms["loc_d"] = l="[gen]",
 		
-		data.forms["ins_p"] = { sa_utils.internal_sandhi({ stem = args.stem, ending = "i" .. oxytone .. "Bis", has_accent = args.has_accent }) }
-		data.forms["dat_p"] = { sa_utils.internal_sandhi({ stem = args.stem, ending = "i" .. oxytone .. "Byas", has_accent = args.has_accent }) }
-		data.forms["abl_p"] = data.forms["dat_p"]
-		data.forms["gen_p"] = { sa_utils.internal_sandhi({ stem = args.lemma, ending = "Am", has_accent = args.has_accent }) }
-		data.forms["loc_p"] = { sa_utils.internal_sandhi({ stem = args.stem, ending = "i" .. oxytone .. "zu", has_accent = args.has_accent }) }
+		data.forms["ins_p"] = i="i" .. oxy .. "Bis",
+		data.forms["dat_p"] = d="i" .. oxy .. "Byas",
+		data.forms["abl_p"] = ab="[dat]",
+		data.forms["gen_p"] = g="+Am",
+		data.forms["loc_p"] = l="i" .. oxy .. "zu",
 		
 		table.insert(data.categories, "Sanskrit in-stem nouns")
 	end
