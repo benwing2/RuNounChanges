@@ -470,6 +470,9 @@ function export.IPA(text, style, phonetic)
 		text = rsub(text, "([EO])(s?#)", function(v, after) return brazil_final_vowel[v] .. after end)
 		-- Word-final unstressed -a(s) -> /ɐ/ (not before -mente)
 		text = rsub(text, "A(s?#[# ])", function(after) return "ɐ" .. after end)
+		-- Initial unmarked unstressed non-nasal e- + -sC- -> /i/ ([[estar]], [[esmeralda]]). To defeat this,
+		-- explicitly mark the <e> e.g. as <ệ> or <eh>.
+		text = rsub(text, "#E(s" .. C .. "*%.)", "#i%1")
 		-- Remaining unstressed a, e, o without quality mark -> /a/ /e/ /o/.
 		local brazil_unstressed_vowel = {["A"] = "a", ["E"] = "e", ["O"] = "o"}
 		text = rsub(text, "([AEO])([^" .. accent .. "])",
@@ -504,9 +507,10 @@ function export.IPA(text, style, phonetic)
 	text = rsub(text, DOTUNDER, "")
 
 	if brazil then
-		-- epenthesize /(j)/ in [[faz]], [[mas]], [[luz]], [[Jesus]], etc. Note, this will not trigger on nasal
-		-- vowels or diphthongs. To defeat this (e.g. in plurals), respell using 'ss' or 'hs'.
-		text = rsub(text, "(" .. V .. "ˈ)([sz]#)", "%1Y%2")
+		-- epenthesize /(j)/ in [[faz]], [[mas]], [[luz]], [[Jesus]], etc. Note, this only triggers at actual word
+		-- boundaries (not before -mente/-zinho), and not on nasal vowels or diphthongs. To defeat this (e.g. in
+		-- plurals), respell using 'ss' or 'hs'.
+		text = rsub(text, "(" .. V .. "ˈ)([sz]#[# ])", "%1Y%2")
 	end
 	-- 'S' here represents earlier ss. Word-finally it is used to prevent epenthesis of (j) and should behave
 	-- like 's'. Elsewhere (between vowels) it should behave like 'ç'.
@@ -548,7 +552,7 @@ function export.IPA(text, style, phonetic)
 	-- Initial r or l/n/s/z + r -> strong r (ʁ).
 	text = rsub(text, "([#" .. TILDE .. "lszʃʒ]%.?)r", "%1ʁ")
 	if brazil then
-		-- Coda r before vowel in verbs is /(ɾ)/. FIXME: Verify this.
+		-- Coda r before vowel in verbs is /(ɾ)/.
 		text = rsub(text, "([aɛei]ˈ)r(#" .. wordsep_c .. "*h?" .. V .. ")", "%1(ɾ)%2")
 		-- Coda r before vowel is /ɾ/.
 		text = rsub(text, "r(" .. C .. "*[.#]" .. wordsep_c .. "*h?" .. V .. ")", "%1ɾ%2")
@@ -581,21 +585,14 @@ function export.IPA(text, style, phonetic)
 		text = rsub(text, "e(" .. stress_c .. "*)(%.?[ʒʃɲʎ])", phonetic and "ɐ%1(ɪ̯)%2" or "ɐ%1(j)%2")
 	end
 
-	-- Glides. This must precede coda l -> w in Brazil, because <ol> /ow/ cannot be reduced to /o/.
+	-- Glides and l. ou -> o(w) must precede coda l -> w in Brazil, because <ol> /ow/ cannot be reduced to /o/.
 	-- ou -> o(w) before conversion of remaining diphthongs to vowel-glide combinations so <ow> can be used to
 	-- indicate a non-reducible glide.
 	-- Optional /w/ in <ou>.
-	text = rsub(text, "(o" .. accent_c .. "*)u", phonetic and "%1(ʊ̯)" or "%1(w)")
+	text = rsub(text, "(o" .. accent_c .. "*)u", "%1(w)")
 	-- Optional /j/ in <eir>.
-	text = rsub(text, "(e" .. accent_c .. "*)i(%.ɾ)", phonetic and "%1(ɪ̯)%2" or "%1(j)%2")
-	local vowel_termination_to_glide = phonetic and {["i"] = "ɪ̯", ["u"] = "ʊ̯"} or {["i"] = "y", ["u"] = "w"}
-	-- i/u as second part of diphthong becomes glide.
-	text = rsub(text, "(" .. V .. accent_c .. "*" .. ")([iu])",
-		function(v1, v2) return v1 .. vowel_termination_to_glide[v2] end)
-	text = rsub(text, "y", "j")
-	text = rsub(text, "Y", phonetic and "(ɪ̯)" or "(j)") -- epenthesized in [[faz]], [[tres]], etc.
-
-	-- l
+	text = rsub(text, "(e" .. accent_c .. "*)i(%.ɾ)", "%1(j)%2")
+	-- Handle coda /l/.
 	if brazil then
 		-- Coda l -> /w/ in Brazil.
 		text = rsub(text, "l(" .. C .. "*[.#])", "w%1")
@@ -603,6 +600,14 @@ function export.IPA(text, style, phonetic)
 		-- Coda l -> [ɫ] in Portugal.
 		text = rsub(text, "l(" .. C .. "*[.#])", "ɫ%1")
 	end
+	text = rsub(text, "y", "j")
+	text = rsub(text, "Y", "(j)") -- epenthesized in [[faz]], [[tres]], etc.
+	local vowel_termination_to_glide = phonetic and
+		{["i"] = "ɪ̯", ["j"] = "ɪ̯", ["u"] = "ʊ̯", ["w"] = "ʊ̯"} or
+		{["i"] = "j", ["j"] = "j", ["u"] = "w", ["w"] = "w"}
+	-- i/u as second part of diphthong becomes glide.
+	text = rsub(text, "(" .. V .. accent_c .. "*" .. "%(?)([ijuw])",
+		function(v1, v2) return v1 .. vowel_termination_to_glide[v2] end)
 
 	-- nh
 	if brazil and phonetic then
