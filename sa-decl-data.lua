@@ -6,16 +6,23 @@ local IAST_to_SLP = require("Module:sa-utilities/translit/IAST-to-SLP1")
 
 local match = mw.ustring.match
 
-decl_data["a"] = {
-	detect = function(args)
-		if match(args.lemma, "a" .. sa_utils.accent .. "?$") and (args.g == "m" or args.g == "n") then
-			args.stem = match(args.lemma, "(.+)a" .. sa_utils.accent .. "?$")
+-- Make a detection function for ARGS that fetches the stem according to MATCH_RE (which is matched against
+-- args.lemma and should have the stem in the first capture). ADDL_CONDITION is an optional function of one
+-- argument (ARGS) that must return true for the detection to happen.
+local function make_detect(match_re, addl_condition)
+	return function(args)
+		if addl_condition and not addl_condition(args) then
+			return false
+		end
+		local stem = match(args.lemma, match_re)
+		if stem then
+			args.stem = stem
 			return true
 		else
 			return false
 		end
 	end
-}
+end
 
 -- Construct all or part of a given noun's declension. Each of SG, DU and PL is a table, whose keys are
 -- as follows:
@@ -43,67 +50,61 @@ local function decline(args, data, sg, du, pl)
 		if not endings then
 			return
 		end
-		for _, case in ipairs(cases) do
-			local es = endings[case]
-			if es then
-				if type(es) == "string" and es:find("^%[") then
-					-- copy from another case; skip and handle later
-				else
-					if type(es) == "string" then
-						es = {es}
-					end
-					local forms = {}
-					for i, e in ipairs(es) do
-						local stem, mono, note
-						if type(e) == "table" then
-							stem = e.stem
-							mono = e.mono
-							note = e.note
-							e = e[1]
-						end
-						if e:find("^%+") then
-							if stem then
-								error("Internal error: Can't use + in an ending when stem is explicitly given")
-							end
-							e = e:gsub("^%+", "")
-							stem = args.lemma
-						elseif not stem then
-							stem = args.stem
-						end
-						forms[i] = sa_utils.internal_sandhi({
-							stem = stem, ending = e, has_accent = args.has_accent, recessive = case == "v", mono = mono
-						})
-						if note then
-							forms["note" .. i] = note
-						end
-					end
-					data.forms[cases[case] .. "_" .. tag] = forms
+		for case, es in pairs(endings) do
+			if type(es) == "string" and es:find("^%[") then
+				-- copy from another case; skip and handle later
+			else
+				if type(es) == "string" then
+					es = {es}
 				end
+				local forms = {}
+				for i, e in ipairs(es) do
+					local stem, mono, note
+					if type(e) == "table" then
+						stem = e.stem
+						mono = e.mono
+						note = e.note
+						e = e[1]
+					end
+					if e:find("^%+") then
+						if stem then
+							error("Internal error: Can't use + in an ending when stem is explicitly given")
+						end
+						e = e:gsub("^%+", "")
+						stem = args.lemma
+					elseif not stem then
+						stem = args.stem
+					end
+					forms[i] = sa_utils.internal_sandhi({
+						stem = stem, ending = e, has_accent = args.has_accent, recessive = case == "v", mono = mono
+					})
+					if note then
+						forms["note" .. i] = note
+					end
+				end
+				data.forms[cases[case] .. "_" .. tag] = forms
 			end
 		end
 
 		-- Now handle cases copied from another.
-		for _, case in ipairs(cases) do
-			local es = endings[case]
-			if es then
-				if type(es) == "string" and es:find("^%[") then
-					-- copy from another case; skip and handle later
-					local other_case = es:match("^%[(.*)%]$")
-					if not other_case then
-						error("Internal error: Unrecognized copy case spec " .. es)
-					end
-					local other_slot = other_case .. "_" .. tag
-					local value = data.forms[other_slot]
-					if not value then
-						error("Internal error: Slot '" .. other_slot .. "' to copy from is empty")
-					end
-					local this_slot = cases[case] .. "_" .. tag
-					if data.forms[this_slot] then
-						error("Internal error: A value already exists for slot '" .. this_slot ..
-							"' when copying from '" .. other_slot .. "'")
-					end
-					data.forms[cases[case] .. "_" .. tag] = value
+		for case, es in pairs(endings) do
+			if type(es) == "string" and es:find("^%[") then
+				-- copy from another case; skip and handle later
+				local other_case = es:match("^%[(.*)%]$")
+				if not other_case then
+					error("Internal error: Unrecognized copy case spec " .. es)
 				end
+				local other_slot = other_case .. "_" .. tag
+				local value = data.forms[other_slot]
+				if not value then
+					error("Internal error: Slot '" .. other_slot .. "' to copy from is empty")
+				end
+				local this_slot = cases[case] .. "_" .. tag
+				if data.forms[this_slot] then
+					error("Internal error: A value already exists for slot '" .. this_slot ..
+						"' when copying from '" .. other_slot .. "'")
+				end
+				data.forms[cases[case] .. "_" .. tag] = value
 			end
 		end
 	end
@@ -113,6 +114,11 @@ local function decline(args, data, sg, du, pl)
 	process_number(pl, "p")
 end
 
+
+decl_data["a"] = {
+	detect = make_detect("(.+)a" .. sa_utils.accent .. "?$",
+		function(args) return args.g == "m" or args.g == "n" end)
+}
 
 setmetatable(decl_data["a"], {
 	__call = function(self, args, data)
@@ -172,14 +178,7 @@ setmetatable(decl_data["a"], {
 })
 
 decl_data["iu"] = {
-	detect = function(args)
-		if match(args.lemma, "[iu]" .. sa_utils.accent .. "?$") then
-			args.stem = match(args.lemma, "(.+)[iu]" .. sa_utils.accent .. "?$")
-			return true
-		else
-			return false
-		end
-	end
+	detect = make_detect("(.+)[iu]" .. sa_utils.accent .. "?$")
 }
 
 setmetatable(decl_data["iu"], {
@@ -255,7 +254,7 @@ setmetatable(decl_data["iu"], {
 				d={ { stem = args.stem .. sa_utils.split_diphthong[sa_utils.up_one_grade[vowel .. oxy]], "e" }, { "+e", note = "Less common" } },
 				ab={ sa_utils.up_one_grade[vowel .. oxy] .. "s", { "+nas", note = "Later Sanskrit" }, { "+as", note = "Less common" }},
 				g="[abl]",
-				{ "+ni" .. oxy, note1 = "Later Sanskrit", }
+				l={ "+ni" .. oxy, note = "Later Sanskrit" },
 				v={ "+", sa_utils.up_one_grade[vowel .. oxy] },
 			}, {
 				n="+nI",
@@ -284,8 +283,7 @@ setmetatable(decl_data["iu"], {
 
 decl_data["AIU"] = {
 	detect = function(args)
-		if match(args.lemma, "[AIU]" .. sa_utils.accent .. "?$") then
-			args.stem = match(args.lemma, "(.+)[AIU]" .. sa_utils.accent .. "?$")
+		if make_detect("(.+)[AIU]" .. sa_utils.accent .. "?$")(args) then
 			args.true_mono = sa_utils.is_monosyllabic(args.lemma)
 			return true
 		else
@@ -313,9 +311,7 @@ setmetatable(decl_data["AIU"], {
 					v="e",
 				}, {
 					n="e" .. oxy,
-					a="[nom]",
 					g="a" .. oxy .. "yos",
-					l="[gen]",
 					v="e",
 				}, {
 					n="+s",
@@ -516,18 +512,11 @@ setmetatable(decl_data["AIU"], {
 	end
 })
 
-decl_data["f"] = {
-	detect = function(args)
-		if match(args.lemma, "f" .. sa_utils.accent .. "?$") then
-			args.stem = match(args.lemma, "(.+)f" .. sa_utils.accent .. "?$")
-			return true
-		else
-			return false
-		end
-	end
+decl_data["f"] = { -- actually for nouns in ṛ
+	detect = make_detect("(.+)f" .. sa_utils.accent .. "?$")
 }
 
-setmetatable(decl_data["f"], {
+setmetatable(decl_data["f"], { -- actually for nouns in ṛ
 	__call = function(self, args, data)
 		local oxy = match(args.lemma, "(" .. sa_utils.accent .. "?)$")
 
@@ -597,14 +586,7 @@ setmetatable(decl_data["f"], {
 })
 
 decl_data["[aiu]s"] = {
-	detect = function(args)
-		if match(args.lemma, "[aiu]" .. sa_utils.accent .. "?s$") then
-			args.stem = match(args.lemma, "(.+)[aiu]" .. sa_utils.accent .. "?s$")
-			return true
-		else
-			return false
-		end
-	end
+	detect = make_detect("(.+)[aiu]" .. sa_utils.accent .. "?s$")
 }
 
 setmetatable(decl_data["[aiu]s"], {
@@ -636,7 +618,6 @@ setmetatable(decl_data["[aiu]s"], {
 				v="+",
 			}, {
 				n={ "+O", { "+A", note = "Vedic" } },
-				a="[nom]",
 				v={ "+O", { "+A", note = "Vedic" } },
 			})
 		else
@@ -646,7 +627,6 @@ setmetatable(decl_data["[aiu]s"], {
 				v="+",
 			}, {
 				n="+I",
-				a="[nom]",
 				v="+I",
 			}, {
 				n={{stem = args.stem .. sa_utils.lengthen[vowel] .. oxy .. "n", "si"}},
@@ -681,14 +661,7 @@ setmetatable(decl_data["[aiu]s"], {
 })
 
 decl_data["an"] = {
-	detect = function(args)
-		if match(args.lemma, "a" .. sa_utils.accent .. "?n$") then
-			args.stem = match(args.lemma, "(.+)a" .. sa_utils.accent .. "?n$")
-			return true
-		else
-			return false
-		end
-	end
+	detect = make_detect("(.+)a" .. sa_utils.accent .. "?n$")
 }
 
 setmetatable(decl_data["an"], {
@@ -796,14 +769,7 @@ setmetatable(decl_data["an"], {
 })
 
 decl_data["in"] = {
-	detect = function(args)
-		if match(args.lemma, "i" .. sa_utils.accent .. "?n$") then
-			args.stem = match(args.lemma, "(.+)i" .. sa_utils.accent .. "?n$")
-			return true
-		else
-			return false
-		end
-	end
+	detect = make_detect("(.+)i" .. sa_utils.accent .. "?n$")
 }
 
 setmetatable(decl_data["in"], {
@@ -862,6 +828,67 @@ setmetatable(decl_data["in"], {
 		})
 
 		table.insert(data.categories, "Sanskrit in-stem nouns")
+	end
+})
+
+decl_data["c"] = {
+	detect = make_detect("(.+)c$")
+}
+
+setmetatable(decl_data["c"], {
+	__call = function(self, args, data)
+		data.decl_type = "c-stem"
+
+		if args.g ~= "n" then
+			decline(args, data, {
+				n="k",
+				a="+am",
+				v="k",
+			}, {
+				n="+O",
+				v="+O",
+			}, {
+				n="+as",
+				a="[nom]",
+				v="+as",
+			})
+		else
+			decline(args, data, {
+				n="k",
+				a="[nom]",
+				v="k",
+			}, {
+				n="+I",
+				v="+I",
+			}, {
+				n="Yci",
+				a="[nom]",
+				v="Yci",
+			})
+		end
+
+		decline(args, data, {
+			i="+A",
+			d="+e",
+			ab="+as",
+			g="[abl]",
+			l="+i",
+		}, {
+			a="[nom]",
+			i="+ByAm",
+			d="[ins]",
+			ab="[ins]",
+			g="+os",
+			l="[gen]",
+		}, {
+			i="+Bis",
+			d="+Byas",
+			ab="[dat]",
+			g="+Am",
+			l="+zu",
+		})
+
+		table.insert(data.categories, "Sanskrit c-stem nouns")
 	end
 })
 
