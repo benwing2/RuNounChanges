@@ -117,7 +117,7 @@ anel	anél:pt=/ɐˈnɛl/;br=/aˈnɛw/
 anel	anél:pt=[ɐˈnɛɫ];br=[aˈnɛʊ̯]
 velho	vélho:/ˈvɛ.ʎu/
 conselho	consêlho:lisbon=/kõˈsɐ(j).ʎu/;br-cpt=/kõˈse.ʎu/
-azul e branco	:br=[a.zuʊ̯ i ˈbɾɐ̃.ku];pt=[ɐ.zul i ˈβɾɐ̃.ku]
+azul e branco	:br=[aˈzuʊ̯ i ˈbɾɐ̃.ku];pt=[ɐˈzul i ˈβɾɐ̃.ku]
 bolsa	bôlsa:br=/ˈbow.sɐ/;pt=/ˈbol.sɐ/
 bolsa	bôlsa:br=[ˈboʊ̯.sɐ];pt=[ˈboɫ.sɐ]
 
@@ -137,7 +137,7 @@ long neck	br=lòngh nécke,lòngue nécke:/ˌlõɡ ˈnɛ.ki/,/ˌlõ.ɡi ˈnɛ.ki
 Los Angeles	br=Lộs Ângeles:gbr-sp=/loz ˈɐ̃.ʒe.lis/;rio=/loz ˈɐ̃.ʒe.liʃ/
 ninguém	:br-cpt=/nĩˈɡẽj̃/;lisbon=/nĩˈɡɐ̃j̃/
 single	br=síngol:/ˈsĩ.ɡow/
-Stonehenge	sp=Stòwnn.rrendj:[ˌstownˈhẽd͡ʒ]
+Stonehenge	sp=Stòwnn.rrendj:[ˌstoʊ̯nˈhẽd͡ʒ]
 viking	br=víking,víkingue:/ˈvi.kĩ/,/ˈvi.kĩ.ɡi/
 zângão	:/ˈzɐ̃.ɡɐ̃w̃/
 
@@ -161,7 +161,7 @@ qüiproquó	br=qüìproquó:/ˌkwi.pɾoˈkwɔ/
 bilro	:rio=[ˈbiʊ̯.χu];pt=[ˈbiɫ.ʁu];gbr-sp=[ˈbiʊ̯.hu]
 carro	:rio=[ˈka.χu];pt=[ˈka.ʁu];gbr-sp=[ˈka.hu]
 genro	:rio=[ˈʒẽ.χu];pt=[ˈʒẽ.ʁu];gbr-sp=[ˈʒẽ.hu]
-Israel	Israél:pt=[iʒ.ʁɐˈɛɫ];gbr-sp=[iz.haˈɛw];rio=[iʒ.χaˈɛw]
+Israel	Israél:pt=[iʒ.ʁɐˈɛɫ];gbr-sp=[iz.haˈɛʊ̯];rio=[iʒ.χaˈɛʊ̯]
 redor	redór:gbr=[heˈdɔh];rio=[χeˈdɔχ];sp=[heˈdɔɾ]
 parte	:rio=[ˈpaχ.t͡ʃi];gbr=[ˈpah.t͡ʃi];sp=[ˈpaɾ.t͡ʃi];pt=[ˈpaɾ.tɨ]
 pardo	:gbr=[ˈpaɦ.du];rio=[ˈpaʁ.du];sp=[ˈpaɾ.du];pt=[ˈpaɾ.ðu]
@@ -179,7 +179,7 @@ passo	:/ˈpa.su/
 caso	:/ˈka.zu/
 mesmo	mêsmo:rio-cpt=/ˈmeʒ.mu/;gbr-sp=/ˈmez.mu/;lisbon=/ˈmɐ(j)ʒ.mu/
 está	:rio-pt=/iʃˈta/;sp=/isˈta/
-os árvores	:rio=/uz ˈaʁ.vo.ɾiʃ/;gbr-sp=/uz ˈaɾ.vo.ɾis/;pt=/uz ˈaɾ.vu.ɾɨʃ/
+os árvores	:rio=/uz ˈaʁ.vo.ɾiʃ/;gbr=/uz ˈaʁ.vo.ɾis/;sp=/uz ˈaɾ.vo.ɾis/;pt=/uz ˈaɾ.vu.ɾɨʃ/
 os habitantes	:rio=/uz a.biˈtɐ̃.t͡ʃiʃ/;gbr-sp=/uz a.biˈtɐ̃.t͡ʃis/;pt=/uz ɐ.biˈtɐ̃.tɨʃ/
 as gentes	:rio=/a ˈʒẽ.t͡ʃiʃ/;gbr-sp=/az ˈʒẽ.t͡ʃis/;pt=/ɐ ˈʒẽ.tɨʃ/
 os sucos	:rio=/u ˈsu.kuʃ/;gbr-sp=/u ˈsu.kus/;pt=/uʃ ˈsu.kuʃ/
@@ -203,7 +203,7 @@ Sydney	Sýdjney:br=/ˈsid͡ʒ.nej/
 prazo	:/ˈpɾa.zu/
 dez	déz:rio=/ˈdɛ(j)ʃ/;gbr-sp=/ˈdɛ(j)s/;pt=/ˈdɛʃ/
 faz	:rio=/ˈfa(j)ʃ/;gbr-sp=/ˈfa(j)s/;pt=/ˈfaʃ/
-dez árvores	déz árvores:rio=/ˈdɛ(j)z ˈaʁ.vo.ɾiʃ/;gbr-sp=/ˈdɛ(j)z ˈaɾ.vo.ɾis/;pt=/ˈdɛz ˈaɾ.vu.ɾɨʃ/
+dez árvores	déz árvores:rio=/ˈdɛ(j)z ˈaʁ.vo.ɾiʃ/;gbr=/ˈdɛ(j)z ˈaʁ.vo.ɾis/;sp=/ˈdɛ(j)z ˈaɾ.vo.ɾis/;pt=/ˈdɛz ˈaɾ.vu.ɾɨʃ/
 dez habitantes	déz habitantes:rio=/ˈdɛ(j)z a.biˈtɐ̃.t͡ʃiʃ/;gbr-sp=/ˈdɛ(j)z a.biˈtɐ̃.t͡ʃis/;pt=/ˈdɛz ɐ.biˈtɐ̃.tɨʃ/
 dez gentes	déz gentes:rio=/ˈdɛ(j) ˈʒẽ.t͡ʃiʃ/;gbr-sp=/ˈdɛ(j)z ˈʒẽ.t͡ʃis/;pt=/ˈdɛ ˈʒẽ.tɨʃ/
 dez sucos	déz sucos:rio=/ˈdɛ(j) ˈsu.kuʃ/;gbr-sp=/ˈdɛ(j) ˈsu.kus/;pt=/ˈdɛʃ ˈsu.kuʃ/
