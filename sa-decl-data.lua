@@ -37,7 +37,7 @@ end
 -- l = locative
 --
 -- The corresponding value is one of the following:
--- 1. a "copy spec" such as "[ins]", meaning to copy from the instrumental of the same number;
+-- 1. a "copy spec" such as "[i]", meaning to copy from the instrumental of the same number;
 -- 2. a single string (specifying an ending); or
 -- 3. a list of specs, where a spec is either a string (an ending) or a table of the form
 --    {"ENDING", stem = "STEM", mono = TRUE/FALSE, note = "NOTE"}. The latter format lets you explicitly specify what
@@ -94,7 +94,10 @@ local function decline(args, data, sg, du, pl)
 				if not other_case then
 					error("Internal error: Unrecognized copy case spec " .. es)
 				end
-				local other_slot = other_case .. "_" .. tag
+				if not cases[other_case] then
+					error("Internal error: Unrecognized copy case spec case " .. es)
+				end
+				local other_slot = cases[other_case] .. "_" .. tag
 				local value = data.forms[other_slot]
 				if not value then
 					error("Internal error: Slot '" .. other_slot .. "' to copy from is empty")
@@ -104,7 +107,7 @@ local function decline(args, data, sg, du, pl)
 					error("Internal error: A value already exists for slot '" .. this_slot ..
 						"' when copying from '" .. other_slot .. "'")
 				end
-				data.forms[cases[case] .. "_" .. tag] = value
+				data.forms[this_slot] = value
 			end
 		end
 	end
@@ -133,7 +136,7 @@ setmetatable(decl_data["a"], {
 				v="a"
 			}, {
 				n="O" .. oxy,
-				a="[nom]",
+				a="[n]",
 				v="O"
 			}, {
 				n={"A" .. oxy .. "s", {"A" .. oxy .. "sas", note="Vedic"}},
@@ -143,15 +146,15 @@ setmetatable(decl_data["a"], {
 		else
 			decline(args, data, {
 				n="a" .. oxy .. "m",
-				a="[nom]",
+				a="[n]",
 				v="a"
 			}, {
 				n="e" .. oxy,
-				a="[nom]",
+				a="[n]",
 				v="e"
 			}, {
 				n={"A" .. oxy .. "ni", {"A" .. oxy, note="Vedic"}},
-				a="[nom]",
+				a="[n]",
 				v={"Ani", {"A", note="Vedic"}}
 			})
 		end
@@ -164,13 +167,13 @@ setmetatable(decl_data["a"], {
 			l="e" .. oxy
 		}, {
 			i="A" .. oxy .. "ByAm",
-			d="[ins]",
-			ab="[ins]",
+			d="[i]",
+			ab="[i]",
 			g="a" .. oxy .. "yos",
-			l="[gen]"
+			l="[g]"
 		}, {
 			i={ "E" .. oxy .. "s", { "e" .. oxy .. "Bis", note = "Vedic" } },
-			d="e" .. oxy .. "Byas", ab="[dat]",
+			d="e" .. oxy .. "Byas", ab="[d]",
 			g="A" .. oxy .. "nAm", l="e" .. oxy .. "zu"
 		})
 		table.insert(data.categories, "Sanskrit a-stem nouns")
@@ -195,24 +198,24 @@ setmetatable(decl_data["iu"], {
 				i={ "+nA", { "+A", note = "Vedic" } },
 				d={ { stem = args.stem .. sa_utils.split_diphthong[sa_utils.up_one_grade[vowel .. oxy]], "e" }, { "+e", note = "Less common"} },
 				ab={sa_utils.up_one_grade[vowel .. oxy] .. "s", {"+as", note = "Less common"}},
-				g="[abl]",
+				g="[ab]",
 				l="O" .. oxy,
 				v=sa_utils.up_one_grade[vowel .. oxy],
 			}, {
 				n="+" .. vowel,
-				a="[nom]",
+				a="[n]",
 				i="+ByAm",
-				d="[ins]",
-				ab="[ins]",
+				d="[i]",
+				ab="[i]",
 				g={{stem = args.stem .. vowel, "o" .. oxy .. "s"}},
-				l="[gen]",
+				l="[g]",
 				v="+" .. vowel,
 			}, {
 				n={{stem = args.stem .. sa_utils.up_one_grade[vowel .. oxy], "as"}},
 				a="+" .. vowel .. "n",
 				i="+Bis",
 				d="+Byas",
-				ab="[dat]",
+				ab="[d]",
 				g=sa_utils.lengthen[vowel] .. "nA" .. (oxy ~= "" and "/" or "") .. "m",
 				l="+su",
 				v={{stem = args.stem .. sa_utils.up_one_grade[vowel], "as"}},
@@ -224,24 +227,24 @@ setmetatable(decl_data["iu"], {
 				i="+A",
 				d={ { stem = args.stem .. sa_utils.split_diphthong[sa_utils.up_one_grade[vowel .. oxy]], "e" }, { "+e", note = "Less common" }, { "+E", note = "Later Sanskrit" } },
 				ab={sa_utils.up_one_grade[vowel .. oxy] .. "s", {"+As", note = "Later Sanskrit"}},
-				g="[abl]",
+				g="[ab]",
 				l={ "O" .. oxy, { "+Am", note = "Later Sanskrit" } },
 				v=sa_utils.up_one_grade[vowel .. oxy],
 			}, {
 				n="+" .. vowel,
-				a="[nom]",
+				a="[n]",
 				i="+ByAm",
-				d="[ins]",
-				ab="[ins]",
+				d="[i]",
+				ab="[i]",
 				g={{stem = args.stem .. vowel, "o" .. oxy .. "s"}},
-				l="[gen]",
+				l="[g]",
 				v="+" .. vowel,
 			}, {
 				n={{stem = args.stem .. sa_utils.up_one_grade[vowel .. oxy], "as"}},
 				a="+" .. vowel .. "s",
 				i="+Bis",
 				d="+Byas",
-				ab="[dat]",
+				ab="[d]",
 				g=sa_utils.lengthen[vowel] .. "nA" .. (oxy ~= "" and "/" or "") .. "m",
 				l="+su",
 				v={{stem = args.stem .. sa_utils.up_one_grade[vowel], "as"}},
@@ -249,28 +252,28 @@ setmetatable(decl_data["iu"], {
 		else
 			decline(args, data, {
 				n="+",
-				a="[nom]",
+				a="[n]",
 				i={ "+nA", { "+A", note = "Vedic" } },
 				d={ { stem = args.stem .. sa_utils.split_diphthong[sa_utils.up_one_grade[vowel .. oxy]], "e" }, { "+e", note = "Less common" } },
 				ab={ sa_utils.up_one_grade[vowel .. oxy] .. "s", { "+nas", note = "Later Sanskrit" }, { "+as", note = "Less common" }},
-				g="[abl]",
+				g="[ab]",
 				l={ "+ni" .. oxy, note = "Later Sanskrit" },
 				v={ "+", sa_utils.up_one_grade[vowel .. oxy] },
 			}, {
 				n="+nI",
-				a="[nom]",
+				a="[n]",
 				i="+ByAm",
-				d="[ins]",
-				ab="[ins]",
+				d="[i]",
+				ab="[i]",
 				g="+nos",
-				l="[gen]",
+				l="[g]",
 				v="+nI",
 			}, {
 				n={ "+" .. vowel, "+", { stem = args.stem .. sa_utils.lengthen[vowel .. oxy], "ni", note = "Later Sanskrit" } },
-				a="[nom]",
+				a="[n]",
 				i="+Bis",
 				d="+Byas",
-				ab="[dat]",
+				ab="[d]",
 				g=sa_utils.lengthen[vowel] .. "nA" .. (oxy ~= "" and "/" or "") .. "m",
 				l="+su",
 				v={ "+" .. vowel, "+", { stem = args.stem .. sa_utils.lengthen[vowel], "ni", note = "Later Sanskrit" } },
@@ -306,7 +309,7 @@ setmetatable(decl_data["AIU"], {
 					i={ "a" .. oxy .. "yA", { "+", note = "Vedic" } },
 					d="+yE",
 					ab="+yAs",
-					g="[abl]",
+					g="[ab]",
 					l="+yAm",
 					v="e",
 				}, {
@@ -323,7 +326,7 @@ setmetatable(decl_data["AIU"], {
 					i="+A",
 					d="+E",
 					ab="+As",
-					g="[abl]",
+					g="[ab]",
 					l="+Am",
 					v=sa_utils.shorten[vowel],
 				}, {
@@ -340,7 +343,7 @@ setmetatable(decl_data["AIU"], {
 					i="+A",
 					d="+E",
 					ab="+As",
-					g="[abl]",
+					g="[ab]",
 					l="+Am",
 					v=sa_utils.shorten[vowel],
 				}, {
@@ -355,16 +358,16 @@ setmetatable(decl_data["AIU"], {
 			decline(args, data, {
 				a="+m",
 			}, {
-				a="[nom]",
+				a="[n]",
 				i="+ByAm",
-				d="[ins]",
-				ab="[ins]",
-				l="[gen]",
+				d="[i]",
+				ab="[i]",
+				l="[g]",
 			}, {
 				a="+s",
 				i="+Bis",
 				d="+Byas",
-				ab="[dat]",
+				ab="[d]",
 				g="+nAm",
 				l="+su",
 			})
@@ -375,24 +378,24 @@ setmetatable(decl_data["AIU"], {
 				i="+",
 				d="e" .. oxy,
 				ab="a" .. oxy .. "s",
-				g="[abl]",
+				g="[ab]",
 				l="i" .. oxy,
 				v="+s",
 			}, {
 				n="O" .. oxy,
-				a="[nom]",
+				a="[n]",
 				i="+ByAm",
-				d="[ins]",
-				ab="[ins]",
+				d="[i]",
+				ab="[i]",
 				g="o" .. oxy .. "s",
-				l="[gen]",
+				l="[g]",
 				v="O",
 			}, {
 				n="+s",
 				a={ "+s", { "a" .. oxy .. "s", note = "Perhaps" } },
 				i="+Bis",
 				d="+Byas",
-				ab="[dat]",
+				ab="[d]",
 				g={ "+" .. sa_utils.lengthen[vowel] .. "nAm", { "+" .. sa_utils.lengthen[vowel] .. "m", note = "Perhaps" } },
 				l="+su",
 				v="+s",
@@ -433,19 +436,19 @@ setmetatable(decl_data["AIU"], {
 			end
 			decline(args, data, {
 				n="+s",
-				g="[abl]",
+				g="[ab]",
 				v="+s",
 			}, {
-				a="[nom]",
+				a="[n]",
 				i="+ByAm",
-				d="[ins]",
-				ab="[ins]",
-				l="[gen]",
+				d="[i]",
+				ab="[i]",
+				l="[g]",
 			}, {
-				a="[nom]",
+				a="[n]",
 				i="+Bis",
 				d="+Byas",
-				ab="[dat]",
+				ab="[d]",
 				l="+su",
 			})
 		elseif args.true_mono then
@@ -455,24 +458,24 @@ setmetatable(decl_data["AIU"], {
 				i={{"+A/", mono = true}},
 				d={ { "+e/", mono = true }, { "+E/", mono = true, note = "Later Sanskrit" } },
 				ab={ { "+a/s", mono = true }, { "+A/s", mono = true, note = "Later Sanskrit" } },
-				g="[abl]",
+				g="[ab]",
 				l={ { "+i/", mono = true }, { "+A/m", mono = true, note = "Later Sanskrit" } },
 				v="+s",
 			}, {
 				n={{"+O", mono = true}},
-				a="[nom]",
+				a="[n]",
 				i={{"+ByA/m", mono = true}},
-				d="[ins]",
-				ab="[ins]",
+				d="[i]",
+				ab="[i]",
 				g={{"+o/s", mono = true}},
-				l="[gen]",
+				l="[g]",
 				v={{"+O", mono = true}},
 			}, {
 				n={{"+as", mono = true}},
-				a="[nom]",
+				a="[n]",
 				i={{"+Bi/s", mono = true}},
 				d={{"+Bya/s", mono = true}},
-				ab="[dat]",
+				ab="[d]",
 				g={ { "+A/m", mono = true }, { "+nA/m", mono = true, note = "Later Sanskrit" } },
 				l={{"+su/", mono = true}},
 				v={{"+as", mono = true}},
@@ -484,24 +487,24 @@ setmetatable(decl_data["AIU"], {
 				i="+A",
 				d="+e",
 				ab="+as",
-				g="[abl]",
+				g="[ab]",
 				l="+i",
 				v=sa_utils.shorten[vowel],
 			}, {
 				n="+A",
-				a="[nom]",
+				a="[n]",
 				i="+ByAm",
-				d="[ins]",
-				ab="[ins]",
+				d="[i]",
+				ab="[i]",
 				g="+os",
-				l="[gen]",
+				l="[g]",
 				v="+A",
 			}, {
 				n="+as",
-				a="[nom]",
+				a="[n]",
 				i="+Bis",
 				d="+Byas",
-				ab="[dat]",
+				ab="[d]",
 				g="+nAm",
 				l="+su",
 				v="+as",
@@ -531,7 +534,7 @@ setmetatable(decl_data["f"], { -- actually for nouns in ṛ
 		if args.g == "n" then
 			decline(args, data, {
 				n="f" .. oxy,
-				a="[nom]",
+				a="[n]",
 				i="+nA",
 				d="+ne",
 				ab="+nas",
@@ -543,7 +546,7 @@ setmetatable(decl_data["f"], { -- actually for nouns in ṛ
 				v="+nI",
 			}, {
 				n="F" .. oxy .. "ni",
-				a="[nom]",
+				a="[n]",
 				v="Fni",
 			})
 		else
@@ -566,17 +569,17 @@ setmetatable(decl_data["f"], { -- actually for nouns in ṛ
 			})
 		end
 		decline(args, data, {
-			g="[abl]",
+			g="[ab]",
 		}, {
-			a="[nom]",
+			a="[n]",
 			i="+ByAm",
-			d="[ins]",
-			ab="[ins]",
-			l="[gen]",
+			d="[i]",
+			ab="[i]",
+			l="[g]",
 		}, {
 			i="+Bis",
 			d="+Byas",
-			ab="[dat]",
+			ab="[d]",
 			g={{stem = args.stem .. "F", "nA" .. (oxy ~= "" and "/" or "") .. "m"}},
 			l="+su",
 		})
@@ -623,7 +626,7 @@ setmetatable(decl_data["[aiu]s"], {
 		else
 			decline(args, data, {
 				n="+",
-				a="[nom]",
+				a="[n]",
 				v="+",
 			}, {
 				n="+I",
@@ -638,20 +641,20 @@ setmetatable(decl_data["[aiu]s"], {
 			i="+A",
 			d="+e",
 			ab="+as",
-			g="[abl]",
+			g="[ab]",
 			l="+i",
 		}, {
-			a="[nom]",
+			a="[n]",
 			i="+ByAm",
-			d="[ins]",
-			ab="[ins]",
+			d="[i]",
+			ab="[i]",
 			g="+os",
-			l="[gen]",
+			l="[g]",
 		}, {
-			a="[nom]",
+			a="[n]",
 			i="+Bis",
 			d="+Byas",
-			ab="[dat]",
+			ab="[d]",
 			g="+Am",
 			l="+su",
 		})
@@ -675,7 +678,7 @@ setmetatable(decl_data["an"], {
 				i="nA" .. oxy,
 				d="ne" .. oxy,
 				ab="na" .. oxy .. "s",
-				g="[abl]",
+				g="[ab]",
 				l={ "ni" .. oxy, "+i" },
 			}, {
 				g="no" .. oxy .. "s",
@@ -704,7 +707,7 @@ setmetatable(decl_data["an"], {
 				i="+A",
 				d="+e",
 				ab="+as",
-				g="[abl]",
+				g="[ab]",
 				l="+i",
 			}, {
 				g="+os",
@@ -733,7 +736,7 @@ setmetatable(decl_data["an"], {
 		if args.g ~= "m" then
 			decline(args, data, {
 				n="a" .. oxy,
-				a="[nom]",
+				a="[n]",
 				v={ "+", "a" },
 			}, nil, {
 				n="A" .. oxy .. "ni",
@@ -751,16 +754,16 @@ setmetatable(decl_data["an"], {
 		end
 
 		decline(args, data, nil, {
-			a="[nom]",
-			a="[nom]",
+			a="[n]",
+			a="[n]",
 			i="a" .. oxy .. "ByAm",
-			d="[ins]",
-			ab="[ins]",
-			l="[gen]",
+			d="[i]",
+			ab="[i]",
+			l="[g]",
 		}, {
 			i="a" .. oxy .. "Bis",
 			d="a" .. oxy .. "Byas",
-			ab="[dat]",
+			ab="[d]",
 			l="a" .. oxy .. "su",
 		})
 
@@ -788,20 +791,20 @@ setmetatable(decl_data["in"], {
 				v={ "+O", { "+A", note = "Vedic" } },
 			}, {
 				n="+as",
-				a="[nom]",
+				a="[n]",
 				v="+as",
 			})
 		else
 			decline(args, data, {
 				n="i" .. oxy,
-				a="[nom]",
+				a="[n]",
 				v="+i",
 			}, {
 				n="+I",
 				v="+I",
 			}, {
 				n="I" .. oxy .. "ni",
-				a="[nom]",
+				a="[n]",
 				v="Ini",
 			})
 		end
@@ -810,19 +813,19 @@ setmetatable(decl_data["in"], {
 			i="+A",
 			d="+e",
 			ab="+as",
-			g="[abl]",
+			g="[ab]",
 			l="+i",
 		}, {
-			a="[nom]",
+			a="[n]",
 			i="i" .. oxy .. "ByAm",
-			d="[ins]",
-			ab="[ins]",
+			d="[i]",
+			ab="[i]",
 			g="+os",
-			l="[gen]",
+			l="[g]",
 		}, {
 			i="i" .. oxy .. "Bis",
 			d="i" .. oxy .. "Byas",
-			ab="[dat]",
+			ab="[d]",
 			g="+Am",
 			l="i" .. oxy .. "zu",
 		})
@@ -849,43 +852,44 @@ setmetatable(decl_data["c"], {
 				v="+O",
 			}, {
 				n="+as",
-				a="[nom]",
+				a="[n]",
 				v="+as",
 			})
 		else
 			decline(args, data, {
 				n="k",
-				a="[nom]",
+				a="[n]",
 				v="k",
 			}, {
 				n="+I",
 				v="+I",
 			}, {
 				n="Yci",
-				a="[nom]",
+				a="[n]",
 				v="Yci",
 			})
 		end
 
+		-- FIXME: We should probably change internal_sandhi to correctly handle c -> g before bh, c -> k before ṣ.
 		decline(args, data, {
 			i="+A",
 			d="+e",
 			ab="+as",
-			g="[abl]",
+			g="[ab]",
 			l="+i",
 		}, {
-			a="[nom]",
-			i="+ByAm",
-			d="[ins]",
-			ab="[ins]",
+			a="[n]",
+			i="gByAm",
+			d="[i]",
+			ab="[i]",
 			g="+os",
-			l="[gen]",
+			l="[g]",
 		}, {
-			i="+Bis",
-			d="+Byas",
-			ab="[dat]",
+			i="gBis",
+			d="gByas",
+			ab="[d]",
 			g="+Am",
-			l="+zu",
+			l="kzu",
 		})
 
 		table.insert(data.categories, "Sanskrit c-stem nouns")
