@@ -121,6 +121,24 @@ azul e branco	:br=[aˈzuʊ̯ i ˈbɾɐ̃.ku];pt=[ɐˈzul i ˈβɾɐ̃.ku]
 bolsa	bôlsa:br=/ˈbow.sɐ/;pt=/ˈbol.sɐ/
 bolsa	bôlsa:br=[ˈboʊ̯.sɐ];pt=[ˈboɫ.sɐ]
 
+# m, n
+ano	:br=/ˈɐ̃.nu/;pt=/ˈɐ.nu/
+cama	:br=/ˈkɐ̃.mɐ/;pt=/ˈkɐ.mɐ/
+entendo	:br=/ĩˈtẽ.du/;pt=/ẽˈtẽ.du/
+falámos	:pt=/fɐˈla.muʃ/
+andaime	:pt=/ɐ̃ˈdaj.mɨ/;br=[ɐ̃ˈdɐ̃ɪ̯̃.mi]
+Jaime	:br=/ˈʒɐ̃j̃.mi/;pt=/ˈʒaj.mɨ/
+parabéns	:gbr-sp=/pa.ɾaˈbẽj̃s/;rio=/pa.ɾaˈbẽj̃ʃ/;lisbon=/pɐ.ɾɐˈbɐ̃j̃ʃ/;cpt=/pɐ.ɾɐˈbẽj̃ʃ/
+também	:br-cpt=/tɐ̃ˈbẽj̃/;lisbon=/tɐ̃ˈbɐ̃j̃/
+regímen	:br=/ʁeˈʒĩ.mẽj̃/;pt=/ʁɨˈʒi.mɛn/
+Renan	:br=/ʁeˈnɐ̃/;pt=/ʁɨˈnan/
+íon	:br=/ˈi.õ/;pt=/ˈi.ɔn/
+Bombaim	:br=/bõ.baˈĩ/;pt=/bõ.bɐˈĩ/
+Coimbra	:br=/koˈĩ.bɾɐ/
+saindo	:br=/saˈĩ.du/;pt=/sɐˈĩ.du/
+fauna	:br=/ˈfɐ̃w̃.nɐ/
+Iaundé	:br=/ja.ũˈdɛ/;pt=/jɐ.ũˈdɛ/
+
 # ng
 abrangência	abrangêncya:br=/a.bɾɐ̃ˈʒẽ.sjɐ/;pt=[ɐ.βɾɐ̃ˈʒẽ.sjɐ]
 camping	br=câmping:/ˈkɐ̃.pĩ/
@@ -146,6 +164,9 @@ banho	:br=/ˈbɐ̃.ɲu/;pt=/ˈbɐ.ɲu/
 Congonhinhas	sp=Còngonhinhas:/ˌkõ.ɡõˈɲĩ.ɲɐs/
 Congonhinhas	sp=Còngonhinhas:[ˌkõ.ɡõˈj̃ĩ.j̃ɐs]
 nheengatu	br=nhengatu:/ɲẽ.ɡaˈtu/
+ainhum	:br=/ɐ̃j̃ˈɲũ/
+rainha	:br=/ʁaˈĩ.ɲɐ/;pt=/ʁɐˈi.ɲɐ/
+moinho	br=moinho,muinho:/moˈĩ.ɲu/,/muˈĩ.ɲu/	pt=muinho,mu.inho:/ˈmwi.ɲu/,/muˈi.ɲu/
 
 # q
 ablaquear	ablaquyar:pt=/ɐ.blɐˈkjaɾ/
@@ -247,22 +268,11 @@ Yunnan	:br=/juˈnɐ̃/;pt=/juˈnan/
 água mole em pedra dura tanto bate até que fura	água móle em pédra dura tanto bate até que fura:br=/ˈa.ɡwɐ ˈmɔ.li ẽj̃ ˈpɛ.dɾɐ ˈdu.ɾɐ ˈtɐ̃.tu ˈba.t͡ʃi aˈtɛ ki ˈfu.ɾɐ/;lisbon=[ˈa.ɣwɐ ˈmɔ.l(ɨ) ɐ̃j̃ ˈpɛ.ðɾɐ ˈðu.ɾɐ ˈtɐ̃.tu ˈβa.t(ɨ) ɐ.ˈtɛ kɨ ˈfu.ɾɐ]
 era só o que me faltava	éra só o que me faltava:br=/ˈɛ.ɾɐ ˈsɔ u ki mi fawˈta.vɐ/
 
-# nasal diphthongs
+# nasalized vowels
 mães	:rio-pt=/ˈmɐ̃j̃ʃ/;gbr-sp=/ˈmɐ̃j̃s/
 põem	põeem:br-cpt=/ˈpõj̃.ẽj̃/;lisbon=/ˈpõj̃.ɐ̃j̃/
 pãozão	:/pɐ̃w̃ˈzɐ̃w̃/
-
-# nasal vowels
-ano	:br=/ˈɐ̃.nu/;pt=/ˈɐ.nu/
-cama	:br=/ˈkɐ̃.mɐ/;pt=/ˈkɐ.mɐ/
-entendo	:br=/ĩˈtẽ.du/;pt=/ẽˈtẽ.du/
-falámos	:pt=/fɐˈla.muʃ/
 Itapoã	:br=/i.ta.poˈɐ̃/
-parabéns	:gbr-sp=/pa.ɾaˈbẽj̃s/;rio=/pa.ɾaˈbẽj̃ʃ/;lisbon=/pɐ.ɾɐˈbɐ̃j̃ʃ/;cpt=/pɐ.ɾɐˈbẽj̃ʃ/
-também	:br-cpt=/tɐ̃ˈbẽj̃/;lisbon=/tɐ̃ˈbɐ̃j̃/
-regímen	:br=/ʁeˈʒĩ.mẽj̃/;pt=/ʁɨˈʒi.mɛn/
-Renan	:br=/ʁeˈnɐ̃/;pt=/ʁɨˈnan/
-íon	:br=/ˈi.õ/;pt=/ˈi.ɔn/
 
 # oral diphthongs
 saiba	:/ˈsaj.bɐ/
@@ -277,17 +287,9 @@ deusa	:/ˈdew.zɐ/
 deusa	:[ˈdeʊ̯.zɐ]
 ouro	:/ˈo(w).ɾu/
 ouro	:[ˈo(ʊ̯).ɾu]
-Bombaim	:br=/bõ.baˈĩ/;pt=/bõ.bɐˈĩ/
-Coimbra	:br=/koˈĩ.bɾɐ/
-saindo	:br=/saˈĩ.du/;pt=/sɐˈĩ.du/
-rainha	:br=/ʁaˈĩ.ɲɐ/;pt=/ʁɐˈi.ɲɐ/
-moinho	br=moinho,muinho:/moˈĩ.ɲu/,/muˈĩ.ɲu/	pt=muinho,mu.inho:/ˈmwi.ɲu/,/muˈi.ɲu/
 sair	:gbr-rio=/saˈi(ʁ)/;sp=/saˈi(ɾ)/;pt=/sɐˈiɾ/
-Iaundé	:br=/ja.ũˈdɛ/;pt=/jɐ.ũˈdɛ/
 Raul	:br=/ʁaˈuw/;pt=/ʁɐˈul/
-Jaime	:br=/ˈʒaj.mi/;pt=/ˈʒaj.mɨ/
 queimar	:gbr-rio=/kejˈma(ʁ)/;sp=/kejˈma(ɾ)/;cpt=/kejˈmaɾ/;lisbon=/kɐjˈmaɾ/
-fauna	:/ˈfaw.nɐ/
 baile	:br=/ˈbaj.li/;pt=/ˈbaj.lɨ/
 beira	:br-cpt=/ˈbe(j).ɾɐ/;lisbon=/ˈbɐj.ɾɐ/
 saia	:/ˈsaj.ɐ/
