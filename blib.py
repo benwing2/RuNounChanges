@@ -143,14 +143,16 @@ def fetch_param_chain(t, first, pref=None, firstdefault=""):
     # no break
     if firstdefault:
       ret.append(firstdefault)
-  if pref != first and (type(first) is not list or pref not in first):
+  if pref and pref != first and (type(first) is not list or pref not in first):
     val = getparam(t, pref)
     if val:
       ret.append(val)
   for i in xrange(1, 30):
-    val = getparam(t, pref + str(i))
-    if val:
-      ret.append(val)
+    param = pref + str(i)
+    if param not in first:
+      val = getparam(t, param)
+      if val:
+        ret.append(val)
   return ret
 
 def append_param_to_chain(t, val, firstparam, parampref=None, before=None):
