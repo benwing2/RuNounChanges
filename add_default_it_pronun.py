@@ -50,8 +50,8 @@ def process_text_on_page(index, pagetitle, text):
       if getparam(t, "voiced2"):
         pagemsg("WARNING: Can't yet handle voiced2=%s" % getparam(t, "voiced2"))
         continue
-      pronuns = blib.fetch_param_chain(t, "1", "") or [pagetitle]
-      print "pronuns: %s" % pronuns
+      specified_pronuns = blib.fetch_param_chain(t, "1", "")
+      pronuns = specified_pronuns or [pagetitle]
       frobbed_pronuns = []
       must_continue = False
       for ipa in pronuns:
@@ -59,8 +59,13 @@ def process_text_on_page(index, pagetitle, text):
         if AC not in ipa and GR not in ipa:
           vowel_count = len([x for x in ipa if x in vowel])
           if vowel_count > 1:
-            ipa = re.sub("(" + vowel_c + ")(" + not_vowel_c + "*[iyu]?" + vowel_c + not_vowel_c + "*)$",
+            new_ipa = re.sub("(" + vowel_c + ")(" + not_vowel_c + "*[iyu]?" + vowel_c + not_vowel_c + "*)$",
                 lambda m: m.group(1) + (AC if m.group(1) in u"eoɛɔ" else GR) + m.group(2), ipa)
+            if new_ipa == ipa:
+              pagemsg("WARNING: Unable to add stress: %s" % ipa)
+            else:
+              notes.append("add stressed form %s to defaulted {{it-IPA}} pronun" % new_ipa)
+              ipa = new_ipa
         if "z" in ipa:
           frobbed_ipa = re.sub("i(" + vowel_c + ")", r"j\1", ipa)
           frobbed_ipa = re.sub("u(" + vowel_c + ")", r"w\1", frobbed_ipa)
@@ -72,6 +77,8 @@ def process_text_on_page(index, pagetitle, text):
             must_continue = True
             break
           for i in xrange(1, len(split_z), 2):
+            if split_z[i - 1].endswith("d"):
+              continue # already converted appropriately
             default_voiced = False
             if voiced in ["y", "yes"] or i == 2 and voiced == "1":
               default_voiced = True
@@ -93,22 +100,36 @@ def process_text_on_page(index, pagetitle, text):
             else:
               z_to_voiceless = {"z": "ts", "zz": "tts"}
               split_z[i] = z_to_voiceless.get(split_z[i], split_z[i])
-          ipa = "".join(split_z)
-        ipa = ipa.replace(u"ʦ", "ts")
-        ipa = ipa.replace(u"ʣ", "dz")
+          new_ipa = "".join(split_z)
+          if new_ipa != ipa:
+            notes.append("convert z to ts or dz in %s -> %s in {{it-IPA}}" % (ipa, new_ipa))
+            ipa = new_ipa
+        new_ipa = ipa.replace(u"ʦ", "ts")
+        new_ipa = new_ipa.replace(u"ʣ", "dz")
+        if new_ipa != ipa:
+          notes.append(u"normalize ʦ/ʣ to ts/dz in {{it-IPA}} pronun")
+          ipa = new_ipa
         ipa = unicodedata.normalize("NFC", ipa)
         # module special-cases -izzare
-        ipa = re.sub(u"iddz[àá]re", "izzare", ipa)
+        new_ipa = re.sub(u"iddz[àá]re", "izzare", ipa)
+        new_ipa = new_ipa.replace(u"á", u"à").replace(u"í", u"ì").replace(u"ú", u"ù")
+        if new_ipa != ipa:
+          notes.append(u"normalize stress in %s in {{it-IPA}}" % ipa)
+          ipa = new_ipa
         frobbed_pronuns.append(ipa)
       if must_continue:
         continue
       if frobbed_pronuns == [pagetitle]:
         frobbed_pronuns = []
+        if specified_pronuns:
+          notes.append("remove explicitly specified pronun in {{it-IPA}} because same as page title")
       blib.set_param_chain(t, frobbed_pronuns, "1", "")
+      if t.has("voiced"):
+        rmparam(t, "voiced")
+        notes.append("remove voiced= in {{it-IPA}}")
 
     if origt != unicode(t):
       pagemsg("Replaced %s with %s" % (origt, unicode(t)))
-      notes.append("add stress to defaulted {{it-IPA}} pronun")
 
   return unicode(parsed), notes
 
