@@ -127,9 +127,10 @@ def do_assert(cond, msg=None):
 # parameter-handling code checks for both. Finally, it allows gaps in the
 # numbered parameters, because the parameter-handling code allows them.
 def fetch_param_chain(t, first, pref=None, firstdefault=""):
+  is_number = type(first) is not list and re.search("^[0-9]+$", first)
   if pref is None:
     assert type(first) is not list, "If pref= is omitted, first= must not be a list"
-    pref = first
+    pref = "" if is_number else first
   ret = []
   if type(first) is not list:
     first = [first]
@@ -143,11 +144,12 @@ def fetch_param_chain(t, first, pref=None, firstdefault=""):
     # no break
     if firstdefault:
       ret.append(firstdefault)
-  if pref and pref != first and (type(first) is not list or pref not in first):
+  if pref and pref not in first:
     val = getparam(t, pref)
     if val:
       ret.append(val)
-  for i in xrange(1, 30):
+  first_num = 1 if not is_number else int(first[0]) + 1
+  for i in xrange(first_num, 30):
     param = pref + str(i)
     if param not in first:
       val = getparam(t, param)
@@ -156,9 +158,11 @@ def fetch_param_chain(t, first, pref=None, firstdefault=""):
   return ret
 
 def append_param_to_chain(t, val, firstparam, parampref=None, before=None):
+  is_number = re.search("^[0-9]+$", firstparam)
   if parampref is None:
-    parampref = firstparam
-  paramno = 0
+    parampref = "" if is_number else firstparam
+  paramno = int(firstparam) if is_number else 0
+  changed = False
   while True:
     paramno += 1
     next_param = firstparam if paramno == 1 else "%s%s" % (
@@ -168,9 +172,10 @@ def append_param_to_chain(t, val, firstparam, parampref=None, before=None):
       return next_param
 
 def remove_param_chain(t, firstparam, parampref=None):
+  is_number = re.search("^[0-9]+$", firstparam)
   if parampref is None:
-    parampref = firstparam
-  paramno = 0
+    parampref = "" if is_number else firstparam
+  paramno = int(firstparam) if is_number else 0
   changed = False
   while True:
     paramno += 1
@@ -183,9 +188,10 @@ def remove_param_chain(t, firstparam, parampref=None):
       return changed
 
 def set_param_chain(t, values, firstparam, parampref=None, before=None):
+  is_number = re.search("^[0-9]+$", firstparam)
   if parampref is None:
-    parampref = firstparam
-  paramno = 0
+    parampref = "" if is_number else firstparam
+  paramno = int(firstparam) if is_number else 0
   for val in values:
     paramno += 1
     next_param = firstparam if paramno == 1 else "%s%s" % (
