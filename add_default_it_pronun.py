@@ -10,7 +10,7 @@ import unicodedata
 AC = u"\u0301"
 GR = u"\u0300"
 CFLEX = u"\0302"
-vowel = u"aeiouɛɔy"
+vowel = u"AEIOUaeiouɛɔy"
 vowel_c = "[" + vowel + "]"
 vocalic_c = "[^" + vowel + "jw]"
 not_vowel_c = "[^" + vowel + "]"
@@ -58,13 +58,16 @@ def process_text_on_page(index, pagetitle, text):
         ipa = unicodedata.normalize("NFD", ipa)
         if AC not in ipa and GR not in ipa:
           vowel_count = len([x for x in ipa if x in vowel])
+          if vowel_count == 1:
+            pagemsg("WARNING: Single-vowel word")
           if vowel_count > 1:
             new_ipa = re.sub("(" + vowel_c + ")(" + not_vowel_c + "*[iyu]?" + vowel_c + not_vowel_c + "*)$",
                 lambda m: m.group(1) + (AC if m.group(1) in u"eoɛɔ" else GR) + m.group(2), ipa)
             if new_ipa == ipa:
               pagemsg("WARNING: Unable to add stress: %s" % ipa)
             else:
-              notes.append("add stressed form %s to defaulted {{it-IPA}} pronun" % new_ipa)
+              notes.append(unicodedata.normalize("NFC", "add stressed form %s to defaulted {{it-IPA}} pronun" %
+                new_ipa))
               ipa = new_ipa
         if "z" in ipa:
           frobbed_ipa = re.sub("i(" + vowel_c + ")", r"j\1", ipa)
@@ -80,7 +83,7 @@ def process_text_on_page(index, pagetitle, text):
             if split_z[i - 1].endswith("d"):
               continue # already converted appropriately
             default_voiced = False
-            if voiced in ["y", "yes"] or i == 2 and voiced == "1":
+            if voiced in ["y", "yes"] or i == 1 and voiced == "1":
               default_voiced = True
             elif i == 1 and split_frobbed_ipa[0] == "":
               if re.search("^[ij]" + stress_c + "?" + vowel_c, split_frobbed_ipa[2]):
@@ -102,7 +105,8 @@ def process_text_on_page(index, pagetitle, text):
               split_z[i] = z_to_voiceless.get(split_z[i], split_z[i])
           new_ipa = "".join(split_z)
           if new_ipa != ipa:
-            notes.append("convert z to ts or dz in %s -> %s in {{it-IPA}}" % (ipa, new_ipa))
+            notes.append(unicodedata.normalize("NFC",
+              "convert z to ts or dz in %s -> %s in {{it-IPA}}" % (ipa, new_ipa)))
             ipa = new_ipa
         new_ipa = ipa.replace(u"ʦ", "ts")
         new_ipa = new_ipa.replace(u"ʣ", "dz")
@@ -112,9 +116,12 @@ def process_text_on_page(index, pagetitle, text):
         ipa = unicodedata.normalize("NFC", ipa)
         # module special-cases -izzare
         new_ipa = re.sub(u"iddz[àá]re", "izzare", ipa)
-        new_ipa = new_ipa.replace(u"á", u"à").replace(u"í", u"ì").replace(u"ú", u"ù")
         if new_ipa != ipa:
-          notes.append(u"normalize stress in %s in {{it-IPA}}" % ipa)
+          notes.append(u"normalize -iddzàre to -izzare in {{it-IPA}}")
+          ipa = new_ipa
+        new_ipa = ipa.replace(u"á", u"à").replace(u"í", u"ì").replace(u"ú", u"ù")
+        if new_ipa != ipa:
+          notes.append(unicodedata.normalize("NFC", u"normalize stress in %s in {{it-IPA}}" % ipa))
           ipa = new_ipa
         frobbed_pronuns.append(ipa)
       if must_continue:
