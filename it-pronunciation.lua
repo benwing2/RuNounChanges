@@ -18,25 +18,30 @@ local AC = u(0x301)
 local GR = u(0x300)
 local CFLEX = u(0x302)
 local DOTOVER = u(0x0307) -- dot over =  ̇ = signal unstressed word
+local DOTUNDER = u(0x0323) -- dot under =  ̣ = unstressed vowel with quality marker
+local LINEUNDER = u(0x0331) -- line under =  ̱ = secondary-stressed vowel with quality marker
 local TEMP1 = u(0xFFF0)
 local SYLDIV = u(0xFFF1) -- used to represent a user-specific syllable divider (.) so we won't change it
-local ipa_stress = "ˈˌ"
-local ipa_stress_c = "[" .. ipa_stress .. "]"
-local stress = AC .. GR
+local stress = "ˈˌ"
 local stress_c = "[" .. stress .. "]"
-local accent = stress .. DOTOVER
+local quality = AC .. GR
+local quality_c = "[" .. quality .. "]"
+local accent = stress .. quality .. DOTOVER .. DOTUNDER .. LINEUNDER
 local accent_c = "[" .. accent .. "]"
 local glides = "jw"
 local W = "[" .. glides .. "]"
-local vowel = "aeɛioɔu"
+local vowel = "aeɛioɔuEO"
 local V = "[" .. vowel .. "]"
 local VW = "[" .. vowel .. "jw]"
 local NV = "[^" .. vowel .. "]"
 local charsep = accent .. "_." .. SYLDIV
+local charsep_not_und = accent .. "." .. SYLDIV
 local charsep_c = "[" .. charsep .. "]"
 local wordsep = charsep .. " #"
+local wordsep_not_und = charsep_not_und .. " #"
 local wordsep_c = "[" .. wordsep .. "]"
 local C = "[^" .. vowel .. wordsep .. "]" -- consonant
+local C_OR_UND = "[^" .. vowel .. wordsep_not_und .. "]" -- consonant or underscore
 local C_NOT_H = "[^h" .. vowel .. wordsep .. "]" -- consonant other than h
 local front = "eɛij"
 local front_c = "[" .. front .. "]"
@@ -150,8 +155,6 @@ local function rsub_repeatedly(term, foo, bar)
 	end
 end
 
--- ʦ, ʣ, ʧ, ʤ used for t͡s, d͡z, t͡ʃ, d͡ʒ in body of function.
--- voiced_z must be a table of integer indices, a boolean, or nil.
 function export.to_phonemic(text, pagename)
 	local abbrev_text
 	if rfind(text, "^[àéèìóòù]$") then
@@ -181,7 +184,12 @@ function export.to_phonemic(text, pagename)
 	text = canon_spaces(text)
 
 	local origwords = rsplit(text, " ")
+
 	text = rsub(text, CFLEX, "") -- eliminate circumflex over î, etc.
+	text = rsub("y", "i")
+	text = rsub(text, "([" .. DOTUNDER .. LINEUNDER .. "])(" .. quality_c .. ")", "%2%1") -- acute/grave first
+	text = rsub(text, "([aiu])" .. AC, "%1" .. GR) -- áíú -> àìù
+
 	local words = rsplit(text, " ")
 	for i, word in ipairs(words) do
 		-- Apply suffix respellings.
@@ -190,12 +198,29 @@ function export.to_phonemic(text, pagename)
 			local replaced
 			word, replaced = rsubb(word, orig .. "$", respelling)
 			if replaced then
+				-- Decompose again because suffix replacements may have accented chars.
+				word = mw.ustring.toNFD(word)
 				break
 			end
 		end
-		-- Make prefixes unstressed unless they have an explicit stress marker; likewise for certain monosyllabic
-		-- words without stress marks.
-		if rfind(word, "%-$") and not rfind(word, accent_c) or unstressed_words[word] then
+
+		-- Make monosyllabic words without stress marks unstressed.
+		if unstressed_words[word] then
+			-- add DOTOVER to the first vowel for cases like [[dei]], [[sui]]
+			word = rsub(word, "^(.-" .. V .. ")", "%1" .. DOTOVER)
+		end
+
+		-- Words marked with an acute or grave (quality marker) not followed by an indicator of secondary stress
+		-- or non-stress get primary stress.
+		word = rsub(word, "(" .. quality_c .. ")([^" .. DOTUNDER .. LINEUNDER .. "])", "%1ˈ%2")
+		word = rsub(word, "(" .. quality_c .. ")$", "%1ˈ")
+		-- Eliminate quality marker on a/i/u, which now serves no purpose.
+		word = rsub(word, "([aiu])" .. quality_c, "%1")
+		-- LINEUNDER means secondary stress.
+		word = rsub(word, LINEUNDER, "ˌ")
+
+		-- Make prefixes unstressed unless they have an explicit stress marker.
+		if rfind(word, "%-$") and not rfind(word, "[" .. stress .. DOTUNDER .. "]") then
 			-- add DOTOVER to the first vowel for cases like [[dei]], [[sui]]
 			word = rsub(word, "^(.-" .. V .. ")", "%1" .. DOTOVER)
 		end
@@ -203,10 +228,7 @@ function export.to_phonemic(text, pagename)
 	end
 	text = table.concat(words, " ")
 
-	-- Decompose again because suffix replacements may have accented chars.
-	text = mw.ustring.toNFD(text)
-
-	-- Convert hyphens to spaces, to handle [[Austria-Hungría]], [[franco-italiano]], etc.
+	-- Convert hyphens to spaces, to handle [[Austria-Hungria]], [[franco-italiano]], etc.
 	text = rsub(text, "%-", " ")
 	-- canonicalize multiple spaces again, which may have been introduced by hyphens
 	text = canon_spaces(text)
@@ -214,24 +236,30 @@ function export.to_phonemic(text, pagename)
 	text = rsub(text, " | ", "# | #")
 	text = "##" .. rsub(text, " ", "# #") .. "##"
 
-	-- random substitutions
-	text = text:gsub("x", "ks"):gsub("y", "i"):gsub("ck", "k"):gsub("sh", "ʃ"):gsub("ng#", "ŋ#")
-	text = rsub(text, "%[z%]", TEMP1) -- [z] means /z/
+	-- Convert e/o unmarked for quality to E/O, and those marked for quality to e/o/ɛ/ɔ.
+	local function convert_e_o(txt)
+		return txt:gsub("[eo]", {["e"] = "E", ["o"] = "O"}):gsub("[EO]" .. quality_c, {
+			["E" .. AC] = "e",
+			["O" .. AC] = "o",
+			["E" .. GR] = "ɛ",
+			["O" .. GR] = "ɔ",
+		})
+	end
 
+	text = convert_e_o(text)
 	local words = rsplit(text, " ")
 
 	for i, word in ipairs(words) do
 		local function err(msg)
 			error(msg .. ": " .. origwords[i])
 		end
-		-- Transcriptions must contain an acute or grave, to indicate stress position.
-		-- This does not handle phrases containing more than one stressed word.
-		-- Default to penultimate stress rather than throw error?
-		if not rfind(word, accent_c) then
-			local vowel_count = select(2, word:gsub("[aeiou]", "%1"))
-			-- Allow monosyllabic unstressed words.
+		-- Transcriptions must contain a primary stress indicator, and an e or o with primary stress must
+		-- be marked for quality.
+		if not rfind(word, "[ˈ" .. DOTOVER .. "]") then
+			local vowel_count = select(2, word:gsub(V, "%1"))
 			if abbrev_text then
-				local abbrev_vowel = usub(abbrev_text, 1, 1)
+				local abbrev_vowel = uupper(usub(abbrev_text, 1, 1))
+				local abbrev_eo = convert_e_o(abbrev_text)
 				if vowel_count == 0 then
 					err("Abbreviated spec '" .. abbrev_text .. "' can't be used with nonsyllabic word")
 				elseif vowel_count == 1 then
@@ -240,9 +268,9 @@ function export.to_phonemic(text, pagename)
 						error("Internal error: Couldn't match monosyllabic word: " .. word)
 					end
 					if abbrev_vowel ~= vow then
-						err("Abbreviated spec '" .. abbrev_text .. "' doesn't match vowel " .. vow)
+						err("Abbreviated spec '" .. abbrev_text .. "' doesn't match vowel " .. ulower(vow))
 					end
-					word = before .. abbrev_text .. after
+					word = before .. abbrev_eo .. after
 				else
 					local before, penultimate, after = rmatch(word,
 						"^(.-)(" .. V .. ")(" .. NV .. "*" .. V .. NV .. "*)$")
@@ -253,16 +281,17 @@ function export.to_phonemic(text, pagename)
 						"^(.-)(" .. V .. ")(" .. NV .. "*)$")
 					if abbrev_vowel ~= penultimate and abbrev_vowel ~= antepenultimate then
 						err("Abbreviated spec '" .. abbrev_text .. "' doesn't match penultimate vowel " ..
-							penultimate .. (antepenultimate and " or antepenultimate vowel " .. antepenultimate or ""))
+							ulower(penultimate) .. (antepenultimate and " or antepenultimate vowel " ..
+								ulower(antepenultimate) or ""))
 					end
 					if penultimate == antepenultimate then
 						err("Can't use abbreviated spec '" .. abbrev_text .. "' here because penultimate and " ..
 							"antepenultimate are the same")
 					end
 					if abbrev_vowel == antepenultimate then
-						word = before2 .. abbrev_text .. after2 .. penultimate .. after
+						word = before2 .. abbrev_eo .. after2 .. penultimate .. after
 					elseif abbrev_vowel == penultimate then
-						word = before .. abbrev_text .. after
+						word = before .. abbrev_eo .. after
 					else
 						error("Internal error: abbrev_vowel from abbrev_text '" .. abbrev_text ..
 							"' didn't match any vowel or glide: " .. origtext)
@@ -273,10 +302,10 @@ function export.to_phonemic(text, pagename)
 			else
 				local before, vow, after = rmatch(word, "^(.-)(" .. V .. ")(.*)$")
 				if before then
-					if vow == "e" or vow == "o" then
+					if vow == "E" or vow == "O" then
 						err("When stressed vowel is e or o, it must be marked é/è or ó/ò to indicate quality")
 					end
-					word = before .. vow .. GR .. after
+					word = before .. vow .. "ˈ" .. after
 				end
 			end
 		end
@@ -284,15 +313,18 @@ function export.to_phonemic(text, pagename)
 	end
 
 	text = table.concat(words, " ")
-	text = rsub(text, DOTOVER, "") -- eliminate DOTOVER; it served its purpose of preventing stress
+	-- Eliminate DOTOVER/DOTUNDER, which have served their purpose of preventing stress.
+	text = rsub(text, "[" .. DOTOVER .. DOTUNDER .. "]", "")
+	-- All remaining E/O are in unstressed syllables and become e/o.
+	text = ulower(text)
 
 	-- Assume that aw is English.
-	word = rsub(word, "a(" .. GR .. "?)w", "o%1")
+	text = rsub(text, "a(" .. accent_c .. "?)w", "o%1")
 
-	-- Handle è, ò.
-	text = text:gsub("([eo])(" .. GR .. ")", function(v, ac)
-			return ({ e = "ɛ", o = "ɔ" })[v] .. ac
-		end) -- e or o followed by grave
+	-- Random substitutions.
+	text = rsub(text, "^ex([" .. V .. "])", "eg[z]%1")
+	text = text:gsub("x", "ks"):gsub("ck", "k"):gsub("sh", "ʃ"):gsub("ng#", "ŋ#")
+	text = rsub(text, "%[z%]", TEMP1) -- [z] means /z/
 
 	-- ci, gi + vowel
 	-- Do ci, gi + e, é, è sometimes contain /j/?
@@ -376,6 +408,7 @@ function export.to_phonemic(text, pagename)
 	if rfind(text, "z") then
 		error("z must be respelled (d)dz or (t)ts: " .. origtext)
 	end
+	text = rsub(text, TEMP1, "z")
 
 	-- Single ⟨s⟩ between vowels is /z/.
 	text = rsub(text, "(" .. VW .. stress_c .. "?)s(" .. VW .. ")", "%1z%2")
@@ -387,17 +420,15 @@ function export.to_phonemic(text, pagename)
 	-- [[w:Italian phonology]] says word-internally, [[w:Help:IPA/Italian]] says after a vowel.
 	text = rsub(text, "(" .. VW .. ")([ʦʣʃʎɲ])", "%1%2%2")
 
-	--syllable division
-	--h blocks following s from being voiced
-	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*h)(" .. C .. "+" .. V .. ")", "%1.%2")
+	-- Divide into syllables.
+	-- First remove 'h' and '_', which have served their purpose of preventing context-dependent changes.
+	-- They should not interfere with syllabification.
+	text = rsub(text, "[h_]", "")
 	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*)(" .. C .. W .. "?" .. V .. ")", "%1.%2")
 	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*" .. C .. ")(" .. C .. V .. ")", "%1.%2")
 	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*" .. C .. "+)(" .. C .. C .. V .. ")", "%1.%2")
 	text = rsub(text, "([pbktdg])%.([lr])", ".%1%2")
-	text = rsub_repeatedly(text, "(" .. C_NOT_H .. ")%.s(" .. C .. ")", "%1s.%2")
-
-	-- Replace acute and grave with stress mark.
-	text = rsub(text, stress_c, "ˈ")
+	text = rsub_repeatedly(text, "(" .. C .. ")%.s(" .. C .. ")", "%1s.%2")
 
 	text = rsub(text, "([ʦʣʧʤ])(%.?)([ʦʣʧʤ]*)", function(affricate1, divider, affricate2)
 		local full_affricate = full_affricates[affricate1]
@@ -410,18 +441,17 @@ function export.to_phonemic(text, pagename)
 	end)
 
 	text = rsub(text, "g", "ɡ") -- U+0261 LATIN SMALL LETTER SCRIPT G
-	text = rsub(text, "h", "")
 
 	-- Stress marks.
 	-- Move IPA stress marks to the beginning of the syllable.
-	text = rsub_repeatedly(text, "([#.])([^#.]*)(" .. ipa_stress_c .. ")", "%1%3%2")
+	text = rsub_repeatedly(text, "([#.])([^#.]*)(" .. stress_c .. ")", "%1%3%2")
 	-- Suppress syllable mark before IPA stress indicator.
-	text = rsub(text, "%.(" .. ipa_stress_c .. ")", "%1")
+	text = rsub(text, "%.(" .. stress_c .. ")", "%1")
 	-- Make all primary stresses but the last one in a given word be secondary. May be fed by the first rule above.
 	text = rsub_repeatedly(text, "ˈ([^ #]+)ˈ", "ˌ%1ˈ")
 
-	-- Remove # symbols at word/text boundaries, as well as _ to force separate interpretation, and recompose.
-	text = rsub(text, "[#_]", "")
+	-- Remove # symbols at word/text boundaries and recompose.
+	text = rsub(text, "#", "")
 	text = mw.ustring.toNFC(text)
 
 	return text
