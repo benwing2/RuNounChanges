@@ -16,6 +16,23 @@ vowel_ipa_to_spelling = {
   "u": u"ù",
 }
 
+vowel_respelling_to_spelling = {
+  u"à": "a",
+  u"é": "e",
+  u"è": "e",
+  u"ì": "i",
+  u"ó": "o",
+  u"ò": "o",
+  u"ù": "u",
+  u"À": "A",
+  u"É": "E",
+  u"È": "E",
+  u"Ì": "I",
+  u"Ó": "O",
+  u"Ò": "O",
+  u"Ù": "U",
+}
+
 def rhyme_to_spelling(rhy):
   rhy = re.sub(u"^(.*?)([aɛeiɔou])", lambda m: m.group(1) + vowel_ipa_to_spelling[m.group(2)], rhy)
   rhy = re.sub("([iu])([aeiou])", r"\1.\2", rhy)
@@ -31,15 +48,6 @@ def rhyme_to_spelling(rhy):
   rhy = re.sub(u"ʃ+", "sci", rhy)
   rhy = re.sub(u"ʎʎi?", "gli", rhy)
   rhy = re.sub("([^d])z", r"\1s", rhy)
-  vowel_respelling_to_spelling = {
-    u"à": "a",
-    u"é": "e",
-    u"è": "e",
-    u"ì": "i",
-    u"ó": "o",
-    u"ò": "o",
-    u"ù": "u",
-  }
   spelling = re.sub(u"([àéèìóòù])(.)", lambda m: vowel_respelling_to_spelling[m.group(1)] + m.group(2), rhy)
   spelling = spelling.replace(".", "")
   spelling = re.sub("([^t])ts", r"\1z", spelling)
@@ -68,37 +76,126 @@ def sub_repeatedly(fro, to, text):
     newtext = re.sub(fro, to, text)
   return text
 
-def ipa_to_respelling(ipa):
-  ipa = ipa.replace("/", "")
+def ipa_to_respelling(ipa, pagemsg):
+  ipa = re.sub(r"[/\[\]]", "", ipa)
+  ipa = ipa.replace(u"ɡ", "g")
+  ipa = ipa.replace(u"ɾ", "r")
+  ipa = ipa.replace(u"ä", "a")
+  ipa = ipa.replace(u"ã", "a")
+  ipa = ipa.replace(u"ẽ", "e")
+  ipa = ipa.replace(u"ĩ", "i")
+  ipa = ipa.replace(u"õ", "o")
+  ipa = ipa.replace(u"ũ", "u")
   ipa = ipa.replace(u"\u0361", "") # get rid of tie bar in t͡ʃ, t͡ːs, etc.
+  ipa = ipa.replace(u"\u032a", "") # get rid of dentalization marker in t̪ d̪ s̪ etc.
+  ipa = ipa.replace(u"\u033a", "") # get rid of marker in r̺ etc.
+  ipa = ipa.replace(u"\u031a", "") # get rid of marker in c̚ etc.
+  ipa = ipa.replace(u"\u031e", "") # get rid of lowering marker in e̞ etc.
+  ipa = ipa.replace(u"\u031f", "") # get rid of marker in ɡ̟ etc.
+  ipa = ipa.replace(u"\u0320", "") # get rid of underline in n̠ etc.
+  ipa = ipa.replace(u"ʲ", "")
   ipa = re.sub(u"([aeɛioɔu])ː", r"\1", ipa)
   ipa = ipa.replace(u"tʃː", u"ttʃ")
   ipa = ipa.replace(u"dʒː", u"ddʒ")
+  ipa = ipa.replace(u"tsː", u"tts")
+  ipa = ipa.replace(u"dzː", u"ddz")
   ipa = re.sub(u"(.)ː", r"\1\1", ipa)
-  ipa = re.sub(u"ˈ(.*?)([aeɛioɔu])", lambda m: m.group(1) + vowel_ipa_to_spelling[m.group(2)], ipa)
-  ipa = sub_repeatedly(r"([iu])\.?([aeiouàèéìòóù])", r"\1*\2", ipa)
-  ipa = sub_repeatedly(r"([aeiouàèéìòóù])\.?([iu])", r"\1*\2", ipa)
+  # Include negative lookahead of 032f (inverted underbreve as in e̯) so that pronuns like /fiˈde̯is.mo/
+  # get the stress on the right vowel. Right afterwords we remove the inverted underbreves.
+  ipa = sub_repeatedly(u"ˌ([^ ]*?)([aeɛioɔu])(?!\u032f)(.*ˈ)", lambda m: m.group(1) + vowel_ipa_to_spelling[m.group(2)] + m.group(3), ipa)
+  # 0331 = LINEUNDER
+  ipa = re.sub(u"ˌ(.*?)([aeɛioɔu])(?!\u032f)", lambda m: m.group(1) + vowel_ipa_to_spelling[m.group(2)] + u"\u0331", ipa)
+  ipa = re.sub(u"ˈ(.*?)([aeɛioɔu])(?!\u032f)", lambda m: m.group(1) + vowel_ipa_to_spelling[m.group(2)], ipa)
+  # 0323 = DOTUNDER
+  ipa = re.sub(u"([ɛɔ])", lambda m: vowel_ipa_to_spelling[m.group(1)] + u"\u0323", ipa)
   ipa = ipa.replace(u"a̯", "a")
-  ipa = ipa.replace(u"ɾ", "r")
+  ipa = ipa.replace(u"e̯", "e")
+  ipa = ipa.replace(u"o̯", "o")
+  ipa = ipa.replace(u"i̯", "j")
+  ipa = ipa.replace(u"u̯", "w")
+  ipa = sub_repeatedly(ur"([iu])\.?([aeiouàèéìòóù])", r"\1*\2", ipa)
+  ipa = sub_repeatedly(ur"([aeiouàèéìòóù])\.?([iu])", r"\1*\2", ipa)
   ipa = ipa.replace(".", "").replace("*", ".")
-  ipa = ipa.replace("j", "i").replace(u"ɡ", "g")
-  ipa = re.sub(u"ɲ+", "gn")
+  ipa = ipa.replace(u"dʒdʒ", u"ddʒ")
+  ipa = ipa.replace("dzdz", u"ddz")
+  ipa = ipa.replace(u"tʃtʃ", u"ttʃ")
+  ipa = ipa.replace("tsts", u"tts")
+  ipa = ipa.replace(u"ɱ", "n")
+  ipa = re.sub(u"ŋ([kg])", r"n\1", ipa)
+  ipa = ipa.replace("j", "i")
+  ipa = re.sub(u"ɲ+", "gn", ipa)
   ipa = ipa.replace("kw", "qu").replace("w", "u")
+  iap = ipa.replace("h", "[h]")
   ipa = re.sub(u"k([eièéì])", r"ch\1", ipa).replace("k", "c")
   ipa = re.sub(u"g([eièéì])", r"gh\1", ipa)
-  ipa = re.sub(u"ddʒ([eièéì])", r"gg\1", ipa).replace(u"ddʒ", "ggi")
-  ipa = re.sub(u"dʒ([eièéì])", r"g\1", ipa).replace(u"dʒ", "gi")
-  ipa = re.sub(u"ttʃ([eièéì])", r"cc\1", ipa).replace(u"ttʃ", "cci")
-  ipa = re.sub(u"tʃ([eièéì])", r"c\1", ipa).replace(u"tʃ", "ci")
+  ipa = re.sub(u"ddʒ([eièéì])", r"gg\1", ipa)
+  ipa = re.sub(u"ddʒ([aàoòóuù])", r"ggi\1", ipa)
+  ipa = re.sub(u"dʒ([eièéì])", r"g\1", ipa)
+  ipa = re.sub(u"dʒ([aàoòóuù])", r"gi\1", ipa)
+  ipa = ipa.replace(u"dʒ", u"[dʒ]")
+  ipa = re.sub(u"ttʃ([eièéì])", r"cc\1", ipa)
+  ipa = re.sub(u"ttʃ([aàoòóuù])", r"cci\1", ipa)
+  ipa = re.sub(u"tʃ([eièéì])", r"c\1", ipa)
+  ipa = re.sub(u"tʃ([aàoòóuù])", r"ci\1", ipa)
+  ipa = ipa.replace(u"tʃ", u"[tʃ]")
   ipa = re.sub(u"ʃ+([eièéì])", r"sc\1", ipa)
-  ipa = re.sub(u"ʃ+", "sci", ipa)
+  ipa = re.sub(u"ʃ+([aàoòóuù])", r"sci\1", ipa)
+  ipa = re.sub(ur"ʃ+(?!\])", "sh", ipa) # don't change [tʃ] generated above
   ipa = re.sub(u"ʎ+([iì])", r"gl\1", ipa)
-  ipa = re.sub(u"ʎ+", "gli")
-  ipa = sub_repeatedly("([aeiouàèéìòóù])s([aeiouàèéìòóù])", r"\1hs\2", ipa)
-  ipa = sub_repeatedly("([aeiouàèéìòóù])z([aeiouàèéìòóùbdglmnrv])", r"\1s\2", ipa)
+  ipa = re.sub(u"ʎ+([aàeèéoòóuù])", r"gli\1", ipa)
+  ipa = sub_repeatedly(u"([aeiouàèéìòóù][\u0323\u0331]?)s([aeiouàèéìòóù])", r"\1[s]\2", ipa)
+  ipa = sub_repeatedly(u"([aeiouàèéìòóù][\u0323\u0331]?)z([aeiouàèéìòóùbdglmnrv])", r"\1s\2", ipa)
   ipa = re.sub("z([bdglmnrv])", r"s\1", ipa)
   ipa = re.sub("(^|[^d])z", r"\1[z]", ipa)
   return ipa
+
+def hack_respelling(pagetitle, respelling, pagemsg):
+  pagetitle_words = pagetitle.split(" ")
+  respelling_words = respelling.split(" ")
+  if len(pagetitle_words) != len(respelling_words):
+    pagemsg("WARNING: Page title has %s words but respelling %s has %s words" % (
+      len(pagetitle_words), respelling, len(respelling_words)))
+  else:
+    hacked_respelling_words = []
+    for ptw, rw in zip(pagetitle_words, respelling_words):
+      # Capitalize respelling as appropriate for pagetitle.
+      if ptw[0].isupper():
+        rw = rw.capitalize()
+      # Add hyphens to respelling if pagetitle is a prefix or suffix.
+      if ptw[0] == "-":
+        rw = "-" + rw
+      if ptw[-1] == "-":
+        rw += "-"
+      # Change 'c' in respelling to 'k' as appropriate for pagetitle; similarly, change 'cs' to 'x' as
+      # appropriate and 'qu' to 'cu'.
+      split_ptw = re.split(u"([cC]+[sh]|[Cc]*[xXkKqQ]+|[cC]+(?![eèéiì]))", ptw)
+      split_rw = re.split(u"([cC]+[sh]|[Cc]*[xXkKqQ]+|[cC]+(?![eèéiì]))", rw)
+      if len(split_ptw) != len(split_rw):
+        pagemsg("WARNING: Different # of c/k/q's in pagetitle word %s vs. c/k/q's in respelling word %s" % (ptw, rw))
+      else:
+        parts = []
+        for i in xrange(len(split_rw)):
+          if i % 2 == 0:
+            parts.append(split_rw[i])
+          else:
+            parts.append(split_ptw[i])
+        rw = "".join(parts)
+      # Change 'ce' in respelling to 'cie' as appropriate for pagetitle.
+      split_ptw = re.split(u"([cC]i?(?=[eèé]))", ptw)
+      split_rw = re.split(u"([cC]i?(?=[eèé]))", rw)
+      if len(split_ptw) != len(split_rw):
+        pagemsg("WARNING: Different # of c(i)e's in pagetitle word %s vs. c(i)e's in respelling word %s" % (ptw, rw))
+      else:
+        parts = []
+        for i in xrange(len(split_rw)):
+          if i % 2 == 0:
+            parts.append(split_rw[i])
+          else:
+            parts.append(split_ptw[i])
+        rw = "".join(parts)
+      hacked_respelling_words.append(rw)
+    respelling = " ".join(hacked_respelling_words)
+  return respelling
 
 def process_text_on_page(index, pagetitle, text):
   global args
@@ -125,10 +222,127 @@ def process_text_on_page(index, pagetitle, text):
       parsed = blib.parse_text(subsections[k])
       saw_it_IPA = False
       for t in parsed.filter_templates():
+        origt = unicode(t)
+        def tmsg(txt):
+          pagemsg("%s: %s" % (txt, unicode(t)))
         tn = tname(t)
         if tn == "it-IPA":
           saw_it_IPA = True
           break
+        if tn == "IPA" and getparam(t, "1") == "it":
+          saw_it_IPA = True
+          pronuns = blib.fetch_param_chain(t, "2")
+          this_phonemic_pronun = None
+          this_phonemic_respelling = None
+          this_phonetic_pronun = None
+          this_phonetic_respelling = None
+          respellings = []
+          #phonemic_pronuns = [pronun for pronun in pronuns if not pronun.startswith("[")]
+          #if not phonemic_pronuns:
+          #  tmsg("WARNING: No phonemic pronuns, using phonetic")
+          #  phonemic_pronuns = pronuns
+          unable = False
+          for pronun in pronuns:
+            respelling = ipa_to_respelling(pronun, tmsg)
+            respelling = hack_respelling(pagetitle, respelling, tmsg)
+            tmsg("For pronun %s, generated respelling %s" % (pronun, respelling))
+            respelling_words = respelling.split(" ")
+            for rw in respelling_words:
+              if rw.endswith("-"): # prefix
+                continue
+              hacked_rw = re.sub(u".[\u0323\u0331]", "e", rw) # pretend vowels with secondary or no stress are 'e'
+              if not re.search(u"[àèéìòóùÀÈÉÌÒÓÙ]", hacked_rw) and len(re.sub("[^aeiouAEIOU]", "", hacked_rw)) > 1:
+                tmsg("WARNING: For respelling %s for pronun %s, word %s is missing stress" %
+                  (respelling, pronun, rw))
+                unable = True
+            if not re.search(u"^[a-zA-ZàèéìòóùÀÈÉÌÒÓÙ. ʒʃ\[\]-]+$", respelling):
+              tmsg("WARNING: Strange char in respelling %s for pronun %s" % (respelling, pronun))
+              unable = True
+            else:
+              putative_pagetitle = re.sub(u"([àèéìòóùÀÈÉÌÒÓÙ])([^ ])",
+                  lambda m: vowel_respelling_to_spelling[m.group(1)] + m.group(2),
+                  respelling)
+              pagetitle_words = pagetitle.split(" ")
+              putative_pagetitle_words = putative_pagetitle.split(" ")
+              if len(pagetitle_words) != len(putative_pagetitle_words):
+                tmsg("WARNING: Page title has %s words but putative page title %s has %s words" % (
+                  len(pagetitle_words), putative_pagetitle, len(putative_pagetitle_words)))
+                unable = True
+              else:
+                hacked_putative_pagetitle_words = []
+                for ptw, puptw in zip(pagetitle_words, putative_pagetitle_words):
+                  split_ptw = re.split("([Zz]+)", ptw)
+                  split_puptw = re.split("([Tt]?[Tt]s|[Dd]?[Dd]z)", puptw)
+                  if len(split_ptw) != len(split_puptw):
+                    tmsg("WARNING: Different # of z's in pagetitle word %s vs. (t)ts/(d)dz's in putative pagetitle word %s" % (
+                      ptw, puptw))
+                    unable = True
+                    hacked_putative_pagetitle_words.append(puptw)
+                  else:
+                    parts = []
+                    for i in xrange(len(split_puptw)):
+                      if i % 2 == 0:
+                        parts.append(split_puptw[i])
+                      else:
+                        parts.append(split_ptw[i])
+                    hacked_putative_pagetitle_words.append("".join(parts))
+                putative_pagetitle = " ".join(hacked_putative_pagetitle_words)
+                if putative_pagetitle != pagetitle:
+                  tmsg("WARNING: Respelling %s doesn't match page title (putative page title %s, pronun %s)" %
+                      (respelling, putative_pagetitle, pronun))
+                  unable = True
+            if pronun.startswith("/"):
+              if this_phonemic_pronun is not None:
+                tmsg("WARNING: Saw two phonemic pronuns %s (respelling %s) and %s (respelling %s) without intervening phonetic pronun" %
+                    (this_phonemic_pronun, this_phonemic_respelling, pronun, respelling))
+                respellings.append(this_phonemic_respelling)
+              this_phonemic_pronun = pronun
+              this_phonemic_respelling = respelling
+              this_phonetic_pronun = None
+              this_phonetic_respelling = None
+            elif pronun.startswith("["):
+              if this_phonetic_pronun is not None:
+                tmsg("WARNING: Saw two phonetic pronuns %s (respelling %s) and %s (respelling %s) without intervening phonemic pronun" %
+                    (this_phonetic_pronun, this_phonetic_respelling, pronun, respelling))
+                unable = True
+              this_phonetic_pronun = pronun
+              this_phonetic_respelling = respelling
+              if this_phonemic_pronun is None:
+                tmsg("WARNING: Saw phonetic pronun %s (respelling %s) without preceding phonemic pronun" %
+                    (pronun, respelling))
+                respellings.append(respelling)
+              elif this_phonemic_respelling != respelling:
+                tmsg("WARNING: Phonemic respelling %s (pronun %s) differs from phonetic respelling %s (pronun %s)" %
+                    (this_phonemic_respelling, this_phonemic_pronun, respelling, pronun))
+                unable = True
+              else:
+                respellings.append(respelling)
+              this_phonemic_pronun = None
+              this_phonemic_respelling = None
+            else:
+              tmsg("WARNING: Pronun %s (respelling %s) not marked as phonemic or phonetic" %
+                  (pronun, respelling))
+              unable = True
+          if this_phonemic_pronun is not None:
+            tmsg("WARNING: Saw phonemic pronun %s (respelling %s) without corresponding phonetic pronun" %
+                (this_phonemic_pronun, this_phonemic_respelling))
+            respellings.append(this_phonemic_respelling)
+          if not unable:
+            for param in t.params:
+              pn = pname(param)
+              if not re.search("^[0-9]+$", pn) and pn != "nocount":
+                tmsg("WARNING: Saw unrecognized param %s=%s" % (pn, unicode(param.value)))
+                unable = True
+          if not unable:
+            rmparam(t, "nocount")
+            del t.params[:]
+            blib.set_param_chain(t, respellings, "1")
+            blib.set_template_name(t, "it-IPA")
+            notes.append("replace raw {{IPA|it}} with {{it-IPA|%s}}" % "|".join(respellings))
+        if unicode(t) != origt:
+          pagemsg("Replaced %s with %s" % (origt, unicode(t)))
+      subsections[k] = unicode(parsed)
+
       if not saw_it_IPA:
         rhymes_template = None
         for t in parsed.filter_templates():
