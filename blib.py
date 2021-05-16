@@ -161,11 +161,11 @@ def append_param_to_chain(t, val, firstparam, parampref=None, before=None):
   is_number = re.search("^[0-9]+$", firstparam)
   if parampref is None:
     parampref = "" if is_number else firstparam
-  paramno = int(firstparam) if is_number else 0
+  paramno = int(firstparam) - 1 if is_number else 0
   changed = False
   while True:
     paramno += 1
-    next_param = firstparam if paramno == 1 else "%s%s" % (
+    next_param = firstparam if paramno == 1 and not is_number else "%s%s" % (
         parampref, paramno)
     if not getparam(t, next_param):
       t.add(next_param, val, before=before)
@@ -175,11 +175,11 @@ def remove_param_chain(t, firstparam, parampref=None):
   is_number = re.search("^[0-9]+$", firstparam)
   if parampref is None:
     parampref = "" if is_number else firstparam
-  paramno = int(firstparam) if is_number else 0
+  paramno = int(firstparam) - 1 if is_number else 0
   changed = False
   while True:
     paramno += 1
-    next_param = firstparam if paramno == 1 else "%s%s" % (
+    next_param = firstparam if paramno == 1 and not is_number else "%s%s" % (
         parampref, paramno)
     if getparam(t, next_param):
       rmparam(t, next_param)
@@ -191,15 +191,15 @@ def set_param_chain(t, values, firstparam, parampref=None, before=None):
   is_number = re.search("^[0-9]+$", firstparam)
   if parampref is None:
     parampref = "" if is_number else firstparam
-  paramno = int(firstparam) if is_number else 0
+  paramno = int(firstparam) - 1 if is_number else 0
   for val in values:
     paramno += 1
-    next_param = firstparam if paramno == 1 else "%s%s" % (
+    next_param = firstparam if paramno == 1 and not is_number else "%s%s" % (
         parampref, paramno)
     t.add(next_param, val, before=before)
   while True:
     paramno += 1
-    next_param = firstparam if paramno == 1 else "%s%s" % (
+    next_param = firstparam if paramno == 1 and not is_number else "%s%s" % (
         parampref, paramno)
     if getparam(t, next_param):
       rmparam(t, next_param)
