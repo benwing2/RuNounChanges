@@ -76,7 +76,7 @@ def sub_repeatedly(fro, to, text):
     newtext = re.sub(fro, to, text)
   return text
 
-def ipa_to_respelling(ipa, pagemsg):
+def ipa_to_respelling(ipa):
   ipa = re.sub(r"[/\[\]]", "", ipa)
   ipa = ipa.replace(u"ɡ", "g")
   ipa = ipa.replace(u"ɾ", "r")
@@ -149,11 +149,12 @@ def ipa_to_respelling(ipa, pagemsg):
   ipa = re.sub("(^|[^d])z", r"\1[z]", ipa)
   return ipa
 
-def hack_respelling(pagetitle, respelling, pagemsg):
+def hack_respelling(pagetitle, respelling):
   pagetitle_words = pagetitle.split(" ")
   respelling_words = respelling.split(" ")
+  warnings = []
   if len(pagetitle_words) != len(respelling_words):
-    pagemsg("WARNING: Page title has %s words but respelling %s has %s words" % (
+    warnings.append("WARNING: Page title has %s words but respelling %s has %s words" % (
       len(pagetitle_words), respelling, len(respelling_words)))
   else:
     hacked_respelling_words = []
@@ -171,7 +172,7 @@ def hack_respelling(pagetitle, respelling, pagemsg):
       split_ptw = re.split(u"([cC]+[sh]|[Cc]*[xXkKqQ]+|[cC]+(?![eèéiì]))", ptw)
       split_rw = re.split(u"([cC]+[sh]|[Cc]*[xXkKqQ]+|[cC]+(?![eèéiì]))", rw)
       if len(split_ptw) != len(split_rw):
-        pagemsg("WARNING: Different # of c/k/q's in pagetitle word %s vs. c/k/q's in respelling word %s" % (ptw, rw))
+        warnings.append("WARNING: Different # of c/k/q's in pagetitle word %s vs. c/k/q's in respelling word %s" % (ptw, rw))
       else:
         parts = []
         for i in xrange(len(split_rw)):
@@ -184,7 +185,7 @@ def hack_respelling(pagetitle, respelling, pagemsg):
       split_ptw = re.split(u"([cC]i?(?=[eèé]))", ptw)
       split_rw = re.split(u"([cC]i?(?=[eèé]))", rw)
       if len(split_ptw) != len(split_rw):
-        pagemsg("WARNING: Different # of c(i)e's in pagetitle word %s vs. c(i)e's in respelling word %s" % (ptw, rw))
+        warnings.append("WARNING: Different # of c(i)e's in pagetitle word %s vs. c(i)e's in respelling word %s" % (ptw, rw))
       else:
         parts = []
         for i in xrange(len(split_rw)):
@@ -195,7 +196,7 @@ def hack_respelling(pagetitle, respelling, pagemsg):
         rw = "".join(parts)
       hacked_respelling_words.append(rw)
     respelling = " ".join(hacked_respelling_words)
-  return respelling
+  return respelling, warnings
 
 def process_text_on_page(index, pagetitle, text):
   global args
@@ -237,14 +238,18 @@ def process_text_on_page(index, pagetitle, text):
           this_phonetic_pronun = None
           this_phonetic_respelling = None
           respellings = []
-          #phonemic_pronuns = [pronun for pronun in pronuns if not pronun.startswith("[")]
-          #if not phonemic_pronuns:
-          #  tmsg("WARNING: No phonemic pronuns, using phonetic")
-          #  phonemic_pronuns = pronuns
-          unable = False
+          all_warnings = []
+          hack_respelling_warnings = []
+          main_warnings = []
+          unable = [False]
           for pronun in pronuns:
-            respelling = ipa_to_respelling(pronun, tmsg)
-            respelling = hack_respelling(pagetitle, respelling, tmsg)
+            respelling = ipa_to_respelling(pronun)
+            respelling, this_hack_respelling_warnings = hack_respelling(pagetitle, respelling)
+            hack_respelling_warnings.extend(this_hack_respelling_warnings)
+            def set_unable(msg):
+              main_warnings.append(msg)
+              unable[0] = True
+
             tmsg("For pronun %s, generated respelling %s" % (pronun, respelling))
             respelling_words = respelling.split(" ")
             for rw in respelling_words:
@@ -252,12 +257,10 @@ def process_text_on_page(index, pagetitle, text):
                 continue
               hacked_rw = re.sub(u".[\u0323\u0331]", "e", rw) # pretend vowels with secondary or no stress are 'e'
               if not re.search(u"[àèéìòóùÀÈÉÌÒÓÙ]", hacked_rw) and len(re.sub("[^aeiouAEIOU]", "", hacked_rw)) > 1:
-                tmsg("WARNING: For respelling %s for pronun %s, word %s is missing stress" %
+                set_unable("WARNING: For respelling %s for pronun %s, word %s is missing stress" %
                   (respelling, pronun, rw))
-                unable = True
             if not re.search(u"^[a-zA-ZàèéìòóùÀÈÉÌÒÓÙ. ʒʃ\[\]-]+$", respelling):
-              tmsg("WARNING: Strange char in respelling %s for pronun %s" % (respelling, pronun))
-              unable = True
+              set_unable("WARNING: Strange char in respelling %s for pronun %s" % (respelling, pronun))
             else:
               putative_pagetitle = re.sub(u"([àèéìòóùÀÈÉÌÒÓÙ])([^ ])",
                   lambda m: vowel_respelling_to_spelling[m.group(1)] + m.group(2),
@@ -265,18 +268,16 @@ def process_text_on_page(index, pagetitle, text):
               pagetitle_words = pagetitle.split(" ")
               putative_pagetitle_words = putative_pagetitle.split(" ")
               if len(pagetitle_words) != len(putative_pagetitle_words):
-                tmsg("WARNING: Page title has %s words but putative page title %s has %s words" % (
+                set_unable("WARNING: Page title has %s words but putative page title %s has %s words" % (
                   len(pagetitle_words), putative_pagetitle, len(putative_pagetitle_words)))
-                unable = True
               else:
                 hacked_putative_pagetitle_words = []
                 for ptw, puptw in zip(pagetitle_words, putative_pagetitle_words):
                   split_ptw = re.split("([Zz]+)", ptw)
                   split_puptw = re.split("([Tt]?[Tt]s|[Dd]?[Dd]z)", puptw)
                   if len(split_ptw) != len(split_puptw):
-                    tmsg("WARNING: Different # of z's in pagetitle word %s vs. (t)ts/(d)dz's in putative pagetitle word %s" % (
+                    set_unable("WARNING: Different # of z's in pagetitle word %s vs. (t)ts/(d)dz's in putative pagetitle word %s" % (
                       ptw, puptw))
-                    unable = True
                     hacked_putative_pagetitle_words.append(puptw)
                   else:
                     parts = []
@@ -288,52 +289,85 @@ def process_text_on_page(index, pagetitle, text):
                     hacked_putative_pagetitle_words.append("".join(parts))
                 putative_pagetitle = " ".join(hacked_putative_pagetitle_words)
                 if putative_pagetitle != pagetitle:
-                  tmsg("WARNING: Respelling %s doesn't match page title (putative page title %s, pronun %s)" %
-                      (respelling, putative_pagetitle, pronun))
-                  unable = True
+                  # If respelling already seen, we already warned about it.
+                  if respelling in respellings:
+                    assert unable[0]
+                  else:
+                    set_unable("WARNING: Respelling %s doesn't match page title (putative page title %s, pronun %s)" %
+                        (respelling, putative_pagetitle, pronun))
+
+            def append_respelling(respelling):
+              if respelling not in respellings:
+                respellings.append(respelling)
+            def append_warnings(warning):
+              if warning:
+                all_warnings.append(warning)
+              for warning in hack_respelling_warnings:
+                all_warnings.append(warning)
+              del hack_respelling_warnings[:]
+              for warning in main_warnings:
+                all_warnings.append(warning)
+              del main_warnings[:]
+
+            append_respelling(respelling)
             if pronun.startswith("/"):
               if this_phonemic_pronun is not None:
-                tmsg("WARNING: Saw two phonemic pronuns %s (respelling %s) and %s (respelling %s) without intervening phonetic pronun" %
+                append_warnings("WARNING: Saw two phonemic pronuns %s (respelling %s) and %s (respelling %s) without intervening phonetic pronun" %
                     (this_phonemic_pronun, this_phonemic_respelling, pronun, respelling))
-                respellings.append(this_phonemic_respelling)
               this_phonemic_pronun = pronun
               this_phonemic_respelling = respelling
               this_phonetic_pronun = None
               this_phonetic_respelling = None
             elif pronun.startswith("["):
-              if this_phonetic_pronun is not None:
-                tmsg("WARNING: Saw two phonetic pronuns %s (respelling %s) and %s (respelling %s) without intervening phonemic pronun" %
-                    (this_phonetic_pronun, this_phonetic_respelling, pronun, respelling))
-                unable = True
-              this_phonetic_pronun = pronun
-              this_phonetic_respelling = respelling
               if this_phonemic_pronun is None:
-                tmsg("WARNING: Saw phonetic pronun %s (respelling %s) without preceding phonemic pronun" %
-                    (pronun, respelling))
-                respellings.append(respelling)
+                if this_phonetic_pronun is not None:
+                  unable[0] = True
+                  append_warnings("WARNING: Saw two phonetic pronuns %s (respelling %s) and %s (respelling %s) without intervening phonemic pronun" %
+                      (this_phonetic_pronun, this_phonetic_respelling, pronun, respelling))
+                else:
+                  append_warnings("WARNING: Saw phonetic pronun %s (respelling %s) without preceding phonemic pronun" %
+                      (pronun, respelling))
+                this_phonetic_pronun = pronun
+                this_phonetic_respelling = respelling
               elif this_phonemic_respelling != respelling:
-                tmsg("WARNING: Phonemic respelling %s (pronun %s) differs from phonetic respelling %s (pronun %s)" %
+                unable[0] = True
+                append_warnings("WARNING: Phonemic respelling %s (pronun %s) differs from phonetic respelling %s (pronun %s)" %
                     (this_phonemic_respelling, this_phonemic_pronun, respelling, pronun))
-                unable = True
               else:
-                respellings.append(respelling)
+                if unable[0] and len(main_warnings) > 0:
+                  # `unable` could be set from a previous pronunciation but no main warnings this time around
+                  # because the previously generated warnings have already been appended to all_warnings.
+                  mesg = main_warnings[0]
+                  del main_warnings[0]
+                  append_warnings(mesg)
+                else:
+                  append_warnings(None)
               this_phonemic_pronun = None
               this_phonemic_respelling = None
             else:
-              tmsg("WARNING: Pronun %s (respelling %s) not marked as phonemic or phonetic" %
+              unable[0] = True
+              append_warnings("WARNING: Pronun %s (respelling %s) not marked as phonemic or phonetic" %
                   (pronun, respelling))
-              unable = True
           if this_phonemic_pronun is not None:
-            tmsg("WARNING: Saw phonemic pronun %s (respelling %s) without corresponding phonetic pronun" %
+            append_warnings("WARNING: Saw phonemic pronun %s (respelling %s) without corresponding phonetic pronun" %
                 (this_phonemic_pronun, this_phonemic_respelling))
-            respellings.append(this_phonemic_respelling)
-          if not unable:
+          if not unable[0]:
             for param in t.params:
               pn = pname(param)
               if not re.search("^[0-9]+$", pn) and pn != "nocount":
-                tmsg("WARNING: Saw unrecognized param %s=%s" % (pn, unicode(param.value)))
-                unable = True
-          if not unable:
+                unable[0] = True
+                append_warnings("WARNING: Saw unrecognized param %s=%s" % (pn, unicode(param.value)))
+          if unable[0]:
+            num_other_warnings = len(all_warnings) - 1
+            warnings_follow = (
+              "; %s warnings follow" % num_other_warnings if num_other_warnings > 1 else
+              "; 1 warning follows" if num_other_warnings == 1 else
+              ""
+            )
+            tmsg("<respelling> %s <end> %s%s" % (" ".join(respellings), all_warnings[0], warnings_follow))
+            for warning in all_warnings[1:]:
+              tmsg(warning)
+          else:
             rmparam(t, "nocount")
             del t.params[:]
             blib.set_param_chain(t, respellings, "1")
