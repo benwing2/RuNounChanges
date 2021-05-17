@@ -167,6 +167,7 @@ def hack_respelling(pagetitle, respelling):
         rw = "-" + rw
       if ptw[-1] == "-":
         rw += "-"
+
       # Change 'c' in respelling to 'k' as appropriate for pagetitle; similarly, change 'cs' to 'x' as
       # appropriate and 'qu' to 'cu'.
       split_ptw = re.split(u"([cC]+[sh]|[Cc]*[xXkKqQ]+|[cC]+(?![eèéiì]))", ptw)
@@ -181,6 +182,7 @@ def hack_respelling(pagetitle, respelling):
           else:
             parts.append(split_ptw[i])
         rw = "".join(parts)
+
       # Change 'ce' in respelling to 'cie' as appropriate for pagetitle.
       split_ptw = re.split(u"([cC]i?(?=[eèé]))", ptw)
       split_rw = re.split(u"([cC]i?(?=[eèé]))", rw)
@@ -194,6 +196,25 @@ def hack_respelling(pagetitle, respelling):
           else:
             parts.append(split_ptw[i])
         rw = "".join(parts)
+
+      # Change 'tts/ddz' in respelling to 'ts/dz' as appropriate for pagetitle.
+      split_ptw = re.split("([Zz]+)", ptw)
+      split_rw = re.split("([Tt]?[Tt]s|[Dd]?[Dd]z)", rw)
+      if len(split_ptw) != len(split_rw):
+        warnings.append("WARNING: Different # of z's in pagetitle word %s vs. ts/dz's in respelling word %s" % (ptw, rw))
+      else:
+        parts = []
+        for i in xrange(len(split_rw)):
+          if i % 2 == 0:
+            parts.append(split_rw[i])
+          elif split_rw[i] == "tts" and split_ptw[i] == "z":
+            parts.append("ts")
+          elif split_rw[i] == "ddz" and split_ptw[i] == "z":
+            parts.append("dz")
+          else:
+            parts.append(split_rw[i])
+        rw = "".join(parts)
+
       hacked_respelling_words.append(rw)
     respelling = " ".join(hacked_respelling_words)
   return respelling, warnings
@@ -222,6 +243,7 @@ def process_text_on_page(index, pagetitle, text):
     if "==Pronunciation==" in subsections[k - 1]:
       parsed = blib.parse_text(subsections[k])
       saw_it_IPA = False
+      all_respellings = []
       for t in parsed.filter_templates():
         origt = unicode(t)
         def tmsg(txt):
@@ -229,6 +251,8 @@ def process_text_on_page(index, pagetitle, text):
         tn = tname(t)
         if tn == "it-IPA":
           saw_it_IPA = True
+          respellings = blib.fetch_param_chain(t, "1")
+          all_respellings.extend(respellings)
           break
         if tn == "IPA" and getparam(t, "1") == "it":
           saw_it_IPA = True
@@ -358,70 +382,68 @@ def process_text_on_page(index, pagetitle, text):
                 unable[0] = True
                 append_warnings("WARNING: Saw unrecognized param %s=%s" % (pn, unicode(param.value)))
           if unable[0]:
-            num_other_warnings = len(all_warnings) - 1
-            warnings_follow = (
-              "; %s warnings follow" % num_other_warnings if num_other_warnings > 1 else
-              "; 1 warning follows" if num_other_warnings == 1 else
-              ""
-            )
-            tmsg("<respelling> %s <end> %s%s" % (" ".join(respellings), all_warnings[0], warnings_follow))
-            for warning in all_warnings[1:]:
-              tmsg(warning)
+            tmsg("<respelling> %s <end> %s" % (" ".join(respellings), " ||| ".join(all_warnings)))
           else:
             rmparam(t, "nocount")
             del t.params[:]
             blib.set_param_chain(t, respellings, "1")
             blib.set_template_name(t, "it-IPA")
             notes.append("replace raw {{IPA|it}} with {{it-IPA|%s}}" % "|".join(respellings))
+          all_respellings.extend(respellings)
         if unicode(t) != origt:
           pagemsg("Replaced %s with %s" % (origt, unicode(t)))
       subsections[k] = unicode(parsed)
 
-      if not saw_it_IPA:
-        rhymes_template = None
-        for t in parsed.filter_templates():
-          tn = tname(t)
-          if tn in ["rhyme", "rhymes"] and getparam(t, "1") == "it":
-            if rhymes_template:
-              pagemsg("WARNING: Saw two {{rhymes|it}} templates: %s and %s" % (unicode(rhymes_template), unicode(t)))
-            rhymes_template = t
-        if rhymes_template:
-          pronuns = []
-          rhymes = blib.fetch_param_chain(rhymes_template, "2")
-          unable = False
-          for rhy in rhymes:
-            spellings = rhyme_to_spelling(rhy)
-            matched = False
-            bad_rhyme_msgs = []
-            for spelling, respelling in spellings:
-              if pagetitle.endswith(spelling):
-                prevpart = pagetitle[:-len(spelling)]
-                if "z" in prevpart:
-                  pagemsg("WARNING: Unable to add pronunciation due to z in part before rhyme %s" % rhy)
+      rhymes_template = None
+      for t in parsed.filter_templates():
+        tn = tname(t)
+        if tn in ["rhyme", "rhymes"] and getparam(t, "1") == "it":
+          if rhymes_template:
+            pagemsg("WARNING: Saw two {{rhymes|it}} templates: %s and %s" % (unicode(rhymes_template), unicode(t)))
+          rhymes_template = t
+      if rhymes_template:
+        pronuns = []
+        rhymes = blib.fetch_param_chain(rhymes_template, "2")
+        unable = False
+        for rhy in rhymes:
+          spellings = rhyme_to_spelling(rhy)
+          matched = False
+          bad_rhyme_msgs = []
+          for spelling, respelling in spellings:
+            if pagetitle.endswith(spelling):
+              prevpart = pagetitle[:-len(spelling)]
+              if "z" in prevpart:
+                pagemsg("WARNING: Unable to add pronunciation due to z in part before rhyme %s" % rhy)
+                unable = True
+                break
+              else:
+                hacked_prevpart = re.sub("([gq])u", r"\1w", prevpart)
+                hacked_prevpart = hacked_prevpart.replace("gli", "gl")
+                hacked_prevpart = re.sub("([cg])i", r"\1", hacked_prevpart)
+                if re.search("[^aeiouAEIOU][iu]([aeiou]|$)", hacked_prevpart):
+                  pagemsg("WARNING: Unable to add pronunciation due to hiatus in part before rhyme %s" % rhy)
                   unable = True
                   break
                 else:
-                  hacked_prevpart = re.sub("([gq])u", r"\1w", prevpart)
-                  hacked_prevpart = hacked_prevpart.replace("gli", "gl")
-                  hacked_prevpart = re.sub("([cg])i", r"\1", hacked_prevpart)
-                  if re.search("[^aeiouAEIOU][iu]([aeiou]|$)", hacked_prevpart):
-                    pagemsg("WARNING: Unable to add pronunciation due to hiatus in part before rhyme %s" % rhy)
-                    unable = True
-                    break
-                  else:
-                    pronuns.append(prevpart + respelling)
-                    matched = True
-                    break
-              else:
-                bad_rhyme_msgs.append("WARNING: Unable to match rhyme %s, spelling %s, respelling %s" % (
-                  rhy, spelling, respelling))
-            if not matched and not unable and bad_rhyme_msgs:
-              for bad_rhyme_msg in bad_rhyme_msgs:
-                pagemsg(bad_rhyme_msg)
-          if pronuns and not unable:
+                  pronuns.append(prevpart + respelling)
+                  matched = True
+                  break
+            else:
+              bad_rhyme_msgs.append("WARNING: Unable to match rhyme %s, spelling %s, respelling %s" % (
+                rhy, spelling, respelling))
+          if not matched and not unable and bad_rhyme_msgs:
+            for bad_rhyme_msg in bad_rhyme_msgs:
+              pagemsg(bad_rhyme_msg)
+        if pronuns and not unable:
+          if not saw_it_IPA:
             subsections[k] = "* {{it-IPA|%s}}\n" % "|".join(pronuns) + subsections[k]
             notes.append("add Italian pronunciation respelling%s %s" % (
               "s" if len(pronuns) > 1 else "", ",".join(pronuns)))
+          else:
+            for pronun in pronuns:
+              if all_respellings and pronun not in all_respellings:
+                pagemsg("WARNING: Rhyme-based respelling %s doesn't match it-IPA respelling(s) %s" % (
+                  pronun, ",".join(all_respellings)))
 
   secbody = "".join(subsections)
   sections[j] = secbody + sectail
