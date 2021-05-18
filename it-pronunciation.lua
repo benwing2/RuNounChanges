@@ -20,8 +20,10 @@ local CFLEX = u(0x302)
 local DOTOVER = u(0x0307) -- dot over =  ̇ = signal unstressed word
 local DOTUNDER = u(0x0323) -- dot under =  ̣ = unstressed vowel with quality marker
 local LINEUNDER = u(0x0331) -- line under =  ̱ = secondary-stressed vowel with quality marker
-local TEMP1 = u(0xFFF0)
-local SYLDIV = u(0xFFF1) -- used to represent a user-specific syllable divider (.) so we won't change it
+local DIA = u(0x0308) -- diaeresis = ̈
+local SYLDIV = u(0xFFF0) -- used to represent a user-specific syllable divider (.) so we won't change it
+local TEMP_Z = u(0xFFF1)
+local TEMP_S = u(0xFFF2)
 local stress = "ˈˌ"
 local stress_c = "[" .. stress .. "]"
 local quality = AC .. GR
@@ -30,7 +32,7 @@ local accent = stress .. quality .. DOTOVER .. DOTUNDER .. LINEUNDER
 local accent_c = "[" .. accent .. "]"
 local glides = "jw"
 local W = "[" .. glides .. "]"
-local vowel = "aeɛioɔuEO"
+local vowel = "aeɛioɔuEOyø"
 local V = "[" .. vowel .. "]"
 local VW = "[" .. vowel .. "jw]"
 local NV = "[^" .. vowel .. "]"
@@ -71,7 +73,7 @@ local recognized_suffixes = {
 	{"acci([ao])", "àcci%1"},
 	{"([aiu])ggine", "%1" .. GR .. "ggine"},
 	{"aggio", "àggio"},
-	{"[ai]gli([ao])", "%1" .. GR .. "gli%2"},
+	{"([ai])gli([ao])", "%1" .. GR .. "gli%2"},
 	{"ai([ao])", "ài%1"},
 	{"([ae])nza", "%1" .. GR .. "ntsa"},
 	{"ario", "àrio"},
@@ -106,11 +108,11 @@ local recognized_suffixes = {
 	{"at([ao])", "àt%1"},
 	{"([ae])tic([ao])", "%1" .. GR .. "tic%2"},
 	{"ense", "ènse"},
-	{"esc[ao]", "ésc%1"},
+	{"esc([ao])", "ésc%1"},
 	{"evole", "évole"},
 	-- FIXME: Systematic exceptions to the following in 3rd plural present tense verb forms
-	{"ian[ao]", "iàn%1"},
-	{"iv[ao]", "ìv%1"},
+	{"ian([ao])", "iàn%1"},
+	{"iv([ao])", "ìv%1"},
 	{"oide", "òide"},
 	{"oso", "óso"},
 }
@@ -118,11 +120,12 @@ local recognized_suffixes = {
 local unstressed_words = m_table.listToSet {
 	"il", "lo", "la", "i", "gli", "le", -- definite articles
 	"un", -- indefinite articles
-	"mi", "ti", "ci", "vi", "li", -- object pronouns
-	"e", "o", -- conjunctions
-	"se", "chi", "che", "non", -- misc particles
+	"mi", "ti", "si", "ci", "vi", "li", -- object pronouns
+	"me", "te", "se", "ce", "ve", "ne", -- conjunctive object pronouns
+	"e", "ed", "o", "od", -- conjunctions
+	"chi", "che", "non", -- misc particles
 	"di", "del", "dei", -- prepositions
-	"a", "al", "ai",
+	"a", "ad", "al", "ai",
 	"da", "dal", "dai",
 	"in", "nel", "nei",
 	"con", "col", "coi",
@@ -183,24 +186,30 @@ function export.to_phonemic(text, pagename)
 
 	text = canon_spaces(text)
 
-	local origwords = rsplit(text, " ")
+	local origwords = rsplit(text, "[ %-]")
 
 	text = rsub(text, CFLEX, "") -- eliminate circumflex over î, etc.
-	text = rsub("y", "i")
+	text = rsub(text, "y", "i")
+	-- French/German vowels
+	text = rsub(text, "u" .. DIA, "y")
+	text = rsub(text, "o" .. DIA, "ø")
+	text = rsub(text, "'", "")
 	text = rsub(text, "([" .. DOTUNDER .. LINEUNDER .. "])(" .. quality_c .. ")", "%2%1") -- acute/grave first
 	text = rsub(text, "([aiu])" .. AC, "%1" .. GR) -- áíú -> àìù
 
 	local words = rsplit(text, " ")
 	for i, word in ipairs(words) do
-		-- Apply suffix respellings.
-		for _, suffix_pair in ipairs(recognized_suffixes) do
-			local orig, respelling = unpack(suffix_pair)
-			local replaced
-			word, replaced = rsubb(word, orig .. "$", respelling)
-			if replaced then
-				-- Decompose again because suffix replacements may have accented chars.
-				word = mw.ustring.toNFD(word)
-				break
+		if not rfind(word, quality_c) then
+			-- Apply suffix respellings.
+			for _, suffix_pair in ipairs(recognized_suffixes) do
+				local orig, respelling = unpack(suffix_pair)
+				local replaced
+				word, replaced = rsubb(word, orig .. "$", respelling)
+				if replaced then
+					-- Decompose again because suffix replacements may have accented chars.
+					word = mw.ustring.toNFD(word)
+					break
+				end
 			end
 		end
 
@@ -214,8 +223,8 @@ function export.to_phonemic(text, pagename)
 		-- or non-stress get primary stress.
 		word = rsub(word, "(" .. quality_c .. ")([^" .. DOTUNDER .. LINEUNDER .. "])", "%1ˈ%2")
 		word = rsub(word, "(" .. quality_c .. ")$", "%1ˈ")
-		-- Eliminate quality marker on a/i/u, which now serves no purpose.
-		word = rsub(word, "([aiu])" .. quality_c, "%1")
+		-- Eliminate quality marker on a/i/u/y/ø, which now serves no purpose.
+		word = rsub(word, "([aiuyø])" .. quality_c, "%1")
 		-- LINEUNDER means secondary stress.
 		word = rsub(word, LINEUNDER, "ˌ")
 
@@ -238,7 +247,7 @@ function export.to_phonemic(text, pagename)
 
 	-- Convert e/o unmarked for quality to E/O, and those marked for quality to e/o/ɛ/ɔ.
 	local function convert_e_o(txt)
-		return txt:gsub("[eo]", {["e"] = "E", ["o"] = "O"}):gsub("[EO]" .. quality_c, {
+		return rsub(rsub(txt, "[eo]", {["e"] = "E", ["o"] = "O"}), "[EO]" .. quality_c, {
 			["E" .. AC] = "e",
 			["O" .. AC] = "o",
 			["E" .. GR] = "ɛ",
@@ -259,7 +268,7 @@ function export.to_phonemic(text, pagename)
 			local vowel_count = select(2, word:gsub(V, "%1"))
 			if abbrev_text then
 				local abbrev_vowel = uupper(usub(abbrev_text, 1, 1))
-				local abbrev_eo = convert_e_o(abbrev_text)
+				local abbrev_eo = convert_e_o(abbrev_text) .. "ˈ"
 				if vowel_count == 0 then
 					err("Abbreviated spec '" .. abbrev_text .. "' can't be used with nonsyllabic word")
 				elseif vowel_count == 1 then
@@ -322,9 +331,12 @@ function export.to_phonemic(text, pagename)
 	text = rsub(text, "a(" .. accent_c .. "?)w", "o%1")
 
 	-- Random substitutions.
-	text = rsub(text, "^ex([" .. V .. "])", "eg[z]%1")
+	text = rsub(text, "^ex(" .. V .. ")", "eg[z]%1")
 	text = text:gsub("x", "ks"):gsub("ck", "k"):gsub("sh", "ʃ"):gsub("ng#", "ŋ#")
-	text = rsub(text, "%[z%]", TEMP1) -- [z] means /z/
+	text = rsub(text, "%[z%]", TEMP_Z) -- [z] means /z/
+	text = rsub(text, "%[s%]", TEMP_S) -- [z] means /s/
+	text = rsub(text, "%[tʃ%]", "ʧ")
+	text = rsub(text, "%[dʒ%]", "ʤ")
 
 	-- ci, gi + vowel
 	-- Do ci, gi + e, é, è sometimes contain /j/?
@@ -386,16 +398,21 @@ function export.to_phonemic(text, pagename)
 	-- ⟨qu⟩ represents /kw/.
 	text = text:gsub("qu", "kw")
 
-	-- u or i (without accent) before another vowel is a glide.
+	-- Unaccented u or i following vowel (with or without accent) is a semivowel. (But 'iu' should be
+	-- interpreted as /ju/ not /iw/.) By preceding the conversion of glides before vowels, this works
+	-- correctly in the common sequence 'aiuo' e.g. [[guerraiuola]], [[acquaiuolo]]. Note that
 	-- ci, gi + vowel, gli, qu must be dealt with beforehand.
-	text = rsub(text, "([iu])(" .. V .. ")", function(glide, v)
-		return (glide == "i" and "j" or "w") .. v
+	text = rsub(text, "(" .. V .. accent_c .. "?)([iu])([^" .. accent .. "])", function(v, glide, acc)
+		if v == "i" and glide == "u" then
+			return v .. glide .. acc
+		else
+			return v .. (glide == "i" and "j" or "w") .. acc
+		end
 	end)
 
-	-- u or i following vowel (with or without accent) is a semivowel. By following the conversion of glides
-	-- before vowels, this works correctly in the common sequence 'aiuo' e.g. [[guerraiuola]], [[acquaiuolo]].
-	text = rsub(text, "(" .. V .. accent_c .. "?)([iu])", function(v, glide)
-		return v .. (glide == "i" and "j" or "w")
+	-- Unaccented u or i before another vowel is a glide. Do it repeatedly to handle oriuolo /orjwɔlo/.
+	text = rsub_repeatedly(text, "([iu])(" .. V .. ")", function(glide, v)
+		return (glide == "i" and "j" or "w") .. v
 	end)
 
 	-- sc before e, i is /ʃ/, doubled after a vowel.
@@ -408,7 +425,6 @@ function export.to_phonemic(text, pagename)
 	if rfind(text, "z") then
 		error("z must be respelled (d)dz or (t)ts: " .. origtext)
 	end
-	text = rsub(text, TEMP1, "z")
 
 	-- Single ⟨s⟩ between vowels is /z/.
 	text = rsub(text, "(" .. VW .. stress_c .. "?)s(" .. VW .. ")", "%1z%2")
@@ -416,9 +432,12 @@ function export.to_phonemic(text, pagename)
 	-- ⟨s⟩ immediately before a voiced consonant is always /z/
 	text = rsub(text, "s(" .. voiced_C_c .. ")", "z%1")
 
+	text = rsub(text, TEMP_Z, "z")
+	text = rsub(text, TEMP_S, "s")
+
 	-- After a vowel, /ʃ ʎ ɲ t͡s d͡z/ are doubled.
 	-- [[w:Italian phonology]] says word-internally, [[w:Help:IPA/Italian]] says after a vowel.
-	text = rsub(text, "(" .. VW .. ")([ʦʣʃʎɲ])", "%1%2%2")
+	text = rsub(text, "(" .. VW .. stress_c .. "?)([ʦʣʃʎɲ])", "%1%2%2")
 
 	-- Divide into syllables.
 	-- First remove 'h' and '_', which have served their purpose of preventing context-dependent changes.
@@ -429,6 +448,7 @@ function export.to_phonemic(text, pagename)
 	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*" .. C .. "+)(" .. C .. C .. V .. ")", "%1.%2")
 	text = rsub(text, "([pbktdg])%.([lr])", ".%1%2")
 	text = rsub_repeatedly(text, "(" .. C .. ")%.s(" .. C .. ")", "%1s.%2")
+	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*)(" .. V .. ")", "%1.%2")
 
 	text = rsub(text, "([ʦʣʧʤ])(%.?)([ʦʣʧʤ]*)", function(affricate1, divider, affricate2)
 		local full_affricate = full_affricates[affricate1]
@@ -457,9 +477,18 @@ function export.to_phonemic(text, pagename)
 	return text
 end
 
+-- For bot usage; {{#invoke:it-pronunciation|to_phonemic_bot|SPELLING}}
+function export.to_phonemic_bot(frame)
+	local iparams = {
+		[1] = {},
+	}
+	local iargs = require("Module:parameters").process(frame.args, iparams)
+	return export.to_phonemic(iargs[1], mw.title.getCurrentTitle().text)
+end
+
 -- Incomplete and currently not used by any templates.
-function export.to_phonetic(word, voiced_z, pagename)
-	local phonetic = export.to_phonemic(word, voiced_z, pagename)
+function export.to_phonetic(word, pagename)
+	local phonetic = export.to_phonemic(word, pagename)
 
 	-- Vowels longer in stressed, open, non-word-final syllables.
 	phonetic = rsub(phonetic, "(ˈ" .. NV .. "*" .. V .. ")([" .. vowel .. "%.])", "%1ː%2")
@@ -483,6 +512,8 @@ function export.show(frame)
 		{
 			-- words to transcribe
 			[1] = { list = true },
+			["qual"] = { list = true, allow_holes = true },
+			["n"] = { list = true, allow_holes = true },
 			pagename = {}, -- for testing
 		})
 
@@ -494,7 +525,11 @@ function export.show(frame)
 		respellings = {pagename}
 	end
 	local transcriptions = Array(respellings):map(function(word, i)
-		return { pron = "/" .. export.to_phonemic(word, pagename) .. "/" }
+		return {
+			pron = "/" .. export.to_phonemic(word, pagename) .. "/",
+			qualifiers = args.qual[i] and {args.qual[i]} or nil,
+			note = args.n[i],
+		}
 	end)
 
 	return m_IPA.format_IPA_full(lang, transcriptions)
