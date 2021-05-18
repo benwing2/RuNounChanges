@@ -242,12 +242,27 @@ def process_text_on_page(index, pagetitle, text):
   for k in xrange(2, len(subsections), 2):
     if "==Pronunciation==" in subsections[k - 1]:
       parsed = blib.parse_text(subsections[k])
+
+      all_pronun_templates = []
+      for t in parsed.filter_templates():
+        tn = tname(t)
+        if tn == "it-IPA" or tn == "IPA" and getparam(t, "1") == "it":
+          all_pronun_templates.append(t)
+
       saw_it_IPA = False
       all_respellings = []
       for t in parsed.filter_templates():
         origt = unicode(t)
         def tmsg(txt):
-          pagemsg("%s: %s" % (txt, unicode(t)))
+          other_templates = []
+          for t in all_pronun_templates:
+            thist = unicode(t)
+            if thist != origt:
+              other_templates.append(thist)
+          pagemsg("%s: %s%s" % (
+            txt, origt,
+            ", other templates %s" % ", ".join(other_templates) if len(other_templates) > 0 else ""
+          ))
         tn = tname(t)
         if tn == "it-IPA":
           saw_it_IPA = True
@@ -382,7 +397,9 @@ def process_text_on_page(index, pagetitle, text):
                 unable[0] = True
                 append_warnings("WARNING: Saw unrecognized param %s=%s" % (pn, unicode(param.value)))
           if unable[0]:
-            tmsg("<respelling> %s <end> %s" % (" ".join(respellings), " ||| ".join(all_warnings)))
+            tmsg("%s<respelling> %s <end> %s" % (
+              "[MULTIPLE PRONUN TEMPLATES] " if len(all_pronun_templates) > 1 else "",
+              " ".join(respellings), " ||| ".join(all_warnings)))
           else:
             rmparam(t, "nocount")
             del t.params[:]
