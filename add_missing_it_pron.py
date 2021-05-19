@@ -396,16 +396,25 @@ def process_text_on_page(index, pagetitle, text):
               if not re.search("^[0-9]+$", pn) and pn != "nocount":
                 unable[0] = True
                 append_warnings("WARNING: Saw unrecognized param %s=%s" % (pn, unicode(param.value)))
+          manual_assist = ""
           if unable[0]:
-            tmsg("%s<respelling> %s <end> %s" % (
-              "[MULTIPLE PRONUN TEMPLATES] " if len(all_pronun_templates) > 1 else "",
-              " ".join(respellings), " ||| ".join(all_warnings)))
-          else:
+            if pagetitle in ipa_directives:
+              respellings = ipa_directives[pagetitle]
+              unable[0] = False
+              manual_assist = " (manually assisted)"
+              tmsg("%sUsing manually-specified IPA-based respelling%s %s; original warnings follow: %s" % (
+                "[MULTIPLE PRONUN TEMPLATES] " if len(all_pronun_templates) > 1 else "",
+                "s" if len(respellings) > 1 else "", ",".join(respellings), " ||| ".join(all_warnings)))
+            else:
+              tmsg("%s<respelling> %s <end> %s" % (
+                "[MULTIPLE PRONUN TEMPLATES] " if len(all_pronun_templates) > 1 else "",
+                " ".join(respellings), " ||| ".join(all_warnings)))
+          if not unable[0]:
             rmparam(t, "nocount")
             del t.params[:]
             blib.set_param_chain(t, respellings, "1")
             blib.set_template_name(t, "it-IPA")
-            notes.append("replace raw {{IPA|it}} with {{it-IPA|%s}}" % "|".join(respellings))
+            notes.append("replace raw {{IPA|it}} with {{it-IPA|%s}}%s" % ("|".join(respellings), manual_assist))
           pronun_based_respellings.extend(respellings)
         if unicode(t) != origt:
           pagemsg("Replaced %s with %s" % (origt, unicode(t)))
@@ -481,13 +490,22 @@ def process_text_on_page(index, pagetitle, text):
               pagemsg(bad_rhyme_msg)
         if rhyme_based_respellings:
           if not saw_it_IPA:
+            manual_assist = ""
             if unable:
-              pagemsg("<rhyme-respelling> %s <end> %s: <from> %s <to> %s <end>" % (" ".join(rhyme_based_respellings),
-                " ||| ".join(all_warnings), unicode(rhymes_template), unicode(rhymes_template)))
-            else:
+              if pagetitle in rhyme_directives:
+                rhyme_based_respellings = rhyme_directives[pagetitle]
+                unable = False
+                manual_assist = " (manually assisted)"
+                pagemsg("Using manually-specified rhyme-based respelling%s %s; original warnings follow: %s: %s" % (
+                  "s" if len(rhyme_based_respellings) > 1 else "", ",".join(rhyme_based_respellings),
+                  " ||| ".join(all_warnings), unicode(rhymes_template)))
+              else:
+                pagemsg("<rhyme-respelling> %s <end> %s: <from> %s <to> %s <end>" % (" ".join(rhyme_based_respellings),
+                  " ||| ".join(all_warnings), unicode(rhymes_template), unicode(rhymes_template)))
+            if not unable:
               subsections[k] = "* {{it-IPA|%s}}\n" % "|".join(rhyme_based_respellings) + subsections[k]
-              notes.append("add Italian rhyme-based respelling%s %s" % (
-                "s" if len(rhyme_based_respellings) > 1 else "", ",".join(rhyme_based_respellings)))
+              notes.append("add Italian rhyme-based respelling%s %s%s" % (
+                "s" if len(rhyme_based_respellings) > 1 else "", ",".join(rhyme_based_respellings), manual_assist))
           else:
             for respelling in rhyme_based_respellings:
               if (not re.search("^qual[0-9]*=", respelling) and pronun_based_respellings and
@@ -503,9 +521,41 @@ def process_text_on_page(index, pagetitle, text):
 
 parser = blib.create_argparser("Add Italian pronunciations based on rhymes",
   include_pagefile=True, include_stdin=True)
-parser.add_argument("--partial-page", action="store_true")
+parser.add_argument("--partial-page", action="store_true", help="Input was generated with 'find_regex.py --lang Italian' and has no ==Italian== header.")
+parser.add_argument("--ipa-direcfile", help="File containing IPA respelling directives, modified from lines output with <respelling> ... <end> in them.")
+parser.add_argument("--rhyme-direcfile", help="File containing rhyme respelling directives, modified from lines output with <rhyme-respelling> ... <end> in them.")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
+
+ipa_directives = {}
+
+if args.ipa_direcfile:
+  for line in codecs.open(args.ipa_direcfile.decode("utf-8"), "r", encoding="utf-8"):
+    line = line.strip()
+    if not line or line.startswith("#"):
+      continue
+    m = re.search("^Page [0-9]* (.*?): <respelling> *(.*?) *<end>", line)
+    if not m:
+      msg("WARNING: Unrecognized line: %s" % line)
+    else:
+      page, respellings = m.groups()
+      respellings = [respelling.replace("_", "") for respelling in respellings.split(" ")]
+      ipa_directives[page] = respellings
+
+rhyme_directives = {}
+
+if args.rhyme_direcfile:
+  for line in codecs.open(args.rhyme_direcfile.decode("utf-8"), "r", encoding="utf-8"):
+    line = line.strip()
+    if not line or line.startswith("#"):
+      continue
+    m = re.search("^Page [0-9]* (.*?): <rhyme-respelling> *(.*?) *<end>", line)
+    if not m:
+      msg("WARNING: Unrecognized line: %s" % line)
+    else:
+      page, respellings = m.groups()
+      respellings = [respelling.replace("_", "") for respelling in respellings.split(" ")]
+      rhyme_directives[page] = respellings
 
 blib.do_pagefile_cats_refs(args, start, end, process_text_on_page, edit=True, stdin=True,
   default_refs=["Template:it-IPA"])
