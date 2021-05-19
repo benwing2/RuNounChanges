@@ -287,8 +287,8 @@ Page 43907 fuoribordo: <rhyme-respelling> fuòribórdo <end> WARNING: Unable to 
 Page 43910 fuoricampo: <rhyme-respelling> fuòricàmpo <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ampo: <from> {{rhymes|it|ampo}} <to> {{rhymes|it|ampo}} <end>
 # FIXME, check that there is a hiatus here
 Page 43919 fuorionda: <rhyme-respelling> fuòri.ónda <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme onda: <from> {{rhymes|it|onda}} <to> {{rhymes|it|onda}} <end>
-# FIXME, both fusa and fu[s]a, clean up entry
-Page 44004 fusa: <rhyme-respelling> fùsa <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: uza: <from> {{rhymes|it|uza}} <to> {{rhymes|it|uza}} <end>
+# already done
+# Page 44004 fusa: <rhyme-respelling> fùsa <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: uza: <from> {{rhymes|it|uza}} <to> {{rhymes|it|uza}} <end>
 Page 44106 gabbiotto: <rhyme-respelling> gabbiòtto <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ɔtto: <from> {{rhymes|it|ɔtto}} <to> {{rhymes|it|ɔtto}} <end>
 Page 44118 Gabriele: <rhyme-respelling> Gabri.èle <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ɛle: <from> {{rhymes|it|ɛle}} <to> {{rhymes|it|ɛle}} <end>
 Page 44120 Gabriella: <rhyme-respelling> Gabri.èlla <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ɛlla: <from> {{rhymes|it|ɛlla}} <to> {{rhymes|it|ɛlla}} <end>
@@ -494,121 +494,111 @@ Page 79618 polisolfuro: <rhyme-respelling> poli[s]olfùro <end> WARNING: Unable 
 Page 79695 politrasfuso: <rhyme-respelling> politrasfùso <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: uzo: <from> {{rhymes|it|uzo}} <to> {{rhymes|it|uzo}} <end>
 Page 79738 pollachiuria: <rhyme-respelling> pollachi.ùria <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme urja: <from> {{rhymes|it|urja}} <to> {{rhymes|it|urja}} <end>
 Page 80073 poppiero: <rhyme-respelling> poppièro <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ɛro: <from> {{rhymes|it|ɛro}} <to> {{rhymes|it|ɛro}} <end>
-
-
-
-
-
-
-# got here
-
-
-
-
-
-
-Page 80511 posatubi: <rhyme-respelling> posatùbi <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ubi: <from> {{rhymes|it|ubi}} <to> {{rhymes|it|ubi}} <end>
-Page 80839 pozzetto: <rhyme-respelling> pozzétto <end> WARNING: Unable to add pronunciation due to z in part before rhyme: etto: <from> {{rhymes|it|etto}} <to> {{rhymes|it|etto}} <end>
+Page 80511 posatubi: <rhyme-respelling> posatùbi #po[s]atùbi <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ubi: <from> {{rhymes|it|ubi}} <to> {{rhymes|it|ubi}} <end>
+Page 80839 pozzetto: <rhyme-respelling> pottsétto <end> WARNING: Unable to add pronunciation due to z in part before rhyme: etto: <from> {{rhymes|it|etto}} <to> {{rhymes|it|etto}} <end>
 Page 80983 preavviso: <rhyme-respelling> preavvìso <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: izo: <from> {{rhymes|it|izo}} <to> {{rhymes|it|izo}} <end>
 Page 80999 precariamente: <rhyme-respelling> precariaménte <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ente: <from> {{rhymes|it|ente}} <to> {{rhymes|it|ente}} <end>
 Page 81062 precisamente: <rhyme-respelling> precisaménte <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ente: <from> {{rhymes|it|ente}} <to> {{rhymes|it|ente}} <end>
 Page 81067 preciso: <rhyme-respelling> precìso <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: izo: <from> {{rhymes|it|izo}} <to> {{rhymes|it|izo}} <end>
-Page 81298 pregiudizialmente: <rhyme-respelling> pregiudizialménte <end> WARNING: Unable to add pronunciation due to z in part before rhyme: ente: <from> {{rhymes|it|ente}} <to> {{rhymes|it|ente}} <end>
-Page 81364 prelievo: <rhyme-respelling> prelièvo <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ɛvo: <from> {{rhymes|it|ɛvo}} <to> {{rhymes|it|ɛvo}} <end>
-Page 81647 presapere: <rhyme-respelling> presapére <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ere: <from> {{rhymes|it|ere}} <to> {{rhymes|it|ere}} <end>
-Page 81682 presedere: <rhyme-respelling> presedére <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ere: <from> {{rhymes|it|ere}} <to> {{rhymes|it|ere}} <end>
-Page 81743 presiedere: <rhyme-respelling> presièdere <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ɛdere: <from> {{rhymes|it|ɛdere}} <to> {{rhymes|it|ɛdere}} <end>
-Page 81748 preso: <rhyme-respelling> préso <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ezo: <from> {{rhymes|it|ezo}} <to> {{rhymes|it|ezo}} <end>
-Page 81856 presuntuoso: <rhyme-respelling> presuntuóso #presuntuó[s]o <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ozo: <from> {{rhymes|it|ozo}} <to> {{rhymes|it|ozo}} <end>
-Page 81859 presupporre: <rhyme-respelling> presuppórre <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: orre: <from> {{rhymes|it|orre}} <to> {{rhymes|it|orre}} <end>
-Page 81877 pretenziosamente: <rhyme-respelling> pretenziosaménte <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ente: <from> {{rhymes|it|ente}} <to> {{rhymes|it|ente}} <end>
-Page 81891 pretesa: <rhyme-respelling> pretésa <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: eza: <from> {{rhymes|it|eza}} <to> {{rhymes|it|eza}} <end>
-Page 81902 pretestuoso: <rhyme-respelling> pretestuóso #pretestuó[s]o <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ozo: <from> {{rhymes|it|ozo}} <to> {{rhymes|it|ozo}} <end>
+Page 81298 pregiudizialmente: <rhyme-respelling> pregiuditsialménte <end> WARNING: Unable to add pronunciation due to z in part before rhyme: ente: <from> {{rhymes|it|ente}} <to> {{rhymes|it|ente}} <end>
+Page 81364 prelievo: <rhyme-respelling> prelièvo preliévo <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ɛvo: <from> {{rhymes|it|ɛvo}} <to> {{rhymes|it|ɛvo|evo}} <end>
+Page 81647 presapere: <rhyme-respelling> pre[s]apére <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ere: <from> {{rhymes|it|ere}} <to> {{rhymes|it|ere}} <end>
+Page 81682 presedere: <rhyme-respelling> pre[s]edére <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ere: <from> {{rhymes|it|ere}} <to> {{rhymes|it|ere}} <end>
+Page 81743 presiedere: <rhyme-respelling> pre[s]ièdere pre[s]iédere <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ɛdere: <from> {{rhymes|it|ɛdere}} <to> {{rhymes|it|ɛdere|edere}} <end>
+Page 81748 preso: <rhyme-respelling> préso #pré[s]o <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ezo: <from> {{rhymes|it|ezo}} <to> {{rhymes|it|ezo}} <end>
+Page 81856 presuntuoso: <rhyme-respelling> presuntu.óso #presuntu.ó[s]o #pre[s]untu.ó[s]o #presuntuó[s]o <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ozo: <from> {{rhymes|it|ozo}} <to> {{rhymes|it|ozo}} <end>
+Page 81859 presupporre: <rhyme-respelling> presuppórre #pre[s]uppórre <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: orre: <from> {{rhymes|it|orre}} <to> {{rhymes|it|orre}} <end>
+Page 81877 pretenziosamente: <rhyme-respelling> pretentsiosaménte #pretentsio[s]aménte <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ente: <from> {{rhymes|it|ente}} <to> {{rhymes|it|ente}} <end>
+Page 81891 pretesa: <rhyme-respelling> pretésa #preté[s]a <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: eza: <from> {{rhymes|it|eza}} <to> {{rhymes|it|eza}} <end>
+Page 81902 pretestuoso: <rhyme-respelling> pretestu.óso #pretestu.ó[s]o #pretestuó[s]o <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ozo: <from> {{rhymes|it|ozo}} <to> {{rhymes|it|ozo}} <end>
 Page 82010 prigioniero: <rhyme-respelling> prigionièro <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ɛro: <from> {{rhymes|it|ɛro}} <to> {{rhymes|it|ɛro}} <end>
 Page 82057 primiero: <rhyme-respelling> primièro <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ɛro: <from> {{rhymes|it|ɛro}} <to> {{rhymes|it|ɛro}} <end>
-Page 82117 priore: <rhyme-respelling> prióre <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ore: <from> {{rhymes|it|ore}} <to> {{rhymes|it|ore}} <end>
-Page 82362 prodigiosamente: <rhyme-respelling> prodigiosaménte <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ente: <from> {{rhymes|it|ente}} <to> {{rhymes|it|ente}} <end>
+Page 82117 priore: <rhyme-respelling> pri.óre <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ore: <from> {{rhymes|it|ore}} <to> {{rhymes|it|ore}} <end>
+Page 82362 prodigiosamente: <rhyme-respelling> prodigiosaménte #prodigio[s]aménte <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ente: <from> {{rhymes|it|ente}} <to> {{rhymes|it|ente}} <end>
 Page 82514 profumiero: <rhyme-respelling> profumièro <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ɛro: <from> {{rhymes|it|ɛro}} <to> {{rhymes|it|ɛro}} <end>
 Page 82841 propriamente: <rhyme-respelling> propriaménte <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ente: <from> {{rhymes|it|ente}} <to> {{rhymes|it|ente}} <end>
-Page 83068 protesi: <rhyme-respelling> protési <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ezi: <from> {{rhymes|it|ezi}} <to> {{rhymes|it|ezi}} <end>
-Page 83126 protofisico: <rhyme-respelling> protofìsico <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: iziko: <from> {{rhymes|it|iziko}} <to> {{rhymes|it|iziko}} <end>
+# already done
+# Page 83068 protesi: <rhyme-respelling> protési <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ezi: <from> {{rhymes|it|ezi}} <to> {{rhymes|it|ezi}} <end>
+Page 83126 protofisico: <rhyme-respelling> pròtofìsico <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: iziko: <from> {{rhymes|it|iziko}} <to> {{rhymes|it|iziko}} <end>
 Page 83297 provocatoriamente: <rhyme-respelling> provocatoriaménte <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ente: <from> {{rhymes|it|ente}} <to> {{rhymes|it|ente}} <end>
 Page 83519 psicofisica: <rhyme-respelling> psicofìsica <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: izika: <from> {{rhymes|it|izika}} <to> {{rhymes|it|izika}} <end>
 Page 83520 psicofisico: <rhyme-respelling> psicofìsico <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: iziko: <from> {{rhymes|it|iziko}} <to> {{rhymes|it|iziko}} <end>
 Page 84051 pusillanime: <rhyme-respelling> pusillànime <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: anime: <from> {{rhymes|it|anime}} <to> {{rhymes|it|anime}} <end>
-Page 84115 puzzetta: <rhyme-respelling> puzzétta <end> WARNING: Unable to add pronunciation due to z in part before rhyme: etta: <from> {{rhymes|it|etta}} <to> {{rhymes|it|etta}} <end>
-Page 84126 puzzoso: <rhyme-respelling> puzzóso #puzzó[s]o <end> WARNING: Unable to add pronunciation due to z in part before rhyme: ozo: <from> {{rhymes|it|ozo}} <to> {{rhymes|it|ozo}} <end>
+Page 84115 puzzetta: <rhyme-respelling> puttsétta <end> WARNING: Unable to add pronunciation due to z in part before rhyme: etta: <from> {{rhymes|it|etta}} <to> {{rhymes|it|etta}} <end>
+Page 84126 puzzoso: <rhyme-respelling> puttsóso #puttsó[s]o <end> WARNING: Unable to add pronunciation due to z in part before rhyme: ozo: <from> {{rhymes|it|ozo}} <to> {{rhymes|it|ozo}} <end>
 Page 84747 quotidianamente: <rhyme-respelling> quotidianaménte <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ente: <from> {{rhymes|it|ente}} <to> {{rhymes|it|ente}} <end>
-Page 84789 rabbiosamente: <rhyme-respelling> rabbiosaménte <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ente: <from> {{rhymes|it|ente}} <to> {{rhymes|it|ente}} <end>
+Page 84789 rabbiosamente: <rhyme-respelling> rabbiosaménte #rabbio[s]aménte <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ente: <from> {{rhymes|it|ente}} <to> {{rhymes|it|ente}} <end>
 Page 84790 rabbioso: <rhyme-respelling> rabbióso #rabbió[s]o <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ozo: <from> {{rhymes|it|ozo}} <to> {{rhymes|it|ozo}} <end>
 Page 84870 racchiudere: <rhyme-respelling> racchiùdere <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme udere: <from> {{rhymes|it|udere}} <to> {{rhymes|it|udere}} <end>
 Page 85025 radianza: <rhyme-respelling> radiàntsa <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme antsa: <from> {{rhymes|it|antsa}} <to> {{rhymes|it|antsa}} <end>
-Page 85094 radiobussola: <rhyme-respelling> radiobùssola <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ussola: <from> {{rhymes|it|ussola}} <to> {{rhymes|it|ussola}} <end>
-Page 85127 radiodiffondere: <rhyme-respelling> radiodiffóndere <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ondere: <from> {{rhymes|it|ondere}} <to> {{rhymes|it|ondere}} <end>
-Page 85152 radiofaro: <rhyme-respelling> radiofàro <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme aro: <from> {{rhymes|it|aro}} <to> {{rhymes|it|aro}} <end>
-Page 85217 radiomobile: <rhyme-respelling> radiomòbile <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ɔbile: <from> {{rhymes|it|ɔbile}} <to> {{rhymes|it|ɔbile}} <end>
-Page 85223 radionuclide: <rhyme-respelling> radionuclìde <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ide: <from> {{rhymes|it|ide}} <to> {{rhymes|it|ide}} <end>
-Page 85224 radioonda: <rhyme-respelling> radioónda <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme onda: <from> {{rhymes|it|onda}} <to> {{rhymes|it|onda}} <end>
-Page 85252 radiosentiero: <rhyme-respelling> radiosentièro <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ɛro: <from> {{rhymes|it|ɛro}} <to> {{rhymes|it|ɛro}} <end>
+Page 85094 radiobussola: <rhyme-respelling> ràdiobùssola <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ussola: <from> {{rhymes|it|ussola}} <to> {{rhymes|it|ussola}} <end>
+Page 85127 radiodiffondere: <rhyme-respelling> ràdiodiffóndere <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ondere: <from> {{rhymes|it|ondere}} <to> {{rhymes|it|ondere}} <end>
+Page 85152 radiofaro: <rhyme-respelling> ràdiofàro <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme aro: <from> {{rhymes|it|aro}} <to> {{rhymes|it|aro}} <end>
+Page 85217 radiomobile: <rhyme-respelling> ràdiomòbile <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ɔbile: <from> {{rhymes|it|ɔbile}} <to> {{rhymes|it|ɔbile}} <end>
+Page 85223 radionuclide: <rhyme-respelling> ràdionuclìde <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ide: <from> {{rhymes|it|ide}} <to> {{rhymes|it|ide}} <end>
+Page 85224 radioonda: <rhyme-respelling> ràdioónda <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme onda: <from> {{rhymes|it|onda}} <to> {{rhymes|it|onda}} <end>
+Page 85252 radiosentiero: <rhyme-respelling> ràdio[s]entièro <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ɛro: <from> {{rhymes|it|ɛro}} <to> {{rhymes|it|ɛro}} <end>
 Page 85254 radioso: <rhyme-respelling> radióso #radió[s]o <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ozo: <from> {{rhymes|it|ozo}} <to> {{rhymes|it|ozo}} <end>
-Page 85255 radiosonda: <rhyme-respelling> radiosónda <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme onda: <from> {{rhymes|it|onda}} <to> {{rhymes|it|onda}} <end>
-Page 85265 radiosveglia: <rhyme-respelling> radiosvéglia <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme eʎʎa: <from> {{rhymes|it|eʎʎa}} <to> {{rhymes|it|eʎʎa}} <end>
-Page 85277 radiotelefono: <rhyme-respelling> radiotelèfono <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ɛfono: <from> {{rhymes|it|ɛfono}} <to> {{rhymes|it|ɛfono}} <end>
-Page 85447 ragazzotto: <rhyme-respelling> ragazzòtto <end> WARNING: Unable to add pronunciation due to z in part before rhyme: ɔtto: <from> {{rhymes|it|ɔtto}} <to> {{rhymes|it|ɔtto}} <end>
-Page 86204 raziocinio: <rhyme-respelling> raziocìnio <end> WARNING: Unable to add pronunciation due to z in part before rhyme: injo: <from> {{rhymes|it|injo}} <to> {{rhymes|it|injo}} <end>
+Page 85255 radiosonda: <rhyme-respelling> ràdio[s]ónda <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme onda: <from> {{rhymes|it|onda}} <to> {{rhymes|it|onda}} <end>
+Page 85265 radiosveglia: <rhyme-respelling> ràdiosvéglia <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme eʎʎa: <from> {{rhymes|it|eʎʎa}} <to> {{rhymes|it|eʎʎa}} <end>
+Page 85277 radiotelefono: <rhyme-respelling> ràdiotelèfono <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ɛfono: <from> {{rhymes|it|ɛfono}} <to> {{rhymes|it|ɛfono}} <end>
+Page 85447 ragazzotto: <rhyme-respelling> ragattsòtto <end> WARNING: Unable to add pronunciation due to z in part before rhyme: ɔtto: <from> {{rhymes|it|ɔtto}} <to> {{rhymes|it|ɔtto}} <end>
+Page 86204 raziocinio: <rhyme-respelling> ratsiocìnio <end> WARNING: Unable to add pronunciation due to z in part before rhyme: injo: <from> {{rhymes|it|injo}} <to> {{rhymes|it|injo}} <end>
 Page 86381 recisamente: <rhyme-respelling> recisaménte <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ente: <from> {{rhymes|it|ente}} <to> {{rhymes|it|ente}} <end>
 Page 86383 reciso: <rhyme-respelling> recìso <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: izo: <from> {{rhymes|it|izo}} <to> {{rhymes|it|izo}} <end>
 Page 86404 reclusa: <rhyme-respelling> reclùsa <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: uza: <from> {{rhymes|it|uza}} <to> {{rhymes|it|uza}} <end>
 Page 86406 recluso: <rhyme-respelling> reclùso <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: uzo: <from> {{rhymes|it|uzo}} <to> {{rhymes|it|uzo}} <end>
 Page 86560 refuso: <rhyme-respelling> refùso <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: uzo: <from> {{rhymes|it|uzo}} <to> {{rhymes|it|uzo}} <end>
-Page 87127 reso: <rhyme-respelling> réso <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ezo: <from> {{rhymes|it|ezo}} <to> {{rhymes|it|ezo}} <end>
-Page 87130 resoconto: <rhyme-respelling> resocónto <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: onto: <from> {{rhymes|it|onto}} <to> {{rhymes|it|onto}} <end>
-Page 87525 riaccogliere: <rhyme-respelling> riaccògliere <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ɔʎʎere: <from> {{rhymes|it|ɔʎʎere}} <to> {{rhymes|it|ɔʎʎere}} <end>
-Page 87688 riappendere: <rhyme-respelling> riappèndere <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ɛndere: <from> {{rhymes|it|ɛndere}} <to> {{rhymes|it|ɛndere}} <end>
-Page 87795 riavere: <rhyme-respelling> riavére <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ere: <from> {{rhymes|it|ere}} <to> {{rhymes|it|ere}} <end>
-Page 88117 richiesto: <rhyme-respelling> richièsto <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ɛsto: <from> {{rhymes|it|ɛsto}} <to> {{rhymes|it|ɛsto}} <end>
+# already done
+# Page 87127 reso: <rhyme-respelling> réso <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ezo: <from> {{rhymes|it|ezo}} <to> {{rhymes|it|ezo}} <end>
+Page 87130 resoconto: <rhyme-respelling> resocónto #re[s]ocónto <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: onto: <from> {{rhymes|it|onto}} <to> {{rhymes|it|onto}} <end>
+Page 87525 riaccogliere: <rhyme-respelling> ri.accògliere <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ɔʎʎere: <from> {{rhymes|it|ɔʎʎere}} <to> {{rhymes|it|ɔʎʎere}} <end>
+Page 87688 riappendere: <rhyme-respelling> ri.appèndere <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ɛndere: <from> {{rhymes|it|ɛndere}} <to> {{rhymes|it|ɛndere}} <end>
+Page 87795 riavere: <rhyme-respelling> ri.avére <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ere: <from> {{rhymes|it|ere}} <to> {{rhymes|it|ere}} <end>
+Page 88117 richiesto: <rhyme-respelling> richièsto richiésto <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ɛsto: <from> {{rhymes|it|ɛsto}} <to> {{rhymes|it|ɛsto|esto}} <end>
 Page 88120 richiudere: <rhyme-respelling> richiùdere <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme udere: <from> {{rhymes|it|udere}} <to> {{rhymes|it|udere}} <end>
-Page 88595 riecco: <rhyme-respelling> riècco <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ɛkko: <from> {{rhymes|it|ɛkko}} <to> {{rhymes|it|ɛkko}} <end>
-Page 88604 riedito: <rhyme-respelling> rièdito <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ɛdito: <from> {{rhymes|it|ɛdito}} <to> {{rhymes|it|ɛdito}} <end>
-Page 88605 riedizione: <rhyme-respelling> rieditsióne <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme one: <from> {{rhymes|it|one}} <to> {{rhymes|it|one}} <end>
-Page 88624 riemergere: <rhyme-respelling> riemèrgere <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ɛrdʒere: <from> {{rhymes|it|ɛrdʒere}} <to> {{rhymes|it|ɛrdʒere}} <end>
-Page 88650 rientro: <rhyme-respelling> riéntro <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme entro: <from> {{rhymes|it|entro}} <to> {{rhymes|it|entro}} <end>
-Page 88679 riespellere: <rhyme-respelling> riespèllere <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ɛllere: <from> {{rhymes|it|ɛllere}} <to> {{rhymes|it|ɛllere}} <end>
-Page 89097 rilievo: <rhyme-respelling> rilièvo <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ɛvo: <from> {{rhymes|it|ɛvo}} <to> {{rhymes|it|ɛvo}} <end>
+Page 88595 riecco: <rhyme-respelling> ri.ècco <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ɛkko: <from> {{rhymes|it|ɛkko}} <to> {{rhymes|it|ɛkko}} <end>
+Page 88604 riedito: <rhyme-respelling> ri.èdito <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ɛdito: <from> {{rhymes|it|ɛdito}} <to> {{rhymes|it|ɛdito}} <end>
+Page 88605 riedizione: <rhyme-respelling> ri.editsióne <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme one: <from> {{rhymes|it|one}} <to> {{rhymes|it|one}} <end>
+Page 88624 riemergere: <rhyme-respelling> ri.emèrgere <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ɛrdʒere: <from> {{rhymes|it|ɛrdʒere}} <to> {{rhymes|it|ɛrdʒere}} <end>
+Page 88650 rientro: <rhyme-respelling> ri.éntro <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme entro: <from> {{rhymes|it|entro}} <to> {{rhymes|it|entro}} <end>
+Page 88679 riespellere: <rhyme-respelling> ri.espèllere <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ɛllere: <from> {{rhymes|it|ɛllere}} <to> {{rhymes|it|ɛllere}} <end>
+Page 89097 rilievo: <rhyme-respelling> rilièvo riliévo <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ɛvo: <from> {{rhymes|it|ɛvo}} <to> {{rhymes|it|ɛvo|evo}} <end>
 Page 89366 rimpiangere: <rhyme-respelling> rimpiàngere <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme andʒere: <from> {{rhymes|it|andʒere}} <to> {{rhymes|it|andʒere}} <end>
 Page 89376 rimpiazzo: <rhyme-respelling> rimpiàttso <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme attso: <from> {{rhymes|it|attso}} <to> {{rhymes|it|attso}} <end>
 Page 89497 rinchiudere: <rhyme-respelling> rinchiùdere <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme udere: <from> {{rhymes|it|udere}} <to> {{rhymes|it|udere}} <end>
-Page 89499 rinchiuso: <rhyme-respelling> rinchiùso <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: uzo: <from> {{rhymes|it|uzo}} <to> {{rhymes|it|uzo}} <end>
-Page 89906 riottenere: <rhyme-respelling> riottenére <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ere: <from> {{rhymes|it|ere}} <to> {{rhymes|it|ere}} <end>
-Page 89910 riottoso: <rhyme-respelling> riottóso #riottó[s]o <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ozo: <from> {{rhymes|it|ozo}} <to> {{rhymes|it|ozo}} <end>
+Page 89499 rinchiuso: <rhyme-respelling> rinchiùso #rinchiù[s]o <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: uzo: <from> {{rhymes|it|uzo}} <to> {{rhymes|it|uzo}} <end>
+Page 89906 riottenere: <rhyme-respelling> ri.ottenére <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ere: <from> {{rhymes|it|ere}} <to> {{rhymes|it|ere}} <end>
+Page 89910 riottoso: <rhyme-respelling> ri.ottóso #ri.ottó[s]o <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ozo: <from> {{rhymes|it|ozo}} <to> {{rhymes|it|ozo}} <end>
 Page 89998 ripiangere: <rhyme-respelling> ripiàngere <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme andʒere: <from> {{rhymes|it|andʒere}} <to> {{rhymes|it|andʒere}} <end>
-Page 90019 ripieno: <rhyme-respelling> ripièno <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ɛno: <from> {{rhymes|it|ɛno}} <to> {{rhymes|it|ɛno}} <end>
-Page 90063 riposo: <rhyme-respelling> ripòso <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ɔzo: <from> {{rhymes|it|ɔzo}} <to> {{rhymes|it|ɔzo}} <end>
-Page 90090 ripresa: <rhyme-respelling> riprésa <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: eza: <from> {{rhymes|it|eza}} <to> {{rhymes|it|eza}} <end>
-Page 90203 risapere: <rhyme-respelling> risapére <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ere: <from> {{rhymes|it|ere}} <to> {{rhymes|it|ere}} <end>
-Page 90305 risedere: <rhyme-respelling> risedére <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ere: <from> {{rhymes|it|ere}} <to> {{rhymes|it|ere}} <end>
-Page 90361 risiedere: <rhyme-respelling> risièdere <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ɛdere: <from> {{rhymes|it|ɛdere}} <to> {{rhymes|it|ɛdere}} <end>
-Page 90362 risiero: <rhyme-respelling> risièro <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ɛro: <from> {{rhymes|it|ɛro}} <to> {{rhymes|it|ɛro}} <end>
-Page 90377 riso: <rhyme-respelling> rìso <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: izo: <from> {{rhymes|it|izo}} <to> {{rhymes|it|izo}} <end>
-Page 90414 risoluzione: <rhyme-respelling> risolutsióne <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: one: <from> {{rhymes|it|one}} <to> {{rhymes|it|one}} <end>
-Page 90422 risommergere: <rhyme-respelling> risommèrgere <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ɛrdʒere: <from> {{rhymes|it|ɛrdʒere}} <to> {{rhymes|it|ɛrdʒere}} <end>
-Page 90447 risospingere: <rhyme-respelling> risospìngere <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: indʒere: <from> {{rhymes|it|indʒere}} <to> {{rhymes|it|indʒere}} <end>
-Page 90449 risostenere: <rhyme-respelling> risostenére <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ere: <from> {{rhymes|it|ere}} <to> {{rhymes|it|ere}} <end>
-Page 90609 risultanza: <rhyme-respelling> risultàntsa <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: antsa: <from> {{rhymes|it|antsa}} <to> {{rhymes|it|antsa}} <end>
-Page 90807 riunito: <rhyme-respelling> riunìto <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ito: <from> {{rhymes|it|ito}} <to> {{rhymes|it|ito}} <end>
-Page 90820 riuscito: <rhyme-respelling> riuscìto <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ito: <from> {{rhymes|it|ito}} <to> {{rhymes|it|ito}} <end>
-Page 90821 riuso: <rhyme-respelling> riùso <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: uzo: <from> {{rhymes|it|uzo}} <to> {{rhymes|it|uzo}} <end>
-Page 91751 rumorosamente: <rhyme-respelling> rumorosaménte <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ente: <from> {{rhymes|it|ente}} <to> {{rhymes|it|ente}} <end>
+Page 90019 ripieno: <rhyme-respelling> ripièno ripiéno <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ɛno: <from> {{rhymes|it|ɛno}} <to> {{rhymes|it|ɛno|eno}} <end>
+Page 90063 riposo: <rhyme-respelling> ripòso #ripò[s]o <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ɔzo: <from> {{rhymes|it|ɔzo}} <to> {{rhymes|it|ɔzo}} <end>
+Page 90090 ripresa: <rhyme-respelling> riprésa #ripré[s]a <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: eza: <from> {{rhymes|it|eza}} <to> {{rhymes|it|eza}} <end>
+Page 90203 risapere: <rhyme-respelling> ri[s]apére <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ere: <from> {{rhymes|it|ere}} <to> {{rhymes|it|ere}} <end>
+Page 90305 risedere: <rhyme-respelling> ri[s]edére <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ere: <from> {{rhymes|it|ere}} <to> {{rhymes|it|ere}} <end>
+Page 90361 risiedere: <rhyme-respelling> ri[s]ièdere risièdere ri[s]iédere risiédere <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ɛdere: <from> {{rhymes|it|ɛdere}} <to> {{rhymes|it|ɛdere|edere}} <end>
+Page 90362 risiero: <rhyme-respelling> risièro #ri[s]ièro <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ɛro: <from> {{rhymes|it|ɛro}} <to> {{rhymes|it|ɛro}} <end>
+# already done
+# Page 90377 riso: <rhyme-respelling> rìso <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: izo: <from> {{rhymes|it|izo}} <to> {{rhymes|it|izo}} <end>
+Page 90414 risoluzione: <rhyme-respelling> risolutsióne #ri[s]olutsióne <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: one: <from> {{rhymes|it|one}} <to> {{rhymes|it|one}} <end>
+Page 90422 risommergere: <rhyme-respelling> ri[s]ommèrgere <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ɛrdʒere: <from> {{rhymes|it|ɛrdʒere}} <to> {{rhymes|it|ɛrdʒere}} <end>
+Page 90447 risospingere: <rhyme-respelling> ri[s]ospìngere <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: indʒere: <from> {{rhymes|it|indʒere}} <to> {{rhymes|it|indʒere}} <end>
+Page 90449 risostenere: <rhyme-respelling> ri[s]ostenére <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ere: <from> {{rhymes|it|ere}} <to> {{rhymes|it|ere}} <end>
+Page 90609 risultanza: <rhyme-respelling> risultàntsa #ri[s]ultàntsa <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: antsa: <from> {{rhymes|it|antsa}} <to> {{rhymes|it|antsa}} <end>
+Page 90807 riunito: <rhyme-respelling> ri.unìto <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ito: <from> {{rhymes|it|ito}} <to> {{rhymes|it|ito}} <end>
+Page 90820 riuscito: <rhyme-respelling> ri.uscìto <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ito: <from> {{rhymes|it|ito}} <to> {{rhymes|it|ito}} <end>
+Page 90821 riuso: <rhyme-respelling> ri.ùso <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: uzo: <from> {{rhymes|it|uzo}} <to> {{rhymes|it|uzo}} <end>
+Page 91751 rumorosamente: <rhyme-respelling> rumorosaménte #rumoro[s]aménte <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ente: <from> {{rhymes|it|ente}} <to> {{rhymes|it|ente}} <end>
 Page 91908 sabbioso: <rhyme-respelling> sabbióso #sabbió[s]o <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ozo: <from> {{rhymes|it|ozo}} <to> {{rhymes|it|ozo}} <end>
 Page 92397 salottiero: <rhyme-respelling> salottièro <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ɛro: <from> {{rhymes|it|ɛro}} <to> {{rhymes|it|ɛro}} <end>
-Page 92629 Samuele: <rhyme-respelling> Samuèle <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ɛle: <from> {{rhymes|it|ɛle}} <to> {{rhymes|it|ɛle}} <end>
-Page 92642 San Pietroburgo: <rhyme-respelling> San Pietrobùrgo <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme urɡo: <from> {{rhymes|it|urɡo}} <to> {{rhymes|it|urɡo}} <end>
+Page 92629 Samuele: <rhyme-respelling> Samu.èle <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ɛle: <from> {{rhymes|it|ɛle}} <to> {{rhymes|it|ɛle}} <end>
+Page 92642 San Pietroburgo: <rhyme-respelling> Sam_Pietrobùrgo #Sam_Piètrobùrgo <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme urɡo: <from> {{rhymes|it|urɡo}} <to> {{rhymes|it|urɡo}} <end>
 Page 92879 sapientemente: <rhyme-respelling> sapienteménte <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ente: <from> {{rhymes|it|ente}} <to> {{rhymes|it|ente}} <end>
 Page 92900 saponiero: <rhyme-respelling> saponièro <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ɛro: <from> {{rhymes|it|ɛro}} <to> {{rhymes|it|ɛro}} <end>
 Page 92973 sarchiello: <rhyme-respelling> sarchièllo <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ɛllo: <from> {{rhymes|it|ɛllo}} <to> {{rhymes|it|ɛllo}} <end>
-Page 93242 sazietà: <rhyme-respelling> sazietà <end> WARNING: Unable to add pronunciation due to z in part before rhyme: a: <from> {{rhymes|it|a}} <to> {{rhymes|it|a}} <end>
+Page 93242 sazietà: <rhyme-respelling> satsietà <end> WARNING: Unable to add pronunciation due to z in part before rhyme: a: <from> {{rhymes|it|a}} <to> {{rhymes|it|a}} <end>
 Page 93474 sbiadito: <rhyme-respelling> sbiadìto <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ito: <from> {{rhymes|it|ito}} <to> {{rhymes|it|ito}} <end>
-Page 93490 sbieco: <rhyme-respelling> sbièco <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ɛko: <from> {{rhymes|it|ɛko}} <to> {{rhymes|it|ɛko}} <end>
+Page 93490 sbieco: <rhyme-respelling> sbièco sbiéco <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ɛko: <from> {{rhymes|it|ɛko}} <to> {{rhymes|it|ɛko|eco}} <end>
 Page 93879 scaldapiedi: <rhyme-respelling> scàldapièdi scàldapiédi <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ɛdi: <from> {{rhymes|it|ɛdi}} <to> {{rhymes|it|ɛdi|edi}} <end>
 Page 94699 schiamazzo: <rhyme-respelling> schiamàttso <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme attso: <from> {{rhymes|it|attso}} <to> {{rhymes|it|attso}} <end>
 Page 94710 schiappa: <rhyme-respelling> schiàppa <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme appa: <from> {{rhymes|it|appa}} <to> {{rhymes|it|appa}} <end>
@@ -616,138 +606,140 @@ Page 94800 schiocco: <rhyme-respelling> schiòcco <end> WARNING: Unable to add p
 Page 94824 schiso: <rhyme-respelling> schìso <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: izo: <from> {{rhymes|it|izo}} <to> {{rhymes|it|izo}} <end>
 Page 94833 schiudere: <rhyme-respelling> schiùdere <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme udere: <from> {{rhymes|it|udere}} <to> {{rhymes|it|udere}} <end>
 Page 94846 schiumoso: <rhyme-respelling> schiumóso #schiumó[s]o <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ozo: <from> {{rhymes|it|ozo}} <to> {{rhymes|it|ozo}} <end>
-Page 94847 schiusa: <rhyme-respelling> schiùsa <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: uza: <from> {{rhymes|it|uza}} <to> {{rhymes|it|uza}} <end>
+Page 94847 schiusa: <rhyme-respelling> schiùsa #schiù[s]a <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: uza: <from> {{rhymes|it|uza}} <to> {{rhymes|it|uza}} <end>
 Page 95108 scimmietta: <rhyme-respelling> scimmiétta <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme etta: <from> {{rhymes|it|etta}} <to> {{rhymes|it|etta}} <end>
-Page 95332 scleroso: <rhyme-respelling> scleròso <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ɔzo: <from> {{rhymes|it|ɔzo}} <to> {{rhymes|it|ɔzo}} <end>
-Page 95908 scosceso: <rhyme-respelling> scoscéso <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ezo: <from> {{rhymes|it|ezo}} <to> {{rhymes|it|ezo}} <end>
+# already done
+# Page 95332 scleroso: <rhyme-respelling> scleròso <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ɔzo: <from> {{rhymes|it|ɔzo}} <to> {{rhymes|it|ɔzo}} <end>
+Page 95908 scosceso: <rhyme-respelling> scoscéso #scoscé[s]o <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ezo: <from> {{rhymes|it|ezo}} <to> {{rhymes|it|ezo}} <end>
 Page 96155 scudiero: <rhyme-respelling> scudièro <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ɛro: <from> {{rhymes|it|ɛro}} <to> {{rhymes|it|ɛro}} <end>
-Page 96513 sediziosamente: <rhyme-respelling> sediziosaménte <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ente: <from> {{rhymes|it|ente}} <to> {{rhymes|it|ente}} <end>
-Page 96973 semiaperto: <rhyme-respelling> semiapèrto <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ɛrto: <from> {{rhymes|it|ɛrto}} <to> {{rhymes|it|ɛrto}} <end>
-Page 96998 semichiuso: <rhyme-respelling> semichiùso <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: uzo: <from> {{rhymes|it|uzo}} <to> {{rhymes|it|uzo}} <end>
-Page 97046 semidisteso: <rhyme-respelling> semidistéso <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ezo: <from> {{rhymes|it|ezo}} <to> {{rhymes|it|ezo}} <end>
-Page 97138 semiopaco: <rhyme-respelling> semiopàco <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ako: <from> {{rhymes|it|ako}} <to> {{rhymes|it|ako}} <end>
-Page 97157 semipieno: <rhyme-respelling> semipièno <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ɛno: <from> {{rhymes|it|ɛno}} <to> {{rhymes|it|ɛno}} <end>
-Page 97414 sensualmente: <rhyme-respelling> sensualménte <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ente: <from> {{rhymes|it|ente}} <to> {{rhymes|it|ente}} <end>
-Page 97424 sentenzioso: <rhyme-respelling> sentenzióso #sentenzió[s]o <end> WARNING: Unable to add pronunciation due to z in part before rhyme: ozo: <from> {{rhymes|it|ozo}} <to> {{rhymes|it|ozo}} <end>
+Page 96513 sediziosamente: <rhyme-respelling> seditsiosaménte #seditsio[s]aménte <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ente: <from> {{rhymes|it|ente}} <to> {{rhymes|it|ente}} <end>
+Page 96973 semiaperto: <rhyme-respelling> sèmi.apèrto <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ɛrto: <from> {{rhymes|it|ɛrto}} <to> {{rhymes|it|ɛrto}} <end>
+Page 96998 semichiuso: <rhyme-respelling> sèmichiùso <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: uzo: <from> {{rhymes|it|uzo}} <to> {{rhymes|it|uzo}} <end>
+Page 97046 semidisteso: <rhyme-respelling> sèmidistéso #sèmidisté[s]o <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ezo: <from> {{rhymes|it|ezo}} <to> {{rhymes|it|ezo}} <end>
+Page 97138 semiopaco: <rhyme-respelling> sèmi.opàco <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ako: <from> {{rhymes|it|ako}} <to> {{rhymes|it|ako}} <end>
+Page 97157 semipieno: <rhyme-respelling> sèmi.pièno <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ɛno: <from> {{rhymes|it|ɛno}} <to> {{rhymes|it|ɛno}} <end>
+Page 97414 sensualmente: <rhyme-respelling> sensu.alménte <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ente: <from> {{rhymes|it|ente}} <to> {{rhymes|it|ente}} <end>
+Page 97424 sentenzioso: <rhyme-respelling> sententsióso #sententsió[s]o <end> WARNING: Unable to add pronunciation due to z in part before rhyme: ozo: <from> {{rhymes|it|ozo}} <to> {{rhymes|it|ozo}} <end>
 Page 97625 seriamente: <rhyme-respelling> seriaménte <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ente: <from> {{rhymes|it|ente}} <to> {{rhymes|it|ente}} <end>
 Page 97651 serioso: <rhyme-respelling> serióso #serió[s]o <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ozo: <from> {{rhymes|it|ozo}} <to> {{rhymes|it|ozo}} <end>
 Page 97811 sese: <rhyme-respelling> sèse <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ɛze: <from> {{rhymes|it|ɛze}} <to> {{rhymes|it|ɛze}} <end>
 Page 98633 sfuso: <rhyme-respelling> sfùso <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: uzo: <from> {{rhymes|it|uzo}} <to> {{rhymes|it|uzo}} <end>
-Page 98638 sgabuzzino: <rhyme-respelling> sgabuzzìno <end> WARNING: Unable to add pronunciation due to z in part before rhyme: ino: <from> {{rhymes|it|ino}} <to> {{rhymes|it|ino}} <end>
+Page 98638 sgabuzzino: <rhyme-respelling> sgabuttsìno #sgabuddzìno <end> WARNING: Unable to add pronunciation due to z in part before rhyme: ino: <from> {{rhymes|it|ino}} <to> {{rhymes|it|ino}} <end>
 Page 98926 siamango: <rhyme-respelling> siamàngo <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme anɡo: <from> {{rhymes|it|anɡo}} <to> {{rhymes|it|anɡo}} <end>
 Page 98927 siamese: <rhyme-respelling> siamése #siamé[s]e <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme eze: <from> {{rhymes|it|eze}} <to> {{rhymes|it|eze}} <end>
 Page 98974 siciliano: <rhyme-respelling> siciliàno <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ano: <from> {{rhymes|it|ano}} <to> {{rhymes|it|ano}} <end>
 Page 99035 siero: <rhyme-respelling> sièro <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ɛro: <from> {{rhymes|it|ɛro}} <to> {{rhymes|it|ɛro}} <end>
-Page 99194 silenziosamente: <rhyme-respelling> silenziosaménte <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ente: <from> {{rhymes|it|ente}} <to> {{rhymes|it|ente}} <end>
-Page 99687 sinuoso: <rhyme-respelling> sinuóso #sinuó[s]o <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ozo: <from> {{rhymes|it|ozo}} <to> {{rhymes|it|ozo}} <end>
+Page 99194 silenziosamente: <rhyme-respelling> silentsiosaménte <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ente: <from> {{rhymes|it|ente}} <to> {{rhymes|it|ente}} <end>
+Page 99687 sinuoso: <rhyme-respelling> sinu.óso #sinu.ó[s]o #sinuó[s]o <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ozo: <from> {{rhymes|it|ozo}} <to> {{rhymes|it|ozo}} <end>
 Page 99719 siriano: <rhyme-respelling> siriàno <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ano: <from> {{rhymes|it|ano}} <to> {{rhymes|it|ano}} <end>
 Page 100343 socchiudere: <rhyme-respelling> socchiùdere <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme udere: <from> {{rhymes|it|udere}} <to> {{rhymes|it|udere}} <end>
-Page 100893 sollievo: <rhyme-respelling> sollièvo <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ɛvo: <from> {{rhymes|it|ɛvo}} <to> {{rhymes|it|ɛvo}} <end>
-Page 101100 sontuoso: <rhyme-respelling> sontuóso #sontuó[s]o <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ozo: <from> {{rhymes|it|ozo}} <to> {{rhymes|it|ozo}} <end>
+Page 100893 sollievo: <rhyme-respelling> sollièvo solliévo <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ɛvo: <from> {{rhymes|it|ɛvo}} <to> {{rhymes|it|ɛvo|evo}} <end>
+Page 101100 sontuoso: <rhyme-respelling> sontu.óso #sontu.ó[s]o #sontuó[s]o <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ozo: <from> {{rhymes|it|ozo}} <to> {{rhymes|it|ozo}} <end>
 Page 101123 soppiatto: <rhyme-respelling> soppiàtto <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme atto: <from> {{rhymes|it|atto}} <to> {{rhymes|it|atto}} <end>
 Page 101251 sopralluogo: <rhyme-respelling> sopralluògo <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ɔɡo: <from> {{rhymes|it|ɔɡo}} <to> {{rhymes|it|ɔɡo}} <end>
 Page 101453 sopruso: <rhyme-respelling> soprùso <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: uzo: <from> {{rhymes|it|uzo}} <to> {{rhymes|it|uzo}} <end>
-Page 101555 sorpresa: <rhyme-respelling> sorprésa <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: eza: <from> {{rhymes|it|eza}} <to> {{rhymes|it|eza}} <end>
-Page 101556 sorpreso: <rhyme-respelling> sorpréso <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ezo: <from> {{rhymes|it|ezo}} <to> {{rhymes|it|ezo}} <end>
-Page 101608 sospeso: <rhyme-respelling> sospéso <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ezo: <from> {{rhymes|it|ezo}} <to> {{rhymes|it|ezo}} <end>
+Page 101555 sorpresa: <rhyme-respelling> sorprésa #sorpré[s]a <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: eza: <from> {{rhymes|it|eza}} <to> {{rhymes|it|eza}} <end>
+Page 101556 sorpreso: <rhyme-respelling> sorpréso #sorpré[s]o <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ezo: <from> {{rhymes|it|ezo}} <to> {{rhymes|it|ezo}} <end>
+Page 101608 sospeso: <rhyme-respelling> sospéso #sospé[s]o <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ezo: <from> {{rhymes|it|ezo}} <to> {{rhymes|it|ezo}} <end>
 Page 101653 sostanziosamente: <rhyme-respelling> sostanziosaménte <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ente: <from> {{rhymes|it|ente}} <to> {{rhymes|it|ente}} <end>
-Page 101734 sottinteso: <rhyme-respelling> sottintéso <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ezo: <from> {{rhymes|it|ezo}} <to> {{rhymes|it|ezo}} <end>
+Page 101734 sottinteso: <rhyme-respelling> sottintéso #sottinté[s]o <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ezo: <from> {{rhymes|it|ezo}} <to> {{rhymes|it|ezo}} <end>
 Page 101888 sottopiatto: <rhyme-respelling> sottopiàtto <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme atto: <from> {{rhymes|it|atto}} <to> {{rhymes|it|atto}} <end>
 Page 101889 sottopiede: <rhyme-respelling> sottopiède sottopiéde <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ɛde: <from> {{rhymes|it|ɛde}} <to> {{rhymes|it|ɛde|ede}} <end>
-Page 101996 sottozero: <rhyme-respelling> sottozèro <end> WARNING: Unable to add pronunciation due to z in part before rhyme: ɛro: <from> {{rhymes|it|ɛro}} <to> {{rhymes|it|ɛro}} <end>
+Page 101996 sottozero: <rhyme-respelling> sottodzèro <end> WARNING: Unable to add pronunciation due to z in part before rhyme: ɛro: <from> {{rhymes|it|ɛro}} <to> {{rhymes|it|ɛro}} <end>
 Page 102026 sovietica: <rhyme-respelling> soviètica <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ɛtika: <from> {{rhymes|it|ɛtika}} <to> {{rhymes|it|ɛtika}} <end>
 Page 102113 sovrappensiero: <rhyme-respelling> sovrappensièro <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ɛro: <from> {{rhymes|it|ɛro}} <to> {{rhymes|it|ɛro}} <end>
-Page 102114 sovrappeso: <rhyme-respelling> sovrappéso <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ezo: <from> {{rhymes|it|ezo}} <to> {{rhymes|it|ezo}} <end>
+Page 102114 sovrappeso: <rhyme-respelling> sovrappéso #sovrappé[s]o <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ezo: <from> {{rhymes|it|ezo}} <to> {{rhymes|it|ezo}} <end>
 Page 102115 sovrappiù: <rhyme-respelling> sovrappiù <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme u: <from> {{rhymes|it|u}} <to> {{rhymes|it|u}} <end>
-Page 102352 spandifieno: <rhyme-respelling> spandifièno <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ɛno: <from> {{rhymes|it|ɛno}} <to> {{rhymes|it|ɛno}} <end>
+Page 102352 spandifieno: <rhyme-respelling> spandifièno spandifiéno <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ɛno: <from> {{rhymes|it|ɛno}} <to> {{rhymes|it|ɛno|eno}} <end>
 Page 102379 sparachiodi: <rhyme-respelling> sparachiòdi <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ɔdi: <from> {{rhymes|it|ɔdi}} <to> {{rhymes|it|ɔdi}} <end>
-Page 102551 spazioso: <rhyme-respelling> spazióso #spazió[s]o <end> WARNING: Unable to add pronunciation due to z in part before rhyme: ozo: <from> {{rhymes|it|ozo}} <to> {{rhymes|it|ozo}} <end>
-Page 102559 spazzaneve: <rhyme-respelling> spazzanéve <end> WARNING: Unable to add pronunciation due to z in part before rhyme: eve: <from> {{rhymes|it|eve}} <to> {{rhymes|it|eve}} <end>
-Page 102720 speranzoso: <rhyme-respelling> speranzóso #speranzó[s]o <end> WARNING: Unable to add pronunciation due to z in part before rhyme: ozo: <from> {{rhymes|it|ozo}} <to> {{rhymes|it|ozo}} <end>
-Page 102804 speso: <rhyme-respelling> spéso <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ezo: <from> {{rhymes|it|ezo}} <to> {{rhymes|it|ezo}} <end>
-Page 102880 spezzatino: <rhyme-respelling> spezzatìno <end> WARNING: Unable to add pronunciation due to z in part before rhyme: ino: <from> {{rhymes|it|ino}} <to> {{rhymes|it|ino}} <end>
+Page 102551 spazioso: <rhyme-respelling> spatsióso #spatsió[s]o <end> WARNING: Unable to add pronunciation due to z in part before rhyme: ozo: <from> {{rhymes|it|ozo}} <to> {{rhymes|it|ozo}} <end>
+Page 102559 spazzaneve: <rhyme-respelling> spattsanéve <end> WARNING: Unable to add pronunciation due to z in part before rhyme: eve: <from> {{rhymes|it|eve}} <to> {{rhymes|it|eve}} <end>
+Page 102720 speranzoso: <rhyme-respelling> sperantsóso #sperantsó[s]o <end> WARNING: Unable to add pronunciation due to z in part before rhyme: ozo: <from> {{rhymes|it|ozo}} <to> {{rhymes|it|ozo}} <end>
+Page 102804 speso: <rhyme-respelling> spéso #spé[s]o <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ezo: <from> {{rhymes|it|ezo}} <to> {{rhymes|it|ezo}} <end>
+Page 102880 spezzatino: <rhyme-respelling> spettsatìno <end> WARNING: Unable to add pronunciation due to z in part before rhyme: ino: <from> {{rhymes|it|ino}} <to> {{rhymes|it|ino}} <end>
 Page 102897 spiacere: <rhyme-respelling> spiacére <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ere: <from> {{rhymes|it|ere}} <to> {{rhymes|it|ere}} <end>
 Page 102929 spiazzo: <rhyme-respelling> spiàttso <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme attso: <from> {{rhymes|it|attso}} <to> {{rhymes|it|attso}} <end>
-Page 103090 spionaggio: <rhyme-respelling> spionàggio <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme addʒo: <from> {{rhymes|it|addʒo}} <to> {{rhymes|it|addʒo}} <end>
+Page 103090 spionaggio: <rhyme-respelling> spi.onàggio <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme addʒo: <from> {{rhymes|it|addʒo}} <to> {{rhymes|it|addʒo}} <end>
 Page 103096 spiovente: <rhyme-respelling> spiovènte <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ɛnte: <from> {{rhymes|it|ɛnte}} <to> {{rhymes|it|ɛnte}} <end>
 Page 103328 sposalizio: <rhyme-respelling> sposalìtsio <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ittsjo: <from> {{rhymes|it|ittsjo}} <to> {{rhymes|it|ittsjo}} <end>
 Page 103335 sposo: <rhyme-respelling> spòso <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ɔzo: <from> {{rhymes|it|ɔzo}} <to> {{rhymes|it|ɔzo}} <end>
-Page 103387 spremiaglio: <rhyme-respelling> spremiàglio <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme aʎʎo: <from> {{rhymes|it|aʎʎo}} <to> {{rhymes|it|aʎʎo}} <end>
-Page 103388 spremiagrumi: <rhyme-respelling> spremiagrùmi <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme umi: <from> {{rhymes|it|umi}} <to> {{rhymes|it|umi}} <end>
+# already done
+# Page 103387 spremiaglio: <rhyme-respelling> sprèmi.àglio <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme aʎʎo: <from> {{rhymes|it|aʎʎo}} <to> {{rhymes|it|aʎʎo}} <end>
+Page 103388 spremiagrumi: <rhyme-respelling> sprèmi.agrùmi <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme umi: <from> {{rhymes|it|umi}} <to> {{rhymes|it|umi}} <end>
 Page 103436 sproposito: <rhyme-respelling> spropòsito <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ɔzito: <from> {{rhymes|it|ɔzito}} <to> {{rhymes|it|ɔzito}} <end>
-Page 103815 stanzetta: <rhyme-respelling> stanzétta <end> WARNING: Unable to add pronunciation due to z in part before rhyme: etta: <from> {{rhymes|it|etta}} <to> {{rhymes|it|etta}} <end>
-Page 103940 statuetta: <rhyme-respelling> statuétta <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme etta: <from> {{rhymes|it|etta}} <to> {{rhymes|it|etta}} <end>
+Page 103815 stanzetta: <rhyme-respelling> stantsétta <end> WARNING: Unable to add pronunciation due to z in part before rhyme: etta: <from> {{rhymes|it|etta}} <to> {{rhymes|it|etta}} <end>
+Page 103940 statuetta: <rhyme-respelling> statu.étta <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme etta: <from> {{rhymes|it|etta}} <to> {{rhymes|it|etta}} <end>
 Page 104501 storiella: <rhyme-respelling> storièlla <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ɛlla: <from> {{rhymes|it|ɛlla}} <to> {{rhymes|it|ɛlla}} <end>
-Page 104690 strapieno: <rhyme-respelling> strapièno <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ɛno: <from> {{rhymes|it|ɛno}} <to> {{rhymes|it|ɛno}} <end>
-Page 105033 stuardo: <rhyme-respelling> stuàrdo <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ardo: <from> {{rhymes|it|ardo}} <to> {{rhymes|it|ardo}} <end>
+Page 104690 strapieno: <rhyme-respelling> strapièno strapiéno <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ɛno: <from> {{rhymes|it|ɛno}} <to> {{rhymes|it|ɛno|eno}} <end>
+Page 105033 stuardo: <rhyme-respelling> stu.àrdo <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ardo: <from> {{rhymes|it|ardo}} <to> {{rhymes|it|ardo}} <end>
 Page 105352 succhiotto: <rhyme-respelling> succhiòtto <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ɔtto: <from> {{rhymes|it|ɔtto}} <to> {{rhymes|it|ɔtto}} <end>
-Page 105709 superfluamente: <rhyme-respelling> superfluaménte <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ente: <from> {{rhymes|it|ente}} <to> {{rhymes|it|ente}} <end>
-Page 105908 surrettiziamente: <rhyme-respelling> surrettiziaménte <end> WARNING: Unable to add pronunciation due to z in part before rhyme: ente: <from> {{rhymes|it|ente}} <to> {{rhymes|it|ente}} <end>
-Page 106378 tagliafieno: <rhyme-respelling> tagliafièno <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ɛno: <from> {{rhymes|it|ɛno}} <to> {{rhymes|it|ɛno}} <end>
+Page 105709 superfluamente: <rhyme-respelling> superflu.aménte superfluaménte <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ente: <from> {{rhymes|it|ente}} <to> {{rhymes|it|ente}} <end>
+Page 105908 surrettiziamente: <rhyme-respelling> surrettitsiaménte <end> WARNING: Unable to add pronunciation due to z in part before rhyme: ente: <from> {{rhymes|it|ente}} <to> {{rhymes|it|ente}} <end>
+Page 106378 tagliafieno: <rhyme-respelling> tàgliafièno tàgliafiéno <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ɛno: <from> {{rhymes|it|ɛno}} <to> {{rhymes|it|ɛno|eno}} <end>
 Page 106607 tamiso: <rhyme-respelling> tamìso <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: izo: <from> {{rhymes|it|izo}} <to> {{rhymes|it|izo}} <end>
-Page 107006 tatuaggio: <rhyme-respelling> tatuàggio <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme addʒo: <from> {{rhymes|it|addʒo}} <to> {{rhymes|it|addʒo}} <end>
-Page 107419 teleripresa: <rhyme-respelling> teleriprésa <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: eza: <from> {{rhymes|it|eza}} <to> {{rhymes|it|eza}} <end>
-Page 108172 terrapieno: <rhyme-respelling> terrapièno <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ɛno: <from> {{rhymes|it|ɛno}} <to> {{rhymes|it|ɛno}} <end>
+Page 107006 tatuaggio: <rhyme-respelling> tatu.àggio <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme addʒo: <from> {{rhymes|it|addʒo}} <to> {{rhymes|it|addʒo}} <end>
+Page 107419 teleripresa: <rhyme-respelling> tèleriprésa <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: eza: <from> {{rhymes|it|eza}} <to> {{rhymes|it|eza}} <end>
+Page 108172 terrapieno: <rhyme-respelling> tèrrapièno tèrrapiéno <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ɛno: <from> {{rhymes|it|ɛno}} <to> {{rhymes|it|ɛno|eno}} <end>
 Page 108214 terriero: <rhyme-respelling> terrièro <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ɛro: <from> {{rhymes|it|ɛro}} <to> {{rhymes|it|ɛro}} <end>
-Page 108268 terzetto: <rhyme-respelling> terzétto <end> WARNING: Unable to add pronunciation due to z in part before rhyme: etto: <from> {{rhymes|it|etto}} <to> {{rhymes|it|etto}} <end>
-Page 108279 terzino: <rhyme-respelling> terzìno <end> WARNING: Unable to add pronunciation due to z in part before rhyme: ino: <from> {{rhymes|it|ino}} <to> {{rhymes|it|ino}} <end>
-Page 108291 terzultimo: <rhyme-respelling> terzùltimo <end> WARNING: Unable to add pronunciation due to z in part before rhyme: ultimo: <from> {{rhymes|it|ultimo}} <to> {{rhymes|it|ultimo}} <end>
-Page 108293 tesa: <rhyme-respelling> tésa <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: eza: <from> {{rhymes|it|eza}} <to> {{rhymes|it|eza}} <end>
-Page 108311 teso: <rhyme-respelling> téso <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ezo: <from> {{rhymes|it|ezo}} <to> {{rhymes|it|ezo}} <end>
+Page 108268 terzetto: <rhyme-respelling> tertsétto <end> WARNING: Unable to add pronunciation due to z in part before rhyme: etto: <from> {{rhymes|it|etto}} <to> {{rhymes|it|etto}} <end>
+Page 108279 terzino: <rhyme-respelling> tertsìno <end> WARNING: Unable to add pronunciation due to z in part before rhyme: ino: <from> {{rhymes|it|ino}} <to> {{rhymes|it|ino}} <end>
+Page 108291 terzultimo: <rhyme-respelling> tertsùltimo <end> WARNING: Unable to add pronunciation due to z in part before rhyme: ultimo: <from> {{rhymes|it|ultimo}} <to> {{rhymes|it|ultimo}} <end>
+Page 108293 tesa: <rhyme-respelling> tésa #té[s]a <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: eza: <from> {{rhymes|it|eza}} <to> {{rhymes|it|eza}} <end>
+Page 108311 teso: <rhyme-respelling> téso #té[s]o <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ezo: <from> {{rhymes|it|ezo}} <to> {{rhymes|it|ezo}} <end>
 Page 108644 tiella: <rhyme-respelling> tièlla <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ɛlla: <from> {{rhymes|it|ɛlla}} <to> {{rhymes|it|ɛlla}} <end>
 Page 108755 timoniero: <rhyme-respelling> timonièro <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ɛro: <from> {{rhymes|it|ɛro}} <to> {{rhymes|it|ɛro}} <end>
 Page 108928 tirapiedi: <rhyme-respelling> tirapièdi tirapiédi <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ɛdi: <from> {{rhymes|it|ɛdi}} <to> {{rhymes|it|ɛdi|edi}} <end>
-Page 109631 tortuoso: <rhyme-respelling> tortuóso #tortuó[s]o <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ozo: <from> {{rhymes|it|ozo}} <to> {{rhymes|it|ozo}} <end>
-Page 110273 trapezoedro: <rhyme-respelling> trapezoèdro <end> WARNING: Unable to add pronunciation due to z in part before rhyme: ɛdro: <from> {{rhymes|it|ɛdro}} <to> {{rhymes|it|ɛdro}} <end>
-Page 110846 trentaduenne: <rhyme-respelling> trentaduènne <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ɛnne: <from> {{rhymes|it|ɛnne}} <to> {{rhymes|it|ɛnne}} <end>
-Page 110942 triangolare: <rhyme-respelling> triangolàre <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme are: <from> {{rhymes|it|are}} <to> {{rhymes|it|are}} <end>
-Page 111285 triotto: <rhyme-respelling> triòtto <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ɔtto: <from> {{rhymes|it|ɔtto}} <to> {{rhymes|it|ɔtto}} <end>
-Page 111353 trisaccaride: <rhyme-respelling> trisaccàride <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: aride: <from> {{rhymes|it|aride}} <to> {{rhymes|it|aride}} <end>
-Page 111607 troppopieno: <rhyme-respelling> troppopièno <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ɛno: <from> {{rhymes|it|ɛno}} <to> {{rhymes|it|ɛno}} <end>
+Page 109631 tortuoso: <rhyme-respelling> tortu.óso #tortu.ó[s]o #tortuó[s]o <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ozo: <from> {{rhymes|it|ozo}} <to> {{rhymes|it|ozo}} <end>
+Page 110273 trapezoedro: <rhyme-respelling> trapetsoèdro trapedzoèdro <end> WARNING: Unable to add pronunciation due to z in part before rhyme: ɛdro: <from> {{rhymes|it|ɛdro}} <to> {{rhymes|it|ɛdro}} <end>
+Page 110846 trentaduenne: <rhyme-respelling> trentadu.ènne <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ɛnne: <from> {{rhymes|it|ɛnne}} <to> {{rhymes|it|ɛnne}} <end>
+Page 110942 triangolare: <rhyme-respelling> tri.angolàre <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme are: <from> {{rhymes|it|are}} <to> {{rhymes|it|are}} <end>
+Page 111285 triotto: <rhyme-respelling> tri.òtto <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ɔtto: <from> {{rhymes|it|ɔtto}} <to> {{rhymes|it|ɔtto}} <end>
+Page 111353 trisaccaride: <rhyme-respelling> tri[s]accàride <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: aride: <from> {{rhymes|it|aride}} <to> {{rhymes|it|aride}} <end>
+Page 111607 troppopieno: <rhyme-respelling> tròppopièno tròppopiéno <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ɛno: <from> {{rhymes|it|ɛno}} <to> {{rhymes|it|ɛno|eno}} <end>
 Page 112171 ucciso: <rhyme-respelling> uccìso <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: izo: <from> {{rhymes|it|izo}} <to> {{rhymes|it|izo}} <end>
 Page 112410 ultrapiatto: <rhyme-respelling> ultrapiàtto <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme atto: <from> {{rhymes|it|atto}} <to> {{rhymes|it|atto}} <end>
-Page 112433 ultrasonoro: <rhyme-respelling> ultrasonòro <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ɔro: <from> {{rhymes|it|ɔro}} <to> {{rhymes|it|ɔro}} <end>
-Page 112805 untuoso: <rhyme-respelling> untuóso #untuó[s]o <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ozo: <from> {{rhymes|it|ozo}} <to> {{rhymes|it|ozo}} <end>
-Page 113202 uzbeco: <rhyme-respelling> uzbèco <end> WARNING: Unable to add pronunciation due to z in part before rhyme: ɛko: <from> {{rhymes|it|ɛko}} <to> {{rhymes|it|ɛko}} <end>
-Page 113495 valorosamente: <rhyme-respelling> valorosaménte <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ente: <from> {{rhymes|it|ente}} <to> {{rhymes|it|ente}} <end>
+Page 112433 ultrasonoro: <rhyme-respelling> ultra[s]onòro <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ɔro: <from> {{rhymes|it|ɔro}} <to> {{rhymes|it|ɔro}} <end>
+Page 112805 untuoso: <rhyme-respelling> untu.óso #untu.ó[s]o #untuó[s]o <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ozo: <from> {{rhymes|it|ozo}} <to> {{rhymes|it|ozo}} <end>
+Page 113202 uzbeco: <rhyme-respelling> u[z]bèco <end> WARNING: Unable to add pronunciation due to z in part before rhyme: ɛko: <from> {{rhymes|it|ɛko}} <to> {{rhymes|it|ɛko}} <end>
+Page 113495 valorosamente: <rhyme-respelling> valorosaménte #valoro[s]aménte <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ente: <from> {{rhymes|it|ente}} <to> {{rhymes|it|ente}} <end>
 Page 113676 variamente: <rhyme-respelling> variaménte <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ente: <from> {{rhymes|it|ente}} <to> {{rhymes|it|ente}} <end>
 Page 113682 varianza: <rhyme-respelling> variàntsa <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme antsa: <from> {{rhymes|it|antsa}} <to> {{rhymes|it|antsa}} <end>
 Page 113824 vecchiardo: <rhyme-respelling> vecchiàrdo <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ardo: <from> {{rhymes|it|ardo}} <to> {{rhymes|it|ardo}} <end>
 Page 113971 veliero: <rhyme-respelling> velièro <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ɛro: <from> {{rhymes|it|ɛro}} <to> {{rhymes|it|ɛro}} <end>
-Page 114196 ventiduenne: <rhyme-respelling> ventiduènne <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ɛnne: <from> {{rhymes|it|ɛnne}} <to> {{rhymes|it|ɛnne}} <end>
+Page 114196 ventiduenne: <rhyme-respelling> ventidu.ènne <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ɛnne: <from> {{rhymes|it|ɛnne}} <to> {{rhymes|it|ɛnne}} <end>
 Page 114223 ventiseienne: <rhyme-respelling> ventiseiènne <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ɛnne: <from> {{rhymes|it|ɛnne}} <to> {{rhymes|it|ɛnne}} <end>
 Page 114228 ventisettenne: <rhyme-respelling> ventisettènne <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ɛnne: <from> {{rhymes|it|ɛnne}} <to> {{rhymes|it|ɛnne}} <end>
 Page 114505 verniero: <rhyme-respelling> vernièro <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ɛro: <from> {{rhymes|it|ɛro}} <to> {{rhymes|it|ɛro}} <end>
-Page 114624 verzotto: <rhyme-respelling> verzòtto <end> WARNING: Unable to add pronunciation due to z in part before rhyme: ɔtto: <from> {{rhymes|it|ɔtto}} <to> {{rhymes|it|ɔtto}} <end>
-Page 114840 viadotto: <rhyme-respelling> viadótto <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme otto: <from> {{rhymes|it|otto}} <to> {{rhymes|it|otto}} <end>
-Page 115029 videoleso: <rhyme-respelling> videoléso <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ezo: <from> {{rhymes|it|ezo}} <to> {{rhymes|it|ezo}} <end>
-Page 115054 videoripresa: <rhyme-respelling> videoriprésa <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: eza: <from> {{rhymes|it|eza}} <to> {{rhymes|it|eza}} <end>
+Page 114624 verzotto: <rhyme-respelling> verdzòtto <end> WARNING: Unable to add pronunciation due to z in part before rhyme: ɔtto: <from> {{rhymes|it|ɔtto}} <to> {{rhymes|it|ɔtto}} <end>
+Page 114840 viadotto: <rhyme-respelling> v.iadótto <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme otto: <from> {{rhymes|it|otto}} <to> {{rhymes|it|otto}} <end>
+Page 115029 videoleso: <rhyme-respelling> vìdeoléso <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ezo: <from> {{rhymes|it|ezo}} <to> {{rhymes|it|ezo}} <end>
+Page 115054 videoripresa: <rhyme-respelling> vìdeoriprésa #vìdeoripré[s]a <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: eza: <from> {{rhymes|it|eza}} <to> {{rhymes|it|eza}} <end>
 Page 115091 Vienna: <rhyme-respelling> Viènna <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ɛnna: <from> {{rhymes|it|ɛnna}} <to> {{rhymes|it|ɛnna}} <end>
-Page 115367 violetta: <rhyme-respelling> violétta <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme etta: <from> {{rhymes|it|etta}} <to> {{rhymes|it|etta}} <end>
-Page 115460 virtualmente: <rhyme-respelling> virtualménte <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ente: <from> {{rhymes|it|ente}} <to> {{rhymes|it|ente}} <end>
-Page 115468 virtuoso: <rhyme-respelling> virtuóso #virtuó[s]o <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ozo: <from> {{rhymes|it|ozo}} <to> {{rhymes|it|ozo}} <end>
+Page 115367 violetta: <rhyme-respelling> vi.olétta violétta <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme etta: <from> {{rhymes|it|etta}} <to> {{rhymes|it|etta}} <end>
+Page 115460 virtualmente: <rhyme-respelling> virtu.alménte <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ente: <from> {{rhymes|it|ente}} <to> {{rhymes|it|ente}} <end>
+Page 115468 virtuoso: <rhyme-respelling> virtu.óso #virtu.ó[s]o #virtuó[s]o <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ozo: <from> {{rhymes|it|ozo}} <to> {{rhymes|it|ozo}} <end>
 Page 115547 visivamente: <rhyme-respelling> visivaménte <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ente: <from> {{rhymes|it|ente}} <to> {{rhymes|it|ente}} <end>
 Page 115554 viso: <rhyme-respelling> vìso <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: izo: <from> {{rhymes|it|izo}} <to> {{rhymes|it|izo}} <end>
-Page 115776 viziosamente: <rhyme-respelling> viziosaménte <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ente: <from> {{rhymes|it|ente}} <to> {{rhymes|it|ente}} <end>
-Page 115778 vizioso: <rhyme-respelling> vizióso #vizió[s]o <end> WARNING: Unable to add pronunciation due to z in part before rhyme: ozo: <from> {{rhymes|it|ozo}} <to> {{rhymes|it|ozo}} <end>
+Page 115776 viziosamente: <rhyme-respelling> vitsiosaménte #vitsio[s]aménte <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ente: <from> {{rhymes|it|ente}} <to> {{rhymes|it|ente}} <end>
+Page 115778 vizioso: <rhyme-respelling> vitsióso #vitsió[s]o <end> WARNING: Unable to add pronunciation due to z in part before rhyme: ozo: <from> {{rhymes|it|ozo}} <to> {{rhymes|it|ozo}} <end>
 Page 115863 volandiero: <rhyme-respelling> volandièro <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ɛro: <from> {{rhymes|it|ɛro}} <to> {{rhymes|it|ɛro}} <end>
-Page 115971 voltafieno: <rhyme-respelling> voltafièno <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ɛno: <from> {{rhymes|it|ɛno}} <to> {{rhymes|it|ɛno}} <end>
-Page 116463 zaccaro: <rhyme-respelling> zàccaro <end> WARNING: Unable to add pronunciation due to z in part before rhyme: akkaro: <from> {{rhymes|it|akkaro}} <to> {{rhymes|it|akkaro}} <end>
-Page 116494 zaffiro: <rhyme-respelling> zaffìro <end> WARNING: Unable to add pronunciation due to z in part before rhyme: iro: <from> {{rhymes|it|iro}} <to> {{rhymes|it|iro}} <end>
-Page 116554 zampetto: <rhyme-respelling> zampétto <end> WARNING: Unable to add pronunciation due to z in part before rhyme: etto: <from> {{rhymes|it|etto}} <to> {{rhymes|it|etto}} <end>
-Page 116567 zampogna: <rhyme-respelling> zampógna <end> WARNING: Unable to add pronunciation due to z in part before rhyme: oɲɲa: <from> {{rhymes|it|oɲɲa}} <to> {{rhymes|it|oɲɲa}} <end>
-Page 116569 zampognaro: <rhyme-respelling> zampognàro <end> WARNING: Unable to add pronunciation due to z in part before rhyme: aro: <from> {{rhymes|it|aro}} <to> {{rhymes|it|aro}} <end>
-Page 116739 zendado: <rhyme-respelling> zendàdo <end> WARNING: Unable to add pronunciation due to z in part before rhyme: ado: <from> {{rhymes|it|ado}} <to> {{rhymes|it|ado}} <end>
-Page 116767 zeppo: <rhyme-respelling> zéppo <end> WARNING: Unable to add pronunciation due to z in part before rhyme: eppo: <from> {{rhymes|it|eppo}} <to> {{rhymes|it|eppo}} <end>
-Page 116776 zerbinotto: <rhyme-respelling> zerbinòtto <end> WARNING: Unable to add pronunciation due to z in part before rhyme: ɔtto: <from> {{rhymes|it|ɔtto}} <to> {{rhymes|it|ɔtto}} <end>
-Page 116874 zimbello: <rhyme-respelling> zimbèllo <end> WARNING: Unable to add pronunciation due to z in part before rhyme: ɛllo: <from> {{rhymes|it|ɛllo}} <to> {{rhymes|it|ɛllo}} <end>
-Page 116915 zingarescamente: <rhyme-respelling> zingarescaménte <end> WARNING: Unable to add pronunciation due to z in part before rhyme: ente: <from> {{rhymes|it|ente}} <to> {{rhymes|it|ente}} <end>
-Page 117028 zolletta: <rhyme-respelling> zollétta <end> WARNING: Unable to add pronunciation due to z in part before rhyme: etta: <from> {{rhymes|it|etta}} <to> {{rhymes|it|etta}} <end>
-Page 117137 zopolo: <rhyme-respelling> zòpolo <end> WARNING: Unable to add pronunciation due to z in part before rhyme: ɔpolo: <from> {{rhymes|it|ɔpolo}} <to> {{rhymes|it|ɔpolo}} <end>
-Page 117153 zoppo: <rhyme-respelling> zòppo <end> WARNING: Unable to add pronunciation due to z in part before rhyme: ɔppo: <from> {{rhymes|it|ɔppo}} <to> {{rhymes|it|ɔppo}} <end>
-Page 117186 zuccheriero: <rhyme-respelling> zuccherièro <end> WARNING: Unable to add pronunciation due to z in part before rhyme: ɛro: <from> {{rhymes|it|ɛro}} <to> {{rhymes|it|ɛro}} <end>
-Page 117210 zuccotto: <rhyme-respelling> zuccòtto <end> WARNING: Unable to add pronunciation due to z in part before rhyme: ɔtto: <from> {{rhymes|it|ɔtto}} <to> {{rhymes|it|ɔtto}} <end>
-Page 117219 zufolo: <rhyme-respelling> zùfolo <end> WARNING: Unable to add pronunciation due to z in part before rhyme: ufolo: <from> {{rhymes|it|ufolo}} <to> {{rhymes|it|ufolo}} <end>
-Page 117221 zugo: <rhyme-respelling> zùgo <end> WARNING: Unable to add pronunciation due to z in part before rhyme: uɡo: <from> {{rhymes|it|uɡo}} <to> {{rhymes|it|uɡo}} <end>
-Page 117225 zulù: <rhyme-respelling> zulù <end> WARNING: Unable to add pronunciation due to z in part before rhyme: u: <from> {{rhymes|it|u}} <to> {{rhymes|it|u}} <end>
-Page 117239 zurighese: <rhyme-respelling> zurighése #zurighé[s]e <end> WARNING: Unable to add pronunciation due to z in part before rhyme: eze: <from> {{rhymes|it|eze}} <to> {{rhymes|it|eze}} <end>
+Page 115971 voltafieno: <rhyme-respelling> vòltafièno vòltafiéno <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ɛno: <from> {{rhymes|it|ɛno}} <to> {{rhymes|it|ɛno|eno}} <end>
+Page 116463 zaccaro: <rhyme-respelling> tsàccaro dzàccaro <end> WARNING: Unable to add pronunciation due to z in part before rhyme: akkaro: <from> {{rhymes|it|akkaro}} <to> {{rhymes|it|akkaro}} <end>
+Page 116494 zaffiro: <rhyme-respelling> dzàffiro #dzaffìro <end> WARNING: Unable to add pronunciation due to z in part before rhyme: iro: <from> {{rhymes|it|iro}} <to> {{rhymes|it|affiro}} <end>
+Page 116554 zampetto: <rhyme-respelling> dzampétto #tsampétto <end> WARNING: Unable to add pronunciation due to z in part before rhyme: etto: <from> {{rhymes|it|etto}} <to> {{rhymes|it|etto}} <end>
+Page 116567 zampogna: <rhyme-respelling> dzampógna #tsampógna <end> WARNING: Unable to add pronunciation due to z in part before rhyme: oɲɲa: <from> {{rhymes|it|oɲɲa}} <to> {{rhymes|it|oɲɲa}} <end>
+Page 116569 zampognaro: <rhyme-respelling> dzampognàro #tsampognàro <end> WARNING: Unable to add pronunciation due to z in part before rhyme: aro: <from> {{rhymes|it|aro}} <to> {{rhymes|it|aro}} <end>
+Page 116739 zendado: <rhyme-respelling> dzendàdo <end> WARNING: Unable to add pronunciation due to z in part before rhyme: ado: <from> {{rhymes|it|ado}} <to> {{rhymes|it|ado}} <end>
+Page 116767 zeppo: <rhyme-respelling> dzéppo #tséppo <end> WARNING: Unable to add pronunciation due to z in part before rhyme: eppo: <from> {{rhymes|it|eppo}} <to> {{rhymes|it|eppo}} <end>
+Page 116776 zerbinotto: <rhyme-respelling> dzerbinòtto <end> WARNING: Unable to add pronunciation due to z in part before rhyme: ɔtto: <from> {{rhymes|it|ɔtto}} <to> {{rhymes|it|ɔtto}} <end>
+Page 116874 zimbello: <rhyme-respelling> dzimbèllo #tsimbèllo <end> WARNING: Unable to add pronunciation due to z in part before rhyme: ɛllo: <from> {{rhymes|it|ɛllo}} <to> {{rhymes|it|ɛllo}} <end>
+Page 116915 zingarescamente: <rhyme-respelling> dzingarescaménte #tsingarescaménte <end> WARNING: Unable to add pronunciation due to z in part before rhyme: ente: <from> {{rhymes|it|ente}} <to> {{rhymes|it|ente}} <end>
+Page 117028 zolletta: <rhyme-respelling> dzollétta <end> WARNING: Unable to add pronunciation due to z in part before rhyme: etta: <from> {{rhymes|it|etta}} <to> {{rhymes|it|etta}} <end>
+Page 117137 zopolo: <rhyme-respelling> dzòpolo #tsòpolo <end> WARNING: Unable to add pronunciation due to z in part before rhyme: ɔpolo: <from> {{rhymes|it|ɔpolo}} <to> {{rhymes|it|ɔpolo}} <end>
+Page 117153 zoppo: <rhyme-respelling> dzòppo #tsòppo <end> WARNING: Unable to add pronunciation due to z in part before rhyme: ɔppo: <from> {{rhymes|it|ɔppo}} <to> {{rhymes|it|ɔppo}} <end>
+Page 117186 zuccheriero: <rhyme-respelling> dzuccherièro #tsuccherièro <end> WARNING: Unable to add pronunciation due to z in part before rhyme: ɛro: <from> {{rhymes|it|ɛro}} <to> {{rhymes|it|ɛro}} <end>
+Page 117210 zuccotto: <rhyme-respelling> dzuccòtto #tsuccòtto <end> WARNING: Unable to add pronunciation due to z in part before rhyme: ɔtto: <from> {{rhymes|it|ɔtto}} <to> {{rhymes|it|ɔtto}} <end>
+Page 117219 zufolo: <rhyme-respelling> dzùfolo #tsùfolo <end> WARNING: Unable to add pronunciation due to z in part before rhyme: ufolo: <from> {{rhymes|it|ufolo}} <to> {{rhymes|it|ufolo}} <end>
+Page 117221 zugo: <rhyme-respelling> dzùgo <end> WARNING: Unable to add pronunciation due to z in part before rhyme: uɡo: <from> {{rhymes|it|uɡo}} <to> {{rhymes|it|uɡo}} <end>
+Page 117225 zulù: <rhyme-respelling> dzulù <end> WARNING: Unable to add pronunciation due to z in part before rhyme: u: <from> {{rhymes|it|u}} <to> {{rhymes|it|u}} <end>
+Page 117239 zurighese: <rhyme-respelling> dzurighése #dzurighé[s]e <end> WARNING: Unable to add pronunciation due to z in part before rhyme: eze: <from> {{rhymes|it|eze}} <to> {{rhymes|it|eze}} <end>
