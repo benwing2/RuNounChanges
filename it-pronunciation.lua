@@ -24,6 +24,7 @@ local DIA = u(0x0308) -- diaeresis = ̈
 local SYLDIV = u(0xFFF0) -- used to represent a user-specific syllable divider (.) so we won't change it
 local TEMP_Z = u(0xFFF1)
 local TEMP_S = u(0xFFF2)
+local TEMP_H = u(0xFFF3)
 local stress = "ˈˌ"
 local stress_c = "[" .. stress .. "]"
 local quality = AC .. GR
@@ -36,15 +37,14 @@ local vowel = "aeɛioɔuEOyø"
 local V = "[" .. vowel .. "]"
 local VW = "[" .. vowel .. "jw]"
 local NV = "[^" .. vowel .. "]"
-local charsep = accent .. "_." .. SYLDIV
-local charsep_not_und = accent .. "." .. SYLDIV
+local charsep_not_tie = accent .. "." .. SYLDIV
+local charsep = charsep_not_tie .. "‿"
 local charsep_c = "[" .. charsep .. "]"
+local wordsep_not_tie = charsep_not_tie .. " #"
 local wordsep = charsep .. " #"
-local wordsep_not_und = charsep_not_und .. " #"
 local wordsep_c = "[" .. wordsep .. "]"
-local C = "[^" .. vowel .. wordsep .. "]" -- consonant
-local C_OR_UND = "[^" .. vowel .. wordsep_not_und .. "]" -- consonant or underscore
-local C_NOT_H = "[^h" .. vowel .. wordsep .. "]" -- consonant other than h
+local C = "[^" .. vowel .. wordsep .. "_]" -- consonant
+local C_OR_TIE = "[^" .. vowel .. wordsep_not_tie .. "_]" -- consonant or tie (‿)
 local front = "eɛij"
 local front_c = "[" .. front .. "]"
 local FRONTED = u(0x031F)
@@ -160,7 +160,10 @@ end
 
 function export.to_phonemic(text, pagename)
 	local abbrev_text
-	if rfind(text, "^[àéèìóòù]$") then
+	if rfind(text, "^%([àéèìóòù]%)$") then
+		if pagename:find("[ %-]") then
+			error("With abbreviated vowel spec " .. text .. ", the page name should be a single word: " .. text)
+		end
 		abbrev_text = mw.ustring.toNFD(text)
 		text = pagename
 	end
@@ -193,12 +196,61 @@ function export.to_phonemic(text, pagename)
 	-- French/German vowels
 	text = rsub(text, "u" .. DIA, "y")
 	text = rsub(text, "o" .. DIA, "ø")
-	text = rsub(text, "'", "")
+	text = rsub(text, "'", "‿")
 	text = rsub(text, "([" .. DOTUNDER .. LINEUNDER .. "])(" .. quality_c .. ")", "%2%1") -- acute/grave first
 	text = rsub(text, "([aiu])" .. AC, "%1" .. GR) -- áíú -> àìù
 
 	local words = rsplit(text, " ")
 	for i, word in ipairs(words) do
+		local function err(msg)
+			error(msg .. ": " .. origwords[i])
+		end
+		-- First apply abbrev spec e.g. (à) or (ó) if given.
+		if abbrev_text then
+			local vowel_count = select(2, word:gsub(V, "%1"))
+			local abbrev_vowel = usub(abbrev_text, 1, 1)
+			if abbrev_vowel == "e" or abbrev_vowel == "o" then
+				abbrev_vowel = upper(abbrev_vowel)
+			end
+			if vowel_count == 0 then
+				err("Abbreviated spec " .. abbrev_text .. " can't be used with nonsyllabic word")
+			elseif vowel_count == 1 then
+				local before, vow, after = rmatch(word, "^(.*)(" .. V .. ")(" .. NV .. "*)$")
+				if not before then
+					error("Internal error: Couldn't match monosyllabic word: " .. word)
+				end
+				if abbrev_vowel ~= vow then
+					err("Abbreviated spec " .. abbrev_text .. " doesn't match vowel " .. ulower(vow))
+				end
+				word = before .. abbrev_eo .. after
+			else
+				local before, penultimate, after = rmatch(word,
+					"^(.-)(" .. V .. ")(" .. NV .. "*" .. V .. NV .. "*)$")
+				if not before then
+					error("Internal error: Couldn't match multisyllabic word: " .. word)
+				end
+				local before2, antepenultimate, after2 = rmatch(before,
+					"^(.-)(" .. V .. ")(" .. NV .. "*)$")
+				if abbrev_vowel ~= penultimate and abbrev_vowel ~= antepenultimate then
+					err("Abbreviated spec ".. abbrev_text .. " doesn't match penultimate vowel " ..
+						ulower(penultimate) .. (antepenultimate and " or antepenultimate vowel " ..
+							ulower(antepenultimate) or ""))
+				end
+				if penultimate == antepenultimate then
+					err("Can't use abbreviated spec " .. abbrev_text .. " here because penultimate and " ..
+						"antepenultimate are the same")
+				end
+				if abbrev_vowel == antepenultimate then
+					word = before2 .. abbrev_eo .. after2 .. penultimate .. after
+				elseif abbrev_vowel == penultimate then
+					word = before .. abbrev_eo .. after
+				else
+					error("Internal error: abbrev_vowel from abbrev_text " .. abbrev_text ..
+						" didn't match any vowel or glide: " .. origtext)
+				end
+			end
+		end
+
 		if not rfind(word, quality_c) then
 			-- Apply suffix respellings.
 			for _, suffix_pair in ipairs(recognized_suffixes) do
@@ -266,47 +318,7 @@ function export.to_phonemic(text, pagename)
 		-- be marked for quality.
 		if not rfind(word, "[ˈ" .. DOTOVER .. "]") then
 			local vowel_count = select(2, word:gsub(V, "%1"))
-			if abbrev_text then
-				local abbrev_vowel = uupper(usub(abbrev_text, 1, 1))
-				local abbrev_eo = convert_e_o(abbrev_text) .. "ˈ"
-				if vowel_count == 0 then
-					err("Abbreviated spec '" .. abbrev_text .. "' can't be used with nonsyllabic word")
-				elseif vowel_count == 1 then
-					local before, vow, after = rmatch(word, "^(.*)(" .. V .. ")(" .. NV .. "*)$")
-					if not before then
-						error("Internal error: Couldn't match monosyllabic word: " .. word)
-					end
-					if abbrev_vowel ~= vow then
-						err("Abbreviated spec '" .. abbrev_text .. "' doesn't match vowel " .. ulower(vow))
-					end
-					word = before .. abbrev_eo .. after
-				else
-					local before, penultimate, after = rmatch(word,
-						"^(.-)(" .. V .. ")(" .. NV .. "*" .. V .. NV .. "*)$")
-					if not before then
-						error("Internal error: Couldn't match multisyllabic word: " .. word)
-					end
-					local before2, antepenultimate, after2 = rmatch(before,
-						"^(.-)(" .. V .. ")(" .. NV .. "*)$")
-					if abbrev_vowel ~= penultimate and abbrev_vowel ~= antepenultimate then
-						err("Abbreviated spec '" .. abbrev_text .. "' doesn't match penultimate vowel " ..
-							ulower(penultimate) .. (antepenultimate and " or antepenultimate vowel " ..
-								ulower(antepenultimate) or ""))
-					end
-					if penultimate == antepenultimate then
-						err("Can't use abbreviated spec '" .. abbrev_text .. "' here because penultimate and " ..
-							"antepenultimate are the same")
-					end
-					if abbrev_vowel == antepenultimate then
-						word = before2 .. abbrev_eo .. after2 .. penultimate .. after
-					elseif abbrev_vowel == penultimate then
-						word = before .. abbrev_eo .. after
-					else
-						error("Internal error: abbrev_vowel from abbrev_text '" .. abbrev_text ..
-							"' didn't match any vowel or glide: " .. origtext)
-					end
-				end
-			elseif vowel_count > 2 then
+			if vowel_count > 2 then
 				err("With more than two vowels and an unrecogized suffix, stress must be explicitly given")
 			else
 				local before, vow, after = rmatch(word, "^(.-)(" .. V .. ")(.*)$")
@@ -335,6 +347,7 @@ function export.to_phonemic(text, pagename)
 	text = text:gsub("x", "ks"):gsub("ck", "k"):gsub("sh", "ʃ"):gsub("ng#", "ŋ#")
 	text = rsub(text, "%[z%]", TEMP_Z) -- [z] means /z/
 	text = rsub(text, "%[s%]", TEMP_S) -- [z] means /s/
+	text = rsub(text, "%[h%]", TEMP_H) -- [h] means /h/
 	text = rsub(text, "%[tʃ%]", "ʧ")
 	text = rsub(text, "%[dʒ%]", "ʤ")
 
@@ -363,10 +376,10 @@ function export.to_phonemic(text, pagename)
 	-- Handle gl and gn.
 	text = rsub(text, "gn", "ɲ")
 	text = rsub(text, "gli(" .. V .. ")", "ʎ%1")
-	text = rsub(text, "gli", "ʎi")
+	text = rsub(text, "gl(‿?i)", "ʎ%1")
 
 	-- Handle other cases of c, g.
-	text = rsub(text, "([cg])([cg]?)(h?)(.)", function(first, double, h, after)
+	text = rsub(text, "([cg])([cg]?)(h?" .. charsep_c .. "*)(.)", function(first, double, h, after)
 		-- Don't allow the combinations cg, gc. Or do something else?
 		if double ~= "" and double ~= first then
 			error("Invalid sequence " .. first .. double .. ".")
@@ -374,7 +387,7 @@ function export.to_phonemic(text, pagename)
 
 		-- c, g is soft before e, i.
 		local cons
-		if rfind(front, after) and h ~= "h" then
+		if rfind(after, front_c) and not rfind(h, "h") then
 			if first == "c" then
 				cons = "ʧ"
 			else
@@ -427,30 +440,37 @@ function export.to_phonemic(text, pagename)
 	end
 
 	-- Single ⟨s⟩ between vowels is /z/.
-	text = rsub(text, "(" .. VW .. stress_c .. "?)s(" .. VW .. ")", "%1z%2")
+	text = rsub(text, "(" .. VW .. stress_c .. "?" .. charsep_c .. "*)s(" .. charsep_c .. "*" .. VW .. ")", "%1z%2")
 
 	-- ⟨s⟩ immediately before a voiced consonant is always /z/
-	text = rsub(text, "s(" .. voiced_C_c .. ")", "z%1")
+	text = rsub(text, "s(" .. charsep_c .. "*" .. voiced_C_c .. ")", "z%1")
 
 	text = rsub(text, TEMP_Z, "z")
 	text = rsub(text, TEMP_S, "s")
 
 	-- After a vowel, /ʃ ʎ ɲ t͡s d͡z/ are doubled.
 	-- [[w:Italian phonology]] says word-internally, [[w:Help:IPA/Italian]] says after a vowel.
-	text = rsub(text, "(" .. VW .. stress_c .. "?)([ʦʣʃʎɲ])", "%1%2%2")
+	text = rsub(text, "(" .. VW .. stress_c .. "?" .. charsep_c .. "*)([ʦʣʃʎɲ])", "%1%2%2")
+
+	-- Change user-specified . into SYLDIV so we don't shuffle it around when dividing into syllables.
+	text = rsub(text, "%.", SYLDIV)
 
 	-- Divide into syllables.
 	-- First remove 'h' and '_', which have served their purpose of preventing context-dependent changes.
 	-- They should not interfere with syllabification.
 	text = rsub(text, "[h_]", "")
-	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*)(" .. C .. W .. "?" .. V .. ")", "%1.%2")
-	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*" .. C .. ")(" .. C .. V .. ")", "%1.%2")
-	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*" .. C .. "+)(" .. C .. C .. V .. ")", "%1.%2")
-	text = rsub(text, "([pbktdg])%.([lr])", ".%1%2")
-	text = rsub_repeatedly(text, "(" .. C .. ")%.s(" .. C .. ")", "%1s.%2")
-	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*)(" .. V .. ")", "%1.%2")
+	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*‿?)(" .. C .. "‿?" .. W .. "?‿?" .. V .. ")", "%1.%2")
+	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*‿?" .. C .. "‿?)(" .. C .. "‿?" .. V .. ")", "%1.%2")
+	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*‿?" .. C_OR_TIE .. "+)(" .. C .. "‿?" .. C .. "‿?" .. V .. ")", "%1.%2")
+	text = rsub(text, "([pbktdg]‿?)%.([lr])", ".%1%2")
+	text = rsub_repeatedly(text, "(" .. C .. "‿?)%.(s‿?)(" .. C .. ")", "%1%2.%3")
+	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*‿?)(" .. V .. ")", "%1.%2")
 
-	text = rsub(text, "([ʦʣʧʤ])(%.?)([ʦʣʧʤ]*)", function(affricate1, divider, affricate2)
+	-- User-specified syllable divider should now be treated like regular one.
+	text = rsub(text, SYLDIV, ".")
+	text = rsub(text, TEMP_H, "h")
+
+	text = rsub(text, "([ʦʣʧʤ])(" .. charsep_c .. "*%.?)([ʦʣʧʤ]*)", function(affricate1, divider, affricate2)
 		local full_affricate = full_affricates[affricate1]
 
 		if affricate2 ~= "" then
