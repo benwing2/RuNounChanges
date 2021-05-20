@@ -539,7 +539,7 @@ if args.ipa_direcfile:
       msg("WARNING: Unrecognized line: %s" % line)
     else:
       page, respellings = m.groups()
-      respellings = [respelling.replace("_", "") for respelling in respellings.split(" ")]
+      respellings = [respelling.replace("_", " ") for respelling in respellings.split(" ")]
       ipa_directives[page] = respellings
 
 rhyme_directives = {}
@@ -554,7 +554,7 @@ if args.rhyme_direcfile:
       msg("WARNING: Unrecognized line: %s" % line)
     else:
       page, respellings = m.groups()
-      respellings = [respelling.replace("_", "") for respelling in respellings.split(" ")]
+      respellings = [respelling.replace("_", " ") for respelling in respellings.split(" ")]
       rhyme_directives[page] = respellings
 
 blib.do_pagefile_cats_refs(args, start, end, process_text_on_page, edit=True, stdin=True,
