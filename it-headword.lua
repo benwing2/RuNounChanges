@@ -2,6 +2,9 @@
 -- Templates covered are it-adj, it-noun and it-proper noun.
 -- See [[Module:it-conj]] for Italian conjugation templates.
 local export = {}
+local pos_functions = {}
+
+local m_links = require("Module:links")
 
 local u = mw.ustring.char
 local rfind = mw.ustring.find
@@ -16,6 +19,10 @@ local unfd = mw.ustring.toNFD
 
 local lang = require("Module:languages").getByCode("it")
 
+local V = "[aeiou]"
+local NV = "[^aeiou]"
+local AV = "[àèéìòóù]"
+
 -- version of rsubn() that discards all but the first return value
 local function rsub(term, foo, bar)
 	local retval = rsubn(term, foo, bar)
@@ -25,6 +32,71 @@ end
 local function glossary_link(entry, text)
 	text = text or entry
 	return "[[Appendix:Glossary#" .. entry .. "|" .. text .. "]]"
+end
+
+local suffix_categories = {
+	["adjectives"] = true,
+	["adverbs"] = true,
+	["nouns"] = true,
+	["verbs"] = true,
+}
+
+-- The main entry point.
+-- FIXME: Convert itadj, itnoun, itprop to go through this.
+function export.show(frame)
+	local tracking_categories = {}
+
+	local poscat = frame.args[1]
+		or error("Part of speech has not been specified. Please pass parameter 1 to the module invocation.")
+
+	local params = {
+		["head"] = {list = true},
+		["suff"] = {type = "boolean"},
+		["id"] = {},
+		["sort"] = {},
+	}
+
+	local parargs = frame:getParent().args
+
+	if pos_functions[poscat] then
+		for key, val in pairs(pos_functions[poscat].params) do
+			params[key] = val
+		end
+	end
+
+	local args = require("Module:parameters").process(parargs, params)
+	local data = {
+		lang = lang,
+		pos_category = poscat,
+		categories = {},
+		heads = args["head"],
+		genders = {},
+		inflections = {},
+		id = args["id"],
+		sort_key = args["sort"],
+	}
+
+	if args["suff"] then
+		data.pos_category = "suffixes"
+
+		if suffix_categories[poscat] then
+			local singular_poscat = poscat:gsub("s$", "")
+			table.insert(data.categories, langname .. " " .. singular_poscat .. "-forming suffixes")
+		else
+			error("No category exists for suffixes forming " .. poscat .. ".")
+		end
+	end
+
+	if pos_functions[poscat] then
+		pos_functions[poscat].func(args, data, tracking_categories, frame)
+	end
+
+	if args["json"] then
+		return require("Module:JSON").toJSON(data)
+	end
+
+	return require("Module:headword").full_headword(data)
+		.. require("Module:utilities").format_categories(tracking_categories, lang)
 end
 
 function export.itadj(frame)
@@ -265,6 +337,7 @@ end
 
 
 local function base_default_verb_forms(base, lemma)
+	local is_pronominal = false
 	-- The particles that can go after a verb are:
 	-- * la, le
 	-- * ne
@@ -317,6 +390,7 @@ local function base_default_verb_forms(base, lemma)
 		linked_verb = "[[" .. verb .. "]][[" .. clitic .. "]][[" .. clitic2 .. "]]"
 		finite_pref = "[[" .. clitic_to_finite[clitic] .. "]] [[" .. clitic2 .. "]] "
 		finite_pref_ho = "[[" .. clitic_to_finite[clitic] .. "]] [[l']]"
+		is_pronominal = true
 	end
 	if not verb then
 		verb, clitic = rmatch(lemma, "^(.-)([cvs]e)ne$")
@@ -324,6 +398,7 @@ local function base_default_verb_forms(base, lemma)
 			linked_verb = "[[" .. verb .. "]][[" .. clitic .. "]][[ne]]"
 			finite_pref = "[[" .. clitic_to_finite[clitic] .. "]] [[ne]] "
 			finite_pref_ho = "[[" .. clitic_to_finite[clitic] .. "]] [[n']]"
+			is_pronominal = true
 		end
 	end
 	if not verb then
@@ -336,6 +411,7 @@ local function base_default_verb_forms(base, lemma)
 			else
 				finite_pref_ho = "[[mi]] [[ci]] "
 			end
+			is_pronominal = true
 		end
 	end
 	if not verb then
@@ -348,6 +424,7 @@ local function base_default_verb_forms(base, lemma)
 			else
 				finite_pref_ho = "[[ci]] "
 			end
+			is_pronominal = true
 		end
 	end
 	if not verb then
@@ -356,6 +433,7 @@ local function base_default_verb_forms(base, lemma)
 			linked_verb = "[[" .. verb .. "]][[mi]]"
 			finite_pref = "[[mi]] "
 			finite_pref_ho = "[[m']]"
+			-- not pronominal
 		end
 	end
 	if not verb then
@@ -364,6 +442,7 @@ local function base_default_verb_forms(base, lemma)
 			linked_verb = "[[" .. verb .. "]][[ne]]"
 			finite_pref = "[[ne]] "
 			finite_pref_ho = "[[n']]"
+			is_pronominal = true
 		end
 	end
 	if not verb then
@@ -372,6 +451,7 @@ local function base_default_verb_forms(base, lemma)
 			linked_verb = "[[" .. verb .. "]][[" .. clitic .. "]]"
 			finite_pref = "[[" .. clitic .. "]] "
 			finite_pref_ho = "[[l']]"
+			is_pronominal = true
 		end
 	end
 	if not verb then
@@ -379,6 +459,7 @@ local function base_default_verb_forms(base, lemma)
 		linked_verb = "[[" .. verb .. "]]"
 		finite_pref = ""
 		finite_pref_ho = ""
+		-- not pronominal
 	end
 
 	local stem, conj_vowel = rmatch(verb, "^(.-)([aeiour])re?$")
@@ -396,6 +477,8 @@ local function base_default_verb_forms(base, lemma)
 	ret.linked_verb = linked_verb
 	ret.finite_pref = finite_pref
 	ret.finite_pref_ho = finite_pref_ho
+	ret.is_pronominal = is_pronominal
+
 
 	if not rfind(conj_vowel, "^[aei]$") then
 		-- Can't generate defaults for verbs in -rre
@@ -410,14 +493,14 @@ local function base_default_verb_forms(base, lemma)
 	if conj_vowel == "i" then
 		ret.isc_pres = stem .. "ìsco"
 	end
-	if conj_vowel = "a" then
-		ret.past = stem .. (base.third and "à" or "ài")
+	if conj_vowel == "a" then
+		ret.past = stem .. (base.third and "ò" or "ài")
 	elseif conj_vowel == "e" then
 		ret.past = {stem .. (base.third and "é" or "éi"), stem .. (base.third and "ètte" or "ètti")}
 	else
 		ret.past = stem .. (base.third and "ì" or "ìi")
 	end
-	if conj_vowel = "a" then
+	if conj_vowel == "a" then
 		ret.pp = stem .. "àto"
 	elseif conj_vowel == "e" then
 		ret.pp = rfind(stem, "[cg]$") and stem .. "iùto" or stem .. "ùto"
@@ -459,25 +542,27 @@ end
 
 local function pres_special_case(base, form, def)
 	if form == "+" then
-		check_not_null(def.pres)
+		check_not_null(base, def.pres)
 		return def.pres
 	elseif form == "+isc" then
-		check_not_null(def.isc_pres)
+		check_not_null(base, def.isc_pres)
 		return def.isc_pres
-	elseif rfind(form, "^[àèéìòóù][+-]?$") then
-		check_not_null(def.pres)
-		local pres = rmatch(def.pres, "^(.*)[oae]$")
+	elseif form == "-" then
+		return form
+	elseif rfind(form, "^" .. AV .. "[+-]?$") then
+		check_not_null(base, def.pres)
+		local pres, final_vowel = rmatch(def.pres, "^(.*)([oae])$")
 		if not pres then
 			error("Internal error: Default present '" .. def.pres .. "' doesn't end in -o, -a or -e")
 		end
 		local TEMP_QU = u(0xFFF1)
 		local TEMP_U_IN_AU = u(0xFFF2)
 		pres = rsub(pres, "qu", TEMP_QU)
-		pres = rsub(pres, "au([^aeiou]*[aeiou][^aeiou]*)$", "a" .. TEMP_U_IN_AU .. "%1")
-		local before, v1, between, v2, after = rmatch(pres, "^(.*)([aeiou])([^aeiou]*)([aeiou])([^aeiou]*)$")
+		pres = rsub(pres, "au(" .. NV .. "*" .. V .. NV .. "*)$", "a" .. TEMP_U_IN_AU .. "%1")
+		local before, v1, between, v2, after = rmatch(pres, "^(.*)(" .. V .. ")(" .. NV .. "*)(" .. V .. ")(" .. NV .. "*)$")
 		if not before then
 			before, v1 = "", ""
-			between, v2, after = rmatch(pres, "^(.*)([aeiou])([^aeiou]*)$")
+			between, v2, after = rmatch(pres, "^(.*)(" .. V .. ")(" .. NV .. "*)$")
 		end
 		if not between then
 			error("No vowel in default present '" .. def.pres .. "' to match")
@@ -516,7 +601,7 @@ local function pres_special_case(base, form, def)
 		end
 		form = rsub(form, TEMP_QU, "qu")
 		form = rsub(form, TEMP_U_IN_AU, "u")
-		return form
+		return form .. final_vowel
 	elseif not base.third and not rfind(form, "[oò]$") then
 		error("Present first-person singular form '" .. form .. "' should end in -o")
 	elseif base.third and not rfind(form, "[aàeè]") then
@@ -528,9 +613,9 @@ end
 
 local function past_special_case(base, form, def)
 	if form == "+" then
-		check_not_null(def.past)
+		check_not_null(base, def.past)
 		return def.past
-	elseif not base.third and not rfind(form, "i$") then
+	elseif form ~= "-" and not base.third and not rfind(form, "i$") then
 		error("Past historic form '" .. form .. "' should end in -i")
 	else
 		return form
@@ -539,9 +624,10 @@ end
 
 local function pp_special_case(base, form, def)
 	if form == "+" then
+		check_not_null(base, def.pp)
 		return def.pp
-	elseif not rfind(form, "to$") then
-		error("Past participle form '" .. form .. "' should end in -to")
+	elseif form ~= "-" and not rfind(form, "o$") then
+		error("Past participle form '" .. form .. "' should end in -o")
 	else
 		return form
 	end
@@ -561,7 +647,7 @@ pos_functions["verbs"] = {
 
 		if args[1] then
 			local arg1 = args[1]
-			if not arg:find("<.*>") then
+			if not arg1:find("<.*>") then
 				arg1 = "<" .. arg1 .. ">"
 			end
 
@@ -620,7 +706,7 @@ pos_functions["verbs"] = {
 					else
 						local saw_irreg = false
 						for _, irreg_form in ipairs(irreg_forms) do
-							local first_element_minus_prefix = rmatch(first_element, "^" .. irreg_form .. ":")
+							local first_element_minus_prefix = rmatch(first_element, "^" .. irreg_form .. ":(.*)$")
 							if first_element_minus_prefix then
 								dot_separated_group[1] = first_element_minus_prefix
 								base.irreg_forms[irreg_form] = fetch_specs(dot_separated_group)
@@ -636,10 +722,14 @@ pos_functions["verbs"] = {
 							end
 
 							-- Parse auxiliaries
-							local colon_separated_groups = iut.split_alternating_runs(comma_separated_group, ":")
+							local colon_separated_groups = iut.split_alternating_runs(comma_separated_groups[1], ":")
 							for _, colon_separated_group in ipairs(colon_separated_groups) do
 								local aux = colon_separated_group[1]
-								if aux ~= "a" and aux ~= "e" then
+								if aux == "a" then
+									aux = "avere"
+								elseif aux == "e" then
+									aux = "essere"
+								else
 									parse_err("Unrecognized auxiliary '" .. aux ..
 										"', should be 'a' (for [[avere]]) or 'e' for ([[essere]])")
 								end
@@ -652,7 +742,7 @@ pos_functions["verbs"] = {
 								else
 									base.aux = {}
 								end
-								table.insert(base.aux, {form = aux, qualifiers = fetch_qualifiers(colon_separated_group)})
+								table.insert(base.aux, {form = aux, footnotes = fetch_qualifiers(colon_separated_group)})
 							end
 
 							-- Parse present
@@ -680,6 +770,7 @@ pos_functions["verbs"] = {
 						end
 					end
 				end
+				return base
 			end
 
 			local parse_props = {
@@ -728,7 +819,7 @@ pos_functions["verbs"] = {
 				end
 				base.third = base.only3s or base.only3sp
 				if alternant_multiword_spec.third == nil then
-					alternant_multiword_spec = base.third
+					alternant_multiword_spec.third = base.third
 				elseif alternant_multiword_spec.third ~= base.third then
 					error("If some alternants specify 'only3s' or 'only3sp', all must")
 				end
@@ -749,6 +840,7 @@ pos_functions["verbs"] = {
 				sub_form = sing_accel .. "|pres|sub",
 				impsub_form = sing_accel .. "|impf|sub",
 				imp_form = "2|s|imp",
+				-- aux should not be here. It doesn't have an accelerator and isn't "conjugated" normally.
 			}
 			local all_verb_slot_labels = {
 				lemma = "infinitive",
@@ -761,31 +853,58 @@ pos_functions["verbs"] = {
 				sub_form = sing_label .. " present subjunctive",
 				impsub_form = sing_label .. " imperfect subjunctive",
 				imp_form = "second-person singular imperative",
+				aux = "auxiliary",
 			}
 
 			local function conjugate_verb(base)
 				local this_def_forms = base_default_verb_forms(base, base.lemma)
+				base.is_pronominal = this_def_forms.is_pronominal
+				if base.is_pronominal then
+					alternant_multiword_spec.is_pronominal = true
+				end
 
-				local function process_specs(slot, specs, default_form, is_part, special_case)
+				local function process_specs(slot, specs, is_part, special_case)
+					specs = specs or {{form = "+"}}
 					for _, spec in ipairs(specs) do
-						local form = spec.form or "+"
+						local decorated_form = spec.form
+						local preserve_monosyllabic_accent, form, syntactic_gemination =
+							rmatch(decorated_form, "^(%*?)(.-)(%**)$")
 						local forms = special_case(base, form, this_def_forms)
 						if type(forms) ~= "table" then
 							forms = {forms}
 						end
 						for _, form in ipairs(forms) do
+							local qualifiers = spec.qualifiers
 							-- If the form is -, insert it directly, unlinked; we handle this specially
 							-- below, turning it into special labels like "no past participle".
 							if form ~= "-" then
+								local unaccented_form
+								if rfind(form, "^.*" .. V .. ".*" .. AV .. "$") then
+									-- final accented vowel with preceding vowel; keep accent
+									unaccented_form = form
+								elseif rfind(form, AV .. "$") and preserve_monosyllabic_accent == "*" then
+									unaccented_form = form
+									qualifiers = iut.combine_footnotes(qualifiers, {"[with written accent]"})
+								else
+									unaccented_form = rsub(form, AV, function(v) return usub(unfd(v), 1, 1) end)
+								end
+								if syntactic_gemination == "*" then
+									qualifiers = iut.combine_footnotes(qualifiers, {"[with following syntactic gemination]"})
+								elseif syntactic_gemination == "**" then
+									qualifiers = iut.combine_footnotes(qualifiers, {"[with optional following syntactic gemination]"})
+								elseif syntactic_gemination ~= "" then
+									error("Decorated form '" .. decorated_form .. "' has too many asterisks after it, use '*' for syntactic gemination and '**' for optional syntactic gemination")
+								end
+								form = "[[" .. unaccented_form .. "|" .. form .. "]]"
 								if not is_part then
-									if form == "ho" or form == "hò" then
-										form = this_def_forms.finite_pref_ho .. "[[" .. form .. "]]"
+									if unaccented_form == "ho" then
+										form = this_def_forms.finite_pref_ho .. form
 									else
-										form = this_def_forms.finite_pref .. "[[" .. form .. "]]"
+										form = this_def_forms.finite_pref .. form
 									end
 								end
 							end
-							iut.insert_form(base.forms, slot, {form = form, footnotes = spec.qualifiers})
+							iut.insert_form(base.forms, slot, {form = form, footnotes = qualifiers})
 						end
 					end
 				end
@@ -827,6 +946,12 @@ pos_functions["verbs"] = {
 			}
 			iut.inflect_multiword_or_alternant_multiword_spec(alternant_multiword_spec, inflect_props)
 
+			-- Set the overall auxiliary or auxiliaries. We can't do this using the normal inflection
+			-- code as it will produce e.g. '[[avere]] e [[avere]]' for conjoined verbs.
+			iut.map_word_specs(alternant_multiword_spec, function(base)
+				iut.insert_forms(alternant_multiword_spec.forms, "aux", base.aux)
+			end)
+
 			-- (5) Fetch the forms and put the conjugated lemmas in data.heads if not explicitly given.
 
 			local function strip_brackets(qualifiers)
@@ -857,23 +982,33 @@ pos_functions["verbs"] = {
 				if forms[1].form == "-" then
 					retval = {label = "no " .. label}
 				else
-					retval = {label = label, accel = {form = accel_form}}
+					retval = {label = label, accel = accel_form and {form = accel_form} or nil}
 					for _, form in ipairs(forms) do
 						local qualifiers = strip_brackets(form.footnotes)
-						-- Strip redundant brackets surrounding entire form. These may get generated e.g.
-						-- if we use the angle bracket notation with a single word.
-						local stripped_form = rmatch(form.form, "^%[%[([^%[%]]*)%]%]$") or form.form
-						table.insert(retval, {term = stripped_form, qualifiers = qualifiers})
+						table.insert(retval, {term = form.form, qualifiers = qualifiers})
 					end
 				end
 				table.insert(data.inflections, retval)
 			end
 
+			if alternant_multiword_spec.is_pronominal then
+				table.insert(data.inflections, {label = glossary_link("pronominal")})
+			end
+			
 			do_verb_form("pres_form")
 			do_verb_form("past_form")
 			do_verb_form("pp_form")
 			for _, irreg_form in ipairs(irreg_forms) do
 				do_verb_form(irreg_form .. "_form")
+			end
+			do_verb_form("aux")
+
+			-- Add categories.
+			for _, form in ipairs(alternant_multiword_spec.forms.aux) do
+				table.insert(data.categories, "Italian verbs taking " .. form.form .. " as auxiliary")
+			end
+			if alternant_multiword_spec.is_pronominal then
+				table.insert(data.categories, "Italian pronominal verbs")
 			end
 
 			-- Use the "linked" form of the lemma as the head if no head= explicitly given.
