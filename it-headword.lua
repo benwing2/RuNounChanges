@@ -1,5 +1,5 @@
 -- This module contains code for Italian headword templates.
--- Templates covered are it-adj, it-noun and it-proper noun.
+-- Templates covered are {{it-adj}}, {{it-noun}}, {{it-proper noun}}, {{it-verb}}.
 -- See [[Module:it-conj]] for Italian conjugation templates.
 local export = {}
 local pos_functions = {}
@@ -571,7 +571,7 @@ local function pres_special_case(base, form, def)
 			local form_vowel, first_second = rmatch(form, "^(.)([+-])$")
 			if not form_vowel then
 				error("Last two stem vowels of default present '" .. def.pres ..
-					"'are the same; you must specify + (second vowel) or - (first vowel) after the vowel spec '" ..
+					"' are the same; you must specify + (second vowel) or - (first vowel) after the vowel spec '" ..
 					form .. "'")
 			end
 			local raw_form_vowel = usub(unfd(form_vowel), 1, 1)
@@ -586,7 +586,7 @@ local function pres_special_case(base, form, def)
 		else
 			if rfind(form, "[+-]$") then
 				error("Last two stem vowels of default present '" .. def.pres ..
-					"'are different; specify just an accented vowel, without a following + or -: '" .. form .. "'")
+					"' are different; specify just an accented vowel, without a following + or -: '" .. form .. "'")
 			end
 			local raw_form_vowel = usub(unfd(form), 1, 1)
 			if raw_form_vowel == v1 then
@@ -643,6 +643,7 @@ pos_functions["verbs"] = {
 		["noautolinkverb"] = {type = "boolean"},
 	},
 	func = function(args, data, tracking_categories, frame)
+		local PAGENAME = mw.title.getCurrentTitle().text
 		local pagename = args.pagename or PAGENAME
 
 		if args[1] then
@@ -976,7 +977,10 @@ pos_functions["verbs"] = {
 					return
 				end
 
-				local accel_form = all_verb_slots[slot]
+				-- Disable accelerators for now because we don't want the added accents going into the headwords.
+				-- FIXME: Add support to [[Module:accel]] so we can add the accelerators back with a param to
+				-- avoid the accents.
+				local accel_form = nil -- all_verb_slots[slot]
 				local label = all_verb_slot_labels[slot]
 				local retval
 				if forms[1].form == "-" then
