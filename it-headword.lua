@@ -540,6 +540,80 @@ local function check_not_null(base, form)
 	end
 end
 
+local function apply_vowel_spec(unaccented_stem, unaccented, unaccented_desc, form)
+	local TEMP_QU = u(0xFFF1)
+	local TEMP_U_IN_AU = u(0xFFF2)
+	unaccented_stem = rsub(unaccented_stem, "qu", TEMP_QU)
+	unaccented_stem = rsub(unaccented_stem, "au(" .. NV .. "*" .. V .. NV .. "*)$", "a" .. TEMP_U_IN_AU .. "%1")
+	local before, v1, between, v2, after = rmatch(unaccented_stem, "^(.*)(" .. V .. ")(" .. NV .. "*)(" .. V .. ")(" .. NV .. "*)$")
+	if not before then
+		before, v1 = "", ""
+		between, v2, after = rmatch(unaccented_stem, "^(.*)(" .. V .. ")(" .. NV .. "*)$")
+	end
+	if not between then
+		error("No vowel in " .. unaccented_desc .. " '" .. unaccented .. "' to match")
+	end
+	if v1 == v2 then
+		local form_vowel, first_second = rmatch(form, "^(.)([+-])$")
+		if not form_vowel then
+			error("Last two stem vowels of " .. unaccented_desc .. " '" .. unaccented ..
+				"' are the same; you must specify + (second vowel) or - (first vowel) after the vowel spec '" ..
+				form .. "'")
+		end
+		local raw_form_vowel = usub(unfd(form_vowel), 1, 1)
+		if raw_form_vowel ~= v1 then
+			error("Vowel spec '" .. form .. "' doesn't match vowel of " .. unaccented_desc .. " '" .. unaccented .. "'")
+		end
+		if first_second == "-" then
+			form = before .. form_vowel .. between .. v2 .. after
+		else
+			form = before .. v1 .. between .. form_vowel .. after
+		end
+	else
+		if rfind(form, "[+-]$") then
+			error("Last two stem vowels of " .. unaccented_desc .. " '" .. unaccented ..
+				"' are different; specify just an accented vowel, without a following + or -: '" .. form .. "'")
+		end
+		local raw_form_vowel = usub(unfd(form), 1, 1)
+		if raw_form_vowel == v1 then
+			form = before .. form .. between .. v2 .. after
+		elseif raw_form_vowel == v2 then
+			form = before .. v1 .. between .. form .. after
+		elseif before == "" then
+			error("Vowel spec '" .. form .. "' doesn't match vowel of " .. unaccented_desc .. " '" .. unaccented .. "'")
+		else
+			error("Vowel spec '" .. form .. "' doesn't match either of the last two vowels of " .. unaccented_desc ..
+				" '" .. unaccented .. "'")
+		end
+	end
+	form = rsub(form, TEMP_QU, "qu")
+	form = rsub(form, TEMP_U_IN_AU, "u")
+	return form
+end
+
+local function root_stressed_inf_special_case(base, form, def)
+	if form == "-" then
+		error("Spec '" .. form .. "' not allowed as root-stressed infinitive spec")
+	end
+	local specs
+	if form == "+" then
+		specs = base.pres
+		for _, spec in ipairs(specs) do
+			if not rfind(spec.form, "^" .. AV .. "[+-]?$") then
+				error("When defaulting root-stressed infinitive vowel to present, present spec must be a single-vowel spec, but saw '"
+					.. spec.form .. "'")
+			end
+		end
+	else
+		specs = {{form = form}}
+	end
+	local retval = {}
+	for _, spec in ipairs(specs) do
+		...
+	end
+	return retval
+end
+
 local function pres_special_case(base, form, def)
 	if form == "+" then
 		check_not_null(base, def.pres)
@@ -555,53 +629,7 @@ local function pres_special_case(base, form, def)
 		if not pres then
 			error("Internal error: Default present '" .. def.pres .. "' doesn't end in -o, -a or -e")
 		end
-		local TEMP_QU = u(0xFFF1)
-		local TEMP_U_IN_AU = u(0xFFF2)
-		pres = rsub(pres, "qu", TEMP_QU)
-		pres = rsub(pres, "au(" .. NV .. "*" .. V .. NV .. "*)$", "a" .. TEMP_U_IN_AU .. "%1")
-		local before, v1, between, v2, after = rmatch(pres, "^(.*)(" .. V .. ")(" .. NV .. "*)(" .. V .. ")(" .. NV .. "*)$")
-		if not before then
-			before, v1 = "", ""
-			between, v2, after = rmatch(pres, "^(.*)(" .. V .. ")(" .. NV .. "*)$")
-		end
-		if not between then
-			error("No vowel in default present '" .. def.pres .. "' to match")
-		end
-		if v1 == v2 then
-			local form_vowel, first_second = rmatch(form, "^(.)([+-])$")
-			if not form_vowel then
-				error("Last two stem vowels of default present '" .. def.pres ..
-					"' are the same; you must specify + (second vowel) or - (first vowel) after the vowel spec '" ..
-					form .. "'")
-			end
-			local raw_form_vowel = usub(unfd(form_vowel), 1, 1)
-			if raw_form_vowel ~= v1 then
-				error("Vowel spec '" .. form .. "' doesn't match vowel of default present '" .. def.pres .. "'")
-			end
-			if first_second == "-" then
-				form = before .. form_vowel .. between .. v2 .. after
-			else
-				form = before .. v1 .. between .. form_vowel .. after
-			end
-		else
-			if rfind(form, "[+-]$") then
-				error("Last two stem vowels of default present '" .. def.pres ..
-					"' are different; specify just an accented vowel, without a following + or -: '" .. form .. "'")
-			end
-			local raw_form_vowel = usub(unfd(form), 1, 1)
-			if raw_form_vowel == v1 then
-				form = before .. form .. between .. v2 .. after
-			elseif raw_form_vowel == v2 then
-				form = before .. v1 .. between .. form .. after
-			elseif before == "" then
-				error("Vowel spec '" .. form .. "' doesn't match vowel of default present '" .. def.pres .. "'")
-			else
-				error("Vowel spec '" .. form .. "' doesn't match either of the last two vowels of default present '" .. def.pres .. "'")
-			end
-		end
-		form = rsub(form, TEMP_QU, "qu")
-		form = rsub(form, TEMP_U_IN_AU, "u")
-		return form .. final_vowel
+		return apply_vowel_spec(pres, def.pres, "default present", form) .. final_vowel
 	elseif not base.third and not rfind(form, "[oò]$") then
 		error("Present first-person singular form '" .. form .. "' should end in -o")
 	elseif base.third and not rfind(form, "[aàeè]") then
@@ -716,9 +744,19 @@ pos_functions["verbs"] = {
 							end
 						end
 						if not saw_irreg then
-							local comma_separated_groups = iut.split_alternating_runs(dot_separated_group, "%s*[,/]%s*", "preserve splitchar")
-							if #comma_separated_groups == 1 or strip_spaces(comma_separated_groups[2][1]) ~= "/" then
-								parse_err("Principal parts must be in the form AUX/PRES or AUX/PRES,PAST,PP: '" ..
+							local comma_separated_groups = iut.split_alternating_runs(dot_separated_group, "%s*[,\\/]%s*", "preserve splitchar")
+							local bad = false
+							local first_separator
+							if #comma_separated_groups == 1 then
+								bad = true
+							else
+								first_separator = strip_spaces(comma_separated_groups[2][1])
+								if first_separator == "," then
+									bad = true
+								end
+							end
+							if bad then
+								parse_err("Principal parts must be in the form AUX/PRES, AUX\\PRES, AUX/PRES,PAST,PP or similar: '" ..
 									table.concat(dot_separated_group) .. "'")
 							end
 
@@ -746,26 +784,38 @@ pos_functions["verbs"] = {
 								table.insert(base.aux, {form = aux, footnotes = fetch_qualifiers(colon_separated_group)})
 							end
 
+							-- Fetch root-stressed infinitive, if given.
+							local presind = 3
+							if first_separator == "\\" then
+								if #comma_separated_groups > 3 and strip_spaces(comma_separated_groups[4][1]) == "\\" then
+									base.root_stressed_inf = fetch_specs(comma_separated_groups[3])
+									presind = 5
+								else
+									base.root_stressed_inf = {{form = "+"}}
+									presind = 3
+								end
+							end
+
 							-- Parse present
-							base.pres = fetch_specs(comma_separated_groups[3])
+							base.pres = fetch_specs(comma_separated_groups[presind])
 
 							-- Parse past historic
-							if #comma_separated_groups > 3 then
-								if strip_spaces(comma_separated_groups[4][1]) ~= "," then
+							if #comma_separated_groups > presind then
+								if strip_spaces(comma_separated_groups[presind + 1][1]) ~= "," then
 									parse_err("Use a comma not slash to separate present from past historic")
 								end
-								base.past = fetch_specs(comma_separated_groups[5])
+								base.past = fetch_specs(comma_separated_groups[presind + 2])
 							end
 
 							-- Parse past participle
-							if #comma_separated_groups > 5 then
-								if strip_spaces(comma_separated_groups[6][1]) ~= "," then
+							if #comma_separated_groups > presind + 2 then
+								if strip_spaces(comma_separated_groups[presind + 3][1]) ~= "," then
 									parse_err("Use a comma not slash to separate past historic from past participle")
 								end
-								base.pp = fetch_specs(comma_separated_groups[7])
+								base.pp = fetch_specs(comma_separated_groups[presind + 4])
 							end
 
-							if #comma_separated_groups > 7 then
+							if #comma_separated_groups > presind + 4 then
 								parse_err("Extraneous text after past participle")
 							end
 						end
@@ -864,18 +914,17 @@ pos_functions["verbs"] = {
 					alternant_multiword_spec.is_pronominal = true
 				end
 
-				local function process_specs(slot, specs, is_part, special_case)
+				local function process_specs(slot, specs, is_finite, special_case)
 					specs = specs or {{form = "+"}}
 					for _, spec in ipairs(specs) do
 						local decorated_form = spec.form
 						local preserve_monosyllabic_accent, form, syntactic_gemination =
 							rmatch(decorated_form, "^(%*?)(.-)(%**)$")
 						local forms = special_case(base, form, this_def_forms)
-						if type(forms) ~= "table" then
-							forms = {forms}
-						end
-						for _, form in ipairs(forms) do
-							local qualifiers = spec.qualifiers
+						forms = iut.convert_to_general_list_form(forms, spec.qualifiers)
+						for _, formobj in ipairs(forms) do
+							local qualifiers = formobj.footnotes
+							local form = formobj.form
 							-- If the form is -, insert it directly, unlinked; we handle this specially
 							-- below, turning it into special labels like "no past participle".
 							if form ~= "-" then
@@ -897,7 +946,7 @@ pos_functions["verbs"] = {
 									error("Decorated form '" .. decorated_form .. "' has too many asterisks after it, use '*' for syntactic gemination and '**' for optional syntactic gemination")
 								end
 								form = "[[" .. unaccented_form .. "|" .. form .. "]]"
-								if not is_part then
+								if is_finite then
 									if unaccented_form == "ho" then
 										form = this_def_forms.finite_pref_ho .. form
 									else
@@ -910,9 +959,14 @@ pos_functions["verbs"] = {
 					end
 				end
 
-				process_specs("pres_form", base.pres, nil, pres_special_case)
-				process_specs("past_form", base.past, nil, past_special_case)
-				process_specs("pp_form", base.pp, "is part", pp_special_case)
+				if base.root_stressed_inf then
+					process_specs("lemma", base.root_stressed_inf, false, root_stressed_inf_special_case)
+				else
+					process_specs("lemma", nil, false, ending_stressed_inf_special_case)
+				end
+				process_specs("pres_form", base.pres, "finite", pres_special_case)
+				process_specs("past_form", base.past, "finite", past_special_case)
+				process_specs("pp_form", base.pp, false, pp_special_case)
 
 				local function irreg_special_case(base, form, def)
 					return form
