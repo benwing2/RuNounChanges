@@ -16,9 +16,11 @@ local uupper = mw.ustring.upper
 local usub = mw.ustring.sub
 local ulen = mw.ustring.len
 local unfd = mw.ustring.toNFD
+local unfc = mw.ustring.toNFC
 
 local lang = require("Module:languages").getByCode("it")
 
+local GR = u(0x0300)
 local V = "[aeiou]"
 local NV = "[^aeiou]"
 local AV = "[àèéìòóù]"
@@ -336,8 +338,9 @@ function export.itprop(frame)
 end
 
 
-local function base_default_verb_forms(base, lemma)
+local function analyze_verb(lemma)
 	local is_pronominal = false
+	local is_reflexive = false
 	-- The particles that can go after a verb are:
 	-- * la, le
 	-- * ne
@@ -382,29 +385,30 @@ local function base_default_verb_forms(base, lemma)
 	--   * vi + si: [[recarvisi]] "to go there"
 	--
 	local ret = {}
-	local finite_pref, finite_pref_ho
+	local linked_suf, finite_pref, finite_pref_ho
 	local clitic_to_finite = {ce = "ce", ve = "ve", se = "me"}
 	local verb, clitic, clitic2 = rmatch(lemma, "^(.-)([cvs]e)(l[ae])$")
-	local linked_verb
 	if verb then
-		linked_verb = "[[" .. verb .. "]][[" .. clitic .. "]][[" .. clitic2 .. "]]"
+		linked_suf = "[[" .. clitic .. "]][[" .. clitic2 .. "]]"
 		finite_pref = "[[" .. clitic_to_finite[clitic] .. "]] [[" .. clitic2 .. "]] "
 		finite_pref_ho = "[[" .. clitic_to_finite[clitic] .. "]] [[l']]"
 		is_pronominal = true
+		is_reflexive = clitic == "se"
 	end
 	if not verb then
 		verb, clitic = rmatch(lemma, "^(.-)([cvs]e)ne$")
 		if verb then
-			linked_verb = "[[" .. verb .. "]][[" .. clitic .. "]][[ne]]"
+			linked_suf = "[[" .. clitic .. "]][[ne]]"
 			finite_pref = "[[" .. clitic_to_finite[clitic] .. "]] [[ne]] "
 			finite_pref_ho = "[[" .. clitic_to_finite[clitic] .. "]] [[n']]"
 			is_pronominal = true
+			is_reflexive = clitic == "se"
 		end
 	end
 	if not verb then
 		verb, clitic = rmatch(lemma, "^(.-)([cv]i)si$")
 		if verb then
-			linked_verb = "[[" .. verb .. "]][[" .. clitic .. "]][[si]]"
+			linked_suf = "[[" .. clitic .. "]][[si]]"
 			finite_pref = "[[mi]] [[" .. clitic .. "]] "
 			if clitic == "vi" then
 				finite_pref_ho = "[[mi]] [[v']]"
@@ -412,12 +416,13 @@ local function base_default_verb_forms(base, lemma)
 				finite_pref_ho = "[[mi]] [[ci]] "
 			end
 			is_pronominal = true
+			is_reflexive = true
 		end
 	end
 	if not verb then
 		verb, clitic = rmatch(lemma, "^(.-)([cv]i)$")
 		if verb then
-			linked_verb = "[[" .. verb .. "]][[" .. clitic .. "]]"
+			linked_suf = "[[" .. clitic .. "]]"
 			finite_pref = "[[" .. clitic .. "]] "
 			if clitic == "vi" then
 				finite_pref_ho = "[[v']]"
@@ -430,16 +435,17 @@ local function base_default_verb_forms(base, lemma)
 	if not verb then
 		verb = rmatch(lemma, "^(.-)si$")
 		if verb then
-			linked_verb = "[[" .. verb .. "]][[mi]]"
+			linked_suf = "[[si]]"
 			finite_pref = "[[mi]] "
 			finite_pref_ho = "[[m']]"
 			-- not pronominal
+			is_reflexive = true
 		end
 	end
 	if not verb then
 		verb = rmatch(lemma, "^(.-)ne$")
 		if verb then
-			linked_verb = "[[" .. verb .. "]][[ne]]"
+			linked_suf = "[[ne]]"
 			finite_pref = "[[ne]] "
 			finite_pref_ho = "[[n']]"
 			is_pronominal = true
@@ -448,7 +454,7 @@ local function base_default_verb_forms(base, lemma)
 	if not verb then
 		verb, clitic = rmatch(lemma, "^(.-)(l[ae])$")
 		if verb then
-			linked_verb = "[[" .. verb .. "]][[" .. clitic .. "]]"
+			linked_suf = "[[" .. clitic .. "]]"
 			finite_pref = "[[" .. clitic .. "]] "
 			finite_pref_ho = "[[l']]"
 			is_pronominal = true
@@ -456,33 +462,41 @@ local function base_default_verb_forms(base, lemma)
 	end
 	if not verb then
 		verb = lemma
-		linked_verb = "[[" .. verb .. "]]"
+		linked_suf = ""
 		finite_pref = ""
 		finite_pref_ho = ""
 		-- not pronominal
 	end
 
-	local stem, conj_vowel = rmatch(verb, "^(.-)([aeiour])re?$")
-	if not stem then
-		error("Unrecognized verb '" .. verb .. "', doesn't end in -are, -ere, -ire, -rre, -ar, -er, -ir, -or or -ur")
-	end
-	if rfind(verb, "r$") then
-		if rfind(verb, "[ou]r$") or base.trarre then
-			verb = verb .. "re"
-		else
-			verb = verb .. "e"
-		end
-	end
-	ret.verb = verb
-	ret.linked_verb = linked_verb
+	ret.raw_verb = verb
+	ret.linked_suf = linked_suf
 	ret.finite_pref = finite_pref
 	ret.finite_pref_ho = finite_pref_ho
 	ret.is_pronominal = is_pronominal
+	ret.is_reflexive = is_reflexive
+	return ret
+end
 
+local function add_default_verb_forms(base)
+	local ret = base.verb
+	local raw_verb = ret.raw_verb
+	local stem, conj_vowel = rmatch(raw_verb, "^(.-)([aeiour])re?$")
+	if not stem then
+		error("Unrecognized verb '" .. raw_verb .. "', doesn't end in -are, -ere, -ire, -rre, -ar, -er, -ir, -or or -ur")
+	end
+	if rfind(raw_verb, "r$") then
+		if rfind(raw_verb, "[ou]r$") or base.trarre then
+			ret.verb = raw_verb .. "re"
+		else
+			ret.verb = raw_verb .. "e"
+		end
+	else
+		ret.verb = raw_verb
+	end
 
 	if not rfind(conj_vowel, "^[aei]$") then
 		-- Can't generate defaults for verbs in -rre
-		return ret
+		return
 	end
 
 	if base.third then
@@ -507,8 +521,6 @@ local function base_default_verb_forms(base, lemma)
 	else
 		ret.pp = stem .. "ìto"
 	end
-
-	return ret
 end
 
 -- Add links around words. If multiword_only, do it only in multiword forms.
@@ -591,45 +603,70 @@ local function apply_vowel_spec(unaccented_stem, unaccented, unaccented_desc, fo
 	return form
 end
 
-local function root_stressed_inf_special_case(base, form, def)
-	if form == "-" then
-		error("Spec '" .. form .. "' not allowed as root-stressed infinitive spec")
+local function do_ending_stressed_inf(iut, base)
+	local accented = rsub(base.verb.verb, "ere$", "ére")
+	accented = rsub(accented, "orre$", "órre")
+	accented = unfc(rsub(accented, "([aiu])(r?re)$", "%1" .. GR .. "%2"))
+	if base.verb.linked_suf ~= "" then
+		accented = rsub(accented, "rre$", "r")
+		accented = rsub(accented, "e$", "")
 	end
-	local specs
-	if form == "+" then
-		specs = base.pres
-		for _, spec in ipairs(specs) do
-			if not rfind(spec.form, "^" .. AV .. "[+-]?$") then
-				error("When defaulting root-stressed infinitive vowel to present, present spec must be a single-vowel spec, but saw '"
-					.. spec.form .. "'")
-			end
-		end
-	else
-		specs = {{form = form}}
-	end
-	local retval = {}
-	for _, spec in ipairs(specs) do
-		...
-	end
-	return retval
+	local linked = "[[" .. base.verb.verb .. "|" .. accented .. "]]" .. base.verb.linked_suf
+	iut.insert_form(base.forms, "lemma_linked", {form = linked})
 end
 
-local function pres_special_case(base, form, def)
+local function do_root_stressed_inf(iut, base, specs)
+	for _, spec in ipairs(specs) do
+		if spec.form == "-" then
+			error("Spec '-' not allowed as root-stressed infinitive spec")
+		end
+		local this_specs
+		if spec.form == "+" then
+			-- Combine current footnotes into present-tense footnotes.
+			this_specs = iut.convert_to_general_list_form(base.pres, spec.footnotes)
+			for _, this_spec in ipairs(this_specs) do
+				if not rfind(this_spec.form, "^" .. AV .. "[+-]?$") then
+					error("When defaulting root-stressed infinitive vowel to present, present spec must be a single-vowel spec, but saw '"
+						.. this_spec.form .. "'")
+				end
+			end
+		else
+			this_specs = {spec}
+		end
+		local verb_stem = rmatch(base.verb.verb, "^(.-)ere$")
+		if not verb_stem then
+			error("Verb '" .. base.verb.verb .. "' must end in -ere to use \\ notation")
+		end
+		for _, this_spec in ipairs(this_specs) do
+			if not rfind(this_spec.form, "^" .. AV .. "[+-]?$") then
+				error("Explicit root-stressed infinitive spec '" .. this_spec.form .. "' should be a single-vowel spec")
+			end
+			local expanded = apply_vowel_spec(verb_stem, base.verb.verb, "root-stressed infinitive", this_spec.form) .. "ere"
+			if base.verb.linked_suf ~= "" then
+				expanded = rsub(expanded, "e$", "")
+			end
+			local linked = "[[" .. base.verb.verb .. "|" .. expanded .. "]]" .. base.verb.linked_suf
+			iut.insert_form(base.forms, "lemma_linked", {form = linked, footnotes = this_spec.footnotes})
+		end
+	end
+end
+
+local function pres_special_case(base, form)
 	if form == "+" then
-		check_not_null(base, def.pres)
-		return def.pres
+		check_not_null(base, base.verb.pres)
+		return base.verb.pres
 	elseif form == "+isc" then
-		check_not_null(base, def.isc_pres)
-		return def.isc_pres
+		check_not_null(base, base.verb.isc_pres)
+		return base.verb.isc_pres
 	elseif form == "-" then
 		return form
 	elseif rfind(form, "^" .. AV .. "[+-]?$") then
-		check_not_null(base, def.pres)
-		local pres, final_vowel = rmatch(def.pres, "^(.*)([oae])$")
+		check_not_null(base, base.verb.pres)
+		local pres, final_vowel = rmatch(base.verb.pres, "^(.*)([oae])$")
 		if not pres then
-			error("Internal error: Default present '" .. def.pres .. "' doesn't end in -o, -a or -e")
+			error("Internal error: Default present '" .. base.verb.pres .. "' doesn't end in -o, -a or -e")
 		end
-		return apply_vowel_spec(pres, def.pres, "default present", form) .. final_vowel
+		return apply_vowel_spec(pres, base.verb.pres, "default present", form) .. final_vowel
 	elseif not base.third and not rfind(form, "[oò]$") then
 		error("Present first-person singular form '" .. form .. "' should end in -o")
 	elseif base.third and not rfind(form, "[aàeè]") then
@@ -639,10 +676,10 @@ local function pres_special_case(base, form, def)
 	end
 end
 
-local function past_special_case(base, form, def)
+local function past_special_case(base, form)
 	if form == "+" then
-		check_not_null(base, def.past)
-		return def.past
+		check_not_null(base, base.verb.past)
+		return base.verb.past
 	elseif form ~= "-" and not base.third and not rfind(form, "i$") then
 		error("Past historic form '" .. form .. "' should end in -i")
 	else
@@ -650,10 +687,10 @@ local function past_special_case(base, form, def)
 	end
 end
 
-local function pp_special_case(base, form, def)
+local function pp_special_case(base, form)
 	if form == "+" then
-		check_not_null(base, def.pp)
-		return def.pp
+		check_not_null(base, base.verb.pp)
+		return base.verb.pp
 	elseif form ~= "-" and not rfind(form, "o$") then
 		error("Past participle form '" .. form .. "' should end in -o")
 	else
@@ -684,7 +721,7 @@ pos_functions["verbs"] = {
 
 			-- (1) Parse the indicator specs inside of angle brackets.
 
-			local function parse_indicator_spec(angle_bracket_spec)
+			local function parse_indicator_spec(angle_bracket_spec, lemma)
 				local base = {forms = {}, irreg_forms = {}}
 				local function parse_err(msg)
 					error(msg .. ": " .. angle_bracket_spec)
@@ -704,21 +741,29 @@ pos_functions["verbs"] = {
 					return qualifiers
 				end
 
-				local function fetch_specs(comma_separated_group)
-					local specs = {}
-
+				local function fetch_specs(comma_separated_group, allow_blank)
 					local colon_separated_groups = iut.split_alternating_runs(comma_separated_group, ":")
+					if allow_blank and #colon_separated_groups == 1 and #colon_separated_groups[1] == 1 and
+						colon_separated_groups[1][1] == "" then
+						return nil
+					end
+					local specs = {}
 					for _, colon_separated_group in ipairs(colon_separated_groups) do
 						local form = colon_separated_group[1]
-						-- Below, we check for a nil form when replacing with the default, so replace
-						-- blank forms (requesting the default) with nil.
 						if form == "" then
-							form = nil
+							parse_err("Blank form not allowed here, but saw '" ..
+								table.concat(comma_separated_group) .. "'")
 						end
-						table.insert(specs, {form = form, qualifiers = fetch_qualifiers(colon_separated_group)})
+						table.insert(specs, {form = form, footnotes = fetch_qualifiers(colon_separated_group)})
 					end
 					return specs
 				end
+
+				if lemma == "" then
+					lemma = pagename
+				end
+				base.lemma = m_links.remove_links(lemma)
+				base.verb = analyze_verb(lemma)
 
 				local inside = angle_bracket_spec:match("^<(.*)>$")
 				assert(inside)
@@ -745,54 +790,60 @@ pos_functions["verbs"] = {
 						end
 						if not saw_irreg then
 							local comma_separated_groups = iut.split_alternating_runs(dot_separated_group, "%s*[,\\/]%s*", "preserve splitchar")
-							local bad = false
-							local first_separator
-							if #comma_separated_groups == 1 then
-								bad = true
-							else
-								first_separator = strip_spaces(comma_separated_groups[2][1])
-								if first_separator == "," then
-									bad = true
-								end
-							end
-							if bad then
-								parse_err("Principal parts must be in the form AUX/PRES, AUX\\PRES, AUX/PRES,PAST,PP or similar: '" ..
-									table.concat(dot_separated_group) .. "'")
-							end
-
-							-- Parse auxiliaries
-							local colon_separated_groups = iut.split_alternating_runs(comma_separated_groups[1], ":")
-							for _, colon_separated_group in ipairs(colon_separated_groups) do
-								local aux = colon_separated_group[1]
-								if aux == "a" then
-									aux = "avere"
-								elseif aux == "e" then
-									aux = "essere"
-								else
-									parse_err("Unrecognized auxiliary '" .. aux ..
-										"', should be 'a' (for [[avere]]) or 'e' for ([[essere]])")
-								end
-								if base.aux then
-									for _, existing_aux in ipairs(base.aux) do
-										if existing_aux.form == aux then
-											parse_err("Auxiliary '" .. aux .. "' specified twice")
+							local presind = 1
+							local first_separator = #comma_separated_groups > 1 and
+								strip_spaces(comma_separated_groups[2][1])
+							if #comma_separated_groups > 1 and first_separator ~= "," then
+								presind = 3
+								-- Auxiliary present (if non-reflexive), or root-stressed infinitive spec
+								-- (if reflexive).
+								if base.verb.is_reflexive then
+									-- Fetch root-stressed infinitive, if given.
+									local specs = fetch_specs(comma_separated_groups[1], "allow blank")
+									if first_separator == "\\" then
+										if specs == nil then
+											base.root_stressed_inf = {{form = "+"}}
+										else
+											base.root_stressed_inf = specs
 										end
+									elseif specs ~= nil then
+										parse_err("With reflexive verb, can't specify anything before initial slash, but saw '"
+											.. table.concat(comma_separated_groups[1]))
 									end
 								else
-									base.aux = {}
-								end
-								table.insert(base.aux, {form = aux, footnotes = fetch_qualifiers(colon_separated_group)})
-							end
+									-- Fetch auxiliary or auxiliaries.
+									local colon_separated_groups = iut.split_alternating_runs(comma_separated_groups[1], ":")
+									for _, colon_separated_group in ipairs(colon_separated_groups) do
+										local aux = colon_separated_group[1]
+										if aux == "a" then
+											aux = "avere"
+										elseif aux == "e" then
+											aux = "essere"
+										else
+											parse_err("Unrecognized auxiliary '" .. aux ..
+												"', should be 'a' (for [[avere]]) or 'e' for ([[essere]])")
+										end
+										if base.aux then
+											for _, existing_aux in ipairs(base.aux) do
+												if existing_aux.form == aux then
+													parse_err("Auxiliary '" .. aux .. "' specified twice")
+												end
+											end
+										else
+											base.aux = {}
+										end
+										table.insert(base.aux, {form = aux, footnotes = fetch_qualifiers(colon_separated_group)})
+									end
 
-							-- Fetch root-stressed infinitive, if given.
-							local presind = 3
-							if first_separator == "\\" then
-								if #comma_separated_groups > 3 and strip_spaces(comma_separated_groups[4][1]) == "\\" then
-									base.root_stressed_inf = fetch_specs(comma_separated_groups[3])
-									presind = 5
-								else
-									base.root_stressed_inf = {{form = "+"}}
-									presind = 3
+									-- Fetch root-stressed infinitive, if given.
+									if first_separator == "\\" then
+										if #comma_separated_groups > 3 and strip_spaces(comma_separated_groups[4][1]) == "\\" then
+											base.root_stressed_inf = fetch_specs(comma_separated_groups[3])
+											presind = 5
+										else
+											base.root_stressed_inf = {{form = "+"}}
+										end
+									end
 								end
 							end
 
@@ -847,34 +898,26 @@ pos_functions["verbs"] = {
 				end
 			end
 
-			-- (3) Remove any links from the lemma, but remember the original form
-			--     so we can use it below in the 'lemma_linked' form.
+			-- (3) Do any global checks (in this case only for 'only3s' and 'only3sp').
 
 			iut.map_word_specs(alternant_multiword_spec, function(base)
-				if base.lemma == "" then
-					base.lemma = pagename
-				end
-				if not args.noautolinkverb then
-					-- Add links to the lemma so the user doesn't specifically need to, since we preserve
-					-- links in multiword lemmas and include links in non-lemma forms rather than allowing
-					-- the entire form to be a link.
-					base.orig_lemma = add_links(base.lemma)
-				else
-					base.orig_lemma = base.lemma
-				end
-				base.lemma = m_links.remove_links(base.lemma)
-
 				-- Handling of only3s and only3p.
 				if base.only3s and base.only3sp then
 					error("'only3s' and 'only3sp' cannot both be specified")
 				end
 				base.third = base.only3s or base.only3sp
-				if alternant_multiword_spec.third == nil then
-					alternant_multiword_spec.third = base.third
-				elseif alternant_multiword_spec.third ~= base.third then
-					error("If some alternants specify 'only3s' or 'only3sp', all must")
+				if alternant_multiword_spec.only3s == nil then
+					alternant_multiword_spec.only3s = base.only3s
+				elseif alternant_multiword_spec.only3s ~= base.only3s then
+					error("If some alternants specify 'only3s', all must")
+				end
+				if alternant_multiword_spec.only3sp == nil then
+					alternant_multiword_spec.only3sp = base.only3sp
+				elseif alternant_multiword_spec.only3sp ~= base.only3sp then
+					error("If some alternants specify 'only3sp', all must")
 				end
 			end)
+			alternant_multiword_spec.third = alternant_multiword_spec.only3s or alternant_multiword_spec.only3sp
 
 			-- (4) Conjugate the verbs according to the indicator specs parsed above.
 
@@ -908,9 +951,8 @@ pos_functions["verbs"] = {
 			}
 
 			local function conjugate_verb(base)
-				local this_def_forms = base_default_verb_forms(base, base.lemma)
-				base.is_pronominal = this_def_forms.is_pronominal
-				if base.is_pronominal then
+				add_default_verb_forms(base)
+				if base.verb.is_pronominal then
 					alternant_multiword_spec.is_pronominal = true
 				end
 
@@ -920,8 +962,8 @@ pos_functions["verbs"] = {
 						local decorated_form = spec.form
 						local preserve_monosyllabic_accent, form, syntactic_gemination =
 							rmatch(decorated_form, "^(%*?)(.-)(%**)$")
-						local forms = special_case(base, form, this_def_forms)
-						forms = iut.convert_to_general_list_form(forms, spec.qualifiers)
+						local forms = special_case(base, form)
+						forms = iut.convert_to_general_list_form(forms, spec.footnotes)
 						for _, formobj in ipairs(forms) do
 							local qualifiers = formobj.footnotes
 							local form = formobj.form
@@ -948,9 +990,9 @@ pos_functions["verbs"] = {
 								form = "[[" .. unaccented_form .. "|" .. form .. "]]"
 								if is_finite then
 									if unaccented_form == "ho" then
-										form = this_def_forms.finite_pref_ho .. form
+										form = base.verb.finite_pref_ho .. form
 									else
-										form = this_def_forms.finite_pref .. form
+										form = base.verb.finite_pref .. form
 									end
 								end
 							end
@@ -959,11 +1001,6 @@ pos_functions["verbs"] = {
 					end
 				end
 
-				if base.root_stressed_inf then
-					process_specs("lemma", base.root_stressed_inf, false, root_stressed_inf_special_case)
-				else
-					process_specs("lemma", nil, false, ending_stressed_inf_special_case)
-				end
 				process_specs("pres_form", base.pres, "finite", pres_special_case)
 				process_specs("past_form", base.past, "finite", past_special_case)
 				process_specs("pp_form", base.pp, false, pp_special_case)
@@ -974,22 +1011,18 @@ pos_functions["verbs"] = {
 
 				for _, irreg_form in ipairs(irreg_forms) do
 					if base.irreg_forms[irreg_form] then
-						process_specs(irreg_form .. "_form", base.irreg_forms[irreg_form], irreg_form == "imp",
+						process_specs(irreg_form .. "_form", base.irreg_forms[irreg_form], irreg_form ~= "imp",
 							irreg_special_case)
 					end
 				end
 
 				iut.insert_form(base.forms, "lemma", {form = base.lemma})
-				-- Add linked version of lemma for use in head=. We write this in a general fashion in case
-				-- there are multiple lemma forms (which isn't possible currently at this level, although it's
-				-- possible overall using the ((...,...)) notation).
-				iut.insert_forms(base.forms, "lemma_linked", iut.map_forms(base.forms.lemma, function(form)
-					if form == base.lemma then
-						return this_def_forms.linked_verb
-					else
-						return form
-					end
-				end))
+				-- Add linked version of lemma for use in head=.
+				if base.root_stressed_inf then
+					do_root_stressed_inf(iut, base, base.root_stressed_inf)
+				else
+					do_ending_stressed_inf(iut, base)
+				end
 			end
 
 			local inflect_props = {
@@ -1052,6 +1085,12 @@ pos_functions["verbs"] = {
 			if alternant_multiword_spec.is_pronominal then
 				table.insert(data.inflections, {label = glossary_link("pronominal")})
 			end
+			if alternant_multiword_spec.only3s then
+				table.insert(data.inflections, {label = glossary_link("impersonal")})
+			end
+			if alternant_multiword_spec.only3sp then
+				table.insert(data.inflections, {label = "third-person only"})
+			end
 			
 			do_verb_form("pres_form")
 			do_verb_form("past_form")
@@ -1062,8 +1101,10 @@ pos_functions["verbs"] = {
 			do_verb_form("aux")
 
 			-- Add categories.
-			for _, form in ipairs(alternant_multiword_spec.forms.aux) do
-				table.insert(data.categories, "Italian verbs taking " .. form.form .. " as auxiliary")
+			if alternant_multiword_spec.forms.aux then
+				for _, form in ipairs(alternant_multiword_spec.forms.aux) do
+					table.insert(data.categories, "Italian verbs taking " .. form.form .. " as auxiliary")
+				end
 			end
 			if alternant_multiword_spec.is_pronominal then
 				table.insert(data.categories, "Italian pronominal verbs")
@@ -1073,7 +1114,9 @@ pos_functions["verbs"] = {
 			if #data.heads == 0 then
 				for _, lemma_obj in ipairs(alternant_multiword_spec.forms.lemma_linked) do
 					local lemma = lemma_obj.form
-					table.insert(data.heads, lemma)
+					-- FIXME, can't yet specify qualifiers for heads
+					table.insert(data.heads, lemma_obj.form)
+					-- table.insert(data.heads, {term = lemma_obj.form, qualifiers = strip_brackets(lemma_obj.footnotes)})
 				end
 			end
 		end
