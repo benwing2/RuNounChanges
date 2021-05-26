@@ -21,6 +21,8 @@ local unfc = mw.ustring.toNFC
 local lang = require("Module:languages").getByCode("it")
 
 local GR = u(0x0300)
+local TEMP_QU = u(0xFFF1)
+local TEMP_U_IN_AU = u(0xFFF2)
 local V = "[aeiou]"
 local NV = "[^aeiou]"
 local AV = "[àèéìòóù]"
@@ -485,7 +487,7 @@ local function add_default_verb_forms(base)
 		error("Unrecognized verb '" .. raw_verb .. "', doesn't end in -are, -ere, -ire, -rre, -ar, -er, -ir, -or or -ur")
 	end
 	if rfind(raw_verb, "r$") then
-		if rfind(raw_verb, "[ou]r$") or base.trarre then
+		if rfind(raw_verb, "[ou]r$") or base.rre then
 			ret.verb = raw_verb .. "re"
 		else
 			ret.verb = raw_verb .. "e"
@@ -552,9 +554,11 @@ local function check_not_null(base, form)
 	end
 end
 
-local function apply_vowel_spec(unaccented_stem, unaccented, unaccented_desc, form)
-	local TEMP_QU = u(0xFFF1)
-	local TEMP_U_IN_AU = u(0xFFF2)
+-- Given an unaccented stem, pull out the last two vowels as well as the in-between stuff, and return
+-- before, v1, between, v2, after as 5 return values. You must undo the TEMP_QU and TEMP_U_IN_AU substitutions
+-- made in before/between/after if you want to use them. `unaccented` is the full verb and `unaccented_desc` a
+-- description of where the verb came from; used only in error messages.
+local function analyze_stem_for_last_two_vowels(unaccented_stem, unaccented, unaccented_desc)
 	unaccented_stem = rsub(unaccented_stem, "qu", TEMP_QU)
 	unaccented_stem = rsub(unaccented_stem, "au(" .. NV .. "*" .. V .. NV .. "*)$", "a" .. TEMP_U_IN_AU .. "%1")
 	local before, v1, between, v2, after = rmatch(unaccented_stem, "^(.*)(" .. V .. ")(" .. NV .. "*)(" .. V .. ")(" .. NV .. "*)$")
@@ -565,6 +569,13 @@ local function apply_vowel_spec(unaccented_stem, unaccented, unaccented_desc, fo
 	if not between then
 		error("No vowel in " .. unaccented_desc .. " '" .. unaccented .. "' to match")
 	end
+	return before, v1, between, v2, after
+end
+
+-- Apply a single-vowel spec in `form`, e.g. é+, to `unaccented_stem`. `unaccented` is the full verb and
+-- `unaccented_desc` a description of where the verb came from; used only in error messages.
+local function apply_vowel_spec(unaccented_stem, unaccented, unaccented_desc, form)
+	local before, v1, between, v2, after = analyze_stem_for_last_two_vowels(unaccented_stem, unaccented, unaccented_desc)
 	if v1 == v2 then
 		local form_vowel, first_second = rmatch(form, "^(.)([+-])$")
 		if not form_vowel then
@@ -604,11 +615,14 @@ local function apply_vowel_spec(unaccented_stem, unaccented, unaccented_desc, fo
 end
 
 local function do_ending_stressed_inf(iut, base)
+	if rfind(base.verb.verb, "rre$") then
+		error("Use \\ not / with -rre verbs")
+	end
+	-- Add acute accent to -ere, grave accent to -are/-ire.
 	local accented = rsub(base.verb.verb, "ere$", "ére")
-	accented = rsub(accented, "orre$", "órre")
-	accented = unfc(rsub(accented, "([aiu])(r?re)$", "%1" .. GR .. "%2"))
+	accented = unfc(rsub(accented, "([ai])re$", "%1" .. GR .. "re"))
+	-- If there is a clitic suffix like -la or -sene, truncate final -e.
 	if base.verb.linked_suf ~= "" then
-		accented = rsub(accented, "rre$", "r")
 		accented = rsub(accented, "e$", "")
 	end
 	local linked = "[[" .. base.verb.verb .. "|" .. accented .. "]]" .. base.verb.linked_suf
@@ -622,29 +636,47 @@ local function do_root_stressed_inf(iut, base, specs)
 		end
 		local this_specs
 		if spec.form == "+" then
-			-- Combine current footnotes into present-tense footnotes.
-			this_specs = iut.convert_to_general_list_form(base.pres, spec.footnotes)
-			for _, this_spec in ipairs(this_specs) do
-				if not rfind(this_spec.form, "^" .. AV .. "[+-]?$") then
-					error("When defaulting root-stressed infinitive vowel to present, present spec must be a single-vowel spec, but saw '"
-						.. this_spec.form .. "'")
+			-- do_root_stressed_inf is used for verbs in -ere and -rre. If the root-stressed vowel isn't explicitly
+			-- given and the verb ends in -arre, -irre or -urre, derive it from the infinitive since there's only
+			-- one possibility.. If the verb ends in -erre or -orre, this won't work because we have both
+			-- scérre (= [[scegliere]]) and disvèrre (= [[disvellere]]), as well as pórre and tòrre (= [[togliere]]).
+			local rre_vowel = rmatch(base.verb.verb, "([aiu])rre$")
+			if rre_vowel then
+				local before, v1, between, v2, after = analyze_stem_for_last_two_vowels(
+					rsub(base.verb.verb, "re$", ""), base.verb.verb, "root-stressed infinitive")
+				local vowel_spec = unfc(rre_vowel .. GR)
+				if v1 == v2 then
+					vowel_spec = vowel_spec .. "+"
+				end
+				this_specs = {{form = vowel_spec}}
+			else
+				-- Combine current footnotes into present-tense footnotes.
+				this_specs = iut.convert_to_general_list_form(base.pres, spec.footnotes)
+				for _, this_spec in ipairs(this_specs) do
+					if not rfind(this_spec.form, "^" .. AV .. "[+-]?$") then
+						error("When defaulting root-stressed infinitive vowel to present, present spec must be a single-vowel spec, but saw '"
+							.. this_spec.form .. "'")
+					end
 				end
 			end
 		else
 			this_specs = {spec}
 		end
-		local verb_stem = rmatch(base.verb.verb, "^(.-)ere$")
+		local verb_stem, verb_suffix = rmatch(base.verb.verb, "^(.-)([er]re)$")
 		if not verb_stem then
-			error("Verb '" .. base.verb.verb .. "' must end in -ere to use \\ notation")
+			error("Verb '" .. base.verb.verb .. "' must end in -ere or -rre to use \\ notation")
+		end
+		-- If there is a clitic suffix like -la or -sene, truncate final -(r)e.
+		if base.verb.linked_suf ~= "" then
+			verb_suffix = verb_suffix == "ere" and "er" or "r"
 		end
 		for _, this_spec in ipairs(this_specs) do
 			if not rfind(this_spec.form, "^" .. AV .. "[+-]?$") then
 				error("Explicit root-stressed infinitive spec '" .. this_spec.form .. "' should be a single-vowel spec")
 			end
-			local expanded = apply_vowel_spec(verb_stem, base.verb.verb, "root-stressed infinitive", this_spec.form) .. "ere"
-			if base.verb.linked_suf ~= "" then
-				expanded = rsub(expanded, "e$", "")
-			end
+
+			local expanded = apply_vowel_spec(verb_stem, base.verb.verb, "root-stressed infinitive", this_spec.form) ..
+				verb_suffix
 			local linked = "[[" .. base.verb.verb .. "|" .. expanded .. "]]" .. base.verb.linked_suf
 			iut.insert_form(base.forms, "lemma_linked", {form = linked, footnotes = this_spec.footnotes})
 		end
@@ -772,8 +804,8 @@ pos_functions["verbs"] = {
 				local dot_separated_groups = iut.split_alternating_runs(segments, "%s*%.%s*")
 				for i, dot_separated_group in ipairs(dot_separated_groups) do
 					local first_element = dot_separated_group[1]
-					if first_element == "only3s" or first_element == "only3sp" or first_element == "trarre" then
-						if #dot_separated_groups[1] > 1 then
+					if first_element == "only3s" or first_element == "only3sp" or first_element == "rre" then
+						if #dot_separated_group > 1 then
 							parse_err("No footnotes allowed with '" .. first_element .. "' spec")
 						end
 						base[first_element] = true
@@ -793,11 +825,11 @@ pos_functions["verbs"] = {
 							local presind = 1
 							local first_separator = #comma_separated_groups > 1 and
 								strip_spaces(comma_separated_groups[2][1])
-							if #comma_separated_groups > 1 and first_separator ~= "," then
-								presind = 3
-								-- Auxiliary present (if non-reflexive), or root-stressed infinitive spec
-								-- (if reflexive).
-								if base.verb.is_reflexive then
+							if base.verb.is_reflexive then
+								if #comma_separated_groups > 1 and first_separator ~= "," then
+									presind = 3
+									-- Auxiliary present (if non-reflexive), or root-stressed infinitive spec
+									-- (if reflexive).
 									-- Fetch root-stressed infinitive, if given.
 									local specs = fetch_specs(comma_separated_groups[1], "allow blank")
 									if first_separator == "\\" then
@@ -810,19 +842,30 @@ pos_functions["verbs"] = {
 										parse_err("With reflexive verb, can't specify anything before initial slash, but saw '"
 											.. table.concat(comma_separated_groups[1]))
 									end
-								else
-									-- Fetch auxiliary or auxiliaries.
-									local colon_separated_groups = iut.split_alternating_runs(comma_separated_groups[1], ":")
-									for _, colon_separated_group in ipairs(colon_separated_groups) do
-										local aux = colon_separated_group[1]
-										if aux == "a" then
-											aux = "avere"
-										elseif aux == "e" then
-											aux = "essere"
-										else
-											parse_err("Unrecognized auxiliary '" .. aux ..
-												"', should be 'a' (for [[avere]]) or 'e' for ([[essere]])")
+								end
+							else -- non-reflexive
+								if #comma_separated_groups == 1 or first_separator == "," then
+									parse_err("With non-reflexive verb, use a spec like AUX/PRES, AUX\\PRES, AUX/PRES,PAST,PP or similar")
+								end
+								presind = 3
+								-- Fetch auxiliary or auxiliaries.
+								local colon_separated_groups = iut.split_alternating_runs(comma_separated_groups[1], ":")
+								for _, colon_separated_group in ipairs(colon_separated_groups) do
+									local aux = colon_separated_group[1]
+									if aux == "a" then
+										aux = "avere"
+									elseif aux == "e" then
+										aux = "essere"
+									elseif aux == "-" then
+										if #colon_separated_group > 1 then
+											parse_err("No footnotes allowed with '-' spec for auxiliary")
 										end
+										aux = nil
+									else
+										parse_err("Unrecognized auxiliary '" .. aux ..
+											"', should be 'a' (for [[avere]]), 'e' (for [[essere]]), or '-' if no past participle")
+									end
+									if aux then
 										if base.aux then
 											for _, existing_aux in ipairs(base.aux) do
 												if existing_aux.form == aux then
@@ -834,15 +877,15 @@ pos_functions["verbs"] = {
 										end
 										table.insert(base.aux, {form = aux, footnotes = fetch_qualifiers(colon_separated_group)})
 									end
+								end
 
-									-- Fetch root-stressed infinitive, if given.
-									if first_separator == "\\" then
-										if #comma_separated_groups > 3 and strip_spaces(comma_separated_groups[4][1]) == "\\" then
-											base.root_stressed_inf = fetch_specs(comma_separated_groups[3])
-											presind = 5
-										else
-											base.root_stressed_inf = {{form = "+"}}
-										end
+								-- Fetch root-stressed infinitive, if given.
+								if first_separator == "\\" then
+									if #comma_separated_groups > 3 and strip_spaces(comma_separated_groups[4][1]) == "\\" then
+										base.root_stressed_inf = fetch_specs(comma_separated_groups[3])
+										presind = 5
+									else
+										base.root_stressed_inf = {{form = "+"}}
 									end
 								end
 							end
@@ -898,7 +941,7 @@ pos_functions["verbs"] = {
 				end
 			end
 
-			-- (3) Do any global checks (in this case only for 'only3s' and 'only3sp').
+			-- (3) Do any global checks.
 
 			iut.map_word_specs(alternant_multiword_spec, function(base)
 				-- Handling of only3s and only3p.
@@ -915,6 +958,15 @@ pos_functions["verbs"] = {
 					alternant_multiword_spec.only3sp = base.only3sp
 				elseif alternant_multiword_spec.only3sp ~= base.only3sp then
 					error("If some alternants specify 'only3sp', all must")
+				end
+				
+				-- Check for missing past participle == missing auxiliary.
+				if not base.verb.is_reflexive then
+					local pp_is_missing = base.pp and #base.pp == 1 and base.pp[1].form == "-"
+					local aux_is_missing = not base.aux
+					if (aux_is_missing or nil) ~= (pp_is_missing or nil) then
+						error("If auxiliary given as '-', past participle must be explicitly specified as '-', and vice-versa")
+					end
 				end
 			end)
 			alternant_multiword_spec.third = alternant_multiword_spec.only3s or alternant_multiword_spec.only3sp
