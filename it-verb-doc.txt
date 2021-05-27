@@ -1,0 +1,278 @@
+{{documentation subpage}}
+
+==Usage==
+This template is designed for the [[lemma]] of all Italian [[verb]]s. Only use this template for the verb's [[lemma]] entry. For non-lemma forms, use {{temp|head|it|verb form}}.
+
+This template should be placed in all Italian verb sections, immediately following the ===Verb=== section header. It provides the inflection line for the entry. The template also automatically categorizes the entry in [[:Category:Italian verbs]] and the appropriate category for the auxiliary, e.g. [[:Category:Italian verbs taking essere as auxiliary]].
+
+As with other Wiktionary inflection templates, '''please do not use <code>subst:</code>'''.
+
+===Regular ''-are'' verbs===
+This verb normally takes a single parameter, which specifies the auxiliary as well as the first singular present indicative, first singular past historic, and past participle. If you are not sure of the correct conjugation, you can leave out all parameters, and the headword will not have any inflected forms specified. However, this is not recommended.
+
+For regular ''-are'' verbs, the parameter normally takes the form ''AUX/VOWEL'', where ''AUX'' is either <code>a</code> for [[avere]] or <code>e</code> for [[essere]], and ''VOWEL'' (termed a ''single-vowel spec'') is the stressed vowel in the present singular with the appropriate stress mark (acute or grave) added to indicate the vowel quality (i.e. it should be one of <code>à è é ì ò ó ù</code>). For example, for {{m|it|ordinare||to order}}, use the following:
+:{{temp|it-verb|a/ó}}
+which produces
+
+{{it-verb|a/ó|pagename=ordinare}}
+
+Note that all the verb forms in the headword include an accent specifying the stress as well as the quality of stressed ''e'' and ''o'', even though Italian normally does not mark the stress or quality except when the stress is word-final. Accordingly, the verb forms are linked using the appropriate standard spelling without the extra stress marks.
+
+If the last two vowels of the stem are the same, add <code>-</code> after the vowel to specify that the leftmost of the two vowels (i.e. the [[antepenultimate]]) is stressed, and <code>+</code> to indicate that the rightmost of the two vowels (the [[penultimate]]) is stressed. For example, for {{m|it|detestare||to detest}}, use the following:
+:{{temp|it-verb|a/è+}}
+which produces
+
+{{it-verb|a/è+|pagename=detestare}}
+
+Meanwhile, for {{m|it|metallificare||to become metallic}}, use:
+:{{temp|it-verb|e/ì-}}
+which produces
+
+{{it-verb|e/ì-|pagename=metallificare}}
+
+'''NOTE''': The "last two vowels" for which stress and quality can be specified are normally the last two written vowels of the stem, even if one of the vowels isn't pronounced. For example, for {{m|it|cominciare||to begin}}, the stem is ''cominci-'' and the last two vowels that can be specified using a single-vowel spec are both ''i'', even though the second ''i'' isn't pronounced. Hence the specification <code>ì-</code> must be used to get the correct stress pattern ''io comìncio''. There are only two exceptions:
+# The ''u'' in ''-qu-'' is not considered a vowel, as it can never be stressed. Hence, for {{m|it|liquidare||to liquidate}}, stem ''liquid-'', present singular ''io lìquido'', the two vowels that can be specified using a single-vowel spec are both i'', and the specification <code>ì-</code> should be used.
+# The ''u'' in ''-au-'' + consonant is not considered a vowel if another vowel follows in the stem. Hence, for {{m|it|laureare||to confer a university degree}}, stem ''laure-'', present singular ''io làureo'', the two vowels ''a'' and ''e'' are those that can be specified using a single-vowel spec, and the specification <code>à</code> should be used. The verb {{m|it|augurare||to augur}} behaves similarly. The ''u'' in ''-au-'' is not skipped if no vowel follows, which allows e.g. {{m|it|spaurare||to frighten}}, present singular (io) ''spaùro'', to be specified using <code>ù</code>.
+Very occasionally a verb's stress pattern falls afoul of these rules, e.g. {{m|it|coniugare||to conjugate}}, present singular ''io còniugo'', where the third from the last vowel is stressed using the above rules. These must be treated as irregular and the full present tense specified; see below.
+
+===Regular ''-ire'' verbs===
+For regular ''-ire'' verbs that do ''not'' take the ''-isc-'' infix, use the same form as for ''-are'' verbs. For example, for {{m|it|partire||to depart}}, present tense ''io pàrto'', use:
+:{{temp|it-verb|e/à}}
+which produces
+
+{{it-verb|e/à|pagename=partire}}
+
+For regular ''-ire'' verbs that take the ''-isc-'' infix, use <code>+isc</code> in place of the vowel spec. For example, for {{m|it|punire||to punish}}, present tense ''io punìsco'', use:
+:{{temp|it-verb|a/+isc}}
+which produces
+
+{{it-verb|a/+isc|pagename=punire}}
+
+===Regular ''-ere'' verbs===
+For regular ''-ere'' verbs stressed as ''-ére'', use the same form as above. For example, for {{m|it|temere|temére|to fear}}, present tense ''io témo'', use:
+:{{temp|it-verb|a/é}}
+which produces
+
+{{it-verb|a/é|pagename=temere}}
+
+Note that both alternative past historic forms are given in the output by default.
+
+For regular ''-ere'' verbs stressed on the stem, use a backslash in place of the slash (mnemonic: the forward slash leans to the right for the more rightward stress, and the backslash leans to the left for the more leftward stress). For example, for {{m|it|abbattere|abbàttere|to throw down, to knock down}}, present tense ''io abbàtto'', use:
+:{{temp|it-verb|a\à+}}
+which produces
+
+{{it-verb|a\à+|pagename=abbattere}}
+
+Here <code>à+</code> must be used because there are two ''a'''s among the last two vowels of the stem. The backslash indicates that the stress on the infinitive, displayed in the headword, should be taken from the present tense rather than placed on the ending.
+
+===Irregular verbs===
+For irregular verbs, specify up to three principal parts (first-singular present, first-singular past historic and past participle), separated by commas. For example for {{m|it|scomparire||to disappear, to die}}, use:
+:{{temp|it-verb|e/scompàio,scompàrvi,scompàrso}}
+which produces
+
+{{it-verb|e/scompàio,scompàrvi,scompàrso|pagename=scomparire}}
+
+You can omit the past participle if it is regularly constructed, or both the past historic and past participle if both are regularly constructed. For example, for {{m|it|piacere||to please}}, with regularly formed past participle ''piaciùto'', use:
+:{{temp|it-verb|e/piàccio,piàcqui}}
+which produces
+
+{{it-verb|e/piàccio,piàcqui|pagename=piacere}}
+
+For root-stressed verbs in ''-ere'', use a backslash in place of a slash, as above, e.g. for {{m|it|scuotere||to shake}}:
+:{{temp|it-verb|a\ò,scòssi,scòtto}}
+which produces
+
+{{it-verb|a\ò,scòssi,scòtto|pagename=scuotere}}
+
+As mentioned above, when a backslash is specified the position and quality of the stress is derived from the present tense single-vowel spec. If the present tense is irregular, specify it in full and include the single-vowel spec ''before'' the backslash, e.g. as follows for {{m|it|scegliere||to choose}}:
+:{{temp|it-verb|a\é\scélgo,scélsi,scélto}}
+which produces
+
+{{it-verb|a\é\scélgo,scélsi,scélto|pagename=scegliere}}
+
+If a given principal part has more than one possibility, separate the possiblities by a colon, e.g. for {{m|it|riempire||to fill}}:
+:{{temp|it-verb|a/é,riempìi,riempìto:riempiùto}}
+which produces
+
+{{it-verb|a/é,riempìi,riempìto:riempiùto|pagename=riempire}}
+
+Note that you can use a <code>+</code> to request the default form(s). Thus, the above spec for {{m|it|riempire}} could (and preferably would) be written as follows:
+:{{temp|it-verb|a/é,+,+:riempiùto}}
+
+You can specify ''qualifiers'' following a given form, which helps give usage notes when there are multiple forms with differing uses, e.g. for {{m|it|comparire||to appear, to manifest, to seem; (law) to appear before a tribunal}}:
+:{{temp|it-verb|e/compàio:+isc[less common],compàrvi:comparìi[less common]:compàrsi[in the legal sense],compàrso}}
+which produces
+
+{{it-verb|e/compàio:+isc[less common],compàrvi:comparìi[less common]:compàrsi[in the legal sense],compàrso|pagename=comparire}}
+
+Here, there are two possible present tense forms (''compàio'' and ''comparìsco'') and three possible past historic forms (''compàrvi'', ''comparìi'', ''compàrsi''), with differing usage characteristics.
+
+Note that there is no requirement that multiple forms be present when qualifiers are used. For example, for {{m|it|soccombere||to succumb}}, whose past participle is rare, use the following:
+:{{temp|it-verb|e\ó+,+,+[rare]}}
+which produces
+
+{{it-verb|e\ó+,+,+[rare]|pagename=soccombere}}
+
+===Specifying additional irregular forms===
+For highly irregular verbs, it sometimes makes sense to include additional irregular forms in the headword. For example, {{m|it|cadere||to fall}} has irregular future ''cadrò'', ''cadrài'', etc. To add the first-person singular future to the headword, use a spec like <code>fut:FORM</code>, separated from the principal parts by a period, as follows:
+:{{temp|it-verb|e/à,càddi.fut:cadrò}}
+which produces
+
+{{it-verb|e/à,càddi.fut:cadrò|pagename=cadere}}
+
+Similarly, for {{m|it|tenere||to hold}}, to specify an irregular future ''terrò'' and irregular imperative singular ''tièni'', use:
+:{{temp|it-verb|a/tèngo,ténni.fut:terrò.imp:tièni}}
+which produces
+
+{{it-verb|a/tèngo,ténni.fut:terrò.imp:tièni|pagename=tenere}}
+
+A more complicated example is {{m|it|essere||to be}}, with numerous irregularities:
+:{{it-verb|e\è\sóno,fùi,stàto.imperf:èro.fut:sarò.sub:sìa.impsub:fóssi.imp:sìi}}
+which produces
+
+{{it-verb|e\è\sóno,fùi,stàto.imperf:èro.fut:sarò.sub:sìa.impsub:fóssi.imp:sìi|pagename=essere}}
+
+The full list of recognized additional irregular forms is as follows:
+{|class="wikitable"
+! Prefix !! Form
+|-
+| <code>imperf</code> || first-singular imperfect indicative
+|-
+| <code>fut</code> || first-singular future indicative
+|-
+| <code>sub</code> || first-singular present indicative
+|-
+| <code>impsub</code> || first-singular imperfect indicative
+|-
+| <code>imp</code> || second-singular imperative
+|}
+
+To specify multiple possibilities for a given irregular form, separate the possibilities by colons, as above. Qualifiers in brackets can be appended to a given form, as above. See the example for {{m|it|dare}} just below for an example of this.
+
+===Special considerations with single-syllable irregular forms===
+With verbs with single-syllable irregular forms, there are some special considerations. For one thing, there may or may not be a written accent on the vowel. Normally, forms are shown in headwords with an accent on the vowel to indicate stress and quality, even though when normally written only the final vowel of multi-vowel words has a written accent. Accordingly, when generating the link, accents are stripped from non-final vowels as well as from single-vowel words. To indicate that a single-vowel word has a written accent, add an asterisk (<code>*</code>) ''before'' the form. This preserves the accent in the link and includes a qualifier reading ''with written accent''.
+
+Some single-syllable forms trigger {{w|syntactic gemination}}, while others don't. To indicate that a form triggers syntactic gemination, add an asterisk (<code>*</code>) ''after'' the form. This includes a qualifier reading ''with syntactic gemination''. You can also include a double asterisk (<code>**</code>) after the form to indicate optional syntactic gemination.
+
+An example that uses both of the above indications is {{m|it|dare||to give}}:
+:{{temp|it-verb|a/dò*:*dò*,dièdi:dètti,dàto.sub:dìa.impsub:déssi.imp:dai:da':*dà*}}
+which produces
+
+{{it-verb|a/dò*:*dò*,dièdi:dètti,dàto.sub:dìa.impsub:déssi.imp:dai:da':*dà*|pagename=dare}}
+
+Note in particular the forms <code>*dò*</code> and <code>*dà*</code>, with asterisks both before the form (to indicate preservation of the written accent) and after the form (to indicate syntactic gemination).
+
+togliere:
+{{it-verb|a\ò\tòlgo,tòlsi,tòlto.sub:tòlga}}
+eseguire:
+{{it-verb|a/é:+isc}}
+perdere:
+{{it-verb|a\è,pèrsi:perdètti:perdéi[less common],pèrso:+}}
+
+===Verbs whose auxiliary varies===
+
+passare:
+{{it-verb|e[intransitive]:a[transitive]/à}}
+finire:
+{{it-verb|a[transitive]:e[intransitive]/+isc}}
+volare:
+{{it-verb|a[usually]:e[when accompanied by a location to or from, or in extended or figurative senses]/ó}}
+avanzare:
+{{it-verb|e[intransitive]:a[transitive, also intransitive meaning "to advance"]/à+}}
+
+===Reflexive verbs===
+All reflexive verbs use {{m|it|essere}}, so there is no need to specify the auxiliary and it should be omitted, e.g. for {{m|it|abbandonarsi||to give up, to give in, to surrender}}, use:
+:{{temp|it-verb|ó}}
+which produces
+
+{{it-verb|ó|pagename=abbandonarsi}}
+
+For root-stressed verbs in ''-ere'', use a backslash with nothing before it, e.g. for {{m|it|accorgersi||to notice, to realize}} (stressed as ''accòrgersi''), use:
+:{{temp|it-verb|\ò,accòrsi,accòrto}}
+which produces
+
+{{it-verb|\ò,accòrsi,accòrto|pagename=accorgersi}}
+
+If a root-stressed verb in ''-ere'' has an irregular present, specify only the stressed vowel before the backslash, e.g. for {{m|it|togliersi||to get out of the way}}, use:
+:{{temp|it-verb|ò\tòlgo,tòlsi,tòlto}}
+which produces
+
+{{it-verb|ò\tòlgo,tòlsi,tòlto|pagename=togliersi}}
+
+Note that explicitly specified forms should be given without the reflexive pronoun attached. The only exception is if the imperative is explicitly specified; in that case, include the pronoun, as it is joined to the imperative form and may cause special changes to the form, e.g. {{w|syntactic gemination}}. An example is for {{m|it|farsi||to become, to move (oneself), to buy, etc.}}, with imperative ''fàtti'':
+:{{temp|it-verb|fàccio:fò*[archaic or dialectal],féci,fàtto.imperf:facévo.sub:fàccia.imp:fàtti}}
+which produces
+
+{{it-verb|fàccio:fò*[archaic or dialectal],féci,fàtto.imperf:facévo.sub:fàccia.imp:fàtti|pagename=farsi}}
+
+===Verbs in ''-rre''===
+Verbs in ''-rre'', e.g. {{m|it|trarre||to pull}}, {{m|it|porre||to put}}, {{m|it|dedurre||to deduce}} should use the same backslash notation as with root-stressed verbs in ''-ere'', e.g. for {{m|it|porre}}:
+:{{temp|it-verb|a\ó\póngo,pósi,pósto.imperf:ponévo.fut:porrò}}
+which produces
+
+{{it-verb|a\ó\póngo,pósi,pósto.imperf:ponévo.fut:porrò}}
+
+For verbs ending in ''-arre'' and ''-urre'' (and ''-irre'' if any such verbs exist), the double-backslash notation can be simplified to a single backslash because the stressed vowel can only be one possibility, e.g. for {{m|it|dedurre}}:
+:{{temp|it-verb|a\dedùco,dedùssi,dedótto.sub:dedùca}}
+
+dedurre:
+{{it-verb|a\dedùco,dedùssi,dedótto.sub:dedùca}}
+distrarsi "to be distracted"
+{{it-verb|a\distràggo,distràssi,distràtto.imperf:distraévo.impsub:distraéssi.imp:distràiti.rre}}
+
+===Third-person only verbs===
+bufare:
+{{it-verb|e/ù.only3s}}
+accadere:
+{{it-verb|e/à+,accàdde.fut:accadrà.only3sp}}
+
+===Defective verbs===
+colere:
+{{it-verb|-\ò,-,-}}
+serpere,vertere:
+{{it-verb|-\è,+,-}}
+incombere:
+{{it-verb|-/ó,+,-}} {{tlb|it|intransitive}} {{+preo|it|su}}
+soccombere:
+{{it-verb|e\ó+,+,+[rare]}}
+volvere:
+{{it-verb|-\ò,vòlsi,-}} {{tlb|it|poetic}}
+redire:
+{{it-verb|a/rièdo,-,redìto.sub:rièda.imperf:-.fut:-.impsub:-}} {{tlb|it|poetic}}
+
+===Pronominal verbs===
+
+spuntarla "to make it, to succeed"
+{{it-verb|a/ù}}
+trovarcisi "to find oneself in a happy situation"
+{{it-verb|ò}}
+volerci "to be needed, to be required"
+{{it-verb|e/vuòle,vòlle.fut:vorrà.sub:vòglia.only3s}}
+andarsene "to go away, to leave"
+{{it-verb|vàdo.fut:andrò.sub:vàda.imp:vàttene}}
+
+===Multiword expressions===
+prestare attenzione "to pay attention"
+{{it-verb|prestare<a/è> attenzione}}
+
+tenere d'occhio "to keep an eye on"
+{{it-verb|tenere<a/tèngo,ténni.fut:terrò.imp:tièni> [[d']][[occhio]]}}
+
+==Parameters==
+The allowed parameters are as follows:
+
+; {{para|1}}
+: Specify the inflected forms; see above.
+; {{para|head}}, {{para|head2}}, ...
+: Override the headword. Useful especially to add unpredictable links in multiword expressions (an automatic linking algorithm applies in the absence of this, and links each word).
+; {{para|noautolinktext|1}}
+: Disable the autolinking algorithm for text outside of the verb itself, in multiword expressions.
+; {{para|noautolinkverb|1}}
+: Disable the autolinking algorithm for the verb. If you use both this and {{para|noautolinktext|1}}, no autolinking will happen, with the result that any links need to be specified using {{para|head}} and non-lemma forms will be linked in their entirety.
+; {{para|sort}}
+: Optional argument to specify the sort key; rarely needed.
+; {{para|id}}
+: Optional argument to specify a sense ID for linking purposes; see {{temp|senseid}} and {{temp|l}}.
+<includeonly>
+[[Category:Italian headword-line templates|verb]]
+</includeonly>
