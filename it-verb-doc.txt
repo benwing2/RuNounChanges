@@ -65,6 +65,8 @@ which produces
 
 Here <code>à+</code> must be used because there are two ''a'''s among the last two vowels of the stem. The backslash indicates that the stress on the infinitive, displayed in the headword, should be taken from the present tense rather than placed on the ending.
 
+Note that the default for verbs in ''-cere'' and ''-gere'' uses a hard ''c''/''g'' in the present but a soft ''ci''/''gi'' in the past participle, which is correct for the majority of verbs, e.g. {{m|it|conoscere||to know (a person), to recognize}}, with present ''io conósco'', past participle ''conosciùto''.
+
 ===Irregular verbs===
 For irregular verbs, specify up to three principal parts (first-singular present, first-singular past historic and past participle), separated by commas. For example for {{m|it|scomparire||to disappear, to die}}, use:
 :{{temp|it-verb|e/scompàio,scompàrvi,scompàrso}}
@@ -140,9 +142,9 @@ The full list of recognized additional irregular forms is as follows:
 |-
 | <code>fut</code> || first-singular future indicative
 |-
-| <code>sub</code> || first-singular present indicative
+| <code>sub</code> || first-singular present subjunctive
 |-
-| <code>impsub</code> || first-singular imperfect indicative
+| <code>impsub</code> || first-singular imperfect subjunctive
 |-
 | <code>imp</code> || second-singular imperative
 |}
@@ -162,23 +164,21 @@ which produces
 
 Note in particular the forms <code>*dò*</code> and <code>*dà*</code>, with asterisks both before the form (to indicate preservation of the written accent) and after the form (to indicate syntactic gemination).
 
-togliere:
-{{it-verb|a\ò\tòlgo,tòlsi,tòlto.sub:tòlga}}
-eseguire:
-{{it-verb|a/é:+isc}}
-perdere:
-{{it-verb|a\è,pèrsi:perdètti:perdéi[less common],pèrso:+}}
-
 ===Verbs whose auxiliary varies===
+Many verbs can take either {{m|it|avere}} or {{m|it|essere}} as an auxiliary, often with different meanings. A very common scenario is {{m|it|avere}} when transitive and {{m|it|essere}} when intransitive, e.g. with {{m|it|finire||to end, to finish}}. You can separate multiple auxiliaries with a colon, as with multiple irregular forms, and include qualifiers, which typically you should do to clarify the different usages:
+{{temp|it-verb|a[transitive]:e[intransitive]/+isc}}
+which produces
 
-passare:
-{{it-verb|e[intransitive]:a[transitive]/à}}
-finire:
-{{it-verb|a[transitive]:e[intransitive]/+isc}}
-volare:
-{{it-verb|a[usually]:e[when accompanied by a location to or from, or in extended or figurative senses]/ó}}
+{{it-verb|a[transitive]:e[intransitive]/+isc|pagename=finire}}
+
+You can include commas, quotes and other punctuation inside brackets in the qualifier text, e.g. with {{m|it|avanzare}}:
 avanzare:
-{{it-verb|e[intransitive]:a[transitive, also intransitive meaning "to advance"]/à+}}
+{{temp|it-verb|e[intransitive]:a[transitive, also intransitive meaning "to advance"]/à+}}
+which produces
+
+{{it-verb|e[intransitive]:a[transitive, also intransitive meaning "to advance"]/à+|pagename=avanzare}}
+
+You can also include angle brackets (e.g. direct HTML, or HTML produced by a template) or even nested square brackets, as long as they are matching.
 
 ===Reflexive verbs===
 All reflexive verbs use {{m|it|essere}}, so there is no need to specify the auxiliary and it should be omitted, e.g. for {{m|it|abbandonarsi||to give up, to give in, to surrender}}, use:
@@ -213,50 +213,94 @@ which produces
 {{it-verb|a\ó\póngo,pósi,pósto.imperf:ponévo.fut:porrò}}
 
 For verbs ending in ''-arre'' and ''-urre'' (and ''-irre'' if any such verbs exist), the double-backslash notation can be simplified to a single backslash because the stressed vowel can only be one possibility, e.g. for {{m|it|dedurre}}:
-:{{temp|it-verb|a\dedùco,dedùssi,dedótto.sub:dedùca}}
+:{{temp|it-verb|a\dedùco,dedùssi,dedótto.imperf:deducévo}}
+which produces
 
-dedurre:
-{{it-verb|a\dedùco,dedùssi,dedótto.sub:dedùca}}
-distrarsi "to be distracted"
-{{it-verb|a\distràggo,distràssi,distràtto.imperf:distraévo.impsub:distraéssi.imp:distràiti.rre}}
+{{it-verb|a\dedùco,dedùssi,dedótto.imperf:deducévo|pagename=dedurre}}
+
+Reflexive verbs in ''-arsi'' and ''-ersi'' based off verbs in ''-arre'' and ''-erre'' can also be interpreted as based off of verbs in ''-are'' or ''-ere''; for example, consider {{m|it|contrarsi}}, reflexive of either {{m|it|contrare||to counter (boxing)}} or {{m|it|contrarre||to tense}}. These verbs must use the special indicator <code>rre</code> to indicate that the reflexive is based off of a verb in ''-arre''; otherwise, it will be interpreted as based off of a verb in ''-are''. An example is {{m|it|distrarsi||to be distracted}}, from {{m|it|distrarre||to distract}}:
+:{{temp|it-verb|a\distràggo,distràssi,distràtto.imperf:distraévo.imp:distràiti.rre}}
+which produces
+
+{{it-verb|a\distràggo,distràssi,distràtto.imperf:distraévo.imp:distràiti.rre|pagename=distrarsi}}
+
+Note in particular the <code>.rre</code> at the end.
 
 ===Third-person only verbs===
-bufare:
-{{it-verb|e/ù.only3s}}
-accadere:
-{{it-verb|e/à+,accàdde.fut:accadrà.only3sp}}
+Some verbs have only third-person forms, either third-person singular only (impersonal) or third-person singular and plural only. Use <code>only3s</code> for the former, and <code>only3sp</code> for the latter. An example of an impersonal verb is {{m|it|bufare||to blizzard}}:
+:{{temp|it-verb|e/ù.only3s}}
+which produces
+
+{{it-verb|e/ù.only3s|pagename=bufare}}
+
+An example of a third-person only verb (singular and plural) is {{m|it|accadere||to happen}}:
+:{{temp|it-verb|e/à+,accàdde.fut:accadrà.only3sp}}
+which produces
+
+{{it-verb|e/à+,accàdde.fut:accadrà.only3sp|pagename=accadere}}
+
+As the latter example shows, irregular forms must be specified in the third person.
 
 ===Defective verbs===
-colere:
-{{it-verb|-\ò,-,-}}
-serpere,vertere:
-{{it-verb|-\è,+,-}}
-incombere:
-{{it-verb|-/ó,+,-}} {{tlb|it|intransitive}} {{+preo|it|su}}
-soccombere:
-{{it-verb|e\ó+,+,+[rare]}}
-volvere:
-{{it-verb|-\ò,vòlsi,-}} {{tlb|it|poetic}}
-redire:
-{{it-verb|a/rièdo,-,redìto.sub:rièda.imperf:-.fut:-.impsub:-}} {{tlb|it|poetic}}
+Some verbs are defective in that they are missing some of their forms. To indicate a missing form, use <code>-</code>. For example, the verb {{m|it|redire||to return}} has no past historic, imperfect, future or imperfect subjunctive. Indicate as follows:
+:{{temp|it-verb|a/rièdo,-,redìto.imperf:-.fut:-.impsub:-}}
+which produces
+
+{{it-verb|a/rièdo,-,redìto.imperf:-.fut:-.impsub:-|pagename=redire}}
+
+If the verb is missing its past participle, use <code>-</code> as normal, but also put a <code>-</code> in place of the auxiliary, because without a past participle no composed tenses can be formed. An example is {{m|it|serpere||to snake}}:
+:{{temp|it-verb|-\è,+,-}}
+which produces
+
+{{it-verb|-\è,+,-|pagename=serpere}}
 
 ===Pronominal verbs===
+Pronominal verbs are those verbs that inherently have a clitic pronoun attached to the infinitive. Reflexive verbs, covered above, are a type of pronominal verb; not all pronominal verbs are reflexive. An example that is not is {{m|it|spuntarla||to make it, to succeed}}, composed of {{m|it|spuntare}} + clitic {{m|it|-la}}. Indicate pronominal verbs as normal:
+:{{temp|it-verb|a/ù}}
+which produces
 
-spuntarla "to make it, to succeed"
-{{it-verb|a/ù}}
-trovarcisi "to find oneself in a happy situation"
-{{it-verb|ò}}
-volerci "to be needed, to be required"
-{{it-verb|e/vuòle,vòlle.fut:vorrà.sub:vòglia.only3s}}
-andarsene "to go away, to leave"
-{{it-verb|vàdo.fut:andrò.sub:vàda.imp:vàttene}}
+{{it-verb|a/ù|pagename=spuntarla}}
+
+Note that the clitic is automatically moved before the finite forms.
+
+If the pronominal verb is reflexive, the auxiliary spec will be omitted, as with all reflexive verbs (see [[#Reflexive verbs|above]]). An example is {{m|it|trovarcisi||to find oneself in a happy situation}}:
+:{{temp|it-verb|ò}}
+which produces
+
+{{it-verb|ò|pagename=trovarcisi}}
+
+note that the two clitics are automatically moved to the front of the finite forms, and {{m|it|-si}} is automatically converted to {{m|it|mi}}.
+
+If the pronominal verb is irregular, don't include any of the clitics in the irregular forms except for the imperative (same as with reflexive verbs). An example is {{m|it|andarsene||to go away, to leave}}:
+:{{temp|it-verb|vàdo.fut:andrò.sub:vàda.imp:vàttene}}
+which produces
+
+{{it-verb|vàdo.fut:andrò.sub:vàda.imp:vàttene|pagename=andarsene}}
+
+Another example is {{m|it|volerci||to be needed, to be required}}. This is impersonal, hence it uses the spec <code>only3s</code> (see [[#Third-person only verbs|above]]), and requires that all irregular forms be given in the third-person singular:
+:{{temp|it-verb|e/vuòle,vòlle.fut:vorrà.sub:vòglia.only3s}}
+which produces
+
+{{it-verb|e/vuòle,vòlle.fut:vorrà.sub:vòglia.only3s|pagename=volerci}}
 
 ===Multiword expressions===
-prestare attenzione "to pay attention"
+Multiword expressions such as {{m|it|prestare attenzione||to pay attention}} are supported. To indicate the conjugation of such an expression, place the full verbal spec inside angle brackets (<code><...></code>) directly after the verb to be conjugated:
+:{{temp|it-verb|prestare<a/è> attenzione}}
+which produces
+
 {{it-verb|prestare<a/è> attenzione}}
 
-tenere d'occhio "to keep an eye on"
+Individual portions of the expression, including words other than the verb, are automatically linked. To override this, add explicit links, e.g. for {{m|it|tenere d'occhio||to keep an eye on}}:
+:{{temp|it-verb|tenere<a/tèngo,ténni.fut:terrò.imp:tièni> [[d']][[occhio]]}}
+which produces
+
 {{it-verb|tenere<a/tèngo,ténni.fut:terrò.imp:tièni> [[d']][[occhio]]}}
+
+This even works if there are multiple verbs in the expression, e.g. {{m|it|trascinare e rilasciare||to [[drag and drop]]}}:
+:{{temp|it-verb|trascinare<a/ì> e rilasciare<a/à>}}
+which produces
+
+{{it-verb|trascinare<a/ì> e rilasciare<a/à>}}
 
 ==Parameters==
 The allowed parameters are as follows:
