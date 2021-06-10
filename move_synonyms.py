@@ -78,10 +78,10 @@ def process_text_on_page(index, pagetitle, text):
             syn = re.sub(r"\{\{[lm]\|%s\|([^{}=]*)\}\}" % re.escape(args.lang), r"[[\1]]", syn)
             gender = None
           if "{{" in syn or "}}" in syn:
-            pagemsg("WARNING: Unmatched braces in %s '%s' in line: %s" % (syntype, orig_syn, line))
+            pagemsg("WARNING: Unmatched braces in %s <%s> in line: %s" % (syntype, orig_syn, line))
             return None
           if "''" in syn:
-            pagemsg("WARNING: Italicized text in %s '%s' in line: %s" % (syntype, orig_syn, line))
+            pagemsg("WARNING: Italicized text in %s <%s> in line: %s" % (syntype, orig_syn, line))
             return None
           # Strip brackets around entire synonym
           syn = re.sub(r"^\[\[([^\[\]]*)\]\]$", r"\1", syn)
@@ -109,7 +109,7 @@ def process_text_on_page(index, pagetitle, text):
         defns = re.split("^(#[^*:].*\n(?:#[*:].*\n)*)", defn_text, 0, re.M)
         for between_index in xrange(0, len(defns), 2):
           if defns[between_index]:
-            pagemsg("WARNING: Saw unknown text '%s' between definitions, not sure what to do" % defns[between_index].strip())
+            pagemsg("WARNING: Saw unknown text <%s> between definitions, not sure what to do" % defns[between_index].strip())
             return None, None, None
         defns = [x for i, x in enumerate(defns) if i % 2 == 1]
         return before_defn_text, defns, after_defn_text
@@ -277,7 +277,7 @@ def process_text_on_page(index, pagetitle, text):
           for defno, unlinked_defn in enumerate(unlinked_defns):
             if re.search(r"\b%s\b" % re.escape(tag), unlinked_defn):
               if matching_defn is not None:
-                pagemsg("WARNING: Matched tag '%s' against both defn '%s' and '%s'" % (
+                pagemsg("WARNING: Matched tag '%s' against both defn <%s> and <%s>" % (
                   tag, unlinked_defns[matching_defn], unlinked_defn))
                 must_break = True
                 must_continue = True
@@ -286,11 +286,12 @@ def process_text_on_page(index, pagetitle, text):
           if must_break:
             break
           if matching_defn is None:
-            pagemsg("WARNING: Couldn't match tag '%s' against definitions" % tag)
+            pagemsg("WARNING: Couldn't match tag '%s' against definitions %s" % (
+              tag, ", ".join("<%s>" % unlinked_defn for unlinked_defn in unlinked_defns)))
             must_continue = True
             break
           if matching_defn in defn_to_tag:
-            pagemsg("WARNING: Matched two tags '%s' and '%s' against the same defn '%s'" % (
+            pagemsg("WARNING: Matched two tags '%s' and '%s' against the same defn <%s>" % (
               tag, defn_to_tag[matching_defn], unlinked_defns[matching_defn]))
             must_continue = True
             break
@@ -347,7 +348,7 @@ def process_text_on_page(index, pagetitle, text):
           defns[0] = new_defn
 
           # Put back new definition text and clear out synonyms
-          put_back_new_defns(defns, "only one definition")
+          put_back_new_defns(defns, "%ss with only one definition" % syntype)
           continue
 
   secbody = "".join(subsections)
