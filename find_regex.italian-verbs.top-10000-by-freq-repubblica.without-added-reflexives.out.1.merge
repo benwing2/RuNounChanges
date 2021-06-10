@@ -101660,7 +101660,7 @@ Page 3623 carezzare: -------- begin text --------
 
 # to [[stroke]] [[gently]]; to [[caress]]
 #: {{syn|it|sfiorare|accarezzare|palpare|lisciare|palpeggiare}}
-# to [[spoil]] (someone), to [[treat]] with [[excessive]] [[indulgence]]
+# to [[coddle]], to [[spoil]] (someone), to [[treat]] with [[excessive]] [[indulgence]]
 # to [[indulge]] one's mind in something; to [[entertain]]; to [[toy with]] (an idea, etc.)
 #: {{syn|it|accarezzare|desiderare|vagheggiare}}
 # to [[contemplate]]
@@ -112733,8 +112733,11 @@ Page 4172 spizzicare: -------- begin text --------
 ===Etymology===
 {{prefix|it|s|pizzico}}, cf. {{m|it|pizzicare}}.
 
+===Pronunciation===
+* {{it-IPA|spittsicàre}}
+
 ===Verb===
-{{it-verb}}
+{{it-verb|a/ì-}}
 
 # {{lb|it|transitive}} to [[nibble]] or [[peck at]] (food)
 
@@ -113277,8 +113280,11 @@ Page 4211 aguzzare: -------- begin text --------
 ===Etymology===
 From {{inh|it|VL.|*acūtiāre}}, present active infinitive of {{m|la|*acūtiō}}, from {{inh|it|la|acūtus}}. Compare {{cog|fr|aiguiser}}, {{cog|ca|agusar}}, {{cog|oc|agusar}}, {{cog|pt|aguçar}}, {{cog|es|aguzar}}.
 
+===Pronunciation===
+* {{it-IPA|aguttsàre}}
+
 ===Verb===
-{{it-verb}}
+{{it-verb|a/ù}}
 
 # {{lb|it|transitive}} to [[sharpen]]
 
@@ -113415,7 +113421,7 @@ Page 4219 italianizzare: -------- begin text --------
 Derived from {{suffix|it|italiano|t1=Italian|izzare|t2=-ize}}.
 
 ===Pronunciation===
-* {{it-IPA|italianiddzàre}}
+* {{it-IPA}}
 * {{hyphenation|it|i|ta|lia|niz|zà|re}}
 
 ===Verb===
@@ -113605,6 +113611,9 @@ Page 4231 miniaturizzare: -------- begin text --------
 
 ===Etymology===
 {{suffix|it|miniatura|izzare}}
+
+===Pronunciation===
+* {{it-IPA}}
 
 ===Verb===
 {{it-verb}}
@@ -113841,11 +113850,16 @@ Page 4247 vezzeggiare: -------- begin text --------
 ===Etymology===
 From {{af|it|vezzo|-eggiare|t1=caress}}.
 
-===Verb===
-{{it-verb}}
+===Pronunciation===
+* {{it-IPA|vettseggiàre}}
 
-# {{lb|it|transitive}} to [[pamper]] or [[coddle]]; to [[caress]]
-# {{lb|it|transitive}} to make a [[fuss]] of
+===Verb===
+{{it-verb|a/é}}
+
+# {{lb|it|transitive}} to [[pet]], to [[caress]], to [[fondle]]
+# {{lb|it|transitive}} to [[pamper]], to [[coddle]]
+# {{lb|it|transitive}} to [[flatter]]
+# {{lb|it|intransitive}} to [[mince]] one's [[words]], to [[speak]] in an [[affected]] [[manner]] {{+aux|it|avere}}
 
 ====Conjugation====
 {{it-conj-ciare|vezzegg|avere}}
@@ -113890,11 +113904,14 @@ Page 4248 svenare: -------- begin text --------
 Page 4249 smozzicare: Found match for regex: =
 Page 4249 smozzicare: -------- begin text --------
 
-===Verb===
-{{it-verb}}
+===Pronunciation===
+* {{it-IPA|smottsicàre}}
 
-# {{lb|it|transitive}} to [[crumble]]
-# {{lb|it|transitive}} to [[mumble]] or [[slur]]
+===Verb===
+{{it-verb|a/ó}} {{+aux|it|avere}}
+
+# to [[crumble]]
+# to [[mumble]], to [[slur]] (words)
 
 ====Conjugation====
 {{it-conj-care|smozzic|avere}}
@@ -114275,6 +114292,9 @@ Page 4259 democratizzare: -------- begin text --------
 ===Etymology===
 {{suffix|it|democratico|izzare}}
 
+===Pronunciation===
+* {{it-IPA}}
+
 ===Verb===
 {{it-verb}}
 
@@ -114582,6 +114602,9 @@ Page 4276 omogeneizzare: -------- begin text --------
 ===Alternative forms===
 * {{l|it|omogenizzare}}
 
+===Pronunciation===
+* {{it-IPA}}
+
 ===Etymology===
 {{suffix|it|omogeneo|izzare}}
 
@@ -114627,6 +114650,9 @@ Page 4278 ghettizzare: -------- begin text --------
 
 ===Etymology===
 {{suffix|it|ghetto|izzare}}
+
+===Pronunciation===
+* {{it-IPA}}
 
 ===Verb===
 {{it-verb}}
@@ -115876,6 +115902,9 @@ Page 4350 velocizzare: -------- begin text --------
 ===Etymology===
 {{suffix|it|veloce|izzare}}
 
+===Pronunciation===
+* {{it-IPA}}
+
 ===Verb===
 {{it-verb}}
 
@@ -117052,6 +117081,9 @@ Page 4418 fiscalizzare: -------- begin text --------
 ===Etymology===
 {{suffix|it|fiscale|izzare}}
 
+===Pronunciation===
+* {{it-IPA}}
+
 ===Verb===
 {{it-verb}}
 
@@ -117076,6 +117108,9 @@ Page 4419 squadernare: -------- begin text --------
 -------- end text --------
 Page 4420 smobilizzare: Found match for regex: =
 Page 4420 smobilizzare: -------- begin text --------
+
+===Pronunciation===
+* {{it-IPA}}
 
 ===Verb===
 {{it-verb}}
@@ -117460,10 +117495,16 @@ Page 4444 portalettere: -------- begin text --------
 Page 4449 bronzare: Found match for regex: =
 Page 4449 bronzare: -------- begin text --------
 
-===Verb===
-{{it-verb}}
+===Pronunciation===
+* {{it-IPA|brondzàre}}
 
-# {{lb|it|transitive}} to [[bronze]]
+===Verb===
+{{it-verb|a/ó}} {{tlb|it|transitive}}
+
+# to [[bronze]] {{gl|to coat with bronze or make bronze-colored}}
+# to [[brown]], to [[make]] [[brown]]
+# to [[singe]], to [[scorch]]
+# to [[tan]]
 
 ====Conjugation====
 {{it-conj-are|bronz|avere}}
@@ -117578,6 +117619,9 @@ Page 4455 americanizzare: -------- begin text --------
 
 ===Etymology===
 {{suffix|it|americano|izzare}}
+
+===Pronunciation===
+* {{it-IPA}}
 
 ===Verb===
 {{it-verb}}
@@ -117701,8 +117745,11 @@ Page 4462 stormire: -------- begin text --------
 Page 4464 pinzare: Found match for regex: =
 Page 4464 pinzare: -------- begin text --------
 
+===Pronunciation===
+* {{it-IPA|pintsàre}}
+
 ===Verb===
-{{it-verb}}
+{{it-verb|a/ì}}
 
 # {{lb|it|transitive}} to [[staple]] (documents)
 # {{lb|it|transitive}} to [[tong]]
@@ -117727,7 +117774,7 @@ Page 4465 marginalizzare: -------- begin text --------
 {{suffix|it|marginale|izzare}}
 
 ===Pronunciation===
-* {{it-IPA|marginaliddzàre}}
+* {{it-IPA}}
 
 ===Verb===
 {{it-verb|a/ì}}
@@ -117844,6 +117891,9 @@ Page 4471 simbolizzare: -------- begin text --------
 ===Etymology===
 {{suffix|it|simbolo|izzare}}
 
+===Pronunciation===
+* {{it-IPA}}
+
 ===Verb===
 {{it-verb}}
 
@@ -117906,6 +117956,9 @@ Page 4474 narcotizzare: -------- begin text --------
 
 ===Etymology===
 {{suffix|it|narcotico|izzare}}
+
+===Pronunciation===
+* {{it-IPA}}
 
 ===Verb===
 {{it-verb}}
@@ -118234,13 +118287,13 @@ Page 4494 gironzolare: -------- begin text --------
 {{rfe|it}}
 
 ===Pronunciation===
-* {{it-IPA|girontsolàre}}
+* {{it-IPA|girondzolàre|girontsolàre}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/ó-}} {{tlb|it|intransitive}}
 
-# {{lb|it|intransitive}} to [[wander]] [[about]]
-# {{lb|it|intransitive}} to [[loiter]]
+# to [[wander]] [[about]]
+# to [[loiter]]
 
 ====Conjugation====
 {{it-conj-are|gironzol|avere}}
@@ -118652,6 +118705,9 @@ Page 4524 smitizzare: -------- begin text --------
 
 ===Etymology===
 {{prefix|it|s|mitizzare}}
+
+===Pronunciation===
+* {{it-IPA}}
 
 ===Verb===
 {{it-verb}}
@@ -119355,6 +119411,9 @@ Page 4565 brutalizzare: -------- begin text --------
 ===Etymology===
 {{suffix|it|brutale|izzare}}
 
+===Pronunciation===
+* {{it-IPA}}
+
 ===Verb===
 {{it-verb}}
 
@@ -119374,6 +119433,9 @@ Page 4566 spazzolare: -------- begin text --------
 
 ===Etymology===
 {{af|it|spazzola|-are}}
+
+===Pronunciation===
+* {{it-IPA|spattsolàre}}
 
 ===Verb===
 {{it-verb|a/à}} {{tlb|it|transitive}}
@@ -119652,7 +119714,7 @@ Page 4582 denuclearizzare: -------- begin text --------
 {{confix|it|de|nucleare|izzare}}
 
 ===Pronunciation===
-* {{it-IPA|denucleariddzàre}}
+* {{it-IPA}}
 
 ===Verb===
 {{it-verb|a/ì}} {{tlb|it|transitive}}
@@ -119716,6 +119778,9 @@ Page 4585 anestetizzare: -------- begin text --------
 
 ===Etymology===
 {{suffix|it|anestetico|izzare}}
+
+===Pronunciation===
+* {{it-IPA}}
 
 ===Verb===
 {{it-verb}}
@@ -119981,6 +120046,9 @@ Page 4600 sindacalizzare: -------- begin text --------
 ===Etymology===
 {{suffix|it|sindacale|izzare}}
 
+===Pronunciation===
+* {{it-IPA}}
+
 ===Verb===
 {{it-verb}}
 
@@ -120222,6 +120290,9 @@ Page 4615 conferenziere: -------- begin text --------
 
 ===Etymology===
 {{suffix|it|conferenza|iere}}
+
+===Pronunciation===
+* {{it-IPA|conferentsière}}
 
 ===Noun===
 {{it-noun|m|f=conferenziera}}
@@ -120647,7 +120718,7 @@ Page 4642 occidentalizzare: -------- begin text --------
 Derived from {{suffix|it|occidentale|t1=western|izzare|t2=-ize}}.
 
 ===Pronunciation===
-* {{it-IPA|occidentaliddzàre}}
+* {{it-IPA}}
 * {{hyphenation|it|oc|ci|den|ta|liz|zà|re}}
 
 ===Verb===
@@ -120962,6 +121033,9 @@ Page 4660 burocratizzare: -------- begin text --------
 ===Etymology===
 {{suffix|it|burocratico|izzare}}
 
+===Pronunciation===
+* {{it-IPA}}
+
 ===Verb===
 {{it-verb}}
 
@@ -121204,8 +121278,11 @@ Page 4672 debbiare: -------- begin text --------
 Page 4673 carrozzare: Found match for regex: =
 Page 4673 carrozzare: -------- begin text --------
 
+===Pronunciation===
+* {{it-IPA|carrottsàre}}
+
 ===Verb===
-{{it-verb}}
+{{it-verb|a/ò}}
 
 # {{lb|it|transitive|automobiles}} to [[build]] the [[body]] for
 
@@ -121759,8 +121836,10 @@ From {{etyl|VL.|it}} {{m|la||*roteolāre}}, from {{etyl|la|it}} {{m|la|rota}}. C
 ===Verb===
 {{it-verb|a[transitive]:e[intransitive]/ù}}
 
-# {{lb|it|intransitive}} to [[totter]], to [[tumble]] [[down]]
-# {{lb|it|intransitive|or|transitive}} to [[roll]] [[head over heels]]
+# {{lb|it|transitive}} to [[roll]] [[down]] (e.g. a slope)
+# {{lb|it|transitive}} to [[tumble]] [[down]] (e.g. the stairs)
+# {{lb|it|intransitive}} to [[roll]] [[somewhere]] {{+aux|it|essere}}
+# {{lb|it|intransitive}} to [[totter]], to [[tumble]] [[down]] {{+aux|it|essere}}
 
 ====Conjugation====
 {{it-conj-are|ruzzol|avere or essere}}
@@ -122212,6 +122291,9 @@ Page 4738 cicatrizzare: -------- begin text --------
 ===Etymology===
 {{suffix|it|cicatrice|izzare}}
 
+===Pronunciation===
+* {{it-IPA}}
+
 ===Verb===
 {{it-verb}}
 
@@ -122407,6 +122489,9 @@ Page 4752 riattizzare: -------- begin text --------
 ===Etymology===
 From {{prefix|it|ri|attizzare}}
 
+===Pronunciation===
+* {{it-IPA|ri.attiddzàre}}
+
 ===Verb===
 {{it-verb}}
 
@@ -122467,6 +122552,9 @@ Page 4756 martirizzare: -------- begin text --------
 ===Etymology===
 {{suffix|it|martire|izzare}}
 
+===Pronunciation===
+* {{it-IPA}}
+
 ===Verb===
 {{it-verb}}
 
@@ -122491,10 +122579,16 @@ Page 4758 bazzicare: -------- begin text --------
 ===Etymology===
 {{unk|it|title=Uncertain}}.
 
-===Verb===
-{{it-verb}}
+===Pronunciation===
+* {{it-IPA|battsicàre}}
 
-# to [[hang out]] or [[hang about]] with or at
+===Verb===
+{{it-verb|a/à}}
+
+# {{lb|it|transitive}} to [[hang out]] with (people)
+# {{lb|it|transitive}} to [[frequent]], to [[hang out]] at (a place)
+# {{lb|it|intransitive}} to [[hang out]] {{+preo|it|con|means=with (people)}} {{+aux|it|avere}}
+# {{lb|it|intransitive}} to [[frequent]], to [[hang out]] {{+preo|it|in|means=at (a place)}} {{+aux|it|avere}}
 
 ====Conjugation====
 {{it-conj-care|bazzic|avere}}
@@ -122903,7 +122997,7 @@ Page 4785 acutizzare: -------- begin text --------
 {{suffix|it|acuto|izzare}}
 
 ===Pronunciation===
-* {{it-IPA|acutiddzàre}}
+* {{it-IPA}}
 * {{rhymes|it|are}}
 
 ===Verb===
@@ -123222,7 +123316,7 @@ Page 4810 gambizzare: -------- begin text --------
 {{suffix|it|gamba|izzare}}
 
 ===Pronunciation===
-* {{it-IPA|gambiddzàre}}
+* {{it-IPA}}
 
 ===Verb===
 {{it-verb}}
@@ -123313,8 +123407,11 @@ Page 4816 ramazzare: -------- begin text --------
 ===Etymology===
 {{af|it|ramazza|-are}}
 
+===Pronunciation===
+* {{it-IPA|ramattsàre}}
+
 ===Verb===
-{{it-verb}}
+{{it-verb|a/à+}}
 
 # {{lb|it|transitive}} to [[sweep]]
 
@@ -123347,6 +123444,9 @@ Page 4820 immunizzare: -------- begin text --------
 ===Etymology===
 {{suffix|it|immune|izzare}}
 
+===Pronunciation===
+* {{it-IPA}}
+
 ===Verb===
 {{it-verb}}
 
@@ -123378,6 +123478,9 @@ Page 4823 vivisezionare: -------- begin text --------
 
 ===Etymology===
 {{af|it|vivisezione|-are}}
+
+===Pronunciation===
+* {{it-IPA|vivisetsionàre}}
 
 ===Verb===
 {{it-verb}}
@@ -123772,10 +123875,13 @@ Page 4850 incasellare: -------- begin text --------
 Page 4851 garzare: Found match for regex: =
 Page 4851 garzare: -------- begin text --------
 
-===Verb===
-{{it-verb}}
+===Pronunciation===
+* {{it-IPA|gardzàre}}
 
-# to [[teasel]]
+===Verb===
+{{it-verb|a/à}} {{tlb|it|transitive}}
+
+# to [[raise]] the [[nap]] on (fabric)
 
 ====Conjugation====
 {{it-conj-are|garz|avere}}
@@ -123979,6 +124085,9 @@ Page 4865 schematizzare: -------- begin text --------
 ===Etymology===
 {{suffix|it|schema|izzare}}
 
+===Pronunciation===
+* {{it-IPA}}
+
 ===Verb===
 {{it-verb}}
 
@@ -124013,6 +124122,9 @@ Page 4870 fraternizzare: -------- begin text --------
 
 ===Etymology===
 {{suffix|it|fraterno|izzare}}
+
+===Pronunciation===
+* {{it-IPA}}
 
 ===Verb===
 {{it-verb}}
@@ -124354,8 +124466,11 @@ Page 4893 raccapezzare: -------- begin text --------
 ===Etymology===
 {{rfe|it}}
 
+===Pronunciation===
+* {{it-IPA|raccapettsàre}}
+
 ===Verb===
-{{it-verb}}
+{{it-verb|a/é}}
 
 # {{lb|it|transitive}} to [[scrape together]]
 # {{lb|it|transitive}} to [[grasp]], [[get]], [[understand]]
@@ -124431,6 +124546,9 @@ Page 4896 liofilizzare: -------- begin text --------
 
 ===Etymology===
 {{af|it|liofilo|-izzare}}
+
+===Pronunciation===
+* {{it-IPA}}
 
 ===Verb===
 {{it-verb}}
@@ -124668,6 +124786,9 @@ Page 4910 inutilizzare: -------- begin text --------
 ===Etymology===
 {{prefix|it|in|utilizzare}}
 
+===Pronunciation===
+* {{it-IPA}}
+
 ===Verb===
 {{it-verb}}
 
@@ -124688,6 +124809,9 @@ Page 4913 europeizzare: -------- begin text --------
 
 ===Etymology===
 {{suffix|it|europeo|izzare}}
+
+===Pronunciation===
+* {{it-IPA}}
 
 ===Verb===
 {{it-verb}}
@@ -124962,8 +125086,11 @@ From {{bor|it|fr|artilleur}}.
 Page 4931 tagliuzzare: Found match for regex: =
 Page 4931 tagliuzzare: -------- begin text --------
 
+===Pronunciation===
+* {{it-IPA|tagliuttsàre}}
+
 ===Verb===
-{{it-verb}}
+{{it-verb|a/ù}}
 
 # {{lb|it|transitive}} to [[chop]], [[mince]] or [[shred]]
 
@@ -125005,6 +125132,9 @@ Page 4935 parcellizzare: -------- begin text --------
 ===Etymology===
 {{suffix|it|parcella|izzare}}
 
+===Pronunciation===
+* {{it-IPA}}
+
 ===Verb===
 {{it-verb}}
 
@@ -125025,13 +125155,20 @@ Page 4935 parcellizzare: -------- begin text --------
 Page 4936 mazzolare: Found match for regex: =
 Page 4936 mazzolare: -------- begin text --------
 
-===Verb===
-{{it-verb}}
+===Pronunciation===
+* {{it-IPA|mattsolàre}}
 
-# {{lb|it|transitive}} to [[club]] (especially to beat to death with a club)
+===Verb===
+{{it-verb|a/mazzuòlo:mazzòlo[popular],+,+}}
+
+# {{lb|it|transitive}} to [[club]] {{gl|to beat to death with a club}}
 
 ====Conjugation====
-{{it-conj-are|mazzol|avere}}
+{{it-conj-are|mazzol|avere
+|pres1s=mazzuolo|pres1s2=mazzolo|pres2s=mazzuoli|pres2s2=mazzoli|pres3s=mazzuola|pres3s2=mazzola|pres3p=mazzuolano|pres3p2=mazzolano
+|sub123s=mazzuoli|sub123s2=mazzoli|sub3p=mazzuolino|sub3p2=mazzolino
+|imp2s=mazzuola|imp2s2=mazzola|imp3s=mazzuoli|imp3s2=mazzoli|imp3p=mazzuolino|imp3p2=mazzolino
+}}
 
 ====Related terms====
 * {{l|it|mazzolata}}
