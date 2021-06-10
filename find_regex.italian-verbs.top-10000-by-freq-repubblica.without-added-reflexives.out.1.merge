@@ -135363,6 +135363,9 @@ Page 5801 somatizzare: -------- begin text --------
 ===Etymology===
 {{suffix|it|somatico|izzare}}
 
+===Pronunciation===
+* {{it-IPA}}
+
 ===Verb===
 {{it-verb}}
 
@@ -135561,7 +135564,7 @@ Page 5819 climatizzare: -------- begin text --------
 {{suffix|it|clima|izzare}}
 
 ===Pronunciation===
-* {{it-IPA|climatiddzàre}}
+* {{it-IPA}}
 
 ===Verb===
 {{it-verb|a/ì}}
@@ -135605,6 +135608,9 @@ Page 5822 alcolizzare: -------- begin text --------
 
 ===Alternative forms===
 * {{l|it|alcoolizzare}}
+
+===Pronunciation===
+* {{it-IPA}}
 
 ===Etymology===
 {{af|it|alcol|-izzare}}
@@ -135697,6 +135703,9 @@ Page 5832 ionizzare: -------- begin text --------
 
 ===Etymology===
 {{suffix|it|ione|izzare}}
+
+===Pronunciation===
+* {{it-IPA}}
 
 ===Verb===
 {{it-verb}}
@@ -135910,6 +135919,9 @@ Page 5875 insonorizzare: -------- begin text --------
 ===Etymology===
 {{confix|it|in|sonoro|izzare}}
 
+===Pronunciation===
+* {{it-IPA}}
+
 ===Verb===
 {{it-verb}}
 
@@ -136070,8 +136082,11 @@ Page 5893 opzionare: -------- begin text --------
 ===Etymology===
 {{af|it|opzione|-are}}
 
+===Pronunciation===
+* {{it-IPA|optsionàre}}
+
 ===Verb===
-{{it-verb}}
+{{it-verb|a/ó}}
 
 # {{lb|it|transitive}} to [[option]], to [[have]] an option on
 
@@ -136308,6 +136323,9 @@ Page 5914 schiavizzare: -------- begin text --------
 ===Etymology===
 {{suffix|it|schiavo|izzare}}
 
+===Pronunciation===
+* {{it-IPA}}
+
 ===Verb===
 {{it-verb}}
 
@@ -136379,8 +136397,11 @@ Page 5917 preannunziare: -------- begin text --------
 ===Etymology===
 {{prefix|it|pre|gloss1=pre-|annunciare|alt2=annunziare|gloss2=to announce}}
 
+===Pronunciation===
+* {{it-IPA|preannuntsiàre}}
+
 ===Verb===
-{{it-verb}}
+{{it-verb|a/ù}}
 
 # {{lb|it|transitive}} to give [[advance]] [[notice]] or [[warning]] of
 
@@ -136396,19 +136417,34 @@ Page 5917 preannunziare: -------- begin text --------
 Page 5922 inzeppare: Found match for regex: =
 Page 5922 inzeppare: -------- begin text --------
 
-===Etymology===
+===Pronunciation===
+* {{it-IPA|indzeppàre|#intseppàre}}
+
+===Etymology 1===
 From {{af|it|in-|zeppo|-are}}.
 
-===Verb===
-{{it-verb}}
+====Verb====
+{{it-verb|a/é}}
 
 # {{lb|it|transitive}} to [[stuff]] with [[food]]
+# {{lb|it|transitive}} to [[cram]]
 
-====Conjugation====
+=====Conjugation=====
 {{it-conj-are|inzepp|avere}}
 
-====Related terms====
+=====Related terms=====
 * {{l|it|inzepparsi}}
+
+===Etymology 2===
+From {{af|it|in-|zeppa|-are}}.
+
+====Verb====
+{{it-verb|a/é}}
+
+# {{lb|it|transitive}} to [[wedge]], to [[jam]]
+
+=====Conjugation=====
+{{it-conj-are|inzepp|avere}}
 
 ===Anagrams===
 * {{anagrams|it|inzepperà}}
@@ -136451,12 +136487,15 @@ Page 5926 guazzare: Found match for regex: =
 Page 5926 guazzare: -------- begin text --------
 
 ===Etymology===
-Possibly from {{der|it|fro|gaschier}}, {{m|fro|gacher}}, {{m|fro|gasser||to soil, spoil, waste}} and {{m|fro|gaschier}}, {{m|fro|guaschier}}, {{m|fro|waschier||to wash, soak}}, both from Old {{der|it|frk|*waskan}}, {{m|frk|*wascon|*wascōn|to wash, bathe}}, from {{der|it|gem-pro|*waskaną||to wash}}, related to {{cog|fr|gâcher||to waste, mess up}}; from {{der|it|ine-pro|*wod-||wet}}. See {{l|fr|gâcher}}, {{l|en|wash}}. Alternatively, from {{m|it|guazzo}}, {{m|la|guazza}}.
+Possibly from {{bor|it|fro|gaschier}}, {{m|fro|gacher}}, {{m|fro|gasser||to soil, spoil, waste}} and {{m|fro|gaschier}}, {{m|fro|guaschier}}, {{m|fro|waschier||to wash, soak}}, both from Old {{der|it|frk|*waskan}}, {{m|frk|*wascon|*wascōn|to wash, bathe}}, from {{der|it|gem-pro|*waskaną||to wash}}, related to {{cog|fr|gâcher||to waste, mess up}}; from {{der|it|ine-pro|*wod-||wet}}. See {{l|fr|gâcher}}, {{l|en|wash}}. Alternatively, from {{m|it|guazzo}}, {{m|la|guazza}}.
+
+===Pronunciation===
+* {{it-IPA|guazzàre}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/à}}
 
-# {{lb|it|intransitive}} to [[wallow]]
+# {{lb|it|intransitive|Tuscan}} to [[wallow]]
 
 ====Conjugation====
 {{it-conj-are|guazz|avere}}
@@ -136778,11 +136817,14 @@ Page 5960 insolentire: -------- begin text --------
 Page 5961 indolenzire: Found match for regex: =
 Page 5961 indolenzire: -------- begin text --------
 
-===Verb===
-{{it-verb}}
+===Pronunciation===
+* {{it-IPA|indolentsìre}}
 
-# {{tlb|it|transitive|or|intransitive}} to [[stiffen]] (up)
-# {{tlb|it|transitive|or|intransitive}} to make [[numb]]
+===Verb===
+{{it-verb|a[transitive]:e[intransitive]/+isc}}
+
+# {{lb|it|transitive}} to [[make]] [[ache]]
+# {{lb|it|intransitive}} to [[ache]] {{+aux|it|essere}}
 
 ====Conjugation====
 {{it-conj-ire-b|indolenz|avere or essere}}
