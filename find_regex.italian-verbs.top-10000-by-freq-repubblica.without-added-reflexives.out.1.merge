@@ -1,4 +1,4 @@
-Beginning at Tue Jun  8 23:27:04 2021
+Beginning at Fri Jun 11 00:12:56 2021
 Page 1 essere: Found match for regex: =
 Page 1 essere: -------- begin text --------
 
@@ -1744,14 +1744,18 @@ From {{inh|it|la|mittere}}, present active infinitive of {{m|la|mittō}}, probab
 ===Verb===
 {{it-verb|a\é,mìsi,mésso}}
 
-# {{lb|it|transitive}} to {{l|en|put}}, {{l|en|place}}, {{l|en|lay}}, {{l|en|set}}
-# {{lb|it|transitive}} to {{l|en|deposit}}
-# {{lb|it|transitive}} to {{l|en|bet}}, {{l|en|wager}}
-# {{lb|it|transitive}} to {{l|en|cut}} {{gloss|new teeth}}
-# {{lb|it|transitive}} to {{l|en|charge}} {{gloss|item on sale}}
-# {{lb|it|intransitive}} to {{l|en|give}}, {{l|en|lead}} onto
-# {{lb|it|intransitive}} to {{l|en|suppose}}
-# {{lb|it|intransitive}} to {{l|en|don}}, {{l|en|put on}}, {{l|en|draw up}}
+# {{lb|it|transitive}} to [[put]] [[place]] [[lay]] [[set]]
+# {{lb|it|transitive}} to [[deposit]]
+# {{lb|it|transitive}} to [[bet]] [[wager]]
+# {{lb|it|transitive}} to [[cut]] {{gloss|new teeth}}
+# {{lb|it|transitive}} to lead {{q|someone}} to (or [[provoke]] in them) a certain [[condition]] or [[state of mind]]; to make {{q|someone}} feel; to [[put]] or [[get]] {{q|someone}} (in)
+#: {{uxi|it|'''mettere''' qualcuno in ansia|to '''make''' someone anxious|lit=to '''make''' someone '''feel''' anxious}}
+#: {{uxi|it|'''mettere''' qualcuno nei guai|to '''get''' someone in trouble}}
+#: {{uxi|it|'''metterli''' d'accordo|to '''get''' them to agree|lit=to '''put''' them in agreement}}
+# {{lb|it|transitive}} to [[charge]] {{gloss|item on sale}}
+# {{lb|it|intransitive}} to [[give]] [[lead]] onto
+# {{lb|it|intransitive}} to [[suppose]]
+# {{lb|it|intransitive}} to [[don]]; to [[put on]]; to [[draw up]]
 
 ====Conjugation====
 {{it-conj-ere|mett|avere|pastp=messo|prem1s=misi|prem3s=mise|prem3s2=-|prem3p=misero|prem3p2=-}}
@@ -8271,6 +8275,9 @@ Page 172 garantire: -------- begin text --------
 ===Etymology===
 {{rfe|it}}
 
+===Pronunciation===
+* {{it-IPA}}
+
 ===Verb===
 {{it-verb|a/+isc}} {{tlb|it|transitive}}
 
@@ -9242,6 +9249,9 @@ Page 196 stabilire: -------- begin text --------
 
 ===Etymology===
 From {{inh|it|la|stabilīre}}, present active infinitive of {{m|la|stabiliō}}.
+
+===Pronunciation===
+* {{it-IPA}}
 
 ===Verb===
 {{it-verb|a/+isc}} {{tlb|it|transitive}}
@@ -10423,6 +10433,9 @@ Page 227 avvertire: -------- begin text --------
 ===Etymology===
 From {{der|it|la|advertō}}.
 
+===Pronunciation===
+* {{it-IPA}}
+
 ===Verb===
 {{it-verb|a/è}} {{tlb|it|transitive}}
 
@@ -10757,6 +10770,9 @@ Page 236 impedire: -------- begin text --------
 
 ===Etymology===
 From {{inh|it|la|impedīre}}, present active infinitive of {{m|la|impediō}}.
+
+===Pronunciation===
+* {{it-IPA}}
 
 ===Verb===
 {{it-verb|a/+isc}}
@@ -15850,6 +15866,9 @@ Page 379 suggerire: -------- begin text --------
 
 ===Etymology===
 From {{der|it|la|suggerō}}.
+
+===Pronunciation===
+* {{it-IPA}}
 
 ===Verb===
 {{it-verb|a/+isc}}
@@ -21225,6 +21244,9 @@ Page 532 ripartire: -------- begin text --------
 ===Etymology===
 {{af|it|ri-|partire}}
 
+===Pronunciation===
+* {{it-IPA}}
+
 ===Verb===
 {{it-verb|e/à}} {{tlb|it|intransitive}}
 
@@ -23947,6 +23969,9 @@ Page 616 fallire: -------- begin text --------
 
 ===Etymology===
 From {{inh|it|VL.|*fallīre}}, from {{inh|it|la|fallere}}, present active infinitive of {{m|la|fallō}}.
+
+===Pronunciation===
+* {{it-IPA}}
 
 ===Verb===
 {{it-verb|a:e[in the meanings "to fail, to flop, to go bankrupt"]/+isc}}
@@ -28871,6 +28896,9 @@ Page 766 aggredire: -------- begin text --------
 ===Etymology===
 From {{der|it|la|aggredior}}, from {{af|la|ad-|t1=towards|gradior|t2=to walk}}.<ref>{{R:it:Trec}}</ref>
 
+===Pronunciation===
+* {{it-IPA}}
+
 ===Verb===
 {{it-verb|a/+isc}} {{tlb|it|transitive}}
 
@@ -30971,6 +30999,9 @@ Page 833 indebolire: -------- begin text --------
 
 ===Etymology===
 {{af|it|in-|debole|-ire}}
+
+===Pronunciation===
+* {{it-IPA}}
 
 ===Verb===
 {{it-verb|a[transitive]:e[intransitive]/+isc}}
@@ -35399,6 +35430,9 @@ Page 975 guarire: -------- begin text --------
 
 ===Etymology===
 From {{der|it|frk|*warjan}}, possibly through the intermediate of a Late {{etyl|VL.|it}} {{m|la|*warīre}}, {{m|la|*uarīre}}.
+
+===Pronunciation===
+* {{it-IPA}}
 
 ===Verb===
 {{it-verb|e[intransitive]:a[transitive]/+isc}}
@@ -41576,6 +41610,9 @@ Page 1184 ingannare: -------- begin text --------
 ===Etymology===
 From {{inh|it|VL.|-}} or {{inh|it|LL.|ingannāre}}, present active infinitive of {{m|la|ingannō}} (attested in a gloss), from {{inh|it|la|ganniō}}. Compare {{cog|es|engañar}}, {{cog|pt|enganar}}.
 
+===Pronunciation===
+*{{it-IPA}}
+
 ===Verb===
 {{it-verb|a/à}} {{tlb|it|transitive}}
 
@@ -42695,6 +42732,9 @@ Page 1218 ritrarre: -------- begin text --------
 ===Etymology===
 From {{inh|it|la|retrahere}}, present active infinitive of {{m|la|retrahō}}
 
+===Pronunciation===
+* {{it-IPA|ritràrre}}
+
 ===Verb===
 {{it-verb}}
 
@@ -43215,6 +43255,9 @@ Page 1237 distrarre: -------- begin text --------
 
 ===Etymology===
 From earlier ''distraere'', from {{der|it|la|distrahere}}, present active infinitive of {{m|la|distrahō}}.
+
+===Pronunciation===
+* {{it-IPA|distràrre}}
 
 ===Verb===
 {{it-verb|a\distràggo,distràssi,distràtto.imperf:distraévo.imp:distrài}}
@@ -45179,6 +45222,9 @@ Page 1302 infastidire: -------- begin text --------
 
 ===Etymology===
 {{af|it|in-|fastidio|-ire}}
+
+===Pronunciation===
+* {{it-IPA}}
 
 ===Verb===
 {{it-verb|a/+isc}}
@@ -47888,6 +47934,9 @@ Page 1399 demolire: -------- begin text --------
 ===Etymology===
 From {{etyl|la|it}} {{m|la|dēmōlīrī}}, present active infinitive of {{m|la|dēmōlior||I demolish}}
 
+===Pronunciation===
+* {{it-IPA}}
+
 ===Verb===
 {{it-verb|a/+isc}}
 
@@ -47897,8 +47946,14 @@ From {{etyl|la|it}} {{m|la|dēmōlīrī}}, present active infinitive of {{m|la|d
 ====Conjugation====
 {{it-conj-ire-b|demol|avere}}
 
+====Related terms====
+* {{l|it|demolizione}}
+
 ===Anagrams===
 * {{l|it|idromele}}
+
+===Further reading===
+* {{R:it:Treccani}}
 
 ----
 
@@ -48412,6 +48467,9 @@ Page 1417 contrarre: -------- begin text --------
 
 ===Etymology===
 From {{inh|it|la|contrahere}}, present active infinitive of {{m|la|contrahō}}.
+
+===Pronunciation===
+* {{it-IPA|contràrre}}
 
 ===Verb===
 {{it-verb|a\contràggo,contràssi,contràtto.imperf:contraévo.imp:contrài}}
@@ -50090,6 +50148,9 @@ Page 1478 intimidire: -------- begin text --------
 
 ===Etymology===
 From {{etyl|ML.|it}} {{m|la|intimidāre}}, present active infinitive of {{m|la|intimidō}}, from {{etyl|la|it}} {{m|la|in||in}} + {{m|la|timidus||afraid, timid}}.
+
+===Pronunciation===
+* {{it-IPA}}
 
 ===Verb===
 {{it-verb|a[transitive]:e[intransitive]/+isc}}
@@ -65020,6 +65081,8 @@ Page 2063 strillare: -------- begin text --------
 # to [[scream]]
 #: {{syn|it|urlare}}
 # to [[squall]]
+# to [[kick up a fuss]]
+#: {{syn|it|risentirsi|protestare}}
 
 ====Conjugation====
 {{it-conj-are|strill|avere}}
@@ -68000,6 +68063,9 @@ Page 2184 generalizzare: -------- begin text --------
 
 ===Etymology===
 {{suffix|it|generale|izzare}}
+
+===Pronunciation===
+* {{it-IPA}}
 
 ===Verb===
 {{it-verb|a/ì}}
@@ -72786,6 +72852,9 @@ Page 2376 detrarre: -------- begin text --------
 
 ===Etymology===
 From {{der|it|la|dētrahere}}, {{m|la|dētrahō}}, probably a borrowing.
+
+===Pronunciation===
+* {{it-IPA|detràrre}}
 
 ===Verb===
 {{it-verb|a\detràggo,detràssi,detràtto.imperf:detraévo.imp:detrài}} {{+preo|it|da|means=from}}
@@ -83796,6 +83865,9 @@ Page 2840 ardere: -------- begin text --------
 ===Etymology===
 From {{inh|it|VL.|*ārdere}}, change of conjugation from {{inh|it|la|ārdēre}}, present active infinitive of {{m|la|ārdeō}}.
 
+===Pronunciation===
+* {{it-IPA|àrdere}}
+
 ===Verb===
 {{it-verb|a[transitive or intransitive]:e[also when intransitive]\à,àrsi,àrso}}
 
@@ -86906,6 +86978,9 @@ Page 2981 personalizzare: -------- begin text --------
 ===Etymology===
 {{suffix|it|personale|izzare}}
 
+===Pronunciation===
+* {{it-IPA}}
+
 ===Verb===
 {{it-verb}}
 
@@ -86915,6 +86990,7 @@ Page 2981 personalizzare: -------- begin text --------
 {{it-conj-are|personalizz|avere}}
 
 ====Derived terms====
+* {{l|it|personalizzabile}}
 * {{l|it|personalizzazione}}
 
 ===Anagrams===
@@ -106584,6 +106660,9 @@ Page 3891 astrarre: -------- begin text --------
 ===Etymology===
 From {{der|it|la|abstrahere}}, present active infinitive of {{m|la|abstrahō||draw away from}}, probably a borrowing.
 
+===Pronunciation===
+* {{it-IPA|astràrre}}
+
 ===Verb===
 {{it-verb}}
 
@@ -115619,6 +115698,8 @@ From {{inh|it|VL.|*excapulāre}}, from {{inh|it|LL.|capulāre}}, from {{inh|it|l
 
 ===Anagrams===
 * {{l|it|Paracelso}}, {{l|it|pascolare}}, {{l|it|pascolerà}}
+
+{{C|it|Clerical vestments}}
 -------- end text --------
 Page 4374 infoltire: Found match for regex: =
 Page 4374 infoltire: -------- begin text --------
@@ -118324,6 +118405,9 @@ Page 4542 diligere: -------- begin text --------
 ===Etymology===
 From {{etyl|la|it}} {{m|la|dīligō||I esteem, love, have regard for}}.
 
+===Pronunciation===
+* {{it-IPA|dilìgere}}
+
 ===Verb===
 {{it-verb|a\ì+,dilèssi,dilètto}}
 
@@ -120680,6 +120764,9 @@ Page 4683 ardere: -------- begin text --------
 ===Etymology===
 From {{inh|it|VL.|*ārdere}}, change of conjugation from {{inh|it|la|ārdēre}}, present active infinitive of {{m|la|ārdeō}}.
 
+===Pronunciation===
+* {{it-IPA|àrdere}}
+
 ===Verb===
 {{it-verb|a[transitive or intransitive]:e[also when intransitive]\à,àrsi,àrso}}
 
@@ -122106,7 +122193,7 @@ Page 4776 scialare: Found match for regex: =
 Page 4776 scialare: -------- begin text --------
 
 ===Etymology===
-From {{inh|it|la|exhalare}}, from {{m|la|ex||out}} + {{m|la|halare||to breathe}}
+From {{inh|it|la|exhalo|exhalare}}, from {{m|la|ex||out}} + {{m|la|halare||to breathe}}
 
 ===Verb===
 {{it-verb}}
@@ -130689,6 +130776,12 @@ From {{der|it|VL.|dēpartiō}}, from {{der|it|la|partiō}}.
 Page 5460 carrellare: Found match for regex: =
 Page 5460 carrellare: -------- begin text --------
 
+===Etymology===
+{{af|it|carrello|-are}}
+
+===Pronunciation===
+* {{it-IPA}}
+
 ===Verb===
 {{it-verb}}
 
@@ -130699,10 +130792,12 @@ Page 5460 carrellare: -------- begin text --------
 
 ====Related terms====
 * {{l|it|carrellata}}
-* {{l|it|carrello}}
 
 ===Anagrams===
 * {{l|it|carrellerà}}
+
+===Further reading===
+* {{R:it:Treccani}}
 -------- end text --------
 Page 5461 canonizzare: Found match for regex: =
 Page 5461 canonizzare: -------- begin text --------
@@ -157486,6 +157581,9 @@ Page 9712 tangere: -------- begin text --------
 {{root|la|ine-pro|*teh₂g-}}
 From {{inh|it|la|tangere}}, present active infinitive of {{m|la|tangō}}, from {{inh|it|itc-pro|*tangō}}, nasal infix present from {{der|it|ine-pro|*teh₂g-}}.
 
+===Pronunciation===
+* {{it-IPA|tàngere}}
+
 ===Verb===
 {{it-verb|-\à,-,-}} {{tlb|it|transitive}}
 
@@ -158348,5 +158446,5 @@ Page 9991 formalizzarsi: -------- begin text --------
 ====Conjugation====
 {{it-conj-arsi|formalizz|essere}}
 -------- end text --------
-Elapsed time: 25 mins 48.17 secs
-Ending at Tue Jun  8 23:52:52 2021
+Elapsed time: 30 mins 24.16 secs
+Ending at Fri Jun 11 00:43:21 2021
