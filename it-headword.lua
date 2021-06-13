@@ -22,7 +22,8 @@ local lang = require("Module:languages").getByCode("it")
 
 local GR = u(0x0300)
 local TEMP_QU = u(0xFFF1)
-local TEMP_U_IN_AU = u(0xFFF2)
+local TEMP_GU = u(0xFFF2)
+local TEMP_U_IN_AU = u(0xFFF3)
 local V = "[aeiou]"
 local NV = "[^aeiou]"
 local AV = "[àèéìòóù]"
@@ -555,11 +556,12 @@ local function check_not_null(base, form)
 end
 
 -- Given an unaccented stem, pull out the last two vowels as well as the in-between stuff, and return
--- before, v1, between, v2, after as 5 return values. You must undo the TEMP_QU and TEMP_U_IN_AU substitutions
--- made in before/between/after if you want to use them. `unaccented` is the full verb and `unaccented_desc` a
--- description of where the verb came from; used only in error messages.
+-- before, v1, between, v2, after as 5 return values. You must undo the TEMP_QU, TEMP_GU and TEMP_U_IN_AU
+-- substitutions made in before/between/after if you want to use them. `unaccented` is the full verb and
+-- `unaccented_desc` a description of where the verb came from; used only in error messages.
 local function analyze_stem_for_last_two_vowels(unaccented_stem, unaccented, unaccented_desc)
 	unaccented_stem = rsub(unaccented_stem, "qu", TEMP_QU)
+	unaccented_stem = rsub(unaccented_stem, "gu(" .. V .. ")", TEMP_GU .. "%1")
 	unaccented_stem = rsub(unaccented_stem, "au(" .. NV .. "*" .. V .. NV .. "*)$", "a" .. TEMP_U_IN_AU .. "%1")
 	local before, v1, between, v2, after = rmatch(unaccented_stem, "^(.*)(" .. V .. ")(" .. NV .. "*)(" .. V .. ")(" .. NV .. "*)$")
 	if not before then
@@ -610,6 +612,7 @@ local function apply_vowel_spec(unaccented_stem, unaccented, unaccented_desc, fo
 		end
 	end
 	form = rsub(form, TEMP_QU, "qu")
+	form = rsub(form, TEMP_GU, "gu")
 	form = rsub(form, TEMP_U_IN_AU, "u")
 	return form
 end
@@ -828,13 +831,19 @@ pos_functions["verbs"] = {
 							if base.verb.is_reflexive then
 								if #comma_separated_groups > 1 and first_separator ~= "," then
 									presind = 3
-									-- Auxiliary present (if non-reflexive), or root-stressed infinitive spec
-									-- (if reflexive).
+									-- Auxiliary present (if non-reflexive), or root-stressed infinitive spec (if reflexive).
 									-- Fetch root-stressed infinitive, if given.
 									local specs = fetch_specs(comma_separated_groups[1], "allow blank")
 									if first_separator == "\\" then
+										-- For verbs like [[scegliersi]] and [[proporsi]], allow either 'é\scélgo' or '\é\scélgo'
+										-- and similarly either 'ó+\propóngo' or '\ó+\propóngo'.
 										if specs == nil then
-											base.root_stressed_inf = {{form = "+"}}
+											if #comma_separated_groups > 3 and strip_spaces(comma_separated_groups[4][1]) == "\\" then
+												base.root_stressed_inf = fetch_specs(comma_separated_groups[3])
+												presind = 5
+											else
+												base.root_stressed_inf = {{form = "+"}}
+											end
 										else
 											base.root_stressed_inf = specs
 										end
