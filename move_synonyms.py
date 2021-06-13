@@ -115,6 +115,10 @@ def process_text_on_page(index, pagetitle, text):
         return before_defn_text, defns, after_defn_text
 
       def add_syns_to_defn(syns, defn):
+        syns = [(syn, qualifier, gender) for syn, qualifier, gender in syns if syn]
+        if len(syns) == 0:
+          return defn
+        saw_nyms_already.add(syntype)
         joined_syns = "|".join("%s%s%s" %
           (syn, "|q%s=%s" % (i + 1, qualifier) if qualifier else "", "|g%s=%s" % (i + 1, gender) if gender else "")
           for i, (syn, qualifier, gender) in enumerate(syns))
@@ -130,26 +134,30 @@ def process_text_on_page(index, pagetitle, text):
           # Need to put antonyms after any inline synonyms
           return re.sub(r"^(.*\n(?:#: *\{\{(?:syn|synonyms)\|.*\n)*)", r"\1#: {{ant|%s|%s}}" %
               (args.lang, joined_syns) + "\n", defn)
-        saw_nyms_already.add(syntype)
 
       # Find definitions
       before_defn_text, defns, after_defn_text = find_defns()
       if before_defn_text is None:
         continue
 
-      def put_back_new_defns(defns, syndesc):
+      def put_back_new_defns(defns, syndesc, skipped_a_line, skipped_lines):
         subsections[defn_subsection] = before_defn_text + "".join(defns) + after_defn_text
-        subsections[k - 1] = ""
-        subsections[k] = ""
+        if skipped_a_line:
+          subsections[k] = "\n".join(skipped_lines)
+        else:
+          subsections[k - 1] = ""
+          subsections[k] = ""
         notes.append("Convert %ss in %s subsection %s to inline %ss in subsection %s based on %s" % (
           syntype, args.langname, k // 2 + 1, syntype, defn_subsection // 2 + 1, syndesc))
 
       # Pull out all synonyms by number
       unparsable = False
       syns_by_number = defaultdict(list)
-      must_continue = False
+      skipped_lines = []
+      skipped_a_line = False
       for line in subsections[k].split("\n"):
         if not line.strip():
+          skipped_lines.append(line)
           continue
         # Look for '* (1) {{l|...}}'
         m = re.search(r"^\* *\(([0-9]+)\) *(.*?)$", line)
@@ -173,11 +181,10 @@ def process_text_on_page(index, pagetitle, text):
 
         parsed_syns = parse_syns(syns)
         if parsed_syns is None:
-          must_continue = True
-          break
-        syns_by_number[int(defnum)] += parsed_syns
-      if must_continue:
-        continue
+          skipped_a_line = True
+          skipped_lines.append(line)
+        else:
+          syns_by_number[int(defnum)] += parsed_syns
 
       if not unparsable:
         # Find definitions
@@ -214,15 +221,18 @@ def process_text_on_page(index, pagetitle, text):
           continue
 
         # Put back new definition text and clear out synonyms
-        put_back_new_defns(defns, "numbered %ss" % syntype)
+        put_back_new_defns(defns, "numbered %ss" % syntype, skipped_a_line, skipped_lines)
         continue
 
       # Try checking for {{sense|...}} or (''...'') indicators
       unparsable = False
       syns_by_tag = {}
+      skipped_lines = []
+      skipped_a_line = False
       must_continue = False
       for line in subsections[k].split("\n"):
         if not line.strip():
+          skipped_lines.append(line)
           continue
         m = re.search(r"^\* *\(''([^']*?)''\) *(.*?)$", line)
         if m:
@@ -243,13 +253,14 @@ def process_text_on_page(index, pagetitle, text):
         tag = re.sub(r",? +etc\.?$", "", tag)
         parsed_syns = parse_syns(syns)
         if parsed_syns is None:
-          must_continue = True
-          break
-        if tag in syns_by_number:
-          pagemsg("WARNING: Saw the same tag '%s' twice" % tag)
-          must_continue = True
-          break
-        syns_by_tag[tag] = parsed_syns
+          skipped_a_line = True
+          skipped_lines.append(line)
+        else:
+          if tag in syns_by_number:
+            pagemsg("WARNING: Saw the same tag '%s' twice" % tag)
+            must_continue = True
+            break
+          syns_by_tag[tag] = parsed_syns
       if must_continue:
         continue
 
@@ -313,16 +324,19 @@ def process_text_on_page(index, pagetitle, text):
           continue
 
         # Put back new definition text and clear out synonyms
-        put_back_new_defns(defns, "tagged %ss" % syntype)
+        put_back_new_defns(defns, "tagged %ss" % syntype, skipped_a_line, skipped_lines)
         continue
 
       # Add synonyms if only one definition
       if len(defns) == 1:
         unparsable = False
         all_syns = []
-        must_continue = False
+        syns_by_tag = {}
+        skipped_lines = []
+        skipped_a_line = False
         for line in subsections[k].split("\n"):
           if not line.strip():
+            skipped_lines.append(line)
             continue
           m = re.search(r"^\* *(.*?)$", line)
           if m:
@@ -334,11 +348,10 @@ def process_text_on_page(index, pagetitle, text):
             break
           parsed_syns = parse_syns(syns)
           if parsed_syns is None:
-            must_continue = True
-            break
-          all_syns.extend(parsed_syns)
-        if must_continue:
-          continue
+            skipped_a_line = True
+            skipped_lines.append(line)
+          else:
+            all_syns.extend(parsed_syns)
 
         if not unparsable:
           # Add inline synonyms
@@ -348,7 +361,7 @@ def process_text_on_page(index, pagetitle, text):
           defns[0] = new_defn
 
           # Put back new definition text and clear out synonyms
-          put_back_new_defns(defns, "%ss with only one definition" % syntype)
+          put_back_new_defns(defns, "%ss with only one definition" % syntype, skipped_a_line, skipped_lines)
           continue
 
   secbody = "".join(subsections)
