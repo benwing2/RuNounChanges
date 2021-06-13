@@ -33,10 +33,13 @@ def process_text_on_page(index, pagetitle, text):
           line = "".join(split_templates)
         else:
           def replace_templated(m):
-            if m.group(1) == pagetitle:
+            m1 = m.group(1)
+            if m1 == pagetitle:
               return "[[#English|%s]]" % pagetitle
+            elif "[[" in m1:
+              return m1
             else:
-              return "[[%s]]" % m.group(1)
+              return "[[%s]]" % m1
           new_line = re.sub(r"\{\{l\|en\|([^{}|]*?)\}\}", replace_templated, line)
           if new_line != line:
             changed = True
