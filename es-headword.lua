@@ -116,7 +116,6 @@ function export.show(frame)
 
 	local params = {
 		["head"] = {list = true},
-		["suff"] = {type = "boolean"},
 		["json"] = {type = "boolean"},
 		["id"] = {},
 	}
@@ -143,14 +142,17 @@ function export.show(frame)
 		id = args["id"],
 	}
 
-	if args["suff"] then
-		data.pos_category = "suffixes"
+	local lemma = m_links.remove_links(data.heads[1] or PAGENAME)
+	if lemma:find("^%-") then -- suffix
+		if poscat:find(" forms?$") then
+			data.pos_category = "suffix forms"
+		else
+			data.pos_category = "suffixes"
+		end
 
 		if suffix_categories[poscat] then
 			local singular_poscat = poscat:gsub("s$", "")
 			table.insert(data.categories, langname .. " " .. singular_poscat .. "-forming suffixes")
-		else
-			error("No category exists for suffixes forming " .. poscat .. ".")
 		end
 	end
 
@@ -549,7 +551,7 @@ pos_functions["adjectives"] = {
 		["fpl"] = {list = true}, --feminine plural override(s)
 		["mpl"] = {list = true}, --masculine plural override(s)
 		["comp"] = {list = true}, --comparative(s)
-		["sup"] = {list = true}, --comparative(s)
+		["sup"] = {list = true}, --superlative(s)
 	},
 	func = function(args, data, tracking_categories)
 		return do_adjective(args, data, tracking_categories, false)
@@ -583,6 +585,20 @@ pos_functions["superlative adjectives"] = {
 	func = function(args, data, tracking_categories)
 		return do_adjective(args, data, tracking_categories, true)
 	end
+}
+
+
+pos_functions["adverbs"] = {
+	params = {
+		["sup"] = {list = true}, --superlative(s)
+	},
+	func = function(args, data, tracking_categories, frame)
+		if args.sup and #args.sup > 0 then
+			check_all_missing(args.sup, "adverbs", tracking_categories)
+			args.sup.label = "superlative"
+			table.insert(data.inflections, args.sup)
+		end
+	end,
 }
 
 
@@ -964,13 +980,16 @@ pos_functions["verbs"] = {
 			if forms[1].form == "-" then
 				return {label = "no " .. label}
 			else
-				local into_table = {label = label, accel = {form = accel_form}}
+				local into_table = {label = label}
+				local accel = {form = accel_form}
 				for _, form in ipairs(forms) do
 					local qualifiers = strip_brackets(form.footnotes)
 					-- Strip redundant brackets surrounding entire form. These may get generated e.g.
 					-- if we use the angle bracket notation with a single word.
 					local stripped_form = rmatch(form.form, "^%[%[([^%[%]]*)%]%]$") or form.form
-					table.insert(into_table, {term = stripped_form, qualifiers = qualifiers})
+					-- Don't include accelerators if brackets remain in form, as the result will be wrong.
+					local this_accel = not stripped_form:find("%[%[") and accel or nil
+					table.insert(into_table, {term = stripped_form, qualifiers = qualifiers, accel = this_accel})
 				end
 				return into_table
 			end
