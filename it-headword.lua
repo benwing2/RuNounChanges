@@ -19,6 +19,7 @@ local unfd = mw.ustring.toNFD
 local unfc = mw.ustring.toNFC
 
 local lang = require("Module:languages").getByCode("it")
+local langname = "Italian"
 
 local GR = u(0x0300)
 local TEMP_QU = u(0xFFF1)
@@ -151,7 +152,7 @@ end
 -- Generate a default plural form, which is correct for most regular nouns and adjectives.
 local function make_plural(form, gender, new_algorithm, special)
 	if new_algorithm then
-		local retval = require("Module:romance utilities").handle_multiword(form, special,
+		local retval = require("Module:User:Benwing2/romance utilities").handle_multiword(form, special,
 			function(form) return make_plural(form, gender, is_adj) end, prepositions)
 		if retval then
 			if #retval ~= 1 then
@@ -210,7 +211,7 @@ end
 
 -- Generate a default feminine form.
 local function make_feminine(form, special)
-	local retval = require("Module:romance utilities").handle_multiword(form, special, make_feminine, prepositions)
+	local retval = require("Module:User:Benwing2/romance utilities").handle_multiword(form, special, make_feminine, prepositions)
 	if retval then
 		if #retval ~= 1 then
 			error("Internal error: Should have one return value for make_feminine: " .. table.concat(retval, ","))
@@ -447,6 +448,10 @@ local function do_adjective(args, data, tracking_categories, is_superlative)
 			require("Module:table").serialCommaJoin(indicators, {dontTag = true}) .. ": " .. args.sp)
 	end
 
+	local PAGENAME = mw.title.getCurrentTitle().text
+	local pagename = args.pagename or PAGENAME
+	local lemma = m_links.remove_links(data.heads[1] or pagename)
+
 	if args.inv then
 		-- invariable adjective
 		table.insert(data.inflections, {label = "invariable"})
@@ -454,11 +459,44 @@ local function do_adjective(args, data, tracking_categories, is_superlative)
 		if args.sp or #args.f > 0 or #args.pl > 0 or #args.mpl > 0 or #args.fpl > 0 then
 			error("Can't specify inflections with an invariable adjective")
 		end
-	else
-		local PAGENAME = mw.title.getCurrentTitle().text
-		local pagename = args.pagename or PAGENAME
-		local lemma = m_links.remove_links(data.heads[1] or pagename)
+	elseif args.fonly then
+		-- feminine-only
+		if args.f > 0 then
+			error("Can't specify explicit feminines with feminine-only adjective")
+		end
+		if args.pl > 0 then
+			error("Can't specify explicit plurals with feminine-only adjective, use fpl=")
+		end
+		if args.mpl > 0 then
+			error("Can't specify explicit masculine plurals with feminine-only adjective")
+		end
+		local argsfpl = args.fpl
+		if #argsfpl == 0 then
+			argsfpl = {"+"}
+		end
+		for _, fpl in ipairs(argsfpl) do
+			if fpl == "+" then
+				local defpl = make_plural(lemma, "f", "new algorithm", args.sp)
+				if not defpl then
+					error("Unable to generate default plural of '" .. lemma .. "'")
+				end
+				table.insert(feminine_plurals, defpl)
+			elseif fpl == "#" then
+				table.insert(feminine_plurals, lemma)
+			else
+				table.insert(feminine_plurals, fpl)
+			end
+		end
 
+		check_all_missing(feminine_plurals, "adjectives", tracking_categories)
+
+		table.insert(data.inflections, {label = "feminine-only"})
+		if #feminine_plurals > 0 then
+			feminine_plurals.label = "feminine plural"
+			feminine_plurals.accel = {form = "f|p"}
+			table.insert(data.inflections, feminine_plurals)
+		end
+	else
 		-- Gather feminines.
 		local argsf = args.f
 		if #argsf == 0 then
@@ -509,8 +547,8 @@ local function do_adjective(args, data, tracking_categories, is_superlative)
 			if fpl == "+" then
 				for _, f in ipairs(feminines) do
 					-- Generate default feminine plural.
-					local defpls = make_plural(f, "f", "new algorithm", args.sp)
-					if not defpls then
+					local defpl = make_plural(f, "f", "new algorithm", args.sp)
+					if not defpl then
 						error("Unable to generate default plural of '" .. f .. "'")
 					end
 					table.insert(feminine_plurals, defpl)
@@ -568,6 +606,10 @@ local function do_adjective(args, data, tracking_categories, is_superlative)
 	if args.irreg and is_superlative then
 		table.insert(data.categories, langname .. " irregular superlative adjectives")
 	end
+	
+	if #data.heads == 0 and args.pagename then
+		table.insert(data.heads, args.pagename)
+	end
 end
 
 
@@ -581,6 +623,7 @@ pos_functions["adjectives"] = {
 		["mpl"] = {list = true}, --masculine plural override(s)
 		["comp"] = {list = true}, --comparative(s)
 		["sup"] = {list = true}, --comparative(s)
+		["fonly"] = {type = "boolean"}, -- feminine only
 		["pagename"] = {}, -- for testing
 	},
 	func = function(args, data, tracking_categories)
