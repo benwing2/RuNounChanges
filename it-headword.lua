@@ -39,11 +39,55 @@ local function glossary_link(entry, text)
 	return "[[Appendix:Glossary#" .. entry .. "|" .. text .. "]]"
 end
 
+local function check_all_missing(forms, plpos, tracking_categories)
+	for _, form in ipairs(forms) do
+		if type(form) == "table" then
+			form = form.term
+		end
+		if form then
+			local title = mw.title.new(form)
+			if title and not title.exists then
+				table.insert(tracking_categories, langname .. " " .. plpos .. " with red links in their headword lines")
+			end
+		end
+	end
+end
+
 local suffix_categories = {
 	["adjectives"] = true,
 	["adverbs"] = true,
 	["nouns"] = true,
 	["verbs"] = true,
+}
+
+local prepositions = {
+	-- a, da + optional article
+	"d?al? ",
+	"d?all[oae] ",
+	"d?all'",
+	"d?ai ",
+	"d?agli ",
+	-- di, in + optional article
+	"di ",
+	"in ",
+	"[dn]el ",
+	"[dn]ell[oae] ",
+	"[dn]ell'",
+	"[dn]ei ",
+	"[dn]egli ",
+	-- su + optional article
+	"su ",
+	"sul ",
+	"sull[oae] ",
+	"sull'",
+	"sui ",
+	"sugli ",
+	-- others
+	"come ",
+	"con ",
+	"per ",
+	"tra ",
+	"fra ",
 }
 
 -- The main entry point.
@@ -104,6 +148,88 @@ function export.show(frame)
 		.. require("Module:utilities").format_categories(tracking_categories, lang)
 end
 
+-- Generate a default plural form, which is correct for most regular nouns and adjectives.
+local function make_plural(form, gender, new_algorithm, special)
+	if new_algorithm then
+		local retval = require("Module:romance utilities").handle_multiword(form, special,
+			function(form) return make_plural(form, gender, is_adj) end, prepositions)
+		if retval then
+			if #retval ~= 1 then
+				error("Internal error: Should have one return value for make_plural: " .. table.concat(retval, ","))
+			end
+			return retval[1]
+		end
+	end
+
+	-- If there are spaces in the term, then we can't reliably form the plural.
+	-- Return nothing instead.
+	if not new_algorithm and form:find(" ") then
+		return nil
+	elseif form:find("io$") then
+		form = form:gsub("io$", "i")
+	elseif form:find("ologo$") then
+		form = form:gsub("o$", "i")
+	-- FIXME, correct everything to always use new algorithm.
+	elseif new_algorithm and form:find("[ia]co$") then
+		form = form:gsub("o$", "i")
+	-- Of adjectives in -co but not in -aco or -ico, there are several in -esco that take -eschi, and various
+	-- others that take -chi: [[adunco]], [[anficerco]], [[azteco]], [[bacucco]], [[barocco]], [[basco]],
+	-- [[bergamasco]], [[berlusco]], [[bianco]], [[bieco]], [[bisiacco]], [[bislacco]], [[bisulco]], [[brigasco]],
+	-- [[brusco]], [[bustocco]], [[caduco]], [[ceco]], [[cecoslovacco]], [[cerco]], [[chiavennasco]], [[cieco]],
+	-- [[ciucco]], [[comasco]], [[cosacco]], [[cremasco]], [[crucco]], [[dificerco]], [[dolco]], [[eterocerco]],
+	-- [[etrusco]], [[falisco]], [[farlocco]], [[fiacco]], [[fioco]], [[fosco]], [[franco]], [[fuggiasco]], [[giucco]],
+	-- [[glauco]], [[gnocco]], [[gnucco]], [[guatemalteco]], [[ipsiconco]], [[lasco]], [[livignasco]], [[losco]], 
+	-- [[manco]], [[monco]], [[monegasco]], [[neobarocco]], [[olmeco]], [[parco]], [[pitocco]], [[pluriconco]], 
+	-- [[poco]], [[polacco]], [[potamotoco]], [[prebarocco]], [[prisco]], [[protobarocco]], [[rauco]], [[ricco]], 
+	-- [[risecco]], [[rivierasco]], [[roco]], [[roiasco]], [[sbieco]], [[sbilenco]], [[sciocco]], [[secco]],
+	-- [[semisecco]], [[slovacco]], [[somasco]], [[sordocieco]], [[sporco]], [[stanco]], [[stracco]], [[staricco]],
+	-- [[taggiasco]], [[tocco]], [[tosco]], [[triconco]], [[trisulco]], [[tronco]], [[turco]], [[usbeco]], [[uscocco]],
+	-- [[uto-azteco]], [[uzbeco]], [[valacco]], [[vigliacco]], [[zapoteco]].
+	--
+	-- Only the following take -ci: [[biunivoco]], [[dieco]], [[equivoco]], [[estrinseco]], [[greco]], [[inequivoco]],
+	-- [[intrinseco]], [[italigreco]], [[magnogreco]], [[meteco]], [[neogreco]], [[osco]] (either -ci or -chi),
+	-- [[petulco]] (either -chi or -ci), [[plurivoco]], [[porco]], [[pregreco]], [[reciproco]], [[stenoeco]],
+	-- [[tagicco]], [[univoco]], [[volsco]].
+	elseif form:find("[cg]o$") then
+		form = form:gsub("o$", "hi")
+	elseif form:find("o$") then
+		form = form:gsub("o$", "i")
+	elseif form:find("[cg]a$") then
+		form = form:gsub("a$", (gender == "m" and "hi" or "he"))
+	elseif form:find("[cg]ia$") then
+		form = form:gsub("ia$", "e")
+	elseif form:find("a$") then
+		form = form:gsub("a$", (gender == "m" and "i" or "e"))
+	elseif form:find("e$") then
+		form = form:gsub("e$", "i")
+	elseif new_algorithm then
+		return nil
+	end
+	return form
+end
+
+-- Generate a default feminine form.
+local function make_feminine(form, special)
+	local retval = require("Module:romance utilities").handle_multiword(form, special, make_feminine, prepositions)
+	if retval then
+		if #retval ~= 1 then
+			error("Internal error: Should have one return value for make_feminine: " .. table.concat(retval, ","))
+		end
+		return retval[1]
+	end
+
+	-- Don't directly return gsub() because then there will be multiple return values.
+	if form:find("o$") then
+		form = form:gsub("o$", "a")
+	elseif form:find("tore$") then
+		form = form:gsub("tore$", "trice")
+	elseif form:find("one$") then
+		form = form:gsub("one$", "ona")
+	end
+
+	return form
+end
+
 function export.itadj(frame)
 	local params = {
 		[1] = {},
@@ -133,8 +259,8 @@ function export.itadj(frame)
 	elseif not end1 then -- no ending vowel parameters - generate default
 		data.inflections = {
 			{label = "feminine singular", stem .. "a"},
-			{label = "masculine plural", make_plural(stem .. "o","m")},
-			{label = "feminine plural", make_plural(stem .. "a","f")}
+			{label = "masculine plural", make_plural(stem .. "o", "m")},
+			{label = "feminine plural", make_plural(stem .. "a", "f")}
 		}
 	else
 		local end2 = args[3] or error("Either 0, 2 or 4 vowel endings should be supplied!")
@@ -259,41 +385,6 @@ function export.itnoun(frame)
 	return require("Module:headword").full_headword(data)
 end
 
--- Generate a default plural form, which is correct for most regular nouns
-function make_plural(word, gender)
-	-- If there are spaces in the term, then we can't reliably form the plural.
-	-- Return nothing instead.
-	if word:find(" ") then
-		return nil
-	elseif word:find("io$") then
-		word = word:gsub("io$", "i")
-	elseif word:find("ologo$") then
-		word = word:gsub("o$", "i")
-	elseif word:find("[cg]o$") then
-		word = word:gsub("o$", "hi")
-	elseif word:find("o$") then
-		word = word:gsub("o$", "i")
-	elseif word:find("[cg]a$") then
-		word = word:gsub("a$", (gender == "m" and "hi" or "he"))
-	elseif word:find("[cg]ia$") then
-		word = word:gsub("ia$", "e")
-	elseif word:find("a$") then
-		word = word:gsub("a$", (gender == "m" and "i" or "e"))
-	elseif word:find("e$") then
-		word = word:gsub("e$", "i")
-	end
-	return word
-end
-
--- Generate a default feminine form
-function make_feminine(word, gender)
-	if word:find("o$") then
-		return word:gsub("o$", "a")
-	else
-		return word
-	end
-end
-
 function export.itprop(frame)
 	local params = {
 		[1] = {list = "g", default = "?"},
@@ -339,6 +430,194 @@ function export.itprop(frame)
 	
 	return require("Module:headword").full_headword(data)
 end
+
+
+local function do_adjective(args, data, tracking_categories, is_superlative)
+	local feminines = {}
+	local masculine_plurals = {}
+	local feminine_plurals = {}
+
+	if args.sp and not allowed_special_indicators[args.sp] then
+		local indicators = {}
+		for indic, _ in pairs(allowed_special_indicators) do
+			table.insert(indicators, "'" .. indic .. "'")
+		end
+		table.sort(indicators)
+		error("Special inflection indicator beginning can only be " ..
+			require("Module:table").serialCommaJoin(indicators, {dontTag = true}) .. ": " .. args.sp)
+	end
+
+	if args.inv then
+		-- invariable adjective
+		table.insert(data.inflections, {label = "invariable"})
+		table.insert(data.categories, langname .. " indeclinable adjectives")
+		if args.sp or #args.f > 0 or #args.pl > 0 or #args.mpl > 0 or #args.fpl > 0 then
+			error("Can't specify inflections with an invariable adjective")
+		end
+	else
+		local PAGENAME = mw.title.getCurrentTitle().text
+		local pagename = args.pagename or PAGENAME
+		local lemma = m_links.remove_links(data.heads[1] or pagename)
+
+		-- Gather feminines.
+		local argsf = args.f
+		if #argsf == 0 then
+			argsf = {"+"}
+		end
+		for _, f in ipairs(argsf) do
+			if f == "+" then
+				-- Generate default feminine.
+				f = make_feminine(lemma, args.sp)
+			elseif f == "#" then
+				f = lemma
+			end
+			table.insert(feminines, f)
+		end
+
+		local argsmpl = args.mpl
+		local argsfpl = args.fpl
+		if #args.pl > 0 then
+			if #argsmpl > 0 or #argsfpl > 0 then
+				error("Can't specify both pl= and mpl=/fpl=")
+			end
+			argsmpl = args.pl
+			argsfpl = args.pl
+		end
+		if #argsmpl == 0 then
+			argsmpl = {"+"}
+		end
+		if #argsfpl == 0 then
+			argsfpl = {"+"}
+		end
+
+		for _, mpl in ipairs(argsmpl) do
+			if mpl == "+" then
+				-- Generate default masculine plural.
+				local defpl = make_plural(lemma, "m", "new algorithm", args.sp)
+				if not defpl then
+					error("Unable to generate default plural of '" .. lemma .. "'")
+				end
+				table.insert(masculine_plurals, defpl)
+			elseif mpl == "#" then
+				table.insert(masculine_plurals, lemma)
+			else
+				table.insert(masculine_plurals, mpl)
+			end
+		end
+
+		for _, fpl in ipairs(argsfpl) do
+			if fpl == "+" then
+				for _, f in ipairs(feminines) do
+					-- Generate default feminine plural.
+					local defpls = make_plural(f, "f", "new algorithm", args.sp)
+					if not defpls then
+						error("Unable to generate default plural of '" .. f .. "'")
+					end
+					table.insert(feminine_plurals, defpl)
+				end
+			elseif fpl == "#" then
+				table.insert(feminine_plurals, lemma)
+			else
+				table.insert(feminine_plurals, fpl)
+			end
+		end
+
+		check_all_missing(feminines, "adjectives", tracking_categories)
+		check_all_missing(masculine_plurals, "adjectives", tracking_categories)
+		check_all_missing(feminine_plurals, "adjectives", tracking_categories)
+
+		-- Make sure there are feminines given and not same as lemma.
+		if #feminines > 0 and not (#feminines == 1 and feminines[1] == lemma) then
+			feminines.label = "feminine"
+			feminines.accel = {form = "f|s"}
+			table.insert(data.inflections, feminines)
+		end
+
+		if #masculine_plurals > 0 and #feminine_plurals > 0 and
+			require("Module:table").deepEqualsList(masculine_plurals, feminine_plurals) then
+			masculine_plurals.label = "plural"
+			masculine_plurals.accel = {form = "p"}
+			table.insert(data.inflections, masculine_plurals)
+		else
+			if #masculine_plurals > 0 then
+				masculine_plurals.label = "masculine plural"
+				masculine_plurals.accel = {form = "m|p"}
+				table.insert(data.inflections, masculine_plurals)
+			end
+
+			if #feminine_plurals > 0 then
+				feminine_plurals.label = "feminine plural"
+				feminine_plurals.accel = {form = "f|p"}
+				table.insert(data.inflections, feminine_plurals)
+			end
+		end
+	end
+
+	if args.comp and #args.comp > 0 then
+		check_all_missing(args.comp, "adjectives", tracking_categories)
+		args.comp.label = "comparative"
+		table.insert(data.inflections, args.comp)
+	end
+
+	if args.sup and #args.sup > 0 then
+		check_all_missing(args.sup, "adjectives", tracking_categories)
+		args.sup.label = "superlative"
+		table.insert(data.inflections, args.sup)
+	end
+
+	if args.irreg and is_superlative then
+		table.insert(data.categories, langname .. " irregular superlative adjectives")
+	end
+end
+
+
+pos_functions["adjectives"] = {
+	params = {
+		["inv"] = {type = "boolean"}, --invariable
+		["sp"] = {}, -- special indicator: "first", "first-last", etc.
+		["f"] = {list = true}, --feminine form(s)
+		["pl"] = {list = true}, --plural override(s)
+		["fpl"] = {list = true}, --feminine plural override(s)
+		["mpl"] = {list = true}, --masculine plural override(s)
+		["comp"] = {list = true}, --comparative(s)
+		["sup"] = {list = true}, --comparative(s)
+		["pagename"] = {}, -- for testing
+	},
+	func = function(args, data, tracking_categories)
+		return do_adjective(args, data, tracking_categories, false)
+	end
+}
+
+pos_functions["comparative adjectives"] = {
+	params = {
+		["inv"] = {type = "boolean"}, --invariable
+		["sp"] = {}, -- special indicator: "first", "first-last", etc.
+		["f"] = {list = true}, --feminine form(s)
+		["pl"] = {list = true}, --plural override(s)
+		["fpl"] = {list = true}, --feminine plural override(s)
+		["mpl"] = {list = true}, --masculine plural override(s)
+		["pagename"] = {}, -- for testing
+	},
+	func = function(args, data, tracking_categories)
+		return do_adjective(args, data, tracking_categories)
+	end
+}
+
+pos_functions["superlative adjectives"] = {
+	params = {
+		["inv"] = {type = "boolean"}, --invariable
+		["sp"] = {}, -- special indicator: "first", "first-last", etc.
+		["f"] = {list = true}, --feminine form(s)
+		["pl"] = {list = true}, --plural override(s)
+		["fpl"] = {list = true}, --feminine plural override(s)
+		["mpl"] = {list = true}, --masculine plural override(s)
+		["irreg"] = {type = "boolean"},
+		["pagename"] = {}, -- for testing
+	},
+	func = function(args, data, tracking_categories)
+		return do_adjective(args, data, tracking_categories, true)
+	end
+}
 
 
 local function analyze_verb(lemma)
