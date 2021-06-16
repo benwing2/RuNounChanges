@@ -27,23 +27,14 @@ local suffix_categories = {
 	["verbs"] = true,
 }
 
-local allowed_special_indicators = {
-	["first"] = true,
-	["first-second"] = true,
-	["first-last"] = true,
-	["second"] = true,
-	["last"] = true,
-	["each"] = true,
-}
-
 local prepositions = {
-	"al?",
-	"del?",
-	"como",
-	"con",
-	"en",
-	"para",
-	"por",
+	"al? ",
+	"del? ",
+	"como ",
+	"con ",
+	"en ",
+	"para ",
+	"por ",
 }
 
 -- Add links around words. If multiword_only, do it only in multiword forms.
@@ -63,23 +54,6 @@ local function add_links(form, multiword_only)
 		end
 	end
 	return form
-end
-
-local function get_special_indicator(form)
-	if form:find("^%+") then
-		form = form:gsub("^%+", "")
-		if not allowed_special_indicators[form] then
-			local indicators = {}
-			for indic, _ in pairs(allowed_special_indicators) do
-				table.insert(indicators, "+" .. indic)
-			end
-			table.sort(indicators)
-			error("Special inflection indicator beginning with '+' can only be " ..
-				require("Module:table").serialCommaJoin(indicators, {dontTag = true}) .. ": +" .. form)
-		end
-		return form
-	end
-	return nil
 end
 
 local function track(page)
@@ -169,97 +143,8 @@ function export.show(frame)
 end
 
 
-local function add_endings(bases, endings)
-	local retval = {}
-	if type(bases) ~= "table" then
-		bases = {bases}
-	end
-	if type(endings) ~= "table" then
-		endings = {endings}
-	end
-	for _, base in ipairs(bases) do
-		for _, ending in ipairs(endings) do
-			table.insert(retval, base .. ending)
-		end
-	end
-	return retval
-end
-
-
-function handle_multiword(form, special, inflect)
-	if special == "first" then
-		local first, rest = rmatch(form, "^(.-)( .*)$")
-		if not first then
-			error("Special indicator 'first' can only be used with a multiword term: " .. form)
-		end
-		return add_endings(inflect(first), rest)
-	elseif special == "second" then
-		local first, second, rest = rmatch(form, "^([^ ]+ )([^ ]+)( .*)$")
-		if not first then
-			error("Special indicator 'second' can only be used with a term with three or more words: " .. form)
-		end
-		return add_endings(add_endings({first}, inflect(second)), rest)
-	elseif special == "first-second" then
-		local first, space, second, rest = rmatch(form, "^([^ ]+)( )([^ ]+)( .*)$")
-		if not first then
-			error("Special indicator 'first-second' can only be used with a term with three or more words: " .. form)
-		end
-		return add_endings(add_endings(add_endings(inflect(first), space), inflect(second)), rest)
-	elseif special == "each" then
-		local terms = rsplit(form, " ")
-		if #terms < 2 then
-			error("Special indicator 'each' can only be used with a multiword term: " .. form)
-		end
-		for i, term in ipairs(terms) do
-			terms[i] = inflect(term)
-			if i > 1 then
-				terms[i] = add_endings(" ", terms[i])
-			end
-		end
-		local result = ""
-		for _, term in ipairs(terms) do
-			result = add_endings(result, term)
-		end
-		return result
-	elseif special == "first-last" then
-		local first, middle, last = rmatch(form, "^(.-)( .* )(.-)$")
-		if not first then
-			first, middle, last = rmatch(form, "^(.-)( )(.*)$")
-		end
-		if not first then
-			error("Special indicator 'first-last' can only be used with a multiword term: " .. form)
-		end
-		return add_endings(add_endings(inflect(first), middle), inflect(last))
-	elseif special == "last" then
-		local rest, last = rmatch(form, "^(.* )(.-)$")
-		if not rest then
-			error("Special indicator 'last' can only be used with a multiword term: " .. form)
-		end
-		return add_endings(rest, inflect(last))
-	elseif special then
-		error("Unrecognized special=" .. special)
-	end
-
-	if form:find(" ") then
-		-- check for prepositions in the middle of the word; do it this way so we can handle
-		-- more than one word before the preposition (and usually inflect each word)
-		for _, prep in ipairs(prepositions) do
-			local first, space_prep, rest = rmatch(form, "^(.-)( " .. prep .. ")( .*)$")
-			if first then
-				return add_endings(inflect(first), space_prep .. rest)
-			end
-		end
-
-		-- multiword expressions default to first-last
-		return handle_multiword(form, "first-last", inflect)
-	end
-
-	return nil
-end
-
-
 local function make_plural(form, special)
-	local retval = handle_multiword(form, special, make_plural)
+	local retval = require("Module:romance utilities").handle_multiword(form, special, make_plural, prepositions)
 	if retval then
 		return retval
 	end
@@ -323,7 +208,7 @@ local function make_plural(form, special)
 end
 
 local function make_feminine(form, special)
-	local retval = handle_multiword(form, special, make_feminine)
+	local retval = require("Module:romance utilities").handle_multiword(form, special, make_feminine, prepositions)
 	if retval then
 		if #retval ~= 1 then
 			error("Internal error: Should have one return value for make_feminine: " .. table.concat(retval, ","))
@@ -331,7 +216,7 @@ local function make_feminine(form, special)
 		return retval[1]
 	end
 
-	if form:match("o$") then
+	if form:find("o$") then
 		local retval = form:gsub("o$", "a") -- discard second retval
 		return retval
 	end
@@ -356,8 +241,8 @@ local function make_feminine(form, special)
 	return form
 end
 
-local function make_masculine(form)
-	local retval = handle_multiword(form, special, make_masculine)
+local function make_masculine(form, special)
+	local retval = require("Module:romance utilities").handle_multiword(form, special, make_masculine, prepositions)
 	if retval then
 		if #retval ~= 1 then
 			error("Internal error: Should have one return value for make_masculine: " .. table.concat(retval, ","))
@@ -365,12 +250,12 @@ local function make_masculine(form)
 		return retval[1]
 	end
 
-	if form:match("dora$") then
+	if form:find("dora$") then
 		local retval = form:gsub("a$", "") -- discard second retval
 		return retval
 	end
 
-	if form:match("a$") then
+	if form:find("a$") then
 		local retval = form:gsub("a$", "o") -- discard second retval
 		return retval
 	end
@@ -684,7 +569,7 @@ pos_functions["nouns"] = {
 				elseif pl == "#" then
 					table.insert(plurals, lemma)
 				elseif pl:find("^%+") then
-					pl = get_special_indicator(pl)
+					pl = require("Module:romance utilities").get_special_indicator(pl)
 					local default_pls = make_plural(lemma, pl)
 					for _, defp in ipairs(default_pls) do
 						table.insert(plurals, defp)
@@ -756,7 +641,7 @@ pos_functions["nouns"] = {
 				elseif mf == "#" then
 					mf = lemma
 				end
-				local special = get_special_indicator(mf)
+				local special = require("Module:romance utilities").get_special_indicator(mf)
 				if special then
 					mf = inflect(lemma, special)
 				end
@@ -802,7 +687,7 @@ pos_functions["nouns"] = {
 				elseif mfpl == "#" then
 					table.insert(new_mfpls, {term = lemma, accel = accel})
 				elseif mfpl:find("^%+") then
-					mfpl = get_special_indicator(mfpl)
+					mfpl = require("Module:romance utilities").get_special_indicator(mfpl)
 					for _, mf in ipairs(singulars) do
 						local default_mfpls = make_plural(mf, mfpl)
 						for _, defp in ipairs(default_mfpls) do
