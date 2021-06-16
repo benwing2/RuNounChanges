@@ -1,0 +1,174 @@
+abduttrice: should be fsg
+abduttori: should be mpl
+accettrice: should be fsg
+accettori: should be mpl
+adattatrice: should be fsg
+adattatori: should be mpl
+agoniste: should be fpl
+allerte: delete
+anfetaminicoi: delete
+anfetaminichi: delete
+anti-europea: delete
+anti-europei: delete
+antirollia: delete
+antirollii: delete
+antirollie: delete
+ascenti: delete
+astrometrici: should be mpl
+astrometrica: should be fsg
+attivatrice: should be fsg
+attivatori: should be mpl
+barbaresci: delete
+bernesii: delete
+bioinformatici: should be mpl
+bioinformatica: should be fsg
+cameristici: should be mpl
+cameristica: should be fsg
+catturatori: should be mpl
+catturatrice: should be fsg
+caudilliste: should be fpl
+caudillisti: should be mpl
+centoquarantosettesimi: delete
+centosettantosettesimi: delete
+chioccie: delete
+coimpitati: delete
+collettiviste: should be fpl
+collettivisti: should be mpl
+copiatori: should be mpl
+copiatrice: should be fsg
+deceleratori: should be mpl
+deceleratrice: should be fsg
+decolanti: delete
+depuratrice: should be fsg
+depuratori: should be mpl
+dinastica: should be fsg
+dinastici: should be mpl
+disincrostari: delete
+eccitatori: should be mpl
+eccitatrice: should be fsg
+effettori: should be mpl
+effettrice: should be fsg
+formatori: should be mpl
+formatrice: should be fsg
+fotogeneratori: should be mpl
+fotogeneratrice: should be fsg
+gaginesche: should be fpl
+gagineschi: should be mpl
+greggie: delete
+hascemite: should be fpl
+hascemiti: should be mpl
+identificatori: should be mpl
+identificatrice: should be fsg
+illodabile, illaudabile: clean up
+impollinatori: should be mpl
+impollinatrice: should be fsg
+impositori: should be mpl
+impositrice: should be fsg
+indebite: lemma should be indebito
+inflccidita: rename to inflaccidita
+inflcciditi: rename to inflacciditi
+inflccidite: rename to inflaccidite
+ingaglardita: rename to ingagliardita
+ingaglarditi: rename to ingagliarditi
+ingaglardite: rename to ingagliardite
+ippotranata: rename to ippotrainata
+ippotranati: rename to ippotrainati
+ippotranate: rename to ippotrainate
+írrito: delete
+isoceraunichi: rename to isoceraunici
+italoturci: rename to italoturchi
+lactotropo, lattotropo: make latter the main form
+largheggiatori: should be mpl
+largheggiatrice: should be fsg
+latifloglia: rename to latifoglia
+latiflogli: rename to latifogli
+latifloglie: rename to latifoglie
+legalisti: should be mpl
+legaliste: should be fpl
+leucopoietici: should be mpl
+leucopoietica: should be fsg
+lignatichi: rename to lignatici
+litolatrice: rename to litolatriche
+logipatice: rename to logopatiche
+lubrificatore: mpl only
+macchiettistice: rename to macchiettistiche
+macreperlata: rename to madreperlata
+macreperlati: rename to madreperlati
+macreperlate: rename to madreperlate
+magnetofonice: rename to magnetofoniche
+malefichi: rename to malefici
+mareomotori: should be mpl
+mareomotrice: should be fsg
+marinareschi: should be mpl
+marinaresca: should be fsg
+mariste: should be fpl
+masticatori: mpl only
+melissofage: rename to melissofaghe
+mendica: should be fsg
+mendichi: should be mpl
+meridionaliste: should be fpl
+meridionalisti: should be mpl
+mesogee: should be fpl
+mesogei: should be mpl
+metasomatitica: rename to metasomatica
+metasomatitici: rename to metasomatici
+metasomatitice: rename to metasomatice
+morbidiccie: rename to morbidicce
+multienzimatichi: rename to multienzimatici
+municipalistichi: rename to municipalistici
+nazionalsocialiste: fpl only
+notaiesche: should be fpl
+notaieschi: should be mpl
+notaresche: should be fpl
+notareschi: should be mpl
+ortologhe: should be fpl
+ortologhi: should be mpl
+ostruzioniste: should be fpl
+ostruzionisti: should be mpl
+ovulatoria: should be fsg
+ovulatori: should be mpl
+pauliste: should be fpl
+paulisti: should be mpl
+perturbatori: should be mpl
+perturbatrice: should be fsg
+polarimetrici: should be mpl
+polarimetrica: should be fsg
+pragmatici: should be mpl
+pragmatica: should be fsg
+premonitori: should be mpl
+premonitrice: should be fsg
+preovulatoria: should be fsg
+preovulatori: should be mpl
+preteschi: should be mpl
+pretesche: should be fpl
+prevaricatori: should be mpl
+prevaricatrice: should be fsg
+punitori: should be mpl
+punitrice: should be fsg
+qualsiana: delete
+qualsisiana: delete
+reggitori: should be mpl
+reggitrice: should be fsg
+risonatrice: should be fsg
+risonatori: should be mpl
+romancie: delete
+sataniste: should be fpl
+satanisti: should be mpl
+scrutatori: should be mpl
+scrutatrice: should be fsg
+semiparassiti: should be mpl
+semiparassite: should be fpl
+spreconi: should be mpl
+sprecona: should be fsg
+stabilizzabti: delete
+sufite: should be fpl
+sufiti: should be mpl
+timidoni: should be mpl
+timidona: should be fsg
+trasportatrice: should be fsg
+trasportatori: should be mpl
+umoresche: should be fpl
+umoreschi: should be mpl
+vasocostrittori: should be mpl
+vasocostrittrice: should be fsg
+vivisettoti: delete
