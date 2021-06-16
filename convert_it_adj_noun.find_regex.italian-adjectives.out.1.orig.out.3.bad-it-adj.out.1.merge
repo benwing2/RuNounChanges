@@ -2,8 +2,11 @@ Beginning at Sun Jun 13 21:25:23 2021
 Page 131 abduttore: Found match for regex: {{it-adj|
 Page 131 abduttore: -------- begin text --------
 
+===Pronunciation===
+* {{it-IPA|abduttóre}}
+
 ===Adjective===
-{{it-adj|f=abduttori|mpl=abduttrice|fpl=abduttrici}}
+{{it-adj}}
 
 # {{lb|it|anatomy}} [[abductive]]
 
@@ -35,6 +38,9 @@ Page 162 abolizionista: -------- begin text --------
 Page 238 accettore: Found match for regex: {{it-adj|
 Page 238 accettore: -------- begin text --------
 
+===Pronunciation===
+* {{it-IPA|accettóre}}
+
 ===Noun===
 {{wikipedia|lang=it}}
 {{it-noun|m}}
@@ -42,7 +48,7 @@ Page 238 accettore: -------- begin text --------
 # {{lb|it|chemistry}} [[acceptor]]
 
 ===Adjective===
-{{it-adj|f=accettori|mpl=accettrice|fpl=accettrici}}
+{{it-adj}}
 
 # {{lb|it|chemistry|relational}} [[acceptor]]
 
@@ -55,6 +61,9 @@ Page 238 accettore: -------- begin text --------
 Page 431 adattatore: Found match for regex: {{it-adj|
 Page 431 adattatore: -------- begin text --------
 
+===Pronunciation===
+* {{it-IPA|adattatóre}}
+
 ===Noun===
 {{it-noun|m}}
 
@@ -65,17 +74,21 @@ Page 431 adattatore: -------- begin text --------
 * {{l|it|adattatore USB}}
 
 ===Adjective===
-{{it-adj|f=adattatori|mpl=adattatrice|fpl=adattatrici}}
+{{it-adj}}
 
 # {{lb|it|relational}} [[adaptor]]
 
 ====Derived terms====
-* {{l|it|proteine adattatrice}} - adaptor protein
+* {{l|it|proteine adattatrice||adaptor protein}}
 -------- end text --------
 Page 507 adonio: Found match for regex: {{it-adj|
 Page 507 adonio: -------- begin text --------
+
 ===Etymology===
-{{der|it|la|-}}
+From {{bor|it|la|Adōnius}}, from {{der|it|grc|Ἀδώνιος}}.
+
+===Pronunciation===
+* {{it-IPA|adònio}}
 
 ===Adjective===
 {{it-adj|mpl=adonii}}
@@ -103,7 +116,7 @@ Page 746 agonista: -------- begin text --------
 # [[agonistic]] [[muscle]]
 
 ===Adjective===
-{{it-adj|mpl=agoniste}}
+{{it-adj}}
 
 # [[agonistic]]
 
@@ -122,8 +135,11 @@ Page 779 agrumicolo: -------- begin text --------
 ===Etymology===
 {{suffix|it|agrume|colo}}
 
+===Pronunciation===
+* {{it-IPA|agrumìcolo}}
+
 ===Adjective===
-{{it-adj|f=argrumicola|mpl=argrumicoli}}
+{{it-adj}}
 
 # {{lb|it|relational}} [[citrus]]
 # {{lb|it|relational}} [[citrus fruit]]
@@ -140,7 +156,7 @@ Page 944 allertato: -------- begin text --------
 # {{past participle of|it|allertare|nocat=1}}
 
 ===Adjective===
-{{it-adj|f=allerta|mpl=allerti}}
+{{it-adj}}
 
 # [[alerted]]
 # [[warned]]
@@ -155,6 +171,9 @@ Page 944 allertato: -------- begin text --------
 Page 958 allobrogo: Found match for regex: {{it-adj|
 Page 958 allobrogo: -------- begin text --------
 
+===Pronunciation===
+* {{it-IPA|allòbrogo}}
+
 ===Adjective===
 {{it-adj|mpl=allobrogi}}
 
@@ -166,6 +185,9 @@ Page 1093 amazzonio: -------- begin text --------
 ===Etymology===
 From {{m|it|amazzone}}
 
+===Pronunciation===
+* {{it-IPA|amaddzònio}}
+
 ===Adjective===
 {{it-adj|mpl=amazzonii}}
 
@@ -175,7 +197,7 @@ Page 1165 ammalaticcio: Found match for regex: {{it-adj|
 Page 1165 ammalaticcio: -------- begin text --------
 
 ===Adjective===
-{{it-adj|fpl=ammalaticcie}}
+{{it-adj}} {{tlb|it|rare}}
 
 # in [[poor]] [[health]]
 -------- end text --------
@@ -191,7 +213,7 @@ Either derived from {{m|it|anancasmo}}, or borrowed from {{bor|it|grc|ἀναγ�
 * {{hyph|it|a|nan|cà|sti|co}}
 
 ===Adjective===
-{{it-adj|f=anacastica|mpl=anacastici}}
+{{it-adj}}
 
 # {{lb|it|psychiatry}} [[obsessive]]
 #: {{syn|it|ossessivo}}
@@ -233,7 +255,7 @@ Page 1371 angelesco: Found match for regex: {{it-adj|
 Page 1371 angelesco: -------- begin text --------
 
 ===Adjective===
-{{it-adj|mpl=angelescho|fpl=angeleschi}}
+{{it-adj}}
 
 # {{synonym of|it|angelico}}
 -------- end text --------
@@ -241,7 +263,7 @@ Page 1441 annacquato: Found match for regex: {{it-adj|
 Page 1441 annacquato: -------- begin text --------
 
 ===Adjective===
-{{it-adj|f=mannacquata|mpl=mannacquati}}
+{{it-adj}}
 
 # [[diluted]], [[watery]], [[thin]], [[watered down]], [[wishy-washy]]
 
@@ -257,7 +279,7 @@ Page 1506 antenatale: -------- begin text --------
 {{prefix|it|ante|natale}}
 
 ===Adjective===
-{{it-adj|pl=antenateli}}
+{{it-adj}}
 
 # [[antenatal]]
 #: {{syn|it|prenatale}}
@@ -310,7 +332,7 @@ Page 1703 antieuropeo: -------- begin text --------
 From {{af|it|anti-|europeo}}.
 
 ===Adjective===
-{{it-adj|f=anti-europea|mpl=anti-europei}}
+{{it-adj}}
 
 # [[anti-European]]
 
@@ -329,7 +351,7 @@ Page 1809 antinazista: -------- begin text --------
 {{prefix|it|anti|nazista}}
 
 ===Adjective===
-{{it-adj|f=nazista|mpl=nazisti}}
+{{it-adj}}
 
 # [[anti-]][[nazi]]
 
@@ -348,7 +370,7 @@ Page 1824 antinflativo: -------- begin text --------
 {{prefix|it|anti|inflativo}}
 
 ===Adjective===
-{{it-adj|f=antinfativa|mpl=antinfativi}}
+{{it-adj}}
 
 # [[anti-inflationary]]
 -------- end text --------
@@ -359,15 +381,18 @@ Page 1825 antinflazionistico: -------- begin text --------
 {{prefix|it|anti|inflazionistico}}
 
 ===Adjective===
-{{it-adj|f=antiinflazionistica|mpl=antiinflazionistici}}
+{{it-adj}}
 
 # [[anti-inflationary]]
 -------- end text --------
 Page 1870 antipertossico: Found match for regex: {{it-adj|
 Page 1870 antipertossico: -------- begin text --------
 
+===Pronunciation===
+* {{it-IPA|antipertóssico}}
+
 ===Adjective===
-{{it-adj|mpl=antipertossichi}}
+{{it-adj}}
 
 # [[antipertussive]]
 
@@ -383,7 +408,7 @@ Page 1931 antirollio: -------- begin text --------
 {{prefix|it|anti|rollio}}
 
 ===Adjective===
-{{it-adj|f=antirollii|mpl=antirollia|fpl=antirollie}}
+{{it-adj|inv=1}}
 
 # [[anti-roll]]
 -------- end text --------
@@ -394,7 +419,7 @@ Page 1965 antisindacale: -------- begin text --------
 {{prefix|it|anti|sindacale}}
 
 ===Adjective===
-{{it-adj|pl=antisindicali}}
+{{it-adj}}
 
 # [[anti-]][[union]]
 -------- end text --------
@@ -402,7 +427,7 @@ Page 1971 antislamico: Found match for regex: {{it-adj|
 Page 1971 antislamico: -------- begin text --------
 
 ===Adjective===
-{{it-adj|mpl=antislamichi}}
+{{it-adj}}
 
 # {{alt spelling|it|antiislamico}}
 -------- end text --------
@@ -413,7 +438,7 @@ Page 2010 antitedesco: -------- begin text --------
 {{prefix|it|anti|tedesco}}
 
 ===Adjective===
-{{it-adj|mpl=antitedesci}}
+{{it-adj}}
 
 # [[anti-]][[German]]
 -------- end text --------
@@ -424,7 +449,7 @@ Page 2027 antitubercolare: -------- begin text --------
 {{prefix|it|anti|tubercolare}}
 
 ===Adjective===
-{{it-adj|pl=antiturebcolari}}
+{{it-adj}}
 
 # [[antitubercular]]
 -------- end text --------
@@ -433,6 +458,9 @@ Page 2052 antofago: -------- begin text --------
 
 ===Etymology===
 From {{affix|it|anto-|-fago}}.
+
+===Pronunciation===
+* {{it-IPA|antòfago}}
 
 ===Adjective===
 {{it-adj|mpl=antofagi}}
@@ -444,6 +472,9 @@ Page 2064 antropofago: -------- begin text --------
 
 ===Etymology===
 From {{der|it|la|anthrōpophagus}}, from {{der|it|grc|ἀνθρωποφάγος}}.
+
+===Pronunciation===
+* {{it-IPA|antropòfago}}
 
 ===Adjective===
 {{it-adj|mpl=antropofagi}}
@@ -470,7 +501,7 @@ Page 2081 anzianotto: -------- begin text --------
 {{suffix|it|anziano|otto}}
 
 ===Adjective===
-{{it-adj|f=anzionotta|mpl=anzionotti}}
+{{it-adj}}
 
 # [[old]], [[long-in-the-tooth]], [[over-the-hill]]
 
@@ -507,8 +538,11 @@ Page 2263 aratorio: -------- begin text --------
 ===Etymology===
 From {{der|it|la|aratorius}}.
 
+===Pronunciation===
+* {{it-IPA|aratòrio}}
+
 ===Adjective===
-{{it-adj}} or {{it-adj|mpl=aratorii}}
+{{it-adj|mpl=aratorii|mpl2=aratori}}
 
 # {{lb|it|relational}} [[ploughing]]
 
@@ -523,6 +557,9 @@ Page 2279 arcadio: -------- begin text --------
 
 ===Etymology===
 From {{der|it|la|Arcadius}}.
+
+===Pronunciation===
+* {{it-IPA|arcàdio}}
 
 ===Adjective===
 {{it-adj|mpl=arcadii}}
@@ -544,7 +581,7 @@ Page 2295 archiacuto: Found match for regex: {{it-adj|
 Page 2295 archiacuto: -------- begin text --------
 
 ===Adjective===
-{{it-adj|fpl=archiacuthe}}
+{{it-adj}}
 
 # [[ogival]] (having a pointed arch)
 
@@ -555,7 +592,7 @@ Page 2376 aristofanesco: Found match for regex: {{it-adj|
 Page 2376 aristofanesco: -------- begin text --------
 
 ===Adjective===
-{{it-adj|mpl=aristofanesci}}
+{{it-adj}}
 
 # [[Aristophanean]]
 
@@ -568,6 +605,9 @@ Page 2376 aristofanesco: -------- begin text --------
 Page 2377 aristofanio: Found match for regex: {{it-adj|
 Page 2377 aristofanio: -------- begin text --------
 
+===Pronunciation===
+* {{it-IPA|aristofànio}}
+
 ===Adjective===
 {{it-adj|mpl=aristofanii}}
 
@@ -577,7 +617,7 @@ Page 2447 arsiccio: Found match for regex: {{it-adj|
 Page 2447 arsiccio: -------- begin text --------
 
 ===Adjective===
-{{it-adj|fpl=arsiccie}}
+{{it-adj}}
 
 # [[scorched]], [[singed]]
 # [[parched]]
@@ -600,7 +640,7 @@ From {{inh|it|la|ascendens|ascendens, ascendentem}}.
 # {{present participle of|it|ascendere|nocat=1}}
 
 ===Adjective===
-{{it-adj|pl=ascenti}}
+{{it-adj}}
 
 # [[ascending]], [[upward]]
 
@@ -626,7 +666,7 @@ Page 2525 asindetico: -------- begin text --------
 {{af|it|asindeto|-ico}}
 
 ===Adjective===
-{{it-adj|f=asundetica|mpl=asundetici}}
+{{it-adj}}
 
 # [[asyndetic]]
 
@@ -640,7 +680,7 @@ Page 2628 assonantico: Found match for regex: {{it-adj|
 Page 2628 assonantico: -------- begin text --------
 
 ===Adjective===
-{{it-adj|mpl=assonantichi}}
+{{it-adj}}
 
 # [[assonant]], [[assonantic]]
 -------- end text --------
@@ -651,7 +691,7 @@ Page 2678 astrometrico: -------- begin text --------
 {{confix|it|astro|metrico}}
 
 ===Adjective===
-{{it-adj|f=astrometrici|mpl=astrometrica|fpl=astrometriche}}
+{{it-adj}}
 
 # [[astrometric]]
 
@@ -665,7 +705,7 @@ Page 2759 attivatore: Found match for regex: {{it-adj|
 Page 2759 attivatore: -------- begin text --------
 
 ===Adjective===
-{{it-adj|f=attivatori|mpl=attivatrice|fpl=attivatrici}}
+{{it-adj}}
 
 # [[activating]]
 
@@ -677,6 +717,9 @@ Page 2759 attivatore: -------- begin text --------
 -------- end text --------
 Page 2768 attorio: Found match for regex: {{it-adj|
 Page 2768 attorio: -------- begin text --------
+
+===Pronunciation===
+* {{it-IPA|attòrio}}
 
 ===Adjective===
 {{it-adj|mpl=attorii}}
@@ -712,7 +755,7 @@ Page 2945 automotore: -------- begin text --------
 {{prefix|it|auto|motore}}
 
 ===Adjective===
-{{it-adj|f=#}}
+{{it-adj}}
 
 # [[automotive]] (all senses)
 # [[locomotive]]
@@ -742,7 +785,7 @@ Page 3055 avveniticcio: Found match for regex: {{it-adj|
 Page 3055 avveniticcio: -------- begin text --------
 
 ===Adjective===
-{{it-adj|fpl=avveniticcie}}
+{{it-adj}}
 
 # {{alternative form of|it|avventizio}}
 -------- end text --------
@@ -750,7 +793,7 @@ Page 3057 avventiccio: Found match for regex: {{it-adj|
 Page 3057 avventiccio: -------- begin text --------
 
 ===Adjective===
-{{it-adj|fpl=avventiccie}}
+{{it-adj}}
 
 # {{alternative form of|it|avventizio}}
 -------- end text --------
@@ -758,9 +801,9 @@ Page 3084 avvocatesco: Found match for regex: {{it-adj|
 Page 3084 avvocatesco: -------- begin text --------
 
 ===Adjective===
-{{it-adj|mpl=avvocatesci}}
+{{it-adj}}
 
-# [[pettifoging]]
+# [[pettifogging]]
 
 ====Related terms====
 * {{l|it|avvocato}}
@@ -775,7 +818,7 @@ From {{m|it|azzeccare}}.
 * {{it-IPA|attseccàto}}
 
 ===Adjective===
-{{it-adj|f=azzecata|mpl=azzecati}}
+{{it-adj}}
 
 # [[accurate]], [[spot-on]], [[apt]]
 #: {{uxi|it|una frase '''azzeccata'''|an '''apt''' phrase}}
@@ -792,7 +835,7 @@ Page 3125 babbaccio: Found match for regex: {{it-adj|
 Page 3125 babbaccio: -------- begin text --------
 
 ===Adjective===
-{{it-adj|fpl=babbaccie}}
+{{it-adj}}
 
 # [[stupid]]
 #: {{syn|it|tonto}}
@@ -802,6 +845,9 @@ Page 3125 babbaccio: -------- begin text --------
 -------- end text --------
 Page 3184 balogio: Found match for regex: {{it-adj|
 Page 3184 balogio: -------- begin text --------
+
+===Pronunciation===
+* {{it-IPA|balògio}}
 
 ===Adjective===
 {{it-adj|fpl=balogie}}
@@ -855,6 +901,9 @@ Named after its production center, {{m|it|Barbaresco}} in Piedmont.
 Page 3221 barbogio: Found match for regex: {{it-adj|
 Page 3221 barbogio: -------- begin text --------
 
+===Pronunciation===
+* {{it-IPA|barbògio}}
+
 ===Adjective===
 {{it-adj|fpl=barbogie}}
 
@@ -898,7 +947,7 @@ Page 3336 belloccio: -------- begin text --------
 {{suffix|it|bello|-occio}}
 
 ===Adjective===
-{{it-adj|fpl=belloccie}}
+{{it-adj}}
 
 # [[good-looking]], [[attractive]]
 -------- end text --------
@@ -1021,7 +1070,7 @@ Page 3362 bene educato: Found match for regex: {{it-adj|
 Page 3362 bene educato: -------- begin text --------
 
 ===Adjective===
-{{it-adj|sp=first-last}}
+{{it-adj|sp=last}}
 
 # {{alternative spelling of|it|beneducato}}
 -------- end text --------
@@ -1032,7 +1081,7 @@ Page 3419 bernese: -------- begin text --------
 {{af|it|Berna|-ese}}
 
 ===Adjective===
-{{it-adj|pl=bernesii}}
+{{it-adj}}
 
 # [[Bernese]]
 
@@ -1058,7 +1107,7 @@ Page 3553 binomio: -------- begin text --------
 From {{inh|it|la|bi-|t=having two parts, occurring twice}} + {{m|la|nōmen|t=name, noun}}. <ref name="Treccani binomio1">{{R:it:Treccani|sense=1}}</ref> Surface analysis: {{affix|it|bi-|-nomio}}.
 
 ====Adjective====
-{{it-adj|mpl=[[binomî]]'' or ''[[binomi]]}}
+{{it-adj}}
 
 # {{lb|it|maths}} {{l|it|binomial}}
 #: {{syn|it|binomiale}}
@@ -1068,7 +1117,7 @@ From {{inh|it|ML.|binomium}}, {{calque|it|grc|[[ἐκ]] [[δύο]] [[ὀνομά
 
 ====Noun====
 {{enum|it|monomio|trinomio|polynomials by number of terms}}
-{{it-noun|m|[[binomî]]'' or ''[[binomi]]}}
+{{it-noun|m|binomi}}
 
 # {{lb|it|maths|algebra}} [[binomial]]
 #: {{hyper|it|polinomio}}
@@ -1090,7 +1139,7 @@ Page 3590 bioinformatico: Found match for regex: {{it-adj|
 Page 3590 bioinformatico: -------- begin text --------
 
 ===Adjective===
-{{it-adj|f=bioinformatici|mpl=bioinformatica|fpl=bioinformatiche}}
+{{it-adj}}
 
 # [[bioinformatic]]
 
@@ -1115,7 +1164,7 @@ Page 3684 bisiaco: Found match for regex: {{it-adj|
 Page 3684 bisiaco: -------- begin text --------
 
 ===Adjective===
-{{it-adj|mpl=bisiachi}}
+{{it-adj}}
 
 # of or from [[Bisiacaria]]
 
@@ -1131,7 +1180,7 @@ Page 3701 bisulco: -------- begin text --------
 * {{l|it|bisulce}}
 
 ===Etymology===
-From {{etyl|la|it}} {{m|la|bisulcus}}
+Borrowed from {{bor|it|la|bisulcus}}.
 
 ===Adjective===
 {{it-adj|mpl=bisulci}}
@@ -1213,7 +1262,7 @@ Page 3887 broncio: -------- begin text --------
 # [[sulk]], [[pout]]
 
 ===Adjective===
-{{it-adj|fpl=broncie}}
+{{it-adj}}
 
 # [[sulky]], [[sulking]]
 
@@ -1232,7 +1281,7 @@ Page 3897 brontolone: -------- begin text --------
 # [[grumbling]]
 
 ===Noun===
-{{it-noun|m}} ''Feminine:'' '''[[brontolona]]'''
+{{it-noun|m|f=brontolona}}
 
 # [[grumbler]]
 -------- end text --------
@@ -1248,7 +1297,7 @@ Perhaps a confluence of {{m|it|buco}} and {{m|it|pertugio}}.
 * {{hyph|it|bù|gio}}
 
 ===Adjective===
-{{it-adj|fpl=bugie}}
+{{it-adj|fpl=bugie|fpl2=buge}}
 
 # {{tlb|it|obsolete}} [[hollow]]
 #* {{quote-book|it|year=1321|author=Dante Alighieri|authorlink=Dante Alighieri|title=[[w:Paradiso (Dante)|La divina commedia: Paradiso]]|publisher=Le Monnier|year_published=2002|section=Canto XX|page=360|lines=25–27|passage=così, rimosso d'aspettare indugio, ¶ quel mormorar de l'aguglia salissi ¶ su per lo collo, come fosse '''bugio'''.|translation=Even thus, relieved from the delay of waiting, that murmuring of the eagle mounted up along its neck, as if it had been '''hollow'''.}}
@@ -1281,7 +1330,7 @@ Page 4018 cafonesco: -------- begin text --------
 * {{it-IPA|cafonésco}}
 
 ===Adjective===
-{{it-adj|f=caronesca|mpl=caronesci}}
+{{it-adj}}
 
 # [[boorish]], [[ill-mannered]]
 
@@ -1298,7 +1347,7 @@ Page 4035 calcico: -------- begin text --------
 {{suffix|it|calcio|gloss1=calcium|ico}}
 
 ===Adjective===
-{{it-adj|mpl=calcichi}}
+{{it-adj}}
 
 # {{lb|it|chemistry}} [[calcic]] {{gloss|of, relating to, or containing calcium or lime}}
 -------- end text --------
@@ -1306,7 +1355,7 @@ Page 4101 cameristico: Found match for regex: {{it-adj|
 Page 4101 cameristico: -------- begin text --------
 
 ===Adjective===
-{{it-adj|f=cameristici|mpl=cameristica|fpl=cameristiche}}
+{{it-adj}}
 
 # {{lb|it|music|relational}} [[chamber]], [[chamber music]]
 
@@ -1320,7 +1369,7 @@ Page 4123 campeggistico: -------- begin text --------
 From {{suffix|it|campeggiare|istico}}
 
 ===Adjective===
-{{it-adj|mpl=campeggistichi}}
+{{it-adj}}
 
 # {{lb|it|relational}} [[camping]]
 -------- end text --------
@@ -1328,7 +1377,7 @@ Page 4205 capetingio: Found match for regex: {{it-adj|
 Page 4205 capetingio: -------- begin text --------
 
 ===Adjective===
-{{it-adj|fpl=capetingie}}
+{{it-adj}}
 
 # [[Capetian]]
 
@@ -1360,7 +1409,7 @@ Page 4215 capitolare: -------- begin text --------
 ===Etymology 2===
 
 ====Adjective====
-{{it-adj|pl=capitulari}}
+{{it-adj}}
 
 # {{lb|it|relational|religion}} [[chapter]]; [[capitular]]
 # {{lb|it|relational|law}} [[capitulation]] {{gl|former agreement with certain non-Christian states, e.g. the Ottoman Empire, providing certain privileges and immunities to citizens of certain Western states}}
@@ -1399,7 +1448,7 @@ Page 4303 cardiostimolante: -------- begin text --------
 {{prefix|it|cardio|stimolante}}
 
 ===Adjective===
-{{it-adj|pl=cardiostimolanto}}
+{{it-adj}}
 
 # [[cardiokinetic]], [[cardiostimulant]]
 #: {{syn|it|cardiocinetico}}
@@ -1468,7 +1517,7 @@ Page 4346 carolingio: Found match for regex: {{it-adj|
 Page 4346 carolingio: -------- begin text --------
 
 ===Adjective===
-{{it-adj|fpl=carolingie}}
+{{it-adj|fpl=carolingie|fpl2=carolinge}}
 
 # [[Carolingian]]
 
@@ -1487,7 +1536,7 @@ Page 4383 caruccio: Found match for regex: {{it-adj|
 Page 4383 caruccio: -------- begin text --------
 
 ===Adjective===
-{{it-adj|fpl=caruccie}}
+{{it-adj}}
 
 # {{lb|it|of a thing}} [[expensive]]
 # {{lb|it|of a person}} [[attractive]]
@@ -1507,7 +1556,7 @@ Page 4404 cassazionista: Found match for regex: {{it-adj|
 Page 4404 cassazionista: -------- begin text --------
 
 ===Adjective===
-{{it-adj|fpl=cassazionistr}}
+{{it-adj}}
 
 # [[cassationist]]
 # {{lb|it|relational}} [[cassation]]
@@ -1522,15 +1571,18 @@ Page 4468 categorizzato: -------- begin text --------
 # {{past participle of|it|categorizzare|nocat=1}}
 
 ===Adjective===
-{{it-adj|f=categorizza|mpl=categorizzi}}
+{{it-adj}}
 
 # [[categorized]]
 -------- end text --------
 Page 4478 cattivello: Found match for regex: {{it-adj|
 Page 4478 cattivello: -------- begin text --------
 
+===Pronunciation===
+* {{it-IPA|cattivèllo}}
+
 ===Adjective===
-{{it-adj|f=cativella|mpl=cativelli}}
+{{it-adj}}
 
 # [[mischievous]], [[naughty]]
 
@@ -1547,7 +1599,7 @@ Page 4483 catturatore: -------- begin text --------
 {{suffix|it|catturare|tore}}
 
 ===Adjective===
-{{it-adj|f=catturatori|mpl=catturatrice|fpl=catturatrici}}
+{{it-adj}}
 
 # {{lb|it|relational}} [[catching]], [[capturing]]
 
@@ -1563,7 +1615,7 @@ Page 4487 caudillista: -------- begin text --------
 {{af|it|caudillo|-ista}}
 
 ===Adjective===
-{{it-adj|mpl=caudilliste|fpl=caudillisti}}
+{{it-adj}}
 
 # {{lb|it|relational}} [[caudillo]], [[caudillismo]]
 
@@ -1574,7 +1626,7 @@ Page 4560 cenericcio: Found match for regex: {{it-adj|
 Page 4560 cenericcio: -------- begin text --------
 
 ===Adjective===
-{{it-adj|fpl=cenericcie}}
+{{it-adj}}
 
 # [[dust]]-[[coloured]]
 
@@ -1589,7 +1641,7 @@ Page 4631 centoquarantasettesimo: -------- begin text --------
 {{ordinalbox|it|146th|147th|148th|centoquarantaseiesimo|centoquarantottesimo|card=centoquarantasette}}
 
 ===Adjective===
-{{it-adj|f=centoquarantosettesima|mpl=centoquarantosettesimi}}
+{{it-adj}}
 
 # [[one hundred]] and [[forty-seventh]]
 
@@ -1600,9 +1652,6 @@ Page 4631 centoquarantasettesimo: -------- begin text --------
 
 ===See also===
 * [[Appendix:Italian numbers]]
-
-===Anagrams===
-* {{l|it|centoquarantosettesima}}
 
 {{cln|it|ordinal numbers}}
 -------- end text --------
@@ -1611,7 +1660,7 @@ Page 4663 centosettantasettesimo: -------- begin text --------
 {{ordinalbox|it|176th|177th|178th|centosettantaseiesimo|centosettantottesimo|card=centosettantasette}}
 
 ===Adjective===
-{{it-adj|f=centosettantosettesima|mpl=centosettantosettesimi}}
+{{it-adj}}
 
 # [[one hundred]] and [[seventy-seventh]]
 
@@ -1622,9 +1671,6 @@ Page 4663 centosettantasettesimo: -------- begin text --------
 
 ===See also===
 * [[Appendix:Italian numbers]]
-
-===Anagrams===
-* {{l|it|centosettantosettesima}}
 
 {{cln|it|ordinal numbers}}
 -------- end text --------
@@ -1667,7 +1713,7 @@ Page 4861 chioccio: -------- begin text --------
 {{back-formation|it|chiocciare|gloss=to cluck}}.
 
 ===Adjective===
-{{it-adj|fpl=chioccie}}
+{{it-adj}}
 
 # [[clucking]]
 
@@ -1690,7 +1736,7 @@ Page 4959 cinericcio: Found match for regex: {{it-adj|
 Page 4959 cinericcio: -------- begin text --------
 
 ===Adjective===
-{{it-adj|fpl=cinericcie}}
+{{it-adj}}
 
 # [[dust]]-[[coloured]]
 
@@ -1712,7 +1758,7 @@ Page 5153 climaticida: -------- begin text --------
 From {{der|it|fr|climaticide}}. By [[surface analysis]], {{suf|it|clima|t1=climate|cida}}.
 
 ===Adjective===
-{{it-adj|mpl=climaticide}}
+{{it-adj}}
 
 # {{lb|it|neologism}} that contributes negatively to [[climate change]]
 -------- end text --------
@@ -1720,7 +1766,7 @@ Page 5157 clinicamente morto: Found match for regex: {{it-adj|
 Page 5157 clinicamente morto: -------- begin text --------
 
 ===Adjective===
-{{it-adj|sp=first-last}}
+{{it-adj|sp=last}}
 
 # [[clinically dead]]
 
@@ -1743,7 +1789,7 @@ Page 5248 coimputato: Found match for regex: {{it-adj|
 Page 5248 coimputato: -------- begin text --------
 
 ===Adjective===
-{{it-adj|f=coimpitata|mpl=coimpitati}}
+{{it-adj}}
 
 # {{lb|it|legal}} [[accused]] or [[charged]] along with another
 
@@ -1756,7 +1802,7 @@ Page 5279 collettivista: Found match for regex: {{it-adj|
 Page 5279 collettivista: -------- begin text --------
 
 ===Adjective===
-{{it-adj|mpl=collettiviste|fpl=collettivisti}}
+{{it-adj}}
 
 # [[collectivist]]
 
@@ -1790,9 +1836,9 @@ Page 5528 conchiliaceo: -------- begin text --------
 From {{af|it|conchylium|lang1=la|-aceo}}.
 
 ===Adjective===
-{{it-adj|f=canforacea|mpl=canforacei}}
+{{it-adj}}
 
-# [[shelly]]
+# {{lb|it|geology|relational}} [[shell]]; [[shell]]-[[like]]
 
 ====Related terms====
 * {{l|it|conchiglia}}
@@ -1803,12 +1849,12 @@ Page 5674 connessionista: Found match for regex: {{it-adj|
 Page 5674 connessionista: -------- begin text --------
 
 ===Adjective===
-{{it-adj|fpl=connessionisti}}
+{{it-adj}}
 
 # [[connectionist]]
 
 ===Noun===
-{{it-noun|mf}}
+{{it-noun|mf|mpl=connessionisti|fpl=connessioniste}}
 
 # [[connectionist]]
 -------- end text --------
@@ -1822,7 +1868,7 @@ From {{der|it|la|cōnscius}}.
 * {{it-IPA|cònscio}}
 
 ===Adjective===
-{{it-adj|fpl=conscie}}
+{{it-adj|fpl=conscie|fpl2=consce}}
 
 # [[conscious]], [[aware]]
 #: {{syn|it|consapevole|informato}}
@@ -1855,7 +1901,7 @@ Page 5912 copiatore: -------- begin text --------
 {{suffix|it|copiare|tore}}
 
 ===Adjective===
-{{it-adj|f=copiatori|mpl=copiatrice|fpl=copiatrici}}
+{{it-adj}}
 
 # {{lb|it|relational}} [[copying]]
 
@@ -1889,7 +1935,7 @@ Page 5927 copulatore: Found match for regex: {{it-adj|
 Page 5927 copulatore: -------- begin text --------
 
 ===Adjective===
-{{it-adj|f=#}}
+{{it-adj}}
 
 # [[copulating]], [[copulatory]]
 
@@ -1940,7 +1986,7 @@ Page 6109 covaticcio: Found match for regex: {{it-adj|
 Page 6109 covaticcio: -------- begin text --------
 
 ===Adjective===
-{{it-adj|fpl=covaticcie}}
+{{it-adj}}
 
 # {{lb|it|relational}} [[brood]]
 # [[broody]]
@@ -1974,7 +2020,7 @@ Page 6202 cristocentrico: -------- begin text --------
 {{suffix|it|Cristo|centrico}}
 
 ===Adjective===
-{{it-adj|f=centrica|mpl=centrici}}
+{{it-adj}}
 
 # [[Christocentric]]
 -------- end text --------
@@ -2006,7 +2052,7 @@ Page 6409 deacronimico: -------- begin text --------
 {{confix|it|de|acronimo|ico}}
 
 ===Adjective===
-{{it-adj|f=#}}
+{{it-adj}}
 {{examples|examples=
 
 * ''[[tiggì]]'' from the pronunciation of ''[[TG]]'', abbreviation of [[telegiornale]]
@@ -2014,7 +2060,7 @@ Page 6409 deacronimico: -------- begin text --------
 * ''[[teevee]]'' from the pronunciation of ''[[TV]]'', abbreviation of [[television]]
 }}
 
-# {{lb|it|linguistics|neologism}} of or relating to a word derived from the [[pronunciation]] or [[affixation]] of an [[acronym]] or [[abbreviation]]
+# {{lb|it|linguistics|neologism|relational}} of a [[word]] [[derive]]d from the [[pronunciation]] or [[affixation]] of an [[acronym]] or [[abbreviation]]
 
 ===Noun===
 {{it-noun|m|deacronimici}}
@@ -2028,7 +2074,7 @@ Page 6424 deboluccio: -------- begin text --------
 {{suffix|it|debole|uccio|gloss1=weak}}
 
 ===Adjective===
-{{it-adj|fpl=deboluccie}}
+{{it-adj}}
 
 # Somewhat [[weak]] or [[feeble]]
 
@@ -2039,7 +2085,7 @@ Page 6445 deceleratore: Found match for regex: {{it-adj|
 Page 6445 deceleratore: -------- begin text --------
 
 ===Adjective===
-{{it-adj|f=deceleratori|mpl=deceleratrice|fpl=deceleratrici}}
+{{it-adj}}
 
 # [[decelerating]]
 
@@ -2085,18 +2131,18 @@ Page 6626 denatalista: -------- begin text --------
 ===Noun===
 {{it-noun|m}} or {{it-noun|f}}
 
-# {{lb|it|neologism}} advocate for a decrease in the [[birth rate]]
+# {{lb|it|neologism}} [[advocate]] for a [[decrease]] in the [[birth rate]]
 
 ===Adjective===
-{{it-adj|mpl=denataliste}}
+{{it-adj}}
 
-# {{lb|it|neologism}} of or relating to advocates of decreasing the birth rate
+# {{lb|it|neologism|relational}} of [[advocate]]s of [[decrease|decreasing]] the [[birth rate]]
 -------- end text --------
 Page 6631 dendrogliale: Found match for regex: {{it-adj|
 Page 6631 dendrogliale: -------- begin text --------
 
 ===Adjective===
-{{it-adj|pl=dendrogilali}}
+{{it-adj}}
 
 # [[dendroglial]]
 -------- end text --------
@@ -2149,7 +2195,7 @@ Page 6697 depuratore: Found match for regex: {{it-adj|
 Page 6697 depuratore: -------- begin text --------
 
 ===Adjective===
-{{it-adj|f=depuratori|mpl=depuratrice|fpl=depuratrici}}
+{{it-adj}}
 
 # [[purifying]]
 
@@ -2171,7 +2217,7 @@ Page 6779 detestato: -------- begin text --------
 # {{past participle of|it|detestarsi|nocat=1}}
 
 ===Adjective===
-{{it-adj|f=detesta|mpl=detesti}}
+{{it-adj}}
 
 # [[detested]], [[hated]]
 
@@ -2185,7 +2231,7 @@ Page 6946 dieco: -------- begin text --------
 From {{bor|it|NL.|dioecus}}. See {{m|it|dioico}}.
 
 ===Pronunciation===
-* {{it-IPA|dïèco}}
+* {{it-IPA|di.èco}}
 * {{rhymes|it|ɛko}}
 * {{hyph|it|di|è|co}}
 
@@ -2236,7 +2282,7 @@ Page 7031 dilettoso: -------- begin text --------
 {{af|it|diletto|-oso}}
 
 ===Adjective===
-{{it-adj|f=dilettoa|mpl=dilettoi}}
+{{it-adj}}
 
 # [[pleasant]]
 # [[delectable]]
@@ -2254,7 +2300,7 @@ Page 7043 dimenticato da dio: -------- begin text --------
 * {{l|it|dimenticato da Dio}}
 
 ===Adjective===
-{{it-adj|f= dimenticata da dio|mpl=  dimenticati da dio|fpl= dimenticate da dio}}
+{{it-adj|sp=first}}
 
 # [[god-forsaken]]/[[godforsaken]]
 -------- end text --------
@@ -2262,7 +2308,7 @@ Page 7044 dimenticato da Dio: Found match for regex: {{it-adj|
 Page 7044 dimenticato da Dio: -------- begin text --------
 
 ===Adjective===
-{{it-adj|f= dimenticata da Dio|mpl=  dimenticati da Dio|fpl= dimenticate da Dio}}
+{{it-adj|sp=first}}
 
 # {{alternative spelling of|it|dimenticato da dio}}
 -------- end text --------
@@ -2309,7 +2355,7 @@ From {{af|it|dinastia|-ico}}.
 * {{it-IPA|dinàstico}}
 
 ===Adjective===
-{{it-adj|f=dinastici|mpl=dinastica|fpl=dinastiche}}
+{{it-adj}}
 
 # [[dynastic]]
 
@@ -2331,7 +2377,7 @@ Page 7203 disincrostatore: -------- begin text --------
 # [[scraper]]
 
 ===Adjective===
-{{it-adj|f=#|pl=disincrostari}}
+{{it-adj}}
 
 # [[descaling]]
 
@@ -2342,7 +2388,7 @@ Page 7271 dissacratore: Found match for regex: {{it-adj|
 Page 7271 dissacratore: -------- begin text --------
 
 ===Adjective===
-{{it-adj|f=#}}
+{{it-adj}}
 
 # [[irreverent]]
 # [[desecrating]]
@@ -2350,8 +2396,11 @@ Page 7271 dissacratore: -------- begin text --------
 Page 7324 distocico: Found match for regex: {{it-adj|
 Page 7324 distocico: -------- begin text --------
 
+===Pronunciation===
+* {{it-IPA|distócico}}
+
 ===Adjective===
-{{it-adj|f=distocia|mpl=distocii|fpl=distocihe}}
+{{it-adj}}
 
 # [[dystocial]]
 
@@ -2362,13 +2411,14 @@ Page 7370 diversamente abile: Found match for regex: {{it-adj|
 Page 7370 diversamente abile: -------- begin text --------
 
 ===Adjective===
-{{it-adj|f= diversamente abile|mpl=  diversamente abili}}
+{{it-adj|sp=last}}
 
 # [[differently able]]
 
 ===Noun===
 {{it-noun|head=[[diversamente]] [[abile]]|mf|diversamente abili}}
-# A [[differently able]] person
+
+# a [[differently able]] person
 #: {{syn|it|disabile|handicappato|invalido}}
 -------- end text --------
 Page 7432 dolco: Found match for regex: {{it-adj|
@@ -2383,7 +2433,7 @@ Derived from {{der|it|LL.|dulcō||I sweeten}}, derived from {{der|it|la|dulcis||
 * {{hyph|it|dól|co}}
 
 ===Adjective===
-{{it-adj|mpl=dolci}} {{tlb|it|Tuscany}}
+{{it-adj}} {{tlb|it|Tuscany}}
 
 # {{lb|it|of weather}} [[moderate]]
 #: {{syn|it|mite}}
@@ -2434,7 +2484,7 @@ Page 7593 eccitatore: Found match for regex: {{it-adj|
 Page 7593 eccitatore: -------- begin text --------
 
 ===Adjective===
-{{it-adj|f=eccitatori|mpl=eccitatrice|fpl=eccitatrici}}
+{{it-adj}}
 
 # [[exciting]], [[stimulating]] (causing excitation rather than excitement)
 
@@ -2453,7 +2503,7 @@ Page 7610 ecologista: -------- begin text --------
 * {{it-IPA|ecologìsta}}
 
 ===Adjective===
-{{it-adj|f=ecologisti|mpl=#|fpl=ecologiste}}
+{{it-adj}}
 
 # [[ecological]], [[environmental]]
 
@@ -2486,7 +2536,7 @@ Page 7685 effettore: -------- begin text --------
 # [[effector]]
 
 ===Adjective===
-{{it-adj|f=effettori|mpl=effettrice|fpl=effettrici}}
+{{it-adj}}
 
 # {{lb|it|relational}} [[effector]]
 -------- end text --------
@@ -2524,7 +2574,7 @@ Page 7769 elettrodico: -------- begin text --------
 From {{af|it|elettrodo|-ico}}.
 
 ===Adjective===
-{{it-adj|mpl=elettrodichi}}
+{{it-adj}}
 
 # [[electrodic]]
 -------- end text --------
@@ -2535,7 +2585,7 @@ Page 8052 entomofago: -------- begin text --------
 {{confix|it|entomo|fago}}
 
 ===Adjective===
-{{it-adj|mpl=entomofagi}} (''Alternative masculine plural'': [[entomofaghi]])
+{{it-adj|mpl=entomofagi}}
 
 # [[entomphagous]], [[insectivorous]]
 
@@ -2563,7 +2613,7 @@ Page 8081 epatoprotettore: -------- begin text --------
 {{prefix|it|epato|protettore}}
 
 ===Adjective===
-{{it-adj|f=#}}
+{{it-adj}}
 
 # [[hepatoprotective]]
 
@@ -2579,7 +2629,7 @@ Page 8122 epilitico: Found match for regex: {{it-adj|
 Page 8122 epilitico: -------- begin text --------
 
 ===Adjective===
-{{it-adj|mpl=epilitichi}}
+{{it-adj}}
 
 # {{lb|it|botany}} [[epilithic]]
 
@@ -2591,10 +2641,10 @@ Page 8124 epinicio: -------- begin text --------
 {{wikipedia|lang=es}}
 
 ===Etymology===
-From {{etyl|la|it}} {{m|la|epinīcium}}, from {{etyl|grc|it}} {{m|grc|ἐπινίκιον||victory ode}}, from {{m|grc|ἐπί||upon}} + {{m|grc|νίκη||victory}}.
+Borrowed from {{bor|it|la|epinīcium}}, from {{der|it|grc|ἐπινίκιον||victory ode}}, from {{m|grc|ἐπί||upon}} + {{m|grc|νίκη||victory}}.
 
 ===Adjective===
-{{it-adj|fpl=epinicie}}
+{{it-adj|fpl=epinicie}} {{tlb|it|literary}}
 
 # [[epinician]]
 
@@ -2695,8 +2745,11 @@ From {{inh|it|la|extrinsecus}}.
 Page 8562 eterocerco: Found match for regex: {{it-adj|
 Page 8562 eterocerco: -------- begin text --------
 
+===Pronunciation===
+* {{it-IPA|eterocèrco}}
+
 ===Adjective===
-{{it-adj|mpl=eterocerci}}
+{{it-adj}}
 
 # {{lb|it|zoology}} [[heterocercal]]
 -------- end text --------
@@ -2705,6 +2758,9 @@ Page 8578 eterologo: -------- begin text --------
 
 ===Etymology===
 {{confix|it|etero|logo}}
+
+===Pronunciation===
+* {{it-IPA|eteròlogo}}
 
 ===Adjective===
 {{it-adj|mpl=eterologhi}}
@@ -2716,7 +2772,7 @@ Page 8593 eterotachico: Found match for regex: {{it-adj|
 Page 8593 eterotachico: -------- begin text --------
 
 ===Adjective===
-{{it-adj|mpl=eterotachichi}}
+{{it-adj}}
 
 # {{lb|it|genetics}} [[heterotachous]]
 #: {{ant|it|omotachico}}
@@ -2732,16 +2788,22 @@ Page 8764 extrasettore: -------- begin text --------
 Page 8794 facile come bere un bicchier d'acqua: Found match for regex: {{it-adj|
 Page 8794 facile come bere un bicchier d'acqua: -------- begin text --------
 
-===Adjective===
-{{it-adj|head=[[facile]] [[come]] [[bere]] [[un]] [[bicchier]] [[d']][[acqua]]|sp=first}} - literally "as easy as drinking a glass of water"
+===Etymology===
+Literally, "as easy as drinking a glass of water".
 
-# {{lb|it|simile}} Very [[easy]]; [[easy as falling off a log]]
+===Adjective===
+{{it-adj|head=[[facile]] [[come]] [[bere]] [[un]] [[bicchier]] [[d']][[acqua]]|sp=first}}
+
+# {{lb|it|simile}} very [[easy]]; [[easy as falling off a log]]
 -------- end text --------
 Page 8826 fallocratico: Found match for regex: {{it-adj|
 Page 8826 fallocratico: -------- begin text --------
 
+===Pronunciation===
+* {{it-IPA|fallocràtico}}
+
 ===Adjective===
-{{it-adj|mpl=fallocratichi}}
+{{it-adj}}
 
 # [[phallocratic]]
 
@@ -2753,7 +2815,7 @@ Page 8908 fatto in casa: Found match for regex: {{it-adj|
 Page 8908 fatto in casa: -------- begin text --------
 
 ===Adjective===
-{{it-adj|f= fatta in casa|mpl=  fatti in casa|fpl= fatte in casa}}
+{{it-adj|sp=first}}
 
 # [[homemade]]
 #: {{syn|it|casereccio|casalingo}}
@@ -2762,7 +2824,7 @@ Page 8978 fenicio: Found match for regex: {{it-adj|
 Page 8978 fenicio: -------- begin text --------
 
 ===Etymology===
-From {{etyl|la|it}} {{m|la|phoenīcius||Phoenician}}.
+Borrowed from {{bor|it|la|phoenīcius||Phoenician}}.
 
 ===Pronunciation===
 * {{it-IPA|fenìcio}}
@@ -2774,7 +2836,7 @@ From {{etyl|la|it}} {{m|la|phoenīcius||Phoenician}}.
 # [[Phoenician]]
 
 ===Noun===
-{{it-noun|m}}
+{{it-noun|m|f=fenicia}}
 
 # [[Phoenician]]
 
@@ -2814,7 +2876,7 @@ From {{inh|it|la|fīcus}}.
 # {{lb|it|slang}} [[cool]] [[guy]], [[bit of alright]]
 
 ====Usage notes====
-Slang term becomes {{m|it|figo}} in Northern Italy.
+* The slang term becomes {{m|it|figo}} in Northern Italy.
 
 ====Derived terms====
 {{der3|it
@@ -2847,7 +2909,7 @@ Page 9138 filocinese: -------- begin text --------
 {{prefix|it|filo|cinese}}
 
 ===Adjective===
-{{it-adj|pl=procinesi}}
+{{it-adj}}
 
 # [[pro-Chinese]] (especially pro-communist or Maoist)
 -------- end text --------
@@ -2858,7 +2920,7 @@ Page 9157 filonazista: -------- begin text --------
 {{prefix|it|filo|nazista}}
 
 ===Adjective===
-{{it-adj|fpl=filonazisthe}}
+{{it-adj}}
 
 # [[pro-]][[Nazi]]
 -------- end text --------
@@ -2873,7 +2935,7 @@ From {{bor|it|es|flojo}}, from {{der|it|la|fluxus}}.<ref>{{R:it:Trec}}</ref>
 * {{rhymes|it|ɔʃʃo}}
 
 ===Adjective===
-{{it-adj|fpl=floscie}}
+{{it-adj}}
 
 # [[floppy]], [[soft]]
 # [[flabby]], [[flaccid]]
@@ -2895,7 +2957,7 @@ Page 9403 formatore: -------- begin text --------
 # [[educator]], [[teacher]]
 
 ===Adjective===
-{{it-adj|f=formatori|mpl=formatrice|fpl=formatrici}}
+{{it-adj}}
 
 # [[formative]]
 
@@ -2913,7 +2975,7 @@ Page 9464 fotocromatico: -------- begin text --------
 {{prefix|it|foto|cromatico}}
 
 ===Adjective===
-{{it-adj|f=forocromatica|mpl=forocromatici}}
+{{it-adj}}
 
 # {{lb|it|chemistry}} [[photochromic]]
 
@@ -2927,7 +2989,7 @@ Page 9474 fotogeneratore: -------- begin text --------
 {{prefix|it|foto|generatore}}
 
 ===Adjective===
-{{it-adj|f=fotogeneratori|mpl=fotogeneratrice|fpl=fotogeneratrici}}
+{{it-adj}}
 
 # [[photoelectric]], [[photovoltaic]]
 #: {{syn|it|fotovoltaico}}
@@ -2939,7 +3001,7 @@ Page 9489 fotonucleare: -------- begin text --------
 {{prefix|it|foto|nucleare}}
 
 ===Adjective===
-{{it-adj|pl=photonucleari}}
+{{it-adj}}
 
 # {{lb|it|physics}} [[photonuclear]]
 -------- end text --------
@@ -2949,8 +3011,11 @@ Page 9509 fradicio: -------- begin text --------
 ===Etymology===
 From metathesis of {{m|it|fracido}}<ref>{{R:it:Treccani}}</ref><ref>{{R:it:Sapere|fràdicio}}</ref>, from {{der|it|la|fracidus}}.
 
+===Pronunciation===
+* {{it-IPA|fràdicio}}
+
 ===Adjective===
-{{it-adj|fpl=fradicie}}
+{{it-adj|fpl=fradice|fpl2=fradicie}}
 
 # [[soaked]], [[soaking]], [[sopping]], [[drenched]]
 # [[legless]], [[sodden]] (very drunk)
@@ -2965,7 +3030,7 @@ Page 9586 frigio: Found match for regex: {{it-adj|
 Page 9586 frigio: -------- begin text --------
 
 ===Etymology===
-From {{der|it|la|Phrygius}}.
+Borrowed from {{bor|it|la|Phrygius}}.
 
 ===Pronunciation===
 * {{it-IPA|frìgio}}
@@ -3028,7 +3093,7 @@ Page 9757 gaginesco: Found match for regex: {{it-adj|
 Page 9757 gaginesco: -------- begin text --------
 
 ===Adjective===
-{{it-adj|f=gaginesce|mpl=gaginesche|fpl=gagineschi}}
+{{it-adj}}
 
 # [[Gaginesque]]
 -------- end text --------
@@ -3036,7 +3101,7 @@ Page 9804 gandarico: Found match for regex: {{it-adj|
 Page 9804 gandarico: -------- begin text --------
 
 ===Adjective===
-{{it-adj|mpl=gandarichi}}
+{{it-adj}}
 
 # [[Gandharan]]
 
@@ -3055,7 +3120,7 @@ Page 9821 gareggiatore: -------- begin text --------
 # {{lb|it|rare}} [[competitor]]; [[contestant]]
 
 ===Adjective===
-{{it-adj|f=#}}
+{{it-adj}}
 
 # {{lb|it|rare|relational}} [[competitor]]
 -------- end text --------
@@ -3063,7 +3128,7 @@ Page 9974 gestatorio: Found match for regex: {{it-adj|
 Page 9974 gestatorio: -------- begin text --------
 
 ===Adjective===
-{{it-adj|f=gestatorie|fpl=gestatorie}}
+{{it-adj}}
 
 # [[gestatorial]]
 
@@ -3080,18 +3145,18 @@ Page 10009 giallone: -------- begin text --------
 * {{it-IPA|giallóne}}
 * {{hyph|it|gial|ló|ne}}
 
-===Noun 1===
+===Noun===
 {{it-noun|m}}
 
-# An [[intense]] [[shade]] of [[yellow]].
+# an [[intense]] [[shade]] of [[yellow]]
 # {{synonym of|it|rigogolo|t=[[golden oriole]]}}
-# A [[silkworm]] in the last phase of its [[larval]] stage.
+# a [[silkworm]] in the last phase of its [[larval]] stage
 # {{lb|it|Veneto}} [[maize]] [[flour]]
 
-===Noun 2===
+===Noun===
 {{it-noun|m|f=giallona}}
 
-# {{lb|it|derogatory}} A [[person]] with a [[yellowish]] [[complexion]].
+# {{lb|it|derogatory}} a [[person]] with a [[yellowish]] [[complexion]]
 
 ===Adjective===
 {{it-adj|f=giallona}}
@@ -3105,21 +3170,27 @@ Page 10009 giallone: -------- begin text --------
 Page 10093 giudio: Found match for regex: {{it-adj|
 Page 10093 giudio: -------- begin text --------
 
+===Pronunciation===
+* {{it-IPA|giudìo}}
+
 ===Adjective===
-{{it-adj|mpl=giudii}}
+{{it-adj|mpl=giudii}} {{tlb|archaic|or|dialectal}}
 
 # {{synonym of|it|giudeo}}
 
 ===Noun===
-{{it-noun|m|giudii|f=giudia}}
+{{it-noun|m|giudii|f=giudia}} {{tlb|archaic|or|dialectal}}
 
 # {{synonym of|it|giudeo}}
 -------- end text --------
 Page 10207 godereccio: Found match for regex: {{it-adj|
 Page 10207 godereccio: -------- begin text --------
 
+===Pronunciation===
+* {{it-IPA|goderéccio}}
+
 ===Adjective===
-{{it-adj|fpl=godereccie}}
+{{it-adj}}
 
 # [[pleasure-seeking]], [[pleasure-loving]]
 # [[pleasant]], [[pleasurable]]
@@ -3172,6 +3243,7 @@ From {{inh|it|la|Graecus}}, from {{der|it|grc|Γραικός}}.
 
 # [[Greek]] (individual)
 
+===Noun===
 {{it-noun|m|~}}
 
 # [[Greek]] (language)
@@ -3200,7 +3272,7 @@ Possibly from a {{inh|it|VL.||*gregius}}, as in {{m|la||[[lana]] *gregia}}, from
 * {{it-IPA|gréggio}}<ref>{{R:it:DiPI}}</ref>
 
 ===Adjective===
-{{it-adj|fpl=greggie}}
+{{it-adj}}
 
 # [[raw]], [[unrefined]]
 # [[crude]] (petroleum)
@@ -3254,7 +3326,7 @@ Page 10419 hascemita: Found match for regex: {{it-adj|
 Page 10419 hascemita: -------- begin text --------
 
 ===Adjective===
-{{it-adj|mpl=hascemite|fpl=hascemiti}}
+{{it-adj}}
 
 # [[Hashemite]]
 -------- end text --------
@@ -3262,7 +3334,7 @@ Page 10478 identificatore: Found match for regex: {{it-adj|
 Page 10478 identificatore: -------- begin text --------
 
 ===Adjective===
-{{it-adj|f=identificatori|mpl=identificatrice|fpl=identificatrici}}
+{{it-adj}}
 
 # [[identifying]]
 
@@ -3279,7 +3351,7 @@ Page 10539 idrolabile: -------- begin text --------
 {{prefix|it|idro|labile}}
 
 ===Adjective===
-{{it-adj|pl=illodabili}}
+{{it-adj}}
 
 # {{lb|it|pathology}} [[inclined]] to suffer from [[dehydration]]
 
@@ -3289,7 +3361,12 @@ Page 10539 idrolabile: -------- begin text --------
 Page 10777 impari: Found match for regex: {{it-adj|
 Page 10777 impari: -------- begin text --------
 
-===Adjective===
+===Etymology 1===
+
+====Pronunciation====
+* {{it-IPA|ìmpari}}
+
+====Adjective====
 {{it-adj|inv=1}}
 
 # [[uneven]], [[unequal]]
@@ -3301,15 +3378,20 @@ Page 10777 impari: -------- begin text --------
 #: {{syn|it|inadatto}}
 # {{lb|it|anatomy}} [[azygous]]
 
-====Related terms====
+=====Related terms=====
 * {{l|it|imparidigitato}}
 * {{l|it|imparipennato}}
 * {{l|it|imparisillabo}}
 
-===Verb===
+===Etymology 2===
+
+====Pronunciation====
+* {{it-IPA|impàri}}
+
+====Verb====
 {{head|it|verb form}}
 
-# {{inflection of|it|imparare||2|s|pres}}
+# {{inflection of|it|imparare||2|s|pres|ind}}
 # {{inflection of|it|imparare||1//2//3|s|pres|subj}}
 # {{inflection of|it|imparare||3|s|impr}}
 
@@ -3326,7 +3408,7 @@ Page 10871 impollinatore: -------- begin text --------
 {{af|it|impollinare|-tore}}
 
 ===Adjective===
-{{it-adj|f=impollinatori|mpl=impollinatrice|fpl=impollinatrici}}
+{{it-adj}}
 
 # [[pollinating]]
 
@@ -3342,7 +3424,7 @@ Page 10883 impositore: Found match for regex: {{it-adj|
 Page 10883 impositore: -------- begin text --------
 
 ===Adjective===
-{{it-adj|f=impositori|mpl=impositrice|fpl=impositrici}}
+{{it-adj}}
 
 # {{lb|it|relational}} [[tax]] [[raising]]
 
@@ -3380,7 +3462,7 @@ Page 10961 in corso: Found match for regex: {{it-adj|
 Page 10961 in corso: -------- begin text --------
 
 ===Adjective===
-{{it-adj|head=[[in]] [[corso]]}}
+{{it-adj|inv=1|head=[[in]] [[corso]]}}
 
 # [[ongoing]], [[in progress]], [[underway]], [[on the go]]
 # {{rfv-sense|it}} [[current]] {{q|year, month, etc.}}
@@ -3397,11 +3479,6 @@ Page 11285 indebitare: -------- begin text --------
 ===Pronunciation===
 * {{it-IPA|indebitàre}}
 * {{rhymes|it|are}}
-
-===Adjective===
-{{it-adj|f=indebita|mpl=indebiti}}
-
-# [[undeserved]]
 
 ===Verb===
 {{it-verb}}
@@ -3440,12 +3517,15 @@ Page 11554 inflaccidito: -------- begin text --------
 # {{past participle of|it|inflaccidire}}
 
 ===Adjective===
-{{it-adj|f=inflccidita|mpl=inflcciditi}}
+{{it-adj}}
 
 # [[flabby]]
 -------- end text --------
 Page 11563 influenzato: Found match for regex: {{it-adj|
 Page 11563 influenzato: -------- begin text --------
+
+===Pronunciation===
+* {{it-IPA|influ.entsàto}}
 
 ===Verb===
 {{it-pp|influenzat}}
@@ -3453,9 +3533,9 @@ Page 11563 influenzato: -------- begin text --------
 # {{past participle of|it|influenzare|nocat=1}}
 
 ===Adjective===
-{{it-adj|f=influenza|mpl=influenzi}}
+{{it-adj}}
 
-# {{lb|it|relational}} [[influenza]], [[flu]]
+# [[stricken]] with [[influenza]], [[sick]] with the [[flu]]
 -------- end text --------
 Page 11609 ingagliardito: Found match for regex: {{it-adj|
 Page 11609 ingagliardito: -------- begin text --------
@@ -3466,7 +3546,7 @@ Page 11609 ingagliardito: -------- begin text --------
 # {{past participle of|it|ingagliardire|nocat=1}}
 
 ===Adjective===
-{{it-adj|f=ingaglardita|mpl=ingaglarditi}}
+{{it-adj}}
 
 # [[strengthened]]
 # [[invigorated]]
@@ -3542,7 +3622,7 @@ Page 12436 ippotrainato: -------- begin text --------
 From {{prefix|it|ippo|trainato}}.
 
 ===Adjective===
-{{it-adj|f=ippotranata|mpl=ippotranati}}
+{{it-adj}}
 
 # [[horse-drawn]]
 
@@ -3565,7 +3645,7 @@ Page 12569 isoceraunico: Found match for regex: {{it-adj|
 Page 12569 isoceraunico: -------- begin text --------
 
 ===Adjective===
-{{it-adj|mpl=isoceraunichi}}
+{{it-adj}}
 
 # [[isoceraunic]]
 -------- end text --------
@@ -3574,6 +3654,9 @@ Page 12692 italogreco: -------- begin text --------
 
 ===Etymology===
 {{prefix|it|italo|greco}}
+
+===Pronunciation===
+* {{it-IPA|italgrèco}}
 
 ===Adjective===
 {{it-adj|mpl=italogreci}}
@@ -3587,7 +3670,7 @@ Page 12696 italoturco: -------- begin text --------
 {{prefix|it|italo|turco}}
 
 ===Adjective===
-{{it-adj|mpl=italoturci}}
+{{it-adj}}
 
 # [[Italian]] and [[Turkish]]
 -------- end text --------
@@ -3595,7 +3678,7 @@ Page 12805 lactotropo: Found match for regex: {{it-adj|
 Page 12805 lactotropo: -------- begin text --------
 
 ===Adjective===
-{{it-adj|f=lattotropa|mpl=lattotropi}}
+{{it-adj}}
 
 # [[lactotrophic]]
 -------- end text --------
@@ -3622,7 +3705,7 @@ Page 12900 larvicida: Found match for regex: {{it-adj|
 Page 12900 larvicida: -------- begin text --------
 
 ===Adjective===
-{{it-adj|f=larvicide}}
+{{it-adj}}
 
 # [[larvicidal]]
 
@@ -3631,11 +3714,12 @@ Page 12900 larvicida: -------- begin text --------
 
 # [[larvicide]]
 -------- end text --------
+GOT HERE
 Page 12922 latifoglio: Found match for regex: {{it-adj|
 Page 12922 latifoglio: -------- begin text --------
 
 ===Adjective===
-{{it-adj|f=latifloglia|mpl=latiflogli}}
+{{it-adj}}
 
 # {{lb|it|botany}} [[broad-leaved]]
 -------- end text --------
@@ -3649,7 +3733,7 @@ Page 12997 legalista: -------- begin text --------
 * {{it-IPA|legalìsta}}
 
 ===Adjective===
-{{it-adj|mpl=legaliste|fpl=legalisti}}
+{{it-adj}}
 
 # [[legalist]]
 
@@ -3673,13 +3757,13 @@ Page 12997 legalista: -------- begin text --------
 Page 13015 legittimatorio: Found match for regex: {{it-adj|
 Page 13015 legittimatorio: -------- begin text --------
 
+===Pronunciation===
+* {{it-IPA|legittimatòrio}}
+
 ===Adjective===
-{{it-adj|mpl=legittimatorii}}
+{{it-adj|mpl=legittimatorii|mp2=legittimatori}}
 
 # [[legitimizing]]
-
-====Usage notes====
-* The masculine plural is sometimes [[legittimatori]]
 -------- end text --------
 Page 13039 lento come una lumaca: Found match for regex: {{it-adj|
 Page 13039 lento come una lumaca: -------- begin text --------
@@ -3693,19 +3777,22 @@ Page 13092 leucopoietico: Found match for regex: {{it-adj|
 Page 13092 leucopoietico: -------- begin text --------
 
 ===Adjective===
-{{it-adj|f=leucopoietici|mpl=leucopoietica|fpl=leucopoietiche}}
+{{it-adj}}
 
 # [[leukopoietic]]
 -------- end text --------
 Page 13160 ligio: Found match for regex: {{it-adj|
 Page 13160 ligio: -------- begin text --------
 
+===Etymology===
+Borrowed from {{bor|it|fro|lige}}; see {{cog|en|liege}}.
+
 ===Pronunciation===
 * {{it-IPA|lìgio}}
 * {{rhymes|it|idʒo}}
 
 ===Adjective===
-{{it-adj|fpl=ligie}} (a) (''Alternative feminine plural'': {{l|it|lige}})
+{{it-adj|fpl=ligie|fpl2=lige}}
 
 # [[faithful]], [[loyal]] or [[devoted]] (to)
 -------- end text --------
@@ -3713,15 +3800,18 @@ Page 13161 lignatico: Found match for regex: {{it-adj|
 Page 13161 lignatico: -------- begin text --------
 
 ===Adjective===
-{{it-adj|mpl=lignatichi}}
+{{it-adj}}
 
-# Handed down from the old to the young
+# handed down from the old to the young
 -------- end text --------
 Page 13244 lipolitico: Found match for regex: {{it-adj|
 Page 13244 lipolitico: -------- begin text --------
 
+===Pronunciation===
+* {{it-IPA|lipolìtico}}
+
 ===Adjective===
-{{it-adj|fpl=lipolitice}}
+{{it-adj}}
 
 # [[lipolytic]]
 
@@ -3731,16 +3821,19 @@ Page 13244 lipolitico: -------- begin text --------
 Page 13276 lissotrico: Found match for regex: {{it-adj|
 Page 13276 lissotrico: -------- begin text --------
 
-===Adjective===
-{{it-adj|fpl=lissotrice}}
+===Pronunciation===
+* {{it-IPA|lissòtrico}}
 
-# [[lissotrichous]]
+===Adjective===
+{{it-adj}}
+
+# {{lb|it|anthropology|rare}} [[lissotrichous]]
 -------- end text --------
 Page 13285 litofotografico: Found match for regex: {{it-adj|
 Page 13285 litofotografico: -------- begin text --------
 
 ===Adjective===
-{{it-adj|f=fotolitografica|mpl=fotolitografici}}
+{{it-adj}}
 
 # {{synonym of|it|fotolitografico}}
 
@@ -3751,7 +3844,7 @@ Page 13289 litolatrico: Found match for regex: {{it-adj|
 Page 13289 litolatrico: -------- begin text --------
 
 ===Adjective===
-{{it-adj|fpl=litolatrice}}
+{{it-adj}}
 
 # [[litholatric]]
 
@@ -3762,8 +3855,11 @@ Page 13289 litolatrico: -------- begin text --------
 Page 13330 locatorio: Found match for regex: {{it-adj|
 Page 13330 locatorio: -------- begin text --------
 
+===Pronunciation===
+* {{it-IPA|locatòrio}}
+
 ===Adjective===
-{{it-adj|mpl=locatorii}}
+{{it-adj|mpl=locatorii|mpl=locatori}}
 
 # {{lb|it|relational}} [[tenant]], [[lessee]]
 
@@ -3780,7 +3876,7 @@ From {{der|it|la|locūtor}}.
 * {{it-IPA|locutóre}}
 
 ===Adjective===
-{{it-adj|f=#}}
+{{it-adj}}
 
 # [[speaking]] (a specified language, dialect etc)
 
@@ -3796,8 +3892,11 @@ From {{der|it|la|locūtor}}.
 Page 13356 logopatico: Found match for regex: {{it-adj|
 Page 13356 logopatico: -------- begin text --------
 
+===Pronunciation===
+* {{it-IPA|logopàtico}}
+
 ===Adjective===
-{{it-adj|fpl=logopatice}}
+{{it-adj}}
 
 # [[logopathic]]
 
@@ -3812,7 +3911,7 @@ Page 13402 lotaringio: -------- begin text --------
 * {{rhymes|it|indʒo}}
 
 ===Adjective===
-{{it-adj|fpl=lotaringie}}
+{{it-adj|fpl=lotaringe|fpl2=lotaringie}}
 
 # [[Lotharingian]]
 -------- end text --------
@@ -3823,12 +3922,15 @@ Page 13413 lubrificatore: -------- begin text --------
 From {{suffix|it|lubrificare|tore}}
 
 ===Adjective===
-{{it-adj|f=#}}
+{{it-adj}}
 
 # [[lubricating]]
 -------- end text --------
 Page 13417 luccichio: Found match for regex: {{it-adj|
 Page 13417 luccichio: -------- begin text --------
+
+===Pronunciation===
+* {{it-IPA|luccichìo}}
 
 ===Adjective===
 {{it-adj|mpl=luccichii}}
@@ -3853,7 +3955,7 @@ Page 13505 macchiettistico: -------- begin text --------
 From {{suffix|it|macchietta|istico}}
 
 ===Adjective===
-{{it-adj|fpl=macchiettistice}}
+{{it-adj}}
 
 # [[caricatural]]
 
@@ -3864,7 +3966,7 @@ Page 13570 madreperlato: Found match for regex: {{it-adj|
 Page 13570 madreperlato: -------- begin text --------
 
 ===Adjective===
-{{it-adj|f=macreperlata|mpl=macreperlati}}
+{{it-adj}}
 
 # [[frosted]]
 
@@ -3878,8 +3980,11 @@ Page 13615 magnetofonico: -------- begin text --------
 ===Etymology===
 {{prefix|it|magneto|fonico}}
 
+===Pronunciation===
+* {{it-IPA|magnetofònico}}
+
 ===Adjective===
-{{it-adj|fpl=magnetofonice}}
+{{it-adj}}
 
 # {{lb|it|relational}} [[tape recorder]]
 # [[tape-recorded]]
@@ -3889,6 +3994,9 @@ Page 13615 magnetofonico: -------- begin text --------
 -------- end text --------
 Page 13635 magnogreco: Found match for regex: {{it-adj|
 Page 13635 magnogreco: -------- begin text --------
+
+===Pronunciation===
+* {{it-IPA|magnogrèco}}
 
 ===Adjective===
 {{it-adj|mpl=magnogreci}}
@@ -3905,7 +4013,7 @@ From {{der|it|la|maleficus}}.
 * {{it-IPA|malèfico}}
 
 ===Adjective===
-{{it-adj|mpl=malefichi}}
+{{it-adj}}
 
 # [[evil]], [[wicked]]
 # [[baleful]], [[malign]]
@@ -3928,7 +4036,7 @@ Cognates include {{cog|fr|mauvais}}, {{cog|ca|malvat}}, {{cog|es|malvado}}.
 * {{it-IPA|malvàgio}}
 
 ===Adjective===
-{{it-adj|fpl=malvagie}} (''feminine plural can also be'': [[malvage]])
+{{it-adj|fpl=malvagie|fpl2=malvage}}
 
 # [[wicked]], [[malign]]
 # [[malicious]]
@@ -3956,6 +4064,9 @@ Cognates include {{cog|fr|mauvais}}, {{cog|ca|malvat}}, {{cog|es|malvado}}.
 Page 13847 maniaco-depressivo: Found match for regex: {{it-adj|
 Page 13847 maniaco-depressivo: -------- begin text --------
 
+===Pronunciation===
+* {{it-IPA|manìaco-depressìvo}}
+
 ===Adjective===
 {{it-adj|head=[[maniaco]]-[[depressivo]]}}
 
@@ -3966,7 +4077,7 @@ Page 13918 mareomotore: -------- begin text --------
 
 ===Adjective===
 {{wikipedia|Energia mareomotrice}}
-{{it-adj|f=mareomotori|mpl=mareomotrice|fpl=mareomotrici}}
+{{it-adj}}
 
 # {{lb|it|relational}} [[tidal]] [[power]]
 -------- end text --------
@@ -3977,7 +4088,7 @@ Page 13928 marinaresco: -------- begin text --------
 {{suffix|it|marinaro|esco|gloss1=|gloss2=}}
 
 ===Adjective===
-{{it-adj|f=marinareschi|mpl=marinaresca|fpl=marinaresche}}
+{{it-adj}}
 
 # {{lb|it|relational}} [[sailor]]
 
@@ -3988,7 +4099,7 @@ Page 13938 marista: Found match for regex: {{it-adj|
 Page 13938 marista: -------- begin text --------
 
 ===Adjective===
-{{it-adj|mpl=mariste}}
+{{it-adj}}
 
 # [[Marist]]
 
@@ -4007,6 +4118,9 @@ Page 13938 marista: -------- begin text --------
 -------- end text --------
 Page 13965 marxista-leninista: Found match for regex: {{it-adj|
 Page 13965 marxista-leninista: -------- begin text --------
+
+===Pronunciation===
+* {{it-IPA|marxìsta-leninìsta}}
 
 ===Adjective===
 {{it-adj|mpl=marxisti-leninisti|fpl=marxiste-leniniste}}
@@ -4028,7 +4142,7 @@ Page 14013 masticatore: Found match for regex: {{it-adj|
 Page 14013 masticatore: -------- begin text --------
 
 ===Adjective===
-{{it-adj|f=#}}
+{{it-adj}}
 
 # {{lb|it|anatomy}} [[masticatory]]
 #: {{syn|it|masticatorio}}
@@ -4044,32 +4158,42 @@ Page 14013 masticatore: -------- begin text --------
 Page 14172 melissofago: Found match for regex: {{it-adj|
 Page 14172 melissofago: -------- begin text --------
 
+===Pronunciation===
+* {{it-IPA|melissòfago}}
+
 ===Adjective===
-{{it-adj|mpl=melissofagi|fpl=melissofage}}
+{{it-adj|mpl=melissofagi}}
 
 # [[meliphagous]]
 -------- end text --------
 Page 14205 mendico: Found match for regex: {{it-adj|
 Page 14205 mendico: -------- begin text --------
 
-===Etymology===
-From {{etyl|la|it}} {{m|la|mendīcus}}
+===Etymology 1===
+From {{etyl|la|it}} {{m|la|mendīcus}}.
 
-===Adjective===
-{{it-adj|f=mendichi|mpl=mendica|fpl=mendiche}}
+====Pronunciation====
+* {{it-IPA|mendìco}}
+
+====Adjective====
+{{it-adj|mpl=mendichi}}
 
 # [[mendicant]]
+#: {{syn|it|mendicante}}
 
-===Noun===
+====Noun====
 {{it-noun|m}}
 
-# [[mendicant]]
-#beggar
+# [[mendicant]], [[beggar]]
+#: {{syn|it|mendicante}}
 
-====Synonyms====
-* {{l|it|mendicante}}
+===Etymology 2===
+{{nonlemma}}
 
-===Verb===
+====Pronunciation====
+* {{it-IPA|méndico}}
+
+====Verb====
 {{head|it|verb form}}
 
 # {{inflection of|it|mendicare||1|s|pres|indc}}
@@ -4083,6 +4207,9 @@ From {{etyl|la|it}} {{m|la|mendīcus}}
 -------- end text --------
 Page 14232 meonio: Found match for regex: {{it-adj|
 Page 14232 meonio: -------- begin text --------
+
+===Pronunciation===
+* {{it-IPA|meònio}}
 
 ===Adjective===
 {{it-adj|mpl=meonii}}
@@ -4099,14 +4226,14 @@ Page 14257 meridionalista: -------- begin text --------
 {{af|it|meridionale|-ista}}
 
 ===Adjective===
-{{it-adj|mpl=meridionaliste|fpl=meridionalisti}}
+{{it-adj}}
 
 # {{synonym of|it|meridionalistico}}
 
 ===Noun===
 {{it-noun|mf|mpl=meridionalisti|fpl=meridionaliste}}
 
-# An expert on the ''problem of the South''
+# an expert on the ''problem of the South'' {{gl|an expert who studies the social and economic issues of southern Italy}}
 
 ====Related terms====
 * {{l|it|meridionalismo}}
@@ -4118,14 +4245,16 @@ Page 14274 merovingio: Found match for regex: {{it-adj|
 Page 14274 merovingio: -------- begin text --------
 
 ===Etymology===
-From {{bor|it|fr|mérovingien}}
+From {{bor|it|fr|mérovingien}}.
+
+===Pronunciation===
+* {{it-IPA|merovìngio}}
 
 ===Adjective===
 {{it-adj|fpl=merovingie}}
 
 # [[Merovingian]]
 #: {{syn|it|merovingico}}
-
 
 ----
 
@@ -4134,15 +4263,18 @@ Page 14291 mesogea: Found match for regex: {{it-adj|
 Page 14291 mesogea: -------- begin text --------
 
 ===Adjective===
-{{it-adj|mpl=mesogee|fpl=mesogei}}
+{{it-adj}}
 
 # [[Mesogean]]
 -------- end text --------
 Page 14361 metasomatico: Found match for regex: {{it-adj|
 Page 14361 metasomatico: -------- begin text --------
 
+===Pronunciation===
+* {{it-IPA|metasomàtico}}
+
 ===Adjective===
-{{it-adj|f=metasomatitica|mpl=metasomatitici}}
+{{it-adj}}
 
 # {{lb|it|geology}} [[metasomatic]]
 
@@ -4151,6 +4283,9 @@ Page 14361 metasomatico: -------- begin text --------
 -------- end text --------
 Page 14375 meteco: Found match for regex: {{it-adj|
 Page 14375 meteco: -------- begin text --------
+
+===Etymology===
+Borrowed from {{bor|it|LL.|metoecus}}, from {{der|it|grc|μέτοικος}}, from {{m|grc|μετα-}} + {{m|grc|οἶκος||house}}.
 
 ===Pronunciation===
 * {{it-IPA|metèco}}
@@ -4167,8 +4302,11 @@ Page 14375 meteco: -------- begin text --------
 Page 14553 minchionatorio: Found match for regex: {{it-adj|
 Page 14553 minchionatorio: -------- begin text --------
 
+===Pronunciation===
+* {{it-IPA|minchionatòrio}}
+
 ===Adjective===
-{{it-adj|mpl=minchionatorii}}
+{{it-adj|mpl=minchionatorii|mpl2=minchionatori}}
 
 # [[mocking]]
 -------- end text --------
@@ -4176,9 +4314,10 @@ Page 14560 minestraio: Found match for regex: {{it-adj|
 Page 14560 minestraio: -------- begin text --------
 
 ===Adjective===
-{{it-adj|mpl=minestraii}}
+{{it-adj}} {{tlb|it|rare}}
 
-# Fond of [[soup]]
+# fond of [[soup]]
+# [[distribute|distributing]] [[soup]]
 
 ====Related terms====
 * {{l|it|minestra}}
@@ -4187,7 +4326,7 @@ Page 14616 mirteo: Found match for regex: {{it-adj|
 Page 14616 mirteo: -------- begin text --------
 
 ===Adjective===
-{{it-adj|f=mirtee|fpl=mirtee}}
+{{it-adj}}
 
 # {{lb|it|relational}} [[myrtle]]
 
@@ -4201,16 +4340,17 @@ Page 14719 mogio: -------- begin text --------
 From {{inh|it|VL.|*morrum}}, {{m|la|*murrum||hillock, mound, snout}}, in the sense of frowning or puckered lips.
 
 ===Adjective===
-{{it-adj|fpl=mogie}} (''Alternative feminine plural'': [[moge]])
+{{it-adj|fpl=mogie|fpl2=moge}}
 
 # [[down]], [[depressed]], [[downcast]], [[disheartened]], [[crestfallen]], [[dejected]]
+
 {{C|it|Emotions}}
 -------- end text --------
 Page 14746 moltipara: Found match for regex: {{it-adj|
 Page 14746 moltipara: -------- begin text --------
 
 ===Adjective===
-{{it-adj|mpl=moltipare}}
+{{it-adj|fonly=1}}
 
 # {{alternative form of|it|multipara}}
 -------- end text --------
@@ -4219,6 +4359,9 @@ Page 14861 monofago: -------- begin text --------
 
 ===Etymology===
 {{confix|it|mono|fago}}
+
+===Pronunciation===
+* {{it-IPA|monòfago}}
 
 ===Adjective===
 {{it-adj|mpl=monofagi}}
@@ -4240,13 +4383,13 @@ From {{prefix|it|mono|binomio}}.<ref name="Treccani monomio">{{R:it:Treccani}}</
 * {{hyphenation|it|mo|nò|mio}}
 
 ===Adjective===
-{{it-adj|mpl=[[monomi]]'' or ''[[monomî]]}}<ref name="Treccani monomio"/>
+{{it-adj}}
 
 # {{lb|it|mathematics}} [[monomial]]
 
 ===Noun===
 {{enum|it||binomio|polynomials by number of terms}}
-{{it-noun|m|[[monomi]]'' or ''[[monomî]]}}<ref name="Treccani monomio"/>
+{{it-noun|m}}
 
 # {{lb|it|mathematics|algebra}} [[monomial]] ([[expression]])
 #: {{ant|it|polinomio}}
@@ -4258,7 +4401,6 @@ From {{prefix|it|mono|binomio}}.<ref name="Treccani monomio">{{R:it:Treccani}}</
 * {{l|it|quadrinomio}}
 
 ===References===
-
 <references/>
 
 ===Anagrams===
@@ -4271,7 +4413,7 @@ Page 15014 morbidiccio: Found match for regex: {{it-adj|
 Page 15014 morbidiccio: -------- begin text --------
 
 ===Adjective===
-{{it-adj|fpl=morbidiccie}}
+{{it-adj}}
 
 # [[softish]]
 
@@ -4284,8 +4426,11 @@ Page 15151 multienzimatico: -------- begin text --------
 ===Etymology===
 {{prefix|it|multi|enzimatico}}
 
+===Pronunciation===
+* {{it-IPA|multi.endzimàtico}}
+
 ===Adjective===
-{{it-adj|mpl=multienzimatichi}}
+{{it-adj}}
 
 # [[multienzymatic]]
 -------- end text --------
@@ -4293,7 +4438,7 @@ Page 15236 municipalistico: Found match for regex: {{it-adj|
 Page 15236 municipalistico: -------- begin text --------
 
 ===Adjective===
-{{it-adj|mpl=municipalistichi}}
+{{it-adj}}
 
 # {{alternative form of|it|municipalesco}}
 -------- end text --------
@@ -4301,14 +4446,14 @@ Page 15401 nazionalsocialista: Found match for regex: {{it-adj|
 Page 15401 nazionalsocialista: -------- begin text --------
 
 ===Adjective===
-{{it-adj|mpl=nazionalsocialiste}}
+{{it-adj}}
 
 # [[National Socialist]], [[Nazi]]
 
 ===Noun===
 {{it-noun|mf|mpl=nazionalsocialisti|fpl=nazionalsocialiste}}
 
-# a member or supporter of the National Socialist Party; a [[Nazi]]
+# a [[member]] or [[supporter]] of the [[National Socialist]] Party; a [[Nazi]]
 
 ===Further reading===
 * {{R:it:Treccani}}
@@ -4316,8 +4461,11 @@ Page 15401 nazionalsocialista: -------- begin text --------
 Page 15480 nencio: Found match for regex: {{it-adj|
 Page 15480 nencio: -------- begin text --------
 
+===Pronunciation===
+* {{it-IPA|néncio}}
+
 ===Adjective===
-{{it-adj|fpl=nencie}}
+{{it-adj}} {{tlb|it|obsolete}}
 
 # [[stupid]]
 -------- end text --------
@@ -4328,7 +4476,7 @@ Page 15511 neogreco: -------- begin text --------
 {{prefix|it|neo|greco}}
 
 ===Pronunciation===
-* {{IPA|it|/ˌnɛo̯ˌɡrɛ.ko/|[ˌn̺ɛo̯ˌɡr̺ɛːko]}}
+* {{it-IPA|nèogrèco|neogrèco}}
 * {{rhymes|it|ɛko}}
 * {{hyph|it|neo|grè|co}}
 
@@ -4364,9 +4512,9 @@ From {{bor|it|la|nescius}}.
 * {{hyph|it|nè|scio}}
 
 ===Adjective===
-{{it-adj|fpl=nescie}}
+{{it-adj|fpl=nescie|fpl2=nesce}}
 
-# {{tlb|it|literary}} [[nescient]], [[ignorant]], [[unaware]]
+# {{tlb|it|archaic}} [[nescient]], [[ignorant]], [[unaware]]
 
 ===References===
 * {{R:it:Trec}}
@@ -4398,7 +4546,7 @@ Page 15716 nimbato: Found match for regex: {{it-adj|
 Page 15716 nimbato: -------- begin text --------
 
 ===Adjective===
-{{it-adj|f=nimbatoa|mpl=nimbatoi}}
+{{it-adj}} {{tlb|it|literary}}
 
 # [[nimbed]], [[haloed]]
 -------- end text --------
@@ -4406,7 +4554,7 @@ Page 15797 non negativo: Found match for regex: {{it-adj|
 Page 15797 non negativo: -------- begin text --------
 
 ===Adjective===
-{{it-adj|f=negativa|mpl=negativi}}
+{{it-adj|sp=last}}
 
 # {{lb|it|mathematics}} [[non-negative]]
 -------- end text --------
@@ -4414,7 +4562,7 @@ Page 15822 nordista: Found match for regex: {{it-adj|
 Page 15822 nordista: -------- begin text --------
 
 ===Adjective===
-{{it-adj|mpl=nordiste}}
+{{it-adj}}
 
 # {{lb|it|US Civil War}} [[Yankee]], [[northern]]
 
@@ -4440,10 +4588,13 @@ Page 15841 nosologico: Found match for regex: {{it-adj|
 Page 15841 nosologico: -------- begin text --------
 
 ===Etymology===
-From {{af|it|nosologia|-ico}}
+From {{af|it|nosologia|-ico}}.
+
+===Pronunciation===
+* {{it-IPA|nosològico}}
 
 ===Adjective===
-{{it-adj|f=nosologoca|mpl=nosologoci|fpl=nosologocho}}
+{{it-adj}}
 
 # [[nosological]]
 
@@ -4460,7 +4611,7 @@ Page 15850 notaiesco: -------- begin text --------
 {{suffix|it|notaio|esco}}
 
 ===Adjective===
-{{it-adj|mpl=notaiesche|fpl=notaieschi}}
+{{it-adj}}
 
 # [[lawyerly]]
 -------- end text --------
@@ -4468,7 +4619,7 @@ Page 15851 notaresco: Found match for regex: {{it-adj|
 Page 15851 notaresco: -------- begin text --------
 
 ===Adjective===
-{{it-adj|mpl=notaresche|fpl=notareschi}}
+{{it-adj}}
 
 # {{alternative form of|it|notaiesco}}
 -------- end text --------
@@ -4476,7 +4627,10 @@ Page 16053 ocra: Found match for regex: {{it-adj|
 Page 16053 ocra: -------- begin text --------
 
 ===Etymology===
-From {{etyl|la|it}} {{m|la|ōchra}}, from {{etyl|grc|it}} {{m|grc|ὤχρα||pale yellow}}.
+Borrowed from {{bor|it|la|ōchra}}, from {{der|it|grc|ὤχρα||pale yellow}}.
+
+===Pronunciation===
+* {{it-IPA|òcra}}
 
 ===Adjective===
 {{it-adj|inv=1}}
@@ -4506,6 +4660,9 @@ Page 16061 oculomotore: -------- begin text --------
 ===Etymology===
 {{prefix|it|oculo|motore}}
 
+===Pronunciation===
+* {{it-IPA|oculomotóre}}
+
 ===Adjective===
 {{it-adj|f=#}}
 
@@ -4532,7 +4689,7 @@ Page 16271 omografico: -------- begin text --------
 {{af|it|omografia|-ico}}
 
 ===Adjective===
-{{it-adj|fpl=omografice}}
+{{it-adj}}
 
 # {{lb|it|linguistics|mathematics}} [[homographic]]
 
@@ -4545,22 +4702,28 @@ Page 16271 omografico: -------- begin text --------
 Page 16280 omologo: Found match for regex: {{it-adj|
 Page 16280 omologo: -------- begin text --------
 
-===Etymology===
+===Pronunciation===
+* {{it-IPA|omòlogo}}
+
+===Etymology 1===
 {{confix|it|omo|logo}}
 
-===Adjective===
+====Adjective====
 {{it-adj|mpl=omologhi}}
 
 # [[homologous]] (all senses)
 # [[corresponding]]
 
-===Noun===
+====Noun====
 {{it-noun|m|omologhi}}
 
 # [[homologue]]
 # [[counterpart]]
 
-===Verb===
+===Etymology 2===
+{{nonlemma}}
+
+====Verb====
 {{head|it|verb form}}
 
 # {{inflection of|it|omologare||1|s|pres|indc}}
@@ -4569,7 +4732,7 @@ Page 16295 omotachico: Found match for regex: {{it-adj|
 Page 16295 omotachico: -------- begin text --------
 
 ===Adjective===
-{{it-adj|mpl=omotachichi}}
+{{it-adj}}
 
 # {{lb|it|genetics}} [[homotachous]]
 #: {{ant|it|eterotachico}}
@@ -4602,8 +4765,11 @@ Page 16365 opaco: -------- begin text --------
 Page 16560 ortologo: Found match for regex: {{it-adj|
 Page 16560 ortologo: -------- begin text --------
 
+===Pronunciation===
+* {{it-IPA|ortòlogo}}
+
 ===Adjective===
-{{it-adj|mpl=ortologhe|fpl=ortologhi}}
+{{it-adj|mpl=ortologhi}}
 
 # [[orthologous]]
 -------- end text --------
@@ -4613,16 +4779,22 @@ Page 16568 ortoterapico: -------- begin text --------
 ===Etymology===
 {{suf|it|ortoterapia|ico}}
 
+===Pronunciation===
+* {{it-IPA|ortoteràpico}}
+
 ===Adjective===
-{{it-adj|f=#}} <!--pluralization is probably wrong here -->
+{{it-adj}}
 
 # {{lb|it|neologism}} relating to [[horticulture therapy]]
 -------- end text --------
 Page 16686 ostruzionista: Found match for regex: {{it-adj|
 Page 16686 ostruzionista: -------- begin text --------
 
+===Pronunciation===
+* {{it-IPA|ostrutsionìsta}}
+
 ===Adjective===
-{{it-adj|mpl=ostruzioniste|fpl=ostruzionisti}}
+{{it-adj}}
 
 # {{lb|it|relational}} [[obstructionist]]
 
@@ -4664,8 +4836,11 @@ Page 16749 ottocentesimo: -------- begin text --------
 Page 16782 ovulatorio: Found match for regex: {{it-adj|
 Page 16782 ovulatorio: -------- begin text --------
 
+===Pronunciation===
+* {{it-IPA|ovulatòrio}}
+
 ===Adjective===
-{{it-adj|f=ovulatori|mpl=ovulatoria|fpl=ovulatorie}}
+{{it-adj}}
 
 # [[ovulatory]]
 #: {{ant|it|anovulatorio}}
@@ -4678,10 +4853,13 @@ Page 16793 ozonometrico: Found match for regex: {{it-adj|
 Page 16793 ozonometrico: -------- begin text --------
 
 ===Etymology===
-From {{suffix|it|ozono|metrico}}
+From {{suffix|it|ozono|metrico}}.
+
+===Pronunciation===
+* {{it-IPA|odzonomètrico}}
 
 ===Adjective===
-{{it-adj|fpl=ozonometrice}}
+{{it-adj}}
 
 # [[ozonometric]]
 
@@ -4712,10 +4890,13 @@ Page 16873 paletnologico: Found match for regex: {{it-adj|
 Page 16873 paletnologico: -------- begin text --------
 
 ===Etymology===
-From {{prefix|it|paleo|etnologico}}
+From {{prefix|it|paleo|etnologico}}.
+
+===Pronunciation===
+* {{it-IPA|paletnològico}}
 
 ===Adjective===
-{{it-adj|mpl=#|fpl=paletnologice}}
+{{it-adj}}
 
 # [[paleoethnological]], [[palaeoethnological]]
 
@@ -4727,23 +4908,25 @@ Page 16887 pallidiccio: Found match for regex: {{it-adj|
 Page 16887 pallidiccio: -------- begin text --------
 
 ===Etymology===
-From {{suffix|it|pallido|iccio}}
+From {{suffix|it|pallido|iccio}}.
 
 ===Adjective===
-{{it-adj|fpl=pallidiccie}}
+{{it-adj}}
 
-# [[palish]] (rather pale)
+# [[palish]] {{gl|rather pale}}
+#: {{syn|it|palludiccio}}
 -------- end text --------
 Page 16890 palliduccio: Found match for regex: {{it-adj|
 Page 16890 palliduccio: -------- begin text --------
 
 ===Etymology===
-From {{suffix|it|pallido|uccio}}
+From {{suffix|it|pallido|uccio}}.
 
 ===Adjective===
-{{it-adj|fpl=palliduccie}}
+{{it-adj}}
 
-# [[palish]] (rather pale)
+# [[palish]] {{gl|rather pale}}
+#: {{syn|it|pallidiccio}}
 -------- end text --------
 Page 16980 pantocratore: Found match for regex: {{it-adj|
 Page 16980 pantocratore: -------- begin text --------
@@ -4769,12 +4952,12 @@ Page 17047 paraguagio: Found match for regex: {{it-adj|
 Page 17047 paraguagio: -------- begin text --------
 
 ===Adjective===
-{{it-adj|fpl=paraguagie}}
+{{it-adj|fpl=paraguagie}} {{tlb|it|rare}}
 
 # [[Paraguayan]]
 
 ===Noun===
-{{it-noun|m|f=paraguagia}}
+{{it-noun|m|f=paraguagia}} {{tlb|it|rare}}
 
 # [[Paraguayan]]
 -------- end text --------
@@ -4785,7 +4968,7 @@ Page 17090 parasimpaticolitico: -------- begin text --------
 {{prefix|it|para|simpaticolitico}}
 
 ===Adjective===
-{{it-adj|mpl=parasimpaticolitichi}}
+{{it-adj}}
 
 # [[parasympatholytic]]
 
@@ -4808,7 +4991,8 @@ Page 17168 parrasio: -------- begin text --------
 ===Adjective===
 {{it-adj|mpl=parrasii}}
 
-# [[Parrasian]], [[Arcadian]]
+# [[Parrasian]] {{gl|from {{w|Parrasia}} in southern Arcadia, in ancient Greece}}
+# [[Arcadian]]
 
 ====Related terms====
 * {{l|it|Parrasia}}
@@ -4817,7 +5001,7 @@ Page 17200 parzialmente scremato: Found match for regex: {{it-adj|
 Page 17200 parzialmente scremato: -------- begin text --------
 
 ===Adjective===
-{{it-adj|f= parzialmente scremata|mpl=  parzialmente scremati}}
+{{it-adj|sp=last}}
 
 # [[semi-skimmed]]
 
@@ -4828,7 +5012,7 @@ Page 17281 paulista: Found match for regex: {{it-adj|
 Page 17281 paulista: -------- begin text --------
 
 ===Adjective===
-{{it-adj|mpl=pauliste|fpl=paulisti}}
+{{it-adj}}
 
 # [[Pauline]]
 # of or pertaining to [[São Paulo]] or its inhabitants
@@ -4849,8 +5033,11 @@ Page 17304 pecilosmotico: -------- begin text --------
 ===Etymology===
 {{pre|it|pecilo|osmotico|t2=osmotic}}
 
+===Pronunciation===
+* {{it-IPA|pecilosmòtico}}
+
 ===Adjective===
-{{it-adj|f=ma|mpl=mi}}
+{{it-adj}}
 
 # {{lb|it|zoology}} {{q|of an [[animal]]}} having an internal [[saline]] [[concentration]] equal to that of the outside [[environment]]
 -------- end text --------
@@ -4860,10 +5047,13 @@ Page 17306 pecoreccio: -------- begin text --------
 ===Etymology===
 {{suffix|it|pecora|eccio}}
 
-===Adjective===
-{{it-adj|fpl=pecoreccie}}
+===Pronunciation===
+* {{it-IPA|pecoréccio}}
 
-# {{lb|it|relational}} [[sheep]]
+===Adjective===
+{{it-adj}}
+
+# {{lb|it|relational|rare}} [[sheep]]
 # {{lb|it|figuratively}} [[coarse]], [[vulgar]]
 #: {{syn|it|volgare|grossolano}}
 
@@ -4877,16 +5067,19 @@ Page 17306 pecoreccio: -------- begin text --------
 Page 17329 pedidio: Found match for regex: {{it-adj|
 Page 17329 pedidio: -------- begin text --------
 
+===Pronunciation===
+* {{it-IPA|pedìdio}}
+
 ===Adjective===
 {{it-adj|mpl=pedidii}}
 
-# Relating to the [[foot|feet]]
+# {{lb|it|anatomy|relational}} [[foot]]
 -------- end text --------
 Page 17427 pentarchico: Found match for regex: {{it-adj|
 Page 17427 pentarchico: -------- begin text --------
 
 ===Adjective===
-{{it-adj|mpl=pentarchichi}}
+{{it-adj}}
 
 # [[pentarchic]]
 -------- end text --------
@@ -4894,7 +5087,7 @@ Page 17627 perturbatore: Found match for regex: {{it-adj|
 Page 17627 perturbatore: -------- begin text --------
 
 ===Adjective===
-{{it-adj|f=perturbatori|mpl=perturbatrice|fpl=perturbatrici}}
+{{it-adj}}
 
 # [[disruptive]]
 
@@ -4905,7 +5098,7 @@ Page 17652 peschierotto: Found match for regex: {{it-adj|
 Page 17652 peschierotto: -------- begin text --------
 
 ===Adjective===
-{{it-adj|f=peschierana|mpl=peschierani}}
+{{it-adj}}
 
 # Of or from [[Peschiera]] (especially [[Peschiera del Garda]])
 
@@ -4915,9 +5108,10 @@ Page 17690 petulco: Found match for regex: {{it-adj|
 Page 17690 petulco: -------- begin text --------
 
 ===Adjective===
-{{it-adj|mpl=petulci}}
+{{it-adj|mpl=petulchi|mpl2=petulci}} {{tlb|it|literary}}
 
-# [[goatlike]]
+# [[butt]]ing with the [[horn]]s
+# {{lb|it|by extension}} [[aggressive]] {{i|said of goats and kids}}
 -------- end text --------
 Page 17752 pieno come un uovo: Found match for regex: {{it-adj|
 Page 17752 pieno come un uovo: -------- begin text --------
@@ -4934,7 +5128,7 @@ Page 17782 pillato: Found match for regex: {{it-adj|
 Page 17782 pillato: -------- begin text --------
 
 ===Adjective===
-{{it-adj|f=pilata|mpl=pilati}}
+{{it-adj}}
 
 # [[tamped]]
 # [[granulated]] (of sugar)
@@ -4944,6 +5138,9 @@ Page 17798 pio: -------- begin text --------
 
 ===Etymology===
 From {{inh|it|la|pius}}.
+
+===Pronunciation===
+* {{it-IPA|pìo}}
 
 ===Adjective===
 {{it-adj|mpl=pii}}
@@ -4966,7 +5163,7 @@ Page 17825 pirchio: Found match for regex: {{it-adj|
 Page 17825 pirchio: -------- begin text --------
 
 ===Adjective===
-{{it-adj|f=pirchiia|mpl=pirchii}}
+{{it-adj}}
 
 # [[mean]], [[stingy]]
 #: {{syn|it|avaro|tirchio}}
@@ -4975,12 +5172,15 @@ Page 17896 placcato oro: Found match for regex: {{it-adj|
 Page 17896 placcato oro: -------- begin text --------
 
 ===Adjective===
-{{it-adj|f= placcata oro|mpl=  placcati oro|fpl= placcate oro}}
+{{it-adj|sp=first}}
 
 # [[gold-plated]]
 -------- end text --------
 Page 17908 planctofago: Found match for regex: {{it-adj|
 Page 17908 planctofago: -------- begin text --------
+
+===Pronunciation===
+* {{it-IPA|planctòfago}}
 
 ===Adjective===
 {{it-adj|mpl=planctofagi}}
@@ -4993,8 +5193,11 @@ Page 17984 pluridirezionale: -------- begin text --------
 ===Etymology===
 {{prefix|it|pluri|direzionale}}
 
+===Pronunciation===
+* {{it-IPA|pluridiretsionàle}}
+
 ===Adjective===
-{{it-adj|pl=pluridimenzionali}}
+{{it-adj}}
 
 # [[multidirectional]]
 -------- end text --------
@@ -5005,12 +5208,9 @@ Page 18001 pluriminorato: -------- begin text --------
 {{prefix|it|pluri|minorato}}
 
 ===Adjective===
-{{it-adj|f=plurominorata|mpl=plurominorati}}
+{{it-adj}}
 
 # [[multi-]][[handicapped]]
-
-===Anagrams===
-* {{l|it|plurominorati}}
 -------- end text --------
 Page 18015 plurireattore: Found match for regex: {{it-adj|
 Page 18015 plurireattore: -------- begin text --------
@@ -5028,7 +5228,7 @@ Page 18024 plurivoco: -------- begin text --------
 
 ===Etymology===
 {{root|it|ine-pro|*pleh₁-|*wekʷ-}}
-From {{der|it|LL.|plūrivocus}}.
+Borrowed from {{bor|it|LL.|plūrivocus}}.
 
 ===Pronunciation===
 * {{it-IPA|plurìvoco}}
@@ -5037,12 +5237,11 @@ From {{der|it|LL.|plūrivocus}}.
 ===Adjective===
 {{it-adj|mpl=plurivoci}}
 
-# {{lb|it|mathematics}} Having more than one solution.
-# {{lb|it|linguistics}} Having multiple [[meaning]]s or [[interpretation]]s; [[polysemous]]
+# {{lb|it|mathematics}} having more than one solution
+#: {{ant|it|univoco}}
+# {{lb|it|linguistics}} having multiple [[meaning]]s or [[interpretation]]s; [[polysemous]]
 #: {{syn|it|polisemico}}
-
-====Antonyms====
-* {{s|1, 2}} {{l|it|univoco}}
+#: {{ant|it|univoco}}
 
 ----
 
@@ -5059,7 +5258,7 @@ Page 18060 polarimetrico: Found match for regex: {{it-adj|
 Page 18060 polarimetrico: -------- begin text --------
 
 ===Adjective===
-{{it-adj|f=polarimetrici|mpl=polarimetrica|fpl=polarimetriche}}
+{{it-adj}}
 
 # [[polarimetric]]
 -------- end text --------
@@ -5068,6 +5267,9 @@ Page 18107 polifago: -------- begin text --------
 
 ===Etymology===
 {{confix|it|poli|fago}}
+
+===Pronunciation===
+* {{it-IPA|polìfago}}
 
 ===Noun===
 {{it-noun|m|polifagi}}
@@ -5086,7 +5288,7 @@ Page 18182 politicamente corretto: Found match for regex: {{it-adj|
 Page 18182 politicamente corretto: -------- begin text --------
 
 ===Adjective===
-{{it-adj|sp=first-last}}
+{{it-adj|sp=last}}
 
 # [[politically correct]]
 #: {{ant|it|politicamente scorretto}}
@@ -5100,7 +5302,7 @@ Page 18183 politicamente scorretto: Found match for regex: {{it-adj|
 Page 18183 politicamente scorretto: -------- begin text --------
 
 ===Adjective===
-{{it-adj|sp=first-last}}
+{{it-adj|sp=last}}
 
 # [[politically incorrect]]
 #: {{ant|it|politicamente corretto}}
@@ -5155,6 +5357,9 @@ Page 18260 pontificio: -------- begin text --------
 ===Etymology===
 From {{der|it|la|pontificius}}.
 
+===Pronunciation===
+* {{it-IPA|pontifìcio}}
+
 ===Adjective===
 {{it-adj|fpl=pontificie}}
 
@@ -5196,7 +5401,7 @@ From {{inh|it|la|porcus}}, from {{inh|it|itc-pro|*porkos}}, from {{inh|it|ine-pr
 ===Adjective===
 {{it-adj|mpl=porci}}
 
-# [[terrible]], [[dirty]], [[bad]] (used as a curse or swearword)
+# [[terrible]], [[dirty]], [[bad]] {{i|used as a curse or swearword}}
 
 ===Anagrams===
 * {{l|it|copro}}, {{l|it|corpo}}
@@ -5210,23 +5415,26 @@ Page 18310 portaticcio: Found match for regex: {{it-adj|
 Page 18310 portaticcio: -------- begin text --------
 
 ===Adjective===
-{{it-adj|fpl=portaticcie}}
+{{it-adj}}
 
 # [[transported]] (from one place to another)
 -------- end text --------
 Page 18425 potamotoco: Found match for regex: {{it-adj|
 Page 18425 potamotoco: -------- begin text --------
 
+===Pronunciation===
+* {{it-IPA|potamòtoco}}
+
 ===Adjective===
 {{it-adj|mpl=potamotoci}}
 
-# [[potamodromous]]
+# [[anadromous]]
 -------- end text --------
 Page 18444 pragmatico: Found match for regex: {{it-adj|
 Page 18444 pragmatico: -------- begin text --------
 
 ===Adjective===
-{{it-adj|f=pragmatici|mpl=pragmatica|fpl=pragmatiche}}
+{{it-adj}}
 
 # [[pragmatic]]
 
@@ -5237,8 +5445,11 @@ Page 18444 pragmatico: -------- begin text --------
 Page 18460 pratio: Found match for regex: {{it-adj|
 Page 18460 pratio: -------- begin text --------
 
+===Pronunciation===
+* {{it-IPA|pratìo}}
+
 ===Adjective===
-{{it-adj|mpl=pratii}}
+{{it-adj|mpl=pratii}} {{tlb|it|uncommon}}
 
 # {{alternative form of|it|prativo}}
 -------- end text --------
@@ -5247,6 +5458,9 @@ Page 18534 preconscio: -------- begin text --------
 
 ===Etymology===
 From {{prefix|it|pre|conscio}}
+
+===Pronunciation===
+* {{it-IPA|precònscio}}
 
 ===Adjective===
 {{it-adj|fpl=preconscie}}
@@ -5285,7 +5499,7 @@ From post-Classical {{der|it|la|praemonitōrem}}, accusative case form of {{m|la
 # a [[forewarner]], [[premonitor]]
 
 ===Adjective===
-{{it-adj|f=premonitori|mpl=premonitrice|fpl=premonitrici}}
+{{it-adj}}
 
 # [[premonitory]]
 
@@ -5295,8 +5509,11 @@ From post-Classical {{der|it|la|praemonitōrem}}, accusative case form of {{m|la
 Page 18671 preovulatorio: Found match for regex: {{it-adj|
 Page 18671 preovulatorio: -------- begin text --------
 
+===Pronunciation===
+* {{it-IPA|preovulatòrio}}
+
 ===Adjective===
-{{it-adj|f=preovulatori|mpl=preovulatoria|fpl=preovulatorie}}
+{{it-adj}}
 
 # [[preovulatory]]
 
@@ -5307,7 +5524,7 @@ Page 18710 presbiteriale: Found match for regex: {{it-adj|
 Page 18710 presbiteriale: -------- begin text --------
 
 ===Adjective===
-{{it-adj|pl=presbiteraili}}
+{{it-adj}}
 
 # {{lb|it|relational}} [[presbytery]]; [[presbyterial]]
 -------- end text --------
@@ -5318,7 +5535,7 @@ Page 18771 pretesco: -------- begin text --------
 From {{suffix|it|prete|esco}}
 
 ===Adjective===
-{{it-adj|mpl=pretesche|fpl=preteschi}}
+{{it-adj}}
 
 # [[priest]][[-like]]
 # [[sanctimonious]]
@@ -5327,7 +5544,7 @@ Page 18783 prevaricatore: Found match for regex: {{it-adj|
 Page 18783 prevaricatore: -------- begin text --------
 
 ===Adjective===
-{{it-adj|f=prevaricatori|mpl=prevaricatrice|fpl=prevaricatrici}}
+{{it-adj}}
 
 # {{lb|it|relational}} [[abuse]] of [[power]]
 
@@ -5346,7 +5563,7 @@ Page 18847 privo di sensi: Found match for regex: {{it-adj|
 Page 18847 privo di sensi: -------- begin text --------
 
 ===Adjective===
-{{it-adj|f= priva di sensi|mpl=  privi di sensi|fpl= prive di sensi}}
+{{it-adj|sp=first}}
 
 # [[unconscious]], [[senseless]]
 #: {{syn|it|svenuto}}
@@ -5358,7 +5575,7 @@ Page 18848 privo di senso: Found match for regex: {{it-adj|
 Page 18848 privo di senso: -------- begin text --------
 
 ===Adjective===
-{{it-adj|f= priva di senso|mpl=  privi di senso|fpl= prive di senso}}
+{{it-adj|sp=first}}
 
 # [[meaningless]]
 #: {{syn|it|senza senso|privo di significato}}
@@ -5367,7 +5584,7 @@ Page 18849 privo di vista: Found match for regex: {{it-adj|
 Page 18849 privo di vista: -------- begin text --------
 
 ===Adjective===
-{{it-adj|f= priva di vista|mpl=  privi di vista|fpl= prive di vista}}
+{{it-adj|sp=first}}
 
 # [[blind]]
 
@@ -5381,7 +5598,7 @@ Page 18850 privo di vita: Found match for regex: {{it-adj|
 Page 18850 privo di vita: -------- begin text --------
 
 ===Adjective===
-{{it-adj|f= priva di vita|mpl=  privi di vita|fpl= prive di vita}}
+{{it-adj|sp=first}}
 
 # [[dead]], [[lifeless]]
 #: {{syn|it|senza vita|morto}}
@@ -5390,7 +5607,7 @@ Page 18958 promessivo: Found match for regex: {{it-adj|
 Page 18958 promessivo: -------- begin text --------
 
 ===Adjective===
-{{it-adj|f=promessivoa|mpl=promessivoi}}
+{{it-adj}}
 
 # {{alternative form of|it|promissivo}}
 -------- end text --------
@@ -5401,7 +5618,7 @@ Page 19106 prototipico: -------- begin text --------
 {{suffix|it|prototipo|t1=prototype|ico}}
 
 ===Adjective===
-{{it-adj|mpl=prototipichi}}
+{{it-adj}} {{tlb|it|uncommon}}
 
 # [[prototypical]]
 -------- end text --------
@@ -5412,7 +5629,7 @@ Page 19207 psicosomatico: -------- begin text --------
 {{prefix|it|psico|somatico}}
 
 ===Adjective===
-{{it-adj|fpl=psicosomatichr}}
+{{it-adj}}
 
 # {{lb|it|psychology}} [[psychosomatic]]
 -------- end text --------
@@ -5431,7 +5648,7 @@ From {{der|it|la|pūnītor}}.
 # [[punisher]], [[spanker]]
 
 ===Adjective===
-{{it-adj|f=punitori|mpl=punitrice|fpl=punitrici}}
+{{it-adj}}
 
 # [[punishing]]
 
@@ -5458,13 +5675,13 @@ From {{affix|it|quadri-|-nomio}}.<ref name="Treccani">{{R:it:Treccani}}</ref>
 * {{hyphenation|it|qua|dri|nò|mio}}
 
 ===Adjective===
-{{it-adj|mpl=[[quadrinomî]] or [[quadrinomi]]}}
+{{it-adj}}
 
 # {{lb|it|maths}} [[quadrinomial]]
 
 ===Noun===
 {{enum|it|trinomio|[[polinomio]] [[di]] [[cinque]] [[termini]]|polynomials by number of terms}}
-{{it-noun|m|[[quadrinomî]]'' or ''[[quadrinomi]]}}
+{{it-noun|m}}
 
 # {{lb|it|maths|algebra}} [[quadrinomial]] (quartic polynomial)
 #: {{hyper|it|polinomio}}
@@ -5476,7 +5693,7 @@ Page 19364 qualsia: Found match for regex: {{it-adj|
 Page 19364 qualsia: -------- begin text --------
 
 ===Adjective===
-{{it-adj|mpl=qualsiano|fpl=qualsiana}}
+{{it-adj|f=#|pl=qualsiano}}
 
 # {{lb|it|uncommon|literary}} {{synonym of|it|qualsiasi}}
 -------- end text --------
@@ -5484,7 +5701,7 @@ Page 19366 qualsisia: Found match for regex: {{it-adj|
 Page 19366 qualsisia: -------- begin text --------
 
 ===Adjective===
-{{it-adj|mpl=qualsisiano|fpl=qualsisiana}}
+{{it-adj|f=#|pl=qualsisiano}}
 
 # {{synonym of|it|qualsiasi}}
 -------- end text --------
@@ -5494,29 +5711,45 @@ Page 19519 raccomandatorio: -------- begin text --------
 ===Etymology===
 {{suffix|it|raccomandare|torio}}
 
+===Pronunciation===
+* {{it-IPA|raccomandatòrio}}
+
 ===Adjective===
-{{it-adj|mpl=raccomandatorii}}
+{{it-adj|mpl=raccomandatorii|mpl2=raccomandatori}}
 
 # [[recommendatory]]
 -------- end text --------
 Page 19520 racconcio: Found match for regex: {{it-adj|
 Page 19520 racconcio: -------- begin text --------
 
-===Verb===
+===Pronunciation===
+* {{it-IPA|raccóncio}}
+
+===Etymology 1===
+
+====Adjective====
+{{it-adj}} {{tlb|it|archaic}}
+
+# [[adjusted]], [[accommodated]]
+
+===Etymology 2===
+
+====Verb====
 {{head|it|verb form}}
 
 # {{inflection of|it|racconciare||1|s|pres|indc}}
-
-===Adjective===
-{{it-adj|fpl=racconcce}}
-
-# [[adjusted]], [[accommodated]]
 -------- end text --------
 Page 19582 radioopaco: Found match for regex: {{it-adj|
 Page 19582 radioopaco: -------- begin text --------
 
+===Alternative forms===
+* {{alter|it|radiopaco}}
+
 ===Etymology===
 {{prefix|it|radio|opaco}}
+
+===Pronunciation===
+* {{it-IPA|ràdioopàco}}
 
 ===Adjective===
 {{it-adj|mpl=radioopachi}}
@@ -5532,9 +5765,9 @@ Page 19729 reagente: -------- begin text --------
 # {{inflection of|it|reagire||pres|part}}
 
 ===Adjective===
-{{it-adj|pl=reagiri}}
+{{it-adj}}
 
-# [[reacting]] (chemistry)
+# {{lb|it|chemistry}} [[reacting]]
 
 ===Noun===
 {{it-noun|m}}
@@ -5552,31 +5785,33 @@ Page 19729 reagente: -------- begin text --------
 Page 19759 reciproco: Found match for regex: {{it-adj|
 Page 19759 reciproco: -------- begin text --------
 
-===Etymology===
-From {{der|it|la|reciprocus}}.
-
 ===Pronunciation===
 * {{it-IPA|recìproco}}
 
-===Adjective===
+===Etymology 1===
+From {{der|it|la|reciprocus}}.
+
+====Adjective====
 {{it-adj|mpl=reciproci}}
 
 # [[reciprocal]]
 #: {{syn|it|mutuo}}
 
-===Noun===
+====Noun====
 {{it-noun|m|reciproci}}
 
 # {{lb|it|mathematics}} [[reciprocal]], [[inverse]]
 
-===Verb===
-{{head|it|verb form}}
-
-# {{inflection of|it|reciprocare||1|s|pres|ind}}
-
 ====Derived terms====
 * {{l|it|reciprocamente}}
 * {{l|it|reciprocità}}
+
+===Etymology 2===
+
+====Verb====
+{{head|it|verb form}}
+
+# {{inflection of|it|reciprocare||1|s|pres|ind}}
 
 ----
 
@@ -5593,7 +5828,7 @@ Page 19807 reggifiaccola: -------- begin text --------
 # {{lb|it|neologism}} [[torchbearer]]
 
 ===Adjective===
-{{it-adj|mpl=reggifiaccole}}
+{{it-adj|pl=#|pl2=reggifiaccole}}
 
 # {{lb|it|neologism}} that [[hold]]s a [[torch]], [[light]], [[flame]], etc.
 #: {{uxi|it|candelabro '''reggifiaccola'''|'''light-bearing''' [[candelabrum]]}}
@@ -5602,7 +5837,7 @@ Page 19810 reggitore: Found match for regex: {{it-adj|
 Page 19810 reggitore: -------- begin text --------
 
 ===Adjective===
-{{it-adj|f=reggitori|mpl=reggitrice|fpl=reggitrici}}
+{{it-adj}}
 
 # [[holding]], [[bearing]]
 
@@ -5625,8 +5860,9 @@ From {{der|it|la|rēgius}}.
 ===Adjective===
 {{it-adj|fpl=regie}}
 
-# [[royal]]
+# {{lb|archaic|or|literary}} [[royal]]
 #: {{syn|it|reale|regale}}
+# {{lb|it|figurative}} [[grand]], [[excellent]]
 
 ===Anagrams===
 * {{l|it|erigo}}
@@ -5644,14 +5880,16 @@ Page 20059 ricettore: Found match for regex: {{it-adj|
 Page 20059 ricettore: -------- begin text --------
 
 ===Adjective===
-{{it-adj|f=#}}
+{{it-adj}} {{tlb|it|uncommon}}
 
 # [[receiving]]
+#: {{syn|it|recettore}}
 
 ===Noun===
-{{it-noun|m}}
+{{it-noun|m}} {{tlb|it|uncommon}}
 
 # [[receiver]] (all senses)
+#: {{syn|it|recettore}}
 
 ===Anagrams===
 * {{l|it|recettori}}, {{l|it|ritorcete}}
@@ -5659,10 +5897,13 @@ Page 20059 ricettore: -------- begin text --------
 Page 20082 riconcio: Found match for regex: {{it-adj|
 Page 20082 riconcio: -------- begin text --------
 
-===Adjective===
-{{it-adj|fpl=riconcie}}
+===Pronunciation===
+* {{it-IPA|ricóncio}}
 
-# Suitably [[styled]]
+===Adjective===
+{{it-adj}}
+
+# [[suitably]] [[styled]]
 -------- end text --------
 Page 20101 ricorsista: Found match for regex: {{it-adj|
 Page 20101 ricorsista: -------- begin text --------
@@ -5676,7 +5917,7 @@ Page 20101 ricorsista: -------- begin text --------
 # [[appellant]]
 
 ===Adjective===
-{{it-adj|f=ricorista|mpl=ricoristi}}
+{{it-adj}}
 
 # [[appellant]]
 -------- end text --------
@@ -5684,7 +5925,7 @@ Page 20190 rifrattore: Found match for regex: {{it-adj|
 Page 20190 rifrattore: -------- begin text --------
 
 ===Adjective===
-{{it-adj|f=#}}
+{{it-adj}}
 
 # [[refractive]], [[refracting]]
 
@@ -5697,8 +5938,11 @@ Page 20190 rifrattore: -------- begin text --------
 Page 20380 risonatore: Found match for regex: {{it-adj|
 Page 20380 risonatore: -------- begin text --------
 
+===Pronunciation===
+* {{it-IPA|risonatóre|#ri[s]onatóre}}
+
 ===Adjective===
-{{it-adj|f=risonatori|pl=risonatrice}}
+{{it-adj}}
 
 # [[resonating]]
 
@@ -5709,6 +5953,9 @@ Page 20380 risonatore: -------- begin text --------
 -------- end text --------
 Page 20456 rizofago: Found match for regex: {{it-adj|
 Page 20456 rizofago: -------- begin text --------
+
+===Pronunciation===
+* {{it-IPA|ridzòfago}}
 
 ===Adjective===
 {{it-adj|mpl=rizofagi}}
@@ -5722,9 +5969,9 @@ Page 20462 robbiesco: -------- begin text --------
 From {{suffix|it|Della Robbia|t1=a family of sculptors|-esco}}.
 
 ===Adjective===
-{{it-adj|f=robbisca|mpl=robbischi}}
+{{it-adj}}
 
-# Characteristic of  the [[Della Robbia]] family of sculptors
+# [[characteristic]] of the [[Della Robbia]] [[family]] of [[sculptor]]s
 
 ====Related terms====
 * {{l|it|robbiano}}
@@ -5732,21 +5979,24 @@ From {{suffix|it|Della Robbia|t1=a family of sculptors|-esco}}.
 Page 20489 roggio: Found match for regex: {{it-adj|
 Page 20489 roggio: -------- begin text --------
 
+===Pronunciation===
+* {{it-IPA|róggio}}
+
 ===Adjective===
 {{it-adj|fpl=roggie}}
 
-# {{alternative form of|it|robbio}}
+# {{archaic form of|it|robbio}}
 
 ===Noun===
 {{it-noun|m|roggi}}
 
-# {{alternative form of|it|robbio}}
+# {{archaic form of|it|robbio}}
 -------- end text --------
 Page 20496 romancio: Found match for regex: {{it-adj|
 Page 20496 romancio: -------- begin text --------
 
 ===Adjective===
-{{it-adj|fpl=romancie}}
+{{it-adj}}
 
 # {{lb|it|relational}} [[Romansch]]
 
@@ -5765,7 +6015,7 @@ Page 20579 rovesciato: -------- begin text --------
 From {{m|it|rovesciare}}.
 
 ===Adjective===
-{{it-adj|f=#}}
+{{it-adj}}
 
 # [[upside-down]], [[upturned]], [[overturned]], in [[reverse]]
 #: {{syn|it|capovolto}}
@@ -5782,7 +6032,7 @@ Page 20809 sano e salvo: Found match for regex: {{it-adj|
 Page 20809 sano e salvo: -------- begin text --------
 
 ===Adjective===
-{{it-adj|head=[[sano]] [[e]] [[salvo]]|f=-a|mpl=-i}}
+{{it-adj|sp=first-last}}
 
 # [[safe and sound]]
 
@@ -5799,7 +6049,7 @@ From {{af|it|Satana|-ista}}.
 * {{it-IPA|satanìsta}}
 
 ===Adjective===
-{{it-adj|mpl=sataniste|fpl=satanisti}}
+{{it-adj}}
 
 # [[Satanist]]
 
@@ -5888,10 +6138,10 @@ Page 21347 scrutatore: Found match for regex: {{it-adj|
 Page 21347 scrutatore: -------- begin text --------
 
 ===Etymology===
-From {{der|it|la|scrūtātor}}.
+Borrowed from {{bor|it|la|scrūtātor}}.
 
 ===Adjective===
-{{it-adj|f=scrutatori|mpl=scrutatrice|fpl=scrutatrici}}
+{{it-adj}}
 
 # [[searching]], [[probing]]
 
@@ -5914,7 +6164,7 @@ Page 21399 secessionistico: Found match for regex: {{it-adj|
 Page 21399 secessionistico: -------- begin text --------
 
 ===Adjective===
-{{it-adj|mpl=secessionistichi}}
+{{it-adj}}
 
 # [[secessionistic]]
 -------- end text --------
@@ -5922,7 +6172,7 @@ Page 21431 seduttorio: Found match for regex: {{it-adj|
 Page 21431 seduttorio: -------- begin text --------
 
 ===Adjective===
-{{it-adj|mpl=seduttorii}}
+{{it-adj|mpl=seduttorii|mpl2=seduttori}}
 
 # [[seductive]]
 #: {{syn|it|seduttivo}}
@@ -5934,7 +6184,7 @@ Page 21619 semimpermeabile: -------- begin text --------
 {{prefix|it|semi|permeabile}}
 
 ===Adjective===
-{{it-adj|pl=semipermeabili}}
+{{it-adj}}
 
 # [[semipermeable]]
 -------- end text --------
@@ -5963,7 +6213,7 @@ Page 21650 semiparassita: -------- begin text --------
 {{prefix|it|semi|parassita}}
 
 ===Adjective===
-{{it-adj|f=semiparassiti|fpl=semiparassite}}
+{{it-adj}}
 
 # [[semiparasitic]]
 
@@ -5979,7 +6229,7 @@ Page 21672 semirurale: -------- begin text --------
 {{prefix|it|semi|rurale}}
 
 ===Adjective===
-{{it-adj|pl=semirural-}}
+{{it-adj}}
 
 # [[semirural]]
 -------- end text --------
@@ -5990,7 +6240,7 @@ Page 21677 semiselvaggio: -------- begin text --------
 {{prefix|it|semi|selvaggio}}
 
 ===Adjective===
-{{it-adj|fpl=semiselvaggie}}
+{{it-adj}}
 
 # [[half-wild]]
 
@@ -6004,7 +6254,7 @@ Page 21821 servitoresco: -------- begin text --------
 {{suffix|it|servitore|esco}}
 
 ===Adjective===
-{{it-adj|mpl=servitorescho}}
+{{it-adj}}
 
 # [[servile]]
 # [[submissive]] and [[obsequious]]
@@ -6013,12 +6263,12 @@ Page 21830 sessagenario: Found match for regex: {{it-adj|
 Page 21830 sessagenario: -------- begin text --------
 
 ===Adjective===
-{{it-adj|mpl=sessagenarii}}
+{{it-adj}}
 
 # [[sexagenarian]]
 
 ===Noun===
-{{it-noun|m|sessagenarii|f=sessagenaria}}
+{{it-noun|m|f=sessagenaria}}
 
 # [[sexagenarian]]
 -------- end text --------
@@ -6026,15 +6276,18 @@ Page 22033 settifrago: Found match for regex: {{it-adj|
 Page 22033 settifrago: -------- begin text --------
 
 ===Adjective===
-{{it-adj|mpl=settifragi}}
+{{it-adj}}
 
 # {{lb|it|botany}} [[septifragal]]
 -------- end text --------
 Page 22284 sinarteto: Found match for regex: {{it-adj|
 Page 22284 sinarteto: -------- begin text --------
 
+===Pronunciation===
+* {{it-IPA|sinartèto}}
+
 ===Adjective===
-{{it-adj|f=asinarteta|mpl=asinarteti}}
+{{it-adj}}
 
 # [[synartetic]]
 -------- end text --------
@@ -6045,7 +6298,7 @@ Page 22413 smanicato: -------- begin text --------
 {{prefix|it|s|manicato}}
 
 ===Adjective===
-{{it-adj|fpl=smanicathe}}
+{{it-adj}}
 
 # [[sleeveless]]
 
@@ -6071,7 +6324,7 @@ Page 22578 solforico: Found match for regex: {{it-adj|
 Page 22578 solforico: -------- begin text --------
 
 ===Adjective===
-{{it-adj|mpl=solforichi}}
+{{it-adj}}
 
 # {{lb|it|chemistry}} [[sulfuric]]
 
@@ -6095,7 +6348,7 @@ From {{af|it|sovra-|carico}}.
 ====Noun====
 {{it-noun|m}}
 
-# Excess [[load]], [[overload]], [[overcharge]], [[surcharge]]
+# excess [[load]], [[overload]], [[overcharge]], [[surcharge]]
 
 ===Etymology 2===
 {{nonlemma}}
@@ -6116,7 +6369,7 @@ Page 23069 spilorcio: -------- begin text --------
 * {{rhymes|it|ortʃo}}
 
 ===Adjective===
-{{it-adj|fpl=spilorcie}}
+{{it-adj}}
 
 # [[mean]], [[stingy]], [[miserly]], [[tight-fisted]]
 
@@ -6175,7 +6428,7 @@ Page 23131 sprecone: -------- begin text --------
 {{suffix|it|sprecare|one}}
 
 ===Adjective===
-{{it-adj|f=spreconi|mpl=sprecona|fpl=#}}
+{{it-adj}}
 
 # [[prodigal]]
 
@@ -6196,7 +6449,7 @@ Page 23178 stabilizzante: -------- begin text --------
 # {{present participle of|it|stabilizzare|nocat=1}}
 
 ===Adjective===
-{{it-adj|pl=stabilizzabti}}
+{{it-adj}}
 
 # [[stabilizing]] (especially chemically)
 
@@ -6255,6 +6508,9 @@ Page 23199 stampa: -------- begin text --------
 Page 23235 steatopigo: Found match for regex: {{it-adj|
 Page 23235 steatopigo: -------- begin text --------
 
+===Pronunciation===
+* {{it-IPA|steatòpigo}}
+
 ===Adjective===
 {{it-adj|mpl=steatopigi}}
 
@@ -6309,6 +6565,12 @@ Page 23363 strafico: -------- begin text --------
 ===Alternative forms===
 * {{l|it|strafigo}}
 
+===Etymology===
+{{af|it|stra-|fico}}
+
+===Pronunciation===
+* {{it-IPA|strafìco}}
+
 ===Adjective===
 {{it-adj|mpl=strafichi}}
 
@@ -6318,7 +6580,7 @@ Page 23426 strombato: Found match for regex: {{it-adj|
 Page 23426 strombato: -------- begin text --------
 
 ===Adjective===
-{{it-adj|f=stromba|mpl=strombi}}
+{{it-adj}}
 
 # [[splayed]]
 
@@ -6333,8 +6595,11 @@ Page 23483 subconscio: -------- begin text --------
 ===Etymology===
 {{prefix|it|sub|conscio}}
 
+===Pronunciation===
+* {{it-IPA|subcònscio}}
+
 ===Adjective===
-{{it-adj|fpl=subconscie}}
+{{it-adj|fpl=subconsce|fpl2=subconscie}}
 
 # [[subconscious]]
 
@@ -6350,8 +6615,11 @@ Page 23491 subdesertico: -------- begin text --------
 ===Etymology===
 {{prefix|it|sub|desertico}}
 
+===Pronunciation===
+* {{it-IPA|subdesèrtico}}
+
 ===Adjective===
-{{it-adj|f=sebdesertica|mpl=sebdesertici}}
+{{it-adj}}
 
 # [[semiarid]], [[semidesert]]
 
@@ -6365,7 +6633,7 @@ Page 23585 sufita: -------- begin text --------
 * {{it-IPA|sufìta}}
 
 ===Adjective===
-{{it-adj|mpl=sufite|fpl=sufiti}}
+{{it-adj}}
 
 # [[Sufist]]
 
@@ -6393,8 +6661,8 @@ From {{inh|it|la|suus}}, from {{inh|it|itc-pro|*sowos}}, from {{inh|it|ine-pro|*
 * {{it-IPA|sùo}}
 * {{rhymes|it|uo}}
 
-===Adjective===
-{{it-adj|mpl=suoi}}
+===Determiner===
+{{head|it|determiner|feminine singular|sua|masculine plural|suoi|feminine plural|sue}}
 
 # [[his]], [[her]], [[its]]
 #: {{uxi|it|i '''suoi''' figli|his/her/its children}}<!--masculine plural example before noun-->
@@ -6408,9 +6676,9 @@ From {{inh|it|la|suus}}, from {{inh|it|itc-pro|*sowos}}, from {{inh|it|ine-pro|*
 #: {{uxi|it|'''Suo''' padre|your father}}<!--masculine singular example before close family member-->
 
 ===Pronoun===
-{{head|it|pronoun}} (as the adjective)
+{{head|it|pronoun|feminine singular|sua|masculine plural|suoi|feminine plural|sue}}
 
-# [[his]], [[hers]], [[its]] own.
+# [[his]], [[hers]], [[its]] own
 #: {{uxi|it|Sono i '''suoi'''|They are his/hers/its own.}}
 # {{lb|it|often|capitalised}} [[yours]] (''polite singular form'')
 #: {{uxi|it|Sono i '''Suoi'''|They are yours.}}
@@ -6435,7 +6703,7 @@ Page 23638 supercosciente: -------- begin text --------
 {{prefix|it|super|consciente}}
 
 ===Adjective===
-{{it-adj|pl=superconscienti}}
+{{it-adj}}
 
 # [[superconscious]]
 
@@ -6451,7 +6719,7 @@ Page 23783 tagicco: -------- begin text --------
 # [[Tajik]]
 
 ===Noun===
-{{it-noun|m|f=tagicca}}
+{{it-noun|m|tagicci|f=tagicca}}
 
 # [[Tajik]]
 -------- end text --------
@@ -6462,7 +6730,7 @@ Page 23946 telefotografico: -------- begin text --------
 {{prefix|it|tele|fotografico}}
 
 ===Adjective===
-{{it-adj|f=telegrafica|mpl=telegrafici}}
+{{it-adj}}
 
 # [[telephotographic]]
 
@@ -6481,7 +6749,7 @@ Page 23956 teleradiotrasmesso: -------- begin text --------
 # {{past participle of|it|teleradiotrasmettere|nocat=1}}
 
 ===Adjective===
-{{it-adj|f=radiotrasmessa|mpl=radiotrasmessi}}
+{{it-adj}}
 
 # [[simulcasted]]
 -------- end text --------
@@ -6492,7 +6760,7 @@ Page 24248 timidone: -------- begin text --------
 {{af|it|timido|-one|t1=shy, timid|pos2=augmentative suffix}}
 
 ===Adjective===
-{{it-adj|f=timidoni|mpl=timidona|fpl=#}}
+{{it-adj}}
 
 # very [[shy]], very [[timid]]
 
@@ -6512,7 +6780,7 @@ Page 24252 timorato di Dio: Found match for regex: {{it-adj|
 Page 24252 timorato di Dio: -------- begin text --------
 
 ===Adjective===
-{{it-adj|f= timorata di Dio|mpl=  timorati di Dio|fpl= timorate di Dio}}
+{{it-adj|sp=first}}
 
 # [[God-fearing]]
 
@@ -6530,15 +6798,15 @@ From {{der|it|la|thrācius}}.
 * {{hyphenation|it|trà|cio}}
 
 ===Adjective===
-{{it-adj|fpl=tracie}}
+{{it-adj|mpl=tracii|mpl2=traci|fpl=tracie}}
 
 # [[Thracian]]
 
 ===Noun===
 {{it-noun|m}}
 
-# {{lb|it|historical}} A person from or an inhabitant of [[Thrace]].
-# The [[Thracian]] [[language]].
+# {{lb|it|historical}} a person from or an inhabitant of [[Thrace]]
+# the [[Thracian]] [[language]]
 
 ====Related terms====
 {{col2|it
@@ -6561,7 +6829,7 @@ Page 24496 transdermico: -------- begin text --------
 {{prefix|it|trans|dermico}}
 
 ===Adjective===
-{{it-adj|f=transdernica|mpl=transdernici}}
+{{it-adj}}
 
 # [[transdermal]]
 -------- end text --------
@@ -6577,7 +6845,7 @@ Page 24548 transumanista: -------- begin text --------
 # [[transhumanist]]
 
 ===Adjective===
-{{it-adj|fpl=transumanisti}}
+{{it-adj}}
 
 # [[transhumanist]]
 -------- end text --------
@@ -6585,7 +6853,7 @@ Page 24578 trascutato: Found match for regex: {{it-adj|
 Page 24578 trascutato: -------- begin text --------
 
 ===Adjective===
-{{it-adj|f=trascutatoa|mpl=trascutatoi}}
+{{it-adj}}
 
 # [[careless]], [[negligent]]
 -------- end text --------
@@ -6598,7 +6866,7 @@ Page 24601 trasmettitore: -------- begin text --------
 # [[transmitter]]
 
 ===Adjective===
-{{it-adj|f=#}}
+{{it-adj}}
 
 # [[transmitting]]
 -------- end text --------
@@ -6606,7 +6874,7 @@ Page 24618 trasportatore: Found match for regex: {{it-adj|
 Page 24618 trasportatore: -------- begin text --------
 
 ===Adjective===
-{{it-adj|f=trasportatori|mpl=trasportatrice|fpl=trasportatrici}}
+{{it-adj}}
 
 # {{lb|it|relational}} [[transport]]
 
@@ -6662,14 +6930,14 @@ From {{affix|it|tri-|-nomio}}.<ref name="Treccani">{{R:it:Treccani}}</ref>
 * {{hyphenation|it|tri|nò|mio}}
 
 ===Adjective===
-{{it-adj|mpl=[[trinomî]] or [[trinomi]]}}
+{{it-adj}}
 
 # {{lb|it|maths}} [[trinomial]]
 #: {{syn|it|trinomiale}}
 
 ===Noun===
 {{enum|it|binomio|quadrinomio|polynomials by number of terms}}
-{{it-noun|m|[[trinomî]]'' or ''[[trinomi]]}}
+{{it-noun|m}}
 
 # {{lb|it|maths|algebra}} [[trinomial]]
 #: {{hyper|it|polinomio}}
@@ -6729,7 +6997,7 @@ In the singular, Latin ''tuum'' underwent *ʊu > *ou > *ɔu [[dissimilation]],<r
 * {{rhymes|it|uo}}
 
 ===Adjective===
-{{it-adj|mpl=tuoi}}
+{{head|it|determiner|feminine singular|tua|masculine plural|tuoi|feminine plural|tue}}
 
 # [[your]] {{gl|informal}}
 #: {{uxi|it|i '''tuoi''' figli|'''your''' children}} <!--masculine plural example before noun-->
@@ -6763,8 +7031,11 @@ When modifying common nouns, this adjective is used before the noun, and with a 
 Page 25075 ubbriaco: Found match for regex: {{it-adj|
 Page 25075 ubbriaco: -------- begin text --------
 
+===Pronunciation===
+* {{it-IPA|ubbriàco}}
+
 ===Adjective===
-{{it-adj|mpl=ubbriachi|fpl=ubbriace}}
+{{it-adj|mpl=ubbriachi}}
 
 # {{alternative form of|it|ubriaco}}
 -------- end text --------
@@ -6776,7 +7047,7 @@ Page 25087 ubriaco: -------- begin text --------
 From {{inh|it|LL.|ēbriācus}}, derived from {{der|it|la|ēbrius}}, ultimately from {{der|it|ine-pro|*h₁egʷʰ-|t=to drink}}.
 
 ===Pronunciation===
-* {{IPA|it|/u.briˈa.ko/|[ubr̺iˈäːko̞]}}
+* {{it-IPA|ubriàco}}
 * {{hyphenation|it|u|brià|co}}
 * {{rhymes|it|ako}}
 
@@ -6811,7 +7082,7 @@ Page 25176 ultrastrutturale: -------- begin text --------
 {{prefix|it|ultra|strutturale}}
 
 ===Adjective===
-{{it-adj|inv=1}}
+{{it-adj}}
 
 # [[ultrastructural]]
 
@@ -6823,7 +7094,7 @@ Page 25199 umidiccio: Found match for regex: {{it-adj|
 Page 25199 umidiccio: -------- begin text --------
 
 ===Adjective===
-{{it-adj|fpl=umidiccie}}
+{{it-adj}}
 
 # [[dampish]]
 # [[clammy]]
@@ -6835,7 +7106,7 @@ Page 25210 umoresco: Found match for regex: {{it-adj|
 Page 25210 umoresco: -------- begin text --------
 
 ===Adjective===
-{{it-adj|mpl=umoresche|fpl=umoreschi}}
+{{it-adj}}
 
 # {{synonym of|it|umoristico}}
 -------- end text --------
@@ -6843,7 +7114,7 @@ Page 25254 unico e solo: Found match for regex: {{it-adj|
 Page 25254 unico e solo: -------- begin text --------
 
 ===Adjective===
-{{it-adj|f=-a|mpl=-i}}
+{{it-adj|sp=first-last}}
 
 # [[one and only]]
 -------- end text --------
@@ -6862,7 +7133,7 @@ From {{inh|it|LL.|ūnivocus}}.
 {{it-adj|mpl=univoci}}
 
 # [[unambiguous]]
-# {{lb|it|mathematics}} Having a single solution
+# {{lb|it|mathematics}} having a [[single]] [[solution]]
 
 ====Antonyms====
 * {{l|it|equivoco}}
@@ -6871,7 +7142,7 @@ Page 25319 unticcio: Found match for regex: {{it-adj|
 Page 25319 unticcio: -------- begin text --------
 
 ===Adjective===
-{{it-adj|fpl=unticcie}}
+{{it-adj}}
 
 # lightly [[greased]]
 # slightly [[oily]]
@@ -6879,10 +7150,13 @@ Page 25319 unticcio: -------- begin text --------
 Page 25391 usurpatorio: Found match for regex: {{it-adj|
 Page 25391 usurpatorio: -------- begin text --------
 
-===Adjective===
-{{it-adj|mpl=usurpatorii}}
+===Pronunciation===
+* {{it-IPA|usurpatòrio}}
 
-# Relating to [[usurpation]] or a [[usurper]]
+===Adjective===
+{{it-adj|mpl=usurpatorii|mpl2=usurpatori}}
+
+# {{lb|it|relational}} [[usurpation]], [[usurper]]
 -------- end text --------
 Page 25538 vasocostrittore: Found match for regex: {{it-adj|
 Page 25538 vasocostrittore: -------- begin text --------
@@ -6891,7 +7165,7 @@ Page 25538 vasocostrittore: -------- begin text --------
 From {{af|it|vaso-|costrittore}}.
 
 ===Adjective===
-{{it-adj|f=vasocostrittori|mpl=vasocostrittrice|fpl=vasocostrittrici}}
+{{it-adj}}
 
 # {{lb|it|medicine}} [[vasoconstricting]], [[vasoconstrictive]]
 
@@ -6905,7 +7179,7 @@ Page 25699 verdegrigio: -------- begin text --------
 From {{af|it|verde|grigio}}.
 
 ===Adjective===
-{{it-adj|fpl=verdegrigie}}
+{{it-adj|fpl=verdegrigie|fpl2=verdegrige}}
 
 # [[grey]]-[[green]]
 -------- end text --------
@@ -6913,12 +7187,12 @@ Page 25732 vermifugo: Found match for regex: {{it-adj|
 Page 25732 vermifugo: -------- begin text --------
 
 ===Adjective===
-{{it-adj|mpl=vermifugi}}
+{{it-adj}}
 
 # [[vermifugal]]
 
 ===Noun===
-{{it-noun|m|vermifugi}}
+{{it-noun|m}}
 
 # [[vermifuge]]
 -------- end text --------
@@ -6935,8 +7209,11 @@ Page 25743 vero e proprio: -------- begin text --------
 Page 25878 villereccio: Found match for regex: {{it-adj|
 Page 25878 villereccio: -------- begin text --------
 
+===Pronunciation===
+* {{it-IPA|villeréccio}}
+
 ===Adjective===
-{{it-adj|fpl=villereccie}}
+{{it-adj}} {{tlb|it|literary}}
 
 # {{lb|it|relational}} [[country]]; [[rustic]], [[rural]]
 -------- end text --------
@@ -6944,7 +7221,7 @@ Page 25988 vivisettore: Found match for regex: {{it-adj|
 Page 25988 vivisettore: -------- begin text --------
 
 ===Adjective===
-{{it-adj|mpl=vivisettoti}}
+{{it-adj}}
 
 # [[vivisectionist]]
 
@@ -6994,12 +7271,12 @@ From {{bor|it|ru|-}}.
 
 # {{syn of|it|udmurto}}
 
-===Noun 1===
+===Noun===
 {{it-noun|m|f=votiaca}}
 
 # {{syn of|it|udmurto}}
 
-===Noun 2===
+===Noun===
 {{it-noun|m|~|head=il votiaco}}
 
 # {{syn of|it|udmurto|t=the [[Udmurt]] [[language]]}}
@@ -7021,7 +7298,7 @@ Page 26103 xantico: Found match for regex: {{it-adj|
 Page 26103 xantico: -------- begin text --------
 
 ===Adjective===
-{{it-adj|fpl=xantichi}}
+{{it-adj}}
 
 # [[xanthic]]
 
@@ -7033,6 +7310,9 @@ Page 26127 xilofago: -------- begin text --------
 
 ===Alternative forms===
 * {{alter|it|silofago}}
+
+===Pronunciation===
+* {{it-IPA|xilòfago}}
 
 ===Etymology===
 {{confix|it|xilo|fago}}
