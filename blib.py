@@ -722,7 +722,8 @@ def iter_items(items, startsort=None, endsort=None, get_name=get_page_name, get_
           pywikibot.output("skipping %s" % str(i))
         continue
 
-    actual_startsort = i
+    if actual_startsort is None:
+      actual_startsort = i
     actual_endsort = None
 
     if endsort != None:
