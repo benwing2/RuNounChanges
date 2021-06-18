@@ -1,4 +1,4 @@
-Beginning at Wed Jun 16 01:58:07 2021
+Beginning at Thu Jun 17 22:23:58 2021
 Page 1 abaco: Found match for regex: =
 Page 1 abaco: -------- begin text --------
 
@@ -48,7 +48,7 @@ Page 2 abasico: -------- begin text --------
 * {{hyph|it|a|bà|si|co}}
 
 ===Adjective===
-{{it-adj|abasic|o|a|i|he}}
+{{it-adj}}
 
 # {{lb|it|medicine}} [[abasic]]
 
@@ -128,7 +128,7 @@ Page 6 acattolico: -------- begin text --------
 From {{af|it|a-|cattolico}}.
 
 ===Adjective===
-{{it-adj|acattolic|o|a|i|he}}
+{{it-adj}}
 
 # [[non-Catholic]]
 
@@ -172,7 +172,7 @@ Page 8 accadico: Found match for regex: =
 Page 8 accadico: -------- begin text --------
 
 ===Adjective===
-{{it-adj|accadic|o|a|i|he}}
+{{it-adj}}
 
 # [[Akkadian]]
 #: {{syn|it|accado}}
@@ -194,7 +194,7 @@ Page 9 accattolico: -------- begin text --------
 {{prefix|it|a|cattolico}}
 
 ===Adjective===
-{{it-adj|accattolic|o|a|i|he}}
+{{it-adj}}
 
 # [[unbelieving]]
 # [[Protestant]]
@@ -1392,7 +1392,7 @@ Page 137 aerotecnico: -------- begin text --------
 {{prefix|it|aero|tecnico}}
 
 ===Adjective===
-{{it-adj|aerotecnic|o|a|i|he}}
+{{it-adj}}
 
 # [[aerotechnical]]
 
@@ -1408,7 +1408,7 @@ Page 138 afasico: Found match for regex: =
 Page 138 afasico: -------- begin text --------
 
 ===Adjective===
-{{it-adj|afasic|o|a|i|he}}
+{{it-adj}}
 
 # {{lb|it|pathology}} [[aphasic]]
 
@@ -1424,7 +1424,7 @@ Page 139 africo: Found match for regex: =
 Page 139 africo: -------- begin text --------
 
 ===Adjective===
-{{it-adj|afric|o|a|i|he}}
+{{it-adj}}
 
 # [[African]]
 #: {{syn|it|africano}}
@@ -1446,7 +1446,7 @@ Page 140 afrodisiaco: Found match for regex: =
 Page 140 afrodisiaco: -------- begin text --------
 
 ===Adjective===
-{{it-adj|afrodisiac|o|a|i|he}}
+{{it-adj}}
 
 # [[aphrodisiac]]
 
@@ -1503,7 +1503,7 @@ Surface analysis: {{prefix|it|a|t1=un-|pos1=negative prefix|gnostico|t2=gnostic}
 * {{hyphenation|it|a|gnò|sti|co}}
 
 ===Adjective===
-{{it-adj|agnostic|o|a|i|he}}
+{{it-adj}}
 
 # [[agnostic]]
 
@@ -1541,7 +1541,7 @@ Page 145 agrotecnico: -------- begin text --------
 From {{af|it|agro-|tecnico}}.
 
 ===Adjective===
-{{it-adj|agrotecnic|o|a|i|he}}
+{{it-adj}}
 
 # [[agrotechnical]]
 
@@ -1748,7 +1748,7 @@ Page 160 amarico: -------- begin text --------
 * {{it-IPA|amàrico}}
 
 ===Adjective===
-{{it-adj|amaric|o|a|i|he}}
+{{it-adj}}
 
 # [[Amharic]]
 
@@ -1847,7 +1847,7 @@ Page 163 analettico: Found match for regex: =
 Page 163 analettico: -------- begin text --------
 
 ===Adjective===
-{{it-adj|analettic|o|a|i|he}}
+{{it-adj}}
 
 # [[analeptic]]
 
@@ -1863,7 +1863,7 @@ Page 164 analgesico: -------- begin text --------
 {{etyl|grc|it}} {{prefix|it|ana|algesico}}
 
 ===Adjective===
-{{it-adj|analgesic|o|a|i|he}}
+{{it-adj}}
 
 # [[analgesic]]
 
@@ -1882,7 +1882,7 @@ Page 165 anarchico: -------- begin text --------
 * {{it-IPA|anàrchico}}
 
 ===Adjective===
-{{it-adj|anarchic|o|a|i|he}}
+{{it-adj}}
 
 # [[anarchistic]]
 # [[nihilistic]]
@@ -1937,7 +1937,7 @@ Page 169 anfetaminico: -------- begin text --------
 {{suffix|it|anfetamina|ico}}
 
 ===Adjective===
-{{it-adj|anfetaminic|o|a|i|he}}
+{{it-adj}}
 
 # {{lb|it|relational}} [[amphetamine]]; [[amphetaminic]]
 
@@ -1982,7 +1982,7 @@ Page 172 annamitico: -------- begin text --------
 # [[Annamite]] (language)
 
 ===Adjective===
-{{it-adj|annamitic|o|a|i|he}}
+{{it-adj}}
 
 # [[Annamite]]
 
@@ -2050,7 +2050,7 @@ From {{af|it|ansia|-litico}}.
 * {{rhymes|it|itiko}}
 
 ===Adjective===
-{{it-adj|ansiolitic|o|a|i|he}}
+{{it-adj}}
 
 # [[tranquilizing]]
 
@@ -2069,7 +2069,7 @@ Page 178 antalgico: Found match for regex: =
 Page 178 antalgico: -------- begin text --------
 
 ===Adjective===
-{{it-adj|antalgic|o|a|i|he}}
+{{it-adj}}
 
 # [[analgesic]]
 
@@ -2086,7 +2086,7 @@ Page 179 antiallergico: Found match for regex: =
 Page 179 antiallergico: -------- begin text --------
 
 ===Adjective===
-{{it-adj|antiallergic|o|a|i|he}}
+{{it-adj}}
 
 # [[antiallergic]]
 
@@ -2099,7 +2099,7 @@ Page 180 antiaritmico: Found match for regex: =
 Page 180 antiaritmico: -------- begin text --------
 
 ===Adjective===
-{{it-adj|antiaritmic|o|a|i|he}}
+{{it-adj}}
 
 # [[antiarrhythmic]]
 
@@ -2118,7 +2118,7 @@ Page 181 antiartritico: -------- begin text --------
 {{prefix|it|anti|artritico}}
 
 ===Adjective===
-{{it-adj|antiartritic|o|a|i|he}}
+{{it-adj}}
 
 # [[antiarthritic]]
 
@@ -2131,7 +2131,7 @@ Page 182 antiasmatico: Found match for regex: =
 Page 182 antiasmatico: -------- begin text --------
 
 ===Adjective===
-{{it-adj|antiasmatic|o|a|i|he}}
+{{it-adj}}
 
 # {{lb|it|pharmacology}} [[antiasthmatic]]
 
@@ -2153,7 +2153,7 @@ Page 183 antibatterico: -------- begin text --------
 {{prefix|it|anti|batterico}}
 
 ===Adjective===
-{{it-adj|antibatteric|o|a|i|he}}
+{{it-adj}}
 
 # [[antibacterial]]
 
@@ -2170,7 +2170,7 @@ Page 184 antibiotico: -------- begin text --------
 {{wikipedia|lang=it}}
 
 ===Adjective===
-{{it-adj|antibiotic|o|a|i|he}}
+{{it-adj}}
 
 # [[antibiotic]]
 
@@ -2195,7 +2195,7 @@ Page 186 anticolinergico: -------- begin text --------
 From {{af|it|anti-|colinergico}}.
 
 ===Adjective===
-{{it-adj|anticolinergic|o|a|i|he}}
+{{it-adj}}
 
 # [[anticholinergic]]
 
@@ -2208,7 +2208,7 @@ Page 187 anticolinesterasico: Found match for regex: =
 Page 187 anticolinesterasico: -------- begin text --------
 
 ===Adjective===
-{{it-adj|anticolinesterasic|o|a|i|he}}
+{{it-adj}}
 
 # [[anticholinesterasic]]
 
@@ -2224,7 +2224,7 @@ Page 188 anticrittogamico: -------- begin text --------
 {{prefix|it|anti|crittogamico}}
 
 ===Adjective===
-{{it-adj|anticrittogamic|o|a|i|he}}
+{{it-adj}}
 
 # [[fungicidal]]
 
@@ -2237,7 +2237,7 @@ Page 189 antidiabetico: Found match for regex: =
 Page 189 antidiabetico: -------- begin text --------
 
 ===Adjective===
-{{it-adj|antidiabetic|o|a|i|he}}
+{{it-adj}}
 
 # [[antidiabetic]]
 
@@ -2256,7 +2256,7 @@ Page 190 antidiaforetico: -------- begin text --------
 {{prefix|it|anti|diaforetico}}
 
 ===Adjective===
-{{it-adj|antidiaforetic|o|a|i|he}}
+{{it-adj}}
 
 # [[antisudorific]], [[antiperspirant]]
 
@@ -2272,7 +2272,7 @@ Page 191 antidiarroico: -------- begin text --------
 {{prefix|it|anti|diarroico}}
 
 ===Adjective===
-{{it-adj|antidiarroic|o|a|i|he}}
+{{it-adj}}
 
 # [[antidiarrheal]]
 
@@ -2288,7 +2288,7 @@ Page 192 antidiuretico: -------- begin text --------
 {{prefix|it|anti|diuretico}}
 
 ===Adjective===
-{{it-adj|antidiuretic|o|a|i|he}}
+{{it-adj}}
 
 # {{lb|it|pharmacology}} [[antidiuretic]]
 
@@ -2301,7 +2301,7 @@ Page 193 antidolorifico: Found match for regex: =
 Page 193 antidolorifico: -------- begin text --------
 
 ===Adjective===
-{{it-adj|antidolorific|o|a|i|he}}
+{{it-adj}}
 
 # [[analgesic]]
 
@@ -2314,7 +2314,7 @@ Page 194 antidopaminergico: Found match for regex: =
 Page 194 antidopaminergico: -------- begin text --------
 
 ===Adjective===
-{{it-adj|antidopaminergic|o|a|i|he}}
+{{it-adj}}
 
 # [[antidopaminergic]]
 
@@ -2330,7 +2330,7 @@ Page 195 antielmintico: Found match for regex: =
 Page 195 antielmintico: -------- begin text --------
 
 ===Adjective===
-{{it-adj|antielmintic|o|a|i|he}}
+{{it-adj}}
 
 # [[anthelmintic]]
 
@@ -2343,7 +2343,7 @@ Page 196 antiemetico: Found match for regex: =
 Page 196 antiemetico: -------- begin text --------
 
 ===Adjective===
-{{it-adj|antiemetic|o|a|i|he}}
+{{it-adj}}
 
 # [[antiemetic]]
 
@@ -2357,7 +2357,7 @@ Page 197 antiemorragico: Found match for regex: =
 Page 197 antiemorragico: -------- begin text --------
 
 ===Adjective===
-{{it-adj|antiemorragic|o|a|i|he}}
+{{it-adj}}
 
 # [[antihemorrhagic]]
 
@@ -2374,7 +2374,7 @@ Page 198 antiepilettico: Found match for regex: =
 Page 198 antiepilettico: -------- begin text --------
 
 ===Adjective===
-{{it-adj|antiepilettic|o|a|i|he}}
+{{it-adj}}
 
 # [[antiepileptic]]
 
@@ -2391,7 +2391,7 @@ Page 199 antiestrogenico: Found match for regex: =
 Page 199 antiestrogenico: -------- begin text --------
 
 ===Adjective===
-{{it-adj|antiestrogenic|o|a|i|he}}
+{{it-adj}}
 
 # [[antiestrogenic]]
 
@@ -2407,7 +2407,7 @@ Page 200 antifibrinolitico: Found match for regex: =
 Page 200 antifibrinolitico: -------- begin text --------
 
 ===Adjective===
-{{it-adj|antifibrinolitic|o|a|i|he}}
+{{it-adj}}
 
 # [[antifibrinolytic]]
 
@@ -2420,7 +2420,7 @@ Page 201 antiflogistico: Found match for regex: =
 Page 201 antiflogistico: -------- begin text --------
 
 ===Adjective===
-{{it-adj|antiflogistic|o|a|i|he}}
+{{it-adj}}
 
 # [[antiphlogistic]]
 
@@ -2436,7 +2436,7 @@ Page 202 antigiudaico: Found match for regex: =
 Page 202 antigiudaico: -------- begin text --------
 
 ===Adjective===
-{{it-adj|antigiudaic|o|a|i|he}}
+{{it-adj}}
 
 # [[anti-]][[Judaic]]
 
@@ -2453,7 +2453,7 @@ Page 203 antimalarico: -------- begin text --------
 {{prefix|it|anti|malarico}}
 
 ===Adjective===
-{{it-adj|antimalaric|o|a|i|he}}
+{{it-adj}}
 
 # [[antimalarial]]
 
@@ -2467,7 +2467,7 @@ Page 204 antimicotico: -------- begin text --------
 {{wikipedia|lang=it}}
 
 ===Adjective===
-{{it-adj|antimicotic|o|a|i|he}}
+{{it-adj}}
 
 # [[antimycotic]], [[antifungal]]
 
@@ -2484,7 +2484,7 @@ Page 205 antimicrobico: Found match for regex: =
 Page 205 antimicrobico: -------- begin text --------
 
 ===Adjective===
-{{it-adj|antimicrobic|o|a|i|he}}
+{{it-adj}}
 
 # [[antimicrobial]]
 
@@ -2503,7 +2503,7 @@ Page 206 antimitotico: -------- begin text --------
 From {{af|it|anti-|mitotico}}.
 
 ===Adjective===
-{{it-adj|antimitotic|o|a|i|he}}
+{{it-adj}}
 
 # [[antimitotic]]
 
@@ -2522,7 +2522,7 @@ Page 207 antineoplastico: -------- begin text --------
 From {{af|it|anti-|neoplastico}}.
 
 ===Adjective===
-{{it-adj|antineoplastic|o|a|i|he}}
+{{it-adj}}
 
 # [[antineoplastic]]
 
@@ -2541,7 +2541,7 @@ Page 208 antinevralgico: -------- begin text --------
 From {{af|it|anti-|nevralgico}}.
 
 ===Adjective===
-{{it-adj|antinevralgic|o|a|i|he}}
+{{it-adj}}
 
 # [[painkilling]]
 
@@ -2557,7 +2557,7 @@ Page 209 antiofidico: -------- begin text --------
 From {{af|it|anti-|ofidico}}.
 
 ===Adjective===
-{{it-adj|antiofidic|o|a|i|he}}
+{{it-adj}}
 
 # {lb|it|relational}} [[anti-]][[snake]] [[bite]], [[antivenin]]
 
@@ -2603,8 +2603,11 @@ Page 210 antipatico: -------- begin text --------
 Page 211 antipertossico: Found match for regex: =
 Page 211 antipertossico: -------- begin text --------
 
+===Pronunciation===
+* {{it-IPA|antipertóssico}}
+
 ===Adjective===
-{{it-adj|antipertossic|o|a|hi|he}}
+{{it-adj}}
 
 # [[antipertussive]]
 
@@ -2618,7 +2621,7 @@ Page 212 antipiretico: -------- begin text --------
 {{wikipedia|lang=it}}
 
 ===Adjective===
-{{it-adj|antipiretic|o|a|i|he}}
+{{it-adj}}
 
 # [[antipyretic]]
 
@@ -2642,7 +2645,7 @@ Page 213 antipsicotico: -------- begin text --------
 From {{af|it|anti-|psicotico}}.
 
 ===Adjective===
-{{it-adj|antipsicotic|o|a|i|he}}
+{{it-adj}}
 
 # [[antipsychotic]]
 
@@ -2661,7 +2664,7 @@ Page 214 antireumatico: -------- begin text --------
 {{prefix|it|anti|reumatico}}
 
 ===Adjective===
-{{it-adj|antireumatic|o|a|i|he}}
+{{it-adj}}
 
 # [[antirheumetic]]
 
@@ -2674,7 +2677,7 @@ Page 215 antisettico: Found match for regex: =
 Page 215 antisettico: -------- begin text --------
 
 ===Adjective===
-{{it-adj|antisettic|o|a|i|he}}
+{{it-adj}}
 
 # [[antiseptic]]
 
@@ -2697,7 +2700,7 @@ Page 216 antispasmodico: -------- begin text --------
 * {{rhymes|it|ɔdiko}}
 
 ===Adjective===
-{{it-adj|antispasmodic|o|a|i|he}}
+{{it-adj}}
 
 # [[antispasmodic]]
 
@@ -2712,7 +2715,7 @@ Page 217 antispastico: -------- begin text --------
 {{wikipedia|lang=it}}
 
 ===Adjective===
-{{it-adj|antispastic|o|a|i|he}}
+{{it-adj}}
 
 # [[antispasmodic]]
 
@@ -2727,7 +2730,7 @@ Page 218 antistaminico: -------- begin text --------
 {{wikipedia|lang=it}}
 
 ===Adjective===
-{{it-adj|antistaminic|o|a|i|he}}
+{{it-adj}}
 
 # [[antihistaminic]]
 
@@ -2746,7 +2749,7 @@ Page 219 antitarmico: -------- begin text --------
 {{prefix|it|anti|tarmico}}
 
 ===Adjective===
-{{it-adj|antitarmic|o|a|i|he}}
+{{it-adj}}
 
 # [[mothproof]]; [[moth]]-[[repellant]]
 
@@ -2774,7 +2777,7 @@ Page 221 antitrombotico: -------- begin text --------
 From {{af|it|anti-|trombotico}}.
 
 ===Adjective===
-{{it-adj|antitrombotic|o|a|i|he}}
+{{it-adj}}
 
 # [[antithrombotic]]
 
@@ -2842,7 +2845,7 @@ Page 225 aramaico: -------- begin text --------
 # The [[Aramaic]] language.
 
 ===Adjective===
-{{it-adj|aramaic|o|a|i|he}}
+{{it-adj}}
 
 # pertaining to the Aramaic language or culture
 
@@ -3110,7 +3113,7 @@ From {{der|it|la|asthmaticus}}, from {{der|it|grc|ἀσθματικός|t=afflie
 * {{rhymes|it|atiko}}
 
 ===Adjective===
-{{it-adj|asmatic|o|a|i|he}}
+{{it-adj}}
 
 # [[asthmatic]]
 
@@ -3223,7 +3226,7 @@ Page 245 attico: -------- begin text --------
 # [[penthouse]]
 
 ===Adjective===
-{{it-adj|attic|o|a|i|he}}
+{{it-adj}}
 
 # [[Attic]]
 
@@ -3268,7 +3271,7 @@ Page 247 autistico: -------- begin text --------
 {{af|it|autismo|-istico}}
 
 ===Adjective===
-{{it-adj|autistic|o|a|i|he}}
+{{it-adj}}
 
 # [[autistic]]
 #: {{syn|it|autista}}
@@ -3296,7 +3299,7 @@ Page 248 autodidattico: -------- begin text --------
 * {{hyph|it|au|to|di|dàt|ti|co}}
 
 ===Adjective===
-{{it-adj|autodidattic|o|a|i|he}}
+{{it-adj}}
 
 # [[self-teaching]], [[self-taught]], [[autodidactic]]
 
@@ -3351,7 +3354,7 @@ Page 250 avestico: Found match for regex: =
 Page 250 avestico: -------- begin text --------
 
 ===Adjective===
-{{it-adj|avestic|o|a|i|he}}
+{{it-adj}}
 
 # [[Avestan]]
 
@@ -3493,7 +3496,7 @@ Page 258 barbiturico: Found match for regex: =
 Page 258 barbiturico: -------- begin text --------
 
 ===Adjective===
-{{it-adj|barbituric|o|a|i|he}}
+{{it-adj}}
 
 # [[barbituric]]
 
@@ -3575,7 +3578,7 @@ Page 263 batteriostatico: -------- begin text --------
 {{wikipedia|lang=it}}
 
 ===Adjective===
-{{it-adj|batteriostatic|o|a|i|he}}
+{{it-adj}}
 
 # [[bacteriostatic]]
 
@@ -3620,7 +3623,7 @@ Page 266 berico: Found match for regex: =
 Page 266 berico: -------- begin text --------
 
 ===Adjective===
-{{it-adj|beric|o|a|i|he}}
+{{it-adj}}
 
 # Of or from [[Vicenza]]
 
@@ -3637,7 +3640,7 @@ Page 267 berluscofobico: Found match for regex: =
 Page 267 berluscofobico: -------- begin text --------
 
 ===Adjective===
-{{it-adj|berluscofobic|o|a|i|he}}
+{{it-adj}}
 
 # That are afraid of the policies of {{w|Silvio Berlusconi}}
 
@@ -3650,7 +3653,7 @@ Page 268 betamimetico: Found match for regex: =
 Page 268 betamimetico: -------- begin text --------
 
 ===Adjective===
-{{it-adj|betamimetic|o|a|i|he}}
+{{it-adj}}
 
 # [[betamimetic]]
 
@@ -3722,7 +3725,7 @@ Page 272 biofisico: -------- begin text --------
 # [[biophysicist]]
 
 ===Adjective===
-{{it-adj|biofisic|o|a|i|he}}
+{{it-adj}}
 
 # [[biophysical]]
 
@@ -3736,7 +3739,7 @@ Page 273 biotecnico: -------- begin text --------
 {{prefix|it|bio|tecnico}}
 
 ===Adjective===
-{{it-adj|biotecnic|o|a|i|he}}
+{{it-adj}}
 
 # [[biotechnical]], [[biotechnological]], [[biotech]]
 
@@ -3760,7 +3763,7 @@ From {{der|it|grc|ἀμφισβητικός||fond of disputing, disputatious, co
 * {{hyphenation|it|bi|sbè|ti|co}}
 
 ===Adjective===
-{{it-adj|bisbetic|o|a|i|he}}
+{{it-adj}}
 
 # [[ill-tempered]], [[crabby]], [[scold]]
 
@@ -3792,7 +3795,7 @@ Page 276 bolscevico: -------- begin text --------
 * {{rhymes|it|iko}}
 
 ===Adjective===
-{{it-adj|bolscevic|o|a|hi|he}}
+{{it-adj|mpl=bolscevichi}}
 
 # [[Bolshevik]]
 
@@ -3850,7 +3853,7 @@ From {{l|it|Bosnia}}.
 * {{hyphenation|it|bo|snì|a|co}}
 
 ===Adjective===
-{{it-adj|bosniac|o|a|i|he}}
+{{it-adj}}
 
 # [[Bosnian]]
 
@@ -3951,7 +3954,7 @@ Page 283 bronchitico: -------- begin text --------
 {{af|it|bronchite|-ico}}
 
 ===Adjective===
-{{it-adj|bronchitic|o|a|i|he}}
+{{it-adj}}
 
 # [[bronchitic]]
 
@@ -3970,7 +3973,7 @@ Page 284 broncolitico: -------- begin text --------
 {{confix|it|bronco|litico}}
 
 ===Adjective===
-{{it-adj|broncolitic|o|a|i|he}}
+{{it-adj}}
 
 # [[broncholytic]]
 
@@ -4075,7 +4078,7 @@ From {{bor|it|fr|calorique}}; synchronically, {{af|it|calori-|-ico}}.
 * {{hyph|it|ca|lò|ri|co}}
 
 ===Adjective===
-{{it-adj|caloric|o|a|i|he}}
+{{it-adj}}
 
 # {{lb|it|relational}} [[calorie]]; [[caloric]], [[calorific]]
 
@@ -4172,7 +4175,7 @@ Page 297 cantabrico: Found match for regex: =
 Page 297 cantabrico: -------- begin text --------
 
 ===Adjective===
-{{it-adj|cantabric|o|a|i|he}}
+{{it-adj}}
 
 # [[Cantabrian]]
 
@@ -4298,7 +4301,7 @@ Page 305 caraibico: Found match for regex: =
 Page 305 caraibico: -------- begin text --------
 
 ===Adjective===
-{{it-adj|caraibic|o|a|i|he}}
+{{it-adj}}
 
 # [[Caribbean]]
 
@@ -4328,7 +4331,7 @@ From {{prefix|it|cardio|t1=related to the heart|cinetico|t2=kinetic}}.
 * {{hyphenation|it|car|dio|ci|nè|ti|co}}
 
 ===Adjective===
-{{it-adj|cardiocinetic|o|a|i|he}}
+{{it-adj}}
 
 # [[cardiokinetic]]
 
@@ -4344,7 +4347,7 @@ Page 307 cardiopatico: -------- begin text --------
 {{af|it|cardiopatia|-ico}}
 
 ===Adjective===
-{{it-adj|cardiopatic|o|a|i|he}}
+{{it-adj}}
 
 # [[cardiopathic]]
 
@@ -4364,7 +4367,7 @@ Page 308 cardiotonico: -------- begin text --------
 {{prefix|it|cardio|tonico}}
 
 ===Adjective===
-{{it-adj|cardiotonic|o|a|i|he}}
+{{it-adj}}
 
 # [[cardiotonic]]
 
@@ -4469,7 +4472,7 @@ Page 311 carnico: -------- begin text --------
 * {{it-IPA|càrnico}}
 
 ===Adjective===
-{{it-adj|carnic|o|a|i|he}}
+{{it-adj}}
 
 # Of or relating to the [[w:Carnia|Carnia]] (which is part of the [[Friuli-Venezia Giulia]]) or the Carnia people; [[Carnic]].
 
@@ -4493,7 +4496,7 @@ Page 312 cartotecnico: -------- begin text --------
 {{prefix|it|carto|tecnico}}
 
 ===Adjective===
-{{it-adj|cartotecnic|o|a|i|he}}
+{{it-adj}}
 
 # {{lb|it|relational}} [[paper]] [[industry]]
 
@@ -4536,7 +4539,7 @@ From {{inh|it|LL|cathedratĭcus}}; by [[surface analysis]]: {{suffix|it|cattedra
 * {{it-IPA|cattedràtico}}
 
 ===Adjective===
-{{it-adj|cattedratic|o|a|i|he}}
+{{it-adj}}
 
 # {{lb|it|relational}} [[university]]
 # {{lb|it|pejorative}} [[pedantic]]
@@ -4598,7 +4601,7 @@ Page 317 caucasico: Found match for regex: =
 Page 317 caucasico: -------- begin text --------
 
 ===Adjective===
-{{it-adj|caucasic|o|a|i|he}}
+{{it-adj}}
 
 # [[Caucasian]]
 
@@ -4617,7 +4620,7 @@ Page 318 causidico: Found match for regex: =
 Page 318 causidico: -------- begin text --------
 
 ===Adjective===
-{{it-adj|causidic|o|a|i|he}}
+{{it-adj}}
 
 # [[causidical]]
 
@@ -4667,7 +4670,7 @@ From {{der|it|la|Celticus}}.
 * {{it-IPA|cèltico}}
 
 ===Adjective===
-{{it-adj|celtic|o|a|i|he}}
+{{it-adj}}
 
 # [[Celtic]]
 
@@ -4689,7 +4692,7 @@ Page 322 cenozoico: -------- begin text --------
 {{confix|it|ceno|zoico}}
 
 ===Adjective===
-{{it-adj|cenozoic|o|a|i|he}}
+{{it-adj}}
 
 # [[Cenozoic]]
 
@@ -4754,7 +4757,7 @@ Page 326 cetnico: Found match for regex: =
 Page 326 cetnico: -------- begin text --------
 
 ===Adjective===
-{{it-adj|cetnic|o|a|i|he}}
+{{it-adj}}
 
 # [[chetnik]]
 
@@ -4773,7 +4776,7 @@ Page 327 chemioterapico: -------- begin text --------
 {{prefix|it|chemio|terapico}}
 
 ===Adjective===
-{{it-adj|chemioterapic|o|a|i|he}}
+{{it-adj}}
 
 # [[chemotherapeutic]]
 
@@ -4797,7 +4800,7 @@ Page 328 cheratoplastico: -------- begin text --------
 * {{hyph|it|che|ra|to|plà|sti|co}}
 
 ===Adjective===
-{{it-adj|cheratoplastic|o|a|i|he}}
+{{it-adj}}
 
 # {{lb|it|medicine}} Promoting [[keratinization]].
 
@@ -4994,7 +4997,7 @@ Page 340 cirenaico: -------- begin text --------
 From {{der|it|la|Cyrenaicus}}.
 
 ===Adjective===
-{{it-adj|cirenaic|o|a|i|he}}
+{{it-adj}}
 
 # [[Cyrenian]]
 
@@ -5022,7 +5025,7 @@ Page 341 cirillico: Found match for regex: =
 Page 341 cirillico: -------- begin text --------
 
 ===Adjective===
-{{it-adj|cirillic|o|a|i|he}}
+{{it-adj}}
 
 # [[Cyrillic]]
 
@@ -5038,7 +5041,7 @@ Page 342 citostatico: -------- begin text --------
 From {{af|it|cito-|-statico}}.
 
 ===Adjective===
-{{it-adj|citostatic|o|a|i|he}}
+{{it-adj}}
 
 # [[cytostatic]]
 
@@ -5094,7 +5097,7 @@ Page 344 claustrofobico: -------- begin text --------
 * {{hyphenation|it|clau|stro|fò|bi|co}}
 
 ===Adjective===
-{{it-adj|claustrofobic|o|a|i|he}}
+{{it-adj}}
 
 # {{lb|it|psychology}} [[claustrophobic]]
 #: {{syn|it|claustrofobo}}
@@ -5147,7 +5150,7 @@ Page 346 clitico: Found match for regex: =
 Page 346 clitico: -------- begin text --------
 
 ===Adjective===
-{{it-adj|clitic|o|a|i|he}}
+{{it-adj}}
 
 # [[clitic]]
 
@@ -5186,7 +5189,7 @@ Page 349 coleretico: -------- begin text --------
 {{wikipedia|lang=it}}
 
 ===Adjective===
-{{it-adj|coleretic|o|a|i|he}}
+{{it-adj}}
 
 # [[choleretic]]
 
@@ -5209,7 +5212,7 @@ From {{bor|it|la|cholericus}}, from {{der|it|grc|χολερικός}}. Compare {
 * {{hyph|it|col|lè|ri|co}}
 
 ===Adjective===
-{{it-adj|colleric|o|a|i|he}}
+{{it-adj}}
 
 # {{lb|it|[[w:humorism|humours]] or [[w:Four temperaments|temperaments]] theory|obsolete}} [[bilious]]
 #: {{syn|it|bilioso}}
@@ -5347,7 +5350,7 @@ Page 358 conspecifico: Found match for regex: =
 Page 358 conspecifico: -------- begin text --------
 
 ===Adjective===
-{{it-adj|conspecific|o|a|i|he}}
+{{it-adj}}
 
 # [[conspecific]]
 
@@ -5397,7 +5400,7 @@ Page 362 cornico: -------- begin text --------
 # [[Cornish]] (language)
 
 ===Adjective===
-{{it-adj|cornic|o|a|i|he}}
+{{it-adj}}
 
 # [[Cornish]]
 
@@ -5448,7 +5451,7 @@ Page 366 cretico: Found match for regex: =
 Page 366 cretico: -------- begin text --------
 
 ===Adjective===
-{{it-adj|cretic|o|a|i|he}}
+{{it-adj}}
 
 # [[Cretan]] (of Crete)
 # [[cretic]]
@@ -5485,7 +5488,7 @@ Page 368 cristianodemocratico: -------- begin text --------
 * {{l|it|cristiano democratico}}, {{l|it|cristiano-democratico}}
 
 ===Adjective===
-{{it-adj|cristianodemocratic|o|a|i|he}}
+{{it-adj}}
 
 # [[Christian]]-[[Democratic]]
 
@@ -5601,7 +5604,7 @@ From {{bor|it|la|Dācus}}, from {{m|la|Dācī}}, from {{der|it|grc|Δᾶκοι}}
 * {{hyph|it|dà|co}}
 
 ===Adjective===
-{{it-adj|dac|o|a|i|he}}
+{{it-adj}}
 
 # [[Dacian]] {{gloss|of or pertaining to Dacia or the Dacians}}
 
@@ -5662,7 +5665,7 @@ Page 377 deacronimico: -------- begin text --------
 {{confix|it|de|acronimo|ico}}
 
 ===Adjective===
-{{it-adj|deacronimic|o|i}}
+{{it-adj}}
 {{examples|examples=
 
 * ''[[tiggì]]'' from the pronunciation of ''[[TG]]'', abbreviation of [[telegiornale]]
@@ -5670,7 +5673,7 @@ Page 377 deacronimico: -------- begin text --------
 * ''[[teevee]]'' from the pronunciation of ''[[TV]]'', abbreviation of [[television]]
 }}
 
-# {{lb|it|linguistics|neologism}} of or relating to a word derived from the [[pronunciation]] or [[affixation]] of an [[acronym]] or [[abbreviation]]
+# {{lb|it|linguistics|neologism|relational}} of a [[word]] [[derive]]d from the [[pronunciation]] or [[affixation]] of an [[acronym]] or [[abbreviation]]
 
 ===Noun===
 {{it-noun|m|deacronimici}}
@@ -5739,7 +5742,7 @@ Derived from {{m|it|onomastico}}, with the prefix {{m|it|de-}}.
 * {{hyph|it|de|o|no|mà|sti|co}}
 
 ===Adjective===
-{{it-adj|deonomastic|o|a|i|he}}
+{{it-adj}}
 
 # Derived from a [[given name]] or a [[last name]].
 
@@ -5785,7 +5788,7 @@ Page 382 diaforetico: Found match for regex: =
 Page 382 diaforetico: -------- begin text --------
 
 ===Adjective===
-{{it-adj|diaforetic|o|a|i|he}}
+{{it-adj}}
 
 # [[diaphoretic]]
 
@@ -5833,7 +5836,7 @@ Page 384 dielettrico: -------- begin text --------
 #: {{syn|it|isolante elettrico}}
 
 ===Adjective===
-{{it-adj|dielettric|o|a|i|he}}
+{{it-adj}}
 
 # {{lb|it|physics}} [[dielectric]], [[insulating]]
 -------- end text --------
@@ -5841,7 +5844,7 @@ Page 385 digastrico: Found match for regex: =
 Page 385 digastrico: -------- begin text --------
 
 ===Adjective===
-{{it-adj|digastric|o|a|i|he}}
+{{it-adj}}
 
 # {{lb|it|anatomy}} [[digastric]]
 
@@ -5860,7 +5863,7 @@ Page 386 digitalico: -------- begin text --------
 # (''especially in plural'') [[digoxin]], [[digitalin]] or any [[cardiac]] [[glycoside]] of similar structure
 
 ===Adjective===
-{{it-adj|digitalic|o|a|i|he}}
+{{it-adj}}
 
 # {{lb|it|relational}} [[digitalin]]
 -------- end text --------
@@ -5940,7 +5943,7 @@ Page 391 dislessico: Found match for regex: =
 Page 391 dislessico: -------- begin text --------
 
 ===Adjective===
-{{it-adj|dislessic|o|a|i|he}}
+{{it-adj}}
 
 # [[dyslectic]], [[dyslexic]]
 
@@ -5962,7 +5965,7 @@ Page 392 distico: -------- begin text --------
 # [[distich]], [[couplet]] (rhyming)
 
 ===Adjective===
-{{it-adj|distic|o|a|i|he}}
+{{it-adj}}
 
 # {{lb|it|botany}} [[distichous]]
 -------- end text --------
@@ -6008,7 +6011,7 @@ Page 396 dogmatico: -------- begin text --------
 From {{der|it|la|dogmaticus}}, from {{der|it|grc|δογματικός}}.
 
 ===Adjective===
-{{it-adj|dogmatic|o|a|i|he}}
+{{it-adj}}
 
 # [[dogmatic]]
 
@@ -6165,7 +6168,7 @@ Page 403 ecclesiastico: -------- begin text --------
 From {{der|it|la|ecclesiasticus}}.
 
 ===Adjective===
-{{it-adj|ecclesiastic|o|a|i|he}}
+{{it-adj}}
 
 # [[ecclesiastical]]
 
@@ -6214,7 +6217,7 @@ Page 405 egocentrico: -------- begin text --------
 From {{affix|it|ego-|-centrico}}.
 
 ===Adjective===
-{{it-adj|egocentric|o|a|i|he}}
+{{it-adj}}
 
 # [[egocentric]]
 
@@ -6245,7 +6248,7 @@ From {{der|it|NL.|elasticus||elastic}}, from {{der|it|grc|-}} as if {{m|grc||*�
 * {{rhymes|it|astiko}}
 
 ===Adjective===
-{{it-adj|elastic|o|a|i|he}}
+{{it-adj}}
 
 # [[elastic]]
 # [[springy]]
@@ -6312,7 +6315,7 @@ Page 410 elettrotecnico: -------- begin text --------
 {{prefix|it|elettro|tecnico}}
 
 ===Adjective===
-{{it-adj|elettrotecnic|o|a|i|he}}
+{{it-adj}}
 
 # [[electrical]], [[electrotechnical]]
 
@@ -6325,7 +6328,7 @@ Page 411 elvetico: Found match for regex: =
 Page 411 elvetico: -------- begin text --------
 
 ===Adjective===
-{{it-adj|elvetic|o|a|i|he}}
+{{it-adj}}
 
 # [[Swiss]], [[Helvetic]]
 
@@ -6340,7 +6343,7 @@ Page 412 emetico: -------- begin text --------
 {{wikipedia|lang=it}}
 
 ===Adjective===
-{{it-adj|emetic|o|a|i|he}}
+{{it-adj}}
 
 # [[emetic]]
 
@@ -6362,7 +6365,7 @@ Page 413 emofiliaco: -------- begin text --------
 {{confix|it|emo|filiaco}}
 
 ===Adjective===
-{{it-adj|emofiliac|o|a|i|he}}
+{{it-adj}}
 
 # {{lb|it|disease}} [[haemophiliac]], [[hemophiliac]]
 
@@ -6381,7 +6384,7 @@ Page 414 eneolitico: -------- begin text --------
 {{af|it|aēneus|-litico|lang1=la}}
 
 ===Adjective===
-{{it-adj|eneolitic|o|a|i|he}}
+{{it-adj}}
 
 # [[Eneolithic]]
 
@@ -6406,7 +6409,7 @@ Page 415 enotecnico: -------- begin text --------
 # [[wine-making]] [[expert]]
 
 ===Adjective===
-{{it-adj|enotecnic|o|a|i|he}}
+{{it-adj}}
 
 # {{lb|it|relational}} [[wine]] [[making]]
 -------- end text --------
@@ -6555,7 +6558,7 @@ Page 427 ergastico: -------- begin text --------
 * {{hyph|it|er|gà|sti|co}}
 
 ===Adjective===
-{{it-adj|ergastic|o|a|i|he}}
+{{it-adj}}
 
 # {{lb|it|biology}} [[ergastic]]
 
@@ -6574,7 +6577,7 @@ Page 428 estroprogestinico: -------- begin text --------
 {{prefix|it|estro|progestinico}}
 
 ===Adjective===
-{{it-adj|estroprogestinic|o|a|i|he}}
+{{it-adj}}
 
 # [[estroprogestinic]]
 
@@ -6605,7 +6608,7 @@ Page 431 etiopico: Found match for regex: =
 Page 431 etiopico: -------- begin text --------
 
 ===Adjective===
-{{it-adj|etiopic|o|a|i|he}}
+{{it-adj}}
 
 # [[Ethiopian]]
 #: {{syn|it|etiope}}
@@ -6633,7 +6636,7 @@ Page 432 etolico: -------- begin text --------
 From {{m|it|Etolia}}
 
 ===Adjective===
-{{it-adj|etolic|o|a|i|he}}
+{{it-adj}}
 
 # [[Aetolian]]
 
@@ -6646,7 +6649,7 @@ Page 433 eurasiatico: Found match for regex: =
 Page 433 eurasiatico: -------- begin text --------
 
 ===Adjective===
-{{it-adj|eurasiatic|o|a|i|he}}
+{{it-adj}}
 
 # [[Eurasian]]
 
@@ -6662,7 +6665,7 @@ Page 434 eurocritico: Found match for regex: =
 Page 434 eurocritico: -------- begin text --------
 
 ===Adjective===
-{{it-adj|eurocritic|o|a|i|he}}
+{{it-adj}}
 
 # [[eurocritical]]
 
@@ -6678,7 +6681,7 @@ Page 435 euroscettico: -------- begin text --------
 {{prefix|it|euro|scettico}}
 
 ===Adjective===
-{{it-adj|euroscettic|o|a|i|he}}
+{{it-adj}}
 
 # [[Euro-sceptic]]
 
@@ -6696,7 +6699,7 @@ Page 436 eutettico: -------- begin text --------
 {{wikipedia|lang=it}}
 
 ===Adjective===
-{{it-adj|eutettic|o|a|i|he}}
+{{it-adj}}
 
 # {{lb|it|chemistry|physics}} [[eutectic]]
 
@@ -6723,7 +6726,7 @@ From {{der|it|la|fānāticus}}.
 * {{it-IPA|fanàtico}}
 
 ===Adjective===
-{{it-adj|fanatic|o|a|i|he}}
+{{it-adj}}
 
 # [[fanatical]]
 
@@ -6830,7 +6833,7 @@ From {{inh|it|la|fīcus}}.
 # {{lb|it|slang}} [[cool]] [[guy]], [[bit of alright]]
 
 ====Usage notes====
-Slang term becomes {{m|it|figo}} in Northern Italy.
+* The slang term becomes {{m|it|figo}} in Northern Italy.
 
 ====Derived terms====
 {{der3|it
@@ -6879,7 +6882,7 @@ Page 444 filatelico: -------- begin text --------
 * {{rhymes|it|ɛliko}}
 
 ===Adjective===
-{{it-adj|filatelic|o|a|i|he}}
+{{it-adj}}
 
 # [[philatelic]]
 
@@ -6909,7 +6912,7 @@ Page 446 filodrammatico: -------- begin text --------
 {{prefix|it|filo|drammatico}}
 
 ===Adjective===
-{{it-adj|filodrammatic|o|a|i|he}}
+{{it-adj}}
 
 # {{lb|it|relational}} [[amateur]] [[dramatics]]
 
@@ -6954,19 +6957,6 @@ From {{der|it|la|physicus||physicist”, “naturalist}}, from {{der|it|grc|φυ
 ----
 
 -------- end text --------
-Page 448 fìsico: Found match for regex: =
-Page 448 fìsico: -------- begin text --------
-
-===Adjective===
-{{it-adj}}
-
-# {{obsolete typography of|it|fisico}}
-
-===Noun===
-{{it-noun|m|fìsici}}
-
-# {{obsolete typography of|it|fisico}}
--------- end text --------
 Page 449 fitochimico: Found match for regex: =
 Page 449 fitochimico: -------- begin text --------
 
@@ -6978,7 +6968,7 @@ From {{af|it|fito-|chimico}}.
 * {{hyph|it|fo|to|chì|mi|co}}
 
 ===Adjective===
-{{it-adj|fitochimic|o|a|i|he}}
+{{it-adj}}
 
 # [[phytochemical]]
 
@@ -7015,7 +7005,7 @@ Page 452 fobico: Found match for regex: =
 Page 452 fobico: -------- begin text --------
 
 ===Adjective===
-{{it-adj|fobic|o|a|i|he}}
+{{it-adj}}
 
 # [[phobic]]
 
@@ -7122,7 +7112,7 @@ Page 460 gaelico: Found match for regex: =
 Page 460 gaelico: -------- begin text --------
 
 ===Adjective===
-{{it-adj|gaelic|o|a|i|he}}
+{{it-adj}}
 
 # [[Gaelic]] (all senses)
 
@@ -7138,7 +7128,7 @@ Page 461 galenico: -------- begin text --------
 {{wikipedia|lang=it}}
 
 ===Adjective===
-{{it-adj|galenic|o|a|i|he}}
+{{it-adj}}
 
 # [[galenical]]
 
@@ -7260,7 +7250,7 @@ Borrowed from {{bor|it|la|genethliacus}}, from {{der|it|grc|γενεθλιακό
 * {{hyph|it|ge|ne|tlìa|co}}
 
 ===Adjective===
-{{it-adj|genetliac|o|a|i|he}}
+{{it-adj}}
 
 # {{tlb|it|literary}} Of or pertaining to one's [[birth]].
 #: {{syn|it|natale|q1=literary|natalizio|q2=uncommon}}
@@ -7281,7 +7271,7 @@ Page 468 geochimico: -------- begin text --------
 {{prefix|it|geo|chimico}}
 
 ===Adjective===
-{{it-adj|geochimic|o|a|i|he}}
+{{it-adj}}
 
 # [[geochemical]]
 
@@ -7326,7 +7316,7 @@ Page 470 geroglifico: -------- begin text --------
 {{wikipedia|lang=it}}
 
 ===Adjective===
-{{it-adj|geroglific|o|a|i|he}}
+{{it-adj}}
 
 # [[hieroglyphic]]
 
@@ -7397,7 +7387,7 @@ Page 475 giuseconomico: -------- begin text --------
 # {{lb|it|legal}} [[economic]] [[law]]
 
 ===Adjective===
-{{it-adj|giuseconomic|o|a|i|he}}
+{{it-adj}}
 
 # {{lb|it|legal|relational}} [[economic]] [[law]]
 -------- end text --------
@@ -7413,7 +7403,7 @@ Page 476 giuslavoristico: -------- begin text --------
 # {{lb|it|legal}} [[labour]] [[law]]
 
 ===Adjective===
-{{it-adj|giuslavoristic|o|a|i|he}}
+{{it-adj}}
 
 # {{lb|it|legal|relational}} [[labour]] [[law]]
 -------- end text --------
@@ -7429,7 +7419,7 @@ Page 477 giusprivatistico: -------- begin text --------
 # {{lb|it|legal}} [[private]] [[law]]
 
 ===Adjective===
-{{it-adj|giusprivatistic|o|a|i|he}}
+{{it-adj}}
 
 # {{lb|it|legal|relational}} [[private]] [[law]]
 -------- end text --------
@@ -7445,7 +7435,7 @@ Page 478 giuspubblicistico: -------- begin text --------
 # {{lb|it|legal}} [[journalistic]] [[law]]
 
 ===Adjective===
-{{it-adj|giuspubblicistic|o|a|i|he}}
+{{it-adj}}
 
 # {{lb|it|legal|relational}} [[journalistic]] [[law]]
 -------- end text --------
@@ -7521,7 +7511,7 @@ Page 484 grafico: -------- begin text --------
 ===Etymology 1===
 
 ====Adjective====
-{{it-adj|grafic|o|a|i|he}}
+{{it-adj}}
 
 # [[graphic]]
 
@@ -7559,7 +7549,7 @@ Page 485 grammatico: -------- begin text --------
 # [[grammarian]]
 
 ===Adjective===
-{{it-adj|grammatic|o|a|i|he}}
+{{it-adj}}
 
 # [[grammatical]]
 
@@ -7782,7 +7772,7 @@ Page 497 indoiranico: -------- begin text --------
 {{prefix|it|indo|iranico}}
 
 ===Adjective===
-{{it-adj|indoiranic|o|a|i|he}}
+{{it-adj}}
 
 # [[Indo-Iranian]]
 
@@ -7807,7 +7797,7 @@ From {{m|it|informatica}}.
 * {{it-IPA|informàtico}}
 
 ===Adjective===
-{{it-adj|informatic|o|a|i|he}}
+{{it-adj}}
 
 # {{lb|it|relational}} [[computing]]; [[informatic]]
 
@@ -7907,7 +7897,7 @@ Page 503 ipacusico: -------- begin text --------
 * {{hyph|it|i|pa|cù|si|co}}
 
 ===Adjective===
-{{it-adj|ipacusic|o|a|i|he}}
+{{it-adj}}
 
 # {{altform|it|ipoacusico}}.
 
@@ -7945,7 +7935,7 @@ Page 505 ipoacusico: -------- begin text --------
 * {{hyph|it|i|po|a|cù|si|co}}
 
 ===Adjective===
-{{it-adj|ipoacusic|o|a|i|he}}
+{{it-adj}}
 
 # Pertaining to [[hypoacusis]].
 # Exhibiting [[hypoacusis]].
@@ -7978,7 +7968,7 @@ Page 507 ipocoristico: Found match for regex: =
 Page 507 ipocoristico: -------- begin text --------
 
 ===Adjective===
-{{it-adj|ipocoristic|o|a|i|he}}
+{{it-adj}}
 
 # [[hypocoristic]]
 
@@ -7992,7 +7982,7 @@ Page 508 iranico: Found match for regex: =
 Page 508 iranico: -------- begin text --------
 
 ===Adjective===
-{{it-adj|iranic|o|a|i|he}}
+{{it-adj}}
 
 # [[Iranian]]
 
@@ -8020,6 +8010,9 @@ Page 509 islamico: -------- begin text --------
 
 # [[Islamic]], [[Muslim]]
 
+====Derived terms====
+* {{l|it|islamicamente}}
+
 ===Noun===
 {{it-noun|m|islamici|f=islamica}}
 
@@ -8039,12 +8032,18 @@ Page 510 isterico: -------- begin text --------
 ===Etymology===
 From {{der|it|la|hystericus}}, from {{der|it|grc|ὑστερικός|t=suffering in the uterus, hysterical}}, from {{m|grc|ὑστέρα|t=womb}}.
 
+===Pronunciation===
+* {{it-IPA|istèrico}}
+
 ===Adjective===
 {{it-adj}}
 
 # [[hysterical]], [[hysteric]]
 #: {{syn|it|instabile|nevrotico}}
 # {{qualifier|derogatory}} [[shrill]]
+
+====Derived terms====
+* {{l|it|istericamente}}
 
 ===Noun===
 {{it-noun|m|isterici|f=isterica}}
@@ -8071,7 +8070,7 @@ From {{bor|it|la|Labrōnicus}}, from {{m|la|Labro|Labrō, Labrōnis|Livorno}} + 
 * {{hyphenation|it|la|brò|ni|co}}
 
 ===Adjective===
-{{it-adj|labronic|o|a|i|he}}
+{{it-adj}}
 
 # {{lb|it|literary|or|soccer|_|slang}} [[Livornian]] {{gloss|of or pertaining to Livorno, especially to its football team}}
 #: {{syn|it|livornese}}
@@ -8126,6 +8125,11 @@ From {{der|it|la|lāicus}}.
 
 # [[lay]]
 # [[secular]]
+
+====Derived terms====
+* {{l|it|laicamente}}
+* {{l|it|laicismo}}
+* {{l|it|laicizzare}}
 
 ===Noun===
 {{it-noun|m|laici|f=laica}}
@@ -8236,7 +8240,7 @@ Page 521 leucemico: -------- begin text --------
 From {{af|it|leucemia|-ico}}.
 
 ===Adjective===
-{{it-adj|leucemic|o|a|i|he}}
+{{it-adj}}
 
 # {{lb|it|oncology}} [[leukemic]]
 
@@ -8262,7 +8266,7 @@ Page 523 liberaldemocratico: Found match for regex: =
 Page 523 liberaldemocratico: -------- begin text --------
 
 ===Adjective===
-{{it-adj|liberaldemocratic|o|a|i|he}}
+{{it-adj}}
 
 # [[Liberal]] [[Democratic]]
 
@@ -8275,7 +8279,7 @@ Page 524 libico: Found match for regex: =
 Page 524 libico: -------- begin text --------
 
 ===Adjective===
-{{it-adj|libic|o|a|i|he}}
+{{it-adj}}
 
 # [[Libyan]]
 
@@ -8383,7 +8387,7 @@ From {{der|it|la|ligusticus}}, from {{der|it|grc|Λιγυστικός}}.
 * {{hyph|it|li|gù|sti|co}}
 
 ===Adjective===
-{{it-adj|ligustic|o|a|i|he}}
+{{it-adj}}
 
 # {{lb|it|literary}} {{synonym of|it|ligure}}
 
@@ -8406,7 +8410,7 @@ From {{bor|it|la|lymphāticus}}; synchronically, {{af|it|linfa|-atico}}.
 * {{hyph|it|lin|fà|ti|co}}
 
 ===Adjective===
-{{it-adj|linfatic|o|a|i|he}}
+{{it-adj}}
 
 # {{lb|it|anatomy|medicine|physiology}} [[lymphatic]]
 
@@ -8485,7 +8489,7 @@ Page 538 lunatico: -------- begin text --------
 From {{inh|it|la|lūnāticus}}.
 
 ===Adjective===
-{{it-adj|lunatic|o|a|i|he}}
+{{it-adj}}
 
 # [[quirky]], [[temperamental]] and [[unstable]]
 # [[lunar]]
@@ -8863,24 +8867,31 @@ Page 554 melopsittaco: -------- begin text --------
 Page 555 mendico: Found match for regex: =
 Page 555 mendico: -------- begin text --------
 
-===Etymology===
-From {{etyl|la|it}} {{m|la|mendīcus}}
+===Etymology 1===
+From {{etyl|la|it}} {{m|la|mendīcus}}.
 
-===Adjective===
-{{it-adj|mendic|o|hi|a|he}}
+====Pronunciation====
+* {{it-IPA|mendìco}}
+
+====Adjective====
+{{it-adj|mpl=mendichi}}
 
 # [[mendicant]]
+#: {{syn|it|mendicante}}
 
-===Noun===
+====Noun====
 {{it-noun|m}}
 
-# [[mendicant]]
-#beggar
+# [[mendicant]], [[beggar]]
+#: {{syn|it|mendicante}}
 
-====Synonyms====
-* {{l|it|mendicante}}
+===Etymology 2===
+{{nonlemma}}
 
-===Verb===
+====Pronunciation====
+* {{it-IPA|méndico}}
+
+====Verb====
 {{head|it|verb form}}
 
 # {{inflection of|it|mendicare||1|s|pres|indc}}
@@ -8907,7 +8918,7 @@ Page 557 mesolitico: -------- begin text --------
 From {{affix|it|meso-|-litico}}.
 
 ===Adjective===
-{{it-adj|mesolitic|o|a|i|he}}
+{{it-adj}}
 
 # [[Mesolithic]]
 
@@ -8943,7 +8954,7 @@ Page 559 mesotriassico: -------- begin text --------
 * {{hyph|it|me|so|triàs|si|co}}
 
 ===Adjective===
-{{it-adj|mesotriassic|o|a|i|he}}
+{{it-adj}}
 
 # {{lb|it|geology|relational}} [[Middle Triassic]]
 
@@ -8967,7 +8978,7 @@ Page 560 mesozoico: -------- begin text --------
 # [[Mesozoic]]
 
 ===Adjective===
-{{it-adj|mesozoic|o|a|i|he}}
+{{it-adj}}
 
 # [[Mesozoic]]
 
@@ -9041,7 +9052,7 @@ Page 563 metalmeccanico: Found match for regex: =
 Page 563 metalmeccanico: -------- begin text --------
 
 ===Adjective===
-{{it-adj|metalmeccanic|o|a|i|he}}
+{{it-adj}}
 
 # {{lb|it|relational}} [[metalworking]]
 
@@ -9073,7 +9084,7 @@ Page 566 midriatico: Found match for regex: =
 Page 566 midriatico: -------- begin text --------
 
 ===Adjective===
-{{it-adj|midriatic|o|a|i|he}}
+{{it-adj}}
 
 # {{lb|it|physiology|pathology}} [[mydriatic]]
 
@@ -9096,7 +9107,7 @@ Page 567 mistico: -------- begin text --------
 From {{der|it|la|mysticus}}, from {{der|it|grc|μυστικός}}.
 
 ====Adjective====
-{{it-adj|mistic|o|a|i|he}}
+{{it-adj}}
 
 # [[mystical]]
 
@@ -9179,7 +9190,7 @@ Page 570 mongolico: -------- begin text --------
 # [[Mongolian]] (group of languages from Mongolia)
 
 ===Adjective===
-{{it-adj|mongolic|o|a|i|he}}
+{{it-adj}}
 
 # [[Mongolian]] (all senses)
 
@@ -9196,7 +9207,7 @@ Page 571 monomaniaco: -------- begin text --------
 {{prefix|it|mono|maniaco}}
 
 ===Adjective===
-{{it-adj|monomaniac|o|a|i|he}}
+{{it-adj}}
 
 # [[monomaniac]], [[monomaniacal]]
 
@@ -9218,7 +9229,7 @@ Page 573 monostico: Found match for regex: =
 Page 573 monostico: -------- begin text --------
 
 ===Adjective===
-{{it-adj|monostic|o|a|i|he}}
+{{it-adj}}
 
 # {{lb|it|relational}} [[monostich]]
 
@@ -9288,7 +9299,7 @@ Page 577 mucolitico: Found match for regex: =
 Page 577 mucolitico: -------- begin text --------
 
 ===Adjective===
-{{it-adj|mucolitic|o|a|i|he}}
+{{it-adj}}
 
 # [[mucolytic]]
 
@@ -9309,7 +9320,7 @@ Page 578 musaico: -------- begin text --------
 # {{alternative form of|it|mosaico}}
 
 ===Adjective===
-{{it-adj|musaic|o|a|i|he}}
+{{it-adj}}
 
 # Relating to a [[muse]]
 -------- end text --------
@@ -9344,7 +9355,7 @@ Page 581 musico: -------- begin text --------
 * {{rhymes|it|uziko}}
 
 ===Adjective===
-{{it-adj|music|o|a|i|he}}
+{{it-adj}}
 
 # [[musical]]
 # [[melodious]]
@@ -9382,7 +9393,7 @@ Page 583 narcotico: -------- begin text --------
 * {{it-IPA|narcòtico}}
 
 ===Adjective===
-{{it-adj|narcotic|o|a|i|he}}
+{{it-adj}}
 
 # [[narcotic]]
 # [[boring]] (annoyingly so)
@@ -9434,7 +9445,7 @@ Page 586 natriuretico: Found match for regex: =
 Page 586 natriuretico: -------- begin text --------
 
 ===Adjective===
-{{it-adj|natriuretic|o|a|i|he}}
+{{it-adj}}
 
 # [[natriuretic]]
 
@@ -9447,7 +9458,7 @@ Page 587 navalmeccanico: Found match for regex: =
 Page 587 navalmeccanico: -------- begin text --------
 
 ===Adjective===
-{{it-adj|navalmeccanic|o|a|i|he}}
+{{it-adj}}
 
 # {{lb|it|relational}} [[shipbuilding]]
 # {{lb|it|relational}} [[naval]] [[engineering]]
@@ -9500,7 +9511,7 @@ Page 589 neocattolico: -------- begin text --------
 {{prefix|it|neo|cattolico}}
 
 ===Adjective===
-{{it-adj|neocattolic|o|a|i|he}}
+{{it-adj}}
 
 # [[neo-Catholic]]
 
@@ -9516,7 +9527,7 @@ Page 590 neoclassico: -------- begin text --------
 {{prefix|it|neo|classico}}
 
 ===Adjective===
-{{it-adj|neoclassic|o|a|i|he}}
+{{it-adj}}
 
 # [[neoclassical]]
 
@@ -9532,7 +9543,7 @@ Page 591 neoebraico: -------- begin text --------
 {{prefix|it|neo|ebraico}}
 
 ===Adjective===
-{{it-adj|neoebraic|o|a|i|he}}
+{{it-adj}}
 
 # [[modern]]-[[Hebrew]]
 
@@ -9550,7 +9561,7 @@ Page 592 neoellenico: -------- begin text --------
 {{prefix|it|neo|ellenico}}
 
 ===Adjective===
-{{it-adj|neoellenic|o|a|i|he}}
+{{it-adj}}
 
 # [[modern]] [[Greek]]
 
@@ -9568,7 +9579,7 @@ Page 593 neogotico: -------- begin text --------
 {{prefix|it|neo|gotico}}
 
 ===Adjective===
-{{it-adj|neogotic|o|a|i|he}}
+{{it-adj}}
 
 # [[neogothic]]
 
@@ -9589,7 +9600,7 @@ Page 594 neogrammatico: -------- begin text --------
 # [[Neogrammarian]]
 
 ===Adjective===
-{{it-adj|neogrammatic|o|a|i|he}}
+{{it-adj}}
 
 # {{lb|it|relational}} [[Neogrammarian]]
 -------- end text --------
@@ -9611,7 +9622,7 @@ Page 596 neozoico: -------- begin text --------
 {{confix|it|neo|zoico}}
 
 ===Adjective===
-{{it-adj|neozoic|o|a|i|he}}
+{{it-adj}}
 
 # {{lb|it|relational}} [[Neozoic]]
 
@@ -9636,7 +9647,7 @@ Page 598 neurochimico: -------- begin text --------
 {{prefix|it|neuro|chimico}}
 
 ===Adjective===
-{{it-adj|neurochimic|o|a|i|he}}
+{{it-adj}}
 
 # [[neurochemical]]
 
@@ -9654,7 +9665,7 @@ Page 599 neurolettico: -------- begin text --------
 {{wikipedia|lang=it}}
 
 ===Adjective===
-{{it-adj|neurolettic|o|a|i|he}}
+{{it-adj}}
 
 # [[antipsychotic]], [[neuroleptic]]
 
@@ -9671,7 +9682,7 @@ Page 600 neurotonico: -------- begin text --------
 {{prefix|it|neuro|tonico}}
 
 ===Adjective===
-{{it-adj|neurotonic|o|a|i|he}}
+{{it-adj}}
 
 # [[neurotonic]]
 
@@ -9721,7 +9732,7 @@ Page 605 nostalgico: -------- begin text --------
 {{af|it|nostalgia|-ico}}
 
 ===Adjective===
-{{it-adj|nostalgic|o|a|i|he}}
+{{it-adj}}
 
 # [[homesick]]
 # [[nostalgic]]
@@ -9861,7 +9872,7 @@ Page 620 occitanico: Found match for regex: =
 Page 620 occitanico: -------- begin text --------
 
 ===Adjective===
-{{it-adj|occitanic|o|a|i|he}}
+{{it-adj}}
 
 # [[Provençal]], [[Occitan]]
 
@@ -9882,7 +9893,7 @@ Page 621 odontalgico: Found match for regex: =
 Page 621 odontalgico: -------- begin text --------
 
 ===Adjective===
-{{it-adj|odontalgic|o|a|i|he}}
+{{it-adj}}
 
 # [[odontalgic]]
 
@@ -9903,7 +9914,7 @@ Page 622 odontotecnico: -------- begin text --------
 # [[dental]] [[technician]]
 
 ===Adjective===
-{{it-adj|odontotecnic|o|a|i|he}}
+{{it-adj}}
 
 # {{lb|it|relational}} [[dental]] [[technology]]
 
@@ -9921,7 +9932,7 @@ From {{af|it|oligofrenia|-ico}}.
 * {{hyph|it|o|li|go|frè|ni|co}}
 
 ===Adjective===
-{{it-adj|oligofrenic|o|a|i|he}}
+{{it-adj}}
 
 # [[mentally retarded]]
 
@@ -9942,7 +9953,7 @@ Page 624 olimpionico: Found match for regex: =
 Page 624 olimpionico: -------- begin text --------
 
 ===Adjective===
-{{it-adj|olimpionic|o|a|i|he}}
+{{it-adj}}
 
 # {{lb|it|of or pertaining to the Olympic Games}} [[Olympic]], [[Olympian]]
 
@@ -10018,7 +10029,7 @@ From {{bor|it|grc|ὀνομαστικός}}.
 # [[name day]]
 
 ===Adjective===
-{{it-adj|onomastic|o|a|i|he}}
+{{it-adj}}
 
 # {{lb|it|relational}} [[name day]]
 
@@ -10184,7 +10195,7 @@ Page 640 ossetico: Found match for regex: =
 Page 640 ossetico: -------- begin text --------
 
 ===Adjective===
-{{it-adj|ossetic|o|a|i|he}}
+{{it-adj}}
 
 # [[Ossetian]], [[Ossetic]]
 
@@ -10205,7 +10216,7 @@ Page 642 ossitocico: Found match for regex: =
 Page 642 ossitocico: -------- begin text --------
 
 ===Adjective===
-{{it-adj|ossitocic|o|a|i|he}}
+{{it-adj}}
 
 # [[oxytocic]]
 
@@ -10237,7 +10248,7 @@ Page 645 ostetrico: Found match for regex: =
 Page 645 ostetrico: -------- begin text --------
 
 ===Adjective===
-{{it-adj|ostetric|o|a|i|he}}
+{{it-adj}}
 
 # [[obstetric]], [[obstetrical]]
 
@@ -10353,7 +10364,7 @@ Page 651 paleozoico: -------- begin text --------
 {{confix|it|paleo|zoico}}
 
 ===Adjective===
-{{it-adj|paleozoic|o|a|i|he}}
+{{it-adj}}
 
 # [[Paleozoic]]
 
@@ -10479,7 +10490,7 @@ Page 656 paramedico: -------- begin text --------
 # [[paramedic]]
 
 ===Adjective===
-{{it-adj|paramedic|o|a|i|he}}
+{{it-adj}}
 
 # [[paramedical]]
 
@@ -10505,7 +10516,7 @@ Page 658 paraplegico: Found match for regex: =
 Page 658 paraplegico: -------- begin text --------
 
 ===Adjective===
-{{it-adj|paraplegic|o|a|i|he}}
+{{it-adj}}
 
 # [[paraplegic]]
 
@@ -10524,7 +10535,7 @@ Page 659 parasimpaticolitico: -------- begin text --------
 {{prefix|it|para|simpaticolitico}}
 
 ===Adjective===
-{{it-adj|parasimpaticolitic}}
+{{it-adj}}
 
 # [[parasympatholytic]]
 
@@ -10537,7 +10548,7 @@ Page 660 parasimpaticomimetico: Found match for regex: =
 Page 660 parasimpaticomimetico: -------- begin text --------
 
 ===Adjective===
-{{it-adj|parasimpaticomimetic|o|a|i|he}}
+{{it-adj}}
 
 # [[parasympathomimetic]]
 
@@ -10566,7 +10577,7 @@ Page 663 parletico: Found match for regex: =
 Page 663 parletico: -------- begin text --------
 
 ===Adjective===
-{{it-adj|parletic|o|a|i|he}}
+{{it-adj}}
 
 # [[paralytic]]
 #: {{syn|it|paralitico}}
@@ -10633,7 +10644,7 @@ Page 669 patrionimico: Found match for regex: =
 Page 669 patrionimico: -------- begin text --------
 
 ===Adjective===
-{{it-adj|patrionimic|o|a|i|he}}
+{{it-adj}}
 
 # [[patrionymic]]
 
@@ -10650,7 +10661,7 @@ Page 670 patronimico: -------- begin text --------
 {{wikipedia|lang=it}}
 
 ===Adjective===
-{{it-adj|patronimic|o|a|i|he}}
+{{it-adj}}
 
 # [[patronymic]]
 
@@ -10685,7 +10696,7 @@ Page 673 peloponnesiaco: Found match for regex: =
 Page 673 peloponnesiaco: -------- begin text --------
 
 ===Adjective===
-{{it-adj|peloponnesiac|o|a|i|he}}
+{{it-adj}}
 
 # [[Peloponnesian]]
 
@@ -10706,7 +10717,7 @@ Page 674 pelusico: -------- begin text --------
 * {{hyph|it|pe|lù|si|co}}
 
 ===Adjective===
-{{it-adj|pelusic|o|a|i|he}}
+{{it-adj}}
 
 # {{tlb|it|historical|uncommon}} [[Pelusiac]]
 #: {{syn|it|pelusiaco|pelusiano|q2=uncommon}}
@@ -10808,7 +10819,7 @@ From {{der|it|la|persicus}}, possibly borrowed; compare the popularly inherited 
 * {{sense|peach tree}} {{l|it|pesco}}
 
 ===Adjective===
-{{it-adj|persic|o|a|i|he}}
+{{it-adj}}
 
 # {{lb|it|relational}} [[Persian Gulf]]
 
@@ -10881,7 +10892,7 @@ Page 686 pitagorico: Found match for regex: =
 Page 686 pitagorico: -------- begin text --------
 
 ===Adjective===
-{{it-adj|pitagoric|o|a|i|he}}
+{{it-adj}}
 
 # [[Pythagorean]]
 
@@ -10933,7 +10944,7 @@ From {{der|it|la|plasticus}}, from {{der|it|grc|πλαστικός}}.
 * {{rhymes|it|astiko}}
 
 ====Adjective====
-{{it-adj|plastic|o|a|i|he}}
+{{it-adj}}
 
 # [[plastic]]
 
@@ -11048,7 +11059,7 @@ Page 693 politecnico: -------- begin text --------
 {{prefix|it|poli|tecnico}}
 
 ===Adjective===
-{{it-adj|politecnic|o|a|i|he}}
+{{it-adj}}
 
 # [[polytechnic]]
 
@@ -11276,7 +11287,7 @@ Page 706 procinetico: -------- begin text --------
 {{prefix|it|pro|cinetico}}
 
 ===Adjective===
-{{it-adj|procinetic|o|a|i|he}}
+{{it-adj}}
 
 # [[prokinetic]]
 
@@ -11329,7 +11340,7 @@ Page 710 progestinico: Found match for regex: =
 Page 710 progestinico: -------- begin text --------
 
 ===Adjective===
-{{it-adj|progestinic|o|a|i|he}}
+{{it-adj}}
 
 # {{lb|it|relational}} [[progestagen]]; [[progestinic]], [[progestogenic]]
 
@@ -11398,7 +11409,7 @@ Page 715 protoceltico: -------- begin text --------
 {{prefix|it|proto|celtico}}
 
 ===Adjective===
-{{it-adj|protoceltic|o|a|i|he}}
+{{it-adj}}
 
 # {{lb|it|relational}} [[Proto-Celtic]]
 
@@ -11427,7 +11438,7 @@ Page 717 protogermanico: -------- begin text --------
 {{prefix|it|proto|germanico}}
 
 ===Adjective===
-{{it-adj|protogermanic|o|a|i|he}}
+{{it-adj}}
 
 # [[Proto-Germanic]]
 
@@ -11453,7 +11464,7 @@ Page 719 protosemitico: -------- begin text --------
 {{prefix|it|proto|semitico}}
 
 ===Adjective===
-{{it-adj|protosemitic|o|a|i|he}}
+{{it-adj}}
 
 # [[Proto-Semitic]]
 
@@ -11512,7 +11523,7 @@ Page 723 psicolettico: Found match for regex: =
 Page 723 psicolettico: -------- begin text --------
 
 ===Adjective===
-{{it-adj|psicolettic|o|a|i|he}}
+{{it-adj}}
 
 # [[psycholeptic]]
 
@@ -11528,7 +11539,7 @@ Page 724 psicopatico: -------- begin text --------
 {{af|it|psicopatia|-ico}}
 
 ===Adjective===
-{{it-adj|psicopatic|o|a|i|he}}
+{{it-adj}}
 
 # [[psychopathic]]
 
@@ -11544,7 +11555,7 @@ Page 725 psicotico: Found match for regex: =
 Page 725 psicotico: -------- begin text --------
 
 ===Adjective===
-{{it-adj|psicotic|o|a|i|he}}
+{{it-adj}}
 
 # [[psychotic]]
 
@@ -11686,7 +11697,7 @@ Page 733 radiofisico: -------- begin text --------
 {{prefix|it|radio|fisico}}
 
 ===Adjective===
-{{it-adj|radiofisic|o|a|i|he}}
+{{it-adj}}
 
 # [[radiophysical]]
 
@@ -11702,7 +11713,7 @@ Page 734 radiotecnico: -------- begin text --------
 {{prefix|it|radio|tecnico}}
 
 ===Adjective===
-{{it-adj|radiotecnic|o|a|i|he}}
+{{it-adj}}
 
 # {{lb|it|relational}} [[radio]] [[engineering]]
 
@@ -11759,7 +11770,7 @@ Page 737 rancico: -------- begin text --------
 # {{inflection of|it|rancicare||1|s|pres|indc}}
 
 ===Adjective===
-{{it-adj|rancic|o|a|i|he}}
+{{it-adj}}
 
 # [[rancid]]
 
@@ -11842,7 +11853,7 @@ Page 744 romaico: Found match for regex: =
 Page 744 romaico: -------- begin text --------
 
 ===Adjective===
-{{it-adj|romaic|o|a|i|he}}
+{{it-adj}}
 
 # [[Romaic]]
 
@@ -11856,6 +11867,9 @@ Page 745 romantico: -------- begin text --------
 
 ===Etymology===
 Borrowed from {{bor|it|en|romantic}}.<ref>{{cite-book|last=Migliorini|first=Bruno|coauthors=Aldo Duro|title=Prontuario etimologico della lingua italiana|year=1950|publisher=Paravia|location=|lang=it|chapter=romantico}}</ref>
+
+===Pronunciation===
+* {{it-IPA|romàntico}}
 
 ===Adjective===
 {{it-adj}}
@@ -11885,7 +11899,7 @@ Page 746 ropalico: -------- begin text --------
 # [[rhopalic]]
 
 ===Adjective===
-{{it-adj|ropalic|o|a|i|he}}
+{{it-adj}}
 
 # [[rhopalic]]
 -------- end text --------
@@ -11922,7 +11936,7 @@ Page 748 sadico: Found match for regex: =
 Page 748 sadico: -------- begin text --------
 
 ===Adjective===
-{{it-adj|sadic|o|a|i|he}}
+{{it-adj}}
 
 # [[sadistic]]
 #: {{syn|it|sadistico}}
@@ -11980,7 +11994,7 @@ Page 752 saluretico: -------- begin text --------
 {{wikipedia|lang=it}}
 
 ===Adjective===
-{{it-adj|saluretic|o|a|i|he}}
+{{it-adj}}
 
 # [[saluretic]]
 
@@ -12095,7 +12109,7 @@ Page 757 schizofrenico: Found match for regex: =
 Page 757 schizofrenico: -------- begin text --------
 
 ===Adjective===
-{{it-adj|schizofrenic|o|a|i|he}}
+{{it-adj}}
 
 # [[schizophrenic]]
 
@@ -12251,7 +12265,7 @@ Page 770 simoniaco: -------- begin text --------
 # [[simoniac]]
 
 ===Adjective===
-{{it-adj|simoniac|o|a|i|he}}
+{{it-adj}}
 
 # [[simoniacal]]
 
@@ -12330,7 +12344,7 @@ Page 772 simpaticomimetico: -------- begin text --------
 {{wikipedia|lang=it}}
 
 ===Adjective===
-{{it-adj|simpaticomimetic|o|a|i|he}}
+{{it-adj}}
 
 # [[sympathomimetic]]
 
@@ -12377,7 +12391,7 @@ Page 774 sinodatico: Found match for regex: =
 Page 774 sinodatico: -------- begin text --------
 
 ===Adjective===
-{{it-adj|sinodatic|o|a|i|he}}
+{{it-adj}}
 
 # {{synonym of|it|cattedratico}}
 
@@ -12393,7 +12407,7 @@ Page 775 siriaco: -------- begin text --------
 From {{der|it|grc|συριακός}}, from {{m|grc|Συρία}}.
 
 ===Adjective===
-{{it-adj|siriac|o|a|i|he}}
+{{it-adj}}
 
 # [[Syrian]]
 # [[Syriac]]
@@ -12456,7 +12470,7 @@ Page 780 socialdemocratico: Found match for regex: =
 Page 780 socialdemocratico: -------- begin text --------
 
 ===Adjective===
-{{it-adj|socialdemocratic|o|a|i|he}}
+{{it-adj}}
 
 # [[social democratic]]
 
@@ -12480,7 +12494,7 @@ Page 782 socratico: Found match for regex: =
 Page 782 socratico: -------- begin text --------
 
 ===Adjective===
-{{it-adj|socratic|o|a|i|he}}
+{{it-adj}}
 
 # [[Socratic]]
 
@@ -12496,7 +12510,7 @@ Page 783 solfamidico: Found match for regex: =
 Page 783 solfamidico: -------- begin text --------
 
 ===Adjective===
-{{it-adj|solfamidic|o|a|i|he}}
+{{it-adj}}
 
 # {{alternative form of|it|sulfamidico}}
 
@@ -12556,7 +12570,7 @@ Page 787 sorbico: Found match for regex: =
 Page 787 sorbico: -------- begin text --------
 
 ===Adjective===
-{{it-adj|sorbic|o|a|i|he}}
+{{it-adj}}
 
 # [[sorbic]]
 
@@ -12625,7 +12639,7 @@ From {{af|it|sovra-|carico}}.
 ====Noun====
 {{it-noun|m}}
 
-# Excess [[load]], [[overload]], [[overcharge]], [[surcharge]]
+# excess [[load]], [[overload]], [[overcharge]], [[surcharge]]
 
 ===Etymology 2===
 {{nonlemma}}
@@ -12657,7 +12671,7 @@ Page 792 spasmolitico: -------- begin text --------
 {{suffix|it|spasmo|litico}}
 
 ===Adjective===
-{{it-adj|spasmolitic|o|a|i|he}}
+{{it-adj}}
 
 # [[spasmolytic]]
 
@@ -12721,7 +12735,7 @@ Page 799 stallatico: Found match for regex: =
 Page 799 stallatico: -------- begin text --------
 
 ===Adjective===
-{{it-adj|stallatic|o|a|i|he}}
+{{it-adj}}
 
 # {{lb|it|relational}} [[stable]]
 
@@ -12868,7 +12882,7 @@ Page 806 sulfamidico: Found match for regex: =
 Page 806 sulfamidico: -------- begin text --------
 
 ===Adjective===
-{{it-adj|sulfamidic|o|a|i|he}}
+{{it-adj}}
 
 # {{lb|it|relational}} [[sulphonamide]]
 
@@ -12884,7 +12898,7 @@ Page 807 superalcolico: -------- begin text --------
 {{prefix|it|super|alcolico}}
 
 ===Adjective===
-{{it-adj|superalcolic|o|a|i|he}}
+{{it-adj}}
 
 # {{lb|it|beverages}} [[high-proof]], [[strong]]
 
@@ -12913,7 +12927,7 @@ Page 809 tagico: Found match for regex: =
 Page 809 tagico: -------- begin text --------
 
 ===Adjective===
-{{it-adj|tagic|o|a|i|he}}
+{{it-adj}}
 
 # {{lb|it|relational}} [[Tajik]], [[Tajiki]]
 
@@ -12964,15 +12978,18 @@ Page 813 tecnico: Found match for regex: =
 Page 813 tecnico: -------- begin text --------
 
 ===Etymology===
-{{etyl|la|it}} ''[[technicus]]''. see also [[-ico]]
+{{etyl|la|it}} ''[[technicus]]''.
 
 ===Pronunciation===
-tècnico, /ˈtɛkniko/
+* {{it-IPA|tècnico}}
 
 ===Adjective===
 {{it-adj}}
 
 # [[technical]]
+
+====Derived terms====
+* {{l|it|tecnicamente}}
 
 ===Noun===
 {{it-noun|m|tecnici}}
@@ -12982,7 +12999,6 @@ tècnico, /ˈtɛkniko/
 
 ====Related terms====
 * {{l|it|tecnica}}
-* {{l|it|tecnicamente}}
 * {{l|it|tecnicismo}}
 * {{l|it|tecnicistico}}
 * {{l|it|tecnicizzare}}
@@ -13002,7 +13018,7 @@ Page 814 telematico: -------- begin text --------
 {{suffix|it|telematica|o}}
 
 ===Adjective===
-{{it-adj|telematic|o|a|i|he}}
+{{it-adj}}
 
 # [[telematic]]
 
@@ -13071,7 +13087,7 @@ Page 818 termotecnico: Found match for regex: =
 Page 818 termotecnico: -------- begin text --------
 
 ===Adjective===
-{{it-adj|termotecnic|o|a|i|he}}
+{{it-adj}}
 
 # {{lb|it|relational}} [[heating]] [[engineering]]
 
@@ -13118,7 +13134,7 @@ Page 822 tireostatico: Found match for regex: =
 Page 822 tireostatico: -------- begin text --------
 
 ===Adjective===
-{{it-adj|tireostatic|o|a|i|he}}
+{{it-adj}}
 
 # [[thyreostatic]]
 
@@ -13137,7 +13153,7 @@ From {{der|it|grc|τονικός}}.
 * {{it-IPA|tònico}}
 
 ===Adjective===
-{{it-adj|tonic|o|a|i|he}}
+{{it-adj}}
 
 # [[tonic]]
 
@@ -13308,7 +13324,7 @@ From {{der|it|la|tragicus}}, from {{der|it|grc|τραγικός}}.
 * {{it-IPA|tràgico}}
 
 ===Adjective===
-{{it-adj|tragic|o|a|i|he}}
+{{it-adj}}
 
 # [[tragic]], [[tragical]]
 #: {{syn|it|drammatico}}
@@ -13339,7 +13355,7 @@ Page 830 transatlantico: -------- begin text --------
 From {{af|it|trans-|atlantico}}.
 
 ===Adjective===
-{{it-adj|transatlantic|o|a|i|he}}
+{{it-adj}}
 
 # [[transatlantic]]
 
@@ -13367,7 +13383,7 @@ Page 832 triassico: -------- begin text --------
 # {{lb|it|geology}} [[Triassic]], [[Trias]]
 
 ===Adjective===
-{{it-adj|triassic|o|a|i|he}}
+{{it-adj}}
 
 # {{lb|it|relational}} [[Triassic]]
 
@@ -13378,7 +13394,7 @@ Page 833 tribraco: Found match for regex: =
 Page 833 tribraco: -------- begin text --------
 
 ===Adjective===
-{{it-adj|tribrac|o|a|hi|he}}
+{{it-adj|mpl=tribrachi}}
 
 # [[tribrachic]]
 
@@ -13396,7 +13412,7 @@ Page 834 triciclico: -------- begin text --------
 {{wikipedia|lang=it}}
 
 ===Adjective===
-{{it-adj|triciclic|o|a|i|he}}
+{{it-adj}}
 
 # [[tricyclic]]
 
@@ -13417,7 +13433,7 @@ From {{bor|it|grc|τρίστιχος}}, derived from {{m|grc|τρι-||three}} + 
 * {{hyph|it|trì|sti|co}}
 
 ===Adjective===
-{{it-adj|tristic|o|a|i|he}}
+{{it-adj}}
 
 # {{lb|it|poetry|of a stanza}} Consisting of [[three]] [[line]]s.
 #: {{hyper|it|strofa}}
@@ -13467,7 +13483,7 @@ Page 838 trombolitico: Found match for regex: =
 Page 838 trombolitico: -------- begin text --------
 
 ===Adjective===
-{{it-adj|trombolitic|o|a|i|he}}
+{{it-adj}}
 
 # [[thrombolytic]]
 
@@ -13530,7 +13546,7 @@ Page 842 ubriaco: -------- begin text --------
 From {{inh|it|LL.|ēbriācus}}, derived from {{der|it|la|ēbrius}}, ultimately from {{der|it|ine-pro|*h₁egʷʰ-|t=to drink}}.
 
 ===Pronunciation===
-* {{IPA|it|/u.briˈa.ko/|[ubr̺iˈäːko̞]}}
+* {{it-IPA|ubriàco}}
 * {{hyphenation|it|u|brià|co}}
 * {{rhymes|it|ako}}
 
@@ -13571,7 +13587,7 @@ Page 843 ugaritico: -------- begin text --------
 #: {{syn|it|[[lingua]] [[ugaritica]]}}
 
 ===Adjective===
-{{it-adj|ugaritic|o|a|i|he}}
+{{it-adj}}
 
 # [[Ugaritic]]
 
@@ -13587,7 +13603,7 @@ Page 844 ugrico: -------- begin text --------
 * {{it-IPA|ùgrico}}
 
 ===Adjective===
-{{it-adj|ugric|o|a|i|he}}
+{{it-adj}}
 
 # [[Ugric]]
 
@@ -13612,7 +13628,7 @@ Page 845 ugrofinnico: -------- begin text --------
 * {{l|it|ugro-finnico}}
 
 ===Adjective===
-{{it-adj|ugrofinnic|o|a|i|he}}
+{{it-adj}}
 
 # [[Finno-Ugric]]
 
@@ -13678,7 +13694,7 @@ Page 848 uralico: Found match for regex: =
 Page 848 uralico: -------- begin text --------
 
 ===Adjective===
-{{it-adj|uralic|o|a|i|he}}
+{{it-adj}}
 
 # {{lb|it|relational}} [[Ural]]
 # [[Uralic]]
@@ -13703,7 +13719,7 @@ Page 850 uricosurico: Found match for regex: =
 Page 850 uricosurico: -------- begin text --------
 
 ===Adjective===
-{{it-adj|uricosuric|o|a|i|he}}
+{{it-adj}}
 
 # [[uricosuric]]
 
@@ -13716,7 +13732,7 @@ Page 851 vagolitico: Found match for regex: =
 Page 851 vagolitico: -------- begin text --------
 
 ===Adjective===
-{{it-adj|vagolitic|o|a|i|he}}
+{{it-adj}}
 
 # [[vagolytic]]
 
@@ -13789,7 +13805,7 @@ Page 854 venetico: -------- begin text --------
 * {{l|it|venètico}}
 
 ===Adjective===
-{{it-adj|venetic|o|a|i|he}}
+{{it-adj}}
 
 # [[Venetic]]
 
@@ -13848,7 +13864,7 @@ Page 857 viceolimpionico: -------- begin text --------
 From {{af|it|vice-|olimpionico}}.
 
 ===Adjective===
-{{it-adj|viceolimpionic|o|a|i|he}}
+{{it-adj}}
 
 # {{lb|it|relational}} [[Olympic]] [[runner-up]]
 
@@ -13948,7 +13964,7 @@ Page 862 vindelico: -------- begin text --------
 # A member of the [[Vindelici]]
 
 ===Adjective===
-{{it-adj|vindelic|o|a|i|he}}
+{{it-adj}}
 
 # [[vindelic]]
 -------- end text --------
@@ -13982,17 +13998,17 @@ From {{bor|it|ru|-}}.
 * {{hyph|it|vo|tià|co}}
 
 ===Adjective===
-{{it-adj|votiac|o|a|hi|he}}
+{{it-adj|mpl=votiachi}}
 
 # {{syn of|it|udmurto}}
 
-===Noun 1===
+===Noun===
 {{it-noun|m|f=votiaca}}
 
 # {{syn of|it|udmurto}}
 
-===Noun 2===
-{{it-noun|m|~|head=il votiaco}}
+===Noun===
+{{it-noun|m|~}}
 
 # {{syn of|it|udmurto|t=the [[Udmurt]] [[language]]}}
 
@@ -14011,7 +14027,7 @@ From {{af|it|zigo-|-matico}}.
 * {{it-IPA|dzigomàtico}}
 
 ===Adjective===
-{{it-adj|zigomatic|o|a|i|he}}
+{{it-adj}}
 
 # {{lb|it|skeleton}} [[zygomatic]]
 
@@ -14077,5 +14093,5 @@ Of uncertain origin, but likely ultimately from {{der|it|grc|ἰδιωτικός
 
 {{C|it|People}}
 -------- end text --------
-Elapsed time: 1 mins 56.95 secs
-Ending at Wed Jun 16 02:00:04 2021
+Elapsed time: 1 mins 56.51 secs
+Ending at Thu Jun 17 22:25:54 2021
