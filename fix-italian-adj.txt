@@ -59,63 +59,42 @@ hascemite: should be fpl
 hascemiti: should be mpl
 identificatori: should be mpl
 identificatrice: should be fsg
-illodabile, illaudabile: clean up
 impollinatori: should be mpl
 impollinatrice: should be fsg
 impositori: should be mpl
 impositrice: should be fsg
-indebite: lemma should be indebito
-inflccidita: rename to inflaccidita
-inflcciditi: rename to inflacciditi
-inflccidite: rename to inflaccidite
-ingaglardita: rename to ingagliardita
-ingaglarditi: rename to ingagliarditi
-ingaglardite: rename to ingagliardite
-ippotranata: rename to ippotrainata
-ippotranati: rename to ippotrainati
-ippotranate: rename to ippotrainate
+inflccidita: delete
+inflcciditi: delete
+inflccidite: delete
+ingaglardita: delete
+ingaglarditi: delete
+ingaglardite: delete
+ippotranata: delete
+ippotranati: delete
+ippotranate: delete
 írrito: delete
-isoceraunichi: rename to isoceraunici
-italoturci: rename to italoturchi
-lactotropo, lattotropo: make latter the main form
 largheggiatori: should be mpl
 largheggiatrice: should be fsg
-latifloglia: rename to latifoglia
-latiflogli: rename to latifogli
-latifloglie: rename to latifoglie
+latifloglia: delete
+latifloglie: delete
 legalisti: should be mpl
 legaliste: should be fpl
 leucopoietici: should be mpl
 leucopoietica: should be fsg
-lignatichi: rename to lignatici
-litolatrice: rename to litolatriche
-logipatice: rename to logopatiche
 lubrificatore: mpl only
-macchiettistice: rename to macchiettistiche
-macreperlata: rename to madreperlata
-macreperlati: rename to madreperlati
-macreperlate: rename to madreperlate
-magnetofonice: rename to magnetofoniche
-malefichi: rename to malefici
+malefichi: delete
 mareomotori: should be mpl
 mareomotrice: should be fsg
 marinareschi: should be mpl
 marinaresca: should be fsg
 mariste: should be fpl
 masticatori: mpl only
-melissofage: rename to melissofaghe
 mendica: should be fsg
 mendichi: should be mpl
 meridionaliste: should be fpl
 meridionalisti: should be mpl
 mesogee: should be fpl
 mesogei: should be mpl
-metasomatitica: rename to metasomatica
-metasomatitici: rename to metasomatici
-metasomatitice: rename to metasomatice
-morbidiccie: rename to morbidicce
-multienzimatichi: rename to multienzimatici
-municipalistichi: rename to municipalistici
 nazionalsocialiste: fpl only
 notaiesche: should be fpl
 notaieschi: should be mpl
@@ -172,3 +151,11 @@ umoreschi: should be mpl
 vasocostrittori: should be mpl
 vasocostrittrice: should be fsg
 vivisettoti: delete
+burrachi: delete
+fìsico: delete
+mesozoico: hiatus?
+odontalgichi: delete
+ossetichi: delete
+patrionimichi: delete
+viceolimpionichi: delete
+voltastomaci: delete
