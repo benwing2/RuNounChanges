@@ -1,4 +1,4 @@
-Beginning at Sat Jun 12 13:15:07 2021
+Beginning at Sat Jun 19 21:23:30 2021
 Page 1 essere: Found match for regex: =
 Page 1 essere: -------- begin text --------
 
@@ -3578,7 +3578,7 @@ Borrowed from {{bor|it|la|particularis}}.
 * {{it-IPA|particolàre}}
 
 ===Adjective===
-{{it-adj|particolar|e|i}}
+{{it-adj}}
 
 # (''antonym of general'') [[particular]], [[private]], [[personal]]
 #: {{ant|it|generale}}
@@ -3816,7 +3816,7 @@ Page 70 militare: -------- begin text --------
 Probably borrowed from {{bor|it|la|mīlitāris}}.
 
 ====Adjective====
-{{it-adj|militar|e|i}}
+{{it-adj}}
 
 # [[military]]
 # [[army]]
@@ -5725,7 +5725,7 @@ Page 119 popolare: -------- begin text --------
 From {{inh|it|la|populāris}}.
 
 ====Adjective====
-{{it-adj|popolar|e|i}}
+{{it-adj}}
 
 # of the [[people]], people's, [[popular]]
 # [[folk]], [[vernacular]]
@@ -6057,7 +6057,7 @@ Page 127 parlamentare: -------- begin text --------
 * {{rhymes|it|are}}
 
 ===Adjective===
-{{it-adj|parlamentar|e|i}}
+{{it-adj}}
 
 # [[parliamentary]]
 
@@ -12123,7 +12123,7 @@ From {{der|it|la|familiāris}}.
 * {{it-IPA|familiàre}}
 
 ===Adjective===
-{{it-adj|familiar|e|i}}
+{{it-adj}}
 
 # {{lb|it|relational}} [[family]]; [[domestic]]
 # [[familiar}}, [[well-known]]
@@ -12213,7 +12213,7 @@ Page 289 alimentare: -------- begin text --------
 From {{inh|it|LL.|alimentarius}}, from {{inh|it|la|alimentum||nourishment}}.
 
 ====Adjective====
-{{it-adj|alimentar|e|i}}
+{{it-adj}}
 
 # {{lb|it|relational}} [[food]]; [[alimentary]], [[dietary]], [[eating]]
 
@@ -13268,7 +13268,7 @@ Page 318 nucleare: -------- begin text --------
 * {{it-IPA|nucleàre}}
 
 ===Adjective===
-{{it-adj|nuclear|e|i}}
+{{it-adj}}
 
 # {{lb|it|physics|biology|sociology}} [[nuclear]]
 
@@ -13326,7 +13326,7 @@ Page 319 circolare: -------- begin text --------
 Borrowed from {{bor|it|LL.|circulāris}}, from {{der|it|la|circulus}}.
 
 ====Adjective====
-{{it-adj|circolar|e|i}}
+{{it-adj}}
 
 # [[circular]]
 
@@ -14245,7 +14245,7 @@ Page 346 titolare: -------- begin text --------
 From {{der|it|LL.|titulāris}}.
 
 ====Adjective====
-{{it-adj|titolar|e|i}}
+{{it-adj}}
 
 # [[appointed]]
 # [[titular]]
@@ -15326,7 +15326,7 @@ Page 379 regolare: -------- begin text --------
 Borrowed from {{bor|it|LL.|rēgulārem}}, accusative form of {{m|la|rēgulāris}}. Surface analysis: {{suffix|it|regola|t1=rule|are|t2=-ar|pos2=adjective-forming derivational suffix}}.
 
 ====Adjective====
-{{it-adj|regolar|e|i}}
+{{it-adj}}
 
 # [[regular]], [[standard]], [[normal]], [[ordinary]], [[average]]
 #: {{syn|it|normale|medio|ordinario}}
@@ -18477,7 +18477,7 @@ Page 466 salutare: -------- begin text --------
 From {{der|it|la|salūtāris}}.
 
 ====Adjective====
-{{it-adj|salutar|e|i}}
+{{it-adj}}
 
 # [[healthy]], [[wholesome]], [[beneficial]]
 #: {{syn|it|sano|benefico}}
@@ -19360,9 +19360,9 @@ Page 493 immobiliare: Found match for regex: =
 Page 493 immobiliare: -------- begin text --------
 
 ===Adjective===
-{{it-adj|immobiliar|e|i}}
+{{it-adj}}
 
-# [[real estate]] (''attributive''), [[property]] (''attributive''), [[house]] (''attributive'')
+# {{lb|it|relational}} [[real estate]], [[property]], [[house]]
 
 ====Related terms====
 * {{l|it|agente immobiliare}}
@@ -19550,24 +19550,27 @@ Page 499 ingegnere: -------- begin text --------
 * {{l|it|ingegniere}} {{qual|misspelling}}
 * {{l|it|ingeniere}} {{qual|misspelling}}
 
-===Etymology===
-From {{m|it|ingegno}}.
-
 ===Pronunciation===
 * {{it-IPA|ingegnère}}
 * {{audio|it|It-un ingegnere.ogg|Audio}}
 
-===Noun===
+===Etymology 1===
+From {{m|it|ingegno}}.
+
+====Noun====
 {{it-noun|m|f=ingegnera}}
 
 # [[engineer]]
 
+=====Related terms=====
+* {{l|it|ingegneria}}
+
+===Etymology 2===
+
+====Noun====
 {{head|it|g=f-p|noun form}}
 
 # {{plural of|it|ingegnera}}
-
-====Related terms====
-* {{l|it|ingegneria}}
 
 {{C|it|Occupations}}
 -------- end text --------
@@ -21601,7 +21604,7 @@ From {{inh|it|ML.|cōnsiliāre}}, from classical {{inh|it|la|cōnsiliāri}}, pre
 From {{suffix|it|consiglio|are|t2=adjective marker}}.
 
 ====Adjective====
-{{it-adj|consigliar|e|i}}
+{{it-adj}}
 
 # {{lb|it|rare}} {{alternative form of|it|consiliare}}
 
@@ -22120,7 +22123,7 @@ Page 578 singolare: -------- begin text --------
 Probably a semi-learned term from {{der|it|la|singulāris}}. Equivalent to {{suffix|it|singolo|are}}. {{doublet|it|cinghiale}}.
 
 ===Adjective===
-{{it-adj|singolar|e|i}}
+{{it-adj}}
 
 # {{lb|it|grammar}} [[singular]]
 #: {{ant|it|plurale}}
@@ -22189,7 +22192,7 @@ Surface analysis: {{suffix|it|porta|t1=door|iere|t2=-er|pos2=[[agent noun]] suff
 {{nonlemma}}
 
 ====Noun====
-{{head|it|noun plural form|g=f}}
+{{head|it|noun form|g=f}}
 
 # {{plural of|it|portiera}}
 
@@ -23615,7 +23618,7 @@ Page 624 tutelare: -------- begin text --------
 From {{bor|it|la|tūtēlāris}}.
 
 ====Adjective====
-{{it-adj|tutelar|e|i}}
+{{it-adj}}
 
 # [[tutelary]]
 
@@ -23910,7 +23913,7 @@ Page 633 elementare: -------- begin text --------
 * {{it-IPA|elementàre}}
 
 ===Adjective===
-{{it-adj|elementar|e|i}}
+{{it-adj}}
 
 # [[elementary]]
 #: {{syn|it|primario}}
@@ -24578,7 +24581,7 @@ Page 653 preliminare: -------- begin text --------
 From {{der|it|NL.|praelīmināris}}. Cognate to {{cog|fr|préliminaire}}.
 
 ===Adjective===
-{{it-adj|preliminar|e|i}}
+{{it-adj}}
 
 # [[preliminary]]
 
@@ -24624,7 +24627,7 @@ Page 655 disciplinare: -------- begin text --------
 From {{der|it|LL.|disciplīnāris}}.
 
 ====Adjective====
-{{it-adj|disciplinar|e|i}}
+{{it-adj}}
 
 # [[disciplinary]]
 
@@ -24716,16 +24719,21 @@ Page 657 riempire: -------- begin text --------
 From {{prefix|it|ri|empire|pos2=same meaning, obsolete}}, from {{inh|it|la|implēre}}.
 
 ===Pronunciation===
-* {{IPA|it|/ri.emˈpi.re/|/rjemˈpi.re/}}
+* {{it-IPA|ri.empìre|riempìre}}
 * {{audio|it|LL-Q652 (ita)-Happypheasant-riempire.wav|Audio}}
 * {{hyphenation|it|ri|em|pì|re}}
 
 ===Verb===
-{{it-verb|a/riémpio,riempìi,riempìto:riempiùto}}
+{{it-verb|a/riémpio,riempìi,riempìto:riempiùto}} {{tlb|it|transitive}}
 
-# {{lb|it|transitive}} to [[fill]], [[fill up]], [[fill in]], [[stuff]], [[heap]]
-#: {{ux|it|'''riempire''' di [[improperio|improperi]]|'''cover''' with insults|inline=1}}
-# {{lb|it|transitive}} to [[fill out]], fill in, fill up {{gloss|complete a form, a document, etc.}}
+# to [[fill]], to [[fill up]]
+#: {{syn|it|colmare|ricolmare|empire|q3=obsolete}}
+#: {{ant|it|svuotare|vuotare}}
+#: {{uxi|it|'''riempire''' di [[improperio|improperi]]|'''cover''' with insults}}
+# to [[stuff]], to [[heap]]
+#: {{syn|it|farcire|imbottire}}
+# to [[fill out]], [[fill in]] {{gloss|to complete a form, a document, etc.}}
+#: {{syn|it|compilare}}
 
 ====Conjugation====
 {{it-conj-ire|riemp|avere
@@ -24734,14 +24742,6 @@ From {{prefix|it|ri|empire|pos2=same meaning, obsolete}}, from {{inh|it|la|impl�
 |prem1s2=riempiei|prem2s2=riempiesti|prem3s2=riempié|prem1p2=riempiemmo|prem2p2=riempieste|prem3p2=riempierono
 |sub123s=riempia|sub3p=riempiano
 |imp3s=riempia|imp3p=riempiano}}
-
-====Synonyms====
-* {{sense|to fill}} {{l|it|colmare}}, {{l|it|ricolmare}}, {{qualifier|obsolete}} {{l|it|empire}}
-* {{sense|to stuff}} {{l|it|farcire}}, {{l|it|imbottire}}
-* {{sense|to fill in a form}} {{l|it|compilare}}
-
-====Antonyms====
-* {{sense|to fill}} {{l|it|svuotare}}, {{l|it|vuotare}}
 
 ====Coordinate terms====
 * {{l|it|pieno}}
@@ -24881,7 +24881,7 @@ Page 661 esemplare: -------- begin text --------
 From {{der|pt|la|exemplaris}}.
 
 ===Adjective===
-{{it-adj|esemplar|e|i}}
+{{it-adj}}
 
 # [[exemplary]]
 # [[model]]
@@ -25762,7 +25762,12 @@ Page 689 progettare: Found match for regex: =
 Page 689 progettare: -------- begin text --------
 
 ===Etymology===
-{{rfe|it}}
+From {{bor|it|fr|projeter||to plan}}.
+
+===Pronunciation===
+* {{it-IPA|progettàre}}
+* {{rhymes|it|are}}
+* {{hyph|it|pro|get|tà|re}}
 
 ===Verb===
 {{it-verb|a/è}}
@@ -25773,18 +25778,21 @@ Page 689 progettare: -------- begin text --------
 ====Conjugation====
 {{it-conj-are|progett|avere}}
 
-====Related terms====
-{{rel-top}}
+====Derived terms====
 * {{l|it|progettazione}}
-* {{l|it|progettista}}
-* {{l|it|progettistica}}
-{{rel-mid}}
-* {{l|it|progetto}}
-* {{l|it|progettuale}}
-{{rel-bottom}}
+
+====Related terms====
+{{rel4|it
+|progettista
+|progettistica
+|progetto
+|progettuale}}
 
 ===Anagrams===
-* {{l|it|progetterà}}
+* {{anagrams|it|progetterà}}
+
+===References===
+* {{R:it:Trec}}
 -------- end text --------
 Page 690 piazzare: Found match for regex: =
 Page 690 piazzare: -------- begin text --------
@@ -27624,7 +27632,7 @@ Page 746 spettacolare: Found match for regex: =
 Page 746 spettacolare: -------- begin text --------
 
 ===Adjective===
-{{it-adj|spettacolar|e|i}}
+{{it-adj}}
 
 # [[spectacular]]
 
@@ -28922,7 +28930,7 @@ Page 785 cellulare: -------- begin text --------
 * {{audio|it|LL-Q652 (ita)-Happypheasant-cellulare.wav|Audio}}
 
 ===Adjective===
-{{it-adj|cellular|e|i}}
+{{it-adj}}
 
 # {{lb|it|biology|phone}} [[cellular]]
 
@@ -29903,7 +29911,7 @@ Page 819 consolare: -------- begin text --------
 {{suffix|it|console|gloss1=consul|are}}
 
 ====Adjective====
-{{it-adj|consolar|e|i}}
+{{it-adj}}
 
 # [[consular]]
 
@@ -30855,7 +30863,7 @@ Page 849 domiciliare: -------- begin text --------
 {{af|it|domicilio|-are|pos2=adjective-forming suffix}}
 
 ====Adjective====
-{{it-adj|domiciliar|e|i}}
+{{it-adj}}
 
 # {{lb|it|relational}} [[home]]; [[domiciliary]]
 
@@ -31723,7 +31731,7 @@ Page 876 cautelare: -------- begin text --------
 {{af|it|cautela|-are}}
 
 ====Adjective====
-{{it-adj|cautelar|e|i}}
+{{it-adj}}
 
 # [[precautionary]]
 
@@ -35368,6 +35376,8 @@ From {{af|it|a-|fiore|-are}}.
 
 ===Anagrams===
 * {{l|it|affiorerà}}
+
+[[Category:it:Baking]]
 -------- end text --------
 Page 991 risanare: Found match for regex: =
 Page 991 risanare: -------- begin text --------
@@ -35856,7 +35866,7 @@ From {{der|it|la|sōlāris}}.
 * {{it-IPA|solàre}}
 
 ===Adjective===
-{{it-adj|solar|e|i}}
+{{it-adj}}
 
 # [[solar]]
 # {{lb|it|relational}} [[sun]]
@@ -35962,7 +35972,7 @@ Page 1010 irregolare: -------- begin text --------
 Borrowed from {{bor|it|LL.|irrēgulāris}}.
 
 ===Adjective===
-{{it-adj|irregolar|e|i}}
+{{it-adj}}
 
 # [[irregular]]
 # [[fitful]]
@@ -37377,7 +37387,7 @@ Page 1056 regolamentare: -------- begin text --------
 {{af|it|regolamento|-are|pos2=adjective-forming suffix}}
 
 ====Adjective====
-{{it-adj|regolamentar|e|i}}
+{{it-adj}}
 
 # {{lb|it|relational}} [[regulation]]
 # [[proper]]
@@ -38340,7 +38350,7 @@ From {{etyl|la|it}} {{m|la|conciliāre}}, present active infinitive of {{m|la|co
 {{suffix|it|concilio|are}}
 
 ====Adjective====
-{{it-adj|conciliar|e|i}}
+{{it-adj}}
 
 # {{lb|it|relational}} [[council]]
 
@@ -39542,7 +39552,7 @@ Page 1137 articolare: -------- begin text --------
 From {{der|it|la|articularis}}.
 
 ====Adjective====
-{{it-adj|articolar|e|i}}
+{{it-adj}}
 
 # {{lb|it|anatomy|relational}} [[joint]]; [[articular]]
 
@@ -39592,16 +39602,12 @@ Page 1138 tramontare: -------- begin text --------
 {{it-verb|e/ó}} {{tlb|it|intransitive}}
 
 # to [[set]], to [[go down]], to [[sink]] {{i|of the sun, moon or stars}}
+#: {{syn|it|calare}}
+#: {{ant|it|sorgere|levare|levarsi}}
 # {{lb|it|figurative}} to [[fade]], to [[wane]]
 
 ====Conjugation====
 {{it-conj-are|tramont|essere}}
-
-====Synonyms====
-* {{sense|set, go down}} {{l|en|calare}}
-
-====Antonyms====
-* {{sense|set, go down}} {{l|it|sorgere}}, {{l|it|levare}}, {{l|it|levarsi}}
 
 ====Derived terms====
 * {{l|it|intramontabile}}
@@ -39810,7 +39816,7 @@ Page 1146 stellare: -------- begin text --------
 From the {{inh|it|la|stēllāris}}.
 
 ====Adjective====
-{{it-adj|stellar|e|i}}
+{{it-adj}}
 
 # [[stellar]]
 # [[star]]-[[shaped]], [[radial]]
@@ -40971,7 +40977,7 @@ Page 1181 muscolare: -------- begin text --------
 {{suffix|it|muscolo|t1=muscle|are}}, or borrowed from {{bor|it|ML.|muscularis}}.
 
 ===Adjective===
-{{it-adj|muscolar|e|i}}
+{{it-adj}}
 
 # {{lb|it|also|figurative}} [[muscular]]
 # {{lb|it|relational}} [[muscle]]
@@ -40987,7 +40993,7 @@ Page 1182 volgare: -------- begin text --------
 From {{inh|it|la|vulgāris}}.
 
 ===Adjective===
-{{it-adj|volgar|e|i}}
+{{it-adj}}
 
 # [[common]], [[popular]]
 # [[vulgar]], [[coarse]], [[sleazy]]
@@ -41832,7 +41838,7 @@ Page 1211 mobiliare: -------- begin text --------
 {{rfe|it}}
 
 ====Adjective====
-{{it-adj|mobiliar|e|i}}
+{{it-adj}}
 
 # {{lb|it|legal}} [[personal]], [[movable]]
 
@@ -41860,23 +41866,25 @@ Page 1211 mobiliare: -------- begin text --------
 Page 1212 ragioniere: Found match for regex: =
 Page 1212 ragioniere: -------- begin text --------
 
-===Etymology===
+===Etymology 1===
 {{suffix|it|ragione|iere}}
 
-===Noun===
+====Noun====
 {{it-noun|m|f=ragioniera}}
 
 # [[accountant]]
 
-===Noun===
-{{head|it|noun form|g=f}}
-
-# {{plural of|it|ragioniera}}
-
-====Related terms====
+=====Related terms=====
 * {{l|it|ragioneria}}
 * {{l|it|ragionieresco}}
 * {{l|it|ragionieristico}}
+
+===Etymology 2===
+
+====Noun====
+{{head|it|noun form|g=f}}
+
+# {{plural of|it|ragioniera}}
 
 ===Anagrams===
 * {{l|it|ragionerei}}, {{l|it|ragionerie}}
@@ -42307,7 +42315,7 @@ Page 1227 supplementare: Found match for regex: =
 Page 1227 supplementare: -------- begin text --------
 
 ===Adjective===
-{{it-adj|supplementar|e|i}}
+{{it-adj}}
 
 # [[additional]], [[extra]], [[supplementary]], [[further]]
 #: {{syn|it|aggiuntivo|addizionale|ulteriore}}
@@ -45269,7 +45277,7 @@ From {{af|it|scalo|-are}}.
 From {{bor|it|la|scālāris}}.
 
 ====Adjective====
-{{it-adj|scalar|e|i}}
+{{it-adj}}
 
 # [[graded]], [[scaled]]
 # [[scalar]]
@@ -46135,9 +46143,9 @@ From {{inh|it|VL.|*patīre}} (infinitive of {{m|la|*patiscō}} or {{m|la|*patēs
 #* {{quote-book|it|year=1671|author={{w|Francesco Redi}}|title=Esperienze intorno a diverse cose naturali|trans-title=Experiences About Various Things of Nature|url=https://books.google.it/books?id=PPllAAAAcAAJ&hl=it&pg=PP3#v=onepage&q&f=false|page=77|pageurl=https://books.google.it/books?id=PPllAAAAcAAJ&pg=PA77#v=onepage&q&f=true|passage=L'Autore {{...}} ſcrivendo de' caimani, {{...}} fa menzione di alcune pietruzze, che ſi trovano nelle loro teﬅe, predicandole molto profittevoli a coloro che '''patiſcono di''' renella.|translation=The author, in writing about caimans, mentions certain small stones, found in their heads, which he praises as very helpful for those who '''suffer from''' small kidney stones.}}
 # {{lb|it|intransitive}} to [[suffer]]
 #* {{quote-book|it|year=c. 1260s|author=Brunetto Latini|authorlink=Brunetto Latini|title=Il tesoretto|trans-title=The Treasure|others=collected in [https://it.wikisource.org/wiki/Indice:Raccolta_di_rime_antiche_toscane_-_Volume_primo.djvu ''Raccolta di rime antiche toscane: Volume primo'']|location=Palermo|publisher=Giuseppe Assenzio|year_published=1817|page=21|pageurl=https://it.wikisource.org/wiki/Pagina:Raccolta_di_rime_antiche_toscane_-_Volume_primo.djvu/21|passage=Poi volse Dio morire ¶ Per voi gente guerire, ¶ E per vostro soccorso. ¶ Allor tutto mio corso ¶ Mutò per tutto ’l mondo ¶ Dal ciel fin lo profondo: ¶ Che lo sole scurao, ¶ E la terra tremao. ¶ Tutto questo avvenia, ¶ Che ’l mio Signor '''patia'''.|translation=Then God decided to die, to heal you people, and for your salvation. So my whole course changed all over the world, from the sky to the depths: the sun darkened, and the earth shook. All this happened, as my Lord '''suffered'''.}}
-#* {{quote-book|it|year=1537|year_published=1812|author=[[w:Annibale Caro|Annibale Caro]], transl.|title=Due orazioni di Gregorio Nazianzeno|url=https://books.google.it/books?id=mQ1fAAAAcAAJ&printsec=frontcover&hl=it#v=onepage&q&f=false|publisher=Società Tipografica de' Classici Italiani|other=collected in ''Opere del commendatore Annibal Caro - Volume VII''|page=94|pageurl=https://books.google.it/books?id=mQ1fAAAAcAAJ&hl=it&pg=RA1-PA94#v=onepage&q&f=false|chapter=Orazione II|chapterurl=https://books.google.it/books?id=mQ1fAAAAcAAJ&hl=it&pg=RA1-PA88#v=onepage&q&f=false|passage=E di tutti questi, color che '''patiscono''' fuor della dignità loro, son più miserabili di quelli che sono avvezzi a '''patire'''|translation=Of all these, those who '''suffer''' outside of their dignity are more miserable than those used to '''suffering'''.}}
+#* {{quote-book|it|year=1537|year_published=1812|author=[[w:Annibale Caro|Annibale Caro]], transl.|title=Due orazioni di Gregorio Nazianzeno|url=https://books.google.it/books?id=mN2y2wFsETwC&hl=it&pg=PA3#v=onepage&q&f=false|publisher=Società Tipografica de' Classici Italiani|other=collected in ''Opere del commendatore Annibal Caro - Volume VII''|page=94|pageurl=https://books.google.it/books?id=mN2y2wFsETwC&hl=it&pg=PA94#v=onepage&q&f=false|chapter=Orazione II|chapterurl=https://books.google.it/books?id=mN2y2wFsETwC&hl=it&pg=RA1-PA88#v=onepage&q&f=false|passage=E di tutti questi, color che '''patiscono''' fuor della dignità loro, son più miserabili di quelli che sono avvezzi a '''patire'''|translation=Of all these, those who '''suffer''' outside of their dignity are more miserable than those used to '''suffering'''.}}
 #* {{quote-book|it|year=1581|author=Torquato Tasso|authorlink=Torquato Tasso|title=[[w:Jerusalem Delivered|Gerusalemme liberata]]|trans-title=Jerusalem Delivered|url=https://books.google.it/books?id=1SM8AAAAcAAJ&hl=it&pg=PP5#v=onepage&q&f=false|publisher=Erasmo Viotti|section=Canto 5|page=95|pageurl=https://books.google.it/books?id=1SM8AAAAcAAJ&hl=it&pg=PA95#v=onepage&q&f=false|passage=Và l'vcciſore in bando: nè '''patire''' ¶ Vuol, che catena, ò ceppi altri gli pogna.|translation=The murderer is banished, and doesn't want to '''suffer''', or be put in chains or shackles by anyone.}}
-#* {{quote-book|it|year=1850|author=Giosuè Carducci|authorlink=Giosuè Carducci|title=Juvenilia|url=https://it.wikisource.org/wiki/Juvenilia#pagename25|publisher=Nicola Zanichelli|year_published=1906|chapter=Alla memoria di D.C.|trans-chapter=In Memory of D.C.|page=146|pageurl=https://it.wikisource.org/wiki/Pagina:Poesie_(Carducci).djvu/172|passage={{...}} lunge a la maligna ¶ Forza ch’a le sue man del mondo ha stretto ¶ Il fren, su l’ale de la morte eretto ¶ Fugga lo spirto ove non piú si '''pate'''|translation=Far from the evil force that has grasped in its had the brake of the world, standing on the wings of death, let the spirit escape where one '''suffers''' no more.}}
+#* {{quote-book|it|year=1850|author=Giosuè Carducci|authorlink=Giosuè Carducci|title=Juvenilia|url=https://it.wikisource.org/wiki/Juvenilia#pagename25|publisher=Nicola Zanichelli|year_published=1906|chapter=Alla memoria di D.C.|trans-chapter=In Memory of D.C.|page=146|pageurl=https://it.wikisource.org/wiki/Pagina:Poesie_(Carducci).djvu/172|passage={{...}} lunge a la maligna ¶ Forza ch’a le sue man del mondo ha stretto ¶ Il fren, su l’ale de la morte eretto ¶ Fugga lo spirto ove non piú si '''pate'''|translation=Far from the evil force that has grasped in its hand the brake of the world, standing on the wings of death, let the spirit escape where one '''suffers''' no more.}}
 # {{lb|it|intransitive|by extension}} to undergo [[discomfort]] or [[unpleasantness]]
 # {{lb|it|intransitive|by extension}} to [[feel]] [[bad]]
 # {{lb|it|intransitive|by extension|of things}} to be [[damaged]]; to [[waste away]]
@@ -46163,7 +46171,7 @@ From {{inh|it|VL.|*patīre}} (infinitive of {{m|la|*patiscō}} or {{m|la|*patēs
 {{it-noun|m|~}}
 
 # [[suffering]]
-#* {{quote-book|it|year=1822|author=Alessandro Manzoni|authorlink=Alessandro Manzoni|title=[[w:Adelchi|Adelchi]]|url=https://it.wikisource.org/wiki/Adelchi|others=collected in ''Opere varie di Alessandro Manzoni''|year-published=1881|publisher=Fratelli Rechiedei|chapter=Atto IV: Scena prima|trans-chapter=Fourth Act: First Scene|chapterurl=https://it.wikisource.org/wiki/Adelchi/Atto_quarto/Scena_I|page=68|pageurl=https://it.wikisource.org/wiki/Pagina:Opere_varie_(Manzoni).djvu/74|passage=Tal della mesta, immobile ¶ Era quaggiuso il fato: ¶ Sempre un obblio di chiedere ¶ Che le saria negato; ¶ E al Dio de’ santi ascendere ¶ Santa del suo '''patir'''.|translation=Such was, down here, the fate of the sad one: forever an oblivion of requests denied; and ascending to the God of saints, saint in her '''suffering'''.}}
+#* {{quote-book|it|year=1822|author=Alessandro Manzoni|authorlink=Alessandro Manzoni|title=[[w:Adelchi|Adelchi]]|url=https://it.wikisource.org/wiki/Adelchi|others=collected in ''Opere varie di Alessandro Manzoni''|year-published=1881|publisher=Fratelli Rechiedei|chapter=Atto IV: Scena prima|trans-chapter=Fourth Act: First Scene|chapterurl=https://it.wikisource.org/wiki/Adelchi/Atto_quarto/Scena_I|page=68|pageurl=https://it.wikisource.org/wiki/Pagina:Opere_varie_(Manzoni).djvu/74|passage=Tal della mesta, immobile ¶ Era quaggiuso il fato: ¶ Sempre un obblio di chiedere ¶ Che le saria negato; ¶ E al Dio de’ santi ascendere ¶ Santa del suo '''patir'''.|translation=Such was, down here, the unmoving fate of the sad one: forever an oblivion of requests denied; and ascending to the God of saints, saint in her '''suffering'''.}}
 #* {{quote-book|it|year=1825|author=[[w:Vincenzo Monti|Vincenzo Monti]], transl.|title=[[w:Iliad|Iliade]]|trans-title=Iliad|location=Milan|publisher=Giovanni Resnati e Gius. Bernardoni di Gio|section=Book 5|year_published=1840|page=126|pageurl=https://books.google.it/books?id=oJkHAAAAQAAJ&lpg=PA324&hl=it&pg=PA126#v=onepage&q&f=false|original=Ἰλιάς (''Iliás'')|by={{w|Homer}}|passage=Non io ¶ Vo' per questo '''patir''', che tu sostegna ¶ Più lungo duolo.|translation=I don't wish for you to experience any further pain from this '''suffering'''.}}
 #* {{quote-book|it|author=Giacomo Leopardi|authorlink=Giacomo Leopardi|coauthor=Alessandro Donati|title=[[w:Canti (Leopardi)|Canti]]|url=https://it.wikisource.org/wiki/Indice:Canti_(Leopardi_-_Donati).djvu|location=Bari|publisher=Einaudi|lines=61–64|year=1835|year_published=1917|page=90|pageurl=|chapter=Canto notturno di un pastore errante dell'Asia|trans-chapter=Night Song of a Wandering Shepherd in Asia|chapterurl=https://it.wikisource.org/wiki/Pagina:Canti_(Leopardi_-_Donati).djvu/100|passage=Pur tu, solinga, eterna peregrina, ¶ che sí pensosa sei, tu forse intendi ¶ questo viver terreno, ¶ il '''patir''' nostro, il sospirar, che sia|translation=Only you, solitary, eternal wanderer, who are so pensive, perhaps you understand what this earthly life, our '''suffering''', the sighing, is.}}
 
@@ -46403,7 +46411,7 @@ From {{inh|it|LL.|fīlāris}}.
 From {{af|it|filo|-are|pos2=adjective-forming suffix}}.
 
 ====Noun====
-{{it-adj|filar|e|i}}
+{{it-adj}}
 
 # {{lb|it|relational}} [[wire]]
 
@@ -47011,7 +47019,7 @@ Page 1391 manipolare: -------- begin text --------
 ===Etymology 2===
 
 ====Adjective====
-{{it-adj|manipolar|e|i}}
+{{it-adj}}
 
 # {{lb|it|Ancient Rome|military|relational}} [[maniple]]; [[manipular]]
 
@@ -47215,7 +47223,7 @@ Page 1398 speculare: -------- begin text --------
 Borrowed from {{bor|it|la|speculāris}}.
 
 ====Adjective====
-{{it-adj|specular|e|i}}
+{{it-adj}}
 
 # {{lb|it|relational}} [[mirror]]; [[specular]]
 
@@ -47452,6 +47460,9 @@ Page 1406 presumere: -------- begin text --------
 
 ===Etymology===
 From {{der|it|la|praesūmō}}.
+
+===Pronunciation===
+* {{it-IPA|presùmere}}
 
 ===Verb===
 {{it-verb|a\ù,presùnsi,presùnto}}
@@ -47945,6 +47956,8 @@ Page 1421 sbarrare: -------- begin text --------
 
 ===Further reading===
 * {{R:it:Treccani}}
+
+[[Category:it:Eye]]
 -------- end text --------
 Page 1422 porgere: Found match for regex: =
 Page 1422 porgere: -------- begin text --------
@@ -48795,11 +48808,6 @@ Page 1455 indebitare: -------- begin text --------
 ===Pronunciation===
 * {{it-IPA|indebitàre}}
 * {{rhymes|it|are}}
-
-===Adjective===
-{{it-adj|indebit}}
-
-# [[undeserved]]
 
 ===Verb===
 {{it-verb}}
@@ -50225,7 +50233,7 @@ Page 1506 fallimentare: Found match for regex: =
 Page 1506 fallimentare: -------- begin text --------
 
 ===Adjective===
-{{it-adj|fallimentar|e|i}}
+{{it-adj}}
 
 # [[bankrupt]]
 
@@ -50238,7 +50246,7 @@ Page 1507 complementare: Found match for regex: =
 Page 1507 complementare: -------- begin text --------
 
 ===Adjective===
-{{it-adj|complementar|e|i}}
+{{it-adj}}
 
 # [[complementary]] (all senses)
 # [[subsidiary]]
@@ -50542,24 +50550,26 @@ From {{m|it|frammento}}.
 Page 1519 romanziere: Found match for regex: =
 Page 1519 romanziere: -------- begin text --------
 
-===Etymology===
-{{suffix|it|romanzo|iere}}
-
 ===Pronunciation===
 * {{it-IPA|romandzière|romantsière}}
 
-===Noun===
+===Etymology 1===
+{{suffix|it|romanzo|iere}}
+
+====Noun====
 {{it-noun|m|f=romanziera}}
 
 # [[novelist]]
 
-===Noun===
+=====Related terms=====
+* {{l|it|romanzo}}
+
+===Etymology 2===
+
+====Noun====
 {{head|it|noun form}}
 
 # {{plural of|it|romanziera}}
-
-====Related terms====
-* {{l|it|romanzo}}
 
 ===Anagrams===
 * {{l|it|romanzerei}}
@@ -50929,7 +50939,7 @@ Page 1532 secolare: -------- begin text --------
 * {{hyph|it|se|co|là|re}}
 
 ===Adjective===
-{{it-adj|secolar|e|i}}
+{{it-adj}}
 
 # {{n-g|Meanings related to [[time]]}}:
 ## {{lb|it|literary}} [[centennial]] {{gl|happening once in a hundred years}}
@@ -51994,7 +52004,7 @@ Page 1572 pendolare: -------- begin text --------
 {{af|it|pendolo|-are|pos2=adjective-forming suffix}}
 
 ====Adjective====
-{{it-adj|pendolar|e|i}}
+{{it-adj}}
 
 # {{lb|it|relational}} [[commuter]]
 # {{lb|it|relational}} [[pendulum]];  [[pendular]]
@@ -52505,14 +52515,21 @@ From {{inh|it|VL.|*notāre}} from classical {{inh|it|la|natāre}}, present activ
 Page 1590 lineare: Found match for regex: =
 Page 1590 lineare: -------- begin text --------
 
+===Pronunciation===
+* {{it-IPA}}
+
 ===Etymology 1===
 Borrowed from {{bor|it|la|līneāris}}.
 
 ====Adjective====
-{{it-adj|linear|e|i}}
+{{it-adj}}
 
 # [[linear]], [[one-dimensional]]
 # [[consistent]] (figurative)
+
+=====Derived terms=====
+* {{l|it|linearità}}
+* {{l|it|linearmente}}
 
 =====Further reading=====
 * {{R:it:Treccani|sense=1}}
@@ -53098,7 +53115,7 @@ Page 1613 capillare: -------- begin text --------
 From Latin [[capillaris]], itself derived from Latin [[capillus]].
 
 ===Adjective===
-{{it-adj|capillar|e|i}}
+{{it-adj}}
 
 # [[capillary]]
 # [[detailed]], [[extensive]]
@@ -53143,7 +53160,11 @@ Page 1615 multare: Found match for regex: =
 Page 1615 multare: -------- begin text --------
 
 ===Etymology===
-From {{etyl|la|it}} {{m|la|multāre}}, present active infinitive of {{m|la|multō}}.
+From {{bor|it|la|multāre}}, present active infinitive of {{m|la|multō}}; synchronically, {{af|it|multa|-are}}.
+
+===Pronunciation===
+* {{it-IPA|multàre}}
+* {{hyph|it|mul|tà|re}}
 
 ===Verb===
 {{it-verb}}
@@ -53157,9 +53178,15 @@ From {{etyl|la|it}} {{m|la|multāre}}, present active infinitive of {{m|la|mult�
 * {{l|it|multa}}
 
 ===Anagrams===
-* {{l|it|multerà}}
-* {{l|it|mutarle}}
-* {{l|it|tremula}}
+* {{anagrams|it|a=aelmrtu|multerà|mutarle|tremula}}
+
+===Further reading===
+* {{R:CIE}}
+* {{R:Grandi Dizionari}}
+* {{R:it:Garzanti}}
+* {{R:DIO}}
+* {{R:it:Sapere}}
+* {{R:it:Treccani}}
 
 ----
 
@@ -53800,7 +53827,7 @@ From {{suffix|it|camera|iere|gloss1=room}}. Compare {{cog|es|camarero}}, {{cog|L
 # [[valet]], [[manservant]], [[footman]], [[lackey]]
 
 ===Noun===
-{{head|it|noun plural form|g=f}}
+{{head|it|noun form|g=f}}
 
 # {{plural of|it|cameriera}}
 
@@ -53870,6 +53897,8 @@ From {{m|it|paura}}, or from {{etyl|la|it}} {{m|la|paurire}} < {{m|la|pavor}} wi
 
 ====Related terms====
 * {{l|it|paura}}
+
+[[Category:it:Fear]]
 -------- end text --------
 Page 1643 pianificare: Found match for regex: =
 Page 1643 pianificare: -------- begin text --------
@@ -54892,7 +54921,7 @@ Page 1681 famigliare: Found match for regex: =
 Page 1681 famigliare: -------- begin text --------
 
 ===Adjective===
-{{it-adj|famigliar|e|i}}
+{{it-adj}}
 
 # {{alt form|it|familiare}}
 
@@ -55214,7 +55243,7 @@ Page 1695 affaire: Found match for regex: =
 Page 1695 affaire: -------- begin text --------
 
 ===Etymology===
-Borrowed from {{bor|it|fr|affaire}}.
+Borrowed from {{bor|it|fr|affaire}}. {{doublet|it|affare}}.
 
 ===Noun===
 {{it-noun|m|-}}
@@ -55736,15 +55765,20 @@ Page 1710 scacchiera: -------- begin text --------
 Page 1711 scacchiere: Found match for regex: =
 Page 1711 scacchiere: -------- begin text --------
 
-===Noun===
-{{head|it|noun plural form|g=f}}
+===Etymology 1===
 
-# {{plural of|it|scacchiera}}
-
+====Noun====
 {{it-noun|m}}
 
 # [[sector]]
 # [[exchequer]]
+
+===Etymology 2===
+
+====Noun====
+{{head|it|noun form|g=f}}
+
+# {{plural of|it|scacchiera}}
 -------- end text --------
 Page 1712 scapitare: Found match for regex: =
 Page 1712 scapitare: -------- begin text --------
@@ -56393,7 +56427,7 @@ Page 1738 impopolare: -------- begin text --------
 {{prefix|it|in|popolare}}
 
 ===Adjective===
-{{it-adj|impopolar|e|i}}
+{{it-adj}}
 
 # [[unpopular]]
 #: {{ant|it|popolare}}
@@ -57637,9 +57671,9 @@ Page 1788 balneare: -------- begin text --------
 Borrowed from {{bor|it|LL.|balneāris}}, from {{der|it|la|balneum}}.
 
 ===Adjective===
-{{it-adj|balnear|e|i}}
+{{it-adj}}
 
-# [[bathing]] (attributive)
+# {{lb|it|relational}} [[bathing]]
 
 ====Related terms====
 * {{l|it|bagnare}}
@@ -57653,9 +57687,9 @@ Page 1789 lagunare: Found match for regex: =
 Page 1789 lagunare: -------- begin text --------
 
 ===Adjective===
-{{it-adj|lagunar|e|i}}
+{{it-adj}}
 
-# [[lagoon]] (attributive)
+# {{lb|it|relational}} [[lagoon]]
 # [[Venetian]]
 
 ====Derived terms====
@@ -58426,7 +58460,7 @@ Page 1820 clientelare: Found match for regex: =
 Page 1820 clientelare: -------- begin text --------
 
 ===Adjective===
-{{it-adj|clientelar|e|i}}
+{{it-adj}}
 
 # [[nepotistic]] (political)
 
@@ -59878,7 +59912,7 @@ Page 1882 polare: Found match for regex: =
 Page 1882 polare: -------- begin text --------
 
 ===Adjective===
-{{it-adj|polar|e|i}}
+{{it-adj}}
 
 # [[polar]] (all senses)
 # [[freezing]] (very cold)
@@ -60580,6 +60614,9 @@ Page 1909 estinguere: -------- begin text --------
 ===Etymology===
 From {{der|it|la|extinguere}}, present active infinitive of {{m|la|extinguō}} (possibly a semi-learned term).
 
+===Pronunciation===
+* {{it-IPA|estìnguere}}
+
 ===Verb===
 {{it-verb}}
 
@@ -60935,7 +60972,7 @@ Page 1923 velare: -------- begin text --------
 Derived from {{suffix|it|velo|alt1=vel(o)|t1=velum|are|t2=-ar|pos2=adjectival suffix}}.
 
 ====Adjective====
-{{it-adj|velar|e|i}}
+{{it-adj}}
 # {{lb|it|anatomy|phonetics}} [[velar]]
 
 ===Etymology 2===
@@ -61271,7 +61308,7 @@ From {{der|it|la|lūnāris}}.
 * {{it-IPA|lunàre}}
 
 ===Adjective===
-{{it-adj|lunar|e|i}}
+{{it-adj}}
 
 # [[lunar]] {{gloss|of or pertaining to the moon}}
 
@@ -61427,7 +61464,7 @@ Page 1942 satellitare: Found match for regex: =
 Page 1942 satellitare: -------- begin text --------
 
 ===Adjective===
-{{it-adj|satellitar|e|i}}
+{{it-adj}}
 
 # [[satellite]]
 #: ''TV satellitare'' - satellite TV
@@ -61546,7 +61583,7 @@ Page 1947 pere: -------- begin text --------
 * {{rhymes|it|ere}}
 
 ===Noun===
-{{head|it|noun plural form|g=f}}
+{{head|it|noun form|g=f}}
 
 # {{plural of|it|pera}}
 
@@ -61645,7 +61682,7 @@ Page 1951 salivare: -------- begin text --------
 {{af|it|saliva|-are}}
 
 ====Adjective====
-{{it-adj|salivar|e|i}}
+{{it-adj}}
 
 # {{lb|it|physiology}} [[salivary]]
 
@@ -62073,10 +62110,10 @@ From {{etyl|la|it}} {{m|la|coniungere}}, present active infinitive of {{m|la|con
 Page 1967 corriere: Found match for regex: =
 Page 1967 corriere: -------- begin text --------
 
-===Etymology===
+===Etymology 1===
 {{suffix|it|correre|iere}}
 
-===Noun===
+====Noun====
 {{it-noun|m}}
 
 # [[messenger]]
@@ -62084,7 +62121,10 @@ Page 1967 corriere: -------- begin text --------
 #: '''Corriere della Sera''' (Evening Courier) - Italian newspaper
 # [[plover]] (bird of the genus ''[[Charadrius]]'')
 
-{{head|it|noun plural form|g=f}}
+===Etymology 2===
+
+====Noun====
+{{head|it|noun form|g=f}}
 
 # {{plural of|it|corriera}}
 
@@ -63155,9 +63195,9 @@ Page 2010 oculare: -------- begin text --------
 Borrowed from {{bor|it|la|oculāris}}.
 
 ===Adjective===
-{{it-adj|ocular|e|i}}
+{{it-adj}}
 
-# {{lb|it|anatomy}} [[ocular]], [[eye]] (''attributive'')
+# {{lb|it|anatomy|relational}} [[eye]]; [[ocular]]
 
 ====Related terms====
 * {{l|it|bulbo oculare}}
@@ -64658,17 +64698,21 @@ Surface analysis: {{suffix|it|legale|t1=legal|izzare|t2=to make}}
 Page 2076 paniere: Found match for regex: =
 Page 2076 paniere: -------- begin text --------
 
-===Etymology===
+===Etymology 1===
 {{bor|it|fr|panier}}, made up of {{suffix|it|pane|-iere}}.
 
-===Noun===
+====Noun====
 {{it-noun|m}}
 
 # [[basket]], [[barge]]
 # [[pannier]]
 # {{lb|it|finance}} [[market]] [[basket]]
 
-{{head|it|noun plural form}}
+===Etymology 2===
+
+====Noun====
+{{head|it|noun form}}
+
 # {{plural of|it|paniera}}
 
 ===Anagrams===
@@ -65289,7 +65333,7 @@ Page 2101 triangolare: -------- begin text --------
 * {{rhymes|it|are}}
 
 ===Adjective===
-{{it-adj|triangolar|e|i}}
+{{it-adj}}
 
 # [[triangular]]
 # {{lb|it|anatomy}} [[triangularis]]
@@ -66418,7 +66462,7 @@ Page 2147 paramilitare: -------- begin text --------
 {{prefix|it|para|militare}}
 
 ===Adjective===
-{{it-adj|paramilitar|e|i}}
+{{it-adj}}
 
 # [[paramilitary]]
 -------- end text --------
@@ -66677,9 +66721,9 @@ Page 2159 pioniere: -------- begin text --------
 * {{it-IPA|pionière}}
 
 ===Adjective===
-{{it-adj|pionier|e|i}}
+{{it-adj}}
 
-# [[pioneer]] (attributive), [[pioneering]]
+# {{lb|it|relational}} [[pioneer]]; [[pioneering]]
 #: {{syn|it|pionieristico}}
 
 ===Noun===
@@ -67760,7 +67804,7 @@ Page 2199 bipolare: Found match for regex: =
 Page 2199 bipolare: -------- begin text --------
 
 ===Adjective===
-{{it-adj|bipolar|e|i}}
+{{it-adj}}
 
 # [[bipolar]]
 
@@ -68764,7 +68808,7 @@ From {{suffix|it|consiglio|are|t2=adjective marker}}.
 * {{hyphenation|it|con|si|lià|re}}
 
 ===Adjective===
-{{it-adj|consiliar|e|i}}
+{{it-adj}}
 
 # {{lb|it|relational}} [[council]]
 #: {{ux|it|la sala '''consiliare'''|inline=1|the '''council''' chamber}}
@@ -69434,6 +69478,8 @@ From {{der|it|la|lambō}}.
 
 ===Further reading===
 * {{R:it:Treccani}}
+
+[[Category:it:Fire]]
 -------- end text --------
 Page 2269 dipanare: Found match for regex: =
 Page 2269 dipanare: -------- begin text --------
@@ -69970,7 +70016,7 @@ Borrowed from {{bor|it|pro|velhar}}<ref>{{R:it:Garzanti}}</ref><ref>{{R:it:Trec}
 * {{it-IPA|vegliàre}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/é}}
 
 # {{lb|it|transitive}} to [[watch over]]
 # {{lb|it|intransitive}} to [[stay up]]; to keep a [[vigil]]
@@ -71099,7 +71145,7 @@ Page 2337 peculiare: -------- begin text --------
 From {{der|it|la|pecūliāris}}.
 
 ===Adjective===
-{{it-adj|peculiar|e|i}} (di)
+{{it-adj}} (di)
 
 # [[peculiar]] (to)
 # [[typical]] (of)
@@ -71370,17 +71416,17 @@ Page 2348 miliare: -------- begin text --------
 From {{etyl|la|it}} {{m|la|milliare}} < {{m|la|milliārius}} < {{m|la|mīlle}}.
 
 ===Adjective===
-{{it-adj|miliar|e|i}}
+{{it-adj}}
 
-# [[mile]] (attributive)
+# {{lb|it|relational}} [[mile]]
 
 ====Derived terms====
 * {{l|it|pietra miliare}} - milestone
 
 ===Adjective===
-{{it-adj|miliar|e|i}}
+{{it-adj}}
 
-# [[millet]] (attributive)
+# {{lb|it|relational}} [[millet]]
 # Characterised by small [[blister]]s
 
 ===Anagrams===
@@ -71563,7 +71609,7 @@ From {{bor|it|la|modulor}}.
 {{af|it|modulo|-are}}
 
 ====Adjective====
-{{it-adj|modular|e|i}}
+{{it-adj}}
 
 # [[modular]]
 
@@ -72656,7 +72702,7 @@ Page 2396 molecolare: -------- begin text --------
 * {{it-IPA|molecolàre}}
 
 ===Adjective===
-{{it-adj|molecolar|e|i}}
+{{it-adj}}
 
 # [[molecular]]
 
@@ -73105,7 +73151,7 @@ From {{der|it|la|molāris}}.
 * {{rhymes|it|are}}
 
 ===Adjective===
-{{it-adj|molar|e|i}}
+{{it-adj}}
 
 # [[molar]] (all senses)
 
@@ -73589,7 +73635,7 @@ Page 2436 angolare: -------- begin text --------
 From {{der|it|la|angulāris}}. Equivalent to {{suffix|it|angolo|are}}.
 
 ====Adjective====
-{{it-adj|angolar|e|i}}
+{{it-adj}}
 
 # [[angular]]
 # [[pitched]]
@@ -73853,9 +73899,9 @@ Page 2447 agroalimentare: -------- begin text --------
 {{prefix|it|agro|alimentare}}
 
 ===Adjective===
-{{it-adj|agroalimentar|e|i}}
+{{it-adj}}
 
-# [[agroalimentary]] ([[food]] and [[agriculture]] (''attributive''))
+# {{lb|it|relational}} [[food]] and [[agriculture]]; [[agroalimentary]]
 -------- end text --------
 Page 2448 rigirare: Found match for regex: =
 Page 2448 rigirare: -------- begin text --------
@@ -74022,7 +74068,7 @@ Page 2458 veicolare: -------- begin text --------
 {{af|it|veicolo|-are}}
 
 ====Adjective====
-{{it-adj|veicolar|e|i}}
+{{it-adj}}
 
 # [[vehicular]] (both senses); {{lb|it|relational}} [[vehicle]]
 # [[transmissive]]
@@ -75440,23 +75486,26 @@ Page 2517 impigliare: -------- begin text --------
 Page 2518 gioielliere: Found match for regex: =
 Page 2518 gioielliere: -------- begin text --------
 
-===Etymology===
-{{suffix|it|gioiello|iere}}
-
 ===Pronunciation===
 * {{it-IPA|gioiellière}}
 
-===Noun===
+===Etymology 1===
+{{suffix|it|gioiello|iere}}
+
+====Noun====
 {{it-noun|m|f=gioielliera}}
 
 # [[jeweller]]
 
-{{head|it|noun plural form|g=f}}
+=====Related terms=====
+* {{l|it|gioiello}}
+
+===Etymology 2===
+
+====Noun====
+{{head|it|noun form|g=f}}
 
 # {{plural of|it|gioielliera}}
-
-====Related terms====
-* {{l|it|gioiello}}
 
 ===Anagrams===
 * {{anagrams|it|gioiellerie}}
@@ -75500,7 +75549,7 @@ Page 2520 parrucchiere: -------- begin text --------
 {{nonlemma}}
 
 ====Noun====
-{{head|it|noun plural form|g=f}}
+{{head|it|noun form|g=f}}
 
 # {{plural of|it|parrucchiera}}
 -------- end text --------
@@ -75508,7 +75557,7 @@ Page 2521 basilare: Found match for regex: =
 Page 2521 basilare: -------- begin text --------
 
 ===Adjective===
-{{it-adj|basilar|e|i}}
+{{it-adj}}
 
 # [[basic]], [[fundamental]]
 #: {{syn|it|essenziale|fondamentale}}
@@ -75523,7 +75572,7 @@ Page 2522 polmonare: -------- begin text --------
 {{suffix|it|polmone|are}}; cf. Latin {{m|la|pulmonarius}}.
 
 ===Adjective===
-{{it-adj|polmonar|e|i}}
+{{it-adj}}
 
 # {{lb|it|anatomy}} [[pulmonary]], of the [[lungs]]
 
@@ -77815,6 +77864,9 @@ Page 2616 imprecare: -------- begin text --------
 ===Etymology===
 From {{etyl|la|it}} {{m|la|imprecārī}}, present active infinitive of {{m|la|imprecor||I invoke; I imprecate}}. Compare Spanish and {{cog|pt|imprecar}}.
 
+===Pronunciation===
+* {{it-IPA}}
+
 ===Verb===
 {{it-verb}}
 
@@ -77824,8 +77876,14 @@ From {{etyl|la|it}} {{m|la|imprecārī}}, present active infinitive of {{m|la|im
 ====Conjugation====
 {{it-conj-care|imprec|avere}}
 
+====Derived terms====
+* {{l|it|imprecatorio}}
+
 ====Related terms====
 * {{l|it|imprecazione}}
+
+===Further reading===
+* {{R:it:Treccani}}
 
 ----
 
@@ -78651,7 +78709,7 @@ From {{suffix|it|bersaglio|iere}}.
 * {{l|it|bersagliare}}
 
 ===Noun===
-{{head|it|noun plural form|g=f}}
+{{head|it|noun form|g=f}}
 
 # {{plural of|it|bersagliera}}
 {{C|it|Military}}
@@ -79371,7 +79429,7 @@ Page 2684 nobiliare: Found match for regex: =
 Page 2684 nobiliare: -------- begin text --------
 
 ===Adjective===
-{{it-adj|nobiliar|e|i}}
+{{it-adj}}
 
 # [[noble]]
 
@@ -79654,9 +79712,9 @@ Page 2696 fogliare: Found match for regex: =
 Page 2696 fogliare: -------- begin text --------
 
 ===Adjective===
-{{it-adj|fogliar|e|i}}
+{{it-adj}}
 
-# {{lb|it|botany}} [[leaf]] (attributive)
+# {{lb|it|botany|relational}} [[leaf]]
 -------- end text --------
 Page 2698 reclamizzare: Found match for regex: =
 Page 2698 reclamizzare: -------- begin text --------
@@ -80008,7 +80066,7 @@ Page 2714 diffamare: Found match for regex: =
 Page 2714 diffamare: -------- begin text --------
 
 ===Etymology===
-From {{inh|it|la|diffamāre}}, present active infinitive of {{m|la|diffamō}}.
+Borrowed from {{bor|it|la|diffāmāre}}, present active infinitive of {{m|la|diffāmō}}.
 
 ===Verb===
 {{it-verb}} {{tlb|it|transitive}}
@@ -80652,7 +80710,7 @@ From {{der|it|la|epistolaris}}.
 * {{it-IPA|epistolàre}}
 
 ===Adjective===
-{{it-adj|epistolar|e|i}}
+{{it-adj}}
 
 # [[epistolary]]
 #: {{uxi|it|l'amore '''epistolare'''|'''epistolary''' love}}
@@ -80960,7 +81018,7 @@ Page 2750 cardiovascolare: -------- begin text --------
 {{prefix|it|cardio|vascolare}}
 
 ===Adjective===
-{{it-adj|cardiovascolar|e|i}}
+{{it-adj}}
 
 # {{lb|it|anatomy}} [[cardiovascular]]
 #: {{syn|it|cardiocircolatorio}}
@@ -81112,7 +81170,7 @@ Page 2758 antinucleare: -------- begin text --------
 {{prefix|it|anti|nucleare}}
 
 ===Adjective===
-{{it-adj|antinuclear|e|i}}
+{{it-adj}}
 
 # [[antinuclear]]
 
@@ -82144,7 +82202,7 @@ Page 2802 capitolare: -------- begin text --------
 ===Etymology 2===
 
 ====Adjective====
-{{it-adj|capitular|e|i}}
+{{it-adj}}
 
 # {{lb|it|relational|religion}} [[chapter]]; [[capitular]]
 # {{lb|it|relational|law}} [[capitulation]] {{gl|former agreement with certain non-Christian states, e.g. the Ottoman Empire, providing certain privileges and immunities to citizens of certain Western states}}
@@ -84333,7 +84391,7 @@ From {{der|it|fr|planer}}, derived from {{m|fr|plain}}, from {{der|it|la|plānus
 Borrowed from {{bor|it|en|planar}}, from {{der|it|LL.|plānārius|t=pertaining to a plane}}, derived from {{der|it|la|plānum|t=plain ground}}, from {{der|it|la|plānus|t=level”, “flat}}.
 
 ====Adjective====
-{{it-adj|planar|e|i}}
+{{it-adj}}
 
 # {{lb|it|mathematics}} [[planar]]
 
@@ -84354,9 +84412,9 @@ Page 2906 alare: -------- begin text --------
 From {{der|it|la|alaris}}.
 
 ====Adjective====
-{{it-adj|alar|e|i}}
+{{it-adj}}
 
-# [[wing]] (attributive)
+# {{lb|it|relational}} [[wing]]
 # {{lb|it|anatomy}} [[alar]]
 
 =====Related terms=====
@@ -84447,9 +84505,9 @@ Page 2909 gemellare: Found match for regex: =
 Page 2909 gemellare: -------- begin text --------
 
 ===Adjective===
-{{it-adj|gemellar|e|i}}
+{{it-adj}}
 
-# [[twin]] (attributive)
+# {{lb|it|relational}} [[twin]]
 
 ====Related terms====
 * {{l|it|gemellarità}}
@@ -84546,7 +84604,7 @@ From {{der|it|la|celerem}}, accusative form of {{m|la|celer||fast, swift}}. Comp
 * {{hyphenation|it|cè|le|re}}
 
 ===Adjective===
-{{it-adj|celer|e|i}}
+{{it-adj}}
 
 # [[quick]], [[fast]]
 
@@ -84618,9 +84676,9 @@ Page 2917 assembleare: Found match for regex: =
 Page 2917 assembleare: -------- begin text --------
 
 ===Adjective===
-{{it-adj|assemblear|e|i}}
+{{it-adj}}
 
-# [[assembly]], [[meeting]] (attributive)
+# {{lb|it|relational}} [[assembly]], [[meeting]]
 
 ====Related terms====
 * {{l|it|assemblearismo}}
@@ -86992,7 +87050,7 @@ Page 3018 sellare: -------- begin text --------
 From {{af|it|sella|t1=[[sella turcica]]|-are|pos2=adjectival formant}}.
 
 ====Adjective====
-{{it-adj|sellar|e|i}}
+{{it-adj}}
 
 # [[sellar]] {{gl|relating to the [[sella turcica]]}}
 
@@ -87316,15 +87374,19 @@ Page 3032 Azzorre: -------- begin text --------
 Page 3033 giocoliere: Found match for regex: =
 Page 3033 giocoliere: -------- begin text --------
 
-===Etymology===
+===Etymology 1===
 {{suffix|it|gioco|iere}}
 
-===Noun===
+====Noun====
 {{it-noun|m|f=giocoliera}}
 
 # [[juggler]]
 
-{{head|it|noun plural form|g=f}}
+===Etymology 2===
+
+====Noun====
+{{head|it|noun form|g=f}}
+
 # {{plural of|it|giocoliera}}
 
 ===Anagrams===
@@ -87909,10 +87971,9 @@ Page 3061 crepuscolare: Found match for regex: =
 Page 3061 crepuscolare: -------- begin text --------
 
 ===Adjective===
-{{it-adj|crepuscolar|e|i}}
+{{it-adj}}
 
-# [[twilight]] (attributive)
-# [[crepuscular]]
+# {{lb|it|relational}} [[twilight]]; [[crepuscular]]
 
 ====Related terms====
 * {{l|it|crepuscolo}}
@@ -88962,7 +89023,7 @@ Page 3104 protocollare: -------- begin text --------
 {{af|it|protocollo|t1=protocol|-are|pos2=adjective-building suffix}}
 
 ====Adjective====
-{{it-adj|protocollar|e|i}}
+{{it-adj}}
 
 # {{lb|it|relational}} [[protocol]]
 
@@ -91224,7 +91285,7 @@ Page 3208 ilare: -------- begin text --------
 * {{hyph|it|i|là|re}}
 
 ====Adjective====
-{{it-adj|ilar|e|i}}
+{{it-adj}}
 
 # {{lb|it|botany}} [[hilar]]
 # {{lb|it|anatomy}} [[hilar]]
@@ -91243,7 +91304,7 @@ From {{bor|it|la|hilaris}}, from {{der|it|grc|ἱλαρός}}.
 * {{hyph|it|ì|la|re}}
 
 ====Adjective====
-{{it-adj|ilar|e|i}}
+{{it-adj}}
 
 # {{lb|it|literary}} [[cheerful]]
 #: {{syn|it|allegro|contento|felice|gaio|lieto}}
@@ -91397,14 +91458,14 @@ From {{inh|it|VL.|*excōlāre}}, from {{inh|it|la|cōlāre}}, present active inf
 Borrowed from {{bor|it|fr|scolaire}}, from {{der|it|LL.|scholāris}}.
 
 ====Adjective====
-{{it-adj|scolar|e|i}}
+{{it-adj}}
 
 # {{only used in|it||[[età]] '''scolare'''|[[school-age]]}}
 
 ===Etymology 4===
 
 ====Noun====
-{{head|it|noun plural form|g=f-p}}
+{{head|it|noun form|g=f-p}}
 
 # {{plural of|it|scolara}}
 
@@ -91883,9 +91944,9 @@ Page 3233 intervallare: -------- begin text --------
 * {{l|it|intervallo}}
 
 ===Adjective===
-{{it-adj|intervallar|e|i}}
+{{it-adj}}
 
-# [[interval]] (attributive)
+# {{lb|it|relational}} [[interval]]
 
 ===Anagrams===
 * {{l|it|intervallerà}}
@@ -92765,7 +92826,7 @@ Page 3272 tripolare: -------- begin text --------
 {{prefix|it|tri|polare}}
 
 ===Adjective===
-{{it-adj|tripolar|e|i}}
+{{it-adj}}
 
 # {{lb|it|physics}} [[tripolar]]
 # [[tripartite]]
@@ -94009,7 +94070,7 @@ Borrowed from {{bor|it|la|anularis|ānulāris, ānulārem|annular, ring-shaped}}
 * {{hyphenation|it|a|nu|la|re}}
 
 ===Adjective===
-{{it-adj|anular|e|i}}
+{{it-adj}}
 
 # [[annular]], [[ring]]-[[shaped]], [[ring]]
 
@@ -95055,7 +95116,7 @@ Page 3378 ausiliare: -------- begin text --------
 Borrowed from {{etyl|la|it}} {{m|la|auxiliaris}}.
 
 ===Adjective===
-{{it-adj|ausiliar|e|i}}
+{{it-adj}}
 
 # [[auxiliary]]
 
@@ -95064,6 +95125,7 @@ Borrowed from {{etyl|la|it}} {{m|la|auxiliaris}}.
 
 # {{lb|it|grammar}} [[auxiliary]]
 
+===Noun===
 {{it-noun|mf}}
 
 # {{lb|it|person that acts in an auxiliary manner}} [[auxiliary]]
@@ -95997,7 +96059,7 @@ Page 3422 extraparlamentare: -------- begin text --------
 {{prefix|it|extra|parlamentare}}
 
 ===Adjective===
-{{it-adj|extraparlamentar|e|i}}
+{{it-adj}}
 
 # [[extraparliamentary]]
 
@@ -96296,7 +96358,7 @@ Page 3437 auricolare: -------- begin text --------
 Borrowed from {{bor|it|LL.|auriculāris}}.
 
 ====Adjective====
-{{it-adj|auricolar|e|i}}
+{{it-adj}}
 
 # {{lb|it|relational}} [[ear]]; [[auricular]]
 
@@ -96309,7 +96371,7 @@ Borrowed from {{bor|it|LL.|auriculāris}}.
 From {{af|it|auricola|-are|pos2=adjective-forming suffix}}.
 
 ====Adjective====
-{{it-adj|auricolar|e|i}}
+{{it-adj}}
 
 # {{lb|it|anatomy}} [[auricular]] {{gl|of or pertaining to the auricules of the heart}}
 -------- end text --------
@@ -97656,7 +97718,7 @@ Page 3503 cannoniere: -------- begin text --------
 {{nonlemma}}
 
 ====Noun====
-{{head|it|noun plural form|g=f-p}}
+{{head|it|noun form|g=f-p}}
 
 # {{plural of|it|cannoniera}}
 -------- end text --------
@@ -98062,7 +98124,7 @@ Page 3525 interdisciplinare: -------- begin text --------
 * {{it-IPA}}
 
 ===Adjective===
-{{it-adj|interdisciplinar|e|i}}
+{{it-adj}}
 
 # [[interdisciplinary]]
 
@@ -99566,7 +99628,7 @@ Derived from {{suffix|it|rettangolo|t1=rectangle|alt1=rettangol(o)|are|t2=-ar|po
 * {{hyphenation|it|ret|tan|go|là|re}}
 
 ===Adjective===
-{{it-adj|rettangolar|e|i}} {{tlb|it|geometry}}
+{{it-adj}} {{tlb|it|geometry}}
 # [[rectangular]]
 
 ====Related terms====
@@ -101109,7 +101171,7 @@ Page 3669 gare: -------- begin text --------
 * {{rhymes|it|are}}
 
 ===Noun===
-{{head|it|noun plural form|g=f}}
+{{head|it|noun form|g=f}}
 
 # {{plural of|it|gara}}
 
@@ -101427,10 +101489,10 @@ Page 3683 vascolare: Found match for regex: =
 Page 3683 vascolare: -------- begin text --------
 
 ===Adjective===
-{{it-adj|vascolar|e|i}}
+{{it-adj}}
 
 # {{lb|it|anatomy|botany}} [[vascular]]
-# [[vase]] (''attributive'')
+# {{lb|it|relational}} [[vase]]
 
 ====Related terms====
 {{rel4|it|avascolare|cardiovascolare|cerebrovascolare|cribrovascolare|extravascolare|fibrovascolare|gastrovascolare|intravascolare|macrovascolare|microvascolare|neurovascolare|perivascolare|renovascolare|vascolarizzato|vascolarizzazione}}
@@ -101441,17 +101503,30 @@ Page 3684 gettonare: -------- begin text --------
 ===Etymology===
 {{suffix|it|gettone|are}}
 
-===Verb===
-{{it-verb}}
+===Pronunciation===
+* {{it-IPA|gettonàre}}
+* {{rhymes|it|are}}
+* {{hyph|it|get|to|nà|re}}
 
-# {{lb|it|transitive|informal}} to [[call]], [[ring]] or [[phone]] someone {{qualifier|especially from a payphone}}
-# {{lb|it|transitive}} to [[feed]] a jukebox {{gloss|put money in}}
+===Verb===
+{{it-verb|a/ó}}
+
+# {{lb|it|transitive|humorous|dated}} To [[call]], [[ring]] or [[phone]] from a [[payphone]].
+# {{lb|it|transitive|humorous|dated}} To have (a [[jukebox]]) [[play]] by putting money in.
+#: {{ux|it|'''gettonare''' un disco|inline=1|to '''have''' the jukebox '''play''' a record}}
+# {{lb|it|transitive|by extension}} To [[award]] [[success]] to.
 
 ====Conjugation====
 {{it-conj-are|getton|avere}}
 
+====Derived terms====
+* {{l|it|gettonato}}
+
 ===Anagrams===
-* {{l|it|gettonerà}}, {{l|it|tetragone}}
+* {{anagrams|it|egrotante|gettonerà|tetragone}}
+
+===References===
+* {{R:it:Trec}}
 
 {{C|it|Telephony}}
 -------- end text --------
@@ -101758,7 +101833,7 @@ Page 3700 similare: -------- begin text --------
 From {{m|la|simile}}, modelled after French {{m|fr|similaire}}. Compare also {{cog|la-med|similāris}}.
 
 ===Adjective===
-{{it-adj|similar|e|i}}
+{{it-adj}}
 
 # [[similar]]
 #: {{syn|it|simile}}
@@ -102769,7 +102844,7 @@ Page 3760 colonnare: Found match for regex: =
 Page 3760 colonnare: -------- begin text --------
 
 ===Adjective===
-{{it-adj|colonnar|e|i}}
+{{it-adj}}
 
 # [[columnar]]
 
@@ -103166,7 +103241,7 @@ Page 3773 sedimentare: -------- begin text --------
 * {{rhymes|it|are}}
 
 ===Adjective===
-{{it-adj|sedimentar|e|i}}
+{{it-adj}}
 
 # [[sedimentary]]
 
@@ -103889,20 +103964,23 @@ From {{bor|it|fr|guigner}}, from {{der|it|frk|*wingjan}}, from {{etyl|gem-pro|it
 Page 3812 canottiere: Found match for regex: =
 Page 3812 canottiere: -------- begin text --------
 
-===Etymology===
+===Etymology 1===
 {{suffix|it|canotto|iere}}
 
-===Noun===
+====Noun====
 {{it-noun|m|f=canottiera}}
 
 # {{lb|it|sports|rowing|nautical}} [[rower]], [[oarsman]]
 
-{{head|it|noun plural form|g=f}}
+=====Related terms=====
+* {{l|it|canottaggio}}
+
+===Etymology 2===
+
+====Noun====
+{{head|it|noun form|g=f}}
 
 # {{plural of|it|canottiera}}
-
-====Related terms====
-* {{l|it|canottaggio}}
 
 ===Anagrams===
 * {{l|it|cineteatro}}
@@ -104100,9 +104178,9 @@ Page 3821 collinare: Found match for regex: =
 Page 3821 collinare: -------- begin text --------
 
 ===Adjective===
-{{it-adj|collinar|e|i}}
+{{it-adj}}
 
-# [[hilly]], [[hill]] (attributive)
+# {{lb|it|relational}} [[hill]]; [[hilly]]
 #: {{syn|it|collinoso}}
 
 ====Related terms====
@@ -104531,7 +104609,7 @@ Page 3845 intercalare: -------- begin text --------
 From {{der|it|la|intercalaris}}.
 
 ====Adjective====
-{{it-adj|intercalar|e|i}}
+{{it-adj}}
 
 # [[interposing]]
 
@@ -106846,9 +106924,9 @@ Page 3962 insulare: -------- begin text --------
 Borrowed from {{bor|it|la|insularis}}.
 
 ===Adjective===
-{{it-adj|insular|e|i}}
+{{it-adj}}
 
-# [[insular]], [[island]] (''attribute'')
+# {{lb|it|relational}} [[island]]; [[insular]]
 #: {{syn|it|isolano}}
 
 ====Related terms====
@@ -108479,7 +108557,7 @@ Page 4050 quadrangolare: -------- begin text --------
 {{prefix|it|quadr|angolare}}
 
 ===Adjective===
-{{it-adj|quadrangolar|e|i}}
+{{it-adj}}
 
 # [[quadrangular]]
 -------- end text --------
@@ -108509,7 +108587,7 @@ Page 4052 nazionalpopolare: Found match for regex: =
 Page 4052 nazionalpopolare: -------- begin text --------
 
 ===Adjective===
-{{it-adj|nazionalpopolar|e|i}}
+{{it-adj}}
 
 # [[national]]-[[popular]]
 
@@ -109692,7 +109770,7 @@ Page 4128 chiare: -------- begin text --------
 # {{feminine plural of|it|chiaro}}
 
 ===Noun===
-{{head|it|noun plural form|g=f}}
+{{head|it|noun form|g=f}}
 
 # {{plural of|it|chiara}}
 -------- end text --------
@@ -109797,7 +109875,7 @@ From {{bor|it|la|tumulō||to bury, to inter}}.
 {{af|it|tumulo|-are|pos2=adjective-forming suffix}}
 
 ====Verb====
-{{it-adj|tumular|e|i}}
+{{it-adj}}
 
 # {{lb|it|rare|relational}} [[tomb]], [[grave]]
 # {{lb|it|rare|relational}} [[mound]], [[tumulus]], [[barrow]]; [[tumular]]
@@ -109822,9 +109900,9 @@ From {{der|it|la|tālāris|t=reaching the ankles}}.
 * {{it-IPA|talàre}}
 
 ===Adjective===
-{{it-adj|talar|e|i}}
+{{it-adj}}
 
-# {{lb|it|of clothing}} [[priest]]'s, priest (''attributive'')
+# {{lb|it|relational}} [[priest]]'s {{i|of clothing}}
 
 ===Anagrams===
 * {{l|it|altare}}, {{l|it|altera}}, {{l|it|realtà}}
@@ -111161,9 +111239,9 @@ Page 4203 cedolare: Found match for regex: =
 Page 4203 cedolare: -------- begin text --------
 
 ===Adjective===
-{{it-adj|cedolar|e|i}}
+{{it-adj}}
 
-# [[coupon]], [[dividend]] (attributive)
+# {{lb|it|relational}} [[coupon]], [[dividend]]
 
 ====Related terms====
 * {{l|it|cedola}}
@@ -111870,20 +111948,24 @@ From {{inh|it|VL.|*compatīre}}, from {{inh|it|la|compatior|compatior, compati}}
 Page 4246 salumiere: Found match for regex: =
 Page 4246 salumiere: -------- begin text --------
 
-===Etymology===
+===Etymology 1===
 {{suffix|it|salume|iere}}
 
-===Noun===
+====Noun====
 {{it-noun|m|f=salumiera}}
 
-# Someone who produces or sells [[salumi]].
+# someone who produces or sells [[salumi]]
 
-{{head|it|noun plural form|g=f}}
-# {{plural of|it|salumiera}}
-
-====Related terms====
+=====Related terms=====
 * {{l|it|salume}}
 * {{l|it|salumeria}}
+
+===Etymology 2===
+
+====Noun====
+{{head|it|noun form|g=f}}
+
+# {{plural of|it|salumiera}}
 
 ===Anagrams===
 * {{l|it|salumerie}}
@@ -112559,7 +112641,7 @@ From {{der|it|ML.|scapulāre}}, from {{der|it|la|scapula}}.
 {{suffix|it|scapola|are}}.
 
 ====Adjective====
-{{it-adj|scapolar|e|i}}
+{{it-adj}}
 
 # {{lb|it|skeleton}} [[scapular]]
 
@@ -112968,7 +113050,7 @@ Page 4313 matricolare: -------- begin text --------
 {{af|it|matricola|-are}}
 
 ====Adjective====
-{{it-adj|matricolar|e|i}}
+{{it-adj}}
 
 # {{lb|it|relational}} [[register]], [[registration]]
 
@@ -113500,7 +113582,7 @@ Page 4341 ire: -------- begin text --------
 {{nonlemma}}
 
 ====Noun====
-{{head|it|noun plural form|g=f}}
+{{head|it|noun form|g=f}}
 
 # {{plural of|it|ira}}
 
@@ -114244,19 +114326,23 @@ From {{affix|it|s-|piovere}}.
 Page 4392 droghiere: Found match for regex: =
 Page 4392 droghiere: -------- begin text --------
 
-===Etymology===
+===Etymology 1===
 {{suffix|it|droga|iere}}
 
-===Noun===
+====Noun====
 {{it-noun|m|f=droghiera}}
 
 # [[grocer]] (shopkeeper)
 
-{{head|it|noun plural form|g=f}}
-# {{plural of|it|droghiera}}
-
-====Related terms====
+=====Related terms=====
 * {{l|it|drogheria}}
+
+===Etymology 2===
+
+====Noun====
+{{head|it|noun form|g=f}}
+
+# {{plural of|it|droghiera}}
 
 ===Anagrams===
 * {{l|it|drogherei}}, {{l|it|drogherie}}
@@ -114830,7 +114916,7 @@ Page 4431 tare: -------- begin text --------
 * {{rhymes|it|are}}
 
 ===Noun===
-{{head|it|noun plural form|g=f}}
+{{head|it|noun form|g=f}}
 
 # {{plural of|it|tara}}
 
@@ -114887,21 +114973,25 @@ From {{der|it|la|refluō}}.
 Page 4435 pasticciere: Found match for regex: =
 Page 4435 pasticciere: -------- begin text --------
 
-===Etymology===
+===Etymology 1===
 {{suffix|it|pasticcio|iere}}
 
-===Noun===
+====Noun====
 {{it-noun|m|f=pasticciera}}
 
 # [[pastrymaker]]
 # [[confectioner]]
 
-{{head|it|noun plural form|g=f}}
-# {{plural of|it|pasticciera}}
-
-====Related terms====
+=====Related terms=====
 * {{l|it|pasticcio}}
 * {{l|it|crema pasticciera}}
+
+===Etymology 2===
+
+====Noun====
+{{head|it|noun form|g=f}}
+
+# {{plural of|it|pasticciera}}
 
 ===Anagrams===
 * {{l|it|pasticcerei}}, {{l|it|pasticcerie}}
@@ -116404,7 +116494,7 @@ Page 4526 termonucleare: -------- begin text --------
 {{prefix|it|termo|nucleare}}
 
 ===Adjective===
-{{it-adj|termonuclear|e|i}}
+{{it-adj}}
 
 # [[thermonuclear]]
 -------- end text --------
@@ -116688,7 +116778,7 @@ Page 4545 mire: Found match for regex: =
 Page 4545 mire: -------- begin text --------
 
 ===Noun===
-{{head|it|noun plural form|g=f}}
+{{head|it|noun form|g=f}}
 
 # {{plural of|it|mira}}
 
@@ -116834,7 +116924,7 @@ Page 4554 lombare: Found match for regex: =
 Page 4554 lombare: -------- begin text --------
 
 ===Adjective===
-{{it-adj|lombar|e|i}}
+{{it-adj}}
 
 # {{lb|it|anatomy}} [[lumbar]]
 
@@ -117510,7 +117600,7 @@ From {{bor|it|LL.|templaris}}, derivate from {{der|it|la|templum}}.<ref name="Tr
 # [[Templar]]
 
 ===Adjective===
-{{it-adj|templar|e|i}}
+{{it-adj}}
 
 # {{lb|it|relational}} [[Templar]], [[Knights Templar]]
 # {{lb|it|relational}} [[temple]]
@@ -118478,7 +118568,7 @@ Page 4663 focare: Found match for regex: =
 Page 4663 focare: -------- begin text --------
 
 ===Noun===
-{{head|it|noun plural form|g=f}}
+{{head|it|noun form|g=f}}
 
 # {{plural of|it|focara}}
 
@@ -118499,7 +118589,7 @@ Surface analysis: {{prefix|it|de|t1=away from|genere|t2=kind”, “species}}
 * {{hyphenation|it|de|gè|ne|re}}
 
 ===Adjective===
-{{it-adj|degener|e|i}}
+{{it-adj}}
 
 # [[degenerate]]
 
@@ -119999,20 +120089,23 @@ Page 4777 impagliare: -------- begin text --------
 Page 4779 barelliere: Found match for regex: =
 Page 4779 barelliere: -------- begin text --------
 
-===Etymology===
+===Etymology 1===
 {{suffix|it|barella|iere}}
 
-===Noun===
+====Noun====
 {{it-noun|m|f=barelliera}}
 
 # [[stretcher-bearer]]
 
-{{head|it|noun plural form|g=f}}
+=====Related terms=====
+* {{l|it|barella}}
+
+===Etymology 2===
+
+====Noun====
+{{head|it|noun form|g=f}}
 
 # {{plural of|it|barelliera}}
-
-====Related terms====
-* {{l|it|barella}}
 
 ===Anagrams===
 * {{l|it|barellerei}}
@@ -121100,7 +121193,7 @@ Borrowed from {{bor|it|fro|archier}}, equivalent to {{suffix|it|arco|iere}}.
 # [[archer]]; [[bowman]]
 
 ===Noun===
-{{head|it|noun plural form|g=f}}
+{{head|it|noun form|g=f}}
 
 # {{plural of|it|arciera}}
 
@@ -121314,7 +121407,7 @@ Page 4859 tubolare: Found match for regex: =
 Page 4859 tubolare: -------- begin text --------
 
 ===Adjective===
-{{it-adj|tubolar|e|i}}
+{{it-adj}}
 
 # [[tubular]]
 
@@ -121468,7 +121561,7 @@ Page 4875 tentacolare: -------- begin text --------
 From {{der|it|fr|tentaculaire}}. By [[surface analysis]], {{suffix|it|tentacolo|t1=tentacle|are}}.
 
 ===Adjective===
-{{it-adj|tentacolar|e|i}}
+{{it-adj}}
 
 # [[tentacular]]
 # [[sprawling]]
@@ -121566,7 +121659,7 @@ Page 4883 interparlamentare: Found match for regex: =
 Page 4883 interparlamentare: -------- begin text --------
 
 ===Adjective===
-{{it-adj|interparlamentar|e|i}}
+{{it-adj}}
 
 # [[interparliamentary]]
 -------- end text --------
@@ -121812,7 +121905,7 @@ Page 4904 biliare: -------- begin text --------
 * {{it-IPA|biliàre}}
 
 ===Adjective===
-{{it-adj|biliar|e|i}}
+{{it-adj}}
 
 # [[biliary]], [[bilious]]
 
@@ -122172,7 +122265,7 @@ Page 4934 passere: Found match for regex: =
 Page 4934 passere: -------- begin text --------
 
 ===Noun===
-{{head|it|noun plural form|g=f}}
+{{head|it|noun form|g=f}}
 
 # {{plural of|it|passera}}
 
@@ -122419,7 +122512,7 @@ Page 4956 spire: Found match for regex: =
 Page 4956 spire: -------- begin text --------
 
 ===Noun===
-{{head|it|noun plural form|head=spira|g=f}}
+{{head|it|noun form|head=spira|g=f}}
 
 # {{plural of|it|spira}}
 
@@ -122578,7 +122671,7 @@ Page 4967 avare: -------- begin text --------
 # {{adj form of|it|avaro||f|p}}
 
 ====Noun====
-{{head|it|noun plural form|g=f-p}}
+{{head|it|noun form|g=f-p}}
 
 # {{inflection of|it|avaro||f|p}}
 
@@ -122591,7 +122684,7 @@ Page 4967 avare: -------- begin text --------
 # {{adj form of|it|avaro||f|p}}
 
 ====Noun====
-{{head|it|noun plural form|g=f}}
+{{head|it|noun form|g=f}}
 
 # {{plural of|it|avara}}
 
@@ -122691,7 +122784,7 @@ Page 4979 lenticolare: -------- begin text --------
 Borrowed from {{bor|it|la|lenticularis}}.
 
 ===Adjective===
-{{it-adj|lenticolar|e|i}}
+{{it-adj}}
 
 # [[lenticular]], [[lentiform]]
 
@@ -122907,7 +123000,7 @@ Page 5002 vere: -------- begin text --------
 # {{adj form of|it|vero||f|p}}
 
 ===Noun===
-{{head|it|noun plural form|g=f-p}}
+{{head|it|noun form|g=f-p}}
 
 # {{inflection of|it|vera||p}}
 
@@ -123897,7 +123990,7 @@ Page 5065 plurisecolare: -------- begin text --------
 {{prefix|it|pluri|secolare}}
 
 ===Adjective===
-{{it-adj|plurisecolar|e|i}}
+{{it-adj}}
 
 # [[centuries]]-[[old]]
 -------- end text --------
@@ -124239,7 +124332,7 @@ Page 5094 peninsulare: Found match for regex: =
 Page 5094 peninsulare: -------- begin text --------
 
 ===Adjective===
-{{it-adj|peninsular|e|i}}
+{{it-adj}}
 
 # [[peninsular]]
 
@@ -125192,6 +125285,8 @@ From {{inh|it|la|exclamāre}}, present active infinitive of {{m|la|exclamō}}, p
 
 ===Anagrams===
 * {{l|it|schiamazzerà}}
+
+[[Category:la:Sound]]
 -------- end text --------
 Page 5177 pressurizzare: Found match for regex: =
 Page 5177 pressurizzare: -------- begin text --------
@@ -125217,12 +125312,17 @@ Page 5177 pressurizzare: -------- begin text --------
 Page 5178 pasticcere: Found match for regex: =
 Page 5178 pasticcere: -------- begin text --------
 
-===Noun===
+===Etymology 1===
+
+====Noun====
 {{it-noun|m}}
 
 # {{alt form|it|pasticciere}}
 
-{{head|it|noun plural form|g=f}}
+===Etymology 2===
+
+====Noun====
+{{head|it|noun form|g=f}}
 
 # {{plural of|it|pasticcera}}
 
@@ -125706,7 +125806,7 @@ Page 5224 multidisciplinare: -------- begin text --------
 {{prefix|it|multi|disciplinare}}
 
 ===Adjective===
-{{it-adj|multidisciplinar|e|i}}
+{{it-adj}}
 
 # [[multidisciplinary]]
 -------- end text --------
@@ -126186,7 +126286,7 @@ Page 5274 perpendicolare: Found match for regex: =
 Page 5274 perpendicolare: -------- begin text --------
 
 ===Adjective===
-{{it-adj|perpendicolar|e|i}}
+{{it-adj}}
 
 # {{lb|it|geometry}} [[perpendicular]]
 
@@ -126745,7 +126845,7 @@ Page 5321 oracolare: Found match for regex: =
 Page 5321 oracolare: -------- begin text --------
 
 ===Adjective===
-{{it-adj|oracolar|e|i}}
+{{it-adj}}
 
 # [[oracular]]
 
@@ -128505,7 +128605,7 @@ Page 5463 morre: Found match for regex: =
 Page 5463 morre: -------- begin text --------
 
 ===Noun===
-{{head|it|noun plural form|g=f}}
+{{head|it|noun form|g=f}}
 
 # {{plural of|it|morra}}
 
@@ -128516,7 +128616,7 @@ Page 5464 loculare: Found match for regex: =
 Page 5464 loculare: -------- begin text --------
 
 ===Adjective===
-{{it-adj|locular|e|i}}
+{{it-adj}}
 
 # [[locular]]
 -------- end text --------
@@ -128595,7 +128695,7 @@ Page 5472 filonucleare: -------- begin text --------
 {{prefix|it|filo|nucleare}}
 
 ===Adjective===
-{{it-adj|filonuclear|e|i}}
+{{it-adj}}
 
 # [[pro-nuclear]]
 -------- end text --------
@@ -128975,7 +129075,7 @@ Page 5520 suadere: Found match for regex: =
 Page 5520 suadere: -------- begin text --------
 
 ===Etymology===
-From {{der|it|la|suādēre}}, present active infinitive of {{m|la|suādeō}}.
+{{lbor|it|la|suādeō|suādēre}}.
 
 ===Pronunciation===
 * {{it-IPA|su.adére|suadére|su.àdere}}
@@ -129498,7 +129598,7 @@ Page 5578 elettronucleare: -------- begin text --------
 {{prefix|it|elettro|nucleare}}
 
 ===Adjective===
-{{it-adj|elettronuclear|e|i}}
+{{it-adj}}
 
 # [[nuclear]] (method of generating electricity)
 -------- end text --------
@@ -129660,7 +129760,7 @@ Page 5591 reticolare: -------- begin text --------
 {{af|it|reticola|-are}}
 
 ====Adjective====
-{{it-adj|reticolar|e|i}}
+{{it-adj}}
 
 # [[reticular]], [[reticulate]]
 
@@ -130422,9 +130522,9 @@ Page 5676 frontaliere: Found match for regex: =
 Page 5676 frontaliere: -------- begin text --------
 
 ===Adjective===
-{{it-adj|frontalier|e|i}}
+{{it-adj}}
 
-# [[border]] (attributive)
+# {{lb|it|relational}} [[border]]
 
 ===Noun===
 {{it-noun|m}}
@@ -130467,7 +130567,7 @@ Page 5680 compere: -------- begin text --------
 * {{hyph|it|cóm|pe|re}}
 
 ===Noun===
-{{head|it|noun plural form|g=f}}
+{{head|it|noun form|g=f}}
 
 # {{plural of|it|compera}}
 
@@ -130544,7 +130644,7 @@ Page 5686 antipopolare: -------- begin text --------
 {{prefix|it|anti|popolare}}
 
 ===Adjective===
-{{it-adj|antipopolar|e|i}}
+{{it-adj}}
 
 # [[unpopular]]
 -------- end text --------
@@ -131227,7 +131327,7 @@ Page 5773 scatolare: Found match for regex: =
 Page 5773 scatolare: -------- begin text --------
 
 ===Adjective===
-{{it-adj|scatolar|e|i}}
+{{it-adj}}
 
 # [[boxy]] (box-shaped)
 
@@ -133348,7 +133448,7 @@ Page 5998 giugulare: -------- begin text --------
 Borrowed from {{bor|it|ML.|-}} or Scientific Latin {{m|la|iugularis|iugularis, jugularis}}, from {{der|it|la|iugulum}}.
 
 ===Adjective===
-{{it-adj|giugular|e|i}}
+{{it-adj}}
 
 # [[jugular]]
 
@@ -133407,7 +133507,7 @@ Page 6003 bare: -------- begin text --------
 * {{rhymes|it|are}}
 
 ===Noun===
-{{head|it|noun plural form|g=f}}
+{{head|it|noun form|g=f}}
 
 # {{plural of|it|bara}}
 
@@ -133827,7 +133927,7 @@ Page 6045 papere: Found match for regex: =
 Page 6045 papere: -------- begin text --------
 
 ===Noun===
-{{head|it|noun plural form|g=f}}
+{{head|it|noun form|g=f}}
 
 # {{plural of|it|papera}}
 
@@ -133889,7 +133989,7 @@ Page 6054 giare: -------- begin text --------
 * {{rhymes|it|are}}
 
 ===Noun===
-{{head|it|noun plural form|g=f}}
+{{head|it|noun form|g=f}}
 
 # {{plural of|it|giara}}
 
@@ -134120,7 +134220,7 @@ Page 6076 pluridisciplinare: -------- begin text --------
 {{prefix|it|pluri|disciplinare}}
 
 ===Adjective===
-{{it-adj|pluridisciplinar|e|i}}
+{{it-adj}}
 
 # [[multidisciplinary]]
 # [[interdisciplinary]]
@@ -134177,7 +134277,7 @@ Page 6082 maculare: -------- begin text --------
 From {{af|it|macula|-are}}.
 
 ===Adjective===
-{{it-adj|macular|e|i}}
+{{it-adj}}
 
 # [[macular]]
 
@@ -134817,7 +134917,7 @@ Page 6168 marre: Found match for regex: =
 Page 6168 marre: -------- begin text --------
 
 ===Noun===
-{{head|it|noun plural form|g=f}}
+{{head|it|noun form|g=f}}
 
 # {{plural of|it|marra}}
 
@@ -134862,7 +134962,7 @@ Page 6178 caldere: Found match for regex: =
 Page 6178 caldere: -------- begin text --------
 
 ===Noun===
-{{head|it|noun plural form|g=f}}
+{{head|it|noun form|g=f}}
 
 # {{plural of|it|caldera}}
 -------- end text --------
@@ -135287,9 +135387,9 @@ From {{der|it|la|ancillāris}}.
 * {{it-IPA|ancillàre}}
 
 ===Adjective===
-{{it-adj|ancillar|e|i}}
+{{it-adj}}
 
-# [[maidservant]] (attributive)
+# {{lb|it|relational}} [[maidservant]]
 # [[ancillary]]
 
 ====Related terms====
@@ -135400,7 +135500,7 @@ Page 6235 semicircolare: -------- begin text --------
 {{prefix|it|semi|circolare}}
 
 ===Adjective===
-{{it-adj|semicircolar|e|i}}
+{{it-adj}}
 
 # [[semicircular]]
 -------- end text --------
@@ -135435,10 +135535,10 @@ Page 6241 patibolare: Found match for regex: =
 Page 6241 patibolare: -------- begin text --------
 
 ===Adjective===
-{{it-adj|patibolar|e|i}}
+{{it-adj}}
 
 # [[sinister]]
-# [[gallows]] (attributive)
+# {{lb|it|relational}} [[gallows]]
 
 ====Related terms====
 * {{l|it|patibolo}}
@@ -135802,7 +135902,7 @@ Page 6294 tabulare: -------- begin text --------
 From {{der|it|LL.|tabulāris}}.
 
 ====Adjective====
-{{it-adj|tabular|e|i}}
+{{it-adj}}
 
 # [[tabular]]
 
@@ -135994,7 +136094,7 @@ Page 6314 interstellare: Found match for regex: =
 Page 6314 interstellare: -------- begin text --------
 
 ===Adjective===
-{{it-adj|interstellar|e|i}}
+{{it-adj}}
 
 # [[interstellar]]
 
@@ -136110,7 +136210,7 @@ Page 6332 tabellare: Found match for regex: =
 Page 6332 tabellare: -------- begin text --------
 
 ===Adjective===
-{{it-adj|tabellar|e|i}}
+{{it-adj}}
 
 # [[tabular]]
 
@@ -137185,7 +137285,7 @@ Page 6449 granulare: -------- begin text --------
 * {{rhymes|it|are}}
 
 ===Adjective===
-{{it-adj|granular|e|i}}
+{{it-adj}}
 
 # [[granular]]
 #: {{syn|it|granuloso}}
@@ -137597,7 +137697,7 @@ Page 6505 olivare: Found match for regex: =
 Page 6505 olivare: -------- begin text --------
 
 ===Adjective===
-{{it-adj|olivar|e|i}}
+{{it-adj}}
 
 # [[olivary]], [[olive-like]]
 
@@ -138081,7 +138181,7 @@ Page 6572 sopraccigliare: Found match for regex: =
 Page 6572 sopraccigliare: -------- begin text --------
 
 ===Adjective===
-{{it-adj|sopraccigliar|e|i}}
+{{it-adj}}
 
 # {{alternative spelling of|it|sopracciliare}}
 -------- end text --------
@@ -138445,6 +138545,7 @@ Page 6628 capocantiere: -------- begin text --------
 ===Noun===
 {{it-noun|m|capicantiere}}
 
+===Noun===
 {{it-noun|f|-}}
 
 # [[construction]] [[foreman]]; [[yard]] foreman; [[site]] foreman
@@ -138536,7 +138637,7 @@ Page 6645 multipolare: -------- begin text --------
 {{prefix|it|multi|polare}}
 
 ===Adjective===
-{{it-adj|multipolar|e|i}}
+{{it-adj}}
 
 # [[multipolar]]
 
@@ -138562,20 +138663,24 @@ Page 6646 mitragliera: -------- begin text --------
 Page 6647 mitragliere: Found match for regex: =
 Page 6647 mitragliere: -------- begin text --------
 
-===Etymology===
+===Etymology 1===
 {{suffix|it|mitraglia|iere}}
 
-===Noun===
+====Noun====
 {{it-noun|m}}
 
 # [[machine gunner]]
 
-{{head|it|noun plural form|g=f}}
-# {{plural of|it|mitragliera}}
-
-====Related terms====
+=====Related terms=====
 * {{l|it|mitraglia}}
 * {{l|it|mitragliare}}
+
+===Etymology 2===
+
+====Noun====
+{{head|it|noun form|g=f}}
+
+# {{plural of|it|mitragliera}}
 -------- end text --------
 Page 6648 mirrare: Found match for regex: =
 Page 6648 mirrare: -------- begin text --------
@@ -139660,7 +139765,7 @@ Page 6792 canicolare: Found match for regex: =
 Page 6792 canicolare: -------- begin text --------
 
 ===Adjective===
-{{it-adj|canicolar|e|i}}
+{{it-adj}}
 
 # [[scorching]]
 -------- end text --------
@@ -139834,7 +139939,7 @@ Page 6816 postconciliare: -------- begin text --------
 {{prefix|it|post|conciliare}}
 
 ===Adjective===
-{{it-adj|postconciliar|e|i}}
+{{it-adj}}
 
 # [[postconciliar]]
 -------- end text --------
@@ -139842,7 +139947,7 @@ Page 6818 palmare: Found match for regex: =
 Page 6818 palmare: -------- begin text --------
 
 ===Adjective===
-{{it-adj|palmar|e|i}}
+{{it-adj}}
 
 # [[evident]], [[obvious]]
 # [[handheld]]
@@ -139876,7 +139981,7 @@ Page 6830 lapillare: Found match for regex: =
 Page 6830 lapillare: -------- begin text --------
 
 ===Adjective===
-{{it-adj|lapillar|e|i}}
+{{it-adj}}
 
 # [[lapillar]]
 
@@ -139991,7 +140096,7 @@ Page 6854 unifamiliare: -------- begin text --------
 {{prefix|it|uni|familiare}}
 
 ===Adjective===
-{{it-adj|unifamiliar|e|i}}
+{{it-adj}}
 
 # [[single]]-[[family]] (''home'')
 
@@ -140002,9 +140107,9 @@ Page 6855 truciolare: Found match for regex: =
 Page 6855 truciolare: -------- begin text --------
 
 ===Adjective===
-{{it-adj|truciolar|e|i}}
+{{it-adj}}
 
-# [[chipboard]] (''attributive''), [[particleboard]] (''attributive'')
+# {{lb|it|relational}} [[chipboard]], [[particleboard]]
 
 ===Noun===
 {{it-noun|m}}
@@ -140207,7 +140312,7 @@ Page 6896 cartolare: -------- begin text --------
 {{rfe|it}}
 
 ===Adjective===
-{{it-adj|cartolar|e|i}}
+{{it-adj}}
 
 # [[securitized]]
 -------- end text --------
@@ -140689,7 +140794,7 @@ Page 6975 megere: Found match for regex: =
 Page 6975 megere: -------- begin text --------
 
 ===Noun===
-{{head|it|noun plural form|g=f}}
+{{head|it|noun form|g=f}}
 
 # {{plural of|it|megera}}
 
@@ -140768,7 +140873,7 @@ Page 6983 intramuscolare: -------- begin text --------
 {{prefix|it|intra|muscolare}}
 
 ===Adjective===
-{{it-adj|intramuscolar|e|i}}
+{{it-adj}}
 
 # {{lb|it|anatomy}} [[intramuscular]]
 
@@ -141286,7 +141391,7 @@ Page 7052 federe: -------- begin text --------
 * {{rhymes|it|ɛdere}}
 
 ===Noun===
-{{head|it|noun plural form|g=f}}
+{{head|it|noun form|g=f}}
 # {{plural of|it|federa}}
 
 ----
@@ -141315,7 +141420,7 @@ Page 7062 cagnare: Found match for regex: =
 Page 7062 cagnare: -------- begin text --------
 
 ===Noun===
-{{head|it|noun plural form|g=f}}
+{{head|it|noun form|g=f}}
 
 # {{plural of|it|cagnara}}
 
@@ -141508,7 +141613,7 @@ Page 7131 vernacolare: -------- begin text --------
 {{af|it|vernacolo|-are}}
 
 ===Adjective===
-{{it-adj|vernacolar|e|i}}
+{{it-adj}}
 
 # [[vernacular]]
 
@@ -141887,7 +141992,7 @@ Page 7195 sere: -------- begin text --------
 * {{rhymes|it|ere}}
 
 ===Noun===
-{{head|it|noun plural form|g=f}}
+{{head|it|noun form|g=f}}
 
 # {{plural of|it|sera}}
 
@@ -142134,7 +142239,7 @@ Page 7267 placentare: Found match for regex: =
 Page 7267 placentare: -------- begin text --------
 
 ===Adjective===
-{{it-adj|placentar|e|i}}
+{{it-adj}}
 
 # [[placental]]
 
@@ -142267,7 +142372,7 @@ Page 7298 camere: Found match for regex: =
 Page 7298 camere: -------- begin text --------
 
 ===Noun===
-{{head|it|noun plural form|g=f}}
+{{head|it|noun form|g=f}}
 # {{plural of|it|camera}}
 
 ===Anagrams===
@@ -142499,7 +142604,7 @@ Page 7354 ere: Found match for regex: =
 Page 7354 ere: -------- begin text --------
 
 ===Noun===
-{{head|it|noun plural form|g=f}}
+{{head|it|noun form|g=f}}
 
 # {{plural of|it|era}}
 
@@ -142529,7 +142634,7 @@ Page 7373 antiparlamentare: Found match for regex: =
 Page 7373 antiparlamentare: -------- begin text --------
 
 ===Adjective===
-{{it-adj|antiparlamentar|e|i}}
+{{it-adj}}
 
 # [[unparliamentary]]
 -------- end text --------
@@ -142540,7 +142645,7 @@ Page 7379 ventricolare: -------- begin text --------
 {{af|it|ventricolo|-are}}
 
 ===Adjective===
-{{it-adj|ventricolar|e|i}}
+{{it-adj}}
 
 # {{lb|it|anatomy}} [[ventricular]]
 
@@ -142565,7 +142670,7 @@ Page 7380 vacanziere: -------- begin text --------
 {{suffix|it|vacanza|iere}}
 
 ====Adjective====
-{{it-adj|vacanzier|e|i}}
+{{it-adj}}
 
 # {{lb|it|relational|jocular}} [[holiday]]
 
@@ -142755,7 +142860,7 @@ Page 7398 neuromuscolare: -------- begin text --------
 {{prefix|it|neuro|muscolare}}
 
 ===Adjective===
-{{it-adj|neuromuscolar|e|i}}
+{{it-adj}}
 
 # {{lb|it|anatomy}} [[neuromuscular]]
 
@@ -142897,22 +143002,32 @@ Page 7424 battelliere: -------- begin text --------
 Page 7429 ammollare: Found match for regex: =
 Page 7429 ammollare: -------- begin text --------
 
-===Verb===
-{{it-verb}}
+===Etymology 1===
+{{af|it|a-|molle|-are}}
+
+====Verb====
+{{it-verb|a[transitive]:e[intransitive]/ò}}
 
 # {{lb|it|transitive}} to [[soak]] or [[steep]]
-# {{lb|it|intransitive}} to [[soak]]
+# {{lb|it|intransitive}} to [[soak]] {{+aux|it|essere}}
 
-{{it-verb}}
-
-# {{lb|it|transitive}} to [[slacken]] or [[loosen]]
-
-====Conjugation====
+=====Conjugation=====
 {{it-conj-are|ammoll|avere or essere}}
 
-====Related terms====
+=====Related terms=====
 * {{l|it|ammollamento}}
 * {{l|it|ammollarsi}}
+
+===Etymology 2===
+{{af|it|a-|mollare}}
+
+====Verb====
+{{it-verb|a/ò}}
+
+# {{lb|it|transitive|uncommon}} to [[slacken]] or [[loosen]]
+
+=====Conjugation=====
+{{it-conj-are|ammoll|avere}}
 
 ===Anagrams===
 * {{l|it|ammollerà}}
@@ -143321,7 +143436,7 @@ Page 7489 curricolare: -------- begin text --------
 {{af|it|curricolo|-are}}
 
 ===Adjective===
-{{it-adj|curricolar|e|i}}
+{{it-adj}}
 
 # [[curricular]]
 
@@ -143432,7 +143547,7 @@ Page 7512 antere: Found match for regex: =
 Page 7512 antere: -------- begin text --------
 
 ===Noun===
-{{head|it|noun plural form|g=f}}
+{{head|it|noun form|g=f}}
 
 # {{plural of|it|antera}}
 
@@ -143486,6 +143601,8 @@ Derived from {{affix|it|s-|pos1=derivational prefix|paura|t2=fear|-ire|pos3=3rd 
 ====Related terms====
 * {{l|it|spauracchio}}
 * {{l|it|spaurevole}}
+
+[[Category:it:Fear]]
 -------- end text --------
 Page 7526 sommettere: Found match for regex: =
 Page 7526 sommettere: -------- begin text --------
@@ -143562,7 +143679,7 @@ Page 7542 preconciliare: -------- begin text --------
 From {{prefix|it|pre|conciliare}}
 
 ===Adjective===
-{{it-adj|preconciliar|e|i}}
+{{it-adj}}
 
 # [[pre-conciliar]]
 -------- end text --------
@@ -143821,15 +143938,18 @@ Page 7590 baleniera: -------- begin text --------
 Page 7591 baleniere: Found match for regex: =
 Page 7591 baleniere: -------- begin text --------
 
-===Etymology===
+===Etymology 1===
 {{suffix|it|balena|iere}}
 
-===Noun===
+====Noun====
 {{it-noun|m}}
 
 # [[whaler]]
 
-{{head|it|noun plural form|g=f}}
+===Etymology 2===
+
+====Noun====
+{{head|it|noun form|g=f}}
 
 # {{plural of|it|baleniera}}
 
@@ -144005,9 +144125,9 @@ Page 7623 postribolare: Found match for regex: =
 Page 7623 postribolare: -------- begin text --------
 
 ===Adjective===
-{{it-adj|postribolar|e|i}}
+{{it-adj}}
 
-# [[brothel]] (''attributive'')
+# {{lb|it|relational}} [[brothel]]
 # {{lb|it|by extension}} [[obscene]]
 
 ====Related terms====
@@ -144236,7 +144356,7 @@ Page 7664 cinire: Found match for regex: =
 Page 7664 cinire: -------- begin text --------
 
 ===Noun===
-{{head|it|noun plural form|g=f-p}}
+{{head|it|noun form|g=f-p}}
 
 # {{plural of|it|cinira}}
 -------- end text --------
@@ -144708,7 +144828,7 @@ From {{der|it|la|interpolō}}.
 {{af|it|inter-|polare}}
 
 ====Adjective====
-{{it-adj|interpolar|e|i}}
+{{it-adj}}
 
 # {{lb|it|physics}} [[interpolar]] (between two poles)
 
@@ -144802,7 +144922,7 @@ Page 7754 bifilare: -------- begin text --------
 {{prefix|it|bi|filare}}
 
 ===Adjective===
-{{it-adj|bifilar|e|i}}
+{{it-adj}}
 
 # [[two]]-[[wire]] (electrical cabling etc)
 
@@ -145362,7 +145482,7 @@ Page 7834 unipolare: -------- begin text --------
 {{prefix|it|uni|polare}}
 
 ===Adjective===
-{{it-adj|unipolar|e|i}}
+{{it-adj}}
 
 # [[unipolar]]
 -------- end text --------
@@ -145373,7 +145493,7 @@ Page 7838 subnucleare: -------- begin text --------
 {{prefix|it|sub|nucleare}}
 
 ===Adjective===
-{{it-adj|subnuclear|e|i}}
+{{it-adj}}
 
 # {{lb|it|physics}} [[subnuclear]]
 
@@ -145489,7 +145609,7 @@ Page 7854 prescolare: -------- begin text --------
 {{prefix|it|pre|scolare}}
 
 ===Adjective===
-{{it-adj|prescolar|e|i}}
+{{it-adj}}
 
 # [[preschool]]
 #: {{syn|it|prescolastico}}
@@ -145543,7 +145663,7 @@ Page 7891 bifamiliare: -------- begin text --------
 {{prefix|it|bi|familiare}}
 
 ===Adjective===
-{{it-adj|bifamiliar|e|i}}
+{{it-adj}}
 
 # [[semi-detached]] (houses)
 
@@ -145937,7 +146057,7 @@ Page 8002 testicolare: Found match for regex: =
 Page 8002 testicolare: -------- begin text --------
 
 ===Adjective===
-{{it-adj|testicolar|e|i}}
+{{it-adj}}
 
 # {{lb|it|anatomy}} [[testicular]]
 
@@ -146860,7 +146980,7 @@ Page 8205 fibrillare: -------- begin text --------
 {{af|it|fibrilla|-are|pos2=adjectival suffix}}
 
 ====Adjective====
-{{it-adj|fibrillar|e|i}}
+{{it-adj}}
 
 # [[fibrillary]]
 
@@ -147146,7 +147266,7 @@ Page 8273 midollare: -------- begin text --------
 {{suffix|it|midolla|are}}, or borrowed from {{bor|it|LL.|medullāris}}, from {{der|it|la|medulla}}. First attested 17th century<ref>{{R:it:Sapere|midollare}}</ref>.
 
 ===Adjective===
-{{it-adj|midollar|e|i}}
+{{it-adj}}
 
 # {{lb|it|anatomy|botany}} [[medullary]]
 
@@ -147583,7 +147703,7 @@ Page 8375 lupare: Found match for regex: =
 Page 8375 lupare: -------- begin text --------
 
 ===Noun===
-{{head|it|noun plural form|g=f}}
+{{head|it|noun form|g=f}}
 
 # {{plural of|it|lupara}}
 
@@ -148160,7 +148280,7 @@ Page 8521 unicellulare: -------- begin text --------
 {{prefix|it|uni|cellulare}}
 
 ===Adjective===
-{{it-adj|unicellular|e|i}}
+{{it-adj}}
 
 # {{lb|it|biology}} [[unicellular]]
 -------- end text --------
@@ -148171,7 +148291,7 @@ Page 8522 translagunare: -------- begin text --------
 {{prefix|it|trans|lagunare}}
 
 ===Adjective===
-{{it-adj|translagunar|e|i}}
+{{it-adj}}
 
 # [[trans-]][[lagoon]]
 -------- end text --------
@@ -149026,7 +149146,7 @@ Page 8738 terre: Found match for regex: =
 Page 8738 terre: -------- begin text --------
 
 ===Noun===
-{{head|it|noun plural form|g=f-p}}
+{{head|it|noun form|g=f-p}}
 
 # {{plural of|it|terra}}
 
@@ -149225,7 +149345,7 @@ Page 8790 laminare: -------- begin text --------
 * {{rhymes|it|are}}
 
 ===Adjective===
-{{it-adj|laminar|e|i}}
+{{it-adj}}
 
 # [[laminar]]
 
@@ -149390,7 +149510,7 @@ Page 8824 cere: -------- begin text --------
 * {{rhymes|it|ere}}
 
 ===Noun===
-{{head|it|noun plural form|g=f}}
+{{head|it|noun form|g=f}}
 
 # {{plural of|it|cera}}
 
@@ -149458,9 +149578,10 @@ Page 8836 begare: -------- begin text --------
 * {{hyph|it|be|gà|re}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/è}}
 
 # {{tlb|it|intransitive|northern Italy}} to [[quarrel]]
+#: {{syn|it|litigare}}
 
 ====Conjugation====
 {{it-conj-care|beg|avere}}
@@ -149472,7 +149593,7 @@ Page 8838 balenottere: Found match for regex: =
 Page 8838 balenottere: -------- begin text --------
 
 ===Noun===
-{{head|it|noun plural form|g=f}}
+{{head|it|noun form|g=f}}
 
 # {{plural of|it|balenottera}}
 -------- end text --------
@@ -149660,7 +149781,7 @@ Page 8908 isobare: Found match for regex: =
 Page 8908 isobare: -------- begin text --------
 
 ===Noun===
-{{head|it|noun plural form|g=f}}
+{{head|it|noun form|g=f}}
 
 # {{plural of|it|isobara}}
 
@@ -149837,10 +149958,10 @@ Page 8952 ascellare: Found match for regex: =
 Page 8952 ascellare: -------- begin text --------
 
 ===Adjective===
-{{it-adj|ascellar|e|i}}
+{{it-adj}}
 
 # [[axillary]]
-# [[armpit]] (''attributive'')
+# {{lb|it|relational}} [[armpit]]
 
 ====Related terms====
 * {{l|it|ascella}}
@@ -150061,7 +150182,7 @@ Page 9040 ghiandolare: Found match for regex: =
 Page 9040 ghiandolare: -------- begin text --------
 
 ===Adjective===
-{{it-adj|ghiandolar|e|i}}
+{{it-adj}}
 
 # {{lb|it|anatomy}} [[glandular]]
 
@@ -150148,7 +150269,7 @@ Page 9063 corpuscolare: -------- begin text --------
 * {{it-IPA|corpuscolàre}}
 
 ===Adjective===
-{{it-adj|corpuscolar|e|i}}
+{{it-adj}}
 
 # [[corpuscular]]
 
@@ -150436,7 +150557,7 @@ Page 9156 plurigemellare: -------- begin text --------
 {{prefix|it|pluri|gemellare}}
 
 ===Adjective===
-{{it-adj|plurigemellar|e|i}}
+{{it-adj}}
 
 # [[multiple]] (describing a pregnancy or birth involving more than two babies)
 -------- end text --------
@@ -150490,7 +150611,7 @@ Page 9174 lamellare: Found match for regex: =
 Page 9174 lamellare: -------- begin text --------
 
 ===Adjective===
-{{it-adj|lamellar|e|i}}
+{{it-adj}}
 
 # [[lamellate]], [[lamellated]], [[lamellar]]
 
@@ -151055,7 +151176,7 @@ Page 9320 ghiare: Found match for regex: =
 Page 9320 ghiare: -------- begin text --------
 
 ===Noun===
-{{head|it|noun plural form|g=f}}
+{{head|it|noun form|g=f}}
 
 # {{plural of|it|ghiara}}
 
@@ -151129,7 +151250,7 @@ Page 9335 curriculare: Found match for regex: =
 Page 9335 curriculare: -------- begin text --------
 
 ===Adjective===
-{{it-adj|curricular|e|i}}
+{{it-adj}}
 
 # {{alt form|it|curricolare}}
 
@@ -151647,7 +151768,7 @@ Page 9485 carbonare: -------- begin text --------
 # {{feminine plural of|it|carbonaro}}
 
 ===Noun===
-{{head|it|noun plural form|g=f-p}}
+{{head|it|noun form|g=f-p}}
 
 # {{plural of|it|carbonara}}
 
@@ -152217,9 +152338,9 @@ Page 9682 vigiliare: Found match for regex: =
 Page 9682 vigiliare: -------- begin text --------
 
 ===Adjective===
-{{it-adj|vigiliar|e|i}}
+{{it-adj}}
 
-# [[vigil]] (attributive)
+# {{lb|it|relational}} [[vigil]]
 
 ====Related terms====
 * {{l|it|vigilia}}
@@ -152292,9 +152413,9 @@ Page 9734 pulviscolare: Found match for regex: =
 Page 9734 pulviscolare: -------- begin text --------
 
 ===Adjective===
-{{it-adj|pulviscolar|e|i}}
+{{it-adj}}
 
-# [[dust]] (attributive)
+# {{lb|it|relational}} [[dust]]
 -------- end text --------
 Page 9758 monopolare: Found match for regex: =
 Page 9758 monopolare: -------- begin text --------
@@ -152303,7 +152424,7 @@ Page 9758 monopolare: -------- begin text --------
 {{prefix|it|mono|polare}}
 
 ===Adjective===
-{{it-adj|monopolar|e|i}}
+{{it-adj}}
 
 # {{lb|it|physics}} [[monopolar]], [[unipolar]]
 
@@ -152358,7 +152479,7 @@ From {{der|it|la|līmināris}}.
 * {{it-IPA|liminàre}}
 
 ===Adjective===
-{{it-adj|liminar|e|i}}
+{{it-adj}}
 
 # [[liminal]]
 
@@ -152380,7 +152501,7 @@ Page 9777 interlineare: -------- begin text --------
 Derived from {{af|it|inter-|linea|-are}}, on the example of the adjective {{m|it|lineare}}.
 
 ====Adjective====
-{{it-adj|interlinear|e|i}}
+{{it-adj}}
 
 # [[interlinear]]
 
@@ -152461,7 +152582,7 @@ Page 9787 gliare: Found match for regex: =
 Page 9787 gliare: -------- begin text --------
 
 ===Adjective===
-{{it-adj|gliar|e|i}}
+{{it-adj}}
 
 # [[glial]]
 #: {{syn|it|gliale}}
@@ -152543,5 +152664,5 @@ Page 9800 formalizzarsi: -------- begin text --------
 ====Conjugation====
 {{it-conj-arsi|formalizz|essere}}
 -------- end text --------
-Elapsed time: 1 hours 6 mins 6.24 secs
-Ending at Sat Jun 12 14:21:13 2021
+Elapsed time: 14 mins 4.83 secs
+Ending at Sat Jun 19 21:37:35 2021
