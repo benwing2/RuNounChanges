@@ -36,3 +36,4 @@ giostrarsela: giostrantesela,giostratosela
 giostarsi: giostratosi
 giostratosi: giostratasi,giostratisi,giostratesi
 meritarsela: meritantesela,meritatosela
+scioccare: schioccerò,schioccerai,schioccerà,schiocceremo,schioccerete,schiocceranno,schioccerei,schiocceresti,schioccerebbe,schiocceremmo,schioccereste,schioccerebbero
