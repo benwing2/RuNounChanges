@@ -3127,7 +3127,7 @@ Page 54 rispondere: Found match for regex: =
 Page 54 rispondere: -------- begin text --------
 
 ===Etymology===
-From {{inh|it|la|respondeō}}.
+From {{inh|it|la|respondēre}}, present active infinitive of {{m|la|respondeō}}.
 
 ===Pronunciation===
 * {{audio|it|It-rispondere.ogg|Audio}}
@@ -10599,7 +10599,7 @@ From {{der|it|la|prosequor|prōsequor, prōsequī}}, modeled after {{m|it|seguir
 * {{hyph|it|pro|se|guì|re}}
 
 ===Verb===
-{{it-verb|a[most meanings]:e[alternatively when intransitive and referring to objects]/é}}
+{{it-verb|a[most meanings]:e[alternatively when intransitive and with a thing as the subject]/é}}
 
 # {{lb|it|transitive}} to [[continue]], [[carry on]], [[go on]], [[resume]]
 #: {{syn|it|continuare|riprendere}}
@@ -10686,7 +10686,7 @@ From {{der|it|la|occurrere}}, present active infinitive of {{m|la|occurrō||I ru
 * {{l|it|occorrenza}}
 * {{l|it|correre}}
 
-[[Category:it:Mind]]
+{{cln|it|Mind}}
 -------- end text --------
 Page 247 fissare: Found match for regex: =
 Page 247 fissare: -------- begin text --------
@@ -31058,7 +31058,7 @@ Page 856 peggiorare: -------- begin text --------
 From {{inh|it|LL.|peiōrāre}}, present active infinitive of {{m|la|peiōrō}}, from {{inh|it|la|peior}}.
 
 ===Verb===
-{{it-verb|a[transitive, also alternatively when intransitive and referring to a person]:e[intransitive]/ó}}
+{{it-verb|a[transitive, also alternatively when intransitive and with a person as the subject]:e[intransitive]/ó}}
 
 # {{lb|it|transitive}} to [[worsen]] (make worse)
 # {{lb|it|intransitive}} to [[worsen]] (become worse) {{i|of an object, situation, etc.}} {{+aux|it|essere}}
@@ -46014,7 +46014,7 @@ Page 1357 espandere: Found match for regex: =
 Page 1357 espandere: -------- begin text --------
 
 ===Etymology===
-Borrowed from {{bor|it|la|expandere}}, present active infinitive of {{m|la|expandō}}. Compare the doublet {{doublet|notext=1|it|spandere}}.
+Borrowed from {{bor|it|la|expandere}}, present active infinitive of {{m|la|expandō}}. Compare the doublet {{m|it|spandere}}.
 
 ===Verb===
 {{it-verb|a\à,espandéi:espandètti[uncommon]:espànsi[uncommon],espànto}} {{tlb|it|transitive}}
@@ -49390,7 +49390,7 @@ Borrowed from {{bor|it|fr|avantager}}.
 * {{it-IPA|avvantaggiàre}}
 
 ===Verb===
-{{it-verb|a/à}} {{tlb|it|transitive}}
+{{it-verb|a/à+}} {{tlb|it|transitive}}
 
 # to [[benefit]], to [[favor]]
 # to [[improve]], to [[advance]]
@@ -49972,13 +49972,13 @@ Page 1495 quadrare: -------- begin text --------
 {{confix|it|quadr|are}}, or from {{inh|it|la|quadrāre}}, present active infinitive of {{m|la|quadrō}}.
 
 ===Verb===
-{{it-verb|a[transitive or intransitive]:e[alternatively when transitive]/à}}
+{{it-verb|a[transitive or intransitive]:e[alternatively when transitive]|a/à}}
 
 # {{lb|it|transitive}} to [[square]] {{gl|to make square; to reduce to a square shape}}
 #: {{syn|it|squadrare|riquadrare}}
 #: {{uxi|it|'''quadrare''' un foglio|to '''square''' a sheet (of paper)}}
 # {{lb|it|mathematics}} to [[square]] (a number)
-# {{lb|it|geometry}} to [[square]] {{gl|to draw a square with the same [[area]] as}}
+# {{lb|it|geometry}} to [[square]] {{gl|to| draw a square with the same [[area]] as}}
 #: {{uxi|it|'''quadrare''' un cerchio|to '''square''' a circle}}
 # {{lb|it|transitive}} to [[tally]] or [[balance]]
 # {{lb|it|intransitive}} to be [[exact]] {{q|of a [[calculation]], etc.}} {{+aux|it|avere|essere}}
@@ -52380,7 +52380,7 @@ Probably from {{der|it|pro|afanar}}, with cognates {{cog|ca|afanyar}}, {{m|ca|af
 * {{it-IPA|affannàre}}
 
 ===Verb===
-{{it-verb|a/à+}}
+{{it-verb|a/à}}
 
 # {{lb|it|transitive}} to leave someone [[breathless]]
 #* {{quote-book|it|year=c. 1410|year_published=1841|title=Guerino detto il Meschino|trans-title=Wretched Guerrin|author=Andrea da Barberino|authorlink=Andrea da Barberino|chapter=XXXVIII|chapterurl={{fullurl:s:it:Guerino detto il Meschino/Capitolo XXXVIII}}|passage=Il Meschino, perchè era bene armato e bene a cavallo, non volle troppo '''affannare''' la bestia, e trovato in una campagna un alloggio di pastori ivi riposarono, e la mattina confortati tutti montarono a cavallo, ed essendo il giorno verso vespro, un’altra volta si riposarono, poscia montarono a cavallo di nuovo.}}
@@ -53476,7 +53476,7 @@ Page 1625 assaltare: -------- begin text --------
 {{af|it|assalto|-are}}
 
 ===Verb===
-{{it-verb|a/à+}}
+{{it-verb|a/à}}
 
 # {{lb|it|transitive|military}} to [[attack]], [[assault]]
 # {{lb|it|transitive}} to [[hold up]] [[by]] [[force]] (a vehicle)
@@ -55461,7 +55461,7 @@ Page 1701 riavere: -------- begin text --------
 * {{rhymes|it|ere}}
 
 ===Verb===
-{{it-verb|a/riò*,rièbbi.fut:riavrò.sub:riàbbia.imp:riàbbi}}
+{{it-verb|a/riò,rièbbi.fut:riavrò.sub:riàbbia.imp:riàbbi}}
 
 # {{lb|it|transitive}} to [[have]] again
 
@@ -56601,7 +56601,7 @@ From {{der|it|ML.|rotulare||to roll", "revolve}}, from {{der|it|la|rotula||a lit
 * {{it-IPA|rotolàre}}
 
 ===Verb===
-{{it-verb|a[transitive]:e[intransitive]/ò-}}
+{{it-verb|a[transitive]:e[intransitive\ò-}}
 
 # {{lb|it|transitive}} to [[roll]]
 # {{lb|it|intransitive}} to [[roll]] {{+aux|it|essere}}
@@ -57673,7 +57673,7 @@ From {{etyl|la|it}} {{m|la|decedo|dēcēdō, dēcēdere}}.
 * {{rhymes|it|ɛdere}}
 
 ===Verb===
-{{it-verb|e\è+}} {{tlb|it|intransitive}}
+{{it-verb|e\è}} {{tlb|it|intransitive}}
 
 # to [[die]] {{+aux|it|essere}}
 #: {{syn|it|morire}}
@@ -58493,7 +58493,7 @@ From {{af|it|a-|punto|-are}}, originally "to note with a dot".
 {{cal|it|fro|appointer||to settle a deal}}.
 
 ====Verb====
-{{it-verb|a[transitive]:e[intransitive]/ù}} {{tlb|it|archaic}}
+{{it-verb|a[transitive]:e[intransitive}/ù}} {{tlb|it|archaic}}
 
 # {{lb|it|transitive}} to [[balance]] (accounts)
 # {{lb|it|transitive}} to [[establish]] by [[mutual]] [[agreement]]
@@ -61402,7 +61402,7 @@ Page 1930 traboccare: -------- begin text --------
 From {{bor|it|pro|trabucar}}, ultimately from {{der|it|frk|*būk}}; with influence from {{m+|it|bocca}}.
 
 ====Verb====
-{{it-verb|e[referring to liquid or other material, or figuratively]:a[referring to a vessel]/ó}}
+{{it-verb|e[with a liquid or other material as the subject, or figuratively]:a[with a vessel as the subject]/ó}}
 
 # {{lb|it|intransitive}} to [[overflow]] {{+preo|it|da|means=from}} {{i|of liquid or other material}} {{+aux|it|essere}}
 # {{lb|it|intransitive}} to [[overflow]] {{+preo|it|di|means=with}} {{i|of a vessel}} {{+aux|it|avere}}
@@ -63434,7 +63434,7 @@ Page 2008 contornare: Found match for regex: =
 Page 2008 contornare: -------- begin text --------
 
 ===Verb===
-{{it-verb|a/ó+}}
+{{it-verb|a/ó}}
 
 # {{lb|it|transitive}} to [[surround]] or [[encircle]]
 # {{lb|it|transitive}} to [[skirt]]
@@ -65236,7 +65236,7 @@ Page 2083 sgonfiare: -------- begin text --------
 ===Etymology 2===
 
 ====Verb====
-{{it-verb|-/ó,+,-}}
+{{it-verb|-/ó}}
 
 # {{lb|it|intransitive}} to [[puff out]] {{i|of a dress}}
 
@@ -71330,7 +71330,7 @@ Page 2325 folgorare: -------- begin text --------
 
 ===Etymology===
 From {{inh|it|la|fulgurāre}}, present active infinitive of {{m|la|fulgurō||I flash, shine}}.<br />
-Surface analysis: {{suffix|it|folgore|t1=lightning, thunderbolt|are|pos2=1st conjugation verbal suffix}}.
+Surface analysis: {{suffix|it|folgore|t1=lightning”, “thunderbolt|are|pos2=1st conjugation verbal suffix}}
 
 ===Pronunciation===
 * {{it-IPA|folgoràre}}
@@ -71338,7 +71338,7 @@ Surface analysis: {{suffix|it|folgore|t1=lightning, thunderbolt|are|pos2=1st con
 * {{hyphenation|it|fol|go|rà|re}}
 
 ===Verb===
-{{it-verb|a/ó-}}
+{{it-verb|a/ó}}
 
 # {{lb|it|transitive}} to [[strike]] (down) {{i|especially with lightning}}
 # {{lb|it|transitive}} to [[electrocute]]
@@ -77478,7 +77478,7 @@ Probably borrowed from {{bor|it|la|irrīdēre}}, present active infinitive of {{
 ===Verb===
 {{it-verb|a\ì+,irrìsi,irrìso}}
 
-# {{lb|it|transitive}} to [[mock]], [[deride]], [[frolic]]
+# {{lb|it|transitive}} to [[mock]], to [[deride]]
 
 ====Conjugation====
 {{it-conj-ere|irrid|avere|pastp=irriso|prem1s=irrisi|prem3s=irrise|prem3s2=-|prem3p=irrisero|prem3p2=-
@@ -88034,13 +88034,33 @@ Page 3025 rullare: -------- begin text --------
 Page 3027 ripiombare: Found match for regex: =
 Page 3027 ripiombare: -------- begin text --------
 
-===Verb===
-{{it-verb}}
+===Pronunciation===
+* {{it-IPA}}
 
-# {{lb|it|intransitive}} to [[fall down]] again
+===Etymology 1===
+{{af|it|ri-|piombare|t2=to plunge}}
 
-====Conjugation====
-{{it-conj-are|ripiomb|essere}}
+====Verb====
+{{it-verb|a[transitive]:e[intransitive]/ó}}
+
+# {{lb|it|transitive}} to [[plunge]] [[again]], to [[plunge]] [[back]]
+# {{lb|it|intransitive}} to [[plunge]] [[down]] [[again]], to [[plunge]] [[back]] [[down]], to [[plummet]] [[again]], to [[fall down]] [[again]] {{+aux|it|essere}}
+# {{lb|it|intransitive}} to [[return]] [[suddenly]], to [[come back]] [[suddenly]] {{+aux|it|essere}}
+# {{lb|it|intransitive}} to [[jump]] [[suddenly]] [[again]] {{+aux|it|essere}}
+
+=====Conjugation=====
+{{it-conj-are|ripiomb|avere or essere}}
+
+===Etymology 2===
+{{af|it|ri-|piombare|t2=to fill with lead}}
+
+====Verb====
+{{it-verb|a/ó}}
+
+# {{lb|it|transitive}} to [[fill]] [[again]] with [[lead]] (e.g. a tooth)
+
+=====Conjugation=====
+{{it-conj-are|ripiomb|avere}}
 
 ===Anagrams===
 * {{l|it|ripiomberà}}
@@ -88049,7 +88069,7 @@ Page 3028 rinfocolare: Found match for regex: =
 Page 3028 rinfocolare: -------- begin text --------
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/ò-}}
 
 # {{lb|it|transitive}} to [[rekindle]], to [[stir up]]
 
@@ -88066,10 +88086,10 @@ Page 3029 funestare: Found match for regex: =
 Page 3029 funestare: -------- begin text --------
 
 ===Etymology===
-From {{etyl|la|it}} {{m|la|fūnestāre}}, present active infinitive of {{m|la|fūnestō}}.
+Borrowed from {{bor|it|la|fūnestāre}}, present active infinitive of {{m|la|fūnestō}}.
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/è}}
 
 # {{lb|it|transitive}} to [[devastate]], [[ravage]], [[lay waste]]
 # {{lb|it|transitive}} to [[distress]], [[sadden]], [[grieve]]
@@ -88192,10 +88212,13 @@ Page 3035 fluttuare: Found match for regex: =
 Page 3035 fluttuare: -------- begin text --------
 
 ===Etymology===
-From {{der|it|la|fluctuare}}, present active infinitive of {{m|la|fluctuo}}, derivative of {{m|la|fluctus}}.
+Borrowed from {{bor|it|la|flūctuāre}}, present active infinitive of {{m|la|flūctuō}}, derivative of {{m|la|flūctus}}.
+
+===Pronunciation===
+* {{it-IPA|fluttu.àre|fluttuàre}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/ù-}}
 
 # {{lb|it|intransitive}} to [[rise]] and [[fall]] {{qualifier|like a wave or a ship}}
 # {{lb|it|intransitive}} to [[flutter]]
@@ -88221,7 +88244,7 @@ From {{m|it|sesto|gloss=layout; due place}}, compare {{m|it|assestare|gloss=to s
 * {{it-IPA|dissestàre}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/è}}
 
 # {{lb|it|transitive}} to [[upset]], [[disturb]]
 
@@ -88244,10 +88267,11 @@ Page 3037 ritentare: -------- begin text --------
 {{prefix|it|ri|tentare}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/è}}
 
-# {{lb|it|transitive}} to [[try]] again
+# {{lb|it|transitive}} to [[try]] [[again]]
 #: {{syn|it|riprovare}}
+# {{lb|it|transitive}} to [[tempt]] [[again]]
 
 ====Related terms====
 * {{l|it|ritentamento}}
@@ -88270,7 +88294,7 @@ From {{m|it|pugnale}}. Compare {{cog|es|apuñalar}}, {{cog|pt|apunhalar}}, {{cog
 * {{it-IPA|pugnalàre}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/à}}
 
 # {{lb|it|transitive}} to [[stab]]
 
@@ -88313,25 +88337,36 @@ From {{bor|it|fr|drainer}}, from {{der|it|en|drain}}.
 Page 3040 posteggiare: Found match for regex: =
 Page 3040 posteggiare: -------- begin text --------
 
-===Etymology===
+===Etymology 1===
 {{suffix|it|posto|eggiare}}
 
-===Verb===
-{{it-verb}}
+====Verb====
+{{it-verb|a/é}}
 
 # {{lb|it|transitive}} to [[park]]
 #: {{syn|it|parcheggiare}}
 
-====Conjugation====
+=====Conjugation=====
 {{it-conj-ciare|postegg|avere}}
 
-====Derived terms====
+=====Derived terms=====
 * {{l|it|posteggiarsi}}
 * {{l|it|posteggio}}
 * {{l|it|posteggiatore}}
 
-====Related terms====
+=====Related terms=====
 * {{l|it|posto}}
+
+===Etymology 2===
+{{suffix|it|posta|eggiare}}
+
+====Verb====
+{{it-verb|a/é}}
+
+# {{lb|it|transitive|uncommon}} to [[follow]] or [[tail]] (someone) in order to [[spy]] on them
+
+=====Conjugation=====
+{{it-conj-ciare|postegg|avere}}
 
 ===Anagrams===
 * {{l|it|peggioraste}}, {{l|it|posteggerai}}, {{l|it|serpeggiato}}
@@ -88356,7 +88391,7 @@ Page 3042 vociare: -------- begin text --------
 * {{hyphenation|it|vo|cià|re}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/ó}}
 
 # {{lb|it|intransitive}} to speak too loudly, often [[rudely]]
 #: {{syn|it|gridare|sbraitare|berciare|schiamazzare|latrare|ragliare|ruggire|starnazzare}}
@@ -88385,7 +88420,7 @@ Page 3043 suggestionare: Found match for regex: =
 Page 3043 suggestionare: -------- begin text --------
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/ó}}
 
 # {{lb|it|transitive}} to [[influence]] (someone), especially in a [[manipulative]] or [[sinister]] way
 #: {{syn|it|influenzare}}
@@ -88489,7 +88524,7 @@ Page 3048 frazionare: -------- begin text --------
 * {{it-IPA|fratsionàre}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/ó}}
 
 # to [[divide]] or [[split up]]
 # to [[fractionate]]
@@ -88539,9 +88574,9 @@ Page 3051 damascare: Found match for regex: =
 Page 3051 damascare: -------- begin text --------
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/à+}}
 
-# {{lb|it|transitive}} to [[damask]] or [[damascene]]
+# {{lb|it|transitive}} to [[damask]] or [[damascene]] {{gl|to decorate (cloth) in damascene patterns}}
 
 ====Conjugation====
 {{it-conj-care|damasc|avere}}
@@ -88561,10 +88596,11 @@ Page 3052 asfissiare: Found match for regex: =
 Page 3052 asfissiare: -------- begin text --------
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a[transitive]:e[intransitive]/ì-}}
 
-# {{lb|it|transitive|intransitive}} to [[asphyxiate]] or [[suffocate]]
+# {{lb|it|transitive}} to [[asphyxiate]] or [[suffocate]]
 # {{lb|it|transitive}} to [[stifle]]
+# {{lb|it|intransitive}} to [[asphyxiate]] or [[suffocate]] {{+aux|it|essere}}
 
 ====Conjugation====
 {{it-conj-iare|asfissi|avere}}
@@ -88583,7 +88619,7 @@ Page 3053 smobilitare: -------- begin text --------
 {{prefix|it|s|mobilitare}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/ì-}}
 
 # {{lb|it|transitive}} to [[demobilize]]
 # {{lb|it|transitive}} to [[disband]]
@@ -88607,7 +88643,7 @@ Page 3054 fregiare: -------- begin text --------
 * {{it-IPA|fregiàre}}
 
 ===Verb===
-{{it-verb}} {{tlb|it|transitive}}
+{{it-verb|a/é}} {{tlb|it|transitive}}
 
 # to [[adorn]], [[embellish]]
 # to [[give]] (someone) (a title, honor, etc.)
@@ -88640,7 +88676,7 @@ From {{m|it|zappa}}. Compare {{cog|fr|saper}}, {{cog|scn|zappari}}, {{cog|vec|sa
 # {{lb|it|transitive}} to [[hoe]]
 # {{lb|it|transitive|figurative}} to [[bang]], to [[hit]] [[hard]] (a piano, etc.)
 # {{lb|it|transitive|military|historical}} to [[sap]], to [[undermine]] (a fortification) with a [[hoe]]
-# {{lb|it|intransitive|soccer}} to [[accidentally]] [[kick]] the [[ground]] (instead of the [[ball]])
+# {{lb|it|intransitive|soccer}} to [[accidentally]] [[kick]] the [[ground]] (instead of the [[ball]]) {{+aux|it|avere}}
 
 ====Conjugation====
 {{it-conj-are|zapp|avere}}
@@ -88663,7 +88699,7 @@ Page 3057 squagliare: -------- begin text --------
 {{compound|it|s-|quagliare}}, regional variant of {{m|it|cagliare||to curdle}}.<ref>{{R:it:Trec}}</ref>
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/à}}
 
 # {{lb|it|transitive}} to [[melt]]
 
@@ -88684,9 +88720,9 @@ Page 3058 profetare: Found match for regex: =
 Page 3058 profetare: -------- begin text --------
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/è}}
 
-# {{lb|it|transitive}} to [[prophesy]]
+# {{lb|it|transitive|or|intransitive}} to [[prophesy]]
 
 ====Conjugation====
 {{it-conj-are|profet|avere}}
@@ -88704,10 +88740,13 @@ Page 3059 ordire: -------- begin text --------
 From {{inh|it|VL.|*ōrdīre}}, from {{inh|it|la|ōrdīrī}}, present active infinitive of {{m|la|ōrdior}}. Compare Spanish and {{cog|pt|urdir}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/+isc}}
 
-# {{lb|it|transitive|textiles}} to [[warp]], [[weave]]
-# {{lb|it|transitive}} to [[plot]], [[hatch]], [[scheme]]
+# {{lb|it|transitive|textiles}} to [[warp]]
+# {{lb|it|transitive|textiles|by extension}} to [[weave]]
+# {{lb|it|transitive|literary}} to [[outline]], to [[sketch]] (a novel, a play, etc.)
+# {{lb|it|transitive}} to [[plot]], to [[hatch]], to [[scheme]]
+# {{lb|it|transitive|nautical}} to [[reeve]] (a rope) {{gl|to pass a rope through a hole or opening to fasten it}}
 
 ====Conjugation====
 {{it-conj-ire-b|ord|avere}}
@@ -88732,10 +88771,17 @@ Page 3060 disusare: -------- begin text --------
 ===Etymology===
 {{af|it|dis-|usare}}
 
-===Verb===
-{{it-verb}}
+===Pronunciation===
+* {{it-IPA}}
 
-# {{lb|it|transitive}} to [[cease]] to [[use]]
+===Verb===
+{{it-verb|a/ù}}
+
+# {{lb|it|transitive|uncommon}} to [[cease]] to [[use]]
+# {{lb|it|transitive|literary|or|archaic}} to [[use]] [[badly]]
+# {{lb|it|transitive|literary|or|archaic}} to [[divide]], to [[divert]]
+# {{lb|it|transitive|literary|or|archaic}} to [[abandon]]
+# {{lb|it|intransitive|literary|or|archaic}} to [[fall]] into [[disuse]] {{+aux|it|avere}}
 
 ====Conjugation====
 {{it-conj-are|disus|avere}}
@@ -88791,12 +88837,12 @@ Page 3063 scarpinare: Found match for regex: =
 Page 3063 scarpinare: -------- begin text --------
 
 ===Etymology===
-From {{inh|it|la|scarpināre}}, present active infinitive of {{m|la|scarpinō}}.
+From {{inh|it|LL.|scarpināre||to scrape, to scratch}}, present active infinitive of {{m|la|scarpinō}}.
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/ì}}
 
-# {{lb|it|intransitive}} to [[hike]], [[trek]]
+# {{lb|it|intransitive|informal}} to [[hike]], to [[trek]]
 
 ====Conjugation====
 {{it-conj-are|scarpin|avere}}
@@ -88817,9 +88863,10 @@ Page 3064 regredire: -------- begin text --------
 From {{der|it|la|regredior}}.
 
 ===Verb===
-{{it-verb}}
+{{it-verb|e/+isc}}
 
-# {{lb|it|intransitive}} to [[regress]]
+# {{lb|it|intransitive}} to [[go]] [[back]], to [[retreat]] {{+aux|it|essere}}
+# {{lb|it|intransitive|figurative|also|psychology}} to [[regress]] {{+aux|it|essere}}
 
 ====Conjugation====
 {{it-conj-ire-b|regred|essere}}
@@ -88835,14 +88882,14 @@ Page 3066 tarlare: Found match for regex: =
 Page 3066 tarlare: -------- begin text --------
 
 ===Verb===
-{{it-verb}}
+{{it-verb|e[intransitive]:a[transitive]/à}}
 
-# {{lb|it|intransitive}} to have [[woodworm]]
-# {{lb|it|transitive}} to infest with woodworm
-# {{lb|it|transitive}} to [[corrode]]
+# {{lb|it|intransitive}} to have [[woodworm]], to be [[worm-eaten]] {{+aux|it|essere}}
+# {{lb|it|transitive}} to [[infest]] with [[woodworm]]
+# {{lb|it|transitive|uncommon}} to [[corrode]]
 
 ====Conjugation====
-{{it-conj-are|tarl|avere}}
+{{it-conj-are|tarl|essere or avere}}
 
 ====Related terms====
 * {{l|it|tarlarsi}}
@@ -88855,10 +88902,10 @@ Page 3067 straniare: Found match for regex: =
 Page 3067 straniare: -------- begin text --------
 
 ===Etymology===
-From {{m|it|strano}} (older variant {{m|it|stranio}}); cf. Late Latin {{m|la|extraneāre}}. Compare {{cog|pt|estranhar}}, {{cog|es|extrañar}}.
+From {{m|it|strano}} (older variant {{m|it|stranio}}); cf. {{cog|LL.|extraneāre}}. Compare {{cog|pt|estranhar}}, {{cog|es|extrañar}}.
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/à}}
 
 # {{lb|it|transitive}} to [[estrange]] or [[alienate]]
 
@@ -88878,7 +88925,7 @@ Page 3068 sfoltire: -------- begin text --------
 {{confix|it|s|folto|ire}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/+isc}}
 
 # to make [[thin]]ner; to thin
 #: {{ux|it|i capelli vanno '''sfoltiti'''|the hairs will '''thin'''}}
@@ -88949,17 +88996,32 @@ Page 3072 stonare: -------- begin text --------
 ===Pronunciation===
 * {{it-IPA|stonàre}}
 
-===Verb===
-{{it-verb}}
+===Etymology 1===
+From {{af|it|s-|tono|-are}}.
 
-# to be [[out of tune]]
-# to [[clash]] (of colours)
+====Verb====
+{{it-verb|a/ò}}
 
-====Conjugation====
+# {{lb|it|intransitive}} to [[play]] [[out of tune]], to be [[out of tune]] {{+aux|it|avere}}
+# {{lb|it|transitive}} to [[play]] (a note) [[out of tune]]
+# {{lb|it|intransitive}} to [[clash]] {{i|of colours}} {{+aux|it|avere}}
+
+=====Conjugation=====
 {{it-conj-are|ston|avere}}
 
-====Related terms====
+=====Related terms=====
 * {{l|it|stonato}}
+
+===Etymology 2===
+Borrowed from {{bor|it|fr|étonner||to surprise, to astound}}, crossed with Etymology 1 above.
+
+====Verb====
+{{it-verb|a/ò}}
+
+# {{lb|it|transitive}} to [[stun]], to [[daze]]
+
+=====Conjugation=====
+{{it-conj-are|ston|avere}}
 
 ===Anagrams===
 * {{l|it|ornaste}}, {{l|it|rasento}}, {{l|it|rasentò}}, {{l|it|restano}}, {{l|it|stanerò}}, {{l|it|stonerà}}
@@ -88971,9 +89033,9 @@ Page 3073 saturare: -------- begin text --------
 Borrowed from {{bor|it|la|saturāre}}, present active infinitive of {{m|la|saturō}}. Cf. also {{m|it|satollare}}.
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/à}}
 
-# {{lb|it|transitive}} to [[saturate]]
+# {{lb|it|transitive|also|chemistry}} to [[saturate]]
 
 ====Conjugation====
 {{it-conj-are|satur|avere}}
@@ -88995,10 +89057,10 @@ Page 3074 rombare: -------- begin text --------
 {{af|it|rombo|-are}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/ó}}
 
-# {{lb|it|intransitive}} to [[roar]]
-# {{lb|it|intransitive}} to [[rumble]]
+# {{lb|it|intransitive}} to [[roar]], to [[rumble]]
+# {{lb|it|intransitive|literary}} to [[whizz]], to [[buzz]] {{i|referring to the sound of wings in motion}}
 
 ====Conjugation====
 {{it-conj-are|romb|avere}}
@@ -89017,8 +89079,11 @@ Page 3075 riannodare: -------- begin text --------
 ===Etymology===
 {{prefix|it|ri|annodare}}
 
+===Pronunciation===
+* {{it-IPA|ri.annodàre}}
+
 ===Verb===
-{{it-verb}}
+{{it-verb|a/ò}}
 
 # {{lb|it|transitive}} to [[tie]] or [[knot]] again
 # {{lb|it|transitive}} to [[renew]]
@@ -89030,9 +89095,9 @@ Page 3076 ridacchiare: Found match for regex: =
 Page 3076 ridacchiare: -------- begin text --------
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/à}}
 
-# {{lb|it|intransitive}} to [[snigger]], to [[giggle]]
+# {{lb|it|intransitive}} to [[snigger]], to [[giggle]] {{+aux|it|avere}}
 
 ====Conjugation====
 {{it-conj-iare|ridacchi|avere}}
@@ -89046,9 +89111,10 @@ Page 3077 ingolfare: Found match for regex: =
 Page 3077 ingolfare: -------- begin text --------
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/ó}}
 
-# {{lb|it|transitive}} to [[flood]] (an engine with fuel)
+# {{lb|it|transitive|automotive}} to [[flood]] (an engine) with [[fuel]]
+# {{lb|it|transitive}} to [[involve]], to [[entangle]] (someone)
 
 ====Conjugation====
 {{it-conj-are|ingolf|avere}}
@@ -89065,16 +89131,18 @@ Page 3078 ammainare: Found match for regex: =
 Page 3078 ammainare: -------- begin text --------
 
 ===Etymology===
-Uncertain, perhaps from {{der|it|VL.|*invagīnare}}, from {{m|la|vagīna}}.
+Uncertain, perhaps from {{der|it|VL.|*invāgīnare}}, from {{m|la|vāgīna}}.
 
 ===Pronunciation===
 * {{it-IPA|ammainàre}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/à}}
 
-# {{lb|it|transitive}} to [[lower]] or [[strike]] (a flag)
-# {{lb|it|transitive}} to [[stow]] (a sail, etc.)
+# {{lb|it|transitive|nautical}} to [[lower]], to [[strike]] (a flag)
+#: {{uxi|it|'''ammainare''' le vele/la bandiera|to retire (from a company)}}
+# {{lb|it|transitive|nautical}} to [[stow]] (a sail, etc.)
+# {{lb|it|intransitive}} to [[stow]] the [[sail]]s {{+aux|it|avere}}
 
 ====Conjugation====
 {{it-conj-are|ammain|avere}}
@@ -89118,7 +89186,7 @@ Page 3080 riconvocare: -------- begin text --------
 {{af|it|ri-|convocare}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/ò-}}
 
 # {{lb|it|transitive}} to [[reconvene]]
 # {{lb|it|transitive}} to [[summon]] again, to [[resummon]]
@@ -89141,7 +89209,7 @@ Either:
 * Or, from Italian {{suffix|it|ingombro|gloss1=encumbrance|are}}.<ref>{{R:it:etimo|ingombro}}</ref>
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/ó}}
 
 # {{lb|it|transitive}} to [[block]], [[obstruct]]
 # {{lb|it|transitive}} to [[clutter]]
@@ -89216,9 +89284,12 @@ Page 3084 favoleggiare: -------- begin text --------
 From {{af|it|favola|-eggiare}}.
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/é}}
 
 # {{lb|it|intransitive}} to [[tell]] [[stories]]
+# {{lb|it|transitive}} to [[represent]] as if in a [[story]]
+# {{lb|it|transitive}} to [[imagine]], to [[fantasize]], to [[fable]]
+# {{lb|it|transitive}} to [[say]] (fantastic things)
 
 ====Conjugation====
 {{it-conj-ciare|favolegg|avere}}
@@ -89230,13 +89301,16 @@ Page 3085 espiare: Found match for regex: =
 Page 3085 espiare: -------- begin text --------
 
 ===Etymology===
-From {{etyl|la|it}} {{m|la|expiāre}}, present active infinitive of {{m|la|expiō}}.
+From {{bor|it|la|expiāre}}, present active infinitive of {{m|la|expiō}}.
+
+===Pronunciation===
+* {{it-IPA|espi.àre}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/ì}}
 
-# {{lb|it|transitive}} to [[expiate]]
-# {{lb|it|transitive}} to [[atone]] (for)
+# {{lb|it|transitive}} to [[expiate]], to [[make]] [[amends]] for
+# {{lb|it|transitive|religion}} to [[atone]] for
 
 ====Conjugation====
 {{it-conj-iare|espi|avere|pres2s=espii|sub123s=espii}}
@@ -89266,7 +89340,7 @@ Page 3086 tracollare: -------- begin text --------
 {{af|it|tra-|collo|-are}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|e/ò}}
 
 # {{lb|it|intransitive}} to [[lose one's balance]]
 # {{lb|it|intransitive}} to [[fall over]]
@@ -89294,10 +89368,10 @@ Page 3087 ricongiungere: -------- begin text --------
 * {{rhymes|it|undʒere}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a\ù,ricongiùnsi,ricongiùnto}} {{tlb|it|transitive}}
 
-# {{lb|it|transitive}} to [[join together]]
-# {{lb|it|transitive}} to [[reunite]], [[reconnect]]
+# to [[join together]]
+# to [[reunite]], [[reconnect]]
 
 ====Conjugation====
 {{it-conj-ere|ricongiung|avere|pastp=ricongiunto|prem1s=ricongiunsi|prem3s=ricongiunse|prem3s2=-|prem3p=ricongiunsero|prem3p2=-
@@ -89339,9 +89413,10 @@ Page 3089 complottare: Found match for regex: =
 Page 3089 complottare: -------- begin text --------
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/ò}}
 
-# {{lb|it|intransitive}} to [[plot]], [[hatch]] or [[conspire]]
+# {{lb|it|intransitive|or|transitive}} to [[plot]], [[hatch]] or [[conspire]] {{+aux|it|avere}}
+# {{lb|it|intransitive|by extension}} to [[chat]], to [[chatter]]
 
 ====Conjugation====
 {{it-conj-are|complott|avere}}
@@ -89359,7 +89434,7 @@ Page 3090 bistrattare: -------- begin text --------
 {{prefix|it|bis|trattare}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/à}}
 
 # {{lb|it|transitive}} to [[mistreat]] or [[ill-treat]]
 #: {{syn|it|maltrattare}}
@@ -89377,12 +89452,13 @@ Page 3091 ammutolire: Found match for regex: =
 Page 3091 ammutolire: -------- begin text --------
 
 ===Verb===
-{{it-verb}}
+{{it-verb|e[intransitive]:a[transitive]/+isc}}
 
-# {{lb|it|intransitive}} to be [[struck dumb]]
+# {{lb|it|intransitive}} to be [[struck dumb]] {{+aux|it|essere}}
+# {{lb|it|transitive}} to [[silence]]
 
 ====Conjugation====
-{{it-conj-ire-b|ammutol|essere}}
+{{it-conj-ire-b|ammutol|essere or avere}}
 -------- end text --------
 Page 3092 sbalzare: Found match for regex: =
 Page 3092 sbalzare: -------- begin text --------
@@ -89394,10 +89470,15 @@ Page 3092 sbalzare: -------- begin text --------
 * {{it-IPA|sbaltsàre}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|e[intransitive]:a[transitive]/à}}
 
+# {{lb|it|intransitive}} to [[jump]] [[up]] [[suddenly]], to [[leap]] [[up]] or [[away]] {{+aux|it|essere}}
+# {{lb|it|intransitive}} to [[be]] [[throw]]n [[down]] [[suddenly]] {{+aux|it|essere}}
+# {{lb|it|intransitive|figurative}} to [[jump]], to [[increase]] or [[rise]] [[suddenly]] {{+aux|it|essere}}
 # {{lb|it|transitive}} to [[throw]], [[fling]], [[toss]] or [[hurl]]
-# {{lb|it|transitive}} to [[emboss]]
+# {{lb|it|transitive|figurative}} to [[demote]]
+# {{lb|it|transitive|figurative}} to [[dismiss]], to [[sack]]
+# {{lb|it|transitive|metalworking|leatherworking}} to [[emboss]]
 
 ====Conjugation====
 {{it-conj-are|sbalz|avere}}
@@ -89416,9 +89497,10 @@ Page 3093 ruggire: -------- begin text --------
 From {{inh|it|la|rugīre}}, present active infinitive of {{m|la|rugiō}}.
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/+isc:ù[archaic, literary or poetic]}}
 
-# {{lb|it|intransitive}} to [[roar]]
+# {{lb|it|intransitive}} to [[roar]] {{+aux|it|avere}}
+# {{lb|it|transitive}} to [[scream]], to [[shout]], to [[roar]] (e.g. threats)
 
 ====Conjugation====
 {{it-conj-ire-b|rugg|avere}}
@@ -89450,9 +89532,9 @@ Page 3096 stressare: Found match for regex: =
 Page 3096 stressare: -------- begin text --------
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/è}}
 
-# {{lb|it|transitive}} to put someone or something under [[stress]], to [[shake up]]
+# {{lb|it|transitive}} to [[put]] under [[stress]], to [[stress]], to [[shake up]]
 
 ====Conjugation====
 {{it-conj-are|stress|avere}}
@@ -89468,7 +89550,7 @@ Page 3097 santificare: Found match for regex: =
 Page 3097 santificare: -------- begin text --------
 
 ===Etymology===
-Probably borrowed from {{etyl|la|it}} {{m|la|sanctificare}}, present active infinitive of {{m|la|sanctifico}}.
+Probably borrowed from {{bor|it|la|sānctificāre}}, present active infinitive of {{m|la|sānctificō}}.
 
 ===Verb===
 {{it-verb|a/ì-}} {{tlb|it|transitive}}
@@ -89498,7 +89580,7 @@ Page 3098 mutilare: Found match for regex: =
 Page 3098 mutilare: -------- begin text --------
 
 ===Etymology===
-From {{etyl|la|it}} {{m|la|mutilāre}}, present active infinitive of {{m|la|mutilō}}.
+Borrowed from {{bor|it|la|mutilāre}}, present active infinitive of {{m|la|mutilō}}.
 
 ===Verb===
 {{it-verb|a/ù}}
@@ -89557,9 +89639,10 @@ Page 3100 ingiallire: -------- begin text --------
 {{af|it|in-|giallo|-ire|t2=yellow}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a[transitive]:e[intransitive]/+isc}}
 
-# {{lb|it|transitive|intransitive}} to (turn) [[yellow]]
+# {{lb|it|transitive}} to [[turn]] [[yellow]], to [[make]] [[yellow]], to [[yellow]]
+# {{lb|it|intransitive}} to [[turn]] [[yellow]], to [[become]] [[yellow]], to [[yellow]] {{+aux|it|essere}}
 
 ====Conjugation====
 {{it-conj-ire-b|ingiall|avere or essere}}
@@ -89574,9 +89657,9 @@ Page 3101 esperimentare: Found match for regex: =
 Page 3101 esperimentare: -------- begin text --------
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/é}}
 
-# {{lb|it|transitive}} {{alt sp|it|sperimentare}}
+# {{lb|it|transitive}} {{alternative form of|it|sperimentare}}
 
 ====Conjugation====
 {{it-conj-are|esperiment|avere}}
@@ -89590,13 +89673,15 @@ Page 3101 esperimentare: -------- begin text --------
 Page 3102 riandare: Found match for regex: =
 Page 3102 riandare: -------- begin text --------
 
-===Verb===
-{{it-verb}} {{+preo|it|in}} ''or'' {{+preo|it|a}}
+===Pronunciation===
+* {{it-IPA|ri.andàre}}
 
-# {{lb|it|intransitive}} to [[go back]] or [[return]] (to)
+===Verb===
+{{it-verb|e/rivàdo.fut:riandrò.imp:rivài:rivà':rivà*}} {{+preo|it|in}} ''or'' {{+preo|it|a}} {{tlb|it|intransitive}}
+
+# to [[go back]] or [[return]] (to)
 
 ====Conjugation====
-
 {| style="background:#F0F0F0; margin:0 auto 0 auto; text-align:center;"
 |-
 ! colspan="2" style="background:#e2e4c0" |
@@ -89769,9 +89854,20 @@ Page 3102 riandare: -------- begin text --------
 
 |}
 
-
 ====Related terms====
 * {{l|it|andare}}
+
+===Verb===
+{{it-verb|a/à}} {{tlb|it|transitive|literary}}
+
+# to [[retrace]] (a path)
+# {{lb|it|figurative}} to [[revisit]] (memories)
+
+====Usage notes====
+* In the transitive meaning, the verb is conjugated as a regular {{m|it|-are}} verb, but the forms with stress on the stem (e.g. {{m|it|riando}}) are rare.
+
+====Conjugation====
+{{it-conj-are|riand|avere}}
 
 ===Anagrams===
 * {{l|it|radiarne}}
@@ -89780,9 +89876,9 @@ Page 3103 dolorare: Found match for regex: =
 Page 3103 dolorare: -------- begin text --------
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/ó+}} {{tlb|it|intransitive}}
 
-# to [[suffer]] or [[ache]]
+# to [[suffer]], to [[ache]]
 
 ====Conjugation====
 {{it-conj-are|dolor|avere}}
@@ -89819,9 +89915,9 @@ Page 3104 protocollare: -------- begin text --------
 {{af|it|protocollo|t1=protocol|-are|pos2=1<sup>st</sup>-conjugation verbal suffix}}
 
 ====Verb====
-{{it-verb}}
+{{it-verb|a/ò+}}
 
-# {{lb|it|transitive}} to [[register]] or [[log]] legal [[protocol]]s
+# {{lb|it|transitive}} to [[register]] or [[log]] (a letter, document, etc.) in the [[legal]] [[register]]
 
 =====Conjugation=====
 {{it-conj-are|protocoll|avere}}
@@ -89838,17 +89934,37 @@ Page 3104 protocollare: -------- begin text --------
 Page 3105 palare: Found match for regex: =
 Page 3105 palare: -------- begin text --------
 
-===Etymology===
-From {{m|it|pala}}.
+===Etymology 1===
+From {{af|it|pala|-are}}.
 
-===Verb===
-{{it-verb}}
+====Verb====
+{{it-verb|a/à}} {{tlb|it|uncommon}}
 
-# {{lb|it|transitive}} to [[shovel]]
+# {{lb|it|transitive}} to [[remove]] with a [[shovel]]
+#: {{uxi|it|'''palare''' il grano|to lift grain with a shovel (in order to ventilate it)}}
 # {{lb|it|transitive}} to [[row]] (a boat)
 
-====Conjugation====
+=====Conjugation=====
 {{it-conj-are|pal|avere}}
+
+===Etymology 2===
+From {{af|it|palo|-are}}.
+
+====Verb====
+{{it-verb|a/à}} {{tlb|it|uncommon}}
+
+# {{lb|it|transitive}} to [[support]] (e.g. vines) on [[pole]]s
+
+=====Conjugation=====
+{{it-conj-are|pal|avere}}
+
+===Etymology 3===
+From {{af|it|pala|-are|pos2=adjective-forming suffix}}.
+
+====Adjective====
+{{it-adj}}
+
+# {{lb|it|relational}} [[propeller]] [[blade]]
 
 ===Anagrams===
 * {{l|it|palerà}}
@@ -89860,7 +89976,7 @@ Page 3106 esemplificare: Found match for regex: =
 Page 3106 esemplificare: -------- begin text --------
 
 ===Etymology===
-From {{etyl|ML.|it}} {{m|la|exemplificāre}}, from {{etyl|la|it}} {{m|la|exemplum||example}}.
+From {{bor|it|ML.|exemplificāre}}, from {{der|it|la|exemplum||example}}.
 
 ===Verb===
 {{it-verb|a/ì-}}
@@ -89881,13 +89997,13 @@ Page 3107 blandire: -------- begin text --------
 Borrowed from {{bor|it|la|blandīrī}}, present active infinitive of {{m|la|blandior}}; first attested 14th century<ref>{{R:it:Sapere}}</ref><ref>http://tlio.ovi.cnr.it/TLIO/</ref>.
 
 ===Verb===
-{{it-verb}} {{tlb|it|transitive}}
+{{it-verb|a/+isc}} {{tlb|it|transitive|literary}}
 
-# to [[coax]], [[blandish]], or [[cajole]]
+# to [[coax]], to [[blandish]], to [[cajole]]
 #: {{syn|it|lusingare|adulare|adescare|lisciare|allettare|accattivarsi|assecondare|comprare}}
 # to [[mitigate]] (a pain, punishment, etc.); to [[relieve]]; to [[soothe]]
 #: {{syn|it|attenuare|calmare|alleviare|placare|lenire|mitigare|acquietare|addolcire}}
-# {{lb|it|literary}} to [[caress]]
+# {{lb|it|rare}} to [[caress]]
 #: {{syn|it|accarezzare|carezzare|coccolare}}
 
 ====Conjugation====
@@ -89910,12 +90026,12 @@ Page 3108 ormeggiare: Found match for regex: =
 Page 3108 ormeggiare: -------- begin text --------
 
 ===Etymology 1===
-From {{etyl|gkm|it}} ''hormizo'', from ''[[ὅρμος]]''.
+From {{bor|it|gkm|ὁρμίζω}}, from {{der|it|grc|ὅρμος}}.
 
 ====Verb====
-{{it-verb}}
+{{it-verb|a/é}}
 
-# {{lb|it|transitive}} to [[moor]] (a vessel)
+# {{lb|it|transitive|nautical|aeronautics}} to [[moor]] (a vessel)
 
 =====Conjugation=====
 {{it-conj-ciare|ormegg|avere}}
@@ -89927,9 +90043,11 @@ From {{etyl|gkm|it}} ''hormizo'', from ''[[ὅρμος]]''.
 ===Etymology 2===
 
 ====Verb====
-{{it-verb}}
+{{it-verb|a/é}}
 
-# Intensive of '''[[ormare]]'''- to [[pursue]].
+# {{lb|it|transitive|rare}} to [[follow]] (someone's) [[footprint]]s, to [[pursue]]
+#: {{syn|it|ormare}}
+# {{lb|it|intransitive|archaic}} to [[leave]] [[footprint]]s {{+aux|it|avere}}
 
 ===Anagrams===
 * {{l|it|aggireremo}}
@@ -89968,9 +90086,10 @@ Page 3110 scritturare: -------- begin text --------
 {{af|it|scrittura|-are}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/ù}}
 
 # {{lb|it|transitive}} to [[engage]] or [[sign up]] (a person for a job, especially in the media)
+# {{lb|it|transitive}} to [[register]] (expenses, income) in an [[accounting]] [[book]]
 
 ====Conjugation====
 {{it-conj-are|scrittur|avere}}
@@ -89991,9 +90110,9 @@ Page 3111 pazientare: -------- begin text --------
 * {{it-IPA|patsientàre}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/è}}
 
-# {{lb|it|intransitive}} to be [[patient]]
+# {{lb|it|intransitive}} to be [[patient]] {{+aux|it|avere}}
 #* {{quote-journal|it|title=Governo, Conte teme i numeri in Senato e chiede tempo al Pd|trans-title=Government, Conte fears the Senate numbers and asks the PD for time|url=https://rep.repubblica.it/pwa/generale/2020/09/22/news/elezioni_pd_zingaretti-268215941|magazine={{w|la Repubblica}}|date=22 September 2020|author=Tommasco Ciriaco|passage=E quindi, certo, è "doveroso" ascoltare le richieste del Pd, che tanto ha '''pazientato''' in questi mesi, ma è altrettanto doveroso tenere in considerazione i rischi di "sfidare" la pancia grillina.|translation=And therefore, it is certainly dutiful to listen to the requests of the PD, that has '''been''' so '''patient''' in these months, but it is just as dutiful to keep the risks of "challenging" the M5S base under consideration.}}
 
 ====Conjugation====
@@ -90012,7 +90131,7 @@ From {{der|it|la|instīgāre}}, present active infinitive of {{m|la|instīgō}}.
 * {{it-IPA|istigàre}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/ì+}}
 
 # {{lb|it|transitive}} to [[incite]], [[stir up]]
 # {{lb|it|transitive}} to [[instigate]]
@@ -90079,7 +90198,7 @@ Page 3115 svantaggiare: -------- begin text --------
 {{confix|it|s|vantaggio|are}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/à}}
 
 # {{lb|it|transitive}} to [[disadvantage]]
 # {{lb|it|transitive}} to [[handicap]]
@@ -90097,7 +90216,7 @@ Page 3116 sindacare: -------- begin text --------
 {{af|it|sindaco|-are}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/ì}}
 
 # {{lb|it|transitive}} to [[check]] or [[control]]
 # {{lb|it|transitive}} to [[audit]]
@@ -90131,9 +90250,13 @@ Page 3117 sgambettare: -------- begin text --------
 {{con|it|s|pos1=derivational prefix|gambetta|pos2=diminutive of {{m|it|gamba}}|are|pos3=1<sup>st</sup>-conjugation verbal suffix}}
 
 ====Verb====
-{{it-verb}}
+{{it-verb|a/é}}
 
-# {{lb|it|intransitive}} to [[kick]] (''one's legs'')
+# {{lb|it|intransitive}} to [[kick]] one's [[leg]]s {{+aux|it|avere}}
+# {{lb|it|intransitive}} to [[walk]] with [[short]], [[fast]] [[step]]s {{+aux|it|avere}}
+
+=====Conjugation=====
+{{it-conj-are|sgambett|avere}}
 
 ===Etymology 2===
 {{suf|it|sgambetto|t1=trip|are|pos2=1<sup>st</sup>-conjugation verbal suffix}}
@@ -90141,7 +90264,7 @@ Page 3117 sgambettare: -------- begin text --------
 ====Verb====
 {{it-verb}}
 
-# {{lb|it|transitive}} to [[trip up]] {{gloss|to cause to fall or stumble}}
+# {{lb|it|transitive|soccer}} to [[trip]], to [[trip up]] {{gloss|to cause to fall or stumble}}
 #: {{syn|it|[[fare lo sgambetto]] a}}
 
 =====Conjugation=====
@@ -90264,10 +90387,10 @@ Page 3124 rosicchiare: Found match for regex: =
 Page 3124 rosicchiare: -------- begin text --------
 
 ===Etymology===
-From a {{etyl|VL.|it}} root *''rosiclāre'' < {{m|la|*rosiculāre}}, from {{m|la|*rosico|*rosicāre}} (cf. Italian {{m|it|rosicare}}), from {{etyl|la|it}} {{m|la|rōdō}}.
+From {{inh|it|VL.|*rōsiclāre}} < {{m|la|*rōsiculāre}}, from {{m|la|*rōsicāre}} (cf. {{cog|it|rosicare}}), from {{der|it|la|rōdō}}.
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/ì-}}
 
 # {{lb|it|transitive}} to [[gnaw]], [[nibble]], [[chew]]
 
@@ -90292,10 +90415,15 @@ Page 3125 rinverdire: -------- begin text --------
 {{af|it|ri-|inverdire}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a[transitive]:e[intransitive]/+isc}}
 
-# {{lb|it|transitive}} to [[green]] again
-# {{lb|it|transitive}} to [[revive]]
+# {{lb|it|transitive}} to [[turn]] [[green]] [[again]]
+# {{lb|it|transitive|figurative}} to [[revive]]
+# {{lb|it|transitive|figurative}} to [[renew]], to [[reinvigorate]]
+# {{lb|it|transitive|leatherworking}} to [[soften]] (leather) with [[water]] prior to [[tan]]ning
+# {{lb|it|intransitive}} to [[become]] [[green]] [[again]] {{+aux|it|essere}}
+# {{lb|it|intransitive|figurative}} to [[become]] [[young]] [[again]], to be [[rejuvenate]]d {{+aux|it|essere}}
+# {{lb|it|intransitive|figurative|poetic}} to [[renew]] [[oneself]] {{+aux|it|essere}}
 
 ====Conjugation====
 {{it-conj-ire-b|rinverd|avere}}
@@ -90319,9 +90447,15 @@ From {{der|it|la|odōrāre}}, present active infinitive of {{m|la|odōrō||I per
 * {{hyph|it|o|do|rà|re}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/ó+}}
 
-# {{lb|it|ambitransitive}} to [[smell]]
+# {{lb|it|transitive}} to [[smell]] (an odor, a flower, etc.), to [[perceive]] with the [[sense]] of [[smell]]
+# {{lb|it|transitive|figurative}} to [[sniff out]], to [[intuit]]
+# {{lb|it|transitive|rare}} to [[perfume]], to [[scent]]
+# {{lb|it|intransitive}} to [[smell]], to [[give off]] a (specified) [[smell]] {{+preo|it|di}} {{+aux|it|avere}}
+#: {{uxi|it|odorare di buono|to smell good}}
+# {{lb|it|intransitive}} to [[give off]] a [[scent]] {{i|e.g. of a rose}} {{+aux|it|avere}}
+# {{lb|it|intransitive|figurative}} to [[smell]] of, to [[hint]] of {{+preo|it|di}} {{+aux|it|avere}}
 
 ====Conjugation====
 {{it-conj-are|odor|avere}}
@@ -90348,7 +90482,7 @@ From {{af|it|sorso|-eggiare|gloss1=sip}}.
 * {{it-IPA|sorseggiàre}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/é}}
 
 # {{lb|it|transitive}} to [[sip]]
 
@@ -90370,8 +90504,11 @@ Page 3128 esiliare: -------- begin text --------
 ===Etymology===
 From {{m|it|esilio}}.
 
+===Pronunciation===
+* {{it-IPA}}
+
 ===Verb===
-{{it-verb}}
+{{it-verb|a/ì-}}
 
 # {{lb|it|transitive}} to [[exile]] or [[banish]]
 
@@ -90390,9 +90527,9 @@ Page 3129 ustionare: Found match for regex: =
 Page 3129 ustionare: -------- begin text --------
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/ó}}
 
-# {{lb|it|transitive}} to [[burn]]
+# {{lb|it|transitive}} to [[burn]], to [[scald]]
 
 ====Conjugation====
 {{it-conj-are|ustion|avere}}
@@ -90425,9 +90562,9 @@ Page 3131 chiaroscurare: Found match for regex: =
 Page 3131 chiaroscurare: -------- begin text --------
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/ù}}
 
-# {{lb|it|transitive|arts}} to [[shade]] (using chiaroscuro)
+# {{lb|it|transitive|arts}} to [[shade]] using [[chiaroscuro]]
 
 ====Conjugation====
 {{it-conj-are|chiaroscur|avere}}
@@ -90443,7 +90580,7 @@ Page 3132 sobbarcare: Found match for regex: =
 Page 3132 sobbarcare: -------- begin text --------
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/à}}
 
 # {{lb|it|transitive}} to [[burden]]
 #: {{syn|it|caricare}}
@@ -90484,20 +90621,29 @@ Page 3133 vivacizzare: -------- begin text --------
 Page 3134 giubilare: Found match for regex: =
 Page 3134 giubilare: -------- begin text --------
 
-===Etymology===
-From {{etyl|la|it}} {{m|la|iūbilāre}}, present active infinitive of {{m|la|iūbilō}}.
+===Etymology 1===
+Borrowed from {{bor|it|la|iūbilāre}}, present active infinitive of {{m|la|iūbilō}}.
 
-===Verb===
-{{it-verb}}
+====Verb====
+{{it-verb|a/ù}}
 
-# {{lb|it|intransitive}} to [[rejoice]]
+# {{lb|it|intransitive}} to [[rejoice]] {{+aux|it|avere}}
+# {{lb|it|transitive}} to [[send off]], to [[retire]] (an employee) after [[long]] [[service]]; to [[pension]]
 
-====Conjugation====
+=====Conjugation=====
 {{it-conj-are|giubil|avere}}
 
-====Related terms====
+=====Related terms=====
 * {{l|it|giubileo}}
 * {{l|it|giubilo}}
+
+===Etymology 2===
+From {{af|it|giubileo|-are|pos2=adjective-forming suffix}}.
+
+====Adjective====
+{{it-adj}}
+
+# {{lb|it|Catholicism|relational}} [[jubilee]]
 
 ===Anagrams===
 * {{l|it|arguibile}}, {{l|it|giubilerà}}, {{l|it|giurabile}}, {{l|it|guaribile}}
@@ -90509,7 +90655,7 @@ Page 3135 arrogare: -------- begin text --------
 Probably borrowed from {{bor|it|la|arrogāre}}, present active infinitive of {{m|la|arrogō}}.
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/ò}}
 
 # {{lb|it|transitive}} to [[claim]], [[arrogate]]
 
@@ -90525,15 +90671,18 @@ Probably borrowed from {{bor|it|la|arrogāre}}, present active infinitive of {{m
 Page 3136 rintuzzare: Found match for regex: =
 Page 3136 rintuzzare: -------- begin text --------
 
+===Etymology===
+Probably ultimately from {{der|it|la|tundere||to beat}}, present active infinitive of {{m|la|tundō}}.
+
 ===Pronunciation===
 * {{it-IPA|rintuttsàre}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/ù}}
 
-# {{lb|it|transitive|rare}} to [[blunt]], especially of weapons
-# {{lb|it|transitive|figuratively}} to [[drive back]] or [[retort]]
-# {{lb|it|transitive|figuratively}} to [[repress]] or [[hold back]] (an [[emotion]], sentiment, etc.)
+# {{lb|it|transitive|uncommon}} to [[blunt]] (a weapon)
+# {{lb|it|transitive|figuratively}} to [[blunt]], to [[retort]] (an insult, an accusation, an attack, etc.)
+# {{lb|it|transitive|figuratively}} to [[repress]], to [[hold back]], to [[curb]] (an emotion, a sentiment, etc.)
 
 ====Conjugation====
 {{it-conj-are|rintuzz|avere}}
@@ -90569,24 +90718,24 @@ Page 3138 ghiacciare: -------- begin text --------
 From {{inh|it|la|glaciāre}}, present active infinitive of {{m|la|glaciō}}. By [[surface analysis]], {{suffix|it|ghiaccio|t1=ice|are}}.
 
 ===Verb===
-{{it-verb}}
+{{it-verb|e[intransitive]:a[transitive, also alternatively when impersonal]/à}}
 
 # {{lb|it|transitive|also|figurative}} to [[freeze]]
 #: {{syn|it|congelare|gelare|surgelare}}
 # {{lb|it|transitive|figurative}} to [[suddenly]] [[deprive]] (someone) of a [[reaction]]; to leave in [[shock]]; to [[paralyze]]
 #: {{ux|it|lo '''ghiacciò''' con un'occhiata|I '''paralyzed''' him with one glance}}
-# {{lb|it|intransitive|impersonal}} {{q|of weather}} to be freezing
+# {{lb|it|intransitive|impersonal}} to be freezing {{i|of weather}} {{+aux|it|essere|avere}}
 #: {{ux|it|stanotte è '''ghiacciato'''|it '''was freezing''' tonight}}
-# {{lb|it|intransitive}} to [[ice over]]
-# {{lb|it|intransitive}} to get [[cold]]
+# {{lb|it|intransitive}} to [[ice over]] {{+aux|it|essere}}
+# {{lb|it|intransitive}} to get [[cold]] {{+aux|it|essere}}
 #: {{syn|it|raffreddarsi}}
 #: {{ux|it|se aspetti, la zuppa '''ghiaccia'''|if you wait, the soup will '''get cold'''}}
-# {{lb|it|intransitive}} to become [[numb]] from the cold
+# {{lb|it|intransitive}} to become [[numb]] from the [[cold]] {{+aux|it|essere}}
 #: {{ux|it|il piede mi '''è ghiacciato'''|my foot '''got numb''' (from the cold)}}
 #: {{ux|it|a stare qua fuori '''ghiaccio'''|from being out here, I'll '''get cold'''}}
 
 ====Conjugation====
-{{it-conj-ciare|ghiacc|essere}}
+{{it-conj-ciare|ghiacc|essere or avere}}
 
 ====Derived terms====
 * {{l|it|ghiacciarsi}}
@@ -90604,7 +90753,7 @@ Page 3139 sgomitare: -------- begin text --------
 {{af|it|s-|gomito|-are}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/ó}}
 
 # {{lb|it|transitive|intransitive}} to [[jostle]] or [[elbow]]
 
@@ -90645,12 +90794,13 @@ Page 3141 arrossare: -------- begin text --------
 {{af|it|a-|rosso|-are}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a[transitive]:e[intransitive]/ó}}
 
 # {{lb|it|transitive}} to make [[red]]; to [[redden]]
+# {{lb|it|intransitive}} to turn [[red]], to [[redden]], to [[blush]] {{+aux|it|essere}}
 
 ====Conjugation====
-{{it-conj-are|arross|avere}}
+{{it-conj-are|arross|avere or essere}}
 
 ====Derived terms====
 * {{l|it|arrossamento}}
@@ -90672,7 +90822,7 @@ Page 3142 sferzare: -------- begin text --------
 * {{it-IPA|sfertsàre}}
 
 ===Verb===
-{{it-verb}} {{tlb|it|transitive}}
+{{it-verb|a/è}} {{tlb|it|transitive}}
 
 # to [[whip]] or [[lash]]
 #: {{syn|it|frustare|fustigare|flagellare|Thesaurus:battere}}
@@ -90698,7 +90848,7 @@ Page 3143 contrabbandare: Found match for regex: =
 Page 3143 contrabbandare: -------- begin text --------
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/à+}}
 
 # {{lb|it|transitive}} to [[smuggle]]
 
@@ -90755,13 +90905,14 @@ Page 3145 appassire: -------- begin text --------
 From {{affix|it|a-|passo|-ire||t2=dried}}.
 
 ===Verb===
-{{it-verb}}
+{{it-verb|e[intransitive]:a[transitive]/+isc}}
 
-# {{lb|it|intransitive}} to [[wither]], [[shrivel]]
+# {{lb|it|intransitive|also|figurative}} to [[wither]], to [[shrivel]] {{+aux|it|essere}}
 #: {{syn|it|passire|q1=rare}}
-# {{lb|it|intransitive}} to [[fade]]
-# {{lb|it|intransitive|wine}} to [[dry]] bunches of grapes by exposure to the sun prior to winemaking
-# {{lb|it|transitive|intransitive|cooking}} to [[sweat]] / to [[cook]] [[slowly]] at low heat, in [[shallow]] [[oil]] and without [[brown]]ing, to reduce moisture content
+# {{lb|it|intransitive|figurative}} to [[fade]] {{+aux|it|essere}}
+# {{lb|it|transitive|uncommon}} to [[cause]] to [[shrivel]]
+# {{lb|it|transitive|wine}} to [[dry]] (bunches of grapes) by [[exposure]] to the [[sun]] prior to [[winemaking]]
+# {{lb|it|transitive|cooking}} to [[sweat]] / to [[cook]] [[slowly]] at low heat, in [[shallow]] [[oil]] and without [[brown]]ing, to reduce [[moisture]] [[content]]
 #: {{syn|it|far sudare}}
 
 ====Derived terms====
@@ -90783,9 +90934,9 @@ Page 3146 sopperire: -------- begin text --------
 From {{etyl|la|it}} {{m|la|suppleo|supplēre|to supply}}, with the Latin ''l'' becoming ''r''. It has a more literal [[doublet]]: {{m|it|supplire||to compensate}}. Both words date from the 14th century.<ref>Dizionario italiano da un affiliato di Oxford University Press. Mondadori Education S.p.A. (on Mac OSX Mavericks)</ref>
 
 ===Verb===
-{{it-verb}} {{+preo|it|a}} {{tlb|it|intransitive}}
+{{it-verb|a/+isc}} {{+preo|it|a}} {{tlb|it|intransitive}}
 
-# to [[provide]] (for)
+# to [[provide]] (for) {{+aux|it|avere}}
 
 ====Conjugation====
 {{it-conj-ire-b|sopper|avere}}
@@ -90799,25 +90950,49 @@ From {{etyl|la|it}} {{m|la|suppleo|supplēre|to supply}}, with the Latin ''l'' b
 Page 3147 scannare: Found match for regex: =
 Page 3147 scannare: -------- begin text --------
 
-===Etymology===
-{{af|it|s-|canna|-are}}
+===Etymology 1===
+{{af|it|s-|canna|t2=tube (of the trachea)|-are}}
 
-===Verb===
+====Verb====
 {{it-verb}}
 
-# {{lb|it|transitive}} to [[cut]] the [[throat]] of (an animal)
-# {{lb|it|transitive}} to [[butcher]], [[slaughter]] (an animal)
-# {{lb|it|transitive|computing}} {{alternative form of|it|scannerizzare}}
+# {{lb|it|transitive}} to [[cut]] the [[throat]] of, to [[butcher]], to [[slaughter]] (an animal)
+# {{lb|it|transitive|figurative}} to [[slaughter]], to [[massacre]]
+# {{lb|it|transitive|figurative}} to [[harass]], to [[oppress]] through [[heavy]] [[tax]]es or [[high]] [[price]]s
 
-====Conjugation====
+=====Conjugation=====
 {{it-conj-are|scann|avere}}
 
-====Related terms====
+=====Related terms=====
 * {{l|it|scannamento}}
 * {{l|it|scannarsi}}
 * {{l|it|scannatoio}}
 * {{l|it|scannatore}}
 * {{l|it|scannatura}}
+
+===Etymology 2===
+{{af|it|s-|canna|t2=tube, spindle|-are}}
+
+====Verb====
+{{it-verb|a/à}}
+
+# {{lb|it|transitive|weaving}} to [[unwind]] (thread) from the [[quill]] (the spindle on which thread for the [[woof]] is wound in a [[shuttle]])
+#: {{syn|it|scannellare|q1=more common}}
+
+=====Conjugation=====
+{{it-conj-are|scann|avere}}
+
+===Etymology 3===
+{{af|it|scan|lang1=en|-are}}
+
+====Verb====
+{{it-verb|a/à}}
+
+# {{lb|it|transitive|computing|uncommon|proscribed}} to [[scan]]
+#: {{syn|it|scannerizzare|scandire|q1=both more common and accepted}}
+
+=====Conjugation=====
+{{it-conj-are|scann|avere}}
 
 ===Anagrams===
 * {{l|it|scannerà}}
@@ -90832,13 +91007,14 @@ From the adjective {{m|it|biado}} (alternatively {{m|it|biavo}}) from {{der|it|V
 * {{it-IPA|sbiadìre}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|e[intransitive]:a[transitive]/+isc}}
 
-# {{lb|it|transitive|intransitive}} to [[fade]]
-#: {{ux|it|I colori si sono '''sbiaditi''' con l'età.|translation=The colors '''faded''' with age.}}
+# {{lb|it|intransitive|also|figurative}} to [[fade]]
+#: {{ux|it|I colori sono '''sbiaditi''' con l'età.|translation=The colors '''faded''' with age.}}
+# {{lb|it|transitive|also|figurative}} to [[fade]], to [[cause]] to [[fade]]
 
 ====Conjugation====
-{{it-conj-ire-b|sbiad|avere when transitive, essere when intransitive}}
+{{it-conj-ire-b|sbiad|essere or avere}}
 
 ====Related terms====
 * {{l|it|sbiadirsi}}
@@ -90853,7 +91029,7 @@ Page 3149 taglieggiare: -------- begin text --------
 {{af|it|taglia|-eggiare}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/é}}
 
 # {{lb|it|transitive}} to [[exact]] a [[tribute]] from
 # {{lb|it|transitive}} to [[extort]] [[money]] from
@@ -90874,7 +91050,7 @@ Page 3150 sbrogliare: -------- begin text --------
 {{rfe|it}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/ò}}
 
 # {{lb|it|transitive}} to [[unravel]]
 # {{lb|it|transitive|nautical}} to [[unfurl]] (a sail)
@@ -90898,7 +91074,7 @@ Page 3152 controfirmare: -------- begin text --------
 {{prefix|it|contro|firmare}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/ì}}
 
 # {{lb|it|transitive}} to [[countersign]]
 
@@ -90915,9 +91091,18 @@ Page 3153 steccare: Found match for regex: =
 Page 3153 steccare: -------- begin text --------
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/é}}
 
-# {{lb|it|transitive}} to [[splint]] (a broken bone, etc.)
+# {{lb|it|transitive}} to [[equip]] with [[slat]]s
+# {{lb|it|transitive}} to [[fence]], to [[surround]] with a [[fence]]
+# {{lb|it|transitive|slang}} to [[mess up]], to [[hit]] [[badly]] (e.g. a shot)
+#: {{uxi|it|steccare la palla|to [[miscue]] {{i|in billiards}}; to [[hit]] the [[ball]] with the [[edge]] of the [[racket]] {{i|in tennis}}}}
+#: {{uxi|it|steccare una nota|to [[hit]] a [[false]] [[note]] {{i|in music}}}}
+# {{lb|it|transitive|cooking}} to [[stuff]] (meat) with [[bacon]], [[lard]], [[spice]]s, etc.
+# {{lb|it|transitive|medical}} to [[splint]] (a broken bone, an arm, etc.)
+# {{lb|it|intransitive|billiards}} to [[miscue]] {{+aux|it|avere}}
+# {{lb|it|intransitive|music}} to [[hit]] a [[false]] [[note]], to [[play]] [[out of tune]] {{+aux|it|avere}}
+#: {{syn|it|stonare}}
 
 ====Conjugation====
 {{it-conj-care|stecc|avere}}
@@ -90934,10 +91119,10 @@ Page 3154 rinfrancare: Found match for regex: =
 Page 3154 rinfrancare: -------- begin text --------
 
 ===Etymology===
-{{affix|it|rin-|franco}}
+{{affix|it|rin-|franco|-are}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/à}}
 
 # {{lb|it|transitive}} to [[encourage]], [[reassure]]
 # {{lb|it|transitive}} to [[cheer]] (the spirit)
@@ -90974,10 +91159,10 @@ Page 3156 perlustrare: Found match for regex: =
 Page 3156 perlustrare: -------- begin text --------
 
 ===Etymology===
-From {{etyl|la|it}} {{m|la|per}} + {{m|la|lustrare}}.
+Borrowed from {{bor|it|la|perlūstrāre}}, present active infinitive of {{m|la|perlūstrō}}.
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/ù}}
 
 # {{lb|it|transitive}} to [[scour]], [[patrol]], [[reconnoitre]]
 
@@ -90994,7 +91179,7 @@ Page 3157 incastonare: Found match for regex: =
 Page 3157 incastonare: -------- begin text --------
 
 ===Etymology===
-{{confix|it|in|t1=into|pos1=derivational prefix|castone|t2=collet”, “beazle|are|pos3=1st conjugation verbal suffix}}
+{{confix|it|in|t1=into|pos1=derivational prefix|castone|t2=collet, bezel, rim in which a jewel is set|are|pos3=1st conjugation verbal suffix}}
 
 ===Pronunciation===
 * {{it-IPA|incastonàre}}
@@ -91002,10 +91187,10 @@ Page 3157 incastonare: -------- begin text --------
 * {{hyphenation|it|in|ca|sto|nà|re}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/ó}}
 
 # {{lb|it|transitive}} to [[set]] (a gemstone)
-# {{lb|it|transitive}} to [[embed]]
+# {{lb|it|transitive|figurative}} to [[embed]]
 
 ====Conjugation====
 {{it-conj-are|incaston|avere}}
@@ -91025,9 +91210,9 @@ Page 3158 tabaccare: -------- begin text --------
 From {{suffix|it|tabacco|are}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/à+}}
 
-# {{lb|it|intransitive}} to take [[snuff]]
+# {{lb|it|intransitive}} to take [[snuff]] {{+aux|it|avere}}
 
 ====Conjugation====
 {{it-conj-care|tabacc|avere}}
@@ -91042,7 +91227,7 @@ Page 3159 rattristare: -------- begin text --------
 {{af|it|ra-|triste|-are|t2=sad}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/ì}}
 
 # to [[sadden]]
 
@@ -91070,9 +91255,10 @@ From {{inh|it|la|injungere}} or {{m|la|iniungere}}, present active infinitive of
 * {{rhymes|it|undʒere}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a\ù,ingiùnsi,ingiùnto}}
 
-# {{lb|it|transitive}} to [[enjoin]] or [[order]] someone to do something
+# {{lb|it|transitive}} to [[enjoin]] or [[order]] (someone) {{+preo|it|di|means=to do something}}
+# {{lb|it|transitive}} to [[order]] (an action to be done)
 
 ====Conjugation====
 {{it-conj-ere|ingiung|avere|pastp=ingiunto|prem1s=ingiunsi|prem3s=ingiunse|prem3s2=-|prem3p=ingiunsero|prem3p2=-
@@ -91089,7 +91275,7 @@ Page 3161 sballottare: -------- begin text --------
 {{prefix|it|s|ballottare}}
 
 ===Verb===
-{{it-verb}} {{tlb|it|transitive}}
+{{it-verb|a/ò}} {{tlb|it|transitive}}
 
 # to [[jolt]], [[bob]], [[toss]] or [[throw]] (about or around)
 # to repeatedly [[move]] from one place to another
@@ -91107,10 +91293,13 @@ Page 3161 sballottare: -------- begin text --------
 Page 3162 esulare: Found match for regex: =
 Page 3162 esulare: -------- begin text --------
 
-===Verb===
-{{it-verb}}
+===Pronunciation===
+* {{it-IPA}}
 
-# {{lb|it|intransitive}} to [[be]] [[beyond]], to [[lie]] [[outside]]
+===Verb===
+{{it-verb|a/è}}
+
+# {{lb|it|intransitive}} to [[be]] [[beyond]], to [[lie]] [[outside]] {{+aux|it|avere}}
 
 ====Conjugation====
 {{it-conj-are|esul|avere}}
@@ -91125,10 +91314,10 @@ Page 3163 scaglionare: -------- begin text --------
 {{af|it|scaglione|-are}}
 
 ===Verb===
-{{it-verb}} {{tlb|it|transitive}}
+{{it-verb|a/ó}} {{tlb|it|transitive}}
 
 # to [[space out]] or [[spread out]]
-# to [[echelon]]
+# to [[echelon]], to [[place]] (troops, a crowd, etc.) in an [[echelon]]
 
 ====Conjugation====
 {{it-conj-are|scaglion|avere}}
@@ -91146,12 +91335,12 @@ Page 3164 quadruplicare: Found match for regex: =
 Page 3164 quadruplicare: -------- begin text --------
 
 ===Etymology===
-From {{bor|it|la|quadruplicāre}}, present active infinitive of {{m|la|quadruplicō}}.
+Borrowed from {{bor|it|la|quadruplicāre}}, present active infinitive of {{m|la|quadruplicō}}.
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/ù}}
 
-# {{lb|it|transitive}} to [[quadruple]], [[multiply]] by [[four]], make [[fourfold]], [[quadruplicate]]
+# {{lb|it|transitive}} to [[quadruple]], to [[multiply]] by [[four]], to make [[fourfold]], to [[quadruplicate]]
 
 ====Conjugation====
 {{it-conj-care|quadruplic|avere}}
@@ -91186,14 +91375,16 @@ Page 3166 contrariare: Found match for regex: =
 Page 3166 contrariare: -------- begin text --------
 
 ===Etymology===
-From {{inh|it|LL.|contrariare}}. By [[surface analysis]], {{suffix|it|contrario|t1=contrary|are}}.
+Borrowed from {{bor|it|LL.|contrāriāre}}. By [[surface analysis]], {{suffix|it|contrario|t1=contrary|are}}.
 
 ===Verb===
-{{it-verb}} {{tlb|it|transitive}}
+{{it-verb|a/à}} {{tlb|it|transitive}}
 
-# to [[oppose]]
-# to [[thwart]] (a plan)
-# to [[annoy]], [[bother]], [[irritate]], [[disgruntle]]
+# {{lb|it|transitive}} to [[oppose]]
+# {{lb|it|transitive}} to [[thwart]] (a plan)
+# {{lb|it|transitive}} to [[annoy]], [[bother]], [[irritate]], [[disgruntle]]
+# {{lb|it|intransitive|rare|literary}} to be in [[opposition]], to [[contrast]] {{+aux|it|avere}}
+# {{lb|it|intransitive|rare|literary}} to [[oppose]] {{+preo|it|a}} {{+aux|it|avere}}
 
 ====Conjugation====
 {{it-conj-iare|contrari|avere}}
@@ -91262,9 +91453,10 @@ Page 3169 piantonare: -------- begin text --------
 {{af|it|piantone|-are}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/ó}}
 
 # {{lb|it|transitive}} to [[guard]], to [[watch over]]
+# {{lb|it|transitive|agriculture}} to [[bury]] (grafted seedlings) in a [[plant]]ing [[box]]
 
 ====Conjugation====
 {{it-conj-are|pianton|avere}}
@@ -91285,12 +91477,13 @@ Page 3170 lampeggiare: -------- begin text --------
 * {{it-IPA|lampeggiàre}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a:e[alternatively when impersonal]/é}}
 
-# {{lb|it|intransitive}} to [[flash]]
-# {{lb|it|intransitive}} to [[blink]] {{gloss|flash on and off at regular intervals; flash headlights on a car}}
-#: {{ux|it|Perché quella luce sta '''lampeggiando'''?|Why is that light '''flashing'''?}}
-# {{lb|it|impersonal|weather}} to be [[lightning]]
+# {{lb|it|intransitive}} to [[flash]] {{+aux|it|avere}}
+# {{lb|it|intransitive}} to [[blink]] {{gloss|to flash on and off at regular intervals; to flash headlights on a car}} {{+aux|it|avere}}
+#: {{ux|it|Perché quella luce sta '''lampeggiando'''?|Why is that light '''blinking'''?}}
+# {{lb|it|intransitive|figurative}} to [[flash]], to [[appear]] [[suddenly]] like a [[flash]] {{+aux|it|avere}}
+# {{lb|it|impersonal|weather}} to be [[lightning]] {{+aux|it|essere|avere}}
 #: {{ux|it|Ha '''lampeggiato''' tutta la notte.|translation=There was '''lightning''' all night.}}
 
 ====Conjugation====
@@ -91307,13 +91500,14 @@ Page 3171 fiatare: Found match for regex: =
 Page 3171 fiatare: -------- begin text --------
 
 ===Etymology===
-From {{etyl|LL.|it}} {{m|la|flātāre}}, present active infinitive of {{m|la|flātō}} < {{etyl|la|it}} {{m|la|flō}}, {{m|la|flātus}}.
+Inherited from {{inh|it|LL.|flātāre}}, present active infinitive of {{m|la|flātō}}, from {{der|it|la|flātus}}, perfect passive participle of {{m|la|flō||to breathe}}.
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/à}}
 
-# {{lb|it|intransitive}} to [[breathe]]
+# {{lb|it|intransitive}} to [[breathe]] {{+aux|it|avere}}
 #: {{syn|it|respirare}}
+# {{lb|it|intransitive|figurative|chiefly in the negative}} to [[utter]] a [[word]] {{+aux|it|avere}}
 
 ====Conjugation====
 {{it-conj-are|fiat|avere}}
@@ -91328,6 +91522,9 @@ From {{etyl|LL.|it}} {{m|la|flātāre}}, present active infinitive of {{m|la|fl�
 -------- end text --------
 Page 3173 tatuare: Found match for regex: =
 Page 3173 tatuare: -------- begin text --------
+
+===Pronunciation===
+* {{it-IPA|tatu.àre}}
 
 ===Verb===
 {{it-verb|a/à}}
@@ -91351,10 +91548,10 @@ Page 3174 profondere: Found match for regex: =
 Page 3174 profondere: -------- begin text --------
 
 ===Etymology===
-From {{der|it|la|prŏfundō}}.
+From {{bor|it|la|prŏfundō}}; probably a semi-learned borrowing.
 
 ===Verb===
-{{it-verb}} {{tlb|it|transitive}}
+{{it-verb|a\ó,profùsi,profùso}} {{tlb|it|transitive}}
 
 # to [[spend]] [[profusely]] or with [[abandon]]
 # to [[give]] [[profusely]]
@@ -91379,7 +91576,7 @@ Page 3175 fiancheggiare: -------- begin text --------
 {{af|it|fianco|-eggiare}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/é}} {{tlb|it|transitive}}
 
 # to [[flank]]; to [[line]]; to be or run [[alongside]]
 # to [[support]] or [[back]]
@@ -91403,9 +91600,9 @@ Page 3177 cabotare: Found match for regex: =
 Page 3177 cabotare: -------- begin text --------
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/ò}}
 
-# {{lb|it|intransitive|nautical}} to [[coast]] (ply along a coast)
+# {{lb|it|intransitive|nautical}} to [[coast]] {{gl|to navigate along a coast}} {{+aux|it|avere}}
 
 ====Conjugation====
 {{it-conj-are|cabot|avere}}
@@ -91424,13 +91621,15 @@ Page 3178 afflosciare: -------- begin text --------
 {{confix|it|a|floscio|gloss2=floppy, soft|are}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a[transitive]:e[intransitive]/ò}}
 
-# {{lb|it|transitive}} to [[soften]]
-# {{lb|it|transitive}} to make something [[flabby]] or [[limp]]
+# {{lb|it|transitive}} to [[make]] [[limp]] or [[floppy]]
+# {{lb|it|transitive|figurative}} to [[stifle]], to [[weaken]]
+# {{lb|it|intransitive}} to [[become]] [[limp]] or [[floppy]], to [[sag]] {{+aux|it|essere}}
+# {{lb|it|intransitive|figurative}} to [[collapse]] from [[weakness]] or [[exhaustion]] {{+aux|it|essere}}
 
 ====Conjugation====
-{{it-conj-ciare|afflosc|avere}}
+{{it-conj-ciare|afflosc|avere or essere}}
 
 ====Related terms====
 * {{l|it|afflosciarsi}}
@@ -91442,9 +91641,11 @@ Page 3179 tramortire: Found match for regex: =
 Page 3179 tramortire: -------- begin text --------
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a[transitive]:e[intransitive]/+isc}}
 
 # {{lb|it|transitive}} to [[stun]] or [[knock out]]
+# {{lb|it|transitive}} to [[numb]]
+# {{lb|it|intransitive}} to be [[stun]]ned or [[knock out|knocked out]] {{+aux|it|essere}}
 
 ====Conjugation====
 {{it-conj-ire-b|tramort|avere}}
@@ -91463,7 +91664,7 @@ Page 3180 sloggiare: -------- begin text --------
 {{it-verb|a/ò}} {{+preo|it|da|means=from}}
 
 # {{lb|it|transitive}} to [[dislodge]], to [[evict]]
-# {{lb|it|intransitive}} to [[move out]], to [[vacate]] {{i|typically under pressure}}
+# {{lb|it|intransitive}} to [[move out]], to [[vacate]] {{i|typically under pressure}} {{+aux|it|avere}}
 
 ====Related terms====
 * {{l|it|sloggiamento}}
@@ -91481,10 +91682,11 @@ Page 3181 prostrare: -------- begin text --------
 {{rfe|it}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/ò}}
 
-# {{lb|it|transitive}} to seriously [[debilitate]]
-# {{lb|it|transitive}} to [[prostrate]]
+# {{lb|it|transitive}} to [[prostrate]], to [[knock down]]
+# {{lb|it|transitive|figurative}} to [[weaken]], to [[exhaust]]
+# {{lb|it|transitive|figurative}} to [[humiliate]], to [[demean]]
 
 ====Conjugation====
 {{it-conj-are|prostr|avere}}
@@ -91504,10 +91706,13 @@ Page 3182 palleggiare: -------- begin text --------
 {{af|it|palla|-eggiare}}
 
 ===Verb===
-{{it-verb}} {{tlb|it|transitive}}
+{{it-verb|a/é}}
 
-# {{lb|it|sports}} to [[practise]] with a [[ball]], especially to repeatedly [[bounce]] it while retaining [[control]]
-# to [[knock up]] (in tennis)
+# {{lb|it|intransitive|sports}} to [[practise]] with a [[ball]] {{i|especially to repeatedly [[bounce]] or [[dribble]] it while retaining [[control]]}} {{+aux|it|avere}}
+# {{lb|it|transitive}} to [[juggle]] (an object from hand to hand)
+# {{lb|it|transitive|figurative}} to [[pass]] [[around]] (an object, a look, a task, etc.)
+# {{lb|it|transitive}} to [[brandish]] (a weapon)
+# {{lb|it|transitive}} to [[rock]], to [[toss]] [[gently]] (e.g. an infant)
 
 ====Conjugation====
 {{it-conj-ciare|pallegg|avere}}
@@ -91534,7 +91739,7 @@ Borrowed from {{bor|it|la|dīvellere}}, present active infinitive of {{m|la|dīv
 * {{hyph|it|di|vèl|le|re}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a\è\divèllo:divèlgo,divèlsi,divèlto}}
 
 # {{lb|it|transitive}} to [[uproot]] or to [[pull up]]
 # {{lb|it|transitive}} to [[eradicate]], to [[extirpate]]
@@ -91586,7 +91791,7 @@ Page 3185 spesare: -------- begin text --------
 {{af|it|spesa|-are}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/é}}
 
 # {{lb|it|transitive}} to [[pay]] the [[expenses]] for
 
@@ -91600,12 +91805,12 @@ Page 3186 ipotecare: Found match for regex: =
 Page 3186 ipotecare: -------- begin text --------
 
 ===Etymology===
-From {{etyl|la|it}} {{m|la|hypotheco||I pledge as collateral}}.
+Borrowed from {{bor|it|la|hypothēcō||I pledge as collateral}}, from {{der|it|grc|ὑποθήκη||pledge}}.
 
 ===Verb===
-{{it-verb}} {{tlb|it|transitive}}
+{{it-verb|a/è}} {{tlb|it|transitive}}
 
-# {{lb|it|also|figurative}} to [[mortgage]]; to [[hypothecate]]
+# {{lb|it|law|also|figurative}} to [[mortgage]]
 # to [[guarantee]]; to [[ensure]]
 #: {{ux|it|ho '''ipotecato''' un buon voto, impegnandomi al lavoro|I '''ensured''' (myself) a good grade by working hard on the assignments}}
 
@@ -91627,12 +91832,15 @@ Page 3187 flagellare: Found match for regex: =
 Page 3187 flagellare: -------- begin text --------
 
 ===Etymology===
-From {{der|it|la|flagellō}}.
+From {{bor|it|la|flagellō}}, probably borrowed.
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/è}} {{tlb|it|transitive}}
 
 # to [[whip]], [[flog]] or [[scourge]]
+# {{lb|it|by extension}} to [[beat]] [[repetitively]]
+# {{lb|it|figurative}} to [[condemn]]
+# {{lb|it|literary}} to [[torment]], to [[persecute]]
 
 ====Conjugation====
 {{it-conj-are|flagell|avere}}
@@ -91655,9 +91863,9 @@ Page 3188 eternare: Found match for regex: =
 Page 3188 eternare: -------- begin text --------
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/è}}
 
-# {{lb|it|transitive}} to [[perpetuate]] or [[immortalize]]
+# {{lb|it|transitive}} to [[perpetuate]], to [[immortalize]], to [[make]] [[eternal]]
 
 ====Conjugation====
 {{it-conj-are|etern|avere}}
@@ -91681,13 +91889,13 @@ From {{inh|it|la|imbibere}}, present active infinitive of {{m|la|imbibō}}.
 * {{hyph|it|im|bé|ve|re}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a\é,imbévvi:+[less common]}} {{tlb|it|transitive}}
 
-# {{lb|it|transitive|rare}} to [[absorb]]
-# {{indtr|it|di|in}} to [[soak]] (in)
+# {{lb|it|rare}} to [[absorb]]
+# to [[saturate]], to [[soak]] {{+preo|it|di|means=in}}
 
 ====Conjugation====
-{{it-conj-ere|imbev|avere}}
+{{it-conj-ere|imbev|avere|prem1s=imbevvi|prem1s2=imbevei|prem1s3=imbevetti|prem3s=imbevve|prem3s2=imbevé|prem3s3=imbevette|prem3p=imbevvero|prem3p2=imbeverono|prem3p3=imbevettero}}
 
 ====Derived terms====
 * {{l|it|imbeversi}}
@@ -91711,10 +91919,12 @@ Page 3190 bisbigliare: -------- begin text --------
 * {{hyph|it|bi|sbi|glià|re}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/ì-}}
 
-# {{lb|it|ambitransitive}} to [[whisper]]
+# {{lb|it|transitive|or|intransitive}} to [[whisper]] {{+aux|it|avere}}
 #: {{syn|it|sussurrare}}
+# {{lb|it|transitive|or|intransitive}} to [[gossip]], to [[speak]] [[ill]] {{+aux|it|avere}}
+#: {{syn|it|mormorare|vociferare}}
 
 ====Conjugation====
 {{it-conj-iare|bisbigli|avere}}
@@ -91740,9 +91950,9 @@ Page 3191 risapere: -------- begin text --------
 * {{rhymes|it|ere}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/risò*,risèppi.fut:risaprò.sub:risàppia.imp:risàppi}}
 
-# {{lb|it|transitive}} to come to [[know]] something
+# {{lb|it|transitive}} to [[come]] to [[know]] [[indirectly]]
 
 ====Conjugation====
 {{it-conj-ere|risap|avere
@@ -91761,15 +91971,17 @@ Page 3192 indurire: Found match for regex: =
 Page 3192 indurire: -------- begin text --------
 
 ===Etymology===
-From {{m|it|indurare}}, from {{inh|it|la|indūrāre}}, present active infinitive of {{m|la|indūrō}}.
+From {{m|it|indurare}}, from {{der|it|la|indūrāre}}, present active infinitive of {{m|la|indūrō}}.
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a[transitive]:e[intransitive]/+isc}}
 
-# {{lb|it|transitive}} to [[harden]]
+# {{lb|it|transitive|also|figurative}} to [[harden]]
+# {{lb|it|transitive|by extension}} to [[strengthen]]
+# {{lb|it|intransitive|also|figurative}} to [[harden]], to [[become]] [[hard]] {{+aux|it|essere}}
 
 ====Conjugation====
-{{it-conj-ire-b|indur|avere}}
+{{it-conj-ire-b|indur|avere or essere}}
 
 ====Derived terms====
 * {{l|it|indurimento}}
@@ -91904,12 +92116,15 @@ Page 3200 ostruire: Found match for regex: =
 Page 3200 ostruire: -------- begin text --------
 
 ===Etymology===
-From {{der|it|la|obstruō}}.
+Borrowed from {{bor|it|la|obstruō}}, with a change in conjugation.
+
+===Pronunciation===
+* {{it-IPA|ostru.ìre}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/+isc}}
 
-# to [[obstruct]] or [[block]]
+# to [[obstruct]], to [[block]] (a passage, a road, an artery in the human body, etc.)
 
 ====Conjugation====
 {{it-conj-ire-b|ostru|avere}}
@@ -91929,10 +92144,15 @@ Page 3201 estenuare: -------- begin text --------
 ===Etymology===
 From {{der|it|la|extenuō}}.
 
-===Verb===
-{{it-verb}}
+===Pronunciation===
+* {{it-IPA|estenu.àre|estenuàre}}
 
-# {{lb|it|transitive}} to [[wear out]] or [[tire out]]
+===Verb===
+{{it-verb|a/è}}
+
+# {{lb|it|transitive}} to [[make]] [[thin]], to [[thin]]
+# {{lb|it|transitive|by extension}} to [[wear out]], to [[tire out]], to [[weaken]], to [[exhaust]]
+# {{lb|it|transitive|figurative}} to [[impoverish]]
 
 ====Conjugation====
 {{it-conj-are|estenu|avere}}
@@ -91948,7 +92168,7 @@ Page 3203 calamitare: Found match for regex: =
 Page 3203 calamitare: -------- begin text --------
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/ì}}
 
 # {{lb|it|transitive}} to [[magnetize]]
 
@@ -91969,7 +92189,7 @@ Page 3204 strattonare: -------- begin text --------
 {{suffix|it|strattone|t1=yank, tug|are}}
 
 ===Verb===
-{{it-verb}} {{tlb|it|transitive}}
+{{it-verb|a/ó}} {{tlb|it|transitive}}
 
 # to [[shove]]
 # to [[pull]] or [[tug]] [[strongly]] or [[violently]]
@@ -91988,7 +92208,7 @@ Page 3205 scorrazzare: Found match for regex: =
 Page 3205 scorrazzare: -------- begin text --------
 
 ===Alternative forms===
-* {{l|it|scorazzare}} {{qual|misspelling}}
+* {{alter|it|scorazzare||misspelling}}
 
 ===Etymology===
 {{rfe|it}}
@@ -91997,11 +92217,11 @@ Page 3205 scorrazzare: -------- begin text --------
 * {{it-IPA|scorrattsàre}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/à}}
 
-# {{lb|it|intransitive}} to [[run about]]
-# {{lb|it|intransitive}} to [[romp]]
-# {{lb|it|intransitive}} (with {{l|it|tra}} or {{l|it|per}}) to [[dedicate]] oneself to various [[field of study|fields of study]], moving from one to another
+# {{lb|it|intransitive}} to [[run about]] {{+aux|it|avere}}
+# {{lb|it|intransitive}} to [[romp]] {{+aux|it|avere}}
+# {{lb|it|intransitive}} to [[dedicate]] oneself to various [[field of study|fields of study]], moving from one to another {{+preo|it|tra}} ''or'' {{+preo|it|per}} {{+aux|it|avere}}
 # {{lb|it|transitive}} to [[travel]] [[far and wide]]
 #: {{uxi|it|'''scorrazzare''' tutta Russia|to '''travel''' all throughout Russia}}
 # {{lb|it|transitive|rare}} to [[accompany]] (someone) to a place
@@ -92048,9 +92268,13 @@ Page 3207 impietrire: -------- begin text --------
 {{af|it|in-|pietra|-ire}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a[transitive]:e[intransitive]/+isc}}
 
-# {{lb|it|transitive}} to [[petrify]] (all senses)
+# {{lb|it|transitive|also|figurative}} to [[petrify]]
+# {{lb|it|transitive|figurative}} to [[numb]], to [[harden]] (e.g. one's heart)
+# {{lb|it|intransitive}} to [[turn]] to [[stone]] {{+aux|it|essere}}
+# {{lb|it|intransitive|figurative}} to [[become]] [[stun]]ned {{+aux|it|essere}}
+# {{lb|it|intransitive|figurative}} to [[become]] [[numb]] {{+aux|it|essere}}
 
 ====Conjugation====
 {{it-conj-ire-b|impietr|avere}}
@@ -92133,7 +92357,7 @@ Page 3210 appuntire: Found match for regex: =
 Page 3210 appuntire: -------- begin text --------
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/+isc}}
 
 # {{lb|it|transitive}} to [[sharpen]]
 
@@ -92146,10 +92370,13 @@ Page 3210 appuntire: -------- begin text --------
 Page 3211 redistribuire: Found match for regex: =
 Page 3211 redistribuire: -------- begin text --------
 
-===Verb===
-{{it-verb}}
+===Pronunciation===
+* {{it-IPA|redistribu.ìre}}
 
-# {{lb|it|transitive}} {{alt sp|it|ridistribuire}}
+===Verb===
+{{it-verb|a/+isc}}
+
+# {{lb|it|transitive}} {{alt form|it|ridistribuire}}
 
 ====Conjugation====
 {{it-conj-ire-b|redistribu|avere}}
@@ -92191,12 +92418,12 @@ Page 3214 digiunare: Found match for regex: =
 Page 3214 digiunare: -------- begin text --------
 
 ===Etymology===
-From a {{inh|it|VL.|-}} derivative of {{inh|it|LL.|jejūnāre}}, alternative form of {{m|la|ieiūnāre}}, present active infinitive of {{m|la|ieiūnō}}, from {{inh|it|la|ieiūnus}}, with the initial Latin ''je-'' probably changing to ''de-'' and later ''di-'' in Italian. Compare Catalan ''[[dejunar]]''. Compare also Old Italian ''[[giunare]]''.
+From a {{inh|it|VL.|-}} derivative of {{der|it|LL.|ieiūnāre}}, present active infinitive of {{m|la|ieiūnō}}, from {{der|it|la|ieiūnus}}, with the initial Latin ''ie-'' probably changing to ''de-'' and later ''di-'' in Italian. Compare {{cog|ca|dejunar}}, {{cog|roa-oit|giunare}}.
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/ù}}
 
-# {{lb|it|intransitive}} to [[fast]]
+# {{lb|it|intransitive}} to [[fast]] {{+aux|it|avere}}
 
 ====Conjugation====
 {{it-conj-are|digiun|avere}}
@@ -92267,7 +92494,7 @@ Probably from {{inh|it|VL.|*excommentare}}, from {{af|la|ex-|commentārī|nocat
 * {{it-IPA|sgomentàre}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/é}}
 
 # {{lb|it|transitive}} to [[alarm]], [[dismay]]
 
@@ -92291,9 +92518,9 @@ Page 3217 schiaffeggiare: -------- begin text --------
 {{suffix|it|schiaffo|eggiare|t1=slap}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/é}}
 
-# {{lb|it|transitive}} to [[slap]] or [[smack]]
+# {{lb|it|transitive}} to [[slap]], to [[smack]]
 
 ====Related terms====
 * {{l|it|schiaffeggiatore}}
@@ -92838,11 +93065,10 @@ Page 3238 spadroneggiare: -------- begin text --------
 {{af|it|s-|padrone|-eggiare}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/é}}
 
-# {{lb|it|intransitive}} to [[swagger]]
-# {{lb|it|intransitive}} to [[put on airs]]
-# {{lb|it|intransitive}} to [[lord over]], [[boss]], [[boss around]]
+# {{lb|it|intransitive}} to [[swagger]], to [[put on airs]] {{+aux|it|avere}}
+# {{lb|it|intransitive}} to [[lord it over]], to [[act]] [[arrogantly]] {{+aux|it|avere}}
 
 ====Conjugation====
 {{it-conj-ciare|spadronegg|avere}}
@@ -95183,15 +95409,15 @@ Page 3347 destreggiare: -------- begin text --------
 {{af|it|destro|-eggiare}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/é}}
 
-# {{lb|it|transitive|dated}} to [[manoeuvre]]
+# {{lb|it|intransitive|dated}} to [[maneuver]]/[[manoeuvre]] [[skillfully]]
 
 ====Conjugation====
 {{it-conj-ciare|destregg|avere}}
 
 ====Usage notes====
-More common and correct in modern usage is {{m|it|destreggiarsi}}.
+* More common and correct in modern usage is {{m|it|destreggiarsi}}.
 
 ====Related terms====
 * {{l|it|destreggiarsi}}
@@ -95924,7 +96150,7 @@ Page 3379 spandere: Found match for regex: =
 Page 3379 spandere: -------- begin text --------
 
 ===Etymology===
-From {{inh|it|la|expandere}}, present active infinitive of {{m|la|expandō}}. Compare the doublet {{m|it|espandere}}.
+From {{etyl|la|it}} {{m|la|expandere}}, present active infinitive of {{m|la|expandō}}. Compare the doublet {{m|it|espandere}}.
 
 ===Verb===
 {{it-verb|a\à,spandéi:spandètti[uncommon]:spànsi[uncommon],spànto}} {{tlb|it|transitive}}
@@ -96619,10 +96845,12 @@ Page 3409 rimaneggiare: -------- begin text --------
 {{af|it|ri-|maneggiare}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/é}}
 
+# {{lb|it|transitive}} to [[handle]] [[again]]
 # {{lb|it|transitive}} to [[rework]], to [[rewrite]], to [[revise]]
 # {{lb|it|transitive}} to [[reshuffle]], to [[rearrange]]
+# {{lb|it|transitive|typography}} to [[recompose]] (text) in order to [[correct]] [[error]]s
 
 ====Conjugation====
 {{it-conj-ciare|rimanegg|avere}}
@@ -96822,12 +97050,12 @@ Page 3421 indietreggiare: -------- begin text --------
 {{af|it|indietro|-eggiare}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|e:a/é}}
 
-# {{lb|it|intransitive}} to [[draw back]], to [[retreat]]
+# {{lb|it|intransitive}} to [[draw back]], to [[retreat]] {{+aux|it|essere|avere}}
 
 ====Conjugation====
-{{it-conj-ciare|indietregg|avere or essere}}
+{{it-conj-ciare|indietregg|essere or avere}}
 
 ===Anagrams===
 * {{l|it|indietreggerai}}
@@ -97282,14 +97510,17 @@ Page 3443 scompigliare: -------- begin text --------
 Page 3444 rumoreggiare: Found match for regex: =
 Page 3444 rumoreggiare: -------- begin text --------
 
+===Alternative forms===
+* {{alter|it|romoreggiare||archaic or literary}}
+
 ===Etymology===
 {{suffix|it|rumore|gloss1=noise, sound|eggiare}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/é}}
 
-# {{lb|it|intransitive}} to [[rumble]]
-# {{lb|it|intransitive}} to [[clamour]]
+# {{lb|it|intransitive}} to [[rumble]] {{+aux|it|avere}}
+# {{lb|it|intransitive}} to [[clamour]] {{+aux|it|avere}}
 
 ====Related terms====
 * {{l|it|rumoreggiatore}}
@@ -99945,15 +100176,15 @@ Page 3573 temporeggiare: Found match for regex: =
 Page 3573 temporeggiare: -------- begin text --------
 
 ===Etymology===
-From {{der|it|la|temporizare}}, verb form of {{m|la|tempus||time}}.
+Borrowed from {{bor|it|ML.|temporizāre}}, from {{der|it|la|tempus||time}}; adapted to the suffix {{af|it|-eggiare}}.
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/é}}
 
-# {{lb|it|intransitive}} to [[play for time]]; to [[temporize]]
-# {{lb|it|intransitive|military}} to [[postpone]] the [[coup de grace]] to [[wear down]] the [[enemy]]
-# {{lb|it|intransitive|archaic}} to [[adapt]] one's [[behavior]] to the [[circumstance]]s
-# {{lb|it|transitive}} to [[postpone]] (a problem); to [[sweep under the rug]]
+# {{lb|it|intransitive}} to [[play for time]]; to [[temporize]] {{+aux|it|avere}}
+# {{lb|it|intransitive|military}} to [[postpone]] the [[coup de grace]] to [[wear down]] the [[enemy]] {{+aux|it|avere}}
+# {{lb|it|intransitive|archaic}} to [[adapt]] one's [[behavior]] to the [[circumstance]]s {{+aux|it|avere}}
+# {{lb|it|transitive|archaic}} to [[postpone]] (a problem); to [[sweep under the rug]]
 
 ====Conjugation====
 {{it-conj-ciare|temporegg|avere}}
@@ -102818,10 +103049,11 @@ Page 3711 occhieggiare: -------- begin text --------
 {{suffix|it|occhio|eggiare}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/é}}
 
-# {{lb|it|transitive}} to [[eye]], [[eye up]], [[ogle]]
-# {{lb|it|intransitive}} to [[peep]], [[appear]]
+# {{lb|it|transitive}} to [[eye]], to [[ogle]]
+# {{lb|it|intransitive|literary}} to [[peek out]], to [[appear]] [[here]] and [[there]]
+# {{lb|it|intransitive|literary}} to [[exchange]] [[glance]]s
 
 ====Conjugation====
 {{it-conj-ciare|occhiegg|avere}}
@@ -102838,8 +103070,11 @@ Page 3712 ridistribuire: -------- begin text --------
 ===Etymology===
 {{af|it|ri-|distribuire}}
 
+===Pronunciation===
+* {{it-IPA|ridistribu.ìre}}
+
 ===Verb===
-{{it-verb}}
+{{it-verb|a/+isc}}
 
 # {{lb|it|transitive}} to [[redistribute]], to [[reallocate]]
 
@@ -103192,9 +103427,9 @@ Page 3731 parteggiare: Found match for regex: =
 Page 3731 parteggiare: -------- begin text --------
 
 ===Verb===
-{{it-verb}} {{+preo|it|per}}
+{{it-verb|a/é}} {{+preo|it|per}}
 
-# {{lb|it|intransitive}} to [[side]] (with); to take the side (of)
+# {{lb|it|intransitive}} to [[side]] (with); to take the side (of) {{+aux|it|avere}}
 
 ====Conjugation====
 {{it-conj-ciare|partegg|avere}}
@@ -104418,7 +104653,7 @@ From {{af|it|burla|-are}}.
 ===Verb===
 {{it-verb|a/ù}}
 
-# {{lb|it|transitive}} to [[make fun of]], [[frolic]]
+# {{lb|it|transitive}} to [[make fun of]], to [[mock]]
 
 ====Conjugation====
 {{it-conj-are|burl|avere}}
@@ -105649,9 +105884,9 @@ Page 3850 rivaleggiare: -------- begin text --------
 {{af|it|rivale|-eggiare}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/é}}
 
-# {{lb|it|transitive}} to [[compete]] or [[vie]] with someone for something
+# {{lb|it|transitive}} to [[compete]] or [[vie]] {{+preo|it|con|means=with}} {{+aux|it|avere}}
 
 ====Conjugation====
 {{it-conj-ciare|rivalegg|avere}}
@@ -106076,13 +106311,13 @@ Page 3871 scheggiare: -------- begin text --------
 {{af|it|scheggia|-eggiare}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a[transitive]:e[intransitive]/é}}
 
 # {{lb|it|transitive}} to [[splinter]] or [[chip]]
-# {{lb|it|intransitive|slang}} to [[run away]]; to run [[the hell]] out of
+# {{lb|it|intransitive|slang}} to [[run away|run]] [[the hell]] [[away]], to [[vamoose]], to [[skedaddle]] {{+aux|it|essere}}
 
 ====Conjugation====
-{{it-conj-ciare|schegg|avere}}
+{{it-conj-ciare|schegg|avere or essere}}
 
 ====Related terms====
 * {{l|it|scheggiamento}}
@@ -110772,14 +111007,14 @@ Page 4142 boccheggiare: -------- begin text --------
 {{suffix|it|bocca|t1=mouth|eggiare}}
 
 ===Verb===
-{{it-verb}} {{tlb|it|intransitive}}
+{{it-verb|a/é}} {{tlb|it|intransitive}}
 
-# to fight for breath; to [[gasp]]; to [[pant]]
+# to [[fight]] for [[breath]]; to [[gasp]]; to [[pant]] {{+aux|it|avere}}
 #: {{syn|it|ansimare}}
 #* {{quote-book|it|year=2019|author=George Orwell|translator=Nicola Gardini|title=Nineteen Eighty-Four|publisher=Mondadori|passage=Adesso si dimenava sul pavimento, '''boccheggiando'''.|translation=She was thrashing about on the floor, '''fighting for breath'''.|lit=She was squirming on the floor, '''panting'''.}}
 # to be dying; to draw in one's last breaths
 #: {{syn|it|[[essere]] [[in fin di vita]]|agonizzare|rantolare}}
-# {{lb|it|figurative|by extension}} to find oneself in grave difficulty; to [[struggle]]
+# {{lb|it|figurative|by extension}} to [[find]] oneself in [[grave]] [[difficulty]]; to [[struggle]]
 
 ====Conjugation====
 {{it-conj-ciare|bocchegg|avere}}
@@ -111022,10 +111257,10 @@ Page 4158 giganteggiare: -------- begin text --------
 {{suffix|it|gigante|eggiare}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/é}}
 
-# {{lb|it|intransitive}} to [[tower]] (over)
-# {{lb|it|intransitive}} to [[excel]]
+# {{lb|it|intransitive}} to [[tower]] {{+preo|it|per|means=over}} {{+aux|it|avere}}
+# {{lb|it|intransitive}} to [[excel]] {{+aux|it|avere}}
 
 ====Conjugation====
 {{it-conj-ciare|gigantegg|avere}}
@@ -111438,9 +111673,9 @@ Page 4171 dileggiare: Found match for regex: =
 Page 4171 dileggiare: -------- begin text --------
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/é}}
 
-# {{lb|it|transitive}} to [[frolic]], [[mock]] or [[scoff]] at
+# {{lb|it|transitive}} to [[mock]], to [[scoff]] at
 
 ====Conjugation====
 {{it-conj-ciare|dilegg|avere}}
@@ -111750,10 +111985,10 @@ Page 4189 armeggiare: -------- begin text --------
 {{suffix|it|arma|eggiare}}
 
 ===Verb===
-{{it-verb}} {{tlb|it|intransitive}}
+{{it-verb|a/é}} {{tlb|it|intransitive}}
 
-# (typically with [[intorno]] {{l|it|a}}, {{l|it|con}}, or {{l|it|su}}) [[manoeuvre]] or [[scheme]] (around)
-# (with {{l|it|in}}) to [[rummage]]
+# to [[maneuver]]/[[manoeuvre]] or [[scheme]] {{+preo|it|intorno a}} ''or'' {{+preo|it|con}} ''or'' {{+preo|it|su}}
+# to [[rummage]] {{+preo|it|in|means=in}}
 # to [[intrigue]]
 # {{lb|it|archaic}} to [[handle]] [[weapon]]s (as an expert)
 
@@ -112139,7 +112374,7 @@ Page 4213 filosofeggiare: -------- begin text --------
 * {{hyph|it|fi|lo|so|feg|già|re}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/é}}
 
 # {{lb|it|pejorative|intransitive}} to [[pose]] as a [[philosopher]]
 #: {{syn|it|filosofare}}
@@ -112300,10 +112535,10 @@ Page 4221 molleggiare: -------- begin text --------
 {{af|it|molla|-eggiare}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/é}}
 
-# {{lb|it|transitive}} to [[spring]]
-# {{lb|it|intransitive}} to be [[springy]] (of a bed, etc.)
+# {{lb|it|transitive}} to [[provide]] with [[spring]]s
+# {{lb|it|intransitive}} to be [[elastic]], to be [[springy]] {{i|of a bed, etc.}} {{+aux|it|avere}}
 
 ====Conjugation====
 {{it-conj-ciare|mollegg|avere}}
@@ -114893,9 +115128,9 @@ Page 4379 furoreggiare: -------- begin text --------
 {{af|it|furore|-eggiare}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/é}}
 
-# {{lb|it|intransitive}} to be very [[fashionable]] or [[successful]]; to be [[all the rage]]
+# {{lb|it|intransitive}} to be very [[fashionable]] or [[successful]]; to be [[all the rage]] {{+aux|it|avere}}
 
 ====Conjugation====
 {{it-conj-ciare|furoregg|avere}}
@@ -116673,9 +116908,10 @@ Page 4490 cannoneggiare: -------- begin text --------
 * {{hyph|it|can|no|neg|già|re}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/é}}
 
-# {{lb|it|transitive}} to [[cannon]]; to [[shell]] (with artillery)
+# {{lb|it|transitive|military}} to [[cannon]]; to [[shell]] (with artillery)
+# {{lb|it|intransitive|military}} to [[fire]] [[cannonball]]s
 
 ====Conjugation====
 {{it-conj-ciare|cannonegg|avere}}
@@ -116689,15 +116925,39 @@ Page 4490 cannoneggiare: -------- begin text --------
 Page 4491 bombare: Found match for regex: =
 Page 4491 bombare: -------- begin text --------
 
-===Verb===
-{{it-verb}}
+===Etymology 1===
+Borrowed from {{bor|it|fr|bomber}}.
 
-# {{lb|it|transitive}} to [[crown]] (make convex)
-# {{lb|it|transitive|slang|vulgar}} to [[fuck]], [[screw]], [[bang]]
+====Verb====
+{{it-verb|a/ó}}
+
+# {{lb|it|transitive}} to [[round]], to [[camber]] (a metal surface) by [[beat]]ing it from the [[reverse]] [[side]]
+# {{lb|it|intransitive|slang|vulgar}} to [[fuck]], to [[screw]], to [[bang]] {{+preo|it|con}} {{+aux|it|avere}}
 #: {{ux|it|Stavano '''bombando''' sul sedile posteriore della macchina.|translation= They were '''screwing''' in the back seat of the car.}}
 #: {{syn|it|chiavare|fottere|scopare|trombare}}
 
-====Conjugation====
+=====Conjugation=====
+{{it-conj-are|bomb|avere}}
+
+===Etymology 2===
+
+====Verb====
+{{it-verb|a/ó}} {{tlb|it|intransitive}}
+
+# {{lb|it|archaic|or|Tuscan}} to [[imbibe]] [[avidly]], to [[quaff]] [[alcohol]] {{+aux|it|avere}}
+
+=====Conjugation=====
+{{it-conj-are|bomb|avere}}
+
+===Etymology 3===
+{{af|it|bombo|-are}}
+
+====Verb====
+{{it-verb|a/ó}} {{tlb|it|intransitive}}
+
+# {{lb|it|archaic}} to [[rumble]] {{+aux|it|avere}}
+
+=====Conjugation=====
 {{it-conj-are|bomb|avere}}
 
 ===Anagrams===
@@ -116713,7 +116973,7 @@ Page 4492 anestetizzare: -------- begin text --------
 * {{it-IPA}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/ì}}
 
 # {{lb|it|transitive}} to [[anesthetize]]
 
@@ -118340,10 +118600,12 @@ Page 4590 tambureggiare: -------- begin text --------
 {{suffix|it|tamburo|gloss1=drum|eggiare}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/é}}
 
-# {{lb|it|intransitive}} to [[drum]]
-# {{lb|it|intransitive}} to [[hammer]], [[pound]], [[beat]]
+# {{lb|it|intransitive}} to [[drum]] {{+aux|it|avere}}
+# {{lb|it|intransitive}} to [[hammer]], [[pound]], [[beat]] {{+aux|it|avere}}
+# {{lb|it|intransitive|military}} to [[shoot]] [[repeatedly]] {{+aux|it|avere}}
+# {{lb|it|transitive|military}} to [[bombard]], to [[hit]] [[repeatedly]]
 
 ====Conjugation====
 {{it-conj-ciare|tamburegg|avere}}
@@ -118825,10 +119087,12 @@ Page 4630 mercanteggiare: -------- begin text --------
 {{af|it|mercante|-eggiare}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/é}}
 
-# {{lb|it|intransitive}} to [[haggle]], to [[bargain]]
-# {{lb|it|transitive}} to [[sell]]
+# {{lb|it|intransitive}} to [[haggle]], to [[bargain]] {{+aux|it|avere}}
+# {{lb|it|intransitive|uncommon}} to [[deal]], to [[trade]] {{+preo|it|in|means=in}} {{+aux|it|avere}}
+# {{lb|it|transitive|uncommon}} to [[sell]]
+# {{lb|it|transitive|figurative|pejorative}} to [[sell]] (votes, one's honor or dignity, etc.)
 
 ====Conjugation====
 {{it-conj-ciare|mercantegg|avere}}
@@ -119453,9 +119717,9 @@ Page 4670 drappeggiare: -------- begin text --------
 {{af|it|drappo|-eggiare}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/é}}
 
-# {{lb|it|transitive}} to [[drape]]
+# {{lb|it|transitive|also|figurative}} to [[drape]]
 
 ====Conjugation====
 {{it-conj-ciare|drappegg|avere}}
@@ -121306,7 +121570,7 @@ Page 4803 amoreggiare: -------- begin text --------
 ===Verb===
 {{it-verb|a/é}}
 
-# {{lb|it|intransitive}} to [[flirt]]
+# {{lb|it|intransitive}} to [[flirt]] {{+aux|it|avere}}
 #: {{syn|it|flirtare}}
 
 ====Conjugation====
@@ -123187,7 +123451,7 @@ Page 4943 traccheggiare: -------- begin text --------
 ===Verb===
 {{it-verb|a/é}}
 
-# {{lb|it|intransitive}} to [[procrastinate]], to [[dawdle]], to [[temporize]]
+# {{lb|it|intransitive}} to [[procrastinate]], to [[dawdle]], to [[temporize]] {{+aux|it|avere}}
 # {{lb|it|transitive|rare}} to [[put off|put]] (someone) [[off]], to [[keep]] in [[suspense]] {{i|especially by means of excuses}}
 
 ====Derived terms====
@@ -124427,12 +124691,11 @@ Page 5037 fiammeggiare: -------- begin text --------
 From {{affix|it|fiamma|-eggiare}}. Compare {{cog|fr|flamboyer}}, {{cog|ca|flamejar}}, {{cog|es|llamear}}, {{cog|pt|chamejar}}.
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/é}}
 
-# to [[blaze]]
-# to [[flambé]]
-# to [[flash]]
-# to [[gleam]]
+# {{lb|it|intransitive}} to [[blaze]] {{+aux|it|avere}}
+# {{lb|it|intransitive}} to [[flash]], to [[gleam]] {{+aux|it|avere}}
+# {{lb|it|transitive|cooking}} to [[flambé]]
 
 
 ====Conjugation====
@@ -125396,16 +125659,18 @@ Page 5119 vaneggiare: Found match for regex: =
 Page 5119 vaneggiare: -------- begin text --------
 
 ===Etymology===
-{{suffix|it|vano|t1=vain|eggiare}}; cognate with {{cog|pms|vanegé}}
+From {{suffix|it|vano|t1=vain|eggiare}}; cognate with {{cog|pms|vanegé}}.
 
 ===Pronunciation===
 * {{it-IPA|vaneggiàre}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/é}}
 
-# {{lb|it|intransitive}} to [[rave]]
+# {{lb|it|intransitive}} to [[rant]], to [[rave]] {{+aux|it|avere}}
 #: {{syn|it|sragionare|delirare|farneticare|sproloquiare|vagellare|ragliare}}
+# {{lb|it|intransitive|literary|or|rare}} to [[fantasize]] {{+aux|it|avere}}
+# {{lb|it|transitive|poetic|or|literary}} to [[say]] while [[rant]]ing
 
 ====Conjugation====
 {{it-conj-ciare|vanegg|avere}}
@@ -125964,7 +126229,7 @@ Page 5170 largheggiare: -------- begin text --------
 {{af|it|largo|-eggiare}}
 
 ===Verb===
-{{it-verb}} {{+preo|it|in}} {{tlb|it|intransitive}}
+{{it-verb|a/é}} {{+preo|it|in}} {{tlb|it|intransitive}}
 
 # to be [[benevolent]]
 # to be [[free]] (with) (money)
@@ -126206,9 +126471,10 @@ Page 5191 villeggiare: -------- begin text --------
 From {{af|it|villa|t1=country house|-eggiare}}.
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/é}}
 
-# {{lb|it|intransitive}} to [[holiday]] (spend one's holidays)
+# {{lb|it|intransitive}} to [[vacation]]/[[holiday]] {{+aux|it|avere}}
+# {{lb|it|intransitive|archaic|or|literary}} to [[stay]] in a [[villa]] {{+aux|it|avere}}
 
 ====Conjugation====
 {{it-conj-ciare|villegg|avere}}
@@ -126250,9 +126516,10 @@ Page 5193 tiranneggiare: -------- begin text --------
 {{af|it|tiranno|-eggiare}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/é}}
 
 # {{lb|it|transitive}} to [[tyrannize]]
+# {{lb|it|intransitive}} to [[rule]] [[tyrannically]] {{+aux|it|avere}}
 
 ====Conjugation====
 {{it-conj-ciare|tirannegg|avere}}
@@ -126337,9 +126604,10 @@ Page 5199 ombreggiare: -------- begin text --------
 {{af|it|ombra|-eggiare}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/é}}
 
-# {{lb|it|transitive}} to [[shade]], [[crosshatch]]
+# {{lb|it|transitive}} to [[shade]], to [[provide]] [[shade]] for
+# {{lb|it|transitive|drawing}} to [[shade]], to [[crosshatch]]
 
 ====Conjugation====
 {{it-conj-ciare|ombregg|avere}}
@@ -126393,10 +126661,10 @@ Page 5203 gorgheggiare: -------- begin text --------
 {{af|it|gorga|-eggiare}}
 
 ===Verb===
-{{it-verb}} {{tlb|it|intransitive}}
+{{it-verb|a/é}} {{tlb|it|intransitive|or|transitive}}
 
-# to [[warble]]
-# {{lb|it|music}} to [[trill]]
+# to [[warble]] {{+aux|it|avere}}
+# {{lb|it|music}} to [[trill]] {{+aux|it|avere}}
 
 ====Conjugation====
 {{it-conj-ciare|gorghegg|avere}}
@@ -127549,9 +127817,9 @@ Page 5314 torreggiare: -------- begin text --------
 {{af|it|torre|t1=tower|-eggiare}}
 
 ===Verb===
-{{it-verb}} {{+preo|it|su}} {{tlb|it|intransitive}}
+{{it-verb|a/é}} {{tlb|it|intransitive}}
 
-# to [[tower]] (over)
+# to [[tower]] {{+preo|it|su|means=over}}
 
 ====Conjugation====
 {{it-conj-ciare|torregg|avere}}
@@ -128216,10 +128484,9 @@ Page 5366 moraleggiare: -------- begin text --------
 {{suffix|it|morale|gloss1=moral|eggiare}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/é}}
 
-# {{lb|it|intransitive}} to [[moralize]]
-# {{lb|it|intransitive}} to [[preach]]
+# {{lb|it|intransitive|usually|pejorative}} to [[moralize]], to [[preach]] {{+aux|it|avere}}
 
 ====Conjugation====
 {{it-conj-ciare|moralegg|avere}}
@@ -129126,9 +129393,9 @@ Page 5441 classicheggiare: -------- begin text --------
 {{af|it|classico|-eggiare}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/é}}
 
-# {{lb|it|intransitive}} to [[classicize]]
+# {{lb|it|intransitive}} to [[classicize]] {{gl|to imitate classic writers or artists}}
 
 ====Conjugation====
 {{it-conj-ciare|classichegg|avere}}
@@ -129514,9 +129781,9 @@ Page 5479 svillaneggiare: -------- begin text --------
 {{af|it|s-|villano|-eggiare}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/é}}
 
-# {{lb|it|transitive}} to [[insult]]
+# {{lb|it|transitive}} to [[offend]], to [[insult]]
 
 ====Conjugation====
 {{it-conj-ciare|svillanegg|avere}}
@@ -129570,10 +129837,11 @@ Page 5487 fraseggiare: -------- begin text --------
 {{af|it|frase|-eggiare}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/é}} {{tlb|it|intransitive}}
 
-# {{lb|it|transitive}} to [[phrase]] (all senses)
-# {{lb|it|intransitive}} to be [[wordy]]
+# {{lb|it|literature}} to [[phrase]], to [[compose]] [[phrase]]s
+# {{lb|it|music}} to [[phrase]] {{gl|to perform a passage with the correct phrasing}}
+# {{lb|it|pejorative}} to be [[wordy]], to [[bloviate]]
 
 ====Conjugation====
 {{it-conj-ciare|frasegg|avere}}
@@ -131151,9 +131419,10 @@ Page 5663 solfeggiare: -------- begin text --------
 From {{af|it|solfa|-eggiare}}.
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/é}}
 
-# {{lb|it|transitive|intransitive}} to practice [[sol-fa]]
+# {{lb|it|music|intransitive}} to [[practice]] [[sol-fa]]
+# {{lb|it|music|transitive}} to [[read]] the [[note]]s of (a piece) using [[sol-fa]]
 
 ====Conjugation====
 {{it-conj-ciare|solfegg|avere}}
@@ -131442,10 +131711,10 @@ Page 5687 ancheggiare: -------- begin text --------
 {{suffix|it|anca|alt1=anche|gloss1=hips|eggiare}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/é}} {{tlb|it|intransitive}}
 
-# {{lb|it|intransitive}} to [[wiggle]] (the hips)
-# to [[grind]]
+# to [[wiggle]] the [[hip]]s, to [[sway]] the [[hip]]s when [[walk]]ing {{+aux|it|avere}}
+# to [[waddle]] {{+aux|it|avere}}
 
 ====Conjugation====
 {{it-conj-ciare|anchegg|avere}}
@@ -131952,10 +132221,14 @@ Page 5753 bordeggiare: -------- begin text --------
 {{af|it|bordo|-eggiare}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/é}}
 
-# {{lb|it|intransitive|nautical}} to [[tack]]
-# to [[border]]
+# {{lb|it|intransitive|nautical}} to [[tack]] {{+aux|it|avere}}
+# {{lb|it|intransitive}} to [[beat]] {{i|of the heart}}
+# {{lb|it|intransitive|figurative|uncommon}} to [[make]] one's [[way]] through [[obstacle]]s
+# {{lb|it|intransitive|figurative|uncommon}} to [[beat around the bush]]
+# {{lb|it|transitive}} to [[border]]
+# {{lb|it|transitive|nautical}} to [[skirt]]
 
 ====Conjugation====
 {{it-conj-ciare|bordegg|avere}}
@@ -137873,23 +138146,28 @@ Page 6428 subodorare: -------- begin text --------
 Page 6429 straboccare: Found match for regex: =
 Page 6429 straboccare: -------- begin text --------
 
-===Verb===
-{{it-verb}}
+====Verb====
+{{it-verb|e[with a liquid or other material as the subject, or figuratively]:a[with a vessel as the subject]/ó}}
 
-# {{lb|it|intransitive}} Stronger variant of [[traboccare]].
-# {{lb|it|archaic}} {{lb|it|intransitive}} to [[fall]]
-#: {{syn|it|cadere}}
+# {{lb|it|intransitive}} to [[overflow]] [[strongly]] {{+preo|it|da|means=from}} {{i|of liquid or other material}} {{+aux|it|essere}}
+#: {{syn|it|traboccare|q1=less intensive}}
+# {{lb|it|intransitive}} to [[overflow]] [[strongly]] {{+preo|it|di|means=with}} {{i|of a vessel}} {{+aux|it|avere}}
+#: {{syn|it|traboccare|q1=less intensive}}
+# {{lb|it|intransitive|figurative}} to [[overflow]] [[strongly]] {{+preo|it|di|means=with (an emotion)}} {{i|of one's heart or soul, etc.}} {{+aux|it|essere}}
+#: {{syn|it|traboccare|q1=less intensive}}
+# {{lb|it|intransitive|archaic}} to [[fall]] [[suddenly]]
+#: {{syn|it|cadere|precipitare}}
 
-====Conjugation====
-{{it-conj-care|strabocc|avere or essere}}
+=====Conjugation=====
+{{it-conj-care|strabocc|essere or avere}}
 -------- end text --------
 Page 6433 sminare: Found match for regex: =
 Page 6433 sminare: -------- begin text --------
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/ì}}
 
-# {{lb|it|transitive}} to [[remove]] [[mines]] from an area; to [[demine]]
+# {{lb|it|transitive|military}} to [[clear]] [[mine]]s from (an area); to [[demine]]
 
 ====Conjugation====
 {{it-conj-are|smin|avere}}
