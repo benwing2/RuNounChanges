@@ -6,9 +6,10 @@ import pywikibot, re, sys, codecs, argparse
 import blib
 from blib import getparam, rmparam, msg, errandmsg, site, tname, pname
 
-inflection_of_templates = ["inflection of", "past participle of"]
+inflection_of_templates = ["inflection of", "past participle of", "present participle of", "feminine singular of"]
 
-form_poses = ["noun form", "verb form", "adjective form", "past participle"]
+form_poses = ["noun form", "verb form", "adjective form", "past participle", "past participle form",
+  "present participle", "present participle form"]
 
 lang_to_langname = {
   "es": "Spanish",
@@ -102,19 +103,30 @@ def delete_form_1(page, index, lemma, formind, formval, lang):
       else:
         # No break
         if re.search("===(Noun|Verb|Adjective)===", subsections[k - 1]):
-          indent = len(re.sub("^(=+).*\n", r"\1", subsections[k - 1].strip()))
-          has_subsubsection = False
-          if k + 1 < len(subsections):
-            nextindent = len(re.sub("^(=+).*\n", r"\1", subsections[k + 1].strip()))
-            if nextindent > indent:
-              has_subsubsection = True
-              pagemsg("WARNING: Subsection #%s (header %s) has subsubsection with header %s, not deleting" % (
-                k // 2, subsections[k - 1].strip(), subsections[k + 1].strip()))
-          if not has_subsubsection:
+          indent_header = subsections[k - 1].strip()
+          indent = len(re.sub("^(=+).*", r"\1", indent_header))
+          has_non_deletable_subsubsection = False
+          extra_subsubsections_to_delete = []
+          l = k
+          while l + 1 < len(subsections):
+            nextindent = len(re.sub("^(=+).*", r"\1", subsections[l + 1].strip()))
+            if nextindent <= indent:
+              break
+            # Italian verb forms often have Synonyms sections for alternative forms, and random Related terms sections
+            if re.search("==(Synonyms|Related terms)==", subsections[l + 1]):
+              extra_subsubsections_to_delete.append(l + 2)
+              l += 2
+            else:
+              has_non_deletable_subsubsection = True
+              pagemsg("WARNING: Subsection #%s (header %s, indent %s) has subsubsection with header %s (indent %s), not deleting" % (
+                l // 2, indent_header, indent, subsections[l + 1].strip(), nextindent))
+              break
+          if not has_non_deletable_subsubsection:
             if remove_deletable_tag_sets_from_subsection:
               subsections_to_remove_inflections_from.append(k)
             else:
               subsections_to_delete.append(k)
+              subsections_to_delete.extend(extra_subsubsections_to_delete)
         else:
           pagemsg("WARNING: Wrong header in otherwise deletable subsection #%s: %s" % (
             k // 2, subsections[k - 1].strip()))
