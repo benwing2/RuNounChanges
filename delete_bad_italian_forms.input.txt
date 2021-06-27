@@ -33,7 +33,8 @@ dormirsela: dormentesela,dormita,dormitosela
 filarsela: filantesela,filatosela
 fumarsela: fumantesela,fumatosela
 giostrarsela: giostrantesela,giostratosela
-giostarsi: giostratosi
+giostrarsi: giostratosi
 giostratosi: giostratasi,giostratisi,giostratesi
 meritarsela: meritantesela,meritatosela
 scioccare: schioccerò,schioccerai,schioccerà,schiocceremo,schioccerete,schiocceranno,schioccerei,schiocceresti,schioccerebbe,schiocceremmo,schioccereste,schioccerebbero
+malfare: malfaccio,malfò,malfai,malfà,malfacciamo,malfate,malfanno,malfacevo,malfacevi,malfaceva,malfacevamo,malfacevate,malfacevano,malfeci,malfacesti,malfece,malfacemmo,malfaceste,malfecero,malfarò,malfarai,malfarà,malfaremo,malfarete,malfaranno,malfarei,malfaresti,malfarebbe,malfaremmo,malfareste,malfarebbero,malfaccia,malfacciate,malfacciano,malfacessi,malfacesse,malfacessimo,malfacessero,malfa',malfacendo,malfacente
