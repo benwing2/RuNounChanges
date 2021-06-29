@@ -95423,9 +95423,10 @@ Page 3346 eclissare: -------- begin text --------
 * {{it-IPA|eclissàre}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/ì}}
 
-# {{lb|it|transitive}} to [[eclipse]]
+# {{lb|it|transitive|astronomy|also|figurative}} to [[eclipse]]
+# {{lb|it|transitive|by extension}} to [[obfuscate]], to [[cover]], to [[conceal]]
 
 ====Conjugation====
 {{it-conj-are|ecliss|avere}}
@@ -95477,7 +95478,7 @@ Page 3348 centellinare: -------- begin text --------
 {{af|it|centellino|-are}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/ì}}
 
 # {{lb|it|transitive}} to [[sip]]
 #: {{syn|it|sorseggiare}}
@@ -95507,7 +95508,7 @@ From {{inh|it|VL.|*exquadrāre}}, present active infinitive of {{m|la|*exquadrō
 * {{hyph|it|squa|drà|re}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/à}}
 
 # {{lb|it|transitive}} to [[delimit]] in a [[square]] or [[rectangular]] [[shape]]
 # {{lb|it|transitive|by extension}} to [[look]], [[eye]]
@@ -95516,6 +95517,7 @@ From {{inh|it|VL.|*exquadrāre}}, present active infinitive of {{m|la|*exquadrō
 #: {{syn|it|mostrare|presentare}}
 # {{lb|it|transitive|archaic|poetic|rare}} to [[break]], [[break up]]
 #: {{syn|it|spezzare}}
+# {{lb|it|intransitive}} to [[square]], to be [[perfectly]] [[perpendicular]] {{+aux|it|avere}}
 
 ====Conjugation====
 {{it-conj-are|squadr|avere}}
@@ -95553,15 +95555,16 @@ Page 3353 contravvenire: Found match for regex: =
 Page 3353 contravvenire: -------- begin text --------
 
 ===Etymology===
-{{prefix|it|contra|venire}}
+Borrowed from {{bor|it|ML.|contrāvenīre}}; synchronically analyzable as {{prefix|it|contra|venire}}.
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/contravvèngo,contravvénni,contravvenùto.fut:contravverrò.imp:contravvièni}} {{tlb|it|intransitive}}
 
-# {{lb|it|intransitive}} to [[contravene]]
+# {{lb|it|intransitive}} to [[contravene]] {{+preo|it|a}}
+# {{lb|it|intransitive}} to [[infringe]] {{+preo|it|a|means=upon}}
 
 ====Conjugation====
-{{it-conj-ire|contravven|essere
+{{it-conj-ire|contravven|avere
 |presp=contravveniente|pastp=contravvenuto
 |pres1s=contravvengo|pres2s=contravvieni|pres3s=contravviene|pres3p=contravvengono
 |prem1s=contravvenni|prem2s=contravvenisti|prem3s=contravvenne|prem3p=contravvennero
@@ -95582,9 +95585,14 @@ Page 3354 annebbiare: -------- begin text --------
 {{confix|it|a|nebbia|gloss2=fog, mist|are}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a[transitive]:e[intransitive]/é}}
 
-# {{lb|it|transitive}} to [[cloud]], [[bewilder]], [[befuddle]]
+# {{lb|it|transitive}} to [[cloud]] with [[fog]]
+# {{lb|it|transitive|figurative}} to [[cloud]], to [[bewilder]], to [[befuddle]]
+# {{lb|it|transitive|figurative}} to [[cloud]], to [[muddle]] (colors)
+# {{lb|it|transitive}} to [[spoil]] (plants, fruits, a harvest, etc.) by the [[action]] of [[fog]]
+# {{lb|it|intransitive}} to [[become]] [[spoil]]ed by the [[fog]] {{+aux|it|essere}}
+# {{lb|it|intransitive|impersonal}} to [[be]] [[foggy]] {{+aux|it|essere}}
 
 ====Conjugation====
 {{it-conj-iare|annebbi|avere}}
@@ -95602,10 +95610,10 @@ Page 3355 tacitare: -------- begin text --------
 {{af|it|tacito|-are}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/à}}
 
-# {{lb|it|transitive}} to [[hush up]]
-# {{lb|it|transitive}} to [[pay off]]
+# {{lb|it|transitive}} to [[pay off]] (e.g. creditors)
+# {{lb|it|transitive|by extension}} to [[hush up]]
 
 ====Conjugation====
 {{it-conj-are|tacit|avere}}
@@ -95627,7 +95635,7 @@ Page 3356 impossibilitare: -------- begin text --------
 {{af|it|impossibilità|-are}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/ì-}}
 
 # {{lb|it|transitive}} to [[make]] [[impossible]], to [[prevent]]
 
@@ -95715,13 +95723,13 @@ Page 3360 calunniare: Found match for regex: =
 Page 3360 calunniare: -------- begin text --------
 
 ===Etymology===
-From {{der|it|la|calumnior}}.
+{{slbor|it|la|calumnior}}.
 
 ===Pronunciation===
 * {{it-IPA|calunniàre}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/ù}}
 
 # {{lb|it|transitive}} to [[slander]]
 
