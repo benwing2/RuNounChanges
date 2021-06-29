@@ -1906,7 +1906,7 @@ def yield_text_from_find_regex(lines, verbose):
       #else:
       m = re.search("^Page ([0-9]+) (.*): -+ begin text -+$", line)
       if m:
-        pagenum = m.group(1)
+        pagenum = int(m.group(1))
         pagename = m.group(2)
         in_multiline = True
         templines = []
