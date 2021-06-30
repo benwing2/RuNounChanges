@@ -97865,10 +97865,12 @@ Page 3456 scolorire: Found match for regex: =
 Page 3456 scolorire: -------- begin text --------
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a[transitive]:e[intransitive]/+isc}}
 
-# {{lb|it|transitive}} to [[fade]], to [[discolour]]
-# {{lb|it|transitive}} to [[fade]], to [[dim]]
+# {{lb|it|transitive}} to [[fade]], to [[discolor]]
+# {{lb|it|transitive|figurative}} to [[fade]], to [[dim]]
+# {{lb|it|intransitive}} to [[fade]], to [[discolor]] {{+aux|it|essere}}
+# {{lb|it|intransitive|figurative}} to [[fade]], to [[dim]] {{+aux|it|essere}}
 
 ====Conjugation====
 {{it-conj-ire-b|scolor|avere}}
@@ -97882,9 +97884,12 @@ Page 3458 epurare: Found match for regex: =
 Page 3458 epurare: -------- begin text --------
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/ù}}
 
-# {{lb|it|transitive}} to [[purge]] (people from an organization)
+# {{lb|it|transitive}} to [[purify]]
+# {{lb|it|transitive}} to [[prune]], to [[cull]] (an administration, office, company)
+# {{lb|it|transitive}} to [[expurgate]] (a book)
+# {{lb|it|transitive}} to [[purge]] (someone) {{i|from an organization}}
 
 ====Conjugation====
 {{it-conj-are|epur|avere}}
@@ -97902,7 +97907,7 @@ Page 3459 tonare: Found match for regex: =
 Page 3459 tonare: -------- begin text --------
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a:e[alternatively when impersonal]/ò}}
 
 # {{lb|it|intransitive}} {{alternative form of|it|tuonare}}
 
@@ -97925,7 +97930,7 @@ Page 3461 imbeccare: -------- begin text --------
 {{confix|it|in|becco|gloss2=beak, bill|are}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/é}}
 
 # {{lb|it|transitive}} to [[feed]] a [[bird]] {{qualifier|by hand}}
 # {{lb|it|transitive}} to [[prompt]]; to [[put words in someone's mouth]]
@@ -97946,9 +97951,9 @@ Page 3462 girovagare: -------- begin text --------
 {{prefix|it|giro|vagare}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/ò}}
 
-# {{lb|it|intransitive}} to [[wander]] about, [[stroll]], [[saunter]]
+# {{lb|it|intransitive}} to [[wander]] about, [[stroll]], [[saunter]] {{+aux|it|avere}}
 
 ====Conjugation====
 {{it-conj-care|girovag|avere}}
@@ -97961,15 +97966,18 @@ Page 3463 divagare: Found match for regex: =
 Page 3463 divagare: -------- begin text --------
 
 ===Etymology===
-From {{der|it|la|dīvagor}}.
+Borrowed from {{bor|it|la|dīvagor}}.
 
 ===Pronunciation===
 * {{it-IPA|divagàre}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/à}}
 
-# {{lb|it|intransitive}} to [[stray]], to [[wander]]
+# {{lb|it|intransitive|literary}} to [[wander]] {{+aux|it|avere}}
+# {{lb|it|intransitive|figurative}} to [[digress]] {{+preo|it|da|means=from (a theme, an argument)}} {{+aux|it|avere}}
+# {{lb|it|intransitive|figurative}} to [[daydream]] {{+aux|it|avere}}
+# {{lb|it|transitive|uncommon}} to [[distract]]
 
 ====Conjugation====
 {{it-conj-care|divag|avere}}
@@ -97990,10 +97998,10 @@ Page 3464 combaciare: -------- begin text --------
 {{prefix|it|con|baciare|t2=to kiss}}
 
 ===Verb===
-{{it-verb}} {{tlb|it|intransitive}}
+{{it-verb|a/à}} {{tlb|it|intransitive}}
 
-# to [[fit]] or [[match]]
-# {{lb|it|figurative|by extension}} to [[agree]] or [[coincide]]
+# to [[fit]], to [[match]] [[exactly]] {{+aux|it|avere}}
+# {{lb|it|figurative|by extension}} to [[agree]], to [[coincide]] {{+aux|it|avere}}
 
 ====Conjugation====
 {{it-conj-ciare|combac|avere}}
@@ -98049,10 +98057,11 @@ Page 3466 sgusciare: -------- begin text --------
 Probably of {{onomatopoeic|it|nocap=1}} origin.
 
 ====Verb====
-{{it-verb}}
+{{it-verb|e/ù}}
 
-# {{lb|it|intransitive}} to [[slip away]]
+# {{lb|it|intransitive}} to [[slip]] {{+preo|it|di}} ''or'' {{+preo|it|da|means=from}} {{+aux|it|essere}}
 #: {{ux|it|Mentre lo toglieva dall'amo, il pesce gli '''è sgusciato''' via dalle mani.|inline=1|The fish '''slipped''' away from his hands as he was unhooking it.}}
+# {{lb|it|intransitive}} to [[slip away]], to [[sneak]] [[away]], to [[escape]] [[unnoticed]] {{+aux|it|essere}}
 
 =====Conjugation=====
 {{it-conj-ciare|sgusc|essere}}
@@ -98061,10 +98070,10 @@ Probably of {{onomatopoeic|it|nocap=1}} origin.
 {{affix|it|s-|guscio|t2=shell|pos2=n|-are}}
 
 ====Verb====
-{{it-verb}}
+{{it-verb|a[transitive]:e[intransitive]/ù}}
 
 # {{lb|it|transitive}} to [[shell]] (peas, eggs, etc.)
-# {{lb|it|intransitive|auxiliary '''{{l|it|essere}}'''}} to be [[hatched]]
+# {{lb|it|intransitive}} to be [[hatched]] {{+aux|it|essere}}
 
 =====Conjugation=====
 {{it-conj-ciare|sgusc|avere or essere}}
@@ -98089,7 +98098,7 @@ From {{inh|it|VL.|*prūdere}}, present active infinitive of {{m|la|*prūdō}}, w
 * {{hyph|it|prù|de|re}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|-\ù,+,-}}
 
 # {{lb|it|intransitive}} to [[itch]]
 
@@ -98109,18 +98118,18 @@ Page 3468 valicare: Found match for regex: =
 Page 3468 valicare: -------- begin text --------
 
 ===Alternative forms===
-* {{l|it|valcare}} {{qualifier|archaic or poetic}}
+* {{alter|it|valcare||archaic or poetic}}
 
 ===Etymology===
-From {{etyl|la|it}} {{m|la|vāricāre}}, present active infinitive of {{m|la|vāricō}}, from {{m|la|vāricus}}. Cf. also the doublet {{m|it|varcare}}.
+From {{inh|it|la|vāricāre}}, present active infinitive of {{m|la|vāricō}}, from {{m|la|vāricus}}. Cf. also the doublet {{doublet|it|varcare|notext=1}}.
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/à}}
 
-# to [[cross]] (a range of mountains etc.)
-# to [[overcome]], [[surmount]]
-# to [[switch]] [[over]]
-# to [[transgress]]
+# to [[cross]] (a river, a border, a range of mountains, etc.)
+# {{lb|it|literary|figurative}} to [[overcome]], to [[surmount]]
+# {{lb|it|archaic}} to [[pass by]]
+# {{lb|it|archaic}} to [[transgress]]
 
 ====Conjugation====
 {{it-conj-care|valic|avere}}
@@ -98138,7 +98147,7 @@ Page 3469 sonnecchiare: -------- begin text --------
 
 ===Etymology===
 {{root|it|ine-pro|*swep-}}
-From a {{etyl|VL.|it}} {{m|la||*somniclāre}} ← {{m|la||*somniculāre}}, derived from {{m|la|somniculus}}, diminutive of {{etyl|la|it}} {{m|la|somnus}}. Compare also {{cog|fr|sommeiller}}.
+From {{inh|it|VL.|*somniculāre}}, derived from {{m|la|somniculus}}, diminutive of {{der|it|la|somnus}}. Compare {{cog|la|somniculōsus}}, {{cog|fr|sommeiller}}.
 
 ===Pronunciation===
 * {{it-IPA|sonnecchiàre}}
@@ -98146,9 +98155,9 @@ From a {{etyl|VL.|it}} {{m|la||*somniclāre}} ← {{m|la||*somniculāre}}, deriv
 * {{hyphenation|it|son|nec|chià|re}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/é}}
 
-# {{lb|it|intransitive}} to [[drowse]], [[doze off]], or [[nod off]]
+# {{lb|it|intransitive}} to [[drowse]], to [[doze off]], to [[nod off]] {{+aux|it|avere}}
 
 ====Conjugation====
 {{it-conj-iare|sonnecchi|avere}}
@@ -98174,7 +98183,7 @@ Borrowed from {{bor|it|la|satiāre}}, present active infinitive of {{m|la|satiō
 * {{it-IPA|satsiàre}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/à}}
 
 # {{lb|it|transitive}} to [[satisfy]]
 # {{lb|it|transitive}} to [[satiate]]
@@ -98196,10 +98205,13 @@ Page 3471 duellare: -------- begin text --------
 ===Etymology===
 {{af|it|duello|-are}}
 
-===Verb===
-{{it-verb}}
+===Pronunciation===
+* {{it-IPA|du.ellàre}}
 
-# {{lb|it|intransitive}} to [[duel]], to [[have]] or [[fight]] a duel
+===Verb===
+{{it-verb|a/è}}
+
+# {{lb|it|intransitive}} to [[duel]], to [[have]] or [[fight]] a [[duel]] {{+aux|it|avere}}
 
 ====Conjugation====
 {{it-conj-are|duell|avere}}
@@ -98221,15 +98233,15 @@ Page 3472 accapigliare: -------- begin text --------
 * {{rhymes|it|are}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/ì-}}
 
-# to [[squabble]], [[brawl]]
-# to [[litigate]]
+# {{lb|it|archaic}} to [[cause]] to [[brawl]], to [[cause]] to [[scuffle]]
 
 ====Conjugation====
 {{it-conj-iare|accapigli|avere}}
 
 ====Derived terms====
+* {{l|it|accapigliarsi}}
 * {{l|it|accapigliatura}}
 -------- end text --------
 Page 3474 sgarrare: Found match for regex: =
