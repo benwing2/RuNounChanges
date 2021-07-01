@@ -955,18 +955,23 @@ def do_pagefile_cats_refs(args, start, end, process, default_cats=[],
           final_newline = "\n"
         pagemsg("-------- begin text --------\n%s%s-------- end text --------" % (new, final_newline))
 
+  def page_should_be_filtered_out(pagetitle):
+    if filter_pages or args_filter_pages:
+      if filter_pages and not filter_pages(pagetitle):
+        return True
+      if args_filter_pages and not re.search(args_filter_pages, pagetitle):
+        return True
+      if args_filter_pages_not and re.search(args_filter_pages_not, pagetitle):
+        return True
+    return False
+
   def process_page(page, i):
     pagetext = [None]
     pagetitle = unicode(page.title())
+    if page_should_be_filtered_out(pagetitle):
+      return
     def pagemsg(txt):
       msg("Page %s %s: %s" % (i, pagetitle, txt))
-    if filter_pages or args_filter_pages:
-      if filter_pages and not filter_pages(pagetitle):
-        return
-      if args_filter_pages and not re.search(args_filter_pages, pagetitle):
-        return
-      if args_filter_pages_not and re.search(args_filter_pages_not, pagetitle):
-        return
     def do_process_page(page, index, parsed=None):
       if stdin:
         pagetext[0] = safe_page_text(page, pagemsg)
@@ -996,6 +1001,8 @@ def do_pagefile_cats_refs(args, start, end, process, default_cats=[],
   if stdin and args.stdin:
     def do_process_text_on_page(index, pagetitle, text):
       if only_lang and "==%s==" % only_lang not in text:
+        return None, None
+      if page_should_be_filtered_out(pagetitle):
         return None, None
       return process(index, pagetitle, text)
     if args.find_regex:
