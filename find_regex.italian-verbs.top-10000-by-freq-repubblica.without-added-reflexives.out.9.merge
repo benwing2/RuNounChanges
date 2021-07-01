@@ -1,4 +1,4 @@
-Beginning at Sun Jun 27 20:17:04 2021
+Beginning at Wed Jun 30 23:21:14 2021
 Page 1 essere: Found match for regex: =
 Page 1 essere: -------- begin text --------
 
@@ -1115,7 +1115,7 @@ The imperative forms of the second-person singular are compounded with pronouns 
 |imp2s=dà|imp2s2=da'|imp2s3=dai|imp2s4=non [[dare]]|imp3s=dia|imp3p=diano}}
 
 ====Derived terms====
-{{der3|it|dare alla luce|dare gas|dare il benservito|dare il la|dare per scontato|dare rifugio|dare spettacolo|dare un'occhiata|dare un pugno|dare via|data|dato|datore|darsela|darsele|darsi|ridare}}
+{{der3|it|dare alla luce|dare gas|dare il benservito|dare il la|dare per scontato|dare spettacolo|dare un'occhiata|dare via|data|dato|datore|darsela|darsele|darsi|ridare}}
 
 ===Noun===
 {{it-noun|m}}
@@ -2985,6 +2985,7 @@ From {{inh|it|la|vīvere}}, present active infinitive of {{m|la|vīvō}}, from {
 |cond1s=vivrei|cond2s=vivresti|cond3s=vivrebbe|cond1p=vivremmo|cond2p=vivreste|cond3p=vivrebbero}}
 
 ====Related terms====
+* {{l|it|viversi}}
 * {{l|it|vivo}}
 
 ===Noun===
@@ -43955,9 +43956,9 @@ Page 1284 avvalere: -------- begin text --------
 * {{rhymes|it|ere}}
 
 ===Verb===
-{{it-verb}}
+{{head|it|verb form}}
 
-# {{alternative form of|it|avvalersi}}
+# {{only used in|it|avvalersi}}
 -------- end text --------
 Page 1285 sorreggere: Found match for regex: =
 Page 1285 sorreggere: -------- begin text --------
@@ -55460,171 +55461,13 @@ Page 1701 riavere: -------- begin text --------
 # {{lb|it|transitive}} to [[have]] again
 
 ====Conjugation====
-{{center top}}
-{| style="background:#F0F0F0"
-
-|-
-! colspan="3" style="background:#e2e4c0" | infinitive
-| colspan="5" | riavere
-
-|-
-! colspan="3" style="background:#e2e4c0" | gerund
-| colspan="5" | [[riavendo]]
-
-|-
-! colspan="3" style="background:#e2e4c0" | present participle
-| colspan="5" | [[riavente]]
-
-|-
-! colspan="3" style="background:#e2e4c0" | past participle
-| colspan="5" | [[riavuto]]
-
-|-
-! colspan="2" rowspan="2" style="background:#C0C0C0" | person
-! colspan="3" style="background:#C0C0C0" | singular
-! colspan="3" style="background:#C0C0C0" | plural
-
-|-
-! style="background:#C0C0C0;width:12.5%" | first
-! style="background:#C0C0C0;width:12.5%" | second
-! style="background:#C0C0C0;width:12.5%" | third
-! style="background:#C0C0C0;width:12.5%" | first
-! style="background:#C0C0C0;width:12.5%" | second
-! style="background:#C0C0C0;width:12.5%" | third
-
-|-
-! style="background:#c0cfe4" rowspan="6" | indicative
-! style="background:#c0cfe4" |
-! style="background:#c0cfe4" | io
-! style="background:#c0cfe4" | tu
-! style="background:#c0cfe4" | lui/lei
-! style="background:#c0cfe4" | noi
-! style="background:#c0cfe4" | voi
-! style="background:#c0cfe4" | loro
-
-|-
-! style="height:3em;background:#c0cfe4" | present
-| [[riò]]
-| [[riai]]
-| [[rià]]
-| [[riabbiamo]]
-| [[riavete]]
-| [[rianno]]
-
-|-
-! style="height:3em;background:#c0cfe4" | imperfect
-| [[riavevo]]
-| [[riavevi]]
-| [[riaveva]]
-| [[riavevamo]]
-| [[riavevate]]
-| [[riavevano]]
-
-|-
-! style="height:3em;background:#c0cfe4" | passato remoto
-| [[riebbi]]
-| [[riavesti]]
-| [[riebbe]]
-| [[riavemmo]]
-| [[riaveste]]
-| [[riebbero]]
-
-|-
-! style="height:3em;background:#c0cfe4" | future
-| [[riavrò]]
-| [[riavrai]]
-| [[riavrà]]
-| [[riavremo]]
-| [[riavrete]]
-| [[riavranno]]
-
-|-
-! style="height:3em;background:#c0cfe4" | conditional
-| [[riavrei]]
-| [[riavresti]]
-| [[riavrebbe]]
-| [[riavremmo]]
-| [[riavreste]]
-| [[riavrebbero]]
-
-|-
-! rowspan="5" style="background:#c0cfe4" | compound<br>tenses
-
-! style="height:3em;background:#c0cfe4" | passato prossimo
-! colspan="6" style="background:#C0C0C0" | Use the present tense of ''avere'' plus the past participle
-
-|-
-! style="height:3em;background:#c0cfe4" | trapassato prossimo
-! colspan="6" style="background:#C0C0C0" | Use the imperfect tense of ''avere'' plus the past participle
-|-
-! style="height:3em;background:#c0cfe4" | trapassato remoto
-! colspan="6" style="background:#C0C0C0" | Use the passato remote tense of ''avere'' plus the past participle
-
-|-
-! style="height:3em;background:#c0cfe4" | futuro anteriore
-! colspan="6" style="background:#C0C0C0" | Use the future tense of ''avere'' plus the past participle
-
-|-
-! style="height:3em;background:#c0cfe4" | condizionale passato
-! colspan="6" style="background:#C0C0C0" | Use the conditional tense of ''avere'' plus the past participle
-
-|-
-! style="background:#c0e4c0" rowspan="3" | subjunctive
-! style="background:#c0e4c0" |
-! style="background:#c0e4c0" | che io
-! style="background:#c0e4c0" | che tu
-! style="background:#c0e4c0" | che lui/che lei
-! style="background:#c0e4c0" | che noi
-! style="background:#c0e4c0" | che voi
-! style="background:#c0e4c0" | che loro
-
-|-
-! style="height:3em;background:#c0e4c0" | present
-| [[riabbia]]
-| riabbia
-| riabbia
-| [[riabbiamo]]
-| [[riabbiate]]
-| [[riabbiano]]
-
-|-
-! style="height:3em;background:#c0e4c0" rowspan="1" | imperfect
-| [[riavessi]]
-| riavessi
-| riavesse
-| [[riavessimo]]
-| [[riaveste]]
-| [[riavessero]]
-
-|-
-! rowspan="2" style="background:#c0e4c0" | compound<br>tenses
-
-! style="height:3em;background:#c0e4c0" | passato
-! colspan="6" style="background:#C0C0C0" | Use the present subjunctive of ''avere'' plus the past participle
-
-|-
-! rowspan="1" style="height:3em;background:#c0e4c0" | trapassato
-! colspan="6" style="background:#C0C0C0" | Use the imperfect subjunctive of ''avere'' plus the past participle
-
-|-
-! colspan="2" rowspan="2" style="height:3em;background:#e4d4c0" | imperative
-! style="background:#e4d4c0" | -
-! style="background:#e4d4c0" | tu
-! style="background:#e4d4c0" | lui/lei
-! style="background:#e4d4c0" | noi
-! style="background:#e4d4c0" | voi
-! style="background:#e4d4c0" | loro
-
-|-
-|
-| [[riabbi]]
-| [[riabbia]]
-| [[riabbiamo]]
-| [[riabbiate]]
-| [[riabbiano]]
-
-|}
-{{center bottom}}
+{{it-conj-ere|riav|avere
+|pres1s=riò|pres2s=riai|pres3s=rià|pres1p=riabbiamo|pres3p=rianno
+|prem1s=riebbi|prem3s=riebbe|prem3s2=-|prem3p=riebbero|prem3p2=-
+|fut1s=riavrò|fut2s=riavrai|fut3s=riavrà|fut1p=riavremo|fut2p=riavrete|fut3p=riavranno
+|cond1s=riavrei|cond2s=riavresti|cond3s=riavrebbe|cond1p=riavremmo|cond2p=riavreste|cond3p=riavrebbero
+|sub123s=riabbia|sub1p=riabbiamo|sub2p=riabbiate|sub3p=riabbiano
+|imp2s=riabbi|imp3s=riabbia|imp1p=riabbiamo|imp2p=riabbiate|imp3p=riabbiano}}
 
 ====Related terms====
 * {{l|it|riaversi}}
@@ -57313,7 +57156,7 @@ Page 1770 strisciare: -------- begin text --------
 # {{lb|it|transitive}} to [[swipe]] (a credit, debit, etc. card)
 # {{lb|it|transitive|rare}} to [[graze]], to [[touch]] [[lightly]]
 #: {{syn|it|rasentare|sfiorare|sfregare}}
-# {{lb|it|ambitransitive|card games}} in the game of [[tresette]], to hit a [[card]] against the table to indicate that one has only simple cards of the same [[suit]]
+# {{lb|it|ambitransitive|card games}} in the game of [[tressette]], to hit a [[card]] against the table to indicate that one has only simple cards of the same [[suit]]
 
 ====Conjugation====
 {{it-conj-ciare|strisc|avere}}
@@ -94709,7 +94552,7 @@ Page 3310 pare: -------- begin text --------
 ===Verb===
 {{head|it|verb form}}
 
-# {{inflection of|it|parere||3|s|ind|pres}}
+# {{inflection of|it|parere||3|s|pres|ind}}
 
 ===Anagrams===
 * {{anagrams|it|a=aepr|apre|arpe|pera|rape}}
@@ -121970,7 +121813,9 @@ Page 4820 guarnire: -------- begin text --------
 * {{alter|it|guernire||archaic}}
 
 ===Etymology===
-From {{bor|it|frk|*warnjan}}. Compare {{cog|fr|garnir}}, {{cog|en|garnish}}.
+From {{bor|it|frk|*warnijan}}. Compare {{cog|fr|garnir}}, {{cog|en|garnish}}.
+
+{{rfv-etym|it}}<!--via old French?-->
 
 ===Pronunciation===
 * {{it-IPA|guarnìre}}
@@ -128308,7 +128153,7 @@ Page 5347 indorare: Found match for regex: =
 Page 5347 indorare: -------- begin text --------
 
 ===Etymology===
-{{prefix|it|in|dorare|gloss2=to gild}}
+{{prefix|it|in|dorare|gloss2=to gild}}.  Also presumably from Latin {{m|la|inauro|inaurō}}.
 
 ===Verb===
 {{it-verb}}
@@ -153887,5 +153732,5 @@ Page 9800 formalizzarsi: -------- begin text --------
 ====Conjugation====
 {{it-conj-arsi|formalizz|essere}}
 -------- end text --------
-Elapsed time: 23 mins 39.65 secs
-Ending at Sun Jun 27 20:40:43 2021
+Elapsed time: 10 mins 59.79 secs
+Ending at Wed Jun 30 23:32:14 2021
