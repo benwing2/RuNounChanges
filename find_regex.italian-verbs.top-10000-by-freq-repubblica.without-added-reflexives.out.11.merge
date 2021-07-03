@@ -102219,9 +102219,10 @@ Page 3658 incupire: Found match for regex: =
 Page 3658 incupire: -------- begin text --------
 
 ===Verb===
-{{it-verb}} {{tlb|it|transitive|or|intransitive}}
+{{it-verb|a[transitive]:e[intransitive]/+isc}}
 
-# to [[darken]]
+# {{lb|it|transitive|also|figurative}} to [[darken]], to [[make]] [[dark]] or [[darker]]
+# {{lb|it|intransitive|also|figurative}} to [[darken]], to [[become]] [[dark]] or [[darker]] {{+aux|it|essere}}
 
 ====Conjugation====
 {{it-conj-ire-b|incup|avere or essere}}
@@ -102232,14 +102233,20 @@ Page 3659 fuorviare: -------- begin text --------
 ===Alternative forms===
 * {{l|it|forviare}}
 
-===Verb===
-{{it-verb}}
+===Pronunciation===
+* {{it-IPA|fuòrvi.àre|fuorvi.àre}}
 
-# {{lb|it|transitive}} to [[lead astray]], [[lead someone down the garden path]]
-# {{lb|it|intransitive}} to [[go astray]]
+===Verb===
+{{it-verb|a/ì}}
+
+# {{lb|it|intransitive|uncommon}} to [[go]] off the [[path]] {{+aux|it|avere}}
+# {{lb|it|intransitive|figurative}} to [[go astray]] {{+aux|it|avere}}
+# {{lb|it|transitive}} to [[lead]] down the [[wrong]] [[path]]
+# {{lb|it|transitive|figurative}} to [[corrupt]], to [[lead astray]], [[lead someone down the garden path]]
+# {{lb|it|transitive|figurative}} to [[mislead]], to [[confuse]]
 
 ====Conjugation====
-{{it-conj-iare|fuorvi|avere}}
+{{it-conj-iare|fuorvi|avere|pres2s=fuorvii|sub123s=fuorvii|imp3s=fuorvii}}
 
 ===Anagrams===
 * {{l|it|fuorvierà}}
@@ -102248,10 +102255,10 @@ Page 3660 scrutinare: Found match for regex: =
 Page 3660 scrutinare: -------- begin text --------
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/ì}}
 
-# {{lb|it|transitive}} to [[count]] (''votes'')
-# {{lb|it|transitive}} to [[assign]] [[marks]]
+# {{lb|it|transitive}} to [[count]] (votes)
+# {{lb|it|transitive}} to [[grade]] (a student)
 
 ====Conjugation====
 {{it-conj-are|scrutin|avere}}
@@ -102306,10 +102313,12 @@ Page 3663 collimare: Found match for regex: =
 Page 3663 collimare: -------- begin text --------
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/ì}}
 
-# {{lb|it|intransitive}} to [[agree]], to [[coincide]], to [[correspond]]
-# {{lb|it|transitive}} to [[collimate]]
+# {{lb|it|intransitive}} to [[coincide]], to [[correspond]] {{+aux|it|avere}}
+# {{lb|it|intransitive|figurative}} to [[match]], to [[agree]] {{+aux|it|avere}}
+# {{lb|it|transitive|physics}} to [[collimate]]
+# {{lb|it|transitive}} to [[align]], to [[make]] [[coincide]]
 
 ====Conjugation====
 {{it-conj-are|collim|avere}}
@@ -102349,16 +102358,20 @@ Page 3664 tonificare: -------- begin text --------
 Page 3665 rimpicciolire: Found match for regex: =
 Page 3665 rimpicciolire: -------- begin text --------
 
+===Alternative forms===
+* {{alter|it|rimpiccolire}}
+
 ===Etymology===
 {{af|it|ri-|impicciolire}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a[transitive]:e[intransitive]}}
 
-# {{lb|it|transitive}} to [[reduce]], to [[decrease]]
+# {{lb|it|transitive}} {{alt form|it|rimpiccolire}}
+# {{lb|it|intransitive}} {{alt form|it|rimpiccolire}} {{+aux|it|essere}}
 
 ====Conjugation====
-{{it-conj-ire-b|rimpicciol|avere}}
+{{it-conj-ire-b|rimpicciol|avere or essere}}
 
 ====Related terms====
 * {{l|it|rimpicciolirsi}}
@@ -102373,22 +102386,22 @@ Page 3666 conciare: Found match for regex: =
 Page 3666 conciare: -------- begin text --------
 
 ===Etymology===
-From {{inh|it|VL.||*comptiāre}}, from {{inh|it|la|comptus}}. Compare {{cog|scn|cunzari}}, {{cog|vec|consar}}, {{m|vec|conzsar}}.
+From {{inh|it|VL.|*comptiāre}}, from {{inh|it|la|comptus}}. Compare {{cog|scn|cunzari}}, {{cog|vec|consar}}, {{m|vec|conzsar}}.
 
 ===Pronunciation===
 * {{it-IPA|conciàre}}
 * {{hyph|it|con|cià|re}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/ó}}
 
 # {{lb|it|transitive}} to [[tan]] (leather); to [[cure]] (tobacco)
-# {{lb|it|transitive}} to [[adjust]]
+# {{lb|it|transitive}} to [[repair]], to [[fix]]
 # {{lb|it|transitive}} to [[ill-treat]]
 #: {{syn|it|maltrattare}}
-# to [[cut]] [[block]]s from [[stone]]
-# to [[season]] food
-# to [[castrate]] [[calf|calves]] or [[pig]]s
+# {{lb|it|transitive}} to [[cut]] [[block]]s from (stones)
+# {{lb|it|transitive}} to [[season]] (food)
+# {{lb|it|transitive}} to [[castrate]] ([[calf|calves]] or [[pig]]s)
 
 ====Conjugation====
 {{it-conj-ciare|conc|avere}}
@@ -102463,12 +102476,12 @@ Page 3668 stipendiare: Found match for regex: =
 Page 3668 stipendiare: -------- begin text --------
 
 ===Etymology===
-From {{etyl|la|it}} {{m|la|stipendium}}.
+From {{der|it|la|stipendium}}.
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/è}}
 
-# {{lb|it|transitive}} to [[pay]] someone a [[salary]] (or [[stipend]])
+# {{lb|it|transitive}} to [[pay]] (someone) a [[salary]] (or [[stipend]])
 
 ====Conjugation====
 {{it-conj-iare|stipendi|avere}}
@@ -102592,7 +102605,7 @@ Page 3674 scimmiottare: -------- begin text --------
 {{af|it|scimmiotto|-are}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/ò}}
 
 # {{lb|it|transitive}} to [[mock]], [[make fun of]]
 # {{lb|it|transitive}} to [[mimic]], [[ape]]
@@ -102646,9 +102659,9 @@ Page 3676 dimissionare: -------- begin text --------
 {{af|it|dimissione|-are}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/ó}}
 
-# {{lb|it|transitive}} to [[dismiss]] (a legal case, etc.)
+# {{lb|it|transitive}} to [[dismiss]], to [[ask]] to [[resign]] (an official, an employee)
 
 ====Conjugation====
 {{it-conj-are|dimission|avere}}
