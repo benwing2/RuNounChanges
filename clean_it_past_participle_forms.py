@@ -109,7 +109,7 @@ def process_text_on_page(index, pagetitle, text):
             verify_lang(getp("1"))
             if getp("2") not in ["verb form", "past participle form"]:
               pagemsg("WARNING: Skipping unknown POS: %s" % unicode(t))
-            FIXME
+              raise BreakException()
 
           elif tn in infltags.inflection_of_templates:
             tags, params, lang, term, tr, alt = (
