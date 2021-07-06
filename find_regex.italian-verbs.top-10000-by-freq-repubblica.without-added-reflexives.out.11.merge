@@ -4252,22 +4252,29 @@ Page 81 servire: Found match for regex: =
 Page 81 servire: -------- begin text --------
 
 ===Etymology===
-From {{inh|it|la|servīre}}, present active infinitive of {{m|la|serviō}}.
+From {{inh|it|la|servīre}}, present active infinitive of {{m|la|serviō}}. In the sports sense, a {{cal|it|en|serve|nocap=1}}.
 
 ===Pronunciation===
 * {{it-IPA|servìre}}
 
 ===Verb===
-{{it-verb|a:e[occasionally when intransitive]/è}}
+{{it-verb|a[transitive, also intransitive in some meanings]:e[intransitive in other meanings]/è}}
 
-# to [[serve]]
-# to [[need]]
-#: {{uxi|it|mi '''servono''' cinque pizze|I '''need''' five pizzas}}
-# to [[plate]]
-#: {{uxi|it|'''servire''' a tavola|t=to put meal on a plate}}
+# {{lb|it|transitive}} to [[serve]] (a master, a guest, a customer, a ruler, a company, one's country, etc.)
+# {{lb|it|transitive}} to [[serve]] (food) {{+preo|it|a|means=to (someone)}}
+# {{lb|it|intransitive}} to [[serve]], to [[be]] in [[servitude]] {{+preo|it|a|means=to (a master, a ruler, a government, etc.)}} {{+aux|it|avere}}
+# {{lb|it|intransitive}} to [[serve]], to [[work]] in a [[domestic]] [[capacity]] {{+preo|it|como|means=as (a waiter, domestic servant, etc.)}} {{+aux|it|avere}}
+# {{lb|it|intransitive}} to [[bring]] [[food]] {{+preo|it|in|tavola|means=to the table}} {{+aux|it|avere}}
+# {{lb|it|intransitive|tennis|ping-pong|volleyball}} to [[serve]] {{+aux|it|avere}}
+# {{lb|it|intransitive}} to [[be]] [[useful]] {{+preo|it|a|means=for (something)}} {{+aux|it|essere}}
+#: {{uxi|it|l'ira non serve a niente|anger is useless, anger '''serves''' no purpose|lit=anger doesn't '''serve''' for anything}}
+# {{lb|it|intransitive}} to [[serve]] {{+preo|it|di|means=as (a lesson, warning, etc.)}} {{+aux|it|essere}}
+#: {{uxi|it|servire di lezione a qualcuno|to '''serve''' as a lesson for someone}}
+# {{lb|it|intransitive}} to be [[necessary]], to be [[need]]ed {{+preo|it|a|means=for/by (someone)}} {{+aux|it|essere}}
+#: {{uxi|it|mi '''servono''' cinque pizze|I '''need''' five pizzas|lit=five pizzas '''are necessary''' for me}}
 
 ====Conjugation====
-{{it-conj-ire|serv|avere}}
+{{it-conj-ire|serv|avere or essere}}
 
 ====Related terms====
 {{top2}}
