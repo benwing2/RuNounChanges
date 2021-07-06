@@ -449,13 +449,11 @@ def process_text_on_page(index, pagetitle, text):
               if ending_respelling == u"óso":
                 saw_oso_ese = True
                 append_respelling(respelling)
-                append_respelling(prevpart + u"ó[s]o")
-                append_respelling("qual%s=traditional" % len(rhyme_based_respellings))
+                append_respelling("#" + prevpart + u"ó[s]o")
               elif ending_respelling == u"ése":
                 saw_oso_ese = True
                 append_respelling(respelling)
-                append_respelling(prevpart + u"é[s]e")
-                append_respelling("qual%s=traditional" % len(rhyme_based_respellings))
+                append_respelling("#" + prevpart + u"é[s]e")
               else:
                 if respelling.endswith(u"zióne"):
                   new_respelling = re.sub(u"zióne$", u"tsióne", respelling)
@@ -463,7 +461,7 @@ def process_text_on_page(index, pagetitle, text):
                   respelling = new_respelling
                   prevpart = respelling[:-len(ending)] + ending_respelling
                 append_respelling(respelling)
-              if (re.search(u"[aeiouàèéìòóù]s[aeiouàèéìòóù]", prevpart.lower()) or
+              if (re.search(u"[aeiouàèéìòóù]s([aeiouàèéìòóù]|$)", prevpart.lower()) or
                   not saw_oso_ese and re.search(u"[aeiouàèéìòóù][sz][aeiouàèéìòóù]", ending_respelling.lower())):
                 append_warnings("WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: %s" % rhy)
                 unable = True
@@ -479,9 +477,12 @@ def process_text_on_page(index, pagetitle, text):
                 append_warnings("WARNING: Unable to add pronunciation due to hiatus in part before rhyme %s" % rhy)
                 unable = True
                 break
-              else:
-                matched = True
+              if re.search(u"[aeiouàèéìòóù]i([^aeiouàèéìòóù]|$)", respelling.lower()):
+                append_warnings("WARNING: Unable to add pronunciation due to falling diphthong in -i: %s" % rhy)
+                unable = True
                 break
+              matched = True
+              break
             else:
               bad_rhyme_msgs.append("WARNING: Unable to match rhyme %s, spelling %s, respelling %s" % (
                 rhy, ending, ending_respelling))
