@@ -237,7 +237,14 @@ def process_text_on_page(index, pagetitle, text):
     secbody = text
     sectail = ""
 
+  # Extract newlines at end of secbody and normalize secbody to end in two newlines
+  m = re.search(r"\A(.*?)(\n*)\Z", secbody, re.S)
+  secbody, secbody_finalnl = m.groups()
+  secbody += "\n\n"
+
   subsections = re.split("(^==+[^=\n]+==+\n)", secbody, 0, re.M)
+
+  need_ref_section = False
 
   for k in xrange(2, len(subsections), 2):
     if "==Pronunciation==" in subsections[k - 1]:
@@ -412,7 +419,17 @@ def process_text_on_page(index, pagetitle, text):
           if not unable[0]:
             rmparam(t, "nocount")
             del t.params[:]
-            blib.set_param_chain(t, respellings, "1")
+            nextparam = 0
+            for param in respellings:
+              if "=" in param:
+                paramname, paramval = param.split("=", 1)
+              else:
+                nextparam += 1
+                paramname = str(nextparam)
+                paramval = param
+              if re.search("^n[0-9]*$", paramname):
+                need_ref_section = True
+              t.add(paramname, paramval)
             blib.set_template_name(t, "it-IPA")
             notes.append("replace raw {{IPA|it}} with {{it-IPA|%s}}%s" % ("|".join(respellings), manual_assist))
           pronun_based_respellings.extend(respellings)
@@ -516,8 +533,25 @@ def process_text_on_page(index, pagetitle, text):
                   ",".join(pronun_based_respellings),
                   ": %s" % " ||| ".join(all_warnings) if len(all_warnings) > 0 else ""))
 
+  if need_ref_section:
+    for k in xrange(len(subsections) - 1, 2, -2):
+      if re.search(r"^===\s*References\s*===$", subsections[k - 1].strip()):
+        if not re.search(r"<references\s*/?\s*>", subsections[k]):
+          subsections[k] = subsections[k].rstrip("\n") + "\n<references />\n\n"
+          notes.append("add <references /> to existing ===References=== section for pronunciation refs")
+        break
+    else: # no break
+      for k in xrange(len(subsections) - 1, 2, -2):
+        if not re.search(r"==\s*(Anagrams|Further reading)\s*==", subsections[k - 1]):
+          subsections[k + 1:k + 1] = ["===References===\n", "<references />\n\n"]
+          notes.append("add new ===References=== section for pronunciation refs")
+          break
+      else: # no break
+        pagemsg("WARNING: Something wrong, couldn't find location to insert ===References=== section")
+
   secbody = "".join(subsections)
-  sections[j] = secbody + sectail
+  # Restore actual number of newlines at end of secbody
+  sections[j] = secbody.rstrip("\n") + secbody_finalnl + sectail
   return "".join(sections), notes
 
 parser = blib.create_argparser("Add Italian pronunciations based on rhymes",
