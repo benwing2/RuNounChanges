@@ -102695,9 +102695,9 @@ From {{inh|it|LL.||adoperare}} < {{inh|it|la|ad}} + {{m|la|operare}}.
 * {{rhymes|it|are}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/ò}} {{tlb|transitive|or|intransitive}}
 
-# {{alt form|it|adoperare}}
+# {{alt form|it|adoperare}} {{+aux|it|avere}}
 
 ====Conjugation====
 {{it-conj-are|adopr|avere}}
@@ -102733,9 +102733,9 @@ Page 3679 sfavorire: Found match for regex: =
 Page 3679 sfavorire: -------- begin text --------
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/+isc}}
 
-# {{lb|it|transitive}} to [[be]] [[against]], to [[work]] against, to be [[unfavourable]], to [[treat]] [[unfairly]]
+# {{lb|it|transitive}} to [[be]] [[against]], to [[work]] against, to be [[unfavourable]] to, to [[treat]] [[unfairly]], to [[disadvantage]]
 #: {{ant|it|favorire}}
 
 ====Conjugation====
@@ -102748,9 +102748,11 @@ Page 3680 corbellare: -------- begin text --------
 From {{affix|it|corbello|-are|t1=blockhead}}.
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/è}}
 
-# {{lb|it|transitive}} to [[mock]], [[tease]]
+# {{lb|it|transitive|colloquial}} to [[mock]], to [[tease]]
+# {{lb|it|transitive}} to [[trick]], to [[cheat]], to [[deceive]]
+# {{lb|it|intransitive}} to [[joke]], to not [[act]] [[seriously]] {{+aux|it|avere}}
 
 ====Conjugation====
 {{it-conj-are|corbell|avere}}
@@ -102809,14 +102811,14 @@ Page 3682 abbarbicare: -------- begin text --------
 * {{hyph|it|ab|bar|bi|cà|re}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/à}}
 
-# {{lb|it|intransitive}} to put forth [[roots]]
-# {{lb|it|intransitive}} to [[take root]] {{qualifier|all senses}}
-# {{lb|it|intransitive}} to [[creep]]
+# {{lb|it|intransitive|botany}} to [[put]] forth [[roots]] {{+aux|it|avere}}
+# {{lb|it|intransitive|figurative}} to [[take root]] {{qualifier|of feelings}} {{+aux|it|avere}}
+# {{lb|it|intransitive}} to [[cling]] {{+preo|it|a|means=to}} {{+aux|it|avere}}
 
 ====Conjugation====
-{{it-conj-care|abbarbic|essere}}
+{{it-conj-care|abbarbic|avere}}
 
 ====Derived terms====
 * {{l|it|abbarbicarsi}}
@@ -102912,10 +102914,10 @@ Page 3687 cablare: Found match for regex: =
 Page 3687 cablare: -------- begin text --------
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/à}}
 
-# {{lb|it|transitive}} to [[cable]]
-# {{lb|it|transitive}} to [[wire]], to [[connect]]
+# {{lb|it|transitive|telecommunications}} to [[cable]]
+# {{lb|it|transitive|electricity}} to [[wire]], to [[connect]]
 
 ====Conjugation====
 {{it-conj-are|cabl|avere}}
@@ -102938,10 +102940,12 @@ Page 3688 arrischiare: -------- begin text --------
 {{confix|it|a|rischio|are}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/ì-}}
 
 # {{lb|it|transitive}} to [[risk]]
-# {{lb|it|transitive}} to [[venture]], [[hazard]]
+# {{lb|it|intransitive}} to [[take]] a [[risk]] {{+aux|it|avere}}
+# {{lb|it|transitive}} to [[attempt]] (something risky)
+# {{lb|it|transitive}} to [[venture]], to [[hazard]] (a proposal, opinion, etc.)
 
 ====Conjugation====
 {{it-conj-iare|arrischi|avere}}
