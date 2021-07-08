@@ -6878,7 +6878,7 @@ Page 4826 chiacchierino: -------- begin text --------
 * {{hyphenation|it|chiac|chie|rì|no}}
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj}}
 
 # [[talkative]], [[chatty]]
 
@@ -7588,7 +7588,7 @@ Page 5501 con le pive nel sacco: -------- begin text --------
 Literally, "with the bagpipes in the bag."
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|inv=1}}
 
 # [[emptyhanded]]
 #: {{syn|it|a mani vuote}}
@@ -7802,7 +7802,7 @@ Page 6334 d'aiuto: -------- begin text --------
 Literally, "of help."
 
 ===Adjective===
-{{head|it|adjective|head=[[d']][[aiuto]]}}
+{{it-adj|inv=1|head=[[d']][[aiuto]]}}
 
 # [[helpful]]
 -------- end text --------
@@ -7825,7 +7825,7 @@ Page 6336 d'andata: Found match for regex: =
 Page 6336 d'andata: -------- begin text --------
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|inv=1|head=[[d']][[andata]]}}
 
 # {{alternative spelling of|it|di andata}}
 -------- end text --------
@@ -7847,7 +7847,7 @@ Page 6338 d'assalto: -------- begin text --------
 Literally, "of assault."
 
 ===Adjective===
-{{head|it|adjective|head=[[d']][[assalto]]}}
+{{it-adj|inv=1|head=[[d']][[assalto]]}}
 
 # {{&lit|it|di|assalto}}
 #* {{quote-book|it|year=2020|author={{w|Barack Obama}}|translators=Chicca Galli; Paolo Lucca; Giuseppe Maugeri|title=Una terra promessa|trans-title={{w|A Promised Land}}|publisher=Garzanti Libri|chapter=11|passage=... attraverso il divieto delle armi '''d'assalto''' e l'ascesa di Newt Gingrich, i diritti delle persone omosessuali e l'impeachment di Clinton – gli elettori americani e i loro rappresentanti si erano sempre più polarizzati.|t=... through '''assault''' weapons bans and the rise of Newt Gingrich, gay rights and the Clinton impeachment—America's voters and their representatives became more and more polarized.|lit=... through the '''assault''' weapons ban and the rise of Newt Gingrich, the rights of homosexual people and the impeachment of Clinton – American voters and their representatives were increasingly polarized.}}
@@ -7880,7 +7880,7 @@ Page 6341 d'obbligo: -------- begin text --------
 Literally, "of obligation."
 
 ===Adjective===
-{{head|it|adjective|head=[[d']][[obbligo]]}}
+{{it-adj|inv=1|head=[[d']][[obbligo]]}}
 
 # [[obligatory]]
 # required or [[recommend]]ed by social [[custom]], [[tradition]], etc.; [[formal]], [[stilted]], [[unspontaneous]]
@@ -7937,7 +7937,7 @@ Page 6343 da asporto: Found match for regex: =
 Page 6343 da asporto: -------- begin text --------
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|inv=1}}
 
 # [[takeaway]]
 -------- end text --------
@@ -7974,7 +7974,7 @@ Page 6346 da cani: -------- begin text --------
 Literally, "of dogs."
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|inv=1}}
 
 # [[terrible]], [[miserable]]
 #: {{syn|it|terribile|miserabile|pessimo}}
@@ -8012,7 +8012,7 @@ Page 6349 da meno: -------- begin text --------
 Literally, "from less."
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|inv=1}}
 
 # {{alt form|it|dammeno}}
 -------- end text --------
@@ -8023,7 +8023,7 @@ Page 6350 da parata: -------- begin text --------
 Literally, "for (a) showing-off."
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|inv=1}}
 
 # {{lb|it|often|humorous}} [[suitable]] for a big [[occasion]]; to [[show off]]
 #: {{syn|it|di parata}}
@@ -8302,7 +8302,7 @@ Page 6560 del cavolo: Found match for regex: =
 Page 6560 del cavolo: -------- begin text --------
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|inv=1}}
 
 # {{lb|it|idiom|familiar}} [[lousy]]
 -------- end text --------
@@ -8384,7 +8384,7 @@ Page 6589 della madonna: -------- begin text --------
 Literally, "of the Virgin Mary."
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|inv=1}}
 
 # {{lb|it|informal}} [[terrible]], [[horrible]]
 #: {{ux|it|Ho una fame '''della madonna'''.|I'm '''terribly''' hungry.|lit=I have a '''terrible''' hunger.}}
@@ -8396,7 +8396,7 @@ Page 6590 della prima ora: -------- begin text --------
 Literally, "of the first hour." Compare {{cog|fr|de la première heure}}.
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|inv=1}}
 
 # {{lb|it|idiom}} having joined a [[political]], [[artistic]], or [[cultural]] movement from the very beginning
 #* {{quote-book|it|year=2020|author={{w|Barack Obama}}|translators=Chicca Galli; Paolo Lucca; Giuseppe Maugeri|title=Una terra promessa|trans-title={{w|A Promised Land}}|publisher=Garzanti Libri|chapter=24|passage=Claire era una mia sostenitrice '''della prima ora''' e tra i miei migliori amici in Senato.|t=Claire was one of my '''early''' supporters and best friends in the Senate...}}
@@ -8507,7 +8507,7 @@ Page 6811 di circostanza: -------- begin text --------
 Literally, "of circumstance." Compare {{cog|fr|de circonstance}}.
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|inv=1}}
 
 # [[formally]] [[suitable]] for an [[occasion]]; suitable
 #: {{syn|it|convenzionale|formale}}
@@ -8620,7 +8620,7 @@ Page 6819 di fiducia: -------- begin text --------
 Literally, "of trust."
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|inv=1}}
 
 # [[trusted]]
 #: {{syn|it|fidato}}
@@ -8646,7 +8646,7 @@ Page 6821 di fortuna: -------- begin text --------
 Literally, "of fortune."
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|inv=1}}
 
 # [[makeshift]]
 #: {{syn|it|improvvisato|provvisorio}}
@@ -8686,7 +8686,7 @@ Page 6823 di lunga data: Found match for regex: =
 Page 6823 di lunga data: -------- begin text --------
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|inv=1|head=[[di]] [[lungo|lunga]] [[data]]}}
 
 # {{synonym of|it|di vecchia data}}
 # {{synonym of|it|di lunga durata}}
@@ -8695,7 +8695,7 @@ Page 6824 di lunga durata: Found match for regex: =
 Page 6824 di lunga durata: -------- begin text --------
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|inv=1|head=[[di]] [[lungo|lunga]] [[durata]]}}
 
 # {{synonym of|it|di vecchia data}}
 -------- end text --------
@@ -8756,7 +8756,7 @@ Page 6828 di moda: -------- begin text --------
 Literally, "of fashion."
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|inv=1}}
 
 # [[fashionable]]
 #: {{syn|it|alla moda}}
@@ -8766,7 +8766,7 @@ Page 6829 di nicchia: Found match for regex: =
 Page 6829 di nicchia: -------- begin text --------
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|inv=1}}
 
 # [[marginal]]; [[secondary]]
 # [[niche]]
@@ -8775,7 +8775,7 @@ Page 6830 di notte: Found match for regex: =
 Page 6830 di notte: -------- begin text --------
 
 ===Adverb===
-{{head|it|adverb}}
+{{it-adv}}
 
 # [[at night]], [[by]] [[night]]
 #: {{syn|it|nottetempo}}
@@ -8795,7 +8795,7 @@ Page 6831 di parata: Found match for regex: =
 Page 6831 di parata: -------- begin text --------
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|inv=1}}
 
 # {{syn of|it|da parata}}
 #: {{uxi|it|pranzo '''di parata'''|lunch '''for a big occasion'''}}
@@ -8831,7 +8831,7 @@ Literally, "of weight."
 #: {{ux|it|sollevarlo '''di peso'''|to pull him up '''forcefully'''}}
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|inv=1}}
 
 # [[relevant]], [[important]], [[salient]]
 #: {{syn|it|di rilievo|di portata}}
@@ -8879,7 +8879,7 @@ Page 6837 di primordine: Found match for regex: =
 Page 6837 di primordine: -------- begin text --------
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|inv=1}}
 
 # {{alternative form of|it|di prim'ordine}}
 -------- end text --------
@@ -8890,7 +8890,7 @@ Page 6839 di punta: -------- begin text --------
 Literally, "of point."
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|inv=1}}
 
 # {{lb|it|idiom}} [[leading]], [[foremost]]
 #: {{uxi|it|persona '''di punta'''|[[point person]]|lit='''leading''' person}}
@@ -8903,7 +8903,7 @@ Page 6840 di rigore: -------- begin text --------
 Literally, "of rigor."
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|inv=1}}
 
 # [[strictly]] [[necessary]]; [[prescribe]]d by the circumstances; necessary, [[obligatory]]
 #: {{syn|it|necessario|obbligatorio|d'obbligo|giocoforza}}
@@ -8915,7 +8915,7 @@ Page 6841 di rilievo: -------- begin text --------
 Literally, "of relief."
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|inv=1}}
 
 # {{lb|it|idiom}} [[prominent]], [[important]]
 #: {{ux|it|occupano un posto '''di rilievo''' nella vita sociale e culturale|they occupy a '''prominent''' place in social and cultural life}}
@@ -8936,7 +8936,7 @@ Page 6843 di ruolo: Found match for regex: =
 Page 6843 di ruolo: -------- begin text --------
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|inv=1}}
 
 # {{lb|it|of tenure etc}} [[permanent]]
 
@@ -8950,7 +8950,7 @@ Page 6844 di sasso: -------- begin text --------
 Literally, "of stone."
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|inv=1}}
 
 # [[insensitive]], [[callous]]
 -------- end text --------
@@ -8974,7 +8974,7 @@ Page 6846 di spicco: Found match for regex: =
 Page 6846 di spicco: -------- begin text --------
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|inv=1}}
 
 # [[prominent]], [[outstanding]]
 -------- end text --------
@@ -8994,7 +8994,7 @@ Page 6848 di tutti i giorni: -------- begin text --------
 Literally, "of all the days." Compare {{cog|fr|de tous les jours}}.
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|inv=1|head=[[di]] [[tutto|tutti]] [[i]] [[giorno|giorni]]}}
 
 # {{lb|it|relational}} [[everyday]]; [[day-to-day]]
 #: {{uxi|it|cibo '''di tutti i giorni'''|'''everyday''' food}}
@@ -9004,7 +9004,7 @@ Page 6849 di tutto rispetto: Found match for regex: =
 Page 6849 di tutto rispetto: -------- begin text --------
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|inv=1}}
 
 # [[worthy]], [[relevant]]
 #: {{syn|it|degno di nota}}
@@ -9013,7 +9013,7 @@ Page 6850 di vecchia data: Found match for regex: =
 Page 6850 di vecchia data: -------- begin text --------
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|inv=1|head=[[di]] [[vecchio|vecchia]] [[data]]}}
 
 # [[long-standing]]
 -------- end text --------
@@ -9024,7 +9024,7 @@ Page 6851 di vetta: -------- begin text --------
 Literally, "of top."
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|inv=1}}
 
 # {{lb|it|relational}} [[top]], [[summit]], etc.
 # {{lb|it|figurative|by extension}} top, [[peak]]
@@ -9503,7 +9503,7 @@ From {{inh|it|la|dēstructus}}.
 # {{past participle of|it|distruggere|nocat=1}}
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj}}
 
 # [[distraught]] (emotional)
 # [[tired]], [[stuffed]]
@@ -9512,7 +9512,7 @@ Page 7377 divin: Found match for regex: =
 Page 7377 divin: -------- begin text --------
 
 ===Adjective===
-{{head|it|adjective}}
+{{head|it|adjective|apocopic}}
 
 # {{apocopic form of|it|divino}}
 
@@ -9823,7 +9823,7 @@ Page 7712 egr.: Found match for regex: =
 Page 7712 egr.: -------- begin text --------
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|inv=1}}
 
 # {{abbreviation of|it|egregio|gloss=[[dear]] {{gloss|at the start of a letter}}}}
 -------- end text --------
@@ -9927,7 +9927,7 @@ Page 8380 eslege: Found match for regex: =
 Page 8380 eslege: -------- begin text --------
 
 ===Adjective===
-{{head|it|adjective}} {{g|m|f}}
+{{it-adj}}
 
 # [[extralegal]]
 # {{lb|it|relational}} [[outlaw]]
@@ -9936,7 +9936,7 @@ Page 8391 esoftalmico: Found match for regex: =
 Page 8391 esoftalmico: -------- begin text --------
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj}}
 
 # [[exophthalmic]]
 
@@ -10160,7 +10160,7 @@ From {{bor|it|la|phalaecius}}, {{m|la|phalaecēus}}, {{m|la|phaleucius}}, {{m|la
 * {{hyph|it|fa|lè|cio}}
 
 ===Adjective===
-{{head|it|adjective|masculine plural|faleci}}
+{{it-adj}}
 
 # {{lb|it|poetry|of a verse}} being [[hendecasyllabic]], and consisting of a [[spondee]], a [[dactyl]], and three [[trochee]]s
 
@@ -10184,9 +10184,9 @@ Page 9081 ficaio: -------- begin text --------
 * {{hyph|it|fi|cà|io}}
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|onlyms=1}}
 
-# {{lb|it|only of the month of September}} [[fig]]-[[producing]]
+# {{only in|it|settembre ficaio|lit=[[fig]]-[[producing]] [[September]]}}
 
 ===Noun===
 {{it-noun|m}} {{tlb|it|archaic}}
@@ -10204,7 +10204,7 @@ Page 9142 filoegizia: Found match for regex: =
 Page 9142 filoegizia: -------- begin text --------
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|inv=1}}
 
 # [[pro-]][[Egypt]]
 -------- end text --------
@@ -10212,7 +10212,7 @@ Page 9168 filosocialista: Found match for regex: =
 Page 9168 filosocialista: -------- begin text --------
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj}}
 
 # [[pro-]][[socialist]]
 -------- end text --------
