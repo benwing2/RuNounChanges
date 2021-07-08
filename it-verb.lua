@@ -1255,27 +1255,9 @@ local function add_non_present(base)
 		end
 	end
 
-	if stems.pret_conj == "irreg" then
-		add_tense("pret", stems.pret, "e", "iste", "o", "imos", "isteis", "ieron")
-	elseif stems.pret_conj == "are" then
-	elseif stems.pret_conj == "ere" then
-		add_tense("pret", stems.pret, "ài", "àsti", "ò", "àmmo", "àste", "àrono")
-	else
-		add_tense("pret", stems.pret, "í", "iste", "ió", "imos", "isteis", "ieron")
-	end
-
-	if stems.pret_conj == "ar" then
-		add_tense("impf_sub_ra", stems.impf_sub_ra, "ara", "aras", "ara", "áramos", "arais", "aran")
-		add_tense("impf_sub_se", stems.impf_sub_se, "ase", "ases", "ase", "ásemos", "aseis", "asen")
-		add_tense("fut_sub", stems.fut_sub, "are", "ares", "are", "áremos", "areis", "aren")
-	else
-		add_tense("impf_sub_ra", stems.impf_sub_ra, "iera", "ieras", "iera", "iéramos", "ierais", "ieran")
-		add_tense("impf_sub_se", stems.impf_sub_se, "iese", "ieses", "iese", "iésemos", "ieseis", "iesen")
-		add_tense("fut_sub", stems.fut_sub, "iere", "ieres", "iere", "iéremos", "iereis", "ieren")
-	end
-
-	add_tense("fut", stems.fut, "é", "ás", "á", "emos", "éis", "án")
-	add_tense("cond", stems.cond, "ía", "ías", "ía", "íamos", "íais", "ían")
+	add_tense("impf_sub", stems.impf_sub, "ssi", "ssi", "sse", "ssimo", "ste", "ssero")
+	add_tense("fut", stems.fut, "ò", "ài", "à", "émo", "éte", "ànno")
+	add_tense("cond", stems.fut, "éi", "ésti", "èbbe", "émmo", "éste", "èbbero")
 
 	-- Do the participles.
 	local function addit(slot, stems, ending)
