@@ -540,23 +540,15 @@ def yield_articles(page, seen, startsort=None, prune_cats_regex=None, recurse=Fa
           yield article
 
 def raw_cat_articles(page, seen, startsort=None, prune_cats_regex=None, recurse=False):
-  if type(page) is list:
-    for cat in page:
-      if isinstance(cat, basestring):
-        msg("Processing category %s" % unicode(cat))
-        errmsg("Processing category %s" % unicode(cat))
-      for article in raw_cat_articles(cat, seen, startsort=startsort, prune_cats_regex=prune_cats_regex, recurse=recurse):
-        yield article
-  else:
-    if type(page) is str:
-      page = page.decode("utf-8")
-    if isinstance(page, basestring):
-      page = pywikibot.Category(site, "Category:" + page)
-    for article in yield_articles(page, seen, startsort=startsort, prune_cats_regex=prune_cats_regex, recurse=recurse):
-      yield article
+  if type(page) is str:
+    page = page.decode("utf-8")
+  if isinstance(page, basestring):
+    page = pywikibot.Category(site, "Category:" + page)
+  for article in yield_articles(page, seen, startsort=startsort, prune_cats_regex=prune_cats_regex, recurse=recurse):
+    yield article
 
 def cat_articles(page, startsort=None, endsort=None, seen=None, prune_cats_regex=None, recurse=False):
-  if not seen:
+  if seen is None:
     seen = set()
   for i, current in iter_items(raw_cat_articles(page, seen, startsort=startsort if not isinstance(startsort, int) else None,
       prune_cats_regex=prune_cats_regex, recurse=recurse), startsort, endsort):
@@ -585,7 +577,7 @@ def yield_subcats(page, seen, prune_cats_regex=None, do_this_page=False, recurse
         yield subcat
 
 def cat_subcats(page, startsort=None, endsort=None, seen=None, prune_cats_regex=None, do_this_page=False, recurse=False):
-  if not seen:
+  if seen is None:
     seen = set()
   if type(page) is str:
     page = page.decode("utf-8")
@@ -956,7 +948,7 @@ def do_pagefile_cats_refs(args, start, end, process, default_cats=[],
         pagemsg("-------- begin text --------\n%s%s-------- end text --------" % (new, final_newline))
 
   def page_should_be_filtered_out(pagetitle):
-    if filter_pages or args_filter_pages:
+    if filter_pages or args_filter_pages or args_filter_pages_not:
       if filter_pages and not filter_pages(pagetitle):
         return True
       if args_filter_pages and not re.search(args_filter_pages, pagetitle):
