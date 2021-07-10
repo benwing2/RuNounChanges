@@ -1,4 +1,4 @@
-Beginning at Thu Jul  8 01:49:59 2021
+Beginning at Fri Jul  9 22:03:41 2021
 Page 2 12ª: Found match for regex: =
 Page 2 12ª: -------- begin text --------
 
@@ -201,7 +201,7 @@ Page 20 a modo: -------- begin text --------
 # {{alternative spelling of|it|ammodo}}
 
 ===Adverb===
-{{head|it|adverb|invariable}}
+{{it-adv}}
 
 # {{alternative spelling of|it|ammodo}}
 -------- end text --------
@@ -225,7 +225,7 @@ Page 22 a picco: -------- begin text --------
 # [[sheer]], [[precipitous]], [[vertical]]
 
 ===Adverb===
-{{head|it|adverb}}
+{{it-adv}}
 
 # [[precipitously]], [[vertically]]
 # [[under]], to the [[bottom]]
@@ -395,7 +395,7 @@ Page 31 a quattro zampe: -------- begin text --------
 #: {{syn|it|quadrupede}}
 
 ===Adverb===
-{{head|it|adverb}}
+{{it-adv}}
 
 # [[on all fours]]
 #: {{syn|it|carponi|gattoni}}
@@ -595,11 +595,11 @@ Page 46 a tempo: -------- begin text --------
 # in time (''with the music'')
 # {{lb|it|music}} return to normal tempo from a deviation {{i|e.g. {{m|it|ritenuto}}, {{m|it|rallentando}}, {{m|it|accelerando}}, etc.}}
 
-===Anagrams===
-* {{l|it|metopa}}, {{l|it|pomate}}
-
 ====Descendants====
 * {{desc|nb|a tempo}}
+
+===Anagrams===
+* {{l|it|metopa}}, {{l|it|pomate}}
 
 ----
 
@@ -613,7 +613,7 @@ Page 47 a tempo perso: -------- begin text --------
 # in one's [[spare time]]
 
 ===Adverb===
-{{head|it|adverb}}
+{{it-adv}}
 
 # in one's [[spare time]]
 
@@ -666,7 +666,7 @@ Page 51 a vista: -------- begin text --------
 # [[visible]], [[exposed]]
 
 ===Adverb===
-{{head|it|adverb}}
+{{it-adv}}
 
 # [[without]] [[instrument]]s (''flight'')
 # [[on sight]] (''shooting'')
@@ -1025,12 +1025,14 @@ Literally “to the tooth”.
 * {{rhymes|it|ɛnte}}
 
 ===Adjective===
-{{it-adj|inv=1|cat2=adverbs}}
+{{it-adj|inv=1}}
 
 # [[#English|al dente]]
 
-====Usage notes====
-* Also used {{l|en|adverbially}}.
+===Adverb===
+{{it-adv}}
+
+# [[#English|al dente]]
 -------- end text --------
 Page 786 al di sopra delle parti: Found match for regex: =
 Page 786 al di sopra delle parti: -------- begin text --------
@@ -1119,7 +1121,7 @@ Page 842 alcun: Found match for regex: =
 Page 842 alcun: -------- begin text --------
 
 ===Determiner===
-{{head|it|determiner|apocopate}}
+{{head|it|determiner form|apocopate}}
 
 # {{apocopic form of|it|alcuno}}
 # {{apocopic form of|it|alcuna}}
@@ -1277,7 +1279,7 @@ Page 903 alla lettera: Found match for regex: =
 Page 903 alla lettera: -------- begin text --------
 
 ===Adverb===
-{{head|it|adverb}}
+{{it-adv}}
 
 # {{lb|it|idiom}} [[to the letter]], [[literally]], [[verbatim]]
 #: {{syn|it|letteralmente}}
@@ -1696,12 +1698,12 @@ Noun use of the above determiner.
 
 # [[double]] (in various games)
 
-===Anagrams===
-* {{anagrams|it|boma}}
-
 ===References===
 * {{R:it:Trec|sense=1}}
 * {{R:it:Trec|sense=2}}
+
+===Anagrams===
+* {{anagrams|it|boma}}
 
 ----
 
@@ -1799,7 +1801,7 @@ Page 1196 ammodo: -------- begin text --------
 # [[respectable]], [[well-behaved]]
 
 ===Adverb===
-{{head|it|adverb}}
+{{it-adv}}
 
 # [[well]], [[properly]]
 -------- end text --------
@@ -1815,7 +1817,7 @@ Page 1503 antemarcia: -------- begin text --------
 # leading to the [[w:it:Marcia su Roma|marcia su Roma]]
 
 ===Noun===
-{{it-noun|m|g2=f|-}}
+{{it-noun|mfbysense|-}}
 
 # a [[person]] who had [[join]]ed the [[Italian]] [[Fascist]] [[party]] before the {{w|March on Rome}}
 
@@ -3344,11 +3346,11 @@ Page 1947 antisciopero: -------- begin text --------
 
 # [[anti-]][[strike]]
 
-===Anagrams===
-* {{anagrams|it|isoentropica|retinoscopia}}
-
 ===References===
 * {{R:it:Trec}}
+
+===Anagrams===
+* {{anagrams|it|isoentropica|retinoscopia}}
 -------- end text --------
 Page 1948 antiscippo: Found match for regex: =
 Page 1948 antiscippo: -------- begin text --------
@@ -3644,7 +3646,7 @@ Page 2011 antiterremoto: -------- begin text --------
 From {{af|it|anti-|terremoto}}.
 
 ===Adjective===
-{{it-adj|inv=1||rare plural|antiterremoti}}
+{{it-adj|f=#|pl=#|pl2=antiterremoti|pl2_qual=rare}}
 
 # [[antiearthquake]]
 
@@ -3797,13 +3799,13 @@ Page 2034 antiuomo: -------- begin text --------
 # {{lb|it|chiefly|military}} [[antipersonnel]]
 #: {{syn|it|antipersona}}
 
+====Further reading====
+* {{R:it:Treccani}}
+
 ===Anagrams===
 * {{l|it|autonomi}}
 * {{l|it|nuotiamo}}
 * {{l|it|tuoniamo}}
-
-====Further reading====
-* {{R:it:Treccani}}
 -------- end text --------
 Page 2036 antiurto: Found match for regex: =
 Page 2036 antiurto: -------- begin text --------
@@ -3995,7 +3997,7 @@ From {{inh|it|LL.|ad pressum}}; compare {{m|it|presso}} and {{cog|fr|après||aft
 * {{it-IPA|apprèsso}}
 
 ===Adverb===
-{{head|it|adverb}}
+{{it-adv}}
 
 # [[nearby]]
 
@@ -4107,11 +4109,11 @@ From {{bor|it|fa|نارنگ|tr=nârang}}, from {{bor|it|sa|नारङ्ग|t=
 =====Descendants=====
 * {{desc|sc|bor=1|aràngiu}}
 
-===Anagrams===
-* {{anagrams|it|ancorai|cariano|carnaio}}
-
 ===References===
 <references/>
+
+===Anagrams===
+* {{anagrams|it|ancorai|cariano|carnaio}}
 
 {{C|it|Colors|Fruits|Trees}}
 
@@ -4320,7 +4322,7 @@ Page 2489 ascianti: -------- begin text --------
 # {{alternative form of|it|ashanti}}
 
 ===Noun===
-{{it-noun|mf|-}}
+{{it-noun|mfbysense|-}}
 
 # {{alternative form of|it|ashanti}}
 
@@ -4340,7 +4342,7 @@ Page 2514 ashanti: -------- begin text --------
 # {{lb|it|relational}} [[Ashanti]]
 
 ===Noun===
-{{it-noun|mf|-}}
+{{it-noun|mfbysense|-}}
 
 # [[Ashanti]]
 
@@ -4633,9 +4635,14 @@ Page 3190 baluci: -------- begin text --------
 * {{alter|it|beluci}}
 
 ===Noun===
-{{it-noun|m|g2=f|-}}
+{{it-noun|mfbysense|-}}
 
-# [[Balochi]] (person, language)
+# [[Balochi]] {{q|person}}
+
+===Noun===
+{{it-noun|m|~}}
+
+# [[Balochi]] {{q|language}}
 
 ===Adjective===
 {{it-adj|inv=1}}
@@ -4683,7 +4690,7 @@ Page 3208 bantu: -------- begin text --------
 # [[Bantu]]
 
 ===Noun===
-{{it-noun|m|g2=f|-}}
+{{it-noun|mfbysense|-}}
 
 # [[Bantu]]
 
@@ -4795,7 +4802,7 @@ Page 3327 bell': Found match for regex: =
 Page 3327 bell': -------- begin text --------
 
 ===Adjective===
-{{head|it|adjective|apocopate}}
+{{it-adj|apoc=1}}
 
 # {{lb|it|sometimes before a vowel}} {{apocopic form of|it|bella}}
 # {{lb|it|sometimes before a vowel}} {{apocopic form of|it|bello}}
@@ -4912,9 +4919,14 @@ Page 3339 beluci: Found match for regex: =
 Page 3339 beluci: -------- begin text --------
 
 ===Noun===
-{{it-noun|m|g2=f|-}}
+{{it-noun|mfbysense|-}}
 
-# {{alternative form of|it|baluci}}
+# {{alternative form of|it|baluci}} {{q|person}}
+
+===Noun===
+{{it-noun|m|~}}
+
+# {{alternative form of|it|baluci}} {{q|language}}
 
 ===Adjective===
 {{it-adj|inv=1}}
@@ -5175,7 +5187,7 @@ Page 3545 bimotore: Found match for regex: =
 Page 3545 bimotore: -------- begin text --------
 
 ===Adjective===
-{{it-adj|inv=1}}
+{{it-adj}}
 
 # [[twin-engined]]
 
@@ -5390,12 +5402,12 @@ Page 3730 blù: Found match for regex: =
 Page 3730 blù: -------- begin text --------
 
 ===Adjective===
-{{it-adj|inv=1}}
+{{head|it|misspelling}}
 
 # {{misspelling of|it|blu}}
 
 ===Noun===
-{{it-noun|m|-}}
+{{head|it|misspelling}}
 
 # {{misspelling of|it|blu}}
 -------- end text --------
@@ -5421,7 +5433,7 @@ Page 3749 bohemien: -------- begin text --------
 # [[Bohemian]] (lifestyle)
 
 ===Noun===
-{{it-noun|m|g2=f|-}}
+{{it-noun|mfbysense|-}}
 
 # [[Bohemian]] (person with such a lifestyle)
 
@@ -5506,7 +5518,7 @@ Page 3951 buon: -------- begin text --------
 * {{audio|it|It-Buon.oga|Audio}}
 
 ===Adjective===
-{{head|it|adjective|g=m|apocopate}}
+{{it-adj|apoc=1}}
 
 # {{apocopic form of|it|buono}}
 
@@ -5525,7 +5537,7 @@ Page 3962 burkinabè: -------- begin text --------
 # [[Burkinabe]], [[Burkinabè]]
 
 ===Noun===
-{{it-noun|m|g2=f|-}}
+{{it-noun|mfbysense|-}}
 
 # [[Burkinabe]], [[Burkinabè]]
 
@@ -5911,10 +5923,10 @@ From {{inh|it|VL.|capus}}, from {{inh|it|la|caput}}, from {{inh|it|itc-pro|*kapu
 Page 4220 capodistretto: Found match for regex: =
 Page 4220 capodistretto: -------- begin text --------
 
-===Adjective===
-{{head|it|adjective}}
+===Noun===
+{{it-noun|m|capodistretti|pl2=capidistretti}}
 
-# [[head]] of [[district]]
+# [[head]] of a [[district]]
 -------- end text --------
 Page 4221 capofitto: Found match for regex: =
 Page 4221 capofitto: -------- begin text --------
@@ -5923,9 +5935,12 @@ Page 4221 capofitto: -------- begin text --------
 {{compound|it|capo|fitto}}
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj}}
 
-# {{only in|it|a capofitto}}
+# with the [[head]] [[down]]
+
+====Derived terms====
+* {{l|it|a capofitto||headlong}}
 -------- end text --------
 Page 4222 capoquarto: Found match for regex: =
 Page 4222 capoquarto: -------- begin text --------
@@ -6008,20 +6023,20 @@ Page 4282 carciofaio: -------- begin text --------
 * {{rhymes|it|ajo}}
 * {{hyph|it|car|cio|fà|io}}
 
-===Noun 1===
+===Noun===
 {{it-noun|m}}
 
 # {{syn of|it|carciofaia|t=artichoke bed; artichoke field}}
 
-===Noun 2===
-{{it-noun|f=carciofaia}}
+===Noun===
+{{it-noun|m|f=carciofaia}}
 
 # one who [[cultivate]]s or [[sell]]s [[artichoke]]s
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj}}
 
-# {{lb|it|only of the month of April}} [[artichoke]]-[[produce|producing]]
+#: {{uxi|it|aprile carciofaio|[[artichoke]]-[[produce|producing]] [[April]]|q=proverb}}
 
 ===References===
 * {{R:it:Trec}}
@@ -6035,7 +6050,7 @@ Page 4323 carioca: -------- begin text --------
 # of or relating to the city of [[Rio de Janeiro]], [[Brazil]]
 
 ===Noun===
-{{it-noun|m|g2=f|-}}
+{{it-noun|mfbysense|-}}
 
 # an inhabitant of the city of [[Rio de Janeiro]], [[Brazil]]
 # [[#English|carioca]] (dance)
@@ -6120,9 +6135,9 @@ From {{inh|it|la|centum}}, from {{inh|it|itc-pro|*kentom}}, from {{inh|it|ine-pr
 * {{rhymes|it|ɛnto}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
-# {{cln|it|cardinal numbers}} [[hundred]]
+# [[hundred]]
 
 ====Derived terms====
 * {{l|it|duecento|t=two hundred}}
@@ -6154,14 +6169,12 @@ Page 4582 centocinquanta: -------- begin text --------
 {{affix|it|cento|cinquanta}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[one hundred]] and [[fifty]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 4594 centocinque: Found match for regex: {
 Page 4594 centocinque: -------- begin text --------
@@ -6171,7 +6184,7 @@ Page 4594 centocinque: -------- begin text --------
 {{affix|it|cento|cinque}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[one hundred]] and [[five]]
 
@@ -6180,8 +6193,6 @@ Page 4594 centocinque: -------- begin text --------
 
 ===Anagrams===
 * {{l|it|cinquecento}}, {{l|it|Cinquecento}}
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 4597 centodiciannove: Found match for regex: {
 Page 4597 centodiciannove: -------- begin text --------
@@ -6191,14 +6202,12 @@ Page 4597 centodiciannove: -------- begin text --------
 {{affix|it|cento|diciannove}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[one hundred]] and [[nineteen]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 4600 centodiciassette: Found match for regex: {
 Page 4600 centodiciassette: -------- begin text --------
@@ -6208,14 +6217,12 @@ Page 4600 centodiciassette: -------- begin text --------
 {{affix|it|cento|diciassette}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[one hundred]] and [[seventeen]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 4602 centodiciotto: Found match for regex: {
 Page 4602 centodiciotto: -------- begin text --------
@@ -6229,21 +6236,19 @@ Page 4602 centodiciotto: -------- begin text --------
 * {{rhymes|it|ɔtto}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[one hundred]] and [[eighteen]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 4603 centodieci: Found match for regex: {
 Page 4603 centodieci: -------- begin text --------
 {{cardinalbox|it|109|110|111|centonove|centoundici|ord=centodecimo}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[one hundred]] and [[ten]]
 
@@ -6258,8 +6263,6 @@ Page 4603 centodieci: -------- begin text --------
 
 ===Anagrams===
 * {{l|it|coincidete}}
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 4605 centododici: Found match for regex: {
 Page 4605 centododici: -------- begin text --------
@@ -6269,14 +6272,12 @@ Page 4605 centododici: -------- begin text --------
 {{affix|it|cento|dodici}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[one hundred]] and [[twelve]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 4606 centodue: Found match for regex: {
 Page 4606 centodue: -------- begin text --------
@@ -6286,7 +6287,7 @@ Page 4606 centodue: -------- begin text --------
 {{af|it|cento|due}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # one hundred and two
 
@@ -6295,8 +6296,6 @@ Page 4606 centodue: -------- begin text --------
 
 ===Anagrams===
 * {{l|it|duecento}}, {{l|it|Duecento}}
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 4608 centomila: Found match for regex: {
 Page 4608 centomila: -------- begin text --------
@@ -6306,7 +6305,7 @@ Page 4608 centomila: -------- begin text --------
 {{af|it|cento|mille|alt2=mila|t1=hundred|t2=thousand}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[hundred thousand]]
 
@@ -6321,8 +6320,6 @@ Page 4608 centomila: -------- begin text --------
 
 ===Anagrams===
 * {{l|it|macilento}}
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 4610 centonovanta: Found match for regex: {
 Page 4610 centonovanta: -------- begin text --------
@@ -6332,7 +6329,7 @@ Page 4610 centonovanta: -------- begin text --------
 {{affix|it|cento|novanta}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[one hundred]] and [[ninety]]
 
@@ -6341,8 +6338,6 @@ Page 4610 centonovanta: -------- begin text --------
 
 ===Anagrams===
 * {{l|it|contentavano}}
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 4621 centonove: Found match for regex: {
 Page 4621 centonove: -------- begin text --------
@@ -6352,7 +6347,7 @@ Page 4621 centonove: -------- begin text --------
 {{af|it|cento|nove}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[one hundred]] and [[nine]]
 
@@ -6362,8 +6357,6 @@ Page 4621 centonove: -------- begin text --------
 ===Anagrams===
 * {{l|it|contenevo}}
 * {{l|it|novecento}}, {{l|it|Novecento}}
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 4624 centootto: Found match for regex: {
 Page 4624 centootto: -------- begin text --------
@@ -6376,7 +6369,7 @@ Page 4624 centootto: -------- begin text --------
 {{af|it|cento|otto|t1=hundred|t2=eight}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[one hundred]] and [[eight]]
 
@@ -6385,8 +6378,6 @@ Page 4624 centootto: -------- begin text --------
 
 ===Anagrams===
 * {{l|it|ottocento}}, {{l|it|Ottocento}}
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 4625 centoquaranta: Found match for regex: {
 Page 4625 centoquaranta: -------- begin text --------
@@ -6396,7 +6387,7 @@ Page 4625 centoquaranta: -------- begin text --------
 {{affix|it|cento|quaranta}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[one hundred]] and [[forty]]
 
@@ -6405,8 +6396,6 @@ Page 4625 centoquaranta: -------- begin text --------
 
 ===Anagrams===
 * {{l|it|acquatteranno}}
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 4637 centoquattordici: Found match for regex: {
 Page 4637 centoquattordici: -------- begin text --------
@@ -6416,14 +6405,12 @@ Page 4637 centoquattordici: -------- begin text --------
 {{affix|it|cento|quattordici}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[one hundred]] and [[fourteen]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 4639 centoquattro: Found match for regex: {
 Page 4639 centoquattro: -------- begin text --------
@@ -6433,7 +6420,7 @@ Page 4639 centoquattro: -------- begin text --------
 {{af|it|cento|quattro}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[one hundred]] and [[four]]
 
@@ -6442,8 +6429,6 @@ Page 4639 centoquattro: -------- begin text --------
 
 ===Anagrams===
 * {{l|it|quattrocento}}, {{l|it|Quattrocento}}
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 4641 centoquindici: Found match for regex: {
 Page 4641 centoquindici: -------- begin text --------
@@ -6453,14 +6438,12 @@ Page 4641 centoquindici: -------- begin text --------
 {{affix|it|cento|quindici}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[one hundred]] and [[fifteen]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 4643 centosedici: Found match for regex: {
 Page 4643 centosedici: -------- begin text --------
@@ -6470,7 +6453,7 @@ Page 4643 centosedici: -------- begin text --------
 {{affix|it|cento|sedici}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[one hundred]] and [[sixteen]]
 
@@ -6479,8 +6462,6 @@ Page 4643 centosedici: -------- begin text --------
 
 ===Anagrams===
 * {{l|it|coincideste}}
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 4644 centosei: Found match for regex: {
 Page 4644 centosei: -------- begin text --------
@@ -6493,7 +6474,7 @@ From {{compound|it|cento|t1=one hundred|sei|t2=six}}.
 * {{it-IPA|cènto[s]èi}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[one hundred]] and [[six]]
 
@@ -6502,8 +6483,6 @@ From {{compound|it|cento|t1=one hundred|sei|t2=six}}.
 
 ===Anagrams===
 * {{l|it|seicento}}, {{l|it|Seicento}}
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 4646 centosessanta: Found match for regex: {
 Page 4646 centosessanta: -------- begin text --------
@@ -6513,14 +6492,12 @@ Page 4646 centosessanta: -------- begin text --------
 {{affix|it|cento|sessanta}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[one hundred]] and [[sixty]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 4657 centosettanta: Found match for regex: {
 Page 4657 centosettanta: -------- begin text --------
@@ -6530,14 +6507,12 @@ Page 4657 centosettanta: -------- begin text --------
 {{affix|it|cento|settanta}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[one hundred]] and [[seventy]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 4668 centosette: Found match for regex: {
 Page 4668 centosette: -------- begin text --------
@@ -6547,7 +6522,7 @@ Page 4668 centosette: -------- begin text --------
 {{af|it|cento|sette}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[one hundred]] and [[seven]]
 
@@ -6556,8 +6531,6 @@ Page 4668 centosette: -------- begin text --------
 
 ===Anagrams===
 * {{l|it|settecento}}, {{l|it|Settecento}}
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 4670 centotre: Found match for regex: {
 Page 4670 centotre: -------- begin text --------
@@ -6570,7 +6543,7 @@ Page 4670 centotre: -------- begin text --------
 {{af|it|cento|tre|t1=hundred|t2=three}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[one hundred]] and [[three]]
 
@@ -6581,8 +6554,6 @@ Page 4670 centotre: -------- begin text --------
 * {{l|it|cornette}}
 * {{l|it|torcente}}
 * {{l|it|trecento}}, {{l|it|Trecento}}
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 4671 centotré: Found match for regex: {
 Page 4671 centotré: -------- begin text --------
@@ -6595,7 +6566,7 @@ Page 4671 centotré: -------- begin text --------
 {{af|it|cento|tre|t1=hundred|t2=three}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[one hundred]] and [[three]]
 
@@ -6607,7 +6578,7 @@ Page 4671 centotré: -------- begin text --------
 * {{l|it|torcente}}
 * {{l|it|trecento}}, {{l|it|Trecento}}
 
-{{cln|it|cardinal numbers|terms spelled with É}}
+{{cln|it|terms spelled with É}}
 -------- end text --------
 Page 4673 centotredici: Found match for regex: {
 Page 4673 centotredici: -------- begin text --------
@@ -6617,15 +6588,13 @@ Page 4673 centotredici: -------- begin text --------
 {{af|it|cento|tredici}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[one hundred]] and [[thirteen]]
 # [[113]], the telephone number used to contact emergency services in Italy
 
 ===See also===
 * [[Appendix:Italian numbers]]
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 4675 centotrenta: Found match for regex: {
 Page 4675 centotrenta: -------- begin text --------
@@ -6635,14 +6604,12 @@ Page 4675 centotrenta: -------- begin text --------
 {{affix|it|cento|trenta}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[one hundred]] and [[thirty]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 4684 centotrentesimo: Found match for regex: {
 Page 4684 centotrentesimo: -------- begin text --------
@@ -6671,7 +6638,7 @@ Page 4687 centottanta: -------- begin text --------
 {{affix|it|cento|ottanta}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[one hundred]] and [[eighty]]
 
@@ -6680,8 +6647,6 @@ Page 4687 centottanta: -------- begin text --------
 
 ===Anagrams===
 * {{l|it|contattante}}
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 4690 centottantamila: Found match for regex: =
 Page 4690 centottantamila: -------- begin text --------
@@ -6690,14 +6655,12 @@ Page 4690 centottantamila: -------- begin text --------
 {{af|it|centottanta|mila}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[one]] [[hundred]] and [[eighty]] [[thousand]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 4700 centotto: Found match for regex: {
 Page 4700 centotto: -------- begin text --------
@@ -6708,14 +6671,12 @@ Page 4700 centotto: -------- begin text --------
 * {{rhymes|it|ɔtto}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # {{alternative form of|it|centootto|gloss=one hundred and eight}}
 
 ===See also===
 * [[Appendix:Italian numbers]]
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 4702 centoundici: Found match for regex: {
 Page 4702 centoundici: -------- begin text --------
@@ -6725,14 +6686,12 @@ Page 4702 centoundici: -------- begin text --------
 {{affix|it|cento|undici}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[one hundred]] and [[eleven]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 4704 centouno: Found match for regex: {
 Page 4704 centouno: -------- begin text --------
@@ -6745,14 +6704,12 @@ Page 4704 centouno: -------- begin text --------
 {{af|it|cento|uno|t1=hundred|t2=one}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[one hundred]] and [[one]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 4706 centoventi: Found match for regex: {
 Page 4706 centoventi: -------- begin text --------
@@ -6766,7 +6723,7 @@ Page 4706 centoventi: -------- begin text --------
 * {{rhymes|it|enti}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[one hundred]] and [[twenty]]
 
@@ -6776,8 +6733,6 @@ Page 4706 centoventi: -------- begin text --------
 ===Anagrams===
 * {{l|it|connettevi}}
 * {{l|it|connettive}}
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 4742 centum: Found match for regex: =
 Page 4742 centum: -------- begin text --------
@@ -6795,14 +6750,12 @@ Page 4745 centuno: -------- begin text --------
 {{cardinalbox|it|100|101|102|cento|centodue|ord=centunesimo}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # {{alternative form of|it|centouno}}
 
 ===See also===
 * [[Appendix:Italian numbers]]
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 4797 champagne: Found match for regex: {
 Page 4797 champagne: -------- begin text --------
@@ -6878,7 +6831,7 @@ Page 4826 chiacchierino: -------- begin text --------
 * {{hyphenation|it|chiac|chie|rì|no}}
 
 ===Adjective===
-{{it-adj}}
+{{head|it|adjective}}
 
 # [[talkative]], [[chatty]]
 
@@ -6901,7 +6854,7 @@ Page 4832 chiaro come il sole: Found match for regex: =
 Page 4832 chiaro come il sole: -------- begin text --------
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|sp=first}}
 
 # [[clear as daylight]], [[plain as day]]
 -------- end text --------
@@ -6966,26 +6919,21 @@ Page 4898 ciascheduno: -------- begin text --------
 * {{it-IPA|ciaschedùno}}
 * {{rhymes|it|uno}}
 
-===Adjective===
-{{head|it|adjective|g=m-s|feminine|[[ciascheduna]]}}
+===Determiner===
+{{head|it|determiner|singular only||feminine|ciascheduna}}
 
 # {{alternative form of|it|ciascuno}}
 
 ===Pronoun===
-{{head|it|pronoun|g=m-s|feminine|[[ciascheduna]]}}
-
-# {{alternative form of|it|ciascuno}}
-
-===Adverb===
-{{head|it|adverb|g=m-s|feminine|[[ciascheduna]]}}
+{{head|it|pronoun|singular only||feminine|ciascheduna}}
 
 # {{alternative form of|it|ciascuno}}
 -------- end text --------
 Page 4899 ciascun: Found match for regex: =
 Page 4899 ciascun: -------- begin text --------
 
-===Adjective===
-{{head|it|adjective}}
+===Determiner===
+{{head|it|determiner form|apocopate}}
 
 # {{apocopic form of|it|ciascuno}}
 -------- end text --------
@@ -6993,21 +6941,22 @@ Page 4900 ciascuno: Found match for regex: =
 Page 4900 ciascuno: -------- begin text --------
 
 ===Etymology===
-From {{inh|it|VL.||*cisque-unus}}, from {{inh|it|la|quisque}} {{m|la|unus}}, and influenced by {{m|it|cadauno}}. Cf. French {{m|fr|chacun}}, Catalan {{m|ca|cadascun}}.
+From {{inh|it|VL.||*cisque-unus}}, from {{inh|it|la|[[quisque]] [[ūnus]]}}, and influenced by {{m|it|cadauno}}. Cf. {{cog|fr|chacun}}, {{cog|ca|cadascun}}.
 
 ===Pronunciation===
 * {{it-IPA|ciascùno}}
 * {{rhymes|it|uno}}
 
-===Adjective===
-{{head|it|adjective|feminine|ciascuna}} {{tlb|it|singular only}}
+===Determiner===
+{{head|it|determiner|singular only||feminine|ciascuna}}
 
 # [[each]], [[every]]
 #: {{syn|it|ogni|tutto|tutti|tutto|tutte}}
 #: {{ux|it|'''''Ciascuno''' Stato membro dovrebbe assicurare un’adeguata protezione dei dati nella legislazione nazionale.''|Each Member State should ensure an adequate data protection level in its national law.}}
+# [[each]], [[apiece]]
 
 ===Pronoun===
-{{head|it|pronoun|feminine|ciascuna}} (singular only)
+{{head|it|pronoun|singular only||feminine|ciascuna}}
 
 # [[each one]]
 # [[everyone]], [[everybody]]
@@ -7015,11 +6964,6 @@ From {{inh|it|VL.||*cisque-unus}}, from {{inh|it|la|quisque}} {{m|la|unus}}, and
 ====Synonyms====
 * {{l|it|cadauno}}
 * {{l|it|ognuno}}
-
-===Adverb===
-{{head|it|adverb|feminine|ciascuna}} (singular only)
-
-# [[each]], [[apiece]]
 
 ===Anagrams===
 * {{anagrams|it|accusino|scuciano}}
@@ -7046,11 +6990,11 @@ From {{der|it|la|cyclamīnos}}.
 ====Derived terms====
 * {{l|it|maglia ciclamino}}
 
-===Anagrams===
-* {{l|it|acclimino}}
-
 ===Further reading===
 * {{R:it:Treccani}}
+
+===Anagrams===
+* {{l|it|acclimino}}
 
 {{C|it|Colors|Flowers|Primrose family plants}}
 -------- end text --------
@@ -7063,7 +7007,7 @@ Page 4941 ciliegia: -------- begin text --------
 * {{alter|it|ciriegia||Tuscan}}
 
 ===Etymology===
-From the variant {{m|it|ciriegia}}, from {{inh|it|VL.|ceresia}}, from the neuter plural of {{inh|it|LL.|ceresium}}, from {{inh|it|la|cerasium}}, from {{der|it|grc|κεράσιον||cherry}}, from {{m|grc|κερασός||[[bird cherry]]}}, ultimately possibly of {{der|it|ine-ana|-}} origin. Alternatively from {{m|it|ciliegio}}, {{m|it|ciriegio}} (Tuscan), from Late Latin {{m|la|ceresus}}, from Latin {{m|la|cerasus}}. See also {{m|it|cerasa}}.
+From the variant {{m|it|ciriegia}}, from {{inh|it|VL.|ceresia}}, from the neuter plural of {{der|it|LL.|ceresium}}, from {{der|it|la|cerasium}}, from {{der|it|grc|κεράσιον||cherry}}, from {{m|grc|κερασός||[[bird cherry]]}}, ultimately possibly of {{der|it|ine-ana|-}} origin. Alternatively from {{m|it|ciliegio}}, {{m|it|ciriegio}} (Tuscan), from {{der|it|LL.|ceresus}}, from {{der|it|la|cerasus}}. See also {{m|it|cerasa}}.
 
 Neither '''-li-''' or '''-gi'''  groups are the result of normal phonetical evolutions.  Lat. '''-ra-''' never evolves to Italian '''-Li''', nor '''sa'''→'''-gi'''<br>
 The word is a hypercorrectism (like ''galera'') by Toscans afraid to pronounce the word as a Ligurian dialectalism. <br>
@@ -7075,7 +7019,7 @@ The word is a hypercorrectism (like ''galera'') by Toscans afraid to pronounce t
 * {{rhymes|it|ɛdʒa}}
 
 ===Noun===
-{{head|it|noun|g=f|plural|ciliegie|or|ciliege|cat2=nouns with multiple plurals}}
+{{it-noun|f|ciliegie|pl2=ciliege}}
 
 # [[cherry]] (fruit)
 # {{lb|it|color}} [[cherry]]
@@ -7129,9 +7073,9 @@ From {{inh|it|VL.|*cīnquāgintā}}, from {{inh|it|la|quīnquāgintā}}, from {{
 * {{hyphenation|it|cin|quàn|ta}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
-# {{cln|it|cardinal numbers}} [[fifty]]
+# [[fifty]]
 
 ====Related terms====
 * {{l|it|cinquantamila}}
@@ -7158,9 +7102,9 @@ Page 4976 cinquantadue: -------- begin text --------
 {{af|it|cinquanta|due|t1=fifty|t2=two}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
-# {{cln|it|cardinal numbers}} [[fifty-two]]
+# [[fifty-two]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
@@ -7173,14 +7117,12 @@ Page 4979 cinquantamila: -------- begin text --------
 {{af|it|cinquanta|mila}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[fifty thousand]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 4980 cinquantanove: Found match for regex: {
 Page 4980 cinquantanove: -------- begin text --------
@@ -7190,9 +7132,9 @@ Page 4980 cinquantanove: -------- begin text --------
 {{af|it|cinquanta|nove|t1=fifty|t2=nine}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
-# {{cln|it|cardinal numbers}} [[fifty-nine]]
+# [[fifty-nine]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
@@ -7208,9 +7150,9 @@ Page 4983 cinquantaquattro: -------- begin text --------
 {{af|it|cinquanta|quattro|t1=fifty|t2=four}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
-# {{cln|it|cardinal numbers}} [[fifty-four]]
+# [[fifty-four]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
@@ -7223,9 +7165,9 @@ Page 4984 cinquantasei: -------- begin text --------
 {{af|it|cinquanta|sei|t1=fifty|t2=six}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
-# {{cln|it|cardinal numbers}} [[fifty-six]]
+# [[fifty-six]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
@@ -7238,9 +7180,9 @@ Page 4986 cinquantasette: -------- begin text --------
 {{af|it|cinquanta|sette|t1=fifty|t2=seven}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
-# {{cln|it|cardinal numbers}} [[fifty-seven]]
+# [[fifty-seven]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
@@ -7256,9 +7198,9 @@ Page 4988 cinquantatré: -------- begin text --------
 {{af|it|cinquanta|tre|t1=fifty|t2=three}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
-# {{cln|it|cardinal numbers}} [[fifty-three]]
+# [[fifty-three]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
@@ -7277,9 +7219,9 @@ Page 4996 cinquantotto: -------- begin text --------
 * {{rhymes|it|ɔtto}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
-# {{cln|it|cardinal numbers}} [[fifty-eight]]
+# [[fifty-eight]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
@@ -7288,12 +7230,12 @@ Page 4997 cinquantun: Found match for regex: =
 Page 4997 cinquantun: -------- begin text --------
 
 ===Adjective===
-{{it-adj|inv=1}}
+{{it-adj|inv=1|apoc=1}}
 
 # {{apocopic form of|it|cinquantuno}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv|apoc=1}}
 
 # {{apocopic form of|it|cinquantuno}}
 -------- end text --------
@@ -7310,9 +7252,9 @@ Page 5000 cinquantuno: -------- begin text --------
 * {{hyph|it|cin|quan|tù|no}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
-# {{cln|it|cardinal numbers}} [[fifty-one]]
+# [[fifty-one]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
@@ -7330,9 +7272,9 @@ From {{inh|it|VL.|*cīnque}}, dissimilation of {{inh|it|la|quīnque}}, from {{in
 * {{hyphenation|it|cìn|que}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
-# {{cln|it|cardinal numbers}} [[five]]
+# [[five]]
 
 ===Noun===
 {{it-noun|m|-}}
@@ -7374,9 +7316,9 @@ Page 5005 cinquecento: -------- begin text --------
 {{af|it|cinque|cento|t1=five|t2=hundred}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
-# {{cln|it|cardinal numbers}} [[five hundred]]
+# [[five hundred]]
 
 ====Derived terms====
 * {{l|it|cinquecentino}}
@@ -7398,14 +7340,12 @@ Page 5006 cinquemila: -------- begin text --------
 {{af|it|cinque|mila}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[five thousand]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 5059 cis: Found match for regex: =
 Page 5059 cis: -------- begin text --------
@@ -7464,17 +7404,19 @@ Page 5207 codalunga: -------- begin text --------
 {{com|it|coda|t1=tail|lunga|t2=long}}
 
 ===Adjective===
-{{head|it|adjective}} <!-- Is this the proper formatting? -->
+{{it-adj|inv=1}}
 
-# {{q|of an [[animal]]}} having a [[long]] [[tail]]
+# having a [[long]] [[tail]] {{i|of an animal}}
+#: {{uxi|it|sterna codalunga|[[arctic tern]]}}
 -------- end text --------
 Page 5209 codarossa: Found match for regex: =
 Page 5209 codarossa: -------- begin text --------
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|inv=1}}
 
-# [[red-tailed]]
+# [[red-tailed]] {{i|of an animal}}
+#: {{uxi|it|poiana codarossa|[[red-tailed hawk]]}}
 -------- end text --------
 Page 5245 coi fiocchi: Found match for regex: =
 Page 5245 coi fiocchi: -------- begin text --------
@@ -7507,7 +7449,7 @@ Literally "color of a dog that flees".
 #* {{seeCites|it}}
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|inv=1}}
 
 # {{n-g|having a [[nonspecific]] or [[nameless]] color}}
 
@@ -7523,7 +7465,7 @@ Page 5346 combinaguai: Found match for regex: =
 Page 5346 combinaguai: -------- begin text --------
 
 ===Noun===
-{{it-noun|mf|-}}
+{{it-noun|mfbysense|-}}
 
 # [[troublemaker]]
 
@@ -7588,7 +7530,7 @@ Page 5501 con le pive nel sacco: -------- begin text --------
 Literally, "with the bagpipes in the bag."
 
 ===Adjective===
-{{it-adj|inv=1}}
+{{head|it|adjective}}
 
 # [[emptyhanded]]
 #: {{syn|it|a mani vuote}}
@@ -7602,7 +7544,7 @@ Page 5732 consorella: -------- begin text --------
 # [[sister]] (in the same institution)
 
 ===Adjective===
-{{head|it|adjective|g=f|plural|[[consorelle]]}}
+{{it-adj|fonly=1}}
 
 # {{lb|it|relational}} [[sister]]
 
@@ -7665,7 +7607,7 @@ Page 5972 coronato dal successo: Found match for regex: =
 Page 5972 coronato dal successo: -------- begin text --------
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|sp=first}}
 
 # [[successful]]
 -------- end text --------
@@ -7674,7 +7616,7 @@ Page 5976 corpo a corpo: -------- begin text --------
 
 ===Adjective===
 {{wikipedia|Combattimento corpo a corpo|lang=it}}
-{{head|it|adjective}}
+{{it-adj|inv=1}}
 
 # [[hand-to-hand]]
 -------- end text --------
@@ -7682,7 +7624,7 @@ Page 6043 così così: Found match for regex: =
 Page 6043 così così: -------- begin text --------
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|inv=1}}
 
 # [[so-so]]
 #: {{syn|it|mediocre|così cosà}}
@@ -7698,9 +7640,9 @@ Page 6091 cotal: Found match for regex: =
 Page 6091 cotal: -------- begin text --------
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|apoc=1}}
 
-# {{apocopic form of|it|[[cotale]]}}
+# {{apocopic form of|it|cotale}}
 -------- end text --------
 Page 6141 cremisi: Found match for regex: =
 Page 6141 cremisi: -------- begin text --------
@@ -7741,7 +7683,7 @@ Borrowed from {{bor|it|en|cringe}}.
 # {{lb|it|neologism}} [[#English|cringe]]
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|inv=1}}<!-- this is a guess -->
 
 # {{lb|it|neologism}} [[cringy]]
 -------- end text --------
@@ -7749,7 +7691,7 @@ Page 6256 crudel: Found match for regex: =
 Page 6256 crudel: -------- begin text --------
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|apoc=1}}
 
 # {{apocopic form of|it|crudele}}
 -------- end text --------
@@ -7802,7 +7744,7 @@ Page 6334 d'aiuto: -------- begin text --------
 Literally, "of help."
 
 ===Adjective===
-{{it-adj|inv=1|head=[[d']][[aiuto]]}}
+{{head|it|adjective|head=[[d']][[aiuto]]}}
 
 # [[helpful]]
 -------- end text --------
@@ -7825,7 +7767,7 @@ Page 6336 d'andata: Found match for regex: =
 Page 6336 d'andata: -------- begin text --------
 
 ===Adjective===
-{{it-adj|inv=1|head=[[d']][[andata]]}}
+{{head|it|adjective}}
 
 # {{alternative spelling of|it|di andata}}
 -------- end text --------
@@ -7847,7 +7789,7 @@ Page 6338 d'assalto: -------- begin text --------
 Literally, "of assault."
 
 ===Adjective===
-{{it-adj|inv=1|head=[[d']][[assalto]]}}
+{{head|it|adjective|head=[[d']][[assalto]]}}
 
 # {{&lit|it|di|assalto}}
 #* {{quote-book|it|year=2020|author={{w|Barack Obama}}|translators=Chicca Galli; Paolo Lucca; Giuseppe Maugeri|title=Una terra promessa|trans-title={{w|A Promised Land}}|publisher=Garzanti Libri|chapter=11|passage=... attraverso il divieto delle armi '''d'assalto''' e l'ascesa di Newt Gingrich, i diritti delle persone omosessuali e l'impeachment di Clinton – gli elettori americani e i loro rappresentanti si erano sempre più polarizzati.|t=... through '''assault''' weapons bans and the rise of Newt Gingrich, gay rights and the Clinton impeachment—America's voters and their representatives became more and more polarized.|lit=... through the '''assault''' weapons ban and the rise of Newt Gingrich, the rights of homosexual people and the impeachment of Clinton – American voters and their representatives were increasingly polarized.}}
@@ -7880,7 +7822,7 @@ Page 6341 d'obbligo: -------- begin text --------
 Literally, "of obligation."
 
 ===Adjective===
-{{it-adj|inv=1|head=[[d']][[obbligo]]}}
+{{head|it|adjective|head=[[d']][[obbligo]]}}
 
 # [[obligatory]]
 # required or [[recommend]]ed by social [[custom]], [[tradition]], etc.; [[formal]], [[stilted]], [[unspontaneous]]
@@ -7937,7 +7879,7 @@ Page 6343 da asporto: Found match for regex: =
 Page 6343 da asporto: -------- begin text --------
 
 ===Adjective===
-{{it-adj|inv=1}}
+{{head|it|adjective}}
 
 # [[takeaway]]
 -------- end text --------
@@ -7974,7 +7916,7 @@ Page 6346 da cani: -------- begin text --------
 Literally, "of dogs."
 
 ===Adjective===
-{{it-adj|inv=1}}
+{{head|it|adjective}}
 
 # [[terrible]], [[miserable]]
 #: {{syn|it|terribile|miserabile|pessimo}}
@@ -8012,7 +7954,7 @@ Page 6349 da meno: -------- begin text --------
 Literally, "from less."
 
 ===Adjective===
-{{it-adj|inv=1}}
+{{head|it|adjective}}
 
 # {{alt form|it|dammeno}}
 -------- end text --------
@@ -8023,7 +7965,7 @@ Page 6350 da parata: -------- begin text --------
 Literally, "for (a) showing-off."
 
 ===Adjective===
-{{it-adj|inv=1}}
+{{head|it|adjective}}
 
 # {{lb|it|often|humorous}} [[suitable]] for a big [[occasion]]; to [[show off]]
 #: {{syn|it|di parata}}
@@ -8117,7 +8059,7 @@ Page 6363 dahlien: -------- begin text --------
 {{etyl|de|it}}
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|inv=1}}
 
 # {{only in|it|giallo dahlien}}
 -------- end text --------
@@ -8302,7 +8244,7 @@ Page 6560 del cavolo: Found match for regex: =
 Page 6560 del cavolo: -------- begin text --------
 
 ===Adjective===
-{{it-adj|inv=1}}
+{{head|it|adjective}}
 
 # {{lb|it|idiom|familiar}} [[lousy]]
 -------- end text --------
@@ -8359,7 +8301,7 @@ Page 6566 delavé: -------- begin text --------
 Borrowed from {{bor|it|fr|délaver}}.
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|inv=1}}
 
 # [[stonewashed]]
 -------- end text --------
@@ -8384,7 +8326,7 @@ Page 6589 della madonna: -------- begin text --------
 Literally, "of the Virgin Mary."
 
 ===Adjective===
-{{it-adj|inv=1}}
+{{head|it|adjective}}
 
 # {{lb|it|informal}} [[terrible]], [[horrible]]
 #: {{ux|it|Ho una fame '''della madonna'''.|I'm '''terribly''' hungry.|lit=I have a '''terrible''' hunger.}}
@@ -8396,7 +8338,7 @@ Page 6590 della prima ora: -------- begin text --------
 Literally, "of the first hour." Compare {{cog|fr|de la première heure}}.
 
 ===Adjective===
-{{it-adj|inv=1}}
+{{head|it|adjective}}
 
 # {{lb|it|idiom}} having joined a [[political]], [[artistic]], or [[cultural]] movement from the very beginning
 #* {{quote-book|it|year=2020|author={{w|Barack Obama}}|translators=Chicca Galli; Paolo Lucca; Giuseppe Maugeri|title=Una terra promessa|trans-title={{w|A Promised Land}}|publisher=Garzanti Libri|chapter=24|passage=Claire era una mia sostenitrice '''della prima ora''' e tra i miei migliori amici in Senato.|t=Claire was one of my '''early''' supporters and best friends in the Senate...}}
@@ -8507,7 +8449,7 @@ Page 6811 di circostanza: -------- begin text --------
 Literally, "of circumstance." Compare {{cog|fr|de circonstance}}.
 
 ===Adjective===
-{{it-adj|inv=1}}
+{{head|it|adjective}}
 
 # [[formally]] [[suitable]] for an [[occasion]]; suitable
 #: {{syn|it|convenzionale|formale}}
@@ -8620,7 +8562,7 @@ Page 6819 di fiducia: -------- begin text --------
 Literally, "of trust."
 
 ===Adjective===
-{{it-adj|inv=1}}
+{{head|it|adjective}}
 
 # [[trusted]]
 #: {{syn|it|fidato}}
@@ -8646,7 +8588,7 @@ Page 6821 di fortuna: -------- begin text --------
 Literally, "of fortune."
 
 ===Adjective===
-{{it-adj|inv=1}}
+{{head|it|adjective}}
 
 # [[makeshift]]
 #: {{syn|it|improvvisato|provvisorio}}
@@ -8686,7 +8628,7 @@ Page 6823 di lunga data: Found match for regex: =
 Page 6823 di lunga data: -------- begin text --------
 
 ===Adjective===
-{{it-adj|inv=1|head=[[di]] [[lungo|lunga]] [[data]]}}
+{{head|it|adjective}}
 
 # {{synonym of|it|di vecchia data}}
 # {{synonym of|it|di lunga durata}}
@@ -8695,7 +8637,7 @@ Page 6824 di lunga durata: Found match for regex: =
 Page 6824 di lunga durata: -------- begin text --------
 
 ===Adjective===
-{{it-adj|inv=1|head=[[di]] [[lungo|lunga]] [[durata]]}}
+{{head|it|adjective}}
 
 # {{synonym of|it|di vecchia data}}
 -------- end text --------
@@ -8756,7 +8698,7 @@ Page 6828 di moda: -------- begin text --------
 Literally, "of fashion."
 
 ===Adjective===
-{{it-adj|inv=1}}
+{{head|it|adjective}}
 
 # [[fashionable]]
 #: {{syn|it|alla moda}}
@@ -8766,7 +8708,7 @@ Page 6829 di nicchia: Found match for regex: =
 Page 6829 di nicchia: -------- begin text --------
 
 ===Adjective===
-{{it-adj|inv=1}}
+{{head|it|adjective}}
 
 # [[marginal]]; [[secondary]]
 # [[niche]]
@@ -8775,7 +8717,7 @@ Page 6830 di notte: Found match for regex: =
 Page 6830 di notte: -------- begin text --------
 
 ===Adverb===
-{{it-adv}}
+{{head|it|adverb}}
 
 # [[at night]], [[by]] [[night]]
 #: {{syn|it|nottetempo}}
@@ -8795,7 +8737,7 @@ Page 6831 di parata: Found match for regex: =
 Page 6831 di parata: -------- begin text --------
 
 ===Adjective===
-{{it-adj|inv=1}}
+{{head|it|adjective}}
 
 # {{syn of|it|da parata}}
 #: {{uxi|it|pranzo '''di parata'''|lunch '''for a big occasion'''}}
@@ -8831,7 +8773,7 @@ Literally, "of weight."
 #: {{ux|it|sollevarlo '''di peso'''|to pull him up '''forcefully'''}}
 
 ===Adjective===
-{{it-adj|inv=1}}
+{{head|it|adjective}}
 
 # [[relevant]], [[important]], [[salient]]
 #: {{syn|it|di rilievo|di portata}}
@@ -8879,7 +8821,7 @@ Page 6837 di primordine: Found match for regex: =
 Page 6837 di primordine: -------- begin text --------
 
 ===Adjective===
-{{it-adj|inv=1}}
+{{head|it|adjective}}
 
 # {{alternative form of|it|di prim'ordine}}
 -------- end text --------
@@ -8890,7 +8832,7 @@ Page 6839 di punta: -------- begin text --------
 Literally, "of point."
 
 ===Adjective===
-{{it-adj|inv=1}}
+{{head|it|adjective}}
 
 # {{lb|it|idiom}} [[leading]], [[foremost]]
 #: {{uxi|it|persona '''di punta'''|[[point person]]|lit='''leading''' person}}
@@ -8903,7 +8845,7 @@ Page 6840 di rigore: -------- begin text --------
 Literally, "of rigor."
 
 ===Adjective===
-{{it-adj|inv=1}}
+{{head|it|adjective}}
 
 # [[strictly]] [[necessary]]; [[prescribe]]d by the circumstances; necessary, [[obligatory]]
 #: {{syn|it|necessario|obbligatorio|d'obbligo|giocoforza}}
@@ -8915,7 +8857,7 @@ Page 6841 di rilievo: -------- begin text --------
 Literally, "of relief."
 
 ===Adjective===
-{{it-adj|inv=1}}
+{{head|it|adjective}}
 
 # {{lb|it|idiom}} [[prominent]], [[important]]
 #: {{ux|it|occupano un posto '''di rilievo''' nella vita sociale e culturale|they occupy a '''prominent''' place in social and cultural life}}
@@ -8936,7 +8878,7 @@ Page 6843 di ruolo: Found match for regex: =
 Page 6843 di ruolo: -------- begin text --------
 
 ===Adjective===
-{{it-adj|inv=1}}
+{{head|it|adjective}}
 
 # {{lb|it|of tenure etc}} [[permanent]]
 
@@ -8950,7 +8892,7 @@ Page 6844 di sasso: -------- begin text --------
 Literally, "of stone."
 
 ===Adjective===
-{{it-adj|inv=1}}
+{{head|it|adjective}}
 
 # [[insensitive]], [[callous]]
 -------- end text --------
@@ -8974,7 +8916,7 @@ Page 6846 di spicco: Found match for regex: =
 Page 6846 di spicco: -------- begin text --------
 
 ===Adjective===
-{{it-adj|inv=1}}
+{{head|it|adjective}}
 
 # [[prominent]], [[outstanding]]
 -------- end text --------
@@ -8994,7 +8936,7 @@ Page 6848 di tutti i giorni: -------- begin text --------
 Literally, "of all the days." Compare {{cog|fr|de tous les jours}}.
 
 ===Adjective===
-{{it-adj|inv=1|head=[[di]] [[tutto|tutti]] [[i]] [[giorno|giorni]]}}
+{{head|it|adjective}}
 
 # {{lb|it|relational}} [[everyday]]; [[day-to-day]]
 #: {{uxi|it|cibo '''di tutti i giorni'''|'''everyday''' food}}
@@ -9004,7 +8946,7 @@ Page 6849 di tutto rispetto: Found match for regex: =
 Page 6849 di tutto rispetto: -------- begin text --------
 
 ===Adjective===
-{{it-adj|inv=1}}
+{{head|it|adjective}}
 
 # [[worthy]], [[relevant]]
 #: {{syn|it|degno di nota}}
@@ -9013,7 +8955,7 @@ Page 6850 di vecchia data: Found match for regex: =
 Page 6850 di vecchia data: -------- begin text --------
 
 ===Adjective===
-{{it-adj|inv=1|head=[[di]] [[vecchio|vecchia]] [[data]]}}
+{{head|it|adjective}}
 
 # [[long-standing]]
 -------- end text --------
@@ -9024,7 +8966,7 @@ Page 6851 di vetta: -------- begin text --------
 Literally, "of top."
 
 ===Adjective===
-{{it-adj|inv=1}}
+{{head|it|adjective}}
 
 # {{lb|it|relational}} [[top]], [[summit]], etc.
 # {{lb|it|figurative|by extension}} top, [[peak]]
@@ -9042,7 +8984,7 @@ From the abbreviation "DC" of the political party.
 # of or pertaining to the [[w:Democrazia Cristiana|Democrazia Cristiana]] (''Christian Democracy'') a dissolved political party
 
 ===Noun===
-{{it-noun|m|g2=f|-}}
+{{it-noun|mfbysense|-}}
 
 # a member of this party
 -------- end text --------
@@ -9056,9 +8998,9 @@ Page 6917 diciannove: -------- begin text --------
 * {{hyphenation|it|di|cian|nò|ve}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
-# {{cln|it|cardinal numbers}} [[nineteen]]
+# [[nineteen]]
 
 ====Related terms====
 * {{l|it|diciannovenne}}
@@ -9079,14 +9021,12 @@ Page 6918 diciannovemila: -------- begin text --------
 {{af|it|diciannove|mila}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[nineteen]] [[thousand]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 6921 diciassette: Found match for regex: {
 Page 6921 diciassette: -------- begin text --------
@@ -9098,9 +9038,9 @@ Page 6921 diciassette: -------- begin text --------
 * {{hyphenation|it|di|cias|sèt|te}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
-# {{cln|it|cardinal numbers}} [[seventeen]]
+# [[seventeen]]
 
 ====Related terms====
 * {{l|it|diciassettenne}}
@@ -9116,14 +9056,12 @@ Page 6922 diciassettemila: -------- begin text --------
 {{af|it|diciassette|mila}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[seventeen]] [[thousand]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 6928 diciotto: Found match for regex: {
 Page 6928 diciotto: -------- begin text --------
@@ -9136,9 +9074,9 @@ Page 6928 diciotto: -------- begin text --------
 * {{rhymes|it|ɔtto}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
-# {{cln|it|cardinal numbers}} [[eighteen]]
+# [[eighteen]]
 
 ====Related terms====
 * {{l|it|diciottenne}}
@@ -9154,14 +9092,12 @@ Page 6929 diciottomila: -------- begin text --------
 {{af|it|diciotto|mila}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[eighteen]] [[thousand]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 6939 didietro: Found match for regex: =
 Page 6939 didietro: -------- begin text --------
@@ -9204,7 +9140,7 @@ From {{etyl|la|it}} {{m|la|decem}}, from {{etyl|ine-pro|it}} {{m|ine-pro|*déḱ
 # {{obsolete form of|it|dieci}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # {{obsolete form of|it|dieci}}
 #* '''1321''', [[w:Dante Alighieri|Dante Alighieri]], ''[[w:Inferno (Dante)|La divina commedia: Inferno]]'', Le Monnier (1994), Canto XXV, p. 367, vv. 31-33:
@@ -9223,9 +9159,9 @@ From earlier {{m|it|diece}}, from {{inh|it|la|decem}}, ultimately from {{inh|it|
 * {{hyphenation|it|diè|ci}}
 
 ====Numeral====
-{{head|it|numeral}}
+{{it-card-inv}}
 
-# {{cln|it|cardinal numbers}} [[ten]]
+# [[ten]]
 
 ====Noun====
 {{it-noun|m|-}}
@@ -9275,7 +9211,7 @@ Page 6943 diecimila: -------- begin text --------
 {{cardinalbox|it|9999|10000|10001|novemilanovecentonovantanove|diecimillauno|ord=decimillesimo}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[ten thousand]]
 {{cardinalbox|it|10<sup>3</sup>|10<sup>4</sup>|10<sup>5</sup>|mille|centomila}}
@@ -9285,8 +9221,6 @@ Page 6943 diecimila: -------- begin text --------
 
 ===Anagrams===
 * {{l|it|micidiale}}
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 6954 diesis: Found match for regex: =
 Page 6954 diesis: -------- begin text --------
@@ -9395,7 +9329,7 @@ From {{inh|it|la|deus}}, from earlier {{m|la|*dẹ̄vos}}, from {{der|it|itc-ola
 From {{inh|it|la|dius}}, alternate form of {{m|la|dīvus||divine, godlike}}, from {{inh|it|ine-pro|*diwyós||heavenly}}, derived from the root {{m|ine-pro|*dyew-||sky, heaven}}. {{doublet|it|divo}}.
 
 ====Adjective====
-{{head|it|adjective|feminine|dia|masculine plural|dii|feminine plural|die}} {{tlb|it|obsolete|poetic}}
+{{it-adj|mpl=dii}} {{tlb|it|obsolete|poetic}}
 
 # [[bright]], [[resplendent]], [[shining]] {{gloss|in a divine fashion}}
 #: {{syn|it|brillante|lucente|luminoso|splendente}}
@@ -9480,7 +9414,7 @@ Page 7310 distante: -------- begin text --------
 # [[distant]] (space or time)
 
 ===Adverb===
-{{head|it|adverb}}
+{{it-adv}}
 
 # [[far away]]
 
@@ -9503,7 +9437,7 @@ From {{inh|it|la|dēstructus}}.
 # {{past participle of|it|distruggere|nocat=1}}
 
 ===Adjective===
-{{it-adj}}
+{{head|it|adjective}}
 
 # [[distraught]] (emotional)
 # [[tired]], [[stuffed]]
@@ -9512,7 +9446,7 @@ Page 7377 divin: Found match for regex: =
 Page 7377 divin: -------- begin text --------
 
 ===Adjective===
-{{head|it|adjective|apocopic}}
+{{head|it|adjective}}
 
 # {{apocopic form of|it|divino}}
 
@@ -9528,7 +9462,7 @@ Page 7400 doc: -------- begin text --------
 # {{alternative case form of|it|DOC|gloss=controlled designation of origin}}
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|inv=1}}
 
 # {{lb|it|chiefly|wine}} certified as {{l|it|DOC}} {{gloss|of a product, usually wine}}
 #: {{uxi|it|un vino '''doc'''}}
@@ -9551,9 +9485,9 @@ From {{inh|it|la|duodecim}}.
 * {{hyphenation|it|dó|di|ci}}
 
 ===Numeral===
-{{head|it|numeral|g=m|invariable}}
+{{it-card-inv}}
 
-# {{cln|it|cardinal numbers}} [[twelve]]
+# [[twelve]]
 
 ====Related terms====
 * {{l|it|dodicenne}}
@@ -9569,14 +9503,12 @@ Page 7420 dodicimila: -------- begin text --------
 {{af|it|dodici|mila}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[twelve]] [[thousand]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 7471 doposci: Found match for regex: =
 Page 7471 doposci: -------- begin text --------
@@ -9654,7 +9586,7 @@ Page 7483 dorminpiedi: Found match for regex: =
 Page 7483 dorminpiedi: -------- begin text --------
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|inv=1}}
 
 # [[sleepy]], [[drowsy]] (''asleep on one's feet'')
 -------- end text --------
@@ -9683,9 +9615,9 @@ From {{inh|it|la|duae}}, feminine plural of {{m|la|duo}}, from {{inh|it|itc-pro|
 * {{hyphenation|it|dù|e}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
-# {{cln|it|cardinal numbers}} [[two]]
+# [[two]]
 
 ===Noun===
 {{it-noun|m|-}}
@@ -9722,9 +9654,9 @@ Page 7534 duecento: -------- begin text --------
 * {{rhymes|it|ɛnto}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
-# {{cln|it|cardinal numbers}} [[two hundred]]
+# [[two hundred]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
@@ -9737,14 +9669,12 @@ Page 7535 duemila: -------- begin text --------
 {{cardinalbox|it|1999|2000|2001|milenovacentonovantanove|duemilauno|ord=duemillesimo}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[two thousand]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 7541 duo: Found match for regex: =
 Page 7541 duo: -------- begin text --------
@@ -9758,7 +9688,7 @@ From {{inh|it|la|duo|t=two}}, from {{inh|it|itc-pro|*duō}}, from {{inh|it|ine-p
 * {{rhymes|it|uo}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # {{obsolete form of|it|due}}
 
@@ -9790,7 +9720,7 @@ Page 7559 duro di comprendonio: Found match for regex: =
 Page 7559 duro di comprendonio: -------- begin text --------
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|sp=first}}
 
 # [[dull]], [[dull-witted]], [[slow]], [[slow-witted]]
 -------- end text --------
@@ -9809,7 +9739,6 @@ Page 7624 ecru: -------- begin text --------
 {{it-noun|m|g2=f|-}}
 
 # [[#English|ecru]]
-# [[colore]] [[naturale]] della [[tela]]
 
 ===Anagrams===
 * {{l|it|cure}}
@@ -9823,7 +9752,7 @@ Page 7712 egr.: Found match for regex: =
 Page 7712 egr.: -------- begin text --------
 
 ===Adjective===
-{{it-adj|inv=1}}
+{{head|it|adjective}}
 
 # {{abbreviation of|it|egregio|gloss=[[dear]] {{gloss|at the start of a letter}}}}
 -------- end text --------
@@ -9831,7 +9760,7 @@ Page 7717 egual: Found match for regex: =
 Page 7717 egual: -------- begin text --------
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|apoc=1}}
 
 # {{apocopic form of|it|eguale}}
 
@@ -9846,15 +9775,15 @@ Page 8055 entrambe: -------- begin text --------
 * {{audio|it|LL-Q652 (ita)-Happypheasant-entrambe.wav|Audio}}
 * {{rhymes|it|ambe}}
 
-===Adjective===
-{{head|it|adjective|g=f-p|masculine|[[entrambi]]}}
+===Determiner===
+{{head|it|determiner form|g=f-p}}
 
-# [[both]]
+# {{feminine of|it|entrambi}}: [[both]]
 
 ===Pronoun===
-{{head|it|pronoun|g=f-p|masculine|[[entrambi]]}}
+{{head|it|pronoun form|g=f-p}}
 
-# [[both]]
+# {{feminine of|it|entrambi}}: [[both]]
 
 ===Anagrams===
 * {{l|it|bramente}}
@@ -9866,14 +9795,14 @@ Page 8056 entrambi: -------- begin text --------
 * {{it-IPA|entràmbi}}
 * {{rhymes|it|ambi}}
 
-===Adjective===
-{{head|it|adjective|g=m-p|feminine|[[entrambe]]}}
+===Determiner===
+{{head|it|determiner|g=m-p|feminine|entrambe}}
 
 # [[both]]
 #: {{syn|it|ambedue|q1=literary|tutti e due|l'uno e l'altro}}
 
 ===Pronoun===
-{{head|it|pronoun|g=m-p|feminine|[[entrambe]]}}
+{{head|it|pronoun|g=m-p|feminine|entrambe}}
 
 # [[both]]
 #: {{syn|it|ambedue|q1=literary|tutti e due|l'uno e l'altro}}
@@ -9917,17 +9846,17 @@ Page 8354 esentasse: -------- begin text --------
 
 # {{inflection of|it|esentare||3|s|impf|subj}}
 
-===Anagrams===
-* {{l|it|astenesse}}
-
 ===Further reading===
 * {{R:it:Treccani}}
+
+===Anagrams===
+* {{l|it|astenesse}}
 -------- end text --------
 Page 8380 eslege: Found match for regex: =
 Page 8380 eslege: -------- begin text --------
 
 ===Adjective===
-{{it-adj}}
+{{head|it|adjective}} {{g|m|f}}
 
 # [[extralegal]]
 # {{lb|it|relational}} [[outlaw]]
@@ -9936,7 +9865,7 @@ Page 8391 esoftalmico: Found match for regex: =
 Page 8391 esoftalmico: -------- begin text --------
 
 ===Adjective===
-{{it-adj}}
+{{head|it|adjective}}
 
 # [[exophthalmic]]
 
@@ -9988,7 +9917,7 @@ Page 8559 etero: -------- begin text --------
 # [[heterosexual]]
 
 ====Noun====
-{{it-noun|m|g2=f|-}}
+{{it-noun|mfbysense|-}}
 # [[heterosexual]]
 
 ===Etymology 2===
@@ -10103,7 +10032,7 @@ Page 8792 facil: Found match for regex: =
 Page 8792 facil: -------- begin text --------
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|apoc=1}}
 
 # {{apocopic form of|it|facile}}
 
@@ -10160,7 +10089,7 @@ From {{bor|it|la|phalaecius}}, {{m|la|phalaecēus}}, {{m|la|phaleucius}}, {{m|la
 * {{hyph|it|fa|lè|cio}}
 
 ===Adjective===
-{{it-adj}}
+{{head|it|adjective|masculine plural|faleci}}
 
 # {{lb|it|poetry|of a verse}} being [[hendecasyllabic]], and consisting of a [[spondee]], a [[dactyl]], and three [[trochee]]s
 
@@ -10184,9 +10113,9 @@ Page 9081 ficaio: -------- begin text --------
 * {{hyph|it|fi|cà|io}}
 
 ===Adjective===
-{{it-adj|onlyms=1}}
+{{head|it|adjective}}
 
-# {{only in|it|settembre ficaio|lit=[[fig]]-[[producing]] [[September]]}}
+# {{lb|it|only of the month of September}} [[fig]]-[[producing]]
 
 ===Noun===
 {{it-noun|m}} {{tlb|it|archaic}}
@@ -10198,13 +10127,13 @@ Page 9081 ficaio: -------- begin text --------
 
 ===References===
 * {{R:it:Trec}}
-* {{R:DIO}}
+* {{R:it:Olivetti}}
 -------- end text --------
 Page 9142 filoegizia: Found match for regex: =
 Page 9142 filoegizia: -------- begin text --------
 
 ===Adjective===
-{{it-adj|inv=1}}
+{{head|it|adjective}}
 
 # [[pro-]][[Egypt]]
 -------- end text --------
@@ -10212,7 +10141,7 @@ Page 9168 filosocialista: Found match for regex: =
 Page 9168 filosocialista: -------- begin text --------
 
 ===Adjective===
-{{it-adj}}
+{{head|it|adjective}}
 
 # [[pro-]][[socialist]]
 -------- end text --------
@@ -10220,12 +10149,12 @@ Page 9181 final: Found match for regex: =
 Page 9181 final: -------- begin text --------
 
 ===Adjective===
-{{it-adj|inv=1}}
+{{it-adj|apoc=1}}
 
 # {{apocopic form of|it|finale}}
 
 ===Noun===
-{{head|it|noun|g=m}}
+{{head|it|noun form|g=m}}
 
 # {{apocopic form of|it|finale}}
 
@@ -11853,15 +11782,15 @@ From {{bor|it|en|indoor}}.
 
 # [[#English|indoor]] (sport)
 
+===Further reading===
+* {{R:it:Treccani}}
+
 ===Anagrams===
 * {{l|it|dorino}}
 * {{l|it|indoro}}, {{l|it|indorò}}
 * {{l|it|ordino}}, {{l|it|ordinò}}
 * {{l|it|ridono}}, {{l|it|ridonò}}
 * {{l|it|rodino}}
-
-===Further reading===
-* {{R:it:Treccani}}
 -------- end text --------
 Page 11414 indù: Found match for regex: =
 Page 11414 indù: -------- begin text --------
@@ -11914,8 +11843,8 @@ Page 11607 infuori: -------- begin text --------
 It can be written as one word (''infuori'') or separated ({{m|it|in fuori}}); the last one is by far the most common variant except for adverbial phrases with the article such as "allʼinfuori" (''outwards'')
 
 ===References===
-* {{R:CIE}}
-* {{R:DIO}}
+* {{R:it:Collins}}
+* {{R:it:Olivetti}}
 * {{R:it:Trec}}
 
 ===Anagrams===
@@ -12455,11 +12384,11 @@ From {{af|it|lanciare|alt1=lancia|t1=throw|pos1=second person singular imperativ
 ====Related terms====
 * {{l|it|lanciamissili}}
 
-===Anagrams===
-* {{anagrams|it|analizzarci}}
-
 ===References===
 * {{R:it:Trec}}
+
+===Anagrams===
+* {{anagrams|it|analizzarci}}
 
 {{cln|it|verb-noun compounds}}
 -------- end text --------
@@ -12619,7 +12548,6 @@ Page 13315 lo stesso: -------- begin text --------
 
 # all the same, just the same, the same, [[anyway]]
 #: {{syn|it|comunque|come}}
-
 -------- end text --------
 Page 13396 Loro: Found match for regex: =
 Page 13396 Loro: -------- begin text --------
@@ -12740,8 +12668,8 @@ From the older form ''matre'', from {{inh|it|la|mater|māter, mātrem}}, from {{
 * {{l|it|padre}}
 
 ===Further reading===
-* {{R:DIO}}
-* {{R:CIE}}
+* {{R:it:Olivetti}}
+* {{R:it:Collins}}
 
 ===Anagrams===
 * {{anagrams|it|derma|merda}}
@@ -12844,7 +12772,7 @@ From {{inh|it|la|(mensis) [[Māius]]}}.
 From {{inh|it|la|maior}}, {{m|la|maius}}, comparative of {{m|la|magnus||big”, “great}}.
 
 ====Adjective====
-{{it-adj|inv=1||masculine plural|maggi}}
+{{it-adj|f=#|f2=+|fpl=maggi|fpl2=magge}}
 
 # {{tlb|it|archaic}} [[greater]], [[bigger]]
 #* {{quote-book|it|year=13th century|author=Cecco Angiolieri|authorlink=Cecco Angiolieri|title=Rime|publisher=BUR|year_published=1979|section=VI - “Quanto un granel di panico è minore”|page=|passage={{...}} e quanto m’è più pessimo el dolore ¶ ad averlo, e l’ho, ch’a averlo perduto: ¶ cotant’è '''maggio''' la pena d’amore, ¶ ched io non averei mai creduto.|translation={{...}} and how the pain is worse to me ¶ having it, and I have it, than having lost it: ¶ so the pain of love is '''greater''' ¶ than I ever would've believed.}}
@@ -12862,11 +12790,11 @@ From {{inh|it|la|maior}}, {{m|la|maius}}, comparative of {{m|la|magnus||big”, 
 =====Synonyms=====
 * {{l|la|maggiormente}}
 
-===Anagrams===
-* {{l|it|omaggi}}
-
 ====See also====
 * {{list:Gregorian calendar months/it}}
+
+===Anagrams===
+* {{l|it|omaggi}}
 -------- end text --------
 Page 13593 maggior: Found match for regex: =
 Page 13593 maggior: -------- begin text --------
@@ -13298,7 +13226,7 @@ From {{bor|it|es|mataco}}.
 
 ===References===
 * {{R:it:Trec}}
-* {{R:DIO}}
+* {{R:it:Olivetti}}
 
 {{C|it|Armadillos|Ethnonyms}}
 -------- end text --------
@@ -13525,9 +13453,9 @@ From {{inh|it|la|mīlle}}, from {{inh|it|itc-pro|*smīɣeslī}}, from {{inh|it|i
 * {{hyphenation|it|mìl|le}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
-# {{cln|it|cardinal numbers}} [[thousand]]
+# [[thousand]]
 
 ====Derived terms====
 {{der3|it|millefiori|millefoglie|millepiedi|Milleporini|millerighe|millesimo}}
@@ -13547,98 +13475,84 @@ Page 14521 millecento: -------- begin text --------
 {{cardinalbox|it|1000|1100|1200|mille|milleduecento|ord=millecentesimo}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[one thousand]] [[one hundred]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 14522 millecinquecento: Found match for regex: {
 Page 14522 millecinquecento: -------- begin text --------
 {{cardinalbox|it|1400|1500|1600|millequattrocento|milleseicento|ord=millecinquecentesimo}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[one thousand]] [[five hundred]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 14524 milleduecento: Found match for regex: {
 Page 14524 milleduecento: -------- begin text --------
 {{cardinalbox|it|1100|1200|1300|millecento|milletrecento|ord=milleduecentesimo}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[one thousand]] [[two hundred]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 14528 millenovecento: Found match for regex: {
 Page 14528 millenovecento: -------- begin text --------
 {{cardinalbox|it|1800|1900|2000|milleottocento|duemila|ord=millenovecentesimo}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[one thousand]] [[nine hundred]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 14529 milleottocento: Found match for regex: {
 Page 14529 milleottocento: -------- begin text --------
 {{cardinalbox|it|1700|1800|1900|millesettecento|millenovecento|ord=milleottocentesimo}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[one thousand]] [[eight hundred]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 14530 millequattrocento: Found match for regex: {
 Page 14530 millequattrocento: -------- begin text --------
 {{cardinalbox|it|1300|1400|1500|milletrecento|millecinquecento|ord=millequattrocentesimo}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[one thousand]] [[four hundred]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 14531 milleseicento: Found match for regex: {
 Page 14531 milleseicento: -------- begin text --------
 {{cardinalbox|it|1500|1600|1700|millecinquecento|millesettecento|ord=milleseicentesimo}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[one thousand]] [[six hundred]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 14532 millesettecento: Found match for regex: {
 Page 14532 millesettecento: -------- begin text --------
@@ -13648,28 +13562,24 @@ Page 14532 millesettecento: -------- begin text --------
 {{af|it|mille|settecento}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[one thousand]] [[seven hundred]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 14536 milletrecento: Found match for regex: {
 Page 14536 milletrecento: -------- begin text --------
 {{cardinalbox|it|1200|1300|1400|milleduecento|millequattrocento|ord=milletrecentesimo}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[one thousand]] [[three hundred]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 14537 milleuno: Found match for regex: {
 Page 14537 milleuno: -------- begin text --------
@@ -13679,14 +13589,12 @@ Page 14537 milleuno: -------- begin text --------
 {{af|it|mille|uno}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[one thousand]] and [[one]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 14538 milleusi: Found match for regex: =
 Page 14538 milleusi: -------- begin text --------
@@ -13741,7 +13649,7 @@ Probably of {{der|it|bnt|-}} origin.
 # {{lb|it|uncountable|masculine only}} [[Mongo]] {{gloss|Bantu language}}
 
 ===References===
-* {{R:DIO}}
+* {{R:it:Olivetti}}
 
 {{C|it|Currency}}
 
@@ -15273,15 +15181,15 @@ From {{inh|it|la|nucem}}, accusative singular of {{m|la|nux||nut}}, ultimately f
 
 # [[walnut]] {{gloss|having a dark brown colour}}
 
-===Anagrams===
-* {{anagrams|it|ceno|cenò|ocne|once}}
-
 ===Further reading===
 * {{pedia|lang=it}}
 
 ===References===
 * {{R:it:Trec|sense=1}}
 * {{R:it:Trec|sense=2}}
+
+===Anagrams===
+* {{anagrams|it|ceno|cenò|ocne|once}}
 
 {{C|it|Colors|Cuts of meat|Fruits|Nuts|Trees|Woods}}
 
@@ -15413,9 +15321,9 @@ From {{inh|it|VL.|*nōvāgintā}}, from {{inh|it|la|nōnāgintā}} (blended with
 * {{audio|it|LL-Q652 (ita)-Happypheasant-novanta.wav|Audio}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
-# {{cln|it|cardinal numbers}} [[ninety]]
+# [[ninety]]
 
 ====Related terms====
 * {{l|it|novantamila}}
@@ -15442,9 +15350,9 @@ Page 15867 novantacinque: -------- begin text --------
 {{af|it|novanta|cinque|t1=ninety|t2=five}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
-# {{cln|it|cardinal numbers}} [[ninety-five]]
+# [[ninety-five]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
@@ -15460,9 +15368,9 @@ Page 15869 novantadue: -------- begin text --------
 {{af|it|novanta|due|t1=ninety|t2=two}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
-# {{cln|it|cardinal numbers}} [[ninety-two]]
+# [[ninety-two]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
@@ -15475,14 +15383,12 @@ Page 15871 novantamila: -------- begin text --------
 {{af|it|novanta|mila}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[ninety]] [[thousand]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 15872 novantanove: Found match for regex: {
 Page 15872 novantanove: -------- begin text --------
@@ -15492,9 +15398,9 @@ Page 15872 novantanove: -------- begin text --------
 {{af|it|novanta|nove|t1=ninety|t2=nine}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
-# {{cln|it|cardinal numbers}} [[ninety-nine]]
+# [[ninety-nine]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
@@ -15507,9 +15413,9 @@ Page 15875 novantaquattro: -------- begin text --------
 {{af|it|novanta|quattro|t1=ninety|t2=four}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
-# {{cln|it|cardinal numbers}} [[ninety-four]]
+# [[ninety-four]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
@@ -15522,9 +15428,9 @@ Page 15876 novantasei: -------- begin text --------
 {{af|it|novanta|sei|t1=ninety|t2=six}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
-# {{cln|it|cardinal numbers}} [[ninety-six]]
+# [[ninety-six]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
@@ -15537,9 +15443,9 @@ Page 15878 novantasette: -------- begin text --------
 {{af|it|novanta|sette|t1=ninety|t2=seven}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
-# {{cln|it|cardinal numbers}} [[ninety-seven]]
+# [[ninety-seven]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
@@ -15555,9 +15461,9 @@ Page 15880 novantatré: -------- begin text --------
 {{af|it|novanta|tre|t1=ninety|t2=three}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
-# {{cln|it|cardinal numbers}} [[ninety-three]]
+# [[ninety-three]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
@@ -15576,9 +15482,9 @@ Page 15885 novantotto: -------- begin text --------
 * {{rhymes|it|ɔtto}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
-# {{cln|it|cardinal numbers}} [[ninety-eight]]
+# [[ninety-eight]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
@@ -15595,9 +15501,9 @@ Page 15887 novantuno: -------- begin text --------
 * {{rhymes|it|uno}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
-# {{cln|it|cardinal numbers}} [[ninety-one]]
+# [[ninety-one]]
 
 ===Noun===
 {{it-noun|m|-}}
@@ -15619,9 +15525,9 @@ Page 15890 nove: -------- begin text --------
 From {{inh|it|la|novem}}, ultimately from {{inh|it|ine-pro|*h₁néwn̥}}.
 
 ====Numeral====
-{{head|it|numeral}}
+{{it-card-inv}}
 
-# {{cln|it|cardinal numbers}} [[nine]]
+# [[nine]]
 
 ====Noun====
 {{it-noun|m|-}}
@@ -15666,9 +15572,9 @@ Page 15894 novecento: -------- begin text --------
 * {{rhymes|it|ɛnto}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
-# {{cln|it|cardinal numbers}} [[nine hundred]]
+# [[nine hundred]]
 # the [[twentieth]] [[century]] ([[1900s]])
 
 ====Derived terms====
@@ -15686,7 +15592,7 @@ Page 15898 novemila: -------- begin text --------
 {{cardinalbox|it|8999|9000|9001|ottomilanovecentonovantanove|novemillauno|ord=novemillesimo}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[nine thousand]]
 
@@ -15695,8 +15601,6 @@ Page 15898 novemila: -------- begin text --------
 
 ===Anagrams===
 * {{l|it|lenivamo}}
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 15935 nude-look: Found match for regex: =
 Page 15935 nude-look: -------- begin text --------
@@ -15716,7 +15620,7 @@ Page 15938 nudo bruco: -------- begin text --------
 * {{alter|it|nudo e bruco|nudo come un bruco}}
 
 ===Adjective===
-{{it-adv|inv=1}}
+{{it-adj|inv=1}}
 
 # {{lb|it|literally}} [[naked]] as a [[worm]]; very [[poor]]
 #: {{syn|it|poverissimo}}
@@ -15841,7 +15745,7 @@ From {{bor|it|fr|oléfiant}}.
 
 ===References===
 * {{R:it:Trec}}
-* {{R:DIO}}
+* {{R:it:Olivetti}}
 -------- end text --------
 Page 16138 oleofacente: Found match for regex: =
 Page 16138 oleofacente: -------- begin text --------
@@ -15861,7 +15765,7 @@ Derived from {{pre|it|oleo|facente}}. {{clq|it|fr|oléfiant}}.
 
 ===References===
 * {{R:it:Trec}}
-* {{R:DIO}}
+* {{R:it:Olivetti}}
 -------- end text --------
 Page 16167 oliva: Found match for regex: {
 Page 16167 oliva: -------- begin text --------
@@ -16163,9 +16067,9 @@ From {{inh|it|la|octāgintā}}, variant of {{m|la|octōgintā||eighty}}, from {{
 * {{audio|it|LL-Q652 (ita)-Happypheasant-ottanta.wav|Audio}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
-# {{cln|it|cardinal numbers}} [[eighty]]
+# [[eighty]]
 
 ====Related terms====
 * {{l|it|ottantamila}}
@@ -16193,9 +16097,9 @@ Page 16710 ottantacinque: -------- begin text --------
 {{af|it|ottanta|cinque|t1=eighty|t2=five}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
-# {{cln|it|cardinal numbers}} [[eighty-five]]
+# [[eighty-five]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
@@ -16208,9 +16112,9 @@ Page 16712 ottantadue: -------- begin text --------
 {{af|it|ottanta|due|t1=eighty|t2=two}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
-# {{cln|it|cardinal numbers}} [[eighty-two]]
+# [[eighty-two]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
@@ -16223,14 +16127,12 @@ Page 16714 ottantamila: -------- begin text --------
 {{af|it|ottanta|mila}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[eighty]] [[thousand]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 16715 ottantanove: Found match for regex: {
 Page 16715 ottantanove: -------- begin text --------
@@ -16240,9 +16142,9 @@ Page 16715 ottantanove: -------- begin text --------
 {{af|it|ottanta|nove|t1=eighty|t2=nine}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
-# {{cln|it|cardinal numbers}} [[eighty-nine]]
+# [[eighty-nine]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
@@ -16255,9 +16157,9 @@ Page 16718 ottantaquattro: -------- begin text --------
 {{af|it|ottanta|quattro|t1=eighty|t2=four}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
-# {{cln|it|cardinal numbers}} [[eighty-four]]
+# [[eighty-four]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
@@ -16270,9 +16172,9 @@ Page 16719 ottantasei: -------- begin text --------
 {{af|it|ottanta|sei|t1=eighty|t2=six}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
-# {{cln|it|cardinal numbers}} [[eighty-six]]
+# [[eighty-six]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
@@ -16285,9 +16187,9 @@ Page 16722 ottantasette: -------- begin text --------
 {{af|it|ottanta|sette|t1=eighty|t2=seven}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
-# {{cln|it|cardinal numbers}} [[eighty-seven]]
+# [[eighty-seven]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
@@ -16300,9 +16202,9 @@ Page 16724 ottantatré: -------- begin text --------
 {{af|it|ottanta|tre|t1=eighty|t2=three}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
-# {{cln|it|cardinal numbers}} [[eighty-three]]
+# [[eighty-three]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
@@ -16321,9 +16223,9 @@ Page 16730 ottantotto: -------- begin text --------
 * {{rhymes|it|ɔtto}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
-# {{cln|it|cardinal numbers}} [[eighty-eight]]
+# [[eighty-eight]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
@@ -16340,9 +16242,9 @@ Page 16732 ottantuno: -------- begin text --------
 * {{rhymes|it|uno}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
-# {{cln|it|cardinal numbers}} [[eighty-one]]
+# [[eighty-one]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
@@ -16359,9 +16261,9 @@ Page 16751 ottocento: -------- begin text --------
 * {{rhymes|it|ɛnto}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
-# {{cln|it|cardinal numbers}} [[eight hundred]]
+# [[eight hundred]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
@@ -16376,7 +16278,7 @@ Page 16752 ottocentomila: -------- begin text --------
 {{af|it|ottocento|mila}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[eight]] [[hundred thousand]]
 
@@ -16391,7 +16293,7 @@ Page 16755 ottomila: -------- begin text --------
 {{af|it|otto|mila}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[eight thousand]]
 
@@ -16400,8 +16302,6 @@ Page 16755 ottomila: -------- begin text --------
 
 ===Anagrams===
 * {{l|it|lottiamo}}
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 16811 paesaggisticoambientale: Found match for regex: =
 Page 16811 paesaggisticoambientale: -------- begin text --------
@@ -16930,11 +16830,11 @@ From {{der|it|la|persea||sebesten tree}}, from {{der|it|grc|περσέα}}.
 
 # {{adj form of|it|perso||f|s}}
 
-===Anagrams===
-* {{anagrams|it|aspre|parse|presa|saper|spare|spera}}
-
 ===References===
 * {{R:it:Trec}}
+
+===Anagrams===
+* {{anagrams|it|aspre|parse|presa|saper|spare|spera}}
 
 ----
 
@@ -17249,11 +17149,11 @@ From {{bor|it|la|pīrāta}}, from {{der|it|grc|πειρᾱτής}}, derived from
 
 # {{inflection of|it|piratare||3|s|pres|indc|;|2|s|impr}}
 
-===Anagrams===
-* {{anagrams|it|parati|parità|patirà|patria|rapati|rapita|tarpai}}
-
 ===References===
 * {{R:it:Trec}}
+
+===Anagrams===
+* {{anagrams|it|parati|parità|patirà|patria|rapati|rapita|tarpai}}
 
 ----
 
@@ -17560,12 +17460,11 @@ From {{inh|it|la|purpura}}, from {{der|it|grc|πορφύρα}}.
 
 # [[purple]], [[crimson]]
 
-===Anagrams===
-* {{l|it|apporrò}}, {{l|it|opporrà}}
-
-
 ===See also===
 {{table:colors/it}}
+
+===Anagrams===
+* {{l|it|apporrò}}, {{l|it|opporrà}}
 
 {{C|it|Purples|Reds}}
 -------- end text --------
@@ -18198,10 +18097,19 @@ Page 19254 punjabi: -------- begin text --------
 Page 19266 purchessia: Found match for regex: =
 Page 19266 purchessia: -------- begin text --------
 
+===Etymology===
+{{af|it|pure|alt1=pur|che|sia}}
+
+===Pronunciation===
+* {{it-IPA|purchessìa}}
+
 ===Adjective===
 {{it-adj|inv=1}}
 
 # [[any]] [[whatever]] or [[whatsoever]]
+
+===Further reading===
+* {{R:it:Treccani}}
 -------- end text --------
 Page 19280 purosangue: Found match for regex: =
 Page 19280 purosangue: -------- begin text --------
@@ -18432,7 +18340,7 @@ Page 19368 qualunche: -------- begin text --------
 #* {{quote-book|it|year=1567|title=Ricettario fiorentino|trans-title=Florentine Cookbook|url=https://books.google.it/books?id=YX5DAAAAcAAJ&printsec=frontcover&dq=Ricettario+fiorentino&hl=it&sa=X&ved=0ahUKEwia8e3b85zhAhWKM-wKHaURCa4Q6AEIKTAA#v=onepage&q&f=false|page=3|pageurl=https://books.google.it/books?id=YX5DAAAAcAAJ&dq=Ricettario%20fiorentino&hl=it&pg=PA3#v=onepage&q&f=false|passage=L'acque artificiali ſono tutte le ﬅillate in '''qualunche''' modo ſi ﬅillino.|translation=Artificial waters are all those [that are] in '''any''' way distilled.}}
 
 ===References===
-* {{R:DIO}}
+* {{R:it:Olivetti}}
 -------- end text --------
 Page 19369 qualuno: Found match for regex: =
 Page 19369 qualuno: -------- begin text --------
@@ -18481,7 +18389,7 @@ Page 19372 quant': -------- begin text --------
 # {{lb|it|sometimes before a vowel}} {{apocopic form of|it|quanto}}
 
 ===Adverb===
-{{it-adv|apocopate}}
+{{head|it|adverb|apocopate}}
 
 # {{lb|it|sometimes before a vowel}} {{apocopic form of|it|quanto}}
 -------- end text --------
@@ -18508,7 +18416,7 @@ Surface analysis: {{suffix|it|quanto|alt1=quant(o)|t1=how much|-unque|pos2=indef
 #: {{syn|it|ciononostante|comunque|purtuttavia|tuttavia}}
 
 ===Adjective===
-{{it-adj|inv=1||rare masculine plural|quantunqui}} {{tlb|it|obsolete}}
+{{it-adj|pl=#|pl2=+|pl2_qual=rare}} {{tlb|it|obsolete}}
 # [[however]] [[much]]
 # {{lb|it|in the plural}} however [[many]]
 #* {{quote-book|it|author=Dante Alighieri|authorlink=Dante Alighieri|title=[[w:Inferno (Dante)|La divina commedia: Inferno]]|trans-title=The Divine Comedy: Hell|format=paperback|edition=12th|publisher=Le Monnier|year=1321|year_published=1994|page=72|section=Canto V|lines=11–12|passage=cignesi con la coda tante volte ¶ '''quantunque''' gradi vuol che giù sia messa.|translation=Girds himself with his tail '''as many''' times ¶ '''as''' grades he wishes it should be thrust down.}}
@@ -18528,8 +18436,8 @@ Surface analysis: {{suffix|it|quanto|alt1=quant(o)|t1=how much|-unque|pos2=indef
 
 ===References===
 <references/>
-* {{R:CIE}}
-* {{R:DIO}}
+* {{R:it:Collins}}
+* {{R:it:Olivetti}}
 -------- end text --------
 Page 19383 quarant: Found match for regex: =
 Page 19383 quarant: -------- begin text --------
@@ -18551,9 +18459,9 @@ From {{inh|it|la|quadrāgintā}}, from {{inh|it|ine-pro|*kʷetwr̥(d)ḱomt||fou
 * {{audio|it|LL-Q652 (ita)-Happypheasant-quaranta.wav|Audio}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
-# {{cln|it|cardinal numbers}} [[forty]]
+# [[forty]]
 
 ====Related terms====
 {{rel4|it
@@ -18585,9 +18493,9 @@ Page 19385 quarantacinque: -------- begin text --------
 {{af|it|quaranta|cinque|t1=forty|t2=five}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
-# {{cln|it|cardinal numbers}} [[forty-five]] (number and record)
+# [[forty-five]] (number and record)
 
 ====Derived terms====
 * {{l|it|quarantacinque giri}}
@@ -18602,14 +18510,12 @@ Page 19386 quarantacinquemila: -------- begin text --------
 {{af|it|quarantacinque|mila}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[forty-five]] [[thousand]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 19389 quarantadue: Found match for regex: {
 Page 19389 quarantadue: -------- begin text --------
@@ -18619,9 +18525,9 @@ Page 19389 quarantadue: -------- begin text --------
 {{af|it|quaranta|due|t1=forty|t2=two}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
-# {{cln|it|cardinal numbers}} [[forty-two]]
+# [[forty-two]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
@@ -18634,14 +18540,12 @@ Page 19391 quarantamila: -------- begin text --------
 {{af|it|quaranta|mila}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[forty]] [[thousand]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 19393 quarantanove: Found match for regex: {
 Page 19393 quarantanove: -------- begin text --------
@@ -18651,9 +18555,9 @@ Page 19393 quarantanove: -------- begin text --------
 {{af|it|quaranta|nove|t1=forty|t2=nine}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
-# {{cln|it|cardinal numbers}} [[forty-nine]]
+# [[forty-nine]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
@@ -18666,9 +18570,9 @@ Page 19396 quarantaquattro: -------- begin text --------
 {{af|it|quaranta|quattro|t1=forty|t2=four}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
-# {{cln|it|cardinal numbers}} [[forty-four]]
+# [[forty-four]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
@@ -18681,9 +18585,9 @@ Page 19397 quarantasei: -------- begin text --------
 {{af|it|quaranta|sei|t1=forty|t2=six}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
-# {{cln|it|cardinal numbers}} [[forty-six]]
+# [[forty-six]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
@@ -18696,9 +18600,9 @@ Page 19399 quarantasette: -------- begin text --------
 {{af|it|quaranta|sette|t1=forty|t2=seven}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
-# {{cln|it|cardinal numbers}} [[forty-seven]]
+# [[forty-seven]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
@@ -18711,9 +18615,9 @@ Page 19401 quarantatré: -------- begin text --------
 {{af|it|quaranta|tre|t1=forty|t2=three}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
-# {{cln|it|cardinal numbers}} [[forty-three]]
+# [[forty-three]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
@@ -18732,9 +18636,9 @@ Page 19411 quarantotto: -------- begin text --------
 * {{rhymes|it|ɔtto}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
-# {{cln|it|cardinal numbers}} [[forty-eight]]
+# [[forty-eight]]
 # the year 1848, especially with reference to the [[revolutions]] of that year
 
 ====Related terms====
@@ -18757,9 +18661,9 @@ Page 19413 quarantuno: -------- begin text --------
 * {{rhymes|it|uno}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
-# {{cln|it|cardinal numbers}} [[forty-one]]
+# [[forty-one]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
@@ -18826,9 +18730,9 @@ From {{inh|it|la|quattuordecim}}.
 * {{hyphenation|it|quat|tór|di|ci}}
 
 ===Numeral===
-{{head|it|numeral|g=m|invariable}}
+{{it-card-inv}}
 
-# {{cln|it|cardinal numbers}} [[fourteen]]
+# [[fourteen]]
 
 ====Related terms====
 * {{l|it|quattordicenne}}
@@ -18846,14 +18750,12 @@ Page 19439 quattordicimila: -------- begin text --------
 {{af|it|quattordici|mila}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[fourteen]] [[thousand]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 19443 quattro: Found match for regex: {
 Page 19443 quattro: -------- begin text --------
@@ -18868,9 +18770,9 @@ From {{inh|it|la|quattuor}}, from {{inh|it|itc-pro|*kʷettwōr}}, from {{inh|it|
 * {{hyphenation|it|quàt|tro}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
-# {{cln|it|cardinal numbers}} [[four]]
+# [[four]]
 
 ====Derived terms====
 {{der4|it
@@ -18916,9 +18818,9 @@ Page 19448 quattrocento: -------- begin text --------
 * {{rhymes|it|ɛnto}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
-# {{cln|it|cardinal numbers}} [[four hundred]]
+# [[four hundred]]
 
 ====Descendants====
 * {{desc|en|quattrocento|bor=1}}
@@ -18933,7 +18835,7 @@ Page 19449 quattrocentomila: Found match for regex: =
 Page 19449 quattrocentomila: -------- begin text --------
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[four hundred thousand]]
 -------- end text --------
@@ -18945,14 +18847,12 @@ Page 19450 quattromila: -------- begin text --------
 {{af|it|quattro|mila}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[four thousand]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 19451 quattroporte: Found match for regex: =
 Page 19451 quattroporte: -------- begin text --------
@@ -19071,9 +18971,9 @@ From {{inh|it|la|quīndecim}}.
 * {{hyphenation|it|quìn|di|ci}}
 
 ===Numeral===
-{{head|it|numeral|g=m|invariable}}
+{{it-card-inv}}
 
-# {{cln|it|cardinal numbers}} [[fifteen]]
+# [[fifteen]]
 
 ====Related terms====
 * {{l|it|cinque}}
@@ -19093,14 +18993,12 @@ Page 19485 quindicimila: -------- begin text --------
 {{af|it|quindici|mila}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[fifteen]] [[thousand]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 19503 QV: Found match for regex: =
 Page 19503 QV: -------- begin text --------
@@ -19604,12 +19502,12 @@ From {{bor|it|la|salmōnem}}, accusative singular of {{m|la|salmō}}.
 * {{l|it|salmone affumicato}}
 * {{l|it|trota salmonata}}
 
-===Anagrams===
-* {{anagrams|it|Anselmo|mensola}}
-
 ===References===
 * {{R:it:Trec|sense=1}}
 * {{R:it:Trec|sense=2}}
+
+===Anagrams===
+* {{anagrams|it|Anselmo|mensola}}
 
 {{C|it|Colors|Fish}}
 
@@ -19845,9 +19743,9 @@ From {{inh|it|la|sēdecim}}.
 * {{hyphenation|it|sé|di|ci}}
 
 ===Numeral===
-{{head|it|numeral|g=m|invariable}}
+{{it-card-inv}}
 
-# {{cln|it|cardinal numbers}} [[sixteen]]
+# [[sixteen]]
 
 ====Related terms====
 * {{l|it|sedicenne}}
@@ -19868,14 +19766,12 @@ Page 21420 sedicimila: -------- begin text --------
 {{af|it|sedici|mila}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[sixteen]] [[thousand]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 21465 sei: Found match for regex: {
 Page 21465 sei: -------- begin text --------
@@ -19891,9 +19787,9 @@ From {{inh|it|la|sex}}, from {{inh|it|ine-pro|*swéḱs}}.
 * {{rhymes|it|ɛi}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
-# {{cln|it|cardinal numbers}} [[six]]
+# [[six]]
 
 ===Noun===
 {{it-noun|m|-}}
@@ -19937,9 +19833,9 @@ From {{etyl|la|it}} {{m|la|sescentī||six hundred}}.
 * {{rhymes|it|ɛnto}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
-# {{cln|it|cardinal numbers}} [[six hundred]]
+# [[six hundred]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
@@ -19951,14 +19847,12 @@ Page 21472 seicentomila: Found match for regex: =
 Page 21472 seicentomila: -------- begin text --------
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[six hundred thousand]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 21516 seimila: Found match for regex: {
 Page 21516 seimila: -------- begin text --------
@@ -19967,7 +19861,7 @@ Page 21516 seimila: -------- begin text --------
 ===Etymology===
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[six thousand]]
 
@@ -19976,8 +19870,6 @@ Page 21516 seimila: -------- begin text --------
 
 ===Anagrams===
 * {{l|it|semiali}}
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 21590 semidispari: Found match for regex: {
 Page 21590 semidispari: -------- begin text --------
@@ -20223,9 +20115,9 @@ From {{inh|it|la|sexāgintā}}, from {{inh|it|ine-pro|*sweḱsḱomt}}, from ear
 * {{audio|it|LL-Q652 (ita)-Happypheasant-sessanta.wav|Audio}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
-# {{cln|it|cardinal numbers}} [[sixty]]
+# [[sixty]]
 
 ====Related terms====
 * {{l|it|sessantamila}}
@@ -20253,9 +20145,9 @@ Page 21834 sessantacinque: -------- begin text --------
 {{af|it|sessanta|cinque|t1=sixty|t2=five}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
-# {{cln|it|cardinal numbers}} [[sixty-five]]
+# [[sixty-five]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
@@ -20268,9 +20160,9 @@ Page 21837 sessantadue: -------- begin text --------
 {{af|it|sessanta|due|t1=sixty|t2=two}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
-# {{cln|it|cardinal numbers}} [[sixty-two]]
+# [[sixty-two]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
@@ -20283,14 +20175,12 @@ Page 21840 sessantamila: -------- begin text --------
 {{af|it|sessanta|mila}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[sixty]] [[thousand]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 21841 sessantanove: Found match for regex: {
 Page 21841 sessantanove: -------- begin text --------
@@ -20300,9 +20190,9 @@ Page 21841 sessantanove: -------- begin text --------
 {{af|it|sessanta|nove|t1=sixty|t2=nine}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
-# {{cln|it|cardinal numbers}} [[sixty-nine]] (number and sexual position)
+# [[sixty-nine]] (number and sexual position)
 
 ===See also===
 * [[Appendix:Italian numbers]]
@@ -20315,9 +20205,9 @@ Page 21845 sessantaquattro: -------- begin text --------
 {{af|it|sessanta|quattro|t1=sixty|t2=four}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
-# {{cln|it|cardinal numbers}} [[sixty-four]]
+# [[sixty-four]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
@@ -20330,9 +20220,9 @@ Page 21846 sessantasei: -------- begin text --------
 {{af|it|sessanta|sei|t1=sixty|t2=six}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
-# {{cln|it|cardinal numbers}} [[sixty-six]]
+# [[sixty-six]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
@@ -20345,9 +20235,9 @@ Page 21848 sessantasette: -------- begin text --------
 {{af|it|sessanta|sette|t1=sixty|t2=seven}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
-# {{cln|it|cardinal numbers}} [[sixty-seven]]
+# [[sixty-seven]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
@@ -20360,9 +20250,9 @@ Page 21850 sessantatré: -------- begin text --------
 {{af|it|sessanta|tre|t1=sixty|t2=three}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
-# {{cln|it|cardinal numbers}} [[sixty-three]]
+# [[sixty-three]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
@@ -20381,9 +20271,9 @@ Page 21857 sessantotto: -------- begin text --------
 * {{rhymes|it|ɔtto}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
-# {{cln|it|cardinal numbers}} [[sixty-eight]]
+# [[sixty-eight]]
 
 ===Proper noun===
 {{it-proper noun|m}}
@@ -20405,9 +20295,9 @@ Page 21859 sessantuno: -------- begin text --------
 * {{rhymes|it|uno}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
-# {{cln|it|cardinal numbers}} [[sixty-one]]
+# [[sixty-one]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
@@ -20424,9 +20314,9 @@ From {{inh|it|la|septuāgintā}}, from {{m|la||*septmāginta}}, from {{inh|it|in
 * {{audio|it|LL-Q652 (ita)-Happypheasant-settanta.wav|Audio}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
-# {{cln|it|cardinal numbers}} [[seventy]]
+# [[seventy]]
 
 ====Related terms====
 * {{l|it|settantamila}}
@@ -20452,9 +20342,9 @@ Page 21884 settantacinque: -------- begin text --------
 {{af|it|settanta|cinque|t1=seventy|t2=five}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
-# {{cln|it|cardinal numbers}} [[seventy-five]]
+# [[seventy-five]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
@@ -20470,9 +20360,9 @@ Page 21887 settantadue: -------- begin text --------
 {{af|it|settanta|due|t1=seventy|t2=two}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
-# {{cln|it|cardinal numbers}} [[seventy-two]]
+# [[seventy-two]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
@@ -20485,14 +20375,12 @@ Page 21890 settantamila: -------- begin text --------
 {{af|it|settanta|mila}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[seventy]] [[thousand]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 21891 settantanove: Found match for regex: {
 Page 21891 settantanove: -------- begin text --------
@@ -20502,9 +20390,9 @@ Page 21891 settantanove: -------- begin text --------
 {{af|it|settanta|nove|t1=seventy|t2=nine}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
-# {{cln|it|cardinal numbers}} [[seventy-nine]]
+# [[seventy-nine]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
@@ -20520,9 +20408,9 @@ Page 21895 settantaquattro: -------- begin text --------
 {{af|it|settanta|quattro|t1=seventy|t2=four}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
-# {{cln|it|cardinal numbers}} [[seventy-four]]
+# [[seventy-four]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
@@ -20535,9 +20423,9 @@ Page 21896 settantasei: -------- begin text --------
 {{af|it|settanta|sei|t1=seventy|t2=six}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
-# {{cln|it|cardinal numbers}} [[seventy-six]]
+# [[seventy-six]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
@@ -20550,9 +20438,9 @@ Page 21899 settantasette: -------- begin text --------
 {{af|it|settanta|sette|t1=seventy|t2=seven}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
-# {{cln|it|cardinal numbers}} [[seventy-seven]]
+# [[seventy-seven]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
@@ -20565,9 +20453,9 @@ Page 21901 settantatré: -------- begin text --------
 {{af|it|settanta|tre|t1=seventy|t2=three}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
-# {{cln|it|cardinal numbers}} [[seventy-three]]
+# [[seventy-three]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
@@ -20586,9 +20474,9 @@ Page 21908 settantotto: -------- begin text --------
 * {{rhymes|it|ɔtto}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
-# {{cln|it|cardinal numbers}} [[seventy-eight]]
+# [[seventy-eight]]
 
 ====Derived terms====
 * {{l|it|settantotto giri}}
@@ -20608,9 +20496,9 @@ Page 21910 settantuno: -------- begin text --------
 * {{rhymes|it|uno}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
-# {{cln|it|cardinal numbers}} [[seventy-one]]
+# [[seventy-one]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
@@ -20627,9 +20515,9 @@ From {{inh|it|la|septem}}, from {{inh|it|ine-pro|*septḿ̥}}.
 * {{hyphenation|it|sèt|te}}
 
 ====Numeral====
-{{head|it|numeral}}
+{{it-card-inv}}
 
-# {{cln|it|cardinal numbers}} [[seven]]
+# [[seven]]
 
 ====Noun====
 {{it-noun|m|~}}
@@ -20683,9 +20571,9 @@ Page 21917 settecento: -------- begin text --------
 * {{rhymes|it|ɛnto}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
-# {{cln|it|cardinal numbers}} [[seven hundred]]
+# [[seven hundred]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
@@ -20700,14 +20588,12 @@ Page 21935 settecentomila: -------- begin text --------
 {{af|it|settecento|mila}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[seven hundred]] [[thousand]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 22022 settemila: Found match for regex: {
 Page 22022 settemila: -------- begin text --------
@@ -20717,14 +20603,12 @@ Page 22022 settemila: -------- begin text --------
 {{af|it|sette|mila}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[seven thousand]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 22049 sexy: Found match for regex: =
 Page 22049 sexy: -------- begin text --------
@@ -21410,12 +21294,12 @@ From {{der|it|mul|Stereum}}, from {{der|it|grc|στερεός||firm, solid}}.
 
 # any [[fungus]] of the genus {{taxlink|Stereum|genus}}
 
-===Anagrams===
-* {{anagrams|it|estero|tesero|teserò}}
-
 ===References===
 * {{R:it:Trec|stereo1|stereo<sup>1</sup>}}
 * {{R:it:Trec|stereo2|stereo<sup>2</sup>}}
+
+===Anagrams===
+* {{anagrams|it|estero|tesero|teserò}}
 
 {{C|it|Mushrooms}}
 
@@ -22184,9 +22068,9 @@ Page 24648 trecento: -------- begin text --------
 * {{rhymes|it|ɛnto}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
-# {{cln|it|cardinal numbers}} [[three hundred]]
+# [[three hundred]]
 
 ====Descendants====
 * {{desc|en|trecento|bor=1}}
@@ -22205,7 +22089,7 @@ Page 24649 trecentocinquanta: -------- begin text --------
 {{affix|it|trecento|cinquanta}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[three hundred]] and [[fifty]]
 
@@ -22214,8 +22098,6 @@ Page 24649 trecentocinquanta: -------- begin text --------
 
 ===Anagrams===
 * {{l|it|centocinquantatré}}
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 24650 trecentocinquantacinque: Found match for regex: {
 Page 24650 trecentocinquantacinque: -------- begin text --------
@@ -22225,7 +22107,7 @@ Page 24650 trecentocinquantacinque: -------- begin text --------
 {{affix|it|trecento|cinquantacinque}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[three hundred]] and [[fifty-five]]
 
@@ -22234,8 +22116,6 @@ Page 24650 trecentocinquantacinque: -------- begin text --------
 
 ===Anagrams===
 * {{l|it|cinquecentocinquantatré}}
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 24651 trecentocinquantadue: Found match for regex: {
 Page 24651 trecentocinquantadue: -------- begin text --------
@@ -22245,7 +22125,7 @@ Page 24651 trecentocinquantadue: -------- begin text --------
 {{affix|it|trecento|cinquantadue}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[three hundred]] and [[fifty-two]]
 
@@ -22254,8 +22134,6 @@ Page 24651 trecentocinquantadue: -------- begin text --------
 
 ===Anagrams===
 * {{l|it|duecentocinquantatré}}
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 24652 trecentocinquantanove: Found match for regex: {
 Page 24652 trecentocinquantanove: -------- begin text --------
@@ -22265,7 +22143,7 @@ Page 24652 trecentocinquantanove: -------- begin text --------
 {{affix|it|trecento|cinquantanove}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[three hundred]] and [[fifty-nine]]
 
@@ -22274,8 +22152,6 @@ Page 24652 trecentocinquantanove: -------- begin text --------
 
 ===Anagrams===
 * {{l|it|cinquecentonovantatré}}, {{l|it|novecentocinquantatré}}, {{l|it|trecentonovantacinque}}
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 24653 trecentocinquantaquattro: Found match for regex: {
 Page 24653 trecentocinquantaquattro: -------- begin text --------
@@ -22285,7 +22161,7 @@ Page 24653 trecentocinquantaquattro: -------- begin text --------
 {{affix|it|trecento|cinquantaquattro}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[three hundred]] and [[fifty-four]]
 
@@ -22294,8 +22170,6 @@ Page 24653 trecentocinquantaquattro: -------- begin text --------
 
 ===Anagrams===
 * {{l|it|quattrocentocinquantatré}}
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 24654 trecentocinquantasei: Found match for regex: {
 Page 24654 trecentocinquantasei: -------- begin text --------
@@ -22305,7 +22179,7 @@ Page 24654 trecentocinquantasei: -------- begin text --------
 {{affix|it|trecento|cinquantasei}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[three hundred]] and [[fifty-six]]
 
@@ -22314,8 +22188,6 @@ Page 24654 trecentocinquantasei: -------- begin text --------
 
 ===Anagrams===
 * {{l|it|seicentocinquantatré}}
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 24655 trecentocinquantasette: Found match for regex: {
 Page 24655 trecentocinquantasette: -------- begin text --------
@@ -22325,7 +22197,7 @@ Page 24655 trecentocinquantasette: -------- begin text --------
 {{affix|it|trecento|cinquantasette}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[three hundred]] and [[fifty-seven]]
 
@@ -22334,8 +22206,6 @@ Page 24655 trecentocinquantasette: -------- begin text --------
 
 ===Anagrams===
 * {{l|it|cinquecentosettantatré}}, {{l|it|settecentocinquantatré}}, {{l|it|trecentosettantacinque}}
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 24656 trecentocinquantatré: Found match for regex: {
 Page 24656 trecentocinquantatré: -------- begin text --------
@@ -22345,14 +22215,12 @@ Page 24656 trecentocinquantatré: -------- begin text --------
 {{affix|it|trecento|cinquantatré}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[three hundred]] and [[fifty-three]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 24657 trecentocinquantotto: Found match for regex: {
 Page 24657 trecentocinquantotto: -------- begin text --------
@@ -22362,14 +22230,12 @@ Page 24657 trecentocinquantotto: -------- begin text --------
 {{affix|it|trecento|cinquantotto}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[three hundred]] and [[fifty-eight]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 24658 trecentocinquantuno: Found match for regex: {
 Page 24658 trecentocinquantuno: -------- begin text --------
@@ -22379,14 +22245,12 @@ Page 24658 trecentocinquantuno: -------- begin text --------
 {{affix|it|trecento|cinquantuno}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[three hundred]] and [[fifty-one]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 24659 trecentocinque: Found match for regex: {
 Page 24659 trecentocinque: -------- begin text --------
@@ -22396,7 +22260,7 @@ Page 24659 trecentocinque: -------- begin text --------
 {{affix|it|trecento|cinque}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[three hundred]] and [[five]]
 
@@ -22405,8 +22269,6 @@ Page 24659 trecentocinque: -------- begin text --------
 
 ===Anagrams===
 * {{l|it|cinquecentotre}}, {{l|it|cinquecentotré}}
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 24660 trecentodiciannove: Found match for regex: {
 Page 24660 trecentodiciannove: -------- begin text --------
@@ -22416,14 +22278,12 @@ Page 24660 trecentodiciannove: -------- begin text --------
 {{affix|it|trecento|dicianove}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[three hundred]] and [[nineteen]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 24661 trecentodiciassette: Found match for regex: {
 Page 24661 trecentodiciassette: -------- begin text --------
@@ -22433,14 +22293,12 @@ Page 24661 trecentodiciassette: -------- begin text --------
 {{affix|it|trecento|diciasette}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[three hundred]] and [[seventeen]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 24662 trecentodiciotto: Found match for regex: {
 Page 24662 trecentodiciotto: -------- begin text --------
@@ -22450,7 +22308,7 @@ Page 24662 trecentodiciotto: -------- begin text --------
 {{affix|it|trecento|diciotto}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[three hundred]] and [[eighteen]]
 
@@ -22459,8 +22317,6 @@ Page 24662 trecentodiciotto: -------- begin text --------
 
 ===Anagrams===
 * {{l|it|ottocentotredici}}
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 24663 trecentodieci: Found match for regex: {
 Page 24663 trecentodieci: -------- begin text --------
@@ -22470,14 +22326,12 @@ Page 24663 trecentodieci: -------- begin text --------
 {{affix|it|trecento|dieci}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[three hundred]] and [[ten]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 24664 trecentododici: Found match for regex: {
 Page 24664 trecentododici: -------- begin text --------
@@ -22487,14 +22341,12 @@ Page 24664 trecentododici: -------- begin text --------
 {{affix|it|trecento|dodici}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[three hundred]] and [[twelve]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 24665 trecentodue: Found match for regex: {
 Page 24665 trecentodue: -------- begin text --------
@@ -22504,7 +22356,7 @@ Page 24665 trecentodue: -------- begin text --------
 {{affix|it|trecento|due}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[three hundred]] and [[two]]
 
@@ -22513,8 +22365,6 @@ Page 24665 trecentodue: -------- begin text --------
 
 ===Anagrams===
 * {{l|it|duecentotre}}, {{l|it|duecentotré}}
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 24666 trecentomila: Found match for regex: =
 Page 24666 trecentomila: -------- begin text --------
@@ -22523,14 +22373,12 @@ Page 24666 trecentomila: -------- begin text --------
 {{af|it|trecento|mila}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[three hundred]] [[thousand]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 24667 trecentonovanta: Found match for regex: {
 Page 24667 trecentonovanta: -------- begin text --------
@@ -22540,7 +22388,7 @@ Page 24667 trecentonovanta: -------- begin text --------
 {{affix|it|trecento|novanta}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[three hundred]] and [[ninety]]
 
@@ -22549,8 +22397,6 @@ Page 24667 trecentonovanta: -------- begin text --------
 
 ===Anagrams===
 * {{l|it|centonovantatré}}
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 24668 trecentonovantacinque: Found match for regex: {
 Page 24668 trecentonovantacinque: -------- begin text --------
@@ -22560,7 +22406,7 @@ Page 24668 trecentonovantacinque: -------- begin text --------
 {{af|it|trecento|novantacinque}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[three hundred]] and [[ninety-five]]
 
@@ -22569,8 +22415,6 @@ Page 24668 trecentonovantacinque: -------- begin text --------
 
 ===Anagrams===
 * {{l|it|cinquecentonovantatré}}, {{l|it|novecentocinquantatré}}, {{l|it|trecentocinquantanove}}
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 24669 trecentonovantadue: Found match for regex: {
 Page 24669 trecentonovantadue: -------- begin text --------
@@ -22580,7 +22424,7 @@ Page 24669 trecentonovantadue: -------- begin text --------
 {{affix|it|trecento|novantadue}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[three hundred]] and [[ninety-two]]
 
@@ -22589,8 +22433,6 @@ Page 24669 trecentonovantadue: -------- begin text --------
 
 ===Anagrams===
 * {{l|it|duecentonovantatré}}
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 24670 trecentonovantanove: Found match for regex: {
 Page 24670 trecentonovantanove: -------- begin text --------
@@ -22600,7 +22442,7 @@ Page 24670 trecentonovantanove: -------- begin text --------
 {{affix|it|trecento|novantanove}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[three hundred]] and [[ninety-nine]]
 
@@ -22609,8 +22451,6 @@ Page 24670 trecentonovantanove: -------- begin text --------
 
 ===Anagrams===
 * {{l|it|novecentonovantatré}}
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 24671 trecentonovantaquattro: Found match for regex: {
 Page 24671 trecentonovantaquattro: -------- begin text --------
@@ -22620,7 +22460,7 @@ Page 24671 trecentonovantaquattro: -------- begin text --------
 {{affix|it|trecento|novantaquattro}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[three hundred]] and [[ninety-four]]
 
@@ -22629,8 +22469,6 @@ Page 24671 trecentonovantaquattro: -------- begin text --------
 
 ===Anagrams===
 * {{l|it|quattrocentonovantatré}}
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 24672 trecentonovantasei: Found match for regex: {
 Page 24672 trecentonovantasei: -------- begin text --------
@@ -22640,7 +22478,7 @@ Page 24672 trecentonovantasei: -------- begin text --------
 {{affix|it|trecento|novantasei}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[three hundred]] and [[ninety-six]]
 
@@ -22649,8 +22487,6 @@ Page 24672 trecentonovantasei: -------- begin text --------
 
 ===Anagrams===
 * {{l|it|seicentonovantatré}}
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 24673 trecentonovantasette: Found match for regex: {
 Page 24673 trecentonovantasette: -------- begin text --------
@@ -22660,7 +22496,7 @@ Page 24673 trecentonovantasette: -------- begin text --------
 {{affix|it|trecento|novantasette}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[three hundred]] and [[ninety-seven]]
 
@@ -22669,8 +22505,6 @@ Page 24673 trecentonovantasette: -------- begin text --------
 
 ===Anagrams===
 * {{l|it|novecentosettantatré}}, {{l|it|settecentonovantatré}}, {{l|it|trecentosettantanove}}
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 24674 trecentonovantatré: Found match for regex: {
 Page 24674 trecentonovantatré: -------- begin text --------
@@ -22680,14 +22514,12 @@ Page 24674 trecentonovantatré: -------- begin text --------
 {{affix|it|trecento|novantatré}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[three hundred]] and [[ninety-three]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 24675 trecentonovantotto: Found match for regex: {
 Page 24675 trecentonovantotto: -------- begin text --------
@@ -22697,14 +22529,12 @@ Page 24675 trecentonovantotto: -------- begin text --------
 {{affix|it|trecento|novantotto}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[three hundred]] and [[ninety-eight]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 24676 trecentonovantuno: Found match for regex: {
 Page 24676 trecentonovantuno: -------- begin text --------
@@ -22714,14 +22544,12 @@ Page 24676 trecentonovantuno: -------- begin text --------
 {{affix|it|trecento|novantuno}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[three hundred]] and [[ninety-one]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 24677 trecentonove: Found match for regex: {
 Page 24677 trecentonove: -------- begin text --------
@@ -22731,7 +22559,7 @@ Page 24677 trecentonove: -------- begin text --------
 {{affix|it|trecento|nove}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[three hundred]] and [[nine]]
 
@@ -22740,8 +22568,6 @@ Page 24677 trecentonove: -------- begin text --------
 
 ===Anagrams===
 * {{l|it|novecentotre}}, {{l|it|novecentotré}}
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 24678 trecentootto: Found match for regex: {
 Page 24678 trecentootto: -------- begin text --------
@@ -22754,7 +22580,7 @@ Page 24678 trecentootto: -------- begin text --------
 {{affix|it|trecento|otto}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[three hundred]] and [[eight]]
 
@@ -22763,8 +22589,6 @@ Page 24678 trecentootto: -------- begin text --------
 
 ===Anagrams===
 * {{l|it|ottocentotre}}, {{l|it|ottocentotré}}
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 24679 trecentoquaranta: Found match for regex: {
 Page 24679 trecentoquaranta: -------- begin text --------
@@ -22774,7 +22598,7 @@ Page 24679 trecentoquaranta: -------- begin text --------
 {{affix|it|trecento|quaranta}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[three hundred]] and [[forty]]
 
@@ -22783,8 +22607,6 @@ Page 24679 trecentoquaranta: -------- begin text --------
 
 ===Anagrams===
 * {{l|it|centoquarantatré}}
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 24680 trecentoquarantacinque: Found match for regex: {
 Page 24680 trecentoquarantacinque: -------- begin text --------
@@ -22794,7 +22616,7 @@ Page 24680 trecentoquarantacinque: -------- begin text --------
 {{affix|it|trecento|quarantacinque}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[three hundred]] and [[forty-five]]
 
@@ -22803,8 +22625,6 @@ Page 24680 trecentoquarantacinque: -------- begin text --------
 
 ===Anagrams===
 * {{l|it|cinquecentoquarantatré}}
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 24681 trecentoquarantadue: Found match for regex: {
 Page 24681 trecentoquarantadue: -------- begin text --------
@@ -22814,7 +22634,7 @@ Page 24681 trecentoquarantadue: -------- begin text --------
 {{affix|it|trecento|quarantadue}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[three hundred]] and [[forty-two]]
 
@@ -22823,8 +22643,6 @@ Page 24681 trecentoquarantadue: -------- begin text --------
 
 ===Anagrams===
 * {{l|it|duecentoquarantatré}}
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 24683 trecentoquarantanove: Found match for regex: {
 Page 24683 trecentoquarantanove: -------- begin text --------
@@ -22834,7 +22652,7 @@ Page 24683 trecentoquarantanove: -------- begin text --------
 {{affix|it|trecento|quarantanove}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[three hundred]] and [[forty-nine]]
 
@@ -22843,8 +22661,6 @@ Page 24683 trecentoquarantanove: -------- begin text --------
 
 ===Anagrams===
 * {{l|it|novecentoquarantatré}}
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 24684 trecentoquarantaquattro: Found match for regex: {
 Page 24684 trecentoquarantaquattro: -------- begin text --------
@@ -22854,7 +22670,7 @@ Page 24684 trecentoquarantaquattro: -------- begin text --------
 {{affix|it|trecento|quarantaquattro}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[three hundred]] and [[forty-four]]
 
@@ -22863,8 +22679,6 @@ Page 24684 trecentoquarantaquattro: -------- begin text --------
 
 ===Anagrams===
 * {{l|it|quattrocentoquarantatré}}
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 24685 trecentoquarantasei: Found match for regex: {
 Page 24685 trecentoquarantasei: -------- begin text --------
@@ -22874,7 +22688,7 @@ Page 24685 trecentoquarantasei: -------- begin text --------
 {{affix|it|trecento|quarantasei}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[three hundred]] and [[forty-six]]
 
@@ -22883,8 +22697,6 @@ Page 24685 trecentoquarantasei: -------- begin text --------
 
 ===Anagrams===
 * {{l|it|seicentoquarantatré}}
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 24686 trecentoquarantasette: Found match for regex: {
 Page 24686 trecentoquarantasette: -------- begin text --------
@@ -22894,7 +22706,7 @@ Page 24686 trecentoquarantasette: -------- begin text --------
 {{affix|it|trecento|quarantasette}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[three hundred]] and [[forty-seven]]
 
@@ -22903,8 +22715,6 @@ Page 24686 trecentoquarantasette: -------- begin text --------
 
 ===Anagrams===
 * {{l|it|settecentoquarantatré}}
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 24687 trecentoquarantatré: Found match for regex: {
 Page 24687 trecentoquarantatré: -------- begin text --------
@@ -22914,14 +22724,12 @@ Page 24687 trecentoquarantatré: -------- begin text --------
 {{affix|it|trecento|quarantatré}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[three hundred]] and [[forty-three]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 24688 trecentoquarantotto: Found match for regex: {
 Page 24688 trecentoquarantotto: -------- begin text --------
@@ -22931,14 +22739,12 @@ Page 24688 trecentoquarantotto: -------- begin text --------
 {{affix|it|trecento|quarantotto}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[three hundred]] and [[forty-eight]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 24689 trecentoquarantuno: Found match for regex: {
 Page 24689 trecentoquarantuno: -------- begin text --------
@@ -22948,14 +22754,12 @@ Page 24689 trecentoquarantuno: -------- begin text --------
 {{affix|it|trecento|quarantuno}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[three hundred]] and [[forty-one]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 24690 trecentoquattordici: Found match for regex: {
 Page 24690 trecentoquattordici: -------- begin text --------
@@ -22965,7 +22769,7 @@ Page 24690 trecentoquattordici: -------- begin text --------
 {{affix|it|trecento|quattordici}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[three hundred]] and [[fourteen]]
 
@@ -22974,8 +22778,6 @@ Page 24690 trecentoquattordici: -------- begin text --------
 
 ===Anagrams===
 * {{l|it|quattrocentotredici}}
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 24691 trecentoquattro: Found match for regex: {
 Page 24691 trecentoquattro: -------- begin text --------
@@ -22985,7 +22787,7 @@ Page 24691 trecentoquattro: -------- begin text --------
 {{affix|it|trecento|quattro}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[three hundred]] and [[four]]
 
@@ -22994,8 +22796,6 @@ Page 24691 trecentoquattro: -------- begin text --------
 
 ===Anagrams===
 * {{l|it|quattrocentotre}}, {{l|it|quattrocentotré}}
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 24692 trecentoquindici: Found match for regex: {
 Page 24692 trecentoquindici: -------- begin text --------
@@ -23005,14 +22805,12 @@ Page 24692 trecentoquindici: -------- begin text --------
 {{affix|it|trecento|quindici}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[three hundred]] and [[fifteen]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 24693 trecentosedici: Found match for regex: {
 Page 24693 trecentosedici: -------- begin text --------
@@ -23022,14 +22820,12 @@ Page 24693 trecentosedici: -------- begin text --------
 {{affix|it|trecento|sedici}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[three hundred]] and [[sixteen]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 24694 trecentosei: Found match for regex: {
 Page 24694 trecentosei: -------- begin text --------
@@ -23039,7 +22835,7 @@ Page 24694 trecentosei: -------- begin text --------
 {{affix|it|trecento|sei}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[three hundred]] and [[six]]
 
@@ -23048,8 +22844,6 @@ Page 24694 trecentosei: -------- begin text --------
 
 ===Anagrams===
 * {{l|it|contesterei}}, {{l|it|seicentotre}}, {{l|it|seicentotré}}
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 24695 trecentosessanta: Found match for regex: {
 Page 24695 trecentosessanta: -------- begin text --------
@@ -23059,7 +22853,7 @@ Page 24695 trecentosessanta: -------- begin text --------
 {{affix|it|trecento|sessanta}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[three hundred]] and [[sixty]]
 
@@ -23068,8 +22862,6 @@ Page 24695 trecentosessanta: -------- begin text --------
 
 ===Anagrams===
 * {{l|it|centosessantatré}}
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 24696 trecentosessantacinque: Found match for regex: {
 Page 24696 trecentosessantacinque: -------- begin text --------
@@ -23079,7 +22871,7 @@ Page 24696 trecentosessantacinque: -------- begin text --------
 {{affix|it|trecento|sessantacinque}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[three hundred]] and [[sixty-five]]
 
@@ -23088,8 +22880,6 @@ Page 24696 trecentosessantacinque: -------- begin text --------
 
 ===Anagrams===
 * {{l|it|cinquecentosessantatré}}
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 24697 trecentosessantadue: Found match for regex: {
 Page 24697 trecentosessantadue: -------- begin text --------
@@ -23099,7 +22889,7 @@ Page 24697 trecentosessantadue: -------- begin text --------
 {{affix|it|trecento|sessantadue}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[three hundred]] and [[sixty-two]]
 
@@ -23108,8 +22898,6 @@ Page 24697 trecentosessantadue: -------- begin text --------
 
 ===Anagrams===
 * {{l|it|duecentosessantatré}}
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 24698 trecentosessantanove: Found match for regex: {
 Page 24698 trecentosessantanove: -------- begin text --------
@@ -23119,7 +22907,7 @@ Page 24698 trecentosessantanove: -------- begin text --------
 {{affix|it|trecento|sessantanove}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[three hundred]] and [[sixty-nine]]
 
@@ -23128,8 +22916,6 @@ Page 24698 trecentosessantanove: -------- begin text --------
 
 ===Anagrams===
 * {{l|it|novecentosessantatré}}
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 24699 trecentosessantaquattro: Found match for regex: {
 Page 24699 trecentosessantaquattro: -------- begin text --------
@@ -23139,7 +22925,7 @@ Page 24699 trecentosessantaquattro: -------- begin text --------
 {{affix|it|trecento|sessantaquattro}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[three hundred]] and [[sixty-four]]
 
@@ -23148,8 +22934,6 @@ Page 24699 trecentosessantaquattro: -------- begin text --------
 
 ===Anagrams===
 * {{l|it|quattrocentosessantatré}}
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 24700 trecentosessantasei: Found match for regex: {
 Page 24700 trecentosessantasei: -------- begin text --------
@@ -23159,7 +22943,7 @@ Page 24700 trecentosessantasei: -------- begin text --------
 {{affix|it|trecento|sessantasei}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[three hundred]] and [[sixty-six]]
 
@@ -23168,8 +22952,6 @@ Page 24700 trecentosessantasei: -------- begin text --------
 
 ===Anagrams===
 * {{l|it|seicentosessantatré}}
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 24701 trecentosessantasette: Found match for regex: {
 Page 24701 trecentosessantasette: -------- begin text --------
@@ -23179,7 +22961,7 @@ Page 24701 trecentosessantasette: -------- begin text --------
 {{affix|it|trecento|sessantasette}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[three hundred]] and [[sixty-seven]]
 
@@ -23188,8 +22970,6 @@ Page 24701 trecentosessantasette: -------- begin text --------
 
 ===Anagrams===
 * {{l|it|settecentosessantatré}}
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 24702 trecentosessantatré: Found match for regex: {
 Page 24702 trecentosessantatré: -------- begin text --------
@@ -23199,14 +22979,12 @@ Page 24702 trecentosessantatré: -------- begin text --------
 {{affix|it|trecento|sessantatré}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[three hundred]] and [[sixty-three]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 24703 trecentosessantotto: Found match for regex: {
 Page 24703 trecentosessantotto: -------- begin text --------
@@ -23216,14 +22994,12 @@ Page 24703 trecentosessantotto: -------- begin text --------
 {{affix|it|trecento|sessantotto}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[three hundred]] and [[sixty-eight]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 24704 trecentosessantuno: Found match for regex: {
 Page 24704 trecentosessantuno: -------- begin text --------
@@ -23233,14 +23009,12 @@ Page 24704 trecentosessantuno: -------- begin text --------
 {{affix|it|trecento|sessantuno}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[three hundred]] and [[sixty-one]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 24705 trecentosettanta: Found match for regex: {
 Page 24705 trecentosettanta: -------- begin text --------
@@ -23250,7 +23024,7 @@ Page 24705 trecentosettanta: -------- begin text --------
 {{affix|it|trecento|settanta}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[three hundred]] and [[seventy]]
 
@@ -23259,8 +23033,6 @@ Page 24705 trecentosettanta: -------- begin text --------
 
 ===Anagrams===
 * {{l|it|centosettantatré}}
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 24706 trecentosettantacinque: Found match for regex: {
 Page 24706 trecentosettantacinque: -------- begin text --------
@@ -23270,7 +23042,7 @@ Page 24706 trecentosettantacinque: -------- begin text --------
 {{affix|it|trecento|settantacinque}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[three hundred]] and [[seventy-five]]
 
@@ -23279,8 +23051,6 @@ Page 24706 trecentosettantacinque: -------- begin text --------
 
 ===Anagrams===
 * {{l|it|cinquecentosettantatré}}, {{l|it|settecentocinquantatré}}, {{l|it|trecentocinquantasette}}
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 24707 trecentosettantadue: Found match for regex: {
 Page 24707 trecentosettantadue: -------- begin text --------
@@ -23290,7 +23060,7 @@ Page 24707 trecentosettantadue: -------- begin text --------
 {{affix|it|trecento|settantadue}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[three hundred]] and [[seventy-two]]
 
@@ -23299,8 +23069,6 @@ Page 24707 trecentosettantadue: -------- begin text --------
 
 ===Anagrams===
 * {{l|it|duecentosettantatré}}
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 24708 trecentosettantanove: Found match for regex: {
 Page 24708 trecentosettantanove: -------- begin text --------
@@ -23310,7 +23078,7 @@ Page 24708 trecentosettantanove: -------- begin text --------
 {{affix|it|trecento|settantanove}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[three hundred]] and [[seventy-nine]]
 
@@ -23319,8 +23087,6 @@ Page 24708 trecentosettantanove: -------- begin text --------
 
 ===Anagrams===
 * {{l|it|novecentosettantatré}}, {{l|it|settecentonovantatré}}, {{l|it|trecentonovantasette}}
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 24709 trecentosettantaquattro: Found match for regex: {
 Page 24709 trecentosettantaquattro: -------- begin text --------
@@ -23330,7 +23096,7 @@ Page 24709 trecentosettantaquattro: -------- begin text --------
 {{affix|it|trecento|settantaquattro}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[three hundred]] and [[seventy-four]]
 
@@ -23339,8 +23105,6 @@ Page 24709 trecentosettantaquattro: -------- begin text --------
 
 ===Anagrams===
 * {{l|it|quattrocentosettantatré}}
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 24710 trecentosettantasei: Found match for regex: {
 Page 24710 trecentosettantasei: -------- begin text --------
@@ -23350,7 +23114,7 @@ Page 24710 trecentosettantasei: -------- begin text --------
 {{affix|it|trecento|settantasei}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[three hundred]] and [[seventy-six]]
 
@@ -23359,8 +23123,6 @@ Page 24710 trecentosettantasei: -------- begin text --------
 
 ===Anagrams===
 * {{l|it|seicentosettantatré}}
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 24711 trecentosettantasette: Found match for regex: {
 Page 24711 trecentosettantasette: -------- begin text --------
@@ -23370,7 +23132,7 @@ Page 24711 trecentosettantasette: -------- begin text --------
 {{affix|it|trecento|settantasette}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[three hundred]] and [[seventy-seven]]
 
@@ -23379,8 +23141,6 @@ Page 24711 trecentosettantasette: -------- begin text --------
 
 ===Anagrams===
 * {{l|it|settecentosettantatré}}
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 24712 trecentosettantatré: Found match for regex: {
 Page 24712 trecentosettantatré: -------- begin text --------
@@ -23390,14 +23150,12 @@ Page 24712 trecentosettantatré: -------- begin text --------
 {{affix|it|trecento|settantatré}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[three hundred]] and [[seventy-three]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 24713 trecentosettantotto: Found match for regex: {
 Page 24713 trecentosettantotto: -------- begin text --------
@@ -23407,14 +23165,12 @@ Page 24713 trecentosettantotto: -------- begin text --------
 {{affix|it|trecento|settantotto}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[three hundred]] and [[seventy-eight]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 24714 trecentosettantuno: Found match for regex: {
 Page 24714 trecentosettantuno: -------- begin text --------
@@ -23424,14 +23180,12 @@ Page 24714 trecentosettantuno: -------- begin text --------
 {{affix|it|trecento|settantuno}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[three hundred]] and [[seventy-one]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 24715 trecentosette: Found match for regex: {
 Page 24715 trecentosette: -------- begin text --------
@@ -23441,7 +23195,7 @@ Page 24715 trecentosette: -------- begin text --------
 {{affix|it|trecento|sette}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[three hundred]] and [[seven]]
 
@@ -23450,8 +23204,6 @@ Page 24715 trecentosette: -------- begin text --------
 
 ===Anagrams===
 * {{l|it|settecentotre}}, {{l|it|settecentotré}}
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 24716 trecentotre: Found match for regex: {
 Page 24716 trecentotre: -------- begin text --------
@@ -23464,14 +23216,12 @@ Page 24716 trecentotre: -------- begin text --------
 {{affix|it|trecento|tre}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[three hundred]] and [[three]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 24717 trecentotré: Found match for regex: {
 Page 24717 trecentotré: -------- begin text --------
@@ -23484,14 +23234,12 @@ Page 24717 trecentotré: -------- begin text --------
 {{affix|it|trecento|tré}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[three hundred]] and [[three]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 24718 trecentotredici: Found match for regex: {
 Page 24718 trecentotredici: -------- begin text --------
@@ -23501,14 +23249,12 @@ Page 24718 trecentotredici: -------- begin text --------
 {{affix|it|trecento|tredici}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[three hundred]] and [[thirteen]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 24719 trecentotrenta: Found match for regex: {
 Page 24719 trecentotrenta: -------- begin text --------
@@ -23518,7 +23264,7 @@ Page 24719 trecentotrenta: -------- begin text --------
 {{affix|it|trecento|trenta}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[three hundred]] and [[thirty]]
 
@@ -23527,8 +23273,6 @@ Page 24719 trecentotrenta: -------- begin text --------
 
 ===Anagrams===
 * {{l|it|centotrentatré}}
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 24720 trecentotrentacinque: Found match for regex: {
 Page 24720 trecentotrentacinque: -------- begin text --------
@@ -23538,7 +23282,7 @@ Page 24720 trecentotrentacinque: -------- begin text --------
 {{affix|it|trecento|trentacinque}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[three hundred]] and [[thirty-five]]
 
@@ -23547,8 +23291,6 @@ Page 24720 trecentotrentacinque: -------- begin text --------
 
 ===Anagrams===
 * {{l|it|cinquecentotrentatré}}
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 24721 trecentotrentadue: Found match for regex: {
 Page 24721 trecentotrentadue: -------- begin text --------
@@ -23558,7 +23300,7 @@ Page 24721 trecentotrentadue: -------- begin text --------
 {{affix|it|trecento|trentadue}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[three hundred]] and [[thirty-two]]
 
@@ -23567,8 +23309,6 @@ Page 24721 trecentotrentadue: -------- begin text --------
 
 ===Anagrams===
 * {{l|it|duecentotrentatré}}
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 24722 trecentotrentanove: Found match for regex: {
 Page 24722 trecentotrentanove: -------- begin text --------
@@ -23578,7 +23318,7 @@ Page 24722 trecentotrentanove: -------- begin text --------
 {{affix|it|trecento|trentanove}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[three hundred]] and [[thirty-nine]] (number)
 
@@ -23587,8 +23327,6 @@ Page 24722 trecentotrentanove: -------- begin text --------
 
 ===Anagrams===
 * {{l|it|novecentotrentatré}}
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 24723 trecentotrentaquattro: Found match for regex: {
 Page 24723 trecentotrentaquattro: -------- begin text --------
@@ -23598,7 +23336,7 @@ Page 24723 trecentotrentaquattro: -------- begin text --------
 {{affix|it|trecento|trentaquattro}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[three hundred]] and [[thirty-four]]
 
@@ -23607,8 +23345,6 @@ Page 24723 trecentotrentaquattro: -------- begin text --------
 
 ===Anagrams===
 * {{l|it|quattrocentotrentatré}}
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 24724 trecentotrentasei: Found match for regex: {
 Page 24724 trecentotrentasei: -------- begin text --------
@@ -23618,7 +23354,7 @@ Page 24724 trecentotrentasei: -------- begin text --------
 {{affix|it|trecento|trentasei}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[three hundred]] and [[thirty-six]]
 
@@ -23627,8 +23363,6 @@ Page 24724 trecentotrentasei: -------- begin text --------
 
 ===Anagrams===
 * {{l|it|seicentotrentatré}}
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 24725 trecentotrentasette: Found match for regex: {
 Page 24725 trecentotrentasette: -------- begin text --------
@@ -23638,7 +23372,7 @@ Page 24725 trecentotrentasette: -------- begin text --------
 {{affix|it|trecento|trentasette}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[three hundred]] and [[thirty-seven]]
 
@@ -23647,8 +23381,6 @@ Page 24725 trecentotrentasette: -------- begin text --------
 
 ===Anagrams===
 * {{l|it|settecentotrentatré}}
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 24726 trecentotrentatré: Found match for regex: {
 Page 24726 trecentotrentatré: -------- begin text --------
@@ -23658,14 +23390,12 @@ Page 24726 trecentotrentatré: -------- begin text --------
 {{affix|it|trecento|trentatré}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[three hundred]] and [[thirty-three]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 24727 trecentotrentotto: Found match for regex: {
 Page 24727 trecentotrentotto: -------- begin text --------
@@ -23675,14 +23405,12 @@ Page 24727 trecentotrentotto: -------- begin text --------
 {{affix|it|trecento|trentotto}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[three hundred]] and [[thirty-eight]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 24728 trecentotrentuno: Found match for regex: {
 Page 24728 trecentotrentuno: -------- begin text --------
@@ -23692,14 +23420,12 @@ Page 24728 trecentotrentuno: -------- begin text --------
 {{affix|it|trecento|trentuno}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[three hundred]] and [[thirty-one]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 24729 trecentottanta: Found match for regex: {
 Page 24729 trecentottanta: -------- begin text --------
@@ -23709,7 +23435,7 @@ Page 24729 trecentottanta: -------- begin text --------
 {{affix|it|trecento|ottanta}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[three hundred]] and [[eighty]]
 
@@ -23718,8 +23444,6 @@ Page 24729 trecentottanta: -------- begin text --------
 
 ===Anagrams===
 * {{l|it|centottantatré}}
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 24730 trecentottantacinque: Found match for regex: {
 Page 24730 trecentottantacinque: -------- begin text --------
@@ -23729,7 +23453,7 @@ Page 24730 trecentottantacinque: -------- begin text --------
 {{affix|it|trecento|ottantacinque}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[three hundred]] and [[eighty-five]]
 
@@ -23738,8 +23462,6 @@ Page 24730 trecentottantacinque: -------- begin text --------
 
 ===Anagrams===
 * {{l|it|cinquecentottantatré}}
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 24731 trecentottantadue: Found match for regex: {
 Page 24731 trecentottantadue: -------- begin text --------
@@ -23749,7 +23471,7 @@ Page 24731 trecentottantadue: -------- begin text --------
 {{affix|it|trecento|ottantadue}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[three hundred]] and [[eighty-two]]
 
@@ -23758,8 +23480,6 @@ Page 24731 trecentottantadue: -------- begin text --------
 
 ===Anagrams===
 * {{l|it|duecentottantatré}}
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 24732 trecentottantanove: Found match for regex: {
 Page 24732 trecentottantanove: -------- begin text --------
@@ -23769,7 +23489,7 @@ Page 24732 trecentottantanove: -------- begin text --------
 {{affix|it|trecento|ottantanove}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[three hundred]] and [[eighty-nine]]
 
@@ -23778,8 +23498,6 @@ Page 24732 trecentottantanove: -------- begin text --------
 
 ===Anagrams===
 * {{l|it|novecentottantatré}}
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 24733 trecentottantaquattro: Found match for regex: {
 Page 24733 trecentottantaquattro: -------- begin text --------
@@ -23789,7 +23507,7 @@ Page 24733 trecentottantaquattro: -------- begin text --------
 {{affix|it|trecento|ottantaquattro}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[three hundred]] and [[eighty-four]]
 
@@ -23798,8 +23516,6 @@ Page 24733 trecentottantaquattro: -------- begin text --------
 
 ===Anagrams===
 * {{l|it|quattrocentottantatré}}
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 24734 trecentottantasei: Found match for regex: {
 Page 24734 trecentottantasei: -------- begin text --------
@@ -23809,7 +23525,7 @@ Page 24734 trecentottantasei: -------- begin text --------
 {{affix|it|trecento|ottantasei}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[three hundred]] and [[eighty-six]]
 
@@ -23818,8 +23534,6 @@ Page 24734 trecentottantasei: -------- begin text --------
 
 ===Anagrams===
 * {{l|it|seicentottantatré}}
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 24735 trecentottantasette: Found match for regex: {
 Page 24735 trecentottantasette: -------- begin text --------
@@ -23829,7 +23543,7 @@ Page 24735 trecentottantasette: -------- begin text --------
 {{affix|it|trecento|ottantasette}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[three hundred]] and [[eighty-seven]]
 
@@ -23838,8 +23552,6 @@ Page 24735 trecentottantasette: -------- begin text --------
 
 ===Anagrams===
 * {{l|it|settecentottantatré}}
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 24736 trecentottantatré: Found match for regex: {
 Page 24736 trecentottantatré: -------- begin text --------
@@ -23849,14 +23561,12 @@ Page 24736 trecentottantatré: -------- begin text --------
 {{affix|it|trecento|ottantatré}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[three hundred]] and [[eighty-three]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 24737 trecentottantotto: Found match for regex: {
 Page 24737 trecentottantotto: -------- begin text --------
@@ -23866,14 +23576,12 @@ Page 24737 trecentottantotto: -------- begin text --------
 {{affix|it|trecento|ottantotto}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[three hundred]] and [[eighty-eight]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 24738 trecentottantuno: Found match for regex: {
 Page 24738 trecentottantuno: -------- begin text --------
@@ -23883,14 +23591,12 @@ Page 24738 trecentottantuno: -------- begin text --------
 {{affix|it|trecento|ottantuno}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[three hundred]] and [[eighty-one]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 24739 trecentotto: Found match for regex: {
 Page 24739 trecentotto: -------- begin text --------
@@ -23904,14 +23610,12 @@ Page 24739 trecentotto: -------- begin text --------
 * {{rhymes|it|ɔtto}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[three hundred]] and [[eight]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 24740 trecentouno: Found match for regex: {
 Page 24740 trecentouno: -------- begin text --------
@@ -23924,14 +23628,12 @@ Page 24740 trecentouno: -------- begin text --------
 {{affix|it|trecento|uno}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[three hundred]] and [[one]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 24741 trecentoventi: Found match for regex: {
 Page 24741 trecentoventi: -------- begin text --------
@@ -23945,7 +23647,7 @@ Page 24741 trecentoventi: -------- begin text --------
 * {{rhymes|it|enti}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[three hundred]] and [[twenty]]
 
@@ -23954,8 +23656,6 @@ Page 24741 trecentoventi: -------- begin text --------
 
 ===Anagrams===
 * {{l|it|centoventitré}}
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 24742 trecentoventicinque: Found match for regex: {
 Page 24742 trecentoventicinque: -------- begin text --------
@@ -23965,7 +23665,7 @@ Page 24742 trecentoventicinque: -------- begin text --------
 {{affix|it|trecento|venticinque}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[three hundred]] and [[twenty-five]]
 
@@ -23974,8 +23674,6 @@ Page 24742 trecentoventicinque: -------- begin text --------
 
 ===Anagrams===
 * {{l|it|cinquecentoventitré}}
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 24743 trecentoventidue: Found match for regex: {
 Page 24743 trecentoventidue: -------- begin text --------
@@ -23985,7 +23683,7 @@ Page 24743 trecentoventidue: -------- begin text --------
 {{affix|it|trecento|ventidue}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[three hundred]] and [[twenty-two]]
 
@@ -23994,8 +23692,6 @@ Page 24743 trecentoventidue: -------- begin text --------
 
 ===Anagrams===
 * {{l|it|duecentoventitré}}
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 24744 trecentoventinove: Found match for regex: {
 Page 24744 trecentoventinove: -------- begin text --------
@@ -24005,7 +23701,7 @@ Page 24744 trecentoventinove: -------- begin text --------
 {{affix|it|trecento|ventinove}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[three hundred]] and [[twenty-nine]]
 
@@ -24014,8 +23710,6 @@ Page 24744 trecentoventinove: -------- begin text --------
 
 ===Anagrams===
 * {{l|it|novecentoventitré}}
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 24745 trecentoventiquattro: Found match for regex: {
 Page 24745 trecentoventiquattro: -------- begin text --------
@@ -24025,7 +23719,7 @@ Page 24745 trecentoventiquattro: -------- begin text --------
 {{affix|it|trecento|ventiquattro}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[three hundred]] and [[twenty-four]]
 
@@ -24034,8 +23728,6 @@ Page 24745 trecentoventiquattro: -------- begin text --------
 
 ===Anagrams===
 * {{l|it|quattrocentoventitré}}
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 24746 trecentoventisei: Found match for regex: {
 Page 24746 trecentoventisei: -------- begin text --------
@@ -24045,7 +23737,7 @@ Page 24746 trecentoventisei: -------- begin text --------
 {{affix|it|trecento|ventisei}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[three hundred]] and [[twenty-six]]
 
@@ -24054,8 +23746,6 @@ Page 24746 trecentoventisei: -------- begin text --------
 
 ===Anagrams===
 * {{l|it|seicentoventitré}}
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 24747 trecentoventisette: Found match for regex: {
 Page 24747 trecentoventisette: -------- begin text --------
@@ -24065,7 +23755,7 @@ Page 24747 trecentoventisette: -------- begin text --------
 {{affix|it|trecento|ventisette}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[three hundred]] and [[twenty-seven]]
 
@@ -24074,8 +23764,6 @@ Page 24747 trecentoventisette: -------- begin text --------
 
 ===Anagrams===
 * {{l|it|settecentoventitré}}
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 24748 trecentoventitré: Found match for regex: {
 Page 24748 trecentoventitré: -------- begin text --------
@@ -24085,14 +23773,12 @@ Page 24748 trecentoventitré: -------- begin text --------
 {{affix|it|trecento|ventitré}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[three hundred]] and [[twenty-three]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 24749 trecentoventotto: Found match for regex: {
 Page 24749 trecentoventotto: -------- begin text --------
@@ -24102,14 +23788,12 @@ Page 24749 trecentoventotto: -------- begin text --------
 {{affix|it|trecento|ventotto}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[three hundred]] and [[twenty-eight]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 24750 trecentoventuno: Found match for regex: {
 Page 24750 trecentoventuno: -------- begin text --------
@@ -24119,14 +23803,12 @@ Page 24750 trecentoventuno: -------- begin text --------
 {{affix|it|trecento|ventuno}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[three hundred]] and [[twenty-one]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 24751 trecentuno: Found match for regex: {
 Page 24751 trecentuno: -------- begin text --------
@@ -24136,14 +23818,12 @@ Page 24751 trecentuno: -------- begin text --------
 * {{alter|it|trecentouno}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[three hundred]] and [[one]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 24754 tredici: Found match for regex: {
 Page 24754 tredici: -------- begin text --------
@@ -24158,9 +23838,9 @@ From {{inh|it|la|tredecim}}.
 * {{hyphenation|it|tré|di|ci}}
 
 ===Numeral===
-{{head|it|numeral|g=m|invariable}}
+{{it-card-inv}}
 
-# {{cln|it|cardinal numbers}} [[thirteen]]
+# [[thirteen]]
 
 ====Derived terms====
 * {{l|it|tredicenne}}
@@ -24186,21 +23866,19 @@ Page 24755 tredicimila: -------- begin text --------
 {{af|it|tredici|mila}}
 
 ===Noun===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[thirteen]] [[thousand]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 24759 tremila: Found match for regex: {
 Page 24759 tremila: -------- begin text --------
 {{cardinalbox|it|2999|3000|3001|duemilenovacentonovantanove|tremilauno|ord=tremilesimo}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[three thousand]]
 
@@ -24209,8 +23887,6 @@ Page 24759 tremila: -------- begin text --------
 
 ===Anagrams===
 * {{l|it|merlati}}, {{l|it|mitrale}}, {{l|it|termali}}
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 24760 tremilacinquecento: Found match for regex: =
 Page 24760 tremilacinquecento: -------- begin text --------
@@ -24219,14 +23895,12 @@ Page 24760 tremilacinquecento: -------- begin text --------
 {{af|it|tremila|cinquecento}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[three thousand]] [[five hundred]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 24761 tremilaseicento: Found match for regex: =
 Page 24761 tremilaseicento: -------- begin text --------
@@ -24235,14 +23909,12 @@ Page 24761 tremilaseicento: -------- begin text --------
 {{af|it|tremila|seicento}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[three thousand]] [[seven hundred]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 24766 trenta: Found match for regex: {
 Page 24766 trenta: -------- begin text --------
@@ -24252,9 +23924,9 @@ Page 24766 trenta: -------- begin text --------
 From {{inh|it|la|trīgintā}}, from {{inh|it|ine-pro|*tri(d)ḱomt||thirty}}.
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
-# {{cln|it|cardinal numbers}} [[thirty]]
+# [[thirty]]
 
 ====Related terms====
 {{rel3|it
@@ -24282,9 +23954,9 @@ Page 24767 trentacinque: -------- begin text --------
 {{af|it|trenta|cinque|t1=thirty|t2=five}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
-# {{cln|it|cardinal numbers}} [[thirty-five]] (number)
+# [[thirty-five]] (number)
 
 ===See also===
 * [[Appendix:Italian numbers]]
@@ -24297,9 +23969,9 @@ Page 24770 trentadue: -------- begin text --------
 {{af|it|trenta|due|t1=thirty|t2=two}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
-# {{cln|it|cardinal numbers}} [[thirty-two]]
+# [[thirty-two]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
@@ -24315,7 +23987,7 @@ Page 24773 trentamila: -------- begin text --------
 {{af|it|trenta|mila}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[thirty]] [[thousand]]
 
@@ -24324,8 +23996,6 @@ Page 24773 trentamila: -------- begin text --------
 
 ===Anagrams===
 * {{l|it|lamentarti}}
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 24774 trentanove: Found match for regex: {
 Page 24774 trentanove: -------- begin text --------
@@ -24335,9 +24005,9 @@ Page 24774 trentanove: -------- begin text --------
 {{af|it|trenta|nove|t1=thirty|t2=nine}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
-# {{cln|it|cardinal numbers}} [[thirty-nine]] (number)
+# [[thirty-nine]] (number)
 
 ===See also===
 * [[Appendix:Italian numbers]]
@@ -24350,9 +24020,9 @@ Page 24778 trentaquattro: -------- begin text --------
 {{af|it|trenta|quattro|t1=thirty|t2=four}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
-# {{cln|it|cardinal numbers}} [[thirty-four]] (number)
+# [[thirty-four]] (number)
 
 ===See also===
 * [[Appendix:Italian numbers]]
@@ -24365,9 +24035,9 @@ Page 24779 trentasei: -------- begin text --------
 {{af|it|trenta|sei|t1=thirty|t2=six}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
-# {{cln|it|cardinal numbers}} [[thirty-six]] (number)
+# [[thirty-six]] (number)
 
 ===See also===
 * [[Appendix:Italian numbers]]
@@ -24383,9 +24053,9 @@ Page 24782 trentasette: -------- begin text --------
 {{af|it|trenta|sette|t1=thirty|t2=seven}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
-# {{cln|it|cardinal numbers}} [[thirty-seven]] (number)
+# [[thirty-seven]] (number)
 
 ===See also===
 * [[Appendix:Italian numbers]]
@@ -24401,9 +24071,9 @@ Page 24785 trentatré: -------- begin text --------
 {{af|it|trenta|tre|t1=thirty|t2=three}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
-# {{cln|it|cardinal numbers}} [[thirty-three]] (number)
+# [[thirty-three]] (number)
 
 ====Derived terms====
 * {{l|it|trentatré giri}}
@@ -24448,9 +24118,9 @@ Page 24793 trentotto: -------- begin text --------
 * {{rhymes|it|ɔtto}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
-# {{cln|it|cardinal numbers}} [[thirty-eight]] (number)
+# [[thirty-eight]] (number)
 
 ===See also===
 * [[Appendix:Italian numbers]]
@@ -24467,9 +24137,9 @@ Page 24796 trentuno: -------- begin text --------
 * {{rhymes|it|uno}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
-# {{cln|it|cardinal numbers}} [[thirty-one]]
+# [[thirty-one]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
@@ -24853,7 +24523,7 @@ Page 25217 un': -------- begin text --------
 * {{it-IPA|un}}
 
 ===Numeral===
-{{head|it|numeral|apocopate}}
+{{it-card-adj|apoc=1}}
 
 # {{lb|it|sometimes before a vowel or an ''h''}} {{apocopic form of|it|una}}
 
@@ -24907,9 +24577,9 @@ From {{inh|it|la|ūndecim}}.
 * {{hyphenation|it|un|di|ci}}
 
 ===Numeral===
-{{head|it|numeral|g=m|invariable}}
+{{it-card-inv}}
 
-# {{cln|it|cardinal numbers}} [[eleven]]
+# [[eleven]]
 
 ====Related terms====
 * {{l|it|undicenne}}
@@ -24928,14 +24598,12 @@ Page 25228 undicimila: -------- begin text --------
 {{af|it|undici|mila}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[eleven thousand]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 25240 unguentario: Found match for regex: =
 Page 25240 unguentario: -------- begin text --------
@@ -25050,7 +24718,7 @@ From {{inh|it|la|ūnus}}, from {{inh|it|itc-ola|oinos}}, from {{inh|it|itc-pro|*
 * {{rhymes|it|uno}}
 
 ===Numeral===
-{{head|it|numeral|cat2=cardinal numbers}}
+{{it-card-adj}}
 
 # [[one]]
 
@@ -25292,9 +24960,9 @@ From {{inh|it|la|vīgintī}}, from {{inh|it|itc-pro|*wīgentī}}, from {{inh|it|
 # [[twenty]]
 
 ====Numeral====
-{{head|it|numeral}}
+{{it-card-inv}}
 
-# {{cln|it|cardinal numbers}} [[twenty]]
+# [[twenty]]
 
 =====Derived terms=====
 {{der4|it
@@ -25354,9 +25022,9 @@ Page 25631 venticinque: -------- begin text --------
 * {{hyph|it|ven|ti|cìn|que}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
-# {{cln|it|cardinal numbers}} [[twenty-five]]
+# [[twenty-five]]
 
 ====Related terms====
 * {{l|it|venticinquennale}}
@@ -25374,14 +25042,12 @@ Page 25632 venticinquemila: -------- begin text --------
 {{af|it|venticinque|mila}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[twenty-five]] [[thousand]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 25633 venticinquemilanovecento: Found match for regex: =
 Page 25633 venticinquemilanovecento: -------- begin text --------
@@ -25390,14 +25056,12 @@ Page 25633 venticinquemilanovecento: -------- begin text --------
 {{af|it|venticinquemila|novecento}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[twenty-five]] [[thousand]] [[nine hundred]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 25637 ventidue: Found match for regex: {
 Page 25637 ventidue: -------- begin text --------
@@ -25407,9 +25071,9 @@ Page 25637 ventidue: -------- begin text --------
 {{af|it|venti|due|t1=twenty|t2=two}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
-# {{cln|it|cardinal numbers}} [[twenty-two]]
+# [[twenty-two]]
 
 ===Noun===
 {{it-noun|m|-}}
@@ -25435,14 +25099,12 @@ Page 25643 ventimila: -------- begin text --------
 {{af|it|venti|mila}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[twenty]] [[thousand]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 25645 ventinove: Found match for regex: {
 Page 25645 ventinove: -------- begin text --------
@@ -25452,9 +25114,9 @@ Page 25645 ventinove: -------- begin text --------
 {{af|it|venti|nove|t1=twenty|t2=nine}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
-# {{cln|it|cardinal numbers}} [[twenty-nine]]
+# [[twenty-nine]]
 
 ====Related terms====
 * {{l|it|ventinovennale}}
@@ -25475,9 +25137,9 @@ Page 25651 ventiquattro: -------- begin text --------
 * {{hyph|it|ven|ti|quàt|tro}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
-# {{cln|it|cardinal numbers}} [[twenty-four]]
+# [[twenty-four]]
 
 ====Related terms====
 * {{l|it|ventiquattrenne}}
@@ -25495,9 +25157,9 @@ Page 25652 ventisei: -------- begin text --------
 {{af|it|venti|sei|t1=twenty|t2=six}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
-# {{cln|it|cardinal numbers}} [[twenty-six]]
+# [[twenty-six]]
 
 ====Related terms====
 * {{l|it|ventiseienne}}
@@ -25516,9 +25178,9 @@ Page 25655 ventisette: -------- begin text --------
 {{af|it|venti|sette|t1=twenty|t2=seven}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
-# {{cln|it|cardinal numbers}} [[twenty-seven]]
+# [[twenty-seven]]
 
 ====Related terms====
 * {{l|it|ventisettana}}
@@ -25534,14 +25196,12 @@ Page 25656 ventisettemila: -------- begin text --------
 {{af|it|ventisette|mila}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[twenty-seven]] [[thousand]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 25659 ventitrè: Found match for regex: =
 Page 25659 ventitrè: -------- begin text --------
@@ -25567,9 +25227,9 @@ Page 25660 ventitré: -------- begin text --------
 {{af|it|venti|tre|t1=twenty|t2=three}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
-# {{cln|it|cardinal numbers}} [[twenty-three]]
+# [[twenty-three]]
 
 ====Related terms====
 * {{l|it|ventitreenne}}
@@ -25594,9 +25254,9 @@ Page 25666 ventotto: -------- begin text --------
 * {{rhymes|it|ɔtto}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
-# {{cln|it|cardinal numbers}} [[twenty-eight]]
+# [[twenty-eight]]
 
 ====Related terms====
 * {{l|it|ventottenne}}
@@ -25626,9 +25286,9 @@ Page 25676 ventuno: -------- begin text --------
 * {{rhymes|it|uno}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
-# {{cln|it|cardinal numbers}} [[twenty-one]]
+# [[twenty-one]]
 
 ===Noun===
 {{it-noun|m|~}}
@@ -25648,14 +25308,12 @@ Page 25677 ventunomila: -------- begin text --------
 {{af|it|ventuno|mila}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
 # [[twentyone]] [[thousand]]
 
 ===See also===
 * [[Appendix:Italian numbers]]
-
-{{cln|it|cardinal numbers}}
 -------- end text --------
 Page 25700 verdemare: Found match for regex: =
 Page 25700 verdemare: -------- begin text --------
@@ -26144,9 +25802,9 @@ From {{der|it|NL.|zerum}}, from {{der|it|ML.|zephirum}}, from {{der|it|ar|صِف
 * {{hyphenation|it|zè|ro}}
 
 ===Numeral===
-{{head|it|numeral}}
+{{it-card-inv}}
 
-# {{cln|it|cardinal numbers}} [[#English|zero]]
+# [[#English|zero]]
 #* {{quote-book|it|year=1587|author={{w|Cosimo Bartoli}}, transl.|chapter=Cap. IIII: Del multiplicare|chapterurl=https://books.google.it/books?id=MTuDr9B2r1MC&hl=it&pg=PA6#v=onepage&q&f=false|trans-chapter=Chapter 4: About Multiplication|title=Opere di {{w|Oronce Finé|Orontio Fineo}} Diuiſe in Cinque Parti: Aritmetica, Geometria, Coſmografia & Oriuoli|url=https://books.google.it/books?id=MTuDr9B2r1MC&hl=it&pg=PP5#v=onepage&q&f=false|location=Venice|publisher=Francesco Franceschi Senese|page=10|pageurl=https://books.google.it/books?id=MTuDr9B2r1MC&hl=it&pg=PA10#v=onepage&q&f=false|section=|passage=Fatta queﬅa prima mu[l]tiplicatione, va all’altra figura che gl’è à canto del numero Multiplicante che ſegue, il quale eſſendo '''zero''', cioè che non ſignifica coſa alcuna, non ti darà ancora coſa alcuna dal ſuo multiplicarlo|translation=Having done this first multiplication, go to the figure next to the following multiplying number, which, being '''zero''' – that is, it doesn't mean anything – will not give anything when multiplied}}
 
 ===Noun===
@@ -26186,5 +25844,5 @@ Page 26248 zulù: -------- begin text --------
 
 # [[Zulu]]
 -------- end text --------
-Elapsed time: 2 mins 37.12 secs
-Ending at Thu Jul  8 01:52:36 2021
+Elapsed time: 3 mins 41.96 secs
+Ending at Fri Jul  9 22:07:23 2021
