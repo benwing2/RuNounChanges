@@ -588,7 +588,7 @@ Page 46 a tempo: -------- begin text --------
 * {{l|it|bomba a tempo}}
 
 ===Adverb===
-{{head|it|adverb}}
+{{it-adv}}
 
 # [[on time]], [[in time]] (''sufficiently early'')
 #: {{syn|it|in tempo|per tempo}}
@@ -6972,7 +6972,7 @@ Page 4912 ciclamino: Found match for regex: =
 Page 4912 ciclamino: -------- begin text --------
 
 ===Etymology===
-From {{der|it|la|cyclamīnos}}.
+Borrowed from {{bor|it|la|cyclamīnos}}.
 
 ===Pronunciation===
 * {{it-IPA|ciclamìno}}
@@ -7228,11 +7228,6 @@ Page 4996 cinquantotto: -------- begin text --------
 -------- end text --------
 Page 4997 cinquantun: Found match for regex: =
 Page 4997 cinquantun: -------- begin text --------
-
-===Adjective===
-{{it-adj|inv=1|apoc=1}}
-
-# {{apocopic form of|it|cinquantuno}}
 
 ===Numeral===
 {{it-card-inv|apoc=1}}
@@ -9446,7 +9441,7 @@ Page 7377 divin: Found match for regex: =
 Page 7377 divin: -------- begin text --------
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|apoc=1}}
 
 # {{apocopic form of|it|divino}}
 
@@ -9692,20 +9687,14 @@ From {{inh|it|la|duo|t=two}}, from {{inh|it|itc-pro|*duō}}, from {{inh|it|ine-p
 
 # {{obsolete form of|it|due}}
 
-===Adjective===
-{{head|it|adjective|g=m|or invariable}}
-
-# {{obsolete form of|it|due}}
-
 ===Noun===
 {{it-noun|m|-}}
 
 # {{obsolete form of|it|due}}
 # [[#English|duo]]
+#: {{syn|it|duetto}}
 # {{lb|it|music}} [[duet]]
-
-====Synonyms====
-* {{sense|2, 3}} {{l|it|duetto}}
+#: {{syn|it|duetto}}
 
 ====Related terms====
 * {{l|it|due}}
@@ -10113,7 +10102,7 @@ Page 9081 ficaio: -------- begin text --------
 * {{hyph|it|fi|cà|io}}
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|f=-|pl=-}}
 
 # {{lb|it|only of the month of September}} [[fig]]-[[producing]]
 
@@ -10253,7 +10242,7 @@ From {{der|it|la|fixus}}, from {{m|la|figō}}. In this modern form, it may be an
 * {{l|it|sguardo}} {{l|it|fisso}} (''fixed stare'')
 
 ===Adverb===
-{{head|it|adverb}}
+{{it-adv}}
 
 # [[fixedly]], [[intently]]
 #: {{syn|it|fissamente}}
@@ -10312,7 +10301,7 @@ Page 9418 forte possibile: Found match for regex: =
 Page 9418 forte possibile: -------- begin text --------
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|sp=first}}
 
 # {{lb|it|music}} as loud as possible
 -------- end text --------
@@ -10320,7 +10309,7 @@ Page 9506 fp: Found match for regex: =
 Page 9506 fp: -------- begin text --------
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|inv=1}}
 
 # {{lb|it|music}} {{abbreviation of|it|forte piano}}
 
@@ -10369,7 +10358,7 @@ Page 9631 fu: -------- begin text --------
 # {{inflection of|it|essere||3|s|phis}}
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|inv=1}}
 
 # [[deceased]], [[late]]
 #: {{syn|it|defunto}}
@@ -10393,7 +10382,7 @@ Page 9683 fuori dai gangheri: Found match for regex: =
 Page 9683 fuori dai gangheri: -------- begin text --------
 
 ===Adjective===
-{{it-adj|inv=1}}
+{{it-adj|inv=1|head=[[fuori]] [[dai]][[ganghero|gangheri]]}}
 
 # [[off the rails]]
 -------- end text --------
@@ -10401,7 +10390,7 @@ Page 9684 fuori dall'ordinario: Found match for regex: =
 Page 9684 fuori dall'ordinario: -------- begin text --------
 
 ===Adjective===
-{{head|it|adjective|head=[[fuori]] [[dall']][[ordinario]]}}
+{{it-adj|inv=1|head=[[fuori]] [[dall']][[ordinario]]}}
 
 # [[weird]], [[bizarre]], [[odd]], [[out of the ordinary]], [[strange]]
 -------- end text --------
@@ -10421,7 +10410,7 @@ Page 9686 fuori di testa: Found match for regex: =
 Page 9686 fuori di testa: -------- begin text --------
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|inv=1}}
 
 # [[mad]], [[fool]], [[insane]], [[crazy]], [[mentally]] [[deranged]]
 # [[one brick short of a full load]]
@@ -10485,7 +10474,7 @@ Page 9692 fuori onda: Found match for regex: =
 Page 9692 fuori onda: -------- begin text --------
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|inv=1}}
 
 # {{alt form|it|fuorionda}}
 
@@ -10498,7 +10487,7 @@ Page 9693 fuori orario: Found match for regex: =
 Page 9693 fuori orario: -------- begin text --------
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|inv=1}}
 
 # {{alt form|it|fuoriorario}}
 -------- end text --------
@@ -10543,7 +10532,7 @@ Page 9697 fuori ruolo: Found match for regex: =
 Page 9697 fuori ruolo: -------- begin text --------
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|inv=1}}
 
 # {{lb|it|of tenure etc}} [[temporary]]
 
@@ -10696,7 +10685,7 @@ Page 9708 fuoriclasse: -------- begin text --------
 # [[unrivalled]], [[unequalled]]
 
 ===Noun===
-{{it-noun|m|g2=f|-}}
+{{it-noun|mfbysense|-}}
 
 # [[champion]], [[ace]]
 # [[a cut above]]
@@ -10759,7 +10748,7 @@ Page 9713 fuorionda: -------- begin text --------
 * {{rhymes|it|onda}}
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|inv=1}}
 
 # [[off the air]]
 
@@ -10862,7 +10851,7 @@ Page 9748 f·p: Found match for regex: =
 Page 9748 f·p: -------- begin text --------
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|inv=1}}
 
 # {{lb|it|music}} [[forte]] the first time and [[piano]] the second time
 #: {{ant|it|p·f}}
@@ -10871,7 +10860,7 @@ Page 9911 gentil: Found match for regex: =
 Page 9911 gentil: -------- begin text --------
 
 ===Adjective===
-{{head|it|adjective|g=m}}
+{{it-adj|apoc=1}}
 
 # {{apocopic form of|it|gentile}}
 
@@ -10893,7 +10882,7 @@ Page 10011 giallorosa: Found match for regex: =
 Page 10011 giallorosa: -------- begin text --------
 
 ===Adjective===
-{{head|it|adjective}} {{g|m|f}} <!-- plural uncertain -->
+{{it-adj|inv=1}}
 
 # [[romantic]] (of a film etc.)
 
@@ -10923,7 +10912,7 @@ Page 10024 giardinaio: -------- begin text --------
 * {{hyph|it|giar|di|nà|io}}
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj}}
 
 # that makes [[garden]]s [[bloom]]
 
@@ -10968,7 +10957,7 @@ Page 10067 giovin: Found match for regex: =
 Page 10067 giovin: -------- begin text --------
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|apoc=1}}
 
 # {{apocopic form of|it|giovine}}
 -------- end text --------
@@ -11016,7 +11005,7 @@ From {{inh|it|la|iūstus}}, {{m|la|jūstus}}, from {{inh|it|itc-pro|*jowestos}},
 # [[righteous]] person
 
 ===Adverb===
-{{head|it|adverb}}
+{{it-adv}}
 
 # [[just]], [[exactly]]
 -------- end text --------
@@ -11041,7 +11030,7 @@ Page 10285 grand': Found match for regex: =
 Page 10285 grand': -------- begin text --------
 
 ===Adjective===
-{{head|it|adjective|apocopate}}
+{{it-adj|apoc=1}}
 
 # {{lb|it|sometimes before a vowel}} {{apocopic form of|it|grande}}
 -------- end text --------
@@ -11142,7 +11131,7 @@ Page 10444 hutu: -------- begin text --------
 # [[Hutu]]
 
 ===Noun===
-{{it-noun|m|g2=f|-}}
+{{it-noun|mfbysense|-}}
 
 # [[Hutu]]
 
@@ -11166,7 +11155,7 @@ Page 10957 in basso: -------- begin text --------
 # [[down]], [[low]]
 
 ===Adverb===
-{{head|it|adverb}}
+{{it-adv}}
 
 # [[down]], [[low]], [[beneath]]
 # at the [[bottom]]; on the bottom
@@ -11179,7 +11168,7 @@ Page 10958 in bianco: Found match for regex: =
 Page 10958 in bianco: -------- begin text --------
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|inv=1}}
 
 # (''free from writing, printing, etc.'') [[blank]], [[undated]]
 # {{lb|it|of a meat or fish dish}} in a [[white sauce]], [[boiled]], [[plain]]
@@ -11199,7 +11188,7 @@ Page 10959 in brodo: Found match for regex: =
 Page 10959 in brodo: -------- begin text --------
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|inv=1}}
 
 # {{lb|it|of pasta or rice}} [[cooked]] and [[served]] in a light [[broth]] as a [[soup]]
 
@@ -11220,20 +11209,23 @@ Page 10960 in controtendenza: -------- begin text --------
 Page 10962 in costume adamitico: Found match for regex: =
 Page 10962 in costume adamitico: -------- begin text --------
 
+===Etymology===
+Literally, "in Adam's suit".
+
 ===Adjective===
 {{it-adj|inv=1}}
 
-# (literally: in Adam's suit) [[in the altogether]]; in one's [[birthday suit]]
+# [[in the altogether]]; in one's [[birthday suit]]
 #: {{syn|it|in tenuta adamitica|in veste adamitica}}
 -------- end text --------
 Page 10963 in diretta: Found match for regex: =
 Page 10963 in diretta: -------- begin text --------
 
 ===Etymology===
-Literally, "in direct."
+Literally, "in direct".
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|inv=1|head=[[in]] [[diretto|diretta]]}}
 
 # [[live]]
 #: {{syn|it|live|dal vivo|in presa diretta|in tempo reale}}
@@ -11252,7 +11244,7 @@ Page 10965 in dotazione: Found match for regex: =
 Page 10965 in dotazione: -------- begin text --------
 
 ===Etymology===
-Literally, "in equipment."
+Literally, "in equipment".
 
 ===Adjective===
 {{it-adj|inv=1}}
@@ -11269,7 +11261,7 @@ Page 10966 in faccia: -------- begin text --------
 Literally, "in face."
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|inv=1}}
 
 # {{syn of|it|di fronte}}
 
@@ -11282,7 +11274,7 @@ Page 10967 in fiamme: Found match for regex: =
 Page 10967 in fiamme: -------- begin text --------
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|inv=1|head=[[in]] [[fiamma|fiamme]]}}
 
 # [[ablaze]], [[afire]], [[on fire]]
 
@@ -11317,7 +11309,7 @@ Page 10969 in folle: Found match for regex: =
 Page 10969 in folle: -------- begin text --------
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|inv=1}}
 
 # {{lb|it|of the engine of a motor car etc}} in [[neutral]]
 -------- end text --------
@@ -11333,7 +11325,7 @@ Page 10970 in forma: -------- begin text --------
 # [[in shape]], [[fit]]
 
 ===Adverb===
-{{head|it|adverb}}
+{{it-adv}}
 
 # [[in shape]]
 
@@ -11353,7 +11345,7 @@ Page 10971 in formissima: -------- begin text --------
 # in [[great]] [[shape]]
 
 ===Adverb===
-{{head|it|adverb}}
+{{it-adv}}
 
 # in [[great]] [[shape]]
 
@@ -11393,7 +11385,7 @@ Page 10974 in grado: Found match for regex: =
 Page 10974 in grado: -------- begin text --------
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|inv=1}}
 
 # {{lb|it|intransitive}} (often with {{m|it|di}}) [[able]] (to); [[capable]] (of); [[up to]]
 #: {{ux|it|Oggi dovete superare questa limitazione. Sarete '''in grado'''?|Today you all have to overcome this limitation. Will you be '''up to it'''?}}
@@ -11406,7 +11398,7 @@ Page 10975 in linea: -------- begin text --------
 Literally, "in line." Compare {{cog|fr|en ligne}}.
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|inv=1}}
 
 # [[online]]
 # [[in-line]]
@@ -11457,7 +11449,7 @@ Page 10980 in pianta stabile: -------- begin text --------
 #: {{syn|it|fisso|permanente}}
 
 ===Adverb===
-{{head|it|adverb}}
+{{it-adv}}
 
 # [[stably]], [[permanently]], [[regularly]]
 #: {{syn|it|stabilmente}}
@@ -11501,7 +11493,7 @@ Page 10984 in scatola: -------- begin text --------
 # [[canned]], [[tinned]]
 
 ===Adverb===
-{{head|it|adverb}}
+{{it-adv}}
 
 # (''to conserve etc'') by [[canning]]
 
@@ -11535,7 +11527,7 @@ Page 10986 in soprannumero: -------- begin text --------
 # [[surplus]], [[extra]], [[redundant]], [[too]] [[many]]
 
 ===Adverb===
-{{head|it|adverb}}
+{{it-adv}}
 
 # too many, [[extra]]
 -------- end text --------
@@ -11557,7 +11549,7 @@ Page 10988 in subordine: -------- begin text --------
 # [[subordinate]]
 
 ===Adverb===
-{{head|it|adverb}}
+{{it-adv}}
 
 # [[secondarily]], [[subordinately]]
 -------- end text --------
@@ -11577,7 +11569,7 @@ Page 10990 in tiro: -------- begin text --------
 Literally, "in pull."
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|inv=1}}
 
 # {{lb|it|idiom|familiar}} [[snazzy]], [[spiffy]]
 #: {{syn|it|elegante}}
@@ -11601,7 +11593,7 @@ Literally, "in humid."
 {{it-IPA|in umìdo}}
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|inv=1}}
 
 # {{lb|it|cooking}} [[cooked]] and [[served]] in a [[sauce]], especially one derived from the food's own [[juice]]s
 
@@ -11712,7 +11704,7 @@ Page 11084 inca: -------- begin text --------
 # [[Inca]]
 
 ===Noun===
-{{it-noun|m|g2=f|-}}
+{{it-noun|mfbysense|-}}
 
 # [[Inca]]
 
@@ -11731,7 +11723,7 @@ Page 11141 incinta: -------- begin text --------
 From {{inh|it|la|incincta}}, feminine past participle of {{m|la|incingō}}. Compare {{cog|fr|enceinte}}, Spanish and Catalan {{m|es|encinta}}, Friulian {{m|fur|incinte}}.
 
 ===Adjective===
-{{head|it|adjective|g=f|plural|incinte}}
+{{it-adj|fonly=1}}
 
 # [[pregnant]], [[expectant]], [[with child]]
 #: {{syn|it|gravida|in stato interessante|in dolce attesa}}
@@ -11805,7 +11797,7 @@ Page 11414 indù: -------- begin text --------
 # [[Hindu]]
 
 ===Noun===
-{{it-noun|m|g2=f|-}}
+{{it-noun|mfbysense|-}}
 
 # [[Hindu]]
 
@@ -11834,7 +11826,7 @@ Page 11607 infuori: -------- begin text --------
 #: {{syn|it|sporgente}}
 
 ===Adverb===
-{{head|it|adverb}}
+{{it-adv}}
 
 # [[out]], [[outwards]]
 #: {{syn|it|fuori}}
@@ -11862,7 +11854,7 @@ From {{inh|it|la|[[in]] [[anteā]]}}.
 # [[previous]]
 
 ===Adverb===
-{{head|it|adverb}}
+{{it-adv}}
 
 # [[forward]], [[onward]], [[on]] {{i|of place}}
 # [[on]], [[onward]] {{i|of time}}
@@ -11888,7 +11880,7 @@ Borrowed from {{bor|it|la|innubus}}, derived from {{m|la|nūbō||I marry}}.
 * {{hyph|it|ìn|nu|ba}}
 
 ===Adjective===
-{{head|it|adjective|g=f|plural|innube}}
+{{it-adj|fonly=1}}
 
 # {{tlb|it|literary|rare}} [[unwed]], [[unmarried]]
 
@@ -11937,7 +11929,7 @@ Page 11944 intercatena: -------- begin text --------
 {{prefix|it|inter|catena}}
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|inv=1}}
 
 # [[interchain]]
 
@@ -12017,7 +12009,7 @@ Page 12073 intersecantisi: Found match for regex: =
 Page 12073 intersecantisi: -------- begin text --------
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|inv=1}}<!-- FIXME, delete -->
 
 # [[intersecting]]
 -------- end text --------
@@ -12069,7 +12061,7 @@ Page 12126 intracatena: -------- begin text --------
 {{prefix|it|intra|catena}}
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|inv=1}}
 
 # [[intrachain]]
 
@@ -12097,7 +12089,7 @@ Page 12142 intramoenia: -------- begin text --------
 From {{etyl|la|it}}.
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|inv=1}}
 
 # {{lb|it|literally}} within the city walls
 # working without payment at a public facility
@@ -12106,7 +12098,7 @@ Page 12210 inutil: Found match for regex: =
 Page 12210 inutil: -------- begin text --------
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|apoc=1}}
 
 # {{apocopic form of|it|inutile}}
 
@@ -12125,7 +12117,7 @@ Derived from {{prefix|it|iso-|}} {{der|it|grc|χειμαίνω||I am exposed to 
 * {{hyph|it|i|so|chi|mè|na}}
 
 ===Adjective===
-{{head|it|adjective|g=f|feminine plural|isochimene}}
+{{it-adj|fonly=1}}
 
 # [[isocheimal]], {{only used in|it|linea isochimena|nocap=1}}
 
@@ -12175,7 +12167,7 @@ Page 12726 juniores: -------- begin text --------
 # {{lb|it|sports}} [[under]]-20 (''of an athlete'')
 
 ===Noun===
-{{it-noun|m|g2=f|-}}
+{{it-noun|mfbysense|-}}
 
 # {{lb|it|sports}} under-20 [[athlete]]
 
@@ -12235,7 +12227,7 @@ Page 12747 khmer: -------- begin text --------
 # [[Khmer]]
 
 ===Noun===
-{{it-noun|m|g2=f|-}}
+{{it-noun|mfbysense|-}}
 
 # [[Khmer]]
 
@@ -12272,9 +12264,12 @@ Page 12761 l'istesso: Found match for regex: =
 Page 12761 l'istesso: -------- begin text --------
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj}}
 
-# {{lb|it|music}} the same
+# {{lb|it|archaic}} the same
+
+====Usage notes====
+* In modern usage, found only in the music expression {{m|it|l'istesso tempo}}.
 
 ====Derived terms====
 * {{l|it|l'istesso tempo}}
@@ -12360,12 +12355,12 @@ From {{af|it|lanciare|alt1=lancia|t1=throw|pos1=second person singular imperativ
 * {{it-IPA|lànciaràddzi}}
 * {{hyph|it|lan|cia|ràz|zi}}
 
-===Noun 1===
+===Noun===
 {{it-noun|m|-}}
 
 # {{lb|it|weapons}} [[rocket launcher]]
 
-===Noun 2===
+===Noun===
 {{it-noun|f|-}}
 
 # {{ellipsis of|it|pistola lanciarazzi}}: [[flare gun]]
@@ -12426,7 +12421,7 @@ Page 12972 lavamani: -------- begin text --------
 # {{alternative form of|it|lavamano}}
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|inv=1}}
 
 # {{lb|it|of a soap product}} designed to [[wash]] the [[hand]]s (especially to remove grease, ink or paints)
 -------- end text --------
@@ -12447,7 +12442,7 @@ Page 13009 leggiero: Found match for regex: =
 Page 13009 leggiero: -------- begin text --------
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj}}
 
 # {{archaic spelling of|it|leggero}}
 -------- end text --------
@@ -12566,8 +12561,8 @@ See {{m|it|loro}}.
 ====See also====
 {{Italian personal pronouns}}
 
-===Adjective===
-{{head|it|adjective|plural}}
+===Determiner===
+{{head|it|determiner|plural}}
 
 # {{lb|it|uncommon|very|formal|or|polite|possessive}} [[your]]
 -------- end text --------
@@ -12580,7 +12575,7 @@ Page 13444 lumbard: -------- begin text --------
 # of or pertaining to the [[Lega Nord]]
 
 ===Noun===
-{{it-noun|m|g2=f|-}}
+{{it-noun|mfbysense|-}}
 
 # a member or supporter of the Lega Nord
 #: {{syn|it|leghista}}
@@ -12691,7 +12686,7 @@ Page 13567 madrelingua: -------- begin text --------
 # [[mother tongue]]
 
 ===Noun===
-{{it-noun|m|g2=f|-}}
+{{it-noun|mfbysense|-}}
 
 # [[native speaker]]
 
@@ -12800,7 +12795,7 @@ Page 13593 maggior: Found match for regex: =
 Page 13593 maggior: -------- begin text --------
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|apoc=1}}
 
 # {{apocopic form of|it|maggiore}}
 -------- end text --------
@@ -12819,13 +12814,13 @@ Page 13759 malpancista: -------- begin text --------
 {{confix|it|mal|pancia|t2=belly|ista}}
 
 ===Noun===
-{{it-noun|m}} or {{it-noun|f}}
+{{it-noun|mfbysense}}
 
 # a person who makes or accepts a political choice [[reluctantly]]
 # a person who manifests [[disagreement]] or [[dissent]] within a political [[party]], especially in an [[nonconstructive]] way
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj}}
 
 # accepting a political choice reluctantly
 # of or relating to dissenting and nonconstructive attitudes
@@ -12880,7 +12875,7 @@ Page 13804 mammola: Found match for regex: =
 Page 13804 mammola: -------- begin text --------
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|inv=1}}
 
 # [[violet]]
 
@@ -12913,7 +12908,7 @@ From {{bor|it|en|Manchu}}, from {{der|it|mnc|ᠮᠠᠨᠵᡠ}}.
 # [[Manchu]]
 
 ===Noun===
-{{it-noun|m|g2=f|-}}
+{{it-noun|mfbysense|-}}
 
 # [[Manchu]] {{gloss|person}}
 
@@ -12959,7 +12954,7 @@ From {{inh|it|la|mancus}}, from {{der|it|ine-pro|*mh₂n-ko-||maimed in the hand
 * {{desc|ca|manc|bor=1}}
 
 ====Adverb====
-{{head|it|adverb}}
+{{it-adv}}
 
 # {{lb|it|colloquial}} [[not even]]
 #: {{syn|it|neppure|neanche}}
@@ -13046,13 +13041,13 @@ From {{bor|it|pt|mandarim}}.
 
 # [[Mandarin]], [[Chinese]]
 
-====Noun 1====
+====Noun====
 {{it-noun|m}}
 
 # [[mandarin]] (bureaucrat of the Chinese Empire)
 # {{lb|it|by extension}} mandarin (pedantic or elitist bureaucrat)
 
-====Noun 2====
+====Noun====
 {{it-noun|m|~}}
 
 # [[Mandarin]] (language)
@@ -13073,15 +13068,15 @@ Page 13839 mangiacrauti: Found match for regex: =
 Page 13839 mangiacrauti: -------- begin text --------
 
 ===Etymology===
-Literally "sauerkraut eater"
+Literally "sauerkraut eater".
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|inv=1}}
 
 # [[German]]
 
 ===Noun===
-{{it-noun|mf|-}}
+{{it-noun|mfbysense|-}}
 
 # [[Kraut]], [[German]]
 -------- end text --------
@@ -13097,7 +13092,7 @@ From {{af|it|mangiare|alt1=mangia|pos1=second person singular imperative|patata|
 * {{hyphenation|it|man|gia|pa|tà|te}}
 
 ===Noun===
-{{it-noun|mf|-}}
+{{it-noun|mfbysense|-}}
 
 # [[potato]]-[[eater]]
 # {{lb|it|derogatory}} [[idler]] {{gloss|a worthless person}}
@@ -13130,15 +13125,15 @@ Page 13842 mangiaspaghetti: Found match for regex: =
 Page 13842 mangiaspaghetti: -------- begin text --------
 
 ===Etymology===
-Literally "spaghetti eater"
+Literally, "spaghetti eater".
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|inv=1}}
 
 # [[Italian]] (especially southern)
 
 ===Noun===
-{{it-noun|mf|-}}
+{{it-noun|mfbysense|-}}
 
 # [[Italian]] (especially one from the South)
 -------- end text --------
@@ -13159,7 +13154,7 @@ Page 13893 maori: -------- begin text --------
 # [[Maori]]
 
 ===Noun===
-{{it-noun|m|g2=f|-}}
+{{it-noun|mfbysense|-}}
 
 # [[Maori]]
 
@@ -13179,7 +13174,7 @@ Page 13900 marbré: Found match for regex: =
 Page 13900 marbré: -------- begin text --------
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|inv=1}}
 
 # {{synonym of|it|marmorizzato}}
 -------- end text --------
@@ -13220,7 +13215,7 @@ From {{bor|it|es|mataco}}.
 # {{lb|it|relational}} [[Mataco]]
 
 ===Noun===
-{{it-noun|mf|-}}
+{{it-noun|mfbysense|-}}
 
 # [[Mataco]]
 
@@ -13265,7 +13260,7 @@ Page 14068 max: Found match for regex: =
 Page 14068 max: -------- begin text --------
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|inv=1}}
 
 # {{abbr of|it|massimo||max}}
 
@@ -13310,7 +13305,7 @@ From {{inh|it|la|melius}}.
 #: {{ant|it|peggiore}}
 
 ===Adverb===
-{{head|it|adverb}} (''comparative of'' '''[[bene]]''')
+{{it-adv}} (''comparative of'' '''[[bene]]''')
 
 # [[better]]
 # (the) [[best]]
@@ -13363,7 +13358,7 @@ Page 14411 mezz: Found match for regex: =
 Page 14411 mezz: -------- begin text --------
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|apoc=1}}
 
 # {{apocopic form of|it|mezzo}}
 
@@ -13374,7 +13369,7 @@ Page 14412 mezz': Found match for regex: =
 Page 14412 mezz': -------- begin text --------
 
 ===Adjective===
-{{head|it|adjective|apocopate}}
+{{it-adj|apoc=1}}
 
 # {{lb|it|sometimes before a vowel}} {{apocopic form of|it|mezza}}
 # {{lb|it|sometimes before a vowel}} {{apocopic form of|it|mezzo}}
@@ -13391,13 +13386,10 @@ Page 14416 mezzopunto: -------- begin text --------
 
 # [[needlepoint]]
 
-===Adjective===
-{{head|it|adjective}}
+===Noun===
+{{it-noun|m|~}}
 
-# {{lb|it|of a flintlock gun}} [[half-cocked]]
-
-====Related terms====
-* {{l|it|tuttopunto}}
+# {{only used in|it|a mezzopunto||[[half-cocked]]}}
 -------- end text --------
 Page 14417 mezzosangue: Found match for regex: =
 Page 14417 mezzosangue: -------- begin text --------
@@ -13419,7 +13411,7 @@ Page 14493 miglior: Found match for regex: =
 Page 14493 miglior: -------- begin text --------
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|apoc=1}}
 
 # {{apocopic form of|it|migliore}}
 -------- end text --------
@@ -13611,7 +13603,7 @@ Page 14571 minor: Found match for regex: =
 Page 14571 minor: -------- begin text --------
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|apoc=1}}
 
 # {{apocopic form of|it|minore}}
 
@@ -13643,7 +13635,7 @@ Probably of {{der|it|bnt|-}} origin.
 # of or pertaining to the {{w|Mongo people}}
 
 ====Noun====
-{{it-noun|mf|-}}
+{{it-noun|mfbysense|-}}
 
 # one who is part of the Mongo people
 # {{lb|it|uncountable|masculine only}} [[Mongo]] {{gloss|Bantu language}}
@@ -13659,10 +13651,19 @@ Probably of {{der|it|bnt|-}} origin.
 Page 14799 mono: Found match for regex: =
 Page 14799 mono: -------- begin text --------
 
-===Adjective===
-{{head|it|adjective}}
+===Etymology 1===
+
+====Adjective====
+{{it-adj|inv=1}}
 
 # [[single]] {{gloss|of one part}}
+
+===Etymology 2===
+
+====Adjective====
+{{it-adj|inv=1}}
+
+# {{lb|it|relational}} [[Mono]]
 
 ----
 
@@ -13754,7 +13755,7 @@ Page 14818 monocarena: Found match for regex: =
 Page 14818 monocarena: -------- begin text --------
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|inv=1}}
 
 # [[monohulled]]
 -------- end text --------
@@ -13852,12 +13853,12 @@ Page 14882 monoguscio: -------- begin text --------
 {{prefix|it|mono|guscio}}
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|inv=1}}
 
 # {{lb|it|relational}} [[monocoque]]
 
 ===Noun===
-{{it-noun|m|monogusci}}
+{{it-noun|m|-}}<!-- FIXME, delete monogusci -->
 
 # [[monocoque]]
 -------- end text --------
@@ -13899,7 +13900,7 @@ Page 14905 monomotore: -------- begin text --------
 {{prefix|it|mono|motore}}
 
 ===Adjective===
-{{it-adj|inv=1}}
+{{it-adj}}
 
 # [[single-engined]]
 
@@ -13942,7 +13943,7 @@ Page 14914 monopezzo: -------- begin text --------
 {{prefix|it|mono|pezzo}}
 
 ===Pronunciation===
-* {{it-IPA|monopèttso}}
+* {{it-IPA|mònopèttso}}
 * {{rhymes|it|ɛttso}}
 
 ===Adjective===
@@ -14009,7 +14010,7 @@ Page 14928 monoreattore: -------- begin text --------
 {{prefix|it|mono|reattore}}
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj}}
 
 # [[single]]-[[jet]]
 
@@ -14028,7 +14029,7 @@ Page 14929 monoreddito: -------- begin text --------
 {{it-adj|inv=1}}
 
 # [[one]]-[[income]], [[single]]-[[income]] (''family, household etc'')
-#* ''Il nostro partito ritiene che il governo debba ridurre il carico fiscale sulle famiglie '''monoreddito'''''. Our party believes that the government should lessen the burden of taxes on '''one-income''' families.
+#* {{quote|it|Il nostro partito ritiene che il governo debba ridurre il carico fiscale sulle famiglie '''monoreddito'''.|Our party believes that the government should lessen the burden of taxes on '''one-income''' families.}}
 
 ====Related terms====
 * {{l|it|reddito}}
@@ -14360,7 +14361,7 @@ Page 15166 multigriglia: -------- begin text --------
 {{prefix|it|multi|griglia}}
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|inv=1}}
 
 # {{lb|it|electronics}} [[multigrid]]
 -------- end text --------
@@ -14418,7 +14419,7 @@ Page 15184 multinastro: -------- begin text --------
 {{prefix|en|multi|nastro}}
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|inv=1}}
 
 # {{lb|it|computing}} [[multithread]], [[multitape]]
 -------- end text --------
@@ -14451,7 +14452,7 @@ Page 15189 multipara: -------- begin text --------
 {{confix|it|multi|para}}
 
 ===Adjective===
-{{head|it|adjective|g=f|plural|[[multipare]]}} {{tlb|it|feminine only}}
+{{it-adj|fonly=1}}
 
 # [[multiparous]]
 #: {{syn|it|pluripara}}
@@ -14460,7 +14461,7 @@ Page 15192 multipiani: Found match for regex: =
 Page 15192 multipiani: -------- begin text --------
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|inv=1}}
 
 # {{alternative form of|it|multipiano}}
 -------- end text --------
@@ -14552,7 +14553,7 @@ Page 15211 multisensore: -------- begin text --------
 {{prefix|it|multi|sensore}}
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|inv=1}}
 
 # [[multisensor]]
 -------- end text --------
@@ -14563,7 +14564,7 @@ Page 15213 multiservizi: -------- begin text --------
 {{prefix|it|multi|servizi}}
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|inv=1}}
 
 # [[multiservice]]
 -------- end text --------
@@ -14750,7 +14751,7 @@ Page 15468 nel pallone: -------- begin text --------
 Literally, "in the (big) ball."
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|inv=1}}
 
 # {{lb|it|idiom}} [[flustered]], [[rattled]], in a [[fuddle]]
 
@@ -14779,7 +14780,7 @@ Page 15580 nero come la pece: -------- begin text --------
 Literally, "black as the pitch."
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|sp=first}}
 
 # {{lb|it|simile}} [[pitch-black]]; [[black as coal]]
 -------- end text --------
@@ -14818,12 +14819,12 @@ Page 15598 nessun: -------- begin text --------
 * {{alter|it|nessun'||misspelling}}
 
 ===Determiner===
-{{head|it|determiner|g=m-s|feminine|nessuna}}
+{{head|it|determiner form|g=m-s|feminine|nessuna}}
 
 # {{apocopic form of|it|nessuno}}
 
 ===Pronoun===
-{{head|it|pronoun}}
+{{head|it|pronoun form}}
 
 # {{apocopic form of|it|nessuno}}
 #: {{ux|it|{{w|nessun dorma|'''nessun''' dorma}}|no one shall sleep|inline=1}}
@@ -14833,13 +14834,13 @@ Page 15599 nessun': Found match for regex: =
 Page 15599 nessun': -------- begin text --------
 
 ===Determiner===
-{{head|it|determiner|apocopate}}
+{{head|it|determiner form|apocopate}}
 
 # {{lb|it|sometimes before a vowel}} {{apocopic form of|it|nessuna}}
 # {{misspelling of|it|nessun}}
 
 ===Pronoun===
-{{head|it|pronoun|apocopate}}
+{{head|it|pronoun form|apocopate}}
 
 # {{lb|it|sometimes before a vowel}} {{apocopic form of|it|nessuna}}
 # {{misspelling of|it|nessun}}
@@ -14860,14 +14861,14 @@ From {{inh|it|la|-}} {{compound|la|nē|t1=not|ipse|lit2=himself|pos2=emphatic|ū
 * {{audio|it|It-nessuno.ogg|Audio}}
 * {{rhymes|it|uno}}
 
-===Adjective===
-{{head|it|adjective|g=m-s|feminine|nessuna|superlative|nessunissimo}}
+===Determiner===
+{{head|it|determiner|g=m-s|singular only||feminine|nessuna}}
 
 # {{lb|it|in negative sentences}} [[no]], [[any]]
 #: {{syn|it|niente|q=informal|nullo|q2=archaic, literary|veruno|q3=archaic, literary}}
 
 ===Pronoun===
-{{head|it|pronoun|g=m-s|feminine|nessuna}}
+{{head|it|pronoun|g=m-s|singular only||feminine|nessuna}}
 
 # [[none]]
 # {{lb|it|masculine|_|only}} [[no one]], [[nobody]]
@@ -14878,7 +14879,7 @@ From {{inh|it|la|-}} {{compound|la|nē|t1=not|ipse|lit2=himself|pos2=emphatic|ū
 * {{qualifier|archaic|literary}} {{l|it|chicchessia}}
 
 ====Usage notes====
-* The adjectival form has no plural form and is therefore only used with singular nouns. The pronoun is also a {{m|en|singulare tantum}}.
+* The determiner has no plural form and is therefore only used with singular nouns. The pronoun is also a {{m|en|singulare tantum}}.
 
 * Before any grammatically connected word not beginning with ''s'' + consonant, ''cn'', ''gn'', ''pn'', ''ps'', ''x'', or ''z'', the masculine form ''nessuno'' changes into the apocopic form {{m|it|nessun}}, while the feminine form ''nessuna'' becomes {{m|it|nessun'}} before vowels:
 : {{ux|it|'''nessun''' dolore|'''no''' pain|inline=1}}
@@ -14907,7 +14908,7 @@ From {{inh|it|VL.|*nittus}}, a syncopation of {{inh|it|la|nitidus}}. {{doublet|i
 #: {{uxi|it|peso '''netto'''|'''net''' weight}}
 
 ===Adverb===
-{{head|it|adverb}}
+{{it-adv}}
 
 # [[clearly]]
 
@@ -14946,13 +14947,13 @@ From {{der|it|la|[[ne]] [[ūnus]]|lit=not one}}.
 * {{it-IPA|neùno}}
 * {{hyphenation|it|ne|'''u'''|no}}
 
-===Adjective===
-{{head|it|adjective|feminine|neuna}}
+===Determiner===
+{{head|it|determiner|g=m-s|singular only||feminine|neuna}}
 
 # {{obsolete form of|it|niuno}}
 
 ===Pronoun===
-{{head|it|pronoun}}
+{{head|it|pronoun|g=m-s|singular only||feminine|neuna}}
 
 # {{obsolete form of|it|niuno}}
 -------- end text --------
@@ -14962,7 +14963,7 @@ Page 15693 nicotino: -------- begin text --------
 ===Adjective===
 {{head|it|adjective}}
 
-# {{lb|it|relational}} [[nicotine]]
+# {{lb|it|relational}} [[nicotine]]<!-- FIXME, submit to RFV -->
 
 ====Derived terms====
 * {{l|it|nicotino-dipendenza}}
@@ -14990,8 +14991,8 @@ From an earlier {{m|it|neente}}, either, from {{der|it|la|[[ne]] [[gentem]]||no 
 #: {{ux|it|Hai bisogno di '''niente'''?|Do you need '''anything'''?|inline=1}}
 #: {{ux|it|Non voglio '''niente''' da mangiare.|I don't want '''anything''' to eat.|inline=1}}
 
-===Adjective===
-{{head|it|adjective}}
+===Determiner===
+{{head|it|determiner|invariable}}
 
 # {{lb|it|informal}} [[no]], (''after a negative'') [[any]]
 #: {{syn|it|nessuno}}
@@ -15032,13 +15033,13 @@ From {{der|it|la|[[nē]] [[ūnus]]|lit=not one}}.
 * {{it-IPA|ni.ùno|niùno}}
 * {{hyphenation|it|ni|ù|no}}
 
-===Adjective===
-{{head|it|adjective|feminine|niuna}}
+===Determiner===
+{{head|it|determiner|singular only||feminine|niuna}}
 
 # {{lb|it|literary}} [[no]], [[any]]
 
 ===Pronoun===
-{{head|it|pronoun}}
+{{head|it|pronoun|singular only||feminine|niuna}}
 
 # {{lb|it|literary}}  [[no one]], [[nobody]]
 -------- end text --------
@@ -15058,7 +15059,7 @@ From {{inh|it|VL.|*nuceola}}, from {{inh|it|la|nux||nut}}. Compare {{cog|lij|nis
 * {{rhymes|it|ɔla}}
 * {{hyphenation|it|noc|ciò|la}}
 
-===Noun 1===
+===Noun===
 {{it-noun|f}}
 
 # [[hazelnut]], [[filbert]]
@@ -15083,7 +15084,7 @@ From {{inh|it|VL.|*nuceola}}, from {{inh|it|la|nux||nut}}. Compare {{cog|lij|nis
 * {{l|it|noce}}
 {{rel-bottom}}
 
-===Noun 2===
+===Noun===
 [[File:Hazel.jpg|thumb|{{ux|it|un occhio (color) '''nocciola'''|a '''hazel''' eye|inline=1}}]]
 {{it-noun|m|-}}
 
@@ -15555,7 +15556,7 @@ From {{inh|it|la|novem}}, ultimately from {{inh|it|ine-pro|*h₁néwn̥}}.
 ====Adjective====
 {{head|it|adjective form}}
 
-# {{adj form of|it|novo|novo|f|p}}
+# {{adj form of|it|novo||f|p}}
 
 ----
 
@@ -15645,7 +15646,7 @@ Page 15970 nuristani: Found match for regex: =
 Page 15970 nuristani: -------- begin text --------
 
 ===Noun===
-{{it-noun|m|g2=f|-}}
+{{it-noun|mfbysense|-}}
 
 # [[Nuristani]]
 
@@ -15658,7 +15659,7 @@ Page 16026 occhiona: Found match for regex: =
 Page 16026 occhiona: -------- begin text --------
 
 ===Adjective===
-{{head|it|adjective|g=f|plural|occhione}}
+{{it-adj|fonly=1}}
 
 # [[big]]-[[eyed]], {{only used in|it|molva occhiona|nocap=1}}
 -------- end text --------
@@ -15669,8 +15670,8 @@ Page 16113 ogne: -------- begin text --------
 * {{it-IPA|ógne}}
 * {{hyphenation|it|o|gne}}
 
-===Adjective===
-{{it-adj|inv=1}}
+===Determiner===
+{{head|it|determiner|invariable}}
 
 # {{archaic form of|it|ogni}}
 -------- end text --------
@@ -15690,8 +15691,8 @@ From earlier {{m|it|ogne}}, {{m|it|onne}}, {{m|it|onni}}, from {{etyl|la|it}} {{
 * {{audio|it|LL-Q652 (ita)-Happypheasant-ogni.wav|Audio}}
 * {{hyphenation|it|o|gni}}
 
-===Adjective===
-{{head|it|adjective}}
+===Determiner===
+{{head|it|determiner|invariable}}
 
 # [[each]], [[every]]
 
@@ -15734,12 +15735,12 @@ Page 16129 olefiante: -------- begin text --------
 From {{bor|it|fr|oléfiant}}.
 
 ===Pronunciation===
-* {{it-IPA|olefïànte}}
+* {{it-IPA|olefi.ànte}}
 * {{rhymes|it|ante}}
 * {{hyph|it|o|le|fi|àn|te}}
 
 ===Noun===
-{{head|it|adjective}}
+{{it-adj}}
 
 # {{only used in|it|gas olefiante}}
 
@@ -15759,7 +15760,7 @@ Derived from {{pre|it|oleo|facente}}. {{clq|it|fr|oléfiant}}.
 * {{hyph|it|o|leo|fa|cèn|te}}
 
 ===Noun===
-{{head|it|adjective}}
+{{it-adj}}
 
 # {{only used in|it|gas oleofacente}}
 
@@ -15868,7 +15869,7 @@ Page 16241 omicidial: Found match for regex: =
 Page 16241 omicidial: -------- begin text --------
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|apoc=1}}
 
 # {{apocopic form of|it|omicidiale}}
 -------- end text --------
@@ -15884,7 +15885,7 @@ Page 16294 omosex: -------- begin text --------
 # [[homosexual]]
 
 ===Noun===
-{{it-noun|m|g2=f|-}}
+{{it-noun|mfbysense|-}}
 
 # [[homosexual]]
 #: {{syn|it|omosessuale}}
@@ -16019,7 +16020,7 @@ From {{der|it|la|Oscus}}.
 * {{hyph|it|ò|sco}}
 
 ===Adjective===
-{{head|it|adjective|feminine singular|osca|masculine plural|osci|or|oschi|feminine plural|osche}}
+{{it-adj|mpl=osci|mpl2=oschi}}
 
 # [[Oscan]]
 
@@ -16046,12 +16047,12 @@ Page 16591 osmanli: -------- begin text --------
 Borrowed from {{bor|it|tr|Osmanlı}}.
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|inv=1}}
 
 # [[Ottoman]]
 
 ===Noun===
-{{it-noun|mf}}
+{{it-noun|mfbysense|-}}
 
 # [[Ottoman]]
 -------- end text --------
@@ -16310,9 +16311,9 @@ Page 16811 paesaggisticoambientale: -------- begin text --------
 * {{alter|it|paesaggistico-ambientale}}
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj}}
 
-# relating to [[environmental]] aspects of [[landscape]]
+# {{lb|it|relational}} of the [[environmental]] aspects of [[landscape]]
 -------- end text --------
 Page 16875 pali: Found match for regex: =
 Page 16875 pali: -------- begin text --------
@@ -16322,7 +16323,7 @@ Page 16875 pali: -------- begin text --------
 * {{hyph|it|pà|li}}
 
 ===Etymology 1===
-From {{der|it|sa|पालि||line, series|pos=referring to the series of canonical texts}}.
+From {{bor|it|sa|पालि||line, series|pos=referring to the series of canonical texts}}.
 
 ====Noun====
 {{it-noun|m|~}}
@@ -16375,7 +16376,7 @@ Page 16919 pamiri: Found match for regex: =
 Page 16919 pamiri: -------- begin text --------
 
 ===Noun===
-{{it-noun|m|g2=f|-}}
+{{it-noun|mfbysense|-}}
 
 # [[Pamir]] (native or inhabitant)
 
@@ -16408,12 +16409,12 @@ Page 16958 pannegro: -------- begin text --------
 {{af|it|pan-|negro}}
 
 ===Pronunciation===
-* {{it-IPA|pannégro}}
+* {{it-IPA|pànnégro}}
 * {{rhymes|it|eɡro}}
 * {{hyph|it|pan|né|gro}}
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|f=-|fpl=-}}
 
 # [[Pan-African]], {{n-g|only used in reference to {{w|Marcus Garvey}}'s political movement}}
 
@@ -16429,7 +16430,7 @@ Page 17009 papua: -------- begin text --------
 # [[Papuan]]
 
 ===Noun===
-{{it-noun|m|g2=f|-}}
+{{it-noun|mfbysense|-}}
 
 # [[Papuan]] (''all senses'')
 #: {{syn|it|papuano}}
@@ -16469,7 +16470,7 @@ From {{inh|it|VL.|*pariclus}}, contracted form of {{m|la|*pariculus}}, a diminut
 # {{lb|it|in the plural}} [[several]], [[many]], [[quite a few]], quite a lot of
 
 ===Adverb===
-{{head|it|adverb}}
+{{it-adv}}
 
 # [[really]], rather, quite a lot, quite a bit
 
@@ -16531,7 +16532,7 @@ Page 17182 particolar: Found match for regex: =
 Page 17182 particolar: -------- begin text --------
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|apoc=1}}
 
 # {{apocopic form of|it|particolare}}
 
@@ -16588,7 +16589,7 @@ From {{inh|it|la|pēius}}, from {{m|la|pēior}}, ''pēiōris''.
 * {{l|it|migliore}}
 
 ===Adverb===
-{{head|it|adverb}} (''comparative of [[male]]'')
+{{it-adv}} (''comparative of [[male]]'')
 
 # [[worse]]
 #: {{ant|it|meglio}}
@@ -16616,7 +16617,7 @@ Page 17344 peggior: Found match for regex: =
 Page 17344 peggior: -------- begin text --------
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|apoc=1}}
 
 # {{apocopic form of|it|peggiore}}
 -------- end text --------
@@ -16641,7 +16642,7 @@ From {{bor|it|grc|πενθέκτη}}, compound of {{m|grc|πέντε||five}} and
 * {{hyph|it|pen|tè|cto}}
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj}}
 
 # {{tlb|it|historical}} [[Quinisext]]
 
@@ -16703,7 +16704,7 @@ From {{af|it|per|bene}}.
 # [[respectable]], [[decent]]
 
 ===Adverb===
-{{head|it|adverb}}
+{{it-adv}}
 
 # [[well]], [[properly]]
 
@@ -16773,7 +16774,7 @@ Page 17566 perlé: Found match for regex: =
 Page 17566 perlé: -------- begin text --------
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|inv=1}}
 
 # {{lb|it|relational}} [[pearl]]
 
@@ -16802,7 +16803,7 @@ From {{bor|it|la|Persa}}, {{m|la|Persēs}}, from {{der|it|grc|Πέρσης}}, fr
 #* {{quote-book|it|year=1807|author=Ugo Foscolo|authorlink=Ugo Foscolo|title={{w|Dei Sepolcri}}|url=https://books.google.it/books?id=uM3uL-xhMgkC&dq=I%20sepolcri%201807&hl=it&pg=PA1#v=onepage&q&f=false|publisher=Molini, Landi e comp.|year_published=1809|page=16|pageurl=https://books.google.it/books?id=uM3uL-xhMgkC&dq=I%20sepolcri%201807&hl=it&pg=PA16#v=onepage&q&f=false|passage=un Nume {{...}} nutría contro a’ '''Persi''' in Maratona {{...}} la virtù Greca e l'ira.|translation=In Marathon, against the '''Persians''', a deity was feeding the Greeks' virtue and rage.}}
 
 ====Adjective====
-{{head|it|adjective|feminine singular|persa|masculine plural|persi|feminine plural|perse}}
+{{it-adj}}
 
 # {{tlb|it|archaic|literary}} [[Persian]]
 
@@ -16961,7 +16962,7 @@ From {{inh|it|la|piscātor|piscātōrem}}.
 # [[fisherman]]
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj}}
 
 # {{lb|it|relational}} [[sea]], [[fish]] {{i|of certain [[animal]] [[species]] that [[fish]] for [[subsistence]]}}
 
@@ -16976,9 +16977,9 @@ Page 17647 pescatrice: -------- begin text --------
 # {{female equivalent of|it|pescatore}}
 
 ===Adjective===
-{{head|it|adjective}}
+{{head|it|adjective form}}
 
-# {{female equivalent of|it|pescatore}}
+# {{feminine singular of|it|pescatore}}
 
 ===Anagrams===
 * {{l|it|pasticcere}}
@@ -17000,7 +17001,7 @@ Uncertain. Possibly from:
 * {{hyphenation|it|pìc|co|lo}}
 
 ===Adjective===
-{{head|it|adjective|g=m|feminine singular|piccola|masculine plural|piccoli|feminine plural|piccole|comparative|[[più]] piccolo|or|minore}}
+{{it-adj|comp=[[più]] piccolo|comp2=minore}}
 
 # [[small]]
 # [[little]]
@@ -17037,7 +17038,7 @@ Page 17753 pieno di sè: -------- begin text --------
 Literally, "full of oneself."
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|sp=first}}
 
 # {{lb|it|idiom}} [[full of oneself]]
 -------- end text --------
@@ -17068,7 +17069,7 @@ Page 17784 pilota: Found match for regex: =
 Page 17784 pilota: -------- begin text --------
 
 ===Noun===
-{{it-noun|mf|mpl=piloti|fpl=pilote}}
+{{it-noun|mfbysense}}
 
 # [[pilot]] (aircraft or ship)
 # [[driver]] (vehicle)
@@ -17099,7 +17100,7 @@ Page 17816 piperita: -------- begin text --------
 From {{etyl|la|it}} {{m|la|mentha}} {{m|la|piperita}}.
 
 ===Adjective===
-{{head|it|adjective|g=f}} only (plural '''[[piperite]]''')
+{{it-adj|fonly=1}}
 
 # [[pepper]], [[peppery]] {{lb|it|only used in ''{{l|it|menta piperita}}'', [[peppermint]]}}
 
@@ -17287,7 +17288,7 @@ Page 18003 plurimotore: -------- begin text --------
 {{prefix|it|pluri|motore}}
 
 ===Adjective===
-{{it-adj|inv=1}}
+{{it-adj}}
 
 # [[multiengine]]
 
@@ -17508,6 +17509,9 @@ Page 18297 porta a porta: -------- begin text --------
 Page 18298 portabagagli: Found match for regex: =
 Page 18298 portabagagli: -------- begin text --------
 
+===Pronunciation===
+* {{it-IPA|pòrtabagàgli}}
+
 ===Noun===
 {{it-noun|m|-}}
 
@@ -17520,6 +17524,9 @@ Page 18298 portabagagli: -------- begin text --------
 
 # that carries [[baggage]] or [[luggage]]
 
+===References===
+* {{R:it:Olivetti}}
+
 {{cln|it|verb-noun compounds}}
 -------- end text --------
 Page 18301 portacasco: Found match for regex: =
@@ -17529,7 +17536,7 @@ Page 18301 portacasco: -------- begin text --------
 {{pre|it|porta|casco|t2=helmet}}
 
 ===Noun===
-{{it-noun|m}}
+{{it-noun|m|-}}<!-- FIXME, delete portacaschi -->
 
 # in a [[motorcycle]], [[compartment]] for holding or storing a [[helmet]]; helmet holder
 
@@ -17545,24 +17552,41 @@ Page 18302 portacontainer: -------- begin text --------
 ===Etymology===
 From {{prefix|it|porta|container}}.
 
+===Pronunciation===
+* {{it-IPA|pòrtacontèiner|pòrtacontàiner}}
+
 ===Adjective===
 {{wikipedia|Nave portacontainer|lang=it}}
 {{it-adj|inv=1}}
 
-# {{lb|it|nautical|relational}} [[container ship]]
+# {{lb|it|relational}} [[container]] {{i|of a ship, train, etc.}}
 
 ====Derived terms====
 * {{l|it|nave portacontainer}}
+
+===Noun===
+{{it-noun|m|-}}
+
+# {{lb|it|nautical}} [[container ship]]
+ 
+===References===
+* {{R:it:Olivetti}}
 -------- end text --------
 Page 18303 portacontenitori: Found match for regex: =
 Page 18303 portacontenitori: -------- begin text --------
 
-===Adjective===
-{{head|it|adjective}}
+===Pronunciation===
+* {{it-IPA|pòrtacontenitóri}}
 
-# {{lb|it|relational}} [[portacontainer]]
+===Adjective===
+{{it-adj|inv=1}}
+
+# {{lb|it|relational|nautical}} [[container]] {{i|of a ship}}
 
 {{cln|it|verb-noun compounds}}
+
+===References===
+* {{R:it:Olivetti}}
 -------- end text --------
 Page 18304 portacorrente: Found match for regex: =
 Page 18304 portacorrente: -------- begin text --------
@@ -17582,14 +17606,14 @@ Page 18305 portafango: -------- begin text --------
 {{com|it|portare|t1=to carry|fango|t2=mud}}
 
 ===Pronunciation===
-* {{it-IPA|portafàngo}}
+* {{it-IPA|pòrtafàngo}}
 * {{rhymes|it|anɡo}}
 * {{hyph|it|por|ta|fàn|go}}
 
 ===Adjective===
-{{it-adj|inv=1}}
+{{it-adj|inv=1|fonly=1}}
 
-# [[mud]]-[[carry]]ing, {{only used in|it|pirobetta portafango|nocap=1}}
+# [[mud]]-[[carry]]ing; {{only used in|it|pirobetta portafango|nocap=1}}
 
 ===Noun===
 {{it-noun|f|-}}
@@ -17603,7 +17627,7 @@ Page 18306 portafortuna: Found match for regex: =
 Page 18306 portafortuna: -------- begin text --------
 
 ===Pronunciation===
-* {{it-IPA|portafortùna}}
+* {{it-IPA|pòrtafortùna}}
 * {{rhymes|it|una}}
 
 ===Noun===
@@ -17645,13 +17669,13 @@ Page 18309 portasfortuna: Found match for regex: =
 Page 18309 portasfortuna: -------- begin text --------
 
 ===Noun===
-{{head|it|noun|g=m}}
+{{it-noun|m|-}}
 
 # [[jinx]]
 #: {{ant|it|portafortuna}}
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|inv=1}}
 
 # [[unlucky]]
 -------- end text --------
@@ -17684,7 +17708,7 @@ Page 18328 posatubi: -------- begin text --------
 * {{rhymes|it|ubi}}
 
 ===Noun===
-{{it-noun|mf|-}}
+{{it-noun|mfbysense|-}}
 
 # [[pipelayer]]
 
@@ -17730,7 +17754,7 @@ Page 18435 pover: Found match for regex: =
 Page 18435 pover: -------- begin text --------
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|apoc=1}}
 
 # {{apocopic form of|it|povere}}
 
@@ -17776,9 +17800,9 @@ Page 18495 precautelari: Found match for regex: =
 Page 18495 precautelari: -------- begin text --------
 
 ===Adjective===
-{{head|it|adjective}}
+{{head|it|adjective form}}
 
-# {{only in|it|misure precautelari}}
+# {{plural of|it|precautelare}}
 -------- end text --------
 Page 18507 precipitevole: Found match for regex: =
 Page 18507 precipitevole: -------- begin text --------
@@ -17791,7 +17815,8 @@ Derived from {{suffix|it|precipitare|t1=precipitate; rush|evole|t2=adjective-for
 * {{hyphenation|it|pre|ci|pi|té|vo|le}}
 
 ===Adjective===
-{{head|it|adjective|m and f plural|precipitevoli|comparative|più precipitevole|superlative|precipitevolissimo}}
+{{it-adj|sup=precipitevolissimo}}
+
 # [[hasty]]
 # [[precipitous]]
 
@@ -17818,7 +17843,7 @@ Page 18602 preimpianto: -------- begin text --------
 # [[preimplantation]]
 
 ===Noun===
-{{it-noun|m}}
+{{it-noun|m|-}}<!-- FIXME, delete preimpianti -->
 
 # [[preimplantation]]
 -------- end text --------
@@ -17995,7 +18020,7 @@ Page 18853 pro': -------- begin text --------
 * {{hyph|it|prò'}}
 
 ===Adjective===
-{{it-adj|inv=1}}
+{{it-adj|apoc=1}}
 
 # {{apocopic form of|it|prode|t=brave, valiant}}
 -------- end text --------
@@ -18078,7 +18103,7 @@ Page 19231 pucciniano: Found match for regex: =
 Page 19231 pucciniano: -------- begin text --------
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj}}
 
 # [[Puccinian]]
 {{cln|it|eponyms}}
@@ -18087,9 +18112,19 @@ Page 19254 punjabi: Found match for regex: =
 Page 19254 punjabi: -------- begin text --------
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|inv=1}}
 
 # [[Punjabi]]
+
+===Noun===
+{{it-noun|mfbysense|-}}
+
+# [[Punjabi]] {{q|person}}
+
+===Noun===
+{{it-noun|m|~}}
+
+# [[Punjabi]] {{q|language}}
 
 ----
 
@@ -18125,7 +18160,7 @@ Page 19280 purosangue: -------- begin text --------
 # [[full-blooded]]
 
 ===Noun===
-{{it-noun|m|g2=f|-}}
+{{it-noun|mfbysense|-}}
 
 # [[thoroughbred]]
 -------- end text --------
@@ -18133,7 +18168,7 @@ Page 19303 p·f: Found match for regex: =
 Page 19303 p·f: -------- begin text --------
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|inv=1}}
 
 # {{lb|it|music}} [[piano]] the first time and [[forte]] the second time
 #: {{ant|it|f·p}}
@@ -18145,7 +18180,7 @@ Page 19338 quadrimotore: -------- begin text --------
 {{prefix|it|quadr|motore}}
 
 ===Adjective===
-{{it-adj|inv=1}}
+{{it-adj}}
 
 # {{lb|it|of an aircraft}} having four engines
 
@@ -18177,12 +18212,11 @@ Page 19355 qual: Found match for regex: =
 Page 19355 qual: -------- begin text --------
 
 ===Adjective===
-{{head|it|adjective}} ''m and f''
+{{head|it|determiner form|apocopate}}
 
 # {{apocopic form of|it|quale}}
 #* {{rfdate|it}}, {{w|Dante Alighieri}}, ''{{w|Inferno}}'', ''Canto I'':
-#*: Ahi quanto a dir '''qual''' era è cosa dura<br>esta selva selvaggia e aspra e forte<br>che nel pensier rinova la paura!
-#*: Ah, how rueful to say what sort it was<br>this wilderness wild and harsh and daunting<br>that in my thoughts makes my fright alive again
+#*: {{quote|it|Ahi quanto a dir '''qual''' era è cosa dura<br>esta selva selvaggia e aspra e forte<br>che nel pensier rinova la paura!|Ah, how rueful to say what sort it was<br>this wilderness wild and harsh and daunting<br>that in my thoughts makes my fright alive again}}
 
 ----
 
@@ -18191,12 +18225,12 @@ Page 19356 qual': Found match for regex: =
 Page 19356 qual': -------- begin text --------
 
 ===Determiner===
-{{head|it|determiner|apocopate}}
+{{head|it|determiner form|apocopate}}
 
 # {{lb|it|sometimes before a vowel}} {{apocopic form of|it|quale}}
 
 ===Pronoun===
-{{head|it|pronoun|apocopate}}
+{{head|it|pronoun form|apocopate}}
 
 # {{lb|it|sometimes before a vowel}} {{apocopic form of|it|quale}}
 -------- end text --------
@@ -18211,8 +18245,8 @@ From {{compound|it|quale|alt1=qual|che}}.<ref>{{cite-book|last=Patota|first=Gius
 * {{hyph|it|quàl|che}}
 * {{audio|it|LL-Q652 (ita)-Happypheasant-qualche.wav|Audio}}
 
-===Adjective===
-{{head|it|adjective|only singular}}
+===Determiner===
+{{head|it|determiner|singular only||invariable}}
 
 # (a) [[few]]
 #: {{uxi|it|Ho '''qualche''' amico.|I have '''a few''' friends.}}
@@ -18243,8 +18277,8 @@ From {{inh|it|la|qualis|quālis, quālem}}.
 * {{audio|it|LL-Q652 (ita)-Happypheasant-quale.wav|Audio}}
 * {{hyphenation|it|qua|le}}
 
-===Adjective===
-{{head|it|adjective|plural|quali}}
+===Determiner===
+{{head|it|determiner|plural|quali}}
 
 # {{lb|it|question}} [[what]]?
 #: {{syn|it|che}}
@@ -18262,7 +18296,7 @@ From {{inh|it|la|qualis|quālis, quālem}}.
 * Poetic or archaic variants before consonant:  {{m|it|quai}}, {{m|it|quà}}.
 
 ===Pronoun===
-{{head|it|pronoun}}
+{{head|it|pronoun|plural|quali}}
 
 # [[which]] ... ?
 #: {{uxi|it|'''Quale''' dei tre è il più grande?|'''Which''' of the three is biggest?}}
@@ -18383,7 +18417,7 @@ Page 19372 quant': Found match for regex: =
 Page 19372 quant': -------- begin text --------
 
 ===Determiner===
-{{head|it|determiner|apocopate}}
+{{head|it|determiner form|apocopate}}
 
 # {{lb|it|sometimes before a vowel}} {{apocopic form of|it|quanta}}
 # {{lb|it|sometimes before a vowel}} {{apocopic form of|it|quanto}}
@@ -18443,7 +18477,7 @@ Page 19383 quarant: Found match for regex: =
 Page 19383 quarant: -------- begin text --------
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-card-inv|apoc=1}}
 
 # {{apocopic form of|it|quaranta}}
 -------- end text --------
@@ -18897,7 +18931,7 @@ Page 19455 quell': Found match for regex: =
 Page 19455 quell': -------- begin text --------
 
 ===Determiner===
-{{head|it|determiner|apocopate}}
+{{head|it|determiner form|apocopate}}
 
 # {{lb|it|before a vowel}} {{apocopic form of|it|quella}}
 # {{lb|it|before a vowel}} {{apocopic form of|it|quello}}
@@ -18913,8 +18947,8 @@ From {{inh|it|VL.||*(ec)cu illu}}, which is a contracted form of {{inh|it|la|ecc
 * {{audio|it|It-quello.ogg|audio}}
 * {{hyph|it|quél|lo}}
 
-===Adjective===
-{{head|it|adjective}}
+===Determiner===
+{{head|it|determiner}}
 
 # [[that]], [[those]]
 
@@ -18929,7 +18963,7 @@ Adjectival forms: <!-- move into table -->
 * {{l|it|quelle}}: feminine plural
 
 ===Pronoun===
-{{head|it|pronoun|plural|quelli|feminine|quella|feminine plural|quelle}}
+{{head|it|pronoun|feminine singular|quella|masculine plural|quelli|feminine plural|quelle}}
 
 # [[that one]]
 # [[those]]
@@ -18944,13 +18978,13 @@ Page 19466 quest': Found match for regex: =
 Page 19466 quest': -------- begin text --------
 
 ===Determiner===
-{{head|it|determiner|apocopate}}
+{{head|it|determiner form|apocopate}}
 
 # {{lb|it|before a vowel}} {{apocopic form of|it|questa}}
 # {{lb|it|before a vowel}} {{apocopic form of|it|questo}}
 
 ===Pronoun===
-{{head|it|pronoun|apocopate}}
+{{head|it|pronoun form|apocopate}}
 
 # {{lb|it|sometimes before a vowel}} {{apocopic form of|it|questa}}
 # {{lb|it|sometimes before a vowel}} {{apocopic form of|it|questo}}
@@ -19004,7 +19038,7 @@ Page 19503 QV: Found match for regex: =
 Page 19503 QV: -------- begin text --------
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|inv=1}}
 
 # {{abbreviation of|it|quattrovalvole}}
 -------- end text --------
@@ -19015,7 +19049,7 @@ Page 19542 radical-chic: -------- begin text --------
 Borrowed from {{bor|it|en|radical chic}}.
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|inv=1}}
 
 # adopting [[non-conformist]] or extreme political views as [[fashion statement]]; [[radical chic]]
 #: {{uxi|it|la sinistra '''radical-chic'''}}
@@ -19028,7 +19062,7 @@ Page 19605 raffaella: Found match for regex: =
 Page 19605 raffaella: -------- begin text --------
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|fonly=1|fpl=-}}
 
 # {{only in|it|alla raffaella}}
 -------- end text --------
@@ -19041,7 +19075,7 @@ Page 19691 raso terra: -------- begin text --------
 # {{lb|it|relational}} [[ground level]]
 
 ===Adverb===
-{{head|it|adverb}}
+{{it-adv}}
 
 # [[hugging]] the [[ground]]
 -------- end text --------
@@ -19067,7 +19101,12 @@ Page 19699 rastafari: Found match for regex: =
 Page 19699 rastafari: -------- begin text --------
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|inv=1}}
+
+# [[Rastafarian]]
+
+===Noun===
+{{it-noun|mfbysense|-}}
 
 # [[Rastafarian]]
 
@@ -19086,7 +19125,7 @@ Page 19820 regolabarba: -------- begin text --------
 # [[razor]] used to [[trim]] one's [[beard]]
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|inv=1}}
 
 # {{lb|it|relational}} [[regolabarba#Noun|regolabarba]]
 
@@ -19117,7 +19156,7 @@ Page 19862 renella: -------- begin text --------
 # {{synonym of|it|asaro europeo|t=[[asarabacca]], [[hazelwort]]}}
 
 ====Adjective====
-{{head|it|adjective|g=f|plural|renelle}}
+{{it-adj|fonly=1}}
 
 # {{only used in|it|erba renella}}
 
@@ -19174,7 +19213,7 @@ From the name {{m|it|Roberto}}.
 * {{hyph|it|ro|bèr|ta}}
 
 ===Adjective===
-{{head|it|adjective|feminine only||plural|roberte}}
+{{it-adj|fonly=1}}
 
 # {{only used in|it|erba roberta}}
 
@@ -19218,7 +19257,7 @@ From {{der|it|la|rosa}}.
 * {{rhymes|it|ɔza}}
 * {{hyphenation|it|rò|ṡa}}
 
-====Noun 1====
+====Noun====
 {{it-noun|f}}
 
 # {{lb|it|flower}} [[rose]]
@@ -19226,7 +19265,7 @@ From {{der|it|la|rosa}}.
 # {{lb|it|heraldiccharge}} [[rose]]
 # {{lb|it|sports|collective}} [[team]] [[members]]
 
-====Noun 2====
+====Noun====
 {{head|it|noun|g=m}}
 
 # {{lb|it|color|uncountable}} [[pink]], [[rose]]
@@ -19319,7 +19358,7 @@ Page 20549 rossoblu: -------- begin text --------
 # of or pertaining to any other sporting team wearing a red-blue shirt
 
 ===Noun===
-{{it-noun|m|g2=f|-}}
+{{it-noun|mfbysense|-}}
 
 # a Bologna Football Club player or supporter
 # a Cagliari Football Club player or supporter
@@ -19391,7 +19430,7 @@ Borrowed from {{bor|it|he|צַבָּר||tr=ṣabár}}.
 * {{hyph|it|sà|bra}}
 
 ===Noun===
-{{it-noun|mf|-}}
+{{it-noun|mfbysense|-}}
 
 # a [[Jew]] born in [[Palestine]]
 # [[Sabra]] {{gloss|native-born Israeli}} {{defdate|from 1950s}}
@@ -19412,7 +19451,7 @@ Page 20653 sabre: -------- begin text --------
 * {{hyph|it|sà|bre}}
 
 ===Noun===
-{{it-noun|mf|-}}
+{{it-noun|mfbysense|-}}
 
 # {{altform|it|sabra}}
 
@@ -19434,7 +19473,7 @@ From {{der|it|la|sacrificus}}.
 * {{it-IPA|sacrìfico}}
 
 ====Adjective====
-{{head|it|adjective}}
+{{it-adj}}
 
 # {{lb|it|literary}} [[sacrificial]]
 
@@ -19540,7 +19579,7 @@ Page 20768 salvafreschezza: -------- begin text --------
 From {{af|it|salvare|freschezza}}.
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|inv=1}}
 
 # [[stay]]-[[fresh]]
 -------- end text --------
@@ -19707,15 +19746,15 @@ Page 20976 scacciapensieri: -------- begin text --------
 # {{lb|it|rare}} [[pastime]]
 
 ===Adjective===
-{{head|it|adjective|g=m}}
+{{it-adj|inv=1}}
 
-# {{lb|it|rare|relational}} pastime
+# {{lb|it|rare|relational}} [[pastime]]
 -------- end text --------
 Page 21050 scatenatasi: Found match for regex: =
 Page 21050 scatenatasi: -------- begin text --------
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|inv=1}}
 
 # [[unleashed]], [[let loose]]
 -------- end text --------
@@ -19963,7 +20002,7 @@ Page 21757 senza fine: Found match for regex: =
 Page 21757 senza fine: -------- begin text --------
 
 ===Adjective===
-{{head|it|adjective|invariable}}
+{{it-adj|inv=1}}
 
 # [[endless]], [[unending]], [[endlessly]]
 # [[boundless]]
@@ -20637,7 +20676,7 @@ Page 22150 sgomentevole: -------- begin text --------
 {{suffix|it|sgomentare|evole}}
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj}}
 
 # [[preoccupying]], [[worrying]]
 -------- end text --------
@@ -20645,7 +20684,7 @@ Page 22255 simil: Found match for regex: =
 Page 22255 simil: -------- begin text --------
 
 ===Adjective===
-{{head|it|adjective|g=m}}
+{{it-adj|apoc=1}}
 
 # {{apocopic form of|it|simile}}
 
@@ -20725,7 +20764,7 @@ Page 22320 single: -------- begin text --------
 Borrowed from {{bor|it|en|single}}.
 
 ===Noun===
-{{it-noun|m|g2=f|-}}
+{{it-noun|mfbysense|-}}
 
 # [[#English|single]], [[loner]] (person who lives alone and has no emotional ties)
 
@@ -20742,7 +20781,7 @@ Page 22321 singolar: Found match for regex: =
 Page 22321 singolar: -------- begin text --------
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|apoc=1}}
 
 # {{apocopic form of|it|singolare}}
 
@@ -20847,7 +20886,7 @@ Page 22708 soprannumero: -------- begin text --------
 # [[supernumerary]], [[extra]], [[redundant]]
 
 ===Adverb===
-{{head|it|adverb}}
+{{it-adv}}
 
 # [[supernumerary]]
 
@@ -20900,7 +20939,7 @@ Page 22817 sotto tono: -------- begin text --------
 # {{alt form|it|sottotono}}
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|inv=1}}
 
 # {{alt form|it|sottotono}}
 -------- end text --------
@@ -20951,7 +20990,7 @@ Page 22852 sottopelle: -------- begin text --------
 From {{af|it|sotto|pelle}}.
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|inv=1}}
 
 # [[subcutaneous]]
 
@@ -21070,7 +21109,7 @@ Page 22887 sovraeccitato: -------- begin text --------
 # {{past participle of|it|sovraeccitare|nocat=1}}
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj}}
 
 # [[overwrought]]
 -------- end text --------
@@ -21113,7 +21152,7 @@ Derived from {{m|it|spada||sword}}.
 * {{hyph|it|spa|dó|na}}
 
 ===Adjective===
-{{head|it|adjective|g=f|plural|spadone}}
+{{it-adj|fonly=1}}
 
 # {{only used in|it|pera spadona}}
 
@@ -21131,7 +21170,7 @@ Page 22948 spalmandola: -------- begin text --------
 From {{m|it|spalmare||to spread}}.
 
 ===Adjective===
-{{head|it|adjective}}
+{{head|it|adjective}}<!-- FIXME, delete -->
 
 # [[spread]]
 #: {{uxi|it|Si consuma '''spalmandola''' su fette di pane abbrustolito.|It is eaten spread on slices of toasted bread.}}
@@ -21151,7 +21190,7 @@ From {{af|it|sparare|alt1=spara|pos1=second person singular imperative|t1=shoot|
 ===Adjective===
 {{it-adj|inv=1}}
 
-# [[snow]]-[[throwing]], {{only used in|it|cannone sparaneve|nocap=1}}
+# [[snow]]-[[throwing]]; {{only used in|it|cannone sparaneve|nocap=1}}
 
 ====Derived terms====
 * {{l|it|cannone sparaneve}}
@@ -21162,7 +21201,7 @@ Page 23028 Spett.: Found match for regex: =
 Page 23028 Spett.: -------- begin text --------
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|inv=1}}
 
 # {{abbr of|it|[[spettabile]]||[[esteemed]]}}
 
@@ -21219,12 +21258,12 @@ Page 23205 standar: Found match for regex: =
 Page 23205 standar: -------- begin text --------
 
 ===Adjective===
-{{it-adj|inv=1}}
+{{head|it|misspelling}}
 
 # {{misspelling of|it|standard}}
 
 ===Noun===
-{{it-noun|m|-}}
+{{head|it|misspelling}}
 
 # {{misspelling of|it|standard}}
 
@@ -21380,10 +21419,13 @@ Page 23294 stilé: -------- begin text --------
 Page 23350 straborda: Found match for regex: =
 Page 23350 straborda: -------- begin text --------
 
-===Adjective===
-{{head|it|adjective}}
+===Pronunciation===
+* {{it-IPA|strabórda}}
 
-# [[overflowing]]
+===Verb===
+{{head|it|verb form}}
+
+# {{infl of|it|strabordare||3|s|pres|ind}}
 -------- end text --------
 Page 23390 strappalacrime: Found match for regex: =
 Page 23390 strappalacrime: -------- begin text --------
@@ -21425,17 +21467,17 @@ Page 23454 Sua: Found match for regex: =
 Page 23454 Sua: -------- begin text --------
 
 ===Etymology===
-See {{m|it|sua}}
+{{nonlemma}}
+
+===Determiner===
+{{head|it|determiner form|g=f-s}}
+
+# {{lb|it|possessive}} {{feminine singular of|it|Suo|t=your {{i|formal or polite}}}}
 
 ===Pronoun===
-{{head|it|pronoun}} {{g|s}} {{g|f}}
+{{head|it|pronoun form|g=f-s}}
 
-# {{lb|it|possessive}} [[yours]] (''formal or polite'')
-
-===Adjective===
-{{head|it|adjective}} {{g|s}} {{g|f}}
-
-# {{lb|it|possessive}} [[your]] (''formal or polite'')
+# {{lb|it|possessive}} {{feminine singular of|it|Suo|t=yours {{i|formal or polite}}}}
 -------- end text --------
 Page 23460 sub judice: Found match for regex: =
 Page 23460 sub judice: -------- begin text --------
@@ -21456,10 +21498,18 @@ Page 23460 sub judice: -------- begin text --------
 Page 23579 Sue: Found match for regex: =
 Page 23579 Sue: -------- begin text --------
 
-===Adjective===
-{{head|it|adjective|g=f-p}}
+===Etymology===
+{{nonlemma}}
 
-# [[your]] (polite)
+===Determiner===
+{{head|it|determiner form|g=f-p}}
+
+# {{lb|it|possessive}} {{feminine plural of|it|Suo|t=your {{i|formal or polite}}}}
+
+===Pronoun===
+{{head|it|pronoun form|g=f-p}}
+
+# {{lb|it|possessive}} {{feminine plural of|it|Suo|t=yours {{i|formal or polite}}}}
 -------- end text --------
 Page 23592 sui generis: Found match for regex: =
 Page 23592 sui generis: -------- begin text --------
@@ -21507,31 +21557,31 @@ Page 23618 Suo: -------- begin text --------
 ===Etymology===
 See {{m|it|suo}}.
 
+===Determiner===
+{{head|it|determiner form|g=m-s}}
+
+# {{lb|it|possessive}} [[your]] {{i|formal or polite}}
+
 ===Pronoun===
-{{head|it|pronoun}} {{g|s}} {{g|m}}
+{{head|it|pronoun|g=m-s}}
 
-# {{lb|it|possessive}} [[yours]] (''formal or polite'')
-
-===Adjective===
-{{head|it|adjective}} {{g|s}} {{g|m}}
-
-# {{lb|it|possessive}} [[your]] (''formal or polite'')
+# {{lb|it|possessive}} [[yours]] {{i|formal or polite}}
 -------- end text --------
 Page 23619 Suoi: Found match for regex: =
 Page 23619 Suoi: -------- begin text --------
 
 ===Etymology===
-See {{m|it|suoi}}
+{{nonlemma}}
+
+===Determiner===
+{{head|it|determiner form|g=m-p}}
+
+# {{lb|it|possessive}} {{masculine plural of|it|Suo|t=your {{i|formal or polite}}}}
 
 ===Pronoun===
-{{head|it|pronoun|g=m-p}}
+{{head|it|pronoun form|g=m-p}}
 
-# {{lb|it|possessive}} [[yours]] (''formal or polite'')
-
-===Adjective===
-{{head|it|adjective|g=m-p}}
-
-# {{lb|it|possessive}} [[your]] (''formal or polite'')
+# {{lb|it|possessive}} {{masculine plural of|it|Suo|t=yours {{i|formal or polite}}}}
 -------- end text --------
 Page 23622 super: Found match for regex: =
 Page 23622 super: -------- begin text --------
@@ -21593,7 +21643,7 @@ Page 23745 sviluppista: Found match for regex: =
 Page 23745 sviluppista: -------- begin text --------
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj}}
 
 # [[developmental]]
 #: {{uxi|it|Stato '''sviluppista'''|{{w|developmental state|'''developmental''' state}}}}
@@ -21620,7 +21670,7 @@ Page 23789 tagliadeficit: Found match for regex: =
 Page 23789 tagliadeficit: -------- begin text --------
 
 ===Adjective===
-{{head|it|adjective|inv}}
+{{it-adj}}
 
 # {{lb|it|economics}} that serves to [[reduce]] a budgetary [[deficit]]
 -------- end text --------
@@ -21631,7 +21681,7 @@ Page 23790 tagliafiamma: -------- begin text --------
 {{pre|it|taglia|fiamma|t2=flame}}
 
 ===Adjective===
-{{head|it|adjective|ivariable}}
+{{it-adj}}
 
 # [[fireproof]]
 #: {{syn|it|tagliafuoco}}
@@ -21678,7 +21728,7 @@ Page 23793 tagliapizza: -------- begin text --------
 # [[pizza cutter]]
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|inv=1}}
 
 # that [[cut]]s pizza
 #: {{uxi|it|rotella '''tagliapizza'''|pizza cutter|lit='''pizza-cutting''' wheel}}
@@ -21714,12 +21764,12 @@ Page 23835 tant': Found match for regex: =
 Page 23835 tant': -------- begin text --------
 
 ===Determiner===
-{{head|it|determiner|apocopate}}
+{{head|it|determiner form|apocopate}}
 
 # {{lb|it|sometimes before a vowel}} {{apocopic form of|it|tanto}}
 
 ===Pronoun===
-{{head|it|pronoun|apocopate}}
+{{head|it|pronoun form|apocopate}}
 
 # {{lb|it|sometimes before a vowel}} {{apocopic form of|it|tanto}}
 
@@ -21731,8 +21781,8 @@ Page 23835 tant': -------- begin text --------
 Page 23839 tantopiù: Found match for regex: =
 Page 23839 tantopiù: -------- begin text --------
 
-===Adjective===
-{{head|it|adjective}}
+===Adverb===
+{{it-adv}}
 
 # [[more so]]
 -------- end text --------
@@ -21815,7 +21865,7 @@ Page 24169 testabianca: -------- begin text --------
 From {{af|it|testa|bianca}}.
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|inv=1}}
 
 # [[white]]-[[headed]]
 -------- end text --------
@@ -21823,10 +21873,9 @@ Page 24171 testabruna: Found match for regex: =
 Page 24171 testabruna: -------- begin text --------
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|inv=1}}
 
-# of an [[animal]] having a [[brown]] [[head]]
-#: {{syn|en|brown-headed}}
+#: [[brown]]-[[headed]]
 -------- end text --------
 Page 24191 tetrafase: Found match for regex: =
 Page 24191 tetrafase: -------- begin text --------
@@ -21835,7 +21884,7 @@ Page 24191 tetrafase: -------- begin text --------
 {{prefix|it|tetra|fase}}
 
 ===Adjective===
-{{head|it|adjective|mf|invariant}}
+{{it-adj|inv=1}}
 
 # [[four]]-[[phase]] (alternating current)
 -------- end text --------
@@ -24154,7 +24203,7 @@ Page 24822 tricamere: -------- begin text --------
 From {{prefix|it|tri|camere}}.
 
 ===Adjective===
-{{head|it|adjective}} {{g|m|f}}
+{{it-adj|inv=1}}
 
 # [[three]]-[[roomed]]
 -------- end text --------
@@ -24208,7 +24257,7 @@ From {{inh|it|VL.|*troppus}}, from {{der|it|LL.|troppus}}, borrowed from {{der|i
 # [[too much]], [[too many]]
 
 ===Adverb===
-{{head|it|adverb}}
+{{it-adv}}
 
 # [[too]] [[much]], too [[long]], too [[far]]
 #: {{uxi|it|allegro ma non '''troppo'''|cheerful but not '''too much'''}}
@@ -24217,7 +24266,7 @@ Page 24984 truffé: Found match for regex: =
 Page 24984 truffé: -------- begin text --------
 
 ===Adjective===
-{{head|it|adjective|inv}}
+{{it-adj|inv=1}}
 
 # {{lb|it|relational}} [[truffle]]
 -------- end text --------
@@ -24268,7 +24317,7 @@ Page 25058 tutt: Found match for regex: =
 Page 25058 tutt: -------- begin text --------
 
 ===Determiner===
-{{head|it|determiner}}
+{{head|it|determiner form|apocopate}}
 
 # {{apocopic form of|it|tutto}}
 
@@ -24279,13 +24328,13 @@ Page 25059 tutt': Found match for regex: =
 Page 25059 tutt': -------- begin text --------
 
 ===Determiner===
-{{head|it|determiner|apocopate}}
+{{head|it|determiner form|apocopate}}
 
 # {{lb|it|sometimes before a vowel}} {{apocopic form of|it|tutta}}
 # {{lb|it|sometimes before a vowel}} {{apocopic form of|it|tutto}}
 
 ===Pronoun===
-{{head|it|pronoun|apocopate}}
+{{head|it|pronoun form|apocopate}}
 
 # {{lb|it|sometimes before a vowel}} {{apocopic form of|it|tutta}}
 # {{lb|it|sometimes before a vowel}} {{apocopic form of|it|tutto}}
@@ -24307,7 +24356,7 @@ Page 25061 tutt'orecchi: Found match for regex: =
 Page 25061 tutt'orecchi: -------- begin text --------
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|inv=1|head=[[tutto|tutt']][[orecchio|orecchi]]}}
 
 # {{alternative spelling of|it|tutto orecchie}}
 -------- end text --------
@@ -24315,7 +24364,7 @@ Page 25062 tutt'ossa: Found match for regex: =
 Page 25062 tutt'ossa: -------- begin text --------
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|inv=1|head=[[tutto|tutt']][[osso|ossa]]}}
 
 # [[gaunt]]
 # [[haggard]], [[drawn]]{{,}} and [[emaciated]]
@@ -24334,14 +24383,14 @@ Page 25063 tutti e: -------- begin text --------
 Literally, "all and."
 
 ===Pronoun===
-{{head|it|pronoun}}
+{{head|it|pronoun|g=m-p|feminine|tutte e}}
 
 # (followed by a [[cardinal number]]) [[all]] (of them)
 #* {{quote-book|it|year=2000|author=George Orwell|translator=Stefano Manferlotti|title=Nineteen Eighty-Four|publisher=Mondadori|page=105|passage=Ansimavano '''tutti e''' due, ma il sorriso era tornato agli angoli della bocca della ragazza.|translation=They were '''both''' breathing fast, but the smile had reappeared round the corners of her mouth.|lit='''Both of them''' were panting, but the smile had returned to the corners of the girl's mouth.}}
 #: {{uxi|it|'''tutti e''' tre|'''all''' three '''of them'''}}
 
-===Adjective===
-{{head|it|adjective}}
+===Determiner===
+{{head|it|determiner|g=m-p|feminine|tutte e}}
 
 # (followed by a [[cardinal number]]) [[all]] of
 #: {{ux|it|non occorre che lei considerasse '''tutti e''' tre le possibilità|she did not need to consider '''all three''' possibilities}}
@@ -24350,7 +24399,7 @@ Page 25065 tutto chiacchere: Found match for regex: =
 Page 25065 tutto chiacchere: -------- begin text --------
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|inv=1}}
 
 # [[all talk]]
 -------- end text --------
@@ -24360,8 +24409,8 @@ Page 25066 tutto fumo e niente arrosto: -------- begin text --------
 ===Etymology===
 Literally, "all smoke and no roast."
 
-===Phrase===
-{{head|it|phrase}}
+===Adjective===
+{{it-adj|inv=1}}
 
 # {{lb|it|idiom}} [[all talk and no action]]
 -------- end text --------
@@ -24369,20 +24418,20 @@ Page 25067 tutto orecchie: Found match for regex: =
 Page 25067 tutto orecchie: -------- begin text --------
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|inv=1}}
 
 # [[all ears]] {{gloss|listening intensely or awaiting explanation}}
 -------- end text --------
 Page 25068 tuttopunto: Found match for regex: =
 Page 25068 tuttopunto: -------- begin text --------
 
-===Adjective===
-{{head|it|adjective|head=a tuttopunto}}
+===Noun===
+{{it-noun|m|~}}
 
-# {{lb|it|of a flintlock gun}} [[fully]]-[[cocked]]
+# {{only used in|it|a tuttopunto||[[fully]]-[[cocked]]}}
 
 ====Related terms====
-* a {{l|it|mezzopunto}}
+* {{l|it|mezzopunto}}
 -------- end text --------
 Page 25069 tuttotondo: Found match for regex: =
 Page 25069 tuttotondo: -------- begin text --------
@@ -24406,7 +24455,7 @@ Page 25113 ugual: Found match for regex: =
 Page 25113 ugual: -------- begin text --------
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|apoc=1}}
 
 # {{apocopic form of|it|uguale}}
 
@@ -24451,7 +24500,7 @@ Page 25133 ultrà: -------- begin text --------
 # [[ultra]], [[extremist]]
 
 ===Noun===
-{{it-noun|m|g2=f|-}}
+{{it-noun|mfbysense|-}}
 
 # [[ultra]], [[extremist]]
 # {{lb|it|soccer}} [[hooligan]]
@@ -24466,24 +24515,19 @@ From {{m|it|uno}}, from {{inh|it|la|ūnus||one}}.
 * {{it-IPA}}
 
 ===Article===
-{{head|it|article|g=m}} (''see'' [[uno]])
+{{head|it|article|g=m}}
 
-# [[an]], [[a]]
+# {{apocopic form of|it|uno}}: [[a]], [[an]]
 
-===Noun===
-{{head|it|noun|g=m}} (''see'' [[uno]])
+===Numeral===
+{{it-card-adj|apoc=1}}
 
-# [[one]]
-
-===Adjective===
-{{head|it|adjective|g=m}} (''see'' [[uno]])
-
-# [[one]]
+# {{apocopic form of|it|uno}}: [[one]]
 
 ===Pronoun===
-{{head|it|pronoun|g=m}} (''see'' [[uno]])
+{{head|it|pronoun form|g=m|apocopate}}
 
-# [[one]]
+# {{apocopic form of|it|uno}}: [[one]] {{i|indefinite pronoun}}
 
 ===Anagrams===
 * {{l|it|nu}}
@@ -24528,12 +24572,12 @@ Page 25217 un': -------- begin text --------
 # {{lb|it|sometimes before a vowel or an ''h''}} {{apocopic form of|it|una}}
 
 ===Article===
-{{head|it|article|apocopate}}
+{{head|it|article form|apocopate}}
 
 # {{lb|it|sometimes before a vowel or an ''h''}} {{apocopic form of|it|una}}
 
 ===Pronoun===
-{{head|it|pronoun|apocopate}}
+{{head|it|pronoun form|apocopate}}
 
 # {{lb|it|sometimes before a vowel or an ''h''}} {{apocopic form of|it|una}}
 
@@ -24612,25 +24656,22 @@ Page 25240 unguentario: -------- begin text --------
 * {{it-IPA|unguentàrio}}
 * {{hyph|it|un|guen|tà|rio}}
 
-===Etymology 1===
+===Etymology===
 {{root|it|ine-pro|*h₃engʷ-}}
-From {{der|it|la|unguentārius||of or pertaining to a perfume|pos=a}}.
+From {{bor|it|la|unguentārius||of or pertaining to a perfume; perfurmer}}.
 
-====Adjective====
-{{head|it|adjective|feminine singular|unguentaria|masculine plural|[[unguentari|unguentarî]]|feminine plural|unguentarie}}
+===Adjective===
+{{it-adj}}
 
-# of or pertaining to an [[ointment]]
+# {{lb|it|relational}} [[ointment]]
 
-=====Related terms=====
+====Related terms====
 {{rel2|it|unguentaceo|unguentaio|unguentare|unguento}}
 
-===Etymology 2===
-From {{der|it|la|unguentārius||perfumer|pos=n}}.
+===Noun===
+{{it-noun|m}}
 
-====Noun====
-{{head|it|noun|g=m|plural|[[unguentari|unguentarî]]}}
-
-# {{lb|it|obsolete}} an ointment [[merchant]], [[perfumer]]
+# {{lb|it|obsolete}} [[ointment]] [[merchant]], [[perfumer]]
 #: {{syn|it|unguentaio}}
 #* {{quote-book|it|year=1353|author=Giovanni Boccaccio|authorlink=Giovanni Boccaccio|title=[[w:The Decameron|Decamerone]]|trans-title=Decameron|url=https://books.google.it/books?id=8Kheh6j35qkC&hl=it&pg=PP9#v=onepage&q&f=false|publisher=Tommaso Hedlin|year_published=1527|chapter=Giornata settima, Novella III|trans-chapter=Seventh Day, Third Story|page=179|pageurl=https://books.google.it/books?id=8Kheh6j35qkC&hl=it&pg=RA1-PA178-IA2#v=onepage&q&f=false|passage={{...}} non celle di frati, ma botteghe di ſpetiali o d''''unguentarij'''|translation=not the cells of friars, but rather apothecaries' or '''perfumers'''' shops}}
 
@@ -24898,7 +24939,7 @@ Page 25501 vanissimo: Found match for regex: =
 Page 25501 vanissimo: -------- begin text --------
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj-sup}}
 
 # {{superlative of|it|vano}}
 
@@ -24932,7 +24973,7 @@ Page 25562 vedda: -------- begin text --------
 # of or pertaining to the [[Vedda]]s
 
 ===Noun===
-{{it-noun|mf|-}}
+{{it-noun|mfbysense|-}}
 
 # [[Vedda]] {{gloss|one of an indigenous people of Sri Lanka}}
 
@@ -25207,12 +25248,12 @@ Page 25659 ventitrè: Found match for regex: =
 Page 25659 ventitrè: -------- begin text --------
 
 ===Adjective===
-{{it-adj|inv=1}}
+{{head|it|misspelling}}
 
 # {{misspelling of|it|ventitré}}
 
 ===Noun===
-{{it-noun|m|-}}
+{{head|it|misspelling}}
 
 # {{misspelling of|it|ventitré}}
 -------- end text --------
@@ -25267,13 +25308,8 @@ Page 25666 ventotto: -------- begin text --------
 Page 25673 ventun: Found match for regex: =
 Page 25673 ventun: -------- begin text --------
 
-===Noun===
-{{it-noun|m|-}}
-
-# {{apocopic form of|it|ventuno}}
-
-===Adjective===
-{{it-adj|inv=1}}
+===Numeral===
+{{it-card-inv|apoc=1}}
 
 # {{apocopic form of|it|ventuno}}
 -------- end text --------
@@ -25355,7 +25391,7 @@ From {{inh|it|la|[​[[herba]]​] [[vēsīcāria]]||bladder grass}}.
 * {{hyph|it|ve|sci|cà|ria}}
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|fonly=1}}
 
 # {{only used in|it|erba vescicaria}}
 
@@ -25390,7 +25426,7 @@ Page 25838 vicin: Found match for regex: =
 Page 25838 vicin: -------- begin text --------
 
 ===Adjective===
-{{it-adj|inv=1}}
+{{it-adj|apoc=1}}
 
 # {{apocopic form of|it|vicino}}
 -------- end text --------
@@ -25466,10 +25502,16 @@ Possibly from {{bor|it|pro|viola}} (modern {{cog|oc|viula}}), ultimately from {{
 Page 25919 virginia: Found match for regex: =
 Page 25919 virginia: -------- begin text --------
 
-===Adjective===
-{{head|it|adjective}}
+===Noun===
+{{it-noun|m|inv=1}}
 
-# (''of tobacco'') From [[Virginia]]
+# [[Virginia]] [[tobacco]]
+# a [[cigar]] with a [[thin]] [[straw]] that can be [[remove]]d before [[light]]ing, originally made of [[Virginia]] [[tobacco]]
+
+===Adjective===
+{{it-adj|inv=1}}
+
+# {{lb|it|relational}} from [[Virginia]] {{i|of tobacco or cigars}}
 -------- end text --------
 Page 25981 vivavoce: Found match for regex: =
 Page 25981 vivavoce: -------- begin text --------
@@ -25553,8 +25595,8 @@ Page 26059 voodoo: -------- begin text --------
 Page 26064 vostr: Found match for regex: =
 Page 26064 vostr: -------- begin text --------
 
-===Adjective===
-{{it-adj|inv=1}}
+===Determiner===
+{{head|it|determiner form|apocopate}}
 
 # {{apocopic form of|it|vostro}}
 -------- end text --------
@@ -25562,9 +25604,9 @@ Page 26066 votaborse: Found match for regex: =
 Page 26066 votaborse: -------- begin text --------
 
 ===Adjective===
-{{head|it|adjective}}
+{{it-adj|inv=1}}
 
-# [[expensive]]
+# {{lb|it|Tuscan}} [[expensive]]
 -------- end text --------
 Page 26072 vudu: Found match for regex: =
 Page 26072 vudu: -------- begin text --------
@@ -25632,7 +25674,7 @@ Page 26091 walser: -------- begin text --------
 # [[Walser]]
 
 ===Noun===
-{{it-noun|m|g2=f|-}}
+{{it-noun|mfbysense|-}}
 
 # [[Walser]]
 -------- end text --------
@@ -25706,7 +25748,7 @@ From {{bor|it|en|Yankee}}.
 * {{hyph|it|Yan|kee}}
 
 ===Noun===
-{{it-noun|mf|-}}
+{{it-noun|mfbysense|-}}
 
 # [[#English|Yankee]]
 # {{lb|it|nautical}} {{syn of|it|uccellina|t=[[jigger]] [[topgallant]] [[staysail]]}}
@@ -25840,7 +25882,7 @@ Page 26248 zulù: -------- begin text --------
 # [[Zulu]]
 
 ===Noun===
-{{it-noun|m|g2=f|-}}
+{{it-noun|mfbysense|-}}
 
 # [[Zulu]]
 -------- end text --------
