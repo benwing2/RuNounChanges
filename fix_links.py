@@ -274,9 +274,6 @@ sections_to_always_include = {
   "Antonyms", "Compounds", "Coordinate terms", "Hyponyms", "Hypernyms",
   "Abbreviations", "Meronyms", "Holonyms", "Troponyms", "Homophones"
 }
-sections_to_include_if_not_latin_script = {
-  "Usage notes", "See also"
-}
 # Always skip Etymology, Pronunciation, Descendants, References,
 # Further reading, Quotations, etc.
 
@@ -306,8 +303,10 @@ def process_text_on_page(index, pagetitle, text):
       for k in xrange(2, len(subsections), 2):
         m = re.search("^===*([^=]*)=*==\n$", subsections[k-1])
         subsectitle = m.group(1).strip()
-        if not (subsectitle in sections_to_always_include or
-          this_ignore_translit != "latin" and subsectitle in sections_to_include_if_not_latin_script
+        if not (
+          subsectitle in sections_to_always_include or
+          this_ignore_translit != "latin" and subsectitle == "Usage notes" or
+          (args.do_see_also or this_ignore_translit != "latin") and subsectitle == "See also"
         ):
           continue
 
@@ -353,16 +352,14 @@ def process_text_on_page(index, pagetitle, text):
           else:
             page, accented = parts
             page = re.sub("#%s$" % thislangname, "", page)
+          if page and this_remove_accents(accented) == page:
+            page = None
+          if "#" in (page or accented):
+            pagemsg("WARNING: Found special char # in %s, skipping: %s" % (linktext(), orig))
+            return orig
           if page:
-            if this_remove_accents(accented) == page:
-              page = None
-            elif re.search("[#:]", page):
-              pagemsg("WARNING: Found special chars # or : in left side of %s, skipping: %s" %
-                  (linktext(), orig))
-              return orig
-            else:
-              pagemsg("WARNING: Page %s doesn't match accented %s in %s, converting to two-part link" %
-                  (page, accented, linktext()))
+            pagemsg("WARNING: Page %s doesn't match accented %s in %s, converting to two-part link" %
+                (page, accented, linktext()))
           translit_arg = ""
           post_translit_arg = ""
           if translit and this_ignore_translit == "notranslit":
@@ -475,12 +472,12 @@ def process_text_on_page(index, pagetitle, text):
               for ll in xrange(0, len(split_line), 2):
                 subline = split_line[ll]
                 replaced = False
-                # Ignore links beginning with a colon (category links and such)
+                # Ignore links with a colon (category links and such)
                 if this_ignore_translit == "latin":
                   new_subline = unobfuscate_brackets(
-                      rsub_repeatedly(r"^(.*?)(\[\[([^:].*?)\]\])", sub_raw_latin_link, subline))
+                      rsub_repeatedly(r"^(.*?)(\[\[([^:]*?)\]\])", sub_raw_latin_link, subline))
                 else:
-                  new_subline = re.sub(r"\[\[([^:A-Za-z][^A-Za-z]*?)\]\](?: \(([^()|]*?)\))?", sub_raw_link, subline)
+                  new_subline = re.sub(r"\[\[([^:A-Za-z]*?)\]\](?: \(([^()|]*?)\))?", sub_raw_link, subline)
                 if new_subline != subline:
                   pagemsg("Replacing %s with %s in %s section in %s" %
                     (subline, new_subline, subsectitle, thislangname))
@@ -528,6 +525,7 @@ if __name__ == "__main__":
     include_pagefile=True, include_stdin=True)
   parser.add_argument('--langs', help="Language codes for languages to do, comma-separated")
   parser.add_argument('--single-lang', help="Text is of this language, without header")
+  parser.add_argument('--do-see-also', action="store_true", help="Do ==See also== sections even in Latin-text langs")
   args = parser.parse_args()
   start, end = blib.parse_start_end(args.start, args.end)
 
