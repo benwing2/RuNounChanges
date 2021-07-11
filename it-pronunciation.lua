@@ -123,6 +123,7 @@ local unstressed_words = m_table.listToSet {
 	"mi", "ti", "si", "ci", "vi", "li", -- object pronouns
 	"me", "te", "se", "ce", "ve", "ne", -- conjunctive object pronouns
 	"e", "ed", "o", "od", -- conjunctions
+	"ho", "hai", "ha", -- forms of [[avere]]
 	"chi", "che", "non", -- misc particles
 	"di", "del", "dei", -- prepositions
 	"a", "ad", "al", "ai",
@@ -160,7 +161,7 @@ end
 
 function export.to_phonemic(text, pagename)
 	local abbrev_text
-	if rfind(text, "^%([àéèìóòù]%)$") then
+	if rfind(text, "^%^[àéèìóòù]$") then
 		if pagename:find("[ %-]") then
 			error("With abbreviated vowel spec " .. text .. ", the page name should be a single word: " .. text)
 		end
@@ -196,7 +197,14 @@ function export.to_phonemic(text, pagename)
 	-- French/German vowels
 	text = rsub(text, "u" .. DIA, "y")
 	text = rsub(text, "o" .. DIA, "ø")
-	text = rsub(text, "'", "‿")
+	text = rsub(text, "([^ ])'([^ ])", "%1‿%2") -- apostrophe between letters is a tie
+	text = rsub(text, "'", "") -- other apostrophes just get removed, e.g. [['ndragheta]], [[ca']].
+	 -- For now, use a special marker of syntactic gemination at beginning of word; later we will
+	 -- convert to ‿ and remove the space.
+	text = rsub(text, "%* (" .. C .. ")", " ⁀%1")
+	if rfind(text, "%* ") then
+		error("* for syntactic gemination can only be used when the next word begins with a consonant: " .. origtext)
+	end
 	text = rsub(text, "([" .. DOTUNDER .. LINEUNDER .. "])(" .. quality_c .. ")", "%2%1") -- acute/grave first
 	text = rsub(text, "([aiu])" .. AC, "%1" .. GR) -- áíú -> àìù
 
@@ -207,11 +215,9 @@ function export.to_phonemic(text, pagename)
 		end
 		-- First apply abbrev spec e.g. (à) or (ó) if given.
 		if abbrev_text then
-			local vowel_count = select(2, word:gsub(V, "%1"))
-			local abbrev_vowel = usub(abbrev_text, 1, 1)
-			if abbrev_vowel == "e" or abbrev_vowel == "o" then
-				abbrev_vowel = upper(abbrev_vowel)
-			end
+			local vowel_count = ulen(rsub(word, NV, ""))
+			local abbrev_sub = abbrev_text:gsub("%^", "")
+			local abbrev_vowel = usub(abbrev_sub, 1, 1)
 			if vowel_count == 0 then
 				err("Abbreviated spec " .. abbrev_text .. " can't be used with nonsyllabic word")
 			elseif vowel_count == 1 then
@@ -222,7 +228,7 @@ function export.to_phonemic(text, pagename)
 				if abbrev_vowel ~= vow then
 					err("Abbreviated spec " .. abbrev_text .. " doesn't match vowel " .. ulower(vow))
 				end
-				word = before .. abbrev_eo .. after
+				word = before .. abbrev_sub .. after
 			else
 				local before, penultimate, after = rmatch(word,
 					"^(.-)(" .. V .. ")(" .. NV .. "*" .. V .. NV .. "*)$")
@@ -241,9 +247,9 @@ function export.to_phonemic(text, pagename)
 						"antepenultimate are the same")
 				end
 				if abbrev_vowel == antepenultimate then
-					word = before2 .. abbrev_eo .. after2 .. penultimate .. after
+					word = before2 .. abbrev_sub .. after2 .. penultimate .. after
 				elseif abbrev_vowel == penultimate then
-					word = before .. abbrev_eo .. after
+					word = before .. abbrev_sub .. after
 				else
 					error("Internal error: abbrev_vowel from abbrev_text " .. abbrev_text ..
 						" didn't match any vowel or glide: " .. origtext)
@@ -266,9 +272,10 @@ function export.to_phonemic(text, pagename)
 		end
 
 		-- Make monosyllabic words without stress marks unstressed.
-		if unstressed_words[word] then
+		local bare_word = rsub(word, "⁀", "") -- remove mark of syntactic gemination
+		if unstressed_words[bare_word] then
 			-- add DOTOVER to the first vowel for cases like [[dei]], [[sui]]
-			word = rsub(word, "^(.-" .. V .. ")", "%1" .. DOTOVER)
+			word = rsub(word, "^(.-" .. V .. accent_c .. "*)", "%1" .. DOTOVER)
 		end
 
 		-- Words marked with an acute or grave (quality marker) not followed by an indicator of secondary stress
@@ -280,10 +287,11 @@ function export.to_phonemic(text, pagename)
 		-- LINEUNDER means secondary stress.
 		word = rsub(word, LINEUNDER, "ˌ")
 
-		-- Make prefixes unstressed unless they have an explicit stress marker.
-		if rfind(word, "%-$") and not rfind(word, "[" .. stress .. DOTUNDER .. "]") then
+		-- Make prefixes unstressed. Primary stress markers become secondary.
+		if rfind(word, "%-$") then
+			word = rsub(word, "ˈ", "ˌ")
 			-- add DOTOVER to the first vowel for cases like [[dei]], [[sui]]
-			word = rsub(word, "^(.-" .. V .. ")", "%1" .. DOTOVER)
+			word = rsub(word, "^(.-" .. V .. accent_c .. "*)", "%1" .. DOTOVER)
 		end
 		words[i] = word
 	end
@@ -317,7 +325,7 @@ function export.to_phonemic(text, pagename)
 		-- Transcriptions must contain a primary stress indicator, and an e or o with primary stress must
 		-- be marked for quality.
 		if not rfind(word, "[ˈ" .. DOTOVER .. "]") then
-			local vowel_count = select(2, word:gsub(V, "%1"))
+			local vowel_count = ulen(rsub(word, NV, ""))
 			if vowel_count > 2 then
 				err("With more than two vowels and an unrecogized suffix, stress must be explicitly given")
 			else
@@ -340,7 +348,7 @@ function export.to_phonemic(text, pagename)
 	text = ulower(text)
 
 	-- Assume that aw is English.
-	text = rsub(text, "a(" .. accent_c .. "?)w", "o%1")
+	text = rsub(text, "a(" .. accent_c .. "*)w", "o%1")
 
 	-- Random substitutions.
 	text = rsub(text, "^ex(" .. V .. ")", "eg[z]%1")
@@ -379,7 +387,7 @@ function export.to_phonemic(text, pagename)
 	text = rsub(text, "gl(‿?i)", "ʎ%1")
 
 	-- Handle other cases of c, g.
-	text = rsub(text, "([cg])([cg]?)(h?" .. charsep_c .. "*)(.)", function(first, double, h, after)
+	text = rsub(text, "([cg])([cg]?)(h?)(" .. charsep_c .. "*.)", function(first, double, h, after)
 		-- Don't allow the combinations cg, gc. Or do something else?
 		if double ~= "" and double ~= first then
 			error("Invalid sequence " .. first .. double .. ".")
@@ -410,12 +418,14 @@ function export.to_phonemic(text, pagename)
 
 	-- ⟨qu⟩ represents /kw/.
 	text = text:gsub("qu", "kw")
+	-- ⟨gu⟩ (unstressed) + vowel represents /gw/.
+	text = text:gsub("gu(" .. V .. ")", "gw%1")
 
 	-- Unaccented u or i following vowel (with or without accent) is a semivowel. (But 'iu' should be
 	-- interpreted as /ju/ not /iw/.) By preceding the conversion of glides before vowels, this works
 	-- correctly in the common sequence 'aiuo' e.g. [[guerraiuola]], [[acquaiuolo]]. Note that
 	-- ci, gi + vowel, gli, qu must be dealt with beforehand.
-	text = rsub(text, "(" .. V .. accent_c .. "?)([iu])([^" .. accent .. "])", function(v, glide, acc)
+	text = rsub(text, "(" .. V .. accent_c .. "*)([iu])([^" .. accent .. "])", function(v, glide, acc)
 		if v == "i" and glide == "u" then
 			return v .. glide .. acc
 		else
@@ -448,9 +458,10 @@ function export.to_phonemic(text, pagename)
 	text = rsub(text, TEMP_Z, "z")
 	text = rsub(text, TEMP_S, "s")
 
-	-- After a vowel, /ʃ ʎ ɲ t͡s d͡z/ are doubled.
-	-- [[w:Italian phonology]] says word-internally, [[w:Help:IPA/Italian]] says after a vowel.
-	text = rsub(text, "(" .. VW .. stress_c .. "?" .. charsep_c .. "*)([ʦʣʃʎɲ])", "%1%2%2")
+	-- Between vowels (including glides), /ʃ ʎ ɲ t͡s d͡z/ are doubled (unless already doubled).
+	-- Not simply after a vowel; 'z' is not doubled in e.g. [[azteco]].
+	text = rsub(text, "(" .. VW .. stress_c .. "?" .. charsep_c .. "*)([ʦʣʃʎɲ])(" .. charsep_c .. "*" .. VW .. ")",
+		"%1%2%2%3")
 
 	-- Change user-specified . into SYLDIV so we don't shuffle it around when dividing into syllables.
 	text = rsub(text, "%.", SYLDIV)
@@ -459,11 +470,16 @@ function export.to_phonemic(text, pagename)
 	-- First remove 'h' and '_', which have served their purpose of preventing context-dependent changes.
 	-- They should not interfere with syllabification.
 	text = rsub(text, "[h_]", "")
+	-- Also now convert ⁀ into a copy of the following consonant with the preceding space converted to ‿.
+	-- We want to do this after all consonants have been converted to IPA (so the correct consonant is geminated)
+	-- but before syllabification, since e.g. 'va* bène' should be treated as a single word 'va‿b.bɛne' for
+	-- syllabification.
+	text = rsub(text, "# #⁀(‿?)(.)", "‿%2%2")
 	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*‿?)(" .. C .. "‿?" .. W .. "?‿?" .. V .. ")", "%1.%2")
 	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*‿?" .. C .. "‿?)(" .. C .. "‿?" .. V .. ")", "%1.%2")
 	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*‿?" .. C_OR_TIE .. "+)(" .. C .. "‿?" .. C .. "‿?" .. V .. ")", "%1.%2")
 	text = rsub(text, "([pbktdg]‿?)%.([lr])", ".%1%2")
-	text = rsub_repeatedly(text, "(" .. C .. "‿?)%.(s‿?)(" .. C .. ")", "%1%2.%3")
+	text = rsub(text, "([kg]‿?)%.w", ".%1w")
 	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*‿?)(" .. V .. ")", "%1.%2")
 
 	-- User-specified syllable divider should now be treated like regular one.
@@ -481,6 +497,7 @@ function export.to_phonemic(text, pagename)
 	end)
 
 	text = rsub(text, "g", "ɡ") -- U+0261 LATIN SMALL LETTER SCRIPT G
+	text = rsub(text, "q", "k") -- [[soqquadro]], [[qatariota]], etc.
 
 	-- Stress marks.
 	-- Move IPA stress marks to the beginning of the syllable.
@@ -544,10 +561,41 @@ function export.show(frame)
 	if #respellings == 0 then
 		respellings = {pagename}
 	end
-	local transcriptions = Array(respellings):map(function(word, i)
+	local final_gemination = "triggers syntactic gemination in the following word"
+	local initial_gemination = "triggers syntactic gemination of the initial consonant following a vowel"
+	local initial_non_gemination = "prevents syntactic gemination of the initial consonant when it would normally occur"
+	local symbol_specs = {
+		{"%*%*$", "**", "optionally " .. final_gemination, "post"},
+		{"%*$", "*", final_gemination, "post"},
+		{"^%*%*", "**", "optionally " .. initial_gemination, "pre"},
+		{"^%*", "*", initial_gemination, "pre"},
+		{"^°°", "°°", "optionally " .. initial_non_gemination, "pre"},
+		{"^°", "°", initial_non_gemination, "pre"},
+	}
+	local transcriptions = Array(respellings):map(function(respelling, i)
+		local qualifiers = {args.qual[i]}
+		local pretext, posttext
+		if respelling:find("^#") then
+			table.insert(qualifiers, 1, "traditional")
+			respelling = respelling:gsub("^#", "")
+		end
+		for _, symbol_spec in ipairs(symbol_specs) do
+			local regex, symbol, text, where = unpack(symbol_spec)
+			if rfind(respelling, regex) then
+				text = '<abbr title="' .. text .. '"><sup>' .. symbol .. "</sup></abbr>"
+				if where == "post" then
+					posttext = text
+				else
+					pretext = text
+				end
+				respelling = rsub(respelling, regex, "")
+			end
+		end
 		return {
-			pron = "/" .. export.to_phonemic(word, pagename) .. "/",
-			qualifiers = args.qual[i] and {args.qual[i]} or nil,
+			pron = "/" .. export.to_phonemic(respelling, pagename) .. "/",
+			qualifiers = #qualifiers > 0 and qualifiers or nil,
+			pretext = pretext,
+			posttext = posttext,
 			note = args.n[i],
 		}
 	end)
