@@ -98,17 +98,32 @@ def process_text_on_page(index, pagetitle, text):
 
   notes = []
 
-  subsections = re.split("(^==+[^=\n]+==+\n)", text, 0, re.M)
+  retval = blib.find_modifiable_lang_section(text, None if args.partial_page else "Italian", pagemsg,
+    force_final_nls=True)
+  if retval is None:
+    return
+  sections, j, secbody, sectail, has_non_lang = retval
 
-  has_etym_sections = "==Etymology 1==" in text
+  subsections = re.split("(^==+[^=\n]+==+\n)", secbody, 0, re.M)
+
+  has_etym_sections = "==Etymology 1==" in secbody
   saw_existing_pron = False
+  saw_existing_it_ipa_secs = set()
+  saw_existing_pron_secs = set()
+  all_etymsections = set()
 
   etymsection = "top" if has_etym_sections else "all"
   for k in xrange(2, len(subsections), 2):
     m = re.search("==Etymology ([0-9]*)==", subsections[k - 1])
     if m:
       etymsection = m.group(1)
+      all_etymsections.add(etymsection)
+    if "==Pronunciation " in subsections[k - 1]:
+      pagemsg("WARNING: Saw Pronunciation N section header: %s" % subsections[k - 1].strip())
     if "==Pronunciation==" in subsections[k - 1]:
+      if etymsection in saw_existing_pron_secs:
+        pagemsg("WARNING: Saw two Pronunciation sections under etym section '%s'" % etymsection)
+      saw_existing_pron_secs.add(etymsection)
       parsed = blib.parse_text(subsections[k])
 
       respellings = []
@@ -117,25 +132,38 @@ def process_text_on_page(index, pagetitle, text):
       for t in parsed.filter_templates():
         tn = tname(t)
         if tn == "it-IPA":
+          saw_existing_it_ipa_secs.add(etymsection)
           if prev_it_IPA_t:
             pagemsg("WARNING: Saw multiple {{it-IPA}} templates in a single Pronunciation section: %s, %s" % (
               unicode(prev_it_IPA_t), unicode(t)))
             must_continue = True
             break
           prev_it_IPA_t = t
+          this_respellings = []
           for param in t.params:
             pn = pname(param)
             pv = unicode(param.value).strip().replace(" ", "_")
             if re.search("^[0-9]+$", pn):
-              respellings.append(pv)
+              this_respellings.append(pv)
             else:
-              respellings.append("%s=%s" % (pn, pv))
+              this_respellings.append("%s=%s" % (pn, pv))
+          if not this_respellings:
+            this_respellings.append(pagetitle)
+          respellings.extend(this_respellings)
       if must_continue:
         continue
 
       if respellings:
         pagemsg("<respelling> %s: %s <end> EXISTING" % (etymsection, " ".join(respellings)))
         saw_existing_pron = True
+
+  if "top" in saw_existing_pron_secs and len(saw_existing_pron_secs) > 1:
+    pagemsg("WARNING: Saw Pronunciation sections both at top and in etym section(s) %s" %
+        ",".join(sorted(list(saw_existing_pron_secs - {"top"}))))
+  if saw_existing_pron and has_etym_sections and "top" not in saw_existing_it_ipa_secs:
+    missing_pron_secs = all_etymsections - saw_existing_it_ipa_secs
+    if len(missing_pron_secs) > 0:
+      pagemsg("WARNING: Missing pronunciations in etym section(s) %s" % ",".join(sorted(list(missing_pron_secs))))
 
   if not saw_existing_pron:
     msgs = []
@@ -149,41 +177,35 @@ def process_text_on_page(index, pagetitle, text):
         respelled_words.append(word)
         traditional_respelled_words.append(word)
         continue
-      if re.search(u"[àèéìòóù]", word):
-        respelled_words.append(word)
-        traditional_respelled_words.append(word)
-        continue
-      if word.startswith("-"):
-        respelled_words.append(word)
-        traditional_respelled_words.append(word)
-        append_msg("SUFFIX")
-        continue
-      if word.endswith("-"):
-        respelled_words.append(word)
-        traditional_respelled_words.append(word)
-        append_msg("PREFIX")
-        continue
-      m = re.search("^([^AEIOUaeiou]*)([AIUaiu])([^A-Z0-9aeiou]*[aeiou]?)$", word)
-      if m:
-        first, vowel, rest = m.groups()
-        accented = unicodedata.normalize("NFC", first + vowel + GR + rest)
-        respelled_words.append(accented)
-        traditional_respelled_words.append(accented)
-        append_msg("AUTOACCENTED")
-        continue
-      for suf, repl in recognized_suffixes:
-        subbed_word = unicodedata.normalize("NFC", re.sub(suf + "$", repl, word))
-        if subbed_word != word:
-          append_msg("AUTOSUBBED")
-          break
-      else: # no break
-        append_msg("NEED_ACCENT")
+      if re.search(u"[àèéìòóù]$", word):
         subbed_word = word
-      if pagetitle.endswith("ese"):
+        append_msg("SELF_ACCENTED")
+      elif word.startswith("-"):
+        subbed_word = word
+        append_msg("SUFFIX")
+      elif word.endswith("-"):
+        subbed_word = word
+        append_msg("PREFIX")
+      else:
+        m = re.search("^([^AEIOUaeiou]*)([AIUaiu])([^A-Z0-9aeiou]*[aeiou]?)$", word)
+        if m:
+          first, vowel, rest = m.groups()
+          subbed_word = unicodedata.normalize("NFC", first + vowel + GR + rest)
+          append_msg("AUTOACCENTED")
+        else:
+          for suf, repl in recognized_suffixes:
+            subbed_word = unicodedata.normalize("NFC", re.sub(suf + "$", repl, word))
+            if subbed_word != word:
+              append_msg("AUTOSUBBED")
+              break
+          else: # no break
+            append_msg("NEED_ACCENT")
+            subbed_word = word
+      if re.search(u"[aeiouàèéìòóù].*ese$", word):
         respelled_words.append(re.sub("ese$", u"ése", word))
         traditional_respelled_words.append(re.sub("ese$", u"é[s]e", word))
         append_msg("AUTO_ESE")
-      elif pagetitle.endswith("oso"):
+      elif re.search(u"[aeiouàèéìòóù].*oso$", word):
         respelled_words.append(re.sub("oso$", u"óso", word))
         traditional_respelled_words.append(re.sub("oso$", u"ó[s]o", word))
         append_msg("AUTO_OSO")
@@ -212,6 +234,7 @@ def process_text_on_page(index, pagetitle, text):
 
 parser = blib.create_argparser("Snarf Italian pronunciations for fixing",
   include_pagefile=True, include_stdin=True)
+parser.add_argument("--partial-page", action="store_true", help="Input was generated with 'find_regex.py --lang LANG' and has no ==LANG== header.")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
