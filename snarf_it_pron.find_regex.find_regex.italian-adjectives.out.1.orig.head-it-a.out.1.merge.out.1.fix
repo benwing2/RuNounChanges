@@ -1,0 +1,1470 @@
+Beginning at Fri Jul  9 22:32:20 2021
+Page 5 a bocca aperta: <respelling> all: a_bócca_apèrta <end> NEED_ACCENT
+Page 6 a buon mercato: <respelling> all: a_buòn_mercàto <end> NEED_ACCENT HIATUS AUTOSUBBED
+Page 7 a conoscenza: <respelling> all: a_conoscèntsa <end> AUTOSUBBED
+Page 8 a doppio taglio: <respelling> all: a_dóppio_tàglio <end> NEED_ACCENT HIATUS AUTOSUBBED
+Page 9 a due: <respelling> all: a_dùe <end> AUTOACCENTED
+Page 48 abbandonata: <respelling> all: abbandonàta <end> AUTOSUBBED
+Page 49 abbastanza: <respelling> all: abbastàntsa <end> EXISTING
+Page 50 abbracciafusto: <respelling> all: abbràcciafùsto <end> NEED_ACCENT
+Page 52 acchiappatutto: <respelling> all: acchiàppatùtto <end> NEED_ACCENT HIATUS
+Page 53 acchiappavoti: <respelling> all: acchiàppavòti <end> NEED_ACCENT HIATUS
+Page 54 acerbetto: <respelling> all: acerbétto <end> NEED_ACCENT
+Page 55 acqua e sapone: <respelling> all: àcqua_e_sapóne <end> NEED_ACCENT AUTOSUBBED
+Page 56 acqua-acqua: <respelling> all: àcqua-àcqua <end> NEED_ACCENT
+Page 57 acqua-aria: <respelling> all: àcqua-ària <end> NEED_ACCENT HIATUS
+Page 58 acqua-terra: <respelling> all: àcqua-tèrra <end> NEED_ACCENT
+Page 59 acquamarina: <respelling> all: àcquamarìna <end> EXISTING
+Page 60 acquaterra: <respelling> all: àcquatèrra <end> NEED_ACCENT
+Page 61 ad acqua: <respelling> all: ad_àcqua <end> NEED_ACCENT
+Page 62 ad avancarica: <respelling> all: ad_avancàrica <end> NEED_ACCENT
+Page 63 ad honorem: <respelling> all: ad_honórem <end> EXISTING
+Page 64 ad incasso: <respelling> all: ad_incàsso <end> NEED_ACCENT
+Page 65 ad incastro: <respelling> all: ad_incàstro <end> AUTOSUBBED
+Page 66 adipico: <respelling> all: adìpico <end> EXISTING
+Page 67 afro: <respelling> top: àfro <end> AUTOACCENTED
+Page 68 al buio: <respelling> all: al_bùio <end> NEED_ACCENT HIATUS
+Page 69 al cardiopalmo: <respelling> all: al_cardiopàlmo <end> NEED_ACCENT HIATUS
+Page 70 al dente: <respelling> all: al_dènte <end> EXISTING
+Page 71 al di sopra delle parti: <respelling> all: al_di_sópra_délle_pàrti <end> NEED_ACCENT AUTOACCENTED
+Page 72 al forno: <respelling> all: al_fórno <end> NEED_ACCENT
+Page 73 al sangue: <respelling> all: al_sàngue <end> NEED_ACCENT
+Page 74 al verde: <respelling> all: al_vérde <end> NEED_ACCENT
+Page 75 al vetriolo: <respelling> all: al_vetri.òlo <end> NEED_ACCENT HIATUS
+Page 76 albicocca: <respelling> all: albicòcca <end> EXISTING
+Page 77 alcun: <respelling> all: alcùn <end> NEED_ACCENT
+Page 78 all'amatriciana: <respelling> all: all'amatriciàna <end> EXISTING
+Page 79 all'aperto: <respelling> all: all'apèrto <end> NEED_ACCENT
+Page 80 all'avanguardia: <respelling> all: all'avanguàrdia <end> NEED_ACCENT HIATUS
+Page 81 all'erta: <respelling> all: all'èrta #all'érta <end> NEED_ACCENT
+Page 82 all'umberta: <respelling> all: all'umbèrta <end> EXISTING
+Page 83 alla Bismarck: <respelling> all: àlla_Bìsmark <end> AUTOACCENTED NEED_ACCENT
+Page 84 alla bolognese: <respelling> all: àlla_bolognése #àlla_bologné[s]e <end> AUTOACCENTED NEED_ACCENT AUTO_ESE S_BETWEEN_VOWELS
+Page 85 alla buona: <respelling> all: àlla_buòna <end> AUTOACCENTED NEED_ACCENT HIATUS
+Page 86 alla carbonara: <respelling> all: àlla_carbonàra <end> AUTOACCENTED NEED_ACCENT
+Page 87 alla carrettiera: <respelling> all: àlla_carrettièra <end> AUTOACCENTED AUTOSUBBED HIATUS
+Page 88 alla diavola: <respelling> all: àlla_diàvola àlla_di.àvola <end> AUTOACCENTED NEED_ACCENT HIATUS
+Page 89 alla lettera: <respelling> all: àlla_léttera #àlla_lèttera <end> AUTOACCENTED NEED_ACCENT
+Page 90 alla mano: <respelling> all: àlla_màno <end> AUTOACCENTED
+Page 91 alla moda: <respelling> all: àlla_mòda <end> AUTOACCENTED NEED_ACCENT
+Page 92 alla mugnaia: <respelling> all: àlla_mugnàia <end> AUTOACCENTED AUTOSUBBED
+Page 93 alla napoletana: <respelling> all: àlla_napoletàna <end> AUTOACCENTED NEED_ACCENT
+Page 94 alla norma: <respelling> all: àlla_nòrma <end> AUTOACCENTED NEED_ACCENT
+Page 95 alla Norma: <respelling> all: àlla_Nòrma <end> AUTOACCENTED NEED_ACCENT
+Page 96 alla pescatora: <respelling> all: àlla_pescatóra <end> AUTOACCENTED NEED_ACCENT
+Page 97 alla puttanesca: <respelling> all: àlla_puttanésca <end> EXISTING
+Page 98 alla raffaella: <respelling> all: àlla_raffaèlla <end> EXISTING
+Page 99 alla romana: <respelling> all: àlla_romàna <end> AUTOACCENTED NEED_ACCENT
+Page 100 alla scudiera: <respelling> all: àlla_scudièra <end> EXISTING
+Page 101 alla siracusana: <respelling> all: àlla_siracusàna <end> AUTOACCENTED NEED_ACCENT S_BETWEEN_VOWELS
+Page 102 alle porte: <respelling> all: àlle_pòrte <end> AUTOACCENTED NEED_ACCENT
+Page 103 allerta: <respelling> top: allèrta #allérta <end> NEED_ACCENT
+Page 104 allo scoglio: <respelling> all: àllo_scòglio <end> AUTOACCENTED NEED_ACCENT
+Page 105 allo spiedo: <respelling> all: àllo_spièdo #àllo_spiédo <end> AUTOACCENTED NEED_ACCENT HIATUS
+Page 106 alluminifero: <respelling> all: allùminìfero <end> EXISTING
+Page 107 allungaciglia: <respelling> all: allùngacìglia <end> AUTOSUBBED
+Page 108 alto come un soldo di cacio: <respelling> all: àlto_cóme_un_sòldo_di_càcio <end> AUTOACCENTED NEED_ACCENT
+Page 109 altrui: <respelling> all: altrùi <end> NEED_ACCENT FALLING_IN_I HIATUS
+Page 110 amaranto: <respelling> all: amarànto <end> EXISTING
+Page 111 ambe: <respelling> top: àmbe <end> EXISTING
+Page 112 ambedue: <respelling> all: ambedùe <end> NEED_ACCENT HIATUS
+Page 113 ambidue: <respelling> all: ambidùe <end> NEED_ACCENT HIATUS
+Page 114 ambidui: <respelling> all: ambidùi <end> NEED_ACCENT FALLING_IN_I HIATUS
+Page 115 ambigenere: <respelling> all: ambigènere <end> EXISTING
+Page 116 ambo: <respelling> 2: àmbo <end> EXISTING
+Page 117 ambodue: <respelling> all: ambodùe <end> NEED_ACCENT HIATUS
+Page 118 ambosessi: <respelling> all: àmbo[s]èssi <end> NEED_ACCENT S_BETWEEN_VOWELS
+Page 119 amendua: <respelling> all: amendùa <end> EXISTING
+Page 120 amendue: <respelling> all: amendùe <end> EXISTING
+Page 121 ammazzasentenze: <respelling> all: ammàttsa[s]entèntse <end> NEED_ACCENT S_BETWEEN_VOWELS Z
+Page 122 ammodo: <respelling> all: ammòdo <end> EXISTING
+Page 123 antemarcia: <respelling> all: antemàrcia <end> NEED_ACCENT
+Page 124 antiabusivi: <respelling> all: anti.abusìvi <end> NEED_ACCENT S_BETWEEN_VOWELS HIATUS
+Page 125 antiabusivismo: <respelling> all: anti.abusivìsmo <end> AUTOSUBBED S_BETWEEN_VOWELS HIATUS
+Page 126 antiacari: <respelling> all: anti.àcari <end> NEED_ACCENT HIATUS
+Page 127 antiacido: <respelling> all: anti.àcido <end> NEED_ACCENT HIATUS
+Page 128 antialcol: <respelling> all: anti.àlcol <end> NEED_ACCENT HIATUS
+Page 129 antialghe: <respelling> all: anti.àlghe <end> NEED_ACCENT HIATUS
+Page 130 antialo: <respelling> all: anti.àlo <end> NEED_ACCENT HIATUS
+Page 131 antialone: <respelling> all: anti.alóne <end> AUTOSUBBED HIATUS
+Page 132 antianeurisma: <respelling> all: anti.aneurìsma <end> NEED_ACCENT HIATUS
+Page 133 antiangina: <respelling> all: anti.angìna <end> NEED_ACCENT HIATUS
+Page 134 antiansia: <respelling> all: anti.ànsia <end> EXISTING
+Page 135 antiblasfemo: <respelling> all: antiblasfèmo <end> NEED_ACCENT
+Page 136 antibloccaggio: <respelling> all: antibloccàggio <end> EXISTING
+Page 137 antiblocco: <respelling> all: antiblòcco <end> NEED_ACCENT
+Page 138 antiblu: <respelling> all: antiblù <end> NEED_ACCENT
+Page 139 antibrina: <respelling> all: antibrìna <end> NEED_ACCENT
+Page 140 anticaccia: <respelling> all: anticàccia <end> AUTOSUBBED
+Page 141 anticaduta: <respelling> all: anticadùta <end> NEED_ACCENT
+Page 142 anticalamità: <respelling> all: anticalamità <end> 
+Page 143 anticaldo: <respelling> all: anticàldo <end> NEED_ACCENT
+Page 144 anticalore: <respelling> all: anticalóre <end> NEED_ACCENT
+Page 145 anticalpestio: <respelling> all: anticalpestìo <end> NEED_ACCENT HIATUS
+Page 146 anticancro: <respelling> all: anticàncro <end> NEED_ACCENT
+Page 147 anticarie: <respelling> all: anticàrie <end> NEED_ACCENT HIATUS
+Page 148 anticarro: <respelling> all: anticàrro <end> NEED_ACCENT
+Page 149 anticasta: <respelling> all: anticàsta <end> NEED_ACCENT
+Page 150 anticellulite: <respelling> all: anticellulìte <end> NEED_ACCENT
+Page 151 anticlandestini: <respelling> all: anticlandestìni <end> NEED_ACCENT
+Page 152 anticlandestino: <respelling> all: anticlandestìno <end> NEED_ACCENT
+Page 153 anticode: <respelling> all: anticóde <end> NEED_ACCENT
+Page 154 anticoincidenza: <respelling> all: anticoi.ncidèntsa <end> AUTOSUBBED FALLING_IN_I
+Page 155 anticolesterolo: <respelling> all: anticolesteròlo <end> NEED_ACCENT
+Page 156 anticollisione: <respelling> all: anticollisióne <end> AUTOSUBBED S_BETWEEN_VOWELS HIATUS
+Page 157 anticoncentrazione: <respelling> all: anticoncentratsióne <end> AUTOSUBBED HIATUS
+Page 158 anticopia: <respelling> all: anticòpia <end> NEED_ACCENT HIATUS
+Page 159 anticoppia: <respelling> all: anticòppia anticóppia <end> NEED_ACCENT HIATUS
+Page 160 anticorrosione: <respelling> all: anticorrosióne <end> AUTOSUBBED S_BETWEEN_VOWELS HIATUS
+Page 161 anticorruzione: <respelling> all: anticorrutsióne <end> AUTOSUBBED HIATUS
+Page 162 anticrimine: <respelling> all: anticrìmine <end> NEED_ACCENT
+Page 163 anticrisi: <respelling> all: anticrìsi <end> NEED_ACCENT S_BETWEEN_VOWELS
+Page 164 anticrollo: <respelling> all: anticròllo <end> NEED_ACCENT
+Page 165 antideflagrante: <respelling> all: antideflagrànte <end> AUTOSUBBED
+Page 166 antidepressione: <respelling> all: antidepressióne <end> AUTOSUBBED HIATUS
+Page 167 antidiabete: <respelling> all: antidi.abète antidiabète <end> NEED_ACCENT HIATUS
+Page 168 antidirottamento: <respelling> all: antidirottaménto <end> AUTOSUBBED
+Page 169 antidiscriminazioni: <respelling> all: antidiscriminatsióni <end> NEED_ACCENT Z HIATUS
+Page 170 antidisturbo: <respelling> all: antidistùrbo <end> NEED_ACCENT
+Page 171 antidolore: <respelling> all: antidolóre <end> NEED_ACCENT
+Page 172 antidoping: <respelling> all: antidòping antidòpin <end> NEED_ACCENT
+Page 173 antidroga: <respelling> all: antidròga <end> NEED_ACCENT
+Page 174 antieffrazione: <respelling> all: anti.effratsióne <end> AUTOSUBBED HIATUS
+Page 175 antiesclusione: <respelling> all: anti.esclusióne <end> AUTOSUBBED S_BETWEEN_VOWELS HIATUS
+Page 176 antietà: <respelling> all: anti.età <end> 
+Page 177 antifannulloni: <respelling> all: antifannullóni <end> NEED_ACCENT
+Page 178 antifiamma: <respelling> all: antifiàmma <end> NEED_ACCENT HIATUS
+Page 179 antifiamme: <respelling> all: antifiàmme <end> NEED_ACCENT HIATUS
+Page 180 antiforfora: <respelling> all: antifórfora <end> NEED_ACCENT
+Page 181 antifreddo: <respelling> all: antifréddo <end> EXISTING
+Page 182 antifrizione: <respelling> all: antifritsióne <end> AUTOSUBBED HIATUS
+Page 183 antifumo: <respelling> all: antifùmo <end> EXISTING
+Page 184 antifuoco: <respelling> all: antifuòco <end> NEED_ACCENT HIATUS
+Page 185 antigatto: <respelling> all: antigàtto <end> NEED_ACCENT
+Page 186 antigelo: <respelling> all: antigèlo <end> NEED_ACCENT
+Page 187 antighiaccio: <respelling> all: antighiàccio <end> AUTOSUBBED HIATUS
+Page 188 antiglobale: <respelling> all: antiglobàle <end> AUTOSUBBED
+Page 189 antiglutine: <respelling> all: antiglùtine <end> NEED_ACCENT
+Page 190 antigraffio: <respelling> all: antigràffio <end> NEED_ACCENT HIATUS
+Page 191 antigrandine: <respelling> all: antigràndine <end> NEED_ACCENT
+Page 192 antiimmigrati: <respelling> all: anti.immigràti <end> NEED_ACCENT FALLING_IN_I HIATUS
+Page 193 antiincendio: <respelling> all: anti.incèndio <end> NEED_ACCENT FALLING_IN_I HIATUS
+Page 194 antiinquinamento: <respelling> all: anti.inquinaménto <end> AUTOSUBBED FALLING_IN_I HIATUS
+Page 195 antiintercettazione: <respelling> all: anti.intercettatsióne <end> AUTOSUBBED FALLING_IN_I HIATUS
+Page 196 antiletteratura: <respelling> all: anti.letteratùra <end> AUTOSUBBED
+Page 197 antilussazione: <respelling> all: anti.lussatsióne <end> AUTOSUBBED HIATUS
+Page 198 antimacchia: <respelling> all: antimàcchia <end> EXISTING
+Page 199 antimafia: <respelling> all: antimàfia <end> NEED_ACCENT HIATUS
+Page 200 antimarxismo: <respelling> all: antimarxìsmo <end> AUTOSUBBED
+Page 201 antimascherina: <respelling> all: antimascherìna <end> NEED_ACCENT
+Page 202 antimmigrazione: <respelling> all: antimmigratsióne <end> AUTOSUBBED HIATUS
+Page 203 antimonopolio: <respelling> all: antimonopòlio <end> NEED_ACCENT HIATUS
+Page 204 antimuffa: <respelling> all: antimùffa <end> NEED_ACCENT
+Page 205 antinausea: <respelling> all: antinàusea <end> NEED_ACCENT S_BETWEEN_VOWELS
+Page 206 antincendio: <respelling> all: antincèndio <end> NEED_ACCENT HIATUS
+Page 207 antincidente: <respelling> all: antincidènte <end> AUTOSUBBED
+Page 208 antineve: <respelling> all: antinéve <end> NEED_ACCENT
+Page 209 antinquinamento: <respelling> all: antinquinaménto <end> AUTOSUBBED FALLING_IN_I
+Page 210 antinsulina: <respelling> all: antinsulìna <end> NEED_ACCENT
+Page 211 antintercettazione: <respelling> all: antintercettatsióne <end> AUTOSUBBED HIATUS
+Page 212 antintercettazioni: <respelling> all: antintercettatsióni <end> NEED_ACCENT Z HIATUS
+Page 213 antintrusione: <respelling> all: antintrusióne <end> AUTOSUBBED S_BETWEEN_VOWELS HIATUS
+Page 214 antinucleo: <respelling> all: antinùcleo <end> NEED_ACCENT
+Page 215 antipanico: <respelling> all: antipànico <end> AUTOSUBBED
+Page 216 antipattinaggio: <respelling> all: antipattinàggio <end> AUTOSUBBED
+Page 217 antipattinamento: <respelling> all: antipattinaménto <end> AUTOSUBBED
+Page 218 antipaura: <respelling> all: antipaùra <end> AUTOSUBBED
+Page 219 antipedofili: <respelling> all: antipedòfili <end> NEED_ACCENT
+Page 220 antipersona: <respelling> all: antipersóna <end> NEED_ACCENT
+Page 221 antipianisti: <respelling> all: antipianìsti <end> NEED_ACCENT HIATUS
+Page 222 antipiccioni: <respelling> all: antipiccióni <end> NEED_ACCENT
+Page 223 antipiega: <respelling> all: antipièga antipiéga <end> EXISTING
+Page 224 antipioggia: <respelling> all: antipiìggia <end> NEED_ACCENT HIATUS
+Page 225 antipirateria: <respelling> all: antipiraterìa <end> NEED_ACCENT HIATUS
+Page 226 antiplacca: <respelling> all: antiplàcca <end> NEED_ACCENT
+Page 227 antipolio: <respelling> all: antipòlio <end> NEED_ACCENT HIATUS
+Page 228 antipolline: <respelling> all: antipòlline <end> NEED_ACCENT
+Page 229 antipolvere: <respelling> all: antipólvere <end> NEED_ACCENT
+Page 230 antiproiettile: <respelling> all: antiproièttile <end> NEED_ACCENT
+Page 231 antiprurito: <respelling> all: antiprurìto <end> NEED_ACCENT
+Page 232 antipulci: <respelling> all: antipùlci <end> NEED_ACCENT
+Page 233 antiracket: <respelling> all: antiràket <end> NEED_ACCENT
+Page 234 antiradar: <respelling> all: antiràdar <end> NEED_ACCENT
+Page 235 antirapina: <respelling> all: antirapìna <end> NEED_ACCENT
+Page 236 antirecessione: <respelling> all: antirecessióne <end> AUTOSUBBED HIATUS
+Page 237 antiribaltone: <respelling> all: antiribaltóne <end> AUTOSUBBED
+Page 238 antiriciclaggio: <respelling> all: antiriciclàggio <end> AUTOSUBBED
+Page 239 antiriflesso: <respelling> all: antiriflèsso <end> NEED_ACCENT
+Page 240 antirombo: <respelling> all: antirómbo <end> NEED_ACCENT
+Page 241 antirosso: <respelling> all: antirósso <end> NEED_ACCENT
+Page 242 antirughe: <respelling> all: antirùghe <end> NEED_ACCENT
+Page 243 antirumore: <respelling> all: antirumóre <end> NEED_ACCENT
+Page 244 antisabotaggio: <respelling> all: anti[s]abotàggio <end> AUTOSUBBED S_BETWEEN_VOWELS
+Page 245 antiscafisti: <respelling> all: antiscafìsti <end> NEED_ACCENT
+Page 246 antiscasso: <respelling> all: antiscàsso <end> NEED_ACCENT
+Page 247 antischiuma: <respelling> all: antischiùma <end> NEED_ACCENT HIATUS
+Page 248 antiscintilla: <respelling> all: antiscintìlla <end> NEED_ACCENT
+Page 249 antisciopero: <respelling> all: antisciòpero <end> EXISTING
+Page 250 antiscippo: <respelling> all: antiscìppo <end> NEED_ACCENT
+Page 251 antiscivolo: <respelling> all: antiscìvolo <end> NEED_ACCENT
+Page 252 antiscorrimento: <respelling> all: antiscorriménto <end> AUTOSUBBED
+Page 253 antisdrucciolo: <respelling> all: antisdrùcciolo <end> NEED_ACCENT
+Page 254 antisequestro: <respelling> all: anti[s]equèstro <end> EXISTING
+Page 255 antisfilamento: <respelling> all: antisfilaménto <end> AUTOSUBBED
+Page 256 antisfondamento: <respelling> all: antisfondaménto <end> AUTOSUBBED
+Page 257 antisistema: <respelling> all: anti[s]istèma <end> NEED_ACCENT S_BETWEEN_VOWELS
+Page 258 antislittamento: <respelling> all: antislittaménto <end> AUTOSUBBED
+Page 259 antismog: <respelling> all: antismòg <end> NEED_ACCENT
+Page 260 antisofisticazione: <respelling> all: anti[s]ofisticatsióne <end> AUTOSUBBED S_BETWEEN_VOWELS HIATUS
+Page 261 antisole: <respelling> all: anti[s]óle <end> NEED_ACCENT S_BETWEEN_VOWELS
+Page 262 antisommergibile: <respelling> all: anti[s]ommergìbile <end> AUTOSUBBED S_BETWEEN_VOWELS
+Page 263 antisommossa: <respelling> all: anti[s]ommòssa <end> NEED_ACCENT S_BETWEEN_VOWELS
+Page 264 antispeculatori: <respelling> all: antispeculatóri <end> NEED_ACCENT
+Page 265 antisprechi: <respelling> all: antisprèchi <end> NEED_ACCENT
+Page 266 antisputo: <respelling> all: antispùto <end> NEED_ACCENT
+Page 267 antistress: <respelling> all: antistrès <end> NEED_ACCENT
+Page 268 antistupro: <respelling> all: antistùpro <end> NEED_ACCENT
+Page 269 antitaccheggio: <respelling> all: antitacchéggio <end> NEED_ACCENT
+Page 270 antitaglio: <respelling> all: antitàglio <end> AUTOSUBBED
+Page 271 antitamponamento: <respelling> all: antitamponaménto <end> AUTOSUBBED
+Page 272 antitarlo: <respelling> all: antitàrlo <end> NEED_ACCENT
+Page 273 antiterremoto: <respelling> all: antiterremòto <end> NEED_ACCENT
+Page 274 antiterrorismo: <respelling> all: antiterrorìsmo <end> AUTOSUBBED
+Page 275 antitosse: <respelling> all: antitósse <end> NEED_ACCENT
+Page 276 antitraffico: <respelling> all: antitràffico <end> NEED_ACCENT
+Page 277 antitrapano: <respelling> all: antitràpano <end> NEED_ACCENT
+Page 278 antitraspirazione: <respelling> all: antitraspiratsióne <end> AUTOSUBBED HIATUS
+Page 279 antitubercolosi: <respelling> all: antitubercolòsi <end> NEED_ACCENT S_BETWEEN_VOWELS
+Page 280 antitumore: <respelling> all: antitumóre <end> NEED_ACCENT
+Page 281 antitumori: <respelling> all: antitumóri <end> NEED_ACCENT
+Page 282 antiulcera: <respelling> all: anti.ùlcera <end> NEED_ACCENT HIATUS
+Page 283 antiuomo: <respelling> all: anti.uòmo <end> NEED_ACCENT HIATUS
+Page 284 antiurto: <respelling> all: anti.ùrto <end> NEED_ACCENT HIATUS
+Page 285 antiusura: <respelling> all: anti.usùra <end> AUTOSUBBED S_BETWEEN_VOWELS HIATUS
+Page 286 antivaiolo: <respelling> all: antivaiòlo <end> NEED_ACCENT
+Page 287 antivandalismo: <respelling> all: antivandalìsmo <end> AUTOSUBBED
+Page 288 antivaricella: <respelling> all: antivaricèlla <end> AUTOSUBBED
+Page 289 antivelocità: <respelling> all: antivelocità <end> EXISTING
+Page 290 antiverde: <respelling> all: antivérde <end> NEED_ACCENT
+Page 291 antiviolenza: <respelling> all: antivi.olèntsa antiviolèntsa <end> AUTOSUBBED HIATUS
+Page 292 antivipera: <respelling> all: antivìpera <end> NEED_ACCENT
+Page 293 antivivisezione: <respelling> all: antivivi[s]etsióne <end> AUTOSUBBED S_BETWEEN_VOWELS HIATUS
+Page 294 antizanzare: <respelling> all: antidzandzàre <end> AUTOSUBBED Z
+Page 295 apposta: <respelling> 1: appòsta <end> EXISTING
+Page 295 apposta: <respelling> 2: appósta <end> EXISTING
+Page 296 appresso: <respelling> all: apprèsso <end> EXISTING
+Page 297 approposito: <respelling> all: appropòsito <end> NEED_ACCENT S_BETWEEN_VOWELS
+Page 298 aragosta: <respelling> all: aragósta <end> EXISTING
+Page 299 arancio: <respelling> top: aràncio <end> NEED_ACCENT
+Page 300 arcobaleno: <respelling> all: arcobaléno <end> EXISTING
+Page 301 ardesia: <respelling> all: ardèsia <end> NEED_ACCENT S_BETWEEN_VOWELS HIATUS
+Page 302 aria-acqua: <respelling> all: ària-àcqua <end> NEED_ACCENT HIATUS
+Page 303 aria-aria: <respelling> all: ària-ària <end> NEED_ACCENT HIATUS
+Page 304 aria-terra: <respelling> all: ària-tèrra <end> NEED_ACCENT HIATUS
+Page 305 armato fino ai denti: <respelling> all: armàto_fìno_ai_dènti <end> AUTOSUBBED AUTOACCENTED NEED_ACCENT
+Page 306 arraffazzonato: <respelling> all: arraffattsonàto <end> AUTOSUBBED Z
+Page 307 arrosto: <respelling> all: arròsto <end> EXISTING
+Page 308 arsenico: <respelling> all: arsènico <end> EXISTING
+Page 309 ascianti: <respelling> all: asciànti <end> NEED_ACCENT
+Page 310 ashanti: <respelling> all: ashànti <end> NEED_ACCENT
+Page 311 asportatrucioli: <respelling> all: aspòrtatrùcioli <end> NEED_ACCENT
+Page 312 atomica: <respelling> all: atòmica <end> NEED_ACCENT
+Page 313 atomiche: <respelling> all: atomiche <end> NEED_ACCENT
+Page 314 atomici: <respelling> all: atòmici <end> NEED_ACCENT
+Page 315 audio: <respelling> all: aùdio <end> NEED_ACCENT HIATUS
+# Page 316 automotive: <respelling> all: automotive <end> NEED_ACCENT
+Page 317 avanti: <respelling> all: avànti <end> EXISTING
+Page 318 avio: <respelling> all: àvio <end> EXISTING
+Page 319 avvenire: <respelling> all: avvenìre <end> EXISTING
+Page 320 azoico: <respelling> all: adzòico <end> EXISTING
+Page 321 baby: <respelling> all: bébi <end> EXISTING
+Page 322 baluci: <respelling> all: balùci <end> NEED_ACCENT
+Page 323 banana: <respelling> all: banàna <end> EXISTING
+Page 324 bantu: <respelling> all: bàntu <end> AUTOACCENTED
+Page 325 barré: <respelling> all: barré <end> 
+Page 326 beat: <respelling> top: bit <end> NEED_ACCENT
+Page 327 beatrice: <respelling> top: beatrìce <end> EXISTING
+Page 328 beccolungo: <respelling> all: béccolùngo <end> NEED_ACCENT
+Page 329 beccorosso: <respelling> all: béccorósso <end> NEED_ACCENT
+Page 330 bell': <respelling> all: bèll' <end> NEED_ACCENT
+Page 331 bell'e buono: <respelling> all: bèll'e_buòno <end> NEED_ACCENT HIATUS
+Page 332 bello: <respelling> top: bèllo <end> EXISTING
+Page 333 beluci: <respelling> all: belùci <end> NEED_ACCENT
+Page 334 belvedere: <respelling> all: bèlvedére <end> EXISTING
+Page 335 ben cotto: <respelling> all: bèn_còtto <end> NEED_ACCENT
+Page 336 ben dotato: <respelling> all: ben_dotàto <end> NEED_ACCENT AUTOSUBBED
+Page 337 bene: WARNING: Saw multiple {{it-IPA}} templates in a single Pronunciation section: {{it-IPA|béne}}, {{it-IPA|bène}}
+Page 337 bene: <respelling> top: bène <end> NEED_ACCENT
+Page 338 bialbero: <respelling> all: bi.àlbero <end> NEED_ACCENT HIATUS
+Page 339 bianco-russo: <respelling> all: biànco-rùsso <end> NEED_ACCENT HIATUS
+Page 340 biancoblu: <respelling> all: biàncoblù <end> NEED_ACCENT HIATUS
+Page 341 bibagno: <respelling> all: bìbàgno <end> NEED_ACCENT
+Page 342 bicamere: <respelling> all: bìcàmere <end> NEED_ACCENT
+Page 343 bideriva: <respelling> all: biderìva <end> AUTOSUBBED
+Page 344 bimotore: <respelling> all: bimotóre <end> AUTOSUBBED
+Page 345 bio: <respelling> top: bìo <end> AUTOACCENTED
+Page 346 biondo platino: <respelling> all: bióndo_plàtino <end> NEED_ACCENT HIATUS
+Page 347 biondo rame: <respelling> all: bióndo_ràme <end> NEED_ACCENT HIATUS AUTOACCENTED
+Page 348 biovulari: <respelling> all: bì.ovulàri <end> NEED_ACCENT HIATUS
+Page 349 bipala: <respelling> all: bipala <end> NEED_ACCENT
+Page 350 bipartisan: <respelling> all: bipàrtisan <end> NEED_ACCENT S_BETWEEN_VOWELS
+Page 351 bipasso: <respelling> all: bipàsso <end> EXISTING
+Page 352 biposto: <respelling> all: bìpósto <end> NEED_ACCENT
+Page 353 bis: <respelling> 4: bis <end> EXISTING
+Page 354 bisex: <respelling> all: bì[s]èx <end> NEED_ACCENT S_BETWEEN_VOWELS
+Page 355 bisulce: <respelling> all: bì[s]ùlce <end> NEED_ACCENT S_BETWEEN_VOWELS
+Page 356 biturbo: <respelling> all: bitùrbo <end> NEED_ACCENT
+Page 357 blasé: <respelling> all: blasé <end> 
+Page 358 blu: <respelling> all: blù <end> EXISTING
+Page 359 blù: <respelling> all: blù <end> 
+Page 360 bluette: <respelling> all: blu.èt <end> NEED_ACCENT HIATUS
+Page 362 bombé: <respelling> all: bombé <end> 
+Page 363 bordeaux: <respelling> all: bordó** bordò** <end> NEED_ACCENT
+Page 364 brulè: <respelling> all: brulè** <end> 
+Page 365 brulé: <respelling> all: brulé** brulè** brülé** qual3=high-style <end> 
+Page 366 brûlé: <respelling> all: brulé** brulè** brülé** qual3=high-style <end> 
+Page 367 buon: <respelling> all: buòn <end> NEED_ACCENT HIATUS
+Page 368 burkinabè: <respelling> all: burkinabè <end> 
+Page 369 cache: <respelling> top: chèʃ* càʃ* <end> AUTOACCENTED
+Page 370 cachi: <respelling> top: càchi <end> AUTOACCENTED
+Page 371 calcinoso: <respelling> all: calcinóso #calcinó[s]o <end> AUTOSUBBED AUTO_OSO S_BETWEEN_VOWELS
+Page 372 calma piatta: <respelling> all: càlma_piàtta <end> AUTOACCENTED NEED_ACCENT HIATUS
+Page 373 campione: <respelling> all: campióne <end> EXISTING
+Page 374 campochiaro: <respelling> all: càmpochiàro <end> NEED_ACCENT HIATUS
+Page 375 camposcuro: <respelling> all: camposcùro <end> AUTOSUBBED
+Page 376 candi: <respelling> all: càndi <end> EXISTING
+Page 377 cane: <respelling> top: càne <end> EXISTING
+Page 378 capestro: <respelling> all: capèstro <end> EXISTING
+Page 379 capo: <respelling> 2: càpo <end> EXISTING
+Page 380 capodistretto: <respelling> all: càpodistrétto <end> NEED_ACCENT
+Page 381 capofitto: <respelling> all: capofìtto <end> NEED_ACCENT
+Page 382 capoquarto: <respelling> all: càpoquàrto <end> NEED_ACCENT
+Page 383 carasau: <respelling> all: carasàu <end> EXISTING
+# Page 384 carbon neutral: <respelling> all: carbon_neutral <end> NEED_ACCENT
+Page 385 carbonica: <respelling> all: carbònica <end> NEED_ACCENT
+# Page 386 carbossi: <respelling> all: carbossi <end> NEED_ACCENT
+Page 387 carciofaio: <respelling> all: carciofàio <end> EXISTING
+Page 388 carioca: <respelling> all: cariòca <end> NEED_ACCENT HIATUS
+Page 389 carminio: <respelling> all: carmìnio <end> EXISTING
+Page 390 Caspio: <respelling> all: Càspio <end> NEED_ACCENT HIATUS
+Page 391 cazzo di: <respelling> all: càzzo_di <end> AUTOACCENTED
+Page 392 cento: <respelling> all: cènto <end> EXISTING
+Page 393 centocinquanta: <respelling> all: cèntocinquànta <end> NEED_ACCENT
+Page 394 centocinque: <respelling> all: cèntocinque <end> NEED_ACCENT
+Page 395 centodiciannove: <respelling> all: cèntodiciannòve <end> NEED_ACCENT
+Page 396 centodiciassette: <respelling> all: cèntodiciassètte <end> NEED_ACCENT
+Page 397 centodiciotto: <respelling> all: cèntodiciòtto <end> EXISTING
+Page 398 centodieci: <respelling> all: cèntodièci cèntodiéci <end> NEED_ACCENT HIATUS
+Page 399 centododici: <respelling> all: cèntodódici <end> NEED_ACCENT
+Page 400 centodue: <respelling> all: cèntodùe <end> NEED_ACCENT HIATUS
+Page 401 centomila: <respelling> all: cèntomùla <end> NEED_ACCENT
+Page 402 centonovanta: <respelling> all: cèntonovànta <end> NEED_ACCENT
+Page 403 centonove: <respelling> all: cèntonòve <end> NEED_ACCENT
+Page 404 centootto: <respelling> all: cèntoòtto <end> NEED_ACCENT
+Page 405 centoquaranta: <respelling> all: cèntoquarànta <end> NEED_ACCENT
+Page 406 centoquattordici: <respelling> all: cèntoquattórdici <end> NEED_ACCENT
+Page 407 centoquattro: <respelling> all: cèntoquàttro <end> NEED_ACCENT
+Page 408 centoquindici: <respelling> all: cèntoquàndici <end> NEED_ACCENT FALLING_IN_I
+Page 409 centosedici: <respelling> all: cènto[s]édici <end> NEED_ACCENT S_BETWEEN_VOWELS
+Page 410 centosei: <respelling> all: cènto[s]èi <end> EXISTING
+Page 411 centosessanta: <respelling> all: cènto[s]essànta <end> NEED_ACCENT S_BETWEEN_VOWELS
+Page 412 centosettanta: <respelling> all: cènto[s]ettànta <end> NEED_ACCENT S_BETWEEN_VOWELS
+Page 413 centosette: <respelling> all: cènto[s]ètte <end> NEED_ACCENT S_BETWEEN_VOWELS
+Page 414 centotre: <respelling> all: cèntotré <end> NEED_ACCENT
+Page 415 centotré: <respelling> all: cèntotré <end> 
+Page 416 centotredici: <respelling> all: cèntotrédici <end> NEED_ACCENT
+Page 417 centotrenta: <respelling> all: cèntotrénta cèntotrènta <end> NEED_ACCENT
+Page 418 centotrentesimo: <respelling> all: cèntotrentèsimo cèntotrentésimo <end> NEED_ACCENT S_BETWEEN_VOWELS
+Page 419 centottanta: <respelling> all: centottànta <end> NEED_ACCENT
+Page 420 centottantamila: <respelling> all: centottàntamìla <end> NEED_ACCENT
+Page 421 centotto: <respelling> all: centòtto <end> EXISTING
+Page 422 centoundici: <respelling> all: cèntoùndici <end> NEED_ACCENT
+Page 423 centouno: <respelling> all: cèntoùno <end> NEED_ACCENT
+Page 424 centoventi: <respelling> all: cèntovénti <end> EXISTING
+Page 425 centum: <respelling> top: chèntum <end> NEED_ACCENT
+Page 426 centuno: <respelling> all: centùno <end> NEED_ACCENT
+Page 427 champagne: <respelling> top: sciampàɲ* <end> NEED_ACCENT
+Page 428 charter: <respelling> all: ciàrter <end> NEED_ACCENT
+Page 429 chermisi: <respelling> all: chèrmisi <end> NEED_ACCENT S_BETWEEN_VOWELS
+Page 431 chiaro come il sole: <respelling> all: chiàro_cóme_il_sóle <end> NEED_ACCENT HIATUS
+Page 432 chiave: <respelling> all: chiàve <end> EXISTING
+Page 433 chiavi in mano: <respelling> all: chiàvi_in_màno <end> NEED_ACCENT HIATUS AUTOACCENTED
+Page 434 ciascheduno: <respelling> all: ciaschedùno <end> EXISTING
+Page 435 ciascun: <respelling> all: ciascùn <end> NEED_ACCENT
+Page 436 ciascuno: <respelling> all: ciascùno <end> EXISTING
+Page 437 ciclamino: <respelling> all: ciclamìno <end> EXISTING
+Page 438 ciliegia: <respelling> all: ciliègia ciliégia <end> EXISTING
+Page 439 ciliegiolo: <respelling> all: ciliegiòlo <end> NEED_ACCENT HIATUS
+Page 440 cinquanta: <respelling> all: cinquànta <end> EXISTING
+Page 441 cinquantadue: <respelling> all: cinquàntadùe <end> NEED_ACCENT HIATUS
+Page 442 cinquantamila: <respelling> all: cinquàntamìla <end> NEED_ACCENT
+Page 443 cinquantanove: <respelling> all: cinquàntanòve <end> NEED_ACCENT
+Page 444 cinquantaquattro: <respelling> all: cinquàntaquàttro <end> NEED_ACCENT
+Page 445 cinquantasei: <respelling> all: cinquànta[s]èi <end> NEED_ACCENT S_BETWEEN_VOWELS FALLING_IN_I
+Page 446 cinquantasette: <respelling> all: cinquànta[s]ètte <end> NEED_ACCENT S_BETWEEN_VOWELS
+Page 447 cinquantatré: <respelling> all: cinquàntatré <end> 
+Page 448 cinquantotto: <respelling> all: cinquantòtto <end> EXISTING
+Page 449 cinquantun: <respelling> all: cinquantùn <end> NEED_ACCENT
+Page 450 cinquantuno: <respelling> all: cinquantùno <end> EXISTING
+Page 451 cinque: <respelling> all: cìnque <end> EXISTING
+Page 452 cinquecento: <respelling> all: cìnquecènto <end> AUTOSUBBED
+Page 453 cinquemila: <respelling> all: cìnquemìla <end> NEED_ACCENT
+Page 454 cis: <respelling> top: cìs <end> AUTOACCENTED
+Page 455 cobalto: <respelling> all: cobàlto <end> EXISTING
+Page 456 codalunga: <respelling> all: códalùnga <end> NEED_ACCENT
+Page 457 codarossa: <respelling> all: códaróssa <end> NEED_ACCENT
+Page 458 coi fiocchi: <respelling> all: coi_fiòcchi <end> NEED_ACCENT HIATUS
+Page 459 colla parte: <respelling> all: cólla_pàrte <end> NEED_ACCENT AUTOACCENTED
+Page 460 color cane che fugge: <respelling> all: colór_càne_che_fùgge <end> NEED_ACCENT AUTOACCENTED
+Page 461 combinaguai: <respelling> all: combìnaguài <end> NEED_ACCENT FALLING_IN_I
+Page 462 come prima: <respelling> all: cóme_prìma <end> NEED_ACCENT AUTOACCENTED
+Page 463 come sta: <respelling> all: cóme_stà <end> EXISTING
+Page 464 complice: <respelling> all: còmplice cómplice <end> NEED_ACCENT
+Page 465 con le pive nel sacco: <respelling> all: con_le_pìve_nel_sàcco <end> AUTOACCENTED
+Page 466 consorella: <respelling> all: consorèlla <end> AUTOSUBBED
+Page 467 copriauto: <respelling> all: còpri.àuto <end> NEED_ACCENT HIATUS
+Page 468 coprimoto: <respelling> all: còprimòto <end> NEED_ACCENT
+Page 469 coprispalle: <respelling> all: còprispàlle <end> NEED_ACCENT
+Page 470 coronato dal successo: <respelling> all: coronàto_dal_succèsso <end> AUTOSUBBED NEED_ACCENT
+Page 471 corpo a corpo: <respelling> all: còrpo_a_còrpo <end> NEED_ACCENT
+Page 472 così così: <respelling> all: così*_così #co[s]ì*_co[s]ì <end> 
+Page 473 cotal: <respelling> all: cotàl <end> NEED_ACCENT
+Page 474 cremisi: <respelling> all: crèmisi <end> EXISTING
+# Page 475 cringe: <respelling> all: cringe <end> AUTOACCENTED
+Page 476 crudel: <respelling> all: crudèl <end> NEED_ACCENT
+Page 477 d'accordissimo: <respelling> all: °°d'accordìssimo <end> NEED_ACCENT
+Page 478 d'accordo: <respelling> all: °°d'accòrdo <end> NEED_ACCENT
+Page 479 d'aiuto: <respelling> all: °°d'aiùto <end> NEED_ACCENT
+Page 480 d'alto bordo: <respelling> all: °°d'àlto_bórdo <end> EXISTING
+Page 481 d'andata: <respelling> all: °°d'andàta <end> AUTOSUBBED
+Page 482 d'antan: <respelling> all: °°d'antàn <end> NEED_ACCENT
+Page 483 d'assalto: <respelling> all: °°d'assàlto <end> NEED_ACCENT
+Page 484 d'eccezione: <respelling> all: °°d'eccetsióne <end> AUTOSUBBED HIATUS
+Page 485 d'epoca: <respelling> all: °°d'època <end> NEED_ACCENT
+Page 486 d'obbligo: <respelling> all: °°d'òbbligo <end> NEED_ACCENT
+Page 487 d'oro: <respelling> all: °°dòro <end> EXISTING
+Page 488 da asporto: <respelling> all: °°da_aspòrto <end> NEED_ACCENT
+Page 489 da banco: <respelling> all: °°da_bànco #°°da*_bànco <end> AUTOACCENTED
+Page 490 da brivido: <respelling> all: °°da_brìvido #°°da*_brìvido <end> NEED_ACCENT
+Page 491 da cani: <respelling> all: °°da_càni #°°da*_càni <end> AUTOACCENTED
+Page 492 da capogiro: <respelling> all: °°da_capogìro #°°da*_capogìro <end> NEED_ACCENT
+Page 493 da incasso: <respelling> all: °°da_incàsso #°°da*_incàsso <end> NEED_ACCENT
+Page 494 da meno: <respelling> all: °°da_méno #°°da*_méno <end> NEED_ACCENT
+Page 495 da parata: <respelling> all: °°da_paràta #°°da*_paràta <end> AUTOSUBBED
+Page 496 da poco: <respelling> all: °°da_pòco #°°da*_pòco <end> NEED_ACCENT
+Page 497 da quattro soldi: <respelling> all: °°da_quàttro_sòldi #°°da*_quàttro_sòldi <end> NEED_ACCENT
+Page 498 da remoto: <respelling> all: °°da_remòto #°°da*_remòto <end> NEED_ACCENT
+Page 499 da sogno: <respelling> all: °°da_sógno #°°da*_sógno <end> NEED_ACCENT
+Page 500 dabbene: <respelling> all: °°dabbène <end> NEED_ACCENT
+Page 501 daccordo: <respelling> all: °°daccòrdo <end> NEED_ACCENT
+# Page 502 dahlien: <respelling> all: dahlien <end> NEED_ACCENT HIATUS
+Page 503 dal vivo: <respelling> all: °°dal_vìvo <end> AUTOACCENTED
+Page 504 dammeno: <respelling> all: °°damméno <end> EXISTING
+Page 505 dappiù: <respelling> all: °°dappiù* <end> 
+Page 506 dappoco: <respelling> all: °°dappòco <end> EXISTING
+Page 507 dark: <respelling> top: dàrk <end> AUTOACCENTED
+Page 508 dattorno: <respelling> all: °°dattórno <end> NEED_ACCENT
+Page 509 davante: <respelling> all: °°davànte <end> EXISTING
+Page 510 davanti: <respelling> all: °°davànti <end> EXISTING
+Page 511 decimonono: <respelling> all: dècimonòno <end> NEED_ACCENT
+Page 512 decimoquarto: <respelling> all: dècimoquàrto <end> NEED_ACCENT
+Page 513 decimoterzo: <respelling> all: dècimotèrtso <end> NEED_ACCENT Z
+Page 514 décolleté: <respelling> all: decolté** decoltè** <end> 
+Page 515 del cavolo: <respelling> all: del_càvolo <end> NEED_ACCENT
+Page 516 del cazzo: <respelling> all: del_càttso <end> AUTOACCENTED
+Page 517 del cuore: <respelling> all: del_cuòre <end> NEED_ACCENT HIATUS
+Page 518 del doppio binario: <respelling> all: del_dóppio_binàrio <end> NEED_ACCENT HIATUS AUTOSUBBED
+Page 519 del genere: <respelling> all: del_gènere <end> NEED_ACCENT
+Page 520 delavé: <respelling> all: delavé** <end> 
+Page 521 dell'ultima ora: <respelling> all: dell'ùltima_óra <end> NEED_ACCENT
+Page 522 della madonna: <respelling> all: dèlla_madònna <end> AUTOSUBBED NEED_ACCENT
+Page 523 della prima ora: <respelling> all: dèlla_prìma_óra <end> AUTOSUBBED AUTOACCENTED NEED_ACCENT
+Page 524 demi-sec: <respelling> all: démi-sèc <end> NEED_ACCENT
+Page 525 demodé: <respelling> all: demodé <end> 
+Page 526 démodé: <respelling> all: demodé <end> 
+Page 527 devanagari: <respelling> all: devanàgari n={{R:it:Trec}} devanagàri n2={{R:it:Olivetti}} <end> EXISTING
+Page 528 di andata: <respelling> all: °°di_andàta <end> AUTOSUBBED
+Page 529 di base: <respelling> all: °°di_bàse <end> AUTOACCENTED
+Page 530 di circostanza: <respelling> all: °°di_circostàntsa <end> AUTOSUBBED
+Page 531 di classe mondiale: <respelling> all: °°di_clàsse_mondiàle <end> AUTOACCENTED AUTOSUBBED HIATUS
+Page 532 di colore: <respelling> all: °°di_colóre <end> NEED_ACCENT
+Page 533 di contrabbando: <respelling> all: °°di_contrabbàndo <end> AUTOSUBBED
+Page 534 di dentro: <respelling> all: °°di_dóntro <end> NEED_ACCENT
+Page 535 di eccezione: <respelling> all: °°di_eccetsióne <end> AUTOSUBBED HIATUS
+Page 536 di faccia: <respelling> all: °°di_fàccia <end> AUTOSUBBED
+Page 537 di ferro: <respelling> all: °°di_fèrro <end> NEED_ACCENT
+Page 538 di fiducia: <respelling> all: °°di_fidùcia <end> NEED_ACCENT
+Page 539 di fondo: <respelling> all: °°di_fóndo <end> NEED_ACCENT
+Page 540 di fortuna: <respelling> all: °°di_fortùna <end> NEED_ACCENT
+Page 541 di fronte: <respelling> all: °°di_frónte <end> NEED_ACCENT
+Page 542 di lunga data: <respelling> all: °°di_lùnga_dàta <end> AUTOACCENTED
+Page 543 di lunga durata: <respelling> all: °°di_lùnga_duràta <end> AUTOACCENTED AUTOSUBBED
+Page 544 di maniera: <respelling> all: °°di_manièra <end> AUTOSUBBED HIATUS
+Page 545 di massa: <respelling> all: °°di_màssa <end> AUTOACCENTED
+Page 546 di mezzo: <respelling> all: °°di_mèddzo <end> NEED_ACCENT Z
+Page 547 di moda: <respelling> all: °°di_mòda <end> NEED_ACCENT
+Page 548 di nicchia: <respelling> all: °°di_nìcchia <end> NEED_ACCENT HIATUS
+Page 549 di notte: <respelling> all: °°di_nòtte <end> NEED_ACCENT
+Page 550 di parata: <respelling> all: °°di_paràta <end> AUTOSUBBED
+Page 551 di parte: <respelling> all: °°di_pàrte <end> AUTOACCENTED
+Page 552 di peso: <respelling> all: °°di_péso #°°di_pé[s]o <end> NEED_ACCENT S_BETWEEN_VOWELS
+Page 553 di prim'ordine: <respelling> all: °°di_prìm'órdine <end> NEED_ACCENT
+Page 554 di prima: <respelling> all: °°di_prìma <end> AUTOACCENTED
+Page 555 di prima necessità: <respelling> all: °°di_prìma_necessità <end> AUTOACCENTED
+Page 556 di primordine: <respelling> all: °°di_prìmórdine <end> NEED_ACCENT
+Page 557 di punta: <respelling> all: °°di_pùnta <end> AUTOACCENTED
+Page 558 di rigore: <respelling> all: °°di_rigóre <end> NEED_ACCENT
+Page 559 di rilievo: <respelling> all: °°di_rilièvo °°di_riliévo <end> NEED_ACCENT HIATUS
+Page 560 di ripiego: <respelling> all: °°di_ripiègo °°di_ripiégo <end> NEED_ACCENT HIATUS
+Page 561 di ruolo: <respelling> all: °°di_ruòlo <end> NEED_ACCENT HIATUS
+Page 562 di sasso: <respelling> all: °°di_sàsso <end> AUTOACCENTED
+Page 563 di serie: <respelling> all: °°di_sèrie <end> NEED_ACCENT HIATUS
+Page 564 di spicco: <respelling> all: °°di_spìcco <end> AUTOACCENTED
+Page 565 di stucco: <respelling> all: °°di_stùcco <end> AUTOACCENTED
+Page 566 di tutti i giorni: <respelling> all: °°di_tùtti_i_giórni <end> AUTOACCENTED NEED_ACCENT
+Page 567 di tutto rispetto: <respelling> all: °°di_tùtto_rispètto <end> AUTOACCENTED NEED_ACCENT
+Page 568 di vecchia data: <respelling> all: °°di_vècchia_dàta <end> NEED_ACCENT HIATUS AUTOACCENTED
+Page 569 di vetta: <respelling> all: °°di_vétta <end> AUTOSUBBED
+Page 570 diccì: <respelling> all: diccì <end> 
+Page 571 diciannove: <respelling> all: diciannòve <end> EXISTING
+Page 572 diciannovemila: <respelling> all: diciannòvemìla <end> NEED_ACCENT
+Page 573 diciassette: <respelling> all: diciassètte <end> EXISTING
+Page 574 diciassettemila: <respelling> all: diciassèttemìla <end> NEED_ACCENT
+Page 575 diciotto: <respelling> all: diciòtto <end> EXISTING
+Page 576 diciottomila: <respelling> all: diciòttomìla <end> NEED_ACCENT
+Page 577 didietro: <respelling> all: didiètro didiétro <end> NEED_ACCENT HIATUS
+#Page 578 diece: <respelling> all: dièce <end> EXISTING
+#Page 579 dieci: <respelling> 1: dièci diéci <end> EXISTING
+#Page 579 dieci: <respelling> 2: di.èci <end> EXISTING
+Page 580 diecimila: <respelling> all: diècimìla diécimìla <end> NEED_ACCENT HIATUS
+Page 581 diesis: <respelling> all: di.èsis dièsis <end> EXISTING
+Page 582 difronte: <respelling> all: °°difrónte <end> EXISTING
+Page 583 diidrossi: <respelling> all: dìidròssi <end> NEED_ACCENT FALLING_IN_I HIATUS
+Page 584 dinanzi: <respelling> all: dinànzi <end> NEED_ACCENT Z
+Page 586 dirimpetto: <respelling> all: °°dirimpètto <end> EXISTING
+Page 587 dispari: <respelling> all: dìspari <end> EXISTING
+Page 588 distante: <respelling> all: distànte <end> AUTOSUBBED
+Page 589 distrutto: <respelling> all: distrìtto <end> NEED_ACCENT
+Page 590 divin: <respelling> all: divìn <end> NEED_ACCENT
+Page 591 doc: <respelling> top: dòc <end> NEED_ACCENT
+Page 592 dodici: <respelling> all: dódici <end> EXISTING
+Page 593 dodicimila: <respelling> all: dódicimìla <end> NEED_ACCENT
+Page 594 doposci: <respelling> all: dóposcì* <end> NEED_ACCENT
+Page 595 doposcì: <respelling> all: dóposcì* <end> 
+Page 596 doposole: <respelling> all: dópo[s]óle <end> NEED_ACCENT S_BETWEEN_VOWELS
+Page 597 dopoteatro: <respelling> all: dópoteàtro <end> NEED_ACCENT
+Page 598 doppiopetto: <respelling> all: dóppiopètto <end> NEED_ACCENT HIATUS
+Page 599 dorminpiedi: <respelling> all: dòrminpièdi dòrminpiédi <end> NEED_ACCENT HIATUS
+Page 600 double-face: <respelling> all: dùbl-fàs <end> NEED_ACCENT
+Page 601 due: <respelling> top: dùe <end> EXISTING
+Page 602 duecento: <respelling> all: dùecènto <end> EXISTING
+Page 603 duemila: <respelling> all: dùemìla <end> NEED_ACCENT HIATUS
+Page 604 duo: <respelling> all: dùo <end> EXISTING
+Page 605 duro di comprendonio: <respelling> all: dùro_di_comprendònio <end> AUTOACCENTED NEED_ACCENT HIATUS
+# Page 606 ecru: <respelling> all: ecru <end> NEED_ACCENT
+# Page 607 egr.: <respelling> all: egr. <end> NEED_ACCENT
+Page 608 egual: <respelling> all: eguàl <end> NEED_ACCENT
+Page 609 entrambe: <respelling> all: entràmbe <end> EXISTING
+Page 610 entrambi: <respelling> all: entràmbi <end> EXISTING
+Page 611 entrobordo: <respelling> all: èntrobórdo <end> EXISTING
+Page 612 esentasse: <respelling> top: esentàsse <end> NEED_ACCENT S_BETWEEN_VOWELS
+Page 613 eslege: <respelling> all: eslège <end> NEED_ACCENT
+Page 614 esoftalmico: <respelling> all: esoftàlmico <end> NEED_ACCENT S_BETWEEN_VOWELS
+Page 615 esperanto: <respelling> all: esperànto <end> EXISTING
+Page 616 etero: <respelling> 1: ètero <end> EXISTING
+Page 616 etero: <respelling> 2: etèro <end> EXISTING
+Page 617 evergreen: <respelling> all: èvergrìn <end> NEED_ACCENT
+Page 618 extra: <respelling> all: èxtra èstra ref:DiPI <end> NEED_ACCENT
+Page 619 extralusso: <respelling> all: èxtralùsso èstralùsso ref:DiPI|extra ref:Olivetti <end> EXISTING
+Page 620 extrastrong: <respelling> all: èxtrastròng èstrastròng ref:DiPI <end> NEED_ACCENT
+Page 621 faccia a faccia: <respelling> all: fàccia_a_fàccia <end> AUTOSUBBED
+Page 622 facil: <respelling> all: fàcil <end> NEED_ACCENT
+Page 623 fai da te: <respelling> all: fài_da_té* #fài_da*_té* <end> AUTOACCENTED
+Page 624 fai-da-te: <respelling> all: fài-da-té* #fài-da*-té* <end> NEED_ACCENT FALLING_IN_I
+
+
+
+
+
+
+
+
+
+# got here
+
+
+
+
+
+
+
+Page 625 falecio: <respelling> all: falècio <end> EXISTING
+Page 626 ficaio: <respelling> all: ficàio <end> EXISTING
+Page 627 filoegizia: <respelling> all: filoegìtsia <end> AUTOSUBBED HIATUS
+Page 628 filosocialista: <respelling> all: filosocialìsta <end> AUTOSUBBED S_BETWEEN_VOWELS
+Page 629 final: <respelling> top: final <end> NEED_ACCENT
+Page 630 fine: <respelling> 4: fìne <end> EXISTING
+Page 631 fisso: <respelling> all: fìsso <end> EXISTING
+Page 632 flou: <respelling> all: flou <end> NEED_ACCENT
+Page 633 fluo: <respelling> all: flùo <end> EXISTING
+Page 634 forte possibile: <respelling> all: forte_possìbile <end> NEED_ACCENT AUTOSUBBED
+Page 635 fp: <respelling> all: fp <end> NEED_ACCENT
+Page 636 francobollo: <respelling> all: francobóllo <end> EXISTING
+Page 637 fu: <respelling> 4: fù <end> EXISTING
+Page 638 fumé: <respelling> all: fumé <end> 
+Page 639 fuori dai gangheri: <respelling> all: fuori_dai_gangheri <end> NEED_ACCENT HIATUS
+Page 640 fuori dall'ordinario: <respelling> all: fuori_dall'ordinàrio <end> NEED_ACCENT HIATUS AUTOSUBBED
+Page 641 fuori dalla grazia di Dio: <respelling> all: fuori_dàlla_grazia_di_Dìo <end> NEED_ACCENT HIATUS AUTOACCENTED Z
+Page 642 fuori di testa: <respelling> all: fuori_di_testa <end> NEED_ACCENT HIATUS
+Page 643 fuori fase: <respelling> all: fuori_fàse <end> NEED_ACCENT HIATUS AUTOACCENTED
+Page 644 fuori luogo: <respelling> all: fuori_luogo <end> NEED_ACCENT HIATUS
+Page 645 fuori mano: <respelling> all: fuori_màno <end> NEED_ACCENT HIATUS AUTOACCENTED
+Page 646 fuori misura: <respelling> all: fuori_misùra <end> NEED_ACCENT HIATUS AUTOSUBBED S_BETWEEN_VOWELS
+Page 647 fuori moda: <respelling> all: fuori_moda <end> NEED_ACCENT HIATUS
+Page 648 fuori onda: <respelling> all: fuori_onda <end> NEED_ACCENT HIATUS
+Page 649 fuori orario: <respelling> all: fuori_oràrio <end> NEED_ACCENT HIATUS AUTOSUBBED
+Page 650 fuori porta: <respelling> all: fuori_porta <end> NEED_ACCENT HIATUS
+Page 651 fuori posto: <respelling> all: fuori_posto <end> NEED_ACCENT HIATUS
+Page 652 fuori programma: <respelling> all: fuori_programma <end> NEED_ACCENT HIATUS
+Page 653 fuori ruolo: <respelling> all: fuori_ruolo <end> NEED_ACCENT HIATUS
+Page 654 fuori sacco: <respelling> all: fuori_sàcco <end> NEED_ACCENT HIATUS AUTOACCENTED
+Page 655 fuori sede: <respelling> all: fuori_sede <end> NEED_ACCENT HIATUS
+Page 656 fuori serie: <respelling> all: fuori_serie <end> NEED_ACCENT HIATUS
+Page 657 fuori servizio: <respelling> all: fuori_servìtsio <end> NEED_ACCENT HIATUS AUTOSUBBED
+Page 658 fuori strada: <respelling> all: fuori_stràda <end> NEED_ACCENT HIATUS AUTOACCENTED
+Page 659 fuoribordo: <respelling> all: fuòribórdo <end> EXISTING
+Page 660 fuoriborsa: <respelling> all: fuoriborsa <end> NEED_ACCENT HIATUS
+Page 661 fuoribusta: <respelling> all: fuoribusta <end> NEED_ACCENT HIATUS
+Page 662 fuoricampo: <respelling> all: fuòricàmpo <end> EXISTING
+Page 663 fuoricasta: <respelling> all: fuoricasta <end> NEED_ACCENT HIATUS
+Page 664 fuoriclasse: <respelling> all: fuoriclasse <end> NEED_ACCENT HIATUS
+Page 665 fuorimano: <respelling> all: fuorimàno <end> EXISTING
+Page 666 fuorimisura: <respelling> all: fuorimisùra <end> AUTOSUBBED S_BETWEEN_VOWELS HIATUS
+Page 667 fuorimoda: <respelling> all: fuorimoda <end> NEED_ACCENT HIATUS
+Page 668 fuorionda: <respelling> all: fuòri.ónda <end> EXISTING
+Page 669 fuoriporta: <respelling> all: fuoriporta <end> NEED_ACCENT HIATUS
+Page 670 fuoriposto: <respelling> all: fuoriposto <end> NEED_ACCENT HIATUS
+Page 671 fuoriprogramma: <respelling> all: fuoriprogramma <end> NEED_ACCENT HIATUS
+Page 672 fuorisacco: <respelling> all: fuorisacco <end> NEED_ACCENT S_BETWEEN_VOWELS HIATUS
+Page 673 fuorisede: <respelling> all: fuorisede <end> NEED_ACCENT S_BETWEEN_VOWELS HIATUS
+Page 674 fuoriserie: <respelling> all: fuoriserie <end> NEED_ACCENT S_BETWEEN_VOWELS HIATUS
+Page 675 f·p: <respelling> all: f·p <end> NEED_ACCENT
+Page 676 gentil: <respelling> all: gentil <end> NEED_ACCENT
+Page 677 gialloblu: <respelling> all: gialloblu <end> NEED_ACCENT
+Page 678 giallorosa: <respelling> all: giallorosa <end> NEED_ACCENT S_BETWEEN_VOWELS
+Page 679 gialloviola: <respelling> all: gialloviola <end> NEED_ACCENT HIATUS
+Page 680 giardinaio: <respelling> all: giardinàio <end> EXISTING
+Page 681 giocattolo: <respelling> all: giocàttolo <end> EXISTING
+Page 682 giovin: <respelling> all: giovin <end> NEED_ACCENT
+Page 683 giù di corda: <respelling> all: giù_di_corda <end> NEED_ACCENT
+Page 684 giusto: <respelling> all: giùsto <end> EXISTING
+Page 685 governista: <respelling> all: governìsta <end> AUTOSUBBED
+Page 686 grand': <respelling> all: grànd' <end> AUTOACCENTED
+Page 687 grande: <respelling> 2: grànde <end> EXISTING
+Page 688 gratis: <respelling> 2: gràtis <end> EXISTING
+Page 689 hutu: <respelling> all: hùtu <end> AUTOACCENTED
+Page 690 in affitto: <respelling> all: in_affitto <end> NEED_ACCENT
+Page 691 in basso: <respelling> all: in_bàsso <end> AUTOACCENTED
+Page 692 in bianco: <respelling> all: in_bianco <end> NEED_ACCENT HIATUS
+Page 693 in brodo: <respelling> all: in_brodo <end> NEED_ACCENT
+Page 694 in controtendenza: <respelling> all: in_controtendèntsa <end> AUTOSUBBED
+Page 695 in costume adamitico: <respelling> all: in_costume_adamitico <end> NEED_ACCENT
+Page 696 in diretta: <respelling> all: in_dirétta <end> AUTOSUBBED
+Page 697 in dolce attesa: <respelling> all: in_dolce_attesa <end> NEED_ACCENT S_BETWEEN_VOWELS
+Page 698 in dotazione: <respelling> all: in_dotatsióne <end> AUTOSUBBED HIATUS
+Page 699 in faccia: <respelling> all: in_fàccia <end> AUTOSUBBED
+Page 700 in fiamme: <respelling> all: in_fiamme <end> NEED_ACCENT HIATUS
+Page 701 in fieri: <respelling> all: in_fìeri <end> EXISTING
+Page 702 in folle: <respelling> all: in_folle <end> NEED_ACCENT
+Page 703 in forma: <respelling> all: in_forma <end> NEED_ACCENT
+Page 704 in formissima: <respelling> all: in_formissima <end> NEED_ACCENT
+Page 705 in gamba: <respelling> all: in_gàmba <end> AUTOACCENTED
+Page 706 in ghingheri: <respelling> all: in_ghingheri <end> NEED_ACCENT
+Page 707 in grado: <respelling> all: in_gràdo <end> AUTOACCENTED
+Page 708 in linea: <respelling> all: in_linea <end> NEED_ACCENT
+Page 709 in notturna: <respelling> all: in_notturna <end> NEED_ACCENT
+Page 710 in obbligo: <respelling> all: in_obbligo <end> NEED_ACCENT
+Page 711 in panne: <respelling> all: in_pànne <end> AUTOACCENTED
+Page 712 in pianta stabile: <respelling> all: in_pianta_stàbile <end> NEED_ACCENT HIATUS AUTOSUBBED
+Page 713 in presenza: <respelling> all: in_presèntsa <end> AUTOSUBBED S_BETWEEN_VOWELS
+Page 714 in primordine: <respelling> all: in_primordine <end> NEED_ACCENT
+Page 715 in provetta: <respelling> all: in_provétta <end> AUTOSUBBED
+Page 716 in scatola: <respelling> all: in_scatola <end> NEED_ACCENT
+Page 717 in sonno: <respelling> all: in_sonno <end> NEED_ACCENT
+Page 718 in soprannumero: <respelling> all: in_soprannumero <end> NEED_ACCENT
+Page 719 in stato interessante: <respelling> all: in_stàto_interessànte <end> AUTOACCENTED AUTOSUBBED
+Page 720 in subordine: <respelling> all: in_subordine <end> NEED_ACCENT
+Page 721 in tenuta adamitica: <respelling> all: in_tenuta_adamitica <end> NEED_ACCENT
+Page 722 in tiro: <respelling> all: in_tìro <end> AUTOACCENTED
+Page 723 in topless: <respelling> all: in_topless <end> NEED_ACCENT
+Page 724 in umido: <respelling> all: in_umìdo <end> EXISTING
+Page 725 in vendita: <respelling> all: in_vendita <end> NEED_ACCENT
+Page 726 in veste adamitica: <respelling> all: in_veste_adamitica <end> NEED_ACCENT
+Page 727 in via di sviluppo: <respelling> all: in_vìa_di_sviluppo <end> AUTOACCENTED NEED_ACCENT
+Page 728 in vista: <respelling> all: in_vìsta <end> AUTOACCENTED
+Page 729 in vita: <respelling> all: in_vìta <end> AUTOACCENTED
+Page 730 in vitro: <respelling> all: in_vìtro <end> EXISTING
+Page 731 inca: <respelling> all: ìnca <end> AUTOACCENTED
+Page 732 incinta: <respelling> all: incinta <end> NEED_ACCENT
+Page 733 indaco: <respelling> all: ìndaco <end> EXISTING
+Page 734 indoor: <respelling> all: indoor <end> NEED_ACCENT
+Page 735 indù: <respelling> all: indù <end> EXISTING
+Page 736 infuori: <respelling> all: infuòri <end> EXISTING
+Page 737 innanzi: <respelling> all: innanzi <end> NEED_ACCENT Z
+Page 738 innuba: <respelling> all: ìnnuba <end> EXISTING
+Page 739 inox: <respelling> all: inox <end> NEED_ACCENT
+Page 740 interblocco: <respelling> all: interblòcco <end> EXISTING
+Page 741 intercatena: <respelling> all: intercatena <end> NEED_ACCENT
+Page 742 interfacoltà: <respelling> all: interfacoltà <end> 
+Page 743 interforze: <respelling> all: interforze <end> NEED_ACCENT Z
+Page 744 intermembrana: <respelling> all: intermembrana <end> NEED_ACCENT
+Page 745 internet: <respelling> 2: ìnternẹ̀t ìnternèt <end> EXISTING
+Page 746 intersecantisi: <respelling> all: intersecantisi <end> NEED_ACCENT S_BETWEEN_VOWELS
+Page 747 intersistema: <respelling> all: intersistema <end> NEED_ACCENT
+Page 748 intorno: <respelling> all: intórno <end> EXISTING
+Page 749 intracatena: <respelling> all: intracatena <end> NEED_ACCENT
+Page 750 intramembrana: <respelling> all: intramembrana <end> NEED_ACCENT
+Page 751 intramoenia: <respelling> all: intramoenia <end> NEED_ACCENT HIATUS
+Page 752 inutil: <respelling> all: inutil <end> NEED_ACCENT
+Page 753 isochimena: <respelling> all: isochimèna <end> EXISTING
+Page 754 jazz: <respelling> all: già[z] gè[z] <end> EXISTING
+Page 755 juniores: <respelling> all: juniores <end> NEED_ACCENT HIATUS
+Page 756 kaki: <respelling> top: kàki <end> AUTOACCENTED
+Page 757 kaputt: <respelling> all: kaputt <end> NEED_ACCENT
+Page 758 kasher: <respelling> all: kasher <end> NEED_ACCENT
+Page 759 khmer: <respelling> all: khmer <end> NEED_ACCENT
+Page 760 kitsch: <respelling> all: ki[tʃ] <end> EXISTING
+Page 761 l'istesso: <respelling> all: l'istesso <end> NEED_ACCENT
+Page 762 lampo: <respelling> all: làmpo <end> EXISTING
+Page 763 lanciamissili: <respelling> all: lànciamìssili <end> EXISTING
+Page 764 lanciarazzi: <respelling> all: lànciaràddzi <end> EXISTING
+Page 765 lavacassonetti: <respelling> all: lavacassonetti <end> NEED_ACCENT
+Page 766 lavaindossa: <respelling> all: lavaindossa <end> NEED_ACCENT FALLING_IN_I
+Page 767 lavamani: <respelling> all: lavamani <end> NEED_ACCENT
+Page 768 leggieri: <respelling> all: leggieri <end> NEED_ACCENT
+Page 769 leggiero: <respelling> all: leggièro <end> AUTOSUBBED
+Page 770 leonato: <respelling> all: leonàto <end> AUTOSUBBED
+Page 771 lilla: <respelling> all: lìlla <end> AUTOACCENTED
+Page 772 lillà: <respelling> all: lillà <end> EXISTING
+Page 773 live: <respelling> top: lìve <end> AUTOACCENTED
+Page 774 lo stesso: <respelling> all: lo_stesso <end> NEED_ACCENT
+Page 775 Loro: <respelling> all: Lóro <end> EXISTING
+Page 776 lumbard: <respelling> all: lumbard <end> NEED_ACCENT
+Page 777 macho: <respelling> 2: màcio <end> EXISTING
+Page 778 made in Italy: <respelling> all: màde_in_Italy <end> AUTOACCENTED NEED_ACCENT
+Page 779 madre: <respelling> all: màdre <end> EXISTING
+Page 780 madrelingua: <respelling> all: madrelingua <end> NEED_ACCENT
+Page 781 madreperla: <respelling> all: madreperla <end> NEED_ACCENT
+Page 782 magenta: <respelling> all: magenta <end> NEED_ACCENT
+Page 783 maggio: <respelling> top: màggio <end> EXISTING
+Page 784 maggior: <respelling> all: maggior <end> NEED_ACCENT
+Page 785 malmaritata: <respelling> all: malmaritàta <end> AUTOSUBBED
+Page 786 malpancista: <respelling> all: malpancìsta <end> AUTOSUBBED
+Page 787 malpari: <respelling> all: malpari <end> NEED_ACCENT
+Page 788 malva: <respelling> all: màlva <end> EXISTING
+Page 789 mammola: <respelling> all: mammola <end> NEED_ACCENT
+Page 790 manciù: <respelling> all: manciù <end> EXISTING
+Page 791 manco: <respelling> 3: mànco <end> EXISTING
+Page 792 mandarino: <respelling> top: mandarìno <end> EXISTING
+Page 793 mangiacrauti: <respelling> all: mangiacrauti <end> NEED_ACCENT
+Page 794 mangiapatate: <respelling> all: màngiapatàte <end> EXISTING
+Page 795 mangiasoldi: <respelling> all: mangiasoldi <end> NEED_ACCENT S_BETWEEN_VOWELS
+Page 796 mangiaspaghetti: <respelling> all: mangiaspaghetti <end> NEED_ACCENT
+Page 797 manopesca: <respelling> all: manopésca <end> AUTOSUBBED
+Page 798 maori: <respelling> all: maori <end> NEED_ACCENT
+Page 799 marbré: <respelling> all: marbré <end> 
+Page 800 maschio e femmina: <respelling> all: maschio_e_femmina <end> NEED_ACCENT HIATUS
+Page 801 mataco: <respelling> all: matàco <end> EXISTING
+Page 802 matelassé: <respelling> all: matelassé <end> 
+Page 803 mavì: <respelling> all: mavì <end> EXISTING
+Page 804 max: <respelling> all: màx <end> AUTOACCENTED
+Page 805 maxi: <respelling> all: màxi <end> AUTOACCENTED
+Page 806 meglio: <respelling> all: mèglio <end> EXISTING
+Page 807 meteo: <respelling> all: meteo <end> NEED_ACCENT
+Page 808 meublé: <respelling> all: meublé <end> 
+Page 809 mezz: <respelling> all: mezz <end> NEED_ACCENT Z
+Page 810 mezz': <respelling> all: mezz' <end> NEED_ACCENT Z
+Page 811 mezzopunto: <respelling> all: mèddzopùnto <end> EXISTING
+Page 812 mezzosangue: <respelling> all: mèddzo[s]àngue <end> EXISTING
+Page 813 miglior: <respelling> all: miglior <end> NEED_ACCENT
+Page 814 mignon: <respelling> all: mignon <end> NEED_ACCENT
+Page 815 mille: <respelling> top: mìlle <end> EXISTING
+Page 816 millecento: <respelling> all: millecènto <end> AUTOSUBBED
+Page 817 millecinquecento: <respelling> all: millecinquecènto <end> AUTOSUBBED
+Page 818 milleduecento: <respelling> all: milleduecènto <end> AUTOSUBBED HIATUS
+Page 819 millenovecento: <respelling> all: millenovecènto <end> AUTOSUBBED
+Page 820 milleottocento: <respelling> all: milleottocènto <end> AUTOSUBBED
+Page 821 millequattrocento: <respelling> all: millequattrocènto <end> AUTOSUBBED
+Page 822 milleseicento: <respelling> all: milleseicènto <end> AUTOSUBBED S_BETWEEN_VOWELS FALLING_IN_I
+Page 823 millesettecento: <respelling> all: millesettecènto <end> AUTOSUBBED S_BETWEEN_VOWELS
+Page 824 milletrecento: <respelling> all: milletrecènto <end> AUTOSUBBED
+Page 825 milleuno: <respelling> all: milleuno <end> NEED_ACCENT
+Page 826 milleusi: <respelling> all: milleusi <end> NEED_ACCENT S_BETWEEN_VOWELS
+Page 827 minor: <respelling> top: minor <end> NEED_ACCENT
+Page 828 mongo: <respelling> top: mòngo <end> EXISTING
+Page 829 mono: <respelling> top: mono <end> NEED_ACCENT
+Page 830 monoalbero: <respelling> all: monoalbero <end> NEED_ACCENT
+Page 831 monoasse: <respelling> all: monoasse <end> NEED_ACCENT
+Page 832 monoblocco: <respelling> all: monoblòcco <end> EXISTING
+Page 833 monocamera: <respelling> all: mònocàmera <end> EXISTING
+Page 834 monocanna: <respelling> all: monocanna <end> NEED_ACCENT
+Page 835 monocarena: <respelling> all: monocarena <end> NEED_ACCENT
+Page 836 monoclasse: <respelling> all: monoclasse <end> NEED_ACCENT
+Page 837 monocolpo: <respelling> all: monocolpo <end> NEED_ACCENT
+Page 838 monocomando: <respelling> all: monocomàndo <end> AUTOSUBBED
+Page 839 monoderiva: <respelling> all: monoderìva <end> AUTOSUBBED
+Page 840 monodisco: <respelling> all: monodìsco <end> EXISTING
+Page 841 monodose: <respelling> all: monodose <end> NEED_ACCENT S_BETWEEN_VOWELS
+Page 842 monoelica: <respelling> all: monoelica <end> NEED_ACCENT
+Page 843 monoguscio: <respelling> all: monoguscio <end> NEED_ACCENT
+Page 844 monolama: <respelling> all: monolama <end> NEED_ACCENT
+Page 845 monomarca: <respelling> all: monomarca <end> NEED_ACCENT
+Page 846 monomotore: <respelling> all: monomotóre <end> AUTOSUBBED
+Page 847 monopala: <respelling> all: monopala <end> NEED_ACCENT
+Page 848 monopetto: <respelling> all: monopetto <end> NEED_ACCENT
+Page 849 monopezzo: <respelling> all: mònopèttso <end> EXISTING
+Page 850 monopiattaforma: <respelling> all: monopiattaforma <end> NEED_ACCENT HIATUS
+Page 851 monoporzione: <respelling> all: monoportsióne <end> AUTOSUBBED HIATUS
+Page 852 monoposto: <respelling> all: monoposto <end> NEED_ACCENT
+Page 853 monoreattore: <respelling> all: monoreattóre <end> AUTOSUBBED
+Page 854 monoreddito: <respelling> all: monoreddito <end> NEED_ACCENT
+Page 855 monorotore: <respelling> all: monorotóre <end> AUTOSUBBED
+Page 856 monoscocca: <respelling> all: monoscocca <end> NEED_ACCENT
+Page 857 monosesso: <respelling> all: monosesso <end> NEED_ACCENT S_BETWEEN_VOWELS
+Page 858 monostadio: <respelling> all: monostadio <end> NEED_ACCENT HIATUS
+Page 859 monotono: <respelling> 1: monòtono <end> EXISTING
+Page 859 monotono: <respelling> 2: monotòno <end> EXISTING
+Page 860 monouso: <respelling> all: mònoùso <end> EXISTING
+Page 861 monovitigno: <respelling> all: monovitigno <end> NEED_ACCENT
+Page 862 monovolume: <respelling> all: monovolume <end> NEED_ACCENT
+Page 863 monstre: <respelling> all: monstre <end> NEED_ACCENT
+Page 864 montapali: <respelling> all: montapàli <end> EXISTING
+Page 865 mordorè: <respelling> all: mordorè <end> 
+Page 866 mozzafiato: <respelling> all: mozzafiàto <end> AUTOSUBBED Z HIATUS
+Page 867 multiaccesso: <respelling> all: multiaccesso <end> NEED_ACCENT HIATUS
+Page 868 multiautore: <respelling> all: multiautóre <end> AUTOSUBBED HIATUS
+Page 869 multicanna: <respelling> all: multicanna <end> NEED_ACCENT
+Page 870 multicomponente: <respelling> all: multicomponènte <end> AUTOSUBBED
+Page 871 multicriterio: <respelling> all: multicriterio <end> NEED_ACCENT HIATUS
+Page 872 multifarmaco: <respelling> all: multifarmaco <end> NEED_ACCENT
+Page 873 multifrequenza: <respelling> all: multifrequèntsa <end> AUTOSUBBED
+Page 874 multifunzione: <respelling> all: multifuntsióne <end> AUTOSUBBED HIATUS
+Page 875 multigamma: <respelling> all: multigamma <end> NEED_ACCENT
+Page 876 multigiocatore: <respelling> all: multigiocatóre <end> AUTOSUBBED
+Page 877 multigrade: <respelling> all: multigrade <end> NEED_ACCENT
+Page 878 multigriglia: <respelling> all: multigrìglia <end> AUTOSUBBED
+Page 879 multimarca: <respelling> all: multimarca <end> NEED_ACCENT
+Page 880 multimateriale: <respelling> all: multimateriàle <end> AUTOSUBBED HIATUS
+Page 881 multimedia: <respelling> all: multimedia <end> NEED_ACCENT HIATUS
+Page 882 multinastro: <respelling> all: multinàstro <end> AUTOSUBBED
+Page 883 multiorario: <respelling> all: multioràrio <end> AUTOSUBBED HIATUS
+Page 884 multiorgano: <respelling> all: multiorgano <end> NEED_ACCENT HIATUS
+Page 885 multipara: <respelling> all: multipara <end> NEED_ACCENT
+Page 886 multipiani: <respelling> all: multipiani <end> NEED_ACCENT HIATUS
+Page 887 multipiano: <respelling> all: multipiàno <end> AUTOSUBBED HIATUS
+Page 888 multipiattaforma: <respelling> all: multipiattaforma <end> NEED_ACCENT HIATUS
+Page 889 multipunto: <respelling> all: multipunto <end> NEED_ACCENT
+Page 890 multirischio: <respelling> all: multirischio <end> NEED_ACCENT HIATUS
+Page 891 multisala: <respelling> all: multisala <end> NEED_ACCENT S_BETWEEN_VOWELS
+Page 892 multischermo: <respelling> all: multischermo <end> NEED_ACCENT
+Page 893 multisensore: <respelling> all: multisensóre <end> AUTOSUBBED S_BETWEEN_VOWELS
+Page 894 multiservizi: <respelling> all: multiservizi <end> NEED_ACCENT S_BETWEEN_VOWELS Z
+Page 895 multisistema: <respelling> all: multisistema <end> NEED_ACCENT S_BETWEEN_VOWELS
+Page 896 multistadio: <respelling> all: multistadio <end> NEED_ACCENT HIATUS
+Page 897 multistrato: <respelling> all: multistràto <end> AUTOSUBBED
+Page 898 multitocco: <respelling> all: multitocco <end> NEED_ACCENT
+Page 899 multiuso: <respelling> all: multi.ùso <end> EXISTING
+Page 900 nahuatl: <respelling> all: nauàtl <end> EXISTING
+Page 901 naïf: <respelling> all: naìf <end> EXISTING
+Page 902 nature: <respelling> all: nature <end> NEED_ACCENT
+Page 903 né in cielo né in terra: <respelling> all: né_in_cielo_né_in_terra <end> NEED_ACCENT
+Page 904 necesse: <respelling> all: necèsse <end> EXISTING
+Page 905 nel pallone: <respelling> all: nel_pallóne <end> AUTOSUBBED
+Page 906 neodada: <respelling> all: neodada <end> NEED_ACCENT
+Page 907 nero come la pece: <respelling> all: nero_come_la_pece <end> NEED_ACCENT
+Page 908 neroargento: <respelling> all: neroargènto <end> AUTOSUBBED
+Page 909 nerofumo: <respelling> all: nerofùmo <end> EXISTING
+Page 910 nessun: <respelling> all: nessun <end> NEED_ACCENT
+Page 911 nessun': <respelling> all: nessun' <end> NEED_ACCENT
+Page 912 nessuno: <respelling> all: nessùno <end> EXISTING
+Page 913 netto: <respelling> all: nétto <end> EXISTING
+Page 914 neuno: <respelling> all: neùno <end> EXISTING
+Page 915 nicotino: <respelling> all: nicotino <end> NEED_ACCENT
+Page 916 niente: <respelling> all: niènte <end> EXISTING
+Page 917 niuno: <respelling> all: ni.ùno niùno <end> EXISTING
+Page 918 nocciola: <respelling> all: nocciòla <end> EXISTING
+Page 919 noce: <respelling> all: nóce <end> EXISTING
+Page 920 nord: <respelling> all: nòrd <end> EXISTING
+Page 921 nord-sud: <respelling> all: nord-sud <end> NEED_ACCENT
+Page 922 normopeso: <respelling> all: normopéso nòrmopéso #normopé[s]o #nòrmopé[s]o <end> EXISTING
+Page 923 nostro: <respelling> all: nòstro <end> EXISTING
+Page 924 novanta: <respelling> all: novànta <end> EXISTING
+Page 925 novantacinque: <respelling> all: novantacinque <end> NEED_ACCENT
+Page 926 novantadue: <respelling> all: novantadue <end> NEED_ACCENT HIATUS
+Page 927 novantamila: <respelling> all: novantamila <end> NEED_ACCENT
+Page 928 novantanove: <respelling> all: novantanove <end> NEED_ACCENT
+Page 929 novantaquattro: <respelling> all: novantaquattro <end> NEED_ACCENT
+Page 930 novantasei: <respelling> all: novantasei <end> NEED_ACCENT S_BETWEEN_VOWELS FALLING_IN_I
+Page 931 novantasette: <respelling> all: novantasette <end> NEED_ACCENT S_BETWEEN_VOWELS
+Page 932 novantatré: <respelling> all: novantatré <end> 
+Page 933 novantotto: <respelling> all: novantòtto <end> EXISTING
+Page 934 novantuno: <respelling> all: novantùno <end> EXISTING
+Page 935 nove: <respelling> top: nòve <end> EXISTING
+Page 936 novecento: <respelling> all: novecènto <end> EXISTING
+Page 937 novemila: <respelling> all: novemila <end> NEED_ACCENT
+Page 938 nude-look: <respelling> all: nude-look <end> NEED_ACCENT
+Page 939 nudo bruco: <respelling> all: nùdo_brùco <end> AUTOACCENTED
+Page 940 nullipara: <respelling> all: nullipara <end> NEED_ACCENT
+Page 941 nuovo di zecca: <respelling> all: nuovo_di_zecca <end> NEED_ACCENT HIATUS Z
+Page 942 nuristani: <respelling> all: nuristani <end> NEED_ACCENT
+Page 943 occhiona: <respelling> all: occhiona <end> NEED_ACCENT HIATUS
+Page 944 ogne: <respelling> all: ógne <end> EXISTING
+Page 945 ogni: <respelling> all: ógni ògni <end> EXISTING
+Page 946 ognitempo: <respelling> all: ognitèmpo <end> EXISTING
+Page 947 olefiante: <respelling> all: olefi.ànte <end> EXISTING
+Page 948 oleofacente: <respelling> all: òleofacènte oleofacènte <end> EXISTING
+Page 949 oliva: <respelling> all: olìva <end> AUTOSUBBED
+Page 950 oltreconfine: <respelling> all: oltreconfine <end> NEED_ACCENT
+Page 951 omaggio: <respelling> all: omàggio <end> AUTOSUBBED
+Page 952 omicidial: <respelling> all: omicidial <end> NEED_ACCENT HIATUS
+Page 953 omosex: <respelling> all: omosex <end> NEED_ACCENT S_BETWEEN_VOWELS
+Page 954 online: <respelling> all: online <end> NEED_ACCENT
+Page 955 onne: <respelling> top: ònne <end> EXISTING
+Page 956 onni: <respelling> all: ònni <end> EXISTING
+Page 957 oro: <respelling> 1: òro <end> EXISTING
+Page 958 osco: <respelling> all: òsco <end> EXISTING
+Page 959 osmanli: <respelling> all: osmanli <end> NEED_ACCENT
+Page 960 ottanta: <respelling> all: ottànta <end> EXISTING
+Page 961 ottantacinque: <respelling> all: ottantacinque <end> NEED_ACCENT
+Page 962 ottantadue: <respelling> all: ottantadue <end> NEED_ACCENT HIATUS
+Page 963 ottantamila: <respelling> all: ottantamila <end> NEED_ACCENT
+Page 964 ottantanove: <respelling> all: ottantanove <end> NEED_ACCENT
+Page 965 ottantaquattro: <respelling> all: ottantaquattro <end> NEED_ACCENT
+Page 966 ottantasei: <respelling> all: ottantasei <end> NEED_ACCENT S_BETWEEN_VOWELS FALLING_IN_I
+Page 967 ottantasette: <respelling> all: ottantasette <end> NEED_ACCENT S_BETWEEN_VOWELS
+Page 968 ottantatré: <respelling> all: ottantatré <end> 
+Page 969 ottantotto: <respelling> all: ottantòtto <end> EXISTING
+Page 970 ottantuno: <respelling> all: ottantùno <end> EXISTING
+Page 971 ottocento: <respelling> all: ottocènto <end> EXISTING
+Page 972 ottocentomila: <respelling> all: ottocentomila <end> NEED_ACCENT
+Page 973 ottomila: <respelling> all: ottomila <end> NEED_ACCENT
+Page 974 paesaggisticoambientale: <respelling> all: paesaggisticoambientàle <end> AUTOSUBBED S_BETWEEN_VOWELS HIATUS
+Page 975 pali: <respelling> top: pàli <end> EXISTING
+Page 976 pamiri: <respelling> all: pamiri <end> NEED_ACCENT
+Page 977 pancianera: <respelling> all: pancianéra <end> EXISTING
+Page 978 pannegro: <respelling> all: pànnégro <end> EXISTING
+Page 979 papua: <respelling> all: papua <end> NEED_ACCENT HIATUS
+Page 980 paranavetta: <respelling> all: paranavétta <end> AUTOSUBBED
+Page 981 parecchio: <respelling> all: parécchio <end> EXISTING
+Page 982 pari: <respelling> top: pàri <end> EXISTING
+Page 983 particolar: <respelling> all: particolar <end> NEED_ACCENT
+Page 984 passabanda: <respelling> all: passabanda <end> NEED_ACCENT
+Page 985 pastello: <respelling> all: pastèllo <end> AUTOSUBBED
+Page 986 peggio: <respelling> all: peggio <end> NEED_ACCENT
+Page 987 peggior: <respelling> all: peggior <end> NEED_ACCENT
+Page 988 pelle e ossa: <respelling> all: pelle_e_ossa <end> NEED_ACCENT
+Page 989 pentecto: <respelling> all: pentècto <end> EXISTING
+Page 990 per bene: <respelling> all: per_bene <end> NEED_ACCENT
+Page 991 per cento: <respelling> all: per_cènto <end> AUTOSUBBED
+Page 992 per eccellenza: <respelling> all: per_eccellèntsa <end> AUTOSUBBED
+Page 993 perbene: <respelling> all: perbène <end> EXISTING
+Page 994 periidro: <respelling> all: periidro <end> NEED_ACCENT FALLING_IN_I HIATUS
+Page 995 perla: <respelling> top: perla <end> NEED_ACCENT
+Page 996 perlé: <respelling> all: perlé <end> 
+Page 997 persa: <respelling> top: pèrsa <end> EXISTING
+Page 998 pervinca: <respelling> all: pervinca <end> NEED_ACCENT
+Page 999 pesca: <respelling> 1: pèsca <end> EXISTING
+Page 999 pesca: WARNING: Saw multiple {{it-IPA}} templates in a single Pronunciation section: {{it-IPA|pésca}}, {{it-IPA|pèsca}}
+Page 1000 pescatore: <respelling> all: pescatóre <end> AUTOSUBBED
+Page 1001 pescatrice: <respelling> all: pescatrìce <end> AUTOSUBBED
+Page 1002 piccolo: <respelling> all: pìccolo <end> EXISTING
+Page 1003 pieno di sè: <respelling> all: pieno_di_sè <end> NEED_ACCENT HIATUS
+Page 1004 pieno zeppo: <respelling> all: pieno_zeppo <end> NEED_ACCENT HIATUS Z
+Page 1005 pigliatutto: <respelling> all: pigliatutto <end> NEED_ACCENT
+Page 1006 pilota: <respelling> all: pilota <end> NEED_ACCENT
+Page 1007 piperita: <respelling> all: piperita <end> NEED_ACCENT
+Page 1008 pirata: <respelling> top: piràta <end> EXISTING
+Page 1009 pirato: <respelling> top: piràto <end> EXISTING
+Page 1010 più: <respelling> all: più <end> 
+Page 1011 piùe: <respelling> all: piùe <end> EXISTING
+Page 1012 pluricanna: <respelling> all: pluricanna <end> NEED_ACCENT
+Page 1013 plurifase: <respelling> all: plurifase <end> NEED_ACCENT S_BETWEEN_VOWELS
+Page 1014 plurimotore: <respelling> all: plurimotóre <end> AUTOSUBBED
+Page 1015 pluripiano: <respelling> all: pluripiàno <end> AUTOSUBBED HIATUS
+Page 1016 plurireddito: <respelling> all: plurireddito <end> NEED_ACCENT
+Page 1017 pluristadio: <respelling> all: pluristadio <end> NEED_ACCENT HIATUS
+Page 1018 pluriuso: <respelling> all: pluri.ùso <end> EXISTING
+Page 1019 polifase: <respelling> all: polifase <end> NEED_ACCENT S_BETWEEN_VOWELS
+Page 1020 ponsò: <respelling> all: ponsò <end> 
+Page 1021 ponte: <respelling> 3: pónte <end> EXISTING
+Page 1022 porno: <respelling> all: pòrno <end> EXISTING
+Page 1023 porpora: <respelling> all: pórpora <end> EXISTING
+Page 1024 porporate: <respelling> all: porporate <end> NEED_ACCENT
+Page 1025 porta a porta: <respelling> all: porta_a_porta <end> NEED_ACCENT
+Page 1026 portabagagli: <respelling> all: pòrtabagàgli <end> EXISTING
+Page 1027 portacasco: <respelling> all: portacasco <end> NEED_ACCENT
+Page 1028 portacontainer: <respelling> all: pòrtacontèiner pòrtacontàiner <end> EXISTING
+Page 1029 portacontenitori: <respelling> all: pòrtacontenitóri <end> EXISTING
+Page 1030 portacorrente: <respelling> all: pòrtacorrènte <end> EXISTING
+Page 1031 portafango: <respelling> all: pòrtafàngo <end> EXISTING
+Page 1032 portafortuna: <respelling> all: pòrtafortùna <end> EXISTING
+Page 1033 portagrissini: <respelling> all: portagrissini <end> NEED_ACCENT
+Page 1034 portasfortuna: <respelling> all: portasfortuna <end> NEED_ACCENT
+Page 1035 posareti: <respelling> all: posareti <end> NEED_ACCENT S_BETWEEN_VOWELS
+Page 1036 posatubi: <respelling> all: posatùbi #po[s]atùbi <end> EXISTING
+Page 1037 post mortem: <respelling> all: post_mortem <end> NEED_ACCENT
+Page 1038 postlaurea: <respelling> all: postlaurea <end> NEED_ACCENT
+Page 1039 postvendita: <respelling> all: postvendita <end> NEED_ACCENT
+Page 1040 pover: <respelling> all: pover <end> NEED_ACCENT
+Page 1041 pré-maman: <respelling> all: pré-maman <end> 
+Page 1042 prebarba: <respelling> all: prebarba <end> NEED_ACCENT
+Page 1043 precautelari: <respelling> all: precautelari <end> NEED_ACCENT
+Page 1044 precipitevole: <respelling> all: precipitévole <end> EXISTING
+Page 1045 precrisi: <respelling> all: precrisi <end> NEED_ACCENT S_BETWEEN_VOWELS
+Page 1046 preimpianto: <respelling> all: preimpianto <end> NEED_ACCENT FALLING_IN_I HIATUS
+Page 1047 premaman: <respelling> all: premaman <end> NEED_ACCENT
+Page 1048 presso: <respelling> top: prèsso <end> EXISTING
+Page 1049 pretermine: <respelling> all: pretermine <end> NEED_ACCENT
+Page 1050 primavera-estate: <respelling> all: primavera-estate <end> NEED_ACCENT
+Page 1051 pro capite: <respelling> all: pro_capite <end> NEED_ACCENT
+Page 1052 pro forma: <respelling> all: pro_forma <end> NEED_ACCENT
+Page 1053 pro': <respelling> all: prọ̀ <end> EXISTING
+Page 1054 pro-capite: <respelling> all: pro-capite <end> NEED_ACCENT
+Page 1055 procapite: <respelling> all: procapite <end> NEED_ACCENT
+Page 1056 prodigio: <respelling> all: prodìgio <end> EXISTING
+Page 1057 proforma: <respelling> all: proforma <end> NEED_ACCENT
+Page 1058 pucciniano: <respelling> all: pucciniàno <end> AUTOSUBBED HIATUS
+Page 1059 punjabi: <respelling> all: punjabi <end> NEED_ACCENT
+Page 1060 purchessia: <respelling> all: purchessìa <end> EXISTING
+Page 1061 purosangue: <respelling> all: purosàngue <end> EXISTING
+Page 1062 p·f: <respelling> all: p·f <end> NEED_ACCENT
+Page 1063 quadrimotore: <respelling> all: quadrimotóre <end> AUTOSUBBED
+Page 1064 quadripala: <respelling> all: quadripala <end> NEED_ACCENT
+Page 1065 quadriposto: <respelling> all: quadriposto <end> NEED_ACCENT
+Page 1066 qual: <respelling> all: qual <end> NEED_ACCENT
+Page 1067 qual': <respelling> all: qual' <end> NEED_ACCENT
+Page 1068 qualche: <respelling> all: quàlche <end> EXISTING
+Page 1069 quale: <respelling> all: quàle <end> EXISTING
+Page 1070 qualsiasi: <respelling> all: qualsiasi <end> NEED_ACCENT S_BETWEEN_VOWELS HIATUS
+Page 1071 qualsivoglia: <respelling> all: qualsivòglia <end> EXISTING
+Page 1072 qualunche: <respelling> all: qualùnche <end> EXISTING
+Page 1073 qualuno: <respelling> all: qualuno <end> NEED_ACCENT
+Page 1074 qualunque: <respelling> all: qualùnque <end> EXISTING
+Page 1075 quant': <respelling> all: quant' <end> NEED_ACCENT
+Page 1076 quantunque: <respelling> all: quantùnque <end> EXISTING
+Page 1077 quarant: <respelling> all: quarant <end> NEED_ACCENT
+Page 1078 quaranta: <respelling> all: quarànta <end> EXISTING
+Page 1079 quarantacinque: <respelling> all: quarantacinque <end> NEED_ACCENT
+Page 1080 quarantacinquemila: <respelling> all: quarantacinquemila <end> NEED_ACCENT
+Page 1081 quarantadue: <respelling> all: quarantadue <end> NEED_ACCENT HIATUS
+Page 1082 quarantamila: <respelling> all: quarantamila <end> NEED_ACCENT
+Page 1083 quarantanove: <respelling> all: quarantanove <end> NEED_ACCENT
+Page 1084 quarantaquattro: <respelling> all: quarantaquattro <end> NEED_ACCENT
+Page 1085 quarantasei: <respelling> all: quarantasei <end> NEED_ACCENT S_BETWEEN_VOWELS FALLING_IN_I
+Page 1086 quarantasette: <respelling> all: quarantasette <end> NEED_ACCENT S_BETWEEN_VOWELS
+Page 1087 quarantatré: <respelling> all: quarantatré <end> 
+Page 1088 quarantotto: <respelling> all: quarantòtto <end> EXISTING
+Page 1089 quarantuno: <respelling> all: quarantùno <end> EXISTING
+Page 1090 quasi: <respelling> all: quàsi <end> EXISTING
+Page 1091 quasimodo: <respelling> all: quasimodo <end> NEED_ACCENT S_BETWEEN_VOWELS
+Page 1092 quattordici: <respelling> all: quattórdici <end> EXISTING
+Page 1093 quattordicimila: <respelling> all: quattordicimila <end> NEED_ACCENT
+Page 1094 quattro: <respelling> all: quàttro <end> EXISTING
+Page 1095 quattrocento: <respelling> all: quattrocènto <end> EXISTING
+Page 1096 quattrocentomila: <respelling> all: quattrocentomila <end> NEED_ACCENT
+Page 1097 quattromila: <respelling> all: quattromila <end> NEED_ACCENT
+Page 1098 quattroporte: <respelling> all: quattroporte <end> NEED_ACCENT
+Page 1099 quattrovalvole: <respelling> all: quattrovalvole <end> NEED_ACCENT
+Page 1100 quei: <respelling> all: quei <end> NEED_ACCENT FALLING_IN_I
+Page 1101 quell': <respelling> all: quell' <end> NEED_ACCENT
+Page 1102 quello: <respelling> all: quéllo <end> EXISTING
+Page 1103 quest': <respelling> all: quest' <end> NEED_ACCENT
+Page 1104 quindici: <respelling> all: quìndici <end> EXISTING
+Page 1105 quindicimila: <respelling> all: quindicimila <end> NEED_ACCENT FALLING_IN_I
+Page 1106 QV: <respelling> all: QV <end> NEED_ACCENT
+Page 1107 radical-chic: <respelling> all: radical-chic <end> NEED_ACCENT
+Page 1108 raffaella: <respelling> all: raffaèlla <end> AUTOSUBBED
+Page 1109 raso terra: <respelling> all: ràso_terra <end> AUTOACCENTED NEED_ACCENT
+Page 1110 rasoterra: <respelling> all: rasoterra <end> NEED_ACCENT S_BETWEEN_VOWELS
+Page 1111 rastafari: <respelling> all: rastafari <end> NEED_ACCENT
+Page 1112 regolabarba: <respelling> all: regolabarba <end> NEED_ACCENT
+Page 1113 renella: <respelling> top: renèlla <end> EXISTING
+Page 1114 retrò: <respelling> all: retrò <end> 
+Page 1115 rétro: <respelling> all: rétro <end> 
+Page 1116 rinco: <respelling> all: rìnco <end> AUTOACCENTED
+Page 1117 roberta: <respelling> all: robèrta <end> EXISTING
+Page 1118 rococò: <respelling> all: rococò <end> 
+Page 1119 rosa: <respelling> 1: ròsa <end> EXISTING
+Page 1119 rosa: <respelling> 2: rósa <end> EXISTING
+Page 1120 rosso sangue: <respelling> all: rosso_sangue <end> NEED_ACCENT
+Page 1121 rosso tiziano: <respelling> all: rosso_tiziàno <end> NEED_ACCENT AUTOSUBBED Z HIATUS
+Page 1122 rossoblu: <respelling> all: rossoblu <end> NEED_ACCENT
+Page 1123 rude: <respelling> 2: rùde <end> EXISTING
+Page 1124 ruggine: <respelling> all: rùggine <end> AUTOSUBBED
+Page 1125 sabra: <respelling> all: sàbra <end> EXISTING
+Page 1126 sabre: <respelling> all: sàbre <end> EXISTING
+Page 1127 sacrifico: <respelling> 1: sacrìfico <end> EXISTING
+Page 1128 sadomaso: <respelling> all: sadomaso <end> NEED_ACCENT S_BETWEEN_VOWELS
+Page 1129 salmone: <respelling> top: salmóne <end> EXISTING
+Page 1130 salvacuore: <respelling> all: salvacuore <end> NEED_ACCENT HIATUS
+Page 1131 salvadeficit: <respelling> all: salvadeficit <end> NEED_ACCENT
+Page 1132 salvafreschezza: <respelling> all: salvafreschéttsa <end> AUTOSUBBED
+Page 1133 salvaspazio: <respelling> all: salvaspazio <end> NEED_ACCENT Z HIATUS
+Page 1134 salvatutto: <respelling> all: salvatutto <end> NEED_ACCENT
+Page 1135 salvavita: <respelling> all: salvavita <end> NEED_ACCENT
+Page 1136 sangue: <respelling> all: sàngue <end> EXISTING
+Page 1137 satellite: <respelling> all: satèllite <end> EXISTING
+Page 1138 sauté: <respelling> all: sauté <end> 
+Page 1139 scacciapensieri: <respelling> all: scacciapensieri <end> NEED_ACCENT HIATUS
+Page 1140 scatenatasi: <respelling> all: scatenatasi <end> NEED_ACCENT S_BETWEEN_VOWELS
+Page 1141 scicche: <respelling> all: scìcche <end> AUTOACCENTED
+Page 1142 sedici: <respelling> all: sédici <end> EXISTING
+Page 1143 sedicimila: <respelling> all: sedicimila <end> NEED_ACCENT
+Page 1144 sei: <respelling> top: sèi <end> EXISTING
+Page 1145 seicento: <respelling> all: sèicènto seicènto <end> EXISTING
+Page 1146 seicentomila: <respelling> all: seicentomila <end> NEED_ACCENT FALLING_IN_I
+Page 1147 seimila: <respelling> all: seimila <end> NEED_ACCENT FALLING_IN_I
+Page 1148 semidispari: <respelling> all: semidispari <end> NEED_ACCENT
+Page 1149 senz'arte né parte: <respelling> all: senz'arte_né_pàrte <end> NEED_ACCENT Z AUTOACCENTED
+Page 1150 senza: WARNING: Saw multiple {{it-IPA}} templates in a single Pronunciation section: {{it-IPA|sèntsa}}, {{it-IPA|séntsa}}
+Page 1150 senza: <respelling> all: sèntsa <end> AUTOSUBBED
+Page 1151 senza arte né parte: <respelling> all: sèntsa_àrte_né_pàrte <end> AUTOSUBBED AUTOACCENTED
+Page 1152 senza fine: <respelling> all: sèntsa_fìne <end> AUTOSUBBED AUTOACCENTED
+Page 1153 senza fondo: <respelling> all: sèntsa_fondo <end> AUTOSUBBED NEED_ACCENT
+Page 1154 senza fronzoli: <respelling> all: sèntsa_fronzoli <end> AUTOSUBBED NEED_ACCENT Z
+Page 1155 senza nome: <respelling> all: sèntsa_nome <end> AUTOSUBBED NEED_ACCENT
+Page 1156 senza parola: <respelling> all: sèntsa_parola <end> AUTOSUBBED NEED_ACCENT
+Page 1157 senza precedenti: <respelling> all: sèntsa_precedenti <end> AUTOSUBBED NEED_ACCENT
+Page 1158 senza prezzo: <respelling> all: sèntsa_prezzo <end> AUTOSUBBED NEED_ACCENT Z
+Page 1159 senza senso: <respelling> all: sèntsa_senso <end> AUTOSUBBED NEED_ACCENT
+Page 1160 senza tempo: <respelling> all: sèntsa_tempo <end> AUTOSUBBED NEED_ACCENT
+Page 1161 senza vita: <respelling> all: sèntsa_vìta <end> AUTOSUBBED AUTOACCENTED
+Page 1162 serbo-croato: <respelling> all: serbo-croàto <end> AUTOSUBBED
+Page 1163 servile: <respelling> all: servile <end> NEED_ACCENT
+Page 1164 servisol: <respelling> all: servisol <end> NEED_ACCENT S_BETWEEN_VOWELS
+Page 1165 sessanta: <respelling> all: sessànta <end> EXISTING
+Page 1166 sessantacinque: <respelling> all: sessantacinque <end> NEED_ACCENT
+Page 1167 sessantadue: <respelling> all: sessantadue <end> NEED_ACCENT HIATUS
+Page 1168 sessantamila: <respelling> all: sessantamila <end> NEED_ACCENT
+Page 1169 sessantanove: <respelling> all: sessantanove <end> NEED_ACCENT
+Page 1170 sessantaquattro: <respelling> all: sessantaquattro <end> NEED_ACCENT
+Page 1171 sessantasei: <respelling> all: sessantasei <end> NEED_ACCENT S_BETWEEN_VOWELS FALLING_IN_I
+Page 1172 sessantasette: <respelling> all: sessantasette <end> NEED_ACCENT S_BETWEEN_VOWELS
+Page 1173 sessantatré: <respelling> all: sessantatré <end> 
+Page 1174 sessantotto: <respelling> all: sessantòtto <end> EXISTING
+Page 1175 sessantuno: <respelling> all: sessantùno <end> EXISTING
+Page 1176 settanta: <respelling> all: settànta <end> EXISTING
+Page 1177 settantacinque: <respelling> all: settantacinque <end> NEED_ACCENT
+Page 1178 settantadue: <respelling> all: settantadue <end> NEED_ACCENT HIATUS
+Page 1179 settantamila: <respelling> all: settantamila <end> NEED_ACCENT
+Page 1180 settantanove: <respelling> all: settantanove <end> NEED_ACCENT
+Page 1181 settantaquattro: <respelling> all: settantaquattro <end> NEED_ACCENT
+Page 1182 settantasei: <respelling> all: settantasei <end> NEED_ACCENT S_BETWEEN_VOWELS FALLING_IN_I
+Page 1183 settantasette: <respelling> all: settantasette <end> NEED_ACCENT S_BETWEEN_VOWELS
+Page 1184 settantatré: <respelling> all: settantatré <end> 
+Page 1185 settantotto: <respelling> all: settantòtto <end> EXISTING
+Page 1186 settantuno: <respelling> all: settantùno <end> EXISTING
+Page 1187 sette: <respelling> 1: sètte <end> EXISTING
+Page 1188 settecento: <respelling> all: settecènto <end> EXISTING
+Page 1189 settecentomila: <respelling> all: settecentomila <end> NEED_ACCENT
+Page 1190 settemila: <respelling> all: settemila <end> NEED_ACCENT
+Page 1191 sexy: <respelling> 2: sèxy <end> EXISTING
+Page 1192 sgomentevole: <respelling> all: sgomentévole <end> AUTOSUBBED
+Page 1193 simil: <respelling> all: simil <end> NEED_ACCENT
+Page 1194 simpatico: <respelling> top: simpàtico <end> EXISTING
+Page 1195 single: <respelling> all: sìngle <end> AUTOACCENTED
+Page 1196 singolar: <respelling> all: singolar <end> NEED_ACCENT
+Page 1197 smeraldo: <respelling> all: smeràldo <end> EXISTING
+Page 1198 snob: <respelling> all: snòb <end> EXISTING
+Page 1199 soft: <respelling> all: sòft <end> EXISTING
+Page 1200 sopranno: <respelling> all: sopranno <end> NEED_ACCENT
+Page 1201 soprannumero: <respelling> all: soprannumero <end> NEED_ACCENT
+Page 1202 sott'olio: <respelling> all: sott'olio <end> NEED_ACCENT HIATUS
+Page 1203 sottaceto: <respelling> all: sottaceto <end> NEED_ACCENT
+Page 1204 sotto tono: <respelling> all: sotto_tono <end> NEED_ACCENT
+Page 1205 sottocosto: <respelling> all: sottocosto <end> NEED_ACCENT
+Page 1206 sottolio: <respelling> all: sottolio <end> NEED_ACCENT HIATUS
+Page 1207 sottopelle: <respelling> all: sottopelle <end> NEED_ACCENT
+Page 1208 sottopeso: <respelling> all: sottopeso <end> NEED_ACCENT S_BETWEEN_VOWELS
+Page 1209 sottorete: <respelling> all: sottorete <end> NEED_ACCENT
+Page 1210 sottotono: <respelling> all: sottotono <end> NEED_ACCENT
+Page 1211 sottotraccia: <respelling> all: sottotràccia <end> AUTOSUBBED
+Page 1212 sottovetro: <respelling> all: sottovetro <end> NEED_ACCENT
+Page 1213 sottovuoto: <respelling> all: sottovuoto <end> NEED_ACCENT HIATUS
+Page 1214 sovraeccitato: <respelling> all: sovraeccitàto <end> AUTOSUBBED
+Page 1215 sovrappeso: <respelling> all: sovrappéso #sovrappé[s]o <end> EXISTING
+Page 1216 spadona: <respelling> all: spadóna <end> EXISTING
+Page 1217 spalmandola: <respelling> all: spalmandola <end> NEED_ACCENT
+Page 1218 sparaneve: <respelling> all: spàranéve <end> EXISTING
+Page 1219 Spett.: <respelling> all: Spett. <end> NEED_ACCENT
+Page 1220 spia: <respelling> all: spìa <end> AUTOACCENTED
+Page 1221 standar: <respelling> all: standar <end> NEED_ACCENT
+Page 1222 standard: <respelling> all: standard <end> NEED_ACCENT
+Page 1223 stereo: <respelling> top: stèreo <end> EXISTING
+Page 1224 stesso: WARNING: Saw multiple {{it-IPA}} templates in a single Pronunciation section: {{it-IPA|stésso}}, {{it-IPA|stèsso}}
+Page 1224 stesso: <respelling> all: stesso <end> NEED_ACCENT
+Page 1225 stilè: <respelling> all: stilè <end> 
+Page 1226 stilé: <respelling> all: stilé <end> 
+Page 1227 straborda: <respelling> all: strabórda <end> EXISTING
+Page 1228 strappalacrime: <respelling> all: strappalàcrime <end> EXISTING
+Page 1229 su di giri: <respelling> all: su_di_gìri <end> AUTOACCENTED
+Page 1230 su misura: <respelling> all: su_misùra <end> AUTOSUBBED S_BETWEEN_VOWELS
+Page 1231 Sua: <respelling> all: Sùa <end> AUTOACCENTED
+Page 1232 sub judice: <respelling> all: sùb_judice <end> AUTOACCENTED NEED_ACCENT
+Page 1233 Sue: <respelling> all: Sùe <end> AUTOACCENTED
+Page 1234 sui generis: <respelling> all: sui_generis <end> NEED_ACCENT
+Page 1235 sul campo: <respelling> all: sul_càmpo <end> AUTOACCENTED
+Page 1236 sul lastrico: <respelling> all: sul_lastrico <end> NEED_ACCENT
+Page 1237 Suo: <respelling> all: Sùo <end> AUTOACCENTED
+Page 1238 Suoi: <respelling> all: Suoi <end> NEED_ACCENT FALLING_IN_I HIATUS
+Page 1239 super: <respelling> top: super <end> NEED_ACCENT
+Page 1240 super partes: <respelling> all: super_partes <end> NEED_ACCENT
+Page 1241 superficie-aria: <respelling> all: superficie-aria <end> NEED_ACCENT HIATUS
+Page 1242 superficie-superficie: <respelling> all: superficie-superficie <end> NEED_ACCENT
+Page 1243 sviluppista: <respelling> all: sviluppìsta <end> AUTOSUBBED
+Page 1244 tagliacode: <respelling> all: tagliacode <end> NEED_ACCENT
+Page 1245 tagliadeficit: <respelling> all: tagliadeficit <end> NEED_ACCENT
+Page 1246 tagliafiamma: <respelling> all: tagliafiamma <end> NEED_ACCENT HIATUS
+Page 1247 tagliafuoco: <respelling> all: tagliafuoco <end> NEED_ACCENT HIATUS
+Page 1248 tagliapasta: <respelling> all: tagliapasta <end> NEED_ACCENT
+Page 1249 tagliapizza: <respelling> all: tagliapizza <end> NEED_ACCENT Z
+Page 1250 tagliaspese: <respelling> all: tagliaspése #tagliaspé[s]e <end> NEED_ACCENT AUTO_ESE S_BETWEEN_VOWELS
+Page 1251 takeaway: <respelling> all: takeaway <end> NEED_ACCENT
+Page 1252 tant': <respelling> all: tànt' <end> AUTOACCENTED
+Page 1253 tantopiù: <respelling> all: tantopiù <end> 
+Page 1254 tardo di comprendonio: <respelling> all: tàrdo_di_comprendonio <end> AUTOACCENTED NEED_ACCENT HIATUS
+Page 1255 telex: <respelling> all: telex <end> NEED_ACCENT
+Page 1256 terra terra: <respelling> all: terra_terra <end> NEED_ACCENT
+Page 1257 terra-aria: <respelling> all: terra-aria <end> NEED_ACCENT HIATUS
+Page 1258 terracotta: <respelling> all: terracotta <end> NEED_ACCENT
+Page 1259 testabianca: <respelling> all: testabianca <end> NEED_ACCENT HIATUS
+Page 1260 testabruna: <respelling> all: testabruna <end> NEED_ACCENT
+Page 1261 tetrafase: <respelling> all: tetrafase <end> NEED_ACCENT S_BETWEEN_VOWELS
+Page 1262 thrilling: <respelling> all: thrilling <end> NEED_ACCENT
+Page 1263 tipo: <respelling> top: tìpo <end> EXISTING
+Page 1264 torneante: <respelling> all: torneànte <end> AUTOSUBBED
+Page 1265 tot: <respelling> top: tot <end> NEED_ACCENT
+Page 1266 trabocchetto: <respelling> all: trabocchétto <end> EXISTING
+Page 1267 tralice: <respelling> all: tralìce <end> EXISTING
+Page 1268 tramendue: <respelling> all: tramendùe <end> EXISTING
+Page 1269 tramendui: <respelling> all: tramendùi <end> EXISTING
+Page 1270 transmembrana: <respelling> all: transmembrana <end> NEED_ACCENT
+Page 1271 trash: <respelling> all: tràsh <end> AUTOACCENTED
+Page 1272 trecento: <respelling> all: trecènto <end> EXISTING
+Page 1273 trecentocinquanta: <respelling> all: trecentocinquanta <end> NEED_ACCENT
+Page 1274 trecentocinquantacinque: <respelling> all: trecentocinquantacinque <end> NEED_ACCENT
+Page 1275 trecentocinquantadue: <respelling> all: trecentocinquantadue <end> NEED_ACCENT HIATUS
+Page 1276 trecentocinquantanove: <respelling> all: trecentocinquantanove <end> NEED_ACCENT
+Page 1277 trecentocinquantaquattro: <respelling> all: trecentocinquantaquattro <end> NEED_ACCENT
+Page 1278 trecentocinquantasei: <respelling> all: trecentocinquantasei <end> NEED_ACCENT S_BETWEEN_VOWELS FALLING_IN_I
+Page 1279 trecentocinquantasette: <respelling> all: trecentocinquantasette <end> NEED_ACCENT S_BETWEEN_VOWELS
+Page 1280 trecentocinquantatré: <respelling> all: trecentocinquantatré <end> 
+Page 1281 trecentocinquantotto: <respelling> all: trecentocinquantotto <end> NEED_ACCENT
+Page 1282 trecentocinquantuno: <respelling> all: trecentocinquantuno <end> NEED_ACCENT
+Page 1283 trecentocinque: <respelling> all: trecentocinque <end> NEED_ACCENT
+Page 1284 trecentodiciannove: <respelling> all: trecentodiciannove <end> NEED_ACCENT
+Page 1285 trecentodiciassette: <respelling> all: trecentodiciassette <end> NEED_ACCENT
+Page 1286 trecentodiciotto: <respelling> all: trecentodiciotto <end> NEED_ACCENT
+Page 1287 trecentodieci: <respelling> all: trecentodieci <end> NEED_ACCENT HIATUS
+Page 1288 trecentododici: <respelling> all: trecentododici <end> NEED_ACCENT
+Page 1289 trecentodue: <respelling> all: trecentodue <end> NEED_ACCENT HIATUS
+Page 1290 trecentomila: <respelling> all: trecentomila <end> NEED_ACCENT
+Page 1291 trecentonovanta: <respelling> all: trecentonovanta <end> NEED_ACCENT
+Page 1292 trecentonovantacinque: <respelling> all: trecentonovantacinque <end> NEED_ACCENT
+Page 1293 trecentonovantadue: <respelling> all: trecentonovantadue <end> NEED_ACCENT HIATUS
+Page 1294 trecentonovantanove: <respelling> all: trecentonovantanove <end> NEED_ACCENT
+Page 1295 trecentonovantaquattro: <respelling> all: trecentonovantaquattro <end> NEED_ACCENT
+Page 1296 trecentonovantasei: <respelling> all: trecentonovantasei <end> NEED_ACCENT S_BETWEEN_VOWELS FALLING_IN_I
+Page 1297 trecentonovantasette: <respelling> all: trecentonovantasette <end> NEED_ACCENT S_BETWEEN_VOWELS
+Page 1298 trecentonovantatré: <respelling> all: trecentonovantatré <end> 
+Page 1299 trecentonovantotto: <respelling> all: trecentonovantotto <end> NEED_ACCENT
+Page 1300 trecentonovantuno: <respelling> all: trecentonovantuno <end> NEED_ACCENT
+Page 1301 trecentonove: <respelling> all: trecentonove <end> NEED_ACCENT
+Page 1302 trecentootto: <respelling> all: trecentootto <end> NEED_ACCENT
+Page 1303 trecentoquaranta: <respelling> all: trecentoquaranta <end> NEED_ACCENT
+Page 1304 trecentoquarantacinque: <respelling> all: trecentoquarantacinque <end> NEED_ACCENT
+Page 1305 trecentoquarantadue: <respelling> all: trecentoquarantadue <end> NEED_ACCENT HIATUS
+Page 1306 trecentoquarantanove: <respelling> all: trecentoquarantanove <end> NEED_ACCENT
+Page 1307 trecentoquarantaquattro: <respelling> all: trecentoquarantaquattro <end> NEED_ACCENT
+Page 1308 trecentoquarantasei: <respelling> all: trecentoquarantasei <end> NEED_ACCENT S_BETWEEN_VOWELS FALLING_IN_I
+Page 1309 trecentoquarantasette: <respelling> all: trecentoquarantasette <end> NEED_ACCENT S_BETWEEN_VOWELS
+Page 1310 trecentoquarantatré: <respelling> all: trecentoquarantatré <end> 
+Page 1311 trecentoquarantotto: <respelling> all: trecentoquarantotto <end> NEED_ACCENT
+Page 1312 trecentoquarantuno: <respelling> all: trecentoquarantuno <end> NEED_ACCENT
+Page 1313 trecentoquattordici: <respelling> all: trecentoquattordici <end> NEED_ACCENT
+Page 1314 trecentoquattro: <respelling> all: trecentoquattro <end> NEED_ACCENT
+Page 1315 trecentoquindici: <respelling> all: trecentoquindici <end> NEED_ACCENT FALLING_IN_I
+Page 1316 trecentosedici: <respelling> all: trecentosedici <end> NEED_ACCENT S_BETWEEN_VOWELS
+Page 1317 trecentosei: <respelling> all: trecentosei <end> NEED_ACCENT S_BETWEEN_VOWELS FALLING_IN_I
+Page 1318 trecentosessanta: <respelling> all: trecentosessanta <end> NEED_ACCENT S_BETWEEN_VOWELS
+Page 1319 trecentosessantacinque: <respelling> all: trecentosessantacinque <end> NEED_ACCENT S_BETWEEN_VOWELS
+Page 1320 trecentosessantadue: <respelling> all: trecentosessantadue <end> NEED_ACCENT S_BETWEEN_VOWELS HIATUS
+Page 1321 trecentosessantanove: <respelling> all: trecentosessantanove <end> NEED_ACCENT S_BETWEEN_VOWELS
+Page 1322 trecentosessantaquattro: <respelling> all: trecentosessantaquattro <end> NEED_ACCENT S_BETWEEN_VOWELS
+Page 1323 trecentosessantasei: <respelling> all: trecentosessantasei <end> NEED_ACCENT S_BETWEEN_VOWELS FALLING_IN_I
+Page 1324 trecentosessantasette: <respelling> all: trecentosessantasette <end> NEED_ACCENT S_BETWEEN_VOWELS
+Page 1325 trecentosessantatré: <respelling> all: trecentosessantatré <end> 
+Page 1326 trecentosessantotto: <respelling> all: trecentosessantotto <end> NEED_ACCENT S_BETWEEN_VOWELS
+Page 1327 trecentosessantuno: <respelling> all: trecentosessantuno <end> NEED_ACCENT S_BETWEEN_VOWELS
+Page 1328 trecentosettanta: <respelling> all: trecentosettanta <end> NEED_ACCENT S_BETWEEN_VOWELS
+Page 1329 trecentosettantacinque: <respelling> all: trecentosettantacinque <end> NEED_ACCENT S_BETWEEN_VOWELS
+Page 1330 trecentosettantadue: <respelling> all: trecentosettantadue <end> NEED_ACCENT S_BETWEEN_VOWELS HIATUS
+Page 1331 trecentosettantanove: <respelling> all: trecentosettantanove <end> NEED_ACCENT S_BETWEEN_VOWELS
+Page 1332 trecentosettantaquattro: <respelling> all: trecentosettantaquattro <end> NEED_ACCENT S_BETWEEN_VOWELS
+Page 1333 trecentosettantasei: <respelling> all: trecentosettantasei <end> NEED_ACCENT S_BETWEEN_VOWELS FALLING_IN_I
+Page 1334 trecentosettantasette: <respelling> all: trecentosettantasette <end> NEED_ACCENT S_BETWEEN_VOWELS
+Page 1335 trecentosettantatré: <respelling> all: trecentosettantatré <end> 
+Page 1336 trecentosettantotto: <respelling> all: trecentosettantotto <end> NEED_ACCENT S_BETWEEN_VOWELS
+Page 1337 trecentosettantuno: <respelling> all: trecentosettantuno <end> NEED_ACCENT S_BETWEEN_VOWELS
+Page 1338 trecentosette: <respelling> all: trecentosette <end> NEED_ACCENT S_BETWEEN_VOWELS
+Page 1339 trecentotre: <respelling> all: trecentotre <end> NEED_ACCENT
+Page 1340 trecentotré: <respelling> all: trecentotré <end> 
+Page 1341 trecentotredici: <respelling> all: trecentotredici <end> NEED_ACCENT
+Page 1342 trecentotrenta: <respelling> all: trecentotrenta <end> NEED_ACCENT
+Page 1343 trecentotrentacinque: <respelling> all: trecentotrentacinque <end> NEED_ACCENT
+Page 1344 trecentotrentadue: <respelling> all: trecentotrentadue <end> NEED_ACCENT HIATUS
+Page 1345 trecentotrentanove: <respelling> all: trecentotrentanove <end> NEED_ACCENT
+Page 1346 trecentotrentaquattro: <respelling> all: trecentotrentaquattro <end> NEED_ACCENT
+Page 1347 trecentotrentasei: <respelling> all: trecentotrentasei <end> NEED_ACCENT S_BETWEEN_VOWELS FALLING_IN_I
+Page 1348 trecentotrentasette: <respelling> all: trecentotrentasette <end> NEED_ACCENT S_BETWEEN_VOWELS
+Page 1349 trecentotrentatré: <respelling> all: trecentotrentatré <end> 
+Page 1350 trecentotrentotto: <respelling> all: trecentotrentotto <end> NEED_ACCENT
+Page 1351 trecentotrentuno: <respelling> all: trecentotrentuno <end> NEED_ACCENT
+Page 1352 trecentottanta: <respelling> all: trecentottanta <end> NEED_ACCENT
+Page 1353 trecentottantacinque: <respelling> all: trecentottantacinque <end> NEED_ACCENT
+Page 1354 trecentottantadue: <respelling> all: trecentottantadue <end> NEED_ACCENT HIATUS
+Page 1355 trecentottantanove: <respelling> all: trecentottantanove <end> NEED_ACCENT
+Page 1356 trecentottantaquattro: <respelling> all: trecentottantaquattro <end> NEED_ACCENT
+Page 1357 trecentottantasei: <respelling> all: trecentottantasei <end> NEED_ACCENT S_BETWEEN_VOWELS FALLING_IN_I
+Page 1358 trecentottantasette: <respelling> all: trecentottantasette <end> NEED_ACCENT S_BETWEEN_VOWELS
+Page 1359 trecentottantatré: <respelling> all: trecentottantatré <end> 
+Page 1360 trecentottantotto: <respelling> all: trecentottantotto <end> NEED_ACCENT
+Page 1361 trecentottantuno: <respelling> all: trecentottantuno <end> NEED_ACCENT
+Page 1362 trecentotto: <respelling> all: trecentòtto <end> EXISTING
+Page 1363 trecentouno: <respelling> all: trecentouno <end> NEED_ACCENT
+Page 1364 trecentoventi: <respelling> all: trecentovénti <end> EXISTING
+Page 1365 trecentoventicinque: <respelling> all: trecentoventicinque <end> NEED_ACCENT
+Page 1366 trecentoventidue: <respelling> all: trecentoventidue <end> NEED_ACCENT HIATUS
+Page 1367 trecentoventinove: <respelling> all: trecentoventinove <end> NEED_ACCENT
+Page 1368 trecentoventiquattro: <respelling> all: trecentoventiquattro <end> NEED_ACCENT
+Page 1369 trecentoventisei: <respelling> all: trecentoventisei <end> NEED_ACCENT S_BETWEEN_VOWELS FALLING_IN_I
+Page 1370 trecentoventisette: <respelling> all: trecentoventisette <end> NEED_ACCENT S_BETWEEN_VOWELS
+Page 1371 trecentoventitré: <respelling> all: trecentoventitré <end> 
+Page 1372 trecentoventotto: <respelling> all: trecentoventotto <end> NEED_ACCENT
+Page 1373 trecentoventuno: <respelling> all: trecentoventuno <end> NEED_ACCENT
+Page 1374 trecentuno: <respelling> all: trecentuno <end> NEED_ACCENT
+Page 1375 tredici: <respelling> all: trédici <end> EXISTING
+Page 1376 tredicimila: <respelling> all: tredicimila <end> NEED_ACCENT
+Page 1377 tremila: <respelling> all: tremila <end> NEED_ACCENT
+Page 1378 tremilacinquecento: <respelling> all: tremilacinquecènto <end> AUTOSUBBED
+Page 1379 tremilaseicento: <respelling> all: tremilaseicènto <end> AUTOSUBBED S_BETWEEN_VOWELS FALLING_IN_I
+Page 1380 trenta: <respelling> all: trenta <end> NEED_ACCENT
+Page 1381 trentacinque: <respelling> all: trentacinque <end> NEED_ACCENT
+Page 1382 trentadue: <respelling> all: trentadue <end> NEED_ACCENT HIATUS
+Page 1383 trentamila: <respelling> all: trentamila <end> NEED_ACCENT
+Page 1384 trentanove: <respelling> all: trentanove <end> NEED_ACCENT
+Page 1385 trentaquattro: <respelling> all: trentaquattro <end> NEED_ACCENT
+Page 1386 trentasei: <respelling> all: trentasei <end> NEED_ACCENT S_BETWEEN_VOWELS FALLING_IN_I
+Page 1387 trentasette: <respelling> all: trentasette <end> NEED_ACCENT S_BETWEEN_VOWELS
+Page 1388 trentatré: <respelling> all: trentatré <end> 
+Page 1389 trentesimo: <respelling> all: trentesimo <end> NEED_ACCENT S_BETWEEN_VOWELS
+Page 1390 trentotto: <respelling> all: trentòtto <end> EXISTING
+Page 1391 trentuno: <respelling> all: trentùno <end> EXISTING
+Page 1392 tricamere: <respelling> all: tricamere <end> NEED_ACCENT
+Page 1393 tripala: <respelling> all: tripala <end> NEED_ACCENT
+Page 1394 triposto: <respelling> all: triposto <end> NEED_ACCENT
+Page 1395 troppo: <respelling> all: tròppo <end> EXISTING
+Page 1396 truffé: <respelling> all: truffé <end> 
+Page 1397 tse-tse: <respelling> all: tse-tse <end> NEED_ACCENT
+Page 1398 tua: <respelling> top: tùa <end> EXISTING
+Page 1399 tutt: <respelling> all: tùtt <end> AUTOACCENTED
+Page 1400 tutt': <respelling> all: tùtt' <end> AUTOACCENTED
+Page 1401 tutt'e: <respelling> all: tùtt'e <end> AUTOACCENTED
+Page 1402 tutt'orecchi: <respelling> all: tutt'orecchi <end> NEED_ACCENT
+Page 1403 tutt'ossa: <respelling> all: tutt'ossa <end> NEED_ACCENT
+Page 1404 tutti e: <respelling> all: tùtti_e <end> AUTOACCENTED
+Page 1405 tutto chiacchere: <respelling> all: tùtto_chiacchere <end> AUTOACCENTED NEED_ACCENT HIATUS
+Page 1406 tutto fumo e niente arrosto: <respelling> all: tùtto_fùmo_e_niènte_arrosto <end> AUTOACCENTED AUTOSUBBED HIATUS NEED_ACCENT
+Page 1407 tutto orecchie: <respelling> all: tùtto_orecchie <end> AUTOACCENTED NEED_ACCENT HIATUS
+Page 1408 tuttopunto: <respelling> all: tuttopunto <end> NEED_ACCENT
+Page 1409 tuttotondo: <respelling> all: tuttotóndo <end> EXISTING
+Page 1410 ugual: <respelling> all: ugual <end> NEED_ACCENT
+Page 1411 uliva: <respelling> all: ulìva <end> AUTOSUBBED
+Page 1412 ultimo ma non meno importante: <respelling> all: ultimo_mà_non_meno_importànte <end> NEED_ACCENT AUTOACCENTED AUTOSUBBED
+Page 1413 ultrà: <respelling> all: ultrà <end> 
+Page 1414 un: <respelling> top: un <end> 
+Page 1415 un bel po' di: <respelling> all: un_bel_po'_di <end> NEED_ACCENT
+Page 1416 un po' di: <respelling> all: un_po'_di <end> NEED_ACCENT
+Page 1417 un poco di: <respelling> all: un_poco_di <end> NEED_ACCENT
+Page 1418 un': <respelling> all: un <end> EXISTING
+Page 1419 una tantum: <respelling> all: ùna_tantum <end> AUTOACCENTED NEED_ACCENT
+Page 1420 undici: <respelling> all: ùndici <end> EXISTING
+Page 1421 undicimila: <respelling> all: undicimila <end> NEED_ACCENT
+Page 1422 unguentario: <respelling> all: unguentàrio <end> EXISTING
+Page 1423 uniasse: <respelling> all: uniasse <end> NEED_ACCENT HIATUS
+Page 1424 unidose: <respelling> all: unidose <end> NEED_ACCENT S_BETWEEN_VOWELS
+Page 1425 uniproprietario: <respelling> all: uniproprietàrio <end> AUTOSUBBED HIATUS
+Page 1426 unisex: <respelling> all: unisex <end> NEED_ACCENT S_BETWEEN_VOWELS
+Page 1427 unitaglia: <respelling> all: unitàglia <end> AUTOSUBBED
+Page 1428 univitigno: <respelling> all: univitigno <end> NEED_ACCENT
+Page 1429 uno: <respelling> top: ùno <end> EXISTING
+Page 1430 uno sì e uno no: <respelling> all: ùno_sì_e_ùno_no <end> AUTOACCENTED NEED_ACCENT
+Page 1431 uno sì, l'altro no: <respelling> all: ùno_sì,_l'àltro_no <end> AUTOACCENTED NEED_ACCENT
+Page 1432 uno sì, uno no: <respelling> all: ùno_sì,_ùno_no <end> AUTOACCENTED NEED_ACCENT
+Page 1433 urdu: <respelling> all: ùrdu <end> AUTOACCENTED
+Page 1434 usa e getta: <respelling> all: ùsa_e_gétta <end> AUTOACCENTED AUTOSUBBED
+Page 1435 ustascia: <respelling> all: ustàscia <end> EXISTING
+Page 1436 vacanziere: <respelling> top: vacantsière <end> EXISTING
+Page 1437 valenciennes: <respelling> all: valenciennes <end> NEED_ACCENT
+Page 1438 vanissimo: <respelling> all: vanissimo <end> NEED_ACCENT
+Page 1439 vecchio stampo: <respelling> all: vecchio_stàmpo <end> NEED_ACCENT HIATUS AUTOACCENTED
+Page 1440 vedda: <respelling> all: vèdda <end> EXISTING
+Page 1441 venti: <respelling> 1: vénti <end> EXISTING
+Page 1441 venti: <respelling> 2: vènti <end> EXISTING
+Page 1442 venticinque: <respelling> all: venticìnque <end> EXISTING
+Page 1443 venticinquemila: <respelling> all: venticinquemila <end> NEED_ACCENT
+Page 1444 venticinquemilanovecento: <respelling> all: venticinquemilanovecènto <end> AUTOSUBBED
+Page 1445 ventidue: <respelling> all: ventidue <end> NEED_ACCENT HIATUS
+Page 1446 ventimila: <respelling> all: ventimila <end> NEED_ACCENT
+Page 1447 ventinove: <respelling> all: ventinove <end> NEED_ACCENT
+Page 1448 ventiquattro: <respelling> all: ventiquàttro <end> EXISTING
+Page 1449 ventisei: <respelling> all: ventisei <end> NEED_ACCENT S_BETWEEN_VOWELS FALLING_IN_I
+Page 1450 ventisette: <respelling> all: ventisette <end> NEED_ACCENT S_BETWEEN_VOWELS
+Page 1451 ventisettemila: <respelling> all: ventisettemila <end> NEED_ACCENT S_BETWEEN_VOWELS
+Page 1452 ventitrè: <respelling> all: ventitrè <end> 
+Page 1453 ventitré: <respelling> all: ventitré <end> 
+Page 1454 ventotto: <respelling> all: ventòtto <end> EXISTING
+Page 1455 ventun: <respelling> all: ventun <end> NEED_ACCENT
+Page 1456 ventuno: <respelling> all: ventùno <end> EXISTING
+Page 1457 ventunomila: <respelling> all: ventunomila <end> NEED_ACCENT
+Page 1458 verdemare: <respelling> all: verdemàre <end> AUTOSUBBED
+Page 1459 verdeoro: <respelling> all: verdeoro <end> NEED_ACCENT
+Page 1460 vescicaria: <respelling> all: vescicària <end> EXISTING
+Page 1461 via cavo: <respelling> all: vìa_càvo <end> AUTOACCENTED
+Page 1462 vicin: <respelling> all: vicin <end> NEED_ACCENT
+Page 1463 viola: <respelling> 1: viòla <end> EXISTING
+Page 1463 viola: <respelling> 2: viòla <end> EXISTING
+Page 1463 viola: <respelling> 3: vìola <end> EXISTING
+Page 1464 virginia: <respelling> all: virginia <end> NEED_ACCENT HIATUS
+Page 1465 vivavoce: <respelling> all: vivavóce <end> EXISTING
+Page 1466 vodu: <respelling> all: vódu <end> EXISTING
+Page 1467 vodù: <respelling> all: vodù <end> 
+Page 1468 volente o nolente: <respelling> all: volènte_o_nolènte <end> AUTOSUBBED
+Page 1469 voodoo: <respelling> all: voodoo <end> NEED_ACCENT
+Page 1470 vostr: <respelling> all: vostr <end> NEED_ACCENT
+Page 1471 votaborse: <respelling> all: votaborse <end> NEED_ACCENT
+Page 1472 vudu: <respelling> all: vùdu <end> EXISTING
+Page 1473 vudù: <respelling> all: vudù <end> 
+Page 1474 walser: <respelling> all: walser <end> NEED_ACCENT
+Page 1475 waterproof: <respelling> all: waterproof <end> NEED_ACCENT
+Page 1476 whig: <respelling> top: whìg <end> AUTOACCENTED
+Page 1477 win-win: <respelling> all: win-win <end> NEED_ACCENT
+Page 1478 wireless: <respelling> all: wireless <end> NEED_ACCENT
+Page 1479 Yankee: <respelling> all: Yènki <end> EXISTING
+Page 1480 yiddish: <respelling> all: yiddish <end> NEED_ACCENT
+Page 1481 zafferano: <respelling> all: dzafferàno <end> EXISTING
+Page 1482 zaffiro: <respelling> all: dzàffiro #dzaffìro <end> EXISTING
+Page 1483 zero: <respelling> all: dzèro <end> EXISTING
+Page 1484 zulù: <respelling> all: dzulù <end> EXISTING
+Elapsed time: 3 mins 31.85 secs
+Ending at Fri Jul  9 22:35:52 2021
