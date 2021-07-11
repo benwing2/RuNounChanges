@@ -8,8 +8,6 @@ from blib import getparam, rmparam, tname, msg, errandmsg, site
 
 import lalib
 
-import convert_la_headword_noun
-
 def process_lemma_page(page, index, is_comp, form):
   global args
   pagetitle = unicode(page.title())
