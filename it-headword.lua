@@ -1,11 +1,13 @@
 -- This module contains code for Italian headword templates.
 -- Templates covered are:
--- * {{it-adj}}, {{it-adj-comp}}, {{it-adj-sup}};
 -- * {{it-noun}}, {{it-proper noun}};
 -- * {{it-verb}};
--- * {{it-adv}};
+-- * {{it-adj}}, {{it-adj-comp}}, {{it-adj-sup}};
+-- * {{it-det}};
+-- * {{it-pron-adj}};
 -- * {{it-pp}};
--- * {{it-card-noun}}, {{it-card-adj}}, {{it-card-inv}}.
+-- * {{it-card-noun}}, {{it-card-adj}}, {{it-card-inv}};
+-- * {{it-adv}}.
 -- See [[Module:it-conj]] for Italian conjugation templates.
 local export = {}
 local pos_functions = {}
@@ -263,6 +265,14 @@ local function fetch_qualifiers(qual, existing)
 	end
 	table.insert(retval, qual)
 	return retval
+end
+
+local function process_comp_sup(compsup, quals)
+	local infls = {}
+	for i, cs in ipairs(compsup) do
+		table.insert(infls, {term = cs, qualifiers = fetch_qualifiers(quals[i])})
+	end
+	return infls
 end
 
 local allowed_genders = require("Module:table").listToSet(
@@ -772,14 +782,6 @@ local function do_adjective(args, data, tracking_categories, pos, is_superlative
 		end
 	end
 
-	local function process_comp_sup(compsup, quals)
-		local infls = {}
-		for i, cs in ipairs(compsup) do
-			table.insert(infls, {term = cs, qualifiers = fetch_qualifiers(quals[i])})
-		end
-		return infls
-	end
-
 	if args.comp and #args.comp > 0 then
 		local comps = process_comp_sup(args.comp, args.comp_qual)
 		check_all_missing(comps, plpos, tracking_categories)
@@ -805,7 +807,6 @@ end
 
 local function get_adjective_params(adjtype)
 	local params = {
-		[1] = {}, -- temporary hack while MediaWiki's servers are misbehaving
 		["inv"] = {type = "boolean"}, --invariable
 		["apoc"] = {type = "boolean"}, --apocopated
 		["sp"] = {}, -- special indicator: "first", "first-last", etc.
@@ -819,7 +820,7 @@ local function get_adjective_params(adjtype)
 		["mpl_qual"] = {list = "mpl=_qual", allow_holes = true},
 		["pagename"] = {}, -- for testing
 	}
-	if adjtype == "base" then
+	if adjtype == "base" or adjtype == "part" then
 		params["comp"] = {list = true} --comparative(s)
 		params["comp_qual"] = {list = "comp=_qual", allow_holes = true}
 		params["sup"] = {list = true} --superlative(s)
@@ -861,6 +862,28 @@ pos_functions["cardinal adjectives"] = {
 	end,
 }
 
+pos_functions["past participles"] = {
+	params = get_adjective_params("part"),
+	func = function(args, data, tracking_categories)
+		do_adjective(args, data, tracking_categories, "participle")
+		data.pos_category = "past participles"
+	end,
+}
+
+pos_functions["determiners"] = {
+	params = get_adjective_params("det"),
+	func = function(args, data, tracking_categories)
+		do_adjective(args, data, tracking_categories, "determiner")
+	end,
+}
+
+pos_functions["adjective-like pronouns"] = {
+	params = get_adjective_params("pron"),
+	func = function(args, data, tracking_categories)
+		do_adjective(args, data, tracking_categories, "pronoun")
+	end,
+}
+
 pos_functions["cardinal invariable"] = {
 	params = {
 		["apoc"] = {type = "boolean"},
@@ -882,60 +905,26 @@ pos_functions["cardinal invariable"] = {
 	end,
 }
 
-pos_functions["determiners"] = {
-	params = get_adjective_params("det"),
-	func = function(args, data, tracking_categories)
-		do_adjective(args, data, tracking_categories, "determiner")
-	end,
-}
-
-pos_functions["past participles"] = {
-	params = {
-		["inv"] = {type = "boolean"}, --invariable
-		["pagename"] = {}, -- for testing
-	},
-	func = function(args, data, tracking_categories)
-		local PAGENAME = mw.title.getCurrentTitle().text
-		local pagename = args.pagename or PAGENAME
-		local lemma = m_links.remove_links(data.heads[1] or pagename)
-		local stem = rmatch(lemma, "^(.*)o$")
-		if not stem then
-			error("Past participle should end in -o")
-		end
-
-		if args.inv then
-			table.insert(data.inflections, {label = glossary_link("invariable")})
-			table.insert(data.categories, langname .. " indeclinable participles")
-		else
-			table.insert(data.genders, "m-s")
-			table.insert(data.inflections, {[1] = stem .. "a", label = "feminine singular"})
-			table.insert(data.inflections, {[1] = stem .. "i", label = "masculine plural"})
-			table.insert(data.inflections, {[1] = stem .. "e", label = "feminine plural"})
-		end
-
-		if #data.heads == 0 and args.pagename then
-			table.insert(data.heads, args.pagename)
-		end
-	end,
-}
-
-
 pos_functions["adverbs"] = {
 	params = {
 		["comp"] = {list = true}, --comparative(s)
+		["comp_qual"] = {list = "comp=_qual", allow_holes = true},
 		["sup"] = {list = true}, --superlative(s)
+		["sup_qual"] = {list = "sup=_qual", allow_holes = true},
 	},
 	func = function(args, data, tracking_categories)
 		if args.comp and #args.comp > 0 then
-			check_all_missing(args.comp, "adverbs", tracking_categories)
-			args.comp.label = "comparative"
-			table.insert(data.inflections, args.comp)
+			local comps = process_comp_sup(args.comp, args.comp_qual)
+			check_all_missing(comps, "adverbs", tracking_categories)
+			comps.label = "comparative"
+			table.insert(data.inflections, comps)
 		end
-	
+
 		if args.sup and #args.sup > 0 then
-			check_all_missing(args.sup, "adverbs", tracking_categories)
-			args.sup.label = "superlative"
-			table.insert(data.inflections, args.sup)
+			local sups = process_comp_sup(args.sup, args.sup_qual)
+			check_all_missing(sups, "adverbs", tracking_categories)
+			sups.label = "superlative"
+			table.insert(data.inflections, sups)
 		end
 	end,
 }
