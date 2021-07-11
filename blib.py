@@ -1157,7 +1157,7 @@ def getEtymLanguageData():
     etym_languages_byCode[etyl["code"]] = etyl
     etym_languages_byCanonicalName[etyl["canonicalName"]] = etyl
 
-def try_repeatedly(fun, pagemsg, operation="save", bad_value_ret=None, max_tries=10, sleep_time=5):
+def try_repeatedly(fun, pagemsg, operation="save", bad_value_ret=None, max_tries=2, sleep_time=5):
   num_tries = 0
   while True:
     try:
@@ -1183,10 +1183,10 @@ def try_repeatedly(fun, pagemsg, operation="save", bad_value_ret=None, max_tries
         raise
       errmsg("Sleeping for %s seconds" % sleep_time)
       time.sleep(sleep_time)
-      if sleep_time >= 40:
-        sleep_time += 40
-      else:
-        sleep_time *= 2
+      #if sleep_time >= 40:
+      #  sleep_time += 40
+      #else:
+      #  sleep_time *= 2
 
 def safe_page_text(page, pagemsg):
   return try_repeatedly(lambda: page.text, pagemsg, "fetch page text", bad_value_ret="")
