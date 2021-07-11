@@ -15,15 +15,11 @@ def process_text_on_page(index, pagetitle, text):
 
   notes = []
 
-  if not args.partial_page:
-    retval = blib.find_modifiable_lang_section(text, args.langname, pagemsg)
-    if retval is None:
-      return
-    sections, j, secbody, sectail, has_non_lang = retval
-  else:
-    sections = [text]
-    j = 0
-    secbody, sectail = blib.split_trailing_separator_and_categories(text)
+  retval = blib.find_modifiable_lang_section(text, None if args.partial_page else args.langname, pagemsg,
+    force_final_nls=True)
+  if retval is None:
+    return
+  sections, j, secbody, sectail, has_non_lang = retval
 
   subsections = re.split("(^==+[^=\n]+==+\n)", secbody, 0, re.M)
 
@@ -365,7 +361,8 @@ def process_text_on_page(index, pagetitle, text):
           continue
 
   secbody = "".join(subsections)
-  sections[j] = secbody + sectail
+  # Strip extra newlines added to secbody
+  sections[j] = secbody.rstrip("\n") + sectail
   return "".join(sections), notes
 
 parser = blib.create_argparser("Convert =Synonyms= sections to inline synonyms", include_pagefile=True, include_stdin=True)

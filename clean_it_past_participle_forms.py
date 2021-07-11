@@ -17,16 +17,11 @@ def process_text_on_page(index, pagetitle, text):
 
   notes = []
 
-  if not args.partial_page:
-    retval = blib.find_modifiable_lang_section(text, "Italian", pagemsg)
-    if retval is None:
-      return
-    sections, j, secbody, sectail, has_non_lang = retval
-  else:
-    sections = [text]
-    j = 0
-    secbody = text
-    sectail = ""
+  retval = blib.find_modifiable_lang_section(text, None if args.partial_page else "Italian", pagemsg,
+    force_final_nls=True)
+  if retval is None:
+    return
+  sections, j, secbody, sectail, has_non_lang = retval
 
   subsections = re.split("(^==+[^=\n]+==+\n)", secbody, 0, re.M)
 
@@ -172,7 +167,7 @@ def process_text_on_page(index, pagetitle, text):
               ",".join(normalized_forms))
           raise BreakException
 
-
+############################# not finished
       
       except BreakException:
         # something went wrong, go to next subsection

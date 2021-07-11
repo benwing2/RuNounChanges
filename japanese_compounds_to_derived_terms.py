@@ -16,15 +16,10 @@ def process_page(page, index, parsed):
   text = unicode(page.text)
   origtext = text
 
-  retval = blib.find_modifiable_lang_section(text, "Japanese", pagemsg)
+  retval = blib.find_modifiable_lang_section(text, "Japanese", pagemsg, force_final_nls=True)
   if retval is None:
-    return None, None
-
+    return
   sections, j, secbody, sectail, has_non_latin = retval
-
-  m = re.search(r"\A(.*?)(\n*)\Z", secbody, re.S)
-  secbody, secbody_finalnl = m.groups()
-  secbody += "\n\n"
 
   notes = []
 
@@ -49,7 +44,8 @@ def process_page(page, index, parsed):
         notes.append("reorder Derived terms after Synonyms/Antonyms")
 
   secbody = "".join(subsections)
-  sections[j] = secbody.rstrip("\n") + secbody_finalnl + sectail
+  # Strip extra newlines added to secbody
+  sections[j] = secbody.rstrip("\n") + sectail
   return "".join(sections), notes
 
 parser = blib.create_argparser("Compounds -> Derived terms in Japanese section and reorder after Synonyms/Antonyms",

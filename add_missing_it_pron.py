@@ -226,21 +226,11 @@ def process_text_on_page(index, pagetitle, text):
 
   notes = []
 
-  if not args.partial_page:
-    retval = blib.find_modifiable_lang_section(text, "Italian", pagemsg)
-    if retval is None:
-      return
-    sections, j, secbody, sectail, has_non_lang = retval
-  else:
-    sections = [text]
-    j = 0
-    secbody = text
-    sectail = ""
-
-  # Extract newlines at end of secbody and normalize secbody to end in two newlines
-  m = re.search(r"\A(.*?)(\n*)\Z", secbody, re.S)
-  secbody, secbody_finalnl = m.groups()
-  secbody += "\n\n"
+  retval = blib.find_modifiable_lang_section(text, None if args.partial_page else "Italian", pagemsg,
+    force_final_nls=True)
+  if retval is None:
+    return
+  sections, j, secbody, sectail, has_non_lang = retval
 
   subsections = re.split("(^==+[^=\n]+==+\n)", secbody, 0, re.M)
 
@@ -550,8 +540,8 @@ def process_text_on_page(index, pagetitle, text):
         pagemsg("WARNING: Something wrong, couldn't find location to insert ===References=== section")
 
   secbody = "".join(subsections)
-  # Restore actual number of newlines at end of secbody
-  sections[j] = secbody.rstrip("\n") + secbody_finalnl + sectail
+  # Strip extra newlines added to secbody
+  sections[j] = secbody.rstrip("\n") + sectail
   return "".join(sections), notes
 
 parser = blib.create_argparser("Add Italian pronunciations based on rhymes",
