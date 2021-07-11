@@ -190,7 +190,7 @@ function export.to_phonemic(text, pagename)
 
 	text = canon_spaces(text)
 
-	local origwords = rsplit(text, "[ %-]")
+	local origwords = rsplit(text, "[ %-]+")
 
 	text = rsub(text, CFLEX, "") -- eliminate circumflex over î, etc.
 	text = rsub(text, "y", "i")
@@ -201,101 +201,110 @@ function export.to_phonemic(text, pagename)
 	text = rsub(text, "'", "") -- other apostrophes just get removed, e.g. [['ndragheta]], [[ca']].
 	 -- For now, use a special marker of syntactic gemination at beginning of word; later we will
 	 -- convert to ‿ and remove the space.
-	text = rsub(text, "%* (" .. C .. ")", " ⁀%1")
-	if rfind(text, "%* ") then
+	text = rsub(text, "%*([ %-])(" .. C .. ")", "%1⁀%2")
+	if rfind(text, "%*[ %-]") then
 		error("* for syntactic gemination can only be used when the next word begins with a consonant: " .. origtext)
 	end
 	text = rsub(text, "([" .. DOTUNDER .. LINEUNDER .. "])(" .. quality_c .. ")", "%2%1") -- acute/grave first
 	text = rsub(text, "([aiu])" .. AC, "%1" .. GR) -- áíú -> àìù
 
-	local words = rsplit(text, " ")
+	local words = require("Module:string utilities").capturing_split(text, "([ %-]+)")
 	for i, word in ipairs(words) do
-		local function err(msg)
-			error(msg .. ": " .. origwords[i])
-		end
-		-- First apply abbrev spec e.g. (à) or (ó) if given.
-		if abbrev_text then
-			local vowel_count = ulen(rsub(word, NV, ""))
-			local abbrev_sub = abbrev_text:gsub("%^", "")
-			local abbrev_vowel = usub(abbrev_sub, 1, 1)
-			if vowel_count == 0 then
-				err("Abbreviated spec " .. abbrev_text .. " can't be used with nonsyllabic word")
-			elseif vowel_count == 1 then
-				local before, vow, after = rmatch(word, "^(.*)(" .. V .. ")(" .. NV .. "*)$")
-				if not before then
-					error("Internal error: Couldn't match monosyllabic word: " .. word)
-				end
-				if abbrev_vowel ~= vow then
-					err("Abbreviated spec " .. abbrev_text .. " doesn't match vowel " .. ulower(vow))
-				end
-				word = before .. abbrev_sub .. after
-			else
-				local before, penultimate, after = rmatch(word,
-					"^(.-)(" .. V .. ")(" .. NV .. "*" .. V .. NV .. "*)$")
-				if not before then
-					error("Internal error: Couldn't match multisyllabic word: " .. word)
-				end
-				local before2, antepenultimate, after2 = rmatch(before,
-					"^(.-)(" .. V .. ")(" .. NV .. "*)$")
-				if abbrev_vowel ~= penultimate and abbrev_vowel ~= antepenultimate then
-					err("Abbreviated spec ".. abbrev_text .. " doesn't match penultimate vowel " ..
-						ulower(penultimate) .. (antepenultimate and " or antepenultimate vowel " ..
-							ulower(antepenultimate) or ""))
-				end
-				if penultimate == antepenultimate then
-					err("Can't use abbreviated spec " .. abbrev_text .. " here because penultimate and " ..
-						"antepenultimate are the same")
-				end
-				if abbrev_vowel == antepenultimate then
-					word = before2 .. abbrev_sub .. after2 .. penultimate .. after
-				elseif abbrev_vowel == penultimate then
+		if (i % 2) == 1 then -- an actual word, not a separator
+			local function err(msg)
+				error(msg .. ": " .. origwords[(i + 1) / 2])
+			end
+			local is_prefix = 
+			    -- utterance-final followed by a hyphen, or
+				i == #words - 2 and words[i+1] == "-" and words[i+2] == "" or
+			    -- non-utterance-final followed by a hyphen
+				i <= #words - 2 and words[i+1] == "- "
+			-- First apply abbrev spec e.g. (à) or (ó) if given.
+			if abbrev_text then
+				local vowel_count = ulen(rsub(word, NV, ""))
+				local abbrev_sub = abbrev_text:gsub("%^", "")
+				local abbrev_vowel = usub(abbrev_sub, 1, 1)
+				if vowel_count == 0 then
+					err("Abbreviated spec " .. abbrev_text .. " can't be used with nonsyllabic word")
+				elseif vowel_count == 1 then
+					local before, vow, after = rmatch(word, "^(.*)(" .. V .. ")(" .. NV .. "*)$")
+					if not before then
+						error("Internal error: Couldn't match monosyllabic word: " .. word)
+					end
+					if abbrev_vowel ~= vow then
+						err("Abbreviated spec " .. abbrev_text .. " doesn't match vowel " .. ulower(vow))
+					end
 					word = before .. abbrev_sub .. after
 				else
-					error("Internal error: abbrev_vowel from abbrev_text " .. abbrev_text ..
-						" didn't match any vowel or glide: " .. origtext)
+					local before, penultimate, after = rmatch(word,
+						"^(.-)(" .. V .. ")(" .. NV .. "*" .. V .. NV .. "*)$")
+					if not before then
+						error("Internal error: Couldn't match multisyllabic word: " .. word)
+					end
+					local before2, antepenultimate, after2 = rmatch(before,
+						"^(.-)(" .. V .. ")(" .. NV .. "*)$")
+					if abbrev_vowel ~= penultimate and abbrev_vowel ~= antepenultimate then
+						err("Abbreviated spec ".. abbrev_text .. " doesn't match penultimate vowel " ..
+							ulower(penultimate) .. (antepenultimate and " or antepenultimate vowel " ..
+								ulower(antepenultimate) or ""))
+					end
+					if penultimate == antepenultimate then
+						err("Can't use abbreviated spec " .. abbrev_text .. " here because penultimate and " ..
+							"antepenultimate are the same")
+					end
+					if abbrev_vowel == antepenultimate then
+						word = before2 .. abbrev_sub .. after2 .. penultimate .. after
+					elseif abbrev_vowel == penultimate then
+						word = before .. abbrev_sub .. after
+					else
+						error("Internal error: abbrev_vowel from abbrev_text " .. abbrev_text ..
+							" didn't match any vowel or glide: " .. origtext)
+					end
 				end
 			end
-		end
 
-		if not rfind(word, quality_c) then
-			-- Apply suffix respellings.
-			for _, suffix_pair in ipairs(recognized_suffixes) do
-				local orig, respelling = unpack(suffix_pair)
-				local replaced
-				word, replaced = rsubb(word, orig .. "$", respelling)
-				if replaced then
-					-- Decompose again because suffix replacements may have accented chars.
-					word = mw.ustring.toNFD(word)
-					break
+			if not is_prefix then
+				if not rfind(word, quality_c) then
+					-- Apply suffix respellings.
+					for _, suffix_pair in ipairs(recognized_suffixes) do
+						local orig, respelling = unpack(suffix_pair)
+						local replaced
+						word, replaced = rsubb(word, orig .. "$", respelling)
+						if replaced then
+							-- Decompose again because suffix replacements may have accented chars.
+							word = mw.ustring.toNFD(word)
+							break
+						end
+					end
+				end
+
+				-- Make known unstressed words without stress marks unstressed.
+				local bare_word = rsub(word, "⁀", "") -- remove mark of syntactic gemination
+				if unstressed_words[bare_word] then
+					-- add DOTOVER to the first vowel for cases like [[dei]], [[sui]]
+					word = rsub(word, "^(.-" .. V .. accent_c .. "*)", "%1" .. DOTOVER)
 				end
 			end
-		end
 
-		-- Make monosyllabic words without stress marks unstressed.
-		local bare_word = rsub(word, "⁀", "") -- remove mark of syntactic gemination
-		if unstressed_words[bare_word] then
-			-- add DOTOVER to the first vowel for cases like [[dei]], [[sui]]
-			word = rsub(word, "^(.-" .. V .. accent_c .. "*)", "%1" .. DOTOVER)
-		end
+			-- Words marked with an acute or grave (quality marker) not followed by an indicator of secondary stress
+			-- or non-stress get primary stress.
+			word = rsub(word, "(" .. quality_c .. ")([^" .. DOTUNDER .. LINEUNDER .. "])", "%1ˈ%2")
+			word = rsub(word, "(" .. quality_c .. ")$", "%1ˈ")
+			-- Eliminate quality marker on a/i/u/y/ø, which now serves no purpose.
+			word = rsub(word, "([aiuyø])" .. quality_c, "%1")
+			-- LINEUNDER means secondary stress.
+			word = rsub(word, LINEUNDER, "ˌ")
 
-		-- Words marked with an acute or grave (quality marker) not followed by an indicator of secondary stress
-		-- or non-stress get primary stress.
-		word = rsub(word, "(" .. quality_c .. ")([^" .. DOTUNDER .. LINEUNDER .. "])", "%1ˈ%2")
-		word = rsub(word, "(" .. quality_c .. ")$", "%1ˈ")
-		-- Eliminate quality marker on a/i/u/y/ø, which now serves no purpose.
-		word = rsub(word, "([aiuyø])" .. quality_c, "%1")
-		-- LINEUNDER means secondary stress.
-		word = rsub(word, LINEUNDER, "ˌ")
-
-		-- Make prefixes unstressed. Primary stress markers become secondary.
-		if rfind(word, "%-$") then
-			word = rsub(word, "ˈ", "ˌ")
-			-- add DOTOVER to the first vowel for cases like [[dei]], [[sui]]
-			word = rsub(word, "^(.-" .. V .. accent_c .. "*)", "%1" .. DOTOVER)
+			-- Make prefixes unstressed. Primary stress markers become secondary.
+			if is_prefix then
+				word = rsub(word, "ˈ", "ˌ")
+				-- add DOTOVER to the first vowel for cases like [[dei]], [[sui]]
+				word = rsub(word, "^(.-" .. V .. accent_c .. "*)", "%1" .. DOTOVER)
+			end
+			words[i] = word
 		end
-		words[i] = word
 	end
-	text = table.concat(words, " ")
+	text = table.concat(words, "")
 
 	-- Convert hyphens to spaces, to handle [[Austria-Hungria]], [[franco-italiano]], etc.
 	text = rsub(text, "%-", " ")
