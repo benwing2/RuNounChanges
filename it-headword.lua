@@ -805,6 +805,7 @@ end
 
 local function get_adjective_params(adjtype)
 	local params = {
+		[1] = {}, -- temporary hack while MediaWiki's servers are misbehaving
 		["inv"] = {type = "boolean"}, --invariable
 		["apoc"] = {type = "boolean"}, --apocopated
 		["sp"] = {}, -- special indicator: "first", "first-last", etc.
@@ -878,6 +879,13 @@ pos_functions["cardinal invariable"] = {
 		if #data.heads == 0 and args.pagename then
 			table.insert(data.heads, args.pagename)
 		end
+	end,
+}
+
+pos_functions["determiners"] = {
+	params = get_adjective_params("det"),
+	func = function(args, data, tracking_categories)
+		do_adjective(args, data, tracking_categories, "determiner")
 	end,
 }
 
