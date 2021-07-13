@@ -76,7 +76,7 @@ Page 117 ambodue: <respelling> all: ambodùe <end> NEED_ACCENT HIATUS
 Page 118 ambosessi: <respelling> all: àmbo[s]èssi <end> NEED_ACCENT S_BETWEEN_VOWELS
 Page 119 amendua: <respelling> all: amendùa <end> EXISTING
 Page 120 amendue: <respelling> all: amendùe <end> EXISTING
-Page 121 ammazzasentenze: <respelling> all: ammàttsa[s]entèntse <end> NEED_ACCENT S_BETWEEN_VOWELS Z
+Page 121 ammazzasentenze: <respelling> all: ammàttsa[s]entèntse r:Olivetti <end> NEED_ACCENT S_BETWEEN_VOWELS Z
 Page 122 ammodo: <respelling> all: ammòdo <end> EXISTING
 Page 123 antemarcia: <respelling> all: antemàrcia <end> NEED_ACCENT
 Page 124 antiabusivi: <respelling> all: anti.abusìvi <end> NEED_ACCENT S_BETWEEN_VOWELS HIATUS
@@ -575,9 +575,9 @@ Page 615 esperanto: <respelling> all: esperànto <end> EXISTING
 Page 616 etero: <respelling> 1: ètero <end> EXISTING
 Page 616 etero: <respelling> 2: etèro <end> EXISTING
 Page 617 evergreen: <respelling> all: èvergrìn <end> NEED_ACCENT
-Page 618 extra: <respelling> all: èxtra èstra ref:DiPI <end> NEED_ACCENT
-Page 619 extralusso: <respelling> all: èxtralùsso èstralùsso ref:DiPI|extra ref:Olivetti <end> EXISTING
-Page 620 extrastrong: <respelling> all: èxtrastròng èstrastròng ref:DiPI <end> NEED_ACCENT
+Page 618 extra: <respelling> all: èxtra èstra r:DiPI <end> NEED_ACCENT
+Page 619 extralusso: <respelling> all: èxtralùsso èstralùsso r:DiPI|extra r:Olivetti <end> EXISTING
+Page 620 extrastrong: <respelling> all: èxtrastròng èstrastròng r:DiPI <end> NEED_ACCENT
 Page 621 faccia a faccia: <respelling> all: fàccia_a_fàccia <end> AUTOSUBBED
 Page 622 facil: <respelling> all: fàcil <end> NEED_ACCENT
 Page 623 fai da te: <respelling> all: fài_da_té* #fài_da*_té* <end> AUTOACCENTED FALLING_IN_I
@@ -616,6 +616,48 @@ Page 655 fuori sede: <respelling> all: fuòri_sède fuòri_séde <end> NEED_ACCE
 Page 656 fuori serie: <respelling> all: fuòri_sèrie <end> NEED_ACCENT HIATUS
 Page 657 fuori servizio: <respelling> all: fuòri_servìtsio <end> NEED_ACCENT HIATUS AUTOSUBBED
 Page 658 fuori strada: <respelling> all: fuòri_stràda <end> NEED_ACCENT HIATUS AUTOACCENTED
+Page 659 fuoribordo: <respelling> all: fuòribórdo <end> EXISTING
+Page 660 fuoriborsa: <respelling> all: fuòribórsa <end> NEED_ACCENT HIATUS
+Page 661 fuoribusta: <respelling> all: fuòribùsta <end> NEED_ACCENT HIATUS
+Page 662 fuoricampo: <respelling> all: fuòricàmpo <end> EXISTING
+Page 663 fuoricasta: <respelling> all: fuòricàsta <end> NEED_ACCENT HIATUS
+Page 664 fuoriclasse: <respelling> all: fuòriclàsse <end> NEED_ACCENT HIATUS
+Page 665 fuorimano: <respelling> all: fuòrimàno <end> EXISTING
+Page 666 fuorimisura: <respelling> all: fuòrimisùra <end> AUTOSUBBED S_BETWEEN_VOWELS HIATUS
+Page 667 fuorimoda: <respelling> all: fuòrimòda <end> NEED_ACCENT HIATUS
+Page 668 fuorionda: <respelling> all: fuòri.ónda <end> EXISTING
+Page 669 fuoriporta: <respelling> all: fuòripòrta <end> NEED_ACCENT HIATUS
+Page 670 fuoriposto: <respelling> all: fuòripósto fuòripòsta <end> NEED_ACCENT HIATUS
+Page 671 fuoriprogramma: <respelling> all: fuòriprogràmma <end> NEED_ACCENT HIATUS
+Page 672 fuorisacco: <respelling> all: fuòri[s]àcco <end> NEED_ACCENT S_BETWEEN_VOWELS HIATUS
+Page 673 fuorisede: <respelling> all: fuòri[s]ède fuòri[s]éde <end> NEED_ACCENT S_BETWEEN_VOWELS HIATUS
+Page 674 fuoriserie: <respelling> all: fuòri[s]èrie <end> NEED_ACCENT S_BETWEEN_VOWELS HIATUS
+# Page 675 f·p: <respelling> all: f·p <end> NEED_ACCENT
+Page 676 gentil: <respelling> all: gentìl <end> NEED_ACCENT
+Page 678 giallorosa: <respelling> all: giàlloròsa <end> NEED_ACCENT S_BETWEEN_VOWELS
+Page 679 gialloviola: <respelling> all: giàllovi.òla giàlloviòla <end> NEED_ACCENT HIATUS
+Page 680 giardinaio: <respelling> all: giardinàio <end> EXISTING
+Page 681 giocattolo: <respelling> all: giocàttolo <end> EXISTING
+Page 682 giovin: <respelling> all: gióvin <end> NEED_ACCENT
+Page 683 giù di corda: <respelling> all: giù_di_còrda <end> SELF_ACCENTED NEED_ACCENT
+Page 684 giusto: <respelling> all: giùsto <end> EXISTING
+Page 685 governista: <respelling> all: governìsta <end> AUTOSUBBED
+Page 686 grand': <respelling> all: grànd' <end> AUTOACCENTED
+Page 687 grande: <respelling> all: grànde <end> EXISTING
+Page 688 gratis: <respelling> all: gràtis <end> EXISTING
+Page 689 hutu: <respelling> all: hùtu <end> AUTOACCENTED
+Page 690 in affitto: <respelling> all: in_affìtto <end> NEED_ACCENT
+Page 691 in basso: <respelling> all: in_bàsso <end> AUTOACCENTED
+Page 692 in bianco: <respelling> all: in_biànco <end> NEED_ACCENT HIATUS
+Page 693 in brodo: <respelling> all: in_bròdo <end> NEED_ACCENT
+Page 694 in controtendenza: <respelling> all: in_controtendèntsa <end> AUTOSUBBED
+Page 695 in costume adamitico: <respelling> all: in_costùme_adamìtico <end> NEED_ACCENT
+Page 696 in diretta: <respelling> all: in_dirètta <end> AUTOSUBBED
+Page 697 in dolce attesa: <respelling> all: in_dólce_attésa #in_dólce_atté[s]a <end> NEED_ACCENT S_BETWEEN_VOWELS
+Page 698 in dotazione: <respelling> all: in_dotatsióne <end> AUTOSUBBED HIATUS
+Page 699 in faccia: <respelling> all: in_fàccia <end> AUTOSUBBED
+Page 700 in fiamme: <respelling> all: in_fiàmme <end> NEED_ACCENT HIATUS
+Page 701 in fieri: <respelling> all: in_fìeri <end> EXISTING
 
 
 
@@ -633,50 +675,8 @@ Page 658 fuori strada: <respelling> all: fuòri_stràda <end> NEED_ACCENT HIATUS
 
 
 
-Page 659 fuoribordo: <respelling> all: fuòribórdo <end> EXISTING
-Page 660 fuoriborsa: <respelling> all: fuoriborsa <end> NEED_ACCENT HIATUS
-Page 661 fuoribusta: <respelling> all: fuoribusta <end> NEED_ACCENT HIATUS
-Page 662 fuoricampo: <respelling> all: fuòricàmpo <end> EXISTING
-Page 663 fuoricasta: <respelling> all: fuoricasta <end> NEED_ACCENT HIATUS
-Page 664 fuoriclasse: <respelling> all: fuoriclasse <end> NEED_ACCENT HIATUS
-Page 665 fuorimano: <respelling> all: fuorimàno <end> EXISTING
-Page 666 fuorimisura: <respelling> all: fuorimisùra <end> AUTOSUBBED S_BETWEEN_VOWELS HIATUS
-Page 667 fuorimoda: <respelling> all: fuorimoda <end> NEED_ACCENT HIATUS
-Page 668 fuorionda: <respelling> all: fuòri.ónda <end> EXISTING
-Page 669 fuoriporta: <respelling> all: fuoriporta <end> NEED_ACCENT HIATUS
-Page 670 fuoriposto: <respelling> all: fuoriposto <end> NEED_ACCENT HIATUS
-Page 671 fuoriprogramma: <respelling> all: fuoriprogramma <end> NEED_ACCENT HIATUS
-Page 672 fuorisacco: <respelling> all: fuori[s]acco <end> NEED_ACCENT S_BETWEEN_VOWELS HIATUS
-Page 673 fuorisede: <respelling> all: fuori[s]ede <end> NEED_ACCENT S_BETWEEN_VOWELS HIATUS
-Page 674 fuoriserie: <respelling> all: fuori[s]erie <end> NEED_ACCENT S_BETWEEN_VOWELS HIATUS
-Page 675 f·p: <respelling> all: f·p <end> NEED_ACCENT
-Page 676 gentil: <respelling> all: gentil <end> NEED_ACCENT
-Page 677 gialloblu: <respelling> all: gialloblu <end> NEED_ACCENT
-Page 678 giallorosa: <respelling> all: giallorosa <end> NEED_ACCENT S_BETWEEN_VOWELS
-Page 679 gialloviola: <respelling> all: gialloviola <end> NEED_ACCENT HIATUS
-Page 680 giardinaio: <respelling> all: giardinàio <end> EXISTING
-Page 681 giocattolo: <respelling> all: giocàttolo <end> EXISTING
-Page 682 giovin: <respelling> all: giovin <end> NEED_ACCENT
-Page 683 giù di corda: <respelling> all: giù_di_corda <end> SELF_ACCENTED NEED_ACCENT
-Page 684 giusto: <respelling> all: giùsto <end> EXISTING
-Page 685 governista: <respelling> all: governìsta <end> AUTOSUBBED
-Page 686 grand': <respelling> all: grànd' <end> AUTOACCENTED
-Page 687 grande: <respelling> all: grànde <end> EXISTING
-Page 688 gratis: <respelling> all: gràtis <end> EXISTING
-Page 689 hutu: <respelling> all: hùtu <end> AUTOACCENTED
-Page 690 in affitto: <respelling> all: in_affitto <end> NEED_ACCENT
-Page 691 in basso: <respelling> all: in_bàsso <end> AUTOACCENTED
-Page 692 in bianco: <respelling> all: in_bianco <end> NEED_ACCENT HIATUS
-Page 693 in brodo: <respelling> all: in_brodo <end> NEED_ACCENT
-Page 694 in controtendenza: <respelling> all: in_controtendèntsa <end> AUTOSUBBED
-Page 695 in costume adamitico: <respelling> all: in_costume_adamitico <end> NEED_ACCENT
-Page 696 in diretta: <respelling> all: in_dirétta <end> AUTOSUBBED
-Page 697 in dolce attesa: <respelling> all: in_dolce_attesa <end> NEED_ACCENT S_BETWEEN_VOWELS
-Page 698 in dotazione: <respelling> all: in_dotatsióne <end> AUTOSUBBED HIATUS
-Page 699 in faccia: <respelling> all: in_fàccia <end> AUTOSUBBED
-Page 700 in fiamme: <respelling> all: in_fiamme <end> NEED_ACCENT HIATUS
-Page 701 in fieri: <respelling> all: in_fìeri <end> EXISTING
-Page 702 in folle: <respelling> all: in_folle <end> NEED_ACCENT
+
+Page 702 in folle: <respelling> all: in_fòlle in_fólle <end> NEED_ACCENT
 Page 703 in forma: <respelling> all: in_forma <end> NEED_ACCENT
 Page 704 in formissima: <respelling> all: in_formissima <end> NEED_ACCENT
 Page 705 in gamba: <respelling> all: in_gàmba <end> AUTOACCENTED
