@@ -38,7 +38,7 @@ local V = "[" .. vowel .. "]"
 local VW = "[" .. vowel .. "jw]"
 local NV = "[^" .. vowel .. "]"
 local charsep_not_tie = accent .. "." .. SYLDIV
-local charsep = charsep_not_tie .. "‿"
+local charsep = charsep_not_tie .. "‿⁀"
 local charsep_c = "[" .. charsep .. "]"
 local wordsep_not_tie = charsep_not_tie .. " #"
 local wordsep = charsep .. " #"
@@ -484,17 +484,20 @@ function export.to_phonemic(text, pagename)
 	-- First remove 'h' and '_', which have served their purpose of preventing context-dependent changes.
 	-- They should not interfere with syllabification.
 	text = rsub(text, "[h_]", "")
-	-- Also now convert ⁀ into a copy of the following consonant with the preceding space converted to ‿.
-	-- We want to do this after all consonants have been converted to IPA (so the correct consonant is geminated)
-	-- but before syllabification, since e.g. 'va* bène' should be treated as a single word 'va‿b.bɛne' for
+	-- Also now convert ⁀ into a copy of the following consonant with the preceding space converted to ⁀
+	-- (which we will eventually convert to a tie symbol ‿, but for awhile we need to distinguish the two
+	-- because automatic syllabic gemination in final-stress words happens only in multisyllabic words,
+	-- and we don't want it to happen in monosyllabic words joined to a previous word by ⁀). We want to do
+	-- this after all consonants have been converted to IPA (so the correct consonant is geminated)
+	-- but before syllabification, since e.g. 'va* bène' should be treated as a single word 'va⁀b.bɛne' for
 	-- syllabification.
-	text = rsub(text, "# #⁀(‿?)(.)", "‿%2%2")
-	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*‿?)(" .. C .. "‿?" .. W .. "?‿?" .. V .. ")", "%1.%2")
-	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*‿?" .. C .. "‿?)(" .. C .. "‿?" .. V .. ")", "%1.%2")
-	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*‿?" .. C_OR_TIE .. "+)(" .. C .. "‿?" .. C .. "‿?" .. V .. ")", "%1.%2")
-	text = rsub(text, "([pbktdg]‿?)%.([lr])", ".%1%2")
-	text = rsub(text, "([kg]‿?)%.w", ".%1w")
-	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*‿?)(" .. V .. ")", "%1.%2")
+	text = rsub(text, "# #⁀(‿?)(.)", "⁀%2%2")
+	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*[‿⁀]?)(" .. C .. "[‿⁀]?" .. W .. "?[‿⁀]?" .. V .. ")", "%1.%2")
+	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*[‿⁀]?" .. C .. "[‿⁀]?)(" .. C .. "[‿⁀]?" .. V .. ")", "%1.%2")
+	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*[‿⁀]?" .. C_OR_TIE .. "+)(" .. C .. "[‿⁀]?" .. C .. "[‿⁀]?" .. V .. ")", "%1.%2")
+	text = rsub(text, "([pbktdg][‿⁀]?)%.([lr])", ".%1%2")
+	text = rsub(text, "([kg][‿⁀]?)%.w", ".%1w")
+	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*[‿⁀]?)(" .. V .. ")", "%1.%2")
 
 	-- User-specified syllable divider should now be treated like regular one.
 	text = rsub(text, SYLDIV, ".")
@@ -512,6 +515,13 @@ function export.to_phonemic(text, pagename)
 
 	text = rsub(text, "g", "ɡ") -- U+0261 LATIN SMALL LETTER SCRIPT G
 
+	local last_word_ends_in_primary_stressed_vowel = rfind(text, "ˈ##$")
+	-- Last word is multisyllabic if it has a syllable marker in it. This should not happen across word boundaries
+	-- (spaces) including ⁀, marking where two words were joined by syntactic gemination.
+	local last_word_is_multisyllabic = rfind(text, "%.[^ ⁀]*$")
+	-- Now that ⁀ has served its purpose, convert to a regular tie ‿.
+	text = rsub(text, "⁀", "‿")
+	
 	-- Stress marks.
 	-- Move IPA stress marks to the beginning of the syllable.
 	text = rsub_repeatedly(text, "([#.])([^#.]*)(" .. stress_c .. ")", "%1%3%2")
@@ -524,7 +534,10 @@ function export.to_phonemic(text, pagename)
 	text = rsub(text, "#", "")
 	text = mw.ustring.toNFC(text)
 
-	return text
+	return {
+		pron = text,
+		auto_syllabic_gemination = last_word_ends_in_primary_stressed_vowel and last_word_is_multisyllabic,
+	}
 end
 
 -- For bot usage; {{#invoke:it-pronunciation|to_phonemic_bot|SPELLING}}
@@ -533,12 +546,12 @@ function export.to_phonemic_bot(frame)
 		[1] = {},
 	}
 	local iargs = require("Module:parameters").process(frame.args, iparams)
-	return export.to_phonemic(iargs[1], mw.title.getCurrentTitle().text)
+	return export.to_phonemic(iargs[1], mw.title.getCurrentTitle().text).pron
 end
 
 -- Incomplete and currently not used by any templates.
 function export.to_phonetic(word, pagename)
-	local phonetic = export.to_phonemic(word, pagename)
+	local phonetic = export.to_phonemic(word, pagename).pron
 
 	-- Vowels longer in stressed, open, non-word-final syllables.
 	phonetic = rsub(phonetic, "(ˈ" .. NV .. "*" .. V .. ")([" .. vowel .. "%.])", "%1ː%2")
@@ -604,8 +617,12 @@ function export.show(frame)
 				respelling = rsub(respelling, regex, "")
 			end
 		end
+		local phonemic = export.to_phonemic(respelling, pagename)
+		if not posttext and phonemic.auto_syllabic_gemination then
+			posttext = '<abbr title="' .. final_gemination .. '"><sup>*</sup></abbr>'
+		end
 		return {
-			pron = "/" .. export.to_phonemic(respelling, pagename) .. "/",
+			pron = "/" .. phonemic.pron .. "/",
 			qualifiers = #qualifiers > 0 and qualifiers or nil,
 			pretext = pretext,
 			posttext = posttext,
