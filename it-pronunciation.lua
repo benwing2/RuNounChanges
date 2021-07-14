@@ -214,7 +214,7 @@ function export.to_phonemic(text, pagename)
 			local function err(msg)
 				error(msg .. ": " .. origwords[(i + 1) / 2])
 			end
-			local is_prefix = 
+			local is_prefix =
 			    -- utterance-final followed by a hyphen, or
 				i == #words - 2 and words[i+1] == "-" and words[i+2] == "" or
 			    -- non-utterance-final followed by a hyphen
@@ -429,6 +429,11 @@ function export.to_phonemic(text, pagename)
 	text = text:gsub("qu", "kw")
 	-- ⟨gu⟩ (unstressed) + vowel represents /gw/.
 	text = text:gsub("gu(" .. V .. ")", "gw%1")
+	text = rsub(text, "q", "k") -- [[soqquadro]], [[qatariota]], etc.
+
+	-- Assimilate n before labial, including across word boundaries; DiPI marks pronunciations like
+	-- /ʤanˈpaolo/ for [[Gian Paolo]] as wrong. To prevent this, use _ or h between n and following labial.
+	text = rsub(text, "n(" .. wordsep_c .. "*[mpb])", "m%1")
 
 	-- Unaccented u or i following vowel (with or without accent) is a semivowel. (But 'iu' should be
 	-- interpreted as /ju/ not /iw/.) By preceding the conversion of glides before vowels, this works
@@ -506,7 +511,6 @@ function export.to_phonemic(text, pagename)
 	end)
 
 	text = rsub(text, "g", "ɡ") -- U+0261 LATIN SMALL LETTER SCRIPT G
-	text = rsub(text, "q", "k") -- [[soqquadro]], [[qatariota]], etc.
 
 	-- Stress marks.
 	-- Move IPA stress marks to the beginning of the syllable.
