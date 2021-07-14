@@ -407,7 +407,6 @@ def process_text_on_page(index, pagetitle, text):
                 "[MULTIPLE PRONUN TEMPLATES] " if len(all_pronun_templates) > 1 else "",
                 " ".join(respellings), " ||| ".join(all_warnings)))
           if not unable[0]:
-            rmparam(t, "nocount")
             del t.params[:]
             nextparam = 0
             for param in respellings:
