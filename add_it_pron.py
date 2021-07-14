@@ -9,6 +9,9 @@ from collections import Counter
 import blib
 from blib import getparam, rmparam, msg, site, tname, pname
 
+# FIXME: Handle two 'n:' references for the same pronunciation. Separate with " !!! " in a single param and fix the
+# underlying code to support this format.
+
 def process_page(index, page, spec):
   global args
   pagetitle = unicode(page.title())
@@ -167,6 +170,32 @@ def process_page(index, page, spec):
       else:
         pagemsg("WARNING: Didn't find Etymology N section for location=%s: spec=%s" % (location, spec))
         return
+
+    if refs or have_footnotes:
+      # Check for refs in References or Further reading embedded in Etym section
+      begin_etym_n_section = None
+      for k in xrange(2, len(subsections), 2):
+        if "==Etymology %s==" % location in subsections[k - 1]:
+          begin_etym_n_section = k - 1
+        elif re.search("==Etymology [0-9]", subsections[k - 1]):
+          # next etym section
+          break
+        elif begin_etym_n_section:
+          if refs and re.search(r"====\s*(References|Further reading)\s*====", subsections[k - 1]):
+            # Found References or Further reading embedded in Etym section
+            pagemsg("Found %s in Etymology %s section" % (subsections[k - 1].strip(), location))
+            needed_refs = []
+            for ref in refs:
+              if ref in subsections[k]:
+                pagemsg("Already found %s in %s section %s under Etymology %s" % (ref, subsections[k - 1].strip(), k // 2, location))
+              else:
+                needed_refs.append(ref)
+            refs = needed_refs
+          if have_footnotes and re.search(r"====\s*References\s*====", subsections[k - 1]):
+            # Check for <references/> in References embedded in Etym section
+            if re.search(r"<references\s*/?\s*>", subsections[k]):
+              pagemsg("Already found <references /> in ===References=== section %s under Etymology %s" % (k // 2, location))
+              have_footnotes = False
 
   if refs:
     # Check for references already present
