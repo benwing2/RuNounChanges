@@ -24,6 +24,6 @@ def process_page(page, index):
     pagemsg("WARNING: Page doesn't exist, null-saving it would create it")
     return
   # pagemsg("Null-saving")
-  page.save(comment="null save")
+  blib.try_repeatedly(lambda: page.save(comment="null save"), pagemsg, "save page")
 
 blib.do_pagefile_cats_refs(args, start, end, process_page)
