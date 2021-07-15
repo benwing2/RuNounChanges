@@ -9,6 +9,7 @@ local MACRON    = u(0x0304)
 local BREVE     = u(0x0306)
 local DOTABOVE  = u(0x0307)
 local DIAER     = u(0x0308)
+local RINGABOVE = u(0x030A)
 local CARON     = u(0x030C)
 local DGRAVE    = u(0x030F)
 local INVBREVE  = u(0x0311)
@@ -353,8 +354,10 @@ m["cy"] = {
 	scripts = Latn,
 	ancestors = {"wlm"},
 	sort_key = {
-		from = {"[âáàä]", "ch", "dd", "[êéèë]", "ff", "ngh", "[îíìï]", "ll", "[ôóòö]", "ph", "rh", "th", "[ûúùü]", "[ŵẃẁẅ]", "[ŷýỳÿ]", "'"},
-		to   = {"a"	    , "c~", "d~", "e"	  , "f~", "g~h", "i"	  , "l~", "o"	  , "p~", "r~", "t~", "u"	  , "w"     , "y"	       }} ,
+		remove_diacritics = DIAER .. ACUTE .. GRAVE .. CIRC,
+		from = {"ch", "dd", "ff", "ngh", "ll", "ph", "rh", "th", "'"},
+		to   = {"c~", "d~", "f~", "g~h", "l~", "p~", "r~", "t~",    },
+	} ,
 	standardChars = "A-IL-PR-UWYa-il-pr-uwy0-9ÂâÊêÎîÔôÛûŴŵŶŷ" .. PUNCTUATION,
 }
 
@@ -387,8 +390,10 @@ m["de"] = {
 	scripts = {"Latn", "Latf"},
 	ancestors = {"gmh"},
 	sort_key = {
-		from = {"[äàáâå]", "[ëèéê]", "[ïìíî]", "[öòóô]", "[üùúû]", "ß" },
-		to   = {"a"	  , "e"	 , "i"	 , "o"	 , "u"	 , "ss"}} ,
+		remove_diacritics = DIAER .. ACUTE .. GRAVE .. CIRC .. RINGABOVE,
+		from = { "ß" },
+		to   = { "ss"},
+	} ,
 	standardChars = "A-Za-z0-9ÄäÖöÜüß" .. PUNCTUATION,
 }
 
@@ -457,8 +462,9 @@ m["eo"] = {
 	"art",
 	scripts = Latn,
 	sort_key = {
-		from = {"[áà]", "[éè]", "[íì]", "[óò]", "[úù]", "[ĉ]", "[ĝ]", "[ĥ]", "[ĵ]", "[ŝ]", "[ŭ]"},
-		to   = {"a"	   , "e"  , "i"  , "o"  , "u", "cĉ", "gĉ", "hĉ", "jĉ", "sĉ", "uĉ"}} ,
+		remove_diacritics = ACUTE .. GRAVE,
+		from = {"[ĉ]", "[ĝ]", "[ĥ]", "[ĵ]", "[ŝ]", "[ŭ]"},
+		to   = {"cĉ", "gĉ", "hĉ", "jĉ", "sĉ", "uĉ"}} ,
 	standardChars = "A-PRSTUVZa-prstuvzĉĈĝĜĵĴŝŜŭŬ0-9" .. PUNCTUATION,
 }
 
@@ -558,7 +564,7 @@ m["fr"] = {
 		"Lorraine French", "Louisiana French", "Luxembourgish French",
 		"Malian French", "Marseille French", "Missourian French", "Moroccan French",
 		"Newfoundland French", "North American French",
-		"Picard French", "Provençal French‎",
+		"Picard French", "Provençal French",
 		"Quebec French",
 		"Réunion French", "Rwandan French",
 		"Tunisian French",
@@ -566,8 +572,10 @@ m["fr"] = {
 	scripts = {"Latn", "Brai"},
 	ancestors = {"frm"},
 	sort_key = {
-		from = {"[áàâä]", "[éèêë]", "[íìîï]", "[óòôö]", "[úùûü]", "[ýỳŷÿ]", "ç", "æ" , "œ" , "'"},
-		to   = {"a"	 , "e"	 , "i"	 , "o"	 , "u"	 , "y"	 , "c", "ae", "oe"}},
+		remove_diacritics = ACUTE .. GRAVE .. CIRC .. DIAER,
+		from = {"ç", "æ" , "œ" , "'"},
+		to   = {"c", "ae", "oe"},
+	},
 	standardChars = "A-Za-z0-9ÀÂÇÉÈÊËÎÏÔŒÛÙÜàâçéèêëîïôœûùü«»" .. PUNCTUATION,
 }
 
@@ -607,8 +615,8 @@ m["gd"] = {
 	scripts = Latn,
 	ancestors = {"mga"},
 	sort_key = {
-		from = {"[áà]", "[éè]", "[íì]", "[óò]", "[úù]", "[ýỳ]"},
-		to   = {"a"   , "e"   , "i"   , "o"   , "u"   , "y"   }} ,
+		remove_diacritics = ACUTE .. GRAVE,
+	},
 	standardChars = "A-IL-PR-Ua-il-pr-u0-9ÀàÈèÌìÒòÙù" .. PUNCTUATION,
 }
 
@@ -619,8 +627,8 @@ m["gl"] = {
 	scripts = Latn,
 	ancestors = {"roa-opt"},
 	sort_key = {
-		from = {"á", "é", "í", "ó", "ú"},
-		to   = {"a", "e", "i", "o", "u"}} ,
+		remove_diacritics = ACUTE,
+	},
 }
 
 m["gn"] = {
@@ -662,8 +670,8 @@ m["ha"] = {
 		from = {"ɓ",   "ɗ",   "ƙ",  "'y", "ƴ",  "'" },
 		to   = {"b~" , "d~"	, "k~", "y~", "y~", ""  }},
 	entry_name = {
-		from = {"R̃", "r̃", "À", "à", "È", "è", "Ì", "ì", "Ò", "ò", "Ù", "ù", "Â", "â", "Ê", "ê", "Î", "î", "Ô", "ô", "Û", "û", "Ā", "ā", "Ē", "ē", "Ī", "ī", "Ō", "ō", "Ū", "ū", "Á", "á", "É", "é", "Í", "í", "Ó", "ó", "Ú", "ú", "Ā̀", "ā̀", "Ḕ", "ḕ", "Ī̀", "ī̀", "Ṑ", "ṑ", "Ū̀", "ū̀", GRAVE, ACUTE},
-		to   = {"R", "r", "A", "a", "E", "e", "I", "i", "O", "o", "U", "u", "A", "a", "E", "e", "I", "i", "O", "o", "U", "u", "A", "a", "E", "e", "I", "i", "O", "o", "U", "u", "A", "a", "E", "e", "I", "i", "O", "o", "U", "u", "A", "a", "E", "e", "I", "i", "O", "o", "U", "u"}},
+		remove_diacritics = GRAVE .. ACUTE .. CIRC .. TILDE .. MACRON,
+	},
 }
 
 m["he"] = {
@@ -817,8 +825,8 @@ m["it"] = {
 	"roa-itd",
 	scripts = Latn,
 	sort_key = {
-		from = {"[àáâäå]", "[èéêë]", "[ìíîï]", "[òóôö]", "[ùúûü]"},
-		to   = {"a"	  , "e"	 , "i"	 , "o"	 , "u"	 }} ,
+		remove_diacritics = GRAVE .. ACUTE .. CIRC .. DIAER .. RINGABOVE,
+	},
 	standardChars = "A-IL-VZa-il-vz0-9" .. PUNCTUATION,
 }
 
@@ -969,8 +977,8 @@ m["kr"] = {
 		from = {"ny", "ǝ", "sh"},
 		to   = {"n~", "e~", "s~"}} , -- the sortkey and entry_name are only for standard Kanuri; when dialectal entries get added, someone will have to work out how the dialects should be represented orthographically
 	entry_name = {
-		from = {"À", "à", "È", "è", "Ǝ̀", "ǝ̀", "Ì", "ì", "Ò", "ò", "Ù", "ù", "Â", "â", "Ê", "ê", "Ǝ̂", "ǝ̂", "Î", "î", "Ô", "ô", "Û", "û", "Ă", "ă", "Ĕ", "ĕ", "Ǝ̆", "ǝ̆", "Ĭ", "ĭ", "Ŏ", "ŏ", "Ŭ", "ŭ", "Á", "á", "É", "é", "Ǝ́", "ǝ́", "Í", "í", "Ó", "ó", "Ú", "ú", GRAVE, ACUTE},
-		to   = {"A", "a", "E", "e", "Ǝ", "ǝ", "I", "i", "O", "o", "U", "u", "A", "a", "E", "e", "Ǝ", "ǝ", "I", "i", "O", "o", "U", "u", "A", "a", "E", "e", "Ǝ", "ǝ", "I", "i", "O", "o", "U", "u", "A", "a", "E", "e", "Ǝ", "ǝ", "I", "i", "O", "o", "U", "u"}},
+		remove_diacritics = GRAVE .. ACUTE .. CIRC .. BREVE,
+	},
 }
 
 m["ks"] = {
@@ -1028,8 +1036,8 @@ m["lg"] = {
 	aliases = {"Ganda", "Oluganda"},
 	scripts = Latn,
 	entry_name = {
-		from = {"á", "Á", "é", "É", "í", "Í", "ó", "Ó", "ú", "Ú", "ń", "Ń", "ḿ", "Ḿ", "â", "Â", "ê", "Ê", "î", "Î", "ô", "Ô", "û", "Û" },
-		to   = {"a", "A", "e", "E", "i", "I", "o", "O", "u", "U", "n", "N", "m", "M", "a", "A", "e", "E", "i", "I", "o", "O", "u", "U",}},
+		remove_diacritics = ACUTE .. CIRC,
+	},
 	sort_key = {
 		from = {"ŋ"},
 		to   = {"n"}} ,
@@ -1072,8 +1080,8 @@ m["lt"] = {
 	scripts = Latn,
 	ancestors = {"olt"},
 	entry_name = {
-		from = {"[áãà]", "[ÁÃÀ]", "[éẽè]", "[ÉẼÈ]", "[íĩì]", "[ÍĨÌ]", "[ýỹ]", "[ÝỸ]", "ñ", "[óõò]", "[ÓÕÒ]", "[úũù]", "[ÚŨÙ]", ACUTE, GRAVE, TILDE},
-		to   = {"a",       "A",     "e",     "E",     "i",     "I",     "y",   "Y",   "n",   "o",    "O",     "u",      "U"}} ,
+		remove_diacritics = ACUTE .. GRAVE .. TILDE,
+	},
 }
 
 m["lu"] = {
@@ -1237,8 +1245,8 @@ m["nd"] = {
 	aliases = {"North Ndebele"},
 	scripts = Latn,
 	entry_name = {
-		from = {"[āàáâǎ]", "[ēèéêě]", "[īìíîǐ]", "[ōòóôǒ]", "[ūùúûǔ]", "ḿ", "[ǹńň]", MACRON, ACUTE, GRAVE, CIRC, CARON},
-		to   = {"a"      , "e"      , "i"      , "o"      , "u"      , "m", "n"    }},
+		remove_diacritics = MACRON .. ACUTE .. GRAVE .. CIRC .. CARON,
+	},
 }
 
 m["ne"] = {
@@ -1295,8 +1303,8 @@ m["nr"] = {
 	aliases = {"South Ndebele"},
 	scripts = Latn,
 	entry_name = {
-		from = {"[āàáâǎ]", "[ēèéêě]", "[īìíîǐ]", "[ōòóôǒ]", "[ūùúûǔ]", "ḿ", "[ǹńň]", MACRON, ACUTE, GRAVE, CIRC, CARON},
-		to   = {"a"      , "e"      , "i"      , "o"      , "u"      , "m", "n"    }},
+		remove_diacritics = MACRON .. ACUTE .. GRAVE .. CIRC .. CARON,
+	},
 }
 
 m["nv"] = {
@@ -1447,8 +1455,8 @@ m["pt"] = {
 	scripts = {"Latn", "Brai"},
 	ancestors = {"roa-opt"},
 	sort_key = {
-		from = {"[àãáâä]", "[èẽéêë]", "[ìĩíï]", "[òóôõö]", "[üúùũ]", "ç", "ñ"},
-		to   = {"a"	  , "e"	  , "i"	 , "o"	  , "u"	 , "c", "n"}} ,
+		remove_diacritics = GRAVE .. TILDE .. ACUTE .. CIRC .. DIAER .. CEDILLA,
+	},
 }
 
 m["qu"] = {
@@ -1500,8 +1508,8 @@ m["rw"] = {
 	varieties = {{"Ha", "Giha"}, "Hangaza", "Vinza", "Shubi"}, -- Deleted "Subi", which normally refers to a different language
 	scripts = Latn,
 	entry_name = {
-		from = {"[áāâǎā́]", "[éēêěḗ]", "[íīîǐī́]", "[óōôǒṓ]", "[úūûǔū́]"},
-		to   = {"a", "e"   , "i", "o"   , "u"} },
+		remove_diacritics = ACUTE .. MACRON .. CIRC .. CARON,
+	},
 }
 
 m["sa"] = {
@@ -1569,8 +1577,8 @@ m["sh"] = {
 	varieties = {"Bosnian", "Croatian", "Montenegrin", "Serbian", "Shtokavian"},
 	scripts = {"Latn", "Cyrl", "Glag"},
 	entry_name = {
-		from = {"[ȀÀȂÁĀÃ]", "[ȁàȃáāã]", "[ȄÈȆÉĒẼ]", "[ȅèȇéēẽ]", "[ȈÌȊÍĪĨ]", "[ȉìȋíīĩ]", "[ȌÒȎÓŌÕ]", "[ȍòȏóōõ]", "[ȐȒŔ]", "[ȑȓŕ]", "[ȔÙȖÚŪŨ]", "[ȕùȗúūũ]", "Ѐ", "ѐ", "[ӢЍ]", "[ӣѝ]", "[Ӯ]", "[ӯ]", GRAVE, ACUTE, DGRAVE, INVBREVE, MACRON, TILDE},
-		to   = {"A"	  , "a"	  , "E"	  , "e"	  , "I"	  , "i"	  , "O"	  , "o"	  , "R"	, "r"	, "U"	  , "u"	  , "Е", "е", "И"   , "и", "У", "у"   }},
+		remove_diacritics = GRAVE .. ACUTE .. DGRAVE .. INVBREVE .. MACRON .. TILDE,
+	},
 	wikimedia_codes = {"sh", "bs", "hr", "sr"},
 }
 
@@ -1591,8 +1599,8 @@ m["sk"] = {
 	"zlw",
 	scripts = Latn,
 	sort_key = {
-		from = {"[áä]", "é", "í", "[óô]", "ú", "ý", "ŕ", "ĺ", "[" .. DIAER .. ACUTE .. CIRC .. "]"},
-		to   = {"a"   , "e", "i", "o"   , "u", "y", "r", "l", ""}} ,
+		remove_diacritics = DIAER .. ACUTE .. CIRC,
+	},
 }
 
 m["sl"] = {
@@ -1602,8 +1610,9 @@ m["sl"] = {
 	aliases = {"Slovenian"},
 	scripts = Latn,
 	entry_name = {
-		from = {"[ÁÀÂĀȂȀ]", "[áàâāȃȁ]", "[ÉÈÊĒȆȄỆẸ]", "[éèêēȇȅệẹə]", "[ÍÌÎĪȊȈ]", "[íìîīȋȉ]", "[ÓÒÔŌȎȌỘỌ]", "[óòôōȏȍộọ]", "[ŔȒȐ]", "[ŕȓȑ]", "[ÚÙÛŪȖȔ]", "[úùûūȗȕ]", "ł", GRAVE, ACUTE, CIRC, MACRON, DGRAVE, INVBREVE, DOTBELOW},
-		to   = {"A"       , "a"       , "E"         , "e"          , "I"       , "i"       , "O"         , "o"         , "R"    , "r"    , "U"       , "u"       , "l"},
+		remove_diacritics = GRAVE .. ACUTE .. CIRC .. MACRON .. DGRAVE .. INVBREVE .. DOTBELOW,
+		from = {"ł"},
+		to   = {"l"},
 	},
 	sort_key = {
 		from = {"č" , "š" , "ž" },
@@ -1631,9 +1640,7 @@ m["so"] = {
 	"Q13275",
 	"cus",
 	scripts = {"Latn", "Arab", "Osma"},
-	entry_name = {
-		from = {"[ÁÀÂ]", "[áàâ]", "[ÉÈÊ]", "[éèê]", "[ÍÌÎ]", "[íìî]", "[ÓÒÔ]", "[óòô]", "[ÚÙÛ]", "[úùû]", "[ÝỲ]", "[ýỳ]"},
-		to   = {"A"	  , "a"	  , "E"	, "e" , "I"	  , "i"	  , "O"	, "o"	, "U"  , "u", "Y", "y"}} ,
+	entry_name = { remove_diacritics = ACUTE .. GRAVE .. CIRC },
 }
 
 m["sq"] = {
@@ -1654,9 +1661,7 @@ m["ss"] = {
 	"bnt-ngu",
 	aliases = {"Swati"},
 	scripts = Latn,
-	entry_name = {
-		from = {"[āàáâǎ]", "[ēèéêě]", "[īìíîǐ]", "[ōòóôǒ]", "[ūùúûǔ]", "ḿ", "[ǹńň]", MACRON, ACUTE, GRAVE, CIRC, CARON},
-		to   = {"a"      , "e"      , "i"      , "o"      , "u"      , "m", "n"    }},
+	entry_name = { remove_diacritics = MACRON .. ACUTE .. GRAVE .. CIRC .. CARON },
 }
 
 m["st"] = {
@@ -1665,9 +1670,7 @@ m["st"] = {
 	"bnt-sts",
 	aliases = {"Sesotho", "Southern Sesotho", "Southern Sotho"},
 	scripts = Latn,
-	entry_name = {
-		from = {"[āàáâǎ]", "[ēèéêě]", "[īìíîǐ]", "[ōòóôǒ]", "[ūùúûǔ]", "ḿ", "[ǹńň]", MACRON, ACUTE, GRAVE, CIRC, CARON},
-		to   = {"a"      , "e"      , "i"      , "o"      , "u"      , "m", "n"    }},
+	entry_name = { remove_diacritics = MACRON .. ACUTE .. GRAVE .. CIRC .. CARON },
 }
 
 m["su"] = {
@@ -1759,9 +1762,7 @@ m["tk"] = {
 	"Q9267",
 	"trk-ogz",
 	scripts = {"Latn", "Cyrl", "Arab"},
-	entry_name = {
-		from = {"ā", "ē", "ī", "ō", "ū", "ȳ", "ȫ", "ǖ", MACRON},
-		to   = {"a", "e", "i", "o", "u", "y", "ö", "ü", ""}},
+	entry_name = { remove_diacritics = MACRON },
 	ancestors = {"trk-ogz-pro"},
 }
 
@@ -1770,9 +1771,7 @@ m["tl"] = {
 	"Q34057",
 	"phi",
 	scripts = {"Latn", "Tglg"},
-	entry_name = {
-		from = {"[áàâ]", "[éèê]", "[íìî]", "[óòô]", "[úùû]", ACUTE, GRAVE, CIRC},
-		to   = {"a"    , "e"    , "i"    , "o"    , "u"    }},
+	entry_name = { remove_diacritics = ACUTE .. GRAVE .. CIRC },
 }
 
 m["tn"] = {
@@ -1788,12 +1787,8 @@ m["to"] = {
 	"Q34094",
 	"poz-pol",
 	scripts = Latn,
-	sort_key = {
-		from = {"ā", "ē", "ī", "ō", "ū", MACRON},
-		to   = {"a", "e", "i", "o", "u", ""}},
-	entry_name = {
-		from = {"á", "é", "í", "ó", "ú", ACUTE},
-		to   = {"a", "e", "i", "o", "u", ""}},
+	sort_key = { remove_diacritics = MACRON },
+	entry_name = { remove_diacritics = ACUTE },
 }
 
 m["tr"] = {
@@ -1922,9 +1917,7 @@ m["xh"] = {
 	"Q13218",
 	"bnt-ngu",
 	scripts = Latn,
-	entry_name = {
-		from = {"[āàáâǎ]", "[ēèéêě]", "[īìíîǐ]", "[ōòóôǒ]", "[ūùúûǔ]", "ḿ", "[ǹńň]", MACRON, ACUTE, GRAVE, CIRC, CARON},
-		to   = {"a"      , "e"      , "i"      , "o"      , "u"      , "m", "n"    }},
+	entry_name = { remove_diacritics = ACUTE .. GRAVE .. MACRON .. CIRC .. CARON},
 }
 
 m["yi"] = {
@@ -1999,9 +1992,7 @@ m["zu"] = {
 	"bnt-ngu",
 	aliases = {"isiZulu"},
 	scripts = Latn,
-	entry_name = {
-		from = {"[āàáâǎ]", "[ēèéêě]", "[īìíîǐ]", "[ōòóôǒ]", "[ūùúûǔ]", "ḿ", "[ǹńň]", MACRON, ACUTE, GRAVE, CIRC, CARON},
-		to   = {"a"      , "e"      , "i"      , "o"      , "u"      , "m", "n"    }},
+	entry_name = { remove_diacritics = ACUTE .. GRAVE .. MACRON .. CIRC .. CARON},
 }
 
 return m
