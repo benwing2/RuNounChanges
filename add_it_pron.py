@@ -29,6 +29,9 @@ def process_page(index, page, spec):
   refs = []
   have_footnotes = False
   next_num_pron = 0
+  last_num_pron = None
+  last_footnote_param_index = None
+
   for pronspec in pronspecs:
     if pronspec.startswith("r:"):
       ref = pronspec[2:]
@@ -44,7 +47,13 @@ def process_page(index, page, spec):
       if next_num_pron == 0:
         pagemsg("WARNING: No preceding pronunciations for footnote %s: %s" % (pronspec, spec))
         return
-      prons.append("n%s={{R:it:%s}}" % ("" if next_num_pron == 1 else next_num_pron, ref))
+      reftemp = "{{R:it:%s}}" % ref
+      if next_num_pron == last_num_pron:
+        prons[last_footnote_param_index] += " !!! " + reftemp
+      else:
+        last_footnote_param_index = len(prons)
+        last_num_pron = next_num_pron
+        prons.append("n%s=%s" % ("" if next_num_pron == 1 else next_num_pron, reftemp))
       have_footnotes = True
     else:
       if re.search("^n[0-9]*=", pronspec):
