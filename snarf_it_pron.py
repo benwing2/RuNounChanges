@@ -107,23 +107,120 @@ def process_text_on_page(index, pagetitle, text):
   subsections = re.split("(^==+[^=\n]+==+\n)", secbody, 0, re.M)
 
   has_etym_sections = "==Etymology 1==" in secbody
+  saw_pronun_section_at_top = False
+  split_pronun_sections = False
+  saw_pronun_section_this_etym_section = False
   saw_existing_pron = False
-  saw_existing_it_ipa_secs = set()
-  saw_existing_pron_secs = set()
-  all_etymsections = set()
+  saw_existing_pron_this_etym_section = False
 
   etymsection = "top" if has_etym_sections else "all"
+  if etymsection == "top":
+    after_etym_1 = False
+    for k in xrange(2, len(subsections), 2):
+      if "==Etymology 1==" in subsections[k - 1]:
+        after_etym_1 = True
+      if "==Pronunciation==" in subsections[k - 1]:
+        if after_etym_1:
+          split_pronun_sections = True
+        else:
+          saw_pronun_section_at_top = True
+
+  msgs = []
+  def append_msg(txt):
+    if txt not in msgs:
+      msgs.append(txt)
+
   for k in xrange(2, len(subsections), 2):
+    msgs = []
+    def apply_default_pronun():
+      respelled_words = []
+      traditional_respelled_words = []
+      for word in pagetitle.split(" "):
+        if word in unstressed_words:
+          append_msg("UNSTRESSED_WORD")
+          respelled_words.append(word)
+          traditional_respelled_words.append(word)
+          continue
+        if re.search(u"[àèéìòóù]$", word):
+          subbed_word = word
+          append_msg("SELF_ACCENTED")
+        elif word.startswith("-"):
+          subbed_word = word
+          append_msg("SUFFIX")
+        elif word.endswith("-"):
+          subbed_word = word
+          append_msg("PREFIX")
+        else:
+          m = re.search("^([^AEIOUaeiou]*)([AIUaiu])([^A-Z0-9aeiou]*[aeiou]?)$", word)
+          if m:
+            first, vowel, rest = m.groups()
+            subbed_word = unicodedata.normalize("NFC", first + vowel + GR + rest)
+            append_msg("AUTOACCENTED")
+          else:
+            for suf, repl in recognized_suffixes:
+              subbed_word = unicodedata.normalize("NFC", re.sub(suf + "$", repl, word))
+              if subbed_word != word:
+                append_msg("AUTOSUBBED")
+                break
+            else: # no break
+              append_msg("NEED_ACCENT")
+              subbed_word = word
+        if re.search(u"[aeiouàèéìòóù].*ese$", word):
+          append_msg("AUTO_ESE")
+          respelled_words.append(re.sub("ese$", u"ése", word))
+          traditional_respelled_words.append(re.sub("ese$", u"é[s]e", word))
+        elif re.search(u"[aeiouàèéìòóù].*oso$", word):
+          append_msg("AUTO_OSO")
+          respelled_words.append(re.sub("oso$", u"óso", word))
+          traditional_respelled_words.append(re.sub("oso$", u"ó[s]o", word))
+        else:
+          respelled_words.append(subbed_word)
+          traditional_respelled_words.append(subbed_word)
+        hacked_subbed = subbed_word.lower()
+        if re.search(u"[aeiouàèéìòóù]s[aeiouàèéìòóù]", hacked_subbed):
+          append_msg("S_BETWEEN_VOWELS")
+        if "z" in hacked_subbed:
+          append_msg("Z")
+        if re.search(u"[aeiouàèéìòóù]i([^aeiouàèéìòóù]|$)", hacked_subbed):
+          append_msg("FALLING_IN_I")
+        hacked_subbed = re.sub("([gq])u", r"\1w", hacked_subbed)
+        hacked_subbed = hacked_subbed.replace("gli", "gl")
+        hacked_subbed = re.sub("([cg])i", r"\1", hacked_subbed)
+        if re.search(u"[^aeiouàèéìòóù][iu][aeiouàèéìòóù]", hacked_subbed):
+          append_msg("HIATUS")
+      respelled_term = "_".join(respelled_words)
+      traditional_respelled_term = "_".join(traditional_respelled_words)
+      respellings = [respelled_term]
+      if respelled_term != traditional_respelled_term:
+        respellings.append("#" + traditional_respelled_term)
+      return respellings
+
+    def check_missing_pronun(etymsection):
+      if split_pronun_sections and not saw_existing_pron_this_etym_section:
+        pagemsg("WARNING: Missing pronunciations in etym section %s" % etymsection)
+        append_msg("MISSING_PRONUN")
+        append_msg("NEW_DEFAULTED")
+        respellings = apply_default_pronun()
+        pagemsg("<respelling> %s: %s <end> %s" % (etymsection, " ".join(respellings), " ".join(msgs)))
+
+      #pagemsg("<respelling> %s: %s <end> %s" % ("top" if has_etym_sections else "all",
+      #  " ".join(x.replace(" ", "_") for x in respellings), " ".join(msgs)))
+
     m = re.search("==Etymology ([0-9]*)==", subsections[k - 1])
     if m:
+      if etymsection != "top":
+        check_missing_pronun(etymsection)
       etymsection = m.group(1)
-      all_etymsections.add(etymsection)
+      saw_pronun_section_this_etym_section = False
+      saw_existing_pron_this_etym_section = False
     if "==Pronunciation " in subsections[k - 1]:
       pagemsg("WARNING: Saw Pronunciation N section header: %s" % subsections[k - 1].strip())
     if "==Pronunciation==" in subsections[k - 1]:
-      if etymsection in saw_existing_pron_secs:
-        pagemsg("WARNING: Saw two Pronunciation sections under etym section '%s'" % etymsection)
-      saw_existing_pron_secs.add(etymsection)
+      if saw_pronun_section_this_etym_section:
+        pagemsg("WARNING: Saw two Pronunciation sections under etym section %s" % etymsection)
+      if saw_pronun_section_at_top and etymsection != "top":
+        pagemsg("WARNING: Saw Pronunciation sections both at top and in etym section %s" % etymsection)
+      saw_pronun_section_this_etym_section = True
       parsed = blib.parse_text(subsections[k])
 
       respellings = []
@@ -132,105 +229,56 @@ def process_text_on_page(index, pagetitle, text):
       for t in parsed.filter_templates():
         tn = tname(t)
         if tn == "it-IPA":
-          saw_existing_it_ipa_secs.add(etymsection)
+          saw_existing_pron = True
+          saw_existing_pron_this_etym_section = True
           if prev_it_IPA_t:
-            pagemsg("WARNING: Saw multiple {{it-IPA}} templates in a single Pronunciation section: %s, %s" % (
-              unicode(prev_it_IPA_t), unicode(t)))
+            pronun_lines = re.findall(r"^.*\{\{it-IPA.*$", subsections[k], re.M)
+            pagemsg("WARNING: Saw multiple {{it-IPA}} templates in a single Pronunciation section: %s" %
+              " ||| ".join(pronun_lines))
             must_continue = True
             break
           prev_it_IPA_t = t
           this_respellings = []
+          saw_pronun = False
+          last_numbered_param = 0
           for param in t.params:
             pn = pname(param)
             pv = unicode(param.value).strip().replace(" ", "_")
             if re.search("^[0-9]+$", pn):
-              this_respellings.append(pv)
+              last_numbered_param += 1
+              saw_pronun = True
+              if pv == "+":
+                append_msg("EXISTING_DEFAULTED")
+                this_respellings.extend(apply_default_pronun())
+              else:
+                append_msg("EXISTING")
+                this_respellings.append(pv)
+            elif re.search("^n[0-9]+$", pn) and int(pn[1:]) == last_numbered_param:
+              m = re.search(r"^\{\{R:it:(DiPI|Olivetti|Treccani|Trec)(\|[^{}]*)?\}\}$", pv)
+              if m:
+                refname, refparams = m.groups()
+                refname = "Treccani" if refname == "Trec" else refname
+                this_respellings.append("n:%s%s" % (refname, refparams or ""))
+              else:
+                this_respellings.append("%s=%s" % (pn, pv))
             else:
               this_respellings.append("%s=%s" % (pn, pv))
-          if not this_respellings:
-            this_respellings.append(pagetitle)
+          if not saw_pronun:
+            append_msg("EXISTING_DEFAULTED")
+            this_respellings.extend(apply_default_pronun())
           respellings.extend(this_respellings)
       if must_continue:
         continue
 
       if respellings:
-        pagemsg("<respelling> %s: %s <end> EXISTING" % (etymsection, " ".join(respellings)))
-        saw_existing_pron = True
+        pagemsg("<respelling> %s: %s <end> %s" % (etymsection, " ".join(respellings), " ".join(msgs)))
 
-  if "top" in saw_existing_pron_secs and len(saw_existing_pron_secs) > 1:
-    pagemsg("WARNING: Saw Pronunciation sections both at top and in etym section(s) %s" %
-        ",".join(sorted(list(saw_existing_pron_secs - {"top"}))))
-  if saw_existing_pron and has_etym_sections and "top" not in saw_existing_it_ipa_secs:
-    missing_pron_secs = all_etymsections - saw_existing_it_ipa_secs
-    if len(missing_pron_secs) > 0:
-      pagemsg("WARNING: Missing pronunciations in etym section(s) %s" % ",".join(sorted(list(missing_pron_secs))))
-
+  check_missing_pronun(etymsection)
   if not saw_existing_pron:
     msgs = []
-    def append_msg(txt):
-      if txt not in msgs:
-        msgs.append(txt)
-    respelled_words = []
-    traditional_respelled_words = []
-    for word in pagetitle.split(" "):
-      if word in unstressed_words:
-        respelled_words.append(word)
-        traditional_respelled_words.append(word)
-        continue
-      if re.search(u"[àèéìòóù]$", word):
-        subbed_word = word
-        append_msg("SELF_ACCENTED")
-      elif word.startswith("-"):
-        subbed_word = word
-        append_msg("SUFFIX")
-      elif word.endswith("-"):
-        subbed_word = word
-        append_msg("PREFIX")
-      else:
-        m = re.search("^([^AEIOUaeiou]*)([AIUaiu])([^A-Z0-9aeiou]*[aeiou]?)$", word)
-        if m:
-          first, vowel, rest = m.groups()
-          subbed_word = unicodedata.normalize("NFC", first + vowel + GR + rest)
-          append_msg("AUTOACCENTED")
-        else:
-          for suf, repl in recognized_suffixes:
-            subbed_word = unicodedata.normalize("NFC", re.sub(suf + "$", repl, word))
-            if subbed_word != word:
-              append_msg("AUTOSUBBED")
-              break
-          else: # no break
-            append_msg("NEED_ACCENT")
-            subbed_word = word
-      if re.search(u"[aeiouàèéìòóù].*ese$", word):
-        respelled_words.append(re.sub("ese$", u"ése", word))
-        traditional_respelled_words.append(re.sub("ese$", u"é[s]e", word))
-        append_msg("AUTO_ESE")
-      elif re.search(u"[aeiouàèéìòóù].*oso$", word):
-        respelled_words.append(re.sub("oso$", u"óso", word))
-        traditional_respelled_words.append(re.sub("oso$", u"ó[s]o", word))
-        append_msg("AUTO_OSO")
-      else:
-        respelled_words.append(subbed_word)
-        traditional_respelled_words.append(subbed_word)
-      hacked_subbed = subbed_word.lower()
-      if re.search(u"[aeiouàèéìòóù]s[aeiouàèéìòóù]", hacked_subbed):
-        append_msg("S_BETWEEN_VOWELS")
-      if "z" in hacked_subbed:
-        append_msg("Z")
-      if re.search(u"[aeiouàèéìòóù]i([^aeiouàèéìòóù]|$)", hacked_subbed):
-        append_msg("FALLING_IN_I")
-      hacked_subbed = re.sub("([gq])u", r"\1w", hacked_subbed)
-      hacked_subbed = hacked_subbed.replace("gli", "gl")
-      hacked_subbed = re.sub("([cg])i", r"\1", hacked_subbed)
-      if re.search(u"[^aeiouàèéìòóù][iu][aeiouàèéìòóù]", hacked_subbed):
-        append_msg("HIATUS")
-    respelled_term = "_".join(respelled_words)
-    traditional_respelled_term = "_".join(traditional_respelled_words)
-    respellings = [respelled_term]
-    if respelled_term != traditional_respelled_term:
-      respellings.append("#" + traditional_respelled_term)
-    pagemsg("<respelling> %s: %s <end> %s" % ("top" if has_etym_sections else "all",
-      " ".join(x.replace(" ", "_") for x in respellings), " ".join(msgs)))
+    append_msg("NEW_DEFAULTED")
+    respellings = apply_default_pronun()
+    pagemsg("<respelling> %s: %s <end> %s" % ("top" if has_etym_sections else "all", " ".join(respellings), " ".join(msgs)))
 
 parser = blib.create_argparser("Snarf Italian pronunciations for fixing",
   include_pagefile=True, include_stdin=True)
