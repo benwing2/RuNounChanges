@@ -588,11 +588,13 @@ function export.show(frame)
 		respellings = {pagename}
 	end
 	local final_gemination = "triggers syntactic gemination in the following word"
+	local final_non_gemination = "does not trigger syntactic gemination in the following word"
 	local initial_gemination = "triggers syntactic gemination of the initial consonant following a vowel"
 	local initial_non_gemination = "prevents syntactic gemination of the initial consonant when it would normally occur"
 	local symbol_specs = {
 		{"%*%*$", "**", "optionally " .. final_gemination, "post"},
 		{"%*$", "*", final_gemination, "post"},
+		{"°$", "°", final_non_gemination, "post"},
 		{"^%*%*", "**", "optionally " .. initial_gemination, "pre"},
 		{"^%*", "*", initial_gemination, "pre"},
 		{"^°°", "°°", "optionally " .. initial_non_gemination, "pre"},
@@ -626,7 +628,7 @@ function export.show(frame)
 			qualifiers = #qualifiers > 0 and qualifiers or nil,
 			pretext = pretext,
 			posttext = posttext,
-			note = args.n[i],
+			notes = args.n[i] and rsplit(args.n[i], "%s*!!!%s*") or nil,
 		}
 	end)
 
