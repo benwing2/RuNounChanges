@@ -19,9 +19,10 @@ from blib import msg, errmsg, site
 import pywikibot
 
 def blacklist(category):
-  if " terms spelled with " in category and not re.search("^(Japanese|Okinawan) ", category):
-    return True
   return False
+  #if " terms spelled with " in category and not re.search("^(Japanese|Okinawan) ", category):
+  #  return True
+  #return False
 
 def process_page(page, index):
   global args
