@@ -106,18 +106,18 @@ def process_page(index, page, spec):
           t.add(paramname, paramval)
         if origt != unicode(t):
           pagemsg("Replaced %s with %s" % (origt, unicode(t)))
-          notes.append("replace existing %s with %s" % (origt, unicode(t)))
+          notes.append("replace existing %s with %s (manually assisted)" % (origt, unicode(t)))
           subsections[k] = unicode(parsed)
         break 
     else: # no break
       new_pron_template = construct_new_pron_template()
       subsections[k] = "* " + new_pron_template + "\n" + subsections[k]
-      notes.append("insert %s into existing Pronunciation section" % new_pron_template)
+      notes.append("insert %s into existing Pronunciation section (manually assisted)" % new_pron_template)
 
   def insert_new_l3_pron_section(k):
     new_pron_template = construct_new_pron_template()
     subsections[k:k] = ["===Pronunciation===\n", "* " + new_pron_template + "\n\n"]
-    notes.append("add top-level Italian pron %s" % new_pron_template)
+    notes.append("add top-level Italian pron %s (manually assisted)" % new_pron_template)
 
   if location == "all":
     for k in xrange(2, len(subsections), 2):
@@ -157,7 +157,7 @@ def process_page(index, page, spec):
         return
       new_pron_template = construct_new_pron_template()
       subsections[k - 1:k - 1] = ["====Pronunciation====\n", "* " + new_pron_template + "\n\n"]
-      notes.append("add Italian pron %s to Etymology %s" % (new_pron_template, location))
+      notes.append("add Italian pron %s to Etymology %s (manually assisted)" % (new_pron_template, location))
 
     for k in xrange(2, len(subsections), 2):
       if "==Etymology %s==" % location in subsections[k - 1]:
