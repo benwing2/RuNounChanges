@@ -27,7 +27,7 @@ Page 23 cercametalli: <respelling> all: cércametàlli r:Olivetti <end> NEED_ACC
 # Page 24 combinaguai: <respelling> all: combinaguai <end> NEED_ACCENT FALLING_IN_I
 Page 25 contagocce: <respelling> all: cóntagócce r:Olivetti <end> NEED_ACCENT
 Page 26 copiafatture: <respelling> all: còpiafattùre r:DiPI r:Olivetti <end> NEED_ACCENT HIATUS
-Page 27 copialettere: <respelling> all: copialettere r:Olivetti r:DiPI:copia <end> NEED_ACCENT HIATUS
+Page 27 copialettere: <respelling> all: copialettere r:Olivetti r:DiPI|copia <end> NEED_ACCENT HIATUS
 Page 28 fermaporta: <respelling> all: férmapòrta r:Olivetti <end> EXISTING
 Page 29 fermauscio: <respelling> all: férmaùscio r:Olivetti <end> EXISTING
 Page 30 grattacielo: <respelling> all: gràttacièlo r:Olivetti <end> EXISTING
