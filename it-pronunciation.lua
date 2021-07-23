@@ -31,19 +31,22 @@ local quality = AC .. GR
 local quality_c = "[" .. quality .. "]"
 local accent = stress .. quality .. DOTOVER .. DOTUNDER .. LINEUNDER
 local accent_c = "[" .. accent .. "]"
-local glides = "jw"
-local W = "[" .. glides .. "]"
+local glide = "jw"
+local liquid = "lr"
+local W = "[" .. glide .. "]"
 local vowel = "aeɛioɔuEOyø"
 local V = "[" .. vowel .. "]"
 local VW = "[" .. vowel .. "jw]"
 local NV = "[^" .. vowel .. "]"
 local charsep_not_tie = accent .. "." .. SYLDIV
+local charsep_not_tie_c = "[" .. charsep_not_tie .. "]"
 local charsep = charsep_not_tie .. "‿⁀"
 local charsep_c = "[" .. charsep .. "]"
 local wordsep_not_tie = charsep_not_tie .. " #"
 local wordsep = charsep .. " #"
 local wordsep_c = "[" .. wordsep .. "]"
 local C = "[^" .. vowel .. wordsep .. "_]" -- consonant
+local C_OR_EOW_NOT_GLIDE_LIQUID = "[^" .. vowel .. charsep .. " _" .. glide .. liquid .. "]" -- consonant not lrjw, or end of word
 local C_OR_TIE = "[^" .. vowel .. wordsep_not_tie .. "_]" -- consonant or tie (‿)
 local front = "eɛij"
 local front_c = "[" .. front .. "]"
@@ -198,6 +201,8 @@ function export.to_phonemic(text, pagename)
 	text = rsub(text, "u" .. DIA, "y")
 	text = rsub(text, "o" .. DIA, "ø")
 	text = rsub(text, "([^ ])'([^ ])", "%1‿%2") -- apostrophe between letters is a tie
+	text = rsub(text, "(" .. C .. ")'$", "%1‿") -- final apostrophe after a consonant is a tie, e.g. [[anch']]
+	text = rsub(text, "(" .. C .. ")' ", "%1‿ ") -- final apostrophe in non-utterance-final word is a tie
 	text = rsub(text, "'", "") -- other apostrophes just get removed, e.g. [['ndragheta]], [[ca']].
 	 -- For now, use a special marker of syntactic gemination at beginning of word; later we will
 	 -- convert to ‿ and remove the space.
@@ -361,7 +366,7 @@ function export.to_phonemic(text, pagename)
 
 	-- Random substitutions.
 	text = rsub(text, "^ex(" .. V .. ")", "eg[z]%1")
-	text = text:gsub("x", "ks"):gsub("ck", "k"):gsub("sh", "ʃ"):gsub("ng#", "ŋ#")
+	text = text:gsub("x", "ks"):gsub("ck", "k"):gsub("sh", "ʃ")
 	text = rsub(text, "%[z%]", TEMP_Z) -- [z] means /z/
 	text = rsub(text, "%[s%]", TEMP_S) -- [z] means /s/
 	text = rsub(text, "%[h%]", TEMP_H) -- [h] means /h/
@@ -439,17 +444,17 @@ function export.to_phonemic(text, pagename)
 	-- interpreted as /ju/ not /iw/.) By preceding the conversion of glides before vowels, this works
 	-- correctly in the common sequence 'aiuo' e.g. [[guerraiuola]], [[acquaiuolo]]. Note that
 	-- ci, gi + vowel, gli, qu must be dealt with beforehand.
-	text = rsub(text, "(" .. V .. accent_c .. "*)([iu])([^" .. accent .. "])", function(v, glide, acc)
-		if v == "i" and glide == "u" then
-			return v .. glide .. acc
+	text = rsub(text, "(" .. V .. accent_c .. "*)([iu])([^" .. accent .. "])", function(v, gl, acc)
+		if v == "i" and gl == "u" then
+			return v .. gl .. acc
 		else
-			return v .. (glide == "i" and "j" or "w") .. acc
+			return v .. (gl == "i" and "j" or "w") .. acc
 		end
 	end)
 
 	-- Unaccented u or i before another vowel is a glide. Do it repeatedly to handle oriuolo /orjwɔlo/.
-	text = rsub_repeatedly(text, "([iu])(" .. V .. ")", function(glide, v)
-		return (glide == "i" and "j" or "w") .. v
+	text = rsub_repeatedly(text, "([iu])(" .. V .. ")", function(gl, v)
+		return (gl == "i" and "j" or "w") .. v
 	end)
 
 	-- sc before e, i is /ʃ/, doubled after a vowel.
@@ -471,6 +476,12 @@ function export.to_phonemic(text, pagename)
 
 	text = rsub(text, TEMP_Z, "z")
 	text = rsub(text, TEMP_S, "s")
+
+	-- Double consonant followed by end of word (e.g. [[stress]], [[staff]], [[jazz]]), or followed by a consonant
+	-- other than a glide or liquid (e.g. [[pullman]]), should be reduced to single. Should not affect double
+	-- consonants between vowels or before glides (e.g. [[occhio]], [[acqua]]) or liquids ([[pubblico]], [[febbraio]]),
+	-- or words before a tie ([[mezz']], [[tutt']]).
+	text = rsub_repeatedly(text, "(" .. C .. ")%1(" .. charsep_not_tie_c .. "*" .. C_OR_EOW_NOT_GLIDE_LIQUID .. ")", "%1%2")
 
 	-- Between vowels (including glides), /ʃ ʎ ɲ t͡s d͡z/ are doubled (unless already doubled).
 	-- Not simply after a vowel; 'z' is not doubled in e.g. [[azteco]].
@@ -503,6 +514,8 @@ function export.to_phonemic(text, pagename)
 	text = rsub(text, SYLDIV, ".")
 	text = rsub(text, TEMP_H, "h")
 
+	local last_word_self_gemination = rfind(text, "[ʦʣʃʎɲ]" .. stress_c .."*##$")
+	local first_word_self_gemination = rfind(text, "^##" .. stress_c .. "*[ʦʣʃʎɲ]")
 	text = rsub(text, "([ʦʣʧʤ])(" .. charsep_c .. "*%.?)([ʦʣʧʤ]*)", function(affricate1, divider, affricate2)
 		local full_affricate = full_affricates[affricate1]
 
@@ -519,6 +532,22 @@ function export.to_phonemic(text, pagename)
 	-- Last word is multisyllabic if it has a syllable marker in it. This should not happen across word boundaries
 	-- (spaces) including ⁀, marking where two words were joined by syntactic gemination.
 	local last_word_is_multisyllabic = rfind(text, "%.[^ ⁀]*$")
+	local retval = {
+		-- Automatic co-gemination (syntactic gemination of the following consonant in a multisyllabic word ending in
+		-- a stressed vowel)
+		auto_cogemination = last_word_ends_in_primary_stressed_vowel and last_word_is_multisyllabic,
+		-- Last word ends in a vowel (an explicit * indicates co-gemination, i.e. syntactic gemination of the
+		-- following consonant)
+		last_word_ends_in_vowel = rfind(text, V .. stress_c .. "*" .. "##$"),
+		-- Last word ends in a consonant (an explicit * indicates self-gemination of this consonant, i.e. the
+		-- consonant doubles before a following vowel)
+		last_word_ends_in_consonant = rfind(text, C .. "##$"),
+		-- Last word ends in a consonant (ts dz ʃ ʎ ɲ) that triggers self-gemination before a following vowel
+		auto_final_self_gemination = last_word_self_gemination,
+		-- First word begins in a consonant (ts dz ʃ ʎ ɲ) that triggers self-gemination after a preceding vowel
+		auto_initial_self_gemination = first_word_self_gemination,
+	}
+
 	-- Now that ⁀ has served its purpose, convert to a regular tie ‿.
 	text = rsub(text, "⁀", "‿")
 	
@@ -534,10 +563,8 @@ function export.to_phonemic(text, pagename)
 	text = rsub(text, "#", "")
 	text = mw.ustring.toNFC(text)
 
-	return {
-		pron = text,
-		auto_syllabic_gemination = last_word_ends_in_primary_stressed_vowel and last_word_is_multisyllabic,
-	}
+	retval.pron = text
+	return retval
 end
 
 -- For bot usage; {{#invoke:it-pronunciation|to_phonemic_bot|SPELLING}}
@@ -580,48 +607,79 @@ function export.show(frame)
 			pagename = {}, -- for testing
 		})
 
-	local pagename = args.pagename or mw.title.getCurrentTitle().text
-	local Array = require "Module:array"
+	local final_cogemination = "triggers final cogemination (syntactic gemination of the initial consonant of the following word)"
+	local final_non_cogemination = "does not trigger final cogemination (syntactic gemination of the initial consonant of the following word)"
+	local final_self_cogemination = "triggers final self-gemination (syntactic gemination of the final consonant before a vowel)"
+	local final_non_self_cogemination = "does not trigger final self-gemination (syntactic gemination of the final consonant before a vowel)"
+	local initial_self_gemination = "triggers initial self-gemination (syntactic gemination of the initial consonant following a vowel)"
+	local initial_non_cogemination = "blocks initial cogemination (syntactic gemination of the initial consonant when it would normally occur, i.e. following a stressed final vowel)"
+	local initial_symbol_specs = {
+		{"**", "optionally " .. initial_self_gemination},
+		{"*", initial_self_gemination},
+		{"°°", "optionally " .. initial_non_cogemination},
+		{"°", initial_non_cogemination},
+	}
+	local final_vowel_symbol_specs = {
+		{"**", "optionally " .. final_cogemination},
+		{"*", final_cogemination},
+		{"°", final_non_cogemination},
+	}
+	local final_consonant_symbol_specs = {
+		{"**", "optionally " .. final_self_cogemination},
+		{"*", final_self_cogemination},
+		{"°", final_non_self_cogemination},
+	}
 
+	local pagename = args.pagename or mw.title.getCurrentTitle().text
 	local respellings = args[1]
 	if #respellings == 0 then
 		respellings = {pagename}
 	end
-	local final_gemination = "triggers syntactic gemination in the following word"
-	local final_non_gemination = "does not trigger syntactic gemination in the following word"
-	local initial_gemination = "triggers syntactic gemination of the initial consonant following a vowel"
-	local initial_non_gemination = "prevents syntactic gemination of the initial consonant when it would normally occur"
-	local symbol_specs = {
-		{"%*%*$", "**", "optionally " .. final_gemination, "post"},
-		{"%*$", "*", final_gemination, "post"},
-		{"°$", "°", final_non_gemination, "post"},
-		{"^%*%*", "**", "optionally " .. initial_gemination, "pre"},
-		{"^%*", "*", initial_gemination, "pre"},
-		{"^°°", "°°", "optionally " .. initial_non_gemination, "pre"},
-		{"^°", "°", initial_non_gemination, "pre"},
-	}
+	local Array = require "Module:array"
+
 	local transcriptions = Array(respellings):map(function(respelling, i)
 		local qualifiers = {args.qual[i]}
-		local pretext, posttext
-		if respelling:find("^#") then
+		local prespec, postspec = rmatch(respelling, "^([#*°]*)(.-)([*°]*)$")
+		if prespec:find("^#") then
 			table.insert(qualifiers, 1, "traditional")
-			respelling = respelling:gsub("^#", "")
-		end
-		for _, symbol_spec in ipairs(symbol_specs) do
-			local regex, symbol, text, where = unpack(symbol_spec)
-			if rfind(respelling, regex) then
-				text = '<abbr title="' .. text .. '"><sup>' .. symbol .. "</sup></abbr>"
-				if where == "post" then
-					posttext = text
-				else
-					pretext = text
-				end
-				respelling = rsub(respelling, regex, "")
-			end
+			prespec = prespec:gsub("^#", "")
 		end
 		local phonemic = export.to_phonemic(respelling, pagename)
-		if not posttext and phonemic.auto_syllabic_gemination then
-			posttext = '<abbr title="' .. final_gemination .. '"><sup>*</sup></abbr>'
+		local pretext, posttext
+
+		if prespec == "" and phonemic.auto_initial_self_gemination then
+			prespec = "*"
+		end
+		if postspec == "" and (phonemic.auto_cogemination or phonemic.auto_final_self_gemination) then
+			postspec = "*"
+		end
+
+		local function check_symbol_spec(spec, recognized_specs, is_pre)
+			for _, symbol_spec in ipairs(recognized_specs) do
+				local symbol, text = unpack(symbol_spec)
+				if symbol == spec then
+					local abbr = '<abbr title="' .. text .. '"><sup>' .. symbol .. "</sup></abbr>"
+					if is_pre then
+						pretext = abbr
+					else
+						posttext = abbr
+					end
+				end
+			end
+			error("Unrecognized " .. (is_pre and "initial" or "final") .. " symbol " .. spec)
+		end
+
+		if prespec ~= "" then
+			check_symbol_spec(prespec, initial_symbol_specs, true)
+		end
+		if postspec ~= "" then
+			if phonemic.last_word_ends_in_vowel then
+				check_symbol_spec(postspec, final_vowel_symbol_specs, false)
+			elseif phonemic.last_word_ends_in_consonant then
+				check_symbol_spec(postspec, final_consonant_symbol_specs, false)
+			else
+				error("Last word ends in neither vowel nor consonant; final symbol " .. spec .. " not allowed here")
+			end
 		end
 		return {
 			pron = "/" .. phonemic.pron .. "/",
