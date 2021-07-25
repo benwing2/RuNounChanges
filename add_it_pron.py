@@ -8,6 +8,7 @@ from collections import Counter
 
 import blib
 from blib import getparam, rmparam, msg, site, tname, pname
+from snarf_it_pron import apply_default_pronun
 
 # FIXME: Handle two 'n:' references for the same pronunciation. Separate with " !!! " in a single param and fix the
 # underlying code to support this format.
@@ -59,6 +60,13 @@ def process_page(index, page, spec):
       if re.search("^n[0-9]*=", pronspec):
         have_footnotes = True
       if "=" not in pronspec:
+        respellings, msgs = apply_default_pronun(pronspec)
+        if "NEED_ACCENT" in msgs:
+          pagemsg("WARNING: Missing accent for pronunciation %s" % pronspec)
+          return
+        if "Z" in msgs:
+          pagemsg("WARNING: Unconverted z in pronunciation %s" % pronspec)
+          return
         next_num_pron += 1
       prons.append(pronspec)
   if not re.search("^[0-9]+$", location) and location not in ["top", "all"]:
@@ -92,18 +100,39 @@ def process_page(index, page, spec):
       tn = tname(t)
       if tn == "it-IPA":
         origt = unicode(t)
-        del t.params[:]
+        # Compute set of current reference params
+        current_refs = set()
+        for param in t.params:
+          pn = pname(param)
+          m = re.search("^n([0-9]*)$", pn)
+          if m:
+            current_refs.add(m.group(1) or "1")
+        # Compute params to add along with set of new reference params
+        params_to_add = []
+        new_refs = set()
         nextparam = 0
         for param in prons:
           if "=" in param:
-            paramname, paramval = param.split("=", 1)
+            pn, pv = param.split("=", 1)
           else:
             nextparam += 1
-            paramname = str(nextparam)
-            paramval = param
-          if re.search("^n[0-9]*$", paramname):
-            need_ref_section = True
-          t.add(paramname, paramval)
+            pn = str(nextparam)
+            pv = param
+          m = re.search("^n([0-9]*)$", pn)
+          if m:
+            new_refs.add(m.group(1) or "1")
+          params_to_add.append((pn, pv))
+
+        # Make sure we're not removing references
+        if len(current_refs - new_refs) > 0 and not args.override_refs:
+          pagemsg("WARNING: Saw existing refs not in new refs, not removing: existing=%s, new=%s" % (
+            origt, "{{it-IPA|%s}}" % "|".join(prons)))
+          return False
+
+        # Now change the params
+        del t.params[:]
+        for pn, pv in params_to_add:
+          t.add(pn, pv)
         if origt != unicode(t):
           pagemsg("Replaced %s with %s" % (origt, unicode(t)))
           notes.append("replace existing %s with %s (manually assisted)" % (origt, unicode(t)))
@@ -113,6 +142,7 @@ def process_page(index, page, spec):
       new_pron_template = construct_new_pron_template()
       subsections[k] = "* " + new_pron_template + "\n" + subsections[k]
       notes.append("insert %s into existing Pronunciation section (manually assisted)" % new_pron_template)
+    return True
 
   def insert_new_l3_pron_section(k):
     new_pron_template = construct_new_pron_template()
@@ -122,7 +152,8 @@ def process_page(index, page, spec):
   if location == "all":
     for k in xrange(2, len(subsections), 2):
       if "==Pronunciation==" in subsections[k - 1]:
-        insert_into_existing_pron_section(k)
+        if not insert_into_existing_pron_section(k):
+          return
         break
     else: # no break
       k = 2
@@ -135,7 +166,8 @@ def process_page(index, page, spec):
   elif location == "top":
     for k in xrange(2, len(subsections), 2):
       if "==Pronunciation==" in subsections[k - 1]:
-        insert_into_existing_pron_section(k)
+        if not insert_into_existing_pron_section(k):
+          return
         break
     else: # no break
       for k in xrange(2, len(subsections), 2):
@@ -168,7 +200,8 @@ def process_page(index, page, spec):
           insert_pron_section_in_etym_section()
           break
       elif begin_etym_n_section and "==Pronunciation==" in subsections[k - 1]:
-        insert_into_existing_pron_section(k)
+        if not insert_into_existing_pron_section(k):
+          return
         break
     else: # no break
       # We reached the end.
@@ -261,7 +294,8 @@ def process_page(index, page, spec):
   return "".join(sections), notes
 
 parser = blib.create_argparser("Add Italian pronunciations based on file of directives")
-parser.add_argument('--direcfile', required=True, help="File containing pronunciations, as output from snarf_it_pron.py and modified")
+parser.add_argument("--direcfile", required=True, help="File containing pronunciations, as output from snarf_it_pron.py and modified")
+parser.add_argument("--override-refs", action="store_true", help="Override reference params (n:Foo), even if some get deleted in the process")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
@@ -272,7 +306,8 @@ def get_items(lines):
   for line in lines:
     m = re.search("^Page ([0-9]*) (.*): <respelling> *(.*?) *<end>", line)
     if not m:
-      msg("WARNING: Unrecognized line: %s" % line)
+      # Not a warning, there will be several of these from output of snarf_it_pron.py
+      msg("Unrecognized line: %s" % line)
     else:
       yield m.groups()
 
