@@ -8,12 +8,12 @@ import blib
 from blib import getparam, rmparam, tname, pname, msg, site
 
 GR = u"\u0300"
-unaccented_vowel = u"aeiouöü"
-unaccented_vowel_not_a = u"eiouöü"
+unaccented_vowel = u"aeiouöüy"
+unaccented_vowel_not_a = u"eiouöüy"
 unaccented_vowel_c = "[" + unaccented_vowel + "]"
 # For whatever reason, there's a single character for ǜ but not for ö̀
-accented_vowel = u"àèéìòóùǜ" + GR # GR for ö̀
-accented_vowel_not_a = u"èéìòóùǜ" + GR # GR for ö̀
+accented_vowel = u"àèéìòóùǜỳ" + GR # GR for ö̀
+accented_vowel_not_a = u"èéìòóùǜỳ" + GR # GR for ö̀
 accented_vowel_c = "[" + accented_vowel + "]"
 vowel_c = "[" + unaccented_vowel + accented_vowel + "]"
 vowel_not_a_c = "[" + unaccented_vowel_not_a + accented_vowel_not_a + "]"
