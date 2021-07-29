@@ -36,13 +36,13 @@ def process_page(index, page, spec):
   for pronspec in pronspecs:
     if pronspec.startswith("r:"):
       ref = pronspec[2:]
-      if not re.search(r"^(Olivetti|DiPI|Treccani)\b", ref):
+      if not re.search(r"^(Olivetti|DiPI|Treccani|DOP)\b", ref):
         pagemsg("WARNING: Unrecognized reference %s: pronspec=%s" % (pronspec, spec))
         return
       refs.append("{{R:it:%s}}" % ref)
     elif pronspec.startswith("n:"):
       ref = pronspec[2:]
-      if not re.search(r"^(Olivetti|DiPI|Treccani)\b", ref):
+      if not re.search(r"^(Olivetti|DiPI|Treccani|DOP)\b", ref):
         pagemsg("WARNING: Unrecognized reference %s: pronspec=%s" % (pronspec, spec))
         return
       if next_num_pron == 0:
