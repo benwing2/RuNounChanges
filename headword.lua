@@ -346,13 +346,28 @@ local function format_inflection_parts(data, parts)
 			part = {term = part}
 		end
 		
-		local qualifiers = ""
+		local qualifiers
+		local reftext
 		
 		if part.qualifiers and #part.qualifiers > 0 then
 			qualifiers = require("Module:qualifier").format_qualifier(part.qualifiers) .. " "
 			
 			-- [[Special:WhatLinksHere/Template:tracking/headword/qualifier]]
 			require("Module:debug").track("headword/qualifier")
+		end
+		if part.refs and #part.refs > 0 then
+			local refs = {}
+			for _, ref in ipairs(parts.refs) do
+				if type(ref) ~= "table" then
+					ref = {text = ref}
+				end
+				local refargs
+				if ref.name or ref.group then
+					refargs = {name = ref.name, group = ref.group}
+				end
+				table.insert(refs, mw.getCurrentFrame():extensionTag("ref", ref.text, refargs))
+			end
+			reftext = table.concat(refs)
 		end
 		
 		local partaccel = part.accel
@@ -378,7 +393,12 @@ local function format_inflection_parts(data, parts)
 			false
 			)
 		
-		part = qualifiers .. part
+		if qualifiers then
+			part = qualifiers .. part
+		end
+		if reftext then
+			part = part .. reftext
+		end
 		
 		parts[key] = part
 	end
