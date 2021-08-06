@@ -6,19 +6,36 @@ import pywikibot, re, sys, codecs, argparse
 import blib
 from blib import getparam, rmparam, msg, errmsg, site, tname
 
-def process_page(page, index):
+def process_subpage(origpage, origindex, page, index):
+  origpagetitle = unicode(origpage.title())
   pagetitle = unicode(page.title())
   def pagemsg(txt):
-    msg("Page %s %s: %s" % (index, pagetitle, txt))
+    msg("Page %s %s: %s %s: %s" % (origindex, origpagetitle, index, pagetitle, txt))
 
   #if pagetitle.startswith("Template:"):
   pagemsg("Found one")
 
-parser = blib.create_argparser("Find templates transcluding a given page")
-parser.add_argument("--pages",
-    help=u"""Comma-separated list of pages to check.""")
-parser.add_argument("--pagefile",
-    help=u"""File containing pages to check.""")
+def process_page(page, index):
+  global args
+  pagetitle = unicode(page.title())
+  def pagemsg(txt):
+    msg("Page %s %s: %s" % (index, pagetitle, txt))
+  def errpagemsg(txt):
+    errmsg("Page %s %s: %s" % (index, pagetitle, txt))
+  errpagemsg("Processing references")
+  if not args.table_of_uses:
+    pagemsg("Processing references")
+  aliases = []
+  for i, subpage in blib.references(pagetitle, namespaces=[10], only_template_inclusion=False, filter_redirects=args.redirects_only):
+    aliases.append(unicode(subpage.title()))
+    if not args.table_of_uses:
+      process_subpage(page, index, subpage, i)
+  if args.table_of_uses:
+    msg("%s%s" % (pagetitle.replace("Template:", ""),
+      aliases and "," + ",".join(x.replace("Template:", "") for x in aliases) or ""))
+
+parser = blib.create_argparser("Find templates transcluding a given page",
+  include_pagefile=True)
 parser.add_argument("--redirects-only",
     help=u"""Only output redirects.""", action='store_true')
 parser.add_argument("--table-of-uses", action='store_true',
@@ -26,19 +43,4 @@ parser.add_argument("--table-of-uses", action='store_true',
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-if args.pages:
-  pages = args.pages.split(",")
-else:
-  pages = [x.strip() for x in codecs.open(args.pagefile, "r", "utf-8")]
-  for pagename in pages:
-    errmsg("Processing references to %s" % pagename)
-    if not args.table_of_uses:
-      msg("Processing references to %s" % pagename)
-    aliases = []
-    for i, page in blib.references(pagename, start, end, namespaces=[10], only_template_inclusion=False, filter_redirects=args.redirects_only):
-      aliases.append(unicode(page.title()))
-      if not args.table_of_uses:
-        process_page(page, i)
-    if args.table_of_uses:
-      msg("%s%s" % (pagename.replace("Template:", ""),
-        aliases and "," + ",".join(x.replace("Template:", "") for x in aliases) or ""))
+blib.do_pagefile_cats_refs(args, start, end, process_page)
