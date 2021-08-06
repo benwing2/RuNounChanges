@@ -529,15 +529,23 @@ def yield_articles(page, seen, startsort=None, prune_cats_regex=None, recurse=Fa
     # Only use when non-recursive. Has a recurse= flag but doesn't allow for prune_cats_regex, doesn't correctly
     # ignore subcats and pages that may be seen multiple times.
     for article in page.articles(startsort=startsort):
-      if article not in seen:
-        seen.add(article)
+      if seen is None:
         yield article
+      else:
+        pagetitle = unicode(article.title())
+        if pagetitle not in seen:
+          seen.add(pagetitle)
+          yield article
   else:
     for subcat in yield_subcats(page, seen, prune_cats_regex=prune_cats_regex, do_this_page=True, recurse=True):
       for article in subcat.articles(startsort=startsort):
-        if article not in seen:
-          seen.add(article)
+        if seen is None:
           yield article
+        else:
+          pagetitle = unicode(article.title())
+          if pagetitle not in seen:
+            seen.add(pagetitle)
+            yield article
 
 def raw_cat_articles(page, seen, startsort=None, prune_cats_regex=None, recurse=False):
   if type(page) is str:
@@ -547,17 +555,19 @@ def raw_cat_articles(page, seen, startsort=None, prune_cats_regex=None, recurse=
   for article in yield_articles(page, seen, startsort=startsort, prune_cats_regex=prune_cats_regex, recurse=recurse):
     yield article
 
-def cat_articles(page, startsort=None, endsort=None, seen=None, prune_cats_regex=None, recurse=False):
-  if seen is None:
+def cat_articles(page, startsort=None, endsort=None, seen=None, prune_cats_regex=None, recurse=False, track_seen=False):
+  if seen is None and track_seen:
     seen = set()
   for i, current in iter_items(raw_cat_articles(page, seen, startsort=startsort if not isinstance(startsort, int) else None,
       prune_cats_regex=prune_cats_regex, recurse=recurse), startsort, endsort):
     yield i, current
 
 def yield_subcats(page, seen, prune_cats_regex=None, do_this_page=False, recurse=False):
-  if page in seen:
-    return
-  seen.add(page)
+  if seen is not None:
+    pagetitle = unicode(page.title())
+    if pagetitle in seen:
+      return
+    seen.add(pagetitle)
   if prune_cats_regex:
     this_cat = re.sub("^Category:", "", unicode(page.title()))
     if re.search(prune_cats_regex, this_cat):
@@ -572,9 +582,13 @@ def yield_subcats(page, seen, prune_cats_regex=None, do_this_page=False, recurse
         yield cat
   else:
     for subcat in subcats:
-      if subcat not in seen:
-        seen.add(subcat)
+      if seen is None:
         yield subcat
+      else:
+        pagetitle = unicode(subcat.title())
+        if pagetitle not in seen:
+          seen.add(pagetitle)
+          yield subcat
 
 def cat_subcats(page, startsort=None, endsort=None, seen=None, prune_cats_regex=None, do_this_page=False, recurse=False):
   if seen is None:
@@ -833,6 +847,8 @@ def create_argparser(desc, include_pagefile=False, include_stdin=False,
       help="When processing categories, do the category and subcategories instead of pages belong to the category.")
     parser.add_argument("--recursive", action="store_true",
       help="In conjunction with --cats, recursively process pages in subcategories.")
+    parser.add_argument("--track-seen", action="store_true",
+      help="Track previously seen articles and don't visit them again.")
     parser.add_argument("--prune-cats", help="Regex to use to prune categories when processing subcategories recursively; any categories matching the regex will be skipped along with any of their subcategories (unless reachable in some other manner).")
     parser.add_argument("--refs", help="List of references to process, comma-separated.")
     parser.add_argument("--specials", help="Special pages to do, comma-separated.")
@@ -845,6 +861,7 @@ def create_argparser(desc, include_pagefile=False, include_stdin=False,
     parser.add_argument("--no-output", help="In conjunction with --find-regex, don't output processed text.", action = "store_true")
   if include_stdin:
     parser.add_argument("--stdin", help="Read dump from stdin.", action="store_true")
+    parser.add_argument("--only-lang", help="Only process the section of a page for this language (a canonical language name).")
   return parser
 
 def init_argparser(desc):
@@ -920,7 +937,9 @@ def parse_start_end(startsort, endsort):
 # If only_lang is given, it should be a canonical name of a language (e.g.
 # "Latin"), and pages not containing this language will be skipped. (This is
 # especially useful in conjunction with dumps on stdin, where it can greatly
-# speed up processing by avoiding the need to parse every page.)
+# speed up processing by avoiding the need to parse every page.) Not to be
+# confused with the --only-lang user-specifiable parameter, which causes
+# processing over only the section of a given language.
 #
 # If filter_pages is given, it should be an unanchored regex used to filter
 # page titles.
@@ -957,8 +976,52 @@ def do_pagefile_cats_refs(args, start, end, process, default_cats=[],
         return True
     return False
 
+  def find_lang_section_for_only_lang(text, lang, pagemsg):
+    sections = re.split("(^==[^=]*==\n)", text, 0, re.M)
+
+    lang_j = -1
+    for j in xrange(2, len(sections), 2):
+      if sections[j-1] == "==" + lang + "==\n":
+        if lang_j >= 0:
+          pagemsg("WARNING: Found two %s sections, skipping" % lang)
+          return None
+        lang_j = j
+    if lang_j < 0:
+      pagemsg("Can't find %s section, skipping" % lang)
+      return None
+    j = lang_j
+
+    # Extract off trailing separator
+    mm = re.match(r"^(.*?)(\n*--+\n*)$", sections[j], re.S)
+    if mm:
+      secbody, sectail = mm.group(1), mm.group(2)
+    else:
+      secbody = sections[j]
+      sectail = ""
+
+    return sections, j, secbody, sectail
+
+  def do_process_text_on_page(index, pagetitle, text, pagemsg):
+    if page_should_be_filtered_out(pagetitle):
+      return None, None
+    if args.only_lang:
+      retval = find_lang_section_for_only_lang(text, args.only_lang, pagemsg)
+      if retval is None:
+        return None
+      sections, j, secbody, sectail = retval
+      if edit:
+        retval = process(index, pagetitle, secbody)
+      if retval is None:
+        return None
+      newsecbody, comment = retval
+      sections[j] = newsecbody + sectail
+      return "".join(sections), comment
+    else:
+      if only_lang and "==%s==" % only_lang not in text:
+        return None, None
+      return process(index, pagetitle, text)
+
   def process_page(page, i):
-    pagetext = [None]
     pagetitle = unicode(page.title())
     if page_should_be_filtered_out(pagetitle):
       return
@@ -966,14 +1029,12 @@ def do_pagefile_cats_refs(args, start, end, process, default_cats=[],
       msg("Page %s %s: %s" % (i, pagetitle, txt))
     def do_process_page(page, index, parsed=None):
       if stdin:
-        pagetext[0] = safe_page_text(page, pagemsg)
-        if only_lang and "==%s==" % only_lang not in pagetext[0]:
-          return None, None
-        return process(index, pagetitle, pagetext[0])
+        pagetext = safe_page_text(page, pagemsg)
+        return do_process_text_on_page(index, pagetitle, pagetext, pagemsg)
       else:
         if only_lang:
-          pagetext[0] = safe_page_text(page, pagemsg)
-          if "==%s==" % only_lang not in pagetext[0]:
+          pagetext = safe_page_text(page, pagemsg)
+          if "==%s==" % only_lang not in pagetext:
             return None, None
         if edit:
           return process(page, index, parsed)
@@ -982,8 +1043,8 @@ def do_pagefile_cats_refs(args, start, end, process, default_cats=[],
 
     if args.find_regex:
       retval = do_process_page(page, i)
-      pagetext[0] = safe_page_text(page, pagemsg)
-      do_handle_find_regex_retval(retval, pagetext[0], pagemsg)
+      pagetext = safe_page_text(page, pagemsg)
+      do_handle_find_regex_retval(retval, pagetext, pagemsg)
     elif edit:
       do_edit(page, i, do_process_page, save=args.save, verbose=args.verbose,
           diff=args.diff)
@@ -991,23 +1052,24 @@ def do_pagefile_cats_refs(args, start, end, process, default_cats=[],
       do_process_page(page, i)
 
   if stdin and args.stdin:
-    def do_process_text_on_page(index, pagetitle, text):
-      if only_lang and "==%s==" % only_lang not in text:
-        return None, None
+    def do_process_stdin_text_on_page(index, pagetitle, text):
       if page_should_be_filtered_out(pagetitle):
-        return None, None
-      return process(index, pagetitle, text)
+        return None
+      else:
+        def pagemsg(txt):
+          msg("Page %s %s: %s" % (index, pagetitle, txt))
+        return do_process_text_on_page(index, pagetitle, text, pagemsg)
     if args.find_regex:
       utf8_stdin = (line.decode("utf-8") for line in sys.stdin)
       index_pagetitle_and_text = yield_text_from_find_regex(utf8_stdin, args.verbose)
       for _, (index, pagetitle, text) in iter_items(index_pagetitle_and_text, start, end,
           get_name=lambda x:x[1], get_index=lambda x:x[0]):
+        retval = do_process_stdin_text_on_page(index, pagetitle, text)
         def pagemsg(txt):
           msg("Page %s %s: %s" % (index, pagetitle, txt))
-        retval = do_process_text_on_page(index, pagetitle, text)
         do_handle_find_regex_retval(retval, text, pagemsg)
     else:
-      parse_dump(sys.stdin, do_process_text_on_page, start, end)
+      parse_dump(sys.stdin, do_process_stdin_text_on_page, start, end)
 
   elif (args.pages or args.pagefile or args.pages_from_find_regex or args.cats or args.refs or
       args.specials or args.prefix_pages):
@@ -1028,7 +1090,10 @@ def do_pagefile_cats_refs(args, start, end, process, default_cats=[],
         process_page(pywikibot.Page(site, pagetitle), i)
     if args.cats:
       args_prune_cats = args.prune_cats and args.prune_cats.decode("utf-8") or None
-      seen = set()
+      if args.track_seen:
+        seen = set()
+      else:
+        seen = None
       for cat in [x.decode("utf-8") for x in re.split(r",(?! )", args.cats)]:
         if args.do_cat_and_subcats:
           for i, subcat in cat_subcats(cat, start, end, seen=seen, prune_cats_regex=args_prune_cats,
@@ -1040,7 +1105,7 @@ def do_pagefile_cats_refs(args, start, end, process, default_cats=[],
             process_page(subcat, i)
         else:
           for i, page in cat_articles(cat, start, end, seen=seen, prune_cats_regex=args_prune_cats,
-              recurse=args.recursive):
+              recurse=args.recursive, track_seen=args.track_seen):
             process_page(page, i)
     if args.refs:
       for ref in [x.decode("utf-8") for x in re.split(r",(?! )", args.refs)]:
@@ -1061,7 +1126,7 @@ def do_pagefile_cats_refs(args, start, end, process, default_cats=[],
     if not default_cats and not default_refs:
       raise ValueError("One of --pages, --pagefile, --cats, --refs, --specials or --prefix-pages should be specified")
     for cat in default_cats:
-      for i, page in cat_articles(cat, start, end):
+      for i, page in cat_articles(cat, start, end, track_seen=args.track_seen):
         process_page(page, i)
     for ref in default_refs:
       for i, page in references(ref, start, end, namespaces=ref_namespaces):
