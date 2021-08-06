@@ -4535,7 +4535,7 @@ def process_text_on_page(index, pagetitle, text):
         def warn(text):
           pagemsg("WARNING: %s" % text)
         tags, this_notes = infltags.combine_adjacent_tags_into_multipart(
-          tags, tag_to_dimension_table, pagemsg, warn,
+          tn, lang, term, tags, tag_to_dimension_table, pagemsg, warn,
           tag_to_canonical_form_table=tag_to_canonical_form_table
         )
         notes.extend(this_notes)

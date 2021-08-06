@@ -1691,6 +1691,7 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
                 if deftemp_allows_multiple_tag_sets:
                   # Now combine adjacent tags into multipart tags.
                   tags, this_notes = infltags.combine_adjacent_tags_into_multipart(
+                    tname(t), lang, lemmaparam,
                     tags, tag_to_dimension_table, pagemsg, warn,
                     tag_to_canonical_form_table=tag_to_canonical_form_table
                   )
@@ -1946,7 +1947,7 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
                               shortdecl == "" and newshortdecl == "-"):
                             pagemsg("Updated participle short decl from %s to %s" %
                                 (shortdecl, newshortdecl))
-                            notes.append("updated participle short decl from %s to %s" %
+                            notes.append("update participle short decl from %s to %s" %
                                 (shortdecl, newshortdecl))
                             declt.add("2", newshortdecl)
                             subsections[check_subsection + 1] = unicode(subsecparsed)

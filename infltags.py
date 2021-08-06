@@ -15,9 +15,16 @@ inflection_of_templates = [
   "participle of"
 ]
 
+inflection_of_templates_convertible_to_more_specific = [
+  "inflection of",
+  "infl of",
+]
+
 tags_to_templates = {
   ("p",): "plural of",
   ("f",): "feminine of",
+  ("m", "p",): "masculine plural of",
+  ("f", "p",): "feminine plural of",
   ("aug",): "augmentative of",
   ("dim",): "diminutive of",
   ("alternative", "form"): "alternative form of",
@@ -70,6 +77,12 @@ def combine_tag_set_group(group):
       result.append(";")
     result.extend(tag_set)
   return result
+
+def construct_abbreviated_template(tn, lang, lemma):
+  if lang:
+    return "{{%s|%s|%s}}" % (tn, lang, lemma)
+  else:
+    return "{{%s|%s}}" % (tn, lemma)
 
 # Fetch and return two sorts of tables from Wiktionary form data:
 # (1) tag_to_dimension_table: Mapping from tags to dimensions. Only tags in
@@ -161,7 +174,7 @@ def combine_adjacent_inflection_of_calls(text, notes, pagemsg, verbose=False):
               prev_gloss == this_gloss and prev_misc_params == this_misc_params):
             # Can combine prev with this.
             this_tags = prev_tags + [";"] + this_tags
-            notes.append("combined adjacent calls to {{%s}}" % template)
+            notes.append("combine adjacent calls to %s" % construct_abbreviated_template(template, this_lang, this_lemma))
 
             # Erase all params.
             del t.params[:]
@@ -242,7 +255,7 @@ def extract_tags_and_nontag_params_from_inflection_of(t, notes):
   if getparam(t, "lang"):
     lang = getparam(t, "lang")
     term_param = 1
-    notes.append("moved lang= in {{%s}} to 1=" % tn)
+    notes.append("move lang=%s in {{%s}} to 1=" % (lang, tn))
   else:
     lang = getparam(t, "1")
     term_param = 2
@@ -258,7 +271,8 @@ def extract_tags_and_nontag_params_from_inflection_of(t, notes):
         if pval:
           tags.append(pval)
         else:
-          notes.append("removed empty tags from {{%s}}" % tn)
+          notes.append("remove empty tags from %s" % construct_abbreviated_template(
+            tname(t), lang, term))
     elif pname not in ["lang", "tr", "alt"]:
       params.append((pname, pval, param.showkey))
   return tags, params, lang, term, tr, alt
@@ -267,12 +281,12 @@ def extract_tags_and_nontag_params_from_inflection_of(t, notes):
 # ones that differ in only one tag in a given dimension. Repeat this
 # until no changes in case we can reduce along multiple dimensions, e.g.
 #
-# {{inflection of|canus||dat|m|p|;|dat|f|p|;|dat|n|p|;|abl|m|p|;|abl|f|p|;|abl|n|p|lang=la}}
+# {{inflection of|la|canus||dat|m|p|;|dat|f|p|;|dat|n|p|;|abl|m|p|;|abl|f|p|;|abl|n|p}}
 #
 # which can be reduced to
 #
 # {{inflection of|la|canus||dat//abl|m//f//n|p}}
-def combine_adjacent_tags_into_multipart(tags, tag_to_dimension_table,
+def combine_adjacent_tags_into_multipart(tn, lang, lemma, tags, tag_to_dimension_table,
   pagemsg, warn, multipart_list_tag_to_parts=multipart_list_tag_to_parts,
   tag_to_canonical_form_table={},
 ):
@@ -300,7 +314,7 @@ def combine_adjacent_tags_into_multipart(tags, tag_to_dimension_table,
     #
     # An example where adjacent-first is better:
     #
-    # {{inflection of|medius||m|acc|s|;|n|nom|s|;|n|acc|s|;|n|voc|s|lang=la}}
+    # {{inflection of|la|medius||m|acc|s|;|n|nom|s|;|n|acc|s|;|n|voc|s}
     #
     # all-first results in
     #
@@ -316,7 +330,7 @@ def combine_adjacent_tags_into_multipart(tags, tag_to_dimension_table,
     #
     # The opposite happens in
     #
-    # {{inflection of|βουλόμενος||n|nom|s|;|m|acc|s|;|n|acc|s|;|n|voc|s|lang=grc}}
+    # {{inflection of|grc|βουλόμενος||n|nom|s|;|m|acc|s|;|n|acc|s|;|n|voc|s}}
     #
     # where all-first results in
     #
@@ -405,8 +419,9 @@ def combine_adjacent_tags_into_multipart(tags, tag_to_dimension_table,
                   combine_msg = "tag sets %s and %s into %s" % (
                     "|".join(cur_tag_set), "|".join(tag_set), "|".join(new_tag_set)
                   )
-                  pagemsg("Combining %s" % combine_msg)
-                  this_notes.append("combined %s" % combine_msg)
+                  abbrev_template = construct_abbreviated_template(tn, lang, lemma)
+                  pagemsg("Combining %s %s" % (abbrev_template, combine_msg))
+                  this_notes.append("combine %s %s" % (abbrev_template, combine_msg))
                   tag_sets[prev_tag_ind] = new_tag_set
                   del tag_sets[tag_ind]
                   break
@@ -498,15 +513,17 @@ def put_back_new_inflection_of_params(t, notes, tags, params, lang, term, tr, al
   if tr:
     t.add("tr", tr)
 
-  if convert_to_more_specific_template and tuple(tags) in tags_to_templates:
+  if (convert_to_more_specific_template and tname(t) in inflection_of_templates_convertible_to_more_specific and
+      tuple(tags) in tags_to_templates):
     tempname = tags_to_templates[tuple(tags)]
+    old_tn = tname(t)
     # Convert to more specific template, e.g. {{plural of}}.
     blib.set_template_name(t, tempname)
     altparam = remove_comment_continuations(alt)
     if altparam:
       t.add("3", altparam)
-    notes.append("replaced {{inflection of|...|%s}} with {{%s}}" % (
-      "|".join(tags), tempname))
+    notes.append("replace {{%s|%s|%s|...|%s}} with {{%s|%s|%s}}" % (
+      old_tn, lang, term, "|".join(tags), tempname, lang, term))
 
   else:
     t.add("3", remove_comment_continuations(alt))

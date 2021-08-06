@@ -918,7 +918,7 @@ def process_text_on_page(index, pagetitle, text):
         pagemsg("WARNING: Modifying line not in --matching-textfile: %s" %
             m.group(0))
       pagemsg("Replacing <%s> with <%s>" % (m.group(0), newtext))
-      notes.append("replaced raw inflection-of defn with {{inflection of|%s}}" % langcode)
+      notes.append("replace raw inflection-of defn with {{inflection of|%s}}" % langcode)
       return newtext
 
     def replace_raw_any(m):
@@ -1045,7 +1045,8 @@ def process_text_on_page(index, pagetitle, text):
             if id:
               t.add("id", id)
             shortenable_tags.append((lang, lemma, tags))
-            notes.append("replaced {{form of}} containing inflection tags with {{inflection of}}")
+            notes.append("replace {{form of}} containing inflection tags with %s" %
+              infltags.construct_abbreviated_template("inflection of", lang, lemma))
             pagemsg("Replacing %s with %s" % (origt, unicode(t)))
     return unicode(parsed)
 
@@ -1095,9 +1096,10 @@ def process_text_on_page(index, pagetitle, text):
             pagemsg("WARNING: Bad tag %s, can't canonicalize" % tag)
             repl = tag
         elif repl != tag:
-          notemsg = ("canonicalized multiword inflection tag '%s' to %s" if ' ' in tag else
-            "canonicalized inflection tag %s to %s")
-          notes.append(notemsg % (tag, "|".join(repl) if type(repl) is list else repl))
+          notemsg = ("canonicalize multiword inflection tag '%s' to %s in %s" if ' ' in tag else
+            "canonicalize inflection tag %s to %s in %s")
+          notes.append(notemsg % (tag, "|".join(repl) if type(repl) is list else repl,
+            infltags.construct_abbreviated_template(tn, lang, term)))
         if type(repl) is list:
           canon_tags.extend(repl)
         else:
@@ -1120,10 +1122,12 @@ def process_text_on_page(index, pagetitle, text):
             else:
               if type(to) is list:
                 canon_tags.extend(to)
-                notes.append("replaced inflection tag sequence %s with %s" % ("|".join(fro), "|".join(to)))
+                joined_to = "|".join(to)
               else:
                 canon_tags.append(to)
-                notes.append("replaced inflection tag sequence %s with %s" % ("|".join(fro), to))
+                joined_to = to
+              notes.append("replace inflection tag sequence %s with %s in %s" % (
+                "|".join(fro), joined_to, infltags.construct_abbreviated_template(tn, lang, term)))
               i += len(fro)
               break
         else:
@@ -1133,6 +1137,10 @@ def process_text_on_page(index, pagetitle, text):
       tags = canon_tags
 
       # (4) Canonicalize tags by combining e.g. 'nom|and|voc' to 'nom//voc'.
+
+      def append_combine_note(dim, orig_tags, combined_tag):
+        notes.append("combine %s tags %s into %s in %s" % (dim, orig_tags, combined_tag,
+          infltags.construct_abbreviated_template(tn, lang, term)))
 
       canon_tags = []
       i = 0
@@ -1164,7 +1172,7 @@ def process_text_on_page(index, pagetitle, text):
           orig_tags = "|".join(tags[i:i + 9])
           combined_tag = "%s//%s//%s//%s//%s" % (tag1, tag2, tag3, tag4, tag5)
           canon_tags.append(combined_tag)
-          notes.append("combined %s tags %s into %s" % (dim, orig_tags, combined_tag))
+          append_combine_note(dim, orig_tags, combined_tag)
           i += 9
 
         # Check for foo|and|bar|and|baz|and|bat where foo, bar, baz and bat
@@ -1189,7 +1197,7 @@ def process_text_on_page(index, pagetitle, text):
           orig_tags = "|".join(tags[i:i + 7])
           combined_tag = "%s//%s//%s//%s" % (tag1, tag2, tag3, tag4)
           canon_tags.append(combined_tag)
-          notes.append("combined %s tags %s into %s" % (dim, orig_tags, combined_tag))
+          append_combine_note(dim, orig_tags, combined_tag)
           i += 7
 
         # Check for foo|and|bar|and|baz where foo, bar and baz
@@ -1210,7 +1218,7 @@ def process_text_on_page(index, pagetitle, text):
           orig_tags = "|".join(tags[i:i + 5])
           combined_tag = "%s//%s//%s" % (tag1, tag2, tag3)
           canon_tags.append(combined_tag)
-          notes.append("combined %s tags %s into %s" % (dim, orig_tags, combined_tag))
+          append_combine_note(dim, orig_tags, combined_tag)
           i += 5
 
         # Check for foo|bar|and|baz where foo, bar and baz
@@ -1230,7 +1238,7 @@ def process_text_on_page(index, pagetitle, text):
           orig_tags = "|".join(tags[i:i + 4])
           combined_tag = "%s//%s//%s" % (tag1, tag2, tag3)
           canon_tags.append(combined_tag)
-          notes.append("combined %s tags %s into %s" % (dim, orig_tags, combined_tag))
+          append_combine_note(dim, orig_tags, combined_tag)
           i += 4
 
         # Check for foo|and|bar where foo and bar are in the same dimension.
@@ -1246,7 +1254,7 @@ def process_text_on_page(index, pagetitle, text):
           orig_tags = "|".join(tags[i:i + 3])
           combined_tag = "%s//%s" % (tag1, tag2)
           canon_tags.append(combined_tag)
-          notes.append("combined %s tags %s into %s" % (dim, orig_tags, combined_tag))
+          append_combine_note(dim, orig_tags, combined_tag)
           i += 3
 
         else:
@@ -1266,7 +1274,8 @@ def process_text_on_page(index, pagetitle, text):
       # {{inflection of|la|canus||dat//abl|m//f//n|p}}
       def warn(text):
         pagemsg("WARNING: %s" % text)
-      tags, this_notes = infltags.combine_adjacent_tags_into_multipart(tags,
+      tags, this_notes = infltags.combine_adjacent_tags_into_multipart(
+        tn, lang, term, tags,
         # FIXME, consider using fetch_tag_to_dimension_table() to fetch the
         # tag-to-dimension table instead of hardcoding it.
         combinable_tags_by_dimension_table, pagemsg, warn,
@@ -1274,10 +1283,11 @@ def process_text_on_page(index, pagetitle, text):
       notes.extend(this_notes)
 
       # (6) Record statistics on multipart tags, unrecognized ("bad") tags,
-      # tags with spaces in them, etc.  # Maybe sort the tags.
+      # tags with spaces in them, etc. Maybe sort the tags.
+
+      tag_sets = infltags.split_tags_into_tag_sets(tags)
 
       # Record statistics on multipart tags
-      tag_sets = infltags.split_tags_into_tag_sets(tags)
       for tag_set in tag_sets:
         record_stats_on_tag_set(tag_set)
 
@@ -1303,7 +1313,7 @@ def process_text_on_page(index, pagetitle, text):
         sorted_tag_sets = [sort_tags(tag_set) for tag_set in tag_sets]
         new_tags = infltags.combine_tag_set_group(sorted_tag_sets)
         if new_tags != tags:
-          notes.append("sorted tags")
+          notes.append("sort tags")
           sorted_tags_info = " (sorted tags)"
           tags = new_tags
 
@@ -1312,7 +1322,7 @@ def process_text_on_page(index, pagetitle, text):
         convert_to_more_specific_template=True)
       if origt != unicode(t):
         if not notes:
-          notes.append("canonicalized {{%s}}" % tn)
+          notes.append("canonicalize %s" % infltags.construct_abbreviated_template(tn, lang, term))
         pagemsg("Replaced %s with %s%s" % (origt, unicode(t), sorted_tags_info))
 
       global num_total_templates
