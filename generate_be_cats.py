@@ -4,11 +4,7 @@
 import re
 import pywikibot
 import blib
-
-site = pywikibot.Site()
-
-def msg(text):
-  print text.encode('utf-8')
+from blib import msg, errandmsg, site
 
 noun_stress_patterns = ["a", "b", "c", "d", "e", "f"]
 adj_stress_patterns = ["a", "b"]
@@ -48,7 +44,7 @@ def create_cat(cat, catargs, extratext=None):
   changelog = "Creating '%s' with text '%s'" % (cat, text)
   msg("Changelog = %s" % changelog)
   if args.save:
-    page.save(comment=changelog)
+    blib.safe_page_save(page, changelog, errandmsg)
 
 parser = blib.create_argparser(u"Create Belarusian noun/verb/adjective categories")
 parser.add_argument('--overwrite', help="Overwrite categories", action="store_true")

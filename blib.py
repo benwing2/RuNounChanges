@@ -316,29 +316,24 @@ def new_do_edit(index, page, func=None, null=False, save=False, verbose=False, d
           page.text = new
           if save:
             p.pagemsg("Saving with comment = %s" % comment)
-            try_repeatedly(lambda: page.save(comment=comment), p.pagemsg,
-              "save page")
+            safe_page_save(page, comment, p.errandpagemsg)
           else:
             p.pagemsg("Would save with comment = %s" % comment)
         elif null:
           p.pagemsg("Purged page cache")
-          page.purge(forcelinkupdate = True)
+          safe_page_purge(page, p.errandpagemsg)
         elif comment:
           p.pagemsg("Skipped: %s" % comment)
         else:
           p.pagemsg("Skipped, no changes")
       else:
         p.pagemsg("Purged page cache")
-        page.purge(forcelinkupdate = True)
-    except (pywikibot.LockedPage, pywikibot.NoUsername):
-      p.errandpagemsg('WARNING: Skipped, page is protected')
-    except pywikibot.exceptions.PageSaveRelatedError as e:
-      p.errandpagemsg('WARNING: Skipped, unable to save (abuse filter?): %s' % e)
+        safe_page_purge(page, p.errandpagemsg)
     except urllib2.HTTPError as e:
-      if e.code != 503:
+      if e.code != 503: # Service unavailable
         raise
     except:
-      p.errandpagemsg('WARNING: Error')
+      p.errandpagemsg("WARNING: Error")
       raise
 
     break
@@ -361,65 +356,24 @@ def do_edit(page, index, func=None, null=False, save=False, verbose=False, diff=
           page.text = new
           if save:
             pagemsg("Saving with comment = %s" % comment)
-            try_repeatedly(lambda: page.save(comment=comment), pagemsg,
-              "save page")
+            safe_page_save(page, comment, errandpagemsg)
           else:
             pagemsg("Would save with comment = %s" % comment)
         elif null:
           pagemsg("Purged page cache")
-          page.purge(forcelinkupdate = True)
+          safe_page_purge(page, errandpagemsg)
         elif comment:
           pagemsg("Skipped: %s" % comment)
         else:
           pagemsg("Skipped, no changes")
       else:
         pagemsg("Purged page cache")
-        page.purge(forcelinkupdate = True)
-    except (pywikibot.LockedPage, pywikibot.NoUsername):
-      errandpagemsg('WARNING: Skipped, page is protected')
-    except pywikibot.exceptions.PageSaveRelatedError as e:
-      # This needs to have Unicode format string or it will choke on
-      # exceptions with Unicode characters in the message.
-      errandpagemsg(u'WARNING: Skipped, unable to save (abuse filter?): %s' % e)
+        safe_page_purge(page, errandpagemsg)
     except urllib2.HTTPError as e:
-      if e.code != 503:
+      if e.code != 503: # Service unavailable
         raise
     except:
-      errandpagemsg(u'WARNING: Error')
-      raise
-
-    break
-
-def do_process_text(pagetitle, pagetext, index, func=None, verbose=False):
-  def pagemsg(text):
-    msg("Page %s %s: %s" % (index, pagetitle, text))
-  while True:
-    try:
-      if func:
-        if verbose:
-          pagemsg("Begin processing")
-        new, comment = func(pagetitle, index, parse_text(pagetext))
-
-        if new:
-          new = unicode(new)
-
-          # Canonicalize shaddas when comparing pages so we don't do saves
-          # that only involve different shadda orders.
-          if reorder_shadda(pagetext) != reorder_shadda(new):
-            if verbose:
-              pagemsg('Replacing <%s> with <%s>' % (pagetext, new))
-            #if save:
-            #  pagemsg("Saving with comment = %s" % comment)
-            #  try_repeatedly(lambda: page.save(comment=comment), pagemsg,
-            #    "save page")
-            #else:
-            pagemsg("Would save with comment = %s" % comment)
-          else:
-            pagemsg('Skipped, no changes')
-        else:
-          pagemsg('Skipped: %s' % comment)
-    except:
-      errmsg(u'Page %s %s: Error' % (index, pagetitle))
+      errandpagemsg("WARNING: Error")
       raise
 
     break
@@ -1027,13 +981,15 @@ def do_pagefile_cats_refs(args, start, end, process, default_cats=[],
       return
     def pagemsg(txt):
       msg("Page %s %s: %s" % (i, pagetitle, txt))
+    def errandpagemsg(txt):
+      errandmsg("Page %s %s: %s" % (i, pagetitle, txt))
     def do_process_page(page, index, parsed=None):
       if stdin:
-        pagetext = safe_page_text(page, pagemsg)
+        pagetext = safe_page_text(page, errandpagemsg)
         return do_process_text_on_page(index, pagetitle, pagetext, pagemsg)
       else:
         if only_lang:
-          pagetext = safe_page_text(page, pagemsg)
+          pagetext = safe_page_text(page, errandpagemsg)
           if "==%s==" % only_lang not in pagetext:
             return None, None
         if edit:
@@ -1043,7 +999,7 @@ def do_pagefile_cats_refs(args, start, end, process, default_cats=[],
 
     if args.find_regex:
       retval = do_process_page(page, i)
-      pagetext = safe_page_text(page, pagemsg)
+      pagetext = safe_page_text(page, errandpagemsg)
       do_handle_find_regex_retval(retval, pagetext, pagemsg)
     elif edit:
       do_edit(page, i, do_process_page, save=args.save, verbose=args.verbose,
@@ -1222,42 +1178,62 @@ def getEtymLanguageData():
     etym_languages_byCode[etyl["code"]] = etyl
     etym_languages_byCanonicalName[etyl["canonicalName"]] = etyl
 
-def try_repeatedly(fun, pagemsg, operation="save", bad_value_ret=None, max_tries=2, sleep_time=5):
+def try_repeatedly(fun, errandpagemsg, operation="save", bad_value_ret=None, max_tries=2, sleep_time=5):
   num_tries = 0
+  def log_exception(txt, e, skipping=False):
+    txt = "WARNING: %s when trying to %s%s: %s" % (
+      txt, operation, ", skipping" if skipping else "", unicode(e)
+    )
+    errandpagemsg(txt)
+    traceback.print_exc(file=sys.stdout)
   while True:
     try:
       return fun()
     except KeyboardInterrupt as e:
       raise
     except pywikibot.exceptions.InvalidTitle as e:
-      pagemsg("WARNING: Invalid title, skipping")
-      traceback.print_exc(file=sys.stdout)
+      log_exception("Invalid title", e, skipping=True)
       return bad_value_ret
+    except (pywikibot.LockedPage, pywikibot.NoUsername) as e:
+      log_exception("Page is protected", e, skipping=True)
+      return bad_value_ret
+    # Instead, retry, which will save the page.
+    #except pywikibot.exceptions.PageSaveRelatedError as e:
+    #  log_exception("Unable to save (abuse filter?)", e, skipping=True)
     except Exception as e:
       if "invalidtitle" in unicode(e):
-        pagemsg("WARNING: Invalid title, skipping")
-        traceback.print_exc(file=sys.stdout)
+        log_exception("Invalid title", e, skipping=True)
         return bad_value_ret
       #except (pywikibot.exceptions.Error, StandardError) as e:
-      pagemsg("WARNING: Error when trying to %s: %s" % (operation, unicode(e)))
-      errmsg("WARNING: Error when trying to %s: %s" % (operation, unicode(e)))
+      log_exception("Error", e)
       num_tries += 1
       if num_tries >= max_tries:
-        pagemsg("WARNING: Can't %s!!!!!!!" % operation)
-        errmsg("WARNING: Can't %s!!!!!!!" % operation)
+        errandpagemsg("WARNING: Can't %s!!!!!!!" % operation)
         raise
-      errmsg("Sleeping for %s seconds" % sleep_time)
+      errandpagemsg("Sleeping for %s seconds" % sleep_time)
       time.sleep(sleep_time)
       #if sleep_time >= 40:
       #  sleep_time += 40
       #else:
       #  sleep_time *= 2
 
-def safe_page_text(page, pagemsg):
-  return try_repeatedly(lambda: page.text, pagemsg, "fetch page text", bad_value_ret="")
+def safe_page_text(page, errandpagemsg, bad_value_ret=""):
+  return try_repeatedly(lambda: page.text, errandpagemsg, "fetch page text", bad_value_ret=bad_value_ret)
 
-def safe_page_exists(page, pagemsg):
-  return try_repeatedly(lambda: page.exists(), pagemsg, "determine if page exists", bad_value_ret=False)
+def safe_page_exists(page, errandpagemsg):
+  return try_repeatedly(lambda: page.exists(), errandpagemsg, "determine if page exists", bad_value_ret=False)
+
+def safe_page_save(page, comment, errandpagemsg):
+  def do_save():
+    page.save(comment=comment)
+    return True
+  return try_repeatedly(do_save, errandpagemsg, "save page", bad_value_ret=False)
+
+def safe_page_purge(page, errandpagemsg):
+  def do_purge():
+    page.purge(forcelinkupdate = True)
+    return True
+  return try_repeatedly(do_purge, errandpagemsg, "purge page", bad_value_ret=False)
 
 class ProcessLinks(object):
   def __init__(self, index, pagetitle, parsed, template, tlang, param, trparam, langparam, notforeign=False):
@@ -1714,9 +1690,9 @@ def output_process_links_template_counts(templates_seen, templates_changed):
   for template, count in sorted(templates_changed.items(), key=lambda x:-x[1]):
     msg("  %s = %s" % (template, count))
 
-def find_lang_section(pagename, lang, pagemsg):
+def find_lang_section(pagename, lang, pagemsg, errandpagemsg):
   page = pywikibot.Page(site, pagename)
-  if safe_page_exists(page, pagemsg):
+  if safe_page_exists(page, errandpagemsg):
     pagemsg("Page %s doesn't exist" % pagename)
     return False
 

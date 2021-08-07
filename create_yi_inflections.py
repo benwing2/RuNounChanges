@@ -19,7 +19,7 @@ import traceback
 import unicodedata
 
 import blib
-from blib import getparam, rmparam, tname, pname, msg, errmsg, site
+from blib import getparam, rmparam, tname, pname, msg, errandmsg, site
 from collections import OrderedDict
 
 verbose = True
@@ -170,18 +170,17 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
   assert len(pagenames) == 1
   pagename = list(pagenames)[0]
 
-  def pagemsg(text, simple=False, fun=msg):
+  def pagemsg(text, simple=False, msgfun=msg):
     if simple:
-      fun("Page %s %s: %s" % (index, pagename, text))
+      msgfun("Page %s %s: %s" % (index, pagename, text))
     else:
-      fun("Page %s %s: %s: %s %s, %s %s%s" % (index, pagename, text, infltype,
+      msgfun("Page %s %s: %s: %s %s, %s %s%s" % (index, pagename, text, infltype,
         joined_infls_with_tr(), lemmatype, lemma, " (%s)" % lemmatr if lemmatr else ""))
   def pagemsg_if(doit, text, simple=False):
     if doit:
       pagemsg(text, simple=simple)
-  def errpagemsg(txt):
-    pagemsg(txt)
-    pagemsg(txt, fun=errmsg)
+  def errandpagemsg(txt):
+    pagemsg(txt, fun=errandmsg)
   def expand_text(tempcall):
     return blib.expand_text(tempcall, pagename, pagemsg, verbose)
 
@@ -346,15 +345,12 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
   comment = None
   notes = []
 
-  try:
-    existing_text = blib.try_repeatedly(lambda: page.text, pagemsg, "fetch page text")
-  except pywikibot.exceptions.InvalidTitle as e:
-    pagemsg("WARNING: Invalid title, skipping")
-    traceback.print_exc(file=sys.stdout)
+  # If invalid title, don't do anything.
+  existing_text = blib.safe_page_text(page, errandpagemsg, bad_value_ret=None)
+  if existing_text is None:
     return
 
-  if not blib.try_repeatedly(lambda: page.exists(), pagemsg,
-      "check page existence"):
+  if not blib.safe_page_exists(page, errandpagemsg):
     # Page doesn't exist. Create it.
     pagemsg("Creating page")
     comment = "Create page for Yiddish %s %s of %s, pos=%s" % (
@@ -413,13 +409,13 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
           if pagename in pages_already_erased:
             pagemsg("WARNING: Not overwriting page, already overwritten previously")
           elif "==Etymology 1==" in sections[i] and not program_args.overwrite_etymologies:
-            errpagemsg("WARNING: Found ==Etymology 1== in page text, not overwriting, skipping form")
+            errandpagemsg("WARNING: Found ==Etymology 1== in page text, not overwriting, skipping form")
             return
           elif "{{audio|" in sections[i]:
-            errpagemsg("WARNING: {{audio|...}} in page text, not overwriting, skipping form")
+            errandpagemsg("WARNING: {{audio|...}} in page text, not overwriting, skipping form")
             return
           elif pagename in lemmas_to_not_overwrite:
-            errpagemsg("WARNING: Page in --lemmas-to-not-overwrite, not overwriting, skipping form")
+            errandpagemsg("WARNING: Page in --lemmas-to-not-overwrite, not overwriting, skipping form")
             return
           else:
             parsed = blib.parse_text(sections[i])
@@ -436,7 +432,7 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
                 found_lemma.append(getparam(t, "2") if tnam == "head" else
                     tnam)
             if found_lemma:
-              errpagemsg("WARNING: Page appears to have a lemma on it, not overwriting, skipping form: lemmas = %s"
+              errandpagemsg("WARNING: Page appears to have a lemma on it, not overwriting, skipping form: lemmas = %s"
               % ",".join(found_lemma))
               return
             notes.append("overwrite section")
@@ -1246,9 +1242,7 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
       comment = notestext
   if page.text != existing_text:
     if save:
-      pagemsg("Saving with comment = %s" % comment, simple=True)
-      blib.try_repeatedly(lambda: page.save(comment=comment), pagemsg,
-          "save page")
+      blib.safe_page_save(page, comment, errandpagemsg)
     else:
       pagemsg("Would save with comment = %s" % comment, simple=True)
 
@@ -1435,9 +1429,8 @@ def create_forms(lemmas_to_process, lemmas_to_overwrite,
     pagetitle = unicode(page.title())
     def pagemsg(txt):
       msg("Page %s %s: %s" % (index, pagetitle, txt))
-    def errpagemsg(txt):
-      pagemsg(txt)
-      errmsg("Page %s %s: %s" % (index, pagetitle, txt))
+    def errandpagemsg(txt):
+      errandmsg("Page %s %s: %s" % (index, pagetitle, txt))
     def expand_text(tempcall):
       return blib.expand_text(tempcall, pagetitle, pagemsg, verbose)
     if pagetitle.startswith("-"):

@@ -63,7 +63,7 @@
 import pywikibot, re, sys, codecs, argparse
 
 import blib
-from blib import getparam, rmparam, msg, site
+from blib import getparam, rmparam, msg, errandmsg, site
 
 import rulib
 
@@ -85,8 +85,8 @@ def iotate(word):
     return [re.sub(u"к$", u"ч", word)]
   return [word]
 
-def find_noun(pagename, pagemsg, expand_text):
-  section = blib.find_lang_section(pagename, "Russian", pagemsg)
+def find_noun(pagename, pagemsg, errandpagemsg, expand_text):
+  section = blib.find_lang_section(pagename, "Russian", pagemsg, errandpagemsg)
   if not section:
     return None
   if "==Etymology" in section:
@@ -114,8 +114,8 @@ def find_noun(pagename, pagemsg, expand_text):
     return None
   return nouns[0]
 
-def find_adj(pagename, pagemsg, expand_text):
-  section = blib.find_lang_section(pagename, "Russian", pagemsg)
+def find_adj(pagename, pagemsg, errandpagemsg, expand_text):
+  section = blib.find_lang_section(pagename, "Russian", pagemsg, errandpagemsg)
   if not section:
     return None
   if "==Etymology" in section:
@@ -188,6 +188,8 @@ def process_page(index, page, save, verbose, nouns, adjectives):
   pagetitle = unicode(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
+  def errandpagemsg(txt):
+    errandmsg("Page %s %s: %s" % (index, pagetitle, txt))
 
   def expand_text(tempcall):
     return blib.expand_text(tempcall, pagetitle, pagemsg, verbose)
@@ -267,7 +269,7 @@ def process_page(index, page, save, verbose, nouns, adjectives):
         stem = rulib.remove_monosyllabic_accents(infinitive)
 
       if verbal_noun in nouns:
-        stressed_noun = find_noun(verbal_noun, pagemsg, expand_text)
+        stressed_noun = find_noun(verbal_noun, pagemsg, errandpagemsg, expand_text)
         if not stressed_noun:
           msg("%s no-etym FIXME" % verbal_noun)
         elif stressed_noun == -1:
@@ -280,14 +282,14 @@ def process_page(index, page, save, verbose, nouns, adjectives):
           msg("%s %s+-%s no-etym verbal-noun" % (verbal_noun, stem, suffix))
 
       if agent_noun in nouns:
-        stressed_noun = find_noun(agent_noun, pagemsg, expand_text)
+        stressed_noun = find_noun(agent_noun, pagemsg, errandpagemsg, expand_text)
         if stressed_noun == -1:
           pagemsg("Would add etym for %s but already has one" % agent_noun)
         else:
           msg(u"%s %s+-тель no-etym agent-noun" % (agent_noun, stem))
 
       if verbal_adj in adjectives:
-        stressed_adj = find_adj(verbal_adj, pagemsg, expand_text)
+        stressed_adj = find_adj(verbal_adj, pagemsg, errandpagemsg, expand_text)
         if stressed_adj == -1:
           pagemsg("Would add etym for %s but already has one" % verbal_adj)
         else:

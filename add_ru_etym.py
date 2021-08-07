@@ -16,7 +16,7 @@
 
 import pywikibot, re, sys, codecs, argparse, time
 import blib
-from blib import site, msg, errmsg, group_notes, iter_items
+from blib import site, msg, errmsg, errandmsg, group_notes, iter_items
 import rulib
 
 # Split text on a separator, but not if separator is preceded by
@@ -64,10 +64,8 @@ def process_line(index, line, add_passive_of, override_etym, save, verbose):
 
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
-
-  def errpagemsg(txt):
-    msg("Page %s %s: %s" % (index, pagetitle, txt))
-    errmsg("Page %s %s: %s" % (index, pagetitle, txt))
+  def errandpagemsg(txt):
+    errandmsg("Page %s %s: %s" % (index, pagetitle, txt))
 
   # Handle etymology
   adjformtext = ""
@@ -194,7 +192,7 @@ def process_line(index, line, add_passive_of, override_etym, save, verbose):
           break
 
       if "==Etymology==" in sections[i] or "==Etymology 1==" in sections[i]:
-        errpagemsg("WARNING: Already found etymology, skipping")
+        errandpagemsg("WARNING: Already found etymology, skipping")
         return
 
       subsections = re.split("(^===+[^=\n]+===+\n)", sections[i], 0, re.M)
@@ -216,7 +214,7 @@ def process_line(index, line, add_passive_of, override_etym, save, verbose):
       notes.append("add (manually specified) Etymology section to Russian lemma")
       break
   else:
-    errpagemsg("WARNING: Can't find Russian section, skipping")
+    errandpagemsg("WARNING: Can't find Russian section, skipping")
     return
 
   if newtext != pagetext:
@@ -225,9 +223,7 @@ def process_line(index, line, add_passive_of, override_etym, save, verbose):
     assert notes
     comment = "; ".join(group_notes(notes))
     if save:
-      pagemsg("Saving with comment = %s" % comment)
-      page.text = newtext
-      page.save(comment=comment)
+      blib.safe_page_save(page, comment, errandpagemsg)
     else:
       pagemsg("Would save with comment = %s" % comment)
 

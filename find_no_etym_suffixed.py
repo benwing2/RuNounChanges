@@ -20,7 +20,7 @@
 import pywikibot, re, sys, codecs, argparse
 
 import blib
-from blib import getparam, rmparam, msg, errmsg, site, tname
+from blib import getparam, rmparam, msg, errandmsg, site, tname
 
 import rulib
 
@@ -41,13 +41,13 @@ def add_if_not(lst, item):
   if item not in lst:
     lst.append(item)
 
-def find_noun_lemmas(parsed, pagetitle, errpagemsg, expand_text):
+def find_noun_lemmas(parsed, pagetitle, errandpagemsg, expand_text):
   noun_lemmas = []
   for t in parsed.filter_templates():
     if tname(t) in ["ru-noun+", "ru-proper noun+"]:
       lemmaarg = rulib.fetch_noun_lemma(t, expand_text)
       if lemmaarg is None:
-        errpagemsg("WARNING: Error generating noun forms: %s" % unicode(t))
+        errandpagemsg("WARNING: Error generating noun forms: %s" % unicode(t))
         return
       else:
         for lemma in re.split(",", lemmaarg):
@@ -61,11 +61,8 @@ def process_page(index, page, save, verbose, adverbs, all_derived_lemmas):
   pagetitle = unicode(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
-
-  def errpagemsg(txt):
-    msg("Page %s %s: %s" % (index, pagetitle, txt))
-    errmsg("Page %s %s: %s" % (index, pagetitle, txt))
-
+  def errandpagemsg(txt):
+    errandmsg("Page %s %s: %s" % (index, pagetitle, txt))
   def expand_text(tempcall):
     return blib.expand_text(tempcall, pagetitle, pagemsg, verbose)
 
@@ -186,9 +183,9 @@ def process_page(index, page, save, verbose, adverbs, all_derived_lemmas):
 
   for possible_derived, suffix in possible:
     if possible_derived in all_derived_lemmas:
-      derived_section = blib.find_lang_section(possible_derived, "Russian", pagemsg)
+      derived_section = blib.find_lang_section(possible_derived, "Russian", pagemsg, errandpagemsg)
       if not derived_section:
-        errpagemsg("WARNING: Couldn't find Russian section for derived term %s" %
+        errandpagemsg("WARNING: Couldn't find Russian section for derived term %s" %
             possible_derived)
         continue
       if "==Etymology" in derived_section:
@@ -197,12 +194,12 @@ def process_page(index, page, save, verbose, adverbs, all_derived_lemmas):
         continue
       derived_defns = rulib.find_defns(derived_section)
       if not derived_defns:
-        errpagemsg("WARNING: Couldn't find definitions for derived term %s" %
+        errandpagemsg("WARNING: Couldn't find definitions for derived term %s" %
             possible_derived)
         continue
 
       derived_parsed = blib.parse_text(derived_section)
-      derived_lemmas = find_noun_lemmas(derived_parsed, possible_derived, errpagemsg,
+      derived_lemmas = find_noun_lemmas(derived_parsed, possible_derived, errandpagemsg,
         lambda tempcall: blib.expand_text(tempcall, possible_derived, pagemsg, verbose))
       for t in derived_parsed.filter_templates():
         if tname(t) in ["ru-adj", "ru-adv"]:
@@ -214,12 +211,12 @@ def process_page(index, page, save, verbose, adverbs, all_derived_lemmas):
             add_if_not(derived_lemmas, lemma)
 
       if not derived_lemmas:
-        errpagemsg("WARNING: No derived term lemmas for %s" % possible_derived)
+        errandpagemsg("WARNING: No derived term lemmas for %s" % possible_derived)
         return
 
       if not base_lemmas:
         base_parsed = blib.parse_text(text)
-        base_lemmas = find_noun_lemmas(base_parsed, pagetitle, errpagemsg, expand_text)
+        base_lemmas = find_noun_lemmas(base_parsed, pagetitle, errandpagemsg, expand_text)
 
         for t in base_parsed.filter_templates():
           if tname(t) in ["ru-verb", "ru-adj"]:
@@ -231,7 +228,7 @@ def process_page(index, page, save, verbose, adverbs, all_derived_lemmas):
               add_if_not(base_lemmas, lemma)
 
         if not base_lemmas:
-          errpagemsg("WARNING: No base lemmas")
+          errandpagemsg("WARNING: No base lemmas")
           return
 
         base_lemmas = [rulib.remove_monosyllabic_accents(x) for x in base_lemmas]
@@ -244,12 +241,12 @@ def process_page(index, page, save, verbose, adverbs, all_derived_lemmas):
 
         base_section = blib.find_lang_section_from_text(text, "Russian", pagemsg)
         if not base_section:
-          errpagemsg("WARNING: Couldn't find Russian section for base")
+          errandpagemsg("WARNING: Couldn't find Russian section for base")
           return
 
         base_defns = rulib.find_defns(base_section)
         if not base_defns:
-          errpagemsg("WARNING: Couldn't find definitions for base")
+          errandpagemsg("WARNING: Couldn't find definitions for base")
           return
 
       def concat_defns(defns):

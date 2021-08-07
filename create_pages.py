@@ -15,7 +15,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import blib, re, codecs
-from blib import msg, errmsg, site
+from blib import msg, errandmsg, site
 import pywikibot
 
 def process_page(page, index, args, contents):
@@ -23,8 +23,7 @@ def process_page(page, index, args, contents):
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
   def errandpagemsg(txt):
-    msg("Page %s %s: %s" % (index, pagetitle, txt))
-    errmsg("Page %s %s: %s" % (index, pagetitle, txt))
+    errandmsg("Page %s %s: %s" % (index, pagetitle, txt))
   if args.verbose:
     pagemsg("Processing")
   if page.exists():
@@ -33,8 +32,8 @@ def process_page(page, index, args, contents):
   comment = 'Created page with "%s"' % contents
   if args.save:
     page.text = contents
-    page.save(comment)
-    errandpagemsg("Created page, comment = %s" % comment)
+    if blib.safe_page_save(page, comment, errandpagemsg):
+      errandpagemsg("Created page, comment = %s" % comment)
   else:
     pagemsg("Would create, comment = %s" % comment)
 

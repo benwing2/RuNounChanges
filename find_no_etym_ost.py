@@ -19,7 +19,7 @@
 import pywikibot, re, sys, codecs, argparse
 
 import blib
-from blib import getparam, rmparam, msg, site
+from blib import getparam, rmparam, msg, errandmsg, site
 
 import rulib
 
@@ -27,6 +27,8 @@ def process_page(index, page, save, verbose, nouns):
   pagetitle = unicode(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
+  def errandpagemsg(txt):
+    errandmsg("Page %s %s: %s" % (index, pagetitle, txt))
 
   def expand_text(tempcall):
     return blib.expand_text(tempcall, pagetitle, pagemsg, verbose)
@@ -59,7 +61,7 @@ def process_page(index, page, save, verbose, nouns):
         return
       tr = getparam(t, "tr")
 
-      nounsection = blib.find_lang_section(noun, "Russian", pagemsg)
+      nounsection = blib.find_lang_section(noun, "Russian", pagemsg, errandpagemsg)
       if not nounsection:
         pagemsg("Couldn't find Russian section for %s" % noun)
         continue

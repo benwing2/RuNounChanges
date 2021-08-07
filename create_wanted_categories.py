@@ -20,6 +20,7 @@ import pywikibot
 
 def blacklist(category):
   return False
+  # Formerly blacklisted because sort= should be given.
   #if " terms spelled with " in category and not re.search("^(Japanese|Okinawan) ", category):
   #  return True
   #return False
@@ -63,11 +64,8 @@ def process_page(page, index):
     comment = 'Created page with "%s"' % contents
     if args.save:
       page.text = contents
-      try:
-        page.save(comment)
+      if blib.safe_page_save(page, comment, errandpagemsg):
         errandpagemsg("Created page, comment = %s" % comment)
-      except pywikibot.exceptions.LockedPage as e:
-        errandpagemsg("WARNING: Error when trying to save: %s" % unicode(e))
     else:
       pagemsg("Would create, comment = %s" % comment)
 

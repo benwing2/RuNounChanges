@@ -19,7 +19,7 @@ import traceback
 import unicodedata
 
 import blib
-from blib import getparam, rmparam, tname, pname, msg, errmsg, site
+from blib import getparam, rmparam, tname, pname, msg, errandmsg, site
 from collections import OrderedDict
 
 import rulib
@@ -377,25 +377,21 @@ def process_page(index, num, save, verbose, params):
   pagetitle = rulib.remove_accents(lemma)
   newtext = generate_page(num)
 
-  def pagemsg(txt, fun=msg):
-    fun("Page %s %s: %s" % (index, pagetitle, txt))
-  def errpagemsg(txt):
-    pagemsg(txt)
-    pagemsg(txt, fun=errmsg)
+  def pagemsg(txt):
+    msg("Page %s %s: %s" % (index, pagetitle, txt))
+  def errandpagemsg(txt):
+    errandmsg("Page %s %s: %s" % (index, pagetitle, txt))
 
   # Prepare to create page
   pagemsg("Creating entry")
   page = pywikibot.Page(site, pagetitle)
 
-  try:
-    existing_text = blib.try_repeatedly(lambda: page.text, pagemsg, "fetch page text")
-  except pywikibot.exceptions.InvalidTitle as e:
-    pagemsg("WARNING: Invalid title, skipping")
-    traceback.print_exc(file=sys.stdout)
+  # If invalid title, don't do anything.
+  existing_text = blib.safe_page_text(page, errandpagemsg, bad_value_ret=None)
+  if existing_text is None:
     return
 
-  if not blib.try_repeatedly(lambda: page.exists(), pagemsg,
-      "check page existence"):
+  if not blib.safe_page_exists(page, errandpagemsg):
     # Page doesn't exist. Create it.
     pagemsg("Creating page")
     comment = "Create page for Russian numeral %s (%s)" % (
@@ -433,7 +429,7 @@ def process_page(index, num, save, verbose, params):
 
         if params.overwrite_page:
           if "==Etymology 1==" in sections[i] and not params.overwrite_etymologies:
-            errpagemsg("WARNING: Found ==Etymology 1== in page text, not overwriting, skipping form")
+            errandpagemsg("WARNING: Found ==Etymology 1== in page text, not overwriting, skipping form")
             return
           else:
             pagemsg("WARNING: Overwriting entire Russian section")
@@ -443,7 +439,7 @@ def process_page(index, num, save, verbose, params):
             notes.append("overwrite section")
             break
         else:
-          errpagemsg("WARNING: Not overwriting existing Russian section")
+          errandpagemsg("WARNING: Not overwriting existing Russian section")
           return
       elif m.group(1) > "Russian":
         pagemsg("Exists; inserting before %s section" % (m.group(1)))
@@ -505,12 +501,11 @@ def process_page(index, num, save, verbose, params):
   if page.text != existing_text:
     if save:
       pagemsg("Saving with comment = %s" % comment)
-      blib.try_repeatedly(lambda: page.save(comment=comment), pagemsg,
-          "save page")
+      blib.safe_page_save(page, comment, errandpagemsg)
     else:
       pagemsg("Would save with comment = %s" % comment)
 
-pa = blib.init_argparser("Save numbers to Wiktionary")
+pa = blib.init_argparser("Save Russian numbers to Wiktionary")
 pa.add_argument("--offline", help="Operate offline, outputting text of new pages", action="store_true")
 pa.add_argument("--overwrite-page", action="store_true",
     help=u"""If specified, overwrite the entire existing page of inflections.

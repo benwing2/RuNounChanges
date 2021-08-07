@@ -19,7 +19,7 @@
 import re
 
 import blib, pywikibot
-from blib import msg, getparam, addparam, remove_links
+from blib import msg, errandmsg, getparam, addparam, remove_links
 from arabiclib import *
 
 import ar_translit
@@ -604,7 +604,7 @@ def create_declension(page, index, save, pos, tempname, decltempname, sgnum,
     page.text = newtext
     msg("For page %s, comment = %s" % (pagename, comment))
     if save:
-      page.save(comment = comment)
+      blib.safe_page_save(page, comment, errandmsg)
 
 def create_declensions(save, pos, tempname, decltempname, sgnum,
     startFrom, upTo, removeparams, is_proper=False):

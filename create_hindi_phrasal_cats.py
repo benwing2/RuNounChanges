@@ -4,8 +4,7 @@
 import re
 import pywikibot
 import blib
-
-site = pywikibot.Site()
+from blib import msg, errandmsg, site
 
 cats = [
   u"आना",
@@ -66,8 +65,6 @@ cats = [
   u"हिलाना",
   u"होना",
 ]
-def msg(text):
-  print text.encode('utf-8')
 
 parser = blib.create_argparser(u"Create Hindi phrasal verb categories")
 args = parser.parse_args()
@@ -84,4 +81,4 @@ for cat in cats:
   changelog = "Create '%s' with text '%s'" % (pagename, text)
   msg("Changelog = %s" % changelog)
   if args.save:
-    page.save(comment=changelog)
+    blib.safe_page_save(page, changelog, errandmsg)

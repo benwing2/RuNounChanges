@@ -4,14 +4,14 @@
 import pywikibot, re, sys, codecs, argparse
 
 import blib
-from blib import getparam, rmparam, msg, errmsg, site
+from blib import getparam, rmparam, msg, errandmsg, site
 
 import rulib
 
-def is_transitive_verb(pagename, pagemsg, errpagemsg):
-  verb_section = blib.find_lang_section(pagename, "Russian", pagemsg)
+def is_transitive_verb(pagename, pagemsg, errandpagemsg):
+  verb_section = blib.find_lang_section(pagename, "Russian", pagemsg, errandpagemsg)
   if not verb_section:
-    errpagemsg("WARNING: Couldn't find Russian section for verb %s" % pagename)
+    errandpagemsg("WARNING: Couldn't find Russian section for verb %s" % pagename)
     return False
 
   parsed = blib.parse_text(verb_section)
@@ -28,10 +28,8 @@ def process_page(index, page, lemmas):
   pagetitle = unicode(page.title())
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
-
-  def errpagemsg(txt):
-    msg("Page %s %s: %s" % (index, pagetitle, txt))
-    errmsg("Page %s %s: %s" % (index, pagetitle, txt))
+  def errandpagemsg(txt):
+    errandmsg("Page %s %s: %s" % (index, pagetitle, txt))
 
   pagemsg("Processing")
 
@@ -39,7 +37,7 @@ def process_page(index, page, lemmas):
 
   section = blib.find_lang_section_from_text(pagetext, "Russian", pagemsg)
   if not section:
-    errpagemsg("WARNING: Couldn't find Russian section")
+    errandpagemsg("WARNING: Couldn't find Russian section")
     return
 
   if "==Etymology" in section:
@@ -72,8 +70,7 @@ def process_page(index, page, lemmas):
         m = re.search(u"^(.*)(с[яь])$", heads[0])
         assert m
         transverb_no_passive = (False if (saw_passive or saw_bad_passive)
-          else is_transitive_verb(rulib.remove_accents(m.group(1)), pagemsg,
-            errpagemsg))
+          else is_transitive_verb(rulib.remove_accents(m.group(1)), pagemsg, errandpagemsg))
         if (saw_passive or saw_bad_passive or transverb_no_passive):
           splits.append((heads, [m.group(1)],
             "%s+-%s" % (m.group(1), m.group(2)),
@@ -142,24 +139,24 @@ def process_page(index, page, lemmas):
       if term not in base_terms_no_accent:
         base_terms_no_accent.append(term)
     if len(base_terms_no_accent) > 1:
-      errpagemsg("WARNING: Multiple base pages %s for base lemmas %s" % (
+      errandpagemsg("WARNING: Multiple base pages %s for base lemmas %s" % (
         ",".join(base_terms_no_accent), ",".join(base_terms)))
       continue
     if base_terms_no_accent[0] not in lemmas:
       continue
     derived_defns = rulib.find_defns(section)
     if not derived_defns:
-      errpagemsg("WARNING: Couldn't find definitions for derived term %s" %
+      errandpagemsg("WARNING: Couldn't find definitions for derived term %s" %
           ",".join(derived_terms))
       continue
-    base_section = blib.find_lang_section(base_terms_no_accent[0], "Russian", pagemsg)
+    base_section = blib.find_lang_section(base_terms_no_accent[0], "Russian", pagemsg, errandpagemsg)
     if not base_section:
-      errpagemsg("WARNING: Couldn't find Russian section for base term %s" %
+      errandpagemsg("WARNING: Couldn't find Russian section for base term %s" %
           base_terms_no_accent[0])
       continue
     base_defns = rulib.find_defns(base_section)
     if not base_defns:
-      errpagemsg("WARNING: Couldn't find definitions for base term %s" %
+      errandpagemsg("WARNING: Couldn't find definitions for base term %s" %
           ",".join(base_terms))
       continue
     def concat_defns(defns):

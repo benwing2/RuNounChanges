@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from blib import getparam, rmparam, msg, errmsg, site
+import blib
+from blib import getparam, rmparam, msg, errandmsg, site
 import pywikibot, re, sys, codecs, argparse
 
 parser = argparse.ArgumentParser(description="Generate form-of documentation pages.")
@@ -21,13 +22,17 @@ def save_template_doc(tempname, doc, save):
   msg("------- end text --------")
   comment = "Update form-of template documentation"
   nextpage += 1
+  def pagemsg(txt):
+    msg("Page %s %s: %s" % (nextpage, tempname, txt))
+  def errandpagemsg(txt):
+    errandmsg("Page %s %s: %s" % (nextpage, tempname, txt))
   if save:
     page = pywikibot.Page(site, "Template:%s/documentation" % tempname)
-    msg("Page %s %s: Saving with comment = %s" % (nextpage, tempname, comment))
+    pagemsg("Saving with comment = %s" % comment)
     page.text = doc
-    page.save(comment=comment)
+    blib.safe_page_save(page, comment, errandpagemsg)
   else:
-    msg("Page %s %s: Would save with comment = %s" % (nextpage, tempname, comment))
+    pagemsg("Would save with comment = %s" % comment)
 
 while True:
   try:
@@ -39,7 +44,7 @@ while True:
     save_template_doc(tempname, "".join(templines), args.save)
   elif in_multiline:
     if line.rstrip('\n').endswith(':'):
-      errmsg("WARNING: Possible missing ----- end text -----: %s" % line.rstrip('\n'))
+      errandmsg("WARNING: Possible missing ----- end text -----: %s" % line.rstrip('\n'))
     templines.append(line)
   else:
     line = line.rstrip('\n')

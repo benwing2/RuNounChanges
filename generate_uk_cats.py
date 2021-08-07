@@ -4,11 +4,7 @@
 import re
 import pywikibot
 import blib
-
-site = pywikibot.Site()
-
-def msg(text):
-  print text.encode('utf-8')
+from blib import msg, errandmsg, site
 
 adj_decls = [
   ["hard-stem stem-stressed", (u"-ий", u"-а", u"-е", u"-і")],
@@ -57,7 +53,7 @@ def create_cat(cat, catargs, extratext=None):
   changelog = "Creating '%s' with text '%s'" % (cat, text)
   msg("Changelog = %s" % changelog)
   if args.save:
-    page.save(comment=changelog)
+    blib.safe_page_save(page, changelog, errandmsg)
 
 parser = blib.create_argparser(u"Create Ukrainian noun/verb/adjective categories")
 parser.add_argument('--overwrite', help="Overwrite categories", action="store_true")

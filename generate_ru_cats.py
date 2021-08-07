@@ -3,6 +3,8 @@
 
 import re
 import pywikibot
+import blib
+from blib import site, msg, errandmsg
 
 dosave = True
 overwrite = False
@@ -150,11 +152,6 @@ cases = ["nominative", "genitive", "dative", "accusative", "instrumental",
 numbers = ["singular", "plural"]
 extra_cases = ["locative", "partitive", "vocative"]
 
-site = pywikibot.Site()
-
-def msg(text):
-  print text.encode('utf-8')
-
 def create_cat(cat, args, adj=False, verb=False):
   if verb:
     cat = "Category:Russian " + cat.replace("~", "verbs")
@@ -173,7 +170,7 @@ def create_cat(cat, args, adj=False, verb=False):
   changelog = "Creating '%s' with text '%s'" % (cat, text)
   msg("Changelog = %s" % changelog)
   if dosave:
-    page.save(comment = changelog)
+    blib.safe_page_save(page, changelog, errandmsg)
 
 def create_adj_cat(cat, args):
   create_cat(cat, args, adj=True)
