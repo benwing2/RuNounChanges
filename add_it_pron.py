@@ -54,10 +54,10 @@ def process_page(index, page, spec):
       else:
         last_footnote_param_index = len(prons)
         last_num_pron = next_num_pron
-        prons.append("n%s=%s" % ("" if next_num_pron == 1 else next_num_pron, reftemp))
+        prons.append("ref%s=%s" % ("" if next_num_pron == 1 else next_num_pron, reftemp))
       have_footnotes = True
     else:
-      if re.search("^n[0-9]*=", pronspec):
+      if re.search("^ref[0-9]*=", pronspec):
         have_footnotes = True
       if "=" not in pronspec:
         respellings, msgs = apply_default_pronun(pronspec)

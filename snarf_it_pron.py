@@ -278,7 +278,7 @@ def process_text_on_page(index, pagetitle, text):
               else:
                 append_msg("EXISTING")
                 this_respellings.append(pv)
-            elif re.search("^n[0-9]*$", pn) and int(pn[1:] or "1") == last_numbered_param:
+            elif re.search("^ref[0-9]*$", pn) and int(pn[3:] or "1") == last_numbered_param:
               m = re.search(r"^\{\{R:it:(DiPI|Olivetti|Treccani|Trec)(\|[^{}]*)?\}\}$", pv)
               if m:
                 refname, refparams = m.groups()
