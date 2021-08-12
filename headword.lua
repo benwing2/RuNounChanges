@@ -357,7 +357,7 @@ local function format_inflection_parts(data, parts)
 		end
 		if part.refs and #part.refs > 0 then
 			local refs = {}
-			for _, ref in ipairs(parts.refs) do
+			for _, ref in ipairs(part.refs) do
 				if type(ref) ~= "table" then
 					ref = {text = ref}
 				end
@@ -485,7 +485,7 @@ local function show_headword_line(data)
 
 	if data.sccat and data.sc then
 		table.insert(data.categories, data.lang:getCanonicalName() .. " " .. data.pos_category
-			.. " in " .. data.sc:getCategoryName())
+			.. " in " .. data.sc:getDisplayForm())
 	end
 	
 	-- Is it a lemma category?
