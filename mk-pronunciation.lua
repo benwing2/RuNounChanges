@@ -1,12 +1,14 @@
 local export = {}
 
-local gsub = mw.ustring.gsub
-local U = mw.ustring.char
+local u = mw.ustring.char
+local rsubn = mw.ustring.gsub
+local ulower = mw.ustring.lower
 
-local acute = U(0x301)
-local stress = U(0x2C8)
-local syllabic = U(0x329)
-local tie = U(0x361)
+local lang = require("Module:languages").getByCode("mk")
+
+local AC = u(0x301)
+local SYLLABIC = u(0x329)
+local TIE = u(0x361)
 
 local phonetic_chars_map = {
 	["а"] = "a",
@@ -22,7 +24,7 @@ local phonetic_chars_map = {
 	["ѓ"] = "ɟ",
 	["ж"] = "ʒ",
 	["з"] = "z",
-	["ѕ"] = "d" .. tie .. "z",
+	["ѕ"] = "d" .. TIE .. "z",
 	["ј"] = "j",
 	["к"] = "k",
 	["л"] = "ɫ",
@@ -37,72 +39,116 @@ local phonetic_chars_map = {
 	["ќ"] = "c",
 	["ф"] = "f",
 	["х"] = "x",
-	["ц"] = "t" .. tie .. "s",
-	["ч"] = "t" .. tie .. "ʃ",
-	["џ"] = "d" .. tie .. "ʒ",
+	["ц"] = "t" .. TIE .. "s",
+	["ч"] = "t" .. TIE .. "ʃ",
+	["џ"] = "d" .. TIE .. "ʒ",
 	["ш"] = "ʃ",
 
 	["’"] = "ə",
-	[acute] = stress,
+	[AC] = "ˈ",
 	["`"] = "ˈ"
 }
 
 local devoicing = {
 	['b'] = 'p', ['d'] = 't', ['ɟ'] = 'c', ['ɡ'] = 'k',
 	['z'] = 's', ['ʒ'] = 'ʃ',
-	['v'] = 'f', [tie] = tie
+	['v'] = 'f', [TIE] = TIE
 }
 
-local peak = "[aɛiɔuə" .. syllabic .. "]"
+local vowel = "aɛiɔuə"
+local vocalic = vowel .. SYLLABIC
+local vocalic_c = "[" .. vocalic .. "]"
 
-function export.toIPA(word)
-	IPA = mw.ustring.toNFC(mw.ustring.lower(word))
+-- version of rsubn() that discards all but the first return value
+local function rsub(term, foo, bar)
+	local retval = rsubn(term, foo, bar)
+	return retval
+end
 
-	IPA = mw.ustring.gsub(IPA, '.', phonetic_chars_map)
+-- version of rsubn() that returns a 2nd argument boolean indicating whether
+-- a substitution was made.
+local function rsubb(term, foo, bar)
+	local retval, nsubs = rsubn(term, foo, bar)
+	return retval, nsubs > 0
+end
 
-	-- Mark word boundaries
-	IPA = mw.ustring.gsub(IPA, "(%s+)", "#%1#")
-	IPA = "#" .. IPA .. "#"
+-- apply rsub() repeatedly until no change
+local function rsub_repeatedly(term, foo, bar)
+	while true do
+		local new_term = rsub(term, foo, bar)
+		if new_term == term then
+			return term
+		end
+		term = new_term
+	end
+end
+
+function export.toIPA(text)
+	text = mw.ustring.toNFC(ulower(text))
+
+	-- convert commas and en/en dashes to text foot boundaries
+	text = rsub(text, "%s*[,–—]%s*", " | ")
+	-- question mark or exclamation point in the middle of a sentence -> text foot boundary
+	text = rsub(text, "([^%s])%s*[!?]%s*([^%s])", "%1 | %2")
+	text = rsub(text, "[!?]", "") -- eliminate remaining punctuation
+
+	-- canonicalize multiple spaces and remove leading and trailing spaces
+	local function canon_spaces(text)
+		text = rsub(text, "%s+", " ")
+		text = rsub(text, "^ ", "")
+		text = rsub(text, " $", "")
+		return text
+	end
+
+	-- Convert hyphens to spaces. FIXME: Prefixes and suffixes should be unstressed unless explicitly marked for stress.
+	text = rsub(text, "%-", " ")
+	-- canonicalize multiple spaces, which may have been introduced by hyphens.
+	text = canon_spaces(text)
+	-- Put # at word beginning and end and double ## at text/foot boundary beginning/end.
+	text = rsub(text, " | ", "# | #")
+	text = "##" .. rsub(text, " ", "# #") .. "##"
+
+	text = rsub(text, ".", phonetic_chars_map)
 
 	-- Syllabic sonorants
-	IPA = mw.ustring.gsub(IPA, "([^aɛiɔuə" .. stress .. "])([rɫl])([^aɛiɔuə])", "%1%2" .. syllabic .. "%3")
-	IPA = mw.ustring.gsub(IPA, "([^aɛiɔuə" .. stress .. "])([nmɲ])([^aɛiɔuərɫlmn])", "%1%2" .. syllabic .. "%3")
-	IPA = mw.ustring.gsub(IPA, "ər", "r" .. syllabic)
+	text = rsub_repeatedly(text, "([^" .. vocalic .. "ˈ])([rɫlʎ])([^" .. vowel .. "])", "%1%2" .. SYLLABIC .. "%3")
+	text = rsub_repeatedly(text, "([^" .. vocalic .. "rɫlʎˈ])([nmɲɲ])([^" .. vowel .. "rɫlʎmnɲ])", "%1%2" .. SYLLABIC .. "%3")
+	text = rsub(text, "ər", "r" .. SYLLABIC)
 
 	-- Mark stress
-	IPA = mw.ustring.gsub(IPA, "(#[^#" .. stress .. "]*" .. peak .. ")([^#" .. stress .. "]*" .. peak .. "[^#" .. stress .. "]*" .. peak .. "[^#" .. stress .. "]*#)", "%1" .. stress .. "%2")
-	IPA = mw.ustring.gsub(IPA, "(#[^#" .. stress .. "]*" .. peak .. ")([^#" .. stress .. "]*" .. peak .. "[^#" .. stress .. "]*#)", "%1" .. stress .. "%2")
-	IPA = mw.ustring.gsub(IPA, "([szʃʒ]?[ptckbdɟɡfxmnɲ]?[mnɲv]?[rɫljʎ]?" .. peak .. ")" .. stress, stress .. "%1")
-	IPA = mw.ustring.gsub(IPA, "([td]" .. tie .. "[szʃʒ]?)" .. stress, stress .. "%1")
-	IPA = mw.ustring.gsub(IPA, "#([^#aɛiɔuə" .. syllabic .. "]*)" .. stress, "#" .. stress .. "%1")
+	text = rsub(text, "(#[^#ˈ ]*" .. vocalic_c .. ")([^#ˈ ]*" .. vocalic_c .. "[^#ˈ ]*" .. vocalic_c .. "[^#ˈ ]*#)", "%1ˈ%2")
+	text = rsub(text, "(#[^#ˈ ]*" .. vocalic_c .. ")([^#ˈ ]*" .. vocalic_c .. "[^#ˈ ]*#)", "%1ˈ%2")
+	text = rsub(text, "([szʃʒ]?[ptckbdɟɡfxmnɲ]?[mnɲv]?[rɫljʎ]?" .. vocalic_c .. ")ˈ", "ˈ%1")
+	text = rsub(text, "([td]" .. TIE .. "[szʃʒ]?)ˈ", "ˈ%1")
+	text = rsub(text, "#([^#aɛiɔuə" .. SYLLABIC .. " ]*)ˈ", "#ˈ%1")
 
 	-- Palatalisation
-	IPA = mw.ustring.gsub(IPA, "ɫ([iɛ])", "l%1")
-	IPA = mw.ustring.gsub(IPA, "ɫ([j])", "ʎ")
+	text = rsub(text, "ɫ([iɛ])", "l%1")
+	text = rsub(text, "ɫ([j])", "ʎ")
 
 	-- Voicing assimilation
-	IPA = gsub(IPA, "([bdɟɡzʒv" .. tie .. "]*)(" .. stress .. "?[ptcksʃfx#])", function(a, b)
-		return gsub(a, '.', devoicing) .. b end)
+	text = rsub(text, "([bdɟɡzʒv" .. TIE .. "]*)(ˈ?[ptcksʃfx#])", function(a, b)
+		return rsub(a, '.', devoicing) .. b end)
 
 	-- Sibilant assimilation
-	IPA = gsub(IPA, "[sz](" .. stress .. "?[td]?" .. tie .. "?)([ʃʒ])", "%2%1%2")
+	text = rsub(text, "[sz](ˈ?[td]?" .. TIE .. "?)([ʃʒ])", "%2%1%2")
 
 	-- Nasal assimilation
-	IPA = mw.ustring.gsub(IPA, "n([ɡk]+)", "ŋ%1")
-	IPA = mw.ustring.gsub(IPA, "n([bp]+)", "m%1")
-	IPA = mw.ustring.gsub(IPA, "[nm]([fv]+)", "ɱ%1")
+	text = rsub(text, "n([ɡk]+)", "ŋ%1")
+	text = rsub(text, "n([bp]+)", "m%1")
+	text = rsub(text, "[nm]([fv]+)", "ɱ%1")
 
 	-- Epenthesis
-	IPA = mw.ustring.gsub(IPA, "(i" .. stress .."?)j?([aɛɔu])", "%1(j)%2")
+	text = rsub(text, "(iˈ?)j?([aɛɔu])", "%1(j)%2")
 
 	-- /r/ allophony
-	IPA = mw.ustring.gsub(IPA, "([aɛiɔuə])r", "%1ɾ")
-	IPA = mw.ustring.gsub(IPA, "ɾ([^aɛiɔuə])", "r%1")
+	text = rsub(text, "([aɛiɔuə])r", "%1ɾ")
+	text = rsub(text, "ɾ([^aɛiɔuə])", "r%1")
 
 	-- Strip hashes
-	IPA = gsub(IPA, "#", "")
+	text = rsub(text, "#", "")
 
-	return IPA
+	return text
 end
 
 function export.show(frame)
@@ -118,7 +164,7 @@ function export.show(frame)
 	local IPA = export.toIPA(term)
 	
 	IPA = "[" .. IPA .. "]"
-	IPA = require("Module:IPA").format_IPA_full(require("Module:languages").getByCode("mk"), { { pron = IPA } } )
+	IPA = require("Module:IPA").format_IPA_full(lang, { { pron = IPA } } )
 	
 	return IPA
 end
