@@ -25,6 +25,7 @@ local SYLDIV = u(0xFFF0) -- used to represent a user-specific syllable divider (
 local TEMP_Z = u(0xFFF1)
 local TEMP_S = u(0xFFF2)
 local TEMP_H = u(0xFFF3)
+local TEMP_X = u(0xFFF4)
 local stress = "ˈˌ"
 local stress_c = "[" .. stress .. "]"
 local quality = AC .. GR
@@ -336,9 +337,9 @@ function export.to_phonemic(text, pagename)
 		local function err(msg)
 			error(msg .. ": " .. origwords[i])
 		end
-		-- Transcriptions must contain a primary stress indicator, and an e or o with primary stress must
-		-- be marked for quality.
-		if not rfind(word, "[ˈ" .. DOTOVER .. "]") then
+		-- Transcriptions must contain a primary or second stress indicator or must explicitly be
+		-- marked as unstressed, and an e or o with primary stress must be marked for quality.
+		if not rfind(word, "[ˈˌ" .. DOTOVER .. "]") then
 			local vowel_count = ulen(rsub(word, NV, ""))
 			if vowel_count > 2 then
 				err("With more than two vowels and an unrecogized suffix, stress must be explicitly given")
@@ -365,6 +366,7 @@ function export.to_phonemic(text, pagename)
 	text = rsub(text, "a(" .. accent_c .. "*)w", "o%1")
 
 	-- Random substitutions.
+	text = rsub(text, "%[x%]", TEMP_X) -- [x] means /x/
 	text = rsub(text, "^ex(" .. V .. ")", "eg[z]%1")
 	text = text:gsub("x", "ks"):gsub("ck", "k"):gsub("sh", "ʃ")
 	text = rsub(text, "%[z%]", TEMP_Z) -- [z] means /z/
@@ -476,6 +478,7 @@ function export.to_phonemic(text, pagename)
 
 	text = rsub(text, TEMP_Z, "z")
 	text = rsub(text, TEMP_S, "s")
+	text = rsub(text, TEMP_X, "x")
 
 	-- Double consonant followed by end of word (e.g. [[stress]], [[staff]], [[jazz]]), or followed by a consonant
 	-- other than a glide or liquid (e.g. [[pullman]]), should be reduced to single. Should not affect double
@@ -514,7 +517,9 @@ function export.to_phonemic(text, pagename)
 	text = rsub(text, SYLDIV, ".")
 	text = rsub(text, TEMP_H, "h")
 
-	local last_word_self_gemination = rfind(text, "[ʦʣʃʎɲ]" .. stress_c .."*##$")
+	local last_word_self_gemination = rfind(text, "[ʦʣʃʎɲ]" .. stress_c .."*##$") and not
+		-- In case the user used t͡ʃ explicitly
+		rfind(text, "t͡ʃ" .. stress_c .."*##$")
 	local first_word_self_gemination = rfind(text, "^##" .. stress_c .. "*[ʦʣʃʎɲ]")
 	text = rsub(text, "([ʦʣʧʤ])(" .. charsep_c .. "*%.?)([ʦʣʧʤ]*)", function(affricate1, divider, affricate2)
 		local full_affricate = full_affricates[affricate1]
@@ -595,15 +600,15 @@ function export.to_phonetic(word, pagename)
 end
 
 function export.show(frame)
-	local m_IPA = require "Module:IPA"
+	local m_IPA = require("Module:IPA")
 
-	local args = require "Module:parameters".process(
+	local args = require("Module:parameters").process(
 		frame:getParent().args,
 		{
-			-- words to transcribe
+			-- terms to transcribe
 			[1] = { list = true },
 			["qual"] = { list = true, allow_holes = true },
-			["n"] = { list = true, allow_holes = true },
+			["ref"] = { list = true, allow_holes = true },
 			pagename = {}, -- for testing
 		})
 
@@ -639,10 +644,19 @@ function export.show(frame)
 
 	local transcriptions = Array(respellings):map(function(respelling, i)
 		local qualifiers = {args.qual[i]}
-		local prespec, postspec = rmatch(respelling, "^([#*°]*)(.-)([*°]*)$")
-		if prespec:find("^#") then
+		local prespec, actual_respelling, postspec = rmatch(respelling, "^([#!*°]*)(.-)([*°]*)$")
+		respelling = actual_respelling
+		if prespec:find("!!") then
+			table.insert(qualifiers, 1, "elevated style")
+			prespec = prespec:gsub("!!", "")
+		end
+		if prespec:find("!") then
+			table.insert(qualifiers, 1, "careful style")
+			prespec = prespec:gsub("!", "")
+		end
+		if prespec:find("#") then
 			table.insert(qualifiers, 1, "traditional")
-			prespec = prespec:gsub("^#", "")
+			prespec = prespec:gsub("#", "")
 		end
 		local phonemic = export.to_phonemic(respelling, pagename)
 		local pretext, posttext
@@ -664,6 +678,7 @@ function export.show(frame)
 					else
 						posttext = abbr
 					end
+					return
 				end
 			end
 			error("Unrecognized " .. (is_pre and "initial" or "final") .. " symbol " .. spec)
@@ -681,12 +696,13 @@ function export.show(frame)
 				error("Last word ends in neither vowel nor consonant; final symbol " .. spec .. " not allowed here")
 			end
 		end
+		local refs = args.ref[i] and require("Module:references").parse_references(args.ref[i]) or nil
 		return {
 			pron = "/" .. phonemic.pron .. "/",
 			qualifiers = #qualifiers > 0 and qualifiers or nil,
 			pretext = pretext,
 			posttext = posttext,
-			notes = args.n[i] and rsplit(args.n[i], "%s*!!!%s*") or nil,
+			refs = refs,
 		}
 	end)
 
