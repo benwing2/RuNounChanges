@@ -139,11 +139,11 @@ function export.IPA(text, style, phonetic, do_debug)
 
 	--determining whether "y" is a consonant or a vowel
 	text = rsub(text, "y(" .. V .. ")", "ɟ%1") -- not the real sound
-	text = rsub(text, "uy#", "uY") -- a temporary symbol; replaced with i below
+	text = rsub(text, "uy#", "uY#") -- a temporary symbol; replaced with i below
 	text = rsub(text, "y", "i")
 
 	--x
-	text = rsub(text, "#x", "s") -- xenofobia, xilófono, etc.
+	text = rsub(text, "#x", "#s") -- xenofobia, xilófono, etc.
 	text = rsub(text, "x", "ks")
 
 	--c, g, q
@@ -170,7 +170,7 @@ function export.IPA(text, style, phonetic, do_debug)
 	text = rsub(text, "#desh", "!") --temporary symbol
 	text = rsub(text, "sh", "ʃ")
 	text = rsub(text, "!", "#desh") --restore
-	text = rsub(text, "#p([st])", "%1") -- [[psicología]], [[pterodáctilo]]
+	text = rsub(text, "#p([st])", "#%1") -- [[psicología]], [[pterodáctilo]]
 	text = rsub(text, "[cgjñrvy]",
 		--["g"]="ɡ":  U+0067 LATIN SMALL LETTER G → U+0261 LATIN SMALL LETTER SCRIPT G
 		{["c"]="k", ["g"]="ɡ", ["j"]="x", ["ñ"]="ɲ", ["r"]="ɾ", ["v"]="b" })
