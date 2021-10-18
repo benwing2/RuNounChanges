@@ -911,47 +911,61 @@ function export.show_pr(frame)
 		end
 	end
 
-	local function format_rhyme(rhyme_ret)
+	local function format_rhyme(rhyme_ret, num_bullets)
 		local function format_rhyme_style(tag, expressed_style, is_first)
 			local pronunciations = {}
 			local rhymes = {}
-			for _, rhyme in ipairs(expressed_style.phonemic) do
-				table.insert(rhymes, rhyme.text)
+			for _, pronun in ipairs(expressed_style.pronun) do
+				table.insert(rhymes, pronun.rhyme)
 			end
+			-- FIXME, add number of syllables
 			local data = {
 				lang = lang,
 				rhymes = rhymes,
 				qualifiers = tag and {tag} or nil,
 			}
-			local bullet = string.rep("*", args.bullets) .. " "
-			local pre = is_first and args.pre and args.pre .. " " or ""
-			local post = is_first and (args.ref or "") .. (args.post and " " .. args.post or "") or ""
-			local formatted = bullet .. pre .. m_IPA.format_IPA_full(lang, pronunciations) .. post
+			local bullet = string.rep("*", num_bullets) .. " "
+			local formatted = bullet .. require("Module:rhymes").format_rhymes(data)
 			local formatted_for_len_parts = {}
-			table.insert(formatted_for_len_parts, bullet .. pre .. "IPA(key): " .. (tag and "(" .. tag .. ") " or ""))
-			for j, pron in ipairs(expressed_style.phonemic) do
+			table.insert(formatted_for_len_parts, bullet .. "Rhymes: " .. (tag and "(" .. tag .. ") " or ""))
+			for j, pronun in ipairs(expressed_style.pronun) do
 				if j > 1 then
 					table.insert(formatted_for_len_parts, ", ")
 				end
-				table.insert(formatted_for_len_parts, "/" .. pron.text .. "/ [" .. expressed_style.phonetic[j].text .. "]")
+				table.insert(formatted_for_len_parts, "-" .. pronun.rhyme)
 			end
-			table.insert(formatted_for_len_parts, post)
 			return formatted, ulen(table.concat(formatted_for_len_parts))
 		end
 
-		ret.text = format_all_styles(ret.expressed_styles, format_style)
+		return format_all_styles(rhyme_ret.expressed_styles, format_style)
+	end
 
 	local textparts = {}
 	if all_rhyme_sets_eq then
+		local num_bullets = 9999
+		for j, parsed in ipairs(parsed_respellings) do
+			if parsed.bullets < num_bullets then
+				num_bullets = parsed.bullets
+			end
+			if j > 1 then
+				table.insert(textparts, "\n")
+			end
+			table.insert(textparts, parsed.pronun.text)
+		end
+		table.insert(textparts, "\n")
+		table.insert(textparts, format_rhyme(first_rhyme_ret, num_bullets))
+	else
 		for j, parsed in ipairs(parsed_respellings) do
 			if j > 1 then
 				table.insert(textparts, "\n")
 			end
 			table.insert(textparts, parsed.pronun.text)
+			table.insert(textparts, "\n")
+			table.insert(textparts, format_rhyme(parsed.rhymes, parsed.bullets + 1))
+		end
+	end
 
-
-
-	return ret.text
+	return table.concat(textparts)
 end
 
 
