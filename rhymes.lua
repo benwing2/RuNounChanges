@@ -40,13 +40,11 @@ function export.show_row(frame)
 	return make_rhyme_link(lang, args[2], "-" .. args[2]) .. (args[3] and (" (''" .. args[3] .. "'')") or "")
 end
 
-local function add_syllable_categories(categories, lang, r, s)
-	local prefix = "Rhymes:" .. lang .. "/" .. r
+local function add_syllable_categories(categories, lang, rhyme, num_syl)
+	local prefix = "Rhymes:" .. lang .. "/" .. rhyme
 	table.insert(categories, "[[Category:" .. prefix .. "]]")
-	if s then
-		local possiblecounts = mw.text.split(s, ",%s*")
-		for i, v in ipairs(possiblecounts) do
-			local n = tonumber(v)
+	if num_syl then
+		for _, n in ipairs(num_syl) do
 			local c
 			if n > 1 then
 				c = prefix .. "/" .. n .. " syllables"
@@ -63,8 +61,9 @@ function export.format_rhymes(data)
 	local links = {}
 	local categories = {}
 	for i, r in ipairs(data.rhymes) do
-		table.insert(links, make_rhyme_link(lang, r, "-" .. r))
-		add_syllable_categories(categories, langname, r, data.srhymes[i] or data.s)
+		local rhyme = r.rhyme
+		table.insert(links, make_rhyme_link(lang, rhyme, "-" .. rhyme))
+		add_syllable_categories(categories, langname, rhyme, rhyme.num_syl or data.num_syl)
 	end
 
 	local ret = "Rhymes: "
@@ -93,11 +92,29 @@ function export.show(frame)
 	local args = require("Module:parameters").process(args, params)
 	local lang = args[compat and "lang" or 1]
 	lang = require("Module:languages").getByCode(lang) or require("Module:languages").err(lang, compat and "lang" or 1)
+
+	local function parse_num_syl(val)
+		val = mw.text.split(val, "%s*,%s*")
+		local ret = {}
+		for _, v in ipairs(val) do
+			local n = tonumber(v) or error("Unrecognized #syllables '" .. v .. "', should be a number")
+			table.insert(ret, n)
+		end
+		return ret
+	end
+
+	local rhymes = {}
+	for i, rhyme in ipairs(args[1 + offset]) do
+		local rhymeobj = {rhyme = rhyme}
+		if args.srhymes[i] then
+			rhymeobj.num_syl = parse_num_syl(args.srhymes[i])
+		end
+	end
+
 	return export.format_rhymes {
 		lang = lang,
-		rhymes = args[1 + offset],
-		s = args.s,
-		srhymes = args.srhymes
+		rhymes = rhymes,
+		num_syl = parse_num_syl(args.s),
 	}
 end
 
