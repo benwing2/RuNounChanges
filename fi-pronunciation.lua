@@ -314,7 +314,12 @@ function export.show(frame)
 						sylkeys[hl] = true
 					end
 				end
-				table.insert(results, "* " .. frame:expandTemplate{title = "rhymes", args = {"fi", s = table.concat(sylcounts, ","), unpack(r)}} .. label)
+				local rhymeobjs = {}
+				for _, rhyme in ipairs(r) do
+					table.insert(rhymeobjs, {rhyme = rhyme})
+				end
+				table.insert(results, "* " .. require("Module:rhymes").format_rhymes(
+					{ lang = lang, rhymes = rhymeobjs, num_syl = sylcounts }) .. label)
 			end
 		end
 	end
