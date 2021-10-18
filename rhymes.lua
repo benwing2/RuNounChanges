@@ -16,7 +16,7 @@ local function make_rhyme_link(lang, link_rhyme, display_rhyme)
 		return table.concat{"[[Rhymes:", lang:getCanonicalName(), "|", lang:getCanonicalName(), "]]"}
 	else
 		local formatted_rhyme, cat = tag_rhyme(display_rhyme or link_rhyme, lang)
-		
+
 		return table.concat{"[[Rhymes:", lang:getCanonicalName(), "/", link_rhyme, "|", formatted_rhyme, "]]", cat}
 	end
 end
@@ -27,16 +27,16 @@ function export.show_row(frame)
 		[2] = {required = true},
 		[3] = {},
 	}
-	
+
 	local args = frame.getParent and frame:getParent().args or frame
-	
+
 	if (not args[1] or args[1] == "") and mw.title.getCurrentTitle().nsText == "Template" then
 		return '[[Rhymes:English/aɪmz|<span class="IPA">-aɪmz</span>]]'
 	end
-	
+
 	local args = require("Module:parameters").process(args, params)
 	local lang = require("Module:languages").getByCode(args[1]) or require("Module:languages").err(args[1], 1)
-	
+
 	return make_rhyme_link(lang, args[2], "-" .. args[2]) .. (args[3] and (" (''" .. args[3] .. "'')") or "")
 end
 
@@ -58,35 +58,47 @@ local function add_syllable_categories(categories, lang, r, s)
 	end
 end
 
+function export.format_rhymes(data)
+	local langname = data.lang:getCanonicalName()
+	local links = {}
+	local categories = {}
+	for i, r in ipairs(data.rhymes) do
+		table.insert(links, make_rhyme_link(lang, r, "-" .. r))
+		add_syllable_categories(categories, langname, r, data.srhymes[i] or data.s)
+	end
+
+	local ret = "Rhymes: "
+	if data.qualifiers and data.qualifiers[1] then
+		ret = require("Module:qualifier").format_qualifier(data.qualifiers) .. " " .. ret
+	end
+	return ret .. table.concat(links, ", ") .. (mw.title.getCurrentTitle().namespace == 0 and table.concat(categories) or "")
+end
+
 function export.show(frame)
 	local args = frame.getParent and frame:getParent().args or frame
 	local compat = args["lang"]
 	local offset = compat and 0 or 1
-	
+
 	local params = {
 		[1 + offset] = {required = true, list = true},
 		[compat and "lang" or 1] = {required = true},
 		["s"] = {},
 		["srhymes"] = {list = "s", allow_holes = true, require_index = true},
 	}
-	
+
 	if (not args[1 + offset] or args[1 + offset] == "") and mw.title.getCurrentTitle().nsText == "Template" then
 		return 'Rhymes: [[Rhymes:English/aɪmz|<span class="IPA">-aɪmz</span>]]'
 	end
-	
+
 	local args = require("Module:parameters").process(args, params)
 	local lang = args[compat and "lang" or 1]
-	local lang = require("Module:languages").getByCode(lang) or require("Module:languages").err(lang, compat and "lang" or 1)
-	
-	local langname = lang:getCanonicalName()
-	local links = {}
-	local categories = {}
-	for i, r in ipairs(args[1 + offset]) do
-		table.insert(links, make_rhyme_link(lang, r, "-" .. r))
-		add_syllable_categories(categories, langname, r, args["srhymes"][i] or args["s"])
-	end
-	
-	return "Rhymes: " .. table.concat(links, ", ") .. (mw.title.getCurrentTitle().namespace == 0 and table.concat(categories) or "")
+	lang = require("Module:languages").getByCode(lang) or require("Module:languages").err(lang, compat and "lang" or 1)
+	return export.format_rhymes {
+		lang = lang,
+		rhymes = args[1 + offset],
+		s = args.s,
+		srhymes = args.srhymes
+	}
 end
 
 -- {{rhymes nav}}
@@ -95,20 +107,20 @@ function export.show_nav(frame)
 	local args = frame:getParent().args
 	local lang = args[1] or (mw.title.getCurrentTitle().nsText == "Template" and "und") or error("Language code has not been specified. Please pass parameter 1 to the template.")
 	lang = require("Module:languages").getByCode(lang) or require("Module:languages").err(lang, 1)
-	
+
 	local parts = {}
 	local i = 2
-	
+
 	while args[i] do
 		local part = args[i]; if part == "" then part = nil end
 		table.insert(parts, part)
 		i = i + 1
 	end
-	
+
 	-- Create steps
 	local steps = {"» [[Wiktionary:Rhymes|Rhymes]]", "» " .. make_rhyme_link(lang)}
 	local categories = {}
-	
+
 	if #parts > 0 then
 		local last = parts[#parts]
 		parts[#parts] = nil
@@ -118,11 +130,11 @@ function export.show_nav(frame)
 			prefix = prefix .. part
 			parts[i] = prefix
 		end
-		
+
 		for _, part in ipairs(parts) do
 			table.insert(steps, "» " .. make_rhyme_link(lang, part .. "-", "-" .. part .. "-"))
 		end
-		
+
 		if last == "-" then
 			table.insert(steps, "» " .. make_rhyme_link(lang, prefix, "-" .. prefix))
 			table.insert(categories, "[[Category:" .. lang:getCanonicalName() .. " rhymes" .. (prefix == "" and "" or "/" .. prefix .. "-") .. "| ]]")
@@ -136,14 +148,14 @@ function export.show_nav(frame)
 	elseif lang:getCode() ~= "und" then
 		table.insert(categories, "[[Category:" .. lang:getCanonicalName() .. " rhymes| ]]")
 	end
-	
+
 	frame:callParserFunction("DISPLAYTITLE",
 		mw.title.getCurrentTitle().fullText:gsub(
 			"/(.+)$",
 			function (rhyme)
 				return "/" .. tag_rhyme(rhyme, lang)
 			end))
-	
+
 	return table.concat(steps, " ") .. table.concat(categories)
 end
 
