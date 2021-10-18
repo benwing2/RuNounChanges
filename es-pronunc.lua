@@ -862,11 +862,19 @@ function export.show_pr(frame)
 		local function dodialect(rhyme_ret, dialect)
 			rhyme_ret.pronun[dialect] = {}
 			for _, pronun in ipairs(parsed.pronun.pronun[dialect]) do
-				local rhyme = rsub(rsub(pronun.phonemic, ".*[ˌˈ]", ""), "^[^" .. vowel .. "]", "")
+				-- Count number of syllables by looking at syllable boundaries (including stress marks).
+				local num_syl = ulen(rsub(pronun.phonemic, "[^.ˌˈ]", "")) + 1
+				-- Get the rhyme by truncating everything up through the last stress mark + any following
+				-- consonants, and remove syllable boundary markers.
+				local rhyme = rsub(rsub(pronun.phonemic, ".*[ˌˈ]", ""), "^[^" .. vowel .. "]", ""):gsub("%.", "")
 				local saw_already = false
 				for _, existing in ipairs(rhyme_ret.pronun[dialect]) do
 					if existing.rhyme == rhyme then
 						saw_already = true
+						-- We already saw this rhyme but possibly with a different number of syllables,
+						-- e.g. if the user specified two pronunciations 'biología' (4 syllables) and
+						-- 'bi.ología' (5 syllables), both of which have the same rhyme /ia/.
+						require("Module:table").insertIfNot(existing.num_syl, num_syl)
 						break
 					end
 				end
@@ -887,6 +895,7 @@ function export.show_pr(frame)
 					end
 					table.insert(rhyme_ret.pronun[dialect], {
 						rhyme = rhyme,
+						num_syl = {num_syl},
 						differences = rhyme_diffs,
 					})
 				end
@@ -916,9 +925,8 @@ function export.show_pr(frame)
 			local pronunciations = {}
 			local rhymes = {}
 			for _, pronun in ipairs(expressed_style.pronun) do
-				table.insert(rhymes, pronun.rhyme)
+				table.insert(rhymes, {rhyme = pronun.rhyme, num_syl = pronun.num_syl})
 			end
-			-- FIXME, add number of syllables
 			local data = {
 				lang = lang,
 				rhymes = rhymes,
