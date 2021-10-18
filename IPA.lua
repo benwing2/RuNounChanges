@@ -91,7 +91,7 @@ end
 
 function export.format_IPA_multiple(lang, items, separator, no_count)
 	local categories = {}
-	separator = separator or ', '
+	separator = separator or ", "
 	
 	-- Format
 	if not items[1] then
@@ -104,7 +104,7 @@ function export.format_IPA_multiple(lang, items, separator, no_count)
 	
 	local bits = {}
 	
-	for _, item in ipairs(items) do
+	for j, item in ipairs(items) do
 		local bit = export.format_IPA(lang, item.pron)
 		
 		if item.pretext then
@@ -145,6 +145,9 @@ function export.format_IPA_multiple(lang, items, separator, no_count)
 			end
 		end
 
+		if j > 1 then
+			bit = (item.separator or separator) .. bit
+		end
 		table.insert(bits, bit)
 		
 		--[=[	[[Special:WhatLinksHere/Template:tracking/IPA/syntax-error]]
@@ -183,7 +186,7 @@ function export.format_IPA_multiple(lang, items, separator, no_count)
 		end
 	end
 
-	return table.concat(bits, separator) .. table.concat(categories)
+	return table.concat(bits) .. table.concat(categories)
 end
 
 -- Takes an IPA pronunciation and formats it and adds cleanup categories.
