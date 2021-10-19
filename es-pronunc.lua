@@ -729,15 +729,18 @@ local function divide_syllables_on_spelling(text)
 	local TEMP_CH = u(0xFFF4)
 	local TEMP_LL = u(0xFFF5)
 	local TEMP_RR = u(0xFFF6)
+	local vowel = "aeiouüy"
+	local V = "[" .. vowel .. "]" -- vowel class
+	local C = "[^" .. vowel .. separator .. "]" -- consonant class
 	-- Change user-specified . into SYLDIV so we don't shuffle it around when dividing into syllables.
 	text = text:gsub("%.", SYLDIV)
 	text = rsub(text, "y(" .. V .. ")", TEMP_Y_CONS .. "%1")
 	text = text:gsub("ch", TEMP_CH)
 	text = text:gsub("ll", TEMP_LL)
 	text = text:gsub("rr", TEMP_RR)
-	--syllable division
 	local vowel_to_glide = { ["i"] = TEMP_I, ["u"] = TEMP_U }
-	-- i and u between vowels -> j and w ([[paranoia]], [[baiano]], [[abreuense]], [[alauita]], [[Malaui]], etc.)
+	-- i and u between vowels -> consonant-like substitutions ([[paranoia]], [[baiano]], [[abreuense]], [[alauita]],
+	-- [[Malaui]], etc.)
 	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*)([iu])(" .. V .. ")",
 		function (v1, iu, v2) return v1 .. vowel_to_glide[iu] .. v2 end
 	)
@@ -746,11 +749,11 @@ local function divide_syllables_on_spelling(text)
 	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*" .. C .. "+)(" .. C .. C .. V .. ")", "%1.%2")
 	text = rsub(text, "([pbvkctdg])%.([lr])", ".%1%2")
 	text = rsub_repeatedly(text, "(" .. C .. ")%.s(" .. C .. ")", "%1s.%2")
-	-- Any aeo, or stressed iuy, should be syllabically divided from a following aeo or stressed iuy.
+	-- Any aeo, or stressed iuüy, should be syllabically divided from a following aeo or stressed iuüy.
 	text = rsub_repeatedly(text, "([aeo]" .. accent_c .. "*)([aeo])", "%1.%2")
 	text = rsub_repeatedly(text, "([aeo]" .. accent_c .. "*)(" .. V .. stress_c .. ")", "%1.%2")
-	text = rsub(text, "([iuy]" .. stress_c .. ")([aeo])", "%1.%2")
-	text = rsub_repeatedly(text, "([iuy]" .. stress_c .. ")(" .. V .. stress_c .. ")", "%1.%2")
+	text = rsub(text, "([iuüy]" .. stress_c .. ")([aeo])", "%1.%2")
+	text = rsub_repeatedly(text, "([iuüy]" .. stress_c .. ")(" .. V .. stress_c .. ")", "%1.%2")
 	text = rsub_repeatedly(text, "i(" .. accent_c .. "*)i", "i%1.i")
 	text = rsub_repeatedly(text, "u(" .. accent_c .. "*)u", "u%1.u")
 	text = text:gsub(SYLDIV, ".")
