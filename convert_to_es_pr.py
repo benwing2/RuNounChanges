@@ -19,10 +19,10 @@ stress = AC + GR
 stress_c = "[" + AC + GR + "]"
 ipa_stress = u"ˈˌ"
 ipa_stress_c = "[" + ipa_stress + "]"
-separator = accent + ipa_stress + "# ." + SYLDIV
+separator = accent + ipa_stress + r"# \-." + SYLDIV
 separator_c = "[" + separator + "]"
 
-def divide_syllables_on_spelling(text):
+def generate_hyphenation_from_spelling(text):
   # decompose everything but ñ and ü
   text = unicodedata.normalize("NFD", text)
   text = text.replace("n" + TILDE, u"ñ")
@@ -49,7 +49,7 @@ def divide_syllables_on_spelling(text):
   text = re.sub("y(" + V + ")", TEMP_Y_CONS + r"\1", text)
   text = text.replace("ch", TEMP_CH)
   # We don't want to break -sh- except in desh-, e.g. [[deshuesar]], [[deshonra]], [[deshecho]].
-  text = re.sub("(^| )([Dd])esh", r"\1\2" + TEMP_DESH, text)
+  text = re.sub("(^|[ -])([Dd])esh", r"\1\2" + TEMP_DESH, text)
   text = text.replace("sh", TEMP_SH)
   text = text.replace(TEMP_DESH, "esh")
   text = text.replace("ll", TEMP_LL)
@@ -74,15 +74,15 @@ def divide_syllables_on_spelling(text):
   text = text.replace("d.r", ".dr")
   # Per https://catalog.ldc.upenn.edu/docs/LDC2019S07/Syllabification_Rules_in_Spanish.pdf, tl at the end of a word
   # (as in nahuatl, Popocatepetl etc.) is divided .tl from the previous vowel.
-  text = re.sub("([^. ])tl( |$)", r"\1.tl\2", text)
+  text = re.sub("([^. -])tl([ -]|$)", r"\1.tl\2", text)
   text = rsub_repeatedly(r"(" + C + ")\.s(" + C + ")", r"\1s.\2", text)
   # Any aeo, or stressed iuüy, should be syllabically divided from a following aeo or stressed iuüy.
   text = rsub_repeatedly("([aeoAEO]" + accent_c + "*)([aeo])", r"\1.\2", text)
   text = rsub_repeatedly("([aeoAEO]" + accent_c + "*)(" + V + stress_c + ")", r"\1.\2", text)
   text = re.sub(u"([iuüyIUÜY]" + stress_c + ")([aeo])", r"\1.\2", text)
   text = rsub_repeatedly(u"([iuüyIUÜY]" + stress_c + ")(" + V + stress_c + ")", r"\1.\2", text)
-  text = rsub_repeatedly("[iI](" + accent_c + "*)i", r"i\1.i", text)
-  text = rsub_repeatedly("[uU](" + accent_c + "*)u", r"u\1.u", text)
+  text = rsub_repeatedly("([iI]" + accent_c + "*)i", r"\1.i", text)
+  text = rsub_repeatedly("([uU]" + accent_c + "*)u", r"\1.u", text)
   text = text.replace(SYLDIV, ".")
   text = text.replace(TEMP_I, "i")
   text = text.replace(TEMP_U, "u")
@@ -185,7 +185,7 @@ def process_text_on_page(index, pagetitle, text):
           arg = getparam(ipat, "1") or "+"
           bare_arg = arg
           default_hyphenation = arg == "+" or arg.replace(".", "") == pagetitle
-          hyphenation = divide_syllables_on_spelling(pagetitle)
+          hyphenation = generate_hyphenation_from_spelling(pagetitle)
           for param in ipat.params:
             pn = pname(param)
             pv = unicode(param.value)
