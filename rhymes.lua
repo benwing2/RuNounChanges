@@ -2,6 +2,7 @@ local export = {}
 
 local function tag_rhyme(rhyme, lang)
 	local formatted_rhyme, cat
+	-- FIXME, should not be here. Telugu should use IPA as well.
 	if lang:getCode() == "te" then
 		formatted_rhyme = require("Module:script utilities").tag_text(rhyme, lang)
 		cat = ""
@@ -56,6 +57,18 @@ local function add_syllable_categories(categories, lang, rhyme, num_syl)
 	end
 end
 
+-- Meant to be called from a module. `data` should contain the following fields:
+--   lang: Language object.
+--   rhymes: List of rhymes to display. Each rhyme is an object with fields `rhyme` (the IPA rhyme, without initial
+--           hyphen) and optionally `num_syl` (if non-nil, a list of the number(s) of syllables of the word with
+--           this rhyme).
+--   qualifiers: If non-nil, a list of qualifiers to display after the caption and before the rhymes.
+--   num_syl: If non-nil, a list of the number(s) of syllables of the word with each rhyme specified in `rhymes`.
+--            This applies to all rhymes specified in `rhymes`, while the corresponding `num_syl` attached to an
+--            individual rhyme applies only to that rhyme (and overrides the global `num_syl`, if both are given).
+--
+-- Note that the number of syllables is currently used only for categorization; if present, an extra category will
+-- be added such as [[Rhymes:Italian/ino/3 syllables]] in addition to [[Rhymes:Italian/ino]].
 function export.format_rhymes(data)
 	local langname = data.lang:getCanonicalName()
 	local links = {}
