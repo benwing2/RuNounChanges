@@ -716,12 +716,14 @@ function export.show(frame)
 end
 
 
-local function divide_syllables_on_spelling(text)
+local function generate_hyphenation_from_spelling(text)
 	-- decompose everything but ñ and ü
 	text = mw.ustring.toNFD(text)
 	text = rsub(text, ".[" .. TILDE .. DIA .. "]", {
 		["n" .. TILDE] = "ñ",
+		["N" .. TILDE] = "Ñ",
 		["u" .. DIA] = "ü",
+		["U" .. DIA] = "Ü",
 	}
 	local TEMP_I = u(0xFFF1)
 	local TEMP_U = u(0xFFF2)
@@ -729,15 +731,32 @@ local function divide_syllables_on_spelling(text)
 	local TEMP_CH = u(0xFFF4)
 	local TEMP_LL = u(0xFFF5)
 	local TEMP_RR = u(0xFFF6)
-	local vowel = "aeiouüy"
+	local TEMP_QU = u(0xFFF7)
+	local TEMP_QU_CAPS = u(0xFFF8)
+	local TEMP_GU = u(0xFFF9)
+	local TEMP_GU_CAPS = u(0xFFFA)
+	local TEMP_SH = u(0xFFFB)
+	local TEMP_DESH = u(0xFFFC)
+	local vowel = "aeiouüyAEIOUÜY"
 	local V = "[" .. vowel .. "]" -- vowel class
+	local separator = accent .. ipa_stress .. "# %-." .. SYLDIV
 	local C = "[^" .. vowel .. separator .. "]" -- consonant class
 	-- Change user-specified . into SYLDIV so we don't shuffle it around when dividing into syllables.
 	text = text:gsub("%.", SYLDIV)
 	text = rsub(text, "y(" .. V .. ")", TEMP_Y_CONS .. "%1")
+	-- We don't want to break -sh- except in desh-, e.g. [[deshuesar]], [[deshonra]], [[deshecho]].
+	text = text:gsub("^([Dd])esh", "%1" .. TEMP_DESH)
+	text = text:gsub("([ %-][Dd])esh", "%1" .. TEMP_DESH)
+	text = text:gsub("sh", TEMP_SH)
+	text = text:gsub(TEMP_DESH, "esh")
 	text = text:gsub("ch", TEMP_CH)
 	text = text:gsub("ll", TEMP_LL)
 	text = text:gsub("rr", TEMP_RR)
+	-- qu mostly handled correctly automatically, but not in quietud
+	text = rsub(text, "qu(" .. V .. ")", TEMP_QU .. "%1")
+	text = rsub(text, "Qu(" .. V .. ")", TEMP_QU_CAPS .. "%1")
+	text = rsub(text, "gu(" .. V .. ")", TEMP_GU .. "%1")
+	text = rsub(text, "Gu(" .. V .. ")", TEMP_GU_CAPS .. "%1")
 	local vowel_to_glide = { ["i"] = TEMP_I, ["u"] = TEMP_U }
 	-- i and u between vowels -> consonant-like substitutions ([[paranoia]], [[baiano]], [[abreuense]], [[alauita]],
 	-- [[Malaui]], etc.)
@@ -747,23 +766,36 @@ local function divide_syllables_on_spelling(text)
 	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*)(" .. C .. V .. ")", "%1.%2")
 	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*" .. C .. ")(" .. C .. V .. ")", "%1.%2")
 	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*" .. C .. "+)(" .. C .. C .. V .. ")", "%1.%2")
-	text = rsub(text, "([pbvkctdg])%.([lr])", ".%1%2")
+	-- Puerto Rico + most of Spain divide tl as t.l. Mexico and the Canary Islands have .tl. Unclear what other regions
+	-- do. Here we choose to go with .tl. See https://catalog.ldc.upenn.edu/docs/LDC2019S07/Syllabification_Rules_in_Spanish.pdf
+	-- and https://www.spanishdict.com/guide/spanish-syllables-and-syllabification-rules.
+	text = rsub(text, "([pbfvkctg])%.([lr])", ".%1%2")
+	text = text:gsub("d%.r", ".dr")
+	-- Per https://catalog.ldc.upenn.edu/docs/LDC2019S07/Syllabification_Rules_in_Spanish.pdf, tl at the end of a word
+	-- (as in nahuatl, Popocatepetl etc.) is divided .tl from the previous vowel.
+	text = text:gsub("([^. %-])tl$", "%1.tl")
+	text = text:gsub("([^. %-])(tl[ %-])", "%1.%2")
 	text = rsub_repeatedly(text, "(" .. C .. ")%.s(" .. C .. ")", "%1s.%2")
 	-- Any aeo, or stressed iuüy, should be syllabically divided from a following aeo or stressed iuüy.
-	text = rsub_repeatedly(text, "([aeo]" .. accent_c .. "*)([aeo])", "%1.%2")
-	text = rsub_repeatedly(text, "([aeo]" .. accent_c .. "*)(" .. V .. stress_c .. ")", "%1.%2")
-	text = rsub(text, "([iuüy]" .. stress_c .. ")([aeo])", "%1.%2")
-	text = rsub_repeatedly(text, "([iuüy]" .. stress_c .. ")(" .. V .. stress_c .. ")", "%1.%2")
-	text = rsub_repeatedly(text, "i(" .. accent_c .. "*)i", "i%1.i")
-	text = rsub_repeatedly(text, "u(" .. accent_c .. "*)u", "u%1.u")
+	text = rsub_repeatedly(text, "([aeoAEO]" .. accent_c .. "*)([aeo])", "%1.%2")
+	text = rsub_repeatedly(text, "([aeoAEO]" .. accent_c .. "*)(" .. V .. stress_c .. ")", "%1.%2")
+	text = rsub(text, "([iuüyIUÜY]" .. stress_c .. ")([aeo])", "%1.%2")
+	text = rsub_repeatedly(text, "([iuüyIUÜY]" .. stress_c .. ")(" .. V .. stress_c .. ")", "%1.%2")
+	text = rsub_repeatedly(text, "([iI]" .. accent_c .. "*)i", "%1.i")
+	text = rsub_repeatedly(text, "([uU]" .. accent_c .. "*)u", "%1.u")
 	text = text:gsub(SYLDIV, ".")
 	text = text:gsub(TEMP_I, "i")
 	text = text:gsub(TEMP_U, "u")
 	text = text:gsub(TEMP_Y_CONS, "y")
 	text = text:gsub(TEMP_CH, "ch")
+	text = text:gsub(TEMP_SH, "sh")
 	text = text:gsub(TEMP_LL, "ll")
 	text = text:gsub(TEMP_RR, "rr")
-	return text
+	text = text:gsub(TEMP_QU, "qu")
+	text = text:gsub(TEMP_QU_CAPS, "Qu")
+	text = text:gsub(TEMP_GU, "gu")
+	text = text:gsub(TEMP_GU_CAPS, "Gu")
+	text = mw.ustring.toNFC(text)
 end
 
 
@@ -773,6 +805,9 @@ function export.show_pr(frame)
 	}
 	local parargs = frame:getParent().args
 	local args = require("Module:parameters").process(parargs, params)
+	local SUBPAGENAME = mw.title.getCurrentTitle().subpageText
+
+	-- Parse the arguments.
 	local respellings = #args[1] > 0 and args[1] or {"+"}
 	local parsed_respellings = {}
 	local iut
@@ -788,7 +823,7 @@ function export.show_pr(frame)
 			local terms = rsplit(run[1], "%s*,%s*")
 			for j, term in ipairs(terms) do
 				if term == "+" then
-					terms[j] = mw.title.getCurrentTitle().text
+					terms[j] = SUBPAGENAME
 				end
 			end
 			local parsed = {terms = rsplit(run[1], "%s*,%s*"), audio = {}, rhymes = {}, hyph = {}}
@@ -848,6 +883,7 @@ function export.show_pr(frame)
 		end
 	end
 
+	-- Loop over individual respellings, processing each.
 	for _, parsed in ipairs(parsed_respellings) do
 		parsed.pronun = generate_pronun(parsed)
 		local saw_space = false
@@ -908,6 +944,41 @@ function export.show_pr(frame)
 		if #parsed.rhymes == 0 and not parsed.norhyme then
 			parsed.rhymes = express_all_styles(parsed, dodialect)
 		end
+
+		local hyphs = {}
+		if #parsed.hyph == 0 then
+			local words = rsplit(SUBPAGENAME, "[ %-]")
+			local all_words_have_vowels = true
+			for _, word in ipairs(words) do
+				word = ulower(mw.ustring.toNFD(word))
+				if not rfind(word, V) then
+					all_words_have_vowels = false
+					break
+				end
+			end
+
+			if all_words_have_vowels then
+				for _, term in ipairs(parsed.terms) do
+					if term:gsub("%.", "") == SUBPAGENAME then
+						m_table.insertIfNot(hyphs, generate_hyphenation_from_spelling(term))
+					end
+				end
+			end
+		else
+			for _, hyph in ipairs(parsed.hyph) do
+				if hyph == "+" then
+					for _, term in ipairs(parsed.terms) do
+						m_table.insertIfNot(hyphs, generate_hyphenation_from_spelling(term))
+					end
+				elseif hyph == "-" then
+					hyphs = {}
+					break
+				else
+					m_table.insertIfNot(hyphs, hyph)
+				end
+			end
+		end
+		parsed.hyph = hyphs
 	end
 
 	-- If all sets of pronunciations have the same rhymes, display them only once at the bottom.
@@ -951,29 +1022,67 @@ function export.show_pr(frame)
 		return format_all_styles(rhyme_ret.expressed_styles, format_style)
 	end
 
-	local textparts = {}
-	if all_rhyme_sets_eq then
-		local num_bullets = 9999
-		for j, parsed in ipairs(parsed_respellings) do
-			if parsed.bullets < num_bullets then
-				num_bullets = parsed.bullets
-			end
-			if j > 1 then
-				table.insert(textparts, "\n")
-			end
-			table.insert(textparts, parsed.pronun.text)
+	-- If all sets of pronunciations have the same hyphenations, display them only once at the bottom.
+	-- Otherwise, display hyphenations beneath each set, indented.
+	local first_hyphs
+	local all_hyph_sets_eq = true
+	for j, parsed in ipairs(parsed_respellings) do
+		if j == 1 then
+			first_hyphs = parsed.hyphs
+		elseif not require("Module:table").deepEquals(first_hyphs, parsed.hyphs) then
+			all_hyph_sets_eq = false
+			break
 		end
-		table.insert(textparts, "\n")
-		table.insert(textparts, format_rhyme(first_rhyme_ret, num_bullets))
-	else
-		for j, parsed in ipairs(parsed_respellings) do
-			if j > 1 then
-				table.insert(textparts, "\n")
-			end
-			table.insert(textparts, parsed.pronun.text)
+	end
+
+	local function format_hyphenation(hyphs, num_bullets)
+		local hyphtext = require("Module:hyphenation").format_hyphenation { lang = lang, hyphs = hyphs }
+		return string.rep("*", num_bullets) .. " " .. hyphtext
+	end
+
+	local function format_audio(audio, num_bullets)
+		local ret = {}
+		for i, a in ipairs(audio) do
+			-- FIXME! There should be a module for this.
+			table.insert(ret, string.rep("*", num_bullets) .. " " .. frame:expandTemplate {
+				title = "audio", args = {"es", audio.file, audio.gloss }})
+		end
+		return table.concat(ret, "\n")
+	end
+
+	local textparts = {}
+	local min_num_bullets = 9999
+	for j, parsed in ipairs(parsed_respellings) do
+		if parsed.bullets < min_num_bullets then
+			min_num_bullets = parsed.bullets
+		end
+		if j > 1 then
+			table.insert(textparts, "\n")
+		end
+		table.insert(textparts, parsed.pronun.text)
+		if #parsed.audio > 0 then
+			table.insert(textparts, "\n")
+			-- If only one pronunciation set, add the audio with the same number of bullets, otherwise
+			-- indent audio by one more bullet.
+			table.insert(textparts, format_audio(parsed.audio,
+				#parsed_respellings == 1 and parsed.bullets or parsed.bullets + 1))
+		end
+		if not all_rhyme_sets_eq then
 			table.insert(textparts, "\n")
 			table.insert(textparts, format_rhyme(parsed.rhymes, parsed.bullets + 1))
 		end
+		if not all_hyph_sets_eq and #parsed.hyphs > 0 then
+			table.insert(textparts, "\n")
+			table.insert(textparts, format_hyphenation(parsed.hyphs, parsed.bullets + 1))
+		end
+	end
+	if all_rhyme_sets_eq then
+		table.insert(textparts, "\n")
+		table.insert(textparts, format_rhyme(first_rhyme_ret, min_num_bullets))
+	end
+	if all_hyph_sets_eq and #first_hyphs > 0 then
+		table.insert(textparts, "\n")
+		table.insert(textparts, format_hyphenation(first_hyphs, min_num_bullets))
 	end
 
 	return table.concat(textparts)
