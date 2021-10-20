@@ -1,6 +1,7 @@
 local export = {}
 
 local m_IPA = require("Module:IPA")
+local m_table = require("Module:table")
 
 local lang = require("Module:languages").getByCode("es")
 
@@ -35,7 +36,7 @@ local separator_c = "[" .. separator .. "]"
 local C = "[^" .. vowel .. separator .. "]" -- consonant
 local T = "[^" .. vowel .. "lrɾjw" .. separator .. "]" -- obstruent or nasal
 
-local unstressed_words = require("Module:table").listToSet({
+local unstressed_words = m_table.listToSet({
 	"el", "la", "los", "las", -- definite articles
 	"un", -- single-syllable indefinite articles
 	"me", "te", "se", "lo", "le", "nos", "os", -- unstressed object pronouns
@@ -799,9 +800,23 @@ local function generate_hyphenation_from_spelling(text)
 end
 
 
+local function all_words_have_vowels(term)
+	local words = rsplit(term, "[ %-]")
+	for _, word in ipairs(words) do
+		word = ulower(mw.ustring.toNFD(word))
+		if not rfind(word, V) then
+			return false
+		end
+	end
+	return true
+end
+
+
 function export.show_pr(frame)
 	local params = {
 		[1] = {list = true},
+		["rhyme"] = {},
+		["hyph"] = {},
 	}
 	local parargs = frame:getParent().args
 	local args = require("Module:parameters").process(parargs, params)
@@ -810,6 +825,8 @@ function export.show_pr(frame)
 	-- Parse the arguments.
 	local respellings = #args[1] > 0 and args[1] or {"+"}
 	local parsed_respellings = {}
+	local overall_rhyme = args.rhyme and rsplit(args.rhyme, "%s*,%s*") or {}
+	local overall_hyph = args.hyph and rsplit(args.hyph, "%s*,%s*") or {}
 	local iut
 	for i, respelling in ipairs(respellings) do
 		if respelling:find("<") then
@@ -826,7 +843,7 @@ function export.show_pr(frame)
 					terms[j] = SUBPAGENAME
 				end
 			end
-			local parsed = {terms = rsplit(run[1], "%s*,%s*"), audio = {}, rhymes = {}, hyph = {}}
+			local parsed = {terms = rsplit(run[1], "%s*,%s*"), audio = {}, rhyme = {}, hyph = {}}
 			for j = 2, #run - 1, 2 do
 				if run[j + 1] ~= "" then
 					parse_err("Extraneous text '" .. run[j + 1] .. "' after modifier")
@@ -835,45 +852,38 @@ function export.show_pr(frame)
 				if not modtext then
 					parse_err("Internal error: Modifier '" .. modtext .. "' isn't surrounded by angle brackets")
 				end
-				if modtext == "norhyme" then
-					if parsed.norhyme then
-						parse_err("Can't specify <norhyme> twice")
+				local prefix, arg = modtext:match("^([a-z]+):(.*)$")
+				if not prefix then
+					parse_err("Modifier " .. run[j] .. " lacks a prefix, should begin with one of " ..
+						"'pre', 'post', 'ref', 'bullets', 'audio', 'rhyme', 'hyph' or 'style'")
+				end
+				if prefix == "pre" or prefix == "post" or prefix == "ref" or prefix == "bullets"
+					or prefix == "style" then
+					if parsed[prefix] then
+						parse_err("Modifier '" .. prefix .. "' occurs twice, second occurrence " .. run[j])
 					end
-					parsed.norhyme = true
-				else
-					local prefix, arg = modtext:match("^([a-z]+):(.*)$")
-					if not prefix then
-						parse_err("Modifier " .. run[j] .. " lacks a prefix, should begin with one of " ..
-							"'pre', 'post', 'ref', 'bullets', 'audio', 'rhyme', 'hyph' or 'style'")
-					end
-					if prefix == "pre" or prefix == "post" or prefix == "ref" or prefix == "bullets"
-						or prefix == "style" then
-						if parsed[prefix] then
-							parse_err("Modifier '" .. prefix .. "' occurs twice, second occurrence " .. run[j])
+					if prefix == "bullets" then
+						if not arg:find("^[0-9]$") then
+							parse_err("Modifier 'bullets' should have a number as argument")
 						end
-						if prefix == "bullets" then
-							if not arg:find("^[0-9]$") then
-								parse_err("Modifier 'bullets' should have a number as argument")
-							end
-							parsed.bullets = tonumber(arg)
-						else
-							parsed[prefix] = arg
-						end
-					elseif prefix == "rhyme" or prefix == "hyph" then
-						local vals = rsplit(arg, "%s*,%s*")
-						for _, val in ipairs(vals) do
-							table.insert(parsed[prefix], val)
-						end
-					elseif prefix == "audio" then
-						local file, gloss = arg:match("^(.-)%s*;%s*(.*)$")
-						if not file then
-							file = arg
-							gloss = "Audio"
-						end
-						table.insert(parsed.audio, {file = file, gloss = gloss})
+						parsed.bullets = tonumber(arg)
 					else
-						parse_err("Unrecognized prefix '" .. prefix .. "' in modifier " .. run[j])
+						parsed[prefix] = arg
 					end
+				elseif prefix == "rhyme" or prefix == "hyph" then
+					local vals = rsplit(arg, "%s*,%s*")
+					for _, val in ipairs(vals) do
+						table.insert(parsed[prefix], val)
+					end
+				elseif prefix == "audio" then
+					local file, gloss = arg:match("^(.-)%s*;%s*(.*)$")
+					if not file then
+						file = arg
+						gloss = "Audio"
+					end
+					table.insert(parsed.audio, {file = file, gloss = gloss})
+				else
+					parse_err("Unrecognized prefix '" .. prefix .. "' in modifier " .. run[j])
 				end
 			end
 			if not parsed.bullets then
@@ -882,6 +892,9 @@ function export.show_pr(frame)
 			table.insert(parsed_respellings, parsed)
 		end
 	end
+
+	local overall_no_rhyme = m_table.concats(overall_rhyme, "-")
+	local overall_no_hyph = m_table.contains(overall_hyph, "-")
 
 	-- Loop over individual respellings, processing each.
 	for _, parsed in ipairs(parsed_respellings) do
@@ -893,71 +906,12 @@ function export.show_pr(frame)
 				break
 			end
 		end
-		if saw_space then
-			parsed.norhyme = true
-		end
 
-		-- Generate the rhymes 
-		local function dodialect(rhyme_ret, dialect)
-			rhyme_ret.pronun[dialect] = {}
-			for _, pronun in ipairs(parsed.pronun.pronun[dialect]) do
-				-- Count number of syllables by looking at syllable boundaries (including stress marks).
-				local num_syl = ulen(rsub(pronun.phonemic, "[^.ˌˈ]", "")) + 1
-				-- Get the rhyme by truncating everything up through the last stress mark + any following
-				-- consonants, and remove syllable boundary markers.
-				local rhyme = rsub(rsub(pronun.phonemic, ".*[ˌˈ]", ""), "^[^" .. vowel .. "]", ""):gsub("%.", "")
-				local saw_already = false
-				for _, existing in ipairs(rhyme_ret.pronun[dialect]) do
-					if existing.rhyme == rhyme then
-						saw_already = true
-						-- We already saw this rhyme but possibly with a different number of syllables,
-						-- e.g. if the user specified two pronunciations 'biología' (4 syllables) and
-						-- 'bi.ología' (5 syllables), both of which have the same rhyme /ia/.
-						require("Module:table").insertIfNot(existing.num_syl, num_syl)
-						break
-					end
-				end
-				if not saw_already then
-					local rhyme_diffs = nil
-					if dialect == "distincion-lleismo" then
-						rhyme_diffs = {}
-						if rhyme:find("θ") then
-							rhyme_diffs.distincion_different = true
-						end
-						if rhyme:find("ʎ") then
-							rhyme_diffs.lleismo_different = true
-						end
-						if rfind(rhyme, "[ʎɟ]") then
-							rhyme_diffs.sheismo_different = true
-							rhyme_diffs.need_rioplat = true
-						end
-					end
-					table.insert(rhyme_ret.pronun[dialect], {
-						rhyme = rhyme,
-						num_syl = {num_syl},
-						differences = rhyme_diffs,
-					})
-				end
-			end
-		end
-
-		if #parsed.rhymes == 0 and not parsed.norhyme then
-			parsed.rhymes = express_all_styles(parsed, dodialect)
-		end
+		local this_no_rhyme = m_table.contains(parsed.rhyme, "-")
 
 		local hyphs = {}
 		if #parsed.hyph == 0 then
-			local words = rsplit(SUBPAGENAME, "[ %-]")
-			local all_words_have_vowels = true
-			for _, word in ipairs(words) do
-				word = ulower(mw.ustring.toNFD(word))
-				if not rfind(word, V) then
-					all_words_have_vowels = false
-					break
-				end
-			end
-
-			if all_words_have_vowels then
+			if not overall_no_hyph and all_words_have_vowels(SUBPAGENAME) then
 				for _, term in ipairs(parsed.terms) do
 					if term:gsub("%.", "") == SUBPAGENAME then
 						m_table.insertIfNot(hyphs, generate_hyphenation_from_spelling(term))
@@ -979,6 +933,63 @@ function export.show_pr(frame)
 			end
 		end
 		parsed.hyph = hyphs
+
+		-- Generate the rhymes 
+		local function dodialect(rhyme_ret, dialect)
+			rhyme_ret.pronun[dialect] = {}
+			for _, pronun in ipairs(parsed.pronun.pronun[dialect]) do
+				if all_words_have_vowels(pronun) then
+					-- Count number of syllables by looking at syllable boundaries (including stress marks).
+					local num_syl = ulen(rsub(pronun.phonemic, "[^.ˌˈ]", "")) + 1
+					-- Get the rhyme by truncating everything up through the last stress mark + any following
+					-- consonants, and remove syllable boundary markers.
+					local rhyme = rsub(rsub(pronun.phonemic, ".*[ˌˈ]", ""), "^[^" .. vowel .. "]", ""):gsub("%.", "")
+					local saw_already = false
+					for _, existing in ipairs(rhyme_ret.pronun[dialect]) do
+						if existing.rhyme == rhyme then
+							saw_already = true
+							-- We already saw this rhyme but possibly with a different number of syllables,
+							-- e.g. if the user specified two pronunciations 'biología' (4 syllables) and
+							-- 'bi.ología' (5 syllables), both of which have the same rhyme /ia/.
+							m_table.insertIfNot(existing.num_syl, num_syl)
+							break
+						end
+					end
+					if not saw_already then
+						local rhyme_diffs = nil
+						if dialect == "distincion-lleismo" then
+							rhyme_diffs = {}
+							if rhyme:find("θ") then
+								rhyme_diffs.distincion_different = true
+							end
+							if rhyme:find("ʎ") then
+								rhyme_diffs.lleismo_different = true
+							end
+							if rfind(rhyme, "[ʎɟ]") then
+								rhyme_diffs.sheismo_different = true
+								rhyme_diffs.need_rioplat = true
+							end
+						end
+						table.insert(rhyme_ret.pronun[dialect], {
+							rhyme = rhyme,
+							num_syl = {num_syl},
+							differences = rhyme_diffs,
+						})
+					end
+				end
+			end
+		end
+
+		if #parsed.rhyme == 0 then
+			if overall_no_rhyme or saw_space then
+				parsed.rhyme = nil
+			else
+				parsed.rhyme = express_all_styles(parsed, dodialect)
+			end
+		else
+			-- FIXME
+		end
+
 	end
 
 	-- If all sets of pronunciations have the same rhymes, display them only once at the bottom.
@@ -987,8 +998,8 @@ function export.show_pr(frame)
 	local all_rhyme_sets_eq = true
 	for j, parsed in ipairs(parsed_respellings) do
 		if j == 1 then
-			first_rhyme_ret = parsed.rhymes
-		elseif not require("Module:table").deepEquals(first_rhyme_ret, parsed.rhymes) then
+			first_rhyme_ret = parsed.rhyme
+		elseif not m_table.deepEquals(first_rhyme_ret, parsed.rhyme) then
 			all_rhyme_sets_eq = false
 			break
 		end
@@ -1029,7 +1040,7 @@ function export.show_pr(frame)
 	for j, parsed in ipairs(parsed_respellings) do
 		if j == 1 then
 			first_hyphs = parsed.hyphs
-		elseif not require("Module:table").deepEquals(first_hyphs, parsed.hyphs) then
+		elseif not m_table.deepEquals(first_hyphs, parsed.hyphs) then
 			all_hyph_sets_eq = false
 			break
 		end
@@ -1067,16 +1078,16 @@ function export.show_pr(frame)
 			table.insert(textparts, format_audio(parsed.audio,
 				#parsed_respellings == 1 and parsed.bullets or parsed.bullets + 1))
 		end
-		if not all_rhyme_sets_eq then
+		if not all_rhyme_sets_eq and parsed.rhyme then
 			table.insert(textparts, "\n")
-			table.insert(textparts, format_rhyme(parsed.rhymes, parsed.bullets + 1))
+			table.insert(textparts, format_rhyme(parsed.rhyme, parsed.bullets + 1))
 		end
 		if not all_hyph_sets_eq and #parsed.hyphs > 0 then
 			table.insert(textparts, "\n")
-			table.insert(textparts, format_hyphenation(parsed.hyphs, parsed.bullets + 1))
+			table.insert(textparts, format_hyphenation(parsed.hyph, parsed.bullets + 1))
 		end
 	end
-	if all_rhyme_sets_eq then
+	if all_rhyme_sets_eq and first_rhyme_ret then
 		table.insert(textparts, "\n")
 		table.insert(textparts, format_rhyme(first_rhyme_ret, min_num_bullets))
 	end
