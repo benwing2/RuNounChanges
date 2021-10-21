@@ -812,6 +812,37 @@ local function all_words_have_vowels(term)
 end
 
 
+local function dodialect_specified_rhymes(rhymes, hyphs, rhyme_ret, dialect)
+	rhyme_ret.pronun[dialect] = {}
+	for _, rhyme in ipairs(rhymes) do
+		local num_syl = {}
+		for _, hyph in ipairs(hyphs) do
+			if not hyph:find("[%s%-]") then
+				local this_num_syl = 1 + ulen(rsub(hyph, "[^.]", ""))
+				m_table.insertIfNot(num_syl, this_num_syl)
+			end
+		end
+		if #num_syl == 0 then
+			num_syl = nil
+		end
+		local rhyme_diffs = nil
+		if dialect == "distincion-lleismo" then
+			rhyme_diffs = {
+				distincion_different = false,
+				lleismo_different = false,
+				sheismo_different = false,
+				need_rioplat = false,
+			}
+		end
+		table.insert(rhyme_ret.pronun[dialect], {
+			rhyme = rhyme,
+			num_syl = num_syl,
+			differences = rhyme_diffs,
+		})
+	end
+end
+
+
 function export.show_pr(frame)
 	local params = {
 		[1] = {list = true},
@@ -825,8 +856,8 @@ function export.show_pr(frame)
 	-- Parse the arguments.
 	local respellings = #args[1] > 0 and args[1] or {"+"}
 	local parsed_respellings = {}
-	local overall_rhyme = args.rhyme and rsplit(args.rhyme, "%s*,%s*") or {}
-	local overall_hyph = args.hyph and rsplit(args.hyph, "%s*,%s*") or {}
+	local overall_rhyme = args.rhyme and rsplit(args.rhyme, "%s*,%s*") or nil
+	local overall_hyph = args.hyph and rsplit(args.hyph, "%s*,%s*") or nil
 	local iut
 	for i, respelling in ipairs(respellings) do
 		if respelling:find("<") then
@@ -893,8 +924,20 @@ function export.show_pr(frame)
 		end
 	end
 
-	local overall_no_rhyme = m_table.concats(overall_rhyme, "-")
-	local overall_no_hyph = m_table.contains(overall_hyph, "-")
+	if overall_hyph then
+		local hyphs = {}
+		for _, hyph in ipairs(overall_hyph) do
+			if hyph == "+" then
+				m_table.insertIfNot(hyphs, generate_hyphenation_from_spelling(SUBPAGENAME))
+			elseif hyph == "-" then
+				hyphs = {}
+				break
+			else
+				m_table.insertIfNot(hyphs, hyph)
+			end
+		end
+		overall_hyph = hyphs
+	end
 
 	-- Loop over individual respellings, processing each.
 	for _, parsed in ipairs(parsed_respellings) do
@@ -911,7 +954,7 @@ function export.show_pr(frame)
 
 		local hyphs = {}
 		if #parsed.hyph == 0 then
-			if not overall_no_hyph and all_words_have_vowels(SUBPAGENAME) then
+			if not overall_hyph and all_words_have_vowels(SUBPAGENAME) then
 				for _, term in ipairs(parsed.terms) do
 					if term:gsub("%.", "") == SUBPAGENAME then
 						m_table.insertIfNot(hyphs, generate_hyphenation_from_spelling(term))
@@ -972,7 +1015,7 @@ function export.show_pr(frame)
 						end
 						table.insert(rhyme_ret.pronun[dialect], {
 							rhyme = rhyme,
-							num_syl = {num_syl},
+							num_syl = num_syl,
 							differences = rhyme_diffs,
 						})
 					end
@@ -981,15 +1024,39 @@ function export.show_pr(frame)
 		end
 
 		if #parsed.rhyme == 0 then
-			if overall_no_rhyme or saw_space then
+			if overall_rhyme or saw_space then
 				parsed.rhyme = nil
 			else
 				parsed.rhyme = express_all_styles(parsed, dodialect)
 			end
 		else
-			-- FIXME
+			local function this_dodialect(rhyme_ret, dialect)
+				return dodialect_specified_rhymes(parsed.rhyme, parsed.hyph, rhyme_ret, dialect)
+			end
+			parsed.rhyme = express_all_styles(parsed, this_dodialect)
 		end
+	end
 
+	if overall_rhyme then
+		if m_table.contains(overall_rhyme, "-") then
+			overall_rhyme = nil
+		else
+			local all_hyphs
+			if overall_hyph then
+				all_hyphs = overall_hyph
+			else
+				all_hyphs = {}
+				for _, parsed in ipairs(parsed_respellings) do
+					for _, hyph in ipairs(parsed.hyph) do
+						m_table.insertIfNot(all_hyphs, hyph)
+					end
+				end
+			end
+			local function dodialect_overall_rhyme(rhyme_ret, dialect)
+				return dodialect_specified_rhymes(overall_rhyme, all_hyphs, rhyme_ret, dialect)
+			end
+			overall_rhyme = express_all_styles(parsed, dodialect_overall_rhyme)
+		end
 	end
 
 	-- If all sets of pronunciations have the same rhymes, display them only once at the bottom.
@@ -1091,9 +1158,17 @@ function export.show_pr(frame)
 		table.insert(textparts, "\n")
 		table.insert(textparts, format_rhyme(first_rhyme_ret, min_num_bullets))
 	end
+	if overall_rhyme then
+		table.insert(textparts, "\n")
+		table.insert(textparts, format_rhyme(overall_rhyme, min_num_bullets))
+	end
 	if all_hyph_sets_eq and #first_hyphs > 0 then
 		table.insert(textparts, "\n")
 		table.insert(textparts, format_hyphenation(first_hyphs, min_num_bullets))
+	end
+	if overall_hyph and #overall_hyph > 0 then
+		table.insert(textparts, "\n")
+		table.insert(textparts, format_hyphenation(overall_hyph, min_num_bullets))
 	end
 
 	return table.concat(textparts)
