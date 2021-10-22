@@ -68,7 +68,7 @@ end
 --            individual rhyme applies only to that rhyme (and overrides the global `num_syl`, if both are given).
 --
 -- Note that the number of syllables is currently used only for categorization; if present, an extra category will
--- be added such as [[Rhymes:Italian/ino/3 syllables]] in addition to [[Rhymes:Italian/ino]].
+-- be added such as [[Category:Rhymes:Italian/ino/3 syllables]] in addition to [[Category:Rhymes:Italian/ino]].
 function export.format_rhymes(data)
 	local langname = data.lang:getCanonicalName()
 	local links = {}
