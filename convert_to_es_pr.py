@@ -43,7 +43,8 @@ def generate_hyphenation_from_spelling(text):
   TEMP_DESH = u"\uFFFC"
   vowel = u"aeiouüyAEIOUÜY"
   V = "[" + vowel + "]" # vowel class
-  C = "[^" + vowel + separator + "]" # consonant class
+  C = "[^" + vowel + separator + "]" # consonant class including h
+  C_NOT_H = "[^" + vowel + separator + "h]" # consonant class not including h
   # Change user-specified . into SYLDIV so we don't shuffle it around when dividing into syllables.
   text = text.replace(".", SYLDIV)
   text = re.sub("y(" + V + ")", TEMP_Y_CONS + r"\1", text)
@@ -60,11 +61,13 @@ def generate_hyphenation_from_spelling(text):
   text = re.sub("gu(" + V + ")", TEMP_GU + r"\1", text)
   text = re.sub("Gu(" + V + ")", TEMP_GU_CAPS + r"\1", text)
   vowel_to_glide = { "i": TEMP_I, "u": TEMP_U }
-  # i and u between vowels -> consonant-like substitutions ([[paranoia]], [[baiano]], [[abreuense]], [[alauita]],
-  # [[Malaui]], etc.)
-  text = rsub_repeatedly("(" + V + accent_c + "*)([iu])(" + V + ")",
+  # i and u between vowels -> consonant-like substitutions: [[paranoia]], [[baiano]], [[abreuense]], [[alauita]],
+  # [[Malaui]], etc.; also with h, as in [[marihuana]], [[parihuela]], [[antihielo]], [[pelluhuano]], [[náhuatl]],
+  # etc.
+  text = rsub_repeatedly("(" + V + accent_c + "*h?)([iu])(" + V + ")",
       lambda m: m.group(1) + vowel_to_glide[m.group(2)] + m.group(3), text)
-  text = rsub_repeatedly("(" + V + accent_c + "*)(" + C + V + ")", r"\1.\2", text)
+  # Divide VCV as V.CV; but don't divide if C == h, e.g. [[prohibir]] should be prohi.bir.
+  text = rsub_repeatedly("(" + V + accent_c + "*)(" + C_NOT_H + V + ")", r"\1.\2", text)
   text = rsub_repeatedly("(" + V + accent_c + "*" + C + ")(" + C + V + ")", r"\1.\2", text)
   text = rsub_repeatedly("(" + V + accent_c + "*" + C + "+)(" + C + C + V + ")", r"\1.\2", text)
   # Puerto Rico + most of Spain divide tl as t.l. Mexico and the Canary Islands have .tl. Unclear what other regions
@@ -77,12 +80,12 @@ def generate_hyphenation_from_spelling(text):
   text = re.sub("([^. -])tl([ -]|$)", r"\1.tl\2", text)
   text = rsub_repeatedly(r"(" + C + ")\.s(" + C + ")", r"\1s.\2", text)
   # Any aeo, or stressed iuüy, should be syllabically divided from a following aeo or stressed iuüy.
-  text = rsub_repeatedly("([aeoAEO]" + accent_c + "*)([aeo])", r"\1.\2", text)
-  text = rsub_repeatedly("([aeoAEO]" + accent_c + "*)(" + V + stress_c + ")", r"\1.\2", text)
-  text = re.sub(u"([iuüyIUÜY]" + stress_c + ")([aeo])", r"\1.\2", text)
-  text = rsub_repeatedly(u"([iuüyIUÜY]" + stress_c + ")(" + V + stress_c + ")", r"\1.\2", text)
-  text = rsub_repeatedly("([iI]" + accent_c + "*)i", r"\1.i", text)
-  text = rsub_repeatedly("([uU]" + accent_c + "*)u", r"\1.u", text)
+  text = rsub_repeatedly("([aeoAEO]" + accent_c + "*)(h?[aeo])", r"\1.\2", text)
+  text = rsub_repeatedly("([aeoAEO]" + accent_c + "*)(h?" + V + stress_c + ")", r"\1.\2", text)
+  text = re.sub(u"([iuüyIUÜY]" + stress_c + ")(h?[aeo])", r"\1.\2", text)
+  text = rsub_repeatedly(u"([iuüyIUÜY]" + stress_c + ")(h?" + V + stress_c + ")", r"\1.\2", text)
+  text = rsub_repeatedly("([iI]" + accent_c + "*)(h?i)", r"\1.\2", text)
+  text = rsub_repeatedly("([uU]" + accent_c + "*)(h?u)", r"\1.\2", text)
   text = text.replace(SYLDIV, ".")
   text = text.replace(TEMP_I, "i")
   text = text.replace(TEMP_U, "u")
@@ -101,6 +104,8 @@ def process_text_on_page(index, pagetitle, text):
   global args
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
+  def expand_text(tempcall):
+    return blib.expand_text(tempcall, pagetitle, pagemsg, args.verbose)
   def verify_template_is_full_line(tn, line):
     templates = list(blib.parse_text(line).filter_templates())
     if type(tn) is list:
@@ -182,8 +187,8 @@ def process_text_on_page(index, pagetitle, text):
           if ipat is None:
             must_continue = True
             break
-          arg = getparam(ipat, "1") or "+"
-          bare_arg = arg
+          bare_arg = getparam(ipat, "1")
+          arg = bare_arg or "+"
           default_hyphenation = arg == "+" or arg.replace(".", "") == pagetitle
           hyphenation = generate_hyphenation_from_spelling(pagetitle)
           for param in ipat.params:
@@ -251,8 +256,42 @@ def process_text_on_page(index, pagetitle, text):
       if must_continue:
         continue
       if rhyme_lines:
-        # FIXME, verify specified rhymes are subset of actual rhymes
-        pass
+        must_continue = False
+        for rhyme_line in rhyme_lines:
+          rhymet = verify_template_is_full_line(["rhyme", "rhymes"], rhyme_line)
+          if not rhymet:
+            must_continue = True
+            break
+          if getparam(rhymet, "1") != "es":
+            pagemsg("WARNING: Wrong language in {{%s}}, not removing: %s" % (tname(rhymet), rhyme_line))
+            must_continue = True
+            break
+          styles = ["distincion-yeismo", "seseo-yeismo", "distincion-lleismo", "seseo-lleismo"]
+          rhyme_pronuns = {}
+          rhymes = blib.fetch_param_chain(rhymet, "2")
+          for rhyme in rhymes:
+            for style in styles:
+              if style not in rhyme_pronuns:
+                pronun = expand_text(u"{{#invoke:es-pronunc|IPA_string|%s|style=%s}}" % (bare_arg, style))
+                if not pronun:
+                  must_continue = True
+                  break
+                rhyme_pronuns[style] = re.sub("^[^aeiou]*", "", re.sub(u".*[ˌˈ]", "", pronun)).replace(u"t͡ʃ", u"tʃ")
+              if rhyme == rhyme_pronuns[style]:
+                pagemsg("Removing rhyme %s, same as pronunciation-based rhyme for %s for spelling '%s'"
+                    % (rhyme, style, bare_arg))
+                break
+            else: # no break
+              style_pronuns = ["%s=%s" % (style, rhyme_pronuns[style]) for style in styles]
+              pagemsg("WARNING: Rhyme %s not same as pronunciation-based rhyme (%s) for spelling '%s'"
+                  % (rhyme, ", ".join(style_pronuns), bare_arg))
+              must_continue = True
+            if must_continue:
+              break
+          if must_continue:
+            break
+      if must_continue:
+        continue
       if not arg:
         pagemsg("WARNING: Something wrong, didn't see {{es-IPA}}?")
         continue
