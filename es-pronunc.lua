@@ -34,6 +34,7 @@ local ipa_stress_c = "[" .. ipa_stress .. "]"
 local separator = accent .. ipa_stress .. "# ." .. SYLDIV
 local separator_c = "[" .. separator .. "]"
 local C = "[^" .. vowel .. separator .. "]" -- consonant
+local C_NOT_H = "[^" .. vowel .. separator .. "h]" -- consonant not including h
 local T = "[^" .. vowel .. "lrɾjw" .. separator .. "]" -- obstruent or nasal
 
 local unstressed_words = m_table.listToSet({
@@ -71,16 +72,63 @@ local function rsub_repeatedly(term, foo, bar)
 	end
 end
 
+--[=[
+About styles, dialects and isoglosses:
 
--- ɟ and ĉ are used internally to represent [ʝ⁓ɟ͡ʝ] and [t͡ʃ]
---
--- dialect == one of the following:
+From the standpoint of pronunciation, a given dialect is defined by isoglosses, which specify differences
+in the way of pronouncing certain phonemes. You can think of a dialect as a collection of isoglosses.
+For example, one isogloss is "distinción" (pronouncing written ''s'' and ''c/z'' differently) vs. "seseo"
+(pronouncing them the same). Another is "lleísmo" (pronouncing written ''ll'' and ''y'' differently) vs.
+"yeísmo" (pronouncing them the same). The dominant pronunciation in Spain can be described as
+distinción + yeísmo, while the pronunciation in rural northern Spain can be described as distinción + lléismo
+and the pronunciation across much of the Andes mountains can be described as seseo + lléismo.
+
+Specifically, the following isoglosses are recognized (note, the isogloss specs as used in this module
+dispense with written accents):
+-- "distincion" = pronouncing ''s'' and ''c/z'' differently
+-- "seseo" = pronouncing ''s'' and ''c/z'' the same
+-- "lleismo" = pronouncing ''ll'' and ''y'' differently
+-- "yeismo" = pronouncing ''ll'' and ''y'' the same
+-- "rioplatense" = Rioplatense speech, i.e. seseo+yeismo with ''ll'' and ''y'' pronounced specially, and a
+                   clear distinction between initial ''hi-'' vs. initial ''ll-/y-''
+-- "sheismo" = a type of Rioplatense speech, characteristic of Buenos Aires, where ''ll'' and ''y'' are
+               pronounced as /ʃ/
+-- "zheismo" = a type of Rioplatense speech, found outside of Buenos Aires, where ''ll'' and ''y'' are
+               pronounced as /ʒ/
+
+These isoglosses can be combined to yield one of the following six dialects:
 -- "distincion-lleismo": distinción + lleísmo
 -- "distincion-yeismo": distinción + yeísmo
 -- "seseo-lleismo": seseo + lleísmo
 -- "seseo-yeismo": seseo + yeísmo
 -- "rioplatense-sheismo": Rioplatense with /ʃ/ (Buenos Aires)
--- "rioplatense-zheismo": Rioplatense with /ʒ/
+-- "rioplatense-zheismo": Rioplatense with /ʒ/ (non-Buenos Aires)
+
+A "style" here is a set of dialects that pronounce a given word in a given fashion. For example, if we are only
+considering the distinción/seseo and lleísmo/yeísmo isoglosses, there are four conceivable dialects (all of
+which in fact exist). However, for a given word, more than one dialect may pronounce it the same. For
+example, a word like [[paz]] has a ''z'' but no ''ll'', and so there are only two possible pronunciations for
+the four dialects. Here, the two styles are "Spain" and "Latin America". Correspondingly, a word like [[pollo]]
+with an ''ll'' but no ''z'' has two styles, which can approximately be described as "most of Spain and Latin
+America" vs. "rural northern Spain, Andes Mountains".
+
+A "style spec" (indicated by the style= parameter to {{es-IPA}}) restricts the output to certain styles.
+A style spec can be one of the following:
+1. An isogloss, e.g. "distincion", "rioplatense"; if specified, only styles containing this isogloss are output.
+2. A negated isogloss, e.g. "-rioplatense".
+3. An intersection of isoglosses ("A and B"), e.g. "distincion+lleismo". This can be used to restrict to specific
+   dialects.
+4. A union of isoglosses ("A or B"), e.g. "distincion,zheismo". If both plus and comma are used, plus takes
+   precedence, e.g. "seseo+lleismo,zheismo" means either the "seseo+lleismo" dialect or the "rioplatense-zheismo"
+   dialect.
+
+An example where the style= parameter might be used is with the word [[bluetooth]], which has one pronunciation
+in Spain/distinción (respelled "blutuz") but another in Latin America/seseo (respelled "blutud"). This might be
+represented using {{es-pr}} as {{es-pr|blutuz<style:distincion>|blutud<style:seseo>}}.
+]=]
+
+-- ɟ and ĉ are used internally to represent [ʝ⁓ɟ͡ʝ] and [t͡ʃ]
+--
 function export.IPA(text, dialect, phonetic, include_syllable_markers, do_debug)
 	local debug = {}
 
@@ -207,22 +255,32 @@ function export.IPA(text, dialect, phonetic, include_syllable_markers, do_debug)
 
 	--syllable division
 	local vowel_to_glide = { ["i"] = "j", ["u"] = "w" }
-	-- i and u between vowels -> j and w ([[paranoia]], [[baiano]], [[abreuense]], [[alauita]], [[Malaui]], etc.)
-	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*)([iu])(" .. V .. ")",
+	-- i and u between vowels -> consonant-like substitutions: [[paranoia]], [[baiano]], [[abreuense]], [[alauita]],
+	-- [[Malaui]], etc.; also with h, as in [[marihuana]], [[parihuela]], [[antihielo]], [[pelluhuano]], [[náhuatl]],
+	-- etc.
+	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*h?)([iu])(" .. V .. ")",
 		function (v1, iu, v2) return v1 .. vowel_to_glide[iu] .. v2 end
 	)
-	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*)(" .. C .. W .. "?" .. V .. ")", "%1.%2")
+	-- Divide VCV as V.CV; but don't divide if C == h, e.g. [[prohibir]] should be prohi.bir.
+	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*)(" .. C_NOT_H .. W .. "?" .. V .. ")", "%1.%2")
 	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*" .. C .. ")(" .. C .. V .. ")", "%1.%2")
 	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*" .. C .. "+)(" .. C .. C .. V .. ")", "%1.%2")
-	text = rsub(text, "([pbktdɡ])%.([lɾ])", ".%1%2")
+	-- Puerto Rico + most of Spain divide tl as t.l. Mexico and the Canary Islands have .tl. Unclear what other regions
+	-- do. Here we choose to go with .tl. See https://catalog.ldc.upenn.edu/docs/LDC2019S07/Syllabification_Rules_in_Spanish.pdf
+	-- and https://www.spanishdict.com/guide/spanish-syllables-and-syllabification-rules.
+	text = rsub(text, "([pbfktɡ])%.([lɾ])", ".%1%2")
+	text = text:gsub("d%.ɾ", ".dɾ")
+	-- Per https://catalog.ldc.upenn.edu/docs/LDC2019S07/Syllabification_Rules_in_Spanish.pdf, tl at the end of a word
+	-- (as in nahuatl, Popocatepetl etc.) is divided .tl from the previous vowel.
+	text = text:gsub("([^.#])tl#", "%1.tl")
 	text = rsub_repeatedly(text, "(" .. C .. ")%.s(" .. C .. ")", "%1s.%2")
 	-- Any aeo, or stressed iu, should be syllabically divided from a following aeo or stressed iu.
-	text = rsub_repeatedly(text, "([aeo]" .. accent_c .. "*)([aeo])", "%1.%2")
-	text = rsub_repeatedly(text, "([aeo]" .. accent_c .. "*)(" .. V .. stress_c .. ")", "%1.%2")
-	text = rsub(text, "([iu]" .. stress_c .. ")([aeo])", "%1.%2")
-	text = rsub_repeatedly(text, "([iu]" .. stress_c .. ")(" .. V .. stress_c .. ")", "%1.%2")
-	text = rsub_repeatedly(text, "i(" .. accent_c .. "*)i", "i%1.i")
-	text = rsub_repeatedly(text, "u(" .. accent_c .. "*)u", "u%1.u")
+	text = rsub_repeatedly(text, "([aeo]" .. accent_c .. "*)(h?[aeo])", "%1.%2")
+	text = rsub_repeatedly(text, "([aeo]" .. accent_c .. "*)(h?" .. V .. stress_c .. ")", "%1.%2")
+	text = rsub(text, "([iu]" .. stress_c .. ")(h?[aeo])", "%1.%2")
+	text = rsub_repeatedly(text, "([iu]" .. stress_c .. ")(h?" .. V .. stress_c .. ")", "%1.%2")
+	text = rsub_repeatedly(text, "(i" .. accent_c .. "*)(h?i)", "%1.%2")
+	text = rsub_repeatedly(text, "(u" .. accent_c .. "*)(h?u)", "%1.%2")
 
 	table.insert(debug, text)
 
@@ -433,7 +491,9 @@ end
 --      (e.g. "distincion-yeismo" for distinción+yeísmo, as is common in Spain;
 --      see the comment above export.IPA() above for the full list);
 --   3. phonetic=1 specifies to generate the phonetic rather than phonemic pronunciation;
---   4. debug=1 includes debug text in the output.
+--   4. include-syllable-markers=1 specifies to include syllable markers in the phonemic output
+--      (they are always included in the phonetic output);
+--   5. debug=1 includes debug text in the output.
 function export.IPA_string(frame)
 	local iparams = {
 		[1] = {},
@@ -449,7 +509,83 @@ function export.IPA_string(frame)
 end
 
 
-local function express_all_styles(args, dodialect)
+-- Generate all relevant dialect pronunciations and group into styles. See the comment above about dialects and styles.
+-- A "pronunciation" here could be for example the IPA phonemic/phonetic representation of the term or the IPA form of
+-- the rhyme that the term belongs to. If `style_spec` is nil, this generates all styles for all dialects, but
+-- `style_spec` can also be a style spec such as "seseo" or "distincion+yeismo" (see comment above) to restrict the
+-- output. `dodialect` is a function of two arguments, `ret` and `dialect`, where `ret` is the return-value table (see
+-- below), and `dialect` is a string naming a particular dialect, such as "distincion-lleismo" or "rioplatense-sheismo".
+-- `dodialect` should side-effect the `ret` table by adding an entry to `ret.pronun` for the dialect in question.
+--
+-- The return value is a table of the form
+--
+-- {
+--   pronun = {DIALECT = {PRONUN, PRONUN, ...}, DIALECT = {PRONUN, PRONUN, ...}, ...},
+--   expressed_styles = {STYLE_GROUP, STYLE_GROUP, ...},
+-- }
+--
+-- where:
+-- 1. DIALECT is a string such as "distincion-lleismo" naming a specific dialect.
+-- 2. PRONUN is a table describing a particular pronunciation. If the dialect is "distincion-lleismo", there should be
+--    a field in this table named `differences`, but where other fields may vary depending on the type of pronunciation
+--    (e.g. phonemic/phonetic or rhyme). See below for the form of the PRONUN table for phonemic/phonetic pronunciation
+--    vs. rhyme and the form of the `differences` field.
+-- 3. STYLE_GROUP is a table of the form {tag = "HIDDEN_TAG", styles = {INNER_SYLE, INNER_SYLE, ...}}. This describes
+--    a group of related styles (such as those for Latin America) that by default (the "hidden" form) are displayed as
+--    a single line, with an icon on the right to "open" the style group into the "shown" form, with multiple lines
+--    for each style in the group. The tag of the style group is the text displayed before the pronunciation in the
+--    default "hidden" form, such as "Spain" or "Latin America". It can have the special value of `false` to indicate
+--    that no tag text is to be displayed. Note that the pronunciation shown in the default "hidden" form is taken
+--    from the first style in the style group.
+-- 4. INNER_SYLE is a table of the form {tag = "SHOWN_TAG", pronun = {PRONUN, PRONUN, ...}}. This describes a single
+--    style (such as for the Andes Mountains in the case where the seseo+lleismo accent differs from all others), to
+--    be shown on a single line. `tag` is the text preceding the displayed pronunciation, or `false` if no tag text
+--    is to be displayed. PRONUN is a table as described above and describes a particular pronunciation.
+--
+-- The PRONUN table has the following form for the full phonemic/phonetic pronunciation:
+--
+-- {
+--   phonemic = "PHONEMIC",
+--   phonetic = "PHONETIC",
+--   differences = {FLAG = BOOLEAN, FLAG = BOOLEAN, ...},
+-- }
+--
+-- Here, `phonemic` is the phonemic pronunciation (displayed as /.../) and `phonetic` is the phonetic pronunciation
+-- (displayed as [...]).
+--
+-- The PRONUN table has the following form for the rhyme pronunciation:
+--
+-- {
+--   rhyme = "RHYME_PRONUN",
+--   num_syl = {NUM, NUM, ...},
+--   differences = {FLAG = BOOLEAN, FLAG = BOOLEAN, ...},
+-- }
+--
+-- Here, `rhyme` is a phonemic pronunciation such as "ado" for [[abogado]] or "iʝa"/"iʎa" for [[tortilla]] (depending
+-- on the dialect), and `num_syl` is a list of the possible numbers of syllables for the term(s) that have this rhyme
+-- (e.g. {4} for [[abogado]], {3} for [[tortilla]] and {4, 5} for [[biología]], which may be syllabified as
+-- bio.lo.gí.a or bi.o.lo.gí.a). `num_syl` is used to generate syllable-count categories such as
+-- [[Category:Rhymes:Spanish/ia/4 syllables]] in addition to [[Category:Rhymes:Spanish/ia]]. `num_syl` may be nil to
+-- suppress the generation of syllable-count categories; this is typically the case with multiword terms.
+--
+-- The value of the `differences` field in the PRONUN table (which, as noted above, only needs to be present for the
+-- "distincion-lleismo" dialect, and otherwise should be nil) is a table containing flags indicating whether and how
+-- the per-dialect pronunciations differ. This is an optimization to avoid having to generate all six dialectal
+-- pronunciations and compare them. It has the following form:
+--
+-- {
+--   distincion_different = BOOLEAN,
+--   lleismo_different = BOOLEAN,
+--   need_rioplat = BOOLEAN,
+--   sheismo_different = BOOLEAN,
+-- }
+--
+-- where:
+-- 1. `distincion_different` should be `true` if the "distincion" and "seseo" pronunciations differ;
+-- 2. `lleismo_different` should be `true` if the "lleismo" and "yeismo" pronunciations differ;
+-- 3. `need_rioplat` should be `true` if the Rioplatense pronunciations differ from the seseo+yeismo pronunciation;
+-- 4. `sheismo_different` should be `true` if the "sheismo" and "zheismo" pronunciations differ.
+local function express_all_styles(style_spec, dodialect)
 	local ret = {
 		pronun = {},
 		expressed_styles = {},
@@ -457,18 +593,31 @@ local function express_all_styles(args, dodialect)
 
 	local need_rioplat
 
+	-- Add a style object (see INNER_SYLE above) that represents a particular style to `ret.expressed_styles`.
+	-- `hidden_tag` is the tag text to be used when the style group containing the style is in the default "hidden"
+	-- state (e.g. "Spain", "Latin America" or false if there is only one style group and no tag text should be
+	-- shown), while `tag` is the tag text to be used when the individual style is shown (e.g. a description such as
+	-- "most of Spain and Latin America", "Andes Mountains" or "everywhere but Argentina and Uruguay").
+	-- `representative_dialect` is one of the dialects that this style represents, and whose pronunciation is stored in
+	-- the style object. `matching_styles` is a hyphen separated string listing the isoglosses described by this style.
+	-- For example, if the term has an ''ll'' but no ''c/z'', the `tag` text for the yeismo pronunciation will be
+	-- "most of Spain and Latin America" and `matching_styles` will be "distincion-seseo-yeismo", indicating that
+	-- it corresponds to both the "distincion" and "seseo" isoglosses as well as the "yeismo" isogloss. This is used
+	-- when a particular style spec is given. If `matching_styles` is omitted, it takes its value from
+	-- `representative_dialect`; this is used when the style contains only a single dialect.
 	local function express_style(hidden_tag, tag, representative_dialect, matching_styles)
 		matching_styles = matching_styles or representative_dialect
-		if not need_rioplat and not matching_styles:find("rioplatense") then
+		-- If the Rioplatense pronunciation isn't distinctive, add all Rioplatense isoglosses.
+		if not need_rioplat then
 			matching_styles = matching_styles .. "-rioplatense-sheismo-zheismo"
 		end
 		-- If style specified, make sure it matches the requested style.
 		local style_matches
-		if not args.style then
+		if not style_spec then
 			style_matches = true
 		else
 			local style_parts = rsplit(matching_styles, "%-")
-			local or_styles = rsplit(args.style, "%s*,%s*")
+			local or_styles = rsplit(style_spec, "%s*,%s*")
 			for _, or_style in ipairs(or_styles) do
 				local and_styles = rsplit(or_style, "%s*%+%s*")
 				local and_matches = true
@@ -502,9 +651,11 @@ local function express_all_styles(args, dodialect)
 			return
 		end
 
+		-- Fetch the representative dialect's pronunciation if not already present.
 		if not ret.pronun[representative_dialect] then
 			dodialect(ret, representative_dialect)
 		end
+		-- Insert the new style into the style group, creating the group if necessary.
 		local new_style = {
 			tag = tag,
 			pronun = ret.pronun[representative_dialect],
@@ -539,7 +690,8 @@ local function express_all_styles(args, dodialect)
 	need_rioplat = differences.need_rioplat
 	local sheismo_different = differences.sheismo_different
 
-	-- Now, based on the observed differences, figure out how to combine the individual styles into
+	-- Now, based on the observed differences, figure out how to combine the individual dialects into styles and
+	-- style groups.
 	if not distincion_different and not lleismo_different then
 		if not need_rioplat then
 			express_style(false, false, "distincion-lleismo", "distincion-seseo-lleismo-yeismo")
@@ -568,6 +720,15 @@ local function express_all_styles(args, dodialect)
 			express_style(hidden_tag, "Argentina and Uruguay", "rioplatense-sheismo", "seseo-rioplatense-sheismo-zheismo")
 		end
 	end
+
+	-- If only one style group, don't indicate the style.
+	-- Not clear we want this in reality.
+	--if #ret.expressed_styles == 1 then
+	--	ret.expressed_styles[1].tag = false
+	--	if #ret.expressed_styles[1].styles == 1 then
+	--		ret.expressed_styles[1].styles[1].tag = false
+	--	end
+	--end
 
 	return ret
 end
@@ -621,23 +782,6 @@ end
 
 
 local function generate_pronun(args)
-	-- About styles, dialects and isoglosses:
-	--
-	-- From the standpoint of pronunciation, a given dialect is defined by isoglosses, which specify differences
-	-- in the way of pronouncing certain phonemes. You can think of a dialect as a collection of isoglosses.
-	-- For example, one isogloss is "distinción" (pronouncing written ''s'' and ''c/z'' differently) vs. "seseo"
-	-- (pronouncing them the same). Another is "lleísmo" (pronouncing written ''ll'' and ''y'' differently) vs.
-	-- "yeísmo" (pronouncing them the same). The dominant pronunciation in Spain can be described as
-	-- distinción + yeísmo, while the pronunciation in rural northern Spain can be described as distinción + lléismo
-	-- and the pronunciation across much of the Andes mountains can be described as seseo + lléismo.
-	--
-	-- A "style" here is a set of dialects that pronounce a given word in a given fashion. For example, if we are only
-	-- considering the distinción/seseo and lleísmo/yeísmo isoglosses, there are four conceivable dialects (all of
-	-- which in fact exist). However, for a given word, more than one dialect may pronounce it the same. For
-	-- example, a word like [[paz]] has a ''z'' but no ''ll'', and so there are only two possible pronunciations for
-	-- the four dialects. Here, the two styles are "Spain" and "Latin America". Correspondingly, a word like [[pollo]]
-	-- with an ''ll'' but no ''z'' has two styles, which can approximately be described as "most of Spain and Latin
-	-- America" vs. "rural northern Spain, Andes Mountains".
 	local function dodialect(ret, dialect)
 		ret.pronun[dialect] = {}
 		for i, term in ipairs(args.terms) do
@@ -651,15 +795,7 @@ local function generate_pronun(args)
 		end
 	end
 
-	local ret = express_all_styles(args, dodialect)
-
-	-- If only one style group, don't indicate the style.
-	if #ret.expressed_styles == 1 then
-		ret.expressed_styles[1].tag = false
-		if #ret.expressed_styles[1].styles == 1 then
-			ret.expressed_styles[1].styles[1].tag = false
-		end
-	end
+	local ret = express_all_styles(args.style, dodialect)
 
 	local function format_style(tag, expressed_style, is_first)
 		local pronunciations = {}
@@ -741,7 +877,8 @@ local function generate_hyphenation_from_spelling(text)
 	local vowel = "aeiouüyAEIOUÜY"
 	local V = "[" .. vowel .. "]" -- vowel class
 	local separator = accent .. ipa_stress .. "# %-." .. SYLDIV
-	local C = "[^" .. vowel .. separator .. "]" -- consonant class
+	local C = "[^" .. vowel .. separator .. "]" -- consonant class including h
+	local C_NOT_H = "[^" .. vowel .. separator .. "h]" -- consonant class not including h
 	-- Change user-specified . into SYLDIV so we don't shuffle it around when dividing into syllables.
 	text = text:gsub("%.", SYLDIV)
 	text = rsub(text, "y(" .. V .. ")", TEMP_Y_CONS .. "%1")
@@ -759,12 +896,14 @@ local function generate_hyphenation_from_spelling(text)
 	text = rsub(text, "gu(" .. V .. ")", TEMP_GU .. "%1")
 	text = rsub(text, "Gu(" .. V .. ")", TEMP_GU_CAPS .. "%1")
 	local vowel_to_glide = { ["i"] = TEMP_I, ["u"] = TEMP_U }
-	-- i and u between vowels -> consonant-like substitutions ([[paranoia]], [[baiano]], [[abreuense]], [[alauita]],
-	-- [[Malaui]], etc.)
-	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*)([iu])(" .. V .. ")",
+	-- i and u between vowels -> consonant-like substitutions: [[paranoia]], [[baiano]], [[abreuense]], [[alauita]],
+	-- [[Malaui]], etc.; also with h, as in [[marihuana]], [[parihuela]], [[antihielo]], [[pelluhuano]], [[náhuatl]],
+	-- etc.
+	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*h?)([iu])(" .. V .. ")",
 		function (v1, iu, v2) return v1 .. vowel_to_glide[iu] .. v2 end
 	)
-	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*)(" .. C .. V .. ")", "%1.%2")
+	-- Divide VCV as V.CV; but don't divide if C == h, e.g. [[prohibir]] should be prohi.bir.
+	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*)(" .. C_NOT_H .. V .. ")", "%1.%2")
 	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*" .. C .. ")(" .. C .. V .. ")", "%1.%2")
 	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*" .. C .. "+)(" .. C .. C .. V .. ")", "%1.%2")
 	-- Puerto Rico + most of Spain divide tl as t.l. Mexico and the Canary Islands have .tl. Unclear what other regions
@@ -778,12 +917,12 @@ local function generate_hyphenation_from_spelling(text)
 	text = text:gsub("([^. %-])(tl[ %-])", "%1.%2")
 	text = rsub_repeatedly(text, "(" .. C .. ")%.s(" .. C .. ")", "%1s.%2")
 	-- Any aeo, or stressed iuüy, should be syllabically divided from a following aeo or stressed iuüy.
-	text = rsub_repeatedly(text, "([aeoAEO]" .. accent_c .. "*)([aeo])", "%1.%2")
-	text = rsub_repeatedly(text, "([aeoAEO]" .. accent_c .. "*)(" .. V .. stress_c .. ")", "%1.%2")
-	text = rsub(text, "([iuüyIUÜY]" .. stress_c .. ")([aeo])", "%1.%2")
-	text = rsub_repeatedly(text, "([iuüyIUÜY]" .. stress_c .. ")(" .. V .. stress_c .. ")", "%1.%2")
-	text = rsub_repeatedly(text, "([iI]" .. accent_c .. "*)i", "%1.i")
-	text = rsub_repeatedly(text, "([uU]" .. accent_c .. "*)u", "%1.u")
+	text = rsub_repeatedly(text, "([aeoAEO]" .. accent_c .. "*)(h?[aeo])", "%1.%2")
+	text = rsub_repeatedly(text, "([aeoAEO]" .. accent_c .. "*)(h?" .. V .. stress_c .. ")", "%1.%2")
+	text = rsub(text, "([iuüyIUÜY]" .. stress_c .. ")(h?[aeo])", "%1.%2")
+	text = rsub_repeatedly(text, "([iuüyIUÜY]" .. stress_c .. ")(h?" .. V .. stress_c .. ")", "%1.%2")
+	text = rsub_repeatedly(text, "([iI]" .. accent_c .. "*)(h?i)", "%1.%2")
+	text = rsub_repeatedly(text, "([uU]" .. accent_c .. "*)(h?u)", "%1.%2")
 	text = text:gsub(SYLDIV, ".")
 	text = text:gsub(TEMP_I, "i")
 	text = text:gsub(TEMP_U, "u")
@@ -843,6 +982,7 @@ local function dodialect_specified_rhymes(rhymes, hyphs, rhyme_ret, dialect)
 end
 
 
+-- External entry point for {{es-pr}}.
 function export.show_pr(frame)
 	local params = {
 		[1] = {list = true},
@@ -977,7 +1117,7 @@ function export.show_pr(frame)
 		end
 		parsed.hyph = hyphs
 
-		-- Generate the rhymes 
+		-- Generate the rhymes.
 		local function dodialect(rhyme_ret, dialect)
 			rhyme_ret.pronun[dialect] = {}
 			for _, pronun in ipairs(parsed.pronun.pronun[dialect]) do
@@ -986,7 +1126,8 @@ function export.show_pr(frame)
 					local num_syl = ulen(rsub(pronun.phonemic, "[^.ˌˈ]", "")) + 1
 					-- Get the rhyme by truncating everything up through the last stress mark + any following
 					-- consonants, and remove syllable boundary markers.
-					local rhyme = rsub(rsub(pronun.phonemic, ".*[ˌˈ]", ""), "^[^" .. vowel .. "]", ""):gsub("%.", "")
+					local rhyme = rsub(rsub(pronun.phonemic, ".*[ˌˈ]", ""), "^[^" .. vowel .. "]*", "")
+						:gsub("%.", ""):gsub("t͡ʃ", "tʃ")
 					local saw_already = false
 					for _, existing in ipairs(rhyme_ret.pronun[dialect]) do
 						if existing.rhyme == rhyme then
@@ -1027,13 +1168,13 @@ function export.show_pr(frame)
 			if overall_rhyme or saw_space then
 				parsed.rhyme = nil
 			else
-				parsed.rhyme = express_all_styles(parsed, dodialect)
+				parsed.rhyme = express_all_styles(parsed.style, dodialect)
 			end
 		else
 			local function this_dodialect(rhyme_ret, dialect)
 				return dodialect_specified_rhymes(parsed.rhyme, parsed.hyph, rhyme_ret, dialect)
 			end
-			parsed.rhyme = express_all_styles(parsed, this_dodialect)
+			parsed.rhyme = express_all_styles(parsed.style, this_dodialect)
 		end
 	end
 
@@ -1055,7 +1196,7 @@ function export.show_pr(frame)
 			local function dodialect_overall_rhyme(rhyme_ret, dialect)
 				return dodialect_specified_rhymes(overall_rhyme, all_hyphs, rhyme_ret, dialect)
 			end
-			overall_rhyme = express_all_styles(parsed, dodialect_overall_rhyme)
+			overall_rhyme = express_all_styles(parsed.style, dodialect_overall_rhyme)
 		end
 	end
 
