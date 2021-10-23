@@ -179,9 +179,9 @@ function export.to_phonemic(text, pagename)
 	text = mw.ustring.toNFD(text)
 
 	-- convert commas and en/en dashes to IPA foot boundaries
-	text = rsub(text, "%s*[,–—]%s*", " | ")
+	text = rsub_repeatedly(text, "%s*[,–—]%s*", " | ")
 	-- question mark or exclamation point in the middle of a sentence -> IPA foot boundary
-	text = rsub(text, "([^%s])%s*[!?]%s*([^%s])", "%1 | %2")
+	text = rsub_repeatedly(text, "([^%s])%s*[!?]%s*([^%s])", "%1 | %2")
 	text = rsub(text, "[!?]", "") -- eliminate remaining punctuation
 
 	-- canonicalize multiple spaces and remove leading and trailing spaces
@@ -201,7 +201,7 @@ function export.to_phonemic(text, pagename)
 	-- French/German vowels
 	text = rsub(text, "u" .. DIA, "y")
 	text = rsub(text, "o" .. DIA, "ø")
-	text = rsub(text, "([^ ])'([^ ])", "%1‿%2") -- apostrophe between letters is a tie
+	text = rsub_repeatedly(text, "([^ ])'([^ ])", "%1‿%2") -- apostrophe between letters is a tie
 	text = rsub(text, "(" .. C .. ")'$", "%1‿") -- final apostrophe after a consonant is a tie, e.g. [[anch']]
 	text = rsub(text, "(" .. C .. ")' ", "%1‿ ") -- final apostrophe in non-utterance-final word is a tie
 	text = rsub(text, "'", "") -- other apostrophes just get removed, e.g. [['ndragheta]], [[ca']].
@@ -362,9 +362,6 @@ function export.to_phonemic(text, pagename)
 	-- All remaining E/O are in unstressed syllables and become e/o.
 	text = ulower(text)
 
-	-- Assume that aw is English.
-	text = rsub(text, "a(" .. accent_c .. "*)w", "o%1")
-
 	-- Random substitutions.
 	text = rsub(text, "%[x%]", TEMP_X) -- [x] means /x/
 	text = rsub(text, "^ex(" .. V .. ")", "eg[z]%1")
@@ -446,7 +443,7 @@ function export.to_phonemic(text, pagename)
 	-- interpreted as /ju/ not /iw/.) By preceding the conversion of glides before vowels, this works
 	-- correctly in the common sequence 'aiuo' e.g. [[guerraiuola]], [[acquaiuolo]]. Note that
 	-- ci, gi + vowel, gli, qu must be dealt with beforehand.
-	text = rsub(text, "(" .. V .. accent_c .. "*)([iu])([^" .. accent .. "])", function(v, gl, acc)
+	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*)([iu])([^" .. accent .. "])", function(v, gl, acc)
 		if v == "i" and gl == "u" then
 			return v .. gl .. acc
 		else
@@ -471,7 +468,7 @@ function export.to_phonemic(text, pagename)
 	end
 
 	-- Single ⟨s⟩ between vowels is /z/.
-	text = rsub(text, "(" .. VW .. stress_c .. "?" .. charsep_c .. "*)s(" .. charsep_c .. "*" .. VW .. ")", "%1z%2")
+	text = rsub_repeatedly(text, "(" .. VW .. stress_c .. "?" .. charsep_c .. "*)s(" .. charsep_c .. "*" .. VW .. ")", "%1z%2")
 
 	-- ⟨s⟩ immediately before a voiced consonant is always /z/
 	text = rsub(text, "s(" .. charsep_c .. "*" .. voiced_C_c .. ")", "z%1")
@@ -488,7 +485,7 @@ function export.to_phonemic(text, pagename)
 
 	-- Between vowels (including glides), /ʃ ʎ ɲ t͡s d͡z/ are doubled (unless already doubled).
 	-- Not simply after a vowel; 'z' is not doubled in e.g. [[azteco]].
-	text = rsub(text, "(" .. VW .. stress_c .. "?" .. charsep_c .. "*)([ʦʣʃʎɲ])(" .. charsep_c .. "*" .. VW .. ")",
+	text = rsub_repeatedly(text, "(" .. VW .. stress_c .. "?" .. charsep_c .. "*)([ʦʣʃʎɲ])(" .. charsep_c .. "*" .. VW .. ")",
 		"%1%2%2%3")
 
 	-- Change user-specified . into SYLDIV so we don't shuffle it around when dividing into syllables.
