@@ -8,7 +8,7 @@
 # FIXME: Handle underbar for trailing secondary stress (DONE)
 # FIXME: Consider removing secondary stress as in mèrcoledì and òligonucleotìde? (DONE)
 # FIXME: Handle pronunciations without stress such as 'fatto' and 'kaf', those defaulted
-#        completely, those with + and those using ^ò and such
+#        completely, those with + and those using ^ò and such (DONE)
 # FIXME: Explicit hyphenations like co.lo.nìa for colonìa and cà.vea for càvea; is this correct? (DONE)
 # FIXME: Explicit hyphenations like u.ra.gá.no with acute accent on aiu (DONE)
 # FIXME: Remove ''' in explicit hyphenation (DONE)
@@ -29,11 +29,11 @@
 #        [[alveolo-palatale]], [[bosniaco-erzegovino]]. Keep primary accents in each word but don't add accents to
 #        unstressed words, as in [[immagine di sé]] respelled ''immàgine di sé'', [[erba da spazzola]] respelled
 #        ''èrba da spàttsola''.
-# FIXME: Convert acute to grave in pronunciation respelling.
+# FIXME: Convert acute to grave in pronunciation respelling. (DONE)
 # FIXME: [[postdiluviano]] hyphenated incorrectly as pos.tdi.lu.vià.no, [[lambdacismo]] hyphenated incorrectly as
 #        lam.bda.cì.smo, similarly for [[postcommunio]], [[sternbergia]]
 # FIXME: Remove final *° etc. from respelling before generating rhymes. (DONE)
-# FIXME: Handle + when generating rhymes. (DONE PARTLY; NEED TO HANDLE AUTO-STRESSED CASES LIKE 'fatto')
+# FIXME: Handle + when generating rhymes. (DONE)
 # FIXME: Instead of skipping page entirely when rhyme mismatches, add rhyme explicitly. (DONE)
 # FIXME: If explicit num syllables given and no default or explicit hyphenation, include num syls. (DONE)
 # FIXME: Lots of mismatches where explicit rhyme has ɔi/oi/ai/ɛi/ei/ui for pronunciation rhyme ɔj/oj/etc., allow this.
@@ -46,7 +46,7 @@
 # FIXME: Ignore pronunciation lines consisting of just the page title, possibly accented. (DONE)
 # FIXME: Correctly handle {{rfap}} lines. (DONE)
 # FIXME: Correctly handle {{wikipedia|lang=it}} and {{wiki|lang=it}} lines, moving below most recent numbered
-#        Etymology section or moving above all sections if no numbered Etymology section.
+#        Etymology section or moving above all sections if no numbered Etymology section. (DONE)
 
 import pywikibot, re, sys, codecs, argparse, unicodedata
 
@@ -59,9 +59,11 @@ CFLEX = u"\u0302" # circumflex =  ̂
 TILDE = u"\u0303" # tilde =  ̃
 DIA = u"\u0308" # diaeresis =  ̈
 TIE = u"\u0361" # tie =  ͡
-LINEUNDER = u"\u0331" # line under =  ̱
+DOTOVER = u"\u0307" # dot over =  ̇ = signal unstressed word
+DOTUNDER = u"\u0323" # dot under =  ̣ = unstressed vowel with quality marker
+LINEUNDER = u"\u0331" # line under =  ̱ = secondary-stressed vowel with quality marker
 SYLDIV = u"\uFFF0" # used to represent a user-specific syllable divider (.) so we won't change it
-accent = AC + GR + CFLEX + LINEUNDER
+accent = AC + GR + CFLEX + DOTOVER + DOTUNDER + LINEUNDER
 accent_c = "[" + accent + "]"
 stress = AC + GR
 stress_c = "[" + AC + GR + "]"
@@ -71,12 +73,95 @@ separator = accent + ipa_stress + r"# \-." + SYLDIV
 separator_c = "[" + separator + "]"
 vowel = u"aeiouyöüAEIOUYÖÜ"
 V = "[" + vowel + "]" # vowel class
+NV = "[^" + vowel + "]" # non-vowel class
 C = "[^" + vowel + separator + "]" # consonant class including h
 pron_sign = u"#!*°"
 pron_sign_c = "[" + pron_sign + "]"
 
 acute_to_grave = {u"á": u"à", u"í": u"ì", u"ú": u"ù", u"Á": u"À", u"Í": u"Ì", u"Ú": u"Ù"}
 
+recognized_suffixes = {
+  # -(m)ente, -(m)ento
+  ("ment([eo])", ur"mént\1"), # must precede -ente/o below
+  ("ent([eo])", ur"ènt\1"), # must follow -mente/o above
+  # verbs
+  ("izzare", u"iddzàre"), # must precede -are below
+  ("izzarsi", u"iddzàrsi"), # must precede -arsi below
+  ("([ai])re", r"\1" + GR + "re"), # must follow -izzare above
+  ("([ai])rsi", r"\1" + GR + "rsi"), # must follow -izzarsi above
+  # nouns
+  ("izzatore", u"iddzatóre"), # must precede -tore below
+  ("([st])ore", ur"\1óre"), # must follow -izzatore above
+  ("izzatrice", u"iddzatrìce"), # must precede -trice below
+  ("trice", u"trìce"), # must follow -izzatrice above
+  ("izzazione", u"iddzatsióne"), # must precede -zione below
+  ("zione", u"tsióne"), # must precede -one below and follow -izzazione above
+  ("one", u"óne"), # must follow -zione above
+  ("acchio", u"àcchio"),
+  ("acci([ao])", ur"àcci\1"),
+  ("([aiu])ggine", r"\1" + GR + "ggine"),
+  ("aggio", u"àggio"),
+  ("([ai])gli([ao])", r"\1" + GR + r"gli\2"),
+  ("ai([ao])", ur"ài\1"),
+  ("([ae])nza", r"\1" + GR + "ntsa"),
+  ("ario", u"àrio"),
+  ("([st])orio", ur"\1òrio"),
+  ("astr([ao])", ur"àstr\1"),
+  ("ell([ao])", ur"èll\1"),
+  ("etta", u"étta"),
+  # do not include -etto, both ètto and étto are common
+  ("ezza", u"éttsa"),
+  ("ficio", u"fìcio"),
+  ("ier([ao])", ur"ièr\1"),
+  ("ifero", u"ìfero"),
+  ("ismo", u"ìsmo"),
+  ("ista", u"ìsta"),
+  ("izi([ao])", ur"ìtsi\1"),
+  ("logia", u"logìa"),
+  # do not include -otto, both òtto and ótto are common
+  ("tudine", u"tùdine"),
+  ("ura", u"ùra"),
+  ("([^aeo])uro", ur"\1ùro"),
+  # adjectives
+  ("izzante", u"iddzànte"), # must precede -ante below
+  ("ante", u"ànte"), # must follow -izzante above
+  ("izzando", u"iddzàndo"), # must precede -ando below
+  ("([ae])ndo", r"\1" + GR + "ndo"), # must follow -izzando above
+  ("([ai])bile", r"\1" + GR + "bile"),
+  ("ale", u"àle"),
+  ("([aeiou])nico", r"\1" + GR + "nico"),
+  ("([ai])stic([ao])", r"\1" + GR + r"stic\2"),
+  # exceptions to the following: àbato, àcato, acròbata, àgata, apòstata, àstato, cìato, fégato, omeòpata,
+  # sàb(b)ato, others?
+  ("at([ao])", ur"àt\1"),
+  ("([ae])tic([ao])", r"\1" + GR + r"tic\2"),
+  ("ense", u"ènse"),
+  ("esc([ao])", ur"ésc\1"),
+  ("evole", u"évole"),
+  # FIXME: Systematic exceptions to the following in 3rd plural present tense verb forms
+  ("ian([ao])", ur"iàn\1"),
+  ("iv([ao])", ur"ìv\1"),
+  ("oide", u"òide"),
+  ("oso", u"óso"),
+}
+
+unstressed_words = {
+  "il", "lo", "la", "i", "gli", "le", # definite articles
+  "un", # indefinite articles
+  "mi", "ti", "si", "ci", "vi", "li", # object pronouns
+  "me", "te", "se", "ce", "ve", "ne", # conjunctive object pronouns
+  "e", "ed", "o", "od", # conjunctions
+  "ho", "hai", "ha", # forms of [[avere]]
+  "chi", "che", "non", # misc particles
+  "di", "del", "dei", # prepositions
+  "a", "ad", "al", "ai",
+  "da", "dal", "dai",
+  "in", "nel", "nei",
+  "con", "col", "coi",
+  "su", "sul", "sui",
+  "per", "pei",
+  "tra", "fra",
+}
 
 def decompose(text):
   # decompose everything but ö and ü
@@ -216,10 +301,108 @@ def adjust_initial_capital(arg, pagetitle, pagemsg, origline):
       arg = new_arg
   return arg
 
-def normalize_bare_arg(arg, pagetitle):
-  # FIXME, handle auto-stressing and such.
+def normalize_bare_arg(arg, pagetitle, pagemsg):
+  origarg = arg
   if arg == "+":
-    return pagetitle
+    arg = pagetitle
+  abbrev_text = None
+  m = re.search(u"^(" + pron_sign_c + "*)(.*?)(" + pron_sign_c + "*)$", arg)
+  arg_prefix, arg, arg_suffix = m.groups()
+  if re.search(ur"^\^[àéèìóòù]$", arg):
+    if re.search("[ %-]", pagetitle):
+      pagemsg("WARNING: With abbreviated vowel spec %s, the page name should be a single word: %s" % (arg, pagetitle))
+      return None
+    abbrev_text = decompose(arg)
+    arg = pagetitle
+  origwords = re.split("([ %-]+)", arg)
+  arg = decompose(arg)
+  words = re.split("([ %-]+)", arg)
+  for i, word in enumerate(words):
+    if (i % 2) == 0: # an actual word, not a separator
+      m = re.search(u"^(" + pron_sign_c + "*)(.*?)(" + pron_sign_c + "*)$", word)
+      word_prefix, word, word_suffix = m.groups()
+      def err(msg):
+        pagemsg("WARNING: " + msg + ": " + origwords[i // 2])
+      is_prefix = (
+        # utterance-final followed by a hyphen, or
+        i == len(words) - 3 and words[i+1] == "-" and words[i+2] == "" or
+        # non-utterance-final followed by a hyphen
+        i <= len(words) - 3 and words[i+1] == "- "
+      )
+      # First apply abbrev spec e.g. (à) or (ó) if given.
+      if abbrev_text:
+        vowel_count = len(re.sub(NV, "", word))
+        abbrev_sub = abbrev_text[1:] # chop off initial ^
+        abbrev_vowel = abbrev_sub[0]
+        if vowel_count == 0:
+          err("Abbreviated spec " + abbrev_text + " can't be used with nonsyllabic word")
+          return None
+        elif vowel_count == 1:
+          m = re.search("^(.*)(" + V + ")(" + NV + "*)$", word)
+          if not m:
+            err("Internal error: Couldn't match monosyllabic word: " + word)
+            return None
+          before, vow, after = m.groups()
+          if abbrev_vowel != vow:
+            err("Abbreviated spec " + abbrev_text + " doesn't match vowel " + vow.lower())
+            return None
+          word = before + abbrev_sub + after
+        else:
+          m = re.search("^(.*?)(" + V + ")(" + NV + "*" + V + NV + "*)$", word)
+          if not m:
+            err("Internal error: Couldn't match multisyllabic word: " + word)
+            return None
+          before, penultimate, after = m.groups()
+          m = re.search("^(.*?)(" + V + ")(" + NV + "*)$", before)
+          before2, antepenultimate, after2 = m.groups()
+          if abbrev_vowel != penultimate and abbrev_vowel != antepenultimate:
+            err("Abbreviated spec " + abbrev_text + " doesn't match penultimate vowel " +
+                penultimate.lower() + (antepenultimate and " or antepenultimate vowel " +
+                  antepenultimate.lower() or ""))
+            return None
+          if penultimate == antepenultimate:
+            err("Can't use abbreviated spec " + abbrev_text + " here because penultimate and " +
+              "antepenultimate are the same")
+            return None
+          if abbrev_vowel == antepenultimate:
+            word = before2 + abbrev_sub + after2 + penultimate + after
+          elif abbrev_vowel == penultimate:
+            word = before + abbrev_sub + after
+          else:
+            err("Internal error: abbrev_vowel from abbrev_text " + abbrev_text +
+              " didn't match any vowel or glide: " + origtext)
+            return None
+
+      if not is_prefix:
+        if not re.search(stress_c, word):
+          # Apply suffix respellings.
+          for orig, respelling in recognized_suffixes:
+            newword = re.sub(orig + "$", respelling, word)
+            if newword != word:
+              # Decompose again because suffix replacements may have accented chars.
+              word = decompose(newword)
+              break
+
+        # Auto-stress some monosyllabic and bisyllabic words.
+        if word not in unstressed_words and not re.search("[" + AC + GR + DOTOVER + "]", word):
+          vowel_count = len(re.sub(NV, "", word))
+          if vowel_count > 2:
+            err("With more than two vowels and an unrecogized suffix, stress must be explicitly given")
+            return None
+          else:
+            m = re.search("^(.*?)(" + V + ")(.*)$", word)
+            if m:
+              before, vow, after = m.groups()
+              if vow in ["e", "o", "E", "O"]:
+                err(u"When stressed vowel is e or o, it must be marked é/è or ó/ò to indicate quality")
+                return None
+              word = before + vow + GR + after
+
+      words[i] = word_prefix + word + word_suffix
+
+  arg = recompose(arg_prefix + "".join(words) + arg_suffix)
+  if arg != origarg:
+    pagemsg("Normalized original argument %s to %s" % (origarg, arg))
   return arg
 
 def process_text_on_page(index, pagetitle, text):
@@ -257,8 +440,11 @@ def process_text_on_page(index, pagetitle, text):
 
   subsections = re.split("(^==+[^=\n]+==+\n)", secbody, 0, re.M)
 
+  sect_for_wiki = 0
   for k in xrange(1, len(subsections), 2):
-    if re.search(r"==\s*Pronunciation\s*==", subsections[k]):
+    if re.search(r"==\s*Etymology [0-9]+\s*==", subsections[k]):
+      sect_for_wiki = k + 1
+    elif re.search(r"==\s*Pronunciation\s*==", subsections[k]):
       secheader = re.sub(r"\s*Pronunciation\s*", "Pronunciation", subsections[k])
       if secheader != subsections[k]:
         subsections[k] = secheader
@@ -295,8 +481,10 @@ def process_text_on_page(index, pagetitle, text):
       args = []
       bare_args = []
       args_for_hyph = []
-      for line in lines:
+      lines_so_far = []
+      for lineind, line in enumerate(lines):
         origline = line
+        lines_so_far.append(line)
         # In case of "* {{it-IPA|...}}", chop off the "* ".
         line = re.sub(r"^\*\s*(\{\{it-IPA)", r"\1", line)
         if line.startswith("{{it-IPA"):
@@ -304,6 +492,10 @@ def process_text_on_page(index, pagetitle, text):
             pagemsg("WARNING: Something wrong, already saw {{it-IPA}}?: %s" % origline)
             must_continue = True
             break
+          outer_ref_arg = None
+          m = re.search("^(.*?) *<ref>(.*?)</ref>$", line)
+          if m:
+            line, outer_ref_arg = m.groups()
           ipat = verify_template_is_full_line("it-IPA", line)
           if ipat is None:
             must_continue = True
@@ -311,7 +503,14 @@ def process_text_on_page(index, pagetitle, text):
           bare_args = blib.fetch_param_chain(ipat, "1") or [u"+"]
           bare_args = [u"+" if arg == pagetitle else arg for arg in bare_args]
           bare_args = [adjust_initial_capital(arg, pagetitle, pagemsg, origline) for arg in bare_args]
-          normalized_bare_args = [normalize_bare_arg(arg, pagetitle) for arg in bare_args]
+          bare_args = [re.sub(u"([áíúÁÍÚ])", lambda m: acute_to_grave[m.group(1)], arg) for arg in bare_args]
+          normalized_bare_args = [
+            normalize_bare_arg(arg, pagetitle, lambda msg: pagemsg("%s: %s" % (msg, origline)))
+            for arg in bare_args
+          ]
+          if None in normalized_bare_args:
+            must_continue = True
+            break
           args = [x for x in bare_args]
 
           args_for_hyph = []
@@ -353,9 +552,27 @@ def process_text_on_page(index, pagetitle, text):
               break
           if must_continue:
             break
+          if outer_ref_arg:
+            if "<ref:" in args[-1]:
+              pagemsg("WARNING: Trying to add outside ref %s into {{it-IPA}} but already has ref in arg %s, skipping: %s"
+                  % (outer_ref_arg, args[-1], origline))
+              must_continue = True
+              break
+            else:
+              args[-1] += "<ref:%s>"  % outer_ref_arg
+              extra_notes.append("incorporate outer <ref>...</ref> into {{it-pr}}")
           continue
         if line.startswith("{{rfap"):
           line = "* " + line
+        if line.startswith("{{wiki"):
+          subsections[sect_for_wiki] = line + "\n" + subsections[sect_for_wiki]
+          # Remove the {{wikipedia}} line from lines seen so far. Put back the remaining lines in case we
+          # run into a problem later on, so we don't end up duplicating the {{wikipedia}} line. We accumulate
+          # lines like this in case for some reason we have two {{wikipedia}} lines in the Pronunciation section.
+          del lines_so_far[-1]
+          subsections[k + 1] = "%s\n\n" % (lines_so_far + lines[lineind + 1:])
+          notes.append("move {{wikipedia}} line to top of etym section")
+          continue
         if not line.startswith("* ") and not line.startswith("*{"):
           pagemsg("WARNING: Pronunciation section line doesn't start with '* ', skipping: %s"
               % origline)
@@ -498,6 +715,9 @@ def process_text_on_page(index, pagetitle, text):
               pagemsg("Not all explicit rhymes (%s) could be matched against pronunciation-based rhyme(s) (%s) for spelling(s) '%s', adding explicitly: %s"
                   % (",".join(normalized_rhymes), rhyme_pronun_text, normalized_bare_arg_text, rhyme_line_text))
               args[-1] += "<rhyme:%s>" % ",".join(normalized_rhymes)
+              extra_notes.append("incorporate non-default rhymes into {{it-pr}}")
+            else:
+              extra_notes.append("remove rhymes that are generated automatically by {{it-pr}}")
             rhyme_lines = []
 
       if not args:
@@ -584,8 +804,10 @@ def process_text_on_page(index, pagetitle, text):
                     pagemsg("WARNING: Explicit hyphenation(s) %s not equal to auto-hyphenation(s) %s, adding explicitly: %s" %
                         (",".join(specified_hyphenations), ",".join(hyphenations), hyph_line))
                   args[-1] += "<hyph:%s>" % ",".join(specified_hyphenations)
+                  extra_notes.append("incorporate non-default hyphenations into {{it-pr}}")
               else:
                 pagemsg("Removed explicit hyphenation(s) same as auto-hyphenation(s): %s" % hyph_line)
+                extra_notes.append("remove hyphenations that are generated automatically by {{it-pr}}")
               hyph_lines = []
 
       if args == ["+"]:
