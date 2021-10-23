@@ -244,8 +244,9 @@ def process_text_on_page(index, pagetitle, text):
             audiogloss = ""
           if audiogloss:
             audiogloss = ";%s" % audiogloss
-          audioarg += "<audio:%s%s>" % (audiofile, audiogloss)
-          pagemsg("Replacing %s with argument %s" % (unicode(audiot), arg))
+          audiopart = "<audio:%s%s>" % (audiofile, audiogloss)
+          audioarg += audiopart
+          pagemsg("Replacing %s with argument part %s" % (unicode(audiot), audiopart))
           extra_notes.append("incorporate %s into {{es-pr}}" % unicode(audiot))
         elif line.startswith("{{rhyme"):
           rhyme_lines.append(line)
