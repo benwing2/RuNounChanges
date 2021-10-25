@@ -567,6 +567,11 @@ def query_special_pages(specialpage, startsort=None, endsort=None):
   for i, current in iter_items(site.querypage(specialpage), startsort, endsort):
     yield i, current
 
+def query_usercontribs(username, startsort=None, endsort=None, starttime=None, endtime=None):
+  for i, current in iter_items(site.usercontribs(user=username, start=starttime, end=endtime), startsort, endsort,
+      get_name=lambda item: item['title']):
+    yield i, current
+
 def stream(st, startsort = None, endsort = None):
   i = 0
 
@@ -806,6 +811,9 @@ def create_argparser(desc, include_pagefile=False, include_stdin=False,
     parser.add_argument("--prune-cats", help="Regex to use to prune categories when processing subcategories recursively; any categories matching the regex will be skipped along with any of their subcategories (unless reachable in some other manner).")
     parser.add_argument("--refs", help="List of references to process, comma-separated.")
     parser.add_argument("--specials", help="Special pages to do, comma-separated.")
+    parser.add_argument("--contribs", help="Names of users whose contributions to iterate over, comma-separated.")
+    parser.add_argument("--contribs-start", help="Timestamp to start doing contributions at.")
+    parser.add_argument("--contribs-end", help="Timestamp to end doing contributions at.")
     parser.add_argument("--prefix-pages", help="Do pages with these prefixes, comma-separated.")
     parser.add_argument("--prefix-namespace", help="Namespace of pages to do using --prefix-pages.")
     parser.add_argument("--ref-namespaces", help="List of namespace(s) to restrict --refs to.")
@@ -881,8 +889,8 @@ def parse_start_end(startsort, endsort):
 # The pages iterated over will be:
 #
 # 1. Those from the dump on stdin if stdin=True and --stdin is given.
-# 2. Else, the pages in --pages, --pagefile, --cats, --refs, --specials and/or
-#    --prefix-pages if any of those arguments are given.
+# 2. Else, the pages in --pages, --pagefile, --cats, --refs, --specials,
+#    --contribs and/or --prefix-pages if any of those arguments are given.
 # 3. Else, pages in the category/categories in default_cats[] and/or pages
 #    referring to the page(s) specified in default_refs[], if either argument
 #    is given.
@@ -1028,7 +1036,7 @@ def do_pagefile_cats_refs(args, start, end, process, default_cats=[],
       parse_dump(sys.stdin, do_process_stdin_text_on_page, start, end)
 
   elif (args.pages or args.pagefile or args.pages_from_find_regex or args.cats or args.refs or
-      args.specials or args.prefix_pages):
+      args.specials or args.contribs or args.prefix_pages):
     if args.pages:
       pages = [x.decode("utf-8") for x in re.split(r",(?! )", args.pages)]
       for i, pagetitle in iter_items(pages, start, end):
@@ -1072,6 +1080,10 @@ def do_pagefile_cats_refs(args, start, end, process, default_cats=[],
       for special in re.split(",(?! )", args.specials):
         for i, page in query_special_pages(special, start, end):
           process_page(page, i)
+    if args.contribs:
+      for contrib in re.split(",(?! )", args.contribs):
+        for i, page in query_usercontribs(contrib, start, end, starttime=args.contribs_start, endtime=args.contribs_end):
+          process_page(pywikibot.Page(site, page['title']), i)
     if args.prefix_pages:
       for prefix in [x.decode("utf-8") for x in re.split(r",(?! )", args.prefix_pages)]:
         namespace = args.prefix_namespace and args.prefix_namespace.decode("utf-8") or None
@@ -1080,7 +1092,7 @@ def do_pagefile_cats_refs(args, start, end, process, default_cats=[],
 
   else:
     if not default_cats and not default_refs:
-      raise ValueError("One of --pages, --pagefile, --cats, --refs, --specials or --prefix-pages should be specified")
+      raise ValueError("One of --pages, --pagefile, --cats, --refs, --specials, --contribs or --prefix-pages should be specified")
     for cat in default_cats:
       for i, page in cat_articles(cat, start, end, track_seen=args.track_seen):
         process_page(page, i)
