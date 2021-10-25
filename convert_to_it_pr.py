@@ -47,6 +47,8 @@
 # FIXME: Correctly handle {{rfap}} lines. (DONE)
 # FIXME: Correctly handle {{wikipedia|lang=it}} and {{wiki|lang=it}} lines, moving below most recent numbered
 #        Etymology section or moving above all sections if no numbered Etymology section. (DONE)
+# FIXME: Add spaces around [,–—|!?] in the middle of text and then remove before calling normalize_bare_args().
+# FIXME: Remove pron_sign_c from text, probably including * in the middle, before calling normalize_bare_args().
 
 import pywikibot, re, sys, codecs, argparse, unicodedata
 
@@ -72,15 +74,19 @@ ipa_stress_c = "[" + ipa_stress + "]"
 separator = accent + ipa_stress + r"# \-." + SYLDIV
 separator_c = "[" + separator + "]"
 vowel = u"aeiouyöüAEIOUYÖÜ"
+vowel_not_u = u"aeouyöüAEOUYÖÜ"
 V = "[" + vowel + "]" # vowel class
+V_NOT_I = "[" + vowel_not_i + "]" # vowel class not including i
 NV = "[^" + vowel + "]" # non-vowel class
 C = "[^" + vowel + separator + "]" # consonant class including h
+C_NOT_H = "[^" + vowel + separator + "h]" # consonant class not including h
+C_NOT_SRZ = "[^" + vowel + separator + "srz]" # consonant class not including s/r/z
 pron_sign = u"#!*°"
 pron_sign_c = "[" + pron_sign + "]"
 
 acute_to_grave = {u"á": u"à", u"í": u"ì", u"ú": u"ù", u"Á": u"À", u"Í": u"Ì", u"Ú": u"Ù"}
 
-recognized_suffixes = {
+recognized_suffixes = [
   # -(m)ente, -(m)ento
   ("ment([eo])", ur"mént\1"), # must precede -ente/o below
   ("ent([eo])", ur"ènt\1"), # must follow -mente/o above
@@ -143,7 +149,7 @@ recognized_suffixes = {
   ("iv([ao])", ur"ìv\1"),
   ("oide", u"òide"),
   ("oso", u"óso"),
-}
+]
 
 unstressed_words = {
   "il", "lo", "la", "i", "gli", "le", # definite articles
@@ -200,48 +206,53 @@ def remove_final_monosyllabic_accents(text):
   words = [re.sub(u"^([^" + vowel + "]*[" + vowel + "])" + accent_c + "$", r"\1", word) for word in words]
   return recompose(" ".join(words))
 
-def generate_hyphenation_from_spelling(text):
+def syllabify_from_spelling(text):
   text = decompose(text)
   TEMP_I = u"\uFFF1"
   TEMP_U = u"\uFFF2"
   TEMP_Y_CONS = u"\uFFF3"
   TEMP_CH = u"\uFFF4"
-  TEMP_SC = u"\uFFF5"
+  TEMP_GH = u"\uFFF5"
   TEMP_GN = u"\uFFF6"
-  TEMP_QU = u"\uFFF7"
-  TEMP_QU_CAPS = u"\uFFF8"
-  TEMP_GU = u"\uFFF9"
-  TEMP_GU_CAPS = u"\uFFFA"
-  TEMP_SH = u"\uFFFB"
-  TEMP_GL = u"\uFFFC"
-  TEMP_GH = u"\uFFFD"
-  C_NOT_H = "[^" + vowel + separator + "h]" # consonant class not including h
-  C_NOT_SRZ = "[^" + vowel + separator + "srz]" # consonant class not including s/r/z
+  TEMP_GL = u"\uFFF7"
+  TEMP_QU = u"\uFFF8"
+  TEMP_QU_CAPS = u"\uFFF9"
+  TEMP_GU = u"\uFFFA"
+  TEMP_GU_CAPS = u"\uFFFB"
   # Change user-specified . into SYLDIV so we don't shuffle it around when dividing into syllables.
   text = text.replace(".", SYLDIV)
   text = re.sub("y(" + V + ")", TEMP_Y_CONS + r"\1", text)
+  # Digraphs that should never be split. We don't need to include digraphs beginning with s (sh, sc[ei]) because
+  # we always syllabify as V.sCV unless C = [srz].
   text = text.replace("ch", TEMP_CH)
   text = text.replace("gh", TEMP_GH)
   text = text.replace("gn", TEMP_GN)
   text = text.replace("gl", TEMP_GL)
-  text = text.replace("sh", TEMP_SH)
-  text = re.sub(u"sc([ei])", TEMP_SC + r"\1", text)
-  # qu mostly handled correctly automatically, but not in quieto etc.
+  # qu mostly handled correctly automatically, but not in quieto etc. See below.
   text = re.sub("qu(" + V + ")", TEMP_QU + r"\1", text)
   text = re.sub("Qu(" + V + ")", TEMP_QU_CAPS + r"\1", text)
   text = re.sub("gu(" + V + ")", TEMP_GU + r"\1", text)
   text = re.sub("Gu(" + V + ")", TEMP_GU_CAPS + r"\1", text)
-  vowel_to_glide = { "i": TEMP_I, "u": TEMP_U }
   # i and u between vowels -> consonant-like substitutions: [[paranoia]], [[febbraio]], [[abbaiare]], [[aiutare]],
-  # [[portauovo]], [[schopenhaueriano]], [[Malaui]], etc.; also with h, as in [[nahuatl]], [[ahia]], etc.
-  # FIXME: [[figliuolo]], [[begliuomini]], [[feuilleton]], [[giuoco]], [[nocciuola]], [[stacciuolo]],
-  # [[rousseauiano]], [[oriuolo]], [[guerricciuola]], [[ghiaggiuolo]], etc.
+  # [[portauovo]], [[schopenhaueriano]], [[Malaui]], [[oltreuomo]], [[palauano]], [[tauone]], [etc.; also with h,
+  # as in [[nahuatl]], [[ahia]], etc. But in the common sequence -Ciuo- ([[figliuolo]], [[begliuomini]], [[giuoco]],
+  # [[nocciuola]], [[stacciuolo]], [[oriuolo]], [[guerricciuola]], [[ghiaggiuolo]], etc.), both i and u are glides.
+  # In the sequence -quiV- ([[quieto]], [[reliquia]], etc.), both u and i are glides, and probably also in -guiV-,
+  # but not in other -CuiV- sequences such as [[buio]], [[abbuiamento]], [[gianduia]], [[cuiusso]], [[alleluia]], etc.).
+  # Special cases are French-origin words like [[feuilleton]], [[rousseauiano]], [[gargouille]]; it's unlikely we
+  # can handle these correctly automatically. Note also examples of h not dividing diphthongs: [[ahi]], [[ehi]],
+  # [[ahimè]], [[ehilà]], [[ohimè]], [[ohilà]], etc.
   #
-  # With h not dividing diphthongs: [[ahi]], [[ehi]], [[ahimè]], [[ehilà]], [[ohimè]], [[ohilà]], etc.
-  # 
-  text = rsub_repeatedly("(" + V + accent_c + "*h?)([iu])(" + V + ")",
-      lambda m: m.group(1) + vowel_to_glide[m.group(2)] + m.group(3), text)
-  # Divide VCV as V.CV; but don't divide if C == h, e.g. [[prohibir]] should be prohi.bir.
+  # We handle these cases as follows:
+  # 1. TEMP_QU, TEMP_GU etc. replace sequences of qu and gu with consonant-type codes. This allows us to distinguish
+  #    -quiV-/-guiV- from other -CuiV-.
+  # 2. We convert i in -ViV- sequences to consonant-type TEMP_I, but similarly for u in -VuV- sequences only if the
+  #    first V isn't i, so -CiuV- remains with two vowels.
+  text = rsub_repeatedly("(" + V + accent_c + "*h?)i(" + V + ")",
+      lambda m: m.group(1) + TEMP_I + m.group(2), text)
+  text = rsub_repeatedly("(" + V_NOT_I + accent_c + "*h?)u(" + V + ")",
+      lambda m: m.group(1) + TEMP_U + m.group(2), text)
+  # Divide VCV as V.CV; but don't divide if C == h, e.g. [[ahimè]] should be ahi.mè.
   text = rsub_repeatedly("(" + V + accent_c + "*)(" + C_NOT_H + V + ")", r"\1.\2", text)
   text = rsub_repeatedly("(" + V + accent_c + "*" + C + ")(" + C + V + ")", r"\1.\2", text)
   text = rsub_repeatedly("(" + V + accent_c + "*" + C + "+)(" + C + C + V + ")", r"\1.\2", text)
@@ -254,7 +265,7 @@ def generate_hyphenation_from_spelling(text):
   # Also V.sCrV, C.sCrV and similarly V.sClV, V.sClV e.g. in.stru.mén.to for [[instrumento]], fi.nè.stra for
   # [[finestra]].
   text = re.sub(r"s\.(" + C + "[lr])", r".s\1", text)
-  # Any aeo, or stressed iuüy, should be syllabically divided from a following aeo or stressed iuüy.
+  # Any aeoö, or stressed iuüy, should be syllabically divided from a following aeoö or stressed iuüy.
   # A stressed vowel might be preceded by LINEUNDER; normalized decomposition puts LINEUNDER before acute/grave.
   text = rsub_repeatedly(u"([aeoöAEOÖ]" + accent_c + u"*)(h?[aeoö])", r"\1.\2", text)
   text = rsub_repeatedly(u"([aeoöAEOÖ]" + accent_c + "*)(h?" + V + accent_c + "*" + stress_c + ")", r"\1.\2", text)
@@ -270,8 +281,6 @@ def generate_hyphenation_from_spelling(text):
   text = text.replace(TEMP_GH, "gh")
   text = text.replace(TEMP_GN, "gn")
   text = text.replace(TEMP_GL, "gl")
-  text = text.replace(TEMP_SH, "sh")
-  text = text.replace(TEMP_SC, "sc")
   text = text.replace(TEMP_QU, "qu")
   text = text.replace(TEMP_QU_CAPS, "Qu")
   text = text.replace(TEMP_GU, "gu")
@@ -314,7 +323,7 @@ def normalize_bare_arg(arg, pagetitle, pagemsg):
       return None
     abbrev_text = decompose(arg)
     arg = pagetitle
-  origwords = re.split("([ %-]+)", arg)
+  origwords = re.split("[ %-]+", arg)
   arg = decompose(arg)
   words = re.split("([ %-]+)", arg)
   for i, word in enumerate(words):
@@ -570,7 +579,7 @@ def process_text_on_page(index, pagetitle, text):
           # run into a problem later on, so we don't end up duplicating the {{wikipedia}} line. We accumulate
           # lines like this in case for some reason we have two {{wikipedia}} lines in the Pronunciation section.
           del lines_so_far[-1]
-          subsections[k + 1] = "%s\n\n" % (lines_so_far + lines[lineind + 1:])
+          subsections[k + 1] = "%s\n\n" % "\n".join(lines_so_far + lines[lineind + 1:])
           notes.append("move {{wikipedia}} line to top of etym section")
           continue
         if not line.startswith("* ") and not line.startswith("*{"):
@@ -770,14 +779,14 @@ def process_text_on_page(index, pagetitle, text):
               specified_hyphenations = [
                 adjust_initial_capital(hyph, pagetitle, pagemsg, hyph_line) for hyph in specified_hyphenations]
               specified_hyphenations = [re.sub(u"î([ -]|$)", r"i\1", hyph) for hyph in specified_hyphenations]
-              hyphenations = [remove_secondary_stress(generate_hyphenation_from_spelling(arg)) for arg in args_for_hyph]
+              hyphenations = [remove_secondary_stress(syllabify_from_spelling(arg)) for arg in args_for_hyph]
               if set(specified_hyphenations) < set(hyphenations):
                 pagemsg("Removing explicit hyphenation(s) %s that are a subset of auto-hyphenation(s) %s: %s" %
                     (",".join(specified_hyphenations), ",".join(hyphenations), hyph_line))
               elif set(specified_hyphenations) != set(hyphenations):
                 hyphenations_without_accents = [remove_accents(hyph) for hyph in hyphenations]
                 rehyphenated_specified_hyphenations = [
-                  generate_hyphenation_from_spelling(hyph) for hyph in specified_hyphenations
+                  syllabify_from_spelling(hyph) for hyph in specified_hyphenations
                 ]
                 def indices_of_syllable_markers(hyph):
                   # Get the character indices of the syllable markers, but not counting the syllable markers themselves
