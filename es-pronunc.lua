@@ -834,6 +834,7 @@ local function generate_pronun(args)
 end
 
 
+-- External entry point for {{es-IPA}}.
 function export.show(frame)
 	local params = {
 		[1] = {},
@@ -853,7 +854,7 @@ function export.show(frame)
 end
 
 
-local function generate_hyphenation_from_spelling(text)
+local function syllabify_from_spelling(text)
 	-- decompose everything but ñ and ü
 	text = mw.ustring.toNFD(text)
 	text = rsub(text, ".[" .. TILDE .. DIA .. "]", {
@@ -1001,27 +1002,27 @@ function export.show_pr(frame)
 	local iut
 	for i, respelling in ipairs(respellings) do
 		if respelling:find("<") then
+			local function parse_err(msg)
+				error(msg .. ": " .. i .. "= " .. respelling)
+			end
 			if not iut then
 				iut = require("Module:inflection utilities")
 			end
-			local run = iut.parse_balanced_segment_run(item, "<", ">")
-			local function parse_err(msg)
-				error(msg .. ": " .. i .. "= " .. table.concat(run))
-			end
+			local run = iut.parse_balanced_segment_run(respelling, "<", ">")
 			local terms = rsplit(run[1], "%s*,%s*")
 			for j, term in ipairs(terms) do
 				if term == "+" then
 					terms[j] = SUBPAGENAME
 				end
 			end
-			local parsed = {terms = rsplit(run[1], "%s*,%s*"), audio = {}, rhyme = {}, hyph = {}}
+			local parsed = {terms = terms, audio = {}, rhyme = {}, hyph = {}}
 			for j = 2, #run - 1, 2 do
 				if run[j + 1] ~= "" then
 					parse_err("Extraneous text '" .. run[j + 1] .. "' after modifier")
 				end
 				local modtext = run[j]:match("^<(.*)>$")
 				if not modtext then
-					parse_err("Internal error: Modifier '" .. modtext .. "' isn't surrounded by angle brackets")
+					parse_err("Internal error: Modifier '" .. run[j] .. "' isn't surrounded by angle brackets")
 				end
 				local prefix, arg = modtext:match("^([a-z]+):(.*)$")
 				if not prefix then
@@ -1034,7 +1035,7 @@ function export.show_pr(frame)
 						parse_err("Modifier '" .. prefix .. "' occurs twice, second occurrence " .. run[j])
 					end
 					if prefix == "bullets" then
-						if not arg:find("^[0-9]$") then
+						if not arg:find("^[0-9]+$") then
 							parse_err("Modifier 'bullets' should have a number as argument")
 						end
 						parsed.bullets = tonumber(arg)
@@ -1061,6 +1062,14 @@ function export.show_pr(frame)
 				parsed.bullets = 1
 			end
 			table.insert(parsed_respellings, parsed)
+		else
+			table.insert(parsed_respellings, {
+				terms = rsplit(respelling, "%s*,%s*"),
+				audio = {},
+				rhyme = {},
+				hyph = {},
+				bullets = 1,
+			})
 		end
 	end
 
@@ -1068,7 +1077,7 @@ function export.show_pr(frame)
 		local hyphs = {}
 		for _, hyph in ipairs(overall_hyph) do
 			if hyph == "+" then
-				m_table.insertIfNot(hyphs, generate_hyphenation_from_spelling(SUBPAGENAME))
+				m_table.insertIfNot(hyphs, syllabify_from_spelling(SUBPAGENAME))
 			elseif hyph == "-" then
 				hyphs = {}
 				break
@@ -1097,7 +1106,7 @@ function export.show_pr(frame)
 			if not overall_hyph and all_words_have_vowels(SUBPAGENAME) then
 				for _, term in ipairs(parsed.terms) do
 					if term:gsub("%.", "") == SUBPAGENAME then
-						m_table.insertIfNot(hyphs, generate_hyphenation_from_spelling(term))
+						m_table.insertIfNot(hyphs, syllabify_from_spelling(term))
 					end
 				end
 			end
@@ -1105,7 +1114,7 @@ function export.show_pr(frame)
 			for _, hyph in ipairs(parsed.hyph) do
 				if hyph == "+" then
 					for _, term in ipairs(parsed.terms) do
-						m_table.insertIfNot(hyphs, generate_hyphenation_from_spelling(term))
+						m_table.insertIfNot(hyphs, syllabify_from_spelling(term))
 					end
 				elseif hyph == "-" then
 					hyphs = {}
