@@ -47,8 +47,8 @@
 # FIXME: Correctly handle {{rfap}} lines. (DONE)
 # FIXME: Correctly handle {{wikipedia|lang=it}} and {{wiki|lang=it}} lines, moving below most recent numbered
 #        Etymology section or moving above all sections if no numbered Etymology section. (DONE)
-# FIXME: Add spaces around [,–—|!?] in the middle of text and then remove before calling normalize_bare_args().
-# FIXME: Remove pron_sign_c from text, probably including * in the middle, before calling normalize_bare_args().
+# FIXME: Add spaces around [,–—|!?] in the middle of text and then remove before calling normalize_bare_arg().
+# FIXME: Remove pron_sign_c from text, probably including * in the middle, before calling normalize_bare_arg().
 
 import pywikibot, re, sys, codecs, argparse, unicodedata
 
@@ -185,7 +185,7 @@ def remove_secondary_stress(text):
   words = decompose(text).split(" ")
   # Remove secondary stresses marked with LINEUNDER if there's a previously stressed vowel. Otherwise, just remove the
   # LINEUNDER, leaving the accent mark, which will be removed below if there's a following stressed vowel.
-  words = [re.sub("(" + stress_c + ".*)" + LINEUNDER + stress_c, r"\1",
+  words = [rsub_repeatedly("(" + stress_c + ".*)" + LINEUNDER + stress_c, r"\1",
     re.sub("(" + stress_c + ".*)" + stress_c + LINEUNDER, r"\1", word)) for word in words]
   words = [word.replace(LINEUNDER, "") for word in words]
   words = [rsub_repeatedly(stress_c + "(.*" + stress_c + ")", r"\1", word) for word in words]
@@ -526,7 +526,7 @@ def process_text_on_page(index, pagetitle, text):
           for arg in normalized_bare_args:
             hypharg = (
               arg.replace("ddz", "zz").replace("tts", "zz").replace("dz", "z").replace("ts", "z")
-              .replace("Dz", "Z").replace("Ts", "Z").replace("[s]", "s").replace("[z]", "z")
+              .replace("Dz", "Z").replace("Ts", "Z").replace("[s]", "s").replace("[z]", "z").replace("_", "")
             )
             hypharg = re.sub(pron_sign_c, "", hypharg)
             putative_pagetitle = remove_secondary_stress(hypharg.replace(".", ""))
