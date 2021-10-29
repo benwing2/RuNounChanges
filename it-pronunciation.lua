@@ -708,10 +708,11 @@ function export.to_phonetic(word, pagename)
 end
 
 
--- Entry point to construct the arguments to a call to m_IPA.format_IPA_full() and return the value of the call.
--- This formats one line of pronunciation, potentially including multiple individual pronunciations (representing
--- differing pronunciations of the same underlying term), potentialy along with attached qualifiers and/or references.
--- `data` is a table currently containing two fields, as follows:
+-- Entry point to construct the arguments to a call to m_IPA.format_IPA_full() and return the value of the call,
+-- as well as the underlying phonemic output (a list of objects of the form returned by to_phonemic) as the second
+-- return value. This formats one line of pronunciation, potentially including multiple individual pronunciations
+-- (representing differing pronunciations of the same underlying term), potentialy along with attached qualifiers
+-- and/or references. `data` is a table currently containing two fields, as follows:
 --
 -- {
 --   terms = {{term = RESPELLING, qual = {QUALIFIER, QUALIFIER, ...}, ref = {REFSPEC, REFSPEC, ...}}, ...},
@@ -1209,7 +1210,8 @@ function export.show_pr(frame)
 
 	-- Loop over individual respellings, processing each.
 	for _, parsed in ipairs(parsed_respellings) do
-		parsed.pronun = generate_pronun(parsed)
+		parsed.pronun, parsed.phonemic = export.show_IPA_full {terms = parsed.terms, pagename = pagename}
+		-- FIXME!
 		local saw_space = false
 		for _, term in ipairs(parsed.terms) do
 			if term:find("[%s%-]") then
@@ -1218,8 +1220,10 @@ function export.show_pr(frame)
 			end
 		end
 
+		-- FIXME!
 		local this_no_rhyme = m_table.contains(parsed.rhyme, "-")
 
+		-- FIXME!
 		local hyphs = {}
 		if #parsed.hyph == 0 then
 			if not overall_hyph and all_words_have_vowels(pagename) then
@@ -1246,59 +1250,14 @@ function export.show_pr(frame)
 		parsed.hyph = hyphs
 
 		-- Generate the rhymes.
-		local function dodialect(rhyme_ret, dialect)
-			rhyme_ret.pronun[dialect] = {}
-			for _, pronun in ipairs(parsed.pronun.pronun[dialect]) do
-				if all_words_have_vowels(pronun) then
-					-- Count number of syllables by looking at syllable boundaries (including stress marks).
-					local num_syl = ulen(rsub(pronun.phonemic, "[^.ˌˈ]", "")) + 1
-					-- Get the rhyme by truncating everything up through the last stress mark + any following
-					-- consonants, and remove syllable boundary markers.
-					local rhyme = rsub(rsub(pronun.phonemic, ".*[ˌˈ]", ""), "^[^" .. vowel .. "]*", "")
-						:gsub("%.", ""):gsub("t͡ʃ", "tʃ")
-					local saw_already = false
-					for _, existing in ipairs(rhyme_ret.pronun[dialect]) do
-						if existing.rhyme == rhyme then
-							saw_already = true
-							-- We already saw this rhyme but possibly with a different number of syllables,
-							-- e.g. if the user specified two pronunciations 'biología' (4 syllables) and
-							-- 'bi.ología' (5 syllables), both of which have the same rhyme /ia/.
-							m_table.insertIfNot(existing.num_syl, num_syl)
-							break
-						end
-					end
-					if not saw_already then
-						local rhyme_diffs = nil
-						if dialect == "distincion-lleismo" then
-							rhyme_diffs = {}
-							if rhyme:find("θ") then
-								rhyme_diffs.distincion_different = true
-							end
-							if rhyme:find("ʎ") then
-								rhyme_diffs.lleismo_different = true
-							end
-							if rfind(rhyme, "[ʎɟ]") then
-								rhyme_diffs.sheismo_different = true
-								rhyme_diffs.need_rioplat = true
-							end
-						end
-						table.insert(rhyme_ret.pronun[dialect], {
-							rhyme = rhyme,
-							num_syl = num_syl,
-							differences = rhyme_diffs,
-						})
-					end
-				end
-			end
-		end
-
 		if #parsed.rhyme == 0 then
 			if overall_rhyme or saw_space then
 				parsed.rhyme = nil
 			else
-				parsed.rhyme = express_all_styles(parsed.style, dodialect)
+				parsed.rhyme = generate_rhymes_from_phonemic_output(parsed.phonemic)
 			end
 		else
+			-- FIXME!
 			local function this_dodialect(rhyme_ret, dialect)
 				return dodialect_specified_rhymes(parsed.rhyme, parsed.hyph, rhyme_ret, dialect)
 			end
@@ -1307,6 +1266,7 @@ function export.show_pr(frame)
 	end
 
 	if overall_rhyme then
+		-- FIXME!
 		if m_table.contains(overall_rhyme, "-") then
 			overall_rhyme = nil
 		else
@@ -1342,31 +1302,13 @@ function export.show_pr(frame)
 	end
 
 	local function format_rhyme(rhyme_ret, num_bullets)
-		local function format_rhyme_style(tag, expressed_style, is_first)
-			local pronunciations = {}
-			local rhymes = {}
-			for _, pronun in ipairs(expressed_style.pronun) do
-				table.insert(rhymes, {rhyme = pronun.rhyme, num_syl = pronun.num_syl})
-			end
-			local data = {
-				lang = lang,
-				rhymes = rhymes,
-				qualifiers = tag and {tag} or nil,
-			}
-			local bullet = string.rep("*", num_bullets) .. " "
-			local formatted = bullet .. require("Module:rhymes").format_rhymes(data)
-			local formatted_for_len_parts = {}
-			table.insert(formatted_for_len_parts, bullet .. "Rhymes: " .. (tag and "(" .. tag .. ") " or ""))
-			for j, pronun in ipairs(expressed_style.pronun) do
-				if j > 1 then
-					table.insert(formatted_for_len_parts, ", ")
-				end
-				table.insert(formatted_for_len_parts, "-" .. pronun.rhyme)
-			end
-			return formatted, ulen(table.concat(formatted_for_len_parts))
-		end
-
-		return format_all_styles(rhyme_ret.expressed_styles, format_style)
+		local data = {
+			lang = lang,
+			rhymes = rhyme_ret,
+			qualifiers = nil, -- FIXME! Consider allowing the user to specify this.
+		}
+		local bullet = string.rep("*", num_bullets) .. " "
+		return bullet .. require("Module:rhymes").format_rhymes(data)
 	end
 
 	-- If all sets of pronunciations have the same hyphenations, display them only once at the bottom.
@@ -1406,6 +1348,7 @@ function export.show_pr(frame)
 		if j > 1 then
 			table.insert(textparts, "\n")
 		end
+		-- FIXME! Handle pre/post/etc.
 		table.insert(textparts, parsed.pronun.text)
 		if #parsed.audio > 0 then
 			table.insert(textparts, "\n")
