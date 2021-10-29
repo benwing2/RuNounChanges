@@ -30,9 +30,7 @@ Page 2 fa: -------- begin text --------
 * {{alter|it|fa'|fai||imperative form only}}
 
 ====Pronunciation====
-* {{it-IPA|fà*}}
-* {{hyphenation|it|fà}}
-* {{rhymes|it|a|s=1}}
+{{it-pr|fà*}}
 * Unlike for the musical note below, this word always triggers {{w|syntactic gemination}}. Hence for example {{m|it|[[fa]] [[freddo]]||it's cold|lit=it makes cold}} is pronounced {{IPAchar|/ˈfa‿fˈfreddo/}}.
 
 ====Verb====
@@ -50,9 +48,7 @@ Page 2 fa: -------- begin text --------
 {{wikipedia|Fa (nota)|lang=it}}
 
 ====Pronunciation====
-* {{it-IPA|fà°|#fà*}}
-* {{hyphenation|it|fà}}
-* {{rhymes|it|a|s=1}}
+{{it-pr|fà°|#fà*}}
 * Unlike for the verb form and derived adverb, this word (and other terms for musical notes) do not trigger {{w|syntactic gemination}} in modern usage, although they did traditionally. Hence {{m|it|[[fa]] [[sol]] [[la]]||[[#English|fa]] [[#English|sol]] [[#English|la]]}} is now pronounced {{IPAchar|/ˈfa ˈsɔl ˈla/}}, but traditionally {{IPAchar|/ˈfa‿sˈsɔl ˈla/}}.
 
 ====Noun====
@@ -71,10 +67,11 @@ Page 3 te: -------- begin text --------
 From {{inh|it|la|tē}}, from {{m|la|tū}}.
 
 ===Pronunciation===
-* {{a|standard|clitic}} {{it-IPA|te}}
-* {{a|standard|disjunctive}} {{it-IPA|té}}
-* {{a|Northern Italy|disjunctive}} {{it-IPA|tè}}
-* {{rhymes|it|e|s=1}}
+{{it-pr
+|te<pre:{{a|standard|clitic}}><rhyme:->
+|té<pre:{{a|standard|disjunctive}}>
+|tè<pre:{{a|Northern Italy|disjunctive}}><rhyme:->
+}}
 
 ===Pronoun===
 {{head|it|pronoun}}
@@ -105,8 +102,7 @@ Page 4 seme: -------- begin text --------
 From {{inh|it|la|sēmen}}, from {{inh|it|ine-pro|*séh₁mn̥}}.
 
 ===Pronunciation===
-* {{it-IPA|séme}}
-* {{enPR|séme}}, {{it-IPA|séme}}
+{{it-pr|séme}}
 
 ===Noun===
 {{it-noun|m}}
@@ -139,8 +135,7 @@ Page 5 Monaco: -------- begin text --------
 {{wikipedia|lang=it}}
 
 ===Pronunciation===
-* {{it-IPA|Mònaco}}, {{IPAchar|[ˈmɔː.na.ko]}}
-* {{hyphenation|it|Mò|na|co}}
+{{it-pr|Mònaco}}
 * {{homophone|it|monaco}}
 
 ===Etymology 1===
@@ -210,10 +205,11 @@ Page 7 me: -------- begin text --------
 From {{inh|it|la|mē}}.
 
 ===Pronunciation===
-* {{a|standard|clitic}} {{it-IPA|me°}}
-* {{a|standard|disjunctive}} {{it-IPA|mé*}}
-* {{a|Northern Italy|disjunctive}} {{it-IPA|mè}}
-* {{rhymes|it|e|s=1}}
+{{it-pr
+|me°<pre:{{a|standard|clitic}}><rhyme:->
+|mé<pre:{{a|standard|disjunctive}}>
+|mè<pre:{{a|Northern Italy|disjunctive}}><rhyme:->
+}}
 * As a clitic pronoun used before another clitic, it is pronounced unstressed and without {{w|syntactic gemination}} of the following consonant, e.g. {{m|it|[[me]] [[ne]] [[vado]]|I'm going away}} {{IPAchar|/me ne ˈvado/}}. As a disjunctive pronoun used after a preposition, it is pronounced stressed and with syntactic gemination, e.g. {{m|it|[[a]] [[me]] [[piace]]|'''I''' like him/her/it}} {{IPAchar|/a‿mˌme‿pˈpjatʃe/}} (since {{m|it|a}} also triggers syntactic gemination).
 
 ===Pronoun===
@@ -248,9 +244,7 @@ Page 8 dove: -------- begin text --------
 From {{inh|it|la|[[dē]] [[ubi]]}}, or from a strengthening of the older form {{m|la||ove}} with a prothetic {{m|la||d-}}. Compare {{cog|pms|doa}}.
 
 ===Pronunciation===
-* {{it-IPA|dóve°|#dóve*}}
-* {{hyph|it|dó|ve}}
-* {{audio|it|It-dove.ogg|Audio}}
+{{it-pr|dóve°|#dóve*<audio:It-dove.ogg>}}
 * Traditionally, this is one of the few words not ending in a stressed vowel that triggers {{w|syntactic gemination}} of the following consonant, but this no longer applies in modern usage. Hence {{m|it|[[dove]] [[vai]]?||where are you going?}} is traditionally pronounced {{IPAchar|/ˈdove‿vˈvai/}} but in modern usage is {{IPAchar|/ˈdove ˈvai/}}.
 
 ===Conjunction===
@@ -304,10 +298,7 @@ Page 10 casa: -------- begin text --------
 From {{inh|it|la|casa|t=house}}.
 
 ===Pronunciation===
-* {{a|Standard, Central and Southern Italy}} {{it-IPA|cà[s]a}}
-* {{a|Northern Italy|Sardinia}} {{it-IPA|càsa}}
-* {{hyph|it|cà|sa}}
-* {{audio|it|It-casa.ogg|Audio (Northern)}}
+{{it-pr|càsa,#cà[s]a<ref:{{R:it:DiPI}}><audio:It-casa.ogg;Audio (Northern)>}}
 
 ===Noun===
 {{it-noun|f}}
@@ -389,6 +380,9 @@ From {{inh|it|la|casa|t=house}}.
 |rincasare
 }}
 
+===References===
+<references />
+
 ===Further reading===
 * {{pedia|lang=it}}
 * {{R:it:Collins}}
@@ -414,7 +408,7 @@ From {{der|it|la|illī}}, nominative masculine plural of {{m|la|ille}}.
 * {{alter|it|-li||enclitic}}
 
 ====Pronunciation====
-* {{it-IPA|°li°}}
+{{it-pr|°li°}}
 * {{homophones|it|lì}}
 * As an unstressed clitic, it does not trigger {{w|syntactic gemination}} of the following consonant. It also actively blocks syntactic gemination of its initial consonant, such as after a word like {{m|it|però||but}} that would normally trigger syntactic gemination. (This does not apply to the enclitic form {{m|it|-li}}, e.g. {{m|it|[[dalli]] [[a]] [[me]]||give them to me}}.)
 
@@ -464,8 +458,7 @@ Page 12 ne: -------- begin text --------
 From {{inh|it|la|inde||thence}}. Compare {{cog|fr|en|pos=adverb, pronoun}}.
 
 ====Pronunciation====
-* {{it-IPA|°ne°|#ne°}}
-* {{rhymes|it|e|s=1}}
+{{it-pr|°ne°|#ne°}}
 * In modern usage but not traditional usage, this word actively blocks {{w|syntactic gemination}} of its initial consonant. Hence {{m|it|[[però]] [[ne]] [[prendo]]||I (will) take some}} is pronounced {{IPAchar|/peˈrɔ ne ˈprɛndo/}} in modern usage, but {{IPAchar|/peˈrɔ‿nne ˈprɛndo/}} traditionally, since {{m|it|però}} normally triggers syntactic gemination.
 
 ====Adverb====
@@ -498,8 +491,7 @@ From {{inh|it|la|inde||thence}}. Compare {{cog|fr|en|pos=adverb, pronoun}}.
 ===Etymology 2===
 
 ====Pronunciation====
-* {{it-IPA|°°ne*}}
-* {{rhymes|it|e|s=1}}
+{{it-pr|°°ne*}}
 * This word triggers {{w|syntactic gemination}} of the following consonant, and may or may not block syntactic gemination of its initial consonant (contrast the pronominal usage above).
 
 ====Contraction====
@@ -539,7 +531,7 @@ Page 14 Emilia-Romagna: -------- begin text --------
 From the former regions {{m|it|Emilia}} and {{m|it|Romagna}}, from {{etyl|la|it}} {{m|la|Aemilia|(via) Aemilia}}, the Roman road connecting Rome to northern Italy, named after the consul Marcus Aemilius Lepidus, and {{m|la||Romania}}, the name of the Eastern Roman Empire applied to Ravenna by the Lombards after the fall of the Western Empire and in the days when Ravenna was a city of the east.
 
 ===Pronunciation===
-* Emìlia-Romagna, {{it-IPA|Emìlia-Romàgna}}
+{{it-pr|Emìlia-Romàgna}}
 
 ===Proper noun===
 {{it-proper noun|f|head=[[Emilia]]-[[Romagna]]}}
@@ -548,17 +540,13 @@ From the former regions {{m|it|Emilia}} and {{m|it|Romagna}}, from {{etyl|la|it}
 -------- end text --------
 Page 15 Aosta: Found match for regex: =
 Page 15 Aosta: -------- begin text --------
+{{wikipedia|lang=it}}
 
 ===Etymology===
 Ultimately from the {{inh|it|la|-}} name of the location, {{m|la|Augusta Praetoria|Augusta Praetōria Salassōrum}}. Cognate with {{cog|fr|Aoste}}, {{cog|frp|Outa}}.
 
 ===Pronunciation===
-{{wikipedia|lang=it}}
-* {{it-IPA|Aòsta}}
-* {{it-IPA|Aósta}}
-* {{rhymes|it|ɔsta}}
-* {{audio|it|It-Aosta.ogg|Audio}}
-* {{hyphenation|it|A|ò|sta}}
+{{it-pr|Aòsta<audio:It-Aosta.ogg>}}
 
 ===Proper noun===
 {{it-proper noun|f}}
@@ -582,7 +570,7 @@ Page 16 Nuoro: -------- begin text --------
 {{wikipedia|lang=it}}
 
 ===Pronunciation===
-* {{it-IPA|Nuòro|#!Nùoro|ref2={{R:it:DiPI}}}}
+{{it-pr|Nuòro|#!Nùoro|ref2={{R:it:DiPI}}}}
 * {{audio|it|It-Nuoro.ogg|Audio}}{{attention|it|this audio uses an incorrect pronunciaition}}
 * {{hyphenation|it|Nù|o|ro}}
 
@@ -604,9 +592,7 @@ Page 17 forte: -------- begin text --------
 From {{inh|it|la|fortis|fortis, fortem}}, from {{inh|it|itc-ola|forctis}}, {{m|itc-ola|fortis}}, ultimately from {{der|it|ine-pro|*bʰerǵʰ-||to rise, high, hill}}.
 
 ===Pronunciation===
-* {{enPR|fòrte}}, {{it-IPA|fòrte}}
-* {{audio|it|It-forte.ogg|Audio}}
-* {{rhymes|it|ɔrte|s=2}}
+{{it-pr|fòrte<audio:It-forte.ogg>}}
 
 ===Noun===
 {{it-noun|m}}
@@ -650,9 +636,11 @@ Page 18 in-: -------- begin text --------
 * {{alter|it|ir-||assimilated form before [[r]]-}}
 
 ===Pronunciation===
-* {{it-IPA|in-}}
-* {{IPA|it|[iɱ]}} {{qualifier|before ''f'' or ''v''}}
-* {{IPA|it|[iŋ]}} {{qualifier|before ''c'' or ''g''}}
+{{it-pr
+|in-
+|[iɱ]<post:{{qualifier|before ''f'' or ''v''}}>
+|[iŋ]<post:{{qualifier|before ''c'' or ''g''}}>
+}}
 
 ===Etymology 1===
 From {{inh|it|la|in-}}, a prefixation of {{m|la|in||in, into}}, ultimately from {{der|it|ine-pro|*h₁én}}.
@@ -708,12 +696,10 @@ Page 19 zio: Found match for regex: =
 Page 19 zio: -------- begin text --------
 
 ===Etymology===
-From {{inh|it|LL.|thius}}, from {{der|it|grc|θεῖος}}. Compare {{cog|es|tío}}, {{cog|pt|tio}}, {{cog|scn|ziu}}, {{cog|sc|tiu}} or {{m|sc|tziu}}, {{cog|vec|sio}}.
+Inherited from {{inh|it|LL.|thius}}, from {{der|it|grc|θεῖος}}. Compare {{cog|es|tío}}, {{cog|pt|tio}}, {{cog|scn|ziu}}, {{cog|sc|tiu}} or {{m|sc|tziu}}, {{cog|vec|sio}}.
 
 ===Pronunciation===
-* {{a|Central and Southern Italy|Standard}} {{it-IPA|tsìo}}
-* {{a|Northern Italy}} {{it-IPA|dzìo}}
-* {{audio|it|LL-Q652 (ita)-Happypheasant-zio.wav|Audio}}
+{{it-pr|dzìo,#tsìo<ref:{{R:it:DiPI}}><audio:LL-Q652 (ita)-Happypheasant-zio.wav>}}
 
 ===Noun===
 {{it-noun|m|zii|f=zia}}
@@ -739,7 +725,7 @@ Page 20 snob: -------- begin text --------
 Borrowed from {{bor|it|en|snob}}.
 
 ===Pronunciation===
-* {{it-IPA|snòb|ref={{R:it:DiPI}}}}<ref>{{R:it:DiPI}}</ref>
+{{it-pr|snòb<ref:{{R:it:DiPI}}>}}
 
 ===Noun===
 {{it-noun|m|-}}
@@ -761,8 +747,7 @@ Page 21 abuso: Found match for regex: =
 Page 21 abuso: -------- begin text --------
 
 ===Pronunciation===
-* {{enPR|abu<u></u>o}}, {{it-IPA|abùso}}
-* {{rhymes|it|uzo|s=3}}
+{{it-pr|abùso}}
 
 ===Etymology 1===
 From {{der|it|la|abūsus}}.
@@ -799,10 +784,7 @@ Page 22 stella: -------- begin text --------
 From {{inh|it|la|stēlla}}, from {{inh|it|itc-pro|*stērolā}}, from {{inh|it|ine-pro|*h₂stḗr}}. {{doublet|it|étoile}}.
 
 ===Pronunciation===
-* {{a|standard}} {{it-IPA|stélla}}
-* {{a|Milan}} {{it-IPA|stèlla}}
-* {{a|Milan}} {{audio|it|It-una stella.ogg|Audio}}
-* {{hyphenation|it|stél|la}}
+{{it-pr|stélla<pre:{{a|standard}}>|stèlla<pre:{{a|Milan}}><rhyme:-><audio:It-una stella.ogg<Audio (Milan)>}}
 
 ===Noun===
 {{it-noun|f}}
@@ -835,9 +817,10 @@ Page 23 bene: -------- begin text --------
 From {{inh|it|la|bene}}.
 
 ===Pronunciation===
-* {{a|standard|Central Italy|Southern Italy}} {{it-IPA|bène}}
-* {{a|Northern Italy}} {{it-IPA|béne}}
-* {{audio|it|It-bene.ogg|Audio (Northern Italy)}}
+{{it-pr
+|bène<pre:{{a|standard|Central Italy|Southern Italy}}>
+|béne<pre:{{a|Northern Italy}}><audio:It-bene.ogg;Audio (Northern Italy)><rhyme:-><hyph:->
+}}
 {{rfap|it|standard, central Italy, Southern Italy}}
 
 ===Adjective===
@@ -966,8 +949,7 @@ Page 24 coro: -------- begin text --------
 From {{der|it|la|chorus}}.
 
 ===Pronunciation===
-* {{enPR|còro}}, {{it-IPA|còro}}
-* {{rhymes|it|ɔro|s=2}}
+{{it-pr|còro}}
 
 ===Noun===
 {{it-noun|m}}
@@ -988,17 +970,16 @@ Page 25 taxi: Found match for regex: =
 Page 25 taxi: -------- begin text --------
 
 ===Pronunciation===
-* {{it-IPA|tàxi}}
-* {{it-IPA|tassì}} {{i|triggers syntactic gemination in the following word}}
-* {{it-IPA|taxì}} {{i|high-style, less-preferred; may trigger syntactic gemination in the following word}}
-* {{audio-IPA|it|It-un taxi.ogg|[un ˈtaksi]}}
-* {{hyphenation|it|tà|xi}}
+{{it-pr|tàxi,tassì<ref:{{R:it:DiPI}}><audio:It-un taxi.ogg><Audio ("un tàxi")>}}
 
 ===Noun===
 {{it-noun|m}}
 
 # [[#English|taxi]]
 #: {{syn|it|tassì}}
+
+===References===
+<references />
 
 ----
 
@@ -1013,10 +994,10 @@ Page 26 senza: -------- begin text --------
 From {{inh|it|la|sine||without}} conflated with {{m|la|absentia||without, in the absence of}}.
 
 ===Pronunciation===
-* {{a|Standard|Central Italy|Southern Italy}} {{it-IPA|sèntsa}}
-* {{a|Northern Italy}} {{it-IPA|séntsa}}
-* {{audio|it|LL-Q652 (ita)-Happypheasant-senza.wav|Audio}}
-* {{hyphenation|it|sèn|za}}
+{{it-pr
+|sèntsa<pre:{{a|Standard|Central Italy|Southern Italy}}><audio:LL-Q652 (ita)-Happypheasant-senza.wav>
+|séntsa<pre:{{a|Northern Italy}}><rhyme:-><hyph:->
+}}
 
 ===Conjunction===
 {{head|it|conjunction}}
@@ -1059,9 +1040,7 @@ Page 27 tra: -------- begin text --------
 From {{inh|it|la|intrā}}, with influence from {{inh|it|la|inter}}.<ref>Angelo Prati, "Vocabolario Etimologico Italiano", Torino, 1951</ref>
 
 ===Pronunciation===
-* {{it-IPA|tra**}}
-* {{audio|it|LL-Q652 (ita)-Happypheasant-tra.wav|Audio}}
-* {{rhymes|it|a}}
+{{it-pr|tra**<audio:LL-Q652 (ita)-Happypheasant-tra.wav>}}
 * This word may or may not trigger {{w|syntactic gemination}} of the following consonant; both possibilities are allowable. Hence {{m|it|[[tra]] [[due]] [[minuti]]||in two minutes}} can be pronounced either {{IPAchar|/tra‿dˈdue miˈnuti/}} (with gemination) or {{IPAchar|/tra ˈdue miˈnuti/}} (without it).
 
 ===Preposition===
@@ -1098,8 +1077,7 @@ Page 28 fra: -------- begin text --------
 From {{inh|it|la|infra}}, which stems from Latin {{m|la|inferus}}.<ref>Angelo Prati, "Vocabolario Etimologico Italiano", Torino, 1951</ref>
 
 ====Pronunciation====
-* {{it-IPA|fra**}}
-* {{rhymes|it|a|s=1}}
+{{it-pr|fra**}}
 * This word may or may not trigger {{w|syntactic gemination}} of the following consonant; both possibilities are allowable. Hence {{m|it|[[fra]] [[due]] [[minuti]]||in two minutes}} can be pronounced either {{IPAchar|/fra‿dˈdue miˈnuti/}} (with gemination) or {{IPAchar|/fra ˈdue miˈnuti/}} (without it).
 
 ====Preposition====
@@ -1129,8 +1107,7 @@ From {{inh|it|la|infra}}, which stems from Latin {{m|la|inferus}}.<ref>Angelo Pr
 {{clipping|it|fratello}}
 
 ====Pronunciation====
-* {{it-IPA|frà*}}
-* {{rhymes|it|a|s=1}}
+{{it-pr|frà*}}
 * Unlike the above word, this word has primary stress and always triggers {{w|syntactic gemination}} of the following consonant.
 
 ====Noun====
@@ -1151,8 +1128,7 @@ Page 29 dividere: -------- begin text --------
 Borrowed from {{bor|it|la|dīvidō|dīvidō, dīvidere|I divide, I separate}}.
 
 ===Pronunciation===
-* {{enPR|divìdere}}, {{it-IPA|divìdere}}
-* {{rhymes|it|idere|s=4}}
+{{it-pr|divìdere}}
 
 ===Verb===
 {{it-verb|a\ì+,divìsi,divìso}} {{tlb|it|transitive}}
@@ -1186,31 +1162,34 @@ Borrowed from {{bor|it|la|dīvidō|dīvidō, dīvidere|I divide, I separate}}.
 Page 30 pranzo: Found match for regex: =
 Page 30 pranzo: -------- begin text --------
 
-===Etymology===
-From {{inh|it|la|prandium}}, whence also {{cog|ro|prânz}}. Ultimately of {{der|it|ine-pro|-}} origin.
-
 ===Pronunciation===
-* {{a|standard}} {{it-IPA|pràndzo}}
-* {{a|non-standard}} {{it-IPA|pràntso}}
-* {{audio|it|It-il pranzo.ogg|Audio (non-standard)}}
+{{it-pr|pràndzo,pràntso<ref:{{R:it:DiPI}}><audio:It-il pranzo.ogg;Audio (with /ts/)>}}
 
-===Noun===
+===Etymology 1===
+Inherited from {{inh|it|la|prandium}}, whence also {{cog|ro|prânz}}. Ultimately of {{der|it|ine-pro|-}} origin.
+
+====Noun====
 {{it-noun|m}}
 
 # [[lunch]] or [[dinner]] (depending on context)
 
-====Derived terms====
+=====Derived terms=====
 * {{l|it|pranzare}}
 * {{l|it|pranzetto}}
 
-====See also====
+=====See also=====
 * {{l|it|colazione}}
 * {{l|it|cena}}
 
-===Verb===
+===Etymology 2===
+
+====Verb====
 {{head|it|verb form}}
 
 # {{inflection of|it|pranzare||1|s|pres|indc}}
+
+===References===
+<references />
 
 {{C|it|Meals}}
 -------- end text --------
@@ -1222,12 +1201,11 @@ Page 31 cielo: -------- begin text --------
 From {{inh|it|la|caelum}}, from {{inh|it|itc-pro|*kailom}}, from {{inh|it|ine-pro||*keh₂i-lom|t=whole}}, from {{m|ine-pro|*keh₂i-}}.
 
 ===Pronunciation===
-* {{a|Central Italy|Standard Italian}} {{it-IPA|cièlo}}
-* {{a|Northern Italy}} {{it-IPA|ciélo}}
-* {{audio|it|It-il cielo.ogg|Audio (Northern)}}
-* {{hyph|it|ciè|lo}}
+{{it-pr
+|cièlo<pre:{{a|Central Italy|Standard Italian}}>
+|ciélo<pre:{{a|Northern Italy}}><audio:It-il cielo.ogg;Audio (Northern)><rhyme:-><hyph:->
+}}
 * {{homophones|it|celo}}
-* {{rhymes|it|ɛlo|s=2}}
 
 ===Noun===
 {{it-noun|m}}
@@ -1257,7 +1235,7 @@ Page 32 pois: -------- begin text --------
 Borrowed from {{bor|it|fr|pois}}.
 
 ===Pronunciation===
-{{it-IPA|pu.à|puà|ref2=Optionally triggers syntactic gemination in the following word.}}<ref>{{R:it:DiPI}}</ref>
+{{it-pr|pu.à**,puà**<ref:{{R:it:DiPI}}>}}
 
 ===Noun===
 {{it-noun|m|-}}
@@ -1280,8 +1258,7 @@ Page 33 amnesia: -------- begin text --------
 From {{der|it|grc|ἀμνησία||forgetfulness}}.
 
 ===Pronunciation===
-* {{it-IPA|amnesìa}}
-* [amneˈziːa]
+{{it-pr|amnesìa}}
 
 ===Noun===
 {{it-noun|f}}
@@ -1302,8 +1279,7 @@ Page 34 surf: -------- begin text --------
 From {{bor|it|en|surf}}.
 
 ===Pronunciation===
-* {{it-IPA|sùɾf}}, {{it-IPA|səɾf}}
-* {{hyphenation|it|sùrf}}
+{{it-pr|sèrf,sö̀rf<ref:{{R:it:DiPI}}>}}
 
 ===Noun===
 {{it-noun|m|-}}
@@ -1316,6 +1292,9 @@ From {{bor|it|en|surf}}.
 * {{l|it|tavola da surf}}
 * {{l|it|windsurf}}
 
+===References===
+<references />
+
 {{C|it|Surfing}}
 
 ----
@@ -1325,7 +1304,7 @@ Page 35 romanzo: Found match for regex: =
 Page 35 romanzo: -------- begin text --------
 
 ===Pronunciation===
-* {{it-IPA|romàndzo|romàntso|ref2={{R:it:DiPI}}}}<ref>{{R:it:DiPI}}</ref>
+{{it-pr|romàndzo|romàntso<ref:{{R:it:DiPI}}>}}
 
 ===Etymology 1===
 Borrowed from {{bor|it|fro|romanz}}, which stems from the Latin expression {{m|la|[[romanice]] [[loqui]]||to speak in the Roman way}}.<ref>{{cite-book|last=Migliorini|first=Bruno|coauthors=Aldo Duro|title=Prontuario etimologico della lingua italiana|year=1950|publisher=Paravia|location=|lang=it|chapter=''romanzo''}}</ref>
@@ -1382,6 +1361,7 @@ Page 36 pomodoro: Found match for regex: {
 Page 36 pomodoro: -------- begin text --------
 {{was fwotd|it|2020|June|22}}
 {{wikipedia|lang=it}}
+[[Image:Tomato_je.jpg|thumb|right|Pomodori]]
 
 ===Alternative forms===
 * {{alter|it|pomo d'oro||archaic}}
@@ -1393,11 +1373,7 @@ Page 36 pomodoro: -------- begin text --------
 A red strain was later developed in Moorish Africa, which came to be known in Italy as {{m|it|pomo dei mori|t=Moor's apple}}.<ref name="Hill">{{cite book|title=The Aphrodisiac Encyclopaedia: A Compendium of Culinary Come-ons|year=2012|publisher=Random House|first=Mark Douglas|last=Hill|url=https://books.google.com/books?id=Qukk4fmqsrcC}}</ref>
 
 ===Pronunciation===
-[[Image:Tomato_je.jpg|thumb|right|Pomodori]]
-* {{it-IPA|pómodòro|ref={{R:it:Olivetti}}}}
-* {{audio|it|It-un pomodoro.ogg|Audio}}
-* {{rhymes|it|ɔro|s=4}}
-* {{hyphenation|it|po|mo|dò|ro}}
+{{it-pr|pómodòro<ref:{{R:it:Olivetti}}><audio:It-un pomodoro.ogg>}}
 
 ===Noun===
 {{head|it|noun|g=m|plural|pomodori|or|pomidoro|popular plural|pomidori}}
@@ -1443,10 +1419,10 @@ Page 37 perché: -------- begin text --------
 {{univerbation|it|per|t1=for|che|t2=which}}.
 
 ===Pronunciation===
-* {{a|standard}} {{it-IPA|perché}}
-* {{a|Lombardy|Sicily}} {{it-IPA|perchè}}
-* {{a|Lombardy}} {{audio|it|It-perché.ogg|Audio}}
-* {{rhymes|it|e|s=2}}
+{{it-pr
+|perché<pre:{{a|standard}}>
+|perchè<pre:{{a|Lombardy|Sicily}}><audio:It-perché.ogg;Audio (Lombardy)><rhyme:->
+}}
 
 ===Conjunction===
 {{head|it|conjunction}}
@@ -1474,29 +1450,28 @@ Page 37 perché: -------- begin text --------
 #: {{ux|it|Vorrei proprio sapere '''il perché'''.|inline=1|I would really like to know '''the reason'''.}}
 #: {{ux|it|Non so '''il perché''', ma non mi sento bene.|inline=1|I don't know '''why''', but I don't feel well.}}
 
-{{cln|it|interrogative adverbs|subordinating conjunctions|terms spelled with É}}
+{{cln|it|interrogative adverbs|subordinating conjunctions}}
 
 ----
 
 -------- end text --------
 Page 38 arena: Found match for regex: =
 Page 38 arena: -------- begin text --------
+{{wikipedia|dab=arena|lang=it}}
 
 ===Alternative forms===
 * {{alter|it|rena}}
 
 ===Etymology===
-From {{inh|it|la|arēna}}, possibly from {{der|it|ett|-}}. See also {{m|it|rena}}.
+Inherited from {{inh|it|la|arēna}}, possibly from {{der|it|ett|-}}. See also {{m|it|rena}}.
 
 ===Pronunciation===
-* {{qualifier|esp. in sense 1 and 2}} {{it-IPA|aréna|ref=[http://www.dizionario.rai.it/poplemma.aspx?lid=87651&r=15331 “aréna”], ''Dizionario d'Ortografia e di Pronunzia''}}
-** {{hyphenation|it|a|ré|na}}
-* {{qualifier|esp. in sense 3 and 4}} {{it-IPA|arèna|ref=[http://www.dizionario.rai.it/poplemma.aspx?lid=87649&r=15331 “arèna”], ''Dizionario d'Ortografia e di Pronunzia''}}
-** {{hyphenation|it|a|rè|na}}
-* {{rhymes|it|ena|s=3}}
+{{it-pr
+|aréna<ref:{{R:it:DOP|id=87651}}><pre:{{q|in the senses "sand", "beach", "lido"}}>
+|aréna,#arèna<ref:{{R:it:DiPI}}><ref:{{R:it:DOP|id=87649}}><pre:{{q|in the senses "arena", "amphiteater"}}>
+}}
 
 ===Noun===
-{{wikipedia|dab=arena|lang=it}}
 {{it-noun|f}}
 
 # [[sand]]
@@ -1522,9 +1497,7 @@ Page 39 ananas: -------- begin text --------
 From {{bor|it|pt|ananás}}, from {{der|it|tpw|nanas||pineapple}}.
 
 ===Pronunciation===
-* {{it-IPA|ànanas}}; (''rare'') {{IPAchar|/a.naˈnas/|[a.n̺aˈn̺as̺]}}
-* {{audio|it|LL-Q652 (ita)-Yiyi-Fragola-ananas.wav|Audio}}
-* {{hyphenation|it|à|na|nas}}; {{hyphenation|it|a|na|nàs|caption=(''rare'')}}
+{{it-pr|ànanas,ananàs<qual:rare><audio:LL-Q652 (ita)-Yiyi-Fragola-ananas.wav>}}
 
 ===Noun===
 {{it-noun|m|-}}
@@ -1546,9 +1519,10 @@ Page 40 egli: -------- begin text --------
 From the older form ''elli'', from {{inh|it|VL.|*illī}}, from {{inh|it|la|ille||that}}.
 
 ===Pronunciation===
-* {{it-IPA|égli}} (before a vowel: /eʎ/)
-* {{audio|it|It-egli.ogg|audio}}
-* {{rhymes|it|eʎʎi|s=2}}
+{{it-pr
+|égli<audio:It-egli.ogg>
+|/eʎ/<pre:{{q|before a vowel}}
+}}
 
 ===Pronoun===
 {{head|it|pronoun|g=m|feminine|ella}}
@@ -1575,8 +1549,10 @@ Page 41 s-: -------- begin text --------
 In most cases, this prefix stems from {{inh|it|la|ex-}} (see {{m|la|ex}}). In some cases, it stems from Latin {{m|la|dis-}}.<ref>{{cite-book|last=Migliorini|first=Bruno|coauthors=Aldo Duro|title=Prontuario etimologico della lingua italiana|year=1950|publisher=Paravia|location=|lang=it|chapter=''s-''}}</ref>
 
 ===Pronunciation===
-* {{it-IPA|s}} {{qualifier|before [[voiceless]] consonants}}
-* {{it-IPA|[z]}} {{qualifier|before [[voiced]] consonants}}
+{{it-pr
+|s-<post:{{qualifier|before [[voiceless]] consonants}}>
+|[z]-<post:{{qualifier|before [[voiced]] consonants}}>
+}}
 
 ===Prefix===
 {{head|it|prefix}}
@@ -1624,9 +1600,7 @@ Page 42 decidere: -------- begin text --------
 From {{der|it|la|dēcīdere}}, present active infinitive of {{m|la|dēcīdō}}, from {{m|la|dē}} + {{m|la|caedō}}.
 
 ===Pronunciation===
-* {{enPR|decìdere}}, {{it-IPA|decìdere}}
-* {{audio|it|LL-Q652 (ita)-Happypheasant-decidere.wav|Audio}}
-* {{rhymes|it|idere|s=4}}
+{{it-pr|decìdere<audio:LL-Q652 (ita)-Happypheasant-decidere.wav>}}
 
 ===Verb===
 {{it-verb|a\ì,decìsi,decìso}}
@@ -1663,9 +1637,7 @@ Page 43 decisione: -------- begin text --------
 Borrowed from {{bor|it|la|dēcīsiō}}.
 
 ===Pronunciation===
-* deci<u>s</u>ióne
-* {{it-IPA|decisióne}}
-* {{rhymes|it|one|s=4}}
+{{it-pr|decisióne}}
 
 ===Noun===
 {{it-noun|f}}
@@ -1686,11 +1658,10 @@ Page 44 cattivo: Found match for regex: =
 Page 44 cattivo: -------- begin text --------
 
 ===Etymology===
-From {{inh|it|la|captīvus}} ("captive" → "caught by the devil" → "bad"). Compare the semantic development of {{cog|fr|chétif||puny, scrawny}} and {{cog|gl|cativo}}
+Inherited from {{inh|it|la|captīvus}} ("captive" → "caught by the devil" → "bad"). Compare the semantic development of {{cog|fr|chétif||puny, scrawny}} and {{cog|gl|cativo}}.
 
 ===Pronunciation===
-* {{a|Standard Italian}} {{it-IPA|cattìvo}}
-* {{audio|it|It-cattivo.ogg|Audio}}
+{{it-pr|cattìvo<pre:{{a|Standard Italian}}><audio:It-cattivo.ogg>}}
 
 ===Adjective===
 {{it-adj|sup=cattivissimo}}
@@ -1725,12 +1696,8 @@ Page 45 qualche: -------- begin text --------
 From {{compound|it|quale|alt1=qual|che}}.<ref>{{cite-book|last=Patota|first=Giuseppe|title=Lineamenti di grammatica storica dell'italiano|year=2002|publisher=il Mulino|location=Bologna|lang=it|isbn=88-15-08638-2|page=139|chapter=}}</ref>
 
 ===Pronunciation===
-* {{it-IPA|quàlche°|#quàlche*}}
+{{it-pr|quàlche°,#quàlche*<audio:LL-Q652 (ita)-Happypheasant-qualche.wav>}}
 * Traditionally, this word triggers {{w|syntactic gemination}} of the following consonant despite not ending in a stressed vowel, but this no longer applies in modern usage. Hence {{m|it|[[qualche]] [[volta]]||sometimes}} is traditionally pronounced {{IPAchar|/ˈkwalke‿vˈvɔlta/}} but in modern usage is {{IPAchar|/ˈkwalke ˈvɔlta/}}.
-
-===Pronunciation===
-* {{hyph|it|quàl|che}}
-* {{audio|it|LL-Q652 (ita)-Happypheasant-qualche.wav|Audio}}
 
 ===Determiner===
 {{head|it|determiner|singular only||invariable}}
@@ -1756,23 +1723,23 @@ From {{compound|it|quale|alt1=qual|che}}.<ref>{{cite-book|last=Patota|first=Gius
 Page 46 freddo: Found match for regex: =
 Page 46 freddo: -------- begin text --------
 
-===Etymology===
+===Pronunciation===
+{{it-pr
+|fréddo<pre:{{a|standard}}>
+|frèddo<pre:{{a|Lombardy|Sicily}}><audio:It-freddo.ogg;Audio (Lombardy)><rhyme:-><hyph:->
+}}
+
+===Etymology 1===
 Inherited from {{inh|it|la|frīgidus||cold}} (through a syncopated {{inh|it|VL.|-}} or {{inh|it|LL.|-}} form {{m|la|frigdus}}, {{m|la||fricdus}}, attested in the Appendix Probi, or {{m|la|fridus}}, found in a Pompeian inscription), itself from {{m|la|frīgeō||to be cold}}, from {{m|la|frīgus||cold, coldness}}, from {{der|it|ine-pro|*sriHgos-}}, {{m|ine-pro|*sriges-}}, {{m|ine-pro|*sriHges-}}. {{doublet|it|frigido}}, a later borrowing.
 
-===Pronunciation===
-* {{a|standard}} {{it-IPA|fréddo}}
-* {{a|Lombardy|Sicily}} {{it-IPA|frèddo}}
-* {{a|Lombardy}} {{audio|it|It-freddo.ogg|Audio}}
-* {{rhymes|it|eddo|s=2}}
-
-===Adjective===
+====Adjective====
 {{it-adj|sup=freddissimo}}
 
 # [[cold]]
 #: {{syn|it|gelato|ghiaccio|scostante}}
 #: {{ant|it|caldo|appassionato}}
 
-====Derived terms====
+=====Derived terms=====
 {{der-top}}
 * {{l|it|avere freddo}}
 * {{l|it|caffè freddo}}
@@ -1780,16 +1747,11 @@ Inherited from {{inh|it|la|frīgidus||cold}} (through a syncopated {{inh|it|VL.|
 * {{l|it|tè freddo}}
 {{der-bottom}}
 
-===Noun===
+====Noun====
 {{it-noun|m}}
 
 # the [[cold]]
 # [[chill]]
-
-===Verb===
-{{head|it|verb form}}
-
-# {{inflection of|it|freddare||1|s|pres|indc}}
 
 ====Related terms====
 {{rel-top3}}
@@ -1807,10 +1769,18 @@ Inherited from {{inh|it|la|frīgidus||cold}} (through a syncopated {{inh|it|VL.|
 * {{l|it|raffreddare}}
 * {{l|it|raffreddore}}
 {{rel-bottom}}
+
+===Etymology 2===
+
+====Verb====
+{{head|it|verb form}}
+
+# {{inflection of|it|freddare||1|s|pres|indc}}
 -------- end text --------
 Page 47 carciofo: Found match for regex: {
 Page 47 carciofo: -------- begin text --------
 {{wikipedia|lang=it}}
+[[Image:Artichoke Cynara cardunculus Head 2000px.jpg|thumb|right|Un carciofo]]
 
 ===Alternative forms===
 * {{alter|it|carcioffo||archaic}}
@@ -1819,10 +1789,7 @@ Page 47 carciofo: -------- begin text --------
 From {{bor|it|sqr|خرشوف}}, from {{bor|it|ar|خُرْشُوف}}.<ref>{{cite book|url=https://books.google.com/books?id=64azgEs5tpEC|title=The Romance Languages|page=282|first=W. D.|last=Elcock|year=1960}}: "Borrowed directly from the Qairawān–Sicily region, without the article, the same Arabic word appears in Italian as carciofo; the Spanish form penetrated, however, into Provence, where it became archichaut, arquichaut, and thence into northern Italy as articiocco".</ref><ref>{{cite book|title=Sicily|url=https://books.google.com/books?id=eeRXAAAAYAAJ|page=74|year=2009}}</ref> {{doublet|it|articiocco}}, which is used in northern Italy. Compare {{cog|scn|cacòcciula}}.
 
 ===Pronunciation===
-[[Image:Artichoke Cynara cardunculus Head 2000px.jpg|thumb|right|Un carciofo]]
-* {{it-IPA|carciòfo}}
-* {{rhymes|it|ɔfo|s=3}}
-* {{hyph|it|car|ciò|fo}}
+{{it-pr|carciòfo}}
 
 ===Noun===
 {{it-noun|m}}
@@ -1853,8 +1820,7 @@ Page 48 naso: -------- begin text --------
 From {{inh|it|la|nāsus}}, from {{inh|it|ine-pro|*néh₂s}}.
 
 ===Pronunciation===
-* {{it-IPA|nàso|#nà[s]o|ref2={{R:it:DiPI}}}}<ref>{{R:it:DiPI}}</ref>
-* {{audio|it|It-il naso.ogg|Audio}}
+{{it-pr|nàso,#nà[s]o<ref:{{R:it:DiPI}}><audio:It-il naso.ogg>}}
 
 ===Noun===
 {{it-noun|m}}
@@ -1891,9 +1857,11 @@ Page 49 cosa: -------- begin text --------
 Inherited from {{inh|it|la|causa}}. Doublet of the borrowing {{doublet|it|causa|notext=1}}.
 
 ===Pronunciation===
-* {{a|Central and Southern Italy}} {{it-IPA|còsa|#cò[s]a}}
-* {{a|Northern Italy}} {{it-IPA|còsa}} {{audio|it|it-cosa.ogg|Audio (Northern)}}
-* {{a|Northern Italy|dialects}} {{it-IPA|cò[s]a}}
+{{it-pr
+|còsa,#cò[s]a<pre:{{a|Central and Southern Italy}}>
+|còsa<pre:{{a|Northern Italy}}><audio:it-cosa.ogg;Audio (Northern)><rhyme:-><hyph:->
+|cò[s]a<pre:{{a|Northern Italy|dialects}}><rhyme:-><hyph:->
+}}
 
 ===Noun===
 {{it-noun|f}}
@@ -1922,9 +1890,10 @@ Page 50 sé: -------- begin text --------
 From {{inh|it|la|sē}}. Compare with {{cog|fr|soi}}, {{cog|pt|si}}, and {{cog|es|sí}}.
 
 ===Pronunciation===
-* {{a|standard}} {{it-IPA|sé}}
-* {{a|Northern Italy}} {{it-IPA|sè}}
-* {{rhymes|it|e|s=1}}
+{{it-pr
+|sé<pre:{{a|standard}}>
+|sè<pre:{{a|Northern Italy}}><rhyme:-><hyph:->
+}}
 
 ===Pronoun===
 {{head|it|pronoun}}
@@ -1934,8 +1903,6 @@ From {{inh|it|la|sē}}. Compare with {{cog|fr|soi}}, {{cog|pt|si}}, and {{cog|es
 ====Derived terms====
 * {{l|it|se stesso}}
 
-{{cln|it|terms spelled with É}}
-
 ----
 
 -------- end text --------
@@ -1943,12 +1910,13 @@ Page 51 sempre: Found match for regex: =
 Page 51 sempre: -------- begin text --------
 
 ===Etymology===
-From {{inh|it|la|semper}}; compare {{cog|ca|sempre}}, {{cog|pt|sempre}}, and {{cog|es|siempre}}.
+Inherited from {{inh|it|la|semper}}; compare {{cog|ca|sempre}}, {{cog|pt|sempre}}, and {{cog|es|siempre}}.
 
 ===Pronunciation===
-* {{a|standard}} {{it-IPA|sèmpre}}
-* {{a|Northern Italy}} {{it-IPA|sémpre}}
-* {{a|standard}} {{audio|it|It-sempre.ogg|Audio}}
+{{it-pr
+|sèmpre<pre:{{a|standard}}><audio:It-sempre.ogg>
+|sémpre<pre:{{a|Northern Italy}}><rhyme:-><hyph:->
+}}
 
 ===Adverb===
 {{it-adv}}
@@ -1976,19 +1944,23 @@ Page 52 tecnica: Found match for regex: =
 Page 52 tecnica: -------- begin text --------
 
 ===Pronunciation===
-* {{enPR|tècnica}}, {{it-IPA|tècnica}}
+{{it-pr|tècnica}}
 
-===Noun===
+===Etymology 1===
+
+====Noun====
 {{it-noun|f}}
 
 # [[technique]]
 
-===Adjective===
+===Etymology 2===
+
+====Adjective====
 {{head|it|adjective form|g=f-s}}
 
 # {{inflection of|it|tecnico||f|s}}
 
-====Related terms====
+===Related terms===
 * {{l|it|tecneto}}, {{l|it|tecnizio}}
 * {{l|it|tecnicismo}}
 * {{l|it|tecnicizzare}}
@@ -2002,10 +1974,10 @@ Page 53 vostro: Found match for regex: =
 Page 53 vostro: -------- begin text --------
 
 ===Etymology===
-From {{inh|it|la|vostrum}}, which is the accusative of {{m|la|voster}}, which derives from the older form {{m|la|vester}}, from {{inh|it|itc-pro|*westeros}}.<ref>{{cite-book|last=Patota|first=Giuseppe|title=Lineamenti di grammatica storica dell'italiano|year=2002|publisher=il Mulino|location=Bologna|lang=it|isbn=88-15-08638-2|page=134|chapter=}}</ref>
+Inherited from {{inh|it|la|vostrum}}, which is the accusative of {{m|la|voster}}, which derives from the older form {{m|la|vester}}, from {{inh|it|itc-pro|*westeros}}.<ref>{{cite-book|last=Patota|first=Giuseppe|title=Lineamenti di grammatica storica dell'italiano|year=2002|publisher=il Mulino|location=Bologna|lang=it|isbn=88-15-08638-2|page=134|chapter=}}</ref>
 
 ===Pronunciation===
-* {{enPR|vòstro}}, {{it-IPA|vòstro}}
+{{it-pr|vòstro}}
 
 ===Determiner===
 {{it-det}}
@@ -2039,12 +2011,10 @@ Page 54 patente: Found match for regex: =
 Page 54 patente: -------- begin text --------
 
 ===Pronunciation===
-* {{enPR|patènte}}, {{it-IPA|patènte}}
-* {{audio|it|LL-Q652 (ita)-Happypheasant-patente.wav|Audio}}
-* {{rhymes|it|ɛnte|s=3}}
+{{it-pr|patènte<audio:LL-Q652 (ita)-Happypheasant-patente.wav>}}
 
 ===Etymology 1===
-From {{der|it|la|patens}}.
+From {{der|it|la|patēns}}.
 
 ====Adjective====
 {{it-adj}}
@@ -2082,7 +2052,7 @@ Page 55 terpene: Found match for regex: =
 Page 55 terpene: -------- begin text --------
 
 ===Pronunciation===
-* {{enPR|terpène}}, {{it-IPA|terpène}}
+{{it-pr|terpène}}
 
 ===Noun===
 {{it-noun|m}}
@@ -2114,7 +2084,7 @@ Page 56 sbronzo: Found match for regex: =
 Page 56 sbronzo: -------- begin text --------
 
 ===Pronunciation===
-* <u>s</u>brónzo, {{it-IPA|sbróntso}}
+{{it-pr|sbróndzo,#sbróntso<ref:{{R:it:DiPI}}>}}
 
 ===Adjective===
 {{it-adj}}
@@ -2126,16 +2096,19 @@ Page 56 sbronzo: -------- begin text --------
 * {{l|it|sbronza}}
 * {{l|it|sbronzarsi}}
 
+===References===
+<references />
+
 {{C|it|Drinking}}
 -------- end text --------
 Page 57 Atene: Found match for regex: =
 Page 57 Atene: -------- begin text --------
+{{wikipedia|lang=it}}
 
 ===Pronunciation===
-* Atène, {{it-IPA|Atène}}
+{{it-pr|Atène}}
 
 ===Proper noun===
-{{wikipedia|lang=it}}
 {{head|it|proper noun|g=f}}
 
 # {{place|it|capital city|c/Greece|t1=Athens}}
@@ -2161,9 +2134,7 @@ Page 58 forbici: -------- begin text --------
 From {{inh|it|la|forficis}} plural of {{m|la|forfex}}.
 
 ===Pronunciation===
-* fòrbici,
-* {{it-IPA|fòrbici}}
-* {{audio|it|It-le forbici.ogg|Audio}}
+{{it-pr|fòrbici<audio:It-le forbici.ogg;Audio ("le forbici")>}}
 
 ===Noun===
 {{it-noun|f-p}}
@@ -2185,10 +2156,10 @@ Page 59 studioso: Found match for regex: =
 Page 59 studioso: -------- begin text --------
 
 ===Etymology===
-From {{etyl|la|it}} {{m|la|studiosus}}.
+Borrowed from {{bor|it|la|studiōsus}}.
 
 ===Pronunciation===
-* studióso, {{it-IPA|studióso|#studió[s]o}}
+{{it-pr|studióso|#studió[s]o}}
 
 ===Adjective===
 {{it-adj}}
@@ -2202,6 +2173,7 @@ From {{etyl|la|it}} {{m|la|studiosus}}.
 {{it-noun|m|f=studiosa}}
 
 # [[scholar]], [[scientist]]
+
 ====Related terms====
 * {{l|it|studio}}
 
@@ -2211,18 +2183,18 @@ From {{etyl|la|it}} {{m|la|studiosus}}.
 Page 60 lancio: Found match for regex: =
 Page 60 lancio: -------- begin text --------
 
-===Etymology===
+===Pronunciation===
+{{it-pr|làncio}}
+
+===Etymology 1===
 From {{m|it|lanciare}}.
 
-===Pronunciation===
-*  làncio, {{it-IPA|làncio}}
-
-===Noun===
+====Noun====
 {{it-noun|m}}
 
 # [[throw]], [[drop]], [[shot]]
 
-====Derived terms====
+=====Derived terms=====
 {{der-top}}
 * {{l|it|lanciatore}}
 * {{l|it|lancio del disco}}
@@ -2232,7 +2204,9 @@ From {{m|it|lanciare}}.
 * {{l|it|lancio del peso}}
 {{der-bottom}}
 
-===Verb===
+===Etymology 2===
+
+====Verb====
 {{head|it|verb form}}
 
 # {{inflection of|it|lanciare||1|s|pres|indc}}
@@ -2247,7 +2221,7 @@ Page 61 vermicelli: Found match for regex: =
 Page 61 vermicelli: -------- begin text --------
 
 ===Pronunciation===
-* vermicèlli, {{it-IPA|vermicèlli}}
+{{it-pr|vermicèlli}}
 
 ===Noun===
 {{head|it|noun form|g=m-p}}
@@ -2261,7 +2235,7 @@ Page 62 mosse: Found match for regex: =
 Page 62 mosse: -------- begin text --------
 
 ===Pronunciation===
-* mòsse, {{it-IPA|mòsse}}
+{{it-pr|mòsse}}
 
 ===Noun===
 {{head|it|noun form|g=f-p}}
@@ -2284,11 +2258,10 @@ Page 63 cipolla: -------- begin text --------
 [[Image:ARS_red_onion.jpg|thumb|right]]
 
 ===Etymology===
-From {{inh|it|LL.|cepulla}}, diminutive of {{inh|it|la|cēpa}}.
+Inherited from {{inh|it|LL.|cepulla}}, diminutive of {{inh|it|la|cēpa}}.
 
 ===Pronunciation===
-* {{audio|it|It-una cipolla.ogg|Audio}} ([[una#Italian|una]] cipolla)
-* {{it-IPA|cipólla}}
+{{it-pr|cipólla<audio:It-una cipolla.ogg;Audio ("una cipolla")>}}
 
 ===Noun===
 {{it-noun|f}}
@@ -2317,9 +2290,7 @@ Page 64 quieto: Found match for regex: =
 Page 64 quieto: -------- begin text --------
 
 ===Pronunciation===
-* {{it-IPA|quièto|qui.èto|quiéto|qui.éto|ref4={{R:it:DiPI}}}}<ref>{{R:it:DiPI}}</ref>
-* {{hyph|it|quiè|to}}, {{hyph|it|qui|è|to|nocaption=1}}, {{hyph|it|quié|to|nocaption=1}}, {{hyph|it|qui|é|to|nocaption=1}}
-* {{rhymes|it|ɛto|eto|s1=2}}
+{{it-pr|quièto,qui.èto,quiéto,qui.éto<ref:{{R:it:DiPI}}>}}
 
 ===Etymology 1===
 {{root|it|ine-pro|*kʷyeh₁-}}
@@ -2366,16 +2337,18 @@ Page 65 Urania: -------- begin text --------
 {{wikipedia|lang=it}}
 
 ===Etymology===
-From {{etyl|grc|it}} {{m|grc|Οὐρανία}}.
+Borrowed from {{bor|it|grc|Οὐρανία}}.
 
 ===Pronunciation===
-* {{it-IPA|Urània}}
-* {{it-IPA|Uranìa}} {{i|outdated}}
+{{it-pr|Urània<ref:{{R:it:DiPI}}>}}
 
 ===Proper noun===
 {{it-proper noun|f}}
 
 # {{lb|it|Greek god}} [[#English|Urania]]
+
+===References===
+<references />
 
 ===Anagrams===
 * {{anagrams|it|a=aainru|anuria|raunai}}
@@ -2386,14 +2359,13 @@ From {{etyl|grc|it}} {{m|grc|Οὐρανία}}.
 Page 66 lantanio: Found match for regex: {
 Page 66 lantanio: -------- begin text --------
 {{elements|it|La|bario|Ba|cerio|Ce}}
-
-===Pronunciation===
-* {{hyphenation|it|lan|tà|nio}}
-* {{it-IPA|lantànio}}
+{{wikipedia|lang=it}}
 {{root|it|ine-pro|*leh₂-}}
 
+===Pronunciation===
+{{it-pr|lantànio}}
+
 ===Noun===
-{{wikipedia|lang=it}}
 {{it-noun|m}}
 
 # {{lb|it|chemistry}} [[lanthanum]]
@@ -2409,30 +2381,31 @@ Page 66 lantanio: -------- begin text --------
 Page 67 empio: Found match for regex: =
 Page 67 empio: -------- begin text --------
 
-===Etymology===
-From {{etyl|la|it}} {{m|la|impius}}.
-
 ===Pronunciation===
-* {{enPR|émpio}}, {{it-IPA|émpio}}
-* {{rhymes|it|empjo|s=2}}
+{{it-pr|émpio}}
 
-===Adjective===
+===Etymology 1===
+Inherited from {{inh|it|la|impius}}.
+
+====Adjective====
 {{it-adj}}
 
 # [[impious]], [[profane]]
 # [[cruel]]
 
-====Synonyms====
+=====Synonyms=====
 * {{l|it|irreligioso}}
 
-====Antonyms====
+=====Antonyms=====
 * {{l|it|pio}}
 
-====Related terms====
+=====Related terms=====
 * {{l|it|empiamente}}
 * {{l|it|empietà}}
 
-===Verb===
+===Etymology 2===
+
+====Verb====
 {{head|it|verb form}}
 
 # {{inflection of|it|empire||1|s|pres|ind}}
@@ -2490,7 +2463,7 @@ Page 70 Colonia: Found match for regex: =
 Page 70 Colonia: -------- begin text --------
 
 ===Pronunciation===
-* Colònia, {{it-IPA|Colònia}}
+{{it-pr|Colònia}}
 
 ===Proper noun===
 {{head|it|proper noun|g=f}}
@@ -2908,13 +2881,16 @@ Page 86 S: -------- begin text --------
 -------- end text --------
 Page 87 Shanghai: Found match for regex: =
 Page 87 Shanghai: -------- begin text --------
+{{wikipedia|lang=it}}
 
 ===Etymology===
 From {{bor|it|cmn|上海|tr=Shànghǎi|lit=Upon-the-Sea}}.
-{{wikipedia|lang=it}}
+
+===Pronunciation===
+{{it-pr|Sciangài}}
 
 ===Proper noun===
-{{head|it|proper noun}} {{it-IPA|Sciangài}}
+{{head|it|proper noun}}
 
 # {{place|it|direct-administered municipality/major port city|in eastern|c/China|t1=Shanghai}}
 
@@ -3079,8 +3055,7 @@ Page 94 monaco: Found match for regex: =
 Page 94 monaco: -------- begin text --------
 
 ===Pronunciation===
-* {{it-IPA|mònaco}}, {{IPAchar|[ˈmɔː.na.ko]}}
-* {{hyphenation|it|mò|na|co}}
+{{it-pr|mònaco}}
 * {{homophone|it|Monaco}}
 
 ===Etymology 1===
@@ -3108,24 +3083,28 @@ From {{inh|it|ML.|-}}, {{inh|it|LL.|monachus}}, from {{der|it|grc|μοναχός
 Page 95 eroina: Found match for regex: =
 Page 95 eroina: -------- begin text --------
 
-===Alternative forms===
+===Pronunciation===
+{{it-pr|eroìna}}
+
+===Etymology 1===
+
+====Alternative forms====
 * {{alter|it|heroina||obsolete}}
 
-===Pronunciation===
-* {{enPR|eroina}}, {{it-IPA|eroìna}}
-
-===Noun===
+====Noun====
 {{it-noun|f|m=eroe}}
 
 # [[heroine]]
 
-===Noun===
+===Etymology 2===
+
+====Noun====
 {{it-noun|f}}
 
 # [[heroin]] {{qualifier|drug}}
 
-====Related terms====
-* {{sense|heroin}} {{l|it|eroinomane}}, {{l|it|eroinomania}}
+=====Related terms=====
+* {{l|it|eroinomane}}, {{l|it|eroinomania}}
 
 ===Anagrams===
 * {{anagrams|it|a=aeinor|aerino|airone|areino|noiare|noierà|oriane|renaio}}
@@ -3134,23 +3113,21 @@ Page 95 eroina: -------- begin text --------
 -------- end text --------
 Page 96 omertà: Found match for regex: =
 Page 96 omertà: -------- begin text --------
+{{wp|lang=it}}
 
 ===Etymology===
 A southern dialectal form of {{doublet|it|umiltà|t1=humility|notext=1}}, from {{der|it|la|humilitātem}}, accusative of {{m|la|humilitās}}, from {{m|la|humilis||humble}}, from {{m|la|humus||ground, soil}}. See {{cog|scn|umirtà}}.
 
 ===Pronunciation===
-{{wp|lang=it}}
-* {{it-IPA|omertà}}
-* {{rhymes|it|a|s=3}}
-* {{hyphenation|it|o|mer|tà}}
+{{it-pr|omertà}}
 
 ===Noun===
 {{it-noun|f|-}}
 
-# {{lb|it|rare|dialectal|Southern Italy}} {{alternative form of|it|umiltà||[[humility]]}}
-# {{lb|it|crime}} An {{l|en|omertà}} or any [[code of silence]].
-#: {{syn|it|{{sense|wall of silence}} {{l|it|reticenza}}}}.
-# {{lb|it|extensively|pejorative}} A form of [[solidarity]] among members of a [[group]], consisting in hiding [[compromising]] truths; a [[wall of silence]].
+# {{lb|it|rare|dialectal|Southern Italy}} {{alternative form of|it|umiltà||humility}}
+# {{lb|it|crime}} an {{l|en|omertà}} or any [[code of silence]]
+#: {{syn|it|reticenza|q1=wall of silence}}
+# {{lb|it|by extension|pejorative}} a form of [[solidarity]] among members of a [[group]], consisting in hiding [[compromising]] truths; a [[wall of silence]]
 
 ====Derived terms====
 * {{l|it|omertoso}}
@@ -3160,13 +3137,10 @@ A southern dialectal form of {{doublet|it|umiltà|t1=humility|notext=1}}, from {
 -------- end text --------
 Page 97 caca: Found match for regex: =
 Page 97 caca: -------- begin text --------
+[[File:Nestor_meridionalis.jpg|thumb|right|250px]]
 
 ===Pronunciation===
-* {{it-IPA}}
-* {{rhymes|it|aka|s=2}}
-* {{hyph|it|cà|ca}}
-
-[[File:Nestor_meridionalis.jpg|thumb|right|250px]]
+{{it-pr|càca}}
 
 ===Etymology 1===
 Borrowed from {{bor|it|en|kaka}}, itself a borrowing from {{der|it|mi|kākā||parrot}}.
@@ -3205,8 +3179,10 @@ Page 98 mis-: -------- begin text --------
 Probably a confluence of {{der|it|la|minus}} and {{der|it|goh|missa-}}.
 
 ===Pronunciation===
-* {{it-IPA|mis-}}
-* {{it-IPA|mi[z]-}} {{q|before vowels and voiced consonants}}
+{{it-pr
+|mis-
+|mi[z]-<post:{{q|before vowels and voiced consonants}}>
+}}
 
 ===Prefix===
 {{head|it|prefix}}
@@ -3229,10 +3205,7 @@ Page 99 citta: Found match for regex: =
 Page 99 citta: -------- begin text --------
 
 ===Pronunciation===
-* {{it-IPA|cìtta}}
-** {{a|Tuscan dialect|after a vowel}} {{it-IPA|scìtta}}
-* {{rhymes|it|itta}}
-* {{hyphenation|it|cìt|ta}}
+{{it-pr|cìtta|scìtta<pre:{{a|Tuscan dialect|after a vowel}}><rhyme:->}}
 
 ===Noun===
 {{it-noun|f|m=citto}}
@@ -3256,7 +3229,7 @@ Page 100 Etiopia: -------- begin text --------
 From {{der|it|la|Aethiopia}}.
 
 ===Pronunciation===
-* Etiòpia, {{it-IPA|Eti.òpia|Etiòpia|ref2={{R:it:DiPI}}}}
+{{it-pr|Eti.òpia,Etiòpia<ref:{{R:it:DiPI}}>}}
 
 ===Proper noun===
 {{it-proper noun|f}}
@@ -3280,8 +3253,7 @@ Page 101 po': -------- begin text --------
 ===Etymology 1===
 
 ====Pronunciation====
-* {{it-IPA|pò'**}}
-* {{rhymes|it|ɔ|s=1}}
+{{it-pr|pò'**}}
 * This word may or may not trigger {{w|syntactic gemination}} of the following consonant; both possibilities are allowable. Hence {{m|it|[[un]] [[po']] [[giù]]||a bit downwards}} can be pronounced either {{IPAchar|/um ˈpɔ ˈdʒu/}} (without gemination) or {{IPAchar|/um ˈpɔ‿dˈdʒu/}} (with it).
 
 ====Noun====
@@ -3292,8 +3264,7 @@ Page 101 po': -------- begin text --------
 ===Etymology 2===
 
 ====Pronunciation====
-* {{it-IPA|pò'°}}
-* {{rhymes|it|ɔ|s=1}}
+{{it-pr|pò'°}}
 * Unlike the above word, this word does not trigger {{w|syntactic gemination}} of the following consonant.
 
 ====Adverb====
@@ -3304,8 +3275,7 @@ Page 101 po': -------- begin text --------
 ===Etymology 3===
 
 ====Pronunciation====
-* {{it-IPA|pò'°}}
-* {{rhymes|it|ɔ|s=1}}
+{{it-pr|pò'°}}
 * Unlike the first word above, this word does not trigger {{w|syntactic gemination}} of the following consonant.
 
 ====Verb====
@@ -3315,16 +3285,13 @@ Page 101 po': -------- begin text --------
 -------- end text --------
 Page 102 forchetta: Found match for regex: =
 Page 102 forchetta: -------- begin text --------
+[[File:RaymondLafourchette.JPG|right|260px]]
 
 ===Etymology===
 {{suffix|it|forca|t1=gardening fork|etta|pos2=diminutive suffix}}. Compare {{cog|fr|fourchette}}.
 
 ===Pronunciation===
-* {{rhymes|it|etta|s=3}}
-[[File:RaymondLafourchette.JPG|right|260px]]
-* {{it-IPA|forchétta}}
-* {{audio|it|It-una forchetta.ogg|Audio}}
-* {{hyphenation|it|for|chét|ta}}
+{{it-pr|forchétta<audio:It-una forchetta.ogg>}}
 
 ===Noun===
 {{it-noun|f}}
@@ -3358,14 +3325,10 @@ Page 103 oceano: Found match for regex: =
 Page 103 oceano: -------- begin text --------
 
 ===Etymology===
-From {{der|it|la|ōceanus}}, from the name of the deity {{m|la|Ōceanus}}, from {{der|it|grc|Ὠκεᾰνός}}.
+Borrowed from {{bor|it|la|ōceanus}}, from the name of the deity {{m|la|Ōceanus}}, from {{der|it|grc|Ὠκεᾰνός}}.
 
 ===Pronunciation===
-* {{it-IPA|ocèano}}
-* {{a|poetic}} {{it-IPA|oceàno}}
-* {{audio|it|LL-Q652 (ita)-Exilexi-oceano.wav|Audio}}
-* {{hyphenation|it|o|cè|a|no}}, {{hyph|it|o|ce|à|no|nocaption=1}}
-* {{rhymes|it|ɛano|s=4}}
+{{it-pr|ocèano<audio:LL-Q652 (ita)-Exilexi-oceano.wav>}}
 
 ===Noun===
 {{it-noun|m}}
@@ -3392,9 +3355,7 @@ Page 104 post-: -------- begin text --------
 From {{der|it|la|post||after}}.
 
 ===Pronunciation===
-* {{it-IPA|pòst}}
-* {{it-IPA|pòs}} {{q|before a consonant}}
-* {{hyph|it|pòst-}}
+{{it-pr|pòst-|pòs<post:{{q|before a consonant}}>}}
 
 ===Prefix===
 {{head|it|prefix}}
@@ -3418,11 +3379,7 @@ Page 105 ruota: Found match for regex: =
 Page 105 ruota: -------- begin text --------
 
 ===Pronunciation===
-* {{it-IPA|ruòta}}
-* {{IPA
-|it
-|/ˈrwɔ.ta/|[ˈr̺wɔːt̪ä]}}
-* {{hyphenation|it|ruo|ta}}
+{{it-pr|ruòta}}
 
 ===Etymology 1===
 From {{inh|it|la|rota}}, from {{der|it|ine-pro|*Hret-||to roll}}.
@@ -3460,9 +3417,7 @@ Page 106 capello: -------- begin text --------
 From {{inh|it|la|capillus}}.
 
 ===Pronunciation===
-* {{a|standard}} {{it-IPA|capéllo}}
-* {{a|Milan}} {{it-IPA|capèllo}}
-* {{hyph|it|ca|pél|lo}}
+{{it-pr|capéllo<pre:{{a|standard}}>|capèllo<pre:{{a|Milan}}><rhyme:-><hyph:->}}
 
 ===Noun===
 {{it-noun|m}}
@@ -3487,8 +3442,7 @@ Page 107 tortellino: -------- begin text --------
 Diminutive of {{m|it|tortello}}, hypocorism of {{m|it|torta|t=cake}}. Surface analysis: {{suffix|it|torta|t1=cake|ello|t2=meliorative suffix|ino|t3=diminutive suffix}}
 
 ===Pronunciation===
-* {{it-IPA|tortéllìno}} or {{IPAchar|/torˌtɛlˈli.no/}}
-* {{hyphenation|it|tor|tel|lì|no}}
+{{it-pr|tortellìno}}
 
 ===Noun===
 {{it-noun|m}}
@@ -3511,6 +3465,7 @@ Diminutive of {{m|it|tortello}}, hypocorism of {{m|it|torta|t=cake}}. Surface an
 Page 108 ossobuco: Found match for regex: {
 Page 108 ossobuco: -------- begin text --------
 {{wikipedia|lang=it}}
+[[File:Ossobuco - os à moelle.JPG|230px|right]]
 
 ===Alternative forms===
 * {{alter|it|osso buco}}
@@ -3519,10 +3474,7 @@ Page 108 ossobuco: -------- begin text --------
 From {{affix|it|osso|t1=bone|buco|t2=hole|pos2=or as an adjective, “hollow”}}, calqued from Milanese {{calque|it|lmo|òss bus|notext=1}}.
 
 ===Pronunciation===
-[[File:Ossobuco - os à moelle.JPG|230px|right]]
-* {{it-IPA|òssobùco}}
-* {{rhymes|it|uko|s=4}}
-* {{hyphenation|it|os|so|bù|co}}
+{{it-pr|òssobùco}}
 
 ===Noun===
 {{it-noun|m|ossibuchi}}
@@ -3538,13 +3490,10 @@ From {{affix|it|osso|t1=bone|buco|t2=hole|pos2=or as an adjective, “hollow”}
 -------- end text --------
 Page 109 sedano: Found match for regex: =
 Page 109 sedano: -------- begin text --------
+[[Image:Celery_1.jpg|thumb|right]]
 
 ===Pronunciation===
-* {{it-IPA|sèdano}}
-* {{rhymes|it|ɛdano|s=3}}
-* {{hyph|it|sè|da|no}}
-
-[[Image:Celery_1.jpg|thumb|right]]
+{{it-pr|sèdano}}
 
 ===Etymology 1===
 From {{der|it|grc|σέλινον}}.
@@ -3581,12 +3530,10 @@ Page 110 cuscino: Found match for regex: =
 Page 110 cuscino: -------- begin text --------
 
 ===Etymology===
-From {{der|it|fro|coissin}}, or {{der|it|pro|coisin}}, from {{der|it|VL.||*coxinum}}, {{m|la||*cossinum}}, from {{der|it|la|coxa|t=hip; thigh}}.
+From {{bor|it|fro|coissin}} or {{bor|it|pro|coisin}}, from {{der|it|VL.||*coxīnum}}, {{m|la||*cossīnum}}, from {{der|it|la|coxa|t=hip; thigh}}.
 
 ===Pronunciation===
-* {{it-IPA|cuscìno}}
-* {{hyph|it|cu|scì|no}}
-* {{audio|it|It-un cuscino.ogg|Audio}} {{q|"un cuscino"}}
+{{it-pr|cuscìno<audio:It-un cuscino.ogg;Audio ("un cuscino")>}}
 
 ===Noun===
 {{it-noun|m}}
@@ -3607,9 +3554,7 @@ Page 111 correo: -------- begin text --------
 Borrowed from {{bor|it|la|correus}}, derived from {{pre|la|nocat=1|con|t1=with|reus|t2=accused, defendant}}.
 
 ===Pronunciation===
-* {{it-IPA|corrèo}}
-* {{it-IPA|còrreo}} {{q|Latinate pronunciation}}
-* {{hyph|it|cor|re|o}}
+{{it-pr|corrèo,#còrreo<ref:{{R:it:DiPI}}>}}
 
 ===Noun===
 {{it-noun|m|f=correa}}
@@ -3621,6 +3566,7 @@ Borrowed from {{bor|it|la|correus}}, derived from {{pre|la|nocat=1|con|t1=with|r
 * {{l|it|reo}}
 
 ===References===
+<references />
 * {{R:it:Trec}}
 
 ----
@@ -3628,14 +3574,14 @@ Borrowed from {{bor|it|la|correus}}, derived from {{pre|la|nocat=1|con|t1=with|r
 -------- end text --------
 Page 112 pernice: Found match for regex: =
 Page 112 pernice: -------- begin text --------
+[[File:Alectoris-chukar-001.jpg|thumb|pernice.]]
 
 ===Etymology===
-From {{etyl|la|it}} {{m|la|perdīx|perdīx, perdīcem|partridge}}, from {{etyl|grc|it}} {{m|grc|πέρδιξ||partridge}}.
+Inherited from {{inh|it|la|perdīx||partridge}} (accusative {{m|la|perdīcem}}), from {{der|it|grc|πέρδιξ||partridge}}.
 
 ===Pronunciation===
-* {{it-IPA|pernìce}}
-* {{rhymes|it|itʃe|s=3}}
-[[File:Alectoris-chukar-001.jpg|thumb|pernice.]]
+{{it-pr|pernìce}}
+
 ===Noun===
 {{it-noun|f}}
 
@@ -3657,10 +3603,7 @@ Page 113 cucina: Found match for regex: =
 Page 113 cucina: -------- begin text --------
 
 ===Pronunciation===
-* {{it-IPA|cucìna}}
-** {{audio-IPA|it|It-la cucina.ogg|[la kuˈtʃiː.na]}}
-* {{audio|it|It-cucina.oga|Audio}}
-* {{hyphenation|it|cu|cì|na}}
+{{it-pr|cucìna<audio:It-la cucina.ogg;Audio ("la cucina")><audio:It-cucina.oga>}}
 
 ===Etymology 1===
 From {{inh|it|VL.|*cocīna}}, from {{inh|it|la|coquīna}}, whence also {{cog|ca|cuina}}, {{cog|fr|cuisine}}, {{cog|gl|cociña}}, {{cog|pt|cozinha}}, {{cog|es|cocina}}, and ultimately {{cog|en|kitchen}}, {{cog|nl|keuken}} and {{cog|de|Küche}}.
@@ -3693,11 +3636,10 @@ Page 114 -ere: Found match for regex: =
 Page 114 -ere: -------- begin text --------
 
 ===Etymology 1===
-From {{inh|it|la|-ēre}} (second conjugation).
+Inherited from {{inh|it|la|-ēre}} (second conjugation).
 
 ====Pronunciation====
-* {{it-IPA|ˈere}}
-* {{hyph|it|é|re}}
+{{it-pr|-ére}}
 
 ====Suffix====
 {{head|it|suffix}}
@@ -3705,10 +3647,10 @@ From {{inh|it|la|-ēre}} (second conjugation).
 # [[stem]], to form the [[infinitive]] of some [[Italian]] {{l|en|[[verb|verbs]]}}
 
 ===Etymology 2===
-From {{inh|it|la|-ere}} (third conjugation).
+Inherited from {{inh|it|la|-ere}} (third conjugation).
 
 ====Pronunciation====
-* {{hyph|it|e|re}}
+{{it-pr|-ėre}}
 
 ====Suffix====
 {{head|it|suffix}}
@@ -3907,8 +3849,7 @@ Page 115 lieto: -------- begin text --------
 From {{inh|it|la|laetus}}. Compare {{cog|es|-}}, {{cog|gl|-}} and {{cog|pt|ledo}}.
 
 ===Pronunciation===
-* {{it-IPA|lièto|liéto|ref2={{R:it:DiPI}}}}<ref>{{R:it:DiPI}}</ref>
-* {{rhymes|it|ɛto|s=2}}
+{{it-pr|lièto,liéto<ref:{{R:it:DiPI}}>}}
 
 ===Adjective===
 {{it-adj|sup=lietissimo}}
@@ -3937,12 +3878,10 @@ Page 116 liceo: Found match for regex: =
 Page 116 liceo: -------- begin text --------
 
 ===Pronunciation===
-* {{a|northern Italy}} {{it-IPA|licéo}}
-* {{a|central Italy|southern Italy}} {{it-IPA|licèo}}
-* {{audio|it|LL-Q652 (ita)-Happypheasant-liceo.wav|Audio}}
-* {{a|northern Italy}} {{rhymes|it|eo|s=3}}
-* {{a|central Italy|southern Italy}} {{rhymes|it|ɛo|s=3}}
-* {{hyphenation|it|li|cè|o}}
+{{it-pr
+|licèo<pre:{{a|standard|central Italy|southern Italy}}><audio:LL-Q652 (ita)-Happypheasant-liceo.wav>
+|licéo<pre:{{a|northern Italy}}><rhyme:-><hyph:->
+}}
 
 ===Noun===
 {{it-noun|m}}
@@ -3967,8 +3906,7 @@ Page 117 sciocco: -------- begin text --------
 Perhaps from {{der|it|la|exsuccus||sapless, lifeless}}, from {{m|la|ex-}} + {{m|la|sucus|succus|t=juice, moisture}} (compare {{m|la|exsūcō}}).
 
 ===Pronunciation===
-* {{it-IPA|sciòcco}},
-* {{rhymes|it|ɔkko|s=2}}
+{{it-pr|sciòcco}}
 
 ===Adjective===
 {{it-adj|sup=sciocchissimo}}
@@ -4024,8 +3962,10 @@ Page 118 siccome: -------- begin text --------
 {{af|it|sì|come}}.
 
 ===Pronunciation===
-* {{i|implying causality}} {{it-IPA|siccóme°}}
-* {{i|implying comparison}} {{it-IPA|siccóme°|#siccóme*|#sìccome*}}
+{{it-pr
+|siccóme°<pre:{{i|implying causality}}>
+|siccóme°|#siccóme*|#sìccome*<pre:{{i|implying comparison}}>
+}}
 
 ===Conjunction===
 {{head|it|conjunction}}
@@ -4056,10 +3996,11 @@ Page 119 stesso: -------- begin text --------
 From {{inh|it|VL.||*st + ipsu}}, a contracted form of {{inh|it|la|-}} {{compound|la|iste|alt1=istum|t1=that, particular|ipsum|t2=himself|nocat=1}}.<ref>{{cite-book|last=Patota|first=Giuseppe|title=Lineamenti di grammatica storica dell'italiano|year=2002|publisher=il Mulino|location=Bologna|lang=it|isbn=88-15-08638-2|pages=137-138|chapter=}}</ref>
 
 ===Pronunciation===
-* {{a|standard}} {{it-IPA|stésso}}
-* {{a|Milan}} {{it-IPA|stèsso}}
-
-* {{rfap|it}}
+{{it-pr
+|stésso<pre:{{a|standard}}>
+|stèsso<pre:{{a|Milan}}><rhyme:-><hyph:->
+}}
+{{rfap|it}}
 
 ===Determiner===
 {{head|it|determiner|g=m-s|feminine singular|stessa|masculine plural|stessi|feminine plural|stesse}} {{qualifier|demonstrative}}
@@ -4106,9 +4047,7 @@ Page 120 direzione: -------- begin text --------
 Borrowed from {{bor|it|la|dīrēctiō|dīrēctiō, dīrēctiōnem}}.
 
 ===Pronunciation===
-* {{it-IPA|diretsióne}}
-* {{audio|it|It-la direzione.ogg|Audio}} - includes definite article "la direzione"
-* {{rhymes|it|one|s=4}}
+{{it-pr|diretsióne<audio:It-la direzione.ogg;Audio ("la direzione")>}}
 
 ===Noun===
 {{it-noun|f}}
@@ -4135,7 +4074,7 @@ Page 121 consueto: -------- begin text --------
 From {{inh|it|la|cōnsuētus||accustomed}};<ref>{{R:it:Trec}}</ref> see this entry for further etymology.
 
 ===Pronunciation===
-* {{it-IPA|consu.èto|consuèto|ref2={{R:it:DiPI}}}}<ref>{{R:it:DiPI}}</ref>
+{{it-pr|consu.èto,consuèto<ref:{{R:it:DiPI}}>}}
 {{rfap|it}}
 
 ===Adjective===
@@ -4170,8 +4109,7 @@ Page 122 consuetudine: -------- begin text --------
 Borrowed from {{bor|it|la|cōnsuētūdō||custom}}. {{doublet|it|costume}}.
 
 ===Pronunciation===
-* {{it-IPA|consu.etùdine|consuetùdine|ref2={{R:it:DiPI}}}}<ref>{{R:it:DiPI}}</ref>
-* {{rhymes|it|udine|s=5}}
+{{it-pr|consu.etùdine,consuetùdine<ref:{{R:it:DiPI}}>}}
 
 ===Noun===
 {{it-noun|f}}
@@ -4189,23 +4127,18 @@ Borrowed from {{bor|it|la|cōnsuētūdō||custom}}. {{doublet|it|costume}}.
 ===References===
 <references/>
 
-{{cln|it|5-syllable words}}
-
 ----
 
 -------- end text --------
 Page 123 Elisabetta: Found match for regex: =
 Page 123 Elisabetta: -------- begin text --------
+{{wikipedia|lang=it}}
 
 ===Etymology===
-From {{etyl|grc|it}} {{m|grc|Ἐλισάβετ}}, a transliteration of {{etyl|hbo|it}} {{m|he|אֱלִישֶׁבַע|tr=Elishéva|lit=my God is an oath}}.
+Borrowed from {{bor|it|grc|Ἐλισάβετ}}, a transliteration of {{der|it|hbo|אֱלִישֶׁבַע|tr=Elishéva|lit=my God is an oath}}.
 
 ===Pronunciation===
-* {{rhymes|it|etta|s=5}}
-{{wikipedia|lang=it}}
-* {{a|traditional}} {{it-IPA|Elisabètta}}
-* {{a|modern}} {{it-IPA|Elisabétta}}
-* {{hyphenation|it|E|li|sa|bèt|ta}}, {{hyphenation|it|nocaption=1|E|li|sa|bét|ta}}
+{{it-pr|Elisabètta,Elisabétta<ref:{{R:it:DiPI}}>}}
 
 ===Proper noun===
 {{it-proper noun|f}}
@@ -4234,11 +4167,10 @@ Page 124 diatriba: Found match for regex: =
 Page 124 diatriba: -------- begin text --------
 
 ===Etymology===
-From {{der|it|la|diatriba}}.
+Borrowed from {{bor|it|la|diatriba}}.
 
 ===Pronunciation===
-* {{it-IPA|di.atrìba|diatrìba}}
-* {{it-IPA|di.àtriba}} {{i|traditional}}
+{{it-pr|di.atrìba,diatrìba<ref:{{R:it:DiPI}}<<name:dipi>>>|#di.àtriba<ref:<<name:dipi>>>}}
 
 ===Noun===
 {{it-noun|f}}
@@ -4274,7 +4206,7 @@ Page 125 realizzazione: -------- begin text --------
 {{suffix|it|realizzare|zione}}
 
 ===Pronunciation===
-* {{it-IPA|realiddzatsióne}},
+{{it-pr|realiddzatsióne}}
 
 ===Noun===
 {{it-noun|f}}
@@ -4286,23 +4218,29 @@ Page 125 realizzazione: -------- begin text --------
 -------- end text --------
 Page 126 tendine: Found match for regex: {
 Page 126 tendine: -------- begin text --------
+
+===Etymology 1===
 {{wikipedia|lang=it}}
 
-===Pronunciation===
-* {{sense|tendon}} {{it-IPA|tèndine}}
-* {{sense|plural of tendina}} {{it-IPA|tendìne}}
+====Pronunciation====
+{{it-pr|tèndine}}
 
-===Noun===
+====Noun====
 {{it-noun|m}}
 
 # {{lb|it|anatomy}} [[tendon]], [[sinew]]
 
-====Derived terms====
+=====Derived terms=====
 * {{l|it|tendine d'Achille}}
 * {{l|it|tendineo}}
 * {{l|it|tendinite}}
 
-===Noun===
+===Etymology 2===
+
+====Pronunciation====
+{{it-pr|tendìne}}
+
+====Noun====
 {{head|it|noun form|g=f}}
 
 # {{plural of|it|tendina}}
@@ -4318,20 +4256,22 @@ Page 126 tendine: -------- begin text --------
 Page 127 magnetochimiche: Found match for regex: =
 Page 127 magnetochimiche: -------- begin text --------
 
-===Pronunciation 1===
-* {{it-IPA|magnetochìmiche}}
-* {{hyph|it|ma|gne|to|chì|mi|che}}
+===Etymology 1===
+
+====Pronunciation====
+{{it-pr|magnetochìmiche}}
 
 ====Adjective====
 {{head|it|adjective form}}
 
 # {{adj form of|it|magnetochimico||f|p}}
 
-===Pronunciation 2===
-* {{it-IPA|magnètochìmiche}}
-* {{hyph|it|ma|gne|to|chì|mi|che}}
+===Etymology 2===
 
-===Noun===
+====Pronunciation====
+{{it-pr|magnètochìmiche}}
+
+====Noun====
 {{head|it|noun form|g=f}}
 
 # {{plural of|it|magnetochimica}}
@@ -4340,8 +4280,7 @@ Page 128 marchese: Found match for regex: =
 Page 128 marchese: -------- begin text --------
 
 ===Pronunciation===
-* {{it-IPA|marchése|ref={{R:it:DiPI}}}}<!-- no traditional form with [s] here -->
-* {{rhymes|it|eze}}
+{{it-pr|marchése<ref:{{R:it:DiPI}}>}}<!-- no traditional form with [s] here -->
 
 ===Noun===
 {{it-noun|m}}
@@ -4365,7 +4304,7 @@ Page 129 disattivare: Found match for regex: =
 Page 129 disattivare: -------- begin text --------
 
 ===Pronunciation===
-* {{it-IPA|disattivàre}}<!-- with [z] -->
+{{it-pr|disattivàre}}<!-- with [z] -->
 
 ===Verb===
 {{it-verb|a/ì}}
@@ -4394,7 +4333,7 @@ Page 130 disinnescare: -------- begin text --------
 {{af|it|dis-|innescare}}
 
 ===Pronunciation===
-* {{it-IPA|disinnescàre}}<!-- with [z] -->
+{{it-pr|disinnescàre}}<!-- with [z] -->
 
 ===Verb===
 {{it-verb|a/é}} {{tlb|it|transitive}}
@@ -4416,8 +4355,7 @@ Page 131 disilludere: Found match for regex: =
 Page 131 disilludere: -------- begin text --------
 
 ===Pronunciation===
-* {{it-IPA|disillùdere}}<!-- with [z] -->
-* {{rhymes|it|udere|s=5}}
+{{it-pr|disillùdere}}<!-- with [z] -->
 
 ===Verb===
 {{it-verb|a\ù,disillùsi,disillùso}} {{tlb|it|transitive}}
@@ -4450,22 +4388,37 @@ Page 132 motivasse: -------- begin text --------
 Page 133 spiano: Found match for regex: =
 Page 133 spiano: -------- begin text --------
 
-===Pronunciation===
-* {{it-IPA|spiàno}} {{q|noun, verb form of spianare}}
-* {{it-IPA|spìano}} {{q|verb form of spiare}}
+===Etymology 1===
 
-===Noun===
+====Pronunciation====
+{{it-pr|spiàno}}
+
+====Noun====
 {{it-noun|m}}
 
 # [[level]] [[ground]], [[clearing]]
 
-====Related terms====
+=====Related terms=====
 * {{l|it|a tutto spiano}}
 
-===Verb===
+===Etymology 2===
+
+====Pronunciation====
+{{it-pr|spìano}}
+
+====Verb====
 {{head|it|verb form}}
 
 # {{inflection of|it|spiare||3|p|pres|indc}}
+
+===Etymology 3===
+
+====Pronunciation====
+{{it-pr|spiàno}}
+
+====Verb====
+{{head|it|verb form}}
+
 # {{inflection of|it|spianare||1|s|pres|indc}}
 
 ===Anagrams===
@@ -4478,7 +4431,7 @@ Page 134 disidratare: -------- begin text --------
 From {{bor|it|fr|déshydrater}}.
 
 ===Pronunciation===
-* {{it-IPA|disidratàre}}<!-- with [z] -->
+{{it-pr|disidratàre}}<!-- with [z] -->
 
 ===Verb===
 {{it-verb|a/à}}
@@ -4500,7 +4453,7 @@ Page 135 disidratarsi: Found match for regex: =
 Page 135 disidratarsi: -------- begin text --------
 
 ===Pronunciation===
-* {{it-IPA|disidratàrsi}}<!-- with [z] -->
+{{it-pr|disidratàrsi}}<!-- with [z] -->
 
 ===Verb===
 {{it-verb|à}}
@@ -4518,7 +4471,7 @@ Page 136 disinfettare: Found match for regex: =
 Page 136 disinfettare: -------- begin text --------
 
 ===Pronunciation===
-* {{it-IPA|disinfettàre}}<!-- with [z] -->
+{{it-pr|disinfettàre}}<!-- with [z] -->
 
 ===Verb===
 {{it-verb|a/è}}
@@ -4543,7 +4496,7 @@ Page 137 disarmare: -------- begin text --------
 {{prefix|it|dis|armare}}
 
 ===Pronunciation===
-* {{it-IPA|disarmàre}}<!-- with [z] -->
+{{it-pr|disarmàre}}<!-- with [z] -->
 
 ===Verb===
 {{it-verb|a/à}}
@@ -4578,9 +4531,7 @@ Page 138 Wikipedia: -------- begin text --------
 Borrowed from {{bor|it|en|Wikipedia}}, blend of {{der|it|haw|wiki}} + {{der|it|en|encyclopedia}}. Surface analysis: {{der|it|haw|wiki|t=speedy}} + {{cog|it|-pedia|t=-pedia}}.
 
 ===Pronunciation===
-* {{q|standard}} {{it-IPA|wikipédia}}
-* {{a|alternative pronunciations}} {{it-IPA|vikipédia|wikipídia|vikipídia}}
-* {{hyphenation|it|wi|ki|pé|dia}}
+{{it-pr|Wikipédia<pre:{{q|standard}}>|Vikipédia,Wikipídia,Vikipídia<pre:{{q|alternative pronunciations}}>}}
 
 ===Proper noun===
 {{it-proper noun|f}}
@@ -4595,16 +4546,16 @@ Page 139 necrosi: Found match for regex: =
 Page 139 necrosi: -------- begin text --------
 
 ===Etymology 1===
+{{wikipedia|lang=it}}
 {{root|it|ine-pro|*neḱ-}}
 From {{der|it|LL.|necrōsis}}, from {{der|it|grc|νέκρωσις}}.<br />
 Surface analysis: {{confix|it|necro|t1=necro-”, “death|osi|t2=-osis|pos2=suffix denoting a medical condition}}
 
 ====Pronunciation====
-* {{it-IPA|necròsi}}; {{IPAchar|/ˈnɛ.kro.zi/|[ˈn̺ɛːkr̺oz̪i]}} {{q|with Ancient Greek stress placement}}
-* {{hyphenation|it|ne|crò|si}}, {{hyph|it|nocaption=1|nè|cro|si}}
+{{it-pr|necròsi<ref:{{R:it:DiPI}}><ref:{{R:it:DOP|id=34625}}>}}
+* The pronunciation with stress on the first syllable is specifically marked as wrong in Canepari's ''Dizionario di Pronuncia Italiana'', and not given at all in the ''Dizionario d'Ortografia e di Pronuncia''.
 
 ====Noun====
-{{wikipedia|lang=it}}
 {{it-noun|f|-}}
 
 # {{lb|it|pathology}} [[necrosis]]
@@ -4630,8 +4581,10 @@ Page 140 risalire: -------- begin text --------
 {{prefix|it|ri|salire|t2=to rise}}. Compare {{cog|pt|resair}}, {{cog|ro|răsări}}, and {{cog|es|resalir}}.
 
 ===Pronunciation===
-* {{it-IPA|ri[s]alìre}} {{i|in the literal sense "to climb again, to go up again"}}
-* {{it-IPA|ri[s]alìre|risalìre}} {{i|in the figurative senses}}
+{{it-pr
+|ri[s]alìre<post:{{i|in the literal sense "to climb again, to go up again"}}>
+|ri[s]alìre,risalìre<post:{{i|in the figurative senses}}>
+}}
 
 ===Verb===
 {{it-verb|e[intransitive]:a[transitive]/sàlgo}}
@@ -4673,10 +4626,7 @@ Page 141 funebre: -------- begin text --------
 From {{der|it|la|fūnebris}}.
 
 ===Pronunciation===
-* {{it-IPA|fùnebre}}
-* {{q|poetic}} {{it-IPA|funèbre}}
-* {{rhymes|it|unebre|ɛbre|s=3}}
-* {{hyph|it|fù|ne|bre}}, {{hyph|it|nocaption=1|fu|nè|bre}}
+{{it-pr|fùnebre<ref:{{R:it:DiPI}}>}}
 
 ===Adjective===
 {{it-adj}}
@@ -4700,6 +4650,7 @@ From {{der|it|la|fūnebris}}.
 }}
 
 ===References===
+<references />
 * {{R:it:Trec}}
 
 ----
@@ -4709,10 +4660,11 @@ Page 142 Timișoara: Found match for regex: {
 Page 142 Timișoara: -------- begin text --------
 {{wikipedia|lang=it}}
 
+===Pronunciation===
+{{it-pr|Timisoàra,Timiscioàra}}
+
 ===Proper noun===
 {{head|it|proper noun|g=f}}
-
-{{it-IPA|Timisoàra|Timiscioàra}}
 
 # {{place|it|city|c/Romania|t=Timișoara}}
 
@@ -4728,10 +4680,11 @@ Page 143 föhn: -------- begin text --------
 ===Etymology===
 From {{bor|it|de|Föhn}}, from {{der|it|VL.|*faōnius}}, from {{der|it|la|Favōnius||[[w:Favonius|Favonius]]}}, a [[Roman]] wind god.
 
+===Pronunciation===
+{{it-pr|fön,fòn}}
+
 ===Noun===
 {{it-noun|m|-}}
-
-{{it-IPA|fön|fòn}}
 
 # [[foehn]]
 # [[hair dryer]]
@@ -4748,8 +4701,10 @@ Page 144 resuscitare: -------- begin text --------
 Borrowed from {{bor|it|la|resuscitō}}.
 
 ===Pronunciation===
-* {{it-IPA|re[s]uscitàre|resuscitàre}} {{i|in most meanings}}<br />
-* {{it-IPA|re[s]uscitàre}} {{i|in the meaning "to arouse again, to restimulate"}}
+{{it-pr
+|re[s]uscitàre,resuscitàre<post:{{i|in most meanings}}>
+|re[s]uscitàre<post:{{i|in the meaning "to arouse again, to restimulate"}}>
+}}
 
 ===Verb===
 {{it-verb|a[transitive]:e[intransitive]/ù}}
@@ -4775,15 +4730,13 @@ Borrowed from {{bor|it|la|resuscitō}}.
 Page 145 ribollita: Found match for regex: {
 Page 145 ribollita: -------- begin text --------
 {{wikipedia|lang=it}}
+[[Image:Minestra_di_pane.jpg|210px|right]]
 
 ===Etymology===
 From {{m|it|ribollire}}.
 
 ===Pronunciation===
-* {{it-IPA|ribollìta}}
-* {{rhymes|it|ita|s=4}}
-* {{hyphenation|it|ri|bol|lì|ta}}
-[[Image:Minestra_di_pane.jpg|210px|right]]
+{{it-pr|ribollìta}}
 
 ===Participle===
 {{head|it|past participle form}}
@@ -4811,8 +4764,10 @@ Page 146 risentire: -------- begin text --------
 {{prefix|it|ri|sentire}}
 
 ===Pronunciation===
-* {{it-IPA|ri[s]entìre}} {{i|in the literal sense "to hear again, to listen again"}}
-* {{it-IPA|risentìre|#ri[s]entìre}} {{i|in the sense "to be affected by"}}
+{{it-pr
+|ri[s]entìre<post:{{i|in the literal sense "to hear again, to listen again"}}>
+|risentìre,#ri[s]entìre<post:{{i|in the sense "to be affected by"}}>
+}}
 
 ===Verb===
 {{it-verb|a/è}}
@@ -4833,9 +4788,10 @@ Page 147 risentito: Found match for regex: =
 Page 147 risentito: -------- begin text --------
 
 ===Pronunciation===
-* {{it-IPA|ri[s]entìto}} {{i|in the literal sense "to hear again, to listen again"}}
-* {{it-IPA|risentìto|#ri[s]entìto}} {{i|in the sense "to be affected by"}}
-* {{rhymes|it|ito}}
+{{it-pr
+|ri[s]entìto<post:{{i|in the literal sense "to hear again, to listen again"}}>
+|risentìto,#ri[s]entìto<post:{{i|in the sense "to be affected by"}}>
+}}
 
 ===Verb===
 {{it-pp}}
@@ -4850,9 +4806,10 @@ Page 148 risentiti: Found match for regex: =
 Page 148 risentiti: -------- begin text --------
 
 ===Pronunciation===
-* {{it-IPA|ri[s]entìti}} {{i|in the literal sense "to hear again, to listen again"}}
-* {{it-IPA|risentìti|#ri[s]entìti}} {{i|in the sense "to be affected by"}}
-* {{rhymes|it|iti}}
+{{it-pr
+|ri[s]entìti<post:{{i|in the literal sense "to hear again, to listen again"}}>
+|risentìti,#ri[s]entìti<post:{{i|in the sense "to be affected by"}}>
+}}
 
 ===Verb===
 {{head|it|verb form|g=m}}
@@ -4868,9 +4825,10 @@ Page 149 risentita: Found match for regex: =
 Page 149 risentita: -------- begin text --------
 
 ===Pronunciation===
-* {{it-IPA|ri[s]entìta}} {{i|in the literal sense "to hear again, to listen again"}}
-* {{it-IPA|risentìta|#ri[s]entìta}} {{i|in the sense "to be affected by"}}
-* {{rhymes|it|ita}}
+{{it-pr
+|ri[s]entìta<post:{{i|in the literal sense "to hear again, to listen again"}}>
+|risentìta,#ri[s]entìta<post:{{i|in the sense "to be affected by"}}>
+}}
 
 ===Participle===
 {{head|it|past participle form}}
@@ -4884,9 +4842,10 @@ Page 150 risento: Found match for regex: =
 Page 150 risento: -------- begin text --------
 
 ===Pronunciation===
-* {{it-IPA|ri[s]ènto}} {{i|in the literal sense "to hear again, to listen again"}}
-* {{it-IPA|risènto|#ri[s]ènto}} {{i|in the sense "to be affected by"}}
-* {{rhymes|it|ɛnto}}
+{{it-pr
+|ri[s]ènto<post:{{i|in the literal sense "to hear again, to listen again"}}>
+|risènto,#ri[s]ènto<post:{{i|in the sense "to be affected by"}}>
+}}
 
 ===Verb===
 {{head|it|verb form}}
@@ -4900,9 +4859,10 @@ Page 151 risenti: Found match for regex: =
 Page 151 risenti: -------- begin text --------
 
 ===Pronunciation===
-* {{it-IPA|ri[s]ènti}} {{i|in the literal sense "to hear again, to listen again"}}
-* {{it-IPA|risènti|#ri[s]ènti}} {{i|in the sense "to be affected by"}}
-* {{rhymes|it|ɛnti}}
+{{it-pr
+|ri[s]ènti<post:{{i|in the literal sense "to hear again, to listen again"}}>
+|risènti,#ri[s]ènti<post:{{i|in the sense "to be affected by"}}>
+}}
 
 ===Verb===
 {{head|it|verb form}}
@@ -4916,9 +4876,10 @@ Page 152 risente: Found match for regex: =
 Page 152 risente: -------- begin text --------
 
 ===Pronunciation===
-* {{it-IPA|ri[s]ènte}} {{i|in the literal sense "to hear again, to listen again"}}
-* {{it-IPA|risènte|#ri[s]ènte}} {{i|in the sense "to be affected by"}}
-* {{rhymes|it|ɛnte|s=3}}
+{{it-pr
+|ri[s]ènte<post:{{i|in the literal sense "to hear again, to listen again"}}>
+|risènte,#ri[s]ènte<post:{{i|in the sense "to be affected by"}}>
+}}
 
 ===Verb===
 {{head|it|verb form}}
@@ -4932,9 +4893,10 @@ Page 153 risentiamo: Found match for regex: =
 Page 153 risentiamo: -------- begin text --------
 
 ===Pronunciation===
-* {{it-IPA|ri[s]entiàmo}} {{i|in the literal sense "to hear again, to listen again"}}
-* {{it-IPA|risentiàmo|#ri[s]entiàmo}} {{i|in the sense "to be affected by"}}
-* {{rhymes|it|amo}}
+{{it-pr
+|ri[s]entiàmo<post:{{i|in the literal sense "to hear again, to listen again"}}>
+|risentiàmo,#ri[s]entiàmo<post:{{i|in the sense "to be affected by"}}>
+}}
 
 ===Verb===
 {{head|it|verb form}}
@@ -4948,9 +4910,10 @@ Page 154 risentite: Found match for regex: =
 Page 154 risentite: -------- begin text --------
 
 ===Pronunciation===
-* {{it-IPA|ri[s]entìte}} {{i|in the literal sense "to hear again, to listen again"}}
-* {{it-IPA|risentìte|#ri[s]entìte}} {{i|in the sense "to be affected by"}}
-* {{rhymes|it|ite}}
+{{it-pr
+|ri[s]entìte<post:{{i|in the literal sense "to hear again, to listen again"}}>
+|risentìte,#ri[s]entìte<post:{{i|in the sense "to be affected by"}}>
+}}
 
 ===Verb===
 {{head|it|verb form}}
@@ -4967,9 +4930,10 @@ Page 155 risentono: Found match for regex: =
 Page 155 risentono: -------- begin text --------
 
 ===Pronunciation===
-* {{it-IPA|ri[s]èntono}} {{i|in the literal sense "to hear again, to listen again"}}
-* {{it-IPA|risèntono|#ri[s]èntono}} {{i|in the sense "to be affected by"}}
-* {{rhymes|it|ɛntono}}
+{{it-pr
+|ri[s]èntono<post:{{i|in the literal sense "to hear again, to listen again"}}>
+|risèntono,#ri[s]èntono<post:{{i|in the sense "to be affected by"}}>
+}}
 
 ===Verb===
 {{head|it|verb form}}
@@ -4983,9 +4947,10 @@ Page 156 risenta: Found match for regex: =
 Page 156 risenta: -------- begin text --------
 
 ===Pronunciation===
-* {{it-IPA|ri[s]ènta}} {{i|in the literal sense "to hear again, to listen again"}}
-* {{it-IPA|risènta|#ri[s]ènta}} {{i|in the sense "to be affected by"}}
-* {{rhymes|it|ɛnta}}
+{{it-pr
+|ri[s]ènta<post:{{i|in the literal sense "to hear again, to listen again"}}>
+|risènta,#ri[s]ènta<post:{{i|in the sense "to be affected by"}}>
+}}
 
 ===Verb===
 {{head|it|verb form}}
@@ -4999,9 +4964,10 @@ Page 157 risentiate: Found match for regex: =
 Page 157 risentiate: -------- begin text --------
 
 ===Pronunciation===
-* {{it-IPA|ri[s]entiàte}} {{i|in the literal sense "to hear again, to listen again"}}
-* {{it-IPA|risentiàte|#ri[s]entiàte}} {{i|in the sense "to be affected by"}}
-* {{rhymes|it|ate}}
+{{it-pr
+|ri[s]entiàte<post:{{i|in the literal sense "to hear again, to listen again"}}>
+|risentiàte,#ri[s]entiàte<post:{{i|in the sense "to be affected by"}}>
+}}
 
 ===Verb===
 {{head|it|verb form}}
@@ -5015,9 +4981,10 @@ Page 158 risentano: Found match for regex: =
 Page 158 risentano: -------- begin text --------
 
 ===Pronunciation===
-* {{it-IPA|ri[s]èntano}} {{i|in the literal sense "to hear again, to listen again"}}
-* {{it-IPA|risèntano|#ri[s]èntano}} {{i|in the sense "to be affected by"}}
-* {{rhymes|it|ɛntano}}
+{{it-pr
+|ri[s]èntano<post:{{i|in the literal sense "to hear again, to listen again"}}>
+|risèntano,#ri[s]èntano<post:{{i|in the sense "to be affected by"}}>
+}}
 
 ===Verb===
 {{head|it|verb form}}
@@ -5031,8 +4998,10 @@ Page 159 risucchiare: Found match for regex: =
 Page 159 risucchiare: -------- begin text --------
 
 ===Pronunciation===
-* {{it-IPA|ri[s]ucchiàre}} {{i|in the literal meaning "to suck again"}}
-* {{it-IPA|ri[s]ucchiàre|risucchiàre}} {{i|in the figurative meaning "to swallow up, to suck in"}}
+{{it-pr
+|ri[s]ucchiàre<post:{{i|in the literal meaning "to suck again"}}>
+|ri[s]ucchiàre,risucchiàre<post:{{i|in the figurative meaning "to swallow up, to suck in"}}>
+}}
 
 ===Verb===
 {{it-verb|a/ù}}
@@ -5053,7 +5022,7 @@ Page 160 rappresaglia: Found match for regex: =
 Page 160 rappresaglia: -------- begin text --------
 
 ===Pronunciation===
-* {{it-IPA|rappre[s]àglia|ref2={{R:it:DiPI}}}}
+{{it-pr|rappre[s]àglia<ref:{{R:it:DiPI}}>}}
 
 ===Noun===
 {{it-noun|f}}
@@ -5068,13 +5037,16 @@ Page 160 rappresaglia: -------- begin text --------
 -------- end text --------
 Page 161 Königsberg: Found match for regex: =
 Page 161 Königsberg: -------- begin text --------
+{{wikipedia|lang=it}}
 
 ===Etymology===
 Borrowed from {{bor|it|de|Königsberg}}, from {{m|de|König||king}} + {{m|de|Berg||mountain}}, named in honour of {{w|Ottokar II of Bohemia|Ottokar II, king of Bohemia}}.
 
 ===Pronunciation===
-{{wikipedia|lang=it}}
-* {{it-IPA|Kö̀ni(g)sbè̱rg}} (''low-register'') {{it-IPA|Còni(g)sberg|Chéni(g)sberg}}
+{{it-pr
+|Kö̀ni(g)sbè̱rg
+|Kòni(g)sberg,Kéni(g)sberg<pre:{{q|low-register}}>
+}}
 
 ===Proper noun===
 {{it-proper noun|f}}
@@ -5084,24 +5056,18 @@ Borrowed from {{bor|it|de|Königsberg}}, from {{m|de|König||king}} + {{m|de|Ber
 ====See also====
 * {{l|it|Kaliningrad}}
 
-{{cln|it|terms spelled with Ö}}
-
 ----
 
 -------- end text --------
 Page 162 motocicletta: Found match for regex: =
 Page 162 motocicletta: -------- begin text --------
+{{wikipedia|lang=it}}
 
 ===Etymology===
 {{prefix|it|moto|bicicletta}}
 
-{{wikipedia|lang=it}}
-
 ===Pronunciation===
-* {{it-IPA|mòtociclétta|ref={{R:it:Olivetti}}}}
-* {{audio|it|It-una motocicletta.ogg|Audio}} {{q|una motocicletta}}
-* {{audio|it|It-motocicletta.oga|Audio}}
-* {{rhymes|it|etta|s=5}}
+{{it-pr|mòtociclétta<ref:{{R:it:Olivetti}}><audio:It-una motocicletta.ogg;Audio ("una motocicletta")><audio:It-motocicletta.oga>}}
 
 ===Noun===
 {{it-noun|f}}
@@ -5116,8 +5082,10 @@ Page 163 ritentano: Found match for regex: =
 Page 163 ritentano: -------- begin text --------
 
 ===Pronunciation===
-* {{it-IPA|ritèntano|riténtano|ref2={{R:it:DiPI|ritento}}}}
-* {{rhymes|it|ɛntano|entano}}
+{{it-pr|ritèntano,riténtano<ref:{{R:it:DiPI|ritento}}>}}
+
+===Verb===
+{{head|it|verb form}}
 
 # {{inflection of|it|ritentare||3|p|pres|indc}}
 
@@ -5131,8 +5099,10 @@ Page 164 ritentino: Found match for regex: =
 Page 164 ritentino: -------- begin text --------
 
 ===Pronunciation===
-* {{it-IPA|ritèntino|riténtino|ref2={{R:it:DiPI|ritento}}}}
-* {{rhymes|it|ɛntino|entino}}
+{{it-pr|ritèntino,riténtino<ref:{{R:it:DiPI|ritento}}>}}
+
+===Verb===
+{{head|it|verb form}}
 
 # {{inflection of|it|ritentare||3|p|pres|subj|;|3|p|impr}}
 
@@ -5150,9 +5120,7 @@ Page 165 riagguantare: -------- begin text --------
 {{affix|it|ri-|agguantare|t1=re-|t2=to catch, grab}}
 
 ===Pronunciation===
-* {{it-IPA|ri.agguantàre}}, {{IPAchar|/rjaɡ.ɡwanˈta.re/|[r̺jäɡɡwän̪ˈt̪äːr̺e̞]}}
-* {{rhymes|it|are}}
-* {{hyph|it|ri|ag|guan|tà|re}}
+{{it-pr|ri.agguantàre}}
 
 ===Verb===
 {{it-verb}}
@@ -5172,8 +5140,10 @@ Page 166 risuscitare: Found match for regex: =
 Page 166 risuscitare: -------- begin text --------
 
 ===Pronunciation===
-* {{it-IPA|ri[s]uscitàre|risuscitàre}} {{i|in most meanings}}<br />
-* {{it-IPA|ri[s]uscitàre}} {{i|in the meaning "to arouse again, to restimulate"}}
+{{it-pr
+|ri[s]uscitàre,risuscitàre<post:{{i|in most meanings}}>
+|ri[s]uscitàre<post:{{i|in the meaning "to arouse again, to restimulate"}}>
+}}
 
 ===Verb===
 {{it-verb|a[transitive]:e[intransitive]/ù}}
@@ -5198,7 +5168,7 @@ Page 167 Lucio: -------- begin text --------
 From {{der|it|la|Lūcius}}.
 
 ===Pronunciation===
-* {{it-IPA|Lùcio}}<!-- generated by [[Template:X2IPA]] -->
+{{it-pr|Lùcio<ref:{{R:it:DiPI}}>}}
 
 ===Proper noun===
 {{it-proper noun|m}}
@@ -5207,6 +5177,9 @@ From {{der|it|la|Lūcius}}.
 
 ====Related terms====
 * {{l|it|Lucia}}
+
+===References===
+<references />
 
 ===Anagrams===
 * {{anagrams|it|a=cilou|-ucoli|ciulo|ciulò|colui}}
@@ -5221,8 +5194,10 @@ Page 168 risaltare: -------- begin text --------
 {{af|it|ri-|saltare}}
 
 ===Pronunciation===
-* {{it-IPA|ri[s]altare}} {{i|in the literal meanings "to jump again, to jump over again"}}
-* {{it-IPA|risaltare|#ri[s]altare}} {{i|in the figurative meanings "to jut out, to stand out"}}
+{{it-pr
+|ri[s]altare<post:{{i|in the literal meanings "to jump again, to jump over again"}}>
+|risaltare,#ri[s]altare<post:{{i|in the figurative meanings "to jut out, to stand out"}}>
+}}
 
 ===Verb===
 {{it-verb|a:e[alternatively in the meaning "to jump again"]/à}}
@@ -5259,7 +5234,7 @@ Page 169 esiguo: -------- begin text --------
 From {{der|it|la|exiguus||strict, exact}}.
 
 ===Pronunciation===
-* {{it-IPA|esìguo|#esìgu.o|ref2={{R:it:DiPI}}}}<ref>{{R:it:DiPI}}</ref>
+{{it-pr|esìguo,#esìgu.o<ref:{{R:it:DiPI}}>}}
 
 ===Adjective===
 {{it-adj}}
@@ -5284,8 +5259,7 @@ Page 170 scandinavo: Found match for regex: =
 Page 170 scandinavo: -------- begin text --------
 
 ===Pronunciation===
-* {{it-IPA|scandìnavo|#!scandinàvo|ref2={{R:it:DiPI}}}}<ref>{{R:it:Trec}}</ref>
-* {{rhymes|it|avo|s=4}}
+{{it-pr|scandìnavo,#!scandinàvo<ref:{{R:it:DiPI}}><ref:{{R:it:Trec}}>}}
 
 ===Adjective===
 {{it-adj}}
@@ -5317,7 +5291,7 @@ Page 171 sgelare: -------- begin text --------
 {{prefix|it|s|gelare|gloss2=to freeze}}
 
 ===Pronunciation===
-* {{it-IPA|sgelàre}},
+{{it-pr|sgelàre}}
 
 ===Verb===
 {{it-verb}}
@@ -5344,10 +5318,7 @@ Page 172 sicomoro: -------- begin text --------
 From {{inh|it|la|sycomorus}}, from {{der|it|grc|σῡκόμορος}}: {{m|grc|σῦκον||fig}} + {{m|grc|μόρον||black mulberry}}.
 
 ===Pronunciation===
-* {{it-IPA|sicomòro}}
-* {{q|rare}} {{it-IPA|sicòmoro}}
-* {{rhymes|it|ɔro|s=4}}
-* {{hyph|it|si|co|mò|ro}}, {{hyph|it|si|cò|mo|ro|nocaption=1}}
+{{it-pr|sicomòro<ref:{{R:it:DiPI}}>}}
 
 ===Noun===
 {{it-noun|m}}
@@ -5358,6 +5329,9 @@ From {{inh|it|la|sycomorus}}, from {{der|it|grc|σῡκόμορος}}: {{m|grc|�
 # [[sycamore]], [[American sycamore]], [[plane#Etymology 4|plane]] ({{m|mul|Platanus occidentalis}})
 #: {{syn|it|platano|sicomoro americano}}
 
+===References===
+<references />
+
 {{C|it|Maples|Mulberry family plants|Proteales order plants|Trees}}
 
 ----
@@ -5367,20 +5341,19 @@ Page 173 linea: Found match for regex: {
 Page 173 linea: -------- begin text --------
 {{wikipedia|lang=it}}
 
-===Etymology===
+===Pronunciation===
+{{it-pr|lìnea<audio:LL-Q652 (ita)-Happypheasant-linea.wav>}}
+
+===Etymology 1===
 From {{der|it|la|līnea||line, thread}}, from {{m|la|līnum||flax}}.
 
-===Pronunciation===
-* {{audio|it|LL-Q652 (ita)-Happypheasant-linea.wav|Audio}}
-lìnea, {{it-IPA|lìnea}}
-
-===Noun===
+====Noun====
 {{it-noun|f}}
 
 # [[line]]
 # [[dash]] (Morse code symbol)
 
-====Related terms====
+=====Related terms=====
 {{top2}}
 * {{l|it|a grandi linee}}
 * {{l|it|allineare}}
@@ -5401,7 +5374,9 @@ lìnea, {{it-IPA|lìnea}}
 * {{l|it|lino}}
 {{bottom}}
 
-===Verb===
+===Etymology 2===
+
+====Verb====
 {{head|it|verb form}}
 
 # {{inflection of|it|lineare||3|s|pres|indc|;|2|s|impr}}
@@ -5415,15 +5390,13 @@ lìnea, {{it-IPA|lìnea}}
 Page 174 millefoglie: Found match for regex: {
 Page 174 millefoglie: -------- begin text --------
 {{wikipedia|lang=it}}
+[[File:Mille-feuille structure.jpg|thumb|180px|un(a) '''millefoglie''']]
 
 ===Etymology===
 From {{compound|it|mille|t1=a thousand|foglie|t2=leaves, layers}}, modeled on {{calque|it|fr|mille-feuille|notext=1}}.
 
 ===Pronunciation===
-[[File:Mille-feuille structure.jpg|thumb|180px|un(a) '''millefoglie''']]
-* {{it-IPA|mìllefòglie}}
-* {{rhymes|it|ɔʎʎe}}
-* {{hyphenation|it|mil|le|fò|glie}}
+{{it-pr|mìllefòglie}}
 
 ===Noun===
 {{it-noun|mf|-}}
@@ -5439,10 +5412,7 @@ Page 175 lubrico: -------- begin text --------
 From {{der|it|la|lūbricus||}}, possibly a borrowing.
 
 ===Pronunciation===
-* {{it-IPA|lùbrico}}
-* {{hyph|it|lù|bri|co}}
-* {{it-IPA|lubrìco}} {{q|non-standard}}
-* {{hyph|it|lu|brì|co}}
+{{it-pr|lùbrico,lubrìco<ref:{{R:it:DiPI}}>}}
 
 ===Adjective===
 {{it-adj}}
@@ -5463,6 +5433,7 @@ From {{der|it|la|lūbricus||}}, possibly a borrowing.
 * {{l|it|lubricità}}
 
 ===References===
+<references />
 * {{R:it:Trec}}
 
 ===Anagrams===
@@ -5474,18 +5445,20 @@ From {{der|it|la|lūbricus||}}, possibly a borrowing.
 Page 176 vasomotori: Found match for regex: =
 Page 176 vasomotori: -------- begin text --------
 
-===Pronunciation 1===
-* {{it-IPA|vàsomotóri}}
-* {{hyph|it|va|so|mo|tó|ri}}
+===Etymology 1===
+
+====Pronunciation====
+{{it-pr|vàsomotóri}}
 
 ====Adjective====
 {{head|it|adjective form}}
 
 # {{adj form of|it|vasomotore||m|p}}
 
-===Pronunciation 2===
-* {{it-IPA|vàsomotòri}}
-* {{hyph|it|va|so|mo|tò|ri}}
+===Etymology 2===
+
+====Pronunciation====
+{{it-pr|vàsomotòri}}
 
 ====Adjective====
 {{head|it|adjective form}}
@@ -5496,8 +5469,7 @@ Page 177 bis-: Found match for regex: =
 Page 177 bis-: -------- begin text --------
 
 ===Pronunciation===
-* {{it-IPA|bis-}}
-* {{it-IPA|bi[z]-}} {{q|before a vowel or a voiced consonant}}
+{{it-pr|bis-|bi[z]-<post:{{q|before a vowel or a voiced consonant}}>}}
 
 ===Etymology 1===
 From {{der|it|la|bis||twice}}.
@@ -5532,10 +5504,7 @@ Page 178 spremiagrumi: -------- begin text --------
 From {{af|it|spremere|t1=squeeze|alt1=spremi|pos1=second person singular imperative|agrume|alt2=agrumi|t2=citrus|lit=citrus-squeezer}}. Compare {{cog|fr|presse-agrume}}.
 
 ===Pronunciation===
-* {{it-IPA|sprèmi.agrùmi|ref={{R:it:Olivetti}}}}
-* {{IPA|fr|/ˌsprɛ.mi.aˈɡru.mi/|[ˌs̪pr̺ɛmiäˈɡr̺uːmi]|[ˌs̪pr̺ɛmjäˈɡr̺uːmi]}}
-* {{rhymes|it|umi}}
-* {{hyphenation|it|spre|mi|a|grù|mi}}
+{{it-pr|sprèmi.agrùmi<ref:{{R:it:Olivetti}}>}}
 
 ===Noun===
 {{it-noun|m|-}}
@@ -5546,12 +5515,12 @@ From {{af|it|spremere|t1=squeeze|alt1=spremi|pos1=second person singular imperat
 <references />
 
 {{C|it|Kitchenware}}
-
 {{cln|it|verb-noun compounds}}
 -------- end text --------
 Page 179 agrippina: Found match for regex: {
 Page 179 agrippina: -------- begin text --------
 {{wikipedia|greppina|lang=it}}
+[[File:Flavia Iulia Helena - Musei Capitolini - antmoose.jpg|thumb|the original sculpture]]
 
 ===Alternative forms===
 * {{alter|it|greppina||rare|popular}}
@@ -5560,10 +5529,7 @@ Page 179 agrippina: -------- begin text --------
 From a statue, kept in the {{w|Capitoline Museums}} in Rome, which portrays {{w|Flavia Iulia Helena}} sitting on this type of chair, once believed to be a representation of {{named-after|it|Agrippina the Elder|wplink==|alt=}}.
 
 ===Pronunciation===
-[[File:Flavia Iulia Helena - Musei Capitolini - antmoose.jpg|thumb|the original sculpture]]
-* {{it-IPA|agrippìna}}
-* {{rhymes|it|ina}}
-* {{hyphenation|it|a|grip|pì|na}}
+{{it-pr|agrippìna}}
 
 ===Noun===
 {{it-noun|f}}
@@ -5580,7 +5546,7 @@ Page 180 archiatra: -------- begin text --------
 From {{der|it|la|archīāter}}.
 
 ===Pronunciation===
-* {{it-IPA|^à}}<!-- no hiatus -->
+{{it-pr|^à}}<!-- no hiatus -->
 
 ===Noun===
 {{it-noun|m}}
@@ -5601,11 +5567,7 @@ Page 181 biodo: -------- begin text --------
 Probably from {{inh|it|VL.|*budula}}, diminutive of {{der|it|LL.|buda}}.
 
 ===Pronunciation===
-* {{it-IPA|biódo}}
-* {{hyph|it|bió|do}}
-* {{it-IPA|biòdo}}
-* {{rhymes|it|ɔdo|s=2}}
-* {{hyph|it|biò|do}}
+{{it-pr|biòdo,#biódo}}
 
 ===Noun===
 {{it-noun|m}}
@@ -5613,16 +5575,13 @@ Probably from {{inh|it|VL.|*budula}}, diminutive of {{der|it|LL.|buda}}.
 # {{vern|simplestem bur-reed}} ({{taxlink|Sparganium erectum|species|noshow=1}})
 #: {{syn|it|coltellaccio maggiore}}
 
-
 {{C|it|Grasses}}
 -------- end text --------
 Page 182 Belzebù: Found match for regex: =
 Page 182 Belzebù: -------- begin text --------
 
 ===Pronunciation===
-* {{it-IPA|Beldzebù|qual=triggers syntactic gemination in the following word}}
-*[bɛld͡zeˈbu]
-* {{rhymes|it|u|s=3}}
+{{it-pr|Beldzebù}}
 
 ===Proper noun===
 {{it-proper noun|m}}
@@ -5632,10 +5591,8 @@ Page 182 Belzebù: -------- begin text --------
 Page 183 zela: Found match for regex: =
 Page 183 zela: -------- begin text --------
 
-===Pronunciation=== 
-* {{it-IPA|dzèla}}
-* {{rhymes|it|ɛla}}
-* {{hyph|it|zè|la}}
+===Pronunciation===
+{{it-pr|dzèla}}
 
 ===Verb===
 {{head|it|verb form}}
@@ -5647,17 +5604,18 @@ Page 183 zela: -------- begin text --------
 -------- end text --------
 Page 184 Esaù: Found match for regex: =
 Page 184 Esaù: -------- begin text --------
+{{wikipedia|lang=it}}
 
 ===Etymology===
-From {{etyl|grc|it}} {{m|grc|Ἡσαῦ}}, from {{etyl|hbo|it}} {{m|he|עֵשָׂו|tr=ʿēśāw}}.
+Borrowed from {{bor|it|grc|Ἡσαῦ}}, from {{der|it|hbo|עֵשָׂו|tr=ʿēśāw}}.
 
 ===Pronunciation===
-* {{a|Northern Italy|Standard}} {{it-IPA|esaù}}
-* {{a|Central and Southern Italy}} {{it-IPA|e[s]aù}}
-* {{rhymes|it|u|s=3}}
+{{it-pr
+|esaù<pre:{{a|Northern Italy|standard}}>
+|e[s]aù<pre:{{a|Central and Southern Italy}}>
+}}
 
 ===Proper noun===
-{{wikipedia|lang=it}}
 {{it-proper noun|m}}
 
 # {{lb|it|biblical character}} [[Esau]] {{gloss|son of Isaac and Rebekah}}
@@ -5666,7 +5624,7 @@ Page 185 inventioni: Found match for regex: =
 Page 185 inventioni: -------- begin text --------
 
 ===Pronunciation===
-* {{a|Old Italian}} {{it-IPA|inventsióni}}
+{{it-pr|inventsióni<pre:{{a|Old Italian}}>}}
 
 ===Noun===
 {{head|it|noun form|g=f}}
@@ -5680,7 +5638,7 @@ Page 186 inventione: Found match for regex: =
 Page 186 inventione: -------- begin text --------
 
 ===Pronunciation===
-* {{a|Old Italian}} {{it-IPA|inventsióne}}
+{{it-pr|inventsióne<pre:{{a|Old Italian}}>}}
 
 ===Noun===
 {{it-noun|f}}
@@ -5697,11 +5655,10 @@ Page 187 Nobel: -------- begin text --------
 * {{alter|it|nobel}}
 
 ===Etymology===
-From {{der|it|sv|Nobel}}, surname of Swedish inventor {{w|Alfred Nobel}}.
+From {{bor|it|sv|Nobel}}, surname of Swedish inventor {{w|Alfred Nobel}}.
 
 ===Pronunciation===
-* {{it-IPA|Nòbel|#Nobèl|ref2={{R:it:DiPI}}}}; {{IPAchar|/ˈnɔ.bel/|[ˈnɔːbel̺]}} {{q|nonstandard}}
-* {{hyphenation|it|No|bèl}}, {{hyphenation|it|Nò|bel|nocaption=1}}
+{{it-pr|Nòbel,#Nobèl<ref:{{R:it:DiPI}}>}}
 
 ===Noun===
 {{it-noun|m|-}}
@@ -5732,6 +5689,7 @@ From {{der|it|sv|Nobel}}, surname of Swedish inventor {{w|Alfred Nobel}}.
 Page 188 gianduiotto: Found match for regex: {
 Page 188 gianduiotto: -------- begin text --------
 {{wikipedia|lang=it}}
+[[File:Gianduiotti.jpg|right|230px]]
 
 ===Alternative forms===
 * {{alter|it|giandujotto||dated}}
@@ -5740,10 +5698,7 @@ Page 188 gianduiotto: -------- begin text --------
 From {{suffix|it|gianduia|otto}}. Compare {{cog|pms|giandojòt}}.
 
 ===Pronunciation===
-[[File:Gianduiotti.jpg|right|230px]]
-* {{it-IPA|gianduiòtto}}
-* {{rhymes|it|ɔtto|s=4}}
-* {{hyphenation|it|gian|du|iòt|to}}
+{{it-pr|gianduiòtto}}
 
 ===Noun===
 {{it-noun|m}}
@@ -5753,19 +5708,16 @@ From {{suffix|it|gianduia|otto}}. Compare {{cog|pms|giandojòt}}.
 -------- end text --------
 Page 189 nocino: Found match for regex: =
 Page 189 nocino: -------- begin text --------
+{{wikipedia|lang=it}}
+[[File:Shabbybooz_nuxalpina.jpg|thumb|right|250px|''una bottiglia di '''nocino''''' – a bottle of '''nocino''']]
 
 ===Pronunciation===
-* {{it-IPA|nocìno}}
-* {{rhymes|it|ino}}
-* {{hyph|it|no|cì|no}}
-
-[[File:Shabbybooz_nuxalpina.jpg|thumb|right|250px|''una bottiglia di '''nocino''''' – a bottle of '''nocino''']]
+{{it-pr|nocìno}}
 
 ===Etymology 1===
 {{suf|it|noce|t1=walnut|ino}}
 
 ====Noun====
-{{wikipedia|lang=it}}
 {{it-noun|m}}
 
 # a childish [[game]] in which [[walnut]]s are thrown against a [[pyramid]] of four other walnuts
@@ -5793,14 +5745,13 @@ Page 189 nocino: -------- begin text --------
 Page 190 Tivoli: Found match for regex: {
 Page 190 Tivoli: -------- begin text --------
 {{wikipedia|lang=it}}
+[[File:Don't Take it for Granite (7616023096).jpg|230px|right]]
 
 ===Etymology===
 From {{inh|it|la|Tībur}}.
 
 ===Pronunciation===
-[[File:Don't Take it for Granite (7616023096).jpg|230px|right]]
-* {{it-IPA|Tìvoli}}
-* {{hyphenation|it|Tì|vo|li}}
+{{it-pr|Tìvoli}}
 
 ===Proper noun===
 {{it-proper noun|f}}
@@ -5816,14 +5767,13 @@ From {{inh|it|la|Tībur}}.
 -------- end text --------
 Page 191 mangiapatate: Found match for regex: =
 Page 191 mangiapatate: -------- begin text --------
+[[File:Van-willem-vincent-gogh-die-kartoffelesser-03850.jpg|thumb|{{w|Vincent Van Gogh}}, ''{{w|The Potato Eaters}}'', 1885, oil on canvas, 82 cm × 114 cm. {{w|Van Gogh Museum}}, Amsterdam.]]
 
 ===Etymology===
 From {{af|it|mangiare|alt1=mangia|pos1=second person singular imperative|patata|alt2=patate|t1=eat|t2=potatoes}}.
 
 ===Pronunciation===
-[[File:Van-willem-vincent-gogh-die-kartoffelesser-03850.jpg|thumb|{{w|Vincent Van Gogh}}, ''{{w|The Potato Eaters}}'', 1885, oil on canvas, 82 cm × 114 cm. {{w|Van Gogh Museum}}, Amsterdam.]]
-* {{it-IPA|màngiapatàte}}
-* {{hyphenation|it|man|gia|pa|tà|te}}
+{{it-pr|màngiapatàte}}
 
 ===Noun===
 {{it-noun|mfbysense|-}}
@@ -5848,8 +5798,7 @@ Page 192 mezzadrile: Found match for regex: =
 Page 192 mezzadrile: -------- begin text --------
 
 ===Pronunciation===
-* {{it-IPA|meddzadrìle}}<!-- no secondary stress per Olivetti -->
-* {{rhymes|it|ile}}
+{{it-pr|meddzadrìle<ref:{{R:it:Olivetti}}>}}<!-- no secondary stress per Olivetti -->
 
 ===Adjective===
 {{it-adj}}
@@ -5859,6 +5808,9 @@ Page 192 mezzadrile: -------- begin text --------
 ====Related terms====
 * {{l|it|mezzadria}}
 * {{l|it|mezzadro}}
+
+===References===
+<references />
 -------- end text --------
 Page 193 pavesare: Found match for regex: =
 Page 193 pavesare: -------- begin text --------
@@ -5867,7 +5819,7 @@ Page 193 pavesare: -------- begin text --------
 From {{m|it|pavese||bunting}}.
 
 ===Pronunciation===
-* {{it-IPA}}<!-- [z] only -->
+{{it-pr}}<!-- [z] only -->
 
 ===Verb===
 {{it-verb|a/é}}
@@ -5886,16 +5838,13 @@ From {{m|it|pavese||bunting}}.
 -------- end text --------
 Page 194 Caravaggio: Found match for regex: =
 Page 194 Caravaggio: -------- begin text --------
+{{wp|Caravaggio (Italia)|Caravaggio (town)|mul=Caravaggio|mullabel=Caravaggio (painter)|lang=it}}
 
 ===Etymology===
 The painter was named after his family's place of origin. {{etystub|it}}
 
 ===Pronunciation===
-{{wp|Caravaggio (Italia)|Caravaggio (town)|mul=Caravaggio|mullabel=Caravaggio (painter)|lang=it}}
-* {{it-IPA|Caravàggio}}
-* {{rhymes|it|addʒo}}
-* {{hyphenation|it|Ca|ra|vag|gio}}
-* {{audio|it|It-Caravaggio.ogg|Audio}}
+{{it-pr|Caravàggio<audio:It-Caravaggio.ogg>}}
 
 ===Proper noun===
 {{it-proper noun|f|g2=m}}
@@ -5918,10 +5867,7 @@ Page 195 citto: -------- begin text --------
 Possibly a reduced form of earlier {{m|it|*piccitto}}, probably from {{inh|it|VL.|pittitus||small, worthless}}. Related to {{m|it|piccolo}} and {{m|it|piccino||little, small}}, and a {{doublet|it|zito|nocap=1}}. Compare {{cog|pms|cit||small; boy, kid}}, {{cog|lij|citto||cent; centimeter}}.
 
 ===Pronunciation===
-* {{it-IPA|cìtto}}
-** {{a|Tuscan dialect|after a vowel}} {{it-IPA|scìtto}}
-* {{rhymes|it|itto|s=2}}
-* {{hyphenation|it|cìt|to}}
+{{it-pr|cìtto|scìtto<pre:{{a|Tuscan dialect|after a vowel}}><rhyme:->}}
 
 ===Noun===
 {{it-noun|m|f=citta}}
@@ -5940,7 +5886,7 @@ Page 196 semiautonoma: Found match for regex: =
 Page 196 semiautonoma: -------- begin text --------
 
 ===Pronunciation===
-* {{it-IPA|semi.autonóma}} {{attention|it|fixed module error, not positive I'm right}}
+{{it-pr|semi.autònoma}}
 
 ===Adjective===
 {{head|it|adjective form}}
@@ -5951,7 +5897,7 @@ Page 197 semiautonomi: Found match for regex: =
 Page 197 semiautonomi: -------- begin text --------
 
 ===Pronunciation===
-* {{it-IPA|semi.autonómi}} {{attention|it|fixed module error, not positive I'm right}}
+{{it-pr|semi.autònomi}}
 
 ===Adjective===
 {{head|it|adjective form}}
@@ -5962,21 +5908,21 @@ Page 198 archiereo: Found match for regex: =
 Page 198 archiereo: -------- begin text --------
 
 ===Pronunciation===
-* {{it-IPA|archierèo}}<!-- no hiatus -->
+{{it-pr|archierèo<ref:{{R:it:Olivetti}}>}}<!-- no hiatus -->
 
 ===Noun===
 {{it-noun|m}}
 
 # [[high priest]] (in Ancient Greece)
 
-===Further reading===
-* {{R:it:Olivetti}}
+===References===
+<references />
 -------- end text --------
 Page 199 necrosare: Found match for regex: =
 Page 199 necrosare: -------- begin text --------
 
 ===Pronunciation===
-* {{it-IPA|necrosàre}}<!-- [z] only -->
+{{it-pr|necrosàre}}<!-- [z] only -->
 
 ===Verb===
 {{it-verb|a/ò}} {{tlb|it|transitive}}
@@ -5994,12 +5940,12 @@ Page 200 Sharm el-Sheikh: -------- begin text --------
 {{wikipedia|lang=it}}
 
 ===Pronounciation===
-* {{it-IPA|sciàrm.elsceìc|!sciàrm.escèː[x]}}
+{{it-pr|sciàrm.elsceìc,!sciàrm.escèː[x]}}
 
 ===Proper noun===
 {{it-proper noun|head=Sharm el-Sheikh}}
 
-# {{place|it|city|c/Egypt}}.
+# {{place|it|city|c/Egypt}}
 -------- end text --------
 Page 201 Gigi: Found match for regex: =
 Page 201 Gigi: -------- begin text --------
@@ -6008,8 +5954,7 @@ Page 201 Gigi: -------- begin text --------
 From Luigi.
 
 ===Pronunciation===
-* {{it-IPA|Gìgi}}
-* {{IPA|en|/ˈdʒidʒi/}}
+{{it-pr|Gìgi}}
 
 ===Proper noun===
 {{it-proper noun|m}}
@@ -6023,11 +5968,7 @@ Page 202 cipero: -------- begin text --------
 From {{der|it|la|cypērus}}, from {{der|it|grc|κύπειρος}}.
 
 ===Pronunciation===
-* {{it-IPA|cìpero}}
-* {{hyph|it|cì|pe|ro}}
-* {{it-IPA|cipèro}} {{q|literary or archaic}}
-* {{rhymes|it|ɛro|s=3}}
-* {{hyph|it|ci|pè|ro}}
+{{it-pr|cìpero}}
 
 ===Noun===
 {{it-noun|m}}
@@ -6049,8 +5990,7 @@ Page 203 -poli: -------- begin text --------
 From {{der|it|grc|πόλις|t=city}}.
 
 ===Pronunciation===
-* {{it-IPA|-pȯli}} {{q|stress falls on the [[antepenultimate]]}}
-* {{hyph|it|-po|li}}
+{{it-pr|-pȯli<post:{{q|stress falls on the [[antepenultimate]]}}>}}
 
 ===Suffix===
 {{head|it|suffix|g=f}}
@@ -6078,9 +6018,7 @@ Page 204 Craxi: -------- begin text --------
 {{orthographic borrowing|it|scn|Craxi}}, {{m|scn|Craxì}}, obsolete spellings using ''x'' for {{IPAfont|/{{l|mul|ʃ}}/}}. {{doublet|it|Crasci|Crascì}}, adapted in pronunciation. The surname's likely meaning was “winemaker”, deriving from {{der|it|el|κρασί||wine}}, from {{der|it|gkm|κρασίον}}, a diminutive of {{der|it|grc|κρᾶσις||mixture, blending}}, whence also {{m|it|crasi}}.
 
 ===Pronunciation===
-* {{it-IPA|Cràxi}}
-* {{q|rare|not used for the politician}} {{it-IPA|Cràsci}}
-* {{hyph|it|Crà|xi}}
+{{it-pr|Cràxi|Cràsci<pre:{{q|rare|not used for the politician}}>}}
 
 ===Proper noun===
 {{it-proper noun|mf}}
@@ -6096,15 +6034,13 @@ Page 204 Craxi: -------- begin text --------
 -------- end text --------
 Page 205 mataco: Found match for regex: =
 Page 205 mataco: -------- begin text --------
+[[File:SouthernThreeBandedArmadillo065b.jpg|thumb|right|250px]]
 
 ===Etymology===
 From {{bor|it|es|mataco}}.
 
 ===Pronunciation===
-* {{it-IPA|matàco}}
-* {{rhymes|it|ako|s=3}}
-* {{hyph|it|ma|tà|co}}
-[[File:SouthernThreeBandedArmadillo065b.jpg|thumb|right|250px]]
+{{it-pr|matàco}}
 
 ===Noun===
 {{it-noun|m|matachi}}
@@ -6139,10 +6075,10 @@ Page 206 schiscetta: -------- begin text --------
 {{affix|lmo|schiscià|t1=to crush|-etta|pos2=diminutive suffix|nocat=1}}, in reference to its flat shape. Equivalent to {{affix|it|schiacciare|-etta}}.
 
 ===Pronunciation===
-* {{a|standard Italian}} {{it-IPA|schiscétta}}
-* {{a|Lombard Italian}} {{it-IPA|schiscètta}}
-* {{rhymes|it|etta}}
-* {{hyphenation|it|schi|scét|ta}}
+{{it-pr
+|schiscétta<pre:{{a|standard Italian}}>
+|schiscètta<post:{{a|Lombard Italian}}><rhyme:-><hyph:->
+}}
 
 ===Noun===
 {{it-noun|f}}
@@ -6162,7 +6098,7 @@ Page 207 risembrare: -------- begin text --------
 {{prefix|it|ri|sembrare}}
 
 ===Pronunciation===
-* {{it-IPA|ri[s]embrare}}<!-- partly a guess; not in DiPI -->
+{{it-pr|ri[s]embràre}}<!-- partly a guess; not in DiPI -->
 
 ===Verb===
 {{it-verb|e/é}} {{tlb|it|intransitive|archaic}}
@@ -6176,10 +6112,8 @@ Page 207 risembrare: -------- begin text --------
 Page 208 smiscela: Found match for regex: =
 Page 208 smiscela: -------- begin text --------
 
-===Pronunciation=== 
-* {{it-IPA|smiscèla}}
-* {{rhymes|it|ɛla|s=3}}
-* {{hyph|it|smi|scè|la}}
+===Pronunciation===
+{{it-pr|smiscèla}}
 
 ===Verb===
 {{head|it|verb form}}
@@ -6189,10 +6123,8 @@ Page 208 smiscela: -------- begin text --------
 Page 209 autocorrela: Found match for regex: =
 Page 209 autocorrela: -------- begin text --------
 
-===Pronunciation=== 
-* {{it-IPA|àutocorrèla}}
-* {{rhymes|it|ɛla|s=5}}
-* {{hyph|it|au|to|cor|rè|la}}
+===Pronunciation===
+{{it-pr|àutocorrèla}}
 
 ===Verb===
 {{head|it|verb form}}
@@ -6203,12 +6135,10 @@ Page 210 diacodio: Found match for regex: =
 Page 210 diacodio: -------- begin text --------
 
 ===Etymology===
-From {{bor|it|ML.|diacodium}}, derived from {{der|it|grc|διά||through}} + {{m|grc|κωδία||poppy head}}.
+Borrowed from {{bor|it|ML.|diacodium}}, derived from {{der|it|grc|διά||through}} + {{m|grc|κωδία||poppy head}}.
 
 ===Pronunciation===
-* {{it-IPA|di.acòdio|diacòdio}} 
-* {{rhymes|it|ɔdjo}}
-* {{hyph|it|di|a|cò|dio||dia|cò|dio}}
+{{it-pr|di.acòdio,diacòdio}} 
 
 ===Noun===
 {{it-noun|m}}
