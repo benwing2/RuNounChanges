@@ -12,13 +12,18 @@ local function tag_rhyme(rhyme, lang)
 	return formatted_rhyme, cat
 end
 
-local function make_rhyme_link(lang, link_rhyme, display_rhyme)
+local function make_rhyme_link(lang, link_rhyme, display_rhyme, qualifiers)
+	local retval
 	if not link_rhyme then
-		return table.concat{"[[Rhymes:", lang:getCanonicalName(), "|", lang:getCanonicalName(), "]]"}
+		retval = table.concat{"[[Rhymes:", lang:getCanonicalName(), "|", lang:getCanonicalName(), "]]"}
 	else
 		local formatted_rhyme, cat = tag_rhyme(display_rhyme or link_rhyme, lang)
-
-		return table.concat{"[[Rhymes:", lang:getCanonicalName(), "/", link_rhyme, "|", formatted_rhyme, "]]", cat}
+		retval = table.concat{"[[Rhymes:", lang:getCanonicalName(), "/", link_rhyme, "|", formatted_rhyme, "]]", cat}
+	end
+	if qualifiers and #qualifiers > 0 then
+		return require("Module:qualifier").format_qualifier(qualifiers) .. " " .. retval
+	else
+		return retval
 	end
 end
 
@@ -36,7 +41,7 @@ function export.show_row(frame)
 	end
 
 	local args = require("Module:parameters").process(args, params)
-	local lang = require("Module:languages").getByCode(args[1]) or require("Module:languages").err(args[1], 1)
+	local lang = require("Module:languages").getByCode(args[1], 1)
 
 	return make_rhyme_link(lang, args[2], "-" .. args[2]) .. (args[3] and (" (''" .. args[3] .. "'')") or "")
 end
@@ -57,29 +62,47 @@ local function add_syllable_categories(categories, lang, rhyme, num_syl)
 	end
 end
 
--- Meant to be called from a module. `data` should contain the following fields:
---   lang: Language object.
---   rhymes: List of rhymes to display. Each rhyme is an object with fields `rhyme` (the IPA rhyme, without initial
---           hyphen) and optionally `num_syl` (if non-nil, a list of the number(s) of syllables of the word with
---           this rhyme).
---   qualifiers: If non-nil, a list of qualifiers to display after the caption and before the rhymes.
---   num_syl: If non-nil, a list of the number(s) of syllables of the word with each rhyme specified in `rhymes`.
---            This applies to all rhymes specified in `rhymes`, while the corresponding `num_syl` attached to an
---            individual rhyme applies only to that rhyme (and overrides the global `num_syl`, if both are given).
---
--- Note that the number of syllables is currently used only for categorization; if present, an extra category will
--- be added such as [[Category:Rhymes:Italian/ino/3 syllables]] in addition to [[Category:Rhymes:Italian/ino]].
+--[=[
+
+Meant to be called from a module. `data` is a table in the following format:
+{
+  lang = LANG_OBJ,
+  rhymes = {{rhyme = RHYME, qualifiers = nil or {QUALIFIER, QUALIFIER, ...}, num_syl = nil or {#SYL, #SYL, ...}}, ...},
+  qualifiers = nil or {QUALIFIER, QUALIFIER, ...},
+  num_syl = nil or {#SYL, #SYL, ...},
+  caption = CAPTION,
+  nocaption = BOOLEAN,
+}
+
+Here:
+
+* `lang` is a language object.
+* `rhymes` is the list of rhymes to display. RHYME is the IPA rhyme, without initial hyphen. QUALIFIER is a qualifier
+  string to display before the specific rhyme in question, formatted using format_qualifier() in [[Module:qualifier]].
+  #SYL is the number of syllables of the word or words containing this rhyme, for categorization purposes (see below).
+* `qualifiers` (at top level), if non-nil, is a list of qualifier strings to display after the caption "Rhymes:" and
+  before the formatted rhymes, formatted using format_qualifier() in [[Module:qualifier]].
+* `num_syl` (at top level), if non-nil, a list of the number(s) of syllables of the word or words with each rhyme
+  specified in `rhymes`. This applies to all rhymes specified in `rhymes`, while the corresponding `num_syl` attached
+  to an individual rhyme applies only to that rhyme (and overrides the global `num_syl`, if both are given).
+* `caption`, if specified, overrides the default caption "Rhymes". A colon and space is automatically added after
+  the caption.
+* `nocaption`, if specified, suppresses the caption entirely.
+
+Note that the number of syllables is currently used only for categorization; if present, an extra category will
+be added such as [[Category:Rhymes:Italian/ino/3 syllables]] in addition to [[Category:Rhymes:Italian/ino]].
+]=]
 function export.format_rhymes(data)
 	local langname = data.lang:getCanonicalName()
 	local links = {}
 	local categories = {}
 	for i, r in ipairs(data.rhymes) do
 		local rhyme = r.rhyme
-		table.insert(links, make_rhyme_link(lang, rhyme, "-" .. rhyme))
+		table.insert(links, make_rhyme_link(lang, rhyme, "-" .. rhyme, r.qualifiers))
 		add_syllable_categories(categories, langname, rhyme, rhyme.num_syl or data.num_syl)
 	end
 
-	local ret = "Rhymes: "
+	local ret = data.nocaption and "" or (data.caption or "Rhymes") .. ": "
 	if data.qualifiers and data.qualifiers[1] then
 		ret = require("Module:qualifier").format_qualifier(data.qualifiers) .. " " .. ret
 	end
@@ -96,6 +119,10 @@ function export.show(frame)
 		[compat and "lang" or 1] = {required = true},
 		["s"] = {},
 		["srhymes"] = {list = "s", allow_holes = true, require_index = true},
+		["qual"] = {},
+		["qualrhymes"] = {list = "qual", allow_holes = true, require_index = true},
+		["caption"] = {},
+		["nocaption"] = {type = "boolean"},
 	}
 
 	if (not args[1 + offset] or args[1 + offset] == "") and mw.title.getCurrentTitle().nsText == "Template" then
@@ -104,7 +131,7 @@ function export.show(frame)
 
 	local args = require("Module:parameters").process(args, params)
 	local lang = args[compat and "lang" or 1]
-	lang = require("Module:languages").getByCode(lang) or require("Module:languages").err(lang, compat and "lang" or 1)
+	lang = require("Module:languages").getByCode(lang, compat and "lang" or 1)
 
 	local function parse_num_syl(val)
 		val = mw.text.split(val, "%s*,%s*")
@@ -122,12 +149,18 @@ function export.show(frame)
 		if args.srhymes[i] then
 			rhymeobj.num_syl = parse_num_syl(args.srhymes[i])
 		end
+		if args.qualrhymes[i] then
+			rhymeobj.qualifiers = {args.qualrhymes[i]}
+		end
 	end
 
 	return export.format_rhymes {
 		lang = lang,
 		rhymes = rhymes,
 		num_syl = parse_num_syl(args.s),
+		qualifiers = args.qual and {args.qual} or nil,
+		caption = args.caption,
+		nocaption = args.nocaption,
 	}
 end
 
@@ -136,7 +169,7 @@ function export.show_nav(frame)
 	-- Gather parameters
 	local args = frame:getParent().args
 	local lang = args[1] or (mw.title.getCurrentTitle().nsText == "Template" and "und") or error("Language code has not been specified. Please pass parameter 1 to the template.")
-	lang = require("Module:languages").getByCode(lang) or require("Module:languages").err(lang, 1)
+	lang = require("Module:languages").getByCode(lang, 1)
 
 	local parts = {}
 	local i = 2
