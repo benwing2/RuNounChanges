@@ -22,7 +22,7 @@ ipa_stress_c = "[" + ipa_stress + "]"
 separator = accent + ipa_stress + r"# \-." + SYLDIV
 separator_c = "[" + separator + "]"
 
-def generate_hyphenation_from_spelling(text):
+def syllabify_from_spelling(text):
   # decompose everything but ñ and ü
   text = unicodedata.normalize("NFD", text)
   text = text.replace("n" + TILDE, u"ñ")
@@ -190,7 +190,7 @@ def process_text_on_page(index, pagetitle, text):
           bare_arg = getparam(ipat, "1")
           arg = bare_arg or "+"
           default_hyphenation = arg == "+" or arg.replace(".", "") == pagetitle
-          hyphenation = generate_hyphenation_from_spelling(pagetitle)
+          hyphenation = syllabify_from_spelling(pagetitle)
           for param in ipat.params:
             pn = pname(param)
             pv = unicode(param.value)
