@@ -1044,6 +1044,9 @@ local function syllabify_from_spelling(text)
 	-- and none divide as t.l. No examples of -dl- but it should be the same per
 	-- http://www.italianlanguageguide.com/pronunciation/syllabication.asp.
 	text = rsub(text, "([pbfvkcgqtd])%.([lr])", ".%1%2")
+	-- Several existing hyphenations divide .pn and .ps and Olivetti agrees. However, Olivetti has tec.no.lo.gì.a,
+	-- showing that cn divides as c.n.
+	text = rsub(text, "p%.([ns])", ".p%1")
 	-- Italian appears to divide VsCV as V.sCV e.g. pé.sca for [[pesca]]. Exceptions are ss, sr, sz and possibly others.
 	text = rsub(text, "s%.(" .. C_NOT_SRZ .. V .. ")", ".s%1")
 	-- Also V.sCrV, C.sCrV and similarly V.sClV, V.sClV e.g. in.stru.mén.to for [[instrumento]], fi.nè.stra for
