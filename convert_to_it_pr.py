@@ -74,7 +74,7 @@ ipa_stress_c = "[" + ipa_stress + "]"
 separator = accent + ipa_stress + r"# \-." + SYLDIV
 separator_c = "[" + separator + "]"
 vowel = u"aeiouyöüAEIOUYÖÜ"
-vowel_not_u = u"aeouyöüAEOUYÖÜ"
+vowel_not_i = u"aeouyöüAEOUYÖÜ"
 V = "[" + vowel + "]" # vowel class
 V_NOT_I = "[" + vowel_not_i + "]" # vowel class not including i
 NV = "[^" + vowel + "]" # non-vowel class
@@ -676,7 +676,7 @@ def process_text_on_page(index, pagetitle, text):
                 must_break = True
                 break
               if pn == "s":
-                num_syl = "<%s>" % pv
+                num_syl = "<s:%s>" % pv
               elif pn.startswith("s"):
                 rhyme_no = int(pn[1:]) - 1
                 rhyme_specific_num_syl.append((rhyme_no, pv))
@@ -691,7 +691,7 @@ def process_text_on_page(index, pagetitle, text):
                   rhyme_no + 1, this_num_syl, rhyme_line))
                 must_break = True
                 break
-              rhymes[rhyme_no][1] = "<%s>" % this_num_syl
+              rhymes[rhyme_no][1] = "<s:%s>" % this_num_syl
             if must_break:
               break
             for rhyme, this_num_syl in rhymes:
