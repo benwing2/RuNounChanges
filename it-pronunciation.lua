@@ -51,18 +51,18 @@ local VW = "[" .. vowel .. "jw]"
 local NV = "[^" .. vowel .. "]"
 local charsep_not_tie = accent .. "." .. SYLDIV
 local charsep_not_tie_c = "[" .. charsep_not_tie .. "]"
-local charsep = charsep_not_tie .. "‿⁀"
+local charsep = charsep_not_tie .. "‿⁀'"
 local charsep_c = "[" .. charsep .. "]"
 local wordsep_not_tie = charsep_not_tie .. " #"
 local wordsep = charsep .. " #"
 local wordsep_c = "[" .. wordsep .. "]"
 local cons_guts = "^" .. vowel .. wordsep .. "_" -- guts of consonant class
 local C = "[" .. cons_guts .. "]" -- consonant
-local C_NOT_SRZ = "[" .. cons_guts .. "srz]" -- consonant not including srz
-local C_NOT_SIBILANT_OR_R = "[" .. cons_guts .. "rszʃʒʦʣʧʤ" .. TEMP_S .. TEMP_Z .. "]" -- consonant not including r or sibilant
-local C_NOT_H = "[" .. cons_guts .. "h]" -- consonant not including h
+local C_NOT_SRZ = "[" .. cons_guts .. "srzSRZ]" -- consonant not including srz
+local C_NOT_SIBILANT_OR_R = "[" .. cons_guts .. "rszʃʒʦʣʧʤRSZ" .. TEMP_S .. TEMP_Z .. "]" -- consonant not including r or sibilant
+local C_NOT_H = "[" .. cons_guts .. "hH]" -- consonant not including h
 local C_OR_EOW_NOT_GLIDE_LIQUID = "[^" .. vowel .. charsep .. " _" .. glide .. liquid .. "]" -- consonant not lrjw, or end of word
-local C_OR_TIE = "[^" .. vowel .. wordsep_not_tie .. "_]" -- consonant or tie (‿)
+local C_OR_TIE = "[^" .. vowel .. wordsep_not_tie .. "_]" -- consonant or tie (‿⁀')
 local front = "eɛij"
 local front_c = "[" .. front .. "]"
 local FRONTED = u(0x031F)
@@ -346,6 +346,7 @@ local function canonicalize_and_auto_accent(text, pagename)
 				error(msg .. ": " .. words[i])
 			end
 			local is_prefix = word:find("%-$")
+			local is_suffix = word:find("^%-")
 
 			if not is_prefix then
 				if not rfind(word, quality_c) then
@@ -368,7 +369,7 @@ local function canonicalize_and_auto_accent(text, pagename)
 					vowel_count = ulen(rsub(word, NV, ""))
 					if vowel_count > 2 then
 						err("With more than two vowels and an unrecogized suffix, stress must be explicitly given")
-					else
+					elseif not is_suffix or vowel_count == 2 then -- don't try to stress suffixes with only one vowel
 						local before, vow, after = rmatch(word, "^(.-)(" .. V .. ")(.*)$")
 						if before then
 							before, vow, after = m.groups()
@@ -1008,26 +1009,25 @@ local function syllabify_from_spelling(text)
 	end
 	text = table.concat(words)
 
+	-- NOTE: In all of the following, we have to be careful to allow for apostrophes between letters and for capital
+	-- letters in the middle of words, as in [[anch'io]], [[all'osso]], [[altr'ieri]], [[cardellino dell'Himalaya]],
+	-- [[UEFA]], etc.
 	local TEMP_I = u(0xFFF1)
-	local TEMP_U = u(0xFFF2)
-	local TEMP_Y = u(0xFFF3)
-	local TEMP_G = u(0xFFF4)
-	local TEMP_QU = u(0xFFF5)
-	local TEMP_QU_CAPS = u(0xFFF6)
-	local TEMP_GU = u(0xFFF7)
-	local TEMP_GU_CAPS = u(0xFFF8)
+	local TEMP_I_CAPS = u(0xFFF2)
+	local TEMP_U = u(0xFFF3)
+	local TEMP_U_CAPS = u(0xFFF4)
+	local TEMP_Y = u(0xFFF5)
+	local TEMP_Y_CAPS = u(0xFFF6)
+	local TEMP_G = u(0xFFF7)
+	local TEMP_G_CAPS = u(0xFFF8)
 	-- Change user-specified . into SYLDIV so we don't shuffle it around when dividing into syllables.
 	text = text:gsub("%.", SYLDIV)
 	-- We propagate underscore this far specifically so we can distinguish g_n ([[wagneriano]]) from gn.
-	-- g_n should end up as g.n but gn sould end up as .gn.
-	text = text:gsub("g_n", TEMP_G .. "n")
+	-- g_n should end up as g.n but gn should end up as .gn.
+	local g_to_temp_g = {["g"] = TEMP_G, ["G"] = TEMP_G_CAPS}
+	text = rsub(text, "([gG])('?)_('?[nN])", function (g, sep, n) return g_to_temp_g[g] .. sep .. n end)
 	-- Now remove underscores before any further processing.
 	text = text:gsub("_", "")
-	-- qu mostly handled correctly automatically, but not in quieto etc. See below.
-	text = rsub(text, "qu(" .. V .. ")", TEMP_QU .. "%1")
-	text = rsub(text, "Qu(" .. V .. ")", TEMP_QU_CAPS .. "%1")
-	text = rsub(text, "gu(" .. V .. ")", TEMP_GU .. "%1")
-	text = rsub(text, "Gu(" .. V .. ")", TEMP_GU_CAPS .. "%1")
 	-- i, u, y between vowels -> consonant-like substitutions:
 	-- With i: [[paranoia]], [[febbraio]], [[abbaiare]], [[aiutare]], etc.
 	-- With u: [[portauovo]], [[schopenhaueriano]], [[Malaui]], [[oltreuomo]], [[palauano]], [[tauone]], etc.
@@ -1043,58 +1043,63 @@ local function syllabify_from_spelling(text)
 	-- correctly automatically.
 	--
 	-- We handle these cases as follows:
-	-- 1. TEMP_QU, TEMP_GU etc. replace sequences of qu and gu with consonant-type codes. This allows us to distinguish
+	-- 1. q+TEMP_U etc. replace sequences of qu and gu with consonant-type codes. This allows us to distinguish
 	--    -quiV-/-guiV- from other -CuiV-.
 	-- 2. We convert i in -ViV- sequences to consonant-type TEMP_I, but similarly for u in -VuV- sequences only if the
 	--    first V isn't i, so -CiuV- remains with two vowels. The syllabification algorithm below will not divide iu
 	--    or uV unless in each case the first vowel is stressed, so -CiuV- remains in a single syllable.
-	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*h?)i(" .. V .. ")",
-			function(v1, v2) return v1 .. TEMP_I .. v2 end)
-	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*h?)y(" .. V .. ")",
-			function(v1, v2) return v1 .. TEMP_Y .. v2 end)
-	text = rsub_repeatedly(text, "(" .. V_NOT_I .. accent_c .. "*h?)u(" .. V .. ")",
-			function(v1, v2) return v1 .. TEMP_U .. v2 end)
+	-- 3. As soon as we convert i to TEMP_I, we undo the u -> TEMP_U change for -quiV-/-guiV-, before u -> TEMP_U in
+	--    -VuV- sequences.
+	local u_to_temp_u = {["u"] = TEMP_U, ["U"] = TEMP_U_CAPS}
+	text = rsub(text, "([qQgG])([uU])('?" .. V .. ")", function(qg, u, v) return qg .. u_to_temp_u[u] .. v end)
+	local i_to_temp_i = {["i"] = TEMP_I, ["I"] = TEMP_I_CAPS, ["y"] = TEMP_Y, ["Y"] = TEMP_Y_CAPS}
+	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*[hH]?)([iIyY])(" .. V .. ")",
+			function(v1, iy, v2) return v1 .. i_to_temp_i[iy] .. v2 end)
+	text = text:gsub(TEMP_U, "u")
+	text = text:gsub(TEMP_U_CAPS, "U")
+	text = rsub_repeatedly(text, "(" .. V_NOT_I .. accent_c .. "*[hH]?)([uU])(" .. V .. ")",
+			function(v1, u, v2) return v1 .. u_to_temp_u[u] .. v2 end)
 	-- Divide VCV as V.CV; but don't divide if C == h, e.g. [[ahimè]] should be ahi.mè.
-	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*)(" .. C_NOT_H .. V .. ")", "%1.%2")
-	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*" .. C .. "+)(" .. C .. V .. ")", "%1.%2")
+	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*'?)(" .. C_NOT_H .. "'?" .. V .. ")", "%1.%2")
+	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*'?" .. C .. C_OR_TIE .. "*)(" .. C .. "'?" .. V .. ")", "%1.%2")
 	-- Examples in Olivetti like [[hathayoga]], [[telethon]], [[cellophane]], [[skyphos]], [[piranha]], [[bilharziosi]]
 	-- divide as .Ch. Exceptions are [[wahhabismo]], [[amharico]], [[kinderheim]], [[schopenhaueriano]] but the latter
 	-- three seem questionable as the pronunciation puts the first consonant in the following syllable and makes the h
 	-- silent.
-	text = rsub(text, "(" .. C_NOT_H .. ")%.h", ".%1h")
+	text = rsub(text, "(" .. C_NOT_H .. "'?)%.([hH])", ".%1%2")
 	-- gn represents a single sound so it should not be divided.
-	text = rsub(text, "g.n", ".gn")
+	text = rsub(text, "([gG])%.([nN])", ".%1%2")
 	-- Existing hyphenations of [[atlante]], [[Betlemme]], [[genetliaco]], [[betlemita]] all divide as .tl,
 	-- and none divide as t.l. No examples of -dl- but it should be the same per
 	-- http://www.italianlanguageguide.com/pronunciation/syllabication.asp.
-	text = rsub(text, "([pbfvkcgqtd])%.([lr])", ".%1%2")
+	text = rsub(text, "([pbfvkcgqtdPBFVKCGQTD]'?)%.([lrLR])", ".%1%2")
 	-- Italian appears to divide sCV as .sCV e.g. pé.sca for [[pesca]], and similarly for sCh, sCl, sCr. Exceptions are
 	-- ss, sr, sz and possibly others.
-	text = rsub(text, "s%.(" .. C_NOT_SRZ .. ")", ".s%1")
+	text = rsub(text, "([sS]'?)%.(" .. C_NOT_SRZ .. ")", ".%1%2")
 	-- Several existing hyphenations divide .pn and .ps and Olivetti agrees. We do this after moving across s so that
 	-- dispnea is divided dis.pnea. Olivetti has tec.no.lo.gì.a for [[tecnologia]], showing that cn divides as c.n, and
 	-- clàc.son, fuc.sì.na, ric.siò for [[clacson]], [[fucsina]], [[ricsiò]], showing that cs divides as c.s.
-	text = rsub(text, "p%.([ns])", ".p%1")
+	text = rsub(text, "([pP]'?)%.([nsNS])", ".%1%2")
 	-- Any aeoö, or stressed iuüy, should be syllabically divided from a following aeoö or stressed iuüy.
 	-- A stressed vowel might be followed by another accent such as LINEUNDER (which we put after the acute/grave in
 	-- decompose()).
-	text = rsub_repeatedly(text, "([aeoöAEOÖ]" .. accent_c .. "*)(h?[aeoö])", "%1.%2")
-	text = rsub_repeatedly(text, "([aeoöAEOÖ]" .. accent_c .. "*)(h?" .. V .. quality_c .. ")", "%1.%2")
-	text = rsub(text, "([iuüyIUÜY]" .. quality_c .. accent_c .. "*)(h?[aeoö])", "%1.%2")
-	text = rsub_repeatedly(text, "([iuüyIUÜY]" .. quality_c .. accent_c .. "*)(h?" .. V .. quality_c .. ")", "%1.%2")
+	text = rsub_repeatedly(text, "([aeoöAEOÖ]" .. accent_c .. "*'?)([hH]?'?[aeoöAEOÖ])", "%1.%2")
+	text = rsub_repeatedly(text, "([aeoöAEOÖ]" .. accent_c .. "*'?)([hH]?'?" .. V .. quality_c .. ")", "%1.%2")
+	text = rsub(text, "([iuüyIUÜY]" .. quality_c .. accent_c .. "*'?)([hH]?'?[aeoöAEOÖ])", "%1.%2")
+	text = rsub_repeatedly(text, "([iuüyIUÜY]" .. quality_c .. accent_c .. "*'?)([hH]?'?" .. V .. quality_c .. ")", "%1.%2")
 	-- We divide ii as i.i ([[sii]]), but not iy or yi, which should hopefully cause [[kefiyyah]] to be handled
 	-- correctly as ke.fiy.yah. Only example with Cyi is [[dandyismo]], which may be exceptional.
-	text = rsub_repeatedly(text, "([iI]" .. accent_c .. "*)(h?i)", "%1.%2")
-	text = rsub_repeatedly(text, "([uüUÜ]" .. accent_c .. "*)(h?[uü])", "%1.%2")
+	text = rsub_repeatedly(text, "([iI]" .. accent_c .. "*'?)([hH]?'?[iI])", "%1.%2")
+	text = rsub_repeatedly(text, "([uüUÜ]" .. accent_c .. "*'?)([hH]?'?[uüUÜ])", "%1.%2")
 	text = text:gsub(SYLDIV, ".")
 	text = text:gsub(TEMP_I, "i")
+	text = text:gsub(TEMP_I_CAPS, "I")
 	text = text:gsub(TEMP_U, "u")
+	text = text:gsub(TEMP_U_CAPS, "U")
 	text = text:gsub(TEMP_Y, "y")
+	text = text:gsub(TEMP_Y_CAPS, "Y")
 	text = text:gsub(TEMP_G, "g")
-	text = text:gsub(TEMP_QU, "qu")
-	text = text:gsub(TEMP_QU_CAPS, "Qu")
-	text = text:gsub(TEMP_GU, "gu")
-	text = text:gsub(TEMP_GU_CAPS, "Gu")
+	text = text:gsub(TEMP_G_CAPS, "G")
 	return text
 end
 
