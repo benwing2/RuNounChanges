@@ -39,8 +39,14 @@ local liquid = "lr"
 local W = "[" .. glide .. "]"
 -- We include both phonemic and spelling forms of vowels and both lowercase and uppercase
 -- for flexibility in applying at various stages of the transformation from spelling -> phonemes.
-local vowel = "aeɛioɔuyøöüAEƐIOƆUYØÖÜ"
+local vowel_not_high = "aeɛoɔøöüAEƐOƆØÖÜ"
+local vowel_not_i = vowel_not_high .. "uU"
+local vowel_not_u = vowel_not_high .. "iyIY"
+local vowel = vowel_not_high .. "iuyIUY"
 local V = "[" .. vowel .. "]"
+local V_NOT_HIGH = "[" .. vowel_not_high .. "]"
+local V_NOT_I = "[" .. vowel_not_i .. "]"
+local V_NOT_U = "[" .. vowel_not_u .. "]"
 local VW = "[" .. vowel .. "jw]"
 local NV = "[^" .. vowel .. "]"
 local charsep_not_tie = accent .. "." .. SYLDIV
@@ -50,7 +56,11 @@ local charsep_c = "[" .. charsep .. "]"
 local wordsep_not_tie = charsep_not_tie .. " #"
 local wordsep = charsep .. " #"
 local wordsep_c = "[" .. wordsep .. "]"
-local C = "[^" .. vowel .. wordsep .. "_]" -- consonant
+local cons_guts = "^" .. vowel .. wordsep .. "_" -- guts of consonant class
+local C = "[" .. cons_guts .. "]" -- consonant
+local C_NOT_SRZ = "[" .. cons_guts .. "srz]" -- consonant not including srz
+local C_NOT_SIBILANT_OR_R = "[" .. cons_guts .. "rszʃʒʦʣʧʤ" .. TEMP_S .. TEMP_Z .. "]" -- consonant not including r or sibilant
+local C_NOT_H = "[" .. cons_guts .. "h]" -- consonant not including h
 local C_OR_EOW_NOT_GLIDE_LIQUID = "[^" .. vowel .. charsep .. " _" .. glide .. liquid .. "]" -- consonant not lrjw, or end of word
 local C_OR_TIE = "[^" .. vowel .. wordsep_not_tie .. "_]" -- consonant or tie (‿)
 local front = "eɛij"
@@ -387,9 +397,6 @@ function export.to_phonemic(text, pagename)
 	text = ulower(text)
 	text = rsub(text, CFLEX, "") -- eliminate circumflex over î, etc.
 	text = rsub(text, "y", "i")
-	-- French/German vowels
-	text = rsub(text, "ü", "y")
-	text = rsub(text, "ö", "ø")
 	text = rsub_repeatedly(text, "([^ ])'([^ ])", "%1‿%2") -- apostrophe between letters is a tie
 	text = rsub(text, "(" .. C .. ")'$", "%1‿") -- final apostrophe after a consonant is a tie, e.g. [[anch']]
 	text = rsub(text, "(" .. C .. ")' ", "%1‿ ") -- final apostrophe in non-utterance-final word is a tie
@@ -441,7 +448,7 @@ function export.to_phonemic(text, pagename)
 
 	-- Random substitutions.
 	text = rsub(text, "%[x%]", TEMP_X) -- [x] means /x/
-	text = rsub(text, "^ex(" .. V .. ")", "eg[z]%1")
+	text = rsub(text, "#ex(" .. V .. ")", "eg[z]%1")
 	text = text:gsub("x", "ks"):gsub("ck", "k"):gsub("sh", "ʃ")
 	text = rsub(text, "%[z%]", TEMP_Z) -- [z] means /z/
 	text = rsub(text, "%[s%]", TEMP_S) -- [z] means /s/
@@ -516,22 +523,20 @@ function export.to_phonemic(text, pagename)
 	-- /ʤanˈpaolo/ for [[Gian Paolo]] as wrong. To prevent this, use _ or h between n and following labial.
 	text = rsub(text, "n(" .. wordsep_c .. "*[mpb])", "m%1")
 
-	-- Unaccented u or i following vowel (with or without accent) is a semivowel. (But 'iu' should be
-	-- interpreted as /ju/ not /iw/.) By preceding the conversion of glides before vowels, this works
-	-- correctly in the common sequence 'aiuo' e.g. [[guerraiuola]], [[acquaiuolo]]. Note that
-	-- ci, gi + vowel, gli, qu must be dealt with beforehand.
-	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*)([iu])([^" .. accent .. "])", function(v, gl, acc)
-		if v == "i" and gl == "u" then
-			return v .. gl .. acc
-		else
-			return v .. (gl == "i" and "j" or "w") .. acc
-		end
+	-- Unaccented u or i following a non-high vowel (with or without accent) is a semivowel. Exclude high vowels because
+	-- 'iu' should be interpreted as /ju/ not /iw/, and 'ii' (as in [[sii]]) and ''uu'' (as in [[duumvirato]]), should
+	-- remain as vowels. We handle ui specially. By preceding the conversion of glides before vowels, this works
+	-- correctly in the common sequence 'aiuo' e.g. [[guerraiuola]], [[acquaiuolo]]. Note that ci, gi + vowel, gli, qu
+	-- must be dealt with beforehand.
+	text = rsub_repeatedly(text, "(" .. V_NOT_HIGH .. accent_c .. "*)([iu])([^" .. accent .. "])", function(v, gl, acc)
+		return v .. (gl == "i" and "j" or "w") .. acc
 	end)
+	text = rsub_repeatedly(text, "(u" .. accent_c .. "*)i([^" .. accent .. "])", "%1j%2")
 
-	-- Unaccented u or i before another vowel is a glide. Do it repeatedly to handle oriuolo /orjwɔlo/.
-	text = rsub_repeatedly(text, "([iu])(" .. V .. ")", function(gl, v)
-		return (gl == "i" and "j" or "w") .. v
-	end)
+	-- Unaccented i or u before another vowel is a glide. Do it repeatedly to handle oriuolo /orjwɔlo/.
+	-- Separate into i and u cases to avoid converting ii or uu except in the sequences iiV or uuV.
+	text = rsub(text, "i(" .. V_NOT_I .. ")", "j%1")
+	text = rsub(text, "u(" .. V_NOT_U .. ")", "w%1")
 
 	-- sc before e, i is /ʃ/, doubled after a vowel.
 	text = text:gsub("sʧ", "ʃ")
@@ -544,18 +549,10 @@ function export.to_phonemic(text, pagename)
 		error("z must be respelled (d)dz or (t)ts: " .. canon_respelling)
 	end
 
-	-- Single ⟨s⟩ between vowels is /z/.
-	text = rsub_repeatedly(text, "(" .. VW .. stress_c .. "?" .. charsep_c .. "*)s(" .. charsep_c .. "*" .. VW .. ")", "%1z%2")
-
-	-- ⟨s⟩ immediately before a voiced consonant is always /z/
-	text = rsub(text, "s(" .. charsep_c .. "*" .. voiced_C_c .. ")", "z%1")
-
-	text = rsub(text, TEMP_Z, "z")
-	text = rsub(text, TEMP_S, "s")
 	text = rsub(text, TEMP_X, "x")
 
 	-- Double consonant followed by end of word (e.g. [[stress]], [[staff]], [[jazz]]), or followed by a consonant
-	-- other than a glide or liquid (e.g. [[pullman]]), should be reduced to single. Should not affect double
+	-- other than a glide or liquid (e.g. [[pullman]], [[Uppsala]]), should be reduced to single. Should not affect double
 	-- consonants between vowels or before glides (e.g. [[occhio]], [[acqua]]) or liquids ([[pubblico]], [[febbraio]]),
 	-- or words before a tie ([[mezz']], [[tutt']]).
 	text = rsub_repeatedly(text, "(" .. C .. ")%1(" .. charsep_not_tie_c .. "*" .. C_OR_EOW_NOT_GLIDE_LIQUID .. ")", "%1%2")
@@ -579,18 +576,39 @@ function export.to_phonemic(text, pagename)
 	-- this after all consonants have been converted to IPA (so the correct consonant is geminated)
 	-- but before syllabification, since e.g. 'va* bène' should be treated as a single word 'va⁀b.bɛne' for
 	-- syllabification.
-	-- FIXME: Need to port syllabification changes from syllabify_from_spelling() here, e.g. in sC clusters.
 	text = rsub(text, "# #⁀(‿?)(.)", "⁀%2%2")
-	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*[‿⁀]?)(" .. C .. "[‿⁀]?" .. W .. "?[‿⁀]?" .. V .. ")", "%1.%2")
-	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*[‿⁀]?" .. C .. "[‿⁀]?)(" .. C .. "[‿⁀]?" .. V .. ")", "%1.%2")
-	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*[‿⁀]?" .. C_OR_TIE .. "+)(" .. C .. "[‿⁀]?" .. C .. "[‿⁀]?" .. V .. ")", "%1.%2")
-	text = rsub(text, "([pbktdg][‿⁀]?)%.([lr])", ".%1%2")
-	text = rsub(text, "([kg][‿⁀]?)%.w", ".%1w")
+	-- Divide before the last consonant (possibly followed by a glide). We then move the syllable division marker
+	-- leftwards over clusters that can form onsets.
+	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*[‿⁀]?" .. C_OR_TIE .. "-)(" .. C .. "[‿⁀]?" .. W .. "?[‿⁀]?" .. V .. ")", "%1.%2")
+	-- Existing hyphenations of [[atlante]], [[Betlemme]], [[genetliaco]], [[betlemita]] all divide as .tl,
+	-- and none divide as t.l. No examples of -dl- but it should be the same per
+	-- http://www.italianlanguageguide.com/pronunciation/syllabication.asp.
+	text = rsub(text, "([pbfvkgtd][‿⁀]?)%.([lr])", ".%1%2")
+	-- Italian appears to divide sCV as .sCV e.g. pé.sca for [[pesca]], and similarly for sCh, sCl, sCr. Exceptions are
+	-- ss, sr, sz and possibly others.
+	text = rsub(text, "(s[‿⁀]?)%.(" .. C_NOT_SIBILANT_OR_R .. ")", ".%1%2")
+	-- Several existing hyphenations divide .pn and .ps and Olivetti agrees. We do this after moving across s so that
+	-- dispnea is divided dis.pnea. Olivetti has tec.no.lo.gì.a for [[tecnologia]], showing that cn divides as c.n, and
+	-- clàc.son, fuc.sì.na, ric.siò for [[clacson]], [[fucsina]], [[ricsiò]], showing that cs divides as c.s.
+	text = rsub(text, "(p[‿⁀]?)%.([ns])", ".%1%2")
 	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*[‿⁀]?)(" .. V .. ")", "%1.%2")
 
 	-- User-specified syllable divider should now be treated like regular one.
 	text = rsub(text, SYLDIV, ".")
 	text = rsub(text, TEMP_H, "h")
+
+	-- Do the following after syllabification so we can distinguish written s from z, e.g. u.sbè.co but uz.bè.co per Olivetti.
+	-- Single ⟨s⟩ between vowels is /z/.
+	text = rsub_repeatedly(text, "(" .. VW .. stress_c .. "?" .. charsep_c .. "*)s(" .. charsep_c .. "*" .. VW .. ")", "%1z%2")
+	-- ⟨s⟩ immediately before a voiced consonant is always /z/
+	text = rsub(text, "s(" .. charsep_c .. "*" .. voiced_C_c .. ")", "z%1")
+	text = rsub(text, TEMP_Z, "z")
+	text = rsub(text, TEMP_S, "s")
+
+	-- French/German vowels
+	text = rsub(text, "ü", "y")
+	text = rsub(text, "ö", "ø")
+	text = rsub(text, "g", "ɡ") -- U+0261 LATIN SMALL LETTER SCRIPT G
 
 	local last_word_self_gemination = rfind(text, "[ʦʣʃʎɲ]" .. stress_c .."*##$") and not
 		-- In case the user used t͡ʃ explicitly
@@ -605,8 +623,6 @@ function export.to_phonemic(text, pagename)
 
 		return full_affricate .. divider
 	end)
-
-	text = rsub(text, "g", "ɡ") -- U+0261 LATIN SMALL LETTER SCRIPT G
 
 	local last_word_ends_in_primary_stressed_vowel = rfind(text, "ˈ##$")
 	-- Last word is multisyllabic if it has a syllable marker in it. This should not happen across word boundaries
@@ -994,64 +1010,71 @@ local function syllabify_from_spelling(text)
 
 	local TEMP_I = u(0xFFF1)
 	local TEMP_U = u(0xFFF2)
-	local TEMP_Y_CONS = u(0xFFF3)
-	local TEMP_CH = u(0xFFF4)
-	local TEMP_GH = u(0xFFF5)
-	local TEMP_GN = u(0xFFF6)
-	local TEMP_GL = u(0xFFF7)
-	local TEMP_QU = u(0xFFF8)
-	local TEMP_QU_CAPS = u(0xFFF9)
-	local TEMP_GU = u(0xFFFA)
-	local TEMP_GU_CAPS = u(0xFFFB)
+	local TEMP_Y = u(0xFFF3)
+	local TEMP_G = u(0xFFF4)
+	local TEMP_QU = u(0xFFF5)
+	local TEMP_QU_CAPS = u(0xFFF6)
+	local TEMP_GU = u(0xFFF7)
+	local TEMP_GU_CAPS = u(0xFFF8)
 	-- Change user-specified . into SYLDIV so we don't shuffle it around when dividing into syllables.
 	text = text:gsub("%.", SYLDIV)
-	text = rsub(text, "y(" .. V .. ")", TEMP_Y_CONS .. "%1")
-	-- Digraphs that should never be split. We don't need to include digraphs beginning with s (sh, sc[ei]) because
-	-- we always syllabify as V.sCV unless C = [srz].
-	text = text:gsub("ch", TEMP_CH)
-	text = text:gsub("gh", TEMP_GH)
-	text = text:gsub("gn", TEMP_GN)
-	text = text:gsub("gl", TEMP_GL)
+	-- We propagate underscore this far specifically so we can distinguish g_n ([[wagneriano]]) from gn.
+	-- g_n should end up as g.n but gn sould end up as .gn.
+	text = text:gsub("g_n", TEMP_G .. "n")
+	-- Now remove underscores before any further processing.
+	text = text:gsub("_", "")
 	-- qu mostly handled correctly automatically, but not in quieto etc. See below.
 	text = rsub(text, "qu(" .. V .. ")", TEMP_QU .. "%1")
 	text = rsub(text, "Qu(" .. V .. ")", TEMP_QU_CAPS .. "%1")
 	text = rsub(text, "gu(" .. V .. ")", TEMP_GU .. "%1")
 	text = rsub(text, "Gu(" .. V .. ")", TEMP_GU_CAPS .. "%1")
-	-- i and u between vowels -> consonant-like substitutions: [[paranoia]], [[febbraio]], [[abbaiare]], [[aiutare]],
-	-- [[portauovo]], [[schopenhaueriano]], [[Malaui]], [[oltreuomo]], [[palauano]], [[tauone]], [etc.; also with h,
-	-- as in [[nahuatl]], [[ahia]], etc. But in the common sequence -Ciuo- ([[figliuolo]], [[begliuomini]], [[giuoco]],
-	-- [[nocciuola]], [[stacciuolo]], [[oriuolo]], [[guerricciuola]], [[ghiaggiuolo]], etc.), both i and u are glides.
-	-- In the sequence -quiV- ([[quieto]], [[reliquia]], etc.), both u and i are glides, and probably also in -guiV-,
-	-- but not in other -CuiV- sequences such as [[buio]], [[abbuiamento]], [[gianduia]], [[cuiusso]], [[alleluia]], etc.).
-	-- Special cases are French-origin words like [[feuilleton]], [[rousseauiano]], [[gargouille]]; it's unlikely we
-	-- can handle these correctly automatically. Note also examples of h not dividing diphthongs: [[ahi]], [[ehi]],
-	-- [[ahimè]], [[ehilà]], [[ohimè]], [[ohilà]], etc.
+	-- i, u, y between vowels -> consonant-like substitutions:
+	-- With i: [[paranoia]], [[febbraio]], [[abbaiare]], [[aiutare]], etc.
+	-- With u: [[portauovo]], [[schopenhaueriano]], [[Malaui]], [[oltreuomo]], [[palauano]], [[tauone]], etc.
+	-- With y: [[ayatollah]], [[coyote]], [[hathayoga]], [[kayak]], [[uruguayano]], etc. [[kefiyyah]] needs special
+	-- handling.
+	-- Also with h, as in [[nahuatl]], [[ahia]], etc.
+	-- With h not dividing diphthongs: [[ahi]], [[ehi]], [[ahimè]], [[ehilà]], [[ohimè]], [[ohilà]], etc.
+	-- But in the common sequence -Ciuo- ([[figliuolo]], [[begliuomini]], [[giuoco]], [[nocciuola]], [[stacciuolo]],
+	-- [[oriuolo]], [[guerricciuola]], [[ghiaggiuolo]], etc.), both i and u are glides. In the sequence -quiV-
+	-- ([[quieto]], [[reliquia]], etc.), both u and i are glides, and probably also in -guiV-, but not in other -CuiV-
+	-- sequences such as [[buio]], [[abbuiamento]], [[gianduia]], [[cuiusso]], [[alleluia]], etc.). Special cases are
+	-- French-origin words like [[feuilleton]], [[rousseauiano]], [[gargouille]]; it's unlikely we can handle these
+	-- correctly automatically.
 	--
 	-- We handle these cases as follows:
 	-- 1. TEMP_QU, TEMP_GU etc. replace sequences of qu and gu with consonant-type codes. This allows us to distinguish
 	--    -quiV-/-guiV- from other -CuiV-.
 	-- 2. We convert i in -ViV- sequences to consonant-type TEMP_I, but similarly for u in -VuV- sequences only if the
-	--    first V isn't i, so -CiuV- remains with two vowels.
+	--    first V isn't i, so -CiuV- remains with two vowels. The syllabification algorithm below will not divide iu
+	--    or uV unless in each case the first vowel is stressed, so -CiuV- remains in a single syllable.
 	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*h?)i(" .. V .. ")",
 			function(v1, v2) return v1 .. TEMP_I .. v2 end)
+	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*h?)y(" .. V .. ")",
+			function(v1, v2) return v1 .. TEMP_Y .. v2 end)
 	text = rsub_repeatedly(text, "(" .. V_NOT_I .. accent_c .. "*h?)u(" .. V .. ")",
 			function(v1, v2) return v1 .. TEMP_U .. v2 end)
 	-- Divide VCV as V.CV; but don't divide if C == h, e.g. [[ahimè]] should be ahi.mè.
 	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*)(" .. C_NOT_H .. V .. ")", "%1.%2")
-	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*" .. C .. ")(" .. C .. V .. ")", "%1.%2")
-	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*" .. C .. "+)(" .. C .. C .. V .. ")", "%1.%2")
+	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*" .. C .. "+)(" .. C .. V .. ")", "%1.%2")
+	-- Examples in Olivetti like [[hathayoga]], [[telethon]], [[cellophane]], [[skyphos]], [[piranha]], [[bilharziosi]]
+	-- divide as .Ch. Exceptions are [[wahhabismo]], [[amharico]], [[kinderheim]], [[schopenhaueriano]] but the latter
+	-- three seem questionable as the pronunciation puts the first consonant in the following syllable and makes the h
+	-- silent.
+	text = rsub(text, "(" .. C_NOT_H .. ")%.h", ".%1h")
+	-- gn represents a single sound so it should not be divided.
+	text = rsub(text, "g.n", ".gn")
 	-- Existing hyphenations of [[atlante]], [[Betlemme]], [[genetliaco]], [[betlemita]] all divide as .tl,
 	-- and none divide as t.l. No examples of -dl- but it should be the same per
 	-- http://www.italianlanguageguide.com/pronunciation/syllabication.asp.
 	text = rsub(text, "([pbfvkcgqtd])%.([lr])", ".%1%2")
-	-- Several existing hyphenations divide .pn and .ps and Olivetti agrees. However, Olivetti has tec.no.lo.gì.a,
-	-- showing that cn divides as c.n.
+	-- Italian appears to divide sCV as .sCV e.g. pé.sca for [[pesca]], and similarly for sCh, sCl, sCr. Exceptions are
+	-- ss, sr, sz and possibly others.
+	text = rsub(text, "s%.(" .. C_NOT_SRZ .. ")", ".s%1")
+	-- Several existing hyphenations divide .pn and .ps and Olivetti agrees. We do this after moving across s so that
+	-- dispnea is divided dis.pnea. Olivetti has tec.no.lo.gì.a for [[tecnologia]], showing that cn divides as c.n, and
+	-- clàc.son, fuc.sì.na, ric.siò for [[clacson]], [[fucsina]], [[ricsiò]], showing that cs divides as c.s.
 	text = rsub(text, "p%.([ns])", ".p%1")
-	-- Italian appears to divide VsCV as V.sCV e.g. pé.sca for [[pesca]]. Exceptions are ss, sr, sz and possibly others.
-	text = rsub(text, "s%.(" .. C_NOT_SRZ .. V .. ")", ".s%1")
-	-- Also V.sCrV, C.sCrV and similarly V.sClV, V.sClV e.g. in.stru.mén.to for [[instrumento]], fi.nè.stra for
-	-- [[finestra]].
-	text = rsub(text, "s%.(" .. C .. "[lr])", ".s%1")
 	-- Any aeoö, or stressed iuüy, should be syllabically divided from a following aeoö or stressed iuüy.
 	-- A stressed vowel might be followed by another accent such as LINEUNDER (which we put after the acute/grave in
 	-- decompose()).
@@ -1059,16 +1082,15 @@ local function syllabify_from_spelling(text)
 	text = rsub_repeatedly(text, "([aeoöAEOÖ]" .. accent_c .. "*)(h?" .. V .. quality_c .. ")", "%1.%2")
 	text = rsub(text, "([iuüyIUÜY]" .. quality_c .. accent_c .. "*)(h?[aeoö])", "%1.%2")
 	text = rsub_repeatedly(text, "([iuüyIUÜY]" .. quality_c .. accent_c .. "*)(h?" .. V .. quality_c .. ")", "%1.%2")
+	-- We divide ii as i.i ([[sii]]), but not iy or yi, which should hopefully cause [[kefiyyah]] to be handled
+	-- correctly as ke.fiy.yah. Only example with Cyi is [[dandyismo]], which may be exceptional.
 	text = rsub_repeatedly(text, "([iI]" .. accent_c .. "*)(h?i)", "%1.%2")
 	text = rsub_repeatedly(text, "([uüUÜ]" .. accent_c .. "*)(h?[uü])", "%1.%2")
 	text = text:gsub(SYLDIV, ".")
 	text = text:gsub(TEMP_I, "i")
 	text = text:gsub(TEMP_U, "u")
-	text = text:gsub(TEMP_Y_CONS, "y")
-	text = text:gsub(TEMP_CH, "ch")
-	text = text:gsub(TEMP_GH, "gh")
-	text = text:gsub(TEMP_GN, "gn")
-	text = text:gsub(TEMP_GL, "gl")
+	text = text:gsub(TEMP_Y, "y")
+	text = text:gsub(TEMP_G, "g")
 	text = text:gsub(TEMP_QU, "qu")
 	text = text:gsub(TEMP_QU_CAPS, "Qu")
 	text = text:gsub(TEMP_GU, "gu")
@@ -1087,7 +1109,7 @@ local function normalize_for_syllabification(respelling)
 	respelling = canon_spaces(respelling)
 	-- Convert respelling conventions back to the original spelling.
 	respelling = respelling:gsub("ddz", "zz"):gsub("tts", "zz"):gsub("dz", "z"):gsub("ts", "z")
-		:gsub("Dz", "Z"):gsub("Ts", "Z"):gsub("%[([sz])%]", "%1"):gsub("_", "")
+		:gsub("Dz", "Z"):gsub("Ts", "Z"):gsub("%[([sz])%]", "%1")
 	local words = split_but_rejoin_affixes(respelling)
 	for i, word in ipairs(words) do
 		if (i % 2) == 1 then -- an actual word, not a separator
@@ -1112,6 +1134,7 @@ end
 -- Given the output of normalize_for_syllabification(), see if it matches the page name. If so, we auto-generate
 -- hyphenation output based on the respelling.
 local function spelling_normalized_for_syllabification_matches_pagename(text, pagename)
+	text = text:gsub("_", "")
 	if text == pagename then
 		return true
 	end
