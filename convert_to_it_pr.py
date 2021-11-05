@@ -71,7 +71,8 @@ stress = AC + GR
 stress_c = "[" + AC + GR + "]"
 ipa_stress = u"ˈˌ"
 ipa_stress_c = "[" + ipa_stress + "]"
-separator = accent + ipa_stress + r"# \-." + SYLDIV
+separator_not_tie = accent + ipa_stress + r"# \-." + SYLDIV
+separator = separator_not_tie + u"‿⁀'"
 separator_c = "[" + separator + "]"
 vowel = u"aeiouyöüAEIOUYÖÜ"
 vowel_not_i = u"aeouyöüAEOUYÖÜ"
@@ -79,6 +80,7 @@ V = "[" + vowel + "]" # vowel class
 V_NOT_I = "[" + vowel_not_i + "]" # vowel class not including i
 NV = "[^" + vowel + "]" # non-vowel class
 C = "[^" + vowel + separator + "]" # consonant class including h
+C_OR_TIE = "[^" + vowel + separator_not_tie + "]" # consonant class including h and tie (‿⁀')
 C_NOT_H = "[^" + vowel + separator + "h]" # consonant class not including h
 C_NOT_SRZ = "[^" + vowel + separator + "srz]" # consonant class not including s/r/z
 pron_sign = u"#!*°"
@@ -169,6 +171,9 @@ unstressed_words = {
   "tra", "fra",
 }
 
+# Apply canonical Unicode decomposition to text, e.g. è → e + ◌̀. But recompose ö and ü so we can treat them as single
+# vowels, and put LINEUNDER/DOTUNDER/DOTOVER after acute/grave (canonical decomposition puts LINEUNDER and DOTUNDER
+# first).
 def decompose(text):
   # decompose everything but ö and ü
   text = unicodedata.normalize("NFD", text)
@@ -176,115 +181,156 @@ def decompose(text):
   text = text.replace("O" + DIA, u"Ö")
   text = text.replace("u" + DIA, u"ü")
   text = text.replace("U" + DIA, u"Ü")
+  text = re.sub("([" + LINEUNDER + DOTUNDER + DOTOVER + "])(" + stress_c + ")", r"\2\1", text)
   return text
 
 def recompose(text):
   return unicodedata.normalize("NFC", text)
 
+# Split into words. Hyphens separate words but not when used to denote affixes, i.e. hyphens between non-spaces
+# separate words. Return value includes alternating words and separators. Use "".join(words) to reconstruct
+# the initial text.
+def split_but_rejoin_affixes(text):
+  if not re.search(r"[\s\-]", text):
+    return [text]
+  end
+  # First replace hyphens separating words with a special character. Remaining hyphens denote affixes and don't
+  # get split. After splitting, replace the special character with a hyphen again.
+  TEMP_HYPH = u"\uFFF0"
+  text = rsub_repeatedly(r"([^\s])-([^\s])", r"\1" + TEMP_HYPH + r"\2", text)
+  words = re.split(r"([\s" + TEMP_HYPH + "]+)", text)
+  return ["-" if word == TEMP_HYPH else word for word in words]
+
 def remove_secondary_stress(text):
-  words = decompose(text).split(" ")
-  # Remove secondary stresses marked with LINEUNDER if there's a previously stressed vowel. Otherwise, just remove the
-  # LINEUNDER, leaving the accent mark, which will be removed below if there's a following stressed vowel.
-  words = [rsub_repeatedly("(" + stress_c + ".*)" + LINEUNDER + stress_c, r"\1",
-    re.sub("(" + stress_c + ".*)" + stress_c + LINEUNDER, r"\1", word)) for word in words]
-  words = [word.replace(LINEUNDER, "") for word in words]
-  words = [rsub_repeatedly(stress_c + "(.*" + stress_c + ")", r"\1", word) for word in words]
-  return recompose(" ".join(words))
+  words = split_but_rejoin_affixes(decompose(text))
+  for i, word in enumerate(words):
+    if i % 2 == 1: # a separator
+      continue
+    # Remove unstressed quality marks.
+    word = re.sub(stress_c + DOTUNDER, "", word)
+    # Remove secondary stresses. Specifically:
+    # (1) Remove secondary stresses marked with LINEUNDER if there's a previously stressed vowel.
+    # (2) Otherwise, just remove the LINEUNDER, leaving the accent mark, which will then be removed if there's
+    #     a following stressed vowel, but left if it's the only stress in the word, as in có̱lle = con le.
+    #     (In the process, we remove other non-stress marks.)
+    # (3) Remove stress mark if there's a following stressed vowel.
+    word = rsub_repeatedly("(" + stress_c + ".*)" + stress_c + LINEUNDER, r"\1", word)
+    word = re.sub("[" + CFLEX + DOTOVER + DOTUNDER + LINEUNDER + "]", "", word)
+    word = rsub_repeatedly(stress_c + "(.*" + stress_c + ")", r"\1", word)
+    words[i] = word
+  return recompose("".join(words))
 
 def remove_accents(text):
-  words = decompose(text).split(" ")
-  words = [re.sub(accent_c, "", word) for word in words]
-  return recompose(" ".join(words))
+  return recompose(re.sub(accent_c, "", decompose(text)))
 
 def remove_non_final_accents(text):
-  words = decompose(text).split(" ")
+  words = split_but_rejoin_affixes(decompose(text))
+  # There should be no accents in separators.
   words = [rsub_repeatedly(accent_c + "(.)", r"\1", word) for word in words]
-  return recompose(" ".join(words))
+  return recompose("".join(words))
 
 def remove_final_monosyllabic_accents(text):
-  words = decompose(text).split(" ")
+  words = split_but_rejoin_affixes(decompose(text))
+  # There should be no accents in separators.
   words = [re.sub(u"^([^" + vowel + "]*[" + vowel + "])" + accent_c + "$", r"\1", word) for word in words]
-  return recompose(" ".join(words))
+  return recompose("".join(words))
 
 def syllabify_from_spelling(text):
   text = decompose(text)
+  # Convert spaces and word-separating hyphens into syllable divisions.
+  words = split_but_rejoin_affixes(text)
+  for i, word in enumerate(words):
+    if (i % 2) == 1: # a separator
+      words[i] = "."
+  text = "".join(words)
   TEMP_I = u"\uFFF1"
-  TEMP_U = u"\uFFF2"
-  TEMP_Y_CONS = u"\uFFF3"
-  TEMP_CH = u"\uFFF4"
-  TEMP_GH = u"\uFFF5"
-  TEMP_GN = u"\uFFF6"
-  TEMP_GL = u"\uFFF7"
-  TEMP_QU = u"\uFFF8"
-  TEMP_QU_CAPS = u"\uFFF9"
-  TEMP_GU = u"\uFFFA"
-  TEMP_GU_CAPS = u"\uFFFB"
+  TEMP_I_CAPS = u"\uFFF2"
+  TEMP_U = u"\uFFF3"
+  TEMP_U_CAPS = u"\uFFF4"
+  TEMP_Y = u"\uFFF5"
+  TEMP_Y_CAPS = u"\uFFF6"
+  TEMP_G = u"\uFFF7"
+  TEMP_G_CAPS = u"\uFFF8"
   # Change user-specified . into SYLDIV so we don't shuffle it around when dividing into syllables.
   text = text.replace(".", SYLDIV)
-  text = re.sub("y(" + V + ")", TEMP_Y_CONS + r"\1", text)
-  # Digraphs that should never be split. We don't need to include digraphs beginning with s (sh, sc[ei]) because
-  # we always syllabify as V.sCV unless C = [srz].
-  text = text.replace("ch", TEMP_CH)
-  text = text.replace("gh", TEMP_GH)
-  text = text.replace("gn", TEMP_GN)
-  text = text.replace("gl", TEMP_GL)
-  # qu mostly handled correctly automatically, but not in quieto etc. See below.
-  text = re.sub("qu(" + V + ")", TEMP_QU + r"\1", text)
-  text = re.sub("Qu(" + V + ")", TEMP_QU_CAPS + r"\1", text)
-  text = re.sub("gu(" + V + ")", TEMP_GU + r"\1", text)
-  text = re.sub("Gu(" + V + ")", TEMP_GU_CAPS + r"\1", text)
-  # i and u between vowels -> consonant-like substitutions: [[paranoia]], [[febbraio]], [[abbaiare]], [[aiutare]],
-  # [[portauovo]], [[schopenhaueriano]], [[Malaui]], [[oltreuomo]], [[palauano]], [[tauone]], [etc.; also with h,
-  # as in [[nahuatl]], [[ahia]], etc. But in the common sequence -Ciuo- ([[figliuolo]], [[begliuomini]], [[giuoco]],
-  # [[nocciuola]], [[stacciuolo]], [[oriuolo]], [[guerricciuola]], [[ghiaggiuolo]], etc.), both i and u are glides.
-  # In the sequence -quiV- ([[quieto]], [[reliquia]], etc.), both u and i are glides, and probably also in -guiV-,
-  # but not in other -CuiV- sequences such as [[buio]], [[abbuiamento]], [[gianduia]], [[cuiusso]], [[alleluia]], etc.).
-  # Special cases are French-origin words like [[feuilleton]], [[rousseauiano]], [[gargouille]]; it's unlikely we
-  # can handle these correctly automatically. Note also examples of h not dividing diphthongs: [[ahi]], [[ehi]],
-  # [[ahimè]], [[ehilà]], [[ohimè]], [[ohilà]], etc.
+  # We propagate underscore this far specifically so we can distinguish g_n ([[wagneriano]]) from gn.
+  # g_n should end up as g.n but gn should end up as .gn.
+  g_to_temp_g = {"g": TEMP_G, "G": TEMP_G_CAPS}
+  text = re.sub("([gG])('?)_('?[nN])", lambda m: g_to_temp_g[m.group(1)] + m.group(2) + m.group(3), text)
+  # Now remove underscores before any further processing.
+  text = text.replace("_", "")
+  # i, u, y between vowels -> consonant-like substitutions:
+  # With i: [[paranoia]], [[febbraio]], [[abbaiare]], [[aiutare]], etc.
+  # With u: [[portauovo]], [[schopenhaueriano]], [[Malaui]], [[oltreuomo]], [[palauano]], [[tauone]], etc.
+  # With y: [[ayatollah]], [[coyote]], [[hathayoga]], [[kayak]], [[uruguayano]], etc. [[kefiyyah]] needs special
+  # handling.
+  # Also with h, as in [[nahuatl]], [[ahia]], etc.
+  # With h not dividing diphthongs: [[ahi]], [[ehi]], [[ahimè]], [[ehilà]], [[ohimè]], [[ohilà]], etc.
+  # But in the common sequence -Ciuo- ([[figliuolo]], [[begliuomini]], [[giuoco]], [[nocciuola]], [[stacciuolo]],
+  # [[oriuolo]], [[guerricciuola]], [[ghiaggiuolo]], etc.), both i and u are glides. In the sequence -quiV-
+  # ([[quieto]], [[reliquia]], etc.), both u and i are glides, and probably also in -guiV-, but not in other -CuiV-
+  # sequences such as [[buio]], [[abbuiamento]], [[gianduia]], [[cuiusso]], [[alleluia]], etc.). Special cases are
+  # French-origin words like [[feuilleton]], [[rousseauiano]], [[gargouille]]; it's unlikely we can handle these
+  # correctly automatically.
   #
   # We handle these cases as follows:
-  # 1. TEMP_QU, TEMP_GU etc. replace sequences of qu and gu with consonant-type codes. This allows us to distinguish
-  #    -quiV-/-guiV- from other -CuiV-.
+  # 1. q+TEMP_U etc. replace sequences of qu and gu with consonant-type codes. This allows us to distinguish
+  #  -quiV-/-guiV- from other -CuiV-.
   # 2. We convert i in -ViV- sequences to consonant-type TEMP_I, but similarly for u in -VuV- sequences only if the
-  #    first V isn't i, so -CiuV- remains with two vowels.
-  text = rsub_repeatedly("(" + V + accent_c + "*h?)i(" + V + ")",
-      lambda m: m.group(1) + TEMP_I + m.group(2), text)
-  text = rsub_repeatedly("(" + V_NOT_I + accent_c + "*h?)u(" + V + ")",
-      lambda m: m.group(1) + TEMP_U + m.group(2), text)
+  #  first V isn't i, so -CiuV- remains with two vowels. The syllabification algorithm below will not divide iu
+  #  or uV unless in each case the first vowel is stressed, so -CiuV- remains in a single syllable.
+  # 3. As soon as we convert i to TEMP_I, we undo the u -> TEMP_U change for -quiV-/-guiV-, before u -> TEMP_U in
+  #  -VuV- sequences.
+  u_to_temp_u = {"u": TEMP_U, "U": TEMP_U_CAPS}
+  text = re.sub("([qQgG])([uU])('?" + V + ")", lambda m: m.group(1) + u_to_temp_u[m.group(2)] + m.group(3), text)
+  i_to_temp_i = {"i": TEMP_I, "I": TEMP_I_CAPS, "y": TEMP_Y, "Y": TEMP_Y_CAPS}
+  text = rsub_repeatedly("(" + V + accent_c + "*[hH]?)([iIyY])(" + V + ")",
+    lambda m: m.group(1) + i_to_temp_i[m.group(2)] + m.group(3), text)
+  text = text.replace(TEMP_U, "u")
+  text = text.replace(TEMP_U_CAPS, "U")
+  text = rsub_repeatedly("(" + V_NOT_I + accent_c + "*[hH]?)([uU])(" + V + ")",
+    lambda m: m.group(1) + u_to_temp_u[m.group(2)] + m.group(3), text)
   # Divide VCV as V.CV; but don't divide if C == h, e.g. [[ahimè]] should be ahi.mè.
-  text = rsub_repeatedly("(" + V + accent_c + "*)(" + C_NOT_H + V + ")", r"\1.\2", text)
-  text = rsub_repeatedly("(" + V + accent_c + "*" + C + ")(" + C + V + ")", r"\1.\2", text)
-  text = rsub_repeatedly("(" + V + accent_c + "*" + C + "+)(" + C + C + V + ")", r"\1.\2", text)
+  text = rsub_repeatedly("(" + V + accent_c + "*'?)(" + C_NOT_H + "'?" + V + ")", r"\1.\2", text)
+  text = rsub_repeatedly("(" + V + accent_c + "*'?" + C + C_OR_TIE + "*)(" + C + "'?" + V + ")", r"\1.\2", text)
+  # Examples in Olivetti like [[hathayoga]], [[telethon]], [[cellophane]], [[skyphos]], [[piranha]], [[bilharziosi]]
+  # divide as .Ch. Exceptions are [[wahhabismo]], [[amharico]], [[kinderheim]], [[schopenhaueriano]] but the latter
+  # three seem questionable as the pronunciation puts the first consonant in the following syllable and makes the h
+  # silent.
+  text = re.sub("(" + C_NOT_H + "'?)\.([hH])", r".\1\2", text)
+  # gn represents a single sound so it should not be divided.
+  text = re.sub("([gG])\.([nN])", r".\1\2", text)
   # Existing hyphenations of [[atlante]], [[Betlemme]], [[genetliaco]], [[betlemita]] all divide as .tl,
   # and none divide as t.l. No examples of -dl- but it should be the same per
   # http://www.italianlanguageguide.com/pronunciation/syllabication.asp.
-  text = re.sub(r"([pbfvkcgqtd])\.([lr])", r".\1\2", text)
-  # Italian appears to divide VsCV as V.sCV e.g. pé.sca for [[pesca]]. Exceptions are ss, sr, sz and possibly others.
-  text = re.sub(r"s\.(" + C_NOT_SRZ + V + ")", r".s\1", text)
-  # Also V.sCrV, C.sCrV and similarly V.sClV, V.sClV e.g. in.stru.mén.to for [[instrumento]], fi.nè.stra for
-  # [[finestra]].
-  text = re.sub(r"s\.(" + C + "[lr])", r".s\1", text)
+  text = re.sub(r"([pbfvkcgqtdPBFVKCGQTD]'?)\.([lrLR])", r".\1\2", text)
+  # Italian appears to divide sCV as .sCV e.g. pé.sca for [[pesca]], and similarly for sCh, sCl, sCr. Exceptions are
+  # ss, sr, sz and possibly others.
+  text = re.sub(r"([sS]'?)\.(" + C_NOT_SRZ + ")", r".\1\2", text)
+  # Several existing hyphenations divide .pn and .ps and Olivetti agrees. We do this after moving across s so that
+  # dispnea is divided dis.pnea. Olivetti has tec.no.lo.gì.a for [[tecnologia]], showing that cn divides as c.n, and
+  # clàc.son, fuc.sì.na, ric.siò for [[clacson]], [[fucsina]], [[ricsiò]], showing that cs divides as c.s.
+  text = re.sub(r"([pP]'?)\.([nsNS])", r".\1\2", text)
   # Any aeoö, or stressed iuüy, should be syllabically divided from a following aeoö or stressed iuüy.
-  # A stressed vowel might be preceded by LINEUNDER; normalized decomposition puts LINEUNDER before acute/grave.
-  text = rsub_repeatedly(u"([aeoöAEOÖ]" + accent_c + u"*)(h?[aeoö])", r"\1.\2", text)
-  text = rsub_repeatedly(u"([aeoöAEOÖ]" + accent_c + "*)(h?" + V + accent_c + "*" + stress_c + ")", r"\1.\2", text)
-  text = re.sub(u"([iuüyIUÜY]" + accent_c + "*" + stress_c + u")(h?[aeoö])", r"\1.\2", text)
-  text = rsub_repeatedly(u"([iuüyIUÜY]" + accent_c + "*" + stress_c + ")(h?" + V + accent_c + "*" + stress_c + ")", r"\1.\2", text)
-  text = rsub_repeatedly("([iI]" + accent_c + "*)(h?i)", r"\1.\2", text)
-  text = rsub_repeatedly(u"([uüUÜ]" + accent_c + u"*)(h?[uü])", r"\1.\2", text)
+  # A stressed vowel might be followed by another accent such as LINEUNDER (which we put after the acute/grave in
+  # decompose()).
+  text = rsub_repeatedly(u"([aeoöAEOÖ]" + accent_c + u"*'?)([hH]?'?[aeoöAEOÖ])", r"\1.\2", text)
+  text = rsub_repeatedly(u"([aeoöAEOÖ]" + accent_c + "*'?)([hH]?'?" + V + stress_c + ")", r"\1.\2", text)
+  text = re.sub(u"([iuüyIUÜY]" + stress_c + accent_c + u"*'?)([hH]?'?[aeoöAEOÖ])", r"\1.\2", text)
+  text = rsub_repeatedly(u"([iuüyIUÜY]" + stress_c + accent_c + "*'?)([hH]?'?" + V + stress_c + ")", r"\1.\2", text)
+  # We divide ii as i.i ([[sii]]), but not iy or yi, which should hopefully cause [[kefiyyah]] to be handled
+  # correctly as ke.fiy.yah. Only example with Cyi is [[dandyismo]], which may be exceptional.
+  text = rsub_repeatedly("([iI]" + accent_c + "*'?)([hH]?'?[iI])", r"\1.\2", text)
+  text = rsub_repeatedly(u"([uüUÜ]" + accent_c + u"*'?)([hH]?'?[uüUÜ])", r"\1.\2", text)
   text = text.replace(SYLDIV, ".")
   text = text.replace(TEMP_I, "i")
+  text = text.replace(TEMP_I_CAPS, "I")
   text = text.replace(TEMP_U, "u")
-  text = text.replace(TEMP_Y_CONS, "y")
-  text = text.replace(TEMP_CH, "ch")
-  text = text.replace(TEMP_GH, "gh")
-  text = text.replace(TEMP_GN, "gn")
-  text = text.replace(TEMP_GL, "gl")
-  text = text.replace(TEMP_QU, "qu")
-  text = text.replace(TEMP_QU_CAPS, "Qu")
-  text = text.replace(TEMP_GU, "gu")
-  text = text.replace(TEMP_GU_CAPS, "Gu")
+  text = text.replace(TEMP_U_CAPS, "U")
+  text = text.replace(TEMP_Y, "y")
+  text = text.replace(TEMP_Y_CAPS, "Y")
+  text = text.replace(TEMP_G, "g")
+  text = text.replace(TEMP_G_CAPS, "G")
   return recompose(text)
 
 def adjust_initial_capital(arg, pagetitle, pagemsg, origline):
@@ -323,91 +369,87 @@ def normalize_bare_arg(arg, pagetitle, pagemsg):
       return None
     abbrev_text = decompose(arg)
     arg = pagetitle
-  origwords = re.split("[ %-]+", arg)
   arg = decompose(arg)
-  words = re.split("([ %-]+)", arg)
+  words = split_but_rejoin_affixes(decompose(arg))
   for i, word in enumerate(words):
-    if (i % 2) == 0: # an actual word, not a separator
-      m = re.search(u"^(" + pron_sign_c + "*)(.*?)(" + pron_sign_c + "*)$", word)
-      word_prefix, word, word_suffix = m.groups()
-      def err(msg):
-        pagemsg("WARNING: " + msg + ": " + origwords[i // 2])
-      is_prefix = (
-        # utterance-final followed by a hyphen, or
-        i == len(words) - 3 and words[i+1] == "-" and words[i+2] == "" or
-        # non-utterance-final followed by a hyphen
-        i <= len(words) - 3 and words[i+1] == "- "
-      )
-      # First apply abbrev spec e.g. (à) or (ó) if given.
-      if abbrev_text:
-        vowel_count = len(re.sub(NV, "", word))
-        abbrev_sub = abbrev_text[1:] # chop off initial ^
-        abbrev_vowel = abbrev_sub[0]
-        if vowel_count == 0:
-          err("Abbreviated spec " + abbrev_text + " can't be used with nonsyllabic word")
+    if i % 2 == 1: # a separator
+      continue
+    m = re.search(u"^(" + pron_sign_c + "*)(.*?)(" + pron_sign_c + "*)$", word)
+    word_prefix, word, word_suffix = m.groups()
+    def err(msg):
+      pagemsg("WARNING: " + msg + ": " + words[i])
+    is_prefix = word.endswith("-")
+    is_suffix = word.startswith("-")
+    # First apply abbrev spec e.g. (à) or (ó) if given.
+    if abbrev_text:
+      vowel_count = len(re.sub(NV, "", word))
+      abbrev_sub = abbrev_text[1:] # chop off initial ^
+      abbrev_vowel = abbrev_sub[0]
+      if vowel_count == 0:
+        err("Abbreviated spec " + abbrev_text + " can't be used with nonsyllabic word")
+        return None
+      elif vowel_count == 1:
+        m = re.search("^(.*)(" + V + ")(" + NV + "*)$", word)
+        if not m:
+          err("Internal error: Couldn't match monosyllabic word: " + word)
           return None
-        elif vowel_count == 1:
-          m = re.search("^(.*)(" + V + ")(" + NV + "*)$", word)
-          if not m:
-            err("Internal error: Couldn't match monosyllabic word: " + word)
-            return None
-          before, vow, after = m.groups()
-          if abbrev_vowel != vow:
-            err("Abbreviated spec " + abbrev_text + " doesn't match vowel " + vow.lower())
-            return None
+        before, vow, after = m.groups()
+        if abbrev_vowel != vow:
+          err("Abbreviated spec " + abbrev_text + " doesn't match vowel " + vow.lower())
+          return None
+        word = before + abbrev_sub + after
+      else:
+        m = re.search("^(.*?)(" + V + ")(" + NV + "*" + V + NV + "*)$", word)
+        if not m:
+          err("Internal error: Couldn't match multisyllabic word: " + word)
+          return None
+        before, penultimate, after = m.groups()
+        m = re.search("^(.*?)(" + V + ")(" + NV + "*)$", before)
+        before2, antepenultimate, after2 = m.groups()
+        if abbrev_vowel != penultimate and abbrev_vowel != antepenultimate:
+          err("Abbreviated spec " + abbrev_text + " doesn't match penultimate vowel " +
+              penultimate.lower() + (antepenultimate and " or antepenultimate vowel " +
+                antepenultimate.lower() or ""))
+          return None
+        if penultimate == antepenultimate:
+          err("Can't use abbreviated spec " + abbrev_text + " here because penultimate and " +
+            "antepenultimate are the same")
+          return None
+        if abbrev_vowel == antepenultimate:
+          word = before2 + abbrev_sub + after2 + penultimate + after
+        elif abbrev_vowel == penultimate:
           word = before + abbrev_sub + after
         else:
-          m = re.search("^(.*?)(" + V + ")(" + NV + "*" + V + NV + "*)$", word)
-          if not m:
-            err("Internal error: Couldn't match multisyllabic word: " + word)
-            return None
-          before, penultimate, after = m.groups()
-          m = re.search("^(.*?)(" + V + ")(" + NV + "*)$", before)
-          before2, antepenultimate, after2 = m.groups()
-          if abbrev_vowel != penultimate and abbrev_vowel != antepenultimate:
-            err("Abbreviated spec " + abbrev_text + " doesn't match penultimate vowel " +
-                penultimate.lower() + (antepenultimate and " or antepenultimate vowel " +
-                  antepenultimate.lower() or ""))
-            return None
-          if penultimate == antepenultimate:
-            err("Can't use abbreviated spec " + abbrev_text + " here because penultimate and " +
-              "antepenultimate are the same")
-            return None
-          if abbrev_vowel == antepenultimate:
-            word = before2 + abbrev_sub + after2 + penultimate + after
-          elif abbrev_vowel == penultimate:
-            word = before + abbrev_sub + after
-          else:
-            err("Internal error: abbrev_vowel from abbrev_text " + abbrev_text +
-              " didn't match any vowel or glide: " + origtext)
-            return None
+          err("Internal error: abbrev_vowel from abbrev_text " + abbrev_text +
+            " didn't match any vowel or glide: " + origtext)
+          return None
 
-      if not is_prefix:
-        if not re.search(stress_c, word):
-          # Apply suffix respellings.
-          for orig, respelling in recognized_suffixes:
-            newword = re.sub(orig + "$", respelling, word)
-            if newword != word:
-              # Decompose again because suffix replacements may have accented chars.
-              word = decompose(newword)
-              break
+    if not is_prefix:
+      if not re.search(stress_c, word):
+        # Apply suffix respellings.
+        for orig, respelling in recognized_suffixes:
+          newword = re.sub(orig + "$", respelling, word)
+          if newword != word:
+            # Decompose again because suffix replacements may have accented chars.
+            word = decompose(newword)
+            break
 
-        # Auto-stress some monosyllabic and bisyllabic words.
-        if word not in unstressed_words and not re.search("[" + AC + GR + DOTOVER + "]", word):
-          vowel_count = len(re.sub(NV, "", word))
-          if vowel_count > 2:
-            err("With more than two vowels and an unrecogized suffix, stress must be explicitly given")
-            return None
-          else:
-            m = re.search("^(.*?)(" + V + ")(.*)$", word)
-            if m:
-              before, vow, after = m.groups()
-              if vow in ["e", "o", "E", "O"]:
-                err(u"When stressed vowel is e or o, it must be marked é/è or ó/ò to indicate quality")
-                return None
-              word = before + vow + GR + after
+      # Auto-stress some monosyllabic and bisyllabic words.
+      if word not in unstressed_words and not re.search("[" + AC + GR + DOTOVER + "]", word):
+        vowel_count = len(re.sub(NV, "", word))
+        if vowel_count > 2:
+          err("With more than two vowels and an unrecogized suffix, stress must be explicitly given")
+          return None
+        elif not is_suffix or vowel_count == 2: # don't try to stress suffixes with only one vowel
+          m = re.search("^(.*?)(" + V + ")(.*)$", word)
+          if m:
+            before, vow, after = m.groups()
+            if vow in ["e", "o", "E", "O"]:
+              err(u"When stressed vowel is e or o, it must be marked é/è or ó/ò to indicate quality")
+              return None
+            word = before + vow + GR + after
 
-      words[i] = word_prefix + word + word_suffix
+    words[i] = word_prefix + word + word_suffix
 
   arg = recompose(arg_prefix + "".join(words) + arg_suffix)
   if arg != origarg:
@@ -526,10 +568,10 @@ def process_text_on_page(index, pagetitle, text):
           for arg in normalized_bare_args:
             hypharg = (
               arg.replace("ddz", "zz").replace("tts", "zz").replace("dz", "z").replace("ts", "z")
-              .replace("Dz", "Z").replace("Ts", "Z").replace("[s]", "s").replace("[z]", "z").replace("_", "")
+              .replace("Dz", "Z").replace("Ts", "Z").replace("[s]", "s").replace("[z]", "z")
             )
             hypharg = re.sub(pron_sign_c, "", hypharg)
-            putative_pagetitle = remove_secondary_stress(hypharg.replace(".", ""))
+            putative_pagetitle = remove_secondary_stress(hypharg.replace(".", "").replace("_", ""))
             putative_pagetitle = remove_non_final_accents(putative_pagetitle)
             # Check if the normalized pronunciation is the same as the page title, if so use the semi-normalized
             # pronunciation for hyphenation. If a word in the page title is a single syllable, it may or may not
@@ -779,7 +821,7 @@ def process_text_on_page(index, pagetitle, text):
               specified_hyphenations = [
                 adjust_initial_capital(hyph, pagetitle, pagemsg, hyph_line) for hyph in specified_hyphenations]
               specified_hyphenations = [re.sub(u"î([ -]|$)", r"i\1", hyph) for hyph in specified_hyphenations]
-              hyphenations = [remove_secondary_stress(syllabify_from_spelling(arg)) for arg in args_for_hyph]
+              hyphenations = [syllabify_from_spelling(remove_secondary_stress(arg)) for arg in args_for_hyph]
               if set(specified_hyphenations) < set(hyphenations):
                 pagemsg("Removing explicit hyphenation(s) %s that are a subset of auto-hyphenation(s) %s: %s" %
                     (",".join(specified_hyphenations), ",".join(hyphenations), hyph_line))
