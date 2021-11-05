@@ -32,6 +32,9 @@
 
 ;Check the pronunciation, rhyme and hyphenation:
 {{User:Benwing2/it-pr|Ùppsala|pagename=Uppsala}}
+{{User:Benwing2/it-pr|wag_neriàno|pagename=wagneriano}}
+{{User:Benwing2/it-pr|taccagnerìa|pagename=taccagneria}}
+{{User:Benwing2/it-pr|cavargnóne|pagename=cavargnone}}
 
 ;Check the pronunciation, second one should be /marjuana/:
 {{User:Benwing2/it-pr|mariwàna,mariu.àna<ref:{{R:it:DiPI}}><hyph:ma.ri.juà.na>|pagename=marijuana}}
@@ -88,11 +91,12 @@
 ;The following should not have secondary stress in the hyphenation:
 {{User:Benwing2/it-pr|òssobùco|pagename=ossobuco}}
 
-;The following should maybe not require explicit syllable division:
-{{User:Benwing2/it-pr|fèld.maresciàllo|pagename=feldmaresciallo}}
-{{User:Benwing2/it-pr|lamb.dacìsmo|pagename=lambdacismo}}
-{{User:Benwing2/it-pr|pòst.commùnio|pagename=postcommunio}}
-{{User:Benwing2/it-pr|stern.bèrgia<ref:{{R:it:Olivetti}}>|pagename=sternbergia}}
+;The following should not require explicit syllable division:
+{{User:Benwing2/it-pr|fèldmaresciàllo|pagename=feldmaresciallo}}
+{{User:Benwing2/it-pr|lambdacìsmo|pagename=lambdacismo}}
+{{User:Benwing2/it-pr|pòstcommùnio|pagename=postcommunio}}
+{{User:Benwing2/it-pr|sternbèrgia<ref:{{R:it:Olivetti}}>|pagename=sternbergia}}
+{{User:Benwing2/it-pr|Tòkyo|pagename=Tokyo}}
 
 ;Two audios:
 {{User:Benwing2/it-pr|cucìna<audio:It-la cucina.ogg;Audio ("la cucina")><audio:It-cucina.oga>|pagename=cucina}}
