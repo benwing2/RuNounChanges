@@ -191,6 +191,13 @@
 {{User:Benwing2/it-pr|°li°|pagename=li}}
 {{User:Benwing2/it-pr|°ne°|#ne°|pagename=ne}}
 
+;Cases with apostrophes and embedded capital letters, should be hyphenated correctly:
+{{User:Benwing2/it-pr|anch'ìo|pagename=anch'io}}
+{{User:Benwing2/it-pr|all'òsso|pagename=all'osso}}
+{{User:Benwing2/it-pr|altr'ièri,altr'iéri|pagename=altr'ieri}}
+{{User:Benwing2/it-pr|cardellìno dell'Himalàya|pagename=cardellino dell'Himalaya}}
+{{User:Benwing2/it-pr|UÈFA,U.ÈFA|pagename=UEFA}}
+
 FIXME: motivasse, {{it-IPA}} is in the French section
 FIXME: delete odî
 FIXME: delete polinomî
