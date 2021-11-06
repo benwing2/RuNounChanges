@@ -24,14 +24,14 @@
 # FIXME: Possibly divide -ps- as .ps, many examples of this e.g. [[autopsia]], [[ypsilon]], [[stipsi]], [[ipsilon]],
 #        [[capsa]], [[necropsia]], [[oligopsonistico]], [[relapso]], [[stereopsia]], [[ipsilofo]], [[ipsolofo]],
 #        [[ipsiconchia]], [[ipsiconco]], [[Scindapso]], [[scindapso]], [[Tapso]] with .ps, vs. [[dipsomania]],
-#        [[rapsodia]], [[rapsodico]], [[dipsomane]], [[rapsodo]], [[-opsia]] with p.s. (WON'T DO)
+#        [[rapsodia]], [[rapsodico]], [[dipsomane]], [[rapsodo]], [[-opsia]] with p.s. (DONE)
 # FIXME: Possibly remove space when hyphenating multiword terms and terms with hyphens in them e.g. [[pera spadona]],
 #        [[alveolo-palatale]], [[bosniaco-erzegovino]]. Keep primary accents in each word but don't add accents to
 #        unstressed words, as in [[immagine di sé]] respelled ''immàgine di sé'', [[erba da spazzola]] respelled
-#        ''èrba da spàttsola''.
+#        ''èrba da spàttsola''. (DONE)
 # FIXME: Convert acute to grave in pronunciation respelling. (DONE)
 # FIXME: [[postdiluviano]] hyphenated incorrectly as pos.tdi.lu.vià.no, [[lambdacismo]] hyphenated incorrectly as
-#        lam.bda.cì.smo, similarly for [[postcommunio]], [[sternbergia]]
+#        lam.bda.cì.smo, similarly for [[postcommunio]], [[sternbergia]] (DONE)
 # FIXME: Remove final *° etc. from respelling before generating rhymes. (DONE)
 # FIXME: Handle + when generating rhymes. (DONE)
 # FIXME: Instead of skipping page entirely when rhyme mismatches, add rhyme explicitly. (DONE)
@@ -40,7 +40,7 @@
 #        Sometimes occurs non-finally, e.g. in [[braida]], [[dispaino]], [[intuino]]. (DONE)
 # FIXME: Several mismatches where explicit rhyme has sm for pronunciation rhyme zm, allow this. (DONE)
 # FIXME: Several mismatches where explicit rhyme has non-final auC or au̯C for pronunciation rhyme awC, allow this. (DONE)
-# FIXME: Pronunciation incorrect for sìi as /sij/.
+# FIXME: Pronunciation incorrect for sìi as /sij/. (DONE)
 # FIXME: [[edui]] correctly pronounced /ɛdwi/ (as per rhyme) or /ɛduj/ (as per {{it-IPA}})?
 # FIXME: Remove circumflex on final î in explicit hyphenation. (DONE)
 # FIXME: Ignore pronunciation lines consisting of just the page title, possibly accented. (DONE)
@@ -49,6 +49,8 @@
 #        Etymology section or moving above all sections if no numbered Etymology section. (DONE)
 # FIXME: Add spaces around [,–—|!?] in the middle of text and then remove before calling normalize_bare_arg().
 # FIXME: Remove pron_sign_c from text, probably including * in the middle, before calling normalize_bare_arg().
+# FIXME: Remove secondary stress after syllabification but use a separate sign to indicate syllabification between
+#        words. (DONE)
 
 import pywikibot, re, sys, codecs, argparse, unicodedata
 
@@ -65,13 +67,14 @@ DOTOVER = u"\u0307" # dot over =  ̇ = signal unstressed word
 DOTUNDER = u"\u0323" # dot under =  ̣ = unstressed vowel with quality marker
 LINEUNDER = u"\u0331" # line under =  ̱ = secondary-stressed vowel with quality marker
 SYLDIV = u"\uFFF0" # used to represent a user-specific syllable divider (.) so we won't change it
+WORDDIV = u"\uFFF1" # used to represent a user-specific word divider (.) so we won't change it
 accent = AC + GR + CFLEX + DOTOVER + DOTUNDER + LINEUNDER
 accent_c = "[" + accent + "]"
 stress = AC + GR
 stress_c = "[" + AC + GR + "]"
 ipa_stress = u"ˈˌ"
 ipa_stress_c = "[" + ipa_stress + "]"
-separator_not_tie = accent + ipa_stress + r"# \-." + SYLDIV
+separator_not_tie = accent + ipa_stress + r"# \-." + SYLDIV + WORDDIV
 separator = separator_not_tie + u"‿⁀'"
 separator_c = "[" + separator + "]"
 vowel = u"aeiouyöüAEIOUYÖÜ"
@@ -241,16 +244,16 @@ def syllabify_from_spelling(text):
   words = split_but_rejoin_affixes(text)
   for i, word in enumerate(words):
     if (i % 2) == 1: # a separator
-      words[i] = "."
+      words[i] = WORDDIV
   text = "".join(words)
-  TEMP_I = u"\uFFF1"
-  TEMP_I_CAPS = u"\uFFF2"
-  TEMP_U = u"\uFFF3"
-  TEMP_U_CAPS = u"\uFFF4"
-  TEMP_Y = u"\uFFF5"
-  TEMP_Y_CAPS = u"\uFFF6"
-  TEMP_G = u"\uFFF7"
-  TEMP_G_CAPS = u"\uFFF8"
+  TEMP_I = u"\uFFF2"
+  TEMP_I_CAPS = u"\uFFF3"
+  TEMP_U = u"\uFFF4"
+  TEMP_U_CAPS = u"\uFFF5"
+  TEMP_Y = u"\uFFF6"
+  TEMP_Y_CAPS = u"\uFFF7"
+  TEMP_G = u"\uFFF8"
+  TEMP_G_CAPS = u"\uFFF9"
   # Change user-specified . into SYLDIV so we don't shuffle it around when dividing into syllables.
   text = text.replace(".", SYLDIV)
   # We propagate underscore this far specifically so we can distinguish g_n ([[wagneriano]]) from gn.
@@ -331,7 +334,13 @@ def syllabify_from_spelling(text):
   text = text.replace(TEMP_Y_CAPS, "Y")
   text = text.replace(TEMP_G, "g")
   text = text.replace(TEMP_G_CAPS, "G")
-  return recompose(text)
+  text = recompose(text)
+  # Convert word divisions into periods, but first into spaces so we can call remove_secondary_stress().
+  # We have to call remove_secondary_stress() after syllabification so we correctly syllabify words like
+  # bìobibliografìa.
+  text = text.replace(WORDDIV, " ")
+  text = remove_secondary_stress(text)
+  return text.replace(" ", ".")
 
 def adjust_initial_capital(arg, pagetitle, pagemsg, origline):
   arg_words = arg.split(" ")
@@ -821,15 +830,13 @@ def process_text_on_page(index, pagetitle, text):
               specified_hyphenations = [
                 adjust_initial_capital(hyph, pagetitle, pagemsg, hyph_line) for hyph in specified_hyphenations]
               specified_hyphenations = [re.sub(u"î([ -]|$)", r"i\1", hyph) for hyph in specified_hyphenations]
-              hyphenations = [syllabify_from_spelling(remove_secondary_stress(arg)) for arg in args_for_hyph]
+              hyphenations = [syllabify_from_spelling(arg) for arg in args_for_hyph]
               if set(specified_hyphenations) < set(hyphenations):
                 pagemsg("Removing explicit hyphenation(s) %s that are a subset of auto-hyphenation(s) %s: %s" %
                     (",".join(specified_hyphenations), ",".join(hyphenations), hyph_line))
               elif set(specified_hyphenations) != set(hyphenations):
                 hyphenations_without_accents = [remove_accents(hyph) for hyph in hyphenations]
-                rehyphenated_specified_hyphenations = [
-                  syllabify_from_spelling(hyph) for hyph in specified_hyphenations
-                ]
+                rehyphenated_specified_hyphenations = [syllabify_from_spelling(hyph) for hyph in specified_hyphenations]
                 def indices_of_syllable_markers(hyph):
                   # Get the character indices of the syllable markers, but not counting the syllable markers themselves
                   # (i.e. return the number of characters preceding the syllable marker).
