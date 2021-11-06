@@ -1,3 +1,15 @@
+--[=[
+This module implements the templates {{it-pr}} and {{it-IPA}}.
+
+Author: benwing2
+
+FIXME:
+
+1. Support raw pronunciations in {{it-pr}}. (DONE)
+2. ahimè should generate aj.mɛ not a.i.mɛ. (DONE)
+3. oriuòlo should divide as o.riuò.lo, both in phonemic and hyphenation. (DONE)
+]=]
+
 local export = {}
 
 local m_table = require("Module:table")
@@ -24,10 +36,11 @@ local LINEUNDER = u(0x0331) -- line under =  ̱ = secondary-stressed vowel with 
 local DIA = u(0x0308) -- diaeresis = ̈
 local TIE = u(0x0361) -- tie =  ͡
 local SYLDIV = u(0xFFF0) -- used to represent a user-specific syllable divider (.) so we won't change it
-local TEMP_Z = u(0xFFF1)
-local TEMP_S = u(0xFFF2)
-local TEMP_H = u(0xFFF3)
-local TEMP_X = u(0xFFF4)
+local WORDDIV = u(0xFFF1) -- used to represent a user-specific word divider (.) so we won't change it
+local TEMP_Z = u(0xFFF2)
+local TEMP_S = u(0xFFF3)
+local TEMP_H = u(0xFFF4)
+local TEMP_X = u(0xFFF5)
 local stress = "ˈˌ"
 local stress_c = "[" .. stress .. "]"
 local quality = AC .. GR
@@ -36,7 +49,9 @@ local accent = stress .. quality .. CFLEX .. DOTOVER .. DOTUNDER .. LINEUNDER
 local accent_c = "[" .. accent .. "]"
 local glide = "jw"
 local liquid = "lr"
+local tie = "‿⁀'"
 local W = "[" .. glide .. "]"
+local W_OR_TIE = "[" .. glide .. tie .. "]"
 -- We include both phonemic and spelling forms of vowels and both lowercase and uppercase
 -- for flexibility in applying at various stages of the transformation from spelling -> phonemes.
 local vowel_not_high = "aeɛoɔøöüAEƐOƆØÖÜ"
@@ -51,7 +66,7 @@ local VW = "[" .. vowel .. "jw]"
 local NV = "[^" .. vowel .. "]"
 local charsep_not_tie = accent .. "." .. SYLDIV
 local charsep_not_tie_c = "[" .. charsep_not_tie .. "]"
-local charsep = charsep_not_tie .. "‿⁀'"
+local charsep = charsep_not_tie .. tie
 local charsep_c = "[" .. charsep .. "]"
 local wordsep_not_tie = charsep_not_tie .. " #"
 local wordsep = charsep .. " #"
@@ -65,8 +80,7 @@ local C_OR_EOW_NOT_GLIDE_LIQUID = "[^" .. vowel .. charsep .. " _" .. glide .. l
 local C_OR_TIE = "[^" .. vowel .. wordsep_not_tie .. "_]" -- consonant or tie (‿⁀')
 local front = "eɛij"
 local front_c = "[" .. front .. "]"
-local FRONTED = u(0x031F)
-local voiced_C_c = "[bdglmnrvʣŋʎɲ]"
+local voiced_C_c = "[bdglmnrvʣʤŋʎɲ]"
 local pron_sign = "#!*°"
 local pron_sign_c = "[" .. pron_sign .. "]"
 local pron_sign_or_punc = pron_sign .. "?|,"
@@ -222,6 +236,27 @@ local function split_but_rejoin_affixes(text)
 		end
 	end
 	return words
+end
+
+local function remove_secondary_stress(text)
+	local words = split_but_rejoin_affixes(text)
+	for i, word in ipairs(words) do
+		if (i % 2) == 1 then -- an actual word, not a separator
+			-- Remove unstressed quality marks.
+			word = rsub(word, quality_c .. DOTUNDER, "")
+			-- Remove secondary stresses. Specifically:
+			-- (1) Remove secondary stresses marked with LINEUNDER if there's a previously stressed vowel.
+			-- (2) Otherwise, just remove the LINEUNDER, leaving the accent mark, which will then be removed if there's
+			--     a following stressed vowel, but left if it's the only stress in the word, as in có̱lle = con le.
+			--     (In the process, we remove other non-stress marks.)
+			-- (3) Remove stress mark if there's a following stressed vowel.
+			word = rsub_repeatedly(word, "(" .. quality_c .. ".*)" .. quality_c .. LINEUNDER, "%1")
+			word = rsub(word, "[" .. CFLEX .. DOTOVER .. DOTUNDER .. LINEUNDER .. "]", "")
+			word = rsub_repeatedly(word, quality_c .. "(.*" .. quality_c .. ")", "%1")
+			words[i] = word
+		end
+	end
+	return table.concat(words)
 end
 
 -- Remove all accents. NOTE: `text` on entry must be decomposed using decompose().
@@ -447,15 +482,14 @@ function export.to_phonemic(text, pagename)
 	text = rsub(text, " | ", "# | #")
 	text = "##" .. rsub(text, " ", "# #") .. "##"
 
-	-- Random substitutions.
+	-- Random consonant substitutions.
 	text = rsub(text, "%[x%]", TEMP_X) -- [x] means /x/
 	text = rsub(text, "#ex(" .. V .. ")", "eg[z]%1")
 	text = text:gsub("x", "ks"):gsub("ck", "k"):gsub("sh", "ʃ")
+	text = rsub(text, TEMP_X, "x")
 	text = rsub(text, "%[z%]", TEMP_Z) -- [z] means /z/
 	text = rsub(text, "%[s%]", TEMP_S) -- [z] means /s/
 	text = rsub(text, "%[h%]", TEMP_H) -- [h] means /h/
-	text = rsub(text, "%[tʃ%]", "ʧ")
-	text = rsub(text, "%[dʒ%]", "ʤ")
 
 	-- ci, gi + vowel
 	-- Do ci, gi + e, é, è sometimes contain /j/?
@@ -514,6 +548,20 @@ function export.to_phonemic(text, pagename)
 		return cons .. after
 	end)
 
+	-- sc before e, i is /ʃ/, doubled after a vowel.
+	text = text:gsub("sʧ", "ʃ")
+
+	text = rsub(text, "%[tʃ%]", "ʧ")
+	text = rsub(text, "%[dʒ%]", "ʤ")
+
+	text = rsub(text, "ddz", "ʣʣ")
+	text = rsub(text, "dz", "ʣ")
+	text = rsub(text, "tts", "ʦʦ")
+	text = rsub(text, "ts", "ʦ")
+	if rfind(text, "z") then
+		error("z must be respelled (d)dz or (t)ts: " .. canon_respelling)
+	end
+
 	-- ⟨qu⟩ represents /kw/.
 	text = text:gsub("qu", "kw")
 	-- ⟨gu⟩ (unstressed) + vowel represents /gw/.
@@ -523,6 +571,9 @@ function export.to_phonemic(text, pagename)
 	-- Assimilate n before labial, including across word boundaries; DiPI marks pronunciations like
 	-- /ʤanˈpaolo/ for [[Gian Paolo]] as wrong. To prevent this, use _ or h between n and following labial.
 	text = rsub(text, "n(" .. wordsep_c .. "*[mpb])", "m%1")
+
+	-- Remove 'h' before converting vowels to glides; h should not block e.g. ahimè -> aj.mɛ.
+	text = text:gsub("h", "")
 
 	-- Unaccented u or i following a non-high vowel (with or without accent) is a semivowel. Exclude high vowels because
 	-- 'iu' should be interpreted as /ju/ not /iw/, and 'ii' (as in [[sii]]) and ''uu'' (as in [[duumvirato]]), should
@@ -534,23 +585,10 @@ function export.to_phonemic(text, pagename)
 	end)
 	text = rsub_repeatedly(text, "(u" .. accent_c .. "*)i([^" .. accent .. "])", "%1j%2")
 
-	-- Unaccented i or u before another vowel is a glide. Do it repeatedly to handle oriuolo /orjwɔlo/.
-	-- Separate into i and u cases to avoid converting ii or uu except in the sequences iiV or uuV.
+	-- Unaccented i or u before another vowel is a glide. Separate into i and u cases to avoid converting ii or uu
+	-- except in the sequences iiV or uuV. Do i first so [[oriuolo]] -> or.jwɔ.lo.
 	text = rsub(text, "i(" .. V_NOT_I .. ")", "j%1")
 	text = rsub(text, "u(" .. V_NOT_U .. ")", "w%1")
-
-	-- sc before e, i is /ʃ/, doubled after a vowel.
-	text = text:gsub("sʧ", "ʃ")
-
-	text = rsub(text, "ddz", "ʣʣ")
-	text = rsub(text, "dz", "ʣ")
-	text = rsub(text, "tts", "ʦʦ")
-	text = rsub(text, "ts", "ʦ")
-	if rfind(text, "z") then
-		error("z must be respelled (d)dz or (t)ts: " .. canon_respelling)
-	end
-
-	text = rsub(text, TEMP_X, "x")
 
 	-- Double consonant followed by end of word (e.g. [[stress]], [[staff]], [[jazz]]), or followed by a consonant
 	-- other than a glide or liquid (e.g. [[pullman]], [[Uppsala]]), should be reduced to single. Should not affect double
@@ -567,9 +605,9 @@ function export.to_phonemic(text, pagename)
 	text = rsub(text, "%.", SYLDIV)
 
 	-- Divide into syllables.
-	-- First remove 'h' and '_', which have served their purpose of preventing context-dependent changes.
-	-- They should not interfere with syllabification.
-	text = rsub(text, "[h_]", "")
+	-- First remove '_', which has served its purpose of preventing context-dependent changes.
+	-- It should not interfere with syllabification.
+	text = text:gsub("_", "")
 	-- Also now convert ⁀ into a copy of the following consonant with the preceding space converted to ⁀
 	-- (which we will eventually convert to a tie symbol ‿, but for awhile we need to distinguish the two
 	-- because automatic syllabic gemination in final-stress words happens only in multisyllabic words,
@@ -580,7 +618,7 @@ function export.to_phonemic(text, pagename)
 	text = rsub(text, "# #⁀(‿?)(.)", "⁀%2%2")
 	-- Divide before the last consonant (possibly followed by a glide). We then move the syllable division marker
 	-- leftwards over clusters that can form onsets.
-	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*[‿⁀]?" .. C_OR_TIE .. "-)(" .. C .. "[‿⁀]?" .. W .. "?[‿⁀]?" .. V .. ")", "%1.%2")
+	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*[‿⁀]?" .. C_OR_TIE .. "-)(" .. C .. W_OR_TIE .. "*" .. V .. ")", "%1.%2")
 	-- Existing hyphenations of [[atlante]], [[Betlemme]], [[genetliaco]], [[betlemita]] all divide as .tl,
 	-- and none divide as t.l. No examples of -dl- but it should be the same per
 	-- http://www.italianlanguageguide.com/pronunciation/syllabication.asp.
@@ -675,24 +713,6 @@ function export.to_phonemic_bot(frame)
 	return export.to_phonemic(iargs[1], mw.title.getCurrentTitle().text).phonemic
 end
 
--- Incomplete and currently not used by any templates.
-function export.to_phonetic(word, pagename)
-	local phonetic = export.to_phonemic(word, pagename).phonemic
-
-	-- Vowels longer in stressed, open, non-word-final syllables.
-	phonetic = rsub(phonetic, "(ˈ" .. NV .. "*" .. V .. ")([" .. vowel .. "%.])", "%1ː%2")
-
-	-- /n/ before /ɡ/ or /k/ is [ŋ]
-	phonetic = rsub(phonetic, "n([%.ˈ]?[ɡk])", "ŋ%1") -- WARNING: IPA /ɡ/
-
-	-- Imperfect: doesn't convert geminated k, g properly.
-	phonetic = rsub(phonetic, "([kg])(" .. front_c .. ")", "%1" .. FRONTED .. "%2")
-		:gsub("a", "ä")
-		:gsub("n", "n̺") -- Converts n before a consonant, which is incorrect.
-
-	return phonetic
-end
-
 
 --[=[
 Entry point to construct the arguments to a call to m_IPA.format_IPA_full() and make a call to this function.
@@ -722,6 +742,7 @@ The return value is an object with the following structure:
   formatted = FORMATTED_IPA_LINE,
   terms = {
 	{phonemic = PHONEMIC_PRON,
+	 raw = "phonemic" or "phonetic",
 	 auto_cogemination = BOOLEAN,
 	 last_word_ends_in_vowel = BOOLEAN,
 	 last_word_ends_in_consonant = BOOLEAN,
@@ -744,6 +765,8 @@ Here:
 * FORMATTED_IPA_LINE is the output of format_IPA_full(), a string.
 * `terms` contains one entry per term in the input object to show_IPA_full().
 * PHONEMIC_PRON is the phonemic IPA pronunciation of the respelling passed in, generated by to_phonemic().
+* RAW is "phonemic" if the user specified a raw pronunciation using /.../, "phonetic" if using [...]. In such a case,
+  PHONEMIC_PRON is the user-specified pronunciation without the surrounding slashes or brackets.
 * `last_word_ends_in_vowel` and the other boolean properties are documented in the source code of to_phonemic().
 * ORIG_RESPELLING is the respelling for which the phonemic IPA pronunciation was generated. This is the same as was
   passed in to show_IPA_full(), but stripped of initial and final spec symbols such as *, **, °, °°, #, !, !!.
@@ -807,8 +830,28 @@ function export.show_IPA_full(data)
 			table.insert(qualifiers, 1, "traditional")
 			prespec = prespec:gsub("#", "")
 		end
-		local pron = export.to_phonemic(respelling, data.pagename)
-		local pretext, posttext
+		local pron, pretext, posttext
+
+		local raw, raw_type
+		raw = rmatch(respelling, "^/(.*)/$")
+		if raw then
+			raw_type = "phonemic"
+		else
+			raw = rmatch(respelling, "^%[(.*)%]$")
+			if raw then
+				raw_type = "phonetic"
+			end
+		end
+		if raw then
+			pron = {
+				orig_respelling = respelling,
+				canon_respelling = respelling,
+				phonemic = raw,
+				raw = raw_type,
+			}
+		else
+			pron = export.to_phonemic(respelling, data.pagename)
+		end
 
 		if prespec == "" and pron.auto_initial_self_gemination then
 			prespec = "*"
@@ -868,7 +911,7 @@ function export.show_IPA_full(data)
 		pron.refs = refs
 		table.insert(retval.terms, pron)
 		table.insert(transcriptions, {
-			pron = "/" .. pron.phonemic .. "/",
+			pron = pron.raw == "phonetic" and "[" .. pron.phonemic .. "]" or "/" .. pron.phonemic .. "/",
 			qualifiers = #qualifiers > 0 and qualifiers or nil,
 			pretext = pretext,
 			posttext = posttext,
@@ -938,11 +981,15 @@ local function generate_rhymes_from_phonemic_output(ipa_full_output, always_rhym
 	local rhymes = {}
 	for _, termobj in ipairs(ipa_full_output.terms) do
 		local pronun = termobj.phonemic
-		local words = split_but_rejoin_affixes(termobj.canon_respelling)
 		local no_rhyme
 		if always_rhyme then
-			no_rhyme = false
+			if raw == "phonetic" then
+				error("Can't generate rhyme for raw phonetic input")
+			else
+				no_rhyme = false
+			end
 		else
+			local words = split_but_rejoin_affixes(termobj.canon_respelling)
 			-- Figure out if we should not generate a rhyme for this term.
 			no_rhyme =
 				#words > 1 -- more than one word
@@ -1004,7 +1051,7 @@ local function syllabify_from_spelling(text)
 	local words = split_but_rejoin_affixes(text)
 	for i, word in ipairs(words) do
 		if (i % 2) == 0 then -- a separator
-			words[i] = "."
+			words[i] = WORDDIV
 		end
 	end
 	text = table.concat(words)
@@ -1012,14 +1059,14 @@ local function syllabify_from_spelling(text)
 	-- NOTE: In all of the following, we have to be careful to allow for apostrophes between letters and for capital
 	-- letters in the middle of words, as in [[anch'io]], [[all'osso]], [[altr'ieri]], [[cardellino dell'Himalaya]],
 	-- [[UEFA]], etc.
-	local TEMP_I = u(0xFFF1)
-	local TEMP_I_CAPS = u(0xFFF2)
-	local TEMP_U = u(0xFFF3)
-	local TEMP_U_CAPS = u(0xFFF4)
-	local TEMP_Y = u(0xFFF5)
-	local TEMP_Y_CAPS = u(0xFFF6)
-	local TEMP_G = u(0xFFF7)
-	local TEMP_G_CAPS = u(0xFFF8)
+	local TEMP_I = u(0xFFF2)
+	local TEMP_I_CAPS = u(0xFFF3)
+	local TEMP_U = u(0xFFF4)
+	local TEMP_U_CAPS = u(0xFFF5)
+	local TEMP_Y = u(0xFFF6)
+	local TEMP_Y_CAPS = u(0xFFF7)
+	local TEMP_G = u(0xFFF8)
+	local TEMP_G_CAPS = u(0xFFF9)
 	-- Change user-specified . into SYLDIV so we don't shuffle it around when dividing into syllables.
 	text = text:gsub("%.", SYLDIV)
 	-- We propagate underscore this far specifically so we can distinguish g_n ([[wagneriano]]) from gn.
@@ -1100,6 +1147,12 @@ local function syllabify_from_spelling(text)
 	text = text:gsub(TEMP_Y_CAPS, "Y")
 	text = text:gsub(TEMP_G, "g")
 	text = text:gsub(TEMP_G_CAPS, "G")
+	-- Convert word divisions into periods, but first into spaces so we can call remove_secondary_stress().
+	-- We have to call remove_secondary_stress() after syllabification so we correctly syllabify words like
+	-- bìobibliografìa.
+	text = text:gsub(WORDDIV, " ")
+	text = remove_secondary_stress(text)
+	text = text:gsub(" ", ".")
 	return text
 end
 
@@ -1115,30 +1168,14 @@ local function normalize_for_syllabification(respelling)
 	-- Convert respelling conventions back to the original spelling.
 	respelling = respelling:gsub("ddz", "zz"):gsub("tts", "zz"):gsub("dz", "z"):gsub("ts", "z")
 		:gsub("Dz", "Z"):gsub("Ts", "Z"):gsub("%[([sz])%]", "%1")
-	local words = split_but_rejoin_affixes(respelling)
-	for i, word in ipairs(words) do
-		if (i % 2) == 1 then -- an actual word, not a separator
-			-- Remove unstressed quality marks.
-			word = rsub(word, quality_c .. DOTUNDER, "")
-			-- Remove secondary stresses. Specifically:
-			-- (1) Remove secondary stresses marked with LINEUNDER if there's a previously stressed vowel.
-			-- (2) Otherwise, just remove the LINEUNDER, leaving the accent mark, which will then be removed if there's
-			--     a following stressed vowel, but left if it's the only stress in the word, as in có̱lle = con le.
-			--     (In the process, we remove other non-stress marks.)
-			-- (3) Remove stress mark if there's a following stressed vowel.
-			word = rsub_repeatedly(word, "(" .. quality_c .. ".*)" .. quality_c .. LINEUNDER, "%1")
-			word = rsub(word, "[" .. CFLEX .. DOTOVER .. DOTUNDER .. LINEUNDER .. "]", "")
-			word = rsub_repeatedly(word, quality_c .. "(.*" .. quality_c .. ")", "%1")
-			words[i] = word
-		end
-	end
-	return table.concat(words)
+	return respelling
 end
 
 
 -- Given the output of normalize_for_syllabification(), see if it matches the page name. If so, we auto-generate
 -- hyphenation output based on the respelling.
 local function spelling_normalized_for_syllabification_matches_pagename(text, pagename)
+	text = remove_secondary_stress(text)
 	text = text:gsub("_", "")
 	if text == pagename then
 		return true
@@ -1162,10 +1199,16 @@ end
 local function generate_hyphenation_from_phonemic_output(ipa_full_output, pagename)
 	local hyphs = {}
 	for _, termobj in ipairs(ipa_full_output.terms) do
-		local normtext = normalize_for_syllabification(termobj.canon_respelling)
+		local normtext
 		-- Figure out if we should not generate a hyphenation for this term.
-		local no_hyph = not all_words_have_vowels(normtext)
-			or not spelling_normalized_for_syllabification_matches_pagename(normtext, pagename)
+		local no_hyph
+		if termobj.raw then
+			no_hyph = true
+		else
+			normtext = = normalize_for_syllabification(termobj.canon_respelling)
+			no_hyph = not all_words_have_vowels(normtext)
+				or not spelling_normalized_for_syllabification_matches_pagename(normtext, pagename)
+		end
 		if not no_hyph then
 			local syllabification = syllabify_from_spelling(normtext)
 			local saw_hyph = false
@@ -1391,19 +1434,19 @@ function export.show_pr(frame)
 	-- Loop over individual respellings, processing each.
 	for _, parsed in ipairs(parsed_respellings) do
 		-- Generate the phonemic pronunciation.
-		parsed.phonemic = export.show_IPA_full {terms = parsed.terms, pagename = pagename}
+		parsed.ipa_full = export.show_IPA_full {terms = parsed.terms, pagename = pagename}
 
 		-- Generate the rhymes.
 		local rhymes = {}
 		if #parsed.rhyme == 0 then
-			rhymes = generate_rhymes_from_phonemic_output(parsed.phonemic)
+			rhymes = generate_rhymes_from_phonemic_output(parsed.ipa_full)
 		else
 			for _, rhyme in ipairs(parsed.rhyme) do
 				if rhyme == "-" then
 					rhymes = {}
 					break
 				elseif rhyme == "+" then
-					local auto_rhymes = generate_rhymes_from_phonemic_output(parsed.phonemic, "always rhyme")
+					local auto_rhymes = generate_rhymes_from_phonemic_output(parsed.ipa_full, "always rhyme")
 					for _, auto_rhyme in ipairs(auto_rhymes) do
 						table.insert(rhymes, auto_rhyme)
 					end
@@ -1412,7 +1455,7 @@ function export.show_pr(frame)
 					-- phonemic representation of the terms.
 					if not rhyme.num_syl then
 						rhyme.num_syl = {}
-						for _, term in ipairs(parsed.phonemic.terms) do
+						for _, term in ipairs(parsed.ipa_full.terms) do
 							local nsyl = get_num_syl_from_phonemic(term.phonemic)
 							m_table.insertIfNot(rhyme.num_syl, nsyl)
 						end
@@ -1425,7 +1468,7 @@ function export.show_pr(frame)
 		-- Generate the hyphenations.
 		local hyphs = {}
 		if #parsed.hyph == 0 then
-			hyphs = generate_hyphenation_from_phonemic_output(parsed.phonemic, pagename)
+			hyphs = generate_hyphenation_from_phonemic_output(parsed.ipa_full, pagename)
 		else
 			for _, hyph in ipairs(parsed.hyph) do
 				if hyph == "-" then
@@ -1468,7 +1511,7 @@ function export.show_pr(frame)
 	local function format_phonemic(parsed)
 		local pre = parsed.pre and parsed.pre .. " " or ""
 		local post = parsed.post and " " .. parsed.post or ""
-		return string.rep("*", parsed.bullets) .. parsed.phonemic.formatted
+		return string.rep("*", parsed.bullets) .. parsed.ipa_full.formatted
 	end
 
 	local function format_rhyme(rhymes, num_bullets)
