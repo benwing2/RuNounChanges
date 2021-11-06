@@ -5,6 +5,8 @@
 {{User:Benwing2/it-pr|tra**<audio:LL-Q652 (ita)-Happypheasant-tra.wav>|pagename=tra}}
 {{User:Benwing2/it-pr|pagename=università}}
 {{User:Benwing2/it-pr|ang_licìsmo|pagename=anglicismo}}
+{{User:Benwing2/it-pr|oriuòlo|pagename=oriuolo}}
+{{User:Benwing2/it-pr|pagename=ahimè}}
 
 ;More complicated example:
 {{User:Benwing2/it-pr|pagename=cosa
@@ -203,3 +205,4 @@ FIXME: delete odî
 FIXME: delete polinomî
 FIXME: delete principî
 FIXME: delete tempî
+FIXME: aùtopàrco should be àutopàrco
