@@ -1,5 +1,7 @@
 local export = {}
 
+local force_cat = false -- for testing
+
 local function tag_rhyme(rhyme, lang)
 	local formatted_rhyme, cat
 	-- FIXME, should not be here. Telugu should use IPA as well.
@@ -48,7 +50,7 @@ end
 
 local function add_syllable_categories(categories, lang, rhyme, num_syl)
 	local prefix = "Rhymes:" .. lang .. "/" .. rhyme
-	table.insert(categories, "[[Category:" .. prefix .. "]]")
+	table.insert(categories, prefix)
 	if num_syl then
 		for _, n in ipairs(num_syl) do
 			local c
@@ -57,7 +59,7 @@ local function add_syllable_categories(categories, lang, rhyme, num_syl)
 			else
 				c = prefix .. "/1 syllable"
 			end
-			table.insert(categories, "[[Category:" .. c .. "]]")
+			table.insert(categories, c)
 		end
 	end
 end
@@ -72,6 +74,8 @@ Meant to be called from a module. `data` is a table in the following format:
   num_syl = nil or {#SYL, #SYL, ...},
   caption = nil or "CAPTION",
   nocaption = BOOLEAN,
+  sort = nil or "SORTKEY",
+  force_cat = BOOLEAN,
 }
 
 Here:
@@ -88,6 +92,8 @@ Here:
 * `caption`, if specified, overrides the default caption "Rhymes". A colon and space is automatically added after
   the caption.
 * `nocaption`, if specified, suppresses the caption entirely.
+* `sort`, if specified, is the sort key for categories.
+* `force_cat`, if specified, forces categories even on non-mainspace pages (for testing).
 
 Note that the number of syllables is currently used only for categorization; if present, an extra category will
 be added such as [[Category:Rhymes:Italian/ino/3 syllables]] in addition to [[Category:Rhymes:Italian/ino]].
@@ -98,15 +104,16 @@ function export.format_rhymes(data)
 	local categories = {}
 	for i, r in ipairs(data.rhymes) do
 		local rhyme = r.rhyme
-		table.insert(links, make_rhyme_link(lang, rhyme, "-" .. rhyme, r.qualifiers))
-		add_syllable_categories(categories, langname, rhyme, rhyme.num_syl or data.num_syl)
+		table.insert(links, make_rhyme_link(data.lang, rhyme, "-" .. rhyme, r.qualifiers))
+		add_syllable_categories(categories, langname, rhyme, r.num_syl or data.num_syl)
 	end
 
 	local ret = data.nocaption and "" or (data.caption or "Rhymes") .. ": "
 	if data.qualifiers and data.qualifiers[1] then
 		ret = require("Module:qualifier").format_qualifier(data.qualifiers) .. " " .. ret
 	end
-	return ret .. table.concat(links, ", ") .. (mw.title.getCurrentTitle().namespace == 0 and table.concat(categories) or "")
+	return ret .. table.concat(links, ", ") ..
+		require("Module:utilities").format_categories(categories, data.lang, data.sort, nil, force_cat or data.force_cat)
 end
 
 function export.show(frame)
@@ -115,19 +122,16 @@ function export.show(frame)
 	local offset = compat and 0 or 1
 
 	local params = {
-		[1 + offset] = {required = true, list = true},
-		[compat and "lang" or 1] = {required = true},
+		[1 + offset] = {required = true, list = true, default = "aɪmz"},
+		[compat and "lang" or 1] = {required = true, default = "en"},
 		["s"] = {},
 		["srhymes"] = {list = "s", allow_holes = true, require_index = true},
-		["qual"] = {},
-		["qualrhymes"] = {list = "qual", allow_holes = true, require_index = true},
+		["q"] = {},
+		["qrhymes"] = {list = "q", allow_holes = true, require_index = true},
 		["caption"] = {},
 		["nocaption"] = {type = "boolean"},
+		["sort"] = {},
 	}
-
-	if (not args[1 + offset] or args[1 + offset] == "") and mw.title.getCurrentTitle().nsText == "Template" then
-		return 'Rhymes: [[Rhymes:English/aɪmz|<span class="IPA">-aɪmz</span>]]'
-	end
 
 	local args = require("Module:parameters").process(args, params)
 	local lang = args[compat and "lang" or 1]
@@ -149,18 +153,20 @@ function export.show(frame)
 		if args.srhymes[i] then
 			rhymeobj.num_syl = parse_num_syl(args.srhymes[i])
 		end
-		if args.qualrhymes[i] then
-			rhymeobj.qualifiers = {args.qualrhymes[i]}
+		if args.qrhymes[i] then
+			rhymeobj.qualifiers = {args.qrhymes[i]}
 		end
+		table.insert(rhymes, rhymeobj)
 	end
 
 	return export.format_rhymes {
 		lang = lang,
 		rhymes = rhymes,
-		num_syl = parse_num_syl(args.s),
-		qualifiers = args.qual and {args.qual} or nil,
+		num_syl = args.s and parse_num_syl(args.s) or nil,
+		qualifiers = args.q and {args.q} or nil,
 		caption = args.caption,
 		nocaption = args.nocaption,
+		sort = args.sort,
 	}
 end
 
