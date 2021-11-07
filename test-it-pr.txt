@@ -8,11 +8,21 @@
 {{User:Benwing2/it-pr|oriuòlo|pagename=oriuolo}}
 {{User:Benwing2/it-pr|pagename=ahimè}}
 
-;More complicated example:
+;More complicated examples:
 {{User:Benwing2/it-pr|pagename=cosa
 |còsa,#cò[s]a<pre:{{a|Central and Southern Italy}}>
 |còsa<pre:{{a|Northern Italy}}><audio:it-cosa.ogg;Audio (Northern)><rhyme:-><hyph:->
 |cò[s]a<pre:{{a|Northern Italy|dialects}}><rhyme:-><hyph:->
+}}
+{{User:Benwing2/it-pr|pagename=J
+|ị* lùnga,gèi,géi,jòd<pre:{{q|letter name}}><ref:{{R:it:DiPI}}>
+|j,ʒ,[dʒ]<pre:{{q|phonemic realization}}><post:{{q|varies according to the source language of the borrowed term}}>
+}}
+{{User:Benwing2/it-pr|**vì*,#**vù*<pre:{{q|letter name}}><hmp:vi><ref:{{R:it:DiPI}}>|v<pre:{{q|phonemic realization}}>|pagename=V}}
+{{User:Benwing2/it-pr|pagename=W
+|**vù* dóppio,**vù* dóppia,dóppia vu̇,dóppia* vu̇,#dóppio vu̇,#dóppio* vu̇,dàblju<ref:{{R:it:DiPI}}><pre:{{q|letter name}}>
+|**vù*<pre:{{q|letter name, for brevity in common acronyms}}><hmp:V,vu>
+|v,w<pre:{{q|phonemic realization}}><post:varies depending on the source language of the loanword>
 }}
 
 ;The following should handle the explicit hyphenation correctly:
@@ -99,6 +109,14 @@
 {{User:Benwing2/it-pr|pòstcommùnio|pagename=postcommunio}}
 {{User:Benwing2/it-pr|sternbèrgia<ref:{{R:it:Olivetti}}>|pagename=sternbergia}}
 {{User:Benwing2/it-pr|Tòkyo|pagename=Tokyo}}
+
+;The following should handle the <hmp:...> modifier correctly.
+{{User:Benwing2/it-pr|dì<pre:{{q|letter name}}><hmp:di,dì,di'>|d<pre:{{q|phonemic realization}}>|pagename=D}}
+;The following should handle the <hmp:...> modifier correctly and the DOTUNDER.
+{{User:Benwing2/it-pr|pagename=E
+|É*<pre:{{q|letter name}}><hmp:e>
+|ẹ́,ẹ̀<pre:{{q|phonemic realization}}><rhyme:-><hmp:e,è>
+}}
 
 ;Two audios:
 {{User:Benwing2/it-pr|cucìna<audio:It-la cucina.ogg;Audio ("la cucina")><audio:It-cucina.oga>|pagename=cucina}}
