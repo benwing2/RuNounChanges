@@ -4,19 +4,16 @@ Page 1 A: -------- begin text --------
 {{wikipedia|lang=it}}
 
 ===Pronunciation===
-* {{qualifier|phoneme; name of letter}} {{it-IPA|A}}
-* {{homophones|it|a}}
+{{it-pr|À*<pre:{{q|letter name}}><hmp:a>|a<pre:{{q|phonemic realization}}><rhyme:->}}
 
 ===Letter===
-{{head|it|letter|g=f|invariable||lower case|a}}
+{{it-letter}}
 
 # {{Latn-def|it|letter|1|a}}
 
 ===See also===
 * {{list:Latin script letters/it/simple}}
 * {{pedialite|Italian alphabet}}
-
-{{cln|it|nouns}}
 
 ----
 
@@ -177,11 +174,10 @@ Page 6 X: -------- begin text --------
 {{wikipedia|lang=it}}
 
 ===Pronunciation===
-* {{qualifier|letter name}} {{it-IPA|ìx}}
-* {{qualifier|phonetic realization}} {{it-IPA|x}}
+{{it-pr|ìx<pre:{{q|letter name}}>|x<pre:{{q|phonemic realization}}>}}
 
 ===Letter===
-{{head|it|letter|g=m|g2=f|invariable||lower case|x}}
+{{it-letter}}
 
 # the twenty-fourth letter of the [[:w:Latin alphabet|Latin alphabet]], called ''{{l|it|ics}}'' in Italian
 
@@ -191,8 +187,6 @@ Page 6 X: -------- begin text --------
 ===See also===
 * {{list:Latin script letters/it}}
 * {{pedialite|Italian alphabet}}
-
-{{cln|it|nouns}}
 
 ----
 
@@ -277,11 +271,10 @@ Page 9 q: Found match for regex: =
 Page 9 q: -------- begin text --------
 
 ===Pronunciation===
-* {{sense|letter name}} {{it-IPA|cu}}
-* {{sense|phoneme}} {{IPA|it|/kw/}}
+{{it-pr|cù<pre:{{q|letter name}}>|cw<pre:{{q|phonemic realization}}>}}
 
 ===Noun===
-{{head|it|letter|g=m|g2=f|invariable}}
+{{it-letter}}
 
 # {{form of|it|lowercase form|Q}}
 
@@ -407,8 +400,7 @@ From {{der|it|la|illī}}, nominative masculine plural of {{m|la|ille}}.
 * {{alter|it|-li||enclitic}}
 
 ====Pronunciation====
-{{it-pr|°li°}}
-* {{homophones|it|lì}}
+{{it-pr|°li°<hmp:lì>}}
 * As an unstressed clitic, it does not trigger {{w|syntactic gemination}} of the following consonant. It also actively blocks syntactic gemination of its initial consonant, such as after a word like {{m|it|però||but}} that would normally trigger syntactic gemination. (This does not apply to the enclitic form {{m|it|-li}}, e.g. {{m|it|[[dalli]] [[a]] [[me]]||give them to me}}.)
 
 ====Pronoun====
@@ -513,8 +505,8 @@ Page 13 PC: Found match for regex: =
 Page 13 PC: -------- begin text --------
 
 ===Pronunciation===
-* {{it-IPA|Piccì|ref=Triggers syntactic gemination in the following word, and may geminate initial {{IPAchar|/p/}} if following a vowel.|Pi[s]ì|qual2=high-style|ref2=Optionally triggers syntactic gemination in the following word.}}
-<references/>
+{{it-pr|**Piccì*|!Pi[s]ì**}}
+
 ===Noun===
 {{head|it|noun|g=m}}
 
@@ -637,8 +629,8 @@ Page 18 in-: -------- begin text --------
 ===Pronunciation===
 {{it-pr
 |in-
-|[iɱ]<post:{{qualifier|before ''f'' or ''v''}}>
-|[iŋ]<post:{{qualifier|before ''c'' or ''g''}}>
+|[iɱ]<post:{{q|before ''f'' or ''v''}}>
+|[iŋ]<post:{{q|before ''c'' or ''g''}}>
 }}
 
 ===Etymology 1===
@@ -1201,10 +1193,9 @@ From {{inh|it|la|caelum}}, from {{inh|it|itc-pro|*kailom}}, from {{inh|it|ine-pr
 
 ===Pronunciation===
 {{it-pr
-|cièlo<pre:{{a|Central Italy|Standard Italian}}>
+|cièlo<pre:{{a|Central Italy|Standard Italian}}><hmp:celo>
 |ciélo<pre:{{a|Northern Italy}}><audio:It-il cielo.ogg;Audio (Northern)><rhyme:-><hyph:->
 }}
-* {{homophones|it|celo}}
 
 ===Noun===
 {{it-noun|m}}
@@ -1549,8 +1540,8 @@ In most cases, this prefix stems from {{inh|it|la|ex-}} (see {{m|la|ex}}). In so
 
 ===Pronunciation===
 {{it-pr
-|s-<post:{{qualifier|before [[voiceless]] consonants}}>
-|[z]-<post:{{qualifier|before [[voiced]] consonants}}>
+|s-<post:{{q|before [[voiceless]] consonants}}>
+|[z]-<post:{{q|before [[voiced]] consonants}}>
 }}
 
 ===Prefix===
@@ -2417,19 +2408,16 @@ Page 68 B: -------- begin text --------
 {{wikipedia|lang=it}}
 
 ===Pronunciation===
-* {{qualifier|letter name}} {{it-IPA|bì}}
-* {{qualifier|phoneme}} {{it-IPA|b}}
+{{it-pr|**bì*<pre:{{q|letter name}}>|b<pre:{{q|phonemic realization}}>}}
 
 ===Letter===
-{{head|it|letter|g=m|g2=f|lower case|b}}
+{{it-letter}}
 
 # {{Latn-def|it|letter|2|bi}}
 
 ===See also===
 * {{list:Latin script letters/it}}
 * {{pedialite|Italian alphabet}}
-
-{{cln|it|nouns}}
 
 ----
 
@@ -2439,21 +2427,16 @@ Page 69 C: -------- begin text --------
 {{wikipedia|lang=it}}
 
 ===Pronunciation===
-* {{qualifier|name of letter}} {{it-IPA|cì}}
-* {{homophones|it|ci}}
-* {{qualifier|phoneme}} {{it-IPA|c}}
-* {{qualifier|phoneme, before "e" or "i"}} {{it-IPA|[tʃ]}}
+{{it-pr|**cì*<pre:{{q|letter name}}><hmp:ci>|c<pre:{{q|phonemic realization}}>|[tʃ]<pre:{{q|phonemic realization before ''e'' or ''i''}}>}}
 
 ===Letter===
-{{head|it|letter|g=m|g2=f|invariable||lower case|c}}
+{{it-letter}}
 
 # {{Latn-def|it|letter|3|ci}}
 
 ===See also===
 * {{list:Latin script letters/it}}
 * {{pedialite|Italian alphabet}}
-
-{{cln|it|nouns}}
 
 ----
 
@@ -2486,20 +2469,16 @@ Page 71 D: -------- begin text --------
 {{wikipedia|lang=it}}
 
 ===Pronunciation===
-* {{qualifier|name of letter}} {{it-IPA|dì}}
-* {{homophones|it|di|dì|di'}}
-* {{qualifier|phoneme}} {{it-IPA|d}}
+{{it-pr|**dì*<pre:{{q|letter name}}><hmp:di,dì,di'>|d<pre:{{q|phonemic realization}}>}}
 
 ===Letter===
-{{head|it|letter|g=m|g2=f|invariable||lower case|d}}
+{{it-letter}}
 
 # {{Latn-def|it|letter|4|di}}
 
 ===See also===
 * {{list:Latin script letters/it}}
 * {{pedialite|Italian alphabet}}
-
-{{cln|it|nouns}}
 
 ----
 
@@ -2509,13 +2488,13 @@ Page 72 E: -------- begin text --------
 {{wikipedia|lang=it}}
 
 ===Pronunciation===
-* {{qualifier|name of letter}} {{it-IPA|é}}
-* {{homophones|it|e}}
-* {{qualifier|phoneme}} {{it-IPA|ẹ́|ẹ̀}}
-* {{homophones|it|e|è}}
+{{it-pr
+|É*<pre:{{q|letter name}}><hmp:e>
+|ẹ́,ẹ̀<pre:{{q|phonemic realization}}><rhyme:-><hmp:e,è>
+}}
 
 ===Letter===
-{{head|it|letter|g=m|g2=f|lower case|e}}
+{{it-letter}}
 
 # {{Latn-def|it|letter|5|e}}
 
@@ -2530,8 +2509,6 @@ Page 72 E: -------- begin text --------
 
 {{C|it|Compass points}}
 
-{{cln|it|nouns}}
-
 ----
 
 -------- end text --------
@@ -2540,19 +2517,16 @@ Page 73 F: -------- begin text --------
 {{wikipedia|lang=it}}
 
 ===Pronunciation===
-* {{qualifier|name of letter}} {{it-IPA|èffe}}
-* {{qualifier|phoneme}} {{it-IPA|f}}
+{{it-pr|èffe<pre:{{q|letter name}}>|f<pre:{{q|phonemic realization}}>}}
 
 ===Letter===
-{{head|it|letter|g=f|invariable||lower case|f}}
+{{it-letter}}
 
 # {{Latn-def|it|letter|6|effe}}
 
 ===See also===
 * {{list:Latin script letters/it}}
 * {{pedialite|Italian alphabet}}
-
-{{cln|it|nouns}}
 
 ----
 
@@ -2562,20 +2536,16 @@ Page 74 G: -------- begin text --------
 {{wikipedia|lang=it}}
 
 ===Pronunciation===
-* {{qualifier|name of letter}} {{it-IPA|gì}}
-* {{qualifier|phoneme}} {{it-IPA|g}}
-* {{qualifier|phoneme, before ''e'' or ''i''}} {{it-IPA|[dʒ]}}
+{{it-pr|**gì*<pre:{{q|letter name}}>|g<pre:{{q|phonemic realization}}>|[dʒ]<pre:{{q|phonemic realization before ''e'' or ''i''}}>}}
 
 ===Letter===
-{{head|it|letter|g=m|g2=f|invariable||lower case|g}}
+{{it-letter}}
 
 # {{Latn-def|it|letter|7|gi}}
 
 ===See also===
 * {{list:Latin script letters/it}}
 * {{pedialite|Italian alphabet}}
-
-{{cln|it|nouns}}
 
 ----
 
@@ -2585,19 +2555,17 @@ Page 75 H: -------- begin text --------
 {{wikipedia|lang=it}}
 
 ===Pronunciation===
-* {{qualifier|name of letter}} {{it-IPA|Àcca}}
-* {{qualifier|phoneme is silent}}
+{{it-pr|àcca<pre:{{q|letter name}}>}}
+* {{qualifier|phonemic realization is silent}}
 
 ===Letter===
-{{head|it|letter|g=f|invariable||lower case|h}}
+{{it-letter}}
 
 # {{Latn-def|it|letter|8|acca}}
 
 ===See also===
 * {{list:Latin script letters/it}}
 * {{pedialite|Italian alphabet}}
-
-{{cln|it|nouns}}
 
 ----
 
@@ -2607,19 +2575,20 @@ Page 76 I: -------- begin text --------
 {{wikipedia|lang=it}}
 
 ===Pronunciation===
-* {{qualifier|phoneme; name of letter}} {{it-IPA|I}}
-* {{qualifier|phoneme, when followed by a vowel in the same syllable}} {{it-IPA|I}}
+{{it-pr
+|Ì*<pre:{{q|letter name}}>
+|i<pre:{{q|phonemic realization}}><rhyme:->
+|j<pre:{{q|phonemic realization when followed by a vowel in the same syllable}}>
+}}
 
 ===Letter===
-{{head|it|letter|g=m|g2=f|invariable|lower case|i}}
+{{it-letter}}
 
 # {{Latn-def|it|letter|9|i}}
 
 ===See also===
 * {{list:Latin script letters/it}}
 * {{pedialite|Italian alphabet}}
-
-{{cln|it|nouns}}
 
 ----
 
@@ -2629,11 +2598,13 @@ Page 77 J: -------- begin text --------
 {{wikipedia|lang=it}}
 
 ===Pronunciation===
-* {{qualifier|name of letter}} {{it-IPA|ị lùnga}}
-* {{qualifier|phonetic realization}} {{it-IPA|j|ʒ|[dʒ]}} {{qualifier|varies according to the source language of the borrowed term}}
+{{it-pr
+|ị* lùnga,ị* lùngo,gèi,géi,jòd<pre:{{q|letter name}}><ref:{{R:it:DiPI}}>
+|j,ʒ,[dʒ]<pre:{{q|phonemic realization}}><post:{{q|varies according to the source language of the borrowed term}}>
+}}
 
 ===Letter===
-{{head|it|letter|g=m|g2=f|invariable||lower case|j}}
+{{it-letter}}
 
 # the tenth letter of the [[:w:Latin alphabet|Latin alphabet]], called ''{{l|it|i lunga}}'' in Italian
 
@@ -2644,7 +2615,8 @@ Page 77 J: -------- begin text --------
 * {{list:Latin script letters/it}}
 * {{pedialite|Italian alphabet}}
 
-{{cln|it|nouns}}
+===References===
+<references />
 
 ----
 
@@ -2654,11 +2626,10 @@ Page 78 K: -------- begin text --------
 {{wikipedia|lang=it}}
 
 ===Pronunciation===
-* {{qualifier|name of letter}} {{it-IPA|càppa}}
-* {{qualifier|phonetic realization}} {{IPA|it|[k]|[kʰ]}} {{q|aspirated by some speakers to distinguish between '''c''' and '''k''' pronunciations}}
+{{it-pr|càppa<pre:{{q|letter name}}>|k<pre:{{q|phonemic realization}}>|raw:[kʰ]<pre:{{q|phonetic realization of some speakers to distinguish between '''c''' and '''k''' pronunciations}}>}}
 
 ===Letter===
-{{head|it|letter|g=m|g2=f|invariable||lower case|k|cat2=nouns}}
+{{it-letter}}
 
 # the eleventh letter of the {{w|Latin alphabet}}, called {{m|it|cappa}} or {{m|it|kappa}} in Italian
 
@@ -2677,19 +2648,16 @@ Page 79 L: -------- begin text --------
 {{wikipedia|lang=it}}
 
 ===Pronunciation===
-* {{qualifier|name of letter}} {{it-IPA|èlle}}
-* {{qualifier|phoneme}} {{it-IPA|l}}
+{{it-pr|èlle<pre:{{q|letter name}}>|l<pre:{{q|phonemic realization}}>}}
 
 ===Letter===
-{{head|it|letter|g=m|g2=f|invariable||lower case|l}}
+{{it-letter}}
 
 # {{Latn-def|it|letter|10|elle}}
 
 ===See also===
 * {{list:Latin script letters/it}}
 * {{pedialite|Italian alphabet}}
-
-{{cln|it|nouns}}
 
 ----
 
@@ -2699,11 +2667,10 @@ Page 80 M: -------- begin text --------
 {{wikipedia|lang=it}}
 
 ===Pronunciation===
-* {{qualifier|name of letter}} {{it-IPA|èmme}}
-* {{qualifier|phoneme}} {{it-IPA|m}}
+{{it-pr|èmme<pre:{{q|letter name}}>|m<pre:{{q|phonemic realization}}>}}
 
 ===Letter===
-{{head|it|letter|g=m|g2=f|invariable||lower case|m}}
+{{it-letter}}
 
 # {{Latn-def|it|letter|11|emme}}
 
@@ -2717,8 +2684,6 @@ Page 80 M: -------- begin text --------
 * {{list:Latin script letters/it}}
 * {{pedialite|Italian alphabet}}
 
-{{cln|it|nouns}}
-
 ----
 
 -------- end text --------
@@ -2727,11 +2692,10 @@ Page 81 N: -------- begin text --------
 {{wikipedia|lang=it}}
 
 ===Pronunciation===
-* {{qualifier|name of letter}} {{it-IPA|ènne}}
-* {{qualifier|phoneme}} {{it-IPA|n}}
+{{it-pr|ènne<pre:{{q|letter name}}>|n<pre:{{q|phonemic realization}}>}}
 
 ===Letter===
-{{head|it|letter|g=m|g2=f|invariable||lower case|n}}
+{{it-letter}}
 
 # {{Latn-def|it|letter|12|enne}}
 
@@ -2746,8 +2710,6 @@ Page 81 N: -------- begin text --------
 
 {{C|it|Compass points}}
 
-{{cln|it|nouns}}
-
 ----
 
 -------- end text --------
@@ -2756,13 +2718,10 @@ Page 82 O: -------- begin text --------
 {{wikipedia|lang=it}}
 
 ===Pronunciation===
-* {{qualifier|name of letter}} {{it-IPA|ò}}
-* {{homophones|it|ho}}
-* {{qualifier|phoneme}} {{it-IPA|ọ́|ọ̀}}
-* {{homophones|it|o|ho}}
+{{it-pr|Ò*<pre:{{q|letter name}}><hmp:ho>|ọ́,ọ̀<pre:{{q|phonemic realization}}><rhyme:-><hmp:o,ho>}}
 
 ===Letter===
-{{head|it|letter|g=m|g2=f|invariable||lower case|o}}
+{{it-letter}}
 
 # {{Latn-def|it|letter|13|o}}
 
@@ -2776,7 +2735,6 @@ Page 82 O: -------- begin text --------
 * {{pedialite|Italian alphabet}}
 
 {{C|it|Compass points}}
-{{cln|it|nouns}}
 
 ----
 
@@ -2786,19 +2744,16 @@ Page 83 P: -------- begin text --------
 {{wikipedia|lang=it}}
 
 ===Pronunciation===
-* {{qualifier|name of letter}} {{it-IPA|pì}}
-* {{qualifier|phoneme}} {{it-IPA|p}}
+{{it-pr|**pì*<pre:{{q|letter name}}>|p<pre:{{q|phonemic realization}}>}}
 
 ===Letter===
-{{head|it|letter|g=m|g2=f|invariable||lower case|p}}
+{{it-letter}}
 
 # {{Latn-def|it|letter|14|pi}}
 
 ===See also===
 * {{list:Latin script letters/it}}
 * {{pedialite|Italian alphabet}}
-
-{{cln|it|nouns}}
 
 ----
 
@@ -2808,19 +2763,16 @@ Page 84 Q: -------- begin text --------
 {{wikipedia|lang=it}}
 
 ===Pronunciation===
-* {{qualifier|name of letter}} {{it-IPA|cù}}
-* {{qualifier|phoneme, always found before {{m|it|U}}}} {{it-IPA|kw}}
+{{it-pr|**cù*<pre:{{q|letter name}}>|q<pre:{{q|phonemic realization; almost always found before ''u'', where it forms the pronunciation {{IPAchar|/kw/}}}}>}}
 
 ===Letter===
-{{head|it|letter|g=m|g2=f|invariable||lower case|q}}
+{{it-letter}}
 
 # {{Latn-def|it|letter|15|cu}}
 
 ===See also===
 * {{list:Latin script letters/it}}
 * {{pedialite|Italian alphabet}}
-
-{{cln|it|nouns}}
 
 ----
 
@@ -2830,19 +2782,16 @@ Page 85 R: -------- begin text --------
 {{wikipedia|lang=it}}
 
 ===Pronunciation===
-* {{qualifier|name of letter}} {{it-IPA|èrre}}
-* {{qualifier|phoneme}} {{it-IPA|r}}
+{{it-pr|èrre<pre:{{q|letter name}}>|r<pre:{{q|phonemic realization}}>}}
 
 ===Letter===
-{{head|it|letter|g=m|g2=f|invariable||lower case|r}}
+{{it-letter}}
 
 # {{Latn-def|it|letter|16|erre}}
 
 ===See also===
 * {{list:Latin script letters/it}}
 * {{pedialite|Italian alphabet}}
-
-{{cln|it|nouns}}
 
 ----
 
@@ -2852,13 +2801,15 @@ Page 86 S: -------- begin text --------
 {{wikipedia|lang=it}}
 
 ===Pronunciation===
-* {{qualifier|name of letter}} {{it-IPA|èsse}}
-* {{qualifier|phoneme, between vowels}} {{it-IPA|[z]|[s]}}
-* {{qualifier|phoneme, when followed by a voiceless consonant}} {{it-IPA|s}}
-* {{qualifier|phoneme, when followed by a voiced consonant}} {{it-IPA|[z]}}
+{{it-pr
+|èsse<pre:{{q|letter name}}>
+|[z],s<pre:{{q|phonemic realization, between vowels}}>
+|s<pre:{{q|phonemic realization, when followed by a voiceless consonant}}>
+|[z]<pre:{{q|phonemic realization, when followed by a voiced consonant}}>
+}}
 
 ===Letter===
-{{head|it|letter|g=m|g2=f|invariable||lower case|s}}
+{{it-letter}}
 
 # {{Latn-def|it|letter|17|esse}}
 
@@ -2872,8 +2823,6 @@ Page 86 S: -------- begin text --------
 * {{pedialite|Italian alphabet}}
 
 {{C|it|Compass points}}
-
-{{cln|it|nouns}}
 
 ----
 
@@ -2901,20 +2850,16 @@ Page 88 T: -------- begin text --------
 {{wikipedia|lang=it}}
 
 ===Pronunciation===
-* {{qualifier|name of letter}} {{it-IPA|tì}}
-* {{homophones|it|ti}}
-* {{qualifier|phoneme}} {{it-IPA|t}}
+{{it-pr|**tì*<pre:{{q|letter name}}><hmp:ti>|t<pre:{{q|phonemic realization}}>}}
 
 ===Letter===
-{{head|it|letter|g=m|g2=f|invariable||lower case|t}}
+{{it-letter}}
 
 # {{Latn-def|it|letter|18|ti}}
 
 ===See also===
 * {{list:Latin script letters/it}}
 * {{pedialite|Italian alphabet}}
-
-{{cln|it|nouns}}
 
 ----
 
@@ -2924,19 +2869,20 @@ Page 89 U: -------- begin text --------
 {{wikipedia|lang=it}}
 
 ===Pronunciation===
-* {{qualifier|phoneme; name of letter}} {{it-IPA|U}}
-* {{qualifier|phoneme, when followed by a vowel in the same syllable}} {{it-IPA|U}}
+{{it-pr
+|Ù*<pre:{{q|letter name}}>
+|u<pre:{{q|phonemic realization}}><rhyme:->
+|w<pre:{{q|phonemic realization when followed by a vowel in the same syllable}}>
+}}
 
 ===Letter===
-{{head|it|letter|g=m|g2=f|invariable||lower case|u}}
+{{it-letter}}
 
 # {{Latn-def|it|letter|19|u}}
 
 ===See also===
 * {{list:Latin script letters/it}}
 * {{pedialite|Italian alphabet}}
-
-{{cln|it|nouns}}
 
 ----
 
@@ -2946,11 +2892,10 @@ Page 90 V: -------- begin text --------
 {{wikipedia|lang=it}}
 
 ===Pronunciation===
-* {{qualifier|name of letter}} {{it-IPA|vù|vì}}
-* {{qualifier|phoneme}} {{it-IPA|v}}
+{{it-pr|**vì*,#**vù*<pre:{{q|letter name}}><hmp:vi><ref:{{R:it:DiPI}}>|v<pre:{{q|phonemic realization}}>}}
 
 ===Letter===
-{{head|it|letter|g=m|g2=f|invariable||lower case|v}}
+{{it-letter}}
 
 # {{Latn-def|it|letter|20|vu|vi}}
 
@@ -2958,7 +2903,8 @@ Page 90 V: -------- begin text --------
 * {{list:Latin script letters/it}}
 * {{pedialite|Italian alphabet}}
 
-{{cln|it|nouns}}
+===References===
+<references />
 
 ----
 
@@ -2968,13 +2914,14 @@ Page 91 W: -------- begin text --------
 {{wikipedia|lang=it}}
 
 ===Pronunciation===
-* {{qualifier|name of letter}} {{it-IPA|vù* dóppia|dóppia vu̇}}
-* {{qualifier|name of letter, for brevity in common acronyms}} {{it-IPA|vù}}
-* {{homophones|it|V|vu}}
-* {{qualifier|phonetic realization}} {{it-IPA|v|w}} {{qualifier|varies depending on the source language of the loanword}}
+{{it-pr
+|**vù* dóppia,**vù* dóppio,dóppia vu̇,dóppia* vu̇,#dóppio vu̇,#dóppio* vu̇,dàblju<ref:{{R:it:DiPI}}><pre:{{q|letter name}}>
+|**vù*<pre:{{q|letter name, for brevity in common acronyms}}><hmp:V,vu>
+|v,w<pre:{{q|phonemic realization}}><post:varies depending on the source language of the loanword>
+}}
 
 ===Letter===
-{{head|it|letter|g=m|g2=f|invariable||lower case|w}}
+{{it-letter}}
 
 # the twenty-third letter of the [[:w:Latin alphabet|Latin alphabet]], called ''{{l|it|doppia vu}}'' or ''{{l|it|vu doppia}}'' in Italian
 
@@ -2991,8 +2938,6 @@ Page 91 W: -------- begin text --------
 * {{list:Latin script letters/it}}
 * {{pedialite|Italian alphabet}}
 
-{{cln|it|nouns}}
-
 ----
 
 -------- end text --------
@@ -3001,11 +2946,13 @@ Page 92 Y: -------- begin text --------
 {{wikipedia|lang=it}}
 
 ===Pronunciation===
-* {{qualifier|name of letter}} {{it-IPA|ìpsilon|ị grèco|ị grèca}}
-* {{qualifier|phonetic realization}} {{it-IPA|j|i}} {{qualifier|varies depending on the loanword}}
+{{it-pr
+|ị* grèca,ị* grèco,ìpsilon<pre:{{q|letter name}}><ref:{{R:it:DiPI}}>
+|j,i<pre:{{q|phonemic realization}}><post:{{q|varies depending on the loanword}}><rhyme:->
+}}
 
 ===Letter===
-{{head|it|letter|g=m|g2=f|invariable||lower case|y}}
+{{it-letter}}
 
 # the twenty-fifth letter of the [[:w:Latin alphabet|Latin alphabet]], called ''{{l|it|ipsilon}}'', ''{{l|it|i greco}}'' or ''{{l|it|i greca}}'' in Italian
 
@@ -3016,9 +2963,10 @@ Page 92 Y: -------- begin text --------
 * {{list:Latin script letters/it}}
 * {{pedialite|Italian alphabet}}
 
-[[Category:Symbols for chemical elements]]
+===References===
+<references />
 
-{{cln|it|nouns}}
+[[Category:Symbols for chemical elements]]
 
 ----
 
@@ -3028,11 +2976,10 @@ Page 93 Z: -------- begin text --------
 {{wikipedia|lang=it}}
 
 ===Pronunciation===
-* {{qualifier|name of letter}} {{it-IPA|dzèta}}
-* {{qualifier|phoneme}} {{it-IPA|ts|dz}}
+{{it-pr|dzèta,dzéta<pre:{{q|letter name}}><ref:{{R:it:DiPI}}>|ts,dz<pre:{{q|phonemic realization}}>}}
 
 ===Letter===
-{{head|it|letter|g=m|g2=f|invariable||lower case|z}}
+{{it-letter}}
 
 # {{Latn-def|it|letter|21|zeta}}
 
@@ -3044,6 +2991,9 @@ Page 93 Z: -------- begin text --------
 ===See also===
 * {{list:Latin script letters/it}}
 * {{pedialite|Italian alphabet}}
+
+===References===
+<references />
 
 [[Category:Symbols for chemical elements]]
 
@@ -6134,7 +6084,7 @@ Page 210 diacodio: Found match for regex: =
 Page 210 diacodio: -------- begin text --------
 
 ===Etymology===
-Borrowed from {{bor|it|ML.|diacodium}}, derived from {{der|it|grc|διά||through}} + {{m|grc|κωδία||poppy head}}.
+Borrowed from {{bor|it|ML.|diacōdium}}, derived from {{der|it|grc|διά||through}} + {{m|grc|κωδία||poppy head}}.
 
 ===Pronunciation===
 {{it-pr|di.acòdio,diacòdio}} 
