@@ -51,6 +51,7 @@
 # FIXME: Remove pron_sign_c from text, probably including * in the middle, before calling normalize_bare_arg().
 # FIXME: Remove secondary stress after syllabification but use a separate sign to indicate syllabification between
 #        words. (DONE)
+# FIXME: Support <hmp:> for homophones. (DONE)
 
 import pywikibot, re, sys, codecs, argparse, unicodedata
 
@@ -799,7 +800,7 @@ def process_text_on_page(index, pagetitle, text):
               break
             syls = []
             if getparam(hypht, "1") != "it":
-              pagemsg("WARNING: Wrong language in {{%s}}, not removing: %s" % (tname(hypht), hyph_line))
+              pagemsg("WARNING: Wrong language in {{%s}}, not removing: %s" % (tname(hypht), hyph_template))
               break
             else:
               must_break = False
@@ -867,6 +868,40 @@ def process_text_on_page(index, pagetitle, text):
                 pagemsg("Removed explicit hyphenation(s) same as auto-hyphenation(s): %s" % hyph_line)
                 extra_notes.append("remove hyphenations that are generated automatically by {{it-pr}}")
               hyph_lines = []
+
+      if homophone_lines:
+        if len(homophone_lines) > 1:
+          pagemsg("WARNING: Multiple homophone lines, not removing: %s" % ", ".join(homophone_lines))
+        else:
+          assert homophone_lines[0].startswith("* ")
+          homophone_line = homophone_lines[0][2:]
+          homophones = {}
+          homophone_qualifiers = {}
+          hmpt = verify_template_is_full_line(["hmp", "homophone", "homophones"], homophone_line)
+          if hmpt:
+            if getparam(hmpt, "1") != "it":
+              pagemsg("WARNING: Wrong language in {{%s}}, not removing: %s" % (tname(hmpt), homophone_line))
+            else:
+              for param in hmpt.params:
+                pn = pname(param)
+                pv = unicode(param.value)
+                if not re.search("^q?[0-9]+$", pn):
+                  pagemsg("WARNING: Unrecognized param %s=%s in {{%s}}, not removing: %s" %
+                      (pn, pv, tname(hmpt), homophone_line))
+                  break
+                if pn.startswith("q"):
+                  homophone_qualifiers[int(pn[1:])] = pv
+                elif int(pn) > 1:
+                  homophones[int(pn) - 1] = pv
+              else: # no break
+                hmp_args = []
+                for pn, pv in sorted(homophones.items()):
+                  hmp_args.append(pv)
+                  if pn in homophone_qualifiers:
+                    hmp_args[-1] += "<qual:%s>" % homophone_qualifiers[pn]
+                args[-1] += "<hmp:%s>" % ",".join(hmp_args)
+                extra_notes.append("incorporate homophones into {{it-pr}}")
+                homophone_lines = []
 
       if args == ["+"]:
         it_pr = "{{it-pr}}"
