@@ -1650,7 +1650,7 @@ Page 44 cattivo: -------- begin text --------
 Inherited from {{inh|it|la|captīvus}} ("captive" → "caught by the devil" → "bad"). Compare the semantic development of {{cog|fr|chétif||puny, scrawny}} and {{cog|gl|cativo}}.
 
 ===Pronunciation===
-{{it-pr|cattìvo<pre:{{a|Standard Italian}}><audio:It-cattivo.ogg>}}
+{{it-pr|cattìvo<pre:{{a|Standard Italian}}><audio:It-cattivo.ogg;Audio (female reader)><audio:LL-Q652 (ita)-LangPao-cattivo.wav;Audio (male speaker)>}}
 
 ===Adjective===
 {{it-adj|sup=cattivissimo}}
@@ -3373,7 +3373,8 @@ From {{inh|it|la|capillus}}.
 # {{lb|it|in the plural}} head [[hair]]
 
 ====See also====
-* {{l|it|pelo}}
+* {{l|it|pelo|tr=body hair}}
+* {{l|it|cappello|tr=hat}}
 
 ===Anagrams===
 * {{anagrams|it|a=acellop|Pollace}}
@@ -3564,11 +3565,17 @@ From {{inh|it|VL.|*cocīna}}, from {{inh|it|la|coquīna}}, whence also {{cog|ca|
 #: {{ux|it|Dal punto di vista del relax, si possono trovare diversi ristoranti e snack bar per rilassarsi e godere della '''cucina''' tunisina.|From the point of view of relaxation, one can find various restaurants and snack bars to relax and enjoy Tunisian '''cuisine'''.}}
 
 =====Related terms=====
-{{col4|it
+{{col2|it
 |cucinare
 |cucinario
 |cuocere
 |cuoco
+}}
+
+=====Derived terms=====
+{{col2|it
+|cucina americana
+|cucina statunitense
 }}
 
 ===Etymology 2===
