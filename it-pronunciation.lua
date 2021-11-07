@@ -8,6 +8,9 @@ FIXME:
 1. Support raw pronunciations in {{it-pr}}. (DONE)
 2. ahimè should generate aj.mɛ not a.i.mɛ. (DONE)
 3. oriuòlo should divide as o.riuò.lo, both in phonemic and hyphenation. (DONE)
+4. Handle <hmp:...> for homophones. (DONE)
+5. Raw pronunciations need to use raw:, esp. for [...] phonetic pronunciation. (DONE)
+6. Handle hyphenation of Uppsala, massmediale correctly. (DONE)
 ]=]
 
 local export = {}
@@ -833,11 +836,11 @@ function export.show_IPA_full(data)
 		local pron, pretext, posttext
 
 		local raw, raw_type
-		raw = rmatch(respelling, "^/(.*)/$")
+		raw = rmatch(respelling, "^raw:/(.*)/$")
 		if raw then
 			raw_type = "phonemic"
 		else
-			raw = rmatch(respelling, "^%[(.*)%]$")
+			raw = rmatch(respelling, "^raw:%[(.*)%]$")
 			if raw then
 				raw_type = "phonetic"
 			end
@@ -1121,12 +1124,13 @@ local function syllabify_from_spelling(text)
 	-- http://www.italianlanguageguide.com/pronunciation/syllabication.asp.
 	text = rsub(text, "([pbfvkcgqtdPBFVKCGQTD]'?)%.([lrLR])", ".%1%2")
 	-- Italian appears to divide sCV as .sCV e.g. pé.sca for [[pesca]], and similarly for sCh, sCl, sCr. Exceptions are
-	-- ss, sr, sz and possibly others.
-	text = rsub(text, "([sS]'?)%.(" .. C_NOT_SRZ .. ")", ".%1%2")
+	-- ss, sr, sz and possibly others. We are careful not to move across s in [[massmediale]], [[password]], etc.
+	text = rsub(text, "([^sS])([sS]'?)%.(" .. C_NOT_SRZ .. ")", "%1.%2%3")
 	-- Several existing hyphenations divide .pn and .ps and Olivetti agrees. We do this after moving across s so that
-	-- dispnea is divided dis.pnea. Olivetti has tec.no.lo.gì.a for [[tecnologia]], showing that cn divides as c.n, and
-	-- clàc.son, fuc.sì.na, ric.siò for [[clacson]], [[fucsina]], [[ricsiò]], showing that cs divides as c.s.
-	text = rsub(text, "([pP]'?)%.([nsNS])", ".%1%2")
+	-- dispnea is divided dis.pnea. We are careful not to move across p in [[Uppsala]]. Olivetti has tec.no.lo.gì.a for
+	-- [[tecnologia]], showing that cn divides as c.n, and clàc.son, fuc.sì.na, ric.siò for [[clacson]], [[fucsina]],
+	-- [[ricsiò]], showing that cs divides as c.s.
+	text = rsub(text, "([^pP])([pP]'?)%.([nsNS])", "%1.%2%3")
 	-- Any aeoö, or stressed iuüy, should be syllabically divided from a following aeoö or stressed iuüy.
 	-- A stressed vowel might be followed by another accent such as LINEUNDER (which we put after the acute/grave in
 	-- decompose()).
@@ -1297,7 +1301,7 @@ local function parse_hyph(arg, iut, parse_err)
 			end
 			local modtext = group[j]:match("^<(.*)>$")
 			if not modtext then
-				parse_err("Internal error: Hyphenation modifier '" .. group[j] .. "' isn't surrounded by angle brackets")
+				parse_err("Internal error: Modifier '" .. group[j] .. "' isn't surrounded by angle brackets")
 			end
 			local prefix, arg = modtext:match("^([a-z]+):(.*)$")
 			if not prefix then
@@ -1313,6 +1317,50 @@ local function parse_hyph(arg, iut, parse_err)
 			end
 		end
 		table.insert(retval, hyph_obj)
+	end
+
+	return retval
+end
+
+
+local function parse_homophone(arg, iut, parse_err)
+	if not iut then
+		iut = require("Module:inflection utilities")
+	end
+	local retval = {}
+	local hmp_segments = iut.parse_balanced_segment_run(arg, "<", ">")
+	local comma_separated_hmp_runs = iut.split_alternating_runs(hmp_segments, "%s*,%s*")
+	for _, hmp_run in ipairs(comma_separated_hmp_runs) do
+		local hmp_obj = {term = hmp_run[1]}
+		for j = 2, #hmp_run - 1, 2 do
+			if group[j + 1] ~= "" then
+				parse_err("Extraneous text '" .. group[j + 1] .. "' after modifier")
+			end
+			local modtext = group[j]:match("^<(.*)>$")
+			if not modtext then
+				parse_err("Internal error: Modifier '" .. group[j] .. "' isn't surrounded by angle brackets")
+			end
+			local prefix, arg = modtext:match("^([a-z]+):(.*)$")
+			if not prefix then
+				parse_err("Modifier " .. group[j] .. " lacks a prefix, should begin with one of 'qual:', 't:' or 'alt:'")
+			end
+			if prefix == "qual" then
+				if not hmp_obj.qualifiers then
+					hmp_obj.qualifiers = {}
+				end
+				table.insert(hmp_obj.qualifiers, arg)
+			elseif prefix == "t" or prefix == "alt" then
+				local key = prefix == "t" and "gloss" or prefix
+				if hmp_obj[key] then
+					parse_err("Modifier '" .. prefix .. "' specified more than once")
+				end
+				hmp_obj[key] = arg
+			else
+				parse_err("Unrecognized prefix '" .. prefix .. "' in modifier " .. group[j]
+					.. ", should be 'qual', 't' or 'alt'")
+			end
+		end
+		table.insert(retval, hmp_obj)
 	end
 
 	return retval
@@ -1343,7 +1391,7 @@ function export.show_pr(frame)
 			end
 			local segments = iut.parse_balanced_segment_run(respelling, "<", ">")
 			local comma_separated_groups = iut.split_alternating_runs(segments, "%s*,%s*")
-			local parsed = {terms = {}, audio = {}, hyph = {}}
+			local parsed = {terms = {}, audio = {}}
 			for i, group in ipairs(comma_separated_groups) do
 				local term = {term = group[1], ref = {}, qual = {}}
 				for j = 2, #group - 1, 2 do
@@ -1357,12 +1405,12 @@ function export.show_pr(frame)
 					local prefix, arg = modtext:match("^([a-z]+):(.*)$")
 					if not prefix then
 						parse_err("Modifier " .. group[j] .. " lacks a prefix, should begin with one of " ..
-							"'pre:', 'post:', 'ref:', 'bullets:', 'audio:', 'rhyme:', 'hyph:' or 'qual:'")
+							"'pre:', 'post:', 'ref:', 'bullets:', 'audio:', 'rhyme:', 'hyph:', 'hmp:' or 'qual:'")
 					end
 					if prefix == "ref" or prefix == "qual" then
 						table.insert(term[prefix], arg)
 					elseif prefix == "pre" or prefix == "post" or prefix == "bullets" or prefix == "rhyme"
-						or prefix == "hyph" or prefix == "audio" then
+						or prefix == "hyph" or prefix == "hmp" or prefix == "audio" then
 						if i < #comma_separated_groups then
 							parse_err("Modifier '" .. prefix .. "' should occur after the last comma-separated term")
 						end
@@ -1382,6 +1430,15 @@ function export.show_pr(frame)
 							else
 								for _, parsed_hyph in ipairs(parsed_hyphs) do
 									table.insert(parsed.hyph, parsed_hyph)
+								end
+							end
+						elseif prefix == "hmp" then
+							local parsed_homophones = parse_homophone(arg, iut, parse_err)
+							if not parsed.hmp then
+								parsed.hmp = parsed_homophones
+							else
+								for _, parsed_homophone in ipairs(parsed_homophones) do
+									table.insert(parsed.hmp, parsed_homophone)
 								end
 							end
 						elseif prefix == "audio" then
@@ -1406,7 +1463,8 @@ function export.show_pr(frame)
 						end
 					else
 						parse_err("Unrecognized prefix '" .. prefix .. "' in modifier " .. group[j]
-							.. ", should be one of 'pre', 'post', 'ref', 'bullets', 'audio', 'rhyme', 'hyph' or 'qual'")
+							.. ", should be one of 'pre', 'post', 'ref', 'bullets', 'audio', 'rhyme', 'hyph', 'hmp'"
+							.. " or 'qual'")
 					end
 				end
 				table.insert(parsed.terms, term)
@@ -1423,11 +1481,8 @@ function export.show_pr(frame)
 			table.insert(parsed_respellings, {
 				terms = terms,
 				audio = {},
-				rhyme = {},
-				hyph = {},
 				bullets = 1,
 			})
-		end
 		end
 	end
 
@@ -1438,7 +1493,7 @@ function export.show_pr(frame)
 
 		-- Generate the rhymes.
 		local rhymes = {}
-		if #parsed.rhyme == 0 then
+		if not parsed.rhyme or #parsed.rhyme == 0 then
 			rhymes = generate_rhymes_from_phonemic_output(parsed.ipa_full)
 		else
 			for _, rhyme in ipairs(parsed.rhyme) do
@@ -1467,7 +1522,7 @@ function export.show_pr(frame)
 
 		-- Generate the hyphenations.
 		local hyphs = {}
-		if #parsed.hyph == 0 then
+		if not parsed.hyph or #parsed.hyph == 0 then
 			hyphs = generate_hyphenation_from_phonemic_output(parsed.ipa_full, pagename)
 		else
 			for _, hyph in ipairs(parsed.hyph) do
@@ -1480,6 +1535,9 @@ function export.show_pr(frame)
 			end
 		end
 		parsed.hyph = hyphs
+
+		-- Generate the homophones.
+		parsed.hmp = parsed.hmp or {}
 	end
 
 	-- If all sets of pronunciations have the same rhymes, display them only once at the bottom.
@@ -1514,19 +1572,24 @@ function export.show_pr(frame)
 		return string.rep("*", parsed.bullets) .. parsed.ipa_full.formatted
 	end
 
-	local function format_rhyme(rhymes, num_bullets)
+	local function format_rhymes(rhymes, num_bullets)
 		local rhymetext = require("Module:rhymes").format_rhymes { lang = lang, rhymes = rhymes }
 		return string.rep("*", num_bullets) .. " " .. rhymetext
 	end
 
-	local function format_hyphenation(hyphs, num_bullets)
-		local hyphtext = require("Module:hyphenation").format_hyphenation { lang = lang, hyphs = hyphs }
+	local function format_hyphenations(hyphs, num_bullets)
+		local hyphtext = require("Module:hyphenation").format_hyphenations { lang = lang, hyphs = hyphs }
 		return string.rep("*", num_bullets) .. " " .. hyphtext
 	end
 
-	local function format_audio(audio, num_bullets)
+	local function format_homophones(hmps, num_bullets)
+		local hmptext = require("Module:homophones").format_homophones { lang = lang, homophones = hmps }
+		return string.rep("*", num_bullets) .. " " .. hmptext
+	end
+
+	local function format_audio(audios, num_bullets)
 		local ret = {}
-		for i, a in ipairs(audio) do
+		for i, audio in ipairs(audios) do
 			-- FIXME! There should be a module for this.
 			table.insert(ret, string.rep("*", num_bullets) .. " " .. frame:expandTemplate {
 				title = "audio", args = {"it", audio.file, audio.gloss }})
@@ -1551,22 +1614,29 @@ function export.show_pr(frame)
 			table.insert(textparts, format_audio(parsed.audio,
 				#parsed_respellings == 1 and parsed.bullets or parsed.bullets + 1))
 		end
-		if not all_rhyme_sets_eq and parsed.rhyme then
+		if not all_rhyme_sets_eq and #parsed.rhyme > 0 then
 			table.insert(textparts, "\n")
-			table.insert(textparts, format_rhyme(parsed.rhyme, parsed.bullets + 1))
+			table.insert(textparts, format_rhymes(parsed.rhyme, parsed.bullets + 1))
 		end
 		if not all_hyph_sets_eq and #parsed.hyphs > 0 then
 			table.insert(textparts, "\n")
-			table.insert(textparts, format_hyphenation(parsed.hyph, parsed.bullets + 1))
+			table.insert(textparts, format_hyphenations(parsed.hyph, parsed.bullets + 1))
+		end
+		if #parsed.hmp > 0 then
+			table.insert(textparts, "\n")
+			-- If only one pronunciation set, add the homophones with the same number of bullets, otherwise
+			-- indent homophones by one more bullet.
+			table.insert(textparts, format_homophones(parsed.hmp,
+				#parsed_respellings == 1 and parsed.bullets or parsed.bullets + 1))
 		end
 	end
-	if all_rhyme_sets_eq and first_rhyme_ret then
+	if all_rhyme_sets_eq and first_rhyme_ret > 0 then
 		table.insert(textparts, "\n")
-		table.insert(textparts, format_rhyme(first_rhyme_ret, min_num_bullets))
+		table.insert(textparts, format_rhymes(first_rhyme_ret, min_num_bullets))
 	end
 	if all_hyph_sets_eq and #first_hyphs > 0 then
 		table.insert(textparts, "\n")
-		table.insert(textparts, format_hyphenation(first_hyphs, min_num_bullets))
+		table.insert(textparts, format_hyphenations(first_hyphs, min_num_bullets))
 	end
 
 	return table.concat(textparts)
