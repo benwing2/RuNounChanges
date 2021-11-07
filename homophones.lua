@@ -1,71 +1,101 @@
 local export = {}
 
-local m_languages = require("Module:languages")
 local m_links = require("Module:links")
-local m_qual = require("Module:qualifier")
 
+--[=[
+Meant to be called from a module. `data` is a table containing the following fields:
+
+{
+  lang = LANGUAGE_OBJECT,
+  homophones = {{term = "HOMOPHONE", alt = nil or "DISPLAY_TEXT", gloss = nil or "GLOSS", tr = nil or "TRANSLITERATION",
+				 qualifiers = nil or {"QUALIFIER", "QUALIFIER", ...}}, ...},
+  sc = nil or SCRIPT_OBJECT,
+  sort = nil or "SORTKEY",
+  caption = nil or "CAPTION",
+  nocaption = BOOLEAN,
+}
+
+Here:
+
+* `lang` is a language object.
+* `homophones` is the list of homophones to display. HOMOPHONE is a homophone. QUALIFIER is a qualifier string to
+  display after the specific homophone in question, formatted using format_qualifier() in [[Module:qualifier]].
+  (FIXME: This should be changed to display the qualifier before the homophone.)
+* `sc`, if specified, is a script object.
+* `sort`, if specified, is a sort key.
+* `caption`, if specified, overrides the default caption "Homophone"/"Homophones". A colon and space is automatically
+  added after the caption.
+* `nocaption`, if specified, suppresses the caption entirely.
+]=]
+function export.format_homophones(data)
+	local hmptexts = {}
+	local hmpcats = {}
+
+	for _, hmp in ipairs(data.homophones) do
+		hmp.lang = data.lang
+		hmp.sc = data.sc
+		local text = m_links.full_link(hmp)
+		if hmp.qualifiers and hmp.qualifiers[1] then
+			text = require("Module:qualifier").format_qualifier(hmp.qualifiers) .. " " .. text
+		end
+		table.insert(hmptexts, text)
+	end
+
+	table.insert(hmpcats, data.lang:getCanonicalName() .. " terms with homophones")
+	local text = table.concat(hmptexts, ", ")
+	local caption = data.nocaption and "" or (
+		data.caption or "[[Appendix:Glossary#homophone|Homophone" .. (#data.homophones > 1 and "s" or "") .. "]]"
+	) .. ": "
+	text = "<span class=\"homophones\">" .. caption .. text .. "</span>"
+	local categories = require("Module:utilities").format_categories(hmpcats, data.lang, data.sort)
+	return text .. categories
+end
+
+
+-- Entry point for {{homophones}} template (also written {{homophone}} and {{hmp}}).
 function export.show(frame)
 	local parent_args = frame:getParent().args
 	local compat = parent_args["lang"]
 	local offset = compat and 0 or 1
 
 	local params = {
-		[1 + offset] = {list = true, allow_holes = true, required = false},
-		
 		[compat and "lang" or 1] = {required = true, default = "en"},
+		[1 + offset] = {list = true, required = true, allow_holes = true, default = "term"},
 		["alt"] = {list = true, allow_holes = true},
+		["t"] = {list = true, allow_holes = true},
 		["tr"] = {list = true, allow_holes = true},
 		["q"] = {list = true, allow_holes = true},
+		["caption"] = {},
+		["nocaption"] = {type = "boolean"},
+		["sc"] = {},
 		["sort"] = {},
 	}
+
+	local args = require("Module:parameters").process(parent_args, params)
 	
-	local args, unrecognized_args =
-		require("Module:parameters").process(parent_args, params, true)
-	
-	if next(unrecognized_args) then
-		local list = {}
-		local tracking = { "homophones/unrecognized param" }
-		for k, v in pairs(unrecognized_args) do
-			table.insert(tracking, "homophones/unrecognized param/" .. tostring(k))
-			table.insert(list, "|" .. tostring(k) .. "=" .. tostring(v))
-		end
-		require("Module:debug").track(tracking)
-		mw.log("Unrecognized parameter" .. (list[2] and "s" or "")
-			.. " in {{homophones}}: " .. table.concat(list, ", "))
-	end
-	
-	local lang = args[compat and "lang" or 1]
-	lang = m_languages.getByCode(lang) or m_languages.err(lang, 1)
-	
-	local maxindex = math.max(args[1 + offset].maxindex, args["alt"].maxindex, args["tr"].maxindex)
-	
-	-- done this way to maintain past behaivour
-	if (args[1 + offset][1] == nil and args["alt"][1] == nil and args["tr"][1] == nil) then
-		if mw.title.getCurrentTitle().nsText == "Template" then
-			-- so as not to cause an error on the template's page
-			args[1 + offset][1] = "term"
-		else
-			error("Please provide at least one homophone.")
-		end
-	end
-	
+	local lang = require("Module:languages").getByCode(args[compat and "lang" or 1], compat and "lang" or 1)
+	local sc = args["sc"] and require("Module:scripts").getByCode(args["sc"], "sc") or nil
+
+	local maxindex = math.max(args[1 + offset].maxindex, args["alt"].maxindex, args["t"].maxindex, args["tr"].maxindex)
+
+	local data = {
+		lang = lang,
+		sc = sc,
+		sort = sort,
+		homophones = {},
+	}
+
 	for i = 1, maxindex do
-		args[1 + offset][i] = m_links.full_link{ lang = lang, term = args[1 + offset][i], alt = args["alt"][i], tr = args["tr"][i] }
-		if args["q"][i] then
-			args[1 + offset][i] = args[1 + offset][i] .. " " .. m_qual.format_qualifier({args["q"][i]})
-		end
+		table.insert(data.homophones, {
+			term = args[1 + offset][i],
+			alt = args["alt"][i],
+			gloss = args["t"][i],
+			tr = args["tr"][i],
+			qualifiers = args["q"][i] and {args["q"][i]} or nil,
+		})
 	end
-	
-	local text = "<span class=\"homophones\">[[Appendix:Glossary#homophone|Homophone" .. (maxindex > 1 and "s" or "") ..
-		 "]]: " .. table.concat(args[1 + offset], ", ") .. "</span>"
-	local category = "[[Category:" ..
-		 lang:getCanonicalName() .. " terms with homophones" .. (args["sort"] and "|" .. args["sort"] or "") .. "]]"
-	local namespace = mw.title.getCurrentTitle().nsText
-	if (namespace == "") then
-		return text .. category
-	else
-		return text
-	end
+
+	return export.format_homophones(data)
 end
 
 return export
