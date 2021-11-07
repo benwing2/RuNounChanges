@@ -1,24 +1,36 @@
 ;Basic tests:
+;1. [[ruota]] spelled ''ruòta''
 {{User:Benwing2/it-pr|ruòta|pagename=ruota}}
+;2. [[forchetta]] spelled ''forchétta''
 {{User:Benwing2/it-pr|forchétta<audio:It-una forchetta.ogg>|pagename=forchetta}}
+;3. [[lieto]] spelled ''lièto,liéto''
 {{User:Benwing2/it-pr|lièto,liéto<ref:{{R:it:DiPI}}>|pagename=lieto}}
+;4. [[tra]] spelled ''tra**''
 {{User:Benwing2/it-pr|tra**<audio:LL-Q652 (ita)-Happypheasant-tra.wav>|pagename=tra}}
+;5. [[università]]
 {{User:Benwing2/it-pr|pagename=università}}
+;6. [[anglicismo]] spelled ''ang_licìsmo''
 {{User:Benwing2/it-pr|ang_licìsmo|pagename=anglicismo}}
+;7. [[oriuolo]] spelled ''oriuòlo''
 {{User:Benwing2/it-pr|oriuòlo|pagename=oriuolo}}
+;8. [[ahimè]]
 {{User:Benwing2/it-pr|pagename=ahimè}}
 
 ;More complicated examples:
+;1. [[cosa]]
 {{User:Benwing2/it-pr|pagename=cosa
 |còsa,#cò[s]a<pre:{{a|Central and Southern Italy}}>
 |còsa<pre:{{a|Northern Italy}}><audio:it-cosa.ogg;Audio (Northern)><rhyme:-><hyph:->
 |cò[s]a<pre:{{a|Northern Italy|dialects}}><rhyme:-><hyph:->
 }}
+;2. [[J]]
 {{User:Benwing2/it-pr|pagename=J
 |ị* lùnga,gèi,géi,jòd<pre:{{q|letter name}}><ref:{{R:it:DiPI}}>
 |j,ʒ,[dʒ]<pre:{{q|phonemic realization}}><post:{{q|varies according to the source language of the borrowed term}}>
 }}
+;3. [[V]]
 {{User:Benwing2/it-pr|**vì*,#**vù*<pre:{{q|letter name}}><hmp:vi><ref:{{R:it:DiPI}}>|v<pre:{{q|phonemic realization}}>|pagename=V}}
+;4. [[W]]
 {{User:Benwing2/it-pr|pagename=W
 |**vù* dóppio,**vù* dóppia,dóppia vu̇,dóppia* vu̇,#dóppio vu̇,#dóppio* vu̇,dàblju<ref:{{R:it:DiPI}}><pre:{{q|letter name}}>
 |**vù*<pre:{{q|letter name, for brevity in common acronyms}}><hmp:V,vu>
@@ -26,201 +38,230 @@
 }}
 
 ;The following should handle the explicit hyphenation correctly:
+;1. [[Gorbaciov]]
 {{User:Benwing2/it-pr|Gòrbaciof,Gòrbaciov,Gorbaciòf,!Garbaciòf<ref:{{R:it:DiPI|Gorbacev}}><hyph:Gòr.ba.ciov,Gor.ba.ciòv>|pagename=Gorbaciov}}
+;2. [[Musorgskij]]
 {{User:Benwing2/it-pr|Mussòrski<ref:{{R:it:DiPI}}><hyph:Mu.sòrg.skij>|pagename=Musorgskij}}
 
-;The following should handle the explicit hyphenation with qualifier correctly:
+;The following ([[vacui]]) should handle the explicit hyphenation with qualifier correctly:
 {{User:Benwing2/it-pr|vàcwi,#vàcu.i<ref:{{R:it:DiPI|vacuo}}><hyph:và.cui,và.cu.i<qual:traditional>>|pagename=vacui}}
 
-;The following should handle the explicit hyphenation correctly (including using the hyphenation to generate the right number of syllables in the syllable rhyme categories):
+;The following ([[Gorbaciov]]) should handle the explicit hyphenation correctly (including generating the right number of syllables in the syllable rhyme categories):
 {{User:Benwing2/it-pr|Gòrbaciof,Gòrbaciov,Gorbaciòf,!Garbaciòf<ref:{{R:it:DiPI|Gorbacev}}><rhyme:fo><hyph:Gòr.ba.ciov,Gor.ba.ciòv>|pagename=Gorbaciov}}
 
 ;The following should handle the multiword term correctly:
+;1. [[Abano Terme]]
 {{User:Benwing2/it-pr|Àbano Tèrme|pagename=Abano Terme}}
+;2. [[Friuli-Venezia Giulia]]
 {{User:Benwing2/it-pr|Fri.ùli-Venètsia Giùlia|pagename=Friuli-Venezia Giulia}}
 
-;The following should have the rhyme correct:
+;The following ([[sii]]) should have the rhyme correct:
 {{User:Benwing2/it-pr|sìi|pagename=sii}}
 
 ;Check the pronunciation, rhyme and hyphenation:
+;1. [[Uppsala]]
 {{User:Benwing2/it-pr|Ùppsala|pagename=Uppsala}}
+;2. [[wagneriano]]
 {{User:Benwing2/it-pr|wag_neriàno|pagename=wagneriano}}
+;3. [[taccagneria]]
 {{User:Benwing2/it-pr|taccagnerìa|pagename=taccagneria}}
+;4. [[cavargnone]]
 {{User:Benwing2/it-pr|cavargnóne|pagename=cavargnone}}
 
-;Check the pronunciation, second one should be /marjuana/:
+;Check the pronunciation ([[marijuana]]), second one should be /marjuana/:
 {{User:Benwing2/it-pr|mariwàna,mariu.àna<ref:{{R:it:DiPI}}><hyph:ma.ri.juà.na>|pagename=marijuana}}
 
-;The following should have auto-hyphenation mè.ga-:
+;The following ([[mega-]]) should have auto-hyphenation mè.ga-:
 {{User:Benwing2/it-pr|mèga-|pagename=mega-}}
 
 ;The following should have auto-hyphenation:
+;1. [[Abraàm]]
 {{User:Benwing2/it-pr|pagename=Abraàm}}
+;2. [[piùe]]
 {{User:Benwing2/it-pr|pagename=piùe}}
+;3. [[Kasparov]]
 {{User:Benwing2/it-pr|Kaspàrof,Kaspàrov<ref:{{R:it:DiPI}}>|pagename=Kasparov}}
+;4. [[chemionastia]]
 {{User:Benwing2/it-pr|chẹ̀mionastìa|pagename=chemionastia}}
+;5. [[conciossiacosaché]]
 {{User:Benwing2/it-pr|conciọ̀ssiacọ̀saché|pagename=conciossiacosaché}}
+;6. [[copriauto]]
 {{User:Benwing2/it-pr|cò̱pri.àuto|pagename=copriauto}}
 
-;The following should work with <rhyme:+> in a multiword term and have hyphenation:
+;The following ([[San Pietroburgo]]) should work with <nowiki><rhyme:+></nowiki> in a multiword term and have hyphenation:
 {{User:Benwing2/it-pr|San Pietrobùrgo,#San Piètrobùrgo<rhyme:+>|pagename=San Pietroburgo}}
 
-;The following should work with rhyme with explicit #syl:
+;The following ([[Katmandu]]) should work with rhyme with explicit #syl:
 {{User:Benwing2/it-pr|Katmandù<rhyme:u<s:3>>|pagename=Katmandu}}
 
 ;The following should maybe automatically have hyphenation:
+;1. [[Katmandu]]
 {{User:Benwing2/it-pr|Katmandù|pagename=Katmandu}}
+;2. [[macro]]
 {{User:Benwing2/it-pr|macró|pagename=macro}}
 
-;The following should recognize the /eʎ/ as "raw".
+;The following ([[egli]]) should recognize the /eʎ/ as "raw".
 {{User:Benwing2/it-pr|pagename=egli
 |égli<audio:It-egli.ogg>
-|/eʎ/<pre:{{q|before a vowel}}>
+|raw:/eʎ/<pre:{{q|before a vowel}}>
 }}
 
-;The following should recognize the [iɱ] as "raw".
+;The following ([[in-]]) should recognize the [iɱ] as "raw".
 {{User:Benwing2/it-pr|pagename=in-
 |in-
-|[iɱ]<post:{{qualifier|before ''f'' or ''v''}}>
-|[iŋ]<post:{{qualifier|before ''c'' or ''g''}}>
+|raw:[iɱ]<post:{{qualifier|before ''f'' or ''v''}}>
+|raw:[iŋ]<post:{{qualifier|before ''c'' or ''g''}}>
 }}
 
-;The following should not have rhymes or hyphenation:
+;The following ([[s-]]) should not have rhymes or hyphenation:
 {{User:Benwing2/it-pr|pagename=s-
 |s-<post:{{qualifier|before [[voiceless]] consonants}}>
 |[z]-<post:{{qualifier|before [[voiced]] consonants}}>
 }}
 
-;The following should hyphenate au.to.psì.a:
+;The following ([[autopsia]]) should hyphenate au.to.psì.a:
 {{User:Benwing2/it-pr|autopsìa|pagename=autopsia}}
 
-;The following should hyphenate cu.iùs.so:
+;The following ([[cuiusso]]) should hyphenate cu.iùs.so:
 {{User:Benwing2/it-pr|cuiùsso|pagename=cuiusso}}
 
-;The following should hyphenate e.mo.pneu.mo.to.rà.ci:
+;The following ([[emopneumotoraci]]) should hyphenate e.mo.pneu.mo.to.rà.ci:
 {{User:Benwing2/it-pr|è̱mopnè̱umotoràci|pagename=emopneumotoraci}}
 
-;The following should not have secondary stress in the hyphenation:
+;The following ([[ossobuco]]) should not have secondary stress in the hyphenation:
 {{User:Benwing2/it-pr|òssobùco|pagename=ossobuco}}
 
 ;The following should not require explicit syllable division:
+;1. [[feldmaresciallo]]
 {{User:Benwing2/it-pr|fèldmaresciàllo|pagename=feldmaresciallo}}
+;2. [[lambdacismo]]
 {{User:Benwing2/it-pr|lambdacìsmo|pagename=lambdacismo}}
+;3. [[postcommunio]]
 {{User:Benwing2/it-pr|pòstcommùnio|pagename=postcommunio}}
+;4. [[sternbergia]]
 {{User:Benwing2/it-pr|sternbèrgia<ref:{{R:it:Olivetti}}>|pagename=sternbergia}}
+;5. [[Tokyo]]
 {{User:Benwing2/it-pr|Tòkyo|pagename=Tokyo}}
 
-;The following should handle the <hmp:...> modifier correctly.
+;The following ([[D]]) should handle the <nowiki><hmp:...></nowiki> modifier correctly.
 {{User:Benwing2/it-pr|dì<pre:{{q|letter name}}><hmp:di,dì,di'>|d<pre:{{q|phonemic realization}}>|pagename=D}}
-;The following should handle the <hmp:...> modifier correctly and the DOTUNDER.
+;The following ([[E]]) should handle the <nowiki><hmp:...></nowiki> modifier correctly and the DOTUNDER.
 {{User:Benwing2/it-pr|pagename=E
 |É*<pre:{{q|letter name}}><hmp:e>
-|ẹ́,ẹ̀<pre:{{q|phonemic realization}}><rhyme:-><hmp:e,è>
+|ẹ́,ẹ̀<pre:{{q|phonemic realization}}><rhyme:-><hmp:e,è<qual:this has a qualifier>>
 }}
 
-;Two audios:
+;Two audios ([[cucina]]):
 {{User:Benwing2/it-pr|cucìna<audio:It-la cucina.ogg;Audio ("la cucina")><audio:It-cucina.oga>|pagename=cucina}}
 
-;Prefix: the following should have one hyphenation and no rhymes:
+;Prefix ([[post-]]): the following should have one hyphenation and no rhymes:
 {{User:Benwing2/it-pr|pòst-|pòs-<post:{{q|before a consonant}}>|pagename=post-}}
 
-;Suffixes: both should have hyphenations, only the first should have rhymes (with correct handling of the DOTOVER):
+;Suffixes ([[-ere]]): both should have hyphenations, only the first should have rhymes (with correct handling of the DOTOVER):
 {{User:Benwing2/it-pr|-ére|pagename=-ere}}
 {{User:Benwing2/it-pr|-ėre|pagename=-ere}}
 
-;The following should show the qualifier attached to the rhyme and hyphenation as well.
+;The following ([[ananas]]) should show the qualifier attached to the rhyme and hyphenation as well.
 ;(But with only one pronun, qualifier should not be shown, and syntactic gemination related qualifiers should not be shown.)
 {{User:Benwing2/it-pr|ànanas,ananàs<qual:rare><audio:LL-Q652 (ita)-Yiyi-Fragola-ananas.wav>|pagename=ananas}}
 
-;The following should show the qualifier attached to the rhyme and hyphenation as well.
+;The following ([[correo]]) should show the qualifier attached to the rhyme and hyphenation as well.
 {{User:Benwing2/it-pr|corrèo,#còrreo|pagename=correo}}
 
-;The following should show the qualifier attached to the rhyme and hyphenation as well.
+;The following ([[scandinavo]]) should show the qualifier attached to the rhyme and hyphenation as well.
 {{User:Benwing2/it-pr|scandìnavo,#!scandinàvo<ref:{{R:it:DiPI}}><ref:{{R:it:Trec}}>|pagename=scandinavo}}
 
-;The following should show the qualifier on the rhyme but not hyphenation.
+;The following ([[maltese]]) should show the qualifier on the rhyme but not hyphenation.
 {{User:Benwing2/it-pr|maltése,#malté[s]e|pagename=maltese}}
 
-;The following should not show any qualifier on the rhyme or hyphenation.
+;The following ([[qualche]]) should not show any qualifier on the rhyme or hyphenation.
 {{User:Benwing2/it-pr|quàlche°,#quàlche*<audio:LL-Q652 (ita)-Happypheasant-qualche.wav>|pagename=qualche}}
 
-;The following should not show any qualifier on the hyphenation.
+;The following ([[bosniaco-erzegovese]]) should not show any qualifier on the hyphenation.
 {{User:Benwing2/it-pr|bosnìaco-erdzegovése,bosnìaco-ertsegovése<qual:high-style>,#bosnìaco-erdzegové[s]e,bosnìaco-ertsegové[s]e<qual:high-style, traditional>|pagename=bosniaco-erzegovese}}
 
-;Correct handling of name in ref and qualifier.
+;Correct handling of name in ref and qualifier ([[diatriba]]).
 {{User:Benwing2/it-pr|di.atrìba,diatrìba<ref:{{R:it:DiPI}}<<name:dipi>>>|#di.àtriba<ref:<<name:dipi>>>|pagename=diatriba}}
 
-;The following uses <ref> twice.
+;The following uses <nowiki><ref></nowiki> twice ([[arena]]).
 {{User:Benwing2/it-pr|pagename=arena
 |aréna<ref:{{R:it:DOP|id=87651}}><pre:{{q|in the senses "sand", "beach", "lido"}}>
 |aréna,#arèna<ref:{{R:it:DiPI}}><ref:{{R:it:DOP|id=87649}}><pre:{{q|in the senses "arena", "amphiteater"}}>
 }}
 
-;The following uses !!! in a ref.
+;The following uses !!! in a ref ([[videogame]]).
 {{User:Benwing2/it-pr|vìdeoghéim,vìdeoghèim<ref:{{R:it:DiPI}} !!! {{R:it:Olivetti}}><hyph:vi.de.o.game>|pagename=videogame}}
 
-;The following should show rhymes and hyphenation only for the first pronunciation.
+;The following should show rhymes and hyphenation only for the first pronunciation ([[citta]]).
 {{User:Benwing2/it-pr|cìtta|scìtta<pre:{{a|Tuscan dialect|after a vowel}}><rhyme:->|pagename=citta}}
 
-;The following should show rhymes and hyphenation only for the first pronunciation.
+;The following should show rhymes and hyphenation only for the first pronunciation ([[capello]]).
 {{User:Benwing2/it-pr|capéllo<pre:{{a|standard}}>|capèllo<pre:{{a|Milan}}><rhyme:-><hyph:->|pagename=capello}}
 
-;The following should have two hyphenations, and rhymes with both 3 and 4 syllables.
+;The following should have two hyphenations, and rhymes with both 3 and 4 syllables ([[Etiopia]]).
 {{User:Benwing2/it-pr|Eti.òpia,Etiòpia<ref:{{R:it:DiPI}}>|pagename=Etiopia}}
 
-;The following should have four hyphenations, and two rhymes, each both 2 and 3 syllables.
+;The following should have four hyphenations, and two rhymes, each both 2 and 3 syllables ([[quieto]]).
 {{User:Benwing2/it-pr|quièto,qui.èto,quiéto,qui.éto<ref:{{R:it:DiPI}}>|pagename=quieto}}
 
-;The following should have rhymes with 1 and 2 syllables.
+;The following should have rhymes with 1 and 2 syllables ([[pois]]).
 {{User:Benwing2/it-pr|pu.à**,puà**<ref:{{R:it:DiPI}}>|pagename=pois}}
 
-;The following should look right.
+;The following should look right ([[po']]).
 {{User:Benwing2/it-pr|pò'**|pagename=po'}}
 * This word may or may not trigger {{w|syntactic gemination}} of the following consonant; both possibilities are allowable. Hence {{m|it|[[un]] [[po']] [[giù]]||a bit downwards}} can be pronounced either {{IPAchar|/um ˈpɔ ˈdʒu/}} (without gemination) or {{IPAchar|/um ˈpɔ‿dˈdʒu/}} (with it).
 
-;In the following, for the second set of pronunciations, rhyme /ome/ should not have a qualifier attached but rhyme /ikkome/ should.
+;In the following, for the second set of pronunciations, rhyme /ome/ should not have a qualifier attached but rhyme /ikkome/ should ([[siccome]]).
 {{User:Benwing2/it-pr|pagename=siccome
 |siccóme°<pre:{{i|implying causality}}>
-|siccóme°|#siccóme*|#sìccome*<pre:{{i|implying comparison}}>
+|siccóme°,#siccóme*,#sìccome*<pre:{{i|implying comparison}}>
 }}
 
-;The following should have only one hyphenation and one rhyme at the bottom, not indented.
+;The following should have only one hyphenation and one rhyme at the bottom, not indented ([[magnetochimiche]]).
 {{User:Benwing2/it-pr|magnetochìmiche<pre:{{q|as an adjective form}}>|magnètochìmiche<pre:{{q|as a noun form}}>|pagename=magnetochimiche}}
 
-;The following should have only one hyphenation and one rhyme at the bottom, not indented.
+;The following should have only one hyphenation and one rhyme at the bottom, not indented ([[Esaù]]).
 {{User:Benwing2/it-pr|pagename=Esaù
 |Esaù<pre:{{a|Northern Italy|standard}}>
 |E[s]aù<pre:{{a|Central and Southern Italy}}>
 }}
 
-;The following should have only one hyphenation and one rhyme at the bottom, not indented.
+;The following should have only one hyphenation and one rhyme at the bottom, not indented ([[risentano]]).
 {{User:Benwing2/it-pr|pagename=risentano
 |ri[s]èntano<post:{{i|in the literal sense "to hear again, to listen again"}}>
 |risèntano,#ri[s]èntano<post:{{i|in the sense "to be affected by"}}>
+}}
 
-;The following should have one hyphenation but two sets of rhymes.
-{User:Benwing2/it-pr|Wikipédia<pre:{{q|standard}}>|Vikipédia,Wikipídia,Vikipídia<pre:{{q|alternative pronunciations}}>|pagename=Wikipedia}}
+;The following should have one hyphenation but two sets of rhymes ([[Wikipedia]]).
+{{User:Benwing2/it-pr|Wikipédia<pre:{{q|standard}}>|Vikipédia,Wikipídia,Vikipídia<pre:{{q|alternative pronunciations}}>|pagename=Wikipedia}}
 
-;The following should show the audio indented under the second pronunciation, and the hyphenation and rhyme indented under the first pronunciation.
+;The following should show the audio indented under the second pronunciation, and the hyphenation and rhyme indented under the first pronunciation ([[freddo]]).
 {{User:Benwing2/it-pr|pagename=freddo
 |fréddo<pre:{{a|standard}}>
 |frèddo<pre:{{a|Lombardy|Sicily}}><audio:It-freddo.ogg;Audio (Lombardy)><rhyme:-><hyph:->
 }}
 
 ;The following should not have any stress in the phonology and hyphenation.
+;1. [[li]]
 {{User:Benwing2/it-pr|°li°|pagename=li}}
+;2. [[ne]]
 {{User:Benwing2/it-pr|°ne°|#ne°|pagename=ne}}
 
 ;Cases with apostrophes and embedded capital letters, should be hyphenated correctly:
+;1. [[anch'io]]
 {{User:Benwing2/it-pr|anch'ìo|pagename=anch'io}}
+;2. [[all'osso]]
 {{User:Benwing2/it-pr|all'òsso|pagename=all'osso}}
+;3. [[altr'ieri]]
 {{User:Benwing2/it-pr|altr'ièri,altr'iéri|pagename=altr'ieri}}
+;4. [[cardellino dell'Himalaya]]
 {{User:Benwing2/it-pr|cardellìno dell'Himalàya|pagename=cardellino dell'Himalaya}}
+;5. [[UEFA]]
 {{User:Benwing2/it-pr|UÈFA,U.ÈFA|pagename=UEFA}}
 
-FIXME: motivasse, {{it-IPA}} is in the French section
-FIXME: delete odî
-FIXME: delete polinomî
-FIXME: delete principî
-FIXME: delete tempî
-FIXME: aùtopàrco should be àutopàrco
+# FIXME: motivasse, {{temp|it-IPA}} is in the French section
+# FIXME: delete odî
+# FIXME: delete polinomî
+# FIXME: delete principî
+# FIXME: delete tempî
+# FIXME: aùtopàrco should be àutopàrco
