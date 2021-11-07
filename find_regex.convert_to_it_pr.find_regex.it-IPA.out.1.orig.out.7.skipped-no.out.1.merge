@@ -132,8 +132,7 @@ Page 5 Monaco: -------- begin text --------
 {{wikipedia|lang=it}}
 
 ===Pronunciation===
-{{it-pr|Mònaco}}
-* {{homophone|it|monaco}}
+{{it-pr|Mònaco<hmp:monaco>}}
 
 ===Etymology 1===
 {{rfe|it}}{{wikipedia|Principato di Monaco|lang=it}}{{wikipedia|Comune di Monaco|lang=it}}
@@ -629,8 +628,8 @@ Page 18 in-: -------- begin text --------
 ===Pronunciation===
 {{it-pr
 |in-
-|[iɱ]<post:{{q|before ''f'' or ''v''}}>
-|[iŋ]<post:{{q|before ''c'' or ''g''}}>
+|raw:[iɱ]<post:{{q|before ''f'' or ''v''}}>
+|raw:[iŋ]<post:{{q|before ''c'' or ''g''}}>
 }}
 
 ===Etymology 1===
@@ -1511,7 +1510,7 @@ From the older form ''elli'', from {{inh|it|VL.|*illī}}, from {{inh|it|la|ille|
 ===Pronunciation===
 {{it-pr
 |égli<audio:It-egli.ogg>
-|/eʎ/<pre:{{q|before a vowel}}>
+|raw:/eʎ/<pre:{{q|before a vowel}}>
 }}
 
 ===Pronoun===
@@ -3004,8 +3003,7 @@ Page 94 monaco: Found match for regex: =
 Page 94 monaco: -------- begin text --------
 
 ===Pronunciation===
-{{it-pr|mònaco}}
-* {{homophone|it|Monaco}}
+{{it-pr|mònaco<hmp:Monaco>}}
 
 ===Etymology 1===
 From {{inh|it|ML.|-}}, {{inh|it|LL.|monachus}}, from {{der|it|grc|μοναχός||single, solitary}}, from {{m|grc|μόνος||alone}}.
