@@ -15,6 +15,8 @@ FIXME:
 
 local export = {}
 
+local force_cat = false -- for testing
+
 local m_table = require("Module:table")
 local m_strutil = require("Module:string utilities")
 
@@ -410,9 +412,9 @@ local function canonicalize_and_auto_accent(text, pagename)
 					elseif not is_suffix or vowel_count == 2 then -- don't try to stress suffixes with only one vowel
 						local before, vow, after = rmatch(word, "^(.-)(" .. V .. ")(.*)$")
 						if before then
-							before, vow, after = m.groups()
 							if rfind(vow, "^[eoEO]$") then
 								err("When stressed vowel is e or o, it must be marked é/è or ó/ò to indicate quality")
+							end
 							word = before .. vow .. GR .. after
 						end
 					end
@@ -458,8 +460,8 @@ function export.to_phonemic(text, pagename)
 			end
 			-- Apply quality markers: è -> ɛ, ò -> ɔ
 			word = rsub(word, "[eo]" .. GR, {
-				["E" .. GR] = "ɛ",
-				["O" .. GR] = "ɔ",
+				["e" .. GR] = "ɛ",
+				["o" .. GR] = "ɔ",
 			})
 			-- Eliminate quality markers and DOTOVER/DOTUNDER, which have served their purpose.
 			word = rsub(word, "[" .. quality .. DOTOVER .. DOTUNDER .. "]", "")
@@ -773,9 +775,9 @@ Here:
 * `last_word_ends_in_vowel` and the other boolean properties are documented in the source code of to_phonemic().
 * ORIG_RESPELLING is the respelling for which the phonemic IPA pronunciation was generated. This is the same as was
   passed in to show_IPA_full(), but stripped of initial and final spec symbols such as *, **, °, °°, #, !, !!.
-* CANON_RESPELLING is the canonicalized version of ORIG_RESPELLING, as output by canonicalize_and_auto_accent().
-  This includes expansion of abbreviations such as ^à, suffix application such as -zione -> tsióne, and other
-  auto-accenting.
+* CANON_RESPELLING is the canonicalized, Unicode-decomposed version of ORIG_RESPELLING, as output by
+  canonicalize_and_auto_accent(). This includes expansion of abbreviations such as ^à, suffix application such as
+  -zione -> tsióne, and other auto-accenting.
 * PRESPEC is a string containing the raw symbol(s) added before the phonemic output, currently one or *, **, ° or °°.
   These may be explicitly specified by the user or added automatically based on the properties in the `phonemic`
   structure described above.
@@ -848,7 +850,7 @@ function export.show_IPA_full(data)
 		if raw then
 			pron = {
 				orig_respelling = respelling,
-				canon_respelling = respelling,
+				canon_respelling = decompose(respelling),
 				phonemic = raw,
 				raw = raw_type,
 			}
@@ -892,10 +894,10 @@ function export.show_IPA_full(data)
 			end
 		end
 		local refs
-		if #terms.ref == 0 then
+		if #term.ref == 0 then
 			refs = nil
-		elseif #terms.ref == 1 then
-			refs = require("Module:references").parse_references(terms.ref[1])
+		elseif #term.ref == 1 then
+			refs = require("Module:references").parse_references(term.ref[1])
 		else
 			refs = {}
 			for _, refspec in ipairs(term.ref) do
@@ -952,7 +954,7 @@ function export.show(frame)
 	end
 
 	local retval_IPA_full = export.show_IPA_full(data)
-	return IPA_full.formatted
+	return retval_IPA_full.formatted
 end
 
 
@@ -986,8 +988,8 @@ local function generate_rhymes_from_phonemic_output(ipa_full_output, always_rhym
 		local pronun = termobj.phonemic
 		local no_rhyme
 		if always_rhyme then
-			if raw == "phonetic" then
-				error("Can't generate rhyme for raw phonetic input")
+			if termobj.raw == "phonetic" then
+				error("Can't generate rhyme for raw phonetic output")
 			else
 				no_rhyme = false
 			end
@@ -995,7 +997,8 @@ local function generate_rhymes_from_phonemic_output(ipa_full_output, always_rhym
 			local words = split_but_rejoin_affixes(termobj.canon_respelling)
 			-- Figure out if we should not generate a rhyme for this term.
 			no_rhyme =
-				#words > 1 -- more than one word
+				termobj.raw -- raw phonemic or phonetic output given
+				or #words > 1 -- more than one word
 				or words[1]:find("%-$") -- a prefix
 				or words[1]:find("^%-") and ( -- an unstressed suffix:
 					-- (1): DOTOVER explicitly indicates unstressed suffix
@@ -1007,39 +1010,41 @@ local function generate_rhymes_from_phonemic_output(ipa_full_output, always_rhym
 		end
 		if not no_rhyme then
 			local rhyme_pronun = rsub(rsub(pronun, ".*[ˌˈ]", ""), "^[^aeiouɛɔ]*", ""):gsub(TIE, ""):gsub("%.", "")
-			local nsyl = get_num_syl_from_phonemic(pronun)
-			local saw_rhyme = false
-			for _, rhyme in ipairs(rhymes) do
-				if rhyme.rhyme == rhyme_pronun then
-					-- already saw rhyme
-					local saw_nsyl = false
-					for _, this_nsyl in ipairs(rhyme.num_syl) do
-						if this_nsyl == nsyl then
-							saw_nsyl = true
-							break
+			if rhyme_pronun ~= "" then
+				local nsyl = get_num_syl_from_phonemic(pronun)
+				local saw_rhyme = false
+				for _, rhyme in ipairs(rhymes) do
+					if rhyme.rhyme == rhyme_pronun then
+						-- already saw rhyme
+						local saw_nsyl = false
+						for _, this_nsyl in ipairs(rhyme.num_syl) do
+							if this_nsyl == nsyl then
+								saw_nsyl = true
+								break
+							end
 						end
+						if not saw_nsyl then
+							table.insert(rhyme.num_syl, nsyl)
+						end
+						saw_rhyme = true
+						break
 					end
-					if not saw_nsyl then
-						table.insert(rhyme.num_syl, nsyl)
-					end
-					saw_rhyme = true
-					break
 				end
-			end
-			if not saw_rhyme then
-				-- Only show pronunciation qualifiers with rhymes if there's more than one pronunciation given.
-				-- Otherwise the qualifier is just redundant since it's already specified before the pronunciation
-				-- and doesn't serve to distinguish rhymes. Also, only set the qualifier for new rhymes; don't
-				-- combine qualifiers from different pronunciations with the same rhyme. For example, for
-				-- {{it-pr|scandìnavo,#!scandinàvo}} we want to see
-				--
-				-- Rhymes: -inavo, ''(traditional, careful style)'' -avo
-				--
-				-- but for {{it-pr|quàlche°,#quàlche*}} we do *NOT* want to see ''(traditional)'' by the rhyme -alke,
-				-- which would be incorrect as the same rhyme applies to both pronunciations and only one of the
-				-- pronunciations is traditional.
-				local quals = #termobj > 1 and termobj.qualifiers or nil
-				table.insert(rhymes, {rhyme = rhyme_pronun, qualifiers = quals, num_syl = {nsyl}})
+				if not saw_rhyme then
+					-- Only show pronunciation qualifiers with rhymes if there's more than one pronunciation given.
+					-- Otherwise the qualifier is just redundant since it's already specified before the pronunciation
+					-- and doesn't serve to distinguish rhymes. Also, only set the qualifier for new rhymes; don't
+					-- combine qualifiers from different pronunciations with the same rhyme. For example, for
+					-- {{it-pr|scandìnavo,#!scandinàvo}} we want to see
+					--
+					-- Rhymes: -inavo, ''(traditional, careful style)'' -avo
+					--
+					-- but for {{it-pr|quàlche°,#quàlche*}} we do *NOT* want to see ''(traditional)'' by the rhyme -alke,
+					-- which would be incorrect as the same rhyme applies to both pronunciations and only one of the
+					-- pronunciations is traditional.
+					local quals = #ipa_full_output.terms > 1 and termobj.qualifiers and #termobj.qualifiers > 0 and termobj.qualifiers or nil
+					table.insert(rhymes, {rhyme = rhyme_pronun, qualifiers = quals, num_syl = {nsyl}})
+				end
 			end
 		end
 	end
@@ -1047,18 +1052,9 @@ local function generate_rhymes_from_phonemic_output(ipa_full_output, always_rhym
 end
 
 
--- Syllabify text based on its spelling. The text should be decomposed using decompose() and have extraneous
--- characters (e.g. initial *) removed.
-local function syllabify_from_spelling(text)
-	-- Convert spaces and word-separating hyphens into syllable divisions.
-	local words = split_but_rejoin_affixes(text)
-	for i, word in ipairs(words) do
-		if (i % 2) == 0 then -- a separator
-			words[i] = WORDDIV
-		end
-	end
-	text = table.concat(words)
-
+-- Syllabify a single word based on its spelling. The text should be decomposed using decompose() and have extraneous
+-- characters (e.g. initial or final *) removed.
+local function syllabify_word_from_spelling(text)
 	-- NOTE: In all of the following, we have to be careful to allow for apostrophes between letters and for capital
 	-- letters in the middle of words, as in [[anch'io]], [[all'osso]], [[altr'ieri]], [[cardellino dell'Himalaya]],
 	-- [[UEFA]], etc.
@@ -1151,6 +1147,24 @@ local function syllabify_from_spelling(text)
 	text = text:gsub(TEMP_Y_CAPS, "Y")
 	text = text:gsub(TEMP_G, "g")
 	text = text:gsub(TEMP_G_CAPS, "G")
+	return text
+end
+
+
+-- Syllabify text based on its spelling. The text should be decomposed using decompose() and have extraneous
+-- characters (e.g. initial *) removed.
+local function syllabify_from_spelling(text)
+	-- Convert spaces and word-separating hyphens into syllable divisions.
+	local words = split_but_rejoin_affixes(text)
+	for i, word in ipairs(words) do
+		if (i % 2) == 0 then -- a separator
+			words[i] = WORDDIV
+		else
+			words[i] = syllabify_word_from_spelling(word)
+		end
+	end
+	text = table.concat(words)
+
 	-- Convert word divisions into periods, but first into spaces so we can call remove_secondary_stress().
 	-- We have to call remove_secondary_stress() after syllabification so we correctly syllabify words like
 	-- bìobibliografìa.
@@ -1164,7 +1178,7 @@ end
 -- Given the canon_respelling field in the structure output by show_IPA_full(), normalize it into the form that can
 -- (a) be passed to syllabify_from_spelling() to produce the syllabification that is used to generate hyphenation
 -- output, (b) be further processed to determine whether to generate hyphenation at all (by comparing the
--- further-processed result to the original pagename).
+-- further-processed result to the original pagename). NOTE: canon_respelling must be decomposed using decompose().
 local function normalize_for_syllabification(respelling)
 	-- Remove IPA foot boundaries.
 	respelling = respelling:gsub("|", " ")
@@ -1176,9 +1190,10 @@ local function normalize_for_syllabification(respelling)
 end
 
 
--- Given the output of normalize_for_syllabification(), see if it matches the page name. If so, we auto-generate
--- hyphenation output based on the respelling.
+-- Given the output of normalize_for_syllabification() (which should be decomposed using decompose()), see if it
+-- matches the page name. If so, we auto-generate hyphenation output based on the respelling.
 local function spelling_normalized_for_syllabification_matches_pagename(text, pagename)
+	pagename = decompose(pagename)
 	text = remove_secondary_stress(text)
 	text = text:gsub("_", "")
 	if text == pagename then
@@ -1209,7 +1224,7 @@ local function generate_hyphenation_from_phonemic_output(ipa_full_output, pagena
 		if termobj.raw then
 			no_hyph = true
 		else
-			normtext = = normalize_for_syllabification(termobj.canon_respelling)
+			normtext = normalize_for_syllabification(termobj.canon_respelling)
 			no_hyph = not all_words_have_vowels(normtext)
 				or not spelling_normalized_for_syllabification_matches_pagename(normtext, pagename)
 		end
@@ -1226,7 +1241,7 @@ local function generate_hyphenation_from_phonemic_output(ipa_full_output, pagena
 			if not saw_hyph then
 				-- Only show pronunciation qualifiers with hyphenations if there's more than one pronunciation given,
 				-- and only set the qualifier for new hyphenations. See generate_rhymes_from_phonemic_output().
-				local quals = #termobj > 1 and termobj.qualifiers or nil
+				local quals = #ipa_full_output.terms > 1 and termobj.qualifiers and #termobj.qualifiers > 0 and termobj.qualifiers or nil
 				table.insert(hyphs, {syllabification = syllabification, hyph = rsplit(syllabification, "%."),
 					qualifiers = quals})
 			end
@@ -1242,10 +1257,10 @@ local function parse_rhyme(arg, iut, parse_err)
 	end
 	local retval = {}
 	local rhyme_segments = iut.parse_balanced_segment_run(arg, "<", ">")
-	local comma_separated_rhyme_runs = iut.split_alternating_runs(rhyme_segments, "%s*,%s*")
-	for _, rhyme_run in ipairs(comma_separated_rhyme_runs) do
-		local rhyme_obj = {rhyme = rhyme_run[1]}
-		for j = 2, #rhyme_run - 1, 2 do
+	local comma_separated_groups = iut.split_alternating_runs(rhyme_segments, "%s*,%s*")
+	for _, group in ipairs(comma_separated_groups) do
+		local rhyme_obj = {rhyme = group[1]}
+		for j = 2, #group - 1, 2 do
 			if group[j + 1] ~= "" then
 				parse_err("Extraneous text '" .. group[j + 1] .. "' after modifier")
 			end
@@ -1262,7 +1277,7 @@ local function parse_rhyme(arg, iut, parse_err)
 				for _, nsyl in ipairs(nsyls) do
 					if not nsyl:find("^[0-9]+$") then
 						parse_err("Number of syllables '" .. nsyl .. "' in rhyme " ..
-							table.concat(rhyme_run) .. " should be numeric")
+							table.concat(group) .. " should be numeric")
 					end
 					if not rhyme_obj.num_syl then
 						rhyme_obj.num_syl = {}
@@ -1292,10 +1307,10 @@ local function parse_hyph(arg, iut, parse_err)
 	end
 	local retval = {}
 	local hyph_segments = iut.parse_balanced_segment_run(arg, "<", ">")
-	local comma_separated_hyph_runs = iut.split_alternating_runs(hyph_segments, "%s*,%s*")
-	for _, hyph_run in ipairs(comma_separated_hyph_runs) do
-		local hyph_obj = {syllabification = hyph_run[1], hyph = rsplit(hyph_run[1], "%.")}
-		for j = 2, #hyph_run - 1, 2 do
+	local comma_separated_groups = iut.split_alternating_runs(hyph_segments, "%s*,%s*")
+	for _, group in ipairs(comma_separated_groups) do
+		local hyph_obj = {syllabification = group[1], hyph = rsplit(group[1], "%.")}
+		for j = 2, #group - 1, 2 do
 			if group[j + 1] ~= "" then
 				parse_err("Extraneous text '" .. group[j + 1] .. "' after modifier")
 			end
@@ -1329,10 +1344,10 @@ local function parse_homophone(arg, iut, parse_err)
 	end
 	local retval = {}
 	local hmp_segments = iut.parse_balanced_segment_run(arg, "<", ">")
-	local comma_separated_hmp_runs = iut.split_alternating_runs(hmp_segments, "%s*,%s*")
-	for _, hmp_run in ipairs(comma_separated_hmp_runs) do
-		local hmp_obj = {term = hmp_run[1]}
-		for j = 2, #hmp_run - 1, 2 do
+	local comma_separated_groups = iut.split_alternating_runs(hmp_segments, "%s*,%s*")
+	for _, group in ipairs(comma_separated_groups) do
+		local hmp_obj = {term = group[1]}
+		for j = 2, #group - 1, 2 do
 			if group[j + 1] ~= "" then
 				parse_err("Extraneous text '" .. group[j + 1] .. "' after modifier")
 			end
@@ -1475,7 +1490,7 @@ function export.show_pr(frame)
 			table.insert(parsed_respellings, parsed)
 		else
 			local terms = {}
-			for _, term in rsplit(respelling, "%s*,%s*") do
+			for _, term in ipairs(rsplit(respelling, "%s*,%s*")) do
 				table.insert(terms, {term = term, ref = {}, qual = {}})
 			end
 			table.insert(parsed_respellings, {
@@ -1497,10 +1512,10 @@ function export.show_pr(frame)
 			rhymes = generate_rhymes_from_phonemic_output(parsed.ipa_full)
 		else
 			for _, rhyme in ipairs(parsed.rhyme) do
-				if rhyme == "-" then
+				if rhyme.rhyme == "-" then
 					rhymes = {}
 					break
-				elseif rhyme == "+" then
+				elseif rhyme.rhyme == "+" then
 					local auto_rhymes = generate_rhymes_from_phonemic_output(parsed.ipa_full, "always rhyme")
 					for _, auto_rhyme in ipairs(auto_rhymes) do
 						table.insert(rhymes, auto_rhyme)
@@ -1519,6 +1534,7 @@ function export.show_pr(frame)
 				end
 			end
 		end
+		parsed.rhyme = rhymes
 
 		-- Generate the hyphenations.
 		local hyphs = {}
@@ -1526,7 +1542,7 @@ function export.show_pr(frame)
 			hyphs = generate_hyphenation_from_phonemic_output(parsed.ipa_full, pagename)
 		else
 			for _, hyph in ipairs(parsed.hyph) do
-				if hyph == "-" then
+				if hyph.syllabification == "-" then
 					hyphs = {}
 					break
 				else
@@ -1559,8 +1575,8 @@ function export.show_pr(frame)
 	local all_hyph_sets_eq = true
 	for j, parsed in ipairs(parsed_respellings) do
 		if j == 1 then
-			first_hyphs = parsed.hyphs
-		elseif not m_table.deepEquals(first_hyphs, parsed.hyphs) then
+			first_hyphs = parsed.hyph
+		elseif not m_table.deepEquals(first_hyphs, parsed.hyph) then
 			all_hyph_sets_eq = false
 			break
 		end
@@ -1569,11 +1585,11 @@ function export.show_pr(frame)
 	local function format_phonemic(parsed)
 		local pre = parsed.pre and parsed.pre .. " " or ""
 		local post = parsed.post and " " .. parsed.post or ""
-		return string.rep("*", parsed.bullets) .. parsed.ipa_full.formatted
+		return string.rep("*", parsed.bullets) .. pre .. parsed.ipa_full.formatted .. post
 	end
 
 	local function format_rhymes(rhymes, num_bullets)
-		local rhymetext = require("Module:rhymes").format_rhymes { lang = lang, rhymes = rhymes }
+		local rhymetext = require("Module:rhymes").format_rhymes { lang = lang, rhymes = rhymes, force_cat = force_cat }
 		return string.rep("*", num_bullets) .. " " .. rhymetext
 	end
 
@@ -1618,7 +1634,7 @@ function export.show_pr(frame)
 			table.insert(textparts, "\n")
 			table.insert(textparts, format_rhymes(parsed.rhyme, parsed.bullets + 1))
 		end
-		if not all_hyph_sets_eq and #parsed.hyphs > 0 then
+		if not all_hyph_sets_eq and #parsed.hyph > 0 then
 			table.insert(textparts, "\n")
 			table.insert(textparts, format_hyphenations(parsed.hyph, parsed.bullets + 1))
 		end
@@ -1630,7 +1646,7 @@ function export.show_pr(frame)
 				#parsed_respellings == 1 and parsed.bullets or parsed.bullets + 1))
 		end
 	end
-	if all_rhyme_sets_eq and first_rhyme_ret > 0 then
+	if all_rhyme_sets_eq and #first_rhyme_ret > 0 then
 		table.insert(textparts, "\n")
 		table.insert(textparts, format_rhymes(first_rhyme_ret, min_num_bullets))
 	end
