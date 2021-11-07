@@ -66,11 +66,11 @@ end
 
 Meant to be called from a module. `data` is a table in the following format:
 {
-  lang = LANG_OBJ,
-  rhymes = {{rhyme = RHYME, qualifiers = nil or {QUALIFIER, QUALIFIER, ...}, num_syl = nil or {#SYL, #SYL, ...}}, ...},
-  qualifiers = nil or {QUALIFIER, QUALIFIER, ...},
+  lang = LANGUAGE_OBJECT,
+  rhymes = {{rhyme = "RHYME", qualifiers = nil or {"QUALIFIER", "QUALIFIER", ...}, num_syl = nil or {#SYL, #SYL, ...}}, ...},
+  qualifiers = nil or {"QUALIFIER", "QUALIFIER", ...},
   num_syl = nil or {#SYL, #SYL, ...},
-  caption = CAPTION,
+  caption = nil or "CAPTION",
   nocaption = BOOLEAN,
 }
 
