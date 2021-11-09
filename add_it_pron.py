@@ -11,7 +11,7 @@ from blib import getparam, rmparam, msg, site, tname, pname
 from snarf_it_pron import apply_default_pronun
 
 # FIXME: Handle two 'n:' references for the same pronunciation. Separate with " !!! " in a single param and fix the
-# underlying code to support this format.
+# underlying code to support this format. (DONE)
 
 def process_page(index, page, spec):
   global args
@@ -26,48 +26,66 @@ def process_page(index, page, spec):
     return
   location, pronspecs = m.groups()
   pronspecs = [pronspec.replace("_", " ") for pronspec in pronspecs.split(" ")]
-  prons = []
-  refs = []
-  have_footnotes = False
-  next_num_pron = 0
-  last_num_pron = None
-  last_footnote_param_index = None
+  if args.old_it_ipa:
+    prons = []
+    refs = []
+    have_footnotes = False
+    next_num_pron = 0
+    last_num_pron = None
+    last_footnote_param_index = None
 
-  for pronspec in pronspecs:
-    if pronspec.startswith("r:"):
-      ref = pronspec[2:]
-      if not re.search(r"^(Olivetti|DiPI|Treccani|DOP)\b", ref):
-        pagemsg("WARNING: Unrecognized reference %s: pronspec=%s" % (pronspec, spec))
-        return
-      refs.append("{{R:it:%s}}" % ref)
-    elif pronspec.startswith("n:"):
-      ref = pronspec[2:]
-      if not re.search(r"^(Olivetti|DiPI|Treccani|DOP)\b", ref):
-        pagemsg("WARNING: Unrecognized reference %s: pronspec=%s" % (pronspec, spec))
-        return
-      if next_num_pron == 0:
-        pagemsg("WARNING: No preceding pronunciations for footnote %s: %s" % (pronspec, spec))
-        return
-      reftemp = "{{R:it:%s}}" % ref
-      if next_num_pron == last_num_pron:
-        prons[last_footnote_param_index] += " !!! " + reftemp
-      else:
-        last_footnote_param_index = len(prons)
-        last_num_pron = next_num_pron
-        prons.append("ref%s=%s" % ("" if next_num_pron == 1 else next_num_pron, reftemp))
-      have_footnotes = True
-    else:
-      if re.search("^ref[0-9]*=", pronspec):
+    for pronspec in pronspecs:
+      if pronspec.startswith("r:"):
+        ref = pronspec[2:]
+        if not re.search(r"^(Olivetti|DiPI|Treccani|DOP)\b", ref):
+          pagemsg("WARNING: Unrecognized reference %s: pronspec=%s" % (pronspec, spec))
+          return
+        refs.append("{{R:it:%s}}" % ref)
+      elif pronspec.startswith("n:"):
+        ref = pronspec[2:]
+        if not re.search(r"^(Olivetti|DiPI|Treccani|DOP)\b", ref):
+          pagemsg("WARNING: Unrecognized reference %s: pronspec=%s" % (pronspec, spec))
+          return
+        if next_num_pron == 0:
+          pagemsg("WARNING: No preceding pronunciations for footnote %s: %s" % (pronspec, spec))
+          return
+        reftemp = "{{R:it:%s}}" % ref
+        if next_num_pron == last_num_pron:
+          prons[last_footnote_param_index] += " !!! " + reftemp
+        else:
+          last_footnote_param_index = len(prons)
+          last_num_pron = next_num_pron
+          prons.append("ref%s=%s" % ("" if next_num_pron == 1 else next_num_pron, reftemp))
         have_footnotes = True
-      if "=" not in pronspec:
-        respellings, msgs = apply_default_pronun(pronspec)
-        if "NEED_ACCENT" in msgs:
-          pagemsg("WARNING: Missing accent for pronunciation %s" % pronspec)
-          return
-        if "Z" in msgs:
-          pagemsg("WARNING: Unconverted z in pronunciation %s" % pronspec)
-          return
-        next_num_pron += 1
+      else:
+        if re.search("^ref[0-9]*=", pronspec):
+          have_footnotes = True
+        if "=" not in pronspec:
+          respellings, msgs = apply_default_pronun(pronspec)
+          if "NEED_ACCENT" in msgs:
+            pagemsg("WARNING: Missing accent for pronunciation %s" % pronspec)
+            return
+          if "Z" in msgs:
+            pagemsg("WARNING: Unconverted z in pronunciation %s" % pronspec)
+            return
+          next_num_pron += 1
+        prons.append(pronspec)
+  else:
+    prons = []
+    refs = []
+    have_footnotes = False
+    for pronspec in pronspecs:
+      pronspec_parts = re.split("(<r:(?:<<.*?>>|[^<>])*>)", pronspec)
+      for i, pronspec_part in enumerate(pronspec_parts):
+        if i % 2 == 1: # a reference
+          if not re.search(r"^<r:(Olivetti|DiPI|Treccani|DOP)\b", pronspec_part):
+            pagemsg("WARNING: Unrecognized reference %s: pronspec=%s" % (pronspec_part, spec))
+            return
+          pronspec_parts[i] = "<ref:{{R:it:%s}}>" % pronspec_part[3:-1]
+      pronspec = "".join(pronspec_parts)
+      if "<ref:" in pronspec:
+        have_footnotes = True # <r: or original <ref:
+      # FIXME: Verify respellings checking for NEED_ACCENT and Z, as above.
       prons.append(pronspec)
   if not re.search("^[0-9]+$", location) and location not in ["top", "all"]:
     pagemsg("WARNING: Unrecognized location %s: pronspec=%s" % (location, spec))
@@ -92,13 +110,16 @@ def process_page(index, page, spec):
     return
 
   def construct_new_pron_template():
-    return "{{it-IPA|%s}}" % "|".join(prons)
+    if args.old_it_ipa:
+      return "{{it-IPA|%s}}" % "|".join(prons), "* "
+    else:
+      return "{{it-pr|%s}}" % "|".join(prons), ""
 
   def insert_into_existing_pron_section(k):
     parsed = blib.parse_text(subsections[k])
     for t in parsed.filter_templates():
       tn = tname(t)
-      if tn == "it-IPA":
+      if tn == "it-IPA" and args.old_it_ipa:
         origt = unicode(t)
         # Compute set of current reference params
         current_refs = set()
@@ -137,16 +158,37 @@ def process_page(index, page, spec):
           pagemsg("Replaced %s with %s" % (origt, unicode(t)))
           notes.append("replace existing %s with %s (manually assisted)" % (origt, unicode(t)))
           subsections[k] = unicode(parsed)
+        break
+      if tn == "it-pr" and not args.old_it_ipa:
+        origt = unicode(t)
+        # Now change the params
+        del t.params[:]
+        for pn, pv in enumerate(prons):
+          t.add(str(pn + 1), pv)
+        if origt != unicode(t):
+          pagemsg("Replaced %s with %s" % (origt, unicode(t)))
+          notes.append("replace existing %s with %s (manually assisted)" % (origt, unicode(t)))
+          subsections[k] = unicode(parsed)
         break 
     else: # no break
-      new_pron_template = construct_new_pron_template()
-      subsections[k] = "* " + new_pron_template + "\n" + subsections[k]
+      new_pron_template, pron_prefix = construct_new_pron_template()
+      if not args.old_it_ipa:
+        # Remove existing rhymes/hyphenation/it-IPA lines
+        for template in ["rhyme|it", "rhymes|it", "it-IPA", "hyph|it", "hyphenation|it"]:
+          re_template = template.replace("|", r"\|")
+          regex = r"^([* ]*\{\{%s(?:\|[^{}]*)*\}\}\n)" % re_template
+          m = re.search(regex, subsections[k], re.M)
+          if m:
+            pagemsg("Removed existing %s" % m.group(1).strip())
+            notes.append("remove existing {{%s}}" % template)
+            subsections[k] = re.sub(regex, "", subsections[k], 0, re.M)
+      subsections[k] = pron_prefix + new_pron_template + "\n" + subsections[k]
       notes.append("insert %s into existing Pronunciation section (manually assisted)" % new_pron_template)
     return True
 
   def insert_new_l3_pron_section(k):
-    new_pron_template = construct_new_pron_template()
-    subsections[k:k] = ["===Pronunciation===\n", "* " + new_pron_template + "\n\n"]
+    new_pron_template, pron_prefix = construct_new_pron_template()
+    subsections[k:k] = ["===Pronunciation===\n", pron_prefix + new_pron_template + "\n\n"]
     notes.append("add top-level Italian pron %s (manually assisted)" % new_pron_template)
 
   if location == "all":
@@ -187,8 +229,8 @@ def process_page(index, page, spec):
       if k -1 >= len(subsections):
         pagemsg("WARNING: No lemma or non-lemma section in Etymology N section: %s" % subsections[begin_etym_n_section].strip())
         return
-      new_pron_template = construct_new_pron_template()
-      subsections[k - 1:k - 1] = ["====Pronunciation====\n", "* " + new_pron_template + "\n\n"]
+      new_pron_template, pron_prefix = construct_new_pron_template()
+      subsections[k - 1:k - 1] = ["====Pronunciation====\n", pron_prefix + new_pron_template + "\n\n"]
       notes.append("add Italian pron %s to Etymology %s (manually assisted)" % (new_pron_template, location))
 
     for k in xrange(2, len(subsections), 2):
@@ -296,6 +338,7 @@ def process_page(index, page, spec):
 parser = blib.create_argparser("Add Italian pronunciations based on file of directives")
 parser.add_argument("--direcfile", required=True, help="File containing pronunciations, as output from snarf_it_pron.py and modified")
 parser.add_argument("--override-refs", action="store_true", help="Override reference params (n:Foo), even if some get deleted in the process")
+parser.add_argument("--old-it-ipa", action="store_true", help="Store as {{it-IPA}} instead of {{it-pr}}")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
