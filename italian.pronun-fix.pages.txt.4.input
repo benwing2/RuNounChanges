@@ -323,34 +323,33 @@ Page 0 accentuino: <respelling> all: accèntu.ino<r:DiPI|accentuo> <end>
 Page 0 accentuato: <respelling> all: accentu.àto,accentuàto<r:DiPI|accentuale> <end>
 Page 0 accentuati: <respelling> all: accentu.àti,accentuàti<r:DiPI|accentuale> <end>
 Page 0 accentuata: <respelling> all: accentu.àta,accentuàta<r:DiPI|accentuale> <end>
-# got this far in find_regex.italian.pronun-fix.pages.txt.4.out.1
 # up through 2000
-Page 0 pesare: <respelling> all: pesàre,#pe[s]àre<r:DiPI|peso> <end>
-Page 0 pesarsi: <respelling> all: pesàrsi,#pe[s]àrsi<r:DiPI|peso> <end>
+Page 0 pesare: <respelling> all: pesàre,#pe[s]àre<r:DiPI|pesa> <end>
+Page 0 pesarsi: <respelling> all: pesàrsi,#pe[s]àrsi<r:DiPI|pesa> <end>
 # FIXME, split etym
 #Page 0 peso: <respelling> all: peso <end>
 #Page 0 pesi: <respelling> all: pesi <end>
 #Page 0 pesa: <respelling> all: pesa <end>
 #Page 0 pese: <respelling> all: pese <end>
-Page 0 pesano: <respelling> all: pésano,#pé[s]ano<r:DiPI|peso> <end>
-Page 0 pesino: <respelling> all: pésino,#pé[s]ino<r:DiPI|peso> <end>
-Page 0 contrappesare: <respelling> all: contrappesàre,#contrappe[s]àre<r:DiPI|peso> <end>
-Page 0 contrappesarsi: <respelling> all: contrappesàrsi,#contrappe[s]àrsi<r:DiPI|peso> <end>
+Page 0 pesano: <respelling> all: pésano,#pé[s]ano<r:DiPI|pesa> <end>
+Page 0 pesino: <respelling> all: pésino,#pé[s]ino<r:DiPI|pesa> <end>
+Page 0 contrappesare: <respelling> all: contrappesàre,#contrappe[s]àre<r:DiPI|pesa> <end>
+Page 0 contrappesarsi: <respelling> all: contrappesàrsi,#contrappe[s]àrsi<r:DiPI|pesa> <end>
 # FIXME, split etym
 #Page 0 contrappeso: <respelling> all: contrappeso <end>
 #Page 0 contrappesi: <respelling> all: contrappesi <end>
-Page 0 contrappesa: <respelling> all: contrappésa,#contrappé[s]a<r:DiPI|peso> <end>
-Page 0 contrappese: <respelling> all: contrappése,#contrappé[s]e<r:DiPI|peso> <end>
-Page 0 contrappesano: <respelling> all: contrappésano,#contrappé[s]ano<r:DiPI|peso> <end>
-Page 0 contrappesino: <respelling> all: contrappésino,#contrappé[s]ino<r:DiPI|peso> <end>
-Page 0 ripesare: <respelling> all: ripesàre,#ripe[s]àre<r:DiPI|peso> <end>
-Page 0 ripesarsi: <respelling> all: ripesàrsi,#ripe[s]àrsi<r:DiPI|peso> <end>
-Page 0 ripeso: <respelling> all: ripéso,#ripé[s]o<r:DiPI|peso> <end>
-Page 0 ripesi: <respelling> all: ripési,#ripé[s]i<r:DiPI|peso> <end>
-Page 0 ripesa: <respelling> all: ripésa,#ripé[s]a<r:DiPI|peso> <end>
-Page 0 ripese: <respelling> all: ripése,#ripé[s]e<r:DiPI|peso> <end>
-Page 0 ripesano: <respelling> all: ripésano,#ripé[s]ano<r:DiPI|peso> <end>
-Page 0 ripesino: <respelling> all: ripésino,#ripé[s]ino<r:DiPI|peso> <end>
+Page 0 contrappesa: <respelling> all: contrappésa,#contrappé[s]a<r:DiPI|pesa> <end>
+Page 0 contrappese: <respelling> all: contrappése,#contrappé[s]e<r:DiPI|pesa> <end>
+Page 0 contrappesano: <respelling> all: contrappésano,#contrappé[s]ano<r:DiPI|pesa> <end>
+Page 0 contrappesino: <respelling> all: contrappésino,#contrappé[s]ino<r:DiPI|pesa> <end>
+Page 0 ripesare: <respelling> all: ripesàre,#ripe[s]àre<r:DiPI|pesa> <end>
+Page 0 ripesarsi: <respelling> all: ripesàrsi,#ripe[s]àrsi<r:DiPI|pesa> <end>
+Page 0 ripeso: <respelling> all: ripéso,#ripé[s]o<r:DiPI|pesa> <end>
+Page 0 ripesi: <respelling> all: ripési,#ripé[s]i<r:DiPI|pesa> <end>
+Page 0 ripesa: <respelling> all: ripésa,#ripé[s]a<r:DiPI|pesa> <end>
+Page 0 ripese: <respelling> all: ripése,#ripé[s]e<r:DiPI|pesa> <end>
+Page 0 ripesano: <respelling> all: ripésano,#ripé[s]ano<r:DiPI|pesa> <end>
+Page 0 ripesino: <respelling> all: ripésino,#ripé[s]ino<r:DiPI|pesa> <end>
 Page 0 soppesare: <respelling> all: soppesàre,#soppe[s]àre<r:DiPI|soppeso> <end>
 Page 0 soppesarsi: <respelling> all: soppesàrsi,#soppe[s]àrsi<r:DiPI|soppeso> <end>
 Page 0 soppeso: <respelling> all: soppéso,#soppé[s]o<r:DiPI> <end>
@@ -370,8 +369,9 @@ Page 0 spesano: <respelling> all: spésano,#spé[s]ano<r:DiPI|speso> <end>
 Page 0 spesino: <respelling> all: spésino,#spé[s]ino<r:DiPI|speso> <end>
 # FIXME, also do piegarsi
 #Page 0 piegare: <respelling> all: piegare <end>
-Page 0 piego: <respelling> all: piègo,piégo<r:DiPI> <end>
-Page 0 pieghi: <respelling> all: pièghi,piéghi<r:DiPI|piego> <end>
+# FIXME, split etym
+#Page 0 piego: <respelling> all: piègo,piégo<r:DiPI> <end>
+#Page 0 pieghi: <respelling> all: pièghi,piéghi<r:DiPI|piego> <end>
 # FIXME, split etym
 #Page 0 piega: <respelling> all: pièga,piéga<r:DiPI> <end>
 Page 0 pieghe: <respelling> all: pièghe,piéghe<r:DiPI|piega> <end>
@@ -406,16 +406,18 @@ Page 0 impieghino: <respelling> all: impièghino,impiéghino<r:DiPI|impiego> <en
 # FIXME
 #Page 0 reimpiegare: <respelling> all: reimpiegare <end>
 #Page 0 reimpiegarsi: <respelling> all: reimpiegarsi <end>
-Page 0 reimpiego: <respelling> all: re.impiègo,re.impiégo<r:DiPI|impiego><r:Olivetti|reimpiegare> <end>
-Page 0 reimpieghi: <respelling> all: re.impièghi,re.impiéghi<r:DiPI|impiego><r:Olivetti|reimpiegare> <end>
+# FIXME, two etyms
+#Page 0 reimpiego: <respelling> all: re.impiègo,re.impiégo<r:DiPI|impiego><r:Olivetti|reimpiegare> <end>
+#Page 0 reimpieghi: <respelling> all: re.impièghi,re.impiéghi<r:DiPI|impiego><r:Olivetti|reimpiegare> <end>
 Page 0 reimpiega: <respelling> all: re.impièga,re.impiéga<r:DiPI|impiego><r:Olivetti|reimpiegare> <end>
 Page 0 reimpiegano: <respelling> all: re.impiègano,re.impiégano<r:DiPI|impiego><r:Olivetti|reimpiegare> <end>
 Page 0 reimpieghino: <respelling> all: re.impièghino,re.impiéghino<r:DiPI|impiego><r:Olivetti|reimpiegare> <end>
 # FIXME
 #Page 0 rimpiegare: <respelling> all: rimpiegare <end>
 #Page 0 rimpiegarsi: <respelling> all: rimpiegarsi <end>
-Page 0 rimpiego: <respelling> all: rimpiègo,rimpiégo<r:DiPI|impiego> <end>
-Page 0 rimpieghi: <respelling> all: rimpièghi,rimpiéghi<r:DiPI|impiego> <end>
+# FIXME, two etyms
+#Page 0 rimpiego: <respelling> all: rimpiègo,rimpiégo<r:DiPI|impiego> <end>
+#Page 0 rimpieghi: <respelling> all: rimpièghi,rimpiéghi<r:DiPI|impiego> <end>
 Page 0 rimpiega: <respelling> all: rimpièga,rimpiéga<r:DiPI|impiego> <end>
 Page 0 rimpiegano: <respelling> all: rimpiègano,rimpiégano<r:DiPI|impiego> <end>
 Page 0 rimpieghino: <respelling> all: rimpièghino,rimpiéghino<r:DiPI|impiego> <end>
@@ -428,6 +430,7 @@ Page 0 rimpieghino: <respelling> all: rimpièghino,rimpiéghino<r:DiPI|impiego> 
 Page 0 ripiega: <respelling> all: ripièga,ripiéga<r:DiPI|ripiego> <end>
 Page 0 ripiegano: <respelling> all: ripiègano,ripiégano<r:DiPI|ripiego> <end>
 Page 0 ripieghino: <respelling> all: ripièghino,ripiéghino<r:DiPI|ripiego> <end>
+# got this far in find_regex.italian.pronun-fix.pages.txt.4.out.1
 # FIXME
 #Page 0 rispiegare: <respelling> all: rispiegare <end>
 #Page 0 rispiegarsi: <respelling> all: rispiegarsi <end>
