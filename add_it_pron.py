@@ -10,6 +10,8 @@ import blib
 from blib import getparam, rmparam, msg, site, tname, pname
 from snarf_it_pron import apply_default_pronun
 
+refs_re = "(Olivetti|DiPI|Treccani|DOP)"
+
 # FIXME: Handle two 'n:' references for the same pronunciation. Separate with " !!! " in a single param and fix the
 # underlying code to support this format. (DONE)
 
@@ -37,13 +39,13 @@ def process_page(index, page, spec):
     for pronspec in pronspecs:
       if pronspec.startswith("r:"):
         ref = pronspec[2:]
-        if not re.search(r"^(Olivetti|DiPI|Treccani|DOP)\b", ref):
+        if not re.search(r"^%s\b" % refs_re, ref):
           pagemsg("WARNING: Unrecognized reference %s: pronspec=%s" % (pronspec, spec))
           return
         refs.append("{{R:it:%s}}" % ref)
       elif pronspec.startswith("n:"):
         ref = pronspec[2:]
-        if not re.search(r"^(Olivetti|DiPI|Treccani|DOP)\b", ref):
+        if not re.search(r"^%s\b" % refs_re, ref):
           pagemsg("WARNING: Unrecognized reference %s: pronspec=%s" % (pronspec, spec))
           return
         if next_num_pron == 0:
@@ -78,10 +80,15 @@ def process_page(index, page, spec):
       pronspec_parts = re.split("(<r:(?:<<.*?>>|[^<>])*>)", pronspec)
       for i, pronspec_part in enumerate(pronspec_parts):
         if i % 2 == 1: # a reference
-          if not re.search(r"^<r:(Olivetti|DiPI|Treccani|DOP)\b", pronspec_part):
+          if not re.search(r"^<r:%s\b" % refs_re, pronspec_part):
             pagemsg("WARNING: Unrecognized reference %s: pronspec=%s" % (pronspec_part, spec))
             return
-          pronspec_parts[i] = "<ref:{{R:it:%s}}>" % pronspec_part[3:-1]
+          ref_template_text = pronspec_part[3:-1]
+          # If the argument to the reference template is the page title, remove it.
+          m = re.search(r"^%s\|(.*)$" % refs_re, ref_template_text)
+          if m and m.group(2) == pagetitle:
+            ref_template_text = m.group(1)
+          pronspec_parts[i] = "<ref:{{R:it:%s}}>" % ref_template_text
       pronspec = "".join(pronspec_parts)
       if "<ref:" in pronspec:
         have_footnotes = True # <r: or original <ref:
@@ -166,6 +173,18 @@ def process_page(index, page, spec):
         for pn, pv in enumerate(prons):
           t.add(str(pn + 1), pv)
         if origt != unicode(t):
+          # Make sure we're not removing references
+          if "<ref:" in origt and not args.override_refs:
+            pagemsg("WARNING: Saw existing refs not in new refs, not removing: existing=%s, new=%s" % (
+              origt, unicode(t)))
+            return False
+
+          # Make sure we're not removing audio or other modifiers
+          if re.search("<(audio|hmp|rhyme|hyph|pre|post):", origt) and not args.override_refs:
+            pagemsg("WARNING: Saw existing audio/hmp/rhyme/hyph/pre/post not in new refs, not removing: existing=%s, new=%s" % (
+              origt, unicode(t)))
+            return False
+
           pagemsg("Replaced %s with %s" % (origt, unicode(t)))
           notes.append("replace existing %s with %s (manually assisted)" % (origt, unicode(t)))
           subsections[k] = unicode(parsed)
