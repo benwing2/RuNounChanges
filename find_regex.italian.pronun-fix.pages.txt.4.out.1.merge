@@ -2,24 +2,47 @@ Beginning at Tue Dec  7 20:41:24 2021
 Page 1 zampillo: Found match for regex: =
 Page 1 zampillo: -------- begin text --------
 
-===Noun===
+===Pronunciation===
+{{it-pr|dzampìllo,#tsampìllo<ref:{{R:it:DiPI}}>}}
+
+===Etymology 1===
+
+====Noun====
 {{it-noun|m|zampilli}}
 
 # a [[gush]]ing [[forth]]
 # a [[spurt]]ing [[out]]
 
-===Verb===
+===Etymology 2===
+
+====Verb====
 {{head|it|verb form}}
 
 # {{inflection of|it|zampillare||1|s|pres|ind}}
+
+===References===
+<references />
 -------- end text --------
 Page 2 zampilli: Found match for regex: =
 Page 2 zampilli: -------- begin text --------
 
-===Verb===
+===Pronunciation===
+{{it-pr|dzampìlli,#tsampìlli<ref:{{R:it:DiPI|zampillo}}>}}
+
+===Etymology 1===
+{{head|it|noun form}}
+
+# {{plural of|it|zampillo}}
+
+===Etymology 2===
+
+====Verb====
 {{head|it|verb form}}
 
 # {{inflection of|it|zampillare||2|s|pres|indc|;|1//2//3|s|pres|subj|;|3|s|impr}}
+
+===References===
+<references />
 -------- end text --------
 Page 3 zampilla: Found match for regex: =
 Page 3 zampilla: -------- begin text --------
@@ -40,6 +63,9 @@ Page 4 zampilliamo: -------- begin text --------
 Page 5 zampillate: Found match for regex: =
 Page 5 zampillate: -------- begin text --------
 
+===Pronunciation===
+{{it-pr|dzampillàte,#tsampillàte<ref:{{R:it:DiPI|zampillo}}>}}
+
 ===Etymology 1===
 
 ====Verb====
@@ -53,6 +79,9 @@ Page 5 zampillate: -------- begin text --------
 {{head|it|past participle form|g=f-p}}
 
 # {{feminine plural of|it|zampillato}}
+
+===References===
+<references />
 -------- end text --------
 Page 6 zampillano: Found match for regex: =
 Page 6 zampillano: -------- begin text --------
@@ -122,7 +151,7 @@ Page 13 zampillio: Found match for regex: =
 Page 13 zampillio: -------- begin text --------
 
 ===Noun===
-{{it-noun|m|zampilli}}
+{{it-noun|m|zampillii}}
 
 # [[gushing]]-[[forth]] (continuous)
 # [[spurting]]-[[out]] (continuous)
@@ -142,12 +171,14 @@ Page 14 zinco: -------- begin text --------
 ===Pronunciation===
 {{it-pr|dzìnco,#tsìnco}}
 
-===Noun===
+===Etymology 1===
+
+====Noun====
 {{it-noun|m}}
 
 # {{lb|it|chemistry}} [[zinc]]
 
-====Related terms====
+=====Related terms=====
 {{rel3
 |it|zincheria
 |zincifero
@@ -158,12 +189,17 @@ Page 14 zinco: -------- begin text --------
 |zincotipista
 }}
 
-===Verb===
+===Etymology 2===
+
+====Verb====
 {{head|it|verb form}}
 
 # {{inflection of|it|zincare||1|s|pres|ind}}
 
 {{C|it|Metals}}
+
+===References===
+<references />
 
 ----
 
@@ -201,10 +237,25 @@ Page 17 zinchiamo: -------- begin text --------
 Page 18 zincate: Found match for regex: =
 Page 18 zincate: -------- begin text --------
 
+===Pronunciation===
+{{it-pr|dzincàte,#tsincàte<ref:{{R:it:DiPI|zinco}}>}}
+
+===Etymology 1===
+
 ===Verb===
 {{head|it|verb form}}
 
 # {{inflection of|it|zincare||2|p|pres|indc|;|2|p|impr}}
+
+===Etymology 2===
+
+====Verb====
+{{head|it|past participle form}}
+
+# {{feminine plural of|it|zincato}}
+
+===References===
+<references />
 -------- end text --------
 Page 19 zincano: Found match for regex: =
 Page 19 zincano: -------- begin text --------
@@ -236,13 +287,20 @@ Page 21 zinchino: -------- begin text --------
 Page 22 zincato: Found match for regex: =
 Page 22 zincato: -------- begin text --------
 
-===Participle===
+===Pronunciation===
+{{it-pr|dzincàto,#tsincàto<ref:{{R:it:DiPI|zinco}}>}}
+
+===Etymology 1===
+
+====Participle====
 {{it-pp}}
 
 # {{past participle of|it|zincare}}
 
-===Noun===
-{{it-noun|m|zincati}}
+===Etymology 2===
+
+====Noun====
+{{it-noun|m}}
 
 # [[zincate]]
 
@@ -260,10 +318,25 @@ Page 23 zincata: -------- begin text --------
 Page 24 zincati: Found match for regex: =
 Page 24 zincati: -------- begin text --------
 
-===Participle===
+===Pronunciation===
+{{it-pr|dzincàti,#tsincàti<ref:{{R:it:DiPI|zinco}}>}}
+
+===Etymology 1===
+
+====Participle====
 {{head|it|past participle form|g=m-p}}
 
 # {{masculine plural of|it|zincato}}
+
+===Etymology 2===
+
+====Noun====
+{{head|it|noun form}}
+
+# {{plural of|it|zincato}}
+
+===References===
+<references />
 
 ===Anagrams===
 * {{anagrams|it|a=aciintz|zacinti}}
@@ -384,7 +457,7 @@ Page 36 ossido di zinco: -------- begin text --------
 {{wikipedia|lang=it}}
 
 ===Noun===
-{{it-noun|head=[[ossido]] [[di]] [[zinco]]|m|ossidi di zinco}}
+{{it-noun|m|ossidi di zinco}}
 
 # {{lb|it|inorganic compound}} [[zinc oxide]]
 -------- end text --------
@@ -650,10 +723,8 @@ From {{suffix|it|zinco|t1=zinc|tipia|t2=-typy}}.
 {{it-noun|f|zincotipie}}
 
 # [[zincography]]
+#: {{syn|it|zincografia|gillotaggio|q2=obsolete}}
 # [[zincograph]]
-
-====Synonyms====
-* {{s|zincography}} {{l|it|zincografia}}; {{l|it|gillotaggio}} {{qualifier|obsolete}}
 -------- end text --------
 Page 64 zincotipie: Found match for regex: =
 Page 64 zincotipie: -------- begin text --------
@@ -712,40 +783,54 @@ Page 70 zirlo: Found match for regex: {
 Page 70 zirlo: -------- begin text --------
 {{was fwotd|it|2013|August|19}}
 
-===Etymology===
+===Pronunciation===
+{{it-pr|dzìrlo,#tsìrlo<ref:{{R:it:DiPI}}>}}
+
+===Etymology 1===
 Of onomatopoeic origin.
 
-===Pronunciation===
-{{it-pr|tsìrlo,dzìrlo}}
-
-===Noun===
+====Noun====
 {{it-noun|m|zirli}}
 
 # the [[song]] of a [[thrush]]
 #* '''2010''', Oscar Wilde, ''Il ritratto di Dorian Gray'', Oscar Mondadori, [http://books.google.com/books?id=xaqr0Sl2Wt0C&pg=PA195&dq=%22zirlo%22#v=onepage page 195]:
 #*: {{quote|it|Pareva lo '''zirlo''' di un tordo.|It sounded like the '''song''' of a thrush.}}
 
-===Verb===
+===Etymology 2===
+
+====Verb====
 {{head|it|verb form}}
 
 # {{inflection of|it|zirlare||1|s|pres|ind}}
 
-{{C|it|Animal sounds}}
+===References===
+<references />
 
+{{C|it|Animal sounds}}
 {{cln|it|onomatopoeias}}
 -------- end text --------
 Page 71 zirli: Found match for regex: =
 Page 71 zirli: -------- begin text --------
+
+===Pronunciation===
+{{it-pr|dzìrli,#tsìrli<ref:{{R:it:DiPI|zirlo}}>}}
+
+===Etymology 1===
 
 ===Verb===
 {{head|it|verb form}}
 
 # {{inflection of|it|zirlare||2|s|pres|indc|;|1//2//3|s|pres|subj|;|3|s|impr}}
 
+===Etymology 2===
+
 ===Noun===
 {{head|it|noun form|g=m}}
 
 # {{plural of|it|zirlo}}
+
+===References===
+<references />
 -------- end text --------
 Page 72 zirla: Found match for regex: =
 Page 72 zirla: -------- begin text --------
@@ -766,6 +851,9 @@ Page 73 zirliamo: -------- begin text --------
 Page 74 zirlate: Found match for regex: =
 Page 74 zirlate: -------- begin text --------
 
+===Pronunciation===
+{{it-pr|dzirlàte,#tsirlàte<ref:{{R:it:DiPI|zirlo}}>}}
+
 ===Etymology 1===
 
 ====Verb====
@@ -779,6 +867,9 @@ Page 74 zirlate: -------- begin text --------
 {{head|it|past participle form|g=f-p}}
 
 # {{feminine plural of|it|zirlato}}
+
+===References===
+<references />
 -------- end text --------
 Page 75 zirlano: Found match for regex: =
 Page 75 zirlano: -------- begin text --------
@@ -880,16 +971,22 @@ From Late {{inh|it|VL.|*affōcāre}}, alteration of {{inh|it|LL.|offōcāre}}, p
 Page 82 affogarsi: Found match for regex: =
 Page 82 affogarsi: -------- begin text --------
 
+===Pronunciation===
+{{it-pr|affogàrsi}}
+
 ===Etymology===
 {{suffix|it|affogare|si}}
 
 ===Verb===
-{{it-verb|ó}}
+{{it-verb|ó:ò[ref:{{R:it:DiPI|affogo}}]}}
 
 # {{lb|it|reflexive}} to [[drown]] (die by drowning)
 
 ====Conjugation====
 {{it-conj-carsi|affog|essere}}
+
+===References===
+<references />
 -------- end text --------
 Page 83 affogo: Found match for regex: =
 Page 83 affogo: -------- begin text --------
@@ -1003,18 +1100,13 @@ Page 89 sfogarsi: -------- begin text --------
 Page 90 sfogo: Found match for regex: =
 Page 90 sfogo: -------- begin text --------
 
-===Etymology===
-Deverbal of {{m|it|sfogare}}.
-
 ===Pronunciation===
 {{it-pr|sfògo,#sfógo<ref:{{R:it:DiPI}}>}}
 
-===Verb===
-{{head|it|verb form}}
+===Etymology 1===
+{{deverbal|it|sfogare}}.
 
-# {{inflection of|it|sfogare||1|s|pres|ind}}
-
-===Noun===
+====Noun====
 {{it-noun|m}}
 
 # [[outlet]] {{q|for a fluid or product}}
@@ -1024,16 +1116,38 @@ Deverbal of {{m|it|sfogare}}.
 ====Derived terms====
 * {{l|it|valvola di sfogo}}
 
+===Etymology 2===
+
+====Verb====
+{{head|it|verb form}}
+
+# {{inflection of|it|sfogare||1|s|pres|ind}}
+
 ===References===
 <references />
 -------- end text --------
 Page 91 sfoghi: Found match for regex: =
 Page 91 sfoghi: -------- begin text --------
 
-===Noun===
+===Pronunciation===
+{{it-pr|sfòghi,#sfóghi<ref:{{R:it:DiPI|sfogo}}>}}
+
+===Etymology 1===
+
+====Noun====
 {{head|it|noun form|g=m}}
 
 # {{plural of|it|sfogo}}
+
+===Etymology 2===
+
+====Verb====
+{{head|it|verb form}}
+
+# {{inflection of|it|sfogare||2|s|pres|indc|;|1//2//3|s|pres|subj|;|3|s|impr}}
+
+===References===
+<references />
 -------- end text --------
 Page 92 sfoga: Found match for regex: =
 Page 92 sfoga: -------- begin text --------
@@ -1065,22 +1179,31 @@ Page 94 sfoghino: -------- begin text --------
 Page 95 soffogare: Found match for regex: =
 Page 95 soffogare: -------- begin text --------
 
-===Verb===
-{{it-verb}}
+===Pronunciation===
+{{it-pr|soffogàre}}
 
-# {{alternative form of|it|soffocare}}
+===Verb===
+{{it-verb|a[transitive]:e[intransitive]/ò-}}
+
+# {{lb|it|archaic|or|regional}} {{alternative form of|it|soffocare}}
 
 ====Conjugation====
-{{it-conj-care|soffog|avere}}
+{{it-conj-care|soffog|avere or essere}}
+
+===References===
+<references />
 -------- end text --------
 Page 96 strafogarsi: Found match for regex: =
 Page 96 strafogarsi: -------- begin text --------
+
+===Etymology===
+From {{af|it|stra-|affogarsi}}, with substitution of the prefix.<ref>{{R:it:Treccani}}</ref>
 
 ===Pronunciation===
 {{it-pr|strafogàrsi}}
 
 ===Verb===
-{{it-verb|ó:ò[ref:{{R:it:DiPI|foga}}]}}
+{{it-verb|ó:ò[ref:{{R:it:DiPI|affogo}}]}}
 
 # {{lb|it|reflexive}} to [[stuff]] oneself (eat too much)
 #: {{syn|it|abbuffarsi}}
@@ -1107,13 +1230,16 @@ From a verbal derivative of {{inh|it|la|dēventum}}, perfect passive participle 
 {{it-pr|diventàre}}
 
 ===Verb===
-{{it-verb|e/è}} {{tlb|it|intransitive}}
+{{it-verb|e/è:é[ref:{{R:it:DiPI|divento}}]}} {{tlb|it|intransitive}}
 
 # to [[become]] (rich, dry, a doctor, etc.), to [[go]] (crazy, etc.), to [[turn]] (red, blue, etc.)
 #: {{syn|it|divenire}}
 
 ====Conjugation====
 {{it-conj-are|divent|essere}}
+
+===References===
+<references />
 
 ===Anagrams===
 * {{anagrams|it|a=adeeinrtv|antiveder|antiverde|derivante|diventerà|intravede|ritendeva}}
@@ -1180,13 +1306,16 @@ Page 104 ridiventare: -------- begin text --------
 {{it-pr|ridiventàre}}
 
 ===Verb===
-{{it-verb|e/è}}
+{{it-verb|e/è:é[ref:{{R:it:DiPI|divento}}]}} {{tlb|it|intransitive}}
 
-# {{lb|it|intransitive}} to [[become]] [[again]]
+# to [[become]] [[again]]
 #: {{syn|it|ridivenire}}
 
 ====Conjugation====
 {{it-conj-are|ridivent|essere}}
+
+===References===
+<references />
 
 ===Further reading===
 * {{R:it:Treccani}}
@@ -1312,6 +1441,9 @@ Page 117 zoppichiamo: -------- begin text --------
 Page 118 zoppicate: Found match for regex: =
 Page 118 zoppicate: -------- begin text --------
 
+===Pronunciation===
+{{it-pr|dzoppicàte,#tsoppicàte<ref:{{R:it:DiPI|zoppico}}>}}
+
 ===Etymology 1===
 
 ====Verb====
@@ -1325,6 +1457,9 @@ Page 118 zoppicate: -------- begin text --------
 {{head|it|past participle form|g=f-p}}
 
 # {{feminine plural of|it|zoppicato}}
+
+===References===
+<references />
 -------- end text --------
 Page 119 zoppicano: Found match for regex: =
 Page 119 zoppicano: -------- begin text --------
@@ -1381,7 +1516,7 @@ Page 126 rizoppicare: -------- begin text --------
 {{prefix|it|ri|zoppicare}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/ò}} {{tlb|it|intransitive}}
 
 # to [[limp]] etc. again
 
@@ -1427,9 +1562,7 @@ Page 144 zoppicanti: -------- begin text --------
 ===Adjective===
 {{it-adj-form|m-p|f-p}}
 
-# {{plural of|it|zoppicante}}
-
-[[Category:Italian adjective plural forms]]
+# {{adj form of|it|zoppicante||f|p}}
 -------- end text --------
 Page 145 zoppicatura: Found match for regex: =
 Page 145 zoppicatura: -------- begin text --------
@@ -1548,15 +1681,25 @@ From {{der|it|la|saccharum}}, from {{der|it|ar|سُكَّر}}. See {{m|en|sugar}
 Page 151 zuccheri: Found match for regex: =
 Page 151 zuccheri: -------- begin text --------
 
-===Noun===
+===Pronunciation===
+{{it-pr|dzùccheri,#tsùccheri<ref:{{R:it:DiPI|zucchero}}>}}
+
+===Etymology 1===
+
+====Noun====
 {{head|it|noun form|g=m}}
 
 # {{plural of|it|zucchero}}
 
-===Verb===
+===Etymology 2===
+
+====Verb====
 {{head|it|verb form}}
 
 # {{inflection of|it|zuccherare||2|s|pres|indc|;|1//2//3|s|pres|subj|;|3|s|impr}}
+
+===References===
+<references />
 -------- end text --------
 Page 152 zucchera: Found match for regex: =
 Page 152 zucchera: -------- begin text --------
@@ -1580,6 +1723,9 @@ Page 154 zuccheriamo: -------- begin text --------
 Page 155 zuccherate: Found match for regex: =
 Page 155 zuccherate: -------- begin text --------
 
+===Pronunciation===
+{{it-pr|dzuccheràte,#tsuccheràte<ref:{{R:it:DiPI|zucchero}}>}}
+
 ===Etymology 1===
 
 ====Verb====
@@ -1593,6 +1739,9 @@ Page 155 zuccherate: -------- begin text --------
 {{head|it|past participle form|g=f-p}}
 
 # {{feminine plural of|it|zuccherato}}
+
+===References===
+<references />
 -------- end text --------
 Page 156 zuccherano: Found match for regex: =
 Page 156 zuccherano: -------- begin text --------
@@ -1620,7 +1769,7 @@ Page 158 zuccherino: -------- begin text --------
 {{af|it|zucchero|t1=sugar|ino|t2=-ine, pertaining to}}
 
 ====Pronunciation====
-{{it-pr|dzuccherìno,#tsuccherìno}}
+{{it-pr|dzuccherìno,#tsuccherìno<ref:{{R:it:DiPI|zucchero}}<<name:dipi>>>}}
 
 ====Adjective====
 {{it-adj}}
@@ -1634,7 +1783,7 @@ Page 158 zuccherino: -------- begin text --------
 {{af|it|zucchero|t1=sugar|ino|pos2=diminutive suffix}}
 
 ====Pronunciation====
-{{it-pr|dzuccherìno,#tsuccherìno}}
+{{it-pr|dzuccherìno,#tsuccherìno<ref:<<name:dipi>>>}}
 
 ====Noun====
 {{it-noun|m|zuccherini}}
@@ -1648,12 +1797,15 @@ Page 158 zuccherino: -------- begin text --------
 {{nonlemma}}
 
 ====Pronunciation====
-{{it-pr|dzùccherino,#tsùccherino}}
+{{it-pr|dzùccherino,#tsùccherino<ref:<<name:dipi>>>}}
 
 ====Verb====
 {{head|it|verb form}}
 
 # {{infl of|it|zuccherare||3|p|pres|subj|;|3|p|imp}}
+
+===References===
+<references />
 
 ===Anagrams===
 * {{anagrams|it|a=ccehinoruz|inzucchero|inzuccherò}}
@@ -1661,15 +1813,25 @@ Page 158 zuccherino: -------- begin text --------
 Page 159 zuccherini: Found match for regex: =
 Page 159 zuccherini: -------- begin text --------
 
-===Adjective===
+====Pronunciation====
+{{it-pr|dzuccherìni,#tsuccherìni<ref:{{R:it:DiPI|zucchero}}>}}
+
+===Etymology 1===
+
+====Adjective====
 {{it-adj-form|m-p}}
 
 # {{adj form of|it|zuccherino||m|p}}
 
-===Noun===
+===Etymology 2===
+
+====Noun====
 {{head|it|noun form|g=m-p}}
 
 # {{plural of|it|zuccherino}}
+
+===References===
+<references />
 
 ===Anagrams===
 * {{anagrams|it|a=ccehiinruz|inzuccheri}}
@@ -1677,16 +1839,16 @@ Page 159 zuccherini: -------- begin text --------
 Page 160 zuccherato: Found match for regex: =
 Page 160 zuccherato: -------- begin text --------
 
+===Participle===
+{{it-pp}}
+
+# {{past participle of|it|zuccherare}}
+
 ===Adjective===
 {{it-adj}}
 
 # [[sweet]], [[sweetened]]
 # [[mellifluous]]
-
-===Participle===
-{{it-pp}}
-
-# {{past participle of|it|zuccherare}}
 -------- end text --------
 Page 161 zuccherati: Found match for regex: =
 Page 161 zuccherati: -------- begin text --------
@@ -1708,7 +1870,7 @@ Page 163 acero da zucchero: Found match for regex: =
 Page 163 acero da zucchero: -------- begin text --------
 
 ===Noun===
-{{it-noun|head=[[acero]] [[da]] [[zucchero]]|m|aceri da zucchero}}
+{{it-noun|m|aceri da zucchero}}
 
 # [[sugar maple]] (tree, ''[[Acer saccharum]]'')
 
@@ -1775,7 +1937,7 @@ Page 169 barbabietola da zucchero: -------- begin text --------
 {{wikipedia|lang=it}}
 
 ===Noun===
-{{it-noun|head=[[barbabietola]] [[da]] [[zucchero]]|f|barbabietole da zucchero}}
+{{it-noun|f|barbabietole da zucchero}}
 
 # [[sugar beet]]
 
@@ -1785,12 +1947,12 @@ Page 171 canna da zucchero: Found match for regex: =
 Page 171 canna da zucchero: -------- begin text --------
 
 ===Noun===
-{{it-noun|head=[[canna]] da [[zucchero]]|f|canne da zucchero}}
+{{it-noun|f|canne da zucchero}}
 
 # [[sugarcane]]
 
 ====Related terms====
-* {{l|it|zucchero di canna}} - cane sugar
+* {{l|it|zucchero di canna||cane sugar}}
 
 {{C|it|Grasses}}
 -------- end text --------
@@ -1928,6 +2090,9 @@ Page 184 inzuccheriamo: -------- begin text --------
 Page 185 inzuccherate: Found match for regex: =
 Page 185 inzuccherate: -------- begin text --------
 
+===Pronunciation===
+{{it-pr|indzuccheràte,#intsuccheràte<ref:{{R:it:DiPI|zucchero}}>}}
+
 ===Etymology 1===
 
 ====Verb====
@@ -1941,6 +2106,9 @@ Page 185 inzuccherate: -------- begin text --------
 {{head|it|past participle form|g=f-p}}
 
 # {{feminine plural of|it|inzuccherato}}
+
+===References===
+<references />
 -------- end text --------
 Page 186 inzuccherano: Found match for regex: =
 Page 186 inzuccherano: -------- begin text --------
@@ -2027,15 +2195,21 @@ Page 196 rinzuccherare: Found match for regex: =
 Page 196 rinzuccherare: -------- begin text --------
 
 ===Etymology===
-{{prefix|it|ri|inzuccherare}}
+{{af|it|ri-|inzuccherare}}
+
+===Pronunciation===
+{{it-pr|rindzuccheràre,#rintsuccheràre<ref:{{R:it:DiPI|zucchero}}>}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/ù}} {{tlb|it|transitive}}
 
 # to [[sugar]] again or further
 
 ====Conjugation====
 {{it-conj-are|rinzuccher|avere}}
+
+===References===
+<references />
 -------- end text --------
 Page 211 vuotazucchine: Found match for regex: =
 Page 211 vuotazucchine: -------- begin text --------
@@ -2052,7 +2226,7 @@ From {{af|it|vuotare|zucchina}}.
 ===Noun===
 {{it-noun|m|#}}
 
-# a [[kitchen knife]], with a hollow blade, used to remove the [[pulp]] from [[courgette]]s
+# a [[kitchen knife]], with a hollow blade, used to remove the [[pulp]] from [[courgette]]s/[[zucchini]]
 
 ===References===
 <references />
@@ -2081,16 +2255,26 @@ Page 213 zuccheraggi: -------- begin text --------
 Page 214 zuccheriera: Found match for regex: =
 Page 214 zuccheriera: -------- begin text --------
 
-===Adjective===
+===Pronunciation===
+{{it-pr|dzuccherièra,#tsuccherièra<ref:{{R:it:DiPI|zuccheriera}}>}}
+
+===Etymology 1===
+
+====Noun====
+{{it-noun|f|zuccheriere}}
+
+# a [[sugar bowl]] {{q|domestic}}
+# {{q|on the counter of a bar}} the sugar [[container]] for a [[customer]]'s [[use]]
+
+===Etymology 2===
+
+====Adjective====
 {{it-adj-form|f-s}}
 
 # {{adj form of|it|zuccheriero||f|s}}
 
-===Noun===
-{{it-noun|f|zuccheriere}}
-
-# a [[sugar bowl]] {{q|[[domestic]]}}
-# {{q|on the [[counter]] of a [[bar]]}} the sugar [[container]] for [[customer]]'s [[use]]
+===References===
+<references />
 
 ===Anagrams===
 * {{anagrams|it|a=acceehirruz|zucchererai}}
@@ -2098,15 +2282,25 @@ Page 214 zuccheriera: -------- begin text --------
 Page 215 zuccheriere: Found match for regex: =
 Page 215 zuccheriere: -------- begin text --------
 
-===Adjective===
+===Pronunciation===
+{{it-pr|dzuccherière,#tsuccherière<ref:{{R:it:DiPI|zuccheriera}}>}}
+
+===Etymology 1===
+
+====Adjective====
 {{it-adj-form|f-p}}
 
 # {{adj form of|it|zuccheriero||f|p}}
 
-===Noun===
+===Etymology 2===
+
+====Noun====
 {{head|it|noun form|g=f-p}}
 
 # {{plural of|it|zuccheriera}}
+
+===References===
+<references />
 
 ===Anagrams===
 * {{anagrams|it|a=cceeehirruz|zucchererei}}
@@ -2188,51 +2382,6 @@ Page 223 zuccherifici: -------- begin text --------
 
 # {{plural of|it|zuccherificio}}
 -------- end text --------
-Page 224 zuccherino: Found match for regex: =
-Page 224 zuccherino: -------- begin text --------
-
-===Etymology 1===
-{{af|it|zucchero|t1=sugar|ino|t2=-ine, pertaining to}}
-
-====Pronunciation====
-{{it-pr|dzuccherìno,#tsuccherìno}}
-
-====Adjective====
-{{it-adj}}
-
-# [[sugary]], over [[sweet]]
-
-====References====
-* {{R:it:Trec|sense=1}}
-
-===Etymology 2===
-{{af|it|zucchero|t1=sugar|ino|pos2=diminutive suffix}}
-
-====Pronunciation====
-{{it-pr|dzuccherìno,#tsuccherìno}}
-
-====Noun====
-{{it-noun|m|zuccherini}}
-
-# [[lump]] of [[sugar]]
-
-====References====
-* {{R:it:Trec|sense=2}}
-
-===Etymology 3===
-{{nonlemma}}
-
-====Pronunciation====
-{{it-pr|dzùccherino,#tsùccherino}}
-
-====Verb====
-{{head|it|verb form}}
-
-# {{infl of|it|zuccherare||3|p|pres|subj|;|3|p|imp}}
-
-===Anagrams===
-* {{anagrams|it|a=ccehinoruz|inzucchero|inzuccherò}}
--------- end text --------
 Page 225 zuccherina: Found match for regex: =
 Page 225 zuccherina: -------- begin text --------
 
@@ -2244,22 +2393,6 @@ Page 225 zuccherina: -------- begin text --------
 ===Anagrams===
 * {{anagrams|it|a=accehinruz|inzucchera|inzuccherà}}
 -------- end text --------
-Page 226 zuccherini: Found match for regex: =
-Page 226 zuccherini: -------- begin text --------
-
-===Adjective===
-{{it-adj-form|m-p}}
-
-# {{adj form of|it|zuccherino||m|p}}
-
-===Noun===
-{{head|it|noun form|g=m-p}}
-
-# {{plural of|it|zuccherino}}
-
-===Anagrams===
-* {{anagrams|it|a=ccehiinruz|inzuccheri}}
--------- end text --------
 Page 227 zuccherine: Found match for regex: =
 Page 227 zuccherine: -------- begin text --------
 
@@ -2267,79 +2400,6 @@ Page 227 zuccherine: -------- begin text --------
 {{it-adj-form|f-p}}
 
 # {{adj form of|it|zuccherino||f|p}}
--------- end text --------
-Page 228 zucchero: Found match for regex: {
-Page 228 zucchero: -------- begin text --------
-{{wikipedia|lang=it}}
-
-===Pronunciation===
-{{it-pr|dzùcchero,#tsùcchero<ref:{{R:it:DiPI}}><audio:It-lo zucchero.ogg>}}
-
-===Etymology 1===
-From {{der|it|la|saccharum}}, from {{der|it|ar|سُكَّر}}. See {{m|en|sugar}} for more details.
-
-====Alternative forms====
-* {{alter|it|zuccaro}}
-
-====Noun====
-{{it-noun|m|zuccheri}}
-
-# [[sugar]] {{qualifier|all senses}}
-
-=====Derived terms=====
-{{der4|it
-|zuccheraggio
-|zuccherare
-|zuccheriero
-|zuccherifero
-|zuccherificio
-|zuccherino
-|zucchero filato
-|zuccheroso}}
-
-=====Related terms=====
-* {{l|it|saccarifero}}
-
-=====Descendants=====
-* {{desc|bor=1|gml|sucker}}
-** {{desc|nds-de|Sucker}}
-** {{desc|nds-nl|suker}}
-** {{desc|pdt|Zocka}}
-** {{desctree|bor=1|da|sukker}}
-** {{desc|bor=1|no|sukker#Norwegian_Bokmål|sukker}}
-** {{desc|bor=1|stq|Sukker}}
-** {{desctree|bor=1|sv|socker}}
-** {{desc|bor=1|fy|sûker}}
-* {{desc|goh|bor=1|zuckar}}
-**{{desc|gmh|zucker}}
-*** {{desc|de|Zucker}}
-
-====References====
-* {{R:it:Trec}}
-
-===Etymology 2===
-{{nonlemma}}
-
-====Verb====
-{{head|it|verb form}}
-
-# {{inflection of|it|zuccherare||1|s|pres|ind}}
-
-===References===
-<references />
--------- end text --------
-Page 229 zuccheri: Found match for regex: =
-Page 229 zuccheri: -------- begin text --------
-
-===Noun===
-{{head|it|noun form|g=m}}
-
-# {{plural of|it|zucchero}}
-
-===Verb===
-{{head|it|verb form}}
-
-# {{inflection of|it|zuccherare||2|s|pres|indc|;|1//2//3|s|pres|subj|;|3|s|impr}}
 -------- end text --------
 Page 230 zucchero candi: Found match for regex: =
 Page 230 zucchero candi: -------- begin text --------
@@ -2378,7 +2438,7 @@ Page 235 zuccheri d'acero: Found match for regex: =
 Page 235 zuccheri d'acero: -------- begin text --------
 
 ===Noun===
-{{head|it|noun form|head=zuccheri d'acero|g=m}}
+{{head|it|noun form|g=m}}
 
 # {{plural of|it|zucchero d'acero}}
 -------- end text --------
@@ -2386,12 +2446,12 @@ Page 236 zucchero di canna: Found match for regex: =
 Page 236 zucchero di canna: -------- begin text --------
 
 ===Noun===
-{{it-noun|head=[[zucchero]] di [[canna]]|m|zuccheri di canna}}
+{{it-noun|m|zuccheri di canna}}
 
 # [[cane sugar]]
 
 ====Related terms====
-* {{l|it|canna da zucchero}} - sugarcane
+* {{l|it|canna da zucchero||sugarcane}}
 -------- end text --------
 Page 237 zuccheri di canna: Found match for regex: =
 Page 237 zuccheri di canna: -------- begin text --------
@@ -2405,7 +2465,7 @@ Page 238 zucchero filato: Found match for regex: =
 Page 238 zucchero filato: -------- begin text --------
 
 ===Noun===
-{{it-noun|head=[[zucchero]] [[filato]]|m|zuccheri filati}}
+{{it-noun|m|zuccheri filati}}
 
 # [[candy floss]] {{qualifier|British}}, [[cotton candy]] {{qualifier|US}}
 -------- end text --------
@@ -2421,7 +2481,7 @@ Page 240 zucchero granulato: Found match for regex: =
 Page 240 zucchero granulato: -------- begin text --------
 
 ===Noun===
-{{it-noun|head=[[zucchero]] [[granulato]]|m|zuccheri granulati}}
+{{it-noun|m|zuccheri granulati}}
 
 # [[granulated sugar]]
 
@@ -2439,7 +2499,7 @@ Page 242 zucchero grezzo: Found match for regex: =
 Page 242 zucchero grezzo: -------- begin text --------
 
 ===Noun===
-{{it-noun|m|zuccheri grezzi|head=[[zucchero]] [[grezzo]]}}
+{{it-noun|m|zuccheri grezzi}}
 
 # [[brown sugar]]
 -------- end text --------
@@ -2455,7 +2515,7 @@ Page 244 zucchero semolato: Found match for regex: =
 Page 244 zucchero semolato: -------- begin text --------
 
 ===Noun===
-{{it-noun|head=[[zucchero]] [[semolato]]|m|zuccheri semolati}}
+{{it-noun|m|zuccheri semolati}}
 
 # [[granulated sugar]]
 -------- end text --------
@@ -2555,7 +2615,7 @@ Page 254 zucchina: -------- begin text --------
 * {{alter|it|zucchino}}
 
 ===Etymology===
-Diminutive from {{af|it|zucca|t1=marrow|-ina|t2=diminutive suffix}}.
+Diminutive from {{af|it|zucca|t1=gourd, squash|-ina|t2=diminutive suffix}}.
 
 ===Noun===
 {{it-noun|f|zucchine}}
@@ -2659,17 +2719,24 @@ Page 260 zufolo: Found match for regex: =
 Page 260 zufolo: -------- begin text --------
 
 ===Pronunciation===
-{{it-pr|dzùfolo,#tsùfolo}}
+{{it-pr|dzùfolo,#tsùfolo<ref:{{R:it:DiPI}}>}}
 
-===Noun===
+===Etymology 1===
+
+====Noun====
 {{it-noun|m|zufoli}}
 
 # [[shawm]], [[#English|zufolo]]
 
-===Verb===
+===Etymology 2===
+
+====Verb====
 {{head|it|verb form}}
 
 # {{inflection of|it|zufolare||1|s|pres|ind}}
+
+===References===
+<references />
 
 {{C|it|Musical instruments}}
 -------- end text --------
@@ -2677,17 +2744,24 @@ Page 261 zufoli: Found match for regex: =
 Page 261 zufoli: -------- begin text --------
 
 ===Pronunciation===
-{{it-pr|dzùfoli,#tsùfoli}}
+{{it-pr|dzùfoli,#tsùfoli<ref:{{R:it:DiPI|zufolo}}>}}
 
-===Noun===
+===Etymology 1===
+
+====Noun====
 {{head|it|noun form|g=m}}
 
 # {{plural of|it|zufolo}}
 
-===Verb===
+===Etymology 2===
+
+====Verb====
 {{head|it|verb form}}
 
 # {{inflection of|it|zufolare||2|s|pres|ind|;|1//2//3|s|pres|subj|;|3|s|impr}}
+
+===References===
+<references />
 -------- end text --------
 Page 262 zufola: Found match for regex: =
 Page 262 zufola: -------- begin text --------
@@ -2711,6 +2785,9 @@ Page 264 zufoliamo: -------- begin text --------
 Page 265 zufolate: Found match for regex: =
 Page 265 zufolate: -------- begin text --------
 
+===Pronunciation===
+{{it-pr|dzufolàte,#tsufolàte<ref:{{R:it:DiPI|zufolo}}>}}
+
 ===Etymology 1===
 
 ====Verb====
@@ -2724,6 +2801,9 @@ Page 265 zufolate: -------- begin text --------
 {{head|it|past participle form|g=f-p}}
 
 # {{feminine plural of|it|zufolato}}
+
+===References===
+<references />
 -------- end text --------
 Page 266 zufolano: Found match for regex: =
 Page 266 zufolano: -------- begin text --------
@@ -2943,25 +3023,9 @@ Page 294 zufolio: Found match for regex: =
 Page 294 zufolio: -------- begin text --------
 
 ===Noun===
-{{it-noun|m|zufoli}}
+{{it-noun|m|zufolii}}
 
 # a [[whistling]]; a [[continuous]] [[whistle]]
--------- end text --------
-Page 295 zufoli: Found match for regex: =
-Page 295 zufoli: -------- begin text --------
-
-===Pronunciation===
-{{it-pr|dzùfoli,#tsùfoli}}
-
-===Noun===
-{{head|it|noun form|g=m}}
-
-# {{plural of|it|zufolo}}
-
-===Verb===
-{{head|it|verb form}}
-
-# {{inflection of|it|zufolare||2|s|pres|ind|;|1//2//3|s|pres|subj|;|3|s|impr}}
 -------- end text --------
 Page 296 abbaino: Found match for regex: =
 Page 296 abbaino: -------- begin text --------
@@ -3067,36 +3131,96 @@ From {{af|it|a-|fetta|-are}}.
 Page 300 affetto: Found match for regex: =
 Page 300 affetto: -------- begin text --------
 
-===Etymology===
-From {{der|it|la|affectus}}.
+===Etymology 1===
+From {{der|it|la|affectus|pos=adjective}} (genitive singular {{m|la|affectī}}).
 
-===Pronunciation===
-{{it-pr|affétto}}
+====Pronunciation====
+{{it-pr|affètto}}
 
-===Noun===
+====Adjective====
+{{it-adj}}
+
+# [[affected]]
+#: {{uxi|it|essere affetto da|to suffer from}}
+
+===Etymology 2===
+From {{der|it|la|affectus|pos=noun}} (genitive singular {{m|la|affectūs}}).
+
+====Pronunciation====
+{{it-pr|affètto}}
+
+====Noun====
 {{it-noun|m}}
 
 # [[affection]]
 # the [[object]] of one's affection
 
-===Verb===
+===Etymology 3===
+{{nonlemma}}
+
+====Pronunciation====
+{{it-pr|affètto}}
+
+====Verb====
 {{head|it|verb form}}
 
-# {{inflection of|it|affettare||1|s|pres|ind}}
+# {{inflection of|it|affettare||1|s|pres|ind|t=to affect, to feign}}
 
-===Adjective===
-{{it-adj}}
+===Etymology 4===
+{{nonlemma}}
 
-# [[affected]]
-#: {{uxi|it|essere affetto da|to suffer from}}
+====Pronunciation====
+{{it-pr|affétto}}
+
+====Verb====
+{{head|it|verb form}}
+
+# {{inflection of|it|affettare||1|s|pres|ind|t=to slice, to knife}}
 -------- end text --------
 Page 301 affetti: Found match for regex: =
 Page 301 affetti: -------- begin text --------
 
-===Noun===
+===Etymology 1===
+
+====Pronunciation====
+{{it-pr|affètti}}
+
+====Adjective====
+{{head|it|adjective form}}
+
+# {{adj form of|it|affetto||m|p}}
+
+===Etymology 2===
+
+====Pronunciation====
+{{it-pr|affètti}}
+
+====Noun====
 {{head|it|noun form|g=m}}
 
 # {{plural of|it|affetto}}
+
+===Etymology 3===
+{{nonlemma}}
+
+====Pronunciation====
+{{it-pr|affètti}}
+
+====Verb====
+{{head|it|verb form}}
+
+# {{inflection of|it|affettare||2|s|pres|indc|;|1//2//3|s|pres|subj|;|3|s|impr|t=to affect, to feign}}
+
+===Etymology 4===
+{{nonlemma}}
+
+====Pronunciation====
+{{it-pr|affétti}}
+
+====Verb====
+{{head|it|verb form}}
+
+# {{inflection of|it|affettare||2|s|pres|indc|;|1//2//3|s|pres|subj|;|3|s|impr|t=to slice, to knife}}
 
 ===Anagrams===
 * {{anagrams|it|a=aeffitt|affitte}}
@@ -3104,13 +3228,37 @@ Page 301 affetti: -------- begin text --------
 Page 302 affetta: Found match for regex: =
 Page 302 affetta: -------- begin text --------
 
-===Pronunciation===
-{{it-pr|affétta}}
+===Etymology 1===
 
-===Verb===
+====Pronunciation====
+{{it-pr|affètta}}
+
+====Adjective====
+{{head|it|adjective form}}
+
+# {{adj form of|it|affetto||f|s}}
+
+===Etymology 2===
+{{nonlemma}}
+
+====Pronunciation====
+{{it-pr|affètta}}
+
+====Verb====
 {{head|it|verb form}}
 
-# {{inflection of|it|affettare||3|s|pres|indc|;|2|s|impr}}
+# {{inflection of|it|affettare||3|s|pres|indc|;|2|s|impr|t=to affect, to feign}}
+
+===Etymology 3===
+{{nonlemma}}
+
+====Pronunciation====
+{{it-pr|affétta}}
+
+====Verb====
+{{head|it|verb form}}
+
+# {{inflection of|it|affettare||3|s|pres|indc|;|2|s|impr|t=to slice, to knife}}
 
 ===Anagrams===
 * {{anagrams|it|a=aaefftt|taffetà}}
@@ -3118,10 +3266,13 @@ Page 302 affetta: -------- begin text --------
 Page 303 affette: Found match for regex: =
 Page 303 affette: -------- begin text --------
 
+===Pronunciation===
+{{it-pr|affètte}}
+
 ===Adjective===
 {{head|it|adjective form}}
 
-# {{feminine plural of|it|affetto}}
+# {{adj form of|it|affetto||f|p}}
 
 ===Anagrams===
 * {{anagrams|it|a=aeefftt|taffete}}
@@ -3129,24 +3280,58 @@ Page 303 affette: -------- begin text --------
 Page 304 affettano: Found match for regex: =
 Page 304 affettano: -------- begin text --------
 
-===Verb===
+===Etymology 1===
+{{nonlemma}}
+
+====Pronunciation====
+{{it-pr|affèttano}}
+
+====Verb====
 {{head|it|verb form}}
 
-# {{inflection of|it|affettare||3|p|pres|indc}}
+# {{inflection of|it|affettare||3|p|pres|indc|t=to affect, to feign}}
+
+===Etymology 2===
+{{nonlemma}}
+
+====Pronunciation====
+{{it-pr|afféttano}}
+
+====Verb====
+{{head|it|verb form}}
+
+# {{inflection of|it|affettare||3|p|pres|indc|t=to slice, to knife}}
 -------- end text --------
 Page 305 affettino: Found match for regex: =
 Page 305 affettino: -------- begin text --------
 
-===Verb===
+===Etymology 1===
+{{nonlemma}}
+
+====Pronunciation====
+{{it-pr|affèttino}}
+
+====Verb====
 {{head|it|verb form}}
 
-# {{inflection of|it|affettare||3|p|pres|subj|;|3|p|impr}}
+# {{inflection of|it|affettare||3|p|pres|subj|;|3|p|impr|t=to affect, to feign}}
+
+===Etymology 2===
+{{nonlemma}}
+
+====Pronunciation====
+{{it-pr|afféttino}}
+
+====Verb====
+{{head|it|verb form}}
+
+# {{inflection of|it|affettare||3|p|pres|subj|;|3|p|impr|t=to slice, to knife}}
 -------- end text --------
 Page 306 accentuare: Found match for regex: =
 Page 306 accentuare: -------- begin text --------
 
 ===Pronunciation===
-{{it-pr|accentu.àre<ref:{{R:it:DiPI|accentuo}}>}}
+{{it-pr|accentu.àre,accentuàre<ref:{{R:it:DiPI|accentuale}}>}}
 
 ===Verb===
 {{it-verb|a/è}}
@@ -3175,6 +3360,9 @@ Page 306 accentuare: -------- begin text --------
 Page 307 accentuarsi: Found match for regex: =
 Page 307 accentuarsi: -------- begin text --------
 
+===Pronunciation===
+{{it-pr|accentu.àrsi,accentuàrsi<ref:{{R:it:DiPI|accentuale}}>}}
+
 ===Verb===
 {{it-verb|è}}
 
@@ -3187,6 +3375,9 @@ Page 307 accentuarsi: -------- begin text --------
 
 ====Related terms====
 * {{l|it|accentuare}}
+
+===References===
+<references />
 
 ===Anagrams===
 * {{anagrams|it|a=aacceinrstu|insaccature}}
@@ -3259,15 +3450,18 @@ Page 312 accentuiamo: -------- begin text --------
 Page 313 accentuate: Found match for regex: =
 Page 313 accentuate: -------- begin text --------
 
+===Pronunciation===
+{{it-pr|accentu.àte,accentuàte<ref:{{R:it:DiPI|accentuale}}>}}
+
 ===Etymology 1===
-
-====Adjective====
-{{head|it|adjective form|g=f-p}}
-
-# {{feminine plural of|it|accentuato}}
 
 ====Participle====
 {{head|it|past participle form|g=f-p}}
+
+# {{feminine plural of|it|accentuato}}
+
+====Adjective====
+{{head|it|adjective form|g=f-p}}
 
 # {{feminine plural of|it|accentuato}}
 
@@ -3277,6 +3471,9 @@ Page 313 accentuate: -------- begin text --------
 {{head|it|verb form}}
 
 # {{inflection of|it|accentuare||2|p|pres|indc|;|2|p|impr}}
+
+===References===
+<references />
 -------- end text --------
 Page 314 accentuano: Found match for regex: =
 Page 314 accentuano: -------- begin text --------
@@ -3320,6 +3517,11 @@ Page 318 accentuato: -------- begin text --------
 ===Pronunciation===
 {{it-pr|accentu.àto,accentuàto<ref:{{R:it:DiPI|accentuale}}>}}
 
+===Participle===
+{{it-pp}}
+
+# {{past participle of|it|accentuare}}
+
 ===Adjective===
 {{it-adj}}
 
@@ -3328,11 +3530,6 @@ Page 318 accentuato: -------- begin text --------
 
 ====Derived terms====
 * {{l|it|accentuatamente}}
-
-===Participle===
-{{it-pp}}
-
-# {{past participle of|it|accentuare}}
 
 ===References===
 <references />
@@ -7322,7 +7519,7 @@ Page 606 colombo viaggiatore: Found match for regex: =
 Page 606 colombo viaggiatore: -------- begin text --------
 
 ===Noun===
-{{it-noun|head=[[colombo]] [[viaggiatore]]|m|colombi viaggiatori}}
+{{it-noun|m|colombi viaggiatori}}
 
 # {{alternative form of|it|piccione viaggiatore}}
 
@@ -7480,7 +7677,7 @@ Page 622 viaggio di nozze: Found match for regex: =
 Page 622 viaggio di nozze: -------- begin text --------
 
 ===Noun===
-{{it-noun|head=[[viaggio]] di [[nozze]]|m|viaggi di nozze}}
+{{it-noun|m|viaggi di nozze}}
 
 # [[honeymoon]]
 #: {{syn|it|luna di miele}}
@@ -9849,7 +10046,7 @@ Page 764 incentrarsi: Found match for regex: =
 Page 764 incentrarsi: -------- begin text --------
 
 ===Verb===
-{{it-verb|head=incentrarsi (su)|è}}
+{{it-verb|è}} {{+preo|it|su}}
 
 # {{reflexive of|it|incentrare}}
 # to [[center]] something (on)
@@ -12176,7 +12373,7 @@ Page 913 freno a mano: Found match for regex: =
 Page 913 freno a mano: -------- begin text --------
 
 ===Noun===
-{{it-noun|m|freni a mano|head=[[freno]] [[a]] [[mano]]}}
+{{it-noun|m|freni a mano}}
 
 # {{lb|it|automotive}} [[handbrake]]
 {{C|it|Vehicles}}
@@ -12225,7 +12422,7 @@ Page 919 freno di emergenza: Found match for regex: =
 Page 919 freno di emergenza: -------- begin text --------
 
 ===Noun===
-{{it-noun|head=[[freno]] [[di]] [[emergenza]]|m|freni di emergenza}}
+{{it-noun|m|freni di emergenza}}
 
 # [[emergency brake]]
 -------- end text --------
@@ -12241,7 +12438,7 @@ Page 921 freno di parcheggio: Found match for regex: =
 Page 921 freno di parcheggio: -------- begin text --------
 
 ===Noun===
-{{it-noun|m|freni di parcheggio|head=[[freno]] [[di]] [[parcheggio]]}}
+{{it-noun|m|freni di parcheggio}}
 
 # {{lb|it|automotive}} [[handbrake]], [[parking]] [[brake]]
 {{C|it|Vehicles}}
@@ -21790,7 +21987,7 @@ Page 1586 viola d'amore: Found match for regex: =
 Page 1586 viola d'amore: -------- begin text --------
 
 ===Noun===
-{{it-noun|f|head=[[viola]] d'[[amore]]|viole d'amore}}
+{{it-noun|f|head=[[viola]] [[d']][[amore]]|viole d'amore}}
 
 # {{lb|it|musical instrument}} [[#English|viola d'amore]]
 
@@ -21831,7 +22028,7 @@ Page 1591 viole da gamba: Found match for regex: =
 Page 1591 viole da gamba: -------- begin text --------
 
 ===Noun===
-{{head|it|noun form|head=[[viole]] da [[gamba]]}}
+{{head|it|noun form|head=[[viola|viole]] [[da]] [[gamba]]}}
 
 # {{plural of|it|viola da gamba}}
 -------- end text --------
@@ -27572,7 +27769,7 @@ Page 2029 ridisputo: -------- begin text --------
 {{it-pr|ridìsputo}}
 
 ===Verb===
-{{head|it|verb form|head=(io) ridisputo}}
+{{head|it|verb form}}
 
 # {{infl of|it|ridisputare||1|s|pres|ind}}
 -------- end text --------
@@ -29686,7 +29883,7 @@ Page 2217 tavolo da pranzo: Found match for regex: =
 Page 2217 tavolo da pranzo: -------- begin text --------
 
 ===Noun===
-{{it-noun|m|tavoli da pranzo|head=[[tavolo]] [[da]] [[pranzo]]}}
+{{it-noun|m|tavoli da pranzo}}
 
 # {{lb|it|furniture}} [[dining table]]
 -------- end text --------
@@ -30754,7 +30951,7 @@ Page 2297 ogni promessa è debito: Found match for regex: =
 Page 2297 ogni promessa è debito: -------- begin text --------
 
 ===Proverb===
-{{head|it|proverb|head=[[ogni]] [[promessa]] [[è]] [[debito]]}}
+{{head|it|proverb|head=[[ogni]] [[promessa]] [[essere|è]] [[debito]]}}
 
 # [[promise]] [[is]] [[debt]]
 -------- end text --------
@@ -31292,7 +31489,7 @@ Page 2339 coppa dell'olio: Found match for regex: =
 Page 2339 coppa dell'olio: -------- begin text --------
 
 ===Noun===
-{{it-noun|head=[[coppa]] [[dell']] [[olio]]|m|coppe dell'olio}}
+{{it-noun|head=[[coppa]] [[dell']][[olio]]|m|coppe dell'olio}}
 
 # [[oil]] [[sump]]
 -------- end text --------
@@ -31300,7 +31497,7 @@ Page 2340 coppe dell'olio: Found match for regex: =
 Page 2340 coppe dell'olio: -------- begin text --------
 
 ===Noun===
-{{head|it|noun form|head=coppe dell'olio}} {{g|m}}
+{{head|it|noun form|head=[[coppa|coppe]] [[dell']][[olio]]|g=m}}
 
 # {{plural of|it|coppa dell'olio}}
 -------- end text --------
@@ -31373,7 +31570,7 @@ Page 2346 coppia comica: Found match for regex: =
 Page 2346 coppia comica: -------- begin text --------
 
 ===Noun===
-{{it-noun|head=[[coppia]] [[comica]]|f|coppie comiche}}
+{{it-noun|f|coppie comiche}}
 
 # [[double act]] (comical)
 #: {{syn|it|coppia di comici}}
@@ -31393,7 +31590,7 @@ Page 2348 coppia di comici: Found match for regex: =
 Page 2348 coppia di comici: -------- begin text --------
 
 ===Noun===
-{{it-noun|head=[[coppia]] di [[comici]]|f|coppie di comici}}
+{{it-noun|f|coppie di comici}}
 
 # [[double act]] (comical)
 #: {{syn|it|coppia comica}}
@@ -31410,7 +31607,7 @@ Page 2350 coppia di fatto: Found match for regex: =
 Page 2350 coppia di fatto: -------- begin text --------
 
 ===Noun===
-{{it-noun|head=[[coppia]] [[di]] [[fatto]]|f|coppie di fatto}}
+{{it-noun|f|coppie di fatto}}
 
 # [[common-law]] [[couple]]
 -------- end text --------
@@ -31489,7 +31686,7 @@ Page 2358 doppia coppia: Found match for regex: =
 Page 2358 doppia coppia: -------- begin text --------
 
 ===Noun===
-{{it-noun|head=[[doppia]] [[coppia]]|f|doppie coppie}}
+{{it-noun|head=[[doppio|doppia]] [[coppia]]|f|doppie coppie}}
 
 # {{lb|it|card games|poker}} [[two pair]]
 -------- end text --------
@@ -31518,7 +31715,7 @@ Page 2361 motore a scoppio: -------- begin text --------
 {{wikipedia|lang=it}}
 
 ===Noun===
-{{it-noun|head=[[motore]] [[a]] [[scoppio]]|m|motori a scoppio}}
+{{it-noun|m|motori a scoppio}}
 
 # [[internal combustion engine]]
 -------- end text --------
