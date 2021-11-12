@@ -13,6 +13,7 @@ local export = {}
 local pos_functions = {}
 
 local m_links = require("Module:links")
+local m_table = require("Module:table")
 
 local u = mw.ustring.char
 local rfind = mw.ustring.find
@@ -275,7 +276,7 @@ local function process_comp_sup(compsup, quals)
 	return infls
 end
 
-local allowed_genders = require("Module:table").listToSet(
+local allowed_genders = m_table.listToSet(
 	{"m", "f", "mf", "mfbysense", "m-p", "f-p", "mf-p", "mfbysense-p", "?", "?-p"}
 )
 
@@ -632,7 +633,7 @@ local function do_adjective(args, data, tracking_categories, pos, is_superlative
 		end
 		table.sort(indicators)
 		error("Special inflection indicator beginning can only be " ..
-			require("Module:table").serialCommaJoin(indicators, {dontTag = true}) .. ": " .. args.sp)
+			m_table.serialCommaJoin(indicators, {dontTag = true}) .. ": " .. args.sp)
 	end
 
 	local PAGENAME = mw.title.getCurrentTitle().text
@@ -774,7 +775,7 @@ local function do_adjective(args, data, tracking_categories, pos, is_superlative
 		end
 
 		if #masculine_plurals > 0 and #feminine_plurals > 0 and
-			require("Module:table").deepEquals(masculine_plurals, feminine_plurals) then
+			m_table.deepEquals(masculine_plurals, feminine_plurals) then
 			insert_inflection(masculine_plurals, "plural", "p")
 		else
 			insert_inflection(masculine_plurals, "masculine plural", "m|p")
@@ -820,7 +821,7 @@ local function get_adjective_params(adjtype)
 		["mpl_qual"] = {list = "mpl=_qual", allow_holes = true},
 		["pagename"] = {}, -- for testing
 	}
-	if adjtype == "base" or adjtype == "part" then
+	if adjtype == "base" or adjtype == "part" or adjtype == "det" then
 		params["comp"] = {list = true} --comparative(s)
 		params["comp_qual"] = {list = "comp=_qual", allow_holes = true}
 		params["sup"] = {list = true} --superlative(s)
@@ -1336,12 +1337,29 @@ pos_functions["verbs"] = {
 		local pagename = args.pagename or PAGENAME
 
 		if args[1] then
+			local iut = require("Module:inflection utilities")
+
 			local arg1 = args[1]
-			if not arg1:find("<.*>") then
+			local need_surrounding_angle_brackets = true
+			-- Check whether we need to add <...> around the argument. If the
+			-- argument has no < in it, we definitely do. Otherwise, we need to
+			-- parse the balanced [...] and <...> and add <...> only if there isn't
+			-- a top-level <...>. We check for [...] because there might be angle
+			-- brackets inside of them (HTML tags in qualifiers or <<name:...>> and
+			-- such in references).
+			if arg1:find("<") then
+				local segments = iut.parse_multi_delimiter_balanced_segment_run(arg1,
+					{{"<", ">"}, {"[", "]"}})
+				for i = 2, #segments, 2 do
+					if segments[i]:find("^<.*>$") then
+						need_surrounding_angle_brackets = false
+						break
+					end
+				end
+			end
+			if need_surrounding_angle_brackets then
 				arg1 = "<" .. arg1 .. ">"
 			end
-
-			local iut = require("Module:inflection utilities")
 
 			-- (1) Parse the indicator specs inside of angle brackets.
 
@@ -1378,7 +1396,13 @@ pos_functions["verbs"] = {
 							parse_err("Blank form not allowed here, but saw '" ..
 								table.concat(comma_separated_group) .. "'")
 						end
-						table.insert(specs, {form = form, footnotes = parse_qualifiers(colon_separated_group)})
+						local new_spec = {form = form, footnotes = parse_qualifiers(colon_separated_group)}
+						for _, existing_spec in ipairs(specs) do
+							if m_table.deepEquals(existing_spec, new_spec) then
+								parse_err("Duplicate spec '" .. table.concat(colon_separated_group) .. "'")
+							end
+						end
+						table.insert(specs, new_spec)
 					end
 					return specs
 				end
@@ -1420,7 +1444,6 @@ pos_functions["verbs"] = {
 							if base.verb.is_reflexive then
 								if #comma_separated_groups > 1 and first_separator ~= "," then
 									presind = 3
-									-- Auxiliary present (if non-reflexive), or root-stressed infinitive spec (if reflexive).
 									-- Fetch root-stressed infinitive, if given.
 									local specs = fetch_specs(comma_separated_groups[1], "allow blank")
 									if first_separator == "\\" then
@@ -1441,6 +1464,7 @@ pos_functions["verbs"] = {
 											.. table.concat(comma_separated_groups[1]))
 									end
 								end
+								base.aux = {{form = "essere"}}
 							else -- non-reflexive
 								if #comma_separated_groups == 1 or first_separator == "," then
 									parse_err("With non-reflexive verb, use a spec like AUX/PRES, AUX\\PRES, AUX/PRES,PAST,PP or similar")
@@ -1610,8 +1634,8 @@ pos_functions["verbs"] = {
 					specs = specs or {{form = "+"}}
 					for _, spec in ipairs(specs) do
 						local decorated_form = spec.form
-						local preserve_monosyllabic_accent, form, syntactic_gemination =
-							rmatch(decorated_form, "^(%*?)(.-)(%**)$")
+						local prespec, form, syntactic_gemination =
+							rmatch(decorated_form, "^([*!#]*)(.-)(%**)$")
 						local forms = special_case(base, form)
 						forms = iut.convert_to_general_list_form(forms, spec.footnotes)
 						for _, formobj in ipairs(forms) do
@@ -1620,11 +1644,28 @@ pos_functions["verbs"] = {
 							-- If the form is -, insert it directly, unlinked; we handle this specially
 							-- below, turning it into special labels like "no past participle".
 							if form ~= "-" then
+								if prespec:find("!!") then
+									qualifiers = iut.combine_footnotes({"[elevated style]"}, qualifiers)
+									prespec = prespec:gsub("!!", "")
+								end
+								if prespec:find("!") then
+									qualifiers = iut.combine_footnotes({"[careful style]"}, qualifiers)
+									prespec = prespec:gsub("!", "")
+								end
+								if prespec:find("#") then
+									qualifiers = iut.combine_footnotes({"[traditional]"}, qualifiers)
+									prespec = prespec:gsub("#", "")
+								end
+								local preserve_monosyllabic_accent
+								if prespec:find("%*") then
+									preserve_monosyllabic_accent = true
+									prespec = prespec:gsub("%*", "")
+								end
 								local unaccented_form
 								if rfind(form, "^.*" .. V .. ".*" .. AV .. "$") then
 									-- final accented vowel with preceding vowel; keep accent
 									unaccented_form = form
-								elseif rfind(form, AV .. "$") and preserve_monosyllabic_accent == "*" then
+								elseif rfind(form, AV .. "$") and preserve_monosyllabic_accent then
 									unaccented_form = form
 									qualifiers = iut.combine_footnotes(qualifiers, {"[with written accent]"})
 								else
@@ -1696,15 +1737,31 @@ pos_functions["verbs"] = {
 				if not qualifiers then
 					return nil
 				end
-				local stripped_qualifiers = {}
+				local quals, refs
 				for _, qualifier in ipairs(qualifiers) do
-					local stripped_qualifier = qualifier:match("^%[(.*)%]$")
-					if not stripped_qualifier then
-						error("Internal error: Qualifier should be surrounded by brackets at this stage: " .. qualifier)
+					local stripped_refs = qualifier:match("^%[ref:(.*)%]$")
+					if stripped_refs then
+						local parsed_refs = require("Module:references").parse_references(stripped_refs)
+						if not refs then
+							refs = parsed_refs
+						else
+							for _, ref in ipairs(parsed_refs) do
+								table.insert(refs, ref)
+							end
+						end
+					else
+						local stripped_qualifier = qualifier:match("^%[(.*)%]$")
+						if not stripped_qualifier then
+							error("Internal error: Qualifier should be surrounded by brackets at this stage: " .. qualifier)
+						end
+						if not quals then
+							quals = {stripped_qualifier}
+						else
+							table.insert(quals, stripped_qualifier)
+						end
 					end
-					table.insert(stripped_qualifiers, stripped_qualifier)
 				end
-				return stripped_qualifiers
+				return quals, refs
 			end
 
 			local function do_verb_form(slot, label)
@@ -1725,8 +1782,8 @@ pos_functions["verbs"] = {
 				else
 					retval = {label = label, accel = accel_form and {form = accel_form} or nil}
 					for _, form in ipairs(forms) do
-						local qualifiers = strip_brackets(form.footnotes)
-						table.insert(retval, {term = form.form, qualifiers = qualifiers})
+						local quals, refs = strip_brackets(form.footnotes)
+						table.insert(retval, {term = form.form, qualifiers = quals, refs = refs})
 					end
 				end
 				table.insert(data.inflections, retval)
@@ -1770,9 +1827,10 @@ pos_functions["verbs"] = {
 			if #data.heads == 0 then
 				for _, lemma_obj in ipairs(alternant_multiword_spec.forms.lemma_linked) do
 					local lemma = lemma_obj.form
-					-- FIXME, can't yet specify qualifiers for heads
+					-- FIXME, can't yet specify qualifiers or references for heads
 					table.insert(data.heads, lemma_obj.form)
-					-- table.insert(data.heads, {term = lemma_obj.form, qualifiers = strip_brackets(lemma_obj.footnotes)})
+					-- local quals, refs = strip_brackets(lemma_obj.footnotes)
+					-- table.insert(data.heads, {term = lemma_obj.form, qualifiers = quals, refs = refs})
 				end
 			end
 		end
