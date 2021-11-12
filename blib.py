@@ -590,6 +590,13 @@ def stream(st, startsort = None, endsort = None):
 
     yield i, pywikibot.Page(site, name)
 
+def iter_pages_from_file(filename):
+  for line in codecs.open(filename, "r", "utf-8"):
+    line = line.strip()
+    if line.startswith("#"):
+      continue
+    yield line
+
 def get_page_name(page):
   if isinstance(page, basestring):
     return page
@@ -1042,7 +1049,7 @@ def do_pagefile_cats_refs(args, start, end, process, default_cats=[],
       for i, pagetitle in iter_items(pages, start, end):
         process_page(pywikibot.Page(site, pagetitle), i)
     if args.pagefile:
-      pages = [x.rstrip('\n') for x in codecs.open(args.pagefile, "r", "utf-8")]
+      pages = iter_pages_from_file(args.pagefile)
       for i, pagetitle in iter_items(pages, start, end):
         process_page(pywikibot.Page(site, pagetitle), i)
     if args.pages_from_find_regex:
