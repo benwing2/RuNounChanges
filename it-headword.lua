@@ -30,6 +30,8 @@ local unfc = mw.ustring.toNFC
 local lang = require("Module:languages").getByCode("it")
 local langname = "Italian"
 
+local force_cat = false -- for testing; if true, categories appear in non-mainspace pages
+
 local GR = u(0x0300)
 local TEMP_QU = u(0xFFF1)
 local TEMP_GU = u(0xFFF2)
@@ -79,6 +81,7 @@ local prepositions = {
 	"d?agli ",
 	-- di, in + optional article
 	"di ",
+	"d'",
 	"in ",
 	"[dn]el ",
 	"[dn]ell[oae] ",
@@ -113,6 +116,8 @@ function export.show(frame)
 		["suff"] = {type = "boolean"},
 		["id"] = {},
 		["sort"] = {},
+		["splithyph"] = {type = "boolean"},
+		["pagename"] = {}, -- for testing
 	}
 
 	local parargs = frame:getParent().args
@@ -124,18 +129,28 @@ function export.show(frame)
 	end
 
 	local args = require("Module:parameters").process(parargs, params)
+	local user_specified_heads = args.head
+	local heads = user_specified_heads
+	local pagename = args.pagename or mw.title.getCurrentTitle().text
+	if #heads == 0 then
+		heads = {require("Module:romance utilities").add_lemma_links(pagename, args.splithyph)}
+	end
+		
 	local data = {
 		lang = lang,
 		pos_category = poscat,
 		categories = {},
-		heads = args["head"],
+		user_specified_heads = user_specified_heads,
+		heads = heads,
+		pagename = pagename,
 		genders = {},
 		inflections = {},
-		id = args["id"],
-		sort_key = args["sort"],
+		id = args.id,
+		sort_key = args.sort,
+		force_cat_output = force_cat,
 	}
 
-	if args["suff"] then
+	if args.suff then
 		data.pos_category = "suffixes"
 
 		if suffix_categories[poscat] then
@@ -150,12 +165,8 @@ function export.show(frame)
 		pos_functions[poscat].func(args, data, tracking_categories, frame)
 	end
 
-	if args["json"] then
-		return require("Module:JSON").toJSON(data)
-	end
-
 	return require("Module:headword").full_headword(data)
-		.. require("Module:utilities").format_categories(tracking_categories, lang)
+		.. require("Module:utilities").format_categories(tracking_categories, lang, args.sort, nil, force_cat)
 end
 
 -- Generate a default plural form, which is correct for most regular nouns and adjectives.
@@ -167,6 +178,12 @@ local function make_plural(form, gender, special)
 			error("Internal error: Should have one return value for make_plural: " .. table.concat(retval, ","))
 		end
 		return retval[1]
+	end
+
+	local function check_no_mf()
+		if gender == "mf" or gender == "mfbysense" or gender == "?" then
+			error("With gender=" .. gender .. ", unable to pluralize form '" .. form .. "' because its plural is gender-specific")
+		end
 	end
 
 	if form:find("io$") then
@@ -198,10 +215,18 @@ local function make_plural(form, gender, special)
 	elseif form:find("o$") then
 		form = form:gsub("o$", "i")
 	elseif form:find("[cg]a$") then
+		check_no_mf()
 		form = form:gsub("a$", (gender == "m" and "hi" or "he"))
+	elseif form:find("logia$") then
+		if gender ~= "f" then
+			error("Form '" .. form .. "' ending in -logia should gender=f if it is using the default plural")
+		end
+		form = form:gsub("a$", "e")
 	elseif form:find("[cg]ia$") then
-		form = form:gsub("ia$", "e")
+		check_no_mf()
+		form = form:gsub("ia$", (gender == "m" and "i" or "e"))
 	elseif form:find("a$") then
+		check_no_mf()
 		form = form:gsub("a$", (gender == "m" and "i" or "e"))
 	elseif form:find("e$") then
 		form = form:gsub("e$", "i")
@@ -284,24 +309,35 @@ local function do_noun(args, data, tracking_categories, pos)
 	local is_plurale_tantum = false
 	local plpos = require("Module:string utilities").pluralize(pos)
 
+	data.genders = args[1]
+	local saw_m = false
+	local saw_f = false
+	local gender_for_default_plural = data.genders[1]
 	for _, g in ipairs(args[1]) do
 		if not allowed_genders[g] then
 			error("Unrecognized gender: " .. g)
 		end
 		if g:find("-p$") then
 			is_plurale_tantum = true
+		else
+			if g == "m" or g == "mf" or g == "mfbysense" then
+				saw_m = true
+			end
+			if g == "f" or g == "mf" or g == "mfbysense" then
+				saw_f = true
+			end
 		end
 	end
-	
-	data.genders = args[1]
+	if saw_m and saw_f and not gender_for_default_plural:find("^mf") then
+		gender_for_default_plural = "mf"
+	end
 
-	local PAGENAME = mw.title.getCurrentTitle().text
-	local pagename = args.pagename or PAGENAME
-	local lemma = m_links.remove_links(data.heads[1] or pagename)
-
+	local lemma = m_links.remove_links(data.heads[1]) -- should always be specified
 
 	-- Plural
 	local plurals = {}
+	local args_mpl = args.mpl
+	local args_fpl = args.fpl
 	if is_plurale_tantum then
 		if #args[2] > 0 then
 			error("Can't specify plurals of plurale tantum " .. pos)
@@ -311,12 +347,12 @@ local function do_noun(args, data, tracking_categories, pos)
 		-- Gather plurals, handling requests for default plurals
 		for i, pl in ipairs(args[2]) do
 			if pl == "+" then
-				pl = make_plural(lemma, data.genders[1])
+				pl = make_plural(lemma, gender_for_default_plural)
 			elseif pl == "#" then
 				pl = lemma
 			elseif pl:find("^%+") then
 				pl = require("Module:romance utilities").get_special_indicator(pl)
-				pl = make_plural(lemma, data.genders[1], pl)
+				pl = make_plural(lemma, gender_for_default_plural, pl)
 			end
 			if pl then
 				table.insert(plurals, {term = pl, qualifiers = fetch_qualifiers(args.pl_qual[i])})
@@ -363,10 +399,21 @@ local function do_noun(args, data, tracking_categories, pos)
 		else
 			-- Countable
 			-- FIXME: Support mixed countable/uncountable
-			if #plurals == 0 and #args.mpl == 0 and #args.fpl == 0 then
-				local pl = make_plural(lemma, data.genders[1])
-				if pl then
-					table.insert(plurals, {term = pl})
+			if #plurals == 0 and #args_mpl == 0 and #args_fpl == 0 then
+				if saw_m and saw_f then
+					local default_mpl = make_plural(lemma, "m")
+					local default_fpl = make_plural(lemma, "f")
+					if default_mpl == default_fpl then
+						table.insert(plurals, {term = default_mpl})
+					else
+						args_mpl = {default_mpl}
+						args_fpl = {default_fpl}
+					end
+				else
+					local pl = make_plural(lemma, gender_for_default_plural)
+					if pl then
+						table.insert(plurals, {term = pl})
+					end
 				end
 			end
 			table.insert(data.categories, langname .. " countable " .. plpos)
@@ -459,14 +506,14 @@ local function do_noun(args, data, tracking_categories, pos)
 	-- FIXME: We should generate feminine plurals by default from feminine singulars given, and vice-versa.
 	-- To do that, eliminate the distinction between `default_feminine_plurals` and `feminine_plurals`,
 	-- as in [[Module:es-headword]].
-	if #args.fpl > 0 then
+	if #args_fpl > 0 then
 		-- Set feminine plurals.
-		feminine_plurals = handle_mf_plural(args.fpl, args.fpl_qual, "f", default_feminine_plurals, feminines)
+		feminine_plurals = handle_mf_plural(args_fpl, args.fpl_qual, "f", default_feminine_plurals, feminines)
 	end
 
-	if #args.mpl > 0 then
+	if #args_mpl > 0 then
 		-- Set masculine plurals.
-		masculine_plurals = handle_mf_plural(args.mpl, args.mpl_qual, "m", default_masculine_plurals, masculines)
+		masculine_plurals = handle_mf_plural(args_mpl, args.mpl_qual, "m", default_masculine_plurals, masculines)
 	end
 
 	check_all_missing(plurals, plpos, tracking_categories)
@@ -523,23 +570,19 @@ local function do_noun(args, data, tracking_categories, pos)
 		table.insert(data.inflections, feminine_plurals)
 	end
 
-	-- Category
-	if lemma:find("o$") and data.genders[1] == "f" then
+	-- Maybe add category 'Italian nouns with irregular gender' (or similar)
+	local irreg_gender_lemma = rsub(lemma, " .*", "") -- only look at first word
+	if (irreg_gender_lemma:find("o$") and (gender_for_default_plural == "f" or gender_for_default_plural == "mf"
+		or gender_for_default_plural == "mfbysense")) or
+		(irreg_gender_lemma:find("a$") and (gender_for_default_plural == "m" or gender_for_default_plural == "mf"
+		or gender_for_default_plural == "mfbysense")) then
 		table.insert(data.categories, langname .. " " .. plpos .. " with irregular gender")
-	end
-	
-	if lemma:find("a$") and data.genders[1] == "m" then
-		table.insert(data.categories, langname .. " " .. plpos .. " with irregular gender")
-	end
-	
-	if #data.heads == 0 and args.pagename then
-		table.insert(data.heads, args.pagename)
 	end
 end
 
 local function get_noun_params()
 	return {
-		[1] = {list = "g", default = "?"},
+		[1] = {list = "g", required = true, default = "?"},
 		[2] = {list = "pl"},
 		["pl_qual"] = {list = "pl=_qual", allow_holes = true},
 		["m"] = {list = true},
@@ -550,7 +593,6 @@ local function get_noun_params()
 		["mpl_qual"] = {list = "mpl=_qual", allow_holes = true},
 		["fpl"] = {list = true},
 		["fpl_qual"] = {list = "fpl=_qual", allow_holes = true},
-		["pagename"] = {}, -- for testing
 	}
 end
 
@@ -583,8 +625,8 @@ function export.itprop(frame)
 	local args = require("Module:parameters").process(frame:getParent().args, params)
 	
 	local data = {
-		lang = lang, pos_category = "proper nouns", categories = {}, sort_key = args["sort"],
-		heads = args["head"], genders = args[1], inflections = {}
+		lang = lang, pos_category = "proper nouns", categories = {}, sort_key = args.sort,
+		heads = args.head, genders = args[1], inflections = {}
 	}
 
 	local is_plurale_tantum = false
@@ -603,14 +645,14 @@ function export.itprop(frame)
 	end
 
 	-- Other gender
-	if #args["f"] > 0 then
-		args["f"].label = "feminine"
-		table.insert(data.inflections, args["f"])
+	if #args.f > 0 then
+		args.f.label = "feminine"
+		table.insert(data.inflections, args.f)
 	end
 	
-	if #args["m"] > 0  then
-		args["m"].label = "masculine"
-		table.insert(data.inflections, args["m"])
+	if #args.m > 0  then
+		args.m.label = "masculine"
+		table.insert(data.inflections, args.m)
 	end
 
 	return require("Module:headword").full_headword(data)
@@ -636,9 +678,7 @@ local function do_adjective(args, data, tracking_categories, pos, is_superlative
 			m_table.serialCommaJoin(indicators, {dontTag = true}) .. ": " .. args.sp)
 	end
 
-	local PAGENAME = mw.title.getCurrentTitle().text
-	local pagename = args.pagename or PAGENAME
-	local lemma = m_links.remove_links(data.heads[1] or pagename)
+	local lemma = m_links.remove_links(data.heads[1]) -- should always be specified
 
 	local function insert_inflection(forms, label, accel)
 		if #forms > 0 then
@@ -800,10 +840,6 @@ local function do_adjective(args, data, tracking_categories, pos, is_superlative
 	if args.irreg and is_superlative then
 		table.insert(data.categories, langname .. " irregular superlative adjectives")
 	end
-	
-	if #data.heads == 0 and args.pagename then
-		table.insert(data.heads, args.pagename)
-	end
 end
 
 local function get_adjective_params(adjtype)
@@ -819,7 +855,6 @@ local function get_adjective_params(adjtype)
 		["fpl_qual"] = {list = "fpl=_qual", allow_holes = true},
 		["mpl"] = {list = true}, --masculine plural override(s)
 		["mpl_qual"] = {list = "mpl=_qual", allow_holes = true},
-		["pagename"] = {}, -- for testing
 	}
 	if adjtype == "base" or adjtype == "part" or adjtype == "det" then
 		params["comp"] = {list = true} --comparative(s)
@@ -888,7 +923,6 @@ pos_functions["adjective-like pronouns"] = {
 pos_functions["cardinal invariable"] = {
 	params = {
 		["apoc"] = {type = "boolean"},
-		["pagename"] = {}, -- for testing
 	},
 	func = function(args, data, tracking_categories)
 		data.pos_category = "numerals"
@@ -898,10 +932,6 @@ pos_functions["cardinal invariable"] = {
 		if args.apoc then
 			table.insert(data.inflections, {label = glossary_link("apocopated")})
 			data.pos_category = "numeral forms"
-		end
-
-		if #data.heads == 0 and args.pagename then
-			table.insert(data.heads, args.pagename)
 		end
 	end,
 }
@@ -1328,14 +1358,10 @@ local irreg_forms = { "imperf", "fut", "sub", "impsub", "imp" }
 pos_functions["verbs"] = {
 	params = {
 		[1] = {},
-		["pagename"] = {}, -- for testing
 		["noautolinktext"] = {type = "boolean"},
 		["noautolinkverb"] = {type = "boolean"},
 	},
 	func = function(args, data, tracking_categories, frame)
-		local PAGENAME = mw.title.getCurrentTitle().text
-		local pagename = args.pagename or PAGENAME
-
 		if args[1] then
 			local iut = require("Module:inflection utilities")
 
@@ -1408,7 +1434,7 @@ pos_functions["verbs"] = {
 				end
 
 				if lemma == "" then
-					lemma = pagename
+					lemma = data.pagename
 				end
 				base.lemma = m_links.remove_links(lemma)
 				base.verb = analyze_verb(lemma)
@@ -1824,7 +1850,8 @@ pos_functions["verbs"] = {
 			end
 
 			-- Use the "linked" form of the lemma as the head if no head= explicitly given.
-			if #data.heads == 0 then
+			if #data.user_specified_heads == 0 then
+				data.heads = {}
 				for _, lemma_obj in ipairs(alternant_multiword_spec.forms.lemma_linked) do
 					local lemma = lemma_obj.form
 					-- FIXME, can't yet specify qualifiers or references for heads
