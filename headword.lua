@@ -167,10 +167,10 @@ local function preprocess(data, postype)
 		-- Check for spaces or hyphens, but exclude prefixes and suffixes.
 		-- Use the pagename, not the head= value, because the latter may have extra
 		-- junk in it, e.g. superscripted text that throws off the algorithm.
-		local checkpattern = ".[%s%-]."
+		local checkpattern = ".[%s%-፡]."
 		if m_data.hyphen_not_multiword_sep[data.lang:getCode()] then
 			-- Exclude hyphens if the data module states that they should for this language
-			checkpattern = ".[%s]."
+			checkpattern = ".[%s፡]."
 		end
 		if mw.ustring.find(unmodified_default_head, checkpattern) and not non_categorizable() then
 			table.insert(data.categories, data.lang:getCanonicalName() .. " multiword terms")
