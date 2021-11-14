@@ -171,8 +171,13 @@ end
 
 -- Generate a default plural form, which is correct for most regular nouns and adjectives.
 local function make_plural(form, gender, special)
+	local plspec
+	if special == "cap*" or special == "cap*+" then
+		plspec = special
+		special = nil
+	end
 	local retval = require("Module:romance utilities").handle_multiword(form, special,
-		function(form) return make_plural(form, gender) end, prepositions)
+		function(form) return make_plural(form, gender, plspec) end, prepositions)
 	if retval and #retval > 0 then
 		if #retval ~= 1 then
 			error("Internal error: Should have one return value for make_plural: " .. table.concat(retval, ","))
@@ -182,7 +187,21 @@ local function make_plural(form, gender, special)
 
 	local function check_no_mf()
 		if gender == "mf" or gender == "mfbysense" or gender == "?" then
-			error("With gender=" .. gender .. ", unable to pluralize form '" .. form .. "' because its plural is gender-specific")
+			error("With gender=" .. gender .. ", unable to pluralize form '" .. form .. "'"
+				.. (special and " using special=" .. special or "") .. " because its plural is gender-specific")
+		end
+	end
+
+	if plspec == "cap*" or plspec == "cap*+" then
+		check_no_mf()
+		if not form:find("^capo") then
+			error("With special=" .. plspec .. ", form '" .. form .. "' must begin with capo-")
+		end
+		if gender == "m" then
+			form = form:gsub("^capo", "capi")
+		end
+		if plspec == "cap*" then
+			return form
 		end
 	end
 
@@ -219,7 +238,7 @@ local function make_plural(form, gender, special)
 		form = form:gsub("a$", (gender == "m" and "hi" or "he"))
 	elseif form:find("logia$") then
 		if gender ~= "f" then
-			error("Form '" .. form .. "' ending in -logia should gender=f if it is using the default plural")
+			error("Form '" .. form .. "' ending in -logia should have gender=f if it is using the default plural")
 		end
 		form = form:gsub("a$", "e")
 	elseif form:find("[cg]ia$") then
@@ -328,95 +347,119 @@ local function do_noun(args, data, tracking_categories, pos)
 			end
 		end
 	end
-	if saw_m and saw_f and not gender_for_default_plural:find("^mf") then
+	if saw_m and saw_f then
 		gender_for_default_plural = "mf"
 	end
 
 	local lemma = m_links.remove_links(data.heads[1]) -- should always be specified
 
+	local function insert_inflection(list, term, accel, qualifiers)
+		local infl = {qualifiers = qualifiers, accel = accel}
+		if term == lemma then
+			infl.label = glossary_link("invariable")
+		else
+			infl.term = term
+		end
+		infl.term_for_further_inflection = term
+		table.insert(list, infl)
+	end
+
 	-- Plural
 	local plurals = {}
 	local args_mpl = args.mpl
 	local args_fpl = args.fpl
+	local args_pl = args[2]
+
 	if is_plurale_tantum then
-		if #args[2] > 0 then
+		if #args_pl > 0 then
 			error("Can't specify plurals of plurale tantum " .. pos)
 		end
 		table.insert(data.inflections, {label = glossary_link("plural only")})
 	else
+		if #args_pl == 0 and #args_mpl == 0 and #args_fpl == 0 then
+			args_pl = {"+"}
+		end
 		-- Gather plurals, handling requests for default plurals
-		for i, pl in ipairs(args[2]) do
-			if pl == "+" then
-				pl = make_plural(lemma, gender_for_default_plural)
-			elseif pl == "#" then
-				pl = lemma
-			elseif pl:find("^%+") then
-				pl = require("Module:romance utilities").get_special_indicator(pl)
-				pl = make_plural(lemma, gender_for_default_plural, pl)
-			end
-			if pl then
-				table.insert(plurals, {term = pl, qualifiers = fetch_qualifiers(args.pl_qual[i])})
-			end
-		end
-
-		-- Check for special plural signals
-		local mode = nil
-
-		local pl1 = #plurals > 0 and plurals[1].term
-		if pl1 == "?" or pll1 == "!" or pl1 == "-" or pl1 == "~" then
-			mode = pl1
-			table.remove(plurals, 1)  -- Remove the mode parameter
-		end
-
-		if mode == "?" then
-			-- Plural is unknown
-			table.insert(data.categories, langname .. " " .. plpos .. " with unknown or uncertain plurals")
-		elseif mode == "!" then
-			-- Plural is not attested
-			table.insert(data.inflections, {label = "plural not attested"})
-			table.insert(data.categories, langname .. " " .. plpos .. " with unattested plurals")
-		elseif mode == "-" then
-			-- Invariable
-			-- If plural forms were given explicitly, then show "usually"
-			if #plurals > 0 then
-				table.insert(data.inflections, {label = "usually " .. glossary_link("invariable")})
-			else
-				table.insert(data.inflections, {label = glossary_link("invariable")})
-			end
-			table.insert(data.categories, langname .. " indeclinable " .. plpos)
-			table.insert(data.categories, langname .. " countable " .. plpos)
-		elseif mode == "~" then
-			-- Uncountable noun; may occasionally have a plural
-			table.insert(data.categories, langname .. " uncountable " .. plpos)
-
-			-- If plural forms were given explicitly, then show "usually"
-			if #plurals > 0 then
-				table.insert(data.inflections, {label = "usually " .. glossary_link("uncountable")})
-				table.insert(data.categories, langname .. " countable " .. plpos)
-			else
-				table.insert(data.inflections, {label = glossary_link("uncountable")})
-			end
-		else
-			-- Countable
-			-- FIXME: Support mixed countable/uncountable
-			if #plurals == 0 and #args_mpl == 0 and #args_fpl == 0 then
-				if saw_m and saw_f then
-					local default_mpl = make_plural(lemma, "m")
-					local default_fpl = make_plural(lemma, "f")
-					if default_mpl == default_fpl then
-						table.insert(plurals, {term = default_mpl})
+		for i, pl in ipairs(args_pl) do
+			local function insert_pl(term)
+				if term == lemma and i == 1 then
+					-- Invariable
+					-- If plural forms were given explicitly, then show "usually"
+					if #args_pl > 1 then
+						table.insert(data.inflections, {label = "usually " .. glossary_link("invariable")})
 					else
-						args_mpl = {default_mpl}
-						args_fpl = {default_fpl}
+						table.insert(data.inflections, {label = glossary_link("invariable")})
+					end
+					table.insert(data.categories, langname .. " indeclinable " .. plpos)
+				else
+					insert_inflection(plurals, term, nil, fetch_qualifiers(args.pl_qual[i]))
+				end
+				table.insert(data.categories, langname .. " countable " .. plpos)
+			end
+			local function make_gendered_plural(form, gender, special)
+				if gender == "mf" then
+					local default_mpl = make_plural(lemma, "m", special)
+					local default_fpl = make_plural(lemma, "f", special)
+					if default_mpl then
+						if default_mpl == default_fpl then
+							insert_pl(default_mpl)
+						else
+							if #args_mpl > 0 or #args_fpl > 0 then
+								error("Can't specify gendered plural spec '" .. (special or "+") .. "' along with gender=" .. gender
+									.. " and also specify mpl= or fpl=")
+							end
+							args_mpl = {default_mpl}
+							args_fpl = {default_fpl}
+						end
 					end
 				else
-					local pl = make_plural(lemma, gender_for_default_plural)
+					local pl = make_plural(lemma, gender, special)
 					if pl then
-						table.insert(plurals, {term = pl})
+						insert_pl(pl)
 					end
 				end
 			end
-			table.insert(data.categories, langname .. " countable " .. plpos)
+
+			if pl == "cap*" or pl == "cap*+" then
+				make_gendered_plural(lemma, gender_for_default_plural, pl)
+			elseif pl == "+" then
+				make_gendered_plural(lemma, gender_for_default_plural)
+			elseif pl:find("^%+") then
+				pl = require("Module:romance utilities").get_special_indicator(pl)
+				make_gendered_plural(lemma, gender_for_default_plural, pl)
+			elseif pl == "?" or pl == "!" then
+				if i > 1 or #args_pl > 1 then
+					error("Can't specify ? or ! with other plurals")
+				end
+				if pl == "?" then
+					-- Plural is unknown
+					table.insert(data.inflections, {label = "plural unknown or uncertain"})
+					table.insert(data.categories, langname .. " " .. plpos .. " with unknown or uncertain plurals")
+				else
+					-- Plural is not attested
+					table.insert(data.inflections, {label = "plural not attested"})
+					table.insert(data.categories, langname .. " " .. plpos .. " with unattested plurals")
+				end
+			elseif pl == "~" then
+				if i > 1 then
+					error("Plural specifier ~ must be first")
+				end
+				-- Uncountable noun; may occasionally have a plural
+				table.insert(data.categories, langname .. " uncountable " .. plpos)
+
+				-- If plural forms were given explicitly, then show "usually"
+				if #args_pl > 1 then
+					table.insert(data.inflections, {label = "usually " .. glossary_link("uncountable")})
+					table.insert(data.categories, langname .. " countable " .. plpos)
+				else
+					table.insert(data.inflections, {label = glossary_link("uncountable")})
+				end
+			else
+				if pl == "#" or pl == "-" then
+					pl = lemma
+				end
+				insert_pl(pl)
+			end
 		end
 	end
 
@@ -424,6 +467,9 @@ local function do_noun(args, data, tracking_categories, pos)
 	local function handle_mf(mfs, qualifiers, gender, inflect, default_plurals)
 		local retval = {}
 		for i, mf in ipairs(mfs) do
+			local function insert_infl(list, term, accel, existing_qualifiers)
+				insert_inflection(list, term, accel, fetch_qualifiers(qualifiers[i], existing_qualifiers))
+			end
 			if mf == "+" then
 				-- Generate default feminine.
 				mf = inflect(lemma)
@@ -434,15 +480,14 @@ local function do_noun(args, data, tracking_categories, pos)
 			if special then
 				mf = inflect(lemma, special)
 			end
-			table.insert(retval, {term = mf, qualifiers = fetch_qualifiers(qualifiers[i])})
+			insert_infl(retval, mf)
 			local mfpl = make_plural(mf, gender, special)
 			if mfpl then
 				-- Add an accelerator for each masculine/feminine plural whose lemma
 				-- is the corresponding singular, so that the accelerated entry
 				-- that is generated has a definition that looks like
 				-- # {{plural of|es|MFSING}}
-				table.insert(default_plurals, {term = mfpl, qualifiers = fetch_qualifiers(qualifiers[i]),
-					accel = {form = "p", lemma = mf}})
+				insert_infl(default_plurals, mfpl, {form = "p", lemma = mf})
 			end
 		end
 		return retval
@@ -458,6 +503,9 @@ local function do_noun(args, data, tracking_categories, pos)
 	local function handle_mf_plural(mfpl, qualifiers, gender, default_plurals, singulars)
 		local new_mfpls = {}
 		for i, mfpl in ipairs(mfpl) do
+			local function insert_infl(term, accel, existing_qualifiers)
+				insert_inflection(new_mfpls, term, accel, fetch_qualifiers(qualifiers[i], existing_qualifiers))
+			end
 			local accel
 			if #mfpl == #singulars then
 				-- If same number of overriding masculine/feminine plurals as singulars,
@@ -473,31 +521,37 @@ local function do_noun(args, data, tracking_categories, pos)
 				if #default_plurals > 0 then
 					for _, defpl in ipairs(default_plurals) do
 						-- defpl is a table
-						table.insert(new_mfpls, {term = defpl.term,
-							qualifiers = fetch_qualifiers(qualifiers[i], defpl.qualifiers), accel = defpl.accel})
+						insert_infl(defpl.term_for_further_inflection, defpl.accel, defpl.qualifiers)
 					end
 				else
 					-- mf is a table
 					local default_mfpl = make_plural(lemma, gender)
 					if default_mfpl then
-						table.insert(new_mfpls, {term = default_mfpl,
-							qualifiers = fetch_qualifiers(qualifiers[i]), accel = accel})
+						insert_infl(default_mfpl, accel)
 					end
 				end
 			elseif mfpl == "#" then
-				table.insert(new_mfpls, {term = lemma, qualifiers = fetch_qualifiers(qualifiers[i]), accel = accel})
-			elseif mfpl:find("^%+") then
-				mfpl = require("Module:romance utilities").get_special_indicator(mfpl)
-				for _, mf in ipairs(singulars) do
-					-- mf is a table
-					local default_mfpl = make_plural(mf.term, gender, mfpl)
+				insert_infl(lemma, accel)
+			elseif mfpl == "cap*" or mfpl == "cap*+" or mfpl:find("^%+") then
+				if mfpl:find("^%+") then
+					mfpl = require("Module:romance utilities").get_special_indicator(mfpl)
+				end
+				if #singulars > 0 then
+					for _, mf in ipairs(singulars) do
+						-- mf is a table
+						local default_mfpl = make_plural(mf.term_for_further_inflection, gender, mfpl)
+						if default_mfpl then
+							insert_infl(default_mfpl, accel, mf.qualifiers)
+						end
+					end
+				else
+					local default_mfpl = make_plural(lemma, gender, mfpl)
 					if default_mfpl then
-						table.insert(new_mfpls, {term = default_mfpl,
-							qualifiers = fetch_qualifiers(qualifiers[i], mf.qualifiers), accel = accel})
+						insert_infl(default_mfpl, accel)
 					end
 				end
 			else
-				table.insert(new_mfpls, {term = mfpl, qualifiers = fetch_qualifiers(qualifiers[i]), accel = accel})
+				insert_infl(mfpl, accel)
 			end
 		end
 		return new_mfpls
@@ -524,7 +578,7 @@ local function do_noun(args, data, tracking_categories, pos)
 
 	local function redundant_plural(pl)
 		for _, p in ipairs(plurals) do
-			if p.term == pl.term then
+			if p.term_for_further_inflection == pl.term_for_further_inflection then
 				return true
 			end
 		end
