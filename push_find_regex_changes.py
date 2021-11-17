@@ -19,7 +19,7 @@ def process_page(index, page, contents, origcontents, verbose, comment,
     pagemsg("Skipping contents for %s because no change" % pagetitle)
     return None, None
   if verbose:
-    pagemsg("For [[%s]]:" % pagename)
+    pagemsg("For [[%s]]:" % pagetitle)
     pagemsg("------- begin text --------")
     msg(contents.rstrip('\n'))
     msg("------- end text --------")
@@ -68,7 +68,8 @@ def process_page(index, page, contents, origcontents, verbose, comment,
   return contents, comment
 
 if __name__ == "__main__":
-  parser = blib.create_argparser("Push changes made to find_regex.py output files")
+  parser = blib.create_argparser("Push changes made to find_regex.py output files",
+    include_pagefile=True)
   parser.add_argument('--direcfile', help="File containing directives.")
   parser.add_argument('--origfile', help="File containing unchanged directives.")
   parser.add_argument('--comment', help="Comment to use.", required="true")
@@ -81,21 +82,45 @@ if __name__ == "__main__":
 
   if args.origfile:
     origlines = codecs.open(args.origfile.decode("utf-8"), "r", "utf-8")
-    for index, pagename, text in blib.yield_text_from_find_regex(origlines, args.verbose):
-      origpages[pagename] = text
+    for index, pagetitle, text in blib.yield_text_from_find_regex(origlines, args.verbose):
+      origpages[pagetitle] = text
 
-  lines = codecs.open(args.direcfile.decode("utf-8"), "r", "utf-8")
+  if blib.args_has_non_default_pages(args):
+    newpages = {}
+    lines = codecs.open(args.direcfile.decode("utf-8"), "r", "utf-8")
+    for index, pagetitle, text in blib.yield_text_from_find_regex(lines, args.verbose):
+      newpages[pagetitle] = text
 
-  index_pagename_and_text = blib.yield_text_from_find_regex(lines, args.verbose)
-  for _, (index, pagename, text) in blib.iter_items(index_pagename_and_text, start, end,
-      get_name=lambda x:x[1], get_index=lambda x:x[0]):
-    origcontents = origpages.get(pagename, None)
-    if origcontents == text:
-      msg("Page %s %s: Skipping contents for %s because no change" % (index, pagename, pagename))
-    else:
-      def do_process_page(page, index, parsed):
-        return process_page(index, page, text, origcontents,
-            args.verbose, args.comment.decode("utf-8"), args.lang_only and args.lang_only.decode("utf-8"),
-            args.allow_page_creation)
-      blib.do_edit(pywikibot.Page(site, pagename), index, do_process_page,
-          save=args.save, verbose=args.verbose, diff=args.diff)
+    def do_process_page(page, index, parsed):
+      pagetitle = unicode(page.title())
+      def pagemsg(txt):
+        msg("Page %s %s: %s" % (index, pagetitle, txt))
+      origcontents = origpages.get(pagetitle, None)
+      newtext = newpages.get(pagetitle, None)
+      if not newtext:
+        pagemsg("Skipping because not found in among new page contents")
+        return
+      if origcontents == newtext:
+        pagemsg("Page %s %s: Skipping contents for %s because no change" % pagetitle)
+        return
+      return process_page(index, page, newtext, origcontents,
+        args.verbose, args.comment.decode("utf-8"), args.lang_only and args.lang_only.decode("utf-8"),
+        args.allow_page_creation)
+    blib.do_pagefile_cats_refs(args, start, end, do_process_page, edit=True)
+
+  else:
+    lines = codecs.open(args.direcfile.decode("utf-8"), "r", "utf-8")
+
+    index_pagetitle_and_text = blib.yield_text_from_find_regex(lines, args.verbose)
+    for _, (index, pagetitle, newtext) in blib.iter_items(index_pagetitle_and_text, start, end,
+        get_name=lambda x:x[1], get_index=lambda x:x[0]):
+      origcontents = origpages.get(pagetitle, None)
+      if origcontents == newtext:
+        msg("Page %s %s: Skipping contents for %s because no change" % (index, pagetitle, pagetitle))
+      else:
+        def do_process_page(page, index, parsed):
+          return process_page(index, page, newtext, origcontents,
+              args.verbose, args.comment.decode("utf-8"), args.lang_only and args.lang_only.decode("utf-8"),
+              args.allow_page_creation)
+        blib.do_edit(pywikibot.Page(site, pagetitle), index, do_process_page,
+            save=args.save, verbose=args.verbose, diff=args.diff)
