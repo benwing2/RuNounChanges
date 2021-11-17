@@ -860,6 +860,10 @@ def parse_start_end(startsort, endsort):
 
   return (startsort, endsort)
 
+def args_has_non_default_pages(args):
+  return not not (args.pages or args.pagefile or args.pages_from_find_regex or args.cats or args.refs or
+      args.specials or args.contribs or args.prefix_pages)
+
 # Process a run of pages, with the set of pages coming from either
 # --pagefile, --cats, --refs, or (if --stdin is given) from a Wiktionary
 # dump read from stdin. PROCESS is called to process the page, and has
@@ -1042,8 +1046,7 @@ def do_pagefile_cats_refs(args, start, end, process, default_cats=[],
     else:
       parse_dump(sys.stdin, do_process_stdin_text_on_page, start, end)
 
-  elif (args.pages or args.pagefile or args.pages_from_find_regex or args.cats or args.refs or
-      args.specials or args.contribs or args.prefix_pages):
+  elif args_has_non_default_pages(args):
     if args.pages:
       pages = [x.decode("utf-8") for x in re.split(r",(?! )", args.pages)]
       for i, pagetitle in iter_items(pages, start, end):
