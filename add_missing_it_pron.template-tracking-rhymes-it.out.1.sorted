@@ -3104,7 +3104,7 @@ Page 1948 pillacchere: <respelling> all: pillàcchere <end>: <from> {{rhymes|it|
 Page 1948 pillacchere: Skipped, no changes
 Page 1344 pinnacoli: <respelling> all: pinnàcoli <end>: <from> {{rhymes|it|akoli|s=4}} <to> {{rhymes|it|akoli|s=4}} <end>
 Page 1344 pinnacoli: Skipped, no changes
-Page 2165 pinzillacchere: <respelling> all: pinzillàcchere <end> WARNING: Unable to add pronunciation due to z in part before rhyme: akkere: <from> {{rhymes|it|akkere|s=5}} <to> {{rhymes|it|akkere|s=5}} <end>
+Page 2165 pinzillacchere: <respelling> all: pintsillàcchere <end> WARNING: Unable to add pronunciation due to z in part before rhyme: akkere: <from> {{rhymes|it|akkere|s=5}} <to> {{rhymes|it|akkere|s=5}} <end>
 Page 2165 pinzillacchere: Skipped, no changes
 Page 1583 pippata: <respelling> all: pippàta <end>: <from> {{rhymes|it|ata|s=3}} <to> {{rhymes|it|ata|s=3}} <end>
 Page 1583 pippata: Skipped, no changes
@@ -3120,11 +3120,12 @@ Page 1309 placchi: <respelling> all: plàcchi <end>: <from> {{rhymes|it|akki|s=2
 Page 1309 placchi: Skipped, no changes
 Page 1308 placco: <respelling> all: plàcco <end>: <from> {{rhymes|it|akko|s=2}} <to> {{rhymes|it|akko|s=2}} <end>
 Page 1308 placco: Skipped, no changes
+Page 1231 plebea: <respelling> all: plebèo <end>: <from> {{rhymes|it|ɛa|s=3}} <to> {{rhymes|it|ɛa|s=3}} <end>
 Page 1231 plebea: <respelling> all: plebèa <end>: <from> {{rhymes|it|ɛa|s=3}} <to> {{rhymes|it|ɛa|s=3}} <end>
 Page 1231 plebea: Skipped, no changes
 Page 1233 plebee: <respelling> all: plebèe <end>: <from> {{rhymes|it|ɛe|s=3}} <to> {{rhymes|it|ɛe|s=3}} <end>
 Page 1233 plebee: Skipped, no changes
-Page 1232 plebei: <respelling> all: plebèi <end> WARNING: Unable to add pronunciation due to falling diphthong in -i: ɛi: <from> {{rhymes|it|ɛi|s=3}} <to> {{rhymes|it|ɛi|s=3}} <end>
+Page 1232 plebei: <respelling> all: plebè.i <end> WARNING: Unable to add pronunciation due to falling diphthong in -i: ɛi: <from> {{rhymes|it|ɛi|s=3}} <to> {{rhymes|it|ɛi|s=3}} <end>
 Page 1232 plebei: Skipped, no changes
 Page 1642 pleomorfa: <respelling> all: pleomòrfa <end>: <from> {{rhymes|it|ɔrfa|s=3}} <to> {{rhymes|it|ɔrfa|s=3}} <end>
 Page 1642 pleomorfa: Skipped, no changes
@@ -3132,19 +3133,27 @@ Page 2170 plurigemino: <respelling> all: plurigèmino <end>: <from> {{rhymes|it|
 Page 2170 plurigemino: Skipped, no changes
 Page 1808 plurivalenti: <respelling> all: plurivalènti <end>: <from> {{rhymes|it|ɛnti|s=5}} <to> {{rhymes|it|ɛnti|s=5}} <end>
 Page 1808 plurivalenti: Skipped, no changes
-Page 1533 pneumotoraci: <respelling> all: pneumotoràci <end>: <from> {{rhymes|it|atʃi|s=5}} <to> {{rhymes|it|atʃi|s=5}} <end>
+Page 1533 pneumotorace: <respelling> all: pnèumotoràce<r:Olivetti|pneumotorace> <end>: <from> {{rhymes|it|atʃi|s=5}} <to> {{rhymes|it|atʃi|s=5}} <end>
+Page 1533 pneumotoraci: <respelling> all: pnèumotoràci<r:Olivetti|pneumotorace> <end>: <from> {{rhymes|it|atʃi|s=5}} <to> {{rhymes|it|atʃi|s=5}} <end>
 Page 1533 pneumotoraci: Skipped, no changes
 Page 478 poetica: <respelling> all: poètica <end>: <from> {{rhymes|it|ɛtika|s=4}} <to> {{rhymes|it|ɛtika|s=4}} <end>
 Page 478 poetica: Skipped, no changes
 Page 1615 polimorfa: <respelling> all: polimòrfa <end>: <from> {{rhymes|it|ɔrfa|s=4}} <to> {{rhymes|it|ɔrfa|s=4}} <end>
 Page 1615 polimorfa: Skipped, no changes
-Page 1620 poliuretanica: <respelling> all: poliuretànica <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme anika: <from> {{rhymes|it|anika|s=6}} <to> {{rhymes|it|anika|s=6}} <end>
+Page 1620 poliuretanica: <respelling> all: pòli.uretànica<r:Olivetti|poliuretanico> <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme anika: <from> {{rhymes|it|anika|s=6}} <to> {{rhymes|it|anika|s=6}} <end>
+Page 1620 poliuretanico: <respelling> all: pòli.uretànico<r:Olivetti|poliuretanico> <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme anika: <from> {{rhymes|it|anika|s=6}} <to> {{rhymes|it|anika|s=6}} <end>
+Page 1620 poliuretanici: <respelling> all: pòli.uretànici<r:Olivetti|poliuretanico> <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme anika: <from> {{rhymes|it|anika|s=6}} <to> {{rhymes|it|anika|s=6}} <end>
+Page 1620 poliuretaniche: <respelling> all: pòli.uretàniche<r:Olivetti|poliuretanico> <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme anika: <from> {{rhymes|it|anika|s=6}} <to> {{rhymes|it|anika|s=6}} <end>
 Page 1620 poliuretanica: Skipped, no changes
-Page 437 polivalenti: <respelling> all: polivalènti <end>: <from> {{rhymes|it|ɛnti|s=5}} <to> {{rhymes|it|ɛnti|s=5}} <end>
+Page 437 polivalente: <respelling> all: pòlivalènte<r:Olivetti|polivalente> <end>: <from> {{rhymes|it|ɛnti|s=5}} <to> {{rhymes|it|ɛnti|s=5}} <end>
+Page 437 polivalenti: <respelling> all: pòlivalènti<r:Olivetti|polivalente> <end>: <from> {{rhymes|it|ɛnti|s=5}} <to> {{rhymes|it|ɛnti|s=5}} <end>
 Page 437 polivalenti: Skipped, no changes
 Page 1950 porcellanata: <respelling> all: porcellanàta <end>: <from> {{rhymes|it|ata|s=5}} <to> {{rhymes|it|ata|s=5}} <end>
 Page 1950 porcellanata: Skipped, no changes
-Page 2058 postvulcanica: <respelling> all: postvulcànica <end>: <from> {{rhymes|it|anika|s=5}} <to> {{rhymes|it|anika|s=5}} <end>
+Page 2058 postvulcanico: <respelling> all: pòstvulcànico<r:Olivetti|postvulcanico> <end>: <from> {{rhymes|it|anika|s=5}} <to> {{rhymes|it|anika|s=5}} <end>
+Page 2058 postvulcanica: <respelling> all: pòstvulcànica<r:Olivetti|postvulcanico> <end>: <from> {{rhymes|it|anika|s=5}} <to> {{rhymes|it|anika|s=5}} <end>
+Page 2058 postvulcanici: <respelling> all: pòstvulcànici<r:Olivetti|postvulcanico> <end>: <from> {{rhymes|it|anika|s=5}} <to> {{rhymes|it|anika|s=5}} <end>
+Page 2058 postvulcaniche: <respelling> all: pòstvulcàniche<r:Olivetti|postvulcanico> <end>: <from> {{rhymes|it|anika|s=5}} <to> {{rhymes|it|anika|s=5}} <end>
 Page 2058 postvulcanica: Skipped, no changes
 Page 695 potendo: <respelling> all: potèndo <end>: <from> {{rhymes|it|ɛndo|s=3}} <to> {{rhymes|it|ɛndo|s=3}} <end>
 Page 695 potendo: Skipped, no changes
@@ -3160,11 +3169,13 @@ Page 1839 prative: <respelling> all: pratìve <end>: <from> {{rhymes|it|ive|s=3}
 Page 1839 prative: Skipped, no changes
 Page 1565 pravi: <respelling> all: pràvi <end>: <from> {{rhymes|it|avi|s=2}} <to> {{rhymes|it|avi|s=2}} <end>
 Page 1565 pravi: Skipped, no changes
-Page 531 preclusa: <respelling> all: preclùsa <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: uza: <from> {{rhymes|it|uza|s=3}} <to> {{rhymes|it|uza|s=3}} <end>
+Page 531 preclusa: <respelling> all: preclùsa<r:DiPI|precluso> <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: uza: <from> {{rhymes|it|uza|s=3}} <to> {{rhymes|it|uza|s=3}} <end>
+Page 531 preclusi: <respelling> all: preclùsi<r:DiPI|precluso> <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: uza: <from> {{rhymes|it|uza|s=3}} <to> {{rhymes|it|uza|s=3}} <end>
+Page 531 precluse: <respelling> all: preclùse<r:DiPI|precluso> <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: uza: <from> {{rhymes|it|uza|s=3}} <to> {{rhymes|it|uza|s=3}} <end>
 Page 531 preclusa: Skipped, no changes
 Page 119 preclusive: <respelling> all: preclusìve <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ive: <from> {{rhymes|it|ive|s=4}} <to> {{rhymes|it|ive|s=4}} <end>
 Page 119 preclusive: Skipped, no changes
-Page 530 precluso: <respelling> all: preclùso <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: uzo: <from> {{rhymes|it|uzo|s=3}} <to> {{rhymes|it|uzo|s=3}} <end>
+Page 530 precluso: <respelling> all: preclùso<r:DiPI> <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: uzo: <from> {{rhymes|it|uzo|s=3}} <to> {{rhymes|it|uzo|s=3}} <end>
 Page 530 precluso: Skipped, no changes
 Page 2171 predace: <respelling> all: predàce <end>: <from> {{rhymes|it|atʃe|s=3}} <to> {{rhymes|it|atʃe|s=3}} <end>
 Page 2171 predace: Skipped, no changes
@@ -3190,7 +3201,10 @@ Page 1954 prescrittive: <respelling> all: prescrittìve <end>: <from> {{rhymes|i
 Page 1954 prescrittive: Skipped, no changes
 Page 1037 pressata: <respelling> all: pressàta <end>: <from> {{rhymes|it|ata|s=3}} <to> {{rhymes|it|ata|s=3}} <end>
 Page 1037 pressata: Skipped, no changes
-Page 1850 presuntive: <respelling> all: presuntìve <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ive: <from> {{rhymes|it|ive|s=4}} <to> {{rhymes|it|ive|s=4}} <end>
+Page 1850 presuntivo: <respelling> all: presuntìvo,pre[s]untìvo<r:DiPI|presuntivo><r:Olivetti|presuntivo> <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ive: <from> {{rhymes|it|ive|s=4}} <to> {{rhymes|it|ive|s=4}} <end>
+Page 1850 presuntive: <respelling> all: presuntìve,pre[s]untìve<r:DiPI|presuntivo><r:Olivetti|presuntivo> <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ive: <from> {{rhymes|it|ive|s=4}} <to> {{rhymes|it|ive|s=4}} <end>
+Page 1850 presuntiva: <respelling> all: presuntìva,pre[s]untìva<r:DiPI|presuntivo><r:Olivetti|presuntivo> <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ive: <from> {{rhymes|it|ive|s=4}} <to> {{rhymes|it|ive|s=4}} <end>
+Page 1850 presuntivi: <respelling> all: presuntìva,pre[s]untìvi<r:DiPI|presuntivo><r:Olivetti|presuntivo> <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ive: <from> {{rhymes|it|ive|s=4}} <to> {{rhymes|it|ive|s=4}} <end>
 Page 1850 presuntive: Skipped, no changes
 Page 492 prevenga: <respelling> all: prevènga <end>: <from> {{rhymes|it|ɛnɡa|s=3}} <to> {{rhymes|it|ɛnɡa|s=3}} <end>
 Page 492 prevenga: Skipped, no changes
@@ -3200,7 +3214,7 @@ Page 154 previa: <respelling> all: prèvia <end>: <from> {{rhymes|it|ɛvja|s=2}}
 Page 154 previa: Skipped, no changes
 Page 155 previe: <respelling> all: prèvie <end>: <from> {{rhymes|it|ɛvje|s=2}} <to> {{rhymes|it|ɛvje|s=2}} <end>
 Page 155 previe: Skipped, no changes
-Page 1032 prezzata: <respelling> all: prezzàta <end> WARNING: Unable to add pronunciation due to z in part before rhyme: ata: <from> {{rhymes|it|ata|s=3}} <to> {{rhymes|it|ata|s=3}} <end>
+Page 1032 prezzata: <respelling> all: prettsàta <end> WARNING: Unable to add pronunciation due to z in part before rhyme: ata: <from> {{rhymes|it|ata|s=3}} <to> {{rhymes|it|ata|s=3}} <end>
 Page 1032 prezzata: Skipped, no changes
 Page 2129 primeva: <respelling> all: primèva <end>: <from> {{rhymes|it|ɛva|s=3}} <to> {{rhymes|it|ɛva|s=3}} <end>
 Page 2129 primeva: Skipped, no changes
@@ -3214,11 +3228,12 @@ Page 140 processi: <respelling> all: procèssi <end> WARNING: Multiple headers N
 Page 140 processi: Skipped, no changes
 Page 92 procrea: <respelling> all: procrèa <end>: <from> {{rhymes|it|ɛa|s=3}} <to> {{rhymes|it|ɛa|s=3}} <end>
 Page 92 procrea: Skipped, no changes
-Page 190 procrei: <respelling> all: procrèi <end> WARNING: Unable to add pronunciation due to falling diphthong in -i: ɛi: <from> {{rhymes|it|ɛi|s=3}} <to> {{rhymes|it|ɛi|s=3}} <end>
+Page 190 procrei: <respelling> all: procrè.i <end> WARNING: Unable to add pronunciation due to falling diphthong in -i: ɛi: <from> {{rhymes|it|ɛi|s=3}} <to> {{rhymes|it|ɛi|s=3}} <end>
 Page 190 procrei: Skipped, no changes
-Page 191 procreino: <respelling> all: procrèino <end> WARNING: Unable to add pronunciation due to falling diphthong in -i: ɛino: <from> {{rhymes|it|ɛino|s=4}} <to> {{rhymes|it|ɛino|s=4}} <end>
+Page 191 procreino: <respelling> all: procrè.ino <end> WARNING: Unable to add pronunciation due to falling diphthong in -i: ɛino: <from> {{rhymes|it|ɛino|s=4}} <to> {{rhymes|it|ɛino|s=4}} <end>
 Page 191 procreino: Skipped, no changes
 Page 91 procreo: <respelling> all: procrèo <end>: <from> {{rhymes|it|ɛo|s=3}} <to> {{rhymes|it|ɛo|s=3}} <end>
+Page 91 procreano: <respelling> all: procrèano <end>: <from> {{rhymes|it|ɛo|s=3}} <to> {{rhymes|it|ɛo|s=3}} <end>
 Page 91 procreo: Skipped, no changes
 Page 160 produttive: <respelling> all: produttìve <end>: <from> {{rhymes|it|ive|s=4}} <to> {{rhymes|it|ive|s=4}} <end>
 Page 160 produttive: Skipped, no changes
@@ -3228,8 +3243,24 @@ Page 1346 professi: <respelling> all: profèssi <end>: <from> {{rhymes|it|ɛssi|
 Page 1346 professi: Skipped, no changes
 Page 1345 professo: <respelling> all: profèsso <end>: <from> {{rhymes|it|ɛsso|s=3}} <to> {{rhymes|it|ɛsso|s=3}} <end>
 Page 1345 professo: Skipped, no changes
-Page 438 profonda: <respelling> all: profónda <end>: <from> {{rhymes|it|onda|s=3}} <to> {{rhymes|it|onda|s=3}} <end>
-Page 438 profonda: Skipped, no changes
+#Page 438 profonda: <respelling> all: profónda <end>: <from> {{rhymes|it|onda|s=3}} <to> {{rhymes|it|onda|s=3}} <end>
+#Page 438 profonda: Skipped, no changes
+Page 438 profonde: <respelling> all: profónde <end>: <from> {{rhymes|it|onda|s=3}} <to> {{rhymes|it|onda|s=3}} <end>
+Page 438 profondino: <respelling> all: profóndino <end>: <from> {{rhymes|it|onda|s=3}} <to> {{rhymes|it|onda|s=3}} <end>
+Page 438 profondono: <respelling> all: profóndono <end>: <from> {{rhymes|it|onda|s=3}} <to> {{rhymes|it|onda|s=3}} <end>
+
+
+
+
+
+
+
+# got here
+
+
+
+
+
 Page 632 profuso: <respelling> all: profùso <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: uzo: <from> {{rhymes|it|uzo|s=3}} <to> {{rhymes|it|uzo|s=3}} <end>
 Page 632 profuso: Skipped, no changes
 Page 234 programmata: <respelling> all: programmàta <end>: <from> {{rhymes|it|ata|s=4}} <to> {{rhymes|it|ata|s=4}} <end>
