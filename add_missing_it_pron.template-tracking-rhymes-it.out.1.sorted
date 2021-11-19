@@ -2042,15 +2042,6 @@ Page 1078 imbuchi: <respelling> all: imbùchi <end>: <from> {{rhymes|it|uki|s=3}
 Page 1078 imbuchi: Skipped, no changes
 Page 1079 imbustata: <respelling> all: imbustàta <end>: <from> {{rhymes|it|ata|s=4}} <to> {{rhymes|it|ata|s=4}} <end>
 Page 1079 imbustata: Skipped, no changes
-
-
-
-
-# got here
-
-
-
-
 Page 1719 imeneo: <respelling> all: imenèo <end> WARNING: Unable to add pronunciation due to falling diphthong in -i: ɛi: <from> {{rhymes|it|ɛi|s=4}} <to> {{rhymes|it|ɛi|s=4}} <end>
 Page 1719 imenea: <respelling> all: imenèa <end> WARNING: Unable to add pronunciation due to falling diphthong in -i: ɛi: <from> {{rhymes|it|ɛi|s=4}} <to> {{rhymes|it|ɛi|s=4}} <end>
 Page 1719 imenee: <respelling> all: imenèe <end> WARNING: Unable to add pronunciation due to falling diphthong in -i: ɛi: <from> {{rhymes|it|ɛi|s=4}} <to> {{rhymes|it|ɛi|s=4}} <end>
@@ -2371,20 +2362,11 @@ Page 1358 intaccano: <respelling> all: intàccano <end>: <from> {{rhymes|it|akka
 Page 1358 intaccano: Skipped, no changes
 Page 1356 intacchi: <respelling> all: intàcchi <end> WARNING: Multiple headers Noun,Verb seen: <from> {{rhymes|it|akki|s=3}} <to> {{rhymes|it|akki|s=3}} <end>
 Page 1356 intacchi: Skipped, no changes
-
-
-
-
-
-
-
-# got here
-
-
-
-
-
-Page 411 integre: <respelling> all: ìntegre intègre <end>: <from> {{rhymes|it|inteɡre|ɛɡre|s2=3}} <to> {{rhymes|it|inteɡre|ɛɡre|s2=3}} <end>
+Page 411 integra: <respelling> all: ìntegra <end>: <from> {{rhymes|it|inteɡre|ɛɡre|s2=3}} <to> {{rhymes|it|inteɡre|ɛɡre|s2=3}} <end>
+Page 411 integri: <respelling> all: ìntegri <end>: <from> {{rhymes|it|inteɡre|ɛɡre|s2=3}} <to> {{rhymes|it|inteɡre|ɛɡre|s2=3}} <end>
+Page 411 integrano: <respelling> all: ìntegrano <end>: <from> {{rhymes|it|inteɡre|ɛɡre|s2=3}} <to> {{rhymes|it|inteɡre|ɛɡre|s2=3}} <end>
+Page 411 integrino: <respelling> all: ìntegrino <end>: <from> {{rhymes|it|inteɡre|ɛɡre|s2=3}} <to> {{rhymes|it|inteɡre|ɛɡre|s2=3}} <end>
+Page 411 integre: <respelling> all: ìntegre <end>: <from> {{rhymes|it|inteɡre|ɛɡre|s2=3}} <to> {{rhymes|it|inteɡre|ɛɡre|s2=3}} <end>
 Page 411 integre: Skipped, no changes
 Page 705 intenda: <respelling> all: intènda <end>: <from> {{rhymes|it|ɛnda|s=3}} <to> {{rhymes|it|ɛnda|s=3}} <end>
 Page 705 intenda: Skipped, no changes
@@ -2412,7 +2394,9 @@ Page 1923 interoceanica: <respelling> all: interoceànica <end>: <from> {{rhymes
 Page 1923 interoceanica: Skipped, no changes
 Page 491 intervenga: <respelling> all: intervènga <end>: <from> {{rhymes|it|ɛnɡa|s=4}} <to> {{rhymes|it|ɛnɡa|s=4}} <end>
 Page 491 intervenga: Skipped, no changes
-Page 414 intesi: <respelling> all: intési <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ezi: <from> {{rhymes|it|ezi|s=3}} <to> {{rhymes|it|ezi|s=3}} <end>
+Page 414 intesi: <respelling> all: intési,#inté[s]i<r:DiPI|intesa> <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ezi: <from> {{rhymes|it|ezi|s=3}} <to> {{rhymes|it|ezi|s=3}} <end>
+Page 414 intese: <respelling> all: intése,#inté[s]e<r:DiPI|intesa> <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ezi: <from> {{rhymes|it|ezi|s=3}} <to> {{rhymes|it|ezi|s=3}} <end>
+Page 414 intesa: <respelling> all: intésa,#inté[s]a<r:DiPI|intesa> <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ezi: <from> {{rhymes|it|ezi|s=3}} <to> {{rhymes|it|ezi|s=3}} <end>
 Page 414 intesi: Skipped, no changes
 Page 958 intonata: <respelling> all: intonàta <end>: <from> {{rhymes|it|ata|s=4}} <to> {{rhymes|it|ata|s=4}} <end>
 Page 958 intonata: Skipped, no changes
@@ -2428,9 +2412,11 @@ Page 653 intraprendi: <respelling> all: intraprèndi <end>: <from> {{rhymes|it|�
 Page 653 intraprendi: Skipped, no changes
 Page 652 intraprendo: <respelling> all: intraprèndo <end>: <from> {{rhymes|it|ɛndo|s=4}} <to> {{rhymes|it|ɛndo|s=4}} <end>
 Page 652 intraprendo: Skipped, no changes
-Page 651 intrapresa: <respelling> all: intraprésa <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: eza: <from> {{rhymes|it|eza|s=4}} <to> {{rhymes|it|eza|s=4}} <end>
+Page 651 intrapresa: <respelling> all: intraprésa,#intrapré[s]a<r:DiPI|preso> <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: eza: <from> {{rhymes|it|eza|s=4}} <to> {{rhymes|it|eza|s=4}} <end>
 Page 651 intrapresa: Skipped, no changes
-Page 650 intrapreso: <respelling> all: intrapréso <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ezo: <from> {{rhymes|it|ezo|s=4}} <to> {{rhymes|it|ezo|s=4}} <end>
+Page 650 intrapreso: <respelling> all: intrapréso,#intrapré[s]o<r:DiPI|preso> <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ezo: <from> {{rhymes|it|ezo|s=4}} <to> {{rhymes|it|ezo|s=4}} <end>
+Page 650 intrapresi: <respelling> all: intraprési,#intrapré[s]i<r:DiPI|preso> <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ezo: <from> {{rhymes|it|ezo|s=4}} <to> {{rhymes|it|ezo|s=4}} <end>
+Page 650 intraprese: <respelling> all: intraprése,#intrapré[s]e<r:DiPI|preso> <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ezo: <from> {{rhymes|it|ezo|s=4}} <to> {{rhymes|it|ezo|s=4}} <end>
 Page 650 intrapreso: Skipped, no changes
 Page 803 intravenga: <respelling> all: intravènga <end>: <from> {{rhymes|it|ɛnɡa|s=4}} <to> {{rhymes|it|ɛnɡa|s=4}} <end>
 Page 803 intravenga: Skipped, no changes
@@ -2452,23 +2438,32 @@ Page 1464 invasata: <respelling> all: invasàta <end> WARNING: Unable to add pro
 Page 1464 invasata: Skipped, no changes
 Page 804 invenga: <respelling> all: invènga <end>: <from> {{rhymes|it|ɛnɡa|s=3}} <to> {{rhymes|it|ɛnɡa|s=3}} <end>
 Page 804 invenga: Skipped, no changes
-Page 1466 inzaccheri: <respelling> all: inzàccheri <end> WARNING: Unable to add pronunciation due to z in part before rhyme: akkeri: <from> {{rhymes|it|akkeri|s=4}} <to> {{rhymes|it|akkeri|s=4}} <end>
+Page 1466 inzaccheri: <respelling> all: intsàccheri,indzàccheri<r:DiPI|inzacchero> <end> WARNING: Unable to add pronunciation due to z in part before rhyme: akkeri: <from> {{rhymes|it|akkeri|s=4}} <to> {{rhymes|it|akkeri|s=4}} <end>
+Page 1466 inzacchera: <respelling> all: intsàcchera,indzàcchera<r:DiPI|inzacchero> <end> WARNING: Unable to add pronunciation due to z in part before rhyme: akkeri: <from> {{rhymes|it|akkeri|s=4}} <to> {{rhymes|it|akkeri|s=4}} <end>
 Page 1466 inzaccheri: Skipped, no changes
-Page 1465 inzacchero: <respelling> all: inzàcchero <end> WARNING: Unable to add pronunciation due to z in part before rhyme: akkero: <from> {{rhymes|it|akkero|s=4}} <to> {{rhymes|it|akkero|s=4}} <end>
+Page 1465 inzacchero: <respelling> all: intsàcchero,indzàcchero<r:DiPI|inzacchero> <end> WARNING: Unable to add pronunciation due to z in part before rhyme: akkero: <from> {{rhymes|it|akkero|s=4}} <to> {{rhymes|it|akkero|s=4}} <end>
+Page 1465 inzaccherano: <respelling> all: intsàccherano,indzàccherano<r:DiPI|inzacchero> <end> WARNING: Unable to add pronunciation due to z in part before rhyme: akkero: <from> {{rhymes|it|akkero|s=4}} <to> {{rhymes|it|akkero|s=4}} <end>
+Page 1465 inzaccherino: <respelling> all: intsàccherino,indzàccherino<r:DiPI|inzacchero> <end> WARNING: Unable to add pronunciation due to z in part before rhyme: akkero: <from> {{rhymes|it|akkero|s=4}} <to> {{rhymes|it|akkero|s=4}} <end>
+Page 1465 inzaccherare: <respelling> all: intsaccheràre,indzaccheràre<r:DiPI|inzacchero> <end> WARNING: Unable to add pronunciation due to z in part before rhyme: akkero: <from> {{rhymes|it|akkero|s=4}} <to> {{rhymes|it|akkero|s=4}} <end>
 Page 1465 inzacchero: Skipped, no changes
+Page 1625 iperacusico: <respelling> all: iperacùsico <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: uzika: <from> {{rhymes|it|uzika|s=6}} <to> {{rhymes|it|uzika|s=6}} <end>
+Page 1625 iperacusici: <respelling> all: iperacùsici <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: uzika: <from> {{rhymes|it|uzika|s=6}} <to> {{rhymes|it|uzika|s=6}} <end>
 Page 1625 iperacusica: <respelling> all: iperacùsica <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: uzika: <from> {{rhymes|it|uzika|s=6}} <to> {{rhymes|it|uzika|s=6}} <end>
 Page 1625 iperacusica: Skipped, no changes
 Page 1626 iperacusiche: <respelling> all: iperacùsiche <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: uzike: <from> {{rhymes|it|uzike|s=6}} <to> {{rhymes|it|uzike|s=6}} <end>
 Page 1626 iperacusiche: Skipped, no changes
+Page 1103 ipogeo: <respelling> all: ipogèo <end>: <from> {{rhymes|it|ɛa|s=4}} <to> {{rhymes|it|ɛa|s=4}} <end>
 Page 1103 ipogea: <respelling> all: ipogèa <end>: <from> {{rhymes|it|ɛa|s=4}} <to> {{rhymes|it|ɛa|s=4}} <end>
 Page 1103 ipogea: Skipped, no changes
 Page 1104 ipogee: <respelling> all: ipogèe <end>: <from> {{rhymes|it|ɛe|s=4}} <to> {{rhymes|it|ɛe|s=4}} <end>
 Page 1104 ipogee: Skipped, no changes
-Page 1102 ipogei: <respelling> all: ipogèi <end> WARNING: Unable to add pronunciation due to falling diphthong in -i: ɛi: <from> {{rhymes|it|ɛi|s=4}} <to> {{rhymes|it|ɛi|s=4}} <end>
+Page 1102 ipogei: <respelling> all: ipogè.i <end> WARNING: Unable to add pronunciation due to falling diphthong in -i: ɛi: <from> {{rhymes|it|ɛi|s=4}} <to> {{rhymes|it|ɛi|s=4}} <end>
 Page 1102 ipogei: Skipped, no changes
-Page 1783 ipotesa: <respelling> all: ipotésa <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: eza: <from> {{rhymes|it|eza|s=4}} <to> {{rhymes|it|eza|s=4}} <end>
+Page 1783 ipotesa: <respelling> all: ipotésa,#ipoté[s]a<r:DiPI|ipoteso> <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: eza: <from> {{rhymes|it|eza|s=4}} <to> {{rhymes|it|eza|s=4}} <end>
+Page 1783 ipoteso: <respelling> all: ipotéso,#ipoté[s]o<r:DiPI|ipoteso> <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: eza: <from> {{rhymes|it|eza|s=4}} <to> {{rhymes|it|eza|s=4}} <end>
 Page 1783 ipotesa: Skipped, no changes
-Page 1784 ipotese: <respelling> all: ipotése #ipoté[s]e <end>: <from> {{rhymes|it|eze|s=4}} <to> {{rhymes|it|eze|s=4}} <end>
+Page 1784 ipotese: <respelling> all: ipotése,#ipoté[s]e<r:DiPI|ipoteso> <end>: <from> {{rhymes|it|eze|s=4}} <to> {{rhymes|it|eze|s=4}} <end>
+Page 1784 ipotesi: <respelling> all: ipotési,#ipoté[s]i<r:DiPI|ipoteso> <end>: <from> {{rhymes|it|eze|s=4}} <to> {{rhymes|it|eze|s=4}} <end>
 Page 1784 ipotese: Skipped, no changes
 Page 282 iracheni: <respelling> all: irachèni <end>: <from> {{rhymes|it|ɛni|s=4}} <to> {{rhymes|it|ɛni|s=4}} <end>
 Page 282 iracheni: Skipped, no changes
@@ -2482,13 +2477,14 @@ Page 1488 isomorfa: <respelling> all: isomòrfa <end> WARNING: Unable to add pro
 Page 1488 isomorfa: Skipped, no changes
 Page 1105 ispanica: <respelling> all: ispànica <end>: <from> {{rhymes|it|anika|s=4}} <to> {{rhymes|it|anika|s=4}} <end>
 Page 1105 ispanica: Skipped, no changes
-Page 9 italiano: For pronun /itaˈljano/, generated respelling italiàno: {{IPA|it|/itaˈljano/|[it̪äˈljäːno̞]}}
-Page 9 italiano: For pronun [it̪äˈljäːno̞], generated respelling italiàno: {{IPA|it|/itaˈljano/|[it̪äˈljäːno̞]}}
-Page 9 italiano: Replaced {{IPA|it|/itaˈljano/|[it̪äˈljäːno̞]}} with {{it-pr|italiàno}}
-Page 9 italiano: Would save with comment = replace raw {{IPA|it}} with {{it-pr|italiàno}}
+#Page 9 italiano: For pronun /itaˈljano/, generated respelling italiàno: {{IPA|it|/itaˈljano/|[it̪äˈljäːno̞]}}
+#Page 9 italiano: For pronun [it̪äˈljäːno̞], generated respelling italiàno: {{IPA|it|/itaˈljano/|[it̪äˈljäːno̞]}}
+#Page 9 italiano: Replaced {{IPA|it|/itaˈljano/|[it̪äˈljäːno̞]}} with {{it-pr|italiàno}}
+#Page 9 italiano: Would save with comment = replace raw {{IPA|it}} with {{it-pr|italiàno}}
 Page 415 iussive: <respelling> all: iussìve <end>: <from> {{rhymes|it|ive|s=3}} <to> {{rhymes|it|ive|s=3}} <end>
 Page 415 iussive: Skipped, no changes
-Page 2079 labraci: <respelling> all: labràci <end>: <from> {{rhymes|it|atʃi|s=3}} <to> {{rhymes|it|atʃi|s=3}} <end>
+Page 2079 labraci: <respelling> all: labràci,làbraci<r:DiPI|labrace> <end>: <from> {{rhymes|it|atʃi|s=3}} <to> {{rhymes|it|atʃi|s=3}} <end>
+Page 2079 labrace: <respelling> all: labràce,làbrace<r:DiPI|labrace> <end>: <from> {{rhymes|it|atʃi|s=3}} <to> {{rhymes|it|atʃi|s=3}} <end>
 Page 2079 labraci: Skipped, no changes
 Page 1470 laccano: <respelling> all: làccano <end>: <from> {{rhymes|it|akkano|s=3}} <to> {{rhymes|it|akkano|s=3}} <end>
 Page 1470 laccano: Skipped, no changes
@@ -2518,13 +2514,14 @@ Page 1474 leggiadre: <respelling> all: leggiàdre <end>: <from> {{rhymes|it|adre
 Page 1474 leggiadre: Skipped, no changes
 Page 2074 lemanica: <respelling> all: lemànica <end>: <from> {{rhymes|it|anika|s=4}} <to> {{rhymes|it|anika|s=4}} <end>
 Page 2074 lemanica: Skipped, no changes
-Page 736 lena: <respelling> all: léna <end>: <from> {{rhymes|it|ena|s=2}} <to> {{rhymes|it|ena|s=2}} <end>
+Page 736 lena: <respelling> all: léna,lèna<r:DiPI> <end>: <from> {{rhymes|it|ena|s=2}} <to> {{rhymes|it|ena|s=2}} <end>
 Page 736 lena: Skipped, no changes
-Page 47 lesa: <respelling> all: lésa <end> WARNING: Multiple headers Adjective,Participle seen ||| WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: eza: <from> {{rhymes|it|eza|s=2}} <to> {{rhymes|it|eza|s=2}} <end>
+Page 47 lesa: <respelling> all: lésa<r:DiPI|leso> <end> WARNING: Multiple headers Adjective,Participle seen ||| WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: eza: <from> {{rhymes|it|eza|s=2}} <to> {{rhymes|it|eza|s=2}} <end>
+Page 47 leso: <respelling> all: léso<r:DiPI|leso> <end> WARNING: Multiple headers Adjective,Participle seen ||| WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: eza: <from> {{rhymes|it|eza|s=2}} <to> {{rhymes|it|eza|s=2}} <end>
 Page 47 lesa: Skipped, no changes
-Page 49 lese: <respelling> all: lése #lé[s]e <end> WARNING: Multiple headers Verb,Adjective seen: <from> {{rhymes|it|eze|s=2}} <to> {{rhymes|it|eze|s=2}} <end>
+Page 49 lese: <respelling> all: lése<r:DiPI|leso> <end> WARNING: Multiple headers Verb,Adjective seen: <from> {{rhymes|it|eze|s=2}} <to> {{rhymes|it|eze|s=2}} <end>
 Page 49 lese: Skipped, no changes
-Page 152 lesi: <respelling> all: lési <end> WARNING: Multiple headers Verb,Adjective seen ||| WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ezi: <from> {{rhymes|it|ezi|s=2}} <to> {{rhymes|it|ezi|s=2}} <end>
+Page 152 lesi: <respelling> all: lési<r:DiPI|leso> <end> WARNING: Multiple headers Verb,Adjective seen ||| WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ezi: <from> {{rhymes|it|ezi|s=2}} <to> {{rhymes|it|ezi|s=2}} <end>
 Page 152 lesi: Skipped, no changes
 Page 1217 lesive: <respelling> all: lesìve <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ive: <from> {{rhymes|it|ive|s=3}} <to> {{rhymes|it|ive|s=3}} <end>
 Page 1217 lesive: Skipped, no changes
@@ -2532,11 +2529,15 @@ Page 1046 lessata: <respelling> all: lessàta <end>: <from> {{rhymes|it|ata|s=3}
 Page 1046 lessata: Skipped, no changes
 Page 866 liberticide: <respelling> all: liberticìde <end>: <from> {{rhymes|it|ide|s=5}} <to> {{rhymes|it|ide|s=5}} <end>
 Page 866 liberticide: Skipped, no changes
-Page 271 licei: <respelling> all: licèi <end> WARNING: Unable to add pronunciation due to falling diphthong in -i: ɛi: <from> {{rhymes|it|ɛi|s=3}} <to> {{rhymes|it|ɛi|s=3}} <end>
+Page 271 licei: <respelling> all: licè.i <end> WARNING: Unable to add pronunciation due to falling diphthong in -i: ɛi: <from> {{rhymes|it|ɛi|s=3}} <to> {{rhymes|it|ɛi|s=3}} <end>
 Page 271 licei: Skipped, no changes
-Page 417 lieti: <respelling> all: lièti <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ɛti: <from> {{rhymes|it|ɛti|s=2}} <to> {{rhymes|it|ɛti|s=2}} <end>
+Page 417 lieto: <respelling> all: lièto,liéto<r:DiPI> <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ɛti: <from> {{rhymes|it|ɛti|s=2}} <to> {{rhymes|it|ɛti|s=2}} <end>
+Page 417 lieti: <respelling> all: lièti,liéti<r:DiPI|lieto> <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ɛti: <from> {{rhymes|it|ɛti|s=2}} <to> {{rhymes|it|ɛti|s=2}} <end>
+Page 417 lieta: <respelling> all: lièta,liéta<r:DiPI|lieto> <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ɛti: <from> {{rhymes|it|ɛti|s=2}} <to> {{rhymes|it|ɛti|s=2}} <end>
+Page 417 liete: <respelling> all: liète,liéte<r:DiPI|lieto> <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ɛti: <from> {{rhymes|it|ɛti|s=2}} <to> {{rhymes|it|ɛti|s=2}} <end>
 Page 417 lieti: Skipped, no changes
-Page 418 lievi: <respelling> all: lièvi <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ɛvi: <from> {{rhymes|it|ɛvi|s=2}} <to> {{rhymes|it|ɛvi|s=2}} <end>
+Page 418 lieve: <respelling> all: liève,liéve<r:DiPI|lieve> <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ɛvi: <from> {{rhymes|it|ɛvi|s=2}} <to> {{rhymes|it|ɛvi|s=2}} <end>
+Page 418 lievi: <respelling> all: lièvi,liévi<r:DiPI|lieve> <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ɛvi: <from> {{rhymes|it|ɛvi|s=2}} <to> {{rhymes|it|ɛvi|s=2}} <end>
 Page 418 lievi: Skipped, no changes
 Page 1773 limacce: <respelling> all: limàcce <end>: <from> {{rhymes|it|attʃe|s=3}} <to> {{rhymes|it|attʃe|s=3}} <end>
 Page 1773 limacce: Skipped, no changes
@@ -2544,10 +2545,13 @@ Page 1229 limata: <respelling> all: limàta <end>: <from> {{rhymes|it|ata|s=3}} 
 Page 1229 limata: Skipped, no changes
 Page 189 limitata: <respelling> all: limitàta <end>: <from> {{rhymes|it|ata|s=4}} <to> {{rhymes|it|ata|s=4}} <end>
 Page 189 limitata: Skipped, no changes
-Page 1924 litantraci: <respelling> all: litantràci <end>: <from> {{rhymes|it|atʃi|s=4}} <to> {{rhymes|it|atʃi|s=4}} <end>
+Page 1924 litantrace: <respelling> all: lìtantràce<r:Olivetti|litantrace> <end>: <from> {{rhymes|it|atʃi|s=4}} <to> {{rhymes|it|atʃi|s=4}} <end>
+Page 1924 litantraci: <respelling> all: lìtantràci<r:Olivetti|litantrace> <end>: <from> {{rhymes|it|atʃi|s=4}} <to> {{rhymes|it|atʃi|s=4}} <end>
 Page 1924 litantraci: Skipped, no changes
-Page 2050 logudoresi: <respelling> all: logudorési <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ezi: <from> {{rhymes|it|ezi|s=5}} <to> {{rhymes|it|ezi|s=5}} <end>
+Page 2050 logudorese: <respelling> all: logudorése,#logudoré[s]e<r:DiPI|maltese> <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ezi: <from> {{rhymes|it|ezi|s=5}} <to> {{rhymes|it|ezi|s=5}} <end>
+Page 2050 logudoresi: <respelling> all: logudorési,#logudoré[s]i<r:DiPI|maltese> <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ezi: <from> {{rhymes|it|ezi|s=5}} <to> {{rhymes|it|ezi|s=5}} <end>
 Page 2050 logudoresi: Skipped, no changes
+Page 1047 longevo: <respelling> all: longèvo <end>: <from> {{rhymes|it|ɛva|s=3}} <to> {{rhymes|it|ɛva|s=3}} <end>
 Page 1047 longeva: <respelling> all: longèva <end>: <from> {{rhymes|it|ɛva|s=3}} <to> {{rhymes|it|ɛva|s=3}} <end>
 Page 1047 longeva: Skipped, no changes
 Page 1049 longeve: <respelling> all: longève <end>: <from> {{rhymes|it|ɛve|s=3}} <to> {{rhymes|it|ɛve|s=3}} <end>
@@ -2555,6 +2559,9 @@ Page 1049 longeve: Skipped, no changes
 Page 1048 longevi: <respelling> all: longèvi <end>: <from> {{rhymes|it|ɛvi|s=3}} <to> {{rhymes|it|ɛvi|s=3}} <end>
 Page 1048 longevi: Skipped, no changes
 Page 1383 longobarda: <respelling> all: longobàrda <end>: <from> {{rhymes|it|arda|s=4}} <to> {{rhymes|it|arda|s=4}} <end>
+Page 1383 longobardi: <respelling> all: longobàrdi <end>: <from> {{rhymes|it|arda|s=4}} <to> {{rhymes|it|arda|s=4}} <end>
+Page 1383 longobarde: <respelling> all: longobàrde <end>: <from> {{rhymes|it|arda|s=4}} <to> {{rhymes|it|arda|s=4}} <end>
+Page 1383 longobardo: <respelling> all: longobàrdo <end>: <from> {{rhymes|it|arda|s=4}} <to> {{rhymes|it|arda|s=4}} <end>
 Page 1383 longobarda: Skipped, no changes
 Page 1906 luculenti: <respelling> all: luculènti <end>: <from> {{rhymes|it|ɛnti|s=4}} <to> {{rhymes|it|ɛnti|s=4}} <end>
 Page 1906 luculenti: Skipped, no changes
@@ -2590,7 +2597,7 @@ Page 46 magna: <respelling> all: màgna <end>: <from> {{rhymes|it|aɲɲa|s=2}} <
 Page 46 magna: Skipped, no changes
 Page 422 magnetica: <respelling> all: magnètica <end>: <from> {{rhymes|it|ɛtika|s=4}} <to> {{rhymes|it|ɛtika|s=4}} <end>
 Page 422 magnetica: Skipped, no changes
-Page 295 magnetizzata: <respelling> all: magnetizzàta <end> WARNING: Unable to add pronunciation due to z in part before rhyme: ata: <from> {{rhymes|it|ata|s=5}} <to> {{rhymes|it|ata|s=5}} <end>
+Page 295 magnetizzata: <respelling> all: magnetiddzàta <end> WARNING: Unable to add pronunciation due to z in part before rhyme: ata: <from> {{rhymes|it|ata|s=5}} <to> {{rhymes|it|ata|s=5}} <end>
 Page 295 magnetizzata: Skipped, no changes
 Page 423 maledetta: <respelling> all: maledétta <end>: <from> {{rhymes|it|etta|s=4}} <to> {{rhymes|it|etta|s=4}} <end>
 Page 423 maledetta: Skipped, no changes
@@ -2602,11 +2609,12 @@ Page 1036 manduchi: <respelling> all: mandùchi <end>: <from> {{rhymes|it|uki|s=
 Page 1036 manduchi: Skipped, no changes
 Page 1076 mangereccia: <respelling> all: mangeréccia <end>: <from> {{rhymes|it|ettʃa|s=4}} <to> {{rhymes|it|ettʃa|s=4}} <end>
 Page 1076 mangereccia: Skipped, no changes
+Page 1083 manicoea: <respelling> all: manichèo <end>: <from> {{rhymes|it|ɛa|s=4}} <to> {{rhymes|it|ɛa|s=4}} <end>
 Page 1083 manichea: <respelling> all: manichèa <end>: <from> {{rhymes|it|ɛa|s=4}} <to> {{rhymes|it|ɛa|s=4}} <end>
 Page 1083 manichea: Skipped, no changes
 Page 1084 manichee: <respelling> all: manichèe <end>: <from> {{rhymes|it|ɛe|s=4}} <to> {{rhymes|it|ɛe|s=4}} <end>
 Page 1084 manichee: Skipped, no changes
-Page 1082 manichei: <respelling> all: manichèi <end> WARNING: Unable to add pronunciation due to falling diphthong in -i: ɛi: <from> {{rhymes|it|ɛi|s=4}} <to> {{rhymes|it|ɛi|s=4}} <end>
+Page 1082 manichei: <respelling> all: manichè.i <end> WARNING: Unable to add pronunciation due to falling diphthong in -i: ɛi: <from> {{rhymes|it|ɛi|s=4}} <to> {{rhymes|it|ɛi|s=4}} <end>
 Page 1082 manichei: Skipped, no changes
 Page 1430 mansa: <respelling> all: mànsa <end>: <from> {{rhymes|it|ansa|s=2}} <to> {{rhymes|it|ansa|s=2}} <end>
 Page 1430 mansa: Skipped, no changes
@@ -2618,6 +2626,7 @@ Page 468 marcito: <respelling> all: marcìto <end>: <from> {{rhymes|it|ito|s=3}}
 Page 468 marcito: Skipped, no changes
 Page 1590 marrubi: <respelling> all: marrùbi <end>: <from> {{rhymes|it|ubi|s=3}} <to> {{rhymes|it|ubi|s=3}} <end>
 Page 1590 marrubi: Skipped, no changes
+Page 1590 mascolina: <respelling> all: mascolìna <end>: <from> {{rhymes|it|ubi|s=3}} <to> {{rhymes|it|ubi|s=3}} <end>
 Page 1475 mascolina: Skipped, no changes
 Page 1475 mascolina: WARNING: Unable to match rhyme ino, spelling Ino, respelling Ìno
 Page 1475 mascolina: WARNING: Unable to match rhyme ino, spelling ino, respelling ìno
@@ -2625,30 +2634,37 @@ Page 237 massacra: <respelling> all: massàcra <end>: <from> {{rhymes|it|akra|s=
 Page 237 massacra: Skipped, no changes
 Page 236 massacri: <respelling> all: massàcri <end>: <from> {{rhymes|it|akri|s=3}} <to> {{rhymes|it|akri|s=3}} <end>
 Page 236 massacri: Skipped, no changes
-Page 227 masterizzata: <respelling> all: masterizzàta <end> WARNING: Unable to add pronunciation due to z in part before rhyme: ata: <from> {{rhymes|it|ata|s=5}} <to> {{rhymes|it|ata|s=5}} <end>
+Page 227 masterizzata: <respelling> all: masteriddzàta <end> WARNING: Unable to add pronunciation due to z in part before rhyme: ata: <from> {{rhymes|it|ata|s=5}} <to> {{rhymes|it|ata|s=5}} <end>
 Page 227 masterizzata: Skipped, no changes
 Page 294 masticata: <respelling> all: masticàta <end>: <from> {{rhymes|it|ata|s=4}} <to> {{rhymes|it|ata|s=4}} <end>
 Page 294 masticata: Skipped, no changes
-Page 1925 matronei: <respelling> all: matronèi <end> WARNING: Unable to add pronunciation due to falling diphthong in -i: ɛi: <from> {{rhymes|it|ɛi|s=4}} <to> {{rhymes|it|ɛi|s=4}} <end>
+Page 1925 matroneo: <respelling> all: matronèo <end> WARNING: Unable to add pronunciation due to falling diphthong in -i: ɛi: <from> {{rhymes|it|ɛi|s=4}} <to> {{rhymes|it|ɛi|s=4}} <end>
+Page 1925 matronea: <respelling> all: matronèa <end> WARNING: Unable to add pronunciation due to falling diphthong in -i: ɛi: <from> {{rhymes|it|ɛi|s=4}} <to> {{rhymes|it|ɛi|s=4}} <end>
+Page 1925 matronee: <respelling> all: matronèe <end> WARNING: Unable to add pronunciation due to falling diphthong in -i: ɛi: <from> {{rhymes|it|ɛi|s=4}} <to> {{rhymes|it|ɛi|s=4}} <end>
+Page 1925 matronei: <respelling> all: matronè.i <end> WARNING: Unable to add pronunciation due to falling diphthong in -i: ɛi: <from> {{rhymes|it|ɛi|s=4}} <to> {{rhymes|it|ɛi|s=4}} <end>
 Page 1925 matronei: Skipped, no changes
 Page 27 mature: <respelling> all: matùre <end>: <from> {{rhymes|it|ure|s=3}} <to> {{rhymes|it|ure|s=3}} <end>
 Page 27 mature: Skipped, no changes
-Page 1174 mausolei: <respelling> all: mausolèi <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ɛi: <from> {{rhymes|it|ɛi|s=4}} <to> {{rhymes|it|ɛi|s=4}} <end>
+Page 1174 mausoleo: <respelling> all: mausolèo <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ɛi: <from> {{rhymes|it|ɛi|s=4}} <to> {{rhymes|it|ɛi|s=4}} <end>
+Page 1174 mausolei: <respelling> all: mausolè.i <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ɛi: <from> {{rhymes|it|ɛi|s=4}} <to> {{rhymes|it|ɛi|s=4}} <end>
 Page 1174 mausolei: Skipped, no changes
 Page 1486 medianica: <respelling> all: mediànica <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme anika: <from> {{rhymes|it|anika|s=4}} <to> {{rhymes|it|anika|s=4}} <end>
 Page 1486 medianica: Skipped, no changes
 Page 1128 medicata: <respelling> all: medicàta <end>: <from> {{rhymes|it|ata|s=4}} <to> {{rhymes|it|ata|s=4}} <end>
 Page 1128 medicata: Skipped, no changes
+Page 1487 meditabondo: <respelling> all: meditabóndo <end>: <from> {{rhymes|it|onde|s=5}} <to> {{rhymes|it|onde|s=5}} <end>
+Page 1487 meditabondi: <respelling> all: meditabóndi <end>: <from> {{rhymes|it|onde|s=5}} <to> {{rhymes|it|onde|s=5}} <end>
+Page 1487 meditabonda: <respelling> all: meditabónda <end>: <from> {{rhymes|it|onde|s=5}} <to> {{rhymes|it|onde|s=5}} <end>
 Page 1487 meditabonde: <respelling> all: meditabónde <end>: <from> {{rhymes|it|onde|s=5}} <to> {{rhymes|it|onde|s=5}} <end>
 Page 1487 meditabonde: Skipped, no changes
-Page 63 mei: <respelling> all: mèi <end> WARNING: Multiple etymologies seen ||| WARNING: Multiple headers Verb,Adjective seen ||| WARNING: Unable to add pronunciation due to falling diphthong in -i: ɛi: <from> {{rhymes|it|ɛi|s=2}} <to> {{rhymes|it|ɛi|s=2}} <end>
-Page 63 mei: Skipped, no changes
-Page 2162 meino: <respelling> all: mèino <end> WARNING: Unable to add pronunciation due to falling diphthong in -i: ɛino: <from> {{rhymes|it|ɛino|s=3}} <to> {{rhymes|it|ɛino|s=3}} <end>
+#Page 63 mei: <respelling> all: mèi <end> WARNING: Multiple etymologies seen ||| WARNING: Multiple headers Verb,Adjective seen ||| WARNING: Unable to add pronunciation due to falling diphthong in -i: ɛi: <from> {{rhymes|it|ɛi|s=2}} <to> {{rhymes|it|ɛi|s=2}} <end>
+#Page 63 mei: Skipped, no changes
+Page 2162 meino: <respelling> all: mè.ino <end> WARNING: Unable to add pronunciation due to falling diphthong in -i: ɛino: <from> {{rhymes|it|ɛino|s=3}} <to> {{rhymes|it|ɛino|s=3}} <end>
 Page 2162 meino: Skipped, no changes
 Page 2051 melanica: <respelling> all: melànica <end>: <from> {{rhymes|it|anika|s=4}} <to> {{rhymes|it|anika|s=4}} <end>
 Page 2051 melanica: Skipped, no changes
-Page 698 mena: <respelling> all: ména <end> WARNING: Multiple headers Noun,Verb seen: <from> {{rhymes|it|ena|s=2}} <to> {{rhymes|it|ena|s=2}} <end>
-Page 698 mena: Skipped, no changes
+#Page 698 mena: <respelling> all: ména <end> WARNING: Multiple headers Noun,Verb seen: <from> {{rhymes|it|ena|s=2}} <to> {{rhymes|it|ena|s=2}} <end>
+#Page 698 mena: Skipped, no changes
 Page 1169 mendaci: <respelling> all: mendàci <end>: <from> {{rhymes|it|atʃi|s=3}} <to> {{rhymes|it|atʃi|s=3}} <end>
 Page 1169 mendaci: Skipped, no changes
 Page 1042 mende: <respelling> all: mènde <end>: <from> {{rhymes|it|ɛnde|s=2}} <to> {{rhymes|it|ɛnde|s=2}} <end>
@@ -2661,9 +2677,14 @@ Page 1747 mesomorfa: <respelling> all: mesomòrfa <end> WARNING: Unable to add p
 Page 1747 mesomorfa: Skipped, no changes
 Page 129 messi: <respelling> all: mèssi <end> WARNING: Multiple headers Noun,Verb seen: <from> {{rhymes|it|ɛssi|s=2}} <to> {{rhymes|it|ɛssi|s=2}} <end>
 Page 129 messi: Skipped, no changes
-Page 1505 messianica: <respelling> all: messiànica <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme anika: <from> {{rhymes|it|anika|s=4}} <to> {{rhymes|it|anika|s=4}} <end>
+Page 1505 messianico: <respelling> all: messi.ànico<r:Olivetti|messianico> <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme anika: <from> {{rhymes|it|anika|s=4}} <to> {{rhymes|it|anika|s=4}} <end>
+Page 1505 messianica: <respelling> all: messi.ànica<r:Olivetti|messianico> <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme anika: <from> {{rhymes|it|anika|s=4}} <to> {{rhymes|it|anika|s=4}} <end>
+Page 1505 messianici: <respelling> all: messi.ànici<r:Olivetti|messianico> <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme anika: <from> {{rhymes|it|anika|s=4}} <to> {{rhymes|it|anika|s=4}} <end>
+Page 1505 messianiche: <respelling> all: messi.àniche<r:Olivetti|messianico> <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme anika: <from> {{rhymes|it|anika|s=4}} <to> {{rhymes|it|anika|s=4}} <end>
 Page 1505 messianica: Skipped, no changes
-Page 1384 metalmeccanica: <respelling> all: metalmeccànica <end>: <from> {{rhymes|it|anika|s=6}} <to> {{rhymes|it|anika|s=6}} <end>
+Page 1384 metalmeccanica: <respelling> all: metàlmeccànica<r:Olivetti|metalmeccanico> <end>: <from> {{rhymes|it|anika|s=6}} <to> {{rhymes|it|anika|s=6}} <end>
+Page 1384 metalmeccanici: <respelling> all: metàlmeccànici<r:Olivetti|metalmeccanico> <end>: <from> {{rhymes|it|anika|s=6}} <to> {{rhymes|it|anika|s=6}} <end>
+Page 1384 metalmeccaniche: <respelling> all: metàlmeccàniche<r:Olivetti|metalmeccanico> <end>: <from> {{rhymes|it|anika|s=6}} <to> {{rhymes|it|anika|s=6}} <end>
 Page 1384 metalmeccanica: Skipped, no changes
 Page 1785 metanica: <respelling> all: metànica <end>: <from> {{rhymes|it|anika|s=4}} <to> {{rhymes|it|anika|s=4}} <end>
 Page 1785 metanica: Skipped, no changes
@@ -2671,7 +2692,9 @@ Page 1658 metatoraci: <respelling> all: metatoràci <end>: <from> {{rhymes|it|at
 Page 1658 metatoraci: Skipped, no changes
 Page 1926 meteci: <respelling> all: metèci <end>: <from> {{rhymes|it|ɛtʃi|s=3}} <to> {{rhymes|it|ɛtʃi|s=3}} <end>
 Page 1926 meteci: Skipped, no changes
-Page 797 microbicide: <respelling> all: microbicìde <end>: <from> {{rhymes|it|ide|s=5}} <to> {{rhymes|it|ide|s=5}} <end>
+Page 797 microbicide: <respelling> all: micròbicìde<r:Olivetti|microbicida> <end>: <from> {{rhymes|it|ide|s=5}} <to> {{rhymes|it|ide|s=5}} <end>
+Page 797 microbicidi: <respelling> all: micròbicìdi<r:Olivetti|microbicida> <end>: <from> {{rhymes|it|ide|s=5}} <to> {{rhymes|it|ide|s=5}} <end>
+Page 797 microbicida: <respelling> all: micròbicìda<r:Olivetti|microbicida> <end>: <from> {{rhymes|it|ide|s=5}} <to> {{rhymes|it|ide|s=5}} <end>
 Page 797 microbicide: Skipped, no changes
 Page 1786 microterme: <respelling> all: microtèrme <end>: <from> {{rhymes|it|ɛrme|s=4}} <to> {{rhymes|it|ɛrme|s=4}} <end>
 Page 1786 microterme: Skipped, no changes
@@ -2700,6 +2723,8 @@ Page 424 miste: Skipped, no changes
 Page 863 mitragliata: <respelling> all: mitragliàta <end>: <from> {{rhymes|it|ata|s=4}} <to> {{rhymes|it|ata|s=4}} <end>
 Page 863 mitragliata: Skipped, no changes
 Page 1338 monca: <respelling> all: mónca <end>: <from> {{rhymes|it|onka|s=2}} <to> {{rhymes|it|onka|s=2}} <end>
+Page 1338 monchi: <respelling> all: mónchi <end>: <from> {{rhymes|it|onka|s=2}} <to> {{rhymes|it|onka|s=2}} <end>
+Page 1338 monche: <respelling> all: mónche <end>: <from> {{rhymes|it|onka|s=2}} <to> {{rhymes|it|onka|s=2}} <end>
 Page 1338 monca: Skipped, no changes
 Page 1752 monomorfa: <respelling> all: monomòrfa <end>: <from> {{rhymes|it|ɔrfa|s=4}} <to> {{rhymes|it|ɔrfa|s=4}} <end>
 Page 1752 monomorfa: Skipped, no changes
@@ -2707,23 +2732,31 @@ Page 425 morbida: <respelling> all: mòrbida <end>: <from> {{rhymes|it|ɔrbida|s
 Page 425 morbida: Skipped, no changes
 Page 1220 morsicata: <respelling> all: morsicàta <end>: <from> {{rhymes|it|ata|s=4}} <to> {{rhymes|it|ata|s=4}} <end>
 Page 1220 morsicata: Skipped, no changes
-Page 1490 moschicide: <respelling> all: moschicìde <end>: <from> {{rhymes|it|ide|s=4}} <to> {{rhymes|it|ide|s=4}} <end>
+Page 1490 moschicide: <respelling> all: mòschicìde<r:Olivetti|moschicida> <end>: <from> {{rhymes|it|ide|s=4}} <to> {{rhymes|it|ide|s=4}} <end>
+Page 1490 moschicidi: <respelling> all: mòschicìdi<r:Olivetti|moschicida> <end>: <from> {{rhymes|it|ide|s=4}} <to> {{rhymes|it|ide|s=4}} <end>
+Page 1490 moschicida: <respelling> all: mòschicìda<r:Olivetti|moschicida> <end>: <from> {{rhymes|it|ide|s=4}} <to> {{rhymes|it|ide|s=4}} <end>
 Page 1490 moschicide: Skipped, no changes
 Page 426 motivata: <respelling> all: motivàta <end> WARNING: Multiple headers Adjective,Participle seen: <from> {{rhymes|it|ata|s=4}} <to> {{rhymes|it|ata|s=4}} <end>
 Page 426 motivata: Skipped, no changes
-Page 1927 motulesa: <respelling> all: motulésa <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: eza: <from> {{rhymes|it|eza|s=4}} <to> {{rhymes|it|eza|s=4}} <end>
+Page 1927 motulesa: <respelling> all: motulésa<r:DiPI|motuleso> <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: eza: <from> {{rhymes|it|eza|s=4}} <to> {{rhymes|it|eza|s=4}} <end>
 Page 1927 motulesa: Skipped, no changes
-Page 1928 motulese: <respelling> all: motulése #motulé[s]e <end>: <from> {{rhymes|it|eze|s=4}} <to> {{rhymes|it|eze|s=4}} <end>
+Page 1928 motulese: <respelling> all: motulése<r:DiPI|motuleso> <end>: <from> {{rhymes|it|eze|s=4}} <to> {{rhymes|it|eze|s=4}} <end>
+Page 1928 motulesi: <respelling> all: motulési<r:DiPI|motuleso> <end>: <from> {{rhymes|it|eze|s=4}} <to> {{rhymes|it|eze|s=4}} <end>
+Page 1928 motuleso: <respelling> all: motuléso<r:DiPI|motuleso> <end>: <from> {{rhymes|it|eze|s=4}} <to> {{rhymes|it|eze|s=4}} <end>
 Page 1928 motulese: Skipped, no changes
 Page 272 muchi: <respelling> all: mùchi <end>: <from> {{rhymes|it|uki|s=2}} <to> {{rhymes|it|uki|s=2}} <end>
 Page 272 muchi: Skipped, no changes
-Page 267 musei: <respelling> all: musèi <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ɛi: <from> {{rhymes|it|ɛi|s=3}} <to> {{rhymes|it|ɛi|s=3}} <end>
+Page 267 musei: <respelling> all: musè.i <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ɛi: <from> {{rhymes|it|ɛi|s=3}} <to> {{rhymes|it|ɛi|s=3}} <end>
+Page 267 museo: <respelling> all: musèo <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ɛi: <from> {{rhymes|it|ɛi|s=3}} <to> {{rhymes|it|ɛi|s=3}} <end>
 Page 267 musei: Skipped, no changes
 Page 1101 nacchere: <respelling> all: nàcchere <end>: <from> {{rhymes|it|akkere|s=3}} <to> {{rhymes|it|akkere|s=3}} <end>
 Page 1101 nacchere: Skipped, no changes
 Page 2146 nache: <respelling> all: nàche <end>: <from> {{rhymes|it|ake|s=2}} <to> {{rhymes|it|ake|s=2}} <end>
 Page 2146 nache: Skipped, no changes
 Page 1115 nauseabonde: <respelling> all: nauseabónde <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: onde: <from> {{rhymes|it|onde|s=4}} <to> {{rhymes|it|onde|s=4}} <end>
+Page 1115 nauseabondo: <respelling> all: nauseabóndo <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: onde: <from> {{rhymes|it|onde|s=4}} <to> {{rhymes|it|onde|s=4}} <end>
+Page 1115 nauseabondi: <respelling> all: nauseabóndi <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: onde: <from> {{rhymes|it|onde|s=4}} <to> {{rhymes|it|onde|s=4}} <end>
+Page 1115 nauseabonda: <respelling> all: nauseabónda <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: onde: <from> {{rhymes|it|onde|s=4}} <to> {{rhymes|it|onde|s=4}} <end>
 Page 1115 nauseabonde: Skipped, no changes
 Page 1221 nefandi: <respelling> all: nefàndi <end>: <from> {{rhymes|it|andi|s=3}} <to> {{rhymes|it|andi|s=3}} <end>
 Page 1221 nefandi: Skipped, no changes
@@ -2731,21 +2764,35 @@ Page 1221 nefandi: Skipped, no changes
 #Page 11 nei: Skipped, no changes
 Page 62 nematocide: <respelling> all: nematocìde <end>: <from> {{rhymes|it|ide|s=5}} <to> {{rhymes|it|ide|s=5}} <end>
 Page 62 nematocide: Skipped, no changes
-Page 1792 neogreca: <respelling> all: neogrèca <end>: <from> {{rhymes|it|ɛka|s=3}} <to> {{rhymes|it|ɛka|s=3}} <end>
+Page 1792 neogreco: <respelling> all: nèogrèco,neogrèco<r:DiPI|neogreco><r:Olivetti|neogreco> <end>: <from> {{rhymes|it|ɛka|s=3}} <to> {{rhymes|it|ɛka|s=3}} <end>
+Page 1792 neogreca: <respelling> all: nèogrèca,neogrèca<r:DiPI|neogreco><r:Olivetti|neogreco> <end>: <from> {{rhymes|it|ɛka|s=3}} <to> {{rhymes|it|ɛka|s=3}} <end>
 Page 1792 neogreca: Skipped, no changes
-Page 1794 neogreche: <respelling> all: neogrèche <end>: <from> {{rhymes|it|ɛke|s=3}} <to> {{rhymes|it|ɛke|s=3}} <end>
+Page 1794 neogreche: <respelling> all: neogrèche,neogrèche<r:DiPI|neogreco><r:Olivetti|neogreco> <end>: <from> {{rhymes|it|ɛke|s=3}} <to> {{rhymes|it|ɛke|s=3}} <end>
 Page 1794 neogreche: Skipped, no changes
-Page 1793 neogreci: <respelling> all: neogrèci <end>: <from> {{rhymes|it|ɛtʃi|s=3}} <to> {{rhymes|it|ɛtʃi|s=3}} <end>
+Page 1793 neogreci: <respelling> all: neogrèci,neogrèci<r:DiPI|neogreco><r:Olivetti|neogreco> <end>: <from> {{rhymes|it|ɛtʃi|s=3}} <to> {{rhymes|it|ɛtʃi|s=3}} <end>
 Page 1793 neogreci: Skipped, no changes
 Page 127 nere: <respelling> all: nére <end>: <from> {{rhymes|it|ere|s=2}} <to> {{rhymes|it|ere|s=2}} <end>
 Page 127 nere: Skipped, no changes
 Page 1884 nesci: <respelling> all: nèsci <end>: <from> {{rhymes|it|ɛʃʃi|s=2}} <to> {{rhymes|it|ɛʃʃi|s=2}} <end>
 Page 1884 nesci: Skipped, no changes
 Page 1886 nescia: <respelling> all: nèscia <end>: <from> {{rhymes|it|ɛʃʃa|s=2}} <to> {{rhymes|it|ɛʃʃa|s=2}} <end>
+Page 1886 nescie: <respelling> all: nèscie <end>: <from> {{rhymes|it|ɛʃʃa|s=2}} <to> {{rhymes|it|ɛʃʃa|s=2}} <end>
 Page 1886 nescia: Skipped, no changes
 Page 1887 nescie: Skipped, no changes
 Page 1887 nescie: WARNING: Unable to match rhyme ɛʃʃe, spelling Esce, respelling Èsce
 Page 1887 nescie: WARNING: Unable to match rhyme ɛʃʃe, spelling esce, respelling èsce
+
+
+
+
+
+
+# got here
+
+
+
+
+
 Page 427 netta: <respelling> all: nétta <end>: <from> {{rhymes|it|etta|s=2}} <to> {{rhymes|it|etta|s=2}} <end>
 Page 427 netta: Skipped, no changes
 Page 2122 neuroplegica: <respelling> all: neuroplègica <end>: <from> {{rhymes|it|ɛdʒika|s=5}} <to> {{rhymes|it|ɛdʒika|s=5}} <end>
