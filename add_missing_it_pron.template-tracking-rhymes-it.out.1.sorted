@@ -2934,18 +2934,6 @@ Page 1107 ottusa: <respelling> all: ottùsa <end> WARNING: Multiple headers Verb
 Page 1107 ottusa: Skipped, no changes
 Page 1108 ottuse: <respelling> all: ottùse <end> WARNING: Multiple headers Verb,Adjective seen ||| WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: uze: <from> {{rhymes|it|uze|s=3}} <to> {{rhymes|it|uze|s=3}} <end>
 Page 1108 ottuse: Skipped, no changes
-
-
-
-
-
-
-# got here
-
-
-
-
-
 Page 1226 pacata: <respelling> all: pacàta <end> WARNING: Multiple headers Adjective,Participle seen: <from> {{rhymes|it|ata|s=3}} <to> {{rhymes|it|ata|s=3}} <end>
 Page 1226 pacata: Skipped, no changes
 Page 1198 paci: <respelling> all: pàci <end>: <from> {{rhymes|it|atʃi|s=2}} <to> {{rhymes|it|atʃi|s=2}} <end>
@@ -2972,7 +2960,7 @@ Page 1409 paonazzi: <respelling> all: paonàttsi <end>: <from> {{rhymes|it|attsi
 Page 1409 paonazzi: Skipped, no changes
 Page 1499 pappata: <respelling> all: pappàta <end>: <from> {{rhymes|it|ata|s=3}} <to> {{rhymes|it|ata|s=3}} <end>
 Page 1499 pappata: Skipped, no changes
-Page 925 paralizzata: <respelling> all: paralizzàta <end> WARNING: Unable to add pronunciation due to z in part before rhyme: ata: <from> {{rhymes|it|ata|s=5}} <to> {{rhymes|it|ata|s=5}} <end>
+Page 925 paralizzata: <respelling> all: paraliddzàta <end> WARNING: Unable to add pronunciation due to z in part before rhyme: ata: <from> {{rhymes|it|ata|s=5}} <to> {{rhymes|it|ata|s=5}} <end>
 Page 925 paralizzata: Skipped, no changes
 Page 1753 paramorfa: <respelling> all: paramòrfa <end>: <from> {{rhymes|it|ɔrfa|s=4}} <to> {{rhymes|it|ɔrfa|s=4}} <end>
 Page 1753 paramorfa: Skipped, no changes
@@ -2980,7 +2968,8 @@ Page 1611 paraplegica: <respelling> all: paraplègica <end>: <from> {{rhymes|it|
 Page 1611 paraplegica: Skipped, no changes
 Page 1612 paraplegiche: <respelling> all: paraplègiche <end>: <from> {{rhymes|it|ɛdʒike|s=5}} <to> {{rhymes|it|ɛdʒike|s=5}} <end>
 Page 1612 paraplegiche: Skipped, no changes
-Page 1803 paraseleni: <respelling> all: paraselèni <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ɛni: <from> {{rhymes|it|ɛni|s=5}} <to> {{rhymes|it|ɛni|s=5}} <end>
+Page 1803 paraselene: <respelling> all: para[s]elène<r:Olivetti|paraselene> <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ɛni: <from> {{rhymes|it|ɛni|s=5}} <to> {{rhymes|it|ɛni|s=5}} <end>
+Page 1803 paraseleni: <respelling> all: para[s]elèni<r:Olivetti|paraselene> <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ɛni: <from> {{rhymes|it|ɛni|s=5}} <to> {{rhymes|it|ɛni|s=5}} <end>
 Page 1803 paraseleni: Skipped, no changes
 Page 1804 parassiticide: <respelling> all: parassiticìde <end>: <from> {{rhymes|it|ide|s=6}} <to> {{rhymes|it|ide|s=6}} <end>
 Page 1804 parassiticide: Skipped, no changes
@@ -2992,7 +2981,10 @@ Page 253 pastinache: <respelling> all: pastinàche <end>: <from> {{rhymes|it|ake
 Page 253 pastinache: Skipped, no changes
 Page 501 patetica: <respelling> all: patètica <end>: <from> {{rhymes|it|ɛtika|s=4}} <to> {{rhymes|it|ɛtika|s=4}} <end>
 Page 501 patetica: Skipped, no changes
-Page 1940 patriottarda: <respelling> all: patriottàrda <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme arda: <from> {{rhymes|it|arda|s=4}} <to> {{rhymes|it|arda|s=4}} <end>
+Page 1940 patriottarda: <respelling> all: patri.ottàrda<r:Olivetti|patriottardo><r:DiPI|patriota> <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme arda: <from> {{rhymes|it|arda|s=4}} <to> {{rhymes|it|arda|s=4}} <end>
+Page 1940 patriottardo: <respelling> all: patri.ottàrdo<r:Olivetti|patriottardo><r:DiPI|patriota> <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme arda: <from> {{rhymes|it|arda|s=4}} <to> {{rhymes|it|arda|s=4}} <end>
+Page 1940 patriottardi: <respelling> all: patri.ottàrdi<r:Olivetti|patriottardo><r:DiPI|patriota> <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme arda: <from> {{rhymes|it|arda|s=4}} <to> {{rhymes|it|arda|s=4}} <end>
+Page 1940 patriottarde: <respelling> all: patri.ottàrde<r:Olivetti|patriottardo><r:DiPI|patriota> <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme arda: <from> {{rhymes|it|arda|s=4}} <to> {{rhymes|it|arda|s=4}} <end>
 Page 1940 patriottarda: Skipped, no changes
 Page 435 pazza: <respelling> all: pàttsa <end>: <from> {{rhymes|it|attsa|s=2}} <to> {{rhymes|it|attsa|s=2}} <end>
 Page 435 pazza: Skipped, no changes
@@ -3010,7 +3002,7 @@ Page 86 pendo: <respelling> all: pèndo <end>: <from> {{rhymes|it|ɛndo|s=2}} <t
 Page 86 pendo: Skipped, no changes
 Page 2169 peneio: <respelling> all: penèio <end>: <from> {{rhymes|it|ɛjo|s=3}} <to> {{rhymes|it|ɛjo|s=3}} <end>
 Page 2169 peneio: Skipped, no changes
-Page 48 peni: <respelling> all: pèni <end> WARNING: Multiple headers Noun,Verb seen: <from> {{rhymes|it|ɛni|s=2}} <to> {{rhymes|it|ɛni|s=2}} <end>
+#Page 48 peni: <respelling> all: pèni <end> WARNING: Multiple headers Noun,Verb seen: <from> {{rhymes|it|ɛni|s=2}} <to> {{rhymes|it|ɛni|s=2}} <end>
 Page 48 peni: Skipped, no changes
 Page 273 pentacoli: <respelling> all: pentàcoli <end>: <from> {{rhymes|it|akoli|s=4}} <to> {{rhymes|it|akoli|s=4}} <end>
 Page 273 pentacoli: Skipped, no changes
@@ -3028,15 +3020,28 @@ Page 1945 perequino: <respelling> all: perèquino <end> WARNING: Unable to add p
 Page 1945 perequino: Skipped, no changes
 Page 1941 perequo: <respelling> all: perèquo <end>: <from> {{rhymes|it|ɛkwo|s=3}} <to> {{rhymes|it|ɛkwo|s=3}} <end>
 Page 1941 perequo: Skipped, no changes
-Page 1325 perigei: <respelling> all: perigèi <end> WARNING: Unable to add pronunciation due to falling diphthong in -i: ɛi: <from> {{rhymes|it|ɛi|s=4}} <to> {{rhymes|it|ɛi|s=4}} <end>
+Page 1325 perigeo: <respelling> all: perigèo <end> WARNING: Unable to add pronunciation due to falling diphthong in -i: ɛi: <from> {{rhymes|it|ɛi|s=4}} <to> {{rhymes|it|ɛi|s=4}} <end>
+Page 1325 perigea: <respelling> all: perigèa <end> WARNING: Unable to add pronunciation due to falling diphthong in -i: ɛi: <from> {{rhymes|it|ɛi|s=4}} <to> {{rhymes|it|ɛi|s=4}} <end>
+Page 1325 perigee: <respelling> all: perigèe <end> WARNING: Unable to add pronunciation due to falling diphthong in -i: ɛi: <from> {{rhymes|it|ɛi|s=4}} <to> {{rhymes|it|ɛi|s=4}} <end>
+Page 1325 perigei: <respelling> all: perigè.i <end> WARNING: Unable to add pronunciation due to falling diphthong in -i: ɛi: <from> {{rhymes|it|ɛi|s=4}} <to> {{rhymes|it|ɛi|s=4}} <end>
 Page 1325 perigei: Skipped, no changes
-Page 1502 peritonei: <respelling> all: peritonèi <end> WARNING: Unable to add pronunciation due to falling diphthong in -i: ɛi: <from> {{rhymes|it|ɛi|s=5}} <to> {{rhymes|it|ɛi|s=5}} <end>
+Page 1502 peritoneo: <respelling> all: peritonèo <end> WARNING: Unable to add pronunciation due to falling diphthong in -i: ɛi: <from> {{rhymes|it|ɛi|s=5}} <to> {{rhymes|it|ɛi|s=5}} <end>
+Page 1502 peritonea: <respelling> all: peritonèa <end> WARNING: Unable to add pronunciation due to falling diphthong in -i: ɛi: <from> {{rhymes|it|ɛi|s=5}} <to> {{rhymes|it|ɛi|s=5}} <end>
+Page 1502 peritonee: <respelling> all: peritonèe <end> WARNING: Unable to add pronunciation due to falling diphthong in -i: ɛi: <from> {{rhymes|it|ɛi|s=5}} <to> {{rhymes|it|ɛi|s=5}} <end>
+Page 1502 peritonei: <respelling> all: peritonè.i <end> WARNING: Unable to add pronunciation due to falling diphthong in -i: ɛi: <from> {{rhymes|it|ɛi|s=5}} <to> {{rhymes|it|ɛi|s=5}} <end>
 Page 1502 peritonei: Skipped, no changes
+Page 1946 permanganico: <respelling> all: permangànico <end>: <from> {{rhymes|it|anika|s=5}} <to> {{rhymes|it|anika|s=5}} <end>
 Page 1946 permanganica: <respelling> all: permangànica <end>: <from> {{rhymes|it|anika|s=5}} <to> {{rhymes|it|anika|s=5}} <end>
+Page 1946 permanganici: <respelling> all: permangànici <end>: <from> {{rhymes|it|anika|s=5}} <to> {{rhymes|it|anika|s=5}} <end>
+Page 1946 permanganiche: <respelling> all: permangàniche <end>: <from> {{rhymes|it|anika|s=5}} <to> {{rhymes|it|anika|s=5}} <end>
 Page 1946 permanganica: Skipped, no changes
-Page 634 persuadi: <respelling> all: persuàdi <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme adi: <from> {{rhymes|it|adi|s=4}} <to> {{rhymes|it|adi|s=4}} <end>
+Page 634 persuadi: <respelling> all: persuàdi,persuàdi<r:DiPI|persuado> <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme adi: <from> {{rhymes|it|adi|s=4}} <to> {{rhymes|it|adi|s=4}} <end>
 Page 634 persuadi: Skipped, no changes
-Page 89 persuado: <respelling> all: persuàdo <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ado: <from> {{rhymes|it|ado|s=4}} <to> {{rhymes|it|ado|s=4}} <end>
+Page 89 persuado: <respelling> all: persu.àdo,persuàdo<r:DiPI|persuado> <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ado: <from> {{rhymes|it|ado|s=4}} <to> {{rhymes|it|ado|s=4}} <end>
+Page 89 persuade: <respelling> all: persu.àde,persuàde<r:DiPI|persuado> <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ado: <from> {{rhymes|it|ado|s=4}} <to> {{rhymes|it|ado|s=4}} <end>
+Page 89 persuada: <respelling> all: persu.àda,persuàda<r:DiPI|persuado> <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ado: <from> {{rhymes|it|ado|s=4}} <to> {{rhymes|it|ado|s=4}} <end>
+Page 89 persuadano: <respelling> all: persu.àdano,persuàdano<r:DiPI|persuado> <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ado: <from> {{rhymes|it|ado|s=4}} <to> {{rhymes|it|ado|s=4}} <end>
+Page 89 persuadino: <respelling> all: persu.àdino,persuàdino<r:DiPI|persuado> <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ado: <from> {{rhymes|it|ado|s=4}} <to> {{rhymes|it|ado|s=4}} <end>
 Page 89 persuado: Skipped, no changes
 Page 1543 pertinaci: <respelling> all: pertinàci <end>: <from> {{rhymes|it|atʃi|s=4}} <to> {{rhymes|it|atʃi|s=4}} <end>
 Page 1543 pertinaci: Skipped, no changes
@@ -3044,7 +3049,12 @@ Page 805 pervenga: <respelling> all: pervènga <end>: <from> {{rhymes|it|ɛnɡa|
 Page 805 pervenga: Skipped, no changes
 Page 2055 pervi: <respelling> all: pèrvi <end>: <from> {{rhymes|it|ɛrvi|s=2}} <to> {{rhymes|it|ɛrvi|s=2}} <end>
 Page 2055 pervi: Skipped, no changes
-Page 926 pesata: <respelling> all: pesàta <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ata: <from> {{rhymes|it|ata|s=3}} <to> {{rhymes|it|ata|s=3}} <end>
+Page 926 pesano: <respelling> all: pésano,#pé[s]ano<r:DiPI|peso> <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ata: <from> {{rhymes|it|ata|s=3}} <to> {{rhymes|it|ata|s=3}} <end>
+Page 926 pesino: <respelling> all: pésino,#pé[s]ino<r:DiPI|peso> <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ata: <from> {{rhymes|it|ata|s=3}} <to> {{rhymes|it|ata|s=3}} <end>
+Page 926 pesato: <respelling> all: pesàto,#pe[s]àto<r:DiPI|pesa> <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ata: <from> {{rhymes|it|ata|s=3}} <to> {{rhymes|it|ata|s=3}} <end>
+Page 926 pesata: <respelling> all: pesàta,#pe[s]àta<r:DiPI|pesa> <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ata: <from> {{rhymes|it|ata|s=3}} <to> {{rhymes|it|ata|s=3}} <end>
+Page 926 pesati: <respelling> all: pesàti,#pe[s]àti<r:DiPI|pesa> <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ata: <from> {{rhymes|it|ata|s=3}} <to> {{rhymes|it|ata|s=3}} <end>
+Page 926 pesate: <respelling> all: pesàte,#pe[s]àte<r:DiPI|pesa> <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ata: <from> {{rhymes|it|ata|s=3}} <to> {{rhymes|it|ata|s=3}} <end>
 Page 926 pesata: Skipped, no changes
 Page 2069 peschereccia: <respelling> all: pescheréccia <end>: <from> {{rhymes|it|ettʃa|s=4}} <to> {{rhymes|it|ettʃa|s=4}} <end>
 Page 2069 peschereccia: Skipped, no changes
@@ -3054,7 +3064,10 @@ Page 32 piace: <respelling> all: piàce <end> WARNING: Unable to add pronunciati
 Page 32 piace: Skipped, no changes
 Page 780 piaci: <respelling> all: piàci <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme atʃi: <from> {{rhymes|it|atʃi|s=2}} <to> {{rhymes|it|atʃi|s=2}} <end>
 Page 780 piaci: Skipped, no changes
-Page 1563 piagnistei: <respelling> all: piagnistèi <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ɛi: <from> {{rhymes|it|ɛi|s=4}} <to> {{rhymes|it|ɛi|s=4}} <end>
+Page 1563 piagnisteo: <respelling> all: piagnistèo <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ɛi: <from> {{rhymes|it|ɛi|s=4}} <to> {{rhymes|it|ɛi|s=4}} <end>
+Page 1563 piagnistea: <respelling> all: piagnistèa <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ɛi: <from> {{rhymes|it|ɛi|s=4}} <to> {{rhymes|it|ɛi|s=4}} <end>
+Page 1563 piagnistee: <respelling> all: piagnistèe <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ɛi: <from> {{rhymes|it|ɛi|s=4}} <to> {{rhymes|it|ɛi|s=4}} <end>
+Page 1563 piagnistei: <respelling> all: piagnistè.i <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ɛi: <from> {{rhymes|it|ɛi|s=4}} <to> {{rhymes|it|ɛi|s=4}} <end>
 Page 1563 piagnistei: Skipped, no changes
 Page 1519 piangenti: <respelling> all: piangènti <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ɛnti: <from> {{rhymes|it|ɛnti|s=3}} <to> {{rhymes|it|ɛnti|s=3}} <end>
 Page 1519 piangenti: Skipped, no changes
@@ -3062,14 +3075,31 @@ Page 1947 piccarda: <respelling> all: piccàrda <end>: <from> {{rhymes|it|arda|s
 Page 1947 piccarda: Skipped, no changes
 Page 1126 picene: <respelling> all: picène <end> WARNING: Multiple headers Noun,Adjective seen: <from> {{rhymes|it|ɛne|s=3}} <to> {{rhymes|it|ɛne|s=3}} <end>
 Page 1126 picene: Skipped, no changes
+Page 12 pieni: <respelling> all: pièna,piéna<r:DiPI|pieno> <end> WARNING: Multiple headers Noun,Adjective seen ||| WARNING: Unable to add pronunciation due to hiatus in part before rhyme ɛni: <from> {{rhymes|it|ɛni|s=2}} <to> {{rhymes|it|ɛni|s=2}} <end>
+Page 12 piene: <respelling> all: piène,piéne<r:DiPI|pieno> <end> WARNING: Multiple headers Noun,Adjective seen ||| WARNING: Unable to add pronunciation due to hiatus in part before rhyme ɛni: <from> {{rhymes|it|ɛni|s=2}} <to> {{rhymes|it|ɛni|s=2}} <end>
 Page 12 pieni: <respelling> all: pièni,piéni<r:DiPI|pieno> <end> WARNING: Multiple headers Noun,Adjective seen ||| WARNING: Unable to add pronunciation due to hiatus in part before rhyme ɛni: <from> {{rhymes|it|ɛni|s=2}} <to> {{rhymes|it|ɛni|s=2}} <end>
 Page 12 pieni: Skipped, no changes
 Page 1585 pietrificata: <respelling> all: pietrificàta <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ata: <from> {{rhymes|it|ata|s=5}} <to> {{rhymes|it|ata|s=5}} <end>
 Page 1585 pietrificata: Skipped, no changes
+Page 1479 pigmee: <respelling> all: pigmèo <end> WARNING: Multiple headers Noun,Adjective seen: <from> {{rhymes|it|ɛe|s=3}} <to> {{rhymes|it|ɛe|s=3}} <end>
+Page 1479 pigmea: <respelling> all: pigmèa <end> WARNING: Multiple headers Noun,Adjective seen: <from> {{rhymes|it|ɛe|s=3}} <to> {{rhymes|it|ɛe|s=3}} <end>
 Page 1479 pigmee: <respelling> all: pigmèe <end> WARNING: Multiple headers Noun,Adjective seen: <from> {{rhymes|it|ɛe|s=3}} <to> {{rhymes|it|ɛe|s=3}} <end>
 Page 1479 pigmee: Skipped, no changes
-Page 1480 pigmei: <respelling> all: pigmèi <end> WARNING: Multiple headers Noun,Adjective seen ||| WARNING: Unable to add pronunciation due to falling diphthong in -i: ɛi: <from> {{rhymes|it|ɛi|s=3}} <to> {{rhymes|it|ɛi|s=3}} <end>
+Page 1480 pigmei: <respelling> all: pigmè.i <end> WARNING: Multiple headers Noun,Adjective seen ||| WARNING: Unable to add pronunciation due to falling diphthong in -i: ɛi: <from> {{rhymes|it|ɛi|s=3}} <to> {{rhymes|it|ɛi|s=3}} <end>
 Page 1480 pigmei: Skipped, no changes
+
+
+
+
+
+
+# got here
+
+
+
+
+
+
 Page 1948 pillacchere: <respelling> all: pillàcchere <end>: <from> {{rhymes|it|akkere|s=4}} <to> {{rhymes|it|akkere|s=4}} <end>
 Page 1948 pillacchere: Skipped, no changes
 Page 1344 pinnacoli: <respelling> all: pinnàcoli <end>: <from> {{rhymes|it|akoli|s=4}} <to> {{rhymes|it|akoli|s=4}} <end>
