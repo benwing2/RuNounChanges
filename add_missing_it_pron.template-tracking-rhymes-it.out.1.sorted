@@ -2781,19 +2781,10 @@ Page 1886 nescia: Skipped, no changes
 Page 1887 nescie: Skipped, no changes
 Page 1887 nescie: WARNING: Unable to match rhyme ɛʃʃe, spelling Esce, respelling Èsce
 Page 1887 nescie: WARNING: Unable to match rhyme ɛʃʃe, spelling esce, respelling èsce
-
-
-
-
-
-
-# got here
-
-
-
-
-
-Page 427 netta: <respelling> all: nétta <end>: <from> {{rhymes|it|etta|s=2}} <to> {{rhymes|it|etta|s=2}} <end>
+#Page 427 netta: <respelling> all: nétta <end>: <from> {{rhymes|it|etta|s=2}} <to> {{rhymes|it|etta|s=2}} <end>
+Page 427 nette: <respelling> all: nétte,nètte<r:DiPI|netto> <end>: <from> {{rhymes|it|etta|s=2}} <to> {{rhymes|it|etta|s=2}} <end>
+Page 427 nettano: <respelling> all: néttano,nèttano<r:DiPI|netto> <end>: <from> {{rhymes|it|etta|s=2}} <to> {{rhymes|it|etta|s=2}} <end>
+Page 427 nettino: <respelling> all: néttino,nèttino<r:DiPI|netto> <end>: <from> {{rhymes|it|etta|s=2}} <to> {{rhymes|it|etta|s=2}} <end>
 Page 427 netta: Skipped, no changes
 Page 2122 neuroplegica: <respelling> all: neuroplègica <end>: <from> {{rhymes|it|ɛdʒika|s=5}} <to> {{rhymes|it|ɛdʒika|s=5}} <end>
 Page 2122 neuroplegica: Skipped, no changes
@@ -2815,13 +2806,15 @@ Page 1932 nirvanica: <respelling> all: nirvànica <end>: <from> {{rhymes|it|anik
 Page 1932 nirvanica: Skipped, no changes
 Page 1663 nisseni: <respelling> all: nissèni <end> WARNING: Multiple headers Noun,Adjective seen: <from> {{rhymes|it|ɛni|s=3}} <to> {{rhymes|it|ɛni|s=3}} <end>
 Page 1663 nisseni: Skipped, no changes
-Page 1006 niubbi: <respelling> all: niùbbi <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ubbi: <from> {{rhymes|it|ubbi|s=3}} <to> {{rhymes|it|ubbi|s=3}} <end>
+Page 1006 niubbi: <respelling> all: ni.ùbbi<r:Treccani|niubbo> <end> WARNING: Unable to add pronunciation due to hiatus in part before rhyme ubbi: <from> {{rhymes|it|ubbi|s=3}} <to> {{rhymes|it|ubbi|s=3}} <end>
 Page 1006 niubbi: Skipped, no changes
 Page 1492 nolenti: <respelling> all: nolènti <end>: <from> {{rhymes|it|ɛnti|s=3}} <to> {{rhymes|it|ɛnti|s=3}} <end>
 Page 1492 nolenti: Skipped, no changes
 Page 192 nominata: <respelling> all: nominàta <end>: <from> {{rhymes|it|ata|s=4}} <to> {{rhymes|it|ata|s=4}} <end>
 Page 192 nominata: Skipped, no changes
-Page 1638 normotesa: <respelling> all: normotésa <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: eza: <from> {{rhymes|it|eza|s=4}} <to> {{rhymes|it|eza|s=4}} <end>
+Page 1638 normotesa: <respelling> all: normotésa,nòrmotésa,#normoté[s]a,#nòrmoté[s]a<r:DiPI|normolineo|teso><r:Olivetti|normoteso> <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: eza: <from> {{rhymes|it|eza|s=4}} <to> {{rhymes|it|eza|s=4}} <end>
+Page 1638 normotesi: <respelling> all: normotési,nòrmotési,#normoté[s]i,#nòrmoté[s]i<r:DiPI|normolineo|teso><r:Olivetti|normoteso> <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: eza: <from> {{rhymes|it|eza|s=4}} <to> {{rhymes|it|eza|s=4}} <end>
+Page 1638 normotese: <respelling> all: normotése,nòrmotése,#normoté[s]e,#nòrmoté[s]e<r:DiPI|normolineo|teso><r:Olivetti|normoteso> <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: eza: <from> {{rhymes|it|eza|s=4}} <to> {{rhymes|it|eza|s=4}} <end>
 Page 1638 normotesa: Skipped, no changes
 Page 1616 norrena: <respelling> all: norrèna <end>: <from> {{rhymes|it|ɛna|s=3}} <to> {{rhymes|it|ɛna|s=3}} <end>
 Page 1616 norrena: Skipped, no changes
@@ -2851,7 +2844,10 @@ Page 760 offendo: <respelling> all: offèndo <end>: <from> {{rhymes|it|ɛndo|s=3
 Page 760 offendo: Skipped, no changes
 Page 809 offerto: <respelling> all: offèrto <end>: <from> {{rhymes|it|ɛrto|s=3}} <to> {{rhymes|it|ɛrto|s=3}} <end>
 Page 809 offerto: Skipped, no changes
-Page 2096 oitanica: <respelling> all: oitànica <end> WARNING: Unable to add pronunciation due to falling diphthong in -i: anika: <from> {{rhymes|it|anika|s=4}} <to> {{rhymes|it|anika|s=4}} <end>
+Page 2096 oitanico: <respelling> all: oitànico<r:Olivetti|oitanico> <end> WARNING: Unable to add pronunciation due to falling diphthong in -i: anika: <from> {{rhymes|it|anika|s=4}} <to> {{rhymes|it|anika|s=4}} <end>
+Page 2096 oitanici: <respelling> all: oitànici<r:Olivetti|oitanico> <end> WARNING: Unable to add pronunciation due to falling diphthong in -i: anika: <from> {{rhymes|it|anika|s=4}} <to> {{rhymes|it|anika|s=4}} <end>
+Page 2096 oitaniche: <respelling> all: oitàniche<r:Olivetti|oitanico> <end> WARNING: Unable to add pronunciation due to falling diphthong in -i: anika: <from> {{rhymes|it|anika|s=4}} <to> {{rhymes|it|anika|s=4}} <end>
+Page 2096 oitanica: <respelling> all: oitànica<r:Olivetti|oitanico> <end> WARNING: Unable to add pronunciation due to falling diphthong in -i: anika: <from> {{rhymes|it|anika|s=4}} <to> {{rhymes|it|anika|s=4}} <end>
 Page 2096 oitanica: Skipped, no changes
 Page 2126 olecranica: <respelling> all: olecrànica <end>: <from> {{rhymes|it|anika|s=5}} <to> {{rhymes|it|anika|s=5}} <end>
 Page 2126 olecranica: Skipped, no changes
@@ -2867,11 +2863,16 @@ Page 2052 omiletica: <respelling> all: omilètica <end>: <from> {{rhymes|it|ɛti
 Page 2052 omiletica: Skipped, no changes
 Page 1692 omomorfa: <respelling> all: omomòrfa <end>: <from> {{rhymes|it|ɔrfa|s=4}} <to> {{rhymes|it|ɔrfa|s=4}} <end>
 Page 1692 omomorfa: Skipped, no changes
-Page 1693 omorganica: <respelling> all: omorgànica <end>: <from> {{rhymes|it|anika|s=5}} <to> {{rhymes|it|anika|s=5}} <end>
+Page 1693 omorganico: <respelling> all: òmorgànico<r:Olivetti|omorganico> <end>: <from> {{rhymes|it|anika|s=5}} <to> {{rhymes|it|anika|s=5}} <end>
+Page 1693 omorganici: <respelling> all: òmorgànici<r:Olivetti|omorganico> <end>: <from> {{rhymes|it|anika|s=5}} <to> {{rhymes|it|anika|s=5}} <end>
+Page 1693 omorganiche: <respelling> all: òmorgàniche<r:Olivetti|omorganico> <end>: <from> {{rhymes|it|anika|s=5}} <to> {{rhymes|it|anika|s=5}} <end>
+Page 1693 omorganica: <respelling> all: òmorgànica<r:Olivetti|omorganico> <end>: <from> {{rhymes|it|anika|s=5}} <to> {{rhymes|it|anika|s=5}} <end>
 Page 1693 omorganica: Skipped, no changes
-Page 2117 onnipossenti: <respelling> all: onnipossènti <end>: <from> {{rhymes|it|ɛnti|s=5}} <to> {{rhymes|it|ɛnti|s=5}} <end>
+Page 2117 onnipossenti: <respelling> all: onnipossènti,ònnipossènti<r:DiPI|onnipossente><r:Olivetti|onnipossente> <end>: <from> {{rhymes|it|ɛnti|s=5}} <to> {{rhymes|it|ɛnti|s=5}} <end>
+Page 2117 onnipossente: <respelling> all: onnipossènte,ònnipossènte<r:DiPI|onnipossente><r:Olivetti|onnipossente> <end>: <from> {{rhymes|it|ɛnti|s=5}} <to> {{rhymes|it|ɛnti|s=5}} <end>
 Page 2117 onnipossenti: Skipped, no changes
-Page 479 onnipresenti: <respelling> all: onnipresènti <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ɛnti: <from> {{rhymes|it|ɛnti|s=5}} <to> {{rhymes|it|ɛnti|s=5}} <end>
+Page 479 onnipresenti: <respelling> all: onnipresènti,ònnipresènti<r:Olivetti|onnipresente><r:DiPI|onnipotente> <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ɛnti: <from> {{rhymes|it|ɛnti|s=5}} <to> {{rhymes|it|ɛnti|s=5}} <end>
+Page 479 onnipresente: <respelling> all: onnipresènte,ònnipresènte<r:Olivetti|onnipresente><r:DiPI|onnipotente> <end> WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: ɛnti: <from> {{rhymes|it|ɛnti|s=5}} <to> {{rhymes|it|ɛnti|s=5}} <end>
 Page 479 onnipresenti: Skipped, no changes
 Page 1327 opaca: <respelling> all: opàca <end>: <from> {{rhymes|it|aka|s=3}} <to> {{rhymes|it|aka|s=3}} <end>
 Page 1327 opaca: Skipped, no changes
@@ -2933,6 +2934,18 @@ Page 1107 ottusa: <respelling> all: ottùsa <end> WARNING: Multiple headers Verb
 Page 1107 ottusa: Skipped, no changes
 Page 1108 ottuse: <respelling> all: ottùse <end> WARNING: Multiple headers Verb,Adjective seen ||| WARNING: Unable to add pronunciation due to /s/ or /z/ between vowels: uze: <from> {{rhymes|it|uze|s=3}} <to> {{rhymes|it|uze|s=3}} <end>
 Page 1108 ottuse: Skipped, no changes
+
+
+
+
+
+
+# got here
+
+
+
+
+
 Page 1226 pacata: <respelling> all: pacàta <end> WARNING: Multiple headers Adjective,Participle seen: <from> {{rhymes|it|ata|s=3}} <to> {{rhymes|it|ata|s=3}} <end>
 Page 1226 pacata: Skipped, no changes
 Page 1198 paci: <respelling> all: pàci <end>: <from> {{rhymes|it|atʃi|s=2}} <to> {{rhymes|it|atʃi|s=2}} <end>
