@@ -15,7 +15,7 @@ inflection_of_templates = [
   "participle of"
 ]
 
-inflection_of_templates_convertible_to_more_specific = [
+generic_inflection_of_templates = [
   "inflection of",
   "infl of",
 ]
@@ -513,7 +513,7 @@ def put_back_new_inflection_of_params(t, notes, tags, params, lang, term, tr, al
   if tr:
     t.add("tr", tr)
 
-  if (convert_to_more_specific_template and tname(t) in inflection_of_templates_convertible_to_more_specific and
+  if (convert_to_more_specific_template and tname(t) in generic_inflection_of_templates and
       tuple(tags) in tags_to_templates):
     tempname = tags_to_templates[tuple(tags)]
     old_tn = tname(t)
