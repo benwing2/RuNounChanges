@@ -373,10 +373,17 @@ def get_items(lines):
     else:
       yield m.groups()
 
+seen_pages = set()
 for _, (index, pagetitle, spec) in blib.iter_items(get_items(lines), start, end, get_name=lambda x:x[1], get_index=lambda x:x[0]):
+  def pagemsg(txt):
+    msg("Page %s %s: %s" % (index, pagetitle, txt))
+  if pagetitle in seen_pages:
+    pagemsg("WARNING: Already saw page, skipping")
+    continue
+  seen_pages.add(pagetitle)
   page = pywikibot.Page(site, pagetitle)
   if not page.exists():
-    msg("Page %s %s: WARNING: Page doesn't exist, skipping" % (index, pagetitle))
+    pagemsg("WARNING: Page doesn't exist, skipping")
   else:
     def do_process_page(page, index, parsed):
       return process_page(index, page, spec)
