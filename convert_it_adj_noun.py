@@ -15,6 +15,7 @@ prepositions = {
   "d?agli ",
   # di, in + optional article
   "di ",
+  "d'",
   "in ",
   "[dn]el ",
   "[dn]ell[oae] ",
