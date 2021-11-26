@@ -328,11 +328,11 @@ local function do_noun(args, data, tracking_categories, pos)
 	local is_plurale_tantum = false
 	local plpos = require("Module:string utilities").pluralize(pos)
 
-	data.genders = args[1]
+	data.genders = {}
 	local saw_m = false
 	local saw_f = false
-	local gender_for_default_plural = data.genders[1]
-	for _, g in ipairs(args[1]) do
+	local gender_for_default_plural = args[1][1]
+	for i, g in ipairs(args[1]) do
 		if not allowed_genders[g] then
 			error("Unrecognized gender: " .. g)
 		end
@@ -346,6 +346,11 @@ local function do_noun(args, data, tracking_categories, pos)
 				saw_f = true
 			end
 		end
+		if args.g_qual[i] then
+			table.insert(data.genders, {spec = g, qualifiers = {args.g_qual[i]}})
+		else
+			table.insert(data.genders, g)
+		end
 	end
 	if saw_m and saw_f then
 		gender_for_default_plural = "mf"
@@ -353,9 +358,17 @@ local function do_noun(args, data, tracking_categories, pos)
 
 	local lemma = m_links.remove_links(data.heads[1]) -- should always be specified
 
-	local function insert_inflection(list, term, accel, qualifiers)
-		local infl = {qualifiers = qualifiers, accel = accel}
-		if term == lemma then
+	local function insert_inflection(list, term, accel, qualifiers, genders, no_inv)
+		if genders then
+			for _, g in ipairs(genders) do
+				if g == "m" and not saw_m or g == "f" and not saw_f then
+					table.insert(data.categories, langname .. " " .. plpos .. " that change gender in the plural")
+				end
+			end
+		end
+					
+		local infl = {qualifiers = qualifiers, accel = accel, genders = genders}
+		if term == lemma and not no_inv then
 			infl.label = glossary_link("invariable")
 		else
 			infl.term = term
@@ -375,9 +388,21 @@ local function do_noun(args, data, tracking_categories, pos)
 			error("Can't specify plurals of plurale tantum " .. pos)
 		end
 		table.insert(data.inflections, {label = glossary_link("plural only")})
+	elseif args.apoc then
+		-- apocopated noun
+		if #args_pl > 0 then
+			error("Can't specify plurals of apocopated " .. pos)
+		end
+		table.insert(data.inflections, {label = glossary_link("apocopated")})
+		data.pos_category = pos .. " forms"
 	else
+		-- If no plurals, use the default plural unless mpl= or fpl= explicitly given.
 		if #args_pl == 0 and #args_mpl == 0 and #args_fpl == 0 then
 			args_pl = {"+"}
+		end
+		-- If only ~ given (countable and uncountable), add the default plural after it.
+		if #args_pl == 1 and args_pl[1] == "~" then
+			args_pl = {"~", "+"}
 		end
 		-- Gather plurals, handling requests for default plurals
 		for i, pl in ipairs(args_pl) do
@@ -392,7 +417,8 @@ local function do_noun(args, data, tracking_categories, pos)
 					end
 					table.insert(data.categories, langname .. " indeclinable " .. plpos)
 				else
-					insert_inflection(plurals, term, nil, fetch_qualifiers(args.pl_qual[i]))
+					insert_inflection(plurals, term, nil, fetch_qualifiers(args.pl_qual[i]),
+						args.pl_g[i] and rsplit(args.pl_g[i], "%s*,%s*") or nil)
 				end
 				table.insert(data.categories, langname .. " countable " .. plpos)
 			end
@@ -440,9 +466,9 @@ local function do_noun(args, data, tracking_categories, pos)
 					table.insert(data.inflections, {label = "plural not attested"})
 					table.insert(data.categories, langname .. " " .. plpos .. " with unattested plurals")
 				end
-			elseif pl == "~" then
+			elseif pl == "-" then
 				if i > 1 then
-					error("Plural specifier ~ must be first")
+					error("Plural specifier - must be first")
 				end
 				-- Uncountable noun; may occasionally have a plural
 				table.insert(data.categories, langname .. " uncountable " .. plpos)
@@ -454,13 +480,25 @@ local function do_noun(args, data, tracking_categories, pos)
 				else
 					table.insert(data.inflections, {label = glossary_link("uncountable")})
 				end
+			elseif pl == "~" then
+				if i > 1 then
+					error("Plural specifier ~ must be first")
+				end
+				-- Countable and uncountable noun; will have a plural
+				table.insert(data.categories, langname .. " countable " .. plpos)
+				table.insert(data.categories, langname .. " uncountable " .. plpos)
+				table.insert(data.inflections, {label = glossary_link("countable") .. " and " .. glossary_link("uncountable")})
 			else
-				if pl == "#" or pl == "-" then
+				if pl == "#" then
 					pl = lemma
 				end
 				insert_pl(pl)
 			end
 		end
+	end
+	
+	if #plurals > 1 then
+		table.insert(data.categories, langname .. " " .. plpos .. " with multiple plurals")
 	end
 
 	-- Gather masculines/feminines. For each one, generate the corresponding plural(s).
@@ -468,7 +506,7 @@ local function do_noun(args, data, tracking_categories, pos)
 		local retval = {}
 		for i, mf in ipairs(mfs) do
 			local function insert_infl(list, term, accel, existing_qualifiers)
-				insert_inflection(list, term, accel, fetch_qualifiers(qualifiers[i], existing_qualifiers))
+				insert_inflection(list, term, accel, fetch_qualifiers(qualifiers[i], existing_qualifiers), nil, "no inv")
 			end
 			if mf == "+" then
 				-- Generate default feminine.
@@ -503,8 +541,8 @@ local function do_noun(args, data, tracking_categories, pos)
 	local function handle_mf_plural(mfpl, qualifiers, gender, default_plurals, singulars)
 		local new_mfpls = {}
 		for i, mfpl in ipairs(mfpl) do
-			local function insert_infl(term, accel, existing_qualifiers)
-				insert_inflection(new_mfpls, term, accel, fetch_qualifiers(qualifiers[i], existing_qualifiers))
+			local function insert_infl(term, accel, existing_qualifiers, no_inv)
+				insert_inflection(new_mfpls, term, accel, fetch_qualifiers(qualifiers[i], existing_qualifiers), nil, no_inv)
 			end
 			local accel
 			if #mfpl == #singulars then
@@ -521,7 +559,9 @@ local function do_noun(args, data, tracking_categories, pos)
 				if #default_plurals > 0 then
 					for _, defpl in ipairs(default_plurals) do
 						-- defpl is a table
-						insert_infl(defpl.term_for_further_inflection, defpl.accel, defpl.qualifiers)
+						-- don't use "invariable" because the plural is not with respect to the lemma but
+						-- with respect to the masc/fem singular
+						insert_infl(defpl.term_for_further_inflection, defpl.accel, defpl.qualifiers, "no inv")
 					end
 				else
 					-- mf is a table
@@ -541,7 +581,9 @@ local function do_noun(args, data, tracking_categories, pos)
 						-- mf is a table
 						local default_mfpl = make_plural(mf.term_for_further_inflection, gender, mfpl)
 						if default_mfpl then
-							insert_infl(default_mfpl, accel, mf.qualifiers)
+							-- don't use "invariable" because the plural is not with respect to the lemma but
+							-- with respect to the masc/fem singular
+							insert_infl(default_mfpl, accel, mf.qualifiers, "no inv")
 						end
 					end
 				else
@@ -551,7 +593,9 @@ local function do_noun(args, data, tracking_categories, pos)
 					end
 				end
 			else
-				insert_infl(mfpl, accel)
+				-- don't use "invariable" if masc/fem singular present because the plural is not with respect to
+				-- the lemma but with respect to the masc/fem singular
+				insert_infl(mfpl, accel, nil, #singulars > 0)
 			end
 		end
 		return new_mfpls
@@ -638,7 +682,10 @@ local function get_noun_params()
 	return {
 		[1] = {list = "g", required = true, default = "?"},
 		[2] = {list = "pl"},
+		["apoc"] = {type = "boolean"}, --apocopated
+		["g_qual"] = {list = "g=_qual", allow_holes = true},
 		["pl_qual"] = {list = "pl=_qual", allow_holes = true},
+		["pl_g"] = {list = "pl=_g", allow_holes = true},
 		["m"] = {list = true},
 		["m_qual"] = {list = "m=_qual", allow_holes = true},
 		["f"] = {list = true},
