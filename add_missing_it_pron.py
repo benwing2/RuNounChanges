@@ -243,10 +243,10 @@ def process_text_on_page(index, pagetitle, text):
       all_pronun_templates = []
       for t in parsed.filter_templates():
         tn = tname(t)
-        if tn == "it-IPA" or tn == "IPA" and getparam(t, "1") == "it":
+        if tn == "it-pr" or tn == "IPA" and getparam(t, "1") == "it":
           all_pronun_templates.append(t)
 
-      saw_it_IPA = False
+      saw_it_pr = False
       pronun_based_respellings = []
       for t in parsed.filter_templates():
         origt = unicode(t)
@@ -261,13 +261,14 @@ def process_text_on_page(index, pagetitle, text):
             ", other templates %s" % ", ".join(other_templates) if len(other_templates) > 0 else ""
           ))
         tn = tname(t)
-        if tn == "it-IPA":
-          saw_it_IPA = True
+        if tn == "it-pr":
+          saw_it_pr = True
           respellings = blib.fetch_param_chain(t, "1")
+          # FIXME, need to split on comma
           pronun_based_respellings.extend(respellings)
           break
         if tn == "IPA" and getparam(t, "1") == "it":
-          saw_it_IPA = True
+          saw_it_pr = True
           pronuns = blib.fetch_param_chain(t, "2")
           this_phonemic_pronun = None
           this_phonemic_respelling = None
@@ -419,8 +420,8 @@ def process_text_on_page(index, pagetitle, text):
               if re.search("^n[0-9]*$", paramname):
                 need_ref_section = True
               t.add(paramname, paramval)
-            blib.set_template_name(t, "it-IPA")
-            notes.append("replace raw {{IPA|it}} with {{it-IPA|%s}}%s" % ("|".join(respellings), manual_assist))
+            blib.set_template_name(t, "it-pr")
+            notes.append("replace raw {{IPA|it}} with {{it-pr|%s}}%s" % ("|".join(respellings), manual_assist))
           pronun_based_respellings.extend(respellings)
         if unicode(t) != origt:
           pagemsg("Replaced %s with %s" % (origt, unicode(t)))
@@ -496,28 +497,35 @@ def process_text_on_page(index, pagetitle, text):
             for bad_rhyme_msg in bad_rhyme_msgs:
               pagemsg(bad_rhyme_msg)
         if rhyme_based_respellings:
-          if not saw_it_IPA:
+          if not saw_it_pr:
             manual_assist = ""
-            if unable:
-              if pagetitle in rhyme_directives:
-                rhyme_based_respellings = rhyme_directives[pagetitle]
-                unable = False
-                manual_assist = " (manually assisted)"
-                pagemsg("Using manually-specified rhyme-based respelling%s %s; original warnings follow: %s: %s" % (
-                  "s" if len(rhyme_based_respellings) > 1 else "", ",".join(rhyme_based_respellings),
-                  " ||| ".join(all_warnings), unicode(rhymes_template)))
-              else:
-                pagemsg("<rhyme-respelling> %s <end> %s: <from> %s <to> %s <end>" % (" ".join(rhyme_based_respellings),
-                  " ||| ".join(all_warnings), unicode(rhymes_template), unicode(rhymes_template)))
-            if not unable:
-              subsections[k] = "* {{it-IPA|%s}}\n" % "|".join(rhyme_based_respellings) + subsections[k]
+            if pagetitle in rhyme_directives:
+              rhyme_based_respellings = rhyme_directives[pagetitle]
+              manual_assist = " (manually assisted)"
+              pagemsg("Using manually-specified rhyme-based respelling%s %s; original warnings follow: %s: %s" % (
+                "s" if len(rhyme_based_respellings) > 1 else "", ",".join(rhyme_based_respellings),
+                " ||| ".join(all_warnings), unicode(rhymes_template)))
+              subsections[k] = "* {{it-pr|%s}}\n" % ",".join(rhyme_based_respellings) + subsections[k]
               notes.append("add Italian rhyme-based respelling%s %s%s" % (
                 "s" if len(rhyme_based_respellings) > 1 else "", ",".join(rhyme_based_respellings), manual_assist))
+            else:
+              different_headers = []
+              for pos in ["Noun", "Verb", "Adjective", "Adverb", "Participle"]:
+                if "==%s==" % pos in secbody:
+                  different_headers.append(pos)
+              if len(different_headers) > 1:
+                all_warnings[0:0] = ["WARNING: Multiple headers %s seen" % ",".join(different_headers)]
+              if "Etymology 1" in secbody:
+                all_warnings[0:0] = ["WARNING: Multiple etymologies seen"]
+
+              pagemsg("<respelling> all: %s <end>%s: <from> %s <to> %s <end>" % (" ".join(rhyme_based_respellings),
+                " " + " ||| ".join(all_warnings) if all_warnings else "",
+                unicode(rhymes_template), unicode(rhymes_template)))
           else:
             for respelling in rhyme_based_respellings:
               if (not re.search("^qual[0-9]*=", respelling) and pronun_based_respellings and
                   respelling not in pronun_based_respellings):
-                pagemsg("WARNING: Rhyme-based respelling%s %s doesn't match it-IPA respelling(s) %s%s" % (
+                pagemsg("WARNING: Rhyme-based respelling%s %s doesn't match it-pr respelling(s) %s%s" % (
                   " (with problems)" if len(all_warnings) > 0 else "", respelling,
                   ",".join(pronun_based_respellings),
                   ": %s" % " ||| ".join(all_warnings) if len(all_warnings) > 0 else ""))
@@ -582,4 +590,4 @@ if args.rhyme_direcfile:
       rhyme_directives[page] = respellings
 
 blib.do_pagefile_cats_refs(args, start, end, process_text_on_page, edit=True, stdin=True,
-  default_refs=["Template:it-IPA"])
+  default_refs=["Template:it-pr"])
