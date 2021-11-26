@@ -683,17 +683,6 @@ def process_text_on_page(index, pagetitle, text):
           def getp(param):
             return getparam(t, param)
 
-          def handle_past_participle(term):
-            normalized_forms.append("{{past participle of|it|%s}}" % term)
-
-          def handle_participle_inflection(term, desc, ending):
-            normalized_forms.append("{{%s of|it|%s}}" % (desc, term))
-
-          def handle_participle_inflection_for_verb(term, desc, ending):
-            verify_verb_lemma(t, term)
-            verify_past_participle_inflection(t, desc, ending)
-            normalized_forms.append("{{%s of|it|%s}}" % (desc, pagetitle[:-1] + "o"))
-
           if tn in infltags.generic_inflection_of_templates:
             addltemp = None
             addltemp_arg = None
@@ -729,7 +718,6 @@ def process_text_on_page(index, pagetitle, text):
                     newtemp = "%s of" % name
                     break
                   elif tag_set_set == infl_tags | {"past", "part"}:
-                    verify_past_participle_inflection(t, name, ending)
                     # We will convert this again to {{masculine/feminine plural of}} or {{feminine singular of}},
                     # which will verify any issues
                     newtemp = "%s past participle of" % name
@@ -787,11 +775,18 @@ def process_text_on_page(index, pagetitle, text):
 
           if tn in ["feminine singular past participle of", "masculine plural past participle of",
               "feminine plural past participle of"]:
-            name = tn.replace(" past participle of", "")
-            nameprops = participle_form_names_to_properties[name]
-            verify_past_participle_inflection(t, name, nameprops["ending"])
             verify_lang(t)
             check_unrecognized_params(t, ["1", "2", "nocat"])
+            name = tn.replace(" past participle of", "")
+            nameprops = participle_form_names_to_properties[name]
+            if name == "feminine singular" and pagetitle.endswith("te"):
+              # Known error; correct for it.
+              pagemsg("Converting known erroneous 'feminine singular' to 'feminine plural': %s" %
+                  unicode(t))
+              name = "feminine plural"
+              this_sec_notes.append("convert known erroneous 'feminine singular' to 'feminine plural'")
+            else:
+              verify_past_participle_inflection(t, name, nameprops["ending"])
             rmparam(t, "nocat")
             blib.set_template_name(t, "%s of" % name)
             t.add("2", pagetitle[:-1] + "o")
@@ -920,7 +915,7 @@ def process_text_on_page(index, pagetitle, text):
           if getparam(head_template, "2") == "past participle":
             pagemsg("WARNING: {{inflection of}} with {{head|it|past participle}}: %s" % headword_line)
             raise BreakException()
-          check_unrecognized_params(head_template, ["1", "2", "head", "g"])
+          check_unrecognized_params(head_template, ["1", "2", "head", "g", "cat2"])
           head_template_head = getparam(head_template, "head")
           if head_template_head:
             head_template_head = "|head=%s" % head_template_head
