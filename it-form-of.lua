@@ -45,8 +45,13 @@ local conjunctive_pronouns = {
 
 local imp = glossary_link("imperative") .. " form"
 local inf = glossary_link("infinitive")
+local ger = glossary_link("gerund")
 local parts_of_speech = {
-	["ger"] = glossary_link("gerund"),
+	["ger"] = ger,
+	["ger1s"] = "first-person singular ({{l|it|io}}) " .. ger,
+	["ger2s"] = "second-person singular ({{l|it|tu}}) " .. ger,
+	["ger1p"] = "first-person plural ({{l|it|noi}}) " .. ger,
+	["ger2p"] = "second-person plural ({{l|it|voi}}) " .. ger,
 	["inf"] = inf,
 	["inf1s"] = "first-person singular ({{l|it|io}}) " .. inf,
 	["inf2s"] = "second-person singular ({{l|it|tu}}) " .. inf,
@@ -90,6 +95,7 @@ function export.it_compound(frame)
 		["pos"] = {},
 		["t"] = {},
 		["gloss"] = {alias_of = "t"},
+		["noarchaic"] = {type = "boolean"},
 		["sort"] = {},
 		["pagename"] = {}, -- for testing
 	}
@@ -191,7 +197,9 @@ function export.it_compound(frame)
 		if not posdesc then
 			error("Internal error: Unrecognized part of speech '" .. pos .. "'")
 		end
-		ins("{{tlb|it|archaic}} ")
+		if not args.noarchaic then
+			ins("{{tlb|it|archaic}} ")
+		end
 	end
 	table.insert(parts, "''compound of ")
 	if pos == "inf" then
