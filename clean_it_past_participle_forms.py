@@ -664,7 +664,8 @@ def process_text_on_page(index, pagetitle, text):
         def getp(param):
           return getparam(t, param)
 
-        if (tn == "head" and getp("1") == "it" and getp("2") in ["verb form", "past participle form", "past participle"]
+        if (tn == "head" and getp("1") == "it" and getp("2") in [
+          "verb form", "participle form", "past participle form", "participle", "past participle"]
             or tn == "it-pp"):
           maybe_saw_participle = True
           break
@@ -826,10 +827,12 @@ def process_text_on_page(index, pagetitle, text):
               newsubseck = unicode(parsed)
 
         # Now split {{inflection of}} and {{masculine/feminine plural of}}/{{feminine singular of}} under the same
-        # header.
+        # header. Also correct header POS and headword POS as needed, add gender to past participle form headword
+        # lines, and convert {{head|it|past participle}} to {{it-pp}}.
         parsed = blib.parse_text(newsubseck)
 
         saw_inflection_of = False
+        saw_pp_of = False
         saw_pp_form_of = False
         head_template = None
         for t in parsed.filter_templates():
@@ -838,11 +841,13 @@ def process_text_on_page(index, pagetitle, text):
             return getparam(t, param)
           if tn in infltags.generic_inflection_of_templates:
             saw_inflection_of = True
+          if tn == "past participle of":
+            saw_pp_of = True
           if tn in ["feminine singular of", "masculine plural of", "feminine plural of"]:
             saw_pp_form_of = True
           if tn == "head":
             verify_lang(t)
-            if getp("2") not in ["verb form", "past participle form", "past participle"]:
+            if getp("2") not in ["verb form", "participle form", "past participle form", "participle", "past participle"]:
               pagemsg("WARNING: Saw strange headword POS in likely past participle form subsection: %s" % unicode(t))
               raise BreakException()
             if head_template:
@@ -861,7 +866,31 @@ def process_text_on_page(index, pagetitle, text):
           pagemsg("WARNING: Didn't see head template in likely past participle form subsection: <<%s>>" % newsubseck)
           raise BreakException()
 
-        if saw_inflection_of and saw_pp_form_of:
+        if saw_pp_of:
+          if saw_inflection_of or saw_pp_form_of:
+            pagemsg("WARNING: Saw {{inflection of}} or past participle form along with {{past participle of}}: <<%s>>" % newsubseck)
+            raise BreakException()
+          if tname(head_template) == "head":
+            check_unrecognized_params(head_template, ["1", "2", "head", "g"])
+            pos = getparam(head_template, "2")
+            if pos in ["participle", "past participle"]:
+              head_param = getparam(head_template, "head")
+              if head_param:
+                pagemsg("WARNING: Template has head=%s, not converting to {{it-pp}}: %s" %
+                  (head_param, unicode(head_template)))
+              else:
+                del head_template.params[:]
+                blib.set_template_name(head_template, "it-pp")
+                this_sec_notes.append("convert {{head|it|%s}} to {{it-pp}}" % pos)
+                newsubseck = unicode(parsed)
+            else:
+              pagemsg("WARNING: Head template has strange POS for participle: %s" % unicode(head_template))
+              raise BreakException()
+          if "Verb" in newsubsecheader:
+            newsubsecheader = newsubsecheader.replace("Verb", "Participle")
+            this_sec_notes.append("correct ==Verb== to ==Participle== for participle")
+
+        elif saw_inflection_of and saw_pp_form_of:
           if tname(head_template) == "it-pp":
             pagemsg("WARNING: Saw {{inflection of}} and past participle form under {{it-pp}}: <<%s>>" % newsubseck)
             raise BreakException()
@@ -912,8 +941,9 @@ def process_text_on_page(index, pagetitle, text):
           if headword_line != unicode(head_template):
             pagemsg("WARNING: Additional text on headword line besides headword template: %s" % headword_line)
             raise BreakException()
-          if getparam(head_template, "2") == "past participle":
-            pagemsg("WARNING: {{inflection of}} with {{head|it|past participle}}: %s" % headword_line)
+          if getparam(head_template, "2") in ["participle", "past participle"]:
+            pagemsg("WARNING: {{inflection of}} with {{head|it|%s}}: %s" % (
+              getparam(head_template, "2"), headword_line))
             raise BreakException()
           check_unrecognized_params(head_template, ["1", "2", "head", "g", "cat2"])
           head_template_head = getparam(head_template, "head")
@@ -936,7 +966,41 @@ def process_text_on_page(index, pagetitle, text):
           newsubseck = "\n".join(newsubseck_lines) + "\n\n"
           this_sec_notes.append("split verb form and past participle form into two subsections")
 
-############################# not finished
+        elif saw_pp_form_of:
+          if tname(head_template) == "it-pp":
+            pagemsg("WARNING: Saw past participle form under {{it-pp}}: <<%s>>" % newsubseck)
+            raise BreakException()
+          check_unrecognized_params(head_template, ["1", "2", "head", "g", "cat2"])
+          pos = getparam(head_template, "2")
+          if pos in ["participle", "past participle"]:
+            pagemsg("WARNING: Head template has strange POS for participle form: %s" % unicode(head_template))
+            raise BreakException()
+          if pos in ["verb form", "participle form"]:
+            head_template.add("2", "past participle form")
+            this_sec_notes.append("convert {{head|it|%s}} to {{head|it|past participle form}} for participle form" % pos)
+            newsubseck = unicode(parsed)
+          if head_template.has("cat2"):
+            rmparam(head_template, "cat2")
+            this_sec_notes.append("remove cat2=from headword template for participle form")
+            newsubseck = unicode(parsed)
+          pagetitle_ending = pagetitle[-1]
+          if pagetitle_ending not in participle_ending_to_properties:
+            pagemsg("WARNING: Something wrong, page title doesn't end in past participle form ending")
+            raise BreakException()
+          should_be_gender = participle_ending_to_properties[pagetitle_ending]["gender"]
+          existing_gender = getparam(head_template, "g")
+          if not existing_gender:
+            head_template.add("g", should_be_gender)
+            this_sec_notes.append("add g=%s to {{head|it|past participle form}} for participle form" % should_be_gender)
+            newsubseck = unicode(parsed)
+          else:
+            head_template.add("g", should_be_gender)
+            this_sec_notes.append("correct g=%s to g=%s in {{head|it|past participle form}} for participle form" % (
+              existing_gender, should_be_gender))
+            newsubseck = unicode(parsed)
+          if "Verb" in newsubsecheader:
+            newsubsecheader = newsubsecheader.replace("Verb", "Participle")
+            this_sec_notes.append("correct ==Verb== to ==Participle== for participle form")
 
       except BreakException:
         # something went wrong, go to next subsection
@@ -947,9 +1011,298 @@ def process_text_on_page(index, pagetitle, text):
       notes.extend(this_sec_notes)
 
   secbody = "".join(subsections)
+
+  # Remove duplicate lines, which may happen e.g. when converting the following:
+
+  # {{inflection of|it|affrettare||f|s|past|part}}
+  # {{inflection of|it|affrettarsi||f|s|past|part}}
+
+  # which becomes
+
+  # {{feminine singular of|it|affrettato}}
+  # {{feminine singular of|it|affrettato}}
+
+  newsecbody = blib.rsub_repeatedly(r"^(#.*\n)\1", r"\1", secbody, 0, re.M)
+  if newsecbody != secbody:
+    notes.append("remove duplicate lines")
+    secbody = newsecbody
+
+  # Now split etym sections as needed.
+
+  def extract_pos_and_lemma(subsectext, lemma_pos, head_lemma_poses, head_nonlemma_poses, special_templates, allowable_form_of_templates):
+    parsed = blib.parse_text(subsectext)
+    pos = None
+    lemma = None
+    for t in parsed.filter_templates():
+      tn = tname(t)
+      def getp(param):
+        return getparam(t, param)
+      if tn == "head":
+        verify_lang(t)
+        if pos:
+          pagemsg("WARNING: Saw two headwords: <<%s>>" % subsectext)
+          raise BreakException()
+        pos = getp("2")
+        if pos in head_lemma_poses:
+          lemma = True
+        elif pos in head_nonlemma_poses:
+          pass
+        else:
+          pagemsg("WARNING: Strange pos=%s for %s: <<%s>" % (pos, lemma_pos, subsectext))
+          raise BreakException()
+      if tn in special_templates:
+        if pos:
+          pagemsg("WARNING: Saw two headwords: <<%s>>" % subsectext)
+          raise BreakException()
+        pos = special_templates[tn]
+        if not pos.endswith(" form"):
+          lemma = True
+      if tn in allowable_form_of_templates or tn in infltags.generic_inflection_of_templates:
+        verify_lang(t)
+        if pos is None:
+          pagemsg("WARNING: Didn't see headword template in %s section: <<%s>>" % (lemma_pos, subsectext))
+          raise BreakException()
+        if lemma is True:
+          pagemsg("WARNING: Saw form-of template %s in lemma %s section: <<%s>>" % (unicode(t), lemma_pos, subsectext))
+          raise BreakException()
+        if lemma:
+          pagemsg("WARNING: Saw two form-of templates in lemma %s section, second is %s: <<%s>>" %
+            (lemma_pos, unicode(t), subsectext))
+        lemma = getp("2")
+    if lemma is None:
+      pagemsg("WARNING: Unable to locate lemma in nonlemma %s section: <<%s>>" % (lemma_pos, subsectext))
+      raise BreakException()
+    return pos, lemma
+
+  def contains_any(lst, items):
+    return any(item in lst for item in items)
+
+  text_before_etym_sections = []
+  text_for_etym_sections = []
+  this_notes = []
+
+  def process_etym_section(secno, sectext, is_etym_section):
+    split_etym_sections = []
+    goes_in_all_at_top = []
+    goes_at_top_of_first_etym_section = ""
+    last_etym_section = None
+    subsections = re.split("(^==+[^=\n]+==+\n)", sectext, 0, re.M)
+    if not is_etym_section:
+      text_before_etym_sections.append(subsections[0])
+    else:
+      goes_at_top_of_first_etym_section = subsections[0]
+    for k in xrange(2, len(subsections), 2):
+      pos = None
+      lemma = None
+      if "=Pronunciation=" in subsections[k - 1]:
+        if is_etym_section:
+          goes_in_all_at_top.append(k)
+        else:
+          text_before_etym_sections.append(subsections[k - 1])
+          text_before_etym_sections.append(subsections[k])
+      elif "=Etymology=" in subsections[k - 1]:
+        if is_etym_section:
+          pagemsg("WARNING: Saw =Etymology= in etym section")
+          raise BreakException()
+        goes_at_top_of_first_etym_section = subsections[k]
+      elif "=Alternative forms=" in subsections[k - 1]:
+        # If =Alternative forms= at top, treat like =Pronunciation=; otherwise, append to
+        # end of last etym section.
+        if last_etym_section is None:
+          if is_etym_section:
+            goes_in_all_at_top.append(k)
+          else:
+            text_before_etym_sections.append(subsections[k - 1])
+            text_before_etym_sections.append(subsections[k])
+        else:
+          existing_poses, existing_lemmas, existing_sections = split_etym_sections[last_etym_section]
+          existing_sections.append((k, None))
+      elif "=Adjective=" in subsections[k - 1]:
+        pos, lemma = extract_pos_and_lemma(subsections[k], "adjective", {"adjective"}, {"adjective form"},
+            {"it-adj": "adjective", "it-adj-sup": "adjective", "it-adj-form": "adjective form"},
+            {"adj form of", "plural of", "masculine plural of", "feminine singular of", "feminine plural of"})
+      elif "=Participle=" in subsections[k - 1]:
+        pos, lemma = extract_pos_and_lemma(subsections[k], "participle", {"participle", "present participle", "past participle"},
+            {"participle form", "past participle form"},
+            {"it-pp": "past participle"},
+            {"masculine plural of", "feminine singular of", "feminine plural of"})
+      elif "=Noun=" in subsections[k - 1]:
+        pos, lemma = extract_pos_and_lemma(subsections[k], "noun", {"noun"}, {"noun form"},
+            {"it-noun": "noun", "it-plural noun": "noun"}, {"noun form of", "plural of"})
+      elif "=Verb=" in subsections[k - 1]:
+        # FIXME, handle {{it-compound of}}
+        pos, lemma = extract_pos_and_lemma(subsections[k], "verb", {"verb"}, {"verb form"},
+            {"it-verb": "verb"}, {"verb form of"})
+      elif "=Adverb=" in subsections[k - 1]:
+        pos, lemma = extract_pos_and_lemma(subsections[k], "adverb", {"adverb"}, [],
+            {"it-adv": "adverb"}, [])
+      elif "=Interjection=" in subsections[k - 1]:
+        pos, lemma = extract_pos_and_lemma(subsections[k], "interjection", {"interjection"}, [],
+            {}, [])
+      elif "=Preposition=" in subsections[k - 1]:
+        pos, lemma = extract_pos_and_lemma(subsections[k], "preposition", {"preposition"}, [],
+            {}, [])
+      elif "=Conjunction=" in subsections[k - 1]:
+        pos, lemma = extract_pos_and_lemma(subsections[k], "conjunction", {"conjunction"}, [],
+            {}, [])
+      elif re.search(r"=\s*(Synonyms|Antonyms|Hyponyms|Hypernyms|Coordinate terms|Derived terms|Related terms|Descendants|Usage notes|References|Further reading|See also|Conjugation|Declension|Inflection)\s*=", subsections[k - 1]):
+        if last_etym_section is None:
+          pagemsg("WARNING: Saw section header %s without preceding lemma or non-lemma form" %
+              subsections[k - 1].strip())
+          raise BreakException()
+        existing_poses, existing_lemmas, existing_sections = split_etym_sections[last_etym_section]
+        existing_sections.append((k, None))
+      else:
+        pagemsg("WARNING: Unrecognized section header: %s" % subsections[k - 1].strip())
+        raise BreakException()
+
+      if pos:
+        for etym_section_no, (existing_poses, existing_lemmas, existing_sections) in enumerate(split_etym_sections):
+          ok_to_group = False
+          if pos in ["participle form", "past participle form", "adjective form"] and pagetitle.endswith("a"):
+            if contains_any(existing_poses, ["noun"]):
+              for existing_section, existing_section_pos in existing_sections:
+                if existing_section_pos == "noun":
+                  parsed = blib.parse_text(subsections[existing_section])
+                  for t in parsed.filter_templates():
+                    tn = tname(t)
+                    def getp(param):
+                      return getparam(t, param)
+                    if tn == "it-noun" and getp("m") or tn == "female equivalent of":
+                      pagemsg("Grouping %s in section %s with likely female equivalent noun in section %s; defn is %s" % (
+                        pos, k, existing_section, blib.find_defns(subsections[existing_section], "it")))
+                      ok_to_group = True
+                      break
+          if not ok_to_group and pos == "noun" and pagetitle.endswith("a"):
+            if contains_any(existing_poses, ["participle form", "adjective form"]):
+              for existing_section, existing_section_pos in existing_sections:
+                if existing_section_pos in ["participle form", "adjective form"]:
+                  parsed = blib.parse_text(subsections[k])
+                  for t in parsed.filter_templates():
+                    tn = tname(t)
+                    def getp(param):
+                      return getparam(t, param)
+                    if tn == "it-noun" and getp("m") or tn == "female equivalent of":
+                      pagemsg("Likely female equivalent noun in section %s, grouping with %s in section %s; defn is %s" % (
+                        k, existing_section_pos, existing_section, blib.find_defns(subsections[k], "it")))
+                      ok_to_group = True
+                      break
+          if not ok_to_group and ((
+              (pos in ["participle", "past participle", "adjective", "adverb", "noun", "interjection",
+                  "preposition", "conjunction"]
+                and contains_any(existing_poses, ["participle", "past participle", "adjective", "adverb", "noun",
+                  "interjection", "preposition", "conjunction"])
+              or pos in ["participle form", "past participle form", "adjective form", "noun form"]
+                and contains_any(existing_poses, ["participle form", "past participle form", "adjective form", "noun form"]))
+              and lemma in existing_lemmas)
+              or contains_any(existing_poses, [pos]) and lemma in existing_lemmas):
+            existing_sections_text = ",".join(
+              "%s:%s" % (existing_section, existing_section_pos) for existing_section, existing_section_pos in existing_sections)
+            pagemsg("Grouping %s section %s with %s section(s) %s" % (pos, k, ",".join(existing_poses), existing_sections_text))
+            ok_to_group = True
+
+          if ok_to_group:
+            existing_poses.append(pos)
+            existing_sections.append((k, pos))
+            existing_lemmas.append(lemma)
+            last_etym_section = etym_section_no
+            break
+
+        else: # no break
+          pagemsg("Creating new %s etym section %s for lemma %s" % (pos, k, lemma))
+          split_etym_sections.append(([pos], [lemma], [(k, pos)]))
+          last_etym_section = len(split_etym_sections) - 1
+
+    if len(split_etym_sections) <= 1:
+      text_for_etym_sections.append(sectext)
+    else:
+      first = True
+      for existing_poses, existing_lemmas, existing_sections in split_etym_sections:
+        etym_section_parts = []
+        if first:
+          etym_section_parts.append(goes_at_top_of_first_etym_section)
+          if not goes_at_top_of_first_etym_section.endswith("\n\n"):
+            etym_section_parts.append("\n")
+          first = False
+        else:
+          etym_section_parts.append("\n")
+        for goes_in_all_sec in goes_in_all_at_top:
+          etym_section_parts.append(subsections[goes_in_all_sec - 1])
+          etym_section_parts.append(subsections[goes_in_all_sec])
+        for existing_section, existing_section_pos in existing_sections:
+          etym_section_parts.append(subsections[existing_section - 1])
+          etym_section_parts.append(subsections[existing_section])
+        etym_section_text = "".join(etym_section_parts)
+        if not is_etym_section:
+          # Indent all subsections by one level.
+          etym_section_text = re.sub("^=(.*)=$", r"==\1==", etym_section_text, 0, re.M)
+        text_for_etym_sections.append(etym_section_text)
+      if is_etym_section:
+        this_notes.append("split ==Etymology %s== into %s sections" % (secno, len(split_etym_sections)))
+      else:
+        this_notes.append("split into %s Etymology sections" % len(split_etym_sections))
+
+  # Anagrams and such go after all etym sections and remain as such even if we start with non-etym-split text
+  # and end with multiple etym sections.
+  subsections_at_level_3 = re.split("(^===[^=\n]+===\n)", secbody, 0, re.M)
+  for last_included_sec in xrange(len(subsections_at_level_3) - 1, 0, -2):
+    if not re.search(r"^===\s*(References|See also|Derived terms|Related terms|Further reading|Anagrams)\s*=== *\n",
+        subsections_at_level_3[last_included_sec - 1]):
+      break
+  text_after_etym_sections = "".join(subsections_at_level_3[last_included_sec + 1:])
+  text_to_split_into_etym_sections = "".join(subsections_at_level_3[:last_included_sec + 1])
+
+  has_etym_1 = "==Etymology 1==" in text_to_split_into_etym_sections
+
+  try:
+    if not has_etym_1:
+      process_etym_section(1, text_to_split_into_etym_sections, is_etym_section=False)
+      if len(text_for_etym_sections) <= 1:
+        secbody = text_to_split_into_etym_sections + text_after_etym_sections
+      else:
+        secbody_parts = text_before_etym_sections
+        for k, text_for_etym_section in enumerate(text_for_etym_sections):
+          secbody_parts.append("===Etymology %s===\n" % (k + 1))
+          secbody_parts.append(text_for_etym_section)
+        secbody = "".join(secbody_parts) + text_after_etym_sections
+        notes.extend(this_notes)
+    else:
+      etym_sections = re.split("(^===Etymology [0-9]+===\n)", text_to_split_into_etym_sections, 0, re.M)
+      if len(etym_sections) < 5:
+        pagemsg("WARNING: Something wrong, saw 'Etymology 1' but didn't see two etym sections")
+      else:
+        for k in xrange(2, len(etym_sections), 2):
+          process_etym_section(k // 2, etym_sections[k], is_etym_section=True)
+        if text_before_etym_sections:
+          pagemsg("WARNING: Internal error: Should see empty text_before_etym_sections but saw: %s" %
+              text_before_etym_sections)
+        else:
+          secbody_parts = [etym_sections[0]]
+          for k, text_for_etym_section in enumerate(text_for_etym_sections):
+            secbody_parts.append("===Etymology %s===\n" % (k + 1))
+            secbody_parts.append(text_for_etym_section)
+          secbody = "".join(secbody_parts) + text_after_etym_sections
+          notes.extend(this_notes)
+
+  except BreakException:
+    # something went wrong, do nothing
+    pass
+
+  if "{{head|it|past participle form" in secbody:
+    newsectail = re.sub(r"\[\[(?:Category|category|CAT):\s*Italian past participle forms\s*\]\]\n?", "", sectail)
+    if newsectail != sectail:
+      notes.append("remove redundant explicit 'Italian past participle forms' category")
+      sectail = newsectail
+
   # Strip extra newlines added to secbody
   sections[j] = secbody.rstrip("\n") + sectail
   text = "".join(sections)
+
+  # Condense 3+ newlines; may have been added when removing redundant categories.
+  newtext = re.sub(r"\n\n+", "\n\n", text)
+  if newtext != text:
+    notes.append("condense 3+ newlines")
+    text = newtext
   return text, notes
 
 parser = blib.create_argparser("Clean up Italian past participle forms",
