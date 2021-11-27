@@ -81,7 +81,7 @@ def process_text_on_page(index, pagetitle, text):
           return "|%s" % "|".join(prons)
         else:
           return "|%s|inf=%s" % ("|".join(prons), inf)
-      m = re.search(r"^imperative(?: \((tu|noi|voi?|singular|plural|let's|)(?: (?:form|person))?\))? of '*\[\[([^\[\]|]*?)\]\]'*(?:, '*\[\[([^\[\]|]*?)\]\]'*)? and '*\[\[([^\[\]|]*?)\]\]'*$", text)
+      m = re.search(r"^imperative(?: \(\[*(tu|noi|voi?|singular|plural|let's|)\]*(?: (?:form|person))?\))? of '*\[\[([^\[\]|]*?)\]\]'*(?:, '*\[\[([^\[\]|]*?)\]\]'*)? and '*\[\[([^\[\]|]*?)\]\]'*$", text)
       if m:
         imp_pers, inf, pron1, pron2 = m.groups()
         if not imp_pers:
@@ -146,11 +146,16 @@ def process_text_on_page(index, pagetitle, text):
       return origtext
     return "# {{it-compound of%s}}\n" % retval
 
-  secbody = re.sub(r"# (Compound of.*?\.*)\n", fix_compound_of, secbody)
-  newsecbody = secbody.replace("{{head|it|combined form}}", "{{head|it|verb form}}")
-  if newsecbody != secbody:
-    notes.append("replace {{head|it|combined form}} with {{head|it|verb form}}")
-    secbody = newsecbody
+  hacked_secbody = re.sub(r"# \[\[[Cc]ompound\|[Cc]ompound\]\]", "# Compound", secbody)
+  hacked_secbody = re.sub(r"# compound", "# Compound", hacked_secbody)
+  hacked_secbody = re.sub(r"# \{\{(?:non-gloss definition|n-g)\|[Cc]ompound (.*)\}\}", r"# Compound \1", hacked_secbody)
+  fixed_secbody = re.sub(r"# (Compound of.*?\.*)\n", fix_compound_of, hacked_secbody)
+  if "{{it-compound of" in fixed_secbody:
+    newsecbody = re.sub(r"\{\{head\|it\|combined forms?\}\}", "{{head|it|verb form}}", fixed_secbody)
+    if newsecbody != fixed_secbody:
+      notes.append("replace {{head|it|combined form}} with {{head|it|verb form}}")
+      fixed_secbody = newsecbody
+    secbody = fixed_secbody
 
   # Strip extra newlines added to secbody
   sections[j] = secbody.rstrip("\n") + sectail
