@@ -60,9 +60,9 @@ def errmsgn(text):
   msgn(text)
   errmsgn(text)
 
-def rsub_repeatedly(fr, to, text):
+def rsub_repeatedly(fr, to, text, count=0, flags=0):
   while True:
-    newtext = re.sub(fr, to, text)
+    newtext = re.sub(fr, to, text, count, flags)
     if newtext == text:
       return text
     text = newtext
