@@ -2,9 +2,6 @@
 # -*- coding: utf-8 -*-
 
 import pywikibot, re, sys, codecs, argparse
-import difflib
-import unicodedata
-from collections import Counter
 
 import blib
 from blib import getparam, rmparam, msg, site, tname, pname
@@ -14,6 +11,8 @@ refs_re = "(Olivetti|DiPI|Treccani|DOP)"
 
 # FIXME: Handle two 'n:' references for the same pronunciation. Separate with " !!! " in a single param and fix the
 # underlying code to support this format. (DONE)
+
+seen_pages = set()
 
 def process_page(index, page, spec):
   global args
@@ -27,6 +26,10 @@ def process_page(index, page, spec):
     pagemsg("WARNING: Unrecognized pronunciation spec: %s" % spec)
     return
   location, pronspecs = m.groups()
+  if (pagetitle, location) in seen_pages:
+    pagemsg("WARNING: Already saw page, skipping")
+    return
+  seen_pages.add((pagetitle, location))
   pronspecs = [pronspec.replace("_", " ") for pronspec in pronspecs.split(" ")]
   if args.old_it_ipa:
     prons = []
@@ -77,18 +80,21 @@ def process_page(index, page, spec):
     refs = []
     have_footnotes = False
     for pronspec in pronspecs:
-      pronspec_parts = re.split("(<r:(?:<<.*?>>|[^<>])*>)", pronspec)
+      pronspec_parts = re.split("(<r:[^<>]*)", pronspec)
       for i, pronspec_part in enumerate(pronspec_parts):
         if i % 2 == 1: # a reference
-          if not re.search(r"^<r:%s\b" % refs_re, pronspec_part):
-            pagemsg("WARNING: Unrecognized reference %s: pronspec=%s" % (pronspec_part, spec))
-            return
-          ref_template_text = pronspec_part[3:-1]
-          # If the argument to the reference template is the page title, remove it.
-          m = re.search(r"^%s\|(.*)$" % refs_re, ref_template_text)
-          if m and m.group(2) == pagetitle:
-            ref_template_text = m.group(1)
-          pronspec_parts[i] = "<ref:{{R:it:%s}}>" % ref_template_text
+          if pronspec_part == "<r:": # a cross-reference to another reference
+            pronspec_parts[i] = "<ref:"
+          else:
+            if not re.search(r"^<r:%s\b" % refs_re, pronspec_part):
+              pagemsg("WARNING: Unrecognized reference %s: pronspec=%s" % (pronspec_part, spec))
+              return
+            ref_template_text = pronspec_part[3:]
+            # If the argument to the reference template is the page title, remove it.
+            m = re.search(r"^%s\|(.*)$" % refs_re, ref_template_text)
+            if m and m.group(2) == pagetitle:
+              ref_template_text = m.group(1)
+            pronspec_parts[i] = "<ref:{{R:it:%s}}" % ref_template_text
       pronspec = "".join(pronspec_parts)
       if "<ref:" in pronspec:
         have_footnotes = True # <r: or original <ref:
@@ -373,14 +379,9 @@ def get_items(lines):
     else:
       yield m.groups()
 
-seen_pages = set()
 for _, (index, pagetitle, spec) in blib.iter_items(get_items(lines), start, end, get_name=lambda x:x[1], get_index=lambda x:x[0]):
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
-  if pagetitle in seen_pages:
-    pagemsg("WARNING: Already saw page, skipping")
-    continue
-  seen_pages.add(pagetitle)
   page = pywikibot.Page(site, pagetitle)
   if not page.exists():
     pagemsg("WARNING: Page doesn't exist, skipping")
