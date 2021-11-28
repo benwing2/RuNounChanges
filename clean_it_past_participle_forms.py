@@ -590,6 +590,14 @@ should be
 ...
 """
 
+no_split_etym = {
+  "corse",
+  "fessa",
+  "fesse",
+  "perite",
+  "provviste",
+}
+
 participle_inflections = [
   {"inflection": {"f", "s"}, "name": "feminine singular", "ending": "a", "gender": "f-s"},
   {"inflection": {"m", "p"}, "name": "masculine plural", "ending": "i", "gender": "m-p"},
@@ -646,13 +654,17 @@ def process_text_on_page(index, pagetitle, text):
         pplemma, should_be_lemma, unicode(t)))
       raise BreakException()
 
-  def check_unrecognized_params(t, allowed_params):
+  def check_unrecognized_params(t, allowed_params, no_break=False):
     for param in t.params:
       pn = pname(param)
       pv = unicode(param.value)
       if pn not in allowed_params:
         pagemsg("WARNING: Saw unrecognized param %s=%s: %s" % (pn, pv, unicode(t)))
-        raise BreakException()
+        if not no_break:
+          raise BreakException()
+        else:
+          return False
+    return True
 
   for k in xrange(2, len(subsections), 2):
     if re.search("==(Verb|Participle)==", subsections[k - 1]):
@@ -678,96 +690,119 @@ def process_text_on_page(index, pagetitle, text):
       newsubseck = subsections[k]
       try:
         # First split out any participle forms from {{inflection of}}
-        parsed = blib.parse_text(newsubseck)
-        for t in parsed.filter_templates():
-          tn = tname(t)
-          def getp(param):
-            return getparam(t, param)
+        while True:
+          # Loop repeatedly in case we have more than one {{inflection of}} (e.g. with [[erudite]]).
+          # After splitting an {{inflection of}} into two, we need to re-parse the text so that further
+          # changes don't stomp on the previous ones.
+          parsed = blib.parse_text(newsubseck)
+          made_a_change = False
+          for t in parsed.filter_templates():
+            tn = tname(t)
+            def getp(param):
+              return getparam(t, param)
 
-          if tn in infltags.generic_inflection_of_templates:
-            addltemp = None
-            addltemp_arg = None
-            removed_tag_set = None
-            tags, params, lang, term, tr, alt = (
-              infltags.extract_tags_and_nontag_params_from_inflection_of(t, this_sec_notes)
-            )
-            verify_lang(t, lang)
-            if params or tr or alt:
-              pagemsg("WARNING: Saw extra parameters in {{%s}}, skipping: %s" % (tn, unicode(t)))
-              raise BreakException()
-            tag_sets = infltags.split_tags_into_tag_sets(tags)
-            filtered_tag_sets = []
-            did_remove = False
-            for tag_set in tag_sets:
-              newtemp = None
-              tag_set_set = {"part" if tag == "ptcp" else tag for tag in tag_set}
-              if any(re.search("[123]", tag) for tag in tag_set):
-                filtered_tag_sets.append(tag_set)
-              elif tag_set_set == {"p"}:
-                # We will convert this again to {{masculine/feminine plural of}}, which will verify any issues
-                newtemp = "plural of"
-              elif tag_set_set == {"past", "part"} or tag_set_set == {"m", "s", "past", "part"}:
-                # We will verify any issues below for the converted template
-                newtemp = "past participle of"
-              else:
-                for inflection in participle_inflections:
-                  infl_tags = inflection["inflection"]
-                  name = inflection["name"]
-                  ending = inflection["ending"]
-                  if tag_set_set == infl_tags:
-                    # We will verify any issues below for the converted template
-                    newtemp = "%s of" % name
-                    break
-                  elif tag_set_set == infl_tags | {"past", "part"}:
-                    # We will convert this again to {{masculine/feminine plural of}} or {{feminine singular of}},
-                    # which will verify any issues
-                    newtemp = "%s past participle of" % name
-                    break
-                else: # no break
-                  pagemsg("WARNING: Unrecognized non-personal tag set %s: %s" % ("|".join(tag_set), unicode(t)))
-                  raise BreakException()
-              if newtemp:
-                if addltemp:
-                  pagemsg("WARNING: Saw more than one past participle form in {{%s}}: {{%s|it|%s}} and {{%s|it|%s}}" % (
-                    tn, addltemp, addltemp_arg, newtemp, term))
-                  raise BreakException()
-                addltemp = newtemp
-                addltemp_arg = term
-                removed_tag_set = tag_set
-
-            if addltemp and not filtered_tag_sets:
-              blib.set_template_name(t, addltemp)
-              del t.params[:]
-              t.add("1", "it")
-              t.add("2", addltemp_arg)
-              this_sec_notes.append("replace {{%s}} with {{%s}}" % (tn, addltemp))
-              newsubseck = unicode(parsed)
-            elif filtered_tag_sets and not addltemp:
-              new_tags = infltags.combine_tag_set_group(filtered_tag_sets)
-              if new_tags != tags:
-                infltags.put_back_new_inflection_of_params(t, this_sec_notes, new_tags, params, lang, term, tr, alt)
-                this_sec_notes.append("clean {{%s}}" % tn)
-                newsubseck = unicode(parsed)
-            elif addltemp and filtered_tag_sets:
-              new_tags = infltags.combine_tag_set_group(filtered_tag_sets)
-              m = re.search(r"\A(.*)^([^\n]*)%s([^\n]*)\n(.*)\Z" % re.escape(unicode(t)), newsubseck, re.S | re.M)
-              if not m:
-                pagemsg("WARNING: Something wrong, can't find %s in <<%s>>" % (unicode(t), newsubseck))
+            if tn in infltags.generic_inflection_of_templates:
+              addltemp = None
+              addltemp_arg = None
+              removed_tag_set = None
+              tags, params, lang, term, tr, alt = (
+                infltags.extract_tags_and_nontag_params_from_inflection_of(t, this_sec_notes)
+              )
+              verify_lang(t, lang)
+              if params or tr or alt:
+                pagemsg("WARNING: Saw extra parameters in {{%s}}, skipping: %s" % (tn, unicode(t)))
                 raise BreakException()
-              before_lines, before_on_line, after_on_line, after_lines = m.groups()
-              infltags.put_back_new_inflection_of_params(t, this_sec_notes, new_tags, params, lang, term, tr, alt)
-              newsubseck = "%s%s%s%s\n%s{{%s|it|%s}}%s\n%s" % (
-                before_lines, before_on_line, unicode(t), after_on_line, before_on_line, addltemp, addltemp_arg,
-                after_on_line, after_lines)
-              notes.append("remove %s from {{%s}} and replace with {{%s}}" % ("|".join(removed_tag_set), tn,
-                addltemp))
-            else:
-              pagemsg("WARNING: Something wrong, no tag sets remain and no new templates added: %s" % unicode(t))
-              raise BreakException()
+              tag_sets = infltags.split_tags_into_tag_sets(tags)
+              filtered_tag_sets = []
+              did_remove = False
+              for tag_set in tag_sets:
+                newtemp = None
+                tag_set_set = {"part" if tag == "ptcp" else tag for tag in tag_set}
+                if any(re.search("[123]", tag) for tag in tag_set):
+                  filtered_tag_sets.append(tag_set)
+                elif tag_set_set == {"p"}:
+                  # We will convert this again to {{masculine/feminine plural of}}, which will verify any issues
+                  newtemp = "plural of"
+                elif tag_set_set == {"past", "part"} or tag_set_set == {"m", "s", "past", "part"}:
+                  # We will verify any issues below for the converted template
+                  newtemp = "past participle of"
+                else:
+                  for inflection in participle_inflections:
+                    infl_tags = inflection["inflection"]
+                    name = inflection["name"]
+                    ending = inflection["ending"]
+                    if tag_set_set == infl_tags:
+                      # We will verify any issues below for the converted template
+                      newtemp = "%s of" % name
+                      break
+                    elif tag_set_set == infl_tags | {"past", "part"}:
+                      # We will convert this again to {{masculine/feminine plural of}} or {{feminine singular of}},
+                      # which will verify any issues
+                      newtemp = "%s past participle of" % name
+                      break
+                  else: # no break
+                    pagemsg("WARNING: Unrecognized non-personal tag set %s: %s" % ("|".join(tag_set), unicode(t)))
+                    raise BreakException()
+                if newtemp:
+                  if addltemp:
+                    pagemsg("WARNING: Saw more than one past participle form in {{%s}}: {{%s|it|%s}} and {{%s|it|%s}}" % (
+                      tn, addltemp, addltemp_arg, newtemp, term))
+                    raise BreakException()
+                  addltemp = newtemp
+                  addltemp_arg = term
+                  removed_tag_set = tag_set
+
+              if addltemp and not filtered_tag_sets:
+                blib.set_template_name(t, addltemp)
+                del t.params[:]
+                t.add("1", "it")
+                t.add("2", addltemp_arg)
+                this_sec_notes.append("replace {{%s}} with {{%s}}" % (tn, addltemp))
+                made_a_change = True
+                newsubseck = unicode(parsed)
+              elif filtered_tag_sets and not addltemp:
+                new_tags = infltags.combine_tag_set_group(filtered_tag_sets)
+                if new_tags != tags:
+                  infltags.put_back_new_inflection_of_params(t, this_sec_notes, new_tags, params, lang, term, tr, alt)
+                  this_sec_notes.append("clean {{%s}}" % tn)
+                  made_a_change = True
+                  newsubseck = unicode(parsed)
+              elif addltemp and filtered_tag_sets:
+                new_tags = infltags.combine_tag_set_group(filtered_tag_sets)
+                m = re.search(r"\A(.*)^([^\n]*)%s([^\n]*)\n(.*)\Z" % re.escape(unicode(t)), newsubseck, re.S | re.M)
+                if not m:
+                  pagemsg("WARNING: Something wrong, can't find %s in <<%s>>" % (unicode(t), newsubseck))
+                  raise BreakException()
+                before_lines, before_on_line, after_on_line, after_lines = m.groups()
+                infltags.put_back_new_inflection_of_params(t, this_sec_notes, new_tags, params, lang, term, tr, alt)
+                this_sec_notes.append("remove %s from {{%s}} and replace with {{%s}}" % ("|".join(removed_tag_set), tn,
+                  addltemp))
+                made_a_change = True
+                newsubseck = "%s%s%s%s\n%s{{%s|it|%s}}%s\n%s" % (
+                  before_lines, before_on_line, unicode(t), after_on_line, before_on_line, addltemp, addltemp_arg,
+                  after_on_line, after_lines)
+              else:
+                pagemsg("WARNING: Something wrong, no tag sets remain and no new templates added: %s" % unicode(t))
+                raise BreakException()
+              
+              if made_a_change:
+                # Break the for-loop over templates. Re-parse and start again from the top.
+                break
+
+          if not made_a_change:
+            # Break the 'while True' loop.
+            break
 
         # Now replace {{masculine/feminine plural past participle of}}, {{feminine singular past participle of}} and
         # {{plural of}} with regular past participle inflection templates.
         parsed = blib.parse_text(newsubseck)
+
+        actual_lemmas_seen = set()
+        lemmas_seen = set()
+        def add_lemma(lemma):
+          actual_lemmas_seen.add(lemma)
+          lemma = re.sub("rsi$", "re", lemma)
+          lemmas_seen.add(lemma)
 
         for t in parsed.filter_templates():
           tn = tname(t)
@@ -788,6 +823,13 @@ def process_text_on_page(index, pagetitle, text):
               this_sec_notes.append("convert known erroneous 'feminine singular' to 'feminine plural'")
             else:
               verify_past_participle_inflection(t, name, nameprops["ending"])
+            if getp("2").endswith("ato"):
+              # Blah. Tons of SemperBlottoBot errors of this sort. Ignore them.
+              pagemsg("Ignoring known error with past participle in place of infinitive: %s" % unicode(t))
+              add_lemma(re.sub("ato$", "are", getp("2")))
+            else:
+              verify_verb_lemma(t, getp("2"))
+              add_lemma(getp("2"))
             rmparam(t, "nocat")
             blib.set_template_name(t, "%s of" % name)
             t.add("2", pagetitle[:-1] + "o")
@@ -815,6 +857,7 @@ def process_text_on_page(index, pagetitle, text):
             if tn == "past participle of":
               verify_past_participle(t, pagetitle)
               verify_verb_lemma(t, getp("2"))
+              add_lemma(getp("2"))
             else:
               name = tn[:-3] # remove " of"
               props = participle_form_names_to_properties[name]
@@ -825,6 +868,29 @@ def process_text_on_page(index, pagetitle, text):
               rmparam(t, "nocat")
               this_sec_notes.append("remove nocat=1 from {{%s}}" % tn)
               newsubseck = unicode(parsed)
+
+        if len(lemmas_seen) > 1:
+          pagemsg("WARNING: Saw past participles of multiple lemmas %s: <<%s>>" % (",".join(lemmas_seen), newsubseck))
+
+        # Now remove {{past participle of}} for reflexive verbs when the non-reflexive equivalent also exists.
+        parsed = blib.parse_text(newsubseck)
+        templates_to_remove = []
+        for t in parsed.filter_templates():
+          tn = tname(t)
+          def getp(param):
+            return getparam(t, param)
+          if tn == "past participle of":
+            lemma = getp("2")
+            if not check_unrecognized_params(t, ["1", "2"], no_break=True):
+              continue
+            if lemma.endswith("rsi") and re.sub("rsi$", "re", lemma) in actual_lemmas_seen:
+              templates_to_remove.append((t, lemma))
+        for t, lemma in templates_to_remove:
+          newnewsubseck, did_replace = blib.replace_in_text(newsubseck, "# %s\n" % unicode(t), "", pagemsg,
+            no_found_repl_check=True)
+          if did_replace:
+            this_sec_notes.append("remove past participle defn for reflexive %s because equivalent non-reflexive defn already exists" % lemma)
+            newsubseck = newnewsubseck
 
         # Now split {{inflection of}} and {{masculine/feminine plural of}}/{{feminine singular of}} under the same
         # header. Also correct header POS and headword POS as needed, add gender to past participle form headword
@@ -1170,9 +1236,14 @@ def process_text_on_page(index, pagetitle, text):
                       return getparam(t, param)
                     if tn == "it-noun" and getp("m") or tn == "female equivalent of":
                       pagemsg("Grouping %s in section %s with likely female equivalent noun in section %s; defn is %s" % (
-                        pos, k, existing_section, blib.find_defns(subsections[existing_section], "it")))
+                        pos, k, existing_section, ";".join(blib.find_defns(subsections[existing_section], "it"))))
                       ok_to_group = True
                       break
+                  if ok_to_group:
+                    break
+                  else:
+                    pagemsg("Not grouping %s in section %s with likely non-female-equivalent noun in section %s; defn is %s" % (
+                      pos, k, existing_section, ";".join(blib.find_defns(subsections[existing_section], "it"))))
           if not ok_to_group and pos == "noun" and pagetitle.endswith("a"):
             if contains_any(existing_poses, ["participle form", "adjective form"]):
               for existing_section, existing_section_pos in existing_sections:
@@ -1184,9 +1255,14 @@ def process_text_on_page(index, pagetitle, text):
                       return getparam(t, param)
                     if tn == "it-noun" and getp("m") or tn == "female equivalent of":
                       pagemsg("Likely female equivalent noun in section %s, grouping with %s in section %s; defn is %s" % (
-                        k, existing_section_pos, existing_section, blib.find_defns(subsections[k], "it")))
+                        k, existing_section_pos, existing_section, ";".join(blib.find_defns(subsections[k], "it"))))
                       ok_to_group = True
                       break
+                  if ok_to_group:
+                    break
+                  else:
+                    pagemsg("Likely non-female-equivalent noun in section %s, not grouping with %s in section %s; defn is %s" % (
+                      k, existing_section_pos, existing_section, ";".join(blib.find_defns(subsections[k], "it"))))
           if not ok_to_group and ((
               (pos in ["participle", "past participle", "adjective", "adverb", "noun", "interjection",
                   "preposition", "conjunction"]
@@ -1242,57 +1318,68 @@ def process_text_on_page(index, pagetitle, text):
       else:
         this_notes.append("split into %s Etymology sections" % len(split_etym_sections))
 
-  # Anagrams and such go after all etym sections and remain as such even if we start with non-etym-split text
-  # and end with multiple etym sections.
-  subsections_at_level_3 = re.split("(^===[^=\n]+===\n)", secbody, 0, re.M)
-  for last_included_sec in xrange(len(subsections_at_level_3) - 1, 0, -2):
-    if not re.search(r"^===\s*(References|See also|Derived terms|Related terms|Further reading|Anagrams)\s*=== *\n",
-        subsections_at_level_3[last_included_sec - 1]):
-      break
-  text_after_etym_sections = "".join(subsections_at_level_3[last_included_sec + 1:])
-  text_to_split_into_etym_sections = "".join(subsections_at_level_3[:last_included_sec + 1])
+  if pagetitle in no_split_etym:
+    pagemsg("Not splitting etymologies because page listed in no_split_etym")
+  else:
+    # Anagrams and such go after all etym sections and remain as such even if we start with non-etym-split text
+    # and end with multiple etym sections.
+    subsections_at_level_3 = re.split("(^===[^=\n]+===\n)", secbody, 0, re.M)
+    for last_included_sec in xrange(len(subsections_at_level_3) - 1, 0, -2):
+      if not re.search(r"^===\s*(References|See also|Derived terms|Related terms|Further reading|Anagrams)\s*=== *\n",
+          subsections_at_level_3[last_included_sec - 1]):
+        break
+    text_after_etym_sections = "".join(subsections_at_level_3[last_included_sec + 1:])
+    text_to_split_into_etym_sections = "".join(subsections_at_level_3[:last_included_sec + 1])
 
-  has_etym_1 = "==Etymology 1==" in text_to_split_into_etym_sections
+    has_etym_1 = "==Etymology 1==" in text_to_split_into_etym_sections
 
-  try:
-    if not has_etym_1:
-      process_etym_section(1, text_to_split_into_etym_sections, is_etym_section=False)
-      if len(text_for_etym_sections) <= 1:
-        secbody = text_to_split_into_etym_sections + text_after_etym_sections
-      else:
-        secbody_parts = text_before_etym_sections
-        for k, text_for_etym_section in enumerate(text_for_etym_sections):
-          secbody_parts.append("===Etymology %s===\n" % (k + 1))
-          secbody_parts.append(text_for_etym_section)
-        secbody = "".join(secbody_parts) + text_after_etym_sections
-        notes.extend(this_notes)
-    else:
-      etym_sections = re.split("(^===Etymology [0-9]+===\n)", text_to_split_into_etym_sections, 0, re.M)
-      if len(etym_sections) < 5:
-        pagemsg("WARNING: Something wrong, saw 'Etymology 1' but didn't see two etym sections")
-      else:
-        for k in xrange(2, len(etym_sections), 2):
-          process_etym_section(k // 2, etym_sections[k], is_etym_section=True)
-        if text_before_etym_sections:
-          pagemsg("WARNING: Internal error: Should see empty text_before_etym_sections but saw: %s" %
-              text_before_etym_sections)
+    try:
+      if not has_etym_1:
+        process_etym_section(1, text_to_split_into_etym_sections, is_etym_section=False)
+        if len(text_for_etym_sections) <= 1:
+          secbody = text_to_split_into_etym_sections + text_after_etym_sections
         else:
-          secbody_parts = [etym_sections[0]]
+          secbody_parts = text_before_etym_sections
           for k, text_for_etym_section in enumerate(text_for_etym_sections):
             secbody_parts.append("===Etymology %s===\n" % (k + 1))
             secbody_parts.append(text_for_etym_section)
           secbody = "".join(secbody_parts) + text_after_etym_sections
           notes.extend(this_notes)
+      else:
+        etym_sections = re.split("(^===Etymology [0-9]+===\n)", text_to_split_into_etym_sections, 0, re.M)
+        if len(etym_sections) < 5:
+          pagemsg("WARNING: Something wrong, saw 'Etymology 1' but didn't see two etym sections")
+        else:
+          for k in xrange(2, len(etym_sections), 2):
+            process_etym_section(k // 2, etym_sections[k], is_etym_section=True)
+          if text_before_etym_sections:
+            pagemsg("WARNING: Internal error: Should see empty text_before_etym_sections but saw: %s" %
+                text_before_etym_sections)
+          else:
+            secbody_parts = [etym_sections[0]]
+            for k, text_for_etym_section in enumerate(text_for_etym_sections):
+              secbody_parts.append("===Etymology %s===\n" % (k + 1))
+              secbody_parts.append(text_for_etym_section)
+            secbody = "".join(secbody_parts) + text_after_etym_sections
+            notes.extend(this_notes)
 
-  except BreakException:
-    # something went wrong, do nothing
-    pass
+    except BreakException:
+      # something went wrong, do nothing
+      pass
 
   if "{{head|it|past participle form" in secbody:
     newsectail = re.sub(r"\[\[(?:Category|category|CAT):\s*Italian past participle forms\s*\]\]\n?", "", sectail)
     if newsectail != sectail:
       notes.append("remove redundant explicit 'Italian past participle forms' category")
       sectail = newsectail
+    newsecbody = re.sub(r"\|cat2=past participle forms([|}])", r"\1", secbody)
+    if newsecbody != secbody:
+      notes.append("remove redundant explicit '|cat2=past participle forms'")
+      secbody = newsecbody
+  if re.search(r"\[\[(?:Category|category|CAT):\s*Italian past participle forms\s*\]\]", secbody + sectail):
+    pagemsg("WARNING: Explicit category 'Italian past participle forms' still remains")
+  if re.search(r"cat2\s*=\s*past participle forms", secbody + sectail):
+    pagemsg("WARNING: Explicit 'cat2=past participle forms' still remains")
 
   # Strip extra newlines added to secbody
   sections[j] = secbody.rstrip("\n") + sectail
