@@ -757,11 +757,11 @@ local function parse_multiword_spec(segments, props, disable_allow_default_indic
 	for i = 2, #segments - 1, 2 do
 		local before_text, before_text_translit, lemma =
 			parse_before_or_post_text(props, segments[i - 1], segments, "lemma is last")
-		local base = props.parse_indicator_spec(segments[i])
+		local base = props.parse_indicator_spec(segments[i], lemma)
 		base.before_text = before_text
 		base.before_text_no_links = m_links.remove_links(base.before_text)
 		base.before_text_translit = before_text_translit
-		base.lemma = lemma
+		base.lemma = base.lemma or lemma
 		table.insert(multiword_spec.word_specs, base)
 	end
 	multiword_spec.post_text, multiword_spec.post_text_translit =
@@ -807,10 +807,10 @@ be inflected, and may have alternants indicated using double parens. Examples:
 
 `props` is an object specifying properties used during parsing, as follows:
 {
-  parse_indicator_spec = FUNCTION_TO_PARSE_AN_INDICATOR_SPEC (required; takes one argument,
-                           a string surrounded by angle brackets, and should return a
-						   word_spec object containing properties describing the indicators
-						   inside of the angle brackets),
+  parse_indicator_spec = FUNCTION_TO_PARSE_AN_INDICATOR_SPEC (required; takes two arguments,
+                           a string surrounded by angle brackets and the lemma, and should
+                           return a word_spec object containing properties describing the
+                           indicators inside of the angle brackets),
   lang = LANG_OBJECT (only needed if manual translit or respelling may be present using //),
   transliterate_respelling = FUNCTION_TO_TRANSLITERATE_RESPELLING (only needed of respelling
                                is allowed in place of manual translit after //; takes one
