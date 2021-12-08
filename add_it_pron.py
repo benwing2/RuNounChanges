@@ -260,7 +260,7 @@ def process_page(index, page, spec):
 
     for k in xrange(2, len(subsections), 2):
       if "==Etymology %s==" % location in subsections[k - 1]:
-        begin_etym_n_section = k - 1
+        begin_etym_n_section = k
       elif re.search("==Etymology [0-9]", subsections[k - 1]):
         if begin_etym_n_section:
           # We encountered the next Etymology section and didn't see Pronunciation; insert a Pronunciation section.
