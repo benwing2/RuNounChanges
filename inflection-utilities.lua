@@ -349,6 +349,11 @@ function export.insert_forms(formtable, slot, forms)
 end
 
 
+function export.identity(form, translit)
+	return form, translit
+end
+
+
 -- Map a function over the form values in FORMS (a list of objects of the form
 -- {form=FORM, translit=MANUAL_TRANSLIT, footnotes=FOOTNOTES}). The function is called with
 -- two arguments, the original form and manual translit; if manual translit isn't relevant,
@@ -506,23 +511,38 @@ end
 
 -- Combine a single form (either a string or object {form = FORM, footnotes = FOOTNOTES, ...}) or a list of same
 -- along with footnotes and return a list of forms where each returned form is an object
--- {form = FORM, footnotes = FOOTNOTES, ...}.
+-- {form = FORM, footnotes = FOOTNOTES, ...}. If WORD_OR_WORDS is already in general list form and FOOTNOTES is nil,
+-- return WORD_OR_WORDS directly rather than copying it.
 function export.convert_to_general_list_form(word_or_words, footnotes)
+	if type(footnotes) == "string" then
+		footnotes = {footnotes}
+	end
 	if type(word_or_words) == "string" then
 		return {{form = word_or_words, footnotes = footnotes}}
 	elseif word_or_words.form then
 		return {export.combine_form_and_footnotes(word_or_words, footnotes)}
-	else
-		local retval = {}
+	elseif not footnotes then
+		-- Check if already in general list form and return directly if so.
+		local must_convert = false
 		for _, form in ipairs(word_or_words) do
 			if type(form) == "string" then
-				table.insert(retval, {form = form, footnotes = footnotes})
-			else
-				table.insert(retval, export.combine_form_and_footnotes(form, footnotes))
+				must_convert = true
+				break
 			end
 		end
-		return retval
+		if not must_convert then
+			return word_or_words
+		end
 	end
+	local retval = {}
+	for _, form in ipairs(word_or_words) do
+		if type(form) == "string" then
+			table.insert(retval, {form = form, footnotes = footnotes})
+		else
+			table.insert(retval, export.combine_form_and_footnotes(form, footnotes))
+		end
+	end
+	return retval
 end
 
 
