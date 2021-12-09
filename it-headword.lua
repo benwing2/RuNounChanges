@@ -1395,7 +1395,7 @@ pos_functions["verbs"] = {
 									unaccented_form = form
 									qualifiers = iut.combine_footnotes(qualifiers, {"[with written accent]"})
 								else
-									unaccented_form = rsub(form, com.AV, function(v) return usub(unfd(v), 1, 1) end)
+									unaccented_form = com.remove_accents(form)
 								end
 								if syntactic_gemination == "*" then
 									qualifiers = iut.combine_footnotes(qualifiers, {"[with following syntactic gemination]"})

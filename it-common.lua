@@ -28,6 +28,10 @@ local function rsub(term, foo, bar)
 	return retval
 end
 
+function export.remove_accents(form)
+	return rsub(form, export.AV, function(v) return usub(unfd(v), 1, 1) end)
+end
+
 function export.analyze_verb(lemma)
 	local is_pronominal = false
 	local is_reflexive = false
