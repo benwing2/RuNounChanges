@@ -2221,7 +2221,7 @@ Page 211 vuotazucchine: -------- begin text --------
 From {{af|it|vuotare|zucchina}}.
 
 ===Pronunciation===
-{{it-pr|vuòtadzucchìne,#vuòtatsucchìne<ref:{{R:it:Olivetti}} !!! {{R:it:DiPI}}>}}
+{{it-pr|vuòtadzucchìne,#vuòtatsucchìne<ref:{{R:it:Olivetti}}><ref:{{R:it:DiPI}}>}}
 
 ===Noun===
 {{it-noun|m|#}}
@@ -3065,10 +3065,16 @@ From {{der|it|lij|abaìn}}, {{m|lij|abæn}}. Confer {{m|it|abate||abbot}} ([[sla
 Page 297 abbai: Found match for regex: =
 Page 297 abbai: -------- begin text --------
 
+===Pronunciation===
+{{it-pr|abbà.i}}
+
 ===Verb===
 {{head|it|verb form}}
 
 # {{inflection of|it|abbaiare||2|s|pres|indc|;|1//2//3|s|pres|subj|;|3|s|impr}}
+
+===References===
+<references />
 
 ===Anagrams===
 * {{anagrams|it|a=aabbi|abbia}}
@@ -3570,9 +3576,15 @@ From {{inh|it|VL.|*pēsāre}}, from {{inh|it|la|pēnsāre}}, present active infi
 {{it-pr|pesàre,#pe[s]àre<ref:{{R:it:DiPI|pesa}}>}}
 
 ===Verb===
-{{it-verb|a:e/é}}
+{{it-verb|a[transitive or intransitive]:e[alternatively when intransitive]/é}}
 
-# {{lb|it|ambitransitive}} to [[weigh]]
+# {{lb|it|transitive|also|figurative}} to [[weigh]] {{gl|to measure the weight of}}
+# {{lb|it|intransitive}} to [[weigh]] (a specific amount) {{+aux|it|avere|essere}}
+# {{lb|it|intransitive}} to [[be]] [[heavy]] {{+aux|it|avere|essere}}
+# {{lb|it|intransitive}} to [[weigh on]], to [[burden]] {{+preo|it|su}} {{+aux|it|avere|essere}}
+# {{lb|it|intransitive|figurative}} to [[weigh on]], to be [[tiresome]] or [[unpleasant]] to {{+preo|it|a}} {{+aux|it|avere|essere}}
+# {{lb|it|intransitive|figurative}} to [[weigh on]], to be [[important]] or [[influential]] on {{+preo|it|su}} {{+aux|it|avere|essere}}
+# {{lb|it|intransitive|figurative}} to [[loom]] {{+preo|it|[[su]] [[di]]}} {{+aux|it|avere|essere}}
 
 ====Conjugation====
 {{it-conj-are|pes|avere or essere}}
@@ -3604,7 +3616,7 @@ Page 322 pesarsi: -------- begin text --------
 ===Verb===
 {{it-verb|é}}
 
-# {{lb|it|reflexive}} to [[weigh]] oneself (e.g. on bathroom scales)
+# {{lb|it|reflexive}} to [[weigh]] oneself {{q|e.g. on bathroom scales}}
 
 ====Conjugation====
 {{it-conj-arsi|pes|essere}}
@@ -5206,16 +5218,19 @@ Page 410 rispiegare: -------- begin text --------
 {{af|it|ri-|spiegare}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/è:é[ref:{{R:it:DiPI|spiego}}]}} {{tlb|it|transitive}}
 
-# {{lb|it|transitive}} to [[reexplain]]
-# {{lb|it|transitive}} to [[unfold]] again
+# to [[reexplain]]
+# to [[unfold]] again
 
 ====Conjugation====
 {{it-conj-care|rispieg|avere}}
 
 ===Further reading===
 * {{R:it:Treccani}}
+
+===References===
+<references />
 
 ===Anagrams===
 * {{anagrams|it|a=aeegiiprrs|presagirei}}
@@ -5507,38 +5522,50 @@ Page 432 avvio: -------- begin text --------
 ===Pronunciation===
 {{it-pr|avvìo}}
 
-===Noun===
+===Etymology 1===
+
+====Noun====
 {{it-noun|m|avvii}}
 
 # [[start]], [[beginning]]
-# [[startup]], [[start]], [[starting]], [[prompt]] (computer)
+# {{lb|it|computing}} [[startup]], [[start]], [[starting]], [[prompt]]
 
-====Related terms====
+=====Related terms=====
 * {{l|it|avviare}}
 * {{l|it|riavvio}}
 
-===Verb===
+===Etymology 2===
+
+====Verb====
 {{head|it|verb form}}
 
 # {{inflection of|it|avviare||1|s|pres|indc}}
 
 ===Anagrams===
 * {{anagrams|it|a=aiovv|ovvia}}
-
-{{C|it|Computing}}
 -------- end text --------
 Page 433 avvii: Found match for regex: =
 Page 433 avvii: -------- begin text --------
 
-===Noun===
+===Pronunciation===
+{{it-pr|avvìi}}
+
+===Etymology 1===
+
+====Noun====
 {{head|it|noun form|g=m}}
 
 # {{plural of|it|avvio}}
 
-===Verb===
+===Etymology 2===
+
+====Verb====
 {{head|it|verb form}}
 
 # {{inflection of|it|avviare||2|s|pres|indc|;|1//2//3|s|pres|subj|;|3|s|impr}}
+
+===References===
+<references />
 
 ===Anagrams===
 * {{anagrams|it|a=aiivv|vivai}}
@@ -5619,10 +5646,28 @@ From {{der|it|la|dēviō}}.
 Page 440 devio: Found match for regex: =
 Page 440 devio: -------- begin text --------
 
-===Verb===
+===Etymology 1===
+
+====Pronunciation====
+{{it-pr|dèvio<ref:{{R:it:DiPI}}<<name:dipi>>>}}
+
+====Adjective====
+{{it-adj}}
+
+# {{tlb|it|archaic|or|literary}} [[circuitous]], [[detour]]ing from the [[main]] [[road]]
+
+===Etymology 2===
+
+====Pronunciation====
+{{it-pr|devìo<ref:<<name:dipi>>>}}
+
+====Verb====
 {{head|it|verb form}}
 
 # {{inflection of|it|deviare||1|s|pres|indc}}
+
+===References===
+<references />
 
 ===Anagrams===
 * {{anagrams|it|a=deiov|dovei|video|video-}}
@@ -5632,6 +5677,9 @@ Page 440 devio: -------- begin text --------
 -------- end text --------
 Page 441 devii: Found match for regex: =
 Page 441 devii: -------- begin text --------
+
+===Pronunciation===
+{{it-pr|devìo<ref:<<name:dipi>>>}}
 
 ===Verb===
 {{head|it|verb form}}
@@ -5644,10 +5692,28 @@ Page 441 devii: -------- begin text --------
 Page 442 devia: Found match for regex: =
 Page 442 devia: -------- begin text --------
 
-===Verb===
+===Etymology 1===
+
+====Pronunciation====
+{{it-pr|devìa<ref:{{R:it:DiPI|devio}}<<name:dipi>>>}}
+
+====Verb====
 {{head|it|verb form}}
 
 # {{inflection of|it|deviare||3|s|pres|indc|;|2|s|impr}}
+
+===Etymology 2===
+
+====Pronunciation====
+{{it-pr|dèvia<ref:<<name:dipi>>>}}
+
+====Adjective====
+{{head|it|adjective form}}
+
+# {{adj form of|it|devio||f|s}}
+
+===References===
+<references />
 
 ===Anagrams===
 * {{anagrams|it|a=adeiv|avide|evadi}}
@@ -5658,6 +5724,9 @@ Page 442 devia: -------- begin text --------
 Page 444 deviano: Found match for regex: =
 Page 444 deviano: -------- begin text --------
 
+===Pronunciation===
+{{it-pr|devìano}}
+
 ===Verb===
 {{head|it|verb form}}
 
@@ -5665,6 +5734,9 @@ Page 444 deviano: -------- begin text --------
 -------- end text --------
 Page 445 deviino: Found match for regex: =
 Page 445 deviino: -------- begin text --------
+
+===Pronunciation===
+{{it-pr|devìino}}
 
 ===Verb===
 {{head|it|verb form}}
@@ -5767,7 +5839,7 @@ Page 453 forviare: Found match for regex: =
 Page 453 forviare: -------- begin text --------
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/ì}}
 
 # {{alternative form of|it|fuorviare}}
 
@@ -5827,10 +5899,12 @@ Page 461 fuorviare: -------- begin text --------
 * {{alter|it|forviare}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/ì}}
 
-# {{lb|it|transitive}} to [[lead astray]], [[lead someone down the garden path]]
-# {{lb|it|intransitive}} to [[go astray]]
+# {{lb|it|transitive}} to [[lead]] down the [[wrong]] [[path]]; to [[disorient]]
+# {{lb|it|transitive|figurative}} to [[mislead]], [[lead astray]], [[lead someone down the garden path]]
+# {{lb|it|intransitive|uncommon}} to [[detour]] {{+aux|it|avere}}
+# {{lb|it|intransitive|figurative}} to [[go astray]] {{+aux|it|avere}}
 
 ====Conjugation====
 {{it-conj-iare|fuorvi|avere|pres2s=fuorvii|sub123s=fuorvii|sub3p=fuorviino|imp3s=fuorvii|imp3p=fuorviino}}
@@ -5926,26 +6000,28 @@ Page 470 inviarsi: -------- begin text --------
 Page 471 invio: Found match for regex: =
 Page 471 invio: -------- begin text --------
 
-===Etymology===
-From {{m|it|inviare}}.
-
 ===Pronunciation===
 {{it-pr|invìo}}
 
-===Noun===
+===Etymology 1===
+{{deverbal|it|inviare}}.
+
+====Noun====
 {{it-noun|m|invii}}
 
 # [[sending]], [[dispatch]], [[delivery]]
 #: {{syn|it|spedizione|consegna}}
-# (''computer keyboard key'') [[enter]]
+# {{lb|it|computing}} [[enter]] {{i|computer keyboard key}}
 
-===Verb===
+====Further reading====
+* {{R:it:Treccani}}
+
+===Etymology 2===
+
+====Verb====
 {{head|it|verb form}}
 
 # {{inflection of|it|inviare||1|s|pres|ind}}
-
-===Further reading===
-* {{R:it:Treccani}}
 
 ===Anagrams===
 * {{anagrams|it|a=iinov|ovini}}
@@ -5956,12 +6032,19 @@ From {{m|it|inviare}}.
 Page 472 invii: Found match for regex: =
 Page 472 invii: -------- begin text --------
 
-===Noun===
+===Pronunciation===
+{{it-pr|invìi}}
+
+===Etymology 1===
+
+====Noun====
 {{head|it|noun form|g=m}}
 
 # {{plural of|it|invio}}
 
-===Verb===
+===Etymology 2===
+
+====Verb====
 {{head|it|verb form}}
 
 # {{inflection of|it|inviare||2|s|pres|indc|;|1//2//3|s|pres|subj|;|3|s|impr}}
@@ -6006,16 +6089,16 @@ Page 477 ovviare: Found match for regex: =
 Page 477 ovviare: -------- begin text --------
 
 ===Etymology===
-From {{etyl|la|it}} {{m|la|obviāre}}, present active infinitive of {{m|la|obviō}}.
+{{slbor|it|la|obviāre}}, present active infinitive of {{m|la|obviō}}.
 
 ===Pronunciation===
 {{it-pr|ovvi.àre,ovviàre<ref:{{R:it:DiPI}}>}}
 
 ===Verb===
-{{it-verb|a/ò:ì[traditional]}} {{tlb|it|intransitive}} {{+preo|it|a}}
+{{it-verb|a/ò:#ì}} {{tlb|it|intransitive}} {{+preo|it|a}}
 
-# to [[remedy]]
-# to [[obviate]]
+# to [[remedy]] {{+aux|it|avere}}
+# to [[obviate]] {{+aux|it|avere}}
 
 ====Conjugation====
 {{it-conj-iare|ovvi|avere|pres2s2=ovvii|sub123s2=ovvii|sub3p2=ovviino|imp3s2=ovvii|imp3p2=ovviino}}
@@ -6029,22 +6112,38 @@ From {{etyl|la|it}} {{m|la|obviāre}}, present active infinitive of {{m|la|obvi�
 Page 479 ovvio: Found match for regex: =
 Page 479 ovvio: -------- begin text --------
 
-===Etymology===
-From {{etyl|la|it}} {{m|la|obvius}}.
+===Etymology 1===
+{{slbor|la|it|obvius}}.
 
-===Pronunciation===
+====Pronunciation====
 {{it-pr|òvvio}}
 
-===Adjective===
+====Adjective====
 {{it-adj}}
 
 # [[obvious]]
 
-====Derived terms====
+=====Derived terms=====
 * {{l|it|ovviamente}}
+
+===Etymology 2===
+
+====Pronunciation====
+{{it-pr|òvvio,#ovvìo<ref:{{R:it:DiPI}}>}}
+
+====Verb====
+{{head|it|verb form}}
+
+# {{inflection of|it|ovviare||1|s|pres|indc}}
+
+===References===
+<references />
 -------- end text --------
 Page 480 ovvi: Found match for regex: =
 Page 480 ovvi: -------- begin text --------
+
+===Pronunciation===
+{{it-pr|òvvi}}
 
 ===Etymology 1===
 
@@ -6074,10 +6173,28 @@ Page 481 ovvii: -------- begin text --------
 Page 482 ovvia: Found match for regex: =
 Page 482 ovvia: -------- begin text --------
 
-===Adjective===
+===Etymology 1===
+
+====Pronunciation====
+{{it-pr|òvvia}}
+
+====Adjective====
 {{head|it|adjective form}}
 
 # {{feminine singular of|it|ovvio}}
+
+===Etymology 2===
+
+====Pronunciation====
+{{it-pr|òvvia,#ovvìa<ref:{{R:it:DiPI|ovvio}}>}}
+
+====Verb====
+{{head|it|verb form}}
+
+# {{inflection of|it|ovviare||3|s|pres|indc|;|2|s|impr}}
+
+===References===
+<references />
 
 ===Anagrams===
 * {{anagrams|it|a=aiovv|avvio|avviò}}
@@ -6149,7 +6266,7 @@ Page 488 ravviarsi: -------- begin text --------
 ===Verb===
 {{it-verb|ì}}
 
-# {{lb|it|transitive}} to [[tidy]] or [[tidy up]] (one's hair etc)
+# {{lb|it|transitive}} to [[tidy]] or [[tidy up]] (one's hair, etc.)
 
 ====Conjugation====
 {{it-conj-iarsi|ravvi|essere|pres2s=ravvii|sub123s=ravvii|sub3p=ravviino|imp3s=ravvii|imp3p=ravviino}}
@@ -6163,7 +6280,17 @@ Page 488 ravviarsi: -------- begin text --------
 Page 489 ravvio: Found match for regex: =
 Page 489 ravvio: -------- begin text --------
 
-===Verb===
+===Etymology 1===
+{{deverbal|it|ravviare}}.
+
+====Noun====
+{{it-noun|m|ravvii}}
+
+# {{tlb|it|rare}} [[tidy up|tidying up]]
+
+===Etymology 2===
+
+====Verb====
 {{head|it|verb form}}
 
 # {{inflection of|it|ravviare||1|s|pres|indc}}
@@ -6174,10 +6301,19 @@ Page 489 ravvio: -------- begin text --------
 Page 490 ravvii: Found match for regex: =
 Page 490 ravvii: -------- begin text --------
 
-===Verb===
+===Etymology 1===
+
+====Verb====
 {{head|it|verb form}}
 
 # {{inflection of|it|ravviare||2|s|pres|indc|;|1//2//3|s|pres|subj|;|3|s|impr}}
+
+===Etymology 2===
+
+====Noun====
+{{head|it|noun form}}
+
+# {{plural of|it|ravvio}}
 -------- end text --------
 Page 491 ravvia: Found match for regex: =
 Page 491 ravvia: -------- begin text --------
@@ -6216,10 +6352,10 @@ Page 495 riavviare: -------- begin text --------
 {{af|it|ri-|avviare}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/ì}} {{tlb|it|transitive}}
 
-# {{lb|it|transitive}} to [[restart]]
-# {{lb|it|transitive}} to [[reboot]]
+# to [[restart]]
+# {{lb|it|computing}} to [[reboot]]
 
 ====Conjugation====
 {{it-conj-iare|riavvi|avere|pres2s=riavvii|sub123s=riavvii|sub3p=riavviino|imp3s=riavvii|imp3p=riavviino}}
@@ -6235,7 +6371,7 @@ Page 496 riavviarsi: Found match for regex: =
 Page 496 riavviarsi: -------- begin text --------
 
 ===Verb===
-{{it-verb}}
+{{it-verb|ì}}
 
 # {{lb|it|reflexive}} to [[restart]]
 
@@ -6249,32 +6385,39 @@ Page 496 riavviarsi: -------- begin text --------
 Page 497 riavvio: Found match for regex: =
 Page 497 riavvio: -------- begin text --------
 
-===Noun===
+===Etymology 1===
+{{deverbal|it|riavviare}}.
+
+====Noun====
 {{it-noun|m|riavvii}}
 
-# [[reboot]], [[rebooting]]
+# {{lb|it|computing}} [[reboot]], [[rebooting]]
 # [[restart]]
 
-====Related terms====
+=====Related terms=====
 * {{l|it|avvio}}
 * {{l|it|riavviare}}
 
-===Verb===
+===Etymology 2===
+
+====Verb====
 {{head|it|verb form}}
 
 # {{inflection of|it|riavviare||1|s|pres|indc}}
-
-{{C|it|Computing}}
 -------- end text --------
 Page 498 riavvii: Found match for regex: =
 Page 498 riavvii: -------- begin text --------
 
-===Noun===
+===Etymology 1===
+
+====Noun====
 {{head|it|noun form|g=m}}
 
 # {{plural of|it|riavvio}}
 
-===Verb===
+===Etymology 2===
+
+====Verb====
 {{head|it|verb form}}
 
 # {{inflection of|it|riavviare||2|s|pres|indc|;|1//2//3|s|pres|subj|;|3|s|impr}}
@@ -6337,18 +6480,23 @@ Page 505 rinvio: -------- begin text --------
 ===Pronunciation===
 {{it-pr|rinvìo}}
 
-===Noun===
+===Etymology 1===
+{{deverbal|it|rinviare}}.
+
+====Noun====
 {{it-noun|m|rinvii}}
 
 # [[postponement]]
 # [[adjournment]]
 
-====Related terms====
+=====Related terms=====
 * {{l|it|invio}}
 * {{l|it|rinviare}}
 * {{l|it|rinvio a giudizio}}
 
-===Verb===
+===Etymology 2===
+
+====Verb====
 {{head|it|verb form}}
 
 # {{inflection of|it|rinviare||1|s|pres|indc}}
@@ -6413,7 +6561,7 @@ Page 511 risviare: -------- begin text --------
 {{prefix|it|ri|sviare}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/ì}}
 
 # to [[divert]], [[reroute]] etc. again
 
@@ -6458,7 +6606,7 @@ Page 520 sviarsi: Found match for regex: =
 Page 520 sviarsi: -------- begin text --------
 
 ===Verb===
-{{it-verb}}
+{{it-verb|ì}}
 
 # {{reflexive of|it|sviare}}
 # (with {{l|it|da}}) to [[go away]] or [[stray]] (from) (a certain place)
@@ -6475,7 +6623,22 @@ Page 520 sviarsi: -------- begin text --------
 Page 521 svio: Found match for regex: =
 Page 521 svio: -------- begin text --------
 
-===Verb===
+===Etymology 1===
+{{deverbal|it|sviare}}.
+
+====Noun====
+{{it-noun|m|svii}}
+
+# {{lb|it|rare}} [[deflection]] {{i|of an arrow, etc.}}, [[diversion]] {{i|of traffic, etc.}}
+# {{lb|it|railroad}} [[derailment]]
+# {{lb|it|literary}} [[digression]]
+
+=====Further reading=====
+* {{R:it:Olivetti}}
+
+===Etymology 2===
+
+====Verb====
 {{head|it|verb form}}
 
 # {{inflection of|it|sviare||1|s|pres|indc}}
@@ -6486,7 +6649,16 @@ Page 521 svio: -------- begin text --------
 Page 522 svii: Found match for regex: =
 Page 522 svii: -------- begin text --------
 
-===Verb===
+===Etymology 1===
+
+====Noun====
+{{head|it|noun form|g=m}}
+
+# {{plural of|it|svio}}
+
+===Etymology 2===
+
+====Verb====
 {{head|it|verb form}}
 
 # {{inflection of|it|sviare||2|s|pres|indc|;|1//2//3|s|pres|subj|;|3|s|impr}}
@@ -6537,7 +6709,7 @@ From {{af|it|tra|via|-are}}.<ref>{{R:it:etimo}}</ref>
 {{it-pr|traviàre,#travi.àre}}
 
 ===Verb===
-{{it-verb|a/à:ì[traditional, high-style]}}
+{{it-verb|a/à:#!ì}}
 
 # {{lb|it|transitive|literary}} to [[cause]] to [[detour]], to [[lead]] [[away]] the [[path]] [[travel]]ed
 # {{lb|it|transitive|figurative}} to [[lead astray]], to [[lead down the garden path]], to [[corrupt]]
@@ -6565,14 +6737,17 @@ Page 528 traviarsi: Found match for regex: =
 Page 528 traviarsi: -------- begin text --------
 
 ===Verb===
-{{it-verb|à:ì[traditional, high-style]}}
+{{it-verb|à:#!ì}}
 
 # {{reflexive of|it|traviare}}
 # {{lb|it|reflexive}} to be [[led astray]]
 # {{lb|it|reflexive}} to go off the [[straight and narrow]]
 
 ====Conjugation====
+;modern:
 {{it-conj-iarsi|travi}}
+;traditional/high-style:
+{{it-conj-iarsi|travi|essere|pres2s=travii|sub123s=travii|sub3p=traviino|imp3s=travii|imp3p=traviino}}
 
 ===Anagrams===
 * {{anagrams|it|a=aaiirrstv|arrivasti|arrivista}}
@@ -6594,11 +6769,16 @@ Page 530 travi: -------- begin text --------
 ===Pronunciation===
 {{it-pr|tràvi}}
 
-===Noun===
+===Etymology 1===
+
+====Noun====
 {{head|it|noun form|g=f}}
+
 # {{plural of|it|trave}}
 
-===Verb===
+===Etymology 2===
+
+====Verb====
 {{head|it|verb form}}
 
 # {{inflection of|it|traviare||2|s|pres|indc|;|1//2//3|s|pres|subj|;|3|s|impr}}
@@ -6649,7 +6829,7 @@ From {{inh|it|VL.|*piscāre}}, from {{inh|it|la|piscārī}}, present active infi
 {{it-verb|a/é}}
 
 # to [[fish]]
-# to [[get]] (find)
+# to [[get]] {{gl|to find}}
 # to [[draw]] (cards)
 
 ====Conjugation====
@@ -6676,19 +6856,27 @@ From {{inh|it|VL.|*piscāre}}, from {{inh|it|la|piscārī}}, present active infi
 Page 539 pesco: Found match for regex: =
 Page 539 pesco: -------- begin text --------
 
-===Etymology===
+===Etymology 1===
 From {{inh|it|VL.|*pessicus}}, from {{inh|it|la|persicus}}. {{doublet|it|persico}}.
 
-===Noun===
+====Pronunciation====
+{{it-pr|pèsco}}
+
+====Noun====
 {{it-noun|m}}
 
-# [[peach]] (''tree'')
+# [[peach]] [[tree]]
 
-====Related terms====
+=====Related terms=====
 * {{l|it|pesca}}
 * {{l|it|pescheto}}
 
-===Verb===
+===Etymology 2===
+
+====Pronunciation====
+{{it-pr|pésco}}
+
+====Verb====
 {{head|it|verb form}}
 
 # {{inflection of|it|pescare||1|s|pres|indc}}
@@ -6704,11 +6892,22 @@ From {{inh|it|VL.|*pessicus}}, from {{inh|it|la|persicus}}. {{doublet|it|persico
 Page 540 peschi: Found match for regex: =
 Page 540 peschi: -------- begin text --------
 
-===Noun===
+===Etymology 1===
+
+====Pronunciation====
+{{it-pr|pèschi}}
+
+====Noun====
 {{head|it|noun form|g=m}}
+
 # {{plural of|it|pesco}}
 
-===Verb===
+===Etymology 2===
+
+====Pronunciation====
+{{it-pr|péschi}}
+
+====Verb====
 {{head|it|verb form}}
 
 # {{inflection of|it|pescare||2|s|pres|indc|;|1//2//3|s|pres|subj|;|3|s|impr}}
@@ -6812,7 +7011,7 @@ Page 542 pesche: -------- begin text --------
 ====Noun====
 {{head|it|noun form|g=f}}
 
-# {{plural of|it|pesca}} {{gloss|peach}}
+# {{plural of|it|pesca|t=peach}}
 
 ===Etymology 2===
 
@@ -6822,7 +7021,7 @@ Page 542 pesche: -------- begin text --------
 ====Noun====
 {{head|it|noun form|g=f}}
 
-# {{plural of|it|pesca}} {{gloss|fishing}}
+# {{plural of|it|pesca|t=fishing}}
 
 ----
 
@@ -6838,7 +7037,22 @@ Page 543 pescano: -------- begin text --------
 Page 544 peschino: Found match for regex: =
 Page 544 peschino: -------- begin text --------
 
-===Verb===
+===Etymology 1===
+
+====Pronunciation====
+{{it-pr|peschìno}}
+
+====Noun====
+{{it-noun|m}}
+
+# {{diminutive of|it|pesco}}: small [[peach]] [[tree]]
+
+===Etymology 2===
+
+====Pronunciation====
+{{it-pr|péschino}}
+
+====Verb====
 {{head|it|verb form}}
 
 # {{inflection of|it|pescare||3|p|pres|subj|;|3|p|impr}}
@@ -7473,7 +7687,7 @@ From {{inh|it|la|vultus|t=expression, face}}. Compare {{cog|pt|vulto|t=aspect}}.
 {{rfap|it}}
 
 ====Adjective====
-{{it-adj}} (a)
+{{it-adj}} {{+preo|it|a}}
 
 # [[facing]]
 # [[concerning]]
@@ -7513,15 +7727,40 @@ From a {{inh|it|VL.|-}} root {{m|la||*voltus}} < {{m|la||*volvitus}} or {{m|la||
 Page 593 volti: Found match for regex: =
 Page 593 volti: -------- begin text --------
 
-===Verb===
-{{head|it|verb form}}
+===Etymology 1===
 
-# {{inflection of|it|voltare||2|s|pres|indc|;|1//2//3|s|pres|subj|;|3|s|impr}}
+====Pronunciation====
+{{it-pr|vólti}}
 
-===Noun===
+====Adjective====
+{{head|it|adjective form|g=m-p}}
+
+# {{adj form of|it|volto||m|p|t=facing, concerning}}
+
+====Noun====
 {{head|it|noun form|g=m}}
 
 # {{plural of|it|volto}}
+
+===Etymology 2===
+
+====Pronunciation====
+{{it-pr|vòlti}}
+
+====Participle====
+{{head|it|past participle form|g=m-p}}
+
+# {{masculine plural of|it|volto|t=(having) turned}}
+
+===Etymology 3===
+
+====Pronunciation====
+{{it-pr|vòlti}}
+
+====Verb====
+{{head|it|verb form}}
+
+# {{inflection of|it|voltare||2|s|pres|indc|;|1//2//3|s|pres|subj|;|3|s|impr}}
 
 ----
 
@@ -7529,11 +7768,11 @@ Page 593 volti: -------- begin text --------
 Page 594 volta: Found match for regex: =
 Page 594 volta: -------- begin text --------
 
-===Pronunciation===
-{{it-pr|vòlta<audio:it-volta.ogg>}}
-
 ===Etymology 1===
 From a {{inh|it|VL.|-}} root {{m|la|*volta}}, from {{m|la||*volŭta}} (perhaps via {{m|la||*volvita|t=a turn}}), from the feminine form of {{inh|it|la|volūtus}}, perfect passive participle of {{m|la|volvō}}. Also possibly from the past participle of {{m|it|volgere}} ({{m|it|volto}}), or from the verb {{m|it|voltare}}. Compare {{cog|es|vuelta}}; cf. also {{cog|es|bóveda}}, {{cog|fr|voûte}}.
+
+====Pronunciation====
+{{it-pr|vòlta<audio:it-volta.ogg>}}
 
 ====Noun====
 {{it-noun|f}}
@@ -7559,12 +7798,28 @@ From a {{inh|it|VL.|-}} root {{m|la|*volta}}, from {{m|la||*volŭta}} (perhaps v
 
 ===Etymology 2===
 
+====Pronunciation====
+{{it-pr|vólta}}
+
+====Adjective====
+{{head|it|adjective form|g=f-s}}
+
+# {{adj form of|it|volto||f|s|t=facing, concerning}}
+
+===Etymology 3===
+
+====Pronunciation====
+{{it-pr|vòlta<audio:it-volta.ogg>}}
+
 ====Participle====
 {{head|it|past participle form|g=f-s}}
 
-# {{feminine singular of|it|volto}}
+# {{feminine singular of|it|volto|t=(having) turned}}
 
-===Etymology 3===
+===Etymology 4===
+
+====Pronunciation====
+{{it-pr|vòlta<audio:it-volta.ogg>}}
 
 ====Verb====
 {{head|it|verb form}}
@@ -7577,10 +7832,35 @@ From a {{inh|it|VL.|-}} root {{m|la|*volta}}, from {{m|la||*volŭta}} (perhaps v
 Page 595 volte: Found match for regex: =
 Page 595 volte: -------- begin text --------
 
-===Noun===
+===Etymology 1===
+
+====Pronunciation====
+{{it-pr|vòlte}}
+
+====Noun====
 {{head|it|noun form|g=f}}
 
 # {{plural of|it|volta}}
+
+===Etymology 2===
+
+====Pronunciation====
+{{it-pr|vólte}}
+
+====Adjective====
+{{head|it|adjective form|g=f-p}}
+
+# {{adj form of|it|volto||f|p|t=facing, concerning}}
+
+===Etymology 3===
+
+====Pronunciation====
+{{it-pr|vòlte}}
+
+====Participle====
+{{head|it|past participle form|g=f-p}}
+
+# {{feminine plural of|it|volto|t=(having) turned}}
 
 ===Anagrams===
 * {{anagrams|it|a=elotv|velto}}
@@ -7625,8 +7905,9 @@ Page 598 viaggiare: -------- begin text --------
 ===Verb===
 {{it-verb|a/à}}
 
-# to [[travel]], to [[journey]], to [[tour]], (''by plane'') to [[fly]]
-# {{lb|it|of a vehicle}} to [[run]], to travel
+# {{lb|it|intransitive}} to [[travel]], to [[journey]] {{+aux|it|avere}}
+# {{lb|it|intransitive|of a vehicle}} to [[run]], to [[travel]] {{+aux|it|avere}}
+# {{lb|it|transitive|uncommon}} to [[tour]] (a location)
 
 ====Conjugation====
 {{it-conj-ciare|viagg|avere}}
@@ -7643,31 +7924,33 @@ Page 600 viaggio: Found match for regex: {
 Page 600 viaggio: -------- begin text --------
 {{wikipedia|lang=it}}
 
-===Etymology===
+===Pronunciation===
+{{it-pr|vi.àggio<audio:It-un viaggio.ogg>}}
+
+===Etymology 1===
 Borrowed from {{bor|it|pro|viatge}} and {{bor|it|fro|viage}}, {{m|fro|veiage}}, from {{der|it|la|viāticum}}, from the adjective {{m|la|viāticus}}, from {{m|la|via||road, path}} + {{m|la|-āticus||pertaining to}}, equivalent to {{suffix|it|via|aggio}}.
 
 {{doublet|it|viatico}} and cognate to {{cog|ca|viatge}}, {{cog|fr|-}} and {{cog|en|voyage}}, {{cog|es|viaje}}, {{cog|pt|viagem}}, {{cog|nrf|viage}}, {{cog|scn|viaggiu}}, {{cog|mt|vjaġġ}}, {{cog|ro|voiaj}}.
 
-===Pronunciation===
-{{it-pr|vi.àggio<audio:It-un viaggio.ogg>}}
-
-===Noun===
+====Noun====
 {{it-noun|m}}
 
 # [[journey]], [[trip]], [[tour]], [[voyage]]
 # {{lb|it|also|_|in the plural}} [[travels]], [[travel]], [[travelling]]
 
-====Derived terms====
+=====Derived terms=====
 * {{l|it|viaggetto}}
 * {{l|it|viaggiare}}
 * {{l|it|viaggiatore}}, {{l|it|viaggiatrice}}
 * {{l|it|viaggio di nozze}}
 
-====Related terms====
+=====Related terms=====
 * {{l|it|via}}
 * {{l|it|viatico}}
 
-===Verb===
+===Etymology 2===
+
+====Verb====
 {{head|it|verb form}}
 
 # {{inflection of|it|viaggiare||1|s|pres|ind}}
@@ -7677,11 +7960,16 @@ Borrowed from {{bor|it|pro|viatge}} and {{bor|it|fro|viage}}, {{m|fro|veiage}}, 
 Page 601 viaggi: Found match for regex: =
 Page 601 viaggi: -------- begin text --------
 
-===Noun===
+===Etymology 1===
+
+====Noun====
 {{head|it|noun form|g=m}}
+
 # {{plural of|it|viaggio}}
 
-===Verb===
+===Etymology 2===
+
+====Verb====
 {{head|it|verb form}}
 
 # {{inflection of|it|viaggiare||2|s|pres|ind|;|1//2//3|s|pres|subj|;|3|s|imp}}
@@ -7892,12 +8180,15 @@ Page 624 continuare: -------- begin text --------
 Borrowed from {{bor|it|la|continuāre}}, present active infinitive of {{m|la|continuō}}, from {{m|la|continuus}}.
 
 ===Pronunciation===
-{{it-pr|continu.àre,continuàre<ref:{{R:it:DiPI|continuo}}>}}
+{{it-pr|continu.àre,continuàre<ref:{{R:it:DiPI|continuiamo|continuo}}>}}
 
 ===Verb===
-{{it-verb|a/ì}}
+{{it-verb|a[transitive or intransitive]:e[alternatively when intransitive with a thing as subject]/ì}}
 
-# to [[carry on]], to [[continue]]
+# {{lb|it|transitive}} to [[continue]], to [[keep on]] [[do]]ing (an action)
+# {{lb|it|transitive}} to [[continue]], to [[resume]] (an action)
+# {{lb|it|intransitive}} to [[continue]], to [[last]] {{i|of a thing}} {{+aux|it|avere|essere}}
+# {{lb|it|intransitive}} to [[continue]], to [[persevere]], to [[carry on]] {{i|of a person}} {{+aux|it|avere}}
 
 ====Conjugation====
 {{it-conj-are|continu|avere}}
@@ -7984,12 +8275,16 @@ Page 626 continuo: -------- begin text --------
 Page 627 continui: Found match for regex: =
 Page 627 continui: -------- begin text --------
 
-===Adjective===
+===Etymology 1===
+
+====Adjective====
 {{it-adj-form|m-p}}
 
 # {{adj form of|it|continuo||m|p}}
 
-===Verb===
+===Etymology 2===
+
+====Verb====
 {{head|it|verb form}}
 
 # {{inflection of|it|continuare||2|s|pres|indc|;|1//2//3|s|pres|subj|;|3|s|impr}}
@@ -8000,12 +8295,16 @@ Page 627 continui: -------- begin text --------
 Page 628 continua: Found match for regex: =
 Page 628 continua: -------- begin text --------
 
-===Adjective===
+===Etymology 1===
+
+====Adjective====
 {{head|it|adjective form|g=f-s}}
 
 # {{adj form of|it|continuo||f|s}}
 
-===Verb===
+===Etymology 2===
+
+====Verb====
 {{head|it|verb form}}
 
 # {{inflection of|it|continuare||3|s|pres|indc|;|2|s|impr}}
@@ -8091,6 +8390,11 @@ Page 636 continuato: -------- begin text --------
 ===Etymology===
 From {{m|it|continuare}}.
 
+===Participle===
+{{it-pp}}
+
+# {{past participle of|it|continuare}}
+
 ===Adjective===
 {{it-adj}}
 
@@ -8098,11 +8402,6 @@ From {{m|it|continuare}}.
 
 ====Derived terms====
 * {{l|it|continuatamente}}
-
-===Participle===
-{{it-pp}}
-
-# {{past participle of|it|continuare}}
 
 ===Further reading===
 * {{R:it:Treccani}}
@@ -8182,7 +8481,7 @@ Page 641 desidero: -------- begin text --------
 ===Etymology 1===
 
 ====Pronunciation====
-{{it-pr|desidèro}}
+{{it-pr|desidèro,#de[s]idèro<ref:{{R:it:Olivetti}}>}}
 
 ====Noun====
 {{it-noun|m}}
@@ -8192,12 +8491,15 @@ Page 641 desidero: -------- begin text --------
 ===Etymology 2===
 
 ====Pronunciation====
-{{it-pr|desìdero}}
+{{it-pr|desìdero,#de[s]ìdero<ref:{{R:it:DiPI}}>}}
 
 ====Verb====
 {{head|it|verb form}}
 
 # {{inflection of|it|desiderare||1|s|pres|indc}}
+
+===References===
+<references />
 
 ===Anagrams===
 * {{anagrams|it|a=ddeeiors|diseredo|diseredò}}
@@ -8208,14 +8510,28 @@ Page 641 desidero: -------- begin text --------
 Page 642 desideri: Found match for regex: =
 Page 642 desideri: -------- begin text --------
 
-===Noun===
+===Etymology 1===
+
+====Pronunciation====
+{{it-pr|desidèri,#de[s]idèri<ref:{{R:it:DiPI}}<<name:dipi>>>}}
+
+====Noun====
 {{head|it|noun form|g=m}}
+
 # {{plural of|it|desiderio}}
 
-===Verb===
+===Etymology 2===
+
+====Pronunciation====
+{{it-pr|desìderi,#de[s]ìderi<ref:<<name:dipi>>>}}
+
+====Verb====
 {{head|it|verb form}}
 
 # {{inflection of|it|desiderare||2|s|pres|ind|;|1//2//3|s|pres|sub|;|3|s|imp}}
+
+===References===
+<references />
 
 ===Anagrams===
 * {{anagrams|it|a=ddeeiirs|diseredi}}
@@ -8309,20 +8625,24 @@ Page 649 desiderino: -------- begin text --------
 Page 651 desiderato: Found match for regex: =
 Page 651 desiderato: -------- begin text --------
 
-===Participle===
+===Etymology 1===
+
+====Participle====
 {{it-pp}}
 
 # {{past participle of|it|desiderare}}
 
-===Adjective===
+====Adjective====
 {{it-adj|sup=desideratissimo}}
 
 # [[hoped-for]], [[desired]], [[longed]] for
 
-====Derived terms====
+=====Derived terms=====
 * {{l|it|desideratamente}}
 
-===Noun===
+===Etymology 2===
+
+====Noun====
 {{it-noun|m}}
 
 # {{lb|it|rare}} [[desideratum]]
@@ -8336,10 +8656,19 @@ Page 651 desiderato: -------- begin text --------
 Page 652 desiderati: Found match for regex: =
 Page 652 desiderati: -------- begin text --------
 
-===Participle===
+===Etymology 1===
+
+====Participle====
 {{head|it|past participle form|g=m-p}}
 
 # {{masculine plural of|it|desiderato}}
+
+===Etymology 2===
+
+====Noun====
+{{head|it|noun form}}
+
+# {{plural of|it|desiderato}}
 
 ===Anagrams===
 * {{anagrams|it|a=addeeiirst|diseredati|disiderate}}
@@ -8357,7 +8686,7 @@ Page 653 desiderata: -------- begin text --------
 {{ubor|it|la|dēsīderāta}}, neuter plural form of {{m|la|dēsīderātus}}, perfect passive participle of {{m|la|dēsīderō||I want, I wish for}}.
 
 ====Noun====
-{{it-plural noun|m}}
+{{it-noun|m-p}}
 
 # [[#English|desiderata]]
 
@@ -8392,7 +8721,7 @@ From {{bor|it|la|dēsīderābilis}}, derived from {{m|la|dēsīderō||I desire, 
 By [[surface analysis]]: {{suf|it|desiderare|abile}}.
 
 ===Pronunciation===
-{{it-pr|desideràbile,#de[s]ideràbile<ref:{{R:it:DiPI|desiderato}}>}}
+{{it-pr|desideràbile,#de[s]ideràbile<ref:{{R:it:DiPI|desidero}}>}}
 
 ===Adjective===
 {{it-adj}}
@@ -8611,21 +8940,6 @@ From an alteration, based on its Latin root, of the older {{m|it|disidero}}, {{m
 ----
 
 -------- end text --------
-Page 670 desideri: Found match for regex: =
-Page 670 desideri: -------- begin text --------
-
-===Noun===
-{{head|it|noun form|g=m}}
-# {{plural of|it|desiderio}}
-
-===Verb===
-{{head|it|verb form}}
-
-# {{inflection of|it|desiderare||2|s|pres|ind|;|1//2//3|s|pres|sub|;|3|s|imp}}
-
-===Anagrams===
-* {{anagrams|it|a=ddeeiirs|diseredi}}
--------- end text --------
 Page 671 desiderosamente: Found match for regex: =
 Page 671 desiderosamente: -------- begin text --------
 
@@ -8642,9 +8956,6 @@ Page 672 desideroso: -------- begin text --------
 
 ===Etymology===
 From {{bor|it|LL.|dēsīderōsus}}.
-
-===Pronunciation===
-{{it-pr|desideróso,#de[s]ideró[s]o<ref:{{R:it:DiPI}}>}}
 
 ===Adjective===
 {{it-adj}} (di)
@@ -8846,19 +9157,26 @@ Page 688 pii desideri: -------- begin text --------
 Page 689 ceno: Found match for regex: =
 Page 689 ceno: -------- begin text --------
 
-===Pronunciation===
+===Etymology 1===
+
+====Pronunciation====
 {{it-pr|céno}}
 
-===Verb===
+====Verb====
 {{head|it|verb form}}
 
 # {{inflection of|it|cenare||1|s|pres|ind}}
 
-===Noun===
+===Etymology 2===
+
+====Pronunciation====
+{{it-pr|cèno}}
+
+====Noun====
 {{it-noun|m}}
 
 # {{lb|it|obsolete}} [[mud]]
-#: {{syn|it|fango}}
+#: {{syn|it|fango|q=normal register}}
 
 ===Anagrams===
 * {{anagrams|it|a=ceno|Noce|noce|ocne|once}}
@@ -8869,10 +9187,25 @@ Page 689 ceno: -------- begin text --------
 Page 690 ceni: Found match for regex: =
 Page 690 ceni: -------- begin text --------
 
-===Verb===
+===Etymology 1===
+
+====Pronunciation====
+{{it-pr|céni}}
+
+====Verb====
 {{head|it|verb form}}
 
 # {{inflection of|it|cenare||2|s|pres|indc|;|1//2//3|s|pres|subj|;|3|s|impr}}
+
+===Etymology 2===
+
+====Pronunciation====
+{{it-pr|cèni}}
+
+====Noun====
+{{head|it|noun form}}
+
+# {{plural of|it|ceno|t=mud}}
 
 ===Anagrams===
 * {{anagrams|it|a=cein|cine|cine-}}
@@ -8912,10 +9245,25 @@ Page 691 educo: -------- begin text --------
 Page 692 educa: Found match for regex: =
 Page 692 educa: -------- begin text --------
 
-===Verb===
+===Etymology 1===
+
+====Pronunciation====
+{{it-pr|èduca}}
+
+====Verb====
 {{head|it|verb form}}
 
 # {{inflection of|it|educare||3|s|pres|indc|;|2|s|impr}}
+
+===Etymology 2===
+
+====Pronunciation====
+{{it-pr|edùca}}
+
+====Verb====
+{{head|it|verb form}}
+
+# {{infl of|it|edurra|1//2//3|s|pres|subj|;|3|s|impr}}
 
 ===Anagrams===
 * {{anagrams|it|a=acdeu|cedua}}
@@ -8968,8 +9316,11 @@ Page 695 educano: -------- begin text --------
 Page 696 negarsi: Found match for regex: =
 Page 696 negarsi: -------- begin text --------
 
+===Pronunciation===
+{{it-pr|negàrsi}}
+
 ===Verb===
-{{it-verb|é:è:niègo[archaic]:niégo[archaic][ref:{{R:it:DiPI|nego}}]}}
+{{it-verb|é:è:niègo[archaic]:niégo[archaic][ref:{{R:it:DiPI|nego|niego}}]}}
 
 # {{reflexive of|it|negare}}
 # {{lb|it|reflexive}} to [[deny]] oneself (something)
@@ -8996,7 +9347,7 @@ From {{der|it|la|domāre}}, present active infinitive of {{m|la|domō}}, from {{
 {{it-pr|domàre}}
 
 ===Verb===
-{{it-verb|a/ó:ò}} {{tlb|it|transitive}}
+{{it-verb|a/ó:ò[ref:{{R:it:DiPI|domo}}]}} {{tlb|it|transitive}}
 
 # to [[tame]]
 #: {{syn|it|addomesticare|ammaestrare|ammansire}}
@@ -9022,6 +9373,9 @@ From {{der|it|la|domāre}}, present active infinitive of {{m|la|domō}}, from {{
 |{{l|it|indomo}}
 }}
 
+===References===
+<references />
+
 ===Anagrams===
 * {{anagrams|it|a=ademor|damerò|daremo|domerà|madore|modera|redamo}}
 
@@ -9036,7 +9390,7 @@ Page 699 domo: -------- begin text --------
 Unsuffixed past participle of {{m|it|domare||to tame}}.
 
 ====Pronunciation====
-{{it-pr|dómo,dòmo}}
+{{it-pr|dómo,dòmo<ref:{{R:it:DiPI}}<<name:dipi>>>}}
 
 ====Participle====
 {{it-pp}}
@@ -9074,7 +9428,7 @@ From {{bor|it|fr|dôme}}, ultimately from {{der|it|grc|δῶμα||house; houseto
 {{nonlemma}}
 
 ====Pronunciation====
-{{it-pr|dómo,dòmo}}
+{{it-pr|dómo,dòmo<ref:<<name:dipi>>>}}
 
 ====Verb====
 {{head|it|verb form}}
@@ -9082,10 +9436,9 @@ From {{bor|it|fr|dôme}}, ultimately from {{der|it|grc|δῶμα||house; houseto
 # {{inflection of|it|domare||1|s|pres|ind}}
 
 ===Etymology 4===
-{{nonlemma}}
 
 ====Pronunciation====
-{{it-pr|dòmo}}
+{{it-pr|dòmo<ref:<<name:dipi>>>}}
 
 ====Noun====
 {{it-noun|m}}
@@ -12878,7 +13231,7 @@ Page 940 vacuino: Found match for regex: =
 Page 940 vacuino: -------- begin text --------
 
 ===Pronunciation===
-{{it-pr|vàcwino,#vàcu.ino<ref:{{R:it:DiPI|vacuo}}><hyph:và.cui.no,và.cu.i.no<qual:traditional>>}}
+{{it-pr|vàc[w]ino,#vàcu.ino<ref:{{R:it:DiPI|vacuo}}>}}
 
 ===Verb===
 {{head|it|verb form}}
@@ -26353,7 +26706,7 @@ Page 1902 desinare: -------- begin text --------
 Borrowed from {{bor|it|fro|disner}}, from {{der|it|VL.|*disieiūnō}}, from {{der|it|la|ieiūnō||to fast}}.
 
 ====Verb====
-{{it-verb|a/è[modern]:é[traditional]}}
+{{it-verb|a/è:#é[ref:{{R:it:DiPI|desino}}]}}
 
 # {{lb|it|intransitive|Tuscan}} to [[lunch]]
 
@@ -26366,6 +26719,9 @@ Borrowed from {{bor|it|fro|disner}}, from {{der|it|VL.|*disieiūnō}}, from {{de
 {{it-noun|m}}
 
 # {{lb|it|Tuscan}} [[lunch]]
+
+===References===
+<references />
 
 ===Anagrams===
 * {{anagrams|it|a=adeeinrs|desinerà}}
