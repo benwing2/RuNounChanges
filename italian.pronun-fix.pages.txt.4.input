@@ -430,7 +430,6 @@ Page 0 rimpieghino: <respelling> all: rimpièghino,rimpiéghino<r:DiPI|impiego> 
 Page 0 ripiega: <respelling> all: ripièga,ripiéga<r:DiPI|ripiego> <end>
 Page 0 ripiegano: <respelling> all: ripiègano,ripiégano<r:DiPI|ripiego> <end>
 Page 0 ripieghino: <respelling> all: ripièghino,ripiéghino<r:DiPI|ripiego> <end>
-# got this far in find_regex.italian.pronun-fix.pages.txt.4.out.1
 # FIXME
 #Page 0 rispiegare: <respelling> all: rispiegare <end>
 #Page 0 rispiegarsi: <respelling> all: rispiegarsi <end>
@@ -513,22 +512,22 @@ Page 0 ovvino: <respelling> all: òvvino<r:DiPI|ovvio> <end>
 Page 0 ovviino: <respelling> all: ovvìino<post:{{q|traditional spelling and pronunciation}}> <end>
 Page 0 ravviare: <respelling> all: ravvi.àre<r:DiPI|avviare> <end>
 Page 0 ravviarsi: <respelling> all: ravvi.àrsi<r:DiPI|avviare> <end>
-Page 0 ravvio: <respelling> all: ravvìo<r:DiPI|avvio> <end>
-Page 0 ravvii: <respelling> all: ravvìi<r:DiPI|avvio> <end>
+Page 0 ravvio: <respelling> top: ravvìo<r:DiPI|avvio> <end>
+Page 0 ravvii: <respelling> top: ravvìi<r:DiPI|avvio> <end>
 Page 0 ravvia: <respelling> all: ravvìa<r:DiPI|avvio> <end>
 Page 0 ravviano: <respelling> all: ravvìano<r:DiPI|avvio> <end>
 Page 0 ravviino: <respelling> all: ravvìino<r:DiPI|avvio> <end>
 Page 0 riavviare: <respelling> all: ri.avvi.àre<r:DiPI|avviare> <end>
 Page 0 riavviarsi: <respelling> all: ri.avvi.àrsi<r:DiPI|avviare> <end>
-Page 0 riavvio: <respelling> all: ri.avvìo<r:DiPI|avvio> <end>
-Page 0 riavvii: <respelling> all: ri.avvìi<r:DiPI|avvio> <end>
+Page 0 riavvio: <respelling> top: ri.avvìo<r:DiPI|avvio> <end>
+Page 0 riavvii: <respelling> top: ri.avvìi<r:DiPI|avvio> <end>
 Page 0 riavvia: <respelling> all: ri.avvìa<r:DiPI|avvio> <end>
 Page 0 riavviano: <respelling> all: ri.avvìano<r:DiPI|avvio> <end>
 Page 0 riavviino: <respelling> all: ri.avvìino<r:DiPI|avvio> <end>
 Page 0 rinviare: <respelling> all: rinvi.àre<r:DiPI|avviare|rinvio> <end>
 Page 0 rinviarsi: <respelling> all: rinvi.àrsi<r:DiPI|avviare|rinvio> <end>
-Page 0 rinvio: <respelling> all: rinvìo<r:DiPI> <end>
-Page 0 rinvii: <respelling> all: rinvìi<r:DiPI|rinvio> <end>
+Page 0 rinvio: <respelling> top: rinvìo<r:DiPI> <end>
+Page 0 rinvii: <respelling> top: rinvìi<r:DiPI|rinvio> <end>
 Page 0 rinvia: <respelling> all: rinvìa<r:DiPI|rinvio> <end>
 Page 0 rinviano: <respelling> all: rinvìano<r:DiPI|rinvio> <end>
 Page 0 rinviino: <respelling> all: rinvìino<r:DiPI|rinvio> <end>
@@ -541,8 +540,8 @@ Page 0 risviano: <respelling> all: risvìano<r:DiPI|rinvio> <end>
 Page 0 risviino: <respelling> all: risvìino<r:DiPI|rinvio> <end>
 Page 0 sviare: <respelling> all: svi.àre<r:DiPI|avviare> <end>
 Page 0 sviarsi: <respelling> all: svi.àrsi<r:DiPI|avviare> <end>
-Page 0 svio: <respelling> all: svìo<r:DiPI|avvio> <end>
-Page 0 svii: <respelling> all: svìi<r:DiPI|avvio> <end>
+Page 0 svio: <respelling> top: svìo<r:DiPI|avvio> <end>
+Page 0 svii: <respelling> top: svìi<r:DiPI|avvio> <end>
 Page 0 svia: <respelling> all: svìa<r:DiPI|avvio> <end>
 Page 0 sviano: <respelling> all: svìano<r:DiPI|avvio> <end>
 Page 0 sviino: <respelling> all: svìino<r:DiPI|avvio> <end>
@@ -551,12 +550,13 @@ Page 0 traviarsi: <respelling> all: traviàrsi,#travi.àrsi<r:DiPI|traviare> <en
 Page 0 travio: <respelling> all: tràvio,#!travìo <end>
 # FIXME: split etym
 # Page 0 travi: <respelling> all: travi <end>
-Page 0 travii: <respelling> all: travìi<post:{{q|traditional/careful-style spelling and pronunciation}}> <end>
+# DONE
+# Page 0 travii: <respelling> all: travìi<post:{{q|traditional/careful-style spelling and pronunciation}}> <end>
 Page 0 travia: <respelling> all: tràvia,#!travìa <end>
 Page 0 traviano: <respelling> all: tràviano,#!travìano <end>
-Page 0 travino: <respelling> all: travino <end>
+Page 0 travino: <respelling> all: tràvino <end>
 Page 0 traviino: <respelling> all: travìino<post:{{q|traditional/careful-style spelling and pronunciation}}> <end>
-Page 0 pescare: <respelling> all: pescare <end>
+Page 0 pescare: <respelling> all: pescàre <end>
 # FIXME, split etym
 #Page 0 pesco: <respelling> all: pesco <end>
 #Page 0 peschi: <respelling> all: peschi <end>
@@ -573,8 +573,7 @@ Page 0 abituo: <respelling> all: abìtu.o,abìtuo<r:DiPI|+|disabituo> <end>
 Page 0 abitui: <respelling> all: abìtu.i,abìt[w]i<r:DiPI|abituo|disabituo> <end>
 Page 0 abitua: <respelling> all: abìtu.a,abìtua<r:DiPI|abituo|disabituo> <end>
 Page 0 abituiamo: <respelling> all: abitu.iàmo,abit[w]i.àmo<r:DiPI|abituandosi|disabituo> <end>
-# FIXME, split
-#Page 0 abituate: <respelling> all: abitu.àte,abituàte<r:DiPI|abituandosi|disabituo> <end>
+Page 0 abituate: <respelling> top: abitu.àte,abituàte<r:DiPI|abituandosi|disabituo> <end>
 Page 0 abituano: <respelling> all: abìtu.ano,abituàno<r:DiPI|abituo|disabituo> <end>
 Page 0 abituiate: <respelling> all: abitu.iàte,abit[w]i.àte<r:DiPI|abituandosi|disabituo> <end>
 Page 0 abituino: <respelling> all: abìtu.ino,abìt[w]ino<r:DiPI|abituo|disabituo> <end>
@@ -587,8 +586,7 @@ Page 0 disabituo: <respelling> all: disabìtu.o,disabìtuo<r:DiPI|+|disabituo> <
 Page 0 disabitui: <respelling> all: disabìtu.i,disabìt[w]i<r:DiPI|abituo|disabituo> <end>
 Page 0 disabitua: <respelling> all: disabìtu.a,disabìtua<r:DiPI|abituo|disabituo> <end>
 Page 0 disabituiamo: <respelling> all: disabitu.iàmo,disabit[w]i.àmo<r:DiPI|abituandosi|disabituo> <end>
-# FIXME, split
-#Page 0 disabituate: <respelling> all: disabitu.àte,disabituàte<r:DiPI|abituandosi|disabituo> <end>
+Page 0 disabituate: <respelling> top: disabitu.àte,disabituàte<r:DiPI|abituandosi|disabituo> <end>
 Page 0 disabituano: <respelling> all: disabìtu.ano,disabituàno<r:DiPI|abituo|disabituo> <end>
 Page 0 disabituiate: <respelling> all: disabitu.iàte,disabit[w]i.àte<r:DiPI|abituandosi|disabituo> <end>
 Page 0 disabituino: <respelling> all: disabìtu.ino,disabìt[w]ino<r:DiPI|abituo|disabituo> <end>
@@ -601,8 +599,7 @@ Page 0 riabituo: <respelling> all: ri.abìtu.o,ri.abìtuo<r:DiPI|+|disabituo> <e
 Page 0 riabitui: <respelling> all: ri.abìtu.i,ri.abìt[w]i<r:DiPI|abituo|disabituo> <end>
 Page 0 riabitua: <respelling> all: ri.abìtu.a,ri.abìtua<r:DiPI|abituo|disabituo> <end>
 Page 0 riabituiamo: <respelling> all: ri.abitu.iàmo,ri.abit[w]i.àmo<r:DiPI|abituandosi|disabituo> <end>
-# FIXME, split
-#Page 0 riabituate: <respelling> all: ri.abitu.àte,ri.abituàte<r:DiPI|abituandosi|disabituo> <end>
+Page 0 riabituate: <respelling> top: ri.abitu.àte,ri.abituàte<r:DiPI|abituandosi|disabituo> <end>
 Page 0 riabituano: <respelling> all: ri.abìtu.ano,ri.abituàno<r:DiPI|abituo|disabituo> <end>
 Page 0 riabituiate: <respelling> all: ri.abitu.iàte,ri.abit[w]i.àte<r:DiPI|abituandosi|disabituo> <end>
 Page 0 riabituino: <respelling> all: ri.abìtu.ino,ri.abìt[w]ino<r:DiPI|abituo|disabituo> <end>
@@ -652,15 +649,15 @@ Page 0 viaggio di nozze: <respelling> all: vi.àggio_di_nòttse<r:DiPI|viaggio|n
 Page 0 viaggi di nozze: <respelling> all: vi.àggi_di_nòttse<r:DiPI|viaggio|nozze> <end>
 Page 0 continuare: <respelling> all: continu.àre,continuàre<r:DiPI|continuiamo|continuo> <end>
 Page 0 continuarsi: <respelling> all: continu.àrsi,continuàrsi<r:DiPI|continuiamo|continuo> <end>
-Page 0 continuo: <respelling> all: contìnu.o,contìnuo<r:DiPI|+|continuo> <end>
-Page 0 continui: <respelling> all: contìnu.i,contìn[w]i<r:DiPI|continuo|continuo> <end>
-Page 0 continua: <respelling> all: contìnu.a,contìnua<r:DiPI|continuo|continuo> <end>
+Page 0 continuo: <respelling> all: contìnu.o,contìnuo<r:DiPI> <end>
+Page 0 continui: <respelling> top: contìnu.i,contìn[w]i<r:DiPI|continuo> <end>
+Page 0 continua: <respelling> top: contìnu.a,contìnua<r:DiPI|continuo> <end>
+Page 0 continue: <respelling> top: contìnu.e,contìnue<r:DiPI|continuo> <end>
 Page 0 continuiamo: <respelling> all: continu.iàmo,contin[w]i.àmo<r:DiPI|continuiamo|continuo> <end>
-# FIXME, split
-#Page 0 continuate: <respelling> all: continu.àte,continuàte<r:DiPI|continuiamo|continuo> <end>
-Page 0 continuano: <respelling> all: contìnu.ano,continuàno<r:DiPI|continuo|continuo> <end>
+Page 0 continuate: <respelling> top: continu.àte,continuàte<r:DiPI|continuiamo|continuo> <end>
+Page 0 continuano: <respelling> all: contìnu.ano,continuàno<r:DiPI|continuo> <end>
 Page 0 continuiate: <respelling> all: continu.iàte,contin[w]i.àte<r:DiPI|continuiamo|continuo> <end>
-Page 0 continuino: <respelling> all: contìnu.ino,contìn[w]ino<r:DiPI|continuo|continuo> <end>
+Page 0 continuino: <respelling> all: contìnu.ino,contìn[w]ino<r:DiPI|continuo> <end>
 Page 0 continuato: <respelling> all: continu.àto,continuàto<r:DiPI|continuiamo|continuo> <end>
 Page 0 continuati: <respelling> all: continu.àti,continuàti<r:DiPI|continuiamo|continuo> <end>
 Page 0 continuata: <respelling> all: continu.àta,continuàta<r:DiPI|continuiamo|continuo> <end>
@@ -671,15 +668,13 @@ Page 0 desiderarsi: <respelling> all: desideràrsi,#de[s]ideràrsi<r:DiPI|deside
 #Page 0 desideri: <respelling> all: desìderi,#de[s]ìderi<r:DiPI> <end>
 Page 0 desidera: <respelling> all: desìdera,#de[s]ìdera<r:DiPI|desidero> <end>
 Page 0 desideriamo: <respelling> all: desideriàmo,#de[s]ideriàmo<r:DiPI|desidero> <end>
-# FIXME, split
-#Page 0 desiderate: <respelling> all: desideràte,#de[s]ideràte<r:DiPI|desidero> <end>
+Page 0 desiderate: <respelling> top: desideràte,#de[s]ideràte<r:DiPI|desidero> <end>
 Page 0 desiderano: <respelling> all: desìderano,#de[s]ìderano<r:DiPI|desidero> <end>
 Page 0 desideriate: <respelling> all: desideriàte,#de[s]ideriàte<r:DiPI|desidero> <end>
 Page 0 desiderino: <respelling> all: desìderino,#de[s]ìderino<r:DiPI|desidero> <end>
-# FIXME, split
-#Page 0 desiderato: <respelling> all: desideràto,#de[s]ideràto<r:DiPI> <end>
-#Page 0 desiderati: <respelling> all: desideràti,#de[s]ideràti<r:DiPI|desiderato> <end>
-#Page 0 desiderata: <respelling> all: desideràta,#de[s]ideràta<r:DiPI> <end>
+Page 0 desiderato: <respelling> top: desideràto,#de[s]ideràto<r:DiPI> <end>
+Page 0 desiderati: <respelling> top: desideràti,#de[s]ideràti<r:DiPI|desiderato> <end>
+Page 0 desiderata: <respelling> top: desideràta,#de[s]ideràta<r:DiPI> <end>
 Page 0 desiderabile: <respelling> all: desideràbile,#de[s]ideràbile<r:DiPI|desidero> <end>
 Page 0 desiderabili: <respelling> all: desideràbili,#de[s]ideràbili<r:DiPI|desidero> <end>
 Page 0 desiderabilità: <respelling> all: desiderabilità,#de[s]iderabilità<r:DiPI|desidero> <end>
@@ -714,23 +709,25 @@ Page 0 mero desiderio: <respelling> all: mèro_desidèrio,#mèro_de[s]idèrio<r:
 Page 0 meri desideri: <respelling> all: mèri_desidèri,#mèri_de[s]idèri<r:DiPI|desideri> <end>
 Page 0 pio desiderio: <respelling> all: pìo_desidèrio,#pìo_de[s]idèrio<r:DiPI|desiderio> <end>
 Page 0 pii desideri: <respelling> all: pìi_desidèri,#pìi_de[s]idèri<r:DiPI|desideri> <end>
-# got here
-# #
-# #
-# #
-# #
 # FIXME, split etym
 #Page 0 ceno: <respelling> all: ceno <end>
 #Page 0 ceni: <respelling> all: ceni <end>
 # FIXME, split etym
 #Page 0 educo: <respelling> all: educo <end>
 #Page 0 educa: <respelling> all: educa <end>
+Page 0 educiamo: <respelling> all: educiàmo <end>
+Page 0 educiate: <respelling> all: educiàte <end>
 #Page 0 educano: <respelling> all: educano <end>
 # FIXME, two vowels
 #Page 0 negarsi: <respelling> all: negarsi <end>
 # FIXME, two vowels
 #Page 0 domare: <respelling> all: domare <end>
 #Page 0 domarsi: <respelling> all: domarsi <end>
+# got here/this far in find_regex.italian.pronun-fix.pages.txt.4.out.1 (page 699)
+# #
+# #
+# #
+# #
 # FIXME, split etym
 #Page 0 domo: <respelling> all: domo <end>
 #Page 0 domi: <respelling> all: domi <end>
