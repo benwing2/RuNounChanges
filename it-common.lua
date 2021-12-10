@@ -32,6 +32,26 @@ function export.remove_accents(form)
 	return rsub(form, export.AV, function(v) return usub(unfd(v), 1, 1) end)
 end
 
+-- Add the `stem` to the `ending` for the given `slot` and apply any phonetic modifications.
+function export.combine_stem_ending(base, slot, stem, ending)
+	-- Add h after c/g in -are forms to preserve the sound.
+	if base.conj_vowel == "à" and stem:find("[cg]$") and rfind(ending, "^[eèéiì]") then
+		stem = stem .. "h"
+	end
+
+	-- Two unstressed i's coming together compress to one.
+	if ending:find("^i") then
+		stem = stem:gsub("i$", "")
+	end
+
+	-- Remove accents from stem if ending is accented.
+	if rfind(ending, com.AV) then
+		stem = com.remove_accents(stem)
+	end
+
+	return stem .. ending
+end
+
 function export.analyze_verb(lemma)
 	local is_pronominal = false
 	local is_reflexive = false
@@ -171,13 +191,10 @@ function export.analyze_verb(lemma)
 	return ret
 end
 
-function export.add_default_verb_forms(base)
+function export.add_default_verb_forms(iut, base, from_headword)
 	local ret = base.verb
 	local raw_verb = ret.raw_verb
-	local stem, conj_vowel = rmatch(raw_verb, "^(.-)([aeiour])re?$")
-	if not stem then
-		error("Unrecognized verb '" .. raw_verb .. "', doesn't end in -are, -ere, -ire, -rre, -ar, -er, -ir, -or or -ur")
-	end
+
 	if rfind(raw_verb, "r$") then
 		if rfind(raw_verb, "[ou]r$") or base.rre then
 			ret.verb = raw_verb .. "re"
@@ -187,35 +204,79 @@ function export.add_default_verb_forms(base)
 	else
 		ret.verb = raw_verb
 	end
-	ret.stem = stem
 
-	if not rfind(conj_vowel, "^[aei]$") then
+	local stems, conj_vowel
+	if base.explicit_stem then
+		stems = iut.map_forms(base.explicit_stem, function(form)
+			local stem, ending = rmatch(form, "^(.*)([aei])$")
+			if not stem then
+				error("Unrecognized stem '" .. form .. "', should end in -a, -e or -i")
+			end
+			if conj_vowel and conj_vowel ~= ending then
+				error("Can't currently specify explicit stems with two different conjugation vowels (" .. conj_vowel
+					.. " and " .. ending .. ")")
+			end
+			conj_vowel = ending
+			return stem
+		end
+	else
+		stems, conj_vowel = rmatch(raw_verb, "^(.-)([aeiour])re?$")
+		if not stems then
+			error("Unrecognized verb '" .. raw_verb .. "', doesn't end in -are, -ere, -ire, -rre, -ar, -er, -ir, -or or -ur")
+		end
+		stems = iut.convert_to_general_list_form(stems)
+		if not rfind(conj_vowel, "^[aei]$") then
+			base.rre = true
+		end
+		if base.rre then
+			if not from_headword then
+				error("With syncopated verb '" .. raw_verb .. "', must use stem: to specify an explicit stem")
+			else
+				conj_vowel = "e"
+			end
+		end
+	end
+
+	ret.stem = stems
+	base.conj_vowel = conj_vowel == "a" and "à" or conj_vowel == "e" and "é" or "ì"
+
+	if base.rre then
 		-- Can't generate defaults for verbs in -rre
 		return
 	end
 
-	if base.third then
-		ret.pres = conj_vowel == "a" and stem .. "a" or stem .. "e"
-	else
-		ret.pres = stem .. "o"
-	end
+	local unaccented_stems = iut.map_forms(stems, function(stem) return export.remove_accents(stem) end)
+	ret.unaccented_stem = unaccented_stems
+	ret.pres = iut.map_forms(stems, function(stem)
+		if base.third then
+			return conj_vowel == "a" and stem .. "a" or stem .. "e"
+		else
+			return stem .. "o"
+		end
+	end)
+	ret.pres3s = iut.map_forms(stems, function(stem) return conj_vowel == "a" and stem .. "a" or stem .. "e" end)
 	if conj_vowel == "i" then
-		ret.isc_pres = stem .. "ìsco"
+		ret.isc_pres = iut.map_forms(unaccented_stems, function(stem) return stem .. "ìsco" end)
+		ret.isc_pres3s = iut.map_forms(unaccented_stems, function(stem) return stem .. "ìsci" end)
 	end
-	if conj_vowel == "a" then
-		ret.past = stem .. (base.third and "ò" or "ài")
-	elseif conj_vowel == "e" then
-		ret.past = {stem .. (base.third and "é" or "éi"), stem .. (base.third and "ètte" or "ètti")}
-	else
-		ret.past = stem .. (base.third and "ì" or "ìi")
-	end
-	if conj_vowel == "a" then
-		ret.pp = stem .. "àto"
-	elseif conj_vowel == "e" then
-		ret.pp = rfind(stem, "[cg]$") and stem .. "iùto" or stem .. "ùto"
-	else
-		ret.pp = stem .. "ìto"
-	end
+	ret.past = iut.flatmap_forms(unaccented_stems, function(stem)
+		if conj_vowel == "a" then
+			return {stem .. (base.third and "ò" or "ài")}
+		elseif conj_vowel == "e" then
+			return {stem .. (base.third and "é" or "éi"), stem .. (base.third and "ètte" or "ètti")}
+		else
+			return {stem .. (base.third and "ì" or "ìi")}
+		end
+	end)
+	ret.pp = iut.map_forms(unaccented_stems, function(stem)
+		if conj_vowel == "a" then
+			return stem .. "àto"
+		elseif conj_vowel == "e" then
+			return rfind(stem, "[cg]$") and stem .. "iùto" or stem .. "ùto"
+		else
+			return stem .. "ìto"
+		end
+	end)
 end
 
 -- Add links around words. If multiword_only, do it only in multiword forms.
@@ -370,9 +431,9 @@ function export.do_root_stressed_inf(iut, base, specs)
 				error("Explicit root-stressed infinitive spec '" .. this_spec.form .. "' should be a single-vowel spec")
 			end
 
-			local expanded = apply_vowel_spec(verb_stem, base.verb.verb, "root-stressed infinitive", this_spec.form) ..
-				verb_suffix
-			local linked = "[[" .. base.verb.verb .. "|" .. expanded .. "]]" .. base.verb.linked_suf
+			local expanded = apply_vowel_spec(verb_stem, base.verb.verb, "root-stressed infinitive", this_spec.form)
+			iut.insert_form(base, "root_stressed_stem", {form = expanded, footnotes = this_spec.footnotes})
+			local linked = "[[" .. base.verb.verb .. "|" .. expanded .. verb_suffix .. "]]" .. base.verb.linked_suf
 			iut.insert_form(base.forms, "lemma_linked", {form = linked, footnotes = this_spec.footnotes})
 		end
 	end
@@ -403,7 +464,28 @@ function export.pres_special_case(base, form)
 	end
 end
 
-function export.pres_unstressed_special_case(base, form)
+function export.pres3s_special_case(base, form)
+	if form == "+" then
+		check_not_null(base, base.verb.pres3s)
+		return base.verb.pres3s
+	elseif form == "+isc" then
+		check_not_null(base, base.verb.isc_pres3s)
+		return base.verb.isc_pres3s
+	elseif form == "-" then
+		return form
+	elseif rfind(form, "^" .. export.AV .. "[+-]?$") then
+		check_not_null(base, base.verb.pres3s)
+		local pres3s, final_vowel = rmatch(base.verb.pres3s, "^(.*)([ae])$")
+		if not pres3s then
+			error("Internal error: Default third-person singular present '" .. base.verb.pres3s
+				.. "' doesn't end in -a or -e")
+		end
+		return apply_vowel_spec(pres3s, base.verb.pres3s, "default third-person singular present", form) .. final_vowel
+	elseif not rfind(form, "[aàeè]") then
+		error("Present third-person singular form '" .. form .. "' should end in -a or -e")
+	else
+		return form
+	end
 end
 
 function export.past_special_case(base, form)
