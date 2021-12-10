@@ -11999,13 +11999,13 @@ Page 814 porgere: Found match for regex: =
 Page 814 porgere: -------- begin text --------
 
 ===Etymology===
-From {{etyl|la|it}} {{m|la|porrigo}}.
+From {{etyl|la|it}} {{m|la|porrigō}}.
 
 ===Pronunciation===
-{{it-pr|pòrgere,pórgere<ref:{{R:it:DiPI}}>}}
+{{it-pr|pòrgere,pórgere<ref:{{R:it:DiPI}}<<name:dipi>>>}}
 
 ===Verb===
-{{it-verb|a\ò,pòrsi,pòrto}}
+{{it-verb|a\ò:ó[ref:<<name:dipi>>],pòrsi:pórsi[ref:{{R:it:DiPI|porsi}}],pòrto:pórto[ref:{{R:it:DiPI|porto}}]}}
 
 # {{lb|it|transitive}} to [[hand]], [[give]]
 # {{lb|it|transitive}} to [[hold out]]
@@ -12027,23 +12027,43 @@ From {{etyl|la|it}} {{m|la|porrigo}}.
 Page 816 porto: Found match for regex: =
 Page 816 porto: -------- begin text --------
 
-===Pronunciation===
-{{it-pr|pòrto<audio:It-un porto.ogg>}}
-
 ===Etymology 1===
 {{root|it|ine-pro|*per-}}
 From {{inh|it|la|portus}}, from {{inh|it|itc-pro|*portus}}, from {{inh|it|ine-pro|*pértus|t=crossing}}, from the root {{m|ine-pro|*per-||to go forth”, “to cross}}.
+
+====Pronunciation====
+{{it-pr|pòrto<audio:It-un porto.ogg>}}
 
 ====Noun====
 {{it-noun|m}}
 
 # [[port]], [[harbour]]
-# [[port]] {{gloss|beverage}}
-# [[carriage]]
 
-=====Descendants=====
-* {{desc|bor=1|ro|port}}
-* {{desc|svm|lupuort|bor=1|der=1}}
+===Etymology 2===
+From {{bor|it|pt|Porto}}, name of the city where the wines were originally shipped from.
+
+====Pronunciation====
+{{it-pr|pòrto}}
+
+====Noun====
+{{it-noun|m}}
+
+# [[port]] {{q|type of wine}}
+
+===Etymology 3===
+
+====Pronunciation====
+{{it-pr|pòrto,pórto}}
+
+====Noun====
+{{it-noun|m}}
+
+# {{tlb|it|archaic}} [[ferry]]
+
+===Etymology 4===
+
+====Pronunciation====
+{{it-pr|pòrto,pórto}}
 
 ====Participle====
 {{it-pp}}
@@ -12054,7 +12074,10 @@ From {{inh|it|la|portus}}, from {{inh|it|itc-pro|*portus}}, from {{inh|it|ine-pr
 * {{l|it|porto di mare}}
 * {{l|it|porto d'armi}}
 
-===Etymology 2===
+===Etymology 5===
+
+====Pronunciation====
+{{it-pr|pòrto<audio:It-un porto.ogg>}}
 
 ====Verb====
 {{head|it|verb form}}
@@ -12105,7 +12128,21 @@ From {{inh|it|la|porta}}, from the {{der|it|ine-pro|-}} root {{m|ine-pro|*per-|t
 {{bottom}}
 
 ===Etymology 2===
-Inflected form of {{m|it|portare}}.
+{{nonlemma}}
+
+====Pronunciation====
+{{it-pr|pòrta,pórta<ref:{{R:it:DiPI}}>}}
+
+====Participle====
+{{head|it|past participle form|g=f-s}}
+
+# {{feminine singular of|it|porto|t=(having) given, (having) handed}}
+
+===Etymology 3===
+{{nonlemma}}
+
+====Pronunciation====
+{{it-pr|pòrta}}
 
 ====Verb====
 {{head|it|verb form}}
@@ -12114,6 +12151,9 @@ Inflected form of {{m|it|portare}}.
 
 =====Derived terms=====
 * {{l|it|porta-}}
+
+===References===
+<references />
 
 ===Anagrams===
 * {{anagrams|it|a=aoprt|Prato|parto|potrà|prato|tarpo|tarpò}}
@@ -12126,16 +12166,68 @@ Inflected form of {{m|it|portare}}.
 Page 818 porti: Found match for regex: =
 Page 818 porti: -------- begin text --------
 
-===Noun===
+===Etymology 1===
+
+====Pronunciation====
+{{it-pr|pòrti}}
+
+====Noun====
 {{head|it|noun form|g=m}}
 
-# {{plural of|it|porto}}
+# {{plural of|it|porto|t=port, harbor}}
 
-===Verb===
+===Etymology 2===
+
+====Pronunciation====
+{{it-pr|pòrti}}
+
+====Noun====
+{{head|it|noun form|g=m}}
+
+# {{plural of|it|porto|t=port (wine)}}
+
+===Etymology 3===
+
+====Pronunciation====
+{{it-pr|pòrti,pórti<ref:{{R:it:Olivetti|PORTO400|alt=porto}}>}}
+
+====Noun====
+{{head|it|noun form|g=m}}
+
+# {{tlb|it|archaic}} {{plural of|it|porto|t=ferry}}
+
+===Etymology 4===
+
+====Pronunciation====
+{{it-pr|pòrti,pórti<ref:{{R:it:DiPI}}>}}
+
+====Participle====
+{{head|it|past participle form|g=m-p}}
+
+# {{masculine plural of|it|porto|t=(having) given, (having) handed}}
+
+===Etymology 5===
+
+====Pronunciation====
+{{it-pr|pòrti}}
+
+====Verb====
 {{head|it|verb form}}
 
 # {{inflection of|it|portare||2|s|pres|ind|;|1//2//3|s|pres|sub|;|3|s|imp}}
+
+===Etymology 6===
+
+====Pronunciation====
+{{it-pr|pórti}}
+
+====Verb====
+{{head|it|verb form}}
+
 # {{inflection of|it|porsi||2|s|inf}}
+
+===References===
+<references />
 
 ===Anagrams===
 * {{anagrams|it|a=ioprt|proti|tropi}}
@@ -12143,10 +12235,10 @@ Page 818 porti: -------- begin text --------
 Page 819 porte: Found match for regex: =
 Page 819 porte: -------- begin text --------
 
-===Pronunciation===
-{{it-pr|pòrte}}
-
 ===Etymology 1===
+
+====Pronunciation====
+{{it-pr|pòrte}}
 
 ====Noun====
 {{head|it|noun form|g=f}}
@@ -12158,10 +12250,16 @@ Page 819 porte: -------- begin text --------
 
 ===Etymology 2===
 
+====Pronunciation====
+{{it-pr|pòrte,pórte<ref:{{R:it:DiPI}}>}}
+
 ====Participle====
 {{head|it|past participle form|g=f-p}}
 
-# {{feminine plural of|it|porto}}
+# {{feminine plural of|it|porto|t=(having) given, (having) handed}}
+
+===References===
+<references />
 
 ===Anagrams===
 * {{anagrams|it|a=eoprt|petro-|poter}}
@@ -12175,22 +12273,28 @@ Page 820 riporgere: -------- begin text --------
 ===Etymology===
 {{af|it|ri-|porgere}}
 
-===Verb===
-{{it-verb}}
+===Pronunciation===
+{{it-pr|ripòrgere,ripórgere<ref:{{R:it:DiPI|porgere}}<<name:dipi>>>}}
 
-# {{lb|it|transitive}} to [[hand]] or [[give]] etc again
+===Verb===
+{{it-verb|a\ò:ó[ref:<<name:dipi>>],ripòrsi:ripórsi[ref:{{R:it:DiPI|porsi}}],ripòrto:ripórto[ref:{{R:it:DiPI|porto}}]}}
+
+# {{lb|it|transitive}} to [[hand]] or [[give]] etc. again
 
 ====Conjugation====
 {{it-conj-ere|riporg|avere|pastp=riporto|prem1s=riporsi|prem3s=riporse|prem3s2=-|prem3p=riporsero|prem3p2=-
 }}
+
+===References===
+<references />
 -------- end text --------
 Page 822 riporto: Found match for regex: =
 Page 822 riporto: -------- begin text --------
 
-===Pronunciation===
-{{it-pr|ripòrto}}
-
 ===Etymology 1===
+
+====Pronunciation====
+{{it-pr|ripòrto,ripórto<ref:{{R:it:DiPI|porto}}>}}
 
 ====Participle====
 {{it-pp}}
@@ -12205,10 +12309,16 @@ Page 822 riporto: -------- begin text --------
 
 ===Etymology 2===
 
+====Pronunciation====
+{{it-pr|ripòrto}}
+
 ====Verb====
 {{head|it|verb form}}
 
 # {{inflection of|it|riportare||1|s|pres|indc}}
+
+===References===
+<references />
 
 ===Anagrams===
 * {{anagrams|it|a=iooprrt|protiro|ripotrò|torpori}}
@@ -12216,13 +12326,28 @@ Page 822 riporto: -------- begin text --------
 Page 823 riporta: Found match for regex: =
 Page 823 riporta: -------- begin text --------
 
-===Pronunciation===
+===Etymology 1===
+
+====Pronunciation====
+{{it-pr|ripòrta,ripórta<ref:{{R:it:DiPI|porta}}>}}
+
+====Participle====
+{{head|it|past participle form|g=f-s}}
+
+# {{feminine singular of|it|riporto|t=(having) given again, (having) handed again}}
+
+===Etymology 2===
+
+====Pronunciation====
 {{it-pr|ripòrta}}
 
-===Verb===
+====Verb====
 {{head|it|verb form}}
 
 # {{inflection of|it|riportare||3|s|pres|indc|;|2|s|impr}}
+
+===References===
+<references />
 
 ===Anagrams===
 * {{anagrams|it|a=aioprrt|partirò|partorì|protrai|riparto|ripotrà}}
@@ -12230,10 +12355,43 @@ Page 823 riporta: -------- begin text --------
 Page 824 riporti: Found match for regex: =
 Page 824 riporti: -------- begin text --------
 
-===Verb===
+===Etymology 1===
+
+====Pronunciation====
+{{it-pr|ripòrti,ripórti<ref:{{R:it:DiPI|porto}}>}}
+
+====Participle====
+{{head|it|past participle form|g=m-p}}
+
+# {{masculine plural of|it|riporto|t=(having) given again, (having) handed again}}
+
+====Noun====
+{{head|it|noun form|g=m-p}}
+
+# {{plural of|it|riporto|t=amount carried forward; appliqué}}
+
+===Etymology 2===
+
+====Pronunciation====
+{{it-pr|ripòrti}}
+
+====Verb====
 {{head|it|verb form}}
 
 # {{inflection of|it|riportare||2|s|pres|indc|;|1//2//3|s|pres|subj|;|3|s|impr}}
+
+===Etymology 3===
+
+====Pronunciation====
+{{it-pr|ripórti}}
+
+====Verb====
+{{head|it|verb form}}
+
+# {{inflection of|it|riporsi||2|s|inf}}
+
+===References===
+<references />
 
 ===Anagrams===
 * {{anagrams|it|a=iioprrt|protiri}}
@@ -12241,10 +12399,16 @@ Page 824 riporti: -------- begin text --------
 Page 825 riporte: Found match for regex: =
 Page 825 riporte: -------- begin text --------
 
+===Pronunciation===
+{{it-pr|ripòrte,ripórte<ref:{{R:it:DiPI|porto}}>}}
+
 ===Participle===
 {{head|it|past participle form|g=f-p}}
 
-# {{feminine plural of|it|riporto}}
+# {{feminine plural of|it|riporto|t=(having) given again, (having) handed again}}
+
+===References===
+<references />
 
 ===Anagrams===
 * {{anagrams|it|a=eioprrt|pierrot|piretro|pretori}}
@@ -12256,10 +12420,10 @@ Page 826 sporgere: -------- begin text --------
 From {{inh|it|la|exporrigo|exporrigere}} (from {{prefix|la|ex-|porrigere}}, equivalent to {{prefix|it|s-|porgere}}).
 
 ===Pronunciation===
-{{it-pr|spòrgere,spórgere<ref:{{R:it:DiPI}}>}}
+{{it-pr|spòrgere,spórgere<ref:{{R:it:DiPI}}<<name:dipi>>>}}
 
 ===Verb===
-{{it-verb|a[transitive]:e[intransitive]\ò,pòrsi,pòrto}}
+{{it-verb|a[transitive]:e[intransitive]\ò:ó[ref:<<name:dipi>>],spòrsi:spórsi[ref:{{R:it:DiPI|porsi}}],spòrto:spórto[ref:{{R:it:DiPI|sporto}}]}}
 
 # {{lb|it|transitive}} to [[reach]] [[out]], to [[stick]] [[out]]
 #: {{uxi|it|'''sporgere''' la testa|'''stick out''' the head}}
@@ -12291,12 +12455,12 @@ Page 827 sporgersi: Found match for regex: =
 Page 827 sporgersi: -------- begin text --------
 
 ===Pronunciation===
-{{it-pr|spòrgersi}}
+{{it-pr|spòrgersi,spórgersi<ref:{{R:it:DiPI|sporgere}}<<name:dipi>>>}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|ò:ó[ref:<<name:dipi>>],spòrsi:spórsi[ref:{{R:it:DiPI|porsi}}],spòrto:spórto[ref:{{R:it:DiPI|sporto}}]}}
 
-# {{indtr|it|.reflexive|da|intr=1}} to [[lean]] out (of)
+# to [[lean]] out {{+preo|it|da|means=of}}
 #: {{ux|it|È pericoloso '''sporgersi'''|It is dangerous to '''lean out'''}}
 
 ====Conjugation====
@@ -12312,10 +12476,46 @@ Page 827 sporgersi: -------- begin text --------
 Page 828 sporto: Found match for regex: =
 Page 828 sporto: -------- begin text --------
 
-===Participle===
+===Etymology 1===
+
+====Pronunciation====
+{{it-pr|spòrto,spórto<ref:{{R:it:DiPI}}<<name:dipi>>>}}
+
+====Participle====
 {{it-pp}}
 
 # {{past participle of|it|sporgere}}
+
+====Adjective====
+{{it-adj}}
+
+# [[lean]]ing [[forward]], [[protrude|protruding]]
+# [[outstretched]]
+
+===Etymology 2===
+Substantivization of the preceding.
+
+====Pronunciation====
+{{it-pr|spòrto<ref:<<name:dipi>>>}}
+
+====Noun====
+{{it-noun|m}}
+
+# {{lb|it|architecture}} [[overhang]], [[ledge]]
+# [[horizontally]] [[open]]ing [[heavy]] [[wooden]] [[shutter]] {{q|typically of a shop}}
+
+===Etymology 3===
+
+====Pronunciation====
+{{it-pr|spòrto,spórto<ref:<<name:dipi>>>}}
+
+====Verb====
+{{head|it|verb form}}
+
+# {{tlb|it|archaic}} {{inflection of|it|sportare||1|s|pres|indc}}
+
+===References===
+<references />
 
 ===Anagrams===
 * {{anagrams|it|a=ooprst|sproto}}
@@ -12323,11 +12523,11 @@ Page 828 sporto: -------- begin text --------
 Page 829 sporta: Found match for regex: =
 Page 829 sporta: -------- begin text --------
 
-===Pronunciation===
-{{it-pr|spòrta}}
-
 ===Etymology 1===
 From {{inh|it|la|sporta}}.
+
+====Pronunciation====
+{{it-pr|spòrta}}
 
 ====Noun====
 {{it-noun|f}}
@@ -12341,10 +12541,31 @@ From {{inh|it|la|sporta}}.
 
 ===Etymology 2===
 
+====Pronunciation====
+{{it-pr|spòrta,spórta<ref:{{R:it:DiPI}}<<name:dipi>>>}}
+
 ====Participle====
 {{head|it|past participle form|g=f-s}}
 
 # {{feminine singular of|it|sporto}}
+
+====Adjective====
+{{head|it|adjective form|g=f-s}}
+
+# {{adj form of|it|sporto||f|s}}
+
+===Etymology 3===
+
+====Pronunciation====
+{{it-pr|spòrta,spórta<ref:<<name:dipi>>>}}
+
+====Verb====
+{{head|it|verb form}}
+
+# {{inflection of|it|sportare||3|s|pres|indc|;|2|s|impr}}
+
+===References===
+<references />
 
 ===Anagrams===
 * {{anagrams|it|a=aoprst|sparto|sprota}}
@@ -12357,10 +12578,41 @@ From {{inh|it|la|sporta}}.
 Page 830 sporti: Found match for regex: =
 Page 830 sporti: -------- begin text --------
 
-===Participle===
+===Etymology 1===
+
+====Pronunciation====
+{{it-pr|spòrti,spórti<ref:{{R:it:DiPI}}<<name:dipi>>>}}
+
+====Participle====
 {{head|it|past participle form|g=m-p}}
 
 # {{masculine plural of|it|sporto}}
+
+====Adjective====
+{{head|it|adjective form|g=m-p}}
+
+# {{adj form of|it|sporto||m|p}}
+
+====Pronunciation====
+{{it-pr|spòrti<ref:<<name:dipi>>>}}
+
+====Noun====
+{{head|it|noun form|g=m-p}}
+
+# {{plural of|it|sporto}}
+
+===Etymology 3===
+
+====Pronunciation====
+{{it-pr|spòrti,spórti<ref:<<name:dipi>>>}}
+
+====Verb====
+{{head|it|verb form}}
+
+# {{tlb|it|archaic}} {{inflection of|it|sportare||2|s|pres|indc|;|1//2//3|s|pres|subj|;|3|s|impr}}
+
+===References===
+<references />
 
 ===Anagrams===
 * {{anagrams|it|a=ioprst|spirto|sproti|storpi}}
@@ -12368,22 +12620,33 @@ Page 830 sporti: -------- begin text --------
 Page 831 sporte: Found match for regex: =
 Page 831 sporte: -------- begin text --------
 
-===Pronunciation===
-{{it-pr|spòrte}}
-
 ===Etymology 1===
 
+====Pronunciation====
+{{it-pr|spòrte}}
+
 ====Noun====
-{{head|it|noun form|g=f}}
+{{head|it|noun form|g=f-p}}
 
 # {{plural of|it|sporta}}
 
 ===Etymology 2===
 
+====Pronunciation====
+{{it-pr|spòrte,spórte<ref:{{R:it:DiPI}}>}}
+
 ====Participle====
 {{head|it|past participle form|g=f-p}}
 
 # {{feminine plural of|it|sporto}}
+
+====Adjective====
+{{head|it|adjective form|g=f-p}}
+
+# {{adj form of|it|sporto||f|p}}
+
+===References===
+<references />
 
 ===Anagrams===
 * {{anagrams|it|a=eoprst|presto|prestò|sperto|spreto|spretò|sprote|sterpo|sterpò}}
@@ -12423,10 +12686,16 @@ Borrowed from {{bor|it|la|designo|designo, designare}}. Compare the inherited do
 Page 833 designarsi: Found match for regex: =
 Page 833 designarsi: -------- begin text --------
 
+===Pronunciation===
+{{it-pr|designàrsi,#de[s]ignàrsi<ref:{{R:it:DiPI|designo}}>}}
+
 ===Verb===
 {{head|it|verb form}}
 
 # {{it-compound of}}
+
+===References===
+<references />
 
 ===Anagrams===
 * {{anagrams|it|a=adegiinrss|denigrassi|disegnarsi}}
@@ -12484,16 +12753,24 @@ Page 838 designiamo: -------- begin text --------
 Page 839 designate: Found match for regex: =
 Page 839 designate: -------- begin text --------
 
-===Verb===
+===Etymology 1===
+
+====Verb====
 {{head|it|verb form}}
 
-# {{inflection of|it|designare||2|p|pres|and|imp}}
+# {{inflection of|it|designare||2|p|pres|indc|;|2|p|impr}}
+
+===Etymology 2===
+
+====Participle====
+{{head|it|past participle form|g=f-p}}
+
 # {{feminine plural of|it|designato}}
 
-===Adjective===
-{{head|it|verb form}}
+====Adjective====
+{{head|it|adjective form|g=f-p}}
 
-# {{feminine plural of|it|designato}}
+# {{adj form of|it|designato||f|p}}
 
 ===Anagrams===
 * {{anagrams|it|a=adeeginst|disegnate|sdegniate}}
@@ -12566,6 +12843,16 @@ Page 845 designati: -------- begin text --------
 
 # {{masculine plural of|it|designato}}
 
+===Adjective===
+{{head|it|adjective form|g=m-p}}
+
+# {{adj form of|it|designato||m|p}}
+
+===Noun===
+{{head|it|noun form|g=m-p}}
+
+# {{plural of|it|designato}}
+
 ===Anagrams===
 * {{anagrams|it|a=adegiinst|disegnati|indigesta}}
 
@@ -12579,6 +12866,11 @@ Page 846 designata: -------- begin text --------
 {{head|it|past participle form|g=f-s}}
 
 # {{feminine singular of|it|designato}}
+
+===Adjective===
+{{head|it|adjective form|g=f-s}}
+
+# {{adj form of|it|designato||f|s}}
 
 ===Anagrams===
 * {{anagrams|it|a=aadeginst|disegnata|indagaste}}
@@ -12634,16 +12926,19 @@ Page 848 destarsi: -------- begin text --------
 {{it-pr|destàrsi}}
 
 ===Verb===
-{{it-verb|é:è}} {{tlb|it|intransitive}}
+{{it-verb|é:è[ref:{{R:it:DiPI|desto}}]}}
 
 # {{reflexive of|it|destare}}
-# to [[wake]] or [[wake up]] {{q|oneself}}
+# {{lb|it|intransitive}} to [[wake up]]
 #: {{syn|it|ridestarsi|svegliarsi|risvegliarsi|alzarsi}}
 #* {{quote-book|it|author=Dante Alighieri|authorlink=Dante Alighieri|title=[[w:Inferno (Dante)|La divina commedia: Inferno]]|trans-title=The Divine Comedy: Hell|format=paperback|edition=12th|publisher=Le Monnier|year=1321|year_published=1994|page=|section=Canto VI|lines=94–96|passage=E 'l duca disse a me: «Più non '''si desta''' ¶ di qua dal suon de l'angelica tromba, ¶ quando verrà la nimica podesta [...]»|translation=And the Guide said to me: "He '''wakes''' no more ¶ this side the sound of the angelic trumpet; ¶ when shall approach the hostile Potentate"}}
 # to get out of a [[rut]]; to come back to activity
 
 ====Conjugation====
 {{it-conj-arsi|dest|essere}}
+
+===References===
+<references />
 
 ===Anagrams===
 * {{anagrams|it|a=adeirsst|detrassi|disserta|sardiste|tradisse}}
@@ -12654,10 +12949,25 @@ Page 849 desto: -------- begin text --------
 ===Pronunciation===
 {{it-pr|désto,dèsto<ref:{{R:it:DiPI}}>}}
 
-===Adjective===
+===Etymology 1===
+Unsuffixed past participle of {{m|it|destare||to awaken}}.
+
+====Participle====
+{{it-pp}}
+
+# {{tlb|it|archaic}} {{past participle of|it|destare}}
+
+====Adjective====
 {{it-adj}}
 
 # [[awake]]
+
+===Etymology 2===
+
+====Verb====
+{{head|it|verb form}}
+
+# {{inflection of|it|destare||1|s|pres|ind}}
 
 ===References===
 <references />
@@ -12681,7 +12991,22 @@ Page 850 desti: -------- begin text --------
 ===Etymology 2===
 
 ====Pronunciation====
-* {{it-pr|désti,dèsti<ref:{{R:it:DiPI}}>}}
+* {{it-pr|désti,dèsti<ref:{{R:it:DiPI}}<<name:dipi>>>}}
+
+====Participle====
+{{head|it|past participle form|g=m-p}}
+
+# {{tlb|it|archaic}} {{masculine plural of|it|desto}}
+
+====Adjective====
+{{head|it|adjective form|g=m-p}}
+
+# {{adj form of|it|desto||m|p}}
+
+===Etymology 3===
+
+====Pronunciation====
+* {{it-pr|désti,dèsti<ref:<<name:dipi>>>}}
 
 ====Verb====
 {{head|it|verb form}}
@@ -12697,10 +13022,30 @@ Page 850 desti: -------- begin text --------
 Page 851 desta: Found match for regex: =
 Page 851 desta: -------- begin text --------
 
-===Verb===
+===Pronunciation===
+* {{it-pr|désta,dèsta<ref:{{R:it:DiPI|desto}}>}}
+
+===Etymology 1===
+
+====Participle====
+{{head|it|past participle form|g=f-s}}
+
+# {{tlb|it|archaic}} {{feminine singular of|it|desto}}
+
+====Adjective====
+{{head|it|adjective form|g=f-s}}
+
+# {{adj form of|it|desto||f|s}}
+
+===Etymology 2===
+
+====Verb====
 {{head|it|verb form}}
 
 # {{inflection of|it|destare||3|s|pres|indc|;|2|s|impr}}
+
+===References===
+<references />
 
 ----
 
@@ -12708,10 +13053,33 @@ Page 851 desta: -------- begin text --------
 Page 852 deste: Found match for regex: =
 Page 852 deste: -------- begin text --------
 
-===Verb===
+===Etymology 1===
+
+====Pronunciation====
+* {{it-pr|déste}}
+
+====Verb====
 {{head|it|verb form}}
 
 # {{inflection of|it|dare||2|p|phis|;|2|p|impf|sub}}
+
+===Etymology 2===
+
+====Pronunciation====
+* {{it-pr|déste,dèste<ref:{{R:it:DiPI}}>}}
+
+====Participle====
+{{head|it|past participle form|g=f-p}}
+
+# {{tlb|it|archaic}} {{feminine plural of|it|desto}}
+
+====Adjective====
+{{head|it|adjective form|g=f-p}}
+
+# {{adj form of|it|desto||f|p}}
+
+===References===
+<references />
 
 ----
 
@@ -12762,12 +13130,15 @@ From {{m|it|destinare}}.
 {{nonlemma}}
 
 ====Pronunciation====
-{{it-pr|déstino,dèstino}}
+{{it-pr|déstino,dèstino<ref:{{R:it:DiPI}}>}}
 
 ====Verb====
 {{head|it|verb form}}
 
 # {{inflection of|it|destare||3|p|pres|subj|;|3|p|imp}}
+
+===References===
+<references />
 
 ===Anagrams===
 * {{anagrams|it|a=deinost|endosti}}
@@ -12798,11 +13169,11 @@ Page 855 ridestare: -------- begin text --------
 * {{l|it|ridestabile}}
 * {{l|it|ridestamento}}
 
-===Further reading===
-* {{R:it:Treccani}}
-
 ===References===
 <references />
+
+===Further reading===
+* {{R:it:Treccani}}
 
 ===Anagrams===
 * {{anagrams|it|a=adeeirrst|arderesti|ardireste|arrideste|disertare|diserterà|raderesti|riardeste|ridareste|ridesterà}}
@@ -12821,6 +13192,9 @@ Page 856 ridestarsi: -------- begin text --------
 
 ====Conjugation====
 {{it-conj-arsi|ridest|essere}}
+
+===References===
+<references />
 
 ===Anagrams===
 * {{anagrams|it|a=adeiirrsst|disserrati}}
@@ -12888,7 +13262,7 @@ Page 862 formulare: -------- begin text --------
 {{it-pr|formulàre}}
 
 ===Verb===
-{{it-verb|a/ò}}
+{{it-verb|a/ò:ó[ref:{{R:it:DiPI|formulo}}]}}
 
 # {{lb|it|transitive}} to [[formulate]], to [[phrase]]
 
@@ -12898,6 +13272,9 @@ Page 862 formulare: -------- begin text --------
 ====Related terms====
 * {{l|it|formula}}
 * {{l|it|formulazione}}
+
+===References===
+<references />
 
 ===Anagrams===
 * {{anagrams|it|a=aeflmorru|formulerà}}
@@ -12928,11 +13305,11 @@ Page 866 formula: Found match for regex: {
 Page 866 formula: -------- begin text --------
 {{wikipedia|lang=it}}
 
-===Etymology 1===
-Borrowed from {{bor|it|la|formula}}.
+===Pronunciation===
+{{it-pr|fòrmula,fórmula<ref:{{R:it:DiPI}}>}}
 
-====Pronunciation====
-{{it-pr|fòrmula}}
+===Etymology 1===
+{{bor+|it|la|formula}}.
 
 ====Noun====
 {{it-noun|f}}
@@ -12952,6 +13329,9 @@ Borrowed from {{bor|it|la|formula}}.
 {{head|it|verb form}}
 
 # {{inflection of|it|formulare||3|s|pres|indc|;|2|s|impr}}
+
+===References===
+<references />
 
 ===Anagrams===
 * {{anagrams|it|a=aflmoru|fulmaro}}
@@ -12993,7 +13373,7 @@ Page 870 riformulare: -------- begin text --------
 {{af|it|ri-|formulare}}
 
 ===Verb===
-{{it-verb|a/ò}}
+{{it-verb|a/ò:ó[ref:{{R:it:DiPI|formulo}}]}}
 
 # {{lb|it|transitive}} to [[reformulate]]
 
@@ -13002,6 +13382,9 @@ Page 870 riformulare: -------- begin text --------
 
 ====Related terms====
 * {{l|it|riformulazione}}
+
+===References===
+<references />
 
 ===Anagrams===
 * {{anagrams|it|a=aefilmorrru|riformulerà}}
@@ -13075,11 +13458,11 @@ Derived from {{m|it|freno}}<ref>http://tlio.ovi.cnr.it/TLIO/</ref><ref>{{R:it:Sa
 {{it-pr|frenàre}}
 
 ===Verb===
-{{it-verb|a/é}}
+{{it-verb|a/é:è[ref:{{R:it:DiPI|freno}}]}}
 
-# {{lb|it|transitive|or|intransitive}} to [[brake]]
-# {{lb|it|transitive|figuratively}} to [[check]], to [[hold back]], to [[curb]], to brake, to [[control]], to [[backpedal]], to [[harness]]
-#: {{syn|it|trattenere|controllare|rallentare|mettere|freno}}
+# {{lb|it|transitive|or|intransitive}} to [[brake]] {{+aux|it|avere}}
+# {{lb|it|transitive|figuratively}} to [[check]], to [[hold back]], to [[curb]], to [[brake]], to [[control]], to [[backpedal]], to [[harness]]
+#: {{syn|it|trattenere|controllare|rallentare|[[mettere]] [[freno]]}}
 
 ====Conjugation====
 {{it-conj-are|fren|avere}}
@@ -13114,16 +13497,19 @@ Page 881 frenarsi: Found match for regex: =
 Page 881 frenarsi: -------- begin text --------
 
 ===Verb===
-{{it-verb|é}}
+{{it-verb|é:è[ref:{{R:it:DiPI|freno}}]}}
 
 # {{reflexive of|it|frenare}}
-# {{lb|it|reflexive}} to [[control]] oneself, [[restrain]] oneself
+# to [[control]] oneself, [[restrain]] oneself
 
 ====Conjugation====
 {{it-conj-arsi|fren}}
 
 ====Related terms====
 * {{l|it|frenato}}
+
+===References===
+<references />
 
 ===Anagrams===
 * {{anagrams|it|a=aefinrrs|refransi|rifranse}}
@@ -13134,34 +13520,36 @@ Page 882 freno: -------- begin text --------
 ===Pronunciation===
 {{it-pr|fréno,frèno<ref:{{R:it:DiPI}}>}}
 
-===Verb===
-{{head|it|verb form}}
+===Etymology 1===
+{{inh+|it|la|frēnum}}, from {{der|it|ine-pro|*dʰer-||to hold}}.
 
-# {{inflection of|it|frenare||1|s|pres|ind}}
-
-===Etymology===
-From {{inh|it|la|frēnum}}, from {{der|it|ine-pro|*dʰer-||to hold}}.
-
-===Noun===
+====Noun====
 {{it-noun|m}}
 
 # [[brake]]
 # {{lb|it|figuratively}} [[check]], [[curb]], [[control]], [[restraint]]
 #: {{syn|it|controllo|limite|restrizione}}
-# {{lb|it|of a horse}} [[bit]]
+# [[bit]] {{q|of a horse}}
 
-====Related terms====
+=====Related terms=====
 * {{l|it|frenare}}
 * {{l|it|frenaggio}}
 * {{l|it|frenata}}
 * {{l|it|frenatura}}
 * {{l|it|frenulo}}
 
-====Descendants====
+=====Descendants=====
 * {{desc|el|φρένο|bor=1}}
 
 ====See also====
 * {{l|it|briglia}}
+
+===Etymology 2===
+
+====Verb====
+{{head|it|verb form}}
+
+# {{inflection of|it|frenare||1|s|pres|ind}}
 
 ===References===
 <references />
@@ -13180,15 +13568,19 @@ Page 883 freni: -------- begin text --------
 ===Pronunciation===
 {{it-pr|fréni,frèni<ref:{{R:it:DiPI|freno}}>}}
 
-===Verb===
-{{head|it|verb form}}
+===Etymology 1===
 
-# {{inflection of|it|frenare||2|s|pres|indc|;|1//2//3|s|pres|subj|;|3|s|impr}}
-
-===Noun===
+====Noun====
 {{head|it|noun form|g=m}}
 
 # {{plural of|it|freno}}
+
+===Etymology 2===
+
+====Verb====
+{{head|it|verb form}}
+
+# {{inflection of|it|frenare||2|s|pres|indc|;|1//2//3|s|pres|subj|;|3|s|impr}}
 
 ===References===
 <references />
@@ -13257,16 +13649,20 @@ Page 887 affrenare: -------- begin text --------
 From {{m|it|freno}}.
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/é:è[ref:{{R:it:DiPI|freno}}]}} {{tlb|it|transitive|literary}}
 
-# {{lb|it|transitive}} to [[restrain]] or [[hold back]]
+# to [[brake]] (a vehicle); to [[restrain]] (a horse)
 #: {{syn|it|frenare|trattenere}}
+# {{lb|it|figuratively}} to [[moderate]], to [[curb]]
 
 ====Conjugation====
 {{it-conj-are|affren|avere}}
 
 ====Derived terms====
 * {{l|it|raffrenare}}
+
+===References===
+<references />
 
 ===Anagrams===
 * {{anagrams|it|a=aaeeffnrr|affrenerà}}
@@ -13327,9 +13723,10 @@ From {{af|it|ra-|frenare}} or {{af|it|ri-|affrenare}}.
 {{it-pr|raffrenàre}}
 
 ===Verb===
-{{it-verb|a/é:è[ref:{{R:it:DiPI|freno}}]}}
+{{it-verb|a/é:è[ref:{{R:it:DiPI|freno}}]}} {{tlb|it|transitive}}
 
-# {{lb|it|transitive}} to [[restrain]], to [[control]]
+# to [[brake]] [[strongly]] (a vehicle); to [[restrain]] (a horse)
+# {{lb|it|figuratively}} to [[moderate]], to [[curb]]
 
 ====Conjugation====
 {{it-conj-are|raffren|avere}}
@@ -13416,9 +13813,10 @@ Page 901 sfrenare: -------- begin text --------
 {{confix|it|s|freno|are}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/é:è[ref:{{R:it:DiPI|sfreno}}]}} {{tlb|it|transitive}}
 
-# {{lb|it|transitive}} to [[unleash]], [[let loose]]
+# {{lb|it|uncommon}} to [[release]] the [[brake]] of (a car, etc.)
+# {{lb|it|figuratively}} to [[unleash]], to [[let loose]]
 
 ====Conjugation====
 {{it-conj-are|sfren|avere}}
@@ -13428,6 +13826,9 @@ Page 901 sfrenare: -------- begin text --------
 * {{l|it|sfrenarsi}}
 * {{l|it|sfrenato}}
 
+===References===
+<references />
+
 ===Anagrams===
 * {{anagrams|it|a=aeefnrrs|refranse|sfrenerà}}
 -------- end text --------
@@ -13435,13 +13836,16 @@ Page 902 sfrenarsi: Found match for regex: =
 Page 902 sfrenarsi: -------- begin text --------
 
 ===Verb===
-{{it-verb}}
+{{it-verb|é:è[ref:{{R:it:DiPI|sfreno}}]}}
 
 # {{reflexive of|it|sfrenare}}
-# to [[let go|let oneself go]], [[break loose]], [[cut loose]], [[go wild]], [[run wild]]
+# {{lb|it|figuratively}} to [[let go|let oneself go]], [[break loose]], [[cut loose]], [[go wild]], [[run wild]]
 
 ====Conjugation====
 {{it-conj-arsi|sfren|essere}}
+
+===References===
+<references />
 
 ====Synonyms====
 * {{l|it|scatenarsi}}
@@ -13547,6 +13951,7 @@ Page 913 freno a mano: -------- begin text --------
 {{it-noun|m}}
 
 # {{lb|it|automotive}} [[handbrake]]
+
 {{C|it|Vehicles}}
 -------- end text --------
 Page 914 freni a mano: Found match for regex: =
@@ -13682,7 +14087,7 @@ Page 928 tenere a freno: Found match for regex: =
 Page 928 tenere a freno: -------- begin text --------
 
 ===Etymology===
-Literally, "to keep at brake."
+Literally, "to keep at brake".
 
 ===Verb===
 {{it-verb}}
@@ -13697,7 +14102,7 @@ Page 929 tenere a freno la lingua: Found match for regex: =
 Page 929 tenere a freno la lingua: -------- begin text --------
 
 ===Etymology===
-Literally, "to keep the tongue in check."
+Literally, "to keep the tongue in check".
 
 ===Verb===
 {{it-verb|head=[[tenere a freno]] [[la]] [[lingua]]}}

@@ -14,7 +14,7 @@ Page 0 zampillata: <respelling> all: dzampillàta,#tsampillàta<r:DiPI|zampillo>
 Page 0 zampillati: <respelling> all: dzampillàti,#tsampillàti<r:DiPI|zampillo> <end>
 Page 0 zampillamento: <respelling> all: dzampillaménto,#tsampillaménto<r:DiPI|zampillo> <end>
 Page 0 zampillio: <respelling> all: dzampillìo,#tsampillìo<r:DiPI|zampillo> <end>
-Page 0 zinco: <respelling> all: dzìnco,#tsìnco<r:DiPI> <end>
+Page 0 zinco: <respelling> top: dzìnco,#tsìnco<r:DiPI> <end>
 Page 0 zinchi: <respelling> all: dzìnchi,#tsìnchi<r:DiPI|zinco> <end>
 Page 0 zinca: <respelling> all: dzìnca,#tsìnca<r:DiPI|zinco> <end>
 Page 0 zinchiamo: <respelling> all: dzinchiàmo,#tsinchiàmo<r:DiPI|zinco> <end>
@@ -23,9 +23,9 @@ Page 0 zinchiamo: <respelling> all: dzinchiàmo,#tsinchiàmo<r:DiPI|zinco> <end>
 Page 0 zincano: <respelling> all: dzìncano,#tsìncano<r:DiPI|zinco> <end>
 Page 0 zinchiate: <respelling> all: dzinchiàte,#tsinchiàte<r:DiPI|zinco> <end>
 Page 0 zinchino: <respelling> all: dzìnchino,#tsìnchino<r:DiPI|zinco> <end>
-Page 0 zincato: <respelling> all: dzincàto,#tsincàto<r:DiPI|zinco> <end>
+Page 0 zincato: <respelling> top: dzincàto,#tsincàto<r:DiPI|zinco> <end>
 Page 0 zincata: <respelling> all: dzincàta,#tsincàta<r:DiPI|zinco> <end>
-Page 0 zincati: <respelling> all: dzincàti,#tsincàti<r:DiPI|zinco> <end>
+Page 0 zincati: <respelling> top: dzincàti,#tsincàti<r:DiPI|zinco> <end>
 Page 0 arzinca: <respelling> all: ardzìnca,artsìnca<r:DiPI> <end>
 Page 0 arzinche: <respelling> all: ardzìnche,artsìnche<r:DiPI|arzinca> <end>
 Page 0 fosfuro di zinco: <respelling> all: fosfùro_di_dzìnco,#fosfùro_di_tsìnco<r:DiPI|zinco> <end>
@@ -218,8 +218,8 @@ Page 0 rinzuccherati: <respelling> all: rindzuccheràti,#rintsuccheràti<r:DiPI|
 Page 0 rinzuccherata: <respelling> all: rindzuccheràta,#rintsuccheràta<r:DiPI|zucchero> <end>
 Page 0 zuccheraggio: <respelling> all: dzuccheràggio,#tsuccheràggio<r:DiPI|zucchero> <end>
 Page 0 zuccheraggi: <respelling> all: dzuccheràggi,#tsuccheràggi<r:DiPI|zucchero> <end>
-Page 0 zuccheriera: <respelling> all: dzuccherièra,#tsuccherièra<r:DiPI|zuccheriera> <end>
-Page 0 zuccheriere: <respelling> all: dzuccherière,#tsuccherière<r:DiPI|zuccheriera> <end>
+Page 0 zuccheriera: <respelling> top: dzuccherièra,#tsuccherièra<r:DiPI|zuccheriera> <end>
+Page 0 zuccheriere: <respelling> top: dzuccherière,#tsuccherière<r:DiPI|zuccheriera> <end>
 Page 0 zuccheriero: <respelling> all: dzuccherièro,#tsuccherièro<r:DiPI|zucchero> <end>
 Page 0 zuccherieri: <respelling> all: dzuccherièri,#tsuccherièri<r:DiPI|zucchero> <end>
 Page 0 zuccherifero: <respelling> all: dzuccherìfero,#tsuccherìfero<r:DiPI|zucchero> <end>
@@ -251,7 +251,7 @@ Page 0 zuccheroso: <respelling> all: dzuccheróso,#tsuccheróso,#tsuccheró[s]o<
 Page 0 zuccherosa: <respelling> all: dzuccherósa,#tsuccherósa,#tsuccheró[s]a<r:DiPI|zucchero> <end>
 Page 0 zuccherosi: <respelling> all: dzuccherósi,#tsuccherósi,#tsuccheró[s]i<r:DiPI|zucchero> <end>
 Page 0 zuccherose: <respelling> all: dzuccheróse,#tsuccheróse,#tsuccheró[s]e<r:DiPI|zucchero> <end>
-Page 0 zucche: <respelling> all: zùcche,#tsùcche<r:DiPI|zucca> <end>
+Page 0 zucche: <respelling> all: dzùcche,#tsùcche<r:DiPI|zucca> <end>
 Page 0 zucchetta: <respelling> all: dzucchétta,#tsucchétta<r:DiPI|zucca> <end>
 Page 0 zucchette: <respelling> all: dzucchétte,#tsucchétte<r:DiPI|zucca> <end>
 Page 0 zucchetto: <respelling> all: dzucchétto,#tsucchétto<r:DiPI|zucca> <end>
@@ -313,7 +313,7 @@ Page 0 accentuare: <respelling> all: accentu.àre,accentuàre<r:DiPI|accentuale>
 Page 0 accentuarsi: <respelling> all: accentu.àrsi,accentuàrsi<r:DiPI|accentuale> <end>
 Page 0 accentuo: <respelling> all: accèntu.o<r:DiPI> <end>
 Page 0 accentui: <respelling> all: accèntu.i<r:DiPI|accentuo> <end>
-Page 0 accentua: <respelling> all: accentu.a<r:DiPI|accentuo> <end>
+Page 0 accentua: <respelling> all: accèntu.a<r:DiPI|accentuo> <end>
 Page 0 accentuiamo: <respelling> all: accentu.iàmo,accent[w]i.àmo<r:DiPI|accentuale> <end>
 # FIXME, split
 #Page 0 accentuate: <respelling> all: accentu.àte,accentuàte<r:DiPI|accentuale> <end>
@@ -324,32 +324,32 @@ Page 0 accentuato: <respelling> all: accentu.àto,accentuàto<r:DiPI|accentuale>
 Page 0 accentuati: <respelling> all: accentu.àti,accentuàti<r:DiPI|accentuale> <end>
 Page 0 accentuata: <respelling> all: accentu.àta,accentuàta<r:DiPI|accentuale> <end>
 # up through 2000
-Page 0 pesare: <respelling> all: pesàre,#pe[s]àre<r:DiPI|pesa> <end>
-Page 0 pesarsi: <respelling> all: pesàrsi,#pe[s]àrsi<r:DiPI|pesa> <end>
+Page 0 pesare: <respelling> all: pesàre,#pe[s]àre<r:DiPI|peso> <end>
+Page 0 pesarsi: <respelling> all: pesàrsi,#pe[s]àrsi<r:DiPI|peso> <end>
 # FIXME, split etym
 #Page 0 peso: <respelling> all: peso <end>
 #Page 0 pesi: <respelling> all: pesi <end>
 #Page 0 pesa: <respelling> all: pesa <end>
 #Page 0 pese: <respelling> all: pese <end>
-Page 0 pesano: <respelling> all: pésano,#pé[s]ano<r:DiPI|pesa> <end>
-Page 0 pesino: <respelling> all: pésino,#pé[s]ino<r:DiPI|pesa> <end>
-Page 0 contrappesare: <respelling> all: contrappesàre,#contrappe[s]àre<r:DiPI|pesa> <end>
-Page 0 contrappesarsi: <respelling> all: contrappesàrsi,#contrappe[s]àrsi<r:DiPI|pesa> <end>
+Page 0 pesano: <respelling> all: pésano,#pé[s]ano<r:DiPI|peso> <end>
+Page 0 pesino: <respelling> all: pésino,#pé[s]ino<r:DiPI|peso> <end>
+Page 0 contrappesare: <respelling> all: contrappesàre,#contrappe[s]àre<r:DiPI|peso> <end>
+Page 0 contrappesarsi: <respelling> all: contrappesàrsi,#contrappe[s]àrsi<r:DiPI|peso> <end>
 # FIXME, split etym
 #Page 0 contrappeso: <respelling> all: contrappeso <end>
 #Page 0 contrappesi: <respelling> all: contrappesi <end>
-Page 0 contrappesa: <respelling> all: contrappésa,#contrappé[s]a<r:DiPI|pesa> <end>
-Page 0 contrappese: <respelling> all: contrappése,#contrappé[s]e<r:DiPI|pesa> <end>
-Page 0 contrappesano: <respelling> all: contrappésano,#contrappé[s]ano<r:DiPI|pesa> <end>
-Page 0 contrappesino: <respelling> all: contrappésino,#contrappé[s]ino<r:DiPI|pesa> <end>
-Page 0 ripesare: <respelling> all: ripesàre,#ripe[s]àre<r:DiPI|pesa> <end>
-Page 0 ripesarsi: <respelling> all: ripesàrsi,#ripe[s]àrsi<r:DiPI|pesa> <end>
-Page 0 ripeso: <respelling> all: ripéso,#ripé[s]o<r:DiPI|pesa> <end>
-Page 0 ripesi: <respelling> all: ripési,#ripé[s]i<r:DiPI|pesa> <end>
-Page 0 ripesa: <respelling> all: ripésa,#ripé[s]a<r:DiPI|pesa> <end>
-Page 0 ripese: <respelling> all: ripése,#ripé[s]e<r:DiPI|pesa> <end>
-Page 0 ripesano: <respelling> all: ripésano,#ripé[s]ano<r:DiPI|pesa> <end>
-Page 0 ripesino: <respelling> all: ripésino,#ripé[s]ino<r:DiPI|pesa> <end>
+Page 0 contrappesa: <respelling> all: contrappésa,#contrappé[s]a<r:DiPI|peso> <end>
+Page 0 contrappese: <respelling> all: contrappése,#contrappé[s]e<r:DiPI|peso> <end>
+Page 0 contrappesano: <respelling> all: contrappésano,#contrappé[s]ano<r:DiPI|peso> <end>
+Page 0 contrappesino: <respelling> all: contrappésino,#contrappé[s]ino<r:DiPI|peso> <end>
+Page 0 ripesare: <respelling> all: ripesàre,#ripe[s]àre<r:DiPI|peso> <end>
+Page 0 ripesarsi: <respelling> all: ripesàrsi,#ripe[s]àrsi<r:DiPI|peso> <end>
+Page 0 ripeso: <respelling> all: ripéso,#ripé[s]o<r:DiPI|peso> <end>
+Page 0 ripesi: <respelling> all: ripési,#ripé[s]i<r:DiPI|peso> <end>
+Page 0 ripesa: <respelling> all: ripésa,#ripé[s]a<r:DiPI|peso> <end>
+Page 0 ripese: <respelling> all: ripése,#ripé[s]e<r:DiPI|peso> <end>
+Page 0 ripesano: <respelling> all: ripésano,#ripé[s]ano<r:DiPI|peso> <end>
+Page 0 ripesino: <respelling> all: ripésino,#ripé[s]ino<r:DiPI|peso> <end>
 Page 0 soppesare: <respelling> all: soppesàre,#soppe[s]àre<r:DiPI|soppeso> <end>
 Page 0 soppesarsi: <respelling> all: soppesàrsi,#soppe[s]àrsi<r:DiPI|soppeso> <end>
 Page 0 soppeso: <respelling> all: soppéso,#soppé[s]o<r:DiPI> <end>
@@ -490,7 +490,7 @@ Page 0 fuorvii: <respelling> all: fuòrvìi,fuorvìi<r:DiPI|fuorvio> <end>
 Page 0 fuorvia: <respelling> all: fuòrvìa,fuorvìa<r:DiPI|fuorvio> <end>
 Page 0 fuorviano: <respelling> all: fuòrvìano,fuorvìano<r:DiPI|fuorvio> <end>
 Page 0 fuorviino: <respelling> all: fuòrvìino,fuorvìino<r:DiPI|fuorvio> <end>
-Page 0 inviare: <respelling> all: invi.àre<r:DiPI|avviare|invio> <end>
+Page 0 inviare: <respelling> all: invi.àre<r:DiPI|avviare|invio><audio:It-inviare.ogg> <end>
 Page 0 inviarsi: <respelling> all: invi.àrsi<r:DiPI|avviare|invio> <end>
 # FIXME, split etym
 #Page 0 invio: <respelling> all: invio <end>
@@ -567,45 +567,48 @@ Page 0 pescano: <respelling> all: péscano<r:DiPI|pesco> <end>
 #Page 0 peschino: <respelling> all: péschino<r:DiPI|pesco> <end>
 # FIXME, create
 #Page 0 peschini: <respelling> all: peschìni <end>
-Page 0 abituare: <respelling> all: abitu.àre,abituàre<r:DiPI|abituandosi|disabituo> <end>
-Page 0 abituarsi: <respelling> all: abitu.àrsi,abituàrsi<r:DiPI|abituandosi|disabituo> <end>
-Page 0 abituo: <respelling> all: abìtu.o,abìtuo<r:DiPI|+|disabituo> <end>
-Page 0 abitui: <respelling> all: abìtu.i,abìt[w]i<r:DiPI|abituo|disabituo> <end>
-Page 0 abitua: <respelling> all: abìtu.a,abìtua<r:DiPI|abituo|disabituo> <end>
-Page 0 abituiamo: <respelling> all: abitu.iàmo,abit[w]i.àmo<r:DiPI|abituandosi|disabituo> <end>
-Page 0 abituate: <respelling> top: abitu.àte,abituàte<r:DiPI|abituandosi|disabituo> <end>
-Page 0 abituano: <respelling> all: abìtu.ano,abituàno<r:DiPI|abituo|disabituo> <end>
-Page 0 abituiate: <respelling> all: abitu.iàte,abit[w]i.àte<r:DiPI|abituandosi|disabituo> <end>
-Page 0 abituino: <respelling> all: abìtu.ino,abìt[w]ino<r:DiPI|abituo|disabituo> <end>
-Page 0 abituato: <respelling> all: abitu.àto,abituàto<r:DiPI|abituandosi|disabituo> <end>
-Page 0 abituati: <respelling> all: abitu.àti,abituàti<r:DiPI|abituandosi|disabituo> <end>
-Page 0 abituata: <respelling> all: abitu.àta,abituàta<r:DiPI|abituandosi|disabituo> <end>
-Page 0 disabituare: <respelling> all: disabitu.àre,disabituàre<r:DiPI|abituandosi|disabituo> <end>
-Page 0 disabituarsi: <respelling> all: disabitu.àrsi,disabituàrsi<r:DiPI|abituandosi|disabituo> <end>
-Page 0 disabituo: <respelling> all: disabìtu.o,disabìtuo<r:DiPI|+|disabituo> <end>
-Page 0 disabitui: <respelling> all: disabìtu.i,disabìt[w]i<r:DiPI|abituo|disabituo> <end>
-Page 0 disabitua: <respelling> all: disabìtu.a,disabìtua<r:DiPI|abituo|disabituo> <end>
-Page 0 disabituiamo: <respelling> all: disabitu.iàmo,disabit[w]i.àmo<r:DiPI|abituandosi|disabituo> <end>
-Page 0 disabituate: <respelling> top: disabitu.àte,disabituàte<r:DiPI|abituandosi|disabituo> <end>
-Page 0 disabituano: <respelling> all: disabìtu.ano,disabituàno<r:DiPI|abituo|disabituo> <end>
-Page 0 disabituiate: <respelling> all: disabitu.iàte,disabit[w]i.àte<r:DiPI|abituandosi|disabituo> <end>
-Page 0 disabituino: <respelling> all: disabìtu.ino,disabìt[w]ino<r:DiPI|abituo|disabituo> <end>
-Page 0 disabituato: <respelling> all: disabitu.àto,disabituàto<r:DiPI|abituandosi|disabituo> <end>
-Page 0 disabituati: <respelling> all: disabitu.àti,disabituàti<r:DiPI|abituandosi|disabituo> <end>
-Page 0 disabituata: <respelling> all: disabitu.àta,disabituàta<r:DiPI|abituandosi|disabituo> <end>
-Page 0 riabituare: <respelling> all: ri.abitu.àre,ri.abituàre<r:DiPI|abituandosi|disabituo> <end>
-Page 0 riabituarsi: <respelling> all: ri.abitu.àrsi,ri.abituàrsi<r:DiPI|abituandosi|disabituo> <end>
-Page 0 riabituo: <respelling> all: ri.abìtu.o,ri.abìtuo<r:DiPI|+|disabituo> <end>
-Page 0 riabitui: <respelling> all: ri.abìtu.i,ri.abìt[w]i<r:DiPI|abituo|disabituo> <end>
-Page 0 riabitua: <respelling> all: ri.abìtu.a,ri.abìtua<r:DiPI|abituo|disabituo> <end>
-Page 0 riabituiamo: <respelling> all: ri.abitu.iàmo,ri.abit[w]i.àmo<r:DiPI|abituandosi|disabituo> <end>
-Page 0 riabituate: <respelling> top: ri.abitu.àte,ri.abituàte<r:DiPI|abituandosi|disabituo> <end>
-Page 0 riabituano: <respelling> all: ri.abìtu.ano,ri.abituàno<r:DiPI|abituo|disabituo> <end>
-Page 0 riabituiate: <respelling> all: ri.abitu.iàte,ri.abit[w]i.àte<r:DiPI|abituandosi|disabituo> <end>
-Page 0 riabituino: <respelling> all: ri.abìtu.ino,ri.abìt[w]ino<r:DiPI|abituo|disabituo> <end>
-Page 0 riabituato: <respelling> all: ri.abitu.àto,ri.abituàto<r:DiPI|abituandosi|disabituo> <end>
-Page 0 riabituati: <respelling> all: ri.abitu.àti,ri.abituàti<r:DiPI|abituandosi|disabituo> <end>
-Page 0 riabituata: <respelling> all: ri.abitu.àta,ri.abituàta<r:DiPI|abituandosi|disabituo> <end>
+Page 0 abituare: <respelling> all: abitu.àre<r:DiPI|abituandosi> <end>
+Page 0 abituarsi: <respelling> all: abitu.àrsi<r:DiPI|abituandosi><audio:LL-Q652_(ita)-Happypheasant-abituarsi.wav> <end>
+Page 0 abituo: <respelling> all: abìtu.o<r:DiPI> <end>
+Page 0 abitui: <respelling> all: abìtu.i<r:DiPI|abituo> <end>
+Page 0 abitua: <respelling> all: abìtu.a<r:DiPI|abituo> <end>
+Page 0 abituiamo: <respelling> all: abitu.iàmo<r:DiPI|abituandosi> <end>
+Page 0 abituate: <respelling> top: abitu.àte<r:DiPI|abituandosi> <end>
+Page 0 abituano: <respelling> all: abìtu.ano<r:DiPI|abituo> <end>
+Page 0 abituiate: <respelling> all: abitu.iàte<r:DiPI|abituandosi> <end>
+Page 0 abituino: <respelling> all: abìtu.ino<r:DiPI|abituo> <end>
+Page 0 abituato: <respelling> all: abitu.àto<r:DiPI|abituandosi> <end>
+# split etym and pronun, already done
+#Page 0 abituati: <respelling> all: abitu.àti<r:DiPI|abituandosi> <end>
+Page 0 abituata: <respelling> all: abitu.àta<r:DiPI|abituandosi> <end>
+Page 0 disabituare: <respelling> all: disabitu.àre<r:DiPI|abituandosi> <end>
+Page 0 disabituarsi: <respelling> all: disabitu.àrsi<r:DiPI|abituandosi> <end>
+Page 0 disabituo: <respelling> all: disabìtu.o<r:DiPI|abituo> <end>
+Page 0 disabitui: <respelling> all: disabìtu.i<r:DiPI|abituo> <end>
+Page 0 disabitua: <respelling> all: disabìtu.a<r:DiPI|abituo> <end>
+Page 0 disabituiamo: <respelling> all: disabitu.iàmo<r:DiPI|abituandosi> <end>
+Page 0 disabituate: <respelling> top: disabitu.àte<r:DiPI|abituandosi> <end>
+Page 0 disabituano: <respelling> all: disabìtu.ano<r:DiPI|abituo> <end>
+Page 0 disabituiate: <respelling> all: disabitu.iàte<r:DiPI|abituandosi> <end>
+Page 0 disabituino: <respelling> all: disabìtu.ino<r:DiPI|abituo> <end>
+Page 0 disabituato: <respelling> all: disabitu.àto<r:DiPI|abituandosi> <end>
+# split etym and pronun, already done
+#Page 0 disabituati: <respelling> all: disabitu.àti<r:DiPI|abituandosi> <end>
+Page 0 disabituata: <respelling> all: disabitu.àta<r:DiPI|abituandosi> <end>
+Page 0 riabituare: <respelling> all: ri.abitu.àre<r:DiPI|abituandosi> <end>
+Page 0 riabituarsi: <respelling> all: ri.abitu.àrsi<r:DiPI|abituandosi> <end>
+Page 0 riabituo: <respelling> all: ri.abìtu.o<r:DiPI|abituo> <end>
+Page 0 riabitui: <respelling> all: ri.abìtu.i<r:DiPI|abituo> <end>
+Page 0 riabitua: <respelling> all: ri.abìtu.a<r:DiPI|abituo> <end>
+Page 0 riabituiamo: <respelling> all: ri.abitu.iàmo<r:DiPI|abituandosi> <end>
+Page 0 riabituate: <respelling> top: ri.abitu.àte<r:DiPI|abituandosi> <end>
+Page 0 riabituano: <respelling> all: ri.abìtu.ano<r:DiPI|abituo> <end>
+Page 0 riabituiate: <respelling> all: ri.abitu.iàte<r:DiPI|abituandosi> <end>
+Page 0 riabituino: <respelling> all: ri.abìtu.ino<r:DiPI|abituo> <end>
+Page 0 riabituato: <respelling> all: ri.abitu.àto<r:DiPI|abituandosi> <end>
+# split etym and pronun, already done
+#Page 0 riabituati: <respelling> all: ri.abitu.àti<r:DiPI|abituandosi> <end>
+Page 0 riabituata: <respelling> all: ri.abitu.àta<r:DiPI|abituandosi> <end>
 Page 0 voltare: <respelling> all: voltàre <end>
 Page 0 voltarsi: <respelling> all: voltàrsi <end>
 # FIXME, split etym
@@ -615,7 +618,7 @@ Page 0 voltarsi: <respelling> all: voltàrsi <end>
 #Page 0 volte: <respelling> all: volte <end>
 Page 0 voltano: <respelling> all: vòltano<r:DiPI|volto> <end>
 Page 0 voltino: <respelling> all: vòltino<r:DiPI|volto> <end>
-Page 0 viaggiare: <respelling> all: vi.aggiàre<r:DiPI|viaggio> <end>
+Page 0 viaggiare: <respelling> all: vi.aggiàre<r:DiPI|viaggio><audio:LL-Q652_(ita)-Happypheasant-viaggiare.wav> <end>
 Page 0 viaggiarsi: <respelling> all: vi.aggiàrsi<r:DiPI|viaggio> <end>
 # FIXME, split etym
 #Page 0 viaggio: <respelling> all: vi.aggio <end>
@@ -649,10 +652,10 @@ Page 0 viaggio di nozze: <respelling> all: vi.àggio_di_nòttse<r:DiPI|viaggio|n
 Page 0 viaggi di nozze: <respelling> all: vi.àggi_di_nòttse<r:DiPI|viaggio|nozze> <end>
 Page 0 continuare: <respelling> all: continu.àre,continuàre<r:DiPI|continuiamo|continuo> <end>
 Page 0 continuarsi: <respelling> all: continu.àrsi,continuàrsi<r:DiPI|continuiamo|continuo> <end>
-Page 0 continuo: <respelling> all: contìnu.o,contìnuo<r:DiPI> <end>
+Page 0 continuo: <respelling> top: contìnu.o,contìnuo<r:DiPI> <end>
 Page 0 continui: <respelling> top: contìnu.i,contìn[w]i<r:DiPI|continuo> <end>
 Page 0 continua: <respelling> top: contìnu.a,contìnua<r:DiPI|continuo> <end>
-Page 0 continue: <respelling> top: contìnu.e,contìnue<r:DiPI|continuo> <end>
+Page 0 continue: <respelling> all: contìnu.e,contìnue<r:DiPI|continuo> <end>
 Page 0 continuiamo: <respelling> all: continu.iàmo,contin[w]i.àmo<r:DiPI|continuiamo|continuo> <end>
 Page 0 continuate: <respelling> top: continu.àte,continuàte<r:DiPI|continuiamo|continuo> <end>
 Page 0 continuano: <respelling> all: contìnu.ano,continuàno<r:DiPI|continuo> <end>
@@ -661,7 +664,7 @@ Page 0 continuino: <respelling> all: contìnu.ino,contìn[w]ino<r:DiPI|continuo>
 Page 0 continuato: <respelling> all: continu.àto,continuàto<r:DiPI|continuiamo|continuo> <end>
 Page 0 continuati: <respelling> all: continu.àti,continuàti<r:DiPI|continuiamo|continuo> <end>
 Page 0 continuata: <respelling> all: continu.àta,continuàta<r:DiPI|continuiamo|continuo> <end>
-Page 0 desiderare: <respelling> all: desideràre,#de[s]ideràre<r:DiPI|desidero> <end>
+Page 0 desiderare: <respelling> all: desideràre,#de[s]ideràre<r:DiPI|desidero><audio:LL-Q652_(ita)-Happypheasant-desiderare.wav> <end>
 Page 0 desiderarsi: <respelling> all: desideràrsi,#de[s]ideràrsi<r:DiPI|desidero> <end>
 # FIXME, split
 #Page 0 desidero: <respelling> all: desìdero,#de[s]ìdero<r:DiPI> <end>
@@ -784,7 +787,7 @@ Page 0 agitarsi: <respelling> all: agitàrsi <end>
 #Page 0 agito: <respelling> all: agito <end>
 #Page 0 agiti: <respelling> all: agiti <end>
 #Page 0 agita: <respelling> all: agita <end>
-Page 0 agite: <respelling> all: agìte <end>
+Page 0 agite: <respelling> top: agìte <end>
 #FIXME, split
 #Page 0 altero: <respelling> all: altero <end>
 #Page 0 altera: <respelling> all: altera <end>
@@ -869,127 +872,145 @@ Page 0 secretarsi: <respelling> all: secretàrsi <end>
 #Page 0 secreta: <respelling> all: secreta <end>
 Page 0 secretano: <respelling> all: secrétano,secrètano<r:DiPI|secreto> <end>
 Page 0 secretino: <respelling> all: secrétino,secrètino<r:DiPI|secreto> <end>
-# got here/this far in find_regex.italian.pronun-fix.pages.txt.4.out.1 (page 813)
+# FIXME, two vowels
+#Page 0 porgere: <respelling> all: porgere <end>
+#Page 0 porgersi: <respelling> all: porgersi <end>
+# FIXME, multiple etyms and pronuns
+#Page 0 porto: <respelling> all: porto <end>
+#Page 0 porta: <respelling> all: porta <end>
+#Page 0 porti: <respelling> all: porti <end>
+#Page 0 porte: <respelling> all: porte <end>
+# FIXME, two vowels
+#Page 0 riporgere: <respelling> all: riporgere <end>
+#Page 0 riporgersi: <respelling> all: riporgersi <end>
+# FIXME, multiple etyms and pronuns
+#Page 0 riporto: <respelling> all: riporto <end>
+#Page 0 riporta: <respelling> all: riporta <end>
+#Page 0 riporti: <respelling> all: riporti <end>
+#Page 0 riporte: <respelling> all: riporte <end>
+# FIXME, two vowels
+#Page 0 sporgere: <respelling> all: sporgere <end>
+#Page 0 sporgersi: <respelling> all: sporgersi <end>
+# FIXME, multiple etyms and pronuns
+#Page 0 sporto: <respelling> all: sporto <end>
+#Page 0 sporta: <respelling> all: sporta <end>
+#Page 0 sporti: <respelling> all: sporti <end>
+#Page 0 sporte: <respelling> all: sporte <end>
+# DONE
+#Page 0 designare: <respelling> all: designare <end>
+#Page 0 designarsi: <respelling> all: designarsi <end>
+Page 0 designo: <respelling> all: desìgno,#de[s]ìgno<r:DiPI|designo> <end>
+Page 0 designi: <respelling> all: desìgni,#de[s]ìgni<r:DiPI|designo> <end>
+Page 0 designa: <respelling> all: desìgna,#de[s]ìgna<r:DiPI|designo> <end>
+# Doesn't exist
+#Page 0 designe: <respelling> all: designe <end>
+Page 0 designiamo: <respelling> all: designiàmo,#de[s]igniàmo<r:DiPI|designo> <end>
+Page 0 designate: <respelling> top: designàte,#de[s]ignàte<r:DiPI|designo> <end>
+Page 0 designano: <respelling> all: desìgnano,#de[s]ìgnano<r:DiPI|designo> <end>
+Page 0 designiate: <respelling> all: designiàte,#de[s]igniàte<r:DiPI|designo> <end>
+Page 0 designino: <respelling> all: desìgnino,#de[s]ìgnino<r:DiPI|designo> <end>
+# Doesn't exist
+#Page 0 designini: <respelling> all: designini <end>
+Page 0 designato: <respelling> all: designàto,#de[s]ignàto<r:DiPI|designo> <end>
+Page 0 designati: <respelling> all: designàti,#de[s]ignàti<r:DiPI|designo> <end>
+Page 0 designata: <respelling> all: designàta,#de[s]ignàta<r:DiPI|designo> <end>
+# two vowels
+Page 0 destare: <respelling> all: destàre <end>
+Page 0 destarsi: <respelling> all: destàrsi <end>
+# multiple etyms, pronuns; done by hand
+#Page 0 desto: <respelling> top: désto,dèsto<r:DiPI> <end>
+#Page 0 desti: <respelling> all: desti <end>
+#Page 0 desta: <respelling> all: desta <end>
+#Page 0 deste: <respelling> all: deste <end>
+Page 0 destano: <respelling> all: déstano,dèstano<r:DiPI|desto> <end>
+# multiple etyms, pronuns; done by hand
+#Page 0 destino: <respelling> all: destino <end>
+Page 0 ridestare: <respelling> all: ridestàre <end>
+Page 0 ridestarsi: <respelling> all: ridestàrsi <end>
+Page 0 ridesto: <respelling> all: ridésto,ridèsto<r:DiPI|desto> <end>
+Page 0 ridesti: <respelling> all: ridésti,ridèsti<r:DiPI|desto> <end>
+Page 0 ridesta: <respelling> all: ridésta,ridèsta<r:DiPI|desto> <end>
+Page 0 ridestano: <respelling> all: ridéstano,ridèstano<r:DiPI|desto> <end>
+Page 0 ridestino: <respelling> all: ridéstino,ridèstino<r:DiPI|desto> <end>
+# two vowels
+Page 0 formulare: <respelling> all: formulàre <end>
+Page 0 formularsi: <respelling> all: formulàrsi <end>
+Page 0 formulo: <respelling> all: fòrmulo,fórmulo<r:DiPI|formulo> <end>
+Page 0 formuli: <respelling> all: fòrmuli,fórmuli<r:DiPI|formulo> <end>
+Page 0 formula: <respelling> top: fòrmula,fórmula<r:DiPI|formula> <end>
+Page 0 formule: <respelling> all: fòrmule,fórmule<r:DiPI|formula> <end>
+Page 0 formulano: <respelling> all: fòrmulano,fórmulano<r:DiPI|formulo> <end>
+Page 0 formulino: <respelling> all: fòrmulino,fórmulino<r:DiPI|formulo> <end>
+# two vowels
+Page 0 riformulare: <respelling> all: riformulàre <end>
+Page 0 riformularsi: <respelling> all: riformulàrsi <end>
+Page 0 riformulo: <respelling> all: rifòrmulo,rifórmulo<r:DiPI|riformulo> <end>
+Page 0 riformuli: <respelling> all: rifòrmuli,rifórmuli<r:DiPI|riformulo> <end>
+Page 0 riformula: <respelling> all: rifòrmula,rifórmula<r:DiPI|riformulo> <end>
+Page 0 riformule: <respelling> all: rifòrmule,rifórmule<r:DiPI|riformulo> <end>
+Page 0 riformulano: <respelling> all: rifòrmulano,rifórmulano<r:DiPI|riformulo> <end>
+Page 0 riformulino: <respelling> all: rifòrmulino,rifórmulino<r:DiPI|riformulo> <end>
+Page 0 formula di prostaferesi: <respelling> all: fòrmula_di_prostafèresi,fórmula_di_prostafèresi<r:DiPI|formula> <end>
+Page 0 formule di prostaferesi: <respelling> all: fòrmule_di_prostafèresi,fórmule_di_prostafèresi<r:DiPI|formula> <end>
+# two vowels
+Page 0 frenare: <respelling> all: frenàre <end>
+Page 0 frenarsi: <respelling> all: frenàrsi <end>
+Page 0 freno: <respelling> top: fréno,frèno<r:DiPI|freno> <end>
+Page 0 freni: <respelling> top: fréni,frèni<r:DiPI|freno> <end>
+Page 0 frena: <respelling> all: fréna,frèna<r:DiPI|freno> <end>
+Page 0 frenano: <respelling> all: frénano,frènano<r:DiPI|freno> <end>
+Page 0 frenino: <respelling> all: frénino,frènino<r:DiPI|freno> <end>
+# two vowels
+Page 0 affrenare: <respelling> all: affrenàre <end>
+Page 0 affrenarsi: <respelling> all: affrenàrsi <end>
+Page 0 affreno: <respelling> all: affréno,affrèno<r:DiPI|freno> <end>
+Page 0 affreni: <respelling> all: affréni,affrèni<r:DiPI|freno> <end>
+Page 0 affrena: <respelling> all: affréna,affrèna<r:DiPI|freno> <end>
+Page 0 affrenano: <respelling> all: affrénano,affrènano<r:DiPI|freno> <end>
+Page 0 affrenino: <respelling> all: affrénino,affrènino<r:DiPI|freno> <end>
+# two vowels
+Page 0 raffrenare: <respelling> all: raffrenàre <end>
+Page 0 raffrenarsi: <respelling> all: raffrenàrsi <end>
+Page 0 raffreno: <respelling> all: raffréno,raffrèno<r:DiPI|freno> <end>
+Page 0 raffreni: <respelling> all: raffréni,raffrèni<r:DiPI|freno> <end>
+Page 0 raffrena: <respelling> all: raffréna,raffrèna<r:DiPI|freno> <end>
+Page 0 raffrenano: <respelling> all: raffrénano,raffrènano<r:DiPI|freno> <end>
+Page 0 raffrenino: <respelling> all: raffrénino,raffrènino<r:DiPI|freno> <end>
+# two vowels
+Page 0 sfrenare: <respelling> all: sfrenàre <end>
+Page 0 sfrenarsi: <respelling> all: sfrenàrsi <end>
+Page 0 sfreno: <respelling> all: sfréno,sfrèno<r:DiPI|sfreno> <end>
+Page 0 sfreni: <respelling> all: sfréni,sfrèni<r:DiPI|sfreno> <end>
+Page 0 sfrena: <respelling> all: sfréna,sfrèna<r:DiPI|sfreno> <end>
+Page 0 sfrenano: <respelling> all: sfrénano,sfrènano<r:DiPI|sfreno> <end>
+Page 0 sfrenino: <respelling> all: sfrénino,sfrènino<r:DiPI|sfreno> <end>
+Page 0 aerofreno: <respelling> all: aerofréno,aerofrèno<r:DiPI|freno> <end>
+Page 0 aerofreni: <respelling> all: aerofréni,aerofrèni<r:DiPI|freno> <end>
+Page 0 dare un colpo di freno: <respelling> all: dàre_un_cólpo_di_fréno,dàre_un_cólpo_di_frèno<r:DiPI|freno> <end>
+Page 0 freno a disco: <respelling> all: fréno_a_dìsco,frèno_a_dìsco<r:DiPI|freno> <end>
+Page 0 freni a disco: <respelling> all: fréni_a_dìsco,frèni_a_dìsco<r:DiPI|freno> <end>
+Page 0 freno a mano: <respelling> all: fréno_a_màno,frèno_a_màno<r:DiPI|freno> <end>
+Page 0 freni a mano: <respelling> all: fréni_a_màno,frèni_a_màno<r:DiPI|freno> <end>
+Page 0 freno a tamburo: <respelling> all: fréno_a_tambùro,frèno_a_tambùro<r:DiPI|freno> <end>
+Page 0 freni a tamburo: <respelling> all: fréni_a_tambùro,frèni_a_tambùro<r:DiPI|freno> <end>
+Page 0 freno d'emergenza: <respelling> all: fréno_d'emergèntsa,frèno_d'emergèntsa<r:DiPI|freno> <end>
+Page 0 freni d'emergenza: <respelling> all: fréni_d'emergèntsa,frèni_d'emergèntsa<r:DiPI|freno> <end>
+Page 0 freno di emergenza: <respelling> all: fréno_di_emergèntsa,frèno_di_emergèntsa<r:DiPI|freno> <end>
+Page 0 freni di emergenza: <respelling> all: fréni_di_emergèntsa,frèni_di_emergèntsa<r:DiPI|freno> <end>
+Page 0 freno di parcheggio: <respelling> all: fréno_di_parchéggio,frèno_di_parchéggio<r:DiPI|freno> <end>
+Page 0 freni di parcheggio: <respelling> all: fréni_di_parchéggio,frèni_di_parchéggio<r:DiPI|freno> <end>
+Page 0 freno-motore: <respelling> all: fréno-motóre,frèno-motóre<r:DiPI|freno> <end>
+Page 0 palafreno: <respelling> all: palafréno,palafrèno<r:DiPI|freno> <end>
+Page 0 palafreni: <respelling> all: palafréni,palafrèni<r:DiPI|freno> <end>
+Page 0 servofreno: <respelling> all: sèrvofréno,sèrvofrèno<r:DiPI|freno><r:Olivetti><r:Treccani|servo-> <end>
+Page 0 servofreni: <respelling> all: sèrvofréni,sèrvofrèni<r:DiPI|freno><r:Olivetti|servofreno><r:Treccani|servo-> <end>
+Page 0 tenere a freno: <respelling> all: tenére_a_fréno,tenére_a_frèno<r:DiPI|freno> <end>
+Page 0 tenere a freno la lingua: <respelling> all: tenére_a_fréno_la_lìngua,tenére_a_frèno_la_lìngua<r:DiPI|freno> <end>
+# got here/this far in find_regex.italian.pronun-fix.pages.txt.4.out.1 (page 929)
 # #
 # #
 # #
 # #
-Page 0 porgere: <respelling> all: porgere <end>
-Page 0 porgersi: <respelling> all: porgersi <end>
-Page 0 porto: <respelling> all: porto <end>
-Page 0 porta: <respelling> all: porta <end>
-Page 0 porti: <respelling> all: porti <end>
-Page 0 porte: <respelling> all: porte <end>
-Page 0 riporgere: <respelling> all: riporgere <end>
-Page 0 riporgersi: <respelling> all: riporgersi <end>
-Page 0 riporto: <respelling> all: riporto <end>
-Page 0 riporta: <respelling> all: riporta <end>
-Page 0 riporti: <respelling> all: riporti <end>
-Page 0 riporte: <respelling> all: riporte <end>
-Page 0 sporgere: <respelling> all: sporgere <end>
-Page 0 sporgersi: <respelling> all: sporgersi <end>
-Page 0 sporto: <respelling> all: sporto <end>
-Page 0 sporta: <respelling> all: sporta <end>
-Page 0 sporti: <respelling> all: sporti <end>
-Page 0 sporte: <respelling> all: sporte <end>
-Page 0 designare: <respelling> all: designare <end>
-Page 0 designarsi: <respelling> all: designarsi <end>
-Page 0 designo: <respelling> all: designo <end>
-Page 0 designi: <respelling> all: designi <end>
-Page 0 designa: <respelling> all: designa <end>
-Page 0 designe: <respelling> all: designe <end>
-Page 0 designiamo: <respelling> all: designiamo <end>
-Page 0 designate: <respelling> all: designate <end>
-Page 0 designano: <respelling> all: designano <end>
-Page 0 designiate: <respelling> all: designiate <end>
-Page 0 designino: <respelling> all: designino <end>
-Page 0 designini: <respelling> all: designini <end>
-Page 0 designato: <respelling> all: designato <end>
-Page 0 designati: <respelling> all: designati <end>
-Page 0 designata: <respelling> all: designata <end>
-Page 0 destare: <respelling> all: destare <end>
-Page 0 destarsi: <respelling> all: destarsi <end>
-Page 0 desto: <respelling> all: desto <end>
-Page 0 desti: <respelling> all: desti <end>
-Page 0 desta: <respelling> all: desta <end>
-Page 0 deste: <respelling> all: deste <end>
-Page 0 destano: <respelling> all: destano <end>
-Page 0 destino: <respelling> all: destino <end>
-Page 0 ridestare: <respelling> all: ridestare <end>
-Page 0 ridestarsi: <respelling> all: ridestarsi <end>
-Page 0 ridesto: <respelling> all: ridesto <end>
-Page 0 ridesti: <respelling> all: ridesti <end>
-Page 0 ridesta: <respelling> all: ridesta <end>
-Page 0 ridestano: <respelling> all: ridestano <end>
-Page 0 ridestino: <respelling> all: ridestino <end>
-Page 0 formulare: <respelling> all: formulare <end>
-Page 0 formularsi: <respelling> all: formularsi <end>
-Page 0 formulo: <respelling> all: formulo <end>
-Page 0 formuli: <respelling> all: formuli <end>
-Page 0 formula: <respelling> all: formula <end>
-Page 0 formule: <respelling> all: formule <end>
-Page 0 formulano: <respelling> all: formulano <end>
-Page 0 formulino: <respelling> all: formulino <end>
-Page 0 riformulare: <respelling> all: riformulare <end>
-Page 0 riformularsi: <respelling> all: riformularsi <end>
-Page 0 riformulo: <respelling> all: riformulo <end>
-Page 0 riformuli: <respelling> all: riformuli <end>
-Page 0 riformula: <respelling> all: riformula <end>
-Page 0 riformule: <respelling> all: riformule <end>
-Page 0 riformulano: <respelling> all: riformulano <end>
-Page 0 riformulino: <respelling> all: riformulino <end>
-Page 0 formula di prostaferesi: <respelling> all: formula_di_prostaferesi <end>
-Page 0 formule di prostaferesi: <respelling> all: formule_di_prostaferesi <end>
-Page 0 frenare: <respelling> all: frenare <end>
-Page 0 frenarsi: <respelling> all: frenarsi <end>
-Page 0 freno: <respelling> all: freno <end>
-Page 0 freni: <respelling> all: freni <end>
-Page 0 frena: <respelling> all: frena <end>
-Page 0 frenano: <respelling> all: frenano <end>
-Page 0 frenino: <respelling> all: frenino <end>
-Page 0 affrenare: <respelling> all: affrenare <end>
-Page 0 affrenarsi: <respelling> all: affrenarsi <end>
-Page 0 affreno: <respelling> all: affreno <end>
-Page 0 affreni: <respelling> all: affreni <end>
-Page 0 affrena: <respelling> all: affrena <end>
-Page 0 affrenano: <respelling> all: affrenano <end>
-Page 0 affrenino: <respelling> all: affrenino <end>
-Page 0 raffrenare: <respelling> all: raffrenare <end>
-Page 0 raffrenarsi: <respelling> all: raffrenarsi <end>
-Page 0 raffreno: <respelling> all: raffreno <end>
-Page 0 raffreni: <respelling> all: raffreni <end>
-Page 0 raffrena: <respelling> all: raffrena <end>
-Page 0 raffrenano: <respelling> all: raffrenano <end>
-Page 0 raffrenino: <respelling> all: raffrenino <end>
-Page 0 sfrenare: <respelling> all: sfrenare <end>
-Page 0 sfrenarsi: <respelling> all: sfrenarsi <end>
-Page 0 sfreno: <respelling> all: sfreno <end>
-Page 0 sfreni: <respelling> all: sfreni <end>
-Page 0 sfrena: <respelling> all: sfrena <end>
-Page 0 sfrenano: <respelling> all: sfrenano <end>
-Page 0 sfrenino: <respelling> all: sfrenino <end>
-Page 0 aerofreno: <respelling> all: aerofreno <end>
-Page 0 aerofreni: <respelling> all: aerofreni <end>
-Page 0 dare un colpo di freno: <respelling> all: dare_un_colpo_di_freno <end>
-Page 0 freno a disco: <respelling> all: freno_a_disco <end>
-Page 0 freni a disco: <respelling> all: freni_a_disco <end>
-Page 0 freno a mano: <respelling> all: freno_a_mano <end>
-Page 0 freni a mano: <respelling> all: freni_a_mano <end>
-Page 0 freno a tamburo: <respelling> all: freno_a_tamburo <end>
-Page 0 freni a tamburo: <respelling> all: freni_a_tamburo <end>
-Page 0 freno d'emergenza: <respelling> all: freno_d'emergenza <end>
-Page 0 freni d'emergenza: <respelling> all: freni_d'emergenza <end>
-Page 0 freno di emergenza: <respelling> all: freno_di_emergenza <end>
-Page 0 freni di emergenza: <respelling> all: freni_di_emergenza <end>
-Page 0 freno di parcheggio: <respelling> all: freno_di_parcheggio <end>
-Page 0 freni di parcheggio: <respelling> all: freni_di_parcheggio <end>
-Page 0 freno-motore: <respelling> all: freno-motore <end>
-Page 0 palafreno: <respelling> all: palafreno <end>
-Page 0 palafreni: <respelling> all: palafreni <end>
-Page 0 servofreno: <respelling> all: servofreno <end>
-Page 0 servofreni: <respelling> all: servofreni <end>
-Page 0 tenere a freno: <respelling> all: tenere_a_freno <end>
-Page 0 tenere a freno la lingua: <respelling> all: tenere_a_freno_la_lingua <end>
 Page 0 vacuare: <respelling> all: vacuare <end>
 Page 0 vacuarsi: <respelling> all: vacuarsi <end>
 Page 0 vacuo: <respelling> all: vacuo <end>
