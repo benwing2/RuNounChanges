@@ -9454,10 +9454,51 @@ From {{bor|it|fr|dôme}}, ultimately from {{der|it|grc|δῶμα||house; houseto
 Page 700 domi: Found match for regex: =
 Page 700 domi: -------- begin text --------
 
-===Verb===
+===Etymology 1===
+
+====Pronunciation====
+{{it-pr|dómi,dòmi<ref:{{R:it:DiPI|domo}}<<name:dipi>>>}}
+
+====Participle====
+{{head|it|past participle form|g=m-p}}
+
+# {{tlb|it|literary}} {{masculine plural of|it|domo|t=(having) tamed}}
+
+====Adjective====
+{{head|it|adjective form|g=m-p}}
+
+# {{tlb|it|literary}} {{adj form of|it|domo||m|p|t=tamed}}
+
+===Etymology 2===
+
+====Pronunciation====
+{{it-pr|dòmi}}
+
+====Noun====
+{{head|it|noun form}}
+
+# {{tlb|it|literary}} {{plural of|it|domo|t=dome, vault; sky}}
+
+===Etymology 3===
+{{nonlemma}}
+
+====Pronunciation====
+{{it-pr|dómi,dòmi<ref:<<name:dipi>>>}}
+
+====Verb====
 {{head|it|verb form}}
 
 # {{infl of|it|domare||2|s|pres|indc|;|1//2//3|s|pres|subj|;|3|s|impr}}
+
+===Etymology 4===
+
+====Pronunciation====
+{{it-pr|dòmi<ref:<<name:dipi>>>}}
+
+====Noun====
+{{it-noun|m}}
+
+# {{alt form|it|duomi}}, {{plural of|it|domo|t=cathedral}}
 
 ===Anagrams===
 * {{anagrams|it|a=dimo|modi}}
@@ -9468,7 +9509,24 @@ Page 700 domi: -------- begin text --------
 Page 701 doma: Found match for regex: =
 Page 701 doma: -------- begin text --------
 
-===Verb===
+===Pronunciation===
+{{it-pr|dóma,dòma<ref:{{R:it:DiPI}}>}}
+
+===Etymology 1===
+
+====Participle====
+{{head|it|past participle form|g=f-s}}
+
+# {{tlb|it|literary}} {{feminine singular of|it|domo|t=(having) tamed}}
+
+====Adjective====
+{{head|it|adjective form|g=f-p}}
+
+# {{tlb|it|literary}} {{adj form of|it|domo||f|s|t=tamed}}
+
+===Etymology 2===
+
+====Verb====
 {{head|it|verb form}}
 
 # {{inflection of|it|domare||3|s|pres|ind|;|2|s|imp}}
@@ -9493,23 +9551,62 @@ Page 702 domano: -------- begin text --------
 Page 703 domino: Found match for regex: =
 Page 703 domino: -------- begin text --------
 
-===Etymology===
-Borrowed from {{bor|it|fr|domino}}, from {{der|it|ML.|domino}}, from {{der|it|la|dominus||lord, master}}.
+===Etymology 1===
+{{bor+|it|la|dominus}}. {{doublet|it|don}}.
 
-===Noun===
-{{it-noun|m}}
+====Pronunciation====
+{{it-pr|dòmino}}
 
-# [[dominoes]]
+====Noun====
+{{it-noun|m|f=+}}
 
-===Verb===
+# {{tlb|it|archaic}} [[lord]], [[master]]
+
+===Etymology 2===
+{{bor+|it|fr|domino}}, from {{der|it|ML.|dominō}}, dative of {{der|it|la|dominus||lord, master}}; possibly from the liturgical phrase {{m|la|[[benedico|benedīcāmus]] [[dominus|Dominō]]|lit=let us bless the Lord}}.<ref>{{R:it:Treccani|domino|sense=2}}.</ref>
+
+====Pronunciation====
+{{it-pr|dòmino}}
+
+====Noun====
+{{it-noun|m|#}}
+
+# [[long]] [[robe]] [[shape]]d as a [[cloak]] with a [[hood]], worn at [[mask]]ed [[ball]s
+# {{lb|it|by extension}} [[person]] [[wear]]ing such a [[robe]]
+
+===Etymology 3===
+{{bor+|it|fr|domino}}, originally the same as Etymology 2; see above.<ref>{{R:it:Treccani|domino|sense=3}}.</ref>
+
+====Pronunciation====
+{{it-pr|dòmino}}
+
+====Noun====
+{{it-noun|m|-}}
+
+# [[dominoes]] {{q|board game}}
+
+===Etymology 4===
+
+====Pronunciation====
+{{it-pr|dómino,dòmino<ref:{{R:it:DiPI|domo}}>}}
+
+====Verb====
 {{head|it|verb form}}
 
 # {{inflection of|it|domare||3|p|pres|subj|;|3|p|impr}}
 
-===Verb===
+===Etymology 5===
+
+====Pronunciation====
+{{it-pr|dòmino}}
+
+====Verb====
 {{head|it|verb form}}
 
 # {{inflection of|it|dominare||1|s|pres|indc}}
+
+===References===
+<references />
 
 ===Anagrams===
 * {{anagrams|it|a=dimnoo|indomo}}
@@ -9527,7 +9624,7 @@ Page 704 rivendicare: -------- begin text --------
 {{it-pr|rivendicàre}}
 
 ===Verb===
-{{it-verb|a/é}}
+{{it-verb|a/é:è[ref:{{R:it:DiPI|rivendico}}]}}
 
 # {{lb|it|transitive}} to [[claim]]
 # {{lb|it|transitive}} to [[maintain]] or [[vindicate]]
@@ -9537,6 +9634,9 @@ Page 704 rivendicare: -------- begin text --------
 
 ====Related terms====
 * {{l|it|rivendicazione}}
+
+===References===
+<references />
 
 ===Further reading===
 * {{R:it:Treccani}}
@@ -9594,7 +9694,7 @@ From {{inh|it|la|vindicāre}}, present active infinitive of {{m|la|vindicō}}.
 {{it-pr|vendicàre}}
 
 ===Verb===
-{{it-verb|a/é}}
+{{it-verb|a/é:è[ref:{{R:it:DiPI|vendico}}]}}
 
 # {{lb|it|transitive}} to [[avenge]], to [[revenge]], to [[take revenge]] for
 #: {{syn|it|[[vendicarsi]] [[di]]}}
@@ -9622,6 +9722,9 @@ From {{inh|it|la|vindicāre}}, present active infinitive of {{m|la|vindicō}}.
 {{rel3|it|vendetta|vendicatore|vindice}}
 
 ===References===
+<references />
+
+===Further reading===
 * {{R:it:Trec}}
 -------- end text --------
 Page 712 vendicarsi: Found match for regex: =
@@ -9634,7 +9737,7 @@ Page 712 vendicarsi: -------- begin text --------
 {{it-pr|vendicàrsi}}
 
 ===Verb===
-{{it-verb|é}}
+{{it-verb|é:è[ref:{{R:it:DiPI|vendico}}]}}
 
 # {{reflexive of|it|vendicare}}
 # {{lb|it|intransitive}} to [[take revenge]]
@@ -9659,6 +9762,9 @@ Page 712 vendicarsi: -------- begin text --------
 
 ====Related terms====
 {{rel3|it|vendetta|vendicabile|vendicativo|vendicatore|vendichevole|vindice}}
+
+===References===
+<references />
 
 ===Anagrams===
 * {{anagrams|it|a=acdeiinrsv|inverdisca}}
@@ -9705,7 +9811,7 @@ Page 714 vendichi: -------- begin text --------
 {{nonlemma}}
 
 ====Participle====
-{{head|it|past participle form}}
+{{head|it|past participle form|g=m-p}}
 
 # {{tlb|it|archaic}} {{masculine plural of|it|vendico}}
 
@@ -9735,14 +9841,14 @@ Page 715 vendica: -------- begin text --------
 {{nonlemma}}
 
 ====Participle====
-{{head|it|past participle form}}
+{{head|it|past participle form|g=f-s}}
 
-# {{infl of|it|vendico||f|s}}
+# {{tlb|it|archaic}} {{feminine singular of|it|vendico}}
 
 ====Adjective====
 {{it-adj-form}}
 
-# {{adj form of|it|vendico||f|s}}
+# {{tlb|it|archaic}} {{adj form of|it|vendico||f|s}}
 
 ===Etymology 2===
 {{nonlemma}}
@@ -9788,11 +9894,12 @@ Borrowed from {{bor|it|la|germināre}}, present active infinitive of {{m|la|germ
 {{it-pr|germinàre}}
 
 ===Verb===
-{{it-verb|e:a/è}}
+{{it-verb|e[intransitive]:a[transitive or alternatively when intransitive]/è}}
 
-# {{lb|it|intransitive}} to [[germinate]]
+# {{lb|it|intransitive}} to [[germinate]] {{+aux|it|essere|avere}}
 #* {{quote-book|it|year=1321|author=Dante Alighieri|authorlink=Dante Alighieri|title=[[w:Paradiso (Dante)|La divina commedia: Paradiso]]|publisher=Le Monnier|year_published=2002|section=Canto XXXIII|page=587|lines=7–9|passage=Nel ventre tuo si raccese l'amore, ¶ per lo cui caldo ne l’etterna pace ¶ così è '''germinato''' questo fiore.|translation=Within thy womb rekindled was the love, by heat of which in the eternal peace after such wise this flower has '''germinated'''.}}
-# {{lb|it|transitive|rare}} to [[cause]] to [[germinate]]
+# {{lb|it|transitive|literary|rare}} to [[cause]] to [[germinate]], to [[produce]]
+# {{lb|it|transitive|figurative}} to [[cause]]
 
 ====Conjugation====
 {{it-conj-are|germin|essere or avere}}
@@ -9810,7 +9917,22 @@ Borrowed from {{bor|it|la|germināre}}, present active infinitive of {{m|la|germ
 Page 720 germino: Found match for regex: =
 Page 720 germino: -------- begin text --------
 
-===Verb===
+===Etymology 1===
+
+====Pronunciation====
+{{it-pr|germìno}}
+
+====Noun====
+{{it-noun|m}}
+
+# {{diminutive of|it|germe}}: small [[germ]], small [[seed]]
+
+===Etymology 2===
+
+====Pronunciation====
+{{it-pr|gèrmino}}
+
+====Verb====
 {{head|it|verb form}}
 
 # {{inflection of|it|germinare||1|s|pres|ind}}
@@ -9824,7 +9946,22 @@ Page 720 germino: -------- begin text --------
 Page 721 germini: Found match for regex: =
 Page 721 germini: -------- begin text --------
 
-===Verb===
+===Etymology 1===
+
+====Pronunciation====
+{{it-pr|germìni}}
+
+====Noun====
+{{head|it|noun form}}
+
+# {{plural of|it|germino}}
+
+===Etymology 2===
+
+====Pronunciation====
+{{it-pr|gèrmini}}
+
+====Verb====
 {{head|it|verb form}}
 
 # {{inflection of|it|germinare||2|s|pres|indc|;|1//2//3|s|pres|subj|;|3|s|impr}}
@@ -9953,10 +10090,36 @@ Page 727 accetto: -------- begin text --------
 Page 728 accetti: Found match for regex: =
 Page 728 accetti: -------- begin text --------
 
-===Verb===
+===Etymology 1===
+
+====Pronunciation====
+{{it-pr|accètti}}
+
+====Adjective====
+{{head|it|adjective form}}
+
+# {{adj form of|it|accetto||m|p}}
+
+===Etymology 2===
+
+====Pronunciation====
+{{it-pr|accètti}}
+
+====Verb====
 {{head|it|verb form}}
 
-# {{inflection of|it|accettare||2|s|pres|indc|;|1//2//3|s|pres|subj|;|3|s|impr}}
+# {{inflection of|it|accettare||2|s|pres|indc|;|1//2//3|s|pres|subj|;|3|s|impr|t=to accept}}
+
+===Etymology 3===
+
+====Pronunciation====
+{{it-pr|accétti}}
+
+====Verb====
+{{head|it|verb form}}
+
+# {{inflection of|it|accettare||2|s|pres|indc|;|1//2//3|s|pres|subj|;|3|s|impr|t=to hatchet}}
+
 -------- end text --------
 Page 729 accetta: Found match for regex: =
 Page 729 accetta: -------- begin text --------
@@ -9973,6 +10136,16 @@ Borrowed from {{bor|it|fr|hachette}}.
 # [[hatchet]]
 
 ===Etymology 2===
+
+====Pronunciation====
+{{it-pr|accètta}}
+
+====Adjective====
+{{head|it|adjective form}}
+
+# {{adj form of|it|accetto||f|s}}
+
+===Etymology 3===
 {{nonlemma}}
 
 ====Pronunciation====
@@ -9981,7 +10154,18 @@ Borrowed from {{bor|it|fr|hachette}}.
 ====Verb====
 {{head|it|verb form}}
 
-# {{inflection of|it|accettare||3|s|pres|indc|;|2|s|impr}}
+# {{inflection of|it|accettare||3|s|pres|indc|;|2|s|impr|t=to accept}}
+
+===Etymology 4===
+{{nonlemma}}
+
+====Pronunciation====
+{{it-pr|accétta}}
+
+====Verb====
+{{head|it|verb form}}
+
+# {{inflection of|it|accettare||3|s|pres|indc|;|2|s|impr|t=to hatchet}}
 
 ===Anagrams===
 * {{anagrams|it|a=aaccett|taccate}}
@@ -9992,10 +10176,27 @@ Borrowed from {{bor|it|fr|hachette}}.
 Page 730 accettano: Found match for regex: =
 Page 730 accettano: -------- begin text --------
 
-===Verb===
+===Etymology 1===
+{{nonlemma}}
+
+====Pronunciation====
+{{it-pr|accèttano}}
+
+====Verb====
 {{head|it|verb form}}
 
-# {{inflection of|it|accettare||3|p|pres|indc}}
+# {{inflection of|it|accettare||3|p|pres|indc|t=to accept}}
+
+===Etymology 2===
+{{nonlemma}}
+
+====Pronunciation====
+{{it-pr|accéttano}}
+
+====Verb====
+{{head|it|verb form}}
+
+# {{inflection of|it|accettare||3|p|pres|indc|t=to hatchet}}
 
 ===Anagrams===
 * {{anagrams|it|a=aaccenott|accattone|accentato|accontate}}
@@ -10003,10 +10204,27 @@ Page 730 accettano: -------- begin text --------
 Page 731 accettino: Found match for regex: =
 Page 731 accettino: -------- begin text --------
 
-===Verb===
+===Etymology 1===
+{{nonlemma}}
+
+====Pronunciation====
+{{it-pr|accèttino}}
+
+====Verb====
 {{head|it|verb form}}
 
-# {{inflection of|it|accettare||3|p|pres|subj|;|3|p|impr}}
+# {{inflection of|it|accettare||3|p|pres|subj|;|3|p|impr|t=to accept}}
+
+===Etymology 2===
+{{nonlemma}}
+
+====Pronunciation====
+{{it-pr|accéttino}}
+
+====Verb====
+{{head|it|verb form}}
+
+# {{inflection of|it|accettare||3|p|pres|subj|;|3|p|impr|t=to hatchet}}
 
 ===Anagrams===
 * {{anagrams|it|a=acceinott|concettai|concitate|tectonica}}
@@ -10015,7 +10233,7 @@ Page 732 tocco: Found match for regex: =
 Page 732 tocco: -------- begin text --------
 
 ===Etymology 1===
-{{rfe|it}}
+{{deverbal|it|toccare}}.
 
 ====Pronunciation====
 {{it-pr|tócco}}
@@ -10027,18 +10245,30 @@ Page 732 tocco: -------- begin text --------
 # [[knock]], [[rap]], [[blow]]
 # [[stroke]] (of a clock or a brush); [[one o'clock]]
 
+===Etymology 2===
+Unsuffixed past participle of {{m|it|toccare}}.
+
+====Pronunciation====
+{{it-pr|tócco}}
+
 ====Adjective====
 {{it-adj}}
 
-# [[touched]] (not totally sane)
-# [[bruised]] (of fruit)
+# [[touched]] {{gl|not totally sane}}
+# [[bruised]] {{q|of fruit}}
+
+===Etymology 3===
+{{nonlemma}}
+
+====Pronunciation====
+{{it-pr|tócco}}
 
 ====Verb====
 {{head|it|verb form}}
 
 # {{inflection of|it|toccare||1|s|pres|indc}}
 
-===Etymology 2===
+===Etymology 4===
 Probably from {{inh|it|la|tucca}}.
 
 ====Pronunciation====
@@ -10049,7 +10279,7 @@ Probably from {{inh|it|la|tucca}}.
 
 # [[hunk]], [[chunk]] {{i|especially of food}}
 
-===Etymology 3===
+===Etymology 5===
 Probably from {{inh|it|la|tucca}}.
 
 ====Pronunciation====
@@ -10060,7 +10290,7 @@ Probably from {{inh|it|la|tucca}}.
 
 # [[meat]] [[sauce]] {{i|in Genoese cuisine}}
 
-===Etymology 4===
+===Etymology 6===
 From {{bor|it|fr|toque}}.
 
 ====Pronunciation====
@@ -10077,30 +10307,117 @@ From {{bor|it|fr|toque}}.
 Page 733 tocchi: Found match for regex: =
 Page 733 tocchi: -------- begin text --------
 
-===Pronunciation===
+===Etymology 1===
+
+====Pronunciation====
 {{it-pr|tócchi}}
 
-===Noun===
-{{head|it|noun form|g=m}}
-# {{plural of|it|tocco}}
+====Noun====
+{{head|it|noun form|g=m-p}}
 
-===Verb===
+# {{plural of|it|tocco|t=touch, knock, stroke}}
+
+===Etymology 2===
+Unsuffixed past participle of {{m|it|toccare}}.
+
+====Pronunciation====
+{{it-pr|tócchi}}
+
+====Adjective====
+{{head|it|adjective form|g=m-p}}
+
+# {{adj form of|it|tocco||m|p|t=touched {{gl|not totally sane}}; bruised {{i|of fruit}}}}
+
+===Etymology 3===
+{{nonlemma}}
+
+====Pronunciation====
+{{it-pr|tócchi}}
+
+====Verb====
 {{head|it|verb form}}
 
 # {{inflection of|it|toccare||2|s|pres|indc|;|1//2//3|s|pres|subj|;|3|s|impr}}
+
+===Etymology 4===
+
+====Pronunciation====
+{{it-pr|tòcchi}}
+
+====Noun====
+{{head|it|noun form|g=m-p}}
+
+# {{plural of|it|tocco|t=hunk, chunk}}
+
+===Etymology 5===
+
+====Pronunciation====
+{{it-pr|tòcchi}}
+
+====Noun====
+{{head|it|noun form|g=m-p}}
+
+# {{plural of|it|tocco|t=meat sauce}}
+
+===Etymology 6===
+
+====Pronunciation====
+{{it-pr|tòcchi}}
+
+====Noun====
+{{head|it|noun form|g=m-p}}
+
+# {{plural of|it|tocco|t=[[toque]] {{gl|type of brimless hat}}}}}
+
 -------- end text --------
 Page 734 tocca: Found match for regex: =
 Page 734 tocca: -------- begin text --------
 
-===Verb===
+===Etymology 1===
+{{bor+|it|lmo|toh}}; compare {{cog|de|Tuch||cloth}}.
+
+====Pronunciation====
+{{it-pr|tòcca}}
+
+====Noun====
+{{it-noun|f}}
+
+# {{lb|it|chiefly in the plural}} [[type]] of [[sacred]] [[trimming]], like a [[chevron]], [[weave|woven]] with [[metallic]] [[foil]] and [[hemp]]
+# {{lb|it|archaic}} [[silk]] [[cloth]] [[weave|woven]] with [[gold]] or [[silver]] [[thread]]s
+
+===Etymology 2===
+{{deverbal|it|toccare}}.
+
+====Pronunciation====
+{{it-pr|tócca}}
+
+====Noun====
+{{it-noun|f}}
+
+# {{lb|it|archaic}} [[alloy]] of [[gold]] with other [[metal]]s
+# {{lb|it|archaic|also|figurative}} [[touchstone]] {{gl|a stone used to check the quality of gold alloys}}
+# [[litmus]] (test)
+# {{lb|it|Tuscany}} [[crack]] in a [[road]]'s [[pavement]] {{q|as felt by a passing vehicle}}
+
+===Etymology 3===
+
+====Pronunciation====
+{{it-pr|tócca}}
+
+====Adjective====
+{{head|it|adjective form}}
+
+# {{adj form of|it|tocco||f|s|t=touched {{gl|not totally sane}}; bruised {{i|of fruit}}}}
+
+===Etymology 4===
+
+====Pronunciation====
+{{it-pr|tócca}}
+
+====Verb====
 {{head|it|verb form}}
 
 # {{inflection of|it|toccare||3|s|pres|indc|;|2|s|impr}}
-
-===Noun===
-{{it-noun|f}}
-
-# {{lb|it|chiefly|in the plural}} [[trimmings]], [[touches]]
 
 ===Anagrams===
 * {{anagrams|it|a=accot|tacco|taccò}}
@@ -10108,10 +10425,35 @@ Page 734 tocca: -------- begin text --------
 Page 735 tocche: Found match for regex: =
 Page 735 tocche: -------- begin text --------
 
-===Noun===
-{{head|it|noun form|g=f}}
+===Etymology 1===
 
-# {{plural of|it|tocca}}
+====Pronunciation====
+{{it-pr|tòcche}}
+
+====Noun====
+{{head|it|noun form|g=f-p}}
+
+# {{plural of|it|tocca|t=type of sacred trimming}}
+
+===Etymology 2===
+
+====Pronunciation====
+{{it-pr|tócche}}
+
+====Noun====
+{{head|it|noun form|g=f-p}}
+
+# {{plural of|it|tocca|t=touchstone; crack in road pavement}}
+
+===Etymology 3===
+
+====Pronunciation====
+{{it-pr|tócche}}
+
+====Adjective====
+{{head|it|adjective form}}
+
+# {{adj form of|it|tocco||f|p|t=touched {{gl|not totally sane}}; bruised {{i|of fruit}}}}
 -------- end text --------
 Page 736 adulare: Found match for regex: =
 Page 736 adulare: -------- begin text --------
@@ -10310,10 +10652,25 @@ Page 745 agitarsi: -------- begin text --------
 Page 746 agito: Found match for regex: =
 Page 746 agito: -------- begin text --------
 
-===Participle===
+===Etymology 1===
+
+====Pronunciation====
+{{it-pr|agìto}}
+
+====Participle====
 {{it-pp}}
 
 # {{past participle of|it|agire}}
+
+===Etymology 2===
+
+====Pronunciation====
+{{it-pr|àgito}}
+
+====Verb====
+{{head|it|verb form}}
+
+# {{inflection of|it|agitare||1|s|pres|indc}}
 
 ===Anagrams===
 * {{anagrams|it|a=agiot|Gaito}}
@@ -10324,15 +10681,45 @@ Page 746 agito: -------- begin text --------
 Page 747 agiti: Found match for regex: =
 Page 747 agiti: -------- begin text --------
 
-===Participle===
+===Etymology 1===
+
+====Pronunciation====
+{{it-pr|agìti}}
+
+====Participle====
 {{head|it|past participle form|g=m-p}}
 
 # {{masculine plural of|it|agito}}
+
+===Etymology 2===
+
+====Pronunciation====
+{{it-pr|àgiti}}
+
+====Verb====
+{{head|it|verb form}}
+
+# {{inflection of|it|agitare||2|s|pres|indc|;|1//2//3|s|pres|subj|;|3|s|impr}}
 -------- end text --------
 Page 748 agita: Found match for regex: =
 Page 748 agita: -------- begin text --------
 
-===Verb===
+===Etymology 1===
+
+====Pronunciation====
+{{it-pr|agìta}}
+
+====Participle====
+{{head|it|past participle form|g=f-s}}
+
+# {{feminine singular of|it|agito}}
+
+===Etymology 2===
+
+====Pronunciation====
+{{it-pr|àgita}}
+
+====Verb====
 {{head|it|verb form}}
 
 # {{inflection of|it|agitare||3|s|pres|ind|;|2|s|imp}}
@@ -10418,7 +10805,22 @@ Derived from {{affix|it|alto|-iero|t1=high, tall}}; {{m|it|alto}} is from {{der|
 Page 751 altera: Found match for regex: =
 Page 751 altera: -------- begin text --------
 
-===Verb===
+===Etymology 1===
+
+====Pronunciation====
+{{it-pr|altèra}}
+
+====Adjective====
+{{head|it|adjective form}}
+
+# {{adj form of|it|altero||f|s}}
+
+===Etymology 2===
+
+====Pronunciation====
+{{it-pr|àltera}}
+
+====Verb====
 {{head|it|verb form}}
 
 # {{inflection of|it|alterare||3|s|pres|ind|;|2|s|imp}}
@@ -10432,7 +10834,22 @@ Page 751 altera: -------- begin text --------
 Page 752 alteri: Found match for regex: =
 Page 752 alteri: -------- begin text --------
 
-===Verb===
+===Etymology 1===
+
+====Pronunciation====
+{{it-pr|altèri}}
+
+====Adjective====
+{{head|it|adjective form}}
+
+# {{adj form of|it|altero||m|p}}
+
+===Etymology 2===
+
+====Pronunciation====
+{{it-pr|àlteri}}
+
+====Verb====
 {{head|it|verb form}}
 
 # {{inflection of|it|alterare||2|s|pres|indc|;|1//2//3|s|pres|subj|;|3|s|impr}}
@@ -10467,7 +10884,7 @@ Page 754 centellinare: -------- begin text --------
 {{af|it|centellino|-are}}
 
 ===Verb===
-{{it-verb|a/ì}}
+{{it-verb|a/è:#ì<ref:{{R:it:DiPI|centellino}}>}}
 
 # {{lb|it|transitive}} to [[sip]]
 #: {{syn|it|sorseggiare}}
@@ -10478,6 +10895,9 @@ Page 754 centellinare: -------- begin text --------
 
 ====Conjugation====
 {{it-conj-are|centellin|avere}}
+
+===References===
+<references />
 
 ===Further reading===
 * {{R:it:Treccani}}
@@ -10490,6 +10910,9 @@ Page 756 centellino: -------- begin text --------
 
 ===Etymology 1===
 
+====Pronunciation====
+{{it-pr|centellìno}}
+
 ====Noun====
 {{it-noun|m}}
 
@@ -10500,10 +10923,16 @@ Page 756 centellino: -------- begin text --------
 
 ===Etymology 2===
 
+====Pronunciation====
+{{it-pr|centèllino,#centellìno<ref:{{R:it:DiPI}}>}}
+
 ====Verb====
 {{head|it|verb form}}
 
 # {{inflection of|it|centellinare||1|s|pres|indc}}
+
+===References===
+<references />
 
 ===Further reading===
 * {{R:it:Treccani}}
@@ -10511,10 +10940,31 @@ Page 756 centellino: -------- begin text --------
 Page 757 centellini: Found match for regex: =
 Page 757 centellini: -------- begin text --------
 
+===Etymology 1===
+
+====Pronunciation====
+{{it-pr|centellìni}}
+
+====Noun====
+{{head|it|noun form|g=m-p}}
+
+# {{plural of|it|centellino}}
+
+=====Derived terms=====
+* {{l|it|centellinare}}
+
+===Etymology 2===
+
+====Pronunciation====
+{{it-pr|centèllini,#centellìni<ref:{{R:it:DiPI|centellino}}>}}
+
 ===Verb===
 {{head|it|verb form}}
 
 # {{inflection of|it|centellinare||2|s|pres|indc|;|1//2//3|s|pres|subj|;|3|s|impr}}
+
+===References===
+<references />
 -------- end text --------
 Page 758 centellina: Found match for regex: =
 Page 758 centellina: -------- begin text --------
@@ -10547,22 +10997,25 @@ Page 761 accentrarsi: Found match for regex: =
 Page 761 accentrarsi: -------- begin text --------
 
 ===Verb===
-{{it-verb}}
+{{it-verb|è:é[ref:{{R:it:DiPI|accentro}}]}} {{tlb|it|intransitive}}
 
-# {{lb|it|reflexive}} to [[center]], to [[centre]]
-# {{lb|it|reflexive}} to [[concentrate]]
+# to [[center]], to [[centre]]
+# to [[concentrate]]
 
 ====Conjugation====
 {{it-conj-arsi|accentr|essere}}
 
 ====Related terms====
 * {{l|it|accentrare}}
+
+===References===
+<references />
 -------- end text --------
 Page 762 concentrarsi: Found match for regex: =
 Page 762 concentrarsi: -------- begin text --------
 
 ===Verb===
-{{it-verb|è}}
+{{it-verb|è:é[ref:{{R:it:DiPI|concentro}}]}} {{tlb|it|intransitive}}
 
 # {{reflexive of|it|concentrare}}
 # to [[concentrate]]
@@ -10575,30 +11028,36 @@ Page 762 concentrarsi: -------- begin text --------
 ====Related terms====
 * {{l|it|concentrato}}
 * {{l|it|concentrazione}}
+
+===References===
+<references />
 -------- end text --------
 Page 763 deconcentrarsi: Found match for regex: =
 Page 763 deconcentrarsi: -------- begin text --------
 
 ===Verb===
-{{it-verb}}
+{{it-verb|è:é[ref:{{R:it:DiPI|concentro}}]}}
 
-# {{lb|it|reflexive}} to [[lose]] one's [[concentration]]
+# to [[lose]] one's [[concentration]]
 
 ====Conjugation====
 {{it-conj-arsi|deconcentr|essere}}
 
 ====Related terms====
 * {{l|it|deconcentrare}}
+
+===References===
+<references />
 -------- end text --------
 Page 764 incentrarsi: Found match for regex: =
 Page 764 incentrarsi: -------- begin text --------
 
 ===Verb===
-{{it-verb|è}} {{+preo|it|su}}
+{{it-verb|è:é[ref:{{R:it:DiPI|incentro}}]}} {{+preo|it|su}}
 
 # {{reflexive of|it|incentrare}}
-# to [[center]] something (on)
-# to [[base]] something (on)
+# {{lb|it|intransitive}} to [[center]] (on)
+# {{lb|it|intransitive}} to [[focus]] (on), to be [[base]]d on
 
 ====Conjugation====
 {{it-conj-arsi|incentr}}
@@ -10606,10 +11065,19 @@ Page 764 incentrarsi: -------- begin text --------
 Page 765 consolo: Found match for regex: =
 Page 765 consolo: -------- begin text --------
 
-===Pronunciation===
+===Etymology 1===
+
+====Pronunciation====
+{{it-pr|cònsolo}}
+
+# {{tlb|it|archaic}} {{alt form|it|console|t=consul}}
+
+===Etymology 2===
+
+====Pronunciation====
 {{it-pr|consólo}}
 
-===Verb===
+====Verb====
 {{head|it|verb form}}
 
 # {{inflection of|it|consolare||1|s|pres|indc}}
@@ -10620,14 +11088,30 @@ Page 765 consolo: -------- begin text --------
 Page 766 consoli: Found match for regex: =
 Page 766 consoli: -------- begin text --------
 
-===Noun===
-{{head|it|noun form|g=m}}
-# {{plural of|it|console}}
+===Etymology 1===
 
-===Verb===
+====Pronunciation====
+{{it-pr|consóli}}
+
+====Verb====
 {{head|it|verb form}}
 
 # {{inflection of|it|consolare||2|s|pres|indc|;|1//2//3|s|pres|subj|;|3|s|impr}}
+
+===Etymology 2===
+
+====Pronunciation====
+{{it-pr|cònsoli}}
+
+====Noun====
+{{head|it|noun form|g=m}}
+
+# {{plural of|it|console}}
+
+====Noun====
+{{head|it|noun form|g=m}}
+
+# {{lb|it|archaic}} {{plural of|it|consolo}}
 
 ===Anagrams===
 * {{anagrams|it|a=cilnoos|scolino}}
@@ -10642,7 +11126,7 @@ Borrowed from {{bor|it|la|contemplor|contemplor, contemplare}}.
 {{it-pr|contemplàre}}
 
 ===Verb===
-{{it-verb|a/è}}
+{{it-verb|a/é:#è[ref:{{R:it:DiPI|contemplo}}]}}
 
 # {{lb|it|transitive}} to [[admire]], [[contemplate]]
 # {{lb|it|transitive}} to [[contemplate]], [[consider]]
@@ -10654,6 +11138,9 @@ Borrowed from {{bor|it|la|contemplor|contemplor, contemplare}}.
 * {{l|it|contemplarsi}}
 * {{l|it|contemplativo}}
 * {{l|it|contemplazione}}
+
+===References===
+<references />
 
 ===Further reading===
 * {{R:it:Treccani}}
@@ -10668,7 +11155,7 @@ Page 768 contemplarsi: Found match for regex: =
 Page 768 contemplarsi: -------- begin text --------
 
 ===Verb===
-{{it-verb|è}}
+{{it-verb|a/é:#è[ref:{{R:it:DiPI|contemplo}}]}}
 
 # {{lb|it|reflexive}} to [[contemplate]] oneself, to [[admire]] oneself
 
@@ -10677,21 +11164,29 @@ Page 768 contemplarsi: -------- begin text --------
 
 ====Related terms====
 * {{l|it|contemplare}}
+
+===References===
+<references />
 -------- end text --------
 Page 769 contemplo: Found match for regex: =
 Page 769 contemplo: -------- begin text --------
 
 ===Pronunciation===
-{{it-pr|contèmplo,contémplo<ref:{{R:it:DiPI}}>}}
+{{it-pr|contémplo,#contèmplo<ref:{{R:it:DiPI}}>}}
 
-===Noun===
+===Etymology 1===
+{{deverbal|it|contemplare}}.
+
+====Noun====
 {{head|it|noun}}
 
 # [[contemplation]]
 ## {{syn|it|contemplazione}}
 # [[religious service]]
 
-===Verb===
+===Etymology 2===
+
+====Verb====
 {{head|it|verb form}}
 
 # {{inflection of|it|contemplare||1|s|pres|indc}}
@@ -10708,7 +11203,16 @@ Page 769 contemplo: -------- begin text --------
 Page 770 contempli: Found match for regex: =
 Page 770 contempli: -------- begin text --------
 
-===Verb===
+===Etymology 1===
+
+====Noun====
+{{head|it|noun form|g=m-p}}
+
+# {{plural of|it|contemplo}}
+
+===Etymology 2===
+
+====Verb====
 {{head|it|verb form}}
 
 # {{inflection of|it|contemplare||2|s|pres|indc|;|1//2//3|s|pres|subj|;|3|s|impr}}
@@ -10742,9 +11246,6 @@ Page 773 contemplino: -------- begin text --------
 -------- end text --------
 Page 774 templo: Found match for regex: =
 Page 774 templo: -------- begin text --------
-
-===Alternative forms===
-* {{alter|it|tempio}}
 
 ===Etymology===
 From {{der|it|la|templum}}, from a stem related to {{der|it|grc|τέμενος|t=}}, {{der|it|grc|τέμνω|t=to cut}}, from {{der|it|ine-pro|*t(e)mp-lo-s}}, from the root {{m|ine-pro|*temp-||to stretch, string}}.<ref name="Treccani">{{R:it:Trec|tempio|accessdate=7 February 2019}}</ref>
@@ -10795,7 +11296,7 @@ Page 776 decretare: -------- begin text --------
 {{it-pr|decretàre}}
 
 ===Verb===
-{{it-verb|a/é+}}
+{{it-verb|a/é+:è+[ref:{{R:it:DiPI|decreto}}]}}
 
 # to [[decree]], to [[order]]
 # to [[confer]], to [[award]], to [[give]]
@@ -10805,6 +11306,9 @@ Page 776 decretare: -------- begin text --------
 
 ====Related terms====
 * {{l|it|decreto}}
+
+===References===
+<references />
 
 ===Anagrams===
 * {{anagrams|it|a=acdeeerrt|carderete|decreterà}}
@@ -10816,10 +11320,10 @@ Page 778 decreto: Found match for regex: =
 Page 778 decreto: -------- begin text --------
 
 ===Etymology 1===
-Borrowed from {{bor|it|la|decretum}}.
+{{bor+|it|la|dēcrētum}}.
 
 ====Pronunciation====
-{{it-pr|decréto}}
+{{it-pr|decréto,decrèto<ref:{{R:it:DiPI}}<<name:dipi>>>}}
 
 ====Noun====
 {{it-noun|m}}
@@ -10830,12 +11334,29 @@ Borrowed from {{bor|it|la|decretum}}.
 * {{l|it|decernere}}
 
 ===Etymology 2===
+{{bor+|it|la|dēcrētus}}.
+
+====Pronunciation====
+{{it-pr|decrèto<ref:<<name:dipi>>>}}
+
+====Adjective====
+{{it-adj}}
+
+# {{tlb|it|archaic}} [[decree]]d, [[establish]]ed
+
+===Etymology 3===
 {{nonlemma}}
+
+====Pronunciation====
+{{it-pr|decréto,decrèto<ref:<<name:dipi>>>}}
 
 ====Verb====
 {{head|it|verb form}}
 
 # {{inflection of|it|decretare||1|s|pres|ind}}
+
+===References===
+<references />
 
 ===Anagrams===
 * {{anagrams|it|a=cdeeort|cedreto|detorce}}
@@ -10846,15 +11367,38 @@ Borrowed from {{bor|it|la|decretum}}.
 Page 779 decreti: Found match for regex: =
 Page 779 decreti: -------- begin text --------
 
-===Noun===
+===Etymology 1===
+
+====Pronunciation====
+{{it-pr|decréti,decrèti<ref:{{R:it:DiPI|decreto}}<<name:dipi>>>}}
+
+====Noun====
 {{head|it|noun form|g=m}}
 
 # {{plural of|it|decreto}}
 
-===Verb===
+===Etymology 2===
+
+====Pronunciation====
+{{it-pr|decréti,decrèti<ref:<<name:dipi>>>}}
+
+====Verb====
 {{head|it|verb form}}
 
 # {{inflection of|it|decretare||2|s|pres|ind|;|3|s|imp|;|1//2//3|s|pres|sub}}
+
+===Etymology 3===
+
+====Pronunciation====
+{{it-pr|decrèti<ref:<<name:dipi>>>}}
+
+====Adjective====
+{{head|it|adjective form}}
+
+# {{tlb|it|archaic}} {{adj form of|it|decreto||m|p}}
+
+===References===
+<references />
 
 ===Anagrams===
 * {{anagrams|it|a=cdeeirt|cederti|cedreti}}
@@ -10865,10 +11409,28 @@ Page 779 decreti: -------- begin text --------
 Page 780 decreta: Found match for regex: =
 Page 780 decreta: -------- begin text --------
 
-===Verb===
+===Etymology 1===
+
+====Pronunciation====
+{{it-pr|decréta,decrèta<ref:{{R:it:DiPI|decreto}}<<name:dipi>>>}}
+
+====Verb====
 {{head|it|verb form}}
 
 # {{inflection of|it|decretare||3|s|pres|indc|;|2|s|impr}}
+
+===Etymology 2===
+
+====Pronunciation====
+{{it-pr|decrèta<ref:<<name:dipi>>>}}
+
+====Adjective====
+{{head|it|adjective form}}
+
+# {{tlb|it|archaic}} {{adj form of|it|decreto||f|s}}
+
+===References===
+<references />
 
 ===Anagrams===
 * {{anagrams|it|a=acdeert|cadrete|cedrate}}
@@ -10927,10 +11489,10 @@ From {{inh|it|la|crepitāre}}, present active infinitive of {{m|la|crepitō||I c
 {{it-pr|crettàre}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|e/è:é[ref:{{R:it:DiPI|cretto}}]}} {{tlb|it|Tuscany|intransitive}}
 
-# {{lb|it|Tuscany|intransitive|especially of walls}} to [[crack]], [[split]]
-# {{lb|it|Tuscany|intransitive|of skin}} to [[chap]], crack
+# to [[crack]], to [[split]] {{q|especially of walls}} {{+aux|it|essere}}
+# to [[chap]], to [[crack]] {{q|of skin}} {{+aux|it|essere}}
 
 ====Conjugation====
 {{it-conj-are|crett|essere}}
@@ -10941,6 +11503,9 @@ From {{inh|it|la|crepitāre}}, present active infinitive of {{m|la|crepitō||I c
 
 ====Related terms====
 * {{l|it|crettatura}}
+
+===References===
+<references />
 
 ===Anagrams===
 * {{anagrams|it|a=aceerrtt|carrette}}
@@ -10955,7 +11520,7 @@ Page 786 crettarsi: -------- begin text --------
 {{it-pr|crettàrsi}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|è:é[ref:{{R:it:DiPI|cretto}}]}}
 
 # {{synonym of|it|crettare}}
 
@@ -10965,6 +11530,9 @@ Page 786 crettarsi: -------- begin text --------
 ====Derived terms====
 * {{l|it|crettare}}
 * {{l|it|cretto}}
+
+===References===
+<references />
 -------- end text --------
 Page 787 cretto: Found match for regex: =
 Page 787 cretto: -------- begin text --------
@@ -10973,7 +11541,7 @@ Page 787 cretto: -------- begin text --------
 {{it-pr|crètto}}
 
 ===Etymology 1===
-{{back-form|it|crettare|t=to crack}}.
+{{deverbal|it|crettare|t=to crack}}.
 
 ====Noun====
 {{it-noun|m}}
@@ -11000,12 +11568,16 @@ Page 787 cretto: -------- begin text --------
 Page 788 cretti: Found match for regex: =
 Page 788 cretti: -------- begin text --------
 
-===Noun===
+===Etymology 1===
+
+====Noun====
 {{head|it|noun form|g=m-p}}
 
 # {{plural of|it|cretto}}
 
-===Verb===
+===Etymology 2===
+
+====Verb====
 {{head|it|verb form}}
 
 # {{inflection of|it|crettare||2|s|pres|ind|;|1//2//3|s|pres|subj|;|3|s|imp}}
@@ -11014,12 +11586,15 @@ Page 792 desecretare: Found match for regex: =
 Page 792 desecretare: -------- begin text --------
 
 ===Verb===
-{{it-verb|a/é+}}
+{{it-verb|a/é+:è+[ref:{{R:it:DiPI|secreto}}]}}
 
 # {{lb|it|transitive|law|politics}} to [[declassify]] {{gl|to remove a [[document]]'s status as [[secret]], so that it may be released and read by the public}}
 
 ====Conjugation====
 {{it-conj-are|desecret|avere}}
+
+===References===
+<references />
 
 ===Anagrams===
 * {{anagrams|it|a=acdeeeerrst|desecreterà}}
@@ -11223,12 +11798,15 @@ Page 807 secretare: Found match for regex: =
 Page 807 secretare: -------- begin text --------
 
 ===Verb===
-{{it-verb|a/è+}}
+{{it-verb|a/é+:è+[ref:{{R:it:DiPI|secreto}}]}}
 
 # to [[classify]] (make secret)
 
 ====Conjugation====
 {{it-conj-are|secret|avere}}
+
+===References===
+<references />
 
 ===Anagrams===
 * {{anagrams|it|a=aceeerrst|secreterà}}
@@ -11240,10 +11818,10 @@ Page 809 secreto: Found match for regex: =
 Page 809 secreto: -------- begin text --------
 
 ===Etymology 1===
-From {{der|it|la|secrētus}}.
+From {{der|it|la|sēcrētus}}.
 
 ====Pronunciation====
-{{it-pr|secréto}}
+{{it-pr|secréto:secrèto<ref:{{R:it:DiPI|secreto}}<<name:dipi>>>}}
 
 ====Adjective====
 {{it-adj}} {{tlb|it|literary}}
@@ -11258,7 +11836,7 @@ From {{der|it|la|secrētus}}.
 ===Etymology 2===
 
 ====Pronunciation====
-{{it-pr|secrèto}}
+{{it-pr|secrèto<ref:<<name:dipi>>>}}
 
 ====Participle====
 {{it-pp}}
@@ -11281,6 +11859,16 @@ From {{der|it|la|secrētus}}.
 * {{l|it|secretorio}}
 * {{l|it|secrezione}}
 
+===Etymology 3===
+
+====Pronunciation====
+{{it-pr|secréto:secrèto<ref:<<name:dipi>>>}}
+
+====Verb====
+{{head|it|verb form}}
+
+# {{inflection of|it|secretare||1|s|pres|indc}}
+
 ===Anagrams===
 * {{anagrams|it|a=ceeorst|Cortese|certose|cortese|cretose|escreto|estorce}}
 
@@ -11293,7 +11881,7 @@ Page 810 secreti: -------- begin text --------
 ===Etymology 1===
 
 ====Pronunciation====
-{{it-pr|secréti}}
+{{it-pr|secréti:secrèti<ref:{{R:it:DiPI|secreto}}<<name:dipi>>>}}
 
 ====Adjective====
 {{it-adj-form}}
@@ -11308,12 +11896,12 @@ Page 810 secreti: -------- begin text --------
 ===Etymology 2===
 
 ====Pronunciation====
-{{it-pr|secrèti}}
+{{it-pr|secrèti<ref:<<name:dipi>>>}}
 
 ====Participle====
 {{head|it|past participle form|g=m-p}}
 
-# {{masculine plural of|it|secreto}}
+# {{masculine plural of|it|secreto|t=(having) secreted, (having) emitted (fluid)}}
 
 ====Adjective====
 {{it-adj-form}}
@@ -11325,6 +11913,16 @@ Page 810 secreti: -------- begin text --------
 
 # {{plural of|it|secreto|t=secretion}}
 
+===Etymology 3===
+
+====Pronunciation====
+{{it-pr|secréti:secrèti<ref:<<name:dipi>>>}}
+
+====Verb====
+{{head|it|verb form}}
+
+# {{inflection of|it|secretare||2|s|pres|indc|;|1//2//3|s|pres|subj|;|3|s|impr}}
+
 ===Anagrams===
 * {{anagrams|it|a=ceeirst|cretesi|escreti}}
 
@@ -11334,15 +11932,40 @@ Page 810 secreti: -------- begin text --------
 Page 811 secreta: Found match for regex: =
 Page 811 secreta: -------- begin text --------
 
-===Adjective===
-{{it-adj-form|f-s}}
+===Etymology 1===
 
-# {{inflection of|it|secreto||f|s}}
+====Pronunciation====
+{{it-pr|secréta:secrèta<ref:{{R:it:DiPI|secreto}}<<name:dipi>>>}}
 
-===Participle===
+====Adjective====
+{{it-adj-form}}
+
+# {{adj form of|it|secreta||f|s|t=secret, hidden}}
+
+===Etymology 2===
+
+====Pronunciation====
+{{it-pr|secrèta<ref:<<name:dipi>>>}}
+
+====Participle====
 {{head|it|past participle form|g=f-s}}
 
-# {{feminine singular of|it|secreto}}
+# {{feminine singular of|it|secreto|t=(having) secreted, (having) emitted (fluid)}}
+
+====Adjective====
+{{it-adj-form}}
+
+# {{adj form of|it|secreto||f|s|t=secretion {{i|relational}}; secreted}}
+
+===Etymology 3===
+
+====Pronunciation====
+{{it-pr|secréta:secrèta<ref:<<name:dipi>>>}}
+
+====Verb====
+{{head|it|verb form}}
+
+# {{inflection of|it|secretare||3|s|pres|indc|;|2|s|impr}}
 
 ===Anagrams===
 * {{anagrams|it|a=aceerst|ceraste|creaste|escreta|recaste}}

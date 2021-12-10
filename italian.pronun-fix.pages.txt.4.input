@@ -723,15 +723,11 @@ Page 0 educiate: <respelling> all: educiàte <end>
 # FIXME, two vowels
 #Page 0 domare: <respelling> all: domare <end>
 #Page 0 domarsi: <respelling> all: domarsi <end>
-# got here/this far in find_regex.italian.pronun-fix.pages.txt.4.out.1 (page 699)
-# #
-# #
-# #
-# #
 # FIXME, split etym
 #Page 0 domo: <respelling> all: domo <end>
 #Page 0 domi: <respelling> all: domi <end>
 #Page 0 doma: <respelling> all: doma <end>
+# FIXME, create dome
 Page 0 domano: <respelling> all: dómano,dòmano<r:DiPI|domo> <end>
 # FIXME, split etym; also do domini (three etyms)
 #Page 0 domino: <respelling> all: domino <end>
@@ -746,9 +742,10 @@ Page 0 rivendichino: <respelling> all: rivéndichino,rivèndichino<r:DiPI|rivend
 # FIXME, split etym
 #Page 0 vendicare: <respelling> all: vendicare <end>
 #Page 0 vendicarsi: <respelling> all: vendicarsi <end>
-Page 0 vendico: <respelling> all: véndico,vèndico<r:DiPI> <end>
-Page 0 vendichi: <respelling> all: véndichi,vèndichi<r:DiPI|vendico> <end>
-Page 0 vendica: <respelling> all: véndica,vèndica<r:DiPI|vendico> <end>
+Page 0 vendico: <respelling> top: véndico,vèndico<r:DiPI> <end>
+Page 0 vendichi: <respelling> top: véndichi,vèndichi<r:DiPI|vendico> <end>
+Page 0 vendica: <respelling> top: véndica,vèndica<r:DiPI|vendico> <end>
+Page 0 vendiche: <respelling> all: véndiche,vèndiche<r:DiPI|vendico> <end>
 Page 0 vendicano: <respelling> all: véndicano,vèndicano<r:DiPI|vendico> <end>
 Page 0 vendichino: <respelling> all: véndichino,vèndichino<r:DiPI|vendico> <end>
 # FIXME
@@ -787,12 +784,12 @@ Page 0 agitarsi: <respelling> all: agitàrsi <end>
 #Page 0 agito: <respelling> all: agito <end>
 #Page 0 agiti: <respelling> all: agiti <end>
 #Page 0 agita: <respelling> all: agita <end>
-#Page 0 agite: <respelling> all: agite <end>
+Page 0 agite: <respelling> all: agìte <end>
 #FIXME, split
 #Page 0 altero: <respelling> all: altero <end>
 #Page 0 altera: <respelling> all: altera <end>
 #Page 0 alteri: <respelling> all: alteri <end>
-#Page 0 altere: <respelling> all: altere <end>
+Page 0 altere: <respelling> all: altère <end>
 #FIXME, two vowels
 #Page 0 centellinare: <respelling> all: centellinare <end>
 #Page 0 centellinarsi: <respelling> all: centellinarsi <end>
@@ -813,51 +810,70 @@ Page 0 centellinino: <respelling> all: centèllinino,#centellìnino<r:DiPI|cente
 # FIXME, two vowels
 #Page 0 contemplare: <respelling> all: contemplare <end>
 #Page 0 contemplarsi: <respelling> all: contemplarsi <end>
-Page 0 contemplo: <respelling> all: contémplo,#contèmplo<r:DiPI> <end>
-Page 0 contempli: <respelling> all: contémpli,#contèmpli<r:DiPI|contemplo> <end>
+Page 0 contemplo: <respelling> top: contémplo,#contèmplo<r:DiPI> <end>
+Page 0 contempli: <respelling> top: contémpli,#contèmpli<r:DiPI|contemplo> <end>
 Page 0 contempla: <respelling> all: contémpla,#contèmpla<r:DiPI|contemplo> <end>
 Page 0 contemplano: <respelling> all: contémplano,#contèmplano<r:DiPI|contemplo> <end>
 Page 0 contemplino: <respelling> all: contémplino,#contèmplino<r:DiPI|contemplo> <end>
-Page 0 templo: <respelling> all: templo <end>
-Page 0 templi: <respelling> all: templi <end>
-Page 0 decretare: <respelling> all: decretare <end>
-Page 0 decretarsi: <respelling> all: decretarsi <end>
-Page 0 decreto: <respelling> all: decreto <end>
-Page 0 decreti: <respelling> all: decreti <end>
-Page 0 decreta: <respelling> all: decreta <end>
-Page 0 decretano: <respelling> all: decretano <end>
-Page 0 decretino: <respelling> all: decretino <end>
-Page 0 controdecreto: <respelling> all: controdecreto <end>
-Page 0 controdecreti: <respelling> all: controdecreti <end>
-Page 0 crettare: <respelling> all: crettare <end>
-Page 0 crettarsi: <respelling> all: crettarsi <end>
-Page 0 cretto: <respelling> all: cretto <end>
-Page 0 cretti: <respelling> all: cretti <end>
-Page 0 cretta: <respelling> all: cretta <end>
-Page 0 crettano: <respelling> all: crettano <end>
-Page 0 crettino: <respelling> all: crettino <end>
-Page 0 desecretare: <respelling> all: desecretare <end>
-Page 0 desecretarsi: <respelling> all: desecretarsi <end>
-Page 0 desecreto: <respelling> all: desecreto <end>
-Page 0 desecreti: <respelling> all: desecreti <end>
-Page 0 desecreta: <respelling> all: desecreta <end>
-Page 0 desecretano: <respelling> all: desecretano <end>
-Page 0 desecretino: <respelling> all: desecretino <end>
-Page 0 discreto: <respelling> all: discreto <end>
-Page 0 discreta: <respelling> all: discreta <end>
-Page 0 discreti: <respelling> all: discreti <end>
-Page 0 discrete: <respelling> all: discrete <end>
-Page 0 indiscreto: <respelling> all: indiscreto <end>
-Page 0 indiscreta: <respelling> all: indiscreta <end>
-Page 0 indiscreti: <respelling> all: indiscreti <end>
-Page 0 indiscrete: <respelling> all: indiscrete <end>
-Page 0 secretare: <respelling> all: secretare <end>
-Page 0 secretarsi: <respelling> all: secretarsi <end>
-Page 0 secreto: <respelling> all: secreto <end>
-Page 0 secreti: <respelling> all: secreti <end>
-Page 0 secreta: <respelling> all: secreta <end>
-Page 0 secretano: <respelling> all: secretano <end>
-Page 0 secretino: <respelling> all: secretino <end>
+Page 0 templo: <respelling> all: témplo,#tèmplo<r:DiPI|tempio> <end>
+Page 0 templi: <respelling> all: témpli,#tèmpli<r:DiPI> <end>
+# FIXME, two vowels
+#Page 0 decretare: <respelling> all: decretare <end>
+#Page 0 decretarsi: <respelling> all: decretarsi <end>
+# FIXME, split pronun
+#Page 0 decreto: <respelling> all: decreto <end>
+#Page 0 decreti: <respelling> all: decreti <end>
+#Page 0 decreta: <respelling> all: decreta <end>
+Page 0 decretano: <respelling> all: decrétano,decrètano<r:DiPI|decreto> <end>
+Page 0 decretino: <respelling> all: decrétino,decrètino<r:DiPI|decreto> <end>
+Page 0 controdecreto: <respelling> all: controdécreto,controdècreto<r:DiPI|decreto> <end>
+Page 0 controdecreti: <respelling> all: controdécreti,controdècreti<r:DiPI|decreto> <end>
+# FIXME, two vowels
+#Page 0 crettare: <respelling> all: crettare <end>
+#Page 0 crettarsi: <respelling> all: crettarsi <end>
+Page 0 cretto: <respelling> top: crètto,crétto<r:DiPI> <end>
+Page 0 cretti: <respelling> top: crètti,crétti<r:DiPI|cretto> <end>
+Page 0 cretta: <respelling> all: crètta,crétta<r:DiPI|cretto> <end>
+Page 0 crettano: <respelling> all: crèttano,créttano<r:DiPI|cretto> <end>
+Page 0 crettino: <respelling> all: crèttino,créttino<r:DiPI|cretto> <end>
+# FIXME, two vowels
+Page 0 desecretare: <respelling> all: desecretàre <end>
+Page 0 desecretarsi: <respelling> all: desecretàrsi <end>
+Page 0 desecreto: <respelling> all: desecréto,desecrèto<r:DiPI|secreto> <end>
+Page 0 desecreti: <respelling> all: desecréti,desecrèti<r:DiPI|secreto> <end>
+Page 0 desecreta: <respelling> all: desecréta,desecrèta<r:DiPI|secreto> <end>
+Page 0 desecretano: <respelling> all: desecrétano,desecrètano<r:DiPI|secreto> <end>
+Page 0 desecretino: <respelling> all: desecrétino,desecrètino<r:DiPI|secreto> <end>
+# FIXME, two vowels
+Page 0 desegretare: <respelling> all: desegretàre <end>
+Page 0 desegretarsi: <respelling> all: desegretàrsi <end>
+Page 0 desegreto: <respelling> all: desegréto,desegrèto<r:DiPI|segreto> <end>
+Page 0 desegreti: <respelling> all: desegréti,desegrèti<r:DiPI|segreto> <end>
+Page 0 desegreta: <respelling> all: desegréta,desegrèta<r:DiPI|segreto> <end>
+Page 0 desegretano: <respelling> all: desegrétano,desegrètano<r:DiPI|segreto> <end>
+Page 0 desegretino: <respelling> all: desegrétino,desegrètino<r:DiPI|segreto> <end>
+Page 0 discreto: <respelling> all: discréto,discrèto<r:DiPI|discreto> <end>
+Page 0 discreta: <respelling> all: discréta,discrèta<r:DiPI|discreto> <end>
+Page 0 discreti: <respelling> all: discréti,discrèti<r:DiPI|discreto> <end>
+Page 0 discrete: <respelling> all: discréte,discrète<r:DiPI|discreto> <end>
+Page 0 indiscreto: <respelling> all: indiscréto,indiscrèto<r:DiPI|indiscreto> <end>
+Page 0 indiscreta: <respelling> all: indiscréta,indiscrèta<r:DiPI|indiscreto> <end>
+Page 0 indiscreti: <respelling> all: indiscréti,indiscrèti<r:DiPI|indiscreto> <end>
+Page 0 indiscrete: <respelling> all: indiscréte,indiscrète<r:DiPI|indiscreto> <end>
+# FIXME, two vowels
+Page 0 secretare: <respelling> all: secretàre <end>
+Page 0 secretarsi: <respelling> all: secretàrsi <end>
+# FIXME, split etym and pronun
+#Page 0 secreto: <respelling> all: secreto <end>
+#Page 0 secreti: <respelling> all: secreti <end>
+#Page 0 secreta: <respelling> all: secreta <end>
+Page 0 secretano: <respelling> all: secrétano,secrètano<r:DiPI|secreto> <end>
+Page 0 secretino: <respelling> all: secrétino,secrètino<r:DiPI|secreto> <end>
+# got here/this far in find_regex.italian.pronun-fix.pages.txt.4.out.1 (page 813)
+# #
+# #
+# #
+# #
 Page 0 porgere: <respelling> all: porgere <end>
 Page 0 porgersi: <respelling> all: porgersi <end>
 Page 0 porto: <respelling> all: porto <end>
