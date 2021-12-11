@@ -125,7 +125,7 @@ EXAMPLES OF CONJUGATION:
   noimp
 >}}
 
-{{it-conj|dire<a/-,dìssi,détto.
+{{it-conj|dire<a/+,dìssi,détto.
   stem:dìce.
   pres2p:dìte.
   imp:dì':*dì*
@@ -139,8 +139,7 @@ EXAMPLES OF CONJUGATION:
   imp:dài:da':*dà*
 >}}
 
-{{it-conj|dovere<a:e[as an auxiliary, with main verbs taking ''essere'']/-.
-  presrow:dèvo:dévo:dèbbo:débbo,dèvi:dévi,dève:déve,dobbiàmo,dovéte,dèvono:dévono:dèbbono:débbono.
+{{it-conj|dovere<a:e[as an auxiliary, with main verbs taking ''essere'']/dèvo:dévo:dèbbo:débbo#dève:déve.
   fut:dovrò.
   sub:dèbba:débba:dèva[rare]:déva[rare].
   noimp
@@ -167,6 +166,8 @@ EXAMPLES OF CONJUGATION:
   imp:vài:và':và*
 >}}
 
+{{it-conj|valere<e:a[transitive]/vàlgo#à,vàlsi,vàlso.fut:varrò>}}
+
 {{it-conj|vedere<a/védo:véggo[literary]:véggio[poetic]#é,vìdi,vìsto:vedùto[less popular].
   fut:vedrò
 >}}
@@ -184,7 +185,7 @@ EXAMPLES OF CONJUGATION:
 
 {{it-conj|togliere<a\ò\tòlgo,tòlsi,tòlto.fut:+:torrò[literary].presp:+>}}
 
-{{it-conj|condurre<a\condùco,condùssi,condótto.stem:condùce>}}
+{{it-conj|condurre<a\+,condùssi,condótto.stem:condùce>}}
 
 {{it-verb|proporre<a\ó+\propóngo,propósi,propósto:propòsto.stem:propóne>}}
 
@@ -249,8 +250,6 @@ local function link_term(term, face)
 	return m_links.full_link({ lang = lang, term = term }, face)
 end
 
-local row_conjugation -- forward reference
-
 local all_persons_numbers = {
 	["1s"] = "1|s",
 	["2s"] = "2|s",
@@ -258,25 +257,12 @@ local all_persons_numbers = {
 	["1p"] = "1|p",
 	["2p"] = "2|p",
 	["3p"] = "3|p",
-	["me"] = "me",
-	["te"] = "te",
-	["se"] = "se",
-	["nos"] = "nos",
-	["os"] = "os",
-	["lo"] = "lo",
-	["la"] = "la",
-	["le"] = "le",
-	["los"] = "los",
-	["las"] = "las",
-	["les"] = "les",
 }
 
 local person_number_list = { "1s", "2s", "3s", "1p", "2p", "3p", }
--- local persnum_to_index = {}
--- for k, v in pairs(person_number_list) do
--- 	persnum_to_index[v] = k
--- end
-local imp_person_number_list = { "2s", "2p", }
+local sub_person_number_list = { "123s", "1p", "2p", "3p", }
+local imp_person_number_list = { "2s", "3s", "1p", "2p", "3p", }
+local impsub_person_number_list = { "12s", "3s", "1p", "2p", "3p", }
 
 person_number_to_reflexive_pronoun = {
 	["1s"] = "mi",
@@ -287,92 +273,127 @@ person_number_to_reflexive_pronoun = {
 	["3p"] = "si",
 }
 
+-- Define as forward references so `row_conjugation` can use them.
+local add_present_indic, add_present_subj, add_imperative, add_past_historic
+local generate_future_stem, generate_conditional_stem
 
-local verb_slots_basic = {
-	{"infinitive", "inf"},
-	{"infinitive_linked", "inf"},
-	{"gerund", "ger"},
-	{"pp", "past|part"},
+local row_conjugation = {
+	["pres"] = {
+		rowdesc = "present",
+		irregrow = person_number_list,
+		conjugate = add_present_indic,
+	},
+	["sub"] = {
+		rowdesc = "present subjunctive",
+		irregrow = {"123s", "1p", "2p", "3p"},
+		conjugate = add_present_subj,
+	},
+	["imp"] = {
+		rowdesc = "imperative",
+		irregrow = {"2s", "2p"},
+		conjugate = add_imperative,
+	},
+	["phis"] = {
+		rowdesc = "past historic",
+		irregrow = person_number_list,
+		conjugate = add_past_historic,
+	},
+	["imperf"] = {
+		rowdesc = "imperfect",
+		irregrow = person_number_list,
+		irregform_ending = "o",
+		irregform_desc = "first-person imperfect",
+		generate_default_stem = function(base) return iut.map_forms(base.verb.unaccented_stem,
+			function(stem) return stem .. base.conj_vowel .. "v" end) end,
+		conjugate = {"o", "i", "a", "àmo", "àte", "ano"},
+	},
+	["impsub"] = {
+		rowdesc = "imperfect subjunctive",
+		irregrow = impsub_person_number_list,
+		irregform_ending = "ssi",
+		irregform_desc = "first/second-person imperfect subjunctive",
+		generate_default_stem = function(base) return iut.map_forms(base.verb.unaccented_stem,
+			function(stem) return stem .. base.conj_vowel end) end,
+		conjugate = {"ssi", "sse", "ssimo", "ste", "ssero"},
+	},
+	["fut"] = {
+		rowdesc = "future",
+		irregrow = person_number_list,
+		irregform_ending = "ò",
+		irregform_desc = "first-person future",
+		generate_default_stem = generate_future_stem,
+		conjugate = {"ò", "ài", "à", "émo", "éte", "ànno"},
+	},
+	["cond"] = {
+		rowdesc = "conditional",
+		irregrow = person_number_list,
+		irregform_ending = "éi",
+		irregform_desc = "first-person conditional",
+		generate_default_stem = generate_conditional_stem,
+		conjugate = {"éi", "ésti", "èbbe", "émmo", "éste", "èbbero"},
+	},
 }
 
-local verb_slots_combined = {}
+local all_verb_slots = {
+	{"inf", "inf"},
+	{"inf_linked", "inf"},
+	{"ger", "ger"},
+	{"pp", "past|part"},
+	{"presp", "pres|part"},
+}
 
-local verb_slot_combined_rows = {}
+local overridable_participle_slots = {
+	["ger"] = true,
+	["presp"] = true,
+}
 
--- Add entries for a slot with person/number variants.
--- `verb_slots` is the table to add to.
--- `slot_prefix` is the prefix of the slot, typically specifying the tense/aspect.
--- `tag_suffix` is the set of inflection tags to add after the person/number tags,
--- or "-" to use "-" as the inflection tags (which indicates that no accelerator entry
--- should be generated).
+local overridable_slots = m_table.shallowcopy(overridable_participle_slots)
+
+--[=[
+Add entries for a slot with person/number variants.
+`verb_slots` is the table to add to.
+`slot_prefix` is the prefix of the slot, typically specifying the tense/aspect.
+`tag_suffix` is the set of inflection tags to add after the person/number tags when forming the accelerator entry,
+   or "-" to indicate that no accelerator entry should be generated.
+`persnum_list` is the list of person/number suffixes to add to `slot_prefix`. If omitted, it is taken from
+   `row_conjugation`.
+]=]
 local function add_slot_personal(verb_slots, slot_prefix, tag_suffix, persnum_list)
-	persnum_list = persnum_list or person_number_list
+	persnum_list = persnum_list or row_conjugation[persnum_list].irregrow
 	for _, persnum in ipairs(persnum_list) do
 		local persnum_tag = all_persons_numbers[persnum]
-		local slot = slot_prefix .. "_" .. persnum
+		local slot = slot_prefix .. persnum
 		if tag_suffix == "-" then
 			table.insert(verb_slots, {slot, "-"})
 		else
 			table.insert(verb_slots, {slot, persnum_tag .. "|" .. tag_suffix})
 		end
+		overridable_slots[slot] = true
 	end
 end
 
-add_slot_personal(verb_slots_basic, "pres", "pres|ind", person_number_list)
-add_slot_personal(verb_slots_basic, "impf", "impf|ind", person_number_list)
-add_slot_personal(verb_slots_basic, "phis", "phis", person_number_list)
-add_slot_personal(verb_slots_basic, "fut", "fut|ind", person_number_list)
-add_slot_personal(verb_slots_basic, "cond", "cond", person_number_list)
-add_slot_personal(verb_slots_basic, "pres_sub", "pres|sub", person_number_list)
-add_slot_personal(verb_slots_basic, "impf_sub", "impf|sub", person_number_list)
-add_slot_personal(verb_slots_basic, "imp", "imp", {"2s", "3s", "1p", "2p", "3p"})
-add_slot_personal(verb_slots_basic, "neg_imp", "-", {"2s", "3s", "1p", "2p", "3p"})
-
-local function add_combined_slot(basic_slot, slot_prefix, pronouns)
-	add_slot_personal(verb_slots_combined, basic_slot .. "_comb", slot_prefix .. "|combined", pronouns)
-	table.insert(verb_slot_combined_rows, {basic_slot, pronouns})
-end
-
-add_combined_slot("infinitive", "inf", {"me", "te", "se", "nos", "os", "lo", "la", "le", "los", "las", "les"})
-add_combined_slot("gerund", "gerund", {"me", "te", "se", "nos", "os", "lo", "la", "le", "los", "las", "les"})
-add_combined_slot("imp_2s", "imp|2s", {"me", "te", "nos", "lo", "la", "le", "los", "las", "les"})
-add_combined_slot("imp_3s", "imp|3s", {"me", "se", "nos", "lo", "la", "le", "los", "las", "les"})
-add_combined_slot("imp_1p", "imp|1p", {"te", "nos", "os", "lo", "la", "le", "los", "las", "les"})
-add_combined_slot("imp_2p", "imp|2p", {"me", "nos", "os", "lo", "la", "le", "los", "las", "les"})
-add_combined_slot("imp_3p", "imp|3p", {"me", "se", "nos", "lo", "la", "le", "los", "las", "les"})
-
-local all_verb_slots = {}
-for _, slot_and_accel in ipairs(verb_slots_basic) do
-	table.insert(all_verb_slots, slot_and_accel)
-end
-for _, slot_and_accel in ipairs(verb_slots_combined) do
-	table.insert(all_verb_slots, slot_and_accel)
-end
-
-local verb_slots_basic_map = {}
-for _, slotaccel in ipairs(verb_slots_basic) do
-	local slot, accel = unpack(slotaccel)
-	verb_slots_basic_map[slot] = accel
-end
-
-local verb_slots_combined_map = {}
-for _, slotaccel in ipairs(verb_slots_combined) do
-	local slot, accel = unpack(slotaccel)
-	verb_slots_combined_map[slot] = accel
-end
+add_slot_personal(all_verb_slots, "pres", "pres|ind")
+add_slot_personal(all_verb_slots, "sub", "pres|sub")
+-- For the imperative, the improw: tag specifies only the 2s and 2p forms as the remaining are copied from the
+-- present subjunctive (but can be individually overridden if necessary).
+add_slot_personal(all_verb_slots, "imp", "imp", imp_person_number_list)
+add_slot_personal(all_verb_slots, "negimp", "-", imp_person_number_list)
+add_slot_personal(all_verb_slots, "phis", "phis")
+add_slot_personal(all_verb_slots, "imperf", "impf|ind")
+add_slot_personal(all_verb_slots, "impsub", "impf|sub")
+add_slot_personal(all_verb_slots, "fut", "fut|ind")
+add_slot_personal(all_verb_slots, "cond", "cond")
 
 local reflexive_masc_forms = {
 	["su"] = {"mi", "tu", "su", "nuestro", "vuestro", "su"},
 	["sus"] = {"mis", "tus", "sus", "nuestros", "vuestros", "sus"},
 	["sí"] = {"mí", "ti", "sí", "nosotros", "vosotros", "sí"},
-	["consigo"] = {"conmigo", "contigo", "consigo", "con nosotros", "con vosotros", "consigo"},
 }
 
 local reflexive_fem_forms = {
 	["su"] = {"mi", "tu", "su", "nuestra", "vuestra", "su"},
 	["sus"] = {"mis", "tus", "sus", "nuestras", "vuestras", "sus"},
 	["sí"] = {"mí", "ti", "sí", "nosotras", "vosotras", "sí"},
-	["consigo"] = {"conmigo", "contigo", "consigo", "con nosotras", "con vosotras", "consigo"},
 }
 
 local reflexive_forms = {
@@ -581,10 +602,9 @@ end
 
 
 local function add_irregrow(base, slot_pref, rowslot)
-	local irregrow_key = rowslot .. "row"
-	if base.irregrow_forms[irregrow_key] then
+	if base.irregrow_forms[rowslot] then
 		for _, irregrow_persnum in ipairs(row_conjugation[rowslot].irregrow) do
-			add(base, slot_pref .. "_" .. irregrow_persnum, base.irregrow_forms[irregrow_key][irregrow_persnum], "")
+			add(base, slot_pref .. "_" .. irregrow_persnum, base.irregrow_forms[rowslot][irregrow_persnum], "")
 		end
 		return true
 	else
@@ -594,7 +614,8 @@ end
 
 
 -- Generate the present indicative. See "RULES FOR CONJUGATION" near the top of the file for the detailed rules.
-local function add_present_indic(base, prefix)
+-- Defined earlier as a forward reference.
+add_present_indic = function(base, prefix)
 	local function addit(pers, stems, endings, from_existing_form)
 		add(base, prefix .. pers, stems, endings, from_existing_form)
 	end
@@ -628,7 +649,8 @@ end
 
 
 -- Generate the present subjunctive. See "RULES FOR CONJUGATION" near the top of the file for the detailed rules.
-local function add_present_subj(base, prefix)
+-- Defined earlier as a forward reference.
+add_present_subj = function(base, prefix)
 	local function addit(pers, stems, endings, from_existing_form)
 		add(base, prefix .. pers, stems, endings, from_existing_form)
 	end
@@ -667,7 +689,8 @@ end
 
 
 -- Generate the imperative. See "RULES FOR CONJUGATION" near the top of the file for the detailed rules.
-local function add_imperative(base, prefix)
+-- Defined earlier as a forward reference.
+add_imperative = function(base, prefix)
 	if base.noimp then
 		return
 	end
@@ -697,7 +720,8 @@ local function add_imperative(base, prefix)
 end
 
 
-local function add_past_historic(base, prefix)
+-- Defined earlier as a forward reference.
+add_past_historic = function(base, prefix)
 	for _, form in ipairs(base.stems.phis_form) do
 		local function add_phis(pref, s1, s2, s3, p1, p2, p3)
 			local newform = {form = pref, footnotes = form.footnotes}
@@ -794,7 +818,8 @@ local function conjugate_row(base, rowslot)
 end
 
 
-local function generate_future_stem(base)
+-- Defined earlier as a forward reference.
+generate_future_stem = function(base, prefix)
 	return iut.map_forms(base.verb.unaccented_stem, function(stem)
 		if base.conj_vowel == "à" then
 			if stem:find("[cg]$") then
@@ -811,7 +836,8 @@ local function generate_future_stem(base)
 end
 
 
-local function generate_conditional_stem(base)
+-- Defined earlier as a forward reference.
+generate_conditional_stem = function(base, prefix)
 	local futrowconj = row_conjugation.fut
 	if not futrowconj then
 		error("Internal error: Can't find 'fut' in row_conjugation")
@@ -834,74 +860,6 @@ local function add_participles(base)
 	addit("pp_fp", stems.pp, "as")
 end
 
-
-local irreg_forms = { "imperf", "fut", "sub", "impsub", "imp" }
-
--- Defined earlier as a forward reference.
-row_conjugation = {
-	["pres"] = {
-		prefix = "pres_",
-		rowdesc = "present",
-		irregrow = row_all_6,
-		conjugate = add_present_indic,
-	},
-	["sub"] = {
-		prefix = "pres_sub_",
-		rowdesc = "present subjunctive",
-		irregrow = {"123s", "1p", "2p", "3p"},
-		conjugate = add_present_subj,
-	},
-	["imp"] = {
-		prefix = "imp_",
-		rowdesc = "imperative",
-		irregrow = {"2s", "2p"},
-		conjugate = add_present_subj,
-	},
-	["phis"] = {
-		prefix = "phis_",
-		rowdesc = "past historic",
-		irregrow = row_all_6,
-		conjugate = add_past_historic,
-	},
-	["imperf"] = {
-		prefix = "impf_",
-		rowdesc = "imperfect",
-		irregrow = row_all_6,
-		irregform_ending = "o",
-		irregform_desc = "first-person imperfect",
-		generate_default_stem = function(base) return iut.map_forms(base.verb.unaccented_stem,
-			function(stem) return stem .. base.conj_vowel .. "v" end) end,
-		conjugate = {"o", "i", "a", "àmo", "àte", "ano"},
-	},
-	["impsub"] = {
-		prefix = "impf_sub_",
-		rowdesc = "imperfect subjunctive",
-		irregrow = {"12s", "3s", "1p", "2p", "3p"},
-		irregform_ending = "ssi",
-		irregform_desc = "first/second-person imperfect subjunctive",
-		generate_default_stem = function(base) return iut.map_forms(base.verb.unaccented_stem,
-			function(stem) return stem .. base.conj_vowel end) end,
-		conjugate = {"ssi", "sse", "ssimo", "ste", "ssero"},
-	},
-	["fut"] = {
-		prefix = "fut_",
-		rowdesc = "future",
-		irregrow = row_all_6,
-		irregform_ending = "ò",
-		irregform_desc = "first-person future",
-		generate_default_stem = generate_future_stem,
-		conjugate = {"ò", "ài", "à", "émo", "éte", "ànno"},
-	},
-	["cond"] = {
-		prefix = "cond_",
-		rowdesc = "conditional",
-		irregrow = row_all_6,
-		irregform_ending = "éi",
-		irregform_desc = "first-person conditional",
-		generate_default_stem = generate_conditional_stem,
-		conjugate = {"éi", "ésti", "èbbe", "émmo", "éste", "èbbero"},
-	},
-}
 
 -- Add the clitic pronouns in `pronouns` to the forms in `base_slot`. If `do_combined_slots` is given,
 -- store the results into the appropriate combined slots, e.g. `imp_2s_comb_lo` for second singular imperative + lo.
@@ -985,7 +943,7 @@ end
 -- `do_joined` means to do only the forms where the pronoun is joined to the end of the form; otherwise, do only the
 -- forms where it is not joined and precedes the form.
 local function add_reflexive_or_fixed_clitic_to_forms(base, do_reflexive, do_joined)
-	for _, slotaccel in ipairs(verb_slots_basic) do
+	for _, slotaccel in ipairs(all_verb_slots) do
 		local slot, accel = unpack(slotaccel)
 		local clitic
 		if not do_reflexive then
@@ -1105,11 +1063,11 @@ end
 
 local function conjugate_verb(base)
 	add_present_indic(base)
+	process_slot_overrides(base, "pres")
 	add_present_subj(base)
-	add_imper(base)
+	add_imperative(base)
 	add_non_present(base)
 	-- This should happen before add_combined_forms() so overrides of basic forms end up part of the combined forms.
-	process_slot_overrides(base, "do basic") -- do basic slot overrides
 	-- This should happen after process_slot_overrides() in case a derived slot is based on an override (as with the
 	-- imp_3s of [[dar]], [[estar]]).
 	copy_subjunctives_to_imperatives(base)
@@ -1159,7 +1117,31 @@ end
 
 
 local function parse_indicator_spec(angle_bracket_spec, lemma)
-	local base = {forms = {}, irreg_forms = {}, irregrow_forms = {}}
+	-- `forms` contains the final per-slot forms. This is processed further in [[Module:inflection-utilities]].
+	--    This is a table indexed by slot (e.g. "pres1s"). Each value in the table is a list of items of the form
+	--    {form = FORM, footnotes = FOOTNOTES} where FORM is the actual generated form and FOOTNOTES is either nil
+	--    or a list of footnotes (which must be surrounded by brackets, e.g. "[archaic]").
+	-- `genforms` contains the forms generated by the various form-generating functions such as add_present_indic().
+	--    `forms` and `genforms` will differ in the presence of overrides, which are included in the former but not
+	--    the latter. We separate the two so that e.g. we can use + in overrides to request the generated forms in
+	--    `genforms`.
+	-- `explicit_specs` contains forms specified by the user using either the prefixes 'imperf:', 'fut:', 'sub:',
+	--    'impsub:' or 'imp:' or in the format e.g. "vèngo:vègno[archaic or poetic]#viène,vénni,venùto" or "é:#è".
+	--    The key is the prefix ("imperf", "fut", etc., for the former format) or "pres", "pres3s", "phis" or "pp"
+	--    (for the latter format). The value is in the same form as for `forms` and `genforms`, but the FORM contained
+	--    in it is the actual user-specified form, which may be e.g. "#è" rather than a verb form, and needs to
+	--    be processed to generate the actual form. A spec may be "+" to insert the default-generated form or forms,
+	--
+	-- `explicit_forms` contains the processed versions of the specs contained in `explicit_specs`. The keys are as
+	--    in `explicit_specs` and the values are the same as for `forms` and `genforms`.
+	-- `explicit_row_specs` contains user-specified forms for a full tense/aspect row using 'presrow:', 'subrow:', etc.
+	--    The key is "pres", "sub", etc. (i.e. minus the "row" suffix). The value is another table indexed by the
+	--    person/number suffix (e.g. "1s", "2s", etc. for "pres"; "123s", "1p", "2p", etc. for "sub"), whose values
+	--    are in the same format as `explicit_specs`.
+	-- `explicit_row_forms` contains the processed versions of `explicit_row_specs`.
+	-- `overrides` contains user-specified forms using 'pres1s:', 'sub3p:', etc. The key is the slot ("pres1s",
+	--   "sub3p", etc.) and the value is of the same format as `forms`, `genforms`, etc.
+	local base = {forms = {}, genforms = {}, irreg_forms = {}, irregrow_forms = {}, overrides = {}}
 	local function parse_err(msg)
 		error(msg .. ": " .. angle_bracket_spec)
 	end
@@ -1704,39 +1686,13 @@ local function show_forms(alternant_multiword_spec)
 		remove_reflexive_indicators)
 	alternant_multiword_spec.lemmas = lemmas -- save for later use in make_table()
 
-	-- Initialize the footnotes with those for the future subjunctive and maybe the pres subjunctive
-	-- voseo usage. In the latter case, we only do it if there is a distinct pres subjunctive voseo form.
-	local function create_footnote_obj()
-		local obj = iut.create_footnote_obj()
-		iut.get_footnote_text({footnotes = {fut_sub_note}}, obj)
-		-- Compute whether the tú and voseo variants are different, for each voseo variant.
-		-- We use this later in make_table().
-		for _, slot in ipairs({"pres_2s", "pres_sub_2s", "imp_2s"}) do
-			alternant_multiword_spec["separate_" .. slot .. "v"] = false
-			iut.map_word_specs(alternant_multiword_spec, function(base)
-				if not m_table.deepEquals(base.forms[slot], base.forms[slot .. "v"]) then
-					alternant_multiword_spec["separate_" .. slot .. "v"] = true
-				end
-			end)
-		end
-		if alternant_multiword_spec.separate_pres_sub_2sv then
-			iut.get_footnote_text({footnotes = {pres_sub_voseo_note}}, obj)
-		end
-		return obj
-	end
-
 	local props = {
 		lang = lang,
 		lemmas = lemmas,
-		create_footnote_obj = create_footnote_obj,
 	}
-	props.slot_list = verb_slots_basic
+	props.slot_list = all_verb_slots
 	iut.show_forms(alternant_multiword_spec.forms, props)
 	alternant_multiword_spec.footnote_basic = alternant_multiword_spec.forms.footnote
-	props.create_footnote_obj = nil
-	props.slot_list = verb_slots_combined
-	iut.show_forms(alternant_multiword_spec.forms, props)
-	alternant_multiword_spec.footnote_combined = alternant_multiword_spec.forms.footnote
 end
 
 
