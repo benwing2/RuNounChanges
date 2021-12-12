@@ -80,7 +80,7 @@ local function isbn(text)
 end
 
 local function issn(text)
-	return "[[w:International Standard Serial Number|ISSN]] [http://www.worldcat.org/issn/" .. text .. " " .. text .. "]" ..
+	return "[[w:International Standard Serial Number|ISSN]] [https://www.worldcat.org/issn/" .. text .. " " .. text .. "]" ..
 		require("Module:check isxn").check_issn(text, "&nbsp;<span class=\"error\" style=\"font-size:88%\">Invalid&nbsp;ISSN</span>[[Category:Pages with ISSN errors]]")
 end
 
@@ -119,31 +119,37 @@ end
 
 -- Fancy version of ine() (if-not-empty). Converts empty string to nil,
 -- but also strips leading/trailing space and then single or double quotes,
--- to allow for embedded spaces.
+-- to allow for embedded spaces. (NOTE: Commented out quote processing, in case they are needed in args.)
 -- FIXME! Copied directly from ru-noun. Move to utility package.
 local function ine(arg)
 	if not arg then return nil end
 	arg = rsub(arg, "^%s*(.-)%s*$", "%1")
 	if arg == "" then return nil end
-	local inside_quotes = rmatch(arg, '^"(.*)"$')
-	if inside_quotes then
-		return inside_quotes
-	end
-	inside_quotes = rmatch(arg, "^'(.*)'$")
-	if inside_quotes then
-		return inside_quotes
-	end
+	--local inside_quotes = rmatch(arg, '^"(.*)"$')
+	--if inside_quotes then
+	--	return inside_quotes
+	--end
+	--inside_quotes = rmatch(arg, "^'(.*)'$")
+	--if inside_quotes then
+	--	return inside_quotes
+	--end
 	return arg
 end
 
 -- Clone frame's and parent's args while also assigning nil to empty strings.
-local function clone_args(frame)
+local function clone_args(frame, include_direct, include_parent)
 	local args = {}
-	for pname, param in pairs(frame:getParent().args) do
-		args[pname] = ine(param)
+	-- If both include_parent and include_direct are given, processing the former must come first so that
+	-- direct args override parent args.
+	if include_parent then
+		for pname, param in pairs(frame:getParent().args) do
+			args[pname] = ine(param)
+		end
 	end
-	for pname, param in pairs(frame.args) do
-		args[pname] = ine(param)
+	if include_direct then
+		for pname, param in pairs(frame.args) do
+			args[pname] = ine(param)
+		end
 	end
 	return args
 end
@@ -466,7 +472,7 @@ function export.source(args)
 		-- can dispense with add_with_sep() and always insert the comma.
 		
 		if a("bibcode") then
-			add(", <small>[[w:Bibcode|Bibcode]]:&nbsp;[http://adsabs.harvard.edu/abs/"
+			add(", <small>[[w:Bibcode|Bibcode]]:&nbsp;[https://adsabs.harvard.edu/abs/"
 				.. mw.uri.encode(a("bibcode")) .. " " .. a("bibcode") .. "]</small>")
 		end
 		if a("doi") then
@@ -485,11 +491,11 @@ function export.source(args)
 				mw.uri.encode(a("jstor")) .. " " .. a("jstor") .. "]</small>")
 		end
 		if a("lccn") then
-			add(", <small>[[w:Library of Congress Control Number|LCCN]] [http://lccn.loc.gov/" ..
+			add(", <small>[[w:Library of Congress Control Number|LCCN]] [https://lccn.loc.gov/" ..
 				mw.uri.encode(a("lccn")) .. " " .. a("lccn") .. "]</small>")
 		end
 		if a("oclc") then
-			add(", <small>[[w:OCLC|OCLC]] [http://worldcat.org/oclc/" ..
+			add(", <small>[[w:OCLC|OCLC]] [https://worldcat.org/oclc/" ..
 				mw.uri.encode(a("oclc")) .. " " .. a("oclc") .. "]</small>")
 		end
 		if a("ol") then
@@ -497,11 +503,11 @@ function export.source(args)
 				mw.uri.encode(a("ol")) .. "/ " .. a("ol") .. "]</small>")
 		end
 		if a("pmid") then
-			add(", <small>[[w:PubMed Identifier|PMID]] [http://www.ncbi.nlm.nih.gov/pubmed/" ..
+			add(", <small>[[w:PubMed Identifier|PMID]] [https://www.ncbi.nlm.nih.gov/pubmed/" ..
 				mw.uri.encode(a("pmid")) .. " " .. a("pmid") .. "]</small>")
 		end
 		if a("ssrn") then
-			add(", <small>[[w:Social Science Research Network|SSRN]] [http://ssrn.com/abstract=" ..
+			add(", <small>[[w:Social Science Research Network|SSRN]] [https://ssrn.com/abstract=" ..
 				mw.uri.encode(a("ssrn")) .. " " .. a("ssrn") .. "]</small>")
 		end
 		if a("id") then
@@ -690,7 +696,7 @@ end
 
 -- External interface, meant to be called from a template.
 function export.source_t(frame)
-	local args = clone_args(frame)
+	local args = clone_args(frame, "include direct", "include parent")
 	local newret = export.source(args)
 	if test_new_code then
 		local oldret = frame:expandTemplate{title="quote-meta/source", args=args}
@@ -716,6 +722,151 @@ function export.source_t(frame)
 		return oldret
 	end
 	return newret
+end
+
+-- External interface, meant to be called from a template.
+function export.call_quote_template(frame)
+	local iparams = {
+		["template"] = {},
+		["textparam"] = {},
+		["pageparam"] = {},
+		["allowparams"] = {list = true},
+		["propagateparams"] = {list = true},
+	}
+	local iargs, other_direct_args = require("Module:parameters").process(frame.args, iparams, "return unknown")
+	local direct_args = {}
+	for pname, param in pairs(other_direct_args) do
+		direct_args[pname] = ine(param)
+	end
+
+	local params = {
+		["text"] = {},
+		["passage"] = {},
+		["page"] = {},
+		["pages"] = {},
+		["footer"] = {},
+		["brackets"] = {},
+	}
+	if iargs.textparam then
+		params[iargs.textparam] = {}
+	end
+	if iargs.pageparam then
+		params[iargs.pageparam] = {}
+	end
+	
+	local parent_args = frame:getParent().args
+	local allow_all = false
+	for _, allowspec in ipairs(iargs.allowparams) do
+		for _, allow in ipairs(rsplit(allowspec, "%s*,%s*")) do
+			local param = rmatch(allow, "^(.*):list$")
+			if param then
+				if rfind(param, "^[0-9]+$") then
+					param = tonumber(param)
+				end
+				params[param] = {list = true}
+			elseif allow == "*" then
+				allow_all = true
+			else
+				if rfind(allow, "^[0-9]+$") then
+					allow = tonumber(allow)
+				end
+				params[allow] = {}
+			end
+		end
+	end
+
+	local params_to_propagate = {}
+	for _, propagate_spec in ipairs(iargs.propagateparams) do
+		for _, param in ipairs(rsplit(propagate_spec, "%s*,%s*")) do
+			table.insert(params_to_propagate, param)
+			params[param] = {}
+		end
+	end
+
+	local args = require("Module:parameters").process(parent_args, params, allow_all)
+	parent_args = require("Module:table").shallowcopy(parent_args)
+
+	other_direct_args.passage = args.text or args.passage or iargs.textparam and args[iargs.textparam] or nil
+	other_direct_args.page = args.page or iargs.pageparam and args[iargs.pageparam] or nil
+	other_direct_args.pages = args.pages
+	if args.footer then
+		other_direct_args.footer = frame:expandTemplate { title = "small", args = {args.footer} }
+	end
+	other_direct_args.brackets = args.brackets
+	if not other_direct_args.authorlink then
+		other_direct_args.authorlink = other_direct_args.author
+	end
+	for _, param in ipairs(params_to_propagate) do
+		if args[param] then
+			other_direct_args[param] = args[param]
+		end
+	end
+
+	return frame:expandTemplate { title = iargs.template or "quote-book", args = other_direct_args }
+end
+
+function export.paramdoc(frame)
+	local params = {
+		[1] = {},
+	}
+
+	local parargs = frame:getParent().args
+	local args = require("Module:parameters").process(parargs, params)
+
+	local passage_param_with_synonym = '<<param>>, {{para|text}}, or {{para|passage}}'
+	local passage_param_no_synonym = '{{para|text}} or {{para|passage}}'
+	local passage_text = [=[
+* <<params>> – the passage to be quoted.]=]
+
+	local page_param_with_synonym = '<<param>> or {{para|page}}, or {{para|pages}}'
+	local page_param_no_synonym = '{{para|page}} or {{para|pages}}'
+	local page_text = [=[
+* <<params>> – '''mandatory in some cases''': the page number(s) quoted from. When quoting a range of pages, note the following:
+** Separate the first and last pages of the range with an [[en dash]], like this: {{para|pages|110–111}}.
+** You must also use {{para|pageref}} to specify the page number that the template should link to (usually the page on which the Wiktionary entry appears).
+: If this parameter is omitted, the template will not link to the online version of the work.]=]
+
+	local chapter_param_with_synonym = '<<param>> or {{para|chapter}}'
+	local chapter_param_no_synonym = '{{para|chapter}}'
+	local chapter_text = [=[
+* <<params>> – the name of the chapter quoted from.]=]
+	local roman_chapter_text = [=[
+* <<params>> – the chapter number quoted from in uppercase Roman numerals.]=]
+	local arabic_chapter_text = [=[
+* <<params>> – the chapter number quoted from in Arabic numerals.]=]
+
+	local trailing_params = [=[
+* {{para|footer}} – a comment about the passage quoted.
+* {{para|brackets}} – use {{para|brackets|on}} to surround a quotation with [[bracket]]s. This indicates that the quotation either contains a mere mention of a term (for example, "some people find the word '''''manoeuvre''''' hard to spell") rather than an actual use of it (for example, "we need to '''manoeuvre''' carefully to avoid causing upset"), or does not provide an actual instance of a term but provides information about related terms.]=]
+
+	local function replace_param(template_text, param)
+	end
+
+	text = rsub(args[1], "<<trailing_params>>", function() return frame:preprocess(trailing_params) end)
+
+	local function do_param_with_optional_synonym(param, text_to_sub, paramtext_synonym, paramtext_no_synonym)
+		local function sub_param(synonym)
+			local subbed_paramtext
+			if synonym then
+				subbed_paramtext = rsub(paramtext_synonym, "<<param>>", "{{para|" .. synonym .. "}}")
+			else
+				subbed_paramtext = paramtext_no_synonym
+			end
+			return frame:preprocess(rsub(text_to_sub, "<<params>>", subbed_paramtext))
+		end
+		text = rsub(text, "<<" .. param .. ">>", function() return sub_param() end)
+		text = rsub(text, "<<" .. param .. ":(.*)>>", sub_param)
+	end
+
+	do_param_with_optional_synonym("passage", passage_text, passage_param_with_synonym, passage_param_no_synonym)
+	do_param_with_optional_synonym("page", page_text, page_param_with_synonym, page_param_no_synonym)
+	do_param_with_optional_synonym("chapter", chapter_text, chapter_param_with_synonym, chapter_param_no_synonym)
+	do_param_with_optional_synonym("roman_chapter", roman_chapter_text, chapter_param_with_synonym, chapter_param_no_synonym)
+	do_param_with_optional_synonym("arabic_chapter", arabic_chapter_text, chapter_param_with_synonym, chapter_param_no_synonym)
+
+	-- Remove final newline so template code can add a newline after invocation
+	text = text:gsub("\n$", "")
+	return text
 end
 
 return export
