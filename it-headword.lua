@@ -1153,11 +1153,11 @@ pos_functions["verbs"] = {
 						base[first_element] = true
 					else
 						local saw_irreg = false
-						for _, irreg_form in ipairs(com.irreg_forms) do
-							local first_element_minus_prefix = rmatch(first_element, "^" .. irreg_form .. ":(.*)$")
+						for _, irreg_slot in ipairs(com.explicit_slots) do
+							local first_element_minus_prefix = rmatch(first_element, "^" .. irreg_slot .. ":(.*)$")
 							if first_element_minus_prefix then
 								dot_separated_group[1] = first_element_minus_prefix
-								base.irreg_forms[irreg_form] = fetch_specs(dot_separated_group)
+								base.irreg_forms[irreg_slot] = fetch_specs(dot_separated_group)
 								saw_irreg = true
 								break
 							end
@@ -1426,9 +1426,9 @@ pos_functions["verbs"] = {
 					return form
 				end
 
-				for _, irreg_form in ipairs(com.irreg_forms) do
-					if base.irreg_forms[irreg_form] then
-						process_specs(irreg_form .. "_form", base.irreg_forms[irreg_form], irreg_form ~= "imp",
+				for _, irreg_slot in ipairs(com.explicit_slots) do
+					if base.irreg_forms[irreg_slot] then
+						process_specs(irreg_slot .. "_form", base.irreg_forms[irreg_slot], irreg_slot ~= "imp",
 							irreg_special_case)
 					end
 				end
@@ -1528,8 +1528,8 @@ pos_functions["verbs"] = {
 			do_verb_form("pres_form")
 			do_verb_form("past_form")
 			do_verb_form("pp_form")
-			for _, irreg_form in ipairs(com.irreg_forms) do
-				do_verb_form(irreg_form .. "_form")
+			for _, irreg_slot in ipairs(com.explicit_slots) do
+				do_verb_form(irreg_slot .. "_form")
 			end
 			do_verb_form("aux")
 			-- If there is a past participle but no auxiliary (e.g. [[malfare]]), explicitly add

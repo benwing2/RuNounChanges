@@ -280,27 +280,27 @@ local generate_future_stem, generate_conditional_stem
 local row_conjugation = {
 	["pres"] = {
 		rowdesc = "present",
-		irregrow = person_number_list,
+		persnum = person_number_list,
 		conjugate = add_present_indic,
 	},
 	["sub"] = {
 		rowdesc = "present subjunctive",
-		irregrow = {"123s", "1p", "2p", "3p"},
+		persnum = {"123s", "1p", "2p", "3p"},
 		conjugate = add_present_subj,
 	},
 	["imp"] = {
 		rowdesc = "imperative",
-		irregrow = {"2s", "2p"},
+		persnum = {"2s", "2p"},
 		conjugate = add_imperative,
 	},
 	["phis"] = {
 		rowdesc = "past historic",
-		irregrow = person_number_list,
+		persnum = person_number_list,
 		conjugate = add_past_historic,
 	},
 	["imperf"] = {
 		rowdesc = "imperfect",
-		irregrow = person_number_list,
+		persnum = person_number_list,
 		irregform_ending = "o",
 		irregform_desc = "first-person imperfect",
 		generate_default_stem = function(base) return iut.map_forms(base.verb.unaccented_stem,
@@ -309,7 +309,7 @@ local row_conjugation = {
 	},
 	["impsub"] = {
 		rowdesc = "imperfect subjunctive",
-		irregrow = impsub_person_number_list,
+		persnum = impsub_person_number_list,
 		irregform_ending = "ssi",
 		irregform_desc = "first/second-person imperfect subjunctive",
 		generate_default_stem = function(base) return iut.map_forms(base.verb.unaccented_stem,
@@ -318,7 +318,7 @@ local row_conjugation = {
 	},
 	["fut"] = {
 		rowdesc = "future",
-		irregrow = person_number_list,
+		persnum = person_number_list,
 		irregform_ending = "ò",
 		irregform_desc = "first-person future",
 		generate_default_stem = generate_future_stem,
@@ -326,13 +326,15 @@ local row_conjugation = {
 	},
 	["cond"] = {
 		rowdesc = "conditional",
-		irregrow = person_number_list,
+		persnum = person_number_list,
 		irregform_ending = "éi",
 		irregform_desc = "first-person conditional",
 		generate_default_stem = generate_conditional_stem,
-		conjugate = {"éi", "ésti", "èbbe", "émmo", "éste", "èbbero"},
+		conjugate = {"éi", "ésti", {"èbbe", "ébbe"}, "émmo", "éste", {"èbbero", "ébbero"}},
 	},
 }
+
+local explicit_slot_set = m_table.listToSet(com.explicit_slots)
 
 local all_verb_slots = {
 	{"inf", "inf"},
@@ -342,24 +344,25 @@ local all_verb_slots = {
 	{"presp", "pres|part"},
 }
 
-local overridable_participle_slots = {
+local overridable_participle_slot_set = {
 	["ger"] = true,
 	["presp"] = true,
 }
 
-local overridable_slots = m_table.shallowcopy(overridable_participle_slots)
+local overridable_slot_set = m_table.shallowcopy(overridable_participle_slot_set)
 
 --[=[
 Add entries for a slot with person/number variants.
 `verb_slots` is the table to add to.
-`slot_prefix` is the prefix of the slot, typically specifying the tense/aspect.
+`slot_prefix` is the prefix of the slot, typically specifying the tense/aspect, and usually has a corresponding
+   entry in `row_conjugation`.
 `tag_suffix` is the set of inflection tags to add after the person/number tags when forming the accelerator entry,
    or "-" to indicate that no accelerator entry should be generated.
 `persnum_list` is the list of person/number suffixes to add to `slot_prefix`. If omitted, it is taken from
    `row_conjugation`.
 ]=]
 local function add_slot_personal(verb_slots, slot_prefix, tag_suffix, persnum_list)
-	persnum_list = persnum_list or row_conjugation[persnum_list].irregrow
+	persnum_list = persnum_list or row_conjugation[slot_prefix].persnum
 	for _, persnum in ipairs(persnum_list) do
 		local persnum_tag = all_persons_numbers[persnum]
 		local slot = slot_prefix .. persnum
@@ -368,7 +371,7 @@ local function add_slot_personal(verb_slots, slot_prefix, tag_suffix, persnum_li
 		else
 			table.insert(verb_slots, {slot, persnum_tag .. "|" .. tag_suffix})
 		end
-		overridable_slots[slot] = true
+		overridable_slot_set[slot] = true
 	end
 end
 
@@ -511,7 +514,7 @@ end
 local function create_base_forms(base)
 	com.add_default_verb_forms(base)
 
-	local function process_specs(slot, specs, is_finite, special_case)
+	local function process_specs(destforms, slot, specs, is_finite, special_case)
 		specs = specs or {{form = "+"}}
 		for _, spec in ipairs(specs) do
 			local decorated_form = spec.form
@@ -568,28 +571,32 @@ local function create_base_forms(base)
 						end
 					end
 				end
-				iut.insert_form(base.stems, slot, {form = form, footnotes = qualifiers})
+				iut.insert_form(destforms, slot, {form = form, footnotes = qualifiers})
 			end
 		end
 	end
 
-	process_specs("pres_form", base.pres, "finite", com.pres_special_case)
+	process_specs(base.explicit_forms, "pres", base.pres, "finite", com.pres_special_case)
 	if base.pres3s then
-		process_specs("pres3s_form", base.pres3s, "finite", com.pres3s_special_case)
+		process_specs(base.explicit_forms, "pres3s", base.pres3s, "finite", com.pres3s_special_case)
 	end
-	process_specs("phis_form", base.phis, "finite", com.phis_special_case)
-	process_specs("pp_form", base.pp, false, com.pp_special_case)
+	process_specs(base.explicit_forms, "phis", base.phis, "finite", com.phis_special_case)
+	process_specs(base.explicit_forms, "pp", base.pp, false, com.pp_special_case)
 
-	local function irreg_special_case(base, form, def)
+	local function explicit_special_case(base, form)
 		return form
 	end
 
-	for _, irreg_form in ipairs(com.irreg_forms) do
-		if base.irreg_forms[irreg_form] then
-			process_specs(irreg_form .. "_form", base.irreg_forms[irreg_form], irreg_form ~= "imp",
-				irreg_special_case)
+	for _, explicit_slot in ipairs(com.explicit_slots) do
+		if base.explicit_specs[explicit_slot] then
+			process_specs(base.explicit_forms, explicit_slot, base.explicit_specs[explicit_slot], explicit_slot ~= "imp",
+				explicit_special_case)
 		end
 	end
+
+	for rowslot, rowconj in pairs(row_conjugation) do
+		if base.explicit_row_specs[rowslot] then
+			for _, persnum in ipairs(rowconj.i
 
 	iut.insert_form(base.forms, "lemma", {form = base.lemma})
 	-- Add linked version of lemma for use in head=.
@@ -601,10 +608,10 @@ local function create_base_forms(base)
 end
 
 
-local function add_irregrow(base, slot_pref, rowslot)
+local function add_explicit_row(base, slot_pref, rowslot)
 	if base.irregrow_forms[rowslot] then
-		for _, irregrow_persnum in ipairs(row_conjugation[rowslot].irregrow) do
-			add(base, slot_pref .. "_" .. irregrow_persnum, base.irregrow_forms[rowslot][irregrow_persnum], "")
+		for _, persnum in ipairs(row_conjugation[rowslot].persnum) do
+			add(base, slot_pref .. "_" .. persnum, base.irregrow_forms[rowslot][persnum], "")
 		end
 		return true
 	else
@@ -746,9 +753,11 @@ add_past_historic = function(base, prefix)
 				add_phis(pref, "éi", "ésti", "é", "émmo", "éste", "érono")
 				break
 			end
-			pref = rmatch(form.form, "^(.*)ètti$")
+			pref = rmatch(form.form, "^(.*)[èé]tti$")
 			if pref then
-				add_phis(pref, "ètti", "ésti", "ètte", "émmo", "éste", "èttero")
+				add_phis(pref, {{form = "étti"}, {form = "ètti", footnotes = {"[traditional]"}}},
+					"ésti", {{form = "étte"}, {form = "ètte", footnotes = {"[traditional]"}}},
+					"émmo", "éste", {{form = "éttero"}, {form = "èttero", footnotes = {"[traditional]"}}})
 				break
 			end
 			pref = rmatch(form.form, "^(.*)ìi$")
@@ -797,20 +806,19 @@ local function conjugate_row(base, rowslot)
 		error("Internal error: Unrecognized row slot '" .. rowslot .. "'")
 	end
 
-	if add_irregrow(base, rowconj.prefix, rowslot) then
+	if add_explicit_row(base, rowconj.prefix, rowslot) then
 		return
 	end
 
 	local stem = get_stem_for_row_conjugation(base, rowslot, rowconj)
 
 	if type(rowconj.conjugate) == "table" then
-		if #rowconj.conjugate ~= #rowconj.irregrow then
-			error("Internal error: Expected " .. #rowconj.irregrow .. " elements for row slot '" .. rowslot
+		if #rowconj.conjugate ~= #rowconj.persnum then
+			error("Internal error: Expected " .. #rowconj.persnum .. " elements for row slot '" .. rowslot
 				.. ", but saw " .. #rowconj.conjugate)
 		end
-		for _, irregrow_persnum in ipairs(#rowconj.irregrow) do
-			add(base, rowconj.prefix .. "_" .. rowconj.irregrow[irregrow_persnum], stem,
-				rowconj.conjugate[irregrow_persnum])
+		for _, persnum in ipairs(#rowconj.persnum) do
+			add(base, rowconj.prefix .. "_" .. rowconj.persnum[persnum], stem, rowconj.conjugate[persnum])
 		end
 	else
 		rowconj.conjugate(base, rowconj.prefix, stem)
@@ -1131,17 +1139,22 @@ local function parse_indicator_spec(angle_bracket_spec, lemma)
 	--    (for the latter format). The value is in the same form as for `forms` and `genforms`, but the FORM contained
 	--    in it is the actual user-specified form, which may be e.g. "#è" rather than a verb form, and needs to
 	--    be processed to generate the actual form. A spec may be "+" to insert the default-generated form or forms,
-	--
+	--    or "-" to indicate that this form doesn't exist.
 	-- `explicit_forms` contains the processed versions of the specs contained in `explicit_specs`. The keys are as
 	--    in `explicit_specs` and the values are the same as for `forms` and `genforms`.
 	-- `explicit_row_specs` contains user-specified forms for a full tense/aspect row using 'presrow:', 'subrow:', etc.
 	--    The key is "pres", "sub", etc. (i.e. minus the "row" suffix). The value is another table indexed by the
 	--    person/number suffix (e.g. "1s", "2s", etc. for "pres"; "123s", "1p", "2p", etc. for "sub"), whose values
 	--    are in the same format as `explicit_specs`.
-	-- `explicit_row_forms` contains the processed versions of `explicit_row_specs`.
-	-- `overrides` contains user-specified forms using 'pres1s:', 'sub3p:', etc. The key is the slot ("pres1s",
-	--   "sub3p", etc.) and the value is of the same format as `forms`, `genforms`, etc.
-	local base = {forms = {}, genforms = {}, irreg_forms = {}, irregrow_forms = {}, overrides = {}}
+	-- `explicit_row_forms` contains the processed versions of `explicit_row_specs`. The key is as for
+	--    `explicit_row_specs`, while the value is another table indexed by the person/number suffix ("1s", "2s",
+	--    etc.), whose values are in the same format as for `forms` and `genforms`.
+	-- `override_specs` contains user-specified forms using 'pres1s:', 'sub3p:', etc. The key is the slot ("pres1s",
+	--   "sub3p", etc.) and the value is of the same format as `explicit_specs`.
+	-- `override_forms` contains the processed versions of `override_specs`, as with `explicit_forms` vs.
+	--   `explicit_specs`.
+	local base = {forms = {}, genforms = {}, explicit_specs = {}, explicit_forms = {}, explicit_row_specs = {},
+		explicit_row_forms = {}, override_specs = {}, override_forms = {}}
 	local function parse_err(msg)
 		error(msg .. ": " .. angle_bracket_spec)
 	end
@@ -1197,160 +1210,157 @@ local function parse_indicator_spec(angle_bracket_spec, lemma)
 	local dot_separated_groups = iut.split_alternating_runs(segments, "%s*%.%s*")
 	for i, dot_separated_group in ipairs(dot_separated_groups) do
 		local first_element = dot_separated_group[1]
-		if first_element == "only3s" or first_element == "only3sp" or first_element == "rre" then
+
+		if i == 1 then -- first dot-separated group is PRES,PHIS,PP or PRES#PRES3S,PHIS,PP or similar.
+			local comma_separated_groups = iut.split_alternating_runs(dot_separated_group, "%s*[,\\/]%s*", "preserve splitchar")
+			local presind = 1
+			local first_separator = #comma_separated_groups > 1 and
+				com.strip_spaces(comma_separated_groups[2][1])
+			if base.verb.is_reflexive then
+				if #comma_separated_groups > 1 and first_separator ~= "," then
+					presind = 3
+					-- Fetch root-stressed infinitive, if given.
+					local specs = fetch_specs(comma_separated_groups[1], "allow blank")
+					if first_separator == "\\" then
+						-- For verbs like [[scegliersi]] and [[proporsi]], allow either 'é\scélgo' or '\é\scélgo'
+						-- and similarly either 'ó+\propóngo' or '\ó+\propóngo'.
+						if specs == nil then
+							if #comma_separated_groups > 3 and com.strip_spaces(comma_separated_groups[4][1]) == "\\" then
+								base.root_stressed_inf = fetch_specs(comma_separated_groups[3])
+								presind = 5
+							else
+								base.root_stressed_inf = {{form = "+"}}
+							end
+						else
+							base.root_stressed_inf = specs
+						end
+					elseif specs ~= nil then
+						parse_err("With reflexive verb, can't specify anything before initial slash, but saw '"
+							.. table.concat(comma_separated_groups[1]))
+					end
+				end
+				base.aux = {{form = "essere"}}
+			else -- non-reflexive
+				if #comma_separated_groups == 1 or first_separator == "," then
+					parse_err("With non-reflexive verb, use a spec like AUX/PRES, AUX\\PRES, AUX/PRES,PAST,PP or similar")
+				end
+				presind = 3
+				-- Fetch auxiliary or auxiliaries.
+				local colon_separated_groups = iut.split_alternating_runs(comma_separated_groups[1], ":")
+				for _, colon_separated_group in ipairs(colon_separated_groups) do
+					local aux = colon_separated_group[1]
+					if aux == "a" then
+						aux = "avere"
+					elseif aux == "e" then
+						aux = "essere"
+					elseif aux == "-" then
+						if #colon_separated_group > 1 then
+							parse_err("No footnotes allowed with '-' spec for auxiliary")
+						end
+						aux = nil
+					else
+						parse_err("Unrecognized auxiliary '" .. aux ..
+							"', should be 'a' (for [[avere]]), 'e' (for [[essere]]), or '-' if no past participle")
+					end
+					if aux then
+						if base.aux then
+							for _, existing_aux in ipairs(base.aux) do
+								if existing_aux.form == aux then
+									parse_err("Auxiliary '" .. aux .. "' specified twice")
+								end
+							end
+						else
+							base.aux = {}
+						end
+						table.insert(base.aux, {form = aux, footnotes = parse_qualifiers(colon_separated_group)})
+					end
+				end
+
+				-- Fetch root-stressed infinitive, if given.
+				if first_separator == "\\" then
+					if #comma_separated_groups > 3 and com.strip_spaces(comma_separated_groups[4][1]) == "\\" then
+						base.root_stressed_inf = fetch_specs(comma_separated_groups[3])
+						presind = 5
+					else
+						base.root_stressed_inf = {{form = "+"}}
+					end
+				end
+			end
+
+			-- Parse present
+			local hash_separated_groups = iut.split_alternating_runs(comma_separated_groups[presind], "%s*#%s*")
+			if #hash_separated_groups > 2 then
+				parse_err("At most one hash sign (#) can appear in present tense specs")
+			end
+			base.explicit_specs.pres = fetch_specs(hash_separated_groups[1])
+			if #hash_separated_groups == 2 then
+				base.explicit_specs.pres3s = fetch_specs(hash_separated_groups[2])
+			end
+
+			-- Parse past historic
+			if #comma_separated_groups > presind then
+				if com.strip_spaces(comma_separated_groups[presind + 1][1]) ~= "," then
+					parse_err("Use a comma not slash to separate present from past historic")
+				end
+				base.explicit_specs.past = fetch_specs(comma_separated_groups[presind + 2])
+			end
+
+			-- Parse past participle
+			if #comma_separated_groups > presind + 2 then
+				if com.strip_spaces(comma_separated_groups[presind + 3][1]) ~= "," then
+					parse_err("Use a comma not slash to separate past historic from past participle")
+				end
+				base.explicit_specs.pp = fetch_specs(comma_separated_groups[presind + 4])
+			end
+
+			if #comma_separated_groups > presind + 4 then
+				parse_err("Extraneous text after past participle")
+			end
+		elseif first_element == "only3s" or first_element == "only3sp" or first_element == "rre" then
 			if #dot_separated_group > 1 then
 				parse_err("No footnotes allowed with '" .. first_element .. "' spec")
 			end
 			base[first_element] = true
-		elseif first_element:find("^[a-z]row:") then
-			local saw_irreg = false
-			for irregrow_form, irregrow_persnums in pairs(irregrow_forms) do
-				local first_element_minus_prefix = rmatch(first_element, "^" .. irregrow_form .. ":(.*)$")
-				if first_element_minus_prefix then
-					dot_separated_group[1] = first_element_minus_prefix
-					local comma_separated_groups = iut.split_alternating_runs(dot_separated_group, "%s*,%s*")
-					if #comma_separated_groups != #irregrow_persnums then
-						parse_err("For " .. irregrow_form .. ", expected " .. #irregrow_persnums .. " forms but saw "
-							.. #comma_separated_groups .. " in '" .. table.concat(dot_separated_groups) .. "'")
-					end
-					base.irreg_forms[irregrow_form] = {}
-					for i, irregrow_persnum in ipairs(irregrow_persnums) do
-						base.irreg_forms[irregrow_form][irregrow_persnum] = fetch_specs(comma_separated_group[i])
-					end
-					saw_irreg = true
-					break
-				end
-			end
-			if not saw_irreg then
-				local irregrow_keys = {}
-				for irregrow_form, _ in pairs(irregrow_forms) do
-					table.insert(irregrow_keys, irregrow_form .. ":")
-				end
-				table.sort(irregrow_keys)
-				parse_err("Irregular row spec should begin with one of " .. m_table.serialCommaJoin(irregrow_keys)
-					.. ", but saw '" .. table.concat(dot_separated_groups) .. "'")
-			end
-		elseif first_element:find("^stem:") then
-			local first_element_minus_prefix = rmatch(first_element, "^stem:(.*)$")
-			dot_separated_group[1] = first_element_minus_prefix
-			base.explicit_stem = fetch_specs(dot_separated_group)
-			break
 		else
-			local saw_irreg = false
-			for _, irreg_form in ipairs(com.irreg_forms) do
-				local first_element_minus_prefix = rmatch(first_element, "^" .. irreg_form .. ":(.*)$")
-				if first_element_minus_prefix then
-					dot_separated_group[1] = first_element_minus_prefix
-					base.irreg_forms[irreg_form] = fetch_specs(dot_separated_group)
-					saw_irreg = true
-					break
-				end
+			local first_element_prefix, first_element_minus_prefix = rmatch(first_element,
+				"^%s*([a-z0-9_]+)%s*:%s*(.-)%s*$")
+			if not first_element_prefix then
+				parse_err("Dot-separated element should be either 'only3s', 'only3p', 'rre' or be of the form "
+					.. "'PREFIX:SPEC', but saw '" .. table.concat(dot_separated_group) .. "'")
 			end
-			if not saw_irreg then
-				local comma_separated_groups = iut.split_alternating_runs(dot_separated_group, "%s*[,\\/]%s*", "preserve splitchar")
-				local presind = 1
-				local first_separator = #comma_separated_groups > 1 and
-					com.strip_spaces(comma_separated_groups[2][1])
-				if base.verb.is_reflexive then
-					if #comma_separated_groups > 1 and first_separator ~= "," then
-						presind = 3
-						-- Fetch root-stressed infinitive, if given.
-						local specs = fetch_specs(comma_separated_groups[1], "allow blank")
-						if first_separator == "\\" then
-							-- For verbs like [[scegliersi]] and [[proporsi]], allow either 'é\scélgo' or '\é\scélgo'
-							-- and similarly either 'ó+\propóngo' or '\ó+\propóngo'.
-							if specs == nil then
-								if #comma_separated_groups > 3 and com.strip_spaces(comma_separated_groups[4][1]) == "\\" then
-									base.root_stressed_inf = fetch_specs(comma_separated_groups[3])
-									presind = 5
-								else
-									base.root_stressed_inf = {{form = "+"}}
-								end
-							else
-								base.root_stressed_inf = specs
-							end
-						elseif specs ~= nil then
-							parse_err("With reflexive verb, can't specify anything before initial slash, but saw '"
-								.. table.concat(comma_separated_groups[1]))
-						end
+			dot_separated_group[1] = first_element_minus_prefix
+			if first_element_prefix == "stem" then
+				base.explicit_stem_spec = fetch_specs(dot_separated_group)
+			elseif explicit_slot_set[first_element_prefix] then
+				base.explicit_specs[first_element_prefix] = fetch_specs(dot_separated_group)
+			elseif overridable_slot_set[first_element_prefix] then
+				base.override_specs[first_element_prefix] = fetch_specs(dot_separated_group)
+			elseif first_element_prefix:find("row$") then
+				local explicit_row_slot = rmatch(first_element_prefix, "^(.*)row$")
+				if row_conjugation[explicit_row_slot] then
+					local rowspec = row_conjugation[explicit_row_slot]
+					local comma_separated_groups = iut.split_alternating_runs(dot_separated_group, "%s*,%s*")
+					if #comma_separated_groups != #rowspec.persnums then
+						parse_err("For " .. explicit_row_slot .. "row:, expected " .. #rowspec.persnums
+							.. " forms but saw " .. #comma_separated_groups .. " in '"
+							.. table.concat(dot_separated_group) .. "'")
 					end
-					base.aux = {{form = "essere"}}
-				else -- non-reflexive
-					if #comma_separated_groups == 1 or first_separator == "," then
-						parse_err("With non-reflexive verb, use a spec like AUX/PRES, AUX\\PRES, AUX/PRES,PAST,PP or similar")
+					base.explicit_row_specs[explicit_row_slot] = {}
+					for i, persnum in ipairs(persnums) do
+						base.explicit_row_specs[explicit_row_slot][persnum] = fetch_specs(comma_separated_group[i])
 					end
-					presind = 3
-					-- Fetch auxiliary or auxiliaries.
-					local colon_separated_groups = iut.split_alternating_runs(comma_separated_groups[1], ":")
-					for _, colon_separated_group in ipairs(colon_separated_groups) do
-						local aux = colon_separated_group[1]
-						if aux == "a" then
-							aux = "avere"
-						elseif aux == "e" then
-							aux = "essere"
-						elseif aux == "-" then
-							if #colon_separated_group > 1 then
-								parse_err("No footnotes allowed with '-' spec for auxiliary")
-							end
-							aux = nil
-						else
-							parse_err("Unrecognized auxiliary '" .. aux ..
-								"', should be 'a' (for [[avere]]), 'e' (for [[essere]]), or '-' if no past participle")
-						end
-						if aux then
-							if base.aux then
-								for _, existing_aux in ipairs(base.aux) do
-									if existing_aux.form == aux then
-										parse_err("Auxiliary '" .. aux .. "' specified twice")
-									end
-								end
-							else
-								base.aux = {}
-							end
-							table.insert(base.aux, {form = aux, footnotes = parse_qualifiers(colon_separated_group)})
-						end
+				else
+					local explicit_row_slots = {}
+					for explicit_row_slot, _ in pairs(row_conjugation) do
+						table.insert(explicit_row_slots, explicit_row_slot .. "row:")
 					end
-
-					-- Fetch root-stressed infinitive, if given.
-					if first_separator == "\\" then
-						if #comma_separated_groups > 3 and com.strip_spaces(comma_separated_groups[4][1]) == "\\" then
-							base.root_stressed_inf = fetch_specs(comma_separated_groups[3])
-							presind = 5
-						else
-							base.root_stressed_inf = {{form = "+"}}
-						end
-					end
+					table.sort(explicit_row_slots)
+					parse_err("Explicit row spec should begin with one of " .. m_table.serialCommaJoin(explicit_row_slots)
+						.. ", but saw '" .. table.concat(dot_separated_group) .. "'")
 				end
-
-				-- Parse present
-				local hash_separated_groups = iut.split_alternating_runs(comma_separated_groups[presind], "%s*#%s*")
-				if #hash_separated_groups > 2 then
-					parse_err("At most one hash sign (#) can appear in present tense specs")
-				end
-				base.pres = fetch_specs(hash_separated_groups[1])
-				if #hash_separated_groups == 2 then
-					base.pres3s = fetch_specs(hash_separated_groups[2])
-				end
-
-				-- Parse past historic
-				if #comma_separated_groups > presind then
-					if com.strip_spaces(comma_separated_groups[presind + 1][1]) ~= "," then
-						parse_err("Use a comma not slash to separate present from past historic")
-					end
-					base.past = fetch_specs(comma_separated_groups[presind + 2])
-				end
-
-				-- Parse past participle
-				if #comma_separated_groups > presind + 2 then
-					if com.strip_spaces(comma_separated_groups[presind + 3][1]) ~= "," then
-						parse_err("Use a comma not slash to separate past historic from past participle")
-					end
-					base.pp = fetch_specs(comma_separated_groups[presind + 4])
-				end
-
-				if #comma_separated_groups > presind + 4 then
-					parse_err("Extraneous text after past participle")
-				end
+			else
+				parse_err("Unrecognized prefix '" .. first_element_prefix .. "' in '"
+					.. table.concat(dot_separated_group) .. "'")
 			end
 		end
 	end

@@ -20,7 +20,7 @@ export.V = "[aeiou]"
 export.NV = "[^aeiou]"
 export.AV = "[àèéìòóù]"
 
-export.irreg_forms = { "imperf", "fut", "sub", "impsub", "imp" }
+export.explicit_slots = { "imperf", "fut", "sub", "impsub", "imp" }
 
 -- version of rsubn() that discards all but the first return value
 local function rsub(term, foo, bar)
