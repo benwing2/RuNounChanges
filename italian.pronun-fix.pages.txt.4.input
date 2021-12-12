@@ -1090,85 +1090,93 @@ Page 0 vacuoma: <respelling> all: vacu.òma<r:Olivetti|vacuoma> <end>
 Page 0 vacuomi: <respelling> all: vacu.òmi<r:Olivetti|vacuoma> <end>
 Page 0 vacuometro: <respelling> all: vacu.òmetro,vacuòmetro<r:DiPI|vacuometro> <end>
 Page 0 vacuometri: <respelling> all: vacu.òmetri,vacuòmetri<r:DiPI|vacuometro> <end>
-# got here/this far in find_regex.italian.pronun-fix.pages.txt.4.out.1 (page 1011)
+Page 0 vacuoscopio: <respelling> all: vacuoscòpio,#vacu.oscòpio<r:DiPI|vacuo><r:Olivetti|vacuoscopio> <end>
+Page 0 vacuoscopi: <respelling> all: vacuoscopi,#vacu.oscòpi<r:DiPI|vacuo><r:Olivetti|vacuoscopio> <end>
+Page 0 vacuostato: <respelling> all: vacu.òstato,vacuòstato<r:DiPI|vacuometro><r:Olivetti|vacuostato> <end>
+Page 0 vacuostati: <respelling> all: vacuostati,vacuòstati<r:DiPI|vacuometro><r:Olivetti|vacuostato> <end>
+Page 0 vacuumterapia: <respelling> all: vacuumterapìa <end>
+Page 0 vacuumterapie: <respelling> all: vacuumterapìe <end>
+Page 0 evaporare: <respelling> all: evaporàre <end>
+Page 0 evaporarsi: <respelling> all: evaporàrsi <end>
+Page 0 evaporo: <respelling> all: evàporo,#!evapóro<r:DiPI|evapora> <end>
+Page 0 evapori: <respelling> all: evàpori,#!evapóri<r:DiPI|evapora> <end>
+Page 0 evapora: <respelling> all: evàpora,#!evapóra<r:DiPI|evapora> <end>
+Page 0 evaporano: <respelling> all: evàporano,#!evapórano<r:DiPI|evapora> <end>
+Page 0 evaporino: <respelling> all: evàporino,#!evapórino<r:DiPI|evapora> <end>
+Page 0 rievaporare: <respelling> all: ri.evaporàre <end>
+Page 0 rievaporarsi: <respelling> all: ri.evaporàrsi <end>
+Page 0 rievaporo: <respelling> all: ri.evàporo,#!ri.evapóro<r:DiPI|evapora> <end>
+Page 0 rievapori: <respelling> all: ri.evàpori,#!ri.evapóri<r:DiPI|evapora> <end>
+Page 0 rievapora: <respelling> all: ri.evàpora,#!ri.evapóra<r:DiPI|evapora> <end>
+Page 0 rievaporano: <respelling> all: ri.evàporano,#!ri.evapórano<r:DiPI|evapora> <end>
+Page 0 rievaporino: <respelling> all: ri.evàporino,#!ri.evapórino<r:DiPI|evapora> <end>
+Page 0 svaporare: <respelling> all: svaporàre <end>
+Page 0 svaporarsi: <respelling> all: svaporàrsi <end>
+Page 0 svaporo: <respelling> all: svapóro <end>
+Page 0 svapori: <respelling> all: svapóri <end>
+Page 0 svapora: <respelling> all: svapóra <end>
+Page 0 svaporano: <respelling> all: svapórano <end>
+Page 0 svaporino: <respelling> all: svapórino <end>
+Page 0 vaporare: <respelling> all: vaporàre <end>
+Page 0 vaporarsi: <respelling> all: vaporàrsi <end>
+Page 0 vaporo: <respelling> all: vapóro <end>
+Page 0 vapori: <respelling> all: vapóri <end>
+Page 0 vapora: <respelling> all: vapóra <end>
+Page 0 vaporano: <respelling> all: vapórano <end>
+Page 0 vaporino: <respelling> all: vapórino <end>
+Page 0 posare: <respelling> all: posàre,#po[s]àre<r:DiPI|posare> <end>
+Page 0 posarsi: <respelling> all: posarsi,#po[s]àrsi<r:DiPI|posare> <end>
+Page 0 poso: <respelling> all: pòso,#pò[s]o<r:DiPI|poso> <end>
+# split etym and pronun
+#Page 0 posi: <respelling> all: posi <end>
+# DONE
+#Page 0 posa: <respelling> all: posa <end>
+# split etym and pronun
+#Page 0 pose: <respelling> all: pose <end>
+Page 0 posiamo: <respelling> all: posiàmo,#po[s]iàmo<r:DiPI|poso> <end>
+Page 0 posate: <respelling> top: posàte,#po[s]àte<r:DiPI|posate> <end>
+Page 0 posano: <respelling> all: pòsano,#pò[s]ano<r:DiPI|poso> <end>
+Page 0 posiate: <respelling> all: posiàte,#po[s]iàte<r:DiPI|posate> <end>
+Page 0 posino: <respelling> all: pòsino,#pò[s]ino<r:DiPI|poso> <end>
+Page 0 posato: <respelling> top: posàto,#po[s]àto<r:DiPI|posare> <end>
+# split etym and pronun
+#Page 0 posati: <respelling> top: posàti,#po[s]àti<r:DiPI|posare> <end>
+Page 0 posata: <respelling> top: posàta,#po[s]àta<r:DiPI|posare> <end>
+Page 0 disposare: <respelling> all: disposàre <end>
+Page 0 disposarsi: <respelling> all: disposàrsi <end>
+Page 0 disposo: <respelling> all: dispòso <end>
+# split etym and pronun
+#Page 0 disposi: <respelling> all: dispòsi <end>
+Page 0 disposa: <respelling> all: dispòsa <end>
+Page 0 disposiamo: <respelling> all: disposiàmo <end>
+Page 0 disposate: <respelling> top: disposàte <end>
+Page 0 disposano: <respelling> all: dispòsano <end>
+Page 0 disposiate: <respelling> all: disposiàte <end>
+Page 0 disposino: <respelling> all: dispòsino <end>
+Page 0 disposato: <respelling> all: disposàto <end>
+Page 0 disposati: <respelling> all: disposàti <end>
+Page 0 disposata: <respelling> all: disposàta <end>
+Page 0 riposare: <respelling> all: riposàre,#ripo[s]àre<r:DiPI|riposo> <end>
+Page 0 riposarsi: <respelling> all: riposarsi,#ripo[s]àrsi<r:DiPI|riposo> <end>
+Page 0 riposo: <respelling> all: ripòso,#ripò[s]o<r:DiPI|riposo> <end>
+# split etym and pronun
+#Page 0 riposi: <respelling> all: riposi <end>
+Page 0 riposa: <respelling> all: ripòsa,#ripò[s]a<r:DiPI|riposo> <end>
+Page 0 riposiamo: <respelling> all: riposiàmo,#ripo[s]iàmo<r:DiPI|riposo> <end>
+Page 0 riposate: <respelling> top: riposàte,#ripo[s]àte<r:DiPI|riposo> <end>
+Page 0 riposano: <respelling> all: ripòsano,#ripò[s]ano<r:DiPI|riposo> <end>
+Page 0 riposiate: <respelling> all: riposiàte,#ripo[s]iàte<r:DiPI|riposo> <end>
+# split etym and pronun
+#Page 0 riposino: <respelling> all: ripòsino,#ripò[s]ino<r:DiPI|riposo> <end>
+Page 0 riposato: <respelling> top: riposàto,#ripo[s]àto<r:DiPI|riposo> <end>
+# split etym and pronun
+#Page 0 riposati: <respelling> top: riposàti,#ripo[s]àti<r:DiPI|riposo> <end>
+Page 0 riposata: <respelling> top: riposàta,#ripo[s]àta<r:DiPI|riposo> <end>
+# got here/this far in find_regex.italian.pronun-fix.pages.txt.4.out.1 (page 1085)
 # #
 # #
 # #
 # #
-Page 0 vacuoscopio: <respelling> all: vacuoscopio <end>
-Page 0 vacuoscopi: <respelling> all: vacuoscopi <end>
-Page 0 vacuostato: <respelling> all: vacuostato <end>
-Page 0 vacuostati: <respelling> all: vacuostati <end>
-Page 0 vacuumterapia: <respelling> all: vacuumterapia <end>
-Page 0 vacuumterapie: <respelling> all: vacuumterapie <end>
-Page 0 evaporare: <respelling> all: evaporare <end>
-Page 0 evaporarsi: <respelling> all: evaporarsi <end>
-Page 0 evaporo: <respelling> all: evaporo <end>
-Page 0 evapori: <respelling> all: evapori <end>
-Page 0 evapora: <respelling> all: evapora <end>
-Page 0 evaporano: <respelling> all: evaporano <end>
-Page 0 evaporino: <respelling> all: evaporino <end>
-Page 0 rievaporare: <respelling> all: rievaporare <end>
-Page 0 rievaporarsi: <respelling> all: rievaporarsi <end>
-Page 0 rievaporo: <respelling> all: rievaporo <end>
-Page 0 rievapori: <respelling> all: rievapori <end>
-Page 0 rievapora: <respelling> all: rievapora <end>
-Page 0 rievaporano: <respelling> all: rievaporano <end>
-Page 0 rievaporino: <respelling> all: rievaporino <end>
-Page 0 svaporare: <respelling> all: svaporare <end>
-Page 0 svaporarsi: <respelling> all: svaporarsi <end>
-Page 0 svaporo: <respelling> all: svaporo <end>
-Page 0 svapori: <respelling> all: svapori <end>
-Page 0 svapora: <respelling> all: svapora <end>
-Page 0 svaporano: <respelling> all: svaporano <end>
-Page 0 svaporino: <respelling> all: svaporino <end>
-Page 0 vaporare: <respelling> all: vaporare <end>
-Page 0 vaporarsi: <respelling> all: vaporarsi <end>
-Page 0 vaporo: <respelling> all: vaporo <end>
-Page 0 vapori: <respelling> all: vapori <end>
-Page 0 vapora: <respelling> all: vapora <end>
-Page 0 vaporano: <respelling> all: vaporano <end>
-Page 0 vaporino: <respelling> all: vaporino <end>
-Page 0 posare: <respelling> all: posare <end>
-Page 0 posarsi: <respelling> all: posarsi <end>
-Page 0 poso: <respelling> all: poso <end>
-Page 0 posi: <respelling> all: posi <end>
-Page 0 posa: <respelling> all: posa <end>
-Page 0 pose: <respelling> all: pose <end>
-Page 0 posiamo: <respelling> all: posiamo <end>
-Page 0 posate: <respelling> all: posate <end>
-Page 0 posano: <respelling> all: posano <end>
-Page 0 posiate: <respelling> all: posiate <end>
-Page 0 posino: <respelling> all: posino <end>
-Page 0 posato: <respelling> all: posato <end>
-Page 0 posati: <respelling> all: posati <end>
-Page 0 posata: <respelling> all: posata <end>
-Page 0 disposare: <respelling> all: disposare <end>
-Page 0 disposarsi: <respelling> all: disposarsi <end>
-Page 0 disposo: <respelling> all: disposo <end>
-Page 0 disposi: <respelling> all: disposi <end>
-Page 0 disposa: <respelling> all: disposa <end>
-Page 0 disposiamo: <respelling> all: disposiamo <end>
-Page 0 disposate: <respelling> all: disposate <end>
-Page 0 disposano: <respelling> all: disposano <end>
-Page 0 disposiate: <respelling> all: disposiate <end>
-Page 0 disposino: <respelling> all: disposino <end>
-Page 0 disposato: <respelling> all: disposato <end>
-Page 0 disposati: <respelling> all: disposati <end>
-Page 0 disposata: <respelling> all: disposata <end>
-Page 0 riposare: <respelling> all: riposare <end>
-Page 0 riposarsi: <respelling> all: riposarsi <end>
-Page 0 riposo: <respelling> all: riposo <end>
-Page 0 riposi: <respelling> all: riposi <end>
-Page 0 riposa: <respelling> all: riposa <end>
-Page 0 riposiamo: <respelling> all: riposiamo <end>
-Page 0 riposate: <respelling> all: riposate <end>
-Page 0 riposano: <respelling> all: riposano <end>
-Page 0 riposiate: <respelling> all: riposiate <end>
-Page 0 riposino: <respelling> all: riposino <end>
-Page 0 riposato: <respelling> all: riposato <end>
-Page 0 riposati: <respelling> all: riposati <end>
-Page 0 riposata: <respelling> all: riposata <end>
 Page 0 nave posareti: <respelling> all: nave_posareti <end>
 Page 0 navi posareti: <respelling> all: navi_posareti <end>
 Page 0 portaposate: <respelling> all: portaposate <end>
