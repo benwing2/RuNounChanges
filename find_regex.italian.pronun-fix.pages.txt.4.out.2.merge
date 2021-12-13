@@ -21274,7 +21274,7 @@ Page 1381 presentare: -------- begin text --------
 From {{inh|it|la|praesentāre}}, present active infinitive of {{m|la|praesentō||I present, show}}.
 
 ===Pronunciation===
-{{it-pr|presentàre<audio:LL-Q652 (ita)-Happypheasant-presentare.wav>}}
+{{it-pr|presentàre<ref:{{R:it:DiPI|presento}}><audio:LL-Q652 (ita)-Happypheasant-presentare.wav>}}
 
 ===Verb===
 {{it-verb|a/è+}}
@@ -21300,6 +21300,9 @@ From {{inh|it|la|praesentāre}}, present active infinitive of {{m|la|praesentō|
 ====Related terms====
 * {{l|it|presente}}
 
+===References===
+<references />
+
 ===Anagrams===
 * {{anagrams|it|a=aeeenprrst|presenterà}}
 
@@ -21310,7 +21313,7 @@ Page 1382 presentarsi: Found match for regex: =
 Page 1382 presentarsi: -------- begin text --------
 
 ===Pronunciation===
-{{it-pr|presentàrsi}}
+{{it-pr|presentàrsi<ref:{{R:it:DiPI|presento}}>}}
 
 ===Verb===
 {{it-verb|è+}}
@@ -21326,6 +21329,9 @@ Page 1382 presentarsi: -------- begin text --------
 
 ====Conjugation====
 {{it-conj-arsi|present}}
+
+===References===
+<references />
 -------- end text --------
 Page 1383 presentire: Found match for regex: =
 Page 1383 presentire: -------- begin text --------
@@ -21335,7 +21341,7 @@ Page 1383 presentire: -------- begin text --------
 Derived from {{prefix|it|pre|t1=before|sentire|t2=to hear”, “to feel}}.
 
 ===Pronunciation===
-{{it-pr|pre[s]entìre}}
+{{it-pr|pre[s]entìre<ref:{{R:it:DiPI|presento}}>}}
 
 ===Verb===
 {{it-verb}}
@@ -21349,6 +21355,9 @@ Derived from {{prefix|it|pre|t1=before|sentire|t2=to hear”, “to feel}}.
 
 ====Related terms====
 * {{l|it|presentimento}}
+
+===References===
+<references />
 -------- end text --------
 Page 1385 presento: Found match for regex: =
 Page 1385 presento: -------- begin text --------
@@ -21356,7 +21365,7 @@ Page 1385 presento: -------- begin text --------
 ===Etymology 1===
 
 ====Pronunciation====
-{{it-pr|presènto}}
+{{it-pr|presènto<ref:{{R:it:DiPI}}<<name:dipi>>>}}
 
 ====Verb====
 {{head|it|verb form}}
@@ -21366,12 +21375,15 @@ Page 1385 presento: -------- begin text --------
 ===Etymology 2===
 
 ====Pronunciation====
-{{it-pr|pre[s]ènto}}
+{{it-pr|pre[s]ènto<ref:<<name:dipi>>>}}
 
 ====Verb====
 {{head|it|verb form}}
 
 # {{inflection of|it|presentire||1|s|pres|ind}}
+
+===References===
+<references />
 
 [[Category:Italian heteronyms]]
 
@@ -21384,7 +21396,7 @@ Page 1386 presenti: -------- begin text --------
 ===Etymology 1===
 
 ====Pronunciation====
-{{it-pr|presènti}}
+{{it-pr|presènti<ref:{{R:it:DiPI}}<<name:dipi>>>}}
 
 ====Adjective====
 {{head|it|adjective form|g=m|g2=f}}
@@ -21399,7 +21411,7 @@ Page 1386 presenti: -------- begin text --------
 ===Etymology 2===
 
 ====Pronunciation====
-{{it-pr|presènti}}
+{{it-pr|presènti<ref:<<name:dipi>>>}}
 
 ====Verb====
 {{head|it|verb form}}
@@ -21409,12 +21421,15 @@ Page 1386 presenti: -------- begin text --------
 ===Etymology 3===
 
 ====Pronunciation====
-{{it-pr|pre[s]ènti}}
+{{it-pr|pre[s]ènti<ref:<<name:dipi>>>}}
 
 ====Verb====
 {{head|it|verb form}}
 
 # {{inflection of|it|presentire||2|s|pres|ind|;|2|s|imp}}
+
+===References===
+<references />
 
 ===Anagrams===
 * {{anagrams|it|a=eeinprst|prestine|respinte|rispente|serpenti}}
@@ -21430,7 +21445,7 @@ Page 1387 presenta: -------- begin text --------
 ===Etymology 1===
 
 ====Pronunciation====
-{{it-pr|presènta}}
+{{it-pr|presènta<ref:{{R:it:DiPI}}<<name:dipi>>>}}
 
 ====Verb====
 {{head|it|verb form}}
@@ -21440,12 +21455,15 @@ Page 1387 presenta: -------- begin text --------
 ===Etymology 2===
 
 ====Pronunciation====
-{{it-pr|pre[s]ènta}}
+{{it-pr|pre[s]ènta<ref:<<name:dipi>>>}}
 
 ====Verb====
 {{head|it|verb form}}
 
 # {{inflection of|it|presentire||1//2//3|s|pres|sub|;|3|s|imp}}
+
+===References===
+<references />
 
 ===Anagrams===
 * {{anagrams|it|a=aeenprst|pestarne|sparente|sperante}}
@@ -21461,7 +21479,7 @@ Page 1388 presente: -------- begin text --------
 ===Etymology 1===
 
 ====Pronunciation====
-{{it-pr|presènte}}
+{{it-pr|presènte<ref:{{R:it:DiPI}}<<name:dipi>>>}}
 
 ====Adjective====
 {{it-adj|sup=presentissimo}}
@@ -21498,12 +21516,15 @@ Page 1388 presente: -------- begin text --------
 ===Etymology 2===
 
 ====Pronunciation====
-{{it-pr|pre[s]ènte}}
+{{it-pr|pre[s]ènte<ref:<<name:dipi>>>}}
 
 ====Verb====
 {{head|it|verb form}}
 
 # {{inflection of|it|presentire||3|s|pres|ind}}
+
+===References===
+<references />
 
 ===Anagrams===
 * {{anagrams|it|a=eeenprst|serpente}}
@@ -21520,7 +21541,7 @@ Page 1389 presentiamo: -------- begin text --------
 ===Etymology 1===
 
 ====Pronunciation====
-{{it-pr|presentiàmo}}
+{{it-pr|presentiàmo<ref:{{R:it:DiPI|presento}}<<name:dipi>>>}}
 
 ====Verb====
 {{head|it|verb form}}
@@ -21530,12 +21551,15 @@ Page 1389 presentiamo: -------- begin text --------
 ===Etymology 2===
 
 ====Pronunciation====
-{{it-pr|pre[s]entiàmo}}
+{{it-pr|pre[s]entiàmo<ref:<<name:dipi>>>}}
 
 ====Verb====
 {{head|it|verb form}}
 
 # {{inflection of|it|presentire||1|p|pres|ind//sub|;|1|p|impr}}
+
+===References===
+<references />
 
 ===Anagrams===
 * {{anagrams|it|a=aeeimnoprst|impersonate|spianteremo}}
@@ -21573,10 +21597,28 @@ Page 1391 presentono: -------- begin text --------
 Page 1392 presentiate: Found match for regex: =
 Page 1392 presentiate: -------- begin text --------
 
-===Verb===
+===Etymology 1===
+
+====Pronunciation====
+{{it-pr|presentiàte<ref:{{R:it:DiPI|presento}}<<name:dipi>>>}}
+
+====Verb====
 {{head|it|verb form}}
 
 # {{inflection of|it|presentare||2|p|pres|subj}}
+
+===Etymology 2===
+
+====Pronunciation====
+{{it-pr|pre[s]entiàte<ref:{{R:it:DiPI|presento}}<<name:dipi>>>}}
+
+====Verb====
+{{head|it|verb form}}
+
+# {{inflection of|it|presentire||2|p|pres|subj}}
+
+===References===
+<references />
 
 ===Anagrams===
 * {{anagrams|it|a=aeeeinprstt|patinereste|piantereste|spianterete}}
@@ -21587,7 +21629,7 @@ Page 1393 presentano: -------- begin text --------
 ===Etymology 1===
 
 ====Pronunciation====
-{{it-pr|presèntano}}
+{{it-pr|presèntano<ref:{{R:it:DiPI|presento}}<<name:dipi>>>}}
 
 ====Verb====
 {{head|it|verb form}}
@@ -21597,12 +21639,15 @@ Page 1393 presentano: -------- begin text --------
 ===Etymology 2===
 
 ====Pronunciation====
-{{it-pr|pre[s]èntano}}
+{{it-pr|pre[s]èntano<ref:<<name:dipi>>>}}
 
 ====Verb====
 {{head|it|verb form}}
 
 # {{inflection of|it|presentire||3|p|pres|subj|;|3|p|impr}}
+
+===References===
+<references />
 
 ===Anagrams===
 * {{anagrams|it|a=aeennoprst|pesteranno|speronante}}
@@ -21612,7 +21657,22 @@ Page 1393 presentano: -------- begin text --------
 Page 1395 presentino: Found match for regex: =
 Page 1395 presentino: -------- begin text --------
 
-===Verb===
+===Etymology 1===
+
+====Pronunciation====
+{{it-pr|presentìno<ref:{{R:it:DiPI}}<<name:dipi>>>}}
+
+====Noun====
+{{it-noun|m}}
+
+# {{diminutive of|it|presente}}: small [[gift]]
+
+===Etymology 2===
+
+====Pronunciation====
+{{it-pr|presèntino<ref:<<name:dipi>>>}}
+
+====Verb====
 {{head|it|verb form}}
 
 # {{inflection of|it|presentare||3|p|pres|subj|;|3|p|impr}}
@@ -21741,6 +21801,11 @@ Page 1402 preservate: -------- begin text --------
 {{head|it|past participle form|g=f-p}}
 
 # {{feminine plural of|it|preservato}}
+
+====Adjective====
+{{head|it|adjective form}}
+
+# {{adj form of|it|preservato||f|p}}
 -------- end text --------
 Page 1403 preservano: Found match for regex: =
 Page 1403 preservano: -------- begin text --------
@@ -21802,6 +21867,11 @@ Page 1407 preservati: -------- begin text --------
 
 # {{masculine plural of|it|preservato}}
 
+====Adjective====
+{{head|it|adjective form}}
+
+# {{adj form of|it|preservato||m|p}}
+
 ===Etymology 2===
 
 ====Pronunciation====
@@ -21825,6 +21895,11 @@ Page 1408 preservata: -------- begin text --------
 {{head|it|past participle form|g=f-s}}
 
 # {{feminine singular of|it|preservato}}
+
+===Adjective===
+{{head|it|adjective form}}
+
+# {{adj form of|it|preservato||f|s}}
 -------- end text --------
 Page 1409 riservare: Found match for regex: =
 Page 1409 riservare: -------- begin text --------
@@ -21917,7 +21992,9 @@ Page 1413 riserva: -------- begin text --------
 ===Pronunciation===
 {{it-pr|risèrva,#ri[s]èrva<ref:{{R:it:DiPI}}>}}
 
-===Noun===
+===Etymology 1===
+
+====Noun====
 {{it-noun|f}}
 
 # [[reserve]] (''in all senses'')
@@ -21932,7 +22009,9 @@ Page 1413 riserva: -------- begin text --------
 * {{l|it|riservato}}
 * {{l|it|riservista}}
 
-===Verb===
+===Etymology 2===
+
+====Verb====
 {{head|it|verb form}}
 
 # {{inflection of|it|riservare||3|s|pres|ind|;|2|s|imp}}
@@ -22056,7 +22135,7 @@ Page 1420 riservati: -------- begin text --------
 ====Adjective====
 {{head|it|adjective form}}
 
-# {{masculine plural of|it|riservato}}
+# {{adj form of|it|riservato||m|p}}
 
 ====Participle====
 {{head|it|past participle form|g=m-p}}
@@ -22081,6 +22160,11 @@ Page 1420 riservati: -------- begin text --------
 -------- end text --------
 Page 1421 riservata: Found match for regex: =
 Page 1421 riservata: -------- begin text --------
+
+===Adjective===
+{{head|it|adjective form}}
+
+# {{adj form of|it|riservato||f|s}}
 
 ===Participle===
 {{head|it|past participle form|g=f-s}}
@@ -22155,7 +22239,7 @@ Page 1425 stenti: Found match for regex: =
 Page 1425 stenti: -------- begin text --------
 
 ===Pronunciation===
-{{it-pr|stènti,sténti<ref:{{R:it:DiPI}}>}}
+{{it-pr|stènti,sténti<ref:{{R:it:DiPI|stento}}>}}
 
 ===Etymology 1===
 
@@ -22198,7 +22282,7 @@ Page 1427 stentano: Found match for regex: =
 Page 1427 stentano: -------- begin text --------
 
 ===Pronunciation===
-{{it-pr|stèntano,sténtano<ref:{{R:it:DiPI}}>}}
+{{it-pr|stèntano,sténtano<ref:{{R:it:DiPI|stento}}>}}
 
 ===Verb===
 {{head|it|verb form}}
@@ -22215,7 +22299,7 @@ Page 1428 stentino: Found match for regex: =
 Page 1428 stentino: -------- begin text --------
 
 ===Pronunciation===
-{{it-pr|stèntino,sténtino<ref:{{R:it:DiPI}}>}}
+{{it-pr|stèntino,sténtino<ref:{{R:it:DiPI|stento}}>}}
 
 ===Verb===
 {{head|it|verb form}}
@@ -22238,6 +22322,9 @@ Page 1429 reintegrare: -------- begin text --------
 # {{lb|it|transitive}} to [[reintegrate]]
 # {{lb|it|transitive}} to [[replenish]], to [[restore]]
 
+====Usage notes====
+* The stressed-form pronunciation ''io reìntegro'' is the only possibility. For the alternative form {{m|it|rintegrare}}, the traditional-minded ''Dizionario d'Ortografia e di Pronunzia'' prescribes ''io rintègro'', while Treccani mentions this pronunciation as "literary" and "uncommon" (but specifies ''io rìntegro'' as even less common). Canepari's modern-minded ''Dizionario di Pronuncia Italiana'' prescribes ''io rìntegro'', and marks ''io rintègro'' as dispreferred and {{m|it|aulica}} (archaic or literary).
+
 ====Conjugation====
 {{it-conj-are|reintegr|avere}}
 
@@ -22251,6 +22338,9 @@ Page 1429 reintegrare: -------- begin text --------
 
 ===References===
 <references />
+
+===Further reading===
+* {{R:it:Treccani}}
 
 ===Anagrams===
 * {{anagrams|it|a=aeeeginrrrt|reintegrerà}}
@@ -22528,6 +22618,11 @@ Page 1448 reiterate: -------- begin text --------
 {{head|it|past participle form|g=f-p}}
 
 # {{feminine plural of|it|reiterato}}
+
+====Adjective====
+{{head|it|adjective form}}
+
+# {{adj form of|it|reiterato||f|p}}
 -------- end text --------
 Page 1449 reiterano: Found match for regex: =
 Page 1449 reiterano: -------- begin text --------
@@ -22565,6 +22660,11 @@ Page 1452 reiterato: -------- begin text --------
 ===Pronunciation===
 {{it-pr|re.iteràto<ref:{{R:it:Olivetti}}>}}
 
+===Participle===
+{{it-pp}}
+
+# {{past participle of|it|reiterare}}
+
 ===Adjective===
 {{it-adj}}
 
@@ -22572,11 +22672,6 @@ Page 1452 reiterato: -------- begin text --------
 
 ====Derived terms====
 * {{l|it|reiteratamente}}
-
-===Participle===
-{{it-pp}}
-
-# {{past participle of|it|reiterare}}
 
 ===References===
 <references />
@@ -22589,6 +22684,11 @@ Page 1453 reiterati: -------- begin text --------
 
 # {{masculine plural of|it|reiterato}}
 
+===Adjective===
+{{head|it|adjective form}}
+
+# {{adj form of|it|reiterato||m|p}}
+
 ===Anagrams===
 * {{anagrams|it|a=aeeiirrtt|attirerei|irretiate|riatterei}}
 -------- end text --------
@@ -22599,6 +22699,11 @@ Page 1454 reiterata: -------- begin text --------
 {{head|it|past participle form|g=f-s}}
 
 # {{feminine singular of|it|reiterato}}
+
+===Adjective===
+{{head|it|adjective form}}
+
+# {{adj form of|it|reiterato||f|s}}
 -------- end text --------
 Page 1455 remare: Found match for regex: =
 Page 1455 remare: -------- begin text --------
@@ -22610,7 +22715,7 @@ From {{m|it|remo}}. Compare {{cog|es|-}} and {{cog|pt|remar}}, {{cog|fr|ramer}}.
 {{it-pr|remàre}}
 
 ===Verb===
-{{it-verb|a/è}} {{tlb|it|intransitive}}
+{{it-verb|a/è:é[ref:{{R:it:DiPI|remo}}]}} {{tlb|it|intransitive}}
 
 # {{lb|it|sports|nautical}} to [[row]]
 #: {{syn|it|vogare}}
@@ -22622,6 +22727,9 @@ From {{m|it|remo}}. Compare {{cog|es|-}} and {{cog|pt|remar}}, {{cog|fr|ramer}}.
 * {{l|it|remata}}
 * {{l|it|rematore}}
 * {{l|it|remo}}
+
+===References===
+<references />
 
 ===Anagrams===
 * {{anagrams|it|a=aeemrr|remerà}}
@@ -22672,12 +22780,16 @@ Page 1458 remi: -------- begin text --------
 ===Pronunciation===
 {{it-pr|rèmi}}
 
-===Noun===
+===Etymology 1===
+
+====Noun====
 {{head|it|noun form|g=m}}
 
 # {{plural of|it|remo}}
 
-===Verb===
+===Etymology 2===
+
+====Verb====
 {{head|it|verb form}}
 
 # {{inflection of|it|remare||2|s|pres|indc|;|1//2//3|s|pres|subj|;|3|s|impr}}
@@ -22776,19 +22888,16 @@ Page 1463 temperarsi: Found match for regex: =
 Page 1463 temperarsi: -------- begin text --------
 
 ===Verb===
-{{it-verb|è-}}
+{{it-verb|é-:#è-[ref:{{R:it:DiPI|tempero}}]}}
 
 # {{reflexive of|it|temperare}}
 # to [[hold back]] from [[fulfill|fulfilling]] one's [[instinct|instincts]]; to discipline oneself
 
 ====Conjugation====
-{{it-conj-arsi|temper|essere
-|pres2s=temperi|pres3s=tempera|pres3p=temperano
-|prem1s=temperai|prem2s=desti|prem3s=temperò|prem1p=temperammo|prem2p=temperaste|prem3p=temperarono
-|cond1s=tempererei|cond2s=tempereresti|cond3s=tempererebbe|cond1p=tempereremmo|cond2p=temperereste|cond3p=tempererebbero
-|sub123s=temperi
-|impsub12s=temperi|impsub3s=temperi|impsub1p=temperiamo|impsub2p=temperiate|impsub3p=temperino
-|imp2s=temperati|imp3s=tempera|imp1p=temperiamoci|imp3p=temperano}}
+{{it-conj-arsi|temper|essere}}
+
+===References===
+<references />
 
 ===Anagrams===
 * {{anagrams|it|a=aeeimprrst|imprestare|impresterà}}
