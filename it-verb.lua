@@ -280,27 +280,27 @@ local generate_future_stem, generate_conditional_stem
 local row_conjugation = {
 	["pres"] = {
 		rowdesc = "present",
-		persnum = person_number_list,
+		persnums = person_number_list,
 		conjugate = add_present_indic,
 	},
 	["sub"] = {
 		rowdesc = "present subjunctive",
-		persnum = {"123s", "1p", "2p", "3p"},
+		persnums = {"123s", "1p", "2p", "3p"},
 		conjugate = add_present_subj,
 	},
 	["imp"] = {
 		rowdesc = "imperative",
-		persnum = {"2s", "2p"},
+		persnums = {"2s", "2p"},
 		conjugate = add_imperative,
 	},
 	["phis"] = {
 		rowdesc = "past historic",
-		persnum = person_number_list,
+		persnums = person_number_list,
 		conjugate = add_past_historic,
 	},
 	["imperf"] = {
 		rowdesc = "imperfect",
-		persnum = person_number_list,
+		persnums = person_number_list,
 		irregform_ending = "o",
 		irregform_desc = "first-person imperfect",
 		generate_default_stem = function(base) return iut.map_forms(base.verb.unaccented_stem,
@@ -309,7 +309,7 @@ local row_conjugation = {
 	},
 	["impsub"] = {
 		rowdesc = "imperfect subjunctive",
-		persnum = impsub_person_number_list,
+		persnums = impsub_person_number_list,
 		irregform_ending = "ssi",
 		irregform_desc = "first/second-person imperfect subjunctive",
 		generate_default_stem = function(base) return iut.map_forms(base.verb.unaccented_stem,
@@ -318,7 +318,7 @@ local row_conjugation = {
 	},
 	["fut"] = {
 		rowdesc = "future",
-		persnum = person_number_list,
+		persnums = person_number_list,
 		irregform_ending = "ò",
 		irregform_desc = "first-person future",
 		generate_default_stem = generate_future_stem,
@@ -326,7 +326,7 @@ local row_conjugation = {
 	},
 	["cond"] = {
 		rowdesc = "conditional",
-		persnum = person_number_list,
+		persnums = person_number_list,
 		irregform_ending = "éi",
 		irregform_desc = "first-person conditional",
 		generate_default_stem = generate_conditional_stem,
@@ -415,11 +415,6 @@ local function skip_slot(base, slot, allow_overrides)
 		return true
 	end
 
-	if base.only3s and (slot:find("^pp_f") or slot:find("^pp_mp")) then
-		-- diluviar, atardecer, neviscar; impersonal verbs have only masc sing pp
-		return true
-	end
-
 	if not slot:find("[123]") then
 		-- Don't skip non-personal slots.
 		return false
@@ -429,12 +424,12 @@ local function skip_slot(base, slot, allow_overrides)
 		return true
 	end
 
-	if base.only3s and (not slot:find("3s") or slot:find("^imp_") or slot:find("^neg_imp_")) then
+	if base.only3s and (not slot:find("3s") or slot:find("^imp[123]") or slot:find("^negimp")) then
 		-- diluviar, atardecer, neviscar
 		return true
 	end
 
-	if base.only3sp and (not slot:find("3[sp]") or slot:find("^imp_") or slot:find("^neg_imp_")) then
+	if base.only3sp and (not slot:find("3[sp]") or slot:find("^imp[123]") or slot:find("^negimp")) then
 		-- atañer, concernir
 		return true
 	end
@@ -485,15 +480,14 @@ local function replace_reflexive_indicators(slot, form)
 end
 
 
-local function add(base, slot, stems, endings, from_existing_form, allow_overrides)
+local function add(base, slot, stems, endings, allow_overrides)
 	if skip_slot(base, slot, allow_overrides) then
 		return
 	end
 	local function do_combine_stem_ending(stem, ending)
 		return com.combine_stem_ending(base, slot, stem, ending)
 	end
-	iut.add_forms(base.forms, slot, stems, endings, do_combine_stem_ending, nil, nil,
-		not from_existing_form and base.all_footnotes or nil)
+	iut.add_forms(base.forms, slot, stems, endings, do_combine_stem_ending)
 end
 
 
@@ -511,77 +505,179 @@ local function insert_forms(base, slot, forms)
 end
 
 
-local function create_base_forms(base)
-	com.add_default_verb_forms(base)
-
-	local function process_specs(destforms, slot, specs, is_finite, special_case)
-		specs = specs or {{form = "+"}}
-		for _, spec in ipairs(specs) do
-			local decorated_form = spec.form
-			local prespec, form, syntactic_gemination =
-				rmatch(decorated_form, "^([*!#]*)(.-)(%**)$")
-			local forms = special_case(base, form)
-			forms = iut.convert_to_general_list_form(forms, spec.footnotes)
-			for _, formobj in ipairs(forms) do
-				local qualifiers = formobj.footnotes
-				local form = formobj.form
-				-- If the form is -, insert it directly, unlinked; we handle this specially
-				-- below, turning it into special labels like "no past participle".
-				if form ~= "-" then
-					if prespec:find("!!") then
-						qualifiers = iut.combine_footnotes({"[elevated style]"}, qualifiers)
-						prespec = prespec:gsub("!!", "")
-					end
-					if prespec:find("!") then
-						qualifiers = iut.combine_footnotes({"[careful style]"}, qualifiers)
-						prespec = prespec:gsub("!", "")
-					end
-					if prespec:find("#") then
-						qualifiers = iut.combine_footnotes({"[traditional]"}, qualifiers)
-						prespec = prespec:gsub("#", "")
-					end
-					local preserve_monosyllabic_accent
-					if prespec:find("%*") then
-						preserve_monosyllabic_accent = true
-						prespec = prespec:gsub("%*", "")
-					end
-					local unaccented_form
-					if rfind(form, "^.*" .. com.V .. ".*" .. com.AV .. "$") then
-						-- final accented vowel with preceding vowel; keep accent
-						unaccented_form = form
-					elseif rfind(form, com.AV .. "$") and preserve_monosyllabic_accent then
-						unaccented_form = form
-						qualifiers = iut.combine_footnotes(qualifiers, {"[with written accent]"})
+local function process_specs(base, destforms, slot, specs, is_finite, special_case)
+	specs = specs or {{form = "+"}}
+	for _, spec in ipairs(specs) do
+		local decorated_form = spec.form
+		local prespec, form, syntactic_gemination =
+			rmatch(decorated_form, "^([*!#]*)(.-)(%**)$")
+		local forms = special_case(base, form)
+		forms = iut.convert_to_general_list_form(forms, spec.footnotes)
+		if base.all_footnotes then
+			forms = iut.convert_to_general_list_form(forms, base.all_footnotes)
+		end
+		for _, formobj in ipairs(forms) do
+			local qualifiers = formobj.footnotes
+			local form = formobj.form
+			-- If the form is -, insert it directly, unlinked; we handle this specially
+			-- below, turning it into special labels like "no past participle".
+			if form ~= "-" then
+				if prespec:find("!!") then
+					qualifiers = iut.combine_footnotes({"[elevated style]"}, qualifiers)
+					prespec = prespec:gsub("!!", "")
+				end
+				if prespec:find("!") then
+					qualifiers = iut.combine_footnotes({"[careful style]"}, qualifiers)
+					prespec = prespec:gsub("!", "")
+				end
+				if prespec:find("#") then
+					qualifiers = iut.combine_footnotes({"[traditional]"}, qualifiers)
+					prespec = prespec:gsub("#", "")
+				end
+				local preserve_monosyllabic_accent
+				if prespec:find("%*") then
+					preserve_monosyllabic_accent = true
+					prespec = prespec:gsub("%*", "")
+				end
+				local unaccented_form
+				if rfind(form, "^.*" .. com.V .. ".*" .. com.AV .. "$") then
+					-- final accented vowel with preceding vowel; keep accent
+					unaccented_form = form
+				elseif rfind(form, com.AV .. "$") and preserve_monosyllabic_accent then
+					unaccented_form = form
+					qualifiers = iut.combine_footnotes(qualifiers, {"[with written accent]"})
+				else
+					unaccented_form = rsub(form, com.AV, function(v) return usub(unfd(v), 1, 1) end)
+				end
+				if syntactic_gemination == "*" then
+					qualifiers = iut.combine_footnotes(qualifiers, {"[with following syntactic gemination]"})
+				elseif syntactic_gemination == "**" then
+					qualifiers = iut.combine_footnotes(qualifiers, {"[with optional following syntactic gemination]"})
+				elseif syntactic_gemination ~= "" then
+					error("Decorated form '" .. decorated_form .. "' has too many asterisks after it, use '*' for syntactic gemination and '**' for optional syntactic gemination")
+				end
+				form = "[[" .. unaccented_form .. "|" .. form .. "]]"
+				if is_finite then
+					if unaccented_form == "ho" then
+						form = base.verb.finite_pref_ho .. form
 					else
-						unaccented_form = rsub(form, com.AV, function(v) return usub(unfd(v), 1, 1) end)
-					end
-					if syntactic_gemination == "*" then
-						qualifiers = iut.combine_footnotes(qualifiers, {"[with following syntactic gemination]"})
-					elseif syntactic_gemination == "**" then
-						qualifiers = iut.combine_footnotes(qualifiers, {"[with optional following syntactic gemination]"})
-					elseif syntactic_gemination ~= "" then
-						error("Decorated form '" .. decorated_form .. "' has too many asterisks after it, use '*' for syntactic gemination and '**' for optional syntactic gemination")
-					end
-					form = "[[" .. unaccented_form .. "|" .. form .. "]]"
-					if is_finite then
-						if unaccented_form == "ho" then
-							form = base.verb.finite_pref_ho .. form
-						else
-							form = base.verb.finite_pref .. form
-						end
+						form = base.verb.finite_pref .. form
 					end
 				end
-				iut.insert_form(destforms, slot, {form = form, footnotes = qualifiers})
+			end
+			iut.insert_form(destforms, slot, {form = form, footnotes = qualifiers})
+		end
+	end
+end
+
+
+local function add_default_verb_forms(base, from_headword)
+	local ret = base.verb
+	local raw_verb = ret.raw_verb
+
+	if rfind(raw_verb, "r$") then
+		if rfind(raw_verb, "[ou]r$") or base.rre then
+			ret.verb = raw_verb .. "re"
+		else
+			ret.verb = raw_verb .. "e"
+		end
+	else
+		ret.verb = raw_verb
+	end
+
+	local conj_vowel
+	if base.explicit_stem_spec then
+		local function explicit_stem_special_case(base, form)
+			if form == "+" then
+				error("Can't specify + with 'stem:'")
+			end
+			local stem, ending = rmatch(form, "^(.*)([aei])$")
+			if not stem then
+				error("Unrecognized stem '" .. form .. "', should end in -a, -e or -i")
+			end
+			if conj_vowel and conj_vowel ~= ending then
+				error("Can't currently specify explicit stems with two different conjugation vowels (" .. conj_vowel
+					.. " and " .. ending .. ")")
+			end
+			conj_vowel = ending
+			return stem
+		end
+		-- Put the explicit stem in base.verb.stem.
+		process_specs(base, ret, "stem", base.explicit_stem_spec, false, explicit_stem_special_case)
+	else
+		ret.stem, conj_vowel = rmatch(raw_verb, "^(.-)([aeiour])re?$")
+		if not ret.stem then
+			error("Unrecognized verb '" .. raw_verb .. "', doesn't end in -are, -ere, -ire, -rre, -ar, -er, -ir, -or or -ur")
+		end
+		-- Need to add base.all_footnotes here; it is added to other stems and base forms in process_specs(),
+		-- but here we don't go through process_specs().
+		ret.stem = iut.convert_to_general_list_form(ret.stem, base.all_footnotes)
+		if not rfind(conj_vowel, "^[aei]$") then
+			base.rre = true
+		end
+		if base.rre then
+			if not from_headword then
+				error("With syncopated verb '" .. raw_verb .. "', must use stem: to specify an explicit stem")
+			else
+				conj_vowel = "e"
 			end
 		end
 	end
 
-	process_specs(base.explicit_forms, "pres", base.pres, "finite", com.pres_special_case)
-	if base.pres3s then
-		process_specs(base.explicit_forms, "pres3s", base.pres3s, "finite", com.pres3s_special_case)
+	base.conj_vowel = conj_vowel == "a" and "à" or conj_vowel == "e" and "é" or "ì"
+
+	if base.rre then
+		-- Can't generate defaults for verbs in -rre
+		return
 	end
-	process_specs(base.explicit_forms, "phis", base.phis, "finite", com.phis_special_case)
-	process_specs(base.explicit_forms, "pp", base.pp, false, com.pp_special_case)
+
+	local unaccented_stems = iut.map_forms(ret.stem, function(stem) return export.remove_accents(stem) end)
+	ret.unaccented_stem = unaccented_stems
+	ret.pres = iut.map_forms(ret.stem, function(stem)
+		if base.third then
+			return conj_vowel == "a" and stem .. "a" or stem .. "e"
+		else
+			return stem .. "o"
+		end
+	end)
+	ret.pres3s = iut.map_forms(stems, function(stem) return conj_vowel == "a" and stem .. "a" or stem .. "e" end)
+	if conj_vowel == "i" then
+		ret.isc_pres = iut.map_forms(unaccented_stems, function(stem) return stem .. "ìsco" end)
+		ret.isc_pres3s = iut.map_forms(unaccented_stems, function(stem) return stem .. "ìsci" end)
+	end
+	ret.past = iut.flatmap_forms(unaccented_stems, function(stem)
+		if conj_vowel == "a" then
+			return {stem .. (base.third and "ò" or "ài")}
+		elseif conj_vowel == "e" then
+			return {stem .. (base.third and "é" or "éi"), stem .. (base.third and "étte" or "étti")}
+		else
+			return {stem .. (base.third and "ì" or "ìi")}
+		end
+	end)
+	ret.pp = iut.map_forms(unaccented_stems, function(stem)
+		if conj_vowel == "a" then
+			return stem .. "àto"
+		elseif conj_vowel == "e" then
+			return rfind(stem, "[cg]$") and stem .. "iùto" or stem .. "ùto"
+		else
+			return stem .. "ìto"
+		end
+	end)
+end
+
+
+local function create_base_forms(base)
+	com.add_default_verb_forms(base)
+
+	for _, explicit_specs_spec in ipairs({
+		{"pres", "finite", comp.pres_special_case},
+		{"pres3s", "finite", comp.pres3s_special_case},
+		{"phis", "finite", comp.phis_special_case},
+		{"pp", false, comp.pp_special_case},
+	}) do
+		local slot, is_finite, special_case = unpack(explicit_specs_spec)
+		process_specs(base, base.explicit_forms, slot, base.explicit_specs[slot], is_finite, special_case)
+	end
 
 	local function explicit_special_case(base, form)
 		return form
@@ -589,14 +685,18 @@ local function create_base_forms(base)
 
 	for _, explicit_slot in ipairs(com.explicit_slots) do
 		if base.explicit_specs[explicit_slot] then
-			process_specs(base.explicit_forms, explicit_slot, base.explicit_specs[explicit_slot], explicit_slot ~= "imp",
+			process_specs(base, base.explicit_forms, explicit_slot, base.explicit_specs[explicit_slot], explicit_slot ~= "imp",
 				explicit_special_case)
 		end
 	end
 
 	for rowslot, rowconj in pairs(row_conjugation) do
 		if base.explicit_row_specs[rowslot] then
-			for _, persnum in ipairs(rowconj.i
+			for _, persnum in ipairs(rowconj.i...) do
+				...
+			end
+		end
+	end
 
 	iut.insert_form(base.forms, "lemma", {form = base.lemma})
 	-- Add linked version of lemma for use in head=.
@@ -608,14 +708,50 @@ local function create_base_forms(base)
 end
 
 
-local function add_explicit_row(base, slot_pref, rowslot)
-	if base.irregrow_forms[rowslot] then
-		for _, persnum in ipairs(row_conjugation[rowslot].persnum) do
-			add(base, slot_pref .. "_" .. persnum, base.irregrow_forms[rowslot][persnum], "")
+local function handle_explicit_row(base, row_slot)
+	if base.explicit_row_specs[row_slot] then
+		for persnum, specs in pairs(base.explicit_row_specs[row_slot]) do
+			local slot = row_slot .. persnum
+			local existing_generated_form = base.forms[slot]
+			if not existing_generated_form then
+				error("Internal error: Explicit row spec for slot " .. slot .. " being processed and no "
+					.. "default-generated forms available")
+			end
+			local function explicit_special_case(base, form)
+				if form == "+" then
+					return existing_generated_form
+				end
+				return form
+			end
+			base.forms[slot] = nil -- erase existing form before generating override
+			process_specs(base, base.forms, slot, specs, "finite", explicit_special_case)
 		end
-		return true
-	else
-		return false
+	end
+end
+
+
+local function handle_overrides_for_row(base, row_slot)
+	local rowspec = row_conjugation[row_slot]
+	if not rowspec then
+		error("Internal error: No row conjugation spec for " .. row_slot)
+	end
+	for _, persnum in ipairs(rowspec.persnums) do
+		local slot = row_slot .. persnum
+		if base.override_specs[slot] then
+			local existing_generated_form = base.forms[slot]
+			if not existing_generated_form then
+				error("Internal error: Explicit override spec for slot " .. slot .. " being processed and no "
+					.. "default-generated forms available")
+			end
+			local function override_special_case(base, form)
+				if form == "+" then
+					return existing_generated_form
+				end
+				return form
+			end
+			base.forms[slot] = nil -- erase existing form before generating override
+			process_specs(base, base.forms, slot, base.override_specs[slot], "finite", override_special_case)
+		end
 	end
 end
 
@@ -623,12 +759,12 @@ end
 -- Generate the present indicative. See "RULES FOR CONJUGATION" near the top of the file for the detailed rules.
 -- Defined earlier as a forward reference.
 add_present_indic = function(base, prefix)
-	local function addit(pers, stems, endings, from_existing_form)
-		add(base, prefix .. pers, stems, endings, from_existing_form)
+	local function addit(pers, stems, endings)
+		add(base, prefix .. pers, stems, endings)
 	end
 
-	addit("1s", base.stems.pres_form, "")
-	local pres_1s_stem = iut.map_forms(base.stems.pres_form, function(form)
+	addit("1s", base.explicit_forms.pres, "")
+	local pres_1s_stem = iut.map_forms(base.explicit_forms.pres, function(form)
 		if not form:find("o$") then
 			error("presrow: must be given in order to generate the present indicative because explicit first-person "
 				.. "singular present indicative '" .. form .. "' does not end in -o")
@@ -637,8 +773,8 @@ add_present_indic = function(base, prefix)
 	end)
 	addit("3p", pres_1s_stem, base.conj_vowel == "à" and "ano" or "ono")
 	local pres_23s_stem
-	if base.stems.pres3s_form then
-		pres_23s_stem = iut.map_forms(base.stems.pres3s_form, function(form)
+	if base.explicit_forms.pres3s then
+		pres_23s_stem = iut.map_forms(base.explicit_forms.pres3s, function(form)
 			if not form:find("[ae]$") then
 				error("presrow: must be given in order to generate the present indicative because explicit third-person "
 					.. "singular present indicative '" .. form .. "' does not end in -a or -e")
@@ -646,7 +782,7 @@ add_present_indic = function(base, prefix)
 			return rsub(form, "[ae]$", "")
 		end)
 	else
-		pres_23s_form = base.explicit_stem and base.verb.stem or base.root_stressed_stem or pres_1s_stem
+		pres_23s_form = base.explicit_stem_spec and base.verb.stem or base.root_stressed_stem or pres_1s_stem
 	end
 	addit("2s", pres_23s_stem, "i")
 	addit("3s", pres_23s_stem, base.conj_vowel == "à" and "a" or "e")
@@ -658,8 +794,8 @@ end
 -- Generate the present subjunctive. See "RULES FOR CONJUGATION" near the top of the file for the detailed rules.
 -- Defined earlier as a forward reference.
 add_present_subj = function(base, prefix)
-	local function addit(pers, stems, endings, from_existing_form)
-		add(base, prefix .. pers, stems, endings, from_existing_form)
+	local function addit(pers, stems, endings)
+		add(base, prefix .. pers, stems, endings)
 	end
 	local function insit(pers, forms)
 		insert_forms(base, prefix .. pers, forms)
@@ -678,8 +814,8 @@ add_present_subj = function(base, prefix)
 			end
 			return rsub(form, "o$", "")
 		end)
-		addit("123s", s123_stem, base.conj_vowel == "à" and "i" or "a", "existing form")
-		addit("3p", s123_stem, base.conj_vowel == "à" and "ino" or "ano", "existing form")
+		addit("123s", s123_stem, base.conj_vowel == "à" and "i" or "a")
+		addit("3p", s123_stem, base.conj_vowel == "à" and "ino" or "ano")
 	end
 
 	-- Copy present indicative 1p to present subjunctive.
@@ -702,9 +838,9 @@ add_imperative = function(base, prefix)
 		return
 	end
 
-	local function addit(pers, stems, endings, from_existing_form)
-		add(base, prefix .. pers, stems, endings, from_existing_form)
-	end
+	local function addit(pers, stems, endings)
+		add(base, prefix .. pers, stems, endings)
+	raq
 	local function insit(pers, forms)
 		insert_forms(base, prefix .. pers, forms)
 	end
@@ -806,10 +942,6 @@ local function conjugate_row(base, rowslot)
 		error("Internal error: Unrecognized row slot '" .. rowslot .. "'")
 	end
 
-	if add_explicit_row(base, rowconj.prefix, rowslot) then
-		return
-	end
-
 	local stem = get_stem_for_row_conjugation(base, rowslot, rowconj)
 
 	if type(rowconj.conjugate) == "table" then
@@ -823,6 +955,9 @@ local function conjugate_row(base, rowslot)
 	else
 		rowconj.conjugate(base, rowconj.prefix, stem)
 	end
+
+	handle_explicit_row(base, rowslot)
+	handle_overrides_for_row(base, rowslot)
 end
 
 
@@ -860,12 +995,10 @@ local function add_participles(base)
 	local function addit(slot, stems, ending)
 		add3(base, slot, base.prefix, stems, ending)
 	end
-	insert_form(base, "infinitive", {form = base.verb})
-	addit("gerund", stems.pres_unstressed, base.conj_vowel == "à" and "àndo" or "èndo")
-	addit("pp_ms", stems.pp, "o")
-	addit("pp_fs", stems.pp, "a")
-	addit("pp_mp", stems.pp, "os")
-	addit("pp_fp", stems.pp, "as")
+	insert_form(base, "inf", {form = base.verb})
+	addit("ger", stems.pres_unstressed, base.conj_vowel == "à" and "àndo" or "èndo")
+	addit("presp", stems.pres_unstressed, base.conj_vowel == "à" and "ànte" or "ènte")
+	addit("pp", stems.pp, "o")
 end
 
 
@@ -931,7 +1064,7 @@ local function add_combined_forms(base)
 		local base_slot, pronouns = unpack(base_slot_and_pronouns)
 		-- Skip non-infinitive/gerund combinations for reflexive verbs. We will copy the appropriate imperative
 		-- combinations later.
-		if not base.refl or base_slot == "infinitive" or base_slot == "gerund" then
+		if not base.refl or base_slot == "inf" or base_slot == "ger" then
 			add_forms_with_clitic(base, base_slot, pronouns, "do combined slots")
 		end
 	end
@@ -942,7 +1075,7 @@ local function process_slot_overrides(base, do_basic, reflexive_only)
 	local overrides = reflexive_only and base.basic_reflexive_only_overrides or
 		do_basic and base.basic_overrides or base.combined_overrides
 	for slot, forms in pairs(overrides) do
-		add(base, slot, base.prefix, forms, false, "allow overrides")
+		add(base, slot, base.prefix, forms, "allow overrides")
 	end
 end
 
@@ -957,19 +1090,19 @@ local function add_reflexive_or_fixed_clitic_to_forms(base, do_reflexive, do_joi
 		if not do_reflexive then
 			clitic = base.clitic
 		elseif slot:find("[123]") then
-			local persnum = slot:match("^.*_(.-)$")
+			local persnum = slot:match("^.*([123][sp])$")
 			clitic = person_number_to_reflexive_pronoun[persnum]
 		else
-			clitic = "se"
+			clitic = "si"
 		end
 		if base.forms[slot] then
-			if slot == "infinitive" or slot == "gerund" or slot:find("^imp_") then
+			if slot == "inf" or slot == "ger" or slot:find("^imp[123]") then
 				if do_joined then
 					add_forms_with_clitic(base, slot, {clitic})
 				end
-			elseif do_reflexive and slot:find("^pp_") or slot == "infinitive_linked" then
+			elseif do_reflexive and slot == "pp" or slot == "inf_linked" then
 				-- do nothing with reflexive past participles or with infinitive linked (handled at the end)
-			elseif slot:find("^neg_imp_") then
+			elseif slot:find("^negimp") then
 				error("Internal error: Should not have forms set for negative imperative at this stage")
 			elseif not do_joined then
 				-- Add clitic as separate word before all other forms. Check whether form already has brackets
@@ -995,8 +1128,8 @@ end
 local function copy_subjunctives_to_imperatives(base)
 	-- Copy subjunctives to imperatives, unless there's an override for the given slot (as with the imp_1p of [[ir]]).
 	for _, persnum in ipairs({"3s", "1p", "3p"}) do
-		local from = "pres_sub_" .. persnum
-		local to = "imp_" .. persnum
+		local from = "sub" .. persnum
+		local to = "imp" .. persnum
 		insert_forms(base, to, iut.map_forms(base.forms[from], function(form) return form end))
 	end
 end
@@ -1006,7 +1139,7 @@ local function handle_infinitive_linked(base)
 	-- Compute linked versions of potential lemma slots, for use in {{it-verb}}.
 	-- We substitute the original lemma (before removing links) for forms that
 	-- are the same as the lemma, if the original lemma has links.
-	for _, slot in ipairs({"infinitive"}) do
+	for _, slot in ipairs({"inf"}) do
 		insert_forms(base, slot .. "_linked", iut.map_forms(base.forms[slot], function(form)
 			if form == base.lemma and rfind(base.linked_lemma, "%[%[") then
 				return base.linked_lemma
@@ -1720,17 +1853,17 @@ local basic_table = [=[
 {\op}| style="background:#F0F0F0;border-collapse:separate;border-spacing:2px;width:100%" class="inflection-table"
 |-
 ! style="background:#e2e4c0" | <span title="infinito">infinitive</span>
-| {infinitive}
+| {inf}
 |-
 ! colspan="2" style="background:#e2e4c0" | <span title="verbo ausiliare">auxiliary verb</span>
 | {aux}
 ! colspan="2" style="background:#e2e4c0" | <span title="gerundio">gerund</span>
-| colspan="2" | {gerund}
+| colspan="2" | {ger}
 |-
 ! colspan="2" style="background:#e2e4c0" |  <span title="participio presente">present participle</span>
-| {pres_ptc}
+| {presp}
 ! colspan="2" style="background:#e2e4c0" | <span title="participio passato">past participle</span>
-| colspan="2" | {past_ptc}
+| colspan="2" | {pp}
 |-
 ! rowspan="2" style="background:#C0C0C0" | person
 ! colspan="3" style="background:#C0C0C0" | singular
@@ -1752,36 +1885,36 @@ local basic_table = [=[
 ! style="background:#c0cfe4" | loro, essi/esse
 |-
 ! style="height:3em;background:#c0cfe4" | <span title="presente">present</span>
-| {pres_indc_1s}
-| {pres_indc_2s}
-| {pres_indc_3s}
-| {pres_indc_1p}
-| {pres_indc_2p}
-| {pres_indc_3p}
+| {pres1s}
+| {pres2s}
+| {pres3s}
+| {pres1p}
+| {pres2p}
+| {pres3p}
 |-
 ! style="height:3em;background:#c0cfe4" | <span title="imperfetto">imperfect</span>
-| {impf_indc_1s}
-| {impf_indc_2s}
-| {impf_indc_3s}
-| {impf_indc_1p}
-| {impf_indc_2p}
-| {impf_indc_3p}
+| {imperf1s}
+| {imperf2s}
+| {imperf3s}
+| {imperf1p}
+| {imperf2p}
+| {imperf3p}
 |-
 ! style="height:3em;background:#c0cfe4" | <span title="passato remoto">past historic</span>
-| {phis_indc_1s}
-| {phis_indc_2s}
-| {phis_indc_3s}
-| {phis_indc_1p}
-| {phis_indc_2p}
-| {phis_indc_3p}
+| {phis1s}
+| {phis2s}
+| {phis3s}
+| {phis1p}
+| {phis2p}
+| {phis3p}
 |-
 ! style="height:3em;background:#c0cfe4" | <span title="futuro semplice">future</span>
-| {futr_indc_1s}
-| {futr_indc_2s}
-| {futr_indc_3s}
-| {futr_indc_1p}
-| {futr_indc_2p}
-| {futr_indc_3p}
+| {fut1s}
+| {fut2s}
+| {fut3s}
+| {fut1p}
+| {fut2p}
+| {fut3p}
 |-
 ! style="background:#c0d8e4" | <span title="condizionale">conditional</span>
 ! style="background:#c0d8e4" | io
@@ -1792,12 +1925,12 @@ local basic_table = [=[
 ! style="background:#c0d8e4" | loro, essi/esse
 |-
 ! style="height:3em;background:#c0d8e4" | <span title="condizionale presente">present</span>
-| {cond_1s}
-| {cond_2s}
-| {cond_3s}
-| {cond_1p}
-| {cond_2p}
-| {cond_3p}
+| {cond1s}
+| {cond2s}
+| {cond3s}
+| {cond1p}
+| {cond2p}
+| {cond3p}
 |-
 ! style="background:#c0e4c0" | <span title="congiuntivo">subjunctive</span>
 ! style="background:#c0e4c0" | che io
@@ -1808,17 +1941,17 @@ local basic_table = [=[
 ! style="background:#c0e4c0" | che loro, che essi/che esse
 |-
 ! style="height:3em;background:#c0e4c0" | <span title="congiuntivo presente">present</span>
-| colspan="3" | {pres_subj_123s}
-| {pres_subj_1p}
-| {pres_subj_2p}
-| {pres_subj_3p}
+| colspan="3" | {sub123s}
+| {sub1p}
+| {sub2p}
+| {sub3p}
 |-
 ! style="height:3em;background:#c0e4c0" | <span title="congiuntivo imperfetto">imperfect</span>
-| colspan="2" | {impf_subj_12s}
-| {impf_subj_3s}
-| {impf_subj_1p}
-| {impf_subj_2p}
-| {impf_subj_3p}
+| colspan="2" | {impsub12s}
+| {impsub3s}
+| {impsub1p}
+| {impsub2p}
+| {impsub3p}
 |-
 ! rowspan="2" style="height:3em;background:#e4d4c0" | <span title="imperativo">imperative</span>
 ! style="background:#e4d4c0" | &mdash;
@@ -1829,19 +1962,19 @@ local basic_table = [=[
 ! style="background:#e4d4c0" | Loro
 |-
 |
-| {impr_2s}
-| {impr_3s}
-| {impr_1p}
-| {impr_2p}
-| {impr_3p}
+| {imp2s}
+| {imp3s}
+| {imp1p}
+| {imp2p}
+| {imp3p}
 |-
 ! style="height:3em;background:#e4d4c0" | <span title="imperativo negativo">negative imperative</span>
 |
-| {neg_impr_2s}
-| {neg_impr_3s}
-| {neg_impr_1p}
-| {neg_impr_2p}
-| {neg_impr_3p}
+| {negimp2s}
+| {negimp3s}
+| {negimp1p}
+| {negimp2p}
+| {negimp3p}
 |{\cl}{notes_clause}</div></div>
 ]=]
 
