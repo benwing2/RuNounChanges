@@ -16120,7 +16120,7 @@ Page 1088 portaposate: -------- begin text --------
 From {{prefix|it|porta|posate}}.
 
 ===Pronunciation===
-{{it-pr|pòrtaposàte,#pòrtapo[s]àte<ref:{{R:it:Olivetti}} !!! {{R:it:DiPI|posate}}>}}
+{{it-pr|pòrtaposàte,#pòrtapo[s]àte<{{R:it:DiPI|posate}}><ref:{{R:it:Olivetti}}>}}
 
 ===Noun===
 {{it-noun|m|#}}
@@ -16150,7 +16150,7 @@ Page 1090 posacenere: -------- begin text --------
 From {{af|it|posare|alt1=posa|pos1=second person singular imperative|cenere|t1=to put down, to lay down|t2=ash, ashes}}.
 
 ===Pronunciation===
-{{it-pr|pòsacénere,#pò[s]acénere<ref:{{R:it:Olivetti}} !!! {{R:it:DiPI|posa}}>}}
+{{it-pr|pòsacénere,#pò[s]acénere<{{R:it:DiPI|posa}}><ref:{{R:it:Olivetti}}>}}
 
 ===Noun===
 {{it-noun|m|#}}
@@ -16473,7 +16473,7 @@ From {{der|it|la|antepōnō}}.
 {{it-pr|antepórre}}
 
 ===Verb===
-{{it-verb|a\ó\antepóngo,antepósi,antepósto.imperf:anteponévo}} {{tlb|it|transitive}}
+{{it-verb|a\ó\antepóngo,antepósi,antepósto:antepòsto[ref:{{R:it:DiPI|posto}}].imperf:anteponévo}} {{tlb|it|transitive}}
 
 # to [[put]] or [[place]] (something) {{+preo|it|a|means=before (something else)}}
 # {{lb|it|figurative}} to [[prefer]] (someone or something) {{+preo|it|a|means=to (someone or something else)}}
@@ -16487,6 +16487,9 @@ From {{der|it|la|antepōnō}}.
 |cond1s=anteporrei|cond2s=anteporresti|cond3s=anteporrebbe|cond1p=anteporremmo|cond2p=anteporreste|cond3p=anteporrebbero
 |sub123s=anteponga|sub3p=antepongano
 |imp3s=anteponga|imp3p=antepongano}}
+
+===References===
+<references />
 
 ===Further reading===
 * {{R:it:Treccani}}
@@ -16551,7 +16554,7 @@ From {{inh|it|la|appōnere}}, present active infinitive of {{m|la|appōnō||I ap
 {{it-pr|appórre}}
 
 ===Verb===
-{{it-verb|a\ó\appóngo,appósi,appósto.imperf:apponévo}} {{tlb|it|transitive}}
+{{it-verb|a\ó\appóngo,appósi,appósto:appòsto[ref:{{R:it:DiPI|apposto}}].imperf:apponévo}} {{tlb|it|transitive}}
 
 # to [[add]], to [[affix]], to [[append]]
 #* {{quote-book|it|year=1321|author=Dante Alighieri|authorlink=Dante Alighieri|title=[[w:Paradiso (Dante)|La divina commedia: Paradiso]]|publisher=Le Monnier|year_published=2002|section=Canto XVI|page=289|lines=67–69|passage=Sempre la confusion de le persone ¶ principio fu del mal de la cittade, ¶ come del vostro il cibo che s''''appone'''|translation=Ever the intermingling of the people has been the source of malady in cities, as in the body food that '''appends''' [to previously eaten food in the body]}}
@@ -16576,10 +16579,11 @@ From {{inh|it|la|appōnere}}, present active infinitive of {{m|la|appōnō||I ap
 * {{l|it|apposizione}}
 * {{l|it|porre}}
 
+===References===
+<references />
+
 ===Anagrams===
 * {{anagrams|it|a=aeopprr|preparo|preparò|rapperò}}
-
-{{cln|it|terms with quotations}}
 -------- end text --------
 Page 1122 apposto: Found match for regex: =
 Page 1122 apposto: -------- begin text --------
@@ -16654,12 +16658,35 @@ From the locution {{m|it|[[a]] [[posta]]}}.
 {{nonlemma}}
 
 ====Pronunciation====
-{{it-pr|appósta}}
+{{it-pr|appósta,appòsta<ref:{{R:it:DiPI|apposto}}>}}
 
 ====Participle====
 {{head|it|past participle form|g=f-s}}
 
 # {{feminine singular of|it|apposto}}
+
+===Etymology 3===
+
+====Pronunciation====
+{{it-pr|appòsta}}
+
+====Verb====
+{{head|it|verb form}}
+
+# {{inflection of|it|appostare||3|s|pres|indc|;|2|s|impr|t=to post, to station {{q|military}}}}
+
+===Etymology 4===
+
+====Pronunciation====
+{{it-pr|appósta}}
+
+====Verb====
+{{head|it|verb form}}
+
+# {{inflection of|it|appostare||3|s|pres|indc|;|2|s|impr|t=to land (a blow)}}
+
+===References===
+<references />
 
 ===Anagrams===
 * {{anagrams|it|a=aaoppst|appasto|appastò}}
@@ -16667,10 +16694,38 @@ From the locution {{m|it|[[a]] [[posta]]}}.
 Page 1124 apposti: Found match for regex: =
 Page 1124 apposti: -------- begin text --------
 
-===Participle===
+===Etymology 1===
+
+====Pronunciation====
+{{it-pr|appósti,appòsti<ref:{{R:it:DiPI|apposto}}>}}
+
+====Participle====
 {{head|it|past participle form|g=m-p}}
 
 # {{masculine plural of|it|apposto}}
+
+===Etymology 2===
+
+====Pronunciation====
+{{it-pr|appòsti}}
+
+====Verb====
+{{head|it|verb form}}
+
+# {{inflection of|it|appostare||2|s|pres|ind|;|1//2//3|s|pres|sub|;|3|s|imp|t=to post, to station {{q|military}}}}
+
+===Etymology 3===
+
+====Pronunciation====
+{{it-pr|appósti}}
+
+====Verb====
+{{head|it|verb form}}
+
+# {{inflection of|it|appostare||2|s|pres|ind|;|1//2//3|s|pres|sub|;|3|s|imp|t=to land (a blow)}}
+
+===References===
+<references />
 
 ===Anagrams===
 * {{anagrams|it|a=aioppst|stoppai|stoppia}}
@@ -16689,11 +16744,17 @@ Page 1125 apposte: -------- begin text --------
 Page 1126 bendisporre: Found match for regex: =
 Page 1126 bendisporre: -------- begin text --------
 
+===Alternative forms===
+* {{alt|it|ben disporre||more common}}
+
 ===Etymology===
-{{m|it|ben}} + {{m|it|disporre}}
+{{univerbation|it|ben|disporre}}.
+
+===Pronunciation===
+{{it-pr|bèndispórre<ref:{{R:it:Olivetti}}>}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a\ó\bendispóngo,bendispósi,bendispósto:bendispòsto[ref:{{R:it:DiPI|disposto}}].imperf:bendisponévo}} {{tlb|it|transitive}}
 
 # to put someone in a good frame of mind; to be [[well-disposed]] towards someone
 
@@ -16706,17 +16767,30 @@ Page 1126 bendisporre: -------- begin text --------
 |cond1s=bendisporrei|cond2s=bendisporresti|cond3s=bendisporrebbe|cond1p=bendisporremmo|cond2p=bendisporreste|cond3p=bendisporrebbero
 |sub123s=bendisponga|sub3p=bendispongano
 |imp3s=bendisponga|imp3p=bendispongano}}
+
+===References===
+<references />
 -------- end text --------
 Page 1127 bendisposto: Found match for regex: =
 Page 1127 bendisposto: -------- begin text --------
 
+===Participle===
+{{it-pp}}
+
+# {{past participle of|it|bendisporre}}
+
 ===Adjective===
-{{it-adj}} (a)
+{{it-adj}} {{+preo|it|a}}
 
 # [[well-disposed]] (towards)
 -------- end text --------
 Page 1128 bendisposta: Found match for regex: =
 Page 1128 bendisposta: -------- begin text --------
+
+===Participle===
+{{head|it|past participle form|g=f-s}}
+
+# {{feminine singular of|it|bendisposto}}
 
 ===Adjective===
 {{head|it|adjective form}}
@@ -16726,6 +16800,11 @@ Page 1128 bendisposta: -------- begin text --------
 Page 1129 bendisposti: Found match for regex: =
 Page 1129 bendisposti: -------- begin text --------
 
+===Participle===
+{{head|it|past participle form|g=m-p}}
+
+# {{masculine plural of|it|bendisposto}}
+
 ===Adjective===
 {{head|it|adjective form}}
 
@@ -16733,6 +16812,11 @@ Page 1129 bendisposti: -------- begin text --------
 -------- end text --------
 Page 1130 bendisposte: Found match for regex: =
 Page 1130 bendisposte: -------- begin text --------
+
+===Participle===
+{{head|it|past participle form|g=f-p}}
+
+# {{feminine plural of|it|bendisposto}}
 
 ===Adjective===
 {{head|it|adjective form}}
@@ -16749,7 +16833,7 @@ From {{inh|it|la|compōnere}}, present active infinitive of {{m|la|compōno}}.
 {{it-pr|compórre}}
 
 ===Verb===
-{{it-verb|a\ó+\compóngo,compósi,compósto.imperf:componévo}} {{tlb|it|transitive}}
+{{it-verb|a\ó+\compóngo,compósi,compósto:compòsto[ref:{{R:it:DiPI|composto}}].imperf:componévo}} {{tlb|it|transitive}}
 
 # to [[compose]], [[compound]]
 # to [[constitute]], [[form]]
@@ -16781,6 +16865,9 @@ From {{inh|it|la|compōnere}}, present active infinitive of {{m|la|compōno}}.
 {{it-noun|m}}
 
 # {{lb|it|music}} [[composition]]
+
+===References===
+<references />
 
 ===Anagrams===
 * {{anagrams|it|a=cemooprr|comprerò|corrompe}}
@@ -16814,8 +16901,8 @@ From {{inh|it|la|compostus}}, syncopated variant of {{m|la|compositus}}. {{doubl
 ====Noun====
 {{it-noun|m}}
 
-# [[compound]] (chemical)
-# [[mixture]] (especially in cooking)
+# [[compound]] {{q|chemical}}
+# [[mixture]] {{q|especially in cooking}}
 
 ===Etymology 2===
 
@@ -16850,7 +16937,10 @@ Page 1133 composta: -------- begin text --------
 ====Noun====
 {{it-noun|f}}
 
-# [[compote]] (stewed fruit)
+# [[compote]] {{gl|stewed fruit}}
+# [[compost]]
+# [[aster]], [[composite]] {{gl|member of a family of flowers}}
+#: {{syn|it|composita}}
 
 ===Etymology 3===
 
@@ -16924,7 +17014,7 @@ Page 1136 contrapporre: -------- begin text --------
 {{it-pr|contrappórre}}
 
 ===Verb===
-{{it-verb|a\ó\contrappóngo,contrappósi,contrappósto.imperf:contrapponévo}} {{tlb|it|transitive}}
+{{it-verb|a\ó\contrappóngo,contrappósi,contrappósto:contrappòsto[ref:{{R:it:DiPI|posto}}].imperf:contrapponévo}} {{tlb|it|transitive}}
 
 # to [[counter]], or set something against
 
@@ -16942,6 +17032,9 @@ Page 1136 contrapporre: -------- begin text --------
 * {{l|it|contrapporsi}}
 * {{l|it|contrapposizione}}
 * {{l|it|contrapposto}}
+
+===References===
+<references />
 -------- end text --------
 Page 1137 contrapposto: Found match for regex: =
 Page 1137 contrapposto: -------- begin text --------
@@ -16994,9 +17087,9 @@ Page 1141 controproporre: -------- begin text --------
 {{prefix|it|contro|proporre}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a\ó+\contropropóngo,contropropósi,contropropósto:contropropòsto[ref:{{R:it:DiPI|proposto}}].imperf:controproponévo}}
 
-# {{lb|it|transitive}} to [[counter]] a proposal
+# {{tlb|it|transitive}} to [[counter]] a proposal
 
 ====Conjugation====
 {{it-conj-ere|contropropon|avere
@@ -17007,6 +17100,9 @@ Page 1141 controproporre: -------- begin text --------
 |cond1s=controproporrei|cond2s=controproporresti|cond3s=controproporrebbe|cond1p=controproporremmo|cond2p=controproporreste|cond3p=controproporrebbero
 |sub123s=controproponga|sub3p=contropropongano
 |imp3s=controproponga|imp3p=contropropongano}}
+
+===References===
+<references />
 -------- end text --------
 Page 1142 controproposto: Found match for regex: =
 Page 1142 controproposto: -------- begin text --------
@@ -17051,7 +17147,16 @@ Page 1144 controproposti: -------- begin text --------
 Page 1145 controproposte: Found match for regex: =
 Page 1145 controproposte: -------- begin text --------
 
-===Participle===
+===Etymology 1===
+
+====Noun====
+{{head|it|noun form|g=f}}
+
+# {{plural of|it|controproposta}}
+
+===Etymology 2===
+
+====Participle====
 {{head|it|past participle form|g=f-p}}
 
 # {{feminine plural of|it|controproposto}}
@@ -17063,9 +17168,10 @@ Page 1146 decomporre: -------- begin text --------
 {{it-pr|decompórre}}
 
 ===Verb===
-{{it-verb|a\ó+\decompóngo,decompósi,decompósto.imperf:decomponévo}}
+{{it-verb|a\ó+\decompóngo,decompósi,decompósto:decompòsto[ref:{{R:it:DiPI|decomposto}}].imperf:decomponévo}} {{tlb|it|transitive}}
 
-# {{lb|it|transitive|chemistry|physics|mathematics}} to [[decompose]] (into constituent parts)
+# {{lb|it|biology}} to [[decompose]], to [[putrefy]]
+# {{lb|it|chemistry|physics|mathematics}} to [[decompose]] {{q|into constituent parts}}
 
 ====Conjugation====
 {{it-conj-ere|decompon|avere
@@ -17079,6 +17185,9 @@ Page 1146 decomporre: -------- begin text --------
 
 ====Derived terms====
 * {{l|it|decomporsi}}
+
+===References===
+<references />
 -------- end text --------
 Page 1147 decomposto: Found match for regex: =
 Page 1147 decomposto: -------- begin text --------
@@ -17139,16 +17248,17 @@ From {{der|it|la|dēpōnere}}, present active infinitive of {{m|la|dēpōnō}}.
 {{it-pr|depórre}}
 
 ===Verb===
-{{it-verb|a\ó\depóngo,depósi,depósto.imperf:deponévo}}
+{{it-verb|a\ó\depóngo,depósi,depósto:depòsto[ref:{{R:it:DiPI|deposto}}].imperf:deponévo}}
 
-# to [[put down]] (a weighty item)
-# to [[deposit]]
-# to [[set aside]]
-# to [[lower]] (an object)
-# to [[depose]]
-# to [[give up]] or [[abandon]] (a project)
-# to [[testify]]
-# to [[lay]] ("an egg")
+# {{lb|it|transitive}} to [[put down]] (a weighty item)
+# {{lb|it|transitive}} to [[deposit]]
+# {{lb|it|transitive}} to [[set aside]]
+# {{lb|it|transitive}} to [[lower]] (an object)
+# {{lb|it|transitive}} to [[depose]]
+# {{lb|it|transitive}} to [[give up]] or [[abandon]] (a project)
+# {{lb|it|transitive}} to [[lay]] (an egg)
+# {{lb|it|intransitive|law}} to [[testify]] {{+aux|it|avere}}
+# {{lb|it|intransitive}} to [[provide]] [[evidence]] {{i|for an opinion, evaluation, etc.}} {{+aux|it|avere}}
 
 ====Conjugation====
 {{it-conj-ere|depon|avere
@@ -17159,6 +17269,9 @@ From {{der|it|la|dēpōnere}}, present active infinitive of {{m|la|dēpōnō}}.
 |cond1s=deporrei|cond2s=deporresti|cond3s=deporrebbe|cond1p=deporremmo|cond2p=deporreste|cond3p=deporrebbero
 |sub123s=deponga|sub3p=depongano
 |imp3s=deponga|imp3p=depongano}}
+
+===References===
+<references />
 
 ===Anagrams===
 * {{anagrams|it|a=deeoprr|perderò|prederò}}
@@ -17214,9 +17327,9 @@ Page 1156 diporre: -------- begin text --------
 From {{inh|it|la|dēpōnere}}, present active infinitive of {{m|la|dēpōnō}}.
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a\ó\dipóngo,dipósi,dipósto:dipòsto[ref:{{R:it:DiPI|deposto}}].imperf:diponévo}}
 
-# {{lb|it|transitive}} {{alt form|it|deporre}}
+# {{tlb|it|transitive|or|intransitive|archaic}} {{alt form|it|deporre}} {{+aux|it|avere}}
 
 ====Conjugation====
 {{it-conj-ere|dipon|avere
@@ -17227,6 +17340,9 @@ From {{inh|it|la|dēpōnere}}, present active infinitive of {{m|la|dēpōnō}}.
 |cond1s=diporrei|cond2s=diporresti|cond3s=diporrebbe|cond1p=diporremmo|cond2p=diporreste|cond3p=diporrebbero
 |sub123s=diponga|sub3p=dipongano
 |imp3s=diponga|imp3p=dipongano}}
+
+===References===
+<references />
 
 ===Anagrams===
 * {{anagrams|it|a=deioprr|predirò|riperdo}}
@@ -17276,9 +17392,11 @@ Page 1161 discomporre: Found match for regex: =
 Page 1161 discomporre: -------- begin text --------
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a\ó+\discompóngo,discompósi,discompósto:discompòsto[ref:{{R:it:DiPI|composto}}].imperf:discomponévo}} {{tlb|transitive|archaic}}
 
-# {{obsolete form of|it|scomporre}}
+# to [[separate]], to [[divide]]
+#: {{syn|it|scomporre|q=normal register}}
+# {{lb|it|figurative}} to [[upset]], to [[disturb]], to [[disrupt]] (harmony, balance, equilibrium, etc.)
 
 ====Conjugation====
 {{it-conj-ere|discompon|avere
@@ -17289,6 +17407,9 @@ Page 1161 discomporre: -------- begin text --------
 |cond1s=discomporrei|cond2s=discomporresti|cond3s=discomporrebbe|cond1p=discomporremmo|cond2p=discomporreste|cond3p=discomporrebbero
 |sub123s=discomponga|sub3p=discompongano
 |imp3s=discomponga|imp3p=discompongano}}
+
+===References===
+<references />
 -------- end text --------
 Page 1162 discomposto: Found match for regex: =
 Page 1162 discomposto: -------- begin text --------
@@ -17332,7 +17453,7 @@ From {{der|it|la|dispōnere}}, present active infinitive of {{m|la|dispōnō}}.
 {{it-pr|dispórre<audio:LL-Q652 (ita)-Happypheasant-disporre.wav>}}
 
 ===Verb===
-{{it-verb|a\ó\dispóngo,dispósi,dispósto.imperf:disponévo}}
+{{it-verb|a\ó\dispóngo,dispósi,dispósto:dispòsto[ref:{{R:it:DiPI|disposto}}].imperf:disponévo}}
 
 # {{lb|it|transitive}} to [[place]]; to [[arrange]]; to [[set out]]; to [[organize]]
 #: {{syn|it|ordinare|sistemare|mettere a posto|collocare|accomodare|mettere|distribuire|allineare|schierare|catalogare|strutturare}}
@@ -17347,16 +17468,16 @@ From {{der|it|la|dispōnere}}, present active infinitive of {{m|la|dispōnō}}.
 # {{lb|it|transitive|archaic}} to [[expose]]
 # {{lb|it|transitive|archaic}} to [[explain]]; to [[clarify]]
 # {{lb|it|transitive|archaic}} to [[depose]]
-# {{lb|it|intransitive}} to [[entrust]]; to [[count on|count]] {{+preo|it|di|means=on (someone)}}
-# {{lb|it|intransitive}} to have [[at one's disposal]] {{+preo|it|di}}
+# {{lb|it|intransitive}} to [[entrust]]; to [[count on|count]] {{+preo|it|di|means=on (someone)}} {{+aux|it|avere}}
+# {{lb|it|intransitive}} to have [[at one's disposal]] {{+preo|it|di}} {{+aux|it|avere}}
 #: {{syn|it|avere a disposizione|possedere|avere}}
-# {{lb|it|intransitive}} to [[guide]] someone's will; to [[exploitatively]] [[direct]]; to [[use]] {{+preo|it|di|someone}}
+# {{lb|it|intransitive}} to [[guide]] someone's will; to [[exploitatively]] [[direct]]; to [[use]] {{+preo|it|di|someone}} {{+aux|it|avere}}
 #: {{ux|it|lei ha '''disposto''' di me al suo piacimento|she '''used''' me for her own gratification}}
-# {{lb|it|intransitive}} to make [[available]] {{+preo|it|di}}
+# {{lb|it|intransitive}} to make [[available]] {{+preo|it|di}} {{+aux|it|avere}}
 #: {{ux|it|l'università '''dispone''' di una biblioteca|the university '''makes''' its library '''available'''}}
-# {{lb|it|intransitive}} to have [[employ]]ed {{+preo|it|di}}
+# {{lb|it|intransitive}} to have [[employ]]ed {{+preo|it|di}} {{+aux|it|avere}}
 #: {{ux|it|la fabbrica '''dispone''' di 500 operai|the factory '''has''' 500 workers '''employed'''}}
-# {{lb|it|intransitive|banking}} (with {{l|it|su}} or {{l|it|a}} [[carico]] {{l|it|di}}) to [[oblige]] by [[draft]], [[check]], etc.
+# {{lb|it|intransitive|banking}} to [[oblige]] by [[draft]], [[check]], etc. {{+preo|it|su}} ''or'' {{+preo|it|[[a]] [[carico]] [[di]]}} {{+aux|it|avere}}
 #: {{uxi|it|l'assegno è '''disposto''' a carico della banca|the check is '''paid out''' by the bank}}
 
 ====Conjugation====
@@ -17380,6 +17501,9 @@ From {{der|it|la|dispōnere}}, present active infinitive of {{m|la|dispōnō}}.
 * {{l|it|disposizione}}
 * {{l|it|disposto}}
 
+===References===
+<references />
+
 ===Further reading===
 * {{R:it:Treccani}}
 -------- end text --------
@@ -17391,6 +17515,11 @@ From {{m|it|disporre}}. Cognate with {{cog|pms|dispòst}}.
 
 ===Pronunciation===
 {{it-pr|dispósto,dispòsto<ref:{{R:it:DiPI}}>}}
+
+===Participle===
+{{it-pp}}
+
+# {{past participle of|it|disporre}}
 
 ===Adjective===
 {{it-adj|sup=dispostissimo}}
@@ -17407,11 +17536,6 @@ From {{m|it|disporre}}. Cognate with {{cog|pms|dispòst}}.
 {{it-noun|m}}
 
 # {{lb|it|legal}} [[provision]]s
-
-===Participle===
-{{it-pp}}
-
-# {{past participle of|it|disporre}}
 
 ===References===
 <references />
@@ -17430,13 +17554,23 @@ Page 1168 disposta: -------- begin text --------
 ===Adjective===
 {{head|it|adjective form}}
 
-# {{feminine singular of|it|disposto}}
+# {{adj form of|it|disposto||f|s}}
 
 ----
 
 -------- end text --------
 Page 1169 disposti: Found match for regex: =
 Page 1169 disposti: -------- begin text --------
+
+===Participle===
+{{head|it|past participle form|g=m-p}}
+
+# {{masculine plural of|it|disposto}}
+
+===Adjective===
+{{head|it|adjective form}}
+
+# {{adj form of|it|disposto||m|p}}
 
 ===Noun===
 {{head|it|noun form|g=m}}
@@ -17446,10 +17580,15 @@ Page 1169 disposti: -------- begin text --------
 Page 1170 disposte: Found match for regex: =
 Page 1170 disposte: -------- begin text --------
 
+===Participle===
+{{head|it|past participle form|g=f-p}}
+
+# {{feminine plural of|it|disposto}}
+
 ===Adjective===
 {{head|it|adjective form}}
 
-# {{feminine plural of|it|disposto}}
+# {{adj form of|it|disposto||f|p}}
 
 ===Anagrams===
 * {{anagrams|it|a=deiopsst|spodesti}}
@@ -17467,7 +17606,7 @@ From the older form {{m|it|sporre}}, from {{inh|it|la|expōnere}}, present activ
 {{it-pr|espórre}}
 
 ===Verb===
-{{it-verb|a\ó\espóngo,espósi,espósto.imperf:esponévo}}
+{{it-verb|a\ó\espóngo,espósi,espósto:espòsto[ref:{{R:it:DiPI|esposto}}].imperf:esponévo}}
 
 # {{lb|it|transitive}} to [[expose]], [[put out]], [[display]], [[show]]
 # {{lb|it|transitive}} to [[exhibit]]
@@ -17494,6 +17633,9 @@ From the older form {{m|it|sporre}}, from {{inh|it|la|expōnere}}, present activ
 * {{l|it|esposizione}}
 * {{l|it|esposto}}
 {{rel-bottom}}
+
+===References===
+<references />
 
 ===Anagrams===
 * {{anagrams|it|a=eeoprrs|persero|presero|spererò}}
@@ -17538,6 +17680,11 @@ Page 1173 esposta: -------- begin text --------
 
 # {{feminine singular of|it|esposto}}
 
+===Adjective===
+{{head|it|adjective form}}
+
+# {{adj form of|it|esposto||f|s}}
+
 ===Anagrams===
 * {{anagrams|it|a=aeopsst|optasse|pastose|pestosa|posaste|potasse|spesato|sposate}}
 -------- end text --------
@@ -17548,6 +17695,16 @@ Page 1174 esposti: -------- begin text --------
 {{head|it|past participle form|g=m-p}}
 
 # {{masculine plural of|it|esposto}}
+
+===Adjective===
+{{head|it|adjective form}}
+
+# {{adj form of|it|esposto||m|p}}
+
+===Noun===
+{{head|it|noun form|g=m}}
+
+# {{plural of|it|esposto}}
 
 ===Anagrams===
 * {{anagrams|it|a=eiopsst|pestosi|potessi|sopiste}}
@@ -17560,6 +17717,11 @@ Page 1175 esposte: -------- begin text --------
 
 # {{feminine plural of|it|esposto}}
 
+===Adjective===
+{{head|it|adjective form}}
+
+# {{adj form of|it|esposto||f|p}}
+
 ===Anagrams===
 * {{anagrams|it|a=eeopsst|pestose|potesse}}
 -------- end text --------
@@ -17570,12 +17732,12 @@ Page 1176 fotocomporre: -------- begin text --------
 {{prefix|it|foto|comporre}}
 
 ===Pronunciation===
-{{it-pr|fotocompórre}}
+{{it-pr|fòtocompórre<ref:{{R:it:Olivetti}}>}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a\ó+\fotocompóngo,fotocompósi,fotocompósto:fotocompòsto[ref:{{R:it:DiPI|composto}}].imperf:fotocomponévo}} {{tlb|it|transitive}}
 
-# {{lb|it|transitive}} to [[photocompose]]
+# to [[photocompose]]
 
 ====Conjugation====
 {{it-conj-ere|fotocompon|avere
@@ -17586,6 +17748,9 @@ Page 1176 fotocomporre: -------- begin text --------
 |cond1s=fotocomporrei|cond2s=fotocomporresti|cond3s=fotocomporrebbe|cond1p=fotocomporremmo|cond2p=fotocomporreste|cond3p=fotocomporrebbero
 |sub123s=fotocomponga|sub3p=fotocompongano
 |imp3s=fotocomponga|imp3p=fotocompongano}}
+
+===References===
+<references />
 -------- end text --------
 Page 1177 fotocomposto: Found match for regex: =
 Page 1177 fotocomposto: -------- begin text --------
@@ -17622,13 +17787,16 @@ Page 1180 fotocomposte: -------- begin text --------
 Page 1181 frapporre: Found match for regex: =
 Page 1181 frapporre: -------- begin text --------
 
+===Etymology===
+{{af|it|fra-|porre}}
+
 ===Pronunciation===
 {{it-pr|frappórre}}
 
 ===Verb===
-{{it-verb|a\ó\frappóngo,frappósi,frappósto.imperf:frapponévo}} {{tlb|it|transitive}}
+{{it-verb|a\ó\frappóngo,frappósi,frappósto:frappòsto[ref:{{R:it:DiPI|posto}}].imperf:frapponévo}} {{tlb|it|transitive}}
 
-# to [[place]] something in the way {{i|as an [[obstacle]]}}
+# to [[place]] (something) in the way {{i|as an obstacle}}
 
 ====Conjugation====
 {{it-conj-ere|frappon|avere
@@ -17642,6 +17810,9 @@ Page 1181 frapporre: -------- begin text --------
 
 ====Derived terms====
 * {{l|it|frapporsi||to interfere with}}
+
+===References===
+<references />
 -------- end text --------
 Page 1182 frapposto: Found match for regex: =
 Page 1182 frapposto: -------- begin text --------
@@ -17683,12 +17854,12 @@ Page 1186 giustapporre: -------- begin text --------
 Formed from {{m|it|giusta}} + {{m|it|porre}}, based on {{der|it|la|[[iuxtā]] [[pōnere]]|t=to put near}}. Neologism coined in the 20th century.<ref>{{R:it:Sapere|giustappórre}}</ref> Confer {{cog|fr|juxtaposer}}.
 
 ===Pronunciation===
-{{it-pr|giustappórre}}
+{{it-pr|giùstappórre<ref:{{R:it:Olivetti}}>}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a\ó\giustappóngo,giustappósi,giustappósto:giustappòsto[ref:{{R:it:DiPI|posto}}].imperf:giustapponévo}}
 
-# {{lb|it|transitive}} to [[juxtapose]]
+# {{tlb|it|transitive}} to [[juxtapose]]
 
 ====Conjugation====
 {{it-conj-ere|giustappon|avere
@@ -17706,7 +17877,7 @@ Formed from {{m|it|giusta}} + {{m|it|porre}}, based on {{der|it|la|[[iuxtā]] [[
 * {{l|it|giustapposizione}}
 
 ===References===
-<references/>
+<references />
 -------- end text --------
 Page 1187 giustapposto: Found match for regex: =
 Page 1187 giustapposto: -------- begin text --------
@@ -17714,19 +17885,16 @@ Page 1187 giustapposto: -------- begin text --------
 ===Pronunciation===
 {{it-pr|giustappósto}}
 
-===Etymology 1===
+===Etymology===
 {{root|it|ine-pro|*h₂yew-}}
 {{nonlemma}}
 
-====Participle====
+===Participle===
 {{it-pp}}
 
 # {{past participle of|it|giustapporre}}
 
-===Etymology 2===
-[[adjectivization|Adjectivization]] of above participle.
-
-====Adjective====
+===Adjective===
 {{it-adj}}
 
 # [[juxtaposed]]
@@ -17743,6 +17911,11 @@ Page 1188 giustapposta: -------- begin text --------
 {{head|it|past participle form|g=f-s}}
 
 # {{feminine singular of|it|giustapposto}}
+
+===Adjective===
+{{head|it|adjective form}}
+
+# {{adj form of|it|giustapposto||f|s}}
 -------- end text --------
 Page 1189 giustapposti: Found match for regex: =
 Page 1189 giustapposti: -------- begin text --------
@@ -17751,6 +17924,11 @@ Page 1189 giustapposti: -------- begin text --------
 {{head|it|past participle form|g=m-p}}
 
 # {{masculine plural of|it|giustapposto}}
+
+===Adjective===
+{{head|it|adjective form}}
+
+# {{adj form of|it|giustapposto||m|p}}
 -------- end text --------
 Page 1190 giustapposte: Found match for regex: =
 Page 1190 giustapposte: -------- begin text --------
@@ -17759,6 +17937,11 @@ Page 1190 giustapposte: -------- begin text --------
 {{head|it|past participle form|g=f-p}}
 
 # {{feminine plural of|it|giustapposto}}
+
+===Adjective===
+{{head|it|adjective form}}
+
+# {{adj form of|it|giustapposto||f|p}}
 -------- end text --------
 Page 1191 imporre: Found match for regex: =
 Page 1191 imporre: -------- begin text --------
@@ -17770,7 +17953,7 @@ From {{der|it|la|impōnere}}, present active infinitive of {{m|la|impōnō}}.
 {{it-pr|impórre}}
 
 ===Verb===
-{{it-verb|a\ó\impóngo,impósi,impósto.imperf:imponévo}}
+{{it-verb|a\ó\impóngo,impósi,impósto:impòsto[ref:{{R:it:DiPI|imposto}}].imperf:imponévo}}
 
 # {{lb|it|transitive}} to [[impose]], [[set]], [[lay]]
 # {{lb|it|transitive}} to [[order]], [[command]], [[dictate]]
@@ -17802,6 +17985,9 @@ From {{der|it|la|impōnere}}, present active infinitive of {{m|la|impōnō}}.
 * {{l|it|porre}}
 {{rel-bottom}}
 
+===References===
+<references />
+
 ===Anagrams===
 * {{anagrams|it|a=eimoprr|irrompe|premorì|reprimo|rirompe}}
 -------- end text --------
@@ -17809,6 +17995,14 @@ Page 1192 imposto: Found match for regex: =
 Page 1192 imposto: -------- begin text --------
 
 ===Etymology 1===
+
+====Pronunciation====
+{{it-pr|impósto,impòsto<ref:{{R:it:DiPI}}>}}
+
+====Participle====
+{{it-pp}}
+
+# {{past participle of|it|imporre}}
 
 ====Adjective====
 {{it-adj}}
@@ -17818,18 +18012,19 @@ Page 1192 imposto: -------- begin text --------
 =====Related terms=====
 * {{l|it|imporre}}
 
-====Participle====
-{{it-pp}}
-
-# {{past participle of|it|imporre}}
-
 ===Etymology 2===
 {{nonlemma}}
+
+====Pronunciation====
+{{it-pr|impòsto}}
 
 ====Verb====
 {{head|it|verb form}}
 
 # {{inflection of|it|impostare||1|s|pres|ind}}
+
+===References===
+<references />
 
 ----
 
@@ -17838,7 +18033,10 @@ Page 1193 imposta: Found match for regex: =
 Page 1193 imposta: -------- begin text --------
 
 ===Etymology 1===
-Possibly from {{inh|it|VL.|*impositum|*impōsitum, *impōsita}}.
+Possibly {{inh+|it|VL.|*impositum|*impōsitum, *impōsita|nocap=1}}.
+
+====Pronunciation====
+{{it-pr|impòsta,impósta<ref:{{R:it:DiPI}}<<name:dipi>>>}}
 
 ====Noun====
 {{it-noun|f}}
@@ -17856,6 +18054,9 @@ Possibly from {{inh|it|VL.|*impositum|*impōsitum, *impōsita}}.
 ===Etymology 2===
 {{nonlemma}}
 
+====Pronunciation====
+{{it-pr|impósta,impòsta<ref:<<name:dipi>>>}}
+
 ====Adjective====
 {{head|it|adjective form}}
 
@@ -17869,10 +18070,16 @@ Possibly from {{inh|it|VL.|*impositum|*impōsitum, *impōsita}}.
 ===Etymology 3===
 {{nonlemma}}
 
+====Pronunciation====
+{{it-pr|impòsta}}
+
 ====Verb====
 {{head|it|verb form}}
 
 # {{inflection of|it|impostare||3|s|pres|ind|;|2|s|imp}}
+
+===References===
+<references />
 
 ===Anagrams===
 * {{anagrams|it|a=aimopst|impasto|impastò}}
@@ -17886,7 +18093,12 @@ Page 1194 imposti: -------- begin text --------
 ===Etymology 1===
 
 ====Pronunciation====
-{{it-pr|impósti}}
+{{it-pr|impósti,impòsti<ref:{{R:it:DiPI|imposto}}>}}
+
+====Adjective====
+{{head|it|adjective form}}
+
+# {{adj form of|it|imposto||m|p}}
 
 ====Participle====
 {{head|it|past participle form|g=m-p}}
@@ -17902,11 +18114,17 @@ Page 1194 imposti: -------- begin text --------
 {{head|it|verb form}}
 
 # {{inflection of|it|impostare||2|s|pres|indc|;|1//2//3|s|pres|subj|;|3|s|impr}}
+
+===References===
+<references />
 -------- end text --------
 Page 1195 imposte: Found match for regex: =
 Page 1195 imposte: -------- begin text --------
 
 ===Etymology 1===
+
+====Pronunciation====
+{{it-pr|impóste,impòste<ref:{{R:it:DiPI|imposta}}<<name:dipi>>>}}
 
 ====Adjective====
 {{head|it|adjective form}}
@@ -17920,10 +18138,16 @@ Page 1195 imposte: -------- begin text --------
 
 ===Etymology 2===
 
+====Pronunciation====
+{{it-pr|impòste,impóste<ref:<<name:dipi>>>}}
+
 ====Noun====
 {{head|it|noun form|g=f}}
 
 # {{plural of|it|imposta}}
+
+===References===
+<references />
 
 ===Anagrams===
 * {{anagrams|it|a=eimopst|impesto|impestò|postime|stempio|stempiò}}
@@ -17941,10 +18165,10 @@ Page 1196 indisporre: -------- begin text --------
 {{it-pr|indispórre}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a\ó\indispóngo,indispósi,indispósto:indispòsto[ref:{{R:it:DiPI|indisposto}}].imperf:indisponévo}} {{tlb|it|transitive}}
 
-# {{lb|it|transitive}} to [[antagonize]]
-# {{lb|it|transitive}} to make a bad [[impression]]
+# to [[antagonize]]
+# to make a bad [[impression]] on
 
 ====Conjugation====
 {{it-conj-ere|indispon|avere
@@ -17955,6 +18179,9 @@ Page 1196 indisporre: -------- begin text --------
 |cond1s=indisporrei|cond2s=indisporresti|cond3s=indisporrebbe|cond1p=indisporremmo|cond2p=indisporreste|cond3p=indisporrebbero
 |sub123s=indisponga|sub3p=indispongano
 |imp3s=indisponga|imp3p=indispongano}}
+
+===References===
+<references />
 
 ===Further reading===
 * {{R:it:Treccani}}
@@ -18025,9 +18252,9 @@ Page 1201 infrapporre: -------- begin text --------
 {{it-pr|infrappórre}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a\ó\infrappóngo,infrappósi,infrappósto:infrappòsto[ref:{{R:it:DiPI|posto}}].imperf:infrapponévo}}
 
-# {{lb|it|transitive}} {{alternative form of|it|frapporre}}
+# {{tlb|it|transitive|rare}} {{alternative form of|it|frapporre}}
 
 ====Conjugation====
 {{it-conj-ere|infrappon|avere
@@ -18038,6 +18265,9 @@ Page 1201 infrapporre: -------- begin text --------
 |cond1s=infrapporrei|cond2s=infrapporresti|cond3s=infrapporrebbe|cond1p=infrapporremmo|cond2p=infrapporreste|cond3p=infrapporrebbero
 |sub123s=infrapponga|sub3p=infrappongano
 |imp3s=infrapponga|imp3p=infrappongano}}
+
+===References===
+<references />
 -------- end text --------
 Page 1202 infrapposto: Found match for regex: =
 Page 1202 infrapposto: -------- begin text --------
@@ -18084,9 +18314,9 @@ From {{bor|it|la|interpōnō}}.
 {{it-pr|interpórre}}
 
 ===Verb===
-{{it-verb|a\ó\interpóngo,interpósi,interpósto.imperf:interponévo}} {{tlb|it|transitive}}
+{{it-verb|a\ó\interpóngo,interpósi,interpósto:interpòsto[ref:{{R:it:DiPI|posto}}].imperf:interponévo}} {{tlb|it|transitive}}
 
-# to [[place]] something in the way of something; to [[interpose]]
+# to [[place]] (something) in the way of something; to [[interpose]]
 
 ====Conjugation====
 {{it-conj-ere|interpon|avere
@@ -18101,21 +18331,24 @@ From {{bor|it|la|interpōnō}}.
 ====Derived terms====
 * {{l|it|interporsi}}
 
+===References===
+<references />
+
 ===Further reading===
 * {{R:it:Treccani}}
 -------- end text --------
 Page 1207 interposto: Found match for regex: =
 Page 1207 interposto: -------- begin text --------
 
-===Adjective===
-{{it-adj}}
-
-# [[interposing]], [[intervening]]
-
 ===Participle===
 {{it-pp}}
 
 # {{past participle of|it|interporre}}
+
+===Adjective===
+{{it-adj}}
+
+# [[interposing]], [[intervening]]
 
 ===Anagrams===
 * {{anagrams|it|a=einooprstt|portentosi|protestino}}
@@ -18131,6 +18364,11 @@ Page 1208 interposta: -------- begin text --------
 
 # {{feminine singular of|it|interposto}}
 
+===Adjective===
+{{head|it|adjective form}}
+
+# {{adj form of|it|interposto||f|s}}
+
 ===Anagrams===
 * {{anagrams|it|a=aeinoprstt|prenotasti|rispettano|storpiante|strepitano|traponesti}}
 
@@ -18145,6 +18383,11 @@ Page 1209 interposti: -------- begin text --------
 
 # {{masculine plural of|it|interposto}}
 
+===Adjective===
+{{head|it|adjective form}}
+
+# {{adj form of|it|interposto||m|p}}
+
 ===Anagrams===
 * {{anagrams|it|a=eiinoprstt|rispettino|strepitino}}
 -------- end text --------
@@ -18155,6 +18398,11 @@ Page 1210 interposte: -------- begin text --------
 {{head|it|past participle form|g=f-p}}
 
 # {{feminine plural of|it|interposto}}
+
+===Adjective===
+{{head|it|adjective form}}
+
+# {{adj form of|it|interposto||f|p}}
 
 ===Anagrams===
 * {{anagrams|it|a=eeinoprstt|presentito|spettinerò}}
@@ -18169,11 +18417,12 @@ From {{etyl|la|it}} {{m|la|oppōnere}}, present active infinitive of {{m|la|opp�
 {{it-pr|oppórre}}
 
 ===Verb===
-{{it-verb|a\ó+\oppóngo,oppósi,oppósto.imperf:opponévo}} {{tlb|it|transitive}}
+{{it-verb|a\ó+\oppóngo,oppósi,oppósto:oppòsto[ref:{{R:it:DiPI|opposto}}].imperf:opponévo}}
 
-# to [[put forward]], [[raise]] (points of view, arguments)
-# to [[oppose]]
-# to [[counter]], [[refute]]
+# {{lb|it|transitive}} to [[put forward]], [[raise]] (points of view, arguments)
+# {{lb|it|transitive}} to [[oppose]]
+# {{lb|it|transitive}} to [[counter]], [[refute]]
+# {{lb|it|intransitive|rare}} to [[object]] to, to [[contradict]] {{+aux|it|avere}}
 
 ====Conjugation====
 {{it-conj-ere|oppon|avere
@@ -18188,6 +18437,9 @@ From {{etyl|la|it}} {{m|la|oppōnere}}, present active infinitive of {{m|la|opp�
 ====Derived terms====
 * {{l|it|opporsi}}
 
+===References===
+<references />
+
 ===Anagrams===
 * {{anagrams|it|a=eoopprr|porpore}}
 -------- end text --------
@@ -18196,6 +18448,11 @@ Page 1212 opposto: -------- begin text --------
 
 ===Pronunciation===
 {{it-pr|oppósto,oppòsto<ref:{{R:it:DiPI}}>}}
+
+===Participle===
+{{it-pp}}
+
+# {{past participle of|it|opporre}}
 
 ===Adjective===
 {{it-adj}}
@@ -18217,16 +18474,16 @@ Page 1212 opposto: -------- begin text --------
 * {{l|it|antonimo}}
 * {{l|it|inverso}}
 
-===Participle===
-{{it-pp}}
-
-# {{past participle of|it|opporre}}
-
 ===References===
 <references />
 -------- end text --------
 Page 1213 opposta: Found match for regex: =
 Page 1213 opposta: -------- begin text --------
+
+===Participle===
+{{head|it|past participle form|g=f-s}}
+
+# {{feminine singular of|it|opposto}}
 
 ===Adjective===
 {{head|it|adjective form}}
@@ -18239,6 +18496,16 @@ Page 1213 opposta: -------- begin text --------
 Page 1214 opposti: Found match for regex: =
 Page 1214 opposti: -------- begin text --------
 
+===Participle===
+{{head|it|past participle form|g=m-p}}
+
+# {{masculine plural of|it|opposto}}
+
+===Adjective===
+{{head|it|adjective form}}
+
+# {{masculine plural of|it|opposto}}
+
 ===Noun===
 {{head|it|noun form|g=m}}
 
@@ -18246,6 +18513,11 @@ Page 1214 opposti: -------- begin text --------
 -------- end text --------
 Page 1215 opposte: Found match for regex: =
 Page 1215 opposte: -------- begin text --------
+
+===Participle===
+{{head|it|past participle form|g=f-p}}
+
+# {{feminine plural of|it|opposto}}
 
 ===Adjective===
 {{head|it|adjective form}}
@@ -18255,10 +18527,13 @@ Page 1215 opposte: -------- begin text --------
 Page 1216 ovideporre: Found match for regex: =
 Page 1216 ovideporre: -------- begin text --------
 
-===Verb===
-{{it-verb}}
+===Pronunciation===
+{{it-pr|òvidepórre<ref:{{R:it:Olivetti}}>}}
 
-# {{lb|it|intransitive}} to [[oviposit]]
+===Verb===
+{{it-verb|a\ó\ovidepóngo,ovidepósi,ovidepósto:ovidepòsto[ref:{{R:it:DiPI|deposto}}].imperf:ovideponévo}}
+
+# {{tlb|it|intransitive|rare}} to [[oviposit]] {{+aux|it|avere}}
 
 ====Conjugation====
 {{it-conj-ere|ovidepon|avere
@@ -18269,6 +18544,9 @@ Page 1216 ovideporre: -------- begin text --------
 |cond1s=ovideporrei|cond2s=ovideporresti|cond3s=ovideporrebbe|cond1p=ovideporremmo|cond2p=ovideporreste|cond3p=ovideporrebbero
 |sub123s=ovideponga|sub3p=ovidepongano
 |imp3s=ovideponga|imp3p=ovidepongano}}
+
+===References===
+<references />
 -------- end text --------
 Page 1217 ovideposto: Found match for regex: =
 Page 1217 ovideposto: -------- begin text --------
@@ -18315,7 +18593,7 @@ Inherited from {{inh|it|la|pōnō|pōnere|to put, place}}, with {{m|la|pōnō}} 
 {{it-pr|pórre<audio:LL-Q652 (ita)-Happypheasant-porre.wav>}}
 
 ===Verb===
-{{it-verb|a\ó\póngo,pósi,pósto.imperf:ponévo}} {{tlb|it|transitive}}
+{{it-verb|a\ó\póngo,pósi,pósto:pòsto[ref:{{R:it:DiPI|posto}}].imperf:ponévo}} {{tlb|it|transitive}}
 
 # to [[put]]
 #: {{syn|it|mettere}}
@@ -18361,6 +18639,11 @@ From {{inh|it|la|postus}}, from {{m|la|positus}}.
 ====Pronunciation====
 {{it-pr|pósto,pòsto<ref:{{R:it:DiPI}}>}}
 
+====Participle====
+{{it-pp}}
+
+# {{past participle of|it|porre}}
+
 ====Noun====
 {{it-noun|m}}
 
@@ -18399,19 +18682,11 @@ From {{inh|it|la|postus}}, from {{m|la|positus}}.
 * {{desc|fr|poste|bor=1}} {{see desc}}
 * {{desc|de|Poste|bor=1}}, {{l|de|Posten}}
 
-====Participle====
-{{it-pp}}
-
-# {{past participle of|it|porre}}
-
-====References====
-<references/>
-
 ===Etymology 2===
 {{nonlemma}}
 
 ====Pronunciation====
-{{it-pr|pòsto,pósto}}
+{{it-pr|pòsto,pósto<ref:{{R:it:DiPI|post}}>}}
 
 ====Verb====
 {{head|it|verb form}}
@@ -18429,6 +18704,9 @@ From {{inh|it|la|postus}}, from {{m|la|positus}}.
 
 # {{inflection of|it|postare||1|s|pres|ind|t=to post (sentries, etc.; military)}}
 
+===References===
+<references/>
+
 ===Anagrams===
 * {{anagrams|it|a=oopst|Spoto|topos}}
 
@@ -18438,13 +18716,13 @@ From {{inh|it|la|postus}}, from {{m|la|positus}}.
 Page 1223 posta: Found match for regex: =
 Page 1223 posta: -------- begin text --------
 
-===Etymology===
-From the feminine of {{m|it|posto}}.
+===Etymology 1===
+{{slbor|it|la|posita}}, feminine singular of {{m|la|positus}}, past participle of {{m|la|pōnō||to put}}. Originally, "post for horses or for mooring ships", then "stopping place for coaches on a journey, way station".<ref>{{R:it:Sapere}}</ref> {{doublet|it|posta|pos1=feminine past participle of {{m|it|porre}}}}.
 
-===Pronunciation===
-{{it-pr|pòsta<ref:{{R:it:DiPI}}><audio:LL-Q652 (ita)-Happypheasant-posta.wav>}}
+====Pronunciation====
+{{it-pr|pòsta<ref:{{R:it:DiPI}}<<name:dipi>>><audio:LL-Q652 (ita)-Happypheasant-posta.wav>}}
 
-===Noun===
+====Noun====
 {{it-noun|f}}
 
 # [[mail]], [[post]]
@@ -18452,7 +18730,7 @@ From the feminine of {{m|it|posto}}.
 #: {{syn|it|ufficio postale}}
 # {{lb|it|games}} [[stake]]s
 
-====Derived terms====
+=====Derived terms=====
 {{der4
 |it|a bella posta
 |fermoposta
@@ -18465,7 +18743,7 @@ From the feminine of {{m|it|posto}}.
 |fare la posta
 }}
 
-====Descendants====
+=====Descendants=====
 ''All are borrowed''.
 {{top2}}
 * {{desc|cim|post}}
@@ -18494,10 +18772,50 @@ From the feminine of {{m|it|posto}}.
 * {{desc|fy|post}}
 {{bottom}}
 
-===Participle===
+===Etymology 2===
+From the feminine singular of {{m|it|posto}}, past participle of {{m|it|porre||to put, to lay}}.
+
+====Pronunciation====
+{{it-pr|pòsta,#pósta<ref:<<name:dipi>>>}}
+
+====Noun====
+{{it-noun|f}}
+
+# {{lb|it|archaic|or|popular|Tuscan}} [[act]] of [[lay]]ing or [[put]]ting, esp. of [[egg]]s
+# {{lb|it|archaic}} [[act]] of [[give|giving]] a [[name]], [[christen]]ing
+# {{lb|it|archaic}} [[footprint]], [[track]]
+
+===Etymology 3===
+
+====Pronunciation====
+{{it-pr|pósta,pòsta<ref:<<name:dipi>>>}}
+
+====Participle====
 {{head|it|participle form}}
 
 # {{feminine singular of|it|posto}}
+
+===Etymology 4===
+{{nonlemma}}
+
+====Pronunciation====
+{{it-pr|pòsta,pósta<ref:{{R:it:DiPI|post}}>}}
+
+====Verb====
+{{head|it|verb form}}
+
+# {{inflection of|it|postare||3|s|pres|ind|;|2|s|imp|t=to post (an email, etc.; Internet)}}
+
+===Etymology 5===
+{{nonlemma}}
+
+====Pronunciation====
+{{it-pr|pòsta}}
+
+====Verb====
+{{head|it|verb form}}
+
+# {{inflection of|it|postare||3|s|pres|ind|;|2|s|imp|t=to post (sentries, etc.; military)}}
 
 ===References===
 <references/>
@@ -18511,10 +18829,50 @@ From the feminine of {{m|it|posto}}.
 Page 1224 posti: Found match for regex: =
 Page 1224 posti: -------- begin text --------
 
-===Noun===
+===Etymology 1===
+
+====Pronunciation====
+{{it-pr|pósti,pòsti<ref:{{R:it:DiPI}}<<name:dipi>>>}}
+
+====Noun====
 {{head|it|noun form|g=m}}
 
 # {{plural of|it|posto}}
+
+===Etymology 2===
+
+====Pronunciation====
+{{it-pr|pósti,pòsti<ref:<<name:dipi>>>}}
+
+====Participle====
+{{head|it|past participle form|g=m-p}}
+
+# {{masculine plural of|it|posto}}
+
+===Etymology 3===
+{{nonlemma}}
+
+====Pronunciation====
+{{it-pr|pòsti,pósti<ref:{{R:it:DiPI|post}}>}}
+
+====Verb====
+{{head|it|verb form}}
+
+# {{inflection of|it|postare||2|s|pres|indc|;|1//2//3|s|pres|subj|;|3|s|impr|t=to post (an email, etc.; Internet)}}
+
+===Etymology 4===
+{{nonlemma}}
+
+====Pronunciation====
+{{it-pr|pòsti}}
+
+====Verb====
+{{head|it|verb form}}
+
+# {{inflection of|it|postare||2|s|pres|indc|;|1//2//3|s|pres|subj|;|3|s|impr|t=to post (sentries, etc.; military)}}
+
+===References===
+<references />
 
 ===Anagrams===
 * {{anagrams|it|a=iopst|-ptosi|ptosi|stipo|stipò}}
@@ -18527,17 +18885,36 @@ Page 1225 poste: -------- begin text --------
 
 ===Etymology 1===
 
+====Pronunciation====
+{{it-pr|pòste<ref:{{R:it:DiPI}}<<name:dipi>>>}}
+
 ====Noun====
 {{head|it|noun form|g=f-p}}
 
-# {{plural of|it|posta}}
+# {{plural of|it|posta|t=mail, post office}}
 
 ===Etymology 2===
+
+====Pronunciation====
+{{it-pr|póste,pòste<ref:<<name:dipi>>>}}
 
 ====Participle====
 {{head|it|past participle form|g=f-p}}
 
 # {{feminine plural of|it|posto}}
+
+===Etymology 3===
+
+====Pronunciation====
+{{it-pr|pòste,#póste<ref:<<name:dipi>>>}}
+
+====Noun====
+{{head|it|noun form|g=f-p}}
+
+# {{plural of|it|posta|t=laying (of eggs)}}
+
+===References===
+<references />
 
 ===Anagrams===
 * {{anagrams|it|a=eopst|pesto|pestò}}
@@ -18555,7 +18932,7 @@ From {{der|it|la|postpōnō}}.
 {{it-pr|pospórre}}
 
 ===Verb===
-{{it-verb|a\ó+\pospóngo,pospósi,pospósto.imperf:posponévo}} {{tlb|it|transitive}}
+{{it-verb|a\ó+\pospóngo,pospósi,pospósto:pospòsto[ref:{{R:it:DiPI|posto}}].imperf:posponévo}} {{tlb|it|transitive}}
 
 # to [[postpone]] or [[put off]]
 # to [[subordinate]]
@@ -18569,6 +18946,9 @@ From {{der|it|la|postpōnō}}.
 |cond1s=posporrei|cond2s=posporresti|cond3s=posporrebbe|cond1p=posporremmo|cond2p=posporreste|cond3p=posporrebbero
 |sub123s=posponga|sub3p=pospongano
 |imp3s=posponga|imp3p=pospongano}}
+
+===References===
+<references />
 
 ===Further reading===
 * {{R:it:Treccani}}
@@ -18636,7 +19016,7 @@ Page 1231 predisporre: -------- begin text --------
 {{it-pr|predispórre}}
 
 ===Verb===
-{{it-verb|a\ó\predispóngo,predispósi,predispósto.imperf:predisponévo}} {{tlb|it|transitive}}
+{{it-verb|a\ó\predispóngo,predispósi,predispósto:predispòsto[ref:{{R:it:DiPI|disposto}}].imperf:predisponévo}} {{tlb|it|transitive}}
 
 # to [[prepare]], [[get ready]]
 # to [[arrange]] {{qualifier|beforehand}}
@@ -18654,6 +19034,9 @@ Page 1231 predisporre: -------- begin text --------
 
 ====Derived terms====
 * {{l|it|predisporsi|gloss=to prepare oneself, get ready}}
+
+===References===
+<references />
 -------- end text --------
 Page 1232 predisposto: Found match for regex: =
 Page 1232 predisposto: -------- begin text --------
@@ -18661,15 +19044,16 @@ Page 1232 predisposto: -------- begin text --------
 ===Pronunciation===
 {{it-pr|predispósto,predispòsto<ref:{{R:it:DiPI|disposto}}>}}
 
-===Adjective===
-{{it-adj}}
-
-# [[set]]
-
 ===Participle===
 {{it-pp}}
 
 # {{past participle of|it|predisporre}}
+
+===Adjective===
+{{it-adj}}
+
+# [[set]], [[prepared]], [[arranged]]
+# [[predisposed]]
 
 ===References===
 <references />
@@ -18681,6 +19065,11 @@ Page 1233 predisposta: -------- begin text --------
 {{head|it|past participle form|g=f-s}}
 
 # {{feminine singular of|it|predisposto}}
+
+===Adjective===
+{{head|it|adjective form}}
+
+# {{adj form of|it|predisposto||f|s}}
 -------- end text --------
 Page 1234 predisposti: Found match for regex: =
 Page 1234 predisposti: -------- begin text --------
@@ -18689,6 +19078,11 @@ Page 1234 predisposti: -------- begin text --------
 {{head|it|past participle form|g=m-p}}
 
 # {{masculine plural of|it|predisposto}}
+
+===Adjective===
+{{head|it|adjective form}}
+
+# {{adj form of|it|predisposto||m|p}}
 -------- end text --------
 Page 1235 predisposte: Found match for regex: =
 Page 1235 predisposte: -------- begin text --------
@@ -18697,6 +19091,11 @@ Page 1235 predisposte: -------- begin text --------
 {{head|it|past participle form|g=f-p}}
 
 # {{feminine plural of|it|predisposto}}
+
+===Adjective===
+{{head|it|adjective form}}
+
+# {{adj form of|it|predisposto||f|p}}
 -------- end text --------
 Page 1236 preporre: Found match for regex: =
 Page 1236 preporre: -------- begin text --------
@@ -18708,7 +19107,7 @@ From {{inh|it|LL.|praepōnere}}, present active infinitive of {{m|la|praepōnō}
 {{it-pr|prepórre}}
 
 ===Verb===
-{{it-verb|a\ó\prepóngo,prepósi,prepósto.imperf:preponévo}} {{tlb|it|transitive}}
+{{it-verb|a\ó\prepóngo,prepósi,prepósto:prepòsto[ref:{{R:it:DiPI|preposto}}].imperf:preponévo}} {{tlb|it|transitive}}
 
 # to [[place]] (something) [[before]]
 # to give (something or someone) [[preference]]
@@ -18727,6 +19126,9 @@ From {{inh|it|LL.|praepōnere}}, present active infinitive of {{m|la|praepōnō}
 ====Related terms====
 * {{l|it|preposto}}
 * {{l|it|preporre}}
+
+===References===
+<references />
 -------- end text --------
 Page 1237 preposto: Found match for regex: =
 Page 1237 preposto: -------- begin text --------
@@ -18773,6 +19175,11 @@ Page 1239 preposti: -------- begin text --------
 {{head|it|past participle form|g=m-p}}
 
 # {{masculine plural of|it|preposto}}
+
+===Noun===
+{{head|it|noun form|g=m}}
+
+# {{plural of|it|preposto}}
 -------- end text --------
 Page 1240 preposte: Found match for regex: =
 Page 1240 preposte: -------- begin text --------
@@ -18792,7 +19199,7 @@ Page 1241 presupporre: -------- begin text --------
 {{it-pr|presuppórre,#pre[s]uppórre<ref:{{R:it:DiPI|presupposto}}>}}
 
 ===Verb===
-{{it-verb|a\ó\presuppóngo,presuppósi,presuppósto.imperf:presupponévo}} {{tlb|it|transitive}}
+{{it-verb|a\ó\presuppóngo,presuppósi,presuppósto:presuppòsto[ref:{{R:it:DiPI|presupposto}}].imperf:presupponévo}} {{tlb|it|transitive}}
 
 # (with {{m|it|che}} + [[subjunctive|subj.]]) to [[assume]], [[suppose]]
 #: {{syn|it|presumere|immaginare|opinare|credere|congetturare|prevedere|supporre|pensare|dubitare}}
@@ -18876,11 +19283,11 @@ From {{der|it|la|prōpōnere}}, present active infinitive of {{m|la|prōpōnō||
 {{it-pr|propórre<audio:LL-Q652 (ita)-Happypheasant-proporre.wav>}}
 
 ===Verb===
-{{it-verb|a\ó+\propóngo,propósi,propósto.imperf:proponévo}} {{tlb|it|transitive}}
+{{it-verb|a\ó+\propóngo,propósi,propósto:propòsto[ref:{{R:it:DiPI|proposto}}].imperf:proponévo}} {{tlb|it|transitive}}
 
 # to [[propose]], [[suggest]], or [[put forward]]
 # to [[suggest]] (someone) {{q|for a role, job position, etc.}}
-# {{lb|it|literary}} (with {{l|it|di}} + [[infinitive|inf.]]) to [[decide]]
+# {{lb|it|literary}} to [[decide]] {{+preo|it|di|infinitive}}
 # {{lb|it|literary}} to [[destine]]
 # {{lb|it|archaic}} to [[start]] by [[say]]ing
 
@@ -18899,6 +19306,9 @@ From {{der|it|la|prōpōnere}}, present active infinitive of {{m|la|prōpōnō||
 
 ====Derived terms====
 * {{l|it|proporsi}}
+
+===References===
+<references />
 
 ===Anagrams===
 * {{anagrams|it|a=eoopprrr|preporrò}}
@@ -18984,10 +19394,19 @@ Page 1249 proposti: -------- begin text --------
 Page 1250 proposte: Found match for regex: =
 Page 1250 proposte: -------- begin text --------
 
-===Noun===
+===Etymology 1===
+
+====Noun====
 {{head|it|noun form|g=f}}
 
 # {{plural of|it|proposta}}
+
+===Etymology 2===
+
+====Participle====
+{{head|it|past participle form|g=f-p}}
+
+# {{feminine plural of|it|proposto}}
 
 ===Anagrams===
 * {{anagrams|it|a=eoopprst|preposto|stopperò}}
@@ -18999,9 +19418,9 @@ Page 1251 reporre: -------- begin text --------
 {{prefix|it|re|porre}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a\ó\repóngo,repósi,repósto:repòsto[ref:{{R:it:DiPI|riposto}}].imperf:reponévo}}
 
-# {{alternative form of|it|riporre}}
+# {{tlb|it|archaic}} {{alternative form of|it|riporre}}
 
 ====Conjugation====
 {{it-conj-ere|repon|avere
@@ -19012,6 +19431,9 @@ Page 1251 reporre: -------- begin text --------
 |cond1s=reporrei|cond2s=reporresti|cond3s=reporrebbe|cond1p=reporremmo|cond2p=reporreste|cond3p=reporrebbero
 |sub123s=reponga|sub3p=repongano
 |imp3s=reponga|imp3p=repongano}}
+
+===References===
+<references />
 -------- end text --------
 Page 1256 ricomporre: Found match for regex: =
 Page 1256 ricomporre: -------- begin text --------
@@ -19023,10 +19445,10 @@ Page 1256 ricomporre: -------- begin text --------
 {{it-pr|ricompórre}}
 
 ===Verb===
-{{it-verb|a\ó+\ricompóngo,ricompósi,ricompósto.imperf:ricomponévo}} {{tlb|it|transitive}}
+{{it-verb|a\ó+\ricompóngo,ricompósi,ricompósto:ricompòsto[ref:{{R:it:DiPI|composto}}].imperf:ricomponévo}} {{tlb|it|transitive}}
 
-# {{lb|it|transitive}} to [[recompose]]
-# {{lb|it|transitive}} to [[reset]] (type)
+# to [[recompose]]
+# to [[reset]] (type)
 
 ====Conjugation====
 {{it-conj-ere|ricompon|avere
@@ -19040,6 +19462,9 @@ Page 1256 ricomporre: -------- begin text --------
 
 ====Derived terms====
 * {{l|it|ricomporsi}}
+
+===References===
+<references />
 
 ===Anagrams===
 * {{anagrams|it|a=ceimooprrr|ricomprerò}}
@@ -19089,9 +19514,9 @@ Page 1261 rideporre: -------- begin text --------
 {{prefix|it|ri|deporre}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a\ó\ridepóngo,ridepósi,ridepósto:ridepòsto[ref:{{R:it:DiPI|deposto}}].imperf:rideponévo}}
 
-# to [[deposit]] etc. again
+# to [[deposit]] etc. again, to [[redeposit]]
 
 ====Conjugation====
 {{it-conj-ere|ridepon|avere
@@ -19103,6 +19528,9 @@ Page 1261 rideporre: -------- begin text --------
 |sub123s=rideponga|sub3p=ridepongano
 |imp3s=rideponga|imp3p=ridepongano}}
 
+===References===
+<references />
+
 ===Anagrams===
 * {{anagrams|it|a=deeioprrr|riperderò}}
 -------- end text --------
@@ -19110,7 +19538,7 @@ Page 1266 ridisporre: Found match for regex: =
 Page 1266 ridisporre: -------- begin text --------
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a\ó\ridispóngo,ridispósi,ridispósto:ridispòsto[ref:{{R:it:DiPI|disposto}}].imperf:ridisponévo}}
 
 # {{lb|it|transitive}} to [[redispose]] or [[rearrange]]
 
@@ -19123,6 +19551,9 @@ Page 1266 ridisporre: -------- begin text --------
 |cond1s=ridisporrei|cond2s=ridisporresti|cond3s=ridisporrebbe|cond1p=ridisporremmo|cond2p=ridisporreste|cond3p=ridisporrebbero
 |sub123s=ridisponga|sub3p=ridispongano
 |imp3s=ridisponga|imp3p=ridispongano}}
+
+===References===
+<references />
 -------- end text --------
 Page 1267 ridisposto: Found match for regex: =
 Page 1267 ridisposto: -------- begin text --------
@@ -19168,11 +19599,15 @@ Page 1271 riesporre: -------- begin text --------
 ===Etymology===
 {{prefix|it|ri|esporre}}
 
-===Verb===
-{{it-verb}}
+===Pronunciation===
+{{it-pr|ri.espórre}}
 
-# {{lb|it|transitive}} to [[redisplay]]
-# {{lb|it|transitive}} to [[reexplain]]
+===Verb===
+{{it-verb|a\ó\riespóngo,riespósi,riespósto:riespòsto[ref:{{R:it:DiPI|esposto}}].imperf:riesponévo}} {{tlb|it|transitive}}
+
+# to [[redisplay]], to [[display]] [[again]]
+# to [[reexplain]], to [[explain]] [[again]]
+# to [[reexpose]], to [[expose]] [[again]]
 
 ====Conjugation====
 {{it-conj-ere|riespon|avere
@@ -19183,6 +19618,9 @@ Page 1271 riesporre: -------- begin text --------
 |cond1s=riesporrei|cond2s=riesporresti|cond3s=riesporrebbe|cond1p=riesporremmo|cond2p=riesporreste|cond3p=riesporrebbero
 |sub123s=riesponga|sub3p=riespongano
 |imp3s=riesponga|imp3p=riespongano}}
+
+===References===
+<references />
 
 ===Anagrams===
 * {{anagrams|it|a=eeioprrrs|respirerò|ripersero|ripresero}}
@@ -19237,10 +19675,13 @@ Page 1276 riopporre: -------- begin text --------
 ===Etymology===
 {{prefix|it|ri|opporre}}
 
-===Verb===
-{{it-verb}}
+===Pronunciation===
+{{it-pr|ri.oppórre}}
 
-# to [[oppose]] etc. again
+===Verb===
+{{it-verb|a\ó+\rioppóngo,rioppósi,rioppósto:rioppòsto[ref:{{R:it:DiPI|opposto}}].imperf:riopponévo}}
+
+# {{tlb|it|transitive}} to [[oppose]] etc. again
 
 ====Conjugation====
 {{it-conj-ere|rioppon|avere
@@ -19251,6 +19692,9 @@ Page 1276 riopporre: -------- begin text --------
 |cond1s=riopporrei|cond2s=riopporresti|cond3s=riopporrebbe|cond1p=riopporremmo|cond2p=riopporreste|cond3p=riopporrebbero
 |sub123s=riopponga|sub3p=rioppongano
 |imp3s=riopponga|imp3p=rioppongano}}
+
+===References===
+<references />
 
 ===Anagrams===
 * {{anagrams|it|a=eioopprrr|proporrei}}
@@ -19265,11 +19709,12 @@ From {{inh|it|la|repōnere}}, present active infinitive of {{m|la|repōnō}}.
 {{it-pr|ripórre}}
 
 ===Verb===
-{{it-verb|a\ó\ripóngo,ripósi,ripósto.imperf:riponévo}} {{tlb|it|transitive}}
+{{it-verb|a\ó\ripóngo,ripósi,ripósto:ripòsto[ref:{{R:it:DiPI|riposto}}].imperf:riponévo}} {{tlb|it|transitive}}
 
 # to [[replace]]
 # to [[place]], etc. again
 # to [[shelve]]
+# to [[hide]]
 
 ====Conjugation====
 {{it-conj-ere|ripon|avere
@@ -19283,6 +19728,9 @@ From {{inh|it|la|repōnere}}, present active infinitive of {{m|la|repōnō}}.
 
 ====Related terms====
 * {{l|it|porre}}
+
+===References===
+<references />
 -------- end text --------
 Page 1282 riposto: Found match for regex: =
 Page 1282 riposto: -------- begin text --------
@@ -19317,6 +19765,11 @@ Page 1283 riposta: -------- begin text --------
 
 # {{feminine singular of|it|riposto}}
 
+===Adjective===
+{{head|it|adjective form|g=f-s}}
+
+# {{adj form of|it|riposto||f|s}}
+
 ===Anagrams===
 * {{anagrams|it|a=aioprst|asporti|oprasti|pastori|posarti|pratosi|protasi|sparito|spirato|storpia|traposi}}
 
@@ -19331,21 +19784,26 @@ Page 1284 riposti: -------- begin text --------
 
 # {{masculine plural of|it|riposto}}
 
+===Adjective===
+{{head|it|adjective form|g=m-p}}
+
+# {{adj form of|it|riposto||m|p}}
+
 ===Anagrams===
 * {{anagrams|it|a=iioprst|pistori|sopirti|spirito}}
 -------- end text --------
 Page 1285 riposte: Found match for regex: =
 Page 1285 riposte: -------- begin text --------
 
-===Adjective===
-{{head|it|adjective form|g=f-p}}
-
-# {{feminine plural of|it|riposto}}
-
 ===Participle===
 {{head|it|past participle form|g=f-p}}
 
 # {{feminine plural of|it|riposto}}
+
+===Adjective===
+{{head|it|adjective form|g=f-p}}
+
+# {{adj form of|it|riposto||f|p}}
 
 ===Anagrams===
 * {{anagrams|it|a=eioprst|esporti|estirpo|estirpò|petrosi|pistore|portesi|posteri|potersi|protesi|ripesto|ripestò|spietro|spietrò|stiperò|storpie}}
@@ -19363,7 +19821,7 @@ Page 1286 riproporre: -------- begin text --------
 {{it-pr|ripropórre}}
 
 ===Verb===
-{{it-verb|a\ó+\ripropóngo,ripropósi,ripropósto.imperf:riproponévo}} {{tlb|it|transitive}}
+{{it-verb|a\ó+\ripropóngo,ripropósi,ripropósto:ripropòsto[ref:{{R:it:DiPI|proposto}}].imperf:riproponévo}} {{tlb|it|transitive}}
 
 # to [[repropose]]; to [[suggest]] again; to [[put forth]] again
 # to [[suggest]] (someone) {{q|for a role, job position, etc.}} again
@@ -19384,6 +19842,9 @@ Page 1286 riproporre: -------- begin text --------
 
 ====Derived terms====
 * {{l|it|riproporsi}}
+
+===References===
+<references />
 -------- end text --------
 Page 1287 riproposto: Found match for regex: =
 Page 1287 riproposto: -------- begin text --------
@@ -19412,7 +19873,7 @@ Page 1288 riproposta: -------- begin text --------
 ===Adjective===
 {{head|it|adjective form}}
 
-# {{feminine singular of|it|riproposto}}
+# {{adj form of|it|riproposto||f|s}}
 
 ===References===
 <references />
@@ -19420,18 +19881,28 @@ Page 1288 riproposta: -------- begin text --------
 Page 1289 riproposti: Found match for regex: =
 Page 1289 riproposti: -------- begin text --------
 
+===Participle===
+{{head|it|past participle form|g=m-p}}
+
+# {{masculine plural of|it|riproposto}}
+
 ===Adjective===
 {{head|it|adjective form}}
 
-# {{masculine plural of|it|riproposto}}
+# {{adj form of|it|riproposto||m|p}}
 -------- end text --------
 Page 1290 riproposte: Found match for regex: =
 Page 1290 riproposte: -------- begin text --------
 
+===Participle===
+{{head|it|past participle form|g=f-p}}
+
+# {{feminine plural of|it|riproposto}}
+
 ===Adjective===
 {{head|it|adjective form}}
 
-# {{feminine plural of|it|riproposto}}
+# {{adj form of|it|riproposto||f|p}}
 
 ===Anagrams===
 * {{anagrams|it|a=eioopprrst|opporresti|stroppierò}}
@@ -19440,9 +19911,9 @@ Page 1291 ritrasporre: Found match for regex: =
 Page 1291 ritrasporre: -------- begin text --------
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a\ó\ritraspóngo,ritraspósi,ritraspósto:ritraspòsto[ref:{{R:it:DiPI|trasposto}}].imperf:ritrasponévo}}
 
-# {{lb|it|transitive}} to [[retranspose]]
+# {{tlb|it|transitive}} to [[retranspose]], to [[transpose]] [[again]]
 
 ====Conjugation====
 {{it-conj-ere|ritraspon|avere
@@ -19505,7 +19976,7 @@ Page 1296 scomporre: -------- begin text --------
 {{it-pr|scompórre}}
 
 ===Verb===
-{{it-verb|a\ó+\scompóngo,scompósi,scompósto.imperf:scomponévo}} {{tlb|it|transitive}}
+{{it-verb|a\ó+\scompóngo,scompósi,scompósto:scompòsto[ref:{{R:it:DiPI|composto}}].imperf:scomponévo}} {{tlb|it|transitive}}
 
 # to [[decompose]]; to [[disaggregate]]; to [[break up]]
 #: {{syn|it|disgregare|dividere|disfare|decomporre|destrutturare|rompere|smontare}}
@@ -19530,6 +20001,9 @@ Page 1296 scomporre: -------- begin text --------
 * {{l|it|scomporsi}}
 * {{l|it|scompositivo}}
 * {{l|it|scompositore}}
+
+===References===
+<references />
 -------- end text --------
 Page 1297 scomposto: Found match for regex: =
 Page 1297 scomposto: -------- begin text --------
@@ -19558,6 +20032,11 @@ Page 1298 scomposta: -------- begin text --------
 {{head|it|past participle form|g=f-s}}
 
 # {{feminine singular of|it|scomposto}}
+
+===Adjective===
+{{head|it|adjective form}}
+
+# {{adj form of|it|scomposto||f|s}}
 -------- end text --------
 Page 1299 scomposti: Found match for regex: =
 Page 1299 scomposti: -------- begin text --------
@@ -19566,6 +20045,11 @@ Page 1299 scomposti: -------- begin text --------
 {{head|it|past participle form|g=m-p}}
 
 # {{masculine plural of|it|scomposto}}
+
+===Adjective===
+{{head|it|adjective form}}
+
+# {{adj form of|it|scomposto||m|p}}
 -------- end text --------
 Page 1300 scomposte: Found match for regex: =
 Page 1300 scomposte: -------- begin text --------
@@ -19574,14 +20058,19 @@ Page 1300 scomposte: -------- begin text --------
 {{head|it|past participle form|g=f-p}}
 
 # {{feminine plural of|it|scomposto}}
+
+===Adjective===
+{{head|it|adjective form}}
+
+# {{adj form of|it|scomposto||f|p}}
 -------- end text --------
 Page 1301 sopporre: Found match for regex: =
 Page 1301 sopporre: -------- begin text --------
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a\ó+\soppóngo,soppósi,soppósto:soppòsto[ref:{{R:it:DiPI|posto}}].imperf:sopponévo}}
 
-# {{lb|it|transitive}} {{alt sp|it|sottoporre}}
+# {{tlb|it|transitive|archaic|literary}} {{alt form|it|sottoporre}}
 
 ====Conjugation====
 {{it-conj-ere|soppon|avere
@@ -19592,6 +20081,9 @@ Page 1301 sopporre: -------- begin text --------
 |cond1s=sopporrei|cond2s=sopporresti|cond3s=sopporrebbe|cond1p=sopporremmo|cond2p=sopporreste|cond3p=sopporrebbero
 |sub123s=sopponga|sub3p=soppongano
 |imp3s=sopponga|imp3p=soppongano}}
+
+===References===
+<references />
 
 ===Anagrams===
 * {{anagrams|it|a=eoopprrs|Prospero|posporre|prospero|prosperò}}
@@ -19644,9 +20136,9 @@ Page 1306 sopraporre: Found match for regex: =
 Page 1306 sopraporre: -------- begin text --------
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a\ó\soprapóngo,soprapósi,soprapósto:soprapòsto[ref:{{R:it:DiPI|sovrapposto}}].imperf:sopraponévo}}
 
-# {{lb|it|transitive}} {{alternative form of|it|sovrapporre}}
+# {{lb|it|transitive|archaic}} {{alternative form of|it|sovrapporre}}
 
 ====Conjugation====
 {{it-conj-ere|soprapon|avere
@@ -19657,6 +20149,9 @@ Page 1306 sopraporre: -------- begin text --------
 |cond1s=sopraporrei|cond2s=sopraporresti|cond3s=sopraporrebbe|cond1p=sopraporremmo|cond2p=sopraporreste|cond3p=sopraporrebbero
 |sub123s=sopraponga|sub3p=soprapongano
 |imp3s=sopraponga|imp3p=soprapongano}}
+
+===References===
+<references />
 -------- end text --------
 Page 1307 sopraposto: Found match for regex: =
 Page 1307 sopraposto: -------- begin text --------
@@ -19700,9 +20195,9 @@ Page 1311 soprapporre: Found match for regex: =
 Page 1311 soprapporre: -------- begin text --------
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a\ó\soprappóngo,soprappósi,soprappósto:soprappòsto[ref:{{R:it:DiPI|sovrapposto}}].imperf:soprapponévo}}
 
-# {{alternative form of|it|sopraporre}}
+# {{tlb|it|transitive|uncommon}} {{alternative form of|it|sovrapporre}}
 
 ====Conjugation====
 {{it-conj-ere|soprappon|avere
@@ -19713,39 +20208,39 @@ Page 1311 soprapporre: -------- begin text --------
 |cond1s=soprapporrei|cond2s=soprapporresti|cond3s=soprapporrebbe|cond1p=soprapporremmo|cond2p=soprapporreste|cond3p=soprapporrebbero
 |sub123s=soprapponga|sub3p=soprappongano
 |imp3s=soprapponga|imp3p=soprappongano}}
+
+===References===
+<references />
 -------- end text --------
 Page 1312 soprapposto: Found match for regex: =
 Page 1312 soprapposto: -------- begin text --------
 
-===Etymology===
-From {{af|it|sopra-|posto}}.
+===Participle===
+{{it-pp}}
 
-===Adjective===
-{{it-adj}}
-
-# {{alternative form of|it|sovrapposto}}
+# {{past participle of|it|soprapporre}}
 -------- end text --------
 Page 1313 soprapposta: Found match for regex: =
 Page 1313 soprapposta: -------- begin text --------
 
-===Adjective===
-{{head|it|adjective form}}
+===Participle===
+{{head|it|past participle form|g=f-s}}
 
 # {{feminine singular of|it|soprapposto}}
 -------- end text --------
 Page 1314 soprapposti: Found match for regex: =
 Page 1314 soprapposti: -------- begin text --------
 
-===Adjective===
-{{head|it|adjective form}}
+===Participle===
+{{head|it|past participle form|g=m-p}}
 
 # {{masculine plural of|it|soprapposto}}
 -------- end text --------
 Page 1315 soprapposte: Found match for regex: =
 Page 1315 soprapposte: -------- begin text --------
 
-===Adjective===
-{{head|it|adjective form}}
+===Participle===
+{{head|it|past participle form|g=f-p}}
 
 # {{feminine plural of|it|soprapposto}}
 -------- end text --------
@@ -19759,9 +20254,9 @@ Page 1316 sottoesporre: -------- begin text --------
 {{it-pr|sottoespórre}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a\ó\sottoespóngo,sottoespósi,sottoespósto:sottoespòsto[ref:{{R:it:DiPI|esposto}}].imperf:sottoesponévo}}
 
-# {{lb|it|transitive}} to [[underexpose]]
+# {{lb|it|transitive|photography}} to [[underexpose]]
 
 ====Conjugation====
 {{it-conj-ere|sottoespon|avere
@@ -19796,6 +20291,11 @@ Page 1318 sottoesposta: -------- begin text --------
 {{head|it|past participle form|g=f-s}}
 
 # {{feminine singular of|it|sottoesposto}}
+
+===Adjective===
+{{head|it|adjective form}}
+
+# {{adj form of|it|sottoesposto||f|s}}
 -------- end text --------
 Page 1319 sottoesposti: Found match for regex: =
 Page 1319 sottoesposti: -------- begin text --------
@@ -19804,6 +20304,11 @@ Page 1319 sottoesposti: -------- begin text --------
 {{head|it|past participle form|g=m-p}}
 
 # {{masculine plural of|it|sottoesposto}}
+
+===Adjective===
+{{head|it|adjective form}}
+
+# {{adj form of|it|sottoesposto||m|p}}
 -------- end text --------
 Page 1320 sottoesposte: Found match for regex: =
 Page 1320 sottoesposte: -------- begin text --------
@@ -19812,6 +20317,11 @@ Page 1320 sottoesposte: -------- begin text --------
 {{head|it|past participle form|g=f-p}}
 
 # {{feminine plural of|it|sottoesposto}}
+
+===Adjective===
+{{head|it|adjective form}}
+
+# {{adj form of|it|sottoesposto||f|p}}
 -------- end text --------
 Page 1321 sottoporre: Found match for regex: =
 Page 1321 sottoporre: -------- begin text --------
@@ -19823,13 +20333,13 @@ Page 1321 sottoporre: -------- begin text --------
 {{it-pr|sottopórre}}
 
 ===Verb===
-{{it-verb|a\ó+\sottopóngo,sottopósi,sottopósto.imperf:sottoponévo}} {{tlb|it|transitive}}
+{{it-verb|a\ó+\sottopóngo,sottopósi,sottopósto:sottopòsto[ref:{{R:it:DiPI|posto}}].imperf:sottoponévo}} {{tlb|it|transitive}}
 
 # to [[subject]] {{q|to something unpleasant}}
 #: {{uxi|it|'''sottoporre''' il straniere a maltrattamenti|to '''subject''' the foreigner to mistreatment}}
 # to [[put]] or [[submit]] (something to someone); to [[consult]]; to [[present]] to someone's [[judgement]]
 #: {{uxi|it|'''sottoporre''' una domanda a qualcuno|'''consult''' with someone about a question|lit=to submit a question to someone}}
-# {{lb|it|archaic}} to put [[underneath]]
+# {{lb|it|archaic|or|rare}} to put [[underneath]]
 # {{lb|it|archaic}} to [[subjugate]]
 #: {{syn|it|soggiogare|opprimere|Thesaurus:sottomettere}}
 
@@ -19845,27 +20355,30 @@ Page 1321 sottoporre: -------- begin text --------
 
 ====Derived terms====
 * {{l|it|sottoporsi}}
+
+===References===
+<references />
 -------- end text --------
 Page 1322 sottoposto: Found match for regex: =
 Page 1322 sottoposto: -------- begin text --------
 
 ===Etymology===
-From {{prefix|it|sotto|posto}}.
-
-===Adjective===
-{{it-adj}}
-
-# (with {{m|it|a}}) [[subjected]] (to)
-
-===Noun===
-{{it-noun|m}}
-
-# [[subordinate]]
+{{nonlemma}}
 
 ===Participle===
 {{it-pp}}
 
 # {{past participle of|it|sottoporre}}
+
+===Adjective===
+{{it-adj}} {{+preo|it|a}}
+
+# [[subjected]] (to)
+
+===Noun===
+{{it-noun|m}}
+
+# [[subordinate]]
 -------- end text --------
 Page 1323 sottoposta: Found match for regex: =
 Page 1323 sottoposta: -------- begin text --------
@@ -19883,18 +20396,28 @@ Page 1323 sottoposta: -------- begin text --------
 Page 1324 sottoposti: Found match for regex: =
 Page 1324 sottoposti: -------- begin text --------
 
-===Noun===
-{{head|it|noun form}}
+===Participle===
+{{head|it|past participle form|g=m-p}}
 
-# {{plural of|it|sottoposto}}
+# {{masculine plural of|it|sottoposto}}
 
 ===Adjective===
 {{head|it|adjective form}}
 
 # {{masculine plural of|it|sottoposto}}
+
+===Noun===
+{{head|it|noun form}}
+
+# {{plural of|it|sottoposto}}
 -------- end text --------
 Page 1325 sottoposte: Found match for regex: =
 Page 1325 sottoposte: -------- begin text --------
+
+===Participle===
+{{head|it|past participle form|g=f-p}}
+
+# {{feminine plural of|it|sottoposto}}
 
 ===Adjective===
 {{head|it|adjective form}}
@@ -19914,9 +20437,9 @@ From {{af|it|sovra-|esporre}}.
 {{it-pr|sovraespórre}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a\ó\sovraespóngo,sovraespósi,sovraespósto:sovraespòsto[ref:{{R:it:DiPI|esposto}}].imperf:sovraesponévo}}
 
-# {{lb|it|transitive}} to [[overexpose]]
+# {{lb|it|transitive|photography}} to [[overexpose]]
 
 ====Conjugation====
 {{it-conj-ere|sovraespon|avere
@@ -19927,6 +20450,9 @@ From {{af|it|sovra-|esporre}}.
 |cond1s=sovraesporrei|cond2s=sovraesporresti|cond3s=sovraesporrebbe|cond1p=sovraesporremmo|cond2p=sovraesporreste|cond3p=sovraesporrebbero
 |sub123s=sovraesponga|sub3p=sovraespongano
 |imp3s=sovraesponga|imp3p=sovraespongano}}
+
+===References===
+<references />
 -------- end text --------
 Page 1327 sovraesposto: Found match for regex: =
 Page 1327 sovraesposto: -------- begin text --------
@@ -19963,10 +20489,13 @@ Page 1330 sovraesposte: -------- begin text --------
 Page 1331 sovraimporre: Found match for regex: =
 Page 1331 sovraimporre: -------- begin text --------
 
-===Verb===
-{{it-verb}}
+===Pronunciation===
+{{it-pr|sovra.impórre}}
 
-# {{lb|it|transitive}} {{alt sp|it|sovrimporre}}
+===Verb===
+{{it-verb|a\ó\sovraimpóngo,sovraimpósi,sovraimpósto:sovraimpòsto[ref:{{R:it:DiPI|imposto}}].imperf:sovraimponévo}}
+
+# {{lb|it|transitive}} {{alt form|it|sovrimporre}}
 
 ====Conjugation====
 {{it-conj-ere|sovraimpon|avere
@@ -19977,6 +20506,9 @@ Page 1331 sovraimporre: -------- begin text --------
 |cond1s=sovraimporrei|cond2s=sovraimporresti|cond3s=sovraimporrebbe|cond1p=sovraimporremmo|cond2p=sovraimporreste|cond3p=sovraimporrebbero
 |sub123s=sovraimponga|sub3p=sovraimpongano
 |imp3s=sovraimponga|imp3p=sovraimpongano}}
+
+===References===
+<references />
 -------- end text --------
 Page 1332 sovraimposto: Found match for regex: =
 Page 1332 sovraimposto: -------- begin text --------
@@ -20020,7 +20552,7 @@ From {{af|it|sovra-|porre}}.
 {{it-pr|sovrappórre}}
 
 ===Verb===
-{{it-verb|a\ó\sovrappóngo,sovrappósi,sovrappósto.imperf:sovrapponévo}} {{tlb|it|transitive}}
+{{it-verb|a\ó\sovrappóngo,sovrappósi,sovrappósto:sovrappòsto[ref:{{R:it:DiPI|sovrapposto}}].imperf:sovrapponévo}} {{tlb|it|transitive}}
 
 # to put or place (something) {{+preo|it|su|means=on top of (something else)}}; to [[superimpose]]
 
@@ -20036,58 +20568,61 @@ From {{af|it|sovra-|porre}}.
 
 ====Derived terms====
 * {{l|it|sovrapporsi}}
+
+===References===
+<references />
 -------- end text --------
 Page 1337 sovrapposto: Found match for regex: =
 Page 1337 sovrapposto: -------- begin text --------
-
-===Adjective===
-{{it-adj}}
-
-# [[superimposed]]
 
 ===Participle===
 {{it-pp}}
 
 # {{past participle of|it|sovrapporre}}
+
+===Adjective===
+{{it-adj}}
+
+# [[superimposed]]
 -------- end text --------
 Page 1338 sovrapposta: Found match for regex: =
 Page 1338 sovrapposta: -------- begin text --------
-
-===Adjective===
-{{head|it|adjective form}}
-
-# {{adj form of|it|sovrapposto||f|s}}
 
 ===Participle===
 {{head|it|past participle form|g=f-s}}
 
 # {{feminine singular of|it|sovrapposto}}
--------- end text --------
-Page 1339 sovrapposti: Found match for regex: =
-Page 1339 sovrapposti: -------- begin text --------
 
 ===Adjective===
 {{head|it|adjective form}}
 
-# {{adj form of|it|sovrapposto||m|p}}
+# {{adj form of|it|sovrapposto||f|s}}
+-------- end text --------
+Page 1339 sovrapposti: Found match for regex: =
+Page 1339 sovrapposti: -------- begin text --------
 
 ===Participle===
 {{head|it|past participle form|g=m-p}}
 
 # {{masculine plural of|it|sovrapposto}}
--------- end text --------
-Page 1340 sovrapposte: Found match for regex: =
-Page 1340 sovrapposte: -------- begin text --------
 
 ===Adjective===
 {{head|it|adjective form}}
 
-# {{adj form of|it|sovrapposto||f|p}}
+# {{adj form of|it|sovrapposto||m|p}}
+-------- end text --------
+Page 1340 sovrapposte: Found match for regex: =
+Page 1340 sovrapposte: -------- begin text --------
 
 ===Participle===
 {{head|it|past participle form|g=f-p}}
 
 # {{feminine plural of|it|sovrapposto}}
+
+===Adjective===
+{{head|it|adjective form}}
+
+# {{adj form of|it|sovrapposto||f|p}}
 -------- end text --------
 Page 1341 sovresporre: Found match for regex: =
 Page 1341 sovresporre: -------- begin text --------
@@ -20096,7 +20631,7 @@ Page 1341 sovresporre: -------- begin text --------
 From {{af|it|sovra-|esporre}}.
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a\ó\sovrespóngo,sovrespósi,sovrespósto:sovrespòsto[ref:{{R:it:DiPI|esposto}}].imperf:sovresponévo}}
 
 # {{lb|it|transitive}} {{alt form|it|sovraesporre}}
 
@@ -20109,12 +20644,15 @@ From {{af|it|sovra-|esporre}}.
 |cond1s=sovresporrei|cond2s=sovresporresti|cond3s=sovresporrebbe|cond1p=sovresporremmo|cond2p=sovresporreste|cond3p=sovresporrebbero
 |sub123s=sovresponga|sub3p=sovrespongano
 |imp3s=sovresponga|imp3p=sovrespongano}}
+
+===References===
+<references />
 -------- end text --------
 Page 1342 sovresposto: Found match for regex: =
 Page 1342 sovresposto: -------- begin text --------
 
 ===Etymology===
-From {{af|it|sovra-|esposto}}.
+{{nonlemma}}
 
 ===Participle===
 {{it-pp}}
@@ -20129,41 +20667,41 @@ From {{af|it|sovra-|esposto}}.
 Page 1343 sovresposta: Found match for regex: =
 Page 1343 sovresposta: -------- begin text --------
 
-===Adjective===
-{{head|it|adjective form}}
-
-# {{adj form of|it|sovresposto||f|s}}
-
 ===Participle===
 {{head|it|past participle form|g=f-s}}
 
 # {{feminine singular of|it|sovresposto}}
--------- end text --------
-Page 1344 sovresposti: Found match for regex: =
-Page 1344 sovresposti: -------- begin text --------
 
 ===Adjective===
 {{head|it|adjective form}}
 
-# {{adj form of|it|sovresposto||m|p}}
+# {{adj form of|it|sovresposto||f|s}}
+-------- end text --------
+Page 1344 sovresposti: Found match for regex: =
+Page 1344 sovresposti: -------- begin text --------
 
 ===Participle===
 {{head|it|past participle form|g=m-p}}
 
 # {{masculine plural of|it|sovresposto}}
--------- end text --------
-Page 1345 sovresposte: Found match for regex: =
-Page 1345 sovresposte: -------- begin text --------
 
 ===Adjective===
 {{head|it|adjective form}}
 
-# {{adj form of|it|sovresposto||f|p}}
+# {{adj form of|it|sovresposto||m|p}}
+-------- end text --------
+Page 1345 sovresposte: Found match for regex: =
+Page 1345 sovresposte: -------- begin text --------
 
 ===Participle===
 {{head|it|past participle form|g=f-p}}
 
 # {{feminine plural of|it|sovresposto}}
+
+===Adjective===
+{{head|it|adjective form}}
+
+# {{adj form of|it|sovresposto||f|p}}
 -------- end text --------
 Page 1346 sovrimporre: Found match for regex: =
 Page 1346 sovrimporre: -------- begin text --------
@@ -20172,9 +20710,10 @@ Page 1346 sovrimporre: -------- begin text --------
 {{it-pr|sovrimpórre}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a\ó\sovrimpóngo,sovrimpósi,sovrimpósto:sovrimpòsto[ref:{{R:it:DiPI|imposto}}].imperf:sovrimponévo}} {{tlb|it|transitive}}
 
-# {{lb|it|transitive}} to [[superimpose]]
+# {{lb|it|uncommon}} to [[superimpose]], to [[overlay]], to [[place]] on top of
+# {{lb|it|finance}} to [[impose]] (an additional tax)
 
 ====Conjugation====
 {{it-conj-ere|sovrimpon|avere
@@ -20185,6 +20724,9 @@ Page 1346 sovrimporre: -------- begin text --------
 |cond1s=sovrimporrei|cond2s=sovrimporresti|cond3s=sovrimporrebbe|cond1p=sovrimporremmo|cond2p=sovrimporreste|cond3p=sovrimporrebbero
 |sub123s=sovrimponga|sub3p=sovrimpongano
 |imp3s=sovrimponga|imp3p=sovrimpongano}}
+
+===References===
+<references />
 -------- end text --------
 Page 1347 sovrimposto: Found match for regex: =
 Page 1347 sovrimposto: -------- begin text --------
@@ -20200,6 +20742,9 @@ Page 1348 sovrimposta: -------- begin text --------
 ===Etymology 1===
 From {{af|it|sovra-|imposta}}.
 
+====Pronunciation====
+{{it-pr|sovrimpòsta,sovrimpósta<ref:{{R:it:DiPI}}>}}
+
 ====Noun====
 {{it-noun|f}}
 
@@ -20207,10 +20752,16 @@ From {{af|it|sovra-|imposta}}.
 
 ===Etymology 2===
 
+====Pronunciation====
+{{it-pr|sovrimpósta,sovrimpòsta<ref:{{R:it:DiPI|imposto}}>}}
+
 ====Participle====
 {{head|it|past participle form|g=f-s}}
 
 # {{feminine singular of|it|sovrimposto}}
+
+===References===
+<references />
 -------- end text --------
 Page 1349 sovrimposti: Found match for regex: =
 Page 1349 sovrimposti: -------- begin text --------
@@ -20223,20 +20774,40 @@ Page 1349 sovrimposti: -------- begin text --------
 Page 1350 sovrimposte: Found match for regex: =
 Page 1350 sovrimposte: -------- begin text --------
 
-===Participle===
+===Etymology 1===
+
+====Pronunciation====
+{{it-pr|sovrimpòste,sovrimpóste<ref:{{R:it:DiPI|sovrimposta}}>}}
+
+====Noun====
+{{head|it|noun form|g=f}}
+
+# {{plural of|it|sovrimposta}}
+
+===Etymology 2===
+
+====Pronunciation====
+{{it-pr|sovrimpóste,sovrimpòste<ref:{{R:it:DiPI|imposto}}>}}
+
+====Participle====
 {{head|it|past participle form|g=f-p}}
 
 # {{feminine plural of|it|sovrimposto}}
+
+===References===
+<references />
 -------- end text --------
 Page 1351 sporre: Found match for regex: =
 Page 1351 sporre: -------- begin text --------
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a\ó\spóngo,spósi,spósto:spòsto[ref:{{R:it:DiPI|esposto}}].imperf:sponévo}} {{tlb|it|transitive|obsolete}}
 
-# {{obsolete form of|it|porre}}
-# {{obsolete form of|it|deporre}}
-# {{obsolete form of|it|esporre}}
+# to [[explain]], to [[illustrate]]
+#: {{syn|it|esporre|q=normal register}}
+# to [[deposit]], to [[put]]
+#: {{syn|it|deporre|q=normal register}}
+# to [[give]] [[birth]]
 
 ====Conjugation====
 {{it-conj-ere|spon|avere
@@ -20247,6 +20818,9 @@ Page 1351 sporre: -------- begin text --------
 |cond1s=sporrei|cond2s=sporresti|cond3s=sporrebbe|cond1p=sporremmo|cond2p=sporreste|cond3p=sporrebbero
 |sub123s=sponga|sub3p=spongano
 |imp3s=sponga|imp3p=spongano}}
+
+===References===
+<references />
 -------- end text --------
 Page 1352 sposto: Found match for regex: =
 Page 1352 sposto: -------- begin text --------
@@ -20264,7 +20838,7 @@ Page 1352 sposto: -------- begin text --------
 ===Etymology 2===
 
 ====Pronunciation====
-{{it-pr|spósto,spòsto<ref:{{R:it:DiPI|posto}}>}}
+{{it-pr|spósto,spòsto<ref:{{R:it:DiPI|esposto}}>}}
 
 ====Participle====
 {{it-pp}}
@@ -20277,18 +20851,54 @@ Page 1352 sposto: -------- begin text --------
 Page 1353 sposta: Found match for regex: =
 Page 1353 sposta: -------- begin text --------
 
-===Verb===
+===Etymology 1===
+
+====Pronunciation====
+{{it-pr|spòsta}}
+
+====Verb====
 {{head|it|verb form}}
 
 # {{inflection of|it|spostare||3|s|pres|indc|;|2|s|impr}}
+
+===Etymology 2===
+
+====Pronunciation====
+{{it-pr|spósta,spòsta<ref:{{R:it:DiPI|esposto}}>}}
+
+====Participle====
+{{head|it|past participle form|g=f-s}}
+
+# {{feminine singular of|it|sposto}}
+
+===References===
+<references />
 -------- end text --------
 Page 1354 sposti: Found match for regex: =
 Page 1354 sposti: -------- begin text --------
 
-===Verb===
+===Etymology 1===
+
+====Pronunciation====
+{{it-pr|spòsti}}
+
+====Verb====
 {{head|it|verb form}}
 
 # {{inflection of|it|spostare||2|s|pres|indc|;|1//2//3|s|pres|subj|;|3|s|impr}}
+
+===Etymology 2===
+
+====Pronunciation====
+{{it-pr|spósti,spòsti<ref:{{R:it:DiPI|esposto}}>}}
+
+====Participle====
+{{head|it|past participle form|g=m-p}}
+
+# {{masculine plural of|it|sposto}}
+
+===References===
+<references />
 -------- end text --------
 Page 1355 sposte: Found match for regex: =
 Page 1355 sposte: -------- begin text --------
@@ -20308,7 +20918,7 @@ From {{inh|it|la|suppōnere}}, present active infinitive of {{m|la|suppōnō}}.
 {{it-pr|suppórre<audio:LL-Q652 (ita)-Happypheasant-supporre.wav>}}
 
 ===Verb===
-{{it-verb|a\ó\suppóngo,suppósi,suppósto.imperf:supponévo}} {{tlb|it|transitive}}
+{{it-verb|a\ó\suppóngo,suppósi,suppósto:suppòsto[ref:{{R:it:DiPI|supposto}}].imperf:supponévo}} {{tlb|it|transitive}}
 
 # to [[suppose]]
 
@@ -20326,7 +20936,7 @@ Page 1357 supposto: Found match for regex: =
 Page 1357 supposto: -------- begin text --------
 
 ===Etymology===
-From {{inh|it|la||suppostus}}, contracted form of {{m|la|suppositus}}.
+{{inh+|it|la||suppostus}}, contracted form of {{m|la|suppositus}}.
 
 ===Participle===
 {{it-pp}}
@@ -20339,7 +20949,7 @@ From {{inh|it|la||suppostus}}, contracted form of {{m|la|suppositus}}.
 # [[supposed]]
 
 ===Conjunction===
-{{head|it|conjunction}} (che)
+{{head|it|conjunction}} {{+preo|it|che}}
 
 # [[supposing]] (that)
 -------- end text --------
@@ -20380,6 +20990,7 @@ Page 1360 supposte: -------- begin text --------
 
 ====Noun====
 {{head|it|noun form|g=f}}
+
 # {{plural of|it|supposta}}
 
 ===Etymology 2===
@@ -20393,9 +21004,9 @@ Page 1361 transporre: Found match for regex: =
 Page 1361 transporre: -------- begin text --------
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a\ó\transpóngo,transpósi,transpósto:transpòsto[ref:{{R:it:DiPI|trasposto}}].imperf:transponévo}} {{tlb|it|transitive|archaic}}
 
-# {{lb|it|transitive}} {{alt form|it|trasporre}}
+# {{alt form|it|trasporre}}
 
 ====Conjugation====
 {{it-conj-ere|transpon|avere
@@ -20406,6 +21017,9 @@ Page 1361 transporre: -------- begin text --------
 |cond1s=transporrei|cond2s=transporresti|cond3s=transporrebbe|cond1p=transporremmo|cond2p=transporreste|cond3p=transporrebbero
 |sub123s=transponga|sub3p=transpongano
 |imp3s=transponga|imp3p=transpongano}}
+
+===References===
+<references />
 
 ===Anagrams===
 * {{anagrams|it|a=aenoprrrst|prostrarne}}
@@ -20452,9 +21066,11 @@ Page 1366 traporre: Found match for regex: =
 Page 1366 traporre: -------- begin text --------
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a\ó\trapóngo,trapósi,trapósto:trapòsto[ref:{{R:it:DiPI|posto}}].imperf:traponévo}} {{tlb|it|transitive|archaic}}
 
-# {{lb|it|transitive}} to [[transplant]]
+# to [[interpose]], to [[place]] [[between]]
+# {{lb|it|rare}} to [[transpose]]
+#: {{syn|it|trasporre|q=normal register}}
 
 ====Conjugation====
 {{it-conj-ere|trapon|avere
@@ -20465,6 +21081,9 @@ Page 1366 traporre: -------- begin text --------
 |cond1s=traporrei|cond2s=traporresti|cond3s=traporrebbe|cond1p=traporremmo|cond2p=traporreste|cond3p=traporrebbero
 |sub123s=traponga|sub3p=trapongano
 |imp3s=traponga|imp3p=trapongano}}
+
+===References===
+<references />
 -------- end text --------
 Page 1367 traposto: Found match for regex: =
 Page 1367 traposto: -------- begin text --------
@@ -20514,9 +21133,9 @@ Page 1371 trapporre: Found match for regex: =
 Page 1371 trapporre: -------- begin text --------
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a\ó\trappóngo,trappósi,trappósto:trappòsto[ref:{{R:it:DiPI|posto}}].imperf:trapponévo}}
 
-# {{lb|it|transitive}} {{alt form|it|traporre}}
+# {{lb|it|transitive|obsolete}} {{alt form|it|traporre}}
 
 ====Conjugation====
 {{it-conj-ere|trappon|avere
@@ -20527,6 +21146,9 @@ Page 1371 trapporre: -------- begin text --------
 |cond1s=trapporrei|cond2s=trapporresti|cond3s=trapporrebbe|cond1p=trapporremmo|cond2p=trapporreste|cond3p=trapporrebbero
 |sub123s=trapponga|sub3p=trappongano
 |imp3s=trapponga|imp3p=trappongano}}
+
+===References===
+<references />
 -------- end text --------
 Page 1372 trapposto: Found match for regex: =
 Page 1372 trapposto: -------- begin text --------
@@ -20582,9 +21204,10 @@ From {{der|it|la|trānspōnō}}.
 {{it-pr|traspórre}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a\ó\traspóngo,traspósi,traspósto:traspòsto[ref:{{R:it:DiPI|trasposto}}].imperf:trasponévo}} {{tlb|it|transitive}}
 
-# {{lb|it|transitive}} to [[transpose]]
+# to [[transpose]], to [[invert]
+# {{lb|it|music]} to [[transpose]]
 
 ====Conjugation====
 {{it-conj-ere|traspon|avere
@@ -20598,6 +21221,9 @@ From {{der|it|la|trānspōnō}}.
 
 ====Related terms====
 * {{l|it|trasponimento}}
+
+===References===
+<references />
 
 ===Further reading===
 * {{R:it:Treccani}}
