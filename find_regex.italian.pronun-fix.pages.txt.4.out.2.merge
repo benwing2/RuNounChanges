@@ -22980,7 +22980,7 @@ Page 1468 temperino: Found match for regex: =
 Page 1468 temperino: -------- begin text --------
 
 ===Etymology 1===
-From {{m|it|temperare||to sharpen, temper}}.
+From {{af|it|temperare|t1=to sharpen, temper|-ino}}.
 
 ====Pronunciation====
 {{it-pr|temperìno}}
@@ -22993,7 +22993,7 @@ From {{m|it|temperare||to sharpen, temper}}.
 ===Etymology 2===
 
 ====Pronunciation====
-{{it-pr|témperino,#tèmperino<ref:{{R:it:DiPI|tempero}}>}}
+{{it-pr|témperino,#tèmperino<ref:{{R:it:DiPI}}>}}
 
 ====Verb====
 {{head|it|verb form}}
@@ -23013,7 +23013,7 @@ Page 1469 contemperare: -------- begin text --------
 From {{der|it|la|contempero|contempero, contemperare}}.
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/é-:#è-[ref:{{R:it:DiPI|contempero}}]}}
 
 # {{lb|it|transitive}} to [[adapt]] or [[make]] [[fit]]
 # {{lb|it|transitive}} to [[moderate]] or [[mitigate]]
@@ -23025,6 +23025,9 @@ From {{der|it|la|contempero|contempero, contemperare}}.
 * {{l|it|contemperanza}}
 * {{l|it|contemperamento}}
 * {{l|it|temperare}}
+
+===References===
+<references />
 
 ===Anagrams===
 * {{anagrams|it|a=aceeemnoprrt|compenetrare|compenetrerà|contempererà}}
@@ -23100,12 +23103,15 @@ Page 1476 ottemperare: -------- begin text --------
 {{it-pr|ottemperàre}}
 
 ===Verb===
-{{it-verb|a/è-}}
+{{it-verb|a/é-:#è-[ref:{{R:it:DiPI|ottempero}}]}}
 
 # {{lb|it|intransitive}} to [[obey]] or [[comply]]
 
 ====Conjugation====
 {{it-conj-are|ottemper|avere}}
+
+===References===
+<references />
 
 ===Anagrams===
 * {{anagrams|it|a=aeeemoprrtt|ottempererà}}
@@ -23163,12 +23169,15 @@ Page 1483 rattemperare: Found match for regex: =
 Page 1483 rattemperare: -------- begin text --------
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/é-:#è-[ref:{{R:it:DiPI|tempero}}]}} {{tlb|it|transitive|literary}}
 
 # to [[temper]], [[moderate]], [[restrain]], [[mitigate]]
 
 ====Related terms====
 * {{l|it|rattemperamento}}
+
+===References===
+<references />
 -------- end text --------
 Page 1490 ristemperare: Found match for regex: =
 Page 1490 ristemperare: -------- begin text --------
@@ -23177,13 +23186,16 @@ Page 1490 ristemperare: -------- begin text --------
 {{prefix|it|ri|stemperare}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/é-:#è-[ref:{{R:it:DiPI|stempero}}]}}
 
 # to [[redissolve]]
 # to [[redilute]]
 
 ====Conjugation====
 {{it-conj-are|ristemper|avere}}
+
+===References===
+<references />
 -------- end text --------
 Page 1497 stemperare: Found match for regex: =
 Page 1497 stemperare: -------- begin text --------
@@ -23195,7 +23207,7 @@ Page 1497 stemperare: -------- begin text --------
 {{it-pr|stemperàre}}
 
 ===Verb===
-{{it-verb|a/è-}} {{tlb|it|transitive}}
+{{it-verb|a/é-:#è-[ref:{{R:it:DiPI|stempero}}]}} {{tlb|it|transitive}}
 
 # {{lb|it|also|figurative}} to [[dissolve]] or  [[dilute]]
 #: {{syn|it|dissolvere|diluire|scogliere|disciogliere|squagliare|liquefare|annacquare}}
@@ -23215,6 +23227,9 @@ Page 1497 stemperare: -------- begin text --------
 ====Derived terms====
 * {{l|it|stemperarsi}}
 
+===References===
+<references />
+
 ===Anagrams===
 * {{anagrams|it|a=aeeemprrst|stempererà}}
 -------- end text --------
@@ -23222,7 +23237,7 @@ Page 1498 stemperarsi: Found match for regex: =
 Page 1498 stemperarsi: -------- begin text --------
 
 ===Verb===
-{{it-verb}}
+{{it-verb|é-:#è-[ref:{{R:it:DiPI|stempero}}]}}
 
 # {{reflexive of|it|stemperare}}
 # to be [[dissolve]]d or [[dilute]]d
@@ -23235,6 +23250,9 @@ Page 1498 stemperarsi: -------- begin text --------
 
 ====Conjugation====
 {{it-conj-arsi|stemper|essere}}
+
+===References===
+<references />
 
 ===Anagrams===
 * {{anagrams|it|a=aeeimprrsst|ritemprasse}}
@@ -23304,15 +23322,18 @@ Borrowed from {{bor|it|la|vegeto|vegeto, vegetare}}.
 {{it-pr|vegetàre}}
 
 ===Verb===
-{{it-verb|a/è-}}
+{{it-verb|a/è-:é-[ref:{{R:it:DiPI|vegeto}}]}}
 
-# {{lb|it|intransitive}} to [[vegetate]]
+# {{lb|it|intransitive}} to [[vegetate]] {{+aux|it|avere}}
 
 ====Conjugation====
 {{it-conj-are|veget|avere}}
 
 ====Related terms====
 * {{l|it|vegetale}}
+
+===References===
+<references />
 
 ===Anagrams===
 * {{anagrams|it|a=aeeegrtv|ergevate|vegeterà}}
@@ -23323,11 +23344,11 @@ Borrowed from {{bor|it|la|vegeto|vegeto, vegetare}}.
 Page 1506 vegeto: Found match for regex: =
 Page 1506 vegeto: -------- begin text --------
 
+===Pronunciation===
+{{it-pr|vègeto,végeto<ref:{{R:it:DiPI}}>}}
+
 ===Etymology 1===
 From {{der|it|la|vegetus}}.
-
-====Pronunciation====
-{{it-pr|vègeto}}
 
 ====Adjective====
 {{it-adj}}
@@ -23345,6 +23366,9 @@ From {{der|it|la|vegetus}}.
 
 # {{inflection of|it|vegetare||1|s|pres|indc}}
 
+===References===
+<references />
+
 ===Further reading===
 * {{R:it:Treccani}}
 
@@ -23354,12 +23378,16 @@ From {{der|it|la|vegetus}}.
 Page 1507 vegeti: Found match for regex: =
 Page 1507 vegeti: -------- begin text --------
 
-===Adjective===
+===Etymology 1===
+
+====Adjective====
 {{head|it|adjective form|g=m-p}}
 
 # {{adj form of|it|vegeto||m|p}}
 
-===Verb===
+===Etymology 2===
+
+====Verb====
 {{head|it|verb form}}
 
 # {{inflection of|it|vegetare||2|s|pres|indc|;|1//2//3|s|pres|subj|;|3|s|impr}}
@@ -23370,12 +23398,16 @@ Page 1507 vegeti: -------- begin text --------
 Page 1508 vegeta: Found match for regex: =
 Page 1508 vegeta: -------- begin text --------
 
-===Adjective===
+===Etymology 1===
+
+====Adjective====
 {{head|it|adjective form|g=f-s}}
 
 # {{adj form of|it|vegeto||f|s}}
 
-===Verb===
+===Etymology 2===
+
+====Verb====
 {{head|it|verb form}}
 
 # {{inflection of|it|vegetare||3|s|pres|indc|;|2|s|impr}}
@@ -23403,7 +23435,7 @@ Page 1511 violare: Found match for regex: =
 Page 1511 violare: -------- begin text --------
 
 ===Etymology===
-From {{der|it|la|violāre}}, present active infinitive of {{m|la|violō||I treat with violence; I maltreat; I violate, defile, profane}}.
+{{bor+|it|la|violāre}}, present active infinitive of {{m|la|violō||I treat with violence; I maltreat; I violate, defile, profane}}.
 
 ===Pronunciation===
 {{it-pr|vi.olàre,violàre<ref:{{R:it:DiPI}}>}}
@@ -23441,10 +23473,42 @@ From {{der|it|la|violāre}}, present active infinitive of {{m|la|violō||I treat
 Page 1513 violo: Found match for regex: =
 Page 1513 violo: -------- begin text --------
 
-===Verb===
+===Etymology 1===
+
+====Pronunciation====
+{{it-pr|vi.òlo<ref:{{R:it:DiPI}}><ref:{{R:it:Olivetti|VIOLO100|alt=violo}}>}}
+
+====Noun====
+{{it-noun|m}} {{tlb|it|regional|Tuscan}}
+
+# [[violet]] {{q|plant}}
+#: {{syn|it|viola|q=normal register}}
+# [[carnation]]
+#: {{syn|it|garofano|q=normal register}}
+
+===Etymology 2===
+
+====Pronunciation====
+{{it-pr|vi.òlo<ref:{{R:it:Olivetti|VIOLO200|alt=violo}}>}}
+
+====Noun====
+{{it-noun|m}} {{tlb|it|regional|Venetian}}
+
+# [[path]]
+#: {{syn|it|viottolo|q=normal register}}
+
+===Etymology 3===
+
+====Pronunciation====
+{{it-pr|vìolo}}
+
+====Verb====
 {{head|it|verb form}}
 
 # {{inflection of|it|violare||1|s|pres|ind}}
+
+===References===
+<references />
 
 ===Anagrams===
 * {{anagrams|it|a=iloov|olivo|ovoli}}
@@ -23455,10 +23519,38 @@ Page 1513 violo: -------- begin text --------
 Page 1514 violi: Found match for regex: =
 Page 1514 violi: -------- begin text --------
 
-===Verb===
+===Etymology 1===
+
+====Pronunciation====
+{{it-pr|vìoli}}
+
+====Verb====
 {{head|it|verb form}}
 
 # {{inflection of|it|violare||2|s|pres|indc|;|1//2//3|s|pres|subj|;|3|s|impr}}
+
+===Etymology 2===
+
+====Pronunciation====
+{{it-pr|vi.òli<ref:{{R:it:DiPI|violo}}><ref:{{R:it:Olivetti|VIOLO100|alt=violo}}>}}
+
+====Noun====
+{{head|it|noun form|g=m-p}} {{tlb|it|regional|Tuscan}}
+
+# {{plural of|it|violo|t=violet, carnation}}
+
+===Etymology 3===
+
+====Pronunciation====
+{{it-pr|vi.òli<ref:{{R:it:Olivetti|VIOLO200|alt=violo}}>}}
+
+====Noun====
+{{head|it|noun form|g=m-p}} {{tlb|it|regional|Venetian}}
+
+# {{plural of|it|violo|t=path}}
+
+===References===
+<references />
 
 ===Anagrams===
 * {{anagrams|it|a=iilov|Livio|Livïo|olivi|ovili|vilio}}
@@ -23471,7 +23563,7 @@ Page 1515 viola: -------- begin text --------
 From {{inh|it|la|viola}}.
 
 ====Pronunciation====
-{{it-pr|vi.òla,viòla}}
+{{it-pr|vi.òla,viòla<ref:{{R:it:DiPI}}>}}
 
 ====Adjective====
 {{it-adj|inv=1}}
@@ -23495,7 +23587,7 @@ From {{inh|it|la|viola}}.
 Possibly from {{bor|it|pro|viola}} (modern {{cog|oc|viula}}), ultimately from {{der|it|ML.|*vitula|t=stringed instrument}}.
 
 ====Pronunciation====
-{{it-pr|vi.òla,viòla}}
+{{it-pr|vi.òla,viòla<ref:{{R:it:DiPI}}>}}
 
 ====Noun====
 {{it-noun|f}}
@@ -23522,7 +23614,9 @@ Possibly from {{bor|it|pro|viola}} (modern {{cog|oc|viula}}), ultimately from {{
 {{table:colors/it}}
 
 ===References===
-* {{R:it:DiPI}}
+<references />
+
+===Further reading===
 * {{R:it:Treccani}}
 
 ===Anagrams===
@@ -23536,10 +23630,13 @@ Possibly from {{bor|it|pro|viola}} (modern {{cog|oc|viula}}), ultimately from {{
 Page 1516 viole: Found match for regex: =
 Page 1516 viole: -------- begin text --------
 
+===Pronunciation===
+{{it-pr|vi.òla,viòla<ref:{{R:it:DiPI|viola}}>}}
+
 ===Noun===
 {{head|it|noun form|g=f-p}}
 
-# {{plural of|it|viola}}
+# {{plural of|it|viola|t=viola, fiddle}}
 
 ===Anagrams===
 * {{anagrams|it|a=eilov|Elvio|olive|ovile|voile}}
@@ -23561,10 +23658,19 @@ Page 1518 violate: -------- begin text --------
 ===Pronunciation===
 {{it-pr|vi.olàte,violàte<ref:{{R:it:DiPI|violare}}>}}
 
-===Verb===
+===Etymology 1===
+
+====Verb====
 {{head|it|verb form}}
 
-# {{inflection of|it|violare||2|p|pres|ind|;|2|p|impr|;|f|p|past|part}}
+# {{inflection of|it|violare||2|p|pres|indc|;|2|p|impr}}
+
+===Etymology 2===
+
+====Participle====
+{{head|it|past participle form|g=f-p}}
+
+# {{feminine plural of|it|violato}}
 
 ===References===
 <references />
@@ -23597,20 +23703,20 @@ Page 1520 violiate: -------- begin text --------
 Page 1521 violino: Found match for regex: =
 Page 1521 violino: -------- begin text --------
 
-===Etymology===
+===Etymology 1===
 From {{af|it|viola|-ino}}.
 
-===Pronunciation===
-{{it-pr|violìno}}
+====Pronunciation====
+{{it-pr|vi.olìno,violìno<ref:{{R:it:DiPI}}>}}
 
-===Noun===
+====Noun====
 {{it-noun|m}}
 
 # [[violin]], [[fiddle]]
 # [[violin]], [[violinist]]
 #: {{syn|it|violinista}}
 
-====Related terms====
+=====Related terms=====
 {{rel3
 |it|primo violino
 |sviolinata
@@ -23618,6 +23724,19 @@ From {{af|it|viola|-ino}}.
 |viola
 |violoncello
 }}
+
+===Etymology 2===
+
+====Pronunciation====
+{{it-pr|vìolino}}
+
+====Verb====
+{{head|it|verb form}}
+
+# {{inflection of|it|vegetare||3|p|pres|subj|;|3|p|impr}}
+
+===References===
+<references />
 
 ===Anagrams===
 * {{anagrams|it|a=iilnoov|livonio|violoni}}
@@ -23630,10 +23749,16 @@ From {{af|it|viola|-ino}}.
 Page 1522 violini: Found match for regex: =
 Page 1522 violini: -------- begin text --------
 
+===Pronunciation===
+{{it-pr|vi.olìni,violìni<ref:{{R:it:DiPI|violino}}>}}
+
 ===Noun===
 {{head|it|noun form|g=m}}
 
 # {{plural of|it|violino}}
+
+===References===
+<references />
 -------- end text --------
 Page 1523 violato: Found match for regex: =
 Page 1523 violato: -------- begin text --------
@@ -23789,17 +23914,21 @@ Borrowed from {{bor|it|la|violentus}}.
 Page 1529 violenti: Found match for regex: =
 Page 1529 violenti: -------- begin text --------
 
-===Verb===
+===Etymology 1===
+
+====Verb====
 {{head|it|verb form}}
 
 # {{inflection of|it|violentare||2|s|pres|indc|;|1//2//3|s|pres|subj|;|3|s|impr}}
 
-===Adjective===
+===Etymology 2===
+
+====Adjective====
 {{it-adj-form|m-p}}
 
 # {{adj form of|it|violento||m|p}}
 
-===Noun===
+====Noun====
 {{head|it|noun form|g=m-p}}
 
 # {{plural of|it|violento}}
@@ -23820,12 +23949,14 @@ Page 1530 violenta: -------- begin text --------
 
 # {{adj form of|it|violento||f|s}}
 
-====Noun====
+===Etymology 2===
+
+=====Noun=====
 {{it-noun|f}}
 
 # {{female equivalent of|it|violento}}; [[violent]] woman
 
-===Etymology 2===
+===Etymology 3===
 
 ====Verb====
 {{head|it|verb form}}
@@ -23841,12 +23972,16 @@ Page 1530 violenta: -------- begin text --------
 Page 1531 violente: Found match for regex: =
 Page 1531 violente: -------- begin text --------
 
-===Adjective===
+===Etymology 1===
+
+====Adjective====
 {{it-adj-form|f-p}}
 
 # {{adj form of|it|violento||f|p}}
 
-===Noun===
+===Etymology 2===
+
+====Noun====
 {{head|it|noun form|g=f-p}}
 
 # {{plural of|it|violenta}}
@@ -24273,7 +24408,7 @@ Page 1568 sviolinare: Found match for regex: =
 Page 1568 sviolinare: -------- begin text --------
 
 ===Etymology===
-From {{m|it|sviolinata}}.
+{{back-form|it|sviolinata}}.
 
 ===Pronunciation===
 {{it-pr|sviolinàre}}
@@ -24407,20 +24542,27 @@ Page 1580 sviolinati: -------- begin text --------
 Page 1581 sviolinata: Found match for regex: =
 Page 1581 sviolinata: -------- begin text --------
 
-===Etymology===
-From {{af|it|s-|violino|-ata}}.
-
 ===Pronunciation===
 {{it-pr|sviolinàta}}
 
-===Noun===
+===Etymology 1===
+From {{af|it|s-|violino|-ata}}.
+
+====Noun====
 {{it-noun|f}}
 
 # {{lb|it|colloquial}} [[fawning]]
 #: {{syn|it|adulazione|lisciata}}
 
-====Derived terms====
+=====Derived terms=====
 * {{l|it|sviolinare}}
+
+===Etymology 2===
+
+====Participle====
+{{head|it|past participle form|g=f-s}}
+
+# {{feminine singular of|it|sviolinato}}
 
 ===Anagrams===
 * {{anagrams|it|a=aaiilnostv|insalivato}}
@@ -24563,10 +24705,25 @@ Page 1592 vomito: -------- begin text --------
 Page 1593 vomiti: Found match for regex: =
 Page 1593 vomiti: -------- begin text --------
 
-===Verb===
+===Etymology 1===
+
+====Pronunciation====
+{{it-pr|vòmiti}}
+
+====Verb====
 {{head|it|verb form}}
 
 # {{inflection of|it|vomitare||2|s|pres|indc|;|1//2//3|s|pres|subj|;|3|s|impr}}
+
+===Etymology 2===
+
+====Pronunciation====
+{{it-pr|vomìti}}
+
+====Participle====
+{{head|it|past participle form|g=m-p}}
+
+# {{masculine plural of|it|vomito}}
 
 ===Anagrams===
 * {{anagrams|it|a=iimotv|motivi}}
@@ -24577,10 +24734,25 @@ Page 1593 vomiti: -------- begin text --------
 Page 1594 vomita: Found match for regex: =
 Page 1594 vomita: -------- begin text --------
 
-===Verb===
+===Etymology 1===
+
+====Pronunciation====
+{{it-pr|vòmìta}}
+
+====Verb====
 {{head|it|verb form}}
 
 # {{inflection of|it|vomitare||3|s|pres|ind|;|2|s|imp}}
+
+===Etymology 2===
+
+====Pronunciation====
+{{it-pr|vomìta}}
+
+====Participle====
+{{head|it|past participle form|g=f-s}}
+
+# {{feminine singular of|it|vomito}}
 
 ===Anagrams===
 * {{anagrams|it|a=aimotv|Timavo|motiva}}
@@ -24611,14 +24783,14 @@ Page 1595 vomite: -------- begin text --------
 Page 1596 voto: Found match for regex: =
 Page 1596 voto: -------- begin text --------
 
-===Pronunciation===
-{{it-pr|vóto}}
-
 ===Etymology 1===
 From {{inh|it|la|vōtum}}.
 
 ====Alternative forms====
 * {{alter|it|boto||archaic}}
+
+====Pronunciation====
+{{it-pr|vóto}}
 
 ====Noun====
 {{it-noun|m}}
@@ -24642,10 +24814,23 @@ From {{inh|it|la|vōtum}}.
 ===Etymology 2===
 {{nonlemma}}
 
+====Pronunciation====
+{{it-pr|vóto}}
+
 ====Verb====
 {{head|it|verb form}}
 
 # {{inflection of|it|votare||1|s|pres|ind}}
+
+===Etymology 3===
+
+====Pronunciation====
+{{it-pr|vòto}}
+
+====Adjective====
+{{it-adj}}
+
+# {{tlb|it|literary|or|popular|_|Tuscan}} {{alt form|it|vuoto}}
 
 ===Further reading===
 * {{R:it:Collins}}
@@ -24660,10 +24845,25 @@ From {{inh|it|la|vōtum}}.
 Page 1597 vota: Found match for regex: =
 Page 1597 vota: -------- begin text --------
 
-===Verb===
+===Etymology 1===
+
+====Pronunciation====
+{{it-pr|vóta}}
+
+====Verb====
 {{head|it|verb form}}
 
 # {{inflection of|it|votare||3|s|pres|indc|;|2|s|impr}}
+
+===Etymology 2===
+
+====Pronunciation====
+{{it-pr|vòta}}
+
+====Adjective====
+{{head|it|adjective form}}
+
+# {{tlb|it|literary|or|popular|_|Tuscan}} {{adj form of|it|voto||f|s|t=empty}}
 
 ----
 
@@ -24671,18 +24871,35 @@ Page 1597 vota: -------- begin text --------
 Page 1598 voti: Found match for regex: =
 Page 1598 voti: -------- begin text --------
 
-===Pronunciation===
+===Etymology 1===
+
+====Pronunciation====
 {{it-pr|vóti}}
 
-===Verb===
+====Verb====
 {{head|it|verb form}}
 
 # {{inflection of|it|votare||2|s|pres|indc|;|1//2//3|s|pres|subj|;|3|s|impr}}
 
-===Noun===
+===Etymology 2===
+
+====Pronunciation====
+{{it-pr|vóti}}
+
+====Noun====
 {{head|it|noun form|g=m-p}}
 
 # {{plural of|it|voto}}
+
+===Etymology 3===
+
+====Pronunciation====
+{{it-pr|vòti}}
+
+====Adjective====
+{{head|it|adjective form}}
+
+# {{tlb|it|literary|or|popular|_|Tuscan}} {{adj form of|it|voto||m|p}}
 
 ===Anagrams===
 * {{anagrams|it|a=iotv|Vito}}
@@ -24735,15 +24952,17 @@ Page 1603 xerocopi: -------- begin text --------
 Page 1604 xerocopia: Found match for regex: =
 Page 1604 xerocopia: -------- begin text --------
 
-===Etymology===
+===Etymology 1===
 {{prefix|it|xero|copia}}
 
-===Noun===
+====Noun====
 {{it-noun|f}}
 
 # [[photocopy]], [[xerox]]
 
-===Verb===
+===Etymology 2===
+
+====Verb====
 {{head|it|verb form}}
 
 # {{inflection of|it|xerocopiare||3|s|pres|indc|;|2|s|impr}}
@@ -24823,7 +25042,7 @@ Page 1612 cresimare: -------- begin text --------
 {{it-pr|cresimàre}}
 
 ===Verb===
-{{it-verb|a/è}}
+{{it-verb|a/é:#è[ref:{{R:it:DiPI|cresima}}]}} {{tlb|it|transitive}}
 
 # to [[confirm]] (in the religious sacrament)
 
@@ -24832,6 +25051,9 @@ Page 1612 cresimare: -------- begin text --------
 
 ====Derived terms====
 * {{l|it|cresimarsi||to be confirmed}}
+
+===References===
+<references />
 
 ===Anagrams===
 * {{anagrams|it|a=aceeimrrs|cresimerà|scremerai|smercerai|smerciare}}
@@ -24843,15 +25065,19 @@ Page 1613 cresimarsi: -------- begin text --------
 {{it-pr}}
 
 ===Verb===
-{{it-verb|è}}
+{{it-verb|é:#è[ref:{{R:it:DiPI|cresima}}]}}
 
+# {{reflexive of|it|cresimare}}
 # to be [[confirmed]] (in the religious sacrament)
 
 ====Conjugation====
 {{it-conj-arsi|cresim}}
 
 ====Related terms====
-* {{l|it|cresimare}} - to confirme
+* {{l|it|cresimare||to confirm}}
+
+===References===
+<references />
 -------- end text --------
 Page 1614 cresimo: Found match for regex: =
 Page 1614 cresimo: -------- begin text --------
@@ -24881,12 +25107,17 @@ Page 1616 cresima: -------- begin text --------
 ===Pronunciation===
 {{it-pr|crèsima<audio:It-cresima.ogg>}}
 
-===Noun===
+===Etymology 1===
+{{deverbal|it|cresimare}}.
+
+====Noun====
 {{it-noun|f}}
 
 # [[confirmation]] (religious ritual)
 
-===Verb===
+===Etymology 2===
+
+====Verb====
 {{head|it|verb form}}
 
 # {{inflection of|it|cresimare||3|s|pres|ind|;|2|s|imp}}
@@ -25193,7 +25424,7 @@ Page 1636 sciamo: -------- begin text --------
 ===Etymology 1===
 
 ====Pronunciation====
-{{it-pr|sci.àmo}}
+{{it-pr|sci.àmo<ref:{{R:it:DiPI|sciare}}>}}
 
 ====Verb====
 {{head|it|verb form}}
@@ -25209,6 +25440,9 @@ Page 1636 sciamo: -------- begin text --------
 {{head|it|verb form}}
 
 # {{inflection of|it|sciamare||1|s|pres|indc}}
+
+===References===
+<references />
 
 ===Anagrams===
 * {{anagrams|it|a=acimos|cimosa|moscai|moscia|osmica}}
@@ -25306,10 +25540,25 @@ Page 1642 sciata: -------- begin text --------
 Page 1643 stello: Found match for regex: =
 Page 1643 stello: -------- begin text --------
 
-===Verb===
+===Etymology 1===
+
+====Pronunciation====
+{{it-pr|stéllo}}
+
+====Verb====
 {{head|it|verb form}}
 
-# {{inflection of|it|stellare||1|s|pres|indc}}
+# {{inflection of|it|stellare||1|s|pres|indc|t=to adorn with stars}}
+
+===Etymology 2===
+
+====Pronunciation====
+{{it-pr|stèllo}}
+
+====Verb====
+{{head|it|verb form}}
+
+# {{inflection of|it|stellare||1|s|pres|indc|t=to shape (the ribs of a ship's hull)}}
 
 ----
 
@@ -25317,18 +25566,147 @@ Page 1643 stello: -------- begin text --------
 Page 1644 stelli: Found match for regex: =
 Page 1644 stelli: -------- begin text --------
 
-===Verb===
+===Etymology 1===
+
+====Pronunciation====
+{{it-pr|stélli}}
+
+====Verb====
 {{head|it|verb form}}
 
-# {{inflection of|it|stellare||2|s|pres|indc|;|1//2//3|s|pres|subj|;|3|s|impr}}
+# {{inflection of|it|stellare||2|s|pres|indc|;|1//2//3|s|pres|subj|;|3|s|impr|t=to adorn with stars}}
+
+===Etymology 2===
+
+====Pronunciation====
+{{it-pr|stèlli}}
+
+====Verb====
+{{head|it|verb form}}
+
+# {{inflection of|it|stellare||2|s|pres|indc|;|1//2//3|s|pres|subj|;|3|s|impr|t=to shape (the ribs of a ship's hull)}}
 
 ===Anagrams===
 * {{anagrams|it|a=eillst|stille}}
 -------- end text --------
+Page 1644 stella: Found match for regex: =
+Page 1644 stella: -------- begin text --------
+
+===Etymology 1===
+{{inh+|it|la|stēlla}}, from {{inh|it|itc-pro|*stērolā}}, from {{der|it|ine-pro|*h₂stḗr}}. {{doublet|it|étoile}}.
+
+====Pronunciation====
+{{it-pr|stélla<pre:{{a|standard}}>|stèlla<pre:{{a|Milan}}><rhyme:-><hyph:-><audio:It-una stella.ogg;Audio (Milan)>}}
+
+====Noun====
+{{it-noun|f}}
+
+# a [[star]]
+#* {{quote-book|it|year=c. 1226|author=Francis of Assisi|authorlink=Francis of Assisi|title=[[w:Canticle of the Sun|Cantico delle creature]]|trans-title=Canticle of the Creatures|url=https://it.wikisource.org/wiki/Indice:Cantico_delle_Creature.djvu|page=2|pageurl=https://it.wikisource.org/w/index.php?title=File:Cantico_delle_Creature.djvu&page=2|publisher=printed by the Biblioteca del Sacro Convento di San Francesco|passage=Laudato ſi mi ſignore ᵱ ſora luna e le '''ﬅelle''', in celu lai foꝛmate clarite ⁊ p̃tioſe ⁊ belle.|translation=Praised be you, my Lord, through Sister Moon and the '''stars'''; in heaven you have made them clear and precious and beautiful.}}
+# {{lb|it|heraldiccharge}} [[star]], [[mullet]]
+
+=====Related terms=====
+* {{l|it|stella alpina}}
+* {{l|it|stella binaria}}
+* {{l|it|stella filante}}
+* {{l|it|stellante}}
+* {{l|it|stellare}}
+* {{l|it|stelletta}}
+* {{l|it|stellina}}
+* {{l|it|stellone}}
+* {{l|it|stelloncino}}
+
+===Etymology 2===
+
+====Pronunciation====
+{{it-pr|stélla}}
+
+====Verb====
+{{head|it|verb form}}
+
+# {{inflection of|it|stellare||3|s|pres|indc|;|2|s|impr|t=to adorn with stars}}
+
+===Etymology 3===
+
+====Pronunciation====
+{{it-pr|stèlla}}
+
+====Verb====
+{{head|it|verb form}}
+
+# {{inflection of|it|stellare||3|s|pres|indc|;|2|s|impr|t=to shape (the ribs of a ship's hull)}}
+
+===Anagrams===
+* {{anagrams|it|a=aellst|stalle}}
+
+----
+
+-------- end text --------
+Page 1644 stellino: Found match for regex: =
+Page 1644 stellino: -------- begin text --------
+
+===Etymology 1===
+
+====Pronunciation====
+{{it-pr|stéllino}}
+
+====Verb====
+{{head|it|verb form}}
+
+# {{inflection of|it|stellare||3|p|pres|subj|;|3|p|impr|t=to adorn with stars}}
+
+===Etymology 2===
+
+====Pronunciation====
+{{it-pr|stèllino}}
+
+====Verb====
+{{head|it|verb form}}
+
+# {{inflection of|it|stellare||3|p|pres|subj|;|3|p|impr|t=to shape (the ribs of a ship's hull)}}
+-------- end text --------
+Page 1644 stellano: Found match for regex: =
+Page 1644 stellano: -------- begin text --------
+
+===Etymology 1===
+
+====Pronunciation====
+{{it-pr|stéllano}}
+
+====Verb====
+{{head|it|verb form}}
+
+# {{inflection of|it|stellare||3|p|pres|indc|t=to adorn with stars}}
+
+===Etymology 2===
+
+====Pronunciation====
+{{it-pr|stèllano}}
+
+====Verb====
+{{head|it|verb form}}
+
+# {{inflection of|it|stellare||3|p|pres|indc|t=to shape (the ribs of a ship's hull)}}
+-------- end text --------
 Page 1645 esamino: Found match for regex: =
 Page 1645 esamino: -------- begin text --------
 
-===Verb===
+===Etymology 1===
+
+====Pronunciation====
+{{it-pr|esamìno}}
+
+====Noun====
+{{it-noun|m}}
+
+# {{diminutive of|it|esame}}: [[quiz]], [[small]] [[exam]]
+
+===Etymology 2===
+
+====Pronunciation====
+{{it-pr|esàmino}}
+
+====Verb====
 {{head|it|verb form}}
 
 # {{inflection of|it|esaminare||1|s|pres|indc}}
@@ -25339,10 +25717,25 @@ Page 1645 esamino: -------- begin text --------
 Page 1646 esamini: Found match for regex: =
 Page 1646 esamini: -------- begin text --------
 
-===Verb===
+===Etymology 1===
+
+====Pronunciation====
+{{it-pr|esàmini}}
+
+====Verb====
 {{head|it|verb form}}
 
 # {{inflection of|it|esaminare||2|s|pres|indc|;|1//2//3|s|pres|subj|;|3|s|impr}}
+
+===Etymology 2===
+
+====Pronunciation====
+{{it-pr|esamìni}}
+
+====Noun====
+{{head|it|noun form|g=m-p}}
+
+# {{plural of|it|voto}}
 
 ===Anagrams===
 * {{anagrams|it|a=aeiimns|esanimi|seminai}}
@@ -25525,14 +25918,17 @@ Page 1655 attentarsi: -------- begin text --------
 {{it-pr|attentàrsi}}
 
 ===Verb===
-{{it-verb|è}}
+{{it-verb|è:é[ref:{{R:it:DiPI|attento}}]}}
 
-# {{lb|it|intransitive}} to [[venture]], [[dare]]. {{n-g|Used with '''[[di]]''' or '''[[a]]''' + infinitive verb}}
+# {{lb|it|intransitive}} to [[venture]], [[dare]] {{+preo|it|di}} ''or'' {{+preo|it|a|infinitive}}
 #: {{syn|it|ardire|arrischiarsi|osare}}
 #* {{quote-book|it|author=Dante Alighieri|authorlink=Dante Alighieri|title=[[w:Purgatorio|La divina commedia: Purgatorio]]|trans-title=The Divine Comedy: Purgatory|format=paperback|publisher=Bompiani|year=1321|year_published=2001|page=378|section=Canto XXV|lines=10–15|passage=E quale il cicognin che leva l’ala ¶ per voglia di volare, e non '''s’attenta''' ¶ d’abbandonar lo nido, e giù la cala; ¶ tal era io con voglia accesa e spenta ¶ di dimandar, venendo infino a l’atto ¶ che fa colui ch’a dicer s’argomenta.|translation=And as the little stork that lifts its wing with a desire to fly, and does not '''venture''' to leave the nest, and lets it downward droop, even such was I, with the desire of asking kindled and quenched, unto the motion coming he makes who doth address himself to speak.}}
 
 ====Conjugation====
 {{it-conj-arsi|attent|avere}}
+
+===References===
+<references />
 
 ===Anagrams===
 * {{anagrams|it|a=aaeinrsttt|nitrataste|transitate}}
@@ -25690,22 +26086,25 @@ Page 1661 bistentare: Found match for regex: =
 Page 1661 bistentare: -------- begin text --------
 
 ===Etymology===
-Likely related to {{m|it|stentare||to have difficulty}}
+Likely related to {{m|it|stentare||to have difficulty}}.
 
 ===Pronunciation===
 {{it-pr|bistentàre}}
 
 ===Verb===
-{{it-verb}} {{tlb|it|obsolete|intransitive}}
+{{it-verb|a/è:é[ref:{{R:it:DiPI|stento}}]}} {{tlb|it|obsolete|intransitive}}
 
 # to [[suffer]] [[greatly]]
-# to [[wait]], to [[loiter]]
+# to [[wait]] [[painfully]], to [[linger]] [[uneasily]]
 
 ====Conjugation====
 {{it-conj-are|bistent|avere}}
 
 ====Derived terms====
 * {{l|it|bistento}}
+
+===References===
+<references />
 
 ===References===
 * {{R:it:Olivetti}}
@@ -25717,7 +26116,7 @@ Page 1663 bistento: -------- begin text --------
 {{it-pr|bistènto}}
 
 ===Etymology 1===
-{{back-form|it|bistentare|t=to anguishedly wait}}.
+{{deverbal|it|bistentare|t=to wait anguishedly}}.
 
 ====Noun====
 {{it-noun|m}}
@@ -25742,12 +26141,16 @@ Page 1663 bistento: -------- begin text --------
 Page 1664 bistenti: Found match for regex: =
 Page 1664 bistenti: -------- begin text --------
 
-===Noun===
+===Etymology 1===
+
+====Noun====
 {{head|it|noun form|g=m-p}}
 
 # {{plural of|it|bistento}}
 
-===Verb===
+===Etymology 2===
+
+====Verb====
 {{head|it|verb form}}
 
 # {{inflection of|it|bistentare||2|s|pres|ind|;|1//2//3|s|pres|subj|;|3|s|imp}}
@@ -25755,12 +26158,22 @@ Page 1664 bistenti: -------- begin text --------
 Page 1668 contentino: Found match for regex: =
 Page 1668 contentino: -------- begin text --------
 
-===Noun===
+===Etymology 1===
+
+====Pronunciation====
+{{it-pr|contentìno}}
+
+====Noun====
 {{it-noun|m}}
 
 # [[sop]]
 
-===Verb===
+===Etymology 2===
+
+====Pronunciation====
+{{it-pr|contèntino}}
+
+====Verb====
 {{head|it|verb form}}
 
 # {{inflection of|it|contentare||3|p|pres|subj|;|3|p|impr}}
@@ -26221,7 +26634,7 @@ Page 1692 sostentarsi: Found match for regex: =
 Page 1692 sostentarsi: -------- begin text --------
 
 ===Verb===
-{{it-verb}}
+{{it-verb|è:é[ref:{{R:it:DiPI|sostento}}]}}
 
 # {{reflexive of|it|sostentare}}
 # {{lb|it|reflexive}} to [[support]] oneself
@@ -26230,6 +26643,9 @@ Page 1692 sostentarsi: -------- begin text --------
 
 ====Conjugation====
 {{it-conj-arsi|sostent|essere}}
+
+===References===
+<references />
 -------- end text --------
 Page 1693 sostento: Found match for regex: =
 Page 1693 sostento: -------- begin text --------
@@ -26451,10 +26867,10 @@ Page 1705 ruzzare: -------- begin text --------
 ===Verb===
 {{it-verb|a/ù}}
 
-# {{lb|it|intransitive}} to [[romp]] or [[frisk]]
+# {{lb|it|intransitive}} to [[romp]] or [[frisk]] {{+aux|it|avere}}
 
 ====Conjugation====
-{{it-conj-are|ruzz|avere}} <!-- yes, avere not essere -->
+{{it-conj-are|ruzz|avere}}<!-- yes, avere not essere -->
 
 ====Derived terms====
 * {{l|it|ruzzamento}}
@@ -26470,7 +26886,7 @@ Page 1707 ruzzo: -------- begin text --------
 {{it-pr|rùddzo}}
 
 ===Etymology 1===
-{{back-form|it|ruzzare|t=to romp}}.
+{{deverbal|it|ruzzare|t=to romp}}.
 
 ====Alternative forms====
 * {{alter|it|ruzza||rare}}
@@ -26497,10 +26913,19 @@ Page 1707 ruzzo: -------- begin text --------
 Page 1708 ruzzi: Found match for regex: =
 Page 1708 ruzzi: -------- begin text --------
 
-===Verb===
+===Etymology 1===
+
+====Verb====
 {{head|it|verb form}}
 
 # {{inflection of|it|ruzzare||2|s|pres|indc|;|1//2//3|s|pres|subj|;|3|s|impr}}
+
+===Etymology 2===
+
+====Noun====
+{{head|it|noun form|g=m}}
+
+# {{plural of|it|ruzzo}}
 -------- end text --------
 Page 1709 ruzza: Found match for regex: =
 Page 1709 ruzza: -------- begin text --------
@@ -26530,7 +26955,7 @@ Page 1712 disvelare: Found match for regex: =
 Page 1712 disvelare: -------- begin text --------
 
 ===Verb===
-{{it-verb|a/è}}
+{{it-verb|a/é:è[ref:{{R:it:DiPI|disvelo}}]}}
 
 # {{lb|it|transitive|literary}} to [[disclose]], to [[reveal]]
 #: {{syn|it|svelare}}
@@ -26541,6 +26966,9 @@ Page 1712 disvelare: -------- begin text --------
 ====Related terms====
 * {{l|it|disvelatore}}
 * {{l|it|disvelamento}}
+
+===References===
+<references />
 
 ===Anagrams===
 * {{anagrams|it|a=adeeilrsv|disvalere|disvelerà}}
@@ -26606,14 +27034,14 @@ Page 1718 disvelino: -------- begin text --------
 Page 1719 rivelare: Found match for regex: =
 Page 1719 rivelare: -------- begin text --------
 
-===Etymology===
-From {{der|it|la|revēlō}}.
-
 ===Pronunciation===
 {{it-pr|rivelàre}}
 
-===Verb===
-{{it-verb|a/é}}
+===Etymology 1===
+From {{der|it|la|revēlō}}.
+
+====Verb====
+{{it-verb|a/é:è[ref:{{R:it:DiPI|rivelo}}]}}
 
 # {{lb|it|transitive}} to [[reveal]], [[disclose]], [[let out]], [[make known]], [[tell]]
 #: {{syn|it|svelare|palesare|rendere}}
@@ -26622,24 +27050,46 @@ From {{der|it|la|revēlō}}.
 # {{lb|it|transitive}} to [[detect]]
 #: {{syn|it|rilevare}}
 
-====Conjugation====
+=====Conjugation=====
 {{it-conj-are|rivel|avere}}
 
-====Derived terms====
+=====Derived terms=====
 {{der3|it
 |rivelarsi
 |rivelabile
 |rivelato}}
 
-====Related terms====
+=====Related terms=====
 * {{l|it|rivelatore}}
 * {{l|it|rivelazione}}
 * {{l|it|rivelamento}}
 * {{l|it|rivelativo}}
 * {{l|it|rivelatorio}}
 
-===Further reading===
+====Further reading====
 * {{R:it:Treccani}}
+
+===Etymology 2===
+{{af|it|ri-|velare|t2=to veil}}
+
+====Verb====
+{{it-verb|a/é}} {{tlb|it|transitive|rare}}
+
+# {{lb|it|transitive}} to [[veil]] [[again]]; to [[hide]] or [[conceal]] [[again]]
+
+=====Conjugation=====
+{{it-conj-are|rivel|avere}}
+
+===Etymology 3===
+{{af|it|ri-|velare|t2=to furnish with sails}}
+
+====Verb====
+{{it-verb|a/é}} {{tlb|it|transitive|nautical|rare}}
+
+# {{lb|it|transitive}} to [[furnish]] [[again]] with [[sail]]s
+
+=====Conjugation=====
+{{it-conj-are|rivel|avere}}
 
 ===Anagrams===
 * {{anagrams|it|a=aeeilrrv|riaverle|rilevare|rileverà|rivelerà}}
@@ -26648,7 +27098,7 @@ Page 1720 rivelarsi: Found match for regex: =
 Page 1720 rivelarsi: -------- begin text --------
 
 ===Verb===
-{{it-verb|é}}
+{{it-verb|é:è[ref:{{R:it:DiPI|rivelo}}]}}
 
 # {{reflexive of|it|rivelare}}
 # to [[reveal]] oneself, [[show]] oneself, [[turn out]] to be, [[prove]] (oneself)
@@ -26660,16 +27110,47 @@ Page 1720 rivelarsi: -------- begin text --------
 ====Related terms====
 * {{l|it|rivelazione}}
 
+===References===
+<references />
+
 ===Anagrams===
 * {{anagrams|it|a=aeiilrrsv|rilevarsi|rivalersi}}
 -------- end text --------
 Page 1721 rivelo: Found match for regex: =
 Page 1721 rivelo: -------- begin text --------
 
-===Verb===
+===Etymology 1===
+
+====Pronunciation====
+{{it-pr|rivélo,rivèlo<ref:{{R:it:DiPI}}>}}
+
+====Verb====
 {{head|it|verb form}}
 
-# {{inflection of|it|rivelare||1|s|pres|indc}}
+# {{inflection of|it|rivelare||1|s|pres|indc|t=to reveal}}
+
+===Etymology 2===
+
+====Pronunciation====
+{{it-pr|rivélo}}
+
+====Verb====
+{{head|it|verb form}}
+
+# {{inflection of|it|rivelare||1|s|pres|indc|t=to veil again, to conceal again}}
+
+===Etymology 3===
+
+====Pronunciation====
+{{it-pr|rivélo}}
+
+====Verb====
+{{head|it|verb form}}
+
+# {{inflection of|it|rivelare||1|s|pres|indc|t=to furnish again with sails}}
+
+===References===
+<references />
 
 ===Anagrams===
 * {{anagrams|it|a=eilorv|Veroli|livore|rilevo|rilevò|virole|voleri}}
@@ -26677,10 +27158,38 @@ Page 1721 rivelo: -------- begin text --------
 Page 1722 riveli: Found match for regex: =
 Page 1722 riveli: -------- begin text --------
 
-===Verb===
+===Etymology 1===
+
+====Pronunciation====
+{{it-pr|rivéli,rivèli<ref:{{R:it:DiPI}}>}}
+
+====Verb====
 {{head|it|verb form}}
 
-# {{inflection of|it|rivelare||2|s|pres|indc|;|1//2//3|s|pres|subj|;|3|s|impr}}
+# {{inflection of|it|rivelare||2|s|pres|indc|;|1//2//3|s|pres|sub|t=to reveal}}
+
+===Etymology 2===
+
+====Pronunciation====
+{{it-pr|rivéli}}
+
+====Verb====
+{{head|it|verb form}}
+
+# {{inflection of|it|rivelare||2|s|pres|indc|;|1//2//3|s|pres|sub|t=to veil again, to conceal again}}
+
+===Etymology 3===
+
+====Pronunciation====
+{{it-pr|rivéli}}
+
+====Verb====
+{{head|it|verb form}}
+
+# {{inflection of|it|rivelare||2|s|pres|indc|;|1//2//3|s|pres|sub|t=to furnish again with sails}}
+
+===References===
+<references />
 
 ===Anagrams===
 * {{anagrams|it|a=eiilrv|rilevi|virile}}
@@ -26688,13 +27197,38 @@ Page 1722 riveli: -------- begin text --------
 Page 1723 rivela: Found match for regex: =
 Page 1723 rivela: -------- begin text --------
 
-===Pronunciation===
-{{it-pr|rivéla}}
+===Etymology 1===
 
-===Verb===
+====Pronunciation====
+{{it-pr|rivéla,rivèla<ref:{{R:it:DiPI}}>}}
+
+====Verb====
 {{head|it|verb form}}
 
-# {{inflection of|it|rivelare||3|s|pres|indc|;|2|s|impr}}
+# {{inflection of|it|rivelare||3|s|pres|indc|;|2|s|impr|t=to reveal}}
+
+===Etymology 2===
+
+====Pronunciation====
+{{it-pr|rivéla}}
+
+====Verb====
+{{head|it|verb form}}
+
+# {{inflection of|it|rivelare||3|s|pres|indc|;|2|s|impr|t=to veil again, to conceal again}}
+
+===Etymology 3===
+
+====Pronunciation====
+{{it-pr|rivéla}}
+
+====Verb====
+{{head|it|verb form}}
+
+# {{inflection of|it|rivelare||3|s|pres|indc|;|2|s|impr|t=to furnish again with sails}}
+
+===References===
+<references />
 
 ===Anagrams===
 * {{anagrams|it|a=aeilrv|Valier|averli|livrea|rileva|rivale|velari|virale}}
@@ -26702,10 +27236,38 @@ Page 1723 rivela: -------- begin text --------
 Page 1724 rivelano: Found match for regex: =
 Page 1724 rivelano: -------- begin text --------
 
-===Verb===
+===Etymology 1===
+
+====Pronunciation====
+{{it-pr|rivélano,rivèlano<ref:{{R:it:DiPI}}>}}
+
+====Verb====
 {{head|it|verb form}}
 
-# {{inflection of|it|rivelare||3|p|pres|indc}}
+# {{inflection of|it|rivelare||3|p|pres|indc|t=to reveal}}
+
+===Etymology 2===
+
+====Pronunciation====
+{{it-pr|rivélano}}
+
+====Verb====
+{{head|it|verb form}}
+
+# {{inflection of|it|rivelare||3|p|pres|indc|t=to veil again, to conceal again}}
+
+===Etymology 3===
+
+====Pronunciation====
+{{it-pr|rivélano}}
+
+====Verb====
+{{head|it|verb form}}
+
+# {{inflection of|it|rivelare||3|p|pres|indc|t=to furnish again with sails}}
+
+===References===
+<references />
 
 ===Anagrams===
 * {{anagrams|it|a=aeilnorv|involare|involerà|rilevano|velinaro}}
@@ -26713,13 +27275,38 @@ Page 1724 rivelano: -------- begin text --------
 Page 1725 rivelino: Found match for regex: =
 Page 1725 rivelino: -------- begin text --------
 
-===Pronunciation===
-{{it-pr|rivélino}}
+===Etymology 1===
 
-===Verb===
+====Pronunciation====
+{{it-pr|rivélino,rivèlino<ref:{{R:it:DiPI}}>}}
+
+====Verb====
 {{head|it|verb form}}
 
-# {{inflection of|it|rivelare||3|p|pres|subj|;|3|p|impr}}
+# {{inflection of|it|rivelare||3|p|pres|subj|;|3|p|impr|t=to reveal}}
+
+===Etymology 2===
+
+====Pronunciation====
+{{it-pr|rivélino}}
+
+====Verb====
+{{head|it|verb form}}
+
+# {{inflection of|it|rivelare||3|p|pres|subj|;|3|p|impr|t=to veil again, to conceal again}}
+
+===Etymology 3===
+
+====Pronunciation====
+{{it-pr|rivélino}}
+
+====Verb====
+{{head|it|verb form}}
+
+# {{inflection of|it|rivelare||3|p|pres|subj|;|3|p|impr|t=to furnish again with sails}}
+
+===References===
+<references />
 
 ===Anagrams===
 * {{anagrams|it|a=eiilnorv|rilevino}}
@@ -26734,7 +27321,7 @@ Page 1726 svelare: -------- begin text --------
 {{it-pr|svelàre}}
 
 ===Verb===
-{{it-verb|a/é}}
+{{it-verb|a/é:è[ref:{{R:it:DiPI|svelo}}]}}
 
 # {{lb|it|transitive}} to [[disclose]], to [[reveal]], to [[unveil]], to [[uncover]], to [[see through]]
 
@@ -26749,6 +27336,9 @@ Page 1726 svelare: -------- begin text --------
 ====Related terms====
 * {{l|it|velo}}
 
+===References===
+<references />
+
 ===Anagrams===
 * {{anagrams|it|a=aeelrsv|svelerà|versale}}
 -------- end text --------
@@ -26756,7 +27346,7 @@ Page 1727 svelarsi: Found match for regex: =
 Page 1727 svelarsi: -------- begin text --------
 
 ===Verb===
-{{it-verb|/é}}
+{{it-verb|é:è[ref:{{R:it:DiPI|svelo}}]}}
 
 # {{lb|it|reflexive}} to [[reveal]] oneself, to [[show]] oneself
 
@@ -26765,6 +27355,9 @@ Page 1727 svelarsi: -------- begin text --------
 
 ====Related terms====
 * {{l|it|svelare}}
+
+===References===
+<references />
 -------- end text --------
 Page 1728 svelo: Found match for regex: =
 Page 1728 svelo: -------- begin text --------
@@ -26837,12 +27430,19 @@ Page 1733 accoccare: -------- begin text --------
 {{it-pr|accoccàre}}
 
 ===Verb===
-{{it-verb}}
+{{it-verb|a/ò:ó[ref:{{R:it:DiPI|accocco}}]}} {{tlb|it|transitive}}
 
-# {{lb|it|obsolete|archery}} to [[nock]]
+# {{lb|it|archery}} to [[nock]] (an arrow) {{gl|to fit against the bowstring of a bow}}
+# {{lb|it|figurative}} to [[deliver]] (a blow, a punch)
+# {{lb|it|figurative}} to [[mock]], to [[deceive]]
+# to [[stop]] (thread) on the [[notch]] of a [[spindle]]
+# to [[join]] the [[four]] [[corner]]s of (a handkerchief)
 
 ====Conjugation====
 {{it-conj-care|accocc|avere}}
+
+===References===
+<references />
 -------- end text --------
 Page 1735 accocco: Found match for regex: =
 Page 1735 accocco: -------- begin text --------
