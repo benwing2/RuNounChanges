@@ -12,9 +12,8 @@ Authorship: Ben Wing <benwing2>
 TERMINOLOGY:
 
 -- "slot" = A particular combination of tense/mood/person/number/etc.
-	 Example slot names for verbs are "pres_1s" (present indicative first-person singular), "pres_sub_2sv" (present
-	 subjunctive second-person singular voseo form) "impf_sub_ra_3p" (imperfect subjunctive -ra form third-person
-	 plural), "imp_1p_comb_lo" (imperative first-person plural combined with clitic [[lo]]).
+	 Example slot names for verbs are "pres1p" (present indicative first-person plural), "impsub12s" (imperfect
+	 subjunctive first/second-person singular form) and "pp" (past participle).
 	 Each slot is filled with zero or more forms.
 
 -- "form" = The conjugated Italian form representing the value of a given slot.
@@ -183,18 +182,56 @@ EXAMPLES OF CONJUGATION:
   improw:sàppi:sappiàte
 >}}
 
+{{it-conj|piacere<e/piàccio#piàce,piàcqui.pres1p:piacciàmo>}}
+
+{{it-conj|comparire<e/compàio:+isc[less common]#à:+isc[less common],compàrvi:comparìi[less common]:compàrsi[in the legal sense],compàrso:comparìto[rare]>}}
+
 {{it-conj|togliere<a\ò\tòlgo,tòlsi,tòlto.fut:+:torrò[literary].presp:+>}}
 
 {{it-conj|condurre<a\+,condùssi,condótto.stem:condùce>}}
 
-{{it-verb|proporre<a\ó+\propóngo,propósi,propósto:propòsto.stem:propóne>}}
+{{it-conj|proporre<a\ó+\propóngo,propósi,propósto:propòsto.stem:propóne>}}
 
-{{it-verb|trarre<a\tràggo,tràssi,tràtto.stem:tràe>}}
+{{it-conj|trarre<a\tràggo,tràssi,tràtto.stem:tràe>}}
+
+
+; Third-person only verbs:
+
+{{it-conj|bufare<e/ù.only3s>}}
+
+{{it-verb|accadere<e/à+,accàdde.fut:accadrà.only3sp>}}
+
+{{it-verb|volerci<e/vuòle,vòlle.fut:vorrà.sub:vòglia.only3s>}}
+
+; Defective verbs:
+
+{{it-verb|redire<a/rièdo,-,redìto.imperf:-.fut:-.impsub:->}}
+
+{{it-verb|serpere<-\è,+,->}}
+
+; Multiword expressions:
+
+{{it-verb|tenere<a/tèngo#tiène,ténni.fut:terrò> [[d']][[occhio]]}}
+
+{{it-conj|trascinare<a/ì> e rilasciare<a/à>}}
+
 ]=]
 
 --[=[
 
 FIXME:
+
+1. Support third-person only verbs.
+2. Support reflexive verbs.
+3. Support pronominal verbs.
+4. Support calling from [[Module:it-headword]].
+5. Implement categories.
+6. Implement replace_reflexive_indicators().
+]=]
+
+--[=[
+
+FIXME (OLD FOR SPANISH):
 
 1. Implement no_pres_stressed for aterir, garantir. (NOTE: Per RAE, garantir used in all forms in Argentina/Uruguay.) [DONE]
 2. Support concluyo. [DONE]
@@ -394,13 +431,13 @@ local reflexive_masc_forms = {
 }
 
 local reflexive_fem_forms = {
-	["su"] = {"mi", "tu", "su", "nuestra", "vuestra", "su"},
+	["si"] = {"mi", "tu", "su", "nuestra", "vuestra", "su"},
 	["sus"] = {"mis", "tus", "sus", "nuestras", "vuestras", "sus"},
 	["sí"] = {"mí", "ti", "sí", "nosotras", "vosotras", "sí"},
 }
 
 local reflexive_forms = {
-	["se"] = {"me", "te", "se", "nos", "os", "se"},
+	["si"] = {"mi", "ti", "si", "ci", "vi", "si"},
 	["suyo"] = {"mío", "tuyo", "suyo", "nuestro", "vuestro", "suyo"},
 	["suya"] = {"mía", "tuya", "suya", "nuestra", "vuestra", "suya"},
 	["suyos"] = {"míos", "tuyos", "suyos", "nuestros", "vuestros", "suyos"},
@@ -585,79 +622,84 @@ local function add_default_verb_forms(base, from_headword)
 		ret.verb = raw_verb
 	end
 
-	local conj_vowel
+	ret.default_stem, ret.default_ending_vowel = rmatch(raw_verb, "^(.-)([aeiour])re?$")
+	if not ret.default_stem then
+		error("Unrecognized verb '" .. raw_verb .. "', doesn't end in -are, -ere, -ire, -rre, -ar, -er, -ir, -or or -ur")
+	end
+	local syncopated = base.rre or not rfind(ret.default_ending_vowel, "^[aei]$")
+
+	local ending_vowel
 	if base.explicit_stem_spec then
 		local function explicit_stem_special_case(base, form)
+			local stem, this_ending_vowel
 			if form == "+" then
-				error("Can't specify + with 'stem:'")
+				stem = ret.default_stem
+				this_ending_vowel = ret.default_ending_vowel
+				if syncopated then
+					error("Can't use + with 'stem:' in syncopated verbs; specify an explicit stem")
+				end
+			else
+				base.explicit_non_default_stem_spec = true
+				stem, this_ending_vowel = rmatch(form, "^(.*)([aei])$")
+				if not stem then
+					error("Unrecognized stem '" .. form .. "', should end in -a, -e or -i")
+				end
 			end
-			local stem, ending = rmatch(form, "^(.*)([aei])$")
-			if not stem then
-				error("Unrecognized stem '" .. form .. "', should end in -a, -e or -i")
+			if ending_vowel and ending_vowel ~= this_ending_vowel then
+				error("Can't currently specify explicit stems with two different conjugation vowels (" .. ending_vowel
+					.. " and " .. this_ending_vowel .. ")")
 			end
-			if conj_vowel and conj_vowel ~= ending then
-				error("Can't currently specify explicit stems with two different conjugation vowels (" .. conj_vowel
-					.. " and " .. ending .. ")")
-			end
-			conj_vowel = ending
+			ending_vowel = this_ending_vowel
 			return stem
 		end
-		-- Put the explicit stem in base.verb.stem.
+		-- Put the explicit stem in ret.stem (i.e. base.verb.stem).
 		process_specs(base, ret, "stem", base.explicit_stem_spec, false, explicit_stem_special_case)
 	else
-		ret.stem, conj_vowel = rmatch(raw_verb, "^(.-)([aeiour])re?$")
-		if not ret.stem then
-			error("Unrecognized verb '" .. raw_verb .. "', doesn't end in -are, -ere, -ire, -rre, -ar, -er, -ir, -or or -ur")
-		end
-		-- Need to add base.all_footnotes here; it is added to other stems and base forms in process_specs(),
-		-- but here we don't go through process_specs().
-		ret.stem = iut.convert_to_general_list_form(ret.stem, base.all_footnotes)
-		if not rfind(conj_vowel, "^[aei]$") then
-			base.rre = true
-		end
-		if base.rre then
+		if syncopated then
 			if not from_headword then
-				error("With syncopated verb '" .. raw_verb .. "', must use stem: to specify an explicit stem")
+				error("With syncopated verb '" .. raw_verb .. "', must use 'stem:' to specify an explicit stem")
 			else
-				conj_vowel = "e"
+				ret.default_ending_vowel = "e"
 			end
 		end
+		-- Convert to general list form so we can call iut.map_forms() over it.
+		ret.stem = iut.convert_to_general_list_form(ret.default_stem)
+		ending_vowel = ret.default_ending_vowel
 	end
 
-	base.conj_vowel = conj_vowel == "a" and "à" or conj_vowel == "e" and "é" or "ì"
+	base.conj_vowel = ending_vowel == "a" and "à" or ending_vowel == "e" and "é" or "ì"
 
-	if base.rre then
-		-- Can't generate defaults for verbs in -rre
+	if syncopated and not base.explicit_stem_spec then
+		-- Can't generate defaults for verbs in -rre; currently we only can get here if from_headword.
 		return
 	end
 
-	local unaccented_stems = iut.map_forms(ret.stem, function(stem) return export.remove_accents(stem) end)
-	ret.unaccented_stem = unaccented_stems
+	ret.unaccented_stem = iut.map_forms(ret.stem, function(stem) return export.remove_accents(stem) end)
 	ret.pres = iut.map_forms(ret.stem, function(stem)
 		if base.third then
-			return conj_vowel == "a" and stem .. "a" or stem .. "e"
+			return ending_vowel == "a" and stem .. "a" or stem .. "e"
 		else
 			return stem .. "o"
 		end
 	end)
-	ret.pres3s = iut.map_forms(stems, function(stem) return conj_vowel == "a" and stem .. "a" or stem .. "e" end)
-	if conj_vowel == "i" then
-		ret.isc_pres = iut.map_forms(unaccented_stems, function(stem) return stem .. "ìsco" end)
-		ret.isc_pres3s = iut.map_forms(unaccented_stems, function(stem) return stem .. "ìsci" end)
+	ret.pres3s = iut.map_forms(ret.stem, function(stem) return ending_vowel == "a" and stem .. "a" or stem .. "e" end)
+	if ending_vowel == "i" then
+		ret.isc_pres = iut.map_forms(ret.unaccented_stem, function(stem) return stem .. "ìsco" end)
+		ret.isc_pres3s = iut.map_forms(ret.unaccented_stem, function(stem) return stem .. "ìsci" end)
 	end
-	ret.past = iut.flatmap_forms(unaccented_stems, function(stem)
-		if conj_vowel == "a" then
+	ret.past = iut.flatmap_forms(ret.unaccented_stem, function(stem)
+		if ending_vowel == "a" then
 			return {stem .. (base.third and "ò" or "ài")}
-		elseif conj_vowel == "e" then
+		elseif ending_vowel == "e" then
 			return {stem .. (base.third and "é" or "éi"), stem .. (base.third and "étte" or "étti")}
 		else
 			return {stem .. (base.third and "ì" or "ìi")}
 		end
 	end)
-	ret.pp = iut.map_forms(unaccented_stems, function(stem)
-		if conj_vowel == "a" then
+	ret.pp = iut.map_forms(ret.unaccented_stem, function(stem)
+		if ending_vowel == "a" then
 			return stem .. "àto"
-		elseif conj_vowel == "e" then
+		elseif ending_vowel == "e" then
 			return rfind(stem, "[cg]$") and stem .. "iùto" or stem .. "ùto"
 		else
 			return stem .. "ìto"
@@ -679,22 +721,17 @@ local function create_base_forms(base)
 		process_specs(base, base.explicit_forms, slot, base.explicit_specs[slot], is_finite, special_case)
 	end
 
-	local function explicit_special_case(base, form)
-		return form
-	end
-
 	for _, explicit_slot in ipairs(com.explicit_slots) do
+		local function explicit_special_case(base, form)
+			if form == "+" then
+				error("+ not supported as spec for explicit slot '" .. explicit_slot ... "'")
+			end
+			return form
+		end
+
 		if base.explicit_specs[explicit_slot] then
 			process_specs(base, base.explicit_forms, explicit_slot, base.explicit_specs[explicit_slot], explicit_slot ~= "imp",
 				explicit_special_case)
-		end
-	end
-
-	for rowslot, rowconj in pairs(row_conjugation) do
-		if base.explicit_row_specs[rowslot] then
-			for _, persnum in ipairs(rowconj.i...) do
-				...
-			end
 		end
 	end
 
