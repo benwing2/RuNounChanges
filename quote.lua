@@ -805,6 +805,56 @@ function export.call_quote_template(frame)
 	return frame:expandTemplate { title = iargs.template or "quote-book", args = other_direct_args }
 end
 
+local paramdoc_param_replacements = {
+	passage = {
+		param_with_synonym = '<<synonym>>, {{para|text}}, or {{para|passage}}',
+		param_no_synonym = '{{para|text}} or {{para|passage}}',
+		text = [=[
+* <<params>> – the passage to be quoted.]=],
+	},
+	page = {
+		param_with_synonym = '<<synonym>> or {{para|page}}, or {{para|pages}}'
+		param_no_synonym = '{{para|page}} or {{para|pages}}'
+		text = [=[
+* <<params>> – '''mandatory in some cases''': the page number(s) quoted from. When quoting a range of pages, note the following:
+** Separate the first and last pages of the range with an [[en dash]], like this: {{para|pages|10–11}}.
+** You must also use {{para|pageref}} to indicate the page to be linked to (usually the page on which the Wiktionary entry appears).
+: This parameter must be specified to have the template link to the online version of the work.]=]
+	},
+	page_with_roman_preface = {
+		param_with_synonym = {"inherit", "page"},
+		param_no_synonym = {"inherit", "page"},
+		text = [=[
+* <<params>> – '''mandatory in some cases''': the page number(s) quoted from. If quoting from the preface, specify the page number(s) in lowercase Roman numerals. When quoting a range of pages, note the following:
+** Separate the first and last page number of the range with an [[en dash]], like this: {{para|pages|10–11}} or {{para|pages|iii–iv}}.
+** You must also use {{para|pageref}} to indicate the page to be linked to (usually the page on which the Wiktionary entry appears).
+: This parameter must be specified to have the template link to the online version of the work.]=]
+	},
+	chapter = {
+		param_with_synonym = '<<synonym>> or {{para|chapter}}',
+		param_no_synonym = '{{para|chapter}}',
+		text = [=[
+* <<params>> – the name of the chapter quoted from.]=],
+	},
+	roman_chapter = {
+		param_with_synonym = {"inherit", "chapter"},
+		param_no_synonym = {"inherit", "chapter"},
+		text = [=[
+* <<params>> – the chapter number quoted from in uppercase Roman numerals.]=],
+	},
+	arabic_chapter = {
+		param_with_synonym = {"inherit", "chapter"},
+		param_no_synonym = {"inherit", "chapter"},
+		text = [=[
+* <<params>> – the chapter number quoted from in Arabic numerals.]=],
+	},
+	trailing_params = {
+		text = [=[
+* {{para|footer}} – a comment about the passage quoted.
+* {{para|brackets}} – use {{para|brackets|on}} to surround a quotation with [[bracket]]s. This indicates that the quotation either contains a mere mention of a term (for example, "some people find the word '''''manoeuvre''''' hard to spell") rather than an actual use of it (for example, "we need to '''manoeuvre''' carefully to avoid causing upset"), or does not provide an actual instance of a term but provides information about related terms.]=],
+	}
+}
+
 function export.paramdoc(frame)
 	local params = {
 		[1] = {},
@@ -813,42 +863,13 @@ function export.paramdoc(frame)
 	local parargs = frame:getParent().args
 	local args = require("Module:parameters").process(parargs, params)
 
-	local passage_param_with_synonym = '<<param>>, {{para|text}}, or {{para|passage}}'
-	local passage_param_no_synonym = '{{para|text}} or {{para|passage}}'
-	local passage_text = [=[
-* <<params>> – the passage to be quoted.]=]
-
-	local page_param_with_synonym = '<<param>> or {{para|page}}, or {{para|pages}}'
-	local page_param_no_synonym = '{{para|page}} or {{para|pages}}'
-	local page_text = [=[
-* <<params>> – '''mandatory in some cases''': the page number(s) quoted from. When quoting a range of pages, note the following:
-** Separate the first and last pages of the range with an [[en dash]], like this: {{para|pages|110–111}}.
-** You must also use {{para|pageref}} to specify the page number that the template should link to (usually the page on which the Wiktionary entry appears).
-: If this parameter is omitted, the template will not link to the online version of the work.]=]
-
-	local chapter_param_with_synonym = '<<param>> or {{para|chapter}}'
-	local chapter_param_no_synonym = '{{para|chapter}}'
-	local chapter_text = [=[
-* <<params>> – the name of the chapter quoted from.]=]
-	local roman_chapter_text = [=[
-* <<params>> – the chapter number quoted from in uppercase Roman numerals.]=]
-	local arabic_chapter_text = [=[
-* <<params>> – the chapter number quoted from in Arabic numerals.]=]
-
-	local trailing_params = [=[
-* {{para|footer}} – a comment about the passage quoted.
-* {{para|brackets}} – use {{para|brackets|on}} to surround a quotation with [[bracket]]s. This indicates that the quotation either contains a mere mention of a term (for example, "some people find the word '''''manoeuvre''''' hard to spell") rather than an actual use of it (for example, "we need to '''manoeuvre''' carefully to avoid causing upset"), or does not provide an actual instance of a term but provides information about related terms.]=]
-
-	local function replace_param(template_text, param)
-	end
-
-	text = rsub(args[1], "<<trailing_params>>", function() return frame:preprocess(trailing_params) end)
+	local text = args[1]
 
 	local function do_param_with_optional_synonym(param, text_to_sub, paramtext_synonym, paramtext_no_synonym)
 		local function sub_param(synonym)
 			local subbed_paramtext
 			if synonym then
-				subbed_paramtext = rsub(paramtext_synonym, "<<param>>", "{{para|" .. synonym .. "}}")
+				subbed_paramtext = rsub(paramtext_synonym, "<<synonym>>", "{{para|" .. synonym .. "}}")
 			else
 				subbed_paramtext = paramtext_no_synonym
 			end
@@ -858,11 +879,32 @@ function export.paramdoc(frame)
 		text = rsub(text, "<<" .. param .. ":(.*)>>", sub_param)
 	end
 
-	do_param_with_optional_synonym("passage", passage_text, passage_param_with_synonym, passage_param_no_synonym)
-	do_param_with_optional_synonym("page", page_text, page_param_with_synonym, page_param_no_synonym)
-	do_param_with_optional_synonym("chapter", chapter_text, chapter_param_with_synonym, chapter_param_no_synonym)
-	do_param_with_optional_synonym("roman_chapter", roman_chapter_text, chapter_param_with_synonym, chapter_param_no_synonym)
-	do_param_with_optional_synonym("arabic_chapter", arabic_chapter_text, chapter_param_with_synonym, chapter_param_no_synonym)
+	local function fetch_text(param_to_replace, key)
+		local spec = paramdoc_param_replacements[param_to_replace]
+		local val = spec[key]
+		if type(val) == "string" then
+			return val
+		end
+		if type(val) == "table" and val[1] == "inherit" then
+			return fetch_text(val[2], key)
+		end
+		error("Internal error: Unrecognized value for param '" .. param_to_replace .. "', key '" .. key .. "': "
+			.. mw.dumpObject(val))
+	end
+
+	for param_to_replace, spec in pairs(paramdoc_param_replacements) do
+		local function fetch(key)
+			return fetch_text(param_to_replace, key)
+		end
+
+		if not spec.param_no_synonym then
+			-- Text to substitute directly.
+			text = rsub(text, "<<" .. param_to_replace .. ">>", function() return frame:preprocess(fetch("text")) end)
+		else
+			do_param_with_optional_synonym(param_to_replace, fetch("text"), fetch("param_with_synonym"),
+				fetch("param_no_synonym"))
+		end
+	end
 
 	-- Remove final newline so template code can add a newline after invocation
 	text = text:gsub("\n$", "")
