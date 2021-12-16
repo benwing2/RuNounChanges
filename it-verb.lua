@@ -325,11 +325,13 @@ local row_conjugation = {
 	["sub"] = {
 		rowdesc = "present subjunctive",
 		persnums = {"123s", "1p", "2p", "3p"},
+		generate_default_first_form = generate_present_subj_first_form,
 		conjugate = add_present_subj,
 	},
 	["imp"] = {
 		rowdesc = "imperative",
 		persnums = {"2s", "2p"},
+		generate_default_first_form = generate_imperative_first_form,
 		conjugate = add_imperative,
 	},
 	["phis"] = {
@@ -721,10 +723,10 @@ local function create_base_forms(base)
 	com.add_default_verb_forms(base)
 
 	for _, explicit_specs_spec in ipairs({
-		{"pres", "finite", comp.pres_special_case},
-		{"pres3s", "finite", comp.pres3s_special_case},
-		{"phis", "finite", comp.phis_special_case},
-		{"pp", false, comp.pp_special_case},
+		{"pres", "finite", com.pres_special_case},
+		{"pres3s", "finite", com.pres3s_special_case},
+		{"phis", "finite", com.phis_special_case},
+		{"pp", false, com.pp_special_case},
 	}) do
 		local slot, is_finite, special_case = unpack(explicit_specs_spec)
 		process_specs(base, base.explicit_forms, slot, base.explicit_specs[slot], is_finite, special_case)
@@ -846,8 +848,8 @@ add_present_subj = function(base, prefix)
 	end
 
 	-- Generate the 123s and 3p forms.
-	addit("123s", base.irregrow_forms.sub, "")
-	addit("3p", base.irregrow_forms.sub, "no")
+	addit("123s", base.explicit_forms.sub, "")
+	addit("3p", base.explicit_forms.sub, "no")
 	-- Copy present indicative 1p to present subjunctive.
 	copy_forms(base, prefix .. "1p", base.forms.pres1p)
 	-- Generate present subjunctive 2p from present indicative 1p by replacing -mo with -te.
@@ -888,7 +890,7 @@ add_imperative = function(base, rowslot, first_form)
 
 	-- Copy first imperative form (user specified or taken from present indicative 3s for conj vowel à, or from
 	-- present indicative 2s for other conj vowels) to imperative 2s.
-	copy("2s", base.irregrow_forms.imp)
+	copy("2s", base.explicit_forms.imp)
 	-- Copy present indicative 2p to imperative 2p.
 	copy("2p", base.forms.pres_2p)
 	-- Copy present subjunctive 3s, 1p, 2p to imperative.
@@ -900,7 +902,7 @@ end
 
 -- Defined earlier as a forward reference.
 add_past_historic = function(base, prefix)
-	for _, form in ipairs(base.stems.phis_form) do
+	for _, form in ipairs(base.explicit_forms.phis) do
 		local function add_phis(pref, s1, s2, s3, p1, p2, p3)
 			local newform = {form = pref, footnotes = form.footnotes}
 			local function addit(pers, endings)
@@ -1034,9 +1036,9 @@ local function add_participles(base)
 		add3(base, slot, base.prefix, stems, ending)
 	end
 	insert_form(base, "inf", {form = base.verb})
-	addit("ger", stems.pres_unstressed, base.conj_vowel == "à" and "àndo" or "èndo")
-	addit("presp", stems.pres_unstressed, base.conj_vowel == "à" and "ànte" or "ènte")
-	addit("pp", stems.pp, "o")
+	addit("ger", base.verb.unaccented_stem, base.conj_vowel == "à" and "àndo" or "èndo")
+	addit("presp", base.verb.unaccented_stem, base.conj_vowel == "à" and "ànte" or "ènte")
+	addit("pp", base.explicit_forms.pp)
 end
 
 
