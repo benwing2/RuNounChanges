@@ -227,6 +227,7 @@ FIXME:
 4. Support calling from [[Module:it-headword]].
 5. Implement categories.
 6. Implement replace_reflexive_indicators().
+7. Disallow + for present.
 ]=]
 
 --[=[
@@ -312,7 +313,8 @@ person_number_to_reflexive_pronoun = {
 
 -- Define as forward references so `row_conjugation` can use them.
 local add_present_indic, add_present_subj, add_imperative, add_past_historic
-local generate_future_stem, generate_conditional_stem
+local generate_present_subj_first_form, generate_imperative_first_form, generate_future_first_form
+local generate_conditional_first_form
 
 local row_conjugation = {
 	["pres"] = {
@@ -340,8 +342,8 @@ local row_conjugation = {
 		persnums = person_number_list,
 		irregform_ending = "o",
 		irregform_desc = "first-person imperfect",
-		generate_default_stem = function(base) return iut.map_forms(base.verb.unaccented_stem,
-			function(stem) return stem .. base.conj_vowel .. "v" end) end,
+		generate_default_first_form = function(base) return iut.map_forms(base.verb.unaccented_stem,
+			function(stem) return stem .. base.conj_vowel .. "vo" end) end,
 		conjugate = {"o", "i", "a", "àmo", "àte", "ano"},
 	},
 	["impsub"] = {
@@ -349,8 +351,8 @@ local row_conjugation = {
 		persnums = impsub_person_number_list,
 		irregform_ending = "ssi",
 		irregform_desc = "first/second-person imperfect subjunctive",
-		generate_default_stem = function(base) return iut.map_forms(base.verb.unaccented_stem,
-			function(stem) return stem .. base.conj_vowel end) end,
+		generate_default_first_form = function(base) return iut.map_forms(base.verb.unaccented_stem,
+			function(stem) return stem .. base.conj_vowel .. "ssi" end) end,
 		conjugate = {"ssi", "sse", "ssimo", "ste", "ssero"},
 	},
 	["fut"] = {
@@ -358,7 +360,7 @@ local row_conjugation = {
 		persnums = person_number_list,
 		irregform_ending = "ò",
 		irregform_desc = "first-person future",
-		generate_default_stem = generate_future_stem,
+		generate_default_first_form = generate_future_first_form,
 		conjugate = {"ò", "ài", "à", "émo", "éte", "ànno"},
 	},
 	["cond"] = {
@@ -366,7 +368,7 @@ local row_conjugation = {
 		persnums = person_number_list,
 		irregform_ending = "éi",
 		irregform_desc = "first-person conditional",
-		generate_default_stem = generate_conditional_stem,
+		generate_default_first_form = generate_conditional_first_form,
 		conjugate = {"éi", "ésti", {"èbbe", "ébbe"}, "émmo", "éste", {"èbbero", "ébbero"}},
 	},
 }
@@ -539,6 +541,13 @@ local function insert_forms(base, slot, forms)
 	if not skip_slot(base, slot) then
 		iut.insert_forms(base.forms, slot, forms)
 	end
+end
+
+
+local function copy_forms(base, slot, forms)
+	-- FIXME, is this needed? This is the same as insert_forms() but clones `forms`.
+	-- Probably not needed as I don't think we ever side-effect existing forms.
+	insert_forms(base.forms, slot, iut.map_forms(forms, iut.identity end))
 end
 
 
@@ -721,20 +730,6 @@ local function create_base_forms(base)
 		process_specs(base, base.explicit_forms, slot, base.explicit_specs[slot], is_finite, special_case)
 	end
 
-	for _, explicit_slot in ipairs(com.explicit_slots) do
-		local function explicit_special_case(base, form)
-			if form == "+" then
-				error("+ not supported as spec for explicit slot '" .. explicit_slot ... "'")
-			end
-			return form
-		end
-
-		if base.explicit_specs[explicit_slot] then
-			process_specs(base, base.explicit_forms, explicit_slot, base.explicit_specs[explicit_slot], explicit_slot ~= "imp",
-				explicit_special_case)
-		end
-	end
-
 	iut.insert_form(base.forms, "lemma", {form = base.lemma})
 	-- Add linked version of lemma for use in head=.
 	if base.root_stressed_inf then
@@ -828,6 +823,18 @@ add_present_indic = function(base, prefix)
 end
 
 
+-- Defined earlier as a forward reference.
+local function generate_present_subj_first_form(base)
+	return iut.map_forms(base.forms.pres1s, function(form)
+		if not form:find("o$") then
+			error("sub: or subrow: must be given in order to generate the singular present subjunctive "
+				.. "because first-person singular present indicative '" .. form .. "' does not end in -o")
+		end
+		return rsub(form, "o$", base.conj_vowel == "à" and "i" or "a")
+	end)
+end
+
+
 -- Generate the present subjunctive. See "RULES FOR CONJUGATION" near the top of the file for the detailed rules.
 -- Defined earlier as a forward reference.
 add_present_subj = function(base, prefix)
@@ -838,27 +845,13 @@ add_present_subj = function(base, prefix)
 		insert_forms(base, prefix .. pers, forms)
 	end
 
-	-- Generate the 123s and 3p forms. Don't copy the 123s form to the 3p form with -no added in case there's an
-	-- override of the 123s form (in which case the 123s form won't be added).
-	if base.irregrow_forms.sub then
-		addit("123s", base.irregrow_forms.sub, "")
-		addit("3p", base.irregrow_forms.sub, "no")
-	else
-		local pres_1s_stem = iut.map_forms(base.forms.pres_1s, function(form)
-			if not form:find("o$") then
-				error("sub: or subrow: must be given in order to generate the singular present subjunctive "
-					.. "because first-person singular present indicative '" .. form .. "' does not end in -o")
-			end
-			return rsub(form, "o$", "")
-		end)
-		addit("123s", s123_stem, base.conj_vowel == "à" and "i" or "a")
-		addit("3p", s123_stem, base.conj_vowel == "à" and "ino" or "ano")
-	end
-
+	-- Generate the 123s and 3p forms.
+	addit("123s", base.irregrow_forms.sub, "")
+	addit("3p", base.irregrow_forms.sub, "no")
 	-- Copy present indicative 1p to present subjunctive.
-	insit("1p", iut.map_forms(base.forms.pres_1p, iut.identity end))
+	copy_forms(base, prefix .. "1p", base.forms.pres1p)
 	-- Generate present subjunctive 2p from present indicative 1p by replacing -mo with -te.
-	insit("2p", iut.map_forms(base.forms.pres_1p, function(form)
+	insit("2p", iut.map_forms(base.forms.pres1p, function(form)
 		if not form:find("mo$") then
 			error("subrow: must be given in order to generate the second-person plural present subjunctive "
 				.. "because first-person plural present indicative '" .. form .. "' does not end in -mo")
@@ -868,35 +861,40 @@ add_present_subj = function(base, prefix)
 end
 
 
+-- Defined earlier as a forward reference.
+local function generate_imperative_first_form(base)
+	if base.conj_vowel == "à" then
+		-- Copy present indicative 3s to imperative 2s.
+		return base.forms.pres_3s
+	else
+		-- Copy present indicative 2s to imperative 2s.
+		return base.forms.pres_2s
+	end
+end
+
+
 -- Generate the imperative. See "RULES FOR CONJUGATION" near the top of the file for the detailed rules.
 -- Defined earlier as a forward reference.
-add_imperative = function(base, prefix)
+add_imperative = function(base, rowslot, first_form)
+	-- FIXME, do we want to do this here or in skip_slot() or elsewhere?
+	-- Maybe we don't need skip_slot() and instead have erase_slots() or similar.
 	if base.noimp then
 		return
 	end
 
-	local function addit(pers, stems, endings)
-		add(base, prefix .. pers, stems, endings)
-	raq
-	local function insit(pers, forms)
-		insert_forms(base, prefix .. pers, forms)
+	local function copy(pers, forms)
+		copy_forms(base, rowslot .. pers, forms)
 	end
 
-	if base.irregrow_forms.imp then
-		addit("2s", base.irregrow_forms.imp, "")
-	elseif base.conj_vowel == "à" then
-		-- Copy present indicative 3s to imperative 2s.
-		insit("2s", iut.map_forms(base.forms.pres_3s, iut.identity end))
-	else
-		-- Copy present indicative 2s to imperative 2s.
-		insit("2s", iut.map_forms(base.forms.pres_2s, iut.identity end))
-	end
+	-- Copy first imperative form (user specified or taken from present indicative 3s for conj vowel à, or from
+	-- present indicative 2s for other conj vowels) to imperative 2s.
+	copy("2s", base.irregrow_forms.imp)
 	-- Copy present indicative 2p to imperative 2p.
-	insit("2p", iut.map_forms(base.forms.pres_2p, iut.identity end))
+	copy("2p", base.forms.pres_2p)
 	-- Copy present subjunctive 3s, 1p, 2p to imperative.
-	insit("3s", iut.map_forms(base.forms.sub_3s, iut.identity end))
-	insit("1p", iut.map_forms(base.forms.sub_1p, iut.identity end))
-	insit("2p", iut.map_forms(base.forms.sub_2p, iut.identity end))
+	copy("3s", base.forms.sub_3s)
+	copy("1p", base.forms.sub_1p)
+	copy("2p", base.forms.sub_2p)
 end
 
 
@@ -952,14 +950,28 @@ add_past_historic = function(base, prefix)
 end
 
 
-local function get_stem_for_row_conjugation(base, rowslot, rowconj)
-	local stem
+local function conjugate_row(base, rowslot)
+	local rowconj = row_conjugation[rowslot]
+	if not rowconj then
+		error("Internal error: Unrecognized row slot '" .. rowslot .. "'")
+	end
+
+	local function explicit_special_case(base, form)
+		if form == "+" then
+			return rowconj.generate_default_first_form(base)
+		end
+		return form
+	end
+
+	local specs = base.explicit_specs[rowslot] or {{form = "+"}}
+	process_specs(base, base.explicit_forms, rowslot, specs, explicit_slot ~= "imp", explicit_special_case)
+
 	if base.irregrow_forms[rowslot] then
 		stem = iut.map_forms(base.irregrow_forms[rowslot], function(form)
 			if form == "+" then
-				return rowconj.generate_default_stem(base)
+				return rowconj.generate_default_first_form(base)
 			end
-			if not form:find(rowconj.irregform_ending .. "$") then
+			if not rfind(form, rowconj.irregform_ending .. "$") then
 				error(rowslot .. "row: must be given in order to generate the " .. rowconj.rowdesc .. " because"
 					.. "explicit " .. rowconj.irregform_desc .. " '" .. form .. "' does not end in -"
 					.. rowconj.irregform_ending)
@@ -973,13 +985,6 @@ local function get_stem_for_row_conjugation(base, rowslot, rowconj)
 end
 
 
-local function conjugate_row(base, rowslot)
-	local rowconj = row_conjugation[rowslot]
-	if not rowconj then
-		error("Internal error: Unrecognized row slot '" .. rowslot .. "'")
-	end
-
-	local stem = get_stem_for_row_conjugation(base, rowslot, rowconj)
 
 	if type(rowconj.conjugate) == "table" then
 		if #rowconj.conjugate ~= #rowconj.persnum then
@@ -999,31 +1004,27 @@ end
 
 
 -- Defined earlier as a forward reference.
-generate_future_stem = function(base, prefix)
-	return iut.map_forms(base.verb.unaccented_stem, function(stem)
-		if base.conj_vowel == "à" then
+generate_future_first_form = function(base, suffix)
+	suffix = suffix or "ò"
+	if base.conj_vowel == "à" then
+		return iut.map_forms(base.verb.unaccented_stem, function(stem)
 			if stem:find("[cg]$") then
-				return stem .. "her"
+				return stem .. "her" .. suffix
 			elseif stem:find("[cg]i$") then
-				return rsub(stem, "i$", "er")
+				return rsub(stem, "i$", "er") .. suffix
 			else
-				return stem .. "er"
+				return stem .. "er" .. suffix
 			end
-		else
-			return base.verb.verb:gsub("e$", "")
-		end
-	end)
+		end)
+	else
+		return base.verb.verb:gsub("e$", suffix)
+	end
 end
 
 
 -- Defined earlier as a forward reference.
-generate_conditional_stem = function(base, prefix)
-	local futrowconj = row_conjugation.fut
-	if not futrowconj then
-		error("Internal error: Can't find 'fut' in row_conjugation")
-	end
-
-	return get_stem_for_row_conjugation(base, "fut", futrowconj)
+generate_conditional_first_form = function(base)
+	return generate_future_first_form(base, "éi")
 end
 
 
