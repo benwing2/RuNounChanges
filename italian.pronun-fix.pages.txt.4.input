@@ -1091,9 +1091,9 @@ Page 0 vacuomi: <respelling> all: vacu.òmi<r:Olivetti|vacuoma> <end>
 Page 0 vacuometro: <respelling> all: vacu.òmetro,vacuòmetro<r:DiPI|vacuometro> <end>
 Page 0 vacuometri: <respelling> all: vacu.òmetri,vacuòmetri<r:DiPI|vacuometro> <end>
 Page 0 vacuoscopio: <respelling> all: vacuoscòpio,#vacu.oscòpio<r:DiPI|vacuo><r:Olivetti|vacuoscopio> <end>
-Page 0 vacuoscopi: <respelling> all: vacuoscopi,#vacu.oscòpi<r:DiPI|vacuo><r:Olivetti|vacuoscopio> <end>
+Page 0 vacuoscopi: <respelling> all: vacuoscòpi,#vacu.oscòpi<r:DiPI|vacuo><r:Olivetti|vacuoscopio> <end>
 Page 0 vacuostato: <respelling> all: vacu.òstato,vacuòstato<r:DiPI|vacuometro><r:Olivetti|vacuostato> <end>
-Page 0 vacuostati: <respelling> all: vacuostati,vacuòstati<r:DiPI|vacuometro><r:Olivetti|vacuostato> <end>
+Page 0 vacuostati: <respelling> all: vacu.òstati,vacuòstati<r:DiPI|vacuometro><r:Olivetti|vacuostato> <end>
 Page 0 vacuumterapia: <respelling> all: vacuumterapìa <end>
 Page 0 vacuumterapie: <respelling> all: vacuumterapìe <end>
 Page 0 evaporare: <respelling> all: evaporàre <end>
@@ -1125,7 +1125,7 @@ Page 0 vapora: <respelling> all: vapóra <end>
 Page 0 vaporano: <respelling> all: vapórano <end>
 Page 0 vaporino: <respelling> all: vapórino <end>
 Page 0 posare: <respelling> all: posàre,#po[s]àre<r:DiPI|posare> <end>
-Page 0 posarsi: <respelling> all: posarsi,#po[s]àrsi<r:DiPI|posare> <end>
+Page 0 posarsi: <respelling> all: posàrsi,#po[s]àrsi<r:DiPI|posare> <end>
 Page 0 poso: <respelling> all: pòso,#pò[s]o<r:DiPI|poso> <end>
 # split etym and pronun
 #Page 0 posi: <respelling> all: posi <end>
@@ -1138,7 +1138,7 @@ Page 0 posate: <respelling> top: posàte,#po[s]àte<r:DiPI|posate> <end>
 Page 0 posano: <respelling> all: pòsano,#pò[s]ano<r:DiPI|poso> <end>
 Page 0 posiate: <respelling> all: posiàte,#po[s]iàte<r:DiPI|posate> <end>
 Page 0 posino: <respelling> all: pòsino,#pò[s]ino<r:DiPI|poso> <end>
-Page 0 posato: <respelling> top: posàto,#po[s]àto<r:DiPI|posare> <end>
+Page 0 posato: <respelling> all: posàto,#po[s]àto<r:DiPI|posare> <end>
 # split etym and pronun
 #Page 0 posati: <respelling> top: posàti,#po[s]àti<r:DiPI|posare> <end>
 Page 0 posata: <respelling> top: posàta,#po[s]àta<r:DiPI|posare> <end>
@@ -1156,9 +1156,9 @@ Page 0 disposino: <respelling> all: dispòsino <end>
 Page 0 disposato: <respelling> all: disposàto <end>
 Page 0 disposati: <respelling> all: disposàti <end>
 Page 0 disposata: <respelling> all: disposàta <end>
-Page 0 riposare: <respelling> all: riposàre,#ripo[s]àre<r:DiPI|riposo> <end>
-Page 0 riposarsi: <respelling> all: riposarsi,#ripo[s]àrsi<r:DiPI|riposo> <end>
-Page 0 riposo: <respelling> all: ripòso,#ripò[s]o<r:DiPI|riposo> <end>
+Page 0 riposare: <respelling> top: riposàre,#ripo[s]àre<r:DiPI|riposo> <end>
+Page 0 riposarsi: <respelling> top: riposàrsi,#ripo[s]àrsi<r:DiPI|riposo> <end>
+Page 0 riposo: <respelling> top: ripòso,#ripò[s]o<r:DiPI|riposo> <end>
 # split etym and pronun
 #Page 0 riposi: <respelling> all: riposi <end>
 Page 0 riposa: <respelling> all: ripòsa,#ripò[s]a<r:DiPI|riposo> <end>
@@ -1168,12 +1168,12 @@ Page 0 riposano: <respelling> all: ripòsano,#ripò[s]ano<r:DiPI|riposo> <end>
 Page 0 riposiate: <respelling> all: riposiàte,#ripo[s]iàte<r:DiPI|riposo> <end>
 # split etym and pronun
 #Page 0 riposino: <respelling> all: ripòsino,#ripò[s]ino<r:DiPI|riposo> <end>
-Page 0 riposato: <respelling> top: riposàto,#ripo[s]àto<r:DiPI|riposo> <end>
+Page 0 riposato: <respelling> all: riposàto,#ripo[s]àto<r:DiPI|riposo> <end>
 # split etym and pronun
 #Page 0 riposati: <respelling> top: riposàti,#ripo[s]àti<r:DiPI|riposo> <end>
-Page 0 riposata: <respelling> top: riposàta,#ripo[s]àta<r:DiPI|riposo> <end>
+Page 0 riposata: <respelling> all: riposàta,#ripo[s]àta<r:DiPI|riposo> <end>
 Page 0 nave posareti: <respelling> all: nàve_pòsaréti,#nàve_pò[s]aréti<r:DiPI|posa><r:Olivetti|posareti> <end>
-Page 0 navi posareti: <respelling> all: nàvi_posareti,#nàvi_pò[s]aréti<r:DiPI|posa><r:Olivetti|posareti> <end>
+Page 0 navi posareti: <respelling> all: nàvi_posaréti,#nàvi_pò[s]aréti<r:DiPI|posa><r:Olivetti|posareti> <end>
 Page 0 portaposate: <respelling> all: pòrtaposàte,#pòrtapo[s]àte<r:DiPI|posate><r:Olivetti> <end>
 Page 0 posacavi: <respelling> all: pòsacàvi,#pò[s]acàvi<r:DiPI|posa><r:Olivetti> <end>
 Page 0 posacenere: <respelling> all: pòsacénere,#pò[s]acénere<r:DiPI|posa><r:Olivetti> <end>
@@ -1217,10 +1217,10 @@ Page 0 apporre: <respelling> all: appórre <end>
 #Page 0 apposti: <respelling> all: appósti,appòsti<r:DiPI|posto> <end>
 Page 0 apposte: <respelling> all: appóste,appòste<r:DiPI|apposto> <end>
 Page 0 bendisporre: <respelling> all: bèndispórre<r:Olivetti> <end>
-Page 0 bendisposto: <respelling> all: bendispósto,bendispòsto<r:DiPI|disposto> <end>
-Page 0 bendisposta: <respelling> all: bendispósta,bendispòsta<r:DiPI|disposto> <end>
-Page 0 bendisposti: <respelling> all: bendispósti,bendispòsti<r:DiPI|disposto> <end>
-Page 0 bendisposte: <respelling> all: bendispóste,bendispòste<r:DiPI|disposto> <end>
+Page 0 bendisposto: <respelling> all: bendispósto,bendispòsto<r:DiPI|disposto><r:Olivetti|bendisposto> <end>
+Page 0 bendisposta: <respelling> all: bendispósta,bendispòsta<r:DiPI|disposto><r:Olivetti|bendisposto> <end>
+Page 0 bendisposti: <respelling> all: bendispósti,bendispòsti<r:DiPI|disposto><r:Olivetti|bendisposto> <end>
+Page 0 bendisposte: <respelling> all: bendispóste,bendispòste<r:DiPI|disposto><r:Olivetti|bendisposto> <end>
 Page 0 comporre: <respelling> all: compórre <end>
 Page 0 composto: <respelling> top: compósto,compòsto<r:DiPI|composto> <end>
 Page 0 composta: <respelling> top: compósta,compòsta<r:DiPI|composta> <end>
@@ -1233,9 +1233,9 @@ Page 0 contrapposti: <respelling> all: contrappósti,contrappòsti<r:DiPI|posto>
 Page 0 contrapposte: <respelling> all: contrappóste,contrappòste<r:DiPI|posto> <end>
 Page 0 controproporre: <respelling> all: contropropórre <end>
 Page 0 controproposto: <respelling> all: contropropósto,contropropòsto<r:DiPI|proposto> <end>
-Page 0 controproposta: <respelling> top: contropropósta,contropropòsta<r:DiPI|proposto> <end>
+Page 0 controproposta: <respelling> top: contropropósta,contropropòsta<r:DiPI|proposto|proposta> <end>
 Page 0 controproposti: <respelling> all: contropropósti,contropropòsti<r:DiPI|proposto> <end>
-Page 0 controproposte: <respelling> top: contropropóste,contropropòste<r:DiPI|proposto> <end>
+Page 0 controproposte: <respelling> top: contropropóste,contropropòste<r:DiPI|proposto|proposta> <end>
 Page 0 decomporre: <respelling> all: decompórre <end>
 Page 0 decomposto: <respelling> all: decompósto,decompòsto<r:DiPI|decomposto> <end>
 Page 0 decomposta: <respelling> all: decompósta,decompòsta<r:DiPI|decomposto> <end>
@@ -1256,7 +1256,7 @@ Page 0 discomposto: <respelling> all: discompósto,discompòsto<r:DiPI|composto>
 Page 0 discomposta: <respelling> all: discompósta,discompòsta<r:DiPI|composto> <end>
 Page 0 discomposti: <respelling> all: discompósti,discompòsti<r:DiPI|composto> <end>
 Page 0 discomposte: <respelling> all: discompóste,discompòste<r:DiPI|composto> <end>
-Page 0 disporre: <respelling> all: dispórre <end>
+Page 0 disporre: <respelling> all: dispórre<audio:LL-Q652_(ita)-Happypheasant-disporre.wav> <end>
 Page 0 disposto: <respelling> all: dispósto,dispòsto<r:DiPI|disposto> <end>
 Page 0 disposta: <respelling> all: dispósta,dispòsta<r:DiPI|disposto> <end>
 Page 0 disposti: <respelling> all: dispósti,dispòsti<r:DiPI|disposto> <end>
@@ -1266,21 +1266,21 @@ Page 0 esposto: <respelling> all: espósto,espòsto<r:DiPI|esposto> <end>
 Page 0 esposta: <respelling> all: espósta,espòsta<r:DiPI|esposto> <end>
 Page 0 esposti: <respelling> all: espósti,espòsti<r:DiPI|esposto> <end>
 Page 0 esposte: <respelling> all: espóste,espòste<r:DiPI|esposto> <end>
-Page 0 fotocomporre: <respelling> all: fotocompórre <end>
-Page 0 fotocomposto: <respelling> all: fotocompósto,fotocompòsto<r:DiPI|composto> <end>
-Page 0 fotocomposta: <respelling> all: fotocompósta,fotocompòsta<r:DiPI|composto> <end>
-Page 0 fotocomposti: <respelling> all: fotocompósti,fotocompòsti<r:DiPI|composto> <end>
-Page 0 fotocomposte: <respelling> all: fotocompóste,fotocompòste<r:DiPI|composto> <end>
+Page 0 fotocomporre: <respelling> all: fòtocompórre<r:Olivetti|fotocomporre> <end>
+Page 0 fotocomposto: <respelling> all: fòtocompósto,fòtocompòsto<r:DiPI|composto><r:Olivetti|fotocomposto> <end>
+Page 0 fotocomposta: <respelling> all: fòtocompósta,fòtocompòsta<r:DiPI|composto><r:Olivetti|fotocomposto> <end>
+Page 0 fotocomposti: <respelling> all: fòtocompósti,fòtocompòsti<r:DiPI|composto><r:Olivetti|fotocomposto> <end>
+Page 0 fotocomposte: <respelling> all: fòtocompóste,fòtocompòste<r:DiPI|composto><r:Olivetti|fotocomposto> <end>
 Page 0 frapporre: <respelling> all: frappórre <end>
 Page 0 frapposto: <respelling> all: frappósto,frappòsto<r:DiPI|posto> <end>
 Page 0 frapposta: <respelling> all: frappósta,frappòsta<r:DiPI|posto> <end>
 Page 0 frapposti: <respelling> all: frappósti,frappòsti<r:DiPI|posto> <end>
 Page 0 frapposte: <respelling> all: frappóste,frappòste<r:DiPI|posto> <end>
-Page 0 giustapporre: <respelling> all: giustappórre <end>
-Page 0 giustapposto: <respelling> all: giustappósto,giustappòsto<r:DiPI|posto> <end>
-Page 0 giustapposta: <respelling> all: giustappósta,giustappòsta<r:DiPI|posto> <end>
-Page 0 giustapposti: <respelling> all: giustappósti,giustappòsti<r:DiPI|posto> <end>
-Page 0 giustapposte: <respelling> all: giustappóste,giustappòste<r:DiPI|posto> <end>
+Page 0 giustapporre: <respelling> all: giùstappórre<r:Olivetti> <end>
+Page 0 giustapposto: <respelling> all: giustappósto,giustappòsto<r:DiPI|posto><r:Olivetti|giustapposto> <end>
+Page 0 giustapposta: <respelling> all: giustappósta,giustappòsta<r:DiPI|posto><r:Olivetti|giustapposto> <end>
+Page 0 giustapposti: <respelling> all: giustappósti,giustappòsti<r:DiPI|posto><r:Olivetti|giustapposto> <end>
+Page 0 giustapposte: <respelling> all: giustappóste,giustappòste<r:DiPI|posto><r:Olivetti|giustapposto> <end>
 Page 0 imporre: <respelling> all: impórre <end>
 # split etym and pronun next 4
 #Page 0 imposto: <respelling> all: impósto,impòsto<r:DiPI|imposto> <end>
@@ -1307,12 +1307,12 @@ Page 0 opposto: <respelling> all: oppósto,oppòsto<r:DiPI|opposto> <end>
 Page 0 opposta: <respelling> all: oppósta,oppòsta<r:DiPI|opposto> <end>
 Page 0 opposti: <respelling> all: oppósti,oppòsti<r:DiPI|opposto> <end>
 Page 0 opposte: <respelling> all: oppóste,oppòste<r:DiPI|opposto> <end>
-Page 0 ovideporre: <respelling> all: ovidepórre <end>
-Page 0 ovideposto: <respelling> all: ovidepósto,ovidepòsto<r:DiPI|deposto> <end>
-Page 0 ovideposta: <respelling> all: ovidepósta,ovidepòsta<r:DiPI|deposto> <end>
-Page 0 ovideposti: <respelling> all: ovidepósti,ovidepòsti<r:DiPI|deposto> <end>
-Page 0 ovideposte: <respelling> all: ovidepóste,ovidepòste<r:DiPI|deposto> <end>
-Page 0 porre: <respelling> all: pórre <end>
+Page 0 ovideporre: <respelling> all: òvidepórre<r:Olivetti> <end>
+Page 0 ovideposto: <respelling> all: òvidepósto,òvidepòsto<r:DiPI|deposto><r:Olivetti|ovideporre> <end>
+Page 0 ovideposta: <respelling> all: òvidepósta,òvidepòsta<r:DiPI|deposto><r:Olivetti|ovideporre> <end>
+Page 0 ovideposti: <respelling> all: òvidepósti,òvidepòsti<r:DiPI|deposto><r:Olivetti|ovideporre> <end>
+Page 0 ovideposte: <respelling> all: òvidepóste,òvidepòste<r:DiPI|deposto><r:Olivetti|ovideporre> <end>
+Page 0 porre: <respelling> all: pórre<audio:LL-Q652_(ita)-Happypheasant-porre.wav> <end>
 # split etym and pronun next 4
 #Page 0 posto: <respelling> all: pósto,pòsto<r:DiPI|posto> <end>
 #Page 0 posta: <respelling> all: pósta,pòsta<r:DiPI|posto> <end>
@@ -1333,16 +1333,16 @@ Page 0 preposto: <respelling> all: prepósto,prepòsto<r:DiPI|preposto> <end>
 Page 0 preposta: <respelling> all: prepósta,prepòsta<r:DiPI|preposto> <end>
 Page 0 preposti: <respelling> all: prepósti,prepòsti<r:DiPI|preposto> <end>
 Page 0 preposte: <respelling> all: prepóste,prepòste<r:DiPI|preposto> <end>
-Page 0 presupporre: <respelling> all: presuppórre <end>
-Page 0 presupposto: <respelling> all: presuppósto,presuppòsto<r:DiPI|presupposto> <end>
-Page 0 presupposta: <respelling> all: presuppósta,presuppòsta<r:DiPI|presupposto> <end>
-Page 0 presupposti: <respelling> all: presuppósti,presuppòsti<r:DiPI|presupposto> <end>
-Page 0 presupposte: <respelling> all: presuppóste,presuppòste<r:DiPI|presupposto> <end>
-Page 0 proporre: <respelling> all: propórre <end>
+Page 0 presupporre: <respelling> all: presuppórre,#pre[s]uppórre<r:DiPI|presupposto> <end>
+Page 0 presupposto: <respelling> all: presuppósto,presuppòsto,#pre[s]uppósto<r:DiPI|presupposto> <end>
+Page 0 presupposta: <respelling> all: presuppósta,presuppòsta,#pre[s]uppósta<r:DiPI|presupposto> <end>
+Page 0 presupposti: <respelling> all: presuppósti,presuppòsti,#pre[s]uppósti<r:DiPI|presupposto> <end>
+Page 0 presupposte: <respelling> all: presuppóste,presuppòste,#pre[s]uppóste<r:DiPI|presupposto> <end>
+Page 0 proporre: <respelling> all: propórre<audio:LL-Q652_(ita)-Happypheasant-proporre.wav> <end>
 Page 0 proposto: <respelling> all: propósto,propòsto<r:DiPI|proposto> <end>
-Page 0 proposta: <respelling> top: propósta,propòsta<r:DiPI|proposto> <end>
+Page 0 proposta: <respelling> top: propósta,propòsta<r:DiPI|proposto|proposta> <end>
 Page 0 proposti: <respelling> all: propósti,propòsti<r:DiPI|proposto> <end>
-Page 0 proposte: <respelling> top: propóste,propòste<r:DiPI|proposto> <end>
+Page 0 proposte: <respelling> top: propóste,propòste<r:DiPI|proposto|proposta> <end>
 Page 0 reporre: <respelling> all: repórre <end>
 Page 0 reposto: <respelling> all: repósto,repòsto<r:DiPI|riposto> <end>
 Page 0 reposta: <respelling> all: repósta,repòsta<r:DiPI|riposto> <end>
@@ -1380,9 +1380,9 @@ Page 0 riposti: <respelling> all: ripósti,ripòsti<r:DiPI|riposto> <end>
 Page 0 riposte: <respelling> all: ripóste,ripòste<r:DiPI|riposto> <end>
 Page 0 riproporre: <respelling> all: ripropórre <end>
 Page 0 riproposto: <respelling> all: ripropósto,ripropòsto<r:DiPI|proposto> <end>
-Page 0 riproposta: <respelling> all: ripropósta,ripropòsta<r:DiPI|proposto> <end>
+Page 0 riproposta: <respelling> all: ripropósta,ripropòsta<r:DiPI|proposto|proposta> <end>
 Page 0 riproposti: <respelling> all: ripropósti,ripropòsti<r:DiPI|proposto> <end>
-Page 0 riproposte: <respelling> all: ripropóste,ripropòste<r:DiPI|proposto> <end>
+Page 0 riproposte: <respelling> all: ripropóste,ripropòste<r:DiPI|proposto|proposta> <end>
 Page 0 ritrasporre: <respelling> all: ritraspórre <end>
 Page 0 ritrasposto: <respelling> all: ritraspósto,ritraspòsto<r:DiPI|trasposto> <end>
 Page 0 ritrasposta: <respelling> all: ritraspósta,ritraspòsta<r:DiPI|trasposto> <end>
@@ -1451,7 +1451,7 @@ Page 0 sporre: <respelling> all: spórre <end>
 #Page 0 sposta: <respelling> all: spósta,spòsta<r:DiPI|posto> <end>
 #Page 0 sposti: <respelling> all: spósti,spòsti<r:DiPI|posto> <end>
 Page 0 sposte: <respelling> all: spóste,spòste<r:DiPI|esposto> <end>
-Page 0 supporre: <respelling> all: suppórre <end>
+Page 0 supporre: <respelling> all: suppórre<audio:LL-Q652_(ita)-Happypheasant-supporre.wav> <end>
 Page 0 supposto: <respelling> all: suppósto,suppòsto<r:DiPI|supposto> <end>
 Page 0 supposta: <respelling> top: suppósta,suppòsta<r:DiPI|supposto> <end>
 Page 0 supposti: <respelling> all: suppósti,suppòsti<r:DiPI|supposto> <end>
@@ -1513,7 +1513,7 @@ Page 0 riservare: <respelling> all: riservàre,#ri[s]ervàre<r:DiPI|riserva> <en
 Page 0 riservarsi: <respelling> all: riservàrsi,#ri[s]ervàrsi<r:DiPI|riserva> <end>
 Page 0 riservo: <respelling> all: risèrvo,#ri[s]èrvo<r:DiPI|riserva> <end>
 Page 0 riservi: <respelling> all: risèrvi,#ri[s]èrvi<r:DiPI|riserva> <end>
-Page 0 riserva: <respelling> all: risèrva,#ri[s]èrva<r:DiPI|riserva> <end>
+Page 0 riserva: <respelling> top: risèrva,#ri[s]èrva<r:DiPI|riserva> <end>
 Page 0 riserviamo: <respelling> all: riserviàmo,#ri[s]erviàmo<r:DiPI|riserva> <end>
 Page 0 riservate: <respelling> top: riservàte,#ri[s]ervàte<r:DiPI|riserva> <end>
 Page 0 riservano: <respelling> all: risèrvano,#ri[s]èrvano<r:DiPI|riserva> <end>
@@ -1531,7 +1531,7 @@ Page 0 riservata: <respelling> all: riservàta,#ri[s]ervàta<r:DiPI|riserva> <en
 #Page 0 stenta: <respelling> all: stenta <end>
 #Page 0 stentano: <respelling> all: stentano <end>
 #Page 0 stentino: <respelling> all: stentino <end>
-Page 0 reintegrare: <respelling> all: re.integràre <end>
+Page 0 reintegrare: <respelling> all: re.integràre<r:Olivetti> <end>
 Page 0 reintegrarsi: <respelling> all: re.integràrsi <end>
 Page 0 reintegro: <respelling> all: reìntegro <end>
 Page 0 reintegri: <respelling> all: reìntegri <end>
@@ -1555,7 +1555,7 @@ Page 0 reiterate: <respelling> top: re.iteràte <end>
 Page 0 reiterano: <respelling> all: reìterano <end>
 Page 0 reiteriate: <respelling> all: re.iteriàte <end>
 Page 0 reiterino: <respelling> all: reìterino <end>
-Page 0 reiterato: <respelling> all: re.iteràto <end>
+Page 0 reiterato: <respelling> all: re.iteràto<r:Olivetti> <end>
 Page 0 reiterati: <respelling> all: re.iteràti <end>
 Page 0 reiterata: <respelling> all: re.iteràta <end>
 Page 0 remare: <respelling> all: remàre <end>
@@ -1648,7 +1648,7 @@ Page 0 violentino: <respelling> all: vi.olèntino,violèntino<r:DiPI|violento> <
 Page 0 violentato: <respelling> all: vi.olentàto,violentàto<r:DiPI|violento> <end>
 Page 0 violentati: <respelling> all: vi.olentàti,violentàti<r:DiPI|violento> <end>
 Page 0 violentata: <respelling> all: vi.olentàta,violentàta<r:DiPI|violento> <end>
-Page 0 antiviolenza: <respelling> all: antivi.olènza,antiviolènza<r:DiPI|violento> <end>
+Page 0 antiviolenza: <respelling> all: antivi.olèntsa,antiviolèntsa<r:DiPI|violento> <end>
 Page 0 cristalvioletto: <respelling> all: cristàlvi.olètto,cristàlviolètto<r:DiPI|violetto><r:Olivetti|cristalvioletto> <end>
 Page 0 cristalvioletti: <respelling> all: cristàlvi.olètti,cristàlviolètti<r:DiPI|violetto><r:Olivetti|cristalvioletto> <end>
 Page 0 gialloviola: <respelling> all: giàllovi.òla,giàlloviòla<r:DiPI|viola><r:Olivetti|gialloverde> <end>
@@ -1664,8 +1664,8 @@ Page 0 nonviolento: <respelling> all: nonvi.olènto,nonviolènto<r:DiPI|violento
 Page 0 nonviolenta: <respelling> all: nonvi.olènta,nonviolènta<r:DiPI|violento> <end>
 Page 0 nonviolenti: <respelling> all: nonvi.olènti,nonviolènti<r:DiPI|violento> <end>
 Page 0 nonviolente: <respelling> all: nonvi.olènte,nonviolènte<r:DiPI|violento> <end>
-Page 0 nonviolenza: <respelling> all: nonvi.olènza,nonviolènza<r:DiPI|violento> <end>
-Page 0 nonviolenze: <respelling> all: nonvi.olènze,nonviolènze<r:DiPI|violento> <end>
+Page 0 nonviolenza: <respelling> all: nonvi.olèntsa,nonviolèntsa<r:DiPI|violento> <end>
+Page 0 nonviolenze: <respelling> all: nonvi.olèntse,nonviolèntse<r:DiPI|violento> <end>
 Page 0 raviolatore: <respelling> all: ravi.olatóre,raviolatóre<r:DiPI|ravioli> <end>
 Page 0 raviolatori: <respelling> all: ravi.olatóri,raviolatóri<r:DiPI|ravioli> <end>
 Page 0 raviolatrice: <respelling> all: ravi.olatrìce,raviolatrìce<r:DiPI|ravioli> <end>
@@ -1688,7 +1688,7 @@ Page 0 sviolinino: <respelling> all: svi.olìnino,sviolìnino<r:DiPI|violino> <e
 #Page 0 sviolinini: <respelling> all: svi.olinini,sviolinini<r:DiPI|violino> <end> does not exist
 Page 0 sviolinato: <respelling> all: svi.olinàto,sviolinàto<r:DiPI|violino> <end>
 Page 0 sviolinati: <respelling> all: svi.olinàti,sviolinàti<r:DiPI|violino> <end>
-Page 0 sviolinata: <respelling> all: svi.olinàta,sviolinàta<r:DiPI|violino> <end>
+Page 0 sviolinata: <respelling> top: svi.olinàta,sviolinàta<r:DiPI|violino> <end>
 Page 0 ultravioletto: <respelling> all: ultravi.olètto,ultraviolètto<r:DiPI|violetto> <end>
 Page 0 ultravioletta: <respelling> all: ultravi.olètta,ultraviolètta<r:DiPI|violetto> <end>
 Page 0 ultravioletti: <respelling> all: ultravi.olètti,ultraviolètti<r:DiPI|violetto> <end>
@@ -1742,7 +1742,7 @@ Page 0 inebrino: <respelling> all: inèbrino <end>
 Page 0 inebriato: <respelling> all: inebri.àto,inebriàto<r:DiPI|inebriato> <end>
 Page 0 inebriati: <respelling> all: inebri.àti,inebriàti<r:DiPI|inebriato> <end>
 Page 0 inebriata: <respelling> all: inebri.àta,inebriàta<r:DiPI|inebriato> <end>
-Page 0 sciare: <respelling> all: sci.àre<r:DiPI|sciare> <end>
+Page 0 sciare: <respelling> top: sci.àre<r:DiPI|sciare> <end>
 Page 0 sciarsi: <respelling> all: sci.àrsi<r:DiPI|sciare> <end>
 Page 0 scio: <respelling> all: scìo <end>
 Page 0 scii: <respelling> all: scìi <end>
@@ -1776,8 +1776,6 @@ Page 0 attentarsi: <respelling> all: attentàrsi <end>
 #Page 0 attenta: <respelling> all: attenta <end>
 Page 0 attentano: <respelling> all: attèntano,atténtano<r:DiPI|attento> <end>
 Page 0 attentino: <respelling> all: attèntino,atténtino<r:DiPI|attento> <end>
-Page 0 bistentare: <respelling> all: bistentàre <end>
-Page 0 bistentarsi: <respelling> all: bistentàrsi <end>
 Page 0 bistentare: <respelling> all: bistentàre <end>
 Page 0 bistentarsi: <respelling> all: bistentàrsi <end>
 Page 0 bistento: <respelling> top: bistènto,bisténto<r:DiPI|stento> <end>
@@ -1821,7 +1819,7 @@ Page 0 stentare: <respelling> all: stentàre <end>
 Page 0 stentarsi: <respelling> all: stentàrsi <end>
 Page 0 stento: <respelling> top: stènto,sténto<r:DiPI|stento> <end>
 Page 0 stenti: <respelling> top: stènti,sténti<r:DiPI|stento> <end>
-Page 0 stenta: <respelling> all: stènta,sténta<r:DiPI|stento> <end>
+Page 0 stenta: <respelling> all: stènta,sténta<r:DiPI|stenta> <end>
 Page 0 stentano: <respelling> all: stèntano,sténtano<r:DiPI|stento> <end>
 Page 0 stentino: <respelling> all: stèntino,sténtino<r:DiPI|stento> <end>
 Page 0 ruzzare: <respelling> all: ruddzàre,ruttsàre<r:DiPI|ruzzo> <end>
@@ -1845,7 +1843,7 @@ Page 0 disvela: <respelling> all: disvéla,disvèla<r:DiPI|disvelo> <end>
 Page 0 disvelano: <respelling> all: disvélano,disvèlano<r:DiPI|disvelo> <end>
 Page 0 disvelino: <respelling> all: disvélino,disvèlino<r:DiPI|disvelo> <end>
 Page 0 rivelare: <respelling> top: rivelàre <end>
-Page 0 rivelarsi: <respelling> top: rivelàrsi <end>
+Page 0 rivelarsi: <respelling> all: rivelàrsi <end>
 # split etym and pronun
 #Page 0 rivelo: <respelling> all: rivelo <end>
 #Page 0 riveli: <respelling> all: riveli <end>
@@ -1898,7 +1896,7 @@ Page 0 scoccare: <respelling> all: scoccàre <end>
 Page 0 scoccarsi: <respelling> all: scoccàrsi <end>
 Page 0 scocco: <respelling> all: scòcco,scócco<r:DiPI|scocco> <end>
 Page 0 scocchi: <respelling> all: scòcchi,scócchi<r:DiPI|scocco> <end>
-Page 0 scocca: <respelling> all: scòcca,scócca<r:DiPI|scocco> <end>
+Page 0 scocca: <respelling> all: scòcca,scócca<r:DiPI> <end>
 Page 0 scoccano: <respelling> all: scòccano,scóccano<r:DiPI|scocco> <end>
 Page 0 scocchino: <respelling> all: scòcchino,scócchino<r:DiPI|scocco> <end>
 Page 0 effettuare: <respelling> all: effettu.àre,effettuàre<r:DiPI|effettuo> <end>
@@ -1922,7 +1920,7 @@ Page 0 affettuosissima: <respelling> all: affettu.osìssima,affettuosìssima,#af
 Page 0 affettuosissimi: <respelling> all: affettu.osìssimi,affettuosìssimi,#affettu.o[s]ìssimi<r:DiPI|affettuoso> <end>
 Page 0 affettuosissime: <respelling> all: affettu.osìssime,affettuosìssime,#affettu.o[s]ìssime<r:DiPI|affettuoso> <end>
 Page 0 affettuosità: <respelling> all: affettu.osità,affettuosità,#affettu.o[s]ità<r:DiPI|affettuoso> <end>
-Page 0 affettuoso: <respelling> all: affettu.óso,affettuóso,#affettu.ó[s]o<r:DiPI|affettuoso> <end>
+Page 0 affettuoso: <respelling> all: affettu.óso,affettuóso,#affettu.ó[s]o<r:DiPI|affettuoso><audio:LL-Q652_(ita)-Happypheasant-affettuoso.wav> <end>
 Page 0 affettuosa: <respelling> all: affettu.ósa,affettuósa,#affettu.ó[s]a<r:DiPI|affettuoso> <end>
 Page 0 affettuosi: <respelling> all: affettu.ósi,affettuósi,#affettu.ó[s]i<r:DiPI|affettuoso> <end>
 Page 0 affettuose: <respelling> all: affettu.óse,affettuóse,#affettu.ó[s]e<r:DiPI|affettuoso> <end>
@@ -1967,7 +1965,7 @@ Page 0 ridisegna: <respelling> all: ridiségna,#ridi[s]égna<r:DiPI|disegno> <en
 Page 0 ridisegne: <respelling> all: ridiségne,#ridi[s]égne<r:DiPI|disegno> <end>
 Page 0 ridisegniamo: <respelling> all: ridisegniàmo,#ridi[s]egniàmo<r:DiPI|disegno> <end>
 Page 0 ridisegnate: <respelling> top: ridisegnàte,#ridi[s]egnàte<r:DiPI|disegno> <end>
-Page 0 ridisegnano: <respelling> all: ridisegnano,#ridi[s]egnano<r:DiPI|disegno> <end>
+Page 0 ridisegnano: <respelling> all: ridiségnano,#ridi[s]égnano<r:DiPI|disegno> <end>
 Page 0 ridisegniate: <respelling> all: ridisegniàte,#ridi[s]egniàte<r:DiPI|disegno> <end>
 Page 0 ridisegnino: <respelling> all: ridiségnino,#ridi[s]égnino<r:DiPI|disegno> <end>
 # not a word
@@ -2027,7 +2025,7 @@ Page 0 compartecipano: <respelling> all: compartécipano,compartècipano<r:DiPI|
 Page 0 compartecipino: <respelling> all: compartécipino,compartècipino<r:DiPI|partecipo> <end>
 Page 0 integrare: <respelling> all: integràre <end>
 Page 0 integrarsi: <respelling> all: integràrsi <end>
-Page 0 integro: <respelling> all: ìntegro <end>
+Page 0 integro: <respelling> top: ìntegro<r:DiPI> <end>
 Page 0 integri: <respelling> all: ìntegri <end>
 Page 0 integra: <respelling> all: ìntegra <end>
 Page 0 integre: <respelling> all: ìntegre <end>
@@ -2068,10 +2066,10 @@ Page 0 dettarsi: <respelling> all: dettàrsi <end>
 #Page 0 dettino: <respelling> all: dettino <end>
 Page 0 disdettare: <respelling> all: disdettàre <end>
 Page 0 disdettarsi: <respelling> all: disdettàrsi <end>
-Page 0 disdetto: <respelling> all: disdétto <end>
-Page 0 disdetti: <respelling> all: disdétti <end>
-Page 0 disdetta: <respelling> all: disdétta <end>
-Page 0 disdette: <respelling> all: disdétte <end>
+Page 0 disdetto: <respelling> top: disdétto <end>
+Page 0 disdetti: <respelling> top: disdétti <end>
+Page 0 disdetta: <respelling> top: disdétta <end>
+Page 0 disdette: <respelling> top: disdétte <end>
 Page 0 disdettano: <respelling> all: disdéttano <end>
 Page 0 disdettino: <respelling> all: disdéttino <end>
 Page 0 ridettare: <respelling> all: ridettàre <end>
@@ -2105,8 +2103,8 @@ Page 0 riapplichi: <respelling> all: ri.àpplichi <end>
 Page 0 riapplica: <respelling> all: ri.àpplica <end>
 Page 0 riapplicano: <respelling> all: ri.àpplicano <end>
 Page 0 riapplichino: <respelling> all: ri.àpplichino <end>
-Page 0 allenare: <respelling> all: allenàre <end>
-Page 0 allenarsi: <respelling> all: allenàrsi <end>
+Page 0 allenare: <respelling> top: allenàre <end>
+Page 0 allenarsi: <respelling> top: allenàrsi <end>
 # split etym and pronun
 #Page 0 alleno: <respelling> all: alleno <end>
 #Page 0 alleni: <respelling> all: alleni <end>
@@ -2188,7 +2186,7 @@ Page 0 riputa: <respelling> all: ripùta <end>
 Page 0 riputano: <respelling> all: ripùtano <end>
 Page 0 riputino: <respelling> all: ripùtino <end>
 Page 0 risputare: <respelling> all: risputàre <end>
-Page 0 risputarsi: <respelling> all: risputarsi <end>
+Page 0 risputarsi: <respelling> all: risputàrsi <end>
 Page 0 risputo: <respelling> all: rispùto <end>
 Page 0 risputi: <respelling> all: rispùti <end>
 Page 0 risputa: <respelling> all: rispùta <end>
@@ -2228,13 +2226,13 @@ Page 0 risulti: <respelling> all: risùlti,#ri[s]ùlti<r:DiPI|risulta> <end>
 Page 0 risulta: <respelling> all: risùlta,#ri[s]ùlta<r:DiPI|risulta> <end>
 Page 0 risulte: <respelling> all: risùlte,#ri[s]ùlte<r:DiPI|risulta> <end>
 Page 0 risultiamo: <respelling> all: risultiàmo,#ri[s]ultiàmo<r:DiPI|risulta> <end>
-Page 0 risultate: <respelling> all: risultàte,#ri[s]ultàte<r:DiPI|risulta|risultato> <end>
+Page 0 risultate: <respelling> top: risultàte,#ri[s]ultàte<r:DiPI|risulta|risultato> <end>
 Page 0 risultano: <respelling> all: risùltano,#ri[s]ùltano<r:DiPI|risulta> <end>
 Page 0 risultiate: <respelling> all: risultiàte,#ri[s]ultiàte<r:DiPI|risulta> <end>
 Page 0 risultino: <respelling> all: risùltino,#ri[s]ùltino<r:DiPI|risulta> <end>
 # does not exist
 #Page 0 risultini: <respelling> all: risultini,#ri[s]ultini<r:DiPI|risulta> <end>
-Page 0 risultato: <respelling> all: risultàto,#ri[s]ultàto<r:DiPI|risultato><audio:it-risultato.ogg;Audio (IT)> <end>
+Page 0 risultato: <respelling> all: risultàto,#ri[s]ultàto<r:DiPI|risultato><audio:it-risultato.ogg;Audio_(IT)> <end>
 Page 0 risultati: <respelling> all: risultàti,#ri[s]ultàti<r:DiPI|risultato> <end>
 Page 0 risultata: <respelling> all: risultàta,#ri[s]ultàta<r:DiPI|risultato> <end>
 # up through 10000
@@ -2327,11 +2325,11 @@ Page 0 zietto: <respelling> all: dzi.étto,#tsi.étto<r:DiPI|zietto> <end>
 Page 0 zietti: <respelling> all: dzi.étti,#tsi.étti<r:DiPI|zietto> <end>
 Page 0 allegrare: <respelling> all: allegràre <end>
 Page 0 allegrarsi: <respelling> all: allegràrsi <end>
-Page 0 allegro: <respelling> top: allègro,allégro<r:DiPI|allegro> <end>
-Page 0 allegri: <respelling> top: allègri,allégri<r:DiPI|allegro> <end>
-Page 0 allegra: <respelling> top: allègra,allégra<r:DiPI|allegro> <end>
-Page 0 allegrano: <respelling> all: allègrano,allégrano<r:DiPI|allegro> <end>
-Page 0 allegrino: <respelling> all: allègrino,allégrino<r:DiPI|allegro> <end>
+Page 0 allegro: <respelling> top: allégro,allègro<r:DiPI|allegro> <end>
+Page 0 allegri: <respelling> top: allégri,allègri<r:DiPI|allegro> <end>
+Page 0 allegra: <respelling> top: allégra,allègra<r:DiPI|allegro> <end>
+Page 0 allegrano: <respelling> all: allégrano,allègrano<r:DiPI|allegro> <end>
+Page 0 allegrino: <respelling> all: allégrino,allègrino<r:DiPI|allegro> <end>
 Page 0 cinciallegra: <respelling> all: cinciallégra,cinciallègra<r:DiPI|cinciallegra> <end>
 Page 0 cinciallegre: <respelling> all: cinciallégre,cinciallègre<r:DiPI|cinciallegra> <end>
 Page 0 cingallegra: <respelling> all: cingallégra,cingallègra<r:DiPI|cingallegra> <end>
@@ -2366,7 +2364,7 @@ Page 0 rirallegrino: <respelling> all: rirallégrino,rirallègrino<r:DiPI|ralleg
 #Page 0 risanato: <respelling> all: risanato <end>
 Page 0 pranzare: <respelling> all: prandzàre,prantsàre<r:DiPI|pranzo> <end>
 Page 0 pranzarsi: <respelling> all: prandzàrsi,prantsàrsi<r:DiPI|pranzo> <end>
-Page 0 pranzo: <respelling> all: pràndzo,pràntso<r:DiPI|pranzo> <end>
+Page 0 pranzo: <respelling> top: pràndzo,pràntso<r:DiPI|pranzo><audio:It-il_pranzo.ogg;Audio_(with_/ts/)> <end>
 Page 0 pranzi: <respelling> all: pràndzi,pràntsi<r:DiPI|pranzo> <end>
 Page 0 pranza: <respelling> all: pràndza,pràntsa<r:DiPI|pranzo> <end>
 Page 0 pranziamo: <respelling> all: prandziàmo,prantsiàmo<r:DiPI|pranzo> <end>
@@ -2377,8 +2375,8 @@ Page 0 pranzino: <respelling> all: pràndzino,pràntsino<r:DiPI|pranzo> <end>
 Page 0 pranzato: <respelling> all: prandzàto,prantsàto<r:DiPI|pranzo> <end>
 Page 0 pranzata: <respelling> all: prandzàta,prantsàta<r:DiPI|pranzo> <end>
 Page 0 pranzati: <respelling> all: prandzàti,prantsàti<r:DiPI|pranzo> <end>
-Page 0 pranzare: <respelling> all: prandzàre,prantsàre<r:DiPI|pranzo> <end>
-Page 0 pranzarsi: <respelling> all: prandzàrsi,prantsàrsi<r:DiPI|pranzo> <end>
+Page 0 ripranzare: <respelling> all: riprandzàre,riprantsàre<r:DiPI|pranzo> <end>
+Page 0 ripranzarsi: <respelling> all: riprandzàrsi,riprantsàrsi<r:DiPI|pranzo> <end>
 Page 0 ripranzo: <respelling> all: ripràndzo,ripràntso<r:DiPI|pranzo> <end>
 Page 0 ripranzi: <respelling> all: ripràndzi,ripràntsi<r:DiPI|pranzo> <end>
 Page 0 ripranza: <respelling> all: ripràndza,ripràntsa<r:DiPI|pranzo> <end>
@@ -2390,7 +2388,7 @@ Page 0 ripranzino: <respelling> all: ripràndzino,ripràntsino<r:DiPI|pranzo> <e
 Page 0 ripranzato: <respelling> all: riprandzàto,riprantsàto<r:DiPI|pranzo> <end>
 Page 0 ripranzata: <respelling> all: riprandzàta,riprantsàta<r:DiPI|pranzo> <end>
 Page 0 ripranzati: <respelling> all: riprandzàti,riprantsàti<r:DiPI|pranzo> <end>
-Page 0 calapranzi: <respelling> all: calaprandzi,calaprantsi<r:DiPI|pranzo> <end>
+Page 0 calapranzi: <respelling> all: càlapràndzi,càlapràntsi<r:DiPI|pranzo><r:Olivetti> <end>
 Page 0 dopopranzo: <respelling> all: dópopràndzo,dópopràntso,dòpopràndzo,dòpopràntso<r:DiPI><r:Olivetti> <end>
 Page 0 porta pranzo: <respelling> all: pòrta_pràndzo,pòrta_pràntso<r:DiPI|pranzo> <end>
 Page 0 portapranzi: <respelling> all: pòrtapràndzi,pòrtapràntsi<r:DiPI|pranzo><r:Olivetti> <end>
@@ -2451,8 +2449,8 @@ Page 0 svaluti: <respelling> all: svàluti,#!svalùti<r:DiPI|valuto> <end>
 Page 0 svaluta: <respelling> all: svàluta,#!svalùta<r:DiPI|valuto> <end>
 Page 0 svalutano: <respelling> all: svàlutano,#!svalùtano<r:DiPI|valuto> <end>
 Page 0 svalutino: <respelling> all: svàlutino,#!svalùtino<r:DiPI|valuto> <end>
-Page 0 situare: <respelling> all: situ.àre<r:Olivetti><r:DiPI|situo|situazione> <end>
-Page 0 situarsi: <respelling> all: situ.àrsi<r:Olivetti><r:DiPI|situo|situazione>  <end>
+Page 0 situare: <respelling> all: situ.àre,situàre<r:Olivetti><r:DiPI|situo|situazione> <end>
+Page 0 situarsi: <respelling> all: situ.àrsi,situàrsi<r:Olivetti><r:DiPI|situo|situazione>  <end>
 Page 0 situo: <respelling> all: sìtu.o,sìtuo<r:DiPI|situo> <end>
 Page 0 situi: <respelling> all: sìtu.i,sìt[w]i<r:DiPI|situo> <end>
 Page 0 situa: <respelling> all: sìtu.a,sìtua<r:DiPI|situo> <end>
@@ -2465,9 +2463,9 @@ Page 0 addebita: <respelling> all: addébita,addèbita<r:DiPI|addebito> <end>
 Page 0 addebitano: <respelling> all: addébitano,addèbitano<r:DiPI|addebito> <end>
 Page 0 addebitino: <respelling> all: addébitino,addèbitino<r:DiPI|addebito> <end>
 Page 0 carta di debito: <respelling> all: càrta_di_débito,càrta_di_dèbito<r:DiPI|debito> <end>
-Page 0 debito: <respelling> all: débito,dèbito<r:DiPI|debito> <end>
+Page 0 debito: <respelling> top: débito,dèbito<r:DiPI|debito> <end>
 Page 0 debita: <respelling> all: débita,dèbita<r:DiPI|debito> <end>
-Page 0 debiti: <respelling> all: débiti,dèbiti<r:DiPI|debito> <end>
+Page 0 debiti: <respelling> top: débiti,dèbiti<r:DiPI|debito> <end>
 Page 0 debite: <respelling> all: débite,dèbite<r:DiPI|debito> <end>
 Page 0 indebitare: <respelling> all: indebitàre <end>
 Page 0 indebitarsi: <respelling> all: indebitàrsi <end>
@@ -2477,7 +2475,7 @@ Page 0 indebita: <respelling> top: indébita,indèbita<r:DiPI|indebito> <end>
 Page 0 indebite: <respelling> all: indébite,indèbite<r:DiPI|indebito> <end>
 Page 0 indebitano: <respelling> all: indébitano,indèbitano<r:DiPI|indebito> <end>
 Page 0 indebitino: <respelling> all: indébitino,indèbitino<r:DiPI|indebito> <end>
-Page 0 ogni promessa è debito: <respelling> all: ogni_promessa_è_débito,ogni_promessa_è_dèbito<r:DiPI|debito> <end>
+Page 0 ogni promessa è debito: <respelling> all: ógni_proméssa_è_débito,ogni_promessa_è_dèbito<r:DiPI|debito> <end>
 Page 0 rindebitare: <respelling> all: rindebitàre <end>
 Page 0 rindebito: <respelling> all: rindébito,rindèbito<r:DiPI|indebito> <end>
 Page 0 rindebiti: <respelling> all: rindébiti,rindèbiti<r:DiPI|indebito> <end>
@@ -2504,7 +2502,7 @@ Page 0 indice: <respelling> all: ìndice <end>
 Page 0 indichino: <respelling> all: ìndichino <end>
 Page 0 indicono: <respelling> all: indìcono <end>
 Page 0 a scoppio ritardato: <respelling> all: a_scòppio_ritardàto <end>
-Page 0 accoppare: <respelling> all: accoppàre <end>
+Page 0 accoppare: <respelling> top: accoppàre <end>
 # split etym and pronun
 #Page 0 accoppo: <respelling> all: accoppo <end>
 #Page 0 accoppi: <respelling> all: accoppi <end>
@@ -2582,9 +2580,9 @@ Page 0 supercoppa: <respelling> all: supercòppa,supercóppa<r:DiPI|coppa> <end>
 Page 0 supercoppe: <respelling> all: supercòppe,supercóppe<r:DiPI|coppa> <end>
 Page 0 termocoppia: <respelling> all: tèrmocòppia,tèrmocóppia<r:DiPI|coppia> <end>
 Page 0 termocoppie: <respelling> all: tèrmocòppie,tèrmocóppie<r:DiPI|coppia> <end>
-Page 0 dialogare: <respelling> all: di.alogàre,dialogàre<r:DiPI|dialogo> <end>
-Page 0 dialogo: <respelling> all: di.àlogo,diàlogo<r:DiPI|dialogo> <end>
-Page 0 dialoghi: <respelling> all: di.àloghi,diàloghi<r:DiPI|dialogo> <end>
+Page 0 dialogare: <respelling> all: di.alogàre,dialogàre<r:DiPI|dialogo><r:Olivetti> <end>
+Page 0 dialogo: <respelling> top: di.àlogo,diàlogo<r:DiPI|dialogo> <end>
+Page 0 dialoghi: <respelling> top: di.àloghi,diàloghi<r:DiPI|dialogo> <end>
 Page 0 dialoga: <respelling> all: di.àloga,diàloga<r:DiPI|dialogo> <end>
 Page 0 dialogano: <respelling> all: di.àlogano,diàlogano<r:DiPI|dialogo> <end>
 Page 0 dialoghino: <respelling> all: di.àloghino,diàloghino<r:DiPI|dialogo> <end>
