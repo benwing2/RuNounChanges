@@ -313,69 +313,74 @@ person_number_to_reflexive_pronoun = {
 
 -- Define as forward references so `row_conjugation` can use them.
 local add_present_indic, add_present_subj, add_imperative, add_past_historic
-local generate_present_subj_first_form, generate_imperative_first_form, generate_future_first_form
-local generate_conditional_first_form
+local generate_present_subj_principal_part, generate_imperative_principal_part, generate_future_principal_part
+local generate_conditional_principal_part
 
+--[=[
+Data on how to conjugate individual rows (i.e. tense/aspect combinations, such as present indicative or
+conditional).
+
+Entries with `generate_default_principal_part` allow a corresponding param to explicitly specify the
+principal part, e.g. 'imperf:èro'.
+]=]
 local row_conjugation = {
 	["pres"] = {
-		rowdesc = "present",
+		desc = "present",
 		persnums = person_number_list,
 		conjugate = add_present_indic,
 	},
 	["sub"] = {
-		rowdesc = "present subjunctive",
+		desc = "present subjunctive",
 		persnums = {"123s", "1p", "2p", "3p"},
-		generate_default_first_form = generate_present_subj_first_form,
+		generate_default_principal_part = generate_present_subj_principal_part,
 		conjugate = add_present_subj,
 	},
 	["imp"] = {
-		rowdesc = "imperative",
+		desc = "imperative",
 		persnums = {"2s", "2p"},
-		generate_default_first_form = generate_imperative_first_form,
+		generate_default_principal_part = generate_imperative_principal_part,
 		conjugate = add_imperative,
 	},
 	["phis"] = {
-		rowdesc = "past historic",
+		desc = "past historic",
 		persnums = person_number_list,
 		conjugate = add_past_historic,
 	},
 	["imperf"] = {
-		rowdesc = "imperfect",
+		desc = "imperfect",
 		persnums = person_number_list,
-		irregform_ending = "o",
-		irregform_desc = "first-person imperfect",
-		generate_default_first_form = function(base) return iut.map_forms(base.verb.unaccented_stem,
+		principal_part_ending = "o",
+		principal_part_desc = "first-person imperfect",
+		generate_default_principal_part = function(base) return iut.map_forms(base.verb.unaccented_stem,
 			function(stem) return stem .. base.conj_vowel .. "vo" end) end,
 		conjugate = {"o", "i", "a", "àmo", "àte", "ano"},
 	},
 	["impsub"] = {
-		rowdesc = "imperfect subjunctive",
+		desc = "imperfect subjunctive",
 		persnums = impsub_person_number_list,
-		irregform_ending = "ssi",
-		irregform_desc = "first/second-person imperfect subjunctive",
-		generate_default_first_form = function(base) return iut.map_forms(base.verb.unaccented_stem,
+		principal_part_ending = "ssi",
+		principal_part_desc = "first/second-person imperfect subjunctive",
+		generate_default_principal_part = function(base) return iut.map_forms(base.verb.unaccented_stem,
 			function(stem) return stem .. base.conj_vowel .. "ssi" end) end,
 		conjugate = {"ssi", "sse", "ssimo", "ste", "ssero"},
 	},
 	["fut"] = {
-		rowdesc = "future",
+		desc = "future",
 		persnums = person_number_list,
-		irregform_ending = "ò",
-		irregform_desc = "first-person future",
-		generate_default_first_form = generate_future_first_form,
+		principal_part_ending = "ò",
+		principal_part_desc = "first-person future",
+		generate_default_principal_part = generate_future_principal_part,
 		conjugate = {"ò", "ài", "à", "émo", "éte", "ànno"},
 	},
 	["cond"] = {
-		rowdesc = "conditional",
+		desc = "conditional",
 		persnums = person_number_list,
-		irregform_ending = "éi",
-		irregform_desc = "first-person conditional",
-		generate_default_first_form = generate_conditional_first_form,
+		principal_part_ending = "éi",
+		principal_part_desc = "first-person conditional",
+		generate_default_principal_part = generate_conditional_principal_part,
 		conjugate = {"éi", "ésti", {"èbbe", "ébbe"}, "émmo", "éste", {"èbbero", "ébbero"}},
 	},
 }
-
-local explicit_slot_set = m_table.listToSet(com.explicit_slots)
 
 local all_verb_slots = {
 	{"inf", "inf"},
@@ -720,16 +725,16 @@ end
 
 
 local function create_base_forms(base)
-	com.add_default_verb_forms(base)
+	add_default_verb_forms(base)
 
-	for _, explicit_specs_spec in ipairs({
+	for _, principal_part_spec in ipairs({
 		{"pres", "finite", com.pres_special_case},
 		{"pres3s", "finite", com.pres3s_special_case},
 		{"phis", "finite", com.phis_special_case},
 		{"pp", false, com.pp_special_case},
 	}) do
-		local slot, is_finite, special_case = unpack(explicit_specs_spec)
-		process_specs(base, base.explicit_forms, slot, base.explicit_specs[slot], is_finite, special_case)
+		local slot, is_finite, special_case = unpack(principal_part_spec)
+		process_specs(base, base.principal_part_forms, slot, base.principal_part_specs[slot], is_finite, special_case)
 	end
 
 	iut.insert_form(base.forms, "lemma", {form = base.lemma})
@@ -751,14 +756,14 @@ local function handle_explicit_row(base, row_slot)
 				error("Internal error: Explicit row spec for slot " .. slot .. " being processed and no "
 					.. "default-generated forms available")
 			end
-			local function explicit_special_case(base, form)
+			local function explicit_row_special_case(base, form)
 				if form == "+" then
 					return existing_generated_form
 				end
 				return form
 			end
 			base.forms[slot] = nil -- erase existing form before generating override
-			process_specs(base, base.forms, slot, specs, "finite", explicit_special_case)
+			process_specs(base, base.forms, slot, specs, "finite", explicit_row_special_case)
 		end
 	end
 end
@@ -797,18 +802,18 @@ add_present_indic = function(base, prefix)
 		add(base, prefix .. pers, stems, endings)
 	end
 
-	addit("1s", base.explicit_forms.pres, "")
-	local pres_1s_stem = iut.map_forms(base.explicit_forms.pres, function(form)
+	addit("1s", base.principal_part_forms.pres, "")
+	local pres1s_stem = iut.map_forms(base.principal_part_forms.pres, function(form)
 		if not form:find("o$") then
 			error("presrow: must be given in order to generate the present indicative because explicit first-person "
 				.. "singular present indicative '" .. form .. "' does not end in -o")
 		end
 		return rsub(form, "o$", "")
 	end)
-	addit("3p", pres_1s_stem, base.conj_vowel == "à" and "ano" or "ono")
-	local pres_23s_stem
-	if base.explicit_forms.pres3s then
-		pres_23s_stem = iut.map_forms(base.explicit_forms.pres3s, function(form)
+	addit("3p", pres1s_stem, base.conj_vowel == "à" and "ano" or "ono")
+	local pres23s_stem
+	if base.principal_part_forms.pres3s then
+		pres23s_stem = iut.map_forms(base.principal_part_forms.pres3s, function(form)
 			if not form:find("[ae]$") then
 				error("presrow: must be given in order to generate the present indicative because explicit third-person "
 					.. "singular present indicative '" .. form .. "' does not end in -a or -e")
@@ -816,17 +821,17 @@ add_present_indic = function(base, prefix)
 			return rsub(form, "[ae]$", "")
 		end)
 	else
-		pres_23s_form = base.explicit_stem_spec and base.verb.stem or base.root_stressed_stem or pres_1s_stem
+		pres23s_form = base.explicit_non_default_stem_spec and base.verb.stem or base.root_stressed_stem or pres1s_stem
 	end
-	addit("2s", pres_23s_stem, "i")
-	addit("3s", pres_23s_stem, base.conj_vowel == "à" and "a" or "e")
-	addit("1p", base.verb.stem, "iàmo")
-	addit("2p", base.verb.stem, base.conj_vowel .. "te")
+	addit("2s", pres23s_stem, "i")
+	addit("3s", pres23s_stem, base.conj_vowel == "à" and "a" or "e")
+	addit("1p", base.verb.unaccented_stem, "iàmo")
+	addit("2p", base.verb.unaccented_stem, base.conj_vowel .. "te")
 end
 
 
 -- Defined earlier as a forward reference.
-local function generate_present_subj_first_form(base)
+local function generate_present_subj_principal_part(base)
 	return iut.map_forms(base.forms.pres1s, function(form)
 		if not form:find("o$") then
 			error("sub: or subrow: must be given in order to generate the singular present subjunctive "
@@ -848,8 +853,8 @@ add_present_subj = function(base, prefix)
 	end
 
 	-- Generate the 123s and 3p forms.
-	addit("123s", base.explicit_forms.sub, "")
-	addit("3p", base.explicit_forms.sub, "no")
+	addit("123s", base.principal_part_forms.sub, "")
+	addit("3p", base.principal_part_forms.sub, "no")
 	-- Copy present indicative 1p to present subjunctive.
 	copy_forms(base, prefix .. "1p", base.forms.pres1p)
 	-- Generate present subjunctive 2p from present indicative 1p by replacing -mo with -te.
@@ -864,20 +869,20 @@ end
 
 
 -- Defined earlier as a forward reference.
-local function generate_imperative_first_form(base)
+local function generate_imperative_principal_part(base)
 	if base.conj_vowel == "à" then
 		-- Copy present indicative 3s to imperative 2s.
-		return base.forms.pres_3s
+		return base.forms.pres3s
 	else
 		-- Copy present indicative 2s to imperative 2s.
-		return base.forms.pres_2s
+		return base.forms.pres2s
 	end
 end
 
 
 -- Generate the imperative. See "RULES FOR CONJUGATION" near the top of the file for the detailed rules.
 -- Defined earlier as a forward reference.
-add_imperative = function(base, rowslot, first_form)
+add_imperative = function(base, rowslot)
 	-- FIXME, do we want to do this here or in skip_slot() or elsewhere?
 	-- Maybe we don't need skip_slot() and instead have erase_slots() or similar.
 	if base.noimp then
@@ -890,9 +895,9 @@ add_imperative = function(base, rowslot, first_form)
 
 	-- Copy first imperative form (user specified or taken from present indicative 3s for conj vowel à, or from
 	-- present indicative 2s for other conj vowels) to imperative 2s.
-	copy("2s", base.explicit_forms.imp)
+	copy("2s", base.principal_part_forms.imp)
 	-- Copy present indicative 2p to imperative 2p.
-	copy("2p", base.forms.pres_2p)
+	copy("2p", base.forms.pres2p)
 	-- Copy present subjunctive 3s, 1p, 2p to imperative.
 	copy("3s", base.forms.sub_3s)
 	copy("1p", base.forms.sub_1p)
@@ -902,7 +907,7 @@ end
 
 -- Defined earlier as a forward reference.
 add_past_historic = function(base, prefix)
-	for _, form in ipairs(base.explicit_forms.phis) do
+	for _, form in ipairs(base.principal_part_forms.phis) do
 		local function add_phis(pref, s1, s2, s3, p1, p2, p3)
 			local newform = {form = pref, footnotes = form.footnotes}
 			local function addit(pers, endings)
@@ -958,46 +963,34 @@ local function conjugate_row(base, rowslot)
 		error("Internal error: Unrecognized row slot '" .. rowslot .. "'")
 	end
 
-	local function explicit_special_case(base, form)
+	local function principal_part_special_case(base, form)
 		if form == "+" then
-			return rowconj.generate_default_first_form(base)
+			return rowconj.generate_default_principal_part(base)
 		end
 		return form
 	end
 
-	local specs = base.explicit_specs[rowslot] or {{form = "+"}}
-	process_specs(base, base.explicit_forms, rowslot, specs, explicit_slot ~= "imp", explicit_special_case)
-
-	if base.irregrow_forms[rowslot] then
-		stem = iut.map_forms(base.irregrow_forms[rowslot], function(form)
-			if form == "+" then
-				return rowconj.generate_default_first_form(base)
-			end
-			if not rfind(form, rowconj.irregform_ending .. "$") then
-				error(rowslot .. "row: must be given in order to generate the " .. rowconj.rowdesc .. " because"
-					.. "explicit " .. rowconj.irregform_desc .. " '" .. form .. "' does not end in -"
-					.. rowconj.irregform_ending)
-			end
-			return rsub(form, rowconj.irregform_ending .. "$", "")
-		end)
-	else
-		stem = rowconj.generate_default_stem(base)
-	end
-	return stem
-end
-
-
+	local principal_part_specs = base.principal_part_specs[rowslot] or {{form = "+"}}
+	process_specs(base, base.principal_part_forms, rowslot, specs, rowslot ~= "imp", principal_part_special_case)
 
 	if type(rowconj.conjugate) == "table" then
 		if #rowconj.conjugate ~= #rowconj.persnum then
 			error("Internal error: Expected " .. #rowconj.persnum .. " elements for row slot '" .. rowslot
 				.. ", but saw " .. #rowconj.conjugate)
 		end
+		local stem = iut.map_forms(base.principal_part_forms[rowslot], function(form)
+			if not rfind(form, rowconj.principal_part_ending .. "$") then
+				error(rowslot .. "row: must be given in order to generate the " .. rowconj.desc .. " because"
+					.. "explicit " .. rowconj.principal_part_desc .. " '" .. form .. "' does not end in -"
+					.. rowconj.principal_part_ending)
+			end
+			return rsub(form, rowconj.principal_part_ending .. "$", "")
+		end)
 		for _, persnum in ipairs(#rowconj.persnum) do
 			add(base, rowconj.prefix .. "_" .. rowconj.persnum[persnum], stem, rowconj.conjugate[persnum])
 		end
 	else
-		rowconj.conjugate(base, rowconj.prefix, stem)
+		rowconj.conjugate(base, rowconj.prefix)
 	end
 
 	handle_explicit_row(base, rowslot)
@@ -1006,7 +999,7 @@ end
 
 
 -- Defined earlier as a forward reference.
-generate_future_first_form = function(base, suffix)
+generate_future_principal_part = function(base, suffix)
 	suffix = suffix or "ò"
 	if base.conj_vowel == "à" then
 		return iut.map_forms(base.verb.unaccented_stem, function(stem)
@@ -1025,8 +1018,8 @@ end
 
 
 -- Defined earlier as a forward reference.
-generate_conditional_first_form = function(base)
-	return generate_future_first_form(base, "éi")
+generate_conditional_principal_part = function(base)
+	return generate_future_principal_part(base, "éi")
 end
 
 
@@ -1038,7 +1031,7 @@ local function add_participles(base)
 	insert_form(base, "inf", {form = base.verb})
 	addit("ger", base.verb.unaccented_stem, base.conj_vowel == "à" and "àndo" or "èndo")
 	addit("presp", base.verb.unaccented_stem, base.conj_vowel == "à" and "ànte" or "ènte")
-	addit("pp", base.explicit_forms.pp)
+	addit("pp", base.principal_part_forms.pp)
 end
 
 
@@ -1194,8 +1187,8 @@ end
 local function generate_negative_imperatives(base)
 	-- Copy subjunctives to negative imperatives, preceded by "no".
 	for _, persnum in ipairs({"2s", "3s", "1p", "2p", "3p"}) do
-		local from = "pres_sub_" .. persnum
-		local to = "neg_imp_" .. persnum
+		local from = "sub" .. persnum
+		local to = "negimp" .. persnum
 		insert_forms(base, to, iut.map_forms(base.forms[from], function(form)
 			if base.args.noautolinkverb then
 				return "no " .. form
@@ -1306,27 +1299,27 @@ local function parse_indicator_spec(angle_bracket_spec, lemma)
 	--    `forms` and `genforms` will differ in the presence of overrides, which are included in the former but not
 	--    the latter. We separate the two so that e.g. we can use + in overrides to request the generated forms in
 	--    `genforms`.
-	-- `explicit_specs` contains forms specified by the user using either the prefixes 'imperf:', 'fut:', 'sub:',
+	-- `principal_part_specs` contains forms specified by the user using either the prefixes 'imperf:', 'fut:', 'sub:',
 	--    'impsub:' or 'imp:' or in the format e.g. "vèngo:vègno[archaic or poetic]#viène,vénni,venùto" or "é:#è".
 	--    The key is the prefix ("imperf", "fut", etc., for the former format) or "pres", "pres3s", "phis" or "pp"
 	--    (for the latter format). The value is in the same form as for `forms` and `genforms`, but the FORM contained
 	--    in it is the actual user-specified form, which may be e.g. "#è" rather than a verb form, and needs to
 	--    be processed to generate the actual form. A spec may be "+" to insert the default-generated form or forms,
 	--    or "-" to indicate that this form doesn't exist.
-	-- `explicit_forms` contains the processed versions of the specs contained in `explicit_specs`. The keys are as
-	--    in `explicit_specs` and the values are the same as for `forms` and `genforms`.
+	-- `principal_part_forms` contains the processed versions of the specs contained in `principal_part_specs`. The keys are as
+	--    in `principal_part_specs` and the values are the same as for `forms` and `genforms`.
 	-- `explicit_row_specs` contains user-specified forms for a full tense/aspect row using 'presrow:', 'subrow:', etc.
 	--    The key is "pres", "sub", etc. (i.e. minus the "row" suffix). The value is another table indexed by the
 	--    person/number suffix (e.g. "1s", "2s", etc. for "pres"; "123s", "1p", "2p", etc. for "sub"), whose values
-	--    are in the same format as `explicit_specs`.
+	--    are in the same format as `principal_part_specs`.
 	-- `explicit_row_forms` contains the processed versions of `explicit_row_specs`. The key is as for
 	--    `explicit_row_specs`, while the value is another table indexed by the person/number suffix ("1s", "2s",
 	--    etc.), whose values are in the same format as for `forms` and `genforms`.
 	-- `override_specs` contains user-specified forms using 'pres1s:', 'sub3p:', etc. The key is the slot ("pres1s",
-	--   "sub3p", etc.) and the value is of the same format as `explicit_specs`.
-	-- `override_forms` contains the processed versions of `override_specs`, as with `explicit_forms` vs.
-	--   `explicit_specs`.
-	local base = {forms = {}, genforms = {}, explicit_specs = {}, explicit_forms = {}, explicit_row_specs = {},
+	--   "sub3p", etc.) and the value is of the same format as `principal_part_specs`.
+	-- `override_forms` contains the processed versions of `override_specs`, as with `principal_part_forms` vs.
+	--   `principal_part_specs`.
+	local base = {forms = {}, genforms = {}, principal_part_specs = {}, principal_part_forms = {}, explicit_row_specs = {},
 		explicit_row_forms = {}, override_specs = {}, override_forms = {}}
 	local function parse_err(msg)
 		error(msg .. ": " .. angle_bracket_spec)
@@ -1465,9 +1458,9 @@ local function parse_indicator_spec(angle_bracket_spec, lemma)
 			if #hash_separated_groups > 2 then
 				parse_err("At most one hash sign (#) can appear in present tense specs")
 			end
-			base.explicit_specs.pres = fetch_specs(hash_separated_groups[1])
+			base.principal_part_specs.pres = fetch_specs(hash_separated_groups[1])
 			if #hash_separated_groups == 2 then
-				base.explicit_specs.pres3s = fetch_specs(hash_separated_groups[2])
+				base.principal_part_specs.pres3s = fetch_specs(hash_separated_groups[2])
 			end
 
 			-- Parse past historic
@@ -1475,7 +1468,7 @@ local function parse_indicator_spec(angle_bracket_spec, lemma)
 				if com.strip_spaces(comma_separated_groups[presind + 1][1]) ~= "," then
 					parse_err("Use a comma not slash to separate present from past historic")
 				end
-				base.explicit_specs.past = fetch_specs(comma_separated_groups[presind + 2])
+				base.principal_part_specs.past = fetch_specs(comma_separated_groups[presind + 2])
 			end
 
 			-- Parse past participle
@@ -1483,7 +1476,7 @@ local function parse_indicator_spec(angle_bracket_spec, lemma)
 				if com.strip_spaces(comma_separated_groups[presind + 3][1]) ~= "," then
 					parse_err("Use a comma not slash to separate past historic from past participle")
 				end
-				base.explicit_specs.pp = fetch_specs(comma_separated_groups[presind + 4])
+				base.principal_part_specs.pp = fetch_specs(comma_separated_groups[presind + 4])
 			end
 
 			if #comma_separated_groups > presind + 4 then
@@ -1504,8 +1497,13 @@ local function parse_indicator_spec(angle_bracket_spec, lemma)
 			dot_separated_group[1] = first_element_minus_prefix
 			if first_element_prefix == "stem" then
 				base.explicit_stem_spec = fetch_specs(dot_separated_group)
-			elseif explicit_slot_set[first_element_prefix] then
-				base.explicit_specs[first_element_prefix] = fetch_specs(dot_separated_group)
+			elseif row_conjugation[first_element_prefix] then
+				if row_conjugation[first_element_prefix].generate_default_principal_part then
+					base.principal_part_specs[first_element_prefix] = fetch_specs(dot_separated_group)
+				else
+					parse_err("Can't specify principal part for " .. row_conjugation[first_element_prefix].desc
+						.. " using '" .. first_element_prefix .. ":'; use the specification PRES#PRES3S.PHIS.PP")
+				end
 			elseif overridable_slot_set[first_element_prefix] then
 				base.override_specs[first_element_prefix] = fetch_specs(dot_separated_group)
 			elseif first_element_prefix:find("row$") then
@@ -1736,9 +1734,6 @@ local function add_categories_and_annotation(alternant_multiword_spec, base, mul
 	elseif base.only3sp then
 		insert_ann("defective", "third-person only")
 		insert_cat("third-person-only verbs")
-	elseif base.no_pres_stressed or base.no_pres1_and_sub then
-		insert_ann("defective", "defective")
-		insert_cat("defective verbs")
 	else
 		insert_ann("defective", "regular")
 	end

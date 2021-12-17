@@ -394,7 +394,7 @@ function export.do_root_stressed_inf(iut, base, specs)
 		if spec.form == "+" then
 			-- do_root_stressed_inf is used for verbs in -ere and -rre. If the root-stressed vowel isn't explicitly
 			-- given and the verb ends in -arre, -irre or -urre, derive it from the infinitive since there's only
-			-- one possibility.. If the verb ends in -erre or -orre, this won't work because we have both
+			-- one possibility. If the verb ends in -erre or -orre, this won't work because we have both
 			-- scérre (= [[scegliere]]) and disvèrre (= [[disvellere]]), as well as pórre and tòrre (= [[togliere]]).
 			local rre_vowel = rmatch(base.verb.verb, "([aiu])rre$")
 			if rre_vowel then
