@@ -274,15 +274,26 @@ local m_string_utilities = require("Module:string utilities")
 local m_links = require("Module:links")
 local m_table = require("Module:table")
 local iut = require("Module:inflection utilities")
-local com = require("Module:it-common")
 
 local force_cat = false -- set to true for debugging
 local check_for_red_links = false -- set to false for debugging
 
+local u = mw.ustring.char
 local rfind = mw.ustring.find
+local rsubn = mw.ustring.gsub
 local rmatch = mw.ustring.match
 local rsplit = mw.text.split
-local rsub = com.rsub
+local ulower = mw.ustring.lower
+local uupper = mw.ustring.upper
+local usub = mw.ustring.sub
+local ulen = mw.ustring.len
+local unfd = mw.ustring.toNFD
+local unfc = mw.ustring.toNFC
+
+local GR = u(0x0300)
+local V = "[aeiou]"
+local NV = "[^aeiou]"
+local AV = "[àèéìòóù]"
 
 local function link_term(term, face)
 	return m_links.full_link({ lang = lang, term = term }, face)
@@ -313,40 +324,46 @@ person_number_to_reflexive_pronoun = {
 
 -- Define as forward references so `row_conjugation` can use them.
 local add_present_indic, add_present_subj, add_imperative, add_past_historic
-local generate_present_subj_principal_part, generate_imperative_principal_part, generate_future_principal_part
-local generate_conditional_principal_part
+local generate_present_principal_parts
+local generate_present_subj_principal_part, generate_imperative_principal_part, generate_phis_principal_part
+local generate_future_principal_part, generate_conditional_principal_part, generate_pp_principal_part
 
 --[=[
 Data on how to conjugate individual rows (i.e. tense/aspect combinations, such as present indicative or
 conditional).
 
-Entries with `generate_default_principal_part` allow a corresponding param to explicitly specify the
-principal part, e.g. 'imperf:èro'.
+The order listed here matters. It determines the order of generating row forms. The order must have
+'pres' < 'sub' < 'imp' because the present subjunctive uses generated forms from the present indicative,
+while the imperative uses forms from the present subjunctive and present indicative.
 ]=]
 local row_conjugation = {
-	["pres"] = {
+	{"pres", {
 		desc = "present",
 		persnums = person_number_list,
+		-- No generate_default_principal_part; handled explicitly in add_present_indic.
 		conjugate = add_present_indic,
-	},
-	["sub"] = {
+		no_explicit_principal_part = true,
+	}},
+	{"sub", {
 		desc = "present subjunctive",
 		persnums = {"123s", "1p", "2p", "3p"},
 		generate_default_principal_part = generate_present_subj_principal_part,
 		conjugate = add_present_subj,
-	},
-	["imp"] = {
+	}},
+	{"imp", {
 		desc = "imperative",
 		persnums = {"2s", "2p"},
 		generate_default_principal_part = generate_imperative_principal_part,
 		conjugate = add_imperative,
-	},
-	["phis"] = {
+	}},
+	{"phis", {
 		desc = "past historic",
 		persnums = person_number_list,
+		generate_default_principal_part = generate_phis_principal_part,
 		conjugate = add_past_historic,
-	},
-	["imperf"] = {
+		no_explicit_principal_part = true,
+	}},
+	{"imperf", {
 		desc = "imperfect",
 		persnums = person_number_list,
 		principal_part_ending = "o",
@@ -354,8 +371,8 @@ local row_conjugation = {
 		generate_default_principal_part = function(base) return iut.map_forms(base.verb.unaccented_stem,
 			function(stem) return stem .. base.conj_vowel .. "vo" end) end,
 		conjugate = {"o", "i", "a", "àmo", "àte", "ano"},
-	},
-	["impsub"] = {
+	}},
+	{"impsub", {
 		desc = "imperfect subjunctive",
 		persnums = impsub_person_number_list,
 		principal_part_ending = "ssi",
@@ -363,24 +380,42 @@ local row_conjugation = {
 		generate_default_principal_part = function(base) return iut.map_forms(base.verb.unaccented_stem,
 			function(stem) return stem .. base.conj_vowel .. "ssi" end) end,
 		conjugate = {"ssi", "sse", "ssimo", "ste", "ssero"},
-	},
-	["fut"] = {
+	}},
+	{"fut", {
 		desc = "future",
 		persnums = person_number_list,
 		principal_part_ending = "ò",
 		principal_part_desc = "first-person future",
 		generate_default_principal_part = generate_future_principal_part,
 		conjugate = {"ò", "ài", "à", "émo", "éte", "ànno"},
-	},
-	["cond"] = {
+	}},
+	{"cond", {
 		desc = "conditional",
 		persnums = person_number_list,
 		principal_part_ending = "éi",
 		principal_part_desc = "first-person conditional",
 		generate_default_principal_part = generate_conditional_principal_part,
 		conjugate = {"éi", "ésti", {"èbbe", "ébbe"}, "émmo", "éste", {"èbbero", "ébbero"}},
-	},
+	}},
+	{"pp", {
+		desc = "past participle",
+		persnums = {""},
+		principal_part_ending = "o",
+		principal_part_desc = "past participle",
+		generate_default_principal_part = generate_pp_principal_part,
+		conjugate = {"o"},
+		no_explicit_principal_part = true,
+		no_row_overrides = true,
+	}},
 }
+
+local row_conjugation_map = {}
+
+for _, spec in ipairs(row_conjugation) do
+	local rowslot, rowconj = unpack(spec)
+	row_conjugation_map[rowslot] = rowconj
+end
+
 
 local all_verb_slots = {
 	{"inf", "inf"},
@@ -452,6 +487,43 @@ local reflexive_forms = {
 	["suyos"] = {"míos", "tuyos", "suyos", "nuestros", "vuestros", "suyos"},
 	["suyas"] = {"mías", "tuyas", "suyas", "nuestras", "vuestras", "suyas"},
 }
+
+
+local function remove_accents(form)
+	return rsub(form, AV, function(v) return usub(unfd(v), 1, 1) end)
+end
+
+
+-- Add links around words. If multiword_only, do it only in multiword forms.
+local function add_links(form, multiword_only)
+	if form == "" or form == " " then
+		return form
+	end
+	if not form:find("%[%[") then
+		if rfind(form, "[%s%p]") then --optimization to avoid loading [[Module:headword]] on single-word forms
+			local m_headword = require("Module:headword")
+			if m_headword.head_is_multiword(form) then
+				form = m_headword.add_multiword_links(form)
+			end
+		end
+		if not multiword_only and not form:find("%[%[") then
+			form = "[[" .. form .. "]]"
+		end
+	end
+	return form
+end
+
+
+local function strip_spaces(text)
+	return text:gsub("^%s*(.-)%s*", "%1")
+end
+
+
+local function check_not_null(base, form)
+	if form == nil then
+		error("Default forms cannot be derived from '" .. base.lemma .. "'")
+	end
+end
 
 
 local function skip_slot(base, slot, allow_overrides)
@@ -526,12 +598,33 @@ local function replace_reflexive_indicators(slot, form)
 end
 
 
+-- Add the `stem` to the `ending` for the given `slot` and apply any phonetic modifications.
+local function combine_stem_ending(base, slot, stem, ending)
+	-- Add h after c/g in -are forms to preserve the sound.
+	if base.conj_vowel == "à" and stem:find("[cg]$") and rfind(ending, "^[eèéiì]") then
+		stem = stem .. "h"
+	end
+
+	-- Two unstressed i's coming together compress to one.
+	if ending:find("^i") then
+		stem = stem:gsub("i$", "")
+	end
+
+	-- Remove accents from stem if ending is accented.
+	if rfind(ending, AV) then
+		stem = remove_accents(stem)
+	end
+
+	return stem .. ending
+end
+
+
 local function add(base, slot, stems, endings, allow_overrides)
 	if skip_slot(base, slot, allow_overrides) then
 		return
 	end
 	local function do_combine_stem_ending(stem, ending)
-		return com.combine_stem_ending(base, slot, stem, ending)
+		return combine_stem_ending(base, slot, stem, ending)
 	end
 	iut.add_forms(base.forms, slot, stems, endings, do_combine_stem_ending)
 end
@@ -593,14 +686,14 @@ local function process_specs(base, destforms, slot, specs, is_finite, special_ca
 					prespec = prespec:gsub("%*", "")
 				end
 				local unaccented_form
-				if rfind(form, "^.*" .. com.V .. ".*" .. com.AV .. "$") then
+				if rfind(form, "^.*" .. V .. ".*" .. AV .. "$") then
 					-- final accented vowel with preceding vowel; keep accent
 					unaccented_form = form
-				elseif rfind(form, com.AV .. "$") and preserve_monosyllabic_accent then
+				elseif rfind(form, AV .. "$") and preserve_monosyllabic_accent then
 					unaccented_form = form
 					qualifiers = iut.combine_footnotes(qualifiers, {"[with written accent]"})
 				else
-					unaccented_form = rsub(form, com.AV, function(v) return usub(unfd(v), 1, 1) end)
+					unaccented_form = remove_accents(form)
 				end
 				if syntactic_gemination == "*" then
 					qualifiers = iut.combine_footnotes(qualifiers, {"[with following syntactic gemination]"})
@@ -690,7 +783,7 @@ local function add_default_verb_forms(base, from_headword)
 		return
 	end
 
-	ret.unaccented_stem = iut.map_forms(ret.stem, function(stem) return export.remove_accents(stem) end)
+	ret.unaccented_stem = iut.map_forms(ret.stem, function(stem) return remove_accents(stem) end)
 	ret.pres = iut.map_forms(ret.stem, function(stem)
 		if base.third then
 			return ending_vowel == "a" and stem .. "a" or stem .. "e"
@@ -703,7 +796,7 @@ local function add_default_verb_forms(base, from_headword)
 		ret.isc_pres = iut.map_forms(ret.unaccented_stem, function(stem) return stem .. "ìsco" end)
 		ret.isc_pres3s = iut.map_forms(ret.unaccented_stem, function(stem) return stem .. "ìsci" end)
 	end
-	ret.past = iut.flatmap_forms(ret.unaccented_stem, function(stem)
+	ret.phis = iut.flatmap_forms(ret.unaccented_stem, function(stem)
 		if ending_vowel == "a" then
 			return {stem .. (base.third and "ò" or "ài")}
 		elseif ending_vowel == "e" then
@@ -724,26 +817,196 @@ local function add_default_verb_forms(base, from_headword)
 end
 
 
-local function create_base_forms(base)
-	add_default_verb_forms(base)
+local function is_single_vowel_spec(spec)
+	return rfind(spec, "^" .. AV .. "[+-]?$") or rfind(spec, "^" .. AV .. "%-%-$")
+end
 
-	for _, principal_part_spec in ipairs({
-		{"pres", "finite", com.pres_special_case},
-		{"pres3s", "finite", com.pres3s_special_case},
-		{"phis", "finite", com.phis_special_case},
-		{"pp", false, com.pp_special_case},
-	}) do
-		local slot, is_finite, special_case = unpack(principal_part_spec)
-		process_specs(base, base.principal_part_forms, slot, base.principal_part_specs[slot], is_finite, special_case)
+
+-- Given an unaccented stem, pull out the last two vowels as well as the in-between stuff, and return
+-- before, v1, between, v2, after as 5 return values. `unaccented` is the full verb and `unaccented_desc`
+-- a description of where the verb came from; used only in error messages.
+local function analyze_stem_for_last_two_vowels(unaccented_stem, unaccented, unaccented_desc)
+	local before, v1, between, v2, after = rmatch(unaccented_stem, "^(.*)(" .. V .. ")(" .. NV .. "*)(" .. V .. ")(" .. NV .. "*)$")
+	if not before then
+		before, v1 = "", ""
+		between, v2, after = rmatch(unaccented_stem, "^(.*)(" .. V .. ")(" .. NV .. "*)$")
+	end
+	if not between then
+		error("No vowel in " .. unaccented_desc .. " '" .. unaccented .. "' to match")
+	end
+	return before, v1, between, v2, after
+end
+
+
+-- Apply a single-vowel spec in `form`, e.g. é+, to `unaccented_stem`. `unaccented` is the full verb and
+-- `unaccented_desc` a description of where the verb came from; used only in error messages.
+local function apply_vowel_spec(unaccented_stem, unaccented, unaccented_desc, vowel_spec)
+	local function vowel_spec_doesnt_match()
+		error("Vowel spec '" .. vowel_spec .. "' doesn't match vowel of " .. unaccented_desc .. " '" .. unaccented .. "'")
+	end
+	local raw_spec_vowel = usub(unfd(vowel_spec), 1, 1)
+	local form
+	local spec_vowel = rmatch(vowel_spec, "^(.)%-%-$")
+	if spec_vowel then -- a spec like ò--
+		local before, v1, between1, v2, between2, v3, after = rmatch(unaccented_stem,
+			"^(.*)(" .. V .. ")(" .. NV .. "*)(" .. V .. ")(" .. NV .. "*)(" .. V .. ")(" .. NV .. "*)$")
+		if not before then
+			error(mw.getContentLanguage():ucfirst(unaccented_desc) .. " '" .. unaccented ..
+				"' must have at least three vowels to use the vowel spec '" ..  vowel_spec .. "'")
+		end
+		if raw_spec_vowel ~= v1 then
+			vowel_spec_doesnt_match()
+		end
+		form = before .. spec_vowel .. between1 .. v2 .. between2 .. v3 .. after
+	else
+		local before, v1, between, v2, after = analyze_stem_for_last_two_vowels(unaccented_stem, unaccented, unaccented_desc)
+		if v1 == v2 then
+			local first_second
+			spec_vowel, first_second = rmatch(vowel_spec, "^(.)([+-])$")
+			if not spec_vowel then
+				error("Last two stem vowels of " .. unaccented_desc .. " '" .. unaccented ..
+					"' are the same; you must specify + (second vowel) or - (first vowel) after the vowel spec '" ..
+					vowel_spec .. "'")
+			end
+			if raw_spec_vowel ~= v1 then
+				vowel_spec_doesnt_match()
+			end
+			if first_second == "-" then
+				form = before .. spec_vowel .. between .. v2 .. after
+			else
+				form = before .. v1 .. between .. spec_vowel .. after
+			end
+		else
+			if rfind(vowel_spec, "[+-]$") then
+				error("Last two stem vowels of " .. unaccented_desc .. " '" .. unaccented ..
+					"' are different; specify just an accented vowel, without a following + or -: '" .. vowel_spec .. "'")
+			end
+			if raw_spec_vowel == v1 then
+				form = before .. vowel_spec .. between .. v2 .. after
+			elseif raw_spec_vowel == v2 then
+				form = before .. v1 .. between .. vowel_spec .. after
+			elseif before == "" then
+				vowel_spec_doesnt_match()
+			else
+				error("Vowel spec '" .. vowel_spec .. "' doesn't match either of the last two vowels of " .. unaccented_desc ..
+					" '" .. unaccented .. "'")
+			end
+		end
+	end
+	return form
+end
+
+
+local function do_ending_stressed_inf(base)
+	if rfind(base.verb.verb, "rre$") then
+		error("Use \\ not / with -rre verbs")
+	end
+	-- Add acute accent to -ere, grave accent to -are/-ire.
+	local accented = rsub(base.verb.verb, "ere$", "ére")
+	accented = unfc(rsub(accented, "([ai])re$", "%1" .. GR .. "re"))
+	-- If there is a clitic suffix like -la or -sene, truncate final -e.
+	if base.verb.linked_suf ~= "" then
+		accented = rsub(accented, "e$", "")
+	end
+	local linked = "[[" .. base.verb.verb .. "|" .. accented .. "]]" .. base.verb.linked_suf
+	iut.insert_form(base.forms, "lemma_linked", {form = linked})
+end
+
+
+local function do_root_stressed_inf(base, specs)
+	local function root_stressed_inf_special_case(base, form, do_stem, from_defaulted_pres)
+		if form == "-" then
+			error("Spec '-' not allowed as root-stressed infinitive spec")
+		end
+		if form == "+" then
+			local rre_vowel = rmatch(base.verb.verb, "([aiu])rre$")
+			if rre_vowel then
+				-- do_root_stressed_inf is used for verbs in -ere and -rre. If the root-stressed vowel isn't explicitly
+				-- given and the verb ends in -arre, -irre or -urre, derive it from the infinitive since there's only
+				-- one possibility. If the verb ends in -erre or -orre, this won't work because we have both scérre
+				-- (= [[scegliere]]) and disvèrre (= [[disvellere]]), as well as pórre and tòrre (= [[togliere]]).
+				local before, v1, between, v2, after = analyze_stem_for_last_two_vowels(
+					rsub(base.verb.verb, "re$", ""), base.verb.verb, "root-stressed infinitive")
+				local vowel_spec = unfc(rre_vowel .. GR)
+				if v1 == v2 then
+					vowel_spec = vowel_spec .. "+"
+				end
+				form = vowel_spec
+			else
+				-- Use the single-vowel spec(s) in the present tense principal part.
+				local temp = {}
+				process_specs(base, temp, "temp", base.principal_part_specs.pres, false, function(base, form)
+					return root_stressed_inf_special_case(base, form, do_stem, "from defaulted pres") end)
+				return temp.temp
+			end
+		end
+		local verb_stem, verb_suffix = rmatch(base.verb.verb, "^(.-)([er]re)$")
+		if not verb_stem then
+			error("Verb '" .. base.verb.verb .. "' must end in -ere or -rre to use \\ notation")
+		end
+		-- If there is a clitic suffix like -la or -sene, truncate final -(r)e.
+		if base.verb.linked_suf ~= "" then
+			verb_suffix = verb_suffix == "ere" and "er" or "r"
+		end
+		if not is_single_vowel_spec(form) then
+			if from_defaulted_pres then
+				error("When defaulting root-stressed infinitive vowel to present, present spec must be a single-vowel spec, but saw '"
+					.. form .. "'")
+			else
+				error("Explicit root-stressed infinitive spec '" .. form .. "' should be a single-vowel spec")
+			end
+		end
+
+		local expanded = apply_vowel_spec(verb_stem, base.verb.verb, "root-stressed infinitive", form)
+		if do_stem then
+			return expanded
+		else
+			return "[[" .. base.verb.verb .. "|" .. expanded .. verb_suffix .. "]]"
+		end
 	end
 
+	process_specs(base, base.principal_part_forms, "root_stressed_stem", specs, false, function(base, form)
+		return root_stressed_inf_special_case(base, form, "do stem") end)
+	process_specs(base, base.forms, "lemma_linked", specs, false, function(base, form)
+		return root_stressed_inf_special_case(base, form, false) end)
+end
+
+
+-- Defined earlier as a forward reference.
+generate_phis_principal_part = function(base)
+	check_not_null(base, base.verb.phis)
+	return base.verb.phis
+end
+
+
+-- Defined earlier as a forward reference.
+generate_pp_principal_part = function(base)
+	check_not_null(base, base.verb.pp)
+	return base.verb.pp
+end
+
+
+local function create_lemma_forms(base)
+	-- Do the lemma and lemma_linked forms. When do_root_stressed_inf is called, this also sets
+	-- base.principal_part_forms.root_stressed_stem, which is needed by add_present_indic(), so we have to
+	-- do this before conjugating the present indicative.
 	iut.insert_form(base.forms, "lemma", {form = base.lemma})
 	-- Add linked version of lemma for use in head=.
-	if base.root_stressed_inf then
-		com.do_root_stressed_inf(iut, base, base.root_stressed_inf)
+	if base.principal_part_specs.root_stressed_inf then
+		do_root_stressed_inf(base, base.principal_part_specs.root_stressed_inf)
 	else
-		com.do_ending_stressed_inf(iut, base)
+		do_ending_stressed_inf(base)
 	end
+end
+
+
+local function general_list_form_contains_form(list, form)
+	for _, formobj in ipairs(list) do
+		if formobj.form == form then
+			return true
+		end
+	end
+	return false
 end
 
 
@@ -759,6 +1022,9 @@ local function handle_explicit_row(base, row_slot)
 			local function explicit_row_special_case(base, form)
 				if form == "+" then
 					return existing_generated_form
+				end
+				if not general_list_form_contains_form(existing_generated_form, form) then
+					base.is_irreg[row_slot] = true
 				end
 				return form
 			end
@@ -786,6 +1052,9 @@ local function handle_overrides_for_row(base, row_slot)
 				if form == "+" then
 					return existing_generated_form
 				end
+				if not general_list_form_contains_form(existing_generated_form, form) then
+					base.is_irreg[row_slot] = true
+				end
 				return form
 			end
 			base.forms[slot] = nil -- erase existing form before generating override
@@ -795,9 +1064,63 @@ local function handle_overrides_for_row(base, row_slot)
 end
 
 
+local function pres_special_case(base, form)
+	if form == "+" then
+		check_not_null(base, base.verb.pres)
+		return base.verb.pres
+	elseif form == "+isc" then
+		check_not_null(base, base.verb.isc_pres)
+		return base.verb.isc_pres
+	elseif form == "-" then
+		return form
+	elseif is_single_vowel_spec(form) then
+		check_not_null(base, base.verb.pres)
+		local pres, final_vowel = rmatch(base.verb.pres, "^(.*)([oae])$")
+		if not pres then
+			error("Internal error: Default present '" .. base.verb.pres .. "' doesn't end in -o, -a or -e")
+		end
+		return apply_vowel_spec(pres, base.verb.pres, "default present", form) .. final_vowel
+	elseif not base.third and not rfind(form, "[oò]$") then
+		error("Present first-person singular form '" .. form .. "' should end in -o")
+	elseif base.third and not rfind(form, "[aàeè]") then
+		error("Present third-person singular form '" .. form .. "' should end in -a or -e")
+	else
+		return form
+	end
+end
+
+
+local function pres3s_special_case(base, form)
+	if form == "+" then
+		check_not_null(base, base.verb.pres3s)
+		return base.verb.pres3s
+	elseif form == "+isc" then
+		check_not_null(base, base.verb.isc_pres3s)
+		return base.verb.isc_pres3s
+	elseif form == "-" then
+		return form
+	elseif rfind(form, "^" .. AV .. "[+-]?$") then
+		check_not_null(base, base.verb.pres3s)
+		local pres3s, final_vowel = rmatch(base.verb.pres3s, "^(.*)([ae])$")
+		if not pres3s then
+			error("Internal error: Default third-person singular present '" .. base.verb.pres3s
+				.. "' doesn't end in -a or -e")
+		end
+		return apply_vowel_spec(pres3s, base.verb.pres3s, "default third-person singular present", form) .. final_vowel
+	elseif not rfind(form, "[aàeè]") then
+		error("Present third-person singular form '" .. form .. "' should end in -a or -e")
+	else
+		return form
+	end
+end
+
+
 -- Generate the present indicative. See "RULES FOR CONJUGATION" near the top of the file for the detailed rules.
 -- Defined earlier as a forward reference.
 add_present_indic = function(base, prefix)
+	process_specs(base, base.principal_part_forms, "pres", base.principal_part_specs.pres, "finite", pres_special_case)
+	process_specs(base, base.principal_part_forms, "pres3s", base.principal_part_specs.pres3s, "finite", pres3s_special_case)
+
 	local function addit(pers, stems, endings)
 		add(base, prefix .. pers, stems, endings)
 	end
@@ -831,7 +1154,7 @@ end
 
 
 -- Defined earlier as a forward reference.
-local function generate_present_subj_principal_part(base)
+generate_present_subj_principal_part = function(base)
 	return iut.map_forms(base.forms.pres1s, function(form)
 		if not form:find("o$") then
 			error("sub: or subrow: must be given in order to generate the singular present subjunctive "
@@ -869,7 +1192,7 @@ end
 
 
 -- Defined earlier as a forward reference.
-local function generate_imperative_principal_part(base)
+generate_imperative_principal_part = function(base)
 	if base.conj_vowel == "à" then
 		-- Copy present indicative 3s to imperative 2s.
 		return base.forms.pres3s
@@ -963,15 +1286,36 @@ local function conjugate_row(base, rowslot)
 		error("Internal error: Unrecognized row slot '" .. rowslot .. "'")
 	end
 
-	local function principal_part_special_case(base, form)
-		if form == "+" then
-			return rowconj.generate_default_principal_part(base)
-		end
-		return form
+	for _, principal_part_spec in ipairs({
+		{"pres", "finite", pres_special_case},
+		{"pres3s", "finite", pres3s_special_case},
+		{"phis", "finite", phis_special_case},
+		{"pp", false, pp_special_case},
+	}) do
+		local slot, is_finite, special_case = unpack(principal_part_spec)
+		process_specs(base, base.principal_part_forms, slot, base.principal_part_specs[slot], is_finite, special_case)
 	end
 
-	local principal_part_specs = base.principal_part_specs[rowslot] or {{form = "+"}}
-	process_specs(base, base.principal_part_forms, rowslot, specs, rowslot ~= "imp", principal_part_special_case)
+	-- Generate the principal part for this row now if it has an entry for `generate_default_principal_part`. Rows of this sort
+	-- have a corresponding explicit principal part specifier, e.g. 'fut:sarò', 'impsub:fóssi'. Other rows (e.g. pres, phis, pp)
+	-- are handled
+	if rowconj.generate_default_principal_part then
+		local function principal_part_special_case(base, form)
+			-- process_specs() calls convert_to_general_list_form() on the output in any case and we need it in this form
+			-- in order to call general_list_form_contains_form(), so we may as well convert it now.
+			local default_principal_part = iut.convert_to_general_list_form(rowconj.generate_default_principal_part(base))
+			if form == "+" then
+				return default_principal_part
+			end
+			if not general_list_form_contains_form(default_principal_part, form) then
+				base.is_irreg[rowslot] = true
+			end
+			return form
+		end
+
+		local principal_part_specs = base.principal_part_specs[rowslot] or {{form = "+"}}
+		process_specs(base, base.principal_part_forms, rowslot, specs, rowslot ~= "imp", principal_part_special_case)
+	end
 
 	if type(rowconj.conjugate) == "table" then
 		if #rowconj.conjugate ~= #rowconj.persnum then
@@ -1236,8 +1580,11 @@ end
 
 
 local function conjugate_verb(base)
-	add_present_indic(base)
-	process_slot_overrides(base, "pres")
+	add_default_verb_forms(base)
+	create_lemma_forms(base)
+	conjugate_row(base, "pres")
+	conjugate_row(base, "sub")
+	conjugate_row(base, "imp")
 	add_present_subj(base)
 	add_imperative(base)
 	add_non_present(base)
@@ -1290,6 +1637,146 @@ local function conjugate_verb(base)
 end
 
 
+local function analyze_verb(lemma)
+	local is_pronominal = false
+	local is_reflexive = false
+	-- The particles that can go after a verb are:
+	-- * la, le
+	-- * ne
+	-- * ci, vi (sometimes in the form ce, ve)
+	-- * si (sometimes in the form se)
+	-- Observed combinations:
+	--   * ce + la: [[avercela]] "to be angry (at someone)", [[farcela]] "to make it, to succeed",
+	--              [[mettercela tutta]] "to put everything (into something)"
+	--   * se + la: [[sbrigarsela]] "to deal with", [[bersela]] "to naively believe in",
+	--              [[sentirsela]] "to have the courage to face (a difficult situation)",
+	--              [[spassarsela]] "to live it up", [[svignarsela]] "to scurry away",
+	--              [[squagliarsela]] "to vamoose, to clear off", [[cercarsela]] "to be looking for (trouble etc.)",
+	--              [[contarsela]] "to have a distortedly positive self-image; to chat at length",
+	--              [[dormirsela]] "to be fast asleep", [[filarsela]] "to slip away, to scram",
+	--              [[giostrarsela]] "to get away with; to turn a situation to one's advantage",
+	--              [[cavarsela]] "to get away with; to get out of (trouble); to make the best of; to manage (to do); to be good at",
+	--              [[meritarsela]] "to get one's comeuppance", [[passarsela]] "to fare (well, badly)",
+	--              [[rifarsela]] "to take revenge", [[sbirbarsela]] "to slide by (in life)",
+	--              [[farsela]]/[[intendersela]] "to have a secret affair or relationship with",
+	--              [[farsela addosso]] "to shit oneself", [[prendersela]] "to take offense at; to blame",
+	--              [[prendersela comoda]] "to take one's time", [[sbrigarsela]] "to finish up; to get out of (a difficult situation)",
+	--              [[tirarsela]] "to lord it over", [[godersela]] "to enjoy", [[vedersela]] "to see (something) through",
+	--              [[vedersela brutta]] "to have a hard time with; to be in a bad situation",
+	--              [[aversela]] "to pick on (someone)", [[battersela]] "to run away, to sneak away",
+	--              [[darsela a gambe]] "to run away", [[fumarsela]] "to sneak away",
+	--              [[giocarsela]] "to behave (a certain way); to strategize; to play"
+	--   * se + ne: [[andarsene]] "to take leave", [[approfittarsene]] "to take advantage of",
+	--              [[fottersene]]/[[strafottersene]] "to not give a fuck",
+	--              [[fregarsene]]/[[strafregarsene]] "to not give a damn",
+	--              [[guardarsene]] "to beware; to think twice", [[impiparsene]] "to not give a damn",
+	--              [[morirsene]] "to fade away; to die a lingering death", [[ridersene]] "to laugh at; to not give a damn",
+	--              [[ritornarsene]] "to return to", [[sbattersene]]/[[strabattersene]] "to not give a damn",
+	--              [[infischiarsene]] "to not give a damn", [[stropicciarsene]] "to not give a damn",
+	--              [[sbarazzarsene]] "to get rid of, to bump off", [[andarsene in acqua]] "to be diluted; to decay",
+	--              [[nutrirsene]] "to feed oneself", [[curarsene]] "to take care of",
+	--              [[intendersene]] "to be an expert (in)", [[tornarsene]] "to return, to go back",
+	--              [[starsene]] "to stay", [[farsene]] "to matter; to (not) consider; to use",
+	--              [[farsene una ragione]] "to resign; to give up; to come to terms with; to settle (a dispute)",
+	--              [[riuscirsene]] "to repeat (something annoying)", [[venirsene]] "to arrive slowly; to leave"
+	--   * ci + si: [[trovarcisi]] "to find oneself in a happy situation",
+	--              [[vedercisi]] "to imagine oneself (in a situation)", [[sentircisi]] "to feel at ease"
+	--   * vi + si: [[recarvisi]] "to go there"
+	--
+	local ret = {}
+	local linked_suf, finite_pref, finite_pref_ho
+	local clitic_to_finite = {ce = "ce", ve = "ve", se = "me"}
+	local verb, clitic, clitic2 = rmatch(lemma, "^(.-)([cvs]e)(l[ae])$")
+	if verb then
+		linked_suf = "[[" .. clitic .. "]][[" .. clitic2 .. "]]"
+		finite_pref = "[[" .. clitic_to_finite[clitic] .. "]] [[" .. clitic2 .. "]] "
+		finite_pref_ho = "[[" .. clitic_to_finite[clitic] .. "]] [[l']]"
+		is_pronominal = true
+		is_reflexive = clitic == "se"
+	end
+	if not verb then
+		verb, clitic = rmatch(lemma, "^(.-)([cvs]e)ne$")
+		if verb then
+			linked_suf = "[[" .. clitic .. "]][[ne]]"
+			finite_pref = "[[" .. clitic_to_finite[clitic] .. "]] [[ne]] "
+			finite_pref_ho = "[[" .. clitic_to_finite[clitic] .. "]] [[n']]"
+			is_pronominal = true
+			is_reflexive = clitic == "se"
+		end
+	end
+	if not verb then
+		verb, clitic = rmatch(lemma, "^(.-)([cv]i)si$")
+		if verb then
+			linked_suf = "[[" .. clitic .. "]][[si]]"
+			finite_pref = "[[mi]] [[" .. clitic .. "]] "
+			if clitic == "vi" then
+				finite_pref_ho = "[[mi]] [[v']]"
+			else
+				finite_pref_ho = "[[mi]] [[ci]] "
+			end
+			is_pronominal = true
+			is_reflexive = true
+		end
+	end
+	if not verb then
+		verb, clitic = rmatch(lemma, "^(.-)([cv]i)$")
+		if verb then
+			linked_suf = "[[" .. clitic .. "]]"
+			finite_pref = "[[" .. clitic .. "]] "
+			if clitic == "vi" then
+				finite_pref_ho = "[[v']]"
+			else
+				finite_pref_ho = "[[ci]] "
+			end
+			is_pronominal = true
+		end
+	end
+	if not verb then
+		verb = rmatch(lemma, "^(.-)si$")
+		if verb then
+			linked_suf = "[[si]]"
+			finite_pref = "[[mi]] "
+			finite_pref_ho = "[[m']]"
+			-- not pronominal
+			is_reflexive = true
+		end
+	end
+	if not verb then
+		verb = rmatch(lemma, "^(.-)ne$")
+		if verb then
+			linked_suf = "[[ne]]"
+			finite_pref = "[[ne]] "
+			finite_pref_ho = "[[n']]"
+			is_pronominal = true
+		end
+	end
+	if not verb then
+		verb, clitic = rmatch(lemma, "^(.-)(l[ae])$")
+		if verb then
+			linked_suf = "[[" .. clitic .. "]]"
+			finite_pref = "[[" .. clitic .. "]] "
+			finite_pref_ho = "[[l']]"
+			is_pronominal = true
+		end
+	end
+	if not verb then
+		verb = lemma
+		linked_suf = ""
+		finite_pref = ""
+		finite_pref_ho = ""
+		-- not pronominal
+	end
+
+	ret.raw_verb = verb
+	ret.linked_suf = linked_suf
+	ret.finite_pref = finite_pref
+	ret.finite_pref_ho = finite_pref_ho
+	ret.is_pronominal = is_pronominal
+	ret.is_reflexive = is_reflexive
+	return ret
+end
+
+
 local function parse_indicator_spec(angle_bracket_spec, lemma)
 	-- `forms` contains the final per-slot forms. This is processed further in [[Module:inflection-utilities]].
 	--    This is a table indexed by slot (e.g. "pres1s"). Each value in the table is a list of items of the form
@@ -1312,15 +1799,12 @@ local function parse_indicator_spec(angle_bracket_spec, lemma)
 	--    The key is "pres", "sub", etc. (i.e. minus the "row" suffix). The value is another table indexed by the
 	--    person/number suffix (e.g. "1s", "2s", etc. for "pres"; "123s", "1p", "2p", etc. for "sub"), whose values
 	--    are in the same format as `principal_part_specs`.
-	-- `explicit_row_forms` contains the processed versions of `explicit_row_specs`. The key is as for
-	--    `explicit_row_specs`, while the value is another table indexed by the person/number suffix ("1s", "2s",
-	--    etc.), whose values are in the same format as for `forms` and `genforms`.
 	-- `override_specs` contains user-specified forms using 'pres1s:', 'sub3p:', etc. The key is the slot ("pres1s",
 	--   "sub3p", etc.) and the value is of the same format as `principal_part_specs`.
 	-- `override_forms` contains the processed versions of `override_specs`, as with `principal_part_forms` vs.
 	--   `principal_part_specs`.
 	local base = {forms = {}, genforms = {}, principal_part_specs = {}, principal_part_forms = {}, explicit_row_specs = {},
-		explicit_row_forms = {}, override_specs = {}, override_forms = {}}
+		override_specs = {}, override_forms = {}, is_irreg = {}}
 	local function parse_err(msg)
 		error(msg .. ": " .. angle_bracket_spec)
 	end
@@ -1367,7 +1851,7 @@ local function parse_indicator_spec(angle_bracket_spec, lemma)
 		lemma = data.pagename
 	end
 	base.lemma = m_links.remove_links(lemma)
-	base.verb = com.analyze_verb(lemma)
+	base.verb = analyze_verb(lemma)
 
 	local inside = angle_bracket_spec:match("^<(.*)>$")
 	assert(inside)
@@ -1381,7 +1865,7 @@ local function parse_indicator_spec(angle_bracket_spec, lemma)
 			local comma_separated_groups = iut.split_alternating_runs(dot_separated_group, "%s*[,\\/]%s*", "preserve splitchar")
 			local presind = 1
 			local first_separator = #comma_separated_groups > 1 and
-				com.strip_spaces(comma_separated_groups[2][1])
+				strip_spaces(comma_separated_groups[2][1])
 			if base.verb.is_reflexive then
 				if #comma_separated_groups > 1 and first_separator ~= "," then
 					presind = 3
@@ -1391,14 +1875,14 @@ local function parse_indicator_spec(angle_bracket_spec, lemma)
 						-- For verbs like [[scegliersi]] and [[proporsi]], allow either 'é\scélgo' or '\é\scélgo'
 						-- and similarly either 'ó+\propóngo' or '\ó+\propóngo'.
 						if specs == nil then
-							if #comma_separated_groups > 3 and com.strip_spaces(comma_separated_groups[4][1]) == "\\" then
-								base.root_stressed_inf = fetch_specs(comma_separated_groups[3])
+							if #comma_separated_groups > 3 and strip_spaces(comma_separated_groups[4][1]) == "\\" then
+								base.principal_part_specs.root_stressed_inf = fetch_specs(comma_separated_groups[3])
 								presind = 5
 							else
-								base.root_stressed_inf = {{form = "+"}}
+								base.principal_part_specs.root_stressed_inf = {{form = "+"}}
 							end
 						else
-							base.root_stressed_inf = specs
+							base.principal_part_specs.root_stressed_inf = specs
 						end
 					elseif specs ~= nil then
 						parse_err("With reflexive verb, can't specify anything before initial slash, but saw '"
@@ -1444,11 +1928,11 @@ local function parse_indicator_spec(angle_bracket_spec, lemma)
 
 				-- Fetch root-stressed infinitive, if given.
 				if first_separator == "\\" then
-					if #comma_separated_groups > 3 and com.strip_spaces(comma_separated_groups[4][1]) == "\\" then
-						base.root_stressed_inf = fetch_specs(comma_separated_groups[3])
+					if #comma_separated_groups > 3 and strip_spaces(comma_separated_groups[4][1]) == "\\" then
+						base.principal_part_specs.root_stressed_inf = fetch_specs(comma_separated_groups[3])
 						presind = 5
 					else
-						base.root_stressed_inf = {{form = "+"}}
+						base.principal_part_specs.root_stressed_inf = {{form = "+"}}
 					end
 				end
 			end
@@ -1465,15 +1949,15 @@ local function parse_indicator_spec(angle_bracket_spec, lemma)
 
 			-- Parse past historic
 			if #comma_separated_groups > presind then
-				if com.strip_spaces(comma_separated_groups[presind + 1][1]) ~= "," then
+				if strip_spaces(comma_separated_groups[presind + 1][1]) ~= "," then
 					parse_err("Use a comma not slash to separate present from past historic")
 				end
-				base.principal_part_specs.past = fetch_specs(comma_separated_groups[presind + 2])
+				base.principal_part_specs.phis = fetch_specs(comma_separated_groups[presind + 2])
 			end
 
 			-- Parse past participle
 			if #comma_separated_groups > presind + 2 then
-				if com.strip_spaces(comma_separated_groups[presind + 3][1]) ~= "," then
+				if strip_spaces(comma_separated_groups[presind + 3][1]) ~= "," then
 					parse_err("Use a comma not slash to separate past historic from past participle")
 				end
 				base.principal_part_specs.pp = fetch_specs(comma_separated_groups[presind + 4])
@@ -1544,14 +2028,14 @@ local function normalize_all_lemmas(alternant_multiword_spec)
 
 	-- (1) Add links to all before and after text.
 	if not alternant_multiword_spec.args.noautolinktext then
-		alternant_multiword_spec.post_text = com.add_links(alternant_multiword_spec.post_text)
+		alternant_multiword_spec.post_text = add_links(alternant_multiword_spec.post_text)
 		for _, alternant_or_word_spec in ipairs(alternant_multiword_spec.alternant_or_word_specs) do
-			alternant_or_word_spec.before_text = com.add_links(alternant_or_word_spec.before_text)
+			alternant_or_word_spec.before_text = add_links(alternant_or_word_spec.before_text)
 			if alternant_or_word_spec.alternants then
 				for _, multiword_spec in ipairs(alternant_or_word_spec.alternants) do
-					multiword_spec.post_text = com.add_links(multiword_spec.post_text)
+					multiword_spec.post_text = add_links(multiword_spec.post_text)
 					for _, word_spec in ipairs(multiword_spec.word_specs) do
-						word_spec.before_text = com.add_links(word_spec.before_text)
+						word_spec.before_text = add_links(word_spec.before_text)
 					end
 				end
 			end
@@ -1617,7 +2101,7 @@ local function normalize_all_lemmas(alternant_multiword_spec)
 			-- Add links to the lemma so the user doesn't specifically need to, since we preserve
 			-- links in multiword lemmas and include links in non-lemma forms rather than allowing
 			-- the entire form to be a link.
-			linked_lemma = com.add_links(base.user_specified_lemma)
+			linked_lemma = add_links(base.user_specified_lemma)
 		end
 		base.linked_lemma = linked_lemma
 	end)
