@@ -55,7 +55,7 @@ Page 4 Аврора: -------- begin text --------
 
 ===Pronunciation===
 * {{ru-IPA|Авро́ра}}
-*{{hyph|ru|Ав|ро́|ра}}
+* {{hyph|ru|Ав|ро́|ра}}
 
 ===Proper noun===
 {{ru-proper noun+|Авро́ра|a=an|n=both}}
@@ -505,7 +505,7 @@ Page 28 Андромеда: -------- begin text --------
 
 ===Pronunciation===
 * {{ru-IPA|Андроме́да}}
-*{{hyph|ru|Ан|дро|ме́|да}}
+* {{hyph|ru|Ан|дро|ме́|да}}
 
 ===Proper noun===
 {{ru-proper noun+|Андроме́да|a=ai}}
@@ -718,7 +718,7 @@ Page 41 Афина: -------- begin text --------
 
 ===Pronunciation===
 * {{ru-IPA|Афи́на}}
-*{{hyph|ru|А|фи́|на}}
+* {{hyph|ru|А|фи́|на}}
 
 ===Proper noun===
 {{ru-proper noun+|Афи́на|a=an}}
@@ -740,7 +740,7 @@ Borrowed from {{bor|ru|grc|Ἀφροδίτη}}.
 
 ===Pronunciation===
 * {{ru-IPA|Афроди́та}}
-*{{hyph|ru|Аф|ро|ди́|та}}
+* {{hyph|ru|Аф|ро|ди́|та}}
 
 ===Proper noun===
 {{ru-proper noun+|Афроди́та|a=an|n=both}}
@@ -1408,7 +1408,7 @@ Page 75 Венера: -------- begin text --------
 
 ===Pronunciation===
 * {{ru-IPA|Вене́ра}}
-*{{hyph|ru|Ве|не́|ра}}
+* {{hyph|ru|Ве|не́|ра}}
 
 ===Proper noun===
 {{ru-proper noun+|Вене́ра|a=ia}}
@@ -1903,7 +1903,7 @@ Ultimately from {{der|ru|la|Diāna}}.
 
 ===Pronunciation===
 * {{ru-IPA|Диа́на}}
-*{{hyph|ru|Ди|а́|на}}
+* {{hyph|ru|Ди|а́|на}}
 
 ===Proper noun===
 {{ru-proper noun+|Диа́на|a=an|n=both}}
@@ -3954,7 +3954,7 @@ From {{der|ru|grc|Μέδουσα}}.
 
 ===Pronunciation===
 * {{ru-IPA|Меду́за}}
-*{{hyph|ru|Ме|ду́|за}}
+* {{hyph|ru|Ме|ду́|за}}
 * {{audio|ru|Ru-медуза.ogg|Audio}}
 
 ===Proper noun===
@@ -4185,7 +4185,7 @@ Borrowed from {{bor|ru|grc|Νίκη}}.
 
 ===Pronunciation===
 * {{ru-IPA|Ни́ка}}
-*{{hyph|ru|Ни́|ка}}
+* {{hyph|ru|Ни́|ка}}
 
 ===Proper noun===
 {{ru-proper noun+|Ни́ка|a=an}}
@@ -4444,7 +4444,7 @@ Borrowed from {{bor|ru|grc|Περσεφόνη}}.
 
 ===Pronunciation===
 * {{ru-IPA|Персефо́на}}
-*{{hyph|ru|Пер|се|фо́|на}}
+* {{hyph|ru|Пер|се|фо́|на}}
 
 ===Proper noun===
 {{ru-proper noun+|Персефо́на|a=an|n=both}}
@@ -5735,7 +5735,7 @@ Page 298 Церера: -------- begin text --------
 
 ===Pronunciation===
 *{{ru-IPA|phon=Церэ́ра}}
-*{{hyph|ru|Це|ре́|ра}}
+* {{hyph|ru|Це|ре́|ра}}
 
 ===Noun===
 {{ru-proper noun+|Цере́ра//Cerɛ́ra|a=ia}}
@@ -6216,7 +6216,7 @@ Page 323 Яма: -------- begin text --------
 
 ===Pronunciation===
 * {{ru-IPA|Я́ма}}
-*{{hyph|ru|Я́|ма}}
+* {{hyph|ru|Я́|ма}}
 
 ===Etymology 1===
 From {{m|ru|я́ма||pit}}.
@@ -6913,7 +6913,7 @@ Page 350 актриса: -------- begin text --------
 ===Noun===
 {{ru-noun+|актри́са|a=an|m=актёр}}
 
-# [[actress]]
+# {{female equivalent of|ru|актёр}}: [[actress]]
 
 ====Declension====
 {{ru-noun-table|актри́са|a=an}}
@@ -7709,7 +7709,7 @@ Page 388 армянка: -------- begin text --------
 ===Noun===
 {{ru-noun+|армя́нка|*|a=an|m=армяни́н}}
 
-# [[female]] [[Armenian]] {{gloss|citizen, resident, or of heritage}}
+# {{female equivalent of|ru|армяни́н}}: [[female]] [[Armenian]] {{q|citizen, resident, or of heritage}}
 
 ====Declension====
 {{ru-noun-table|армя́нка|*|a=an}}
@@ -8046,7 +8046,7 @@ Page 403 африканка: -------- begin text --------
 ===Noun===
 {{ru-noun+|африка́нка|*|a=an|m=африка́нец}}
 
-# {{female equivalent of|ru|африка́нец}}: [[African]] girl or woman
+# {{female equivalent of|ru|африка́нец}}: [[African]] [[woman]] or [[girl]]
 
 ====Declension====
 {{ru-noun-table|африка́нка|*|a=an}}
@@ -9539,9 +9539,9 @@ Page 469 блондинка: -------- begin text --------
 * {{audio|ru|Ru-{{PAGENAME}}.ogg|Audio}}
 
 ===Noun===
-{{ru-noun+|блонди́нка|*|a=an}}
+{{ru-noun+|блонди́нка|*|a=an|m=блонди́н}}
 
-# [[blonde]] (fair-skinned, fair-haired girl or woman)
+# {{female equivalent of|ru|блонди́н}}: [[blonde]] {{gl|fair-skinned, fair-haired woman or girl}}
 
 ====Declension====
 {{ru-noun-table|блонди́нка|*|a=an}}
@@ -9682,7 +9682,7 @@ Page 474 бобриха: -------- begin text --------
 ===Noun===
 {{ru-noun+|бобри́ха|a=an|m=бобр|m2=бобёр}}
 
-# a [[female]] [[beaver]]
+# {{female equivalent of|ru|бобр}}, {{female equivalent of|ru|бобёр}}: [[female]] [[beaver]]
 
 ====Declension====
 {{ru-noun-table|бобри́ха|a=an}}
@@ -9832,7 +9832,7 @@ The “angle grinder” sense derives from the fact that the first such tools to
 ===Noun===
 {{ru-noun+|болга́рка|*|a=ai|m=болга́рин}}
 
-# {{female equivalent of|ru|болга́рин}}: [[Bulgarian]] girl or woman
+# {{female equivalent of|ru|болга́рин}}: [[Bulgarian]] [[woman]] or [[girl]]
 # {{lb|ru|colloquial}} [[angle]] [[grinder]], [[side]] [[grinder]]
 
 ====Declension====
@@ -9961,7 +9961,7 @@ Page 487 бразильянка: -------- begin text --------
 ===Noun===
 {{ru-noun+|бразилья́нка|*|a=an|m=брази́лец}}
 
-# {{female equivalent of|ru|брази́лец}}: [[Brazilian]] ''(girl or woman)''
+# {{female equivalent of|ru|брази́лец}}: [[Brazilian]] [[woman]] or [[girl]]
 
 ====Declension====
 {{ru-noun-table|бразилья́нка|*|a=an}}
@@ -10550,9 +10550,9 @@ Page 512 великая княгиня: -------- begin text --------
 * {{ru-IPA|вели́кая княги́ня}}
 
 ===Noun===
-{{ru-noun+|[[великий|вели́кая]]|+|_|[[княги́ня]]|a=an|m=вели́кий князь}}
+{{ru-noun+|[[великий|вели́кая]]|+|_|[[княги́ня]]|a=an|m=вели́кий кня́зь}}
 
-# [[grand princess]], [[grand duchess]]
+# {{female equivalent of|ru|вели́кий кня́зь}}: [[grand princess]], [[grand duchess]]
 
 ====Declension====
 {{ru-noun-table|вели́кая|+|_|княги́ня|a=an}}
@@ -10580,7 +10580,7 @@ Page 513 великая княжна: -------- begin text --------
 {{ru-noun-table|old=1|вели́кая|+|_|княжна́|*|a=an}}
 
 ====See also====
-* {{l|ru|вели́кий князь}}
+* {{l|ru|вели́кий кня́зь}}
 
 {{topics|ru|Female people|Monarchy|Nobility|Titles}}
 -------- end text --------
@@ -10591,9 +10591,9 @@ Page 514 великомученица: -------- begin text --------
 * {{ru-IPA|великому́ченица}}
 
 ===Noun===
-{{ru-noun+|великому́ченица|a=an}}
+{{ru-noun+|великому́ченица|a=an|m=великому́ченик}}
 
-# [[great martyress]]; {{female equivalent of|ru|великому́ченик}}
+# {{female equivalent of|ru|великому́ченик}}: [[great martyress]]
 
 ====Declension====
 {{ru-noun-table|великому́ченица|a=an}}
@@ -10807,7 +10807,7 @@ Page 523 виновница: -------- begin text --------
 ===Noun===
 {{ru-noun+|вино́вница|a=an|m=вино́вник}}
 
-# [[female]] [[culprit]]
+# {{female equivalent of|ru|вино́вник}}: [[female]] [[culprit]]
 
 ====Declension====
 {{ru-noun-table|вино́вница|a=an}}
@@ -10828,7 +10828,7 @@ Page 524 владелица: -------- begin text --------
 ===Noun===
 {{ru-noun+|владе́лица|a=an|m=владе́лец}}
 
-# female [[owner]]
+# {{female equivalent of|ru|владе́лец}}: [[female]] [[owner]]
 
 ====Declension====
 {{ru-noun-table|владе́лица|a=an}}
@@ -10871,7 +10871,7 @@ Page 526 владычица: -------- begin text --------
 ===Noun===
 {{ru-noun+|влады́чица|a=an|voc=влады́чице|m=влады́ка}}
 
-# {{lb|ru|literary}} [[female]] [[ruler]] or [[sovereign]]; [[mistress]]
+# {{lb|ru|literary}} {{female equivalent of|ru|влады́ка}}: [[female]] [[ruler]] or [[sovereign]]; [[mistress]]
 
 ====Declension====
 {{ru-noun-table|влады́чица|a=an|voc=влады́чице}}
@@ -10897,7 +10897,7 @@ From {{suffix|ru|власти́тель|ница}}.
 ===Noun===
 {{ru-noun+|власти́тельница|a=an|m=власти́тель}}
 
-# female [[ruler]], [[arbiter]], [[sovereign]]
+# {{female equivalent of|ru|власти́тель}}: [[female]] [[ruler]], [[arbiter]], [[sovereign]]
 
 ====Declension====
 {{ru-noun-table|власти́тельница|a=an}}
@@ -10914,9 +10914,9 @@ Page 528 внучатая племянница: -------- begin text --------
 * {{ru-IPA|внуча́тая племя́нница}}
 
 ===Noun===
-{{ru-noun+|[[внучатый|внуча́тая]]|+|_|[[племя́нница]]|a=an}}
+{{ru-noun+|[[внучатый|внуча́тая]]|+|_|[[племя́нница]]|a=an|m=внуча́тый племя́нник}}
 
-# [[grandniece]], [[great-niece]] {{gloss|[[nephew]]'s or [[niece]]'s daughter}}
+# {{female equivalent of|ru|внуча́тый племя́нник}}: [[grandniece]], [[great-niece]] {{gloss|[[nephew]]'s or [[niece]]'s daughter}}
 
 ====Declension====
 {{ru-noun-table|[[внучатый|внуча́тая]]|+|_|[[племя́нница]]|a=an}}
@@ -10942,7 +10942,7 @@ Page 529 внучка: -------- begin text --------
 ====Noun====
 {{ru-noun+|вну́чка|*|a=an|m=внук}}
 
-# [[granddaughter]]
+# {{female equivalent of|ru|внук}}: [[granddaughter]]
 
 =====Declension=====
 {{ru-noun-table|вну́чка|*|a=an}}
@@ -10977,7 +10977,7 @@ Page 530 вобла: -------- begin text --------
 {{ru-noun+|во́бла|a=an}}
 
 # [[vobla]], [[Caspian roach]] {{qualifier|[[Rutilus caspicus]]}}
-# {{lb|ru|colloquial|derogatory}} an ugly and [[skinny]] woman
+# {{lb|ru|colloquial|derogatory}} an [[ugly]] and [[skinny]] woman
 
 ====Declension====
 {{ru-noun-table|во́бла|a=an}}
@@ -10995,7 +10995,7 @@ Page 531 водолазка: -------- begin text --------
 ===Noun===
 {{ru-noun+|водола́зка|*|a=an|m=водола́з}}
 
-# {{lb|ru|colloquial|rare}} [[female]] [[diver]]
+# {{lb|ru|colloquial|rare}} {{female equivalent of|ru|водола́з}}: [[female]] [[diver]]
 
 ====Declension====
 {{ru-noun-table|водола́зка|*|a=an}}
@@ -11068,7 +11068,7 @@ Page 534 водочница: -------- begin text --------
 ===Noun===
 {{ru-noun+|во́дочница|a=an|m=во́дочник}}
 
-# female [[manufacturer]] and/or [[seller]] of [[vodka]], strong [[liquor]]
+# {{female equivalent of|ru|во́дочник}}: female [[manufacturer]] and/or [[seller]] of [[vodka]], strong [[liquor]]
 # {{lb|ru|colloquial|rare}} female [[drunkard]], someone who drinks a lot of vodka
 
 ====Declension====
@@ -11089,7 +11089,7 @@ Feminine of {{m|ru|возлю́бленный||sweetheart}}, originally a partic
 ===Noun===
 {{ru-noun+|возлю́бленная|+|a=an|m=возлю́бленный}}
 
-# [[sweetheart]]
+# {{female equivalent of|ru|возлю́бленный}}: [[female]] [[sweetheart]]
 
 ====Declension====
 {{ru-noun-table|возлю́бленная|+|a=an}}
@@ -11126,7 +11126,7 @@ Page 537 вокалистка: -------- begin text --------
 ===Noun===
 {{ru-noun+|вокали́стка|*|a=an|m=вокали́ст}}
 
-# female [[vocalist]], [[singer]]
+# {{female equivalent of|ru|вокали́ст}}: [[female]] [[vocalist]], [[singer]]
 
 ====Declension====
 {{ru-noun-table|вокали́стка|*|a=an}}
@@ -11170,7 +11170,7 @@ Page 539 волчица: -------- begin text --------
 ===Noun===
 {{ru-noun+|волчи́ца|a=an|m=волк}}
 
-# [[she-wolf]] (animal)
+# {{female equivalent of|ru|волк}}: [[she-wolf]] {{q|animal}}
 
 ====Declension====
 {{ru-noun-table|волчи́ца|a=an}}
@@ -11194,7 +11194,7 @@ Feminine form of {{m|ru|волше́бник}}
 ===Noun===
 {{ru-noun+|волше́бница|a=an|m=волше́бник}}
 
-# [[wizardess]], [[sorceress]], [[witch]], [[fairy]]
+# {{female equivalent of|ru|волше́бник}}: [[wizardess]], [[sorceress]], [[witch]], [[fairy]]
 #: {{syn|ru|ве́дьма|ворожея́|колду́нья|фе́я|чароде́йка}}
 
 ====Declension====
@@ -11291,7 +11291,7 @@ Page 544 воровка: -------- begin text --------
 ===Noun===
 {{ru-noun+|воро́вка|*|a=an|m=вор}}
 
-# female [[thief]]
+# {{female equivalent of|ru|вор}}: [[female]] [[thief]]
 # {{lb|ru|obsolete}} female [[traitor]], [[apostate]], [[outlaw]]
 
 ====Declension====
@@ -11400,9 +11400,7 @@ Page 548 воспитанница: -------- begin text --------
 ===Noun===
 {{ru-noun+|воспи́танница|a=an|m=воспи́танник}}
 
-# [[female]] [[foster child]]
-# [[female]] [[pupil]]
-# [[alumna]]
+# {{female equivalent of|ru|воспи́танник}}: [[female]] [[foster child]]; [[female]] [[pupil]]; [[alumna]]
 
 ====Declension====
 {{ru-noun-table|воспи́танница|a=an}}
@@ -11425,7 +11423,7 @@ Page 549 воспитательница: -------- begin text --------
 ===Noun===
 {{ru-noun+|воспита́тельница|a=an|m=воспита́тель}}
 
-# (female) [[educator]]
+# {{female equivalent of|ru|воспита́тель}}: [[female]] [[educator]]
 # [[governess]], [[mentor]]; [[tutor]]
 # (female) [[nursery]]/[[kindergarten]] [[teacher]], [[governess]]
 
@@ -11491,10 +11489,13 @@ Page 552 врачиха: -------- begin text --------
 ===Noun===
 {{ru-noun+|врачи́ха|a=an|m=врач}}
 
-# {{lb|ru|colloquial}} female [[doctor]] ("врач" is preferred for both genders)
+# {{lb|ru|colloquial}} {{female equivalent of|ru|врач}}: female [[doctor]]
 
 ====Declension====
 {{ru-noun-table|врачи́ха|a=an}}
+
+====Usage notes====
+* {{m|ru|врач}} is preferred for both genders.
 
 {{topics|ru|Female healthcare occupations}}
 -------- end text --------
@@ -11525,7 +11526,7 @@ Page 554 всадница: -------- begin text --------
 ===Noun===
 {{ru-noun+|вса́дница|a=an|m=вса́дник}}
 
-# [[horsewoman]], female [[rider]]
+# {{female equivalent of|ru|вса́дник}}: [[horsewoman]], female [[rider]]
 
 ====Declension====
 {{ru-noun-table|вса́дница|a=an}}
@@ -11569,7 +11570,7 @@ From {{inh|ru|sla-pro|*vydra}}, from {{inh|ru|ine-bsl-pro|*ūdrāˀ}}, from {{in
 ===Noun===
 {{ru-noun+|вы́дра|a=an|adj=вы́дряный|adj2=вы́дровый|dim=вы́дрочка}}
 
-# [[otter]] (the mammal)
+# [[otter]] {{q|mammal}}
 # {{lb|ru|pejorative}} [[mean]], [[ugly]] [[woman]]
 
 ====Declension====
@@ -11615,7 +11616,7 @@ Page 558 выпускница: -------- begin text --------
 ===Noun===
 {{ru-noun+|выпускни́ца|a=an|m=выпускни́к}}
 
-# female [[graduate]] (from a university), female school leaver
+# {{female equivalent of|ru|выпускни́к}}: [[female]] [[graduate]] {{q|from a university}}, [[female]] [[school]] [[leave]]r
 
 ====Declension====
 {{ru-noun-table|выпускни́ца|a=an}}
@@ -11705,7 +11706,7 @@ Page 562 вьетнамка: -------- begin text --------
 ===Noun===
 {{ru-noun+|вьетна́мка|*|a=an|m=вьетна́мец}}
 
-# [[female]] [[Vietnamese]] [[person]]
+# {{female equivalent of|ru|вьетна́мец}}: [[female]] [[Vietnamese]] [[person]]
 
 ====Declension====
 {{ru-noun-table|вьетна́мка|*|a=an}}
@@ -12995,7 +12996,7 @@ Page 616 грибница: -------- begin text --------
 ====Noun====
 {{ru-noun+|грибни́ца|a=an|m=грибни́к}}
 
-# [[female]] [[mushroomer]], [[female]] [[habitual]] [[gatherer]] [[of]] [[mushrooms]], [[female]] [[mushroom]] [[picker]], [[female]] [[mushroom]] [[hunter]]
+# {{female equivalent of|ru|грибни́к}}: [[female]] [[mushroomer]], [[female]] [[habitual]] [[gatherer]] [[of]] [[mushrooms]], [[female]] [[mushroom]] [[picker]], [[female]] [[mushroom]] [[hunter]]
 
 =====Declension=====
 {{ru-noun-table|грибни́ца|a=an}}
@@ -13083,7 +13084,7 @@ Page 619 грузинка: -------- begin text --------
 ===Noun===
 {{ru-noun+|грузи́нка|*|a=an|m=грузи́н}}
 
-# [[Georgian]] woman
+# {{female equivalent of|ru|грузи́н}}: [[Georgian]] woman
 
 ====Declension====
 {{ru-noun-table|грузи́нка|*|a=an}}
@@ -13268,7 +13269,7 @@ Page 627 гусыня: -------- begin text --------
 ===Noun===
 {{ru-noun+|гусы́ня|a=an|m=гуса́к|m2=гусь}}
 
-# a [[female]] [[goose]]
+# {{female equivalent of|ru|гуса́к}}, {{female equivalent of|ru|гусь}}: a [[female]] [[goose]]
 
 ====Declension====
 {{ru-noun-table|гусы́ня|a=an}}
@@ -14491,7 +14492,7 @@ Compare {{cog|cs|drop}}, {{cog|pl|drop}}. Cognate with {{cog|de|Trappe}}.
 ===Noun===
 {{ru-noun+|дрофа́|a=an}}
 
-# [[great bustard]], a species of bird.
+# [[great bustard]] {{q|a species of bird}}
 
 ====Declension====
 {{ru-noun-table|дрофа́|a=an}}
@@ -14738,7 +14739,7 @@ Page 691 европейка: -------- begin text --------
 ===Noun===
 {{ru-noun+|европе́йка|*|a=an|m=европе́ец}}
 
-# {{female equivalent of|ru|европе́ец}}: [[European]] girl or woman
+# {{female equivalent of|ru|европе́ец}}: [[European]] [[woman]] or [[girl]]
 
 ====Declension====
 {{ru-noun-table|европе́йка|*|a=an}}
@@ -15218,7 +15219,7 @@ From {{suffix|ru|жи́тель|ница}}.
 ===Noun===
 {{ru-noun+|жи́тельница|a=an|m=жи́тель}}
 
-# female [[inhabitant]], [[resident]], [[occupant]], [[dweller]]
+# {{female equivalent of|ru|жи́тель}}: [[female]] [[inhabitant]], [[resident]], [[occupant]], [[dweller]]
 
 ====Declension====
 {{ru-noun-table|жи́тельница|a=an}}
@@ -15239,7 +15240,7 @@ Page 711 жрица: -------- begin text --------
 ===Noun===
 {{ru-noun+|жри́ца|a=an|m=жрец}}
 
-# [[priestess]] {{i|in a [[pagan]] [[religion]]}}
+# {{female equivalent of|ru|жрец}}: [[priestess]] {{i|in a [[pagan]] [[religion]]}}
 
 ====Declension====
 {{ru-noun-table|жри́ца|a=an}}
@@ -15280,9 +15281,9 @@ Page 713 журналистка: -------- begin text --------
 * {{audio|ru|Ru-{{PAGENAME}}.ogg|Audio}}
 
 ===Noun===
-{{ru-noun+|журнали́стка|*|a=an}}
+{{ru-noun+|журнали́стка|*|a=an|m=журнали́ст}}
 
-# female [[journalist]]
+# {{female equivalent of|ru|журнали́ст}}: [[female]] [[journalist]]
 
 ====Declension====
 {{ru-noun-table|журнали́стка|*|a=an}}
@@ -15382,8 +15383,8 @@ Page 718 зазноба: -------- begin text --------
 ===Noun===
 {{ru-noun+|зазно́ба|a=ia|dim=зазно́бушка}}
 
-# love attraction
-# the object of such attraction, a [[sweetheart]]
+# {{lb|ru|inanimate}} [[love]] [[attraction]]
+# {{lb|ru|animate}} the [[object]] of such [[attraction]], a [[sweetheart]]
 
 ====Declension====
 {{ru-noun-table|зазно́ба|a=ia}}
@@ -15457,7 +15458,7 @@ Page 722 зайчиха: -------- begin text --------
 ===Noun===
 {{ru-noun+|зайчи́ха|a=an|m=за́яц}}
 
-# a [[female]] [[hare]], [[bunny]]
+# {{female equivalent of|ru|за́яц}}: [[female]] [[hare]], [[bunny]]
 
 ====Declension====
 {{ru-noun-table|зайчи́ха|a=an}}
@@ -15641,8 +15642,7 @@ Page 731 заступница: -------- begin text --------
 ===Noun===
 {{ru-noun+|засту́пница|a=an|m=засту́пник}}
 
-# [[defender]], [[intercessor]] ''(female)''
-# [[protector]], [[patron]] ''(female)''
+# {{female equivalent of|ru|засту́пник}}: [[female]] [[defender]], [[intercessor]]; [[female]] [[protector]], [[patron]]
 
 ====Declension====
 {{ru-noun-table|засту́пница|a=an}}
@@ -15697,9 +15697,7 @@ Page 733 защитница: -------- begin text --------
 ===Noun===
 {{ru-noun+|защи́тница|a=an|m=защи́тник}}
 
-# [[defender]], [[protector]]
-# [[advocate]], [[attorney]]
-# [[full-back]]
+# {{female equivalent of|ru|защи́тник}}: [[female]] [[defender]], [[protector]]; [[female]] [[advocate]], [[attorney]]; [[female]] [[full-back]]
 
 ====Declension====
 {{ru-noun-table|защи́тница|a=an}}
@@ -15716,8 +15714,7 @@ From {{suffix|ru|заяви́тель|ница}}.
 ===Noun===
 {{ru-noun+|заяви́тельница|a=an|m=заяви́тель}}
 
-# female [[applicant]] {{gloss|one who applies}}
-# female [[declarant]] {{gloss|a person who makes a formal declaration or statement}}
+# {{female equivalent of|ru|заяви́тель}}: female [[applicant]] {{gloss|one who applies}}; female [[declarant]] {{gloss|a person who makes a formal declaration or statement}}
 
 ====Declension====
 {{ru-noun-table|заяви́тельница|a=an}}
@@ -15837,7 +15834,7 @@ Page 739 землячка: -------- begin text --------
 ====Noun====
 {{ru-noun+|земля́чка|*|a=an|m=земля́к}}
 
-# [[female]] [[compatriot]], [[countrywoman]]
+# {{female equivalent of|ru|земля́к}}: [[female]] [[compatriot]], [[countrywoman]]
 
 =====Declension=====
 {{ru-noun-table|земля́чка|*|a=an}}
@@ -15872,7 +15869,7 @@ Page 740 злодейка: -------- begin text --------
 ===Noun===
 {{ru-noun+|злоде́йка|*|a=an|m=злоде́й}}
 
-# female [[villain]]
+# {{female equivalent of|ru|злоде́й}}: [[female]] [[villain]]
 
 ====Declension====
 {{ru-noun-table|злоде́йка|*|a=an}}
@@ -16000,7 +15997,7 @@ Page 746 знакомая: -------- begin text --------
 ===Noun===
 {{ru-noun+|знако́мая|+|a=an|m=знако́мый}}
 
-# female [[acquaintance]] {{gloss|person}}
+# {{female equivalent of|ru|знако́мый}}: [[female]] [[acquaintance]] {{gloss|person}}
 
 ====Declension====
 {{ru-noun-table|знако́мая|+|a=an}}
@@ -16037,7 +16034,7 @@ From {{inh|ru|sla-pro|*zъly}}, genitive {{m|sla-pro||*zъlъve}}, which is cogn
 ===Noun===
 {{ru-noun+|золо́вка|*|a=an}}
 
-# ''(antiquated usage)'' [[sister-in-law]] ''(husband’s [[sister]])''
+# {{lb|ru|archaic}} [[sister-in-law]] {{gl|husband's [[sister]]}}
 
 ====Declension====
 {{ru-noun-table|золо́вка|*|a=an}}
@@ -16131,7 +16128,7 @@ Page 752 игроманка: -------- begin text --------
 ===Noun===
 {{ru-noun+|игрома́нка|*|a=an|m=игрома́н}}
 
-# female [[ludomaniac]]
+# {{female equivalent of|ru|игрома́н}}: [[female]] [[ludomaniac]]
 
 ====Declension====
 {{ru-noun-table|игрома́нка|*|a=an}}
@@ -16170,7 +16167,7 @@ Page 754 игуменья: -------- begin text --------
 ===Noun===
 {{ru-noun+|игу́менья|a=an|m=игу́мен}}
 
-# [[Mother Superior]], [[abbess]]
+# {{female equivalent of|ru|игу́мен}}: [[Mother Superior]], [[abbess]]
 
 ====Declension====
 {{ru-noun-table|игу́менья|a=an}}
@@ -16187,7 +16184,7 @@ Page 755 идиотка: -------- begin text --------
 ===Noun===
 {{ru-noun+|идио́тка|*|a=an|m=идио́т}}
 
-# female [[idiot]]
+# {{female equivalent of|ru|идио́т}}: [[female]] [[idiot]]
 
 ====Declension====
 {{ru-noun-table|идио́тка|*|a=an}}
@@ -16204,7 +16201,7 @@ Page 756 избранница: -------- begin text --------
 ===Noun===
 {{ru-noun+|избра́нница|a=an|m=избра́нник}}
 
-# [[chosen]] [[one]], [[choice]] {{gloss|referring to a female}}
+# {{female equivalent of|ru|избра́нник}}: [[female]] [[chosen]] [[one]], [[choice]] {{gloss|referring to a female}}
 # {{lb|ru|poetic}} [[darling]], [[sweetheart]], [[betrothed]] {{gloss|referring to a female}}
 
 ====Declension====
@@ -16231,7 +16228,7 @@ From {{suffix|ru|изда́тель|ница}}.
 ===Noun===
 {{ru-noun+|изда́тельница|a=an|m=изда́тель}}
 
-# female [[publisher]] {{gloss|one who publishes, especially books}}
+# {{female equivalent of|ru|изда́тель}}: [[female]] [[publisher]] {{gloss|one who publishes, especially books}}
 
 ====Declension====
 {{ru-noun-table|изда́тельница|a=an}}
@@ -16247,7 +16244,7 @@ Page 758 израильтянка: -------- begin text --------
 ===Noun===
 {{ru-noun+|израильтя́нка|*|a=an|m=израильтя́нин}}
 
-# an [[Israeli]] {{qualifier|female}}
+# {{female equivalent of|ru|израильтя́нин}}: [[female]] [[Israeli]]
 
 ====Declension====
 {{ru-noun-table|израильтя́нка|*|a=an}}
@@ -16271,8 +16268,8 @@ Page 759 именинница: -------- begin text --------
 ===Noun===
 {{ru-noun+|имени́нница|a=an|m=имени́нник}}
 
-# [[birthday]] [[girl]]/[[woman]] {{gloss|girl or woman [[celebrate|celebrating]] her [[birthday]]}}
-# {{lb|ru|religion}} [[name day|name-day]] [[girl]]/[[woman]] {{gloss|girl or woman celebrating her [[name day]], i.e. the [[day]] of the [[saint]] who she is named after}}
+# {{female equivalent of|ru|имени́нник}}: [[birthday]] [[girl]]/[[woman]] {{gloss|woman or girl [[celebrate|celebrating]] her [[birthday]]}}
+# {{lb|ru|religion}} [[name day|name-day]] [[girl]]/[[woman]] {{gloss|woman or girl celebrating her [[name day]], i.e. the [[day]] of the [[saint]] who she is named after}}
 
 ====Declension====
 {{ru-noun-table|имени́нница|a=an}}
@@ -16301,7 +16298,7 @@ From {{suffix|ru|иммигра́нт|ка}}.
 ===Noun===
 {{ru-noun+|иммигра́нтка|*|a=an|m=иммигра́нт}}
 
-# female [[immigrant]]
+# {{female equivalent of|ru|иммигра́нт}}: [[female]] [[immigrant]]
 
 ====Declension====
 {{ru-noun-table|иммигра́нтка|*|a=an}}
@@ -16336,7 +16333,7 @@ Originally borrowed from {{bor|ru|la|imperātrīx}} via its oblique stem (compar
 ===Noun===
 {{ru-noun+|императри́ца|a=an|m=импера́тор}}
 
-# [[empress]]
+# {{female equivalent of|ru|импера́тор}}: [[empress]]
 
 ====Declension====
 {{ru-noun-table|императри́ца|a=an}}
@@ -16355,8 +16352,8 @@ Page 763 инвалидка: -------- begin text --------
 ===Noun===
 {{ru-noun+|инвали́дка|*|a=ai|m=инвали́д}}
 
-# {{lb|ru|animate}} [[invalid]], [[disabled]] [[woman]]
-# {{lb|ru|inanimate|colloquial}} a [[vehicle]] designed for disabled people
+# {{lb|ru|animate}} {{female equivalent of|ru|инвали́д}}: [[female]] [[invalid]], [[disabled]] [[woman]]
+# {{lb|ru|inanimate|colloquial}} [[vehicle]] [[design]]ed for [[disabled]] [[people]]
 
 ====Declension====
 {{ru-noun-table|инвали́дка|*|a=ai}}
@@ -16371,7 +16368,7 @@ Page 764 индейка: -------- begin text --------
 ===Noun===
 {{ru-noun+|инде́йка|*|a=an|m=индю́к}}
 
-# [[turkey]] {{gloss|bird}}
+# {{female equivalent of|ru|индю́к}}: [[female]] [[turkey]] {{gloss|bird}}
 
 ====Declension====
 {{ru-noun-table|инде́йка|*|a=an}}
@@ -16383,12 +16380,13 @@ Page 764 индейка: -------- begin text --------
 * {{l|ru|индюшо́нок|g=m}}
 
 ===See also===
-* {{l|ru|индиа́нка|g=f}} (''an Indian woman - from India or indigenous American'')
+* {{l|ru|индиа́нка|g=f||an Indian woman (from India or indigenous American)}}
 
 {{topics|ru|Fowls}}
 -------- end text --------
 Page 765 индианка: Found match for regex: =
 Page 765 индианка: -------- begin text --------
+[[Image:Wah-Ta-Waso.jpg|thumb|индианка [2]]]
 
 ===Pronunciation===
 * {{ru-IPA|индиа́нка}}
@@ -16396,24 +16394,22 @@ Page 765 индианка: -------- begin text --------
 ===Noun===
 {{ru-noun+|индиа́нка|*|a=an|m=инди́ец|m2=инде́ец}}
 
-[[Image:Wah-Ta-Waso.jpg|thumb|индианка [2]]]
-
-# [[Indian]] woman (''a person from India''), masculine equivalent: [[индиец]]
-# [[Indian]] woman (''a member of one of the indigenous peoples of the Americas''), masculine equivalent: [[индеец]]
+# {{female equivalent of|ru|инди́ец}}: [[Indian]] woman {{gl|a woman from India}}
+# {{female equivalent of|ru|инде́ец}}: [[Indian]] woman {{gl|a member of one of the indigenous peoples of the Americas}}
 
 ====Declension====
 {{ru-noun-table|индиа́нка|*|a=an}}
 
 ====Related terms====
 * {{l|ru|И́ндия}}
-* {{l|ru|инди́йский}} (''of India'')
-* {{l|ru|инде́йский}} (''of indigenous Americans'')
-* {{l|ru|инди́ец}} (''a person from India'') {{g|m}}
-* {{l|ru|инде́ец}} (''a member of one of the indigenous peoples of the Americas'') {{g|m}}
-* {{l|ru|индуска}} (''a female Hindu, also an Indian woman'')
+* {{l|ru|инди́йский||of India}}
+* {{l|ru|инде́йский||of indigenous Americans}}
+* {{l|ru|инди́ец||a person from India|g=m}}
+* {{l|ru|инде́ец||a member of one of the indigenous peoples of the Americas|g=m}}
+* {{l|ru|инду́ска||a female Hindu, also an Indian woman}}
 
 ===See also===
-* {{l|ru|индю́к}} (''turkey - bird'') {{g|m}}, {{l|ru|инде́йка|g=f}}, {{l|ru|индю́шка|g=f}} (''colloquial'')
+* {{l|ru|индю́к||male turkey (bird)|g=m}}, {{l|ru|инде́йка||female turkey (bird)|g=f}}, {{l|ru|индю́шка||female turkey (bird)|pos=colloquial|g=f}}
 
 {{topics|ru|Demonyms}}
 -------- end text --------
@@ -16430,7 +16426,7 @@ Page 766 индонезийка: -------- begin text --------
 ===Noun===
 {{ru-noun+|индонези́йка//indonɛzíjka|*|or|индонези́йка|*|a=an|m=индонези́ец}}
 
-# female [[Indonesian]] {{gloss|person from Indonesia}}
+# {{female equivalent of|ru|индонези́ец|tr=indonɛzíjec, indonezíjec}}: female [[Indonesian]] {{gloss|person from Indonesia}}
 
 ====Declension====
 {{ru-noun-table|индонези́йка//indonɛzíjka|*|or|индонези́йка|*|a=an}}
@@ -16450,7 +16446,7 @@ Page 767 индюшка: -------- begin text --------
 ===Noun===
 {{ru-noun+|индю́шка|*|a=an|m=индю́к}}
 
-# female [[turkey]] ''(hen)''
+# {{female equivalent of|ru|индю́к}}: female [[turkey]] {{q|hen}}
 
 ====Declension====
 {{ru-noun-table|индю́шка|*|a=an}}
@@ -16475,7 +16471,7 @@ Page 768 инопланетянка: -------- begin text --------
 ===Noun===
 {{ru-noun+|инопланетя́нка|*|a=an|m=инопланетя́нин}}
 
-# female [[alien]] {{gloss|life form of non-Earth origin}}
+# {{female equivalent of|ru|инопланетя́нин}}: [[female]] [[alien]] {{gloss|life form of non-Earth origin}}
 
 ====Declension====
 {{ru-noun-table|инопланетя́нка|*|a=an}}
@@ -16492,7 +16488,7 @@ Page 769 иностранка: -------- begin text --------
 ===Noun===
 {{ru-noun+|иностра́нка|*|a=an|m=иностра́нец}}
 
-# [[foreigner]] [[woman]]
+# {{female equivalent of|ru|иностра́нец}}: [[female]] [[foreigner]]
 
 ====Declension====
 {{ru-noun-table|иностра́нка|*|a=an}}
@@ -16509,7 +16505,7 @@ From {{suffix|ru|интеллиге́нт|ка}}.
 ===Noun===
 {{ru-noun+|интеллиге́нтка|*|a=an|m=интеллиге́нт}}
 
-# female [[intellectual]] {{gloss|intelligent person, interested in intellectual matters}}
+# {{female equivalent of|ru|интеллиге́нт}}: [[female]] [[intellectual]] {{gloss|intelligent person, interested in intellectual matters}}
 
 ====Declension====
 {{ru-noun-table|интеллиге́нтка|*|a=an}}
@@ -16546,7 +16542,7 @@ Page 772 иранка: -------- begin text --------
 ===Noun===
 {{ru-noun+|ира́нка|*|a=an|m=ира́нец}}
 
-# female [[Iranian]]
+# {{female equivalent of|ru|ира́нец}}: [[female]] [[Iranian]]
 
 ====Declension====
 {{ru-noun-table|ира́нка|*|a=an}}
@@ -16563,7 +16559,7 @@ Page 773 ирландка: -------- begin text --------
 ===Noun===
 {{ru-noun+|ирла́ндка|*|a=an|m=ирла́ндец}}
 
-# [[Irishwoman]]
+# {{female equivalent of|ru|ирла́ндец}}: [[Irishwoman]]
 
 ====Declension====
 {{ru-noun-table|ирла́ндка|*|a=an}}
@@ -16586,7 +16582,7 @@ Page 774 исландка: -------- begin text --------
 ===Noun===
 {{ru-noun+|исла́ндка|*|a=an|m=исла́ндец}}
 
-# female [[Icelander]] {{gloss|a person from Iceland or of Icelandic descent}}
+# {{female equivalent of|ru|исла́ндец}}: [[female]] [[Icelander]] {{gloss|a person from Iceland or of Icelandic descent}}
 
 ====Declension====
 {{ru-noun-table|исла́ндка|*|a=an}}
@@ -16609,7 +16605,7 @@ Page 775 испанка: -------- begin text --------
 ===Noun===
 {{ru-noun+|испа́нка|*|a=an|m=испа́нец}}
 
-# female [[Spaniard]], [[Spanish]] woman or girl
+# {{female equivalent of|ru|испа́нец}}: [[female]] [[Spaniard]], [[Spanish]] [[woman]] or [[girl]]
 # {{lb|ru|colloquial|obsolete}} [[Spanish influenza]]
 
 ====Declension====
@@ -16631,7 +16627,7 @@ Page 776 исполнительница: -------- begin text --------
 ===Noun===
 {{ru-noun+|исполни́тельница|a=an|m=исполни́тель}}
 
-# female [[performer]], [[executor]]
+# {{female equivalent of|ru|исполни́тель}}: [[female]] [[performer]], [[executor]]
 
 ====Declension====
 {{ru-noun-table|исполни́тельница|a=an}}
@@ -16645,7 +16641,7 @@ Page 777 исследовательница: -------- begin text --------
 ===Noun===
 {{ru-noun+|иссле́довательница|a=an|m=иссле́дователь}}
 
-# female [[researcher]]
+# {{female equivalent of|ru|иссле́дователь}}: [[female]] [[researcher]]
 
 ====Declension====
 {{ru-noun-table|иссле́довательница|a=an}}
@@ -16665,7 +16661,7 @@ Page 778 истеричка: -------- begin text --------
 ===Noun===
 {{ru-noun+|истери́чка|*|a=an|m=исте́рик}}
 
-# {{lb|ru|colloquial}} [[hysteric]] [[woman]]
+# {{female equivalent of|ru|исте́рик}}: {{lb|ru|colloquial}} [[hysteric]] [[woman]]
 
 ====Declension====
 {{ru-noun-table|истери́чка|*|a=an}}
@@ -16679,7 +16675,7 @@ Page 779 итальянка: -------- begin text --------
 ===Noun===
 {{ru-noun+|италья́нка|*|a=an|m=италья́нец}}
 
-# [[Italian]] girl or woman
+# {{female equivalent of|ru|италья́нец}}: [[Italian]] [[woman]] or [[girl]]
 
 ====Declension====
 {{ru-noun-table|италья́нка|*|a=an}}
@@ -16754,7 +16750,7 @@ Page 783 кавказка: -------- begin text --------
 ===Noun===
 {{ru-noun+|кавка́зка|*|a=an|m=кавка́зец}}
 
-# {{topics|ru|Female demonyms‎}} [[Caucasian]] [[woman]] {{gloss|native of the Caucasus region}}
+# {{topics|ru|Female demonyms}} {{female equivalent of|ru|кавка́зец}}: [[Caucasian]] [[woman]] {{gloss|native of the Caucasus region}}
 
 ====Declension====
 {{ru-noun-table|кавка́зка|*|a=an}}
@@ -16806,7 +16802,7 @@ From {{suf|ru|каза́х|ка|alt1=каза́х-|alt2=ька|t1=Kazakh}}.
 ===Noun===
 {{ru-noun+|каза́шка|*|a=an|m=каза́х}}
 
-# [[Kazakh]] girl or woman
+# {{female equivalent of|ru|каза́х}}: [[Kazakh]] [[woman]] or [[girl]]
 
 ====Declension====
 {{ru-noun-table|каза́шка|*|a=an}}
@@ -16911,7 +16907,7 @@ Page 789 камбоджийка: -------- begin text --------
 ===Noun===
 {{ru-noun+|камбоджи́йка|*|a=an|m=камбоджи́ец}}
 
-# female [[Cambodian]] {{gloss|a person from Cambodia or of Cambodian descent}}
+# {{female equivalent of|ru|камбоджи́ец}}: female [[Cambodian]] {{gloss|a person from Cambodia or of Cambodian descent}}
 
 ====Declension====
 {{ru-noun-table|камбоджи́йка|*|a=an}}
@@ -16978,7 +16974,6 @@ Page 792 камышница: -------- begin text --------
 ====Declension====
 {{ru-noun-table|камы́шница|a=an}}
 
-{{cln|ru|words suffixed with -ница}}
 {{topics|ru|Birds}}
 -------- end text --------
 Page 793 канадка: Found match for regex: =
@@ -16993,7 +16988,7 @@ Page 793 канадка: -------- begin text --------
 ===Noun===
 {{ru-noun+|кана́дка|*|a=an|m=кана́дец}}
 
-# [[Canadian]] (woman or girl)
+# {{female equivalent of|ru|кана́дец}}: [[Canadian]] (woman or girl)
 
 ====Declension====
 {{ru-noun-table|кана́дка|*|a=an}}
@@ -17179,7 +17174,7 @@ Page 801 карлица: -------- begin text --------
 ===Noun===
 {{ru-noun+|ка́рлица|a=an|m=ка́рлик}}
 
-# [[dwarf]], [[pygmy]] ''(female)''
+# {{female equivalent of|ru|ка́рлик}}: [[female]] [[dwarf]], [[pygmy]]
 
 ====Declension====
 {{ru-noun-table|ка́рлица|a=an}}
@@ -17199,9 +17194,9 @@ Page 802 карьеристка: -------- begin text --------
 * {{ru-IPA|карьери́стка}}
 
 ===Noun===
-{{ru-noun+|карьери́стка|*|a=an}}
+{{ru-noun+|карьери́стка|*|a=an|m=карьери́ст}}
 
-# {{lb|ru|deprecative}} {{female equivalent of|ru|карьери́ст}}; a female [[careerist]]
+# {{lb|ru|pejorative}} {{female equivalent of|ru|карьери́ст}}: a female [[careerist]]
 
 ====Declension====
 {{ru-noun-table|карьери́стка|*|a=an}}
@@ -17225,7 +17220,7 @@ From {{affix|ru|коса́тый|-ка|t1=having a [[pigtail]]}}, from {{affix|r
 {{ru-noun+|каса́тка|*|a=an}}
 
 # {{senseid|ru|swallow}}[[swallow]], [[barn swallow]] (''[[Hirundo rustica]]'')
-# [[darling]] ''(term of affection)''
+# {{lb|ru|endearing}} [[darling]]
 
 ====Declension====
 {{ru-noun-table|каса́тка|*|a=an}}
@@ -17245,7 +17240,7 @@ Page 804 кассирша: -------- begin text --------
 ===Noun===
 {{ru-noun+|касси́рша|a=an|m=касси́р}}
 
-# {{lb|ru|colloquial}} female [[cashier]], [[teller]]
+# {{lb|ru|colloquial}} {{female equivalent of|ru|касси́р}}: female [[cashier]], [[teller]]
 
 ====Usage notes====
 * Some occupation names work for both males and females. The male form of the term may refer to a male or a female. This is a more colloquial term.
@@ -17267,7 +17262,7 @@ Page 805 кашалотиха: -------- begin text --------
 ===Noun===
 {{ru-noun+|кашало́тиха|a=an|m=кашало́т}}
 
-# a [[female]] [[cachalot]], [[sperm whale]]
+# {{female equivalent of|ru|кашало́т}}: [[female]] [[cachalot]], [[sperm whale]]
 
 ====Declension====
 {{ru-noun-table|кашало́тиха|a=an}}
@@ -17299,12 +17294,10 @@ Page 807 керосинщица: -------- begin text --------
 ===Noun===
 {{ru-noun+|кероси́нщица|a=an|m=кероси́нщик}}
 
-# [[kerosene]] woman (woman who sells kerosene)
+# {{female equivalent of|ru|кероси́нщик}}: [[female]] [[kerosene]] [[seller]]
 
 ====Declension====
 {{ru-noun-table|кероси́нщица|a=an}}
-
-{{cln|ru|words suffixed with -ница}}
 
 {{topics|ru|Female people}}
 -------- end text --------
@@ -17406,8 +17399,10 @@ Page 812 кикимора: -------- begin text --------
 ===Noun===
 {{ru-noun+|кики́мора|a=an}}
 
-# {{lb|ru|mythological creature}} [[kikimora]] (''a female house spirit in the Slavic mythology'')
-# {{lb|ru|colloquial|pejorative}} an ugly girl or woman
+# {{lb|ru|mythological creature}} [[kikimora]] {{gl|a female house spirit in the Slavic mythology}}
+#: {{syn|ru|шиши́мора|q=less common}}
+# {{lb|ru|colloquial|pejorative}} an [[ugly]] [[woman]] or [[girl]]
+#: {{syn|ru|уро́дина|уро́дка|дурну́шка}}
 
 ====Declension====
 {{ru-noun-table|кики́мора|a=an}}
@@ -17415,10 +17410,6 @@ Page 812 кикимора: -------- begin text --------
 ====Descendants====
 * {{desc|en|kikimora|bor=1}}
 * {{desc|es|kikimora|bor=1}}
-
-====Synonyms====
-* {{l|ru|шиши́мора}} (''mythological creature, less common'')
-* {{l|ru|уро́дина}}, {{l|ru|уро́дка}}, {{l|ru|дурну́шка}} (''an ugly girl or woman'')
 
 {{topics|ru|Mythological creatures|Slavic mythology}}
 -------- end text --------
@@ -17462,7 +17453,7 @@ Page 814 киноактриса: -------- begin text --------
 ===Noun===
 {{ru-noun+|киноактри́са|a=an|m=киноактёр}}
 
-# [[film]] [[actress]], [[movie]] [[actress]]
+# {{female equivalent of|ru|киноактёр}}: [[film]] [[actress]], [[movie]] [[actress]]
 
 ====Declension====
 {{ru-noun-table|киноактри́са|a=an}}
@@ -17502,7 +17493,7 @@ Page 816 киприотка: -------- begin text --------
 ===Noun===
 {{ru-noun+|киприо́тка|*|a=an|m=киприо́т}}
 
-# female [[Cypriot]] {{gloss|person from Cyprus}}
+# {{female equivalent of|ru|киприо́т}}: [[female]] [[Cypriot]] {{gloss|person from Cyprus}}
 
 ====Declension====
 {{ru-noun-table|киприо́тка|*|a=an}}
@@ -17525,7 +17516,7 @@ Page 817 киргизка: -------- begin text --------
 ===Noun===
 {{ru-noun+|кирги́зка|*|a=an|m=кирги́з}}
 
-# [[Kyrgyz]] girl or woman
+# {{female equivalent of|ru|кирги́з}}: [[Kyrgyz]] [[woman]] or [[girl]]
 
 ====Declension====
 {{ru-noun-table|кирги́зка|*|a=an}}
@@ -17596,7 +17587,7 @@ Page 819 киска: -------- begin text --------
 {{ru-noun+|ки́ска|*|a=an}}
 
 # {{lb|ru|informal|affectionate}} [[kitty]], [[cat]]
-# {{lb|ru|slang}} [[pussy]] (female genitalia)
+# {{lb|ru|slang}} [[pussy]] {{gl|female genitalia}}
 
 ====Declension====
 {{ru-noun-table|ки́ска|*|a=an}}
@@ -17627,7 +17618,7 @@ Page 821 китаянка: -------- begin text --------
 ===Noun===
 {{ru-noun+|китая́нка|*|a=an|m=кита́ец}}
 
-# a [[Chinese]] {{qualifier|female}}
+# {{female equivalent of|ru|кита́ец}}: [[Chinese]] [[woman]] or [[girl]]
 
 ====Declension====
 {{ru-noun-table|китая́нка|*|a=an}}
@@ -17651,7 +17642,7 @@ Page 822 китаёза: -------- begin text --------
 ===Noun===
 {{ru-noun+|a=an|g=m-an|g2=f-an}}
 
-# {{lb|ru|slang|pejorative}} a [[Chinese]] person, a [[chink]], a [[chinaman]]
+# {{lb|ru|slang|pejorative}} [[Chinese]] person, [[chink]], [[chinaman]]
 
 ====Declension====
 {{ru-noun-table|a=an}}
@@ -17668,9 +17659,9 @@ Page 823 клептоманка: -------- begin text --------
 * {{ru-IPA|клептома́нка}}
 
 ===Noun===
-{{ru-noun+|клептома́нка|*|a=an}}
+{{ru-noun+|клептома́нка|*|a=an|m=клептома́н}}
 
-# [[kleptomaniac]] ''(female)''
+# {{female equivalent of|ru|клептома́н}}: [[female]] [[kleptomaniac]]
 
 ====Declension====
 {{ru-noun-table|клептома́нка|*|a=an}}
@@ -17734,7 +17725,7 @@ Inherited from {{inh|ru|sla-pro|*kъnęgynja}}; compare {{cog|uk|княги́н�
 
 # [[princess]] (the prince’s [[consort]]), [[duchess]]
 # [[daughter]]
-# {{lb|ru|poetic}} [[bride]] in old wedding rituals.
+# {{lb|ru|poetic}} [[bride]] in [[old]] [[wedding]] [[rituals]]
 
 ====Declension====
 {{ru-noun-table|княги́ня|a=an}}
@@ -17762,7 +17753,7 @@ Page 827 княжна: -------- begin text --------
 ===Noun===
 {{ru-noun+|княжна́|*|a=an|m=кня́жич}}
 
-# [[princess]] {{qualifier|unmarried daughter of a prince}}
+# {{female equivalent of|ru|кня́жич}}: [[princess]] {{qualifier|unmarried daughter of a prince}}
 
 ====Declension====
 {{ru-noun-table|княжна́|*|a=an}}
@@ -17989,7 +17980,7 @@ Page 838 колдунья: -------- begin text --------
 ===Noun===
 {{ru-noun+|колду́нья|a=an|m=колду́н}}
 
-# [[enchantress]], [[lamia]], [[sibyl]], [[sorceress]], [[witch]] (person who uses magic)
+# {{female equivalent of|ru|колду́н}}: [[enchantress]], [[lamia]], [[sibyl]], [[sorceress]], [[witch]] {{gl|person who uses magic}}
 
 ====Declension====
 {{ru-noun-table|колду́нья|a=an}}
@@ -18092,7 +18083,7 @@ Page 842 колхозница: -------- begin text --------
 ===Noun===
 {{ru-noun+|колхо́зница|a=an|m=колхо́зник}}
 
-# [[female]] [[collective]] [[farmer]]
+# {{female equivalent of|ru|колхо́зник}}: [[female]] [[collective]] [[farmer]]
 
 ====Declension====
 {{ru-noun-table|колхо́зница|a=an}}
@@ -18165,7 +18156,7 @@ Page 845 комариха: -------- begin text --------
 ===Noun===
 {{ru-noun+|комари́ха|a=an|m=кома́р}}
 
-# {{lb|ru|colloquial}} a [[female]] [[mosquito]]
+# {{lb|ru|colloquial}} {{female equivalent of|ru|кома́р}}: a [[female]] [[mosquito]]
 
 ====Declension====
 {{ru-noun-table|комари́ха|a=an}}
@@ -18182,7 +18173,7 @@ Page 846 коммунистка: -------- begin text --------
 ===Noun===
 {{ru-noun+|коммуни́стка|*|a=an|m=коммуни́ст}}
 
-# [[communist]] woman, [[communist]] girl (female who follows a communist or Marxist-Leninist philosophy)
+# {{female equivalent of|ru|коммуни́ст}}: [[communist]] woman, [[communist]] girl (female who follows a communist or Marxist-Leninist philosophy)
 
 ====Declension====
 {{ru-noun-table|коммуни́стка|*|a=an}}
@@ -18219,7 +18210,7 @@ From {{suffix|ru|компаньо́н|ка}}.
 ===Noun===
 {{ru-noun+|компаньо́нка|*|a=an|m=компаньо́н}}
 
-# female [[companion]], [[partner]] {{gloss|a member of a business or law partnership}}
+# {{female equivalent of|ru|компаньо́н}}: [[female]] [[companion]], [[partner]] {{gloss|a member of a business or law partnership}}
 
 ====Declension====
 {{ru-noun-table|компаньо́нка|*|a=an}}
@@ -18239,7 +18230,7 @@ Page 849 комсомолка: -------- begin text --------
 ===Noun===
 {{ru-noun+|комсомо́лка|*|a=an|m=комсомо́лец}}
 
-# female member of the [[w:Komsomol|Komsomol]], Komsomol member
+# {{female equivalent of|ru|комсомо́лец}}: [[female]] [[w:Komsomol|Komsomol]] [[member]]
 
 ====Declension====
 {{ru-noun-table|комсомо́лка|*|a=an}}
@@ -18257,7 +18248,7 @@ Borrowed from {{bor|ru|en|congresswoman}}.
 ===Noun===
 {{ru-noun|конгрессву́мен|f-an|tr=kongressvúmɛn|-|m=конгрессме́н}}
 
-# [[congresswoman]]
+# {{female equivalent of|ru|конгрессме́н|tr=kongressmén, kongressmɛ́n, kongrɛssmén, kongrɛssmɛ́n}}: [[congresswoman]]
 -------- end text --------
 Page 851 консультантка: Found match for regex: =
 Page 851 консультантка: -------- begin text --------
@@ -18271,7 +18262,7 @@ Page 851 консультантка: -------- begin text --------
 ===Noun===
 {{ru-noun+|консульта́нтка|*|a=an|m=консульта́нт}}
 
-# female [[advisor]] {{gloss|one who offers advice}}
+# {{female equivalent of|ru|консульта́нт}}: [[female]] [[advisor]] {{gloss|one who offers advice}}
 
 ====Declension====
 {{ru-noun-table|консульта́нтка|*|a=an}}
@@ -18291,7 +18282,7 @@ Page 852 контра: -------- begin text --------
 ====Noun====
 {{ru-noun+|ко́нтра|a=ai}}
 
-# {{lb|ru|historical|pejorative|often|collective}} [[counterrevolutionary]], [[counterrevolutionaries]]; [[counterrevolution]] (especially in reference to 1917 {{w|Russian Revolution}}).
+# {{lb|ru|historical|pejorative|often|collective}} [[counterrevolutionary]], [[counterrevolutionaries]]; [[counterrevolution]] {{q|especially in reference to the 1917 {{w|Russian Revolution}}}}
 
 =====Declension=====
 {{ru-noun-table|ко́нтра|a=ai}}
@@ -18326,7 +18317,7 @@ Page 853 контрабандистка: -------- begin text --------
 ===Noun===
 {{ru-noun+|контрабанди́стка|*|a=an|m=контрабанди́ст}}
 
-# [[smuggler]], [[contrabandist]] ''(female)''
+# {{female equivalent of|ru|контрабанди́ст}}: [[female]] [[smuggler]], [[contrabandist]]
 
 ====Declension====
 {{ru-noun-table|контрабанди́стка|*|a=an}}
@@ -18362,7 +18353,7 @@ Page 855 кореянка: -------- begin text --------
 ===Noun===
 {{ru-noun+|корея́нка|*|a=an|m=коре́ец}}
 
-# a [[Korean]] {{qualifier|female}}
+# {{female equivalent of|ru|коре́ец}}: [[female]] [[Korean]]
 
 ====Declension====
 {{ru-noun-table|корея́нка|*|a=an}}
@@ -18387,7 +18378,7 @@ Page 856 кормилица: -------- begin text --------
 {{ru-noun+|корми́лица|a=an|m=корми́лец}}
 
 # [[wet nurse]]
-# [[female]] [[breadwinner]]
+# {{female equivalent of|ru|корми́лец}}: [[female]] [[breadwinner]]
 
 ====Declension====
 {{ru-noun-table|корми́лица|a=an}}
@@ -18469,7 +18460,7 @@ Feminine of {{affix|ru|коро́ль|-ов}}. Pronounced {{m|ru||короле́
 ===Noun===
 {{ru-noun+|короле́ва|a=an|m=коро́ль}}
 
-# [[queen]]
+# {{female equivalent of|ru|коро́ль}}: [[queen]]
 # {{lb|ru|chess|informal}} [[queen]] (Russian abbreviation: [[Ф#Russian|Ф]])
 
 ====Declension====
@@ -18728,7 +18719,7 @@ Possibly from {{bor|ru|pl|krala||queen (card games)}}, from {{bor|ru|cs|král||k
 ====Noun====
 {{ru-noun+|кра́ля|a=an|m=краль}}
 
-# {{lb|ru|dated}} a [[wealthy]] [[stately]] [[lady]]
+# {{lb|ru|dated}} {{female equivalent of|ru|краль}}: [[wealthy]] [[stately]] [[lady]]
 # {{lb|ru|dated|card games}} [[queen]]
 #: {{syn|ru|да́ма}}
 # {{lb|ru|low|_|colloquial|or|folklore}} [[beauty]], a beautiful woman; someone's female [[lover]]/[[girlfriend]]
@@ -18755,9 +18746,9 @@ Page 870 красавица: -------- begin text --------
 * {{audio|ru|Ru-{{PAGENAME}}.ogg|Audio}}
 
 ===Noun===
-{{ru-noun+|краса́вица|a=an}}
+{{ru-noun+|краса́вица|a=an|m=краса́вец}}
 
-# [[beautiful]] [[woman]], {{l|en|beauty|id=beautiful person}}
+# {{female equivalent of|ru|краса́вец}}: [[beautiful]] [[woman]], {{l|en|beauty|id=beautiful person}}
 
 ====Declension====
 {{ru-noun-table|краса́вица|a=an}}
@@ -18794,7 +18785,7 @@ From {{suffix|ru|красноарме́йский|ка}}. Apparently the word fi
 ===Noun===
 {{ru-noun+|красноарме́йка|*|a=an|m=красноарме́ец}}
 
-# {{topics|ru|Military ranks}} {{lb|ru|history}}  [[Red Army]] [[woman]]
+# {{topics|ru|Military ranks}} {{lb|ru|history}} {{female equivalent of|ru|красноарме́ец}}: [[Red Army]] [[woman]]
 
 ====Declension====
 {{ru-noun-table|красноарме́йка|*|a=an}}
@@ -18825,9 +18816,9 @@ Page 873 красноярка: -------- begin text --------
 * {{ru-IPA|красноя́рка}}
 
 ===Noun===
-{{ru-noun+|красноя́рка|*|a=an}}
+{{ru-noun+|красноя́рка|*|a=an|m=красноя́рец}}
 
-# female [[citizen]] of [[Krasnoyarsk]]
+# {{female equivalent of|ru|красноя́рец}}: [[female]] [[citizen]] of [[Krasnoyarsk]]
 
 ====Declension====
 {{ru-noun-table|красноя́рка|*|a=an}}
@@ -18992,7 +18983,7 @@ Page 880 крестница: -------- begin text --------
 ===Noun===
 {{ru-noun+|кре́стница|a=an|m=кре́стник}}
 
-# [[goddaughter]]
+# {{female equivalent of|ru|кре́стник}}: [[goddaughter]]
 
 ====Declension====
 {{ru-noun-table|кре́стница|a=an}}
@@ -19016,7 +19007,7 @@ Page 881 крестьянка: -------- begin text --------
 ===Noun===
 {{ru-noun+|крестья́нка|*|a=an|m=крестья́нин}}
 
-# female [[peasant]], [[farmer]]
+# {{female equivalent of|ru|крестья́нин}}: [[female]] [[peasant]], [[farmer]]
 
 ====Declension====
 {{ru-noun-table|крестья́нка|*|a=an}}
@@ -19046,7 +19037,7 @@ From {{affix|ru|кролик|alt1=крольк-|-и́ха}}, using the stem form
 ===Noun===
 {{ru-noun+|крольчи́ха|a=an|m=кро́лик}}
 
-# [[female]] [[rabbit]] {{gloss|[[doe]]}}
+# {{female equivalent of|ru|кро́лик}}: [[female]] [[rabbit]] {{gloss|[[doe]]}}
 
 ====Declension====
 {{ru-noun-table|крольчи́ха|a=an}}
@@ -19153,9 +19144,9 @@ Page 887 крёстная: -------- begin text --------
 * {{ru-IPA}}
 
 ===Noun===
-{{ru-noun+|крёстная|+|a=an}}
+{{ru-noun+|крёстная|+|a=an|m=крёстный}}
 
-# [[godmother]]
+# {{female equivalent of|ru|крёстный}}: [[godmother]]
 
 ====Declension====
 {{ru-noun-table|крёстная|+|a=an}}
@@ -19181,7 +19172,7 @@ Page 888 крёстная дочь: -------- begin text --------
 * {{ru-IPA}}
 
 ===Noun===
-{{ru-noun+|[[крёстный|крёстная]]|+|_|e|до́черь|f|nom_sg2=[[до́чь]]|acc_sg2=до́чь|ins_pl2=~~ьми́,~~я́ми|a=an}}
+{{ru-noun+|[[крёстный|крёстная]]|+|_|e|до́черь|f|nom_sg2=[[до́чь]]|acc_sg2=до́чь|ins_pl2=~~ьми́,~~я́ми|a=an|m=крёстный сы́н}}
 
 # [[goddaughter]]
 
@@ -19195,7 +19186,7 @@ Page 888 крёстная дочь: -------- begin text --------
 * {{l|ru|крёстная мать}}
 * {{l|ru|кре́стник}}
 * {{l|ru|крёстный оте́ц}}
-* {{l|ru|крёстный сын}}
+* {{l|ru|крёстный сы́н}}
 
 {{topics|ru|Family}}
 -------- end text --------
@@ -19207,7 +19198,7 @@ Page 889 крёстная мать: -------- begin text --------
 * {{audio|ru|LL-Q7737 (rus)-Tatiana Kerbush-крёстная мать.wav|Audio}}
 
 ===Noun===
-{{ru-noun+|[[крёстный|крёстная]]|+|_|e|ма́терь|f|nom_sg2=[[ма́ть]]|acc_sg2=ма́ть|ins_pl2=~~я́ми,~~ьми́|a=an}}
+{{ru-noun+|[[крёстный|крёстная]]|+|_|e|ма́терь|f|nom_sg2=[[ма́ть]]|acc_sg2=ма́ть|ins_pl2=~~я́ми,~~ьми́|a=an|m=крёстный оте́ц}}
 
 # [[godmother]]
 
@@ -19233,7 +19224,7 @@ Page 890 ку-ку: -------- begin text --------
 ===Interjection===
 {{head|ru|interjection|head=ку-ку́}}
 
-# {{lb|ru|onomatopoeia}} [[cuckoo]] (sound a cuckoo makes)
+# {{lb|ru|onomatopoeia}} [[cuckoo]] {{gl|sound a cuckoo makes}}
 #: {{uxi|ru|[[куку́шка]] [[куковать|куку́ет]]|a cuckoo cuckoos}}
 # {{lb|ru|familiar}} [[hey]]
 # {{lb|ru|familiar}} [[gotcha]]; a reaction during [[hide and seek]] or [[peekaboo]] game
@@ -19257,7 +19248,7 @@ Page 891 кубинка: -------- begin text --------
 ===Noun===
 {{ru-noun+|куби́нка|*|a=an|m=куби́нец}}
 
-# female [[Cuban]] {{gloss|a person from Cuba}}
+# {{female equivalent of|ru|куби́нец}}: [[female]] [[Cuban]] {{gloss|a person from Cuba}}
 
 ====Declension====
 {{ru-noun-table|куби́нка|*|a=an}}
@@ -19281,10 +19272,9 @@ Borrowed from {{bor|ru|fr|cousine}}.
 * {{ru-IPA|кузи́на}}
 
 ===Noun===
-{{ru-noun+|кузи́на|a=an}}
+{{ru-noun+|кузи́на|a=an|m=кузе́н}}
 
-# [[cousin]] (any female cousin however distant)
-# distant blood relative
+# {{female equivalent of|ru|кузе́н|tr=kuzɛ́n}}: [[female]] [[cousin]] {{gl|any female cousin however distant}}; [[distant]] [[female]] [[blood]] [[relative]]
 
 ====Declension====
 {{ru-noun-table|кузи́на|a=an}}
@@ -19432,7 +19422,7 @@ Page 898 кума: -------- begin text --------
 ====Noun====
 {{ru-noun+|кума́|a=an|m=кум}}
 
-# [[godmother]] of one's child or [[godchild]], or mother of one's godchild, [[gossip]]
+# {{female equivalent of|ru|кум}}: [[godmother]] of one's child or [[godchild]], or mother of one's godchild, [[gossip]]
 # {{lb|ru|obsolete}} form of address to a middle-aged woman
 
 =====Declension=====
@@ -19609,10 +19599,10 @@ From {{inh|ru|sla-pro|*kurica}}, equivalent to {{affix|ru|ку́ра|-ица}}.
 ===Noun===
 {{ru-noun+|ку́рица||ку́р|or|a=an|adj=кури́ный|dim=ку́рочка}}
 
-# [[chicken]] (a bird of species ''Gallus gallus'').
-#: {{ux|ru|q=derisive proverb|'''Ку́рица''' — [[не]] [[пти́ца]], [[ба́ба]] — [[не]] [[челове́к]].|A chicken is not a bird and a woman is not a human.}}
+# [[chicken]] {{gl|a bird of species ''Gallus gallus''}}
+#: {{ux|ru|q=derisive proverb|'''Ку́рица''' — [[не]] [[пти́ца]], [[ба́ба]] — [[не]] [[челове́к]].|A chicken is not a bird and a woman is not a person.}}
 #: {{ux|ru|q=derisive proverb|'''Ку́рица''' — [[не]] [[пти́ца]], [[По́льша]] — [[не]] [[заграни́ца]].|A chicken is not a bird and Poland is not a foreign country.<br />{{i|Poland here may be replaced by any other formerly socialist country or former Soviet republic.}}}}
-# [[hen]] ''(female chicken)''
+# [[hen]] {{gl|female chicken}}
 #: {{uxi|ru|'''ку́рица''' [[клохтать|кло́хчет]] ([[кудахтать|куда́хчет]])|a hen [[cackle]]s ([[cluck]]s)}}
 #: {{uxi|ru|ку́ры [[нестись|несу́тся]]|hens lay eggs}}
 #: {{uxi|ru|'''ку́рица''' [[снести|снесла́]] [[яйцо́]]|a hen has laid an egg}}
@@ -19651,7 +19641,7 @@ Page 904 куропатка: -------- begin text --------
 {{wikipedia|lang=ru}}
 
 ===Etymology===
-From {{m|ru|кура}} (a shortened form of {{m|ru|ку́рица|t=hen}}) + {{m+|orv|пъта}}, the current form of which is {{m|ru|пти́ца|t=bird}}.
+From {{m|ru|ку́ра}} (a shortened form of {{m|ru|ку́рица|t=hen}}) + {{m+|orv|пъта}}, the current form of which is {{m|ru|пти́ца|t=bird}}.
 
 ===Pronunciation===
 * {{ru-IPA|куропа́тка}}
@@ -19726,7 +19716,7 @@ From {{suffix|ru|курси́ст|ка}}.
 ===Noun===
 {{ru-noun+|курси́стка|*|a=an|m=курси́ст}}
 
-# {{lb|ru|historical}} female [[student]] {{gloss|in pre-revolutionary Russia}}
+# {{lb|ru|historical}} {{female equivalent of|ru|курси́ст}}: female [[student]] {{gloss|in pre-revolutionary Russia}}
 
 ====Declension====
 {{ru-noun-table|курси́стка|*|a=an}}
@@ -19846,7 +19836,7 @@ Page 913 кыргызка: -------- begin text --------
 ===Noun===
 {{ru-noun+|кыргы́зка|*|a=an|m=кыргы́з}}
 
-# {{alt form|ru|кирги́зка}}: [[Kyrgyz]] {{gloss|person, preferred form in Kyrgyzstan}}
+# {{alt form|ru|кирги́зка}}: {{female equivalent of|ru|кыргы́з}}: [[female]] [[Kyrgyz]] {{gloss|person, preferred form in Kyrgyzstan}}
 
 ====Declension====
 {{ru-noun-table|кыргы́зка|*|a=an}}
@@ -19863,7 +19853,7 @@ Page 914 лаборантка: -------- begin text --------
 ===Noun===
 {{ru-noun+|лабора́нтка|*|a=an|m=лабора́нт}}
 
-# (female) [[laboratory]] [[assistant]], (female) [[laboratory]] [[technician]]
+# {{female equivalent of|ru|лабора́нт}}: [[female]] [[laboratory]] [[assistant]], [[female]] [[laboratory]] [[technician]]
 
 ====Declension====
 {{ru-noun-table|лабора́нтка|*|a=an}}
@@ -20055,7 +20045,7 @@ Page 922 лаоска: -------- begin text --------
 ===Noun===
 {{ru-noun+|лао́ска|*|a=an|m=лао́сец}}
 
-# female [[Laotian]], [[Lao]] {{gloss|person}}
+# {{female equivalent of|ru|лао́сец}}: [[female]] [[Laotian]], [[Lao]] {{gloss|person}}
 
 ====Declension====
 {{ru-noun-table|лао́ска|*|a=an}}
@@ -20096,7 +20086,7 @@ Borrowed from {{bor|ru|la|larva}}.
 
 ===Pronunciation===
 * {{ru-IPA|ла́рва}}
-*{{hyph|ru|ла́р|ва}}
+* {{hyph|ru|ла́р|ва}}
 
 ===Noun===
 {{ru-noun+|ла́рва|a=an}}
@@ -20235,7 +20225,7 @@ Page 928 латышка: -------- begin text --------
 ===Noun===
 {{ru-noun+|латы́шка|*|a=an|m=латы́ш}}
 
-# female [[Latvian]], [[Lett]]
+# {{female equivalent of|ru|латы́ш}}: [[female]] [[Latvian]], [[Lett]]
 
 ====Declension====
 {{ru-noun-table|латы́шка|*|a=an}}
@@ -20344,7 +20334,7 @@ From {{suffix|ru|легкоатле́т|ка}}.
 ===Noun===
 {{ru-noun+|легкоатле́тка|*|a=an|m=легкоатле́т}}
 
-# female ([[track and field]]) [[athlete]] {{gloss|a participant in a group of sporting activities which includes track and field, road running, cross country running and racewalking}}
+# {{female equivalent of|ru|легкоатле́т}}: [[female]] ([[track and field]]) [[athlete]] {{gloss|a participant in a group of sporting activities which includes track and field, road running, cross country running and racewalking}}
 
 ====Declension====
 {{ru-noun-table|легкоатле́тка|*|a=an}}
@@ -20365,7 +20355,7 @@ Borrowed from {{bor|ru|en|lady}}.
 ===Noun===
 {{ru-noun|ле́ди|f-an|-}}
 
-# [[lady]] {{q|usually in British context; title or a woman of breeding and authority}}
+# [[lady]] {{q|usually in British context; title of a woman of breeding and authority}}
 
 {{topics|ru|Female people|Nobility|Titles}}
 -------- end text --------
@@ -20395,7 +20385,7 @@ Page 935 лезгинка: -------- begin text --------
 ====Noun====
 {{ru-noun+|лезги́нка|*|a=an|m=лезги́н}}
 
-# a [[Lezgi]] {{qualifier|female}}
+# {{female equivalent of|ru|лезги́н}}: [[female]] [[Lezgi]]
 
 =====Declension=====
 {{ru-noun-table|лезги́нка|*|a=an}}
@@ -20432,7 +20422,7 @@ Page 936 ленинградка: -------- begin text --------
 ===Noun===
 {{ru-noun+|ленингра́дка|*|a=an|m=ленингра́дец}}
 
-# [[female]] [[resident]] of [[Leningrad]] ([[now]] [[Saint Petersburg]])
+# {{female equivalent of|ru|ленингра́дец}}: [[female]] [[resident]] of [[Leningrad]] ([[now]] [[Saint Petersburg]])
 
 ====Declension====
 {{ru-noun-table|ленингра́дка|*|a=an}}
@@ -20484,7 +20474,7 @@ Page 939 ливийка: -------- begin text --------
 ===Noun===
 {{ru-noun+|ливи́йка|*|a=an|m=ливи́ец}}
 
-# ''female'' [[Lybian]]
+# {{female equivalent of|ru|ливи́ец}}: [[female]] [[Lybian]]
 
 ====Declension====
 {{ru-noun-table|ливи́йка|*|a=an}}
@@ -20507,7 +20497,7 @@ From {{inh|ru|sla-pro|*lisъ}}.
 ====Noun====
 {{ru-noun+|d|лиса́|a=an|adj=ли́сий|adj2=лиси́ный|dim=лиси́чка}}
 
-# (''zool.'') [[fox]] (''Vulpes vulpes'')
+# {{lb|ru|zoology}} [[fox]] (''Vulpes vulpes'')
 # [[vixen]], female fox
 # fox [[fur]]
 # {{lb|ru|colloquial}} a [[foxy]] fellow/girl
@@ -20560,7 +20550,7 @@ From {{inh|ru|sla-pro|*lisica}}.
 # [[vixen]] (female of the fox)
 
 ====Usage notes====
-The usual word for fox is '''''лисица''''', while ''[[лиса]]'' is somewhat more poetic, and ''[[лис]]'' is specifically the male.
+The usual word for fox is '''''лисица''''', while {{m|ru|лиса́}} is somewhat more poetic, and {{m|ru|лис}} is specifically the male.
 
 ====Declension====
 {{ru-noun-table|лиси́ца|a=an}}
@@ -20631,7 +20621,7 @@ Page 943 литовка: -------- begin text --------
 ===Noun===
 {{ru-noun+|лито́вка|*|a=an|m=лито́вец}}
 
-# female [[Lithuanian]] {{gloss|person from Lithuania}}
+# {{female equivalent of|ru|лито́вец}}: [[female]] [[Lithuanian]] {{gloss|person from Lithuania}}
 
 ====Declension====
 {{ru-noun-table|лито́вка|*|a=an}}
@@ -20657,7 +20647,7 @@ From {{suffix|ru|лиходе́й|ка}}.
 ===Noun===
 {{ru-noun+|лиходе́йка|*|a=an|m=лиходе́й}}
 
-# {{lb|ru|archaic|poetic}} female [[evildoer]], [[villain]]
+# {{lb|ru|archaic|poetic}} {{female equivalent of|ru|лиходе́й}}: [[female]] [[evildoer]], [[villain]]
 
 ====Declension====
 {{ru-noun-table|лиходе́йка|*|a=an}}
@@ -20675,9 +20665,9 @@ Page 945 лицемерка: -------- begin text --------
 * {{ru-IPA|лицеме́рка}}
 
 ===Noun===
-{{ru-noun+|лицеме́рка|*|a=a}}
+{{ru-noun+|лицеме́рка|*|a=a|m=лицеме́р}}
 
-# [[hypocrite]] ''(female)''
+# {{female equivalent of|ru|лицеме́р}}: [[female]] [[hypocrite]]
 
 ====Declension====
 {{ru-noun-table|лицеме́рка|*|a=a}}
@@ -20767,9 +20757,9 @@ Page 949 лондонка: -------- begin text --------
 * {{ru-IPA|ло́ндонка}}
 
 ===Noun===
-{{ru-noun+|ло́ндонка|*|a=an|f=ло́ндонец}}
+{{ru-noun+|ло́ндонка|*|a=an|m=ло́ндонец}}
 
-# (female) [[Londoner]]
+# {{female equivalent of|ru|ло́ндонец}}: [[female]] [[Londoner]]
 
 ====Declension====
 {{ru-noun-table|ло́ндонка|*|a=an}}
@@ -20793,7 +20783,7 @@ Page 950 лосиха: -------- begin text --------
 ===Noun===
 {{ru-noun+|лоси́ха|a=an|m=лось}}
 
-# a [[female]] [[moose]]
+# {{female equivalent of|ru|лось}}: [[female]] [[moose]]
 
 ====Declension====
 {{ru-noun-table|лоси́ха|a=an}}
@@ -20863,7 +20853,7 @@ Page 953 лучница: -------- begin text --------
 ===Noun===
 {{ru-noun+|лу́чница|a=an|m=лу́чник}}
 
-# [[archeress]], [[female]] [[archer]]
+# {{female equivalent of|ru|лу́чник}}: [[archeress]], [[female]] [[archer]]
 
 ====Declension====
 {{ru-noun-table|лу́чница|a=an}}
@@ -20929,7 +20919,7 @@ Page 956 львица: -------- begin text --------
 ===Noun===
 {{ru-noun+|льви́ца|a=an|m=лев}}
 
-# [[lioness]]
+# {{female equivalent of|ru|лев}}: [[lioness]]
 
 ====Declension====
 {{ru-noun-table|льви́ца|a=an}}
@@ -20956,9 +20946,9 @@ Page 957 любимая: -------- begin text --------
 # {{inflection of|ru|люби́мый||nom|f|s}}
 
 ===Noun===
-{{ru-noun+|люби́мая|+|a=an}}
+{{ru-noun+|люби́мая|+|a=an|m=люби́мый}}
 
-# [[beloved]], [[darling]]
+# {{female equivalent of|ru|люби́мый}}: [[female]] [[beloved]], [[darling]]
 
 ====Declension====
 {{ru-noun-table|люби́мая|+|a=an}}
@@ -20988,7 +20978,7 @@ Page 958 любимица: -------- begin text --------
 ===Noun===
 {{ru-noun+|люби́мица|a=an|m=люби́мец}}
 
-# female [[favourite]], [[pet]], [[fondling]], [[minion]]
+# {{female equivalent of|ru|люби́мец}}: [[female]] [[favourite]], [[pet]], [[fondling]], [[minion]]
 
 ====Declension====
 {{ru-noun-table|люби́мица|a=an}}
@@ -21008,8 +20998,7 @@ From {{suffix|ru|люби́тель|ница}}.
 ===Noun===
 {{ru-noun+|люби́тельница|a=an|m=люби́тель}}
 
-# [[lover]], [[devotee]], [[fan]] ''(female)''
-# female [[amateur]] {{gloss|person attached to a pursuit without pursuing it professionally}}
+# {{female equivalent of|ru|люби́тель}}: [[female]] [[lover]], [[devotee]], [[fan]]; [[female]] [[amateur]] {{gloss|person attached to a pursuit without pursuing it professionally}}
 
 ====Declension====
 {{ru-noun-table|люби́тельница|a=an}}
@@ -21026,7 +21015,7 @@ Page 960 любовница: -------- begin text --------
 ===Noun===
 {{ru-noun+|любо́вница|a=an|m=любо́вник}}
 
-# [[mistress]], [[lover]]
+# {{female equivalent of|ru|любо́вник}}: [[mistress]], [[lover]]
 
 ====Declension====
 {{ru-noun-table|любо́вница|a=an}}
@@ -21096,7 +21085,7 @@ Page 963 лягушка: -------- begin text --------
 {{ru-noun+|лягу́шка|*|a=an}}
 
 # [[frog]]
-# {{lb|ru|Internet}} [[@]] ([[at sign]]) (more common: [[собака]] "dog")
+# {{lb|ru|Internet}} [[@]] ([[at sign]]) (more common: {{m|ru|соба́ка||dog}})
 
 ====Declension====
 {{ru-noun-table|лягу́шка|*|a=an}}
@@ -21154,7 +21143,7 @@ Page 965 лярва: -------- begin text --------
 
 ===Pronunciation===
 * {{ru-IPA|ля́рва}}
-*{{hyph|ru|ля́р|ва}}
+* {{hyph|ru|ля́р|ва}}
 
 ===Etymology 1===
 Borrowed from {{bor|ru|la|larva}}.
@@ -21192,7 +21181,7 @@ Page 966 ляшка: -------- begin text --------
 ===Noun===
 {{ru-noun+|ля́шка|a=an|*|m=лях}}
 
-# {{lb|ru|historical|now|sometimes|_|slightly|_|derogatory|or|ironic}} female [[Pole]], [[Polish]] woman, [[Polack]]
+# {{lb|ru|historical|now|sometimes|_|slightly|_|derogatory|or|ironic}} {{female equivalent of|ru|лях}}: [[female]] [[Pole]], [[Polish]] [[woman]], [[Polack]]
 
 ====Declension====
 {{ru-noun-table|ля́шка|a=an|*}}
@@ -21383,7 +21372,7 @@ Page 974 македонка: -------- begin text --------
 ===Noun===
 {{ru-noun+|македо́нка|*|a=an|m=македо́нец}}
 
-# female [[Macedonian]] {{gloss|person from Macedonia}}
+# {{female equivalent of|ru|македо́нец}}: [[female]] [[Macedonian]] {{gloss|person from Macedonia}}
 
 ====Declension====
 {{ru-noun-table|македо́нка|*|a=an}}
@@ -21431,7 +21420,7 @@ Page 976 малайзийка: -------- begin text --------
 ===Noun===
 {{ru-noun+|малайзи́йка|*|a=an|m=малайзи́ец}}
 
-# female [[Malaysian]] {{gloss|person from Malaysia}}
+# {{female equivalent of|ru|малайзи́ец}}: [[female]] [[Malaysian]] {{gloss|person from Malaysia}}
 
 ====Declension====
 {{ru-noun-table|малайзи́йка|*|a=an}}
@@ -21454,7 +21443,7 @@ Page 977 малайка: -------- begin text --------
 ===Noun===
 {{ru-noun+|мала́йка|*|a=an|m=мала́ец}}
 
-# female [[Malaysian]] {{gloss|person from Malaysia}}
+# {{female equivalent of|ru|мала́ец}}: [[female]] [[Malaysian]] {{gloss|person from Malaysia}}
 
 ====Declension====
 {{ru-noun-table|мала́йка|*|a=an}}
@@ -21477,7 +21466,7 @@ Page 978 малийка: -------- begin text --------
 ===Noun===
 {{ru-noun+|мали́йка|*|a=an|m=мали́ец}}
 
-# female [[Malian]] {{gloss|a person from Mali or of Malian descent}}
+# {{female equivalent of|ru|мали́ец}}: [[female]] [[Malian]] {{gloss|a person from Mali or of Malian descent}}
 
 ====Declension====
 {{ru-noun-table|мали́йка|*|a=an}}
@@ -21548,7 +21537,7 @@ Page 981 малышка: -------- begin text --------
 {{ru-noun+|малы́шка|*|a=an|m=малы́ш|g=f-an|g2=m-an}}
 
 # [[little]] [[child]] ({{n-g|as a term of endearment}})
-# (very) [[little girl]], baby girl
+# {{female equivalent of|ru|малы́ш}}: (very) [[little girl]], baby girl
 
 =====Declension=====
 {{ru-noun-table|малы́шка|*|a=an}}
@@ -21576,7 +21565,7 @@ Page 982 мальтийка: -------- begin text --------
 ===Noun===
 {{ru-noun+|мальти́йка|*|a=an|m=мальти́ец}}
 
-# female [[Maltese]] {{gloss|inhabitant of Malta}}
+# {{female equivalent of|ru|мальти́ец}}: [[female]] [[Maltese]] {{gloss|inhabitant of Malta}}
 
 ====Declension====
 {{ru-noun-table|мальти́йка|*|a=an}}
@@ -21827,7 +21816,7 @@ Page 993 манекенщица: -------- begin text --------
 ===Noun===
 {{ru-noun+|манеке́нщица|a=an|m=манеке́нщик}}
 
-# female [[mannequin]] {{gloss|a person who models clothes}}, a female [[model]]
+# {{female equivalent of|ru|манеке́нщик}}: [[female]] [[mannequin]] {{gloss|a person who models clothes}}, [[female]] [[model]]
 
 ====Declension====
 {{ru-noun-table|манеке́нщица|a=an}}
@@ -21884,7 +21873,7 @@ Page 996 маркиза: -------- begin text --------
 ====Noun====
 {{ru-noun+|марки́за|a=ai|m=марки́з}}
 
-# {{lb|ru|animate}} [[marchioness]], [[marquise]]
+# {{lb|ru|animate}} {{female equivalent of|ru|марки́з}}: [[marchioness]], [[marquise]]
 # {{lb|ru|inanimate}} [[sunblind]], [[sun blind]], [[awning]], [[marquee]]
 
 =====Declension=====
@@ -21939,7 +21928,7 @@ Page 998 мастерица: -------- begin text --------
 ===Noun===
 {{ru-noun+|мастери́ца|a=a|m=ма́стер}}
 
-# ''(female)'' [[master]], [[good]] [[hand]] [[at]]
+# {{female equivalent of|ru|ма́стер}}: [[female]] [[master]] {{gl|someone good at something}}
 
 ====Declension====
 {{ru-noun-table|мастери́ца|a=a}}
@@ -21956,7 +21945,7 @@ Page 999 материалистка: -------- begin text --------
 ===Noun===
 {{ru-noun+|материали́стка|*|a=an|m=материали́ст}}
 
-# [[materialist]] ''(female)''
+# {{female equivalent of|ru|материали́ст}}: [[female]] [[materialist]]
 
 ====Declension====
 {{ru-noun-table|материали́стка|*|a=an}}
@@ -22233,7 +22222,7 @@ Page 1010 машинистка: -------- begin text --------
 # female [[typist]]
 
 ====Usage notes====
-The term {{l|ru|машини́ст}} doesn't mean "male typist" but "engine driver".
+* The term {{l|ru|машини́ст}} doesn't mean "male typist" but "engine driver".
 
 ====Declension====
 {{ru-noun-table|машини́стка|*|a=an}}
@@ -22262,9 +22251,9 @@ Page 1012 медведица: -------- begin text --------
 * {{ru-IPA|медве́дица}}
 
 ===Noun===
-{{ru-noun+|медве́дица|a=an}}
+{{ru-noun+|медве́дица|a=an|m=медве́дь}}
 
-# [[female]] [[bear]]; [[she-bear]]
+# {{female equivalent of|ru|медве́дь}}: [[female]] [[bear]]; [[she-bear]]
 # {{lb|ru|informal}} [[Ursa Major]] or [[Ursa Minor]] (see [[Большая Медведица]], [[Малая Медведица]])
 # [[tiger moth]]
 
@@ -22339,7 +22328,7 @@ Page 1016 медсестра: -------- begin text --------
 * {{audio|ru|Ru-{{PAGENAME}}.ogg|Audio}}
 
 ===Noun===
-{{ru-noun+|d|медсестра́|;ё*|gen_pl=медсестёр|a=an}}
+{{ru-noun+|d|медсестра́|;ё*|gen_pl=медсестёр|a=an|m=медбра́т}}
 
 # {{lb|ru|medicine}} [[hospital]] [[nurse]]
 
@@ -22470,7 +22459,7 @@ Page 1022 мещанка: -------- begin text --------
 ===Noun===
 {{ru-noun+|меща́нка|*|a=an|m=меща́нин}}
 
-# [[petit bourgeois]] [[woman]]
+# {{female equivalent of|ru|меща́нин}}: [[petit bourgeois]] [[woman]]
 # {{lb|ru|figurative}} [[narrow-minded]] [[woman]], [[woman]] with [[petty]] [[interests]]
 
 ====Declension====
@@ -22546,9 +22535,9 @@ Page 1026 милая: -------- begin text --------
 # {{inflection of|ru|ми́лый||nom|f|s}}
 
 ===Noun===
-{{ru-noun+|ми́лая|+|a=an}}
+{{ru-noun+|ми́лая|+|a=an|m=ми́лый}}
 
-# [[sweetheart]], [[darling]]
+# {{female equivalent of|ru|ми́лый}}: [[female]] [[sweetheart]], [[darling]]
 
 ====Declension====
 {{ru-noun-table|ми́лая|+|a=an}}
@@ -22670,7 +22659,7 @@ Page 1031 минчанка: -------- begin text --------
 ===Noun===
 {{ru-noun+|минча́нка|*|a=an|m=минча́нин}}
 
-# [[resident]] [[of]] [[Minsk]] ''(female)''
+# {{female equivalent of|ru|минча́нин}}: [[female]] [[resident]] [[of]] [[Minsk]]
 
 ====Declension====
 {{ru-noun-table|минча́нка|*|a=an}}
@@ -22711,7 +22700,7 @@ From {{bor|ru|en|Mrs}} or {{m|en|mistress}}.
 ===Noun===
 {{ru-noun|ми́ссис|f-an|-|m=ми́стер}}
 
-# {{lb|ru|English speaking countries}} [[Mrs]], [[mistress]]
+# {{lb|ru|English speaking countries}} {{female equivalent of|ru|ми́стер}}: [[Mrs]], [[mistress]]
 #: {{syn|ru|госпожа́|суда́рыня}}
 
 {{cln|ru|terms of address}}
@@ -22751,7 +22740,7 @@ Borrowed from {{affix|ru|mauvaise|lang1=fr|-шка}}.
 ===Noun===
 {{ru-noun+|мове́шка|*|a=an}}
 
-# {{lb|ru|humorous|rare}} ugly woman
+# {{lb|ru|humorous|rare}} [[ugly]] [[woman]]
 
 ====Declension====
 {{ru-noun-table|мове́шка|*|a=an}}
@@ -22820,7 +22809,7 @@ Page 1038 модница: -------- begin text --------
 ===Noun===
 {{ru-noun+|мо́дница|a=an|m=мо́дник}}
 
-# {{lb|ru|colloquial}} [[female]] [[fashionista]], [[fashionable]] [[woman]]
+# {{lb|ru|colloquial}} {{female equivalent of|ru|мо́дник}}: [[female]] [[fashionista]], [[fashionable]] [[woman]]
 
 ====Declension====
 {{ru-noun-table|мо́дница|a=an}}
@@ -22855,7 +22844,7 @@ Page 1040 мокрая курица: Found match for regex: =
 Page 1040 мокрая курица: -------- begin text --------
 
 ===Etymology===
-Compare {{cog|fr|poule mouillée}}.
+Literally, "wet chicken". Compare {{cog|fr|poule mouillée}}.
 
 ===Pronunciation===
 * {{ru-IPA|мо́края ку́рица}}
@@ -22863,7 +22852,7 @@ Compare {{cog|fr|poule mouillée}}.
 ===Noun===
 {{ru-noun+|[[мокрый|мо́края]]|+|_|[[ку́рица]]||ку́р|or|[[ку́рица]]|a=an}}
 
-# [[milksop]] {{gloss|weak, easily frightened or ineffectual person}}, a weak and [[pitiful]]-looking person (''literally'' ‘wet chicken’).
+# [[milksop]] {{gloss|weak, easily frightened or ineffectual person}}, [[weak]] and [[pitiful]]-looking person
 
 ====Declension====
 {{ru-noun-table|[[мокрый|мо́края]]|+|_|[[ку́рица]]||ку́р|or|[[ку́рица]]|a=an}}
@@ -22898,7 +22887,7 @@ Page 1042 молдаванка: -------- begin text --------
 ===Noun===
 {{ru-noun+|молдава́нка|*|a=an|m=молдава́нин}}
 
-# female [[Moldavian]], [[Moldovan]] {{gloss|person from Moldova or of Moldovan descent}}
+# {{female equivalent of|ru|молдава́нин}}: [[female]] [[Moldavian]], [[Moldovan]] {{gloss|person from Moldova or of Moldovan descent}}
 
 ====Declension====
 {{ru-noun-table|молдава́нка|*|a=an}}
@@ -22943,7 +22932,7 @@ Page 1044 молодчина: -------- begin text --------
 ===Noun===
 {{ru-noun+|молодчи́на|a=an|g=m-an|g2=f-an}}
 
-# {{lb|ru|colloquial}} ''same as'' {{l|ru|молоде́ц}} - [[attaboy]], [[attagirl]], etc.
+# {{lb|ru|colloquial}} {{synonym of|ru|молоде́ц|t=[[attaboy]], [[attagirl]], etc.}}
 
 ====Declension====
 {{ru-noun-table|молодчи́на|a=an}}
@@ -23033,7 +23022,7 @@ From {{affix|ru|мона́х|-ыня}}, by analogy with feminine forms such as {
 ===Noun===
 {{ru-noun+|мона́хиня|a=an|m=мона́х}}
 
-# [[nun]] {{gl|member of a Christian religious community of women}}
+# {{female equivalent of|ru|мона́х}}: [[nun]] {{gl|member of a Christian religious community of women}}
 #: {{syn|ru|мона́шка|мона́шенка}}
 
 ====Declension====
@@ -23077,7 +23066,7 @@ Page 1048 монголка: -------- begin text --------
 ===Noun===
 {{ru-noun+|монго́лка|*|a=an|m=монго́л}}
 
-# [[Mongolian]] girl or woman
+# {{female equivalent of|ru|монго́л}}: [[Mongolian]] [[woman]] or [[girl]]
 
 ====Declension====
 {{ru-noun-table|монго́лка|*|a=an}}
@@ -23142,8 +23131,8 @@ Page 1050 моржиха: -------- begin text --------
 ===Noun===
 {{ru-noun+|моржи́ха|a=an|m=морж}}
 
-# a [[female]] [[walrus]]
-# {{lb|ru|colloquial}} a female [[winter swimmer]], [[ice swimmer]]
+# {{female equivalent of|ru|морж}}: [[female]] [[walrus]]
+# {{lb|ru|colloquial}} [[female]] [[winter swimmer]], [[ice swimmer]]
 
 ====Declension====
 {{ru-noun-table|моржи́ха|a=an}}
@@ -23278,9 +23267,9 @@ Page 1058 москвичка: -------- begin text --------
 * {{ru-IPA|москви́чка}}
 
 ===Noun===
-{{ru-noun+|москви́чка|*|a=an}}
+{{ru-noun+|москви́чка|*|a=an|m=москви́ч}}
 
-# [[Muscovite]] girl or woman
+# {{female equivalent of|ru|москви́ч}}: [[Muscovite]] [[woman]] or [[girl]]
 
 ====Declension====
 {{ru-noun-table|москви́чка|*|a=an}}
@@ -23374,14 +23363,14 @@ From {{suffix|ru|мсти́тель|ница}}.
 ===Noun===
 {{ru-noun+|мсти́тельница|a=an|m=мсти́тель}}
 
-# female [[avenger]]
+# {{female equivalent of|ru|мсти́тель}}: [[female]] [[avenger]]
 
 ====Declension====
 {{ru-noun-table|мсти́тельница|a=an}}
 
 ====Related terms====
-* {{l|ru|месть}} (''revenge, noun'')
-* {{l|ru|мстить}} (''verb'')
+* {{l|ru|месть||revenge}}
+* {{l|ru|мстить||to avenge}}
 
 {{topics|ru|Female people}}
 -------- end text --------
@@ -23397,7 +23386,7 @@ Page 1063 мужененавистница: -------- begin text --------
 ===Noun===
 {{ru-noun+|мужененави́стница|a=an|m=мужененави́стник}}
 
-# female [[misandrist]], [[manhater]]
+# {{female equivalent of|ru|мужененави́стник}}: [[female]] [[misandrist]], [[manhater]]
 
 ====Declension====
 {{ru-noun-table|мужененави́стница|a=an}}
@@ -23407,7 +23396,7 @@ Page 1064 муза: -------- begin text --------
 
 ===Pronunciation===
 * {{ru-IPA|му́за}}
-*{{hyph|ru|му́|за}}
+* {{hyph|ru|му́|за}}
 * {{audio|ru|Ru-{{PAGENAME}}.ogg|Audio}}
 
 ===Noun===
@@ -23432,7 +23421,7 @@ Page 1065 мурашка: -------- begin text --------
 {{ru-noun+|мура́шка|*|a=ai}}
 
 # {{diminutive of|ru|мураве́й|}}, [[ant]]
-# [[goosebump]] (''usually plural'')
+# {{lb|ru|usually plural}} [[goosebump]]
 
 ====Declension====
 {{ru-noun-table|мура́шка|*|a=ai}}
@@ -23451,7 +23440,7 @@ Page 1066 мусульманка: -------- begin text --------
 ===Noun===
 {{ru-noun+|мусульма́нка|*|a=an|m=мусульма́нин}}
 
-# female [[Muslim]]
+# {{female equivalent of|ru|мусульма́нин}}: [[female]] [[Muslim]]
 
 ====Declension====
 {{ru-noun-table|мусульма́нка|*|a=an}}
@@ -23531,7 +23520,7 @@ Page 1069 мученица: -------- begin text --------
 ===Noun===
 {{ru-noun+|му́ченица|a=an|m=му́ченик}}
 
-# female [[martyr]]; [[martyress]]
+# {{female equivalent of|ru|му́ченик}}: [[female]] [[martyr]]; [[martyress]]
 
 ====Declension====
 {{ru-noun-table|му́ченица|a=an}}
@@ -23554,7 +23543,7 @@ Page 1070 мучительница: -------- begin text --------
 ===Noun===
 {{ru-noun+|мучи́тельница|a=an|m=мучи́тель}}
 
-# [[tormentress]]
+# {{female equivalent of|ru|мучи́тель}}: [[female]] [[tormenter]], [[tormentress]]
 
 ====Declension====
 {{ru-noun-table|мучи́тельница|a=an}}
@@ -23616,7 +23605,7 @@ From {{suffix|ru|мышь|ка}}. The computing term is a {{semantic loan|ru|en|
 ===Noun===
 {{ru-noun+|мы́шка|*|a=ai}}
 
-# {{lb|ru|animate}} {{diminutive of|ru|мышь}}.
+# {{lb|ru|animate}} {{diminutive of|ru|мышь}}
 # {{lb|ru|inanimate|computing|diminutive}} [[mouse]]
 
 ====Declension====
@@ -23638,11 +23627,11 @@ From {{inh|ru|orv|мꙑшь}}, from {{inh|ru|sla-pro|*myšь||mouse}}, from {{in
 ===Noun===
 {{ru-noun+|e||f|a=an|adj=мыши́ный|dim=мы́шка}}
 
-# [[mouse]] (animal)
+# [[mouse]] {[q|animal}}
 #: {{uxi|ru|[[полевой|полева́я]] '''мышь'''|[[field mouse]]}}
-#: {{uxi|ru|[[лету́чая мышь]]|[[bat]]}} (verbatim: "flying mouse")
+#: {{uxi|ru|[[лету́чая мышь]]|[[bat]]|lit=flying mouse}}
 #:: {{uxi|ru|[[летучий|Лету́чие]] '''мы́ши''' [[использовать|испо́льзуют]] [[ультразву́к]] [[для]] ориенти́рования [[в]] [[полёт|полёте]].|Bats use ultra-sound for flight navigation.}}
-# [[mouse]] (computer pointing device)
+# {{lb|ru|computing}} [[mouse]]
 #: {{uxi|ru|[[компьютерный|компью́терная]] '''мышь'''|tr=kompʹjútɛrnaja '''myšʹ'''|computer [[mouse]]}}
 #: {{uxi|ru|'''Мышь''' [[иметь|име́ла]] [[мно́жество]] [[кнопка|кно́пок]], [[назначение|назначе́ния]] [[который|кото́рых]] [[он]] [[не]] [[понимать|понима́л]].|The mouse had a lot of buttons whose purpose he didn't understand.}}
 
@@ -23657,7 +23646,7 @@ From {{inh|ru|orv|мꙑшь}}, from {{inh|ru|sla-pro|*myšь||mouse}}, from {{in
 * {{R:ru:Vasmer|мышь}}
 * {{R:ru:Chernykh|мышь|page=552|vol=1}}
 
-{{topics|ru|Computing|Murids}}
+{{topics|ru|Murids}}
 -------- end text --------
 Page 1075 мямля: Found match for regex: =
 Page 1075 мямля: -------- begin text --------
@@ -23718,7 +23707,7 @@ Page 1077 нанимательница: -------- begin text --------
 ===Noun===
 {{ru-noun+|нанима́тельница|a=an|m=нанима́тель}}
 
-# female [[employer]], [[hirer]] {{gloss|one who advertises}}
+# {{female equivalent of|ru|нанима́тель}}: [[female]] [[employer]], [[hirer]] {{gloss|one who advertises}}
 
 ====Declension====
 {{ru-noun-table|нанима́тельница|a=an}}
@@ -23736,7 +23725,7 @@ Page 1078 напарница: -------- begin text --------
 ===Noun===
 {{ru-noun+|напа́рница|a=an|m=напа́рник}}
 
-# female [[partner]], [[mate]], [[associate]] {{gloss|person united with another or others in an act, enterprise, or business; a partner or colleague; friend, buddy}}
+# {{female equivalent of|ru|напа́рник}}: [[female]] [[partner]], [[mate]], [[associate]] {{gloss|person united with another or others in an act, enterprise, or business; a partner or colleague; friend, buddy}}
 
 ====Declension====
 {{ru-noun-table|напа́рница|a=an}}
@@ -23761,7 +23750,7 @@ Page 1079 наркоманка: -------- begin text --------
 ===Noun===
 {{ru-noun+|наркома́нка|*|a=an|m=наркома́н}}
 
-# female [[drug addict]]
+# {{female equivalent of|ru|наркома́н}}: [[female]] [[drug addict]]
 
 ====Declension====
 {{ru-noun-table|наркома́нка|*|a=an}}
@@ -23811,8 +23800,7 @@ From {{suffix|ru|наруши́тель|ница}}.
 ===Noun===
 {{ru-noun+|наруши́тельница|a=an|m=наруши́тель}}
 
-# [[violator]]
-# [[trespasser]]
+# {{female equivalent of|ru|наруши́тель}}: [[female]] [[violator]]; [[female]] [[trespasser]]
 
 ====Declension====
 {{ru-noun-table|наруши́тельница|a=an}}
@@ -23828,7 +23816,7 @@ Page 1082 насильница: -------- begin text --------
 ===Noun===
 {{ru-noun+|наси́льница|a=an|m=наси́льник}}
 
-# female [[rapist]]
+# {{female equivalent of|ru|наси́льник}}: [[female]] [[rapist]]
 
 ====Declension====
 {{ru-noun-table|наси́льница|a=an}}
@@ -23844,10 +23832,9 @@ Page 1083 наследница: -------- begin text --------
 * {{ru-IPA|насле́дница}}
 
 ===Noun===
-
 {{ru-noun+|насле́дница|a=a|m=насле́дник}}
 
-# [[heiress]]
+# {{female equivalent of|ru|насле́дник}}: [[heiress]]
 
 ====Declension====
 {{ru-noun-table|насле́дница|a=a}}
@@ -23865,9 +23852,9 @@ Page 1084 насмешница: Found match for regex: =
 Page 1084 насмешница: -------- begin text --------
 
 ===Noun===
-{{ru-noun+|насме́шница|a=an}}
+{{ru-noun+|насме́шница|a=an|m=насме́шник}}
 
-# [[heckler]], [[mocker]]
+# {{female equivalent of|ru|насме́шник}}: [[female]] [[heckler]], [[female]] [[mocker]]
 
 ====Declension====
 {{ru-noun-table|насме́шница}}
@@ -23884,8 +23871,7 @@ Page 1085 наставница: -------- begin text --------
 ===Noun===
 {{ru-noun+|наста́вница|a=an|m=наста́вник}}
 
-# female [[tutor]], [[mentor]], [[preceptor]]
-# female [[instructor]], [[tutor-guide]]
+# {{female equivalent of|ru|наста́вник}}: [[female]] [[tutor]], [[mentor]], [[preceptor]]; [[female]] [[instructor]], [[tutor-guide]]
 
 ====Declension====
 {{ru-noun-table|наста́вница|a=an}}
@@ -23904,9 +23890,10 @@ Page 1086 настоятельница: -------- begin text --------
 * {{ru-IPA|настоя́тельница}}
 
 ===Noun===
-{{ru-noun+|настоя́тельница|a=an|m=настоя́тель}} ([[монастырь|монастыря]] monastyrjá)
+{{ru-noun+|настоя́тельница|a=an|m=настоя́тель}}
 
-# [[abbess]], [[mother superior]], [[prioress]] {{gloss|female superior of a nunnery}}
+# {{female equivalent of|ru|настоя́тель}}: [[abbess]], [[mother superior]], [[prioress]] {{gloss|female superior of a nunnery}}
+#: {{syn|ru|'''настоя́тельница''' [[монастырь|монастыря́]]}}
 
 ====Declension====
 {{ru-noun-table|настоя́тельница|a=an}}
@@ -23923,7 +23910,7 @@ Page 1087 нахлебница: -------- begin text --------
 ===Noun===
 {{ru-noun+|нахле́бница|a=an|m=нахле́бник}}
 
-# {{female equivalent of|ru|нахле́бник}}
+# {{female equivalent of|ru|нахле́бник}}: {{female equivalent of|ru|нахле́бник}}
 
 ====Declension====
 {{ru-noun-table|нахле́бница|a=an}}
@@ -23941,12 +23928,8 @@ Borrowed from {{bor|ru|de|Nazi}}.
 {{ru-noun|на́ци|m-an|g2=f-an|-}}
 
 # {{lb|ru|politics}} [[Nazi]]
+#: {{syn|ru|наци́ст|g1=m|наци́стка|g2=f|фаши́ст|g3=m|фаши́стка|g4=f|скинхе́д|tr5=skinxéd, skinxɛ́d}}
 #* {{quote-book|ru|text=[[как|Как]], [[ваш|ва́ша]] [[жена́]] — '''на́ци'''?! — [[изумиться|изуми́лся]] [[я]]. — [[и|И]] [[вы]] [[этот|э́то]] [[терпеть|те́рпите]]? — [[ах|Ах]], [[вы]] [[не]] [[представлять|представля́ете]], [[ско́лько]] [[этот|э́то]] [[я|мне]] [[доставлять|доставля́ет]] [[неприятность|неприя́тностей]]! [[но|Но]] [[что]] [[оставаться|остаётся]] [[де́лать]]? Не [[разводи́ться]] [[же]] [[и́з-за]] [[политический|полити́ческих]] [[разногласие|разногла́сий]].|t=What, your wife’s a '''Nazi'''?!" I was amazed. "And you put up with it?" "Oh, you have no idea how it troubles me! But what can I do? You don’t get divorced over political disagreements."|author=Pavel Pepperstein|chapter=Dijéta stariká|trans-chapter=Old Man's Diet}}
-
-====Synonyms====
-* {{l|ru|наци́ст}}, {{l|ru|наци́стка}}
-* {{l|ru|фаши́ст}}, {{l|ru|фаши́стка}}
-* {{l|ru|скинхе́д|tr=skinxéd, skinxɛ́d}}
 -------- end text --------
 Page 1089 нацистка: Found match for regex: =
 Page 1089 нацистка: -------- begin text --------
@@ -23960,7 +23943,7 @@ From {{suffix|ru|наци́ст|ка}}.
 ===Noun===
 {{ru-noun+|наци́стка|*|a=an|m=наци́ст}}
 
-# female [[Nazi]]
+# {{female equivalent of|ru|наци́ст}}: [[female]] [[Nazi]]
 
 ====Declension====
 {{ru-noun-table|наци́стка|*|a=an}}
@@ -23977,7 +23960,7 @@ Page 1090 начальница: -------- begin text --------
 ===Noun===
 {{ru-noun+|нача́льница|a=an|m=нача́льник}}
 
-# female [[chief]], [[boss]], [[superior]], [[master]], [[principal]], [[commander]]
+# {{female equivalent of|ru|нача́льник}}: [[female]] [[chief]], [[boss]], [[superior]], [[master]], [[principal]], [[commander]]
 
 ====Declension====
 {{ru-noun-table|нача́льница|a=an}}
@@ -24074,7 +24057,7 @@ Page 1094 неверующая: -------- begin text --------
 ===Noun===
 {{ru-noun+|неве́рующая|+|a=an|m=неве́рующий}}
 
-# female [[nonbeliever]]
+# {{female equivalent of|ru|неве́рующий}}: [[female]] [[nonbeliever]]
 
 ====Declension====
 {{ru-noun-table|неве́рующая|+|a=an}}
@@ -24102,10 +24085,11 @@ From {{inh|ru|sla-pro|*nevěsta}}.
 # [[fiancée]], [[bride]]
 # [[marriageable]] [[girl]]
 
-The vocative form, [[невесто]], can occasionally be found in religious music, such as the Russian translation of {{pedia|Agni Parthene}} 
-
 ====Declension====
 {{ru-noun-table|неве́ста|a=an|voc=неве́сто}}
+
+====Usage notes====
+* The vocative form, {{m|ru|неве́сто}}, can occasionally be found in religious music, such as the Russian translation of {{pedia|Agni Parthene}}.
 
 ====Descendants====
 * {{desc|kpv|невеста|bor=1}}
@@ -24138,15 +24122,15 @@ From {{af|ru|неве́ста|-ка}}. Cognate with {{cog|be|няве́стка}
 ===Noun===
 {{ru-noun+|неве́стка|*|a=an}}
 
-# a woman’s [[daughter-in-law]] ''(husband’s daughter-in-law is [[сноха]])''
-# [[sister-in-law]] ''(the wife of one’s brother or brother-in-law)''
+# [[woman]]'s [[daughter-in-law]]
+# [[sister-in-law]] {{gl|the wife of one's brother or brother-in-law}}
 
 ====Declension====
 {{ru-noun-table|неве́стка|*|a=an}}
 
 ===See also===
+* {{l|ru|сноха́||husband's daughter-in-law}}
 * {{l|ru|зять}}
-* {{l|ru|сноха́}}
 * {{l|ru|неве́ста}}
 
 {{topics|ru|Female family members}}
@@ -24162,7 +24146,7 @@ Page 1097 невидимка: -------- begin text --------
 
 # {{lb|ru|animate|masculine|or|feminine}} [[invisible]] [[being]]
 #: {{ux|ru|[[сде́латься]] '''невиди́мкой'''|t=to become invisible}}
-# [[invisible]] [[hairpin]], [[bobby pin]]
+# {[lb|ru|inanimate}} [[invisible]] [[hairpin]], [[bobby pin]]
 
 ====Declension====
 {{ru-noun-table|невиди́мка|*|a=ai}}
@@ -24208,13 +24192,13 @@ Page 1100 негритоска: -------- begin text --------
 ===Noun===
 {{ru-noun+|негрито́ска|*|a=an|m=негрито́с}}
 
-# {{lb|ru|slang|pejorative}} [[nigger]], [[black]] (woman)
+# {{lb|ru|slang|pejorative}} {{female equivalent of|ru|негрито́с}}: [[nigger]], [[black]] [[woman]]
 
 ====Declension====
 {{ru-noun-table|негрито́ска|*|a=an}}
 
 ====Synonyms====
-* {{l|ru|ни́ггер}} (from English)
+* {{l|ru|ни́ггер}} {{q|from English}}
 
 ====Derived terms====
 * {{l|ru|негрито́сский|pos=a}}
@@ -24233,20 +24217,20 @@ Page 1101 негритянка: -------- begin text --------
 ===Noun===
 {{ru-noun+|негритя́нка|*|a=an|m=негр}}
 
-# a [[black]] woman; [[Negress]]
+# {{female equivalent of|ru|негр}}: [[black]] [[woman]]
 
 ====Usage notes====
-* The usage of the word "{{m|ru|негр}}" or "{{m|ru|негритя́нка}}" in Russian is generally not considered pejorative. It is a neutral word in Russian, and is not used derogatively.
+* The usage of the word {{m|ru|негр}} or {{m|ru|негритя́нка}} in Russian is generally not considered pejorative. It is a neutral word in Russian, and is not used derogatively.
 * Due to Western influence, for political correctness some people avoid the term.
 
 ====Declension====
 {{ru-noun-table|негритя́нка|*|a=an}}
 
 ====Related terms====
-* {{l|ru|негр|pos=n}} - [[black]] [[man]]
-* {{l|ru|негритёнок}} - [[little]] [[black]] [[boy]]
+* {{l|ru|негр|pos=n||[[black]] [[man]]}}
+* {{l|ru|негритёнок||[[little]] [[black]] [[boy]]}}
 * {{l|ru|негритя́нский|pos=a}}
-* {{l|ru|негрито́с}}, {{l|ru|негрито́ска|pos=n}} (''offensive'')
+* {{l|ru|негрито́с|g=m}}, {{l|ru|негрито́ска|g=f|pos=n}} {{q|offensive}}
 -------- end text --------
 Page 1102 недотепа: Found match for regex: =
 Page 1102 недотепа: -------- begin text --------
@@ -24337,7 +24321,7 @@ Page 1106 незнакомка: -------- begin text --------
 ===Noun===
 {{ru-noun+|незнако́мка|*|a=an|m=незнако́мец}}
 
-# female [[stranger]], [[alien]] {{gloss|person, etc. from outside}}
+# {{female equivalent of|ru|незнако́мец}}: [[female]] [[stranger]], [[alien]] {{gloss|person, etc. from outside}}
 
 ====Declension====
 {{ru-noun-table|незнако́мка|*|a=an}}
@@ -24354,7 +24338,7 @@ From {{suffix|ru|нелега́л|ка}}.
 ===Noun===
 {{ru-noun+|нелега́лка|*|a=an|m=нелега́л}}
 
-# {{lb|ru|colloquial}} female [[illegal alien]], female illegal immigrant {{gloss|person within a state without authorization}}
+# {{female equivalent of|ru|нелега́л}}: {{lb|ru|colloquial}} [[female]] [[illegal]] [[immigrant]], [[female]] [[illegal alien]] {{gloss|person within a state without authorization}}
 
 ====Declension====
 {{ru-noun-table|нелега́лка|*|a=an}}
@@ -24372,7 +24356,7 @@ Page 1108 немецкая овчарка: -------- begin text --------
 # [[German Shepherd]]
 
 ====Usage notes====
-The German shepherd is generally thought of in Russia as a border-guard dog and is not associated with the blind or the police.
+* The German shepherd is generally thought of in Russia as a border-guard dog and is not associated with the blind or the police.
 
 ====Declension====
 {{ru-noun-table|[[немецкий|неме́цкая]]|+|_|[[овча́рка]]|*|a=an}}
@@ -24397,7 +24381,7 @@ Page 1109 немка: -------- begin text --------
 ===Noun===
 {{ru-noun+|не́мка|*|a=an|m=не́мец}}
 
-# [[German]] [[woman]] or [[girl]]
+# {{female equivalent of|ru|не́мец}}: [[German]] [[woman]] or [[girl]]
 
 ====Declension====
 {{ru-noun-table|не́мка|*|a=an}}
@@ -24424,7 +24408,7 @@ Page 1110 неофашистка: -------- begin text --------
 ===Noun===
 {{ru-noun+|неофаши́стка|*|a=an|m=неофаши́ст}}
 
-# female [[neofascist]] {{gloss|a follower of neofascism}}
+# {{female equivalent of|ru|неофаши́ст}}: [[female]] [[neofascist]] {{gloss|a follower of neofascism}}
 
 ====Declension====
 {{ru-noun-table|неофаши́стка|*|a=an}}
@@ -24455,18 +24439,19 @@ Perhaps from {{affix|ru|не-|по-|сесть|alt3=сед-|-а}}.
 Page 1112 неприятельница: Found match for regex: =
 Page 1112 неприятельница: -------- begin text --------
 
+===Etymology===
+{{af|ru|неприя́тель|-ница}}
+
 ===Pronunciation===
 * {{ru-IPA|неприя́тельница}}
 
 ===Noun===
 {{ru-noun+|неприя́тельница|a=an|m=неприя́тель}}
 
-# female [[adversary]], female [[opponent]]
+# {{female equivalent of|ru|неприя́тель}}: [[female]] [[adversary]], [[female]] [[opponent]]
 
 ====Declension====
 {{ru-noun-table|неприя́тельница|a=an}}
-
-{{cln|ru|words suffixed with -ница}}
 
 {{topics|ru|Female people}}
 -------- end text --------
@@ -24541,7 +24526,7 @@ Cognate with {{cog|fi|norppa||ringed seal}}
 ===Noun===
 {{ru-noun+|не́рпа|a=an}}
 
-# {{lb|ru|zoology}} [[seal]] of the genus ''Pusa''.
+# {{lb|ru|zoology}} [[seal]] of the genus ''Pusa''
 
 ====Declension====
 {{ru-noun-table|не́рпа|a=an}}
@@ -24634,7 +24619,7 @@ Page 1119 нивхка: -------- begin text --------
 ===Noun===
 {{ru-noun+|ни́вхка|*|a=an|m=нивх}}
 
-# [[Nivkh]] woman
+# {{female equivalent of|ru|нивх}}: [[Nivkh]] [[woman]]
 
 ====Declension====
 {{ru-noun-table|ни́вхка|*|a=an}}
@@ -24651,7 +24636,7 @@ Page 1120 нидерландка: -------- begin text --------
 ===Noun===
 {{ru-noun+|нидерла́ндка|*|a=an|m=нидерла́ндец}}
 
-# [[Dutch]] girl, [[Dutch]] woman
+# {{female equivalent of|ru|нидерла́ндец}}: [[Dutch]] [[girl]], [[Dutch]] [[woman]]
 
 ====Declension====
 {{ru-noun-table|нидерла́ндка|*|a=an}}
@@ -24740,7 +24725,7 @@ Page 1124 новозеландка: -------- begin text --------
 ===Noun===
 {{ru-noun+|новозела́ндка|*|a=an|m=новозела́ндец}}
 
-# [[New Zealander]] ''(female)''
+# {{female equivalent of|ru|новозела́ндец}}: [[female]] [[New Zealander]]
 
 ====Declension====
 {{ru-noun-table|новозела́ндка|*|a=an}}
@@ -24763,7 +24748,7 @@ Page 1125 норвежка: -------- begin text --------
 ===Noun===
 {{ru-noun+|норве́жка|*|a=an|m=норве́жец}}
 
-# [[Norwegian]] girl or woman
+# {{female equivalent of|ru|норве́жец}}: [[Norwegian]] [[woman]] or [[girl]]
 
 ====Declension====
 {{ru-noun-table|норве́жка|*|a=an}}
@@ -24798,7 +24783,7 @@ Page 1126 норка: -------- begin text --------
 ====Noun====
 {{ru-noun+|но́рка|*|a=ai}}
 
-# [[mink]] ''(animal and fur)''
+# [[mink]] {{q|animal and fur}}
 
 =====Declension=====
 {{ru-noun-table|но́рка|*|a=ai}}
@@ -24861,8 +24846,7 @@ Page 1129 нюня: -------- begin text --------
 {{ru-noun+|ню́ня|m(2)|or||f(2)|a=an}}
 
 # {{lb|ru|colloquial|pejorative}} [[sniveller]], [[crybaby]]
-# {{lb|ru|colloquial|pejorative}} ''in expression only''
-#: {{uxi|ru|[[распуска́ть ню́ни]]|to [[snivel]], [[slobber]], [[whimper]]}}
+#: {{uxi|ru|[[распуска́ть]] '''ню́ни'''|q=pejorative|to [[snivel]], to [[slobber]], to [[whimper]]}}
 
 ====Declension====
 {{ru-noun-table|ню́ня|m(2)|or||f(2)|a=an}}
@@ -24903,9 +24887,9 @@ Page 1131 нянька: -------- begin text --------
 ===Noun===
 {{ru-noun+|ня́нька|*|a=an}}
 
-# {{diminutive of|ru|ня́ня|}}
-#: {{uxi|ru|[[у|У]] [[семь|семи́]] '''ня́нек''' [[дитя́]] [[без]] [[глаз|гла́за]].|Too many cooks spoil the broth. / Everybody's business is nobody's business. (Russian proverb)}}
-#: {{uxi|ru|'''Ня́нька''' [[заботиться|забо́тится]] [[о]] [[два|двух]] [[младенец|младе́нцах]].|A (young) '''nanny''' looks after two infants.}}
+# {{diminutive of|ru|ня́ня|t=nurse, nanny, babysitter}}
+#: {{ux|ru|[[у|У]] [[семь|семи́]] '''ня́нек''' [[дитя́]] [[без]] [[глаз|гла́за]].|Too many cooks spoil the broth. / Everybody's business is nobody's business.|q=Russian proverb}}
+#: {{ux|ru|'''Ня́нька''' [[заботиться|забо́тится]] [[о]] [[два|двух]] [[младенец|младе́нцах]].|A (young) '''nanny''' looks after two infants.}}
 
 ====Declension====
 {{ru-noun-table|ня́нька|*|a=an}}
@@ -25117,7 +25101,7 @@ Page 1141 обладательница: -------- begin text --------
 ===Noun===
 {{ru-noun+|облада́тельница|a=an|m=облада́тель}}
 
-# female [[possessor]], [[owner]], [[holder]]
+# {{female equivalent of|ru|облада́тель}}: [[female]] [[possessor]], [[owner]], [[holder]]
 
 ====Declension====
 {{ru-noun-table|облада́тельница|a=an}}
@@ -25133,7 +25117,7 @@ Page 1142 обожательница: -------- begin text --------
 ===Noun===
 {{ru-noun+|обожа́тельница|a=an|m=обожа́тель}}
 
-# female [[admirer]], [[adorer]]
+# {{female equivalent of|ru|обожа́тель}}: [[female]] [[admirer]], [[adorer]]
 
 ====Declension====
 {{ru-noun-table|обожа́тельница|a=an}}
@@ -25254,9 +25238,9 @@ Page 1147 овчарка: -------- begin text --------
 * {{ru-IPA|овча́рка}}
 
 ===Noun===
-{{ru-noun+|овча́рка|*|a=an}}
+{{ru-noun+|овча́рка|*|a=an|m=овча́р}}
 
-# [[shepherdess]]
+# {{female equivalent of|ru|овча́р}}: [[shepherdess]]
 # [[sheepdog]], [[herding dog]]
 # [[German Shepherd]]
 
@@ -25314,7 +25298,7 @@ Page 1149 одноклассница: -------- begin text --------
 ===Noun===
 {{ru-noun+|однокла́ссница|a=an|m=однокла́ссник}}
 
-# female [[classmate]], [[schoolmate]] (someone who is in the same class in school)
+# {{female equivalent of|ru|однокла́ссник}}: [[female]] [[classmate]], [[schoolmate]] {{gl|someone who is in the same class in school}}
 
 ====Declension====
 {{ru-noun-table|однокла́ссница|a=an}}
@@ -25330,7 +25314,7 @@ Page 1150 оживительница: -------- begin text --------
 ===Noun===
 {{ru-noun+|оживи́тельница|a=an|m=ожива́тель}}
 
-# [[animator]] {{gloss|one who brings something to life}}
+# {{female equivalent of|ru|ожива́тель}}: [[animator]] {{gloss|one who brings something to life}}
 
 ====Declension====
 {{ru-noun-table|оживи́тельница|a=an}}
@@ -25391,8 +25375,8 @@ Page 1153 олимпийка: -------- begin text --------
 [[File:12-05-28-olympia-einkleidung-allgemein-50.jpg|[1] олимпийка|thumb]]
 {{ru-noun+|олимпи́йка|*|a=ai|m=олимпи́ец}}
 
-# {{lb|ru|inanimate}} a sports [[sweatshirt]] with a zip fastener
-# {{lb|ru|animate|rare}} a female [[Olympian]]
+# {{lb|ru|inanimate}} [[sports]] [[sweatshirt]] with a [[zip]] [[fastener]]
+# {{lb|ru|animate|rare}} {{female equivalent of|ru|олимпи́ец}}: [[female]] [[Olympian]]
 
 ====Declension====
 {{ru-noun-table|олимпи́йка|*|a=ai}}
@@ -25426,7 +25410,7 @@ Page 1155 ораторша: -------- begin text --------
 ===Noun===
 {{ru-noun+|ора́торша|a=an|m=ора́тор}}
 
-# ''(female)'' [[orator]], [[speaker]]
+# {{female equivalent of|ru|ора́тор}}: [[female]] [[orator]], [[speaker]]
 
 ====Declension====
 {{ru-noun-table|ора́торша|a=an}}
@@ -25462,7 +25446,7 @@ Page 1157 орлица: -------- begin text --------
 ===Noun===
 {{ru-noun+|орли́ца|a=an|m=орёл}}
 
-# [[female]] [[eagle]]
+# {{female equivalent of|ru|орёл}}: [[female]] [[eagle]]
 
 ====Declension====
 {{ru-noun-table|орли́ца|a=an}}
@@ -25512,7 +25496,7 @@ Page 1159 осетинка: -------- begin text --------
 ===Noun===
 {{ru-noun+|осети́нка|*|a=an|m=осети́н}}
 
-# female [[Ossete]], [[Ossetian]]
+# {{female equivalent of|ru|осети́н}}: [[female]] [[Ossete]], [[Ossetian]]
 
 ====Declension====
 {{ru-noun-table|осети́нка|*|a=an}}
@@ -25534,7 +25518,7 @@ Page 1160 ослиха: -------- begin text --------
 ===Noun===
 {{ru-noun+|осли́ха|a=an|m=осёл}}
 
-# a [[female]] [[donkey]], [[ass]]
+# {{female equivalent of|ru|осёл}}: [[female]] [[donkey]], [[ass]]
 
 ====Declension====
 {{ru-noun-table|осли́ха|a=an}}
@@ -25553,7 +25537,7 @@ Page 1161 ослица: -------- begin text --------
 ===Noun===
 {{ru-noun+|осли́ца|a=an|m=осёл}}
 
-# a [[female]] [[donkey]], [[ass]]
+# {{female equivalent of|ru|осёл}}: [[female]] [[donkey]], [[ass]]
 
 ====Declension====
 {{ru-noun-table|осли́ца|a=an}}
@@ -25653,7 +25637,7 @@ Page 1166 отличница: -------- begin text --------
 ===Noun===
 {{ru-noun+|отли́чница|a=an|m=отли́чник}}
 
-# {{female equivalent of|ru|отли́чник||[[high]] [[achiever]]}}
+# {{female equivalent of|ru|отли́чник}}: [[female]] [[high]] [[achiever]]
 
 ====Declension====
 {{ru-noun-table|отли́чница|a=an}}
@@ -25680,7 +25664,7 @@ Page 1167 отроковица: -------- begin text --------
 ===Noun===
 {{ru-noun+|отрокови́ца|a=an|m=о́трок}}
 
-# {{lb|ru|archaic}} [[young]] [[girl]]
+# {{lb|ru|archaic}} {{female equivalent of|ru|о́трок}}: [[young]] [[girl]]
 
 ====Declension====
 {{ru-noun-table|отрокови́ца|a=an}}
@@ -25702,7 +25686,7 @@ Page 1168 официантка: -------- begin text --------
 ===Noun===
 {{ru-noun+|официа́нтка|*|a=an|m=официа́нт}}
 
-# [[waitress]]
+# {{female equivalent of|ru|официа́нт}}: [[waitress]]
 
 ====Declension====
 {{ru-noun-table|официа́нтка|*|a=an}}
@@ -25844,7 +25828,7 @@ From {{bor|ru|pl|panienka}}.
 ===Noun===
 {{ru-noun+|пане́нка|*|a=an}}
 
-# {{lb|ru|dated|or|Poland}} (a Polish) young lady, [[miss]]; a Polish [[young]] [[girl]]
+# {{lb|ru|dated|or|Poland}} ([[Polish]]) [[young]] [[lady]], [[miss]]; [[Polish]] [[young]] [[girl]]
 
 ====Declension====
 {{ru-noun-table|пане́нка|*|a=an}}
@@ -25878,7 +25862,7 @@ Page 1177 паникёрша: -------- begin text --------
 ===Noun===
 {{ru-noun+|a=an|m=паникёр}}
 
-# female [[alarmist]] {{gloss|one who causes others to become alarmed without cause}}
+# {{female equivalent of|ru|паникёр}}: [[female]] [[alarmist]] {{gloss|one who causes others to become alarmed without cause}}
 
 ====Declension====
 {{ru-noun-table|a=an}}
@@ -26102,7 +26086,7 @@ From {{suffix|ru|партнёр|ша}}.
 ===Noun===
 {{ru-noun+|a=an|m=партнёр}}
 
-# female [[partner]], [[associate]] {{gloss|person united with another or others in an act, enterprise, or business; a partner or colleague}}
+# {{female equivalent of|ru|партнёр}}: [[female]] [[partner]], [[associate]] {{gloss|person united with another or others in an act, enterprise, or business; a partner or colleague}}
 
 ====Declension====
 {{ru-noun-table|a=an}}
@@ -26155,7 +26139,7 @@ Page 1186 пассажирка: -------- begin text --------
 ===Noun===
 {{ru-noun+|пассажи́рка|*|a=an|m=пассажи́р}}
 
-# [[female]] [[passenger]]
+# {{female equivalent of|ru|пассажи́р}}: [[female]] [[passenger]]
 
 ====Declension====
 {{ru-noun-table|пассажи́рка|*|a=an}}
@@ -26197,7 +26181,7 @@ Page 1188 пастушка: -------- begin text --------
 ====Noun====
 {{ru-noun+|пасту́шка|*|a=an|m=пасту́х}}
 
-# [[shepherdess]], female [[shepherd]]
+# {{female equivalent of|ru|пасту́х}}: [[shepherdess]], [[female]] [[shepherd]]
 
 =====Declension=====
 {{ru-noun-table|пасту́шка|*|a=an}}
@@ -26233,7 +26217,7 @@ Page 1189 пациентка: -------- begin text --------
 ===Noun===
 {{ru-noun+|пацие́нтка//paciéntka|*|a=an|m=пацие́нт}}
 
-# female [[patient]]
+# {{female equivalent of|ru|пацие́нт|tr=paciént}}: female [[patient]]
 
 ====Declension====
 {{ru-noun-table|пацие́нтка//paciéntka|*|a=an}}
@@ -26251,7 +26235,7 @@ Page 1190 певица: -------- begin text --------
 ===Noun===
 {{ru-noun+|певи́ца|a=an|m=певе́ц}}
 
-# female [[singer]], [[songstress]]
+# {{female equivalent of|ru|певе́ц}}: [[female]] [[singer]], [[songstress]]
 
 ====Declension====
 {{ru-noun-table|певи́ца|a=an}}
@@ -26284,7 +26268,7 @@ Page 1192 пелядь: -------- begin text --------
 ===Noun===
 {{ru-noun+|пе́лядь|f|a=an}}
 
-# [[peled]] {{gl|fish}}
+# [[peled]] {{q|fish}}
 
 ====Declension====
 {{ru-noun-table|пе́лядь|f|a=an}}
@@ -26434,7 +26418,7 @@ Page 1196 пенсионерка: -------- begin text --------
 ===Noun===
 {{ru-noun+|пенсионе́рка|*|a=an|m=пенсионе́р}}
 
-# female [[pensioner]], [[retiree]]
+# {{female equivalent of|ru|пенсионе́р}}: [[female]] [[pensioner]], [[retiree]]
 
 ====Declension====
 {{ru-noun-table|пенсионе́рка|*|a=an}}
@@ -26450,9 +26434,9 @@ Page 1197 первомученица: -------- begin text --------
 * {{ru-IPA|первому́ченица}}
 
 ===Noun===
-{{ru-noun+|первому́ченица|a=an}}
+{{ru-noun+|первому́ченица|a=an|m=первому́ченик}}
 
-# [[protomartyress]]; {{female equivalent of|ru|первому́ченик}}
+# {{female equivalent of|ru|первому́ченик}}: [[protomartyress]]
 
 ====Declension====
 {{ru-noun-table|первому́ченица|a=an}}
@@ -26466,7 +26450,7 @@ Page 1198 пердушка: -------- begin text --------
 ===Noun===
 {{ru-noun+|перду́шка|*|a=an|m=перду́н}}
 
-# {{lb|ru|colloquial}} female [[farter]], [[fart]] {{gloss|someone who farts}}
+# {{lb|ru|colloquial}} {{female equivalent of|ru|перду́н}}: [[female]] [[farter]], [[fart]] {{gloss|someone who farts}}
 
 ====Declension====
 {{ru-noun-table|перду́шка|*|a=an|m=перду́н}}
@@ -26478,10 +26462,9 @@ Page 1199 переводчица: -------- begin text --------
 * {{ru-IPA|перево́дчица}}
 
 ===Noun===
-{{ru-noun+|перево́дчица|a=an}}
+{{ru-noun+|перево́дчица|a=an|m=перево́дчик}}
 
-# [[translator]]
-# [[interpreter]]
+# {{female equivalent of|ru|перево́дчик}}: [[female]] [[translator]]; [[female]] [[interpreter]]
 
 ====Declension====
 {{ru-noun-table|перево́дчица|a=an}}
@@ -26503,7 +26486,7 @@ Page 1200 персиянка: -------- begin text --------
 ===Noun===
 {{ru-noun+|персия́нка|*|a=an|m=перс}}
 
-# a [[Persian]] {{qualifier|female}}
+# {{female equivalent of|ru|перс}}: [[female]] [[Persian]]
 
 ====Declension====
 {{ru-noun-table|персия́нка|*|a=an}}
@@ -26618,7 +26601,7 @@ Page 1205 пианистка: -------- begin text --------
 ===Noun===
 {{ru-noun+|пиани́стка|*|a=an|m=пиани́ст}}
 
-# female [[pianist]]
+# {{female equivalent of|ru|пиани́ст}}: [[female]] [[pianist]]
 
 ====Declension====
 {{ru-noun-table|пиани́стка|*|a=an}}
@@ -26729,7 +26712,7 @@ From {{suffix|ru|пионе́р|ка}}.
 ===Noun===
 {{ru-noun+|пионе́рка|*|a=an|m=пионе́р}}
 
-# female [[pioneer]]
+# {{female equivalent of|ru|пионе́р}}: [[female]] [[pioneer]]
 
 ====Declension====
 {{ru-noun-table|пионе́рка|*|a=an}}
@@ -26811,7 +26794,7 @@ From {{suffix|ru|писа́тель|ница}}.
 ===Noun===
 {{ru-noun+|писа́тельница|a=an|m=писа́тель}}
 
-# [[authoress]]
+# {{female equivalent of|ru|писа́тель}}: [[female]] [[author]]
 
 ====Declension====
 {{ru-noun-table|писа́тельница|a=an}}
@@ -26833,7 +26816,7 @@ Page 1214 пиявка: -------- begin text --------
 ===Noun===
 {{ru-noun+|пия́вка|*|a=an}}
 
-# [[leech]] (blood-sucking annelid)
+# [[leech]] {{gl|blood-sucking annelid}}
 
 ====Declension====
 {{ru-noun-table|пия́вка|*|a=an}}
@@ -26877,9 +26860,9 @@ Page 1216 племянница: -------- begin text --------
 * {{audio|ru|Ru-{{PAGENAME}}.ogg|Audio}}
 
 ===Noun===
-{{ru-noun+|племя́нница|a=an}}
+{{ru-noun+|племя́нница|a=an|m=племя́нник}}
 
-# [[niece]]
+# {{female equivalent of|ru|племя́нник}}: [[niece]]
 
 ====Declension====
 {{ru-noun-table|племя́нница|a=an}}
@@ -26930,7 +26913,7 @@ Page 1218 пленница: -------- begin text --------
 ===Noun===
 {{ru-noun+|пле́нница|a=an|m=пле́нник}}
 
-# [[female]] [[prisoner]]
+# {{female equivalent of|ru|пле́нник}}: [[female]] [[prisoner]]
 # {{lb|ru|figurative}} [[female]] [[captive]] {{i|under someone's [[irresistible]] [[influence]]}}
 
 ====Declension====
@@ -26968,7 +26951,7 @@ Page 1220 победительница: -------- begin text --------
 ===Noun===
 {{ru-noun+|победи́тельница|a=an|m=победи́тель}}
 
-# female [[winner]], [[victor]]
+# {{female equivalent of|ru|победи́тель}}: [[female]] [[winner]], [[victor]]
 
 ====Declension====
 {{ru-noun-table|победи́тельница|a=an}}
@@ -26983,9 +26966,9 @@ Page 1221 повариха: -------- begin text --------
 * {{ru-IPA|повари́ха}}
 
 ===Noun===
-{{ru-noun+|повари́ха|a=an}}
+{{ru-noun+|повари́ха|a=an|m=по́вар}}
 
-# [[female]] [[cook]]
+# {{female equivalent of|ru|по́вар}}: [[female]] [[cook]]
 
 ====Declension====
 {{ru-noun-table|повари́ха|a=an}}
@@ -27006,7 +26989,7 @@ Page 1222 повелительница: -------- begin text --------
 ===Noun===
 {{ru-noun+|повели́тельница|a=an|m=повели́тель}}
 
-# [[lady]], [[sovereign]]
+# {{female equivalent of|ru|повели́тель}}: [[lady]], [[sovereign]]
 
 ====Declension====
 {{ru-noun-table|повели́тельница|a=an}}
@@ -27024,7 +27007,7 @@ Page 1223 повитуха: -------- begin text --------
 ===Noun===
 {{ru-noun+|повиту́ха|a=an}}
 
-# [[midwife]] (woman who assists other women in childbirth)
+# [[midwife]] {{gl|woman who assists other women in childbirth}}
 
 ====Declension====
 {{ru-noun-table|повиту́ха|a=an}}
@@ -27046,7 +27029,7 @@ Page 1224 поганка: -------- begin text --------
 ====Noun====
 {{ru-noun+|пога́нка|*|a=an|m=пога́нец}}
 
-# {{lb|ru|pejorative}} [[female]] [[scoundrel]], [[scumbag]], [[rascal]]
+# {{lb|ru|pejorative}} {{female equivalent of|ru|пога́нец}}: [[female]] [[scoundrel]], [[scumbag]], [[rascal]]
 
 =====Declension=====
 {{ru-noun-table|пога́нка|*|a=an}}
@@ -27085,7 +27068,7 @@ Page 1225 погромщица: -------- begin text --------
 ===Noun===
 {{ru-noun+|погро́мщица|a=an|m=погро́мщик}}
 
-# female member of a [[pogrom]] [[mob]]; [[rioter]], [[vigilante]]
+# {{female equivalent of|ru|погро́мщик}}: [[female]] [[member]] of a [[pogrom]] [[mob]]; [[rioter]], [[vigilante]]
 
 ====Declension====
 {{ru-noun-table|погро́мщица|a=an}}
@@ -27106,7 +27089,7 @@ From {{suffix|ru|пода́тель|ница}}.
 ===Noun===
 {{ru-noun+|пода́тельница|a=an|m=пода́тель}}
 
-# female [[applicant]], [[petitioner]], [[lodger]] (of an application)
+# {{female equivalent of|ru|пода́тель}}: [[female]] [[applicant]], [[petitioner]], [[lodger]] {{q|of an application}}
 
 ====Declension====
 {{ru-noun-table|пода́тельница|a=an}}
@@ -27125,7 +27108,7 @@ From {{suffix|ru|поджига́тель|ница}}.
 ===Noun===
 {{ru-noun+|поджига́тельница|a=an|m=поджига́тель}}
 
-# female [[arsonist]] {{gloss|one who has committed the act of arson, or illegally setting fire to property}}
+# {{female equivalent of|ru|поджига́тель}}: [[female]] [[arsonist]] {{gloss|one who has committed the act of arson, or illegally setting fire to property}}
 
 ====Declension====
 {{ru-noun-table|поджига́тельница|a=an}}
@@ -27165,8 +27148,8 @@ Page 1229 подмена: -------- begin text --------
 ===Noun===
 {{ru-noun+|подме́на|a=ia}}
 
-# [[substitution]] (secretly or unnoticed) 
-# [[relief]] ''(worker)''
+# [[substitution]] {{q|secretly or unnoticed}}
+# [[relief]] {{q|worker}}
 
 ====Declension====
 {{ru-noun-table|подме́на|a=ia}}
@@ -27185,7 +27168,7 @@ Page 1230 подруга: -------- begin text --------
 ===Noun===
 {{ru-noun+|подру́га|a=an|m=друг|dim=подру́жка}}
 
-# female [[friend]]
+# {{female equivalent of|ru|друг}}: [[female]] [[friend]]
 # [[girlfriend]]
 
 ====Declension====
@@ -27261,9 +27244,7 @@ Page 1233 поклонница: -------- begin text --------
 ===Noun===
 {{ru-noun+|покло́нница|a=an|m=покло́нник}}
 
-# [[admirer]]
-# [[fan]], [[groupie]]
-# [[worshipper]]
+# {{female equivalent of|ru|покло́нник}}: [[female]] [[admirer]]; [[female]] [[fan]], [[groupie]]; [[female]] [[worshipper]]
 
 ====Declension====
 {{ru-noun-table|покло́нница|a=an}}
@@ -27287,7 +27268,7 @@ From {{inh|ru|sla-pro|*pokojь}}.
 ===Noun===
 {{ru-noun+|поко́йница|a=an|m=поко́йник}}
 
-# a female [[deceased]]
+# {{female equivalent of|ru|поко́йник}}: [[female]] [[deceased]] [[person]]
 
 ====Declension====
 {{ru-noun-table|поко́йница|a=an}}
@@ -27310,7 +27291,7 @@ Page 1235 покупательница: -------- begin text --------
 ===Noun===
 {{ru-noun+|покупа́тельница|a=an|m=покупа́тель}}
 
-# female [[buyer]], [[purchaser]], [[customer]], [[client]]
+# {{female equivalent of|ru|покупа́тель}}: [[female]] [[buyer]], [[purchaser]], [[customer]], [[client]]
 
 ====Declension====
 {{ru-noun-table|покупа́тельница|a=an}}
@@ -27333,7 +27314,7 @@ Page 1236 полицейская: -------- begin text --------
 ===Noun===
 {{ru-noun+|полице́йская|+|a=an|m=полице́йский}}
 
-# [[policewoman]]
+# {{female equivalent of|ru|полице́йский}}: [[policewoman]]
 
 ====Declension====
 {{ru-noun-table|полице́йская|+|a=an}}
@@ -27387,8 +27368,7 @@ Page 1239 получательница: -------- begin text --------
 ===Noun===
 {{ru-noun+|получа́тельница|a=an|m=получа́тель}}
 
-# female [[recipient]]
-# female [[addressee]] {{gloss|the person or organization to which something, such as a letter or message, is addressed, for whom the item is intended}}
+# {{female equivalent of|ru|получа́тель}}: female [[recipient]]; female [[addressee]] {{gloss|the person or organization to which something, such as a letter or message, is addressed, for whom the item is intended}}
 
 ====Declension====
 {{ru-noun-table|получа́тельница|a=an}}
@@ -27406,7 +27386,7 @@ Page 1240 пользовательница: -------- begin text --------
 ===Noun===
 {{ru-noun+|по́льзовательница|a=an|m=по́льзователь}}
 
-# [[user]] (girl or woman who uses a computer)
+# {{female equivalent of|ru|по́льзователь}}: [[female]] [[user]] {{gl|woman or girl who uses a computer}}
 
 ====Declension====
 {{ru-noun-table|по́льзовательница|a=an}}
@@ -27429,7 +27409,7 @@ Borrowed from {{bor|ru|pl|Polka}}.
 ====Noun====
 {{ru-noun+|по́лька|*|a=an|m=поля́к}}
 
-# female [[Pole]], [[Polish]] [[girl]] or [[woman]]
+# {{female equivalent of|ru|поля́к}}: [[female]] [[Pole]], [[Polish]] [[woman]] or [[girl]]
 
 =====Declension=====
 {{ru-noun-table|по́лька|*|a=an}}
@@ -27494,7 +27474,7 @@ Page 1243 полячка: -------- begin text --------
 ===Noun===
 {{ru-noun+|поля́чка|*|a=an|m=поля́к}}
 
-# {{lb|ru|dated|or|colloquial}} female [[Pole]]
+# {{lb|ru|dated|or|colloquial}} {{female equivalent of|ru|поля́к}}: [[female]] [[Pole]]
 
 ====Declension====
 {{ru-noun-table|поля́чка|*|a=an}}
@@ -27545,9 +27525,7 @@ Page 1245 помощница: -------- begin text --------
 ===Noun===
 {{ru-noun+|помо́щница|a=an|m=помо́щник}}
 
-# female [[associate]], [[assistant]], [[deputy]]
-# female [[helper]], [[aid]]
-# female [[helpmate]]
+# {{female equivalent of|ru|помо́щник}}: [[female]] [[associate]], [[assistant]], [[deputy]]; [[female]] [[helper]], [[aid]]; [[female]] [[helpmate]]
 
 ====Declension====
 {{ru-noun-table|помо́щница|a=an}}
@@ -27582,7 +27560,7 @@ Page 1247 попка: -------- begin text --------
 * {{ru-IPA|по́пка}}
 
 ===Etymology 1===
-Diminutive of {{m|ru|по́па}}
+{{af|ru|по́па|-ка}}
 
 ====Noun====
 {{ru-noun+|по́пка|*}}
@@ -27598,7 +27576,7 @@ Diminutive of {{m|ru|по́па}}
 * {{l|ru|попочка}}
 
 ===Etymology 2===
-Shortening of {{m|ru|попуга́й}}
+{{clipping|ru|попуга́й}}.
 
 ====Noun====
 {{ru-noun+|по́пка|*|a=an|g=m-an}}
@@ -27610,7 +27588,7 @@ Shortening of {{m|ru|попуга́й}}
 {{ru-noun-table|по́пка|*|a=an}}
 
 ===Etymology 3===
-Shortening of {{m|ru|попуга́й}}
+{{clipping|ru|попуга́й}}.
 
 ====Noun====
 {{ru-noun+|по́пка|*}}
@@ -27656,7 +27634,7 @@ Page 1249 портниха: -------- begin text --------
 ===Noun===
 {{ru-noun+|портни́ха|a=an|m=портно́й}}
 
-# {{senseid|ru|dressmaker}}[[dressmaker]] (female), [[tailor]] (female)
+# {{senseid|ru|dressmaker}} {{female equivalent of|ru|портно́й}}: [[female]] [[dressmaker]], [[female]] [[tailor]]
 # [[tailorbird]]
 
 ====Declension====
@@ -27679,7 +27657,7 @@ Page 1250 португалка: -------- begin text --------
 ===Noun===
 {{ru-noun+|португа́лка|*|a=an|m=португа́лец}}
 
-# [[Portuguese]] girl or woman
+# {{female equivalent of|ru|португа́лец}}: [[Portuguese]] [[woman]] or [[girl]]
 
 ====Declension====
 {{ru-noun-table|португа́лка|*|a=an}}
@@ -27739,7 +27717,7 @@ Page 1253 посетительница: -------- begin text --------
 ===Noun===
 {{ru-noun+|посети́тельница|a=an|m=посети́тель}}
 
-# ([[female]]) [[visitor]]
+# {{female equivalent of|ru|посети́тель}}: [[female]] [[visitor]]
 
 ====Declension====
 {{ru-noun-table|посети́тельница|a=an}}
@@ -27853,9 +27831,9 @@ Page 1258 потерпевшая: -------- begin text --------
 # {{inflection of|ru|потерпе́вший||nom|f|s}}
 
 ===Noun===
-{{ru-noun+|потерпе́вшая|+|a=an|f=потерпе́вший}}
+{{ru-noun+|потерпе́вшая|+|a=an|m=потерпе́вший}}
 
-# [[female]] [[victim]]
+# {{female equivalent of|ru|потерпе́вший}}: [[female]] [[victim]]
 
 ====Declension====
 {{ru-noun-table|потерпе́вшая|+|a=an}}
@@ -27887,23 +27865,27 @@ Page 1259 потомучка: -------- begin text --------
 Page 1260 потребительница: Found match for regex: =
 Page 1260 потребительница: -------- begin text --------
 
+===Etymology===
+{{af|ru|потреби́тель|-ница}}
+
 ===Pronunciation===
 * {{ru-IPA|потреби́тельница}}
 
 ===Noun===
-{{ru-noun+|потреби́тельница|a=an}}
+{{ru-noun+|потреби́тельница|a=an|m=потреби́тель}}
 
-# female [[consumer]] {{gloss|person purchasing goods}}
+# {{female equivalent of|ru|потреби́тель}}: [[female]] [[consumer]] {{gloss|person purchasing goods}}
 
 ====Declension====
 {{ru-noun-table|потреби́тельница|a=an}}
-
-{{cln|ru|words suffixed with -ница}}
 
 {{topics|ru|Female people}}
 -------- end text --------
 Page 1261 похитительница: Found match for regex: =
 Page 1261 похитительница: -------- begin text --------
+
+===Etymology===
+{{af|ru|похити́тель|-ница}}
 
 ===Pronunciation===
 * {{ru-IPA|похити́тельница}}
@@ -27911,12 +27893,10 @@ Page 1261 похитительница: -------- begin text --------
 ===Noun===
 {{ru-noun+|похити́тельница|a=an|m=похити́тель}}
 
-# female [[abductor]] {{gloss|kidnapper}}
+# {{female equivalent of|ru|похити́тель}}: [[female]] [[abductor]] {{gloss|kidnapper}}
 
 ====Declension====
 {{ru-noun-table|похити́тельница|a=an}}
-
-{{cln|ru|words suffixed with -ница}}
 
 {{topics|ru|Crime|Female people}}
 -------- end text --------
@@ -27933,7 +27913,7 @@ From {{affix|ru|почему́|t1=[[why]]|-чка}}<ref>{{Русская гра�
 ===Noun===
 {{ru-noun+|почему́чка|*|a=an|g=m-an|g2=f-an}}
 
-# a [[person]], often a [[child]], who asks a lot of [[question]]s
+# [[person]], often a [[child]], who asks a lot of [[question]]s
 #* {{quote-book|ru|year=1978|author=А. Ф. Чле́нов|title=Как Алёшка жил на Се́вере|text=[[если|Е́сли]] [[мно́го]] [[переспрашивать|переспра́шиваешь]], то [[смеяться|смею́тся]] [[и]] [[говорить|говоря́т]], [[что]] [[ты]] '''почему́чка''', [[и́ли]] [[ещё]] [[ка́к]]-нибу́дь [[ты|тебя́]] [[называть|называ́ют]].}}
 #* {{quote-book|ru|year=1933|author=Корне́й Чуко́вский|title=От двух до пяти́|text=― Не [[быть|бу́дешь]] [[я|мне]] [[отвеча́ть]], [[я]] [[быть|бу́ду]] [[глу́пый]]; [[а]] [[е́сли]] [[ты]] [[не]] [[быть|бу́дешь]] [[отка́зываться]] [[я|мне]] [[объясня́ть]], [[тогда́]], [[ма́ма]], [[я]] [[быть|бу́ду]] всё умне́е [[и]] умне́е…" … ― [[я|Я]] '''почему́чка''', [[а]] [[ты]] [[потому́чка]]! [[и|И]] [[тот|те]] [[взрослый|взро́слые]], [[который|кото́рые]] брезгли́во [[отмахиваться|отма́хиваются]] [[от]] «доку́чных» [[вопрос|вопро́сов]] [[ребёнок|ребёнка]], [[совершать|соверша́ют]] [[непоправимый|непоправи́мо]] [[жестокий|жесто́кое]] де́ло: [[они́]] [[наси́льно]] [[задерживать|заде́рживают]] его́ [[у́мственный]] [[рост]], [[тормозить|тормозя́т]] его́ [[духовный|духо́вное]] [[разви́тие]].}}
 
@@ -27957,13 +27937,16 @@ From {{affix|ru|почему́|t1=[[why]]|-чка}}<ref>{{Русская гра�
 Page 1263 почитательница: Found match for regex: =
 Page 1263 почитательница: -------- begin text --------
 
+===Etymology===
+{{af|ru|почита́тель|-ница}}
+
 ===Pronunciation===
 * {{ru-IPA|почита́тельница}}
 
 ===Noun===
 {{ru-noun+|почита́тельница|a=an|m=почита́тель}}
 
-# female [[admirer]], [[worshipper]]
+# {{female equivalent of|ru|почита́тель}}: [[female]] [[admirer]], [[worshipper]]
 
 ====Declension====
 {{ru-noun-table|почита́тельница|a=an}}
@@ -27985,7 +27968,7 @@ From {{suffix|ru|почтальо́н|ша}}.
 ===Noun===
 {{ru-noun+|почтальо́нша|a=an|m=почтальо́н}}
 
-# [[postwoman]], [[mailwoman]], female [[letter carrier]], [[mail carrier]] {{gloss|woman who delivers the post, woman who delivers the mail}}
+# {{female equivalent of|ru|почтальо́н}}: [[postwoman]], [[mailwoman]], [[female]] [[letter carrier]], [[mail carrier]] {{gloss|woman who delivers the post, woman who delivers the mail}}
 
 ====Declension====
 {{ru-noun-table|почтальо́нша|a=an}}
@@ -28002,10 +27985,10 @@ Page 1265 поэтесса: -------- begin text --------
 ===Noun===
 {{ru-noun+|поэте́сса//poetɛ́ssa|a=an|m=поэ́т}}
 
-# [[poetess]], woman [[poet]]
+# {{female equivalent of|ru|поэ́т}}: [[female]] [[poet]], [[poetess]]
 
 ====Usage notes====
-Sometimes interpreted as not quite equal to the masculine {{l|ru|поэ́т}}. Several famous female Russian poets, notably [[:w:Anna Akhmatova|Anna Akhmatova]] and [[:w:Marina Tsvetaeva|Marina Tsvetaeva]], insisted on being called {{l|ru|поэ́т}}, and regarded the term {{l|ru|поэте́сса|tr=poetɛ́ssa}} as insulting.
+* Sometimes interpreted as not quite equal to the masculine {{l|ru|поэ́т}}. Several famous female Russian poets, notably [[:w:Anna Akhmatova|Anna Akhmatova]] and [[:w:Marina Tsvetaeva|Marina Tsvetaeva]], insisted on being called {{l|ru|поэ́т}}, and regarded the term {{l|ru|поэте́сса|tr=poetɛ́ssa}} as insulting.
 
 ====Declension====
 {{ru-noun-table|поэте́сса//poetɛ́ssa|a=an}}
@@ -28030,12 +28013,10 @@ Page 1266 прабабка: -------- begin text --------
 {{ru-noun+|праба́бка|*|a=an}}
 
 # {{lb|ru|colloquial}} [[great-grandmother]]
+#: {{syn|ru|прабабу́шка|q=normal word}}
 
 ====Declension====
 {{ru-noun-table|праба́бка|*|a=an}}
-
-====Synonyms====
-* {{l|ru|прабабу́шка}} {{i|normal word}}
 
 ====Derived terms====
 * {{l|ru|праба́бкин}}
@@ -28160,7 +28141,7 @@ From {{inh|ru|sla-pro|*pьrakъ}} / {{m|sla-pro|*pьraka}} + {{m|sla-pro|*-ьka}
 ===Noun===
 {{ru-noun+|пра́чка|*|a=an}}
 
-# A [[washerwoman]]
+# [[washerwoman]]
 
 ====Declension====
 {{ru-noun-table|пра́чка|*|a=an}}
@@ -28177,10 +28158,13 @@ From {{inh|ru|sla-pro|*pьrakъ}} / {{m|sla-pro|*pьraka}} + {{m|sla-pro|*-ьka}
 * {{R:ru:Vasmer|прачка}}
 * {{R:ru:Chernykh|прачка|page=64|vol=2}}
 
-{{cln|ru|words suffixed with -ак|words suffixed with -ака|words suffixed with -ка}}
+{{cln|ru|words suffixed with -ка}}
 -------- end text --------
 Page 1272 предпринимательница: Found match for regex: =
 Page 1272 предпринимательница: -------- begin text --------
+
+===Etymology===
+{{af|ru|предпринима́тель|-ница}}
 
 ===Pronunciation===
 * {{ru-IPA|предпринима́тельница}}
@@ -28189,16 +28173,18 @@ Page 1272 предпринимательница: -------- begin text --------
 ===Noun===
 {{ru-noun+|предпринима́тельница|a=an|m=предпринима́тель}}
 
-# female [[industrialist]], [[businessman]], [[entrepreneur]] {{gloss|person who organizes and operates a business and assumes the associated risk}}
+# {{female equivalent of|ru|предпринима́тель}}: [[female]] [[industrialist]], [[businessman]], [[entrepreneur]] {{gloss|person who organizes and operates a business and assumes the associated risk}}
 
 ====Declension====
 {{ru-noun-table|предпринима́тельница|a=an}}
 
-{{cln|ru|words suffixed with -ница}}
 {{topics|ru|Female occupations}}
 -------- end text --------
 Page 1273 представительница: Found match for regex: =
 Page 1273 представительница: -------- begin text --------
+
+===Etymology===
+{{af|ru|представи́тель|-ница}}
 
 ===Pronunciation===
 * {{ru-IPA|представи́тельница}}
@@ -28206,8 +28192,7 @@ Page 1273 представительница: -------- begin text --------
 ===Noun===
 {{ru-noun+|представи́тельница|a=an|m=представи́тель}}
 
-# [[representative]], [[spokesman]]
-# [[member]], [[representativ]]
+# {{female equivalent of|ru|представи́тель}}: [[female]] [[representative]], [[spokeswoman]]
 
 ====Declension====
 {{ru-noun-table|представи́тельница|a=an}}
@@ -28245,7 +28230,7 @@ Page 1275 предшественница: -------- begin text --------
 ===Noun===
 {{ru-noun+|предше́ственница|a=an|m=предше́ственник}}
 
-# {{female equivalent of|ru|предше́ственник}}
+# {{female equivalent of|ru|предше́ственник}}: [[female]] [[predecessor]]
 
 ====Declension====
 {{ru-noun-table|предше́ственница|a=an}}
@@ -28262,7 +28247,7 @@ Page 1276 прелюбодейка: -------- begin text --------
 ===Noun===
 {{ru-noun+|прелюбоде́йка|*|a=an|m=прелюбоде́й}}
 
-# [[adulteress]] {{gloss|woman or girl who commits adultery}}
+# {{female equivalent of|ru|прелюбоде́й}}: [[female]] [[adulterer]], [[adulteress]] {{gloss|woman or girl who commits adultery}}
 
 ====Declension====
 {{ru-noun-table|прелюбоде́йка|*|a=an}}
@@ -28270,13 +28255,16 @@ Page 1276 прелюбодейка: -------- begin text --------
 Page 1277 преподавательница: Found match for regex: =
 Page 1277 преподавательница: -------- begin text --------
 
+===Etymology===
+{{affix|ru|преподава́тель|-ница}}
+
 ===Pronunciation===
 * {{ru-IPA|преподава́тельница}}
 
 ===Noun===
 {{ru-noun+|преподава́тельница|a=an|m=преподава́тель}}
 
-# female [[teacher]]
+# {{female equivalent of|ru|преподава́тель}}: [[female]] [[teacher]]
 
 ====Declension====
 {{ru-noun-table|преподава́тельница|a=an}}
@@ -28288,8 +28276,6 @@ Page 1277 преподавательница: -------- begin text --------
 * {{l|ru|преподава́тель}}
 * {{l|ru|преподава́тельский}}
 * {{l|ru|преподава́ть}}, {{l|ru|препода́ть}}
-
-{{cln|ru|words suffixed with -ница}}
 
 {{topics|ru|Education|Female occupations}}
 -------- end text --------
@@ -28305,7 +28291,7 @@ First attested in 1993. From {{affix|ru|пре́сс-секрета́рь|-ша}
 ===Noun===
 {{ru-noun+|[[пре́сс]]-[[секрета́рша]]|a=an}}
 
-# {{lb|ru|colloquial}} {{female equivalent of|ru|пре́сс-секрета́рь|gloss=[[press secretary]]}}
+# {{lb|ru|colloquial}} {{female equivalent of|ru|пре́сс-секрета́рь}}: [[female]] [[press secretary]]
 
 ====Declension====
 {{ru-noun-table|[[пре́сс]]-[[секрета́рша]]|a=an}}
@@ -28325,7 +28311,7 @@ Page 1279 претендентка: -------- begin text --------
 ===Noun===
 {{ru-noun+|претенде́нтка|*|a=an|m=претенда́нт}}
 
-# female [[pretender]], [[claimant]] (to, upon), [[aspirant]] (to), [[applicant]] {{gloss|one who applies}}
+# {{female equivalent of|ru|претенда́нт}}: [[female]] [[pretender]], [[claimant]] (to, upon), [[aspirant]] (to); [[female]] [[applicant]] {{gloss|one who applies}}
 
 ====Declension====
 {{ru-noun-table|претенде́нтка|*|a=an}}
@@ -28339,7 +28325,7 @@ Page 1280 приверженка: -------- begin text --------
 ===Noun===
 {{ru-noun+|приве́рженка|*|a=an|m=приве́рженец}}
 
-# female [[advocate]], [[adherent]], [[supporter]], [[devotee]] {{gloss|person who speaks in support of something}}
+# {{female equivalent of|ru|приве́рженец}}: [[female]] [[advocate]], [[adherent]], [[supporter]], [[devotee]] {{gloss|person who speaks in support of something}}
 
 ====Declension====
 {{ru-noun-table|приве́рженка|*|a=an}}
@@ -28406,7 +28392,7 @@ Borrowed from {{bor|ru|fr|princesse}} or {{der|ru|de|Prinzess}}, an archaic form
 ===Noun===
 {{ru-noun+|принце́сса|a=an|m=принц}}
 
-# [[princess]]
+# {{female equivalent of|ru|принц}}: [[princess]]
 
 ====Declension====
 {{ru-noun-table|принце́сса|a=an}}
@@ -28435,7 +28421,7 @@ From {{inh|ru|sla-pro|*prisluga}}.
 ===Noun===
 {{ru-noun+|прислу́га|a=an|g=m-an|g2=f-an}}
 
-# [[servant]] (female), [[maidservant]]
+# [[female]] [[servant]], [[maidservant]]
 # {{lb|ru|collective}} [[servants]], [[domestics]], household servants {{g|m|f}}
 # {{lb|ru|military, collective}} [[crew]], [[gunners]], gun [[detachment]]
 
@@ -28450,13 +28436,16 @@ From {{inh|ru|sla-pro|*prisluga}}.
 Page 1285 приятельница: Found match for regex: =
 Page 1285 приятельница: -------- begin text --------
 
+===Etymology===
+{{af|ru|прия́тель|-ница}}
+
 ===Pronunciation===
 * {{ru-IPA|прия́тельница}}
 
 ===Noun===
 {{ru-noun+|прия́тельница|a=an|m=прия́тель}}
 
-# ''(female)'' [[friend]], [[acquaintance]]
+# {{female equivalent of|ru|прия́тель}}: [[female]] [[friend]], [[acquaintance]]
 
 ====Declension====
 {{ru-noun-table|прия́тельница|a=an}}
@@ -28470,8 +28459,7 @@ Page 1286 проводница: -------- begin text --------
 ===Noun===
 {{ru-noun+|проводни́ца|a=an|m=проводни́к}}
 
-# female [[guide]] ''(person)''
-# female [[conductor]], [[guard]], [[train]] [[attendant]] ''(on a train)''
+# {{female equivalent of|ru|проводни́к}}: [[female]] [[guide]]; [[female]] [[conductor]], [[guard]], [[train]] [[attendant]]
 
 ====Declension====
 {{ru-noun-table|проводни́ца|a=an}}
@@ -28486,8 +28474,7 @@ Page 1287 продавщица: -------- begin text --------
 ===Noun===
 {{ru-noun+|продавщи́ца|a=an|m=продаве́ц}}
 
-# female [[seller]], [[salesman]], [[vender]]
-# female [[shop assistant]] {{gloss|shop employee}}
+# {{female equivalent of|ru|продаве́ц}}: [[female]] [[seller]], [[saleswoman]], [[vender]]; [[female]] [[shop assistant]]
 
 ====Declension====
 {{ru-noun-table|продавщи́ца|a=an}}
@@ -28533,7 +28520,7 @@ From {{suffix|ru|проси́тель|ница}}.
 ===Noun===
 {{ru-noun+|проси́тельница|a=an|m=проси́тель}}
 
-# female [[petitioner]], [[applicant]], [[suppliant]]
+# {{female equivalent of|ru|проси́тель}}: [[female]] [[petitioner]], [[applicant]], [[suppliant]]
 
 ====Declension====
 {{ru-noun-table|проси́тельница|a=an}}
@@ -28608,8 +28595,7 @@ Page 1293 противница: -------- begin text --------
 ===Noun===
 {{ru-noun+|проти́вница|a=an|m=проти́вник}}
 
-# female [[opponent]], [[adversary]]
-# female [[enemy]]
+# {{female equivalent of|ru|проти́вник}}: [[female]] [[opponent]], [[adversary]]; [[female]] [[enemy]]
 
 ====Declension====
 {{ru-noun-table|проти́вница|a=an}}
@@ -28637,7 +28623,7 @@ Page 1294 профсоюзница: -------- begin text --------
 ===Noun===
 {{ru-noun+|профсою́зница|a=an|m=профсою́зник}}
 
-# female [[trade unionist]]
+# {{female equivalent of|ru|профсою́зник}}: [[female]] [[trade unionist]]
 
 ====Declension====
 {{ru-noun-table|профсою́зница|a=an}}
@@ -28653,7 +28639,7 @@ Page 1295 процентщица: -------- begin text --------
 ===Noun===
 {{ru-noun+|проце́нтщица|a=an|m=проце́нтщик}}
 
-# {{lb|ru|colloquial|dated}} female [[usurer]], [[pawnbroker]]
+# {{lb|ru|colloquial|dated}} {{female equivalent of|ru|проце́нтщик}}: [[female]] [[usurer]], [[pawnbroker]]
 
 ====Declension====
 {{ru-noun-table|проце́нтщица|a=an}}
@@ -28726,7 +28712,7 @@ From {{inh|ru|sla-pro|*pъtakъ}}.
 ====Noun====
 {{ru-noun+|пта́ха|a=an|dim=пта́шка}}
 
-# {{lb|ru|colloquial}} (a small) [[bird]]
+# {{lb|ru|colloquial}} [[small]] [[bird]]
 
 =====Declension=====
 {{ru-noun-table|пта́ха|a=an}}
@@ -28755,7 +28741,7 @@ Page 1299 пташка: -------- begin text --------
 ===Noun===
 {{ru-noun+|пта́шка|*|a=an}}
 
-# [[birdie]], little [[bird]], {{diminutive of|ru|пта́ха|nocap=1}}
+# {{diminutive of|ru|пта́ха|nocap=1}}: [[birdie]], little [[bird]]
 
 ====Declension====
 {{ru-noun-table|пта́шка|*|a=an}}
@@ -28959,7 +28945,7 @@ Page 1309 путница: -------- begin text --------
 ===Noun===
 {{ru-noun+|пу́тница|m=пу́тник|a=an}}
 
-# [[traveller]], [[wayfarer]] (female)
+# {{female equivalent of|ru|пу́тник|a=an}}: [[female]] [[traveller]], [[female]] [[wayfarer]]
 
 ====Declension====
 {{ru-noun-table|пу́тница|a=an}}
@@ -29108,7 +29094,7 @@ Page 1316 раба: -------- begin text --------
 ===Noun===
 {{ru-noun+|раба́|a=an|m=раб}}
 
-# female [[slave]]
+# {{female equivalent of|ru|раб}}: [[female]] [[slave]]
 
 ====Declension====
 {{ru-noun-table|раба́|a=an}}
@@ -29138,10 +29124,9 @@ From {{inh|ru|sla-pro|*orbotьnica}}, from {{m|sla-pro|*orbotьnъ}} + {{m|sla-p
 * {{audio|ru|Ru-{{PAGENAME}}.ogg|audio}}
 
 ===Noun===
-{{ru-noun+|рабо́тница|a=an|f=рабо́тник}}
+{{ru-noun+|рабо́тница|a=an|m=рабо́тник}}
 
-# [[working]] woman, [[working]] girl, female [[worker]]
-# female [[clerk]], female [[laborer]], female [[employee]]
+# {{female equivalent of|ru|рабо́тник}}: [[female]] [[worker]]; [[female]] [[clerk]], [[female]] [[laborer]], [[female]] [[employee]]
 # [[maid]], [[housemaid]]
 
 ====Declension====
@@ -29165,7 +29150,7 @@ Page 1318 работодательница: -------- begin text --------
 ===Noun===
 {{ru-noun+|работода́тельница|a=an|m=работода́тель}}
 
-# female [[employer]]
+# {{female equivalent of|ru|работода́тель}}: [[female]] [[employer]]
 
 ====Declension====
 {{ru-noun-table|работода́тельница|a=an}}
@@ -29208,7 +29193,7 @@ Page 1320 рабочая: -------- begin text --------
 ===Noun===
 {{ru-noun+|рабо́чая|+|a=an|m=рабо́чий}}
 
-# female [[worker]]
+# {{female equivalent of|ru|рабо́чий}}: [[female]] [[worker]]
 
 ====Declension====
 {{ru-noun-table|рабо́чая|+|a=an}}
@@ -29225,7 +29210,7 @@ From {{inh|ru|sla-pro|*orbyni|gloss=female slave, maid}}, from {{m|sla-pro|*orb�
 ===Noun===
 {{ru-noun+|рабы́ня|a=an|m=раб}}
 
-# female [[slave]]
+# {{female equivalent of|ru|раб}}: [[female]] [[slave]]
 
 ====Declension====
 {{ru-noun-table|рабы́ня|a=an}}
@@ -29254,8 +29239,7 @@ Page 1322 радистка: -------- begin text --------
 ===Noun===
 {{ru-noun+|ради́стка|*|a=an|m=ради́ст}}
 
-# ''(female)'' [[radio]] [[operator]], [[radioman]]
-# ''(female)'' [[telegraphist]], [[telegrapher]]
+# {{female equivalent of|ru|ради́ст}}: [[female]] [[radio]] [[operator]]; [[female]] [[telegraphist]], [[telegrapher]]
 
 ====Declension====
 {{ru-noun-table|ради́стка|*|a=an}}
@@ -29269,8 +29253,8 @@ Page 1323 разбойница: -------- begin text --------
 ===Noun===
 {{ru-noun+|разбо́йница|a=an|m=разбо́йник}}
 
-# a female [[brigand]]
-# {{lb|ru|colloquial}} female [[rogue]], [[wretch]]
+# {{female equivalent of|ru|разбо́йник}}: [[female]] [[brigand]]
+# {{lb|ru|colloquial}} [[female]] [[rogue]], [[wretch]]
 
 ====Declension====
 {{ru-noun-table|разбо́йница|a=an}}
@@ -29288,7 +29272,7 @@ Page 1324 развратница: -------- begin text --------
 ===Noun===
 {{ru-noun+|развра́тница|a=an|m=развра́тник}}
 
-# [[libertine]], [[debauchee]], [[rake]], [[profligate]]
+# {{female equivalent of|ru|развра́тник}}: [[female]] [[libertine]], [[debauchee]], [[profligate]]
 
 ====Declension====
 {{ru-noun-table|развра́тница|a=an}}
@@ -29384,10 +29368,10 @@ Page 1329 ранетка: -------- begin text --------
 * {{ru-IPA|ране́тка}}
 
 ===Etymology 1===
+{{wikipedia|Ранетка (сорт яблок)|Ране́тка|lang=ru}}
 From {{affix|ru|ране́та|-ка}}, from {{cog|fr|reinette||little queen}}.
 
 ====Noun====
-{{wikipedia|Ранетка (сорт яблок)|Ране́тка|lang=ru}}
 {{ru-noun+|ране́тка|*}}
 
 # [[rennet]], [[pippin]] (variety of apple)
@@ -29401,7 +29385,7 @@ From {{affix|ru|ране́та|-ка}}, from {{cog|fr|reinette||little queen}}.
 ====Noun====
 {{ru-noun+|ране́тка|*|a=an}}
 
-# {{lb|ru|slang}} [[ranetka]] (of a sexually [[precocious]] girl)
+# {{lb|ru|slang}} [[ranetka]] {{gl|sexually [[precocious]] girl}}
 #: {{uxi|ru|Моя [[однокла́ссница]] [[На́стя]] — '''ране́тка'''. [[с|С]] 13 лет [[с]] [[пацан|пацана́ми]] [[трахаться|тра́хается]]!|My classmate Nastya is a "ranetka". She’s been screwing boys since she was 13!}}
 
 =====Declension=====
@@ -29433,7 +29417,7 @@ Page 1331 расистка: -------- begin text --------
 ===Noun===
 {{ru-noun+|раси́стка|*|a=an|m=раси́ст}}
 
-# [[racist]] (''female'')
+# {{female equivalent of|ru|раси́ст}}: [[female]] [[racist]]
 
 ====Declension====
 {{ru-noun-table|раси́стка|*|a=an}}
@@ -29517,7 +29501,7 @@ Page 1335 революционерка: -------- begin text --------
 ===Noun===
 {{ru-noun+|революционе́рка|*|a=an|m=революционе́р}}
 
-# female [[revolutionary]]
+# {{female equivalent of|ru|революционе́р}}: [[female]] [[revolutionary]]
 
 ====Declension====
 {{ru-noun-table|революционе́рка|*|a=an}}
@@ -29538,7 +29522,7 @@ Page 1336 регентша: -------- begin text --------
 ===Noun===
 {{ru-noun+|ре́гентша|a=an|m=ре́гент}}
 
-# [[female]] [[regent]]
+# {{female equivalent of|ru|ре́гент}}: [[female]] [[regent]]
 
 ====Declension====
 {{ru-noun-table|ре́гентша|a=an}}
@@ -29554,7 +29538,7 @@ Page 1337 рекламодательница: -------- begin text --------
 ===Noun===
 {{ru-noun+|рекламода́тельница|a=an|m=рекламода́тель}}
 
-# female [[advertiser]] {{gloss|one who advertises}}
+# {{female equivalent of|ru|рекламода́тель}}: [[female]] [[advertiser]] {{gloss|one who advertises}}
 
 ====Declension====
 {{ru-noun-table|рекламода́тельница|a=an}}
@@ -29622,7 +29606,7 @@ Page 1340 ровесница: -------- begin text --------
 ===Noun===
 {{ru-noun+|рове́сница|a=an|m=рове́сник}}
 
-# female [[contemporary]], [[age-mate]] {{gloss|one who is the same age as another}}
+# {{female equivalent of|ru|рове́сник}}: [[female]] [[contemporary]], [[age-mate]] {{gloss|one who is the same age as another}}
 
 ====Declension====
 {{ru-noun-table|рове́сница|a=an}}
@@ -29684,7 +29668,7 @@ Page 1343 родительница: -------- begin text --------
 ===Noun===
 {{ru-noun+|роди́тельница|a=an|m=роди́тель}}
 
-# female [[parent]] {{gloss|person from whom one is descended}}
+# {{female equivalent of|ru|роди́тель}}: [[female]] [[parent]] {{gloss|person from whom one is descended}}
 
 ====Declension====
 {{ru-noun-table|роди́тельница|a=an}}
@@ -29701,7 +29685,7 @@ Page 1344 родственница: -------- begin text --------
 ===Noun===
 {{ru-noun+|ро́дственница|a=an|m=ро́дственник}}
 
-# [[relative]], [[relation]], [[kinswoman]] (member of one's family)
+# {{female equivalent of|ru|ро́дственник}}: [[female]] [[relative]], [[relation]], [[kinswoman]] {{gl|member of one's family}}
 
 ====Declension====
 {{ru-noun-table|ро́дственница|a=an}}
@@ -29766,13 +29750,13 @@ Page 1347 россиянка: -------- begin text --------
 ===Noun===
 {{ru-noun+|россия́нка|*|a=an|m=россия́нин}}
 
-# a female who is native to [[Russia]], or has Russian citizenship, regardless of ethnicity (compare with [[русская]])
+# {{female equivalent of|ru|россия́нин}}: [[female]] who is native to [[Russia]], or has Russian citizenship, regardless of ethnicity
 
 ====Declension====
 {{ru-noun-table|россия́нка|*|a=an}}
 
 ====Related terms====
-* {{l|ru|ру́сский}}, {{l|ru|ру́сская}}
+* {{l|ru|ру́сский||ethnic Russian}}, {{l|ru|ру́сская||female ethnic Russian}}
 * {{l|ru|росси́йский}}
 * {{l|ru|Росси́я}}
 
@@ -29787,7 +29771,7 @@ Page 1348 ростовщица: -------- begin text --------
 ===Noun===
 {{ru-noun+|ростовщи́ца|a=an|m=ростовщи́к}}
 
-# female [[usurer]]
+# {{female equivalent of|ru|ростовщи́к}}: [[female]] [[usurer]]
 
 ====Declension====
 {{ru-noun-table|ростовщи́ца|a=an}}
@@ -29839,8 +29823,7 @@ Page 1350 руководительница: -------- begin text --------
 ===Noun===
 {{ru-noun+|руководи́тельница|a=an|m=руководи́тель}}
 
-# [[chairwoman]], (female) [[head]]
-# (female) [[leader]]
+# {{female equivalent of|ru|руководи́тель}}: [[chairwoman]], [[female]] [[head]]; [[female]] [[leader]]
 
 ====Declension====
 {{ru-noun-table|руководи́тельница|a=an}}
@@ -29900,7 +29883,7 @@ Page 1353 румынка: -------- begin text --------
 ===Noun===
 {{ru-noun+|румы́нка|*|a=an|m=румы́н}}
 
-# female [[Romanian]] {{gloss|person from Romania}}
+# {{female equivalent of|ru|румы́н}}: [[female]] [[Romanian]] {{gloss|person from Romania}}
 
 ====Declension====
 {{ru-noun-table|румы́нка|*|a=an}}
@@ -29925,7 +29908,7 @@ From {{inh|ru|orv|русалиꙗ}}, {{der|ru|cu|роусалиѩ}}, from {{der|
 ===Noun===
 {{ru-noun+|руса́лка|*|a=an}}
 
-# [[rusalka]]; a Slavic [[female]] [[water]] [[spirit]] associated with death by [[drowning]] and with [[w:Green week|Green Week]] traditions occurring around the time of [[Pentecost]].
+# [[rusalka]]; a Slavic [[female]] [[water]] [[spirit]] associated with death by [[drowning]] and with [[w:Green week|Green Week]] traditions occurring around the time of [[Pentecost]]
 # {{q|by extension}} [[nymph]], [[mermaid]] {{q|in the context of Western fantasy and mythology}}
 
 ====Declension====
@@ -29955,12 +29938,15 @@ Page 1355 русская: -------- begin text --------
 # {{inflection of|ru|ру́сский||f|nom|s}}
 
 ===Noun===
-{{ru-noun+|ру́сская|+|a=an}}
+{{ru-noun+|ру́сская|+|a=an|m=ру́сский}}
 
-# [[Russian]] (''female''), an ethnic Russian person (for other ethnicities living in Russia, see [[россиянин]], [[россиянка]])
+# {{female equivalent of|ru|ру́сский}}: [[female]] [[ethnic]] [[Russian]]
 
 ====Declension====
 {{ru-noun-table|ру́сская|+|a=an}}
+
+====Usage notes====
+* For other ethnicities living in Russia, see {{m|ru|россия́нин}}, {{m|ru|россия́нка}}.
 
 ====Related terms====
 * {{l|ru|ру́сский}}
@@ -30197,9 +30183,9 @@ Page 1367 рыболовка: -------- begin text --------
 * {{ru-IPA|рыболо́вка}}
 
 ===Noun===
-{{ru-noun+|рыболо́вка|*|a=an}}
+{{ru-noun+|рыболо́вка|*|a=an|m=рыболо́в}}
 
-# female [[fisher]]
+# {{female equivalent of|ru|рыболо́в}}: [[female]] [[fisher]], [[fisherwoman]]
 
 ====Declension====
 {{ru-noun-table|рыболо́вка|*|a=an}}
@@ -31697,7 +31683,7 @@ Page 1433 словенка: -------- begin text --------
 ===Noun===
 {{ru-noun+|слове́нка|*|a=an|m=слове́нец}}
 
-# [[Slovene]] girl or woman
+# [[Slovene]] [[woman]] or [[girl]]
 
 ====Declension====
 {{ru-noun-table|слове́нка|*|a=an}}
@@ -33336,7 +33322,7 @@ Page 1500 таджичка: -------- begin text --------
 ===Noun===
 {{ru-noun+|таджи́чка|*|a=an|m=таджи́к}}
 
-# [[Tajik]] girl or woman
+# [[Tajik]] [[woman]] or [[girl]]
 
 ====Declension====
 {{ru-noun-table|таджи́чка|*|a=an}}
@@ -34130,7 +34116,7 @@ Page 1537 трусиха: -------- begin text --------
 ===Noun===
 {{ru-noun+|труси́ха|a=an}}
 
-# {{lb|ru|colloquial}} a [[cowardly]] [[girl]] or [[woman]]
+# {{lb|ru|colloquial}} a [[cowardly]] [[woman]] or [[girl]]
 
 ====Declension====
 {{ru-noun-table|труси́ха|a=an}}
@@ -34576,7 +34562,7 @@ Page 1557 узбечка: -------- begin text --------
 ===Noun===
 {{ru-noun+|узбе́чка|*|a=an|m=узбе́к}}
 
-# [[Uzbek]] girl or woman
+# [[Uzbek]] [[woman]] or [[girl]]
 
 ====Declension====
 {{ru-noun-table|узбе́чка|*|a=an}}
@@ -35221,7 +35207,7 @@ Page 1584 фурия: -------- begin text --------
 
 ===Pronunciation===
 * {{ru-IPA|фу́рия}}
-*{{hyph|ru|фу́|ри|я}}
+* {{hyph|ru|фу́|ри|я}}
 
 ===Noun===
 {{ru-noun+|фу́рия|a=an}}
@@ -35760,7 +35746,7 @@ Page 1607 цыганка: -------- begin text --------
 ===Noun===
 {{ru-noun+|цыга́нка|*|a=an|m=цыга́н}}
 
-# [[Gypsy]]/[[Romani]] girl or woman
+# [[Gypsy]]/[[Romani]] [[woman]] or [[girl]]
 
 ====Declension====
 {{ru-noun-table|цыга́нка|*|a=an}}
@@ -36173,7 +36159,7 @@ Page 1625 чернушка: -------- begin text --------
 ===Noun===
 {{ru-noun+|черну́шка|*|a=ai}}
 
-# girl or woman with a rich, dark [[complexion]], dark-brown eyes and black hair
+# [[woman]] or [[girl]] with a rich, dark [[complexion]], dark-brown eyes and black hair
 # [[black cumin]] herb or flower (''[[Nigella sativa]]''), also called {{vern|Roman coriander}}, [[black caraway]], {{vern|black seed}}, {{vern|nutmeg flower}} or {{vern|love in the mist}}
 # mushroom of ''[[Russula adusta]]'' species
 
@@ -36315,7 +36301,7 @@ Borrowed from {{bor|ru|cs|Češka}} or can be construed as {{affix|ru|чех|-к
 ===Noun===
 {{ru-noun+|че́шка|*|a=ai|m=чех}}
 
-# {{lb|ru|animate}} [[Czech]] ''(girl or woman)''
+# {{lb|ru|animate}} [[Czech]] [[woman]] or [[girl]]
 # {{lb|ru|inanimate}} a shoe used in [[gymnastics]] or [[ballet]] (''usually plural'')
 [[Image:Cheshki01.gif|thumb|чешки (gym or ballet shoes)]]
 
@@ -36779,7 +36765,7 @@ Page 1653 шведка: -------- begin text --------
 ===Noun===
 {{ru-noun+|шве́дка|*|a=an|m=швед}}
 
-# [[Swede]] (Swedish girl or woman)
+# [[female]] [[Swede]], [[Swedish]] [[woman]] or [[girl]]
 
 ====Declension====
 {{ru-noun-table|шве́дка|*|a=an}}
