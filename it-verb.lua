@@ -273,7 +273,7 @@ local lang = require("Module:languages").getByCode("it")
 local m_string_utilities = require("Module:string utilities")
 local m_links = require("Module:links")
 local m_table = require("Module:table")
-local iut = require("Module:inflection utilities")
+local iut = require("Module:User:Benwing2/inflection utilities")
 
 local force_cat = false -- set to true for debugging
 local check_for_red_links = false -- set to false for debugging
@@ -300,6 +300,10 @@ local GR = u(0x0300)
 local V = "[aeiou]"
 local NV = "[^aeiou]"
 local AV = "[àèéìòóù]"
+local MAV = "[aeiouàèéìòóù]" -- maybe-accented vowel
+local NMAV = "[^aeiouàèéìòóù]" -- not maybe-accented vowel
+
+local PRESERVE_ACCENT = u(0xFFF0)
 
 local function link_term(term, face)
 	return m_links.full_link({ lang = lang, term = term }, face)
@@ -370,6 +374,27 @@ local function add_links(form, multiword_only)
 		end
 	end
 	return form
+end
+
+
+-- Convert links around accented words to two-part links without extra accents.
+local function convert_accented_links(text)
+	return rsub(text, "%[%[([^%[%]|]+)%]%]",
+		function(linktext)
+			if rfind(linktext, "^.*" .. MAV .. ".*" .. AV .. "$") then
+				-- final accented vowel with preceding vowel; keep accent
+				return linktext
+			elseif rfind(linktext, PRESERVE_ACCENT) then
+				return rsub(linktext, PRESERVE_ACCENT, "")
+			else
+				local unaccented = remove_accents(linktext)
+				if unaccented == linktext then
+					return linktext
+				else
+					return unaccented .. "|" .. linktext
+				end
+			end
+		end)
 end
 
 
@@ -507,7 +532,21 @@ end
 local function copy_forms(base, slot, forms)
 	-- FIXME, is this needed? This is the same as insert_forms() but clones `forms`.
 	-- Probably not needed as I don't think we ever side-effect existing forms.
-	insert_forms(base.forms, slot, iut.map_forms(forms, iut.identity))
+	insert_forms(base, slot, iut.map_forms(forms, iut.identity))
+end
+
+
+local function general_list_form_contains_form(list, form, process_form)
+	for _, formobj in ipairs(list) do
+		local formobj_form = formobj.form
+		if process_form then
+			formobj_form = process_form(formobj_form)
+		end
+		if formobj_form == form then
+			return true
+		end
+	end
+	return false
 end
 
 
@@ -546,14 +585,9 @@ local function process_specs(base, destforms, slot, specs, is_finite, special_ca
 					prespec = prespec:gsub("%*", "")
 				end
 				local unaccented_form
-				if rfind(form, "^.*" .. V .. ".*" .. AV .. "$") then
-					-- final accented vowel with preceding vowel; keep accent
-					unaccented_form = form
-				elseif rfind(form, AV .. "$") and preserve_monosyllabic_accent then
-					unaccented_form = form
-					qualifiers = iut.combine_footnotes(qualifiers, {"[with written accent]"})
-				else
-					unaccented_form = remove_accents(form)
+				if preserve_monosyllabic_accent and rfind(form, "^" .. NMAV .. "*" .. AV .. "$")  then
+					-- final accented vowel without preceding vowel, and "*" before form; add PRESERVE_ACCENT
+					form = PRESERVE_ACCENT .. form
 				end
 				if syntactic_gemination == "*" then
 					qualifiers = iut.combine_footnotes(qualifiers, {"[with following syntactic gemination]"})
@@ -562,14 +596,15 @@ local function process_specs(base, destforms, slot, specs, is_finite, special_ca
 				elseif syntactic_gemination ~= "" then
 					error("Decorated form '" .. decorated_form .. "' has too many asterisks after it, use '*' for syntactic gemination and '**' for optional syntactic gemination")
 				end
-				form = "[[" .. unaccented_form .. "|" .. form .. "]]"
-				if is_finite then
-					if unaccented_form == "ho" then
-						form = base.verb.finite_pref_ho .. form
-					else
-						form = base.verb.finite_pref .. form
-					end
-				end
+				--FIXME: Move elsewhere.
+				--form = "[[" .. unaccented_form .. "|" .. form .. "]]"
+				--if is_finite then
+				--	if unaccented_form == "ho" then
+				--		form = base.verb.finite_pref_ho .. form
+				--	else
+				--		form = base.verb.finite_pref .. form
+				--	end
+				--end
 			end
 			iut.insert_form(destforms, slot, {form = form, footnotes = qualifiers})
 		end
@@ -769,7 +804,7 @@ local function do_ending_stressed_inf(base)
 		accented = rsub(accented, "e$", "")
 	end
 	local linked = "[[" .. base.verb.verb .. "|" .. accented .. "]]" .. base.verb.linked_suf
-	iut.insert_form(base.forms, "lemma_linked", {form = linked})
+	iut.insert_form(base.forms, "inf_linked", {form = linked})
 end
 
 
@@ -827,7 +862,7 @@ local function do_root_stressed_inf(base, specs)
 
 	process_specs(base, base.principal_part_forms, "root_stressed_stem", specs, false, function(base, form)
 		return root_stressed_inf_special_case(base, form, "do stem") end)
-	process_specs(base, base.forms, "lemma_linked", specs, false, function(base, form)
+	process_specs(base, base.forms, "inf_linked", specs, false, function(base, form)
 		return root_stressed_inf_special_case(base, form, false) end)
 end
 
@@ -836,81 +871,12 @@ local function create_lemma_forms(base)
 	-- Do the lemma and lemma_linked forms. When do_root_stressed_inf is called, this also sets
 	-- base.principal_part_forms.root_stressed_stem, which is needed by add_present_indic(), so we have to
 	-- do this before conjugating the present indicative.
-	iut.insert_form(base.forms, "lemma", {form = base.lemma})
+	iut.insert_form(base.forms, "inf", {form = base.lemma})
 	-- Add linked version of lemma for use in head=.
 	if base.principal_part_specs.root_stressed_inf then
 		do_root_stressed_inf(base, base.principal_part_specs.root_stressed_inf)
 	else
 		do_ending_stressed_inf(base)
-	end
-end
-
-
-local function general_list_form_contains_form(list, form, process_form)
-	for _, formobj in ipairs(list) do
-		local formobj_form = formobj.form
-		if process_form then
-			formobj_form = process_form(formobj_form)
-		end
-		if formobj_form == form then
-			return true
-		end
-	end
-	return false
-end
-
-
-local function handle_row_overrides_for_row(base, row_slot)
-	if base.row_override_specs[row_slot] then
-		for persnum, specs in pairs(base.row_override_specs[row_slot]) do
-			local slot = row_slot .. persnum
-			local existing_generated_form = base.forms[slot]
-			if not existing_generated_form then
-				error("Internal error: Explicit row spec for slot " .. slot .. " being processed and no "
-					.. "default-generated forms available")
-			end
-			local function row_override_special_case(base, form)
-				if form == "+" then
-					return existing_generated_form
-				end
-				if not general_list_form_contains_form(existing_generated_form, form) then
-					base.is_irreg[row_slot] = true
-				end
-				return form
-			end
-			base.forms[slot] = nil -- erase existing form before generating override
-			process_specs(base, base.forms, slot, specs, "finite", row_override_special_case)
-		end
-	end
-end
-
-
-local function handle_single_overrides_for_row(base, row_slot)
-	local rowspec = row_conjugation_map[row_slot]
-	if not rowspec then
-		error("Internal error: No row conjugation spec for " .. row_slot)
-	end
-
-	for _, persnum in ipairs(rowspec.persnums) do
-		local slot = row_slot .. persnum
-		if base.single_override_specs[slot] then
-			local existing_generated_form = base.forms[slot]
-			if not existing_generated_form then
-				error("Internal error: Explicit override spec for slot " .. slot .. " being processed and no "
-					.. "default-generated forms available")
-			end
-			local function override_special_case(base, form)
-				if form == "+" then
-					return existing_generated_form
-				end
-				if not general_list_form_contains_form(existing_generated_form, form) then
-					base.is_irreg[row_slot] = true
-				end
-				return form
-			end
-			base.forms[slot] = nil -- erase existing form before generating override
-			process_specs(base, base.forms, slot, base.single_override_specs[slot], "finite", override_special_case)
-		end
 	end
 end
 
@@ -1092,7 +1058,7 @@ end
 local function add_negative_imperative(base)
 	-- FIXME: needs changes for reflexive verbs
 	for _, persnum in ipairs({"2s", "3s", "1p", "2p", "3p"}) do
-		local from = persnum == "2s" and "lemma" or "imp" .. persnum
+		local from = persnum == "2s" and "inf" or "imp" .. persnum
 		local to = "negimp" .. persnum
 		insert_forms(base, to, iut.map_forms(base.forms[from], function(form)
 			if base.args.noautolinkverb then
@@ -1342,14 +1308,11 @@ end
 local all_verb_slots = {
 	{"inf", "inf"},
 	{"inf_linked", "inf"},
-	{"ger", "ger"},
-	{"presp", "pres|part"},
+	-- FIXME, needs to be handled specially
+	{"aux", "-"},
 }
 
-local overridable_participle_slot_set = {
-	["ger"] = true,
-	["presp"] = true,
-}
+local overridable_participle_slot_set = {}
 
 local overridable_slot_set = m_table.shallowcopy(overridable_participle_slot_set)
 
@@ -1369,6 +1332,61 @@ for _, spec in ipairs(row_conjugation) do
 		end
 	end
 end
+
+local function handle_row_overrides_for_row(base, row_slot)
+	if base.row_override_specs[row_slot] then
+		for persnum, specs in pairs(base.row_override_specs[row_slot]) do
+			local slot = row_slot .. persnum
+			local existing_generated_form = base.forms[slot]
+			if not existing_generated_form then
+				error("Internal error: Explicit row spec for slot " .. slot .. " being processed and no "
+					.. "default-generated forms available")
+			end
+			local function row_override_special_case(base, form)
+				if form == "+" then
+					return existing_generated_form
+				end
+				if not general_list_form_contains_form(existing_generated_form, form) then
+					base.is_irreg[row_slot] = true
+				end
+				return form
+			end
+			base.forms[slot] = nil -- erase existing form before generating override
+			process_specs(base, base.forms, slot, specs, "finite", row_override_special_case)
+		end
+	end
+end
+
+
+local function handle_single_overrides_for_row(base, row_slot)
+	local rowspec = row_conjugation_map[row_slot]
+	if not rowspec then
+		error("Internal error: No row conjugation spec for " .. row_slot)
+	end
+
+	for _, persnum in ipairs(rowspec.persnums) do
+		local slot = row_slot .. persnum
+		if base.single_override_specs[slot] then
+			local existing_generated_form = base.forms[slot]
+			if not existing_generated_form then
+				error("Internal error: Explicit override spec for slot " .. slot .. " being processed and no "
+					.. "default-generated forms available")
+			end
+			local function override_special_case(base, form)
+				if form == "+" then
+					return existing_generated_form
+				end
+				if not general_list_form_contains_form(existing_generated_form, form) then
+					base.is_irreg[row_slot] = true
+				end
+				return form
+			end
+			base.forms[slot] = nil -- erase existing form before generating override
+			process_specs(base, base.forms, slot, base.single_override_specs[slot], "finite", override_special_case)
+		end
+	end
+end
+
 
 local function conjugate_row(base, rowslot)
 	local rowconj = row_conjugation_map[rowslot]
@@ -1397,8 +1415,8 @@ local function conjugate_row(base, rowslot)
 	end
 
 	if type(rowconj.conjugate) == "table" then
-		if #rowconj.conjugate ~= #rowconj.persnum then
-			error("Internal error: Expected " .. #rowconj.persnum .. " elements for row slot '" .. rowslot
+		if #rowconj.conjugate ~= #rowconj.persnums then
+			error("Internal error: Expected " .. #rowconj.persnums .. " elements for row slot '" .. rowslot
 				.. ", but saw " .. #rowconj.conjugate)
 		end
 		local stem = iut.map_forms(base.principal_part_forms[rowslot], function(form)
@@ -1409,8 +1427,8 @@ local function conjugate_row(base, rowslot)
 			end
 			return rsub(form, rowconj.principal_part_ending .. "$", "")
 		end)
-		for _, persnum in ipairs(#rowconj.persnum) do
-			add(base, rowconj.prefix .. "_" .. rowconj.persnum[persnum], stem, rowconj.conjugate[persnum])
+		for _, persnum in ipairs(rowconj.persnums) do
+			add(base, rowslot .. persnum, stem, rowconj.conjugate[persnum])
 		end
 	else
 		rowconj.conjugate(base, rowslot)
@@ -2149,13 +2167,13 @@ local function compute_categories_and_annotation(alternant_multiword_spec, from_
 	alternant_multiword_spec.categories = {}
 	local ann = {}
 	alternant_multiword_spec.annotation = ann
+	ann.conj = {}
 	ann.irreg = {}
 	ann.defective = {}
-	ann.vowel_alt = {}
-	ann.cons_alt = {}
+	ann.aux = {}
 
 	local multiword_lemma = false
-	for _, form in ipairs(alternant_multiword_spec.forms.lemma) do
+	for _, form in ipairs(alternant_multiword_spec.forms.inf) do
 		if form.form:find(" ") then
 			multiword_lemma = true
 			break
@@ -2181,7 +2199,7 @@ end
 
 
 local function show_forms(alternant_multiword_spec)
-	local lemmas = iut.map_forms(alternant_multiword_spec.forms.lemma,
+	local lemmas = iut.map_forms(alternant_multiword_spec.forms.inf,
 		remove_reflexive_indicators)
 	alternant_multiword_spec.lemmas = lemmas -- save for later use in make_table()
 
@@ -2209,7 +2227,7 @@ local basic_table = [=[
 {\op}| style="background:#F0F0F0;border-collapse:separate;border-spacing:2px;width:100%" class="inflection-table"
 |-
 ! style="background:#e2e4c0" | <span title="infinito">infinitive</span>
-| {lemma}
+| {inf}
 |-
 ! colspan="2" style="background:#e2e4c0" | <span title="verbo ausiliare">auxiliary verb</span>
 | {aux}
@@ -2422,10 +2440,10 @@ function export.do_generate_forms(parent_args, from_headword, def)
 	}
 	iut.inflect_multiword_or_alternant_multiword_spec(alternant_multiword_spec, inflect_props)
 
-	-- Remove redundant brackets around entire forms.
+	-- Convert accented forms to two-part forms and remove PRESERVE_ACCENT characters.
 	for slot, forms in pairs(alternant_multiword_spec.forms) do
 		for _, form in ipairs(forms) do
-			form.form = com.strip_redundant_links(form.form)
+			form.form = convert_accented_links(form.form)
 		end
 	end
 
