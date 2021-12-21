@@ -383,23 +383,23 @@ local function convert_accented_links(text)
 		function(linktext)
 			if rfind(linktext, "^.*" .. MAV .. ".*" .. AV .. "$") then
 				-- final accented vowel with preceding vowel; keep accent
-				return linktext
 			elseif rfind(linktext, PRESERVE_ACCENT) then
-				return rsub(linktext, PRESERVE_ACCENT, "")
+				linktext = rsub(linktext, PRESERVE_ACCENT, "")
 			else
 				local unaccented = remove_accents(linktext)
 				if unaccented == linktext then
-					return linktext
+					-- keep linktext
 				else
-					return unaccented .. "|" .. linktext
+					linktext = unaccented .. "|" .. linktext
 				end
 			end
+			return "[[" .. linktext .. "]]"
 		end)
 end
 
 
 local function strip_spaces(text)
-	return text:gsub("^%s*(.-)%s*", "%1")
+	return rsub(text, "^%s*(.-)%s*", "%1")
 end
 
 
@@ -462,16 +462,13 @@ end
 
 
 local function undo_escape_form(form)
-	-- assign to var to throw away second value
-	local newform = form:gsub("⦃⦃", "<"):gsub("⦄⦄", ">")
-	return newform
+	return rsub(rsub(form, "⦃⦃", "<"), "⦄⦄", ">")
 end
 
 
 local function remove_reflexive_indicators(form)
 	-- assign to var to throw away second value
-	local newform = form:gsub("⦃⦃.-⦄⦄", "")
-	return newform
+	return rsub(form, "⦃⦃.-⦄⦄", "")
 end
 
 
@@ -492,7 +489,7 @@ local function combine_stem_ending(base, slot, stem, ending)
 
 	-- Two unstressed i's coming together compress to one.
 	if ending:find("^i") then
-		stem = stem:gsub("i$", "")
+		stem = rsub(stem, "i$", "")
 	end
 
 	-- Remove accents from stem if ending is accented.
@@ -569,20 +566,20 @@ local function process_specs(base, destforms, slot, specs, is_finite, special_ca
 			if form ~= "-" then
 				if prespec:find("!!") then
 					qualifiers = iut.combine_footnotes({"[elevated style]"}, qualifiers)
-					prespec = prespec:gsub("!!", "")
+					prespec = rsub(prespec, "!!", "")
 				end
 				if prespec:find("!") then
 					qualifiers = iut.combine_footnotes({"[careful style]"}, qualifiers)
-					prespec = prespec:gsub("!", "")
+					prespec = rsub(prespec, "!", "")
 				end
 				if prespec:find("#") then
 					qualifiers = iut.combine_footnotes({"[traditional]"}, qualifiers)
-					prespec = prespec:gsub("#", "")
+					prespec = rsub(prespec, "#", "")
 				end
 				local preserve_monosyllabic_accent
 				if prespec:find("%*") then
 					preserve_monosyllabic_accent = true
-					prespec = prespec:gsub("%*", "")
+					prespec = rsub(prespec, "%*", "")
 				end
 				local unaccented_form
 				if preserve_monosyllabic_accent and rfind(form, "^" .. NMAV .. "*" .. AV .. "$")  then
@@ -907,7 +904,7 @@ local function pres_special_case(base, form)
 	else
 		local unaccented_form = remove_accents(form)
 		if not general_list_form_contains_form(base.verb.pres, unaccented_form, remove_accents)
-			and not general_list_form_contains_form(base.verb.isc_pres, unaccented_form, remove_accents) then
+			and (base.isc_pres and not general_list_form_contains_form(base.verb.isc_pres, unaccented_form, remove_accents)) then
 			base.is_irreg.pres = true
 		end
 		return form
@@ -925,11 +922,11 @@ local function pres3s_special_case(base, form)
 		return base.verb.isc_pres3s
 	elseif form == "-" then
 		return form
-	elseif rfind(form, "^" .. AV .. "[+-]?$") then
+	elseif is_single_vowel_spec(form) then
 		check_not_null(base, base.verb.pres3s, form, principal_part_desc)
 		return iut.map_forms(base.verb.pres3s, function(defform)
 			local pres3s, final_vowel = rmatch(defform, "^(.*)([ae])$")
-			if not pres then
+			if not pres3s then
 				error("Internal error: Default third-person singular present '" .. defform .. "' doesn't end in -a or -e")
 			end
 			return apply_vowel_spec(pres3s, defform, "default third-person singular present", form) .. final_vowel
@@ -950,7 +947,9 @@ end
 -- Generate the present indicative. See "RULES FOR CONJUGATION" near the top of the file for the detailed rules.
 local function add_present_indic(base, prefix)
 	process_specs(base, base.principal_part_forms, "pres", base.principal_part_specs.pres, "finite", pres_special_case)
-	process_specs(base, base.principal_part_forms, "pres3s", base.principal_part_specs.pres3s, "finite", pres3s_special_case)
+	if base.principal_part_specs.pres3s then
+		process_specs(base, base.principal_part_forms, "pres3s", base.principal_part_specs.pres3s, "finite", pres3s_special_case)
+	end
 
 	local function addit(pers, stems, endings)
 		add(base, prefix .. pers, stems, endings)
@@ -975,7 +974,7 @@ local function add_present_indic(base, prefix)
 			return rsub(form, "[ae]$", "")
 		end)
 	else
-		pres23s_form = base.explicit_non_default_stem_spec and base.verb.stem or base.root_stressed_stem or pres1s_stem
+		pres23s_stem = base.explicit_non_default_stem_spec and base.verb.stem or base.root_stressed_stem or pres1s_stem
 	end
 	addit("2s", pres23s_stem, "i")
 	addit("3s", pres23s_stem, base.conj_vowel == "à" and "a" or "e")
@@ -1083,7 +1082,7 @@ end
 local function add_past_historic(base, prefix)
 	for _, form in ipairs(base.principal_part_forms.phis) do
 		local function add_phis(pref, s1, s2, s3, p1, p2, p3)
-			local newform = {form = pref, footnotes = form.footnotes}
+			local newform = form.footnotes and iut.convert_to_general_list_form(pref, form.footnotes) or pref
 			local function addit(pers, endings)
 				add(base, prefix .. pers, newform, endings)
 			end
@@ -1144,7 +1143,7 @@ local function generate_future_principal_part(base, suffix)
 			end
 		end)
 	else
-		return base.verb.verb:gsub("e$", suffix)
+		return rsub(base.verb.verb, "e$", suffix)
 	end
 end
 
@@ -1411,7 +1410,7 @@ local function conjugate_row(base, rowslot)
 
 		local principal_part_specs = base.principal_part_specs[rowslot] or rowconj.not_defaulted and {{form = "-"}}
 			or {{form = "+"}}
-		process_specs(base, base.principal_part_forms, rowslot, specs, rowslot ~= "imp", principal_part_special_case)
+		process_specs(base, base.principal_part_forms, rowslot, principal_part_specs, rowslot ~= "imp", principal_part_special_case)
 	end
 
 	if type(rowconj.conjugate) == "table" then
@@ -1427,8 +1426,8 @@ local function conjugate_row(base, rowslot)
 			end
 			return rsub(form, rowconj.principal_part_ending .. "$", "")
 		end)
-		for _, persnum in ipairs(rowconj.persnums) do
-			add(base, rowslot .. persnum, stem, rowconj.conjugate[persnum])
+		for i, persnum in ipairs(rowconj.persnums) do
+			add(base, rowslot .. persnum, stem, rowconj.conjugate[i])
 		end
 	else
 		rowconj.conjugate(base, rowslot)
@@ -1472,14 +1471,14 @@ local function add_forms_with_clitic(base, base_slot, pronouns, do_combined_slot
 			-- Some further special cases.
 			if base_slot == "imp_1p" and (pronoun == "nos" or pronoun == "os") then
 				-- Final -s disappears: sintamos + nos -> sintámonos, sintamos + os -> sintámoos
-				cliticized_verb = reaccented_verb:gsub("s$", "") .. pronoun
+				cliticized_verb = rsub(reaccented_verb, "s$", "") .. pronoun
 			elseif base_slot == "imp_2p" and pronoun == "os" then
 				-- Final -d disappears, which may cause an accent to be required:
 				-- haced + os -> haceos, sentid + os -> sentíos
 				if reaccented_verb:find("id$") then
-					cliticized_verb = reaccented_verb:gsub("id$", "íos")
+					cliticized_verb = rsub(reaccented_verb, "id$", "íos")
 				else
-					cliticized_verb = reaccented_verb:gsub("d$", "os")
+					cliticized_verb = rsub(reaccented_verb, "d$", "os")
 				end
 			else
 				cliticized_verb = reaccented_verb .. pronoun
