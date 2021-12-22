@@ -221,52 +221,26 @@ EXAMPLES OF CONJUGATION:
 
 FIXME:
 
-1. Support third-person only verbs.
-2. Support reflexive verbs.
-3. Support pronominal verbs.
-4. Support calling from [[Module:it-headword]].
-5. Implement categories.
-6. Implement replace_reflexive_indicators().
-7. Disallow + for present.
-]=]
-
---[=[
-
-FIXME (OLD FOR SPANISH):
-
-1. Implement no_pres_stressed for aterir, garantir. (NOTE: Per RAE, garantir used in all forms in Argentina/Uruguay.) [DONE]
-2. Support concluyo. [DONE]
-3. Fixes for veo -> ve vs. preveo -> prevé. [DONE]
-4. Various more irregular verbs, e.g. predecir, redecir, bendecir, maldecir. [DONE]
-5. Raising of e -> i, o -> u before -iendo, -ió, etc. occurs only in -ir verbs. [DONE]
-6. Raising of e -> i, o -> u happens before subjunctive -amos, -áis in -ir verbs. [DONE]
-7. Implement reflexive verbs. [DONE]
-8. Implement categories. [DONE]
-9. Implement show_forms. [DONE]
-10. Reconcile stems.vowel_alt from irregular verbs with vowel_alt from indicators. May require
-    moving the irregular-verb handling code in construct_stems() into detect_indicator_spec(). [DONE]
-11. Implement make_table. [DONE]
-12. Vowel alternation should show u-ue (jugar), i-ie (adquirir), e-í (reír) alternations specially. [DONE]
-13. Handle linking of multiword forms as is done in [[Module:es-headword]]. [DONE]
-14. Implement comparison against previous module. [DONE]
-15. Implement categorization of irregularities for individual tenses.
-16. Support nocomb=1. [DONE]
-17. (Possibly) display irregular forms in a different color, as with the old module.
-18. (Possibly) display a "rule" description indicating the types of alternations.
-19. Implement replace_reflexive_indicators().
-20. Implement verbs with attached clitics e.g. [[pasarlo]], [[corrérsela]]. [DONE]
-21. When footnote + tú/vos notation, add a space before tú/vos.
-22. Fix [[erguir]] so ie-i vowel alternation produces ye- at beginning of word, similarly for errar. Also allow
-    multiple vowel alternation specs in irregular verbs, for errar. Finally, ie should show as e-ye for errar
-    and as e-ye-i for erguir. [DONE]
-23. Figure out why red links in combined forms show up as black not red.
-24. Consider including alternative superseded forms of verbs like [[ciar]] (e.g. pret_3s = cio, ció with footnote).
-25. Allow conjugation of suffixes e.g. -ir, -ecer; need to fix in [[Module:inflection utilities]]. [DONE]
-26. Allow specification of stems esp. so that footnotes can be hung off them; use + for the default.
-27. Don't remove monosyllabic accents when conjugating suffixes. [DONE]
-28. If multiword expression with no <>, add <> after first word, as with [[Module:es-headword]]. [DONE]
-29. (Possibly) link the parts of a reflexive or cliticized infinitive, as done in [[Module:es-headword]]. [DONE]
-30. Final fixes to allow [[Module:es-headword]] to use this module. [DONE]
+1. Fix inf_linked and lemma_linked to work like in [[Module:es-verb]].
+2. Finish support for reflexive and pronominal verbs.
+3. Finish support for reflexive and pronominal imperatives.
+4. Finish support for negative imperatives.
+3. Fix handling of third-only verbs; require that irregular forms be specified in the first person.
+4. Support defective verbs specified using e.g. redire<a/rièdo,-,redìto.imperf:-.fut:-.impsub:->.
+   Include categorization; but if row overrides or single overrides of all forms given, don't categorize
+   as defective for that row.
+5. Fix handling of aux; snarf code from [[Module:de-verb]] to handle aux with multiword expressions.
+6. Add automatic support for common irregular verbs: [[essere]], [[avere]], [[andare]], [[fare]], [[dare]],
+   [[dire]], [[venire]], [[vedere]], [[tenere]], [[bere]], etc. Should make combinations of these verbs
+   with clitics, and multiword expressions with these verbs, easier to handle.
+7. Add support for calling from {{it-verb}} in [[Module:it-headword]].
+8. Throw an error if forms missing accents are specified (perhaps except with some special signal, to make
+   it easier to port the old [[Module:it-conj]]).
+9. Consider adding combined clitic tables like in [[Module:es-verb]].
+10. Consider adding automatic support for prefixed -fare verbs.
+11. Consider displaying irregular forms in a different color, as with the old [[Module:es-conj]], or adding
+   a triangle next to them, as with [[Module:ru-verb]].
+12. Consider supporting replace_reflexive_indicators().
 --]=]
 
 local lang = require("Module:languages").getByCode("it")
@@ -305,50 +279,84 @@ local NMAV = "[^aeiouàèéìòóù]" -- not maybe-accented vowel
 
 local PRESERVE_ACCENT = u(0xFFF0)
 
-local function link_term(term, face)
-	return m_links.full_link({ lang = lang, term = term }, face)
-end
+local full_person_number_list = {"1s", "2s", "3s", "1p", "2p", "3p"}
+local imp_person_number_list = {"2s", "3s", "1p", "2p", "3p"}
 
 -- Used to create the accelerator entries in all_verb_slots.
 local person_number_tag_prefix = {
 	["1s"] = "1|s|",
 	["2s"] = "2|s|",
 	["3s"] = "3|s|",
-	["12s"] = "1//2|s|",
-	["123s"] = "1//2//3|s|",
 	["1p"] = "1|p|",
 	["2p"] = "2|p|",
 	["3p"] = "3|p|",
 	[""] = "", -- used for non-finite forms such as the past participle
 }
 
-person_number_to_reflexive_pronoun = {
-	["1s"] = "mi",
-	["2s"] = "ti",
-	["3s"] = "si",
-	["1p"] = "ci",
-	["2p"] = "vi",
-	["3p"] = "si",
+substitutable_reflexive_pronoun = {
+	["si"] = {
+		["1s"] = "[[mi]]",
+		["2s"] = "[[ti]]",
+		["3s"] = "[[si]]",
+		["1p"] = "[[ci]]",
+		["2p"] = "[[vi]]",
+		["3p"] = "[[si]]",
+		["nf"] = "[[si]]",
+	},
+	["se"] = {
+		["1s"] = "[[me]]",
+		["2s"] = "[[te]]",
+		["3s"] = "[[se]]",
+		["1p"] = "[[ce]]",
+		["2p"] = "[[ve]]",
+		["3p"] = "[[se]]",
+		["nf"] = "[[se]]",
+	},
+	["si_no_ci"] = {
+		["1s"] = "[[mi]]",
+		["2s"] = "[[ti]]",
+		["3s"] = "[[si]]",
+		["1p"] = "",
+		["2p"] = "[[vi]]",
+		["3p"] = "[[si]]",
+		["nf"] = "[[si]]",
+	},
+	["si_no_vi"] = {
+		["1s"] = "[[mi]]",
+		["2s"] = "[[ti]]",
+		["3s"] = "[[si]]",
+		["1p"] = "[[ci]]",
+		["2p"] = "",
+		["3p"] = "[[si]]",
+		["nf"] = "[[si]]",
+	},
+	["space_no_ci"] = {
+		["1s"] = " ",
+		["2s"] = " ",
+		["3s"] = " ",
+		["1p"] = "",
+		["2p"] = " ",
+		["3p"] = " ",
+		["nf"] = " ",
+	},
+	["space_no_vi"] = {
+		["1s"] = " ",
+		["2s"] = " ",
+		["3s"] = " ",
+		["1p"] = " ",
+		["2p"] = "",
+		["3p"] = " ",
+		["nf"] = " ",
+	},
 }
 
-local reflexive_masc_forms = {
-	["su"] = {"mi", "tu", "su", "nuestro", "vuestro", "su"},
-	["sus"] = {"mis", "tus", "sus", "nuestros", "vuestros", "sus"},
-	["sí"] = {"mí", "ti", "sí", "nosotros", "vosotros", "sí"},
-}
-
-local reflexive_fem_forms = {
-	["si"] = {"mi", "tu", "su", "nuestra", "vuestra", "su"},
-	["sus"] = {"mis", "tus", "sus", "nuestras", "vuestras", "sus"},
-	["sí"] = {"mí", "ti", "sí", "nosotras", "vosotras", "sí"},
-}
-
+-- FIXME, the following broken and not yet used
 local reflexive_forms = {
 	["si"] = {"mi", "ti", "si", "ci", "vi", "si"},
-	["suyo"] = {"mío", "tuyo", "suyo", "nuestro", "vuestro", "suyo"},
-	["suya"] = {"mía", "tuya", "suya", "nuestra", "vuestra", "suya"},
-	["suyos"] = {"míos", "tuyos", "suyos", "nuestros", "vuestros", "suyos"},
-	["suyas"] = {"mías", "tuyas", "suyas", "nuestras", "vuestras", "suyas"},
+	["suo"] = {"mìo", "tùo", "sùo", "nòstro", "vòstro", "sùo"},
+	["sua"] = {"mìa", "tùa", "sùa", "nòstra", "vòstra", "sùa"},
+	["suoi"] = {"mièi", "tuòi", "suòi", "nòstri", "vòstri", "suòi"},
+	["sue"] = {"mìe", "tùe", "sùe", "nòstre", "vòstre", "sùe"},
 }
 
 
@@ -412,6 +420,7 @@ end
 
 
 local function skip_slot(base, slot, allow_overrides)
+	-- FIXME, broken and not yet used
 	if not allow_overrides and (base.basic_overrides[slot] or base.combined_overrides[slot] or
 		base.refl and base.basic_reflexive_only_overrides[slot]) then
 		-- Skip any slots for which there are overrides.
@@ -441,7 +450,15 @@ local function skip_slot(base, slot, allow_overrides)
 end
 
 
+local function substitute_reflexive_pronoun(text, persnum)
+	return rsub(text, "<(.-)>", function(refl)
+		return substitutable_reflexive_pronoun[refl][persnum]
+	end)
+end
+
+
 local function escape_reflexive_indicators(arg1)
+	-- FIXME, broken and not yet used
 	if not arg1:find("pron>") then
 		return arg1
 	end
@@ -449,11 +466,7 @@ local function escape_reflexive_indicators(arg1)
 	-- Loop over every other segment. The even-numbered segments are angle-bracket specs while
 	-- the odd-numbered segments are the text between them.
 	for i = 2, #segments - 1, 2 do
-		if segments[i] == "<mpron>" then
-			segments[i] = "⦃⦃mpron⦄⦄"
-		elseif segments[i] == "<fpron>" then
-			segments[i] = "⦃⦃fpron⦄⦄"
-		elseif segments[i] == "<pron>" then
+		if segments[i] == "<pron>" then
 			segments[i] = "⦃⦃pron⦄⦄"
 		end
 	end
@@ -462,17 +475,19 @@ end
 
 
 local function undo_escape_form(form)
+	-- FIXME, broken and not yet used
 	return rsub(rsub(form, "⦃⦃", "<"), "⦄⦄", ">")
 end
 
 
 local function remove_reflexive_indicators(form)
-	-- assign to var to throw away second value
+	-- FIXME, broken and not yet used
 	return rsub(form, "⦃⦃.-⦄⦄", "")
 end
 
 
 local function replace_reflexive_indicators(slot, form)
+	-- FIXME, broken and not yet used
 	if not form:find("⦃") then
 		return form
 	end
@@ -789,6 +804,15 @@ local function apply_vowel_spec(unaccented_stem, unaccented, unaccented_desc, vo
 end
 
 
+local function add_finite_reflexive_clitics(base, rowslot)
+	for _, persnum in ipairs(full_person_number_list) do
+		base.forms[rowslot .. persnum] = iut.map_forms(base.forms[rowslot .. persnum], function(form)
+			return substitute_reflexive_pronoun(base.verb.finite_pref, persnum) .. "[[" .. form .. "]]"
+		end)
+	end
+end
+
+
 local function do_ending_stressed_inf(base)
 	if rfind(base.verb.verb, "rre$") then
 		error("Use \\ not / with -rre verbs")
@@ -796,6 +820,7 @@ local function do_ending_stressed_inf(base)
 	-- Add acute accent to -ere, grave accent to -are/-ire.
 	local accented = rsub(base.verb.verb, "ere$", "ére")
 	accented = unfc(rsub(accented, "([ai])re$", "%1" .. GR .. "re"))
+	iut.insert_form(base.forms, "inf", {form = accented})
 	-- If there is a clitic suffix like -la or -sene, truncate final -e.
 	if base.verb.linked_suf ~= "" then
 		accented = rsub(accented, "e$", "")
@@ -806,11 +831,11 @@ end
 
 
 local function do_root_stressed_inf(base, specs)
-	local function root_stressed_inf_special_case(base, form, do_stem, from_defaulted_pres)
-		if form == "-" then
+	local function root_stressed_inf_special_case(base, spec, form_to_do, from_defaulted_pres)
+		if spec == "-" then
 			error("Spec '-' not allowed as root-stressed infinitive spec")
 		end
-		if form == "+" then
+		if spec == "+" then
 			local rre_vowel = rmatch(base.verb.verb, "([aiu])rre$")
 			if rre_vowel then
 				-- do_root_stressed_inf is used for verbs in -ere and -rre. If the root-stressed vowel isn't explicitly
@@ -823,7 +848,7 @@ local function do_root_stressed_inf(base, specs)
 				if v1 == v2 then
 					vowel_spec = vowel_spec .. "+"
 				end
-				form = vowel_spec
+				spec = vowel_spec
 			else
 				-- Use the single-vowel spec(s) in the present tense principal part.
 				local temp = {}
@@ -837,44 +862,56 @@ local function do_root_stressed_inf(base, specs)
 			error("Verb '" .. base.verb.verb .. "' must end in -ere or -rre to use \\ notation")
 		end
 		-- If there is a clitic suffix like -la or -sene, truncate final -(r)e.
+		local truncated_verb_suffix = verb_suffix
 		if base.verb.linked_suf ~= "" then
-			verb_suffix = verb_suffix == "ere" and "er" or "r"
+			truncated_verb_suffix = verb_suffix == "ere" and "er" or "r"
 		end
-		if not is_single_vowel_spec(form) then
+		if not is_single_vowel_spec(spec) then
 			if from_defaulted_pres then
 				error("When defaulting root-stressed infinitive vowel to present, present spec must be a single-vowel spec, but saw '"
-					.. form .. "'")
+					.. spec .. "'")
 			else
-				error("Explicit root-stressed infinitive spec '" .. form .. "' should be a single-vowel spec")
+				error("Explicit root-stressed infinitive spec '" .. spec .. "' should be a single-vowel spec")
 			end
 		end
 
-		local expanded = apply_vowel_spec(verb_stem, base.verb.verb, "root-stressed infinitive", form)
-		if do_stem then
+		local expanded = apply_vowel_spec(verb_stem, base.verb.verb, "root-stressed infinitive", spec)
+		if form_to_do == "stem" then
 			return expanded
+		elseif form_to_do == "inf" then
+			return expanded .. verb_suffix
 		else
-			return "[[" .. base.verb.verb .. "|" .. expanded .. verb_suffix .. "]]"
+			return "[[" .. base.verb.verb .. "|" .. expanded .. truncated_verb_suffix .. "]]" .. base.verb.linked_suf
 		end
 	end
 
 	process_specs(base, base.principal_part_forms, "root_stressed_stem", specs, false, function(base, form)
-		return root_stressed_inf_special_case(base, form, "do stem") end)
+		return root_stressed_inf_special_case(base, form, "stem") end)
+	process_specs(base, base.forms, "inf", specs, false, function(base, form)
+		return root_stressed_inf_special_case(base, form, "inf") end)
 	process_specs(base, base.forms, "inf_linked", specs, false, function(base, form)
-		return root_stressed_inf_special_case(base, form, false) end)
+		return root_stressed_inf_special_case(base, form, "inf_linked") end)
 end
 
 
-local function create_lemma_forms(base)
-	-- Do the lemma and lemma_linked forms. When do_root_stressed_inf is called, this also sets
+local function add_infinitive(base, rowslot)
+	-- Do the inf and inf_linked forms. When do_root_stressed_inf is called, this also sets
 	-- base.principal_part_forms.root_stressed_stem, which is needed by add_present_indic(), so we have to
 	-- do this before conjugating the present indicative.
-	iut.insert_form(base.forms, "inf", {form = base.lemma})
-	-- Add linked version of lemma for use in head=.
 	if base.principal_part_specs.root_stressed_inf then
 		do_root_stressed_inf(base, base.principal_part_specs.root_stressed_inf)
 	else
 		do_ending_stressed_inf(base)
 	end
+end
+
+
+local function add_infinitive_reflexive_clitics(base, rowslot)
+	base.forms[rowslot] = iut.map_forms(base.forms[rowslot], function(form)
+		local unaccented_form = remove_accents(form)
+		form = rsub(form, "r?re$", "r")
+		return "[[" .. unaccented_form .. "|" .. form .. "]]" .. substitute_reflexive_pronoun(base.verb.linked_suf, "nf")
+	end)
 end
 
 
@@ -945,14 +982,14 @@ end
 
 
 -- Generate the present indicative. See "RULES FOR CONJUGATION" near the top of the file for the detailed rules.
-local function add_present_indic(base, prefix)
+local function add_present_indic(base, rowslot)
 	process_specs(base, base.principal_part_forms, "pres", base.principal_part_specs.pres, "finite", pres_special_case)
 	if base.principal_part_specs.pres3s then
 		process_specs(base, base.principal_part_forms, "pres3s", base.principal_part_specs.pres3s, "finite", pres3s_special_case)
 	end
 
 	local function addit(pers, stems, endings)
-		add(base, prefix .. pers, stems, endings)
+		add(base, rowslot .. pers, stems, endings)
 	end
 
 	addit("1s", base.principal_part_forms.pres, "")
@@ -995,19 +1032,19 @@ end
 
 
 -- Generate the present subjunctive. See "RULES FOR CONJUGATION" near the top of the file for the detailed rules.
-local function add_present_subj(base, prefix)
+local function add_present_subj(base, rowslot)
 	local function addit(pers, stems, endings)
-		add(base, prefix .. pers, stems, endings)
+		add(base, rowslot .. pers, stems, endings)
 	end
 	local function insit(pers, forms)
-		insert_forms(base, prefix .. pers, forms)
+		insert_forms(base, rowslot .. pers, forms)
 	end
 
 	-- Generate the 123s and 3p forms.
 	addit("123s", base.principal_part_forms.sub, "")
 	addit("3p", base.principal_part_forms.sub, "no")
 	-- Copy present indicative 1p to present subjunctive.
-	copy_forms(base, prefix .. "1p", base.forms.pres1p)
+	copy_forms(base, rowslot .. "1p", base.forms.pres1p)
 	-- Generate present subjunctive 2p from present indicative 1p by replacing -mo with -te.
 	insit("2p", iut.map_forms(base.forms.pres1p, function(form)
 		if not form:find("mo$") then
@@ -1016,6 +1053,18 @@ local function add_present_subj(base, prefix)
 		end
 		return rsub(form, "mo$", "te")
 	end))
+end
+
+
+local function postprocess_present_subj_after_row_overrides(base, rowslot)
+	local function copy(pers, forms)
+		copy_forms(base, rowslot .. pers, forms)
+	end
+
+	-- Copy 123s to 1s, 2s and 3s. This happens between the row overrides and the single overrides.
+	copy("1s", base.forms.sub123s)
+	copy("2s", base.forms.sub123s)
+	copy("3s", base.forms.sub123s)
 end
 
 
@@ -1054,6 +1103,11 @@ local function add_imperative(base, rowslot)
 end
 
 
+local function add_imperative_reflexive_clitics(base, rowslot)
+	-- FIXME
+end
+
+
 local function add_negative_imperative(base)
 	-- FIXME: needs changes for reflexive verbs
 	for _, persnum in ipairs({"2s", "3s", "1p", "2p", "3p"}) do
@@ -1073,18 +1127,23 @@ local function add_negative_imperative(base)
 end
 
 
+local function add_negative_imperative_reflexive_clitics(base, rowslot)
+	-- FIXME
+end
+
+
 local function generate_past_historic_principal_part(base)
 	check_not_null(base, base.verb.phis, "+", "first-singular past historic")
 	return base.verb.phis
 end
 
 
-local function add_past_historic(base, prefix)
+local function add_past_historic(base, rowslot)
 	for _, form in ipairs(base.principal_part_forms.phis) do
 		local function add_phis(pref, s1, s2, s3, p1, p2, p3)
 			local newform = form.footnotes and iut.convert_to_general_list_form(pref, form.footnotes) or pref
 			local function addit(pers, endings)
-				add(base, prefix .. pers, newform, endings)
+				add(base, rowslot .. pers, newform, endings)
 			end
 			addit("1s", s1)
 			addit("2s", s2)
@@ -1153,6 +1212,22 @@ local function generate_conditional_principal_part(base)
 end
 
 
+local function postprocess_imperfect_subj_after_row_overrides(base, rowslot)
+	local function copy(pers, forms)
+		copy_forms(base, rowslot .. pers, forms)
+	end
+
+	-- Copy 12s to 1s and 2s. This happens between the row overrides and the single overrides.
+	copy("1s", base.forms.impsub12s)
+	copy("2s", base.forms.imbsub12s)
+end
+
+
+local function add_participle_reflexive_clitics(base, rowslot)
+	-- do nothing
+end
+
+
 local function generate_past_participle_principal_part(base)
 	check_not_null(base, base.verb.pp, "+", "first-singular past historic")
 	return base.verb.pp
@@ -1166,6 +1241,13 @@ local function generate_gerund_principal_part(base)
 end
 
 
+local function add_gerund_reflexive_clitics(base, rowslot)
+	base.forms[rowslot] = iut.map_forms(base.forms[rowslot], function(form)
+		return "[[" .. form .. "]]" .. substitute_reflexive_pronoun(base.verb.linked_suf, persnum)
+	end)
+end
+
+
 local function generate_present_participle_principal_part(base)
 	return iut.map_forms(base.verb.unaccented_stem, function(stem)
 		return stem .. (base.conj_vowel == "à" and "ànte" or "ènte")
@@ -1173,19 +1255,27 @@ local function generate_present_participle_principal_part(base)
 end
 
 
-local full_person_number_list = {"1s", "2s", "3s", "1p", "2p", "3p"}
-local imp_person_number_list = {"2s", "3s", "1p", "2p", "3p"}
-
 --[=[
 Data on how to conjugate individual rows (i.e. tense/aspect combinations, such as present indicative or
 conditional).
 
 The order listed here matters. It determines the order of generating row forms. The order must have
-'pres' < 'sub' < 'imp' < 'negimp' because the present subjunctive uses generated forms from the present indicative,
-while the imperative uses forms from the present subjunctive and present indicative and the negative imperative
-uses forms from the lemma (generated before any rows are conjugated) and the imperative.
+'inf' < 'pres' < 'sub' < 'imp' < 'negimp' because the present indicative uses the root_stressed_stem generated
+by add_infinitive; the present subjunctive uses generated forms from the present indicative; the imperative uses
+forms from the present subjunctive and present indicative; and the negative imperative uses forms from the infinitive
+and the imperative.
 ]=]
 local row_conjugation = {
+	{"inf", {
+		desc = "infinitive",
+		tag_suffix = "inf",
+		persnums = {""},
+		-- No generate_default_principal_part; handled specially in add_infinitive.
+		conjugate = add_infinitive,
+		no_explicit_principal_part = true, -- because handled specially using / or \ notation
+		no_row_overrides = true, -- useless because there's only one form; use / or \ notation
+		no_single_overrides = true, --useless because there's only one form; use / or \ notation
+	}},
 	{"pres", {
 		desc = "present",
 		tag_suffix = "pres|ind",
@@ -1194,13 +1284,18 @@ local row_conjugation = {
 		-- two principal parts for the present indicative ("pres" and "pres3s").
 		conjugate = add_present_indic,
 		no_explicit_principal_part = true, -- because handled specially in PRES#PRES3S,PHIS,PP spec
+		add_reflexive_clitics = add_finite_reflexive_clitics,
 	}},
 	{"sub", {
 		desc = "present subjunctive",
 		tag_suffix = "pres|sub",
-		persnums = {"123s", "1p", "2p", "3p"},
+		persnums = full_person_number_list,
+		row_override_persnums = {"123s", "1p", "2p", "3p"},
 		generate_default_principal_part = generate_present_subj_principal_part,
 		conjugate = add_present_subj,
+		-- This copies 123s to 1s/2s/3s
+		postprocess_after_row_overrides = postprocess_present_subj_after_row_overrides,
+		add_reflexive_clitics = add_finite_reflexive_clitics,
 	}},
 	{"imp", {
 		desc = "imperative",
@@ -1226,6 +1321,7 @@ local row_conjugation = {
 		generate_default_principal_part = generate_past_historic_principal_part,
 		conjugate = add_past_historic,
 		no_explicit_principal_part = true, -- because handled specially in PRES#PRES3S,PHIS,PP spec
+		add_reflexive_clitics = add_finite_reflexive_clitics,
 	}},
 	{"imperf", {
 		desc = "imperfect",
@@ -1236,16 +1332,21 @@ local row_conjugation = {
 		principal_part_desc = "first-person imperfect",
 		principal_part_ending = "o",
 		conjugate = {"o", "i", "a", "àmo", "àte", "ano"},
+		add_reflexive_clitics = add_finite_reflexive_clitics,
 	}},
 	{"impsub", {
 		desc = "imperfect subjunctive",
 		tag_suffix = "impf|sub",
-		persnums = {"12s", "3s", "1p", "2p", "3p"},
+		persnums = full_person_number_list,
+		row_override_persnums = {"12s", "3s", "1p", "2p", "3p"},
 		generate_default_principal_part = function(base) return iut.map_forms(base.verb.unaccented_stem,
 			function(stem) return stem .. base.conj_vowel .. "ssi" end) end,
 		principal_part_desc = "first/second-person imperfect subjunctive",
 		principal_part_ending = "ssi",
 		conjugate = {"ssi", "sse", "ssimo", "ste", "ssero"},
+		-- This copies 12s to 1s/2s
+		postprocess_after_row_overrides = postprocess_imperfect_subj_after_row_overrides,
+		add_reflexive_clitics = add_finite_reflexive_clitics,
 	}},
 	{"fut", {
 		desc = "future",
@@ -1255,6 +1356,7 @@ local row_conjugation = {
 		principal_part_desc = "first-person future",
 		principal_part_ending = "ò",
 		conjugate = {"ò", "ài", "à", "émo", "éte", "ànno"},
+		add_reflexive_clitics = add_finite_reflexive_clitics,
 	}},
 	{"cond", {
 		desc = "conditional",
@@ -1264,6 +1366,7 @@ local row_conjugation = {
 		principal_part_desc = "first-person conditional",
 		principal_part_ending = "éi",
 		conjugate = {"éi", "ésti", {"èbbe", "ébbe"}, "émmo", "éste", {"èbbero", "ébbero"}},
+		add_reflexive_clitics = add_finite_reflexive_clitics,
 	}},
 	{"pp", {
 		desc = "past participle",
@@ -1414,8 +1517,9 @@ local function conjugate_row(base, rowslot)
 	end
 
 	if type(rowconj.conjugate) == "table" then
-		if #rowconj.conjugate ~= #rowconj.persnums then
-			error("Internal error: Expected " .. #rowconj.persnums .. " elements for row slot '" .. rowslot
+		local persnums = rowconj.row_override_persnums or rowconj.persnums
+		if #rowconj.conjugate ~= #persnums then
+			error("Internal error: Expected " .. #persnums .. " elements for row slot '" .. rowslot
 				.. ", but saw " .. #rowconj.conjugate)
 		end
 		local stem = iut.map_forms(base.principal_part_forms[rowslot], function(form)
@@ -1426,7 +1530,7 @@ local function conjugate_row(base, rowslot)
 			end
 			return rsub(form, rowconj.principal_part_ending .. "$", "")
 		end)
-		for i, persnum in ipairs(rowconj.persnums) do
+		for i, persnum in ipairs(persnums) do
 			add(base, rowslot .. persnum, stem, rowconj.conjugate[i])
 		end
 	else
@@ -1434,141 +1538,10 @@ local function conjugate_row(base, rowslot)
 	end
 
 	handle_row_overrides_for_row(base, rowslot)
+	if rowconj.postprocess_after_row_overrides then
+		rowconj.postprocess_after_row_overrides(base, rowslot)
+	end
 	handle_single_overrides_for_row(base, rowslot)
-end
-
-
--- Add the clitic pronouns in `pronouns` to the forms in `base_slot`. If `do_combined_slots` is given,
--- store the results into the appropriate combined slots, e.g. `imp_2s_comb_lo` for second singular imperative + lo.
--- Otherwise, directly modify `base_slot`. The latter case is used for handling reflexive verbs, and in that case
--- `pronouns` should contain only a single pronoun.
-local function add_forms_with_clitic(base, base_slot, pronouns, do_combined_slots)
-	if not base.forms[base_slot] then
-		-- This can happen, e.g. in only3s/only3sp verbs.
-		return
-	end
-	for _, form in ipairs(base.forms[base_slot]) do
-		-- Figure out that correct accenting of the verb when a clitic pronoun is attached to it. We may need to
-		-- add or remove an accent mark:
-		-- (1) No accent mark currently, none needed: infinitive sentar because of sentarlo; imperative singular
-		--     ten because of tenlo;
-		-- (2) Accent mark currently, still needed: infinitive oír because of oírlo;
-		-- (3) No accent mark currently, accent needed: imperative singular siente -> siénte because of siéntelo;
-		-- (4) Accent mark currently, not needed: imperative singular está -> estálo, sé -> selo.
-		local syllables = com.syllabify(form.form)
-		local sylno = com.stressed_syllable(syllables)
-		table.insert(syllables, "lo")
-		local needs_accent = com.accent_needed(syllables, sylno)
-		if needs_accent then
-			syllables[sylno] = com.add_accent_to_syllable(syllables[sylno])
-		else
-			syllables[sylno] = com.remove_accent_from_syllable(syllables[sylno])
-		end
-		table.remove(syllables) -- remove added clitic pronoun
-		local reaccented_verb = table.concat(syllables)
-		for _, pronoun in ipairs(pronouns) do
-			local cliticized_verb
-			-- Some further special cases.
-			if base_slot == "imp_1p" and (pronoun == "nos" or pronoun == "os") then
-				-- Final -s disappears: sintamos + nos -> sintámonos, sintamos + os -> sintámoos
-				cliticized_verb = rsub(reaccented_verb, "s$", "") .. pronoun
-			elseif base_slot == "imp_2p" and pronoun == "os" then
-				-- Final -d disappears, which may cause an accent to be required:
-				-- haced + os -> haceos, sentid + os -> sentíos
-				if reaccented_verb:find("id$") then
-					cliticized_verb = rsub(reaccented_verb, "id$", "íos")
-				else
-					cliticized_verb = rsub(reaccented_verb, "d$", "os")
-				end
-			else
-				cliticized_verb = reaccented_verb .. pronoun
-			end
-			if do_combined_slots then
-				insert_form(base, base_slot .. "_comb_" .. pronoun,
-					{form = cliticized_verb, footnotes = form.footnotes})
-			else
-				form.form = cliticized_verb
-			end
-		end
-	end
-end
-
-
--- Generate the combinations of verb form (infinitive, gerund or various imperatives) + clitic pronoun.
-local function add_combined_forms(base)
-	for _, base_slot_and_pronouns in ipairs(verb_slot_combined_rows) do
-		local base_slot, pronouns = unpack(base_slot_and_pronouns)
-		-- Skip non-infinitive/gerund combinations for reflexive verbs. We will copy the appropriate imperative
-		-- combinations later.
-		if not base.refl or base_slot == "inf" or base_slot == "ger" then
-			add_forms_with_clitic(base, base_slot, pronouns, "do combined slots")
-		end
-	end
-end
-
-
--- Add a reflexive pronoun or fixed clitic, e.g. [[lo]], as appropriate to the base form that were generated.
--- `do_joined` means to do only the forms where the pronoun is joined to the end of the form; otherwise, do only the
--- forms where it is not joined and precedes the form.
-local function add_reflexive_or_fixed_clitic_to_forms(base, do_reflexive, do_joined)
-	for _, slotaccel in ipairs(all_verb_slots) do
-		local slot, accel = unpack(slotaccel)
-		local clitic
-		if not do_reflexive then
-			clitic = base.clitic
-		elseif slot:find("[123]") then
-			local persnum = slot:match("^.*([123][sp])$")
-			clitic = person_number_to_reflexive_pronoun[persnum]
-		else
-			clitic = "si"
-		end
-		if base.forms[slot] then
-			if slot == "inf" or slot == "ger" or slot:find("^imp[123]") then
-				if do_joined then
-					add_forms_with_clitic(base, slot, {clitic})
-				end
-			elseif do_reflexive and slot == "pp" or slot == "inf_linked" then
-				-- do nothing with reflexive past participles or with infinitive linked (handled at the end)
-			elseif slot:find("^negimp") then
-				error("Internal error: Should not have forms set for negative imperative at this stage")
-			elseif not do_joined then
-				-- Add clitic as separate word before all other forms. Check whether form already has brackets
-				-- (as will be the case if the form has a fixed clitic).
-				for _, form in ipairs(base.forms[slot]) do
-					if base.args.noautolinkverb then
-						form.form = clitic .. " " .. form.form
-					else
-						local clitic_pref = "[[" .. clitic .. "]] "
-						if form.form:find("%[%[") then
-							form.form = clitic_pref .. form.form
-						else
-							form.form = clitic_pref .. "[[" .. form.form .. "]]"
-						end
-					end
-				end
-			end
-		end
-	end
-end
-
-
-local function copy_imperatives_to_reflexive_combined_forms(base)
-	local copy_table = {
-		{"imp_2s", "imp_2s_comb_te"},
-		{"imp_3s", "imp_3s_comb_se"},
-		{"imp_1p", "imp_1p_comb_nos"},
-		{"imp_2p", "imp_2p_comb_os"},
-		{"imp_3p", "imp_3p_comb_se"},
-	}
-
-	-- Copy imperatives (with the clitic reflexive pronoun already added) to the appropriate "combined" reflexive
-	-- forms.
-	for _, entry in ipairs(copy_table) do
-		local from, to = unpack(entry)
-		-- Need to call map_forms() to clone the form objects because insert_forms() doesn't clone them, and may
-		-- side-effect them when inserting footnotes.
-		insert_forms(base, to, iut.map_forms(base.forms[from], function(form) return form end))
-	end
 end
 
 
@@ -1586,32 +1559,10 @@ end
 
 local function conjugate_verb(base)
 	add_default_verb_forms(base)
-	create_lemma_forms(base)
 	for _, rowspec in ipairs(row_conjugation) do
 		local rowslot, rowconj = unpack(rowspec)
 		conjugate_row(base, rowslot)
 	end
-	-- This should happen before add_combined_forms() so overrides of basic forms end up part of the combined forms.
-	-- This should happen after process_slot_overrides() in case a derived slot is based on an override (as with the
-	-- imp_3s of [[dar]], [[estar]]).
-	-- copy_subjunctives_to_imperatives(base)
-	-- We need to add joined reflexives, then joined and non-joined clitics, then non-joined reflexives, so we get
-	-- [[házmelo]] but [[no]] [[me]] [[lo]] [[haga]].
-	if base.refl then
-		add_reflexive_or_fixed_clitic_to_forms(base, "do reflexive", "do joined")
-		process_slot_overrides(base, "do basic", "do reflexive") -- do reflexive-only basic slot overrides
-	end
-	if base.clitic then
-		-- This should happen after reflexives are added.
-		add_reflexive_or_fixed_clitic_to_forms(base, false, "do joined")
-		add_reflexive_or_fixed_clitic_to_forms(base, false, false)
-	end
-	if base.refl then
-		add_reflexive_or_fixed_clitic_to_forms(base, "do reflexive", false)
-	end
-	-- This should happen after add_reflexive_or_fixed_clitic_to_forms() so negative imperatives get the reflexive pronoun
-	-- and clitic in them.
-	-- generate_negative_imperatives(base)
 	if not base.args.noautolinkverb then
 		add_missing_links_to_forms(base)
 	end
@@ -1665,22 +1616,30 @@ local function analyze_verb(lemma)
 	--   * vi + si: [[recarvisi]] "to go there"
 	--
 	local ret = {}
-	local linked_suf, finite_pref, finite_pref_ho
-	local clitic_to_finite = {ce = "ce", ve = "ve", se = "me"}
-	local verb, clitic, clitic2 = rmatch(lemma, "^(.-)([cvs]e)(l[ae])$")
+	local linked_suf, finite_pref, finite_pref_elided_e, finite_pref_elided_ho
+	local clitic_to_substitutable = {ce = "[[ce]]", ve = "[[ve]]", se = "<se>"}
+	local clitic_to_elided = {
+		ci = "[[c']]", vi = "[[vi]] ", si = "[[si]] ",
+		lo = "[[l']]", la = "[[l']]", li = "[[li]] ", le = "[[le]] ",
+	}
+	local verb, clitic, clitic2 = rmatch(lemma, "^(.-)([cvs]e)(l[oaie])$")
 	if verb then
-		linked_suf = "[[" .. clitic .. "]][[" .. clitic2 .. "]]"
-		finite_pref = "[[" .. clitic_to_finite[clitic] .. "]] [[" .. clitic2 .. "]] "
-		finite_pref_ho = "[[" .. clitic_to_finite[clitic] .. "]] [[l']]"
+		clitic = clitic_to_substitutable[clitic]
+		linked_suf = clitic .. "[[" .. clitic2 .. "]]"
+		finite_pref = clitic .. " [[" .. clitic2 .. "]] "
+		finite_pref_elided_e = clitic .. " " .. clitic_to_elided[clitic2]
+		finite_pref_elided_ho = clitic .. " " .. clitic_to_elided[clitic2]
 		is_pronominal = true
 		is_reflexive = clitic == "se"
 	end
 	if not verb then
 		verb, clitic = rmatch(lemma, "^(.-)([cvs]e)ne$")
 		if verb then
-			linked_suf = "[[" .. clitic .. "]][[ne]]"
-			finite_pref = "[[" .. clitic_to_finite[clitic] .. "]] [[ne]] "
-			finite_pref_ho = "[[" .. clitic_to_finite[clitic] .. "]] [[n']]"
+			clitic = clitic_to_substitutable[clitic]
+			linked_suf = clitic .. "[[ne]]"
+			finite_pref = clitic .. " [[ne]] "
+			finite_pref_elided_e = clitic .. " [[n']]"
+			finite_pref_elided_ho = clitic .. " [[ne]] "
 			is_pronominal = true
 			is_reflexive = clitic == "se"
 		end
@@ -1688,13 +1647,18 @@ local function analyze_verb(lemma)
 	if not verb then
 		verb, clitic = rmatch(lemma, "^(.-)([cv]i)si$")
 		if verb then
-			linked_suf = "[[" .. clitic .. "]][[si]]"
-			finite_pref = "[[mi]] [[" .. clitic .. "]] "
-			if clitic == "vi" then
-				finite_pref_ho = "[[mi]] [[v']]"
+			local si_no_clitic, space_no_clitic
+			if clitic == "ci" then
+				si_no_clitic = "<si_no_ci>"
+				space_no_clitic = "<space_no_ci>"
 			else
-				finite_pref_ho = "[[mi]] [[ci]] "
+				si_no_clitic = "<si_no_vi>"
+				space_no_clitic = "<space_no_vi>"
 			end
+			linked_suf = "[[" .. clitic .. "]]" .. si_no_clitic
+			finite_pref = si_no_clitic .. space_no_clitic .. "[[" .. clitic .. "]] "
+			finite_pref_elided_e = si_no_clitic .. space_no_clitic .. clitic_to_elided[clitic]
+			finite_pref_elided_ho = finite_pref
 			is_pronominal = true
 			is_reflexive = true
 		end
@@ -1704,20 +1668,18 @@ local function analyze_verb(lemma)
 		if verb then
 			linked_suf = "[[" .. clitic .. "]]"
 			finite_pref = "[[" .. clitic .. "]] "
-			if clitic == "vi" then
-				finite_pref_ho = "[[v']]"
-			else
-				finite_pref_ho = "[[ci]] "
-			end
+			finite_pref_elided_e = clitic_to_elided[clitic]
+			finite_pref_elided_ho = finite_pref
 			is_pronominal = true
 		end
 	end
 	if not verb then
 		verb = rmatch(lemma, "^(.-)si$")
 		if verb then
-			linked_suf = "[[si]]"
-			finite_pref = "[[mi]] "
-			finite_pref_ho = "[[m']]"
+			linked_suf = "<si>"
+			finite_pref = "<si> "
+			finite_pref_elided_e = finite_pref
+			finite_pref_elided_ho = finite_pref
 			-- not pronominal
 			is_reflexive = true
 		end
@@ -1727,16 +1689,18 @@ local function analyze_verb(lemma)
 		if verb then
 			linked_suf = "[[ne]]"
 			finite_pref = "[[ne]] "
-			finite_pref_ho = "[[n']]"
+			finite_pref_elided_e = "[[n']]"
+			finite_pref_elided_ho = "[[ne]] "
 			is_pronominal = true
 		end
 	end
 	if not verb then
-		verb, clitic = rmatch(lemma, "^(.-)(l[ae])$")
+		verb, clitic = rmatch(lemma, "^(.-)(l[oaie])$")
 		if verb then
 			linked_suf = "[[" .. clitic .. "]]"
 			finite_pref = "[[" .. clitic .. "]] "
-			finite_pref_ho = "[[l']]"
+			finite_pref_elided_e = clitic_to_elided[clitic]
+			finite_pref_elided_ho = clitic_to_elided[clitic]
 			is_pronominal = true
 		end
 	end
@@ -1744,14 +1708,16 @@ local function analyze_verb(lemma)
 		verb = lemma
 		linked_suf = ""
 		finite_pref = ""
-		finite_pref_ho = ""
+		finite_pref_elided_e = ""
+		finite_pref_elided_ho = ""
 		-- not pronominal
 	end
 
 	ret.raw_verb = verb
 	ret.linked_suf = linked_suf
 	ret.finite_pref = finite_pref
-	ret.finite_pref_ho = finite_pref_ho
+	ret.finite_pref_elided_e = finite_pref_elided_e
+	ret.finite_pref_elided_ho = finite_pref_elided_ho
 	ret.is_pronominal = is_pronominal
 	ret.is_reflexive = is_reflexive
 	return ret
@@ -2314,13 +2280,16 @@ local basic_table = [=[
 ! style="background:#c0e4c0" | che loro, che essi/che esse
 |-
 ! style="height:3em;background:#c0e4c0" | <span title="congiuntivo presente">present</span>
-| colspan="3" | {sub123s}
+| {sub1s}
+| {sub2s}
+| {sub3s}
 | {sub1p}
 | {sub2p}
 | {sub3p}
 |-
 ! style="height:3em;background:#c0e4c0" | <span title="congiuntivo imperfetto">imperfect</span>
-| colspan="2" | {impsub12s}
+| {impsub1s}
+| {impsub2s}
 | {impsub3s}
 | {impsub1p}
 | {impsub2p}
@@ -2355,7 +2324,8 @@ local basic_table = [=[
 local function make_table(alternant_multiword_spec)
 	local forms = alternant_multiword_spec.forms
 
-	forms.title = link_term(alternant_multiword_spec.lemmas[1].form, "term")
+	forms.title = m_links.full_link({ lang = lang, term = alternant_multiword_spec.lemmas[1].form }, "term")
+
 	if alternant_multiword_spec.annotation ~= "" then
 		forms.title = forms.title .. " (" .. alternant_multiword_spec.annotation .. ")"
 	end
