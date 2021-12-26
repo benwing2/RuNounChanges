@@ -135,7 +135,7 @@ EXAMPLES OF CONJUGATION:
   sub:dìa.
   fut:darò.
   impsub:déssi.
-  imp:dài:da':*dà*
+  imp:dài:dà':*dà*
 >}}
 
 {{it-conj|dovere<a:e[as an auxiliary, with main verbs taking ''essere'']/dèvo:dévo:dèbbo:débbo#dève:déve.
@@ -562,7 +562,7 @@ local function general_list_form_contains_form(list, form, process_form)
 end
 
 
-local function process_specs(base, destforms, slot, specs, is_finite, special_case)
+local function process_specs(base, destforms, slot, specs, special_case)
 	specs = specs or {{form = "+"}}
 	for _, spec in ipairs(specs) do
 		local decorated_form = spec.form
@@ -608,15 +608,6 @@ local function process_specs(base, destforms, slot, specs, is_finite, special_ca
 				elseif syntactic_gemination ~= "" then
 					error("Decorated form '" .. decorated_form .. "' has too many asterisks after it, use '*' for syntactic gemination and '**' for optional syntactic gemination")
 				end
-				--FIXME: Move elsewhere.
-				--form = "[[" .. unaccented_form .. "|" .. form .. "]]"
-				--if is_finite then
-				--	if unaccented_form == "ho" then
-				--		form = base.verb.finite_pref_ho .. form
-				--	else
-				--		form = base.verb.finite_pref .. form
-				--	end
-				--end
 			end
 			iut.insert_form(destforms, slot, {form = form, footnotes = qualifiers})
 		end
@@ -669,7 +660,7 @@ local function add_default_verb_forms(base, from_headword)
 			return stem
 		end
 		-- Put the explicit stem in ret.stem (i.e. base.verb.stem).
-		process_specs(base, ret, "stem", base.explicit_stem_spec, false, explicit_stem_special_case)
+		process_specs(base, ret, "stem", base.explicit_stem_spec, explicit_stem_special_case)
 	else
 		if base.syncopated then
 			if not from_headword then
@@ -846,7 +837,7 @@ local function do_root_stressed_inf(base, specs)
 			else
 				-- Use the single-vowel spec(s) in the present tense principal part.
 				local temp = {}
-				process_specs(base, temp, "temp", base.principal_part_specs.pres, false, function(base, form)
+				process_specs(base, temp, "temp", base.principal_part_specs.pres, function(base, form)
 					return root_stressed_inf_special_case(base, form, do_stem, "from defaulted pres") end)
 				return temp.temp
 			end
@@ -872,9 +863,9 @@ local function do_root_stressed_inf(base, specs)
 		end
 	end
 
-	process_specs(base, base.principal_part_forms, "root_stressed_stem", specs, false, function(base, form)
+	process_specs(base, base.principal_part_forms, "root_stressed_stem", specs, function(base, form)
 		return root_stressed_inf_special_case(base, form, "stem") end)
-	process_specs(base, base.forms, "inf", specs, false, function(base, form)
+	process_specs(base, base.forms, "inf", specs, function(base, form)
 		return root_stressed_inf_special_case(base, form, "inf") end)
 end
 
@@ -968,9 +959,9 @@ end
 
 -- Generate the present indicative. See "RULES FOR CONJUGATION" near the top of the file for the detailed rules.
 local function add_present_indic(base, rowslot)
-	process_specs(base, base.principal_part_forms, "pres", base.principal_part_specs.pres, "finite", pres_special_case)
+	process_specs(base, base.principal_part_forms, "pres", base.principal_part_specs.pres, pres_special_case)
 	if base.principal_part_specs.pres3s then
-		process_specs(base, base.principal_part_forms, "pres3s", base.principal_part_specs.pres3s, "finite", pres3s_special_case)
+		process_specs(base, base.principal_part_forms, "pres3s", base.principal_part_specs.pres3s, pres3s_special_case)
 	end
 
 	local function addit(pers, stems, endings)
@@ -1088,10 +1079,35 @@ local function add_imperative(base, rowslot)
 end
 
 
+local function get_unlinked_clitic_suffix(base, persnum)
+	return m_links.remove_links(substitute_reflexive_pronoun(base.verb.linked_suf, persnum))
+end
+
+
 local function add_imperative_reflexive_clitics(base, rowslot)
-	-- FIXME
-	for _, persnum in ipairs(full_person_number_list) do
-		base.forms[rowslot .. persnum] = iut.flatmap_forms(base.forms[rowslot .. persnum], function(form)
+	local function s2suf = get_unlinked_clitic_suffix(base, "2s")
+	base.forms[rowslot .. "2s"] = iut.flatmap_forms(base.forms[rowslot .. "2s"], function(form)
+		form = rsub(form, "'$", "") -- dà', fà', etc.
+		if rfind(form, AV .. "$") then -- final stressed vowel; implement syntactic gemination
+			if rfind(s2suf, "^gli") then
+				return {form .. s2suf}
+			else
+				return {form .. usub(s2suf, 1, 1) .. s2suf}
+			end
+		elseif rfind(form, "ài$") then
+			return {}
+		else
+			return {form .. s2suf}
+		end
+	end)
+	for _, persnum in ipairs({"1p", "2p"}) do
+		local function suf = get_unlinked_clitic_suffix(base, persnum)
+		base.forms[rowslot .. persnum] = iut.map_forms(base.forms[rowslot .. persnum], function(form)
+			return form .. suf
+		end)
+	end
+	for _, persnum in ipairs({"3s", "3p"}) do
+		base.forms[rowslot .. persnum] = iut.map_forms(base.forms[rowslot .. persnum], function(form)
 			return substitute_reflexive_pronoun(base.verb.finite_pref, persnum) .. "[[" .. form .. "]]"
 		end)
 	end
@@ -1099,26 +1115,32 @@ end
 
 
 local function add_negative_imperative(base)
-	-- FIXME: needs changes for reflexive verbs
 	for _, persnum in ipairs({"2s", "3s", "1p", "2p", "3p"}) do
 		local from = persnum == "2s" and "inf" or "imp" .. persnum
-		local to = "negimp" .. persnum
-		insert_forms(base, to, iut.map_forms(base.forms[from], function(form)
-			if base.args.noautolinkverb then
-				return "non " .. form
-			elseif form:find("%[%[") then
-				-- already linked, e.g. when reflexive
-				return "[[non]] " .. form
-			else
-				return "[[non]] [[" .. form .. "]]"
-			end
+		insert_forms(base, "negimp" .. persnum, iut.map_forms(base.forms[from], function(form)
+			return "[[non]] [[" .. form .. "]]"
 		end))
 	end
 end
 
 
 local function add_negative_imperative_reflexive_clitics(base, rowslot)
-	-- FIXME
+	for _, persnum in ipairs({"2s", "1p", "2p"}) do
+		local function suf = get_unlinked_clitic_suffix(base, persnum)
+		local function pref = substitute_reflexive_pronoun(base.verb.finite_pref, persnum)
+		base.forms[rowslot .. persnum] = iut.flatmap_forms(base.forms[rowslot .. persnum], function(form)
+			local truncated = persnum == "2s" and rsub(form, "r?re%]%]$", "r%1") or rsub(form, "%]%]$", "")
+			local sufform = truncated .. suf .. "]]"
+			local prefform = rsub(form, "^(%[%[non%]%]) (.*)$", "%1 " .. pref .. " %2")
+			return {sufform, prefform}
+		end)
+	end
+	for _, persnum in ipairs({"3s", "3p"}) do
+		local function pref = substitute_reflexive_pronoun(base.verb.finite_pref, persnum)
+		base.forms[rowslot .. persnum] = iut.map_forms(base.forms[rowslot .. persnum], function(form)
+			return rsub(form, "^(%[%[non%]%]) (.*)$", "%1 " .. pref .. " %2")
+		end)
+	end
 end
 
 
@@ -1233,7 +1255,7 @@ end
 
 local function add_gerund_reflexive_clitics(base, rowslot)
 	base.forms[rowslot] = iut.map_forms(base.forms[rowslot], function(form)
-		return form .. m_links.remove_links(substitute_reflexive_pronoun(base.verb.linked_suf, persnum))
+		return form .. get_unlinked_clitic_suffix(base, "nf")
 	end)
 end
 
@@ -1303,6 +1325,7 @@ local row_conjugation = {
 		persnums = imp_person_number_list,
 		-- No generate_default_principal_part because all parts are copied from other parts.
 		conjugate = add_negative_imperative,
+		add_reflexive_clitics = add_negative_imperative_reflexive_clitics,
 		no_explicit_principal_part = true, -- because all parts are copied from other parts
 		no_row_overrides = true, -- not useful; use single overrides if really needed
 	}},
@@ -1312,8 +1335,8 @@ local row_conjugation = {
 		persnums = full_person_number_list,
 		generate_default_principal_part = generate_past_historic_principal_part,
 		conjugate = add_past_historic,
-		no_explicit_principal_part = true, -- because handled specially in PRES#PRES3S,PHIS,PP spec
 		add_reflexive_clitics = add_finite_reflexive_clitics,
+		no_explicit_principal_part = true, -- because handled specially in PRES#PRES3S,PHIS,PP spec
 	}},
 	{"imperf", {
 		desc = "imperfect",
@@ -1449,7 +1472,7 @@ local function handle_row_overrides_for_row(base, row_slot)
 				return form
 			end
 			base.forms[slot] = nil -- erase existing form before generating override
-			process_specs(base, base.forms, slot, specs, "finite", row_override_special_case)
+			process_specs(base, base.forms, slot, specs, row_override_special_case)
 		end
 	end
 end
@@ -1479,7 +1502,7 @@ local function handle_single_overrides_for_row(base, row_slot)
 				return form
 			end
 			base.forms[slot] = nil -- erase existing form before generating override
-			process_specs(base, base.forms, slot, base.single_override_specs[slot], "finite", override_special_case)
+			process_specs(base, base.forms, slot, base.single_override_specs[slot], override_special_case)
 		end
 	end
 end
@@ -1508,7 +1531,7 @@ local function conjugate_row(base, rowslot)
 
 		local principal_part_specs = base.principal_part_specs[rowslot] or rowconj.not_defaulted and {{form = "-"}}
 			or {{form = "+"}}
-		process_specs(base, base.principal_part_forms, rowslot, principal_part_specs, rowslot ~= "imp", principal_part_special_case)
+		process_specs(base, base.principal_part_forms, rowslot, principal_part_specs, principal_part_special_case)
 	end
 
 	if type(rowconj.conjugate) == "table" then
@@ -1544,9 +1567,17 @@ local function add_missing_links_to_forms(base)
 	-- Any forms without links should get them now. Redundant ones will be stripped later.
 	for slot, forms in pairs(base.forms) do
 		for _, form in ipairs(forms) do
-			if not form.form:find("%[%[") then
-				form.form = "[[" .. form.form .. "]]"
-			end
+			form.form = add_links(form.form)
+		end
+	end
+end
+
+
+local function remove_links_from_forms(base)
+	-- Remove links from forms in case of noautolinkverb.
+	for slot, forms in pairs(base.forms) do
+		for _, form in ipairs(forms) do
+			form.form = m_links.remove_links(form.form)
 		end
 	end
 end
@@ -1558,7 +1589,15 @@ local function conjugate_verb(base)
 		local rowslot, rowconj = unpack(rowspec)
 		conjugate_row(base, rowslot)
 	end
-	if not base.args.noautolinkverb then
+	if base.verb.linked_suf ~= "" then
+		for _, rowspec in ipairs(row_conjugation) do
+			local rowslot, rowconj = unpack(rowspec)
+			rowconj.add_reflexive_clitics(base, rowslot)
+		end
+	end
+	if base.args.noautolinkverb then
+		remove_links_from_forms(base)
+	else
 		add_missing_links_to_forms(base)
 	end
 end
