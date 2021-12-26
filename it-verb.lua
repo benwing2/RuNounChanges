@@ -821,12 +821,6 @@ local function do_ending_stressed_inf(base)
 	local accented = rsub(base.verb.verb, "ere$", "ére")
 	accented = unfc(rsub(accented, "([ai])re$", "%1" .. GR .. "re"))
 	iut.insert_form(base.forms, "inf", {form = accented})
-	-- If there is a clitic suffix like -la or -sene, truncate final -e.
-	if base.verb.linked_suf ~= "" then
-		accented = rsub(accented, "e$", "")
-	end
-	local linked = "[[" .. base.verb.verb .. "|" .. accented .. "]]" .. base.verb.linked_suf
-	iut.insert_form(base.forms, "inf_linked", {form = linked})
 end
 
 
@@ -861,11 +855,6 @@ local function do_root_stressed_inf(base, specs)
 		if not verb_stem then
 			error("Verb '" .. base.verb.verb .. "' must end in -ere or -rre to use \\ notation")
 		end
-		-- If there is a clitic suffix like -la or -sene, truncate final -(r)e.
-		local truncated_verb_suffix = verb_suffix
-		if base.verb.linked_suf ~= "" then
-			truncated_verb_suffix = verb_suffix == "ere" and "er" or "r"
-		end
 		if not is_single_vowel_spec(spec) then
 			if from_defaulted_pres then
 				error("When defaulting root-stressed infinitive vowel to present, present spec must be a single-vowel spec, but saw '"
@@ -878,10 +867,8 @@ local function do_root_stressed_inf(base, specs)
 		local expanded = apply_vowel_spec(verb_stem, base.verb.verb, "root-stressed infinitive", spec)
 		if form_to_do == "stem" then
 			return expanded
-		elseif form_to_do == "inf" then
-			return expanded .. verb_suffix
 		else
-			return "[[" .. base.verb.verb .. "|" .. expanded .. truncated_verb_suffix .. "]]" .. base.verb.linked_suf
+			return expanded .. verb_suffix
 		end
 	end
 
@@ -889,8 +876,6 @@ local function do_root_stressed_inf(base, specs)
 		return root_stressed_inf_special_case(base, form, "stem") end)
 	process_specs(base, base.forms, "inf", specs, false, function(base, form)
 		return root_stressed_inf_special_case(base, form, "inf") end)
-	process_specs(base, base.forms, "inf_linked", specs, false, function(base, form)
-		return root_stressed_inf_special_case(base, form, "inf_linked") end)
 end
 
 
@@ -1105,6 +1090,11 @@ end
 
 local function add_imperative_reflexive_clitics(base, rowslot)
 	-- FIXME
+	for _, persnum in ipairs(full_person_number_list) do
+		base.forms[rowslot .. persnum] = iut.flatmap_forms(base.forms[rowslot .. persnum], function(form)
+			return substitute_reflexive_pronoun(base.verb.finite_pref, persnum) .. "[[" .. form .. "]]"
+		end)
+	end
 end
 
 
@@ -1243,7 +1233,7 @@ end
 
 local function add_gerund_reflexive_clitics(base, rowslot)
 	base.forms[rowslot] = iut.map_forms(base.forms[rowslot], function(form)
-		return "[[" .. form .. "]]" .. substitute_reflexive_pronoun(base.verb.linked_suf, persnum)
+		return form .. m_links.remove_links(substitute_reflexive_pronoun(base.verb.linked_suf, persnum))
 	end)
 end
 
@@ -1275,6 +1265,7 @@ local row_conjugation = {
 		no_explicit_principal_part = true, -- because handled specially using / or \ notation
 		no_row_overrides = true, -- useless because there's only one form; use / or \ notation
 		no_single_overrides = true, --useless because there's only one form; use / or \ notation
+		add_reflexive_clitics = add_infinitive_reflexive_clitics,
 	}},
 	{"pres", {
 		desc = "present",
@@ -1304,6 +1295,7 @@ local row_conjugation = {
 		row_override_persnums = {"2s", "2p"},
 		generate_default_principal_part = generate_imperative_principal_part,
 		conjugate = add_imperative,
+		add_reflexive_clitics = add_imperative_reflexive_clitics,
 	}},
 	{"negimp", {
 		desc = "negative imperative",
@@ -1374,6 +1366,7 @@ local row_conjugation = {
 		persnums = {""},
 		generate_default_principal_part = generate_past_participle_principal_part,
 		conjugate = function(base) return base.principal_part_forms.pp end,
+		add_reflexive_clitics = add_participle_reflexive_clitics,
 		no_explicit_principal_part = true, -- because handled specially in PRES#PRES3S,PHIS,PP spec
 		no_row_overrides = true, -- useless because there's only one form; use the PRES#PRES3S,PHIS,PP spec
 		no_single_overrides = true, --useless because there's only one form; use the PRES#PRES3S,PHIS,PP spec
@@ -1384,6 +1377,7 @@ local row_conjugation = {
 		persnums = {""},
 		generate_default_principal_part = generate_gerund_principal_part,
 		conjugate = function(base) return base.principal_part_forms.ger end,
+		add_reflexive_clitics = add_gerund_reflexive_clitics,
 		no_row_overrides = true, -- useless because there's only one form; use explicit principal part
 		no_single_overrides = true, -- useless because there's only one form; use explicit principal part
 	}},
@@ -1393,6 +1387,7 @@ local row_conjugation = {
 		persnums = {""},
 		generate_default_principal_part = generate_present_participle_principal_part,
 		conjugate = function(base) return base.principal_part_forms.presp end,
+		add_reflexive_clitics = add_participle_reflexive_clitics,
 		no_row_overrides = true, -- useless because there's only one form; use explicit principal part
 		no_single_overrides = true, -- useless because there's only one form; use explicit principal part
 		not_defaulted = true, -- not defaulted, user has to request it explicitly
