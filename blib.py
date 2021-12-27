@@ -1226,6 +1226,9 @@ def try_repeatedly(fun, errandpagemsg, operation="save", bad_value_ret=None, max
       if "invalidtitle" in unicode(e):
         log_exception("Invalid title", e, skipping=True)
         return bad_value_ret
+      if "abusefilter-disallowed" in unicode(e):
+        log_exception("Abuse filter: Disallowed", e, skipping=True)
+        return bad_value_ret
       #except (pywikibot.exceptions.Error, StandardError) as e:
       log_exception("Error", e)
       num_tries += 1
