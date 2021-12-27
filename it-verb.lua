@@ -871,9 +871,8 @@ end
 
 
 local function add_infinitive(base, rowslot)
-	-- Do the inf and inf_linked forms. When do_root_stressed_inf is called, this also sets
-	-- base.principal_part_forms.root_stressed_stem, which is needed by add_present_indic(), so we have to
-	-- do this before conjugating the present indicative.
+	-- When do_root_stressed_inf is called, this also sets base.principal_part_forms.root_stressed_stem, which is needed
+	-- by add_present_indic(), so we have to do this before conjugating the present indicative.
 	if base.principal_part_specs.root_stressed_inf then
 		do_root_stressed_inf(base, base.principal_part_specs.root_stressed_inf)
 	else
@@ -1002,7 +1001,8 @@ local function generate_present_subj_principal_part(base)
 			error("sub: or subrow: must be given in order to generate the singular present subjunctive "
 				.. "because first-person singular present indicative '" .. form .. "' does not end in -o")
 		end
-		return rsub(form, "o$", base.conj_vowel == "à" and "i" or "a")
+		-- Need to call combine_stem_ending() here to handle verbs in -care/-gare and -ciare/-giare.
+		return combine_stem_ending(base, "sub123s", rsub(form, "o$", ""), base.conj_vowel == "à" and "i" or "a")
 	end)
 end
 
@@ -1072,10 +1072,10 @@ local function add_imperative(base, rowslot)
 	copy("2s", base.principal_part_forms.imp)
 	-- Copy present indicative 2p to imperative 2p.
 	copy("2p", base.forms.pres2p)
-	-- Copy present subjunctive 3s, 1p, 2p to imperative.
-	copy("3s", base.forms.sub_3s)
-	copy("1p", base.forms.sub_1p)
-	copy("2p", base.forms.sub_2p)
+	-- Copy present subjunctive 3s, 1p, 3p to imperative.
+	copy("3s", base.forms.sub3s)
+	copy("1p", base.forms.sub1p)
+	copy("3p", base.forms.sub3p)
 end
 
 
@@ -1085,7 +1085,7 @@ end
 
 
 local function add_imperative_reflexive_clitics(base, rowslot)
-	local function s2suf = get_unlinked_clitic_suffix(base, "2s")
+	local s2suf = get_unlinked_clitic_suffix(base, "2s")
 	base.forms[rowslot .. "2s"] = iut.flatmap_forms(base.forms[rowslot .. "2s"], function(form)
 		form = rsub(form, "'$", "") -- dà', fà', etc.
 		if rfind(form, AV .. "$") then -- final stressed vowel; implement syntactic gemination
@@ -1101,7 +1101,7 @@ local function add_imperative_reflexive_clitics(base, rowslot)
 		end
 	end)
 	for _, persnum in ipairs({"1p", "2p"}) do
-		local function suf = get_unlinked_clitic_suffix(base, persnum)
+		local suf = get_unlinked_clitic_suffix(base, persnum)
 		base.forms[rowslot .. persnum] = iut.map_forms(base.forms[rowslot .. persnum], function(form)
 			return form .. suf
 		end)
@@ -1126,17 +1126,17 @@ end
 
 local function add_negative_imperative_reflexive_clitics(base, rowslot)
 	for _, persnum in ipairs({"2s", "1p", "2p"}) do
-		local function suf = get_unlinked_clitic_suffix(base, persnum)
-		local function pref = substitute_reflexive_pronoun(base.verb.finite_pref, persnum)
+		local suf = get_unlinked_clitic_suffix(base, persnum)
+		local pref = substitute_reflexive_pronoun(base.verb.finite_pref, persnum)
 		base.forms[rowslot .. persnum] = iut.flatmap_forms(base.forms[rowslot .. persnum], function(form)
-			local truncated = persnum == "2s" and rsub(form, "r?re%]%]$", "r%1") or rsub(form, "%]%]$", "")
+			local truncated = persnum == "2s" and rsub(form, "r?re%]%]$", "r") or rsub(form, "%]%]$", "")
 			local sufform = truncated .. suf .. "]]"
 			local prefform = rsub(form, "^(%[%[non%]%]) (.*)$", "%1 " .. pref .. " %2")
 			return {sufform, prefform}
 		end)
 	end
 	for _, persnum in ipairs({"3s", "3p"}) do
-		local function pref = substitute_reflexive_pronoun(base.verb.finite_pref, persnum)
+		local pref = substitute_reflexive_pronoun(base.verb.finite_pref, persnum)
 		base.forms[rowslot .. persnum] = iut.map_forms(base.forms[rowslot .. persnum], function(form)
 			return rsub(form, "^(%[%[non%]%]) (.*)$", "%1 " .. pref .. " %2")
 		end)
@@ -1231,7 +1231,7 @@ local function postprocess_imperfect_subj_after_row_overrides(base, rowslot)
 
 	-- Copy 12s to 1s and 2s. This happens between the row overrides and the single overrides.
 	copy("1s", base.forms.impsub12s)
-	copy("2s", base.forms.imbsub12s)
+	copy("2s", base.forms.impsub12s)
 end
 
 
@@ -1388,7 +1388,9 @@ local row_conjugation = {
 		tag_suffix = "past|part",
 		persnums = {""},
 		generate_default_principal_part = generate_past_participle_principal_part,
-		conjugate = function(base) return base.principal_part_forms.pp end,
+		principal_part_desc = "past participle",
+		principal_part_ending = "",
+		conjugate = {""},
 		add_reflexive_clitics = add_participle_reflexive_clitics,
 		no_explicit_principal_part = true, -- because handled specially in PRES#PRES3S,PHIS,PP spec
 		no_row_overrides = true, -- useless because there's only one form; use the PRES#PRES3S,PHIS,PP spec
@@ -1399,7 +1401,9 @@ local row_conjugation = {
 		tag_suffix = "ger",
 		persnums = {""},
 		generate_default_principal_part = generate_gerund_principal_part,
-		conjugate = function(base) return base.principal_part_forms.ger end,
+		principal_part_desc = "gerund",
+		principal_part_ending = "",
+		conjugate = {""},
 		add_reflexive_clitics = add_gerund_reflexive_clitics,
 		no_row_overrides = true, -- useless because there's only one form; use explicit principal part
 		no_single_overrides = true, -- useless because there's only one form; use explicit principal part
@@ -1409,7 +1413,9 @@ local row_conjugation = {
 		tag_suffix = "pres|part",
 		persnums = {""},
 		generate_default_principal_part = generate_present_participle_principal_part,
-		conjugate = function(base) return base.principal_part_forms.presp end,
+		principal_part_desc = "present participle",
+		principal_part_ending = "",
+		conjugate = {""},
 		add_reflexive_clitics = add_participle_reflexive_clitics,
 		no_row_overrides = true, -- useless because there's only one form; use explicit principal part
 		no_single_overrides = true, -- useless because there's only one form; use explicit principal part
@@ -1426,8 +1432,6 @@ end
 
 
 local all_verb_slots = {
-	{"inf", "inf"},
-	{"inf_linked", "inf"},
 	-- FIXME, needs to be handled specially
 	{"aux", "-"},
 }
@@ -1877,9 +1881,9 @@ local function parse_indicator_spec(angle_bracket_spec, lemma, pagename)
 				for _, colon_separated_group in ipairs(colon_separated_groups) do
 					local aux = colon_separated_group[1]
 					if aux == "a" then
-						aux = "avere"
+						aux = "avére"
 					elseif aux == "e" then
-						aux = "essere"
+						aux = "èssere"
 					elseif aux == "-" then
 						if #colon_separated_group > 1 then
 							parse_err("No footnotes allowed with '-' spec for auxiliary")
@@ -1982,12 +1986,12 @@ local function parse_indicator_spec(angle_bracket_spec, lemma, pagename)
 					local persnums = rowspec.row_override_persnums or rowspec.persnums
 					if #comma_separated_groups ~= #persnums then
 						parse_err("For " .. row_override_slot .. "row:, expected " .. #persnums
-							.. " forms but saw " .. #comma_separated_groups .. " in '"
+							.. " comma-separated forms but saw " .. #comma_separated_groups .. " in '"
 							.. table.concat(dot_separated_group) .. "'")
 					end
 					base.row_override_specs[row_override_slot] = {}
 					for i, persnum in ipairs(persnums) do
-						base.row_override_specs[row_override_slot][persnum] = fetch_specs(comma_separated_group[i])
+						base.row_override_specs[row_override_slot][persnum] = fetch_specs(comma_separated_groups[i])
 					end
 				else
 					local row_override_slots = {}
@@ -2111,7 +2115,7 @@ local function add_categories_and_annotation(alternant_multiword_spec, base, mul
 		insert_cat("verbs ending in -ere")
 	else
 		local ending = base.conj_vowel == "à" and "are" or base.conj_vowel == "é" and "ere" or "ire"
-		insert_ann("conj", ending)
+		insert_ann("conj", "-" .. ending)
 		insert_cat("verbs ending in -" .. ending)
 	end
 
