@@ -25,7 +25,7 @@ def process_text_on_page(index, pagetitle, text):
   removed_cats = []
 
   def should_remove_cat(cat):
-    return re.match(args.regex + "$", cat)
+    return re.match(args.regex + "$", cat.replace("_", " "))
 
   parsed = blib.parse_text(text)
 
