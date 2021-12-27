@@ -225,22 +225,24 @@ FIXME:
 2. Finish support for reflexive and pronominal verbs.
 3. Finish support for reflexive and pronominal imperatives.
 4. Finish support for negative imperatives.
-3. Fix handling of third-only verbs; require that irregular forms be specified in the first person.
-4. Support defective verbs specified using e.g. redire<a/rièdo,-,redìto.imperf:-.fut:-.impsub:->.
+5. Fix handling of third-only verbs; require that irregular forms be specified in the first person.
+6. Support defective verbs specified using e.g. redire<a/rièdo,-,redìto.imperf:-.fut:-.impsub:->.
    Include categorization; but if row overrides or single overrides of all forms given, don't categorize
    as defective for that row.
-5. Fix handling of aux; snarf code from [[Module:de-verb]] to handle aux with multiword expressions.
-6. Add automatic support for common irregular verbs: [[essere]], [[avere]], [[andare]], [[fare]], [[dare]],
+7. Fix handling of aux; snarf code from [[Module:de-verb]] to handle aux with multiword expressions.
+8. Add automatic support for common irregular verbs: [[essere]], [[avere]], [[andare]], [[fare]], [[dare]],
    [[dire]], [[venire]], [[vedere]], [[tenere]], [[bere]], etc. Should make combinations of these verbs
    with clitics, and multiword expressions with these verbs, easier to handle.
-7. Add support for calling from {{it-verb}} in [[Module:it-headword]].
-8. Throw an error if forms missing accents are specified (perhaps except with some special signal, to make
-   it easier to port the old [[Module:it-conj]]).
-9. Consider adding combined clitic tables like in [[Module:es-verb]].
-10. Consider adding automatic support for prefixed -fare verbs.
-11. Consider displaying irregular forms in a different color, as with the old [[Module:es-conj]], or adding
+9. Add support for calling from {{it-verb}} in [[Module:it-headword]].
+10. Throw an error if forms missing accents are specified (perhaps except with some special signal, to make
+    it easier to port the old [[Module:it-conj]]).
+11. Consider adding combined clitic tables like in [[Module:es-verb]].
+12. Consider adding automatic support for prefixed -fare verbs.
+13. Consider displaying irregular forms in a different color, as with the old [[Module:es-conj]], or adding
    a triangle next to them, as with [[Module:ru-verb]].
-12. Consider supporting replace_reflexive_indicators().
+14. Consider supporting replace_reflexive_indicators().
+15. Add post-clitic-addition overrides.
+16. PRES/PAST/PP spec should be required to come first to avoid ambiguities.
 --]=]
 
 local lang = require("Module:languages").getByCode("it")
@@ -407,7 +409,27 @@ end
 
 
 local function strip_spaces(text)
-	return rsub(text, "^%s*(.-)%s*", "%1")
+	return rsub(text, "^%s*(.-)%s*$", "%1")
+end
+
+
+-- Like iut.split_alternating_runs() but strips spaces from both ends of the odd-numbered elements (only in
+-- odd-numbered runs if preserve_splitchar is given). Effectively we leave alone the footnotes and splitchars
+-- themselves, but otherwise strip extraneous spaces. Spaces in the middle of an element are also left alone.
+local function split_alternating_runs_and_strip_spaces(segment_runs, splitchar, preserve_splitchar)
+	local split_runs = iut.split_alternating_runs(segment_runs, splitchar, preserve_splitchar)
+	local function strip_run(run)
+	end
+	for i, run in ipairs(split_runs) do
+		if not preserve_splitchar or i % 2 == 1 then
+			for j, element in ipairs(run) do
+				if j % 2 == 1 then
+					run[j] = strip_spaces(element)
+				end
+			end
+		end
+	end
+	return split_runs
 end
 
 
@@ -916,7 +938,7 @@ local function pres_special_case(base, form)
 	else
 		local unaccented_form = remove_accents(form)
 		if not general_list_form_contains_form(base.verb.pres, unaccented_form, remove_accents)
-			and (base.isc_pres and not general_list_form_contains_form(base.verb.isc_pres, unaccented_form, remove_accents)) then
+			and (base.verb.isc_pres and not general_list_form_contains_form(base.verb.isc_pres, unaccented_form, remove_accents)) then
 			base.is_irreg.pres = true
 		end
 		return form
@@ -948,7 +970,7 @@ local function pres3s_special_case(base, form)
 	else
 		local unaccented_form = remove_accents(form)
 		if not general_list_form_contains_form(base.verb.pres3s, unaccented_form, remove_accents)
-			and not general_list_form_contains_form(base.verb.isc_pres3s, unaccented_form, remove_accents) then
+			and (base.verb.isc_pres3s and not general_list_form_contains_form(base.verb.isc_pres3s, unaccented_form, remove_accents)) then
 			base.is_irreg.pres = true
 		end
 		return form
@@ -1805,7 +1827,7 @@ local function parse_indicator_spec(angle_bracket_spec, lemma, pagename)
 	end
 
 	local function fetch_specs(comma_separated_group, allow_blank)
-		local colon_separated_groups = iut.split_alternating_runs(comma_separated_group, ":")
+		local colon_separated_groups = split_alternating_runs_and_strip_spaces(comma_separated_group, ":")
 		if allow_blank and #colon_separated_groups == 1 and #colon_separated_groups[1] == 1 and
 			colon_separated_groups[1][1] == "" then
 			return nil
@@ -1838,15 +1860,15 @@ local function parse_indicator_spec(angle_bracket_spec, lemma, pagename)
 	assert(inside)
 
 	local segments = iut.parse_balanced_segment_run(inside, "[", "]")
-	local dot_separated_groups = iut.split_alternating_runs(segments, "%s*%.%s*")
+	local dot_separated_groups = split_alternating_runs_and_strip_spaces(segments, "%.")
 	for i, dot_separated_group in ipairs(dot_separated_groups) do
 		local first_element = dot_separated_group[1]
 
 		if i == 1 then -- first dot-separated group is PRES,PHIS,PP or PRES#PRES3S,PHIS,PP or similar.
-			local comma_separated_groups = iut.split_alternating_runs(dot_separated_group, "%s*[,\\/]%s*", "preserve splitchar")
+			local comma_separated_groups = split_alternating_runs_and_strip_spaces(dot_separated_group, "[,\\/]",
+				"preserve splitchar")
 			local presind = 1
-			local first_separator = #comma_separated_groups > 1 and
-				strip_spaces(comma_separated_groups[2][1])
+			local first_separator = #comma_separated_groups > 1 and comma_separated_groups[2][1]
 			if base.verb.is_reflexive then
 				if #comma_separated_groups > 1 and first_separator ~= "," then
 					presind = 3
@@ -1856,7 +1878,7 @@ local function parse_indicator_spec(angle_bracket_spec, lemma, pagename)
 						-- For verbs like [[scegliersi]] and [[proporsi]], allow either 'é\scélgo' or '\é\scélgo'
 						-- and similarly either 'ó+\propóngo' or '\ó+\propóngo'.
 						if specs == nil then
-							if #comma_separated_groups > 3 and strip_spaces(comma_separated_groups[4][1]) == "\\" then
+							if #comma_separated_groups > 3 and comma_separated_groups[4][1] == "\\" then
 								base.principal_part_specs.root_stressed_inf = fetch_specs(comma_separated_groups[3])
 								presind = 5
 							else
@@ -1877,7 +1899,7 @@ local function parse_indicator_spec(angle_bracket_spec, lemma, pagename)
 				end
 				presind = 3
 				-- Fetch auxiliary or auxiliaries.
-				local colon_separated_groups = iut.split_alternating_runs(comma_separated_groups[1], ":")
+				local colon_separated_groups = split_alternating_runs_and_strip_spaces(comma_separated_groups[1], ":")
 				for _, colon_separated_group in ipairs(colon_separated_groups) do
 					local aux = colon_separated_group[1]
 					if aux == "a" then
@@ -1909,7 +1931,7 @@ local function parse_indicator_spec(angle_bracket_spec, lemma, pagename)
 
 				-- Fetch root-stressed infinitive, if given.
 				if first_separator == "\\" then
-					if #comma_separated_groups > 3 and strip_spaces(comma_separated_groups[4][1]) == "\\" then
+					if #comma_separated_groups > 3 and comma_separated_groups[4][1] == "\\" then
 						base.principal_part_specs.root_stressed_inf = fetch_specs(comma_separated_groups[3])
 						presind = 5
 					else
@@ -1919,7 +1941,7 @@ local function parse_indicator_spec(angle_bracket_spec, lemma, pagename)
 			end
 
 			-- Parse present
-			local hash_separated_groups = iut.split_alternating_runs(comma_separated_groups[presind], "%s*#%s*")
+			local hash_separated_groups = split_alternating_runs_and_strip_spaces(comma_separated_groups[presind], "#")
 			if #hash_separated_groups > 2 then
 				parse_err("At most one hash sign (#) can appear in present tense specs")
 			end
@@ -1929,8 +1951,7 @@ local function parse_indicator_spec(angle_bracket_spec, lemma, pagename)
 			end
 
 			-- Parse past historic
-			if #comma_separated_groups > presind then
-				if strip_spaces(comma_separated_groups[presind + 1][1]) ~= "," then
+			if #comma_separated_groups > presind then if comma_separated_groups[presind + 1][1] ~= "," then
 					parse_err("Use a comma not slash to separate present from past historic")
 				end
 				base.principal_part_specs.phis = fetch_specs(comma_separated_groups[presind + 2])
@@ -1938,7 +1959,7 @@ local function parse_indicator_spec(angle_bracket_spec, lemma, pagename)
 
 			-- Parse past participle
 			if #comma_separated_groups > presind + 2 then
-				if strip_spaces(comma_separated_groups[presind + 3][1]) ~= "," then
+				if comma_separated_groups[presind + 3][1] ~= "," then
 					parse_err("Use a comma not slash to separate past historic from past participle")
 				end
 				base.principal_part_specs.pp = fetch_specs(comma_separated_groups[presind + 4])
@@ -1982,7 +2003,7 @@ local function parse_indicator_spec(angle_bracket_spec, lemma, pagename)
 						parse_err("Can't specify row override for " .. rowspec.desc .. " using " .. row_override_slot
 							.. "row:; use an explicit principal part or single overrides (if allowed)")
 					end
-					local comma_separated_groups = iut.split_alternating_runs(dot_separated_group, "%s*,%s*")
+					local comma_separated_groups = split_alternating_runs_and_strip_spaces(dot_separated_group, ",")
 					local persnums = rowspec.row_override_persnums or rowspec.persnums
 					if #comma_separated_groups ~= #persnums then
 						parse_err("For " .. row_override_slot .. "row:, expected " .. #persnums
