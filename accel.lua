@@ -1,12 +1,11 @@
 local export = {}
 
 local rsplit = mw.text.split
+local split_term_regex = "%*~!"
 
-function no_rule_error(params) -- Intentionally global; better way to do this?
-	return error(('No rule for "%s" in language "%s".')
-		:format(params.form, params.lang), 2)
-end
-
+-- FIXME: Intentionally global, but think whether this is correct. Currently no messages are logged in any code.
+-- This potentially could be made non-global by moving inside of generate_JSON() and passed into export.generate(),
+-- so it can in turn be passed to language-specific accelerator code.
 messages = require("Module:array")() -- intentionally global
 
  
@@ -25,17 +24,47 @@ function export.default_entry(params)
 			end
 			genderspec = table.concat(genders)
 		end
-		return "{{head|" .. params.lang .. "|" .. pos ..
-			(params.target ~= params.target_pagename and "|head=" .. params.target or "") ..
-			(params.transliteration and "|tr=" .. params.transliteration or "") ..
-			genderspec .. "}}"
+		local parts = {}
+		table.insert(parts, "{{head|" .. params.lang .. "|" .. pos)
+		for i, target in ipairs(params.targets) do
+			local paramnum = i == 1 and "" or tostring(i)
+			if target.term ~= params.target_pagename then
+				table.insert(parts, ("|head%s=%s"):format(paramnum, target.term))
+			end
+			if target.translit then
+				table.insert(parts, ("|tr%s=%s"):format(paramnum, target.translit))
+			end
+		end
+		table.insert(parts, genderspec .. "}}")
+		return table.concat(parts)
 	end
+
 	local function make_def(tempname, extra_params)
-		return "{{" .. tempname .. "|" .. params.lang ..
-			"|" .. params.origin ..
-			(params.origin_transliteration and "|tr=" .. params.origin_transliteration or "") ..
-			(extra_params or "") ..
-			"}}"
+		local parts = {}
+		table.insert(parts, "{{" .. tempname .. "|" .. params.lang)
+		for i, origin in ipairs(params.origins) do
+			local termparam, trparam
+			if i == 1 then
+				termparam = ""
+				trparam = "tr="
+			else
+				termparam = "term" .. i .. "="
+				trparam = "tr" .. i .. "="
+			end
+			table.insert(parts, ("|%s%s"):format(termparam, origin.term))
+			if origin.translit then
+				table.insert(parts, ("|%s%s"):format(trparam, origin.translit))
+			end
+		end
+		table.insert(parts, (extra_params or "") .. "}}")
+		return table.concat(parts)
+	end
+
+	local function no_rule_error(params)
+		-- FIXME, verify the 2 below (number of stack frames to pop off); may be wrong now that we moved this function
+		-- underneath default_entry().
+		return error(('No rule for "%s" in language "%s".')
+			:format(params.form, params.lang), 2)
 	end
 
 	local entry = {
@@ -663,6 +692,26 @@ local function entries_to_text(entries, lang)
 	return "==" .. lang:getCanonicalName() .. "==\n\n" .. table.concat(entries, "\n\n")
 end
 
+
+local function split_term_and_translit(encoded_term, encoded_translit)
+	local terms = rsplit(encoded_term, split_term_regex)
+	local translits = encoded_translit and rsplit(encoded_translit, split_term_regex) or {}
+	if #translits > #terms then
+		error(("Saw %s translits, which is > the %s terms seen: encoded_term=%s, encoded_translit=%s"):
+			format(#translits, #terms, encoded_term, encoded_translit))
+	end
+	local result = {}
+	for i, term in ipairs(terms) do
+		local translit = translits[i]
+		if translit == "" then
+			translit = nil
+		end
+		table.insert(result, {term = term, translit = translit})
+	end
+	return result
+end
+
+
 function export.generate(frame)
 	local fparams = {
 		lang            = {required = true},
@@ -676,6 +725,7 @@ function export.generate(frame)
 		transliteration        = {list = true, allow_holes = true},
 		origin                 = {list = true, allow_holes = true},
 		origin_transliteration = {list = true, allow_holes = true},
+		-- I'm pretty sure this is actually required and must have args.num entries in it.
 		target                 = {list = true, allow_holes = true},
 	}
 	
@@ -700,6 +750,8 @@ function export.generate(frame)
 		}
 		
 		params.form = params.form:gsub("&#124;", "|")
+		params.targets = split_term_and_translit(params.target, params.transliteration)
+		params.origins = split_term_and_translit(params.origin, params.origin_transliteration)
 		
 		-- Make a default entry
 		local entry = export.default_entry(params)
