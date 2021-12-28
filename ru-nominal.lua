@@ -6,8 +6,8 @@ local export = {}
 
 local lang = require("Module:languages").getByCode("ru")
 
-local ut = require("Module:utils")
 local m_links = require("Module:links")
+local m_table = require("Module:table")
 local com = require("Module:ru-common")
 local m_ru_translit = require("Module:ru-translit")
 local m_table_tools = require("Module:table tools")
@@ -53,6 +53,16 @@ function export.split_russian_tr(term, dopair)
 	end
 end
 
+local function concat_maybe_moving_notes(x, y, movenotes)
+	if movenotes then
+		local xentry, xnotes = m_table_tools.separate_notes(x)
+		local yentry, ynotes = m_table_tools.separate_notes(y)
+		return xentry .. yentry .. xnotes .. ynotes
+	else
+		return x .. y
+	end
+end
+
 -- Concatenate two Russian strings RU1 and RU2 that may have corresponding
 -- manual transliteration TR1 and TR2 (which should be nil if there is no
 -- manual translit). If DOPAIR, return a two-item list of the combined
@@ -62,19 +72,9 @@ end
 -- them to the end of the concatenated string, before any footnote symbols
 -- for RU2; same thing goes for TR1 and TR2.
 function export.concat_russian_tr(ru1, tr1, ru2, tr2, dopair, movenotes)
-	local function concat_maybe_moving_notes(x, y)
-		if movenotes then
-			local xentry, xnotes = m_table_tools.separate_notes(x)
-			local yentry, ynotes = m_table_tools.separate_notes(y)
-			return xentry .. yentry .. xnotes .. ynotes
-		else
-			return x .. y
-		end
-	end
-
 	local ru, tr
 	if not tr1 and not tr2 then
-		ru = concat_maybe_moving_notes(ru1, ru2)
+		ru = concat_maybe_moving_notes(ru1, ru2, movenotes)
 	else
 		if not tr1 then
 			tr1 = export.translit_no_links(ru1)
@@ -82,7 +82,7 @@ function export.concat_russian_tr(ru1, tr1, ru2, tr2, dopair, movenotes)
 		if not tr2 then
 			tr2 = export.translit_no_links(ru2)
 		end
-		ru, tr = concat_maybe_moving_notes(ru1, ru2), com.j_correction(concat_maybe_moving_notes(tr1, tr2))
+		ru, tr = concat_maybe_moving_notes(ru1, ru2, movenotes), com.j_correction(concat_maybe_moving_notes(tr1, tr2, movenotes))
 	end
 	if dopair then
 		return {ru, tr}
@@ -118,6 +118,78 @@ function export.concat_forms(forms)
 		end
 	end
 	return table.concat(joined_rutr, ",")
+end
+
+-- Given a list of forms, where each form is a two-element list of {RUSSIAN, TRANSLIT}, strip footnote symbols from the
+-- end of the Russian and translit.
+function export.strip_notes_from_forms(forms)
+	local newforms = {}
+	for _, form in ipairs(forms) do
+		local ru, tr = form[1], form[2]
+		ru, _ = m_table_tools.separate_notes(ru)
+		if tr then
+			tr, _ = m_table_tools.separate_notes(tr)
+		end
+		table.insert(newforms, {ru, tr})
+	end
+	return newforms
+end
+
+-- Given a list of forms, where each form is a two-element list of {RUSSIAN, TRANSLIT}, unzip into parallel lists of
+-- Russian and translit. The latter list may have gaps in it.
+function export.unzip_forms(forms)
+	local rulist = {}
+	local trlist = {}
+	for i, form in ipairs(forms) do
+		local ru, tr = form[1], form[2]
+		rulist[i] = ru
+		trlist[i] = tr
+	end
+	return rulist, trlist
+end
+
+-- Given parallel lists of Russian and translit (where the latter list may have gaps in it), return a list of forms,
+-- where each form is a two-element list of {RUSSIAN, TRANSLIT}.
+function export.zip_forms(rulist, trlist)
+	local forms = {}
+	for i, ru in ipairs(rulist) do
+		table.insert(forms, {ru, trlist[i]})
+	end
+	return forms
+end
+
+-- Given a list of forms, where each form is a two-element list of {RUSSIAN, TRANSLIT}, combine adjacent forms with
+-- identical Russian, concatenating the translit with a comma in between.
+function export.combine_translit_of_adjacent_heads(forms)
+	local newforms = {}
+	if #forms == 0 then
+		return newforms
+	end
+	table.insert(newforms, {forms[1][1], forms[1][2]})
+	for i = 2, #forms do
+		-- If the Russian of the next form is the same as that of the last one, combine their translits and modify
+		-- newforms[] in-place. Otherwise add the next form to newforms[]. Make sure to clone the form rather than
+		-- just appending it directly since we may modify it in-place; we don't want to side-effect `forms` as passed
+		-- in.
+		if forms[i][1] == newforms[#newforms][1] then
+			local tr1 = newforms[#newforms][2]
+			local tr2 = forms[i][2]
+			if not tr1 and not tr2 then
+				-- this shouldn't normally happen
+			else
+				tr1 = tr1 or export.translit_no_links(newforms[#newforms][1])
+				tr2 = tr2 or export.translit_no_links(forms[i][1])
+				if tr1 == tr2 then
+					-- this shouldn't normally happen
+				else
+					newforms[#newforms][2] = tr1 .. ", " .. tr2
+				end
+			end
+		else
+			table.insert(newforms, {forms[i][1], forms[i][2]})
+		end
+	end
+	return newforms
 end
 
 function export.strip_ending(ru, tr, ending)
@@ -219,11 +291,8 @@ export.unstressed_rules = {
 	["х"] = velar_rules,
 }
 
-export.nonsyllabic_suffixes = ut.list_to_set({"", "ъ", "ь", "й"})
+export.nonsyllabic_suffixes = m_table.listToSet({"", "ъ", "ь", "й"})
 
-export.sibilant_suffixes = ut.list_to_set({"ш", "щ", "ч", "ж"})
+export.sibilant_suffixes = m_table.listToSet({"ш", "щ", "ч", "ж"})
 
 return export
-
--- For Vim, so we get 4-space tabs
--- vim: set ts=4 sw=4 noet:
