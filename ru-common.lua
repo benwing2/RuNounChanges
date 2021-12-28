@@ -902,6 +902,3 @@ function export.split_symbols(entry, do_subscript)
 end
 
 return export
-
--- For Vim, so we get 4-space tabs
--- vim: set ts=4 sw=4 noet:
