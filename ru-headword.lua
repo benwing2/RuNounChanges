@@ -121,6 +121,16 @@ local function add_forms(inflection, forms, pos)
 	end
 end
 
+local function get_non_redundant_translit(data)
+	local translits = {}
+	for i, translit in ipairs(data.translits) do
+		if not data.redundant_translits[i] then
+			translits[i] = translit
+		end
+	end
+	return translit
+end
+
 -- The main entry point.
 function export.show(frame)
 	local poscat = ine(frame.args[1]) or error("Part of speech has not been specified. Please pass parameter 1 to the module invocation.")
@@ -214,6 +224,9 @@ function export.show(frame)
 				table.insert(data.categories, "Russian terms with irregular pronunciations")
 			end
 			tr = tr_gen
+		end
+		if tr == tr_gen then
+			data.redundant_translits[i] = true
 		end
 
 		table.insert(data.translits, tr)
@@ -920,7 +933,7 @@ pos_functions["adverbs"] = {
 		local comps = args[2]
 
 		handle_comparatives(data, comps, "adverb", args.noinf,
-			{form = "comparative", lemma = heads, translit = data.translit})
+			{form = "comparative", lemma = data.heads, translit = get_non_redundant_translit(data)})
 
 		local function add_adv_forms(label, forms)
 			local parts = {label = label}
