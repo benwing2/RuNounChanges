@@ -120,27 +120,48 @@ local function rsub(term, foo, bar)
 end
 
 
+local function wrap_in_span(text, classes)
+	return ("<span class='%s'>%s</span>"):format(classes, text)
+end
+
+
 function export.format_form_of(data)
 	if type(data) ~= "table" then
-		error("First argument must now be a table of arguments")
+		error("Internal error: First argument must now be a table of arguments")
 	end
-
+	-- FIXME: Change the callers to send in .terminfos instead of .terminfo and remove
+	-- the following compatibility code.
+	if data.terminfo and data.terminfos then
+		error("Internal error: Can't specify both .terminfo and .terminfos")
+	end
+	local terminfos = data.terminfos
+	if data.terminfo then
+		if type(data.terminfo) == "string" then
+			terminfos = data.terminfo
+		else
+			terminfos = {data.terminfo}
+		end
+	end
 	local text_classes = data.text_classes or "form-of-definition use-with-mention"
 	local terminfo_classes = data.text_classes or "form-of-definition-link"
 	local parts = {}
 	table.insert(parts, "<span class='" .. text_classes .. "'>")
 	table.insert(parts, data.text)
-	if data.text ~= "" and data.terminfo then
+	if data.text ~= "" and terminfos then
 		table.insert(parts, " ")
 	end
-	if data.terminfo then
-		table.insert(parts, "<span class='" .. terminfo_classes .. "'>")
-		if type(data.terminfo) == "string" then
-			table.insert(parts, data.terminfo)
+	if terminfos then
+		if type(terminfos) == "string" then
+			table.insert(parts, wrap_in_span(terminfos, terminfo_classes))
 		else
-			table.insert(parts, m_links.full_link(data.terminfo, data.terminfo_face, false))
+			local formatted_terms = {}
+			for _, terminfo in ipairs(terminfos) do
+				table.insert(formatted_terms, wrap_in_span(
+					m_links.full_link(terminfo, data.terminfo_face, false), terminfo_classes
+				))
+			end
+			table.insert(parts, m_table.serialCommaJoin(formatted_terms))
 		end
-		table.insert(parts, "</span>")
 	end
 	if data.posttext then
 		table.insert(parts, data.posttext)
@@ -600,8 +621,8 @@ end
 -- Compute and return the appropriate categories for the tags in `tags` (user-specified tags,
 -- which may consist of multiple tag sets separated by semicolons) and the language in `lang`.
 -- This checks both language-specific and language-agnostic category specs in [[Module:form of/cats]].
--- `POS` is the user-specified part of speech, if any, and `terminfo` is currently unused.
-function export.fetch_lang_categories(lang, tags, terminfo, POS)
+-- `POS` is the user-specified part of speech, if any, and `terminfos` is currently unused.
+function export.fetch_lang_categories(lang, tags, terminfos, POS)
 	local m_cats = mw.loadData("Module:form of/cats")
 
 	local categories = {}
@@ -828,7 +849,7 @@ function export.fetch_lang_categories(lang, tags, terminfo, POS)
 end
 
 
-function export.tagged_inflections(data, terminfo, notext, capfirst, posttext, joiner)
+function export.tagged_inflections(data)
 	if not data.tags then
 		error("First argument must now be a table of arguments")
 	end
@@ -890,16 +911,16 @@ function export.tagged_inflections(data, terminfo, notext, capfirst, posttext, j
 		table.insert(inflections, table.concat(cur_infl))
 	end
 
-	local format_data = require("Module:table").shallowcopy(data)
+	local format_data = m_table.shallowcopy(data)
 
+	local of_text = (data.terminfos or data.terminfo) and " of" or ""
 	if #inflections == 1 then
 		format_data.text =
-			data.notext and "" or ((data.capfirst and require("Module:string utilities").ucfirst(inflections[1]) or inflections[1]) ..
-				(data.terminfo and " of" or ""))
+			data.notext and "" or ((data.capfirst and require("Module:string utilities").ucfirst(inflections[1]) or inflections[1])
+				.. of_text)
 		return export.format_form_of(format_data)
 	else
-		format_data.text = data.notext and "" or ((data.capfirst and "Inflection" or "inflection") ..
-			(data.terminfo and " of" or ""))
+		format_data.text = data.notext and "" or ((data.capfirst and "Inflection" or "inflection") .. of_text)
 		format_data.posttext = (data.posttext or "") .. ":"
 		local link = export.format_form_of(format_data)
 		local text_classes = data.text_classes or "form-of-definition use-with-mention"

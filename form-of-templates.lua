@@ -6,12 +6,14 @@ local m_form_of = require("Module:form of")
 local m_form_of_pos = require("Module:form of/pos")
 local rfind = mw.ustring.find
 local rmatch = mw.ustring.match
+local rsplit = mw.text.split
 local rgsplit = mw.text.gsplit
 
--- Add tracking category for PAGE when called from TEMPLATE. The tracking
--- category linked to is [[Template:tracking/form-of/TEMPLATE/PAGE]].
-local function track(template, page)
-	require("Module:debug").track("form-of/" .. template .. "/" .. page)
+-- Add tracking category for PAGE when called from TEMPLATE. The tracking category linked to is
+-- [[Template:tracking/form-of/TEMPLATE/PAGE]]. If TEMPLATE is omitted, the tracking category is of the form
+-- [[Template:tracking/form-of/PAGE]].
+local function track(page, template)
+	require("Module:debug").track("form-of/" .. (template and template .. "/" or "") .. page)
 end
 
 
@@ -99,7 +101,7 @@ local function process_parent_args(template, parent_args, params, defaults, igno
 	if tracked_params then
 		for tracked_param, _ in pairs(tracked_params) do
 			if parent_args[tracked_param] then
-				track(template, "arg/" .. tracked_param)
+				track("arg/" .. tracked_param, template)
 			end
 		end
 	end
@@ -130,40 +132,38 @@ end
 -- will be the gloss, unless NO_NUMBERED_GLOSS is given.
 local function add_link_params(params, term_param, no_numbered_gloss)
 	-- Numbered params controlling link display
-	params[term_param] = {}
-	params[term_param + 1] = {alias_of = "alt"}
+	params[term_param] = { list = "term", allow_holes = true }
+	params[term_param + 1] = { alias_of = "alt" }
 	if not no_numbered_gloss then
-		params[term_param + 2] = {alias_of = "t"}
+		params[term_param + 2] = { alias_of = "t" }
 	end
 	
 	-- Named params controlling link display
-	params["alt"] = {}
-	params["t"] = {}
-	params["gloss"] = {alias_of = "t"}
-	params["sc"] = {}
-	params["tr"] = {}
-	params["ts"] = {}
-	params["pos"] = {}
-	params["g"] = {list = true}
-	params["id"] = {}
-	params["lit"] = {}
+	params["alt"] = { list = true, allow_holes = true }
+	params["t"] = { list = true, allow_holes = true }
+	params["gloss"] = { alias_of = "t", list = true, allow_holes = true }
+	params["sc"] = { list = true, allow_holes = true }
+	params["tr"] = { list = true, allow_holes = true }
+	params["ts"] = { list = true, allow_holes = true }
+	params["pos"] = { list = true, allow_holes = true }
+	params["g"] = { list = true, allow_holes = true }
+	params["id"] = { list = true, allow_holes = true }
+	params["lit"] = { list = true, allow_holes = true }
 end
 
 
--- Given processed invocation arguments IARGS and processed parent arguments
--- ARGS, as well as TERM_PARAM (the parent argument specifying the main
--- entry) and COMPAT (true if the language code is found in args["lang"]
--- instead of args[1]), return LANG, TERMINFO, CATEGORIES, where
+-- Given processed invocation arguments IARGS and processed parent arguments ARGS, as well as TERM_PARAM (the parent
+-- argument specifying the first main entry/lemma) and COMPAT (true if the language code is found in args["lang"]
+-- instead of args[1]), return LANG, TERMINFOS, CATEGORIES, where
 -- * LANG is the language code;
--- * TERMINFO is the terminfo structure specifying the main entry, as
---   passed to full_link in Module:links;
--- * CATEGORIES is the categories to add the page to (consisting of any
---   categories specified in the invocation or parent args and any tracking
---   categories, but not any additional lang-specific categories that may be
---   added by {{inflection of}} or similar templates).
+-- * TERMINFOS is a sequence of terminfo structures specifying the main entries/lemmas, as passed to full_link in
+--   [[Module:links]];
+-- * CATEGORIES is the categories to add the page to (consisting of any categories specified in the invocation or
+--   parent args and any tracking categories, but not any additional lang-specific categories that may be added by
+--   {{inflection of}} or similar templates).
 --
 -- This is a subfunction of construct_form_of_text().
-local function get_terminfo_and_categories(iargs, args, term_param, compat)
+local function get_terminfos_and_categories(iargs, args, term_param, compat)
 	local lang = args[compat and "lang" or 1] or iargs["lang"] or "und"
 	lang = require("Module:languages").getByCode(lang) or
 		require("Module:languages").err(lang, compat and "lang" or 1)
@@ -183,88 +183,110 @@ local function get_terminfo_and_categories(iargs, args, term_param, compat)
 		
 	-- Format the link, preceding text and categories
 
-	local terminfo
+	local terminfos
 
 	if iargs["nolink"] then
-		terminfo = nil
+		terminfos = nil
 	elseif iargs["linktext"] then
-		terminfo = iargs["linktext"]
+		terminfos = iargs["linktext"]
 	else
-		local term = args[term_param]
+		terminfos = {}
+		-- FIXME! Previously there was only one term parameter but multiple genders. For compatibility, if we see only
+		-- one term but multiple genders, allow this and convert the genders to the new format, for further
+		-- processing. Also such usages so we can convert them.
+		if args[term_param].maxindex <= 1 and args["g"].maxindex > 1 then
+			local genders = {}
+			for i = 1, args["g"].maxindex do
+				if args["g"][i] then
+					table.insert(genders, args["g"][i])
+				end
+			end
+			args["g"] = {table.concat(genders, ",")}
+			args["g"].maxindex = 1
+			track("one-term-multiple-genders")
+		end
 
-		if not term and not args["alt"] and not args["tr"] and not args["ts"] then
-			if mw.title.getCurrentTitle().nsText == "Template" then
-				term = "term"
-			else
-				error("No linked-to term specified; either specify term, alt, translit or transcription")
+		-- Find the maximum index among any of the list parameters.
+		local maxmaxindex = 0
+		for k, v in pairs(args) do
+			if type(v) == "table" and v.maxindex and v.maxindex > maxmaxindex then
+				maxmaxindex = v.maxindex
 			end
 		end
-		
-		-- add tracking category if term is same as page title
-		if term and mw.title.getCurrentTitle().text == lang:makeEntryName(term) then
-			table.insert(categories, "Forms linking to themselves")
-		end
-		-- maybe add tracking category if primary entry doesn't exist (this is an
-		-- expensive call so we don't do it by default)
-		if iargs["noprimaryentrycat"] and term and mw.title.getCurrentTitle().nsText == ""
-			and not mw.title.new(term).exists then
-			table.insert(categories, lang:getCanonicalName() .. " " .. iargs["noprimaryentrycat"])
-		end
 
-		local sc = args["sc"] or iargs["sc"]
-		
-		sc = (sc and (require("Module:scripts").getByCode(sc) or
-			error("The script code \"" .. sc .. "\" is not valid.")) or nil)
+		for i = 1, maxmaxindex do
+			local term = args[term_param][i]
 
-		terminfo = {
-			lang = lang,
-			sc = sc,
-			term = term,
-			alt = args["alt"],
-			id = args["id"],
-			gloss = args["t"],
-			tr = args["tr"],
-			ts = args["ts"],
-			pos = args["pos"],
-			genders = args["g"],
-			lit = args["lit"],
-		}
+			if not term and not args["alt"][i] and not args["tr"][i] and not args["ts"][i] then
+				if i == 1 and mw.title.getCurrentTitle().nsText == "Template" then
+					term = "term"
+				else
+					error("No linked-to term specified; either specify term, alt, translit or transcription")
+				end
+			end
+			
+			-- add tracking category if term is same as page title
+			if term and mw.title.getCurrentTitle().text == lang:makeEntryName(term) then
+				table.insert(categories, "Forms linking to themselves")
+			end
+			-- maybe add tracking category if primary entry doesn't exist (this is an
+			-- expensive call so we don't do it by default)
+			if iargs["noprimaryentrycat"] and term and mw.title.getCurrentTitle().nsText == ""
+				and not mw.title.new(term).exists then
+				table.insert(categories, lang:getCanonicalName() .. " " .. iargs["noprimaryentrycat"])
+			end
+
+			local sc = args["sc"][i] or iargs["sc"]
+			
+			sc = sc and require("Module:scripts").getByCode(sc, "sc" .. (i == 1 and "" or i)) or nil
+
+			local terminfo = {
+				lang = lang,
+				sc = sc,
+				term = term,
+				alt = args["alt"][i],
+				id = args["id"][i],
+				gloss = args["t"][i],
+				tr = args["tr"][i],
+				ts = args["ts"][i],
+				pos = args["pos"][i],
+				genders = args["g"][i] and rsplit(args["g"][i], ",") or {},
+				lit = args["lit"][i],
+			}
+
+			table.insert(terminfos, terminfo)
+		end
 	end
 	
-	return lang, terminfo, categories
+	return lang, terminfos, categories
 end
 
 
--- Construct and return the full definition line for a form-of-type template
--- invocation, given processed invocation arguments IARGS, processed parent
--- arguments ARGS, TERM_PARAM (the parent argument specifying the main entry),
--- COMPAT (true if the language code is found in args["lang"] instead of
--- args[1]), and DO_FORM_OF, which is a function that returns the actual
--- definition-line text and any language-specific categories. The terminating
--- period/dot will be added as appropriate, the language-specific categories
--- will be added to any categories requested by the invocation or parent args,
--- and then whole thing will be appropriately formatted.
+-- Construct and return the full definition line for a form-of-type template invocation, given processed invocation
+-- arguments IARGS, processed parent arguments ARGS, TERM_PARAM (the parent argument specifying the main entry), COMPAT
+-- (true if the language code is found in args["lang"] instead of args[1]), and DO_FORM_OF, which is a function that
+-- returns the actual definition-line text and any language-specific categories. The terminating period/dot will be
+-- added as appropriate, the language-specific categories will be added to any categories requested by the invocation
+-- or parent args, and then whole thing will be appropriately formatted.
 --
 -- DO_FORM_OF takes two arguments:
 --
 -- (1) The object describing the language;
--- (2) the terminfo object. Normally, this is a table of the form ultimately
---     passed to full_link in [[Module:links]] (which, among other things, also
---     includes the language object inside of it), but if the invocation argument
---     linktext= is given, it will be a string consisting of that text, and if
---     the invocation argument nolink= is given, it will be nil.
+-- (2) the terminfo objects. Normally, this is a sequence of tables of the form ultimately passed to full_link in
+--     [[Module:links]] (which, among other things, also includes the language object inside of it), but if the
+--     invocation argument linktext= is given, it will be a string consisting of that text, and if the invocation
+--     argument nolink= is given, it will be nil.
 --
 -- DO_FORM_OF should return two arguments:
 --
--- (1) The actual definition-line text, marked up appropriately with
---     <span>...</span> but without any terminating period/dot.
--- (2) Any extra categories to add the page to (other than those that can be
---     derived from parameters specified to the invocation or parent arguments,
---     which will automatically be added to the page).
+-- (1) The actual definition-line text, marked up appropriately with <span>...</span> but without any terminating
+--     period/dot.
+-- (2) Any extra categories to add the page to (other than those that can be derived from parameters specified to the
+--     invocation or parent arguments, which will automatically be added to the page).
 local function construct_form_of_text(iargs, args, term_param, compat, do_form_of)
-	local lang, terminfo, categories = get_terminfo_and_categories(iargs, args, term_param, compat)
+	local lang, terminfos, categories = get_terminfos_and_categories(iargs, args, term_param, compat)
 
-	local form_of_text, lang_cats = do_form_of(lang, terminfo)
+	local form_of_text, lang_cats = do_form_of(lang, terminfos)
 	for _, cat in ipairs(lang_cats) do
 		table.insert(categories, cat)
 	end
@@ -412,8 +434,8 @@ function export.form_of_t(frame)
 	end
 
 	return construct_form_of_text(iargs, args, term_param, compat,
-		function(lang, terminfo)
-			return m_form_of.format_form_of {text = text, terminfo = terminfo,
+		function(lang, terminfos)
+			return m_form_of.format_form_of {text = text, terminfos = terminfos,
 				terminfo_face = "term", posttext = iargs["posttext"]}, {}
 		end
 	)
@@ -433,12 +455,12 @@ end
 -- values are "and", "slash", "en-dash".
 local function construct_tagged_form_of_text(iargs, args, term_param, compat, tags, joiner)
 	return construct_form_of_text(iargs, args, term_param, compat,
-		function(lang, terminfo)
+		function(lang, terminfos)
 			local lang_cats =
-				args["nocat"] and {} or m_form_of.fetch_lang_categories(lang, tags, terminfo, args["p"])
+				args["nocat"] and {} or m_form_of.fetch_lang_categories(lang, tags, terminfos, args["p"])
 			return m_form_of.tagged_inflections {
 				tags = tags,
-				terminfo = terminfo,
+				terminfos = terminfos,
 				terminfo_face = "term",
 				notext = args["notext"],
 				capfirst = args["cap"] or iargs["withcap"] and not args["nocap"],
