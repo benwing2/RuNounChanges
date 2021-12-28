@@ -120,14 +120,9 @@ local function rsub(term, foo, bar)
 end
 
 
-function export.format_form_of(data, terminfo, posttext)
+function export.format_form_of(data)
 	if type(data) ~= "table" then
-		data = {
-			text = data,
-			terminfo = terminfo,
-			posttext = posttext,
-			terminfo_face = "term",
-		}
+		error("First argument must now be a table of arguments")
 	end
 
 	local text_classes = data.text_classes or "form-of-definition use-with-mention"
@@ -417,42 +412,59 @@ end
 -- Single-level multipart tags are left alone. (If we need to, a slight modification of the following code
 -- will also split single-level multipart tags.) This assumes that multipart tags are represented as lists
 -- and two-level multipart tags are represented as lists of lists, as is output by normalize_tags().
+-- NOTE: We have to be careful to properly handle imbalanced two-level multipart tags such as
+-- <code>def:s//p</code> (or the reverse, <code>s//def:p</code>).
 function export.split_two_level_multipart_tag_set(tag_set)
 	-- This would be a whole lot easier in Python, with built-in support for
 	-- slicing and array concatenation.
 	for i, tag in ipairs(tag_set) do
-		if type(tag) == "table" and type(tag[1]) == "table" then
-			-- We found a two-level multipart tag.
-			-- (1) Extract the preceding tags.
-			local pre_tags = {}
-			for j=1,i-1 do
-				table.insert(pre_tags, tag_set[j])
-			end
-			-- (2) Extract the following tags.
-			local post_tags = {}
-			for j=i+1,#tag_set do
-				table.insert(post_tags, tag_set[j])
-			end
-			-- (3) Loop over each tag set alternant in the two-level multipart tag.
-			-- For each alternant, form the tag set consisting of pre_tags + alternant + post_tags,
-			-- and recursively split that tag set.
-			local resulting_tag_sets = {}
-			for _, first_level_tag_set in ipairs(tag) do
-				local expanded_tag_set = {}
-				for _, pre_tag in ipairs(pre_tags) do
-					table.insert(expanded_tag_set, pre_tag)
-				end
-				for _, second_level_tag in ipairs(first_level_tag_set) do
-					table.insert(expanded_tag_set, second_level_tag)
-				end
-				for _, post_tag in ipairs(post_tags) do
-					table.insert(expanded_tag_set, post_tag)
-				end
-				for _, split_tag_set in ipairs(split_two_level_multipart_tag_set(expanded_tag_set)) do
-					table.insert(resulting_tag_sets, split_tag_set)
+		if type(tag) == "table" then
+			-- We saw a multipart tag. Check if any of the parts are two-level.
+			local saw_two_level_tag = false
+			for _, first_level_tag in ipairs(tag) do
+				if type(first_level_tag) == "table" then
+					saw_two_level_tag = true
+					break
 				end
 			end
-			return resulting_tag_sets
+			if saw_two_level_tag then
+				-- We found a two-level multipart tag.
+				-- (1) Extract the preceding tags.
+				local pre_tags = {}
+				for j=1,i-1 do
+					table.insert(pre_tags, tag_set[j])
+				end
+				-- (2) Extract the following tags.
+				local post_tags = {}
+				for j=i+1,#tag_set do
+					table.insert(post_tags, tag_set[j])
+				end
+				-- (3) Loop over each tag set alternant in the two-level multipart tag.
+				-- For each alternant, form the tag set consisting of pre_tags + alternant + post_tags,
+				-- and recursively split that tag set.
+				local resulting_tag_sets = {}
+				for _, first_level_tag_set in ipairs(tag) do
+					local expanded_tag_set = {}
+					for _, pre_tag in ipairs(pre_tags) do
+						table.insert(expanded_tag_set, pre_tag)
+					end
+					-- The second level may have a string or a list.
+					if type(first_level_tag_set) == "table" then
+						for _, second_level_tag in ipairs(first_level_tag_set) do
+							table.insert(expanded_tag_set, second_level_tag)
+						end
+					else
+						table.insert(expanded_tag_set, first_level_tag_set)
+					end
+					for _, post_tag in ipairs(post_tags) do
+						table.insert(expanded_tag_set, post_tag)
+					end
+					for _, split_tag_set in ipairs(export.split_two_level_multipart_tag_set(expanded_tag_set)) do
+						table.insert(resulting_tag_sets, split_tag_set)
+					end
+				end
+				return resulting_tag_sets
+			end
 		end
 	end
 
@@ -623,11 +635,11 @@ function export.fetch_lang_categories(lang, tags, terminfo, POS)
 		-- spec says {"has", "1//3"}, then the tag set tag must be a multipart tag that has both "1" and "3"
 		-- in it. "1//3" works, as does "1//2//3".
 		local function tag_set_tag_matches_spec_tag(tag_set_tag, spec_tag)
-			if type(spec_tag) == "list" then
-				if type(tag_set_tag) == "list" and is_subset(spec_tag, tag_set_tag) then
+			if type(spec_tag) == "table" then
+				if type(tag_set_tag) == "table" and is_subset(spec_tag, tag_set_tag) then
 					return true
 				end
-			elseif type(tag_set_tag) == "list" then
+			elseif type(tag_set_tag) == "table" then
 				if m_table.contains(tag_set_tag, spec_tag) then
 					return true
 				end
@@ -643,7 +655,7 @@ function export.fetch_lang_categories(lang, tags, terminfo, POS)
 		-- string (i.e. not a multipart tag), this boils down to list containment, but it gets more
 		-- complex when multipart tags are present.
 		local function tag_set_matches_spec_tag(spec_tag)
-			tag = normalize_tag(tag)
+			spec_tag = normalize_tag(spec_tag)
 			for _, tag_set_tag in ipairs(tag_set) do
 				if tag_set_tag_matches_spec_tag(tag_set_tag, spec_tag) then
 					return true
@@ -680,11 +692,26 @@ function export.fetch_lang_categories(lang, tags, terminfo, POS)
 				return false, 3
 			elseif predicate == "tags=" then
 				local normalized_spec_tags = export.normalize_tags(spec[2])
+				-- Allow tags to be in different orders, and multipart tags to
+				-- be in different orders. To handle this, we first check that
+				-- both tag set tags and spec tags have the same length. If so,
+				-- we sort the multipart tags in the tag set tags and spec tags,
+				-- and then check that all tags in the spec tags are in the
+				-- tag set tags.
 				if #tag_set ~= #normalized_spec_tags then
 					return false, 3
 				end
-				for i=1,#tag_set do
-					if not tag_set_tag_matches_spec_tag(tag_set[i], normalized_spec_tags[i]) then
+				local tag_set_tags = m_table.deepcopy(tag_set)
+				for i=1,#tag_set_tags do
+					if type(tag_set_tags[i]) == "table" then
+						table.sort(tag_set_tags[i])
+					end
+					if type(normalized_spec_tags[i]) == "table" then
+						table.sort(normalized_spec_tags[i])
+					end
+				end
+				for i=1,#tag_set_tags do
+					if not m_table.contains(tag_set_tags, normalized_spec_tags[i], "deepCompare") then
 						return false, 3
 					end
 				end
@@ -803,14 +830,7 @@ end
 
 function export.tagged_inflections(data, terminfo, notext, capfirst, posttext, joiner)
 	if not data.tags then
-		data = {
-			tags = data,
-			terminfo = terminfo,
-			notext = notext,
-			capfirst = capfirst,
-			posttext = posttext,
-			joiner = joiner,
-		}
+		error("First argument must now be a table of arguments")
 	end
 	local cur_infl = {}
 	local inflections = {}
