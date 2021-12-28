@@ -423,8 +423,26 @@ function export.full_link(data, face, allow_self_link, no_check_redundant_transl
 		local class = ""
 
 		local function encode_accel_param(prefix, param)
+			if not param then
+				return ""
+			end
+			if type(param) == "table" then
+				local filled_params = {}
+				-- There may be gaps in the sequence, especially for translit params.
+				local maxindex = 0
+				for k, v in pairs(param) do
+					if type(k) == "number" and k > maxindex then
+						maxindex = k
+					end
+				end
+				for i=1,maxindex do
+					filled_params[i] = param[i] or ""
+				end
+				-- [[Module:accel]] splits these up again.
+				param = table.concat(filled_params, "*~!")
+			end
 			-- This is decoded again by [[WT:ACCEL]].
-			return param and prefix .. param:gsub("%%", "."):gsub(" ", "_") or ""
+			return prefix .. param:gsub("%%", "."):gsub(" ", "_")
 		end
 
 		if data.accel then
@@ -432,6 +450,7 @@ function export.full_link(data, face, allow_self_link, no_check_redundant_transl
 			local gender = encode_accel_param("gender-", data.accel.gender)
 			local pos = encode_accel_param("pos-", data.accel.pos)
 			local translit = encode_accel_param("transliteration-", data.accel.translit)
+			local target = encode_accel_param("target-", data.accel.target)
 			local lemma = encode_accel_param("origin-", data.accel.lemma)
 			local lemma_translit = encode_accel_param("origin_transliteration-", data.accel.lemma_translit)
 			local no_store = data.accel.no_store and "form-of-nostore" or ""
