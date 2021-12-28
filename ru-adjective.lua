@@ -840,109 +840,6 @@ categorize = function(decl_type, args, orig_short_accent, short_accent,
 	end
 end
 
-local stem_expl = {
-	["velar-stem"] = "a velar (-к, -г or –x)",
-	["sibilant-stem"] = "a sibilant (-ш, -ж, -ч or -щ)",
-	["ц-stem"] = "-ц",
-	["i-stem"] = "-и (old-style -і)",
-	["vowel-stem"] = "a vowel other than -и or -і, or -й or -ь",
-	["soft-stem"] = "a soft consonant",
-	["hard-stem"] = "a hard consonant",
-}
-
-local zaliznyak_stem_type = {
-	["velar-stem"] = "3",
-	["sibilant-stem"] = "4",
-	["ц-stem"] = "5",
-	["i-stem"] = "7",
-	["vowel-stem"] = "6",
-	["soft-stem"] = "2",
-	["hard-stem"] = "1",
-}
-
--- Implementation of template 'ruadjcatboiler'.
-function export.catboiler(frame)
-	local SUBPAGENAME = mw.title.getCurrentTitle().subpageText
-	local args = clone_args(frame)
-
-	local cats = {}
-
-	local maintext, misctext
-	if args[1] == "adj" then
-		local stem, stress = rmatch(SUBPAGENAME, "^Russian ([^ ]*) ([^ *]*)-stressed adjectives")
-		if not stem then
-			stem, stress = rmatch(SUBPAGENAME, "^Russian ([^ ]*) (possessive) adjectives")
-		end
-		if not stem then
-			stem = rmatch(SUBPAGENAME, "^Russian ([^ ]*) adjectives")
-			stress = ""
-		end
-		if not stem then
-			error("Invalid category name, should be e.g. \"Russian velar-stem ending-stressed adjectives\"")
-		end
-		local stresstext = stress == "stem" and
-			"This adjective has stress on the stem, corresponding to Zaliznyak's type a." or
-			stress == "ending" and
-			"This adjective has stress on the endings, corresponding to Zaliznyak's type b." or
-			"All adjectives of this type have stress on the stem."
-		local endingtext = "ending in the nominative in masculine singular " .. args[2] .. ", feminine singular " .. args[3] .. ", neuter singular " .. args[4] .. " and plural " .. args[5] .. "."
-		local stemtext, posstext
-		if stress == "possessive" then
-			posstext = " possessive"
-			if stem == "long" then
-				stemtext = " The stem ends in a yod, which disappears in the nominative singular but appears in all other forms as a soft sign ь followed by a vowel."
-			else
-				stemtext = ""
-			end
-		else
-			posstext = ""
-			if not stem_expl[stem] then
-				error("Invalid stem type " .. stem)
-			end
-			stemtext = " The stem ends in " .. stem_expl[stem] .. " and is Zaliznyak's type " .. zaliznyak_stem_type[stem] .. "."
-		end
-
-		maintext = stem .. posstext .. " ~, " .. endingtext .. stemtext .. " " .. stresstext
-		insert_category(cats, "~ by stem type and stress|" .. stem .. " " .. stress)
-	elseif args[1] == "shortaccent" then
-		local shortaccent = rmatch(SUBPAGENAME, "^Russian adjectives with short accent pattern ([^ ]*)")
-		if not shortaccent then
-			error("Invalid category name, should be e.g. \"Russian adjectives with short accent pattern c\"")
-		end
-		maintext = "~ with short accent pattern " .. rsub(shortaccent, "'", "&#39;") .. ", with " .. args[2] .. "."
-		insert_category(cats, "~ by short accent pattern|" .. shortaccent)
-	elseif args[1] == "irreg" then
-		local irregularity = rmatch(SUBPAGENAME, "^Russian adjectives with irregular (.*)")
-		if not irregularity then
-			error("Invalid category name, should be e.g. \"Russian adjectives with irregular nominative masculine singular\"")
-		end
-		maintext = "~ with irregular " .. irregularity .. " (possibly along with other cases)."
-		insert_category(cats, "~ by irregularity|" .. irregularity)
-	elseif args[1] == "misc" then
-		misctext = args[2]
-		local sort_key = rmatch(SUBPAGENAME, "^Russian adjectives with (.*)")
-		if not sort_key then
-			sort_key = rmatch(SUBPAGENAME, "^Russian adjectives by (.*)")
-		end
-		if not sort_key then
-			sort_key = rmatch(SUBPAGENAME, "^Russian adjectives (.*)")
-		end
-		if not sort_key then
-			sort_key = rmatch(SUBPAGENAME, "^Russian (.*)")
-		end
-		if not sort_key then
-			error("Invalid category name, should begin with \"Russian\": " .. SUBPAGENAME)
-		end
-		insert_category(cats, "~|" .. sort_key)
-	else
-		error("Unknown ruadjcatboiler type " .. (args[1] or "(empty)"))
-	end
-
-	return (misctext or "This category contains Russian " .. rsub(maintext, "~", "adjectives"))
-		.. "\n" ..
-		mw.getCurrentFrame():expandTemplate{title="ru-categoryTOC", args={}}
-		.. m_utilities.format_categories(cats, lang, nil, nil, "force")
-end
 
 --------------------------------------------------------------------------
 --                   Autodetection and stem munging                     --
@@ -1458,7 +1355,7 @@ declensions_old["ой"] = {
 	["nom_f"] = "а́я",
 	["nom_mp"] = "ы́е",
 	["nom_p"] = "ы́я",
-	["gen_m"] = "а́го",
+	["gen_m"] = {"а́го", "о́го"},
 	["gen_f"] = "о́й",
 	["gen_p"] = "ы́хъ",
 	["dat_m"] = "о́му",
@@ -1955,7 +1852,7 @@ local function get_accel_forms(old, special, has_nom_mp)
 		pre_f = "pre|f|s",
 		pre_p = "pre|p",
 		-- the following two gendered plurals are only used with special == "cdva"
-		acc_mp == "acc|m//n|p",
+		acc_mp = "acc|m//n|p",
 		acc_fp = "acc|f|p",
 		-- the remaining gendered plurals are only used with special == "oba"
 		gen_mp = "gen|m//n|p",
