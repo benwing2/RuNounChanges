@@ -167,7 +167,7 @@ local function makeLangLink(link, lang, id, allow_self_link)
 
 		if not link.fragment and lang:getCode() ~= "und" then
 			if id then
-				link.fragment = require("Module:utilities").make_id(lang, id)
+				link.fragment = require("Module:senseid").anchor(lang, id)
 			elseif not mw.ustring.find(link.target, "^Appendix:")
 					and not mw.ustring.find(link.target, "^Reconstruction:") then
 				link.fragment = lang:getCanonicalName()
@@ -379,11 +379,6 @@ function export.format_link_annotations(data, face)
 		table_insert(annotations, "literally " .. export.mark(data.lit, "gloss"))
 	end
 
-	-- Original meaning
-	if data.orig then
-		table_insert(annotations, "originally " .. export.mark(data.orig, "gloss"))
-	end
-
 	if #annotations > 0 then
 		table_insert(output, " " .. export.mark(table_concat(annotations, ", "), "annotations"))
 	end
@@ -562,41 +557,6 @@ function export.english_links(text)
 			local link = parseLink(linktext)
 			return makeLangLink(link, lang, nil, true, false)
 		end))
-end
-
-function export.light_link(data)
-	local language_names = mw.loadData("Module:languages/code to canonical name")
-	local script_codes = mw.loadData("Module:scripts/codes")
-
-	if data.langCode then
-		data.langName = language_names[data.langCode] or error('The language code "' .. data.langCode .. '" is not recognized.')
-	else
-		error('Language code is required.')
-	end
-
-	if not data.term then
-		error('Term to link to is required.')
-	end
-
-	if data.scCode then
-		if not script_codes[data.scCode] then
-			error('The script code "' .. data.sc .. '" is not recognized.')
-		end
-	else
-		error("The function light_link requires a script code.")
-	end
-
-	local fragment
-	if data.id then
-		fragment = data.langName .. "-" .. mw.uri.encode(data.id, "WIKI")
-	else
-		fragment = data.langName
-	end
-
-	return table_concat {
-		'<span class="', data.scCode, '" lang="', data.langCode,
-		'">[[', data.term, "#", fragment, "|", (data.alt or data.term), "]]</span>"
-	}
 end
 
 --[=[
