@@ -1,10 +1,12 @@
 local export = {}
 
+local force_cat = false -- for testing
+
 local m_form_of = require("Module:form of")
 local m_form_of_pos = require("Module:form of/pos")
 local rfind = mw.ustring.find
 local rmatch = mw.ustring.match
-local rsplit = mw.text.split
+local rgsplit = mw.text.gsplit
 
 -- Add tracking category for PAGE when called from TEMPLATE. The tracking
 -- category linked to is [[Template:tracking/form-of/TEMPLATE/PAGE]].
@@ -45,7 +47,7 @@ local function process_parent_args(template, parent_args, params, defaults, igno
 		local named_list_params_to_ignore = {}
 
 		for _, ignorespec in ipairs(ignorespecs) do
-			for _, ignore in ipairs(rsplit(ignorespec, ",")) do
+			for ignore in rgsplit(ignorespec, ",") do
 				local param = rmatch(ignore, "^(.*):list$")
 				if param then
 					if rfind(param, "^[0-9]+$") then
@@ -114,7 +116,7 @@ local function split_inflection_tags(tagspecs, split_regex)
 	end
 	local inflection_tags = {}
 	for _, tagspec in ipairs(tagspecs) do
-		for _, tag in ipairs(rsplit(tagspec, split_regex)) do
+		for tag in rgsplit(tagspec, split_regex) do
 			table.insert(inflection_tags, tag)
 		end
 	end
@@ -266,9 +268,13 @@ local function construct_form_of_text(iargs, args, term_param, compat, do_form_o
 	for _, cat in ipairs(lang_cats) do
 		table.insert(categories, cat)
 	end
-	return form_of_text .. (
+	local text = form_of_text .. (
 		args["nodot"] and "" or args["dot"] or iargs["withdot"] and "." or ""
-	) .. require("Module:utilities").format_categories(categories, lang, args["sort"])
+	)
+	if #categories == 0 then
+		return text
+	end
+	return text .. require("Module:utilities").format_categories(categories, lang, args["sort"], nil, force_cat)
 end
 
 
@@ -407,7 +413,8 @@ function export.form_of_t(frame)
 
 	return construct_form_of_text(iargs, args, term_param, compat,
 		function(lang, terminfo)
-			return m_form_of.format_form_of {text = text, terminfo = terminfo, posttext = iargs["posttext"]}, {}
+			return m_form_of.format_form_of {text = text, terminfo = terminfo,
+				terminfo_face = "term", posttext = iargs["posttext"]}, {}
 		end
 	)
 end
@@ -432,6 +439,7 @@ local function construct_tagged_form_of_text(iargs, args, term_param, compat, ta
 			return m_form_of.tagged_inflections {
 				tags = tags,
 				terminfo = terminfo,
+				terminfo_face = "term",
 				notext = args["notext"],
 				capfirst = args["cap"] or iargs["withcap"] and not args["nocap"],
 				posttext = iargs["posttext"],
@@ -555,7 +563,7 @@ intended for templates that allow the user to specify a set of inflection tags.
 It works similarly to form_of_t() and tagged_form_of_t() except that the
 calling convention for the calling template is
 	{{TEMPLATE|LANG|MAIN_ENTRY_LINK|MAIN_ENTRY_DISPLAY_TEXT|TAG|TAG|...}}
-instead of
+instead of 
 	{{TEMPLATE|LANG|MAIN_ENTRY_LINK|MAIN_ENTRY_DISPLAY_TEXT|GLOSS}}
 Note that there isn't a numbered parameter for the gloss, but it can still
 be specified using t= or gloss=.
