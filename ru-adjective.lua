@@ -158,6 +158,27 @@ local function insert_forms_into_existing_forms(existing, newforms, notesym)
 	return inserted
 end
 
+-- Insert an entry into an existing list if not already present, comparing the entry to items in the existing list
+-- using a key function. If entry already found, combine it into the existing entry using combine_func, a function of
+-- two arguments (the existing and new entries), which should return the combined entry. Return false if entry already
+-- found, true if new entry inserted. If combine_func not specified, the existing entry is left alone. If combine_func
+-- is specified, the return value will be written over the existing value (i.e. the existing list will be modified
+-- in-place).
+local function insert_if_not_by_key(list, new_entry, keyfunc, combine_func)
+	local new_entry_key = keyfunc(new_entry)
+	for i, item in ipairs(list) do
+		local item_key = keyfunc(item)
+		if m_table.deepEquals(item_key, new_entry_key) then
+			if combine_func then
+				list[i] = combine_func(item, new_entry)
+			end
+			return false
+		end
+	end
+	table.insert(list, new_entry)
+	return true
+end
+
 local function track(page)
 	m_debug.track("ru-adjective/" .. page)
 	return true
@@ -1878,28 +1899,16 @@ local function show_form(forms, old, is_lemma, accel_form, lemma_forms)
 	local latinvals = {}
 	local lemmavals = {}
 
-	-- Accumulate separately the Russian and transliteration into
-	-- RUSSIANVALS and LATINVALS, then concatenate each down below.
-	-- However, if LEMMA, we put each transliteration directly
-	-- after the corresponding Russian, in parens, and put the results
-	-- in LEMMAVALS, which get concatenated below. (This is used in the
-	-- title of the declension table.) (Actually, currently we don't
-	-- include the translit in the declension table title.)
-
+	-- Accumulate separately the Russian and transliteration into RUSSIANVALS and LATINVALS, then concatenate each down below.
+	-- FIXME: Comment better what's going on.
 	if #forms == 1 and forms[1][1] == "-" then
 		return "&mdash;"
 	end
 
 	local lemmaru, lemmatr
-	if accel_form and lemma_forms then
-		local lemma_form = lemma_forms[1]
-		if lemma_form[1] ~= "-" then
-			lemmaru, lemmatr = lemma_form[1], lemma_form[2]
-			lemmaru, _ = m_table_tools.separate_notes(lemmaru)
-			if lemmatr then
-				lemmatr, _ = m_table_tools.separate_notes(lemmatr)
-			end
-		end
+	if accel_form and lemma_forms and lemma_form[1] ~= "-" then
+		lemma_forms = nom.combine_translit_of_adjacent_heads(nom.strip_notes_from_forms(lemma_forms))
+		lemmaru, lemmatr = nom.unzip_forms(lemma_forms)
 	end
 
 	for _, form in ipairs(forms) do
@@ -1910,37 +1919,73 @@ local function show_form(forms, old, is_lemma, accel_form, lemma_forms)
 			trentry, trnotes = m_table_tools.get_notes(tr)
 		end
 		ruentry = com.remove_monosyllabic_accents(ruentry)
-		local ruspan, trspan
-		local accel = lemmaru and {form = accel_form, translit = tr, lemma = lemmaru,
-			lemma_translit = lemmatr} or nil
-		if old then
-			ruspan = m_links.full_link({lang = lang, term = com.remove_jo(ruentry), alt = ruentry, tr = "-", accel = accel}) .. runotes
-		else
-			ruspan = m_links.full_link({lang = lang, term = ruentry, tr = "-", accel = accel}) .. runotes
-		end
+		local ruobj = {entry = ruentry, tr = {trentry or true}, notes = runotes}
 		if not trentry then
 			trentry = nom.translit_no_links(ruentry)
 		end
 		if not trnotes then
 			trnotes = nom.translit_no_links(runotes)
 		end
-		trspan = m_links.remove_links(trentry) .. trnotes
-		trspan = require("Module:script utilities").tag_translit(trspan, lang, "default", " style=\"color: #888;\"")
+		local trobj = {entry = trentry, notes = trnotes}
 
+		local function keyfunc(obj)
+			return obj.entry
+		end
+		local function combine_func_ru(obj1, obj2)
+			for _, tr in ipairs(obj2.tr) do
+				m_table.insertIfNot(obj1.tr, tr)
+			end
+			obj1.notes = obj1.notes .. obj2.notes
+			return obj1
+		end
+		local function combine_func_tr(obj1, obj2)
+			obj1.notes = obj1.notes .. obj2.notes
+			return obj1
+		end
 		if is_lemma then
-			-- insert_if_not(lemmavals, ruspan .. " (" .. trspan .. ")")
-			m_table.insertIfNot(lemmavals, ruspan)
+			-- m_table.insertIfNot(lemmavals, ruspan .. " (" .. trspan .. ")")
+			insert_if_not_by_key(lemmavals, ruobj, keyfunc, combine_func_ru)
 		else
-			m_table.insertIfNot(russianvals, ruspan)
-			m_table.insertIfNot(latinvals, trspan)
+			insert_if_not_by_key(russianvals, ruobj, keyfunc, combine_func_ru)
+			insert_if_not_by_key(latinvals, trobj, keyfunc, combine_func_tr)
 		end
 	end
 
+	local function concatenate_ru(objs)
+		for i, obj in ipairs(objs) do
+			local accel = nil
+			if lemmaru then
+				local translit = nil
+				if #obj.tr == 1 and obj.tr[1] == true then
+					-- no translit
+				else
+					for j, tr in ipairs(obj.tr) do
+						if tr == true then
+							obj.tr[j] = nom.translit_no_links(obj.entry)
+						end
+					end
+					translit = table.concat(obj.tr, ", ")
+				end
+				accel = {form = accel_form, translit = translit, lemma = lemmaru, lemma_translit = lemmatr}
+			end
+			objs[i] = m_links.full_link({lang = lang, term = obj.entry, tr = "-", accel = accel}) .. obj.notes
+		end
+		return table.concat(objs, ", ")
+	end
+
+	local function concatenate_tr(objs)
+		for i, obj in ipairs(objs) do
+			objs[i] = require("Module:script utilities").tag_translit(m_links.remove_links(obj.entry), lang, "default",
+				" style=\"color: #888;\"") .. obj.notes
+		end
+		return table.concat(objs, ", ")
+	end
+
 	if is_lemma then
-		return table.concat(lemmavals, ", ")
+		return concatenate_ru(lemmavals)
 	else
-		local russian_span = table.concat(russianvals, ", ")
-		local latin_span = table.concat(latinvals, ", ")
+		local russian_span = concatenate_ru(russianvals)
+		local latin_span = concatenate_tr(latinvals)
 		return russian_span .. "<br />" .. latin_span
 	end
 end
