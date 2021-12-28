@@ -103,8 +103,8 @@ TODO:
 ]=]--
 
 local m_utilities = require("Module:utilities")
-local ut = require("Module:utils")
 local m_links = require("Module:links")
+local m_table = require("Module:table")
 local com = require("Module:ru-common")
 local nom = require("Module:ru-nominal")
 local strutils = require("Module:string utilities")
@@ -147,7 +147,7 @@ local function insert_forms_into_existing_forms(existing, newforms, notesym)
 	end
 	local inserted = false
 	for _, item in ipairs(newforms) do
-		if not ut.contains(existing, item) then
+		if not m_table.contains(existing, item, "deepCompare") then
 			if notesym then
 				item = nom.concat_paired_russian_tr(item, {notesym})
 			end
@@ -240,7 +240,7 @@ local short_cases = {
 -- Create master list of all possible cases (actually case/number/gender pairs)
 local all_cases = mw.clone(long_cases)
 for _, case in ipairs(short_cases) do
-	ut.insert_if_not(all_cases, case)
+	m_table.insertIfNot(all_cases, case)
 end
 
 -- If enabled, compare this module with new version of module to make
@@ -335,19 +335,19 @@ function export.do_generate_forms(args, old, manual)
 			local short_title
 			if short_accent then
 				short_title = short_accent
-			elseif ut.contains({"proper", "stressed-proper"}, decl_type) then
+			elseif m_table.contains({"proper", "stressed-proper"}, decl_type) then
 				short_title = "surname"
-			elseif ut.contains({"ьій", "ьий", "short", "stressed-short", "mixed"},
+			elseif m_table.contains({"ьій", "ьий", "short", "stressed-short", "mixed"},
 				decl_type) then
 				short_title = "possessive"
 			end
 			if short_title then	
 				if datedrare == "dated" then
-					ut.insert_if_not(dated_short_classes, short_title)
+					m_table.insertIfNot(dated_short_classes, short_title)
 				elseif datedrare == "rare" then
-					ut.insert_if_not(rare_short_classes, short_title)
+					m_table.insertIfNot(rare_short_classes, short_title)
 				else
-					ut.insert_if_not(normal_short_classes, short_title)
+					m_table.insertIfNot(normal_short_classes, short_title)
 				end
 			end
 			if short_stem then
@@ -466,7 +466,7 @@ function export.do_generate_forms(args, old, manual)
 					short_stem)
 			end
 
-			decline(args, decls[decl_type], ut.contains({"ой", "stressed-short", "stressed-proper"}, decl_type))
+			decline(args, decls[decl_type], m_table.contains({"ой", "stressed-short", "stressed-proper"}, decl_type))
 			if short_forms_allowed and short_accent then
 				decline_short(args, short_decls[short_decl_type],
 					short_stress_patterns[short_accent], datedrare)
@@ -477,7 +477,7 @@ function export.do_generate_forms(args, old, manual)
 				short_internal_notes_table
 			local internal_note = intable[decl_type] or shortintab[short_decl_type]
 			if internal_note then
-				ut.insert_if_not(args.internal_notes, internal_note)
+				m_table.insertIfNot(args.internal_notes, internal_note)
 			end
 		end
 	end
@@ -488,7 +488,7 @@ function export.do_generate_forms(args, old, manual)
 		if sct == "" then
 			return
 		end
-		if not ut.contains({"surname", "possessive"}, sct) then
+		if not m_table.contains({"surname", "possessive"}, sct) then
 			-- Convert e.g. a*,a(1) into a*[(1)], either finally or followed by
 			-- comma.
 			sct = rsub(sct, "([abc]'*)%*,%1%*?(%([12]%))$", "%1*[%2]")
@@ -534,7 +534,7 @@ function export.do_generate_forms(args, old, manual)
 		for _, case in ipairs(all_cases) do
 			local arg = args[case]
 			local newarg = newargs[case]
-			if not ut.equals(arg, newarg) then
+			if not m_table.deepEquals(arg, newarg) then
 				-- Uncomment this to display the particular case and
 				-- differing forms.
 				--error(case .. " " .. (arg and nom.concat_forms(arg) or "nil") .. " || " .. (newarg and nom.concat_forms(newarg) or "nil"))
@@ -617,7 +617,7 @@ function export.get_nominal_decl(decl, gender, old)
 	local ingenders = old and internal_notes_genders_old or internal_notes_genders
 	-- FIXME, what if there are multiple internal notes? See comment in
 	-- do_generate_forms().
-	local internal_notes = ingenders[decl] and ut.contains(ingenders[decl], gender) and intable[decl]
+	local internal_notes = ingenders[decl] and m_table.contains(ingenders[decl], gender) and intable[decl]
 	return n, internal_notes
 end
 
@@ -631,7 +631,7 @@ local function get_form(forms)
 			trentry, trnotes = m_table_tools.get_notes(tr)
 		end
 		ruentry = m_links.remove_links(ruentry)
-		ut.insert_if_not(canon_forms, {ruentry, trentry})
+		m_table.insertIfNot(canon_forms, {ruentry, trentry}, "deepCompare")
 	end
 	return nom.concat_forms(canon_forms)
 end
@@ -656,7 +656,7 @@ function export.generate_form(frame)
 		error("Must specify desired form using form=")
 	end
 	local form = args.form
-	if not ut.contains(all_cases, form) then
+	if not m_table.contains(all_cases, form) then
 		error("Unrecognized form " .. form)
 	end
 	local args = export.do_generate_forms(args, false)
@@ -745,18 +745,18 @@ categorize = function(decl_type, args, orig_short_accent, short_accent,
 
 	-- FIXME: For compatibility with old {{temp|ru-adj7}}, {{temp|ru-adj8}},
 	-- {{temp|ru-adj9}}; maybe there's a better way.
-	if ut.contains({"ьій", "ьий", "short", "stressed-short", "mixed",
+	if m_table.contains({"ьій", "ьий", "short", "stressed-short", "mixed",
 		"proper", "stressed-proper"}, decl_type) then
 		insert_cat("possessive ~")
 	end
 
-	if ut.contains({"ьій", "ьий"}, decl_type) then
+	if m_table.contains({"ьій", "ьий"}, decl_type) then
 		insert_cat("long possessive ~")
-	elseif ut.contains({"short", "stressed-short"}, decl_type) then
+	elseif m_table.contains({"short", "stressed-short"}, decl_type) then
 		insert_cat("short possessive ~")
-	elseif ut.contains({"mixed"}, decl_type) then
+	elseif m_table.contains({"mixed"}, decl_type) then
 		insert_cat("mixed possessive ~")
-	elseif ut.contains({"proper", "stressed-proper"}, decl_type) then
+	elseif m_table.contains({"proper", "stressed-proper"}, decl_type) then
 		insert_cat("proper-name ~")
 	elseif decl_type == "$" then
 		insert_cat("indeclinable ~")
@@ -764,13 +764,13 @@ categorize = function(decl_type, args, orig_short_accent, short_accent,
 		local hint_types = com.get_stem_trailing_letter_type(args.stem)
 	-- insert English version of Zaliznyak stem type
 		local stem_type =
-			ut.contains(hint_types, "velar") and "velar-stem" or
-			ut.contains(hint_types, "sibilant") and "sibilant-stem" or
-			ut.contains(hint_types, "c") and "ц-stem" or
-			ut.contains(hint_types, "i") and "i-stem" or
-			ut.contains(hint_types, "vowel") and "vowel-stem" or
-			ut.contains(hint_types, "soft-cons") and "vowel-stem" or
-			ut.contains(hint_types, "palatal") and "vowel-stem" or
+			m_table.contains(hint_types, "velar") and "velar-stem" or
+			m_table.contains(hint_types, "sibilant") and "sibilant-stem" or
+			m_table.contains(hint_types, "c") and "ц-stem" or
+			m_table.contains(hint_types, "i") and "i-stem" or
+			m_table.contains(hint_types, "vowel") and "vowel-stem" or
+			m_table.contains(hint_types, "soft-cons") and "vowel-stem" or
+			m_table.contains(hint_types, "palatal") and "vowel-stem" or
 			decl_type == "ий" and "soft-stem" or
 			"hard-stem"
 		if stem_type == "soft-stem" or stem_type == "vowel-stem" then
@@ -783,7 +783,7 @@ categorize = function(decl_type, args, orig_short_accent, short_accent,
 		insert_cat("ending-stressed ~")
 	end
 
-	local short_forms_allowed = ut.contains({"ый", "ой", "ій", "ий"}, decl_type)
+	local short_forms_allowed = m_table.contains({"ый", "ой", "ій", "ий"}, decl_type)
 	if short_forms_allowed then
 		local override_m = args.short_m
 		local override_f = args.short_f
@@ -957,7 +957,7 @@ detect_stem_and_accent_type = function(lemma, tr, decl, args)
 				end
 				error("Cannot determine stem type of adjective: " .. lemma)
 			end
-		elseif ut.contains({"short", "stressed-short", "mixed", "proper",
+		elseif m_table.contains({"short", "stressed-short", "mixed", "proper",
 			"stressed-proper"}, decl) then
 			base = rmatch(lemma, "^(.-)ъ?$")
 			assert(base)
@@ -1755,9 +1755,9 @@ local function gen_short_form(args, decl, case, fun, datedrare)
 		args.forms["short_" .. case], attach_with(args, decl[case], fun, true),
 		(datedrare == "dated" and datedrare == "rare") and "*" or nil)
 	if datedrare == "dated" and inserted then
-		ut.insert_if_not(args.internal_notes, "<sup>*</sup> Dated.")
+		m_table.insertIfNot(args.internal_notes, "<sup>*</sup> Dated.")
 	elseif datedrare == "rare" and inserted then
-		ut.insert_if_not(args.internal_notes, "<sup>*</sup> Rare.")
+		m_table.insertIfNot(args.internal_notes, "<sup>*</sup> Rare.")
 	end
 end
 
@@ -1929,10 +1929,10 @@ local function show_form(forms, old, is_lemma, accel_form, lemma_forms)
 
 		if is_lemma then
 			-- insert_if_not(lemmavals, ruspan .. " (" .. trspan .. ")")
-			ut.insert_if_not(lemmavals, ruspan)
+			m_table.insertIfNot(lemmavals, ruspan)
 		else
-			ut.insert_if_not(russianvals, ruspan)
-			ut.insert_if_not(latinvals, trspan)
+			m_table.insertIfNot(russianvals, ruspan)
+			m_table.insertIfNot(latinvals, trspan)
 		end
 	end
 
