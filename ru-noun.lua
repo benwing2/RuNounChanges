@@ -361,7 +361,7 @@ TODO:
 ]=]--
 
 local m_utilities = require("Module:utilities")
-local ut = require("Module:utils")
+local m_table = require("Module:table")
 local m_links = require("Module:links")
 local com = require("Module:ru-common")
 local nom = require("Module:ru-nominal")
@@ -418,10 +418,10 @@ local function track(page)
 	return true
 end
 
--- version of ut.insert_if_not() that makes sure 'false' doesn't get inserted by mistake
+-- version of m_table.insertIfNot() that makes sure 'false' doesn't get inserted by mistake, and uses deep comparison.
 local function insert_if_not(foo, bar)
 	assert(bar ~= false)
-	ut.insert_if_not(foo, bar)
+	m_table.insertIfNot(foo, bar, nil, "deep compare")
 end
 
 -- Fancy version of ine() (if-not-empty). Converts empty string to nil,
@@ -487,8 +487,8 @@ local function rutr_pairs_equal(term1, term2)
 	elseif type(tr1entry) == type(tr2entry) then
 		return false
 	else
-		tr1entry = tr1entry or nom.translit_no_links(ru1entry)
-		tr2entry = tr2entry or nom.translit_no_links(ru2entry)
+		tr1entry = tr1entry or com.translit_no_links(ru1entry)
+		tr2entry = tr2entry or com.translit_no_links(ru2entry)
 		return tr1entry == tr2entry
 	end
 end
@@ -897,13 +897,13 @@ local function categorize_and_init_heading(stress, decl, args, n, islast)
 	else
 		local stem_type =
 			sgdc.decl == "3rd" and "3rd-declension" or
-			ut.contains(sghint_types, "velar") and "velar-stem" or
-			ut.contains(sghint_types, "sibilant") and "sibilant-stem" or
-			ut.contains(sghint_types, "c") and "ц-stem" or
-			ut.contains(sghint_types, "i") and "i-stem" or
-			ut.contains(sghint_types, "vowel") and "vowel-stem" or
-			ut.contains(sghint_types, "soft-cons") and "vowel-stem" or
-			ut.contains(sghint_types, "palatal") and "vowel-stem" or
+			m_table.contains(sghint_types, "velar") and "velar-stem" or
+			m_table.contains(sghint_types, "sibilant") and "sibilant-stem" or
+			m_table.contains(sghint_types, "c") and "ц-stem" or
+			m_table.contains(sghint_types, "i") and "i-stem" or
+			m_table.contains(sghint_types, "vowel") and "vowel-stem" or
+			m_table.contains(sghint_types, "soft-cons") and "vowel-stem" or
+			m_table.contains(sghint_types, "palatal") and "vowel-stem" or
 			sgdc.hard == "soft" and "soft-stem" or
 			"hard-stem"
 		local short_stem_type = stem_type == "3rd-declension" and "3rd-decl" or stem_type
@@ -1033,9 +1033,9 @@ local function compute_heading(args)
 
 	local function handle_bool(boolvals, text, into)
 		into = into or headings
-		if ut.contains(boolvals, "yes") and ut.contains(boolvals, "no") then
+		if m_table.contains(boolvals, "yes") and m_table.contains(boolvals, "no") then
 			table.insert(into, "[" .. text .. "]")
-		elseif ut.contains(boolvals, "yes") then
+		elseif m_table.contains(boolvals, "yes") then
 			table.insert(into, text)
 		end
 	end
@@ -1051,7 +1051,7 @@ local function compute_overall_heading_categories_and_genders(args)
 
 	-- First try for non-adjectival, non-indeclinable
 	for i=1,#hinfo do
-		if not ut.contains(hinfo[i].stemetc, "indecl") and not ut.contains(hinfo[i].adjectival, "yes") then
+		if not m_table.contains(hinfo[i].stemetc, "indecl") and not m_table.contains(hinfo[i].adjectival, "yes") then
 			index = i
 			break
 		end
@@ -1059,7 +1059,7 @@ local function compute_overall_heading_categories_and_genders(args)
 	if index == 0 then
 		-- Then just non-indeclinable
 		for i=1,#hinfo do
-			if not ut.contains(hinfo[i].stemetc, "indecl") then
+			if not m_table.contains(hinfo[i].stemetc, "indecl") then
 				index = i
 				break
 			end
@@ -1129,7 +1129,7 @@ end
 local function extract_word_joiner(spec)
 	word_joiner = rmatch(spec, "^join:(.*)$")
 	assert(word_joiner)
-	return nom.split_russian_tr(word_joiner, "dopair")
+	return com.split_russian_tr(word_joiner, "dopair")
 end
 
 local function determine_headword_gender(args, sgdc, gender)
@@ -1408,8 +1408,8 @@ generate_forms_1 = function(args, per_word_info)
 	for i=1,#per_word_info do
 		args["a" .. i] = verify_animacy_value(args["a" .. i])
 		args["n" .. i] = verify_number_value(args["n" .. i])
-		args["prefix" .. i] = nom.split_russian_tr(args["prefix" .. i] or "", "dopair")
-		args["suffix" .. i] = nom.split_russian_tr(args["suffix" .. i] or "", "dopair")
+		args["prefix" .. i] = com.split_russian_tr(args["prefix" .. i] or "", "dopair")
+		args["suffix" .. i] = com.split_russian_tr(args["suffix" .. i] or "", "dopair")
 	end
 	args.a = verify_animacy_value(args.a) or "i"
 	-- args.ndef, if set, is the default value for args.n; if unset, it defaults
@@ -1427,11 +1427,11 @@ generate_forms_1 = function(args, per_word_info)
 	args.ndef = verify_number_value(args.ndef)
 	args.orign = args.n
 	args.n = args.n or args.ndef
-	args.prefix = nom.split_russian_tr(args.prefix or "", "dopair")
-	args.suffix = nom.split_russian_tr(args.suffix or "", "dopair")
+	args.prefix = com.split_russian_tr(args.prefix or "", "dopair")
+	args.suffix = com.split_russian_tr(args.suffix or "", "dopair")
 	-- Attach overall prefix to first per-word prefix, similarly for suffix
-	args.prefix1 = nom.concat_paired_russian_tr(args.prefix, args.prefix1)
-	args["suffix" .. #per_word_info] = nom.concat_paired_russian_tr(
+	args.prefix1 = com.concat_paired_russian_tr(args.prefix, args.prefix1)
+	args["suffix" .. #per_word_info] = com.concat_paired_russian_tr(
 		args["suffix" .. #per_word_info], args.suffix)
 
 	-- Initialize non-word-specific arguments.
@@ -1488,7 +1488,7 @@ generate_forms_1 = function(args, per_word_info)
 		local decl = arg_set[3] or ""
 		local pl, pltr
 		if arg_set[4] then
-			pl, pltr = nom.split_russian_tr(arg_set[4])
+			pl, pltr = com.split_russian_tr(arg_set[4])
 		end
 
 		-- Extract special markers from declension class.
@@ -1518,7 +1518,7 @@ generate_forms_1 = function(args, per_word_info)
 		end
 		default_lemma = lemma
 		local lemmatr
-		lemma, lemmatr = nom.split_russian_tr(lemma)
+		lemma, lemmatr = com.split_russian_tr(lemma)
 
 		-- If we're conjugating a suffix, insert a pseudoconsonant at the beginning
 		-- of all forms, so they get conjugated as if ending in a consonant.
@@ -1551,7 +1551,7 @@ generate_forms_1 = function(args, per_word_info)
 		args.lemmatr = lemmatr
 		if args.lemma then
 			-- Explicit lemma given.
-			args.explicit_lemma, args.explicit_lemmatr = nom.split_russian_tr(args.lemma)
+			args.explicit_lemma, args.explicit_lemmatr = com.split_russian_tr(args.lemma)
 		end
 
 		-- Treat suffixes without an accent, and suffixes with an accent on the
@@ -1980,7 +1980,7 @@ generate_forms_1 = function(args, per_word_info)
 			local is_pl = rfind(case, "_pl")
 			if args.thisn == "s" and is_pl or args.thisn == "p" and not is_pl then
 				-- Don't need to check cases that won't be displayed.
-			elseif not ut.equals(arg, newarg) then
+			elseif not m_table.deepEquals(arg, newarg) then
 				local monosyl_accent_diff = false
 				-- Differences only in monosyllabic accents. Enable if we
 				-- change the algorithm for these.
@@ -2001,7 +2001,7 @@ generate_forms_1 = function(args, per_word_info)
 				else
 					-- Uncomment this to display the particular case and
 					-- differing forms.
-					--error(case .. " " .. (arg and nom.concat_forms(arg) or "nil") .. " || " .. (newarg and nom.concat_forms(newarg) or "nil"))
+					--error(case .. " " .. (arg and com.concat_forms(arg) or "nil") .. " || " .. (newarg and com.concat_forms(newarg) or "nil"))
 					track("different-decl")
 					difdecl = true
 				end
@@ -2074,7 +2074,7 @@ local function get_form(forms, preserve_links, raw)
 			end
 		end
 	end
-	return nom.concat_forms(canon_forms)
+	return com.concat_forms(canon_forms)
 end
 
 local function case_will_be_displayed(args, case)
@@ -2175,7 +2175,7 @@ function export.generate_form(frame)
 		error("Must specify desired form using form=")
 	end
 	local form = args.form
-	if not ut.contains(all_cases, form) then
+	if not m_table.contains(all_cases, form) then
 		error("Unrecognized form " .. form)
 	end
 	local args = export.do_generate_forms(args, false)
@@ -2268,55 +2268,55 @@ end
 local function detect_lemma_type(lemma, tr, gender, args, variant)
 	local base, ending = rmatch(lemma, "^(.*)([еЕ]́)$") -- accented
 	if base then
-		return base, nom.strip_tr_ending(tr, ending), ulower(ending)
+		return base, com.strip_tr_ending(tr, ending), ulower(ending)
 	end
 	base, ending = rmatch(lemma, "^(.*[" .. com.sib_c .. "])([еЕ])$") -- unaccented
 	if base then
 		if variant == "-ище" and not rfind(lemma, "[щЩ][еЕ]$") then
 			error("With declension variant -ище, lemma should end in -ще: " .. lemma)
 		end
-		return base, nom.strip_tr_ending(tr, ending), variant == "-ище" and "(ищ)е-и" or "о"
+		return base, com.strip_tr_ending(tr, ending), variant == "-ище" and "(ищ)е-и" or "о"
 	end
 	if variant == "-ишко" then
 		base, ending = rmatch(lemma, "^(.*[шШ][кК])([оО])$") -- unaccented
 		if not base then
 			error("With declension variant -ишко, lemma should end in -шко: " .. lemma)
 		end
-		return base, nom.strip_tr_ending(tr, ending), "(ишк)о-и"
+		return base, com.strip_tr_ending(tr, ending), "(ишк)о-и"
 	end
 	if variant == "-ин" then
 		base, ending = rmatch(lemma, "^(.*)([иИ]́?[нН][ъЪ]?)$") -- maybe accented
 		if not base then
 			error("With declension variant -ин, lemma should end in -ин(ъ): " .. lemma)
 		end
-		return base, nom.strip_tr_ending(tr, ending), ulower(ending)
+		return base, com.strip_tr_ending(tr, ending), ulower(ending)
 	end
 	-- Now autodetect -ин; only animate and in -анин/-янин
 	base, ending = rmatch(lemma, "^(.*[аяАЯ]́?[нН])([иИ]́?[нН][ъЪ]?)$")
 	-- Need to check the animacy to avoid nouns like маиганин, цианин,
 	-- меланин, соланин, etc.
 	if base and args.thisa == "a" then
-		return base, nom.strip_tr_ending(tr, ending), ulower(ending)
+		return base, com.strip_tr_ending(tr, ending), ulower(ending)
 	end
 	base, ending = rmatch(lemma, "^(.*)([ёЁ]́?[нН][оО][кК][ъЪ]?)$")
 	if base then
-		return base, nom.strip_tr_ending(tr, ending), ulower(ending)
+		return base, com.strip_tr_ending(tr, ending), ulower(ending)
 	end
 	base, ending = rmatch(lemma, "^(.*[" .. com.sib_c .. "])([оО]́[нН][оО][кК][ъЪ]?)$")
 	if base then
-		return base, nom.strip_tr_ending(tr, ending), ulower(ending)
+		return base, com.strip_tr_ending(tr, ending), ulower(ending)
 	end
 	base, ending = rmatch(lemma, "^(.*)([ёЁ]́?[нН][оО][чЧ][еЕ][кК][ъЪ]?)$")
 	if base then
-		return base, nom.strip_tr_ending(tr, ending), ulower(ending)
+		return base, com.strip_tr_ending(tr, ending), ulower(ending)
 	end
 	base, ending = rmatch(lemma, "^(.*[" .. com.sib_c .. "])([оО]́[нН][оО][чЧ][еЕ][кК][ъЪ]?)$")
 	if base then
-		return base, nom.strip_tr_ending(tr, ending), ulower(ending)
+		return base, com.strip_tr_ending(tr, ending), ulower(ending)
 	end
 	base, ending = rmatch(lemma, "^(.*)([мМ][яЯ]́?)$")
 	if base then
-		return base, nom.strip_tr_ending(tr, ending), ulower(ending)
+		return base, com.strip_tr_ending(tr, ending), ulower(ending)
 	end
 
 	--recognize plural endings
@@ -2325,16 +2325,16 @@ local function detect_lemma_type(lemma, tr, gender, args, variant)
 		if base then
 			-- Don't do this; о/-ья is too rare
 			-- error("Ambiguous plural lemma " .. lemma .. " in -ья, singular could be -о or -ье/-ьё; specify the singular")
-			return base, nom.strip_tr_ending(tr, ending), "ье", ending
+			return base, com.strip_tr_ending(tr, ending), "ье", ending
 		end
 		base, ending = rmatch(lemma, "^(.*)([аяАЯ]́?)$")
 		if base then
-			return base, nom.strip_tr_ending(tr, ending), rfind(ending, "[аА]") and "о" or "е", ending
+			return base, com.strip_tr_ending(tr, ending), rfind(ending, "[аА]") and "о" or "е", ending
 		end
 		base, ending = rmatch(lemma, "^(.*)([ыиЫИ]́?)$")
 		if base then
 			if rfind(ending, "[ыЫ]") or rfind(base, "[" .. com.sib .. com.velar .. "]$") then
-				return base, nom.strip_tr_ending(tr, ending), "о-и", ending
+				return base, com.strip_tr_ending(tr, ending), "о-и", ending
 			else
 				-- FIXME, should we return a slash declension?
 				error("No neuter declension е-и available; use a slash declension")
@@ -2344,7 +2344,7 @@ local function detect_lemma_type(lemma, tr, gender, args, variant)
 	if gender == "f" then
 		base, ending = rmatch(lemma, "^(.*)([ьЬ][иИ]́?)$")
 		if base then
-			return base, nom.strip_tr_ending(tr, ending), "ья", ending
+			return base, com.strip_tr_ending(tr, ending), "ья", ending
 		end
 	end
 	-- Recognize masculines with irregular plurals, but only if the user
@@ -2356,20 +2356,20 @@ local function detect_lemma_type(lemma, tr, gender, args, variant)
 		if args.thisn == "p" or variant == "-ья" then
 			base, ending = rmatch(lemma, "^(.*)([ьЬ][яЯ]́?)$")
 			if base then
-				return base, nom.strip_tr_ending(tr, ending), (args.old and "ъ-ья" or "-ья"), ending
+				return base, com.strip_tr_ending(tr, ending), (args.old and "ъ-ья" or "-ья"), ending
 			end
 		end
 		if args.thisn == "p" or args.want_sc1 then
 			base, ending = rmatch(lemma, "^(.*)([аА]́?)$")
 			if base then
-				return base, nom.strip_tr_ending(tr, ending), (args.old and "ъ-а" or "-а"), ending
+				return base, com.strip_tr_ending(tr, ending), (args.old and "ъ-а" or "-а"), ending
 			end
 			base, ending = rmatch(lemma, "^(.*)([яЯ]́?)$")
 			if base then
 				if rfind(base, "[" .. com.vowel .. "]́?$") then
-					return base, nom.strip_tr_ending(tr, ending), "й-я", ending
+					return base, com.strip_tr_ending(tr, ending), "й-я", ending
 				else
-					return base, nom.strip_tr_ending(tr, ending), "ь-я", ending
+					return base, com.strip_tr_ending(tr, ending), "ь-я", ending
 				end
 			end
 		end
@@ -2380,39 +2380,39 @@ local function detect_lemma_type(lemma, tr, gender, args, variant)
 			base, ending = rmatch(lemma, "^(.*)([ыЫ]́?)$")
 		end
 		if base then
-			return base, nom.strip_tr_ending(tr, ending), gender == "m" and (args.old and "ъ" or "") or "а", ending
+			return base, com.strip_tr_ending(tr, ending), gender == "m" and (args.old and "ъ" or "") or "а", ending
 		end
 		base, ending = rmatch(lemma, "^(.*[" .. com.vowel .. "й]́?)([иИ]́?)$")
 		if base then
-			return base, nom.strip_tr_ending(tr, ending), gender == "m" and "й" or "я", ending
+			return base, com.strip_tr_ending(tr, ending), gender == "m" and "й" or "я", ending
 		end
 		base, ending = rmatch(lemma, "^(.*)([иИ]́?)$")
 		if base then
-			return base, nom.strip_tr_ending(tr, ending), gender == "m" and "ь-m" or "я", ending
+			return base, com.strip_tr_ending(tr, ending), gender == "m" and "ь-m" or "я", ending
 		end
 	end
 	if gender == "3f" then
 		base, ending = rmatch(lemma, "^(.*)([иИ]́?)$")
 		if base then
-			return base, nom.strip_tr_ending(tr, ending), "ь-f", ending
+			return base, com.strip_tr_ending(tr, ending), "ь-f", ending
 		end
 	end
 	-- end of recognize-plurals code
 
 	base, ending = rmatch(lemma, "^(.*)([ьЬ][яеёЯЕЁ]́?)$")
 	if base then
-		return base, nom.strip_tr_ending(tr, ending), ulower(ending)
+		return base, com.strip_tr_ending(tr, ending), ulower(ending)
 	end
 	base, ending = rmatch(lemma, "^(.*)([йаяеоёъЙАЯЕОЁЪ]́?)$")
 	if base then
-		return base, nom.strip_tr_ending(tr, ending), ulower(ending)
+		return base, com.strip_tr_ending(tr, ending), ulower(ending)
 	end
 	base, ending = rmatch(lemma, "^(.*)([ьЬ])$")
 	if base then
 		if gender == "m" or gender == "f" then
-			return base, nom.strip_tr_ending(tr, ending), "ь-" .. gender
+			return base, com.strip_tr_ending(tr, ending), "ь-" .. gender
 		elseif gender == "3f" then
-			return base, nom.strip_tr_ending(tr, ending), "ь-f"
+			return base, com.strip_tr_ending(tr, ending), "ь-f"
 		else
 			error("Need to specify gender m or f with lemma in -ь: ".. lemma)
 		end
@@ -2525,7 +2525,7 @@ determine_decl = function(lemma, tr, decl, args)
 		-- But be careful with explicit declensions like -а that look like
 		-- variants without gender (FIXME, eventually we should maybe do
 		-- something about the potential ambiguity).
-		if gender == "" and not ut.contains({"-ья", "-ин", "-ишко", "-ище"}, variant) then
+		if gender == "" and not m_table.contains({"-ья", "-ин", "-ишко", "-ище"}, variant) then
 			gender, variant = nil, nil
 		end
 	end
@@ -2759,7 +2759,7 @@ detect_adj_type = function(lemma, tr, decl, old)
 			decl = "+" .. ending .. "-" .. shortmixed
 		end
 		was_autodetected = true
-	elseif ut.contains({"+short", "+mixed", "+proper"}, decl) then
+	elseif m_table.contains({"+short", "+mixed", "+proper"}, decl) then
 		base, ending = rmatch(lemma, "^(.-)([оаыъ]?́?)$")
 		assert(base)
 		local shortmixed = usub(decl, 2)
@@ -2774,7 +2774,7 @@ detect_adj_type = function(lemma, tr, decl, old)
 		base = lemma
 	end
 	if ending and ending ~= "" then
-		tr = nom.strip_tr_ending(tr, ending)
+		tr = com.strip_tr_ending(tr, ending)
 	end
 
 	-- Remove any accents from the declension, but not their presence.
@@ -3709,7 +3709,7 @@ local function attach_unstressed(args, case, suf, was_stressed)
 				end
 			end
 		end
-		return nom.concat_russian_tr(barestem, baretr, suf, nil, "dopair"), suf
+		return com.concat_russian_tr(barestem, baretr, suf, nil, "dopair"), suf
 	end
 	suf = com.make_unstressed(suf)
 	local rules = nom.unstressed_rules[ulower(usub(stem, -1))]
@@ -3767,9 +3767,9 @@ local function attach_with(args, case, suf, fun, irreg, n, islast)
 	else
 		local combined, realsuf = fun(args, case, suf)
 		local irregsuf = irreg and {IRREGMARKER} or {""}
-		return {combined and nom.concat_paired_russian_tr(
-			nom.concat_paired_russian_tr(args["prefix" .. n], combined),
-			nom.concat_paired_russian_tr(args["suffix" .. n], irregsuf)) or nil},
+		return {combined and com.concat_paired_russian_tr(
+			com.concat_paired_russian_tr(args["prefix" .. n], combined),
+			com.concat_paired_russian_tr(args["suffix" .. n], irregsuf)) or nil},
 			{realsuf and realsuf .. args["suffix" .. n][1] or nil}
 	end
 end
@@ -3934,11 +3934,11 @@ stress_patterns["f''"] = {
 	nom_pl="-", gen_pl="+", dat_pl="+", acc_pl="+", ins_pl="+", pre_pl="+",
 }
 
-ending_stressed_gen_pl_patterns = ut.list_to_set({"b", "b'", "c", "e", "f", "f'", "f''"})
-ending_stressed_pre_sg_patterns = ut.list_to_set({"b", "b'", "d", "d'", "f", "f'", "f''"})
+ending_stressed_gen_pl_patterns = m_table.listToSet({"b", "b'", "c", "e", "f", "f'", "f''"})
+ending_stressed_pre_sg_patterns = m_table.listToSet({"b", "b'", "d", "d'", "f", "f'", "f''"})
 ending_stressed_dat_sg_patterns = ending_stressed_pre_sg_patterns
 ending_stressed_sg_patterns = ending_stressed_pre_sg_patterns
-ending_stressed_pl_patterns = ut.list_to_set({"b", "b'", "c"})
+ending_stressed_pl_patterns = m_table.listToSet({"b", "b'", "c"})
 
 local numbers = {
 	["s"] = "singular",
@@ -4020,15 +4020,15 @@ canonicalize_override = function(args, case, forms, n)
 	local vals = rsplit(val, "%s*,%s*")
 	local retvals = {}
 	for _, val in ipairs(vals) do
-		local valru, valtr = nom.split_russian_tr(val)
+		local valru, valtr = com.split_russian_tr(val)
 		valru = rsub(valru, "~~", ustem)
 		valru = rsub(valru, "~", com.is_stressed(val) and ustem or stem)
 		if rfind(valru, "^%*") then
 			valru = rsub(valru, "^%*", "") .. HYPMARKER
 		end
 		if valtr then
-			tr = tr or nom.translit_no_links(stem)
-			utr = utr or nom.translit_no_links(ustem)
+			tr = tr or com.translit_no_links(stem)
+			utr = utr or com.translit_no_links(ustem)
 			valtr = rsub(valtr, "~~", utr)
 			valtr = rsub(valtr, "~", com.is_stressed(val) and utr or tr)
 			if rfind(valtr, "^%*") then
@@ -4079,8 +4079,8 @@ canonicalize_override = function(args, case, forms, n)
 					ru = ru .. datru_notes
 					-- do the translit; but it shouldn't have brackets in it
 					if tr or valtr then
-						tr = tr or nom.translit_no_links(rutr[1])
-						valtr = valtr or nom.translit_no_links(valru)
+						tr = tr or com.translit_no_links(rutr[1])
+						valtr = valtr or com.translit_no_links(valru)
 						tr = rsub(tr, "^%+", valtr)
 						tr = rsub(tr, "(%s)%+", "%1" .. valtr)
 						tr = tr .. dattr_notes
@@ -4137,7 +4137,7 @@ local function process_overrides(args, f, n)
 					if formru ~= "-" then
 						-- don't mark an override of - as irregular, even if
 						-- it has an attached footnote symbol
-						form = nom.concat_paired_russian_tr(form, {IRREGMARKER})
+						form = com.concat_paired_russian_tr(form, {IRREGMARKER})
 					end
 				end
 				table.insert(new_overrides, form)
@@ -4182,11 +4182,11 @@ end
 
 local function process_tail_args(args, f, n)
 	local function append_note_all(case, value)
-		value = nom.split_russian_tr(value, "dopair")
+		value = com.split_russian_tr(value, "dopair")
 		local function append1(case)
 			if f[case] then
 				for i=1,#f[case] do
-					f[case][i] = nom.concat_paired_russian_tr(f[case][i], value)
+					f[case][i] = com.concat_paired_russian_tr(f[case][i], value)
 				end
 			end
 		end
@@ -4201,12 +4201,12 @@ local function process_tail_args(args, f, n)
 	end
 
 	local function append_note_last(case, value, gt_one)
-		value = nom.split_russian_tr(value, "dopair")
+		value = com.split_russian_tr(value, "dopair")
 		local function append1(case)
 			if f[case] then
 				local lastarg = #f[case]
 				if lastarg > (gt_one and 1 or 0) then
-					f[case][lastarg] = nom.concat_paired_russian_tr(f[case][lastarg], value)
+					f[case][lastarg] = com.concat_paired_russian_tr(f[case][lastarg], value)
 				end
 			end
 		end
@@ -4462,111 +4462,8 @@ handle_overall_forms_and_overrides = function(args)
 		args.acc_sg = args.acc_sg or args.acc_sg_in
 		args.acc_pl = args.acc_pl or args.acc_pl_in
 	else -- bianimate
-		args.acc_sg = args.acc_sg or ut.equals(args.acc_sg_in, args.acc_sg_an) and args.acc_sg_in or nil
-		args.acc_pl = args.acc_pl or ut.equals(args.acc_pl_in, args.acc_pl_an) and args.acc_pl_in or nil
-	end
-end
-
--- Generate a string to substitute into a particular form in a Wiki-markup
--- table. FORMS is the list of forms, generated by concat_word_forms().
--- OLD is true if we're dealing with a pre-reform declension (in this case,
--- the page we link to has е in place of ё, for reasons I'm not completely
--- sure of). LEMMA is true is we're formatting the entry for use in displaying
--- the lemma in the declension table title. In this case, we don't include
--- the translit, and remove monosyllabic accents from the Cyrillic (but not
--- in multiword expressions).
-local function show_form(forms, old, is_lemma, accel_form, lemma_forms)
-	local russianvals = {}
-	local latinvals = {}
-	local lemmavals = {}
-
-	-- Accumulate separately the Russian and transliteration into
-	-- RUSSIANVALS and LATINVALS, then concatenate each down below.
-	-- However, if LEMMA, we put each transliteration directly
-	-- after the corresponding Russian, in parens, and put the results
-	-- in LEMMAVALS, which get concatenated below. (This is used in the
-	-- title of the declension table.) (Actually, currently we don't
-	-- include the translit in the declension table title.)
-
-	local lemmaru, lemmatr
-	if accel_form and lemma_forms then
-		local lemma_form = lemma_forms[1]
-		if lemma_form[1] ~= "-" then
-			lemmaru, lemmatr = lemma_form[1], lemma_form[2]
-			lemmaru, _ = m_table_tools.separate_notes(lemmaru)
-			if lemmatr then
-				lemmatr, _ = m_table_tools.separate_notes(lemmatr)
-			end
-		end
-	end
-
-	local is_missing = false
-	for _, form in ipairs(forms) do
-		local ru, tr = form[1], form[2]
-		local ruentry, runotes = m_table_tools.separate_notes(ru)
-		local trentry, trnotes
-		if tr then
-			trentry, trnotes = m_table_tools.separate_notes(tr)
-			trnotes = rsub(trnotes, HYPMARKER, "")
-		end
-		if is_lemma and com.is_monosyllabic(ruentry) then
-			ruentry = com.remove_accents(ruentry)
-			if trentry then
-				trentry = com.remove_accents(trentry)
-			end
-		end
-		local accel = lemmaru and {form = accel_form, translit = tr, lemma = lemmaru,
-			lemma_translit = lemmatr} or nil
-		local ishyp = rfind(runotes, HYPMARKER)
-		if ishyp then
-			runotes = rsub(runotes, HYPMARKER, "")
-		end
-		runotes = m_table_tools.superscript_notes(runotes)
-		if trnotes then
-			trnotes = m_table_tools.superscript_notes(trnotes)
-		end
-		local ruspan, trspan
-		if ruentry == "-" and #forms == 1 then
-			ruspan = "&mdash;"
-			is_missing = true
-		elseif ishyp then
-			-- no accelerator for hypothetical forms
-			ruspan = m_links.full_link({lang = lang, term = nil, alt = ruentry, tr = "-"}, "hypothetical")
-		else
-			ruspan = m_links.full_link({lang = lang, term = ruentry, tr = "-", accel = accel})
-		end
-		ruspan = ruspan .. runotes
-		if not trentry then
-			trentry = nom.translit_no_links(ruentry)
-		end
-		if not trnotes then
-			trnotes = nom.translit_no_links(runotes)
-		end
-		trspan = m_links.remove_links(trentry)
-		if ishyp then
-			trspan = scriptutils.tag_text(trspan, lang, Latn, "hypothetical")
-		end
-		trspan = scriptutils.tag_translit(trspan .. trnotes, lang, "default", ' style="color: #888"')
-
-		if is_lemma then
-			-- insert_if_not(lemmavals, ruspan .. " (" .. trspan .. ")")
-			insert_if_not(lemmavals, ruspan)
-		else
-			insert_if_not(russianvals, ruspan)
-			insert_if_not(latinvals, trspan)
-		end
-	end
-
-	if is_lemma then
-		return table.concat(lemmavals, ", ")
-	else
-		local russian_span = table.concat(russianvals, ", ")
-		if is_missing then
-			return russian_span
-		else
-			local latin_span = table.concat(latinvals, ", ")
-			return russian_span .. "<br />" .. latin_span
-		end
+		args.acc_sg = args.acc_sg or m_table.deepEquals(args.acc_sg_in, args.acc_sg_an) and args.acc_sg_in or nil
+		args.acc_pl = args.acc_pl or m_table.deepEquals(args.acc_pl_in, args.acc_pl_an) and args.acc_pl_in or nil
 	end
 end
 
@@ -4602,8 +4499,8 @@ local function concat_word_forms_1(word_forms, trailing_forms)
 				-- is principally used in overall overrides, where we stuff
 				-- the entire override into the last word
 				local full_form = form[1] == "" and trailing_form or
-					nom.concat_paired_russian_tr(form,
-						nom.concat_paired_russian_tr(joiner, trailing_form),
+					com.concat_paired_russian_tr(form,
+						com.concat_paired_russian_tr(joiner, trailing_form),
 						"movenotes")
 				if rfind(full_form[1], "<insa>") and rfind(full_form[1], "<insb>") then
 					-- REJECT! So we don't get mixtures of the two feminine
@@ -4668,12 +4565,12 @@ make_table = function(args)
 	data.number = args.nonumber and "" or numbers[args.n]
 
 	local lemma_forms = args[args.n == "p" and "nom_pl" or "nom_sg"]
-	data.lemma = show_form(args.explicit_lemma and {{args.explicit_lemma, args.explicit_lemmatr}} or
-		args[args.n == "p" and "nom_pl_linked" or "nom_sg_linked"], args.old, "lemma", nil, nil)
+	data.lemma = nom.show_form(args.explicit_lemma and {{args.explicit_lemma, args.explicit_lemmatr}} or
+		args[args.n == "p" and "nom_pl_linked" or "nom_sg_linked"], "lemma", nil, nil)
 	data.title = args.title or strutils.format(args.old and old_title_temp or title_temp, data)
 
-	local sg_an_in_equal = ut.equals(args.acc_sg_an, args.acc_sg_in)
-	local pl_an_in_equal = ut.equals(args.acc_pl_an, args.acc_pl_in)
+	local sg_an_in_equal = m_table.deepEquals(args.acc_sg_an, args.acc_sg_in)
+	local pl_an_in_equal = m_table.deepEquals(args.acc_pl_an, args.acc_pl_in)
 
 	for _, case in ipairs(displayable_cases) do
 		local accel_form = accel_forms[case]
@@ -4687,7 +4584,7 @@ make_table = function(args)
 		if args.n == "p" then
 			accel_form = rsub(accel_form, "|p$", "")
 		end
-		data[case] = show_form(args[case], args.old, false, accel_form, lemma_forms)
+		data[case] = nom.show_form(args[case], false, accel_form, lemma_forms, "remove monosyllabic accents only lemma")
 	end
 
 	local temp = nil
@@ -4940,6 +4837,3 @@ templates["half_a"] = template_prelude("35") .. [===[
 ]===] .. template_postlude()
 
 return export
-
--- For Vim, so we get 4-space tabs
--- vim: set ts=4 sw=4 noet:
