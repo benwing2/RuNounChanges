@@ -158,27 +158,6 @@ local function insert_forms_into_existing_forms(existing, newforms, notesym)
 	return inserted
 end
 
--- Insert an entry into an existing list if not already present, comparing the entry to items in the existing list
--- using a key function. If entry already found, combine it into the existing entry using combine_func, a function of
--- two arguments (the existing and new entries), which should return the combined entry. Return false if entry already
--- found, true if new entry inserted. If combine_func not specified, the existing entry is left alone. If combine_func
--- is specified, the return value will be written over the existing value (i.e. the existing list will be modified
--- in-place).
-local function insert_if_not_by_key(list, new_entry, keyfunc, combine_func)
-	local new_entry_key = keyfunc(new_entry)
-	for i, item in ipairs(list) do
-		local item_key = keyfunc(item)
-		if m_table.deepEquals(item_key, new_entry_key) then
-			if combine_func then
-				list[i] = combine_func(item, new_entry)
-			end
-			return false
-		end
-	end
-	table.insert(list, new_entry)
-	return true
-end
-
 local function track(page)
 	m_debug.track("ru-adjective/" .. page)
 	return true
