@@ -449,7 +449,8 @@ function export.full_link(data, face, allow_self_link, no_check_redundant_transl
 			local form = data.accel.form and data.accel.form .. "-form-of" or ""
 			local gender = encode_accel_param("gender-", data.accel.gender)
 			local pos = encode_accel_param("pos-", data.accel.pos)
-			local translit = encode_accel_param("transliteration-", data.accel.translit)
+			local translit = encode_accel_param("transliteration-",
+				data.accel.translit or (data.tr ~= "-" and data.tr or nil))
 			local target = encode_accel_param("target-", data.accel.target)
 			local lemma = encode_accel_param("origin-", data.accel.lemma)
 			local lemma_translit = encode_accel_param("origin_transliteration-", data.accel.lemma_translit)
@@ -460,6 +461,7 @@ function export.full_link(data, face, allow_self_link, no_check_redundant_transl
 				gender .. " " ..
 				pos .. " " ..
 				translit .. " " ..
+				target .. " " ..
 				lemma .. " " ..
 				lemma_translit .. " " ..
 				no_store .. " "
