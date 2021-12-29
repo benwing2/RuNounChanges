@@ -269,9 +269,9 @@ local function do_adjective(args, data, tracking_categories, is_superlative)
 	local masculine_plurals = {}
 	local feminine_plurals = {}
 
-	if args.sp and not allowed_special_indicators[args.sp] then
+	if args.sp and not require("Module:romance utilities").allowed_special_indicators[args.sp] then
 		local indicators = {}
-		for indic, _ in pairs(allowed_special_indicators) do
+		for indic, _ in pairs(require("Module:romance utilities").allowed_special_indicators) do
 			table.insert(indicators, "'" .. indic .. "'")
 		end
 		table.sort(indicators)
