@@ -126,29 +126,60 @@ local function split_inflection_tags(tagspecs, split_regex)
 end
 
 
+local link_params = { "term", "alt", "t", "gloss", "sc", "tr", "ts", "pos", "g", "id", "lit" }
+local link_param_set = {}
+for _, param in ipairs(link_params) do
+	link_param_set[param] = true
+end
+
 -- Modify PARAMS in-place by adding parameters that control the link to the
 -- main entry. TERM_PARAM is the number of the param specifying the main
 -- entry itself; TERM_PARAM + 1 will be the display text, and TERM_PARAM + 2
 -- will be the gloss, unless NO_NUMBERED_GLOSS is given.
-local function add_link_params(params, term_param, no_numbered_gloss)
-	-- Numbered params controlling link display
-	params[term_param] = { list = "term", allow_holes = true }
-	params[term_param + 1] = { alias_of = "alt" }
-	if not no_numbered_gloss then
-		params[term_param + 2] = { alias_of = "t" }
+local function add_link_params(parent_args, params, term_param, no_numbered_gloss)
+	-- See if any params for the second or higher term exist.
+	local multiple_lemmas = false
+	for k, v in pairs(parent_args) do
+		if type(k) == "string" then
+			local base, num = k:match("^([a-z]+)([0-9]+)$")
+			if base and link_param_set[base] then
+				multiple_lemmas = true
+				break
+			end
+		end
 	end
-	
-	-- Named params controlling link display
-	params["alt"] = { list = true, allow_holes = true }
-	params["t"] = { list = true, allow_holes = true }
-	params["gloss"] = { alias_of = "t", list = true, allow_holes = true }
-	params["sc"] = { list = true, allow_holes = true }
-	params["tr"] = { list = true, allow_holes = true }
-	params["ts"] = { list = true, allow_holes = true }
-	params["pos"] = { list = true, allow_holes = true }
-	params["g"] = { list = true, allow_holes = true }
-	params["id"] = { list = true, allow_holes = true }
-	params["lit"] = { list = true, allow_holes = true }
+	-- If no params for the second or higher term exist, use a simpler param setup to save memory.
+	params[term_param + 1] = {alias_of = "alt"}
+	if not no_numbered_gloss then
+		params[term_param + 2] = {alias_of = "t"}
+	end
+	if not multiple_lemmas then
+		-- Numbered params controlling link display
+		params[term_param] = {}
+		
+		-- Named params controlling link display
+		params["gloss"] = {alias_of = "t"}
+		params["g"] = {list = true}
+		for _, param in ipairs(link_params) do
+			if param ~= "gloss" and param ~= "g" and param ~= "term" then
+				params[param] = {}
+			end
+		end
+	else
+		-- Numbered params controlling link display
+		params[term_param] = { list = "term", allow_holes = true }
+
+		-- Named params controlling link display
+		params["gloss"] = { alias_of = "t", list = true, allow_holes = true }
+		local list_spec = { list = true, allow_holes = true }
+		for _, param in ipairs(link_params) do
+			if param ~= "gloss" and param ~= "term" then
+				params[param] = list_spec
+			end
+		end
+	end
+
+	return multiple_lemmas
 end
 
 
@@ -163,7 +194,7 @@ end
 --   {{inflection of}} or similar templates).
 --
 -- This is a subfunction of construct_form_of_text().
-local function get_terminfos_and_categories(iargs, args, term_param, compat)
+local function get_terminfos_and_categories(iargs, args, term_param, compat, multiple_lemmas)
 	local lang = args[compat and "lang" or 1] or iargs["lang"] or "und"
 	lang = require("Module:languages").getByCode(lang) or
 		require("Module:languages").err(lang, compat and "lang" or 1)
@@ -183,12 +214,55 @@ local function get_terminfos_and_categories(iargs, args, term_param, compat)
 		
 	-- Format the link, preceding text and categories
 
+	local function add_term_tracking_categories(term)
+		-- add tracking category if term is same as page title
+		if term and mw.title.getCurrentTitle().text == lang:makeEntryName(term) then
+			table.insert(categories, "Forms linking to themselves")
+		end
+		-- maybe add tracking category if primary entry doesn't exist (this is an
+		-- expensive call so we don't do it by default)
+		if iargs["noprimaryentrycat"] and term and mw.title.getCurrentTitle().nsText == ""
+			and not mw.title.new(term).exists then
+			table.insert(categories, lang:getCanonicalName() .. " " .. iargs["noprimaryentrycat"])
+		end
+	end
+
 	local terminfos
 
 	if iargs["nolink"] then
 		terminfos = nil
 	elseif iargs["linktext"] then
 		terminfos = iargs["linktext"]
+	elseif not multiple_lemmas then
+		local term = args[term_param]
+
+		if not term and not args["alt"] and not args["tr"] and not args["ts"] then
+			if mw.title.getCurrentTitle().nsText == "Template" then
+				term = "term"
+			else
+				error("No linked-to term specified; either specify term, alt, translit or transcription")
+			end
+		end
+
+		add_term_tracking_categories(term)
+
+		local sc = args["sc"] or iargs["sc"]
+		
+		sc = sc and require("Module:scripts").getByCode(sc, "sc") or nil
+
+		local terminfo = {
+			lang = lang,
+			sc = sc,
+			term = term,
+			genders = args["g"],
+			gloss = args["t"],
+		}
+		for _, param in ipairs(link_params) do
+			if param ~= "sc" and param ~= "term" and param ~= "g" and param ~= "gloss" and param ~= "t" then
+				terminfo[param] = args[param]
+			end
+		end
+		terminfos = {terminfo}
 	else
 		terminfos = {}
 		-- FIXME! Previously there was only one term parameter but multiple genders. For compatibility, if we see only
@@ -224,17 +298,8 @@ local function get_terminfos_and_categories(iargs, args, term_param, compat)
 					error("No linked-to term specified; either specify term, alt, translit or transcription")
 				end
 			end
-			
-			-- add tracking category if term is same as page title
-			if term and mw.title.getCurrentTitle().text == lang:makeEntryName(term) then
-				table.insert(categories, "Forms linking to themselves")
-			end
-			-- maybe add tracking category if primary entry doesn't exist (this is an
-			-- expensive call so we don't do it by default)
-			if iargs["noprimaryentrycat"] and term and mw.title.getCurrentTitle().nsText == ""
-				and not mw.title.new(term).exists then
-				table.insert(categories, lang:getCanonicalName() .. " " .. iargs["noprimaryentrycat"])
-			end
+
+			add_term_tracking_categories(term)
 
 			local sc = args["sc"][i] or iargs["sc"]
 			
@@ -244,15 +309,14 @@ local function get_terminfos_and_categories(iargs, args, term_param, compat)
 				lang = lang,
 				sc = sc,
 				term = term,
-				alt = args["alt"][i],
-				id = args["id"][i],
-				gloss = args["t"][i],
-				tr = args["tr"][i],
-				ts = args["ts"][i],
-				pos = args["pos"][i],
 				genders = args["g"][i] and rsplit(args["g"][i], ",") or {},
-				lit = args["lit"][i],
+				gloss = args["t"][i],
 			}
+			for _, param in ipairs(link_params) do
+				if param ~= "sc" and param ~= "term" and param ~= "g" and param ~= "gloss" and param ~= "t" then
+					terminfo[param] = args[param][i]
+				end
+			end
 
 			table.insert(terminfos, terminfo)
 		end
@@ -283,8 +347,8 @@ end
 --     period/dot.
 -- (2) Any extra categories to add the page to (other than those that can be derived from parameters specified to the
 --     invocation or parent arguments, which will automatically be added to the page).
-local function construct_form_of_text(iargs, args, term_param, compat, do_form_of)
-	local lang, terminfos, categories = get_terminfos_and_categories(iargs, args, term_param, compat)
+local function construct_form_of_text(iargs, args, term_param, compat, multiple_lemmas, do_form_of)
+	local lang, terminfos, categories = get_terminfos_and_categories(iargs, args, term_param, compat, multiple_lemmas)
 
 	local form_of_text, lang_cats = do_form_of(lang, terminfos)
 	for _, cat in ipairs(lang_cats) do
@@ -404,8 +468,9 @@ function export.form_of_t(frame)
 		["nodot"] = {type = "boolean"},
 	}
 
+	local multiple_lemmas
 	if not iargs["nolink"] and not iargs["linktext"] then
-		add_link_params(params, term_param)
+		multiple_lemmas = add_link_params(parent_args, params, term_param)
 	end
 
 	if next(iargs["cat"]) then
@@ -433,7 +498,7 @@ function export.form_of_t(frame)
 		text = require("Module:string utilities").ucfirst(text)
 	end
 
-	return construct_form_of_text(iargs, args, term_param, compat,
+	return construct_form_of_text(iargs, args, term_param, compat, multiple_lemmas,
 		function(lang, terminfos)
 			return m_form_of.format_form_of {text = text, terminfos = terminfos,
 				terminfo_face = "term", posttext = iargs["posttext"]}, {}
@@ -453,8 +518,8 @@ end
 -- should be directly returned as the template function's return value.
 -- JOINER is the strategy to join multipart tags for display; currently accepted
 -- values are "and", "slash", "en-dash".
-local function construct_tagged_form_of_text(iargs, args, term_param, compat, tags, joiner)
-	return construct_form_of_text(iargs, args, term_param, compat,
+local function construct_tagged_form_of_text(iargs, args, term_param, compat, multiple_lemmas, tags, joiner)
+	return construct_form_of_text(iargs, args, term_param, compat, multiple_lemmas,
 		function(lang, terminfos)
 			local lang_cats =
 				args["nocat"] and {} or m_form_of.fetch_lang_categories(lang, tags, terminfos, args["p"])
@@ -554,8 +619,9 @@ function export.tagged_form_of_t(frame)
 		["nodot"] = {type = "boolean"},
 	}
 	
+	local multiple_lemmas
 	if not iargs["nolink"] and not iargs["linktext"] then
-		add_link_params(params, term_param)
+		multiple_lemmas = add_link_params(parent_args, params, term_param)
 	end
 
 	local ignored_params = {}
@@ -574,7 +640,7 @@ function export.tagged_form_of_t(frame)
 	local args = process_parent_args("tagged-form-of-t", parent_args,
 		params, iargs["def"], iargs["ignore"], ignored_params)
 	
-	return construct_tagged_form_of_text(iargs, args, term_param, compat,
+	return construct_tagged_form_of_text(iargs, args, term_param, compat, multiple_lemmas,
 		split_inflection_tags(iargs[1], iargs["split_tags"]), "and")
 end
 
@@ -676,8 +742,9 @@ function export.inflection_of_t(frame)
 		["joiner"] = {},
 	}
 	
+	local multiple_lemmas
 	if not iargs["nolink"] and not iargs["linktext"] then
-		add_link_params(params, term_param, "no-numbered-gloss")
+		multiple_lemmas = add_link_params(parent_args, params, term_param, "no-numbered-gloss")
 	end
 
 	local ignored_params = {}
@@ -712,7 +779,7 @@ function export.inflection_of_t(frame)
 		end
 	end
 
-	return construct_tagged_form_of_text(iargs, args, term_param, compat, infls,
+	return construct_tagged_form_of_text(iargs, args, term_param, compat, multiple_lemmas, infls,
 		parent_args["joiner"])
 end
 
