@@ -149,7 +149,7 @@ local function insert_forms_into_existing_forms(existing, newforms, notesym)
 	for _, item in ipairs(newforms) do
 		if not m_table.contains(existing, item, "deepCompare") then
 			if notesym then
-				item = nom.concat_paired_russian_tr(item, {notesym})
+				item = com.concat_paired_russian_tr(item, {notesym})
 			end
 	        table.insert(existing, item)
 			inserted = true
@@ -303,7 +303,7 @@ function export.do_generate_forms(args, old, manual)
 	args.categories = {}
 	old = old or args.old
 	args.old = old
-	args.suffix = nom.split_russian_tr(args.suffix or "", "dopair")
+	args.suffix = com.split_russian_tr(args.suffix or "", "dopair")
 	args.internal_notes = {}
 	-- Superscript footnote marker at beginning of note, similarly to what's
 	-- done at end of forms.
@@ -328,15 +328,15 @@ function export.do_generate_forms(args, old, manual)
 		dated_short_classes = {}
 		saw_no_short = false
 		for _, decl_type in ipairs(rsplit(decl_types, ",")) do
-			local lemma, lemmatr = nom.split_russian_tr(lemma_and_tr)
+			local lemma, lemmatr = com.split_russian_tr(lemma_and_tr)
 			-- if lemma ends with -ся, strip it and act as if suffix=ся given
 			-- (or rather, prepend ся to suffix)
 			local active_base = rmatch(lemma, "^(.*)ся$")
 			if active_base then
 				lemma = active_base
-				lemmatr = nom.strip_tr_ending(lemmatr, "ся")
+				lemmatr = com.strip_tr_ending(lemmatr, "ся")
 				args.refl = true
-				args.real_suffix = nom.concat_paired_russian_tr({"ся"}, args.suffix)
+				args.real_suffix = com.concat_paired_russian_tr({"ся"}, args.suffix)
 			else
 				args.refl = false
 				args.real_suffix = args.suffix
@@ -372,7 +372,7 @@ function export.do_generate_forms(args, old, manual)
 				end
 			end
 			if short_stem then
-				short_stem, short_stemtr = nom.split_russian_tr(short_stem)
+				short_stem, short_stemtr = com.split_russian_tr(short_stem)
 			end
 
 			stem, args.allow_unaccented = rsubb(stem, "^%*", "")
@@ -558,7 +558,7 @@ function export.do_generate_forms(args, old, manual)
 			if not m_table.deepEquals(arg, newarg) then
 				-- Uncomment this to display the particular case and
 				-- differing forms.
-				--error(case .. " " .. (arg and nom.concat_forms(arg) or "nil") .. " || " .. (newarg and nom.concat_forms(newarg) or "nil"))
+				--error(case .. " " .. (arg and com.concat_forms(arg) or "nil") .. " || " .. (newarg and com.concat_forms(newarg) or "nil"))
 				track("different-decl")
 				difdecl = true
 			end
@@ -654,7 +654,7 @@ local function get_form(forms)
 		ruentry = m_links.remove_links(ruentry)
 		m_table.insertIfNot(canon_forms, {ruentry, trentry}, "deepCompare")
 	end
-	return nom.concat_forms(canon_forms)
+	return com.concat_forms(canon_forms)
 end
 
 -- The entry point for 'ru-adj-forms' to generate all adjective forms.
@@ -931,7 +931,7 @@ detect_stem_and_accent_type = function(lemma, tr, decl, args)
 				elseif ending == "ій" and decl == "ь" then
 					ending = "ьій"
 				end
-				tr = nom.strip_tr_ending(tr, ending)
+				tr = com.strip_tr_ending(tr, ending)
 				-- -ий/-ій will be converted to -ый after velars and sibilants
 				-- by the caller
 				decl = com.make_unstressed(ending)
@@ -1525,7 +1525,7 @@ local function attach_unstressed(args, suf, short)
 		elseif rfind(args.bare, "[йьъ]$") then
 			return {args.bare, args.baretr}
 		elseif suf == "ъ" then
-			return nom.concat_russian_tr(args.bare, args.baretr, suf, nil, "dopair")
+			return com.concat_russian_tr(args.bare, args.baretr, suf, nil, "dopair")
 		else
 			return {args.bare, args.baretr}
 		end
@@ -1583,7 +1583,7 @@ local function attach_with(args, suf, fun, short)
 			end
 			for _, x in ipairs(funval) do
 				table.insert(tbl,
-					nom.concat_paired_russian_tr(x, args.real_suffix))
+					com.concat_paired_russian_tr(x, args.real_suffix))
 			end
 			return tbl
 		else
@@ -1617,7 +1617,7 @@ canonicalize_override = function(args, case)
 	-- auto-accent/check for necessary accents
 	local newvals = {}
 	for _, v in ipairs(val) do
-		local ru, tr = nom.split_russian_tr(v)
+		local ru, tr = com.split_russian_tr(v)
 		if not args.allow_unaccented then
 			if tr and com.is_unstressed(ru) ~= com.is_unstressed(tr) then
 				error("Override " .. ru .. " and translit " .. tr .. " must have same accent pattern")
@@ -1640,20 +1640,20 @@ handle_forms_and_overrides = function(args, short_forms_allowed)
 	local f = args.forms
 
 	local function append_note_all(case, value)
-		value = nom.split_russian_tr(value, "dopair")
+		value = com.split_russian_tr(value, "dopair")
 		if f[case] then
 			for i=1,#f[case] do
-				f[case][i] = nom.concat_paired_russian_tr(f[case][i], value)
+				f[case][i] = com.concat_paired_russian_tr(f[case][i], value)
 			end
 		end
 	end
 
 	local function append_note_last(case, value, gt_one)
-		value = nom.split_russian_tr(value, "dopair")
+		value = com.split_russian_tr(value, "dopair")
 		if f[case] then
 			local lastarg = #f[case]
 			if lastarg > (gt_one and 1 or 0) then
-				f[case][lastarg] = nom.concat_paired_russian_tr(f[case][lastarg], value)
+				f[case][lastarg] = com.concat_paired_russian_tr(f[case][lastarg], value)
 			end
 		end
 	end
@@ -1892,109 +1892,11 @@ local function get_accel_forms(old, special, has_nom_mp)
 	}
 end
 
--- Generate a string to substitute into a particular form in a Wiki-markup
--- table. FORMS is the list of forms.
-local function show_form(forms, old, is_lemma, accel_form, lemma_forms)
-	local russianvals = {}
-	local latinvals = {}
-	local lemmavals = {}
-
-	-- Accumulate separately the Russian and transliteration into RUSSIANVALS and LATINVALS, then concatenate each down below.
-	-- FIXME: Comment better what's going on.
-	if #forms == 1 and forms[1][1] == "-" then
-		return "&mdash;"
-	end
-
-	local lemmaru, lemmatr
-	if accel_form and lemma_forms and lemma_form[1] ~= "-" then
-		lemma_forms = nom.combine_translit_of_adjacent_heads(nom.strip_notes_from_forms(lemma_forms))
-		lemmaru, lemmatr = nom.unzip_forms(lemma_forms)
-	end
-
-	for _, form in ipairs(forms) do
-		local ru, tr = form[1], form[2]
-		local ruentry, runotes = m_table_tools.get_notes(ru)
-		local trentry, trnotes
-		if tr then
-			trentry, trnotes = m_table_tools.get_notes(tr)
-		end
-		ruentry = com.remove_monosyllabic_accents(ruentry)
-		local ruobj = {entry = ruentry, tr = {trentry or true}, notes = runotes}
-		if not trentry then
-			trentry = nom.translit_no_links(ruentry)
-		end
-		if not trnotes then
-			trnotes = nom.translit_no_links(runotes)
-		end
-		local trobj = {entry = trentry, notes = trnotes}
-
-		local function keyfunc(obj)
-			return obj.entry
-		end
-		local function combine_func_ru(obj1, obj2)
-			for _, tr in ipairs(obj2.tr) do
-				m_table.insertIfNot(obj1.tr, tr)
-			end
-			obj1.notes = obj1.notes .. obj2.notes
-			return obj1
-		end
-		local function combine_func_tr(obj1, obj2)
-			obj1.notes = obj1.notes .. obj2.notes
-			return obj1
-		end
-		if is_lemma then
-			-- m_table.insertIfNot(lemmavals, ruspan .. " (" .. trspan .. ")")
-			insert_if_not_by_key(lemmavals, ruobj, keyfunc, combine_func_ru)
-		else
-			insert_if_not_by_key(russianvals, ruobj, keyfunc, combine_func_ru)
-			insert_if_not_by_key(latinvals, trobj, keyfunc, combine_func_tr)
-		end
-	end
-
-	local function concatenate_ru(objs)
-		for i, obj in ipairs(objs) do
-			local accel = nil
-			if lemmaru then
-				local translit = nil
-				if #obj.tr == 1 and obj.tr[1] == true then
-					-- no translit
-				else
-					for j, tr in ipairs(obj.tr) do
-						if tr == true then
-							obj.tr[j] = nom.translit_no_links(obj.entry)
-						end
-					end
-					translit = table.concat(obj.tr, ", ")
-				end
-				accel = {form = accel_form, translit = translit, lemma = lemmaru, lemma_translit = lemmatr}
-			end
-			objs[i] = m_links.full_link({lang = lang, term = obj.entry, tr = "-", accel = accel}) .. obj.notes
-		end
-		return table.concat(objs, ", ")
-	end
-
-	local function concatenate_tr(objs)
-		for i, obj in ipairs(objs) do
-			objs[i] = require("Module:script utilities").tag_translit(m_links.remove_links(obj.entry), lang, "default",
-				" style=\"color: #888;\"") .. obj.notes
-		end
-		return table.concat(objs, ", ")
-	end
-
-	if is_lemma then
-		return concatenate_ru(lemmavals)
-	else
-		local russian_span = concatenate_ru(russianvals)
-		local latin_span = concatenate_tr(latinvals)
-		return russian_span .. "<br />" .. latin_span
-	end
-end
-
 -- Make the table
 make_table = function(args)
 	local lemma_forms = args.special and args.nom_mp or
 		args.nofull and args.short_m or args.nom_m
-	args.lemma = m_links.remove_links(show_form(lemma_forms, args.old, true, nil, nil))
+	args.lemma = m_links.remove_links(nom.show_form(lemma_forms, true, nil, nil))
 	args.title = args.title or strutils.format(
 		(args.special or args.manual) and args.old and old_title_temp_no_short_msg or
 		(args.special or args.manual) and title_temp_no_short_msg or
@@ -2015,7 +1917,7 @@ make_table = function(args)
 			if noneuter then
 				accel_form = rsub(accel_form, "//n", "")
 			end
-			args[case] = show_form(args[case], args.old, false, accel_form, lemma_forms)
+			args[case] = nom.show_form(args[case], false, accel_form, lemma_forms)
 		else
 			args[case] = nil
 		end
@@ -2529,6 +2431,3 @@ full_clause_oba = [===[
 ]===]
 
 return export
-
--- For Vim, so we get 4-space tabs
--- vim: set ts=4 sw=4 noet:
