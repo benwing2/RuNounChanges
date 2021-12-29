@@ -89,7 +89,7 @@ local function track(page)
 end
 
 local function insert_if_not(list, item)
-	return m_table.insertIfNot(list, item, "deep compare")
+	return m_table.insertIfNot(list, item, nil, "deep compare")
 end
 
 -- Clone args while also assigning nil to empty strings.
@@ -116,23 +116,39 @@ local function split_list_into_russian_tr(list)
 end
 
 local function russian_tr_to_inflection_obj(data, form, pos)
-	local hypothetical = false
-	if rfind(form, HYPMARKER) then
-		form = rsub(form, HYPMARKER, "")
-		hypothetical = true
+	local ru, tr
+	if type(form) == "string" then
+		ru, tr = com.split_russian_tr(form)
+	else
+		ru, tr = unpack(form)
 	end
-	local ru, tr = com.split_russian_tr(form)
-	local obj = {term=ru, translit=tr, hypothetical=hypothetical}
+	local sawhyp_ru, sawhyp_tr
+	ru, sawhyp_ru = rsubb(ru, HYPMARKER, "")
+	if tr then
+		tr, sawhyp_tr = rsubb(tr, HYPMARKER, "")
+	end
+	local obj = {term=ru, translit=tr, hypothetical=sawhyp_ru or sawhyp_tr}
 	if com.needs_accents(ru) then
 		table.insert(data.categories, "Requests for accents in Russian " .. pos .. " entries")
 	end
 	return obj
 end
 
-local function add_forms(data, inflections, forms, pos)
+local function add_forms_to_inflection(data, parts, forms, pos)
 	for i, form in ipairs(forms) do
-		insert_if_not(inflections, russian_tr_to_inflection_obj(data, form, pos))
+		insert_if_not(parts, russian_tr_to_inflection_obj(data, form, pos))
 	end
+end
+
+local function add_inflection(data, label, forms, pos, accel_form)
+	local accel
+	if accel_form then
+		-- FIXME, remove redundant translit, combine adjacent translits with same Russian
+		accel = {form = accel_form, lemma = data.heads, lemma_translit = data.translits}
+	end
+	local parts = {label = label, accel = accel}
+	add_forms_to_inflection(data, parts, forms, pos)
+	table.insert(data.inflections, parts)
 end
 
 local function get_non_redundant_translit(data)
@@ -290,8 +306,7 @@ local function noun_plus_or_multi(frame, multi)
 		args = m_noun.do_generate_forms(args, old)
 	end
 
-	local data = {lang = lang, pos_category = poscat, categories = {}, heads = {},
-		translits = {}, genders = {}, inflections = {}}
+	local data = {lang = lang, pos_category = poscat, categories = {}, inflections = {}}
 
 	-- do explicit genders using g=, g2=, etc.
 	data.genders = headword_args.g
@@ -361,55 +376,24 @@ local function noun_plus_or_multi(frame, multi)
 		return newlist
 	end
 
-	local function remove_tr(list)
-		local newlist = {}
-		for _, x in ipairs(list) do
-			table.insert(newlist, x[1])
-		end
-		return newlist
-	end
-
 	local argsn = args.n or args.ndef
-	local genitives, plurals, genpls
+	local heads, genitives, plurals, genpls
 	if argsn == "p" then
-		data.heads = prepare_entry(args.nom_pl_linked, "ishead")
+		heads = prepare_entry(args.nom_pl_linked, "ishead")
 		genitives = prepare_entry(args.gen_pl)
 		plurals = {{"-"}}
 		genpls = {{"-"}}
 	else
-		data.heads = prepare_entry(args.nom_sg_linked, "ishead")
+		heads = prepare_entry(args.nom_sg_linked, "ishead")
 		genitives = prepare_entry(args.gen_sg)
 		plurals = argsn == "s" and {{"-"}} or prepare_entry(args.nom_pl)
 		genpls = argsn == "s" and {{"-"}} or prepare_entry(args.gen_pl)
 	end
 
-	local irregtr = false
-	for _, head in ipairs(data.heads) do
-		local ru, tr = head[1], head[2]
-		if not tr then
-			tr = lang:transliterate(m_links.remove_links(ru))
-		else
-			irregtr = true
-		end
-		table.insert(data.translits, tr)
-	end
-	if irregtr and not args.notrcat then
+	heads = combine_translit_of_adjacent_forms(heads)
+	data.heads, data.translits = com.unzip_forms(heads)
+	if next(data.translits) and not args.notrcat then
 		table.insert(data.categories, "Russian terms with irregular pronunciations")
-	end
-
-	-- Combine adjacent heads by their transliteration (which should always
-	-- be different, as identical heads including translit have previously
-	-- been removed)
-	data.heads = remove_tr(data.heads)
-	local i = 1
-	while i < #data.heads do
-		if data.heads[i] == data.heads[i+1] then
-			data.translits[i] = data.translits[i] .. ", " .. data.translits[i+1]
-			table.remove(data.heads, i+1)
-			table.remove(data.translits, i+1)
-		else
-			i = i + 1
-		end
 	end
 
 	-- Eliminate transliteration from genitives and remove duplicates
@@ -486,8 +470,12 @@ local function get_noun_pos(pos)
 				not args.unknown_animacy then
 				error("[[Template:ru-noun]] can now only be used with indeclinable and manually-declined nouns; use [[Template:ru-noun+]] instead")
 			end
-
-	do_noun(data, args, pos == "proper nouns", genitives, plurals, genpls, pos)
+			genitives = split_list_into_russian_tr(genitives)
+			plurals = split_list_into_russian_tr(plurals)
+			genpls = split_list_into_russian_tr(genpls)
+			do_noun(data, args, pos == "proper nouns", genitives, plurals, genpls, pos)
+		end,
+	}
 end
 
 pos_functions["proper nouns"] = get_noun_pos("proper nouns")
@@ -572,10 +560,8 @@ do_noun = function(data, args, no_plural, genitives, plurals, genpls, pos)
 		end
 	end
 
-	local function add_noun_forms(label, forms)
-		local parts = {label = label}
-		add_forms(data, parts, forms, "noun")
-		table.insert(data.inflections, parts)
+	local function add_noun_forms(label, forms, accel_form)
+		add_inflection(data, label, forms, "noun", accel_form)
 	end
 
 	-- Add the genitive forms
@@ -894,7 +880,7 @@ pos_functions["adjectives"] = {
 
 		local function add_adj_forms(label, forms)
 			local parts = {label = label}
-			add_forms(data, parts, forms, "adjective")
+			add_forms_to_inflection(data, parts, forms, "adjective")
 			table.insert(data.inflections, parts)
 		end
 
@@ -949,7 +935,7 @@ pos_functions["adverbs"] = {
 
 		local function add_adv_forms(label, forms)
 			local parts = {label = label}
-			add_forms(data, parts, forms, "adverb")
+			add_forms_to_inflection(data, parts, forms, "adverb")
 			table.insert(data.inflections, parts)
 		end
 
@@ -998,7 +984,7 @@ local function get_verb_pos(pos)
 
 			local function add_verb_forms(label, forms)
 				local parts = {label = label}
-				add_forms(data, parts, forms, "verb")
+				add_forms_to_inflection(data, parts, forms, "verb")
 				table.insert(data.inflections, parts)
 			end
 
