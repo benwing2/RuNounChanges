@@ -29,6 +29,29 @@ local function rsub(term, foo, bar)
 	return retval
 end
 
+-- Insert an entry into an existing list if not already present, comparing the entry to items in the existing list
+-- using a key function. If entry already found, combine it into the existing entry using combine_func, a function of
+-- two arguments (the existing and new entries), which should return the combined entry. Return false if entry already
+-- found, true if new entry inserted. If combine_func not specified, the existing entry is left alone. If combine_func
+-- is specified, the return value will be written over the existing value (i.e. the existing list will be modified
+-- in-place).
+--
+-- FIXME: General enough to consider moving to [[Module:table]].
+local function insert_if_not_by_key(list, new_entry, keyfunc, combine_func)
+	local new_entry_key = keyfunc(new_entry)
+	for i, item in ipairs(list) do
+		local item_key = keyfunc(item)
+		if m_table.deepEquals(item_key, new_entry_key) then
+			if combine_func then
+				list[i] = combine_func(item, new_entry)
+			end
+			return false
+		end
+	end
+	table.insert(list, new_entry)
+	return true
+end
+
 --------------------------------------------------------------------------
 --                        Used for manual translit                      --
 --------------------------------------------------------------------------
@@ -122,78 +145,6 @@ function export.concat_forms(forms)
 	return table.concat(joined_rutr, ",")
 end
 
--- Given a list of forms, where each form is a two-element list of {RUSSIAN, TRANSLIT}, strip footnote symbols from the
--- end of the Russian and translit.
-function export.strip_notes_from_forms(forms)
-	local newforms = {}
-	for _, form in ipairs(forms) do
-		local ru, tr = form[1], form[2]
-		ru, _ = m_table_tools.separate_notes(ru)
-		if tr then
-			tr, _ = m_table_tools.separate_notes(tr)
-		end
-		table.insert(newforms, {ru, tr})
-	end
-	return newforms
-end
-
--- Given a list of forms, where each form is a two-element list of {RUSSIAN, TRANSLIT}, unzip into parallel lists of
--- Russian and translit. The latter list may have gaps in it.
-function export.unzip_forms(forms)
-	local rulist = {}
-	local trlist = {}
-	for i, form in ipairs(forms) do
-		local ru, tr = form[1], form[2]
-		rulist[i] = ru
-		trlist[i] = tr
-	end
-	return rulist, trlist
-end
-
--- Given parallel lists of Russian and translit (where the latter list may have gaps in it), return a list of forms,
--- where each form is a two-element list of {RUSSIAN, TRANSLIT}.
-function export.zip_forms(rulist, trlist)
-	local forms = {}
-	for i, ru in ipairs(rulist) do
-		table.insert(forms, {ru, trlist[i]})
-	end
-	return forms
-end
-
--- Given a list of forms, where each form is a two-element list of {RUSSIAN, TRANSLIT}, combine adjacent forms with
--- identical Russian, concatenating the translit with a comma in between.
-function export.combine_translit_of_adjacent_heads(forms)
-	local newforms = {}
-	if #forms == 0 then
-		return newforms
-	end
-	table.insert(newforms, {forms[1][1], forms[1][2]})
-	for i = 2, #forms do
-		-- If the Russian of the next form is the same as that of the last one, combine their translits and modify
-		-- newforms[] in-place. Otherwise add the next form to newforms[]. Make sure to clone the form rather than
-		-- just appending it directly since we may modify it in-place; we don't want to side-effect `forms` as passed
-		-- in.
-		if forms[i][1] == newforms[#newforms][1] then
-			local tr1 = newforms[#newforms][2]
-			local tr2 = forms[i][2]
-			if not tr1 and not tr2 then
-				-- this shouldn't normally happen
-			else
-				tr1 = tr1 or export.translit_no_links(newforms[#newforms][1])
-				tr2 = tr2 or export.translit_no_links(forms[i][1])
-				if tr1 == tr2 then
-					-- this shouldn't normally happen
-				else
-					newforms[#newforms][2] = tr1 .. ", " .. tr2
-				end
-			end
-		else
-			table.insert(newforms, {forms[i][1], forms[i][2]})
-		end
-	end
-	return newforms
-end
-
 function export.strip_ending(ru, tr, ending)
 	local strippedru = rsub(ru, ending .. "$", "")
 	if strippedru == ru then
@@ -260,14 +211,14 @@ function export.show_form(forms, is_lemma, accel_form, lemma_forms, remove_monos
 	-- field per term.) We don't do this when processing the forms below; instead we handle this in a different
 	-- and more general fashion (see below).
 	local lemmaru, lemmatr
-	if accel_form and lemma_forms and lemma_form[1] ~= "-" then
-		lemma_forms = export.combine_translit_of_adjacent_heads(export.strip_notes_from_forms(lemma_forms))
+	if accel_form and lemma_forms and lemma_forms[1] ~= "-" then
+		lemma_forms = com.combine_translit_of_adjacent_heads(com.strip_notes_from_forms(lemma_forms))
 		for i, form in ipairs(lemma_forms) do
 			local ru, tr = unpack(lemma_forms[i])
 			ru, tr = com.remove_monosyllabic_accents(ru, tr)
 			lemma_forms[i] = {ru, tr}
 		end
-		lemmaru, lemmatr = export.unzip_forms(lemma_forms)
+		lemmaru, lemmatr = com.unzip_forms(lemma_forms)
 	end
 
 	-- Accumulate separately the Russian and transliteration into RUSSIANVALS and LATINVALS, then concatenate each down
@@ -303,10 +254,10 @@ function export.show_form(forms, is_lemma, accel_form, lemma_forms, remove_monos
 		end
 		local ruobj = {entry = ruentry, tr = {trentry or true}, ishyp = ishyp, notes = runotes}
 		if not trentry then
-			trentry = export.translit_no_links(ruentry)
+			trentry = com.translit_no_links(ruentry)
 		end
 		if not trnotes then
-			trnotes = export.translit_no_links(runotes)
+			trnotes = com.translit_no_links(runotes)
 		end
 		local trobj = {entry = trentry, ishyp = ishyp, notes = trnotes}
 
@@ -347,7 +298,7 @@ function export.show_form(forms, is_lemma, accel_form, lemma_forms, remove_monos
 				else
 					for j, tr in ipairs(obj.tr) do
 						if tr == true then
-							obj.tr[j] = export.translit_no_links(obj.entry)
+							obj.tr[j] = com.translit_no_links(obj.entry)
 						end
 					end
 					translit = table.concat(obj.tr, ", ")
@@ -357,6 +308,7 @@ function export.show_form(forms, is_lemma, accel_form, lemma_forms, remove_monos
 			if obj.entry == "-" and #forms == 1 then
 				objs[i] = "&mdash;"
 				is_missing = true
+			end
 			if obj.ishyp then
 				-- no accelerator for hypothetical forms
 				objs[i] = m_links.full_link({lang = lang, term = nil, alt = obj.entry, tr = "-"}, "hypothetical")
