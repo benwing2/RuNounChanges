@@ -39,7 +39,7 @@
 		  documentation for that module for info on the format of this setting.
 ]=]--
 
-local m_common = require("Module:ru-common")
+local com = require("Module:ru-common")
 local m_links = require("Module:links")
 local m_headword = require("Module:headword")
 local m_utilities = require("Module:utilities")
@@ -88,6 +88,10 @@ local function track(page)
 	return true
 end
 
+local function insert_if_not(list, item)
+	return m_table.insertIfNot(list, item, "deep compare")
+end
+
 -- Clone args while also assigning nil to empty strings.
 local function clone_args(in_args)
 	local args = {}
@@ -103,21 +107,31 @@ local function make_qualifier_text(text)
 	return require("Module:qualifier").format_qualifier(text)
 end
 
-local function add_forms(inflection, forms, pos)
+-- WARNING: Side-effects the input list.
+local function split_list_into_russian_tr(list)
+	for i, item in ipairs(list) do
+		list[i] = com.split_russian_tr(item, "dopair")
+	end
+	return list
+end
+
+local function russian_tr_to_inflection_obj(data, form, pos)
+	local hypothetical = false
+	if rfind(form, HYPMARKER) then
+		form = rsub(form, HYPMARKER, "")
+		hypothetical = true
+	end
+	local ru, tr = com.split_russian_tr(form)
+	local obj = {term=ru, translit=tr, hypothetical=hypothetical}
+	if com.needs_accents(ru) then
+		table.insert(data.categories, "Requests for accents in Russian " .. pos .. " entries")
+	end
+	return obj
+end
+
+local function add_forms(data, inflections, forms, pos)
 	for i, form in ipairs(forms) do
-		local hypothetical = false
-		if rfind(form, HYPMARKER) then
-			form = rsub(form, HYPMARKER, "")
-			hypothetical = true
-		end
-		local splitvals = rsplit(form, "//")
-		if #splitvals > 2 then
-			error("FORM or FORM//TRANSLIT expected: " .. form)
-		end
-		table.insert(heads, {term=splitvals[1], translit=splitvals[2], hypothetical=hypothetical})
-		if m_common.needs_accents(splitvals[1]) then
-			table.insert(data.categories, "Requests for accents in Russian " .. pos .. " entries")
-		end
+		insert_if_not(inflections, russian_tr_to_inflection_obj(data, form, pos))
 	end
 end
 
@@ -170,14 +184,14 @@ function export.show(frame)
 		-- but only in the main namespace; for the moment, do only with tracking;
 		-- FIXME, duplicates tracking down below a bit, clean that stuff up
 		local head_no_links = m_links.remove_links(head)
-		local head_noaccent = m_common.remove_accents(head_no_links)
+		local head_noaccent = com.remove_accents(head_no_links)
 		if NAMESPACE == "" and head_noaccent ~= PAGENAME then
 			track("bad-headword")
 			--error("Headword " .. head .. " doesn't match pagename " ..
 			--	PAGENAME)
 		end
 
-		if m_common.needs_accents(head_no_links) then
+		if com.needs_accents(head_no_links) then
 			if not args.noacccat then
 				table.insert(data.categories, "Requests for accents in Russian entries")
 			end
@@ -322,12 +336,7 @@ local function noun_plus_or_multi(frame, multi)
 				trnotes = rsub(trnotes, IRREGMARKER, "") -- remove note of irregularity
 				trnotes = m_table_tools.superscript_notes(trnotes)
 			end
-			if m_common.is_monosyllabic(ruentry) then
-				ruentry = m_common.remove_accents(ruentry)
-				if trentry then
-					trentry = m_common.remove_accents(trentry)
-				end
-			end
+			ruentry, trentry = com.remove_monosyllabic_accents(ruentry, trentry)
 			if sawhyp then
 				table.insert(newlist, {ruentry .. runotes .. HYPMARKER,
 					trentry and trentry .. trnotes .. HYPMARKER})
@@ -340,8 +349,6 @@ local function noun_plus_or_multi(frame, multi)
 				elseif rfind(ruentry, "[%[|%]]") then
 					-- don't add links around a form that's already linked
 					ruspan = ruentry .. runotes
-				elseif old then
-					ruspan = "[[" .. com.remove_jo(ruentry) .. "|" .. ruentry .. "]]" .. runotes
 				else
 					ruspan = "[[" .. ruentry .. "]]" .. runotes
 				end
@@ -410,7 +417,7 @@ local function noun_plus_or_multi(frame, multi)
 	genitives = remove_tr(genitives)
 	local genitives_no_dups = {}
 	for _, gen in ipairs(genitives) do
-		m_table.insertIfNot(genitives_no_dups, gen)
+		insert_if_not(genitives_no_dups, gen)
 	end
 	genitives = genitives_no_dups
 
@@ -419,7 +426,7 @@ local function noun_plus_or_multi(frame, multi)
 	plurals = remove_tr(plurals)
 	local plurals_no_dups = {}
 	for _, pl in ipairs(plurals) do
-		m_table.insertIfNot(plurals_no_dups, pl)
+		insert_if_not(plurals_no_dups, pl)
 	end
 	plurals = plurals_no_dups
 
@@ -428,7 +435,7 @@ local function noun_plus_or_multi(frame, multi)
 	genpls = remove_tr(genpls)
 	local genpls_no_dups = {}
 	for _, gpl in ipairs(genpls) do
-		m_table.insertIfNot(genpls_no_dups, gpl)
+		insert_if_not(genpls_no_dups, gpl)
 	end
 	genpls = genpls_no_dups
 
@@ -567,7 +574,7 @@ do_noun = function(data, args, no_plural, genitives, plurals, genpls, pos)
 
 	local function add_noun_forms(label, forms)
 		local parts = {label = label}
-		add_forms(parts, forms, "noun")
+		add_forms(data, parts, forms, "noun")
 		table.insert(data.inflections, parts)
 	end
 
@@ -661,28 +668,38 @@ do_noun = function(data, args, no_plural, genitives, plurals, genpls, pos)
 end
 
 local function generate_informal_comp(comp)
-	if rfind(comp, "е́?е$") then
-		return rsub(comp, "(е́?)е$", "%1й")
+	local ru, tr = unpack(comp)
+	if rfind(ru, "е́?е$") then
+		ru, tr = com.strip_ending(ru, tr, "е") -- Cyrillic е
+		return com.concat_russian_tr(ru, tr, "й", nil, "dopair")
 	else
 		return nil
 	end
 end
 
 local function generate_po_variant(comp)
-	if rfind(comp, "е$") or rfind(comp, "е́?й$") then
-		return "[[по" .. comp .. "|(по)]][[" .. comp .. "]]"
+	local ru, tr = unpack(comp)
+	if rfind(ru, "е$") or rfind(ru, "е́?й$") then
+		ru = "[[по" .. ru .. "|(по)]][[" .. ru .. "]]"
+		tr = tr and "po" .. tr or nil
+		return {ru, tr}
 	else
 		return comp
 	end
 end
 
+local function generate_periphrastic_comp(positive)
+	local ru, tr = unpack(positive)
+	return com.concat_russian_tr("[[бо́лее]] ", nil, ru, tr, "dopair")
+end
+
 local allowed_endings = {
-	{"ый", "yj"},
-	{"ий", "ij"},
-	{"о́й", "o" .. AC .. "j"},
+	"ый",
+	"ий",
+	"о́й",
 	-- last two for adverbs
-	{"о", "o"},
-	{"о́", "o" .. AC}
+	"о",
+	"о́",
 }
 
 local velar_to_translit = {
@@ -700,11 +717,11 @@ local velar_to_palatal = {
 	["x"] = "š"
 }
 
--- Generate the comparative(s) given the positive(s). Note that this is written
--- to take in and generate comparative(s) for transliteration(s) as well as
--- Russian. This isn't currently used by {{ru-adjective}} but will be used by
--- a bot that generates entries for comparatives.
-local function generate_comparative(heads, trs, compspec)
+-- Generate the comparative(s) given the positive(s). `positives` is a list of {RUSSIAN, TR} forms. `compspec` is the
+-- comparative spec (either + or a spec giving an adjectival accent pattern, such as +c'). If + is given, the default
+-- is +a unless the positive is ending-stressed, in which case the default is +b. Return value is a list of
+-- {RUSSIAN, TR} forms. Upon input, transliterations must be decomposed.
+local function generate_comparative(positives, compspec)
 	local comps = {}
 	if not rfind(compspec, "^%+") then
 		error("Compspec '" .. compspec .. "' must begin with + in this function")
@@ -713,52 +730,56 @@ local function generate_comparative(heads, trs, compspec)
 		error("Compsec '" .. compspec .. "' has illegal format, should be e.g. + or +c''")
 	end
 	compspec = rsub(compspec, "^%+", "")
-	for i, head in ipairs(heads) do
-		local tr = m_common.decompose(trs[i])
-		head = m_links.remove_links(head)
+	for _, positive in ipairs(positives) do
+		local ru, tr = unpack(positive)
+		ru = m_links.remove_links(ru)
 		local removed_ending = false
-		for j, endingpair in ipairs(allowed_endings) do
-			if rfind(head, endingpair[1] .. "$") then
-				if not rfind(tr, endingpair[2] .. "$") then
-					error("Translit '" .. tr .. "' doesn't end with expected '"
-						.. endingpair[2] .. "', corresponding to head '" .. head .. "'")
-				end
-				if endingpair[1] == "о́й" then
+		for _, allowed_ending in ipairs(allowed_endings) do
+			if rfind(ru, allowed_ending .. "$") then
+				if allowed_ending == "о́й" or allowed_ending == "о́" then
 					if compspec == "a" then
-						error("Short stress pattern a not allowed with ending-stressed adjectives")
+						error("Short stress pattern a not allowed with ending-stressed adjectives/adverbs")
 					elseif compspec == "" then
 						compspec = "b"
 					end
 				end
-				head = rsub(head, endingpair[1] .. "$", "")
-				tr = rsub(tr, endingpair[2] .. "$", "")
+				ru, tr = com.strip_ending(ru, tr, allowed_ending)
 				removed_ending = true
 				break
 			end
 		end
 		if not removed_ending then
-			error("Head '" .. head .. "' doesn't end with expected ending")
+			error("Russian '" .. ru .. "' doesn't end with expected ending")
 		end
 		local comp, comptr
-		if rfind(head, "[кгх]$") then
-			stemhead, lastheadchar = rmatch(head, "^(.*)(.)$")
-			stemtr, lasttrchar = rmatch(tr, "^(.*)(.)$")
-			if velar_to_translit[lastheadchar] ~= lasttrchar then
-				error("Translit '" .. tr .. "' doesn't end with transliterated equivalent of last char '" ..
-					lastheadchar .. "' of head '" .. head .. "'")
+		if rfind(ru, "[кгх]$") then
+			local stemru, lastruchar = rmatch(ru, "^(.*)(.)$")
+			local stemtr, lasttrchar
+			if tr then
+				stemtr, lasttrchar = rmatch(tr, "^(.*)(.)$")
+				if velar_to_translit[lastruchar] ~= lasttrchar then
+					error("Translit '" .. tr .. "' doesn't end with transliterated equivalent of last char '" ..
+						lastruchar .. "' of Russian '" .. ru .. "'")
+				end
 			end
-			comp, comptr = m_common.make_ending_stressed(stemhead, stemtr)
-			comp = comp .. velar_to_palatal[lastheadchar] .. "е" -- Cyrillic е
-			comptr = comptr .. velar_to_palatal[lasttrchar] .. "e" -- Latin e
+			comp, comptr = com.make_ending_stressed(stemru, stemtr)
+			comp = comp .. velar_to_palatal[lastruchar] .. "е" -- Cyrillic е
+			if comptr then
+				comptr = comptr .. velar_to_palatal[lasttrchar] .. "e" -- Latin e
+			end
 		elseif compspec == "" or compspec == "a" then
-			comp = head .. "ее" -- Cyrillic ее
-			comptr = tr .. "ee" -- Latin ee
+			comp = ru .. "ее" -- Cyrillic ее
+			if comptr then
+				comptr = tr .. "ee" -- Latin ee
+			end
 		else -- end-stressed comparative, including pattern a'
-			comp, comptr = m_common.make_unstressed_once(head, tr)
+			comp, comptr = com.make_unstressed_once(ru, tr)
 			comp = comp .. "е́е" -- Cyrillic е́е
-			comptr = comptr .. "e" .. AC .. "e" -- Latin decomposed ée
+			if comptr then
+				comptr = comptr .. "e" .. AC .. "e" -- Latin decomposed ée
+			end
 		end
-		m_table.insertIfNot(comps, {comp, comptr})
+		insert_if_not(comps, {comp, comptr})
 	end
 	return comps
 end
@@ -768,26 +789,16 @@ function export.generate_comparative(frame)
 	local comps = ine(frame.args[1]) or error("Must specify comparative(s) in parameter 1")
 	local compspec = ine(frame.args[2]) or ""
 	comps = rsplit(comps, ",")
-	local heads = {}
-	local trs = {}
-	for _, comp in ipairs(comps) do
-		local splitvals = rsplit(comp, "//")
-		if #splitvals > 2 then
-			error("HEAD or HEAD//TR expected: " .. comp)
-		end
-		table.insert(heads, splitvals[1])
-		table.insert(trs, #splitvals == 1 and lang:transliterate(splitvals[1], nil) or splitvals[2])
+	for i, comp in ipairs(comps) do
+		comps[i] = com.split_russian_tr(comp, "dopair")
 	end
-	comps = generate_comparative(heads, trs, compspec)
-	local combined_comps = {}
-	for _, comp in ipairs(comps) do
-		table.insert(combined_comps, comp[1] .. "//" .. comp[2])
-	end
-	return m_common.recompose(table.concat(combined_comps, ","))
+	comps = generate_comparative(comps, compspec)
+	return com.recompose(com.concat_forms(comps))
 end
 
 local function handle_comparatives(data, comps, catpos, noinf, accel)
-	if #comps == 1 and comps[1] == "-" then
+	comps = split_list_into_russian_tr(comps)
+	if #comps == 1 and comps[1][1] == "-" then
 		table.insert(data.inflections, {label = "no comparative"})
 		track("nocomp")
 	elseif #comps > 0 then
@@ -801,40 +812,41 @@ local function handle_comparatives(data, comps, catpos, noinf, accel)
 				comptype == "dated" and dated_comp_parts or
 				comptype == "awkward" and awkward_comp_parts or
 				normal_comp_parts
-			m_table.insertIfNot(comp_parts, generate_po_variant(comp))
+			insert_if_not(comp_parts, generate_po_variant(comp))
 			if not noinf then
 				local informal = generate_informal_comp(comp)
 				if informal then
-					m_table.insertIfNot(comp_parts, generate_po_variant(informal))
+					insert_if_not(comp_parts, generate_po_variant(informal))
 				end
 			end
-			if m_common.needs_accents(comp) then
+			if com.needs_accents(comp[1]) then
 				table.insert(data.categories, "Requests for accents in Russian " .. catpos .. " entries")
 			end
 		end
 
 		for _, comp in ipairs(comps) do
-			if comp == "peri" then
-				for _, head in ipairs(data.heads) do
-					m_table.insertIfNot(normal_comp_parts, "[[бо́лее]] " .. head)
+			local ru, tr = unpack(comp)
+			if ru == "peri" then
+				for _, positive in ipairs(com.zip_forms(data.heads, data.translits)) do
+					insert_if_not(normal_comp_parts, generate_periphrastic_comp(positive))
 				end
 				track("pericomp")
 			else
 				local comptype = "normal"
-				if rfind(comp, "^rare%-") then
+				if rfind(ru, "^rare%-") then
 					comptype = "rare"
-					comp = rsub(comp, "^rare%-", "")
-				elseif rfind(comp, "^dated%-") then
+					comp = rsub(ru, "^rare%-", "")
+				elseif rfind(ru, "^dated%-") then
 					comptype = "dated"
-					comp = rsub(comp, "^dated%-", "")
-				elseif rfind(comp, "^awkward%-") then
+					comp = rsub(ru, "^dated%-", "")
+				elseif rfind(ru, "^awkward%-") then
 					comptype = "awkward"
-					comp = rsub(comp, "^awkward%-", "")
+					comp = rsub(ru, "^awkward%-", "")
 				end
-				if rfind(comp, "^+") then
-					local autocomps = generate_comparative(data.heads, data.translits, comp)
+				if rfind(ru, "^+") then
+					local autocomps = generate_comparative(com.zip_forms(data.heads, data.translits), ru)
 					for _, autocomp in ipairs(autocomps) do
-						insert_comp(autocomp[1], comptype)
+						insert_comp(autocomp, comptype)
 					end
 				else
 					insert_comp(comp, comptype)
@@ -882,7 +894,7 @@ pos_functions["adjectives"] = {
 
 		local function add_adj_forms(label, forms)
 			local parts = {label = label}
-			add_forms(parts, forms, "adjective")
+			add_forms(data, parts, forms, "adjective")
 			table.insert(data.inflections, parts)
 		end
 
@@ -933,11 +945,11 @@ pos_functions["adverbs"] = {
 		local comps = args[2]
 
 		handle_comparatives(data, comps, "adverb", args.noinf,
-			{form = "comparative", lemma = data.heads, translit = get_non_redundant_translit(data)})
+			{form = "comparative", lemma = data.heads, lemma_translit = get_non_redundant_translit(data)})
 
 		local function add_adv_forms(label, forms)
 			local parts = {label = label}
-			add_forms(parts, forms, "adverb")
+			add_forms(data, parts, forms, "adverb")
 			table.insert(data.inflections, parts)
 		end
 
@@ -986,7 +998,7 @@ local function get_verb_pos(pos)
 
 			local function add_verb_forms(label, forms)
 				local parts = {label = label}
-				add_forms(parts, forms, "verb")
+				add_forms(data, parts, forms, "verb")
 				table.insert(data.inflections, parts)
 			end
 
