@@ -1040,7 +1040,7 @@ end
 
 -- Given a list of forms, where each form is a two-element list of {RUSSIAN, TRANSLIT}, combine adjacent forms with
 -- identical Russian, concatenating the translit with a comma in between.
-function export.combine_translit_of_adjacent_heads(forms)
+function export.combine_translit_of_adjacent_forms(forms)
 	local newforms = {}
 	if #forms == 0 then
 		return newforms
