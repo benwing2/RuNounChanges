@@ -91,6 +91,7 @@ end
 -- this function enables the module to be called from a template;
 -- FIXME, does this actually work?
 function export.main(frame)
+	-- FIXME: Not used. Consider deleting.
 	if type(export[frame.args[1]]) == 'function' then
 		return export[frame.args[1]](frame.args[2], frame.args[3])
 	else
@@ -101,6 +102,7 @@ end
 -- selects preposition о, об or обо for next phrase, which can start from
 -- punctuation
 function export.obo(phr)
+	-- FIXME: Not used. Consider deleting.
 	--Algorithm design is mainly inherited from w:ru:template:Обо
 	local w = rmatch(phr,"[%p%s%c]*(.-)[%p%s%c]") or rmatch(phr,"[%p%s%c]*(.-)$")
 	if not w then return nil end
@@ -1038,13 +1040,28 @@ function export.zip_forms(rulist, trlist)
 	return forms
 end
 
+local function any_forms_have_translit(forms)
+	for _, form in ipairs(forms) do
+		if form[2] then
+			return true
+		end
+	end
+	return false
+end
+
 -- Given a list of forms, where each form is a two-element list of {RUSSIAN, TRANSLIT}, combine adjacent forms with
 -- identical Russian, concatenating the translit with a comma in between.
 function export.combine_translit_of_adjacent_forms(forms)
-	local newforms = {}
 	if #forms == 0 then
-		return newforms
+		return forms
 	end
+
+	-- Optimization to avoid creating a new list in the majority case when no translit exists.
+	if not any_forms_have_translit(forms) then
+		return forms
+	end
+
+	local newforms = {}
 	table.insert(newforms, {forms[1][1], forms[1][2]})
 	for i = 2, #forms do
 		-- If the Russian of the next form is the same as that of the last one, combine their translits and modify
@@ -1067,6 +1084,39 @@ function export.combine_translit_of_adjacent_forms(forms)
 			end
 		else
 			table.insert(newforms, {forms[i][1], forms[i][2]})
+		end
+	end
+	return newforms
+end
+
+-- Given a list of forms, where each form is a two-element list of {RUSSIAN, TRANSLIT}, FIXME.
+-- TRANSLIT must be decomposed!
+function export.split_translit_of_adjacent_forms(forms)
+	if #forms == 0 then
+		return forms
+	end
+
+	-- Optimization to avoid creating a new list in the majority case when no translit exists.
+	if not any_forms_have_translit(forms) then
+		return forms
+	end
+
+	-- FIXME, deal with decomposed/non-decomposed nature of translits; e.g. may need to decompose
+	-- translits in [[Module:ru-headword]] and [[Module:accel/ru]].
+	local newforms = {}
+	for _, form in ipairs(forms) do
+		local ru, tr = unpack(form)
+		if not tr or not tr:find(",") or ru:find(",") then
+			table.insert(newforms, form)
+		else
+			local split_trs = rsplit(tr, ",%s*")
+			local default_tr = export.translit_no_links(ru)
+			for _, split_tr in ipairs(split_trs) do
+				if split_tr == default_tr then
+					split_tr = nil
+				end
+				table.insert(newforms, {ru, split_tr})
+			end
 		end
 	end
 	return newforms
