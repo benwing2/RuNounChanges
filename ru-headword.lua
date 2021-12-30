@@ -39,7 +39,7 @@
 		  documentation for that module for info on the format of this setting.
 ]=]--
 
-local com = require("Module:ru-common")
+local com = require("Module:User:Benwing2/ru-common")
 local m_links = require("Module:links")
 local m_headword = require("Module:headword")
 local m_utilities = require("Module:utilities")
@@ -120,7 +120,7 @@ local function split_list_into_russian_tr(list)
 	return splitlist
 end
 
-local function russian_tr_to_inflection_obj(data, form, pos, accel)
+local function russian_tr_to_inflection_obj(form, part_accel)
 	local ru, tr
 	if type(form) == "string" then
 		ru, tr = com.split_russian_tr(form)
@@ -132,10 +132,7 @@ local function russian_tr_to_inflection_obj(data, form, pos, accel)
 	if tr then
 		tr, sawhyp_tr = rsubb(tr, HYPMARKER, "")
 	end
-	local obj = {term=ru, translit=tr, hypothetical=sawhyp_ru or sawhyp_tr, accel=accel}
-	if com.needs_accents(ru) then
-		table.insert(data.categories, "Requests for accents in Russian " .. pos .. " entries")
-	end
+	local obj = {term=ru, translit=tr, hypothetical=sawhyp_ru or sawhyp_tr, accel=part_accel}
 	return obj
 end
 
@@ -145,7 +142,11 @@ local function add_forms_to_inflection(data, parts, forms, pos)
 	end
 	forms = com.combine_translit_of_adjacent_forms(forms)
 	for i, form in ipairs(forms) do
-		insert_if_not(parts, russian_tr_to_inflection_obj(data, form, pos))
+		insert_if_not(parts, russian_tr_to_inflection_obj(form))
+		local ru, tr = unpack(form)
+		if com.needs_accents(m_links.remove_links(ru)) then
+			table.insert(data.categories, "Requests for accents in Russian " .. pos .. " entries")
+		end
 	end
 end
 
@@ -155,7 +156,7 @@ local function add_inflection(data, label, forms, pos, accel_form)
 	end
 	local accel
 	if accel_form then
-		-- FIXME, remove redundant translit
+		-- FIXME, consider removing redundant translit
 		accel = {form = accel_form, lemma = data.heads, lemma_translit = data.translits}
 	end
 	local parts = {label = label, accel = accel}
@@ -165,16 +166,6 @@ end
 
 local function fetch_combined_head_and_translit(data)
 	return com.split_translit_of_adjacent_forms(com.zip_forms(data.heads, data.translits))
-end
-
-local function get_non_redundant_translit(data)
-	local translits = {}
-	for i, translit in ipairs(data.translits) do
-		if not data.redundant_translits[i] then
-			translits[i] = translit
-		end
-	end
-	return translit
 end
 
 -- The main entry point.
@@ -735,67 +726,75 @@ function export.generate_comparative(frame)
 	return com.recompose(com.concat_forms(comps))
 end
 
-local function handle_comparatives(data, comps, catpos, noinf, accel)
+local function handle_comparatives(data, comps, catpos, noinf)
 	comps = split_list_into_russian_tr(comps)
 	if #comps == 1 and comps[1][1] == "-" then
 		table.insert(data.inflections, {label = "no comparative"})
 		track("nocomp")
 	elseif #comps > 0 then
-		local normal_comp_parts = {label = "comparative", accel = accel}
-		-- Skip accelerators for these three
+		local normal_comp_parts = {label = "comparative"}
 		local rare_comp_parts = {label = "rare comparative"}
 		local dated_comp_parts = {label = "dated comparative"}
 		local awkward_comp_parts = {label = "rare/awkward comparative"}
 
 		local function insert_comp_inflection(comp_part, comptype, comp, target)
-			local infl_obj = russian_tr_to_inflection_obj(data, comp, 
-local function russian_tr_to_inflection_obj(data, form, pos, accel)
+			local accel
+			local target_ru, target_tr = unpack(target)
+			if comptype == "normal" then
+				accel = {form = "comparative", lemma = data.heads, lemma_translit = data.translits,
+					target = target_ru, translit = target_tr}
+			end
+			local infl_obj = russian_tr_to_inflection_obj(form, accel)
+			insert_if_not(comp_part, infl_obj)
+			if com.needs_accents(m_links.remove_links(target_ru)) then
+				table.insert(data.categories, "Requests for accents in Russian " .. catpos .. " entries")
+			end
 		end
 
-		local function insert_comp_of_type(comp, comptype)
-			local comp_parts = comptype == "rare" and rare_comp_parts or
+		local function get_comp_parts(comptype)
+			return comptype == "rare" and rare_comp_parts or
 				comptype == "dated" and dated_comp_parts or
 				comptype == "awkward" and awkward_comp_parts or
 				normal_comp_parts
-			insert_if_not(comp_parts, generate_po_variant(comp))
+		end
+
+		local function insert_comp_of_type(comp, comptype)
+			local comp_parts = get_comp_parts(comptype)
+			insert_comp_inflection(comp_parts, comptype, generate_po_variant(comp), comp)
 			if not noinf then
 				local informal = generate_informal_comp(comp)
 				if informal then
-					insert_if_not(comp_parts, generate_po_variant(informal))
+					insert_comp_inflection(comp_parts, comptype, generate_po_variant(informal), informal)
 				end
-			end
-			if com.needs_accents(comp[1]) then
-				table.insert(data.categories, "Requests for accents in Russian " .. catpos .. " entries")
 			end
 		end
 
 		for _, comp in ipairs(comps) do
 			local ru, tr = unpack(comp)
+			local comptype = "normal"
+			if rfind(ru, "^rare%-") then
+				comptype = "rare"
+				comp = rsub(ru, "^rare%-", "")
+			elseif rfind(ru, "^dated%-") then
+				comptype = "dated"
+				comp = rsub(ru, "^dated%-", "")
+			elseif rfind(ru, "^awkward%-") then
+				comptype = "awkward"
+				comp = rsub(ru, "^awkward%-", "")
+			end
 			if ru == "peri" then
 				for _, positive in ipairs(fetch_combined_head_and_translit(data)) do
-					insert_if_not(normal_comp_parts, generate_periphrastic_comp(positive))
+					local comp = generate_periphrastic_comp(positive)
+					insert_comp_inflection(get_comp_parts(comptype), comptype, comp, comp)
 				end
 				track("pericomp")
+			elseif rfind(ru, "^+") then
+				local autocomps = generate_comparative(fetch_combined_head_and_translit(data), ru)
+				for _, autocomp in ipairs(autocomps) do
+					insert_comp_of_type(autocomp, comptype)
+				end
 			else
-				local comptype = "normal"
-				if rfind(ru, "^rare%-") then
-					comptype = "rare"
-					comp = rsub(ru, "^rare%-", "")
-				elseif rfind(ru, "^dated%-") then
-					comptype = "dated"
-					comp = rsub(ru, "^dated%-", "")
-				elseif rfind(ru, "^awkward%-") then
-					comptype = "awkward"
-					comp = rsub(ru, "^awkward%-", "")
-				end
-				if rfind(ru, "^+") then
-					local autocomps = generate_comparative(fetch_combined_head_and_translit(data), ru)
-					for _, autocomp in ipairs(autocomps) do
-						insert_comp_of_type(autocomp, comptype)
-					end
-				else
-					insert_comp_of_type(comp, comptype)
-				end
+				insert_comp_of_type(comp, comptype)
 			end
 		end
 
@@ -833,8 +832,7 @@ pos_functions["adjectives"] = {
 			table.insert(data.categories, "Russian indeclinable adjectives")
 		end
 
-		-- FIXME: To implement accelerators for adjectives, need to add explicit target due to по-hacking
-		handle_comparatives(data, comps, "adjective", args.noinf, nil)
+		handle_comparatives(data, comps, "adjective", args.noinf)
 
 		local function add_adj_forms(label, forms, accel_form)
 			add_inflection(data, label, forms, "adjective", accel_form)
@@ -899,7 +897,7 @@ pos_functions["adverbs"] = {
 	func = function(args, data)
 		local comps = args[2]
 
-		handle_comparatives(data, comps, "adverb", args.noinf, "comparative")
+		handle_comparatives(data, comps, "adverb", args.noinf)
 
 		local function add_adv_forms(label, forms, accel_form)
 			add_inflection(data, label, forms, "adverb", accel_form)
@@ -950,13 +948,13 @@ local function get_verb_pos(pos)
 			end
 
 			-- Add the imperfective forms; intentionally no accelerator, need manual handling
-			if #args.impf > 0 then aspect == "impf"
+			if #args.impf > 0 and aspect == "impf" then
 				error("Can't specify imperfective counterparts for an imperfective verb")
 			end
 			add_verb_forms("imperfective", args.impf)
 
 			-- Add the perfective forms; intentionally no accelerator, need manual handling
-			if #args.pf > 0 then aspect == "pf"
+			if #args.pf > 0 and aspect == "pf" then
 				error("Can't specify perfective counterparts for a perfective verb")
 			end
 			add_verb_forms("perfective", args.pf)

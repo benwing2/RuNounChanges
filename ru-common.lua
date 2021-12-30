@@ -1089,8 +1089,9 @@ function export.combine_translit_of_adjacent_forms(forms)
 	return newforms
 end
 
--- Given a list of forms, where each form is a two-element list of {RUSSIAN, TRANSLIT}, FIXME.
--- TRANSLIT must be decomposed!
+-- Given a list of forms, where each form is a two-element list of {RUSSIAN, TRANSLIT}, split cases where two different
+-- transliterations have been packed into a single translit field by creating two term/translit adcent term/translit
+-- pairs. This is the opposite operation of combine_translit_of_adjacent_forms().
 function export.split_translit_of_adjacent_forms(forms)
 	if #forms == 0 then
 		return forms
@@ -1101,8 +1102,6 @@ function export.split_translit_of_adjacent_forms(forms)
 		return forms
 	end
 
-	-- FIXME, deal with decomposed/non-decomposed nature of translits; e.g. may need to decompose
-	-- translits in [[Module:ru-headword]] and [[Module:accel/ru]].
 	local newforms = {}
 	for _, form in ipairs(forms) do
 		local ru, tr = unpack(form)
