@@ -101,6 +101,9 @@ function export.default_entry(params)
 	elseif params.form == "f" and params.pos == "noun" then
 		entry.head = make_head(params.pos, "f")
 		entry.def = make_def("female equivalent of")
+	elseif (params.form == "abstract noun" or params.form == "verbal noun") and params.pos == "noun" then
+		entry.head = make_head(params.pos)
+		entry.def = make_def(params.form .. " of")
 	elseif templates[params.form] then
 		entry.def = make_def(templates[params.form])
 	end
