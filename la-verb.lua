@@ -291,8 +291,9 @@ local function get_subtype_by_ending(lemma, conjtype, specified_subtypes,
 end
 
 local irreg_verbs_to_conj_type = {
-	["āiō"] = "3rd-io",
+	["aiō"] = "3rd-io",
 	["aiiō"] = "3rd-io",
+	["ajō"] = "3rd-io",
 	["dīcō"] = "3rd",
 	["dūcō"] = "3rd",
 	["faciō"] = "3rd-io",
@@ -407,8 +408,9 @@ local function detect_decl_and_subtypes(args)
 		conjtype = "irreg"
 		local prefix
 		prefix, base = split_prefix_and_base(lemma, {
-			"āiō",
+			"aiō",
 			"aiiō",
+			"ajō",
 			"dīcō",
 			"dūcō",
 			"faciō",
@@ -1742,32 +1744,112 @@ irreg_conjugations["aio"] = function(args, data, typeinfo)
 
 	local prefix = typeinfo.prefix or ""
 
-	data.forms["1s_pres_actv_indc"] = {prefix .. "āiō", prefix .. "aiiō"}
-	data.forms["2s_pres_actv_indc"] = {prefix .. "āis", prefix .. "ais"}
+	data.forms["1s_pres_actv_indc"] = prefix .. "aiō"
+	data.forms["2s_pres_actv_indc"] = prefix .. "ais"
 	data.forms["3s_pres_actv_indc"] = prefix .. "ait"
-	data.forms["3p_pres_actv_indc"] = {prefix .. "āiunt", prefix .. "aiiunt"}
+	data.forms["3p_pres_actv_indc"] = prefix .. "aiunt"
 
-	data.forms["1s_impf_actv_indc"] = {prefix .. "aiēbam", prefix .. "āībam"}
-	data.forms["2s_impf_actv_indc"] = {prefix .. "aiēbās", prefix .. "āībās"}
-	data.forms["3s_impf_actv_indc"] = {prefix .. "aiēbat", prefix .. "āībat"}
-	data.forms["1p_impf_actv_indc"] = {prefix .. "aiēbāmus", prefix .. "āībāmus"}
-	data.forms["2p_impf_actv_indc"] = {prefix .. "aiēbātis", prefix .. "āībātis"}
-	data.forms["3p_impf_actv_indc"] = {prefix .. "aiēbant", prefix .. "āībant"}
+	data.forms["1s_impf_actv_indc"] = prefix .. "aiēbam"
+	data.forms["2s_impf_actv_indc"] = prefix .. "aiēbās"
+	data.forms["3s_impf_actv_indc"] = prefix .. "aiēbat"
+	data.forms["1p_impf_actv_indc"] = prefix .. "aiēbāmus"
+	data.forms["2p_impf_actv_indc"] = prefix .. "aiēbātis"
+	data.forms["3p_impf_actv_indc"] = prefix .. "aiēbant"
 
 	data.forms["2s_perf_actv_indc"] = prefix .. "aistī"
 	data.forms["3s_perf_actv_indc"] = prefix .. "ait"
 
-	data.forms["2s_pres_actv_subj"] = prefix .. "āiās"
-	data.forms["3s_pres_actv_subj"] = prefix .. "āiat"
-	data.forms["3p_pres_actv_subj"] = prefix .. "āiant"
+	data.forms["2s_pres_actv_subj"] = prefix .. "aiās"
+	data.forms["3s_pres_actv_subj"] = prefix .. "aiat"
+	data.forms["3p_pres_actv_subj"] = prefix .. "aiant"
 
-	data.forms["2s_pres_actv_impr"] = prefix .. "aï"
+	data.forms["2s_pres_actv_impr"] = prefix .. "ai"
 
-	data.forms["pres_actv_inf"] = prefix .. "āiere"
+	data.forms["pres_actv_inf"] = prefix .. "aiere"
 	data.forms["pres_actv_ptc"] = prefix .. "aiēns"
 end
 
-irreg_conjugations["aiio"] = irreg_conjugations["aio"]
+irreg_conjugations["aiio"] = function(args, data, typeinfo)
+	table.insert(data.title, "[[Appendix:Latin third conjugation|third conjugation]] iō-variant")
+	table.insert(data.title, "[[Appendix:Latin irregular verbs|irregular]]")
+	table.insert(data.title, "active only")
+	table.insert(data.title, "highly [[defective verb|defective]]")
+	table.insert(data.categories, "Latin third conjugation verbs")
+	table.insert(data.categories, "Latin irregular verbs")
+	table.insert(data.categories, "Latin active-only verbs")
+	table.insert(data.categories, "Latin defective verbs")
+
+	-- Signal to {{la-verb}} to display the verb as irregular and highly defective
+	typeinfo.subtypes.irreg = true
+	typeinfo.subtypes.highlydef = true
+
+	local prefix = typeinfo.prefix or ""
+
+	data.forms["1s_pres_actv_indc"] = prefix .. "aiiō"
+	data.forms["2s_pres_actv_indc"] = prefix .. "ais"
+	data.forms["3s_pres_actv_indc"] = prefix .. "ait"
+	data.forms["3p_pres_actv_indc"] = prefix .. "aiunt"
+
+	data.forms["1s_impf_actv_indc"] = prefix .. "aiiēbam"
+	data.forms["2s_impf_actv_indc"] = prefix .. "aiiēbās"
+	data.forms["3s_impf_actv_indc"] = prefix .. "aiiēbat"
+	data.forms["1p_impf_actv_indc"] = prefix .. "aiiēbāmus"
+	data.forms["2p_impf_actv_indc"] = prefix .. "aiiēbātis"
+	data.forms["3p_impf_actv_indc"] = prefix .. "aiiēbant"
+
+	data.forms["2s_perf_actv_indc"] = prefix .. "aistī"
+	data.forms["3s_perf_actv_indc"] = prefix .. "ait"
+
+	data.forms["2s_pres_actv_subj"] = prefix .. "aiiās"
+	data.forms["3s_pres_actv_subj"] = prefix .. "aiiat"
+	data.forms["3p_pres_actv_subj"] = prefix .. "aiiant"
+
+	data.forms["2s_pres_actv_impr"] = prefix .. "ai"
+
+	data.forms["pres_actv_inf"] = prefix .. "aiiere"
+	data.forms["pres_actv_ptc"] = prefix .. "aiiēns"
+end
+
+irreg_conjugations["ajo"] = function(args, data, typeinfo)
+	table.insert(data.title, "[[Appendix:Latin third conjugation|third conjugation]] iō-variant")
+	table.insert(data.title, "[[Appendix:Latin irregular verbs|irregular]]")
+	table.insert(data.title, "active only")
+	table.insert(data.title, "highly [[defective verb|defective]]")
+	table.insert(data.categories, "Latin third conjugation verbs")
+	table.insert(data.categories, "Latin irregular verbs")
+	table.insert(data.categories, "Latin active-only verbs")
+	table.insert(data.categories, "Latin defective verbs")
+
+	-- Signal to {{la-verb}} to display the verb as irregular and highly defective
+	typeinfo.subtypes.irreg = true
+	typeinfo.subtypes.highlydef = true
+
+	local prefix = typeinfo.prefix or ""
+
+	data.forms["1s_pres_actv_indc"] = prefix .. "ajō"
+	data.forms["2s_pres_actv_indc"] = prefix .. "ais"
+	data.forms["3s_pres_actv_indc"] = prefix .. "ait"
+	data.forms["3p_pres_actv_indc"] = prefix .. "ajunt"
+
+	data.forms["1s_impf_actv_indc"] = prefix .. "ajēbam"
+	data.forms["2s_impf_actv_indc"] = prefix .. "ajēbās"
+	data.forms["3s_impf_actv_indc"] = prefix .. "ajēbat"
+	data.forms["1p_impf_actv_indc"] = prefix .. "ajēbāmus"
+	data.forms["2p_impf_actv_indc"] = prefix .. "ajēbātis"
+	data.forms["3p_impf_actv_indc"] = prefix .. "ajēbant"
+
+	data.forms["2s_perf_actv_indc"] = prefix .. "aistī"
+	data.forms["3s_perf_actv_indc"] = prefix .. "ait"
+
+	data.forms["2s_pres_actv_subj"] = prefix .. "ajās"
+	data.forms["3s_pres_actv_subj"] = prefix .. "ajat"
+	data.forms["3p_pres_actv_subj"] = prefix .. "ajant"
+
+	data.forms["2s_pres_actv_impr"] = prefix .. "ai"
+
+	data.forms["pres_actv_inf"] = prefix .. "ajere"
+	data.forms["pres_actv_ptc"] = prefix .. "ajēns"
+end
 
 irreg_conjugations["dico"] = function(args, data, typeinfo)
 	table.insert(data.title, "[[Appendix:Latin third conjugation|third conjugation]]")
@@ -2261,7 +2343,9 @@ end
 
 irreg_conjugations["volo"] = function(args, data, typeinfo)
 	table.insert(data.title, "[[Appendix:Latin irregular verbs|irregular]]")
+	table.insert(data.title, "[[suppletive]] in the second-person singular indicative present")
 	table.insert(data.categories, "Latin irregular verbs")
+	table.insert(data.categories, "Latin suppletive verbs")
 
 	local prefix = typeinfo.prefix or ""
 
@@ -2278,7 +2362,9 @@ end
 
 irreg_conjugations["malo"] = function(args, data, typeinfo)
 	table.insert(data.title, "[[Appendix:Latin irregular verbs|irregular]]")
+	table.insert(data.title, "[[suppletive]] in the second-person singular indicative present")
 	table.insert(data.categories, "Latin irregular verbs")
+	table.insert(data.categories, "Latin suppletive verbs")
 
 	typeinfo.subtypes.nopass = true
 	typeinfo.subtypes.noimp = true
@@ -2292,7 +2378,9 @@ end
 
 irreg_conjugations["nolo"] = function(args, data, typeinfo)
 	table.insert(data.title, "[[Appendix:Latin irregular verbs|irregular]]")
+	table.insert(data.title, "[[suppletive]] in the second-person singular indicative present")
 	table.insert(data.categories, "Latin irregular verbs")
+	table.insert(data.categories, "Latin suppletive verbs")
 
 	typeinfo.subtypes.nopass = true
 	make_perf(data, "nōlu")
@@ -2390,8 +2478,11 @@ irreg_conjugations["coepi"] = function(args, data, typeinfo)
 	make_perf(data, prefix .. "coep")
 	make_supine(data, typeinfo, prefix .. "coept")
 	make_perfect_passive(data)
+end
 
-	make_gerund(data, typeinfo, prefix .. "coepiend", "und-variant", "no-gerund")
+-- The vowel of the prefix is lengthened if it ends in -n and the next word begins with f- or s-.
+local function lengthen_prefix(prefix)
+	return prefix:gsub("([aeiou]n)$", {["an"] = "ān", ["en"] = "ēn", ["in"] = "īn", ["on"] = "ōn", ["un"] = "ūn"})
 end
 
 irreg_conjugations["sum"] = function(args, data, typeinfo)
@@ -2401,13 +2492,9 @@ irreg_conjugations["sum"] = function(args, data, typeinfo)
 	table.insert(data.categories, "Latin suppletive verbs")
 
 	local prefix = typeinfo.prefix or ""
-	local prefix_d = ine(args[3])
-	prefix_d = prefix_d or prefix
-	local prefix_f = ine(args[4]); if prefix == "ab" then prefix_f = "ā" end
-	prefix_f = prefix_f or prefix
-	-- The vowel of the prefix is lengthened if it ends in -n and the next word begins with f- or s-.
-	local prefix_long = prefix:gsub("([aeiou]n)$", {["an"] = "ān", ["en"] = "ēn", ["in"] = "īn", ["on"] = "ōn", ["un"] = "ūn"})
-	prefix_f = prefix_f:gsub("([aeiou]n)$", {["an"] = "ān", ["en"] = "ēn", ["in"] = "īn", ["on"] = "ōn", ["un"] = "ūn"})
+	local prefix_e = ine(args[3]) or prefix
+	local prefix_f = lengthen_prefix(ine(args[4]) or prefix)
+	local prefix_s = lengthen_prefix(prefix)
 
 	typeinfo.subtypes.nopass = true
 	typeinfo.subtypes.supfutractvonly = true
@@ -2415,56 +2502,56 @@ irreg_conjugations["sum"] = function(args, data, typeinfo)
 	make_supine(data, typeinfo, prefix_f .. "fut")
 
 	-- Active imperfective indicative
-	data.forms["1s_pres_actv_indc"] = prefix_long .. "sum"
-	data.forms["2s_pres_actv_indc"] = prefix_d .. "es"
-	data.forms["3s_pres_actv_indc"] = prefix_d .. "est"
-	data.forms["1p_pres_actv_indc"] = prefix_long .. "sumus"
-	data.forms["2p_pres_actv_indc"] = prefix_d .. "estis"
-	data.forms["3p_pres_actv_indc"] = prefix_long .. "sunt"
+	data.forms["1s_pres_actv_indc"] = prefix_s .. "sum"
+	data.forms["2s_pres_actv_indc"] = prefix_e .. "es"
+	data.forms["3s_pres_actv_indc"] = prefix_e .. "est"
+	data.forms["1p_pres_actv_indc"] = prefix_s .. "sumus"
+	data.forms["2p_pres_actv_indc"] = prefix_e .. "estis"
+	data.forms["3p_pres_actv_indc"] = prefix_s .. "sunt"
 
-	data.forms["1s_impf_actv_indc"] = prefix_d .. "eram"
-	data.forms["2s_impf_actv_indc"] = prefix_d .. "erās"
-	data.forms["3s_impf_actv_indc"] = prefix_d .. "erat"
-	data.forms["1p_impf_actv_indc"] = prefix_d .. "erāmus"
-	data.forms["2p_impf_actv_indc"] = prefix_d .. "erātis"
-	data.forms["3p_impf_actv_indc"] = prefix_d .. "erant"
+	data.forms["1s_impf_actv_indc"] = prefix_e .. "eram"
+	data.forms["2s_impf_actv_indc"] = prefix_e .. "erās"
+	data.forms["3s_impf_actv_indc"] = prefix_e .. "erat"
+	data.forms["1p_impf_actv_indc"] = prefix_e .. "erāmus"
+	data.forms["2p_impf_actv_indc"] = prefix_e .. "erātis"
+	data.forms["3p_impf_actv_indc"] = prefix_e .. "erant"
 
-	data.forms["1s_futr_actv_indc"] = prefix_d .. "erō"
-	data.forms["2s_futr_actv_indc"] = {prefix_d .. "eris", prefix_d .. "ere"}
-	data.forms["3s_futr_actv_indc"] = prefix_d .. "erit"
-	data.forms["1p_futr_actv_indc"] = prefix_d .. "erimus"
-	data.forms["2p_futr_actv_indc"] = prefix_d .. "eritis"
-	data.forms["3p_futr_actv_indc"] = prefix_d .. "erunt"
+	data.forms["1s_futr_actv_indc"] = prefix_e .. "erō"
+	data.forms["2s_futr_actv_indc"] = {prefix_e .. "eris", prefix_e .. "ere"}
+	data.forms["3s_futr_actv_indc"] = prefix_e .. "erit"
+	data.forms["1p_futr_actv_indc"] = prefix_e .. "erimus"
+	data.forms["2p_futr_actv_indc"] = prefix_e .. "eritis"
+	data.forms["3p_futr_actv_indc"] = prefix_e .. "erunt"
 
 	-- Active imperfective subjunctive
-	data.forms["1s_pres_actv_subj"] = prefix_long .. "sim"
-	data.forms["2s_pres_actv_subj"] = prefix_long .. "sīs"
-	data.forms["3s_pres_actv_subj"] = prefix_long .. "sit"
-	data.forms["1p_pres_actv_subj"] = prefix_long .. "sīmus"
-	data.forms["2p_pres_actv_subj"] = prefix_long .. "sītis"
-	data.forms["3p_pres_actv_subj"] = prefix_long .. "sint"
+	data.forms["1s_pres_actv_subj"] = prefix_s .. "sim"
+	data.forms["2s_pres_actv_subj"] = prefix_s .. "sīs"
+	data.forms["3s_pres_actv_subj"] = prefix_s .. "sit"
+	data.forms["1p_pres_actv_subj"] = prefix_s .. "sīmus"
+	data.forms["2p_pres_actv_subj"] = prefix_s .. "sītis"
+	data.forms["3p_pres_actv_subj"] = prefix_s .. "sint"
 
-	data.forms["1s_impf_actv_subj"] = {prefix_d .. "essem", prefix_f .. "forem"}
-	data.forms["2s_impf_actv_subj"] = {prefix_d .. "essēs", prefix_f .. "forēs"}
-	data.forms["3s_impf_actv_subj"] = {prefix_d .. "esset", prefix_f .. "foret"}
-	data.forms["1p_impf_actv_subj"] = {prefix_d .. "essēmus", prefix_f .. "forēmus"}
-	data.forms["2p_impf_actv_subj"] = {prefix_d .. "essētis", prefix_f .. "forētis"}
-	data.forms["3p_impf_actv_subj"] = {prefix_d .. "essent", prefix_f .. "forent"}
+	data.forms["1s_impf_actv_subj"] = {prefix_e .. "essem", prefix_f .. "forem"}
+	data.forms["2s_impf_actv_subj"] = {prefix_e .. "essēs", prefix_f .. "forēs"}
+	data.forms["3s_impf_actv_subj"] = {prefix_e .. "esset", prefix_f .. "foret"}
+	data.forms["1p_impf_actv_subj"] = {prefix_e .. "essēmus", prefix_f .. "forēmus"}
+	data.forms["2p_impf_actv_subj"] = {prefix_e .. "essētis", prefix_f .. "forētis"}
+	data.forms["3p_impf_actv_subj"] = {prefix_e .. "essent", prefix_f .. "forent"}
 
 	-- Imperative
-	data.forms["2s_pres_actv_impr"] = prefix_d .. "es"
-	data.forms["2p_pres_actv_impr"] = prefix_d .. "este"
+	data.forms["2s_pres_actv_impr"] = prefix_e .. "es"
+	data.forms["2p_pres_actv_impr"] = prefix_e .. "este"
 
-	data.forms["2s_futr_actv_impr"] = prefix_d .. "estō"
-	data.forms["3s_futr_actv_impr"] = prefix_d .. "estō"
-	data.forms["2p_futr_actv_impr"] = prefix_d .. "estōte"
-	data.forms["3p_futr_actv_impr"] = prefix_long .. "suntō"
+	data.forms["2s_futr_actv_impr"] = prefix_e .. "estō"
+	data.forms["3s_futr_actv_impr"] = prefix_e .. "estō"
+	data.forms["2p_futr_actv_impr"] = prefix_e .. "estōte"
+	data.forms["3p_futr_actv_impr"] = prefix_s .. "suntō"
 
 	-- Present infinitives
-	data.forms["pres_actv_inf"] = prefix_d .. "esse"
+	data.forms["pres_actv_inf"] = prefix_e .. "esse"
 
 	-- Future infinitives
-	data.forms["futr_actv_inf"] = {"[[" .. prefix_f .. "futūrus]] [[esse]]", prefix_f .. "fore"}
+	data.forms["futr_actv_inf"] = {"[[" .. prefix_f .. "futūrum]] [[esse]]", prefix_f .. "fore"}
 
 	-- Imperfective participles
 	if prefix == "ab" then
@@ -2752,8 +2839,8 @@ make_deponent_perf = function(data, supine_stem)
 		add_forms(data, "plup_actv_subj", stems, "[[essem]]", "[[essēs]]", "[[esset]]", {}, {}, {})
 		add_forms(data, "plup_actv_subj", stemp, {}, {}, {}, "[[essēmus]]", "[[essētis]]", "[[essent]]")
 
-		add_form(data, "perf_actv_inf", stems, "[[esse]]")
-		add_form(data, "futr_actv_inf", "", "[[" .. stem .. "ūrus]] [[esse]]")
+		add_form(data, "perf_actv_inf", "", "[[" .. stem .. "um]] [[esse]]")
+		add_form(data, "futr_actv_inf", "", "[[" .. stem .. "ūrum]] [[esse]]")
 		add_form(data, "perf_actv_ptc", stem, "us")
 		add_form(data, "futr_actv_ptc", stem, "ūrus")
 
@@ -2986,7 +3073,7 @@ make_table = function(data)
 	convert_forms_into_links(data)
 
 	return [=[
-{| style="width: 100%; background: #EEE; border: 1px solid #AAA; font-size: 95%; text-align: center;" class="inflection-table vsSwitcher vsToggleCategory-inflection"
+{| style="width: 100%; background: #EEE; border: 1px solid #AAA; font-size: 95%; text-align: center;" class="inflection-table vsSwitcher" data-toggle-category="inflection"
 |-
 ! colspan="8" class="vsToggleElement" style="background: #CCC; text-align: left;" | &nbsp;&nbsp;&nbsp;Conjugation of ]=] .. get_displayable_lemma(data.actual_lemma) .. (#data.title > 0 and " (" .. table.concat(data.title, ", ") .. ")" or "") .. [=[
 
@@ -3322,7 +3409,7 @@ checkexist = function(data)
 	local outerbreak = false
 	for _, conjugation in pairs(data.forms) do
 		if conjugation then
-			if type(conjugation) == 'string' then
+			if type(conjugation) == "string" then
 				conjugation = {conjugation}
 			end
 			for _, conj in ipairs(conjugation) do
@@ -3330,7 +3417,7 @@ checkexist = function(data)
 					local title = lang:makeEntryName(conj)
 					local t = mw.title.new(title)
 					if t and not t.exists then
-						table.insert(data.categories, 'Latin verbs with red links in their conjugation tables')
+						table.insert(data.categories, "Latin verbs with red links in their inflection tables")
 						outerbreak = true
 						break
 					end
