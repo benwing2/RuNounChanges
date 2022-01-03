@@ -245,6 +245,7 @@ FIXME:
 17. Add variant codes to avoid mismatching variants in the conditional -èbbe/-ébbe, -éttero vs. érono, etc.
 18. If explicit fut: given, it should control the conditional as well. (DONE)
 19. If present -, sub:- or imp:-, it should suppress the whole row in the absence of row or individual overrides.
+20. 'ci ci vuole' should maybe -> 'a noi ci vuole' instead of 'ci vuole'.
 --]=]
 
 local lang = require("Module:languages").getByCode("it")
@@ -937,8 +938,6 @@ local function pres_special_case(base, form)
 	elseif form == "+isc" then
 		check_not_null(base, base.verb.isc_pres, form, principal_part_desc)
 		return base.verb.isc_pres
-	elseif form == "-" then
-		return form
 	elseif is_single_vowel_spec(form) then
 		check_not_null(base, base.verb.pres, form, principal_part_desc)
 		return iut.map_forms(base.verb.pres, function(defform)
@@ -971,8 +970,6 @@ local function pres3s_special_case(base, form)
 	elseif form == "+isc" then
 		check_not_null(base, base.verb.isc_pres3s, form, principal_part_desc)
 		return base.verb.isc_pres3s
-	elseif form == "-" then
-		return form
 	elseif is_single_vowel_spec(form) then
 		check_not_null(base, base.verb.pres3s, form, principal_part_desc)
 		return iut.map_forms(base.verb.pres3s, function(defform)
@@ -1332,7 +1329,7 @@ The order listed here matters. It determines the order of generating row forms. 
 'inf' < 'pres' < 'sub' < 'imp' < 'negimp' because the present indicative uses the root_stressed_stem generated
 by add_infinitive; the present subjunctive uses generated forms from the present indicative; the imperative uses
 forms from the present subjunctive and present indicative; and the negative imperative uses forms from the infinitive
-and the imperative.
+and the imperative. Similarly we must have 'fut' < 'cond' because the conditional uses the future principal part.
 ]=]
 local row_conjugation = {
 	{"inf", {
@@ -1385,6 +1382,7 @@ local row_conjugation = {
 		add_reflexive_clitics = add_negative_imperative_reflexive_clitics,
 		no_explicit_principal_part = true, -- because all parts are copied from other parts
 		no_row_overrides = true, -- not useful; use single overrides if really needed
+		dont_check_defective_status = true, -- we don't want a category for this
 	}},
 	{"phis", {
 		desc = "past historic",
@@ -1477,6 +1475,7 @@ local row_conjugation = {
 		no_row_overrides = true, -- useless because there's only one form; use explicit principal part
 		no_single_overrides = true, -- useless because there's only one form; use explicit principal part
 		not_defaulted = true, -- not defaulted, user has to request it explicitly
+		dont_check_defective_status = true, -- this is frequently missing and doesn't indicate a defective verb
 	}},
 }
 
@@ -1625,6 +1624,24 @@ local function conjugate_row(base, rowslot)
 end
 
 
+local function check_for_defective_rows(base)
+	for _, rowspec in ipairs(row_conjugation) do
+		local rowslot, rowconj = unpack(rowspec)
+		if not rowconj.dont_check_defective_status then
+			for i, persnum in ipairs(rowconj.persnums) do
+				local slot = rowslot .. persnum
+				if not base.forms[slot] and not skip_slot(base, slot) then
+					base.is_defective[rowslot] = true
+				end
+			end
+		end
+	end
+	if not base.forms.aux and not base.verb.is_reflexive then
+		base.is_defective.aux = true
+	end
+end
+
+
 local function add_missing_links_to_forms(base)
 	-- Any forms without links should get them now. Redundant ones will be stripped later.
 	for slot, forms in pairs(base.forms) do
@@ -1658,6 +1675,7 @@ local function conjugate_verb(base)
 		end
 	end
 	erase_suppressed_slots(base)
+	check_for_defective_rows(base)
 	if base.args.noautolinkverb then
 		remove_links_from_forms(base)
 	else
@@ -1845,7 +1863,7 @@ local function parse_indicator_spec(angle_bracket_spec, lemma, pagename)
 	--    a given row is irregular.
 	-- `props` is a table of miscellaneous properties.
 	local base = {forms = {}, principal_part_specs = {}, principal_part_forms = {}, row_override_specs = {},
-		single_override_specs = {}, is_irreg = {}, props = {}}
+		single_override_specs = {}, is_irreg = {}, is_defective = {}, props = {}}
 	local function parse_err(msg)
 		error(msg .. ": " .. angle_bracket_spec)
 	end
@@ -2186,7 +2204,18 @@ local function add_categories_and_annotation(alternant_multiword_spec, base, mul
 		insert_cat("verbs ending in -" .. ending)
 	end
 
+	if base.props.only3s then
+		insert_ann("third_only", "impersonal")
+		insert_cat("impersonal verbs")
+	elseif base.props.only3sp then
+		insert_ann("third_only", "third-person only")
+		insert_cat("third-person-only verbs")
+	else
+		insert_ann("third_only", "regular")
+	end
+
 	local is_irreg = false
+	local is_defective = false
 	for _, rowspec in ipairs(row_conjugation) do
 		local rowslot, rowconj = unpack(rowspec)
 		if base.is_irreg[rowslot] then
@@ -2196,31 +2225,38 @@ local function add_categories_and_annotation(alternant_multiword_spec, base, mul
 			end
 			insert_cat("verbs with irregular " .. rowconj.desc)
 		end 
+		if base.is_defective[rowslot] then
+			if not is_defective then
+				is_defective = true
+				insert_cat("defective verbs")
+			end
+			insert_cat("verbs with defective " .. rowconj.desc)
+		end 
 	end
+	if not base.verb.is_reflexive and not base.forms.aux then
+		if not is_defective then
+			is_defective = true
+			insert_cat("defective verbs")
+		end
+		insert_cat("verbs lacking composed tenses")
+	end
+
 	if is_irreg then
 		insert_ann("irreg", "irregular")
 	else
 		insert_ann("irreg", "regular")
 	end
 
-	if base.props.only3s then
-		insert_ann("defective", "impersonal")
-		insert_cat("impersonal verbs")
-	elseif base.props.only3sp then
-		insert_ann("defective", "third-person only")
-		insert_cat("third-person-only verbs")
+	if is_defective then
+		insert_ann("defective", "defective")
 	else
 		insert_ann("defective", "regular")
 	end
 
-	if not base.verb.is_reflexive then
-		if not base.forms.aux then
-			insert_cat("verbs lacking composed tenses")
-		else
-			for _, auxform in ipairs(base.forms.aux) do
-				insert_ann("aux", auxform.form)
-				insert_cat("verbs taking " .. auxform.form .. " as auxiliary")
-			end
+	if not base.verb.is_reflexive and base.forms.aux then
+		for _, auxform in ipairs(base.forms.aux) do
+			insert_ann("aux", auxform.form)
+			insert_cat("verbs taking " .. auxform.form .. " as auxiliary")
 		end
 	end
 
@@ -2242,6 +2278,7 @@ local function compute_categories_and_annotation(alternant_multiword_spec, from_
 	local ann = {}
 	alternant_multiword_spec.annotation = ann
 	ann.conj = {}
+	ann.third_only = {}
 	ann.irreg = {}
 	ann.defective = {}
 	ann.aux = {}
@@ -2260,6 +2297,10 @@ local function compute_categories_and_annotation(alternant_multiword_spec, from_
 	local ann_parts = {}
 	local conj = table.concat(ann.conj, " or ")
 	table.insert(ann_parts, conj)
+	local third_only = table.concat(ann.third_only, " or ")
+	if third_only ~= "" and third_only ~= "regular" then
+		table.insert(ann_parts, third_only)
+	end
 	local irreg = table.concat(ann.irreg, " or ")
 	if irreg ~= "" and irreg ~= "regular" then
 		table.insert(ann_parts, irreg)
