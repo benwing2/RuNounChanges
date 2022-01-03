@@ -682,7 +682,7 @@ function export.make_beginning_stressed(ru, tr)
 end
 
 -- used for tracking and categorization
-trailing_letter_type = {
+local trailing_letter_type = {
 	["ш"] = {"sibilant", "cons"},
 	["щ"] = {"sibilant", "cons"},
 	["ч"] = {"sibilant", "cons"},
@@ -1049,9 +1049,9 @@ local function any_forms_have_translit(forms)
 	return false
 end
 
--- Given a list of forms, where each form is a two-element list of {RUSSIAN, TRANSLIT}, combine adjacent forms with
+-- Given a list of forms, where each form is a two-element list of {RUSSIAN, TRANSLIT}, combine forms with
 -- identical Russian, concatenating the translit with a comma in between.
-function export.combine_translit_of_adjacent_forms(forms)
+function export.combine_translit_of_duplicate_forms(forms)
 	if #forms == 0 then
 		return forms
 	end
@@ -1064,35 +1064,37 @@ function export.combine_translit_of_adjacent_forms(forms)
 	local newforms = {}
 	table.insert(newforms, {forms[1][1], forms[1][2]})
 	for i = 2, #forms do
-		-- If the Russian of the next form is the same as that of the last one, combine their translits and modify
-		-- newforms[] in-place. Otherwise add the next form to newforms[]. Make sure to clone the form rather than
-		-- just appending it directly since we may modify it in-place; we don't want to side-effect `forms` as passed
-		-- in.
-		if forms[i][1] == newforms[#newforms][1] then
-			local tr1 = newforms[#newforms][2]
-			local tr2 = forms[i][2]
-			if not tr1 and not tr2 then
-				-- this shouldn't normally happen
-			else
-				tr1 = tr1 or export.translit_no_links(newforms[#newforms][1])
-				tr2 = tr2 or export.translit_no_links(forms[i][1])
-				if tr1 == tr2 then
+		for j = 1, #newforms do
+			-- If the Russian of the next form is the same as that of the last one, combine their translits and modify
+			-- newforms[] in-place. Otherwise add the next form to newforms[]. Make sure to clone the form rather than
+			-- just appending it directly since we may modify it in-place; we don't want to side-effect `forms` as passed
+			-- in.
+			if forms[i][1] == newforms[j][1] then
+				local tr1 = newforms[j][2]
+				local tr2 = forms[i][2]
+				if not tr1 and not tr2 then
 					-- this shouldn't normally happen
 				else
-					newforms[#newforms][2] = tr1 .. ", " .. tr2
+					tr1 = tr1 or export.translit_no_links(newforms[j][1])
+					tr2 = tr2 or export.translit_no_links(forms[i][1])
+					if tr1 == tr2 then
+						-- this shouldn't normally happen
+					else
+						newforms[j][2] = tr1 .. ", " .. tr2
+					end
 				end
+			else
+				table.insert(newforms, {forms[i][1], forms[i][2]})
 			end
-		else
-			table.insert(newforms, {forms[i][1], forms[i][2]})
 		end
 	end
 	return newforms
 end
 
 -- Given a list of forms, where each form is a two-element list of {RUSSIAN, TRANSLIT}, split cases where two different
--- transliterations have been packed into a single translit field by creating two term/translit adcent term/translit
--- pairs. This is the opposite operation of combine_translit_of_adjacent_forms().
-function export.split_translit_of_adjacent_forms(forms)
+-- transliterations have been packed into a single translit field by creating two adjacent term/translit pairs. This is
+-- the opposite operation of combine_translit_of_duplicate_forms().
+function export.split_translit_of_duplicate_forms(forms)
 	if #forms == 0 then
 		return forms
 	end
