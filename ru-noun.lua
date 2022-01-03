@@ -386,14 +386,42 @@ local ulower = mw.ustring.lower
 local usub = mw.ustring.sub
 local ulen = mw.ustring.len
 
+-- If enabled, compare this module with new version of module to make
+-- sure all declensions are the same. Eventually consider removing this;
+-- but useful as new code is created.
+local test_new_ru_noun_module = false
+
 local AC = u(0x0301) -- acute =  ́
 local CFLEX = u(0x0302) -- circumflex =  ̂
 local PSEUDOCONS = u(0xFFF2) -- pseudoconsonant placeholder, matching ru-common
 local IRREGMARKER = "△"
 local HYPMARKER = "⟐"
 
+local paucal_marker = "*"
+local paucal_internal_note = "* Used with the numbers 1.5, 2, 3, 4 and higher numbers after 20 ending in 2, 3, and 4."
+
 -- text class to check lowercase arg against to see if Latin text embedded in it
 local latin_text_class = "[a-zščžěáéíóúýàèìòùỳâêîôûŷạẹịọụỵȧėȯẏ]"
+
+-- Forward functions
+
+local generate_forms_1
+local determine_decl
+local handle_forms_and_overrides
+local handle_overall_forms_and_overrides
+local concat_word_forms
+local make_table
+local detect_adj_type
+local detect_stress_pattern
+local override_stress_pattern
+local determine_stress_variant
+local determine_stem_variant
+local is_reducible
+local is_dereducible
+local add_bare_suffix
+local attach_stressed
+local do_stress_pattern
+local canonicalize_override
 
 -- version of rsubn() that discards all but the first return value
 local function rsub(term, foo, bar)
@@ -601,50 +629,65 @@ local ending_stressed_dat_sg_patterns = {}
 local ending_stressed_sg_patterns = {}
 -- Set of patterns with all plural forms ending-stressed.
 local ending_stressed_pl_patterns = {}
--- List of all cases, including those that are declined normally
--- (nom/gen/dat/acc/ins/pre sg and pl), plus animate/inanimate accusative
--- variants (computed automatically as appropriate from the previous cases),
--- plus additional overridable cases (loc/par/voc), plus the "linked" lemma
--- case variants used in ru-noun+ headwords (nom_sg_linked, nom_pl_linked,
--- whose values come from nom_sg and nom_pl but may have additional embedded
--- links if they were given in the lemma).
-local all_cases
+
+local declinable_cases_except_accusative = {
+	"nom_sg", "gen_sg", "dat_sg", "ins_sg", "pre_sg",
+	"nom_pl", "gen_pl", "dat_pl", "ins_pl", "pre_pl",
+}
+
+local accusative_cases_unsplit_animacy = {
+	"acc_sg", "acc_pl",
+}
+
+local accusative_cases_split_animacy = {
+	"acc_sg_an", "acc_sg_in", "acc_pl_an", "acc_pl_in",
+}
+
+local lemma_linked_cases = {
+	"nom_sg_linked", "nom_pl_linked",
+}
+
+local overridable_only_cases = {
+	"par", "loc", "voc", "par_pl", "loc_pl", "voc_pl", "count", "pauc",
+}
+local overridable_only_cases_set = m_table.listToSet(overridable_only_cases)
+
 -- List of all cases that are declined normally.
-local decl_cases
--- List of all cases that can be displayed (includes all cases except
--- plain accusatives).
-local displayable_cases
--- List of all cases that can be overridden (includes all cases except the
--- "linked" lemma case variants). Also currently the same as the cases
--- returned by export.generate_forms().
-local overridable_cases
--- Type of trailing letter, for tracking purposes
-local trailing_letter_type
+local decl_cases = m_table.append(declinable_cases_except_accusative, accusative_cases_unsplit_animacy)
 
--- If enabled, compare this module with new version of module to make
--- sure all declensions are the same. Eventually consider removing this;
--- but useful as new code is created.
-local test_new_ru_noun_module = false
+-- List of all cases that can be overridden (includes all cases except the "linked" lemma case variants). Also
+-- currently the same as the cases returned by export.generate_forms().
+local overridable_cases = m_table.append(decl_cases, accusative_cases_split_animacy, overridable_only_cases)
 
--- Forward functions
+-- List of all cases that can be displayed (includes all cases except plain accusatives).
+local displayable_cases = m_table.append(declinable_cases_except_accusative, lemma_linked_cases,
+	accusative_cases_split_animacy, overridable_only_cases)
 
-local generate_forms_1
-local determine_decl
-local handle_forms_and_overrides
-local handle_overall_forms_and_overrides
-local concat_word_forms
-local make_table
-local detect_adj_type
-local detect_stress_pattern
-local override_stress_pattern
-local determine_stress_variant
-local determine_stem_variant
-local is_reducible
-local is_dereducible
-local add_bare_suffix
-local attach_stressed
-local do_stress_pattern
-local canonicalize_override
+-- List of all cases, including those that are declined normally (nom/gen/dat/acc/ins/pre sg and pl), plus
+-- animate/inanimate accusative variants (computed automatically as appropriate from the previous cases), plus
+-- additional overridable cases (loc/par/voc and plural), plus the "linked" lemma case variants used in ru-noun+
+-- headwords (nom_sg_linked, nom_pl_linked, whose values come from nom_sg and nom_pl but may have additional embedded
+-- links if they were given in the lemma).
+local all_cases = m_table.append(overridable_cases, lemma_linked_cases)
+
+local function english_case_description(case)
+	if case == "par" or case == "loc" or case == "voc" then
+		-- For historical reasons, the singular of these cases doens't include "_sg" in their code.
+		case = case .. "_sg"
+	end
+	local engcase = rsub(case, "^([a-z]*)", {
+		nom="nominative", gen="genitive", dat="dative",
+		acc="accusative", ins="instrumental", pre="prepositional",
+		par="partitive", loc="locative", voc="vocative",
+		count="count form", pauc="paucal",
+	})
+	engcase = rsub(engcase, "(_[a-z]*)", {
+		_sg=" singular", _pl=" plural",
+		_an="", _in="",
+		--_an=" animate", _in=" inanimate"
+	})
+	return engcase
+end
 
 --------------------------------------------------------------------------
 --                     Tracking and categorization                      --
@@ -1081,25 +1124,12 @@ local function compute_overall_heading_categories_and_genders(args)
 		local is_pl = rfind(case, "_pl")
 		if args.n == "s" and is_pl or args.n == "p" and not is_pl then
 			-- Don't create singular categories when plural-only or vice-versa
-		elseif (case == "loc" or case == "voc" or case == "par") then
+		elseif overridable_only_cases_set[case] then
 			if args.any_overridden[case] then
-				local engcase = rsub(case, "^([a-z]*)", {
-					par="partitive", loc="locative", voc="vocative"
-				})
-				insert_category(categories, "~ with " .. engcase, args.pos)
+				insert_category(categories, "~ with " .. english_case_description(case), args.pos)
 			end
 		elseif args.any_irreg_case[case] then
-			local engcase = rsub(case, "^([a-z]*)", {
-				nom="nominative", gen="genitive", dat="dative",
-				acc="accusative", ins="instrumental", pre="prepositional",
-				par="partitive", loc="locative", voc="vocative"
-			})
-			engcase = rsub(engcase, "(_[a-z]*)", {
-				_sg=" singular", _pl=" plural",
-				_an="", _in="",
-				--_an=" animate", _in=" inanimate"
-			})
-			insert_category(categories, "~ with irregular " .. engcase, args.pos)
+			insert_category(categories, "~ with irregular " .. english_case_description(case), args.pos)
 		end
 	end
 	local heading = args.manual and "" or "(<span style=\"font-size: smaller;\">[[Appendix:Russian nouns#Declension tables|" .. table.concat(headings, " ") .. "]]</span>)"
@@ -2085,10 +2115,11 @@ local function case_will_be_displayed(args, case)
 	elseif args.n == "s" then
 		caseok = not ispl
 	end
-	if case == "loc" and not args.any_overridden.loc or
-		case == "par" and not args.any_overridden.par or
-		case == "voc" and not args.any_overridden.voc then
-		caseok = false
+	for _, override_case in ipairs(overridable_only_cases) do
+		if case == override_case and not args.any_overridden[override_case] then
+			caseok = false
+			break
+		end
 	end
 	if args.a == "a" or args.a == "i" then
 		if rfind(case, "_[ai]n") then
@@ -3948,44 +3979,10 @@ local numbers = {
 local old_title_temp = [=[Pre-reform declension of <b lang="ru" class="Cyrl">{lemma}</b>]=]
 local title_temp = [=[Declension of <b lang="ru" class="Cyrl">{lemma}</b>]=]
 
-local partitive = nil
-local locative = nil
-local vocative = nil
-local internal_notes_template = nil
-local notes_template = nil
+local extra_case_template, extra_case_template_with_plural
+local internal_notes_template
+local notes_template
 local templates = {}
-
--- all cases, period
-all_cases = {
-	"nom_sg", "gen_sg", "dat_sg", "acc_sg", "ins_sg", "pre_sg",
-	"nom_pl", "gen_pl", "dat_pl", "acc_pl", "ins_pl", "pre_pl",
-	"nom_sg_linked", "nom_pl_linked",
-	"acc_sg_an", "acc_sg_in", "acc_pl_an", "acc_pl_in",
-	"par", "loc", "voc",
-}
-
--- cases that can be declined normally
-decl_cases = {
-	"nom_sg", "gen_sg", "dat_sg", "acc_sg", "ins_sg", "pre_sg",
-	"nom_pl", "gen_pl", "dat_pl", "acc_pl", "ins_pl", "pre_pl",
-}
-
--- all cases displayable
-displayable_cases = {
-	"nom_sg", "gen_sg", "dat_sg", "ins_sg", "pre_sg",
-	"nom_pl", "gen_pl", "dat_pl", "ins_pl", "pre_pl",
-	"nom_sg_linked", "nom_pl_linked",
-	"acc_sg_an", "acc_sg_in", "acc_pl_an", "acc_pl_in",
-	"par", "loc", "voc",
-}
-
--- all cases that can be overridden
-overridable_cases = {
-	"nom_sg", "gen_sg", "dat_sg", "acc_sg", "ins_sg", "pre_sg",
-	"nom_pl", "gen_pl", "dat_pl", "acc_pl", "ins_pl", "pre_pl",
-	"acc_sg_an", "acc_sg_in", "acc_pl_an", "acc_pl_in",
-	"par", "loc", "voc",
-}
 
 -- Convert a raw override into a canonicalized list of individual overrides.
 -- If input is nil, so is output. Certain junk (e.g. <br/>) is removed,
@@ -4130,7 +4127,7 @@ local function process_overrides(args, f, n)
 				-- we could consider loc/par irregular if they don't follow the
 				-- expected forms; but we'd have to figure out how to eliminate
 				-- the preposition that may be specified
-				if case ~= "loc" and case ~= "par" and case ~= "voc" and
+				if not overridable_only_cases_set[case] and
 						not args.manual and
 						not contains_rutr_pair(f[case], form) then
 					local formru, formnotes = m_table_tools.separate_notes(form[1])
@@ -4139,6 +4136,10 @@ local function process_overrides(args, f, n)
 						-- it has an attached footnote symbol
 						form = com.concat_paired_russian_tr(form, {IRREGMARKER})
 					end
+				end
+				if case == "pauc" then
+					-- Internal note indicating that the form is for numbers 2, 3 and 4.
+					form = com.concat_paired_russian_tr(form, {paucal_marker})
 				end
 				table.insert(new_overrides, form)
 			end
@@ -4316,9 +4317,7 @@ handle_forms_and_overrides = function(args, n, islast)
 	f.voc = f.voc or f.nom_sg
 	-- Set these in case we have plural only, in which case the
 	-- singular will also get set to these same values in case we are
-	-- a plural-only word in a singular-only expression. NOTE: It's actually
-	-- unnecessary to do "f.loc_pl = f.loc_pl or f.pre_pl" as f.loc_pl should
-	-- never previously be set.
+	-- a plural-only word in a singular-only expression.
 	f.loc_pl = f.loc_pl or f.pre_pl
 	f.par_pl = f.par_pl or f.gen_pl
 	f.voc_pl = f.voc_pl or f.nom_pl
@@ -4340,11 +4339,9 @@ handle_forms_and_overrides = function(args, n, islast)
 		f.ins_pl = f.ins_sg
 		f.pre_pl = f.pre_sg
 		f.nom_pl = f.nom_sg
-		-- Unnecessary because only used below to initialize singular
-		-- loc/par/voc with pluralia tantum.
-		-- f.loc_pl = f.loc
-		-- f.par_pl = f.par
-		-- f.voc_pl = f.voc
+		f.loc_pl = f.loc
+		f.par_pl = f.par
+		f.voc_pl = f.voc
 	elseif nu == "p" then
 		f.nom_sg_linked = f.nom_pl_linked
 		f.nom_sg = f.nom_pl
@@ -4373,6 +4370,10 @@ handle_overall_forms_and_overrides = function(args)
 
 	process_tail_args(args, overall_forms, "")
 	process_overrides(args, overall_forms, "")
+
+	if case_will_be_displayed(args, "pauc") then
+		insert_if_not(args.internal_notes, paucal_internal_note)
+	end
 
 	-- if IRREGMARKER is anywhere in text, remove all instances and put
 	-- at the end before any notes.
@@ -4556,6 +4557,8 @@ local accel_forms = {
 	voc_pl = "voc|p",
 	par = "par|s",
 	par_pl = "par|p",
+	count = "count|form",
+	pauc = "pau",
 }
 
 -- Make the table
@@ -4598,9 +4601,9 @@ make_table = function(args)
 		data.ins_x = data.ins_sg
 		data.pre_x = data.pre_sg
 		if sg_an_in_equal then
-			temp = "half"
+			temp = "one_number"
 		else
-			temp = "half_a"
+			temp = "one_number_split_animacy"
 		end
 	elseif args.n == "p" then
 		data.nom_x = data.nom_pl
@@ -4610,27 +4613,63 @@ make_table = function(args)
 		data.acc_x_in = data.acc_pl_in
 		data.ins_x = data.ins_pl
 		data.pre_x = data.pre_pl
-		data.par = nil
-		data.loc = nil
-		data.voc = nil
+		data.par = data.par_pl
+		data.loc = data.loc_pl
+		data.voc = data.voc_pl
 		if pl_an_in_equal then
-			temp = "half"
+			temp = "one_number"
 		else
-			temp = "half_a"
+			temp = "one_number_split_animacy"
 		end
 	else
 		if pl_an_in_equal then
-			temp = "full"
+			temp = "both_numbers"
 		elseif sg_an_in_equal then
-			temp = "full_af"
+			temp = "both_numbers_split_animacy_plural_only"
 		else
-			temp = "full_a"
+			temp = "both_numbers_split_animacy"
 		end
 	end
 
-	data.par_clause = args.any_overridden.par and strutils.format(partitive, data) or ""
-	data.loc_clause = args.any_overridden.loc and strutils.format(locative, data) or ""
-	data.voc_clause = args.any_overridden.voc and strutils.format(vocative, data) or ""
+	for _, extra_case in ipairs({
+		{"par", "partitive"},
+		{"loc", "locative"},
+		{"voc", "vocative"},
+	}) do
+		local case, engcase = unpack(extra_case)
+		local template
+		if args.n ~= "s" and args.n ~= "p" and args.any_overridden[case .. "_pl"] then
+			if not args.any_overridden[case] then
+				data[case] = ""
+			end
+			template = extra_case_template_with_plural
+		elseif args.n == "s" and args.any_overridden[case] or args.n == "p" and args.any_overridden[case .. "_pl"] then
+			template = extra_case_template
+		end
+		if template then
+			template = strutils.format(template, {case=case, engcase=engcase})
+			data[case .. "_clause"] = strutils.format(template, data)
+		else
+			data[case .. "_clause"] = ""
+		end
+	end
+
+	for _, extra_case in ipairs({
+		{"count", "count form"},
+		{"pauc", "paucal"},
+	}) do
+		local case, engcase = unpack(extra_case)
+		local template
+		if args.n ~= "p" and args.any_overridden[case] then
+			template = extra_case_template
+		end
+		if template then
+			template = strutils.format(template, {case=case, engcase=engcase})
+			data[case .. "_clause"] = strutils.format(template, data)
+		else
+			data[case .. "_clause"] = ""
+		end
+	end
 
 	local notes = get_arg_chain(args, "notes", "notes")
 	local all_notes = {}
@@ -4651,22 +4690,18 @@ make_table = function(args)
 	return strutils.format(templates[temp], data)
 end
 
-partitive = [===[
+local extra_case_template = [===[
 
-! style="background:#eff7ff" | partitive
-| {par}
+! style="background:#eff7ff" | {engcase}
+| {\op}{case}{\cl}
+|
 |-]===]
 
-locative = [===[
+local extra_case_template_with_plural = [===[
 
-! style="background:#eff7ff" | locative
-| {loc}
-|-]===]
-
-vocative = [===[
-
-! style="background:#eff7ff" | vocative
-| {voc}
+! style="background:#eff7ff" | {engcase}
+| {\op}{case}{\cl}
+| {\op}{case}_pl{\cl}
 |-]===]
 
 notes_template = [===[
@@ -4689,11 +4724,11 @@ local function template_prelude(min_width)
 end
 
 local function template_postlude()
-	return [===[|-{par_clause}{loc_clause}{voc_clause}
+	return [===[|-{par_clause}{loc_clause}{voc_clause}{count_clause}{pauc_clause}
 |{\cl}{notes_clause}</div></div></div>]===]
 end
 
-templates["full"] = template_prelude("45") .. [===[
+templates["both_numbers"] = template_prelude("45") .. [===[
 ! style="width:10em;background:#d9ebff" |
 ! style="background:#d9ebff" | singular
 ! style="background:#d9ebff" | plural
@@ -4723,7 +4758,7 @@ templates["full"] = template_prelude("45") .. [===[
 | {pre_pl}
 ]===] .. template_postlude()
 
-templates["full_a"] = template_prelude("50") .. [===[
+templates["both_numbers_split_animacy"] = template_prelude("50") .. [===[
 ! style="width:15em;background:#d9ebff" |
 ! style="background:#d9ebff" | singular
 ! style="background:#d9ebff" | plural
@@ -4756,7 +4791,7 @@ templates["full_a"] = template_prelude("50") .. [===[
 | {pre_pl}
 ]===] .. template_postlude()
 
-templates["full_af"] = template_prelude("50") .. [===[
+templates["both_numbers_split_animacy_plural_only"] = template_prelude("50") .. [===[
 ! style="width:15em;background:#d9ebff" |
 ! style="background:#d9ebff" | singular
 ! style="background:#d9ebff" | plural
@@ -4788,7 +4823,7 @@ templates["full_af"] = template_prelude("50") .. [===[
 | {pre_pl}
 ]===] .. template_postlude()
 
-templates["half"] = template_prelude("30") .. [===[
+templates["one_number"] = template_prelude("30") .. [===[
 ! style="width:10em;background:#d9ebff" |
 ! style="background:#d9ebff" | {number}
 |-
@@ -4811,7 +4846,7 @@ templates["half"] = template_prelude("30") .. [===[
 | {pre_x}
 ]===] .. template_postlude()
 
-templates["half_a"] = template_prelude("35") .. [===[
+templates["one_number_split_animacy"] = template_prelude("35") .. [===[
 ! style="width:15em;background:#d9ebff" |
 ! style="background:#d9ebff" | {number}
 |-
