@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import pywikibot, re, sys, codecs, argparse
+import pywikibot, re, sys, codecs, argparse, unicodedata
 
 import blib
 from blib import getparam, rmparam, tname, msg, site
@@ -11,33 +11,76 @@ from collections import defaultdict
 # FIXME: Better handling of Alternative Forms
 
 lemma_poses = {
+  "abbreviation",
+  "acronym",
   "adjective",
+  "adnominal",
+  "adposition",
   "adverb",
+  "affix",
+  "ambiposition",
+  "article",
   "cardinal number",
   "circumfix",
+  "circumposition",
+  "classifier",
+  "combined form",
+  "combining form",
+  "confix",
   "conjunction",
+  "contraction",
+  "converb",
+  "counter",
   "determiner",
   "diacritical mark",
   "gerund",
+  "Han character",
+  "Han tu",
+  "hanja",
+  "hanzi",
+  "ideophone",
   "idiom",
+  "infinitive",
+  "infix",
+  "initialism",
   "interfix",
   "interjection",
+  "jyutping",
+  "kanji",
+  "kanji reading",
   "letter",
+  "ligature",
+  "misspelling",
+  "morpheme",
   "noun",
+  "number",
   "numeral",
+  "numeral symbol",
   "particle",
   "participle",
+  "pinyin",
   "phrase",
+  "postposition",
+  "postpositional phrase",
   "predicative",
   "prefix",
   "preposition",
   "prepositional phrase",
+  "preverb",
+  "pronominal adverb",
   "pronoun",
   "proper noun",
   "proverb",
   "punctuation mark",
+  "relative",
+  "romaji",
+  "romanization",
   "root",
+  "singulative",
+  "stem",
   "suffix",
+  "syllable",
+  "symbol",
   "verb",
 }
 
@@ -52,14 +95,14 @@ def get_subsection_id(subsections, k, include_equal_signs=False):
   if include_equal_signs:
     subsection_name = subsections[k].strip()
   else:
-    m = re.match("^=+(.*?)=+ *\n", subsections[k])
+    m = re.match("^=+(.*?)=+[ \t]*\n", subsections[k])
     subsection_name = m.group(1).strip() if m else "UNKNOWN SECTION NAME"
   return "%s (%s)" % (k // 2 + 1, subsection_name)
 
 def check_for_bad_etym_sections(secbody, pagemsg):
   global args
-  l3_subsections = re.split(r"(^===[^=\n]+=== *\n)", secbody, 0, re.M)
-  subsections = re.split(r"(^===+[^=\n]+===+ *\n)", secbody, 0, re.M)
+  l3_subsections = re.split(r"(^===[^=\n]+===[ \t]*\n)", secbody, 0, re.M)
+  subsections = re.split(r"(^===+[^=\n]+===+[ \t]*\n)", secbody, 0, re.M)
   l3_last_etym_header = len(l3_subsections) - 2
 
   if len(l3_subsections) < 3:
@@ -82,17 +125,17 @@ def check_for_bad_etym_sections(secbody, pagemsg):
     return
 
   l3_first_etym_header = 1
-  while l3_first_etym_header < len(l3_subsections) and re.search(r"^===\s*(Alternative forms|Pronunciation)\s*=== *\n", l3_subsections[l3_first_etym_header]):
+  while l3_first_etym_header < len(l3_subsections) and re.search(r"^===\s*(Alternative forms|Pronunciation)\s*===[ \t]*\n", l3_subsections[l3_first_etym_header]):
     l3_first_etym_header += 2
   if l3_first_etym_header >= len(l3_subsections):
     pagemsg("WARNING: Saw only ==Alternative forms== and/or ==Pronunciation== sections")
     return
-  final_section_re = r"^===\s*(References|See also|Derived terms|Related terms|Conjugation|Declension|Inflection|Descendants|Further reading|Anagrams|Mutation)\s*=== *\n"
+  final_section_re = r"^===\s*(References|See also|Derived terms|Related terms|Conjugation|Declension|Inflection|Descendants|Further reading|Anagrams|Mutation)\s*===[ \t]*\n"
   while l3_last_etym_header > 1 and re.search(final_section_re, l3_subsections[l3_last_etym_header]):
     l3_last_etym_header -= 2
   expected_etym_no = 1
   for k in xrange(l3_first_etym_header, l3_last_etym_header + 2, 2):
-    if not re.search(r"===\s*Etymology %s\s*=== *\n" % expected_etym_no, l3_subsections[k]):
+    if not re.search(r"===\s*Etymology %s\s*===[ \t]*\n" % expected_etym_no, l3_subsections[k]):
       pagemsg("WARNING: Expected ===Etymology %s=== but saw section %s" % (
         expected_etym_no, get_subsection_id(l3_subsections, k, include_equal_signs=True)))
     expected_etym_no += 1
@@ -116,7 +159,7 @@ def check_for_bad_subsections(secbody, pagemsg, langname):
       notes.append("%s: %s" % (langname, note))
     else:
       notes.append(note)
-  subsections = re.split(r"(^===+[^=\n]+===+ *\n)", secbody, 0, re.M)
+  subsections = re.split(r"(^===+[^=\n]+===+[ \t]*\n)", secbody, 0, re.M)
   def subsection_id(k, include_equal_signs=False):
     return get_subsection_id(subsections, k, include_equal_signs=include_equal_signs)
 
@@ -178,7 +221,7 @@ def check_for_bad_subsections(secbody, pagemsg, langname):
   indentation = {}
   def correct_indentation(k, expected_indentation):
     if args.correct:
-      m = re.match("^(=+)(.*?)(=+) *\n", subsections[k])
+      m = re.match("^(=+)(.*?)(=+)[ \t]*\n", subsections[k])
       if m and len(m.group(1)) == len(m.group(3)):
         subsections[k] = ("=" * expected_indentation) + m.group(2) + ("=" * expected_indentation) + "\n"
         indentation[k] = expected_indentation
@@ -187,17 +230,17 @@ def check_for_bad_subsections(secbody, pagemsg, langname):
     if re.search("^==", subsections[k], re.M):
       pagemsg("WARNING: Saw badly formatted section header in section %s <%s>" % (subsection_id(k), subsections[k].strip()))
   for k in xrange(1, len(subsections), 2):
-    if re.search(r"===+ +\n", subsections[k]):
+    if re.search(r"===+[ \t]+\n", subsections[k]):
       pagemsg("WARNING: Space at end of section header in section %s" % subsection_id(k))
       if args.correct:
-        subsections[k] = re.sub(r"(===+) +(\n)", r"\1\2", subsections[k])
+        subsections[k] = re.sub(r"(===+)[ \t]+(\n)", r"\1\2", subsections[k])
         append_note("remove extraneous space at end of section header in section %s" % subsection_id(k))
-    if re.search(r"^===+ ", subsections[k]) or re.search(" ==+ *\n", subsections[k]):
+    if re.search(r"^===+[ \t]", subsections[k]) or re.search(" ==+[ \t]*\n", subsections[k]):
       pagemsg("WARNING: Space surrounding section name in section header in section %s" % subsection_id(k))
       if args.correct:
         subsections[k] = re.sub(r"^(===+)\s*(.*?)\s*(===+\n)", r"\1\2\3", subsections[k])
         append_note("remove extraneous space surrounding section header name in section %s" % subsection_id(k))
-    m = re.match("^(=+).*?(=+) *\n", subsections[k])
+    m = re.match("^(=+).*?(=+)[ \t]*\n", subsections[k])
     indentation[k] = len(m.group(1))
     if indentation[k] != len(m.group(2)):
       pagemsg("WARNING: Mismatched indentation, %s equal signs on left but %s on right in section %s"
@@ -226,7 +269,7 @@ def check_for_bad_subsections(secbody, pagemsg, langname):
       if re.search(r"=\s*Etymology [0-9]", subsections[k]):
         last_etym_header = k
   pos_since_etym_section = 0
-  header_to_reindent_regex = r"=\s*(Synonyms|Antonyms|Hyponyms|Hypernyms|Coordinate terms|Derived terms|Related terms|Descendants|Usage notes|Conjugation|Declension|Inflection)\s*="
+  header_to_reindent_regex = r"=\s*(Synonyms|Antonyms|Hyponyms|Hypernyms|Coordinate terms|Derived terms|Related terms|Descendants|Usage notes|Conjugation|Declension|Inflection|Translations)\s*="
   headers_seen = defaultdict(int)
   headers_seen_since_etym_section = defaultdict(int)
   for k in xrange(1, len(subsections), 2):
@@ -321,10 +364,13 @@ def process_text_on_page(index, pagetitle, text):
     return newtext.rstrip("\n") + text_finalnl, notes
 
   notes = []
-  sections = re.split("(^==[^\n=]*== *\n)", text, 0, re.M)
+  sections = re.split("(^==[^\n=]*==[ \t]*\n)", text, 0, re.M)
+
+  # Correct extraneous spaces in L2 headers and prepare for sorting by language.
+  sections_for_sorting = []
   for j in xrange(2, len(sections), 2):
-    # Fetch L2 language name and correct extraneous spaces in header.
-    m = re.search("^==( *)(.*?)( *)==( *)\n$", sections[j - 1])
+    # Fetch L2 language name.
+    m = re.search("^==([ \t]*)(.*?)([ \t]*)==([ \t]*)\n$", sections[j - 1])
     space1, langname, space2, space3 = m.groups()
     def pagemsg(txt):
       msg("Page %s %s: %s: %s" % (index, pagetitle, langname, txt))
@@ -336,8 +382,52 @@ def process_text_on_page(index, pagetitle, text):
       if args.correct:
         sections[j - 1] = "==%s==\n" % langname
         notes.append("%s: remove extraneous space in L2 header" % langname)
+    sections_for_sorting.append((langname, sections[j - 1], sections[j]))
 
-    # Correct missing or misformatted section divider at end of section.
+  # Sort by language name if needed.
+  def langname_key(langname):
+    if langname == "Translingual":
+      return " "
+    elif langname == "English":
+      # Translingual before English per [[WT:ELE]].
+      return "  "
+    else:
+      # FIXME! What is the correct rule for handling non-ASCII characters? I notice that e.g. Yámana comes before
+      # Yoruba on [[ala]] and elsewhere (hence combining diacritics should be ignored), but 'Are'are comes before
+      # Acehnese on [[ma]] (hence apostrophes should not be ignored), and ǃKung (not with an exclamation point but
+      # U+01C3) comes after Zulu (hence non-ASCII letters should not be ignored). For now I've decided to convert to
+      # decomposed form and remove all combining diacritics (which are generally in the range U+0300 to U+036F).
+      return re.sub(u"[\u0300-\u036F]", "", unicodedata.normalize("NFD", langname)).lower()
+  sorted_sections = sorted(sections_for_sorting, key=lambda sec: langname_key(sec[0]))
+  if sorted_sections != sections_for_sorting:
+    msg("Page %s %s: %s" % (index, pagetitle, "WARNING: Language sections misordered, reordering"))
+    if args.correct:
+      newsections = [sections[0]]
+      numlangs = len(sorted_sections)
+      # Fix up all the dividers, needed esp. if the last language section is reordered.
+      for j in xrange(numlangs):
+        langname, header, contents = sorted_sections[j]
+        m = re.search(r"\A(.*?)\s*\n--+\Z", contents.rstrip(), re.S)
+        divider = "\n\n----\n\n" if j < numlangs - 1 else "\n\n"
+        if not m:
+          # no divider at end
+          contents = contents.rstrip() + divider
+        else:
+          contents = m.group(1) + divider
+        newsections.append(header)
+        newsections.append(contents)
+      sections = newsections
+      notes.append("correct misordered language sections")
+
+  # Correct missing or misformatted section divider at end of section.
+  # This should have no effect if we re-sorted the language sections.
+  for j in xrange(2, len(sections), 2):
+    # Fetch L2 language name.
+    m = re.search("^==([ \t]*)(.*?)([ \t]*)==([ \t]*)\n$", sections[j - 1])
+    space1, langname, space2, space3 = m.groups()
+    def pagemsg(txt):
+      msg("Page %s %s: %s: %s" % (index, pagetitle, langname, txt))
+
     if j < len(sections) - 2: # no section divider at end of last L2 section
       m = re.search(r"\A(.*?)\s*\n--+\Z", sections[j].rstrip(), re.S)
       if not m:
