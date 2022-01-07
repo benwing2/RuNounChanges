@@ -225,6 +225,7 @@ FIXME:
 3. Finish support for reflexive and pronominal imperatives.
 4. Finish support for negative imperatives.
 5. Fix handling of third-only verbs; require that irregular forms be specified in the first person.
+   Remove existing half-implemented support for specifying principal parts in the third person.
 6. Support defective verbs specified using e.g. redire<a/rièdo,-,redìto.imperf:-.fut:-.impsub:->.
    Include categorization; but if row overrides or single overrides of all forms given, don't categorize
    as defective for that row.
@@ -291,6 +292,266 @@ local all_verb_slots = {
 	-- FIXME, needs to be handled specially
 	{"aux", "-"},
 }
+
+local irreg_verbs = {
+	{"andare", [=[
+		e/-.
+		presrow:vàdo,vài,và*,andiàmo,andàte,vànno.
+		fut:andrò.
+		sub:vàda.
+		imp:vài:và':và*
+]=]},
+	{"aprire"?, ...},
+	{"avere", [=[
+		a/-,èbbi.
+		presrow:hò*,hài,hà*,abbiàmo,avéte,hànno.
+		fut:avrò.
+		sub:àbbia.
+		imp:àbbi:và':và*.
+		presp:avènte,abbiènte
+]=]},
+	{"battere"?, ...},
+
+
+
+
+
+	{"bere", "é,bévvi:bevétti:bevéi[rare].fut:berrò.stem:béve.presp:+",
+		"<<bere>>, <<strabere>>, <<ribere>>; but not <<ebere||to weaken>> or <<iubere||to command, to order>>"},
+	-- incombere, procombere, soccombere: regular except missing or rare past participle
+	-- iubere: archaic, defective
+	-- giacere, piacere, tacere; Hoepli says piacciàmo only, taciàmo only and either giaccìamo or giaciàmo;
+	-- but Treccani says all should be in -acciàmo. DOP says piaciàmo and taciàmo are errors and giaciàmo is
+	-- "meno bene".
+	{"acere", "àccio#à,àcqui.pres1p:acciàmo.presp:+",
+		"<<giacere>>, <<tacere>>, <<piacere>> and derivatives"},
+	-- licere (lecere), recere: archaic or poetic, defective
+	-- dicere, benedicere: archaic; handled under dire below
+	-- soffolcere (suffolcere, soffolgere, suffulcere): archaic, defective
+	-- molcere: poetic, defective
+	{"vincere", "ì,vìnsi,vìnto.presp:+", "<<vincere>> and derivatives"},
+	{"cuocere", "cuòcio#ò,còssi,còtto.stem:cuòce:còce.presp:+", "<<cuocere>> and derivatives"},
+	{"nuocere", "nòccio:nuòccio#ò,nòcqui,nociùto:nuociùto[rare].stem:nuòce:nòce.presp:nocènte",
+		"<<nuocere>>, <<rinuocere>>"},
+	{"torcere", "ò,tòrsi,tòrto.presp:+", "<<torcere>> and derivatives"},
+	{"nascere", "à,nàcqui,nàto.presp:+", "<<nascere>>, <<rinascere>>, <<prenascere>>"},
+	-- pascere, ripascere: regular
+	-- acquiescere: rare, defective in past participle
+	-- mescere, rimescere: regular
+	{"crescere", "é,crébbi.presp:+", "<<crescere>> and derivatives"},
+	-- mansuescere: archaic, rare, infinitive only
+	{"noscere", "ó,nóbbi.presp:+", "<<conoscere>>, archaic <<cognoscere>> and derivatives"},
+	-- ducere and derivatives: archaic; handled under -durre below
+	-- lucere, tralucere, rilucere: archaic, defective
+	-- 'cadere' must precede 'adere'
+	{"cadere", "à,càddi.fut:cadrò.presp:+", "<<cadere>> and derivatives"},
+	-- NOTE: (1) per DiPI, [[suadere]] can be pronounced suadére (per Treccani/Hoepli) or suàdere.
+	-- (2) [[ridere]] has past historic [[rasi]], with /z/ or traditional /s/, whereas the past historic of the
+	-- other verbs has only /z/; but this currently makes no difference as we don't indicate all details of verb
+	-- pronunciation. If we change this and start indicating full pronunciation (e.g. as [[Module:fr-verb]] does),
+	-- we need to split these verbs.
+	{"adere", "à,àsi,àso.presp:+", "<<radere>> and derivatives; <<suadere>> and derivatives; verbs in ''-vadere'' (<<invadere>>, <<evadere>>, <<pervadere>>); but not <<cadere>> and derivatives"},
+	-- reddere: archaic for rendere
+	-- cedere and derivatives: regular (cèssi archaic)
+	{"chiedere", "è:é,chièsi:chiési.chièsto:chiésto.presp:+", "<<chiedere>> and derivatives"},
+	-- riedere: variant of poetic/archaic defective redire (reddire)
+	-- risiedere, presiedere: regular
+	{"ledere", "è,lési,léso.presp:+", "<<ledere>>"},
+	-- credere and derivatives: regular (crési archaic)
+	-- pedere: obsolete, regular but lacking past participle
+	{"sedere", "sièdo:sèggo[literary]#sièdi.fut:+:siederò[popular].presp:+", "<<sedere>> and derivatives"},
+	{"vedere", "é,vìdi,vìsto:vedùto[less popular].fut:vedrò.presp:vedènte:veggènte", "<<vedere>> and derivatives"},
+	-- stridere: regular but past participle is lacking (per Hoepli) or extremely rare (per Treccani)
+	-- NOTE: [[ridere]] has past historic [[risi]], with /z/ or traditional /s/, whereas the past historic of the
+	-- other verbs has only /z/; see comment above about 'adere'.
+	{"idere", "ì:ìsi:ìso.presp:+", "verbs in ''-cidere'' (<<incidere>>, <<coincidere>>, <<uccidere>>, <<decidere>>, etc.; verbs in ''-lidere'' (<<elidere>>, <<collidere>>, <<allidere>>); <<ridere>> and derivatives; <<assidere>>; <<dividere>> and derivatives; but not <<stridere>>"},
+	-- Treccani (under [[espandere]] says past historic only spànsi, past participle only spànso. Hoepli says past
+	-- historic spandéi or (uncommon) spandètti or spànsi, past participle spànto or archaic spànso or spandùto.
+	-- The reality from reverso.net is somewhere in between.
+	{"spandere", "à,spànsi:+[uncommon],spànto:spànso.presp:+", "<<spandere>> and derivatives"},
+	-- must precede cendere
+	{"scendere", "é:è,scési,scéso.presp:+", "<<scendere>> and derivatives"},
+	{"cendere", "è,cési,céso.presp:+", "<<accendere>> and derivatives, <<incendere>>"},
+	{{term = "fendere", prefixes = {"di", "de", "of"}}, "è,difési,diféso.presp:+", "<<difendere>> (archaic <<defendere>>), <<offendere>> and derivatives"},
+	{"fendere", "è,+,+:fésso.presp:+", "<<fendere>>, <<rifendere>>, <<sfendere>>; but not <<offendere>>, <<difendere>> or respective derivatives"},
+	-- splendere: regular but rare or lacking past participle
+	{"^pendere", "è,+,+[rare].presp:+", "<<pendere>>; but not any derivatives"},
+	{"propendere", "è,+,propéso[rare].presp:+", "<<propendere>>"},
+	{"pendere", "è,pési,péso.presp:+", "<<appendere>>, <<dipendere>>, <<spendere>>, <<sospendere>> and other verbs and derivatives in ''-pendere'' other than <<pendere>> and <<propendere>>"},
+	{"prendere", "è,prési,préso.presp:+", "<<prendere>> and derivatives"},
+	{"rendere", "è,rési:+[literary],réso.presp:+", "<<rendere>>, <<arrendere>> and <<rirendere>>"},
+	{"tendere", "è,tési,téso.presp:+", "<<tendere>>, <<stendere>> and derivatives of each"},
+	-- vendere: regular
+	{"scindere", "ì,scìssi,scìsso.presp:+", "<<scindere>> and derivatives"},
+	-- ascondere, nascondere and derivatives
+	{"scondere", "ó,scósi,scósto.presp:+", "<<nascondere>>, <<ascondere>> and derivatives of each"},
+	{"fondere", "ó,fùsi,fùso.presp:+", "<<fondere>> and derivatives"},
+	-- rispondere (respondere) and derivatives
+	{"spondere", "ó,spósi,spósto.presp:+", "<<rispondere>> (archaic <<respondere>>) and derivatives"],
+	-- Hoepli says tònso but I suspect it's a mistake; Olivetti says tónso
+	{"tondere", "ó,+,+:tónso.presp:+", "<<tondere>>"},
+	{"tundere", "ù,tùsi,tùso.presp:+", "<<contundere>> and <<ottundere>>"},
+	{"godere", "ò,+,+.fut:godrò:goderò[uncommon].presp:+", "<<godere>> and derivatives"},
+	{"plodere", "ò,plòsi,plòso.presp:+", "<<esplodere>>, <<implodere>> and derivatives"},
+	{"rodere", "ó,rósi,róso.presp:+", "<<rodere>> and derivatives"},
+	{"ardere", "à,àrsi,àrso.presp:+", "<<ardere>> and derivatives"},
+	{"perdere", "è,pèrsi:perdètti:perdéi[less common],pèrso:perdùto", "<<pedere>> and derivatives"},
+	{"mordere", "ò,mòrsi,mòrso.presp:+", "<<mordere>> and derivatives"},
+	-- gaudere: literary or archaic, defective
+	-- prudere: regular but uncommon in the past historic; lacking in the past participle
+	{"udere", "ù,ùsi,ùso.presp:+", "<<chiudere>> and derivatives; verbs in ''-cludere'' (<<concludere>>, <<includere>>, <<escludere>>, etc.); verbs in ''-ludere'' (<<eludere>>, <<deludere>>, <<alludere>>, etc.); verbs in ''-trudere'' (<<intrudere>>, <<protrudere>>, <<estrudere>>, etc.); but not <<prudere>> or <<gaudere>>"},
+	-- piagere, plagere: archaic, defective
+	-- traggere and derivatives: archaic; handled under trarre below
+	{"eggere", "è,èssi,ètto.presp:+", "<<leggere>> and derivatives; <<reggere>> and derivatives; <<proteggere>> and derivatives"},
+	-- must precede affiggere
+	{{term = "figgere", prefixes = {"^", "con", "ri", "scal", "tra"}}, "ì,fìssi,fìtto.presp:+", "<<figgere>> and some derivatives (<<configgere>>, <<rifiggere>>, <<scalfiggere>>, <<trafiggere>> and derivatives), with past participle in ''-fitto''"},
+	{"figgere", "ì,ìssi,ìsso.presp:+", "most derivatives of <<figgere>> (<<affiggere>>, <<crocifiggere>> and variants, <<defiggere>>, <<infiggere>>, <<prefiggere>>, <<suffiggere>>, and derivatives), with past participle in ''-fisso''"},
+	{"fliggere", "ì,flìssi,flìtto.presp:+", "verbs in ''-fliggere'' (<<affliggere>>, <<confliggere>>, <<infliggere>>)"},
+	{"friggere", "ì,frìssi,frìtto.presp:+", "<<friggere>> and derivatives"},
+	{"struggere", "ì,strùssi,strùtto.presp:+", "<<struggere>> and derivatives"},
+	{"redigere", "ì,redàssi,redàtto.presp:+", "<<redigere>>"},
+	-- indigere: archaic, defective
+	-- negligere: uncommon, defective
+	{"diligere", "ì,dilèssi,dilètto.presp:+", "<<diligere>> and derivatives"},
+	{"rigere", "ì,rèssi,rètto.presp:+", "<<erigere>>, <<dirigere>> and derivatives"},
+	{"sigere", "ì,+[uncommon],sàtto.presp:+", "<<esigere>> and <<transigere>>"},
+	{"vigere", "ì,vigéi,-.presp:+.only3sp", "<<vigere>>"},
+	-- algere: archaic poetic, defective
+	-- soffolgere: archaic, defective; variant of soffolcere, see above
+	-- molgere: rare, literary, defective
+	{"volgere", "ò,vòlsi,vòlto.presp:+", "<<volgere>> and derivatives"},
+	{"indulgere", "ù,indùlsi,indùlto.presp:+", "<<indulgere>>"},
+	{"fulgere", "ù,fùlsi,-.presp:+", "<<fulgere>> and derivatives; lacking past participle"},
+	-- angere: archaic or poetic, defective
+	{{term = "angere", prefixes = {"pi", "pl"}}, "à,ànsi,ànto.presp:+", "<<piangere>> (archaic <<plangere>>) and derivatives"},
+	-- piagnere: archaic, defective, no past historic or past participle
+	-- clangere: literary, rare, defective, no past historic or past participle
+	{"frangere", "à,frànsi,frànto.presp:+", "<<frangere>> and derivatives"},
+	-- tangere: literary, defective
+	-- etc.
+
+	...
+
+
+	-- addire, benedire, contraddire, indire, interdire, maledire, predire, ricontraddire, ridire, etc.
+	{"dire", "+,dìssi,détto.stem:dìce.pres2p:dìte.imp:dì':dì*+.presp:+"},
+	-- archaic variant of dire
+	{"dicere", "+,dìssi,détto.pres2p:dìte.imp:dì':dì*+.presp:+"},
+	-- condurre, etc.
+	{"durre", "+,dùssi,dótto.stem:dùce.presp:+"},
+	-- archaic variant of -durre
+	{"ducere", "+,dùssi,dótto.presp:+"},
+	{"trarre", "tràggo,tràssi,tràtto.stem:tràe.presp:+"},
+	-- archaic variant of trarre, with some different present tense (hence conditional/imperative) forms
+	{"traggere", "tràggo#tràgge,tràssi,tràtto.pres1p:traggiàmo.fut:trarrò.stem:tràe.presp:+"},
+
+
+
+
+
+
+
+	{"cogliere"?, ...},
+	{"coprire"?, ...},
+	{"correre"?, ...},
+	{"dare", [=[
+		a/-,dièdi:dètti.
+		presrow:dò*:*dò*,dài,*dà*,diàmo,dàte,dànno.
+		sub:dìa.
+		fut:darò.
+		impsub:déssi.
+		imp:dài:dà':*dà*
+]=]},
+	-- must precede dire
+	{"udire", "a/òdo.fut:+:udrèi.presp:+:udiènte"},
+	{"dovere", [=[
+		a:e[as an auxiliary, with main verbs taking ''essere'']/dèvo:dévo:dèbbo:débbo#dève:déve.
+		fut:dovrò.
+		sub:dèbba:débba:dèva[rare]:déva[rare].
+		imp:-
+]=]},
+	{"scendere", ...},
+	-- prendere, rendere, tendere
+	-- {"prendere", 'a:e[also in the meaning "to happen unexpectedly"]\\è,prési,préso'},
+	{"endere", ...},
+	{"eggere"?, ...},
+	{"essere", [=[
+		e\è\-,-,stàto.
+		presrow:sóno,sèi,è,siàmo,siète,sóno.
+		imperfrow:èro,èri,èra,eravàmo,eravàte,èrano.
+		phisrow:fùi,fósti,fù*,fùmmo,fóste,fùrono.
+		fut:sarò.
+		sub:sìa.
+		impsub:fóssi.
+		improw:sìi:siàte.
+		presp:essènte[rare]
+]=]},
+	{"fare", [=[
+		a/-,féci,fàtto.
+		stem:fàce.
+		presrow:fàccio,fài,fà*,facciàmo,fàte,fànno.
+		sub:fàccia.
+		imp:fà*:fài:fà'
+]=]},
+	{"fondere"?, ...},
+	-- must go before ingere
+	{"stringere"?, ...},
+	-- cingere, pingere, tingere, ...
+	{"ingere"?, ...},
+	{"manere"?, ...},
+	{"mergere", ...},
+	{"mettere", "a\\é,mìsi,mésso"},
+	{"mordere"?, ...},
+	{"morire"?, ...},
+	{"muovere"?, ...},
+	{"nascondere"?, ...},
+	{"offrire"?, ...},
+	-- cogliere, sciogliere, togliere and derivs
+	{"ogliere", "a\\ò\\òlgo,òlsi,òlto"},
+	{"piangere"?, ...},
+	{"porgere"?, ...},
+	{"porre", "a\\ó+\\póngo,pósi,pósto:pòsto.stem:póne"},
+	{"potere", [=[
+		a:e[as an auxiliary, with main verbs taking ''essere'']/-,potéi:potètti[less common].
+		presrow:pòsso,puòi,può*,possiàmo,potéte,pòssono.
+		fut:potrò.
+		imp:-
+]=]},
+	{"primere"?, ...},
+	{"ridere", ...},
+	{"rispondere"?, ...},
+	{"rodere"?, ...},
+	{"rompere"?, ...},
+	{"sapere", [=[
+		a:e[as an auxiliary, with main verbs taking ''essere'']/-,sèppi.
+		presrow:sò*,sài,sà*,sappiàmo,sapéte,sànno.
+		fut:saprò.
+		sub:sàppia.
+		improw:sàppi:sappiàte
+]=]},
+	{"scegliere", ...},
+	{"scrivere", ...},
+	{"sedere", ...},
+	{"seguire", ...},
+	{"sentire", ...},
+	{"spargere", ...},
+	{"stare", ...},
+	{"sistere", "a\\ì,+,sistìto"},
+	{"tendere"?, ...},
+	{"tenere", "a/tèngo#tiène,ténni.fut:terrò"},
+	{"ungere"?, ...},
+	{"uscire", "e/èsco.presp:+"},
+	{"valere", "e:a[transitive]/vàlgo#à,vàlsi,vàlso.fut:varrò"},
+	{"venire", "e/vèngo#viène,vénni,venùto.fut:verrò.presp:veniènte"},
+	{"vivere", ...},
+	{"volere", [=[
+		a:e[as an auxiliary, with main verbs taking ''essere'']/-,vòlli.
+		presrow:vòglio,vuòi,vuòle,vogliàmo,voléte,vògliono.
+		fut:vorrò.
+		presp:+
+	]=]},
+	{"volgere"?, ...},
+},
 
 -- Used to create the accelerator entries in all_verb_slots.
 local person_number_tag_prefix = {
@@ -2321,8 +2582,8 @@ local function show_forms(alternant_multiword_spec)
 	local props = {
 		lang = lang,
 		lemmas = lemmas,
+		slot_list = all_verb_slots,
 	}
-	props.slot_list = all_verb_slots
 	iut.show_forms(alternant_multiword_spec.forms, props)
 	alternant_multiword_spec.footnote_basic = alternant_multiword_spec.forms.footnote
 end
@@ -2539,7 +2800,6 @@ function export.do_generate_forms(parent_args, from_headword, def)
 
 	local parse_props = {
 		parse_indicator_spec = do_parse_indicator_spec,
-		lang = lang,
 		allow_default_indicator = true,
 		allow_blank_lemma = true,
 	}
@@ -2551,7 +2811,6 @@ function export.do_generate_forms(parent_args, from_headword, def)
 	detect_all_indicator_specs(alternant_multiword_spec, from_headword)
 	local inflect_props = {
 		slot_list = all_verb_slots,
-		lang = lang,
 		inflect_word_spec = conjugate_verb,
 		-- We add links around the generated verbal forms rather than allow the entire multiword
 		-- expression to be a link, so ensure that user-specified links get included as well.
