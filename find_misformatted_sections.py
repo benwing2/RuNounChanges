@@ -217,6 +217,10 @@ def check_for_bad_subsections(secbody, pagemsg, langname):
     pagemsg("WARNING: Saw Pronunciation 1, not changing indentation")
     return "".join(subsections), notes
 
+  if re.search(r"==\s*Etymology [0-9]+\s*==", secbody) and not re.search(r"==\s*Etymology 1\s*==", secbody):
+    pagemsg("WARNING: Has ==Etymology N== but not ==Etymology 1==, not changing indentation")
+    return "".join(subsections), notes
+
   correct_indentation_notes = []
   indentation = {}
   def correct_indentation(k, expected_indentation):
