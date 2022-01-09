@@ -429,7 +429,110 @@ local irreg_verbs = {
 	{"frangere", "à,frànsi,frànto.presp:+", "<<frangere>> and derivatives"},
 	-- tangere: literary, defective
 	-- etc.
+	{"spengere", "è:é,spènsi:spénsi,spènto:spénto.presp:+", "<<spengere>> (Tuscan variant of <<spegnere>>)"},
+	{"mingere", "ì,mìnsi,-.presp:+", "<<mingere>> and derivatives"},
+	{"stringere", "ì,strìnsi,strétto.presp:+", "<<stringere>> and derivatives"},
+	{"ingere", "ì,ìnsi,ìnto.presp:+", "<<cingere>> and derivatives; <<fingere>> and derivatives; <<pingere>> and derivatives; <<spingere>> and derivatives; <<tingere>> and derivatives; but not <<mingere>> (lacking the past participle), and not <<stringere>> and derivatives (with past participle <<stretto>> etc.)"},
+	{"fungere", "ù,fùnsi,fùnto[rare].presp:+", "<<fungere>> and derivatives"},
+	{"ungere", "ù,ùnsi,ùnto.presp:+", "<<ungere>>; <<giungere>> and derivatives; <<mungere>> and derivatives; <<pungere>> and derivatives; but not <<fungere>> and derivatives (past participle is formed the same way but rare)"},
+	-- arrogere: archaic, defective
+	-- allargere: send to RFV
+	{{term = "ergere", prefixes = {"^", "ad", "ri"}}, "è,èrsi,èrto:#érto.presp:+", "<<ergere>>, <<adergere>>, <<riergere>>; but not any other verbs in ''-ergere''"},
+	{{term = "ergere", prefixes = {"m", "sp", "t"}}, "è,èrsi,èrso.presp:+", "<<mergere>> and derivatives; <<spergere>> and derivatives; <<tergere>> and derivatives"},
+	{"^vergere", "è,vergéi,-.presp:+", "<<vergere>>; but not any derivatives"},
+	{"convergere", "è,convèrsi:+[rare],convèrso[rare].presp:+", "<<convergere>>"},
+	{"divergere", "è,divèrsi[rare],-.presp:+", "<<divergere>>"},
+	{{term = "orgere", prefixes = {"sc", "p"}}, "ò:ó,òrsi:órsi,òrto:órto.presp:+", "<<scorgere>>; <<porgere>> and derivatives"},
+	{"sorgere", "ó:ò,sórsi:sòrsi,sórto:sòrto.presp:+", "<<sorgere>>"},
+	{"urgere", "ù,-,-.presp:+", "<<urgere>>"},
+	{"surgere", "ù,sùrsi,sùrto.presp:+", "<<surgere>> and derivatives"},
+	-- turgere: poetic, defective
+	{"scegliere", "é\\scélgo,scélsi,scélto.presp:+", "<<scegliere>> and derivatives"},
+	-- svegliere: archaic form of svellere, defective
+	{{term = "ogliere", prefixes = {"c", "sci", "t"}}, "ò\\òlgo,òlsi,òlto.presp:+", "<<cogliere>> and derivatives; <<sciogliere>> and derivatives; <<togliere>> and derivatives"},
+	{"adempiere", "é,adempiéi.pres2p:adempìte.presp:+", "<<adempiere>>; see also <<adempire>> of the same meaning"},
+	{"empiere", "émpio,empìi,empiéi[less common],empiùto.stem:émpi.presp:+", "<<empiere>>, <<riempiere>>; but not <<adempiere>>, which borrows fewer forms from <<adempire>>; see also <<empire>>, <<riempire>> of the same meaning"},
+	{"compiere", [=[
+	ó:ò,compiéi,compìi[more common],+.pres2p:compiéte,compìte[more common].
+	imperf:compiévo,compìvo[more common].
+	impsub:compiéssi,compìssi[more common].
+	fut:compierò:compirò[more common].
+	presp:+
+]=], "<<compiere>>, <<ricompiere>>; see also <<compire>>, <<ricompire>>"},
+	-- calere: rare/literary, defective
+	{"valere", "vàlgo#à,vàlsi,vàlso.fut:varrò.presp:+", "<<valere>> and derivatives"},
+	{"eccellere", "è,eccèlsi,eccèlso[rare].presp:+", "<<eccellere>>"},
+	{"pellere", "è,pùlsi,pùlso.presp:+", "verbs in ''-pellere'' (<<espellere>>, <<impellere>>, <<propellere>>, <<repellere>>, etc."},
+	{"avellere", "è,vùlsi,vùlso.presp:+", "<<avellere>>"},
+	{"svellere", "è:svèlgo,svèlsi,svèlto.presp:+", "<<svellere>>, <<disvellere>>"},
+	{"vellere", "è:vèlgo,vèlsi:vùlsi[uncommon or archaic],vèlto:vùlso[uncommon or archaic].presp:+",
+		"<<vellere>> and certain derivatives, especially <<divellere>>; note that <<evellere>> and <<convellere>> need special handling as they are defective"},
+	-- evellere, convellere: literary or archaic, defective
+	-- tollere: archaic, unclear conjugation
+	{{term = "tollere", prefixes = {"at", "es"}}, "è,-,-.presp:+", "<<attollere>>, <<estollere>>"},
+	-- colere: archaic, defective
+	{"dolere", "dòlgo#duòle,dòlsi,+.fut:dorrò.presp:+", "<<dolere>> and derivatives"},
+	{"solere", "sòglio#suòle,soléi[rare],sòlito.pres1p:sogliàmo.fut:-.imp:-.presp:-", "<<solere>>"},
+	{"volere", [=[
+		-,vòlli.
+		presrow:vòglio,vuòi,vuòle,vogliàmo,voléte,vògliono.
+		fut:vorrò.
+		presp:+
+	]=], "<<volere>> and derivatives"},
+	-- gemere: regular
+	-- fremere: regular
+	-- premere, spremere: regular; past historic prèssi and past participle prèsso archaic
+	-- temere: regular
+	{"redimere", "ì,redènsi,redènto.presp:+", "<<redimere>>"},
+	{"perplimere", "ì,+,perplèsso:perplimùto[rare].presp:+", "<<perplimere>>"},
+	{"dirimere", "ì,+[rare],-.presp:+", "<<dirimere>>"},
+	{"primere", "ì,prèssi,prèsso.presp:+", "verbs in ''-primere'' (<<comprimere>>, <<deprimere>>, <<esprimere>>, <<imprimere>>, etc."},
+	{"esimere", "ì,+,-.presp:+", "<<esimere>>"},
+	-- presummere: obsolete, unclear conjugation
+	-- promere: archaic, defective
+	{"sumere", "ù,sùnsi,sùnto.presp:+", "verbs in ''-sumere'' (<<assumere>>, <<consumere>>, <<presumere>>, <<resumere>>, etc.)"},
+	{"rimanere", "rimàngo#à,rimàsi,rimàsto.fut:rimarrò.presp:+", "<<rimanere>>"},
+	{"permanere", "permàngo#à,permàsi,-.fut:permarrò.presp:+", "<<permanere>>"},
+	{"tenere", "tèngo#tiène,ténni.fut:terrò.presp:+", "<<tenere>> and derivatives"},
+	{"spegnere", "é:#è\\spéngo:#spèngo,spénsi:#spènsi,spénto:#spènto.presp:+", "<<spegnere>> and derivatives"},
+	-- accignere, scignere, pignere and derivatives, strignere and derivatives, ugnere: all obsolete, unclear conjugation
+	{"cernere", "è,+,cernìto[uncommon].presp:+", "<<cernere>> and derivatives"},
+	{"sapere", [=[
+		-,sèppi.
+		presrow:sò*,sài,sà*,sappiàmo,sapéte,sànno.
+		fut:saprò.
+		sub:sàppia.
+		improw:sàppi:sappiàte
+]=], "<<sapere>> and derivatives"},
+	{"rompere", "ó,rùppi,rótto.presp:+", "<<rompere>> and derivatives"},
+	-- scerpere: archaic/obsolete, unclear conjugation
+	{"serpere", "è,-,-.presp:+", "<<serpere>>"},
+	{"^parere", "pàio#à,pàrvi,pàrso.pres1p:paiàmo.fut:parrò.presp:+", "<<parere>>"},
+	-- sparere, trasparere: archaic/obsolete, unclear conjugation
+	-- sofferere: archaic/obsolete, unclear conjugation
+	-- cherere, chierere: archaic/obsolete, unclear conjugation
+	{"correre", "ó,córsi,córso.presp:+", "<<correre>> and derivatives"},
+	-- comburere: literary, defective
+	-- furere: archaic rare, unclear conjugation
+	{{term = "essere", prefixes = {"^", "ri"}}, [=[
+		è\-,-,stàto.
+		presrow:sóno,sèi,è,siàmo,siète,sóno.
+		imperfrow:èro,èri,èra,eravàmo,eravàte,èrano.
+		phisrow:fùi,fósti,fù*,fùmmo,fóste,fùrono.
+		fut:sarò.
+		sub:sìa.
+		impsub:fóssi.
+		improw:sìi:siàte.
+		presp:essènte[rare]
+]=], "<<essere>>, <<riessere>>"},
+	{"tessere", "è,tesséi,+.presp:+", "<<tessere>> and derivatives"},
+	{"mietere", "è:é,mietéi,+.presp:+", "<<mietere>>"},
+	{"ripetere", "è.presp:+", "<<ripetere>>"},
+	{"competere", "è,competéi,-.presp:+", "<<competere>> and derivatives"},
+	-- verbs in ''-petere'': regular
 
+
+	
 	...
 
 
@@ -444,6 +547,10 @@ local irreg_verbs = {
 	{"trarre", "tràggo,tràssi,tràtto.stem:tràe.presp:+"},
 	-- archaic variant of trarre, with some different present tense (hence conditional/imperative) forms
 	{"traggere", "tràggo#tràgge,tràssi,tràtto.pres1p:traggiàmo.fut:trarrò.stem:tràe.presp:+"},
+	-- FIXME: automatically add + after vowel in cases like comporre
+	{"porre", "ó\\póngo,pósi,pósto:pòsto.stem:póne.presp:+"},
+	-- archaic variant of porre
+	{"ponere", "ó\\póngo,pósi,pósto:pòsto.presp:+"},
 
 
 
@@ -475,17 +582,6 @@ local irreg_verbs = {
 	-- {"prendere", 'a:e[also in the meaning "to happen unexpectedly"]\\è,prési,préso'},
 	{"endere", ...},
 	{"eggere"?, ...},
-	{"essere", [=[
-		e\è\-,-,stàto.
-		presrow:sóno,sèi,è,siàmo,siète,sóno.
-		imperfrow:èro,èri,èra,eravàmo,eravàte,èrano.
-		phisrow:fùi,fósti,fù*,fùmmo,fóste,fùrono.
-		fut:sarò.
-		sub:sìa.
-		impsub:fóssi.
-		improw:sìi:siàte.
-		presp:essènte[rare]
-]=]},
 	{"fare", [=[
 		a/-,féci,fàtto.
 		stem:fàce.
@@ -498,8 +594,6 @@ local irreg_verbs = {
 	{"stringere"?, ...},
 	-- cingere, pingere, tingere, ...
 	{"ingere"?, ...},
-	{"manere"?, ...},
-	{"mergere", ...},
 	{"mettere", "a\\é,mìsi,mésso"},
 	{"mordere"?, ...},
 	{"morire"?, ...},
@@ -510,7 +604,6 @@ local irreg_verbs = {
 	{"ogliere", "a\\ò\\òlgo,òlsi,òlto"},
 	{"piangere"?, ...},
 	{"porgere"?, ...},
-	{"porre", "a\\ó+\\póngo,pósi,pósto:pòsto.stem:póne"},
 	{"potere", [=[
 		a:e[as an auxiliary, with main verbs taking ''essere'']/-,potéi:potètti[less common].
 		presrow:pòsso,puòi,può*,possiàmo,potéte,pòssono.
@@ -522,13 +615,6 @@ local irreg_verbs = {
 	{"rispondere"?, ...},
 	{"rodere"?, ...},
 	{"rompere"?, ...},
-	{"sapere", [=[
-		a:e[as an auxiliary, with main verbs taking ''essere'']/-,sèppi.
-		presrow:sò*,sài,sà*,sappiàmo,sapéte,sànno.
-		fut:saprò.
-		sub:sàppia.
-		improw:sàppi:sappiàte
-]=]},
 	{"scegliere", ...},
 	{"scrivere", ...},
 	{"sedere", ...},
@@ -538,18 +624,10 @@ local irreg_verbs = {
 	{"stare", ...},
 	{"sistere", "a\\ì,+,sistìto"},
 	{"tendere"?, ...},
-	{"tenere", "a/tèngo#tiène,ténni.fut:terrò"},
 	{"ungere"?, ...},
 	{"uscire", "e/èsco.presp:+"},
-	{"valere", "e:a[transitive]/vàlgo#à,vàlsi,vàlso.fut:varrò"},
 	{"venire", "e/vèngo#viène,vénni,venùto.fut:verrò.presp:veniènte"},
 	{"vivere", ...},
-	{"volere", [=[
-		a:e[as an auxiliary, with main verbs taking ''essere'']/-,vòlli.
-		presrow:vòglio,vuòi,vuòle,vogliàmo,voléte,vògliono.
-		fut:vorrò.
-		presp:+
-	]=]},
 	{"volgere"?, ...},
 },
 
