@@ -806,6 +806,7 @@ def create_argparser(desc, include_pagefile=False, include_stdin=False,
     parser.add_argument("--pagefile", help="File listing pages to process.")
     parser.add_argument("--pages", help="List of pages to process, comma-separated.")
     parser.add_argument("--pages-from-find-regex", help="Read pages to process (and their indices) from previous find_regex.py output.")
+    parser.add_argument("--pages-from-previous-output", help="Read pages to process (and their indices) from previous output of the form 'Page ### PAGENAME: '.")
     parser.add_argument("--cats", help="List of categories to process, comma-separated.")
     parser.add_argument("--do-subcats", action="store_true",
       help="When processing categories, do subcategories instead of pages belong to the category.")
@@ -861,8 +862,8 @@ def parse_start_end(startsort, endsort):
   return (startsort, endsort)
 
 def args_has_non_default_pages(args):
-  return not not (args.pages or args.pagefile or args.pages_from_find_regex or args.cats or args.refs or
-      args.specials or args.contribs or args.prefix_pages)
+  return not not (args.pages or args.pagefile or args.pages_from_find_regex or args.pages_from_previous_output
+      or args.cats or args.refs or args.specials or args.contribs or args.prefix_pages)
 
 # Process a run of pages, with the set of pages coming from either
 # --pagefile, --cats, --refs, or (if --stdin is given) from a Wiktionary
@@ -1060,6 +1061,13 @@ def do_pagefile_cats_refs(args, start, end, process, default_cats=[],
         codecs.open(args.pages_from_find_regex, "r", "utf-8"), args.verbose
       )
       for _, (i, pagetitle, _) in iter_items(index_pagetitle_and_text, start, end,
+          get_name=lambda x:x[1], get_index=lambda x:x[0]):
+        process_page(pywikibot.Page(site, pagetitle), i)
+    if args.pages_from_previous_output:
+      index_pagetitle = yield_pages_from_previous_output(
+        codecs.open(args.pages_from_previous_output, "r", "utf-8"), args.verbose
+      )
+      for _, (i, pagetitle) in iter_items(index_pagetitle, start, end,
           get_name=lambda x:x[1], get_index=lambda x:x[0]):
         process_page(pywikibot.Page(site, pagetitle), i)
     if args.cats:
@@ -2042,3 +2050,21 @@ def yield_text_from_diff(lines, verbose):
         templines = []
       elif verbose:
         msg("Skipping: %s" % line)
+
+def yield_pages_from_previous_output(lines, verbose):
+  prev_pagenum = None
+  prev_pagename = None
+  while True:
+    try:
+      line = next(lines)
+    except StopIteration:
+      break
+    line = line.rstrip('\n')
+    m = re.search("^Page ([0-9]+) (.*?): ", line)
+    if m:
+      pagenum = int(m.group(1))
+      pagename = m.group(2)
+      if pagenum != prev_pagenum or pagename != prev_pagename:
+        yield pagenum, pagename
+      prev_pagenum = pagenum
+      prev_pagename = pagename
