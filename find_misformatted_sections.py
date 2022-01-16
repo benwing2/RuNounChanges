@@ -13,6 +13,7 @@ from collections import defaultdict
 lemma_poses = {
   "abbreviation",
   "acronym",
+  "adjectival noun", # Japanese-specific
   "adjective",
   "adnominal",
   "adposition",
@@ -87,6 +88,47 @@ lemma_poses = {
 capitalized_lemma_poses = [k.capitalize() for k in lemma_poses]
 pos_regex = "==(%s)==" % "|".join(capitalized_lemma_poses)
 
+chinese_low_surrogates = (
+  "[" +
+  # The following should be the SIP: U+20000 (D840+DC00) to U+2EBEF (D87A+DFEF): #u"𠀀-𮯯"
+  # We include a bit more than needed to get everything.
+  u"\uD840-\uD87A"+
+  # The following should be the ExtG: U+30000 (D880+DC00) to U+3134F (D884+DF4F): u"𰀀-𱍏"
+  # We include a bit more than needed to get everything.
+  u"\uD880-\uD884"+
+  "]"
+)
+
+chinese_misc_ideographic_symbols_and_punctuation = (
+  #u"𖿢𖿣𖿰𖿱" i.e. u"\U+00016FE2\U+00016FE3\U+00016FF0\U+00016FF1"
+  # i.e. D81B+DFE2 + D81B+DFE3 + D81B+DFF0 + D81B+DFF1
+  u"\uD81B[\uDFE2\uDFE3\uDFF0\uDFF1]"
+)
+
+# In the following, we skip the ranges and characters that require surrogates in UTF16 because
+# we're still in Python 2. We handle those characters specially, decomposing them into their
+# individual surrogates (yuck). When we switch to Python 3, this issue should go away.
+chinese_ranges = (
+  "[" + 
+  u"\u4E00-\u9FFF"+ # u"一-鿿"
+  u"\u3400-\u4DBF"+ # u"㐀-䶿" # ExtA
+  #u"\U00020000-\U0002EBEF"+ # u"𠀀-𮯯" # SIP 
+  #u"\U00030000-\U0003134F"+ # u"𰀀-𱍏" # ExtG
+  u"﨎﨏﨑﨓﨔﨟﨡﨣﨤﨧﨨﨩"+
+  u"\u2E80-\u2EFF"+ # u"⺀-⻿" # Radicals Supplement
+  u"\u3000-\u303F"+ # u"　-〿" # CJK Symbols and Punctuation
+  #u"𖿢𖿣𖿰𖿱"+ # Ideographic Symbols and Punctuation
+  u"\u31C0-\u31EF"+ # u"㇀-㇯" # Strokes
+  u"\u337B-\u337F\u32FF"+ # u"㍻-㍿㋿" # 組文字
+  "]"
+)
+
+def matches_chinese_character(pagetitle):
+  return (len(pagetitle) == 1 and re.search("^" + chinese_ranges + "$", pagetitle)
+    or len(pagetitle) == 2 and re.search("^" + chinese_low_surrogates + "$", pagetitle[0])
+    or len(pagetitle) == 2 and re.search("^" + chinese_misc_ideographic_symbols_and_punctuation + "$", pagetitle)
+  )
+
 def get_subsection_id(subsections, k, include_equal_signs=False):
   if k == 0:
     return "0"
@@ -151,7 +193,10 @@ def group_correction_notes(template, notes):
     notetext = "%s and %s" % (", ".join(notes[0:-1]), notes[-1])
   return template % notetext
 
-def check_for_bad_subsections(secbody, pagemsg, langname):
+def check_for_bad_subsections(secbody, pagetitle, pagemsg, langname):
+  if ":" in pagetitle:
+    pagemsg("WARNING: Not mainspace, not changing")
+    return secbody, []
   global args
   notes = []
   def append_note(note):
@@ -213,12 +258,23 @@ def check_for_bad_subsections(secbody, pagemsg, langname):
   if len(correct_whitespace_notes) > 0:
     append_note(group_correction_notes("correct whitespace of %s", correct_whitespace_notes))
 
+  # Do it this way so we get all the warnings when there is more than one.
+  dont_indent = False
+
+  subpagetitle = re.sub(".*/", "", pagetitle)
+  if matches_chinese_character(subpagetitle):
+    pagemsg("WARNING: Page title is a single Chinese character, not changing indentation")
+    dont_indent = True
+
   if re.search(r"==\s*Pronunciation 1\s*==", secbody):
     pagemsg("WARNING: Saw Pronunciation 1, not changing indentation")
-    return "".join(subsections), notes
+    dont_indent = True
 
   if re.search(r"==\s*Etymology [0-9]+\s*==", secbody) and not re.search(r"==\s*Etymology 1\s*==", secbody):
     pagemsg("WARNING: Has ==Etymology N== but not ==Etymology 1==, not changing indentation")
+    dont_indent = True
+
+  if dont_indent:
     return "".join(subsections), notes
 
   correct_indentation_notes = []
@@ -274,38 +330,83 @@ def check_for_bad_subsections(secbody, pagemsg, langname):
         last_etym_header = k
   pos_since_etym_section = 0
   header_to_reindent_regex = r"=\s*(Synonyms|Antonyms|Hyponyms|Hypernyms|Coordinate terms|Derived terms|Related terms|Descendants|Usage notes|Conjugation|Declension|Inflection|Translations)\s*="
-  headers_seen = defaultdict(int)
-  headers_seen_since_etym_section = defaultdict(int)
+  num_seen_by_header = defaultdict(int)
+  num_seen_by_header_since_etym_section = defaultdict(int)
+  pos_sections_seen_by_header_since_etym_section = defaultdict(set)
   for k in xrange(1, len(subsections), 2):
     if re.search(r"=\s*Etymology [0-9]", subsections[k]):
       pos_since_etym_section = 0
-      headers_seen_since_etym_section = defaultdict(int)
+      num_seen_by_header_since_etym_section = defaultdict(int)
+      pos_sections_seen_by_header_since_etym_section = defaultdict(set)
     if re.search(pos_regex, subsections[k]):
       pos_since_etym_section += 1
     m = re.search(header_to_reindent_regex, subsections[k])
     if m:
-      headers_seen_since_etym_section[m.group(1)] += 1
-      headers_seen[m.group(1)] += 1
+      num_seen_by_header_since_etym_section[m.group(1)] += 1
+      num_seen_by_header[m.group(1)] += 1
       expected_indentation = 4 + (1 if has_etym_sections else 0)
       if indentation[k] != expected_indentation:
         pagemsg("WARNING: Expected indentation %s but actually has %s in section %s"
           % (expected_indentation, indentation[k], subsection_id(k)))
-        if pos_since_etym_section > 1 and headers_seen_since_etym_section[m.group(1)] <= 1 and expected_indentation > indentation[k]:
+        if (pos_since_etym_section > 1 and (num_seen_by_header_since_etym_section[m.group(1)] <= 1
+            or pos_since_etym_section in pos_sections_seen_by_header_since_etym_section[m.group(1)])
+          and expected_indentation > indentation[k]):
           if args.correct:
             # We could legitimately have one Declension/Descendants/etc. section corresponding to two or more POS's and
             # at the same level as the POS's; but presumably not if we've seen another of the same header in the same
-            # etym section.
+            # etym section in a different POS section. We don't want to correct in a case like this:
+            # ===Etymology 2===
+            #
+            # ====Noun====
+            #
+            # ====Noun====
+            #
+            # ====Derived terms===
+            #
+            # whereas we do want to correct in a case like this:
+            #
+            # ===Etymology 2===
+            #
+            # ====Noun====
+            #
+            # =====Derived terms====
+            #
+            # ====Noun====
+            #
+            # ====Derived terms====
+            #
+            # whereas we don't want to correct in a case like this:
+            #
+            # ===Etymology 2===
+            #
+            # ====Noun====
+            #
+            # =====Derived terms====
+            #
+            # ====Noun====
+            #
+            # =====Derived terms====
+            #
+            # ====Derived terms====
+            #
+            # (All these cases have been observed.)
             pagemsg("WARNING: Can't correct section %s header (first such header in etym section) because it has %s POS sections (> 1) in etym section above it and indentation is increasing" % (
               subsection_id(k), pos_since_etym_section))
-        elif has_etym_sections and k > last_etym_header and headers_seen[m.group(1)] <=1 and indentation[k] == 3:
+        elif pos_since_etym_section == 0:
+          pagemsg("WARNING: Saw section %s subheader before any parts of speech in etym section%s" % (
+            subsection_id(k), "; won't correct" if args.correct else ""))
+        elif (has_etym_sections and k > last_etym_header and (num_seen_by_header[m.group(1)] <=1
+              or pos_since_etym_section in pos_sections_seen_by_header_since_etym_section[m.group(1)])
+          and indentation[k] == 3):
           # We could legitimately have one L3 Declension/Descendants/etc. section corresponding to two or more POS's in
           # different etym sections (i.e. covering all etym sections); but presumably not if we've seen another of the
-          # same header.
+          # same header in a different POS section (see discussion above).
           if args.correct:
             pagemsg("WARNING: Can't correct L3 section %s header (first such header seen) because there is more than one etym section and it is past the last one" % (
               subsection_id(k)))
         else:
           correct_indentation(k, expected_indentation)
+      pos_sections_seen_by_header_since_etym_section[m.group(1)].add(pos_since_etym_section)
       if k < len(subsections) - 2 and indentation[k + 2] > indentation[k]:
         pagemsg("WARNING: nested section %s under section %s"
           % (subsection_id(k + 2, include_equal_signs=True), subsection_id(k, include_equal_signs=True)))
@@ -342,7 +443,7 @@ def check_for_bad_subsections(secbody, pagemsg, langname):
     if re.search(r"==\s*Alternative forms\s*==", subsections[k]):
       expected_indentation = expected_altform_indentation
       check_correct = True
-    if re.search(r"==\s*Pronunciation\s*==", subsections[k]):
+    elif re.search(r"==\s*Pronunciation\s*==", subsections[k]):
       expected_indentation = expected_pron_indentation
       check_correct = True
     if check_correct and expected_indentation != indentation[k]:
@@ -364,7 +465,7 @@ def process_text_on_page(index, pagetitle, text):
       pagemsg("WARNING: --partial-page specified but saw an L2 header, skipping")
       return
     check_for_bad_etym_sections(text, pagemsg)
-    newtext, notes = check_for_bad_subsections(text, pagemsg, None)
+    newtext, notes = check_for_bad_subsections(text, pagetitle, pagemsg, None)
     return newtext.rstrip("\n") + text_finalnl, notes
 
   notes = []
@@ -448,7 +549,7 @@ def process_text_on_page(index, pagetitle, text):
             notes.append("%s: correct misformatted language section divider at end" % langname)
 
     check_for_bad_etym_sections(sections[j], pagemsg)
-    newsection, this_notes = check_for_bad_subsections(sections[j], pagemsg, langname)
+    newsection, this_notes = check_for_bad_subsections(sections[j], pagetitle, pagemsg, langname)
     sections[j] = newsection
     notes.extend(this_notes)
   return "".join(sections).rstrip("\n") + text_finalnl, notes
