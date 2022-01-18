@@ -247,6 +247,9 @@ FIXME:
 18. If explicit fut: given, it should control the conditional as well. (DONE)
 19. If present -, sub:- or imp:-, it should suppress the whole row in the absence of row or individual overrides.
 20. 'ci ci vuole' should maybe -> 'a noi ci vuole' instead of 'ci vuole'.
+21. Instead of * before, use + after so that * before can be used for reconstructed terms.
+22. When handling built-in verbs, automatically add + after vowel in cases like comporre.
+23. When handling built-in verbs, make sure we correctly handle root-stressed infinitives.
 --]=]
 
 local lang = require("Module:languages").getByCode("it")
@@ -293,29 +296,27 @@ local all_verb_slots = {
 	{"aux", "-"},
 }
 
-local irreg_verbs = {
+local builtin_verbs = {
+	---------------------------------------------- -are verbs --------------------------------------------
+	-- must precede dare
 	{"andare", [=[
-		e/-.
+		-.
 		presrow:vàdo,vài,và*,andiàmo,andàte,vànno.
 		fut:andrò.
 		sub:vàda.
 		imp:vài:và':và*
-]=]},
-	{"aprire"?, ...},
-	{"avere", [=[
-		a/-,èbbi.
-		presrow:hò*,hài,hà*,abbiàmo,avéte,hànno.
-		fut:avrò.
-		sub:àbbia.
-		imp:àbbi:và':và*.
-		presp:avènte,abbiènte
-]=]},
-	{"battere"?, ...},
+]=], "<<andare>> and derivatives"},
+	{"dare", [=[
+		-,dièdi:dètti.
+		presrow:dò*:*dò*,dài,*dà*,diàmo,dàte,dànno.
+		sub:dìa.
+		fut:darò.
+		impsub:déssi.
+		imp:dài:dà':*dà*
+]=], "<<dare>> and derivatives; but not <<andare>> or derivatives"},
+	--{"stare", ...},
 
-
-
-
-
+	---------------------------------------------- -ere verbs --------------------------------------------
 	{"bere", "é,bévvi:bevétti:bevéi[rare].fut:berrò.stem:béve",
 		"<<bere>>, <<strabere>>, <<ribere>>; but not <<ebere||to weaken>> or <<iubere||to command, to order>>"},
 	-- incombere, procombere, soccombere: regular except missing or rare past participle
@@ -387,7 +388,7 @@ local irreg_verbs = {
 	{"scondere", "ó,scósi,scósto", "<<nascondere>>, <<ascondere>> and derivatives of each"},
 	{"fondere", "ó,fùsi,fùso", "<<fondere>> and derivatives"},
 	-- rispondere (respondere) and derivatives
-	{"spondere", "ó,spósi,spósto", "<<rispondere>> (archaic <<respondere>>) and derivatives"],
+	{"spondere", "ó,spósi,spósto", "<<rispondere>> (archaic <<respondere>>) and derivatives"},
 	-- Hoepli says tònso but I suspect it's a mistake; Olivetti says tónso
 	{"tondere", "ó,+,+:tónso", "<<tondere>>"},
 	{"tundere", "ù,tùsi,tùso", "<<contundere>> and <<ottundere>>"},
@@ -536,101 +537,62 @@ local irreg_verbs = {
 	-- divertere, convertere, etc.: archaic, unclear conjugation
 	{"controvertere", "è,-,-.stem:controvèrti.fut:-.imp:-.presp:-", "<<controvertere>>"},
 	{"sistere", "ì,+,sistìto", "verbs in ''-sistere'' (<<consistere>>, <<esistere>>, <<insistere>>, <<resistere>>, etc.)"},
-	-- battere: regular
 	{"battere", "à", "<<battere>> and derivatives"},
 	{"flettere", "è,flettéi:flèssi[less common],flèsso", "<<flettere>> and derivatives; <<riflettere>> needs an override to handle differences in the past participle"},
-
-
-	
-	...
-
-
-	-- addire, benedire, contraddire, indire, interdire, maledire, predire, ricontraddire, ridire, etc.
-	{"dire", "+,dìssi,détto.stem:dìce.pres2p:dìte.imp:dì':dì*+"},
-	-- archaic variant of dire
-	{"dicere", "+,dìssi,détto.pres2p:dìte.imp:dì':dì*+"},
-	-- condurre, etc.
-	{"durre", "+,dùssi,dótto.stem:dùce"},
-	-- archaic variant of -durre
-	{"ducere", "+,dùssi,dótto"},
-	{"trarre", "tràggo,tràssi,tràtto.stem:tràe"},
-	-- archaic variant of trarre, with some different present tense (hence conditional/imperative) forms
-	{"traggere", "tràggo#tràgge,tràssi,tràtto.pres1p:traggiàmo.fut:trarrò.stem:tràe"},
-	-- FIXME: automatically add + after vowel in cases like comporre
-	{"porre", "ó\\póngo,pósi,pósto:pòsto.stem:póne"},
-	-- archaic variant of porre
-	{"ponere", "ó\\póngo,pósi,pósto:pòsto"},
-
-
-
-
-
-
-
-	{"cogliere"?, ...},
-	{"coprire"?, ...},
-	{"correre"?, ...},
-	{"dare", [=[
-		a/-,dièdi:dètti.
-		presrow:dò*:*dò*,dài,*dà*,diàmo,dàte,dànno.
-		sub:dìa.
-		fut:darò.
-		impsub:déssi.
-		imp:dài:dà':*dà*
+	-- FIXME, remaining -ere verbs
+	{"avere", [=[
+		-,èbbi.
+		presrow:hò*,hài,hà*,abbiàmo,avéte,hànno.
+		fut:avrò.
+		sub:àbbia.
+		imp:àbbi:và':và*.
+		presp:avènte,abbiènte
 ]=]},
-	-- must precede dire
-	{"udire", "a/òdo.fut:+:udrèi.presp:+:udiènte"},
+	-- {"scrivere", ...},
+	-- {"vivere", ...},
 	{"dovere", [=[
-		a:e[as an auxiliary, with main verbs taking ''essere'']/dèvo:dévo:dèbbo:débbo#dève:déve.
+		dèvo:dévo:dèbbo:débbo#dève:déve.
 		fut:dovrò.
 		sub:dèbba:débba:dèva[rare]:déva[rare].
 		imp:-
 ]=]},
-	{"scendere", ...},
-	-- prendere, rendere, tendere
-	-- {"prendere", 'a:e[also in the meaning "to happen unexpectedly"]\\è,prési,préso'},
-	{"endere", ...},
-	{"eggere"?, ...},
+	-- {"muovere", ...},
+
+	---------------------------------------------- -ire verbs --------------------------------------------
+	
+	{"uscire", "èsco.presp:+"},
+	-- must precede dire
+	{"udire", "a/òdo.fut:+:udrèi.presp:+:udiènte"},
+	-- {"offrire", ...},
+	-- {"morire", ...},
+	-- {"aprire", ...},
+	-- {"coprire", ...},
+	{"venire", "vèngo#viène,vénni,venùto.fut:verrò.presp:veniènte"},
+	-- {"sentire", ...},
+	-- {"seguire", ...},
+
+	------------------------------------------- syncopated verbs -----------------------------------------
 	{"fare", [=[
-		a/-,féci,fàtto.
+		-,féci,fàtto.
 		stem:fàce.
 		presrow:fàccio,fài,fà*,facciàmo,fàte,fànno.
 		sub:fàccia.
 		imp:fà*:fài:fà'
 ]=]},
-	{"fondere"?, ...},
-	-- must go before ingere
-	{"stringere"?, ...},
-	-- cingere, pingere, tingere, ...
-	{"ingere"?, ...},
-	{"mettere", "a\\é,mìsi,mésso"},
-	{"mordere"?, ...},
-	{"morire"?, ...},
-	{"muovere"?, ...},
-	{"nascondere"?, ...},
-	{"offrire"?, ...},
-	-- cogliere, sciogliere, togliere and derivs
-	{"ogliere", "a\\ò\\òlgo,òlsi,òlto"},
-	{"piangere"?, ...},
-	{"porgere"?, ...},
-	{"primere"?, ...},
-	{"ridere", ...},
-	{"rispondere"?, ...},
-	{"rodere"?, ...},
-	{"rompere"?, ...},
-	{"scegliere", ...},
-	{"scrivere", ...},
-	{"sedere", ...},
-	{"seguire", ...},
-	{"sentire", ...},
-	{"spargere", ...},
-	{"stare", ...},
-	{"tendere"?, ...},
-	{"ungere"?, ...},
-	{"uscire", "e/èsco.presp:+"},
-	{"venire", "e/vèngo#viène,vénni,venùto.fut:verrò.presp:veniènte"},
-	{"vivere", ...},
-	{"volgere"?, ...},
+	{"trarre", "tràggo,tràssi,tràtto.stem:tràe"},
+	-- archaic variant of trarre, with some different present tense (hence conditional/imperative) forms
+	{"traggere", "tràggo#tràgge,tràssi,tràtto.pres1p:traggiàmo.fut:trarrò.stem:tràe"},
+	-- addire, benedire, contraddire, indire, interdire, maledire, predire, ricontraddire, ridire, etc.
+	{"dire", "+,dìssi,détto.stem:dìce.pres2p:dìte.imp:dì':dì*+"},
+	-- archaic variant of dire
+	{"dicere", "+,dìssi,détto.pres2p:dìte.imp:dì':dì*+"},
+	{"porre", "ó\\póngo,pósi,pósto:pòsto.stem:póne"},
+	-- archaic variant of porre
+	{"ponere", "ó\\póngo,pósi,pósto:pòsto"},
+	-- condurre, etc.
+	{"durre", "+,dùssi,dótto.stem:dùce"},
+	-- archaic variant of -durre
+	{"ducere", "+,dùssi,dótto"},
 },
 
 -- Used to create the accelerator entries in all_verb_slots.
@@ -996,7 +958,7 @@ local function process_specs(base, destforms, slot, specs, special_case)
 end
 
 
-local function add_default_verb_forms(base, from_headword)
+local function set_up_base_verb(base)
 	local ret = base.verb
 	local raw_verb = ret.raw_verb
 
@@ -1009,15 +971,20 @@ local function add_default_verb_forms(base, from_headword)
 	else
 		ret.verb = raw_verb
 	end
+end
 
-	ret.default_stem, ret.default_ending_vowel = rmatch(raw_verb, "^(.-)([aeiour])re?$")
+
+local function add_default_verb_forms(base, from_headword)
+	local ret = base.verb
+
+	ret.default_stem, ret.default_ending_vowel = rmatch(base.verb.verb, "^(.-)([aeir])re$")
 	if not ret.default_stem then
-		error("Unrecognized verb '" .. raw_verb .. "', doesn't end in -are, -ere, -ire, -rre, -ar, -er, -ir, -or or -ur")
+		error("Unrecognized verb '" .. base.verb.verb .. "', doesn't end in -are, -ere, -ire or -rre")
 	end
-	base.props.syncopated = base.props.rre or not rfind(ret.default_ending_vowel, "^[aei]$")
+	base.props.syncopated = base.props.rre or ret.default_ending_vowel == "r"
 
 	local ending_vowel
-	if base.explicit_stem_spec then
+	if base.principal_part_specs.explicit_stem_spec then
 		local function explicit_stem_special_case(base, form)
 			local stem, this_ending_vowel
 			if form == "+" then
@@ -1041,7 +1008,7 @@ local function add_default_verb_forms(base, from_headword)
 			return stem
 		end
 		-- Put the explicit stem in ret.stem (i.e. base.verb.stem).
-		process_specs(base, ret, "stem", base.explicit_stem_spec, explicit_stem_special_case)
+		process_specs(base, ret, "stem", base.principal_part_specs.explicit_stem_spec, explicit_stem_special_case)
 	else
 		if base.props.syncopated then
 			if not from_headword then
@@ -1057,7 +1024,7 @@ local function add_default_verb_forms(base, from_headword)
 
 	base.conj_vowel = ending_vowel == "a" and "à" or ending_vowel == "e" and "é" or "ì"
 
-	if base.props.syncopated and not base.explicit_stem_spec then
+	if base.props.syncopated and not base.principal_part_specs.explicit_stem_spec then
 		-- Can't generate defaults for verbs in -rre; currently we only can get here if from_headword.
 		return
 	end
@@ -1732,7 +1699,7 @@ local row_conjugation = {
 		generate_default_principal_part = generate_default_past_historic_principal_part,
 		conjugate = add_past_historic,
 		add_reflexive_clitics = add_finite_reflexive_clitics,
-		no_explicit_principal_part = true, -- because handled specially in PRES#PRES3S,PHIS,PP spec
+		no_explicit_principal_part = "builtin", -- because handled specially in PRES#PRES3S,PHIS,PP spec
 	}},
 	{"imperf", {
 		desc = "imperfect",
@@ -1788,7 +1755,7 @@ local row_conjugation = {
 		principal_part_ending = "",
 		conjugate = {""},
 		add_reflexive_clitics = add_participle_reflexive_clitics,
-		no_explicit_principal_part = true, -- because handled specially in PRES#PRES3S,PHIS,PP spec
+		no_explicit_principal_part = "builtin", -- because handled specially in PRES#PRES3S,PHIS,PP spec
 		no_row_overrides = true, -- useless because there's only one form; use the PRES#PRES3S,PHIS,PP spec
 		no_single_overrides = true, --useless because there's only one form; use the PRES#PRES3S,PHIS,PP spec
 	}},
@@ -1965,6 +1932,18 @@ local function conjugate_row(base, rowslot)
 end
 
 
+-- If a built-in verb was requested, add the verb's prefix to all forms.
+local function add_prefix_to_forms(base)
+	if base.verb.prefix and base.verb.prefix ~= "" then
+		for slot, forms in pairs(base.forms) do
+			for _, form in ipairs(forms) do
+				form.form = base.verb.prefix .. form.form
+			end
+		end
+	end
+end
+
+
 local function check_for_defective_rows(base)
 	for _, rowspec in ipairs(row_conjugation) do
 		local rowslot, rowconj = unpack(rowspec)
@@ -1983,8 +1962,8 @@ local function check_for_defective_rows(base)
 end
 
 
+-- Any forms without links should get them now. Redundant ones will be stripped later.
 local function add_missing_links_to_forms(base)
-	-- Any forms without links should get them now. Redundant ones will be stripped later.
 	for slot, forms in pairs(base.forms) do
 		for _, form in ipairs(forms) do
 			form.form = add_links(form.form)
@@ -2004,11 +1983,11 @@ end
 
 
 local function conjugate_verb(base)
-	add_default_verb_forms(base)
 	for _, rowspec in ipairs(row_conjugation) do
 		local rowslot, rowconj = unpack(rowspec)
 		conjugate_row(base, rowslot)
 	end
+	add_prefix_to_forms(base)
 	if base.verb.linked_suf ~= "" then
 		for _, rowspec in ipairs(row_conjugation) do
 			local rowslot, rowconj = unpack(rowspec)
@@ -2180,33 +2159,51 @@ local function analyze_verb(lemma)
 end
 
 
-local function parse_indicator_spec(angle_bracket_spec, lemma, pagename)
-	-- `forms` contains the final per-slot forms. This is processed further in [[Module:inflection-utilities]].
-	--    This is a table indexed by slot (e.g. "pres1s"). Each value in the table is a list of items of the form
-	--    {form = FORM, footnotes = FOOTNOTES} where FORM is the actual generated form and FOOTNOTES is either nil
-	--    or a list of footnotes (which must be surrounded by brackets, e.g. "[archaic]").
-	-- `principal_part_specs` contains forms specified by the user using either the prefixes 'imperf:', 'fut:', 'sub:',
-	--    'impsub:' or 'imp:' or in the format e.g. "vèngo:vègno[archaic or poetic]#viène,vénni,venùto" or "é:#è".
-	--    The key is the prefix ("imperf", "fut", etc., for the former format) or "pres", "pres3s", "phis" or "pp"
-	--    (for the latter format). The value is in the same form as for `forms` and `genforms`, but the FORM contained
-	--    in it is the actual user-specified form, which may be e.g. "#è" rather than a verb form, and needs to
-	--    be processed to generate the actual form. A spec may be "+" to insert the default-generated form or forms,
-	--    or "-" to indicate that this form doesn't exist.
-	-- `principal_part_forms` contains the processed versions of the specs contained in `principal_part_specs`. The keys are as
-	--    in `principal_part_specs` and the values are the same as for `forms` and `genforms`.
-	-- `row_override_specs` contains user-specified forms for a full tense/aspect row using 'presrow:', 'subrow:', etc.
-	--    The key is "pres", "sub", etc. (i.e. minus the "row" suffix). The value is another table indexed by the
-	--    person/number suffix (e.g. "1s", "2s", etc. for "pres"; "123s", "1p", "2p", etc. for "sub"), whose values
-	--    are in the same format as `principal_part_specs`.
-	-- `single_override_specs` contains user-specified forms using 'pres1s:', 'sub3p:', etc. The key is the slot ("pres1s",
-	--    "sub3p", etc.) and the value is of the same format as `principal_part_specs`.
-	-- `is_irreg` is a table indexed by the row suffix ("pres", "sub", etc.) whose value is true or false indicating whether
-	--    a given row is irregular.
-	-- `props` is a table of miscellaneous properties.
-	local base = {forms = {}, principal_part_specs = {}, principal_part_forms = {}, row_override_specs = {},
-		single_override_specs = {}, is_irreg = {}, is_defective = {}, props = {}}
+-- Subfunction of find_builtin_verb(). Match a single spec (which may begin with ^ to anchor against the beginning,
+-- otherwise anchored only at the end) against `verb`. Return the prefix and main verb.
+local function match_spec_against_verb(spec, verb)
+	if spec:find("^%^") then
+		-- must match exactly
+		if rfind(verb, spec + "$") then
+			return "", verb
+		end
+	else
+		local prefix, main_verb = rmatch(verb, "^(.*)(" .. spec .. ")$")
+		if prefix then
+			return prefix, main_verb
+		end
+	end
+end
+
+
+-- Find and return the prefix, main verb and conj spec for a built-in verb.
+local function find_builtin_verb(verb)
+	for _, builtin_verb in ipairs(builtin_verbs) do
+		local spec, conj, desc = unpack(builtin_verb)
+
+		if type(spec) == "string" then
+			local prefix, main_verb = match_spec_against_verb(spec, verb)
+			if prefix then
+				return prefix, main_verb, conj
+			end
+		else
+			-- Of the form {term = "ergere", prefixes = {"^", "ad", "ri"}}. Note that the prefixes not preceded by ^
+			-- can have further prefixes before them.
+			for _, spec_prefix in ipairs(spec.prefixes) do
+				local prefix, main_verb = match_spec_against_verb(spec_prefix .. spec.term, verb)
+				if prefix then
+					return prefix, main_verb, conj
+				end
+			end
+		end
+	end
+end
+
+
+local function parse_inside(base, inside, is_builtin_verb)
 	local function parse_err(msg)
-		error(msg .. ": " .. angle_bracket_spec)
+		error((is_builtin_verb and "Internal error processing built-in verb spec: " or "") .. msg
+			.. ": <" .. inside .. ">")
 	end
 
 	local function parse_qualifiers(separated_group)
@@ -2247,14 +2244,18 @@ local function parse_indicator_spec(angle_bracket_spec, lemma, pagename)
 		return specs
 	end
 
-	if lemma == "" then
-		lemma = pagename
+	-- Parse present-tense spec of the form PRES#PRES3S or just PRES, and set the appropriate properties in `base`.
+	-- Used in the PRES#PRES3S,PHIS,PP spec as well as with pres:PRES#PRES3S in conjunction with built-in verbs.
+	local function parse_present_spec(run)
+		local hash_separated_groups = split_alternating_runs_and_strip_spaces(run, "#")
+		if #hash_separated_groups > 2 then
+			parse_err("At most one hash sign (#) can appear in present tense specs")
+		end
+		base.principal_part_specs.pres = fetch_specs(hash_separated_groups[1])
+		if #hash_separated_groups == 2 then
+			base.principal_part_specs.pres3s = fetch_specs(hash_separated_groups[2])
+		end
 	end
-	base.lemma = m_links.remove_links(lemma)
-	base.verb = analyze_verb(lemma)
-
-	local inside = angle_bracket_spec:match("^<(.*)>$")
-	assert(inside)
 
 	local segments = iut.parse_balanced_segment_run(inside, "[", "]")
 	local dot_separated_groups = split_alternating_runs_and_strip_spaces(segments, "%.")
@@ -2266,7 +2267,7 @@ local function parse_indicator_spec(angle_bracket_spec, lemma, pagename)
 				"preserve splitchar")
 			local presind = 1
 			local first_separator = #comma_separated_groups > 1 and comma_separated_groups[2][1]
-			if base.verb.is_reflexive then
+			if base.verb.is_reflexive or is_builtin_verb then
 				if #comma_separated_groups > 1 and first_separator ~= "," then
 					presind = 3
 					-- Fetch root-stressed infinitive, if given.
@@ -2285,11 +2286,14 @@ local function parse_indicator_spec(angle_bracket_spec, lemma, pagename)
 							base.principal_part_specs.root_stressed_inf = specs
 						end
 					elseif specs ~= nil then
-						parse_err("With reflexive verb, can't specify anything before initial slash, but saw '"
+						local errpref = is_builtin_verb and "With built-in verb" or "With reflexive verb"
+						parse_err(errpref .. ", can't specify anything before initial slash, but saw '"
 							.. table.concat(comma_separated_groups[1]))
 					end
 				end
-				base.forms.aux = {{form = "essere"}}
+				if not is_builtin_verb then
+					base.forms.aux = {{form = "essere"}}
+				end
 			else -- non-reflexive
 				if #comma_separated_groups == 1 or first_separator == "," then
 					parse_err("With non-reflexive verb, use a spec like AUX/PRES, AUX\\PRES, AUX/PRES,PAST,PP or similar")
@@ -2337,33 +2341,32 @@ local function parse_indicator_spec(angle_bracket_spec, lemma, pagename)
 				end
 			end
 
-			-- Parse present
-			local hash_separated_groups = split_alternating_runs_and_strip_spaces(comma_separated_groups[presind], "#")
-			if #hash_separated_groups > 2 then
-				parse_err("At most one hash sign (#) can appear in present tense specs")
-			end
-			base.principal_part_specs.pres = fetch_specs(hash_separated_groups[1])
-			if #hash_separated_groups == 2 then
-				base.principal_part_specs.pres3s = fetch_specs(hash_separated_groups[2])
-			end
+			if #comma_separated_groups == presind and comma_separated_groups[presind][1] == "@" then
+				-- We will find the conjugation for the built-in verb later, after we've seen whether there is an
+				-- '.rre' property.
+				base.props.builtin = true
+			else
+				-- Parse present
+				parse_present_spec(comma_separated_groups[presind])
 
-			-- Parse past historic
-			if #comma_separated_groups > presind then if comma_separated_groups[presind + 1][1] ~= "," then
-					parse_err("Use a comma not slash to separate present from past historic")
+				-- Parse past historic
+				if #comma_separated_groups > presind then if comma_separated_groups[presind + 1][1] ~= "," then
+						parse_err("Use a comma not slash to separate present from past historic")
+					end
+					base.principal_part_specs.phis = fetch_specs(comma_separated_groups[presind + 2])
 				end
-				base.principal_part_specs.phis = fetch_specs(comma_separated_groups[presind + 2])
-			end
 
-			-- Parse past participle
-			if #comma_separated_groups > presind + 2 then
-				if comma_separated_groups[presind + 3][1] ~= "," then
-					parse_err("Use a comma not slash to separate past historic from past participle")
+				-- Parse past participle
+				if #comma_separated_groups > presind + 2 then
+					if comma_separated_groups[presind + 3][1] ~= "," then
+						parse_err("Use a comma not slash to separate past historic from past participle")
+					end
+					base.principal_part_specs.pp = fetch_specs(comma_separated_groups[presind + 4])
 				end
-				base.principal_part_specs.pp = fetch_specs(comma_separated_groups[presind + 4])
-			end
 
-			if #comma_separated_groups > presind + 4 then
-				parse_err("Extraneous text after past participle")
+				if #comma_separated_groups > presind + 4 then
+					parse_err("Extraneous text after past participle")
+				end
 			end
 		elseif first_element == "only3s" or first_element == "only3sp" or first_element == "rre" then
 			if #dot_separated_group > 1 then
@@ -2379,9 +2382,15 @@ local function parse_indicator_spec(angle_bracket_spec, lemma, pagename)
 			end
 			dot_separated_group[1] = first_element_minus_prefix
 			if first_element_prefix == "stem" then
-				base.explicit_stem_spec = fetch_specs(dot_separated_group)
+				base.principal_part_specs.explicit_stem_spec = fetch_specs(dot_separated_group)
+			elseif first_element_prefix == "pres" then
+				if not base.props.builtin then
+					parse_err("Can't specify 'pres:' override except when '@' is given to request a built-in verb")
+				end
+				parse_present_spec(dot_separated_group)
 			elseif row_conjugation_map[first_element_prefix] then
-				if row_conjugation_map[first_element_prefix].no_explicit_principal_part then
+				local no_explicit_pp = row_conjugation_map[first_element_prefix].no_explicit_principal_part
+				if no_explicit_pp == true or not base.props.builtin and no_explicit_pp == "builtin" then
 					parse_err("Can't specify principal part for " .. row_conjugation_map[first_element_prefix].desc
 						.. " using '" .. first_element_prefix .. ":'; use the specification PRES#PRES3S.PHIS.PP")
 				else
@@ -2426,6 +2435,77 @@ local function parse_indicator_spec(angle_bracket_spec, lemma, pagename)
 			end
 		end
 	end
+end
+
+
+local function create_base()
+	-- `forms` contains the final per-slot forms. This is processed further in [[Module:inflection-utilities]].
+	--    This is a table indexed by slot (e.g. "pres1s"). Each value in the table is a list of items of the form
+	--    {form = FORM, footnotes = FOOTNOTES} where FORM is the actual generated form and FOOTNOTES is either nil
+	--    or a list of footnotes (which must be surrounded by brackets, e.g. "[archaic]").
+	-- `principal_part_specs` contains forms specified by the user using either the prefixes 'imperf:', 'fut:', 'sub:',
+	--    'impsub:' or 'imp:' or in the format e.g. "vèngo:vègno[archaic or poetic]#viène,vénni,venùto" or "é:#è".
+	--    The key is the prefix ("imperf", "fut", etc., for the former format) or "pres", "pres3s", "phis" or "pp"
+	--    (for the latter format). The value is in the same form as for `forms` and `genforms`, but the FORM contained
+	--    in it is the actual user-specified form, which may be e.g. "#è" rather than a verb form, and needs to
+	--    be processed to generate the actual form. A spec may be "+" to insert the default-generated form or forms,
+	--    or "-" to indicate that this form doesn't exist.
+	-- `principal_part_forms` contains the processed versions of the specs contained in `principal_part_specs`. The keys are as
+	--    in `principal_part_specs` and the values are the same as for `forms` and `genforms`.
+	-- `row_override_specs` contains user-specified forms for a full tense/aspect row using 'presrow:', 'subrow:', etc.
+	--    The key is "pres", "sub", etc. (i.e. minus the "row" suffix). The value is another table indexed by the
+	--    person/number suffix (e.g. "1s", "2s", etc. for "pres"; "123s", "1p", "2p", etc. for "sub"), whose values
+	--    are in the same format as `principal_part_specs`.
+	-- `single_override_specs` contains user-specified forms using 'pres1s:', 'sub3p:', etc. The key is the slot ("pres1s",
+	--    "sub3p", etc.) and the value is of the same format as `principal_part_specs`.
+	-- `is_irreg` is a table indexed by the row suffix ("pres", "sub", etc.) whose value is true or false indicating whether
+	--    a given row is irregular.
+	-- `props` is a table of miscellaneous properties.
+	return {forms = {}, principal_part_specs = {}, principal_part_forms = {}, row_override_specs = {},
+		single_override_specs = {}, is_irreg = {}, is_defective = {}, props = {}}
+end
+
+
+local function parse_indicator_spec(angle_bracket_spec, lemma, pagename)
+	local base = create_base()
+	if lemma == "" then
+		lemma = pagename
+	end
+	base.lemma = m_links.remove_links(lemma)
+	base.verb = analyze_verb(lemma)
+
+	local inside = angle_bracket_spec:match("^<(.*)>$")
+	assert(inside)
+	parse_inside(base, inside, false)
+
+	local function parse_err(msg)
+		error(msg .. ": " .. angle_bracket_spec)
+	end
+
+	-- Set up base.verb.verb. This must be done after parse_inside() because it depends on the '.rre' indicator.
+	set_up_base_verb(base)
+
+	if base.props.builtin then
+		local prefix, main_verb, conj = find_builtin_verb(base.verb.verb)
+		if not prefix then
+			parse_err("Unable to find built-in verb corresponding to '" .. base.verb.verb .. "'")
+		end
+		-- Create a new `base`, fill it with properties from the built-in verb, and copy over the user-specified
+		-- properties on top of it.
+		local nbase = create_base()
+		nbase.lemma = base.lemma
+		nbase.verb = base.verb
+		nbase.verb.prefix = prefix
+		nbase.verb.verb = main_verb
+		parse_inside(nbase, conj, "is builtin")
+		for prop_table in ipairs { "principal_part_specs", "row_override_specs", "single_override_specs", "props" } do
+			for slot, prop in pairs(base[prop_table]) do
+				nbase[prop_table][slot] = prop
+			end
+		end
+		return nbase
+	end
+
 	return base
 end
 
