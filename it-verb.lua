@@ -232,7 +232,7 @@ FIXME:
 7. Fix handling of aux; snarf code from [[Module:de-verb]] to handle aux with multiword expressions. (DONE)
 8. Add automatic support for common irregular verbs: [[essere]], [[avere]], [[andare]], [[fare]], [[dare]],
    [[dire]], [[venire]], [[vedere]], [[tenere]], [[bere]], etc. Should make combinations of these verbs
-   with clitics, and multiword expressions with these verbs, easier to handle.
+   with clitics, and multiword expressions with these verbs, easier to handle. (DONE)
 9. Add support for calling from {{it-verb}} in [[Module:it-headword]].
 10. Throw an error if forms missing accents are specified (perhaps except with some special signal, to make
     it easier to port the old [[Module:it-conj]]).
@@ -242,19 +242,20 @@ FIXME:
    a triangle next to them, as with [[Module:ru-verb]].
 14. Consider supporting replace_reflexive_indicators().
 15. Add post-clitic-addition overrides.
-16. PRES/PAST/PP spec should be required to come first to avoid ambiguities.
+16. PRES/PAST/PP spec should be required to come first to avoid ambiguities. (DONE)
 17. Add variant codes to avoid mismatching variants in the conditional -èbbe/-ébbe, -éttero vs. érono, etc.
 18. If explicit fut: given, it should control the conditional as well. (DONE)
 19. If present -, sub:- or imp:-, it should suppress the whole row in the absence of row or individual overrides.
 20. 'ci ci vuole' should maybe -> 'a noi ci vuole' instead of 'ci vuole'.
-21. Instead of * before, use + after so that * before can be used for reconstructed terms.
+21. Instead of * before, use ! after so that * before can be used for reconstructed terms. (DONE)
 22. When handling built-in verbs, automatically add + after vowel in cases like comporre. (DONE; HANDLED AUTOMATICALLY)
 23. When handling built-in verbs, make sure we correctly handle root-stressed infinitives. (DONE)
 24. When handling built-in verbs, make sure explicit * afterwards is handled as if automatically there when a
     prefix is added, and make sure final accent is handled correct when a prefix is added. In both cases, verify
-	both sfare and rifare, sdare and ridare.
+	both sfare and rifare, sdare and ridare. (DONE)
 25. When handling built-in verbs, make sure we handle prefixes correctly w.r.t. negative imperatives. (DONE)
 26. Support ref: in footnotes.
+27. Finish built-in -ere verbs.
 --]=]
 
 local lang = require("Module:languages").getByCode("it")
@@ -313,11 +314,11 @@ local builtin_verbs = {
 	-- NOTE: specifying détti autogenerates #dètti
 	{"dare", [=[
 		-,dièdi:diédi:détti.
-		presrow:dò*:dò*+[less common],dài,dà*+,diàmo,dàte,dànno.
+		presrow:dò*:dò*![less common],dài,dà*!,diàmo,dàte,dànno.
 		sub:dìa.
 		fut:darò.
 		impsub:déssi.
-		imp:dài:dà':dà*+
+		imp:dài:dà':dà*!
 ]=], "<<dare>> and derivatives (<<addare>>, <<ridare>>, <<sdare>>); but not <<andare>> or derivatives"},
 	-- NOTE: specifying stétti autogenerates #stètti
 	{"stare", [=[
@@ -386,7 +387,7 @@ local builtin_verbs = {
 	-- NOTE: [[ridere]] has past historic [[risi]], with /z/ or traditional /s/, whereas the past historic of the
 	-- other verbs has only /z/; see comment above about 'adere'.
 	{"idere", "ì:ìsi:ìso", "verbs in ''-cidere'' (<<incidere>>, <<coincidere>>, <<uccidere>>, <<decidere>>, etc.; verbs in ''-lidere'' (<<elidere>>, <<collidere>>, <<allidere>>); <<ridere>> and derivatives; <<assidere>>; <<dividere>> and derivatives; but not <<stridere>>"},
-	-- Treccani (under [[espandere]] says past historic only spànsi, past participle only spànso. Hoepli says past
+	-- Treccani (under [[espandere]]) says past historic only spànsi, past participle only spànso. Hoepli says past
 	-- historic spandéi or (uncommon) spandètti or spànsi, past participle spànto or archaic spànso or spandùto.
 	-- The reality from reverso.net is somewhere in between.
 	{"spandere", "à,spànsi:+[uncommon],spànto:spànso", "<<spandere>> and derivatives"},
@@ -699,7 +700,7 @@ local builtin_verbs = {
 	-- benedire (strabenedire, ribenedire), maledire (stramaledire, rimaledire)
 	{{term = "dire", prefixes = {"bene", "male"}}, "+,dìssi:dìi[popular],détto.stem:dìce.pres2p:dìte.imperf:+:dìvo[popular]", "<<benedire>>, <<maledire>> and derivatives"},
 	-- dire, ridire
-	{{term = "dire", prefixes = {"^", "ri"}}, "+,dìssi,détto.stem:dìce.pres2p:dìte.imp:dì':dì*+", "<<dire>>, <<ridire>>; not any other derivatives"},
+	{{term = "dire", prefixes = {"^", "ri"}}, "+,dìssi,détto.stem:dìce.pres2p:dìte.imp:dì':dì*!", "<<dire>>, <<ridire>>; not any other derivatives"},
 	-- addire, contraddire, ricontraddire, indire, interdire, predire, etc.
 	{"dire", "+,dìssi,détto.stem:dìce.pres2p:dìte", "derivatives of <<dire>> other than <<benedire>>, <<maledire>> and <<ridire>>"},
 	-- dicere: archaic; not included due to multiple variants
@@ -815,14 +816,20 @@ local function add_links(form, multiword_only)
 end
 
 
--- Convert links around accented words to two-part links without extra accents.
-local function convert_accented_links(text)
-	return rsub(text, "%[%[([^%[%]|]+)%]%]",
+local function convert_accented_links_in_text(text)
+	local need_preserve_accent_note = false
+	local retval = rsub(text, "%[%[([^%[%]|]+)%]%]",
 		function(linktext)
 			if rfind(linktext, "^.*" .. MAV .. ".*" .. AV .. "$") then
-				-- final accented vowel with preceding vowel; keep accent
+				-- Final accented vowel with preceding vowel; keep accent, and remove redundant PRESERVE_ACCENT char.
+				-- The redundant character happens in a case like [[ridare]] leveraging built-in [[dare]], where the
+				-- spec for [[dare]] in the third-singular present indicative says "dà*!", where ! indicates that the
+				-- accent should be preserved. This maps to "\uFFF0dà", which in turn becomes "ri\uFFF0dà" when the
+				-- prefix is added, with a redundant PRESERVE_ACCENT character in the middle.
+				linktext = rsub(linktext, PRESERVE_ACCENT, "")
 			elseif rfind(linktext, PRESERVE_ACCENT) then
 				linktext = rsub(linktext, PRESERVE_ACCENT, "")
+				need_preserve_accent_note = true
 			else
 				local unaccented = remove_accents(linktext)
 				if unaccented == linktext then
@@ -833,6 +840,42 @@ local function convert_accented_links(text)
 			end
 			return "[[" .. linktext .. "]]"
 		end)
+	return retval, need_preserve_accent_note
+end
+
+
+-- Convert links around accented words to two-part links without extra accents. Remove PRESERVE_ACCENT characters,
+-- and if necessary, insert a footnote indicating that a written accent on a monosyllabic verb is preserved.
+local function convert_accented_links(alternant_multiword_spec)
+	-- Convert accented forms to two-part forms and remove PRESERVE_ACCENT characters.
+	for slot, forms in pairs(alternant_multiword_spec.forms) do
+		local saw_preserve_accent = false
+		for _, form in ipairs(forms) do
+			if rfind(form.form, PRESERVE_ACCENT) then
+				saw_preserve_accent = true
+				break
+			end
+		end
+		if not saw_preserve_accent then
+			-- If we didn't see a PRESERVE_ACCENT marker, we can just side-effect the forms to save memory.
+			for _, form in ipairs(forms) do
+				form.form = convert_accented_links_in_text(form.form)
+			end
+		else
+			-- Otherwise, we might need to add a footnote and/or merge two forms into one. For example, [[dare]] for
+			-- the first-person singular present indicative specifies "dò*,dò*!". The first "dò*" means written [[do]]
+			-- pronounced "dò" with syntactic gemination; the second "dò*!" means written [[dò]] pronounced "dò" with
+			-- syntactic gemination. In a prefixed variant like [[ridare]], the written accent is always preserved;
+			-- both forms map to written [[ridò]], and need to be deduplicated.
+			alternant_multiword_spec.forms[slot] = nil
+			for _, form in ipairs(forms) do
+				local new_form, need_preserve_accent_note = convert_accented_links_in_text(form.form)
+				iut.insert_form(alternant_multiword_spec.forms, slot, iut.combine_form_and_footnotes(
+					form, need_preserve_accent_note and "[with written accent on monosyllabic verb]" or nil,
+					new_form))
+			end
+		end
+	end
 end
 
 
@@ -966,9 +1009,6 @@ end
 
 
 local function add(base, slot, stems, endings, allow_overrides)
-	--if skip_slot(base, slot, allow_overrides) then
-	--	return
-	--end
 	local function do_combine_stem_ending(stem, ending)
 		return combine_stem_ending(base, slot, stem, ending)
 	end
@@ -976,23 +1016,14 @@ local function add(base, slot, stems, endings, allow_overrides)
 end
 
 
-local function insert_form(base, slot, form)
-	--if not skip_slot(base, slot) then
-		iut.insert_form(base.forms, slot, form)
-	--end
-end
-
-
 local function insert_forms(base, slot, forms)
-	--if not skip_slot(base, slot) then
-		iut.insert_forms(base.forms, slot, forms)
-	--end
+	iut.insert_forms(base.forms, slot, forms)
 end
 
 
 local function copy_forms(base, slot, forms)
 	-- FIXME, is this needed? This is the same as insert_forms() but clones `forms`.
-	-- Probably not needed as I don't think we ever side-effect existing forms.
+	-- Probably not needed as I don't think we ever side-effect existing forms up to this point.
 	insert_forms(base, slot, iut.map_forms(forms, iut.identity))
 end
 
@@ -1022,8 +1053,8 @@ local function process_specs(base, destforms, slot, specs, special_case)
 		local decorated_form = spec.form
 		-- Skip "-"; effectively, no forms get inserted into destforms[slot].
 		if decorated_form ~= "-" then
-			local prespec, form, syntactic_gemination =
-				rmatch(decorated_form, "^([*!#]*)(.-)(%**)$")
+			local prespec, form, postspec =
+				rmatch(decorated_form, "^([!#]*)(.-)([*!]*)$")
 			local forms = special_case(base, form)
 			-- If `special_case` return nil, no forms get inserted into destforms[slot]. This happens e.g. when
 			-- fut:- is given and no explicit conditional principal part is given. In that case,
@@ -1050,21 +1081,20 @@ local function process_specs(base, destforms, slot, specs, special_case)
 						qualifiers = iut.combine_footnotes({"[traditional]"}, qualifiers)
 						prespec = rsub(prespec, "#", "")
 					end
-					local preserve_monosyllabic_accent
-					if prespec:find("%*") then
+					if postspec:find("!") then
 						preserve_monosyllabic_accent = true
-						prespec = rsub(prespec, "%*", "")
+						postspec = rsub(postspec, "!", "")
 					end
 					local unaccented_form
 					if preserve_monosyllabic_accent and rfind(form, "^" .. NMAV .. "*" .. AV .. "$")  then
 						-- final accented vowel without preceding vowel, and "*" before form; add PRESERVE_ACCENT
 						form = PRESERVE_ACCENT .. form
 					end
-					if syntactic_gemination == "*" then
-						qualifiers = iut.combine_footnotes(qualifiers, {"[with following syntactic gemination]"})
-					elseif syntactic_gemination == "**" then
-						qualifiers = iut.combine_footnotes(qualifiers, {"[with optional following syntactic gemination]"})
-					elseif syntactic_gemination ~= "" then
+					if postspec == "*" then
+						qualifiers = iut.combine_footnotes(qualifiers, {"[with syntactic gemination after the verb]"})
+					elseif postspec == "**" then
+						qualifiers = iut.combine_footnotes(qualifiers, {"[with optional syntactic gemination after the verb]"})
+					elseif postspec ~= "" then
 						error("Decorated form '" .. decorated_form .. "' has too many asterisks after it, use '*' for syntactic gemination and '**' for optional syntactic gemination")
 					end
 					iut.insert_form(destforms, slot, {form = form, footnotes = qualifiers})
@@ -3173,14 +3203,7 @@ function export.do_generate_forms(parent_args, from_headword, def)
 	}
 	iut.inflect_multiword_or_alternant_multiword_spec(alternant_multiword_spec, inflect_props)
 	compute_auxiliary(alternant_multiword_spec)
-
-	-- Convert accented forms to two-part forms and remove PRESERVE_ACCENT characters.
-	for slot, forms in pairs(alternant_multiword_spec.forms) do
-		for _, form in ipairs(forms) do
-			form.form = convert_accented_links(form.form)
-		end
-	end
-
+	convert_accented_links(alternant_multiword_spec)
 	compute_categories_and_annotation(alternant_multiword_spec, from_headword)
 	return alternant_multiword_spec
 end
