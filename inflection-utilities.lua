@@ -483,23 +483,41 @@ function export.expand_footnote(note)
 end
 
 
--- Combine a form (either a string or a table {form = FORM, footnotes = FOOTNOTES, ...}) with footnotes.
--- Do the minimal amount of work; e.g. if FOOTNOTES is nil, just return FORM.
-function export.combine_form_and_footnotes(form, footnotes)
-	if type(footnotes) == "string" then
-		footnotes = {footnotes}
+-- Combine a form (either a string or a table) with additional footnotes, possibly replacing the form string and/or
+-- translit in the process. Normally called in one of two ways:
+-- (1) combine_form_and_footnotes(FORM_OBJ, ADDL_FOOTNOTES, NEW_FORM, NEW_TRANSLIT) where FORM_OBJ is an existing
+--     form object (a table of the form {form = FORM, translit = TRANSLIT, footnotes = FOOTNOTES, ...}); ADDL_FOOTNOTES
+--     is either nil, a single string (a footnote) or a list of footnotes; NEW_FORM is either nil or the new form
+--     string to substitute; and NEW_TRANSLIT is either nil or the new translit string to substitute.
+-- (2) combine_form_and_footnotes(FORM_STRING, FOOTNOTES), where FORM_STRING is a string and FOOTNOTES is either nil,
+--     a single string (a footnote) or a list of footnotes.
+--
+-- In either case, a form object (a table of the form {form = FORM, translit = TRANSLIT, footnotes = FOOTNOTES, ...})
+-- is returned, preserving as many properties as possible from any existing form object in FORM_OR_FORM_OBJ. Do the
+-- minimal amount of work; e.g. if FORM_OR_FORM_OBJ is a form object and ADDL_FOOTNOTES, NEW_FORM and NEW_TRANSLIT are
+-- all nil, the same object as passed in is returned. Under no circumstances is the existing form object side-effected.
+function export.combine_form_and_footnotes(form_or_form_obj, addl_footnotes, new_form, new_translit)
+	if type(addl_footnotes) == "string" then
+		addl_footnotes = {addl_footnotes}
 	end
-	if footnotes then
-		if type(form) == "table" then
-			form = m_table.shallowcopy(form)
-			form.footnotes = export.combine_footnotes(form.footnotes, footnotes)
-			return form
-		else
-			return {form = form, footnotes = footnotes}
-		end
-	else
-		return form
+	if not addl_footnotes and not new_form and not new_translit then
+		return form_or_form_obj
 	end
+	if type(form_or_form_obj) == "string" then
+		new_form = new_form or form_or_form_obj
+		return {form = new_form, translit = new_translit, footnotes = addl_footnotes}
+	end
+	form_or_form_obj = m_table.shallowcopy(form_or_form_obj)
+	if new_form then
+		form_or_form_obj.form = new_form
+	end
+	if new_translit then
+		form_or_form_obj.translit = new_translit
+	end
+	if addl_footnotes then
+		form_or_form_obj.footnotes = export.combine_footnotes(form_or_form_obj.footnotes, addl_footnotes)
+	end
+	return form_or_form_obj
 end
 
 
