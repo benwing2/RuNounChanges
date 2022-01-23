@@ -229,7 +229,7 @@ FIXME:
 6. Support defective verbs specified using e.g. redire<a/rièdo,-,redìto.imperf:-.fut:-.impsub:->.
    Include categorization; but if row overrides or single overrides of all forms given, don't categorize
    as defective for that row.
-7. Fix handling of aux; snarf code from [[Module:de-verb]] to handle aux with multiword expressions.
+7. Fix handling of aux; snarf code from [[Module:de-verb]] to handle aux with multiword expressions. (DONE)
 8. Add automatic support for common irregular verbs: [[essere]], [[avere]], [[andare]], [[fare]], [[dare]],
    [[dire]], [[venire]], [[vedere]], [[tenere]], [[bere]], etc. Should make combinations of these verbs
    with clitics, and multiword expressions with these verbs, easier to handle.
@@ -248,11 +248,13 @@ FIXME:
 19. If present -, sub:- or imp:-, it should suppress the whole row in the absence of row or individual overrides.
 20. 'ci ci vuole' should maybe -> 'a noi ci vuole' instead of 'ci vuole'.
 21. Instead of * before, use + after so that * before can be used for reconstructed terms.
-22. When handling built-in verbs, automatically add + after vowel in cases like comporre.
-23. When handling built-in verbs, make sure we correctly handle root-stressed infinitives.
+22. When handling built-in verbs, automatically add + after vowel in cases like comporre. (DONE; HANDLED AUTOMATICALLY)
+23. When handling built-in verbs, make sure we correctly handle root-stressed infinitives. (DONE)
 24. When handling built-in verbs, make sure explicit * afterwards is handled as if automatically there when a
     prefix is added, and make sure final accent is handled correct when a prefix is added. In both cases, verify
 	both sfare and rifare, sdare and ridare.
+25. When handling built-in verbs, make sure we handle prefixes correctly w.r.t. negative imperatives. (DONE)
+26. Support ref: in footnotes.
 --]=]
 
 local lang = require("Module:languages").getByCode("it")
@@ -295,7 +297,6 @@ local full_person_number_list = {"1s", "2s", "3s", "1p", "2p", "3p"}
 local imp_person_number_list = {"2s", "3s", "1p", "2p", "3p"}
 
 local all_verb_slots = {
-	-- FIXME, needs to be handled specially
 	{"aux", "-"},
 }
 
@@ -1156,7 +1157,7 @@ local function add_default_verb_forms(base, from_headword)
 	ret.pres3s = iut.map_forms(ret.stem, function(stem) return ending_vowel == "a" and stem .. "a" or stem .. "e" end)
 	if ending_vowel == "i" then
 		ret.isc_pres = iut.map_forms(ret.unaccented_stem, function(stem) return stem .. "ìsco" end)
-		ret.isc_pres3s = iut.map_forms(ret.unaccented_stem, function(stem) return stem .. "ìsci" end)
+		ret.isc_pres3s = iut.map_forms(ret.unaccented_stem, function(stem) return stem .. "ìsce" end)
 	end
 	ret.phis = iut.flatmap_forms(ret.unaccented_stem, function(stem)
 		if ending_vowel == "a" then
@@ -1270,7 +1271,7 @@ end
 
 local function do_ending_stressed_inf(base)
 	if rfind(base.verb.verb, "rre$") then
-		error("Use \\ not / with -rre verbs")
+		error("Use a backslash (\\) with -rre verbs")
 	end
 	-- Add acute accent to -ere, grave accent to -are/-ire.
 	local accented = rsub(base.verb.verb, "ere$", "ére")
@@ -1308,7 +1309,7 @@ local function do_root_stressed_inf(base, specs)
 		end
 		local verb_stem, verb_suffix = rmatch(base.verb.verb, "^(.-)([er]re)$")
 		if not verb_stem then
-			error("Verb '" .. base.verb.verb .. "' must end in -ere or -rre to use \\ notation")
+			error("Verb '" .. base.verb.verb .. "' must end in -ere or -rre to use backslash (\\) notation")
 		end
 		if not is_single_vowel_spec(spec) then
 			if from_defaulted_pres then
@@ -1586,7 +1587,10 @@ local function add_negative_imperative(base)
 	for _, persnum in ipairs({"2s", "3s", "1p", "2p", "3p"}) do
 		local from = persnum == "2s" and "inf" or "imp" .. persnum
 		insert_forms(base, "negimp" .. persnum, iut.map_forms(base.forms[from], function(form)
-			return "[[non]] [[" .. form .. "]]"
+			-- We need to add the prefix explicitly here because it has to go inside the [[non]]. Accordingly, we
+			-- set dont_add_prefix in the row_conjugation entry for negative imperatives so we don't get the prefix
+			-- added again at the end.
+			return "[[non]] [[" .. (base.verb.prefix or "") .. form .. "]]"
 		end))
 	end
 end
@@ -1783,7 +1787,10 @@ local row_conjugation = {
 		-- No generate_default_principal_part; handled specially in add_present_indic because we actually have
 		-- two principal parts for the present indicative ("pres" and "pres3s").
 		conjugate = add_present_indic,
-		no_explicit_principal_part = true, -- because handled specially in PRES^PRES3S,PHIS,PP spec
+		-- Set to `true` because handled specially in PRES^PRES3S,PHIS,PP spec; not set to "builtin" because
+		-- handled specially for built-in verbs as well. (This is because there are two principal parts involved,
+		-- "pres" and "pres3s".)
+		no_explicit_principal_part = true,
 		add_reflexive_clitics = add_finite_reflexive_clitics,
 	}},
 	{"sub", {
@@ -1815,7 +1822,12 @@ local row_conjugation = {
 		add_reflexive_clitics = add_negative_imperative_reflexive_clitics,
 		no_explicit_principal_part = true, -- because all parts are copied from other parts
 		no_row_overrides = true, -- not useful; use single overrides if really needed
-		dont_check_defective_status = true, -- we don't want a category for this
+		-- We don't want a category [[:Category:Italian verbs with defective negative imperative]]; doesn't make
+		-- sense as all parts are copied from elsewhere.
+		dont_check_defective_status = true,
+		-- Don't add the prefix at the end because of negative imperatives like "[[non]] [[proporre]]"; the prefix
+		-- must go *inside* the "non", so needs to be handled specially during conjugation.
+		dont_add_prefix = true,
 	}},
 	{"phis", {
 		desc = "past historic",
@@ -1824,7 +1836,9 @@ local row_conjugation = {
 		generate_default_principal_part = generate_default_past_historic_principal_part,
 		conjugate = add_past_historic,
 		add_reflexive_clitics = add_finite_reflexive_clitics,
-		no_explicit_principal_part = "builtin", -- because handled specially in PRES^PRES3S,PHIS,PP spec
+		-- Set to "builtin" because normally handled specially in PRES^PRES3S,PHIS,PP spec, but when a built-in verb
+		-- is involved, we want a way of overriding the past historic (using 'phis:').
+		no_explicit_principal_part = "builtin",
 	}},
 	{"imperf", {
 		desc = "imperfect",
@@ -1880,9 +1894,11 @@ local row_conjugation = {
 		principal_part_ending = "",
 		conjugate = {""},
 		add_reflexive_clitics = add_participle_reflexive_clitics,
-		no_explicit_principal_part = "builtin", -- because handled specially in PRES^PRES3S,PHIS,PP spec
-		no_row_overrides = true, -- useless because there's only one form; use the PRES^PRES3S,PHIS,PP spec
-		no_single_overrides = true, --useless because there's only one form; use the PRES^PRES3S,PHIS,PP spec
+		-- Set to "builtin" because normally handled specially in PRES^PRES3S,PHIS,PP spec, but when a built-in verb
+		-- is involved, we want a way of overriding the past participle (using 'pp:').
+		no_explicit_principal_part = "builtin",
+		no_row_overrides = true, -- useless because there's only one form; use the PRES^PRES3S,PHIS,PP or pp: spec
+		no_single_overrides = true, --useless because there's only one form; use the PRES^PRES3S,PHIS,PP or pp: spec
 	}},
 	{"ger", {
 		desc = "gerund",
@@ -2058,12 +2074,22 @@ local function conjugate_row(base, rowslot)
 end
 
 
--- If a built-in verb was requested, add the verb's prefix to all forms.
+-- If a built-in verb was requested, add the verb's prefix to all forms (except the negative imperative and aux).
+-- We don't add to the negative imperative because that row specifies `dont_add_prefix`; we don't add to aux because
+-- it's not part of a row (even though it's mentioned in `all_verb_slots`).
 local function add_prefix_to_forms(base)
 	if base.verb.prefix and base.verb.prefix ~= "" then
-		for slot, forms in pairs(base.forms) do
-			for _, form in ipairs(forms) do
-				form.form = base.verb.prefix .. form.form
+		for _, spec in ipairs(row_conjugation) do
+			local rowslot, rowconj = unpack(spec)
+			if not rowconj.dont_add_prefix then -- used for the negative imperative, which must be handled specially
+				for _, persnum in ipairs(rowconj.persnums) do
+					local slot = rowslot .. persnum
+					if base.forms[slot] then -- slot may not have any forms, e.g. the present participle
+						for _, form in ipairs(base.forms[slot]) do
+							form.form = base.verb.prefix .. form.form
+						end
+					end
+				end
 			end
 		end
 	end
@@ -2565,6 +2591,8 @@ end
 
 
 local function create_base()
+	-- `lemma` is the verb lemma, as specified by the user.
+	-- `verb` contains various properties of the verb derived from the lemma by analyze_verb().
 	-- `forms` contains the final per-slot forms. This is processed further in [[Module:inflection-utilities]].
 	--    This is a table indexed by slot (e.g. "pres1s"). Each value in the table is a list of items of the form
 	--    {form = FORM, footnotes = FOOTNOTES} where FORM is the actual generated form and FOOTNOTES is either nil
@@ -2578,8 +2606,10 @@ local function create_base()
 	--    (b) specs in the format e.g. "vèngo:vègno[archaic or poetic]^viène,vénni,venùto" or "é:#è" (the key is one of
 	--        "pres", "pres3s", "phis" or "pp" as appropriate);
 	--    (c) an explicit stem specified using 'stem:' (the key is "explicit_stem_spec");
-	--    (d) a root-stressed infinitive spec such as "o+" in "a\o+\compóngo,compósi,compósto" (the key is
-	--        "root_stressed_inf");
+	--    (d) a root-stressed infinitive spec such as "ó+" in "a\ó+\compóngo,compósi,compósto" (the key is
+	--        "root_stressed_inf"); this will have the value "+" (meaning to take the vowel spec from the present tense)
+	--        if a spec like "a\è" is given with only one backslash, and will be missing entirely if a spec like "a/è"
+	--        is given with a slash instead of a backslash;
 	--    (e) an auxiliary specified using e.g. "a[transitive]:e[intransitive]/è" (the key is "aux" and the value will
 	--        contain the actual auxiliary in the form in place of "a" or "e").
 	-- `principal_part_forms` contains the processed versions of the specs contained in `principal_part_specs`. The
@@ -2632,6 +2662,24 @@ local function parse_indicator_spec(angle_bracket_spec, lemma, pagename)
 		nbase.verb.prefix = prefix
 		nbase.verb.verb = main_verb
 		parse_inside(nbase, conj, "is builtin")
+		if nbase.principal_part_specs.root_stressed_inf then
+			local base_rsi = base.principal_part_specs.root_stressed_inf
+			-- We are dealing with a built-in verb whose spec has a backslash in it, such as [[scegliere]] with spec
+			-- "é\scélgo,scélsi,scélto", or [[porre]] with spec "ó\póngo,pósi,pósto". The user should have specified
+			-- "a\@" or similar. We need to merge the specs appropriately.
+			if not base_rsi then
+				parse_err(("Built-in verb [[%s]] has a root-stressed infinitive, and so the user specification "
+					.. "should have a backslash (\\) preceding the @ sign"):format(main_verb))
+			end
+			if #base_rsi ~= 1 or base_rsi[1].form ~= "+" or base_rsi[1].footnotes then
+				local auxspec = base.verb.is_reflexive and "" or "a"
+				parse_err(("Built-in verb [[%s]] has a root-stressed infinitive, and so the user specification "
+					.. "should use a single-backslash spec like '%s\\@', not a double-backslash one like '%s\\ó\\@'"):
+					format(main_verb, aux_spec, aux_spec))
+			end
+			-- Cancel out the user's spec so it doesn't override the built-in spec.
+			base.principal_part_specs.root_stressed_inf = nil
+		end
 		for _, prop_table in ipairs { "principal_part_specs", "row_override_specs", "single_override_specs", "props" } do
 			for slot, prop in pairs(base[prop_table]) do
 				nbase[prop_table][slot] = prop
