@@ -220,12 +220,12 @@ EXAMPLES OF CONJUGATION:
 
 FIXME:
 
-1. Fix inf_linked and lemma_linked to work like in [[Module:es-verb]].
+1. Fix inf_linked and lemma_linked to work like in [[Module:es-verb]]. (DONE)
 2. Finish support for reflexive and pronominal verbs.
 3. Finish support for reflexive and pronominal imperatives.
-4. Finish support for negative imperatives.
+4. Finish support for negative imperatives. (DONE)
 5. Fix handling of third-only verbs; require that irregular forms be specified in the first person.
-   Remove existing half-implemented support for specifying principal parts in the third person.
+   Remove existing half-implemented support for specifying principal parts in the third person. (DONE)
 6. Support defective verbs specified using e.g. redire<a/rièdo,-,redìto.imperf:-.fut:-.impsub:->.
    Include categorization; but if row overrides or single overrides of all forms given, don't categorize
    as defective for that row.
@@ -233,11 +233,11 @@ FIXME:
 8. Add automatic support for common irregular verbs: [[essere]], [[avere]], [[andare]], [[fare]], [[dare]],
    [[dire]], [[venire]], [[vedere]], [[tenere]], [[bere]], etc. Should make combinations of these verbs
    with clitics, and multiword expressions with these verbs, easier to handle. (DONE)
-9. Add support for calling from {{it-verb}} in [[Module:it-headword]].
+9. Add support for calling from {{it-verb}} in [[Module:it-headword]]. (DONE)
 10. Throw an error if forms missing accents are specified (perhaps except with some special signal, to make
     it easier to port the old [[Module:it-conj]]).
 11. Consider adding combined clitic tables like in [[Module:es-verb]].
-12. Consider adding automatic support for prefixed -fare verbs.
+12. Consider adding automatic support for prefixed -fare verbs. (DONE)
 13. Consider displaying irregular forms in a different color, as with the old [[Module:es-conj]], or adding
    a triangle next to them, as with [[Module:ru-verb]].
 14. Consider supporting replace_reflexive_indicators().
@@ -254,8 +254,9 @@ FIXME:
     prefix is added, and make sure final accent is handled correct when a prefix is added. In both cases, verify
 	both sfare and rifare, sdare and ridare. (DONE)
 25. When handling built-in verbs, make sure we handle prefixes correctly w.r.t. negative imperatives. (DONE)
-26. Support ref: in footnotes.
+26. Support ref: in footnotes. (DONE)
 27. Finish built-in -ere verbs.
+28. Implement error("If past participle given as '-', auxiliary must be explicitly specified as '-'"). (DONE)
 --]=]
 
 local lang = require("Module:languages").getByCode("it")
@@ -1177,13 +1178,7 @@ local function add_default_verb_forms(base, from_headword)
 	end
 
 	ret.unaccented_stem = iut.map_forms(ret.stem, function(stem) return remove_accents(stem) end)
-	ret.pres = iut.map_forms(ret.stem, function(stem)
-		if base.third then
-			return ending_vowel == "a" and stem .. "a" or stem .. "e"
-		else
-			return stem .. "o"
-		end
-	end)
+	ret.pres = iut.map_forms(ret.stem, function(stem) return stem .. "o" end)
 	ret.pres3s = iut.map_forms(ret.stem, function(stem) return ending_vowel == "a" and stem .. "a" or stem .. "e" end)
 	if ending_vowel == "i" then
 		ret.isc_pres = iut.map_forms(ret.unaccented_stem, function(stem) return stem .. "ìsco" end)
@@ -1191,11 +1186,11 @@ local function add_default_verb_forms(base, from_headword)
 	end
 	ret.phis = iut.flatmap_forms(ret.unaccented_stem, function(stem)
 		if ending_vowel == "a" then
-			return {stem .. (base.third and "ò" or "ài")}
+			return {stem .. "ài"}
 		elseif ending_vowel == "e" then
-			return {stem .. (base.third and "é" or "éi"), stem .. (base.third and "étte" or "étti")}
+			return {stem .. "éi", stem .. "étti"}
 		else
-			return {stem .. (base.third and "ì" or "ìi")}
+			return {stem .. "ìi"}
 		end
 	end)
 	ret.pp = iut.map_forms(ret.unaccented_stem, function(stem)
@@ -1396,21 +1391,32 @@ local function pres_special_case(base, form)
 	elseif is_single_vowel_spec(form) then
 		check_not_null(base, base.verb.pres, form, principal_part_desc)
 		return iut.map_forms(base.verb.pres, function(defform)
-			local pres, final_vowel = rmatch(defform, "^(.*)([oae])$")
+			local pres = rmatch(defform, "^(.*)o$")
 			if not pres then
-				error("Internal error: Default present '" .. defform .. "' doesn't end in -o, -a or -e")
+				error("Internal error: Default present '" .. defform .. "' doesn't end in -o")
 			end
-			return apply_vowel_spec(pres, defform, "default present", form) .. final_vowel
+			return apply_vowel_spec(pres, defform, "default present", form) .. "o"
 		end)
-	elseif not base.third and not rfind(form, "[oò]$") then
+	elseif not rfind(form, "[oò]$") then
 		error("Present first-person singular form '" .. form .. "' should end in -o")
-	elseif base.third and not rfind(form, "[aàeè]") then
-		error("Present third-person singular form '" .. form .. "' should end in -a or -e")
 	else
 		local unaccented_form = remove_accents(form)
 		if not general_list_form_contains_form(base.verb.pres, unaccented_form, remove_accents)
 			and (base.verb.isc_pres and not general_list_form_contains_form(base.verb.isc_pres, unaccented_form, remove_accents)) then
-			base.is_irreg.pres = true
+			base.is_row_irreg.pres = true
+			-- FIXME! Here we are encoding knowledge of the algorithm in add_present_indic() to determine how to
+			-- propagate irregular present 1s to other forms. This duplicates the logic of that algorithm, and if that
+			-- code ever changes, this code needs to change too. In practice, it doesn't currently matter so much
+			-- because the values in `is_irreg` are currently used only by the code in [[Module:it-headword]] to
+			-- determine whether to show irregular principal parts, and the present tense is always shown in any case.
+			-- But in the future, the values in `is_irreg` could be used for other purposes.
+			base.is_irreg.pres1s = true
+			base.is_irreg.pres3p = true
+			if not base.principal_part_forms.pres3s and not base.explicit_non_default_stem_spec
+				and not base.principal_part_forms.root_stressed_stem then
+				base.is_irreg.pres2s = true
+				base.is_irreg.pres3s = true
+			end
 		end
 		return form
 	end
@@ -1440,7 +1446,10 @@ local function pres3s_special_case(base, form)
 		local unaccented_form = remove_accents(form)
 		if not general_list_form_contains_form(base.verb.pres3s, unaccented_form, remove_accents)
 			and (base.verb.isc_pres3s and not general_list_form_contains_form(base.verb.isc_pres3s, unaccented_form, remove_accents)) then
-			base.is_irreg.pres = true
+			base.is_row_irreg.pres = true
+			base.is_irreg.pres3s = true
+			-- pres3s is copied to pres2s.
+			base.is_irreg.pres2s = true
 		end
 		return form
 	end
@@ -1529,18 +1538,6 @@ local function add_present_subj(base, rowslot)
 end
 
 
-local function postprocess_present_subj_after_row_overrides(base, rowslot)
-	local function copy(pers, forms)
-		copy_forms(base, rowslot .. pers, forms)
-	end
-
-	-- Copy 123s to 1s, 2s and 3s. This happens between the row overrides and the single overrides.
-	copy("1s", base.forms.sub123s)
-	copy("2s", base.forms.sub123s)
-	copy("3s", base.forms.sub123s)
-end
-
-
 local function generate_default_imperative_principal_part(base, do_err)
 	if base.conj_vowel == "à" then
 		-- Copy present indicative 3s to imperative 2s.
@@ -1618,7 +1615,7 @@ local function add_negative_imperative(base)
 		local from = persnum == "2s" and "inf" or "imp" .. persnum
 		insert_forms(base, "negimp" .. persnum, iut.map_forms(base.forms[from], function(form)
 			-- We need to add the prefix explicitly here because it has to go inside the [[non]]. Accordingly, we
-			-- set dont_add_prefix in the row_conjugation entry for negative imperatives so we don't get the prefix
+			-- set dont_add_prefix in the row_conjugations entry for negative imperatives so we don't get the prefix
 			-- added again at the end.
 			return "[[non]] [[" .. (base.verb.prefix or "") .. form .. "]]"
 		end))
@@ -1743,17 +1740,6 @@ local function generate_default_conditional_principal_part(base, do_err)
 end
 
 
-local function postprocess_imperfect_subj_after_row_overrides(base, rowslot)
-	local function copy(pers, forms)
-		copy_forms(base, rowslot .. pers, forms)
-	end
-
-	-- Copy 12s to 1s and 2s. This happens between the row overrides and the single overrides.
-	copy("1s", base.forms.impsub12s)
-	copy("2s", base.forms.impsub12s)
-end
-
-
 local function add_participle_reflexive_clitics(base, rowslot)
 	-- do nothing
 end
@@ -1798,7 +1784,7 @@ by add_infinitive; the present subjunctive uses generated forms from the present
 forms from the present subjunctive and present indicative; and the negative imperative uses forms from the infinitive
 and the imperative. Similarly we must have 'fut' < 'cond' because the conditional uses the future principal part.
 ]=]
-local row_conjugation = {
+local row_conjugations = {
 	{"inf", {
 		desc = "infinitive",
 		tag_suffix = "inf",
@@ -1828,10 +1814,9 @@ local row_conjugation = {
 		tag_suffix = "pres|sub",
 		persnums = full_person_number_list,
 		row_override_persnums = {"123s", "1p", "2p", "3p"},
+		row_override_persnums_to_full_persnums = {["123s"] = {"1s", "2s", "3s"}},
 		generate_default_principal_part = generate_default_present_subj_principal_part,
 		conjugate = add_present_subj,
-		-- This copies 123s to 1s/2s/3s
-		postprocess_after_row_overrides = postprocess_present_subj_after_row_overrides,
 		add_reflexive_clitics = add_finite_reflexive_clitics,
 	}},
 	{"imp", {
@@ -1886,13 +1871,12 @@ local row_conjugation = {
 		tag_suffix = "impf|sub",
 		persnums = full_person_number_list,
 		row_override_persnums = {"12s", "3s", "1p", "2p", "3p"},
+		row_override_persnums_to_full_persnums = {["12s"] = {"1s", "2s"}},
 		generate_default_principal_part = function(base) return iut.map_forms(base.verb.unaccented_stem,
 			function(stem) return stem .. base.conj_vowel .. "ssi" end) end,
 		principal_part_desc = "first/second-person imperfect subjunctive",
 		principal_part_ending = "ssi",
 		conjugate = {"ssi", "sse", "ssimo", "ste", "ssero"},
-		-- This copies 12s to 1s/2s
-		postprocess_after_row_overrides = postprocess_imperfect_subj_after_row_overrides,
 		add_reflexive_clitics = add_finite_reflexive_clitics,
 	}},
 	{"fut", {
@@ -1960,9 +1944,9 @@ local row_conjugation = {
 
 local row_conjugation_map = {}
 
-for _, spec in ipairs(row_conjugation) do
-	local rowslot, rowconj = unpack(spec)
-	row_conjugation_map[rowslot] = rowconj
+for _, rowconj in ipairs(row_conjugations) do
+	local rowslot, rowspec = unpack(rowconj)
+	row_conjugation_map[rowslot] = rowspec
 end
 
 
@@ -1971,38 +1955,56 @@ local overridable_participle_slot_set = {}
 local overridable_slot_set = m_table.shallowcopy(overridable_participle_slot_set)
 
 -- Populate all_verb_slots and overridable_slot_set.
-for _, spec in ipairs(row_conjugation) do
-	local rowslot, rowconj = unpack(spec)
-	for _, persnum in ipairs(rowconj.persnums) do
+for _, rowconj in ipairs(row_conjugations) do
+	local rowslot, rowspec = unpack(rowconj)
+	for _, persnum in ipairs(rowspec.persnums) do
 		local persnum_tag = person_number_tag_prefix[persnum]
 		local slot = rowslot .. persnum
-		if rowconj.tag_suffix == "-" then
+		if rowspec.tag_suffix == "-" then
 			table.insert(all_verb_slots, {slot, "-"})
 		else
-			table.insert(all_verb_slots, {slot, persnum_tag .. rowconj.tag_suffix})
+			table.insert(all_verb_slots, {slot, persnum_tag .. rowspec.tag_suffix})
 		end
-		if not rowconj.no_single_overrides then
+		if not rowspec.no_single_overrides then
 			overridable_slot_set[slot] = true
 		end
 	end
 end
 
-local function handle_row_overrides_for_row(base, row_slot)
-	if base.row_override_specs[row_slot] then
-		for persnum, specs in pairs(base.row_override_specs[row_slot]) do
-			local slot = row_slot .. persnum
+local function handle_row_overrides_for_row(base, rowslot)
+	if base.row_override_specs[rowslot] then
+		for persnum, specs in pairs(base.row_override_specs[rowslot]) do
+			local slot = rowslot .. persnum
 			local existing_generated_form = base.forms[slot]
 			local function row_override_special_case(base, form)
 				if form == "+" then
 					if not existing_generated_form then
 						error(("Default form '+' requested in row override '%s:' for slot %s but no default-generated form available; "
 							.. "typically this means the principal part was given as '-'")
-							:format(row_slot, slot))
+							:format(rowslot, slot))
 					end
 					return existing_generated_form
 				end
+				-- Check whether the row override form is the same as the default; if not, it's an irregularity.
 				if not general_list_form_contains_form(existing_generated_form, form) then
-					base.is_irreg[row_slot] = true
+					-- Note that the row has an irregularity in it.
+					base.is_row_irreg[rowslot] = true
+					-- Now note that the individual form is irregular. If the row override is for a combined form like
+					-- 123s, we have to map that to the individual forms (1s, 2s, 3s).
+					local rowspec = row_conjugation_map[rowslot]
+					if not rowspec then
+						error("Internal error: No row conjugation spec for " .. rowslot)
+					end
+					local row_override_persnums_map = rowspec.row_override_persnums_to_full_persnums
+					if row_override_persnums_map and row_override_persnums_map[persnum] then
+						-- Propagate individual irregularities to actual person/number forms, as for the present and
+						-- imperfect subjunctive.
+						for _, full_persnum in ipairs(row_override_persnums_map[persnum]) do
+							base.is_irreg[rowslot .. full_persnum] = true
+						end
+					else
+						base.is_irreg[rowslot .. persnum] = true
+					end
 				end
 				return form
 			end
@@ -2013,14 +2015,14 @@ local function handle_row_overrides_for_row(base, row_slot)
 end
 
 
-local function handle_single_overrides_for_row(base, row_slot)
-	local rowspec = row_conjugation_map[row_slot]
+local function handle_single_overrides_for_row(base, rowslot)
+	local rowspec = row_conjugation_map[rowslot]
 	if not rowspec then
-		error("Internal error: No row conjugation spec for " .. row_slot)
+		error("Internal error: No row conjugation spec for " .. rowslot)
 	end
 
 	for _, persnum in ipairs(rowspec.persnums) do
-		local slot = row_slot .. persnum
+		local slot = rowslot .. persnum
 		if base.single_override_specs[slot] then
 			local existing_generated_form = base.forms[slot]
 			local function override_special_case(base, form)
@@ -2028,12 +2030,14 @@ local function handle_single_overrides_for_row(base, row_slot)
 					if not existing_generated_form then
 						error(("Default form '+' requested in override for slot %s but no default-generated form available; "
 							.. "typically this means the principal part was given as '-'")
-							:format(row_slot, slot))
+							:format(rowslot, slot))
 					end
 					return existing_generated_form
 				end
+				-- Check whether the single override form is the same as the default; if not, it's an irregularity.
 				if not general_list_form_contains_form(existing_generated_form, form) then
-					base.is_irreg[row_slot] = true
+					base.is_row_irreg[rowslot] = true
+					base.is_irreg[slot] = true
 				end
 				return form
 			end
@@ -2046,15 +2050,15 @@ end
 
 local function conjugate_row(base, rowslot)
 	add_default_verb_forms(base)
-	local rowconj = row_conjugation_map[rowslot]
-	if not rowconj then
+	local rowspec = row_conjugation_map[rowslot]
+	if not rowspec then
 		error("Internal error: Unrecognized row slot '" .. rowslot .. "'")
 	end
 
 	-- Generate the principal part for this row now if it has an entry for `generate_default_principal_part`.
-	if rowconj.generate_default_principal_part then
+	if rowspec.generate_default_principal_part then
 		local function principal_part_special_case(base, form)
-			local default_principal_part = rowconj.generate_default_principal_part(base, form == "+")
+			local default_principal_part = rowspec.generate_default_principal_part(base, form == "+")
 			if default_principal_part then
 				-- There may be no default; e.g. if fut:- is given, the default conditional principal part is nil.
 				-- process_specs() calls convert_to_general_list_form() on the output in any case and we need it in this form
@@ -2064,42 +2068,53 @@ local function conjugate_row(base, rowslot)
 			if form == "+" then
 				return default_principal_part
 			end
+			-- Check whether the principal part is the same as the default; if not, the entire row is irregular.
 			if not general_list_form_contains_form(default_principal_part, form) then
-				base.is_irreg[rowslot] = true
+				base.is_row_irreg[rowslot] = true
+				for _, persnum in ipairs(rowspec.persnums) do
+					base.is_irreg[rowslot .. persnum] = true
+				end
 			end
 			return form
 		end
 
-		local principal_part_specs = base.principal_part_specs[rowslot] or rowconj.not_defaulted and {{form = "-"}}
+		local principal_part_specs = base.principal_part_specs[rowslot] or rowspec.not_defaulted and {{form = "-"}}
 			or {{form = "+"}}
 		process_specs(base, base.principal_part_forms, rowslot, principal_part_specs, principal_part_special_case)
 	end
 
-	if type(rowconj.conjugate) == "table" then
-		local persnums = rowconj.row_override_persnums or rowconj.persnums
-		if #rowconj.conjugate ~= #persnums then
+	if type(rowspec.conjugate) == "table" then
+		local persnums = rowspec.row_override_persnums or rowspec.persnums
+		if #rowspec.conjugate ~= #persnums then
 			error("Internal error: Expected " .. #persnums .. " elements for row slot '" .. rowslot
-				.. ", but saw " .. #rowconj.conjugate)
+				.. ", but saw " .. #rowspec.conjugate)
 		end
 		local stem = iut.map_forms(base.principal_part_forms[rowslot], function(form)
-			if not rfind(form, rowconj.principal_part_ending .. "$") then
-				error(rowslot .. "row: must be given in order to generate the " .. rowconj.desc .. " because"
-					.. "explicit " .. rowconj.principal_part_desc .. " '" .. form .. "' does not end in -"
-					.. rowconj.principal_part_ending)
+			if not rfind(form, rowspec.principal_part_ending .. "$") then
+				error(rowslot .. "row: must be given in order to generate the " .. rowspec.desc .. " because"
+					.. "explicit " .. rowspec.principal_part_desc .. " '" .. form .. "' does not end in -"
+					.. rowspec.principal_part_ending)
 			end
-			return rsub(form, rowconj.principal_part_ending .. "$", "")
+			return rsub(form, rowspec.principal_part_ending .. "$", "")
 		end)
 		for i, persnum in ipairs(persnums) do
-			add(base, rowslot .. persnum, stem, rowconj.conjugate[i])
+			add(base, rowslot .. persnum, stem, rowspec.conjugate[i])
 		end
 	else
-		rowconj.conjugate(base, rowslot)
+		rowspec.conjugate(base, rowslot)
 	end
 
 	handle_row_overrides_for_row(base, rowslot)
-	if rowconj.postprocess_after_row_overrides then
-		rowconj.postprocess_after_row_overrides(base, rowslot)
+
+	-- If there's a mapping from row override persnums to full persnums, copy the slots accordingly.
+	if rowspec.row_override_persnums_to_full_persnums then
+		for row_override_persnum, full_persnums in pairs(rowspec.row_override_persnums_to_full_persnums) do
+			for _, full_persnum in ipairs(full_persnums) do
+				copy_forms(base, rowslot .. full_persnum, base.forms[rowslot .. row_override_persnum])
+			end
+		end
 	end
+
 	handle_single_overrides_for_row(base, rowslot)
 end
 
@@ -2109,10 +2124,10 @@ end
 -- it's not part of a row (even though it's mentioned in `all_verb_slots`).
 local function add_prefix_to_forms(base)
 	if base.verb.prefix and base.verb.prefix ~= "" then
-		for _, spec in ipairs(row_conjugation) do
-			local rowslot, rowconj = unpack(spec)
-			if not rowconj.dont_add_prefix then -- used for the negative imperative, which must be handled specially
-				for _, persnum in ipairs(rowconj.persnums) do
+		for _, rowconj in ipairs(row_conjugations) do
+			local rowslot, rowspec = unpack(rowconj)
+			if not rowspec.dont_add_prefix then -- used for the negative imperative, which must be handled specially
+				for _, persnum in ipairs(rowspec.persnums) do
 					local slot = rowslot .. persnum
 					if base.forms[slot] then -- slot may not have any forms, e.g. the present participle
 						for _, form in ipairs(base.forms[slot]) do
@@ -2127,19 +2142,19 @@ end
 
 
 local function check_for_defective_rows(base)
-	for _, rowspec in ipairs(row_conjugation) do
-		local rowslot, rowconj = unpack(rowspec)
-		if not rowconj.dont_check_defective_status then
-			for i, persnum in ipairs(rowconj.persnums) do
+	for _, rowconj in ipairs(row_conjugations) do
+		local rowslot, rowspec = unpack(rowconj)
+		if not rowspec.dont_check_defective_status then
+			for i, persnum in ipairs(rowspec.persnums) do
 				local slot = rowslot .. persnum
 				if not base.forms[slot] and not skip_slot(base, slot) then
-					base.is_defective[rowslot] = true
+					base.is_row_defective[rowslot] = true
 				end
 			end
 		end
 	end
 	if not base.principal_part_specs.aux and not base.verb.is_reflexive then
-		base.is_defective.aux = true
+		base.is_row_defective.aux = true
 	end
 end
 
@@ -2165,15 +2180,15 @@ end
 
 
 local function conjugate_verb(base)
-	for _, rowspec in ipairs(row_conjugation) do
-		local rowslot, rowconj = unpack(rowspec)
+	for _, rowconj in ipairs(row_conjugations) do
+		local rowslot, rowspec = unpack(rowconj)
 		conjugate_row(base, rowslot)
 	end
 	add_prefix_to_forms(base)
 	if base.verb.linked_suf ~= "" then
-		for _, rowspec in ipairs(row_conjugation) do
-			local rowslot, rowconj = unpack(rowspec)
-			rowconj.add_reflexive_clitics(base, rowslot)
+		for _, rowconj in ipairs(row_conjugations) do
+			local rowslot, rowspec = unpack(rowconj)
+			rowspec.add_reflexive_clitics(base, rowslot)
 		end
 	end
 	erase_suppressed_slots(base)
@@ -2650,13 +2665,20 @@ local function create_base()
 	--    are in the same format as `principal_part_specs`.
 	-- `single_override_specs` contains user-specified forms using 'pres1s:', 'sub3p:', etc. The key is the slot
 	--    ("pres1s", "sub3p", etc.) and the value is of the same format as `principal_part_specs`.
-	-- `is_irreg` is a table indexed by the row suffix ("pres", "sub", etc.) whose value is true or false indicating
-	--    whether a given row is irregular.
+	-- `is_irreg` is a table indexed by an individual form slot ("pres1s", "sub2s", "pp", etc.) whose value is true or
+	--    false indicating whether a given form is irregular. Currently, the values in `is_irreg` are used only by the
+	--    code in [[Module:it-headword]] to determine whether to show irregular principal parts.
+	-- `is_row_irreg` is a table indexed by the row slot ("pres", "sub", etc.) whose value is true or false indicating
+	--    whether a given row is irregular. The values here are currently used to determine whether to add categories
+	--    like [[:Category:Italian verbs with irregular imperfect subjunctive]].
+	-- `is_row_defective` is a table indexed by the row slot ("pres", "sub", etc.) whose value is true or false
+	--    indicating whether a given row is defective (missing one or more forms). Forms expected to be missing due to
+	--    'only3s' or 'only3sp' don't count.
 	-- `props` is a table of miscellaneous properties.
 	--
 	-- There should be no other properties set directly at the `base` level.
 	return {forms = {}, principal_part_specs = {}, principal_part_forms = {}, row_override_specs = {},
-		single_override_specs = {}, is_irreg = {}, is_defective = {}, props = {}}
+		single_override_specs = {}, is_irreg = {}, is_row_irreg = {}, is_row_defective = {}, props = {}}
 end
 
 
@@ -2750,13 +2772,9 @@ local function normalize_all_lemmas(alternant_multiword_spec)
 end
 
 
-local function detect_indicator_spec(base)
-	if base.props.only3s and base.props.only3sp then
-		error("'only3s' and 'only3sp' cannot both be specified")
-	end
-end
-
-
+-- Detect inconsistencies in indicator specs. This checks that the properties 'only3s' and 'only3sp' are consistent
+-- across all verbs; checks that if the past participle is given as -, the auxiliary is also given as -; and propagates
+-- certain properties (the `from_headword` property and the template args) down to each `base`.
 local function detect_all_indicator_specs(alternant_multiword_spec, from_headword)
 	alternant_multiword_spec.props = {}
 
@@ -2783,7 +2801,46 @@ local function detect_all_indicator_specs(alternant_multiword_spec, from_headwor
 	end
 
 	iut.map_word_specs(alternant_multiword_spec, function(base)
-		detect_indicator_spec(base)
+		if base.props.only3s and base.props.only3sp then
+			error("'only3s' and 'only3sp' cannot both be specified")
+		end
+
+		-- Check for missing past participle -> missing auxiliary.
+		if not base.verb.is_reflexive then
+			local pp_is_missing = base.principal_part_specs.pp and #base.principal_part_specs.pp == 0
+				and base.principal_part_specs.pp[1].form == "-"
+			local aux_is_missing = not base.principal_part_specs.aux
+			if pp_is_missing and not aux_is_missing then
+				error("If past participle given as '-', auxiliary must be explicitly specified as '-'")
+			end
+		end
+	end)
+end
+
+
+-- Propagate indications of irregularity and other properties upward from individual `base` forms to the overall
+-- `alternant_multiword_spec`. The overall indications of irregularity are used in [[Module:it-headword]] to show
+-- irregular principal parts, and other properties are used similarly in [[Module:it-headword]]. This needs to be
+-- done later than detect_all_indicator_specs() because it depends on the result of parsing the angle bracket spec.
+local function propagate_properties_upward(alternant_multiword_spec)
+	alternant_multiword_spec.is_irreg = {}
+	iut.map_word_specs(alternant_multiword_spec, function(base)
+		for slot, irreg in pairs(base.is_irreg) do
+			alternant_multiword_spec.is_irreg[slot] = alternant_multiword_spec.is_irreg[slot] or irreg
+		end
+		-- If there is an explicit stem spec, we display the imperfect principal part explicitly even if not marked
+		-- as irregular.
+		if base.principal_part_specs.explicit_stem_spec then
+			alternant_multiword_spec.props.has_explicit_stem_spec = true
+		end
+		-- If any verb is pronominal, we display the overall lemma as 'pronominal'.
+		if base.verb.is_pronominal then
+			alternant_multiword_spec.props.is_pronominal = true
+		end
+		-- If any verb is non-reflexive, we show the auxiliary.
+		if not base.verb.is_reflexive then
+			alternant_multiword_spec.props.is_non_reflexive = true
+		end
 	end)
 end
 
@@ -2801,6 +2858,7 @@ local function compute_auxiliary(alternant_multiword_spec)
 end
 
 
+-- Add the categories and annotation for `base` into the appropriate structures in `alternant_multiword_spec`.
 local function add_categories_and_annotation(alternant_multiword_spec, base, multiword_lemma, from_headword)
 	local function insert_ann(anntype, value)
 		m_table.insertIfNot(alternant_multiword_spec.annotation[anntype], value)
@@ -2862,21 +2920,21 @@ local function add_categories_and_annotation(alternant_multiword_spec, base, mul
 
 	local is_irreg = false
 	local is_defective = false
-	for _, rowspec in ipairs(row_conjugation) do
-		local rowslot, rowconj = unpack(rowspec)
-		if base.is_irreg[rowslot] then
+	for _, rowconj in ipairs(row_conjugations) do
+		local rowslot, rowspec = unpack(rowconj)
+		if base.is_row_irreg[rowslot] then
 			if not is_irreg then
 				is_irreg = true
 				insert_cat("irregular verbs")
 			end
-			insert_cat("verbs with irregular " .. rowconj.desc)
+			insert_cat("verbs with irregular " .. rowspec.desc)
 		end 
-		if base.is_defective[rowslot] then
+		if base.is_row_defective[rowslot] then
 			if not is_defective then
 				is_defective = true
 				insert_cat("defective verbs")
 			end
-			insert_cat("verbs with defective " .. rowconj.desc)
+			insert_cat("verbs with defective " .. rowspec.desc)
 		end 
 	end
 	if not base.verb.is_reflexive and not base.principal_part_specs.aux then
@@ -2907,7 +2965,9 @@ local function add_categories_and_annotation(alternant_multiword_spec, base, mul
 	end
 
 	if base.verb.is_pronominal then
-		insert_cat("verbs with lexical clitics")
+		insert_cat("pronominal verbs")
+		-- FIXME: Should we use this instead? This is what Spanish does.
+		-- insert_cat("verbs with lexical clitics")
 	end
 
 	if base.verb.is_reflexive then
@@ -2916,9 +2976,8 @@ local function add_categories_and_annotation(alternant_multiword_spec, base, mul
 end
 
 
--- Compute the categories to add the verb to, as well as the annotation to display in the
--- conjugation title bar. We combine the code to do these functions as both categories and
--- title bar contain similar information.
+-- Compute the categories to add the verb to, as well as the annotation to display in the conjugation title bar. We
+-- combine the code to do these functions as both categories and title bar contain similar information.
 local function compute_categories_and_annotation(alternant_multiword_spec, from_headword)
 	alternant_multiword_spec.categories = {}
 	local ann = {}
@@ -2959,9 +3018,9 @@ local function compute_categories_and_annotation(alternant_multiword_spec, from_
 end
 
 
+-- Convert the forms associated with each slot into their display form (a string).
 local function show_forms(alternant_multiword_spec)
-	local lemmas = iut.map_forms(alternant_multiword_spec.forms.inf,
-		remove_reflexive_indicators)
+	local lemmas = iut.map_forms(alternant_multiword_spec.forms.inf, remove_reflexive_indicators)
 	alternant_multiword_spec.lemmas = lemmas -- save for later use in make_table()
 
 	local props = {
@@ -2970,7 +3029,6 @@ local function show_forms(alternant_multiword_spec)
 		slot_list = all_verb_slots,
 	}
 	iut.show_forms(alternant_multiword_spec.forms, props)
-	alternant_multiword_spec.footnote_basic = alternant_multiword_spec.forms.footnote
 end
 
 
@@ -3128,7 +3186,7 @@ local function make_table(alternant_multiword_spec)
 	forms.description = ""
 
 	-- Format the table.
-	forms.footnote = alternant_multiword_spec.footnote_basic
+	forms.footnote = alternant_multiword_spec.forms.footnote
 	forms.notes_clause = forms.footnote ~= "" and m_string_utilities.format(notes_template, forms) or ""
 	return m_string_utilities.format(basic_table, forms)
 end
@@ -3141,7 +3199,6 @@ end
 function export.do_generate_forms(parent_args, from_headword, def)
 	local params = {
 		[1] = {required = true, default = def or "mettere<a\é,mìsi,mésso>"},
-		["nocomb"] = {type = "boolean"},
 		["noautolinktext"] = {type = "boolean"},
 		["noautolinkverb"] = {type = "boolean"},
 		["pagename"] = {} -- for testing
@@ -3150,6 +3207,8 @@ function export.do_generate_forms(parent_args, from_headword, def)
 	if from_headword then
 		params["head"] = {list = true}
 		params["id"] = {}
+		params["sort"] = {}
+		params["splithyph"] = {type = "boolean"}
 	end
 
 	local args = require("Module:parameters").process(parent_args, params)
@@ -3202,6 +3261,7 @@ function export.do_generate_forms(parent_args, from_headword, def)
 		include_user_specified_links = true,
 	}
 	iut.inflect_multiword_or_alternant_multiword_spec(alternant_multiword_spec, inflect_props)
+	propagate_properties_upward(alternant_multiword_spec)
 	compute_auxiliary(alternant_multiword_spec)
 	convert_accented_links(alternant_multiword_spec)
 	compute_categories_and_annotation(alternant_multiword_spec, from_headword)
