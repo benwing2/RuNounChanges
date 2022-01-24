@@ -35,29 +35,23 @@ function export.remove_redundant_links(text)
 end
 
 --[=[
-In order to understand the following parsing code, you need to understand how inflected
-text specs work. They are intended to work with inflected text where individual words to
-be inflected may be followed by inflection specs in angle brackets. The format of the
-text inside of the angle brackets is up to the individual language and part-of-speech
-specific implementation. A real-world example is as follows:
-"[[медичний|меди́чна]]<+> [[сестра́]]<*,*#.pr>". This is the inflection of a multiword
-expression "меди́чна сестра́", which means "nurse" (literally "medical sister"), consisting
-of two words: the adjective меди́чна ("medical" in the feminine singular) and the noun
-сестра́ ("sister"). The specs in angle brackets follow each word to be inflected; for
-example, <+> means that the preceding word should be declined as an adjective.
+In order to understand the following parsing code, you need to understand how inflected text specs work. They are
+intended to work with inflected text where individual words to be inflected may be followed by inflection specs in
+angle brackets. The format of the text inside of the angle brackets is up to the individual language and part-of-speech
+specific implementation. A real-world example is as follows: "[[медичний|меди́чна]]<+> [[сестра́]]<*,*#.pr>". This is the inflection of a multiword expression "меди́чна сестра́", which means "nurse" in Ukrainian (literally "medical sister"),
+consisting of two words: the adjective меди́чна ("medical" in the feminine singular) and the noun сестра́ ("sister"). The
+specs in angle brackets follow each word to be inflected; for example, <+> means that the preceding word should be
+declined as an adjective.
 
-The code below works in terms of balanced expressions, which are bounded by delimiters
-such as < > or [ ]. The intention is to allow separators such as spaces to be embedded
-inside of delimiters; such embedded separators will not be parsed as separators.
-For example, Ukrainian noun specs allow footnotes in brackets to be inserted inside of
-angle brackets; something like "меди́чна<+> сестра́<pr.[this is a footnote]>" is legal,
-as is "[[медичний|меди́чна]]<+> [[сестра́]]<pr.[this is an <i>italicized footnote</i>]>",
-and the parsing code should not be confused by the embedded brackets, spaces or angle
-brackets.
+The code below works in terms of balanced expressions, which are bounded by delimiters such as < > or [ ]. The
+intention is to allow separators such as spaces to be embedded inside of delimiters; such embedded separators will not
+be parsed as separators. For example, Ukrainian noun specs allow footnotes in brackets to be inserted inside of angle
+brackets; something like "меди́чна<+> сестра́<pr.[this is a footnote]>" is legal, as is
+"[[медичний|меди́чна]]<+> [[сестра́]]<pr.[this is an <i>italicized footnote</i>]>", and the parsing code should not be
+confused by the embedded brackets, spaces or angle brackets.
 
-The parsing is done by two functions, which work in close concert:
-parse_balanced_segment_run() and split_alternating_runs(). To illustrate, consider
-the following:
+The parsing is done by two functions, which work in close concert: parse_balanced_segment_run() and
+split_alternating_runs(). To illustrate, consider the following:
 
 parse_balanced_segment_run("foo<M.proper noun> bar<F>", "<", ">") =
   {"foo", "<M.proper noun>", " bar", "<F>", ""}
@@ -67,22 +61,18 @@ then
 split_alternating_runs({"foo", "<M.proper noun>", " bar", "<F>", ""}, " ") =
   {{"foo", "<M.proper noun>", ""}, {"bar", "<F>", ""}}
 
-Here, we start out with a typical inflected text spec "foo<M.proper noun> bar<F>",
-call parse_balanced_segment_run() on it, and call split_alternating_runs() on the
-result. The output of parse_balanced_segment_run() is a list where even-numbered
-segments are bounded by the bracket-like characters passed into the function,
-and odd-numbered segments consist of the surrounding text. split_alternating_runs()
-is called on this, and splits *only* the odd-numbered segments, grouping all
-segments between the specified character. Note that the inner lists output by
-split_alternating_runs() are themselves in the same format as the output of
-parse_balanced_segment_run(), with bracket-bounded text in the even-numbered segments.
-Hence, such lists can be passed again to split_alternating_runs().
+Here, we start out with a typical inflected text spec "foo<M.proper noun> bar<F>", call parse_balanced_segment_run() on
+it, and call split_alternating_runs() on the result. The output of parse_balanced_segment_run() is a list where
+even-numbered segments are bounded by the bracket-like characters passed into the function, and odd-numbered segments
+consist of the surrounding text. split_alternating_runs() is called on this, and splits *only* the odd-numbered
+segments, grouping all segments between the specified character. Note that the inner lists output by
+split_alternating_runs() are themselves in the same format as the output of parse_balanced_segment_run(), with
+bracket-bounded text in the even-numbered segments. Hence, such lists can be passed again to split_alternating_runs().
 ]=]
 
 
--- Parse a string containing matched instances of parens, brackets or the like.
--- Return a list of strings, alternating between textual runs not containing the
--- open/close characters and runs beginning and ending with the open/close
+-- Parse a string containing matched instances of parens, brackets or the like. Return a list of strings, alternating
+-- between textual runs not containing the open/close characters and runs beginning and ending with the open/close
 -- characters. For example,
 --
 -- parse_balanced_segment_run("foo(x(1)), bar(2)", "(", ")") = {"foo", "(x(1))", ", bar", "(2)", ""}.
@@ -174,12 +164,10 @@ end
 
 
 --[=[
-Split a list of alternating textual runs of the format returned by
-`parse_balanced_segment_run` on `splitchar`. This only splits the odd-numbered
-textual runs (the portions between the balanced open/close characters).
-The return value is a list of lists, where each list contains an odd number of
-elements, where the even-numbered elements of the sublists are the original
-balanced textual run portions. For example, if we do
+Split a list of alternating textual runs of the format returned by `parse_balanced_segment_run` on `splitchar`. This
+only splits the odd-numbered textual runs (the portions between the balanced open/close characters).  The return value
+is a list of lists, where each list contains an odd number of elements, where the even-numbered elements of the sublists
+are the original balanced textual run portions. For example, if we do
 
 parse_balanced_segment_run("foo<M.proper noun> bar<F>", "<", ">") =
   {"foo", "<M.proper noun>", " bar", "<F>", ""}
@@ -189,21 +177,19 @@ then
 split_alternating_runs({"foo", "<M.proper noun>", " bar", "<F>", ""}, " ") =
   {{"foo", "<M.proper noun>", ""}, {"bar", "<F>", ""}}
 
-Note that we did not touch the text "<M.proper noun>" even though it contains a space
-in it, because it is an even-numbered element of the input list. This is intentional and
-allows for embedded separators inside of brackets/parens/etc. Note also that the inner
-lists in the return value are of the same form as the input list (i.e. they consist of
-alternating textual runs where the even-numbered segments are balanced runs), and can in
-turn be passed to split_alternating_runs().
+Note that we did not touch the text "<M.proper noun>" even though it contains a space in it, because it is an
+even-numbered element of the input list. This is intentional and allows for embedded separators inside of
+brackets/parens/etc. Note also that the inner lists in the return value are of the same form as the input list (i.e.
+they consist of alternating textual runs where the even-numbered segments are balanced runs), and can in turn be passed
+to split_alternating_runs().
 
-If `preserve_splitchar` is passed in, the split character is included in the output,
-as follows:
+If `preserve_splitchar` is passed in, the split character is included in the output, as follows:
 
 split_alternating_runs({"foo", "<M.proper noun>", " bar", "<F>", ""}, " ", true) =
   {{"foo", "<M.proper noun>", ""}, {" "}, {"bar", "<F>", ""}}
 
-Consider what happens if the original string has multiple spaces between brackets,
-and multiple sets of brackets without spaces between them.
+Consider what happens if the original string has multiple spaces between brackets, and multiple sets of brackets
+without spaces between them.
 
 parse_balanced_segment_run("foo[dated][low colloquial] baz-bat quux xyzzy[archaic]", "[", "]") =
   {"foo", "[dated]", "", "[low colloquial]", " baz-bat quux xyzzy", "[archaic]", ""}
@@ -266,10 +252,9 @@ function export.concat_forms_in_slot(forms)
 end
 
 
--- Insert a form (an object of the form {form=FORM, translit=MANUAL_TRANSLIT, footnotes=FOOTNOTES})
--- into a list of such forms. If the form is already present, the footnotes of the existing and
--- new form might be combined (specifically, footnotes in the new form beginning with ! will be
--- combined).
+-- Insert a form (an object of the form {form=FORM, translit=MANUAL_TRANSLIT, footnotes=FOOTNOTES}) into a list of such
+-- forms. If the form is already present, the footnotes of the existing and new form might be combined (specifically,
+-- footnotes in the new form beginning with ! will be combined).
 function export.insert_form_into_list(list, form)
 	-- Don't do anything if the form object or the form inside it is nil. This simplifies
 	-- form insertion in the presence of inflection generating functions that may return nil,
@@ -355,12 +340,11 @@ end
 
 
 -- Map a function over the form values in FORMS (a list of objects of the form
--- {form=FORM, translit=MANUAL_TRANSLIT, footnotes=FOOTNOTES}). The function is called with
--- two arguments, the original form and manual translit; if manual translit isn't relevant,
--- it's fine to declare the function with only one argument. The return value is either a
--- single value (the new form) or two values (the new form and new manual translit).
--- Use insert_form_into_list() to insert them into the returned list in case two different
--- forms map to the same thing.
+-- {form=FORM, translit=MANUAL_TRANSLIT, footnotes=FOOTNOTES}). The function is called with two arguments, the original
+-- form and manual translit; if manual translit isn't relevant, it's fine to declare the function with only one
+-- argument. The return value is either a single value (the new form) or two values (the new form and new manual
+-- translit). Use insert_form_into_list() to insert them into the returned list in case two different forms map to the
+-- same thing.
 function export.map_forms(forms, fun)
 	if not forms then
 		return nil
@@ -376,12 +360,11 @@ end
 
 
 -- Map a list-returning function over the form values in FORMS (a list of objects of the form
--- {form=FORM, translit=MANUAL_TRANSLIT, footnotes=FOOTNOTES}). The function is called witih
--- two arguments, the original form and manual translit; if manual translit isn't relevant,
--- it's fine to declare the function with only one argument. The return value is either a
--- list of forms or a list of objects of the form {form=FORM, translit=MANUAL_TRANSLIT}.
--- Use insert_form_into_list() to insert them into the returned list in case two different
--- forms map to the same thing.
+-- {form=FORM, translit=MANUAL_TRANSLIT, footnotes=FOOTNOTES}). The function is called with two arguments, the original
+-- form and manual translit; if manual translit isn't relevant, it's fine to declare the function with only one
+-- argument. The return value is either a list of forms or a list of objects of the form
+-- {form=FORM, translit=MANUAL_TRANSLIT}. Use insert_form_into_list() to insert them into the returned list in case two
+-- different forms map to the same thing.
 function export.flatmap_forms(forms, fun)
 	if not forms then
 		return nil
@@ -404,12 +387,11 @@ end
 
 
 -- Map a function over the form values in FORMS (a single string, a single object of the form
--- {form=FORM, translit=MANUAL_TRANSLIT, footnotes=FOOTNOTES}, or a list of either of the
--- previous two types). If FIRST_ONLY is given and FORMS is a list, only map over the first
--- element. Return value is of the same form as FORMS. The function is called with two
--- arguments, the original form and manual translit; if manual translit isn't relevant,
--- it's fine to declare the function with only one argument. The return value is either a
--- single value (the new form) or two values (the new form and new manual translit).
+-- {form=FORM, translit=MANUAL_TRANSLIT, footnotes=FOOTNOTES}, or a list of either of the previous two types). If
+-- FIRST_ONLY is given and FORMS is a list, only map over the first element. Return value is of the same form as FORMS.
+-- The function is called with  arguments, the original form and manual translit; if manual translit isn't relevant,
+-- it's fine to declare the function with only one argument. The return value is either a single value (the new form)
+-- or two values (the new form and new manual translit).
 function export.map_form_or_forms(forms, fn, first_only)
 	if forms == nil then
 		return nil
@@ -434,8 +416,7 @@ function export.map_form_or_forms(forms, fn, first_only)
 end
 
 
--- Combine two sets of footnotes. If either is nil, just return the other, and if both are nil,
--- return nil.
+-- Combine two sets of footnotes. If either is nil, just return the other, and if both are nil, return nil.
 function export.combine_footnotes(notes1, notes2)
 	if not notes1 and not notes2 then
 		return nil
@@ -454,12 +435,27 @@ function export.combine_footnotes(notes1, notes2)
 end
 
 
--- Expand a given footnote (as specified by the user, including the surrounding brackets)
--- into the form to be inserted into the final generated table.
-function export.expand_footnote(note)
+-- Expand a given footnote (as specified by the user, including the surrounding brackets) into the form to be inserted
+-- into the final generated table. If `no_parse_refs` is not given and the footnote is a reference (of the form
+-- '[ref:...]'), parse and return the specified reference(s). Two values are returned, `footnote_string` (the expanded
+-- footnote, or nil if the second value is present) and `references` (a list of objects of the form
+-- {text = TEXT, name = NAME, group = GROUP} if the footnote is a reference and `no_parse_refs` is not given, otherwise
+-- nil). Unless `return_raw` is given, the returned footnote string is capitalized and has a final period added.
+function export.expand_footnote_or_references(note, return_raw, no_parse_refs)
 	local notetext = rmatch(note, "^%[!?(.*)%]$")
 	if not notetext then
 		error("Internal error: Footnote should be surrounded by brackets: " .. note)
+	end
+	if not no_parse_refs and notetext:find("^ref:") then
+		-- a reference
+		notetext = rsub(notetext, "^ref:", "")
+		local parsed_refs = require("Module:references").parse_references(notetext)
+		for i, ref in ipairs(parsed_refs) do
+			if type(ref) == "string" then
+				parsed_refs[i] = {text = ref}
+			end
+		end
+		return nil, parsed_refs
 	end
 	if footnote_abbrevs[notetext] then
 		notetext = footnote_abbrevs[notetext]
@@ -479,7 +475,14 @@ function export.expand_footnote(note)
 		end
 		notetext = table.concat(split_notes)
 	end
-	return m_string_utilities.ucfirst(notetext) .. "."
+	return return_raw and notetext or m_string_utilities.ucfirst(notetext) .. "."
+end
+
+
+-- Older entry point. Equivalent to expand_footnote_or_references(note, true).
+-- FIXME: Convert all uses to use expand_footnote_or_references() instead.
+function export.expand_footnote(note)
+	return export.expand_footnote_or_references(note, false, "no parse refs")
 end
 
 
@@ -1121,6 +1124,7 @@ end
 
 
 -- Older entry point for inflecting a term. Equivalent to inflect_multiword_or_alternant_multiword_spec().
+-- FIXME: Convert all uses to use inflect_multiword_or_alternant_multiword_spec() instead.
 function export.decline_multiword_or_alternant_multiword_spec(multiword_spec, props)
 	return export.inflect_multiword_or_alternant_multiword_spec(multiword_spec, props)
 end
@@ -1146,6 +1150,7 @@ function export.create_footnote_obj()
 		notes = {},
 		seen_notes = {},
 		noteindex = 1,
+		seen_refs = {},
 	}
 end
 
@@ -1155,20 +1160,73 @@ function export.get_footnote_text(form, footnote_obj)
 		return ""
 	end
 	local link_indices = {}
+	local all_refs = {}
 	for _, footnote in ipairs(form.footnotes) do
-		footnote = export.expand_footnote(footnote)
-		local this_noteindex = footnote_obj.seen_notes[footnote]
-		if not this_noteindex then
-			-- Generate a footnote index.
-			this_noteindex = footnote_obj.noteindex
-			footnote_obj.noteindex = footnote_obj.noteindex + 1
-			table.insert(footnote_obj.notes, '<sup style="color: red">' .. this_noteindex .. '</sup>' .. footnote)
-			footnote_obj.seen_notes[footnote] = this_noteindex
+		local refs
+		footnote, refs = export.expand_footnote_or_references(footnote)
+		if footnote then
+			local this_noteindex = footnote_obj.seen_notes[footnote]
+			if not this_noteindex then
+				-- Generate a footnote index.
+				this_noteindex = footnote_obj.noteindex
+				footnote_obj.noteindex = footnote_obj.noteindex + 1
+				table.insert(footnote_obj.notes, '<sup style="color: red">' .. this_noteindex .. '</sup>' .. footnote)
+				footnote_obj.seen_notes[footnote] = this_noteindex
+			end
+			m_table.insertIfNot(link_indices, this_noteindex)
 		end
-		m_table.insertIfNot(link_indices, this_noteindex)
+		if refs then
+			for _, ref in ipairs(refs) do
+				if not ref.name then
+					local this_refhash = footnote_obj.seen_refs[ref.text]
+					if not this_refhash then
+						-- Different text needs to have different auto-generated names, globally across the entire page,
+						-- including across different invocations of {{it-verb}} or {{it-conj}}. The easiest way to accomplish
+						-- this is to use a message-digest hashing function. It does not have to be cryptographically secure
+						-- (MD5 is insecure); it just needs to have low probability of collisions.
+						this_refhash = mw.hash.hashValue("md5", ref.text)
+						footnote_obj.seen_refs[ref.text] = this_refhash
+					end
+					ref.autoname = this_refhash
+				end
+				-- I considered using "n" as the default group rather than nothing, to more clearly distinguish regular
+				-- footnotes from references, but this requires referencing group "n" as <references group="n"> below,
+				-- which is non-obvious.
+				m_table.insertIfNot(all_refs, ref)
+			end
+		end
 	end
 	table.sort(link_indices)
-	return '<sup style="color: red">' .. table.concat(link_indices, ",") .. '</sup>'
+	local function sort_refs(r1, r2)
+		-- FIXME, we are now sorting on an arbitrary hash. Should we keep track of the order we
+		-- saw the autonamed references and sort on that?
+		if r1.autoname and r2.name then
+			return true
+		elseif r1.name and r2.autoname then
+			return false
+		elseif r1.name and r2.name then
+			return r1.name < r2.name
+		else
+			return r1.autoname < r2.autoname
+		end
+	end
+	table.sort(all_refs, sort_refs)
+	for i, ref in ipairs(all_refs) do
+		local refargs = {name = ref.name or ref.autoname, group = ref.group}
+		all_refs[i] = mw.getCurrentFrame():extensionTag("ref", ref.text, refargs)
+	end
+	local link_text
+	if #link_indices > 0 then
+		link_text = '<sup style="color: red">' .. table.concat(link_indices, ",") .. '</sup>'
+	else
+		link_text = ""
+	end
+	local ref_text = table.concat(all_refs)
+	if link_text ~= "" and ref_text ~= "" then
+		return link_text .. "<sup>,</sup>" .. ref_text
+	else
+		return link_text .. ref_text
+	end
 end
 
 
@@ -1179,36 +1237,55 @@ into strings. Each form list turns into a string consisting of a comma-separated
 (unless `no_accel` is set in a given form). `props` is a table used in generating the strings, as follows:
 {
   lang = LANG_OBJECT,
-  lemmas = LEMMAS,
-  slot_table = SLOT_TABLE,
-  slot_list = SLOT_LIST,
+  lemmas = {"LEMMA", "LEMMA", ...},
+  slot_list = {{"SLOT", "ACCEL"}, {"SLOT", "ACCEL"}, ...},
+  slot_table = {SLOT = "ACCEL", SLOT = "ACCEL", ...},
   include_translit = BOOLEAN,
-  create_footnote_obj = FUNCTION_TO_CREATE_FOOTNOTE_OBJ,
-  canonicalize = FUNCTION_TO_CANONICALIZE_EACH_FORM,
-  transform_link = FUNCTION_TO_TRANSFORM_EACH_LINK,
-  join_spans = FUNCTION_TO_JOIN_SPANS,
+  create_footnote_obj = nil or FUNCTION_TO_CREATE_FOOTNOTE_OBJ,
+  canonicalize = nil or FUNCTION_TO_CANONICALIZE_EACH_FORM,
+  transform_link = nil or FUNCTION_TO_TRANSFORM_EACH_LINK,
+  join_spans = nil or FUNCTION_TO_JOIN_SPANS,
   allow_footnote_symbols = BOOLEAN,
-  footnotes = EXTRA_FOOTNOTES,
+  footnotes = nil or {"EXTRA_FOOTNOTE", "EXTRA_FOOTNOTE", ...},
 }
+
 `lemmas` is the list of lemmas, used in the accelerators.
-`slot_list` is a list of two-element lists of slots and associated accelerator inflections.
-`slot_table` is a table mapping slots to associated accelerator inflections.
-  (One of `slot_list` or `slot_table` must be given.)
-If `include_translit` is given, transliteration is included in the generated strings.
+
+`slot_list` is a list of two-element lists of slots and associated accelerator inflections. SLOT should correspond to
+slots generated during inflect_multiword_or_alternant_multiword_spec(). ACCEL is the corresponding accelerator form;
+e.g. if SLOT is "pres_1sg", ACCEL might be "1|s|pres|ind". ACCEL is used in generating entries for accelerator support
+(see [[WT:ACCEL]]).
+
+`slot_table` is a table mapping slots to associated accelerator inflections and serves the same function as
+`slot_list`. Only one of `slot_list` or `slot_table` must be given. For new code it is preferable to use `slot_list`
+because this allows you to control the order of processing slots, which may occasionally be important.
+
+`include_translit`, if given, causes transliteration to be included in the generated strings.
+
 `create_footnote_obj` is an optional function of no arguments to create the footnote object used to track footnotes;
-  see export.create_footnote_obj(). Customizing it is useful to prepopulate the footnote table using
-  export.get_footnote_text().
-`canonicalize` is an optional function of one argument (a form) to canonicalize each form before processing; it can return nil
-  for no change.
-`transform_link` is an optional function to transform a linked form prior to further processing; it is passed three arguments
-  (slot, link, link_tr) and should return the transformed link (or if translit is active, it should return the transformed link
-  and corresponding translit). It can return nil for no change.
-`join_spans` is an optional function of three arguments (slot, orig_spans, tr_spans) where the spans in question are after
-  linking and footnote processing. It should return a string (the joined spans) or nil for the default algorithm, which separately
-  joins the orig_spans and tr_spans with commas and puts a newline between them.
-If `allow_footnote_symbols` is given, footnote symbols attached to forms (e.g. numbers, asterisk) are separated off, placed outside
-the links, and superscripted. In this case, `footnotes` should be a list of footnotes (preceded by footnote symbols, which are
-superscripted). These footnotes are combined with any footnotes found in the forms and placed into `forms.footnotes`.
+see export.create_footnote_obj(). Customizing it is useful to prepopulate the footnote table using
+export.get_footnote_text().
+
+`canonicalize` is an optional function of one argument (a form) to canonicalize each form before processing; it can
+return nil for no change. The most common purpose of this function is to remove variant codes from the form. See the
+documentation for inflect_multiword_or_alternant_multiword_spec() for a description of variant codes and their purpose.
+
+`transform_link` is an optional function to transform a linked form prior to further processing. It is passed three
+arguments (slot, link, link_tr) and should return the transformed link (or if translit is active, it should return two
+values, the transformed link and corresponding translit). It can return nil for no change. `transform_link` is used,
+for example, in [[Module:de-verb]], where it adds the appropriate pronoun ([[ich]], [[du]], etc.) to finite verb forms,
+and adds [[dass]] before special subordinate-clause variants of finte verb forms.
+
+`join_spans` is an optional function of three arguments (slot, orig_spans, tr_spans) where the spans in question are
+after linking and footnote processing. It should return a string (the joined spans) or nil for the default algorithm,
+which separately joins the orig_spans and tr_spans with commas and puts a newline between them.
+
+`allow_footnote_symbols`, if given, causes any footnote symbols attached to forms (e.g. numbers, asterisk) to be
+separated off, placed outside the links, and superscripted. In this case, `footnotes` should be a list of footnotes
+(preceded by footnote symbols, which are superscripted). These footnotes are combined with any footnotes found in the
+forms and placed into `forms.footnotes`. This mechanism of specifying footnotes is provided for backward compatibility
+with certain existing inflection modules and should not be used for new modules. Instead, use the regular footnote
+mechanism specified using the `footnotes` property attached to each form object.
 ]=]
 function export.show_forms(forms, props)
 	local footnote_obj = props.create_footnote_obj and props.create_footnote_obj() or export.create_footnote_obj()
@@ -1237,6 +1314,9 @@ function export.show_forms(forms, props)
 			local orig_spans = {}
 			local tr_spans = {}
 			local orignotes, trnotes = "", ""
+			if type(formvals) ~= "table" then
+				error("Internal error: For slot '" .. slot .. "', expected table but saw " .. mw.dumpObject(formvals))
+			end
 			for i, form in ipairs(formvals) do
 				local orig_text = props.canonicalize and props.canonicalize(form.form) or form.form
 				local link
@@ -1325,9 +1405,8 @@ function export.show_forms(forms, props)
 end
 
 
---[=[
-Older entry point. Same as `show_forms` but automatically sets include_translit = true in props.
-]=]
+-- Older entry point. Same as `show_forms` but automatically sets include_translit = true in props.
+-- FIXME: Convert all uses to use show_forms() instead.
 function export.show_forms_with_translit(forms, lemmas, slot_table, props, footnotes, allow_footnote_symbols)
 	props.lemmas = lemmas
 	props.slot_table = slot_table
