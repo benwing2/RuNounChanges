@@ -221,14 +221,14 @@ EXAMPLES OF CONJUGATION:
 FIXME:
 
 1. Fix inf_linked and lemma_linked to work like in [[Module:es-verb]]. (DONE)
-2. Finish support for reflexive and pronominal verbs.
-3. Finish support for reflexive and pronominal imperatives.
+2. Finish support for reflexive and pronominal verbs. (DONE)
+3. Finish support for reflexive and pronominal imperatives. (DONE)
 4. Finish support for negative imperatives. (DONE)
 5. Fix handling of third-only verbs; require that irregular forms be specified in the first person.
    Remove existing half-implemented support for specifying principal parts in the third person. (DONE)
 6. Support defective verbs specified using e.g. redire<a/rièdo,-,redìto.imperf:-.fut:-.impsub:->.
    Include categorization; but if row overrides or single overrides of all forms given, don't categorize
-   as defective for that row.
+   as defective for that row. (DONE)
 7. Fix handling of aux; snarf code from [[Module:de-verb]] to handle aux with multiword expressions. (DONE)
 8. Add automatic support for common irregular verbs: [[essere]], [[avere]], [[andare]], [[fare]], [[dare]],
    [[dire]], [[venire]], [[vedere]], [[tenere]], [[bere]], etc. Should make combinations of these verbs
@@ -255,8 +255,12 @@ FIXME:
 	both sfare and rifare, sdare and ridare. (DONE)
 25. When handling built-in verbs, make sure we handle prefixes correctly w.r.t. negative imperatives. (DONE)
 26. Support ref: in footnotes. (DONE)
-27. Finish built-in -ere verbs.
+27. Finish built-in -ire verbs.
 28. Implement error("If past participle given as '-', auxiliary must be explicitly specified as '-'"). (DONE)
+29. Make present participles default to enabled. (DONE)
+30. Instead of a qualifier for syntactic gemination, use a superscripted symbol with a tooltip, as for {{it-IPA}}.
+    Do this automatically for multisyllabic terms ending in a stressed vowel, but don't do it if the verb ends up
+	non-final, as in [[andare a letto]].
 --]=]
 
 local lang = require("Module:languages").getByCode("it")
@@ -1797,7 +1801,7 @@ local row_conjugations = {
 		add_reflexive_clitics = add_infinitive_reflexive_clitics,
 	}},
 	{"pres", {
-		desc = "present",
+		desc = "present indicative",
 		tag_suffix = "pres|ind",
 		persnums = full_person_number_list,
 		-- No generate_default_principal_part; handled specially in add_present_indic because we actually have
@@ -1837,7 +1841,7 @@ local row_conjugations = {
 		add_reflexive_clitics = add_negative_imperative_reflexive_clitics,
 		no_explicit_principal_part = true, -- because all parts are copied from other parts
 		no_row_overrides = true, -- not useful; use single overrides if really needed
-		-- We don't want a category [[:Category:Italian verbs with defective negative imperative]]; doesn't make
+		-- We don't want a category [[:Category:Italian verbs with missing negative imperative]]; doesn't make
 		-- sense as all parts are copied from elsewhere.
 		dont_check_defective_status = true,
 		-- Don't add the prefix at the end because of negative imperatives like "[[non]] [[proporre]]"; the prefix
@@ -1856,7 +1860,7 @@ local row_conjugations = {
 		no_explicit_principal_part = "builtin",
 	}},
 	{"imperf", {
-		desc = "imperfect",
+		desc = "imperfect indicative",
 		tag_suffix = "impf|ind",
 		persnums = full_person_number_list,
 		generate_default_principal_part = function(base) return iut.map_forms(base.verb.unaccented_stem,
@@ -1937,7 +1941,8 @@ local row_conjugations = {
 		add_reflexive_clitics = add_participle_reflexive_clitics,
 		no_row_overrides = true, -- useless because there's only one form; use explicit principal part
 		no_single_overrides = true, -- useless because there's only one form; use explicit principal part
-		not_defaulted = true, -- not defaulted, user has to request it explicitly
+		-- Disable this; seems most verbs do have present participles
+		-- not_defaulted = true, -- not defaulted, user has to request it explicitly
 		dont_check_defective_status = true, -- this is frequently missing and doesn't indicate a defective verb
 	}},
 }
@@ -2934,7 +2939,7 @@ local function add_categories_and_annotation(alternant_multiword_spec, base, mul
 				is_defective = true
 				insert_cat("defective verbs")
 			end
-			insert_cat("verbs with defective " .. rowspec.desc)
+			insert_cat("verbs with missing " .. rowspec.desc)
 		end 
 	end
 	if not base.verb.is_reflexive and not base.principal_part_specs.aux then
@@ -2959,8 +2964,10 @@ local function add_categories_and_annotation(alternant_multiword_spec, base, mul
 
 	if not base.verb.is_reflexive and base.principal_part_specs.aux then
 		for _, auxform in ipairs(base.principal_part_specs.aux) do
-			insert_ann("aux", auxform.form)
-			insert_cat("verbs taking " .. auxform.form .. " as auxiliary")
+			-- No auxiliaries end in a stressed vowel so this is safe.
+			local aux_no_accents = remove_accents(auxform.form)
+			insert_ann("aux", aux_no_accents)
+			insert_cat("verbs taking " .. aux_no_accents .. " as auxiliary")
 		end
 	end
 
