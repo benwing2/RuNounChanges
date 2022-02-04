@@ -190,7 +190,7 @@ def process_text_on_page(pageindex, pagetitle, text):
             pagemsg("WARNING: Unmatched colon in %s <%s> in line: %s" % (syntype, orig_syn, line))
             return None
           # Strip brackets around entire synonym
-          syn = re.sub(r"^\[\[([^\[\]]*)\]\]$", r"\1", syn)
+          syn = re.sub(r"^\[\[([^\[\]|{}]*)\]\]$", r"\1", syn)
           # If there are brackets around some words but not all, put brackets around the remaining words
           if "[[" in syn:
             split_by_brackets = re.split(r"(\[\[[^\[\]]*\]\])", syn)
