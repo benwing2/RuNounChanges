@@ -231,6 +231,29 @@ function export.split_alternating_runs(segment_runs, splitchar, preserve_splitch
 end
 
 
+local function strip_spaces(text)
+	return rsub(text, "^%s*(.-)%s*$", "%1")
+end
+
+
+-- Like split_alternating_runs() but strips spaces from both ends of the odd-numbered elements (only in
+-- odd-numbered runs if preserve_splitchar is given). Effectively we leave alone the footnotes and splitchars
+-- themselves, but otherwise strip extraneous spaces. Spaces in the middle of an element are also left alone.
+function export.split_alternating_runs_and_strip_spaces(segment_runs, splitchar, preserve_splitchar)
+	local split_runs = export.split_alternating_runs(segment_runs, splitchar, preserve_splitchar)
+	for i, run in ipairs(split_runs) do
+		if not preserve_splitchar or i % 2 == 1 then
+			for j, element in ipairs(run) do
+				if j % 2 == 1 then
+					run[j] = strip_spaces(element)
+				end
+			end
+		end
+	end
+	return split_runs
+end
+
+
 -- Given a list of forms (each of which is a table of the form
 -- {form=FORM, translit=MANUAL_TRANSLIT, footnotes=FOOTNOTES}), concatenate into a
 -- SLOT=FORM//TRANSLIT,FORM//TRANSLIT,... string (or SLOT=FORM,FORM,... if no translit),
@@ -626,7 +649,7 @@ function export.add_multiple_forms(forms, slot, sets_of_forms, combine_stem_endi
 	if #sets_of_forms == 0 then
 		return
 	elseif #sets_of_forms == 1 then
-		local formset = iut.convert_to_general_list_form(sets_of_forms[1], footnotes)
+		local formset = export.convert_to_general_list_form(sets_of_forms[1], footnotes)
 		export.insert_forms(forms, slot, formset)
 	elseif #sets_of_forms == 2 then
 		local stems = sets_of_forms[1]
