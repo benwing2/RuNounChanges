@@ -3220,8 +3220,6 @@ function export.do_generate_forms(parent_args, from_headword, def)
 
 	local args = require("Module:parameters").process(parent_args, params)
 
-	local iut = require("Module:inflection utilities")
-
 	local arg1 = args[1]
 	local need_surrounding_angle_brackets = true
 	-- Check whether we need to add <...> around the argument. If the
