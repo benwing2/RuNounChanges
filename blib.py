@@ -148,7 +148,7 @@ def fetch_param_chain(t, first, pref=None, firstdefault=""):
     val = getparam(t, pref)
     if val:
       ret.append(val)
-  first_num = 1 if not is_number else int(first[0]) + 1
+  first_num = 1 if not is_number or pref else int(first[0]) + 1
   for i in xrange(first_num, 30):
     param = pref + str(i)
     if param not in first:
