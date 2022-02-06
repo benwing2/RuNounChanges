@@ -89,141 +89,74 @@ pos_functions.adjectives = function(class, args, data)
 end
 
 pos_functions.nouns = function(class, args, data)
-	local params = {
-		[1] = {list = "g", default = "?"},
-		[2] = {list = "gen"},
-		[3] = {list = "pl"},
-		[4] = {list = "dim"},
-		["head"] = {},
-		["m"] = {list = true},
-		["f"] = {list = true},
-	}
+	local alternant_multiword_spec = require("Module:User:Benwing2/de-noun").do_generate_forms(args, nil, "from headword")
+	data.heads = alternant_multiword_spec.args.head
+	data.genders = alternant_multiword_spec.genders
 	
-	local args = require("Module:parameters").process(args, params)
-	data.heads = {args["head"]}
-	
-	-- Gender
-	for _, g in ipairs(args[1]) do
-		if legal_gender[g] then
-			table.insert(data.genders, g)
-			
-			if g == "p" then
-				table.insert(data.categories, "German pluralia tantum")
+	local function expand_footnotes_and_references(footnotes)
+		if not footnotes then
+			return nil
+		end
+		local quals, refs
+		for _, qualifier in ipairs(footnotes) do
+			local this_footnote, this_refs =
+				require("Module:User:Benwing2/inflection utilities").expand_footnote_or_references(qualifier, "return raw")
+			if this_refs then
+				if not refs then
+					refs = this_refs
+				else
+					for _, ref in ipairs(this_refs) do
+						table.insert(refs, ref)
+					end
+				end
 			else
-				table.insert(data.categories, "German " .. gender_names[g] .. " nouns")
+				if not quals then
+					quals = {this_footnote}
+				else
+					table.insert(quals, this_footnote)
+				end
 			end
+		end
+		return quals, refs
+	end
+
+	local function do_noun_form(slot, label, accel_form)
+		local forms = alternant_multiword_spec.forms[slot]
+		local retval
+		if not forms then
+			retval = {label = "no " .. label}
 		else
-			if g == "m-s" or g == "f-s" or g == "n-s" or g == "m-p" or g == "f-p" or g == "n-p" then
-				require("Module:debug").track("de-headword/genders")
+			retval = {label = label, accel = accel_form and {form = accel_form} or nil}
+			for _, form in ipairs(forms) do
+				local quals, refs = expand_footnotes_and_references(form.footnotes)
+				table.insert(retval, {term = form.form, qualifiers = quals, refs = refs})
 			end
-			
-			table.insert(data.genders, "?")
 		end
+
+		table.insert(data.inflections, retval)
 	end
-	
-	if args[1][1] ~= "p" then
-		-- Genitive
-		if not args[2][1] then
-			if args[1][1] == "m" or args[1][1] == "n" then
-				table.insert(args[2], PAGENAME .. "s")
-			else
-				table.insert(args[2], PAGENAME)
-			end
-		elseif #args[2] == 1 then
-			-- TODO: instead of this duplication use [[Module:de-noun]]
-			if args[2][1] == "s" then
-				args[2][1] = PAGENAME .. "s"
-			elseif args[2][1] == "(s)" then	
-				args[2][1] = PAGENAME .. "s"
-				table.insert(args[2], PAGENAME)
-			elseif args[2][1] == "es" then
-				args[2][1] = PAGENAME .. "es"
-			elseif args[2][1] == "(es)" then
-				args[2][1] = PAGENAME .. "es"
-				table.insert(args[2], PAGENAME)
-			elseif args[2][1] == "(e)s" then
-				args[2][1] = PAGENAME .. "es"
-				table.insert(args[2], PAGENAME .. "s")
-			elseif args[2][1] == "ses" then
-				args[2][1] = PAGENAME .. "ses"
-			elseif args[2][1] == "en" then
-				args[2][1] = PAGENAME .. "en"
-			elseif args[2][1] == "n" then
-				args[2][1] = PAGENAME .. "n"
-			elseif args[2][1] == "ns" then
-				args[2][1] = PAGENAME .. "ns"
-			end
-		end
-		
-		for i, form in ipairs(args[2]) do
-			args[2][i] = {term = form}
-		end
-		
-		args[2].accel = {form = "gen|s"}
-		args[2].label = "genitive"
-		table.insert(data.inflections, args[2])
-		
-		-- Plural
-		if not args[3][1] and data.pos_category == "nouns" then
-			table.insert(args[3], PAGENAME .. "en")
-		elseif #args[3] == 1 then
-			-- TODO: instead of this duplication use [[Module:de-noun]]
-			if args[3][1] == "n" then
-				args[3][1] = PAGENAME .. "n"
-			elseif args[3][1] == "en" then
-				args[3][1] = PAGENAME .. "en"
-			elseif args[3][1] == "nen" then
-				args[3][1] = PAGENAME .. "nen"
-			elseif args[3][1] == "e" then
-				args[3][1] = PAGENAME .. "e"
-			elseif args[3][1] == "se" then
-				args[3][1] = PAGENAME .. "se"
-			elseif args[3][1] == "s" then
-				args[3][1] = PAGENAME .. "s"
-			end
-		end
-		
-		if args[3][1] == "-" then
-			table.insert(data.inflections, {label = "no plural"})
-			table.insert(data.categories, "German uncountable nouns")
-		elseif #args[3] > 0 then
-			for i, form in ipairs(args[3]) do
-				args[3][i] = {term = form}
-			end
-			
-			args[3].accel = {form = "p"}
-			args[3].label = "plural"
-			table.insert(data.inflections, args[3])
-		end
+
+	do_noun_form("gen_s", "genitive", "gen|s")
+	do_noun_form("nom_p", "plural")
+	do_noun_form("dim", "diminutive")
+	do_noun_form("f", "feminine")
+	do_noun_form("m", "masculine")
+
+	-- Add categories.
+	for _, cat in ipairs(alternant_multiword_spec.categories) do
+		table.insert(data.categories, cat)
 	end
-	
-	-- Diminutive
-	if #args[4] > 0 then
-		for i, form in ipairs(args[4]) do
-			args[4][i] = {term = form, genders = {"n"}}
+
+	-- Use the "linked" form of the lemma as the head if no head= explicitly given.
+	if #data.heads == 0 then
+		data.heads = {}
+		local lemmas = alternant_multiword_spec.forms.nom_s or alternant_multiword_spec.forms.nom_p or {}
+		for _, lemma_obj in ipairs(lemmas) do
+			-- FIXME, can't yet specify qualifiers or references for heads
+			table.insert(data.heads, lemma_obj.form)
+			-- local quals, refs = expand_footnotes_and_references(lemma_obj.footnotes)
+			-- table.insert(data.heads, {term = lemma_obj.form, qualifiers = quals, refs = refs})
 		end
-		
-		args[4].accel = {form = "diminutive", gender = "n"}
-		args[4].label = "diminutive"
-		table.insert(data.inflections, args[4])
-	end
-	
-	-- Other gender
-	if #args.f > 0 then
-		args.f.label = "female"
-		if args.f[1] == "in" then
-			args.f[1] = PAGENAME .. "in"
-		end
-		if args.f[1] == PAGENAME .. "in" then
-			args.f.accel = {form = "feminine", gender = "f"}
-			args.f.label = "feminine"
-		end
-		table.insert(data.inflections, args.f)
-	end
-	
-	if #args.m > 0 then
-		args.m.label = "male"
-		table.insert(data.inflections, args.m)
 	end
 end
 
