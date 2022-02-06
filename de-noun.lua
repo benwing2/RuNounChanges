@@ -27,9 +27,10 @@ local m_table = require("Module:table")
 local m_links = require("Module:links")
 local m_string_utilities = require("Module:string utilities")
 local iut = require("Module:User:Benwing2/inflection utilities")
+local com = require("Module:de-common")
 
 local pretend_from_headword = true -- may be set during debugging
-local force_cat = true -- may be set during debugging
+local force_cat = false -- may be set during debugging
 
 local u = mw.ustring.char
 local rsplit = mw.text.split
@@ -66,7 +67,7 @@ local function rsubb(term, foo, bar)
 end
 
 
-local output_noun_slots = {
+local noun_slots = {
 	nom_s = "nom|s",
 	gen_s = "gen|s",
 	dat_s = "dat|s",
@@ -80,38 +81,9 @@ local output_noun_slots = {
 }
 
 
-local output_noun_slots_with_linked = m_table.shallowcopy(output_noun_slots)
-output_noun_slots_with_linked["nom_s_linked"] = "nom|s"
-output_noun_slots_with_linked["nom_p_linked"] = "nom|p"
-
-local input_params_to_slots_both = {
-	[1] = "nom_s",
-	[2] = "nom_p",
-	[3] = "gen_s",
-	[4] = "gen_p",
-	[5] = "dat_s",
-	[6] = "dat_p",
-	[7] = "acc_s",
-	[8] = "acc_p",
-	[9] = "abl_s",
-	[10] = "voc_s",
-}
-
-local input_params_to_slots_sg = {
-	[1] = "nom_s",
-	[2] = "gen_s",
-	[3] = "dat_s",
-	[4] = "acc_s",
-	[5] = "abl_s",
-	[6] = "voc_s",
-}
-
-local input_params_to_slots_pl = {
-	[1] = "nom_p",
-	[2] = "gen_p",
-	[3] = "dat_p",
-	[4] = "acc_p",
-}
+local noun_slots_with_linked = m_table.shallowcopy(noun_slots)
+noun_slots_with_linked["nom_s_linked"] = "nom|s"
+noun_slots_with_linked["nom_p_linked"] = "nom|p"
 
 
 local cases = {
@@ -134,46 +106,11 @@ local umlaut = {
 }
 
 
-local articles = {
-	["m"] = {
-		ind_nom = "ein", def_nom = "der",
-		ind_gen = "eines", def_gen = "des",
-		ind_dat = "einem", def_dat = "dem",
-		ind_acc = "einen", def_acc = "den",
-		ind_abl = "einen", def_abl = "den",
-		ind_voc = "einen", def_voc = "den",
-	},
-	["n"] = {
-		ind_nom = "eine", def_nom = "die",
-		ind_gen = "einer", def_gen = "der",
-		ind_dat = "einer", def_dat = "der",
-		ind_acc = "eine", def_acc = "die",
-		ind_abl = "eine", def_abl = "die",
-		ind_voc = "eine", def_voc = "die",
-	},
-	["f"] = {
-		ind_nom = "ein", def_nom = "das",
-		ind_gen = "eines", def_gen = "des",
-		ind_dat = "einem", def_dat = "dem",
-		ind_acc = "ein", def_acc = "das",
-		ind_abl = "ein", def_abl = "das",
-		ind_voc = "ein", def_voc = "das",
-	},
-	["p"] = {
-		def_nom = "die",
-		def_gen = "der",
-		def_dat = "den",
-		def_acc = "die",
-		def_abl = "?",
-		def_voc = "?",
-	},
-}
-
-local output_noun_slots_with_linked_and_articles = m_table.shallowcopy(output_noun_slots_with_linked)
+local noun_slots_with_linked_and_articles = m_table.shallowcopy(noun_slots_with_linked)
 for case, _ in pairs(cases) do
-	output_noun_slots_with_linked_and_articles["art_ind_" .. case .. "_s"] = "-"
-	output_noun_slots_with_linked_and_articles["art_def_" .. case .. "_s"] = "-"
-	output_noun_slots_with_linked_and_articles["art_def_" .. case .. "_p"] = "-"
+	noun_slots_with_linked_and_articles["art_ind_" .. case .. "_s"] = "-"
+	noun_slots_with_linked_and_articles["art_def_" .. case .. "_s"] = "-"
+	noun_slots_with_linked_and_articles["art_def_" .. case .. "_p"] = "-"
 end
 
 local function apply_umlaut(term, origterm)
@@ -290,7 +227,7 @@ local function process_spec(endings, default, footnotes, desc, process)
 		end
 	end
 end
-	
+
 
 local function add_spec(base, slot, endings, default, footnotes, process_combined_stem_ending)
 	local function do_add(stem, ending)
@@ -486,6 +423,7 @@ decls["adj"] = function(base, stress)
 end
 ]=]
 
+
 --[=[
 Parse an indicator spec (text consisting of angle brackets and zero or more dot-separated indicators within them).
 Return value is an object of the form
@@ -570,7 +508,7 @@ local function parse_indicator_spec(angle_bracket_spec, lemma, pagename)
 		else
 			parse_err("Slot indicator '" .. indicator .. "' must be followed by a colon: '" .. table.concat(segments) .. "'")
 		end
-		if not output_noun_slots[slot] then
+		if not noun_slots[slot] then
 			parse_err("Unrecognized slot indicator '" .. indicator .. "': '" .. table.concat(segments) .. "'")
 		end
 		segments[1] = rest
@@ -865,33 +803,15 @@ local function compute_articles(alternant_multiword_spec)
 		for _, genderspec in ipairs(base.genders) do
 			for case, _ in pairs(cases) do
 				iut.insert_form(alternant_multiword_spec.forms, "art_ind_" .. case .. "_s",
-					{form = articles[genderspec.form]["ind_" .. case]})
+					{form = com.articles[genderspec.form]["ind_" .. case]})
 				iut.insert_form(alternant_multiword_spec.forms, "art_def_" .. case .. "_s",
-					{form = articles[genderspec.form]["def_" .. case]})
+					{form = com.articles[genderspec.form]["def_" .. case]})
 			end
 		end
 	end)
 	for case, _ in pairs(cases) do
 		iut.insert_form(alternant_multiword_spec.forms, "art_def_" .. case .. "_p",
-			{form = articles.p["def_" .. case]})
-	end
-end
-
-
-local function process_manual_overrides(forms, args, number)
-	local params_to_slots_map =
-		number == "sg" and input_params_to_slots_sg or
-		number == "pl" and input_params_to_slots_pl or
-		input_params_to_slots_both
-	for param, slot in pairs(params_to_slots_map) do
-		if args[param] then
-			forms[slot] = nil
-			if args[param] ~= "-" and args[param] ~= "—" then
-				for _, form in ipairs(rsplit(args[param], "%s*,%s*")) do
-					iut.insert_form(forms, slot, {form = form})
-				end
-			end
-		end
+			{form = com.articles.p["def_" .. case]})
 	end
 end
 
@@ -912,94 +832,89 @@ local function compute_categories_and_annotation(alternant_multiword_spec)
 		insert("pluralia tantum")
 	end
 	local annotation
-	if alternant_multiword_spec.manual then
-		alternant_multiword_spec.annotation =
-			alternant_multiword_spec.number == "sg" and "sg-only" or
-			alternant_multiword_spec.number == "pl" and "pl-only" or
-			""
-	else
-		local annparts = {}
-		local genderdescs = {}
-		local decldescs = {}
-		local function do_word_spec(base)
-			local saw_m_or_n = false
-			for _, gender in ipairs(base.genders) do
-				if gender.form == "m" then
-					m_table.insertIfNot(genderdescs, "masc")
-					saw_m_or_n = true
-				elseif gender.form == "f" then
-					m_table.insertIfNot(genderdescs, "fem")
-				elseif gender.form == "n" then
-					m_table.insertIfNot(genderdescs, "neut")
-					saw_m_or_n = true
-				else
-					error("Internal error: Unrecognized gender '" .. gender.form .. "'")
-				end
-			end
-			if saw_m_or_n then
-				if base.props.weak then
-					insert("weak ~")
-					m_table.insertIfNot(decldescs, "weak")
-				else
-					m_table.insertIfNot(decldescs, "strong")
-				end
-			end
-		end
-		local key_entry = alternant_multiword_spec.first_noun or alternant_multiword_spec.first_adj or 1
-		if #alternant_multiword_spec.alternant_or_word_specs >= key_entry then
-			local alternant_or_word_spec = alternant_multiword_spec.alternant_or_word_specs[key_entry]
-			if alternant_or_word_spec.alternants then
-				for _, multiword_spec in ipairs(alternant_or_word_spec.alternants) do
-					key_entry = multiword_spec.first_noun or multiword_spec.first_adj or 1
-					if #multiword_spec.word_specs >= key_entry then
-						do_word_spec(multiword_spec.word_specs[key_entry])
-					end
-				end
+	local annparts = {}
+	local genderdescs = {}
+	local decldescs = {}
+	local function do_word_spec(base)
+		local saw_m_or_n = false
+		for _, gender in ipairs(base.genders) do
+			if gender.form == "m" then
+				m_table.insertIfNot(genderdescs, "masc")
+				saw_m_or_n = true
+			elseif gender.form == "f" then
+				m_table.insertIfNot(genderdescs, "fem")
+			elseif gender.form == "n" then
+				m_table.insertIfNot(genderdescs, "neut")
+				saw_m_or_n = true
 			else
-				do_word_spec(alternant_or_word_spec)
+				error("Internal error: Unrecognized gender '" .. gender.form .. "'")
 			end
 		end
-		if alternant_multiword_spec.number ~= "both" then
-			table.insert(annparts, alternant_multiword_spec.number == "sg" and "sg-only" or "pl-only")
+		if saw_m_or_n then
+			if base.props.weak then
+				insert("weak ~")
+				m_table.insertIfNot(decldescs, "weak")
+			else
+				m_table.insertIfNot(decldescs, "strong")
+			end
 		end
-		if #genderdescs > 0 then
-			table.insert(annparts, table.concat(genderdescs, " // "))
-		end
-		if #decldescs > 0 then
-			table.insert(annparts, table.concat(decldescs, " // "))
-		end
-		if not alternant_multiword_spec.first_noun and alternant_multiword_spec.first_adj then
-			insert("adjectival ~")
-			table.insert(annparts, "adjectival")
-		end
-		alternant_multiword_spec.annotation = table.concat(annparts, " ")
 	end
+	local key_entry = alternant_multiword_spec.first_noun or alternant_multiword_spec.first_adj or 1
+	if #alternant_multiword_spec.alternant_or_word_specs >= key_entry then
+		local alternant_or_word_spec = alternant_multiword_spec.alternant_or_word_specs[key_entry]
+		if alternant_or_word_spec.alternants then
+			for _, multiword_spec in ipairs(alternant_or_word_spec.alternants) do
+				key_entry = multiword_spec.first_noun or multiword_spec.first_adj or 1
+				if #multiword_spec.word_specs >= key_entry then
+					do_word_spec(multiword_spec.word_specs[key_entry])
+				end
+			end
+		else
+			do_word_spec(alternant_or_word_spec)
+		end
+	end
+	if alternant_multiword_spec.number ~= "both" then
+		table.insert(annparts, alternant_multiword_spec.number == "sg" and "sg-only" or "pl-only")
+	end
+	if #genderdescs > 0 then
+		table.insert(annparts, table.concat(genderdescs, " // "))
+	end
+	if #decldescs > 0 then
+		table.insert(annparts, table.concat(decldescs, " // "))
+	end
+	if not alternant_multiword_spec.first_noun and alternant_multiword_spec.first_adj then
+		insert("adjectival ~")
+		table.insert(annparts, "adjectival")
+	end
+	alternant_multiword_spec.annotation = table.concat(annparts, " ")
 end
 
 
-local function process_dim_m_f(alternant_multiword_spec, spec, default, slot, desc)
+local function process_dim_m_f(alternant_multiword_spec, arg_specs, default, slot, desc)
 	local lemmas = alternant_multiword_spec.forms.nom_s or alternant_multiword_spec.forms.nom_p or {}
 	lemmas = iut.map_forms(lemmas, function(form)
 		return rsub(form, "e$", "")
 	end)
 
-	local function parse_err(msg)
-		error(msg .. ": " .. spec)
-	end
-	local segments = iut.parse_balanced_segment_run(spec, "[", "]")
-	local ending_specs = com.fetch_specs(iut, segments, ",", desc, nil, parse_err)
+	for _, spec in ipairs(arg_specs) do
+		local function parse_err(msg)
+			error(msg .. ": " .. spec)
+		end
+		local segments = iut.parse_balanced_segment_run(spec, "[", "]")
+		local ending_specs = fetch_specs(segments, ",", desc, nil, parse_err)
 
-	-- FIXME, this should propagate the 'ss' property upwards
-	local props = {}
-	local function do_combine_stem_ending(stem, ending)
-		return combine_stem_ending(props, stem, ending)
-	end
+		-- FIXME, this should propagate the 'ss' property upwards
+		local props = {}
+		local function do_combine_stem_ending(stem, ending)
+			return combine_stem_ending(props, stem, ending)
+		end
 
-	local function process(stem, ending)
-		iut.add_forms(alternant_multiword_spec.forms, slot, lemmas, ending, do_combine_stem_ending)
-	end
+		local function process(stem, ending)
+			iut.add_forms(alternant_multiword_spec.forms, slot, lemmas, ending, do_combine_stem_ending)
+		end
 
-	process_spec(spec, default, nil, desc, process)
+		process_spec(ending_specs, default, nil, desc, process)
+	end
 end
 
 
@@ -1008,7 +923,7 @@ local function show_forms(alternant_multiword_spec)
 	local props = {
 		lang = lang,
 		lemmas = lemmas,
-		slot_table = output_noun_slots_with_linked_and_articles,
+		slot_table = noun_slots_with_linked_and_articles,
 	}
 	iut.show_forms(alternant_multiword_spec.forms, props)
 end
@@ -1178,13 +1093,33 @@ end
 
 local function compute_headword_genders(alternant_multiword_spec)
 	local genders = {}
-	local number
 	if alternant_multiword_spec.number == "pl" then
-		return "p"
+		return {spec = "p"}
 	end
 	iut.map_word_specs(alternant_multiword_spec, function(base)
 		for _, genderspec in ipairs(base.genders) do
-			m_table.insertIfNot(genders, genderspec.form)
+			-- Create the new spec to insert.
+			local spec = {spec = genderspec.form}
+			if genderspec.footnotes then
+				local qualifiers = {}
+				for _, footnote in ipairs(genderspec.footnotes) do
+					m_table.insertIfNot(qualifiers, iut.expand_footnote_or_references(footnote, "return raw", "no parse refs"))
+				end
+				spec.qualifiers = qualifiers
+			end
+			-- See if the gender of the spec is already present; if so, combine qualifiers.
+			local saw_existing = false
+			for _, existing_spec in ipairs(genders) do
+				if existing_spec.spec == spec.spec then
+					existing_spec.qualifiers = iut.combine_footnotes(existing_spec.qualifiers, spec.qualifiers)
+					saw_existing = true
+					break
+				end
+			end
+			-- If not, add gender.
+			if not saw_existing then
+				table.insert(genders, spec)
+			end
 		end
 	end)
 	return genders
@@ -1257,7 +1192,7 @@ function export.do_generate_forms(parent_args, pos, from_headword, def)
 		skip_slot = function(slot)
 			return skip_slot(alternant_multiword_spec.number, slot)
 		end,
-		slot_table = output_noun_slots_with_linked,
+		slot_table = noun_slots_with_linked,
 		inflect_word_spec = decline_noun,
 	}
 	iut.inflect_multiword_or_alternant_multiword_spec(alternant_multiword_spec, inflect_props)
@@ -1268,53 +1203,6 @@ function export.do_generate_forms(parent_args, pos, from_headword, def)
 	process_dim_m_f(alternant_multiword_spec, args.f, nil, "f", "feminine equivalent")
 	process_dim_m_f(alternant_multiword_spec, args.m, nil, "m", "masculine equivalent")
 	return alternant_multiword_spec
-end
-
-
--- Externally callable function to parse and decline a noun where all forms
--- are given manually. Return value is WORD_SPEC, an object where the declined
--- forms are in `WORD_SPEC.forms` for each slot. If there are no values for a
--- slot, the slot key will be missing. The value for a given slot is a list of
--- objects {form=FORM, footnotes=FOOTNOTES}.
-function export.do_generate_forms_manual(parent_args, number, pos, from_headword, def)
-	if number ~= "sg" and number ~= "pl" and number ~= "both" then
-		error("Internal error: number (arg 1) must be 'sg', 'pl' or 'both': '" .. number .. "'")
-	end
-
-	local params = {
-		footnote = {list = true},
-		title = {},
-	}
-	if number == "both" then
-		params[1] = {required = true, default = "तारीख़"}
-		params[2] = {required = true, default = "तवारीख़"}
-		params[3] = {required = true, default = "तारीख़"}
-		params[4] = {required = true, default = "तवारीख़ों"}
-		params[5] = {required = true, default = "तारीख़"}
-		params[6] = {required = true, default = "तवारीख़ो"}
-	elseif number == "sg" then
-		params[1] = {required = true, default = "अदला-बदला"}
-		params[2] = {required = true, default = "अदले-बदले"}
-		params[3] = {required = true, default = "अदले-बदले"}
-	else
-		params[1] = {required = true, default = "लोग"}
-		params[2] = {required = true, default =	"लोगों"}
-		params[3] = {required = true, default = "लोगो"}
-	end
-
-
-	local args = m_para.process(parent_args, params)
-	local alternant_spec = {
-		title = args.title,
-		footnotes = args.footnote,
-		forms = {},
-		number = number,
-		pos = pos or "nouns",
-		manual = true,
-	}
-	process_manual_overrides(alternant_spec.forms, args, alternant_spec.number)
-	compute_categories_and_annotation(alternant_spec)
-	return alternant_spec
 end
 
 
@@ -1331,27 +1219,12 @@ function export.show(frame)
 end
 
 
--- Entry point for {{de-ndecl-manual}}, {{de-ndecl-manual-sg}} and {{de-ndecl-manual-pl}}.
--- Template-callable function to parse and decline a noun given manually-specified inflections
--- and generate a displayable table of the declined forms.
-function export.show_manual(frame)
-	local iparams = {
-		[1] = {required = true},
-	}
-	local iargs = m_para.process(frame.args, iparams)
-	local parent_args = frame:getParent().args
-	local alternant_spec = export.do_generate_forms_manual(parent_args, iargs[1])
-	show_forms(alternant_spec)
-	return make_table(alternant_spec) .. require("Module:utilities").format_categories(alternant_spec.categories, lang)
-end
-
-
 -- Concatenate all forms of all slots into a single string of the form "SLOT=FORM,FORM,...|SLOT=FORM,FORM,...|...".
 -- Embedded pipe symbols (as might occur in embedded links) are converted to <!>. If INCLUDE_PROPS is given, also
 -- include additional properties (currently, g= for headword genders). This is for use by bots.
 local function concat_forms(alternant_spec, include_props)
 	local ins_text = {}
-	for slot, _ in pairs(output_noun_slots_with_linked) do
+	for slot, _ in pairs(noun_slots_with_linked) do
 		local formtext = iut.concat_forms_in_slot(alternant_spec.forms[slot])
 		if formtext then
 			table.insert(ins_text, slot .. "=" .. formtext)
