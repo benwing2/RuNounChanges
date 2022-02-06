@@ -26,23 +26,26 @@ local legal_verb_classes = {
 
 local lang = require("Module:languages").getByCode("de")
 
+local function ine(val)
+	if val == "" then return nil else return val
+end
+
+
 -- The main entry point.
 -- This is the only function that can be invoked from a template.
 function export.show(frame)
 	local args = frame:getParent().args
 	PAGENAME = mw.title.getCurrentTitle().text
-	
-	local head = args["head"]; if head == "" then head = nil end
-	
+
 	local poscat = frame.args[1] or error("Part of speech has not been specified. Please pass parameter 1 to the module invocation.")
 	local class = frame.args[2]; if class == "" then class = nil end
-	
-	local data = {lang = lang, pos_category = poscat, categories = {}, heads = {head}, genders = {}, inflections = {}}
-	
+
+	local data = {lang = lang, pos_category = poscat, categories = {}, heads = {}, genders = {}, inflections = {}}
+
 	if pos_functions[poscat] then
 		pos_functions[poscat](class, args, data)
 	end
-	
+
 	return
 		require("Module:headword").full_headword(data)
 end
@@ -51,17 +54,17 @@ pos_functions.adjectives = function(class, args, data)
 	local params = {
 		[1] = {list = "comp"},
 		[2] = {list = "sup"},
-		["head"] = {},
+		["head"] = {list = true},
 	}
 	local args = require("Module:parameters").process(args, params)
-	data.heads = {args["head"]}
-	
+	data.heads = args["head"]
+
 	if args[1][1] == "-" then
 		table.insert(data.inflections, {label = "not comparable"})
 		table.insert(data.categories, "German uncomparable adjectives")
 		return
 	end
-	
+
 	if #args[1] > 0 then
 		for i, form in ipairs(args[1]) do
 			args[1][i] = {term = (form == "er" and PAGENAME .. "er" or form),
@@ -73,7 +76,7 @@ pos_functions.adjectives = function(class, args, data)
 	end
 	args[1].label = "[[Appendix:Glossary#comparative|comparative]]"
 	table.insert(data.inflections, args[1])
-	
+
 	if #args[2] > 0 then
 		for i, form in ipairs(args[2]) do
 			args[2][i] = {
@@ -88,11 +91,159 @@ pos_functions.adjectives = function(class, args, data)
 	table.insert(data.inflections, args[2])
 end
 
+
+local function old_nouns(class, args, data)
+	local params = {
+		[1] = {list = "g", default = "?"},
+		[2] = {list = "gen"},
+		[3] = {list = "pl"},
+		[4] = {list = "dim"},
+		["head"] = {list = true},
+		["m"] = {list = true},
+		["f"] = {list = true},
+		["old"] = {type = "boolean"},
+	}
+
+	local args = require("Module:parameters").process(args, params)
+	data.heads = args["head"]
+
+	-- Gender
+	for _, g in ipairs(args[1]) do
+		if legal_gender[g] then
+			table.insert(data.genders, g)
+
+			if g == "p" then
+				table.insert(data.categories, "German pluralia tantum")
+			else
+				table.insert(data.categories, "German " .. gender_names[g] .. " nouns")
+			end
+		else
+			if g == "m-s" or g == "f-s" or g == "n-s" or g == "m-p" or g == "f-p" or g == "n-p" then
+				require("Module:debug").track("de-headword/genders")
+			end
+
+			table.insert(data.genders, "?")
+		end
+	end
+
+	if args[1][1] ~= "p" then
+		-- Genitive
+		if not args[2][1] then
+			if args[1][1] == "m" or args[1][1] == "n" then
+				table.insert(args[2], PAGENAME .. "s")
+			else
+				table.insert(args[2], PAGENAME)
+			end
+		elseif #args[2] == 1 then
+			-- TODO: instead of this duplication use [[Module:de-noun]]
+			if args[2][1] == "s" then
+				args[2][1] = PAGENAME .. "s"
+			elseif args[2][1] == "(s)" then
+				args[2][1] = PAGENAME .. "s"
+				table.insert(args[2], PAGENAME)
+			elseif args[2][1] == "es" then
+				args[2][1] = PAGENAME .. "es"
+			elseif args[2][1] == "(es)" then
+				args[2][1] = PAGENAME .. "es"
+				table.insert(args[2], PAGENAME)
+			elseif args[2][1] == "(e)s" then
+				args[2][1] = PAGENAME .. "es"
+				table.insert(args[2], PAGENAME .. "s")
+			elseif args[2][1] == "ses" then
+				args[2][1] = PAGENAME .. "ses"
+			elseif args[2][1] == "en" then
+				args[2][1] = PAGENAME .. "en"
+			elseif args[2][1] == "n" then
+				args[2][1] = PAGENAME .. "n"
+			elseif args[2][1] == "ns" then
+				args[2][1] = PAGENAME .. "ns"
+			end
+		end
+
+		for i, form in ipairs(args[2]) do
+			args[2][i] = {term = form}
+		end
+
+		args[2].accel = {form = "gen|s"}
+		args[2].label = "genitive"
+		table.insert(data.inflections, args[2])
+
+		-- Plural
+		if not args[3][1] and data.pos_category == "nouns" then
+			table.insert(args[3], PAGENAME .. "en")
+		elseif #args[3] == 1 then
+			-- TODO: instead of this duplication use [[Module:de-noun]]
+			if args[3][1] == "n" then
+				args[3][1] = PAGENAME .. "n"
+			elseif args[3][1] == "en" then
+				args[3][1] = PAGENAME .. "en"
+			elseif args[3][1] == "nen" then
+				args[3][1] = PAGENAME .. "nen"
+			elseif args[3][1] == "e" then
+				args[3][1] = PAGENAME .. "e"
+			elseif args[3][1] == "se" then
+				args[3][1] = PAGENAME .. "se"
+			elseif args[3][1] == "s" then
+				args[3][1] = PAGENAME .. "s"
+			end
+		end
+
+		if args[3][1] == "-" then
+			table.insert(data.inflections, {label = "no plural"})
+			table.insert(data.categories, "German uncountable nouns")
+		elseif #args[3] > 0 then
+			for i, form in ipairs(args[3]) do
+				args[3][i] = {term = form}
+			end
+
+			args[3].accel = {form = "p"}
+			args[3].label = "plural"
+			table.insert(data.inflections, args[3])
+		end
+	end
+
+	-- Diminutive
+	if #args[4] > 0 then
+		for i, form in ipairs(args[4]) do
+			args[4][i] = {term = form, genders = {"n"}}
+		end
+
+		args[4].accel = {form = "diminutive", gender = "n"}
+		args[4].label = "diminutive"
+		table.insert(data.inflections, args[4])
+	end
+
+	-- Other gender
+	if #args.f > 0 then
+		args.f.label = "female"
+		if args.f[1] == "in" then
+			args.f[1] = PAGENAME .. "in"
+		end
+		if args.f[1] == PAGENAME .. "in" then
+			args.f.accel = {form = "feminine", gender = "f"}
+			args.f.label = "feminine"
+		end
+		table.insert(data.inflections, args.f)
+	end
+
+	if #args.m > 0 then
+		args.m.label = "male"
+		table.insert(data.inflections, args.m)
+	end
+end
+
+
 pos_functions.nouns = function(class, args, data)
+	-- Compatibility with old calling convention, either if old= is given or any arg no longer supported is given.
+	if ine(args.old) or ine(args[2]) or ine(args[3]) or ine(args[4]) or ine(args.g1) or ine(args.g2) or ine(args.g3) or
+		ine(args.gen1) or ine(args.gen2) or ine(args.gen3) or ine(args.pl1) or ine(args.pl2) or ine(args.pl3) then
+		return old_nouns(class, args, data)
+	end
+
 	local alternant_multiword_spec = require("Module:User:Benwing2/de-noun").do_generate_forms(args, nil, "from headword")
 	data.heads = alternant_multiword_spec.args.head
 	data.genders = alternant_multiword_spec.genders
-	
+
 	local function expand_footnotes_and_references(footnotes)
 		if not footnotes then
 			return nil
