@@ -28,9 +28,8 @@ local m_links = require("Module:links")
 local m_string_utilities = require("Module:string utilities")
 local iut = require("Module:User:Benwing2/inflection utilities")
 
-local current_title = mw.title.getCurrentTitle()
-local NAMESPACE = current_title.nsText
-local PAGENAME = current_title.text
+local pretend_from_headword = true -- may be set during debugging
+local force_cat = true -- may be set during debugging
 
 local u = mw.ustring.char
 local rsplit = mw.text.split
@@ -178,7 +177,7 @@ for case, _ in pairs(cases) do
 end
 
 local function apply_umlaut(term, origterm)
-	local stem, after = term:match("^(.*)(e[lmnr]?)$")
+	local stem, after = term:match("^(.*[^e])(e[lmnr]?)$")
 	if stem then
 		-- Nagel -> Nägel, Garten -> Gärten
 		return apply_umlaut(stem, term) .. after
@@ -200,22 +199,27 @@ local function skip_slot(number, slot)
 end
 
 
+local function combine_stem_ending(props, stem, ending)
+	if ending:find("^%^") then
+		-- Umlaut requested
+		ending = rsub(ending, "^%^", "")
+		stem = apply_umlaut(stem)
+	end
+	if props.ss and stem:find("ß$") and rfind(ending, "^" .. V) then
+		stem = rsub(stem, "ß$", "ss")
+	end
+	return stem .. ending
+end
+
+
 local function add(base, slot, stem, ending, footnotes, process_combined_stem_ending)
 	if not ending or skip_slot(base.number, slot) then
 		return
 	end
 	stem = stem or base.lemma
 
-	local function combine_stem_ending(stem, ending)
-		if ending:find("^%^") then
-			-- Umlaut requested
-			ending = rsub(ending, "^%^", "")
-			stem = apply_umlaut(stem)
-		end
-		if base.props.ss and stem:find("ß$") and rfind(ending, "^" .. V) then
-			stem = rsub(stem, "ß$", "ss")
-		end
-		local retval = stem .. ending
+	local function do_combine_stem_ending(stem, ending)
+		local retval = combine_stem_ending(base.props, stem, ending)
 		if process_combined_stem_ending then
 			retval = process_combined_stem_ending(retval)
 		end
@@ -224,15 +228,11 @@ local function add(base, slot, stem, ending, footnotes, process_combined_stem_en
 
 	footnotes = iut.combine_footnotes(base.footnotes, footnotes)
 	local ending_obj = iut.combine_form_and_footnotes(ending, footnotes)
-	iut.add_forms(base.forms, slot, stem, ending_obj, combine_stem_ending)
+	iut.add_forms(base.forms, slot, stem, ending_obj, do_combine_stem_ending)
 end
 
 
-local function add_spec(base, slot, endings, default, footnotes, process_combined_stem_ending)
-	local function do_add(stem, ending)
-		add(base, slot, stem, ending, footnotes, process_combined_stem_ending)
-	end
-
+local function process_spec(endings, default, footnotes, desc, process)
 	for _, ending in ipairs(endings) do
 		local function sub_form(form)
 			return {form = form, footnotes = ending.footnotes}
@@ -243,10 +243,9 @@ local function add_spec(base, slot, endings, default, footnotes, process_combine
 		elseif ending.form == "+" then
 			if not default then
 				-- Could happen if e.g. gen is given as -- and then a gen_s override with + is specified.
-				error("Form '+' found for slot '" .. slot .. "' but no default is available")
+				error("Form '+' found for " .. desc .. " but no default is available")
 			end
-			add_spec(base, slot, iut.convert_to_general_list_form(default, ending.footnotes),
-				nil, footnotes, process_combined_stem_ending)
+			process_spec(iut.convert_to_general_list_form(default, ending.footnotes), nil, footnotes, desc, process)
 		else
 			local full_eform
 			if rfind(ending.form, "^" .. CAP) then
@@ -256,16 +255,23 @@ local function add_spec(base, slot, endings, default, footnotes, process_combine
 				ending = sub_form(rsub(ending.form, "^!", ""))
 			end
 			if full_eform then
-				do_add(ending, "")
+				process(ending, "")
 			else
 				local expanded_endings
 				local umlaut = rmatch(ending.form, "^(%^?)%(e%)s$" )
 				if umlaut then
 					expanded_endings = {"es", "s"}
-				else
+				end
+				if not umlaut then
 					umlaut = rmatch(ending.form, "^(%^?)%(s%)$")
 					if umlaut then
-						expanded_endings = {"", "s"}
+						expanded_endings = {"s", ""}
+					end
+				end
+				if not umlaut then
+					umlaut = rmatch(ending.form, "^(%^?)%(es%)$")
+					if umlaut then
+						expanded_endings = {"es", ""}
 					end
 				end
 				if expanded_endings then
@@ -273,16 +279,24 @@ local function add_spec(base, slot, endings, default, footnotes, process_combine
 					for _, expanded_ending in ipairs(expanded_endings) do
 						table.insert(new_endings, sub_form(umlaut .. expanded_ending))
 					end
-					do_add(nil, new_endings)
+					process(nil, new_endings)
 				else
 					if ending.form == "-" then
 						ending = sub_form("")
 					end
-					do_add(nil, ending)
+					process(nil, ending)
 				end
 			end
 		end
 	end
+end
+	
+
+local function add_spec(base, slot, endings, default, footnotes, process_combined_stem_ending)
+	local function do_add(stem, ending)
+		add(base, slot, stem, ending, footnotes, process_combined_stem_ending)
+	end
+	process_spec(endings, default, footnotes, "slot '" .. slot .. "'", do_add)
 end
 
 
@@ -364,7 +378,7 @@ local function get_default_gen(base, gender)
 		-- [[Euphemismus]], [[Exitus]], [[Exodus]], etc.
 		return ""
 	else
-		return "(e)s"
+		return "s"
 	end
 end
 
@@ -450,6 +464,7 @@ local function handle_derived_slots_and_overrides(base)
 	end
 end
 
+
 --[=[
 decls["adj"] = function(base, stress)
 	local adj_alternant_spec = require("Module:de-adjective").do_generate_forms(
@@ -470,20 +485,6 @@ decls["adj"] = function(base, stress)
 	end
 end
 ]=]
-
-local function fetch_footnotes(separated_group)
-	local footnotes
-	for j = 2, #separated_group - 1, 2 do
-		if separated_group[j + 1] ~= "" then
-			error("Extraneous text after bracketed footnotes: '" .. table.concat(separated_group) .. "'")
-		end
-		if not footnotes then
-			footnotes = {}
-		end
-		table.insert(footnotes, separated_group[j])
-	end
-	return footnotes
-end
 
 --[=[
 Parse an indicator spec (text consisting of angle brackets and zero or more dot-separated indicators within them).
@@ -540,43 +541,6 @@ local function parse_indicator_spec(angle_bracket_spec, lemma, pagename)
 		error(msg .. ": <" .. inside .. ">")
 	end
 
-	local function parse_footnotes(separated_group)
-		local footnotes
-		for j = 2, #separated_group - 1, 2 do
-			if separated_group[j + 1] ~= "" then
-				parse_err("Extraneous text after bracketed footnotes: '" .. table.concat(separated_group) .. "'")
-			end
-			if not footnotes then
-				footnotes = {}
-			end
-			table.insert(footnotes, separated_group[j])
-		end
-		return footnotes
-	end
-
-	local function fetch_specs(comma_separated_group, spectype, allow_blank)
-		local colon_separated_groups = iut.split_alternating_runs_and_strip_spaces(comma_separated_group, ":")
-		if allow_blank and #colon_separated_groups == 1 and #colon_separated_groups[1] == 1 and
-			colon_separated_groups[1][1] == "" then
-			return nil
-		end
-		local specs = {}
-		for _, colon_separated_group in ipairs(colon_separated_groups) do
-			local form = colon_separated_group[1]
-			if form == "" then
-				parse_err("Blank form not allowed here, but saw '" ..  table.concat(comma_separated_group) .. "'")
-			end
-			local new_spec = {form = form, footnotes = parse_footnotes(colon_separated_group)}
-			for _, existing_spec in ipairs(specs) do
-				if existing_spec.form == new_spec.form then
-					parse_err("Duplicate " .. spectype .. " spec '" .. table.concat(colon_separated_group) .. "'")
-				end
-			end
-			table.insert(specs, new_spec)
-		end
-		return specs
-	end
-
 	--[=[
 	Parse a single override spec and return three values: the slot the override applies to, the original indicator
 	spec used to specify the slot, and the override specs. The input is a list where the footnotes have been separated
@@ -585,13 +549,10 @@ local function parse_indicator_spec(angle_bracket_spec, lemma, pagename)
 		"[in most cases in writing]", ""}
 	]=]
 	local function parse_override(segments)
-		local retval = {values = {}}
 		local part = segments[1]
 		local offset = 4
 		local case = usub(part, 1, 3)
-		if cases[case] then
-			-- ok
-		else
+		if not cases[case] then
 			parse_err("Internal error: unrecognized case in override: '" .. table.concat(segments) .. "'")
 		end
 		local indicator = case
@@ -613,7 +574,7 @@ local function parse_indicator_spec(angle_bracket_spec, lemma, pagename)
 			parse_err("Unrecognized slot indicator '" .. indicator .. "': '" .. table.concat(segments) .. "'")
 		end
 		segments[1] = rest
-		return slot, indicator, fetch_specs(segments, "override")
+		return slot, indicator, com.fetch_specs(iut, segments, ":", "override", nil, parse_err)
 	end
 
 	if inside ~= "" then
@@ -623,7 +584,7 @@ local function parse_indicator_spec(angle_bracket_spec, lemma, pagename)
 			local part = dot_separated_group[1]
 			if i == 1 then
 				local comma_separated_groups = iut.split_alternating_runs_and_strip_spaces(dot_separated_group, ",")
-				base.genders = fetch_specs(comma_separated_groups[1], "gender")
+				base.genders = com.fetch_specs(iut, comma_separated_groups[1], ":", "gender", nil, parse_err)
 				local saw_sg = false
 				local saw_pl = false
 				local saw_mn = false
@@ -645,15 +606,13 @@ local function parse_indicator_spec(angle_bracket_spec, lemma, pagename)
 				end
 				local pl_index = saw_mn and 3 or saw_pl and 1 or 2
 				if #comma_separated_groups > 1 and saw_mn then
-					base.gens = fetch_specs(comma_separated_groups[2], "genitive", "allow blank")
-				else
-					base.gens = {{form = "+"}}
+					base.gens = com.fetch_specs(iut, comma_separated_groups[2], ":", "genitive", "allow blank", parse_err)
 				end
+				base.gens = base.gens or {{form = "+"}}
 				if #comma_separated_groups >= pl_index and not saw_pl then
-					base.pls = fetch_specs(comma_separated_groups[pl_index], "plural", "allow blank")
-				else
-					base.pls = {{form = "+"}}
+					base.pls = com.fetch_specs(iut, comma_separated_groups[pl_index], ":", "plural", "allow blank", parse_err)
 				end
+				base.pls = base.pls or {{form = "+"}}
 				if #comma_separated_groups > pl_index then
 					if saw_pl then
 						parse_err("Can't specify plurals with plural-only nouns")
@@ -679,7 +638,20 @@ local function parse_indicator_spec(angle_bracket_spec, lemma, pagename)
 				if #dot_separated_group == 1 then
 					parse_err("Blank indicator")
 				end
-				base.footnotes = fetch_footnotes(dot_separated_group)
+				base.footnotes = com.fetch_footnotes(dot_separated_group, parse_err)
+			elseif part:find(":") then
+				-- override
+				local case_prefix = usub(part, 1, 3)
+				if cases[case_prefix] then
+					local slot, slot_indicator, override = parse_override(dot_separated_group)
+					if base.overrides[slot] then
+						parse_err("Can't specify override twice for slot '" .. slot_indicator .. "'")
+					else
+						base.overrides[slot] = override
+					end
+				else
+				parse_err("Unrecognized indicator '" .. part .. "'")
+				end
 			elseif #dot_separated_group > 1 then
 				parse_err("Footnotes only allowed with slot overrides or by themselves: '" .. table.concat(dot_separated_group) .. "'")
 			elseif part == "sg" then
@@ -698,19 +670,9 @@ local function parse_indicator_spec(angle_bracket_spec, lemma, pagename)
 				if base.props[part] then
 					parse_err("Can't specify '" .. part .. "' twice")
 				end
-				base.props.adj = true
+				base.props[part] = true
 			else
-				local case_prefix = usub(part, 1, 3)
-				if cases[case_prefix] then
-					local slot, slot_indicator, override = parse_override(dot_separated_group)
-					if base.overrides[slot] then
-						parse_err("Can't specify override twice for slot '" .. slot_indicator .. "'")
-					else
-						base.overrides[slot] = override
-					end
-				else
 				parse_err("Unrecognized indicator '" .. part .. "'")
-				end
 			end
 		end
 	end
@@ -878,7 +840,7 @@ local function determine_noun_status(alternant_multiword_spec)
 			elseif alternant_type == "adj" and not alternant_multiword_spec.first_adj then
 				alternant_multiword_spec.first_adj = i
 			end
-		elseif not alternant_or_word_spec.indecl then
+		else
 			if not alternant_or_word_spec.props.adj then
 				alternant_multiword_spec.first_noun = i
 				return
@@ -957,13 +919,21 @@ local function compute_categories_and_annotation(alternant_multiword_spec)
 			""
 	else
 		local annparts = {}
+		local genderdescs = {}
 		local decldescs = {}
 		local function do_word_spec(base)
 			local saw_m_or_n = false
 			for _, gender in ipairs(base.genders) do
-				if gender == "m" or gender == "n" then
+				if gender.form == "m" then
+					m_table.insertIfNot(genderdescs, "masc")
 					saw_m_or_n = true
-					break
+				elseif gender.form == "f" then
+					m_table.insertIfNot(genderdescs, "fem")
+				elseif gender.form == "n" then
+					m_table.insertIfNot(genderdescs, "neut")
+					saw_m_or_n = true
+				else
+					error("Internal error: Unrecognized gender '" .. gender.form .. "'")
 				end
 			end
 			if saw_m_or_n then
@@ -992,9 +962,10 @@ local function compute_categories_and_annotation(alternant_multiword_spec)
 		if alternant_multiword_spec.number ~= "both" then
 			table.insert(annparts, alternant_multiword_spec.number == "sg" and "sg-only" or "pl-only")
 		end
-		if #decldescs == 0 then
-			table.insert(annparts, "indecl")
-		else
+		if #genderdescs > 0 then
+			table.insert(annparts, table.concat(genderdescs, " // "))
+		end
+		if #decldescs > 0 then
 			table.insert(annparts, table.concat(decldescs, " // "))
 		end
 		if not alternant_multiword_spec.first_noun and alternant_multiword_spec.first_adj then
@@ -1003,6 +974,32 @@ local function compute_categories_and_annotation(alternant_multiword_spec)
 		end
 		alternant_multiword_spec.annotation = table.concat(annparts, " ")
 	end
+end
+
+
+local function process_dim_m_f(alternant_multiword_spec, spec, default, slot, desc)
+	local lemmas = alternant_multiword_spec.forms.nom_s or alternant_multiword_spec.forms.nom_p or {}
+	lemmas = iut.map_forms(lemmas, function(form)
+		return rsub(form, "e$", "")
+	end)
+
+	local function parse_err(msg)
+		error(msg .. ": " .. spec)
+	end
+	local segments = iut.parse_balanced_segment_run(spec, "[", "]")
+	local ending_specs = com.fetch_specs(iut, segments, ",", desc, nil, parse_err)
+
+	-- FIXME, this should propagate the 'ss' property upwards
+	local props = {}
+	local function do_combine_stem_ending(stem, ending)
+		return combine_stem_ending(props, stem, ending)
+	end
+
+	local function process(stem, ending)
+		iut.add_forms(alternant_multiword_spec.forms, slot, lemmas, ending, do_combine_stem_ending)
+	end
+
+	process_spec(spec, default, nil, desc, process)
 end
 
 
@@ -1204,7 +1201,7 @@ function export.do_generate_forms(parent_args, pos, from_headword, def)
 		pagename = {},
 	}
 
-	if from_headword then
+	if from_headword or pretend_from_headword then
 		params["head"] = {list = true}
 		params["f"] = {list = true}
 		params["m"] = {list = true}
@@ -1264,8 +1261,12 @@ function export.do_generate_forms(parent_args, pos, from_headword, def)
 		inflect_word_spec = decline_noun,
 	}
 	iut.inflect_multiword_or_alternant_multiword_spec(alternant_multiword_spec, inflect_props)
+	compute_articles(alternant_multiword_spec)
 	compute_categories_and_annotation(alternant_multiword_spec)
 	alternant_multiword_spec.genders = compute_headword_genders(alternant_multiword_spec)
+	process_dim_m_f(alternant_multiword_spec, args.dim, nil, "dim", "diminutive")
+	process_dim_m_f(alternant_multiword_spec, args.f, nil, "f", "feminine equivalent")
+	process_dim_m_f(alternant_multiword_spec, args.m, nil, "m", "masculine equivalent")
 	return alternant_multiword_spec
 end
 
@@ -1325,7 +1326,8 @@ function export.show(frame)
 	show_forms(alternant_multiword_spec)
 	-- FIXME!
 	alternant_multiword_spec.forms.decl_type = "foo"
-	return make_table(alternant_multiword_spec) .. require("Module:utilities").format_categories(alternant_multiword_spec.categories, lang)
+	return make_table(alternant_multiword_spec) .. require("Module:utilities").format_categories(
+		alternant_multiword_spec.categories, lang, nil, nil, force_cat)
 end
 
 
