@@ -1,6 +1,8 @@
 local export = {}
 local pos_functions = {}
 
+local lang = require("Module:languages").getByCode("de")
+
 local legal_gender = {
 	["m"] = true,
 	["f"] = true,
@@ -24,10 +26,14 @@ local legal_verb_classes = {
 	["7"] = true,
 }
 
-local lang = require("Module:languages").getByCode("de")
-
 local function ine(val)
 	if val == "" then return nil else return val
+end
+
+
+local function glossary_link(entry, text)
+	text = text or entry
+	return "[[Appendix:Glossary#" .. entry .. "|" .. text .. "]]"
 end
 
 
@@ -74,7 +80,7 @@ pos_functions.adjectives = function(class, args, data)
 		args[1] = {request = true}
 		table.insert(data.categories, "de-adj lacking comparative")
 	end
-	args[1].label = "[[Appendix:Glossary#comparative|comparative]]"
+	args[1].label = glossary_link("comparative")
 	table.insert(data.inflections, args[1])
 
 	if #args[2] > 0 then
@@ -87,7 +93,7 @@ pos_functions.adjectives = function(class, args, data)
 		args[2] = {request = true}
 		table.insert(data.categories, "de-adj lacking superlative")
 	end
-	args[2].label = "[[Appendix:Glossary#superlative|superlative]]"
+	args[2].label = glossary_link("superlative")
 	table.insert(data.inflections, args[2])
 end
 
@@ -271,25 +277,32 @@ pos_functions.nouns = function(class, args, data)
 		return quals, refs
 	end
 
-	local function do_noun_form(slot, label, accel_form)
+	local function do_noun_form(slot, label, should_be_present, accel_form, genders)
 		local forms = alternant_multiword_spec.forms[slot]
 		local retval
 		if not forms then
+			if not should_be_present then
+				return
+			end
 			retval = {label = "no " .. label}
 		else
 			retval = {label = label, accel = accel_form and {form = accel_form} or nil}
 			for _, form in ipairs(forms) do
 				local quals, refs = expand_footnotes_and_references(form.footnotes)
-				table.insert(retval, {term = form.form, qualifiers = quals, refs = refs})
+				table.insert(retval, {term = form.form, qualifiers = quals, refs = refs, genders = genders})
 			end
 		end
 
 		table.insert(data.inflections, retval)
 	end
 
-	do_noun_form("gen_s", "genitive", "gen|s")
-	do_noun_form("nom_p", "plural")
-	do_noun_form("dim", "diminutive")
+	if alternant_multiword_spec.number == "pl" then
+		table.insert(data.inflections, {label = glossary_link("plural only")})
+	else
+		do_noun_form("gen_s", "genitive", true, "gen|s")
+		do_noun_form("nom_p", "plural", true)
+	end
+	do_noun_form("dim", "diminutive", nil, nil, {"n"})
 	do_noun_form("f", "feminine")
 	do_noun_form("m", "masculine")
 
