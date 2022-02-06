@@ -161,7 +161,21 @@ def declts_to_unicode(declts):
   return ",".join(unicode(declt) for declt in declts)
 
 
-def do_headword_template(headt, declts, pagetitle, pagemsg, notes):
+def normalize_values(values):
+  newvals = []
+  for value in values:
+    if value is True:
+      newvals.append(value)
+    else:
+      # Split on comma or comma + <br> or " or "
+      vals = re.split(r"(?:\s+or\s+|\s*,\s*(?:<br>)?\s*)", value.strip())
+      # Remove raw links
+      vals = [re.sub(r"^\[\[([^\[\]]*)\]\]$", r"\1", v) for v in vals]
+      newvals.extend(vals)
+  return newvals
+
+
+def do_headword_template(headt, declts, pagetitle, pagetext, pagemsg, notes):
   ss = False
   if declts:
     sses = [not not getparam(declt, "ss") for declt in declts]
@@ -179,11 +193,11 @@ def do_headword_template(headt, declts, pagetitle, pagemsg, notes):
 
   genders = blib.fetch_param_chain(headt, "1", "g")
   headword_genders = genders
-  gens = blib.fetch_param_chain(headt, "2", "gen", True)
-  pls = blib.fetch_param_chain(headt, "3", "pl")
-  dims = blib.fetch_param_chain(headt, "4", "dim")
-  fems = blib.fetch_param_chain(headt, "f")
-  mascs = blib.fetch_param_chain(headt, "m")
+  gens = normalize_values(blib.fetch_param_chain(headt, "2", "gen", True))
+  pls = normalize_values(blib.fetch_param_chain(headt, "3", "pl"))
+  dims = normalize_values(blib.fetch_param_chain(headt, "4", "dim"))
+  fems = normalize_values(blib.fetch_param_chain(headt, "f"))
+  mascs = normalize_values(blib.fetch_param_chain(headt, "m"))
   if gens == [True]:
     gens = []
   for param in headt.params:
@@ -261,6 +275,11 @@ def do_headword_template(headt, declts, pagetitle, pagemsg, notes):
 
   decl_genders_gens_and_pls = []
   if declts:
+    props = [not not getparam(declt, "prop") for declt in declts]
+    if len(set(props)) > 1:
+      pagemsg("WARNING: Saw inconsistent values for prop= in decl templates: %s" % declts_to_unicode(declts))
+      return
+    prop = list(set(props)) == [True]
     prev_is_weak = None
     prev_is_sg = None
     for declt in declts:
@@ -275,7 +294,7 @@ def do_headword_template(headt, declts, pagetitle, pagemsg, notes):
       if gender != "p":
         is_weak = False
         is_sg = False
-        for param in ["head", "ns", "gs", "ds", "as", "bs", "vs", "np", "gp", "dp", "ap", "prop", "notes"]:
+        for param in ["head", "ns", "gs", "ds", "as", "bs", "vs", "np", "gp", "dp", "ap", "notes"]:
           if getp(param):
             pagemsg("WARNING: Saw %s=%s, can't handle yet: %s" % (param, getp(param), unicode(declt)))
             return
@@ -311,7 +330,7 @@ def do_headword_template(headt, declts, pagetitle, pagemsg, notes):
           if pl == "-":
             is_sg = True
           else:
-            decl_pls = [pl]
+            decl_pls = normalize_values([pl])
         if prev_is_weak is not None and prev_is_weak != is_weak:
           pagemsg("WARNING: Saw declension template with weak=%s different from previous weak=%s: %s"
               % (is_weak, prev_is_weak, declts_to_unicode(declts)))
@@ -378,6 +397,8 @@ def do_headword_template(headt, declts, pagetitle, pagemsg, notes):
       declspec += ".sg"
     if ss:
       declspec += ".ss"
+    if prop:
+      declspec += ".prop"
 
     if headspec != declspec:
       if set(all_decl_gens) <= set(headword_gens) and set(all_decl_pls) <= set(headword_pls):
@@ -398,13 +419,31 @@ def do_headword_template(headt, declts, pagetitle, pagemsg, notes):
               ",".join(headword_pls), ",".join(all_decl_genders), ",".join(headword_genders), unicode(headt), unicode(declt)))
         return
 
-  outmsg = "Would convert %s to %s" % (unicode(headt), "{{de-noun|%s%s}}" % (headspec, extraspec))
+  newheadt = "{{de-noun|%s%s}}" % (headspec, extraspec)
+  outmsg = "Would convert %s to %s" % (unicode(headt), newheadt)
   if declts:
-    outmsg += " and %s to %s" % (declts_to_unicode(declts), "{{de-ndecl|%s}}" % declspec)
+    newdeclt = "{{de-ndecl|%s}}" % declspec
+    outmsg += " and %s to %s" % (declts_to_unicode(declts), newdeclt)
   pagemsg(outmsg)
 
+  if unicode(headt) != newheadt:
+    newpagetext, replaced = blib.replace_in_text(pagetext, unicode(headt), newheadt, pagemsg, abort_if_warning=True)
+    if not replaced:
+      return
+    notes.append("replace old {{de-noun}} with new format")
+    pagetext = newpagetext
+  if declts:
+    declts_existing = "\n".join(unicode(declt) for declt in declts)
+    newpagetext, replaced = blib.replace_in_text(pagetext, declts_existing, newdeclt, pagemsg, abort_if_warning=True)
+    if not replaced:
+      return
+    notes.append("replace old {{de-decl-noun*}} with new {{de-ndecl}}")
+    pagetext = newpagetext
 
-def process_text_on_page(index, pagetitle, text):
+  return pagetext, notes
+
+
+def process_text_in_section(index, pagetitle, text):
   global args
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
@@ -422,7 +461,10 @@ def process_text_on_page(index, pagetitle, text):
       return getparam(t, param)
     if tn == "de-noun":
       if declts:
-        do_headword_template(headt, declts, pagetitle, pagemsg, notes)
+        retval = do_headword_template(headt, declts, pagetitle, text, pagemsg, notes)
+        if not retval:
+          return
+        text, notes = retval
         headt = None
         declts = []
       if headt:
@@ -446,9 +488,26 @@ def process_text_on_page(index, pagetitle, text):
     if not declts:
       pagemsg("NOTE: Saw head template without corresponding declension template, still processing: %s"
           % unicode(headt))
-    do_headword_template(headt, declts, pagetitle, pagemsg, notes)
-
+    return do_headword_template(headt, declts, pagetitle, text, pagemsg, notes)
   return unicode(parsed), notes
+
+
+def process_text_on_page(index, pagetitle, text):
+  if "=Etymology 1=" in text:
+    notes = []
+    etym_sections = re.split("(^===Etymology [0-9]+===\n)", text, 0, re.M)
+    for k in xrange(2, len(etym_sections), 2):
+      retval = process_text_in_section(index, pagetitle, etym_sections[k])
+      if not retval:
+        return
+      newsectext, newnotes = retval
+      etym_sections[k] = newsectext
+      notes.extend(newnotes)
+    text = "".join(etym_sections)
+    return text, notes
+  else:
+    return process_text_in_section(index, pagetitle, text)
+
 
 parser = blib.create_argparser("Convert {{de-noun}} to new format",
   include_pagefile=True, include_stdin=True)
