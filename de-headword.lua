@@ -27,7 +27,7 @@ local legal_verb_classes = {
 }
 
 local function ine(val)
-	if val == "" then return nil else return val
+	if val == "" then return nil else return val end
 end
 
 
