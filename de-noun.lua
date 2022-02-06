@@ -901,7 +901,7 @@ local function process_dim_m_f(alternant_multiword_spec, arg_specs, default, slo
 			error(msg .. ": " .. spec)
 		end
 		local segments = iut.parse_balanced_segment_run(spec, "[", "]")
-		local ending_specs = fetch_specs(segments, ",", desc, nil, parse_err)
+		local ending_specs = com.fetch_specs(iut, segments, ",", desc, nil, parse_err)
 
 		-- FIXME, this should propagate the 'ss' property upwards
 		local props = {}
