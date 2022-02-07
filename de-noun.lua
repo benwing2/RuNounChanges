@@ -119,8 +119,18 @@ local function apply_umlaut(term, origterm)
 		-- Nagel -> Nägel, Garten -> Gärten
 		return apply_umlaut(stem, term) .. after
 	end
+	-- Haus -> Häuschen
 	local before_v, v, after_v = rmatch(term, "^(.*)([Aa])([Uu]" .. NV .. "-)$")
 	if not before_v then
+		-- Haar -> Härchen
+		before_v, v, after_v = rmatch(term, "^(.*)([Aa])[Aa](" .. NV .. "-)$")
+	end
+	if not before_v then
+		-- Boot -> Bötchen
+		before_v, v, after_v = rmatch(term, "^(.*)([Oo])[Oo](" .. NV .. "-)$")
+	end
+	if not before_v then
+		-- regular umlaut
 		before_v, v, after_v = rmatch(term, "^(.*)([AaOouU])(" .. NV .. "-)$")
 	end
 	if before_v then
@@ -301,19 +311,14 @@ local function get_default_gen(base, gender)
 		return ""
 	elseif base.props.weak then
 		return get_n_ending(base.lemma)
-	elseif rfind(base.lemma, "e$")
-		-- check for weak ending -el, -em, -en, -er, e.g. [[Nagel]], [[Meier]], [[Riedel]]; but exclude [[Heer]],
-		-- [[Bier]], [[Ziel]], which can take -es or -s
-		or rfind(base.lemma, "e[lmnr]$") and not rfind(base.lemma, NV .. "[ei]e[lnmr]$")
-		-- check for neuter in -um, e.g. [[Museum]], [[Vakuum]]
-		or gender == "n" and rfind(base.lemma, "um$") then
-		return "s"
 	elseif rfind(base.lemma, "nis$") then
 		-- neuter like [[Erlebnis]], [[Geheimnis]] or occasional masculine like [[Firnis]], [[Penis]]
 		return "ses"
 	elseif rfind(base.lemma, NV .. "us$") then
 		-- [[Euphemismus]], [[Exitus]], [[Exodus]], etc.
 		return ""
+	elseif rfind(base.lemma, "[sßxz]$") then
+		return "es"
 	else
 		return "s"
 	end
@@ -445,7 +450,7 @@ Return value is an object of the form
   }, -- misc Boolean properties: "weak" (weak noun); "adj" (adjectival noun; set using "+");
 		"ss" (lemma in -ß changes to -ss- before endings beginning with a vowel; pre-1996 spelling);
 		"nodatpln" (suppress automatic addition of 'n' in the dative plural after '-e', '-er', '-el')
-  number = "NUMBER", -- "sg", "pl"; may be missing
+  number = "NUMBER", -- "sg", "pl", "both"; may be missing
   adj = true, -- may be missing
 
   -- The following additional fields are added by other functions:
@@ -464,11 +469,11 @@ Return value is an object of the form
   },
 }
 ]=]
-local function parse_indicator_spec(angle_bracket_spec, lemma, pagename)
+local function parse_indicator_spec(angle_bracket_spec, lemma, pagename, proper_noun)
 	if lemma == "" then
 		lemma = pagename
 	end
-	local base = {forms = {}, overrides = {}, props = {}}
+	local base = {forms = {}, overrides = {}, props = {prop = proper_noun}}
 	base.orig_lemma = lemma
 	base.orig_lemma_no_links = m_links.remove_links(lemma)
 	base.lemma = base.orig_lemma_no_links
@@ -546,11 +551,9 @@ local function parse_indicator_spec(angle_bracket_spec, lemma, pagename)
 				if #comma_separated_groups > 1 and saw_mn then
 					base.gens = com.fetch_specs(iut, comma_separated_groups[2], ":", "genitive", "allow blank", parse_err)
 				end
-				base.gens = base.gens or {{form = "+"}}
 				if #comma_separated_groups >= pl_index and not saw_pl then
 					base.pls = com.fetch_specs(iut, comma_separated_groups[pl_index], ":", "plural", "allow blank", parse_err)
 				end
-				base.pls = base.pls or {{form = "+"}}
 				if #comma_separated_groups > pl_index then
 					if saw_pl then
 						parse_err("Can't specify plurals with plural-only nouns")
@@ -592,13 +595,15 @@ local function parse_indicator_spec(angle_bracket_spec, lemma, pagename)
 				end
 			elseif #dot_separated_group > 1 then
 				parse_err("Footnotes only allowed with slot overrides or by themselves: '" .. table.concat(dot_separated_group) .. "'")
-			elseif part == "sg" then
-				if base.number == "pl" then
-					parse_err("Can't specify 'sg' along with 'pl'")
-				elseif base.number then
-					parse_err("Can't specify 'sg' twice")
+			elseif part == "sg" or part == "both" then
+				if base.number then
+					if base.number ~= part then
+						parse_err("Can't specify '" .. part .. "' along with '" .. base.number .. "'")
+					else
+						parse_err("Can't specify '" .. part .. "' twice")
+					end
 				end
-				base.number = "sg"
+				base.number = part
 			elseif part == "+" then
 				if base.props.adj then
 					parse_err("Can't specify '+' twice")
@@ -618,11 +623,24 @@ local function parse_indicator_spec(angle_bracket_spec, lemma, pagename)
 end
 
 
-local function detect_indicator_spec(base)
+local function detect_indicator_spec(alternant_multiword_spec, base)
 	-- Set default values.
 	if not base.props.adj then
-		base.number = base.number or "both"
+		base.number = base.number or base.pls and "both" or alternant_multiword_spec.is_proper and "sg" or "both"
 	end
+	if base.number == "pl" then
+		if base.gens then
+			error("Internal error: With plural-only noun, no genitive singular specs should be allowed")
+		end
+		if base.pls then
+			error("Internal error: With plural-only noun, no plural specs should be allowed")
+		end
+	end
+	if base.pls and base.number == "sg" then
+		error("Can't specify explicit plural specs along with explicit '.sg'")
+	end
+	base.gens = base.gens or {{form = "+"}}
+	base.pls = base.pls or {{form = "+"}}
 	if base.props.adj then
 		synthesize_adj_lemma(base)
 	end
@@ -631,7 +649,7 @@ end
 
 local function detect_all_indicator_specs(alternant_multiword_spec)
 	iut.map_word_specs(alternant_multiword_spec, function(base)
-		detect_indicator_spec(base)
+		detect_indicator_spec(alternant_multiword_spec, base)
 	end)
 end
 
@@ -826,7 +844,7 @@ local function compute_categories_and_annotation(alternant_multiword_spec)
 		cattype = rsub(cattype, "~", alternant_multiword_spec.pos)
 		m_table.insertIfNot(alternant_multiword_spec.categories, "German " .. cattype)
 	end
-	if alternant_multiword_spec.number == "sg" then
+	if not alternant_multiword_spec.is_proper and alternant_multiword_spec.number == "sg" then
 		insert("uncountable ~")
 	elseif alternant_multiword_spec.number == "pl" then
 		insert("pluralia tantum")
@@ -1130,7 +1148,7 @@ end
 -- Return value is WORD_SPEC, an object where the declined forms are in `WORD_SPEC.forms`
 -- for each slot. If there are no values for a slot, the slot key will be missing. The value
 -- for a given slot is a list of objects {form=FORM, footnotes=FOOTNOTES}.
-function export.do_generate_forms(parent_args, pos, from_headword, def)
+function export.do_generate_forms(parent_args, pos, from_headword, is_proper, def)
 	local params = {
 		[1] = {required = true, default = "Haus<n,es,^er>"},
 		pagename = {},
@@ -1182,6 +1200,7 @@ function export.do_generate_forms(parent_args, pos, from_headword, def)
 	local alternant_multiword_spec = iut.parse_inflected_text(arg1, parse_props)
 	alternant_multiword_spec.pos = pos or "nouns"
 	alternant_multiword_spec.args = args
+	alternant_multiword_spec.is_proper = is_proper
 	detect_all_indicator_specs(alternant_multiword_spec)
 	propagate_properties(alternant_multiword_spec, "number", "both", "both")
 	-- The default of "M" should apply only to plural adjectives, where it doesn't matter.
