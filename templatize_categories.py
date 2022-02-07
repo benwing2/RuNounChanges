@@ -29,22 +29,24 @@ def process_text_on_page(index, pagetitle, text, lang, langname):
     notes.append("replace underscores with spaces in [[Category:%s_...]]" % langname)
     text = newtext
 
-  newtext = re.sub(r"\[\[Category:%s:([^|\[\]{}]*)\|([^|\[\]{}]*)\]\]" % lang, r"{{C|%s|\1|sort=\2}}" % lang, text)
+  topicstemp = args.topics_template
+  newtext = re.sub(r"\[\[Category:%s:([^|\[\]{}]*)\|([^|\[\]{}]*)\]\]" % lang, r"{{%s|%s|\1|sort=\2}}" % (topicstemp, lang), text)
   if newtext != text:
-    notes.append("templatize topical categories with sort key for lang=%s using {{C}}" % lang)
+    notes.append("templatize topical categories with sort key for lang=%s using {{%s}}" % (lang, topicstemp))
     text = newtext
-  newtext = re.sub(r"\[\[Category:%s:([^|\[\]{}]*)\]\]" % lang, r"{{C|%s|\1}}" % lang, text)
+  newtext = re.sub(r"\[\[Category:%s:([^|\[\]{}]*)\]\]" % lang, r"{{%s|%s|\1}}" % (topicstemp, lang), text)
   if newtext != text:
-    notes.append("templatize topical categories for lang=%s using {{C}}" % lang)
+    notes.append("templatize topical categories for lang=%s using {{%s}}" % (lang, topicstemp))
     text = newtext
-  newtext = re.sub(r"\{\{(?:c|top|topic|topics|catlangcode)\|%s\|(.*?)\}\}" % lang, r"{{C|%s|\1}}" % lang, text)
+  newtext = re.sub(r"\{\{(?:c|C|top|topic|topics|catlangcode)\|%s\|(.*?)\}\}" % lang, r"{{%s|%s|\1}}" % (topicstemp, lang), text)
   if newtext != text:
-    notes.append("standardize templatized topical categories for lang=%s using {{C}}" % lang)
+    notes.append("standardize templatized topical categories for lang=%s using {{%s}}" % (lang, topicstemp))
     text = newtext
   while True:
-    newtext = re.sub(r"\{\{C\|%s\|([^=\[\]{}]*)\}\}\n\{\{C\|%s\|([^=\[\]{}]*)\}\}" % (lang, lang), r"{{C|%s|\1|\2}}" % lang, text)
+    newtext = re.sub(r"\{\{%s\|%s\|([^=\[\]{}]*)\}\}\n\{\{C\|%s\|([^=\[\]{}]*)\}\}" % (topicstemp, lang, lang),
+        r"{{%s|%s|\1|\2}}" % (topicstemp, lang), text)
     if newtext != text:
-      notes.append("combine templatized topical categories for lang=%s using {{C}}" % lang)
+      notes.append("combine templatized topical categories for lang=%s using {{%s}}" % (lang, topicstemp))
       text = newtext
     else:
       break
@@ -74,6 +76,7 @@ def process_text_on_page(index, pagetitle, text, lang, langname):
 parser = blib.create_argparser(u"Templatize categories", include_pagefile=True, include_stdin=True)
 parser.add_argument("--lang", help="Code of language to templatize", required=True)
 parser.add_argument("--langname", help="Name of language to templatize", required=True)
+parser.add_argument("--topics-template", help="Name of topics template to use", default="C")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
