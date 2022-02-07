@@ -2068,3 +2068,62 @@ def yield_pages_from_previous_output(lines, verbose):
         yield pagenum, pagename
       prev_pagenum = pagenum
       prev_pagename = pagename
+
+
+#Split a list of alternating textual runs of the format returned by `parse_balanced_segment_run` on `splitchar`. This
+#only splits the odd-numbered textual runs (the portions between the balanced open/close characters).  The return value
+#is a list of lists, where each list contains an odd number of elements, where the even-numbered elements of the sublists
+#are the original balanced textual run portions. For example, if we do
+#
+#parse_balanced_segment_run("foo<M.proper noun> bar<F>", "<", ">") =
+#  ["foo", "<M.proper noun>", " bar", "<F>", ""]
+#
+#then
+#
+#split_alternating_runs(["foo", "<M.proper noun>", " bar", "<F>", ""], " ") =
+#  [["foo", "<M.proper noun>", ""], ["bar", "<F>", ""]]
+#
+#Note that we did not touch the text "<M.proper noun>" even though it contains a space in it, because it is an
+#even-numbered element of the input list. This is intentional and allows for embedded separators inside of
+#brackets/parens/etc. Note also that the inner lists in the return value are of the same form as the input list (i.e.
+#they consist of alternating textual runs where the even-numbered segments are balanced runs), and can in turn be passed
+#to split_alternating_runs().
+#
+#If `preserve_splitchar` is passed in, the split character is included in the output, as follows:
+#
+#split_alternating_runs(["foo", "<M.proper noun>", " bar", "<F>", ""], " ", true) =
+#  [["foo", "<M.proper noun>", ""], [" "], ["bar", "<F>", ""]]
+#
+#Consider what happens if the original string has multiple spaces between brackets, and multiple sets of brackets
+#without spaces between them.
+#
+#parse_balanced_segment_run("foo[dated][low colloquial] baz-bat quux xyzzy[archaic]", "[", "]") =
+#  ["foo", "[dated]", "", "[low colloquial]", " baz-bat quux xyzzy", "[archaic]", ""]
+#
+#then
+#
+#split_alternating_runs(["foo", "[dated]", "", "[low colloquial]", " baz-bat quux xyzzy", "[archaic]", ""], "[ %-]") =
+#  [["foo", "[dated]", "", "[low colloquial]", ""], ["baz"], ["bat"], ["quux"], ["xyzzy", "[archaic]", ""]]
+#
+#If `preserve_splitchar` is passed in, the split character is included in the output,
+#as follows:
+#
+#split_alternating_runs(["foo", "[dated]", "", "[low colloquial]", " baz bat quux xyzzy", "[archaic]", ""], "[ %-]", true) =
+#  [["foo", "[dated]", "", "[low colloquial]", ""], [" "], ["baz"], ["-"], ["bat"], [" "], ["quux"], [" "], ["xyzzy", "[archaic]", ""]]
+#
+#As can be seen, the even-numbered elements in the outer list are one-element lists consisting of the separator text.
+def split_alternating_runs(segment_runs, splitchar, preserve_splitchar=False):
+  grouped_runs = []
+  run = []
+  for i, seg in enumerate(segment_runs):
+    if i % 2 == 1:
+      run.append(seg)
+    else:
+      parts = preserve_splitchar and re.split("(" + splitchar + ")", seg) or re.split(splitchar, seg)
+      run.append(parts[0])
+      for j in xrange(1, len(parts)):
+        grouped_runs.append(run)
+        run = [parts[j]]
+  if run:
+    grouped_runs.append(run)
+  return grouped_runs
