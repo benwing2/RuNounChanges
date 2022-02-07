@@ -37,6 +37,12 @@ local function glossary_link(entry, text)
 end
 
 
+local function track(page)
+	require("Module:debug").track("de-headword/" .. page)
+	return true
+end
+
+
 -- The main entry point.
 -- This is the only function that can be invoked from a template.
 function export.show(frame)
@@ -78,7 +84,7 @@ pos_functions.adjectives = function(class, args, data)
 		end
 	else
 		args[1] = {request = true}
-		table.insert(data.categories, "de-adj lacking comparative")
+		track("de-adj lacking comparative")
 	end
 	args[1].label = glossary_link("comparative")
 	table.insert(data.inflections, args[1])
@@ -91,7 +97,7 @@ pos_functions.adjectives = function(class, args, data)
 		end
 	else
 		args[2] = {request = true}
-		table.insert(data.categories, "de-adj lacking superlative")
+		track("de-adj lacking superlative")
 	end
 	args[2].label = glossary_link("superlative")
 	table.insert(data.inflections, args[2])
@@ -99,6 +105,7 @@ end
 
 
 local function old_nouns(class, args, data)
+	track("de-noun-old")
 	local params = {
 		[1] = {list = "g", default = "?"},
 		[2] = {list = "gen"},
@@ -246,7 +253,7 @@ pos_functions.nouns = function(class, args, data, proper)
 		return old_nouns(class, args, data)
 	end
 
-	local alternant_multiword_spec = require("Module:User:Benwing2/de-noun").do_generate_forms(args, nil, "from headword", proper)
+	local alternant_multiword_spec = require("Module:de-noun").do_generate_forms(args, nil, "from headword", proper)
 	data.heads = alternant_multiword_spec.args.head
 	data.genders = alternant_multiword_spec.genders
 
@@ -257,7 +264,7 @@ pos_functions.nouns = function(class, args, data, proper)
 		local quals, refs
 		for _, qualifier in ipairs(footnotes) do
 			local this_footnote, this_refs =
-				require("Module:User:Benwing2/inflection utilities").expand_footnote_or_references(qualifier, "return raw")
+				require("Module:inflection utilities").expand_footnote_or_references(qualifier, "return raw")
 			if this_refs then
 				if not refs then
 					refs = this_refs
@@ -317,7 +324,7 @@ pos_functions.nouns = function(class, args, data, proper)
 	-- Use the "linked" form of the lemma as the head if no head= explicitly given.
 	if #data.heads == 0 then
 		data.heads = {}
-		local lemmas = alternant_multiword_spec.forms.nom_s or alternant_multiword_spec.forms.nom_p or {}
+		local lemmas = alternant_multiword_spec.forms.nom_s_linked or alternant_multiword_spec.forms.nom_p_linked or {}
 		for _, lemma_obj in ipairs(lemmas) do
 			-- FIXME, can't yet specify qualifiers or references for heads
 			table.insert(data.heads, lemma_obj.form)
