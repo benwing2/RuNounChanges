@@ -100,11 +100,12 @@ def process_text_on_page(pageindex, pagetitle, text):
             syns = before_text + after_text
             break
           break
-        # Commas are frequent in translit. Hack around this by temporarily replacing comma with 0xFFF0.
-        # Do repeatedly in case of multiple commas.
-        syns = rsub_repeatedly(r"(\{\{[^{}]*),([^{}]*\}\})", r"\1" + u"\uFFF0" + r"\2", syns)
-        syns = re.split("(?: *[,;] *| +/ +)", syns.strip())
-        syns = [syn.replace(u"\uFFF0", ",") for syn in syns]
+
+        # Split on commas, semicolons, slashes but don't split commas etc. inside of braces or brackets
+        split_by_brackets_braces = re.split(r"(\{\{[^{}]*\}\}|\[\[[^\[\]]*\]\])", syns.strip())
+        comma_separated_runs = blib.split_alternating_runs(split_by_brackets_braces, "(?: *[,;] *| +/ +)")
+        syns = ["".join(comma_separated_run) for comma_separated_run in comma_separated_runs]
+
         if qualifier and len(syns) > 1:
           pagemsg("WARNING: Saw qualifier along with multiple synonyms, not sure how to proceed: <%s>" % orig_syns)
           return None
@@ -193,7 +194,7 @@ def process_text_on_page(pageindex, pagetitle, text):
           syn = re.sub(r"^\[\[([^\[\]|{}]*)\]\]$", r"\1", syn)
           # If there are brackets around some words but not all, put brackets around the remaining words
           if "[[" in syn:
-            split_by_brackets = re.split(r"(\[\[[^\[\]]*\]\])", syn)
+            split_by_brackets = re.split(r"([^ ]*\[\[[^\[\]]*\]\][^ ]*)", syn)
             def maybe_add_brackets(m):
               text = m.group(1)
               if "[" in text or "]" in text:
@@ -205,8 +206,14 @@ def process_text_on_page(pageindex, pagetitle, text):
                     % (text, syntype, orig_syn, line))
                 return text
               return "[[%s]]" % text
+            # Put brackets around the remainin words not already bracketed or partially bracketed. But don't put
+            # brackets around words inside of HTML comments, and don't include punctuation inside the brackets.
             for i in xrange(0, len(split_by_brackets), 2):
-              split_by_brackets[i] = re.sub("([^ ]+)", maybe_add_brackets, split_by_brackets[i])
+              split_out_comments = re.split("(<!--.*?-->)", split_by_brackets[i])
+              for j in xrange(0, len(split_out_comments), 2):
+                split_out_comments[j] = re.sub("([^ ,*/{}:;()?!+<>]+)", maybe_add_brackets, split_out_comments[j])
+              split_by_brackets[i] = "".join(split_out_comments)
+
             new_syn = "".join(split_by_brackets)
             if new_syn != syn:
               pagemsg("Add brackets to '%s', producing '%s'" % (syn, new_syn))
