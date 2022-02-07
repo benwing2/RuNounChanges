@@ -239,14 +239,14 @@ local function old_nouns(class, args, data)
 end
 
 
-pos_functions.nouns = function(class, args, data)
+pos_functions.nouns = function(class, args, data, proper)
 	-- Compatibility with old calling convention, either if old= is given or any arg no longer supported is given.
 	if ine(args.old) or ine(args[2]) or ine(args[3]) or ine(args[4]) or ine(args.g1) or ine(args.g2) or ine(args.g3) or
 		ine(args.gen1) or ine(args.gen2) or ine(args.gen3) or ine(args.pl1) or ine(args.pl2) or ine(args.pl3) then
 		return old_nouns(class, args, data)
 	end
 
-	local alternant_multiword_spec = require("Module:User:Benwing2/de-noun").do_generate_forms(args, nil, "from headword")
+	local alternant_multiword_spec = require("Module:User:Benwing2/de-noun").do_generate_forms(args, nil, "from headword", proper)
 	data.heads = alternant_multiword_spec.args.head
 	data.genders = alternant_multiword_spec.genders
 
@@ -296,11 +296,14 @@ pos_functions.nouns = function(class, args, data)
 		table.insert(data.inflections, retval)
 	end
 
+	if proper then
+		table.insert(data.inflections, {label = glossary_link("proper noun")})
+	end
 	if alternant_multiword_spec.number == "pl" then
 		table.insert(data.inflections, {label = glossary_link("plural only")})
 	else
 		do_noun_form("gen_s", "genitive", true, "gen|s")
-		do_noun_form("nom_p", "plural", true)
+		do_noun_form("nom_p", "plural", not proper)
 	end
 	do_noun_form("dim", "diminutive", nil, nil, {"n"})
 	do_noun_form("f", "feminine")
@@ -324,7 +327,9 @@ pos_functions.nouns = function(class, args, data)
 	end
 end
 
-pos_functions["proper nouns"] = pos_functions.nouns
+pos_functions["proper nouns"] = function(class, args, data)
+	return pos_functions.nouns(class, args, data, "proper noun")
+end
 
 pos_functions.verbs = function(class, args, data)
 	if args[2] then -- old-style
