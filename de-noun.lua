@@ -22,11 +22,22 @@ TERMINOLOGY:
 	 masculine singular is missing.
 ]=]
 
+--[=[
+FIXME:
+
+1. Qualifiers in genders should appear as footnotes on the articles.
+2. Support notation like <g:f> on feminine/diminutive/masculine, e.g. used for [[Gespons]] (neuter with the meaning
+   "wife", masculine with the meaning "husband").
+3. Fix CSS gender-specific class in table.
+4. Support adjectival nouns and adjective-noun combinations.
+5. Allow period and comma in forms e.g. for [[Eigent.-Whg.]], [[Eigt.-Whg.]] (using a backslash).
+]=]
+
 local lang = require("Module:languages").getByCode("de")
 local m_table = require("Module:table")
 local m_links = require("Module:links")
 local m_string_utilities = require("Module:string utilities")
-local iut = require("Module:User:Benwing2/inflection utilities")
+local iut = require("Module:inflection utilities")
 local com = require("Module:de-common")
 
 local pretend_from_headword = true -- may be set during debugging
@@ -263,7 +274,7 @@ local function add_dative_plural(base, specs, def_pl)
 	local function process_combined_stem_ending(stem_ending)
 		if base.props.nodatpln then
 			return stem_ending
-		elseif rfind(stem_ending, "[elr]$") then
+		elseif rfind(stem_ending, "e[lr]?$") then
 			return stem_ending .. "n"
 		else
 			return stem_ending
@@ -538,7 +549,7 @@ local function parse_indicator_spec(angle_bracket_spec, lemma, pagename, proper_
 						saw_sg = true
 					elseif g == "f" then
 						saw_sg = true
-					elseif g == "pl" then
+					elseif g == "p" then
 						saw_pl = true
 					else
 						parse_err("Unrecognized gender spec '" .. g .. "'")
@@ -928,7 +939,7 @@ local function process_dim_m_f(alternant_multiword_spec, arg_specs, default, slo
 		end
 
 		local function process(stem, ending)
-			iut.add_forms(alternant_multiword_spec.forms, slot, lemmas, ending, do_combine_stem_ending)
+			iut.add_forms(alternant_multiword_spec.forms, slot, stem or lemmas, ending, do_combine_stem_ending)
 		end
 
 		process_spec(ending_specs, default, nil, desc, process)
