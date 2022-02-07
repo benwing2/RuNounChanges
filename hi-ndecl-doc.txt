@@ -75,7 +75,7 @@ since omitting the term is equivalent to specifying the page name as the term. B
 which produces
 
 {{hi-ndecl|बंदी प्रत्यक्षीकरण//प्रत्यक्षीक*रण<M>}}
-Here only the last word is resplled.
+Here only the last word is respelled.
 
 Respelling can be used on words without indicators, for example in {{m|hi|पंचायती राज||village council}}, where the first word is invariable and needs respelling:
 :{{temp|hi-ndecl|पंचायती//पंचाय*ती राज<M>}}
@@ -107,21 +107,22 @@ which produces
 {{hi-ndecl|((ख़लीफ़ा<M.unmarked>,ख़लीफ़ा<M>))}}
 The general syntax is comma-separated alternatives inside of double parentheses.
 
-There are almost no restrictions on what can be used as an alternative. The genders do not have to agree; for example, to decline the word {{m|hi|टिकट||ticket]}, which can be either masculine or feminine, use the following:
+There are almost no restrictions on what can be used as an alternative. The genders do not have to agree; for example, to decline the word {{m|hi|टिकट||ticket}}, which can be either masculine or feminine, use the following:
 :{{temp|hi-ndecl|((<M>,<F>))}}
 
 which produces
 
-{{hi-ndecl|((टिट<M>,टिट<F>))}}
+{{hi-ndecl|((टिकट<M>,टिकट<F>))}}
 It is even allowed to include a multiword term as an alternative. An example where this is useful is {{m|hi|कीड़ा-मकोड़ा||insect, [[creepy-crawly]]}}, where the first part can either decline or be used invariably:
 :{{temp|hi-ndecl|((कीड़ा<M>-मकोड़ा<M>,<M>))}}
 
 which produces
 
-{{hi-ndecl|((कीड़ा<M>-मकोड़ा<M>,<M>))}}
+{{hi-ndecl|((कीड़ा<M>-मकोड़ा<M>,कीड़ा-मकोड़ा<M>))}}
 
 ===Overrides===
-Some words are irregular in some of their forms. Syntax is provided to override 
+Some words are irregular in some of their forms. Syntax is provided to override individual forms. [document more]
+<!-- interesting examples 
 
 {{hi-ndecl|((कीड़ा<M>-मकोड़ा<M>,<M>))}}
 {{hi-ndecl|काला<+> पहाड़<M>}}
@@ -136,9 +137,7 @@ Some words are irregular in some of their forms. Syntax is provided to override
 {{hi-ndecl|((<M>,<M.dirpl:जवाहिरात, जवाहरात, जवाहर.plstem: जवाहिरात, जवाहरात, जवाहर>))}}
 {{hi-ndecl|((<M.plstem:तवारीख़>,<M>))}}
 
-
-
-
+-->
 <includeonly>
 [[Category:Hindi noun inflection-table templates]]
 </includeonly>
