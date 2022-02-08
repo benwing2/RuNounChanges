@@ -181,6 +181,17 @@ def normalize_values(values):
 
 def do_headword_template(headt, declts, pagetitle, subsections, subsection_with_head, subsection_with_declts, pagemsg):
   notes = []
+
+  old_style_headt = False
+  for param in ["old", "2", "3", "4", "g1", "g2", "g3", "gen1", "gen2", "gen3", "pl1", "pl2", "pl3"]:
+    if getparam(headt, param):
+      old_style_headt = True
+      break
+  if not old_style_headt:
+    pagemsg("NOTE: Skipping new-style headt=%s%s" % (unicode(headt),
+      declts and ", declts=%s" % declts_to_unicode(declts) or ""))
+    return notes
+
   is_proper = tname(headt) == "de-proper noun"
   ss = False
   if declts:
@@ -209,7 +220,7 @@ def do_headword_template(headt, declts, pagetitle, subsections, subsection_with_
   for param in headt.params:
     pn = pname(param)
     pv = unicode(param.value)
-    if pn not in ["1", "2", "3", "4", "m", "f"] and not re.search("^(g|gen|pl|dim|m|f)[0-9]+$", pn):
+    if pn not in ["1", "2", "3", "4", "m", "f", "old"] and not re.search("^(g|gen|pl|dim|m|f)[0-9]+$", pn):
       pagemsg("WARNING: Unrecognized param %s=%s: %s" % (pn, pv, unicode(headt)))
       return
   if not genders:
@@ -428,24 +439,26 @@ def do_headword_template(headt, declts, pagetitle, subsections, subsection_with_
       else:
         headspec += ".both"
   newheadt = "{{de-%s|%s%s}}" % ("proper noun" if is_proper else "noun", headspec, extraspec)
-  outmsg = "Would convert %s to %s" % (unicode(headt), newheadt)
+  headt_outmsg = "convert %s to new-format %s" % (unicode(headt), newheadt)
+  outmsg = "Would " + headt_outmsg
   if declts:
     newdeclt = "{{de-ndecl|%s}}" % declspec
-    outmsg += " and %s to %s" % (declts_to_unicode(declts), newdeclt)
+    declt_outmsg = "convert %s to %s" % (declts_to_unicode(declts), newdeclt)
+    outmsg += " and " + declt_outmsg
   pagemsg(outmsg)
 
   if unicode(headt) != newheadt:
     newsectext, replaced = blib.replace_in_text(subsections[subsection_with_head], unicode(headt), newheadt, pagemsg, abort_if_warning=True)
     if not replaced:
       return
-    notes.append("replace old {{de-noun}} with new format")
+    notes.append(headt_outmsg)
     subsections[subsection_with_head] = newsectext
   if declts:
     declts_existing = "\n".join(unicode(declt) for declt in declts)
     newsectext, replaced = blib.replace_in_text(subsections[subsection_with_declts], declts_existing, newdeclt, pagemsg, abort_if_warning=True)
     if not replaced:
       return
-    notes.append("replace old {{de-decl-noun*}} with new {{de-ndecl}}")
+    notes.append(declt_outmsg)
     subsections[subsection_with_declts] = newsectext
 
   return notes
