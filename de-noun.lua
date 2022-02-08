@@ -30,7 +30,7 @@ FIXME:
    "wife", masculine with the meaning "husband").
 3. Fix CSS gender-specific class in table.
 4. Support adjectival nouns and adjective-noun combinations.
-5. Allow period and comma in forms e.g. for [[Eigent.-Whg.]], [[Eigt.-Whg.]] (using a backslash).
+5. Allow period and comma in forms e.g. for [[Eigent.-Whg.]], [[Eigt.-Whg.]] (using a backslash). (DONE)
 ]=]
 
 local lang = require("Module:languages").getByCode("de")
@@ -59,6 +59,9 @@ local capletters = "A-ZÄÖÜ"
 local CAP = "[" .. capletters .. "]"
 local V = "[" .. vowels .. "]"
 local NV = "[^" .. vowels .. "]"
+
+local SUB_ESCAPED_PERIOD = u(0xFFF0)
+local SUB_ESCAPED_COMMA = u(0xFFF1)
 
 local archaic_dative_note = "[now uncommon, [[Wiktionary:About German#Dative_singular_-e_in_noun_declension|see notes]]]"
 
@@ -274,7 +277,7 @@ local function add_dative_plural(base, specs, def_pl)
 	local function process_combined_stem_ending(stem_ending)
 		if base.props.nodatpln then
 			return stem_ending
-		elseif rfind(stem_ending, "e[lr]?$") then
+		elseif rfind(stem_ending, "e[lr]?$") or rfind(stem_ending, "erl$") then
 			return stem_ending .. "n"
 		else
 			return stem_ending
@@ -343,6 +346,9 @@ local function get_default_pl(base, gender)
 		return "se"
 	elseif gender == "f" or base.props.weak or rfind(base.lemma, "e$") then
 		return get_n_ending(base.lemma)
+	elseif gender == "n" and rfind(base.lemma, "lein$") then
+		-- Diminutives in -lein (those in -chen will automatically get a null ending from -en below)
+		return ""
 	elseif gender == "n" and rfind(base.lemma, "um$") then
 		-- [[Museum]] -> [[Museen]], [[Vakuum]] -> [[Vakuen]]; not masculine [[Baum]] (plural [[Bäume]])
 		-- or [[Reichtum]] (plural [[Reichtümer]])
@@ -440,6 +446,24 @@ end
 ]=]
 
 
+-- Like iut.split_alternating_runs_and_strip_spaces(), but ensure that backslash-escaped commas and periods are not
+-- treated as separators.
+local function split_alternating_runs_with_escapes(segments, splitchar)
+	for i, segment in ipairs(segments) do
+		segments[i] = rsub(segment, "\\,", SUB_ESCAPED_COMMA)
+		segments[i] = rsub(segment, "\\%.", SUB_ESCAPED_PERIOD)
+	end
+	local separated_groups = iut.split_alternating_runs_and_strip_spaces(segments, splitchar)
+	for _, separated_group in ipairs(separated_groups) do
+		for i, segment in ipairs(separated_group) do
+			separated_group[i] = rsub(segment, SUB_ESCAPED_COMMA, ",")
+			separated_group[i] = rsub(segment, SUB_ESCAPED_PERIOD, ".")
+		end
+	end
+	return separated_groups
+end
+
+
 --[=[
 Parse an indicator spec (text consisting of angle brackets and zero or more dot-separated indicators within them).
 Return value is an object of the form
@@ -533,11 +557,11 @@ local function parse_indicator_spec(angle_bracket_spec, lemma, pagename, proper_
 
 	if inside ~= "" then
 		local segments = iut.parse_balanced_segment_run(inside, "[", "]")
-		local dot_separated_groups = iut.split_alternating_runs_and_strip_spaces(segments, "%.")
+		local dot_separated_groups = split_alternating_runs_with_escapes(segments, "%.")
 		for i, dot_separated_group in ipairs(dot_separated_groups) do
 			local part = dot_separated_group[1]
 			if i == 1 then
-				local comma_separated_groups = iut.split_alternating_runs_and_strip_spaces(dot_separated_group, ",")
+				local comma_separated_groups = split_alternating_runs_with_escapes(dot_separated_group, ",")
 				base.genders = com.fetch_specs(iut, comma_separated_groups[1], ":", "gender", nil, parse_err)
 				local saw_sg = false
 				local saw_pl = false
