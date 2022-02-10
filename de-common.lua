@@ -7,6 +7,14 @@ Authorship: <benwing2>
 
 ]=]
 
+local rmatch = mw.ustring.match
+
+local vowels = "aeiouyäöüAEIOUYÄÖÜ"
+local capletters = "A-ZÄÖÜ"
+local CAP = "[" .. capletters .. "]"
+local V = "[" .. vowels .. "]"
+local NV = "[^" .. vowels .. "]"
+
 
 export.articles = {
 	["m"] = {
@@ -42,6 +50,33 @@ export.articles = {
 		ind_voc = "?", def_voc = "?",
 	},
 }
+
+
+function export.apply_umlaut(term, origterm)
+	local stem, after = term:match("^(.*[^e])(e[lmnr]?)$")
+	if stem then
+		-- Nagel -> Nägel, Garten -> Gärten
+		return export.apply_umlaut(stem, term) .. after
+	end
+	-- Haus -> Häuschen
+	local before_v, v, after_v = rmatch(term, "^(.*)([Aa])([Uu]" .. NV .. "-)$")
+	if not before_v then
+		-- Haar -> Härchen
+		before_v, v, after_v = rmatch(term, "^(.*)([Aa])[Aa](" .. NV .. "-)$")
+	end
+	if not before_v then
+		-- Boot -> Bötchen
+		before_v, v, after_v = rmatch(term, "^(.*)([Oo])[Oo](" .. NV .. "-)$")
+	end
+	if not before_v then
+		-- regular umlaut
+		before_v, v, after_v = rmatch(term, "^(.*)([AaOouU])(" .. NV .. "-)$")
+	end
+	if before_v then
+		return before_v .. umlaut[v] .. after_v
+	end
+	error("Can't umlaut " .. (origterm or term) .. " because the last vowel isn't a, o, u or au")
+end
 
 
 function export.fetch_footnotes(separated_group, parse_err)

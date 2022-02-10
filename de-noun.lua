@@ -56,12 +56,6 @@ local usub = mw.ustring.sub
 local uupper = mw.ustring.upper
 local ulower = mw.ustring.lower
 
-local vowels = "aeiouyäöüAEIOUYÄÖÜ"
-local capletters = "A-ZÄÖÜ"
-local CAP = "[" .. capletters .. "]"
-local V = "[" .. vowels .. "]"
-local NV = "[^" .. vowels .. "]"
-
 local SUB_ESCAPED_PERIOD = u(0xFFF0)
 local SUB_ESCAPED_COMMA = u(0xFFF1)
 
@@ -129,33 +123,6 @@ for case, _ in pairs(cases) do
 	noun_slots_with_linked_and_articles["art_def_" .. case .. "_p"] = "-"
 end
 
-local function apply_umlaut(term, origterm)
-	local stem, after = term:match("^(.*[^e])(e[lmnr]?)$")
-	if stem then
-		-- Nagel -> Nägel, Garten -> Gärten
-		return apply_umlaut(stem, term) .. after
-	end
-	-- Haus -> Häuschen
-	local before_v, v, after_v = rmatch(term, "^(.*)([Aa])([Uu]" .. NV .. "-)$")
-	if not before_v then
-		-- Haar -> Härchen
-		before_v, v, after_v = rmatch(term, "^(.*)([Aa])[Aa](" .. NV .. "-)$")
-	end
-	if not before_v then
-		-- Boot -> Bötchen
-		before_v, v, after_v = rmatch(term, "^(.*)([Oo])[Oo](" .. NV .. "-)$")
-	end
-	if not before_v then
-		-- regular umlaut
-		before_v, v, after_v = rmatch(term, "^(.*)([AaOouU])(" .. NV .. "-)$")
-	end
-	if before_v then
-		return before_v .. umlaut[v] .. after_v
-	end
-	error("Can't umlaut " .. (origterm or term) .. " because the last vowel isn't a, o, u or au")
-end
-
-
 local function skip_slot(number, slot)
 	return number == "sg" and rfind(slot, "_p$") or
 		number == "pl" and rfind(slot, "_s$")
@@ -166,9 +133,9 @@ local function combine_stem_ending(props, stem, ending)
 	if ending:find("^%^") then
 		-- Umlaut requested
 		ending = rsub(ending, "^%^", "")
-		stem = apply_umlaut(stem)
+		stem = com.apply_umlaut(stem)
 	end
-	if props.ss and stem:find("ß$") and rfind(ending, "^" .. V) then
+	if props.ss and stem:find("ß$") and rfind(ending, "^" .. com.V) then
 		stem = rsub(stem, "ß$", "ss")
 	end
 	return stem .. ending
@@ -179,7 +146,6 @@ local function add(base, slot, stem, ending, footnotes, process_combined_stem_en
 	if not ending or skip_slot(base.number, slot) then
 		return
 	end
-	stem = stem or base.lemma
 
 	local function do_combine_stem_ending(stem, ending)
 		local retval = combine_stem_ending(base.props, stem, ending)
@@ -191,7 +157,7 @@ local function add(base, slot, stem, ending, footnotes, process_combined_stem_en
 
 	footnotes = iut.combine_footnotes(base.footnotes, footnotes)
 	local ending_obj = iut.combine_form_and_footnotes(ending, footnotes)
-	iut.add_forms(base.forms, slot, stem, ending_obj, do_combine_stem_ending)
+	iut.add_forms(base.forms, slot, stem or base.lemma, ending_obj, do_combine_stem_ending)
 end
 
 
@@ -211,7 +177,7 @@ local function process_spec(endings, default, footnotes, desc, process)
 			process_spec(iut.convert_to_general_list_form(default, ending.footnotes), nil, footnotes, desc, process)
 		else
 			local full_eform
-			if rfind(ending.form, "^" .. CAP) then
+			if rfind(ending.form, "^" .. com.CAP) then
 				full_eform = true
 			elseif rfind(ending.form, "^!") then
 				full_eform = true
@@ -309,7 +275,7 @@ end
 
 
 local function get_n_ending(stem)
-	if rfind(stem, "e$") or rfind(stem, "e[lr]$") and not rfind(stem, NV .. "[ei]e[lr]$") then
+	if rfind(stem, "e$") or rfind(stem, "e[lr]$") and not rfind(stem, com.NV .. "[ei]e[lr]$") then
 		-- [[Kammer]], [[Feier]], [[Leier]], but not [[Spur]], [[Beer]], [[Manier]], [[Schmier]] or [[Vier]]
 		-- similarly, [[Achsel]], [[Gabel]], [[Tafel]], etc. but not [[Ziel]]
 		return "n"
@@ -330,7 +296,7 @@ local function get_default_gen(base, gender)
 	elseif rfind(base.lemma, "nis$") then
 		-- neuter like [[Erlebnis]], [[Geheimnis]] or occasional masculine like [[Firnis]], [[Penis]]
 		return "ses"
-	elseif rfind(base.lemma, NV .. "us$") then
+	elseif rfind(base.lemma, com.NV .. "us$") then
 		-- [[Euphemismus]], [[Exitus]], [[Exodus]], etc.
 		return ""
 	elseif rfind(base.lemma, "[sßxz]$") then
@@ -358,11 +324,11 @@ local function get_default_pl(base, gender)
 	elseif rfind(base.lemma, "mus$") then
 		-- Algorithmus -> Algorithmen, Aphorismus -> Aphorismen
 		return "!" .. rsub(base.lemma, "us$", "en")
-	elseif rfind(base.lemma, NV .. "us$") then
+	elseif rfind(base.lemma, com.NV .. "us$") then
 		-- [[Abakus]] -> [[Abakusse]], [[Zirkus]] -> [[Zirkusse]], [[Autobus]] -> [[Autobusse]];
 		-- not [[Applaus]] (plural [[Applause]])
 		return "se"
-	elseif rfind(base.lemma, "e[lmnr]$") and not rfind(base.lemma, NV .. "[ei]e[lnmr]$") then
+	elseif rfind(base.lemma, "e[lmnr]$") and not rfind(base.lemma, com.NV .. "[ei]e[lnmr]$") then
 		-- check for weak ending -el, -em, -en, -er, e.g. [[Adler]], [[Meier]], [[Riedel]]; but exclude [[Heer]],
 		-- [[Bier]], [[Ziel]], which take -e by default
 		return ""
