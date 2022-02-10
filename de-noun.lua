@@ -31,6 +31,8 @@ FIXME:
 3. Fix CSS gender-specific class in table.
 4. Support adjectival nouns and adjective-noun combinations.
 5. Allow period and comma in forms e.g. for [[Eigent.-Whg.]], [[Eigt.-Whg.]] (using a backslash). (DONE)
+6. Allow embedded links in genitive/plural/feminine/diminutive/masculine specs, e.g. 'f=![[weiblich]]er Geschäftspartner'.
+7. Add 'prop' indicator to indicate proper nouns and suppress the indefinite article.
 ]=]
 
 local lang = require("Module:languages").getByCode("de")
@@ -874,6 +876,7 @@ end
 -- title bar contain similar information.
 local function compute_categories_and_annotation(alternant_multiword_spec)
 	alternant_multiword_spec.categories = {}
+	alternant_multiword_spec.props = {}
 
 	local function insert(cattype)
 		cattype = rsub(cattype, "~", alternant_multiword_spec.pos)
@@ -909,6 +912,12 @@ local function compute_categories_and_annotation(alternant_multiword_spec)
 				m_table.insertIfNot(decldescs, "weak")
 			else
 				m_table.insertIfNot(decldescs, "strong")
+			end
+			-- Compute overall weakness for use in headword.
+			if alternant_multiword_spec.props.weak == nil then
+				alternant_multiword_spec.props.weak = base.props.weak
+			elseif alternant_multiword_spec.props.weak ~= base.props.weak then
+				alternant_multiword_spec.props.weak = "both"
 			end
 		end
 	end
