@@ -1,0 +1,46 @@
+{{User:Benwing2/de-adecl|comp:^|pagename=lang}}
+{{User:Benwing2/de-adecl|comp:besser.sup:best|pagename=gut}}
+{{User:Benwing2/de-adecl|comp|pagename=klein}}
+; should correctly handle sup automatically
+{{User:Benwing2/de-adecl|comp:^|pagename=groß}}
+{{User:Benwing2/de-adecl|comp|pagename=müde}}
+; superlative should be veraltetst-
+{{User:Benwing2/de-adecl|comp|pagename=veraltet}}
+; should automatically have stem akzeptabl- and comparative akzeptabler, superlative akzeptabelst-
+{{User:Benwing2/de-adecl|comp|pagename=akzeptabel}}
+; should automatically have superlative ältest-
+{{User:Benwing2/de-adecl|comp:^|pagename=alt}}
+; should automatically have comparative fitter, superlative fittest
+{{User:Benwing2/de-adecl|stem:fitt.comp|pagename=fit}}
+{{User:Benwing2/de-adecl|pred:-|pagename=erste}}
+; should automatically have superlative nassest- or nässest-
+{{User:Benwing2/de-adecl|comp:+:^|pagename=nass}}
+{{User:Benwing2/de-adecl|comp:+:^.ss|pagename=naß}}
+{{User:Benwing2/de-adecl|stem:rosan:+.comp:rosaner.sup:rosanst:rosast|pagename=rosa}}
+{{User:Benwing2/de-adecl|stem:lilan:+|pagename=lila}}
+{{User:Benwing2/de-adecl|-e.comp:+:^[alternatively in Austrian German].sup:dunkelst|pagename=dunkel}}
+; should automatically have comparative simpler but superlative simpelst
+{{User:Benwing2/de-adecl|-e.comp|pagename=simpel}}
+{{User:Benwing2/de-adecl|-e.comp|pagename=aper}}
+; should have comparative either abgeschlossener or abgeschlossner
+{{User:Benwing2/de-adecl|comp:+:-e|pagename=abgeschlossen}}
+; should have comparative either aufrechter, superlative aufrechtest- or aufrechtst-
+{{User:Benwing2/de-adecl|sup:+est:+st|pagename=aufrecht}}
+{{User:Benwing2/de-adecl|sup:+t:+est|pagename=bauernschlau}}
+; should have comparative doofer, döfer or dööfer, likewise the superlative
+{{User:Benwing2/de-adecl|comp:+:^:dööf|pagename=doof}}
+; superlative adds onto stem fad-
+{{User:Benwing2/de-adecl|sup:+est:+st|pagename=fade}}
+{{User:Benwing2/de-adecl|comp:+:^.sup:^st:^est:+st:+est|pagename=krank}}
+; superlative but no comparative
+{{User:Benwing2/de-adecl|comp:-.sup:+|pagename=allerdurchlauchtig}}
+; superlative but no comparative, no predicate
+{{User:Benwing2/de-adecl|comp:-.sup:+.pred:-|pagename=inner}}
+{{User:Benwing2/de-adecl|[[an]] [[den]] [[Haar]]en [[herbeiziehen|herbeigezogen]]<comp:+er:mehr<> +.sup:+st.sup:meist<> +>|pagename=an den Haaren herbeigezogen}}
+{{User:Benwing2/de-adecl|comp:-.sup:+.pred:-|pagename=inner}}
+{{User:Benwing2/de-adecl|stem:+[formal]:+en[informal].comp.sup:+est[formal]:+enst[informal]|pagename=orange}}
+{{User:Benwing2/de-adecl|stem:+[formal]:+en[informal].comp.sup:+est[formal]:+enst[informal]|pagename=weit hergeholt}}
+; should derive superlatives wenigst, mindest
+{{User:Benwing2/de-adecl|comp:+:minder|pagename=wenig}}
+{{User:Benwing2/de-adecl|comp:+:weitergehend.sup:+:weitestgehend|pagename=weitgehend}}
+{{User:Benwing2/de-adecl|comp:weiter hergeholt:weit hergeholter[informal].sup:weites hergeholt:weit hergeholtest[informal].pred:am weitesten hergeholt:am weit hergeholtesten[informal]|pagename=weit hergeholt}}
