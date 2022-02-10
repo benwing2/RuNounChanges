@@ -533,23 +533,38 @@ def process_text_in_section(index, pagetitle, text):
 
 
 def process_text_on_page(index, pagetitle, text):
-  if "=Etymology 1=" in text:
+  global args
+  def pagemsg(txt):
+    msg("Page %s %s: %s" % (index, pagetitle, txt))
+
+  retval = blib.find_modifiable_lang_section(text, None if args.partial_page else "German", pagemsg)
+  if retval is None:
+    return
+  sections, j, secbody, sectail, has_non_lang = retval
+
+  if "=Etymology 1=" in secbody:
     notes = []
-    etym_sections = re.split("(^===Etymology [0-9]+===\n)", text, 0, re.M)
+    etym_sections = re.split("(^===Etymology [0-9]+===\n)", secbody, 0, re.M)
     for k in xrange(2, len(etym_sections), 2):
       retval = process_text_in_section(index, pagetitle, etym_sections[k])
       if retval:
         newsectext, newnotes = retval
         etym_sections[k] = newsectext
         notes.extend(newnotes)
-    text = "".join(etym_sections)
-    return text, notes
+    secbody = "".join(etym_sections)
+    sections[j] = secbody + sectail
+    return "".join(sections), notes
   else:
-    return process_text_in_section(index, pagetitle, text)
+    retval = process_text_in_section(index, pagetitle, secbody)
+    if retval:
+      secbody, notes = retval
+      sections[j] = secbody + sectail
+      return "".join(sections), notes
 
 
 parser = blib.create_argparser("Convert {{de-noun}}/{{de-proper noun}} to new format",
   include_pagefile=True, include_stdin=True)
+parser.add_argument("--partial-page", action="store_true", help="Input was generated with 'find_regex.py --lang LANG' and has no ==LANG== header.")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
