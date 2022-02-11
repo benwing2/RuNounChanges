@@ -590,6 +590,9 @@ def stream(st, startsort = None, endsort = None):
 
     yield i, pywikibot.Page(site, name)
 
+def split_arg(arg):
+  return [x.decode("utf-8") for x in re.split(r",(?! )", arg)]
+
 def iter_pages_from_file(filename):
   for line in codecs.open(filename, "r", "utf-8"):
     line = line.strip()
@@ -1028,8 +1031,19 @@ def do_pagefile_cats_refs(args, start, end, process, default_cats=[],
       do_process_page(page, i)
 
   if stdin and args.stdin:
+    pages_to_filter = None
+    if args.pages:
+      pages_to_filter = set(split_arg(args.pages))
+    if args.pagefile:
+      new_pages_to_filter = set(iter_pages_from_file(args.pagefile))
+      if pages_to_filter is None:
+        pages_to_filter = new_pages_to_filter
+      else:
+        pages_to_filter |= new_pages_to_filter
     def do_process_stdin_text_on_page(index, pagetitle, text):
-      if page_should_be_filtered_out(pagetitle):
+      if pages_to_filter is not None and pagetitle not in pages_to_filter:
+        return None
+      elif page_should_be_filtered_out(pagetitle):
         return None
       else:
         def pagemsg(txt):
@@ -1049,7 +1063,7 @@ def do_pagefile_cats_refs(args, start, end, process, default_cats=[],
 
   elif args_has_non_default_pages(args):
     if args.pages:
-      pages = [x.decode("utf-8") for x in re.split(r",(?! )", args.pages)]
+      pages = split_arg(args.pages)
       for i, pagetitle in iter_items(pages, start, end):
         process_page(pywikibot.Page(site, pagetitle), i)
     if args.pagefile:
@@ -1076,7 +1090,7 @@ def do_pagefile_cats_refs(args, start, end, process, default_cats=[],
         seen = set()
       else:
         seen = None
-      for cat in [x.decode("utf-8") for x in re.split(r",(?! )", args.cats)]:
+      for cat in split_arg(args.cats):
         if args.do_cat_and_subcats:
           for i, subcat in cat_subcats(cat, start, end, seen=seen, prune_cats_regex=args_prune_cats,
               do_this_page=True, recurse=args.recursive):
@@ -1090,20 +1104,20 @@ def do_pagefile_cats_refs(args, start, end, process, default_cats=[],
               recurse=args.recursive, track_seen=args.track_seen):
             process_page(page, i)
     if args.refs:
-      for ref in [x.decode("utf-8") for x in re.split(r",(?! )", args.refs)]:
+      for ref in split_arg(args.refs):
         # We don't use ref_namespaces here because the user might not want it.
         for i, page in references(ref, start, end, namespaces=args_ref_namespaces):
           process_page(page, i)
     if args.specials:
-      for special in re.split(",(?! )", args.specials):
+      for special in split_arg(args.specials):
         for i, page in query_special_pages(special, start, end):
           process_page(page, i)
     if args.contribs:
-      for contrib in re.split(",(?! )", args.contribs):
+      for contrib in split_arg(args.contribs):
         for i, page in query_usercontribs(contrib, start, end, starttime=args.contribs_start, endtime=args.contribs_end):
           process_page(pywikibot.Page(site, page['title']), i)
     if args.prefix_pages:
-      for prefix in [x.decode("utf-8") for x in re.split(r",(?! )", args.prefix_pages)]:
+      for prefix in split_arg(args.prefix_pages):
         namespace = args.prefix_namespace and args.prefix_namespace.decode("utf-8") or None
         for i, page in prefix_pages(prefix, start, end, namespace):
           process_page(page, i)
