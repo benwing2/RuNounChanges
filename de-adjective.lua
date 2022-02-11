@@ -58,42 +58,37 @@ local function link_term(term, face)
 end
 
 
-local function tag_text(text)
-	return m_script_utilities.tag_text(text, lang)
-end
-
-
 local cases = { "nom", "gen", "dat", "acc" }
 local genders = { "m", "f", "n", "p" }
 local states = { "str", "wk", "mix" }
 local comps = { "", "comp", "sup" }
 
 local adjective_slot_list_positive = {
-	{"lemma", "-"},
-	{"pred", "-"},
-	{"sup_pred", "-"},
+	{"the_lemma", "-"},
 }
 local adjective_slot_list_comparative = {
-	{"comp_pred", "-"},
 }
 local adjective_slot_list_superlative = {
-	{"sup_pred", "-"},
 }
 for _, comp in ipairs(comps) do
 	local slot_list = comp == "" and adjective_slot_list_positive or
 		comp == "comp" and adjective_slot_list_comparative or
 		adjective_slot_list_superlative
+	local compsup = comp ~= "" and comp .. "_" or ""
 	for _, state in ipairs(states) do
 		for _, case in ipairs(cases) do
 			for _, gender in ipairs(genders) do
-				local slot = (comp and comp .. "_" or "") .. state .. "_" .. case .. "_" .. gender
+				local slot = compsup .. state .. "_" .. case .. "_" .. gender
 				local accel_gender = gender == "p" and "p" or gender .. "|s"
 				local accel = state .. "|" .. case .. "|" .. accel_gender .. (comp and "|" .. comp or "")
 				table.insert(slot_list, {slot, accel})
 			end
 		end
 	end
-	table.insert(slot_list, {(comp and comp .. "_" or "") .. "pred", "-"})
+	table.insert(slot_list, {compsup .. "pred", "-"})
+	for _, gender in ipairs(genders) do
+		table.insert(slot_list, {compsup .. "pred_" .. gender, "-"})
+	end
 end
 
 local adjective_slot_set = {}
@@ -102,7 +97,7 @@ local function add_slots(slot_list)
 	for _, slot_accel in ipairs(slot_list) do
 		table.insert(all_adjective_slot_list, slot_accel)
 		local slot, accel = unpack(slot_accel)
-		if slot ~= "lemma" then
+		if slot ~= "the_lemma" then
 			adjective_slot_set[slot] = true
 		end
 	end
@@ -115,10 +110,7 @@ local function add(base, slot, stem, ending, footnotes)
 	if not ending then
 		return
 	end
-	local function combine_stem_ending(stem, ending)
-		if base.props.ss and stem:find("ß$") and rfind(ending, "^" .. V) then
-			stem = rsub(stem, "ß$", "ss")
-		end
+	local function do_combine_stem_ending(stem, ending)
 		return stem .. ending
 	end
 
@@ -137,24 +129,24 @@ end
 
 
 local function decline_plural(base, stem, compsup)
-	add_cases(base, compsup .. "str", "p", "e", "er", "en", "e")
-	add_cases(base, compsup .. "wk", "p", "en", "en", "en", "en")
-	add_cases(base, compsup .. "mix", "p", "en", "en", "en", "en")
+	add_cases(base, stem, compsup .. "str", "p", "e", "er", "en", "e")
+	add_cases(base, stem, compsup .. "wk", "p", "en", "en", "en", "en")
+	add_cases(base, stem, compsup .. "mix", "p", "en", "en", "en", "en")
 end
 
 
 local function decline_singular(base, stem, compsup)
-	add_cases(base, compsup .. "str", "m", "er", "en", "em", "en")
-	add_cases(base, compsup .. "wk", "m", "e", "en", "en", "en")
-	add_cases(base, compsup .. "mix", "m", "er", "en", "en", "en")
+	add_cases(base, stem, compsup .. "str", "m", "er", "en", "em", "en")
+	add_cases(base, stem, compsup .. "wk", "m", "e", "en", "en", "en")
+	add_cases(base, stem, compsup .. "mix", "m", "er", "en", "en", "en")
 
-	add_cases(base, compsup .. "str", "f", "e", "er", "er", "e")
-	add_cases(base, compsup .. "wk", "f", "e", "en", "en", "e")
-	add_cases(base, compsup .. "mix", "f", "e", "en", "en", "e")
+	add_cases(base, stem, compsup .. "str", "f", "e", "er", "er", "e")
+	add_cases(base, stem, compsup .. "wk", "f", "e", "en", "en", "e")
+	add_cases(base, stem, compsup .. "mix", "f", "e", "en", "en", "e")
 
-	add_cases(base, compsup .. "str", "n", "es", "en", "em", "es")
-	add_cases(base, compsup .. "wk", "n", "e", "en", "en", "e")
-	add_cases(base, compsup .. "mix", "n", "es", "en", "en", "es")
+	add_cases(base, stem, compsup .. "str", "n", "es", "en", "em", "es")
+	add_cases(base, stem, compsup .. "wk", "n", "e", "en", "en", "e")
+	add_cases(base, stem, compsup .. "mix", "n", "es", "en", "en", "es")
 end
 
 
@@ -205,13 +197,13 @@ local function parse_indicator_spec(angle_bracket_spec, lemma, pagename)
 			if part == "comp" then
 				part = "comp:+"
 			end
-			if rfind(part, "^comp:") or rfind(part, "^sup:") or part("^stem:") then
+			if rfind(part, "^comp:") or rfind(part, "^sup:") or rfind(part, "^stem:") then
 				local spectype, rest = rmatch(part, "^(.-):(.*)$")
 				if base[spectype] then
 					parse_err("Can't specify value for '" .. spectype .. "' twice")
 				end
 				dot_separated_group[1] = rest
-				base[compsup] = com.fetch_specs(iut, dot_separated_group, spectype, nil, parse_err)
+				base[spectype] = com.fetch_specs(iut, dot_separated_group, ":", spectype, nil, parse_err)
 			elseif part:find(":") then
 				local slot, override = parse_override(dot_separated_group)
 				if base.overrides[slot] then
@@ -276,7 +268,7 @@ local function generate_default_sup(base, stem)
 		return stem .. "t"
 	elseif rfind(stem, "[szxßd]$") or rfind(stem, "[^e]t$") then
 		return stem .. "est"
-	elseif base.props.omitted_e and rfind(stem, NV .. "[lmnr]$") then
+	elseif base.props.omitted_e and rfind(stem, com.NV .. "[lmnr]$") then
 		-- If we omitted -e- in the stem, try to put it back. E.g. [[simpel]], stem ''simpl-'', comparative
 		-- ''simpler'', superlative ''simpelst-''.
 		return rsub(stem, "([lmnr])$", "e%1st")
@@ -287,18 +279,21 @@ end
 
 
 local function process_comp_sup_spec(base, destforms, slot, specs, form_default)
+	local function do_form_default(form)
+		return form_default(base, form)
+	end
 	specs = specs or {{form = "+"}}
 	for _, spec in ipairs(specs) do
 		local forms
 		if spec.form == "-" then
 			-- Skip "-"; effectively, no forms get inserted into output.comp.
 		elseif spec.form == "+" then
-			forms = iut.map_forms(base.stems.stem, form_default)
+			forms = iut.map_forms(base.stems.stem, do_form_default)
 		elseif rfind(spec.form, "^%+") then
 			local ending = rsub(spec.form, "^%+", "")
 			forms = iut.map_forms(base.stems.stem, function(form) return form .. ending end)
 		elseif spec.form == "^" then
-			forms = iut.map_forms(base.stems.stem, function(form) return form_default(com.apply_umlaut(form)) end)
+			forms = iut.map_forms(base.stems.stem, function(form) return do_form_default(com.apply_umlaut(form)) end)
 		elseif rfind(spec.form, "^%^") then
 			local ending = rsub(spec.form, "^%^", "")
 			forms = iut.map_forms(base.stems.stem, function(form) return com.apply_umlaut(form) .. ending end)
@@ -330,7 +325,7 @@ local function detect_indicator_spec(alternant_multiword_spec, base)
 	if base.sup then
 		process_comp_sup_spec(base, base.stems, "sup", base.sup, generate_default_sup)
 		if base.stems.sup and not base.comp then
-			base.comp == {{form = "+"}}
+			base.comp = {{form = "+"}}
 		end
 	end
 	-- Next process the comparative, if specified (or defaulted because a superlative was specified).
@@ -383,7 +378,7 @@ local function decline_adjective(base)
 		decline_singular(base, base.stems.sup, "sup_")
 		decline_plural(base, base.stems.sup, "sup_")
 	end
-	add(base, "lemma", base.orig_lemma, "")
+	add(base, "the_lemma", base.orig_lemma, "")
 	add(base, "pred", base.lemma, "")
 	if base.stems.comp then
 		add(base, "comp_pred", base.stems.comp, "")
@@ -408,6 +403,7 @@ end
 -- declension title bar. We combine the code to do these functions as both categories and
 -- title bar contain similar information.
 local function compute_categories_and_annotation(alternant_multiword_spec)
+	alternant_multiword_spec.categories = {}
 	local function insert(cattype)
 		cattype = rsub(cattype, "~", alternant_multiword_spec.pos)
 		m_table.insertIfNot(alternant_multiword_spec.categories, "German " .. cattype)
@@ -427,9 +423,9 @@ end
 
 
 local function show_forms(alternant_multiword_spec)
-	local lemmas = alternant_multiword_spec.forms.lemma or {}
+	local lemmas = alternant_multiword_spec.forms.the_lemma or {}
 
-	local function add_predicate_pronouns(slot, link)
+	local function add_pronouns_and_articles(slot, link)
 		if slot == "pred_m" then
 			return link_term("[[er]] [[ist]]") .. " " .. link
 		elseif slot == "pred_f" then
@@ -438,13 +434,23 @@ local function show_forms(alternant_multiword_spec)
 			return link_term("[[es]] [[ist]]") .. " " .. link
 		elseif slot == "pred_p" then
 			return link_term("[[sie]] [[sind]]") .. " " .. link
+		elseif rfind(slot, "wk_") then
+			local case, gender = rmatch(slot, ".*wk_(.*)_([mfnp])$")
+			return link_term(com.articles[gender]["def_" .. case]) .. " " .. link
+		elseif rfind(slot, "mix_") then
+			local case, gender = rmatch(slot, ".*mix_(.*)_([mfnp])$")
+			return link_term(com.articles[gender]["ind_" .. case]) .. " " .. link
 		else
 			return link
 		end
 	end
 
+	local function join_spans(slot, spans)
+		return table.concat(spans, "<br />")
+	end
+
 	local function copy_predicate_forms(compsup)
-		for _, gender in ipairs { "m", "f", "n", "p" } do
+		for _, gender in ipairs(genders) do
 			alternant_multiword_spec.forms[compsup .. "pred_" .. gender] = alternant_multiword_spec.forms[compsup .. "pred"]
 		end
 	end
@@ -455,7 +461,8 @@ local function show_forms(alternant_multiword_spec)
 	local props = {
 		lang = lang,
 		lemmas = lemmas,
-		transform_link = add_predicate_pronouns,
+		transform_link = add_pronouns_and_articles,
+		join_spans = join_spans,
 	}
 	props.slot_list = adjective_slot_list_positive
 	iut.show_forms(alternant_multiword_spec.forms, props)
@@ -580,11 +587,7 @@ local function make_table(alternant_multiword_spec)
 </div></div>
 ]===]
 
-	if alternant_multiword_spec.title then
-		forms.title = alternant_multiword_spec.title
-	else
-		forms.title = 'Declension of <i lang="de" class="Latn">' .. forms.lemma .. '</i>'
-	end
+	local ital_lemma = '<i lang="de" class="Latn">' .. forms.lemma .. "</i>"
 
 	local annotation = alternant_multiword_spec.annotation
 	if annotation == "" then
@@ -595,6 +598,7 @@ local function make_table(alternant_multiword_spec)
 
 	-- Format the positive table.
 	local positive_table_spec = rsub(table_spec, "COMPSUP", "")
+	forms.title = "Positive forms of " .. ital_lemma
 	forms.footnote = alternant_multiword_spec.footnote_positive
 	forms.notes_clause = forms.footnote ~= "" and m_string_utilities.format(notes_template, forms) or ""
 	local positive_table = m_string_utilities.format(positive_table_spec, forms)
@@ -603,6 +607,7 @@ local function make_table(alternant_multiword_spec)
 	local comparative_table = ""
 	if alternant_multiword_spec.props.has_comp then
 		local comparative_table_spec = rsub(table_spec, "COMPSUP", "comp_")
+		forms.title = "Comparative forms of " .. ital_lemma
 		forms.footnote = alternant_multiword_spec.footnote_comparative
 		forms.notes_clause = forms.footnote ~= "" and m_string_utilities.format(notes_template, forms) or ""
 		comparative_table = m_string_utilities.format(comparative_table_spec, forms)
@@ -612,6 +617,7 @@ local function make_table(alternant_multiword_spec)
 	local superlative_table = ""
 	if alternant_multiword_spec.props.has_comp then
 		local superlative_table_spec = rsub(table_spec, "COMPSUP", "sup_")
+		forms.title = "Superlative forms of " .. ital_lemma
 		forms.footnote = alternant_multiword_spec.footnote_superlative
 		forms.notes_clause = forms.footnote ~= "" and m_string_utilities.format(notes_template, forms) or ""
 		superlative_table = m_string_utilities.format(superlative_table_spec, forms)
@@ -688,7 +694,7 @@ function export.do_generate_forms(parent_args, pos, from_headword, def)
 		skip_slot = function(slot)
 			return false
 		end,
-		slot_list = adjective_slot_list,
+		slot_list = all_adjective_slot_list,
 		inflect_word_spec = decline_adjective,
 	}
 	iut.inflect_multiword_or_alternant_multiword_spec(alternant_multiword_spec, inflect_props)
