@@ -28,7 +28,7 @@
 {{User:Benwing2/de-adecl|sup:+est:+st|pagename=aufrecht}}
 {{User:Benwing2/de-adecl|sup:+t:+est|pagename=bauernschlau}}
 ; should have comparative doofer, döfer or dööfer, likewise the superlative
-{{User:Benwing2/de-adecl|comp:+:^:dööf|pagename=doof}}
+{{User:Benwing2/de-adecl|comp:+:^:dööfer|pagename=doof}}
 ; superlative adds onto stem fad-
 {{User:Benwing2/de-adecl|sup:+est:+st|pagename=fade}}
 {{User:Benwing2/de-adecl|comp:+:^.sup:^st:^est:+st:+est|pagename=krank}}
