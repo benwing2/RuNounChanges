@@ -1,7 +1,10 @@
-Beginning at Thu Feb 10 20:28:36 2022
+Beginning at Thu Feb 10 20:32:48 2022
 Page 3251 arminianizm: Found match for regex: {
 Page 3251 arminianizm: -------- begin text --------
-{{wikipedia|lang=pl}}
+{{wp|lang=pl}}
+
+===Etymology===
+From {{af|pl|arminianin|-izm}}, in turn {{named-after|pl|nationality=Dutch|occupation=theologian|Jacobus Arminius|wplink=Jacobus_Arminius|nocap=1}}.
 
 ===Pronunciation===
 {{pl-p}}
@@ -9,30 +12,40 @@ Page 3251 arminianizm: -------- begin text --------
 ===Noun===
 {{pl-noun|m-in}}
 
-# {{l|en|Arminianism}}
+# {{lb|pl|Protestantism}} [[Arminianism]]
 
 ====Declension====
 {{pl-decl-noun-m-in|tantum=s}}
 
-{{cln|pl|words suffixed with -izm}}
+===Further reading===
+* {{R:pl:WSJP}}
+* {{R:PWN}}
 -------- end text --------
 Page 3254 arnika: Found match for regex: {
 Page 3254 arnika: -------- begin text --------
-{{wikipedia|lang=pl}}
+{{wp|lang=pl}}
+
+===Etymology===
+From {{bor|pl|NL.|arnica}}.
 
 ===Pronunciation===
-{{pl-p|a=LL-Q809 (pol)-Poemat-arnika.wav|fs=1}}
+{{pl-p|a=LL-Q809 (pol)-Poemat-arnika.wav}}
 
 ===Noun===
 {{pl-noun|f}}
 
-# {{l|en|arnica}}
+# [[arnica]] {{gl|any of several plants, of the [[genus]] ''[[Arnica]]''}}
 #: {{syn|pl|kupalnik}}
 
 ====Declension====
 {{pl-decl-noun-f}}
 
+====Derived terms====
+* {{q|noun}} {{l|pl|arnika górska}}
+* {{q|adjective}} {{l|pl|arnikowy}}
+
 ===Further reading===
+* {{R:pl:WSJP}}
 * {{R:PWN}}
 
 {{C|pl|Composites}}
@@ -47,7 +60,7 @@ Page 6877 cętkowany: -------- begin text --------
 From {{affix|pl|cętkować|-any}}.
 
 ===Pronunciation===
-{{pl-p}}
+{{pl-p|a=LL-Q809 (pol)-Olaf-cętkowany.wav}}
 
 ===Adjective===
 {{pl-adj|bardziej|adv=-}}
@@ -69,7 +82,7 @@ Page 8491 czarter: -------- begin text --------
 From {{bor|pl|en|charter}}.
 
 ===Pronunciation===
-{{pl-p}}
+{{pl-p|a=LL-Q809 (pol)-Poemat-czarter.wav}}
 
 ===Noun===
 {{pl-noun|m-in}}
@@ -89,7 +102,7 @@ Page 8526 czat: Found match for regex: =
 Page 8526 czat: -------- begin text --------
 
 ===Pronunciation===
-{{pl-p|hh=czad,Czad}}
+{{pl-p|hh=czad,Czad|a=LL-Q809 (pol)-Olaf-czat.wav}}
 
 ===Etymology 1===
 From {{bor|pl|en|chat}}.
@@ -131,7 +144,7 @@ Page 8547 czecheł: -------- begin text --------
 From {{inh|pl|zlw-opl|czecheł}}, from {{inh|pl|sla-pro|*čexъlъ}}.
 
 ===Pronunciation===
-{{pl-p}}
+{{pl-p|a=LL-Q809 (pol)-Olaf-czecheł.wav}}
 
 ===Noun===
 {{pl-noun|m-in}}
@@ -151,7 +164,7 @@ Page 8548 czechizm: -------- begin text --------
 {{wikipedia|lang=pl}}
 
 ===Pronunciation===
-{{pl-p}}
+{{pl-p|a=LL-Q809 (pol)-Olaf-czechizm.wav}}
 
 ===Noun===
 {{pl-noun|m-in}}
@@ -173,7 +186,7 @@ Page 8585 czelesta: -------- begin text --------
 From {{bor|pl|it|celeste}}.
 
 ===Pronunciation===
-{{pl-p}}
+{{pl-p|a=LL-Q809 (pol)-Olaf-czelesta.wav}}
 
 ===Noun===
 {{pl-noun|f}}
@@ -191,7 +204,7 @@ Page 8606 czepiga: -------- begin text --------
 * {{alter|pl|czapiga|capiga|cepiga}}
 
 ===Pronunciation===
-{{pl-p}}
+{{pl-p|a=LL-Q809 (pol)-Olaf-czepiga.wav}}
 
 ===Noun===
 {{pl-noun|f}}
@@ -215,7 +228,7 @@ Page 8714 człapać: -------- begin text --------
 * {{l|pl|cłapać}}
 
 ===Pronunciation===
-{{pl-p}}
+{{pl-p|a=LL-Q809 (pol)-Olaf-człapać.wav}}
 
 ===Verb===
 {{pl-verb|a=i}}
@@ -235,7 +248,7 @@ Page 8805 czubatka europejska: -------- begin text --------
 {{wikipedia|lang=pl}}
 
 ===Pronunciation===
-{{pl-p}}
+{{pl-p|a=LL-Q809 (pol)-Poemat-czubatka europejska.wav}}
 
 ===Noun===
 {{pl-noun|f|head=czubatka europejska}}
@@ -256,7 +269,7 @@ Page 8827 czułek: -------- begin text --------
 From {{suffix|pl|czuły|ek}}.
 
 ===Pronunciation===
-{{pl-p}}
+{{pl-p|a=LL-Q809 (pol)-Olaf-czułek.wav}}
 
 ===Noun===
 {{pl-noun|m-in}}
@@ -281,7 +294,7 @@ Page 8844 czuwak: -------- begin text --------
 From {{affix|pl|czuwać|-ak}}.
 
 ===Pronunciation===
-{{pl-p}}
+{{pl-p|a=LL-Q809 (pol)-Olaf-czuwak.wav}}
 
 ===Noun===
 {{pl-noun|m-in}}
@@ -298,7 +311,7 @@ Page 8877 czy co: Found match for regex: =
 Page 8877 czy co: -------- begin text --------
 
 ===Pronunciation===
-{{pl-p}}
+{{pl-p|a=LL-Q809 (pol)-Olaf-czy co.wav}}
 
 ===Particle===
 {{head|pl|particle}}
@@ -314,7 +327,7 @@ Page 8878 czy jak: Found match for regex: =
 Page 8878 czy jak: -------- begin text --------
 
 ===Pronunciation===
-{{pl-p}}
+{{pl-p|a=LL-Q809 (pol)-Olaf-czy jak.wav}}
 
 ===Particle===
 {{head|pl|particle}}
@@ -333,7 +346,7 @@ Page 8923 czyścicielka: -------- begin text --------
 From {{af|pl|czyściciel|-ka}}.
 
 ===Pronunciation===
-{{pl-p}}
+{{pl-p|a=LL-Q809 (pol)-Olaf-czyścicielka.wav}}
 
 ===Noun===
 {{pl-noun|f|m=czyściciel}}
@@ -360,7 +373,7 @@ Page 9054 daktylowiec: -------- begin text --------
 From {{suffix|pl|daktyl|owiec}}.
 
 ===Pronunciation===
-{{pl-p}}
+{{pl-p|a=LL-Q809 (pol)-Olaf-daktylowiec.wav}}
 
 ===Noun===
 {{pl-noun|m-in}}
@@ -390,7 +403,7 @@ Page 9113 dantejski: -------- begin text --------
 From {{suffix|pl|Dante|pos1=Italian poet|ski}}
 
 ===Pronunciation===
-{{pl-p}}
+{{pl-p|a=LL-Q809 (pol)-Olaf-dantejski.wav}}
 
 ===Adjective===
 {{pl-adj|-|adv=-}}
@@ -417,7 +430,7 @@ Page 9305 dekadent: -------- begin text --------
 From {{bor|pl|fr|décadent}}.
 
 ===Pronunciation===
-{{pl-p}}
+{{pl-p|a=LL-Q809 (pol)-Olaf-dekadent.wav}}
 
 ===Noun===
 {{pl-noun|m-pr|f=dekadentka}}
@@ -440,7 +453,7 @@ Page 9407 demotywować: -------- begin text --------
 From {{prefix|pl|de|motywować}}.
 
 ===Pronunciation===
-{{pl-p}}
+{{pl-p|a=LL-Q809 (pol)-Olaf-demotywować.wav}}
 
 ===Verb===
 {{pl-verb|a=i|pf=zdemotywować}}
@@ -466,7 +479,7 @@ Page 9415 dendrochronologia: -------- begin text --------
 {{wikipedia|lang=pl}}
 
 ===Pronunciation===
-{{pl-p}}
+{{pl-p|a=LL-Q809 (pol)-Poemat-dendrochronologia.wav}}
 
 ===Noun===
 {{pl-noun|f}}
@@ -492,7 +505,7 @@ Page 9524 detalicznie: -------- begin text --------
 From {{af|pl|detaliczny|-ie}}.
 
 ===Pronunciation===
-{{pl-p}}
+{{pl-p|a=LL-Q809 (pol)-Olaf-detalicznie.wav}}
 
 ===Adverb===
 {{pl-adv|detaliczniej}}
@@ -513,7 +526,7 @@ Page 9561 dezaktywacyjny: -------- begin text --------
 From {{suffix|pl|dezaktywacja|ny}}.
 
 ===Pronunciation===
-{{pl-p}}
+{{pl-p|a=LL-Q809 (pol)-Olaf-dezaktywacyjny.wav}}
 
 ===Adjective===
 {{pl-adj|-|adv=-}}
@@ -542,7 +555,7 @@ Page 9562 dezaktywizacja: -------- begin text --------
 From {{af|pl|dez-|aktywizować|-cja}}.
 
 ===Pronunciation===
-{{pl-p}}
+{{pl-p|a=LL-Q809 (pol)-Olaf-dezaktywizacja.wav}}
 
 ===Noun===
 {{pl-noun|f}}
@@ -572,7 +585,7 @@ Page 9592 dębik: -------- begin text --------
 From {{affix|pl|dąb|-ik}}.
 
 ===Pronunciation===
-{{pl-p}}
+{{pl-p|a=LL-Q809 (pol)-Olaf-dębik.wav}}
 
 ===Noun===
 {{pl-noun|m-in}}
@@ -595,7 +608,7 @@ Page 9687 diwa: -------- begin text --------
 From {{bor|pl|it|diva|t=diva, goddess}}, from {{der|pl|la|dīva|t=goddess}}, female of {{m|la|dīvus|t=divine, divine one; notably a deified mortal}}.
 
 ===Pronunciation===
-{{pl-p}}
+{{pl-p|a=LL-Q809 (pol)-Olaf-diwa.wav}}
 
 ===Noun===
 {{pl-noun|f}}
@@ -621,7 +634,7 @@ Page 9701 dławik: -------- begin text --------
 From {{affix|pl|dławić|-ik}}.
 
 ===Pronunciation===
-{{pl-p}}
+{{pl-p|a=LL-Q809 (pol)-Olaf-dławik.wav}}
 
 ===Noun===
 {{pl-noun|m-an}}
@@ -656,7 +669,7 @@ Page 9702 dławisz: -------- begin text --------
 From {{affix|pl|dławić|-isz}}.
 
 ===Pronunciation===
-{{pl-p}}
+{{pl-p|a=LL-Q809 (pol)-Olaf-dławisz.wav}}
 
 ===Noun===
 {{pl-noun|m-in}}
@@ -684,7 +697,7 @@ Page 9705 dłoniasty: -------- begin text --------
 From {{af|pl|dłoń|-asty}}.
 
 ===Pronunciation===
-{{pl-p}}
+{{pl-p|a=LL-Q809 (pol)-Olaf-dłoniasty.wav}}
 
 ===Adjective===
 {{pl-adj|-|adv=-}}
@@ -705,7 +718,7 @@ Page 9760 dmuchawa: -------- begin text --------
 From {{affix|pl|dmuchać|-awa}}.
 
 ===Pronunciation===
-{{pl-p}}
+{{pl-p|a=LL-Q809 (pol)-Olaf-dmuchawa.wav}}
 
 ===Noun===
 {{pl-noun|f}}
@@ -725,7 +738,7 @@ Page 9912 docelowy: Found match for regex: =
 Page 9912 docelowy: -------- begin text --------
 
 ===Pronunciation===
-{{pl-p}}
+{{pl-p|a=LL-Q809 (pol)-Olaf-docelowy.wav}}
 
 ===Adjective===
 {{pl-adj|-|adv=docelowo}}
@@ -748,7 +761,7 @@ Page 9927 dociągać: -------- begin text --------
 From {{prefix|pl|do|ciągać}}.
 
 ===Pronunciation===
-{{pl-p}}
+{{pl-p|a=LL-Q809 (pol)-Olaf-dociągać.wav}}
 
 ===Verb===
 {{pl-verb|a=i|pf=dociągnąć}}
@@ -776,7 +789,7 @@ Page 9928 dociągnąć: -------- begin text --------
 From {{suffix|pl|dociągać|nąć}}.
 
 ===Pronunciation===
-{{pl-p|do'ciąg.nąć}}
+{{pl-p|do'ciąg.nąć|a=LL-Q809 (pol)-Olaf-dociągnąć.wav}}
 
 ===Verb===
 {{pl-verb|a=p|impf=dociągać}}
@@ -807,7 +820,7 @@ Page 9929 dociec: -------- begin text --------
 From {{af|pl|do-|ciec}}.
 
 ===Pronunciation===
-{{pl-p}}
+{{pl-p|a=LL-Q809 (pol)-Olaf-dociec.wav}}
 
 ===Verb===
 {{pl-verb|a=p|impf=dociekać}}
@@ -831,7 +844,7 @@ Page 9959 dodekafonia: -------- begin text --------
 From {{der|pl|grc|δώδεκα}} {{suffix|pl||fonia}}.
 
 ===Pronunciation===
-{{pl-p}}
+{{pl-p|a=LL-Q809 (pol)-Olaf-dodekafonia.wav}}
 
 ===Noun===
 {{pl-noun|f}}
@@ -854,7 +867,7 @@ Page 10027 dokopać: -------- begin text --------
 From {{prefix|pl|do|kopać}}.
 
 ===Pronunciation===
-{{pl-p}}
+{{pl-p|a=LL-Q809 (pol)-Olaf-dokopać.wav}}
 
 ===Verb===
 {{pl-verb|a=p|impf=dokopywać}}
@@ -883,7 +896,7 @@ Page 10029 dokopywać: -------- begin text --------
 From {{suffix|pl|dokopać|ywać}}.
 
 ===Pronunciation===
-{{pl-p}}
+{{pl-p|a=LL-Q809 (pol)-Olaf-dokopywać.wav}}
 
 ===Verb===
 {{pl-verb|a=i|pf=dokopać}}
@@ -912,7 +925,7 @@ Page 10087 dolnoniemiecki: -------- begin text --------
 * {{qualifier|abbreviation}}: {{l|pl|dniem.}}
 
 ===Pronunciation===
-{{pl-p}}
+{{pl-p|a=LL-Q809 (pol)-Olaf-dolnoniemiecki.wav}}
 
 ===Adjective===
 {{pl-adj|-|adv=-}}
@@ -932,7 +945,7 @@ Page 10154 domknąć: -------- begin text --------
 From {{prefix|pl|do|mknąć}}.
 
 ===Pronunciation===
-{{pl-p}}
+{{pl-p|a=LL-Q809 (pol)-Olaf-domknąć.wav}}
 
 ===Verb===
 {{pl-verb|a=p|impf=domykać}}
@@ -957,7 +970,7 @@ Page 10172 domykać: -------- begin text --------
 From {{suffix|pl|domknąć|ać}}.
 
 ===Pronunciation===
-{{pl-p}}
+{{pl-p|a=LL-Q809 (pol)-Olaf-domykać.wav}}
 
 ===Verb===
 {{pl-verb|a=i|pf=domknąć}}
@@ -982,7 +995,7 @@ Page 10184 donaszać: -------- begin text --------
 From {{suffix|pl|donosić|ać}}.
 
 ===Pronunciation===
-{{pl-p}}
+{{pl-p|a=LL-Q809 (pol)-Olaf-donaszać.wav}}
 
 ===Verb===
 {{pl-verb|a=i|pf=donosić}}
@@ -1001,7 +1014,7 @@ Page 10336 dosalać: Found match for regex: =
 Page 10336 dosalać: -------- begin text --------
 
 ===Pronunciation===
-{{pl-p}}
+{{pl-p|a=LL-Q809 (pol)-Olaf-dosalać.wav}}
 
 ===Verb===
 {{pl-verb|a=i|pf=dosolić}}
@@ -1023,7 +1036,7 @@ Page 10536 drapować: -------- begin text --------
 From {{bor|pl|fr|draper}} {{suffix|pl||ować}}.
 
 ===Pronunciation===
-{{pl-p}}
+{{pl-p|a=LL-Q809 (pol)-Poemat-drapować.wav}}
 
 ===Verb===
 {{pl-verb|a=i|pf=udrapować}}
@@ -1045,7 +1058,7 @@ Page 10570 drenować: -------- begin text --------
 From {{bor|pl|fr|drainer}} + {{af|pl|-ować}}, from {{der|pl|en|drain}}, from {{der|pl|enm|dreinen}}, from {{der|pl|ang|drēahnian}}, from {{der|pl|gem-pro|*drauhnōną}}, from {{m|gem-pro|*draugiz}}.
 
 ===Pronunciation===
-{{pl-p}}
+{{pl-p|a=LL-Q809 (pol)-Poemat-drenować.wav}}
 
 ===Verb===
 {{pl-verb|a=i|pf=wydrenować}}
@@ -1073,7 +1086,7 @@ Page 10800 drzewostan: -------- begin text --------
 From {{compound|pl|drzewo|stan}}.
 
 ===Pronunciation===
-{{pl-p}}
+{{pl-p|a=LL-Q809 (pol)-Olaf-drzewostan.wav}}
 
 ===Noun===
 {{pl-noun|m-in}}
@@ -1101,7 +1114,7 @@ Page 10817 dubas: -------- begin text --------
 * {{l|pl|dziubas}}
 
 ===Pronunciation===
-{{pl-p}}
+{{pl-p|a=LL-Q809 (pol)-Olaf-dubas.wav}}
 
 ===Noun===
 {{pl-noun|m-in}}
@@ -1125,7 +1138,7 @@ Page 10822 dubbingowy: -------- begin text --------
 From {{suffix|pl|dubbing|owy}}.
 
 ===Pronunciation===
-{{pl-p|dabingowy|h=du.bbin.go.wy}}
+{{pl-p|dabingowy|h=du.bbin.go.wy|a=LL-Q809 (pol)-Olaf-dubbingowy.wav}}
 
 ===Adjective===
 {{pl-adj|-|adv=-}}
@@ -1150,7 +1163,7 @@ Page 11060 dwumiesięcznik: -------- begin text --------
 From {{prefix|pl|dwu|t1=bi-|miesięcznik|t2=monthly <noun>}}.
 
 ===Pronunciation===
-{{pl-p}}
+{{pl-p|a=LL-Q809 (pol)-Olaf-dwumiesięcznik.wav}}
 
 ===Noun===
 {{pl-noun|m-in}}
@@ -1169,7 +1182,7 @@ Page 11094 dwutysięczny: Found match for regex: =
 Page 11094 dwutysięczny: -------- begin text --------
 
 ===Pronunciation===
-{{pl-p}}
+{{pl-p|a=LL-Q809 (pol)-Olaf-dwutysięczny.wav}}
 
 ===Numeral===
 {{head|pl|numeral|g=m}}
@@ -1190,7 +1203,7 @@ Page 11165 dyktando: -------- begin text --------
 Related to {{m|pl|dyktować|gloss=to dictate}}
 
 ===Pronunciation===
-{{pl-p}}
+{{pl-p|a=LL-Q809 (pol)-Olaf-dyktando.wav}}
 
 ===Noun===
 {{pl-noun|n}}
@@ -1213,7 +1226,7 @@ Page 11202 dymnica: -------- begin text --------
 From {{suffix|pl|dym|nica}}.
 
 ===Pronunciation===
-{{pl-p}}
+{{pl-p|a=LL-Q809 (pol)-Olaf-dymnica.wav}}
 
 ===Noun===
 {{pl-noun|f}}
@@ -1237,7 +1250,7 @@ Page 11222 dyplomacja: -------- begin text --------
 From {{bor|pl|fr|diplomatie}}.
 
 ===Pronunciation===
-{{pl-p}}
+{{pl-p|a=LL-Q809 (pol)-Olaf-dyplomacja.wav}}
 
 ===Noun===
 {{pl-noun|g=f}}
@@ -1261,7 +1274,7 @@ Page 11271 dyspepsja: -------- begin text --------
 {{wikipedia|lang=pl}}
 
 ===Pronunciation===
-{{pl-p}}
+{{pl-p|a=LL-Q809 (pol)-Olaf-dyspepsja.wav}}
 
 ===Noun===
 {{pl-noun|f}}
@@ -1282,7 +1295,7 @@ Page 11316 dywizjonizm: -------- begin text --------
 {{wikipedia|lang=pl}}
 
 ===Pronunciation===
-{{pl-p}}
+{{pl-p|a=LL-Q809 (pol)-Olaf-dywizjonizm.wav}}
 
 ===Noun===
 {{pl-noun|m-in}}
@@ -1309,7 +1322,7 @@ Page 11367 działon: -------- begin text --------
 From {{affix|pl|działo|-on}}.
 
 ===Pronunciation===
-{{pl-p}}
+{{pl-p|a=LL-Q809 (pol)-Olaf-działon.wav}}
 
 ===Noun===
 {{pl-noun|m-in}}
@@ -1334,7 +1347,7 @@ Page 11574 dziewięćsił: -------- begin text --------
 From {{inh|pl|sla-pro|*devęsilъ}}, equivalent to {{compound|pl|dziewięć|sił}}.
 
 ===Pronunciation===
-{{pl-p}}
+{{pl-p|a=LL-Q809 (pol)-Olaf-dziewięćsił.wav}}
 
 ===Noun===
 {{pl-noun|m-in}}
@@ -1358,7 +1371,7 @@ Page 11596 dzięcielina: -------- begin text --------
 From {{inh|pl|sla-pro|*dętelina}}, from {{m|sla-pro|*dętelъ}}.
 
 ===Pronunciation===
-{{pl-p}}
+{{pl-p|a=LL-Q809 (pol)-Olaf-dzięcielina.wav}}
 
 ===Noun===
 {{pl-noun|f}}
@@ -1386,7 +1399,7 @@ Page 11688 dziwaczek: -------- begin text --------
 {{wikipedia|lang=pl}}
 
 ===Pronunciation===
-{{pl-p}}
+{{pl-p|a=LL-Q809 (pol)-Olaf-dziwaczek.wav}}
 
 ===Etymology 1===
 From {{suffix|pl|dziwak|ek}}.
@@ -1426,7 +1439,7 @@ Page 11709 dziwonia: -------- begin text --------
 {{wikipedia|lang=pl}}
 
 ===Pronunciation===
-{{pl-p}}
+{{pl-p|a=LL-Q809 (pol)-Olaf-dziwonia.wav}}
 
 ===Noun===
 {{pl-noun|f}}
@@ -1445,7 +1458,7 @@ Page 11776 dżin: Found match for regex: =
 Page 11776 dżin: -------- begin text --------
 
 ===Pronunciation===
-{{pl-p}}
+{{pl-p|a=LL-Q809 (pol)-Olaf-dżin.wav}}
 
 ===Etymology 1===
 
@@ -1497,7 +1510,7 @@ Page 11778 dżinn: -------- begin text --------
 From {{bor|pl|ar|جن}}.
 
 ===Pronunciation===
-{{pl-p|dżin|h=dżinn}}
+{{pl-p|dżin|h=dżinn|a=LL-Q809 (pol)-Olaf-dżinn.wav}}
 
 ===Noun===
 {{pl-noun|m-pr}}
@@ -1525,7 +1538,7 @@ Page 11790 dżudoczka: -------- begin text --------
 From {{suffix|pl|dżudoka|ka}}.
 
 ===Pronunciation===
-{{pl-p}}
+{{pl-p|a=LL-Q809 (pol)-Olaf-dżudoczka.wav}}
 
 ===Noun===
 {{pl-noun|f|m=dżudoka}}
@@ -1554,7 +1567,7 @@ Page 11791 dżudoka: -------- begin text --------
 From {{bor|pl|ja|柔道家}}.
 
 ===Pronunciation===
-{{pl-p}}
+{{pl-p|a=LL-Q809 (pol)-Olaf-dżudoka.wav}}
 
 ===Noun===
 {{pl-noun|m-pr|f=dżudoczka}}
@@ -1586,7 +1599,7 @@ Page 11881 egzogamia: -------- begin text --------
 {{wikipedia|lang=pl}}
 
 ===Pronunciation===
-{{pl-p}}
+{{pl-p|a=LL-Q809 (pol)-Olaf-egzogamia.wav}}
 
 ===Noun===
 {{pl-noun|f}}
@@ -1606,7 +1619,7 @@ Page 11903 eklektyzm: -------- begin text --------
 {{wikipedia|lang=pl}}
 
 ===Pronunciation===
-{{pl-p}}
+{{pl-p|a=LL-Q809 (pol)-Olaf-eklektyzm.wav}}
 
 ===Noun===
 {{pl-noun|m-in}}
@@ -1633,7 +1646,7 @@ Page 11958 ekspandować: -------- begin text --------
 From {{bor|pl|la|expandō}} + {{af|pl|-ować}}.
 
 ===Pronunciation===
-{{pl-p}}
+{{pl-p|a=LL-Q809 (pol)-Olaf-ekspandować.wav}}
 
 ===Verb===
 {{pl-verb|a=i}}
@@ -1660,7 +1673,7 @@ Page 12199 epika: -------- begin text --------
 From {{der|pl|la|epicus}}, from {{der|pl|grc|ἐπικός}}, from {{m|grc|ἔπος||word, story}}.
 
 ====Pronunciation====
-{{pl-p|fs=1}}
+{{pl-p|fs=1|a=LL-Q809 (pol)-Olaf-epika.wav}}
 
 ===Noun===
 {{pl-noun|f}}
@@ -1696,7 +1709,7 @@ Page 12206 epistemologia: -------- begin text --------
 {{wikipedia|lang=pl}}
 
 ===Pronunciation===
-{{pl-p}}
+{{pl-p|a=LL-Q809 (pol)-Olaf-epistemologia.wav}}
 
 ===Noun===
 {{pl-noun|g=f}}
@@ -1724,7 +1737,7 @@ Page 12254 esej: -------- begin text --------
 {{wikipedia|lang=pl}}
 
 ===Pronunciation===
-{{pl-p}}
+{{pl-p|a=LL-Q809 (pol)-Olaf-esej.wav}}
 
 ===Noun===
 {{pl-noun|m-in}}
@@ -1750,7 +1763,7 @@ Page 12280 estetyzm: -------- begin text --------
 {{wikipedia|lang=pl}}
 
 ===Pronunciation===
-{{pl-p}}
+{{pl-p|a=LL-Q809 (pol)-Olaf-estetyzm.wav}}
 
 ===Noun===
 {{pl-noun|m-in}}
@@ -1769,7 +1782,7 @@ Page 12290 estymować: -------- begin text --------
 From {{bor|pl|fr|estimer}} + {{af|pl|-ować}}, from {{der|pl|la|aestimō}}.
 
 ===Pronunciation===
-{{pl-p}}
+{{pl-p|a=LL-Q809 (pol)-Olaf-estymować.wav}}
 
 ===Verb===
 {{pl-verb|a=i}}
@@ -1794,7 +1807,7 @@ Page 12303 etiologia: -------- begin text --------
 {{wikipedia|lang=pl}}
 
 ===Pronunciation===
-{{pl-p}}
+{{pl-p|a=LL-Q809 (pol)-Olaf-etiologia.wav}}
 
 ===Noun===
 {{pl-noun|f}}
@@ -1812,7 +1825,7 @@ Page 12313 etnologia: -------- begin text --------
 {{wikipedia|lang=pl}}
 
 ===Pronunciation===
-{{pl-p}}
+{{pl-p|a=LL-Q809 (pol)-Olaf-etnologia.wav}}
 
 ===Noun===
 {{pl-noun|f}}
@@ -1837,7 +1850,7 @@ Page 12352 eunuchoidyzm: -------- begin text --------
 {{wikipedia|lang=pl}}
 
 ===Pronunciation===
-{{pl-p}}
+{{pl-p|a=LL-Q809 (pol)-Olaf-eunuchoidyzm.wav}}
 
 ===Noun===
 {{pl-noun|m-in}}
@@ -1854,7 +1867,7 @@ Page 12386 ewangelicyzm: -------- begin text --------
 {{wikipedia|lang=pl|ewangelicy}}
 
 ===Pronunciation===
-{{pl-p}}
+{{pl-p|a=LL-Q809 (pol)-Olaf-ewangelicyzm.wav}}
 
 ===Noun===
 {{pl-noun|m-in}}
@@ -1879,7 +1892,7 @@ Page 12389 ewangelikalizm: -------- begin text --------
 {{wikipedia|lang=pl}}
 
 ===Pronunciation===
-{{pl-p}}
+{{pl-p|a=LL-Q809 (pol)-Olaf-ewangelikalizm.wav}}
 
 ===Noun===
 {{pl-noun|m-in}}
@@ -1903,7 +1916,7 @@ Page 12392 ewenement: -------- begin text --------
 From {{bor|pl|fr|événement}}.
 
 ===Pronunciation===
-{{pl-p}}
+{{pl-p|a=LL-Q809 (pol)-Olaf-ewenement.wav}}
 
 ===Noun===
 {{pl-noun|m-in}}
@@ -1923,7 +1936,7 @@ Page 12398 ewidencjonować: -------- begin text --------
 From {{suffix|pl|ewidencja|ować}}.
 
 ===Pronunciation===
-{{pl-p}}
+{{pl-p|a=LL-Q809 (pol)-Olaf-ewidencjonować.wav}}
 {{rfap|pl}}
 
 ===Verb===
@@ -1950,7 +1963,7 @@ Page 12481 falafel: -------- begin text --------
 Borrowed from {{bor|pl|ar|فَلَافِل}}, the plural of {{m|ar|فِلْفِل||pepper}}. See the English entry for more.
 
 ===Pronunciation===
-{{pl-p}}
+{{pl-p|a=LL-Q809 (pol)-Olaf-falafel.wav}}
 
 ===Noun===
 {{pl-noun|m-in}}
@@ -1984,7 +1997,7 @@ Page 12498 falset: -------- begin text --------
 From {{der|pl|it|falsetto}}.
 
 ===Pronunciation===
-{{pl-p}}
+{{pl-p|a=LL-Q809 (pol)-Olaf-falset.wav}}
 
 ===Noun===
 {{pl-noun|m-in}}
@@ -2005,7 +2018,7 @@ Page 12673 fenol: -------- begin text --------
 {{wikipedia|lang=pl|mul=Fenole}}
 
 ===Pronunciation===
-{{pl-p}}
+{{pl-p|a=LL-Q809 (pol)-Olaf-fenol.wav}}
 
 ===Noun===
 {{pl-noun|m-in}}
@@ -2047,9 +2060,9 @@ Page 48863 terapia: -------- begin text --------
 {{pl-decl-noun-f|tantum=s}}
 
 ====Derived terms====
-* {{l|pl|aeroterapia}}, {{l|pl|apioterapia}}, {{l|pl|apiterapia}}, {{l|pl|terapeuta}}, {{l|pl|terapeutka}}, {{l|pl|afektoterapia}}, {{l|pl|aktynoterapia}}
-* {{l|pl|terapeutyczny}}
-* {{l|pl|terapeutycznie}}
+* {{q|nouns}} {{l|pl|aeroterapia}}, {{l|pl|apioterapia}}, {{l|pl|apiterapia}}, {{l|pl|aromaterapia}}, {{l|pl|terapeuta}}, {{l|pl|terapeutka}}, {{l|pl|afektoterapia}}, {{l|pl|aktynoterapia}}
+* {{q|adjective}} {{l|pl|terapeutyczny}}
+* {{q|adverb}} {{l|pl|terapeutycznie}}
 
 ===Further reading===
 * {{R:pl:WSJP}}
@@ -2060,5 +2073,5 @@ Page 48863 terapia: -------- begin text --------
 ----
 
 -------- end text --------
-Elapsed time: 0 mins 5.49 secs
-Ending at Thu Feb 10 20:28:41 2022
+Elapsed time: 0 mins 11.31 secs
+Ending at Thu Feb 10 20:32:59 2022
