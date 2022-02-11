@@ -43,4 +43,4 @@
 ; should derive superlatives wenigst, mindest
 {{User:Benwing2/de-adecl|comp:+:minder|pagename=wenig}}
 {{User:Benwing2/de-adecl|comp:+:weitergehend.sup:+:weitestgehend|pagename=weitgehend}}
-{{User:Benwing2/de-adecl|comp:weiter hergeholt:weit hergeholter[informal].sup:weites hergeholt:weit hergeholtest[informal].pred:am weitesten hergeholt:am weit hergeholtesten[informal]|pagename=weit hergeholt}}
+{{User:Benwing2/de-adecl|comp:weiter hergeholt:weit hergeholter[informal].sup:weites hergeholt:weit hergeholtest[informal].sup_pred:am weitesten hergeholt:am weit hergeholtesten[informal]|pagename=weit hergeholt}}
