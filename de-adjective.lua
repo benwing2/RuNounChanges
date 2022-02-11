@@ -241,7 +241,17 @@ local function parse_indicator_spec(angle_bracket_spec)
 		local dot_separated_groups = iut.split_alternating_runs_and_strip_spaces(segments, "%.")
 		for i, dot_separated_group in ipairs(dot_separated_groups) do
 			local part = dot_separated_group[1]
-			if part:find(":") then
+			if part == "comp" then
+				part = "comp:+"
+			end
+			if rfind(part, "^comp:") or rfind(part, "^sup:") or part("^stem:") then
+				local spectype, rest = rmatch(part, "^(.-):(.*)$")
+				if base[spectype] then
+					parse_err("Can't specify value for '" .. spectype .. "' twice")
+				end
+				dot_separated_group[1] = rest
+				base[compsup] = com.fetch_specs(iut, dot_separated_group, spectype, nil, parse_err)
+			elseif part:find(":") then
 				local slot, override = parse_override(dot_separated_group)
 				if base.overrides[slot] then
 					parse_err("Can't specify override twice for slot '" .. slot .. "'")
@@ -260,6 +270,11 @@ local function parse_indicator_spec(angle_bracket_spec)
 					parse_err("Can't specify 'ss' twice")
 				end
 				base.props.ss = true
+			elseif part == "-e" then
+				if base.props.omitted_e then
+					parse_err("Can't specify '-e' twice")
+				end
+				base.props.omitted_e = true
 			else
 				parse_err("Unrecognized indicator '" .. part .. "'")
 			end
@@ -269,13 +284,28 @@ local function parse_indicator_spec(angle_bracket_spec)
 end
 
 
-local function generate_stem_from_lemma(base, lemma)
-	if lemma:find("e$") then
-		return rsub(lemma, "e$", "")
+local function generate_default_stem_from_lemma(base)
+	if base.props.ss then
+		if not rfind(base.lemma, "ß$") then
+			error("With '.ss', lemma '" .. base.lemma .. "' should end in -ß")
+		end
+		return rsub(base.lemma, "ß$", "ss")
 	end
 	if base.props.omitted_e then
+		local non_ending, ending = rmatch(base.lemma, "^(.*)e([lmnr])$")
+		if not non_ending then
+			error("Can't use '-e' with lemma '" .. base.lemma .. "'; lemma should end in -el, -em, -en or -er")
+		end
+		return non_ending .. ending
+	end
+	if base.lemma:find("e$") then
+		return rsub(base.lemma, "e$", "")
+	end
+	return rsub(base.lemma, "([ai])bel$", "%1bl")
+end
 
-	return rsub(lemma, "([ai])bel$", "%1bl")
+
+local function process_comparative_spec(base)
 end
 
 
@@ -295,21 +325,6 @@ end
 
 
 local function detect_indicator_spec(alternant_multiword_spec, base)
-	-- Set default values.
-	if not base.props.adj then
-		base.number = base.number or base.pls and "both" or alternant_multiword_spec.is_proper and "sg" or "both"
-	end
-	if base.number == "pl" then
-		if base.gens then
-			error("Internal error: With plural-only noun, no genitive singular specs should be allowed")
-		end
-		if base.pls then
-			error("Internal error: With plural-only noun, no plural specs should be allowed")
-		end
-	end
-	if base.pls and base.number == "sg" then
-		error("Can't specify explicit plural specs along with explicit '.sg'")
-	end
 	base.gens = base.gens or {{form = "+"}}
 	base.pls = base.pls or {{form = "+"}}
 	if base.props.adj then
