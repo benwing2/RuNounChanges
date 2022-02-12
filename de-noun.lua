@@ -106,16 +106,6 @@ local cases = {
 }
 
 
-local umlaut = {
-	["a"] = "ä",
-	["A"] = "Ä",
-	["o"] = "ö",
-	["O"] = "Ö",
-	["u"] = "ü",
-	["U"] = "Ü",
-}
-
-
 local noun_slots_with_linked_and_articles = m_table.shallowcopy(noun_slots_with_linked)
 for case, _ in pairs(cases) do
 	noun_slots_with_linked_and_articles["art_ind_" .. case .. "_s"] = "-"
@@ -1172,6 +1162,7 @@ function export.do_generate_forms(parent_args, pos, from_headword, is_proper, de
 		params["id"] = {}
 		params["sort"] = {}
 		params["splithyph"] = {type = "boolean"}
+		params["nolinkhead"] = {type = "boolean"}
 	end
 
 	local args = require("Module:parameters").process(parent_args, params)
