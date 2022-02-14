@@ -89,13 +89,14 @@ local noun_slot_list = {
 	{"gen_p", "gen|p"},
 	{"dat_p", "dat|p"},
 	{"acc_p", "acc|p"},
+	{"equiv", "-"}, -- fem/masc equivalent of a masc/fem noun
 }
 noun_slot_set = {}
 for _, slotaccel in ipairs(noun_slot_list) do
 	local slot, accel = unpack(slotaccel)
 	noun_slot_set[slot] = true
 end
-	
+
 local states = { "str", "wk", "mix" }
 local definitenesses = { "ind", "def" }
 local cases = { "nom", "gen", "dat", "acc", "abl", "voc" }
@@ -110,7 +111,9 @@ local gender_spec_to_full_gender = {
 
 local case_set = m_table.listToSet(cases)
 
-local adjectival_slot_list = {}
+local adjectival_slot_list = {
+	{"equiv", "-"}, -- fem/masc equivalent of a masc/fem adjective
+}
 local adjective_slot_set = {}
 for _, state in ipairs(states) do
 	for _, case in ipairs(adj_cases) do
@@ -177,7 +180,10 @@ local function add(base, slot, stem, ending, footnotes, process_combined_stem_en
 
 	footnotes = iut.combine_footnotes(base.footnotes, footnotes)
 	local ending_obj = iut.combine_form_and_footnotes(ending, footnotes)
-	if base.props.overall_adj then
+	-- If we're declining an adjectival noun or adjective-noun combination, and the slot is a noun slot, convert it to
+	-- the equivalent adjective slots (e.g. gen_s -> str_gen_s/wk_gen_s/mix_gen_s). But don't do that for "equiv",
+	-- which is the same in nouns and adjectives.
+	if base.props.overall_adj and noun_slot_set[slot] and slot ~= "equiv" then
 		for _, state in ipairs(states) do
 			iut.add_forms(base.forms, state .. "_" .. slot, stem or base.lemma, ending_obj, do_combine_stem_ending)
 		end
@@ -187,7 +193,22 @@ local function add(base, slot, stem, ending, footnotes, process_combined_stem_en
 end
 
 
-local function process_spec(endings, default, footnotes, desc, process)
+-- Process an ending spec such as "s", "(e)s", "^er", "^lein", "!Pizzen", etc. as might be found in the genitive,
+-- plural, an override, the value of dim=/m=/f=/n=, etc. `endings` is a list of such specs, where each entry of the
+-- list is of the form {form=FORM, footnotes=FOOTNOTES} where FOOTNOTES is either nil or {FOOTNOTE, FOOTNOTE, ...}.
+-- If `literal_endings` is given, the FORM values should be interpreted literally (i.e. as full forms) rather than
+-- as ending specs. `default` is what to substitute if an ending spec is "+", and should be either in the same
+-- format as `endings` or something that can be converted to that format, e.g. a string. `literal_default`, if given,
+-- indicates that the FORM values in `default` should be interpreted literally, similar to `literal_endings`.
+-- FOOTNOTES is either nil or a list of additional footnotes to add to each generated form. `desc` is an English
+-- description of what kind of spec is being processed, for error messages. `process` is called for each generated
+-- form and is a function of two arguments, STEM and ENDING. If the spec is a full form, STEM will be that form
+-- (in the form of an object {form=FORM, footnotes=FOOTNOTES}) and ENDING will be an empty string; otherwise, STEM
+-- will be nil and ENDING will be the the ending to process in the form {form=FORM, footnotes=FOOTNOTES}. Note that
+-- umlauts are not handled in process_spec(); if the spec passed in specifies an umlaut, e.g. "^chen", process()
+-- will be called with a FORM beginning with "^", and must handle the umlaut itself. (Umlauts are properly handled
+-- inside of add().)
+local function process_spec(endings, literal_endings, default, literal_default, footnotes, desc, process)
 	for _, ending in ipairs(endings) do
 		local function sub_form(form)
 			return {form = form, footnotes = ending.footnotes}
@@ -197,13 +218,14 @@ local function process_spec(endings, default, footnotes, desc, process)
 			-- do nothing
 		elseif ending.form == "+" then
 			if not default then
-				-- Could happen if e.g. gen is given as -- and then a gen_s override with + is specified.
+				-- Could happen if e.g. gen is given as -- and then a gen_s override with + is specified, or with n= for neuter,
+				-- where no default is available.
 				error("Form '+' found for " .. desc .. " but no default is available")
 			end
-			process_spec(iut.convert_to_general_list_form(default, ending.footnotes), nil, footnotes, desc, process)
+			process_spec(iut.convert_to_general_list_form(default, ending.footnotes), literal_default, nil, nil, footnotes, desc, process)
 		else
 			local full_eform
-			if rfind(ending.form, "^" .. com.CAP) then
+			if literal_endings or rfind(ending.form, "^" .. com.CAP) then
 				full_eform = true
 			elseif rfind(ending.form, "^!") then
 				full_eform = true
@@ -247,11 +269,11 @@ local function process_spec(endings, default, footnotes, desc, process)
 end
 
 
-local function add_spec(base, slot, endings, default, footnotes, process_combined_stem_ending)
+local function add_spec(base, slot, endings, default, literal_default, footnotes, process_combined_stem_ending)
 	local function do_add(stem, ending)
 		add(base, slot, stem, ending, footnotes, process_combined_stem_ending)
 	end
-	process_spec(endings, default, footnotes, "slot '" .. slot .. "'", do_add)
+	process_spec(endings, nil, default, literal_default, footnotes, "slot '" .. slot .. "'", do_add)
 end
 
 
@@ -262,7 +284,7 @@ local function process_slot_overrides(base)
 		end
 		local origforms = base.forms[slot]
 		base.forms[slot] = nil
-		add_spec(base, slot, overrides, origforms)
+		add_spec(base, slot, overrides, origforms, "literal default")
 	end
 end
 
@@ -277,7 +299,7 @@ local function add_dative_plural(base, specs, def_pl)
 			return stem_ending
 		end
 	end
-	add_spec(base, "dat_p", specs, def_pl, nil, process_combined_stem_ending)
+	add_spec(base, "dat_p", specs, def_pl, nil, nil, process_combined_stem_ending)
 end
 
 
@@ -391,17 +413,40 @@ end
 local function decline_noun(base)
 	if base.number == "pl" then
 		decline_plural(base, "")
+		if rfind(base.lemma, "innen$") then
+			--- Ends in -innen, likely feminine. Chop off, and convert e.g. Chinesinnen -> Chinesen.
+			local masc = rsub(base.lemma, "innen$", "")
+			if rfind(masc, "es$") then
+				masc = masc .. "en"
+			end
+			add(base, "equiv", masc, "")
+		else
+			-- Likely masculine. Try to convert Chinesen -> Chinesinnen, and -er -> -erinnen.
+			local femstem = rsub(base.lemma, "en$", "")
+			add(base, "equiv", femstem, "innen")
+		end
 	else
 		for _, genderspec in ipairs(base.genders) do
 			local gender = genderspec.form
 			decline_singular_and_plural(base, gender, get_default_gen(base, gender), get_default_pl(base, gender))
+			if gender == "m" then
+				add(base, "equiv", rsub(base.lemma, "e$", ""), "in") -- feminine
+			elseif gender == "f" then
+				-- Try (sort of) to get the masculine. Remove final -in, and if the result ends in -es, convert to -ese
+				-- (e.g. Chinesin -> Chinese).
+				local masc = rsub(base.lemma, "in$", "")
+				if rfind(masc, "es$") then
+					masc = masc .. "e"
+				end
+				add(base, "equiv", masc, "")
+			end -- do nothing for neuter
 		end
 	end
 end
 
 
 local function decline_adjective(base)
-	local adj_alternant_multiword_spec = require("Module:de-adjective").do_generate_forms(
+	local adj_alternant_multiword_spec = require("Module:User:Benwing2/de-adjective").do_generate_forms(
 		{base.lemma .. "<>"}
 	)
 	local function copy(from_slot, to_slot)
@@ -418,9 +463,17 @@ local function decline_adjective(base)
 
 	if base.number == "pl" then
 		copy_gender_forms("p")
+		add(base, "equiv", base.lemma, "e")
 	else
+		-- Normally there should be only one gender.
 		for _, genderspec in ipairs(base.genders) do
-			copy_gender_forms(genderspec.form)
+			local gender = genderspec.form
+			copy_gender_forms(gender)
+			if gender == "m" then
+				add(base, "equiv", base.lemma, "e") -- feminine
+			elseif gender == "f" then
+				add(base, "equiv", base.lemma, "er") -- masculine
+			end -- do nothing for neuter
 		end
 		if base.number ~= "sg" then
 			copy_gender_forms("p")
@@ -1023,7 +1076,7 @@ local function get_lemmas(alternant_multiword_spec)
 end
 
 
-local function process_dim_m_f_n(alternant_multiword_spec, arg_specs, default, slot, desc)
+local function process_dim_m_f_n(alternant_multiword_spec, arg_specs, default, literal_default, slot, desc)
 	local lemmas = get_lemmas(alternant_multiword_spec)
 	lemmas = iut.map_forms(lemmas, function(form)
 		return rsub(form, "e$", "")
@@ -1046,7 +1099,7 @@ local function process_dim_m_f_n(alternant_multiword_spec, arg_specs, default, s
 			iut.add_forms(alternant_multiword_spec.forms, slot, stem or lemmas, ending, do_combine_stem_ending)
 		end
 
-		process_spec(ending_specs, default, nil, desc, process)
+		process_spec(ending_specs, nil, default, literal_default, nil, desc, process)
 	end
 end
 
@@ -1068,7 +1121,7 @@ local noun_template_both = [=[
 <div class="NavHead">{title}{annotation}</div>
 <div class="NavContent">
 {\op}| border="1px solid #505050" style="border-collapse:collapse; background:#FAFAFA; text-align:center; width:100%" class="inflection-table inflection-table-de inflection-table-de-{decl_type}"
-! style="background:#AAB8C0;width:15%" | 
+! style="background:#AAB8C0;width:15%" |
 ! colspan="3" style="background:#AAB8C0;width:46%" | singular
 ! colspan="2" style="background:#AAB8C0;width:39%" | plural
 |-
@@ -1128,7 +1181,7 @@ local noun_template_sg = [=[
 <div class="NavHead">{title}{annotation}</div>
 <div class="NavContent">
 {\op}| border="1px solid #505050" style="border-collapse:collapse; background:#FAFAFA; text-align:center; width:100%" class="inflection-table inflection-table-de inflection-table-de-{decl_type}"
-! style="background:#AAB8C0;width:24.6%" | 
+! style="background:#AAB8C0;width:24.6%" |
 ! colspan="3" style="background:#AAB8C0;" | singular
 |-
 ! style="background:#BBC9D0" |
@@ -1163,7 +1216,7 @@ local noun_template_pl = [=[
 <div class="NavHead">{title}{annotation}</div>
 <div class="NavContent">
 {\op}| border="1px solid #505050" style="border-collapse:collapse; background:#FAFAFA; text-align:center; width:100%" class="inflection-table inflection-table-de inflection-table-de-{decl_type}"
-! style="background:#AAB8C0;width:24.6%" | 
+! style="background:#AAB8C0;width:24.6%" |
 ! colspan="2" style="background:#AAB8C0;" | plural
 |-
 ! style="background:#BBC9D0" |
@@ -1193,7 +1246,7 @@ local noun_template_pl = [=[
 <div class="NavHead">{title}{annotation}</div>
 <div class="NavContent">
 {\op}| border="1px solid #505050" style="border-collapse:collapse; background:#FAFAFA; text-align:center; width:100%" class="inflection-table"
-! style="background:#BBC9D0;width:15%" | 
+! style="background:#BBC9D0;width:15%" |
 ! colspan="2" style="background:#BBC9D0" | singular
 ! colspan="2" style="background:#BBC9D0" | plural
 |-
@@ -1216,7 +1269,7 @@ local noun_template_pl = [=[
 | colspan="2" | {str_acc_s}
 | colspan="2" | {str_acc_p}
 |-
-! style="background:#AAB8C0" | 
+! style="background:#AAB8C0" |
 ! colspan="4" style="background:#AAB8C0" | weak declension
 |-
 ! style="background:#BBC9D0" | nominative
@@ -1243,7 +1296,7 @@ local noun_template_pl = [=[
 | style="background:#EEEEEE;width:5em" | {art_def_acc_p}
 | {wk_acc_p}
 |-
-! style="background:#AAB8C0" | 
+! style="background:#AAB8C0" |
 ! colspan="4" style="background:#AAB8C0" | mixed declension
 |-
 ! style="background:#BBC9D0" | nominative
@@ -1277,7 +1330,7 @@ local noun_template_pl = [=[
 <div class="NavHead">{title}{annotation}</div>
 <div class="NavContent">
 {| border="1px solid #505050" style="border-collapse:collapse; background:#FAFAFA; text-align:center; width:100%" class="inflection-table"
-! style="background:#BBC9D0;width:15%" | 
+! style="background:#BBC9D0;width:15%" |
 ! colspan="2" style="background:#BBC9D0" | singular
 |-
 ! style="background:#AAB8C0" | {gender}
@@ -1295,7 +1348,7 @@ local noun_template_pl = [=[
 ! style="background:#BBC9D0" | accusative
 | colspan="2" | {str_acc_s}
 |-
-! style="background:#AAB8C0" | 
+! style="background:#AAB8C0" |
 ! colspan="2" style="background:#AAB8C0" | weak declension
 |-
 ! style="background:#BBC9D0" | nominative
@@ -1314,7 +1367,7 @@ local noun_template_pl = [=[
 | style="background:#EEEEEE;width:5em" | {art_def_acc_s}
 | {wk_acc_s}
 |-
-! style="background:#AAB8C0" | 
+! style="background:#AAB8C0" |
 ! colspan="2" style="background:#AAB8C0" | mixed declension
 |-
 ! style="background:#BBC9D0" | nominative
@@ -1504,10 +1557,12 @@ function export.do_generate_forms(parent_args, pos, from_headword, is_proper, de
 	compute_categories_and_annotation(alternant_multiword_spec)
 	alternant_multiword_spec.genders = compute_headword_genders(alternant_multiword_spec)
 	if from_headword or pretend_from_headword then
-		process_dim_m_f_n(alternant_multiword_spec, args.dim, nil, "dim", "diminutive")
-		process_dim_m_f_n(alternant_multiword_spec, args.f, nil, "f", "feminine equivalent")
-		process_dim_m_f_n(alternant_multiword_spec, args.m, nil, "m", "masculine equivalent")
-		process_dim_m_f_n(alternant_multiword_spec, args.n, nil, "n", "neuter equivalent")
+		process_dim_m_f_n(alternant_multiword_spec, args.dim, "^chen", nil, "dim", "diminutive")
+		process_dim_m_f_n(alternant_multiword_spec, args.f, alternant_multiword_spec.forms.equiv,
+			"literal default", "f", "feminine equivalent")
+		process_dim_m_f_n(alternant_multiword_spec, args.m, alternant_multiword_spec.forms.equiv,
+			"literal default", "m", "masculine equivalent")
+		process_dim_m_f_n(alternant_multiword_spec, args.n, nil, nil, "n", "neuter equivalent")
 	end
 	return alternant_multiword_spec
 end
