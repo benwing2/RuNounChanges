@@ -3,12 +3,12 @@
 {{User:Benwing2/de-ndecl|n,es,^er|dim=^chen,^lein,^le,^el,^'l,^l|pagename=Haus}}
 {{User:Benwing2/de-ndecl|n:m,s:-,s|pagename=RAM}}
 {{User:Benwing2/de-ndecl|f,s|pagename=LED}}
-{{User:Benwing2/de-ndecl|m,s,s|f=+|pagename=Aborigine}}
+{{User:Benwing2/de-ndecl|m,s,s|f=e|pagename=Aborigine}}
 {{User:Benwing2/de-ndecl|f,en|pagename=Uhr}}
 {{User:Benwing2/de-ndecl|f[northern and central Germany and Luxembourg; sometimes also in southern Germany, Austria and Switzerland]:n[usual in southern Germany, Austria and Switzerland],-,-[with the neuter gender]:en[with the feminine gender]:e[rarer, with the neuter gender]|pagename=SMS}}
 {{User:Benwing2/de-ndecl|n,-:s,s:-|pagename=UFO}}
 {{User:Benwing2/de-ndecl|f.sg|pagename=Schadenfreude}}
-{{User:Benwing2/de-ndecl|m.weak|f=in|pagename=Chinese}}
+{{User:Benwing2/de-ndecl|m.weak|pagename=Chinese}}
 {{User:Benwing2/de-ndecl|m,(e)s,e|pagename=Samstag}}
 {{User:Benwing2/de-ndecl|m,s,e:s|f=in,e,a|pagename=Muslim}}
 {{User:Benwing2/de-ndecl|m,s,-|f=in|pagename=Taiwaner}}
@@ -22,23 +22,22 @@
 {{User:Benwing2/de-ndecl|m,(e)s,e|dim=chen,lein|f=in|pagename=Fisch}}
 {{User:Benwing2/de-ndecl|f|dim=chen|pagename=Feder}}
 {{User:Benwing2/de-ndecl|f|dim=^chen|pagename=Straße}}
+{{User:Benwing2/de-ndecl|p|pagename=Leute}}
 ;Genitive defaults to -s, plural to Impressen
 {{User:Benwing2/de-ndecl|n|pagename=Impressum}}
 ;Genitive defaults to -s, + requests the default plural Vakuen
 {{User:Benwing2/de-ndecl|n,,Vakua:+|pagename=Vakuum}}
-;~ drops final -e
-{{User:Benwing2/de-ndecl|f|dim=~chen|pagename=Zigarette}}
+{{User:Benwing2/de-ndecl|f|dim=chen|pagename=Zigarette}}
 {{User:Benwing2/de-ndecl|f,^e|dim=^chen,^lein|m=^emännchen[for the animal],^erich[for the animal]|f=^eweibchen[for the animal],^in[for the animal]|pagename=Maus}}
 {{User:Benwing2/de-ndecl|n,s,Lexika:Lexiken:s[nonstandard, rare]:Lexikas[nonstandard, rare]|pagename=Lexikon}}
-{{User:Benwing2/de-ndecl|m,s,-:s|dim=~chen|pagename=Wodka}}
+{{User:Benwing2/de-ndecl|m,s,-:s|dim=chen|pagename=Wodka}}
 {{User:Benwing2/de-ndecl|m,(e)s,er|pagename=Zeitgeist}}
 {{User:Benwing2/de-ndecl|n,(e)s,e|dim=^chen,^lein|pagename=Schaf}}
 {{User:Benwing2/de-ndecl|n,(e)s,e:^er[informal, sometimes deprecatory]|pagename=Schicksal}}
 {{User:Benwing2/de-ndecl|n,(e)s,^er|pagename=Übersetzungswörterbuch}}
 {{User:Benwing2/de-ndecl|m,(e)s,^e|pagename=Gaul}}
 {{User:Benwing2/de-ndecl|m:f,s[masculine]:-[feminine],s|pagename=Python}}
-;~ drops final -e
-{{User:Benwing2/de-ndecl|m.weak|f=~in|pagename=Baske}}
+{{User:Benwing2/de-ndecl|m.weak|f=in|pagename=Baske}}
 {{User:Benwing2/de-ndecl|f,^e|pagename=Kuh}}
 {{User:Benwing2/de-ndecl|m,s.sg|pagename=Westen}}
 {{User:Benwing2/de-ndecl|m:n:f,s:-,s:-|pagename=Sony}}
@@ -57,21 +56,30 @@
 {{User:Benwing2/de-ndecl|m,(s),(s)|pagename=Tschick}}
 {{User:Benwing2/de-ndecl|Bain<n,s,s>-Marie}}
 {{User:Benwing2/de-ndecl|m,(s),Pulcinelle.nodatpln|pagename=Pulcinella}}
-{{User:Benwing2/de-ndecl|pl.nodatpln|pagename=Penne}}
+{{User:Benwing2/de-ndecl|p.nodatpln|pagename=Penne}}
 {{User:Benwing2/de-ndecl|m,(e)s,-.datpl:en|pagename=Gilbhart}}
 {{User:Benwing2/de-ndecl|f,Stracciatelle.nodatpln|pagename=Stracciatella}}
-; FIXME: The following may not work, may need to rewrite spec
 {{User:Benwing2/de-ndecl|f,Linguae francae.nodatpln|pagename=Lingua franca}}
 {{User:Benwing2/de-ndecl|Reichsführer<m,s,-> SS}}
 {{User:Benwing2/de-ndecl|Jäger<m,s,-> und Sammler<m,s,->}}
-{{User:Benwing2/de-ndecl|m.+|f=Erwachsene|pagename=Erwachsener}}
-{{User:Benwing2/de-ndecl|f.+|m=Erwachsener|pagename=Erwachsene}}
-{{User:Benwing2/de-ndecl|n.+|pagename=Adlerjunges}}
+{{User:Benwing2/de-ndecl|+|f=Erwachsene|pagename=Erwachsener}}
+{{User:Benwing2/de-ndecl|+|m=Erwachsener|pagename=Erwachsene}}
+{{User:Benwing2/de-ndecl|+|pagename=Adlerjunges}}
 ;Should automatically double n in plural
 {{User:Benwing2/de-ndecl|f|m=Vietnamese|pagename=Vietnamesin}}
 {{User:Benwing2/de-ndecl|n,ses,se|pagename=Verhältnis}}
 {{User:Benwing2/de-ndecl|m,-:ses,se:Penes|pagename=Penis}}
 {{User:Benwing2/de-ndecl|f,se|pagename=Verdammnis}}
 {{User:Benwing2/de-ndecl|schwarzes<+> Loch<n,(e)s,^er>}}
+{{User:Benwing2/de-ndecl|Kanarische<+> Inseln<p>}}
+{{User:Benwing2/de-ndecl|Olympische<+> Winterspiele<p>}}
+
 ;The following should correctly umlaut to Nägel.
 {{User:Benwing2/de-ndecl|m,s,^|pagename=Nagel}}
+;The following should correctly umlaut to Bötchen/Bötlein.
+{{User:Benwing2/de-ndecl|n,(e)s,e|dim=^chen,^lein|pagename=Boot}}
+;The following should correctly umlaut to Härchen.
+{{User:Benwing2/de-ndecl|n,(e)s,e|dim=^chen|pagename=Haar}}
+{{User:Benwing2/de-ndecl|((<m,(e)s>,<m.weak.[also in Southern Germany and Austria]>))|pagename=Hirsch}}
+{{User:Benwing2/de-ndecl|((<m.weak>,<m,,en.[in speech].gen:+[rare]>))|f=in|pagename=Leopard}}
+{{User:Benwing2/de-ndecl|((<m,es:s.[spoken or written]>,<m.weak.[written only]>))|pagename=Magnet}}
