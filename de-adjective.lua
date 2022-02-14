@@ -118,6 +118,13 @@ local function add(base, slot, stem, ending, footnotes)
 		return rsub(stem, OMITTED_E, "") .. ending
 	end
 
+	if ending == "en" and (base.props.sync_n or base.props.sync_mn or base.props.sync_mns) then
+		ending = "n"
+	elseif ending == "em" and (base.props.sync_mn or base.props.sync_mns) then
+		ending = "m"
+	elseif ending == "es" and base.props.sync_mns then
+		ending = "s"
+	end
 	footnotes = iut.combine_footnotes(base.footnotes, footnotes)
 	local ending_obj = iut.combine_form_and_footnotes(ending, footnotes)
 	iut.add_forms(base.forms, slot, stem, ending_obj, do_combine_stem_ending)
@@ -213,11 +220,11 @@ local function parse_indicator_spec(angle_bracket_spec, lemma, pagename)
 				base.footnotes = com.fetch_footnotes(dot_separated_group, parse_err)
 			elseif #dot_separated_group > 1 then
 				parse_err("Footnotes only allowed with slot overrides or by themselves: '" .. table.concat(dot_separated_group) .. "'")
-			elseif part == "ss" then
-				if base.props.ss then
-					parse_err("Can't specify 'ss' twice")
+			elseif part == "ss" or part == "sync_n" or part == "sync_mn" or part == "sync_mns" then
+				if base.props[part] then
+					parse_err("Can't specify '" .. part .. "' twice")
 				end
-				base.props.ss = true
+				base.props[part] = true
 			else
 				parse_err("Unrecognized indicator '" .. part .. "'")
 			end
