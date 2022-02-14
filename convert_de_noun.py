@@ -48,7 +48,9 @@ def apply_umlaut(term):
   return None
 
 
-def analyze_form(pagetitle, form, do_stem=False):
+def analyze_form(pagetitle, form, default, do_stem=False):
+  if form == default:
+    return "+"
   if do_stem and pagetitle.endswith("e"):
     pagetitle = pagetitle[:-1]
   if form.startswith(pagetitle):
@@ -63,15 +65,16 @@ def analyze_form(pagetitle, form, do_stem=False):
   return "!" + form
 
 
-def analyze_forms(pagetitle, forms, do_stem=False, joiner=":"):
-  forms = [analyze_form(pagetitle, form, do_stem=do_stem) for form in forms]
+def analyze_forms(pagetitle, forms, default, do_stem=False, joiner=":", old_contractions=False):
+  forms = [analyze_form(pagetitle, form, default, do_stem=do_stem) for form in forms]
   forms = [form or "-" for form in forms]
-  if set(forms) == {"es", "s"}:
-    forms = ["(e)s"]
-  elif set(forms) == {"s", "-"}:
-    forms = ["(s)"]
-  elif set(forms) == {"es", "-"}:
-    forms = ["(es)"]
+  if old_contractions:
+    if set(forms) == {"es", "s"}:
+      forms = ["(e)s"]
+    elif set(forms) == {"s", "-"}:
+      forms = ["(s)"]
+    elif set(forms) == {"es", "-"}:
+      forms = ["(es)"]
   return joiner.join(forms)
 
 
@@ -179,8 +182,149 @@ def normalize_values(values):
   return newvals
 
 
+def construct_default_equiv(lemma, gender):
+  if gender == "m":
+    lemma = re.sub("e$", "", lemma)
+    return lemma + "in"
+  if gender == "f":
+    lemma = re.sub("in$", "", lemma)
+    if lemma.endswith("es"):
+      lemma += "e"
+    return lemma
+  return None
+
+
 def do_headword_template(headt, declts, pagetitle, subsections, subsection_with_head, subsection_with_declts, pagemsg):
   notes = []
+
+  def analyze_declts(declts, pagetitle, headword_gens, headword_pls):
+    decl_genders_gens_and_pls = []
+    prev_is_weak = None
+    prev_is_sg = None
+    for declt in declts:
+      def getp(param):
+        return getparam(declt, param)
+      tn = tname(declt)
+      gender = re.sub(".*-", "", tn)
+      if gender == "pl":
+        gender = "p"
+      decl_gens = []
+      decl_pls = []
+      if gender != "p":
+        is_weak = False
+        is_sg = False
+        for param in ["head", "ns", "gs", "ds", "as", "bs", "vs", "np", "gp", "dp", "ap", "notes"]:
+          if getp(param):
+            pagemsg("WARNING: Saw %s=%s, can't handle yet: %s" % (param, getp(param), unicode(declt)))
+            return None
+        if gender in ["m", "n"]:
+          arg1 = getp("1")
+          if not arg1:
+            gen = ""
+          elif arg1 in ["n", "ns", "en", "ens"]:
+            is_weak = True
+            gen = arg1
+          elif arg1 in ["s", "es", "ses", "(e)s", "(s)", "'"]:
+            gen = arg1
+          else:
+            pagemsg("WARNING: Unrecognized arg1=%s: %s" % (arg1, unicode(declt)))
+            return None
+          decl_gens = convert_gens(pagetitle, [gen], from_decl=True)
+        num = getp("n")
+        if num == "sg":
+          is_sg = True
+        elif num not in ["full", ""]:
+          pagemsg("WARNING: Unrecognized n=%s: %s" % (num, unicode(declt)))
+          return None
+        if not is_sg:
+          if gender == "f":
+            plsuffix = getp("1")
+          else:
+            plsuffix = getp("2")
+          argpl = getp("pl")
+          if argpl:
+            pl = argpl
+          else:
+            pl = pagetitle + plsuffix
+          if pl == "-":
+            is_sg = True
+          else:
+            decl_pls = normalize_values([pl])
+        if prev_is_weak is not None and prev_is_weak != is_weak:
+          pagemsg("WARNING: Saw declension template with weak=%s different from previous weak=%s: %s"
+              % (is_weak, prev_is_weak, declts_to_unicode(declts)))
+          return None
+        prev_is_weak = is_weak
+        if prev_is_sg is not None and prev_is_sg != is_sg:
+          pagemsg("WARNING: Saw declension template with sg=%s different from previous sg=%s: %s"
+              % (is_sg, prev_is_sg, declts_to_unicode(declts)))
+          return None
+        prev_is_sg = is_sg
+      decl_genders_gens_and_pls.append((gender, decl_gens, decl_pls))
+
+    all_decl_genders = []
+    all_decl_gens = []
+    all_decl_pls = []
+    for decl_gender, decl_gens, decl_pls in decl_genders_gens_and_pls:
+      if decl_gender not in all_decl_genders:
+        all_decl_genders.append(decl_gender)
+      for decl_gen in decl_gens:
+        if decl_gen not in all_decl_gens:
+          all_decl_gens.append(decl_gen)
+      for decl_pl in decl_pls:
+        if decl_pl not in all_decl_pls:
+          all_decl_pls.append(decl_pl)
+    first_gender, first_decl_gens, first_decl_pls = decl_genders_gens_and_pls[0]
+    if len(all_decl_genders) > 1 and (
+      len(all_decl_gens) != len(first_decl_gens) or len(all_decl_pls) != len(first_decl_pls)
+    ):
+      pagemsg("WARNING: Multiple declension templates with different genders as well as different either genitives or plurals: %s"
+          % declts_to_unicode(declts))
+      return None
+    if len(all_decl_gens) != len(first_decl_gens) and len(all_decl_pls) != len(first_decl_pls):
+      pagemsg("WARNING: Multiple declension templates with different both genitives and plurals: %s"
+          % declts_to_unicode(declts))
+      return None
+
+    is_weak = prev_is_weak
+    is_sg = prev_is_sg
+    declspec = ":".join(all_decl_genders)
+
+    def compute_part(declspec, headword_parts, all_decl_parts, get_default_part, desc):
+      defparts = []
+      for gender in all_decl_genders:
+        defpart = pagetitle + get_default_part(pagetitle, gender, is_weak)
+        if defpart not in defparts:
+          defparts.append(defpart)
+      if all_decl_parts == defparts:
+        declspec += ","
+      else:
+        all_decl_part_forms = analyze_forms(pagetitle, all_decl_parts, None)
+        if set(headword_parts) == set(all_decl_parts):
+          headword_part_forms = analyze_forms(pagetitle, headword_parts, None)
+          if headword_part_forms != all_decl_part_forms:
+            pagemsg("NOTE: Headword %s(s) %s same as all decl %s(s) %s but analyzed form(s) different (probably different ordering), preferring headword analyzed form(s) %s over decl analyzed form(s) %s: declts=%s"
+                % (desc, ",".join(headword_parts), desc, ",".join(all_decl_parts), headword_part_forms, all_decl_part_forms,
+                  declts_to_unicode(declts)))
+            all_decl_part_forms = headword_part_forms
+        else:
+          pagemsg("WARNING: Headword %s(s) %s not same as all decl %s(s) %s, continuing"
+              % (desc, ",".join(headword_parts), desc, ",".join(all_decl_parts)))
+        declspec += ",%s" % all_decl_part_forms
+      return declspec
+
+    if "m" in all_decl_genders or "n" in all_decl_genders:
+      declspec = compute_part(declspec, headword_gens, all_decl_gens, get_default_gen, "genitive")
+    if "p" not in all_decl_genders:
+      declspec = compute_part(declspec, headword_pls, all_decl_pls, get_default_pl, "plural")
+    declspec = re.sub(",*$", "", declspec)
+    if is_weak:
+      declspec += ".weak"
+    if is_sg:
+      declspec += ".sg"
+    if ss:
+      declspec += ".ss"
+    return declspec, all_decl_genders, all_decl_gens, all_decl_pls
 
   old_style_headt = False
   for param in ["old", "2", "3", "4", "g1", "g2", "g3", "gen1", "gen2", "gen3", "pl1", "pl2", "pl3"]:
@@ -208,6 +352,7 @@ def do_headword_template(headt, declts, pagetitle, subsections, subsection_with_
     # headword and declension specs.
     pagetitle = re.sub(u"ß$", "ss", pagetitle)
 
+  adjectival = any(tname(t).startswith("de-decl-adj+noun") for t in declts)
   genders = blib.fetch_param_chain(headt, "1", "g")
   headword_genders = genders
   gens = normalize_values(blib.fetch_param_chain(headt, "2", "gen", True))
@@ -220,7 +365,8 @@ def do_headword_template(headt, declts, pagetitle, subsections, subsection_with_
   for param in headt.params:
     pn = pname(param)
     pv = unicode(param.value)
-    if pn not in ["1", "2", "3", "4", "m", "f", "old"] and not re.search("^(g|gen|pl|dim|m|f)[0-9]+$", pn):
+    if pn not in ["1", "2", "3", "4", "m", "f", "old"] and not re.search("^(g|gen|pl|dim|m|f)[0-9]+$", pn) and (
+        not adjectival or pn not in "head"):
       pagemsg("WARNING: Unrecognized param %s=%s: %s" % (pn, pv, unicode(headt)))
       return
   if not genders:
@@ -233,185 +379,211 @@ def do_headword_template(headt, declts, pagetitle, subsections, subsection_with_
     pagemsg("WARNING: Saw genitive(s) or plural(s) with plural-only: %s" % unicode(headt))
     return
   saw_mn = "m" in genders or "n" in genders
-  if not saw_mn:
+  if not saw_mn and not adjectival:
     if gens and gens == [pagetitle]:
       gens = []
     if gens:
       pagemsg("WARNING: Saw genitive(s) with feminine-only gender: %s" % unicode(headt))
       return
-  headspec = ":".join(genders)
-  extraspec = ""
-  is_sg = False
-  is_both = False
-  is_weak = False
-  headword_gens = []
-  headword_pls = []
-  if headspec != "p":
-    pls = convert_pls(pagetitle, pls, is_proper=is_proper)
-    headword_pls = pls
-    if saw_mn:
-      gens = convert_gens(pagetitle, gens)
-      headword_gens = gens
-      if (len(gens) == 1 and any(gens[0] == pagetitle + ending for ending in ["n", "en", "ns", "ens"])
-        and len(pls) == 1 and (pls[0] == "-" or any(pls[0] == pagetitle + ending for ending in ["n", "en"]))):
-        is_weak = True
-      def_gens = []
-      for gender in genders:
-        def_gen = pagetitle + get_default_gen(pagetitle, gender, is_weak)
-        if def_gen not in def_gens:
-          def_gens.append(def_gen)
-      if set(def_gens) == set(gens):
-        headspec += ","
+
+  if adjectival:
+    if len(declts) > 1:
+      pagemsg("WARNING: Saw adjectival declension along with multiple declension templates, can't handle: %s"
+        % declts_to_unicode(declts))
+      return
+    declt = declts[0]
+    def getp(param):
+      return getparam(declt, param)
+    tn = tname(declt)
+    m = re.search(r"^de-decl-adj\+noun(-sg)?-([mfn])$", tn)
+    if m:
+      default_equiv = None
+      is_sg, gender = m.groups()
+      adj = getp("1")
+      noun = getp("2")
+      if gender in ["m", "f"]:
+        default_equiv = adj + ("e" if gender == "m" else "er")
+        if noun:
+          default_equiv += " " + construct_default_equiv(noun, gender)
+      if gender in ["m", "n"]:
+        noun_gen = getp("3")
+        noun_pl = getp("4")
       else:
-        headspec += ",%s" % analyze_forms(pagetitle, gens)
-    def_pls = []
-    for gender in genders:
-      def_pl = pagetitle + get_default_pl(pagetitle, gender, is_weak)
-      if def_pl not in def_pls:
-        def_pls.append(def_pl)
-    if set(def_pls) == set(pls):
-      headspec += ","
-      if is_proper:
-        is_both = True
-    elif pls == ["-"]:
-      is_sg = True
+        noun_gen = "-"
+        noun_pl = getp("3")
+      noun_pl_full = getp("pl")
+      adj_ending = "er" if gender == "m" else "e" if gender == "f" else "es"
+      expected_lemma = adj + adj_ending
+      if gender == "f":
+        # Should be '-er' but we often see '-en' (weak form) instead
+        expected_gens = [adj + "er", adj + "en"]
+      else:
+        expected_gens = [adj + "en"]
+      if is_sg:
+        expected_pls = []
+      else:
+        expected_pls = [adj + "e", adj + "en"]
+      if not noun:
+        if noun_gen != "-" or noun_pl_full or (noun_pl and noun_pl != "-"):
+          pagemsg("WARNING: Bad parameters for adjectival noun: %s" % unicode(declt))
+          return
+        all_decl_genders = [gender]
+      else:
+        fake_declt = "{{de-decl-noun-%s%s|%s|pl=%s%s}}" % (gender, "" if gender == "f" else "|" + noun_gen, noun_pl, noun_pl_full, "|n=sg" if is_sg else "")
+        fake_declt = list(blib.parse_text(fake_declt).filter_templates())[0]
+        def analyze_headword_parts_for_noun(parts, desc):
+          noun_headword_parts = []
+          for part in parts:
+            m = re.search("^([^ ]+) ([^ ]+)$", part.strip())
+            if not m:
+              pagemsg("WARNING: Can't analyze headword %s '%s' into adjective and noun, continuing: head=%s, decl=%s"
+                  % (desc, part, unicode(headt), unicode(declt)))
+              return []
+            part_adj, part_noun = m.groups()
+            noun_headword_parts.append(part_noun)
+          return noun_headword_parts
+        noun_headword_gens = analyze_headword_parts_for_noun(gens, "genitive")
+        noun_headword_pls = analyze_headword_parts_for_noun(pls, "plural")
+
+        retval = analyze_declts([fake_declt], noun, noun_headword_gens, noun_headword_pls)
+        if retval is None:
+          return
+        declspec, all_decl_genders, all_decl_gens, all_decl_pls = retval
+        expected_lemma = "%s %s" % (expected_lemma, noun)
+        expected_gens = ["%s %s" % (expected_gen, gen) for expected_gen in expected_gens for gen in ([noun] if gender == "f" else all_decl_gens)]
+        if is_sg:
+          expected_pls = []
+        else:
+          expected_pls = ["%se %s" % (adj, pl) for pl in all_decl_pls]
+      if pagetitle != expected_lemma:
+        pagemsg("WARNING: For adjectival noun or adjective-noun combination, expected lemma '%s' but saw '%s': head=%s, decl=%s"
+            % (expected_lemma, pagetitle, unicode(headt), unicode(declt)))
+        return
+      if set(genders) != set(all_decl_genders):
+        pagemsg("WARNING: For adjectival noun or adjective-noun combination, expected gender(s) '%s' but saw '%s': head=%s, decl=%s"
+            % (",".join(all_decl_genders), ",".join(genders), unicode(headt), unicode(declt)))
+        return
+      if not (set(gens) <= set(expected_gens)):
+        pagemsg("WARNING: For adjectival noun or adjective-noun combination, expected genitive(s) '%s' but saw '%s': head=%s, decl=%s"
+            % (",".join(expected_gens), ",".join(gens), unicode(headt), unicode(declt)))
+        return
+      if pls == ["-"]:
+        if expected_pls:
+          pagemsg("WARNING: For adjectival noun or adjective-noun combination, expected plural(s) '%s' but saw '%s': head=%s, decl=%s"
+              % (",".join(expected_pls), ",".join(pls), unicode(headt), unicode(declt)))
+          return
+      elif not (set(pls) <= set(expected_pls)):
+        pagemsg("WARNING: For adjectival noun or adjective-noun combination, expected plural(s) '%s' but saw '%s': head=%s, decl=%s"
+            % (",".join(expected_pls), ",".join(pls), unicode(headt), unicode(declt)))
+        return
+      if not noun:
+        declspec = "+"
+        if is_sg:
+          declspec += ".sg"
+      else:
+        if re.search("^" + CAP, adj):
+          adj_lemma = adj.lower()
+        else:
+          adj_lemma = adj
+        if adj_lemma in ["erst", "zweit", "dritt", "viert", u"fünft", "sechst", "siebent", "acht", "neunt", "zehnt"]:
+          adj_lemma += "e"
+        adj_form = adj + adj_ending
+        if adj_form.startswith(adj_lemma):
+          adj_link = "[[%s]]%s" % (adj_lemma, adj_form[len(adj_lemma):])
+        else:
+          adj_link = "[[%s|%s]]" % (adj_lemma, adj_form)
+        noun_link = "[[%s]]" % noun
+        # This is less accurate than the above. Often head= is wrong.
+        # Try to update adjective and noun links from head= if given.
+        #head = getparam(headt, "head")
+        #if head:
+        #  m = re.search("^([^ ]*) ([^ ]*)$", head)
+        #  if not m:
+        #    pagemsg("WARNING: Can't parse head=%s for adjective-noun combination, continuing: head=%s, decl=%s"
+        #        % (head, unicode(headt), unicode(declt)))
+        #  else:
+        #    head_adj_link, head_noun_link = m.groups()
+        #    m = re.search(r"\[\[([^][]*)\|([^][]*)\]\]$", head_adj_link)
+        #    if m:
+        #      adj_link_lemma, adj_link_form = m.groups()
+        #      if adj_link_form.startswith(adj_link_lemma):
+        #        head_adj_link = "[[%s]]%s" % (adj_link_lemma, adj_link_form[len(adj_link_lemma):])
+        #    if head_adj_link != adj_link:
+        #      pagemsg("NOTE: Head-derived adjective link %s not same as decl-template-derived adjective link %s, using the former: head=%s, decl=%s"
+        #          % (head_adj_link, adj_link, unicode(headt), unicode(declt)))
+        #      adj_link = head_adj_link
+        #    if head_noun_link != noun_link:
+        #      pagemsg("NOTE: Head-derived noun link %s not same as decl-template-derived noun link %s, using the former: head=%s, decl=%s"
+        #          % (head_noun_link, noun_link, unicode(headt), unicode(declt)))
+        #      noun_link = head_noun_link
+        declspec = "%s<+> %s<%s>" % (adj_link, noun_link, declspec)
+      headspec = declspec
+      is_both = is_proper and not is_sg
     else:
-      headspec += ",%s" % analyze_forms(pagetitle, pls)
-  headspec = re.sub(",*$", "", headspec)
-  if is_weak:
-    headspec += ".weak"
-  if is_sg:
-    headspec += ".sg"
-  if ss:
-    headspec += ".ss"
-  if dims:
-    extraspec += "|dim=%s" % analyze_forms(pagetitle, dims, do_stem=True, joiner=",")
-  if fems:
-    extraspec += "|f=%s" % analyze_forms(pagetitle, fems, do_stem=True, joiner=",")
-  if mascs:
-    extraspec += "|m=%s" % analyze_forms(pagetitle, mascs, do_stem=True, joiner=",")
-
-
-  decl_genders_gens_and_pls = []
-  if declts:
-    prev_is_weak = None
-    prev_is_sg = None
-    for declt in declts:
-      def getp(param):
-        return getparam(declt, param)
-      tn = tname(declt)
-      gender = re.sub(".*-", "", tn)
-      if gender == "pl":
-        gender = "p"
-      decl_gens = []
-      decl_pls = []
-      if gender != "p":
-        is_weak = False
-        is_sg = False
-        for param in ["head", "ns", "gs", "ds", "as", "bs", "vs", "np", "gp", "dp", "ap", "notes"]:
-          if getp(param):
-            pagemsg("WARNING: Saw %s=%s, can't handle yet: %s" % (param, getp(param), unicode(declt)))
-            return
-        if gender in ["m", "n"]:
-          arg1 = getp("1")
-          if not arg1:
-            gen = ""
-          elif arg1 in ["n", "ns", "en", "ens"]:
-            is_weak = True
-            gen = arg1
-          elif arg1 in ["s", "es", "ses", "(e)s", "(s)", "'"]:
-            gen = arg1
-          else:
-            pagemsg("WARNING: Unrecognized arg1=%s: %s" % (arg1, unicode(declt)))
-            return
-          decl_gens = convert_gens(pagetitle, [gen], from_decl=True)
-        num = getp("n")
-        if num == "sg":
-          is_sg = True
-        elif num not in ["full", ""]:
-          pagemsg("WARNING: Unrecognized n=%s: %s" % (num, unicode(declt)))
-          return
-        if not is_sg:
-          if gender == "f":
-            plsuffix = getp("1")
-          else:
-            plsuffix = getp("2")
-          argpl = getp("pl")
-          if argpl:
-            pl = argpl
-          else:
-            pl = pagetitle + plsuffix
-          if pl == "-":
-            is_sg = True
-          else:
-            decl_pls = normalize_values([pl])
-        if prev_is_weak is not None and prev_is_weak != is_weak:
-          pagemsg("WARNING: Saw declension template with weak=%s different from previous weak=%s: %s"
-              % (is_weak, prev_is_weak, declts_to_unicode(declts)))
-          return
-        prev_is_weak = is_weak
-        if prev_is_sg is not None and prev_is_sg != is_sg:
-          pagemsg("WARNING: Saw declension template with sg=%s different from previous sg=%s: %s"
-              % (is_sg, prev_is_sg, declts_to_unicode(declts)))
-          return
-        prev_is_sg = is_sg
-      decl_genders_gens_and_pls.append((gender, decl_gens, decl_pls))
-
-    all_decl_genders = []
-    all_decl_gens = []
-    all_decl_pls = []
-    for decl_gender, decl_gens, decl_pls in decl_genders_gens_and_pls:
-      if decl_gender not in all_decl_genders:
-        all_decl_genders.append(decl_gender)
-      for decl_gen in decl_gens:
-        if decl_gen not in all_decl_gens:
-          all_decl_gens.append(decl_gen)
-      for decl_pl in decl_pls:
-        if decl_pl not in all_decl_pls:
-          all_decl_pls.append(decl_pl)
-    first_gender, first_decl_gens, first_decl_pls = decl_genders_gens_and_pls[0]
-    if len(all_decl_genders) > 1 and (
-      len(all_decl_gens) != len(first_decl_gens) or len(all_decl_pls) != len(first_decl_pls)
-    ):
-      pagemsg("WARNING: Multiple declension templates with different genders as well as different either genitives or plurals: %s"
-          % declts_to_unicode(declts))
-      return
-    if len(all_decl_gens) != len(first_decl_gens) and len(all_decl_pls) != len(first_decl_pls):
-      pagemsg("WARNING: Multiple declension templates with different both genitives and plurals: %s"
-          % declts_to_unicode(declts))
+      pagemsg("WARNING: Unrecognized decl template(s): %s" % declts_to_unicode(declts))
       return
 
-    is_weak = prev_is_weak
-    is_sg = prev_is_sg
-    declspec = ":".join(all_decl_genders)
-    if "m" in all_decl_genders or "n" in all_decl_genders:
-      defgens = []
-      for gender in all_decl_genders:
-        defgen = pagetitle + get_default_gen(pagetitle, gender, is_weak)
-        if defgen not in defgens:
-          defgens.append(defgen)
-      if all_decl_gens == defgens:
-        declspec += ","
+  else: # not adjectival
+    if len(genders) == 1 and genders[0] in ["m", "f"]:
+      default_equiv = construct_default_equiv(pagetitle, genders[0])
+    headspec = ":".join(genders)
+    is_sg = False
+    is_both = False
+    is_weak = False
+    headword_gens = []
+    headword_pls = []
+    if headspec != "p":
+      pls = convert_pls(pagetitle, pls, is_proper=is_proper)
+      headword_pls = pls
+      if saw_mn:
+        gens = convert_gens(pagetitle, gens)
+        headword_gens = gens
+        if (len(gens) == 1 and any(gens[0] == pagetitle + ending for ending in ["n", "en", "ns", "ens"])
+          and len(pls) == 1 and (pls[0] == "-" or any(pls[0] == pagetitle + ending for ending in ["n", "en"]))):
+          is_weak = True
+        def_gens = []
+        for gender in genders:
+          def_gen = pagetitle + get_default_gen(pagetitle, gender, is_weak)
+          if def_gen not in def_gens:
+            def_gens.append(def_gen)
+        if set(def_gens) == set(gens):
+          headspec += ","
+        else:
+          headspec += ",%s" % analyze_forms(pagetitle, gens, None)
+      def_pls = []
+      for gender in genders:
+        def_pl = pagetitle + get_default_pl(pagetitle, gender, is_weak)
+        if def_pl not in def_pls:
+          def_pls.append(def_pl)
+      if set(def_pls) == set(pls):
+        headspec += ","
+        if is_proper:
+          is_both = True
+      elif pls == ["-"]:
+        is_sg = True
       else:
-        declspec += ",%s" % analyze_forms(pagetitle, all_decl_gens)
-    if "p" not in all_decl_genders:
-      defpls = []
-      for gender in all_decl_genders:
-        defpl = pagetitle + get_default_pl(pagetitle, gender, is_weak)
-        if defpl not in defpls:
-          defpls.append(defpl)
-      if all_decl_pls == defpls:
-        declspec += ","
-      else:
-        declspec += ",%s" % analyze_forms(pagetitle, all_decl_pls)
-    declspec = re.sub(",*$", "", declspec)
+        headspec += ",%s" % analyze_forms(pagetitle, pls, None)
+    headspec = re.sub(",*$", "", headspec)
     if is_weak:
-      declspec += ".weak"
+      headspec += ".weak"
     if is_sg:
-      declspec += ".sg"
+      headspec += ".sg"
     if ss:
-      declspec += ".ss"
+      headspec += ".ss"
 
+  extraspec = ""
+  if dims:
+    extraspec += "|dim=%s" % analyze_forms(pagetitle, dims, None, do_stem=True, joiner=",")
+  if fems:
+    extraspec += "|f=%s" % analyze_forms(pagetitle, fems, default_equiv, do_stem=True, joiner=",")
+  if mascs:
+    extraspec += "|m=%s" % analyze_forms(pagetitle, mascs, default_equiv, do_stem=True, joiner=",")
+
+  if declts and not adjectival:
+    retval = analyze_declts(declts, pagetitle, headword_gens, headword_pls)
+    if retval is None:
+      return
+    declspec, all_decl_genders, all_decl_gens, all_decl_pls = retval
     if headspec != declspec:
       if set(all_decl_gens) <= set(headword_gens) and set(all_decl_pls) <= set(headword_pls):
         if set(all_decl_genders) == set(headword_genders):
@@ -504,10 +676,7 @@ def process_text_in_section(index, pagetitle, text):
           notes.extend(this_notes)
         headt = t
         subsection_with_head = k
-      elif tn.startswith("de-decl-adj+noun"):
-        pagemsg("WARNING: Saw adjectival noun template: %s" % unicode(t))
-        return
-      elif tn in decl_templates:
+      elif tn.startswith("de-decl-adj+noun") or tn in decl_templates:
         if declts:
           if subsection_with_declts == k:
             pagemsg("NOTE: Saw declension template #%s without intervening head template: previous decl template(s)=%s, decl=%s%s"
