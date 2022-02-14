@@ -11,14 +11,14 @@ Authorship: <benwing2>
 
 TERMINOLOGY:
 
--- "slot" = A particular combination of state/case/gender/number.
-	 Example slot names for adjectives are "mix_nom_m" (mixed nominative masculine singular),
-	 "str_gen_p" (strong genitive plural) and "pred" (predicative). Each slot is filled with zero or more forms.
+-- "slot" = A particular combination of state/case/gender/number. Example slot names for adjectives are
+     "mix_nom_m" (mixed nominative masculine singular), "sup_str_dat_p" (superlative strong dative plural) and
+     "comp_pred" (comparative predicative). Each slot is filled with zero or more forms.
 
 -- "form" = The declined German form representing the value of a given slot.
 
--- "lemma" = The dictionary form of a given German term. Generally the predicative, but may be the
-     strong nominative masculine singular or other form.
+-- "lemma" = The dictionary form of a given German term. Generally the predicative, but may be the strong nominative
+     masculine singular or other form.
 ]=]
 
 local lang = require("Module:languages").getByCode("de")
@@ -36,6 +36,8 @@ local rgmatch = mw.ustring.gmatch
 local rsubn = mw.ustring.gsub
 local ulen = mw.ustring.len
 local uupper = mw.ustring.upper
+
+local OMITTED_E = u(0xFFF0)
 
 
 -- version of rsubn() that discards all but the first return value
@@ -64,6 +66,8 @@ local states = { "str", "wk", "mix" }
 local comps = { "", "comp", "sup" }
 
 local adjective_slot_list_positive = {
+	-- We generate the lemma into `the_lemma` because `lemma` is special-cased in iut.show_forms()
+	-- to hold the lemma string.
 	{"the_lemma", "-"},
 }
 local adjective_slot_list_comparative = {
@@ -111,7 +115,7 @@ local function add(base, slot, stem, ending, footnotes)
 		return
 	end
 	local function do_combine_stem_ending(stem, ending)
-		return stem .. ending
+		return rsub(stem, OMITTED_E, "") .. ending
 	end
 
 	footnotes = iut.combine_footnotes(base.footnotes, footnotes)
@@ -147,15 +151,6 @@ local function decline_singular(base, stem, compsup)
 	add_cases(base, stem, compsup .. "str", "n", "es", "en", "em", "es")
 	add_cases(base, stem, compsup .. "wk", "n", "e", "en", "en", "e")
 	add_cases(base, stem, compsup .. "mix", "n", "es", "en", "en", "es")
-end
-
-
-local function process_slot_overrides(base)
-	for slot, overrides in pairs(base.overrides) do
-		local origforms = base.forms[slot]
-		base.forms[slot] = nil
-		add_spec(base, slot, overrides, origforms)
-	end
 end
 
 
@@ -223,11 +218,6 @@ local function parse_indicator_spec(angle_bracket_spec, lemma, pagename)
 					parse_err("Can't specify 'ss' twice")
 				end
 				base.props.ss = true
-			elseif part == "-e" then
-				if base.props.omitted_e then
-					parse_err("Can't specify '-e' twice")
-				end
-				base.props.omitted_e = true
 			else
 				parse_err("Unrecognized indicator '" .. part .. "'")
 			end
@@ -239,17 +229,7 @@ end
 
 local function generate_default_stem(base)
 	if base.props.ss then
-		if not rfind(base.lemma, "ß$") then
-			error("With '.ss', lemma '" .. base.lemma .. "' should end in -ß")
-		end
 		return rsub(base.lemma, "ß$", "ss")
-	end
-	if base.props.omitted_e then
-		local non_ending, ending = rmatch(base.lemma, "^(.*)e([lmnr])$")
-		if not non_ending then
-			error("Can't use '-e' with lemma '" .. base.lemma .. "'; lemma should end in -el, -em, -en or -er")
-		end
-		return non_ending .. ending
 	end
 	if base.lemma:find("e$") then
 		return rsub(base.lemma, "e$", "")
@@ -264,21 +244,27 @@ end
 
 
 local function generate_default_sup(base, stem)
-	if rfind(stem, "gr[oö]ß$") then
+	if rfind(stem, OMITTED_E .. "[lmnr]$") then
+		-- If we omitted -e- in the stem, put it back. E.g. [[simpel]], stem ''simpl-'', comparative
+		-- ''simpler'', superlative ''simpelst-'', or [[abgeschlossen]], comparative ''abgeschlossener'' or
+		-- ''abgeschlossner'', superlative just ''abgeschlossenst-''.
+		local non_ending, ending = rmatch(stem, "^(.*)" .. OMITTED_E .. "([lmnr])$")
+		if base.props.ss then
+			-- [[abgeschlossen]] -> ''abgeschloßner'' -> ''abgeschlossenst'' (pre-1996 spelling)
+			non_ending = rsub(non_ending, "ß$", "ss")
+		end
+		return non_ending .. "e" .. ending .. "st"
+	elseif rfind(stem, "gr[oö]ß$") then
 		return stem .. "t"
 	elseif rfind(stem, "[szxßd]$") or rfind(stem, "[^e]t$") then
 		return stem .. "est"
-	elseif base.props.omitted_e and rfind(stem, com.NV .. "[lmnr]$") then
-		-- If we omitted -e- in the stem, try to put it back. E.g. [[simpel]], stem ''simpl-'', comparative
-		-- ''simpler'', superlative ''simpelst-''.
-		return rsub(stem, "([lmnr])$", "e%1st")
 	else
 		return stem .. "st"
 	end
 end
 
 
-local function process_comp_sup_spec(base, destforms, slot, specs, form_default)
+local function process_spec(base, destforms, slot, specs, base_stem, form_default)
 	local function do_form_default(form)
 		return form_default(base, form)
 	end
@@ -288,15 +274,26 @@ local function process_comp_sup_spec(base, destforms, slot, specs, form_default)
 		if spec.form == "-" then
 			-- Skip "-"; effectively, no forms get inserted into output.comp.
 		elseif spec.form == "+" then
-			forms = iut.map_forms(base.stems.stem, do_form_default)
+			forms = iut.map_forms(base_stem, do_form_default)
 		elseif rfind(spec.form, "^%+") then
 			local ending = rsub(spec.form, "^%+", "")
-			forms = iut.map_forms(base.stems.stem, function(form) return form .. ending end)
+			forms = iut.map_forms(base_stem, function(form) return form .. ending end)
 		elseif spec.form == "^" then
-			forms = iut.map_forms(base.stems.stem, function(form) return do_form_default(com.apply_umlaut(form)) end)
+			forms = iut.map_forms(base_stem, function(form) return do_form_default(com.apply_umlaut(form)) end)
 		elseif rfind(spec.form, "^%^") then
 			local ending = rsub(spec.form, "^%^", "")
-			forms = iut.map_forms(base.stems.stem, function(form) return com.apply_umlaut(form) .. ending end)
+			forms = iut.map_forms(base_stem, function(form) return com.apply_umlaut(form) .. ending end)
+		elseif spec.form == "-e" then
+			forms = iut.map_forms(base_stem, function(form)
+				local non_ending, ending = rmatch(form, "^(.*)e([lmnr])$")
+				if not non_ending then
+					error("Can't use '-e' with stem '" .. form .. "'; should end in -el, -em, -en or -er")
+				end
+				if base.props.ss then
+					non_ending = rsub(non_ending, "ss$", "ß$")
+				end
+				return do_form_default(non_ending .. OMITTED_E .. ending)
+			end)
 		else
 			iut.insert_form(destforms, slot, spec)
 		end
@@ -310,27 +307,20 @@ end
 
 local function detect_indicator_spec(alternant_multiword_spec, base)
 	-- First generate the stem(s), substituting + with the default formed from the lemma.
-	local stems = base.stem or {{form = "+"}}
-	stems = iut.map_forms(stems, function(form)
-		if form == "+" then
-			return generate_default_stem(base)
-		else
-			return form
-		end
-	end)
-	iut.insert_forms(base.stems, "stem", stems)
+	process_spec(base, base.stems, "stem", base.stem, {{form = generate_default_stem(base)}},
+	   function(base, stem) return stem end)
 
 	-- Next process the superative, if specified. We do this first so that if there is a superative and no
 	-- comparative specified, we add a comparative; but if sup:- is given, we don't add a comparative.
 	if base.sup then
-		process_comp_sup_spec(base, base.stems, "sup", base.sup, generate_default_sup)
+		process_spec(base, base.stems, "sup", base.sup, base.stems.stem, generate_default_sup)
 		if base.stems.sup and not base.comp then
 			base.comp = {{form = "+"}}
 		end
 	end
 	-- Next process the comparative, if specified (or defaulted because a superlative was specified).
 	if base.comp then
-		process_comp_sup_spec(base, base.stems, "comp", base.comp, generate_default_comp)
+		process_spec(base, base.stems, "comp", base.comp, base.stems.stem, generate_default_comp)
 	end
 	-- Next, if comparative specified but not superlative, derive the superlative(s) from the comparative(s).
 	if base.stems.comp and not base.sup then
@@ -364,6 +354,15 @@ local function detect_all_indicator_specs(alternant_multiword_spec)
 	iut.map_word_specs(alternant_multiword_spec, function(base)
 		detect_indicator_spec(alternant_multiword_spec, base)
 	end)
+end
+
+
+local function process_slot_overrides(base)
+	for slot, overrides in pairs(base.overrides) do
+		local origforms = base.forms[slot]
+		base.forms[slot] = nil
+		process_spec(base, base.forms, slot, overrides, origforms, function(base, form) return form end)
+	end
 end
 
 
@@ -426,13 +425,13 @@ local function show_forms(alternant_multiword_spec)
 	local lemmas = alternant_multiword_spec.forms.the_lemma or {}
 
 	local function add_pronouns_and_articles(slot, link)
-		if slot == "pred_m" then
+		if rfind(slot, "pred_m$") then
 			return link_term("[[er]] [[ist]]") .. " " .. link
-		elseif slot == "pred_f" then
+		elseif rfind(slot, "pred_f$") then
 			return link_term("[[sie]] [[ist]]") .. " " .. link
-		elseif slot == "pred_n" then
+		elseif rfind(slot, "pred_n$") then
 			return link_term("[[es]] [[ist]]") .. " " .. link
-		elseif slot == "pred_p" then
+		elseif rfind(slot, "pred_p$") then
 			return link_term("[[sie]] [[sind]]") .. " " .. link
 		elseif rfind(slot, "wk_") then
 			local case, gender = rmatch(slot, ".*wk_(.*)_([mfnp])$")
