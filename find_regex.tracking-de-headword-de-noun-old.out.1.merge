@@ -51,7 +51,7 @@ Page 2 April: -------- begin text --------
 * {{audio|de|De-April.ogg|audio}}
 
 ===Noun===
-{{de-noun|m,(s),e}}
+{{de-noun|m,(s)}}
 
 # [[#English|April]]
 #* '''1741''', ''Annales Cistercienses, Das ist, Cisterciensische, Oder Vielmehr Jährliche Kirchen-Geschichte Von Erbauung Cisterz, wie dieser Heil. Marianischen Orden seinen Anfang und Aufnahm genommen, und was sich von Anno Christi Geburth 1098. des Heil. Cistercienser-Ordens im ersten bis 1212. des bemeldten Ordens im 115. Jahr Denckwürdiges begaben, In V. Theil abgetheilet. In Lateinischer Sprache beschrieben Von dem Hochwürdigsten Angelo Manrique von Burgen [...] von dem Hochwürdigen Bonifacio Hiltprand [...] Ins Teutsche übersetzt; Endlichen Ans Tag-Licht und in Druck gegeben Von dem Hochwürdigen Wilhelmo II. [...] Dritter Theil'', page 156:
@@ -62,7 +62,7 @@ Page 2 April: -------- begin text --------
 #*: 22) Bei Ueberreichung der Verzeichnisse der schulpflichtigen Kinder weiset der Vorstand den Lehrer an, mit dem Ersten '''Aprils''' und dem Ersten Octobers diejenigen aufzunehmen, welche dann das 8te Jahr vollendet haben.
 
 ====Declension====
-{{de-ndecl|m,(s),e}}
+{{de-ndecl|m,(s)}}
 
 ====Usage notes====
 * Phrasings like ''{{m|de|erster}} April'' (''1. April'') are commonly used to refer to a certain day of April, and not to a certain April month as a whole of a certain time period.
@@ -88,13 +88,13 @@ Page 3 RAM: Found match for regex: =
 Page 3 RAM: -------- begin text --------
 
 ===Noun===
-{{de-noun|n:m,(s),s}}
+{{de-noun|n:m,(s),(s)[rare]}}
 
 # {{lb|de|computing}} [[#English|RAM]]
 #: {{syn|de|Arbeitsspeicher}}
 
 ====Declension====
-{{de-ndecl|n:m,(s),s}}
+{{de-ndecl|n:m,(s),(s)[rare]}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -109,12 +109,12 @@ Page 4 Bahamas: -------- begin text --------
 * {{audio|de|De-Bahamas.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|p|Bahamas}}
+{{de-proper noun|p}}
 
 # {{place|de|archipelago/and/country|r/Caribbean|t=Bahamas}}
 
 ====Declension====
-{{de-decl-noun-pl}}
+{{de-ndecl|p}}
 
 ----
 
@@ -131,6 +131,9 @@ Page 5 San Marino: -------- begin text --------
 
 # {{place|de|microstate|r/Southern Europe|surrounded by|c/Italy|t1=San Marino}}
 # {{place|de|capital city|c:pref/San Marino|t1=San Marino}}
+
+====Declension====
+{{de-ndecl|n.sg}}
 
 ====Derived terms====
 * {{l|de|San-Marinese}}
@@ -150,6 +153,9 @@ Page 6 El Salvador: -------- begin text --------
 {{de-proper noun|n|nolinkhead=1}}
 
 # {{place|de|country|r/Central America|t1=El Salvador}}
+
+====Declension====
+{{de-ndecl|n.sg}}
 
 ====Related terms====
 * {{l|de|salvadorianisch}}
@@ -172,6 +178,9 @@ From {{der|de|mos|burkina||honest}} + {{der|de|dyu|faso||father's house}}, {{coi
 
 # {{senseid|de|Q965}}{{place|de|country|r/West Africa|t=Burkina Faso}}
 
+====Declension====
+{{de-ndecl|n.sg}}
+
 {{C|de|Burkina Faso}}
 
 ----
@@ -189,6 +198,9 @@ Page 8 Sierra Leone: -------- begin text --------
 
 # {{place|de|country|r/West Africa|t=Sierra Leone}}
 
+====Declension====
+{{de-ndecl|n.sg}}
+
 ----
 
 -------- end text --------
@@ -203,6 +215,9 @@ Page 9 Sri Lanka: -------- begin text --------
 {{de-proper noun|n|nolinkhead=1}}
 
 # {{place|de|island/and/country|r/South Asia|t=Sri Lanka}}
+
+====Declension====
+{{de-ndecl|n.sg}}
 
 ====Derived terms====
 * {{l|de|Srilanker}}, {{l|de|Sri-Lanker}}, {{l|de|Sri Lanker}}
@@ -222,6 +237,9 @@ Page 10 Costa Rica: -------- begin text --------
 
 # {{senseid|de|Q800}}{{place|de|country|r/Central America|t1=Costa Rica}}
 
+====Declension====
+{{de-ndecl|n.sg}}
+
 ----
 
 -------- end text --------
@@ -229,7 +247,7 @@ Page 11 IL: Found match for regex: =
 Page 11 IL: -------- begin text --------
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{head|de|proper noun|g=n}}
 
 # {{abbreviation of|de|[[Innsbruck]] [[Land]]}} {{gloss|country code of ''Innsbruck, Land'', the surrounding circuit of [[Innsbruck]]/[[Tyrol]]/[[Austria]]}}
 
@@ -266,7 +284,7 @@ From {{inh|de|gmh|herze}}, from {{inh|de|goh|herza}}, from {{inh|de|gmw-pro|*her
 :: Otherwise, the forms ''dem Herzen'' and ''dem Herz'' are both acceptable. The latter is predominant in speech, while the former remains the more established form in writing.
 
 ====Declension====
-{{de-ndecl|n,ens:es[Colloquial, uncommon; may also rarely be found in medical literature].weak.dat:en:-[Informal]}}
+{{de-ndecl|n,ens:es[colloquial, uncommon; may also rarely be found in medical literature].weak.dat:en:-[informal]}}
 
 ====Derived terms====
 {{top3}}
@@ -342,9 +360,12 @@ From {{der|de|grc|Νίκη}}, from {{m|grc|νίκη||victory}}.
 * {{IPA|de|/ˈniːkə/|/ˈniːke/}}
 
 ====Proper noun====
-{{de-proper noun|f|Nikes}}
+{{de-proper noun|f.gen:-:s[without the article]}}
 
 # {{lb|de|Greek mythology}} [[#English|Nike]]
+
+=====Declension=====
+{{de-ndecl|f.gen:-:s[without the article].sg}}
 
 ===Etymology 2===
 From the brand, from {{der|de|en|Nike}}, from the Greek word in etymology 1.
@@ -424,6 +445,9 @@ From {{der|de|ar|أَبُو ظَبْي}}, probably in part through {{der|de|en|A
 # {{place|de|emirate|c/United Arab Emirates|on the southern|gulf/Persian Gulf|t1=Abu Dhabi}}
 # {{place|de|capital city|c/United Arab Emirates|t1=Abu Dhabi}}
 
+====Declension====
+{{de-ndecl|n.sg}}
+
 ----
 
 -------- end text --------
@@ -448,6 +472,9 @@ From {{bor|de|en|New York}}.
 # {{place|de|state|c/USA|t=New York}}
 #: {{syn|de|Staat New York}} {{q|more usual because the simplex is normally understood as NYC}}
 
+====Declension====
+{{de-ndecl|n.sg}}
+
 ----
 
 -------- end text --------
@@ -462,7 +489,7 @@ Page 17 Schicksal: -------- begin text --------
 * {{audio|de|De-Schicksal.ogg|Audio}}
 
 ===Noun===
-{{de-noun|n,(e)s,e:^er}}
+{{de-noun|n,s:es,e:^er[informal, sometimes slightly deprecative]}}
 
 # {{lb|de|uncountable}} [[destiny]], [[fate]] {{gloss|irresistable power that predetermines events}}
 # {{lb|de|countable}} someone's destiny, fate
@@ -474,7 +501,7 @@ Page 17 Schicksal: -------- begin text --------
 * The normal plural is '''''Schicksale'''''. The form ''Schicksäler'' is more informal and sometimes slightly deprecative, e.g. expressing the notion that people exaggerate the bitterness of their fates. However, it is also attestable as an entirely neutral variant.
 
 ====Declension====
-{{de-ndecl|n,(e)s,e:^er[Informal]}}
+{{de-ndecl|n,s:es,e:^er[informal, sometimes slightly deprecative]}}
 
 ====Derived terms====
 * {{l|de|schicksalhaft}}
@@ -492,9 +519,12 @@ Page 18 Salerno: Found match for regex: =
 Page 18 Salerno: -------- begin text --------
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|n,-}}
 
 # {{place|de|city/and/province|r/Campania|c/Italy|t=Salerno}}
+
+====Declension====
+{{de-ndecl|n,-.sg}}
 
 ----
 
@@ -513,7 +543,7 @@ Page 19 Mittag: -------- begin text --------
 From {{inh|de|gmh|mittetac}}, from {{inh|de|goh|mittitac}}, compound of {{m|goh|mitti}} (see {{cog|de|Mitte}}) and {{m|goh|tac}} (see {{m|de|Tag}}). Cognate to {{cog|nl|middag}}.
 
 ====Noun====
-{{de-noun|m||Mittage}}
+{{de-noun|m,s:es}}
 
 # [[noon]], [[midday]], late [[morning]], early [[afternoon]] {{gloss|time from about 11 a.m. to 2 p.m}}
 #: {{ux|de|Sie hat bis '''Mittag''' geschlafen.|She slept until midday.}}
@@ -525,7 +555,7 @@ From {{inh|de|gmh|mittetac}}, from {{inh|de|goh|mittitac}}, compound of {{m|goh|
 * {{l|de|Mitttag}}
 
 =====Declension=====
-{{de-decl-noun-m|(e)s|e}}
+{{de-ndecl|m,s:es}}
 
 =====Derived terms=====
 * {{l|de|Vormittag}}
@@ -542,10 +572,13 @@ From {{inh|de|gmh|mittetac}}, from {{inh|de|goh|mittitac}}, compound of {{m|goh|
 Shortened from {{m|de|Mittagessen}}.
 
 ====Noun====
-{{de-noun|n,,s}}
+{{de-noun|n,,s:es.sg}}
 
 # {{lb|de|somewhat|informal}} [[lunch]] {{gloss|light meal eaten around midday}}
 #: {{ux|de|Wann gibt's '''Mittag'''?|When is '''lunch''' ready?}}
+
+=====Declension=====
+{{de-ndecl|n,,s:es.sg}}
 
 ===Further reading===
 * {{R:DWDS}}
@@ -562,17 +595,20 @@ Page 20 Sofia: -------- begin text --------
 * {{audio|de|De-Sofia.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|f|Sofia|gen2=Sofias}}
+{{de-proper noun|f,s.gen:-:s}}
 
 # {{given name|de|female|varoftype=a less common|varof=Sophia}}
 
 ===Etymology===
-From {{bor|de|bg|Со́фия}}.
+{{bor+|de|bg|Со́фия}}.
 
 ===Proper noun===
-{{de-proper noun|n|Sofias}}
+{{de-proper noun|n}}
 
 # {{place|de|capital city|c/Bulgaria|t1=Sofia}}
+
+====Declension====
+{{de-ndecl|n.sg}}
 
 ----
 
@@ -580,39 +616,60 @@ From {{bor|de|bg|Со́фия}}.
 Page 21 Hesse: Found match for regex: =
 Page 21 Hesse: -------- begin text --------
 
-===Etymology===
-From {{inh|de|gmh|Hesse}}, from {{inh|de|goh|Hesso}}, possibly ultimately derived from {{der|de|gem-pro|*hatjaną|t=to persecute; hate}}. Compare [[w:Chatti|Chatti]], [[w:Chasuarii|Chasuarii]], [[w:Chattuarii|Chattuarii]].
-
 ===Pronunciation===
 * {{audio|de|De-Hesse.ogg|Audio}}
 
-===Noun===
-{{de-noun|m|Hessen|Hessen|f=Hessin}}
+===Etymology 1===
+From {{inh|de|gmh|Hesse}}, from {{inh|de|goh|Hesso}}, possibly ultimately derived from {{der|de|gem-pro|*hatjaną|t=to persecute; hate}}. Compare [[w:Chatti|Chatti]], [[w:Chasuarii|Chasuarii]], [[w:Chattuarii|Chattuarii]].
 
-# A man born in or residing in the state of [[#English|Hesse]]; a [[Hessian]].
+====Noun====
+{{de-noun|m.weak|f=in}}
 
-====Declension====
-{{de-decl-noun-m|n|n}}
+# a man born in or residing in the state of [[#English|Hesse]]; a [[Hessian]]
 
-===Proper noun===
-{{de-proper noun|old=1}}
+=====Declension=====
+{{de-ndecl|m.weak}}
 
-# {{lb|de|Hessian}} [[#English|Hesse]].
-# {{surname|de|habitational|nodot=1}} for an inhabitant of [[#English|Hesse]].
-
-====Synonyms====
-* {{sense|Central German state}} {{l|de|Hessen}} {{qualifier|Standard German}}
-
-====Derived terms====
+=====Derived terms=====
 {{col3|de|
 |Hessemann
 }}
 
-====Descendants====
+=====Descendants=====
 * {{desc|en|Hesse}}
 * {{desc|fr|Hesse}}
 * {{desc|pt|Hesse}}
 * {{desc|es|Hesse}}
+
+===Etymology 2===
+
+====Noun====
+{{de-noun|f}}
+
+# [[shank]] {{i|of beef or veal}}
+
+=====Declension=====
+{{de-ndecl|f}}
+
+===Etymology 3===
+
+====Proper noun====
+{{head|de|proper noun}}
+
+# {{lb|de|Hessian}} [[#English|Hesse]] {{gl|Central German state}}
+#: {{syn|de|Hessen<q:Standard German>}}
+
+===Etymology 4===
+
+====Proper noun====
+{{de-proper noun|m,s,s:-.nodatpln}} ''or''<br />
+{{de-proper noun|f,s:-.nodatpln}}
+
+# {{surname|de|habitational|nodot=1}} for an inhabitant of [[#English|Hesse]]
+
+====Declension====
+{{de-ndecl|m,s,s:-.nodatpln}}
+{{de-ndecl|f,s:-.nodatpln}}
 
 {{C|de|Hesse}}
 
@@ -626,24 +683,30 @@ Page 22 Python: -------- begin text --------
 * {{IPA|de|/ˈpyː.tɔn/}}
 * {{audio|de|De-Python.ogg|Audio}}
 
-===Noun===
-{{de-noun|m:f,,s}}
+===Etymology 1===
+
+====Noun====
+{{de-noun|m,,s}} ''or''<br />
+{{de-noun|f,s}}
 
 # [[python]] {{gloss|snake}}
 
-====Usage notes====
+=====Usage notes=====
 * The masculine is more strictly standard, but the feminine is fairly common (after {{m|de|Schlange}} and most other words for snakes).
 
-====Declension====
-{{de-ndecl|m:f,,s}}
+=====Declension=====
+{{de-ndecl|m,,s}}
+{{de-ndecl|f,s}}
 
-===Proper noun===
-{{de-proper noun|n|Python|-}}
+===Etymology 2===
+
+====Proper noun====
+{{de-proper noun|n}}
 
 # {{lb|de|computing}} [[#English|Python]]
 
-====Declension====
-{{de-ndecl|n,-.sg}}
+=====Declension=====
+{{de-ndecl|n.sg}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -663,6 +726,9 @@ Page 23 St. Vincent und die Grenadinen: -------- begin text --------
 {{de-proper noun|m,St\. Vincents und der Grenadinen|head=[[St. Vincent]] [[und]] [[die]] [[Grenadinen]]}}
 
 # {{place|de|archipelago/and/country|r/Caribbean|t=Saint Vincent and the Grenadines}}
+
+====Declension====
+{{de-ndecl|[[St. Vincent]]<n,-:s.sg> [[und]] [[die]]<n,!die:!der.sg> [[Grenadinen]]}}
 -------- end text --------
 Page 24 Jesus: Found match for regex: =
 Page 24 Jesus: -------- begin text --------
@@ -676,13 +742,13 @@ Page 24 Jesus: -------- begin text --------
 * {{audio|de|De-Jesus.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|m|Jesu|gen2=Jesus'}}
+{{de-proper noun|m.acc:-:Jesum.dat:-:Jesu.gen:Jesu:-:'.abl:-:Jesu.voc:Jesu:-}}
 
 # {{lb|de|Christianity}} [[#English|Jesus]]
 #: {{syn|de|Christus|Jesus Christus}}
 
 ====Declension====
-{{de-decl-noun-m|as=Jesus/Jesum|ds=Jesus/Jesu|gs=Jesu/Jesus/Jesus'|bs=Jesus/Jesu|vs=Jesu/Jesus|n=sg-av|prop=1}}
+{{de-ndecl|m.acc:-:Jesum.dat:-:Jesu.gen:Jesu:-:'.abl:-:Jesu.voc:Jesu:-.sg}}
 
 ====Related terms====
 * {{l|de|Jesses}}, {{l|de|Jeses}}
@@ -703,7 +769,7 @@ From {{compound|de|nieder|t1=low, nether|Lande|t2=lands}}, a plural of {{m|de|La
 * {{hyphenation|de|Nie|der|lan|de}}
 
 ===Proper noun===
-{{de-proper noun|p|old=1}}
+{{de-proper noun|p}}
 
 # {{place|de|country|r/Western Europe|t=the [[Netherlands]]}}
 #: {{syn|de|Holland<q:somewhat informal>}}
@@ -711,7 +777,7 @@ From {{compound|de|nieder|t1=low, nether|Lande|t2=lands}}, a plural of {{m|de|La
 #*: [...] vorzüglich aus den beiden '''Niederlanden''', Frankreich und Deutschland.
 
 ====Declension====
-{{de-decl-noun-n|prop=yes|n=pl}}
+{{de-ndecl|p}}
 
 ====Derived terms====
 {{der4|de
@@ -730,8 +796,6 @@ From {{compound|de|nieder|t1=low, nether|Lande|t2=lands}}, a plural of {{m|de|La
 }}
 
 {{C|de|Exonyms|Netherlands}}
-
-{{cln|de|pluralia tantum}}
 -------- end text --------
 Page 26 Engels: Found match for regex: =
 Page 26 Engels: -------- begin text --------
@@ -742,15 +806,24 @@ Page 26 Engels: -------- begin text --------
 ===Pronunciation===
 * {{audio|de|LL-Q188 (deu)-Sebastian Wallroth-Engels.wav|Audio}}
 
-===Noun===
+===Etymology 1===
+
+====Noun====
 {{head|de|noun form}}
 
 # {{inflection of|de|Engel||gen|s}}
 
-===Proper noun===
-{{de-proper noun|old=1}}
+===Etymology 2===
+
+====Proper noun====
+{{de-proper noun|m,',-:ens}} ''or''<br />
+{{de-proper noun|f,-:ens}}
 
 # {{surname|de}}
+
+=====Declension=====
+{{de-ndecl|m,',-:ens}} ''or''<br />
+{{de-ndecl|f,-:ens}}
 -------- end text --------
 Page 27 Zug: Found match for regex: =
 Page 27 Zug: -------- begin text --------
@@ -831,11 +904,14 @@ From {{inh|de|gmh|zuc}}, {{m|gmh|zug}}, from {{inh|de|goh|zug}}, from {{inh|de|g
 * {{alt|de|ZG}} {{q|canton; {{w|ISO 3166-2:CH}}}}
 
 ====Proper noun====
-{{de-proper noun|Zug|gen2=Zugs}}
+{{de-proper noun|n}}
 
-# {{place|de|t=Zug|canton|c/Switzerland}}.
+# {{place|de|t=Zug|canton|c/Switzerland}}
 #: {{syn|de|Kanton Zug}}
-# {{place|de|t=Zug|capital city|can/Zug|c/Switzerland}}.
+# {{place|de|t=Zug|capital city|can/Zug|c/Switzerland}}
+
+=====Declension=====
+{{de-ndecl|n.sg}}
 
 =====Derived terms=====
 * {{l|de|Zuger}}, {{l|de|Zugerin}}
@@ -856,12 +932,12 @@ Page 28 tour de force: Found match for regex: =
 Page 28 tour de force: -------- begin text --------
 
 ===Noun===
-{{de-noun|f|tour de force|tours de force|head=''tour de force''}}
+{{de-noun|tour<f,s> de force|nolinkhead=1}}
 
 # {{alternative form of|de|Tour de Force}}
 
 ====Declension====
-{{de-decl-noun-f|pl=tours de force|dp=tours de force}}
+{{de-ndecl|tour<f,s> de force}}
 -------- end text --------
 Page 29 Wasser: Found match for regex: =
 Page 29 Wasser: -------- begin text --------
@@ -879,7 +955,7 @@ From {{inh|de|gmh|wazzer}}, from {{inh|de|goh|wazzar}}, from {{der|de|gem-pro|*w
 
 # [[water]] {{gloss|H₂O}}
 # alcoholic beverage, similar to [[brandy]], made from fermented fruit
-# {{lb|de|colloquial}} clipping of [[Mineralwasser]]/[[Tafelwasser]].
+# {{lb|de|colloquial}} {{clipping of|de|[[Mineralwasser]]/[[Tafelwasser]]}}
 
 ====Usage notes====
 * Both plural forms are infrequent. Unchanged '''''Wasser''''' is used as a purely emphatic plural: ''die '''Wasser''' des Rheins'' – the '''waters''' of the Rhine. '''''Wässer''''' is used as an actual plural meaning different kinds of water (or brandy): ''teure und preiswerte '''Wässer''''' – expensive and inexpensive [table] '''waters'''. However, ''Wässer'' is also used emphatically in some compound words such as {{m|de|Abwässer|Ab'''wässer'''|waste water}} and {{m|de|Schmutzwässer|Schmutz'''wässer'''|dirty water}}.
@@ -971,8 +1047,8 @@ From {{inh|de|gmh|brēzel}}, from {{inh|de|goh|breztella}}, {{m|goh|brezitella}}
 * {{audio|de|De-Brezel.ogg|Audio}}
 
 ===Noun===
-{{de-noun|f||Brezeln}};
-{{de-noun|n|Brezels|Brezel}}
+{{de-noun|f}} ''or (in Austria and certain other regions)'' <br />
+{{de-noun|n}}
 
 # [[pretzel]]; any kind of [[baked good]] in the form of a loose [[knot]]
 #: {{ux|de|Das alte Zunftzeichen der Bäcker ist die '''Brezel'''.|t=The ancient guild-symbol of the baker is a '''pretzel.'''}}
@@ -981,8 +1057,8 @@ From {{inh|de|gmh|brēzel}}, from {{inh|de|goh|breztella}}, {{m|goh|brezitella}}
 * Mostly feminine, but neuter in some regions including Austria.
 
 ====Declension====
-{{de-decl-noun-f|n}}
-{{de-decl-noun-n|s}}
+{{de-noun|f}}
+{{de-noun|n}}
 
 ====Derived terms====
 * {{l|de|Fastenbrezel}}
@@ -1013,7 +1089,7 @@ Page 31 Häuschen: -------- begin text --------
 * {{hyphenation|de|Häus|chen}}
 
 ===Noun===
-{{de-noun|n,s,-:Häuserchen[dialectal]}}
+{{de-noun|n,,-:Häuserchen[dialectal]}}
 
 # {{diminutive of|de|Haus}}
 
@@ -1022,7 +1098,7 @@ Page 31 Häuschen: -------- begin text --------
 * The plural ''Häuserchen'' is native to parts of Central Germany and common in the respective vernaculars. It is also, occasionally, seen in standard usage.
 
 ====Declension====
-{{de-ndecl|n,s,-:Häuserchen[dialectal]}}
+{{de-ndecl|n,,-:Häuserchen[dialectal]}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -1077,13 +1153,13 @@ From {{af|de|Mensch|t1=man, human being, person|-n-|alt2=-en-|Affe|t3=ape}}, cog
 * {{audio|de|De-Menschenaffe.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m|Meschenaffen|Meschenaffen|f=Menschenäffin}}
+{{de-noun|m.weak|f=^in}}
 
 # {{lb|de|colloquial}} An [[ape]] or [[great ape]] (male or of unspecified sex) {{gloss|a tail-less [[primate]]}}.
 # {{lb|de|scientific}} A [[hominid]] (male or of unspecified sex) {{gloss|a member of the family [[Hominidae]], including [[human]]s}}.
 
 ====Declension====
-{{de-decl-noun-m|n|n}}
+{{de-ndecl|m.weak}}
 
 ===See also===
 {{col4|de
@@ -1113,10 +1189,13 @@ Page 35 Rachel: -------- begin text --------
 * {{audio|de|De-Rachel.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|f|Rachels}}
+{{de-proper noun|f,en:s.gen:s}}
 
 # [[#English|Rachel]] {{gloss|biblical figure}}
 # {{given name|de|female}}
+
+====Declension====
+{{de-ndecl|f,en:s.gen:s}}
 
 {{C|de|Biblical characters|Individuals}}
 -------- end text --------
@@ -1124,13 +1203,12 @@ Page 36 ä: Found match for regex: =
 Page 36 ä: -------- begin text --------
 
 ===Noun===
-{{de-noun|n|ä|gen2=äs|ä|pl2=äs}}
+{{de-noun|n,-:s,-:s}}
 
 # {{alt form|de|Ä}}
 
 ====Declension====
-{{de-decl-noun-n}}
-{{de-decl-noun-n|s|s}}
+{{de-ndecl|n,-:s,-:s}}
 
 ====Further reading====
 * {{R:Duden|ae_Buchstabe}}
@@ -1158,7 +1236,7 @@ From {{inh|de|gmh|vrouwe}}, {{m|gmh|vrowe}}, from {{inh|de|goh|frouwa}}, from {{
 * {{homophones|de|frau}}
 
 ===Noun===
-{{de-noun|f||Frauen|Fräulein|dim2=Frauchen}}
+{{de-noun|f|dim=^lein,chen}}
 
 # [[woman]] {{gloss|adult female human}}
 #* '''1762''', Jacob Brucker, ''Die Heilige Schrift des Alten und Neuen Testaments, nebst einer vollständigen Erklärung derselben welche aus den auserlesensten Anmerkungen verschiedener Engländischen Schriftsteller zusammengetragen, und in der holländischen Sprache an das Licht gestellet, nunmehr aber in dieser deutschen Uebersetzung aufs neue durchgesehen, und mit vielen Anmerkungen und einem Vorberichte begleitet worden. Der funfzehente Theil, welcher des Neuen Testaments vierter Band ist, und die beyden Briefe Pauli an die Corinther, wie auch den an die Galater und Epheser enthält.'' (Leipzig), pages 257-259 and 263:
@@ -1177,10 +1255,10 @@ From {{inh|de|gmh|vrouwe}}, {{m|gmh|vrowe}}, from {{inh|de|goh|frouwa}}, from {{
 
 
 ====Declension====
-{{de-decl-noun-f|en}}
+{{de-ndecl|f}}
 
 ; Obsolete declension
-{{de-decl-noun-f|en|gs=Frauen|ds=Frauen}}
+{{de-ndecl|f.gen:en.dat:en}}
 
 ====Synonyms====
 * {{sense|adult female}} {{l|de|Weib}}; {{l|de|Männin}} {{q|nonstandard, Biblical}}
@@ -1336,12 +1414,12 @@ Page 39 Slowenien: -------- begin text --------
 * {{audio|de|De-Slowenien.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|n|old=1}}
+{{de-proper noun|n}}
 
 # {{place|de|country|r/Southeast Europe|in the|r/Alps|t=Slovenia}}
 
 ====Declension====
-{{de-decl-noun-n|prop=y|n=sg}}
+{{de-ndecl|n.sg}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -1377,12 +1455,12 @@ Page 41 FOC: -------- begin text --------
 * {{IPA|de|/fɔk/|/ɛfʔoːˈtseː/}}
 
 ===Noun===
-{{de-noun|n|FOC|FOCs}}
+{{de-noun|n,(s),(s)}}
 
 # {{init of|de||Factory-Outlet-Center}}
 
 ====Declension====
-{{de-decl-noun-n|(s)|s}}
+{{de-ndecl|n,(s),(s)}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -1451,20 +1529,14 @@ From {{inh|de|goh|mandala}}, from {{der|de|LL.|amygdala}}.
 ===Etymology 2===
 
 ====Noun====
-{{de-noun|n||Mandel|pl2=Mandeln}}
-
-# a quantity of 15
-
-====Noun====
-{{de-noun|f||Mandeln}}
+{{de-noun|n,,-:n}} ''or''<br />
+{{de-noun|f}}
 
 # a quantity of 15
 
 =====Declension=====
-Neuter:
-{{de-decl-noun-n|s|}}
-Feminine:
-{{de-decl-noun-f|n}}
+{{de-noun|n,,-:n}}
+{{de-noun|f}}
 
 =====Derived terms=====
 * {{l|de|Bauernmandel}}, {{l|de|Großmandel}} (a quantity of 16)
@@ -1484,9 +1556,12 @@ Page 45 Sophia: -------- begin text --------
 * {{hyphenation|de|So|phi|a}}
 
 ===Proper noun===
-{{de-proper noun|f|Sophia|gen2=Sophias|gen3=Sophiens}}
+{{de-proper noun|f.gen:-:s:Sophiens}}
 
 # {{given name|de|female|eq=Sophia}}
+
+====Declension====
+{{de-ndecl|f.gen:-:s:Sophiens.sg}}
 
 ====Related terms====
 * {{l|de|Sofie}}, {{l|de|Sophie}}, {{l|de|Sonja}}
@@ -1498,12 +1573,12 @@ Page 46 Wechselvordruck: Found match for regex: =
 Page 46 Wechselvordruck: -------- begin text --------
 
 ===Noun===
-{{de-noun|m|Wechselvordrucks|gen2=Wechselvordruckes|Wechselvordrucke}}
+{{de-noun|m,s:es}}
 
 # [[billing form]], [[bill form]]
 
 ====Declension====
-{{de-decl-noun-n|(e)s|e}}
+{{de-ndecl|m,s:es}}
 -------- end text --------
 Page 47 Judith: Found match for regex: =
 Page 47 Judith: -------- begin text --------
@@ -1519,9 +1594,12 @@ From {{der|de|la|Judith}}, from {{der|de|he|יְהוּדִית||woman from [[Jud
 * {{audio|de|De-Judith.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|f|Judiths}}
+{{de-proper noun|f.gen:s}}
 
 # {{given name|de|female|eq=Judith}}
+
+====Declension====
+{{de-ndecl|f.gen:s.sg}}
 
 ====Derived terms====
 * {{l|de|Jutta}} {{q|perhaps}}
@@ -1536,13 +1614,13 @@ Page 48 Popsicle: -------- begin text --------
 From American {{bor|de|en|popsicle}}.
 
 ===Noun===
-{{de-noun|n|g2=m||Popsicles}}
+{{de-noun|n:m,s,s}}
 
-# [[ice lolly]]
+# [[popsicle]] (US), [[ice lolly]] (UK)
 #: {{syn|de|Eis am Stiel}}
 
 ====Declension====
-{{de-decl-noun-n|s|s}}
+{{de-ndecl|n:m,s,s}}
 
 {{C|de|Ice cream}}
 -------- end text --------
@@ -1557,7 +1635,7 @@ From {{inh|de|gmh|wurm}}, from {{inh|de|goh|wurm}}, from {{inh|de|gem-pro|*wurmi
 * {{audio|de|De-Wurm.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m|g2=n|Wurmes|gen2=Wurms|Würmer|pl2=Würme|Würmchen|dim2=Würmlein}}
+{{de-noun|m:n[alternatively when meaning "baby, mite"],es:s,^er:^e[archaic]|dim=^chen,^lein}}
 
 # {{lb|de|biology}} [[worm]]
 # {{lb|de|informal}} [[maggot]], [[grub]]
@@ -1573,11 +1651,7 @@ From {{inh|de|gmh|wurm}}, from {{inh|de|goh|wurm}}, from {{inh|de|gem-pro|*wurmi
 * The normal plural is {{m|de||Würmer}}. The form {{m|de||Würme}} is archaic; it might still see some usage in the heraldic sense.
 
 ====Declension====
-{{de-decl-noun-m|(e)s|pl=Würmer}}
-* Rare neuter form:
-{{de-decl-noun-n|(e)s|pl=Würmer}}
-* Archaic plural:
-{{de-decl-noun-m|(e)s|pl=Würme}}
+{{de-ndecl|m:n[alternatively when meaning "baby, mite"],es:s,^er:^e[archaic]}}
 
 ====Related terms====
 {{rel3|de
@@ -1607,9 +1681,12 @@ Page 50 Angela: -------- begin text --------
 * {{audio|de|De-Angela.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|f|Angelas}}
+{{de-proper noun|f.gen:s}}
 
 # {{given name|de|female|from=Latin|eq=Angela}}
+
+====Declension====
+{{de-ndecl|f.gen:s.sg}}
 
 ====Related terms====
 * {{l|de|Angelika}}, {{l|de|Angelina}}
@@ -1632,6 +1709,9 @@ Page 51 Buenos Aires: -------- begin text --------
 # {{place|de|capital city|c/Argentina|t1=Buenos Aires}}
 # {{place|de|province|c/Argentina|t1=Buenos Aires}}
 
+====Declension====
+{{de-ndecl|n,'.sg}}
+
 ----
 
 -------- end text --------
@@ -1649,12 +1729,14 @@ From {{bor|de|gmh|merz}}, from {{bor|de|goh|merzo}}, from {{bor|de|la|martius}}
 * {{audio|de|De-März.ogg|audio}}
 
 ===Noun===
-{{de-noun|m,-:es:en[obsolete],e:en[obsolete]}}
+{{de-noun|m|-[predominant]:es[less common]}} ''or (obsolete)''<br />
+{{de-noun|m.weak}}
 
 # [[March]]
 
 ====Declension====
-{{de-ndecl|m,-:es[Less common]:en[Obsolete],e:en[Obsolete]}}
+{{de-ndecl|m|-[predominant]:es[less common]}} ''or (obsolete)''<br />
+{{de-ndecl|m.weak}}
 
 ====Descendants====
 * {{desc|et|märts|bor=1}}
@@ -1678,9 +1760,12 @@ Page 53 Carla: -------- begin text --------
 {{rfe|de}}
 
 ===Proper noun===
-{{de-proper noun|f|Carlas}}
+{{de-proper noun|f.gen:s}}
 
 # {{given name|de|female|m=Carl}}
+
+====Declension====
+{{de-ndecl|f.gen:s.sg}}
 
 ----
 
@@ -1696,12 +1781,12 @@ Page 54 Wikiwörterbuch: -------- begin text --------
 * {{hyphenation|de|Wi|ki|wör|ter|buch}}
 
 ===Noun===
-{{de-noun|n|Wikiwörterbuchs|gen2=Wikiwörterbuches|-}}
+{{de-noun|n,s:es.dat:-.sg}}
 
 # {{lb|de|uncommon}} [[Wiktionary]], [[wiktionary]] {{gloss|dictionary produced by cooperative online project}}
 
 ====Declension====
-{{de-decl-noun-n|(e)s|ds=Wikiwörterbuch|pl=-}}
+{{de-ndecl|n,s:es.dat:-.sg}}
 
 ====See also====
 * {{l|de|Wiktionary}}
@@ -1717,18 +1802,21 @@ Borrowed from {{bor|de|fr|Charlotte}} and {{m|fr|charlotte}}.
 * {{audio|de|De-Charlotte.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|f|Charlotte|gen2=Charlottes}}
+{{de-proper noun|f.gen:-:s}}
 
 # {{given name|de|female|from=French|varform=Lotte|varform2=Lieselotte|varform3=Liselotte}}
 # {{ngd|The digraph ⟨Ch⟩ in the [[Appendix:German spelling alphabet|German spelling alphabet]].}}
 
+====Declension====
+{{de-ndecl|f.gen:-:s}}
+
 ===Noun===
-{{de-noun|f||Charlotten}}
+{{de-noun|f}}
 
 # [[charlotte]] {{gloss|dessert consisting of sponge cake filled with fruit}}
 
 ====Declension====
-{{de-decl-noun-f|n}}
+{{de-ndecl|f}}
 
 ===Further reading===
 * {{R:Duden|Charlotte_weiblicher_Vorname}}
@@ -1752,12 +1840,12 @@ From {{bor|de|la|contextus}}.
 * {{audio|de|De-Kontext.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m|gen1=Kontexts|gen2=Kontextes|Kontexte}}
+{{de-noun|m,s:es}}
 
 # [[context]]
 
 ====Declension====
-{{de-decl-noun-m|(e)s|e}}
+{{de-ndecl|m,s:es}}
 
 ====Derived terms====
 * {{l|de|kontextfrei}}
@@ -1779,13 +1867,12 @@ From {{der|de|la|Hadriānus}}, ultimately from {{der|de|ett|𐌇𐌀𐌕𐌓𐌉
 * {{hyphenation|de|Ad|ri|an}}
 
 ===Proper noun===
-{{de-proper noun|m|gen2=Adrian}}
+{{de-proper noun|m,-[only with an article]:s,e:s}}
 
 # {{given name|de|male|eq=Adrian|from=Latin}}
 
 ====Declension====
-{{de-decl-noun-m|(s)|s|prop=1}}
-{{de-decl-noun-m|(s)|e|prop=1}}
+{{de-ndecl|m,-[only with an article]:s,e:s}}
 
 ====Related terms====
 * {{l|de|Adi}}, {{l|de|Adri}}, {{l|de|Adriaen}}, {{l|de|Adrianus}}, {{l|de|Ari}}, {{l|de|Ary}}
@@ -1800,9 +1887,14 @@ Page 58 Siegmeister: -------- begin text --------
 {{compound|de|Sieg|t1=victory|Meister|t2=master}}
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|m,s,s:-.nodatpln}} ''or''<br />
+{{de-proper noun|f,s:-.nodatpln}}
 
 # {{surname|de}}
+
+====Declension====
+{{de-ndecl|m,s,s:-.nodatpln}}
+{{de-ndecl|f,s:-.nodatpln}}
 -------- end text --------
 Page 59 Maria: Found match for regex: =
 Page 59 Maria: -------- begin text --------
@@ -3161,13 +3253,13 @@ Page 83 Ego: -------- begin text --------
 * {{audio|de|De-Ego.ogg|Audio}}
 
 ===Noun===
-{{de-noun|n|Ego|Egos}}
+{{de-noun|n,-:s,s}}
 
 # [[ego]]
 #: {{syn|de|Ich}}
 
 ====Declension====
-{{de-decl-noun-n|s|s}}
+{{de-ndecl|n,-:s,s}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -3185,13 +3277,13 @@ Page 84 Elf: -------- begin text --------
 From {{m|de|elf||eleven}}.
 
 ====Noun====
-{{de-noun|f||old=1}}
+{{de-noun|f}}
 
 # (a group of) [[eleven]]
 # [[football]] [[team]], [[XI]] (so called because eleven is the number of players on such a team)
 
 =====Declension=====
-{{de-decl-noun-f}}
+{{de-ndecl|f}}
 
 =====Hyponyms=====
 * {{l|de|Nationalelf}}
@@ -3276,9 +3368,14 @@ From {{inh|de|gmh|engel}}, from {{inh|de|goh|engil}} from <!--Gothic 𐌰𐌲�
 Short form of given names beginning with ''Engel-'', such as {{m|de|Engelbert}}. Also a nickname for someone with an angelic disposition, or for someone living in a house with a sign of an angel.
 
 ====Proper noun====
-{{de-proper noun|old=1}}
+{{de-proper noun|m,s,s:-.nodatpln}} ''or''<br />
+{{de-proper noun|f,s:-.nodatpln}}
 
 # {{surname|de|from=given names}}
+
+=====Declension=====
+{{de-ndecl|m,s,s:-.nodatpln}}
+{{de-ndecl|f,s:-.nodatpln}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -3436,7 +3533,7 @@ Page 91 Handball: -------- begin text --------
 * {{audio|de|De-Handball.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m,(e)s,^e}}
+{{de-noun|m,es:s,^e}}
 
 # {{lb|de|uncountable}} [[handball]] {{gloss|Olympic team sport}}
 # {{lb|de|countable}} [[handball]] {{gloss|the ball used in this sport}}
@@ -3445,7 +3542,7 @@ Page 91 Handball: -------- begin text --------
 * Not used for the foul in association football; for that see {{m|de|Handspiel}}.
 
 ====Declension====
-{{de-ndecl|m,(e)s,^e}}
+{{de-ndecl|m,es:s,^e}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -3464,7 +3561,7 @@ From {{der|de|gml|heck||wooden fencing}}, from {{der|de|osx|*hekki}}, from {{der
 * {{audio|de|De-Heck.ogg|Audio}}
 
 ===Noun===
-{{de-noun|n,(e)s,s:e}}
+{{de-noun|n,s:es,s:e}}
 
 # [[stern]] (of a ship)
 # [[tail]] (of an aeroplane)
@@ -3474,7 +3571,7 @@ From {{der|de|gml|heck||wooden fencing}}, from {{der|de|osx|*hekki}}, from {{der
 * The more common plural is '''''Hecks'''''.
 
 ====Declension====
-{{de-ndecl|n,(e)s,s:e}}
+{{de-ndecl|n,s:es,s:e}}
 
 ====Antonyms====
 * {{sense|stern, tail}} {{l|de|Bug|g=m|gloss=bow}}
@@ -3661,12 +3758,12 @@ Page 98 Joule: -------- begin text --------
 * {{audio|de|De-Joule.ogg|Audio}}
 
 ===Noun===
-{{de-noun|n|Joule|gen2=Joules|Joule}}
+{{de-noun|n,-:s,-.nodatpln}}
 
 # [[joule]]
 
 ====Declension====
-{{de-decl-noun-n|(s)|dp=Joule}}
+{{de-ndecl|n,-:s,-.nodatpln}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -3802,13 +3899,12 @@ Page 101 Kai: -------- begin text --------
 17th century, from {{bor|de|nl|kaai}}, from {{der|de|dum|kaey}} (whence also through hypercorrection {{cog|nl|kade}}). The word is ultimately [[Celtic]], but it is unsettled whether the Dutch form is borrowed via {{der|de|fro|kay}}, as traditionally held, or indeed vice versa.
 
 ====Noun====
-{{de-noun|m|Kais|gen2=Kaies|Kais|pl2=Kaie}}
+{{de-noun|m,s,s:e[uncommon]}}
 
 # [[wharf]], [[quay]]
 
 =====Declension=====
-{{de-decl-noun-m|s|s}}
-{{de-decl-noun-m|(e)s|e}}
+{{de-ndecl|m,s,s:e[uncommon]}}
 
 =====Descendants=====
 * {{desc|pl|keja|bor=1}}
@@ -3818,10 +3914,14 @@ Page 101 Kai: -------- begin text --------
 Taken into regular use in the 20th century; either borrowed from {{bor|de|da|Kaj}}, or from a {{der|de|fy|-}} baby talk form of {{m|fy|Kaimbe}}, {{m|fy|Kempe||fighter, warrior}}, {{m|fy|Gerrit||[[Gerard]]}}, {{m|fy|Cornelis||[[Cornelius]]}} and {{m|fy|Kleis||[[Nicholas]]}}.
 
 ====Proper noun====
-{{de-proper noun|m:f,s}}
+{{de-proper noun|m:f,s,s}}
 
 # {{lb|de|chiefly|Northern Germany}} {{given name|de|male}}
 # {{lb|de|rare}} {{given name|de|female|dim=Katharina}}
+
+=====Declension=====
+{{de-ndecl|m,s,s}}
+{{de-ndecl|f,s.gen:s}}
 
 =====Alternative forms=====
 * {{l|de|Kaj}}, {{l|de|Kay}}
@@ -3833,25 +3933,25 @@ Page 102 Khan: Found match for regex: {
 Page 102 Khan: -------- begin text --------
 {{wikipedia|lang=de}}
 
+===Alternative forms===
+* {{alter|de|Chan}}
+
 ===Etymology===
 From {{der|de|fro|chan}}, from {{der|de|ML.|canus}}, {{m|la|caanus}}, of {{der|de|trk|-}} origin, from {{der|de|otk||xān|t=Central Asian khan}}, probably ultimately of non-Turkic (Central Asian) origin.<ref>{{R:American_Heritage_Dictionary|khan}}</ref>
-
-===Noun===
-{{de-noun|m||Khane}}
-
-# [[khan]]
-
-====Alternative forms====
-* {{alter|de|Chan}}
 
 ===Pronunciation===
 * {{audio|de|De-Khan.ogg|Audio}}
 
-====Related terms====
-* {{l|de|Khanat}}
+===Noun===
+{{de-noun|m}}
+
+# [[khan]]
 
 ====Declension====
-{{de-decl-noun-m|(e)s|e}}
+{{de-ndecl|m}}
+
+====Related terms====
+* {{l|de|Khanat}}
 
 ===References===
 <references/>
@@ -3867,7 +3967,7 @@ Page 103 Kraken: -------- begin text --------
 ===Noun===
 {{head|de|noun form|g=f|g2=m}}
 
-# {{plural of|de|Krake}}
+# {{inflection of|de|Krake||acc//dat//gen|s|;|nom//acc//dat//gen|p}}
 # {{lb|de|obsolete|Magic: The Gathering}} {{syn of|de|Krake||[[kraken]]}}
 
 ===Proper noun===
@@ -3893,12 +3993,12 @@ From {{inh|de|gmh|lap}}, from {{inh|de|goh|lab}}, of {{unknown|de|notext=1}} unc
 * {{rhymes|de|aːp|s=1}}
 
 ===Noun===
-{{de-noun|n||Labe|gen2=Labes}}
+{{de-noun|n,s:es}}
 
 # [[rennet]]
 
 ====Declension====
-{{de-decl-noun-m|(e)s|e}}
+{{de-ndecl|n,s:es}}
 
 ====Derived terms====
 * {{l|de|Labkraut}}
@@ -3920,7 +4020,7 @@ Page 105 Leopard: -------- begin text --------
 * {{audio|de|De-Leopard.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m|Leoparden|Leoparden|f=Leopardin}}
+{{de-noun|((<m.weak>,<m.[in speech].gen:+[rare]>))|f=in}}
 
 # [[leopard]]
 
@@ -3928,7 +4028,7 @@ Page 105 Leopard: -------- begin text --------
 The word may follow either weak or strong declension. In the genitive singular, it is almost always weak; in the accusative and dative however, both the weak and strong forms are possible, the former predominant in writing and the latter in speech.
 
 ====Declension====
-{{de-decl-noun-m|en|en|ds=Leoparden/~|as=Leoparden/~}}
+{{de-ndecl|((<m.weak>,<m.[in speech].gen:+[rare]>))|f=in}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -3941,16 +4041,27 @@ Page 106 Limo: -------- begin text --------
 ===Pronunciation===
 * {{audio|de|De-Limo.ogg|Audio}}
 
-===Noun===
-{{de-noun|f|Limo|Limo|pl2=Limos}}
+===Etymology 1===
 
-{{de-noun|n|Limo|gen2=Limos|Limo|pl2=Limos}}
+====Noun====
+{{de-noun|f,s:-}} ''or''<br />
+{{de-noun|n,-:s,s:-}}
 
 # {{lb|de|colloquial}} {{clipping of|de|Limonade}}
 
-====Declension====
-{{de-decl-noun-f|pl=[[Limos]],<br>Limo}}
-{{de-decl-noun-n|(s)|pl=[[Limos]],<br>Limo}}
+=====Declension=====
+{{de-ndecl|f,s:-}}
+{{de-ndecl|n,-:s,s:-}}
+
+===Etymology 2===
+
+====Noun====
+{{de-noun|f,s}}
+
+# {{lb|de|colloquial}} {{clipping of|de|Limousine}}: [[limo]]
+
+=====Declension=====
+{{de-ndecl|f,s}}
 -------- end text --------
 Page 107 Lunch: Found match for regex: =
 Page 107 Lunch: -------- begin text --------
@@ -3963,7 +4074,7 @@ Borrowed from {{bor|de|en|lunch}}.
 * {{audio|de|De-Lunch.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m|g2=n|Lunches|gen2=Lunchs|Lunches|pl2=Lunchs|pl3=Lunche}}
+{{de-noun|m,es:s:-,es:s:e}}
 
 # An English-style midday meal, generally smaller than the German-style [[Mittagessen]].
 #* '''1844''', E. A. Moriarty (translator), {{w|Charles Dickens}} (English author), ''Leben und Abenteuer Martin Chuzzlewit's'', [http://books.google.de/books?id=XmRMAAAAcAAJ&dq=Lunch page 20]:
@@ -3974,7 +4085,7 @@ Borrowed from {{bor|de|en|lunch}}.
 #*: {{quote|de|Dann gibt es schon wieder zu essen. Mein '''Lunch''' liegt doch erst zwei Stunden zurück.|Then it is already time to eat again. My '''lunch''' was only two hours ago.}}
 
 ====Declension====
-{{de-decl-noun-m|(e)s|pl=[[Lunches]], [[Lunchs]], [[Lunche]]}}
+{{de-ndecl|m,es:s:-,es:s:e}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -3988,18 +4099,22 @@ Page 108 Madeleine: -------- begin text --------
 From {{bor|de|fr|Madeleine}}.
 
 ===Proper noun===
-{{head|de|proper noun}}
+{{de-proper noun|f,s.gen:s}}
 
 # {{given name|de|female}}
 
+====Declension====
+{{de-ndecl|f,s.gen:s}}
+
 ===Noun===
-{{de-noun|n|g2=f|Madeleine|Madeleines}}
+{{de-noun|f,s}} ''or''<br />
+{{de-noun|n,s,s}}
 
 # [[madeleine]] {{gloss|small cake}}
 
 ====Declension====
-{{de-decl-noun-n|(s)|s}}
-{{de-decl-noun-f|s}}
+{{de-ndecl|f,s}}
+{{de-ndecl|n,s,s}}
 
 ====Derived terms====
 * {{l|de|Madeleine-Effekt}}
@@ -4022,7 +4137,7 @@ From {{bor|de|la|magnēs|t=[[lodestone]]}}, from {{der|de|grc||μαγνῆτις
 * {{hyph|de|Mag|net}}
 
 ===Noun===
-{{de-noun|m|Magneten|Magneten|gen2=Magnets|gen3=Magnetes|pl2=Magnete}}
+{{de-noun|((<m,es:s.[spoken or written]>,<m.weak.[written only]>))}}
 
 # [[magnet]]
 
@@ -4030,11 +4145,7 @@ From {{bor|de|la|magnēs|t=[[lodestone]]}}, from {{der|de|grc||μαγνῆτις
 The word may be declined according to the strong or the weak pattern. In the written language, both are common; in the regular spoken language, however, the strong declension is predominant.
 
 ====Declension====
-Weak declension:
-{{de-decl-noun-m|en|en}}
-
-Strong declension:
-{{de-decl-noun-m|(e)s|e}}
+{{de-ndecl|((<m,es:s.[spoken or written]>,<m.weak.[written only]>))}}
 
 ====Derived terms====
 * {{l|de|magnetisch}}
@@ -5007,7 +5118,7 @@ Borrowed from {{bor|de|fr|pommes frites|lit=fried apples (of the earth)}}.
 * {{rhymes|de|ɪt|s=2}}
 
 ===Noun===
-{{de-noun|p|head=Pommes frites|old=1}}
+{{de-noun|p|nolinkhead=1}}
 
 # [[french fries]], [[chips]]
 #: {{syn|de|Pommes<g:f-p>|;|Pommfritt|Pommfritts<g:p>}}
@@ -5016,7 +5127,7 @@ Borrowed from {{bor|de|fr|pommes frites|lit=fried apples (of the earth)}}.
 * There is also an uncommon singular form {{m|de|Pomme frite|g=f}}.
 
 ====Declension====
-{{de-decl-noun-f|n=pl}}
+{{de-ndecl|p}}
 
 ====Synonyms====
 * {{l|de|Fritten|g=f-p}}, ''singular'' {{l|de|Fritte|g=f}},
@@ -7628,13 +7739,13 @@ Compare {{cog|da|telt}} (whence {{cog|en|tilt}} + native {{m|en|tild}} from {{co
 * {{audio|de|De-Zelt.ogg|audio}}
 
 ===Noun===
-{{de-noun|n|Zeltes|gen2=Zelts|Zelte}}
+{{de-noun|n,(e)s}}
 
 # [[tent]], [[marquee]]
 #: {{ux|de|Stellen wir unser '''Zelt''' hier auf dieser Wiese auf.|Let's pitch our tent here in this meadow.}}
 
 ====Declension====
-{{de-decl-noun-m|(e)s|e}}
+{{de-ndecl|n,(e)s}}
 
 ====Derived terms====
 {{der4
@@ -7698,7 +7809,7 @@ Page 203 Schal: -------- begin text --------
 * {{rhymes|de|aːl|s=1}}
 
 ===Noun===
-{{de-noun|m|Schals|gen2=Schales|Schals|pl2=Schale}}
+{{de-noun|m,,s:e[less common]}}
 
 # [[scarf]]
 # {{lb|de|less common}} [[shawl]]
@@ -7708,8 +7819,7 @@ Page 203 Schal: -------- begin text --------
 * The commoner plural form is '''''Schals'''''.
 
 ====Declension====
-{{de-decl-noun-m|s|s}}
-{{de-decl-noun-m|(e)s|e}}
+{{de-ndecl|m,,s:e[less common]}}
 
 ===Further reading===
 * {{R:DWDS}}
@@ -7745,15 +7855,12 @@ From {{inh|de|gmh|hirz}}, from {{inh|de|goh|hiruz}}, from {{inh|de|gmw-pro|*heru
 * {{audio|de|De-Hirsch.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m|Hirsches|gen2=Hirschs|gen3=Hirschen|Hirsche|pl2=Hirschen|f=Hirschin}}
+{{de-noun|((<m,(e)s>,<m.weak.[also in Southern Germany and Austria]>))|f=in}}
 
 # [[deer]]
 
 ====Declension====
-; Strong declension:
-{{de-decl-noun-m|(e)s|e}}
-; Weak declension:
-{{de-decl-noun-m|en|en}}
+{{de-ndecl|((<m,(e)s>,<m.weak.[also in Southern Germany and Austria]>))}}
 
 ====Derived terms====
 * {{l|de|Hirschkuh}}, {{l|de|Hirschhorn}}, {{l|de|Hirschzecke}}
@@ -7929,13 +8036,13 @@ From {{inh|de|gmh|viehte}}, {{inh|de|goh|fiuhta}}, from {{der|de|gmw-pro|*fiuhti
 * {{hyph|de|Fich|te}}
 
 ===Noun===
-{{de-noun|f||Fichten}}
+{{de-noun|f}}
 
-# {{lb|de|countable}} A [[spruce]]; the common tree {{qualifier|Picea}}
+# {{lb|de|countable}} a [[spruce]]; the common tree {{qualifier|Picea}}
 # {{lb|de|countable}} [[spruce]]; the [[wood]] and [[timber]] of the tree
 
 ====Declension====
-{{de-decl-noun-f|n}}
+{{de-ndecl|f}}
 [[File:Fichte Holz.JPG|thumb|225px|''Fichtenholz'' — Spruce wood (2)]]
 
 ====Synonyms====
@@ -7987,9 +8094,14 @@ From {{inh|de|gmh|viehte}}, {{inh|de|goh|fiuhta}}, from {{der|de|gmw-pro|*fiuhti
 }}
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|m,(s),(s)}} ''or'' <br />
+{{de-proper noun|f,(s)}}
 
 # {{surname|de}}
+
+====Declension====
+{{de-ndecl|m,(s),(s)}}
+{{de-ndecl|f,(s)}}
 
 {{C|de|Conifers|Trees}}
 -------- end text --------
@@ -8004,9 +8116,8 @@ Page 209 Spargel: -------- begin text --------
 * {{audio|de|De-Spargel.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m||Spargel}}
-
-{{de-noun|f||Spargeln}}
+{{de-noun|m}} ''or alternatively (in the southern language area)''<br />
+{{de-noun|f}}
 
 # {{lb|de|usually|uncountable}} [[asparagus]]
 #* {{quote-book|de|year=1856|author=Johann Christoph Gottlob Weise|authorlink=de:Johann Christoph Gottlob Weise|title=Der vollkommene Melonen-, Gurken-, Artischocken-, Spargel- u. Champignongärtner|pageurl=https://books.google.de/books?id=B5lJAAAAIAAJ&pg=PA101&hl=de&cd=3&source=gbs_api#v=onepage|page=101|passage=Die Erhöhung mit Erde im Frühjahre ist deshalb nothwendig, damit der '''Spargel''' tief zu liegen komme; denn liegt er nicht tief genug, so muß man die Sprossen  immer etwas über die Erde heraustreiben lassen, {{...}}|translation=The incrementing with soil is necessary to make the '''asparagus''' lie deep; because if he doesn’t lie deep enough, you always have to let the sprouts grow out of the earth a bit.}}
@@ -8017,8 +8128,8 @@ Page 209 Spargel: -------- begin text --------
 * The word is exclusively masculine in northern and central Germany. It may alternatively be feminine in southern regions. In writing this is now chiefly restricted to Switzerland.
 
 ====Declension====
-{{de-decl-noun-m|s}}
-{{de-decl-noun-f|n}}
+{{de-ndecl|m}}
+{{de-ndecl|f}}
 
 ====Derived terms====
 {{rel4|de|Fichtenspargel|Spargelstechen|Spargelbohne|Spargelfliege|Spargelkohl|Spargelsilvester|Spargelstange|Spargeltarzan|Spargelzeit}}
@@ -8036,12 +8147,12 @@ Page 210 Bolivien-Tropfenameisenwürger: Found match for regex: =
 Page 210 Bolivien-Tropfenameisenwürger: -------- begin text --------
 
 ===Noun===
-{{de-noun|head=[[Bolivien]]-[[Tropfenameisenwürger]]|m|Bolivien-Tropfenameisenwürgers|Bolivien-Tropfenameisenwürger}}
+{{de-noun|m}}
 
 # [[Bolivian slaty antshrike]]
 
 ====Declension====
-{{de-decl-noun-m|s|}}
+{{de-ndecl|m}}
 
 ====Related terms====
 * {{l|de|Ameisenwürger}}
@@ -8054,12 +8165,12 @@ Page 211 Flussufer-Ameisenwürger: Found match for regex: =
 Page 211 Flussufer-Ameisenwürger: -------- begin text --------
 
 ===Noun===
-{{de-noun|m|head=[[Flussufer]]-[[Ameisenwürger]]||Flussufer-Ameisenwürger}}
+{{de-noun|m}}
 
 # [[Castelnau's antshrike]]
 
 ====Declension====
-{{de-decl-noun-m|s|}}
+{{de-ndecl|m}}
 
 ====Related terms====
 * {{l|de|Ameisenwürger}}
@@ -8067,8 +8178,6 @@ Page 211 Flussufer-Ameisenwürger: -------- begin text --------
 * {{l|de|Ufer}}
 
 {{C|de|Antshrikes}}
-
-{{cln|de|nouns}}
 -------- end text --------
 Page 212 Nördlicher Schwarzameisenwürger: Found match for regex: =
 Page 212 Nördlicher Schwarzameisenwürger: -------- begin text --------
@@ -8098,12 +8207,12 @@ From {{compound|de|Bock|Käfer|gloss1=he-goat|gloss2=beetle}}.
 {{rfap|de}}
 
 ===Noun===
-{{de-noun|m|Bockkäfers|Bockkäfer}}
+{{de-noun|m}}
 
 # [[longhorn beetle]]
 
 ====Declension====
-{{de-decl-noun-m||pl=Bockkäfer}}
+{{de-ndecl|m}}
 
 ====Related terms====
 {{rel3|de
@@ -8144,7 +8253,7 @@ From {{inh|de|gem-pro|*skībǭ}}, {{m|gem-pro|*skif-}}, from {{der|de|ine-pro|*s
 * {{hyphenation|de|Schei|be}}
 
 ===Noun===
-{{de-noun|f||Scheiben|Scheibchen}}
+{{de-noun|f}}
 
 # [[disc]]
 # [[pane]]
@@ -8153,7 +8262,7 @@ From {{inh|de|gem-pro|*skībǭ}}, {{m|gem-pro|*skif-}}, from {{der|de|ine-pro|*s
 # [[puck]]
 
 ====Declension====
-{{de-decl-noun-f|n}}
+{{de-ndecl|f}}
 
 ====Related terms====
 {{rel3|de
@@ -8183,9 +8292,14 @@ From {{inh|de|gem-pro|*skībǭ}}, {{m|gem-pro|*skif-}}, from {{der|de|ine-pro|*s
 * {{desc|ru|шайба|bor=1}}
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|m,(s),(s)}} ''or'' <br />
+{{de-proper noun|f,(s)}}
 
 # {{surname|de}}
+
+====Declension====
+{{de-ndecl|m,(s),(s)}}
+{{de-ndecl|f,(s)}}
 
 ===Further reading===
 * {{R:DWDS}}
@@ -8199,7 +8313,7 @@ Page 215 SB: Found match for regex: =
 Page 215 SB: -------- begin text --------
 
 ===Noun===
-{{de-noun|old=1}} {{attn|de|This was created by someone ignorant of German's grammatical system, the default information displayed is very likely wrong.}}
+{{de-noun|f}}
 
 # {{acronym of|de|Selbstbedienung}}
 
@@ -8217,9 +8331,12 @@ From {{der|de|fr|Denise}}.
 * {{audio|de|De-Denise.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|f|Denise'}}
+{{de-proper noun|f,n:s.gen:'}}
 
 # {{given name|de|female|from=French}}
+
+====Declension====
+{{de-ndecl|f,n:s.gen:'}}
 -------- end text --------
 Page 217 Kap Verde: Found match for regex: =
 Page 217 Kap Verde: -------- begin text --------
@@ -8231,6 +8348,9 @@ Page 217 Kap Verde: -------- begin text --------
 {{de-proper noun|n|nolinkhead=1}}
 
 # {{place|de|archipelago/and/country|r/West Africa|t=Cape Verde}}
+
+====Declension====
+{{de-ndecl|n.sg}}
 
 ----
 
@@ -8256,9 +8376,12 @@ From the {{der|de|no|-}} {{m|nb|Tromsø}}.
 * {{hyphenation|de|Troms|ø}}
 
 ===Proper noun===
-{{de-proper noun||Tromsøs}}
+{{de-proper noun|n}}
 
 # {{place|de|city|c/Norway|t=Tromsø}}
+
+====Declension====
+{{de-ndecl|n.sg}}
 
 {{cln|de|terms spelled with Ø}}
 
@@ -8285,9 +8408,13 @@ Page 221 Anden: -------- begin text --------
 * {{audio|de|De-Anden.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun||Anden}}
+{{de-proper noun|p}}
 
-# The [[Andes]] mountain range.
+# the [[Andes]] mountains
+
+====Declension====
+{{de-ndecl|p}}
+
 {{C|de|Mountains|South America}}
 -------- end text --------
 Page 222 Isis: Found match for regex: {
@@ -8298,16 +8425,22 @@ Page 222 Isis: -------- begin text --------
 <div>From {{der|de|grc|Ἶσις||Isis}}, from {{der|de|egy|ꜣst|<hiero>st-t:H8-B1</hiero>|tr={{l|egy|ꜣst}}}}.</div>
 
 ====Proper noun====
-{{de-proper noun|f|Isis'|gen2=Isis}}
+{{de-proper noun|f.gen:':-}}
 
-# [[#English|Isis]].
+# [[#English|Isis]]
+
+=====Declension=====
+{{de-ndecl|f.gen:':-}}
 
 ===Etymology 2===
 
 ====Proper noun====
-{{de-proper noun|f|Isis'|gen2=Isis}}
+{{de-proper noun|f.gen:':-}}
 
 # {{alternative form of|de|ISIS||[[#English|Isis]]}}
+
+=====Declension=====
+{{de-ndecl|f.gen:':-}}
 
 {{C|de|Egyptian mythology}}
 
@@ -8328,7 +8461,7 @@ From {{inh|de|gmh|buochstabe}}, from {{inh|de|goh|*buohstabo|t=letter, writing}}
 * {{audio|de|De-Buchstabe.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m|Buchstabens|gen2=Buchstaben|Buchstaben}}
+{{de-noun|m,ns:n[less common].weak}}
 
 # [[letter]] (of the [[alphabet]])
 #* '''1931''', [[w:de:Gebhard Mehring|Gebhard Mehring]], ''[[s:de:Schrift und Schrifttum|Schrift und Schrifttum]]'', Silberburg-Verlag, page 21:
@@ -8344,10 +8477,7 @@ From {{inh|de|gmh|buochstabe}}, from {{inh|de|goh|*buohstabo|t=letter, writing}}
 ''Buchstabe'' usually has the genitive singular ''(des) Buchstaben'''s''''' (cf. {{m|de|Name}}). The weak form ''(des) Buchstaben'' does also exist.
 
 ====Declension====
-; Mixed
-{{de-decl-noun-m|ns|n}}
-; Weak
-{{de-decl-noun-m|n|n}}
+{{de-ndecl|m,ns:n[less common].weak}}
 
 ====Derived terms====
 * {{l|de|Buchstäblichkeit}}
@@ -8576,15 +8706,13 @@ Page 227 Phönix: -------- begin text --------
 * {{audio|de|De-Phönix.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m|Phönix|gen2=Phönixes|Phönixe}}
+{{de-noun|m,-:es[less common]}}
 
 # [[phoenix]]
 # {{lb|de|constellation}} the [[constellation]] [[Phoenix]]
 
 ====Declension====
-{{de-decl-noun-m||e}}
-Less common:
-{{de-decl-noun-m|es|e}}
+{{de-ndecl|m,-:es[less common]}}
 
 ====Related terms====
 * {{l|de|Phönixpalme}}
@@ -10176,12 +10304,12 @@ Compound of ''Lor-'' from Latin {{m|la|laurus||laurel}} and {{m|de|Beer}}, old f
 * {{audio|de|De-Lorbeer.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m|Lorbeers|Lorbeeren}}
+{{de-noun|m,s:es,en}}
 
 # [[laurel]], [[bay]]
 
 ====Declension====
-{{de-decl-noun-n|s|en}}
+{{de-ndecl|m,s:es,en}}
 
 ====Derived terms====
 * {{l|de|sich auf seinen Lorbeeren ausruhen}}
@@ -10234,13 +10362,14 @@ From {{inh|de|gmh|pfaht}}, from {{der|de|la|pactum||pact}}. The unshifted onset 
 * {{audio|de|De-Pacht.ogg|Audio}}
 
 ===Noun===
-{{de-noun|f|old=1}}
+{{de-noun|f}}
 
 # [[lease]]
 
 ====Declension====
-{{de-decl-noun-f|en}}
-{{de-decl-noun-m|(e)s|pl=Pächte}}
+{{de-ndecl|f}}
+;Obsolete masculine declension:
+{{de-ndecl|m,(e)s,^e}}
 
 ====Derived terms====
 * {{l|de|pachten}}
@@ -10577,17 +10706,13 @@ From {{inh|de|gmh|schrōt}}, from {{inh|de|goh|scrōt}}, from {{inh|de|gem-pro|*
 * {{rhymes|de|oːt|s=1}}
 
 ===Noun===
-{{de-noun|m|g2=n||gen2=Schrotes|Schrote}}
+{{de-noun|m:n,s:es}}
 
 # crushed [[grain]]
 # [[small shot|small-shot]]
 
 ====Declension====
-Masculine:
-{{de-decl-noun-m|(e)s|e}}
-
-Neuter:
-{{de-decl-noun-n|(e)s|e}}
+{{de-ndecl|m:n,s:es}}
 
 ====Derived terms====
 * {{l|de|schroten}}
@@ -10613,7 +10738,7 @@ Compare {{cog|nds|Swaan}}, {{cog|nl|zwaan}}, {{cog|en|swan}}, {{cog|sv|svan}}.
 * {{rhymes|de|aːn|s=1}}
 
 ===Noun===
-{{de-noun|m|Schwans|gen2=Schwanes|Schwäne|pl2=Schwanen|Schwänchen|dim2=Schwänlein|f=Schwänin}}
+{{de-noun|m,s:es,^e:en[archaic]|dim=^chen,^lein|f=^in}}
 
 # [[swan]] (male or of unspecified sex)
 # {{lb|de|constellation}} the [[constellation]] [[Cygnus]]
@@ -10622,9 +10747,7 @@ Compare {{cog|nds|Swaan}}, {{cog|nl|zwaan}}, {{cog|en|swan}}, {{cog|sv|svan}}.
 * The normal plural is {{m|de||Schwäne}}; the form ''Schwanen'' is archaic.
 
 ====Declension====
-{{de-decl-noun-m|(e)s|pl=Schwäne}}
-Archaic:
-{{de-decl-noun-m|(e)s|en}}
+{{de-ndecl|m,s:es,^e:en[archaic]|dim=^chen,^lein|f=^in}}
 
 ====Hyponyms====
 {{col3|de
@@ -11099,12 +11222,12 @@ Page 282 Spielfeld: -------- begin text --------
 * {{audio|de|De-Spielfeld.ogg|Audio}}
 
 ===Noun===
-{{de-noun|n||Spielfelder}}
+{{de-noun|n,(e)s,er}}
 
 # [[field]] (''sports'')
 
 ====Declension====
-{{de-decl-noun-n|(e)s|er}}
+{{de-ndecl|n,(e)s,er}}
 
 ====Related terms====
 * {{l|de|Spielgeld}}
@@ -11178,12 +11301,12 @@ From {{inh|de|gmh|wismāt}}, from {{der|de|la|bisemūtum}}, from {{der|de|ar|ب�
 * {{audio|de|De-Wismut.ogg|Audio}}
 
 ===Noun===
-{{de-noun|n|Wismutes|gen2=Wismuts|-}}
+{{de-noun|n:m,s:es.sg}}
 
 # [[bismuth]]
 
 ====Declension====
-{{de-decl-noun-m|(e)s|n=sg}}
+{{de-ndecl|n:m,s:es.sg}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -11204,9 +11327,12 @@ Page 286 Dalai Lama: -------- begin text --------
 * {{audio|de|De-Dalai Lama.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m|nolinkhead=1}}
+{{de-noun|m,s,s|nolinkhead=1}}
 
 # [[#English|Dalai Lama]] {{gloss|head of Tibetan Buddhism}}
+
+====Declension====
+{{de-ndecl|m,s,s}}
 
 ===Further reading===
 * {{R:UniLeipzig|Dalai Lama}}
@@ -11218,13 +11344,12 @@ Page 287 Algarve: -------- begin text --------
 * {{IPA|de|/alˈɡaʁvə/}}
 
 ===Proper noun===
-{{de-proper noun|f|g2=m}}
+{{de-proper noun|f:m,-}}
 
 # {{place|de|traditional region/and/former kingdom|c/Portugal|t1=Algarve}}
 
 ====Declension====
-{{de-decl-noun-f|prop=y|n=sg}}
-{{de-decl-noun-m|prop=y|n=sg}}
+{{de-ndecl|f:m,-.sg}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -11240,6 +11365,9 @@ Page 288 Big Mac: -------- begin text --------
 {{de-noun|m,-:s,s|nolinkhead=1}}
 
 # {{alternative form of|de|Big Mäc}}
+
+====Declension====
+{{de-ndecl|m,-:s,s}}
 
 ----
 
@@ -25538,12 +25666,12 @@ Borrowed from {{bor|de|en|Big Mac}}.
 {{rfap|de}}
 
 ===Noun===
-{{de-noun|head=Big Mäc|m|Big Mäc|gen2=Big Mäcs|Big Mäcs}}
+{{de-noun|m,-:s,s|nolinkhead=1}}
 
 # [[Big Mac]]
 
 ====Declension====
-{{de-decl-noun-n|(s)|s}}
+{{de-ndecl|m,-:s,s}}
 -------- end text --------
 Page 874 Letzter: Found match for regex: =
 Page 874 Letzter: -------- begin text --------
