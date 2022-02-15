@@ -111,7 +111,7 @@ add_slots(adjective_slot_list_comparative)
 add_slots(adjective_slot_list_superlative)
 
 local function add(base, slot, stem, ending, footnotes)
-	if not ending then
+	if not ending or base.suppress[ending] then
 		return
 	end
 	local function do_combine_stem_ending(stem, ending)
@@ -206,6 +206,23 @@ local function parse_indicator_spec(angle_bracket_spec, lemma, pagename)
 				end
 				dot_separated_group[1] = rest
 				base[spectype] = com.fetch_specs(iut, dot_separated_group, ":", spectype, nil, parse_err)
+			if rfind(part, "^suppress:") then
+				if #dot_separated_group > 1 then
+					parse_err("Can't specify footnotes with suppress: '" .. table.concat(dot_separated_group) .. "'")
+				end
+				if base.suppress then
+					parse_err("Can't specify value for 'suppress:' twice")
+				end
+				part = rsub(part, "suppress:", "")
+				local endings = rsplit(part, "%s*:%s*")
+				local suppress = {}
+				for _, ending in ipairs(endings) do
+					if ending ~= "e" and ending ~= "em" and ending ~= "en" and ending ~= "er" and ending ~= "es" then
+						parse_err("Unrecognized ending '" .. ending .. "' in suppress: spec: '" .. table.concat(dot_separated_group) .. "'")
+					end
+					suppress[ending] = true
+				end
+				base.suppress = suppress
 			elseif part:find(":") then
 				local slot, override = parse_override(dot_separated_group)
 				if base.overrides[slot] then
@@ -219,7 +236,7 @@ local function parse_indicator_spec(angle_bracket_spec, lemma, pagename)
 				end
 				base.footnotes = com.fetch_footnotes(dot_separated_group, parse_err)
 			elseif #dot_separated_group > 1 then
-				parse_err("Footnotes only allowed with slot overrides or by themselves: '" .. table.concat(dot_separated_group) .. "'")
+				parse_err("Footnotes only allowed with slot overrides, comp:, sup:, stem: or by themselves: '" .. table.concat(dot_separated_group) .. "'")
 			elseif part == "ss" or part == "sync_n" or part == "sync_mn" or part == "sync_mns" then
 				if base.props[part] then
 					parse_err("Can't specify '" .. part .. "' twice")
