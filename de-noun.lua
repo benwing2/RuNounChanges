@@ -459,9 +459,7 @@ local function decline_adjective(base)
 	local function insert_footnotes(footnotes)
 		if footnotes then
 			for _, footnote in ipairs(footnotes) do
-				ins("[")
 				ins(footnote)
-				ins("]")
 			end
 		end
 	end
@@ -760,10 +758,10 @@ local function parse_indicator_spec(angle_bracket_spec, lemma, pagename, proper_
 				if base.props.adj then
 					errmsg = "Footnotes only allowed with slot overrides, 'stem:' or by themselves"
 				else
-					errmsg = "Footnotes only allowed with slot overrides or by themselves"
+					errmsg = "Footnotes only allowed with genitive, plural, slot overrides or by themselves"
 				end
 				parse_err(errmsg .. ": '" .. table.concat(dot_separated_group) .. "'")
-			elseif not base.props.adj and (part == "sg" or part == "both") then
+			elseif part == "sg" or part == "both" then
 				if base.number then
 					if base.number ~= part then
 						parse_err("Can't specify '" .. part .. "' along with '" .. base.number .. "'")
