@@ -446,8 +446,50 @@ end
 
 
 local function decline_adjective(base)
-	local adj_alternant_multiword_spec = require("Module:User:Benwing2/de-adjective").do_generate_forms(
-		{base.lemma .. "<>"}
+	-- Construct an equivalent call to {{de-adecl}} based on the adjective indicators we fetched.
+	local adj_spec_parts = {}
+	local function ins(val)
+		table.insert(adj_spec_parts, val)
+	end
+	local function ins_dot()
+		if #adj_spec_parts > 0 then
+			ins(".")
+		end
+	end
+	local function insert_footnotes(footnotes)
+		if footnotes then
+			for _, footnote in ipairs(footnotes) do
+				ins("[")
+				ins(footnote)
+				ins("]")
+			end
+		end
+	end
+	if base.adj_stem then
+		ins("stem")
+		for _, stem in ipairs(base.adj_stem) do
+			ins(":")
+			ins(stem.form)
+			insert_footnotes(stem.footnotes)
+		end
+	end
+	if base.adj_suppress then
+		ins_dot()
+		ins("suppress:")
+		ins(base.adj_suppress)
+	end
+	if base.footnotes then
+		ins_dot()
+		insert_footnotes(base.footnotes)
+	end
+	for prop, _ in pairs(base.props) do
+		if prop ~= "adj" and prop ~= "overall_adj" then
+			ins_dot()
+			ins(prop)
+		end
+	end
+	local adj_alternant_multiword_spec = require("Module:de-adjective").do_generate_forms(
+		{base.lemma .. "<" .. table.concat(adj_spec_parts) .. ">"}
 	)
 	local function copy(from_slot, to_slot)
 		base.forms[to_slot] = adj_alternant_multiword_spec.forms[from_slot]
@@ -685,6 +727,15 @@ local function parse_indicator_spec(angle_bracket_spec, lemma, pagename, proper_
 						base.number = "pl"
 					end
 				end
+			elseif base.props.adj and part:find("^stem:") then
+				dot_separated_group[1] = rsub(part, "^stem:", "")
+				base.adj_stem = com.fetch_specs(iut, dot_separated_group, ":", "adjectival stem", nil, parse_err)
+			elseif base.props.adj and part:find("^suppress:") then
+				if #dot_separated_group > 1 then
+					parse_err("Can't specify footnotes with suppress: '" .. table.concat(dot_separated_group) .. "'")
+				end
+				-- No need to parse or validate more. Will happen in [[Module:de-adjective]].
+				base.adj_suppress = rsub(part, "suppress:", "")
 			elseif part == "" then
 				if #dot_separated_group == 1 then
 					parse_err("Blank indicator")
@@ -692,6 +743,7 @@ local function parse_indicator_spec(angle_bracket_spec, lemma, pagename, proper_
 				base.footnotes = com.fetch_footnotes(dot_separated_group, parse_err)
 			elseif part:find(":") then
 				-- override
+				-- FIXME: Handle adjectival overrides
 				local case_prefix = usub(part, 1, 3)
 				if case_set[case_prefix] then
 					local slot, slot_indicator, override = parse_override(dot_separated_group)
@@ -704,8 +756,14 @@ local function parse_indicator_spec(angle_bracket_spec, lemma, pagename, proper_
 				parse_err("Unrecognized indicator '" .. part .. "'")
 				end
 			elseif #dot_separated_group > 1 then
-				parse_err("Footnotes only allowed with slot overrides or by themselves: '" .. table.concat(dot_separated_group) .. "'")
-			elseif part == "sg" or part == "both" then
+				local errmsg
+				if base.props.adj then
+					errmsg = "Footnotes only allowed with slot overrides, 'stem:' or by themselves"
+				else
+					errmsg = "Footnotes only allowed with slot overrides or by themselves"
+				end
+				parse_err(errmsg .. ": '" .. table.concat(dot_separated_group) .. "'")
+			elseif not base.props.adj and (part == "sg" or part == "both") then
 				if base.number then
 					if base.number ~= part then
 						parse_err("Can't specify '" .. part .. "' along with '" .. base.number .. "'")
@@ -714,12 +772,12 @@ local function parse_indicator_spec(angle_bracket_spec, lemma, pagename, proper_
 					end
 				end
 				base.number = part
-			elseif part == "+" then
-				if base.props.adj then
-					parse_err("Can't specify '+' twice")
+			elseif not base.props.adj and (part == "weak" or part == "ss" or part == "nodatpln") then
+				if base.props[part] then
+					parse_err("Can't specify '" .. part .. "' twice")
 				end
-				base.props.adj = true
-			elseif part == "weak" or part == "ss" or part == "nodatpln" then
+				base.props[part] = true
+			elseif base.props.adj and (part == "ss" or part == "sync_n" or part == "sync_mn" or part == "sync_mns") then
 				if base.props[part] then
 					parse_err("Can't specify '" .. part .. "' twice")
 				end
