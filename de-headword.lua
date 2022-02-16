@@ -214,7 +214,8 @@ pos_functions.nouns = function(class, args, data, proper)
 		return old_nouns(class, args, data)
 	end
 
-	local alternant_multiword_spec = require("Module:de-noun").do_generate_forms(args, nil, "from headword", proper)
+	local m_de_noun = require("Module:de-noun")
+	local alternant_multiword_spec = m_de_noun.do_generate_forms(args, nil, "from headword", proper)
 	data.heads = alternant_multiword_spec.args.head
 	data.genders = alternant_multiword_spec.genders
 
@@ -293,14 +294,24 @@ pos_functions.nouns = function(class, args, data, proper)
 		table.insert(data.inflections, {label = table.concat(weakdesc, " or ")})
 	end
 	local overall_adj = alternant_multiword_spec.props.overall_adj
+	local surname = alternant_multiword_spec.props.surname
 	if not alternant_multiword_spec.first_noun and alternant_multiword_spec.first_adj then
 		table.insert(data.inflections, {label = "adjectival"})
+	end
+	if surname then
+		table.insert(data.inflections, {label = "surname"})
 	end
 	if alternant_multiword_spec.number == "pl" then
 		table.insert(data.inflections, {label = glossary_link("plural only")})
 		if overall_adj then
 			do_noun_form("wk_nom_p", "definite plural", nil, nil, nil, "[[die]]")
 		end
+	elseif surname then
+		do_noun_form("gen_m_s", glossary_link("masculine") .. " " .. glossary_link("genitive"),
+			true)
+		do_noun_form("gen_f_s", glossary_link("feminine") .. " " .. glossary_link("genitive"),
+			true)
+		do_noun_form("nom_p", "plural", true)
 	else
 		local weak_nom_prefixes = {}
 		local weak_gen_prefixes = {}
@@ -347,9 +358,7 @@ pos_functions.nouns = function(class, args, data, proper)
 	-- Use the "linked" form of the lemma as the head if no head= explicitly given.
 	if #data.heads == 0 then
 		data.heads = {}
-		local lemmas = overall_adj and
-			(alternant_multiword_spec.forms.str_nom_s_linked or alternant_multiword_spec.forms.str_nom_p_linked or {}) or
-			alternant_multiword_spec.forms.nom_s_linked or alternant_multiword_spec.forms.nom_p_linked or {}
+		local lemmas = m_de_noun.get_lemmas(alternant_multiword_spec)
 		for _, lemma_obj in ipairs(lemmas) do
 			-- FIXME, can't yet specify qualifiers or references for heads
 			table.insert(data.heads, alternant_multiword_spec.args.nolinkhead and lemma_obj.form or
