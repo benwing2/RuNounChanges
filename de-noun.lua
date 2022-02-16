@@ -170,16 +170,23 @@ table.insert(adjectival_slot_list_with_linked, {"str_nom_p_linked", "str|nom|p"}
 
 -- Construct linked+article variants.
 local noun_slot_list_with_linked_and_articles = m_table.shallowcopy(noun_slot_list_with_linked)
-local surname_slot_list_with_linked_and_articles = m_table.shallowcopy(surname_slot_list_with_linked)
 local adjectival_slot_list_with_linked_and_articles = m_table.shallowcopy(adjectival_slot_list_with_linked)
 for _, case in ipairs(cases) do
 	for _, number in ipairs(numbers) do
 		for _, def in ipairs(definitenesses) do
 			local slotaccel = {"art_" .. def .. "_" .. case .. "_" .. number, "-"}
 			table.insert(noun_slot_list_with_linked_and_articles, slotaccel)
-			table.insert(surname_slot_list_with_linked_and_articles, slotaccel)
 			table.insert(adjectival_slot_list_with_linked_and_articles, slotaccel)
 		end
+	end
+end
+
+
+local surname_slot_list_with_linked_and_articles = m_table.shallowcopy(surname_slot_list_with_linked)
+for _, case in ipairs(cases) do
+	for _, gender_number in ipairs {"m_s", "f_s", "p" } do
+		local slotaccel = {"art_def_" .. case .. "_" .. gender_number, "-"}
+		table.insert(surname_slot_list_with_linked_and_articles, slotaccel)
 	end
 end
 
@@ -460,6 +467,7 @@ local function decline_surname(base)
 		gen_m_s = "s"
 	end
 	add_spec(base, "gen_m_s", base.gens, gen_m_s)
+	add(base, "gen_m_s", nil, "", {"[with an article]"})
 	add(base, "gen_f_s", nil, "")
 	add(base, "dat_m_s", nil, "")
 	add(base, "dat_f_s", nil, "")
@@ -1123,7 +1131,9 @@ end
 
 
 local function decline_noun_or_adjective(base)
-	if base.props.adj then
+	if base.props.surname then
+		decline_surname(base)
+	elseif base.props.adj then
 		decline_adjective(base)
 	else
 		decline_noun(base)
@@ -1134,7 +1144,7 @@ end
 
 -- Set the overall articles. We can't do this using the normal inflection code as it will produce e.g.
 -- '[[der]] [[und]] [[der]]' for conjoined nouns.
-local function compute_articles(alternant_multiword_spec)
+local function compute_non_surname_articles(alternant_multiword_spec)
 	iut.map_word_specs(alternant_multiword_spec, function(base)
 		for _, genderspec in ipairs(base.genders) do
 			for _, case in ipairs(cases) do
@@ -1150,6 +1160,31 @@ local function compute_articles(alternant_multiword_spec)
 			{form = com.articles.p["ind_" .. case]})
 		iut.insert_form(alternant_multiword_spec.forms, "art_def_" .. case .. "_p",
 			{form = com.articles.p["def_" .. case]})
+	end
+end
+
+
+-- Set the overall surname articles. We can't do this using the normal inflection code as it will produce e.g.
+-- '[[der]] [[und]] [[der]]' for conjoined nouns.
+local function compute_surname_articles(alternant_multiword_spec)
+	for _, gender in ipairs {"m", "f"} do
+		for _, case in ipairs(cases) do
+			iut.insert_form(alternant_multiword_spec.forms, "art_def_" .. case .. "_" .. gender .. "_s",
+				{form = "([[" .. com.articles[gender]["def_" .. case] .. "]])"})
+		end
+	end
+	for _, case in ipairs(cases) do
+		iut.insert_form(alternant_multiword_spec.forms, "art_def_" .. case .. "_p",
+			{form = "([[" .. com.articles.p["def_" .. case] .. "]])"})
+	end
+end
+
+
+local function compute_articles(alternant_multiword_spec)
+	if alternant_multiword_spec.props.surname then
+		compute_surname_articles(alternant_multiword_spec)
+	else
+		compute_non_surname_articles(alternant_multiword_spec)
 	end
 end
 
@@ -1410,49 +1445,49 @@ local noun_template_surname = [=[
 <div class="NavHead">{title}{annotation}</div>
 <div class="NavContent">
 {\op}| border="1px solid #505050" style="border-collapse:collapse; background:#FAFAFA; text-align:center; width:100%" class="inflection-table inflection-table-de inflection-table-de-{decl_type}"
-! style="background:#AAB8C0;width:13%" |
+! rowspan="2" style="background:#AAB8C0;width:13%" |
 ! colspan="4" style="background:#AAB8C0" | singular
 ! colspan="2" rowspan="2" style="background:#AAB8C0" | plural
 |-
-! colspan="2" style="background:#AAB8C0" |
-! style="background:#AAB8C0;width:23%" | masculine
-! style="background:#AAB8C0;width:23%" | feminine
+! colspan="2" style="background:#AAB8C0;width:23%" | masculine
+! colspan="2" style="background:#AAB8C0;width:23%" | feminine
 |-
 ! style="background:#BBC9D0" |
-! style="background:#BBC9D0;width:6%" | [[indefinite article|indef.]]
 ! style="background:#BBC9D0;width:6%" | [[definite article|def.]]
-! colspan="2" style="background:#BBC9D0;width:46%" | noun
+! style="background:#BBC9D0;width:23%" | noun
+! style="background:#BBC9D0;width:6%" | [[definite article|def.]]
+! style="background:#BBC9D0;width:23%" | noun
 ! style="background:#BBC9D0;width:6%" | [[definite article|def.]]
 ! style="background:#BBC9D0;width:23%" | noun
 |-
 ! style="background:#BBC9D0" | nominative
-| style="background:#EEEEEE" | {art_ind_nom_s}
-| style="background:#EEEEEE" | {art_def_nom_s}
+| style="background:#EEEEEE" | {art_def_nom_m_s}
 | {nom_m_s}
+| style="background:#EEEEEE" | {art_def_nom_f_s}
 | {nom_f_s}
 | style="background:#EEEEEE" | {art_def_nom_p}
 | {nom_p}
 |-
 ! style="background:#BBC9D0" | genitive
-| style="background:#EEEEEE" | {art_ind_gen_s}
-| style="background:#EEEEEE" | {art_def_gen_s}
+| style="background:#EEEEEE" | {art_def_gen_m_s}
 | {gen_m_s}
+| style="background:#EEEEEE" | {art_def_gen_f_s}
 | {gen_f_s}
 | style="background:#EEEEEE" | {art_def_gen_p}
 | {gen_p}
 |-
 ! style="background:#BBC9D0" | dative
-| style="background:#EEEEEE" | {art_ind_dat_s}
-| style="background:#EEEEEE" | {art_def_dat_s}
+| style="background:#EEEEEE" | {art_def_dat_m_s}
 | {dat_m_s}
+| style="background:#EEEEEE" | {art_def_dat_f_s}
 | {dat_f_s}
 | style="background:#EEEEEE" | {art_def_dat_p}
 | {dat_p}
 |-
 ! style="background:#BBC9D0" | accusative
-| style="background:#EEEEEE" | {art_ind_acc_s}
-| style="background:#EEEEEE" | {art_def_acc_s}
+| style="background:#EEEEEE" | {art_def_acc_m_s}
 | {acc_m_s}
+| style="background:#EEEEEE" | {art_def_acc_f_s}
 | {acc_f_s}
 | style="background:#EEEEEE" | {art_def_acc_p}
 | {acc_p}
@@ -1630,7 +1665,9 @@ local function make_table(alternant_multiword_spec)
 	end
 
 	local table_spec
-	if alternant_multiword_spec.props.overall_adj then
+	if alternant_multiword_spec.props.surname then
+		table_spec = noun_template_surname
+	elseif alternant_multiword_spec.props.overall_adj then
 		table_spec =
 			alternant_multiword_spec.number == "sg" and adjectival_template_sg or
 			alternant_multiword_spec.number == "pl" and rsub(rsub(adjectival_template_sg, "singular", "plural"), "_s}", "_p}") or
