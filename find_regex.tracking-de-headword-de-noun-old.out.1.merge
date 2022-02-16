@@ -109,12 +109,12 @@ Page 4 Bahamas: -------- begin text --------
 * {{audio|de|De-Bahamas.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|p}}
+{{de-proper noun|p.article}}
 
 # {{place|de|archipelago/and/country|r/Caribbean|t=Bahamas}}
 
 ====Declension====
-{{de-ndecl|p}}
+{{de-ndecl|p.article}}
 
 ----
 
@@ -127,13 +127,13 @@ Page 5 San Marino: -------- begin text --------
 * {{audio|de|De-San Marino.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|n|nolinkhead=1}}
+{{de-proper noun|toponym|nolinkhead=1}}
 
 # {{place|de|microstate|r/Southern Europe|surrounded by|c/Italy|t1=San Marino}}
 # {{place|de|capital city|c:pref/San Marino|t1=San Marino}}
 
 ====Declension====
-{{de-ndecl|n.sg}}
+{{de-ndecl|toponym}}
 
 ====Derived terms====
 * {{l|de|San-Marinese}}
@@ -150,12 +150,12 @@ Page 6 El Salvador: -------- begin text --------
 * {{audio|de|De-El Salvador.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|n|nolinkhead=1}}
+{{de-proper noun|toponym|nolinkhead=1}}
 
 # {{place|de|country|r/Central America|t1=El Salvador}}
 
 ====Declension====
-{{de-ndecl|n.sg}}
+{{de-ndecl|toponym}}
 
 ====Related terms====
 * {{l|de|salvadorianisch}}
@@ -174,12 +174,12 @@ From {{der|de|mos|burkina||honest}} + {{der|de|dyu|faso||father's house}}, {{coi
 * {{audio|de|De-Burkina Faso.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|n|nolinkhead=1}}
+{{de-proper noun|toponym|nolinkhead=1}}
 
 # {{senseid|de|Q965}}{{place|de|country|r/West Africa|t=Burkina Faso}}
 
 ====Declension====
-{{de-ndecl|n.sg}}
+{{de-ndecl|toponym}}
 
 {{C|de|Burkina Faso}}
 
@@ -194,12 +194,12 @@ Page 8 Sierra Leone: -------- begin text --------
 * {{audio|de|De-Sierra Leone.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|n|nolinkhead=1}}
+{{de-proper noun|toponym|nolinkhead=1}}
 
 # {{place|de|country|r/West Africa|t=Sierra Leone}}
 
 ====Declension====
-{{de-ndecl|n.sg}}
+{{de-ndecl|toponym}}
 
 ----
 
@@ -212,12 +212,12 @@ Page 9 Sri Lanka: -------- begin text --------
 * {{audio|de|De-Sri Lanka.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|n|nolinkhead=1}}
+{{de-proper noun|toponym|nolinkhead=1}}
 
 # {{place|de|island/and/country|r/South Asia|t=Sri Lanka}}
 
 ====Declension====
-{{de-ndecl|n.sg}}
+{{de-ndecl|toponym}}
 
 ====Derived terms====
 * {{l|de|Srilanker}}, {{l|de|Sri-Lanker}}, {{l|de|Sri Lanker}}
@@ -233,12 +233,12 @@ Page 10 Costa Rica: -------- begin text --------
 * {{audio|de|De-Costa Rica.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|n|nolinkhead=1}}
+{{de-proper noun|toponym|nolinkhead=1}}
 
 # {{senseid|de|Q800}}{{place|de|country|r/Central America|t1=Costa Rica}}
 
 ====Declension====
-{{de-ndecl|n.sg}}
+{{de-ndecl|toponym}}
 
 ----
 
@@ -440,13 +440,13 @@ From {{der|de|ar|أَبُو ظَبْي}}, probably in part through {{der|de|en|A
 * {{audio|de|De-Abu Dhabi.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|n|nolinkhead=1}}
+{{de-proper noun|toponym|nolinkhead=1}}
 
 # {{place|de|emirate|c/United Arab Emirates|on the southern|gulf/Persian Gulf|t1=Abu Dhabi}}
 # {{place|de|capital city|c/United Arab Emirates|t1=Abu Dhabi}}
 
 ====Declension====
-{{de-ndecl|n.sg}}
+{{de-ndecl|toponym}}
 
 ----
 
@@ -466,14 +466,14 @@ From {{bor|de|en|New York}}.
 * {{audio|de|De-New York.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|n|nolinkhead=1}}
+{{de-proper noun|toponym|nolinkhead=1}}
 
 # {{place|de|largest city|s:pref/New York|and the largest city in the [[United States]]|t1=New York|t2=New York City}}
 # {{place|de|state|c/USA|t=New York}}
 #: {{syn|de|Staat New York}} {{q|more usual because the simplex is normally understood as NYC}}
 
 ====Declension====
-{{de-ndecl|n.sg}}
+{{de-ndecl|toponym}}
 
 ----
 
@@ -519,12 +519,12 @@ Page 18 Salerno: Found match for regex: =
 Page 18 Salerno: -------- begin text --------
 
 ===Proper noun===
-{{de-proper noun|n,-}}
+{{de-proper noun|toponym}}
 
 # {{place|de|city/and/province|r/Campania|c/Italy|t=Salerno}}
 
 ====Declension====
-{{de-ndecl|n,-.sg}}
+{{de-ndecl|toponym}}
 
 ----
 
@@ -595,20 +595,23 @@ Page 20 Sofia: -------- begin text --------
 * {{audio|de|De-Sofia.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|f,s.gen:-:s}}
+{{de-proper noun|f,s.gen:s}}
 
 # {{given name|de|female|varoftype=a less common|varof=Sophia}}
+
+====Declension====
+{{de-ndecl|f,s.gen:s}}
 
 ===Etymology===
 {{bor+|de|bg|Со́фия}}.
 
 ===Proper noun===
-{{de-proper noun|n}}
+{{de-proper noun|toponym}}
 
 # {{place|de|capital city|c/Bulgaria|t1=Sofia}}
 
 ====Declension====
-{{de-ndecl|n.sg}}
+{{de-ndecl|toponym}}
 
 ----
 
@@ -662,14 +665,12 @@ From {{inh|de|gmh|Hesse}}, from {{inh|de|goh|Hesso}}, possibly ultimately derive
 ===Etymology 4===
 
 ====Proper noun====
-{{de-proper noun|m,s,s:-.nodatpln}} ''or''<br />
-{{de-proper noun|f,s:-.nodatpln}}
+{{de-proper noun|surname}}
 
 # {{surname|de|habitational|nodot=1}} for an inhabitant of [[#English|Hesse]]
 
 ====Declension====
-{{de-ndecl|m,s,s:-.nodatpln}}
-{{de-ndecl|f,s:-.nodatpln}}
+{{de-ndecl|surname}}
 
 {{C|de|Hesse}}
 
@@ -723,12 +724,12 @@ Page 23 St. Vincent und die Grenadinen: -------- begin text --------
 * {{audio|de|De-St. Vincent und die Grenadinen.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|m,St\. Vincents und der Grenadinen|head=[[St. Vincent]] [[und]] [[die]] [[Grenadinen]]}}
+{{de-proper noun|toponym,St\. Vincents und der Grenadinen|head=[[St. Vincent]] [[und]] [[die]] [[Grenadinen]]}}
 
 # {{place|de|archipelago/and/country|r/Caribbean|t=Saint Vincent and the Grenadines}}
 
 ====Declension====
-{{de-ndecl|[[St. Vincent]]<n,-:s.sg> [[und]] [[die]]<n,!die:!der.sg> [[Grenadinen]]}}
+{{de-ndecl|toponym,St\. Vincents und der Grenadinen|head=[[St. Vincent]] [[und]] [[die]] [[Grenadinen]]}}
 -------- end text --------
 Page 24 Jesus: Found match for regex: =
 Page 24 Jesus: -------- begin text --------
@@ -769,7 +770,7 @@ From {{compound|de|nieder|t1=low, nether|Lande|t2=lands}}, a plural of {{m|de|La
 * {{hyphenation|de|Nie|der|lan|de}}
 
 ===Proper noun===
-{{de-proper noun|p}}
+{{de-proper noun|p.article}}
 
 # {{place|de|country|r/Western Europe|t=the [[Netherlands]]}}
 #: {{syn|de|Holland<q:somewhat informal>}}
@@ -777,7 +778,7 @@ From {{compound|de|nieder|t1=low, nether|Lande|t2=lands}}, a plural of {{m|de|La
 #*: [...] vorzüglich aus den beiden '''Niederlanden''', Frankreich und Deutschland.
 
 ====Declension====
-{{de-ndecl|p}}
+{{de-ndecl|p.article}}
 
 ====Derived terms====
 {{der4|de
@@ -816,14 +817,12 @@ Page 26 Engels: -------- begin text --------
 ===Etymology 2===
 
 ====Proper noun====
-{{de-proper noun|m,',-:ens}} ''or''<br />
-{{de-proper noun|f,-:ens}}
+{{de-proper noun|surname}}
 
 # {{surname|de}}
 
 =====Declension=====
-{{de-ndecl|m,',-:ens}} ''or''<br />
-{{de-ndecl|f,-:ens}}
+{{de-ndecl|surname}}
 -------- end text --------
 Page 27 Zug: Found match for regex: =
 Page 27 Zug: -------- begin text --------
@@ -904,14 +903,14 @@ From {{inh|de|gmh|zuc}}, {{m|gmh|zug}}, from {{inh|de|goh|zug}}, from {{inh|de|g
 * {{alt|de|ZG}} {{q|canton; {{w|ISO 3166-2:CH}}}}
 
 ====Proper noun====
-{{de-proper noun|n}}
+{{de-proper noun|toponym}}
 
 # {{place|de|t=Zug|canton|c/Switzerland}}
 #: {{syn|de|Kanton Zug}}
 # {{place|de|t=Zug|capital city|can/Zug|c/Switzerland}}
 
 =====Declension=====
-{{de-ndecl|n.sg}}
+{{de-ndecl|toponym}}
 
 =====Derived terms=====
 * {{l|de|Zuger}}, {{l|de|Zugerin}}
@@ -1057,8 +1056,8 @@ From {{inh|de|gmh|brēzel}}, from {{inh|de|goh|breztella}}, {{m|goh|brezitella}}
 * Mostly feminine, but neuter in some regions including Austria.
 
 ====Declension====
-{{de-noun|f}}
-{{de-noun|n}}
+{{de-ndecl|f}}
+{{de-ndecl|n}}
 
 ====Derived terms====
 * {{l|de|Fastenbrezel}}
@@ -1414,12 +1413,12 @@ Page 39 Slowenien: -------- begin text --------
 * {{audio|de|De-Slowenien.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|n}}
+{{de-proper noun|toponym}}
 
 # {{place|de|country|r/Southeast Europe|in the|r/Alps|t=Slovenia}}
 
 ====Declension====
-{{de-ndecl|n.sg}}
+{{de-ndecl|toponym}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -1437,9 +1436,12 @@ Page 40 Andrea: -------- begin text --------
 * {{hyphenation|de|An|d|rea}}
 
 ===Proper noun===
-{{de-proper noun|f|Andreas}}
+{{de-proper noun|f,s.gen:s}}
 
 # {{given name|de|female|m=Andreas}}
+
+====Declension====
+{{de-ndecl|f,s.gen:s}}
 
 ====Usage notes====
 * The genitive ''Andrea'' can be used after the article {{m|de|der}} (feminine genitive singular).
@@ -1556,12 +1558,12 @@ Page 45 Sophia: -------- begin text --------
 * {{hyphenation|de|So|phi|a}}
 
 ===Proper noun===
-{{de-proper noun|f.gen:-:s:Sophiens}}
+{{de-proper noun|f,s:Sophien.gen:s}}
 
 # {{given name|de|female|eq=Sophia}}
 
 ====Declension====
-{{de-ndecl|f.gen:-:s:Sophiens.sg}}
+{{de-ndecl|f,s:Sophien.gen:s}}
 
 ====Related terms====
 * {{l|de|Sofie}}, {{l|de|Sophie}}, {{l|de|Sonja}}
@@ -1594,12 +1596,12 @@ From {{der|de|la|Judith}}, from {{der|de|he|יְהוּדִית||woman from [[Jud
 * {{audio|de|De-Judith.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|f.gen:s}}
+{{de-proper noun|f,en:s.gen:s}}
 
 # {{given name|de|female|eq=Judith}}
 
 ====Declension====
-{{de-ndecl|f.gen:s.sg}}
+{{de-ndecl|f,en:s.gen:s}}
 
 ====Derived terms====
 * {{l|de|Jutta}} {{q|perhaps}}
@@ -1681,12 +1683,12 @@ Page 50 Angela: -------- begin text --------
 * {{audio|de|De-Angela.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|f.gen:s}}
+{{de-proper noun|f,s.gen:s}}
 
 # {{given name|de|female|from=Latin|eq=Angela}}
 
 ====Declension====
-{{de-ndecl|f.gen:s.sg}}
+{{de-ndecl|f,s.gen:s}}
 
 ====Related terms====
 * {{l|de|Angelika}}, {{l|de|Angelina}}
@@ -1704,13 +1706,13 @@ Page 51 Buenos Aires: -------- begin text --------
 ** {{audio|de|De-Buenos Aires.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|n,'|nolinkhead=1}}
+{{de-proper noun|toponym|nolinkhead=1}}
 
 # {{place|de|capital city|c/Argentina|t1=Buenos Aires}}
 # {{place|de|province|c/Argentina|t1=Buenos Aires}}
 
 ====Declension====
-{{de-ndecl|n,'.sg}}
+{{de-ndecl|toponym}}
 
 ----
 
@@ -1760,12 +1762,12 @@ Page 53 Carla: -------- begin text --------
 {{rfe|de}}
 
 ===Proper noun===
-{{de-proper noun|f.gen:s}}
+{{de-proper noun|f,s.gen:s}}
 
 # {{given name|de|female|m=Carl}}
 
 ====Declension====
-{{de-ndecl|f.gen:s.sg}}
+{{de-ndecl|f,s.gen:s}}
 
 ----
 
@@ -1802,13 +1804,13 @@ Borrowed from {{bor|de|fr|Charlotte}} and {{m|fr|charlotte}}.
 * {{audio|de|De-Charlotte.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|f.gen:-:s}}
+{{de-proper noun|f,s.gen:s}}
 
 # {{given name|de|female|from=French|varform=Lotte|varform2=Lieselotte|varform3=Liselotte}}
 # {{ngd|The digraph ⟨Ch⟩ in the [[Appendix:German spelling alphabet|German spelling alphabet]].}}
 
 ====Declension====
-{{de-ndecl|f.gen:-:s}}
+{{de-ndecl|f,s.gen:s}}
 
 ===Noun===
 {{de-noun|f}}
@@ -1867,12 +1869,12 @@ From {{der|de|la|Hadriānus}}, ultimately from {{der|de|ett|𐌇𐌀𐌕𐌓𐌉
 * {{hyphenation|de|Ad|ri|an}}
 
 ===Proper noun===
-{{de-proper noun|m,-[only with an article]:s,e:s}}
+{{de-proper noun|m,-[only with an article]:s,e:s[colloquial]}}
 
 # {{given name|de|male|eq=Adrian|from=Latin}}
 
 ====Declension====
-{{de-ndecl|m,-[only with an article]:s,e:s}}
+{{de-ndecl|m,-[only with an article]:s,e:s[colloquial]}}
 
 ====Related terms====
 * {{l|de|Adi}}, {{l|de|Adri}}, {{l|de|Adriaen}}, {{l|de|Adrianus}}, {{l|de|Ari}}, {{l|de|Ary}}
@@ -1887,14 +1889,12 @@ Page 58 Siegmeister: -------- begin text --------
 {{compound|de|Sieg|t1=victory|Meister|t2=master}}
 
 ===Proper noun===
-{{de-proper noun|m,s,s:-.nodatpln}} ''or''<br />
-{{de-proper noun|f,s:-.nodatpln}}
+{{de-proper noun|surname}}
 
 # {{surname|de}}
 
 ====Declension====
-{{de-ndecl|m,s,s:-.nodatpln}}
-{{de-ndecl|f,s:-.nodatpln}}
+{{de-ndecl|surname}}
 -------- end text --------
 Page 59 Maria: Found match for regex: =
 Page 59 Maria: -------- begin text --------
@@ -1909,10 +1909,12 @@ From Vulgate {{bor|de|la|Maria}}, from {{der|de|grc|Μαρία}}, {{m|grc|Μαρ
 * {{hyphenation|de|Ma|ri|a}}
 
 ===Proper noun===
-{{de-proper noun|f|g2=m|Marias|gen2=Mariens|gen3=Mariä}}
+{{de-proper noun|f,s.gen:s,Mariens[usually only with the Virgin Mary],Mariä[in fixed Catholic expressions]}}
 
 # {{given name|de|female|eq=Mary}}
-# {{given name|de|male|q=used as a middle name, chiefly by Catholics}}
+
+====Declension====
+{{de-ndecl|f,s.gen:s,Mariens[usually only with the Virgin Mary],Mariä[in fixed Catholic expressions]}}
 
 ====Usage notes====
 * The genitive form ''Mariä'' is restricted to Catholic contexts, and chiefly to the [[Virgin Mary]]. It is now very rare outside of fixed terms like {{m|de|Mariä Verkündigung||Feast of the [[Annunciation]]}}. In contemporary German, the genitive ''Mariens'' is also widely restricted to the Virgin, while the only form commonly used for other persons is ''Marias''.
@@ -1939,6 +1941,14 @@ From Vulgate {{bor|de|la|Maria}}, from {{der|de|grc|Μαρία}}, {{m|grc|Μαρ
 |Meike
 |Mia
 }}
+
+===Proper noun===
+{{de-proper noun|m,s,s}}
+
+# {{given name|de|male|q=used as a middle name, chiefly by Catholics}}
+
+====Declension====
+{{de-ndecl|m,s,s}}
 
 {{C|de|Biblical characters|Individuals}}
 
@@ -2206,9 +2216,12 @@ Masculine form is rare.
 From {{der|de|nds|-}} and {{der|de|fy|-}}.
 
 ====Proper noun====
-{{head|de|proper noun}}
+{{de-proper noun|f,n:s[colloquial].gen:s}}
 
 # {{given name|de|female|dim=Anna|from=Low German|from2=West Frisian}}
+
+=====Declension=====
+{{de-ndecl|f,n:s[colloquial].gen:s}}
 
 ===Etymology 4===
 From {{inh|de|gmh|anke}}, or borrowed from {{bor|de|gsw|Anke}}.
@@ -2297,11 +2310,11 @@ Page 68 Atlas: -------- begin text --------
 * {{audio|de|De-Atlas.ogg|Audio (Berlin)}}
 
 ===Etymology 1===
-From {{bor|de|la|Atlās}} or from {{bor|de|grc|Ἄτλας}}, from the name of the mythological figure {{m|grc|Ἄτλας||Bearer (of the Heavens)}}.
 {{wikipedia|lang=de}}
+From {{bor|de|la|Atlās}} or from {{bor|de|grc|Ἄτλας}}, from the name of the mythological figure {{m|grc|Ἄτλας||Bearer (of the Heavens)}}.
 
 ====Noun====
-{{de-noun|m|Atlas|gen2=Atlasses|gen3=Atlanten|Atlanten|pl2=Atlasse}}
+{{de-noun|m,-:ses:Atlanten,Atlanten}}
 
 # {{lb|de|cartography|or|reference work}} [[atlas]] {{gloss|bound collection of maps}}
 #* '''1902''', ''Geologisches Centralblatt'', volume 2, page 17:
@@ -2309,30 +2322,68 @@ From {{bor|de|la|Atlās}} or from {{bor|de|grc|Ἄτλας}}, from the name of t
 # [[atlas]] {{gloss|bound collection of tables, illustrations on any subject}}
 #* '''2008''', Frank H. Netter, translation by Roland Mühlbauer, ''Atlas der Anatomie'', fourth edition, {{ISBN|978-3-437-41602-6}}, preface:
 #*: {{quote|de|Jeder von ihnen hat einen Abschnitt des '''Atlanten''' gegengelesen, korrigiert und auf den neuesten Stand gebracht.|Each one of them checked, corrected, and brought a chapter of the '''atlas''' up to date.}}
-# {{lb|de|medicine}} [[atlas]] {{gloss|uppermost vertebra of the neck}}
-#* '''1893''', ''Deutsche Zeitschrift für Chirurgie'', volume 35, edited by A. Lücke and E. Rose, page 559:
-#*: {{quote|de|Halswirbel zeigt sich an der rechten unteren Gelenkfläche des '''Atlas''' eine leicht bogenförmige, usurirte [sic] Linie im Gelenkknorpel: {{...}}|The cervical vertebra manifests on the right anterior articular surface of the '''atlas''' a slightly arcuate, abraded line in the articular cartilage: {{...}}}}
 # {{lb|de|uncommon}} [[atlas]] {{gloss|figure of a man used as a column}}
 #: {{syn|de|Atlant}}
 
 =====Declension=====
-{{de-decl-noun-m||se}}
-{{de-decl-noun-m|ses|se}}
-{{de-decl-noun-m|gs=Atlanten|as=Atlanten|ds=Atlanten|pl=Atlanten}}
+{{de-ndecl|m,-:ses:Atlanten,Atlanten}}
+
+====Noun====
+{{de-noun|m,-:ses:Atlanten,se}}
+
+# {{lb|de|medicine}} [[atlas]] {{gloss|uppermost vertebra of the neck}}
+#* '''1893''', ''Deutsche Zeitschrift für Chirurgie'', volume 35, edited by A. Lücke and E. Rose, page 559:
+#*: {{quote|de|Halswirbel zeigt sich an der rechten unteren Gelenkfläche des '''Atlas''' eine leicht bogenförmige, usurirte [sic] Linie im Gelenkknorpel: {{...}}|The cervical vertebra manifests on the right anterior articular surface of the '''atlas''' a slightly arcuate, abraded line in the articular cartilage: {{...}}}}
+
+=====Declension=====
+{{de-ndecl|m,-:ses:Atlanten,se}}
 
 ====Proper noun====
-{{de-proper noun|m|Atlas'}}
+{{de-proper noun|m,-:ses:Atlanten.article}}
 
-# {{lb|de|Greek god}} [[#English|Atlas]] {{gloss|son of [[Iapetus]] and [[Clymene]], leader of the [[Titans]] ordered by [[Zeus]] to support the sky on his shoulders}}
 # {{place|de|mountain range|in northwestern|cont/Africa|t1=the Atlas Mountains}}
+
+=====Declension=====
+{{de-ndecl|m,-:ses:Atlanten.article.sg}}
+
+====Proper noun====
+{{de-proper noun|m.toponym}}
+
 # {{lb|de|astronomy}} [[#English|Atlas]] {{gloss|[[moon]] of [[Saturn]]}}
 # {{lb|de|astronomy}} [[#English|Atlas]] {{gloss|[[star]] in the [[Pleiades]]}}
 # {{lb|de|astronomy}} [[#English|Atlas]] {{gloss|[[crater]] in the first [[quadrant]] of the moon}}
-# a (US) [[#English|Atlas]] intercontinental ballistic missile
+
+=====Declension=====
+{{de-proper noun|m.toponym}}
+
+====Proper noun====
+{{de-proper noun|m,',se}}
+
+# {{lb|de|Greek god}} [[#English|Atlas]] {{gloss|son of [[Iapetus]] and [[Clymene]], leader of the [[Titans]] ordered by [[Zeus]] to support the sky on his shoulders}}
+# {{given name|de}}
+
+=====Declension=====
+{{de-proper noun|m,',se}}
+
+====Proper noun====
+{{de-proper noun|surname}}
+
+# {{surname|de}}
+
+=====Declension=====
+{{de-proper noun|surname}}
+
+====Proper noun====
+{{de-proper noun|f.article}}
+
+# [[#English|Atlas]] {{gl|family of US intercontinental ballistic missiles}}
+
+=====Declension=====
+{{de-ndecl|f.article.sg}}
 
 ===Etymology 2===
-Borrowed from {{bor|de|ar|أَطْلَس}}.
 {{wikipedia|Atlas (Gewebe)|lang=de}}
+Borrowed from {{bor|de|ar|أَطْلَس}}.
 
 ====Noun====
 {{de-noun|m,-:ses.sg}}
@@ -2358,23 +2409,25 @@ Page 69 Au: -------- begin text --------
 * {{audio|de|De-Au.ogg|Audio}}
 
 ===Noun===
-{{de-noun|f||Auen}}
+{{de-noun|f}}
 
 # {{lb|de|chiefly|South Germany|Austria}} {{apocopic form of|de|Aue}}
 
 ====Declension====
-{{de-decl-noun-f|en}}
+{{de-ndecl|f}}
 
 ====Derived terms====
 * {{l|de|Auwald}}
 
-{{wp|lang=de}}
-
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{wp|lang=de}}
+{{de-proper noun|toponym}}
 
 # {{place|de|municipality|s/Vorarlberg|c/Austria}}
 # {{place|de|municipality|can/Saint Gallen|c/Switzerland}}
+
+====Declension====
+{{de-ndecl|toponym}}
 
 ----
 
@@ -2672,13 +2725,13 @@ Borrowed from {{bor|de|en|brand}}.
 ===Etymology 3===
 
 ====Proper noun====
-{{de-proper noun|n}}
+{{de-proper noun|toponym}}
 
 # {{place|de|municipality|s/Vorarlberg|c/Austria}}
 # {{place|de|municipality|s/Bavaria|c/Germany}}
 
 =====Declension=====
-{{de-ndecl|n.sg}}
+{{de-ndecl|toponym}}
 
 ===Further reading===
 * {{R:DWDS}}
@@ -3368,14 +3421,12 @@ From {{inh|de|gmh|engel}}, from {{inh|de|goh|engil}} from <!--Gothic 𐌰𐌲�
 Short form of given names beginning with ''Engel-'', such as {{m|de|Engelbert}}. Also a nickname for someone with an angelic disposition, or for someone living in a house with a sign of an angel.
 
 ====Proper noun====
-{{de-proper noun|m,s,s:-.nodatpln}} ''or''<br />
-{{de-proper noun|f,s:-.nodatpln}}
+{{de-proper noun|surname}}
 
 # {{surname|de|from=given names}}
 
 =====Declension=====
-{{de-ndecl|m,s,s:-.nodatpln}}
-{{de-ndecl|f,s:-.nodatpln}}
+{{de-ndecl|surname}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -3405,11 +3456,14 @@ Page 86 Ester: -------- begin text --------
 {{de-decl-noun-n|s}}
 
 ===Proper noun===
-{{head|de|proper noun}}
+{{de-proper-noun|f,s:-.gen:s}}
 
 # [[Esther]] {{qualifier|biblical character}}
 # the book of Esther
 # {{given name|de|female|varform=Esther|from=Hebrew}}
+
+====Declension====
+{{de-ndecl|f,s:-.gen:s}}
 
 {{C|de|Biblical characters|Books of the Bible|Individuals}}
 
@@ -3426,9 +3480,12 @@ Variant of {{m|de|Florentina}}, the feminine equivalent of {{m|de|Florentin}}, f
 * {{audio|de|De-Florentine.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|f|gen2=Florentines||Florentinen|pl2=Florentines}}
+{{de-proper noun|f,n:s.gen:s}}
 
 # {{given name|de|female|from=Latin}}
+
+====Declension====
+{{de-ndecl|f,n:s.gen:s}}
 -------- end text --------
 Page 88 Format: Found match for regex: =
 Page 88 Format: -------- begin text --------
@@ -3515,9 +3572,12 @@ Page 90 Groß: -------- begin text --------
 {{de-decl-noun-n||e}}
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|surname}}
 
 # {{surname|de|from=nicknames}}
+
+====Declension====
+{{de-ndecl|surname}}
 
 {{C|de|Historical numbers}}
 -------- end text --------
@@ -3602,9 +3662,12 @@ From {{der|de|gml|heck||wooden fencing}}, from {{der|de|osx|*hekki}}, from {{der
 * {{l|de|Steuerbord}} {{qualifier|ship}}
 
 ===Proper noun===
-{{de-proper noun|m|g2=f|Hecks}}
+{{de-proper noun|surname}}
 
 # {{surname|de}}
+
+====Declension====
+{{de-ndecl|surname}}
 
 ===Further reading===
 * {{R:DWDS}}
@@ -3625,9 +3688,12 @@ Page 93 Henry: -------- begin text --------
 {{de-decl-noun-n|n=sg}}
 
 ===Proper noun===
-{{de-proper noun|m|old=1}}
+{{de-proper noun|m,s,s}}
 
 # {{given name|de|male|from=English}}
+
+====Declension====
+{{de-ndecl|m,s,s}}
 
 ----
 
@@ -3640,9 +3706,12 @@ Page 94 Herne: -------- begin text --------
 * {{audio|de|De-Herne.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|toponym}}
 
 # {{place|de|city|s/North Rhine-Westphalia|c/Germany|t1=Herne}}
+
+====Declension====
+{{de-ndecl|toponym}}
 -------- end text --------
 Page 95 Homosexuelle: Found match for regex: =
 Page 95 Homosexuelle: -------- begin text --------
@@ -3778,20 +3847,20 @@ Page 99 Judas: -------- begin text --------
 * {{audio|de|De-Judas.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|m|Judas'}}
+{{de-proper noun|m,':-[with an article]}}
 
 # {{lb|de|biblical character}} [[#English|Judas]]
 
 ====Declension====
-{{de-decl-noun-m|'|n=sg}}
+{{de-ndecl|m,':-[with an article].sg}}
 
 ===Noun===
-{{de-noun|m|Judas|Judasse}}
+{{de-noun|m,-,se}}
 
 # [[#English|Judas]]; [[traitor]]
 
 ====Declension====
-{{de-decl-noun-m||e}}
+{{de-ndecl|m,-,se}}
 
 ====Derived terms====
 * {{l|de|Judaskuss}}
@@ -4234,10 +4303,20 @@ Page 112 Mars: -------- begin text --------
 * {{hyphenation|de|Mars}}
 
 ====Proper noun====
+{{de-proper noun|m,':-[with an article]}}
+
+# {{senseid|de|Q112}} {{lb|de|Roman god}} [[#English|Mars]]
+
+=====Declension=====
+{{de-ndecl|m,':-[with an article].sg}}
+
+====Proper noun====
 {{de-proper noun|m,-}}
 
 # {{senseid|de|Q111}} {{C|de|Planets of the Solar System}} {{lb|de|astronomy}} [[#English|Mars]]
-# {{senseid|de|Q112}} {{lb|de|Roman god}} [[#English|Mars]]
+
+=====Declension=====
+{{de-ndecl|m,-.sg}}
 
 ===Etymology 2===
 From {{der|de|nds}}.
@@ -4332,25 +4411,28 @@ See also {{cog|nl|maan}}, {{cog|en|moon}}, {{cog|sv|måne}}, {{cog|is|máni}}); 
 * {{audio|de|De-at-Mond.ogg|audio (Austria)}}
 
 ===Proper noun===
-{{de-proper noun|m|old=1}}
+{{de-proper noun|m,es:s.article}}
 
-# {{lb|de|astronomy}} The [[Moon]]; [[Earth|Earth's]] only natural satellite, and also a [[luminary]].
+# {{lb|de|astronomy}} the [[Moon]]; [[Earth|Earth's]] only natural satellite, and also a [[luminary]]
 #: {{ux|de|Der '''Mond''' ist so massereich, dass Erde und '''Mond''' zusammen häufig als Doppelplanet bezeichnet werden.|The '''Moon''' has such an enormous mass that Earth and '''Moon''' are often considered as a binary system.}}
 
-===Noun===
-{{de-noun|m|Mondes|gen2=Monds|Monde}}
+====Declension====
+{{de-ndecl|m,es:s.article.sg}}
 
-# {{lb|de|astronomy}} A [[moon]], a natural [[satellite]] that is [[orbit|orbiting]] its corresponding planet
+===Noun===
+{{de-noun|m,es:s}}
+
+# {{lb|de|astronomy}} [[moon]] {{gl|a natural [[satellite]] that is [[orbit|orbiting]] its corresponding planet}}
 #: {{ux|de|Ganymed ist der größte '''Mond''' des Sonnensystems.|Ganymede is the biggest '''moon''' of the Solar System.}}
 #: {{ux|de|Merkur und Venus haben keine natürlichen '''Monde'''.|Mercury and Venus do not possess natural '''moons'''.}}
-# {{lb|de|literary|dated}} A [[month]], especially a [[lunar month]]
+# {{lb|de|literary|dated}} a [[month]], especially a [[lunar month]]
 # {{lb|de|heraldiccharge}} [[moon]] (often used to describe a [[crescent]])
 
 ====Declension====
-{{de-decl-noun-m|(e)s|e}}
+{{de-ndecl|m,es:s}}
 
 '''Old Declension:''' This old declension is not used anymore, but was up until the end of the 18th century.
-{{de-decl-noun-m|en|en}}
+{{de-ndecl|m.weak}}
 
 ====Synonyms====
 * {{sense|Earth's moon}} {{l|de|Luna}}
@@ -4420,13 +4502,13 @@ Page 116 Mutter: -------- begin text --------
 From {{inh|de|gmh|muoter}}, from {{inh|de|goh|muoter}}, from {{inh|de|gem-pro|*mōdēr}}, from {{inh|de|ine-pro|*méh₂tēr}}. Compare {{cog|nl|moeder}}, {{cog|en|mother}}, {{cog|da|moder}}, {{cog|sv|moder}}.
 
 ====Noun====
-{{de-noun|f||Mütter|Mütterchen|dim2=Mütterlein}}
+{{de-noun|f,^|dim=^chen,^lein}}
 
 # [[mother]]
 #: {{ant|de|Vater|Kind}}
 
 =====Declension=====
-{{de-decl-noun-f|pl=Mütter}}
+{{de-ndecl|f,^}}
 
 =====Hypernyms=====
 * {{l|de|Eltern}}
@@ -4648,10 +4730,13 @@ From {{inh|de|gmh|muoter}}, from {{inh|de|goh|muoter}}, from {{inh|de|gem-pro|*m
 * {{desc|bor=1|gmw-cfr|Motter}}
 
 ====Proper noun====
-{{de-proper noun|f|Mutters}}
+{{de-proper noun|f.gen:s.dat:n[archaic or humorous].acc:n[archaic or humorous]}}
 
 # [[Mother]]; [[Mum]]; [[Mom]]
 #: {{syn|de|Mama|Mutti}}
+
+=====Proper noun=====
+{{de-ndecl|f.gen:s.dat:n[archaic or humorous].acc:n[archaic or humorous].sg}}
 
 =====Usage notes=====
 * Chiefly in north-eastern regions, there used to be a colloquial practice of adding {{m|de|-n|-(e)n}} to proper nouns in the dative and accusative cases: {{m|de||ein Geschenk für [[Muttern]]|t=a present for Mother}}. This is now chiefly archaic or humorous. However, the phrase {{m|de|wie bei Muttern|t=like Mum used to make|pos=of food}} has entered general use.
@@ -4674,7 +4759,6 @@ Originally the same as etymology 1, but secondarily distinguished in the plural;
 * {{R:UniLeipzig}}
 * {{R:OpenThesaurus}}
 * {{pedia|lang=de}}
-
 
 {{C|de|Female family members}}
 
@@ -4916,9 +5000,12 @@ From {{der|de|sv|-}}, {{der|de|no|-}} and {{der|de|da|Per}} in the 19th century.
 * {{rhymes|de|eːɐ̯|s=1}}
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|m,s,e:s[colloquial]}}
 
 # {{given name|de|male}}
+
+====Declension====
+{{de-ndecl|m,s,e:s[colloquial]}}
 
 ----
 
@@ -5526,7 +5613,7 @@ Borrowed from {{bor|de|en|soul}}, from {{der|de|enm|-}}, from {{der|de|ang|sāwo
 ===Etymology 2===
 
 ====Proper noun====
-{{de-proper noun|n,-}}
+{{de-proper noun|toponym}}
 
 # {{rare spelling of|de|Seoul}}
 #* {{quote-book
@@ -5536,6 +5623,9 @@ Borrowed from {{bor|de|en|soul}}, from {{der|de|enm|-}}, from {{der|de|ang|sāwo
 |location=Berlin
 |page=166f.
 |passage=Bau der Eisenbahn von '''Soul''' nach Fusan in Korea. Nachdem seit dem Jahre 1900 das koreanische Halbinselreich mit Eröffnung der 42 km langen Eisenbahn von der Hauptstadt des Landes '''Soul''' nach dem an der Westküste gelegenen Hafen Chemulpo in die Reihe der Eisenbahnländer eingetreten ist, beginnt der Eisenbahnbau auch im Lande der „Morgenruhe“ lebhaftere Fortschritte zu machen. {{...}} Dieses Interesse der Japaner an Korea bethätigt sich jetzt besonders lebhaft bei dem in Kürze beginnenden Bau der Bahn von '''Soul''' nach dem an der Südostküste gelegenen Hafenorte Fusan.}}
+
+=====Declension=====
+{{de-ndecl|toponym}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -6169,9 +6259,12 @@ From the adjective {{m|de|weiß}}.
 * {{l|de|Weißwurst}}
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|surname}}
 
 # {{surname|de|common|from=nicknames}}
+
+====Declension====
+{{de-ndecl|surname}}
 
 ===See also===
 {{table:colors/de}}
@@ -6216,12 +6309,12 @@ Page 162 Worms: -------- begin text --------
 From {{inh|de|goh|Warmazia}}, {{m|goh|Wormazia}}, from {{der|de|la|Borbetomagus}}, {{m|la|Bormitomagus}}, from a {{der|de|cel-gau|-}} name apparently composed of a form the name of the god {{w|Borvo}} and {{der|de|cel-pro|*magos|t=field}}.
 
 ===Proper noun===
-{{de-proper noun|n|Worms|gen2=Worms'}}
+{{de-proper noun|toponym}}
 
 # {{place|de|city|s/Rhineland-Palatinate|c/Germany|t=Worms}}
 
 ====Declension====
-{{de-decl-noun-n|gs=Worms'|np=-|gp=-|dp=-|ap=-|notes=The genitive is {{m|de|Worms'}} before another noun, e.g. {{m|de||in Worms' alten Gassen|t=in Worms's old lanes}}; it is {{m|de||Worms}} after the definite article and an adjective, e.g. {{m|de||die Gassen des alten Worms|t=the lanes of old Worms}}.}}
+{{de-ndecl|toponym}}
 
 ===Further reading===
 * {{pedia|lang=de}}
@@ -6338,12 +6431,12 @@ From {{bor|de|fr|Adèle}}, from a {{der|de|gem|-}} root meaning “noble”. Com
 * {{rhymes|de|eːlə}}
 
 ===Proper noun===
-{{de-proper noun|f|Adele|gen2=Adeles|Adelen}}
+{{de-proper noun|f,n:s.gen:s}}
 
 # {{given name|de|female|from=French|eq=Adele|eq2=Adela}}
 
 ====Declension====
-{{de-decl-noun-f|prop=yes|gs=~/Adeles|n}}
+{{de-ndecl|f,n:s.gen:s}}
 
 ----
 
@@ -6462,9 +6555,12 @@ From {{inh|de|gmh|grâve}}.
 ===Etymology 2===
 
 ====Proper noun====
-{{de-proper noun|old=1}}
+{{de-proper noun|surname}}
 
 # {{surname|de}}
+
+====Declension====
+{{de-ndecl|surname}}
 
 ===Etymology 3===
 
@@ -6697,9 +6793,12 @@ From {{inh|de|gmh|būre}}, {{m|gmh|gebūre}}, from {{inh|de|goh|būr}}, {{m|goh|
 {{table:chess pieces/de}}
 
 ====Proper noun====
-{{de-proper noun|old=1}}
+{{de-proper noun|surname}}
 
 # {{surname|de|A=An|[[occupational]]|from=occupations}}
+
+=====Declension=====
+{{de-ndecl|surname}}
 
 ===Etymology 2===
 {{root|de|ine-pro|*bʰuH-}}
@@ -7078,12 +7177,12 @@ From {{der|de|non|Urðr}}.
 * {{audio|de|De-Urd.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|f|Urds|gen2=Urd}}
+{{de-proper noun|f.gen:s:-[with an article]}}
 
 # {{lb|de|Norse mythology}} [[#English|Urd]]
 
 ====Declension====
-{{de-decl-noun-f|gs=Urds/Urd|n=sg}}
+{{de-ndecl|f.gen:s:-[with an article].sg}}
 
 ====Holonyms====
 * {{l|de|Norne}}
@@ -7120,17 +7219,23 @@ Agent noun of {{m|de|richten}}
 * {{l|de|richten}}, {{l|de|Gericht}}
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|surname}}
 
 # {{surname|de|from=occupations}}
+
+====Declension====
+{{de-ndecl|surname}}
 
 ====Derived terms====
 * {{l|de|Richterskala}}
 
 ===Proper noun===
-{{de-proper noun|p|old=1}}
+{{de-proper noun|p}}
 
 # [[Judges]]: [[Book of Judges]] ''(book of the Bible)''
+
+====Declension====
+{{de-ndecl|p}}
 
 ====Synonyms====
 * {{l|de|Ri}} ([[Ri.]])
@@ -7528,9 +7633,12 @@ Substantivization of {{m|de|taub||deaf}}.
 ===Etymology 3===
 
 ====Proper noun====
-{{de-proper noun|m:f,s}}
+{{de-proper noun|surname}}
 
 # {{surname|de}}
+
+=====Declension=====
+{{de-ndecl|surname}}
 
 {{C|de|Columbids}}
 -------- end text --------
@@ -7589,7 +7697,7 @@ Page 195 Sozialdemokratische Partei Deutschlands: Found match for regex: =
 Page 195 Sozialdemokratische Partei Deutschlands: -------- begin text --------
 
 ===Proper noun===
-{{de-proper noun|[[sozialdemokratisch|Sozialdemokratische]]<+> [[Partei]]<f> [[Deutschland]]s}}
+{{de-proper noun|[[sozialdemokratisch|Sozialdemokratische]]<+> [[Partei]]<f> [[Deutschland]]s.article}}
 
 # {{lb|de|German politics}} German Social Democratic Party
 
@@ -7611,7 +7719,7 @@ Page 196 Christlich Demokratische Union: -------- begin text --------
 {{wikipedia|lang=de}}
 
 ===Proper noun===
-{{de-proper noun|[[christlich|Christlich]] [[demokratisch|Demokratische]]<+> [[Union]]<f>}}
+{{de-proper noun|[[christlich|Christlich]] [[demokratisch|Demokratische]]<+> [[Union]]<f>.article}}
 
 # {{lb|de|German politics}} {{w|Christian Democratic Union of Germany}}
 
@@ -7913,9 +8021,12 @@ From {{inh|de|gmh|hanef}}, {{m|gmh|hanif}}, {{m|gmh|hanf}}, from {{inh|de|goh|ha
 * {{l|de|Hänfling}}
 
 ===Proper noun===
-{{de-proper noun|m|g2=f}}
+{{de-proper noun|surname}}
 
 # {{surname|de}}
+
+====Declension====
+{{de-ndecl|surname}}
 
 ===Further reading===
 * {{R:DWDS}}
@@ -8007,9 +8118,12 @@ In official use ([[Standard German]]), the word ''Schild'' in this sense is excl
 }}
 
 ===Proper noun===
-{{de-proper noun|m|g2=f}}
+{{de-proper noun|surname}}
 
 # {{surname|de}}
+
+====Declension====
+{{de-ndecl|surname}}
 
 ===Further reading===
 * {{R:DWDS}}
@@ -8094,14 +8208,12 @@ From {{inh|de|gmh|viehte}}, {{inh|de|goh|fiuhta}}, from {{der|de|gmw-pro|*fiuhti
 }}
 
 ===Proper noun===
-{{de-proper noun|m,(s),(s)}} ''or'' <br />
-{{de-proper noun|f,(s)}}
+{{de-proper noun|surname}}
 
 # {{surname|de}}
 
 ====Declension====
-{{de-ndecl|m,(s),(s)}}
-{{de-ndecl|f,(s)}}
+{{de-ndecl|surname}}
 
 {{C|de|Conifers|Trees}}
 -------- end text --------
@@ -8292,14 +8404,12 @@ From {{inh|de|gem-pro|*skībǭ}}, {{m|gem-pro|*skif-}}, from {{der|de|ine-pro|*s
 * {{desc|ru|шайба|bor=1}}
 
 ===Proper noun===
-{{de-proper noun|m,(s),(s)}} ''or'' <br />
-{{de-proper noun|f,(s)}}
+{{de-proper noun|surname}}
 
 # {{surname|de}}
 
 ====Declension====
-{{de-ndecl|m,(s),(s)}}
-{{de-ndecl|f,(s)}}
+{{de-ndecl|surname}}
 
 ===Further reading===
 * {{R:DWDS}}
@@ -8331,12 +8441,12 @@ From {{der|de|fr|Denise}}.
 * {{audio|de|De-Denise.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|f,n:s.gen:'}}
+{{de-proper noun|f,n:s.gen:':s}}
 
 # {{given name|de|female|from=French}}
 
 ====Declension====
-{{de-ndecl|f,n:s.gen:'}}
+{{de-ndecl|f,n:s.gen:':s}}
 -------- end text --------
 Page 217 Kap Verde: Found match for regex: =
 Page 217 Kap Verde: -------- begin text --------
@@ -8345,12 +8455,12 @@ Page 217 Kap Verde: -------- begin text --------
 * {{audio|de|De-Kap Verde.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|n|nolinkhead=1}}
+{{de-proper noun|toponym|nolinkhead=1}}
 
 # {{place|de|archipelago/and/country|r/West Africa|t=Cape Verde}}
 
 ====Declension====
-{{de-ndecl|n.sg}}
+{{de-ndecl|toponym}}
 
 ----
 
@@ -8376,12 +8486,12 @@ From the {{der|de|no|-}} {{m|nb|Tromsø}}.
 * {{hyphenation|de|Troms|ø}}
 
 ===Proper noun===
-{{de-proper noun|n}}
+{{de-proper noun|toponym}}
 
 # {{place|de|city|c/Norway|t=Tromsø}}
 
 ====Declension====
-{{de-ndecl|n.sg}}
+{{de-ndecl|toponym}}
 
 {{cln|de|terms spelled with Ø}}
 
@@ -8408,12 +8518,12 @@ Page 221 Anden: -------- begin text --------
 * {{audio|de|De-Anden.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|p}}
+{{de-proper noun|p.article}}
 
 # the [[Andes]] mountains
 
 ====Declension====
-{{de-ndecl|p}}
+{{de-ndecl|p.article}}
 
 {{C|de|Mountains|South America}}
 -------- end text --------
@@ -8618,9 +8728,12 @@ Page 225 Agnes: -------- begin text --------
 * {{audio|de|De-Agnes.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|f|Agnes'}}
+{{de-proper noun|f,-.gen:':ens[older ending]}}
 
 # {{given name|de|female|eq=Agnes|from=Ancient Greek}}
+
+====Declension====
+{{de-ndecl|f,-.gen:':ens[older ending]}}
 
 ====Related terms====
 * {{l|de|Ines}}
@@ -8635,7 +8748,7 @@ Page 226 Fritz: -------- begin text --------
 Shortened form of {{m|de|Friedrich}}. Cognate to [[Fred]].
 
 ====Proper noun====
-{{de-proper noun|m|Fritz'|gen2=Fritzens|Fritze}}
+{{de-proper noun|m,':ens[older ending],e}}
 
 # {{given name|de|male|dim=Friedrich}}
 #* '''1856''', ''Archiv des historischen Vereines von Unterfranken und Aschaffenburg'', 14. Band, 1. Heft, page 138:
@@ -8647,9 +8760,7 @@ Shortened form of {{m|de|Friedrich}}. Cognate to [[Fred]].
 #*: Eine besonders fruchtbare Tätigkeit haben zwei '''Fritze''' entfaltet: '''Fritz''' Diehm und '''Fritz''' Römhild, der sich als Schriftsteller '''Fritz''' Romeo nennt.
 
 =====Declension=====
-{{de-decl-noun-m|ens|e}}
-or
-{{de-decl-noun-m|'|e}}
+{{de-ndecl|m,':ens[older ending],e}}
 
 =====Derived terms=====
 * {{l|de|Fritzchen}}
@@ -8666,7 +8777,7 @@ or
 From the proper noun {{m|de|Fritz}}, used as a derogatory term for a German person in translations into German.
 
 ====Noun====
-{{de-noun|m|Fritz'|gen2=Fritzens|Fritze|pl2=Fritzen}}
+{{de-noun|m,':ens[older ending],e:en}}
 
 # {{lb|de|used by non-Germans|derogatory}} a [[#English|Fritz]], a [[German]]
 #* {{rfdate|de}}, Alaksandr A. Fadeev, ''Der junge Garde'', German translation, page 135:
@@ -8683,9 +8794,7 @@ From the proper noun {{m|de|Fritz}}, used as a derogatory term for a German pers
 #*: Eigentlich, denkt er, bist du das größte Rindvieh unter Rußlands Sonne, Fedor Tarkanow. Kaum hast du Sohn und Frau, stürzt du dich in das verrückteste aller Abenteuer und riskierst Kopf und Kragen für zwei '''Fritzen'''.
 
 =====Declension=====
-{{de-decl-noun-m|ens|en}}
-or
-{{de-decl-noun-m|'|e}}
+{{de-ndecl|m,':ens[older ending],e:en}}
 
 =====Derived terms=====
 * {{l|de|Fritzchen}}
@@ -8857,7 +8966,7 @@ Page 230 Mira: -------- begin text --------
 ===Etymology 1===
 
 ====Proper noun====
-{{de-proper noun|old=1}}
+{{de-proper noun|m}}
 
 # {{lb|de|star}} [[#English|Mira]]
 #* {{quote-web
@@ -8869,12 +8978,18 @@ Page 230 Mira: -------- begin text --------
 |url=https://www.spiegel.de/wissenschaft/weltall/sternen-schweif-wundersamer-sprinter-im-all-entdeckt-a-500321.html
 |passage=Astronomen haben an dem schon seit 400 Jahren bekannten Stern '''Mira''' eine überraschende Entdeckung gemacht: Der Himmelskörper im Sternbild Walfisch zieht einen kometenartigen Schweif hinter sich her. Er ist mit 13 Lichtjahren mehrere tausend Mal so lang wie unser Sonnensystem. Eine solche Beobachtung sei bisher noch nie gelungen, schreibt das Team um Mark Seibert von der Carnegie Institution im Fachblatt "Nature".}}
 
+=====Declension=====
+{{de-ndecl|m.sg}}
+
 ===Etymology 2===
 
 ====Proper noun====
-{{de-proper noun|f}}
+{{de-proper noun|f,s.gen:s}}
 
 # {{given name|de|female}}
+
+=====Declension=====
+{{de-ndecl|f,s.gen:s}}
 
 ===Further reading===
 * {{pedia|Mira (Stern)|lang=de}}
@@ -8887,14 +9002,24 @@ Page 231 Blissenbach: Found match for regex: =
 Page 231 Blissenbach: -------- begin text --------
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|surname}}
 
-# A German [[surname]] with several clusters of use, the densest being in the [[Rhineland]]. Spread to [[France]] and [[USA]]. Most likely derived from a [[village]] and/or [[creek]] name [[Blissenbach]] in the [[Bergish Land]].
+# {{surname|de|[[German]]|nodot=1}} with several clusters of use, the densest being in the [[Rhineland]]. Spread to [[France]] and [[USA]]. Most likely derived from a [[village]] and/or [[creek]] name [[Blissenbach]] in the [[Bergish Land]].
+
+====Declension====
+{{de-ndecl|surname}}
+
+====Alternative forms====
+* {{alt|de|Bliessenbach|Blißenbach|Bließenbach|Blihßenbach|Blisenbach|Bliesenbach|Blihsenbach}}
+
+===Proper noun===
+{{de-proper noun|toponym}}
+
 # Originally the name of a German village, now merely an isolated [[street]] on a hill top outside the municipality of [[Kürten]] in the [[Bergish Land]], east of [[Cologne]].
 # Proper name of a [[brook]] or [[creek]] near [[Kürten]] in the [[Bergish Land]] east of [[Cologne]] in [[Germany]].
 
-====Related terms====
-* {{l|de|surname|Surnames}}: {{l|de|Bliessenbach}}, {{l|de|Blißenbach}}, {{l|de|Bließenbach}}, {{l|de|Blihßenbach}}, {{l|de|Blisenbach}}, {{l|de|Bliesenbach}}, {{l|de|Blihsenbach}} are spelling variants of {{l|de|Blissenbach}}.
+====Declension====
+{{de-ndecl|toponym}}
 -------- end text --------
 Page 232 Stefanie: Found match for regex: =
 Page 232 Stefanie: -------- begin text --------
@@ -8904,9 +9029,12 @@ Page 232 Stefanie: -------- begin text --------
 * {{audio|de|De-Stefanie.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|f|Stefanies}}
+{{de-proper noun|f,s.gen:s}}
 
 # {{given name|de|female|var=Stephanie}}
+
+====Declension====
+{{de-ndecl|f,s.gen:s}}
 -------- end text --------
 Page 233 Kohl: Found match for regex: =
 Page 233 Kohl: -------- begin text --------
@@ -8934,9 +9062,12 @@ From {{inh|de|gmh|}}, from {{inh|de|goh|kōlo}}.
 * {{l|de|Weißkohl}}
 
 ====Proper noun====
-{{de-proper noun|old=1}}
+{{de-proper noun|surname}}
 
 # {{surname|de|A=An occupational|from=occupations|nodot=1}} for a grower or seller of cabbages.
+
+=====Declension=====
+{{de-ndecl|surname}}
 
 ===Etymology 2===
 Unclear. Several possibilities have been suggested, including derivation from {{bor|de|rom}} and derivation from {{bor|de|he|קוֹל|tr=qōl||voice}}. But compare western {{cog|de|Kappes||cabbage, nonsense}}, though the second meaning might also be a loan translation of ''Kohl''.
@@ -9199,10 +9330,13 @@ From {{inh|de|gmh|weter}}, from {{inh|de|goh|wetar}}, from {{inh|de|gem-pro|*wed
 
 ====Proper noun====
 {{wikipedia|Wetter (Ruhr)}}
-{{de-proper noun|old=1}}
+{{de-proper noun|toponym}}
 
 # {{place|de|town|s/Hesse|c/Germany}}
 # {{place|de|town|dist/Ruhr|c/Germany}}
+
+=====Declension=====
+{{de-ndecl|toponym}}
 
 ===Further reading===
 * {{R:DWDS}}
@@ -9233,9 +9367,12 @@ From {{inh|de|gmh|koch}}, from {{inh|de|goh|choch}}, from {{der|de|LL.|cocus}}, 
 {{de-decl-noun-m|(e)s|pl=Köche}}
 
 ====Proper noun====
-{{de-proper noun|old=1}}
+{{de-proper noun|surname}}
 
 # {{surname|de|A=An|occupational|from=occupations}}
+
+=====Declension=====
+{{de-ndecl|surname}}
 
 ===Etymology 2===
 From {{inh|de|gmh|koch}}, from the verb {{m|gmh|kochen||to cook}}.
@@ -9266,9 +9403,12 @@ Page 239 Feucht: -------- begin text --------
 The name means "marshy place," from the adjective {{m|de|feucht|t=damp, marshy, wet}}. One of its former names was {{m|grc|Ὑδρόπολις}}, of the same meaning.<ref>Blackie, C. (1887). Geographical Etymology: A Dictionary of Place-names Giving Their Derivations. United Kingdom: John Murray, p. 79</ref>  The Dutch name is {{m|nl|Voichtig}}.
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|toponym}}
 
 # {{place|de|market town/and/municipality|s/Bavaria|c/Germany|t1=Feucht}}
+
+====Declension====
+{{de-ndecl|toponym}}
 
 ===References===
 <references/>
@@ -9765,9 +9905,12 @@ From {{inh|de|gmh|biber}}, {{inh|de|goh|[[bibar]], [[bibur]]}}, from {{inh|de|gm
 {{de-decl-noun-m|s}}
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|surname}}
 
 # {{surname|de|from=nicknames}} More common in the form {{m|de|Bieber}}.
+
+====Declension====
+{{de-ndecl|surname}}
 
 ===Further reading===
 * {{R:DWDS}}
@@ -9821,9 +9964,12 @@ From {{inh|de|gmh|busch}}, {{m|gmh|bosch}}, from {{inh|de|goh|busk}}, from {{inh
 * {{l|de|Böschung}}
 
 ===Proper noun===
-{{de-proper noun||Buschs}}
+{{de-proper noun|surname}}
 
 # {{surname|de|A=A common}}
+
+====Declension====
+{{de-ndecl|surname}}
 
 ----
 
@@ -9966,9 +10112,12 @@ Page 256 Groll: -------- begin text --------
 ===Etymology 1===
 
 ====Proper noun====
-{{de-proper noun|n}}
+{{de-proper noun|surname}}
 
 # {{surname|de|A=A German}}
+
+=====Declension=====
+{{de-ndecl|surname}}
 
 ===Etymology 2===
 From {{der|de|gmh|grolle}}, related to {{cog|en|growl}}.
@@ -10465,9 +10614,12 @@ From {{inh|de|gmh|[[braht]]}}, from {{inh|de|goh|braht}}, from {{inh|de|gem-pro|
 * {{l|de|Farbenpracht}}
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|toponym}}
 
 # {{place|de|municipality|s/Rhineland-Palatinate|c/Germany}}
+
+====Declension====
+{{de-ndecl|toponym}}
 
 ===Further reading===
 * {{R:DWDS}}
@@ -10589,10 +10741,13 @@ Attested in the 13th century in {{w|Schleswig-Holstein}}, thought to derive from
 * {{alter|de|Schmahl|Schmal|Schmall|Schmaltz}}
 
 ====Proper noun====
-{{de-proper noun|m:f,':ens,-:ens}}
+{{de-proper noun|surname}}
 
 # {{surname|de|dot=&#32;—}} {{non-gloss definition|famously held by:}}
 ## [[w:Valentinus Smalcius|Valentin Schmalz]] (1572–1622), German Socinian theologian
+
+=====Declension=====
+{{de-ndecl|surname}}
 
 =====Related terms=====
 * {{l|de|schmal}}
@@ -11203,10 +11358,13 @@ Borrowed from {{bor|en|ru|Калинингра́д}}.
 * {{audio|de|De-Kaliningrad.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|toponym}}
 
-# {{place|de|oblast|c/Russia}}; an exclave on the [[Baltic Sea]], between [[Poland]] and [[Lithuania]].
-# {{place|de|city/administrative center|obl/Kaliningrad|c/Russia}}. Formerly located in [[East Prussia]] and called [[Königsberg]].
+# {{place|de|oblast|c/Russia}}; an exclave on the [[Baltic Sea]], between [[Poland]] and [[Lithuania]]
+# {{place|de|city/administrative center|obl/Kaliningrad|c/Russia}}; formerly located in [[East Prussia]] and called [[Königsberg]]
+
+====Declension====
+{{de-ndecl|toponym}}
 
 ----
 
@@ -11259,9 +11417,12 @@ Page 283 Großkirchen: -------- begin text --------
 * {{alter|de|Grosskirchen||Switzerland}}
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|toponym}}
 
 # {{place|de|city|c/Hungary|t=Nagykanizsa}}
+
+====Declension====
+{{de-ndecl|toponym}}
 -------- end text --------
 Page 284 Elisabeth: Found match for regex: =
 Page 284 Elisabeth: -------- begin text --------
@@ -11272,10 +11433,13 @@ Page 284 Elisabeth: -------- begin text --------
 * {{audio|de|De-Elisabeth.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|f|Elisabeths}}
+{{de-proper noun|f,s:en.gen:s}}
 
-# [[Elizabeth]] {{qualifier|biblical character}}.
+# [[Elizabeth]] {{qualifier|biblical character}}
 # {{given name|de|female|from=Biblical Hebrew}}
+
+====Declension====
+{{de-ndecl|f,s:en.gen:s}}
 
 ====Related terms====
 * {{l|de|Anneliese}}, {{l|de|Bettina}}, {{l|de|Betti}}, {{l|de|Elisa}}, {{l|de|Elise}}, {{l|de|Elli}}, {{l|de|Elly}}, {{l|de|Elsa}}, {{l|de|Else}}, {{l|de|Ilse}}, {{l|de|Isabel}}, {{l|de|Isabella}}, {{l|de|Isabelle}}, {{l|de|Liesbeth}}, {{l|de|Lieschen}}, {{l|de|Lieselotte}}, {{l|de|Lili}}, {{l|de|Lilli}}, {{l|de|Lilly}}, {{l|de|Lis}}, {{l|de|Lisa}}, {{l|de|Lisbeth}}, {{l|de|Lise}}, {{l|de|Liselotte}}, {{l|de|Marlies}}, {{l|de|Sissi}}.
@@ -11344,12 +11508,12 @@ Page 287 Algarve: -------- begin text --------
 * {{IPA|de|/alˈɡaʁvə/}}
 
 ===Proper noun===
-{{de-proper noun|f:m,-}}
+{{de-proper noun|f:m,-.article}}
 
 # {{place|de|traditional region/and/former kingdom|c/Portugal|t1=Algarve}}
 
 ====Declension====
-{{de-ndecl|f:m,-.sg}}
+{{de-ndecl|f:m,-.article.sg}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -11441,9 +11605,12 @@ Page 290 Steinbruch: -------- begin text --------
 * {{l|de|Steinzeit}}
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|toponym}}
 
 # {{place|de|district|city/Budapest|t1=Kőbánya}}
+
+====Declension====
+{{de-ndecl|toponym}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -11498,20 +11665,23 @@ Page 292 Bertha: -------- begin text --------
 * {{alter|de|Berta}}
 
 ===Proper noun===
-{{de-proper noun|f|Berthas}}
+{{de-proper noun|f,s.gen:s}}
 
 # {{given name|de|female|eq=Bertha}}
+
+====Declension====
+{{de-ndecl|f,s.gen:s}}
 -------- end text --------
 Page 293 Schwarzes Meer: Found match for regex: =
 Page 293 Schwarzes Meer: -------- begin text --------
 
 ===Proper noun===
-{{de-proper noun|[[schwarz|Schwarzes]]<+> [[Meer]]<n,es:s>}}
+{{de-proper noun|[[schwarz|Schwarzes]]<+> [[Meer]]<n,es:s.article>}}
 
 # [[Black Sea]]
 
 ====Declension====
-{{de-ndecl|[[schwarz|Schwarzes]]<+> [[Meer]]<n,es:s.sg>}}
+{{de-ndecl|[[schwarz|Schwarzes]]<+> [[Meer]]<n,es:s.article.sg>}}
 
 ====Related terms====
 * {{l|de|Meer}}
@@ -11548,10 +11718,13 @@ Page 295 Interlaken: -------- begin text --------
 Coined in 1891 from {{der|de|la|inter}} + {{m|la|lacus}}, from its geographical position between two lakes.
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|toponym}}
 
 # {{place|de|town|c/Switzerland|t=Interlaken}}
 #: {{syn|de|Aarmühle<q:prior to 1891>}}
+
+====Declension====
+{{de-ndecl|toponym}}
 
 ----
 
@@ -11616,9 +11789,12 @@ Page 297 Berta: Found match for regex: =
 Page 297 Berta: -------- begin text --------
 
 ===Proper noun===
-{{de-proper noun|f|Bertas}}
+{{de-proper noun|f,s.gen:s}}
 
 # {{given name|de|female|var=Bertha}}
+
+====Declension====
+{{de-ndecl|f,s.gen:s}}
 
 ===Symbol===
 {{head|de|symbol}}
@@ -11639,12 +11815,12 @@ Page 298 Zweiter Weltkrieg: -------- begin text --------
 * {{audio|de|De-Zweiter Weltkrieg.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|[[zweite|Zweiter]] [[Weltkrieg]]<m,es:s>}}
+{{de-proper noun|[[zweite|Zweiter]] [[Weltkrieg]]<m,es:s.article>}}
 
 # the [[Second World War]], [[World War II]]
 
 ====Declension====
-{{de-ndecl|[[zweite|Zweiter]] [[Weltkrieg]]<m,es:s.sg>}}
+{{de-ndecl|[[zweite|Zweiter]] [[Weltkrieg]]<m,es:s.article.sg>}}
 
 {{C|de|War}}
 -------- end text --------
@@ -11658,10 +11834,20 @@ Page 299 Tirpitz: -------- begin text --------
 * {{IPA|de|/ˈtiːʁpɪt͡s/}}
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|f.article}}
 
-# A German [[battleship]] during the [[Second World War]], the [[sister ship]] to the [[Bismarck]].
-# A surname.
+# a German [[battleship]] during the [[Second World War]], the [[sister ship]] to the [[Bismarck]]
+
+====Declension====
+{{de-ndecl|f.article.sg}}
+
+===Proper noun===
+{{de-proper noun|surname}}
+
+# {{surname|de}}
+
+====Declension====
+{{de-ndecl|surname}}
 
 {{C|de|Warships}}
 -------- end text --------
@@ -11676,9 +11862,12 @@ From earlier {{m|de|Gratz}}, probably of {{der|de|sla|-}} origin, from {{der|de|
 * {{audio|de|De-Graz.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|toponym}}
 
 # {{place|de|city/state capital|s/Styria|c/Austria|t1=Graz}}
+
+====Declension====
+{{de-ndecl|toponym}}
 
 ===References===
 <references/>
@@ -11694,12 +11883,12 @@ Page 301 Europäische Union: -------- begin text --------
 * {{audio|de|De-Europäische Union.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|[[europäisch|Europäische]]<+> [[Union]]<f>}}
+{{de-proper noun|[[europäisch|Europäische]]<+> [[Union]]<f.article>}}
 
 # [[European Union]]
 
 ====Declension====
-{{de-ndecl|[[europäisch|Europäische]]<+> [[Union]]<f.sg>}}
+{{de-ndecl|[[europäisch|Europäische]]<+> [[Union]]<f.article.sg>}}
 
 {{C|de|European Union}}
 -------- end text --------
@@ -11726,7 +11915,7 @@ Page 303 Union der Sozialistischen Sowjetrepubliken: -------- begin text -------
 * {{audio|de|De-Union der Sozialistischen Sowjetrepubliken.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|[[Union]]<f> [[die|der]] [[sozialistisch|Sozialistischen]] [[Sowjetrepublik]]en}}
+{{de-proper noun|[[Union]]<f.article> [[die|der]] [[sozialistisch|Sozialistischen]] [[Sowjetrepublik]]en}}
 
 # {{place|de|former country|cont/Europe,Asia|t=Union of Soviet Socialist Republics|t2=Soviet Union}}
 -------- end text --------
@@ -12648,13 +12837,13 @@ Page 326 Kalevala: -------- begin text --------
 Borrowed from {{bor|de|fi|Kalevala}}.
 
 ===Proper noun===
-{{de-proper noun|n|Kalevala|g2=f}}
+{{de-proper noun|n:f,-.article}}
 
-# The {{l|en|Kalevala}} {{gloss|the Finnish national epic}}
+# the {{l|en|Kalevala}} {{gloss|the Finnish national epic}}
 #:{{ux|de|In jenen Jahren durchpflügte die russische Aggression die Autonomie Finnlands gerade an den Grenzlinien Kareliens, wodurch das '''Kalevala''' zum Symbol nationaler Identität aufstieg.|In those years, Russian aggression plowed through the autonomy of Finland right on the borderlines of Karelia, whereby the '''Kalevala''' rose to a symbol of national identity.}}  
 
 ====Declension====
-{{de-decl-noun-n|n=sg}}
+{{de-ndecl|n:f,-.article.sg}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -12676,17 +12865,20 @@ Page 327 Jasmin: -------- begin text --------
 * {{audio|de|De-Jasmin.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m||Jasmine}}
+{{de-noun|m}}
 
 # [[jasmine]]
 
 ====Declension====
-{{de-decl-noun-m|s|e}}
+{{de-ndecl|m}}
 
 ===Proper noun===
-{{de-proper noun|f|Jasmins}}
+{{de-proper noun|f,s.gen:s}}
 
 # {{given name|de|female|usage=modern|eq=Jasmine}}
+
+====Declension====
+{{de-ndecl|f,s.gen:s}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -12750,12 +12942,12 @@ Page 329 Plejaden: -------- begin text --------
 * {{audio|de|De-Plejaden.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|p|old=1}}
+{{de-proper noun|p.article}}
 
 # [[Pleiades]], [[Messier 45]] (star cluster)
 
 ====Declension====
-{{de-decl-noun-f|n=pl}}
+{{de-ndecl|p.article}}
 
 {{C|de|Astronomy}}
 -------- end text --------
@@ -12797,9 +12989,12 @@ Both from {{der|de|ar|لَيْلَى}} and {{der|de|fi|Laila}}.
 * {{IPA|de|/ˈlaɪ̯la/}}
 
 ===Proper noun===
-{{de-proper noun|f|Lailas}}
+{{de-proper noun|f,s.gen:s}}
 
 # {{lb|de|fairly|_|rare|but of some native use}} {{given name|de|female}}
+
+====Declension====
+{{de-ndecl|f,s.gen:s}}
 
 ----
 
@@ -12816,9 +13011,12 @@ From {{bor|de|grc|Σουσάννα}}, the New Testament form of {{der|de|he|שׁ
 * {{rhymes|de|anə|s=3}}
 
 ===Proper noun===
-{{de-proper noun|f|Susannes}}
+{{de-proper noun|f,s.gen:s}}
 
 # {{given name|de|female|from=Hebrew|eq=Susan}}
+
+====Declension====
+{{de-ndecl|f,s.gen:s}}
 
 ----
 
@@ -13154,9 +13352,12 @@ Via {{der|de|gml|-}} from {{der|de|dum|dûne}}, from {{der|de|odt|dūna}}, from 
 * {{l|de|Wanderdüne}}
 
 ===Proper noun===
-{{de-proper noun|f|Dünes}}
+{{de-proper noun|f.article}}
 
 # {{place|de|<<island>> near [[Heligoland]] in <<s/Schleswig-Holstein>>, <<c/Germany>>|t=Düne}}
+
+====Declension====
+{{de-ndecl|f.article.sg}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -13223,12 +13424,12 @@ Page 345 Rotes Meer: -------- begin text --------
 * {{audio|de|De-Rotes Meer.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|[[rot|Rotes]]<+> [[Meer]]<n,es:s>}}
+{{de-proper noun|[[rot|Rotes]]<+> [[Meer]]<n,es:s.article>}}
 
 # [[Red Sea]]
 
 ====Declension====
-{{de-ndecl|[[rot|Rotes]]<+> [[Meer]]<n,es:s.sg>}}
+{{de-ndecl|[[rot|Rotes]]<+> [[Meer]]<n,es:s.article.sg>}}
 
 {{C|de|Seas}}
 -------- end text --------
@@ -13239,16 +13440,14 @@ Page 346 Totes Meer: -------- begin text --------
 * {{audio|de|De-Totes Meer.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|[[tot|Totes]]<+> [[Meer]]<n,es:s>}}
+{{de-proper noun|[[tot|Totes]]<+> [[Meer]]<n,es:s.article>}}
 
 # the [[Dead Sea]]
 
 ====Declension====
-{{de-ndecl|[[tot|Totes]]<+> [[Meer]]<n,es:s.sg>}}
+{{de-ndecl|[[tot|Totes]]<+> [[Meer]]<n,es:s.article.sg>}}
 
 {{C|de|Seas}}
-
-{{cln|de|proper nouns}}
 -------- end text --------
 Page 347 Kaspisches Meer: Found match for regex: =
 Page 347 Kaspisches Meer: -------- begin text --------
@@ -13257,16 +13456,14 @@ Page 347 Kaspisches Meer: -------- begin text --------
 * {{audio|de|De-Kaspisches Meer.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|[[kaspisch|Kaspisches]]<+> [[Meer]]<n,es:s>}}
+{{de-proper noun|[[kaspisch|Kaspisches]]<+> [[Meer]]<n,es:s.article>}}
 
 # [[Caspian Sea]]
 
 ====Declension====
-{{de-ndecl|[[kaspisch|Kaspisches]]<+> [[Meer]]<n,es:s.sg>}}
+{{de-ndecl|[[kaspisch|Kaspisches]]<+> [[Meer]]<n,es:s.article.sg>}}
 
 {{C|de|Seas}}
-
-{{cln|de|proper nouns}}
 -------- end text --------
 Page 348 Indischer Ozean: Found match for regex: =
 Page 348 Indischer Ozean: -------- begin text --------
@@ -13275,13 +13472,13 @@ Page 348 Indischer Ozean: -------- begin text --------
 * {{audio|de|De-Indischer Ozean.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|[[indisch|Indischer]]<+> [[Ozean]]<m,es:s>}}
+{{de-proper noun|[[indisch|Indischer]]<+> [[Ozean]]<m,es:s.article>}}
 
 # the [[Indian Ocean]]
 #: {{syn|de|Indik<g:m>}}
 
 ====Declension====
-{{de-ndecl|[[indisch|Indischer]]<+> [[Ozean]]<m,es:s.sg>}}
+{{de-ndecl|[[indisch|Indischer]]<+> [[Ozean]]<m,es:s.sg.article>}}
 
 {{C|de|Oceans}}
 -------- end text --------
@@ -13292,14 +13489,14 @@ Page 349 Arktischer Ozean: -------- begin text --------
 * {{audio|de|De-Arktischer Ozean.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|[[arktisch|Arktischer]]<+> [[Ozean]]<m,es:s>}}
+{{de-proper noun|[[arktisch|Arktischer]]<+> [[Ozean]]<m,es:s.article>}}
 
 # [[Arctic Ocean]]
 #: {{syn|de|Nördliches Eismeer|Nordpolarmeer}}
 #: {{ant|de|Südlicher Ozean|Südliches Eismeer|Südpolarmeer}}
 
 ====Declension====
-{{de-ndecl|[[arktisch|Arktischer]]<+> [[Ozean]]<m,es:s.sg>}}
+{{de-ndecl|[[arktisch|Arktischer]]<+> [[Ozean]]<m,es:s.sg.article>}}
 
 ====See also====
 * {{l|de|Arktik}}, {{l|de|Antarktik}}
@@ -13315,14 +13512,14 @@ Page 350 Südlicher Ozean: -------- begin text --------
 * {{audio|de|De-Südlicher Ozean.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|[[südlich|Südlicher]]<+> [[Ozean]]<m,es:s>}}
+{{de-proper noun|[[südlich|Südlicher]]<+> [[Ozean]]<m,es:s.article>}}
 
 # the [[Southern Ocean]]
 #: {{syn|de|Südliches Eismeer|Südpolarmeer}}
 #: {{ant|de|Arktischer Ozean|Nördliches Eismeer|Nordpolarmeer}}
 
 ====Declension====
-{{de-ndecl|[[südlich|Südlicher]]<+> [[Ozean]]<m,es:s.sg>}}
+{{de-ndecl|[[südlich|Südlicher]]<+> [[Ozean]]<m,es:s.sg.article>}}
 
 ====See also====
 * {{l|de|Arktik}}, {{l|de|Antarktik}}
@@ -13406,9 +13603,12 @@ Page 354 Fitz: Found match for regex: =
 Page 354 Fitz: -------- begin text --------
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|surname}}
 
 # {{surname|de|nodot=1}} from the [[Palatinate]] region of [[Germany]]
+
+====Declension====
+{{de-ndecl|surname}}
 -------- end text --------
 Page 355 Kanarische Inseln: Found match for regex: {
 Page 355 Kanarische Inseln: -------- begin text --------
@@ -13419,12 +13619,12 @@ Page 355 Kanarische Inseln: -------- begin text --------
 * {{audio|de|De-Kanarische Inseln.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|[[kanarisch|Kanarische]]<+> [[Insel]]n<p>}}
+{{de-proper noun|[[kanarisch|Kanarische]]<+> [[Insel]]n<p.article>}}
 
 # {{place|de|archipelago/and/autonomous community|c/Spain|t=Canary Islands}}
 
 ====Declension====
-{{de-ndecl|[[kanarisch|Kanarische]]<+> [[Insel]]n<p>}}
+{{de-ndecl|[[kanarisch|Kanarische]]<+> [[Insel]]n<p.article>}}
 -------- end text --------
 Page 356 Kommentar: Found match for regex:  
 Page 356 Kommentar: -------- begin text --------
@@ -13594,9 +13794,12 @@ From {{inh|de|gmh|fleischer}}, {{m|gmh|vleischer}}, {{m|gmh|vleischære}}, equiv
 {{de-decl-noun-m|s}}
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|surname}}
 
 # {{surname|de|A=An|[[occupational]]|from=occupations}}
+
+====Declension====
+{{de-ndecl|surname}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -13885,9 +14088,12 @@ Page 369 Lisbeth: -------- begin text --------
 * {{audio|de|De-Lisbeth.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|f|Lisbeths}}
+{{de-proper noun|f,s.gen:s:en}}
 
 # {{given name|de|female}} ''derived from'' {{m|de|Elisabeth}}
+
+====Declension====
+{{de-ndecl|f,s.gen:s:en}}
 
 ----
 
@@ -13988,9 +14194,12 @@ Page 373 Swen: Found match for regex: =
 Page 373 Swen: -------- begin text --------
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|m,s,e:s}}<!-- guess based on [[Per]] -->
 
 # {{given name|de|male|from=sv:Sven}}
+
+====Declension====
+{{de-ndecl|m,s,e:s}}
 -------- end text --------
 Page 374 Juwel: Found match for regex: {
 Page 374 Juwel: -------- begin text --------
@@ -14144,9 +14353,12 @@ Page 379 Christel: -------- begin text --------
 * {{audio|de|De-Christel.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|f|Christels}}
+{{de-proper noun|f,-:s.gen:s}}
 
 # {{given name|de|female|dimof=Christine|dimof2=Christiane}}
+
+====Declension====
+{{de-ndecl|f,-:s.gen:s}}
 
 ----
 
@@ -14163,12 +14375,12 @@ Page 380 Christoph: -------- begin text --------
 * {{hyphenation|de|Chris|toph}}
 
 ===Proper noun===
-{{de-proper noun|m|old=1}}
+{{de-proper noun|m,s,s}}
 
 # {{given name|de|male|eq=Christopher}}
 
 ====Declension====
-{{de-decl-noun-m|(s)|s}}
+{{de-ndecl|m,s,s}}
 
 ====Related terms====
 * {{l|de|Christopher}}
@@ -14188,13 +14400,13 @@ From {{inh|de|gmh|kintheit}}, from {{inh|de|goh|kindheit}} (also {{m|goh|kindesh
 * {{audio|de|De-Kindheit.ogg|Audio}}
 
 ===Noun===
-{{de-noun|f|||old=1}}
+{{de-noun|f}}
 
 # [[childhood]]
 #: {{syn|de|Kinderjahre|Kinderzeit}}
 
 ====Declension====
-{{de-decl-noun-f}}
+{{de-ndecl|f}}
 
 ====Derived terms====
 {{col4|de
@@ -14380,9 +14592,12 @@ Page 387 Ulrike: -------- begin text --------
 * {{audio|de|De-Ulrike.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|f|Ulrike|gen2=Ulrikes}}
+{{de-proper noun|f,s.gen:s}}
 
 # {{given name|de|female|m=Ulrich|eq=Ulrica}}
+
+====Declension====
+{{de-ndecl|f,s.gen:s}}
 -------- end text --------
 Page 388 Kreuzer: Found match for regex: =
 Page 388 Kreuzer: -------- begin text --------
@@ -14423,9 +14638,12 @@ From {{inh|de|gmh|kriuzære}}; analyzable as {{suffix|de|Kreuz|er}}, from the [[
 ===Etymology 3===
 
 ====Proper noun====
-{{de-proper noun||Kreuzers}}
+{{de-proper noun|surname}}
 
 # {{surname|de}}
+
+=====Declension=====
+{{de-ndecl|surname}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -14511,9 +14729,12 @@ Page 392 Carola: Found match for regex: =
 Page 392 Carola: -------- begin text --------
 
 ===Proper noun===
-{{de-proper noun|f|Carolas}}
+{{de-proper noun|f,s.gen:s}}
 
 # {{given name|de|female|from=Latin|m=Carolus}}, Latin form of [[Karl]] (=[[Charles]])
+
+====Declension====
+{{de-ndecl|f,s.gen:s}}
 
 ----
 
@@ -14587,23 +14808,23 @@ Page 395 Arno: -------- begin text --------
 {{clipping|de}}.
 
 ====Proper noun====
-{{de-proper noun|m}}
+{{de-proper noun|m,s,s}}
 
 # {{given name|de|male|dim=Arnold|q=also diminutive of other [[Germanic]] compound names beginning with ''Arn-'' "eagle"}}
 
 =====Declension=====
-{{de-ndecl|m.sg}}
+{{de-ndecl|m,s,s}}
 
 ===Etymology 2===
 From {{bor|de|it|Arno}}, from {{der|de|la|Arnus}}. {{etystub|de}}
 
 ====Proper noun====
-{{de-proper noun|m|Arno|gen2=Arnos|head=[[der]] Arno}}
+{{de-proper noun|m,-:s.article}}
 
 # {{place|de|river|r/Tuscany|t1=Arno}}
 
 =====Declension=====
-{{de-decl-noun-m|prop=1|n=sg|(s)}}
+{{de-ndecl|m,-:s.article.sg}}
 
 ====Further reading====
 {{pedia|lang=de|Arno (Tyrrhenisches Meer)|Arno}}
@@ -14622,7 +14843,7 @@ Page 396 Hundertjähriger Krieg: -------- begin text --------
 * {{audio|de|De-Hundertjähriger Krieg.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|[[hunderjährig|Hundertjähriger]]<+> [[Krieg]]<m,es:s>}}
+{{de-proper noun|[[hunderjährig|Hundertjähriger]]<+> [[Krieg]]<m,es:s.article>}}
 
 # [[Hundred Years' War]]
 
@@ -14805,12 +15026,12 @@ Page 403 Komoren: -------- begin text --------
 * {{audio|de|De-Komoren.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|p|Komoren}}
+{{de-proper noun|p.article}}
 
 # {{place|de|archipelago/and/country|r/East Africa|in the|ocean/Indian Ocean|t=Comoros}}
 
 ====Declension====
-{{de-decl-noun-pl}}
+{{de-ndecl|p.article}}
 
 {{C|de|Exonyms}}
 -------- end text --------
@@ -14824,7 +15045,7 @@ Page 404 Demokratische Republik Kongo: -------- begin text --------
 * {{audio|de|De-Demokratische Republik Kongo.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|[[demokratische|Demokratische]]<+> [[Republik]]<f> [[Kongo]]}}
+{{de-proper noun|[[demokratische|Demokratische]]<+> [[Republik]]<f.article> [[Kongo]]}}
 
 # {{place|de|country|r/Central Africa|t=Democratic Republic of the Congo}}
 #: {{syn|de|Kongo<g:f>|Zaire|Belgisch Kongo}}
@@ -14911,9 +15132,12 @@ Page 407 Norderney: -------- begin text --------
 * {{rhymes|de|aɪ̯|s=3}}
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|toponym}}
 
 # {{place|de|an <<island>> in the <<dist:suf/Aurich>>, <<s/Lower Saxony>>, one of the seven populated [[East Frisian Islands]] off the [[North Sea]] coast of <<c/Germany>>}}
+
+====Declension====
+{{de-ndecl|toponym}}
 -------- end text --------
 Page 408 Pantherpilz: Found match for regex: =
 Page 408 Pantherpilz: -------- begin text --------
@@ -15039,9 +15263,12 @@ Page 411 Thorwald: Found match for regex: =
 Page 411 Thorwald: -------- begin text --------
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|m,s,e:s}}
 
 # {{given name|de|male}}
+
+====Declension====
+{{de-ndecl|m,s,e:s}}
 -------- end text --------
 Page 412 Schwimmbad: Found match for regex: =
 Page 412 Schwimmbad: -------- begin text --------
@@ -15082,9 +15309,12 @@ From {{der|de|ru|Таня}}, diminutive of {{m|ru|Татьяна}}, whence less 
 * {{audio|de|De-Tanja.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|f|Tanjas}}
+{{de-proper noun|f,s.gen:s}}
 
 # {{given name|de|female|popular=popular especially in the 1970s and 1980s}}
+
+====Declension====
+{{de-ndecl|f,s.gen:s}}
 
 ----
 
@@ -15093,9 +15323,12 @@ Page 414 Zickefoose: Found match for regex: =
 Page 414 Zickefoose: -------- begin text --------
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|surname}}
 
 # {{surname|de|rare|from=nicknames}}
+
+====Declension====
+{{de-ndecl|surname}}
 -------- end text --------
 Page 415 Viereck: Found match for regex: {
 Page 415 Viereck: -------- begin text --------
@@ -15334,10 +15567,20 @@ From {{inh|de|gem-pro|*raginą||counsel by the gods}} + {{m|gem-pro|*harjaz||arm
 * {{homophones|de|reiner}}
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|m,s,-:s}}
 
 # {{given name|de|male}}
-# {{surname|de|[[patronymic]]|from=given names}}
+
+====Declension====
+{{de-ndecl|m,s,-:s}}
+
+===Proper noun===
+{{de-proper noun|surname}}
+
+# {{surname|de|patronymic|from=given names}}
+
+====Declension====
+{{de-ndecl|surname}}
 -------- end text --------
 Page 423 Sims: Found match for regex: =
 Page 423 Sims: -------- begin text --------
@@ -15381,15 +15624,15 @@ Page 424 Datteln: -------- begin text --------
 ===Noun===
 {{head|de|noun form|g=p}}
 
-# {{plural of|de|Dattel}} "[[dates]]" (fruit)
+# {{plural of|de|Dattel|t=date (fruit)}}
 
 ===Proper noun===
-{{de-proper noun|n|Dattelns}}
+{{de-proper noun|toponym}}
 
-# A [[city]] in the [[Ruhr Area]], [[North Rhine-Westphalia]], [[Germany]]
+# {{place|de|city|in the|area/Ruhr Area|s/North Rhine-Westphalia|c/Germany}}
 
 ====Declension====
-{{de-decl-noun-n|(s)|n=sg}}
+{{de-decl-noun-n|toponym}}
 -------- end text --------
 Page 425 Peters: Found match for regex: =
 Page 425 Peters: -------- begin text --------
@@ -15401,9 +15644,12 @@ Page 425 Peters: -------- begin text --------
 * {{audio|de|De-Peters.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|surname}}
 
 # {{surname|de|from=given names|nodot=1}} common in northern Germany.
+
+====Declension====
+{{de-ndecl|surname}}
 
 ===Proper noun===
 {{head|de|proper noun form}}
@@ -15451,9 +15697,12 @@ Perhaps from a {{bor|de|gml|-}} diminutive of {{m|de|Judith}}, from {{der|de|he|
 * {{audio|de|De-Jutta.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|f|Juttas}}
+{{de-proper noun|f,s:Jutten.gen:s}}
 
 # {{given name|de|female}}
+
+====Declension====
+{{de-ndecl|f,s:Jutten.gen:s}}
 -------- end text --------
 Page 428 Baguette: Found match for regex: {
 Page 428 Baguette: -------- begin text --------
@@ -15565,12 +15814,12 @@ Page 431 Knecht Ruprecht: -------- begin text --------
 * {{IPA|de|/ˌknɛçt.ˈʁuː.pʁɛçt/|/-ˈʁuːp.ʁɛçt/}}
 
 ===Proper noun===
-{{de-proper noun|m|Knecht Ruprechts}}
+{{de-proper noun|m}}
 
 # A [[farmhand]] or [[servant]] character who accompanies [[St. Nicholas]] to help him and, traditionally, to punish naughty children with his [[rod]].
 
 ====Declension====
-{{de-decl-noun-m|s}}
+{{de-ndecl|m.sg}}
 
 ====See also====
 * {{l|de|Hans Muff|g=m}}
@@ -15654,12 +15903,12 @@ Page 434 Ostchinesisches Meer: -------- begin text --------
 * {{audio|de|De-Ostchinesisches Meer.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|[[ostchinesisch|Ostchinesisches]]<+> [[Meer]]<n,es:s>}}
+{{de-proper noun|[[ostchinesisch|Ostchinesisches]]<+> [[Meer]]<n,es:s.article>}}
 
 # [[East China Sea]]
 
 ====Declension====
-{{de-ndecl|[[ostchinesisch|Ostchinesisches]]<+> [[Meer]]<n,es:s.sg>}}
+{{de-ndecl|[[ostchinesisch|Ostchinesisches]]<+> [[Meer]]<n,es:s.sg.article>}}
 
 {{C|de|Seas}}
 -------- end text --------
@@ -15727,7 +15976,7 @@ Page 437 Russische Föderation: -------- begin text --------
 * {{audio|de|De-Russische Föderation.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|[[russisch|Russische]]<+> [[Föderation]]<f>}}
+{{de-proper noun|[[russisch|Russische]]<+> [[Föderation]]<f.article>}}
 
 # {{place|de|country|cont/Europe,Asia|t=Russian Federation|t2=Russia}}
 #: {{syn|de|Russland}}
@@ -16013,9 +16262,12 @@ From [[w:Pope Silvester I|Pope Silvester I]], whose feast-day has been the 31st 
 From {{der|de|la|Silvester}}.
 
 ====Proper noun====
-{{de-proper noun|m}}
+{{de-proper noun|m,s,-:s}}
 
 # {{given name|de|male}}
+
+====Declension====
+{{de-ndecl|m,s,-:s}}
 
 {{C|de|Holidays}}
 
@@ -16213,13 +16465,16 @@ Borrowed from {{bor|de|la|monastērium}}, from {{der|de|grc|μοναστήριο
 * {{audio|de|De-Münster.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|n|old=1}}
+{{de-proper noun|toponym}}
 
 # {{place|de|city|s/North Rhine-Westphalia|c/Germany|t1=Münster}}
-# {{lb|de|historical}} The prince-bishopric based in that city
+# {{lb|de|historical}} the prince-bishopric based in that city
 # {{place|de|municipality|s/Bavaria|c/Germany}}
 # {{place|de|municipality|s/Hesse|c/Germany}}
 # {{place|de|municipality|s/Tirol|c/Austria}}
+
+====Declension====
+{{de-ndecl|toponym}}
 
 ====Descendants====
 * {{desc|en|Münster|bor=1}}
@@ -16269,9 +16524,12 @@ Page 453 Oberhausen: -------- begin text --------
 * {{audio|de|De-Oberhausen.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|toponym}}
 
 # {{place|de|city|s/North Rhine-Westphalia|c/Germany|t1=Oberhausen}}
+
+====Declension====
+{{de-ndecl|toponym}}
 -------- end text --------
 Page 454 Fürth: Found match for regex: {
 Page 454 Fürth: -------- begin text --------
@@ -16281,9 +16539,12 @@ Page 454 Fürth: -------- begin text --------
 * {{audio|de|De-Fürth.OGG|Audio}}
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|toponym}}
 
 # {{place|de|independent city|s/Bavaria|c/Germany|t1=Fürth}}
+
+====Declension====
+{{de-ndecl|toponym}}
 -------- end text --------
 Page 455 Kaufbeuren: Found match for regex: {
 Page 455 Kaufbeuren: -------- begin text --------
@@ -16294,9 +16555,12 @@ Page 455 Kaufbeuren: -------- begin text --------
 * {{audio|de|LL-Q188 (deu)-Michael Schönitzer (WMDE)-Kaufbeuren.wav|Audio}}
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|toponym}}
 
 # {{place|de|independent city|s/Bavaria|c/Germany|t1=Kaufbeuren}}
+
+====Declension====
+{{de-ndecl|toponym}}
 -------- end text --------
 Page 456 Kempten: Found match for regex: {
 Page 456 Kempten: -------- begin text --------
@@ -16308,9 +16572,12 @@ Page 456 Kempten: -------- begin text --------
 * {{audio|de|LL-Q188 (deu)-Michael Schönitzer (WMDE)-Kempten.wav|Audio}}
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|toponym}}
 
 # {{place|de|independent city|s/Bavaria|c/Germany|t1=Kempten}}
+
+====Declension====
+{{de-ndecl|toponym}}
 -------- end text --------
 Page 457 Memmingen: Found match for regex: {
 Page 457 Memmingen: -------- begin text --------
@@ -16321,9 +16588,12 @@ Page 457 Memmingen: -------- begin text --------
 * {{audio|de|LL-Q188 (deu)-Michael Schönitzer (WMDE)-Memmingen.wav|Audio}}
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|n}}
 
 # {{place|de|independent city|s/Bavaria|c/Germany|t1=Memmingen}}
+
+====Declension====
+{{de-ndecl|toponym}}
 -------- end text --------
 Page 458 Schwabach: Found match for regex: {
 Page 458 Schwabach: -------- begin text --------
@@ -16334,24 +16604,30 @@ Page 458 Schwabach: -------- begin text --------
 * {{audio|de|LL-Q188 (deu)-Ionenlaser-Schwabach.wav|Audio}}
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|toponym}}
 
 # {{place|de|independent city|s/Bavaria|c/Germany|t1=Schwabach}}
+
+====Declension====
+{{de-ndecl|toponym}}
 -------- end text --------
 Page 459 Schweinfurt: Found match for regex: {
 Page 459 Schweinfurt: -------- begin text --------
 {{wikipedia|lang=de}}
 
 ===Etymology===
-[[Schwein]] "[[pig]]" + [[Furt]] "[[ford]]"
+{{af|de|Schwein|t1=pig|Furt|t2=ford}}
 
 ===Pronunciation===
 * {{audio|de|LL-Q188 (deu)-Michael Schönitzer (WMDE)-Schweinfurt.wav|Audio}}
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|toponym}}
 
 # {{place|de|independent city|s/Bavaria|c/Germany|t1=Schweinfurt}}
+
+====Declension====
+{{de-ndecl|toponym}}
 -------- end text --------
 Page 460 Straubing: Found match for regex: {
 Page 460 Straubing: -------- begin text --------
@@ -16362,9 +16638,12 @@ Page 460 Straubing: -------- begin text --------
 * {{audio|de|LL-Q188 (deu)-Michael Schönitzer (WMDE)-Straubing.wav|Audio}}
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|toponym}}
 
 # {{place|de|independent city|s/Bavaria|c/Germany|t1=Straubing}}
+
+====Declension====
+{{de-ndecl|toponym}}
 -------- end text --------
 Page 461 Weiden in der Oberpfalz: Found match for regex: {
 Page 461 Weiden in der Oberpfalz: -------- begin text --------
@@ -16375,9 +16654,12 @@ Page 461 Weiden in der Oberpfalz: -------- begin text --------
 * {{audio|de|LL-Q188 (deu)-Michael Schönitzer (WMDE)-Weiden in der Oberpfalz.wav|Audio}}
 
 ===Proper noun===
-{{de-proper noun|[[Weiden]]<n> [[in]] [[die|der]] [[Oberpfalz]]}}
+{{de-proper noun|[[Weiden]]<toponym> [[in]] [[die|der]] [[Oberpfalz]]}}
 
 # {{place|de|independent city|s/Bavaria|c/Germany|t1=Weiden in der Oberpfalz}}
+
+====Declension====
+{{de-ndecl|[[Weiden]]<toponym> [[in]] [[die|der]] [[Oberpfalz]]}}
 -------- end text --------
 Page 462 Frankfurt an der Oder: Found match for regex: {
 Page 462 Frankfurt an der Oder: -------- begin text --------
@@ -16393,9 +16675,12 @@ Page 462 Frankfurt an der Oder: -------- begin text --------
 * {{audio|de|De-Frankfurt an der Oder.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|[[Frankfurt]]<n> [[an]] [[die|der]] [[Oder]]}}
+{{de-proper noun|[[Frankfurt]]<toponym> [[an]] [[die|der]] [[Oder]]}}
 
 # {{place|de|sizable town|s/Brandenburg|in eastern|c/Germany|t1=Frankfurt-an-der-Oder}}
+
+====Declension====
+{{de-ndecl|[[Frankfurt]]<toponym> [[an]] [[die|der]] [[Oder]]}}
 -------- end text --------
 Page 463 Offenbach am Main: Found match for regex: {
 Page 463 Offenbach am Main: -------- begin text --------
@@ -16408,7 +16693,7 @@ Page 463 Offenbach am Main: -------- begin text --------
 * {{audio|de|De-Offenbach am Main.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|[[Offenbach]]<n> [[am]] [[Main]]}}
+{{de-proper noun|[[Offenbach]]<toponym> [[am]] [[Main]]}}
 
 # {{place|de|independent city|s/Hesse|c/Germany|next to the|river/Main|t=Offenbach am Main}}
 -------- end text --------
@@ -16424,7 +16709,7 @@ Page 464 Frankfurt am Main: -------- begin text --------
 * {{audio|de|De-Frankfurt am Main.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|[[Frankfurt]]<n> [[am]] [[Main]]}}
+{{de-proper noun|[[Frankfurt]]<toponym> [[am]] [[Main]]}}
 
 # {{place|de|largest city|s/Hesse|in central|c/Germany|t1=Frankfurt am Main}}
 #: {{syn|de|Mainhattan|q1=humorous|FFM}}
@@ -16437,9 +16722,12 @@ Page 465 Hoyerswerda: -------- begin text --------
 * {{audio|de|De-Hoyerswerda.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|toponym}}
 
 # {{place|de|independent city|s/Saxony|c/Germany|t1=Hoyerswerda}}
+
+====Declension====
+{{de-ndecl|toponym}}
 -------- end text --------
 Page 466 Plauen: Found match for regex: {
 Page 466 Plauen: -------- begin text --------
@@ -16450,9 +16738,12 @@ Page 466 Plauen: -------- begin text --------
 * {{audio|de|De-Plauen.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|toponym}}
 
 # {{place|de|independent city|s/Saxony|c/Germany|t1=Plauen}}
+
+====Declension====
+{{de-ndecl|toponym}}
 -------- end text --------
 Page 467 Kriegsbeil: Found match for regex: =
 Page 467 Kriegsbeil: -------- begin text --------
@@ -16507,9 +16798,12 @@ Page 469 Schicklgruber: -------- begin text --------
 {{rfe|de}}
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|surname}}
 
-# {{surname|de}} ( The original surname of [[w:Adolf Hitler|Adolf Hitler's]] father.)
+# {{surname|de}} (The original surname of [[w:Adolf Hitler|Adolf Hitler's]] father.)
+
+====Declension====
+{{de-ndecl|surname}}
 -------- end text --------
 Page 470 Frottee: Found match for regex: {
 Page 470 Frottee: -------- begin text --------
@@ -16551,24 +16845,36 @@ Page 471 Moldau: -------- begin text --------
 Cognate to {{m|en|Moldova}} (the {{w|Moldova River}}), which see.
 
 ====Proper noun====
-{{de-proper noun|f|gen2=Moldaus}}
+{{de-proper noun|f.article}}
 
 # {{place|de|river|c/Romania|t=Moldova}}
 
+=====Declension=====
+{{de-ndecl|f.sg.article}}
+
 ====Proper noun====
-{{de-proper noun|n|gen2=Moldaus}}
+{{de-proper noun|toponym}}
 
 # {{lb|de|officialese|Germany|Austria}} {{place|de|country|r/Eastern Europe|t=Moldova}}
 #: {{syn|de|Moldawien|q1=usual name|Republik Moldau|q2=full officialese form|Moldova|q3=Switzerland officialese}}
 #* {{quote-web|de|title=Moldaus Präsident Dodon verliert ersten Wahlgang|work=Spiegel|url=https://www.spiegel.de/politik/ausland/moldau-amtsinhaber-igor-dodon-verliert-ersten-wahlgang-gegen-maia-sandu-a-a0251b39-ae0d-4fef-bad4-aef04e123f8b|date=2020-11-02|passage=Das unter anderem für den Weinanbau bekannte Land '''Moldau''' liegt zwischen der Ukraine und Rumänien im politischen Spannungsfeld zwischen Russland und der EU.}}
+# {{place|de|historical region|in northeast|c/Romania|t=Western Moldavia}}
+# {{place|de|municipality/and/village|dist:Suf/Teplice|r:Suf/Ústí nad Labem|c/Czech Republic|t=Moldava}}
+# {{place|de|town/and/municipality|dist:Suf/Košice-okolie|r:Suf/Košice|c/Slovakia|t=Moldava nad Bodvou}}; in full in German, {{m|de|Moldau an der Bodwa}}
+
+=====Declension=====
+{{de-ndecl|toponym}}
 
 ===Etymology 2===
 Cognate to {{m|en|Vltava}}, which see.
 
 ====Proper noun====
-{{de-proper noun|f}}
+{{de-proper noun|f.article}}
 
 # {{place|de|major river|c/Czech Republic|t=Vltava}}
+
+=====Declension=====
+{{de-ndecl|f.sg.article}}
 
 =====Derived terms=====
 * {{l|de|Moldavit}}
@@ -16847,9 +17153,12 @@ From {{der|de|goh|Haduwig}}, {{m|goh|Hadwig}}, from {{der|de|gem-pro|*Haþuwīg�
 * {{audio|de|De-Hedwig.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|f|Hedwigs}}
+{{de-proper noun|f,s.gen:s}}
 
 # {{given name|de|female|from=Proto-Germanic|q=borne by a 12th/13th century [[Silesian]] saint}}
+
+====Declension====
+{{de-ndecl|f,s.gen:s}}
 
 ====Descendants====
 * {{desc|en|Hedwig|bor=1}}
@@ -16965,12 +17274,12 @@ Page 484 Erster Weltkrieg: -------- begin text --------
 * {{audio|de|De-Erster Weltkrieg.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|[[erste|Erster]]<+> [[Weltkrieg]]<m,s:es>}}
+{{de-proper noun|[[erste|Erster]]<+> [[Weltkrieg]]<m,s:es..article>}}
 
-# The [[First World War]], [[World War I]].
+# the [[First World War]], [[World War I]]
 
 ====Declension====
-{{de-ndecl|[[erste|Erster]]<+> [[Weltkrieg]]<m,s:es.sg>}}
+{{de-ndecl|[[erste|Erster]]<+> [[Weltkrieg]]<m,s:es.sg..article>}}
 
 {{C|de|War}}
 -------- end text --------
@@ -16984,11 +17293,21 @@ From {{inh|de|gem-pro|*Raginaharduz}}.
 * {{audio|de|De-Reineke.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|m,-}}
 
 # [[Reynard]] (the fox)
 #: {{syn|de|Reineke Fuchs}}
+
+====Declension====
+{{de-ndecl|m,-.sg}}
+
+===Proper noun===
+{{de-proper noun|surname}}
+
 # {{surname|de}}
+
+====Declension====
+{{de-ndecl|surname}}
 
 ===See also===
 * {{pedia}}
@@ -17025,10 +17344,13 @@ Page 487 Pieria: Found match for regex: =
 Page 487 Pieria: -------- begin text --------
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|toponym}}
 
 # {{place|de|regional unit|in north-central|c/Greece|t=Pieria}}
 # {{place|de|province|empire/Roman Empire|t=Pieria}}
+
+====Declension====
+{{de-ndecl|toponym}}
 
 ----
 
@@ -17191,9 +17513,12 @@ Page 493 Agathe: -------- begin text --------
 * {{audio|de|De-Agathe.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|f|Agathes}}
+{{de-proper noun|f,n:s.gen:s}}
 
-# {{given name|de|female|eq=Agatha}}.
+# {{given name|de|female|eq=Agatha}}
+
+====Declension====
+{{de-ndecl|f,n:s.gen:s}}
 
 ----
 
@@ -17242,28 +17567,30 @@ Page 495 Römer: -------- begin text --------
 * {{audio|de|De-Römer.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m|Römers|Römer|f=Römerin}}
+{{de-noun|m|f=in}}
 
 # [[Roman]]
 # [[rummer]]
 
 ====Declension====
-{{de-decl-noun-m|s}}
-
-{{wp|lang=de|Römer (Frankfurt am Main)}}
+{{de-ndecl|m}}
 
 ===Proper noun===
-{{de-proper noun|m|Römers}}
+{{wp|lang=de|Römer (Frankfurt am Main)}}
+{{de-proper noun|m}}
 
 # the building of the [[city council]] of [[Frankfurt am Main]]
 
 ====Declension====
-{{de-decl-noun-m|n=sg}}
+{{de-ndecl|m.sg}}
 
 ===Proper noun===
-{{de-proper noun|m|g2=f}}
+{{de-proper noun|surname}}
 
 # {{surname|de}}
+
+====Declension====
+{{de-ndecl|surname}}
 
 {{C|de|Vessels|Buildings|Demonyms|Nationalities}}
 -------- end text --------
@@ -17333,9 +17660,12 @@ Named after the German physicist {{w|Wilhelm Conrad Röntgen}}.
 {{rfe|de}}<ref>{{cite-book|author=Hans Bahlow|entry=Röntgen, ''Röntjen''|title=Deutsches Namenlexikon: Familien- und Vornamen nach Ursprung und Sinn erklärt|location=Frankfurt am Main|publisher=[[w:Suhrkamp Verlag|Suhrkamp Taschenbuch Verlag]]|year=1967|year_published=1972|passage=fries. KF. wie ''Böntjen'', ''Büntgens!'' Ronymus s. Hieronymus!|lang=de}}</ref>
 
 ====Proper noun====
-{{de-proper noun|old=1}}
+{{de-proper noun|surname}}
 
 # {{surname|de|nodot=1}}, notably of [[w:Wilhelm Röntgen|Wilhelm Conrad Röntgen]].
+
+=====Declension=====
+{{de-ndecl|surname}}
 
 ===References===
 <references />
@@ -17381,9 +17711,12 @@ Page 499 Mao: -------- begin text --------
 * {{IPA|de|/maʊ̯/}} {{q|never in isolation, but sometimes when followed by another name}}
 
 ===Proper noun===
-{{de-proper noun||Maos}}
+{{de-proper noun|surname}}
 
 # {{name translit|de|zh|毛|tr=Máo|type=surname}}; usually referring to {{w|Mao Zedong}} (in German ''Mao Tse-tung'' or rarer ''Mao Zedong'')
+
+====Declension====
+{{de-ndecl|surname}}
 
 ----
 
@@ -17437,9 +17770,12 @@ Page 501 Ottilie: -------- begin text --------
 * {{audio|de|De-Ottilie.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|f|Ottilie|gen2=Ottilies|gen3=Ottiliens}}
+{{de-proper noun|f,n:s.gen:s}}<!-- by analogy with dewikt [[Amalie]] -->
 
 # {{given name|de|female|eq=fr:Odile}}
+
+====Declension====
+{{de-ndecl|f,n:s.gen:s}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -17594,9 +17930,12 @@ Page 508 Immelmann: Found match for regex: =
 Page 508 Immelmann: -------- begin text --------
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|surname}}
 
-# {{m|en|Immelmann}}: {{surname|de}}
+# {{surname|de}}
+
+====Declension====
+{{de-ndecl|surname}}
 
 ====Descendants====
 * {{desc|en|Immelmann}}
@@ -17910,13 +18249,13 @@ Page 520 Vereinigtes Königreich: -------- begin text --------
 * {{audio|de|De-Vereinigtes Königreich.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|[[vereinigt|Vereinigtes]]<+> [[Königreich]]<n,s:es>}}
+{{de-proper noun|[[vereinigt|Vereinigtes]]<+> [[Königreich]]<n,s:es.article>}}
 
 # {{place|de|country|r/Western Europe|t=United Kingdom}}
 #: {{syn|de|Großbritannien<q:mildly informal>}}
 
 ====Declension====
-{{de-ndecl|[[vereinigt|Vereinigtes]]<+> [[Königreich]]<n,s:es.sg>}}
+{{de-ndecl|[[vereinigt|Vereinigtes]]<+> [[Königreich]]<n,s:es.sg.article>}}
 
 ====Synonyms====
 * {{l|de|England}} {{qualifier|proscribed|informal}}
@@ -18173,10 +18512,13 @@ Page 527 Theophilus: Found match for regex: =
 Page 527 Theophilus: -------- begin text --------
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|m,',se:-:'[colloquial]]}}
 
 # {{lb|de|biblical character}} [[#English|Theophilus]] {{gloss|biblical figure}}
 # {{given name|de|male|usage=rare}}
+
+====Declension====
+{{de-ndecl|m,',se:-:'[colloquial]]}}
 
 {{C|de|Individuals}}
 
@@ -18338,9 +18680,12 @@ Page 534 Marshallinseln: -------- begin text --------
 * {{audio|de|De-Marshallinseln.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|p|Marshallinseln}}
+{{de-proper noun|p.article}}
 
 # {{place|de|country/and/archipelago|r/Micronesia|t1=Marshall Islands}}
+
+====Declension====
+{{de-ndecl|p.article}}
 
 ====Related terms====
 * {{l|de|Marshallesisch}}
@@ -18766,8 +19111,8 @@ Nominalisation of {{m|de|schwarz}}.
 ===Noun===
 {{de-noun|+|f=+}}
 
-# A [[black]] object or [[being]].
-## {{qualifier|specifically}} A [[black]] person, a person of naturally dark skin.
+# a [[black]] object or [[being]]
+## {{qualifier|specifically}} a [[black]] person, a person of naturally dark skin
 
 ====Declension====
 {{de-ndecl|+}}
@@ -18813,10 +19158,13 @@ Page 552 Mose: -------- begin text --------
 * {{audio|de|De-Mose.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|m,s:-[only with an article]}}
 
 # {{lb|de|biblical character|Protestantism}} [[Moses]]
 #: {{syn|de|Moses|q1=Catholic}}
+
+====Declension====
+{{de-ndecl|m,s:-[only with an article].sg}}
 
 {{C|de|Biblical characters|Individuals}}
 
@@ -19130,9 +19478,12 @@ Page 565 Meschede: -------- begin text --------
 * {{audio|de|De-Meschede.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|toponym}}
 
 # {{place|de|town|dist/Hochsauerland|s/North Rhine-Westphalia|c/Germany|t1=Meschede}}
+
+====Declension====
+{{de-ndecl|toponym}}
 -------- end text --------
 Page 566 Weißer: Found match for regex: =
 Page 566 Weißer: -------- begin text --------
@@ -19388,9 +19739,12 @@ Page 572 Liebling: -------- begin text --------
 * {{l|de|Liebchen}}
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|surname}}
 
-# {{surname|de|from=nicknames|nodot=1}} originating as a nickname.
+# {{surname|de|from=nicknames|nodot=1}} originating as a nickname
+
+====Declension====
+{{de-ndecl|surname}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -19519,7 +19873,7 @@ From {{bor|de|en|Facebook}}.
 * {{hyphenation|de|Face|book}}
 
 ===Proper noun===
-{{de-proper noun|gen1=Facebooks}}
+{{de-proper noun|n}}
 
 # [[#English|Facebook]]
 
@@ -19527,7 +19881,7 @@ From {{bor|de|en|Facebook}}.
 * {{l|de|facebooken}}
 
 ====Declension====
-{{de-decl-noun-n|n=sg|prop=1|s}}
+{{de-ndecl|n.sg}}
 
 ====Usage notes====
 * ''Facebook'' is not normally used with an article; when one is used, it is the neuter article ([[Citations:Facebook|see citations]]).
@@ -19546,14 +19900,14 @@ Page 578 Kalter Krieg: -------- begin text --------
 * {{audio|de|De-Kalter Krieg.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|[[kalt|Kalter]]<+> [[Krieg]]<m,s:es>}}
+{{de-proper noun|[[kalt|Kalter]]<+> [[Krieg]]<m,s:es.article>}}
 
 # [[Cold War]] (a period of history from 1945-1991)
 #* '''2018''', Reinhard Werner, ''[https://www.epochtimes.de/politik/welt/rassismus-vorwurf-holt-bundesregierung-ein-linke-schaeumt-nach-interview-des-afrika-beauftragten-nooke-a2678756.html „Rassismus“-Vorwurf holt Bundesregierung ein: Linke schäumt nach Interview des Afrika-Beauftragten Nooke]'', in the Epoch Times:
 #*: {{quote|de|„... Experten, auch Afrikaner, sagen: Der Kalte Krieg hat Afrika mehr geschadet als die Kolonialzeit.“|"... Experts, including Africans, say: The Cold War has done more harm to Africa than the colonial era."}}
 
 ====Declension====
-{{de-ndecl|[[kalt|Kalter]]<+> [[Krieg]]<m,s:es.sg>}}
+{{de-ndecl|[[kalt|Kalter]]<+> [[Krieg]]<m,s:es.sg.article>}}
 
 ===Further reading===
 * {{R:DWDS}}
@@ -19716,10 +20070,13 @@ Page 585 Cheshire-Katze: -------- begin text --------
 {{wikipedia|lang=de}}
 
 ===Proper noun===
-{{de-proper noun|f|head=die [[Cheshire]]-[[Katze]]|old=1}}
+{{de-proper noun|f.article}}
 
-# the [[Cheshire cat]]
+# [[Cheshire cat]]
 #: {{syn|de|Grinsekatze<g:f>}}
+
+====Declension====
+{{de-ndecl|f.sg.article}}
 
 {{C|de|Cats|Fairy tale|Fictional characters}}
 -------- end text --------
@@ -19731,10 +20088,13 @@ Page 586 Grinsekatze: -------- begin text --------
 From {{compound|de|grinsen|t1=to grin|Katze|t2=cat}}.
 
 ===Proper noun===
-{{de-proper noun|f|head=die Grinsekatze|old=1}}
+{{de-proper noun|f.article}}
 
-# the [[Cheshire cat]]
+# [[Cheshire cat]]
 #: {{syn|de|Cheshire-Katze<g:f>}}
+
+====Declension====
+{{de-ndecl|f.sg.article}}
 
 {{C|de|Cats|Fairy tale|Fictional characters}}
 -------- end text --------
@@ -19852,10 +20212,20 @@ Page 592 Kanaan: -------- begin text --------
 From {{der|de|grc|Χαναάν}}, from {{der|de|he|כְּנַעַן|tr=k'ná'an}}.
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|toponym}}
+
+# [[Canaan]] {{qualifier|region}}
+
+====Declension====
+{{de-ndecl|toponym}}
+
+===Proper noun===
+{{de-proper noun|m}}
 
 # [[Canaan]] {{qualifier|biblical character}}
-# [[Canaan]] {{qualifier|region}}
+
+====Declension====
+{{de-ndecl|m.sg}}
 
 ====Related terms====
 * {{l|de|Kanaanäisch}}
@@ -19873,12 +20243,12 @@ From {{af|de|rot|-el|t1=red|pos2=diminutive suffix}}.
 * {{hyph|de|Rö|teln}}
 
 ===Noun===
-{{de-noun|p|old=1}}
+{{de-noun|p}}
 
 # [[rubella]], [[German measles]]
 
 ====Declension====
-{{de-decl-noun-m|n=pl}}
+{{de-ndecl|p}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -19954,9 +20324,12 @@ Page 596 Knör: Found match for regex: =
 Page 596 Knör: -------- begin text --------
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|surname}}
 
 # {{surname|de}}
+
+====Declension====
+{{de-ndecl|surname}}
 -------- end text --------
 Page 597 Europäer: Found match for regex: =
 Page 597 Europäer: -------- begin text --------
@@ -20365,12 +20738,12 @@ Page 607 Ionisches Meer: -------- begin text --------
 * {{audio|de|De-Ionisches Meer.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|[[ionisch|Ionisches]]<+> [[Meer]]<n,es:s>}}
+{{de-proper noun|[[ionisch|Ionisches]]<+> [[Meer]]<n,es:s.article>}}
 
 # [[Ionian Sea]] (European sea)
 
 ====Declension====
-{{de-ndecl|[[ionisch|Ionisches]]<+> [[Meer]]<n,es:s.sg>}}
+{{de-ndecl|[[ionisch|Ionisches]]<+> [[Meer]]<n,es:s.sg.article>}}
 
 {{C|de|Seas}}
 -------- end text --------
@@ -20382,12 +20755,12 @@ Page 608 Olympische Winterspiele: -------- begin text --------
 * {{audio|de|De-Olympische Winterspiele.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|[[olympisch|Olympische]]<+> [[Winterspiele]]<p>}}
+{{de-proper noun|[[olympisch|Olympische]]<+> [[Winterspiele]]<p.article>}}
 
 # [[Olympic Winter Games]], [[Winter Olympics]]
 
 ====Declension====
-{{de-ndecl|[[olympisch|Olympische]]<+> [[Winterspiele]]<p>}}
+{{de-ndecl|[[olympisch|Olympische]]<+> [[Winterspiele]]<p.article>}}
 
 {{C|de|Winter sports}}
 -------- end text --------
@@ -20399,7 +20772,7 @@ Page 609 Hellenische Republik: -------- begin text --------
 * {{audio|de|De-Hellenische Republik.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|[[hellenisch|Hellenische]]<+> [[Republik]]<f>}}
+{{de-proper noun|[[hellenisch|Hellenische]]<+> [[Republik]]<f.article>}}
 
 # {{place|de|country|r/Southern Europe|t=Hellenic Republic|t2=Greece}}
 #: {{syn|de|Griechenland<g:n>}}
@@ -20428,20 +20801,23 @@ From {{der|de|la|hebenus|ebenus|ebony}} + {{m|de|Holz||wood}}.
 * {{audio|de|De-Ebenholz.ogg|Audio}}
 
 ===Noun===
-{{de-noun|n|Ebenholzes|Ebenhölzer}}
+{{de-noun|n,,^er}}
 
 # [[ebony]] {{gloss|wood}}
 
 ====Declension====
-{{de-decl-noun-n|es|pl=Ebenhölzer}}
+{{de-ndecl|n,,^er}}
 
 ====Descendants====
 * {{desc|bor=1|hu|ében}}
 
 ===Proper noun===
-{{de-proper noun||Ebenholz'}}
+{{de-proper noun|toponym}}
 
 # {{place|de|village|mun/Vaduz|c/Liechtenstein}}
+
+====Declension====
+{{de-ndecl|toponym}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -20493,7 +20869,7 @@ Variant of {{m|de|Taube}}.
 From a {{der|de|cel}} (likely [[Gaulish]]) word meaning "water". Compare {{cog|en|Dover}}, {{cog|cy|dwfr}}, {{m|cy|dŵr}}, {{cog|br|dour}} and {{cog|sga|dobur||water, river}}.
 
 ====Proper noun====
-{{de-proper noun|f}}
+{{de-proper noun|f.article}}
 
 # {{place|de|left tributary|riv/Main|in|s/Baden-Württemberg,Bavaria|c/Germany|t=Tauber}}
 
@@ -20503,7 +20879,7 @@ Substantivization of {{m|de|taub}}.
 ====Noun====
 {{de-noun|+|f=+}}
 
-# A [[deaf]] man or boy.
+# a [[deaf]] man or boy
 
 =====Declension=====
 {{de-ndecl|+}}
@@ -20713,13 +21089,13 @@ Page 622 Balearische Inseln: -------- begin text --------
 * {{audio|de|De-Balearische Inseln.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|[[balearisch|Balearische]]<+> [[Insel]]n<p>}}
+{{de-proper noun|[[balearisch|Balearische]]<+> [[Insel]]n<p.article>}}
 
 # {{place|de|archipelago/autonomous community/and/province|c/Spain|t=Balearic Islands}}
 #: {{syn|de|Balearen}}
 
 ====Declension====
-{{de-ndecl|[[balearisch|Balearische]]<+> [[Insel]]n<p>}}
+{{de-ndecl|[[balearisch|Balearische]]<+> [[Insel]]n<p.article>}}
 -------- end text --------
 Page 623 Werktag: Found match for regex: =
 Page 623 Werktag: -------- begin text --------
@@ -20750,12 +21126,12 @@ Page 624 Oberer See: -------- begin text --------
 * {{audio|de|De-Oberer See.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|[[ober|Oberer]]<+> [[See]]<m>}}
+{{de-proper noun|[[ober|Oberer]]<+> [[See]]<m.article>}}
 
 # [[Lake Superior]]
 
 ====Declension====
-{{de-ndecl|[[ober|Oberer]]<+> [[See]]<m.sg>}}
+{{de-ndecl|[[ober|Oberer]]<+> [[See]]<m.sg.article>}}
 
 {{C|de|Lakes}}
 -------- end text --------
@@ -20812,15 +21188,21 @@ Derived from {{suffix|de|Mutter|-i|t1=mother}}.
 * {{audio|de|De-Mutti.ogg|Audio}}
 
 ===Noun===
-{{de-noun|f|Muttis|gen2=Mutti|Muttis}}
+{{de-noun|f,s.gen:s:-[only with an article]}}
 
 # [[mom]], [[mummy]]
 
-===Proper noun===
-{{de-proper noun|f|old=1}}
+====Declension====
+{{de-ndecl|f,s.gen:s:-[only with an article]}}
 
-# ''A nickname for'' [[w:Angela Merkel|Angela Merkel]].
+===Proper noun===
+{{de-proper noun|f,s.gen:s:-[only with an article]}}
+
+# ''a nickname for'' [[w:Angela Merkel|Angela Merkel]]
 #: {{syn|de|Mama}}
+
+====Declension====
+{{de-ndecl|f,s.gen:s:-[only with an article].sg}}
 
 ====Usage notes====
 * The word is commonly used with a definite article in most parts of central Germany, southern Germany, and Austria: ''Wo ist die Mutti?'' – “Where is Mum?” In northern Germany—and generally in writing—no article tends to be used: ''Wo ist Mutti?''
@@ -20949,13 +21331,13 @@ Page 633 Pazifischer Ozean: -------- begin text --------
 * {{audio|de|De-Pazifischer Ozean.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|[[pazifisch|Pazifischer]]<+> [[Ozean]]<m,es:s>}}
+{{de-proper noun|[[pazifisch|Pazifischer]]<+> [[Ozean]]<m,es:s.article>}}
 
 # [[Pacific Ocean]] (the world's largest body of water)
 #: {{syn|de|Stiller Ozean|Pazifik|Südsee}}
 
 ====Declension====
-{{de-ndecl|[[pazifisch|Pazifischer]]<+> [[Ozean]]<m,es:s.sg>}}
+{{de-ndecl|[[pazifisch|Pazifischer]]<+> [[Ozean]]<m,es:s.sg.article>}}
 
 {{C|de|Oceans}}
 -------- end text --------
@@ -21213,9 +21595,12 @@ Page 645 Uta: Found match for regex: =
 Page 645 Uta: -------- begin text --------
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|f,s:Uten.gen:s}}<!-- by comparison with [[Uten]], [[Jutta]] -->
 
 # {{given name|de|female|var=Ute}}
+
+====Declension====
+{{de-ndecl|f,s:Uten.gen:s}}
 
 ----
 
@@ -21266,12 +21651,15 @@ Page 648 Walpurga: -------- begin text --------
 From {{der|de|goh|waltan||rule}} (<< {{der|de|gem-pro|*waldaną}}) + {{m|goh|burg||castle}}.
 
 ===Proper noun===
-{{de-proper noun|f|Walpurgas}}
+{{de-proper noun|f,s.gen:s}}
 
-# An eighth century [[saint]] whose [[feast day]] on May 1st coincided with a pagan feast associated in folklore with [[witchcraft]].
+# an eighth century [[saint]] whose [[feast day]] on May 1st coincided with a pagan feast associated in folklore with [[witchcraft]]
 #* {{quote-book|de|year=1919|title=Wege und Umwege|chapter=Das Leben der Heiligen Walpurga|author=Annette Kolb|authorlink=Annette Kolb|url=https://www.gutenberg.org/cache/epub/46204/pg46204-images.html|passage=Der Pförtner, der sich eines Abends weigerte, '''Walpurgas''' Befehle auszuführen, und die Lichter ihres Klosters anzustecken, ist das Bild des unintuitiven Menschen, der immerzu sieht und nie erschaut, indes Walpurgas lauterem Herzen ein Licht entquoll und ihre Gestalt umflutete, die mitten in der Nacht so hell zu leuchten begann, daß die Schar der Nonnen bestürzt herbeieilte und sprachlos vor Staunen die Strahlende umringte.}}
 # {{lb|de|now|rare}} {{given name|de|female}}
 #* {{quote-journal|de|title=Wenn's sein muss, will ich auch ganz brav lange sitzen|work=Die Zeit|url=https://www.zeit.de/2001/03/_Wenn's_sein_muss_will_ich_auch_ganz/komplettansicht|date=2001-01-11|passage=Es waren Christoph Willibald Gluck (2. 7. 1714 in Erasbach bis 15. 11. 1787 in Wien) und seine Frau '''Walpurga'''.}}
+
+====Declension====
+{{de-ndecl|f,s.gen:s}}
 
 ====Usage notes====
 * The German given name is rare today, but some of its cognates are in regular use in northern Europe.
@@ -21364,9 +21752,12 @@ Page 653 Stanislaus: Found match for regex: =
 Page 653 Stanislaus: -------- begin text --------
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|m,',e}}<!-- by analogy with [[Nikolaus]] -->
 
 # {{given name|de|male|eq=Stanislaus}}
+
+====Declension====
+{{de-ndecl|m,',e}}
 -------- end text --------
 Page 654 Knackarsch: Found match for regex: =
 Page 654 Knackarsch: -------- begin text --------
@@ -21480,10 +21871,13 @@ Page 658 Dornach: Found match for regex: =
 Page 658 Dornach: -------- begin text --------
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|toponym}}
 
 # {{place|de|neighbourhood|in western|city/Mulhouse|r/Alsace|c/France}}
 # {{place|de|town|can/Solothurn|in northern|c/Switzerland}}
+
+====Declension====
+{{de-ndecl|toponym}}
 -------- end text --------
 Page 659 virtuelles Teilchen: Found match for regex: {
 Page 659 virtuelles Teilchen: -------- begin text --------
@@ -21695,13 +22089,13 @@ Borrowed from {{bor|de|he|יום כיפור|יוֹם כִּפּוּר|sc=Hebr|tr
 * {{audio|de|De-Jom Kippur.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|m|Jom Kippur|Jom Kippur|head=Jom Kippur}}
+{{de-proper noun|m,-,-.nolinkhead=1}}
 
 # [[Yom Kippur]] (Day of Atonement)
 #: {{syn|de|Versöhnungsfest|Versöhnungstag}}
 
 ====Declension====
-{{de-decl-noun-m|||dp=Jom Kippur}}
+{{de-ndecl|m,-,-.nolinkhead=1}}
 
 {{C|de|Judaism}}
 -------- end text --------
@@ -21756,9 +22150,12 @@ Page 672 Schindler: Found match for regex: =
 Page 672 Schindler: -------- begin text --------
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|surname}}
 
 # {{surname|de}}
+
+====Declension====
+{{de-ndecl|surname}}
 -------- end text --------
 Page 673 Schwade: Found match for regex: [
 Page 673 Schwade: -------- begin text --------
@@ -21948,9 +22345,12 @@ Page 679 Zimmermann: -------- begin text --------
 * {{l|de|Tischler}}
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|surname}}
 
 # {{surname|de|common occupational|from=occupations}}
+
+====Declension====
+{{de-ndecl|surname}}
 
 ===Further reading===
 * {{R:DWDS}}
@@ -22170,13 +22570,13 @@ Page 688 Siebenschläfertag: -------- begin text --------
 ===Pronunciation===
 * {{audio|de|De-Siebenschläfertag.ogg|Audio}}
 
-===Proper noun===
-{{de-proper noun|m||Siebenschläfertage}}
+===Noun===
+{{de-noun|m,s:es,e}}
 
 # [[Seven Sleepers Day]]
 
 ====Declension====
-{{de-decl-noun-n|(e)s|e}}
+{{de-ndecl|m,s:es,e}}
 
 {{C|de|Calendar terms}}
 -------- end text --------
@@ -22242,9 +22642,12 @@ Page 691 Schlegel: -------- begin text --------
 {{de-decl-noun-m|s|pl=Schlegel}}
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|surname}}
 
 # {{surname|de|from=occupations|nodot=1}} for a [[smith]] or for a strong man.
+
+====Declension====
+{{de-ndecl|surname}}
 
 {{cln|de|surnames from nicknames}}
 -------- end text --------
@@ -22261,13 +22664,13 @@ Literally, "[[Near East]]".
 * {{audio|de|De-Naher Osten.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|[[nah|Naher]]<+> [[Osten]]<m>}}
+{{de-proper noun|[[nah|Naher]]<+> [[Osten]]<m.article>}}
 
 # [[Middle East]] {{gloss|region comprising southwest Asia and northeast Africa}}
 # {{lb|de|loosely|nonstandard}} the [[MENA]] region
 
 ====Declension====
-{{de-ndecl|[[nah|Naher]]<+> [[Osten]]<m.sg>}}
+{{de-ndecl|[[nah|Naher]]<+> [[Osten]]<m.sg.article>}}
 
 ====Usage notes====
 * As in English, {{m|de||Naher Osten|t=Near East}} and {{m|de||Mittlerer Osten|t=Middle East}} are synonymous. The difference is that German prefers the former, English the latter.
@@ -22370,13 +22773,13 @@ Page 696 Atlantischer Ozean: -------- begin text --------
 * {{audio|de|De-Atlantischer Ozean.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|[[atlantisch|Atlantischer]]<+> [[Ozean]]<m,es:s>}}
+{{de-proper noun|[[atlantisch|Atlantischer]]<+> [[Ozean]]<m,es:s.article>}}
 
 # [[Atlantic Ocean]] (the ocean lying between the Americas to the west and Europe and Africa to the east)
 #: {{syn|de|Atlantik}}
 
 ====Declension====
-{{de-ndecl|[[atlantisch|Atlantischer]]<+> [[Ozean]]<m,es:s.sg>}}
+{{de-ndecl|[[atlantisch|Atlantischer]]<+> [[Ozean]]<m,es:s.sg.article>}}
 
 <!--===Further reading===
 * {{R:Duden}}
@@ -22392,13 +22795,13 @@ Page 697 Adriatisches Meer: -------- begin text --------
 * {{audio|de|De-Adriatisches Meer.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|[[adriatisch|Adriatisches]]<+> [[Meer]]<n,es:s>}}
+{{de-proper noun|[[adriatisch|Adriatisches]]<+> [[Meer]]<n,es:s.article>}}
 
 # {{place|de|sea/arm|sea/Mediterranean Sea|t1=Adriatic Sea}}
 #: {{syn|de|Adria}}
 
 ====Declension====
-{{de-ndecl|[[adriatisch|Adriatisches]]<+> [[Meer]]<n,es:s.sg>}}
+{{de-ndecl|[[adriatisch|Adriatisches]]<+> [[Meer]]<n,es:s.sg.article>}}
 -------- end text --------
 Page 698 Bieber: Found match for regex: =
 Page 698 Bieber: -------- begin text --------
@@ -22413,9 +22816,12 @@ From {{inh|de|gmh|biber||beaver}}, originally as a nickname for a hard worker.
 * {{IPA|de|/ˈbiːbɐ/}}
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|surname}}
 
 # {{surname|de|from=nicknames}}
+
+====Declension====
+{{de-ndecl|surname}}
 -------- end text --------
 Page 699 Gesims: Found match for regex: =
 Page 699 Gesims: -------- begin text --------
@@ -22553,7 +22959,7 @@ Page 705 ehemalige jugoslawische Republik Mazedonien: -------- begin text ------
 * {{audio|de|De-ehemalige jugoslawische Republik Mazedonien.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|[[ehemalig]]e<+> [[jugoslawisch]]e<+> [[Republik]]<f> [[Mazedonien]]}}
+{{de-proper noun|[[ehemalig]]e<+> [[jugoslawisch]]e<+> [[Republik]]<f.article> [[Mazedonien]]}}
 
 # {{place|de|country|r/Southeast Asia|t=former Yugoslav Republic of Macedonia|t2=North Macedonia}}
 #: {{syn|de|EJRM|Republik Mazedonien}}
@@ -22603,7 +23009,7 @@ Page 708 Islamische Republik Pakistan: -------- begin text --------
 * {{audio|de|De-Islamische Republik Pakistan.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|[[islamisch|Islamische]]<+> [[Republik]]<f> [[Pakistan]]}}
+{{de-proper noun|[[islamisch|Islamische]]<+> [[Republik]]<f.article> [[Pakistan]]}}
 
 # [[Islamic Republic of Pakistan]]
 #: {{syn|de|Pakistan}}
@@ -22845,7 +23251,7 @@ Page 720 Sozialistische Föderative Republik Jugoslawien: -------- begin text --
 {{wikipedia|lang=de}}
 
 ===Proper noun===
-{{de-proper noun|[[sozialistisch|Sozialistische]]<+> [[föderativ|Föderative]]<+> [[Republik]]<f> [[Jugoslawien]]}}
+{{de-proper noun|[[sozialistisch|Sozialistische]]<+> [[föderativ|Föderative]]<+> [[Republik]]<f.article> [[Jugoslawien]]}}
 
 # {{place|de|former country|r/Southeast Europe|t=Socialist Federal Republic of Yugoslavia|t2=Yugoslavia}}
 -------- end text --------
@@ -22859,7 +23265,7 @@ Page 721 Anti-Antifa: -------- begin text --------
 * {{IPA|de|/ˈantiˌantiˌfaː/}}
 
 ===Proper noun===
-{{de-proper noun|f|Anti-Antifa|head=[[anti-|Anti-]][[Antifa]]}}
+{{de-proper noun|[[anti-|Anti-]][[Antifa]]<f,s[rare].article>}}
 
 # [[anti-Antifa]], a collection of various right-wing and [[fascist]] individuals or groups which oppose [[Antifa]]
 #* {{quote-journal|de|work=Der Tagesspiegel|date=1999-09-01|passage="'''Anti-Antifa'''" ist die Bezeichnung für eine seit Jahren von Neonazis betriebene, bundesweite Kampagne der "Feindaufklärung".|t="'''Anti-Antifa'''" is the designation of a "know-your-enemy" campaign pursued for years by neo-Nazis throughout Germany.}}
@@ -22936,9 +23342,12 @@ From {{inh|de|gmh|schuochmacher}}; analyzable as {{affix|de|Schuh|t1=shoe|Macher
 * {{l|de|Hutmacher}}, {{l|de|Korbmacher}}, {{l|de|Stellmacher}}, {{l|de|Uhrmacher}}
 
 ===Proper noun===
-{{de-proper noun||Schuhmachers}}
+{{de-proper noun|surname}}
 
 # {{surname|de|from=occupations}}
+
+====Declension====
+{{de-ndecl|surname}}
 
 ====Related terms====
 * {{l|de|Schomaker}}
@@ -22958,12 +23367,12 @@ Page 725 Wilde Jagd: -------- begin text --------
 {{compound|de|wild|Jagd}}
 
 ===Proper noun===
-{{de-proper noun|[[wild|Wilde]]<+> [[Jagd]]<f>}}
+{{de-proper noun|[[wild|Wilde]]<+> [[Jagd]]<f.article>}}
 
 # [[Wild Hunt]]
 
 ====Declension====
-{{de-ndecl|[[wild|Wilde]]<+> [[Jagd]]<f.sg>}}
+{{de-ndecl|[[wild|Wilde]]<+> [[Jagd]]<f.sg.article>}}
 
 {{C|de|Mythology}}
 -------- end text --------
@@ -23081,7 +23490,7 @@ Page 730 Neue Deutsche Welle: -------- begin text --------
 {{compound|de|neu|deutsch|Welle|t1=new|t2=German|t3=wave}}, adapted {{calque|de|en|new wave|nocap=1}}.
 
 ===Proper noun===
-{{de-proper noun|[[neue|Neue]]<+> [[deutsche|Deutsche]]<+> [[Welle]]<f>}}
+{{de-proper noun|[[neue|Neue]]<+> [[deutsche|Deutsche]]<+> [[Welle]]<f.article>}}
 
 # {{lb|de|music genre}} [[New German Wave]] {{gloss|genre of German music originally derived from punk rock and New Wave music}}
 #: {{syn|de|NDW}}
@@ -23241,9 +23650,12 @@ Page 737 Tiers: -------- begin text --------
 * {{audio|de|De-Tiers.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun||Tiers'}}
+{{de-proper noun|toponym}}
 
-# {{place|de|municipality|p/South Tyrol}}
+# {{place|de|municipality|ap/South Tyrol|c/Italy}}
+
+====Declension====
+{{de-ndecl|toponym}}
 
 ====Derived terms====
 * {{l|de|Tierser}}
@@ -23407,14 +23819,14 @@ Page 745 Weißes Haus: -------- begin text --------
 * {{audio|de|De-Weißes Haus.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|[[weiß|Weißes]]<+> [[Haus]]<n>}}
+{{de-proper noun|[[weiß|Weißes]]<+> [[Haus]]<n.article>}}
 
 # [[White House]] (especially the official residence of the US President; presidency, administration and executive)
 #* [http://www.stern.de/politik/geschichte/geschichte-als-granatfeuer-durch-moskau-hallten-3511684.html stern.de: ''Geschichte: Als Granatfeuer durch Moskau hallten'' (4. Dezember 2003)]
 #*: {{quote|de|Am 4. Oktober 1993 hallte Granatfeuer durch Moskau. Auf Befehl von Präsident Boris Jelzin nahmen Panzer das '''Weiße Haus''', den Sitz des Parlaments, an der Moskwa unter Feuer.}}
 
 ====Declension====
-{{de-ndecl|[[weiß|Weißes]]<+> [[Haus]]<n.sg>}}
+{{de-ndecl|[[weiß|Weißes]]<+> [[Haus]]<n.sg.article>}}
 -------- end text --------
 Page 746 Barock: Found match for regex: =
 Page 746 Barock: -------- begin text --------
@@ -23579,9 +23991,12 @@ From {{m|de|klein||small}}.
 * {{audio|de|De-Klein.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|surname}}
 
 # {{m|en|Kline}}: {{surname|de|common|from=nicknames|eq=Small}}
+
+====Declension====
+{{de-ndecl|surname}}
 
 ====Derived terms====
 * {{l|de|Kleinsche Flasche}}
@@ -23748,17 +24163,20 @@ From {{unadapted borrowing|de|it|Orvieto|notext=1}}, from {{der|de|la|[[urbs|Urb
 * {{hyph|de|Or|vi|e|to}}
 
 ===Proper noun===
-{{de-proper noun||Orvietos|gen2=Orvieto}}
+{{de-proper noun|toponym}}
 
 # {{place|de|town|r/Umbria|t=Orvieto}}
 
+====Declension====
+{{de-ndecl|toponym}}
+
 ===Noun===
-{{de-noun|m|Orvietos|gen2=Orvieto|Orvietos}}
+{{de-noun|m,-:s,s}}
 
 # {{tlb|de|countable|and|uncountable}} {{l|en|Orvieto}} {{gloss|white wine}}
 
 ====Declension====
-{{de-decl-noun-m|(s)|s}}
+{{de-ndecl|m,-:s,s}}
 
 {{C|de|Wine}}
 
@@ -23863,23 +24281,23 @@ Page 765 eulersche Identität: Found match for regex: =
 Page 765 eulersche Identität: -------- begin text --------
 
 ===Proper noun===
-{{de-proper noun|[[eulersch]]e<+> [[Identität]]<f>}}
+{{de-proper noun|[[eulersch]]e<+> [[Identität]]<f.article>}}
 
 # {{lb|de|complex analysis}} [[Euler's identity]]
 
 ====Declension====
-{{de-ndecl|[[eulersch]]e<+> [[Identität]]<f.sg>}}
+{{de-ndecl|[[eulersch]]e<+> [[Identität]]<f.sg.article}}
 -------- end text --------
 Page 766 eulersche Formel: Found match for regex: =
 Page 766 eulersche Formel: -------- begin text --------
 
 ===Proper noun===
-{{de-proper noun|eulersche<+> Formel<f>}}
+{{de-proper noun|eulersche<+> Formel<f.article>}}
 
 # {{lb|de|complex analysis}} [[Euler's formula]]
 
 ====Declension====
-{{de-ndecl|eulersche<+> Formel<f.sg>}}
+{{de-ndecl|eulersche<+> Formel<f.sg.article>}}
 -------- end text --------
 Page 767 gelb-rote Karte: Found match for regex: =
 Page 767 gelb-rote Karte: -------- begin text --------
@@ -23953,13 +24371,13 @@ Page 771 Jesus Christus: -------- begin text --------
 * {{audio|de|De-Jesus Christus.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|m|Jesu Christi}}
+{{de-proper noun|m.acc:Jesum Christum:-.dat:Jesu Christo:-.gen:Jesu Christi:-.abl:Jesu Christo:-.voc:Jesu Christe}}
 
-# {{lb|de|Christianity}} [[Jesus Christ]], a religious figure.
-# [[Jesus Christ]], used as an [[exclamation]] of [[displeasure]], [[shock]] or [[disbelief]], and yet also an exclamation of awe, reverence, and thanks to Jesus when very good things happen.].
+# {{lb|de|Christianity}} [[Jesus Christ]], a religious figure
+# [[Jesus Christ]], used as an [[exclamation]] of [[displeasure]], [[shock]] or [[disbelief]], and yet also an exclamation of awe, reverence, and thanks to Jesus when very good things happen
 
 ====Declension====
-{{de-decl-noun-m|n=sg-av|as=Jesum Christum/Jesus Christus|ds=Jesu Christo/Jesus Christus|gs=Jesu Christi/Jesus Christus|bs=Jesu Christo/Jesus Christus|vs=Jesu Christe}}
+{{de-ndecl|m.acc:Jesum Christum:-.dat:Jesu Christo:-.gen:Jesu Christi:-.abl:Jesu Christo:-.voc:Jesu Christe.sg}}
 * Other combinations of the various inflected forms of {{m|de|Jesus}} and {{m|de|Christus}} (for which see those entries) may occasionally be found.
 
 ====Synonyms====
@@ -24046,9 +24464,12 @@ The same as {{m|de|Junge}} with dialectal [[apocope]].
 From {{m|de|jung||young}}, originally denoting the younger of two namesakes in a family.
 
 ====Proper noun====
-{{de-proper noun|old=1}}
+{{de-proper noun|surname}}
 
 # {{surname|de|common|from=nicknames}}
+
+====Declension====
+{{de-ndecl|surname}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -24060,9 +24481,12 @@ Page 775 Schulte: -------- begin text --------
 A {{bor|de|nds-de}} variant of {{m|de|Schulz}}.
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|surname}}
 
 # {{surname|de|from=occupations}}
+
+====Declension====
+{{de-ndecl|surname}}
 -------- end text --------
 Page 776 Hoffmann: Found match for regex: [
 Page 776 Hoffmann: -------- begin text --------
@@ -24075,9 +24499,12 @@ An occupational surname for an owner or manager of a farm, from {{der|de|gmh|hof
 * {{audio|de|De-Hoffmann.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|surname}}
 
 # {{surname|de|common|from=occupations}}
+
+====Declension====
+{{de-ndecl|surname}}
 
 ====Related terms====
 * {{l|de|Hofmann}}
@@ -24095,17 +24522,23 @@ Southern German variant of {{m|de|Hoffmann}}.
 * {{audio|de|De-Hofmann.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|surname}}
 
 # {{surname|de|common|from=occupations}}
+
+====Declension====
+{{de-ndecl|surname}}
 -------- end text --------
 Page 778 Maier: Found match for regex: =
 Page 778 Maier: -------- begin text --------
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|surname}}
 
 # {{surname|de|from=occupations}} A spelling variant of {{l|de|Meyer}}.
+
+====Declension====
+{{de-ndecl|surname}}
 
 ====Derived terms====
 * {{l|en|Maierform}}
@@ -24117,9 +24550,12 @@ Page 779 Mayer: Found match for regex: =
 Page 779 Mayer: -------- begin text --------
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|surname}}
 
 # {{surname|de|from=occupations}} A spelling variant of {{l|de|Meyer}}.
+
+====Declension====
+{{de-ndecl|surname}}
 -------- end text --------
 Page 780 Kühn: Found match for regex: =
 Page 780 Kühn: -------- begin text --------
@@ -24128,9 +24564,12 @@ Page 780 Kühn: -------- begin text --------
 Medieval contraction of the given name [[Konrad]]. Sometimes possibly a nickname from {{m|de|kühn||daring}}.
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|surname}}
 
 # {{surname|de|from=given names}}
+
+====Declension====
+{{de-ndecl|surname}}
 -------- end text --------
 Page 781 Kuhn: Found match for regex: =
 Page 781 Kuhn: -------- begin text --------
@@ -24139,9 +24578,12 @@ Page 781 Kuhn: -------- begin text --------
 Medieval contraction of the given name [[Konrad]].
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|surname}}
 
 # {{surname|de|from=given names}}
+
+====Declension====
+{{de-ndecl|surname}}
 -------- end text --------
 Page 782 Brandt: Found match for regex: =
 Page 782 Brandt: -------- begin text --------
@@ -24150,9 +24592,12 @@ Page 782 Brandt: -------- begin text --------
 Contraction of given names containing the {{der|de|gem|-}} element Brand-, -brand ("fire/ sword") such as modern German {{m|de|Hildebrandt}}.
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|surname}}
 
 # {{surname|de|from=given names}}
+
+====Declension====
+{{de-ndecl|surname}}
 -------- end text --------
 Page 783 Vogt: Found match for regex: =
 Page 783 Vogt: -------- begin text --------
@@ -24177,7 +24622,7 @@ From {{inh|de|gmh|voget}}, from {{inh|de|goh|fogat}}, borrowed from {{der|de|LL.
 * {{desc|en|vogt|bor=1}}
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|surname}}
 
 # {{surname|de|from=occupations}}
 
@@ -24191,9 +24636,12 @@ Page 784 Seifart: Found match for regex: =
 Page 784 Seifart: -------- begin text --------
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|surname}}
 
 # {{surname|de}}
+
+====Declension====
+{{de-ndecl|surname}}
 
 ====Related terms====
 * {{l|de|Seifarth}}
@@ -24440,9 +24888,12 @@ Page 794 Steinbeißer: -------- begin text --------
 * {{l|de|Seewolf}}
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|surname}}
 
-# ''A [[surname]].''
+# {{surname|de}}
+
+====Declension====
+{{de-ndecl|surname}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -24510,9 +24961,12 @@ Page 798 Mauthner: -------- begin text --------
 {{wikipedia|lang=de}}
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|surname}}
 
 # {{surname|de|German}}
+
+====Declension====
+{{de-ndecl|surname}}
 
 ====Derived terms====
 * {{l|de|mauthnersch}}
@@ -24539,14 +24993,20 @@ Page 800 Drau: -------- begin text --------
 * {{rhymes|de|aʊ̯|s=1}}
 
 ===Proper noun===
-{{de-proper noun|f|old=1}}
+{{de-proper noun|f.article}}
 
 # {{place|de|tributary|riv:Suf/Danube|in|c/Italy,Austria,Slovenia,Croatia,Hungary|t1=Drava}}
 
+====Declension====
+{{de-ndecl|f.sg.article}}
+
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|toponym}}
 
 # {{place|de|town/and/commune|ap/Trentino|ar/Trentino-Alto Adige|c/Italy|t=Dro}}
+
+====Declension====
+{{de-ndecl|toponym}}
 -------- end text --------
 Page 801 Arbeitsmann: Found match for regex: =
 Page 801 Arbeitsmann: -------- begin text --------
@@ -24646,12 +25106,12 @@ Page 806 Großer Wagen: -------- begin text --------
 * {{audio|de|De-Großer Wagen.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|[[groß|Großer]]<+> [[Wagen]]<m>}}
+{{de-proper noun|[[groß|Großer]]<+> [[Wagen]]<m.article>}}
 
 # {{lb|de|astronomy}} the [[Plough]], the [[Big Dipper]] {{gloss|asterism in the constellation [[Ursa Major]]}}
 
 ====Declension====
-{{de-ndecl|[[groß|Großer]]<+> [[Wagen]]<m.sg>}}
+{{de-ndecl|[[groß|Großer]]<+> [[Wagen]]<m.sg.article>}}
 
 ===See also===
 * {{l|de|Großer Bär||[[Ursa Major]] {{gloss|constellation}}}}
@@ -24669,12 +25129,12 @@ Page 807 Großer Bär: -------- begin text --------
 * {{audio|de|De-Großer Bär.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|[[groß|Großer]]<+> [[Bär]]<m.weak>}}
+{{de-proper noun|[[groß|Großer]]<+> [[Bär]]<m.weak.article>}}
 
 # {{lb|de|constellation}} [[Ursa Major]]
 
 ====Declension====
-{{de-ndecl|[[groß|Großer]]<+> [[Bär]]<m.weak.sg>}}
+{{de-ndecl|[[groß|Großer]]<+> [[Bär]]<m.weak.sg.article>}}
 
 ====See also====
 * {{l|de|Großer Wagen||the Plough, Big Dipper {{gloss|asterism}}}}
@@ -24898,9 +25358,12 @@ Page 827 Kaisers: -------- begin text --------
 * {{audio|de|De-Kaisers.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|toponym}}
 
 # {{place|de|municipality|s/Tyrol|c/Austria}}
+
+====Declension====
+{{de-ndecl|toponym}}
 
 ===Noun===
 {{head|de|noun form}}
@@ -24961,7 +25424,7 @@ From {{compound|de|neu|deutsch|Härte|t1=new|t2=German|t3=hardness}}, inspired b
 * {{IPA|de|[ˈnɔʏ̯ə ˈdɔʏ̯tʃə ˈhɛɐ̯tə]|[ˈnɔʏ̯ə ˈdɔʏ̯tʃə ˈhɛʁtə]}}
 
 ===Proper noun===
-{{de-proper noun|[[neu|Neue]]<+> [[deutsch|Deutsche]]<+> [[Härte]]<f>}}
+{{de-proper noun|[[neu|Neue]]<+> [[deutsch|Deutsche]]<+> [[Härte]]<f.article>}}
 
 # [[#English|Neue Deutsche Härte]]; a [[genre]] of [[German]] [[hard rock]]/[[heavy metal]] music originating in the 1990s, incorporating elements of [[dance music]] and [[electronica]]
 #: {{syn|de|NDH<q:abbreviation>}}
@@ -25251,12 +25714,12 @@ Page 854 Dotcom-Blase: -------- begin text --------
 {{wikipedia|lang=de}}
 
 ===Proper noun===
-{{de-proper noun|head=[[Dotcom]]-[[Blase]]|f|old=1}}
+{{de-proper noun|f}}
 
 # {{lb|de|business|history}} [[dot-com bubble]]
 
 ====Declension====
-{{de-decl-noun-f|n=sg|prop=1}}
+{{de-ndecl|f.sg}}
 -------- end text --------
 Page 855 Dunkle Energie: Found match for regex: {
 Page 855 Dunkle Energie: -------- begin text --------
@@ -25566,9 +26029,12 @@ Page 868 Mals: -------- begin text --------
 * {{audio|de|De-Mals.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun||Mals'}}
+{{de-proper noun|toponym}}
 
-# {{place|de|municipality|p/South Tyrol}}
+# {{place|de|municipality|ap/South Tyrol|c/Italy}}
+
+====Declension====
+{{de-ndecl|toponym}}
 
 ====Derived terms====
 * {{l|de|Malser}}
@@ -25586,9 +26052,12 @@ Page 869 Fritzens: -------- begin text --------
 * {{audio|de|De-Fritzens.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|toponym}}
 
 # {{place|de|municipality|s/Tyrol|c/Austria}}
+
+====Declension====
+{{de-ndecl|toponym}}
 
 ===Noun===
 {{head|de|noun form}}
@@ -25891,12 +26360,15 @@ Page 886 Sczedrzik: Found match for regex: =
 Page 886 Sczedrzik: -------- begin text --------
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|toponym}}
 
 # {{place|de|village|c/Poland|t1=Sczedrzik|t2=Szczedrzyk}}
 #: {{syn|de|Hitlersee<q:1934–1945>}}
 #* '''1859''', Alexander Göschen, ''Deutsche Klinik'', volume 11, page 254:
 #*: Niederlassungen: {{...}} Fleck in Brandenburg, Moritz in Biesenthal, Ludwig in Grünberg, Heilmann in Marklissa, Reuter in Woliersheim, Jany in '''Sczedrzik''' bei Malapane, Bujakowsky in Rosenberg (O.-Schl.), {{...}}
+
+====Declension====
+{{de-ndecl|toponym}}
 -------- end text --------
 Page 887 Reichsdeutscher: Found match for regex: =
 Page 887 Reichsdeutscher: -------- begin text --------
@@ -26163,9 +26635,12 @@ Page 900 Rabaul: Found match for regex: =
 Page 900 Rabaul: -------- begin text --------
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|toponym}}
 
 # {{place|de|town|c/Papua New Guinea|t=Rabaul}}
+
+====Declension====
+{{de-ndecl|toponym}}
 
 ----
 
@@ -26325,20 +26800,21 @@ From {{inh|de|gmh|vlies}}, ultimately from the source of {{m|de|fließen||to flo
 * {{hyphenation|de|Fließ}}
 
 ===Noun===
-{{de-noun|n|g2=m|Fließes|Fließe}}
+{{de-noun|n:m}}
 
 # {{lb|de|dated|outside|dialects}} [[stream]]
 
 ====Declension====
-{{de-decl-noun-n|es|e}}
-{{de-decl-noun-m|es|e}}
-
-{{wp|lang=de}}
+{{de-ndecl|n:m}}
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{wp|lang=de}}
+{{de-proper noun|toponym}}
 
 # {{place|de|municipality|s/Tyrol|c/Austria}}
+
+====Declension====
+{{de-ndecl|toponym}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -26981,13 +27457,13 @@ Page 930 Proterozoikum: -------- begin text --------
 * {{IPA|de|/pʁoteʁoˈtsoːikʊm/}}
 * {{audio|de|De-Proterozoikum.ogg|Audio}}
 
-====Declension====
-{{de-decl-noun-n|s|n=sg}}
-
 ===Proper noun===
-{{de-proper noun|n|old=1}}
+{{de-proper noun|n.article}}
 
 # the [[Proterozoic]]
+
+====Declension====
+{{de-ndecl|n.sg.article}}
 
 ===See also===
 * {{l|de|Paläoproterozoikum}}
@@ -27190,10 +27666,13 @@ Page 937 Mohs: -------- begin text --------
 {{wikipedia|Mohs scale of mineral hardness}}
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|surname}}
 
 # {{surname|de}}
-# [[w:de:Friedrich Mohs|Friedrich Mohs]], German mineralogist, the originator of Mohs scale of mineral hardness.
+#: [[w:de:Friedrich Mohs|Friedrich Mohs]], German mineralogist, the originator of Mohs scale of mineral hardness.
+
+====Declension====
+{{de-ndecl|surname}}
 -------- end text --------
 Page 938 Verfassungsschutz: Found match for regex: =
 Page 938 Verfassungsschutz: -------- begin text --------
@@ -27567,12 +28046,12 @@ From {{bor|de|ko|^평양||flat land}}.
 * {{hyphenation|de|Pjöng|jang}}
 
 ===Proper noun===
-{{de-proper noun|n|old=1}}
+{{de-proper noun|toponym}}
 
 # {{place|de|capital|c/North Korea|t1=Pyongyang}}
 
 ====Declension====
-{{de-decl-noun-n|(s)|pl=-}}
+{{de-ndecl|toponym}}
 -------- end text --------
 Page 957 Lampion: Found match for regex: =
 Page 957 Lampion: -------- begin text --------
@@ -27876,12 +28355,15 @@ Page 968 Königsberger Klops: -------- begin text --------
 -------- end text --------
 Page 969 Escher: Found match for regex: =
 Page 969 Escher: -------- begin text --------
+{{wikipedia|lang=de}}
 
 ===Proper noun===
-{{wikipedia|lang=de}}
-{{de-proper noun|old=1}}
+{{de-proper noun|surname}}
 
 # {{surname|de}}
+
+====Declension====
+{{de-ndecl|surname}}
 -------- end text --------
 Page 970 Prinzess: Found match for regex: =
 Page 970 Prinzess: -------- begin text --------
@@ -27965,15 +28447,18 @@ Page 973 Arsengehalt: -------- begin text --------
 -------- end text --------
 Page 974 Eichinger: Found match for regex: =
 Page 974 Eichinger: -------- begin text --------
+{{wikipedia|lang=de}}
 
 ===Pronunciation===
 * {{audio|de|De-Eichinger.ogg|Audio}}
 
 ===Proper noun===
-{{wikipedia|lang=de}}
-{{de-proper noun|old=1}}
+{{de-proper noun|surname}}
 
 # {{surname|de}}
+
+====Declension====
+{{de-ndecl|surname}}
 -------- end text --------
 Page 975 Gelbes: Found match for regex: =
 Page 975 Gelbes: -------- begin text --------
@@ -27999,9 +28484,12 @@ Page 976 Haerle: Found match for regex: =
 Page 976 Haerle: -------- begin text --------
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|surname}}
 
 # {{surname|de}}
+
+====Declension====
+{{de-ndecl|surname}}
 -------- end text --------
 Page 977 Kampfstoff: Found match for regex: =
 Page 977 Kampfstoff: -------- begin text --------
@@ -28025,9 +28513,12 @@ Page 978 Bebel: Found match for regex: =
 Page 978 Bebel: -------- begin text --------
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|surname}}
 
 # {{surname|de}}
+
+====Declension====
+{{de-ndecl|surname}}
 -------- end text --------
 Page 979 Nährmedium: Found match for regex: =
 Page 979 Nährmedium: -------- begin text --------
@@ -28586,7 +29077,7 @@ Page 1005 Europäische Kommission: -------- begin text --------
 * {{audio|de|De-Europäische Kommission.ogg|Audio}}
 
 ===Noun===
-{{de-proper noun|[[europäisch|Europäische]]<+> [[Kommission]]<f>}}
+{{de-proper noun|[[europäisch|Europäische]]<+> [[Kommission]]<f.sg.article>}}
 
 # {{lb|de|EU|politics}} [[European Commission]]
 -------- end text --------
@@ -29089,9 +29580,12 @@ Page 1026 Mieders: -------- begin text --------
 * {{audio|de|De-Mieders.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|toponym}}
 
 # {{place|de|municipality|s/Tyrol|c/Austria}}
+
+====Declension====
+{{de-ndecl|toponym}}
 
 ===Noun===
 {{head|de|noun form|g=n}}
@@ -29106,9 +29600,12 @@ Page 1027 Taus: -------- begin text --------
 * {{rhymes|de|aʊ̯s|s=1}}
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|toponym}}
 
-# The Czech town of [[Domažlice]]
+# {{place|de|town|r:Suf/Plzeň|c/Czech Republic|t=Domažlice}}
+
+====Declension====
+{{de-ndecl|toponym}}
 
 ===Noun===
 {{head|de|noun form|g=m}}
@@ -29574,9 +30071,12 @@ Page 1051 Sangerhausen: -------- begin text --------
 
 ===Proper noun===
 {{wikipedia|lang=de}}
-{{de-proper noun|old=1}}
+{{de-proper noun|toponym}}
 
 # {{place|de|town|s/Saxony-Anhalt}}
+
+====Declension====
+{{de-ndecl|toponym}}
 -------- end text --------
 Page 1052 Schwaz: Found match for regex: =
 Page 1052 Schwaz: -------- begin text --------
@@ -29586,9 +30086,12 @@ Page 1052 Schwaz: -------- begin text --------
 
 ===Proper noun===
 {{wikipedia|lang=de}}
-{{de-proper noun|old=1}}
+{{de-proper noun|toponym}}
 
 # {{place|de|city|s/Tyrol|c/Austria}}
+
+====Declension====
+{{de-ndecl|toponym}}
 -------- end text --------
 Page 1053 Silberstandard: Found match for regex: =
 Page 1053 Silberstandard: -------- begin text --------
@@ -29651,12 +30154,12 @@ From {{compound|de|Seide|t1=silk|Straße|t2=street, road}}. Coined by {{w|Ferdin
 * {{IPA|de|/ˈzaɪ̯dn̩ˌʃtʁaːsə/}}
 
 ===Proper noun===
-{{de-proper noun|f|head=die Seidenstraße|old=1}}
+{{de-proper noun|f.article}}
 
 # {{lb|de|history}} [[Silk Road]]
 
 ====Declension====
-{{de-decl-noun-f|prop=1|n=sg}}
+{{de-ndecl|f.article.sg}}
 
 ====Related terms====
 {{col4-u|de
@@ -29691,12 +30194,12 @@ Page 1058 Deutsches Reich: -------- begin text --------
 * {{hyph|de|Deut|sches Reich}}
 
 ===Proper noun===
-{{de-proper noun|[[deutsch|Deutsches]]<+> [[Reich]]<n,es:s>}}
+{{de-proper noun|[[deutsch|Deutsches]]<+> [[Reich]]<n,es:s.article>}}
 
 # the [[German Empire]] {{gloss|official name of the German state from 1871 through the mid 1940s}}
 
 ====Declension====
-{{de-ndecl|[[deutsch|Deutsches]]<+> [[Reich]]<n,es:s.sg>}}
+{{de-ndecl|[[deutsch|Deutsches]]<+> [[Reich]]<n,es:s.sg.article>}}
 -------- end text --------
 Page 1059 englischer Gruß: Found match for regex: =
 Page 1059 englischer Gruß: -------- begin text --------
@@ -29843,14 +30346,12 @@ Page 1065 Schmaltz: Found match for regex: =
 Page 1065 Schmaltz: -------- begin text --------
 
 ===Proper noun===
-{{de-proper noun|n|Schmaltz}}
+{{de-proper noun|surname}}
 
 # {{alternative spelling of|de|Schmalz}}
 
 ====Declension====
-German names are generally not declined; nevertheless, if inflected, {{m|de||Schmaltz}} declines as follows:
-{{de-decl-noun-n||e}}
-There is also an archaic genitive singular form in {{m|de|Schmaltzes}}.
+{{de-ndecl|surname}}
 -------- end text --------
 Page 1066 Rauschgiftsüchtige: Found match for regex: =
 Page 1066 Rauschgiftsüchtige: -------- begin text --------
@@ -30214,9 +30715,12 @@ Page 1079 Vals: -------- begin text --------
 {{wp|lang=de}}
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|toponym}}
 
 # {{place|de|municipality|s/Tyrol|c/Austria}}
+
+====Declension====
+{{de-ndecl|toponym}}
 -------- end text --------
 Page 1080 Blaue Nachzügler: Found match for regex: =
 Page 1080 Blaue Nachzügler: -------- begin text --------
@@ -30238,10 +30742,13 @@ Page 1081 Bogue: -------- begin text --------
 A corruption of {{der|de|pt|Boca do Tigre|lit=[[mouth|Mouth]] of the [[tiger|Tiger]]}}, a [[calque]] of the {{der|de|zh|-}} name {{m|zh|虎門|lit=[[tiger|Tiger]] [[gate|Gate]]|tr=Hǔmén}}.
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|f.article}}
 
-# {{lb|de|usually with the definite article}} An [[important]] [[strait]] in the [[Pearl River]] [[delta|Delta]] between [[Guangzhou]] and the [[South China Sea]].
+# {{place|de|strait|in the [[Pearl River]] [[delta|Delta]], between [[Guangzhou]] and the [[South China Sea]]}}
 #: {{syn|de|Bocca Tigris}}
+
+====Declension====
+{{de-ndecl|f.article.sg}}
 -------- end text --------
 Page 1082 Happy End: Found match for regex: =
 Page 1082 Happy End: -------- begin text --------
@@ -30528,9 +31035,12 @@ Page 1091 Schauwecker: -------- begin text --------
 A German surname originating in the city of Reutlingen, from 'schauen' meaning 'to look' or 'to keep watch' and 'wecken' + -er, 'one who alerts' or 'raises the alarm'. The name thus denotes the job of a sentinel or patrolman, and dates back to the fortification of the city in the early 13th century.
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|surname}}
 
 # {{surname|de}}
+
+====Declension====
+{{de-ndecl|surname}}
 -------- end text --------
 Page 1092 Managementsystem: Found match for regex: =
 Page 1092 Managementsystem: -------- begin text --------
@@ -30681,10 +31191,13 @@ Page 1096 Asperger: -------- begin text --------
 * {{U:de:-er words}}
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|surname}}
 
 # {{surname|de}}
 #: {{w|Hans Asperger|Hans '''Asperger'''}}, b. 1906
+
+====Declension====
+{{de-ndecl|surname}}
 
 ====Derived terms====
 {{der4|de
@@ -30724,9 +31237,12 @@ Old diminutive of {{m|de|Brosame}}.
 * {{l|de|Semmelbrösel}}
 
 ===Proper noun===
-{{de-proper noun|n|old=1}}
+{{de-proper noun|toponym}}
 
-# [[Brzice]], Czechia
+# {{place|de|municipality/and/town|dist:Suf/Náchod|r:Suf/Hradec Králové|c/Czech Republic|t=Brzice}}
+
+====Declension====
+{{de-ndecl|toponym}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -30849,9 +31365,13 @@ Borrowed from {{bor|de|pl|Raków}}.
 * {{IPA|de|/ˈʁakʊf/}}
 
 ===Proper noun===
-{{de-proper noun|old=1}}{{attention|de|Needs gender and declension, as a minimum.}}
+{{de-proper noun|toponym}}
 
 # {{place|de|<<village>> and <<former town>> in <<c/Poland>>, important centre of Socinianism in the 16th–17th CC|t=Raków}}
+#: {{syn|de|Rakau}}
+
+====Declension====
+{{de-ndecl|toponym}}
 
 ===Further reading===
 * {{pedia|Raków (Powiat Kielecki)|lang=de}}
@@ -30865,7 +31385,7 @@ Page 1104 SGDI: -------- begin text --------
 ===Proper noun===
 {{de-proper noun|old=1}}
 
-# {{initialism of|de|{{l|de|Sammlung}} {{l|de|der}} {{l|de|griechisch|griechischen}} {{l|de|Dialekt}}-{{l|de|Inschrift|Inschriften}}}}
+# {{initialism of|de|[[Sammlung]] [[der]] [[griechisch]]en [[Dialekt]]-[[Inschrift]]en}}
 
 ===Anagrams===
 * {{anagrams|en|DIGs|GDIs|Sigd|dIGs|digs|gids}}
@@ -31235,12 +31755,12 @@ Page 1120 Volksrepublik Lugansk: -------- begin text --------
 {{wikipedia|lang=de}}
 
 ===Proper noun===
-{{de-proper noun|head=[[Volksrepublik]] [[Lugansk]]|f|old=1}}
+{{de-proper noun|[[Volksrepublik]]<f.article> [[Lugansk]]}}
 
-# {{place|de|a self-proclaimed quasi-state, internationally recognized as part of <<c:pref/Ukraine>>; one of two members of the Confederation of [[Novorossiya]].|t1=Luhansk People's Republic}}
+# {{place|de|a self-proclaimed quasi-state, internationally recognized as part of <<c:pref/Ukraine>>; one of two members of the Confederation of [[Novorossiya]]|t1=Luhansk People's Republic}}
 
 ====Declension====
-{{de-decl-noun-f|n=sg}}
+{{de-ndecl|[[Volksrepublik]]<f.sg.article> [[Lugansk]]}}
 
 ===See also===
 * {{l|de|Lugansk}}
@@ -31250,7 +31770,7 @@ Page 1121 Volksrepublik Donezk: -------- begin text --------
 {{wikipedia|lang=de}}
 
 ===Proper noun===
-{{de-proper noun|[[Volksrepublik]]<f> [[Donezk]]}}
+{{de-proper noun|[[Volksrepublik]]<f.article> [[Donezk]]}}
 
 # {{place|de|a self-proclaimed quasi-state, internationally recognized as part of <<c:pref/Ukraine>>; one of two members of the Confederation of [[Novorossiya]]|t1=Donetsk People's Republic}}
 #* '''2014''' June 16th, ''Ukraine: Der Weg in den Krieg'', Die Welt (e-book version without page numbers; <small>{{ISBN|978-3-944166-54-4}}</small>):
@@ -31262,6 +31782,9 @@ Page 1121 Volksrepublik Donezk: -------- begin text --------
 #*: Die Siedlungen am Rande der Hochburg der Separatisten, die sich neuerdings '''Volksrepublik Donezk''' nannte, hatte der Krieg übel getroffen.
 #* '''2015''' May 22nd, Norman M. Spreng, ''Putin-Versteher: Warum immer mehr Deutsche Verständnis für Russland haben'', BoD – Books on Demand, Norderstedt, p.184 <small>{{ISBN|978-3-7347-5075-5}}</small>:
 #*: Die Frage an die Bürger lautete: 'Sind Sie für eine selbstständige '''Volksrepublik Donezk'''?'
+
+====Declension====
+{{de-ndecl|[[Volksrepublik]]<f.sg.article> [[Donezk]]}}
 
 ===See also===
 * {{l|de|Donezk}}
@@ -31506,9 +32029,12 @@ Page 1129 Nals: -------- begin text --------
 {{wp|lang=de}}
 
 ===Proper noun===
-{{de-proper noun||Nals'}}
+{{de-proper noun|toponym}}
 
-# {{place|de|municipality|p/South Tyrol}}
+# {{place|de|municipality|ap/South Tyrol|c/Italy}}
+
+====Declension====
+{{de-ndecl|toponym}}
 
 ====Related terms====
 * {{l|de|Nalser}}
@@ -31521,9 +32047,12 @@ Page 1130 Plaus: -------- begin text --------
 * {{audio|de|De-Plaus.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun||Plaus'}}
+{{de-proper noun|toponym}}
 
-# {{place|de|municipality|p/South Tyrol}}
+# {{place|de|municipality|ap/South Tyrol|c/Italy}}
+
+====Declension====
+{{de-ndecl|toponym}}
 
 ====Related terms====
 * {{l|de|Plauser}}
@@ -31538,9 +32067,12 @@ Page 1131 Proveis: -------- begin text --------
 {{wp|lang=de}}
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|toponym}}
 
-# {{place|de|municipality|p/South Tyrol}}
+# {{place|de|municipality|ap/South Tyrol|c/Italy}}
+
+====Declension====
+{{de-ndecl|toponym}}
 
 ====Related terms====
 * {{l|de|Proveiser}}
@@ -31549,10 +32081,13 @@ Page 1132 Gais: Found match for regex: =
 Page 1132 Gais: -------- begin text --------
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|toponym}}
 
 # {{place|de|municipality|c/Switzerland}}
-# {{place|de|municipality|p/South Tyrol}}
+# {{place|de|municipality|ap/South Tyrol|c/Italy}}
+
+====Declension====
+{{de-ndecl|toponym}}
 
 ====Related terms====
 * {{l|de|Gaiser}}
@@ -31562,10 +32097,22 @@ Page 1133 Vils: -------- begin text --------
 {{wp|lang=de}}
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|f.article}}
 
-# One of three rivers, all of them tributaries.
+# {{place|de|right tributary|riv/Danube|s/Bavaria|c/Germany}}
+# {{place|de|left tributary|riv/Lech|c/Germany,Austria}}
+# {{place|de|right tributary|riv/Naab|s/Bavaria|c/Germany}}
+
+====Declension====
+{{de-ndecl|f.article.sg}}
+
+===Proper noun===
+{{de-proper noun|toponym}}
+
 # {{place|de|town|s/Tyrol|c/Austria}}
+
+====Declension====
+{{de-ndecl|toponym}}
 
 {{C|de|Rivers}}
 -------- end text --------
@@ -31574,9 +32121,12 @@ Page 1134 Grins: -------- begin text --------
 {{wp|lang=de}}
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|toponym}}
 
 # {{place|de|municipality|s/Tyrol|c/Austria}}
+
+====Declension====
+{{de-ndecl|toponym}}
 
 ----
 
@@ -31586,9 +32136,12 @@ Page 1135 Fiss: -------- begin text --------
 {{wp|lang=de}}
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|toponym}}
 
 # {{place|de|municipality|s/Tyrol|c/Austria}}
+
+====Declension====
+{{de-ndecl|toponym}}
 
 ----
 
@@ -31598,9 +32151,12 @@ Page 1136 Spiss: -------- begin text --------
 {{wp|lang=de}}
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|toponym}}
 
 # {{place|de|municipality|s/Tyrol|c/Austria}}
+
+====Declension====
+{{de-ndecl|toponym}}
 
 ----
 
@@ -31610,18 +32166,24 @@ Page 1137 Kauns: -------- begin text --------
 {{wp|lang=de}}
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|toponym}}
 
-# {{place|de|municipality|c/Austria}}
+# {{place|de|municipality|s/Tyrol|c/Austria}}
+
+====Declension====
+{{de-ndecl|toponym}}
 -------- end text --------
 Page 1138 Mils: Found match for regex: {
 Page 1138 Mils: -------- begin text --------
 {{wp|lang=de}}
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|toponym}}
 
 # {{place|de|municipality|s/Tyrol|c/Austria}}
+
+====Declension====
+{{de-ndecl|toponym}}
 
 ----
 
@@ -31634,18 +32196,24 @@ Page 1139 Pians: -------- begin text --------
 * {{audio|de|De-Pians.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|toponym}}
 
 # {{place|de|municipality|s/Tyrol|c/Austria}}
+
+====Declension====
+{{de-ndecl|toponym}}
 -------- end text --------
 Page 1140 Ebbs: Found match for regex: {
 Page 1140 Ebbs: -------- begin text --------
 {{wp|lang=de}}
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|toponym}}
 
 # {{place|de|municipality|s/Tyrol|c/Austria}}
+
+====Declension====
+{{de-ndecl|toponym}}
 -------- end text --------
 Page 1141 Gols: Found match for regex: {
 Page 1141 Gols: -------- begin text --------
@@ -31658,9 +32226,12 @@ From {{der|de|hu|Gálos}}, [[Hungarianized]] from an earlier name, possibly name
 * {{audio|de|De-Gols.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|toponym}}
 
 # {{place|de|municipality|s/Burgenland|c/Austria}}
+
+====Declension====
+{{de-ndecl|toponym}}
 
 ===References===
 * Fényes Elek: Magyarország geographiai szótára, mellyben minden város, falu és puszta, betürendben körülményesen leiratik. Pest: Fényes Elek. 1851.
@@ -31670,27 +32241,36 @@ Page 1142 Bürs: -------- begin text --------
 {{wp|lang=de}}
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|toponym}}
 
 # {{place|de|municipality|s/Vorarlberg|c/Austria}}
+
+====Declension====
+{{de-ndecl|toponym}}
 -------- end text --------
 Page 1143 Röns: Found match for regex: {
 Page 1143 Röns: -------- begin text --------
 {{wp|lang=de}}
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|toponym}}
 
 # {{place|de|municipality|s/Vorarlberg|c/Austria}}
+
+====Declension====
+{{de-ndecl|toponym}}
 -------- end text --------
 Page 1144 Düns: Found match for regex: {
 Page 1144 Düns: -------- begin text --------
 {{wp|lang=de}}
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|toponym}}
 
 # {{place|de|municipality|s/Vorarlberg|c/Austria}}
+
+====Declension====
+{{de-ndecl|toponym}}
 -------- end text --------
 Page 1145 Weizenfeld: Found match for regex: =
 Page 1145 Weizenfeld: -------- begin text --------
@@ -31783,13 +32363,13 @@ From {{compound|de|Haus|Schwein}}.
 * {{rhymes|de|aɪ̯n}}
 
 ===Noun===
-{{de-noun|n,(e)s,e}}
+{{de-noun|n,s:es,e}}
 
 # [[domestic]] [[pig]]
 #: {{coord|de|Wildschwein}}
 
 ====Declension====
-{{de-ndecl|n,(e)s,e}}
+{{de-ndecl|n,s:es,e}}
 
 ===References===
 * {{R:Duden}}
@@ -31975,9 +32555,12 @@ Page 1157 Malter: -------- begin text --------
 {{de-decl-noun-m|s|}}
 
 ===Proper noun===
-{{de-proper noun|m|g2=f}}
+{{de-proper noun|surname}}
 
 # {{surname|de}}
+
+====Declension====
+{{de-ndecl|surname}}
 -------- end text --------
 Page 1158 Malters: Found match for regex: =
 Page 1158 Malters: -------- begin text --------
@@ -31986,9 +32569,12 @@ Page 1158 Malters: -------- begin text --------
 * {{audio|de|De-Malters.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|toponym}}
 
 # {{place|de|municipality|city/Lucerne|c/Switzerland}}
+
+====Declension====
+{{de-ndecl|toponym}}
 
 ===Noun===
 {{head|de|noun form}}
@@ -32027,12 +32613,12 @@ Page 1160 Internationales Phonetisches Alphabet: -------- begin text --------
 * {{hyphenation|de|In|ter|na|ti|o|nal|es|Pho|ne|tisch|es|Al|pha|bet}}
 
 ===Proper noun===
-{{de-proper noun|[[international|Internationales]]<+> [[phonetisch|Phonetisches]]<+> [[Alphabet]]<n,s:es>}}
+{{de-proper noun|[[international|Internationales]]<+> [[phonetisch|Phonetisches]]<+> [[Alphabet]]<n,s:es.article>}}
 
 # [[International Phonetic Alphabet]]
 
 ====Declension====
-{{de-ndecl|[[international|Internationales]]<+> [[phonetisch|Phonetisches]]<+> [[Alphabet]]<n,s:es.sg>}}
+{{de-ndecl|[[international|Internationales]]<+> [[phonetisch|Phonetisches]]<+> [[Alphabet]]<n,s:es.sg.article>}}
 -------- end text --------
 Page 1161 Mail: Found match for regex: =
 Page 1161 Mail: -------- begin text --------
@@ -32126,12 +32712,12 @@ Page 1165 Heiliger Gral: -------- begin text --------
 * {{rhymes|de|aːl}}
 
 ===Proper noun===
-{{de-proper noun|[[heilig|Heiliger]]<+> [[Gral]]<m,s:es>}}
+{{de-proper noun|[[heilig|Heiliger]]<+> [[Gral]]<m,s:es.article>}}
 
 # [[Holy Grail]]
 
 ====Declension====
-{{de-ndecl|[[heilig|Heiliger]]<+> [[Gral]]<m,s:es.sg>}}
+{{de-ndecl|[[heilig|Heiliger]]<+> [[Gral]]<m,s:es.sg.article>}}
 
 ====Synonyms====
 * {{l|de|Gral}}
@@ -32241,9 +32827,12 @@ Page 1172 Fienen: Found match for regex: =
 Page 1172 Fienen: -------- begin text --------
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|toponym}}
 
-# [[Foieni]]
+# {{place|de|commune|co:Suf/Satu Mare|c/Romania|t=Foieni}}
+
+====Declension====
+{{de-ndecl|toponym}}
 -------- end text --------
 Page 1173 Gilbhart: Found match for regex: =
 Page 1173 Gilbhart: -------- begin text --------
@@ -32265,17 +32854,23 @@ Page 1174 Metternich: Found match for regex: =
 Page 1174 Metternich: -------- begin text --------
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|surname}}
 
 # {{surname|de}}
+
+====Declension====
+{{de-ndecl|surname}}
 -------- end text --------
 Page 1175 Wallenstein: Found match for regex: =
 Page 1175 Wallenstein: -------- begin text --------
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|surname}}
 
 # {{surname|de}}
+
+====Declension====
+{{de-ndecl|surname}}
 -------- end text --------
 Page 1176 Halsband: Found match for regex: =
 Page 1176 Halsband: -------- begin text --------
@@ -32456,9 +33051,12 @@ Page 1183 Selz: Found match for regex: =
 Page 1183 Selz: -------- begin text --------
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|toponym}}
 
-# [[Seltz]] {{gloss|Alsace}}
+# {{place|de|commune|dept/Bas-Rhin|r:suf/Grand Est|c/France|in|r/Alsace}}
+
+====Declension====
+{{de-ndecl|toponym}}
 -------- end text --------
 Page 1184 Niednagel: Found match for regex: =
 Page 1184 Niednagel: -------- begin text --------
@@ -32669,9 +33267,12 @@ Page 1194 Naturns: -------- begin text --------
 {{wp|lang=de}}
 
 ===Proper noun===
-{{de-proper noun||Naturns'}}
+{{de-proper noun|toponym}}
 
-# {{place|de|municipality|p/South Tyrol}}
+# {{place|de|municipality|ap/South Tyrol|c/Italy}}
+
+====Declension====
+{{de-ndecl|toponym}}
 
 ====Derived terms====
 * {{l|de|Naturnser}}
@@ -32684,9 +33285,12 @@ Page 1195 Kiens: -------- begin text --------
 * {{audio|de|De-Kiens.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun||Kiens'}}
+{{de-proper noun|toponym}}
 
-# {{place|de|municipality|p/South Tyrol}}
+# {{place|de|municipality|ap/South Tyrol|c/Italy}}
+
+====Declension====
+{{de-ndecl|toponym}}
 
 ====Derived terms====
 * {{l|de|Kienser}}
@@ -32696,9 +33300,12 @@ Page 1196 Mäls: -------- begin text --------
 {{wp|lang=de}}
 
 ===Proper noun===
-{{de-proper noun||Mäls'}}
+{{de-proper noun|toponym}}
 
 # {{place|de|village|mun/Balzers|c/Liechtenstein}}
+
+====Declension====
+{{de-ndecl|toponym}}
 -------- end text --------
 Page 1197 Pflugschar: Found match for regex: =
 Page 1197 Pflugschar: -------- begin text --------
@@ -32904,7 +33511,7 @@ Page 1206 Katholische Kirche: -------- begin text --------
 * {{alter|de|katholische Kirche}}
 
 ===Proper noun===
-{{de-proper noun|[[katholisch|Katholische]]<+> [[Kirche]]<f>}}
+{{de-proper noun|[[katholisch|Katholische]]<+> [[Kirche]]<f.article>}}
 
 # [[Roman Catholic Church]]
 # [[Catholic Church]]
@@ -32913,7 +33520,7 @@ Page 1206 Katholische Kirche: -------- begin text --------
 * The form {{m|de|Römisch-Katholische Kirche||Roman Catholic Church}}, though not rare, is less common in German than in English.
 
 ====Declension====
-{{de-ndecl|[[katholisch|Katholische]]<+> [[Kirche]]<f.sg>}}
+{{de-ndecl|[[katholisch|Katholische]]<+> [[Kirche]]<f.sg.article>}}
 -------- end text --------
 Page 1207 Hauß: Found match for regex: =
 Page 1207 Hauß: -------- begin text --------
@@ -32959,12 +33566,12 @@ Page 1209 Ptolemäus: -------- begin text --------
 {{rfap|de}}
 
 ===Proper noun===
-{{de-proper noun|m|Ptolemäus'}}
+{{de-proper noun|m,':-[with an article]}}
 
 # [[Ptolemy]]
 
 ====Declension====
-{{de-decl-noun-n|'|n=sg}}
+{{de-ndecl|m,':-[with an article].sg}}
 -------- end text --------
 Page 1210 Skuld: Found match for regex: {
 Page 1210 Skuld: -------- begin text --------
@@ -32978,12 +33585,12 @@ From {{der|de|non|Skuld}}.
 * {{audio|de|De-Skuld.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|f|Skulds|gen2=Skuld}}
+{{de-proper noun|f.gen:s:-[with an article]}}
 
 # {{lb|de|Norse mythology}} [[#English|Skuld]]
 
 ====Declension====
-{{de-decl-noun-f|gs=Skulds/Skuld|n=sg}}
+{{de-ndecl|f.gen:s:-[with an article].sg}}
 
 ====Holonyms====
 * {{l|de|Norne}}
@@ -33032,7 +33639,7 @@ Page 1213 Erdaltzeit: -------- begin text --------
 {{de-decl-noun-f|n=sg}}
 
 ===Proper noun===
-{{de-proper noun|f|old=1}}
+{{de-proper noun|f.article}}
 
 # {{synonym of|de|Paläozoikum}}
 
@@ -33323,9 +33930,12 @@ From the {{inh|de|gmh|spilman}}, from the {{inh|de|goh|spiliman}}, from {{compou
 * {{l|de|Spielmannszug}}
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|surname}}
 
 # {{surname|de|A=An|occupational|from=occupations}}
+
+====Declension====
+{{de-ndecl|surname}}
 
 ===References===
 * {{R:Duden}}
@@ -33363,7 +33973,7 @@ Page 1225 Kiez: -------- begin text --------
 * {{l|de|Kiezdeutsch}}
 
 ===Proper noun===
-{{de-proper noun|m|Kiezes|head=der Kiez}}
+{{de-proper noun|m.article}}
 
 # {{lb|de|informal|North Germany|Hamburg}} [[Reeperbahn]] {{gloss|entertainment district in Hamburg}}
 #* {{quote-song|de|title=Reeperbahn|album=Bunte Republik Deutschland|artist={{w|Udo Lindenberg}}|year=1989|passage=Da gibt es so 'nen Boulevard, / die Große Freiheit auch ganz nah, / und ich weiß, mich zieht's zum '''Kiez'''.|t=There is this boulevard / and the "Große Freiheit" nearby / and I know, I'm drawn to the '''Kiez'''.}}
@@ -33372,7 +33982,7 @@ Page 1225 Kiez: -------- begin text --------
 #* {{quote-book|de|year=2014|author=Christian U. Märschel|title=Kiez, Koks & Kaiserschnitt|publisher=epubli|ISBN=9783844278781|page=46|passage=Aber der '''Kiez''' ist nicht in jedem Viertel. Nur in Hamburg. In St.-Pauli. Auf der Reeperbahn. Nur dort ist der '''Kiez''' wirklich '''Kiez'''.|t=But the '''Kiez''' is not in every neighborhood. Only in Hamburg. In St. Pauli. On the Reeperbahn. Only there '''Kiez''' really means '''Kiez'''.}}
 
 ====Declension====
-{{de-decl-noun-m|es|n=sg|prop=yes}}
+{{de-ndecl|m.article.sg}}
 
 ===Further reading===
 * {{pedia|lang=de}}
@@ -33435,12 +34045,12 @@ Page 1228 Republik China: -------- begin text --------
 * {{audio|de|De-Republik China.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|head=[[Republik]] [[China]]|f|old=1}}
+{{de-proper noun|[[Republik]]<f.article> [[China]]}}
 
 # [[Republic of China]]
 
 ====Declension====
-{{de-decl-noun-f|n=sg}}
+{{de-ndecl|[[Republik]]<f.article.sg> [[China]]}}
 -------- end text --------
 Page 1229 Demokratische Volksrepublik Algerien: Found match for regex: =
 Page 1229 Demokratische Volksrepublik Algerien: -------- begin text --------
@@ -33449,7 +34059,7 @@ Page 1229 Demokratische Volksrepublik Algerien: -------- begin text --------
 * {{audio|de|De-Demokratische Volksrepublik Algerien.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|[[demokratisch|Demokratische]]<+> [[Volksrepublik]]<f> [[Algerien]]}}
+{{de-proper noun|[[demokratisch|Demokratische]]<+> [[Volksrepublik]]<f.sg> [[Algerien]]}}
 
 # [[People's Democratic Republic of Algeria]]
 -------- end text --------
@@ -33460,7 +34070,7 @@ Page 1230 Demokratische Volksrepublik Laos: -------- begin text --------
 * {{audio|de|De-Demokratische Volksrepublik Laos.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|[[demokratisch|Demokratische]]<+> [[Volksrepublik]]<f> [[Laos]]}}
+{{de-proper noun|[[demokratisch|Demokratische]]<+> [[Volksrepublik]]<f.sg> [[Laos]]}}
 
 # [[Lao People's Democratic Republic]]
 -------- end text --------
@@ -33774,9 +34384,12 @@ Page 1241 Creutzfeldt: -------- begin text --------
 * {{IPA|de|/ˈkʁɔʏtsfelt/}}
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|surname}}
 
 # {{surname|de}}
+
+====Declension====
+{{de-ndecl|surname}}
 
 ====Derived terms====
 * {{l|de|Creutzfeldt-Jakob-Krankheit}}
@@ -33887,9 +34500,12 @@ From {{bor|de|tr|Ayşe}}, from {{der|de|ar|عَائِشَة}}. The use as a comm
 * {{IPA|de|/ˈaɪ̯ʃə/}}
 
 ===Proper noun===
-{{de-proper noun|f|Aisches}}
+{{de-proper noun|f,s.gen:s}}
 
 # {{given name|de|female|from=Arabic}}
+
+====Declension====
+{{de-ndecl|f,s.gen:s}}
 
 ====Usage notes====
 * The name is used chiefly by people of Turkish descent, sometimes in this spelling, more commonly probably in the original spelling {{m|tr|Ayşe}}.
@@ -34206,13 +34822,13 @@ From {{compound|de|eisern|Vorhang}}.
 * {{audio|de|De-Eiserner Vorhang.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|[[eisern|Eiserner]]<+> [[Vorhang]]<m>}}
+{{de-proper noun|[[eisern|Eiserner]]<+> [[Vorhang]]<m.article>}}
 
 # [[Iron Curtain]] (dividing line between western Europe and the Soviet controlled regions)
 #: {{uxi|de|der '''Eiserne Vorhang'''|the '''Iron Curtain'''}}
 
 ====Declension====
-{{de-ndecl|[[eisern|Eiserner]]<+> [[Vorhang]]<m.sg>}}
+{{de-ndecl|[[eisern|Eiserner]]<+> [[Vorhang]]<m.sg.article>}}
 
 ===See also===
 * {{l|de|Berliner Mauer|g=f||Berlin Wall}}
@@ -34224,7 +34840,7 @@ Page 1261 Eiserne Krone: -------- begin text --------
 From {{compound|de|eisern|Krone}}.
 
 ===Proper noun===
-{{de-proper noun|[[eisern|Eiserne]]<+> [[Krone]]<f>}}
+{{de-proper noun|[[eisern|Eiserne]]<+> [[Krone]]<f.article>}}
 
 # [[iron|Iron]] [[Crown]] of [[Lombardy]]
 #: {{uxi|de|die '''Eiserne Krone'''|the '''Iron Crown of Lombardy'''}}
@@ -34248,13 +34864,13 @@ From {{compound|de|golden|Schnitt}}.
 * {{audio|de|De-Goldener Schnitt.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|[[golden|Goldener]]<+> [[Schnitt]]<m,es:s>}}
+{{de-proper noun|[[golden|Goldener]]<+> [[Schnitt]]<m,es:s.article>}}
 
 # [[golden ratio]]
 #: {{uxi|de|der '''Goldene Schnitt'''|the '''golden ratio'''}}
 
 ====Declension====
-{{de-ndecl|[[golden|Goldener]]<+> [[Schnitt]]<m,es:s.sg>}}
+{{de-ndecl|[[golden|Goldener]]<+> [[Schnitt]]<m,es:s.sg.article>}}
 
 ====Related terms====
 * {{l|de|Silberner Schnitt}}
@@ -34277,14 +34893,14 @@ From {{compound|de|golden|Zahl}}.
 * {{IPA|de|[ˈɡɔldənɐ ˈtsaːl]}}
 
 ===Proper noun===
-{{de-proper noun|[[golden|Goldene]]<+> [[Zahl]]<f>}}
+{{de-proper noun|[[golden|Goldene]]<+> [[Zahl]]<f.article>}}
 
 # {{lb|de|mathematics}} the [[irrational number]] [[phi]] of the [[golden ratio]] / [[golden section]] (''sectio aurea'')
 #: {{uxi|de|die '''Goldene Zahl'''|the '''golden ratio'''}}
 # {{lb|de|chronology}} [[golden number]] (''numerus aureus'')
 
 ====Declension====
-{{de-ndecl|[[golden|Goldene]]<+> [[Zahl]]<f.sg>}}
+{{de-ndecl|[[golden|Goldene]]<+> [[Zahl]]<f.sg.article>}}
 
 ====Related terms====
 * {{l|de|Goldener Schnitt}}
@@ -34461,8 +35077,12 @@ Page 1270 Kempf: Found match for regex: =
 Page 1270 Kempf: -------- begin text --------
 
 ===Proper noun===
-{{de-proper noun|old=1}}
-#{{surname|de}}
+{{de-proper noun|surname}}
+
+# {{surname|de}}
+
+====Declension====
+{{de-ndecl|surname}}
 -------- end text --------
 Page 1271 Wolhyniendeutscher: Found match for regex: {
 Page 1271 Wolhyniendeutscher: -------- begin text --------
@@ -34606,9 +35226,12 @@ Page 1277 Arendt: Found match for regex: =
 Page 1277 Arendt: -------- begin text --------
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|surname}}
 
 # {{surname|de}}
+
+====Declension====
+{{de-ndecl|surname}}
 -------- end text --------
 Page 1278 Gully: Found match for regex: =
 Page 1278 Gully: -------- begin text --------
@@ -34939,9 +35562,12 @@ Page 1292 Stransky: -------- begin text --------
 * {{IPA|de|/ˈʃtʀanski/}}
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|surname}}
 
 # {{surname|de}}
+
+====Declension====
+{{de-ndecl|surname}}
 -------- end text --------
 Page 1293 Schöps: Found match for regex: =
 Page 1293 Schöps: -------- begin text --------
@@ -35078,9 +35704,12 @@ Page 1298 Siebold: Found match for regex: =
 Page 1298 Siebold: -------- begin text --------
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|surname}}
 
 # {{surname|de}}
+
+====Declension====
+{{de-ndecl|surname}}
 -------- end text --------
 Page 1299 Grundel: Found match for regex: =
 Page 1299 Grundel: -------- begin text --------
@@ -35178,8 +35807,12 @@ Page 1303 Schaumburg: -------- begin text --------
 * {{audio|de|De-Schaumburg.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|old=1}}
-#{{surname|de}}
+{{de-proper noun|surname}}
+
+# {{surname|de}}
+
+====Declension====
+{{de-ndecl|surname}}
 -------- end text --------
 Page 1304 Donaudampfschifffahrtsgesellschaftskapitän: Found match for regex: =
 Page 1304 Donaudampfschifffahrtsgesellschaftskapitän: -------- begin text --------
@@ -35621,9 +36254,12 @@ Page 1319 Porz: -------- begin text --------
 Derived from either {{der|de|la|portus}} or {{m|la|porta}}.
 
 ===Proper noun===
-{{de-proper noun|f|Porzes}}
+{{de-proper noun|toponym}}
 
-# A [[borough]] of [[Cologne]], [[Germany]].{{attention|de|please check}}
+# {{place|de|borough|city/Cologne|c/Germany}}
+
+====Declension====
+{{de-ndecl|toponym}}
 -------- end text --------
 Page 1320 StuK: Found match for regex: =
 Page 1320 StuK: -------- begin text --------
@@ -35643,12 +36279,12 @@ From {{pre|de|vor|t1=pre-|März|t2=March}}.
 * {{audio|de|De-Vormärz.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|m|Vormärzes|gen2=Vormärz|gen3=Vormärzen}}
+{{de-proper noun|m,-:es.article}}
 
 # {{lb|de|historical}} The period leading up to the 1848 {{w|German revolutions of 1848–49|March Revolution}}, variously held to begin in either 1815 (after the {{w|Congress of Vienna}}) or 1830 (after the {{w|July Revolution}}).
 
 ====Declension====
-{{de-decl-noun-m|es|gs=[[Vormärzes]],<br>Vormärz|n=sg|prop=y}}
+{{de-ndecl|m,-:es.sg.article}}
 
 ====Derived terms====
 * {{l|de|vormärzlich}}
@@ -35661,9 +36297,12 @@ Page 1322 Karpaten: -------- begin text --------
 * {{audio|de|De-Karpaten.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|p.article}}
 
 # {{place|de|mountain range|r/Central Europe,Eastern Europe|t=Carpathians}}
+
+====Declension====
+{{de-ndecl|p.article}}
 
 {{C|de|Exonyms}}
 -------- end text --------
@@ -35817,9 +36456,12 @@ Page 1330 Rorschach: Found match for regex: =
 Page 1330 Rorschach: -------- begin text --------
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|surname}}
 
 # {{surname|de}}
+
+====Declension====
+{{de-ndecl|surname}}
 -------- end text --------
 Page 1331 Glaubensbekenntnis: Found match for regex: =
 Page 1331 Glaubensbekenntnis: -------- begin text --------
@@ -36651,9 +37293,12 @@ Page 1345 Glurns: -------- begin text --------
 {{wp|lang=de}}
 
 ===Proper noun===
-{{de-proper noun||Glurns'}}
+{{de-proper noun|toponym}}
 
-# {{place|de|municipality|p/South Tyrol}}
+# {{place|de|municipality|ap/South Tyrol|c/Italy}}
+
+====Declension====
+{{de-ndecl|toponym}}
 
 ====Derived terms====
 * {{l|de|Glurnser}}
@@ -36663,18 +37308,24 @@ Page 1346 Kuens: -------- begin text --------
 {{wp|lang=de}}
 
 ===Proper noun===
-{{de-proper noun||Kuens'}}
+{{de-proper noun|toponym}}
 
-# {{place|de|municipality|p/South Tyrol}}
+# {{place|de|municipality|ap/South Tyrol|c/Italy}}
+
+====Declension====
+{{de-ndecl|toponym}}
 -------- end text --------
 Page 1347 Tscherms: Found match for regex: {
 Page 1347 Tscherms: -------- begin text --------
 {{wp|lang=de}}
 
 ===Proper noun===
-{{de-proper noun||Tscherms'}}
+{{de-proper noun|toponym}}
 
-# {{place|de|municipality|p/South Tyrol}}
+# {{place|de|municipality|ap/South Tyrol|c/Italy}}
+
+====Declension====
+{{de-ndecl|toponym}}
 
 ====Related terms====
 * {{l|de|Tschermser}}
@@ -36684,9 +37335,12 @@ Page 1348 Stilfs: -------- begin text --------
 {{wp|lang=de}}
 
 ===Proper noun===
-{{de-proper noun||Stilfs'}}
+{{de-proper noun|toponym}}
 
-# {{place|de|municipality|p/South Tyrol}}
+# {{place|de|municipality|ap/South Tyrol|c/Italy}}
+
+====Declension====
+{{de-ndecl|toponym}}
 
 ====Related terms====
 * {{l|de|Stilfser}}
@@ -36696,9 +37350,12 @@ Page 1349 Villanders: -------- begin text --------
 {{wp|lang=de}}
 
 ===Proper noun===
-{{de-proper noun||Villanders'}}
+{{de-proper noun|toponym}}
 
-# {{place|de|municipality|p/South Tyrol}}
+# {{place|de|municipality|ap/South Tyrol|c/Italy}}
+
+====Declension====
+{{de-ndecl|toponym}}
 
 ====Related terms====
 * {{l|de|Villanderser}}
@@ -36708,9 +37365,12 @@ Page 1350 Schnals: -------- begin text --------
 {{wp|lang=de}}
 
 ===Proper noun===
-{{de-proper noun||Schnals'}}
+{{de-proper noun|toponym}}
 
-# {{place|de|municipality|p/South Tyrol}}
+# {{place|de|municipality|ap/South Tyrol|c/Italy}}
+
+====Declension====
+{{de-ndecl|toponym}}
 
 ====Related terms====
 * {{l|de|Schnalser}}
@@ -36720,9 +37380,12 @@ Page 1351 Villnöß: -------- begin text --------
 {{wp|lang=de}}
 
 ===Proper noun===
-{{de-proper noun||Villnöß'}}
+{{de-proper noun|toponym}}
 
-# {{place|de|municipality|p/South Tyrol}}
+# {{place|de|municipality|ap/South Tyrol|c/Italy}}
+
+====Declension====
+{{de-ndecl|toponym}}
 
 ====Related terms====
 * {{l|de|Villnößer}}
@@ -36732,9 +37395,12 @@ Page 1352 Feldthurns: -------- begin text --------
 {{wp|lang=de}}
 
 ===Proper noun===
-{{de-proper noun||Feldthurns'}}
+{{de-proper noun|toponym}}
 
-# {{place|de|municipality|p/South Tyrol}}
+# {{place|de|municipality|ap/South Tyrol|c/Italy}}
+
+====Declension====
+{{de-ndecl|toponym}}
 
 ====Related terms====
 * {{l|de|Feldthurner}}
@@ -36744,9 +37410,12 @@ Page 1353 Gsies: -------- begin text --------
 {{wp|lang=de}}
 
 ===Proper noun===
-{{de-proper noun||Gsies'}}
+{{de-proper noun|toponym}}
 
-# {{place|de|municipality|p/South Tyrol}}
+# {{place|de|municipality|ap/South Tyrol|c/Italy}}
+
+====Declension====
+{{de-ndecl|toponym}}
 
 ====Related terms====
 * {{l|de|Gsieser}}
@@ -36759,9 +37428,12 @@ Page 1354 Laas: -------- begin text --------
 * {{audio|de|De-Laas.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun||Laas'}}
+{{de-proper noun|toponym}}
 
-# {{place|de|municipality|p/South Tyrol}}
+# {{place|de|municipality|ap/South Tyrol|c/Italy}}
+
+====Declension====
+{{de-ndecl|toponym}}
 
 ====Related terms====
 * {{l|de|Laaser}}
@@ -36771,9 +37443,12 @@ Page 1355 Partschins: -------- begin text --------
 {{wp|lang=de}}
 
 ===Proper noun===
-{{de-proper noun||Partschins'}}
+{{de-proper noun|toponym}}
 
-# {{place|de|municipality|p/South Tyrol}}
+# {{place|de|municipality|ap/South Tyrol|c/Italy}}
+
+====Declension====
+{{de-ndecl|toponym}}
 
 ====Related terms====
 * {{l|de|Partschinser}}
@@ -36783,9 +37458,12 @@ Page 1356 Ratschings: -------- begin text --------
 {{wp|lang=de}}
 
 ===Proper noun===
-{{de-proper noun||Ratschings'}}
+{{de-proper noun|toponym}}
 
-# {{place|de|municipality|p/South Tyrol}}
+# {{place|de|municipality|ap/South Tyrol|c/Italy}}
+
+====Declension====
+{{de-ndecl|toponym}}
 
 ====Related terms====
 * {{l|de|Ratschingser}}
@@ -36795,9 +37473,12 @@ Page 1357 Schluderns: -------- begin text --------
 {{wp|lang=de}}
 
 ===Proper noun===
-{{de-proper noun||Schluderns'}}
+{{de-proper noun|toponym}}
 
-# {{place|de|municipality|p/South Tyrol}}
+# {{place|de|municipality|ap/South Tyrol|c/Italy}}
+
+====Declension====
+{{de-ndecl|toponym}}
 
 ====Related terms====
 * {{l|de|Schludernser}}
@@ -36901,9 +37582,12 @@ Page 1363 Breydenbach: -------- begin text --------
 {{wikipedia|Breidenstein|Breydenbach|lang=de}}
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|toponym}}
 
-# Former name of {{w|Breidenstein|lang=de}}
+# {{obsolete spelling of|de|Breidenbach}}
+
+====Declension====
+{{de-ndecl|toponym}}
 -------- end text --------
 Page 1364 Hexenring: Found match for regex: =
 Page 1364 Hexenring: -------- begin text --------
@@ -37126,9 +37810,12 @@ Page 1372 Karius: Found match for regex: =
 Page 1372 Karius: -------- begin text --------
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|surname}}
 
 # {{surname|de}}
+
+====Declension====
+{{de-ndecl|surname}}
 -------- end text --------
 Page 1373 Wulst: Found match for regex: =
 Page 1373 Wulst: -------- begin text --------
@@ -37189,13 +37876,14 @@ Page 1375 Dritter Golfkrieg: -------- begin text --------
 Literally, "Third Gulf War", the {{m|de|Erster Golfkrieg}} being what is now called the {{w|Iran-Iraq War}} in English.
 
 ===Proper noun===
-{{de-proper noun|[[dritte|Dritter]]<+> [[Golfkrieg]]<m,es:s>}}
+{{de-proper noun|[[dritte|Dritter]]<+> [[Golfkrieg]]<m,es:s.article>}}
 
 # [[Iraq War]] {{gloss|US-led invasion of Iraq in 2003}}
 #: {{syn|de|Irakkrieg}}
 
 ====Declension====
-{{de-ndecl|[[dritte|Dritter]]<+> [[Golfkrieg]]<m,es:s.sg>}}
+{{de-ndecl|[[dritte|Dritter]]<+> [[Golfkrieg]]<m,es:s.sg.article>}}
+
 {{C|de|War}}
 -------- end text --------
 Page 1376 Farre: Found match for regex: =
@@ -37579,9 +38267,12 @@ Page 1395 Devos: -------- begin text --------
 Borrowed from {{bor|de|nl|de Vos}}.
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|surname}}
 
 # {{surname|de|from=Dutch}}
+
+====Declension====
+{{de-ndecl|surname}}
 
 ----
 
@@ -37592,7 +38283,7 @@ Page 1396 Gammelfleischparty: -------- begin text --------
 ===Noun===
 {{de-noun|old=1}}
 
-# A [[party]] for people over the age of 30.
+# a [[party]] for people over the age of 30
 -------- end text --------
 Page 1397 Verarbeitungsschritt: Found match for regex: =
 Page 1397 Verarbeitungsschritt: -------- begin text --------
@@ -37600,7 +38291,7 @@ Page 1397 Verarbeitungsschritt: -------- begin text --------
 ===Noun===
 {{de-noun|old=1}}
 
-# [[processing|Processing]] [[step]].
+# [[processing]] [[step]]
 -------- end text --------
 Page 1398 Chamenei: Found match for regex: =
 Page 1398 Chamenei: -------- begin text --------
@@ -37612,9 +38303,12 @@ From {{der|de|fa|خامنه‌ای|tr=xâmene'i}}.
 * {{IPA|de|/ˌxaːməˈnɛɪ̯/}} {{a|usual; with idiolectal variants}}
 
 ===Proper noun===
-{{de-proper noun||Chameneis}}
+{{de-proper noun|surname}}
 
 # [[Khamenei]], {{surname|de|from=Persian|A=a Persian|dot=,}} {{non-gloss definition|notably borne by {{w|Ali Khamenei}}.}}
+
+====Declension====
+{{de-ndecl|surname}}
 
 ====See also====
 * {{l|de|Chomeini}}
@@ -37623,15 +38317,18 @@ Page 1399 Chomeini: Found match for regex: =
 Page 1399 Chomeini: -------- begin text --------
 
 ===Etymology===
-From {{der|de|fa|خمینی|tr=xomeyni}}, from {{m|fa|خمین|tr=xomeyn||[[Khomein]], a town in Iran}} and the suffix {{m|fa|ـی|tr=-i}}.
+{{bor+|de|fa|خمینی|tr=xomeyni}}, from {{m|fa|خمین|tr=xomeyn||[[Khomein]], a town in Iran}} and the suffix {{m|fa|ـی|tr=-i}}.
 
 ===Pronunciation===
 * {{IPA|de|/xoˈmɛɪ̯ni/}} {{a|usual; with idiolectal variants}}
 
 ===Proper noun===
-{{de-proper noun||Chomeinis}}
+{{de-proper noun|surname}}
 
 # [[Khomeini]], {{surname|de|from=Persian|A=a Persian|dot=,}} {{non-gloss definition|notably borne by {{w|Ruhollah Khomeini}}.}}
+
+====Declension====
+{{de-ndecl|surname}}
 
 ====See also====
 * {{l|de|Chamenei}}
@@ -37853,12 +38550,12 @@ Page 1410 Roter Platz: -------- begin text --------
 * {{audio|de|De-Roter Platz.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|[[rot|Roter]]<+> [[Platz]]<m>}}
+{{de-proper noun|[[rot|Roter]]<+> [[Platz]]<m.article>}}
 
 # [[Red Square]] {{gloss|large historical square in central Moscow}}
 
 ====Declension====
-{{de-ndecl|[[rot|Roter]]<+> [[Platz]]<m.sg>}}
+{{de-ndecl|[[rot|Roter]]<+> [[Platz]]<m.sg.article>}}
 -------- end text --------
 Page 1411 zoologischer Garten: Found match for regex: =
 Page 1411 zoologischer Garten: -------- begin text --------
@@ -38352,12 +39049,12 @@ Page 1434 Auswärtiges Amt: -------- begin text --------
 * {{audio|de|De-Auswärtiges_Amt.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|[[auswärtig|Auswärtiges]]<+> [[Amt]]<n,es:s>}}
+{{de-proper noun|[[auswärtig|Auswärtiges]]<+> [[Amt]]<n,es:s.article>}}
 
 # {{w|Federal Foreign Office}} or its predecessors
 
 ====Declension====
-{{de-ndecl|[[auswärtig|Auswärtiges]]<+> [[Amt]]<n,es:s.sg>}}
+{{de-ndecl|[[auswärtig|Auswärtiges]]<+> [[Amt]]<n,es:s.sg.article>}}
 -------- end text --------
 Page 1435 Hilfswilliger: Found match for regex: =
 Page 1435 Hilfswilliger: -------- begin text --------
@@ -39333,9 +40030,12 @@ Page 1475 Fränkel: Found match for regex: =
 Page 1475 Fränkel: -------- begin text --------
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|surname}}
 
 # {{surname|de}}
+
+====Declension====
+{{de-ndecl|surname}}
 -------- end text --------
 Page 1476 Breve: Found match for regex: =
 Page 1476 Breve: -------- begin text --------
@@ -39936,12 +40636,12 @@ Page 1503 Unbefleckte Empfängnis: -------- begin text --------
 Loan translation of {{der|de|la|immaculata conceptio}}.
 
 ===Proper noun===
-{{de-proper noun|[[unbefleckt|Unbefleckte]]<+> [[Empfängnis]]<f>}}
+{{de-proper noun|[[unbefleckt|Unbefleckte]]<+> [[Empfängnis]]<f.article>}}
 
 # {{lb|de|Roman Catholicism}} [[Immaculate Conception]]
 
 ====Declension====
-{{de-ndecl|[[unbefleckt|Unbefleckte]]<+> [[Empfängnis]]<f.sg>}}
+{{de-ndecl|[[unbefleckt|Unbefleckte]]<+> [[Empfängnis]]<f.sg.article>}}
 -------- end text --------
 Page 1504 eingetragene Partnerschaft: Found match for regex: =
 Page 1504 eingetragene Partnerschaft: -------- begin text --------
@@ -40852,12 +41552,12 @@ Page 1543 erste Lautverschiebung: -------- begin text --------
 * {{audio|de|De-erste Lautverschiebung.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|[[erste]]<+> [[Lautverschiebung]]<f>}}
+{{de-proper noun|[[erste]]<+> [[Lautverschiebung]]<f.article>}}
 
-# [[Grimm's law]].
+# [[Grimm's law]]
 
 ====Declension====
-{{de-ndecl|[[erste]]<+> [[Lautverschiebung]]<f.sg>}}
+{{de-ndecl|[[erste]]<+> [[Lautverschiebung]]<f.sg.article>}}
 
 ====Coordinate terms====
 * {{l|de|zweite Lautverschiebung}}
@@ -40872,12 +41572,12 @@ Page 1544 zweite Lautverschiebung: -------- begin text --------
 * {{audio|de|De-zweite Lautverschiebung.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|[[zweite]]<+> [[Lautverschiebung]]<f>}}
+{{de-proper noun|[[zweite]]<+> [[Lautverschiebung]]<f.article>}}
 
 # [[High German consonant shift]]
 
 ====Declension====
-{{de-ndecl|[[zweite]]<+> [[Lautverschiebung]]<f.sg>}}
+{{de-ndecl|[[zweite]]<+> [[Lautverschiebung]]<f.sg.article>}}
 
 ====Coordinate terms====
 * {{l|de|erste Lautverschiebung}}
@@ -41386,7 +42086,7 @@ Page 1575 Hohes Venn: -------- begin text --------
 * {{audio|de|De-Hohes Venn.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|[[hoch|Hohes]]<+> [[Venn]]<n>}}
+{{de-proper noun|[[hoch|Hohes]]<+> [[Venn]]<n.article>}}
 
 # [[High Fens]] {{gloss|boggy region in eastern Belgium and western Germany}}
 
@@ -41415,7 +42115,7 @@ Page 1577 Bogdania: Found match for regex: =
 Page 1577 Bogdania: -------- begin text --------
 
 ===Proper noun===
-{{de-proper noun|f|Bogdaniae}}
+{{de-proper noun|f.gen:Bogdaniae}}
 
 # {{obsolete form of|de|Bogdanien|nocap=1|nodot=1}}
 
@@ -41607,12 +42307,12 @@ Page 1586 Ewige Stadt: Found match for regex: =
 Page 1586 Ewige Stadt: -------- begin text --------
 
 ===Proper noun===
-{{de-proper noun|[[ewig|Ewige]]<+> [[Stadt]]<f>}}
+{{de-proper noun|[[ewig|Ewige]]<+> [[Stadt]]<f.article>}}
 
 # [[Eternal City]]
 
 ====Declension====
-{{de-ndecl|[[ewig|Ewige]]<+> [[Stadt]]<f.sg>}}
+{{de-ndecl|[[ewig|Ewige]]<+> [[Stadt]]<f.sg.article>}}
 -------- end text --------
 Page 1587 Aufmerksamkeitsdefizit-Hyperaktivitätsstörung: Found match for regex: =
 Page 1587 Aufmerksamkeitsdefizit-Hyperaktivitätsstörung: -------- begin text --------
@@ -41644,12 +42344,12 @@ Page 1588 Rotes Kreuz: -------- begin text --------
 * {{audio|de|De-Rotes Kreuz.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|[[rot|Rotes]]<+> [[Kreuz]]<n>}}
+{{de-proper noun|[[rot|Rotes]]<+> [[Kreuz]]<n.article>}}
 
 # [[Red Cross]]
 
 ====Declension====
-{{de-ndecl|[[rot|Rotes]]<+> [[Kreuz]]<n.sg>}}
+{{de-ndecl|[[rot|Rotes]]<+> [[Kreuz]]<n.sg.article>}}
 -------- end text --------
 Page 1589 Rechtsgelehrter: Found match for regex: =
 Page 1589 Rechtsgelehrter: -------- begin text --------
@@ -42423,9 +43123,9 @@ Page 1622 Bayxit: -------- begin text --------
 From {{m|de|Bayern}}; modelled on {{m|en|Brexit}}.
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|m}}
 
-# {{lb|de|politics}} The ([[hypothetical]]) [[withdrawal]] of [[Bavaria]] from [[Germany]].
+# {{lb|de|politics}} the ([[hypothetical]]) [[withdrawal]] of [[Bavaria]] from [[Germany]]
 -------- end text --------
 Page 1623 Ballett-Tänzerin: Found match for regex: =
 Page 1623 Ballett-Tänzerin: -------- begin text --------
@@ -42523,12 +43223,12 @@ Page 1626 Oligozän: -------- begin text --------
 * {{audio|de|De-Oligozän.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|n|Oligozän}}
+{{de-proper noun|n.article}}
 
 # [[Oligocene]]
 
 ====Declension====
-{{de-decl-noun-n|s|pl=-}}
+{{de-ndecl|n.article.sg}}
 
 ====Coordinate terms====
 * {{l|de|Eozän}}, {{l|de|Paläozän}}
@@ -42694,14 +43394,12 @@ Page 1633 Großer Osten: -------- begin text --------
 * {{audio|de|De-Großer Osten.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|[[groß|Großer]]<+> [[Osten]]<m>}}
+{{de-proper noun|[[groß|Großer]]<+> [[Osten]]<m.article>}}
 
-# [[Grand Est]]
+# {{place|de|region|c/France|t=Grand Est}}
 
 ====Declension====
-{{de-ndecl|[[groß|Großer]]<+> [[Osten]]<m.sg>}}
-
-{{C|de|Regions of France}}
+{{de-ndecl|[[groß|Großer]]<+> [[Osten]]<m.sg.article>}}
 -------- end text --------
 Page 1634 Hausautor: Found match for regex: =
 Page 1634 Hausautor: -------- begin text --------
@@ -43794,12 +44492,12 @@ Page 1678 Osmanisches Reich: -------- begin text --------
 * {{audio|de|De-Osmanisches Reich.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|[[osmanisch|Osmanisches]]<+> [[Reich]]<n,es:s>}}
+{{de-proper noun|[[osmanisch|Osmanisches]]<+> [[Reich]]<n,es:s.article>}}
 
 # [[Ottoman Empire]]
 
 ====Declension====
-{{de-ndecl|[[osmanisch|Osmanisches]]<+> [[Reich]]<n,es:s.sg>}}
+{{de-ndecl|[[osmanisch|Osmanisches]]<+> [[Reich]]<n,es:s.sg.article>}}
 -------- end text --------
 Page 1679 Vereinsausschluß: Found match for regex: =
 Page 1679 Vereinsausschluß: -------- begin text --------
@@ -43847,7 +44545,7 @@ Page 1681 Bethlehemitischer Kindermord: Found match for regex: =
 Page 1681 Bethlehemitischer Kindermord: -------- begin text --------
 
 ===Noun===
-{{de-proper noun|[[bethlehemitisch|Bethlehemitischer]]<+> [[Kindermord]]<m,es:s>}}
+{{de-proper noun|[[bethlehemitisch|Bethlehemitischer]]<+> [[Kindermord]]<m,es:s.article>}}
 
 # [[Massacre of the Innocents]]
 
@@ -43889,12 +44587,12 @@ Page 1683 Dritte Welt: -------- begin text --------
 * {{audio|de|De-Dritte_Welt.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|[[dritte|Dritte]]<+> [[Welt]]<f>}}
+{{de-proper noun|[[dritte|Dritte]]<+> [[Welt]]<f.article>}}
 
 # [[Third World]]
 
 ====Declension====
-{{de-ndecl|[[dritte|Dritte]]<+> [[Welt]]<f.sg>}}
+{{de-ndecl|[[dritte|Dritte]]<+> [[Welt]]<f.sg.article>}}
 -------- end text --------
 Page 1684 Erste Welt: Found match for regex: =
 Page 1684 Erste Welt: -------- begin text --------
@@ -43903,12 +44601,12 @@ Page 1684 Erste Welt: -------- begin text --------
 * {{IPA|de|/ˈeːɐ̯stɐ vɛlt/}}
 
 ===Proper noun===
-{{de-proper noun|[[erste|Erste]]<+> [[Welt]]<f>}}
+{{de-proper noun|[[erste|Erste]]<+> [[Welt]]<f.article>}}
 
 # [[First World]]
 
 ====Declension====
-{{de-ndecl|[[erste|Erste]]<+> [[Welt]]<f.sg>}}
+{{de-ndecl|[[erste|Erste]]<+> [[Welt]]<f.sg.article>}}
 -------- end text --------
 Page 1685 Zweite Welt: Found match for regex: =
 Page 1685 Zweite Welt: -------- begin text --------
@@ -43917,12 +44615,12 @@ Page 1685 Zweite Welt: -------- begin text --------
 * {{IPA|de|/ˈt͡svaɪ̯tə vɛlt/}}
 
 ===Proper noun===
-{{de-proper noun|[[zweite|Zweite]]<+> [[Welt]]<f>}}
+{{de-proper noun|[[zweite|Zweite]]<+> [[Welt]]<f.article>}}
 
 # [[Second World]]
 
 ====Declension====
-{{de-ndecl|[[zweite|Zweite]]<+> [[Welt]]<f.sg>}}
+{{de-ndecl|[[zweite|Zweite]]<+> [[Welt]]<f.sg.article>}}
 -------- end text --------
 Page 1686 Doppelidentität: Found match for regex: =
 Page 1686 Doppelidentität: -------- begin text --------
@@ -43959,14 +44657,14 @@ Substantivisation of {{m|de|allmächtig}}.
 * {{audio|de|De-Allmächtiger.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|+}}
+{{de-proper noun|+.article}}
 
 # [[Almighty]]
 #* '''1912''', [[:w:Martin Luther|Martin Luther]], ''Lutherbibel von 1912'', Job 5:17 (with KJV translation)
 #*: {{quote|de|Siehe, selig ist der Mensch, den Gott straft; darum weigere dich der Züchtigung des '''Allmächtigen''' nicht.|Behold, happy is the man whom God correcteth: therefore despise not thou the chastening of the '''Almighty'''.}}
 
 ====Declension====
-{{de-ndecl|+.sg}}
+{{de-ndecl|+.sg.article}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -44531,12 +45229,12 @@ The term was coined in the 19th century. Ultimately from {{der|de|grc|παλαι
 * {{hyph|de|Pa|lä|o|zän}}
 
 ===Proper noun===
-{{de-proper noun|n|Paläozän}}
+{{de-proper noun|n.article}}
 
 # [[Paleocene]]
 
 ====Declension====
-{{de-decl-noun-n|s|pl=-}}
+{{de-ndecl|n.article.sg}}
 
 ====Coordinate terms====
 * {{l|de|Oligozän}}, {{l|de|Eozän}}
@@ -44559,7 +45257,7 @@ The term was coined in the 19th century.  Ultimately from {{der|de|grc|ἠώς |
 * {{hyph|de|Eo|zän}}
 
 ===Proper noun===
-{{de-proper noun|n|Eozän}}
+{{de-proper noun|n.article}}
 
 # [[Eocene]]
 #* '''2020''', [[:de:wikipedia|de.wikipedia]], ''[https://de.wikipedia.org/wiki/Tertiär Tertiär]''
@@ -44567,7 +45265,7 @@ The term was coined in the 19th century.  Ultimately from {{der|de|grc|ἠώς |
 #:{{uxi|de|das '''Eozän''' ist die zweitälteste Abteilung des Tertiärs|}}
 
 ====Declension====
-{{de-decl-noun-n|s|pl=-}}
+{{de-ndecl|n.article.sg}}
 
 ====Hyponyms====
 * {{l|de|Obereozän}}, {{l|de|Mitteleozän}}, {{l|de|Untereozän}}
@@ -44594,10 +45292,14 @@ Page 1712 Tauern: -------- begin text --------
 * {{audio|de|De-Tauern.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|m,-:s.article}}
 
-# high [[mountain pass]], especially any in the {{w|Austrian Central Alps}}
-# used to name similar mountain ranges, such as {{w|High Tauern}} and {{w|Ossiach Tauern}}
+# name of several high [[mountain pass]]es in the {{w|Austrian Central Alps}}
+
+===Proper noun===
+{{de-proper noun|p.article}}
+
+# name of several [[mountain range]]s in the {{w|Austrian Central Alps}}, such as {{w|High Tauern}} and {{w|Ossiach Tauern}}
 -------- end text --------
 Page 1713 Stille Post: Found match for regex: =
 Page 1713 Stille Post: -------- begin text --------
@@ -44687,13 +45389,14 @@ Page 1717 VK: Found match for regex: =
 Page 1717 VK: -------- begin text --------
 
 ===Etymology===
-Abbreviation of {{m|de|Vereinigtes Königreich}}
+Abbreviation of {{m|de|Vereinigtes Königreich}}.
 
 ===Pronunciation===
 * {{IPA|de|/faʊ̯kaː/}}
 
 ===Proper noun===
 {{de-proper noun|old=1}}
+
 # [[United Kingdom]], [[UK]]
 #: {{syn|de|Vereinigtes Königreich}}
 
@@ -45298,11 +46001,9 @@ Page 1745 Ischim: -------- begin text --------
 * {{audio|de|De-Ischim.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|toponym}}
 
-# [[Ishim]] {{gloss|town in Tyumen Oblast, Russia}}
-
-{{C|de|Cities in Russia|Tyumen Oblast}}
+# {{place|de|town|obl/Tyumen Oblast|c/Russia|t=Ishim}}
 -------- end text --------
 Page 1746 Wegbeschreibung: Found match for regex: {
 Page 1746 Wegbeschreibung: -------- begin text --------
@@ -45960,9 +46661,12 @@ Page 1775 Gödel: Found match for regex: =
 Page 1775 Gödel: -------- begin text --------
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|surname}}
 
 # {{surname|de}}
+
+====Declension====
+{{de-ndecl|surname}}
 -------- end text --------
 Page 1776 Willkommer: Found match for regex: =
 Page 1776 Willkommer: -------- begin text --------
@@ -45971,9 +46675,12 @@ Page 1776 Willkommer: -------- begin text --------
 * {{IPA|de|/ˈvɪlkɔmɐ/}}
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|surname}}
 
 # {{surname|de}}
+
+====Declension====
+{{de-ndecl|surname}}
 -------- end text --------
 Page 1777 Kahba: Found match for regex: =
 Page 1777 Kahba: -------- begin text --------
@@ -46039,13 +46746,13 @@ Page 1779 Kilimandscharo: -------- begin text --------
 * {{IPA|de|/kilimanˈd͡ʒaːʁo/}}
 
 ===Proper noun===
-{{de-proper noun|m|Kilimandscharo|gen2=Kilimandscharos}}
+{{de-proper noun|m,-:s.article}}
 
 # [[Kilimanjaro]]
 #: {{meronyms|de|Wilhelmskuppe|q1=obsolete|Kaiser-Wilhem-Spitze|q2=obsolete}}
 
 ====Declension====
-{{de-decl-noun-m|(s)|prop=yes}}
+{{de-ndecl|m,-:s.article.sg}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -46153,17 +46860,23 @@ Page 1784 Kapstadt: -------- begin text --------
 * {{IPA|de|/ˈkaːpʃtat/}}
 
 ===Proper noun===
-{{de-proper noun|f|Kapstadts}}
+{{de-proper noun|toponym}}
 
 # {{place|de|city|c/South Africa|t=Cape Town}}
+
+====Declension====
+{{de-ndecl|toponym}}
 -------- end text --------
 Page 1785 Wörz: Found match for regex: =
 Page 1785 Wörz: -------- begin text --------
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|surname}}
 
 # {{surname|de}}
+
+====Declension====
+{{de-ndecl|surname}}
 -------- end text --------
 Page 1786 Best Practice: Found match for regex: =
 Page 1786 Best Practice: -------- begin text --------
@@ -47926,9 +48639,12 @@ Equivalent to {{compound|de|neu|Haus}}. Compare with {{cog|en|Newhouse}}, {{cog|
 * {{audio|de|De-Neuhaus.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|surname}}
 
 # {{surname|de}}
+
+====Declension====
+{{de-ndecl|surname}}
 -------- end text --------
 Page 1859 Fantasy: Found match for regex: =
 Page 1859 Fantasy: -------- begin text --------
@@ -47965,7 +48681,7 @@ Page 1860 Klio: -------- begin text --------
 * {{audio|de|De-Klio.ogg}}
 
 ===Proper noun===
-{{de-proper noun|f|Klio|gen2=Klios}}
+{{de-proper noun|f.s:-[with an article]}}
 
 # [[Clio]]
 
@@ -47999,9 +48715,12 @@ Page 1862 Friedländer: Found match for regex: =
 Page 1862 Friedländer: -------- begin text --------
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|surname}}
 
 # {{surname|de}}
+
+====Declension====
+{{de-ndecl|surname}}
 
 ====Descendants====
 * {{desc|en|Friedlander|bor=1}}
@@ -48680,12 +49399,12 @@ Page 1893 Seealpen: -------- begin text --------
 {{af|de|See|Alpen}}
 
 ===Proper noun===
-{{de-proper noun|p|old=1}}
+{{de-proper noun|p.article}}
 
 # [[Maritime Alps]] 
 
 ====Declension====
-{{de-decl-noun-f|n=pl}}
+{{de-ndecl|p.article}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -48853,17 +49572,23 @@ Page 1900 Clausewitz: -------- begin text --------
 * {{IPA|de|/ˈklaʊzəvɪts/}}
 
 ===Proper noun===
-{{de-proper noun||old=1}}
+{{de-proper noun|surname}}
 
 # {{surname|de}}
+
+====Declension====
+{{de-ndecl|surname}}
 -------- end text --------
 Page 1901 Appelhans: Found match for regex: =
 Page 1901 Appelhans: -------- begin text --------
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|surname}}
 
 # {{surname|de|German|eq=Appelhans}}
+
+====Declension====
+{{de-ndecl|surname}}
 
 ====Descendants====
 {{top2}}
@@ -48918,10 +49643,13 @@ Page 1904 Willdenow: Found match for regex: =
 Page 1904 Willdenow: -------- begin text --------
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|surname}}
 
 # {{surname|de|German}}
 #: {{w|Carl Ludwig Willdenow|Carl Ludwig '''Willdenow'''}}, b. 1765
+
+====Declension====
+{{de-ndecl|surname}}
 
 ====Descendants====
 {{top2}}
@@ -49291,13 +50019,15 @@ Borrowed from {{bor|de|ar|الْحَبَش}}.
 * {{IPA|de|/ˈhabəʃ/|/ˈħabəʃ/|/ˈhabɛʃ/|/ˈħabɛʃ/}}
 
 ===Proper noun===
-{{de-proper noun|n|g2=m|Habesch|gen2=Habeschs}}
+{{de-proper noun|m,-:s.article}} ''or''<br />
+{{de-proper noun|toponym}}
 
 # {{tlb|de|archaic}} {{place|de|country|r/East Africa|t=Ethiopia}}
 #* {{R:sem:Nöldeke:1879|instead=1|page=1265|passage=Selbst solche verhältnismäßig späte Ereignisse wie die Semitisierung von '''Habesch''', welche kaum anders als durch eine Einwanderung von Südarabien aus zu erklären ist, darf man kaum zeitlich berechnen wollen.|t=Even such relatively late occurrences like the Semitization of '''Abyssinia''', which cannot well be explained other than by immigration from South Arabia, one can hardly calculate dates for.}}
 
 ====Declension====
-{{de-decl-noun-m|(s)|n=sg|prop=yes}}
+{{de-ndecl|m,-:s.article.sg}}
+{{de-ndecl|toponym}}
 
 ====Usage notes====
 This country name be used freely with and without article. The genitive {{m|de|Habesch}} is used when the article precedes, else it is {{m|de|Habeschs}}. When used with article it is likely masculine, when without it it must be neuter. Compare {{m|de|Iran}}.
@@ -49315,42 +50045,51 @@ Page 1922 Habasch: -------- begin text --------
 * {{IPA|de|/ˈhabaʃ/|/ˈħabaʃ/}}
 
 ===Proper noun===
-{{de-proper noun|n|g2=m|Habasch|gen2=Habaschs}}
+{{de-proper noun|m,-:s.article}} ''or''<br />
+{{de-proper noun|toponym}}
 
 # {{alt form|de|Habesch}}
 
 ====Declension====
-{{de-decl-noun-m|(s)|n=sg|prop=yes}}
+{{de-ndecl|m,-:s.article.sg}}
+{{de-ndecl|toponym}}
 -------- end text --------
 Page 1923 Chabesch: Found match for regex: =
 Page 1923 Chabesch: -------- begin text --------
 
 ===Proper noun===
-{{de-proper noun|n|g2=m|Chabesch|gen2=Chabeschs}}
+{{de-proper noun|m,-:s.article}} ''or''<br />
+{{de-proper noun|toponym}}
 
 # {{alt sp|de|Habesch}}
 
 ====Declension====
-{{de-decl-noun-m|(s)|n=sg|prop=yes}}
+{{de-ndecl|m,-:s.article.sg}}
+{{de-ndecl|toponym}}
 -------- end text --------
 Page 1924 Chabasch: Found match for regex: =
 Page 1924 Chabasch: -------- begin text --------
 
 ===Proper noun===
-{{de-proper noun|n|g2=m|Chabasch|gen2=Chabaschs}}
+{{de-proper noun|m,-:s.article}} ''or''<br />
+{{de-proper noun|toponym}}
 
 # {{alt sp|de|Habasch}}
 
 ====Declension====
-{{de-decl-noun-m|(s)|n=sg|prop=yes}}
+{{de-ndecl|m,-:s.article.sg}}
+{{de-ndecl|toponym}}
 -------- end text --------
 Page 1925 Heineck: Found match for regex: =
 Page 1925 Heineck: -------- begin text --------
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|surname}}
 
 # {{surname|de}}
+
+====Declension====
+{{de-ndecl|surname}}
 -------- end text --------
 Page 1926 erster Fall: Found match for regex: =
 Page 1926 erster Fall: -------- begin text --------
@@ -49447,12 +50186,12 @@ Page 1930 Swing-Jugend: Found match for regex: =
 Page 1930 Swing-Jugend: -------- begin text --------
 
 ===Proper noun===
-{{de-proper noun|f|Swing-Jugend|head=[[Swing]]-[[Jugend]]}}
+{{de-proper noun|f.article}}
 
 # {{alternative form of|de|Swingjugend}}
 
 ====Declension====
-{{de-decl-noun-f|n=sg|prop=yes}}
+{{de-ndecl|f.article.sg}}
 -------- end text --------
 Page 1931 Hitler-Jugend: Found match for regex: =
 Page 1931 Hitler-Jugend: -------- begin text --------
@@ -49461,12 +50200,12 @@ Page 1931 Hitler-Jugend: -------- begin text --------
 * {{audio|de|De-Hitler-Jugend.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|f|Hitler-Jugend|head=[[Hitler]]-[[Jugend]]}}
+{{de-proper noun|f.article}}
 
 # {{alternative form of|de|Hitlerjugend}}
 
 ====Declension====
-{{de-decl-noun-f|n=sg|prop=yes}}
+{{de-ndecl|f.article.sg}}
 -------- end text --------
 Page 1932 stilles Wasser: Found match for regex: =
 Page 1932 stilles Wasser: -------- begin text --------
@@ -49686,23 +50425,23 @@ From {{bor|de|gez|ሓማሴን}}.
 * {{audio|de|De-Hamasien.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|n|old=1}}
+{{de-proper noun|toponym}}
 
-# {{place|de|historical province|c/Ethiopia|t={{l|en|Hamasien}}}}
+# {{place|de|historical province|c/Ethiopia|t=Hamasien}}
 
 ====Declension====
-{{de-decl-noun-m|(s)|n=sg|prop=yes}}
+{{de-ndecl|toponym}}
 -------- end text --------
 Page 1941 Hamassien: Found match for regex: =
 Page 1941 Hamassien: -------- begin text --------
 
 ===Proper noun===
-{{de-proper noun|n|old=1}}
+{{de-proper noun|toponym}}
 
 # {{alt sp|de|Hamasien}}
 
 ====Declension====
-{{de-decl-noun-m|(s)|n=sg|prop=yes}}
+{{de-ndecl|toponym}}
 -------- end text --------
 Page 1942 Lampenflora: Found match for regex: =
 Page 1942 Lampenflora: -------- begin text --------
@@ -50550,11 +51289,12 @@ Page 1983 Aichinger: -------- begin text --------
 {{wp|lang=de}}
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|surname}}
 
 # {{surname|de}}
 
-[[de:Aichinger]]
+====Declension====
+{{de-ndecl|surname}}
 -------- end text --------
 Page 1984 Hinreisser: Found match for regex: =
 Page 1984 Hinreisser: -------- begin text --------
@@ -51389,13 +52129,13 @@ Page 2017 Waterkant: -------- begin text --------
 * {{IPA|de|/ˈvaːtɐ.kant/}}
 
 ===Proper noun===
-{{de-proper noun|f|head=die Waterkant|der Waterkant}}
+{{de-proper noun|f.article}}
 
 # {{lb|de|jocular}} {{synonym of|de|Nordseeküste|t=North Sea coast}}
 #* {{quote-song|de|album=Auf einem Auge blöd|title=Nordisch By Nature|year=1995|artist=Fettes Brot|passage=Eißfeld von der '''Waterkant''' / Schickt seine Disco-Vibrations übers ganze Land}}
 
 ====Declension====
-{{de-decl-noun-f|prop=yes|n=sg}}
+{{de-ndecl|f.article.sg}}
 
 ====Derived terms====
 * {{l|de|Waterkantgate}}
@@ -52101,7 +52841,7 @@ Page 2045 Nationalsozialistische Deutsche Arbeiterpartei: -------- begin text --
 {{wikipedia|lang=de}}
 
 ===Proper noun===
-{{de-proper noun|[[nationalsozialistisch|Nationalsozialistische]]<+> [[deutsch|Deutsche]]<+> [[Arbeiterpartei]]<f>}}
+{{de-proper noun|[[nationalsozialistisch|Nationalsozialistische]]<+> [[deutsch|Deutsche]]<+> [[Arbeiterpartei]]<f.article>}}
 
 # {{lb|de|historical|Nazism|politics}} the Nazi Party
 
@@ -52304,7 +53044,7 @@ Page 2056 WKÖ: Found match for regex: =
 Page 2056 WKÖ: -------- begin text --------
 
 ===Proper noun===
-{{de-proper noun|f|WKÖs}}
+{{de-proper noun|f.gen:s}}
 
 # {{lb|de|Austria|economics}} {{abbreviation of|de|[[Wirtschaftskammer|'''W'''irtschafts'''K'''ammer]] [[Österreich|'''Ö'''sterreich]]}} {{gloss|[[Austrian]] [[chamber|Chamber]] [[of]] [[commerce|Commerce]]}}
 
@@ -52637,37 +53377,39 @@ Page 2074 Misogyn: -------- begin text --------
 Page 2075 Baumheide: Found match for regex: =
 Page 2075 Baumheide: -------- begin text --------
 
-===Alternative forms===
-* {{alter|de|Baumhaide|Baumheyde}}
-
+===Etymology 1===
 {{wp|lang=de}}
 [[File:Erica arborea - La Palma 01.jpg|frameless|right|{{lang|de|Baumheide}}|upright=1.2]]
-===Etymology===
-{{af|de|Baum|Heide}}.
+{{af|de|Baum|Heide}}
 
-===Pronunciation 1===
+====Alternative forms====
+* {{alter|de|Baumhaide|Baumheyde||obsolete}}
+
+====Pronunciation====
 * {{IPA|de|/ˈbaʊ̯mˌhaɪ̯də/}}
 
 ====Noun====
-{{de-noun|f||Baumheiden}}
+{{de-noun|f}}
 
 # [[tree heath]], [[briarwood]] ({{taxlink|Erica arborea|species}})
 
+=====Declension=====
+{{de-ndecl|f}}
+
+===Etymology 2===
 {{wp|lang=de|Baumheide (Bielefeld)}}
 [[File:Stadtteile Bielefeld - Baumheide.svg|frameless|right|{{lang|de|Baumheide}}|upright=1.2]]
-=====Declension=====
-{{de-decl-noun-f|n}}
 
-===Pronunciation 2===
+====Pronunciation====
 * {{IPA|de|/baʊ̯mˈhaɪ̯də/|/ˈbaʊ̯mˌhaɪ̯də/}}
 
 ====Proper noun====
-{{de-proper noun|n|old=1}}
+{{de-proper noun|toponym}}
 
-# {{place|de|neighbourhood|district/Heepen|city/Bielefeld|state/North Rhine-Westphalia|c/Germany}}, known for its [[high-rise]] [[flat]]s and socially disadvantaged inhabitant structure and therefore [[stronghold]] of Bielefeldian [[rap]] music.
+# {{place|de|neighbourhood|district/Heepen|city/Bielefeld|state/North Rhine-Westphalia|c/Germany}}, known for its [[high-rise]] [[flat]]s and socially disadvantaged inhabitant structure and for being a [[stronghold]] of Bielefeldian [[rap]] music
 
 =====Declension=====
-{{de-decl-noun-f|n}}
+{{de-ndecl|toponym}}
 
 ===References===
 * {{R:de:Meineke:2013|page=205}}, brushed aside the toponym as a transparent formation in contradistinction to neighbouring heaths.
@@ -52859,12 +53601,12 @@ Page 2085 Golfküste: -------- begin text --------
 {{compound|de|Golf|Küste}}
 
 ===Proper noun===
-{{de-proper noun|f||old=1}}
+{{de-proper noun|f.article}}
 
 # {{w|Gulf Coast}}
 
 ====Declension====
-{{de-decl-noun-f|n}}
+{{de-ndecl|f.article.sg}}
 
 ====Related terms====
 * {{l|de|Golfküstenebene}}
