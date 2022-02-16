@@ -147,30 +147,6 @@ local function old_nouns(class, args, data)
 			else
 				table.insert(args[2], PAGENAME)
 			end
-		elseif #args[2] == 1 then
-			-- TODO: instead of this duplication use [[Module:de-noun]]
-			if args[2][1] == "s" then
-				args[2][1] = PAGENAME .. "s"
-			elseif args[2][1] == "(s)" then
-				args[2][1] = PAGENAME .. "s"
-				table.insert(args[2], PAGENAME)
-			elseif args[2][1] == "es" then
-				args[2][1] = PAGENAME .. "es"
-			elseif args[2][1] == "(es)" then
-				args[2][1] = PAGENAME .. "es"
-				table.insert(args[2], PAGENAME)
-			elseif args[2][1] == "(e)s" then
-				args[2][1] = PAGENAME .. "es"
-				table.insert(args[2], PAGENAME .. "s")
-			elseif args[2][1] == "ses" then
-				args[2][1] = PAGENAME .. "ses"
-			elseif args[2][1] == "en" then
-				args[2][1] = PAGENAME .. "en"
-			elseif args[2][1] == "n" then
-				args[2][1] = PAGENAME .. "n"
-			elseif args[2][1] == "ns" then
-				args[2][1] = PAGENAME .. "ns"
-			end
 		end
 
 		for i, form in ipairs(args[2]) do
@@ -184,21 +160,6 @@ local function old_nouns(class, args, data)
 		-- Plural
 		if not args[3][1] and data.pos_category == "nouns" then
 			table.insert(args[3], PAGENAME .. "en")
-		elseif #args[3] == 1 then
-			-- TODO: instead of this duplication use [[Module:de-noun]]
-			if args[3][1] == "n" then
-				args[3][1] = PAGENAME .. "n"
-			elseif args[3][1] == "en" then
-				args[3][1] = PAGENAME .. "en"
-			elseif args[3][1] == "nen" then
-				args[3][1] = PAGENAME .. "nen"
-			elseif args[3][1] == "e" then
-				args[3][1] = PAGENAME .. "e"
-			elseif args[3][1] == "se" then
-				args[3][1] = PAGENAME .. "se"
-			elseif args[3][1] == "s" then
-				args[3][1] = PAGENAME .. "s"
-			end
 		end
 
 		if args[3][1] == "-" then
@@ -284,7 +245,7 @@ pos_functions.nouns = function(class, args, data, proper)
 		return quals, refs
 	end
 
-	local function do_noun_form(slot, label, should_be_present, accel_form, genders)
+	local function do_noun_form(slot, label, should_be_present, accel_form, genders, prefix)
 		local forms = alternant_multiword_spec.forms[slot]
 		local retval
 		if not forms then
@@ -294,9 +255,22 @@ pos_functions.nouns = function(class, args, data, proper)
 			retval = {label = "no " .. label}
 		else
 			retval = {label = label, accel = accel_form and {form = accel_form} or nil}
+			local prev_footnotes
 			for _, form in ipairs(forms) do
-				local quals, refs = expand_footnotes_and_references(form.footnotes)
-				table.insert(retval, {term = form.form, qualifiers = quals, refs = refs, genders = genders})
+				local footnotes = form.footnotes
+				if footnotes and prev_footnotes and require("Module:table").deepEquals(footnotes, prev_footnotes) then
+					footnotes = nil
+				end
+				prev_footnotes = form.footnotes
+				local quals, refs = expand_footnotes_and_references(footnotes)
+				local term = form.form
+				if prefix then
+					if not term:find("[%[%]]") then
+						term = "[[" .. term .. "]]"
+					end
+					term = prefix .. " " .. term
+				end
+				table.insert(retval, {term = term, qualifiers = quals, refs = refs, genders = genders})
 			end
 		end
 
@@ -306,15 +280,64 @@ pos_functions.nouns = function(class, args, data, proper)
 	if proper then
 		table.insert(data.inflections, {label = glossary_link("proper noun")})
 	end
+	local weakprop = alternant_multiword_spec.props.weak 
+	if weakprop and not (#weakprop == 1 and weakprop[1] == false) then
+		local weakdesc = {}
+		for _, is_weak in ipairs(alternant_multiword_spec.props.weak) do
+			if is_weak then
+				table.insert(weakdesc, glossary_link("weak declension", "weak"))
+			else
+				table.insert(weakdesc, glossary_link("strong declension", "strong"))
+			end
+		end
+		table.insert(data.inflections, {label = table.concat(weakdesc, " or ")})
+	end
+	local overall_adj = alternant_multiword_spec.props.overall_adj
+	if not alternant_multiword_spec.first_noun and alternant_multiword_spec.first_adj then
+		table.insert(data.inflections, {label = "adjectival"})
+	end
 	if alternant_multiword_spec.number == "pl" then
 		table.insert(data.inflections, {label = glossary_link("plural only")})
+		if overall_adj then
+			do_noun_form("wk_nom_p", "definite plural", nil, nil, nil, "[[die]]")
+		end
 	else
-		do_noun_form("gen_s", "genitive", true, "gen|s")
-		do_noun_form("nom_p", "plural", not proper)
+		local weak_nom_prefixes = {}
+		local weak_gen_prefixes = {}
+		local saw_f = false
+		if overall_adj then
+			local m_table = require("Module:table")
+			for _, gender in ipairs(alternant_multiword_spec.genders) do
+				if gender.spec == "m" then
+					m_table.insertIfNot(weak_nom_prefixes, "[[der]]")
+					m_table.insertIfNot(weak_gen_prefixes, "[[des]]")
+				elseif gender.spec == "f" then
+					saw_f = true
+					m_table.insertIfNot(weak_nom_prefixes, "[[die]]")
+					m_table.insertIfNot(weak_gen_prefixes, "[[der]]")
+				elseif gender.spec == "n" then
+					m_table.insertIfNot(weak_nom_prefixes, "[[das]]")
+					m_table.insertIfNot(weak_gen_prefixes, "[[des]]")
+				else
+					error("Internal error: Unrecognized gender '" .. gender.spec .. "'")
+				end
+			end
+			do_noun_form("wk_nom_s", "definite nominative", nil, nil, nil, table.concat(weak_nom_prefixes, "/"))
+		end
+		do_noun_form(overall_adj and "str_gen_s" or "gen_s", "genitive", true, nil, nil,
+			overall_adj and not saw_f and "([[des]])" or nil)
+		if overall_adj and saw_f then
+			do_noun_form("wk_gen_s", "definite genitive", nil, nil, nil, table.concat(weak_gen_prefixes, "/"))
+		end
+		do_noun_form(overall_adj and "str_nom_p" or "nom_p", "plural", not proper)
+		if overall_adj then
+			do_noun_form("wk_nom_p", "definite plural", nil, nil, nil, "[[die]]")
+		end
 	end
-	do_noun_form("dim", "diminutive", nil, nil, {"n"})
-	do_noun_form("f", "feminine")
+	do_noun_form("dim", "diminutive", nil, "diminutive", {"n"})
+	do_noun_form("f", "feminine", nil, "feminine")
 	do_noun_form("m", "masculine")
+	do_noun_form("n", "neuter")
 
 	-- Add categories.
 	for _, cat in ipairs(alternant_multiword_spec.categories) do
@@ -324,10 +347,13 @@ pos_functions.nouns = function(class, args, data, proper)
 	-- Use the "linked" form of the lemma as the head if no head= explicitly given.
 	if #data.heads == 0 then
 		data.heads = {}
-		local lemmas = alternant_multiword_spec.forms.nom_s_linked or alternant_multiword_spec.forms.nom_p_linked or {}
+		local lemmas = overall_adj and
+			(alternant_multiword_spec.forms.str_nom_s_linked or alternant_multiword_spec.forms.str_nom_p_linked or {}) or
+			alternant_multiword_spec.forms.nom_s_linked or alternant_multiword_spec.forms.nom_p_linked or {}
 		for _, lemma_obj in ipairs(lemmas) do
 			-- FIXME, can't yet specify qualifiers or references for heads
-			table.insert(data.heads, lemma_obj.form)
+			table.insert(data.heads, alternant_multiword_spec.args.nolinkhead and lemma_obj.form or
+				require("Module:headword utilities").add_lemma_links(lemma_obj.form, alternant_multiword_spec.args.splithyph))
 			-- local quals, refs = expand_footnotes_and_references(lemma_obj.footnotes)
 			-- table.insert(data.heads, {term = lemma_obj.form, qualifiers = quals, refs = refs})
 		end
