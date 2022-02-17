@@ -51,7 +51,7 @@ Page 2 April: -------- begin text --------
 * {{audio|de|De-April.ogg|audio}}
 
 ===Noun===
-{{de-noun|m,(s)}}
+{{de-noun|m,-:s}}
 
 # [[#English|April]]
 #* '''1741''', ''Annales Cistercienses, Das ist, Cisterciensische, Oder Vielmehr Jährliche Kirchen-Geschichte Von Erbauung Cisterz, wie dieser Heil. Marianischen Orden seinen Anfang und Aufnahm genommen, und was sich von Anno Christi Geburth 1098. des Heil. Cistercienser-Ordens im ersten bis 1212. des bemeldten Ordens im 115. Jahr Denckwürdiges begaben, In V. Theil abgetheilet. In Lateinischer Sprache beschrieben Von dem Hochwürdigsten Angelo Manrique von Burgen [...] von dem Hochwürdigen Bonifacio Hiltprand [...] Ins Teutsche übersetzt; Endlichen Ans Tag-Licht und in Druck gegeben Von dem Hochwürdigen Wilhelmo II. [...] Dritter Theil'', page 156:
@@ -62,7 +62,7 @@ Page 2 April: -------- begin text --------
 #*: 22) Bei Ueberreichung der Verzeichnisse der schulpflichtigen Kinder weiset der Vorstand den Lehrer an, mit dem Ersten '''Aprils''' und dem Ersten Octobers diejenigen aufzunehmen, welche dann das 8te Jahr vollendet haben.
 
 ====Declension====
-{{de-ndecl|m,(s)}}
+{{de-ndecl|m,-:s}}
 
 ====Usage notes====
 * Phrasings like ''{{m|de|erster}} April'' (''1. April'') are commonly used to refer to a certain day of April, and not to a certain April month as a whole of a certain time period.
@@ -270,7 +270,7 @@ From {{inh|de|gmh|herze}}, from {{inh|de|goh|herza}}, from {{inh|de|gmw-pro|*her
 * {{homophones|de|Hertz}}
 
 ===Noun===
-{{de-noun|n|Herzens|Herzen|Herzchen|dim2=Herzlein}}
+{{de-noun|n,ens:es[colloquial, uncommon; may also rarely be found in medical literature].weak.dat:en:-[informal or when referring to a card suit or as a term of endearment]|dim=chen,lein}}
 
 # [[heart]]
 # {{lb|de|card games}} [[hearts]]
@@ -284,7 +284,7 @@ From {{inh|de|gmh|herze}}, from {{inh|de|goh|herza}}, from {{inh|de|gmw-pro|*her
 :: Otherwise, the forms ''dem Herzen'' and ''dem Herz'' are both acceptable. The latter is predominant in speech, while the former remains the more established form in writing.
 
 ====Declension====
-{{de-ndecl|n,ens:es[colloquial, uncommon; may also rarely be found in medical literature].weak.dat:en:-[informal]}}
+{{de-ndecl|n,ens:es[colloquial, uncommon; may also rarely be found in medical literature].weak.dat:en:-[informal or when referring to a card suit or as a term of endearment]}}
 
 ====Derived terms====
 {{top3}}
@@ -838,7 +838,7 @@ Page 27 Zug: -------- begin text --------
 From {{inh|de|gmh|zuc}}, {{m|gmh|zug}}, from {{inh|de|goh|zug}}, from {{inh|de|gem-pro|*tugiz}}, an abstract noun belonging to Proto-Germanic {{m|gem-pro|*teuhaną}}, from {{der|de|ine-pro|*dewk-||to pull, lead}}.<ref>{{R:EWddS|hw=Zug|ed=22}}</ref> Cognate with {{cog|nl|teug}}, {{cog|hrx|Zugh}}, {{cognate|en|tug|||tr=|pos=|g=|id=}}, {{cog|ang|tyge}}. Compare to {{cog|de|ziehen||to pull, to draw}}.
 
 ====Noun====
-{{de-noun|m,(e)s,^e}}
+{{de-noun|m,es:e,^e}}
 
 # [[train]] (multiple vehicles one behind the other, particularly travelling on rails)
 #: {{syn|de|Bahn|Eisenbahn}}
@@ -860,7 +860,7 @@ From {{inh|de|gmh|zuc}}, {{m|gmh|zug}}, from {{inh|de|goh|zug}}, from {{inh|de|g
 #: {{syn|de|Spielzug}}
 
 =====Declension=====
-{{de-ndecl|m,(e)s,^e}}
+{{de-ndecl|m,es:e,^e}}
 
 =====Hyponyms=====
 {{col3|de|Spielzug}}
@@ -1046,8 +1046,8 @@ From {{inh|de|gmh|brēzel}}, from {{inh|de|goh|breztella}}, {{m|goh|brezitella}}
 * {{audio|de|De-Brezel.ogg|Audio}}
 
 ===Noun===
-{{de-noun|f}} ''or (in Austria and certain other regions)'' <br />
-{{de-noun|n}}
+{{de-noun|f}} ''or''<br />
+{{de-noun|n[in Austria and certain other regions]}}
 
 # [[pretzel]]; any kind of [[baked good]] in the form of a loose [[knot]]
 #: {{ux|de|Das alte Zunftzeichen der Bäcker ist die '''Brezel'''.|t=The ancient guild-symbol of the baker is a '''pretzel.'''}}
@@ -1056,8 +1056,8 @@ From {{inh|de|gmh|brēzel}}, from {{inh|de|goh|breztella}}, {{m|goh|brezitella}}
 * Mostly feminine, but neuter in some regions including Austria.
 
 ====Declension====
-{{de-ndecl|f}}
-{{de-ndecl|n}}
+{{de-ndecl|f}} ''or''<br />
+{{de-ndecl|n[in Austria and certain other regions]}}
 
 ====Derived terms====
 * {{l|de|Fastenbrezel}}
@@ -1322,7 +1322,7 @@ From {{inh|de|gmh|herre}}, from {{inh|de|goh|hēriro}}, {{m|goh|hērro||grey, gr
 * {{homophones|de|Heer|hehr|her}} {{q|common merger}}
 
 ===Noun===
-{{de-noun|m|Herrn|gen2=Herren|Herren|pl2=Herrn|Herrchen|dim2=Herrlein}}
+{{de-noun|m,n:en[archaic],en:n[archaic].weak.acc:n:en[archaic].dat:n:en[archaic]|dim=chen,lein}}
 
 # [[man]], [[gentleman]] ''(polite term)''
 #: {{ux|de|'''Herren'''bekleidung|'''gentlemen's''' wear}}
@@ -1362,12 +1362,7 @@ From {{inh|de|gmh|herre}}, from {{inh|de|goh|hēriro}}, {{m|goh|hērro||grey, gr
 
 ====Declension====
 * The forms {{m|de|Herrn}} and {{m|de|Herren}} were originally simple phonetic/graphic variants. Both were used for the singular and plural inflections. In contemporary standard German they are—usually—distinguished functionally, ''Herrn'' being the inflected singular, ''Herren'' the plural.
-
-* With functional split of ''-n/-en'':
-{{de-decl-noun-m|n|en}}
-
-* Without functional split of ''-n/-en'':
-{{de-decl-noun-m|gs=[[Herrn]], [[Herren]]|ds=[[Herrn]], [[Herren]]|as=[[Herrn]], [[Herren]]|pl=[[Herrn]], [[Herren]]}}
+{{de-ndecl|m,n:en[archaic],en:n[archaic].weak.acc:n:en[archaic].dat:n:en[archaic]}}
 
 ====Derived terms====
 {{der-top}}
@@ -1731,13 +1726,14 @@ From {{bor|de|gmh|merz}}, from {{bor|de|goh|merzo}}, from {{bor|de|la|martius}}
 * {{audio|de|De-März.ogg|audio}}
 
 ===Noun===
-{{de-noun|m|-[predominant]:es[less common]}} ''or (obsolete)''<br />
+{{de-noun|m,-[predominant]:es[less common]}} ''or (obsolete)''<br />
 {{de-noun|m.weak}}
 
 # [[March]]
 
 ====Declension====
-{{de-ndecl|m|-[predominant]:es[less common]}}
+{{de-ndecl|m,-[predominant]:es[less common]}}
+; Obsolete declension:
 {{de-ndecl|m.weak}}
 
 ====Descendants====
@@ -1920,9 +1916,6 @@ From Vulgate {{bor|de|la|Maria}}, from {{der|de|grc|Μαρία}}, {{m|grc|Μαρ
 * The genitive form ''Mariä'' is restricted to Catholic contexts, and chiefly to the [[Virgin Mary]]. It is now very rare outside of fixed terms like {{m|de|Mariä Verkündigung||Feast of the [[Annunciation]]}}. In contemporary German, the genitive ''Mariens'' is also widely restricted to the Virgin, while the only form commonly used for other persons is ''Marias''.
 * In historic texts the name is often declined as in Latin. See {{m|la|Marīa}}.
 
-====Declension====
-{{de-decl-noun-f|n=sg|gs=Marias/Mariens/Mariä}}
-
 ====Derived terms====
 * {{l|de|marianisch}}
 
@@ -2009,14 +2002,13 @@ Page 61 a: -------- begin text --------
 # {{Latn-def-lite|de|letter|1|langname=German}}
 
 ====Noun====
-{{de-noun|n|a|gen2=as|a|pl2=as}}
+{{de-noun|n,-:s,-:s}}
 
 # {{alt form|de|A}}
 <!--
 
 =====Declension=====
-{{de-decl-noun-n}}
-{{de-decl-noun-n|s|s}}
+{{de-ndecl|n,-:s,-:s}}
 
 =====Usage notes=====
 The genitive and plural forms {{m-lite|de|as}} are colloquial.-->
@@ -2140,12 +2132,12 @@ Named after the {{bor|de|fr|-}} physicist {{w|André-Marie Ampère}}.
 * {{hyphenation|en|Am|pere}}
 
 ===Noun===
-{{de-noun|n|Amperes|Ampere}}
+{{de-noun|n,s:-,-.nodatpln}}
 
-# The [[ampere]], [[unit]] of [[electrical]] [[current]]
+# [[ampere]] {{gl|[[unit]] of [[electrical]] [[current]]}}
 
 ====Declension====
-{{de-decl-noun-n|s|dp=Ampere}}
+{{de-ndecl|n,s:-,-.nodatpln}}
 
 ====Derived terms====
 * {{l|de|Amperage}}
@@ -2167,12 +2159,12 @@ Page 64 Anime: -------- begin text --------
 * {{audio|de|de-Anime.ogg|Anime}}
 
 ===Noun===
-{{de-noun|m|Anime|gen2=Animes|Anime|pl2=Animes}}
+{{de-noun|m,s:-,-:s.nodatpln}}
 
 # [[anime]] (A style of art that originated in Japan) 
 
 ====Declension====
-{{de-decl-noun-m|(s)|pl=[[Animes]],<br>Anime|dp=[[Animes]],<br>Anime}}
+{{de-ndecl|m,s:-,-:s.nodatpln}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -2190,7 +2182,8 @@ Page 65 Anke: -------- begin text --------
 From {{inh|de|gmh|anko}}, from {{inh|de|goh|ancha}}. Related to {{m|de|Enkel||ankle}}.
 
 ====Noun====
-{{de-noun|f|g2=m|Anke|gen2=Anken|Anken}}
+{{de-noun|f,n.gen:n.dat:n.acc:n}} ''or''<br />
+{{de-noun|m[rare].weak}}
 
 # {{lb|de|regional|otherwise|_|obsolete}} [[nape]] of the [[neck]]
 
@@ -2198,8 +2191,8 @@ From {{inh|de|gmh|anko}}, from {{inh|de|goh|ancha}}. Related to {{m|de|Enkel||an
 Masculine form is rare.
 
 =====Declension=====
-{{de-decl-noun-f|n}}
-{{de-decl-noun-m|n|n}}
+{{de-ndecl|f,n.gen:n.dat:n.acc:n}}
+{{de-ndecl|m[rare].weak}}
 
 ===Etymology 2===
 {{unk|de|title=Unclear}}.
@@ -2248,18 +2241,21 @@ Page 66 Antichrist: -------- begin text --------
 * {{IPA|de|/ˈantiˌkʁɪst/}}
 * {{audio|de|De-Antichrist.ogg|Audio}}
 
-===Noun===
-{{de-noun|m|Antichrist|gen2=Antichristen|gen3=Antichrists|Antichristen|pl2=Antichriste}}
+===Proper noun===
+{{de-proper noun|m,en:s.acc:-.dat:en.article}}
 
 # {{lb|de|Christianity}} [[#English|Antichrist]]
 
-====Usage notes====
-* The commonest inflection is with an invariable singular and a plural in ''-en''. Normal weak and strong declensions are also possible.
+====Declension====
+{{de-ndecl|m,en:s.acc:-.dat:en.article.sg}}
+
+===Noun===
+{{de-noun|m.weak}}
+
+# {{lb|de|Christianity}} [[antichrist]]
 
 ====Declension====
-{{de-decl-noun-m||en}}
-{{de-decl-noun-m|en|en}}
-{{de-decl-noun-m|s|e}}
+{{de-ndecl|m.weak}}
 
 ====See also====
 * {{l|de|Antichristus}}
@@ -2279,7 +2275,7 @@ From {{m|de|arm||poor}}.
 ====Noun====
 {{de-noun|+|m=+}}
 
-# [[pauper]] (female poor person)
+# {{female equivalent of|de|Armer}}: [[female]] [[pauper]]
 
 =====Declension=====
 {{de-ndecl|+}}
@@ -2443,16 +2439,14 @@ Page 70 Autor: -------- begin text --------
 * {{audio|de|De-Autor.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m|Autors|gen2=Autoren|Autoren|f=Autorin}}
+{{de-noun|((<m,s,en>,<m.weak.[rare, proscribed]>))|f=in}}
 
 # [[author]] {{q|male or of unspecified gender}}
 #: {{syn|de|Urheber|Verfasser}}
 #: {{ant|de|Plagiator}}
 
 ====Declension====
-{{de-decl-noun-m|s|en}}
-Also:
-{{de-decl-noun-m|en|en}}
+{{de-ndecl|((<m,s,en>,<m.weak.[rare, proscribed]>))}}
 
 ====Related terms====
 {{rel3|de
@@ -2532,7 +2526,7 @@ From {{inh|de|gmh|bant}}.
 * {{rhymes|de|ant|s=1}}
 
 ====Noun====
-{{de-noun|n|Bandes|gen2=Bands|Bänder|pl2=Bande|Bändchen|dim2=Bändlein}}
+{{de-noun|n,es:s,^er:e[figurative or poetic]|dim=^chen,^lein}}
 
 # [[tape]], [[ribbon]]
 # {{lb|de|anatomy}} A [[ligament]]
@@ -2548,10 +2542,7 @@ From {{inh|de|gmh|bant}}.
 * The plural ''Bande'' is used in the figurative sense of “bond” and in the poetic meaning “shackles” (for which usually {{m|de|Fessel}} is used). In early modern German, the two plurals were widely interchangeable.
 
 =====Declension=====
-; Plural ''Bänder''
-{{de-decl-noun-n|(e)s|pl=Bänder}}
-; Plural ''Bande''
-{{de-decl-noun-n|(e)s|e}}
+{{de-ndecl|n,es:s,^er:e[figurative or poetic]|dim=^chen,^lein}}
 
 =====Derived terms=====
 {{col3|de
@@ -2586,12 +2577,12 @@ From {{inh|de|gmh|bant}}.
 * {{rhymes|de|ant|s=1}}
 
 ====Noun====
-{{de-noun|m,(e)s,^e|dim=^chen}}
+{{de-noun|m,es:s,^e|dim=^chen}}
 
-# A [[volume]] of a multi-volume set of [[books]]
+# [[volume]] {{q|of a multi-volume set of [[books]]}}
 
 =====Declension=====
-{{de-ndecl|m,(e)s,^e}}
+{{de-ndecl|m,es:s,^e}}
 
 =====Derived terms=====
 {{col2|de
@@ -2616,6 +2607,16 @@ Borrowed from {{bor|de|en|band}}.
 =====Declension=====
 {{de-ndecl|f,s}}
 
+===Etymology 4===
+
+====Proper noun====
+{{de-proper noun|surname}}
+
+# {{surname|de}}
+
+=====Declension=====
+{{de-ndecl|surname}}
+
 {{cln|de|heteronyms}}{{cln|de|nouns with multiple genders}}
 
 ----
@@ -2635,7 +2636,7 @@ From the adjective {{m|de|blau||blue}}.
 * {{rhymes|de|aʊ̯|s=1}}
 
 ===Noun===
-{{de-noun|n|Blau|gen2=Blaus|Blau|pl2=Blaus}}
+{{de-noun|n,s,-:s}}
 
 # {{lb|de|uncountable}} the colour [[blue]] (as a whole)
 # {{lb|de|countable}} a particular tone of blue
@@ -2646,7 +2647,7 @@ From the adjective {{m|de|blau||blue}}.
 ## the [[sea]]
 
 ====Declension====
-{{de-decl-noun-n|s|en}}
+{{de-ndecl|n,s,-:s}}
 
 ===See also===
 {{table:colors/de}}
@@ -2672,7 +2673,7 @@ From {{inh|de|goh|brant}}, from {{inh|de|gem-pro|*brandaz}}. Cognate with {{cog|
 * {{rhymes|de|ant|s=1}}
 
 ====Noun====
-{{de-noun|m,(e)s,^e}}
+{{de-noun|m,es:s,^e}}
 
 # [[fire]], [[blaze]] {{gloss|destructive occurrence}}
 # [[hell]]
@@ -2682,7 +2683,7 @@ From {{inh|de|goh|brant}}, from {{inh|de|gem-pro|*brandaz}}. Cognate with {{cog|
 # {{lb|de|colloquial}} strong [[thirst]]
 
 =====Declension=====
-{{de-ndecl|m,(e)s,^e}}
+{{de-ndecl|m,es:s,^e}}
 
 =====Derived terms=====
 {{der4|de
@@ -2713,14 +2714,15 @@ From {{inh|de|goh|brant}}, from {{inh|de|gem-pro|*brandaz}}. Cognate with {{cog|
 Borrowed from {{bor|de|en|brand}}.
 
 ====Noun====
-{{de-noun|f|g2=n|g3=m|Brand|gen2=Brands|Brands}}
+{{de-noun|f}} ''or''
+{{de-noun|n:m,s,s}}
 
 # {{lb|de|marketing|_|slang|otherwise|_|unusual}} [[brand]]
 #: {{syn|de|Marke}}
 
 =====Declension=====
-{{de-decl-noun-f|s}}
-{{de-decl-noun-n|s|s}}
+{{de-ndecl|f}}
+{{de-ndecl|n:m,s,s}}
 
 ===Etymology 3===
 
@@ -2758,7 +2760,7 @@ From the verb {{m|de|binden|t=bind}}.
 * {{homophones|de|bunt}}
 
 ===Noun===
-{{de-noun|m|Bundes|Bünde}}
+{{de-noun|m,es:s,^e}}
 
 # [[alliance]]
 # {{lb|de|biblical}} [[covenant]]
@@ -2766,7 +2768,7 @@ From the verb {{m|de|binden|t=bind}}.
 # [[waistband]]
 
 ====Declension====
-{{de-decl-noun-m|(e)s|pl=Bünde}}
+{{de-ndecl|m,es:s,^e}}
 
 ====Derived terms====
 {{col3|de
@@ -2802,12 +2804,12 @@ From the verb {{m|de|binden|t=bind}}.
 }}
 
 ===Noun===
-{{de-noun|n|Bundes|Bunde}}
+{{de-noun|n,es:s}}
 
 # a [[bunch]]
 
 ====Declension====
-{{de-decl-noun-n|es|pl=Bunde}}
+{{de-ndecl|n,es:s}}
 
 ====Derived terms====
 * {{l|de|bundweise}}
@@ -2823,12 +2825,15 @@ From the verb {{m|de|binden|t=bind}}.
 }}
 
 ===Noun===
-{{de-noun|m|Bundes|-}}
+{{de-noun|m,es:s.sg}}
 
 # [[confederation]] of German states
 #: {{uxi|de|Die Aufgaben des '''Bundes'''|The tasks of the German confederation}}
 # the German army, [[Bundeswehr]]
 #: {{uxi|de|Ich geh zum '''Bund'''.|I will join the German army.}}
+
+====Declension====
+{{de-ndecl|m,es:s.sg}}
 
 ====Derived terms====
 {{col4|de
@@ -2878,7 +2883,7 @@ Page 76 Butter: -------- begin text --------
 ===Etymology===
 From {{inh|de|gmh|buter}}, {{m|gmh|butter}}, from {{inh|de|goh|butera}}, from {{inh|de|gmw-pro|*buterā}}, borrowed from {{der|de|la|butyra}}, collective plural of {{m|la|butyrum}}.
 
-Though originally feminine, the word became masculine throughout [[Upper German]] and in southern dialects of [[West Central German]]. The now established feminine gender is [[East Central German]], reinforced by {{der|de|gml|boter}} {{g|f}}.
+Though originally feminine, the word became masculine throughout [[Upper German]] and in southern dialects of [[West Central German]]. The now established feminine gender is [[East Central German]], reinforced by {{der|de|gml|boter|g=f}}.
 
 ===Pronunciation===
 * {{IPA|de|/ˈbʊtɐ/}}
