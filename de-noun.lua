@@ -185,8 +185,10 @@ end
 local surname_slot_list_with_linked_and_articles = m_table.shallowcopy(surname_slot_list_with_linked)
 for _, case in ipairs(cases) do
 	for _, gender_number in ipairs {"m_s", "f_s", "p" } do
-		local slotaccel = {"art_def_" .. case .. "_" .. gender_number, "-"}
-		table.insert(surname_slot_list_with_linked_and_articles, slotaccel)
+		for _, def in ipairs(definitenesses) do
+			local slotaccel = {"art_" .. def .. "_" .. case .. "_" .. gender_number, "-"}
+			table.insert(surname_slot_list_with_linked_and_articles, slotaccel)
+		end
 	end
 end
 
@@ -1148,18 +1150,18 @@ local function compute_non_surname_articles(alternant_multiword_spec)
 	iut.map_word_specs(alternant_multiword_spec, function(base)
 		for _, genderspec in ipairs(base.genders) do
 			for _, case in ipairs(cases) do
-				iut.insert_form(alternant_multiword_spec.forms, "art_ind_" .. case .. "_s",
-					{form = com.articles[genderspec.form]["ind_" .. case]})
-				iut.insert_form(alternant_multiword_spec.forms, "art_def_" .. case .. "_s",
-					{form = com.articles[genderspec.form]["def_" .. case]})
+				for _, def in ipairs(definitenesses) do
+					iut.insert_form(alternant_multiword_spec.forms, "art_" .. def .. "_" .. case .. "_s",
+						{form = com.articles[genderspec.form][def .. "_" .. case]})
+				end
 			end
 		end
 	end)
 	for _, case in ipairs(cases) do
-		iut.insert_form(alternant_multiword_spec.forms, "art_ind_" .. case .. "_p",
-			{form = com.articles.p["ind_" .. case]})
-		iut.insert_form(alternant_multiword_spec.forms, "art_def_" .. case .. "_p",
-			{form = com.articles.p["def_" .. case]})
+		for _, def in ipairs(definitenesses) do
+			iut.insert_form(alternant_multiword_spec.forms, "art_" .. def .. "_" .. case .. "_p",
+				{form = com.articles.p[def .. "_" .. case]})
+		end
 	end
 end
 
@@ -1169,8 +1171,10 @@ end
 local function compute_surname_articles(alternant_multiword_spec)
 	for _, gender in ipairs {"m", "f"} do
 		for _, case in ipairs(cases) do
-			iut.insert_form(alternant_multiword_spec.forms, "art_def_" .. case .. "_" .. gender .. "_s",
-				{form = "([[" .. com.articles[gender]["def_" .. case] .. "]])"})
+			for _, def in ipairs(definitenesses) do
+				iut.insert_form(alternant_multiword_spec.forms, "art_" .. def .. "_" .. case .. "_" .. gender .. "_s",
+					{form = "([[" .. com.articles[gender][def .. "_" .. case] .. "]])"})
+			end
 		end
 	end
 	for _, case in ipairs(cases) do
@@ -1223,7 +1227,9 @@ local function compute_categories_and_annotation(alternant_multiword_spec)
 				error("Internal error: Unrecognized gender '" .. gender.form .. "'")
 			end
 		end
-		if saw_m_or_n then
+		if base.props.surname then
+			m_table.insertIfNot(decldescs, "surname")
+		elseif saw_m_or_n then
 			if base.props.weak then
 				insert("weak ~")
 				m_table.insertIfNot(decldescs, "weak")
@@ -1445,48 +1451,58 @@ local noun_template_surname = [=[
 <div class="NavHead">{title}{annotation}</div>
 <div class="NavContent">
 {\op}| border="1px solid #505050" style="border-collapse:collapse; background:#FAFAFA; text-align:center; width:100%" class="inflection-table inflection-table-de inflection-table-de-{decl_type}"
-! rowspan="2" style="background:#AAB8C0;width:13%" |
-! colspan="4" style="background:#AAB8C0" | singular
+! rowspan="2" style="background:#AAB8C0;width:11%" |
+! colspan="6" style="background:#AAB8C0" | singular
 ! colspan="2" rowspan="2" style="background:#AAB8C0" | plural
 |-
-! colspan="2" style="background:#AAB8C0;width:23%" | masculine
-! colspan="2" style="background:#AAB8C0;width:23%" | feminine
+! colspan="3" style="background:#AAB8C0" | masculine
+! colspan="3" style="background:#AAB8C0" | feminine
 |-
 ! style="background:#BBC9D0" |
-! style="background:#BBC9D0;width:6%" | [[definite article|def.]]
+! style="background:#BBC9D0;width:4%" | [[indefinite article|indef.]]
+! style="background:#BBC9D0;width:4%" | [[definite article|def.]]
 ! style="background:#BBC9D0;width:23%" | noun
-! style="background:#BBC9D0;width:6%" | [[definite article|def.]]
+! style="background:#BBC9D0;width:4%" | [[indefinite article|indef.]]
+! style="background:#BBC9D0;width:4%" | [[definite article|def.]]
 ! style="background:#BBC9D0;width:23%" | noun
-! style="background:#BBC9D0;width:6%" | [[definite article|def.]]
+! style="background:#BBC9D0;width:4%" | [[definite article|def.]]
 ! style="background:#BBC9D0;width:23%" | noun
 |-
 ! style="background:#BBC9D0" | nominative
+| style="background:#EEEEEE" | {art_ind_nom_m_s}
 | style="background:#EEEEEE" | {art_def_nom_m_s}
 | {nom_m_s}
+| style="background:#EEEEEE" | {art_ind_nom_f_s}
 | style="background:#EEEEEE" | {art_def_nom_f_s}
 | {nom_f_s}
 | style="background:#EEEEEE" | {art_def_nom_p}
 | {nom_p}
 |-
 ! style="background:#BBC9D0" | genitive
+| style="background:#EEEEEE" | {art_ind_gen_m_s}
 | style="background:#EEEEEE" | {art_def_gen_m_s}
 | {gen_m_s}
+| style="background:#EEEEEE" | {art_ind_gen_f_s}
 | style="background:#EEEEEE" | {art_def_gen_f_s}
 | {gen_f_s}
 | style="background:#EEEEEE" | {art_def_gen_p}
 | {gen_p}
 |-
 ! style="background:#BBC9D0" | dative
+| style="background:#EEEEEE" | {art_ind_dat_m_s}
 | style="background:#EEEEEE" | {art_def_dat_m_s}
 | {dat_m_s}
+| style="background:#EEEEEE" | {art_ind_dat_f_s}
 | style="background:#EEEEEE" | {art_def_dat_f_s}
 | {dat_f_s}
 | style="background:#EEEEEE" | {art_def_dat_p}
 | {dat_p}
 |-
 ! style="background:#BBC9D0" | accusative
+| style="background:#EEEEEE" | {art_ind_acc_m_s}
 | style="background:#EEEEEE" | {art_def_acc_m_s}
 | {acc_m_s}
+| style="background:#EEEEEE" | {art_ind_acc_f_s}
 | style="background:#EEEEEE" | {art_def_acc_f_s}
 | {acc_f_s}
 | style="background:#EEEEEE" | {art_def_acc_p}
