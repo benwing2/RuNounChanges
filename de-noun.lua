@@ -93,6 +93,13 @@ local gender_spec_to_full_gender = {
 local case_set = m_table.listToSet(cases)
 
 
+local function add_equiv(slot_list)
+	table.insert(slot_list, {"m_equiv", "-"}) -- masculine equivalent of a feminine or neuter noun
+	table.insert(slot_list, {"f_equiv", "-"}) -- feminine equivalent of a masculine or neuter noun
+	table.insert(slot_list, {"n_equiv", "-"}) -- neuter equivalent of a masculine or feminine noun
+end
+
+
 -- Construct noun slots.
 
 local noun_slot_list = {
@@ -106,8 +113,8 @@ local noun_slot_list = {
 	{"gen_p", "gen|p"},
 	{"dat_p", "dat|p"},
 	{"acc_p", "acc|p"},
-	{"equiv", "-"}, -- fem/masc equivalent of a masc/fem noun
 }
+add_equiv(noun_slot_list)
 noun_slot_set = {}
 for _, slotaccel in ipairs(noun_slot_list) do
 	local slot, accel = unpack(slotaccel)
@@ -138,9 +145,8 @@ end
 
 -- Construct adjectival slots.
 
-local adjectival_slot_list = {
-	{"equiv", "-"}, -- fem/masc equivalent of a masc/fem adjective
-}
+local adjectival_slot_list = {}
+add_equiv(adjective_slot_list)
 local adjective_slot_set = {}
 for _, state in ipairs(states) do
 	for _, case in ipairs(adj_cases) do
@@ -228,9 +234,9 @@ local function add(base, slot, stem, ending, footnotes, process_combined_stem_en
 	footnotes = iut.combine_footnotes(base.footnotes, footnotes)
 	local ending_obj = iut.combine_form_and_footnotes(ending, footnotes)
 	-- If we're declining an adjectival noun or adjective-noun combination, and the slot is a noun slot, convert it to
-	-- the equivalent adjective slots (e.g. gen_s -> str_gen_s/wk_gen_s/mix_gen_s). But don't do that for "equiv",
-	-- which is the same in nouns and adjectives.
-	if base.props.overall_adj and noun_slot_set[slot] and slot ~= "equiv" then
+	-- the equivalent adjective slots (e.g. gen_s -> str_gen_s/wk_gen_s/mix_gen_s). But don't do that for "m_equiv",
+	-- "f_equiv", "n_equiv", which are the same in nouns and adjectives.
+	if base.props.overall_adj and noun_slot_set[slot] and not rfind(slot, "equiv$") then
 		for _, state in ipairs(states) do
 			iut.add_forms(base.forms, state .. "_" .. slot, stem or base.lemma, ending_obj, do_combine_stem_ending)
 		end
@@ -507,18 +513,18 @@ local function decline_noun(base)
 			if rfind(masc, "es$") then
 				masc = masc .. "en"
 			end
-			add(base, "equiv", masc, "")
+			add(base, "m_equiv", masc, "")
 		else
 			-- Likely masculine. Try to convert Chinesen -> Chinesinnen, and -er -> -erinnen.
 			local femstem = rsub(base.lemma, "en$", "")
-			add(base, "equiv", femstem, "innen")
+			add(base, "f_equiv", femstem, "innen")
 		end
 	else
 		for _, genderspec in ipairs(base.genders) do
 			local gender = genderspec.form
 			decline_singular_and_plural(base, gender, get_default_gen(base, gender), get_default_pl(base, gender))
 			if gender == "m" then
-				add(base, "equiv", rsub(base.lemma, "e$", ""), "in") -- feminine
+				add(base, "f_equiv", rsub(base.lemma, "e$", ""), "in") -- feminine
 			elseif gender == "f" then
 				-- Try (sort of) to get the masculine. Remove final -in, and if the result ends in -es, convert to -ese
 				-- (e.g. Chinesin -> Chinese).
@@ -526,7 +532,7 @@ local function decline_noun(base)
 				if rfind(masc, "es$") then
 					masc = masc .. "e"
 				end
-				add(base, "equiv", masc, "")
+				add(base, "m_equiv", masc, "")
 			end -- do nothing for neuter
 		end
 	end
@@ -591,17 +597,17 @@ local function decline_adjective(base)
 
 	if base.number == "pl" then
 		copy_gender_forms("p")
-		add(base, "equiv", base.lemma, "e")
+		add(base, "m_equiv", base.lemma, "e")
+		add(base, "f_equiv", base.lemma, "e")
+		add(base, "n_equiv", base.lemma, "e")
 	else
 		-- Normally there should be only one gender.
 		for _, genderspec in ipairs(base.genders) do
 			local gender = genderspec.form
 			copy_gender_forms(gender)
-			if gender == "m" then
-				add(base, "equiv", base.lemma, "e") -- feminine
-			elseif gender == "f" then
-				add(base, "equiv", base.lemma, "er") -- masculine
-			end -- do nothing for neuter
+			add(base, "m_equiv", base.lemma, "er") -- masculine
+			add(base, "f_equiv", base.lemma, "e") -- feminine
+			add(base, "n_equiv", base.lemma, "es") -- neuter
 		end
 		if base.number ~= "sg" then
 			copy_gender_forms("p")
@@ -1829,11 +1835,12 @@ function export.do_generate_forms(parent_args, pos, from_headword, is_proper, de
 	alternant_multiword_spec.genders = compute_headword_genders(alternant_multiword_spec)
 	if from_headword or pretend_from_headword then
 		process_dim_m_f_n(alternant_multiword_spec, args.dim, "^chen", nil, "dim", "diminutive")
-		process_dim_m_f_n(alternant_multiword_spec, args.f, alternant_multiword_spec.forms.equiv,
+		process_dim_m_f_n(alternant_multiword_spec, args.f, alternant_multiword_spec.forms.f_equiv,
 			"literal default", "f", "feminine equivalent")
-		process_dim_m_f_n(alternant_multiword_spec, args.m, alternant_multiword_spec.forms.equiv,
+		process_dim_m_f_n(alternant_multiword_spec, args.m, alternant_multiword_spec.forms.m_equiv,
 			"literal default", "m", "masculine equivalent")
-		process_dim_m_f_n(alternant_multiword_spec, args.n, nil, nil, "n", "neuter equivalent")
+		process_dim_m_f_n(alternant_multiword_spec, args.n, alternant_multiword_spec.forms.n_equiv,
+			"literal default", "n", "neuter equivalent")
 	end
 	return alternant_multiword_spec
 end
