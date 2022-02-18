@@ -1,4 +1,4 @@
-Beginning at Mon Feb 14 23:44:22 2022
+Beginning at Fri Feb 18 01:42:18 2022
 Page 1 A: Found match for regex: =
 Page 1 A: -------- begin text --------
 
@@ -18,15 +18,14 @@ Page 1 A: -------- begin text --------
 * {{list:Latin script letters/de}}
 
 ====Noun====
-{{de-noun|n|A|gen2=As|A|pl2=As}}
+{{de-noun|n,-:s,-:s}}
 
 # [[#English|A]]
 #: {{uxi|de|Von '''A''' bis Z.|From '''A''' to Z.}}
 #: {{uxi|de|Wer '''A''' sagt, muss auch B sagen.|One who says '''A''' must also say B.}}
 
 =====Declension=====
-{{de-decl-noun-n}}
-{{de-decl-noun-n|s|s}}
+{{de-ndecl|n,-:s,-:s}}
 
 ===Etymology 2===
 
@@ -52,7 +51,7 @@ Page 2 April: -------- begin text --------
 * {{audio|de|De-April.ogg|audio}}
 
 ===Noun===
-{{de-noun|m|Aprils|gen2=April|Aprile}}
+{{de-noun|m,(s),e}}
 
 # [[#English|April]]
 #* '''1741''', ''Annales Cistercienses, Das ist, Cisterciensische, Oder Vielmehr Jährliche Kirchen-Geschichte Von Erbauung Cisterz, wie dieser Heil. Marianischen Orden seinen Anfang und Aufnahm genommen, und was sich von Anno Christi Geburth 1098. des Heil. Cistercienser-Ordens im ersten bis 1212. des bemeldten Ordens im 115. Jahr Denckwürdiges begaben, In V. Theil abgetheilet. In Lateinischer Sprache beschrieben Von dem Hochwürdigsten Angelo Manrique von Burgen [...] von dem Hochwürdigen Bonifacio Hiltprand [...] Ins Teutsche übersetzt; Endlichen Ans Tag-Licht und in Druck gegeben Von dem Hochwürdigen Wilhelmo II. [...] Dritter Theil'', page 156:
@@ -63,7 +62,7 @@ Page 2 April: -------- begin text --------
 #*: 22) Bei Ueberreichung der Verzeichnisse der schulpflichtigen Kinder weiset der Vorstand den Lehrer an, mit dem Ersten '''Aprils''' und dem Ersten Octobers diejenigen aufzunehmen, welche dann das 8te Jahr vollendet haben.
 
 ====Declension====
-{{de-decl-noun-n|s|e}}
+{{de-ndecl|m,(s),e}}
 
 ====Usage notes====
 * Phrasings like ''{{m|de|erster}} April'' (''1. April'') are commonly used to refer to a certain day of April, and not to a certain April month as a whole of a certain time period.
@@ -89,13 +88,13 @@ Page 3 RAM: Found match for regex: =
 Page 3 RAM: -------- begin text --------
 
 ===Noun===
-{{de-noun|n|g2=m|RAMs|gen2=RAM|RAMs}}
+{{de-noun|n:m,(s),s}}
 
 # {{lb|de|computing}} [[#English|RAM]]
 #: {{syn|de|Arbeitsspeicher}}
 
 ====Declension====
-{{de-decl-noun-n|(s)|s}}
+{{de-ndecl|n:m,(s),s}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -404,6 +403,7 @@ Ultimately from {{der|de|grc|λεξικόν||dictionary}}, from {{m|grc|λεξι
 
 ===Further reading===
 * {{R:Duden}}
+* {{R:DWDS}}
 
 {{C|de|Reference works}}
 -------- end text --------
@@ -462,7 +462,7 @@ Page 17 Schicksal: -------- begin text --------
 * {{audio|de|De-Schicksal.ogg|Audio}}
 
 ===Noun===
-{{de-noun|n|Schicksals|gen2=Schicksales|Schicksale|pl2=Schicksäler}}
+{{de-noun|n,(e)s,e:^er}}
 
 # {{lb|de|uncountable}} [[destiny]], [[fate]] {{gloss|irresistable power that predetermines events}}
 # {{lb|de|countable}} someone's destiny, fate
@@ -474,9 +474,7 @@ Page 17 Schicksal: -------- begin text --------
 * The normal plural is '''''Schicksale'''''. The form ''Schicksäler'' is more informal and sometimes slightly deprecative, e.g. expressing the notion that people exaggerate the bitterness of their fates. However, it is also attestable as an entirely neutral variant.
 
 ====Declension====
-{{de-decl-noun-n|(e)s|e}}
-;{{q|informal}}
-{{de-decl-noun-n|(e)s|pl=Schicksäler}}
+{{de-ndecl|n,(e)s,e:^er[Informal]}}
 
 ====Derived terms====
 * {{l|de|schicksalhaft}}
@@ -629,9 +627,7 @@ Page 22 Python: -------- begin text --------
 * {{audio|de|De-Python.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m||Pythons}}
-
-{{de-noun|f||Pythons}}
+{{de-noun|m:f,,s}}
 
 # [[python]] {{gloss|snake}}
 
@@ -639,8 +635,7 @@ Page 22 Python: -------- begin text --------
 * The masculine is more strictly standard, but the feminine is fairly common (after {{m|de|Schlange}} and most other words for snakes).
 
 ====Declension====
-{{de-decl-noun-m|s|s}}
-{{de-decl-noun-f|s}}
+{{de-ndecl|m:f,,s}}
 
 ===Proper noun===
 {{de-proper noun|n|Python|-}}
@@ -648,7 +643,7 @@ Page 22 Python: -------- begin text --------
 # {{lb|de|computing}} [[#English|Python]]
 
 ====Declension====
-{{de-decl-noun-n||n=sg}}
+{{de-ndecl|n,-.sg}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -880,7 +875,7 @@ From {{inh|de|gmh|wazzer}}, from {{inh|de|goh|wazzar}}, from {{der|de|gem-pro|*w
 * {{audio|de|BY-Wasser.ogg|Audio (Bavarian)}}
 
 ===Noun===
-{{de-noun|n||Wasser|pl2=Wässer|Wässerchen|dim2=Wässerlein}}
+{{de-noun|n,,-:^|dim=^chen,^lein}}
 
 # [[water]] {{gloss|H₂O}}
 # alcoholic beverage, similar to [[brandy]], made from fermented fruit
@@ -890,10 +885,7 @@ From {{inh|de|gmh|wazzer}}, from {{inh|de|goh|wazzar}}, from {{der|de|gem-pro|*w
 * Both plural forms are infrequent. Unchanged '''''Wasser''''' is used as a purely emphatic plural: ''die '''Wasser''' des Rheins'' – the '''waters''' of the Rhine. '''''Wässer''''' is used as an actual plural meaning different kinds of water (or brandy): ''teure und preiswerte '''Wässer''''' – expensive and inexpensive [table] '''waters'''. However, ''Wässer'' is also used emphatically in some compound words such as {{m|de|Abwässer|Ab'''wässer'''|waste water}} and {{m|de|Schmutzwässer|Schmutz'''wässer'''|dirty water}}.
 
 ====Declension====
-'''Plural ''Wasser'''''
-{{de-decl-noun-n|s}}
-'''Plural ''Wässer'''''
-{{de-decl-noun-n|s|pl=Wässer}}
+{{de-ndecl|n,,-:^}}
 
 ====Derived terms====
 {{der3|de
@@ -1142,6 +1134,7 @@ Page 36 ä: -------- begin text --------
 
 ====Further reading====
 * {{R:Duden|ae_Buchstabe}}
+* {{R:DWDS}}
 
 ----
 
@@ -1656,17 +1649,12 @@ From {{bor|de|gmh|merz}}, from {{bor|de|goh|merzo}}, from {{bor|de|la|martius}}
 * {{audio|de|De-März.ogg|audio}}
 
 ===Noun===
-{{de-noun|m|März|gen2=Märzes|gen3=Märzen|Märze|pl2=Märzen}}
+{{de-noun|m,-:es:en[obsolete],e:en[obsolete]}}
 
 # [[March]]
 
 ====Declension====
-* With zero ending in genitive (predominant):
-{{de-decl-noun-m||e}}
-* With genitive in ''-es'' (less common):
-{{de-decl-noun-m|es|e}}
-* Weak declension (obsolete):
-{{de-decl-noun-m|en|en}}
+{{de-ndecl|m,-:es[Less common]:en[Obsolete],e:en[Obsolete]}}
 
 ====Descendants====
 * {{desc|et|märts|bor=1}}
@@ -2207,6 +2195,7 @@ From {{m|de|arm||poor}}.
 
 ===Further reading===
 * {{R:Duden}}
+* {{R:DWDS}}
 -------- end text --------
 Page 68 Atlas: Found match for regex: =
 Page 68 Atlas: -------- begin text --------
@@ -3062,6 +3051,7 @@ Page 80 Deutsche: -------- begin text --------
 
 ===Further reading===
 * {{R:Duden|Deutsche_Angehoerige_des_deutschen_Volkes}}
+* {{R:DWDS}}
 
 {{C|de|Female demonyms|Germany|Nationalities}}
 -------- end text --------
@@ -3116,6 +3106,7 @@ Page 81 Deutscher: -------- begin text --------
 
 ===Further reading===
 * {{R:Duden}}
+* {{R:DWDS}}
 
 {{C|de|Germany|Male demonyms|Nationalities}}
 -------- end text --------
@@ -3458,7 +3449,7 @@ Page 91 Handball: -------- begin text --------
 
 ===Further reading===
 * {{R:Duden}}
-
+* {{R:DWDS}}
 {{C|de|Sports}}
 -------- end text --------
 Page 92 Heck: Found match for regex:  
@@ -4050,6 +4041,7 @@ Strong declension:
 
 ===Further reading===
 * {{R:Duden}}
+* {{R:DWDS}}
 -------- end text --------
 Page 110 Malaise: Found match for regex: =
 Page 110 Malaise: -------- begin text --------
@@ -4566,6 +4558,7 @@ Originally the same as etymology 1, but secondarily distinguished in the plural;
 {{de-ndecl|f}}
 
 ===Further reading===
+* {{R:DWDS}}
 * {{R:Duden|Mutter_Frau_Kinder_Natur}}
 * {{R:UniLeipzig}}
 * {{R:OpenThesaurus}}
@@ -5396,7 +5389,7 @@ Borrowed from {{bor|de|en|slang}}.
 
 ===Further reading===
 * {{R:Duden}}
-
+* {{R:DWDS}}
 ----
 
 -------- end text --------
@@ -5521,6 +5514,7 @@ From {{bor|de|la|symbolum}}.
 
 ===Further reading===
 * {{R:Duden}}
+* {{R:DWDS}}
 -------- end text --------
 Page 146 Tank: Found match for regex: =
 Page 146 Tank: -------- begin text --------
@@ -6213,6 +6207,7 @@ Page 165 Zebra: -------- begin text --------
 
 ===Further reading===
 * {{R:Duden}}
+* {{R:DWDS}}
 
 {{C|de|Equids}}
 
@@ -6743,7 +6738,7 @@ The word is always masculine in northern and central Germany. In the southern ha
 
 ===Further reading===
 * {{R:Duden}}
-
+* {{R:DWDS}}
 {{C|de|Foods}}
 -------- end text --------
 Page 180 Zink: Found match for regex: =
@@ -6800,6 +6795,7 @@ Page 181 Bismut: -------- begin text --------
 
 ===Further reading===
 * {{R:Duden}}
+* {{R:DWDS}}
 
 {{C|de|Chemical elements}}
 
@@ -7772,6 +7768,7 @@ From {{inh|de|gmh|hirz}}, from {{inh|de|goh|hiruz}}, from {{inh|de|gmw-pro|*heru
 
 ===Further reading===
 * {{R:Duden}}
+* {{R:DWDS}}
 
 {{C|de|Cervids|Male animals}}
 
@@ -8863,6 +8860,7 @@ From {{inh|de|gmh|vlōz}} {{g|n}}, {{g|m}}, from {{inh|de|goh|flōz}} {{g|n}}. C
 
 ===Further reading===
 * {{R:Duden}}
+* {{R:DWDS}}
 -------- end text --------
 Page 235 Fluß: Found match for regex: =
 Page 235 Fluß: -------- begin text --------
@@ -9427,6 +9425,7 @@ From {{der|de|gmh|ephöu}}, from {{der|de|goh|ebhouwi}}, derived through popular
 
 ===Further reading===
 * {{R:Duden}}
+* {{R:DWDS}}
 -------- end text --------
 Page 246 Lebenslauf: Found match for regex: =
 Page 246 Lebenslauf: -------- begin text --------
@@ -9641,6 +9640,11 @@ From {{inh|de|gmh|biber}}, {{inh|de|goh|[[bibar]], [[bibur]]}}, from {{inh|de|gm
 {{de-proper noun|old=1}}
 
 # {{surname|de|from=nicknames}} More common in the form {{m|de|Bieber}}.
+
+===Further reading===
+* {{R:DWDS}}
+* {{R:UniLeipzig}}
+* {{R:Duden|Biber_Nagetier_Biberpelz}}
 
 {{C|de|Rodents}}
 
@@ -10185,6 +10189,7 @@ Compound of ''Lor-'' from Latin {{m|la|laurus||laurel}} and {{m|de|Beer}}, old f
 
 ===Further reading===
 * {{R:Duden}}
+* {{R:DWDS}}
 -------- end text --------
 Page 265 Lump: Found match for regex: =
 Page 265 Lump: -------- begin text --------
@@ -10695,6 +10700,7 @@ Archaic:
 
 ===Further reading===
 * {{R:Duden}}
+* {{R:DWDS}}
 
 {{C|de|Swans}}
 
@@ -10753,6 +10759,7 @@ From ''Spatz'' (“sparrow”), but with a different plural on the model of the 
 
 ===Further reading===
 * {{R:Duden}}
+* {{R:DWDS}}
 
 {{C|de|True sparrows}}
 
@@ -10968,7 +10975,7 @@ neuter noun with singular and plural:
 
 ===Further reading===
 * {{R:Duden}}
-* [http://www.dwds.de/?qu=Weihnachten Weihnachten] in ''DWDS''
+* {{R:DWDS}}
 
 {{C|de|Christmas}}
 -------- end text --------
@@ -11475,6 +11482,7 @@ From {{inh|de|gmh|vassal}}, from {{der|de|fro|vassal}}.
 
 ===Further reading===
 * {{R:Duden}}
+* {{R:DWDS}}
 -------- end text --------
 Page 297 Berta: Found match for regex: =
 Page 297 Berta: -------- begin text --------
@@ -11717,6 +11725,7 @@ Weak declension:
 
 ===Further reading===
 * {{R:Duden}}
+* {{R:DWDS}}
 
 {{C|de|Parrots}}
 
@@ -11796,6 +11805,7 @@ From {{inh|de|gmh|kapitān}}, borrowed (13th c.) in the military sense from {{de
 
 ===Further reading===
 * {{R:Duden}}
+* {{R:DWDS}}
 
 {{C|de|Occupations}}
 
@@ -11831,7 +11841,7 @@ Weak declension:
 
 ===Further reading===
 * {{R:Duden}}
-
+* {{R:DWDS}}
 {{C|de|Felids}}
 -------- end text --------
 Page 311 Papst: Found match for regex: {
@@ -11940,7 +11950,7 @@ A late 18th century relatinized form from early modern {{m|de|Babst}}, {{m|de|Ba
 
 ===Further reading===
 * {{R:Duden}}
-
+* {{R:DWDS}}
 {{C|de|Roman Catholicism}}
 
 ----
@@ -11970,6 +11980,7 @@ From {{bor|de|la|cactus}}, from {{der|de|grc|κάκτος||cardoon}}, of {{w|Pre
 
 ===Further reading===
 * {{R:Duden}}
+* {{R:DWDS}}
 
 {{C|de|Cacti}}
 
@@ -12099,6 +12110,7 @@ Borrowed from {{bor|de|tr|yoğurt}} or {{der|de|ota|یوغورت|tr=yōghurt, yo
 
 ===Further reading===
 * {{R:Duden}}
+* {{R:DWDS}}
 
 {{C|de|Foods}}
 
@@ -12454,6 +12466,7 @@ Page 323 Automat: -------- begin text --------
 
 ===Further reading===
 * {{R:Duden}}
+* {{R:DWDS}}
 -------- end text --------
 Page 324 Dynamik: Found match for regex: =
 Page 324 Dynamik: -------- begin text --------
@@ -12834,6 +12847,7 @@ From {{inh|de|gmh|bezirc}}, from {{m|gmh|be-}} + {{m|gmh|zirc}}, from {{der|de|l
 
 ===Further reading===
 * {{R:Duden}}
+* {{R:DWDS}}
 -------- end text --------
 Page 337 Millionär: Found match for regex: {
 Page 337 Millionär: -------- begin text --------
@@ -13253,6 +13267,7 @@ Page 353 Mineralwasser: -------- begin text --------
 
 ===Further reading===
 * {{R:Duden}}
+* {{R:DWDS}}
 
 {{C|de|Beverages|Water}}
 
@@ -13582,6 +13597,7 @@ The plural ''Balkons'' goes along with the northern pronunciation of the word; t
 
 ===Further reading===
 * {{R:Duden}}
+* {{R:DWDS}}
 -------- end text --------
 Page 366 Erntedankfest: Found match for regex: =
 Page 366 Erntedankfest: -------- begin text --------
@@ -13943,6 +13959,7 @@ From {{affix|de|gegen-|Teil}}.
 
 ===Further reading===
 * {{R:Duden}}
+* {{R:DWDS}}
 -------- end text --------
 Page 377 Unparteiische: Found match for regex: =
 Page 377 Unparteiische: -------- begin text --------
@@ -14284,6 +14301,7 @@ From {{inh|de|gmh|kriuzære}}; analyzable as {{suffix|de|Kreuz|er}}, from the [[
 
 ===Further reading===
 * {{R:Duden}}
+* {{R:DWDS}}
 
 {{C|de|Money|Warships}}
 -------- end text --------
@@ -14599,6 +14617,7 @@ Page 400 Meteorit: -------- begin text --------
 
 ===Further reading===
 * {{R:Duden}}
+* {{R:DWDS}}
 -------- end text --------
 Page 401 Sabbatjahr: Found match for regex: {
 Page 401 Sabbatjahr: -------- begin text --------
@@ -15714,6 +15733,7 @@ Additional forms are:
 
 ===Further reading===
 * {{R:Duden}}
+* {{R:DWDS}}
 
 {{C|de|Languages}}
 
@@ -16989,6 +17009,7 @@ From {{affix|de|Schlacht|Feld}}.
 
 ===Further reading===
 * {{R:Duden}}
+* {{R:DWDS}}
 -------- end text --------
 Page 492 Sellerie: Found match for regex: {
 Page 492 Sellerie: -------- begin text --------
@@ -17031,7 +17052,7 @@ From {{bor|de|fr|céleri}}, from {{der|de|lmo|selleri}}, from {{der|de|la|selīn
 
 ===Further reading===
 * {{R:Duden}}
-
+* {{R:DWDS}}
 {{C|de|Celery family plants|Vegetables|Herbs}}
 -------- end text --------
 Page 493 Agathe: Found match for regex: =
@@ -17663,6 +17684,7 @@ Page 515 Infinitiv: -------- begin text --------
 
 ===Further reading===
 * {{R:Duden}}
+* {{R:DWDS}}
 -------- end text --------
 Page 516 Amputierte: Found match for regex: =
 Page 516 Amputierte: -------- begin text --------
@@ -17975,6 +17997,7 @@ From {{m|de|bekannt}}
 
 ===Further reading===
 * {{R:Duden}}
+* {{R:DWDS}}
 -------- end text --------
 Page 525 Bekannte: Found match for regex: =
 Page 525 Bekannte: -------- begin text --------
@@ -17993,6 +18016,7 @@ Page 525 Bekannte: -------- begin text --------
 
 ===Further reading===
 * {{R:Duden}}
+* {{R:DWDS}}
 -------- end text --------
 Page 526 Tierpark: Found match for regex: =
 Page 526 Tierpark: -------- begin text --------
@@ -18736,6 +18760,7 @@ From {{der|de|grc|-}} {{m|grc|ἀρχι-|t=leading}} + {{m|grc|πέλαγος|g=
 
 ===Further reading===
 * {{R:Duden}}
+* {{R:DWDS}}
 
 {{C|de|Islands}}
 -------- end text --------
@@ -19154,12 +19179,14 @@ From {{inh|de|goh|gifugili}}. The expected modern form is *''Gefügel'', a colle
 * {{l|de|Geflügelschere}}
 * {{l|de|Geflügelzucht}}
 * {{l|de|geflügelt}}
+* {{l|de|Geflügelverarbeitungsbetrieb}}
 
 ====See also====
 * {{l|de|Gevögel}}
 
 ===Further reading===
 * {{R:Duden}}
+* {{R:DWDS}}
 -------- end text --------
 Page 571 ethnische Säuberung: Found match for regex: =
 Page 571 ethnische Säuberung: -------- begin text --------
@@ -19658,30 +19685,37 @@ Page 590 Kalte Schnauze: -------- begin text --------
 Page 591 Reiche: Found match for regex: =
 Page 591 Reiche: -------- begin text --------
 
-===Etymology===
-Substantivisation of {{m|de|reich}}.
-
 ===Pronunciation===
 * {{IPA|de|/ˈʁaɪ̯çə/}}
 * {{audio|de|De-Reiche.ogg|Audio}}
 * {{rhymes|de|aɪ̯çə|s=2}}
 
-===Noun===
+===Etymology 1===
+Substantivisation of {{m|de|reich}}.
+
+====Noun====
+{{head|de|noun form}}
+
+# {{inflection of|de|Reicher||str|nom//acc|p|;|wk|nom|s}}
+
+====Noun====
 {{de-noun|+|m=+}}
 
 # [[rich]] woman
 
-====Declension====
+=====Declension=====
 {{de-ndecl|+}}
 
-===Noun===
-{{head|de|noun form}}
+===Etymology 2===
+
+====Noun====
+{{head|de|noun form|g=n}}
 
 # {{inflection of|de|Reich||nom//acc//gen|p}}
-# {{inflection of|de|Reicher||str|nom//acc|p|;|wk|nom|s}}
 
 ===Further reading===
 * {{R:Duden}}
+* {{R:DWDS}}
 -------- end text --------
 Page 592 Kanaan: Found match for regex: =
 Page 592 Kanaan: -------- begin text --------
@@ -19924,7 +19958,7 @@ Page 600 Erwachsener: -------- begin text --------
 ===Etymology 1===
 
 ====Noun====
-{{de-noun|+|f=+}}
+{{de-noun|+|f=+|n=+}}
 
 # [[adult]] (fully grown human); [[grown-up]] (male or of unspecified sex)
 #* '''2009''', ''Die Todesopfer an der Berliner Mauer 1961-1989. Ein biographisches Handbuch'', p. 20:
@@ -20835,16 +20869,16 @@ From {{inh|de|gmh|æ}}.
 ** The distinction between long {{IPAchar|/ɛː/}} and {{IPAchar|/eː/}} is maintained in some regions, including Switzerland and most of western Germany. In many other regions the two are merged in normal speech, though speakers may nevertheless distinguish them in individual words and in enunciation.
 
 ===Letter===
-{{de-noun|n|Ä|gen2=Äs|Ä|pl2=Äs}}
+{{de-noun|n,-:s,-:s}}
 
 # {{ngd|A letter used in German [[spelling]]: an [[umlaut]]ed version of [[A#German|A]].}}
 
 ====Declension====
-{{de-decl-noun-n}}
-{{de-decl-noun-n|s|s}}
+{{de-ndecl|n,-:s,-:s}}
 
 ====Further reading====
 * {{R:Duden|ae_Buchstabe}}
+* {{R:DWDS}}
 
 ----
 
@@ -21946,6 +21980,7 @@ Formed from {{m|de|ob||on account of, pertaining to}} + {{m|de|erst||first, fore
 
 ===Further reading===
 * {{R:Duden}}
+* {{R:DWDS}}
 
 ===References===
 * Pilch, H. (1999). Comparative Anglo-German Linguistics. Germany: Shaker, p. 46
@@ -22215,8 +22250,9 @@ Page 696 Atlantischer Ozean: -------- begin text --------
 ====Declension====
 {{de-ndecl|[[atlantisch|Atlantischer]]<+> [[Ozean]]<m,es:s.sg>}}
 
-===Further reading===
+<!--===Further reading===
 * {{R:Duden}}
+* {{R:DWDS}}-->
 
 {{C|de|Oceans}}
 -------- end text --------
@@ -22782,6 +22818,7 @@ From {{inh|de|gmh|schuochmacher}}; analyzable as {{affix|de|Schuh|t1=shoe|Macher
 
 ===Further reading===
 * {{R:Duden}}
+* {{R:DWDS}}
 
 {{C|de|Occupations}}
 -------- end text --------
@@ -23291,16 +23328,17 @@ Page 747 Panzerkampfwagen: -------- begin text --------
 * {{audio|de|LL-Q188 (deu)-Sebastian Wallroth-Panzerkampfwagen.wav|Audio}}
 
 ===Noun===
-{{de-noun|m||Panzerkampfwagen|pl2=Panzerkampfwägen}}
+{{de-noun|m,s,-:^}}
 
 # {{lb|de|military}} [[Panzer]], a [[tank]], [[armoured fighting vehicle]]
 #: {{syn|de|Panzer|;|Kampfpanzer|;|PzKpfw<q:abbreviation>|;|PzKW<q:abbreviation>|;|KPz<q:abbreviation>|;|Pz<q:abbreviation>}}
 
 ====Declension====
-{{de-decl-noun-m|s|pl=''Panzerkampfwagen'',<br>[[Panzerkampfwägen]]}}
+{{de-ndecl|m,s,-:^}}
 
 ===Further reading===
 * {{R:Duden}}
+* {{R:DWDS}}
 -------- end text --------
 Page 748 demokratischer Sozialismus: Found match for regex: {
 Page 748 demokratischer Sozialismus: -------- begin text --------
@@ -29465,12 +29503,12 @@ Page 1056 Krebß: Found match for regex: =
 Page 1056 Krebß: -------- begin text --------
 
 ===Noun===
-{{de-noun|Krebßes|Krebße}}
+{{de-noun|m,es,e}}
 
 # {{obsolete spelling of|de|Krebs}}
 
 ====Declension====
-{{de-decl-noun-m|es|e}}
+{{de-ndecl|m,es,e}}
 -------- end text --------
 Page 1057 Seidenstraße: Found match for regex: =
 Page 1057 Seidenstraße: -------- begin text --------
@@ -29510,6 +29548,7 @@ From {{compound|de|Seide|t1=silk|Straße|t2=street, road}}. Coined by {{w|Ferdin
 
 ===Further reading===
 * {{pedia|lang=de}}
+* {{R:DWDS}}
 
 ===References===
 <references/>
@@ -30050,6 +30089,17 @@ Page 1079 Vals: -------- begin text --------
 {{de-proper noun|old=1}}
 
 # {{place|de|municipality|s/Tyrol|c/Austria}}
+-------- end text --------
+Page 1080 Blaue Nachzügler: Found match for regex: =
+Page 1080 Blaue Nachzügler: -------- begin text --------
+
+===Pronunciation===
+* {{audio|de|De-Blaue Nachzügler.ogg|Audio}}
+
+===Noun===
+{{head|de|noun form}}
+
+# {{inflection of|de|Blauer Nachzügler||str|nom//acc|p|;|wk|nom|s}}
 -------- end text --------
 Page 1081 Bogue: Found match for regex: {
 Page 1081 Bogue: -------- begin text --------
@@ -32158,6 +32208,7 @@ From {{inh|de|gmh|amer}}, from {{inh|de|goh|amaro}}, [[w:Clipping (morphology)|c
 
 ===Further reading===
 * {{R:Duden|Ammer_Singvogel}}
+* {{R:DWDS}}
 -------- end text --------
 Page 1178 Landstreicher: Found match for regex: =
 Page 1178 Landstreicher: -------- begin text --------
@@ -32431,6 +32482,9 @@ Page 1191 Mehrwert: -------- begin text --------
 ====Related terms====
 * {{l|de|Mehrwertsteuer}}
 * {{l|de|Nominalwert}}
+
+===Further reading===
+* {{R:DWDS}}
 -------- end text --------
 Page 1192 Gnom: Found match for regex: =
 Page 1192 Gnom: -------- begin text --------
@@ -34186,6 +34240,11 @@ From {{inh|de|gmh|gelīche}}, from {{inh|de|goh|gilīkī}}; equivalent to {{suf|
 Substantivisation of {{m|de|gleich}}.
 
 ====Noun====
+{{head|de|noun form|g=n}}
+
+# {{inflection of|de|Gleiches||wk|nom|s}}
+
+====Noun====
 {{de-noun|+|m=+}}
 
 # {{nominalization of|de|gleich}}: {{female equivalent of|de|Gleicher}}: [[female]] [[equal]] (female who is equal to another person)
@@ -35724,6 +35783,9 @@ Page 1334 Spottgedicht: -------- begin text --------
 * {{l|de|Liebesgedicht}}
 * {{l|de|Schmähgedicht}}
 * {{l|de|Sinngedicht}}
+
+===Further reading===
+* {{R:DWDS}}
 -------- end text --------
 Page 1335 Weihnachtsgedicht: Found match for regex: =
 Page 1335 Weihnachtsgedicht: -------- begin text --------
@@ -36754,16 +36816,16 @@ Page 1365 Grünkern: -------- begin text --------
 * {{IPA|de|/ˈɡʁyːnkɛʁn/}}
 
 ===Noun===
-{{de-noun|m||Grünkerne}}
+{{de-noun|m,(e)s,e}}
 
 # {{lb|de|culinary}} dried unripe [[grain]]s of [[spelt]]
 
 ====Declension====
-{{de-decl-noun-m|(e)s|e}}
+{{de-ndecl|m,(e)s,e}}
 
 ===Further reading===
 * {{R:Duden}}
-* {{pedia}}
+* {{R:DWDS}}
 * {{pedia|lang=de}}
 -------- end text --------
 Page 1366 Klippdachs: Found match for regex: =
@@ -42699,58 +42761,6 @@ The plant is dated since about 1900 for commercial exploitation because of its s
 * {{R:TPL|i=1|Prunus+domestica}}
 
 {{C|de|Prunus genus plants}}
--------- end text --------
-Page 1641 Massenkunstoff: Found match for regex: =
-Page 1641 Massenkunstoff: -------- begin text --------
-
-===Etymology===
-From {{compound|de|Masse|-n-|Kunststoff|gloss1=mass, bulk|gloss3=plastic}}.
-
-===Pronunciation===
-* {{IPA|de|/ˈmasn̩ˌkʊnstʃtɔf/}}
-* {{hyphenation|de|Mas|sen|kunst|stoff}}
-{{rfap|de}}
-
-===Noun===
-{{de-noun|m|Massenkunststoffes|gen2=Massenkunststoffs|Massenkunststoffe}}
-
-# [[bulk]] [[plastics]], [[mass-produced]] [[plastics]]
-#: {{syn|de|Standardkunststoff}}
-
-====Declension====
-{{de-decl-noun-m|(e)s|e}}
-
-====Related terms====
-* {{l|de|Altkunststoff}}
-* {{l|de|Biokunststoff}}
-* {{l|de|Mischkunststoff}}
-* {{l|de|Schaumkunststoff}}
--------- end text --------
-Page 1642 Massenkunstoffe: Found match for regex: =
-Page 1642 Massenkunstoffe: -------- begin text --------
-
-===Etymology===
-From {{compound|de|Masse|-n-|Kunststoff|gloss1=mass|gloss3=plastic}}.
-
-===Pronunciation===
-* {{IPA|de|/ˈmasn̩ˌkʊnstʃtɔf/}}
-* {{hyphenation|de|Mas|sen|kunst|stoff}}
-{{rfap|de}}
-
-===Noun===
-{{de-noun|m|Massenkunststoffes|gen2=Massenkunststoffs|Massenkunststoffe}}
-
-# [[commodity]] [[plastic]]s
-#: {{syn|de|Standardkunststoff}}
-
-====Declension====
-{{de-decl-noun-m|(e)s|e}}
-
-====Related terms====
-* {{l|de|Altkunststoff}}
-* {{l|de|Biokunststoff}}
-* {{l|de|Schaumkunststoff}}
-* {{l|de|Sonderkunststoff}}
 -------- end text --------
 Page 1643 Schweinestall: Found match for regex: =
 Page 1643 Schweinestall: -------- begin text --------
@@ -52857,5 +52867,5 @@ Page 2091 Fatzke: -------- begin text --------
 ====Declension====
 {{de-decl-noun-m|n|n}}
 -------- end text --------
-Elapsed time: 4 mins 37.00 secs
-Ending at Mon Feb 14 23:48:59 2022
+Elapsed time: 4 mins 33.32 secs
+Ending at Fri Feb 18 01:46:51 2022
