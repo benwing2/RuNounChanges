@@ -33,7 +33,7 @@ FIXME:
 5. Allow period and comma in forms e.g. for [[Eigent.-Whg.]], [[Eigt.-Whg.]] (using a backslash). (DONE)
 6. Allow embedded links in genitive/plural/feminine/diminutive/masculine specs, e.g. 'f=![[weiblich]]er Geschäftspartner'.
 7. Add 'prop' indicator to indicate proper nouns and suppress the indefinite article.
-8. Add 'surname' indicator to indicate surnames, decline appropriately and include both masc and fem variants in the table.
+8. Add 'surname' indicator to indicate surnames, decline appropriately and include both masc and fem variants in the table. (DONE)
 ]=]
 
 local lang = require("Module:languages").getByCode("de")
@@ -146,7 +146,7 @@ end
 -- Construct adjectival slots.
 
 local adjectival_slot_list = {}
-add_equiv(adjective_slot_list)
+add_equiv(adjectival_slot_list)
 local adjective_slot_set = {}
 for _, state in ipairs(states) do
 	for _, case in ipairs(adj_cases) do
@@ -218,7 +218,16 @@ local function combine_stem_ending(props, stem, ending)
 end
 
 
-local function add(base, slot, stem, ending, footnotes, process_combined_stem_ending)
+-- Add a form (a combination of `stem` and `ending`, where either may be a single string, a list of strings, or a
+-- list of objects of the form {form=FORM, footnotes=FOOTNOTES}, where FOOTNOTES can be nil or a list of strings)
+-- to the given slot `slot`. `gender` specifies the gender of the resulting form ("m", "f" or "n") or nil. (This is
+-- used to ensure that the correct article is attached to the form when there are multiple forms with differing
+-- genders. If `gender` is nil, articles of all relevant genders will be included. `gender` should only be nil
+-- when the slot is plural or when the gender cannot be determined, e.g. in overrides.) `footnotes` specifies
+-- any extra footnotes to add to the resulting form, and should be either nil or a list of strings.
+-- `process_combined_stem_ending` is a function to process the resulting form before it is inserted. (This is used
+-- currently to add an -n to the dative plural.)
+local function add(base, slot, stem, ending, gender, footnotes, process_combined_stem_ending)
 	if not ending or skip_slot(base.number, slot) then
 		return
 	end
@@ -228,6 +237,12 @@ local function add(base, slot, stem, ending, footnotes, process_combined_stem_en
 		if process_combined_stem_ending then
 			retval = process_combined_stem_ending(retval)
 		end
+		-- For now, don't do this.
+		-- If gender specified, add a special character to the beginning of the value to indicate the
+		-- gender. This gets propagated to the end and used in [[Module:de-headword]].
+		-- if gender then
+		--	retval = gender_to_gender_char[gender] .. retval
+		-- end
 		return retval
 	end
 
@@ -248,20 +263,19 @@ end
 
 -- Process an ending spec such as "s", "(e)s", "^er", "^lein", "!Pizzen", etc. as might be found in the genitive,
 -- plural, an override, the value of dim=/m=/f=/n=, etc. `endings` is a list of such specs, where each entry of the
--- list is of the form {form=FORM, footnotes=FOOTNOTES} where FOOTNOTES is either nil or {FOOTNOTE, FOOTNOTE, ...}.
--- If `literal_endings` is given, the FORM values should be interpreted literally (i.e. as full forms) rather than
--- as ending specs. `default` is what to substitute if an ending spec is "+", and should be either in the same
--- format as `endings` or something that can be converted to that format, e.g. a string. `literal_default`, if given,
--- indicates that the FORM values in `default` should be interpreted literally, similar to `literal_endings`.
--- FOOTNOTES is either nil or a list of additional footnotes to add to each generated form. `desc` is an English
--- description of what kind of spec is being processed, for error messages. `process` is called for each generated
--- form and is a function of two arguments, STEM and ENDING. If the spec is a full form, STEM will be that form
--- (in the form of an object {form=FORM, footnotes=FOOTNOTES}) and ENDING will be an empty string; otherwise, STEM
+-- list is of the form {form=FORM, footnotes=FOOTNOTES} where FOOTNOTES is either nil or {FOOTNOTE, FOOTNOTE, ...}. If
+-- `literal_endings` is given, the FORM values should be interpreted literally (i.e. as full forms) rather than as
+-- ending specs. `default` is what to substitute if an ending spec is "+", and should be either in the same format as
+-- `endings` or something that can be converted to that format, e.g. a string. `literal_default`, if given, indicates
+-- that the FORM values in `default` should be interpreted literally, similar to `literal_endings`. `desc` is an
+-- English description of what kind of spec is being processed, for error messages. `process` is called for each
+-- generated form and is a function of two arguments, STEM and ENDING. If the spec is a full form, STEM will be that
+-- form (in the form of an object {form=FORM, footnotes=FOOTNOTES}) and ENDING will be an empty string; otherwise, STEM
 -- will be nil and ENDING will be the the ending to process in the form {form=FORM, footnotes=FOOTNOTES}. Note that
 -- umlauts are not handled in process_spec(); if the spec passed in specifies an umlaut, e.g. "^chen", process()
 -- will be called with a FORM beginning with "^", and must handle the umlaut itself. (Umlauts are properly handled
 -- inside of add().)
-local function process_spec(endings, literal_endings, default, literal_default, footnotes, desc, process)
+local function process_spec(endings, literal_endings, default, literal_default, desc, process)
 	for _, ending in ipairs(endings) do
 		local function sub_form(form)
 			return {form = form, footnotes = ending.footnotes}
@@ -275,7 +289,7 @@ local function process_spec(endings, literal_endings, default, literal_default, 
 				-- where no default is available.
 				error("Form '+' found for " .. desc .. " but no default is available")
 			end
-			process_spec(iut.convert_to_general_list_form(default, ending.footnotes), literal_default, nil, nil, footnotes, desc, process)
+			process_spec(iut.convert_to_general_list_form(default, ending.footnotes), literal_default, nil, nil, desc, process)
 		else
 			local full_eform
 			if literal_endings or rfind(ending.form, "^" .. com.CAP) then
@@ -322,11 +336,16 @@ local function process_spec(endings, literal_endings, default, literal_default, 
 end
 
 
-local function add_spec(base, slot, endings, default, literal_default, footnotes, process_combined_stem_ending)
+-- Add an ending spec such as "s", "(e)s", "^er", "^lein", "!Pizzen", etc. as might be found in the genitive, plural,
+-- an override, the value of dim=/m=/f=/n=, etc., to the slot `slot` (e.g. "gen_s"). `endings` is a list of such specs,
+-- where each entry of the list is of the form {form=FORM, footnotes=FOOTNOTES} where FOOTNOTES is either nil or
+-- {FOOTNOTE, FOOTNOTE, ...}. For the meaning of `gender`, `footnotes` and `process_combined_stem_ending`, see add().
+-- For the meaning of `default` and `literal_default`, see process_spec().
+local function add_spec(base, slot, endings, gender, default, literal_default, footnotes, process_combined_stem_ending)
 	local function do_add(stem, ending)
-		add(base, slot, stem, ending, footnotes, process_combined_stem_ending)
+		add(base, slot, stem, ending, gender, footnotes, process_combined_stem_ending)
 	end
-	process_spec(endings, nil, default, literal_default, footnotes, "slot '" .. slot .. "'", do_add)
+	process_spec(endings, nil, default, literal_default, "slot '" .. slot .. "'", do_add)
 end
 
 
@@ -337,7 +356,8 @@ local function process_slot_overrides(base)
 		end
 		local origforms = base.forms[slot]
 		base.forms[slot] = nil
-		add_spec(base, slot, overrides, origforms, "literal default")
+		-- Gender is not given by the user.
+		add_spec(base, slot, overrides, nil, origforms, "literal default")
 	end
 end
 
@@ -352,11 +372,11 @@ local function add_dative_plural(base, specs, def_pl)
 			return stem_ending
 		end
 	end
-	add_spec(base, "dat_p", specs, def_pl, nil, nil, process_combined_stem_ending)
+	add_spec(base, "dat_p", specs, nil, def_pl, nil, nil, process_combined_stem_ending)
 end
 
 
-local function add_archaic_dative_singular(base, def_gen)
+local function add_archaic_dative_singular(base, gender, def_gen)
 	for _, ending in ipairs(base.gens) do
 		local dat_ending
 		local ending_form = ending.form
@@ -369,7 +389,7 @@ local function add_archaic_dative_singular(base, def_gen)
 			dat_ending = "se"
 		end
 		if dat_ending then
-			add(base, "dat_s", nil, dat_ending, iut.combine_footnotes(ending.footnotes, {archaic_dative_note}))
+			add(base, "dat_s", nil, dat_ending, gender, iut.combine_footnotes(ending.footnotes, {archaic_dative_note}))
 		end
 	end
 end
@@ -440,30 +460,32 @@ end
 
 
 local function decline_plural(base, def_pl)
-	add_spec(base, "nom_p", base.pls, def_pl)
-	add_spec(base, "gen_p", base.pls, def_pl)
+	add_spec(base, "nom_p", base.pls, nil, def_pl)
+	add_spec(base, "gen_p", base.pls, nil, def_pl)
 	add_dative_plural(base, base.pls, def_pl)
-	add_spec(base, "acc_p", base.pls, def_pl)
+	add_spec(base, "acc_p", base.pls, nil, def_pl)
 end
 
 
 local function decline_singular_and_plural(base, gender, def_gen, def_pl)
-	add(base, "nom_s", nil, "")
-	add_spec(base, "gen_s", base.gens, def_gen)
+	add(base, "nom_s", nil, "", gender)
+	add_spec(base, "gen_s", base.gens, gender, def_gen)
 	if base.props.weak then
 		local ending = get_n_ending(base.lemma)
-		add(base, "dat_s", nil, ending)
-		add(base, "acc_s", nil, gender == "m" and ending or "")
+		add(base, "dat_s", nil, ending, gender)
+		add(base, "acc_s", nil, gender == "m" and ending or "", gender)
 	else
-		add(base, "dat_s", nil, "")
-		add_archaic_dative_singular(base, def_gen)
-		add(base, "acc_s", nil, "")
+		add(base, "dat_s", nil, "", gender)
+		add_archaic_dative_singular(base, gender, def_gen)
+		add(base, "acc_s", nil, "", gender)
 	end
 	decline_plural(base, def_pl)
 end
 
 
 local function decline_surname(base)
+	-- We don't specify gender here. There are always two genders, m and f, which will be handled correctly in
+	-- [[Module:de-headword]].
 	add(base, "nom_m_s", nil, "")
 	add(base, "nom_f_s", nil, "")
 	local gen_m_s
@@ -474,8 +496,8 @@ local function decline_surname(base)
 	else
 		gen_m_s = "s"
 	end
-	add_spec(base, "gen_m_s", base.gens, gen_m_s)
-	add(base, "gen_m_s", nil, "", {"[with an article]"})
+	add_spec(base, "gen_m_s", base.gens, nil, gen_m_s)
+	add(base, "gen_m_s", nil, "", nil, {"[with an article]"})
 	add(base, "gen_f_s", nil, "")
 	add(base, "dat_m_s", nil, "")
 	add(base, "dat_f_s", nil, "")
@@ -497,10 +519,36 @@ local function decline_surname(base)
 		-- [[Schmidt]], [[Bergmann]], [[Brentano]]
 		pl_ending = {"s"}
 	end
-	add_spec(base, "nom_p", base.pls, pl_ending)
-	add_spec(base, "gen_p", base.pls, pl_ending)
-	add_spec(base, "dat_p", base.pls, pl_ending)
-	add_spec(base, "acc_p", base.pls, pl_ending)
+	add_spec(base, "nom_p", base.pls, nil, pl_ending)
+	add_spec(base, "gen_p", base.pls, nil, pl_ending)
+	add_spec(base, "dat_p", base.pls, nil, pl_ending)
+	add_spec(base, "acc_p", base.pls, nil, pl_ending)
+end
+
+
+local function decline_toponym(base)
+	-- We don't specify gender here, which is always neuter.
+	add(base, "nom_s", nil, "")
+	local gen_s
+	local null_footnote
+	if rfind(base.lemma, "[sxzß]$") then
+		gen_s = "'"
+		null_footnote = "[with an article]"
+	else
+		gen_s = "s"
+		null_footnote = "[optionally with an article]"
+	end
+	add_spec(base, "gen_s", base.gens, nil, gen_s)
+	add(base, "gen_s", nil, "", nil, {null_footnote})
+	add(base, "dat_s", nil, "")
+	add(base, "acc_s", nil, "")
+	if base.number == "both" then
+		-- only with explicitly given plural
+		add_spec(base, "nom_p", base.pls)
+		add_spec(base, "gen_p", base.pls)
+		add_spec(base, "dat_p", base.pls)
+		add_spec(base, "acc_p", base.pls)
+	end
 end
 
 
@@ -513,6 +561,7 @@ local function decline_noun(base)
 			if rfind(masc, "es$") then
 				masc = masc .. "en"
 			end
+			-- No need to specify gender for *_equiv; will be handled correctly in [[Module:de-headword]].
 			add(base, "m_equiv", masc, "")
 		else
 			-- Likely masculine. Try to convert Chinesen -> Chinesinnen, and -er -> -erinnen.
@@ -575,7 +624,7 @@ local function decline_adjective(base)
 		insert_footnotes(base.footnotes)
 	end
 	for prop, _ in pairs(base.props) do
-		if prop ~= "adj" and prop ~= "overall_adj" then
+		if prop ~= "adj" and prop ~= "overall_adj" and prop ~= "article" then
 			ins_dot()
 			ins(prop)
 		end
@@ -597,6 +646,7 @@ local function decline_adjective(base)
 
 	if base.number == "pl" then
 		copy_gender_forms("p")
+		-- No need to specify gender for *_equiv; will be handled correctly in [[Module:de-headword]].
 		add(base, "m_equiv", base.lemma, "e")
 		add(base, "f_equiv", base.lemma, "e")
 		add(base, "n_equiv", base.lemma, "e")
@@ -605,6 +655,7 @@ local function decline_adjective(base)
 		for _, genderspec in ipairs(base.genders) do
 			local gender = genderspec.form
 			copy_gender_forms(gender)
+			-- No need to specify gender for *_equiv; will be handled correctly in [[Module:de-headword]].
 			add(base, "m_equiv", base.lemma, "er") -- masculine
 			add(base, "f_equiv", base.lemma, "e") -- feminine
 			add(base, "n_equiv", base.lemma, "es") -- neuter
@@ -760,6 +811,7 @@ local function parse_indicator_spec(angle_bracket_spec, lemma, pagename, proper_
 				local saw_mn = false
 				local saw_adj = false
 				local saw_surname = false
+				local saw_toponym = false
 				for _, genderspec in ipairs(base.genders) do
 					local g = genderspec.form
 					if g == "m" or g == "n" then
@@ -782,6 +834,11 @@ local function parse_indicator_spec(angle_bracket_spec, lemma, pagename, proper_
 							parse_err("Can't specify multiple genders with surname declension")
 						end
 						saw_surname = true
+					elseif g == "toponym" then
+						if #base.genders > 1 then
+							parse_err("Can't specify multiple genders with toponym declension")
+						end
+						saw_toponym = true
 					else
 						parse_err("Unrecognized gender spec '" .. g .. "'")
 					end
@@ -789,7 +846,7 @@ local function parse_indicator_spec(angle_bracket_spec, lemma, pagename, proper_
 				if saw_sg and saw_pl then
 					parse_err("Can't specify both singular and plural gender specs")
 				end
-				local pl_index = (saw_adj or saw_pl) and 1 or (saw_mn or saw_surname) and 3 or 2
+				local pl_index = (saw_adj or saw_pl) and 1 or (saw_mn or saw_surname or saw_toponym) and 3 or 2
 				if #comma_separated_groups > pl_index then
 					if saw_adj then
 						parse_err("Can't specify plurals or genitives with adjectival declension")
@@ -803,7 +860,7 @@ local function parse_indicator_spec(angle_bracket_spec, lemma, pagename, proper_
 							.. "(gender, plural)")
 					end
 				end
-				if #comma_separated_groups > 1 and saw_mn then
+				if #comma_separated_groups > 1 and (saw_mn or saw_surname or saw_toponym) then
 					base.gens = com.fetch_specs(iut, comma_separated_groups[2], ":", "genitive", "allow blank", parse_err)
 				end
 				if #comma_separated_groups == pl_index and pl_index > 1 then
@@ -817,6 +874,16 @@ local function parse_indicator_spec(angle_bracket_spec, lemma, pagename, proper_
 					else
 						base.props.surname = true
 						base.genders = {{form = "m"}, {form = "f"}}
+					end
+				end
+				if saw_toponym then
+					if #base.genders > 1 then
+						parse_err("Internal error: More than one gender spec for 'toponym'")
+					elseif base.genders[1].footnotes then
+						parse_err("Can't specify footnotes with 'toponym'")
+					else
+						base.props.toponym = true
+						base.genders = {{form = "n"}}
 					end
 				end
 				if saw_adj then
@@ -884,12 +951,12 @@ local function parse_indicator_spec(angle_bracket_spec, lemma, pagename, proper_
 					end
 				end
 				base.number = part
-			elseif not base.props.adj and (part == "weak" or part == "ss" or part == "nodatpln") then
+			elseif not base.props.adj and (part == "weak" or part == "ss" or part == "nodatpln" or part == "article") then
 				if base.props[part] then
 					parse_err("Can't specify '" .. part .. "' twice")
 				end
 				base.props[part] = true
-			elseif base.props.adj and (part == "ss" or part == "sync_n" or part == "sync_mn" or part == "sync_mns") then
+			elseif base.props.adj and (part == "ss" or part == "article" or part == "sync_n" or part == "sync_mn" or part == "sync_mns") then
 				if base.props[part] then
 					parse_err("Can't specify '" .. part .. "' twice")
 				end
@@ -923,12 +990,19 @@ end
 
 
 local function detect_indicator_spec(alternant_multiword_spec, base)
+	base.number = base.number or base.props.surname and "both" or base.pls and "both" or
+		(alternant_multiword_spec.props.is_proper or base.props.toponym) and "sg" or "both"
+	if base.props.article then
+		alternant_multiword_spec.props.article = true
+	end
+	if base.props.toponym then
+		alternant_multiword_spec.props.toponym = true
+	end
 	if base.props.adj then
 		alternant_multiword_spec.props.overall_adj = true
 		synthesize_adj_lemma(base)
 	else
 		-- Set default values.
-		base.number = base.number or base.props.surname and "both" or base.pls and "both" or alternant_multiword_spec.props.is_proper and "sg" or "both"
 		if base.props.surname then
 			alternant_multiword_spec.props.surname = true
 		else
@@ -1141,6 +1215,8 @@ end
 local function decline_noun_or_adjective(base)
 	if base.props.surname then
 		decline_surname(base)
+	elseif base.props.toponym then
+		decline_toponym(base)
 	elseif base.props.adj then
 		decline_adjective(base)
 	else
@@ -1235,6 +1311,8 @@ local function compute_categories_and_annotation(alternant_multiword_spec)
 		end
 		if base.props.surname then
 			m_table.insertIfNot(decldescs, "surname")
+		elseif base.props.toponym then
+			m_table.insertIfNot(decldescs, "toponym")
 		elseif saw_m_or_n then
 			if base.props.weak then
 				insert("weak ~")
@@ -1286,6 +1364,41 @@ function export.get_lemmas(alternant_multiword_spec)
 end
 
 
+local function compute_headword_genders(alternant_multiword_spec)
+	local genders = {}
+	if alternant_multiword_spec.number == "pl" then
+		return {{spec = "p"}}
+	end
+	iut.map_word_specs(alternant_multiword_spec, function(base)
+		for _, genderspec in ipairs(base.genders) do
+			-- Create the new spec to insert.
+			local spec = {spec = genderspec.form}
+			if genderspec.footnotes then
+				local qualifiers = {}
+				for _, footnote in ipairs(genderspec.footnotes) do
+					m_table.insertIfNot(qualifiers, iut.expand_footnote_or_references(footnote, "return raw", "no parse refs"))
+				end
+				spec.qualifiers = qualifiers
+			end
+			-- See if the gender of the spec is already present; if so, combine qualifiers.
+			local saw_existing = false
+			for _, existing_spec in ipairs(genders) do
+				if existing_spec.spec == spec.spec then
+					existing_spec.qualifiers = iut.combine_footnotes(existing_spec.qualifiers, spec.qualifiers)
+					saw_existing = true
+					break
+				end
+			end
+			-- If not, add gender.
+			if not saw_existing then
+				table.insert(genders, spec)
+			end
+		end
+	end)
+	return genders
+end
+
+
 local function process_dim_m_f_n(alternant_multiword_spec, arg_specs, default, literal_default, slot, desc)
 	local lemmas = export.get_lemmas(alternant_multiword_spec)
 	lemmas = iut.map_forms(lemmas, function(form)
@@ -1309,7 +1422,7 @@ local function process_dim_m_f_n(alternant_multiword_spec, arg_specs, default, l
 			iut.add_forms(alternant_multiword_spec.forms, slot, stem or lemmas, ending, do_combine_stem_ending)
 		end
 
-		process_spec(ending_specs, nil, default, literal_default, nil, desc, process)
+		process_spec(ending_specs, nil, default, literal_default, desc, process)
 	end
 end
 
@@ -1417,6 +1530,36 @@ local noun_template_sg = [=[
 |-
 ! style="background:#BBC9D0" | accusative
 | style="background:#EEEEEE" | {art_ind_acc_s}
+| style="background:#EEEEEE" | {art_def_acc_s}
+| {acc_s}{abl_voc_clause}
+|{\cl}{notes_clause}</div></div>]=]
+
+
+local noun_template_sg_no_indef = [=[
+<div class="NavFrame" style="width:50%">
+<div class="NavHead">{title}{annotation}</div>
+<div class="NavContent">
+{\op}| border="1px solid #505050" style="border-collapse:collapse; background:#FAFAFA; text-align:center; width:100%" class="inflection-table inflection-table-de inflection-table-de-{decl_type}"
+! style="background:#AAB8C0;width:24.6%" |
+! colspan="2" style="background:#AAB8C0;" | singular
+|-
+! style="background:#BBC9D0" |
+! style="background:#BBC9D0;width:11.5%" | [[definite article|def.]]
+! style="background:#BBC9D0;width:52.5%" | noun
+|-
+! style="background:#BBC9D0" | nominative
+| style="background:#EEEEEE" | {art_def_nom_s}
+| {nom_s}
+|-
+! style="background:#BBC9D0" | genitive
+| style="background:#EEEEEE" | {art_def_gen_s}
+| {gen_s}
+|-
+! style="background:#BBC9D0" | dative
+| style="background:#EEEEEE" | {art_def_dat_s}
+| {dat_s}
+|-
+! style="background:#BBC9D0" | accusative
 | style="background:#EEEEEE" | {art_def_acc_s}
 | {acc_s}{abl_voc_clause}
 |{\cl}{notes_clause}</div></div>]=]
@@ -1705,7 +1848,8 @@ local function make_table(alternant_multiword_spec)
 		end
 	else
 		table_spec =
-			alternant_multiword_spec.number == "sg" and noun_template_sg or
+			alternant_multiword_spec.number == "sg" and (
+				alternant_multiword_spec.props.toponym and noun_template_sg_no_indef or	noun_template_sg) or
 			alternant_multiword_spec.number == "pl" and noun_template_pl or
 			noun_template_both
 		if forms.abl_s ~= "—" or forms.voc_s ~= "—" then
@@ -1717,41 +1861,6 @@ local function make_table(alternant_multiword_spec)
 	forms.notes_clause = forms.footnote ~= "" and
 		m_string_utilities.format(notes_template, forms) or ""
 	return m_string_utilities.format(table_spec, forms)
-end
-
-
-local function compute_headword_genders(alternant_multiword_spec)
-	local genders = {}
-	if alternant_multiword_spec.number == "pl" then
-		return {{spec = "p"}}
-	end
-	iut.map_word_specs(alternant_multiword_spec, function(base)
-		for _, genderspec in ipairs(base.genders) do
-			-- Create the new spec to insert.
-			local spec = {spec = genderspec.form}
-			if genderspec.footnotes then
-				local qualifiers = {}
-				for _, footnote in ipairs(genderspec.footnotes) do
-					m_table.insertIfNot(qualifiers, iut.expand_footnote_or_references(footnote, "return raw", "no parse refs"))
-				end
-				spec.qualifiers = qualifiers
-			end
-			-- See if the gender of the spec is already present; if so, combine qualifiers.
-			local saw_existing = false
-			for _, existing_spec in ipairs(genders) do
-				if existing_spec.spec == spec.spec then
-					existing_spec.qualifiers = iut.combine_footnotes(existing_spec.qualifiers, spec.qualifiers)
-					saw_existing = true
-					break
-				end
-			end
-			-- If not, add gender.
-			if not saw_existing then
-				table.insert(genders, spec)
-			end
-		end
-	end)
-	return genders
 end
 
 
