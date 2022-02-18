@@ -214,7 +214,7 @@ pos_functions.nouns = function(class, args, data, proper)
 		return old_nouns(class, args, data)
 	end
 
-	local m_de_noun = require("Module:de-noun")
+	local m_de_noun = require("Module:User:Benwing2/de-noun")
 	local alternant_multiword_spec = m_de_noun.do_generate_forms(args, nil, "from headword", proper)
 	data.heads = alternant_multiword_spec.args.head
 	data.genders = alternant_multiword_spec.genders
@@ -244,6 +244,46 @@ pos_functions.nouns = function(class, args, data, proper)
 			end
 		end
 		return quals, refs
+	end
+
+	local function get_nom_articles(alternant_multiword_spec)
+		local articles = {}
+		local m_table = require("Module:table")
+		if alternant_multiword_spec.number == "pl" then
+			m_table.insertIfNot(articles, "[[die]]")
+		else
+			for _, gender in ipairs(alternant_multiword_spec.genders) do
+				if gender.spec == "m" then
+					m_table.insertIfNot(articles, "[[der]]")
+				elseif gender.spec == "f" then
+					m_table.insertIfNot(articles, "[[die]]")
+				elseif gender.spec == "n" then
+					m_table.insertIfNot(articles, "[[das]]")
+				else
+					error("Internal error: Unrecognized gender '" .. gender.spec .. "'")
+				end
+			end
+		end
+		return table.concat(articles, "/")
+	end
+
+	local function get_gen_s_articles(alternant_multiword_spec)
+		local articles = {}
+		local m_table = require("Module:table")
+		if alternant_multiword_spec.number == "pl" then
+			error("Internal error: Should not be called on plural-only nouns")
+		else
+			for _, gender in ipairs(alternant_multiword_spec.genders) do
+				if gender.spec == "m" or gender.spec == "n" then
+					m_table.insertIfNot(articles, "[[des]]")
+				elseif gender.spec == "f" then
+					m_table.insertIfNot(articles, "[[der]]")
+				else
+					error("Internal error: Unrecognized gender '" .. gender.spec .. "'")
+				end
+			end
+		end
+		return table.concat(articles, "/")
 	end
 
 	local function do_noun_form(slot, label, should_be_present, accel_form, genders, prefix)
@@ -294,7 +334,18 @@ pos_functions.nouns = function(class, args, data, proper)
 		table.insert(data.inflections, {label = table.concat(weakdesc, " or ")})
 	end
 	local overall_adj = alternant_multiword_spec.props.overall_adj
+	local article = alternant_multiword_spec.props.article
 	local surname = alternant_multiword_spec.props.surname
+	local saw_f = false
+	local saw_mn = false
+	for _, gender in ipairs(alternant_multiword_spec.genders) do
+		if gender.spec == "f" then
+			saw_f = true
+		elseif gender.spec == "m" or gender.spec == "n" then
+			saw_mn = true
+		end
+	end
+	local fem_sg_only = not saw_mn and alternant_multiword_spec.number ~= "pl"
 	if not alternant_multiword_spec.first_noun and alternant_multiword_spec.first_adj then
 		table.insert(data.inflections, {label = "adjectival"})
 	end
@@ -303,52 +354,47 @@ pos_functions.nouns = function(class, args, data, proper)
 	end
 	if alternant_multiword_spec.number == "pl" then
 		table.insert(data.inflections, {label = glossary_link("plural only")})
+	end
+	if article then
+		table.insert(data.inflections, {label = "usually definite"})
+	end
+	if alternant_multiword_spec.number == "pl" then
 		if overall_adj then
 			do_noun_form("wk_nom_p", "definite plural", nil, nil, nil, "[[die]]")
 		end
 	elseif surname then
-		do_noun_form("gen_m_s", glossary_link("masculine") .. " " .. glossary_link("genitive"),
-			true)
-		do_noun_form("gen_f_s", glossary_link("feminine") .. " " .. glossary_link("genitive"),
-			true)
+		do_noun_form("gen_m_s", "masculine genitive", true)
+		do_noun_form("gen_f_s", "feminine genitive", true)
 		do_noun_form("nom_p", "plural", true)
-	else
-		local weak_nom_prefixes = {}
-		local weak_gen_prefixes = {}
-		local saw_f = false
-		if overall_adj then
-			local m_table = require("Module:table")
-			for _, gender in ipairs(alternant_multiword_spec.genders) do
-				if gender.spec == "m" then
-					m_table.insertIfNot(weak_nom_prefixes, "[[der]]")
-					m_table.insertIfNot(weak_gen_prefixes, "[[des]]")
-				elseif gender.spec == "f" then
-					saw_f = true
-					m_table.insertIfNot(weak_nom_prefixes, "[[die]]")
-					m_table.insertIfNot(weak_gen_prefixes, "[[der]]")
-				elseif gender.spec == "n" then
-					m_table.insertIfNot(weak_nom_prefixes, "[[das]]")
-					m_table.insertIfNot(weak_gen_prefixes, "[[des]]")
-				else
-					error("Internal error: Unrecognized gender '" .. gender.spec .. "'")
-				end
+	elseif overall_adj then
+		if article then
+			if not fem_sg_only then
+				do_noun_form("wk_nom_s", "definite nominative", nil, nil, nil, get_nom_articles(alternant_multiword_spec))
 			end
-			do_noun_form("wk_nom_s", "definite nominative", nil, nil, nil, table.concat(weak_nom_prefixes, "/"))
-		end
-		do_noun_form(overall_adj and "str_gen_s" or "gen_s", "genitive", true, nil, nil,
-			overall_adj and not saw_f and "([[des]])" or nil)
-		if overall_adj and saw_f then
-			do_noun_form("wk_gen_s", "definite genitive", nil, nil, nil, table.concat(weak_gen_prefixes, "/"))
-		end
-		do_noun_form(overall_adj and "str_nom_p" or "nom_p", "plural", not proper)
-		if overall_adj then
+			do_noun_form("wk_gen_s", "definite genitive", nil, nil, nil, get_gen_s_articles(alternant_multiword_spec))
+			do_noun_form("wk_nom_p", "definite plural", nil, nil, nil, "[[die]]")
+		else
+			do_noun_form("wk_nom_s", "definite nominative", nil, nil, nil, get_nom_articles(alternant_multiword_spec))
+			do_noun_form("str_gen_s", "genitive", true, nil, nil, not saw_f and "([[des]])" or nil)
+			if saw_f then
+				do_noun_form("wk_gen_s", "definite genitive", nil, nil, nil, get_gen_s_articles(alternant_multiword_spec))
+			end
+			do_noun_form("str_nom_p", "plural", not proper)
 			do_noun_form("wk_nom_p", "definite plural", nil, nil, nil, "[[die]]")
 		end
+	else
+		if article then
+			do_noun_form("gen_s", "definite genitive", nil, nil, nil, get_gen_s_articles(alternant_multiword_spec))
+			do_noun_form("nom_p", "definite plural", not proper, nil, nil, "[[die]]")
+		else
+			do_noun_form("gen_s", "genitive")
+			do_noun_form("nom_p", "plural", not proper)
+		end
 	end
-	do_noun_form("dim", "diminutive", nil, "diminutive", {"n"})
-	do_noun_form("f", "feminine", nil, "feminine")
-	do_noun_form("m", "masculine")
-	do_noun_form("n", "neuter")
+	do_noun_form("dim", "diminutive", nil, "diminutive", {"n"}, article and "[[das]]" or nil)
+	do_noun_form("m", "masculine", nil, nil, nil, article and "[[der]]" or nil)
+	do_noun_form("f", "feminine", nil, "feminine", nil, article and "[[die]]" or nil)
+	do_noun_form("n", "neuter", nil, "neuter", nil, article and "[[das]]" or nil)
 
 	-- Add categories.
 	for _, cat in ipairs(alternant_multiword_spec.categories) do
@@ -360,11 +406,16 @@ pos_functions.nouns = function(class, args, data, proper)
 		data.heads = {}
 		local lemmas = m_de_noun.get_lemmas(alternant_multiword_spec)
 		for _, lemma_obj in ipairs(lemmas) do
+			local head = alternant_multiword_spec.args.nolinkhead and lemma_obj.form or
+				require("Module:headword utilities").add_lemma_links(lemma_obj.form, alternant_multiword_spec.args.splithyph)
+			if article and (not overall_adj or fem_sg_only) then
+				table.insert(data.heads, get_nom_articles(alternant_multiword_spec) .. " " .. head)
+			else
+				table.insert(data.heads, head)
+			end
 			-- FIXME, can't yet specify qualifiers or references for heads
-			table.insert(data.heads, alternant_multiword_spec.args.nolinkhead and lemma_obj.form or
-				require("Module:headword utilities").add_lemma_links(lemma_obj.form, alternant_multiword_spec.args.splithyph))
 			-- local quals, refs = expand_footnotes_and_references(lemma_obj.footnotes)
-			-- table.insert(data.heads, {term = lemma_obj.form, qualifiers = quals, refs = refs})
+			-- table.insert(data.heads, {term = head, qualifiers = quals, refs = refs})
 		end
 	end
 end
