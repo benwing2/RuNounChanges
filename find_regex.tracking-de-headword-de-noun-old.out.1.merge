@@ -1,4 +1,4 @@
-Beginning at Sat Feb 19 01:41:14 2022
+Beginning at Sat Feb 19 15:36:30 2022
 Page 1 A: Found match for regex: =
 Page 1 A: -------- begin text --------
 
@@ -1469,7 +1469,7 @@ Page 42 arabische Ziffer: Found match for regex: =
 Page 42 arabische Ziffer: -------- begin text --------
 
 ===Etymology===
-[[arabisch]] "[[Arabic]]" + [[Ziffer]] "[[cypher]]"
+{{lit|Arabic digit}}.
 
 ===Noun===
 {{de-noun|[[arabisch]]e<+> [[Ziffer]]<f>}}
@@ -5581,7 +5581,7 @@ From {{bor|de|la|senior}}.
 #: {{ux|de|Nächstes Jahr werd ich 19, da spiel ich dann schon bei den '''Senioren'''.|I’m turning 19 next year, so I’ll be playing with the '''adults'''.}}
 
 ====Declension====
-{{de-ndecl|m,s,en|f=in}}
+{{de-ndecl|m,s,en}}
 
 ====Derived terms====
 * {{l|de|Seniorenheim}}
@@ -6298,13 +6298,13 @@ From the adjective {{m|de|weiß}}.
 * {{hyphenation|de|Weiß}}
 
 ===Noun===
-{{de-noun|n,-:es.-[rare]}}
+{{de-noun|n,-:es,-[rare]}}
 
 # [[white]], [[whiteness]]
 # [[powder]], [[face powder]]
 
 ====Declension====
-{{de-ndecl|n,-:es.-[rare]}}
+{{de-ndecl|n,-:es,-[rare]}}
 
 ====Derived terms====
 * {{l|de|Weißbier}}
@@ -17437,7 +17437,7 @@ Page 489 Fax: -------- begin text --------
 * {{audio|de|De-Fax.ogg|Audio}}
 
 ===Noun===
-{{de-noun|n|g2=m|Fax|Faxe}}
+{{de-noun|n:m[chiefly Switzerland],(es),e}}
 
 # [[fax]] (document received and printed by a fax machine)
 # [[fax machine]]
@@ -17447,9 +17447,10 @@ Page 489 Fax: -------- begin text --------
 * The masculine gender is chiefly used in Switzerland.
 
 ====Declension====
-{{de-decl-noun-n||e}}
+{{de-ndecl|n:m[chiefly Switzerland],(es),e}}
 
 ===Further reading===
+* {{R:DWDS}}
 * {{R:Duden}}
 -------- end text --------
 Page 490 Gerade: Found match for regex: {
@@ -20377,12 +20378,12 @@ Page 597 Europäer: -------- begin text --------
 * {{hyphenation|de|Eu|ro|pä|er}}
 
 ===Noun===
-{{de-noun|m|Europäers|Europäer}}
+{{de-noun|m,s,-}}
 
 # [[European]] (person)
 
 ====Declension====
-{{de-decl-noun-n|s}}
+{{de-ndecl|m,s,-}}
 
 ====Derived terms====
 * {{l|de|Europäerin}}
@@ -26904,7 +26905,7 @@ Page 910 Aalfett: Found match for regex: =
 Page 910 Aalfett: -------- begin text --------
 
 ===Etymology===
-{{compound|de|Aal|Fett}}.
+{{compound|de|Aal|Fett}}
 
 ===Pronunciation===
 * {{IPA|de|/ˈaːlˌfɛt/}}
@@ -26912,15 +26913,17 @@ Page 910 Aalfett: -------- begin text --------
 * {{hyphenation|de|Aal|fett}}
 
 ===Noun===
-{{de-noun|n|Aalfettes|Aalfette}}<!--"Aalfetts" is not attested-->
+{{de-noun|n,es:s,e}}
 
 # [[eel]] [[fat]]
 
-====Declension====
-{{de-decl-noun-n|(e)s|e}}
-
 ====Usage notes====
 * The inflected forms are rarely used.
+
+====Declension====
+{{de-ndecl|n,es:s,e}}
+
+{{C|de|Fats and oils}}
 -------- end text --------
 Page 911 Siliciumwasserstoff: Found match for regex: =
 Page 911 Siliciumwasserstoff: -------- begin text --------
@@ -29179,7 +29182,7 @@ Page 1007 Liberaler: -------- begin text --------
 
 {{C|de|Politics}}
 -------- end text --------
-Page 1008 Delegierter: Found match for regex: =
+Page 1008 Delegierter: Found match for regex: {
 Page 1008 Delegierter: -------- begin text --------
 {{wikipedia|lang=de}}
 
@@ -29757,7 +29760,7 @@ Page 1032 Studierende: -------- begin text --------
 ====Declension====
 {{de-ndecl|+}}
 -------- end text --------
-Page 1033 Unbekannte: Found match for regex: =
+Page 1033 Unbekannte: Found match for regex: {
 Page 1033 Unbekannte: -------- begin text --------
 {{wikipedia|lang=de}}
 
@@ -35034,7 +35037,7 @@ From {{bor|de|ar|فَتْوَى||formal legal opinion}}, the verbal noun of {{m|
 * {{audio|de|De-Fatwa.ogg|Audio}}
 
 ===Noun===
-{{de-noun|f|g2=n||Fatwas|gen2=Fatwas|pl2=Fatwen}}
+{{de-noun|f,s:Fatwen[rare]}} or {{de-noun|n[dated],s,s}}
 
 # {{lb|de|Islam}} [[fatwa]] {{gloss|scholar's written response to a religious question}}
 #: {{syn|de|Responsum}} {{qualifier|not restricted to Islam}}
@@ -35043,9 +35046,8 @@ From {{bor|de|ar|فَتْوَى||formal legal opinion}}, the verbal noun of {{m|
 * The neuter gender is dated.
 
 ====Declension====
-{{de-decl-noun-f|s}}
-{{de-decl-noun-f|pl=Fatwen}}
-{{de-decl-noun-n|s|s}}
+{{de-ndecl|f,s:Fatwen[rare]}}
+{{de-ndecl|n[dated],s,s}}
 
 ====Related terms====
 * {{l|de|Mufti}}
@@ -35769,7 +35771,7 @@ From {{der|de|la|recēnsens||reviewer}}, from {{m|la|recēnseō||review}}, from 
 # creator of a [[recension]] of a text
 
 ====Declension====
-{{de-ndecl|m.weak|f=in}}
+{{de-ndecl|m.weak}}
 -------- end text --------
 Page 1301 Alkoholkranker: Found match for regex: =
 Page 1301 Alkoholkranker: -------- begin text --------
@@ -35825,7 +35827,7 @@ Page 1303 Schaumburg: -------- begin text --------
 ====Declension====
 {{de-ndecl|surname}}
 -------- end text --------
-Page 1304 Donaudampfschifffahrtsgesellschaftskapitän: Found match for regex: =
+Page 1304 Donaudampfschifffahrtsgesellschaftskapitän: Found match for regex: {
 Page 1304 Donaudampfschifffahrtsgesellschaftskapitän: -------- begin text --------
 {{wikipedia|lang=de}}
 
@@ -36028,31 +36030,17 @@ A [[pseudo-anglicism]] made up of {{compound|de|Base|Cap|t1=base|t2=cap}}.
 {{de-ndecl|n,s,s}} ''or''<br />
 {{de-ndecl|f,s}}
 -------- end text --------
-Page 1312 Leibhaftige: Found match for regex: {
+Page 1312 Leibhaftige: Found match for regex: =
 Page 1312 Leibhaftige: -------- begin text --------
-{{was fwotd|de|2017|October|13}}
-
-===Etymology===
-From the adjective {{m|de|leibhaftig||incarnate, personified}}. Literally, "the incarnate".
 
 ===Pronunciation===
 * {{IPA|de|/laɪ̯pˈhaftɪɡə/}}
 * {{audio|de|De-Leibhaftige.ogg|Audio}}
 
-===Noun===
-{{de-noun|m.weak.sg.article}}
+===Proper noun===
+{{head|de|proper noun form}}
 
-# {{lb|de|theology|euphemistic|with definite article}} the [[Devil]]
-#: {{syn|de|Teufel|Luzifer|Satan|Höllenfürst}}
-#* {{quote-book|de|year=1829|title=Hermes, Oder, Kritisches Jahrbuch Der Literatur|volume=33-35|passage=''Ja, sie ist die Schlange (der '''Leibhaftige''' selbst), die zu dem Menschen spricht: Erkenne Dich, Du bist Gott, und es ist kein Gott außer Dir.''|translation=Yes, it is the serpent (the '''Devil''' himself), who said to the people: Know yourself, you are God and there is no other God but you.}}
-#* {{quote-book|de|year=2011|title=Der Hundertjährige, der aus dem Fenster stieg und verschwand|trans-title=The Hundred-Year-Old Man Who Climbed Out the Window and Disappeared|author=Wibke Kuhn|type=translation|original=Hundraåringen som klev ut genom fönstret och försvann|by=Jonas Jonasson|isbn=978-3-641-05668-1|passage=''»Selbstverständlich«, sagte Staatsanwalt Ranelid, »solange es der Wahrheitsfindung dient, dürfte sich der '''Leibhaftige''' selbst dazu äußern.«''|translation="Of course", said Prosecutor Ranelid, "as long as it served the truth, even the '''Devil''' himself would be allowed to speak out."}}
-#* {{quote-book|de|year=2014|title=Kolja|author=Alexandre Berner|isbn=978-1-291-85186-1|page=311|passage=''Bei gewissen Kreisen bin ich gehasst wie der '''Leibhaftige''' persönlich!''|translation=In certain circles, I am personally hated like the '''Devil'''!}}
-
-====Declension====
-{{de-ndecl|m.weak.sg.article}}
-
-===References===
-* {{R:Duden|Leibhaftiger}}
+# {{inflection of|de|Leibhaftiger||wk|nom|s}}
 -------- end text --------
 Page 1313 Dagobert Duck: Found match for regex: =
 Page 1313 Dagobert Duck: -------- begin text --------
@@ -38919,7 +38907,16 @@ Page 1428 Zürbel: -------- begin text --------
 ====Declension====
 {{de-ndecl|f}}
 
-====Derived terms====
+===Noun===
+{{de-noun|m}}
+
+# {{obs form|de|Zürgel|t=hackberry}}
+#* {{quote-book|de|author={{w|lang=de|Bernhard Sebastian von Nau}}|title=Anleitung zur deutschen Forstwissenschaft|volume=1: Vorbereitungslehren zur besseren Erlernung|location=Frankfurt am Main|year=1807|publisher=Andreäische Buchhandlung|page=31|section=§ 68|pageurl=https://www.google.com/books/edition/Anleitung_zur_deutschen_Forstwissenschaf/5zs7AAAAcAAJ?gbpv=1&pg=PA31&printsec=frontcover|passage=Der westliche Lotus oder '''Zürbelbaum''' wächst in der Provinz Neuyork zu einem Baum von 40–50 Fuß hoch und 2 Fuß im Durchschnitte dik. Er steht in flachliegenden Gegenden auf kleinen Hügeln, oder an den Ufern der frischen Bäche und Flüsse, doch jederzeit in einer geschützten Lage. Der Boden für ihn muß trocken und leicht, aus viel Sand mit etwas Leimen, fetter Erde oder andern Erdarten gemischt sein. ''Celtis occidentalis''. The American Nettle-Tree. Micocoulier de Virginie. Die eine Hälfte der Blätter ist länger als die andere; sie sind übrigens eirund, scharf zugespitzt und mit Ausschluß der Spitze und des untern Theils nur an den Seiten gezahnt.|t=The western lotus or hackberry grows in the State of New York to a tree 40–50 feet high and 2 feet in diameter thick. He stands in flat-lying areas on small mounds, or on shores of the fresh becks and rivers, but always in a protected site. The ground must be dry and light, of much sand with a bit of loam, fat earth or other types of earths mixed together. ''Celtis occidentalis''. The American Nettle-Tree. Micocoulier de Virginie. One half of the leaves is longer than the other; apart from that they are ovate, sharply pointed and bar the point and the lower part jagged at the sides.}}
+
+====Declension====
+{{de-ndecl|m}}
+
+===Derived terms===
 * {{l|de|Zürbelbaum}}
 * {{l|de|Zürbelnuss}} / {{l|de|Zürbelnuß}}
 -------- end text --------
@@ -40152,7 +40149,7 @@ Page 1480 Recensent: -------- begin text --------
 # {{obsolete spelling of|de|Rezensent}}
 
 ====Declension====
-{{de-ndecl|m.weak|f=in}}
+{{de-ndecl|m.weak}}
 -------- end text --------
 Page 1481 Wenigkeit: Found match for regex: =
 Page 1481 Wenigkeit: -------- begin text --------
@@ -40764,7 +40761,7 @@ Borrowed from {{bor|de|it|rivoluzionario}}.
 |translation=He was once a '''revolutionary''', / Civicly lamp cleaner; / Went the revolutionary's step / together with the revolutionaries.}}
 
 ====Declension====
-{{de-ndecl|m|f=in}}
+{{de-ndecl|m}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -41064,7 +41061,7 @@ From {{der|de|LL.|officialis}}.
 # {{lb|de|Austria}} title for [[civil servant]]s
 
 ====Declension====
-{{de-ndecl|((<m>,<m.weak>))|f=in}}
+{{de-ndecl|((<m>,<m.weak>))}}
 
 ====Related terms====
 * {{l|de|Official}}
@@ -41255,7 +41252,7 @@ Page 1532 Tour de force: -------- begin text --------
 # {{alternative spelling of|de|Tour de Force}}
 
 ====Declension====
-{{de-ndecl|Tour<f,s> de force|nolinkhead=1}}
+{{de-ndecl|Tour<f,s> de force}}
 -------- end text --------
 Page 1533 K-Frage: Found match for regex: =
 Page 1533 K-Frage: -------- begin text --------
@@ -41510,7 +41507,7 @@ Page 1541 Nestflüchter: -------- begin text --------
 #: {{ant|de|Nesthocker}}
 
 ====Declension====
-{{de-ndecl|m|f=in}}
+{{de-ndecl|m}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -43087,13 +43084,13 @@ Borrowed from {{bor|de|en|event}}.
 * {{audio|de|De-Event.ogg}}
 
 ===Noun===
-{{de-noun|n:m}}
+{{de-noun|n:m,s,s}}
 
 # [[event]]
 #: {{syn|de|Veranstaltung}}
 
 ====Declension====
-{{de-ndecl|n:m}}
+{{de-ndecl|n:m,s,s}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -53740,5 +53737,5 @@ Page 2091 Fatzke: -------- begin text --------
 * {{R:Duden}}
 * {{R:DWDS}}
 -------- end text --------
-Elapsed time: 4 mins 26.53 secs
-Ending at Sat Feb 19 01:45:41 2022
+Elapsed time: 4 mins 33.16 secs
+Ending at Sat Feb 19 15:41:03 2022
