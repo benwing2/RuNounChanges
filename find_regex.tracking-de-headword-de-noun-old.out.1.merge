@@ -35827,6 +35827,7 @@ Page 1303 Schaumburg: -------- begin text --------
 -------- end text --------
 Page 1304 Donaudampfschifffahrtsgesellschaftskapitän: Found match for regex: =
 Page 1304 Donaudampfschifffahrtsgesellschaftskapitän: -------- begin text --------
+{{wikipedia|lang=de}}
 
 ===Alternative forms===
 * {{alter|de|Donaudampfschiffahrtsgesellschaftskapitän}}
@@ -35841,8 +35842,7 @@ Compound of {{compound|de|Donau|t1=Danube|Dampf|t2=steam|Schifffahrt|t3=navigati
 * {{hyphenation|de|Do|nau|dampf|schiff|fahrts|ge|sell|schafts|ka|pi|tän}}
 
 ===Noun===
-{{wikipedia|lang=de}}
-{{de-noun|m|Donaudampfschifffahrtsgesellschaftskapitäns|Donaudampfschifffahrtsgesellschaftskapitäne}}
+{{de-noun|m}}
 
 # [[Danube]] [[steamship]] [[company]] [[captain]]
 #* '''2015''', Bibi Mahony, ''Sonntagskind: Tod eines Täters'', BoD – Books on Demand ({{ISBN|9783739295930}})
@@ -35858,7 +35858,7 @@ Compound of {{compound|de|Donau|t1=Danube|Dampf|t2=steam|Schifffahrt|t3=navigati
 When referring specifically to a captain of the First Danube Steamship Company, the spelling with two ''f''s is argued by the German Wikipedia to be correct, because proper names are not changed by the spelling reform.
 
 ====Declension====
-{{de-decl-noun-m|(e)s|e}}
+{{de-ndecl|m}}
 -------- end text --------
 Page 1305 Gischt: Found match for regex: =
 Page 1305 Gischt: -------- begin text --------
@@ -35871,19 +35871,18 @@ From {{inh|de|gmh|jest}}, {{m|gmh|gest||foam}}, from {{inh|de|goh|*jest}}, {{m|g
 * {{audio|de|De-Gischt.ogg|Audio}}
 
 ===Noun===
-{{de-noun|f||Gischten}}
+{{de-noun|f,+[uncommon]}} ''or''<br />
+{{de-noun|m[rare],s:es,e[uncommon]}}
 
-{{de-noun|m|Gischtes|gen2=Gischts|Gischte}}
-
-# The frothy [[foam]] on sea [[wave]]s.
-# {{lb|de|dated}} Other kinds of foam or [[froth]] that form on liquids, such as on [[beer]] or boiling water.
+# the frothy [[foam]] on sea [[wave]]s
+# {{lb|de|dated}} other kinds of foam or [[froth]] that form on liquids, such as on [[beer]] or boiling water
 
 ====Usage notes====
 * The word is now almost exclusively feminine.
 
 ====Declension====
-{{de-decl-noun-f|en}}
-{{de-decl-noun-m|(e)s|e}}
+{{de-ndecl|f,+[uncommon]}} ''or''<br />
+{{de-ndecl|m[rare],s:es,e[uncommon]}}
 
 ====Synonyms====
 * {{l|de|Schaum}}
@@ -35900,12 +35899,12 @@ Page 1306 Buchdruck: -------- begin text --------
 * {{hyphenation|de|Buch|druck}}
 
 ===Noun===
-{{de-noun|m|Buchdrucks|-|gen2=Buchdruckes}}
+{{de-noun|m,s:es}}
 
 # [[letterpress]]
 
 ====Declension====
-{{de-decl-noun-m|(e)s|en}}
+{{de-ndecl|m,s:es}}
 -------- end text --------
 Page 1307 Unterrichtsfach: Found match for regex: =
 Page 1307 Unterrichtsfach: -------- begin text --------
@@ -35918,12 +35917,12 @@ From {{af|de|Unterricht|-s-|Fach}}.
 * {{audio|de|De-Unterrichtsfach.ogg|Audio}}
 
 ===Noun===
-{{de-noun|n|Unterrichtsfaches|Unterrichtsfächer|gen2=Unterrichtsfachs}}
+{{de-noun|n,s:es,^er}}
 
 # [[school]] [[subject]]
 
 ====Declension====
-{{de-decl-noun-m|(e)s|pl=Unterrichtsfächer}}
+{{de-ndecl|n,s:es,^er}}
 -------- end text --------
 Page 1308 Gest: Found match for regex: =
 Page 1308 Gest: -------- begin text --------
@@ -35938,12 +35937,14 @@ Page 1308 Gest: -------- begin text --------
 * {{audio|de|De-Gest.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m|g2=f|Gests|gen2=Gestes|gen3=Gest|-}}
+{{de-noun|m,s:es.sg}} ''or''<br />
+{{de-noun|f.sg}}
 
 # {{lb|de|northern German|dated}} [[yeast]]
 
 ====Declension====
-{{de-decl-noun-m|(e)s|n=sg}}
+{{de-ndecl|m,s:es.sg}}
+{{de-ndecl|f.sg}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -35995,19 +35996,19 @@ Page 1310 Windpferd: -------- begin text --------
 From {{compound|de|Wind|Pferd}}, a {{calque|de|bo|རླུང་རྟ|nocap=1}}.
 
 ===Noun===
-{{de-noun|n|Windpferds|Windpferde}}
+{{de-noun|n,s:es}}
 
 # [[wind horse]]
 
 ====Declension====
-{{de-decl-noun-n|(e)s|e}}
+{{de-ndecl|n,s:es}}
 -------- end text --------
 Page 1311 Basecap: Found match for regex: {
 Page 1311 Basecap: -------- begin text --------
 {{wikipedia|lang=de}}
 
 ===Etymology===
-A [[pseudo-anglicism]] made up of {{compound|de|Base|Cap|t1=base|t2=cap}}
+A [[pseudo-anglicism]] made up of {{compound|de|Base|Cap|t1=base|t2=cap}}.
 {{attention|de|Do we have a reference for this or is it just an assumption? An equally likely assumption is that it's just shortened from "baseball cap" for some reason.}}
 
 ===Pronunciation===
@@ -36017,21 +36018,15 @@ A [[pseudo-anglicism]] made up of {{compound|de|Base|Cap|t1=base|t2=cap}}
 * {{hyphenation|de|Base|cap}}
 
 ===Noun===
-{{de-noun|n||Basecaps}}
-
-# [[baseball cap]]
-
-====Declension====
-{{de-decl-noun-n|s|s}}
-
-===Noun===
-{{de-noun|f||Basecaps}}
+{{de-noun|n,s,s}} ''or''<br />
+{{de-noun|f,s}}
 
 # [[baseball cap]]
 #: {{syn|de|Baseballcap|Baseballkappe|Baseballmütze|Schildmütze}}
 
 ====Declension====
-{{de-decl-noun-f|np=Basecaps|gp=Basecaps|dp=Basecaps|ap=Basecaps}}
+{{de-ndecl|n,s,s}} ''or''<br />
+{{de-ndecl|f,s}}
 -------- end text --------
 Page 1312 Leibhaftige: Found match for regex: {
 Page 1312 Leibhaftige: -------- begin text --------
@@ -36045,7 +36040,7 @@ From the adjective {{m|de|leibhaftig||incarnate, personified}}. Literally, "the 
 * {{audio|de|De-Leibhaftige.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m|des [[Leibhaftigen]]|-|head=der Leibhaftige}}
+{{de-noun|m.weak.sg.article}}
 
 # {{lb|de|theology|euphemistic|with definite article}} the [[Devil]]
 #: {{syn|de|Teufel|Luzifer|Satan|Höllenfürst}}
@@ -36054,23 +36049,7 @@ From the adjective {{m|de|leibhaftig||incarnate, personified}}. Literally, "the 
 #* {{quote-book|de|year=2014|title=Kolja|author=Alexandre Berner|isbn=978-1-291-85186-1|page=311|passage=''Bei gewissen Kreisen bin ich gehasst wie der '''Leibhaftige''' persönlich!''|translation=In certain circles, I am personally hated like the '''Devil'''!}}
 
 ====Declension====
-{{de-decl-noun-table-sg
-|title=der [[Leibhaftige]]
-|title_app=&#32;{{q|weak adjectival declension only}}
-|art_ind_ns=—
-|art_ind_gs=—
-|art_ind_ds=—
-|art_ind_as=—
-|art_def_ns=der
-|art_def_gs=des
-|art_def_ds=dem
-|art_def_as=den
-|ns=Leibhaftige
-|gs=Leibhaftigen
-|ds=Leibhaftigen
-|as=Leibhaftigen
-|notes=Appears only in the singular and in conjunction with the definite article
-}}
+{{de-ndecl|m.weak.sg.article}}
 
 ===References===
 * {{R:Duden|Leibhaftiger}}
@@ -36107,7 +36086,6 @@ From {{m|de|Dagobert|pos=a male given name}} + {{der|de|en|duck}}.
 {{de-ndecl|[[Dagobert]] Duck<m,s,s>}}
 
 {{C|de|Fictional characters}}
-
 {{cln|de|eponyms}}
 -------- end text --------
 Page 1314 Brückentag: Found match for regex: {
@@ -36123,12 +36101,12 @@ Page 1314 Brückentag: -------- begin text --------
 * {{hyphenation|de|Brü|cken|tag}}
 
 ===Noun===
-{{de-noun|m|Brückentages|gen2=Brückentags}}
+{{de-noun|m,es:s}}
 
 # a day which, if taken off work, results in a [[long weekend]]; a [[day]] which [[fall]]s between two [[work]]-[[free]] days ([[holiday]]s or [[weekend]] days), on which [[leave]] is preferred
 
 ====Declension====
-{{de-decl-noun-m|(e)s|e}}
+{{de-ndecl|m,es:s}}
 
 ====Synonyms====
 * {{l|de|Fenstertag}}, {{l|de|Zwickeltag}} {{q|Austria}}
@@ -36140,13 +36118,13 @@ Page 1315 Arisierer: -------- begin text --------
 From {{af|de|arisieren|-er}}.
 
 ===Noun===
-{{de-noun|m|Arisierers|Arisierer}}
+{{de-noun|m}}
 
 # {{lb|de|Nazism}} a [[German]] who [[confiscate]]s and [[appropriate]]s [[Jewish]] property
 #:{{syn|de|Ariseur}}
 
 ====Declension====
-{{de-decl-noun-m|s|e}}
+{{de-ndecl|m}}
 -------- end text --------
 Page 1316 Versteppung: Found match for regex: {
 Page 1316 Versteppung: -------- begin text --------
@@ -36156,12 +36134,15 @@ Page 1316 Versteppung: -------- begin text --------
 From {{af|de|ver-|Steppe|-ung}}. Mainstream usage dates back to {{w|Alwin Seifert|lang=de}}'s 1936 book ''Die Versteppung Deutschlands''.
 
 ===Noun===
-{{de-noun|f|Versteppungs|-}}
+{{de-noun|f.sg}}
 
 # {{lb|de|ecology}} [[steppification]]; [[desertification]]
 
 ====Usage notes====
-Now uncommon in scientific discourse, where {{m|de|Desertifikation}} is most used.
+* Now uncommon in scientific discourse, where {{m|de|Desertifikation}} is most used.
+
+====Declension====
+{{de-ndecl|f.sg}}
 -------- end text --------
 Page 1317 Adliger: Found match for regex: =
 Page 1317 Adliger: -------- begin text --------
@@ -36276,9 +36257,12 @@ Page 1320 StuK: Found match for regex: =
 Page 1320 StuK: -------- begin text --------
 
 ===Noun===
-{{de-noun|old=1}}
+{{de-noun|f}}
 
 # {{l|en|SPG|gloss=[[self-propelled gun]]}} {{abbreviation of|de|Sturmkanone}} {{gloss|[[assault gun]]}}
+
+====Declension====
+{{de-ndecl|f}}
 -------- end text --------
 Page 1321 Vormärz: Found match for regex: =
 Page 1321 Vormärz: -------- begin text --------
@@ -36292,7 +36276,7 @@ From {{pre|de|vor|t1=pre-|März|t2=March}}.
 ===Proper noun===
 {{de-proper noun|m,-:es.article}}
 
-# {{lb|de|historical}} The period leading up to the 1848 {{w|German revolutions of 1848–49|March Revolution}}, variously held to begin in either 1815 (after the {{w|Congress of Vienna}}) or 1830 (after the {{w|July Revolution}}).
+# {{lb|de|historical}} the period leading up to the 1848 {{w|German revolutions of 1848–49|March Revolution}}, variously held to begin in either 1815 (after the {{w|Congress of Vienna}}) or 1830 (after the {{w|July Revolution}})
 
 ====Declension====
 {{de-ndecl|m,-:es.article.sg}}
@@ -36327,13 +36311,12 @@ Page 1323 Dummbatz: -------- begin text --------
 * {{IPA|de|/ˈdʊmbats/}}
 
 ===Noun===
-{{de-noun|m|Dummbatzes|gen2=Dummbatzen|Dummbatze|pl2=Dummbatzen|Dummbätzchen}}
+{{de-noun|((<m>,<m.weak>))|dim=^chen}}
 
 # {{lb|de|colloquial}} [[idiot]]; [[dumbnut]]; [[pinhead]]
 
 ====Declension====
-{{de-decl-noun-m|es|e}}
-{{de-decl-noun-m|en|en}}
+{{de-ndecl|((<m>,<m.weak>))}}
 -------- end text --------
 Page 1324 Tasteninstrument: Found match for regex: =
 Page 1324 Tasteninstrument: -------- begin text --------
@@ -36345,12 +36328,12 @@ From {{af|de|Taste|-n-|Instrument}}.
 * {{audio|de|De-Tasteninstrument.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m|Tasteninstruments|gen2=Tasteninstrumentes|Tasteninstrumente}}
+{{de-noun|n,s:es}}
 
-# {{lb|de|musical instruments}} [[keyboard]] {{gloss|any musical instrument played by touching}}
+# {{lb|de|music}} [[keyboard]] {{gloss|any musical instrument played by touching}}
 
 ====Declension====
-{{de-decl-noun-n|(e)s|e}}
+{{de-ndecl|n,s:es}}
 
 ====Related terms====
 {{rel2|de
@@ -36378,12 +36361,12 @@ Page 1326 Stecknadelkopf: -------- begin text --------
 * {{hyphenation|de|Steck|na|del|kopf}}
 
 ===Noun===
-{{de-noun|m|Stecknadelkopfs|Stecknadelköpfe}}
+{{de-noun|m,s:es,^e}}
 
 # [[pinhead]] {{gloss|often used in size comparisons}}
 
 ====Declension====
-{{de-decl-noun-m|(e)s|pl=Stecknadelköpfe}}
+{{de-ndecl|m,s:es,^e}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -36394,12 +36377,12 @@ Page 1327 Quarzit: -------- begin text --------
 {{wikipedia|lang=de}}
 
 ===Noun===
-{{de-noun|m||Quartzite}}
+{{de-noun|m,s:es}}
 
 # [[quartzite]]
 
 ====Declension====
-{{de-decl-noun-m|s|e}}
+{{de-ndecl|m,s:es}}
 
 ====Descendants====
 * {{desc|ru|кварци́т|bor=1}} {{see desc}}
@@ -36418,14 +36401,16 @@ Page 1328 Langohr: -------- begin text --------
 * {{audio|de|De-Langohr.ogg|Audio}}
 
 ===Noun===
-{{de-noun|n|Langohrs|gen2=Langohres|Langohren}}
+{{de-noun|n:m[sometimes, when referring to a person or animal],s:es,en}}
 
-# [[donkey]]
-# [[rabbit]]
+# {{lb|de|obsolete}} a [[long]] [[ear]]
+# {{lb|de|colloquial|humorous}} [[donkey]]
+# {{lb|de|colloquial|humorous}} [[dolt]], [[blockhead]]
+# {{lb|de|colloquial|humorous}} [[rabbit]]
 # {{lb|de|zoology}} [[long-eared bat]] {{q|animal of the genus {{taxlink|Plecotus|genus|ver=190211}}}}
 
 ====Declension====
-{{de-decl-noun-n|(e)s|n}}
+{{de-ndecl|n:m[sometimes, when referring to a person or animal],s:es,en}}
 
 ====Derived terms====
 * {{l|de|ein Esel schimpft den anderen Langohr}}
@@ -36447,7 +36432,7 @@ Page 1329 Hinterlassenschaft: -------- begin text --------
 * {{audio|de|De-Hinterlassenschaft.ogg|Audio}}
 
 ===Noun===
-{{de-noun|f|old=1}}
+{{de-noun|f}}
 
 # {{lb|de|formal}} [[bequest]]; [[legacy]] {{gloss|property left for inheritance}}
 #: {{syn|de|Vermächtnis|Erbschaft}}
@@ -36457,7 +36442,7 @@ Page 1329 Hinterlassenschaft: -------- begin text --------
 # {{lb|de|colloquial|euphemism}} [[feces]]
 
 ====Declension====
-{{de-decl-noun-f}}
+{{de-ndecl|f}}
 
 ===Further reading===
 * {{R:DWDS}}
@@ -36484,12 +36469,12 @@ Page 1331 Glaubensbekenntnis: -------- begin text --------
 * {{audio|de|De-Glaubensbekenntnis.ogg|Audio}}
 
 ===Noun===
-{{de-noun|n|Glaubensbekenntnises|Glaubensbekenntnise}}
+{{de-noun|n}}
 
 # [[creed]]; statement of faith
 
 ====Declension====
-{{de-decl-noun-n|ses|se}}
+{{de-ndecl|n}}
 
 ====Related terms====
 {{rel3|de
@@ -36525,7 +36510,7 @@ From {{affix|de|taugen|t1=to be of use|nichts|t2=nothing}}, alteration of older 
 * {{audio|de|De-Taugenichts.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m|Taugenichts|gen2=Taugenichtses|Taugenichtse}}
+{{de-noun|m,-:es}}
 
 # {{lb|de|derogatory|perhaps|_|dated}} [[good-for-nothing]]
 #: {{syn|de|Hallodri|q1=regional|Herumtreiber|Nichtsnutz|Krattler|q4=regional|Tunichtgut}}
@@ -36539,7 +36524,7 @@ From {{affix|de|taugen|t1=to be of use|nichts|t2=nothing}}, alteration of older 
 |passage=Da trat der Vater aus dem Hause; er hatte schon seit Tagesanbruch in der Mühle rumort und die Schlafmütze schief auf dem Kopfe, der sagte zu mir: „Du '''Taugenichts'''! da sonnst Du Dich schon wieder und dehnst und reckst Dir die Knochen müde, und läßt mich alle Arbeit allein thun. Ich kann Dich hier nicht länger füttern. Der Frühling ist vor der Thüre, geh auch einmal hinaus in die Welt und erwirb Dir selber Dein Brodt.“}}
 
 ====Declension====
-{{de-decl-noun-m|es|e|gs=[[Taugenichtses]],<br>Taugenichts}}
+{{de-ndecl|m,-:es}}
 
 {{cln|de|exocentric compounds}}
 -------- end text --------
@@ -36550,12 +36535,12 @@ Page 1334 Spottgedicht: -------- begin text --------
 {{affix|de|Spott|Gedicht|t1=mockery, ridicule|t2=poem}}
 
 ===Noun===
-{{de-noun|n|Spottgedichts|Spottgedichte}}
+{{de-noun|n,s:es}}
 
-# [[satirical]]
+# [[satirical]] [[poem]]
 
 ====Declension====
-{{de-decl-noun-n|(e)s|e}}
+{{de-ndecl|n,s:es}}
 
 ====Related terms====
 * {{l|de|Spottlied}}
@@ -36575,12 +36560,12 @@ Page 1335 Weihnachtsgedicht: -------- begin text --------
 {{affix|de|Weihnachten|Gedicht|t1=Christmas|t2=poem}}
 
 ===Noun===
-{{de-noun|n|Weihnachtsgedichts|Weihnachtsgedichte}}
+{{de-noun|n,s:es}}
 
 # [[Christmas]] [[poem]]
 
 ====Declension====
-{{de-decl-noun-n|(e)s|e}}
+{{de-ndecl|n,s:es}}
 
 ====Related terms====
 * {{l|de|Weihnachtsbaum}}
@@ -36604,13 +36589,13 @@ From {{bor|de|fr|dictionnaire|g=m}}.
 * {{hyph|de|Dik|tio|när}}
 
 ===Noun===
-{{de-noun|n|g2=m|Diktionärs|Diktionäre}}
+{{de-noun|n:m}}
 
 # {{lb|de|archaic}} {{syn of|de|Wörterbuch||[[dictionary]]}}
 #* {{quote-song|de|artist=Einstürzende Neubauten|year=2007|album=Alles wieder offen|title=Let's do it a Dada|text=In keinem '''Diktionär''' / hat es den Eintrag je gegeben / nur du und ich my Darling / wir wissen was es wirklich heisst|translation=In no '''dictionary''' / has there ever been this entry / just you and me my darling / we know what it really means}}
 
 ====Declension====
-{{de-decl-noun-n||en}}
+{{de-ndecl|n:m}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -36628,13 +36613,13 @@ Page 1337 Schmelztopf: -------- begin text --------
 * {{IPA|de|[ˈʃmɛlt͡s.topf]}}
 
 ===Noun===
-{{de-noun|m|Schmelztopfes|gen2=Schmelztopfes|Schmelztöpfe}}
+{{de-noun|m,s:es,^e}}
 
 # [[melting pot]]
 #* {{RQ:Halfeld|A|pages=206–207|Das Elend der Universitäten beginnt, wie wir sahen, schon bei den Grundschulen und High Schools. Diesen weist der Amerikanismus eine soziale Funktion zu, die alles andere überschattet: '''Schmelztopf''' der Rassen zu sein und die Mentalität von Kindern, deren Eltern oder Großeltern nicht nur durch Erdteile, sondern durch Kultur, Sitten und Sprache getrennt lebten, der Einheitsforderung des Adoptivlandes zu unterwerfen. Während die rein erzieherischen Aufgaben naturgemäß zurückzutreten haben, wird das geistige Individuum bewußt auf die Normalformel gebracht.|The misery of the universities begins, as we have seen, already in the primary schools and high schools. To these the Americanism assigns the social function that overshadows all: Being a melting pot of all races and subordinating the mentality of children whose parents and grandparents have not been living separated by continents, but by culture, traditions and language, to the demand of oneness of the adoptive country. Whereas the educational tasks naturally have to step back, the mental individual is being brought intentionally to the formula of normality.}}
 
 ====Declension====
-{{de-decl-noun-m|(e)s|pl=Schmelztöpfe}}
+{{de-ndecl|m,s:es,^e}}
 -------- end text --------
 Page 1338 Heterosexueller: Found match for regex: =
 Page 1338 Heterosexueller: -------- begin text --------
@@ -37262,16 +37247,15 @@ Page 1343 Bahuvrihi: Found match for regex: =
 Page 1343 Bahuvrihi: -------- begin text --------
 
 ===Etymology===
-Borrowed from {{bor|de|sa|बहुव्रीहि||much rice}}.
+Borrowed from {{bor|de|sa|बहुव्रीहि|lit=much rice}}.
 
 ===Noun===
-{{de-noun|n||Bahuvrihis}}
+{{de-noun|n,-,-:s}}
 
-# {{lb|de|grammar}} A [[bahuvrihi]] [[compound]].
+# {{lb|de|grammar}} [[bahuvrihi]] [[compound]]
 
 ====Declension====
-{{de-decl-noun-n||}}
-{{de-decl-noun-n||s}}
+{{de-ndecl|n,-,-:s}}
 -------- end text --------
 Page 1344 Minderjähriger: Found match for regex: =
 Page 1344 Minderjähriger: -------- begin text --------
@@ -37500,7 +37484,7 @@ Page 1358 Keyword-Driven Testing: -------- begin text --------
 ===Noun===
 {{de-noun|n,s.sg|nolinkhead=1}}
 
-# {{lb|de|seldom|software testing}} [[keyword-driven testing]]
+# {{lb|de|rare|software}} [[keyword-driven testing]]
 
 ====Hypernyms====
 * {{l|de|Testing}}
@@ -37521,12 +37505,12 @@ From {{affix|de|hören|Beispiel|t1=hear|t2=example}}.
 * {{rhymes|de|iːl}}
 
 ===Noun===
-{{de-noun|n|Horbeispiels|gen2=Horbeispieles|Horbeispiele}}
+{{de-noun|n,s:es}}
 
 # [[audio]] [[clip]], audio example, audio sample, audio excerpt, [[sound bite]]
 
 ====Declension====
-{{de-decl-noun-n|(e)s|e}}
+{{de-ndecl|n,s:es}}
 -------- end text --------
 Page 1360 Podex: Found match for regex: =
 Page 1360 Podex: -------- begin text --------
@@ -37539,12 +37523,12 @@ From {{bor|de|la|pōdex}}.
 * {{audio|de|De-Podex.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m|Podex|gen2=Podexes|Podexe}}
+{{de-noun|m,-:es}}
 
 # [[posterior]], [[behind]] {{q|human buttocks}}
 
 ====Declension====
-{{de-decl-noun-m|es|e|gs=[[Podexes]],<br>Podex}}
+{{de-ndecl|m,-:es}}
 -------- end text --------
 Page 1361 geflügeltes Wort: Found match for regex: =
 Page 1361 geflügeltes Wort: -------- begin text --------
@@ -37579,14 +37563,13 @@ From the Prussian composer of military music {{w|Johann Gottfried Piefke}}.
 * {{audio|de|De-Piefke.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m|gen1=Piefke|gen2=Piefkes|pl1=Piefke|pl2=Piefkes}}
+{{de-noun|m,-:s,-:s}}
 
 # {{lb|de|regional|chiefly|Northern Germany|offensive}} [[show-off]], [[stuffed shirt]]
 # {{lb|de|Austria|derogatory|ethnic slur}} (Northern) [[German]]
 
 ====Declension====
-{{de-decl-noun-m||}}
-{{de-decl-noun-m|s|s}}
+{{de-ndecl|m,-:s,-:s}}
 -------- end text --------
 Page 1363 Breydenbach: Found match for regex: {
 Page 1363 Breydenbach: -------- begin text --------
@@ -37612,7 +37595,7 @@ Page 1364 Hexenring: -------- begin text --------
 * {{hyphenation|de|He|xen|ring}}
 
 ===Noun===
-{{de-noun|m||Hexenringe}}
+{{de-noun|m,s:es}}
 
 # [[fairy ring]]
 #: {{syn|de|Feenkreis}}
@@ -37620,7 +37603,7 @@ Page 1364 Hexenring: -------- begin text --------
 #*: {{quote|de|Das als '''Hexenring''' bekannte Phänomen wird durch Pilzfruchtkörper verursacht, die sich kreisförmig um eine biologisch tote Zone ausbreiten. Im europäischen  Volksglauben stellen sie ein Tor zur Welt der Feen oder Hexen dar, ein  Paralleluniversum mit eigenen Gesetzen und Zeitdimensionen. Die Ringe zeugen von dunklen Kräften: Dämonen, Sternschnuppen, Blitzeinschlägen. Es bringt Unglück, in einen solchen Ring zu springen.|t=The phenomenon known as the '''fairy ring''' is caused by fungal fruit bodies that spread in a circle around a biologically dead zone. In European popular belief, they represent a gateway to the world of fairies or witches, a parallel universe with its own laws and time dimensions. The rings testify to dark forces: demons, falling stars, lightning strikes. It is bad luck to jump into such a ring.}}
 
 ====Declension====
-{{de-decl-noun-m|(e)s|e}}
+{{de-ndecl|m,s:es}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -37639,12 +37622,12 @@ Page 1365 Grünkern: -------- begin text --------
 * {{IPA|de|/ˈɡʁyːnkɛʁn/}}
 
 ===Noun===
-{{de-noun|m,(e)s,e}}
+{{de-noun|m,s:es}}
 
 # {{lb|de|culinary}} dried unripe [[grain]]s of [[spelt]]
 
 ====Declension====
-{{de-ndecl|m,(e)s,e}}
+{{de-ndecl|m,s:es}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -37658,13 +37641,13 @@ Page 1366 Klippdachs: -------- begin text --------
 From {{com|de|Klippe|Dachs}}, {{calque|de|nl|klipdas|nocap=1}}. First attested in the 19th century.
 
 ===Noun===
-{{de-noun|m|Klipdachses|Klipdachse}}
+{{de-noun|m}}
 
 # [[rock hyrax]], {{taxlink|Hyrax capensis|species}}
 #: {{syn|de|Klippschliefer}}
 
 ====Declension====
-{{de-decl-noun-m|es|e}}
+{{de-ndecl|m}}
 
 ====Descendants====
 * {{desc|en|klipdachs|bor=1}}
@@ -37680,15 +37663,15 @@ Page 1367 Protz: -------- begin text --------
 Perhaps from regional terms for [[toad]], from {{der|de|gmh|broʒʒen||to swell}}.
 
 ====Noun====
-{{de-noun|m|Protzes|Protze|gen2=Protzen|pl2=Protzen}}
+{{de-noun|((<m>,<m.weak>))}}
 
 # {{lb|de|derogatory}} [[braggard]], [[poseur]]
 # {{lb|de|pejorative}} [[splendor]], [[magnificence]], [[splurge]]
 #: {{syn|de|Prasserei|Pracht|Prunk|Pomp}}
+# [[tractor]] with [[artillery]]
 
 =====Declension=====
-{{de-decl-noun-m|es|e}}
-{{de-decl-noun-m|en|en}}
+{{de-ndecl|((<m>,<m.weak>))}}
 
 =====Derived terms=====
 {{der4|de
@@ -37704,9 +37687,12 @@ Perhaps from regional terms for [[toad]], from {{der|de|gmh|broʒʒen||to swell}
 From {{inh|de|gmh|broʒ||bud}}, from {{der|de|gmh|-}} {{m|gmh|broʒʒen||to sprout}}.
 
 ====Noun====
-{{de-noun|m,es:en,e:en}}
+{{de-noun|((<m>,<m.weak>))}}
 
 # {{lb|de|forestry}} [[coniferous]] [[tree]] with [[abnormal]] [[growth]]
+
+=====Declension=====
+{{de-ndecl|((<m>,<m.weak>))}}
 
 ===Further reading===
 * {{R:Duden|Protz_Aufschneider_Angeber}}
@@ -37726,19 +37712,18 @@ From {{inh|de|gmh|vlansch|t=corner, end}}. Related to {{m|de|flennen|t=to blubbe
 * {{audio|de|De-Flansch.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m|Flansches|Flansche|gen2=Flanchs}}
+{{de-noun|m,es:s}}
 
 # [[flange]]
+
+====Declension====
+{{de-ndecl|m,es:s}}
 
 ====Derived terms====
 * {{l|de|Kanalflansch}}
 * {{l|de|Kunststoffflansch}}
 * {{l|de|Maschinenflansch}}
 * {{l|de|Zwischenflansch}}
-
-====Declension====
-{{de-decl-noun-m|es|e}}
-{{de-decl-noun-m|s|e}}
 
 ===References===
 * {{R:Duden}}
@@ -37780,13 +37765,13 @@ From {{compound|de|Gesicht|Schleier|t1=face|t2=veil}}.
 * {{rhymes|de|aɪ̯ɐ}}
 
 ===Noun===
-{{de-noun|m||Gesichtschleier}}
+{{de-noun|m}}
 
 # {{lb|de|Islam}} [[niqab]]
 # {{lb|de|ornithology}} [[facial disc]]
 
 ====Declension====
-{{de-decl-noun-m|s}}
+{{de-ndecl|m}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -37834,18 +37819,16 @@ From {{inh|de|gmh|}}, from {{inh|de|goh|wulsta}}.
 * {{audio|de|De-Wulst.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m|Wulstes|gen2=Wulsts|Wülste|pl2=Wulste}} or {{de-noun|f|Wulst|Wülste|Wülstchen|dim2=Wülstlein}}
+{{de-noun|m,es:s,^e:e|dim=^chen,^lein}} ''or''<br />
+{{de-noun|f,^e:e}}
 
-# An oblong [[bulge]]
-# A [[wreath]], [[garland]]
-# {{lb|de|architecture}} A [[torus]]
+# [[oblong]] [[bulge]]
+# [[wreath]], [[garland]]
+# {{lb|de|architecture}} [[torus]]
 
 ====Declension====
-;masculine
-{{de-decl-noun-m|(e)s|pl=Wülste}}
-{{de-decl-noun-m|(e)s|pl=Wulste}}
-;feminine
-{{de-decl-noun-f|pl=Wülste}}
+{{de-ndecl|m,es:s,^e:e}}
+{{de-ndecl|f,^e:e}}
 
 ====Related terms====
 * {{l|de|wulsten}}
@@ -37868,12 +37851,12 @@ From {{bor|de|it|lingua franca||Frankish language};, the plural is from {{bor|de
 * {{hyphenation|de|Lin|gua fran|ca}}
 
 ===Noun===
-{{de-noun|f||Linguae francae}}
+{{de-noun|f,Linguae francae.nodatpln}}
 
 # [[lingua franca]]
 
 ====Declension====
-{{de-decl-noun-f|pl=Linguae francae|dp=Linguae francae}}
+{{de-ndecl|f,Linguae francae.nodatpln}}
 -------- end text --------
 Page 1375 Dritter Golfkrieg: Found match for regex: =
 Page 1375 Dritter Golfkrieg: -------- begin text --------
@@ -37902,12 +37885,12 @@ From {{der|de|gmh|far(re)}}, from {{der|de|goh|far(ro)}}, from {{inh|de|gem-pro|
 * {{audio|de|De-Farre.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m||Farren}}
+{{de-noun|m.weak}}
 
-# A young [[bull]]
+# [[young]] [[bull]]
 
 ====Declension====
-{{de-decl-noun-m|n}}
+{{de-ndecl|m.weak}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -37937,12 +37920,12 @@ Page 1378 Färberdistel: -------- begin text --------
 {{compound|de|Färber|Distel}}, i.e. "dyer's thistle".
 
 ===Noun===
-{{de-noun|f||Färberdiesteln}}
+{{de-noun|f}}
 
 # [[safflower]] (''[[Carthamus tinctorius]]'')
 
 ====Declension====
-{{de-decl-noun-f|n}}
+{{de-ndecl|f}}
 
 ====Derived terms====
 * {{l|de|Färberdistelöl}}
@@ -37951,7 +37934,7 @@ Page 1379 Argusauge: Found match for regex: =
 Page 1379 Argusauge: -------- begin text --------
 
 ===Etymology===
-{{compound|de|Argus|Auge|t1=Argus|t2=eye}}. A reference to the 100-eyed mythological Greek giant {{m|en|Argus}}
+{{compound|de|Argus|Auge|t1=Argus|t2=eye}}. A reference to the 100-eyed mythological Greek giant {{m|en|Argus}}.
 
 ===Pronunciation===
 * {{IPA|de|/ˈaʁɡʊsˌʔaʊ̯ɡə/}}
@@ -37959,12 +37942,12 @@ Page 1379 Argusauge: -------- begin text --------
 * {{audio|de|De-Argusauge.ogg|Audio}}
 
 ===Noun===
-{{de-noun|n||Argusaugen}}
+{{de-noun|n,s,n}}
 
-# [[eagle eye]]
+# {{lb|de|higher register|usually in the plural}} [[eagle eye]]
 
 ====Declension====
-{{de-decl-noun-m|s|n}}
+{{de-ndecl|n,s,n}}
 
 ====Derived terms====
 * {{l|de|argusäugig}}
@@ -37987,9 +37970,6 @@ Page 1380 Seelenverwandter: -------- begin text --------
 
 ====Declension====
 {{de-ndecl|+}}
-
-===See also===
-* [[Seelenverwandte]] {{g|f}}
 -------- end text --------
 Page 1381 Schwarzes Loch: Found match for regex: =
 Page 1381 Schwarzes Loch: -------- begin text --------
@@ -38012,12 +37992,12 @@ Page 1382 Stereolupe: -------- begin text --------
 {{prefix|de|stereo|Lupe}}
 
 ===Noun===
-{{de-noun|f||Stereolpen}}
+{{de-noun|f}}
 
 # [[stereomicroscope]]
 
 ====Declension====
-{{de-decl-noun-f|n}}
+{{de-ndecl|f}}
 -------- end text --------
 Page 1383 dunkelgelbe Karte: Found match for regex: =
 Page 1383 dunkelgelbe Karte: -------- begin text --------
@@ -38042,16 +38022,16 @@ Page 1384 Grüsch: Found match for regex: =
 Page 1384 Grüsch: -------- begin text --------
 
 ===Etymology===
-From {{inh|de|gmh|grüsch}}, {{inh|de|goh|*kruska}}.
+{{inh+|de|gmh|grüsch}}, from {{inh|de|goh|*kruska}}.
 
 ===Noun===
-{{de-noun|n,-:(e)s.sg}}
+{{de-noun|n,-:s:es.sg}}
 
 # {{lb|de|Switzerland}} [[bran]]
 #: {{syn|de|Kleie}}
 
 ====Declension====
-{{de-ndecl|n,-:(e)s.sg}}
+{{de-ndecl|n,-:s:es.sg}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -38091,12 +38071,12 @@ Page 1386 Schlipsträger: -------- begin text --------
 * {{audio|de|De-Schlipsträger.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m|Schlipsträger|Schlipsträger}}
+{{de-noun|m}}
 
 # {{lb|de|pejorative|metonymically}} [[suit]] {{qualifier|formally dressed man}}
 
 ====Declension====
-{{de-decl-noun-m|s|}}
+{{de-ndecl|m}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -38113,12 +38093,12 @@ From {{bor|de|la|liquidus}}.
 * {{audio|de|De-Liquid.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m|Liquid|Liquide}}
+{{de-noun|m}}
 
 # {{lb|de|linguistics}} [[liquid]]
 
 ====Declension====
-{{de-decl-noun-m|s|e}}
+{{de-ndecl|m}}
 
 ====Related terms====
 * {{l|de|Fließlaut}}
@@ -38135,12 +38115,12 @@ Page 1388 starke Deklination: -------- begin text --------
 * {{audio|de|De-starke Deklination.ogg|Audio}}
 
 ===Noun===
-{{de-noun|[[stark]]e<+> [[Deklination]]<f>}}
+{{de-noun|[[stark]]e<+> [[Deklination]]<f.article.sg>}}
 
 # [[strong declension]]
 
 ====Declension====
-{{de-ndecl|[[stark]]e<+> [[Deklination]]<f>}}
+{{de-ndecl|[[stark]]e<+> [[Deklination]]<f.article.sg>}}
 -------- end text --------
 Page 1389 schwache Deklination: Found match for regex: =
 Page 1389 schwache Deklination: -------- begin text --------
@@ -38150,12 +38130,12 @@ Page 1389 schwache Deklination: -------- begin text --------
 * {{audio|de|De-schwache Deklination.ogg|Audio}}
 
 ===Noun===
-{{de-noun|[[schwach]]e<+> [[Deklination]]<f>}}
+{{de-noun|[[schwach]]e<+> [[Deklination]]<f.article.sg>}}
 
 # [[weak declension]]
 
 ====Declension====
-{{de-ndecl|[[schwach]]e<+> [[Deklination]]<f>}}
+{{de-ndecl|[[schwach]]e<+> [[Deklination]]<f.article.sg>}}
 -------- end text --------
 Page 1390 gemischte Deklination: Found match for regex: =
 Page 1390 gemischte Deklination: -------- begin text --------
@@ -38165,18 +38145,18 @@ Page 1390 gemischte Deklination: -------- begin text --------
 * {{audio|de|De-gemischte_Deklination.ogg|Audio}}
 
 ===Noun===
-{{de-noun|[[gemischt]]e<+> [[Deklination]]<f>}}
+{{de-noun|[[gemischt]]e<+> [[Deklination]]<f.article.sg>}}
 
 # [[mixed declension]]
-## {{lb|de|German [[grammar]]}} A type of declension that adjectives use after {{m|de|ein}}, {{m|de|kein}}, and possessive determiners.
-## {{lb|de|German [[grammar]]}} A type of noun declension with {{m|de|-en}} in the plural, but {{m|de|-s}}, {{m|de|-es}}, {{m|de|-ens}} in the genitive singular.
-## {{lb|de|Latin|_|grammar}} A subclass of the [[third declension]] of nouns and adjectives.
+## {{lb|de|German|_|grammar}} a type of declension that adjectives use after {{m|de|ein}}, {{m|de|kein}}, and possessive determiners
+## {{lb|de|German|_|grammar}} a type of noun declension with {{m|de|-en}} in the plural, but {{m|de|-s}}, {{m|de|-es}}, {{m|de|-ens}} in the genitive singular
+## {{lb|de|Latin|_|grammar}} a subclass of the [[third declension]] of nouns and adjectives
 
 ====Usage notes====
 * With regard to German adjectives, the term “mixed declension” is generally used for simplicity. A closer analysis shows, however, that there are in fact just two declensions, strong and weak, but that there is a general rule prescribing that determiners with no declensional ending must be followed by strong adjectives, even if they are otherwise followed by weak ones. This rule is most relevant for {{m|de||ein}}, {{m|de||kein}} and possessives, but is not restricted to them. Compare {{m|de|welch|welch'''er'''}} {{m|de|schön|schön'''e'''}} {{m|de|Tag|t=which beautiful day}} with {{m|de||welch schön'''er''' Tag|t=what a beautiful day}}, in which latter the undeclined determiner causes the adjective to become strong.
 
 ====Declension====
-{{de-ndecl|[[gemischt]]e<+> [[Deklination]]<f>}}
+{{de-ndecl|[[gemischt]]e<+> [[Deklination]]<f.article.sg>}}
 -------- end text --------
 Page 1391 Pflasterstein: Found match for regex: {
 Page 1391 Pflasterstein: -------- begin text --------
@@ -38191,12 +38171,12 @@ From {{com|de|Pflaster|Stein}}.
 * {{audio|de|De-Pflasterstein.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m|Pflastersteins|gen2=Pflastersteines|Pflastersteinne}}
+{{de-noun|m,s:es}}
 
 # [[paving stone]]
 
 ====Declension====
-{{de-decl-noun-m|(e)s|e}}
+{{de-ndecl|m,s:es}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -38213,12 +38193,12 @@ Borrowed from {{bor|de|ru|уша́нка}}.
 * {{audio|de|De-Uschanka.ogg|Audio}}
 
 ===Noun===
-{{de-noun|f|Uschanka|Uschankas}}
+{{de-noun|f,s}}
 
 # [[ushanka]]
 
 ====Declension====
-{{de-decl-noun-m||pl=Uschankas}}
+{{de-ndecl|f,s}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -38229,18 +38209,18 @@ Page 1393 Showmaster: Found match for regex: =
 Page 1393 Showmaster: -------- begin text --------
 
 ===Etymology===
-From {{bor|de|en|[[show]] + [[master]]}}, [[pseudo-anglicism]].
+From {{bor|de|en|[[show]] + [[master]]}}; a [[pseudo-anglicism]].
 
 ===Pronunciation===
 * {{audio|de|De-Showmaster.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m|Showmasters|Showmaster|f=Showmasterin}}
+{{de-noun|m|f=in}}
 
 # [[host]], [[compère]], [[master of ceremonies]]
 
 ====Declension====
-{{de-decl-noun-m|s|s}}
+{{de-ndecl|m}}
 
 ====See also====
 * {{l|de|Talkmaster}}
@@ -38287,23 +38267,29 @@ Page 1396 Gammelfleischparty: Found match for regex: =
 Page 1396 Gammelfleischparty: -------- begin text --------
 
 ===Noun===
-{{de-noun|old=1}}
+{{de-noun|f,s}}
 
 # a [[party]] for people over the age of 30
+
+====Declension====
+{{de-ndecl|f,s}}
 -------- end text --------
 Page 1397 Verarbeitungsschritt: Found match for regex: =
 Page 1397 Verarbeitungsschritt: -------- begin text --------
 
 ===Noun===
-{{de-noun|old=1}}
+{{de-noun|m,s:es}}
 
 # [[processing]] [[step]]
+
+====Declension====
+{{de-ndecl|m,s:es}}
 -------- end text --------
 Page 1398 Chamenei: Found match for regex: =
 Page 1398 Chamenei: -------- begin text --------
 
 ===Etymology===
-From {{der|de|fa|خامنه‌ای|tr=xâmene'i}}.
+{{bor+|de|fa|خامنه‌ای|tr=xâmene'i}}.
 
 ===Pronunciation===
 * {{IPA|de|/ˌxaːməˈnɛɪ̯/}} {{a|usual; with idiolectal variants}}
