@@ -62,7 +62,8 @@ function export.show(frame)
 		require("Module:headword").full_headword(data)
 end
 
-pos_functions.adjectives = function(class, args, data)
+local function old_adjectives(class, args, data)
+	track("de-adj-old")
 	local params = {
 		[1] = {list = "comp"},
 		[2] = {list = "sup"},
@@ -103,6 +104,68 @@ pos_functions.adjectives = function(class, args, data)
 	table.insert(data.inflections, args[2])
 end
 
+
+pos_functions.adjectives = function(class, args, data, proper)
+	-- Compatibility with old calling convention, either if old= is given or any arg no longer supported is given.
+	if ine(args.old) or ine(args[2]) or ine(args.comp1) or ine(args.comp2) or ine(args.comp3) or
+		ine(args.sup1) or ine(args.sup2) or ine(args.sup3) or args[1] == "-" then
+		return old_adjectives(class, args, data)
+	end
+
+	local alternant_multiword_spec = require("Module:de-adjective").do_generate_forms(args, nil, "from headword")
+	data.heads = alternant_multiword_spec.args.head
+	data.id = alternant_multiword_spec.args.id
+	data.sort = alternant_multiword_spec.args.sort
+
+	local function do_adj_form(slot, label, should_be_present, accel_form)
+		local forms = alternant_multiword_spec.forms[slot]
+		local retval
+		if not forms then
+			if not should_be_present then
+				return
+			end
+			retval = {label = "no " .. label}
+		else
+			retval = {label = label, accel = accel_form and {form = accel_form} or nil}
+			local prev_footnotes
+			for _, form in ipairs(forms) do
+				local footnotes = form.footnotes
+				if footnotes and prev_footnotes and require("Module:table").deepEquals(footnotes, prev_footnotes) then
+					footnotes = nil
+				end
+				prev_footnotes = form.footnotes
+				local quals, refs = require("Module:inflection utilities").fetch_headword_qualifiers_and_references(footnotes)
+				local term = form.form
+				table.insert(retval, {term = term, qualifiers = quals, refs = refs, genders = genders})
+			end
+		end
+
+		table.insert(data.inflections, retval)
+	end
+
+	local should_comp_sup = alternant_multiword_spec.forms.comp_pred or alternant_multiword_spec.forms.sup_pred
+	do_noun_form("comp_pred", glossary_link("comparative"), should_comp_sup, "comparative")
+	do_noun_form("sup_pred", glossary_link("superlative"), should_comp_sup, "superlative")
+
+	-- Add categories.
+	for _, cat in ipairs(alternant_multiword_spec.categories) do
+		table.insert(data.categories, cat)
+	end
+
+	-- Use the "linked" form of the lemma as the head if no head= explicitly given.
+	if #data.heads == 0 then
+		data.heads = {}
+		local lemmas = alternant_multiword_spec.forms.the_lemma or {}
+		for _, lemma_obj in ipairs(lemmas) do
+			local head = alternant_multiword_spec.args.nolinkhead and lemma_obj.form or
+				require("Module:headword utilities").add_lemma_links(lemma_obj.form, alternant_multiword_spec.args.splithyph)
+			table.insert(data.heads, head)
+			-- FIXME, can't yet specify qualifiers or references for heads
+			-- local quals, refs = require("Module:inflection utilities").fetch_headword_qualifiers_and_references(lemma_obj.footnotes)
+			-- table.insert(data.heads, {term = head, qualifiers = quals, refs = refs})
+		end
+	end
+end
 
 local function old_nouns(class, args, data)
 	track("de-noun-old")
@@ -214,37 +277,12 @@ pos_functions.nouns = function(class, args, data, proper)
 		return old_nouns(class, args, data)
 	end
 
-	local m_de_noun = require("Module:User:Benwing2/de-noun")
+	local m_de_noun = require("Module:de-noun")
 	local alternant_multiword_spec = m_de_noun.do_generate_forms(args, nil, "from headword", proper)
 	data.heads = alternant_multiword_spec.args.head
 	data.genders = alternant_multiword_spec.genders
-
-	local function expand_footnotes_and_references(footnotes)
-		if not footnotes then
-			return nil
-		end
-		local quals, refs
-		for _, qualifier in ipairs(footnotes) do
-			local this_footnote, this_refs =
-				require("Module:inflection utilities").expand_footnote_or_references(qualifier, "return raw")
-			if this_refs then
-				if not refs then
-					refs = this_refs
-				else
-					for _, ref in ipairs(this_refs) do
-						table.insert(refs, ref)
-					end
-				end
-			else
-				if not quals then
-					quals = {this_footnote}
-				else
-					table.insert(quals, this_footnote)
-				end
-			end
-		end
-		return quals, refs
-	end
+	data.id = alternant_multiword_spec.args.id
+	data.sort = alternant_multiword_spec.args.sort
 
 	local function get_nom_articles(alternant_multiword_spec)
 		local articles = {}
@@ -303,7 +341,7 @@ pos_functions.nouns = function(class, args, data, proper)
 					footnotes = nil
 				end
 				prev_footnotes = form.footnotes
-				local quals, refs = expand_footnotes_and_references(footnotes)
+				local quals, refs = require("Module:inflection utilities").fetch_headword_qualifiers_and_references(footnotes)
 				local term = form.form
 				if prefix then
 					if not term:find("[%[%]]") then
