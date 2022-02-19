@@ -78,6 +78,12 @@ local function rsubb(term, foo, bar)
 end
 
 
+local function track(page)
+	require("Module:debug").track("de-noun/" .. page)
+	return true
+end
+
+
 local states = { "str", "wk", "mix" }
 local definitenesses = { "ind", "def" }
 local cases = { "nom", "gen", "dat", "acc", "abl", "voc" }
@@ -387,6 +393,8 @@ local function add_archaic_dative_singular(base, gender, def_gen)
 			dat_ending = "e"
 		elseif ending_form == "ses" then
 			dat_ending = "se"
+		elseif base.props.dat_with_e then
+			dat_ending = "e"
 		end
 		if dat_ending then
 			add(base, "dat_s", nil, dat_ending, gender, iut.combine_footnotes(ending.footnotes, {archaic_dative_note}))
@@ -395,10 +403,13 @@ local function add_archaic_dative_singular(base, gender, def_gen)
 end
 
 
-local function get_n_ending(stem)
+local function get_n_ending(base, stem, is_sg)
 	if rfind(stem, "e$") or rfind(stem, "e[lr]$") and not rfind(stem, com.NV .. "[ei]e[lr]$") then
 		-- [[Kammer]], [[Feier]], [[Leier]], but not [[Spur]], [[Beer]], [[Manier]], [[Schmier]] or [[Vier]]
 		-- similarly, [[Achsel]], [[Gabel]], [[Tafel]], etc. but not [[Ziel]]
+		return "n"
+	elseif base.props.sync_sg and is_sg then
+		-- ''des Herrn'', ''des Satyrn'', etc.
 		return "n"
 	elseif rfind(stem, "[^aeAE]in$") then
 		-- [[Chinesin]], [[Doktorin]], etc.; but not words in -ein or -ain such as [[Pein]]
@@ -413,7 +424,7 @@ local function get_default_gen(base, gender)
 	if gender == "f" then
 		return ""
 	elseif base.props.weak then
-		return get_n_ending(base.lemma)
+		return get_n_ending(base, base.lemma, "is singular")
 	elseif rfind(base.lemma, "nis$") then
 		-- neuter like [[Erlebnis]], [[Geheimnis]] or occasional masculine like [[Firnis]], [[Penis]]
 		return "ses"
@@ -433,8 +444,12 @@ local function get_default_pl(base, gender)
 		-- neuter like [[Erlebnis]], [[Geheimnis]] or feminine like [[Kenntnis]], [[Wildnis]],
 		-- or occasional masculine like [[Firnis]], [[Penis]]
 		return "se"
-	elseif gender == "f" or base.props.weak or rfind(base.lemma, "e$") then
-		return get_n_ending(base.lemma)
+	elseif gender == "f" or base.props.weak then
+		return get_n_ending(base, base.lemma)
+	elseif rfind(base.lemma, "e$") then
+		track("default-pl-e-not-f-or-weak")
+		-- FIXME: This should return "s"
+		return get_n_ending(base, base.lemma)
 	elseif gender == "n" and rfind(base.lemma, "lein$") then
 		-- Diminutives in -lein (those in -chen will automatically get a null ending from -en below)
 		return ""
@@ -471,7 +486,7 @@ local function decline_singular_and_plural(base, gender, def_gen, def_pl)
 	add(base, "nom_s", nil, "", gender)
 	add_spec(base, "gen_s", base.gens, gender, def_gen)
 	if base.props.weak then
-		local ending = get_n_ending(base.lemma)
+		local ending = get_n_ending(base, base.lemma, "is singular")
 		add(base, "dat_s", nil, ending, gender)
 		add(base, "acc_s", nil, gender == "m" and ending or "", gender)
 	else
@@ -951,7 +966,7 @@ local function parse_indicator_spec(angle_bracket_spec, lemma, pagename, proper_
 					end
 				end
 				base.number = part
-			elseif not base.props.adj and (part == "weak" or part == "ss" or part == "nodatpln" or part == "article") then
+			elseif not base.props.adj and (part == "weak" or part == "ss" or part == "nodatpln" or part == "article" or part == "dat_with_e" or part == "sync_sg") then
 				if base.props[part] then
 					parse_err("Can't specify '" .. part .. "' twice")
 				end
@@ -990,8 +1005,6 @@ end
 
 
 local function detect_indicator_spec(alternant_multiword_spec, base)
-	base.number = base.number or base.props.surname and "both" or base.pls and "both" or
-		(alternant_multiword_spec.props.is_proper or base.props.toponym) and "sg" or "both"
 	if base.props.article then
 		alternant_multiword_spec.props.article = true
 	end
@@ -1003,6 +1016,8 @@ local function detect_indicator_spec(alternant_multiword_spec, base)
 		synthesize_adj_lemma(base)
 	else
 		-- Set default values.
+		base.number = base.number or base.props.surname and "both" or base.pls and "both" or
+			(alternant_multiword_spec.props.is_proper or base.props.toponym) and "sg" or "both"
 		if base.props.surname then
 			alternant_multiword_spec.props.surname = true
 		else
@@ -1410,7 +1425,8 @@ local function process_dim_m_f_n(alternant_multiword_spec, arg_specs, default, l
 			error(msg .. ": " .. spec)
 		end
 		local segments = iut.parse_balanced_segment_run(spec, "[", "]")
-		local ending_specs = com.fetch_specs(iut, segments, ",", desc, nil, parse_err)
+		-- Allow comma (preferred) or colon as separator.
+		local ending_specs = com.fetch_specs(iut, segments, "[,:]", desc, nil, parse_err)
 
 		-- FIXME, this should propagate the 'ss' property upwards
 		local props = {}
@@ -1479,6 +1495,47 @@ local noun_template_both = [=[
 |-
 ! style="background:#BBC9D0" | accusative
 | style="background:#EEEEEE" | {art_ind_acc_s}
+| style="background:#EEEEEE" | {art_def_acc_s}
+| {acc_s}
+| style="background:#EEEEEE" | {art_def_acc_p}
+| {acc_p}
+|{\cl}{notes_clause}</div></div>]=]
+
+
+local noun_template_both_no_indef = [=[
+<div class="NavFrame" style="width:93%">
+<div class="NavHead">{title}{annotation}</div>
+<div class="NavContent">
+{\op}| border="1px solid #505050" style="border-collapse:collapse; background:#FAFAFA; text-align:center; width:100%" class="inflection-table inflection-table-de inflection-table-de-{decl_type}"
+! style="background:#AAB8C0;width:15%" |
+! colspan="2" style="background:#AAB8C0;width:39%" | singular
+! colspan="2" style="background:#AAB8C0;width:39%" | plural
+|-
+! style="background:#BBC9D0" |
+! style="background:#BBC9D0;width:7%" | [[definite article|def.]]
+! style="background:#BBC9D0;width:32%" | noun
+! style="background:#BBC9D0;width:7%" | [[definite article|def.]]
+! style="background:#BBC9D0;width:32%" | noun
+|-
+! style="background:#BBC9D0" | nominative
+| style="background:#EEEEEE" | {art_def_nom_s}
+| {nom_s}
+| style="background:#EEEEEE" | {art_def_nom_p}
+| {nom_p}
+|-
+! style="background:#BBC9D0" | genitive
+| style="background:#EEEEEE" | {art_def_gen_s}
+| {gen_s}
+| style="background:#EEEEEE" | {art_def_gen_p}
+| {gen_p}
+|-
+! style="background:#BBC9D0" | dative
+| style="background:#EEEEEE" | {art_def_dat_s}
+| {dat_s}
+| style="background:#EEEEEE" | {art_def_dat_p}
+| {dat_p}
+|-
+! style="background:#BBC9D0" | accusative
 | style="background:#EEEEEE" | {art_def_acc_s}
 | {acc_s}
 | style="background:#EEEEEE" | {art_def_acc_p}
@@ -1847,11 +1904,11 @@ local function make_table(alternant_multiword_spec)
 			forms.gender = "''" .. table.concat(genderdesc_parts, " or ") .. " gender ''"
 		end
 	else
+		local no_indef = alternant_multiword_spec.props.toponym or alternant_multiword_spec.props.article
 		table_spec =
-			alternant_multiword_spec.number == "sg" and (
-				alternant_multiword_spec.props.toponym and noun_template_sg_no_indef or	noun_template_sg) or
+			alternant_multiword_spec.number == "sg" and (no_indef and noun_template_sg_no_indef or noun_template_sg) or
 			alternant_multiword_spec.number == "pl" and noun_template_pl or
-			noun_template_both
+			(no_indef and noun_template_both_no_indef or noun_template_both)
 		if forms.abl_s ~= "—" or forms.voc_s ~= "—" then
 			forms.abl_voc_clause = m_string_utilities.format(noun_template_abl_voc, forms)
 		else
@@ -1925,7 +1982,9 @@ function export.do_generate_forms(parent_args, pos, from_headword, is_proper, de
 	alternant_multiword_spec.props = {}
 	alternant_multiword_spec.props.is_proper = is_proper
 	detect_all_indicator_specs(alternant_multiword_spec)
-	propagate_properties(alternant_multiword_spec, "number", "both", "both")
+	local default_number =
+		(alternant_multiword_spec.props.is_proper or alternant_multiword_spec.props.toponym) and "sg" or "both"
+	propagate_properties(alternant_multiword_spec, "number", default_number, "both")
 	-- FIXME, maybe should check that noun genders match adjective genders
 	determine_adjectival_genders(alternant_multiword_spec)
 	determine_noun_status(alternant_multiword_spec)
