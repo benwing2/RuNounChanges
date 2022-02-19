@@ -93,7 +93,6 @@ local gender_spec_to_full_gender = {
 	m = "masculine",
 	f = "feminine",
 	n = "neuter",
-	p = "plural",
 }
 
 local case_set = m_table.listToSet(cases)
@@ -904,9 +903,8 @@ local function parse_indicator_spec(angle_bracket_spec, lemma, pagename, proper_
 				if saw_adj then
 					if #base.genders > 1 then
 						parse_err("Internal error: More than one gender spec for adjectival declension")
-					elseif base.genders[1].footnotes then
-						parse_err("Can't specify footnotes with '+', '+p' or 'p+' for adjectival declension")
 					else
+						base.adj_or_pl_footnotes = base.genders[1].footnotes
 						base.props.adj = true
 						base.genders = {}
 					end
@@ -914,9 +912,11 @@ local function parse_indicator_spec(angle_bracket_spec, lemma, pagename, proper_
 				if saw_pl then
 					if #base.genders > 1 then
 						parse_err("Internal error: More than one gender spec when gender spec is plural")
-					elseif #base.genders > 0 and base.genders[1].footnotes then
-						parse_err("Can't specify footnotes with 'pl' gender spec")
 					else
+						if #base.genders > 0 then
+							-- base.genders will have been emptied out already with '+p'/'p+' spec
+							base.adj_or_pl_footnotes = base.genders[1].footnotes
+						end
 						base.genders = {}
 						base.number = "pl"
 					end
@@ -1162,20 +1162,14 @@ local function propagate_properties(alternant_multiword_spec, property, default_
 end
 
 
--- Find the first noun in a multiword expression and set alternant_multiword_spec.first_noun
--- to the index of that noun. Also find the first adjective and set alternant_multiword_spec.first_adj
--- similarly. If there is a first noun, we use its properties to determine the overall expression's
--- properties; otherwise we use the first adjective's properties, otherwise the first word's properties.
--- If the "word" located this way is not an alternant spec, we just use its properties directly, otherwise
--- we use the properties of the first noun (or failing that the first adjective, or failing that the
--- first word) in each alternative alternant in the alternant spec. For this reason, we need to set the
--- the .first_noun of and .first_adj of each multiword expression embedded in the first noun alternant spec,
--- and the .first_adj of each multiword expression in each adjective alternant spec leading up to the
--- first noun alternant spec.
+-- Set the gender of adjectives and adjectival nouns to the gender autodetected during synthesize_adj_lemma(),
+-- unless the form is plural. We don't just set the gender directly in synthesize_adj_lemma() because we don't know
+-- until later (i.e. when propagate_properties() is called) whether an adjectival form in -e is feminine or plural.
+-- We set the footnotes (i.e. qualifiers) of the gender to the footnotes (if any) specified directly after '+'.
 local function determine_adjectival_genders(alternant_multiword_spec)
 	iut.map_word_specs(alternant_multiword_spec, function(base)
 		if base.props.adj and base.number ~= "pl" then
-			base.genders = {{form = base.autodetected_gender}}
+			base.genders = {{form = base.autodetected_gender, footnotes = base.adj_or_pl_footnotes}}
 		end
 	end)
 end
@@ -1309,19 +1303,27 @@ local function compute_categories_and_annotation(alternant_multiword_spec)
 	local annparts = {}
 	local genderdescs = {}
 	local decldescs = {}
+
+	for _, genderspec in ipairs(alternant_multiword_spec.genders) do
+		local genderdesc_parts = {}
+		if genderspec.spec == "p" then
+			table.insert(genderdesc_parts, "pl-only")
+		else
+			table.insert(genderdesc_parts, gender_spec_to_full_gender[genderspec.spec])
+		end
+		if genderspec.qualifiers then
+			table.insert(genderdesc_parts, " ''(")
+			table.insert(genderdesc_parts, table.concat(genderspec.qualifiers, ", "))
+			table.insert(genderdesc_parts, ")''")
+		end
+		table.insert(genderdescs, table.concat(genderdesc_parts))
+	end
+
 	local function do_word_spec(base)
 		local saw_m_or_n = false
 		for _, gender in ipairs(base.genders) do
-			if gender.form == "m" then
-				m_table.insertIfNot(genderdescs, "masc")
+			if gender.form == "m" or gender.form == "n" then
 				saw_m_or_n = true
-			elseif gender.form == "f" then
-				m_table.insertIfNot(genderdescs, "fem")
-			elseif gender.form == "n" then
-				m_table.insertIfNot(genderdescs, "neut")
-				saw_m_or_n = true
-			else
-				error("Internal error: Unrecognized gender '" .. gender.form .. "'")
 			end
 		end
 		if base.props.surname then
@@ -1351,8 +1353,8 @@ local function compute_categories_and_annotation(alternant_multiword_spec)
 			do_word_spec(alternant_or_word_spec)
 		end
 	end
-	if alternant_multiword_spec.number ~= "both" then
-		table.insert(annparts, alternant_multiword_spec.number == "sg" and "sg-only" or "pl-only")
+	if alternant_multiword_spec.number == "sg" then
+		table.insert(annparts, "sg-only")
 	end
 	if #genderdescs > 0 then
 		table.insert(annparts, table.concat(genderdescs, " // "))
@@ -1364,40 +1366,44 @@ local function compute_categories_and_annotation(alternant_multiword_spec)
 		insert("adjectival ~")
 		table.insert(annparts, "adjectival")
 	end
-	alternant_multiword_spec.annotation = table.concat(annparts, " ")
+	alternant_multiword_spec.annotation = table.concat(annparts, ", ")
 end
 
 
-function export.get_lemmas(alternant_multiword_spec)
+function export.get_lemmas(alternant_multiword_spec, linked_variant)
+	local slots_to_fetch
 	if alternant_multiword_spec.props.surname then
-		return alternant_multiword_spec.forms.nom_m_s or {}
+		slots_to_fetch = {"nom_m_s"}
 	elseif alternant_multiword_spec.props.overall_adj then
-		return alternant_multiword_spec.forms.str_nom_s or alternant_multiword_spec.forms.str_nom_p or {}
+		slots_to_fetch = {"str_nom_s", "str_nom_p"}
 	else
-		return alternant_multiword_spec.forms.nom_s or alternant_multiword_spec.forms.nom_p or {}
+		slots_to_fetch = {"nom_s", "nom_p"}
 	end
+	local linked_suf = linked_variant and "_linked" or ""
+	for _, slot in ipairs(slots_to_fetch) do
+		if alternant_multiword_spec.forms[slot .. linked_suf] then
+			return alternant_multiword_spec.forms[slot .. linked_suf]
+		end
+	end
+	return {}
 end
 
 
 local function compute_headword_genders(alternant_multiword_spec)
-	local genders = {}
-	if alternant_multiword_spec.number == "pl" then
-		return {{spec = "p"}}
-	end
+	alternant_multiword_spec.genders = {}
 	iut.map_word_specs(alternant_multiword_spec, function(base)
-		for _, genderspec in ipairs(base.genders) do
+		local genders = base.genders
+		if base.number == "pl" then
+			-- Initialize the qualifiers of the plural "gender" to the footnotes (if any) specified after 'p', '+p' or 'p+'
+			-- in the indicator spec.
+			genders = {{form = "p", footnotes = base.adj_or_pl_footnotes}}
+		end
+		for _, genderspec in ipairs(genders) do
 			-- Create the new spec to insert.
-			local spec = {spec = genderspec.form}
-			if genderspec.footnotes then
-				local qualifiers = {}
-				for _, footnote in ipairs(genderspec.footnotes) do
-					m_table.insertIfNot(qualifiers, iut.expand_footnote_or_references(footnote, "return raw", "no parse refs"))
-				end
-				spec.qualifiers = qualifiers
-			end
+			local spec = {spec = genderspec.form, qualifiers = genderspec.footnotes}
 			-- See if the gender of the spec is already present; if so, combine qualifiers.
 			local saw_existing = false
-			for _, existing_spec in ipairs(genders) do
+			for _, existing_spec in ipairs(alternant_multiword_spec.genders) do
 				if existing_spec.spec == spec.spec then
 					existing_spec.qualifiers = iut.combine_footnotes(existing_spec.qualifiers, spec.qualifiers)
 					saw_existing = true
@@ -1406,11 +1412,22 @@ local function compute_headword_genders(alternant_multiword_spec)
 			end
 			-- If not, add gender.
 			if not saw_existing then
-				table.insert(genders, spec)
+				table.insert(alternant_multiword_spec.genders, spec)
 			end
 		end
 	end)
-	return genders
+	-- Now convert the footnotes in the gender specs to qualifiers. This involves removing brackets and expanding any
+	-- footnote abbreviations.
+	for _, genderspec in ipairs(alternant_multiword_spec.genders) do
+		if genderspec.qualifiers then
+			local processed_qualifiers = {}
+			for _, qualifier in ipairs(genderspec.qualifiers) do
+				m_table.insertIfNot(processed_qualifiers,
+					iut.expand_footnote_or_references(qualifier, "return raw", "no parse refs"))
+			end
+			genderspec.qualifiers = processed_qualifiers
+		end
+	end
 end
 
 
@@ -1883,7 +1900,7 @@ local function make_table(alternant_multiword_spec)
 	if annotation == "" then
 		forms.annotation = ""
 	else
-		forms.annotation = " (<span style=\"font-size: smaller;\">" .. annotation .. "</span>)"
+		forms.annotation = " [<span style=\"font-size: smaller;\">" .. annotation .. "</span>]"
 	end
 
 	local table_spec
@@ -1999,8 +2016,8 @@ function export.do_generate_forms(parent_args, pos, from_headword, is_proper, de
 	}
 	iut.inflect_multiword_or_alternant_multiword_spec(alternant_multiword_spec, inflect_props)
 	compute_articles(alternant_multiword_spec)
+	compute_headword_genders(alternant_multiword_spec)
 	compute_categories_and_annotation(alternant_multiword_spec)
-	alternant_multiword_spec.genders = compute_headword_genders(alternant_multiword_spec)
 	if from_headword or pretend_from_headword then
 		process_dim_m_f_n(alternant_multiword_spec, args.dim, "^chen", nil, "dim", "diminutive")
 		process_dim_m_f_n(alternant_multiword_spec, args.f, alternant_multiword_spec.forms.f_equiv,
