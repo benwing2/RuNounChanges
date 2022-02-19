@@ -1981,6 +1981,11 @@ From {{m|de|homosexuell}}.
 * {{l|de|Tucke}}
 * {{l|de|Transvestit}}
 
+===Noun===
+{{head|de|noun form|g=f}}
+
+# {{inflection of|de|Homosexuelle||str|gen//dat|s|;|str|gen|p}}
+
 ===Further reading===
 * {{R:Duden}}
 * {{R:DWDS}}
@@ -3739,11 +3744,9 @@ From {{m|de|homosexuell}}.
 {{de-ndecl|+}}
 
 ===Noun===
-{{head|de|noun form|g=m|cat2=noun plural forms}}
+{{head|de|noun form|g=m}}
 
-# {{inflection of|de|Homosexueller||nom|indef|p}}
-# {{inflection of|de|Homosexueller||acc|indef|p}}
-# {{inflection of|de|Homosexueller||nom|def|s}}
+# {{inflection of|de|Homosexueller||str|nom//acc|p|;|wk|nom|s}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -6694,6 +6697,11 @@ Page 172 Obdachlose: -------- begin text --------
 ====Related terms====
 * {{l|de|obdachlos}}
 
+===Noun===
+{{head|de|noun form|g=m}}
+
+# {{inflection of|de|Obdachloser||str|nom//acc|p|;|wk|nom|s}}
+
 ===Further reading===
 * {{R:Duden}}
 -------- end text --------
@@ -7668,17 +7676,17 @@ From {{inh|de|gmh|tūbe}}, from {{inh|de|goh|tūba}}, from {{inh|de|gem-pro|*dū
 Substantivization of {{m|de|taub||deaf}}.
 
 ====Noun====
-{{head|de|noun form|g=m}}
-
-# {{inflection of|de|Tauber||str|nom//acc|p|;|wk|nom|s}}
-
-====Noun====
 {{de-noun|+|m=+}}
 
 # {{female equivalent of|de|Tauber}}: [[deaf]] [[woman]] or [[girl]]
 
 =====Declension=====
 {{de-ndecl|+}}
+
+====Noun====
+{{head|de|noun form|g=m}}
+
+# {{inflection of|de|Tauber||str|nom//acc|p|;|wk|nom|s}}
 
 ===Etymology 3===
 
@@ -9916,17 +9924,17 @@ From the adjective {{m|de|alt}}.
 * {{rhymes|de|altə|s=2}}
 
 ===Noun===
-{{head|de|noun form|g=m}}
-
-# {{inflection of|de|Alter||str|nom//acc|p|;|wk|nom|s}}
-
-===Noun===
 {{de-noun|+|m=+}}
 
 # {{female equivalent of|de|Alter}}: [[old]] [[woman]]
 
 ====Declension====
 {{de-ndecl|+}}
+
+===Noun===
+{{head|de|noun form|g=m}}
+
+# {{inflection of|de|Alter||str|nom//acc|p|;|wk|nom|s}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -10092,17 +10100,17 @@ From {{inh|de|gmh|vīge}}, from {{inh|de|goh|fīga}}, from {{der|de|fro|figue}},
 ===Etymology 2===
 
 ====Noun====
-{{head|de|noun form|g=m}}
-
-# {{inflection of|de|Feiger||str|nom//acc|p|;|wk|nom|s|t=cowardly person}}
-
-====Noun====
 {{de-noun|+|m=+}}
 
 # {{lb|de|rare}} {{female equivalent of|de|Feiger}}: [[cowardly]] [[woman]]
 
 =====Declension=====
 {{de-ndecl|+}}
+
+====Noun====
+{{head|de|noun form|g=m}}
+
+# {{inflection of|de|Feiger||str|nom//acc|p|;|wk|nom|s|t=cowardly person}}
 
 ===Further reading===
 * {{R:DWDS}}
@@ -10435,6 +10443,11 @@ Substantivization of the adjective {{m|de|irre}}.
 
 ====Declension====
 {{de-ndecl|+}}
+
+===Noun===
+{{head|de|noun form|g=m}}
+
+# {{inflection of|de|Irrer||str|nom//acc|p|;|wk|nom|s}}
 -------- end text --------
 Page 262 Gemeinschaftsgefühl: Found match for regex: =
 Page 262 Gemeinschaftsgefühl: -------- begin text --------
@@ -11351,17 +11364,17 @@ From {{inh|de|goh|wīsa}}, from {{inh|de|gem-pro|*wīsaz||wise}}.
 ===Etymology 2===
 
 ====Noun====
-{{head|de|noun form|g=m}}
-
-# {{inflection of|de|Weiser||str|nom//acc|p|;|wk|nom|s}}
-
-====Noun====
 {{de-noun|+|m=+}}
 
 # {{female equivalent of|de|Weiser}}: [[female]] [[sage]], [[wisewoman]]
 
 =====Declension=====
 {{de-ndecl|+}}
+
+====Noun====
+{{head|de|noun form|g=m}}
+
+# {{inflection of|de|Weiser||str|nom//acc|p|;|wk|nom|s}}
 
 ===Further reading===
 * {{R:DWDS}}
@@ -12362,11 +12375,9 @@ Compound of [[außer]]/[[außerhalb]] "[[outside]]" (of) + [[irdisch]]/[[Erde]] 
 {{de-ndecl|+}}
 
 ===Noun===
-{{head|de|noun form}}
+{{head|de|noun form|g=m}}
 
-# {{inflection of|de|Außerirdischer||weak|nom|s}}
-# {{inflection of|de|Außerirdischer||strong|nom|p}}
-# {{inflection of|de|Außerirdischer||strong|acc|p}}
+# {{inflection of|de|Außerirdischer||str|nom//acc|p|;|wk|nom|s}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -12755,6 +12766,11 @@ From {{m|de|schwul}}.
 |Schwulentreff
 |Schwulenverband
 }}
+
+===Noun===
+{{head|de|noun form|g=f}}
+
+# {{inflection of|de|Schwule||str|gen//dat|s|;|str|gen|p}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -13579,11 +13595,6 @@ Page 351 Ungläubige: -------- begin text --------
 * {{audio|de|De-Ungläubige.ogg|Audio}}
 
 ===Noun===
-{{head|de|noun form|g=m}}
-
-# {{inflection of|de|Ungläubiger||str|nom//acc|p|;|wk|nom|s}}
-
-===Noun===
 {{de-noun|+|m=+}}
 
 # {{lb|de|religion}} {{female equivalent of|de|Ungläubiger}}: [[female]] [[infidel]]/[[heathen]]/[[disbeliever]]/[[unbeliever]]
@@ -13592,6 +13603,11 @@ Page 351 Ungläubige: -------- begin text --------
 
 ====Declension====
 {{de-ndecl|+}}
+
+===Noun===
+{{head|de|noun form|g=m}}
+
+# {{inflection of|de|Ungläubiger||str|nom//acc|p|;|wk|nom|s}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -13864,6 +13880,11 @@ Page 361 Verlobte: -------- begin text --------
 ====Declension====
 {{de-ndecl|+}}
 
+===Noun===
+{{head|de|noun form|g=m}}
+
+# {{inflection of|de|Verlobter||str|nom//acc|p|;|wk|nom|s}}
+
 ====Related terms====
 * {{l|de|verloben}}
 * {{l|de|Verlobung}}
@@ -14114,6 +14135,11 @@ Page 368 Prostituierte: -------- begin text --------
 |Prostitution
 }}
 
+===Noun===
+{{head|de|noun form|g=m}}
+
+# {{inflection of|de|Prostituierter||str|nom//acc|p|;|wk|nom|s}}
+
 ===Further reading===
 * {{R:DWDS}}
 * {{R:UniLeipzig}}
@@ -14222,17 +14248,17 @@ Page 372 Schaulustige: -------- begin text --------
 * {{audio|de|De-Schaulustige.ogg|Audio}}
 
 ===Noun===
-{{head|de|noun form|g=m}}
-
-# {{inflection of|de|Schaulustiger||wk|nom|s|;|str|nom//acc|p}}
-
-===Noun===
 {{de-noun|+|m=+}}
 
 # {{female equivalent of|de|Schaulustiger}}: [[female]] [[rubbernecker]], [[female]] [[onlooker]]
 
 ====Declension====
 {{de-ndecl|+}}
+
+===Noun===
+{{head|de|noun form|g=m}}
+
+# {{inflection of|de|Schaulustiger||wk|nom|s|;|str|nom//acc|p}}
 -------- end text --------
 Page 373 Swen: Found match for regex: =
 Page 373 Swen: -------- begin text --------
@@ -15498,6 +15524,11 @@ Substantivization of {{m|de|jugendlich||youthful}}.
 ====Declension====
 {{de-ndecl|+}}
 
+===Noun===
+{{head|de|noun form|g=m}}
+
+# {{inflection of|de|Jugendlicher||str|nom//acc|p|;|wk|nom|s}}
+
 ===Further reading===
 * {{R:DWDS}}
 * {{R:UniLeipzig}}
@@ -15717,16 +15748,15 @@ Page 426 Auszubildende: -------- begin text --------
 {{de-noun|+|m=+}}
 
 # {{female equivalent of|de|Auszubildender}}: [[female]] [[appentice]], [[female]] [[trainee]]
+#: {{syn|de|Azubi<qq:somewhat informal>|Azubine<qq:colloquial, humorous>|Lehrling}}
 
 ====Declension====
 {{de-ndecl|+}}
 
-====Synonyms====
-* {{l|de|Azubi}} ([[Azubine]])
-* {{l|de|Lehrling}}
+===Noun===
+{{head|de|noun form|g=m}}
 
-====Coordinate terms====
-* {{l|de|Auszubildender}}
+# {{inflection of|de|Auszubildender||str|nom//acc|p|;|wk|nom|s}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -16089,11 +16119,6 @@ Page 440 Alkoholkranke: -------- begin text --------
 * {{audio|de|De-Alkoholkranke.ogg|Audio}}
 
 ===Noun===
-{{head|de|noun form|g=m}}
-
-# {{inflection of|de|Alkoholkranker||str|nom//acc|p|;|wk|nom|s}}
-
-===Noun===
 {{de-noun|+|m=+}}
 
 # {{female equivalent of|de|Alkoholkranker}}: [[female]] [[alcoholic]]
@@ -16101,6 +16126,11 @@ Page 440 Alkoholkranke: -------- begin text --------
 
 ====Declension====
 {{de-ndecl|+}}
+
+===Noun===
+{{head|de|noun form|g=m}}
+
+# {{inflection of|de|Alkoholkranker||str|nom//acc|p|;|wk|nom|s}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -16384,11 +16414,9 @@ Page 448 Verwandte: -------- begin text --------
 }}
 
 ===Noun===
-{{head|de|noun form}}
+{{head|de|noun form|g=m}}
 
-# {{inflection of|de|Verwandter||weak|nom|s}}
-# {{inflection of|de|Verwandter||strong|nom|p}}
-# {{inflection of|de|Verwandter||strong|acc|p}}
+# {{inflection of|de|Verwandter||str|nom//acc|p|;|wk|nom|s}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -16434,11 +16462,9 @@ Page 449 Verwandter: -------- begin text --------
 * {{l|de|verwandtschaftlich}}
 
 ===Noun===
-{{head|de|noun form}}
+{{head|de|noun form|g=f}}
 
-# {{inflection of|de|Verwandte||strong|gen|s}}
-# {{inflection of|de|Verwandte||strong|dat|s}}
-# {{inflection of|de|Verwandte||strong|gen|p}}
+# {{inflection of|de|Verwandte||str|gen//dat|s|;|str|gen|p}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -18502,6 +18528,11 @@ From {{m|de|bekannt}}.
 ====Related terms====
 * {{l|de|Bekanntschaft}}
 
+===Noun===
+{{head|de|noun form|g=f}}
+
+# {{inflection of|de|Bekannte||str|gen//dat|s|;|str|gen|p}}
+
 ===Further reading===
 * {{R:Duden}}
 * {{R:DWDS}}
@@ -18520,6 +18551,11 @@ Page 525 Bekannte: -------- begin text --------
 
 ====Declension====
 {{de-ndecl|+}}
+
+===Noun===
+{{head|de|noun form|g=m}}
+
+# {{inflection of|de|Bekannter||str|nom//acc|p|;|wk|nom|s}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -18748,6 +18784,11 @@ Substantivation of {{m|de|tot}}.
 ====Declension====
 {{de-ndecl|+}}
 
+===Noun===
+{{head|de|noun form|g=f}}
+
+# {{inflection of|de|Tote||str|gen//dat|s|;|str|gen|p}}
+
 ===Further reading===
 * {{R:Duden}}
 -------- end text --------
@@ -18858,7 +18899,7 @@ Substantivization of {{m|de|interniert||interned}}.
 {{de-ndecl|+}}
 
 ===Noun===
-{{head|de|noun form|head=Internierter}}
+{{head|de|noun form|g=f}}
 
 # {{inflection of|de|Internierte||str|gen//dat|s|;|str|gen|p}}
 
@@ -18887,6 +18928,11 @@ Substantivization of {{m|de|jugendlich||youthful}}.
 
 ====Declension====
 {{de-ndecl|+}}
+
+===Noun===
+{{head|de|noun form|g=f}}
+
+# {{inflection of|de|Jugendliche||str|gen//dat|s|;|str|gen|p}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -19487,6 +19533,11 @@ Page 563 Leidtragende: -------- begin text --------
 ====Declension====
 {{de-ndecl|+}}
 
+===Noun===
+{{head|de|noun form|g=m}}
+
+# {{inflection of|de|Leidtragender||str|nom//acc|p|;|wk|nom|s}}
+
 ===Further reading===
 * {{R:Duden}}
 -------- end text --------
@@ -19503,6 +19554,11 @@ Page 564 Leidtragender: -------- begin text --------
 
 ====Declension====
 {{de-ndecl|+}}
+
+===Noun===
+{{head|de|noun form|g=f}}
+
+# {{inflection of|de|Leidtragende||str|gen//dat|s|;|str|gen|p}}
 -------- end text --------
 Page 565 Meschede: Found match for regex: {
 Page 565 Meschede: -------- begin text --------
@@ -19623,7 +19679,7 @@ Page 568 Linke: -------- begin text --------
 * {{l|de|Rechte}}
 
 ===Noun===
-{{head|de|noun form}}
+{{head|de|noun form|g=m}}
 
 # {{inflection of|de|Linker||str|nom//acc|p|;|wk|nom|s}}
 
@@ -20684,6 +20740,11 @@ Substantivization of {{m|de|geliebt||loved, beloved}}, the past participle of {{
 ====Declension====
 {{de-ndecl|+}}
 
+===Noun===
+{{head|de|noun form|g=m}}
+
+# {{inflection of|de|Geliebter||str|nom//acc|p|;|wk|nom|s}}
+
 ===Further reading===
 * {{R:Duden}}
 
@@ -20917,6 +20978,11 @@ Substantivization of {{m|de|taub}}.
 
 =====Declension=====
 {{de-ndecl|+}}
+
+===Noun===
+{{head|de|noun form|g=f}}
+
+# {{inflection of|de|Taube||str|gen//dat|s|;|str|gen|p}}
 -------- end text --------
 Page 613 Pfingstmontag: Found match for regex: =
 Page 613 Pfingstmontag: -------- begin text --------
@@ -21031,6 +21097,11 @@ From {{m|de|oppositionell|t=oppositional|pos=a}}.
 ====Declension====
 {{de-ndecl|+}}
 
+===Noun===
+{{head|de|noun form|g=f}}
+
+# {{inflection of|de|Oppositionelle||str|gen//dat|s|;|str|gen|p}}
+
 ===Further reading===
 * {{R:Duden|oppositionell}}
 -------- end text --------
@@ -21048,6 +21119,11 @@ From the adjective {{m|de|ehemalig}}.
 
 ====Declension====
 {{de-ndecl|+}}
+
+===Noun===
+{{head|de|noun form|g=m}}
+
+# {{inflection of|de|Ehemaliger||str|nom//acc|p|;|wk|nom|s}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -21394,6 +21470,11 @@ From {{af|de|Droge|-n-|Abhängiger}}.
 ====Declension====
 {{de-ndecl|+}}
 
+===Noun===
+{{head|de|noun form|g=f}}
+
+# {{inflection of|de|Drogenabhängige||str|gen//dat|s|;|str|gen|p}}
+
 ===Further reading===
 * {{R:Duden}}
 -------- end text --------
@@ -21520,6 +21601,11 @@ From {{suf|de|fremd|er}}. Compare {{cog|nds|[[Frümeder]] (en Frümeder, dei Fr�
 ====Declension====
 {{de-ndecl|+}}
 
+===Noun===
+{{head|de|noun form|g=f}}
+
+# {{inflection of|de|Fremde||str|gen//dat|s|;|str|gen|p}}
+
 ===Further reading===
 * {{R:DWDS}}
 * {{R:UniLeipzig}}
@@ -21545,7 +21631,7 @@ Substantivisation of {{m|de|verdächtig}}.
 {{de-ndecl|+}}
 
 ===Noun===
-{{head|de|noun form}}
+{{head|de|noun form|g=m}}
 
 # {{inflection of|de|Verdächtiger||str|nom//acc|p|;|wk|nom|s}}
 
@@ -21622,6 +21708,11 @@ Page 644 Angeklagter: -------- begin text --------
 
 ====Declension====
 {{de-ndecl|+}}
+
+===Noun===
+{{head|de|noun form|g=f}}
+
+# {{inflection of|de|Angeklagte||str|gen//dat|s|;|str|gen|p}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -23064,6 +23155,11 @@ Page 709 Angeklagte: -------- begin text --------
 ====Declension====
 {{de-ndecl|+}}
 
+===Noun===
+{{head|de|noun form|g=m}}
+
+# {{inflection of|de|Angeklagter||str|nom//acc|p|;|wk|nom|s}}
+
 ===Further reading===
 * {{R:DWDS}}
 * {{R:UniLeipzig}}
@@ -23138,11 +23234,9 @@ Page 713 Tote: -------- begin text --------
 {{de-ndecl|+}}
 
 ===Noun===
-{{head|de|noun form}}
+{{head|de|noun form|g=m}}
 
-# {{infl of|de|Toter||strong|nom|p}}
-# {{infl of|de|Toter||strong|acc|p}}
-# {{infl of|de|Toter||weak|nom|s}}
+# {{inflection of|de|Toter||str|nom//acc|p|;|wk|nom|s}}
 -------- end text --------
 Page 714 Purpur: Found match for regex: =
 Page 714 Purpur: -------- begin text --------
@@ -24157,9 +24251,6 @@ See {{m|it|Natel}}.
 Page 758 Gefreiter: Found match for regex: =
 Page 758 Gefreiter: -------- begin text --------
 
-===Alternative forms===
-* {{alter|de|Gefreite}}
-
 ===Etymology===
 From the fact that the rank was originally ''freed'' from sentry duty.
 
@@ -24178,9 +24269,13 @@ From the fact that the rank was originally ''freed'' from sentry duty.
 ====Descendants====
 * {{desctree|ru|ефре́йтор|bor=1}}
 
+===Noun===
+{{head|de|noun form|g=f}}
+
+# {{inflection of|de|Gefreite||str|gen//dat|s|;|str|gen|p}}
+
 ===Further reading===
 * {{R:Duden}}
-{{attention|de}}
 -------- end text --------
 Page 759 Orvieto: Found match for regex: =
 Page 759 Orvieto: -------- begin text --------
@@ -24294,6 +24389,11 @@ Page 763 Drogenbeauftragter: -------- begin text --------
 
 ====Declension====
 {{de-ndecl|+}}
+
+===Noun===
+{{head|de|noun form|g=f}}
+
+# {{inflection of|de|Drogenbeauftragte||str|gen//dat|s|;|str|gen|p}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -25099,6 +25199,11 @@ From {{af|de|Arbeit|-s-|pflichtig|alt3=pflichtiger}}.
 ====Declension====
 {{de-ndecl|+}}
 
+===Noun===
+{{head|de|noun form|g=f}}
+
+# {{inflection of|de|Arbeitspflichtige||str|gen//dat|s|;|str|gen|p}}
+
 ===References===
 * Robert Michael and Karin Doerr, ''Nazi-Deutsch / Nazi German'', Greenwood Press (2002), {{ISBN|0-313-32106-X}}, page 71.
 
@@ -25211,6 +25316,11 @@ Page 810 Schuldiger: -------- begin text --------
 
 ====Declension====
 {{de-ndecl|+}}
+
+===Noun===
+{{head|de|noun form|g=f}}
+
+# {{inflection of|de|Schuldige||str|gen//dat|s|;|str|gen|p}}
 
 ===Noun===
 {{de-noun|m}}
@@ -25808,6 +25918,11 @@ From {{m|de|schaulustig}}.
 ====Declension====
 {{de-ndecl|+}}
 
+===Noun===
+{{head|de|noun form|g=f}}
+
+# {{inflection of|de|Schaulustige||str|gen//dat|s|;|str|gen|p}}
+
 ===Further reading===
 * {{R:Duden}}
 -------- end text --------
@@ -25864,6 +25979,11 @@ Substantivisation of {{m|de|beteiligt}}.
 ====Declension====
 {{de-ndecl|+}}
 
+===Noun===
+{{head|de|noun form|g=m}}
+
+# {{inflection of|de|Beteiligter||str|nom//acc|p|;|wk|nom|s}}
+
 ===Further reading===
 * {{R:Duden}}
 -------- end text --------
@@ -25893,12 +26013,16 @@ Page 863 Auszubildender: -------- begin text --------
 {{de-ndecl|+}}
 
 ====Synonyms====
-* {{l|de|Azubi}}
-* {{l|de|Lehrling}}
+* {{synl|de|Azubi|Lehrling}}
 
 ====Coordinate terms====
-* {{l|de|Azubi}} ({{l|de|Azubine}}) {{g|f}}
+* {{l|de|Azubi|g=f}}, {{l|de|Azubine|g=f}}
 * {{l|de|Auszubildende|g=f}}
+
+===Noun===
+{{head|de|noun form|g=f}}
+
+# {{inflection of|de|Auszubildende||str|gen//dat|s|;|str|gen|p}}
 
 ===Further reading===
 * {{R:DWDS}}
@@ -25951,6 +26075,11 @@ Page 864 Vorsitzender: -------- begin text --------
 * {{l|de|vorsitzen}}
 * {{l|de|vorsitzend}} {{qualifier|present participle}}
 
+===Noun===
+{{head|de|noun form|g=f}}
+
+# {{inflection of|de|Vorsitzende||str|gen//dat|s|;|str|gen|p}}
+
 ===Further reading===
 * {{R:Duden}}
 -------- end text --------
@@ -25994,6 +26123,11 @@ Page 865 Vorsitzende: -------- begin text --------
 ====Related terms====
 * {{l|de|vorsitzen}}
 * {{l|de|vorsitzend}} {{qualifier|present participle}}
+
+===Noun===
+{{head|de|noun form|g=m}}
+
+# {{inflection of|de|Vorsitzender||str|nom//acc|p|;|wk|nom|s}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -26188,6 +26322,11 @@ Substantivisation of {{m|de|letzter||last}}.
 
 ====Declension====
 {{de-ndecl|+.article}}
+
+===Noun===
+{{head|de|noun form|g=f}}
+
+# {{inflection of|de|Letzte||str|gen//dat|s|;|str|gen|p}}
 -------- end text --------
 Page 875 Massendefekt: Found match for regex: =
 Page 875 Massendefekt: -------- begin text --------
@@ -26421,6 +26560,11 @@ From {{affix|de|Reich|-s-|Deutscher}}.
 ====Usage notes====
 The meaning of this term was historically imprecise and variable.
 
+===Noun===
+{{head|de|noun form|g=f}}
+
+# {{inflection of|de|Reichsdeutsche||str|gen//dat|s|;|str|gen|p}}
+
 ===See also===
 * {{l|de|Reichsjude}}
 * {{l|de|Volksdeutscher}}
@@ -26449,6 +26593,11 @@ From {{affix|de|Ausland|-s-|Deutscher}}.
 ====Usage notes====
 The meaning of this term was historically imprecise and variable.
 
+===Noun===
+{{head|de|noun form|g=f}}
+
+# {{inflection of|de|Auslandsdeutsche||str|gen//dat|s|;|str|gen|p}}
+
 ===See also===
 * {{l|de|volksdeutsch}}
 
@@ -26474,6 +26623,11 @@ Page 889 Volksdeutscher: -------- begin text --------
 
 ====Usage notes====
 The meaning of this term was historically imprecise and variable.
+
+===Noun===
+{{head|de|noun form|g=f}}
+
+# {{inflection of|de|Volksdeutsche||str|gen//dat|s|;|str|gen|p}}
 
 ===See also===
 * {{l|de|Auslandsdeutscher}}
@@ -27244,6 +27398,11 @@ A substantivization of {{m|de|geistlich||spiritual}}.
 ====Declension====
 {{de-ndecl|+}}
 
+===Noun===
+{{head|de|noun form|g=m}}
+
+# {{inflection of|de|Geistlicher||str|nom//acc|p|;|wk|nom|s}}
+
 ===Further reading===
 * {{R:DWDS}}
 * {{R:UniLeipzig}}
@@ -27269,6 +27428,11 @@ A substantivization of {{m|de|geistlich||spiritual}}.
 ====Declension====
 {{de-ndecl|+}}
 
+===Noun===
+{{head|de|noun form|g=f}}
+
+# {{inflection of|de|Geistliche||str|gen//dat|s|;|str|gen|p}}
+
 ===Further reading===
 * {{R:Duden}}
 -------- end text --------
@@ -27282,11 +27446,6 @@ From {{m|de|krank}}.
 * {{IPA|de|[ˈkʁaŋkə]}}
 * {{audio|de|De-Kranke.ogg|Audio}}
 * {{hyphenation|de|Kran|ke}}
-
-===Noun===
-{{head|de|noun form|g=m}}
-
-# {{inflection of|de|Kranker||str|nom//acc|p|;|wk|nom//acc|s}}
 
 ===Noun===
 {{de-noun|+|m=+}}
@@ -27355,6 +27514,11 @@ From {{m|de|krank}}.
 ====See also====
 * {{l|de|Invalidin}}, {{l|de|Invalide}}
 * {{l|de|Patientin}}
+
+===Noun===
+{{head|de|noun form|g=m}}
+
+# {{inflection of|de|Kranker||str|nom//acc|p|;|wk|nom//acc|s}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -27444,6 +27608,11 @@ From {{m|de|krank}}.
 ====See also====
 * {{l|de|Invalider}}
 * {{l|de|Patient}}
+
+===Noun===
+{{head|de|noun form|g=f}}
+
+# {{inflection of|de|Kranke||str|gen//dat|s|;|str|gen|p}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -27620,6 +27789,11 @@ Substantivization of {{m|de|beauftragt}}, past participle of {{m|de|beauftragen}
 |Wehrbeauftragter
 |Wildtierbeauftragter
 }}
+
+===Noun===
+{{head|de|noun form|g=f}}
+
+# {{inflection of|de|Beauftragte||str|gen//dat|s|;|str|gen|p}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -27859,6 +28033,11 @@ From the adjective {{m|de|letztere}}.
 
 ====Declension====
 {{de-ndecl|+}}
+
+===Noun===
+{{head|de|noun form|g=m}}
+
+# {{inflection of|de|Letzterer||str|nom//acc|p|;|wk|nom|s}}
 -------- end text --------
 Page 946 Tiefststand: Found match for regex: =
 Page 946 Tiefststand: -------- begin text --------
@@ -28906,17 +29085,17 @@ Page 997 Große: -------- begin text --------
 * {{audio|de|De-Große.ogg|Audio}}
 
 ===Noun===
-{{head|de|noun form|g=m}}
-
-# {{inflection of|de|Großer||str|nom//acc|p|;|wk|nom|s}}
-
-===Noun===
 {{de-noun|+|m=+}}
 
 # {{female equivalent of|de|Großer}}: [[female]] [[adult]]; [[female]] [[great]] (person) {{q|title}}
 
 ====Declension====
 {{de-ndecl|+}}
+
+===Noun===
+{{head|de|noun form|g=m}}
+
+# {{inflection of|de|Großer||str|nom//acc|p|;|wk|nom|s}}
 -------- end text --------
 Page 998 Frühgeborene: Found match for regex: =
 Page 998 Frühgeborene: -------- begin text --------
@@ -28999,6 +29178,11 @@ Page 1000 Abgeordneter: -------- begin text --------
 * {{l|de|EU-Abgeordneter}}
 {{der-bottom}}
 
+===Noun===
+{{head|de|noun form|g=f}}
+
+# {{inflection of|de|Abgeordnete||str|gen//dat|s|;|str|gen|p}}
+
 ===Further reading===
 * {{R:DWDS}}
 * {{R:UniLeipzig}}
@@ -29008,15 +29192,9 @@ Page 1000 Abgeordneter: -------- begin text --------
 -------- end text --------
 Page 1001 Abgeordnete: Found match for regex:  
 Page 1001 Abgeordnete: -------- begin text --------
- 
 
 ===Pronunciation===
 * {{audio|de|De-Abgeordnete.ogg|Audio}}
-
-===Noun===
-{{head|de|noun form|g=m}}
-
-# {{inflection of|de|Abgeordneter||str|nom//acc|p|;|wk|nom|s}}
 
 ===Noun===
 {{de-noun|+|m=+}}
@@ -29025,6 +29203,11 @@ Page 1001 Abgeordnete: -------- begin text --------
 
 ====Declension====
 {{de-ndecl|+}}
+
+===Noun===
+{{head|de|noun form|g=m}}
+
+# {{inflection of|de|Abgeordneter||str|nom//acc|p|;|wk|nom|s}}
 
 ===Further reading===
 * {{R:DWDS}}
@@ -29067,8 +29250,10 @@ Substantivization of {{m|de|betroffen||affected}}
 ====Declension====
 {{de-ndecl|+}}
 
-====Coordinate terms====
-* {{l|de|Betroffene|g=f}}
+===Noun===
+{{head|de|noun form|g=f}}
+
+# {{inflection of|de|Betroffene||str|gen//dat|s|;|str|gen|p}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -29114,6 +29299,7 @@ Page 1005 Europäische Kommission: -------- begin text --------
 -------- end text --------
 Page 1006 Angehöriger: Found match for regex: =
 Page 1006 Angehöriger: -------- begin text --------
+{{wikipedia|lang=de}}
 
 ===Etymology===
 A [[substantivization]] (converting into a [[noun substantive|substantive]]) of the adjective {{m|de|angehörig||belonging, affiliated}}.
@@ -29122,7 +29308,6 @@ A [[substantivization]] (converting into a [[noun substantive|substantive]]) of 
 * {{audio|de|De-Angehöriger.ogg|Audio}}
 
 ===Noun===
-{{wikipedia|lang=de}}
 {{de-noun|+|f=+}}
 
 # [[relative]], [[next of kin]], [[relation]] {{q|male or of unspecified gender}}
@@ -29160,6 +29345,11 @@ A [[substantivization]] (converting into a [[noun substantive|substantive]]) of 
 |Wehrmachtsangehöriger
 }}
 
+===Noun===
+{{head|de|noun form|g=f}}
+
+# {{inflection of|de|Angehörige||str|gen//dat|s|;|str|gen|p}}
+
 ===Further reading===
 * {{R:Duden}}
 -------- end text --------
@@ -29176,6 +29366,11 @@ Page 1007 Liberaler: -------- begin text --------
 
 ====Declension====
 {{de-ndecl|+}}
+
+===Noun===
+{{head|de|noun form|g=f}}
+
+# {{inflection of|de|Liberale||str|gen//dat|s|;|str|gen|p}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -29202,6 +29397,11 @@ Substantivization of {{m|de|delegiert||delegated}}.
 ====Conjugation====
 {{de-ndecl|+}}
 
+===Noun===
+{{head|de|noun form|g=f}}
+
+# {{inflection of|de|Delegierte||str|gen//dat|s|;|str|gen|p}}
+
 ===Further reading===
 * {{R:Duden}}
 -------- end text --------
@@ -29221,6 +29421,11 @@ Substantivization of {{m|de|klein||small}}.
 
 ====Declension====
 {{de-ndecl|+}}
+
+===Noun===
+{{head|de|noun form|g=m}}
+
+# {{inflection of|de|Kleiner||str|nom//acc|p|;|wk|nom|s}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -29331,6 +29536,11 @@ Substantivization of {{m|de|gefangen||caught}}.
 * {{l|de|Gefangenenwärter}}
 * {{l|de|Gefangenenwärterin}}
 * {{l|de|Gefängnis}}
+
+===Noun===
+{{head|de|noun form|g=f}}
+
+# {{inflection of|de|Gefangene||str|gen//dat|s|;|str|gen|p}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -29453,6 +29663,11 @@ Page 1019 Fremde: -------- begin text --------
 
 ====Declension====
 {{de-ndecl|+}}
+
+===Noun===
+{{head|de|noun form|g=m}}
+
+# {{inflection of|de|Fremder||str|nom//acc|p|;|wk|nom|s}}
 -------- end text --------
 Page 1020 Obdachloser: Found match for regex: =
 Page 1020 Obdachloser: -------- begin text --------
@@ -29471,6 +29686,11 @@ Substantivization of {{m|de|obdachlos||homeless}}.
 
 ====Declension====
 {{de-ndecl|+}}
+
+===Noun===
+{{head|de|noun form|g=f}}
+
+# {{inflection of|de|Obdachlose||str|gen//dat|s|;|str|gen|p}}
 
 ===Further reading===
 * {{R:DWDS}}
@@ -29491,17 +29711,17 @@ Substantivisation of {{m|de|delegiert}}.
 * {{audio|de|De-Delegierte.ogg|Audio}}
 
 ===Noun===
-{{head|de|noun form|g=m}}
-
-# {{inflection of|de|Delegierter||str|nom//acc|p|;|wk|nom|s}}
-
-===Noun===
 {{de-noun|+|m=+}}
 
 # {{female equivalent of|de|Delegierter}}: [[female]] [[delegate]], [[female]] [[representative]]
 
 ====Declension====
 {{de-ndecl|+}}
+
+===Noun===
+{{head|de|noun form|g=m}}
+
+# {{inflection of|de|Delegierter||str|nom//acc|p|;|wk|nom|s}}
 -------- end text --------
 Page 1022 Kleiner: Found match for regex: =
 Page 1022 Kleiner: -------- begin text --------
@@ -29520,7 +29740,7 @@ Page 1022 Kleiner: -------- begin text --------
 ===Noun===
 {{head|de|noun form|g=f}}
 
-# {{inflection of|de|Kleine||gen|s}}
+# {{inflection of|de|Kleine||str|gen//dat|s|;|str|gen|p}}
 -------- end text --------
 Page 1023 Geliebter: Found match for regex: =
 Page 1023 Geliebter: -------- begin text --------
@@ -29545,7 +29765,7 @@ Substantivization of {{m|de|geliebt||loved, beloved}}, the past participle of {{
 ===Noun===
 {{head|de|noun form|g=f}}
 
-# {{inflection of|de|Geliebte||gen|s}}
+# {{inflection of|de|Geliebte||str|gen//dat|s|;|str|gen|p}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -29571,7 +29791,7 @@ Page 1024 Altes: -------- begin text --------
 
 # {{inflection of|de|Alt||gen|s|t=Alto}}
 
-===Etymology 2===
+===Etymology 3===
 
 ====Noun====
 {{head|de|noun form|g=n}}
@@ -29648,17 +29868,17 @@ Page 1028 Letzte: -------- begin text --------
 * {{audio|de|De-Letzte.ogg|Audio}}
 
 ===Noun===
-{{head|de|noun|g=m}}
-
-# {{inflection of|de|Letzter||str|nom//acc|p|;|wk|nom|s}}
-
-===Noun===
 {{de-noun|+.article|m=+}}
 
 # {{female equivalent of|de|Letzter}}: the [[last]] [[woman]] or [[girl]]
 
 ====Declension====
 {{de-ndecl|+.article}}
+
+===Noun===
+{{head|de|noun|g=m}}
+
+# {{inflection of|de|Letzter||str|nom//acc|p|;|wk|nom|s}}
 -------- end text --------
 Page 1029 Polizeibeamter: Found match for regex: =
 Page 1029 Polizeibeamter: -------- begin text --------
@@ -29692,17 +29912,17 @@ Page 1030 Reisende: -------- begin text --------
 * {{audio|de|De-Reisende.ogg|Audio}}
 
 ===Noun===
-{{head|de|noun form|g=m}}
-
-# {{inflection of|de|Reisender||str|nom//acc|p|;|wk|nom|s}}
-
-===Noun===
 {{de-noun|+|m=+}}
 
 # {{female equivalent of|de|Reisender}}: [[female]] [[tourist]]; [[female]] [[traveller]], [[female]] [[voyager]]
 
 ====Declension====
 {{de-ndecl|+}}
+
+===Noun===
+{{head|de|noun form|g=m}}
+
+# {{inflection of|de|Reisender||str|nom//acc|p|;|wk|nom|s}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -29729,13 +29949,10 @@ From {{m|de|reisend||traveling}}, present participle of the verb {{m|de|reisen||
 ====Derived terms====
 * {{l|de|Handelsreisender}}
 
-====Related terms====
-* {{l|de|Reisende}}
-
 ===Noun===
 {{head|de|noun form|g=f}}
 
-# {{inflection of|de|Reisende||gen|s}}
+# {{inflection of|de|Reisende||str|gen//dat|s|;|str|gen|p}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -29748,17 +29965,17 @@ Page 1032 Studierende: -------- begin text --------
 * {{audio|de|De-Studierende.ogg|Audio}}
 
 ===Noun===
-{{head|de|noun form|g=m}}
-
-# {{inflection of|de|Studierender||str|nom//acc|p|;|wk|nom|s}}
-
-===Noun===
 {{de-noun|+|m=+}}
 
 # {{female equivalent of|de|Studierender}}: [[female]] [[student]]
 
 ====Declension====
 {{de-ndecl|+}}
+
+===Noun===
+{{head|de|noun form|g=m}}
+
+# {{inflection of|de|Studierender||str|nom//acc|p|;|wk|nom|s}}
 -------- end text --------
 Page 1033 Unbekannte: Found match for regex: {
 Page 1033 Unbekannte: -------- begin text --------
@@ -29778,6 +29995,11 @@ Substantivisation of {{m|de|unbekannt}} and shorting of {{m|de|[[unbekannt]]e [[
 
 ====Declension====
 {{de-ndecl|+}}
+
+===Noun===
+{{head|de|noun form|g=m}}
+
+# {{inflection of|de|Unbekannter||str|nom//acc|p|;|wk|nom|s}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -29850,6 +30072,11 @@ From {{com|de|Vorstand|-s-|Vorsitzender}}.
 ====Declension====
 {{de-ndecl|+}}
 
+===Noun===
+{{head|de|noun form|g=f}}
+
+# {{inflection of|de|Vorstandsvorsitzende||str|gen//dat|s|;|str|gen|p}}
+
 ===Further reading===
 * {{R:Duden}}
 -------- end text --------
@@ -29869,6 +30096,11 @@ Page 1038 Zweiter: -------- begin text --------
 
 ====Declension====
 {{de-ndecl|+}}
+
+===Noun===
+{{head|de|noun form|g=f}}
+
+# {{inflection of|de|Zweite||str|gen//dat|s|;|str|gen|p}}
 -------- end text --------
 Page 1039 Zweite: Found match for regex: =
 Page 1039 Zweite: -------- begin text --------
@@ -30263,6 +30495,11 @@ Substantivization of the adjective {{m|de|irre}}.
 ====Declension====
 {{de-ndecl|+}}
 
+===Noun===
+{{head|de|noun form|g=f}}
+
+# {{inflection of|de|Irre||str|gen//dat|s|;|str|gen|p}}
+
 ===Further reading===
 * {{R:Duden}}
 -------- end text --------
@@ -30347,6 +30584,11 @@ Page 1063 Vorgesetzte: -------- begin text --------
 ====Declension====
 {{de-ndecl|+}}
 
+===Noun===
+{{head|de|noun form|g=m}}
+
+# {{inflection of|de|Vorgesetzter||str|nom//acc|p|;|wk|nom|s}}
+
 ===Further reading===
 * {{R:Duden}}
 -------- end text --------
@@ -30400,6 +30642,11 @@ Substantivization of {{m|de|rauschgiftsüchtig||drug-addicted}}.
 ====Declension====
 {{de-ndecl|+}}
 
+===Noun===
+{{head|de|noun form|g=m}}
+
+# {{inflection of|de|Rauschgiftsüchtiger||str|nom//acc|p|;|wk|nom|s}}
+
 ===Further reading===
 * {{R:Duden}}
 -------- end text --------
@@ -30421,8 +30668,10 @@ Substantivization of {{m|de|rauschgiftsüchtig||drug-addicted}}.
 ====Declension====
 {{de-ndecl|+}}
 
-====Related terms====
-* {{l|de|Rauschgiftsüchtige|g=f}}
+===Noun===
+{{head|de|noun form|g=f}}
+
+# {{inflection of|de|Rauschgiftsüchtige||str|gen//dat|s|;|str|gen|p}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -31831,6 +32080,11 @@ Literally, "maximally pigmented person". {{compound|de|maximal|pigmentiert|t1=ma
 
 ====Declension====
 {{de-ndecl|+}}
+
+===Noun===
+{{head|de|noun form|g=f}}
+
+# {{inflection of|de|Maximalpigmentierte||str|gen//dat|s|;|str|gen|p}}
 -------- end text --------
 Page 1123 Lakritz: Found match for regex: =
 Page 1123 Lakritz: -------- begin text --------
@@ -31939,13 +32193,6 @@ Page 1125 Heilige: -------- begin text --------
 ===Etymology 1===
 
 ====Noun====
-{{head|de|noun form|g=m}}
-
-# {{inflection of|de|Heiliger||str|nom//acc|p|;|wk|nom|s}}
-
-===Etymology 2===
-
-====Noun====
 {{de-noun|+|m=+}}
 
 # {{female equivalent of|de|Heiliger}}: [[female]] [[saint]]
@@ -31956,6 +32203,13 @@ Page 1125 Heilige: -------- begin text --------
 
 ===References===
 * {{R:Duden}}
+
+===Etymology 2===
+
+====Noun====
+{{head|de|noun form|g=m}}
+
+# {{inflection of|de|Heiliger||str|nom//acc|p|;|wk|nom|s}}
 -------- end text --------
 Page 1126 Heiliger: Found match for regex: =
 Page 1126 Heiliger: -------- begin text --------
@@ -31995,6 +32249,11 @@ Masculine substantive of {{m|de|heilig||holy, sacred}}.
 * {{l|de|heilig}}
 * {{l|de|heiligen}}
 * {{l|de|Heiligung}}
+
+===Noun===
+{{head|de|noun form|g=f}}
+
+# {{inflection of|de|Heilige||str|gen//dat|s|;|str|gen|p}}
 
 ===References===
 * {{R:Duden}}
@@ -32549,6 +32808,11 @@ Page 1156 Weiser: -------- begin text --------
 
 ====Declension====
 {{de-ndecl|+}}
+
+===Noun===
+{{head|de|noun form|g=f}}
+
+# {{inflection of|de|Weise||str|gen//dat|s|;|str|gen|p}}
 
 ===Further reading===
 * {{R:DWDS}}
@@ -33783,9 +34047,9 @@ Page 1217 Geschworene: -------- begin text --------
 {{de-ndecl|+}}
 
 ===Noun===
-{{head|de|noun form}}
+{{head|de|noun form|g=m}}
 
-# {{inflection of|de|Geschworener||nom//acc|p}}
+# {{inflection of|de|Geschworener||str|nom//acc|p|;|wk|nom|s}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -34215,9 +34479,6 @@ Page 1233 Eisheiliger: -------- begin text --------
 ====Synonyms====
 * {{l|de|Eismänner}}
 * {{l|de|Gestrenge Herren}}
-
-====Coordinate terms====
-* {{l|de|Eisheilige}}
 
 ====References====
 * {{R:Duden|Eisheiligen}}
@@ -35010,17 +35271,22 @@ From {{inh|de|gmh|gelīche}}, from {{inh|de|goh|gilīkī}}; equivalent to {{suf|
 Substantivisation of {{m|de|gleich}}.
 
 ====Noun====
-{{head|de|noun form|g=n}}
-
-# {{inflection of|de|Gleiches||wk|nom|s}}
-
-====Noun====
 {{de-noun|+|m=+}}
 
 # {{nominalization of|de|gleich}}: {{female equivalent of|de|Gleicher}}: [[female]] [[equal]] (female who is equal to another person)
 
 =====Declension=====
 {{de-ndecl|+}}
+
+====Noun====
+{{head|de|noun form|g=m}}
+
+# {{inflection of|de|Gleicher||str|nom//acc|p|;|wk|nom|s}}
+
+====Noun====
+{{head|de|noun form|g=n}}
+
+# {{inflection of|de|Gleiches||wk|nom|s}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -35118,7 +35384,7 @@ Page 1271 Wolhyniendeutscher: -------- begin text --------
 * {{alter|de|Wolyniendeutscher||rare|cf. Volhynian German: [[Woliniendeitscher]]}}
 
 ===Etymology===
-{{compound|de|Wolhynien|t1=(the [[guberniya]] of) [[Volhynia]] / [[Volynia]]|Deutscher|t2= [[German]]}}
+{{compound|de|Wolhynien|t1=(the [[guberniya]] of) [[Volhynia]] / [[Volynia]]|Deutscher|t2=[[German]]}}
 
 ===Noun===
 {{de-noun|+|f=+}}
@@ -35129,7 +35395,7 @@ Page 1271 Wolhyniendeutscher: -------- begin text --------
 {{de-ndecl|+}}
 
 ====Related terms====
-{{q|common spelling '''with''' the “[[h]]”}} (cf. [[Russian]]: {{l|ru|Волы́нь||Volhynia / Volynia}} with a “hard [[l]]” or nonpalatalized “[[l]]”)
+{{q|common spelling '''with''' the “[[h]]”}} (cf. [[Russian]]: {{l|ru|Волы́нь||Volhynia / Volynia}} with a “hard/nonpalatalized [[l]]”)
 * {{l|de|Wolhynien}}
 * {{l|de|wolhyniendeutsch}}
 * {{l|de|Wolhyniendeutsch}}
@@ -35139,6 +35405,11 @@ Page 1271 Wolhyniendeutscher: -------- begin text --------
 * {{l|de|Wolynien}}
 * {{l|de|Wolynier}}
 * {{l|de|wolynisch}}
+
+===Noun===
+{{head|de|noun form|g=f}}
+
+# {{inflection of|de|Wolhyniendeutsche||str|gen//dat|s|;|str|gen|p}}
 -------- end text --------
 Page 1272 Elektrizitätswerk: Found match for regex: =
 Page 1272 Elektrizitätswerk: -------- begin text --------
@@ -35441,6 +35712,11 @@ From {{suffix|de|verlobt|er}}.
 * {{l|de|verloben}}
 * {{l|de|Verlobung}}
 * {{l|de|Verlobungspaar}}
+
+===Noun===
+{{head|de|noun form|g=f}}
+
+# {{inflection of|de|Verlobte||str|gen//dat|s|;|str|gen|p}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -35796,6 +36072,11 @@ Page 1301 Alkoholkranker: -------- begin text --------
 ====Declension====
 {{de-ndecl|+}}
 
+===Noun===
+{{head|de|noun form|g=f}}
+
+# {{inflection of|de|Alkoholkranke||str|gen//dat|s|;|str|gen|p}}
+
 ===Further reading===
 * {{R:Duden}}
 
@@ -35817,6 +36098,11 @@ From {{prefix|de|after-|t1=after-; pseudo-|Gelehrter|t2=scholar}}.
 
 ====Declension====
 {{de-ndecl|+}}
+
+===Noun===
+{{head|de|noun form|g=f}}
+
+# {{inflection of|de|Aftergelehrte||str|gen//dat|s|;|str|gen|p}}
 
 ===Further reading===
 * [https://books.google.de/books?id=0WgRJBs-caIC&q=Aftergelehrter ''Aftergelehrter'', in: ''Deutsches Schimpfwörterbuch oder die Schimpfwörter der Deutschen. Zum allgemeinen Nutzen gesammelt und alphabetisch geordnet, nebst einer Vorvor-, Vor- und Nachrede''], Arnstadt, 1839, p. 3
@@ -35994,6 +36280,11 @@ From the [[substantivisation]] of {{m|de|pädophil||paedophile / pedophile (adj)
 ===See also===
 * {{l|de|Sexverbrechen}}
 * {{l|de|Sexverbrecher}}, {{l|de|Sexverbrecherin}}
+
+===Noun===
+{{head|de|noun form|g=f}}
+
+# {{inflection of|de|Pädophile||str|gen//dat|s|;|str|gen|p}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -36209,6 +36500,11 @@ From {{m|de|adlig}}.
 |Edelfrau
 |Edelfräulein
 }}
+
+===Noun===
+{{head|de|noun form|g=f}}
+
+# {{inflection of|de|Adlige||str|gen//dat|s|;|str|gen|p}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -36641,6 +36937,11 @@ From {{m|de|heterosexuell}}.
 * {{l|de|Heterosexualität}}
 * {{l|de|heterosexuell}}
 
+===Noun===
+{{head|de|noun form|g=f}}
+
+# {{inflection of|de|Heterosexuelle||str|gen//dat|s|;|str|gen|p}}
+
 ===Further reading===
 * {{R:Duden}}
 * {{R:DWDS}}
@@ -36671,11 +36972,9 @@ From {{m|de|heterosexuell}}.
 * {{l|de|heterosexuell}}
 
 ===Noun===
-{{head|de|noun form|g=m|cat2=noun plural forms}}
+{{head|de|noun form|g=m}}
 
-# {{inflection of|de|Heterosexueller||nom|indef|p}}
-# {{inflection of|de|Heterosexueller||acc|indef|p}}
-# {{inflection of|de|Heterosexueller||nom|def|s}}
+# {{inflection of|de|Heterosexueller||str|nom//acc|p|;|wk|nom|s}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -36685,7 +36984,7 @@ Page 1340 Gelehrter: Found match for regex: =
 Page 1340 Gelehrter: -------- begin text --------
 
 ===Etymology===
-[[Substantivisation|substantivisation]] of {{m|de|gelehrt}}
+[[Substantivisation|substantivisation]] of {{m|de|gelehrt}}.
 
 ===Pronunciation===
 * {{IPA|de|/ɡəˈleːɐ̯tɐ/}}
@@ -37195,7 +37494,7 @@ Page 1341 Gelehrte: Found match for regex: =
 Page 1341 Gelehrte: -------- begin text --------
 
 ===Etymology===
-[[substantivisation|Substantivisation]] of {{m|de|gelehrt}}
+[[substantivisation|Substantivisation]] of {{m|de|gelehrt}}.
 
 ===Pronunciation===
 * {{IPA|de|/ɡəˈleːɐ̯tə/}}
@@ -37211,11 +37510,9 @@ Page 1341 Gelehrte: -------- begin text --------
 {{de-ndecl|+}}
 
 ===Noun===
-{{head|de|noun form}}
+{{head|de|noun form|g=m}}
 
-# {{inflection of|de|Gelehrter||str|nom|p}}
-# {{inflection of|de|Gelehrter||str|acc|p}}
-# {{inflection of|de|Gelehrter||wk|nom|s}}
+# {{inflection of|de|Gelehrter||str|nom//acc|p|;|wk|nom|s}}
 -------- end text --------
 Page 1342 Schwarzes im Auge: Found match for regex: =
 Page 1342 Schwarzes im Auge: -------- begin text --------
@@ -37272,6 +37569,11 @@ Substantivization of {{m|de|minderjährig}}.
 
 ====Declension====
 {{de-ndecl|+}}
+
+===Noun===
+{{head|de|noun form|g=f}}
+
+# {{inflection of|de|Minderjährige||str|gen//dat|s|;|str|gen|p}}
 
 ===References===
 * {{R:Duden}}
@@ -37966,6 +38268,11 @@ Page 1380 Seelenverwandter: -------- begin text --------
 
 ====Declension====
 {{de-ndecl|+}}
+
+===Noun===
+{{head|de|noun form|g=f}}
+
+# {{inflection of|de|Seelenverwandte||str|gen//dat|s|;|str|gen|p}}
 -------- end text --------
 Page 1381 Schwarzes Loch: Found match for regex: =
 Page 1381 Schwarzes Loch: -------- begin text --------
@@ -38373,6 +38680,11 @@ From {{compound|de|Bank|t1=bank|Angestellter|t2=employee}}.
 ====Usage notes====
 * Compare the narrower terms {{m|de|Banker}} and {{m|de|Bankier}}.
 
+===Noun===
+{{head|de|noun form|g=f}}
+
+# {{inflection of|de|Bankangestellte||str|gen//dat|s|;|str|gen|p}}
+
 ===Further reading===
 * {{R:DWDS}}
 * {{R:UniLeipzig}}
@@ -38616,6 +38928,11 @@ Substantivisation of {{m|de|leibeigen||unfree}}.
 ====Declension====
 {{de-ndecl|+}}
 
+===Noun===
+{{head|de|noun form|g=f}}
+
+# {{inflection of|de|Leibeigene||str|gen//dat|s|;|str|gen|p}}
+
 ===Further reading===
 * {{R:Duden}}
 -------- end text --------
@@ -38823,6 +39140,11 @@ Substantivisation of {{m|de|bevollmächtigt}}.
 ====Declension====
 {{de-ndecl|+}}
 
+===Noun===
+{{head|de|noun form|g=f}}
+
+# {{inflection of|de|Bevollmächtigte||str|gen//dat|s|;|str|gen|p}}
+
 ===Further reading===
 * {{R:Duden}}
 -------- end text --------
@@ -38844,6 +39166,11 @@ Substantivisation of {{m|de|bevollmächtigt}}.
 
 ====Declension====
 {{de-ndecl|+}}
+
+===Noun===
+{{head|de|noun form|g=m}}
+
+# {{inflection of|de|Bevollmächtigter||str|nom//acc|p|;|wk|nom|s}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -38968,6 +39295,11 @@ Substantivisation of {{m|de|asozial}}.
 ====Declension====
 {{de-ndecl|+}}
 
+===Noun===
+{{head|de|noun form|g=f}}
+
+# {{inflection of|de|Asoziale||str|gen//dat|s|;|str|gen|p}}
+
 ===Further reading===
 * {{R:Duden}}
 -------- end text --------
@@ -38989,6 +39321,11 @@ Substantivisation of {{m|de|asozial}}.
 
 ====Declension====
 {{de-ndecl|+}}
+
+===Noun===
+{{head|de|noun form|g=m}}
+
+# {{inflection of|de|Asozialer||str|nom//acc|p|;|wk|nom|s}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -39075,6 +39412,11 @@ Page 1435 Hilfswilliger: -------- begin text --------
 
 ====Declension====
 {{de-ndecl|+}}
+
+===Noun===
+{{head|de|noun form|g=f}}
+
+# {{inflection of|de|Hilfswillige||str|gen//dat|s|;|str|gen|p}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -39446,6 +39788,11 @@ Substantivisation of {{m|de|welsch}}.
 
 ====Declension====
 {{de-ndecl|+}}
+
+===Noun===
+{{head|de|noun form|g=f}}
+
+# {{inflection of|de|Welsche||str|gen//dat|s|;|str|gen|p}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -40197,6 +40544,11 @@ Page 1482 Normalsterbliche: -------- begin text --------
 ====Declension====
 {{de-ndecl|+}}
 
+===Noun===
+{{head|de|noun form|g=m}}
+
+# {{inflection of|de|Normalsterblicher||str|nom//acc|p|;|wk|nom|s}}
+
 ===Further reading===
 * {{R:Duden}}
 -------- end text --------
@@ -40236,6 +40588,11 @@ Substantivisation of {{m|de|sterblich}}.
 ====Declension====
 {{de-ndecl|+}}
 
+===Noun===
+{{head|de|noun form|g=f}}
+
+# {{inflection of|de|Sterbliche||str|gen//dat|s|;|str|gen|p}}
+
 ===Further reading===
 * {{R:Duden}}
 -------- end text --------
@@ -40257,6 +40614,11 @@ Substantivisation of {{m|de|sterblich}}.
 
 ====Declension====
 {{de-ndecl|+}}
+
+===Noun===
+{{head|de|noun form|g=m}}
+
+# {{inflection of|de|Sterblicher||str|nom//acc|p|;|wk|nom|s}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -40281,6 +40643,11 @@ Substantivisation of {{m|de|heimatvertrieben}}.
 
 ====Declension====
 {{de-ndecl|+}}
+
+===Noun===
+{{head|de|noun form|g=f}}
+
+# {{inflection of|de|Heimatvertriebene||str|gen//dat|s|;|str|gen|p}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -40456,6 +40823,11 @@ Substantivisation of {{m|de|sachverständig}}.
 ====Declension====
 {{de-ndecl|+}}
 
+===Noun===
+{{head|de|noun form|g=f}}
+
+# {{inflection of|de|Sachverständige||str|gen//dat|s|;|str|gen|p}}
+
 ===Further reading===
 * {{R:Duden}}
 -------- end text --------
@@ -40477,6 +40849,11 @@ Substantivisation of {{m|de|sachverständig}}.
 
 ====Declension====
 {{de-ndecl|+}}
+
+===Noun===
+{{head|de|noun form|g=m}}
+
+# {{inflection of|de|Sachverständiger||str|nom//acc|p|;|wk|nom|s}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -41003,6 +41380,11 @@ Nominalization of {{m|de|intern||internal}}.
 ====Declension====
 {{de-ndecl|+}}
 
+===Noun===
+{{head|de|noun form|g=m}}
+
+# {{inflection of|de|Interner||str|nom//acc|p|;|wk|nom|s}}
+
 ===Further reading===
 * {{R:Duden}}
 -------- end text --------
@@ -41186,6 +41568,11 @@ From {{m|de|halbstark}}.
 
 ====Declension====
 {{de-ndecl|+}}
+
+===Noun===
+{{head|de|noun form|g=f}}
+
+# {{inflection of|de|Halbstarke||str|gen//dat|s|;|str|gen|p}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -42362,6 +42749,11 @@ Page 1589 Rechtsgelehrter: -------- begin text --------
 ====Declension====
 {{de-ndecl|+}}
 
+===Noun===
+{{head|de|noun form|g=f}}
+
+# {{inflection of|de|Rechtsgelehrte||str|gen//dat|s|;|str|gen|p}}
+
 ===Further reading===
 * {{R:Duden}}
 -------- end text --------
@@ -42413,6 +42805,11 @@ Page 1591 Schutzheiliger: -------- begin text --------
 ====Declension====
 {{de-ndecl|+}}
 
+===Noun===
+{{head|de|noun form|g=f}}
+
+# {{inflection of|de|Schutzheilige||str|gen//dat|s|;|str|gen|p}}
+
 ===Further reading===
 * {{R:Duden}}
 -------- end text --------
@@ -42434,6 +42831,11 @@ Page 1592 Schutzheilige: -------- begin text --------
 
 ====Declension====
 {{de-ndecl|+}}
+
+===Noun===
+{{head|de|noun form|g=m}}
+
+# {{inflection of|de|Schutzheiliger||str|nom//acc|p|;|wk|nom|s}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -42562,6 +42964,11 @@ Substantivisation of {{m|de|reisig}}.
 ====Declension====
 {{de-ndecl|+}}
 
+===Noun===
+{{head|de|noun form|g=f}}
+
+# {{inflection of|de|Reisige||str|gen//dat|s|;|str|gen|p}}
+
 ===Further reading===
 * {{R:Duden}}
 -------- end text --------
@@ -42584,6 +42991,11 @@ Substantivisation of {{m|de|außen}} + {{m|de|stehend}}.
 ====Declension====
 {{de-ndecl|+}}
 
+===Noun===
+{{head|de|noun form|g=f}}
+
+# {{inflection of|de|Außenstehende||str|gen//dat|s|;|str|gen|p}}
+
 ===Further reading===
 * {{R:Duden}}
 -------- end text --------
@@ -42605,6 +43017,11 @@ Substantivisation of {{m|de|beteiligt}}.
 
 ====Declension====
 {{de-ndecl|+}}
+
+===Noun===
+{{head|de|noun form|g=f}}
+
+# {{inflection of|de|Beteiligte||str|gen//dat|s|;|str|gen|p}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -42630,6 +43047,11 @@ Substantivisation of {{m|de|asylsuchend}}.
 ====Declension====
 {{de-ndecl|+}}
 
+===Noun===
+{{head|de|noun form|g=f}}
+
+# {{inflection of|de|Asylsuchende||str|gen//dat|s|;|str|gen|p}}
+
 ===Further reading===
 * {{R:Duden}}
 * {{R:DWDS}}
@@ -42654,6 +43076,11 @@ Substantivisation of {{m|de|groß}}.
 
 ====Declension====
 {{de-ndecl|+}}
+
+===Noun===
+{{head|de|noun form|g=f}}
+
+# {{inflection of|de|Große||str|gen//dat|s|;|str|gen|p}}
 -------- end text --------
 Page 1602 Vorsehung: Found match for regex: {
 Page 1602 Vorsehung: -------- begin text --------
@@ -42824,6 +43251,11 @@ Page 1608 Frühgeborener: -------- begin text --------
 
 ====Declension====
 {{de-ndecl|+}}
+
+===Noun===
+{{head|de|noun form|g=f}}
+
+# {{inflection of|de|Frühgeborene||str|gen//dat|s|;|str|gen|p}}
 -------- end text --------
 Page 1609 Frühgeborenes: Found match for regex: {
 Page 1609 Frühgeborenes: -------- begin text --------
@@ -43310,11 +43742,9 @@ From {{compound|de|Haus|Angestellte|gloss1=house, home|gloss2=female employee}}.
 {{de-ndecl|+}}
 
 ===Noun===
-{{head|de|noun form}}
+{{head|de|noun form|g=m}}
 
-# {{inflection of|de|Hausangestellter||str|nom|p}}
-# {{inflection of|de|Hausangestellter||str|acc|p}}
-# {{inflection of|de|Hausangestellter||wk|nom|s}}
+# {{inflection of|de|Hausangestellter||str|nom//acc|p|;|wk|nom|s}}
 
 ===References===
 * {{R:Duden}}
@@ -43367,11 +43797,9 @@ From {{compound|de|Haus|Arme|gloss1=house, home|gloss2=female poor person}}.
 {{de-ndecl|+}}
 
 ===Noun===
-{{head|de|noun form}}
+{{head|de|noun form|g=m}}
 
-# {{inflection of|de|Hausarmer||str|nom|p}}
-# {{inflection of|de|Hausarmer||str|acc|p}}
-# {{inflection of|de|Hausarmer||wk|nom|s}}
+# {{inflection of|de|Hausarmer||str|nom//acc|p|;|wk|nom|s}}
 -------- end text --------
 Page 1633 Großer Osten: Found match for regex: {
 Page 1633 Großer Osten: -------- begin text --------
@@ -43705,11 +44133,9 @@ From {{m|de|bediensten|bedienstet}}. {{etystub|de}}
 {{de-ndecl|+}}
 
 ===Noun===
-{{head|de|noun form}}
+{{head|de|noun form|g=m}}
 
-# {{inflection of|de|Bediensteter||str|nom|p}}
-# {{inflection of|de|Bediensteter||str|acc|p}}
-# {{inflection of|de|Bediensteter||wk|nom|s}}
+# {{inflection of|de|Bediensteter||str|nom//acc|p|;|wk|nom|s}}
 
 ===References===
 * {{R:Duden}}
@@ -43763,11 +44189,9 @@ From {{compound|de|Haus|Bedienstete|gloss1=house, home|gloss2=female employee; s
 {{de-ndecl|+}}
 
 ===Noun===
-{{head|de|noun form}}
+{{head|de|noun form|g=m}}
 
-# {{inflection of|de|Hausbediensteter||str|nom|p}}
-# {{inflection of|de|Hausbediensteter||str|acc|p}}
-# {{inflection of|de|Hausbediensteter||wk|nom|s}}
+# {{inflection of|de|Hausbediensteter||str|nom//acc|p|;|wk|nom|s}}
 
 ===References===
 * {{R:DWDS}}
@@ -43860,6 +44284,11 @@ From {{affix|de|Staat|-s-|Angehöriger}}.
 ====Related terms====
 * {{l|de|Staatsanwalt}}, {{l|de|Staatskasse}}
 * {{l|de|Bundesstaat}}, {{l|de|Einheitsstaat}}, {{l|de|Nationalstaat}}
+
+===Noun===
+{{head|de|noun form|g=f}}
+
+# {{inflection of|de|Staatsangehörige||str|gen//dat|s|;|str|gen|p}}
 
 ===Further reading===
 * {{R:DWDS}}
@@ -44346,6 +44775,11 @@ Substantivisation of {{m|de|eingeboren}}.
 ====Declension====
 {{de-ndecl|+}}
 
+===Noun===
+{{head|de|noun form|g=f}}
+
+# {{inflection of|de|Eingeborene||str|gen//dat|s|;|str|gen|p}}
+
 ===Further reading===
 * {{R:Duden}}
 -------- end text --------
@@ -44367,6 +44801,11 @@ Substantivisation of {{m|de|eingeboren}}.
 
 ====Declension====
 {{de-ndecl|+}}
+
+===Noun===
+{{head|de|noun form|g=m}}
+
+# {{inflection of|de|Eingeborener||str|nom//acc|p|;|wk|nom|s}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -44446,11 +44885,9 @@ From {{compound|de|Schrift|Gelehrte|gloss1=writing, script|gloss2=female scholar
 {{de-ndecl|+}}
 
 ===Noun===
-{{head|de|noun form}}
+{{head|de|noun form|g=m}}
 
-# {{inflection of|de|Schriftgelehrter||str|nom|p}}
-# {{inflection of|de|Schriftgelehrter||str|acc|p}}
-# {{inflection of|de|Schriftgelehrter||wk|nom|s}}
+# {{inflection of|de|Schriftgelehrter||str|nom//acc|p|;|wk|nom|s}}
 -------- end text --------
 Page 1677 Weihnachtsgebäck: Found match for regex: =
 Page 1677 Weihnachtsgebäck: -------- begin text --------
@@ -44734,7 +45171,7 @@ Substantivisation of {{m|de|vermisst}}.
 {{de-ndecl|+}}
 
 ===Noun===
-{{head|de|noun form|g=f}}
+{{head|de|noun form|g=m}}
 
 # {{inflection of|de|Vermisster||str|nom//acc|p|;|wk|nom|s}}
 
@@ -44853,6 +45290,11 @@ From {{compound|de|Militär|Angehöriger}}.
 * {{l|de|Militäreinheit}}, {{l|de|Militärgericht}}
 * {{l|de| Gemeindeangehöriger}}, {{l|de|Parlamentsangehöriger}}, {{l|de|Staatsangehöriger}}
 
+===Noun===
+{{head|de|noun form|g=f}}
+
+# {{inflection of|de|Militärangehörige||str|gen//dat|s|;|str|gen|p}}
+
 ===Further reading===
 * {{R:DWDS}}
 * {{R:UniLeipzig}}
@@ -44904,6 +45346,11 @@ From {{af|de|Luftwaffe|-n-|Angehöriger}}.
 ====Related terms====
 * {{l|de|Luftwaffendivision}}, {{l|de|Luftwaffeneinheit}}, {{l|de|Luftwaffenmaschine}}
 * {{l|de|Bundeswehrangehöriger}}, {{l|de|Parlamentsangehöriger}}, {{l|de|Staatsangehöriger}}
+
+===Noun===
+{{head|de|noun form|g=f}}
+
+# {{inflection of|de|Luftwaffenangehörige||str|gen//dat|s|;|str|gen|p}}
 
 ===Further reading===
 * {{R:DWDS}}
@@ -44962,6 +45409,11 @@ From {{af|de|Familie|-n-|Angehöriger}}.
 ====Related terms====
 * {{l|de|Familienname}}, {{l|de|Familienstatus}}, {{l|de|Großfamilie}}, {{l|de|Unterfamilie}}
 * {{l|de|Gemeindeangehöriger}}, {{l|de|Luftwaffenangehöriger}}, {{l|de|Parlamentsangehöriger}}, {{l|de|Staatsangehöriger}}
+
+===Noun===
+{{head|de|noun form|g=f}}
+
+# {{inflection of|de|Familienangehörige||str|gen//dat|s|;|str|gen|p}}
 
 ===Further reading===
 * {{R:DWDS}}
@@ -45200,7 +45652,7 @@ Substantivisation of {{m|de|wachhabend}}.
 {{de-ndecl|+}}
 
 ===Noun===
-{{head|de|noun form}}
+{{head|de|noun form|g=m}}
 
 # {{inflection of|de|Wachhabender||str|nom//acc|p|;|wk|nom|s}}
 
@@ -45483,7 +45935,7 @@ Substantivisation of {{m|de|inhaftiert}}.
 {{de-ndecl|+}}
 
 ===Noun===
-{{head|de|noun form}}
+{{head|de|noun form|g=m}}
 
 # {{inflection of|de|Inhaftierter||str|nom//acc|p|;|wk|nom|s}}
 
@@ -45579,7 +46031,7 @@ Substantivisation of {{m|de|alleinerziehend}}.
 {{de-ndecl|+}}
 
 ===Noun===
-{{head|de|noun form}}
+{{head|de|noun form|g=m}}
 
 # {{inflection of|de|Alleinerziehender||str|nom//acc|p|;|wk|nom|s}}
 
@@ -45633,7 +46085,7 @@ Substantivisation of {{m|de|abgesandt}}.
 {{de-ndecl|+}}
 
 ===Noun===
-{{head|de|noun form}}
+{{head|de|noun form|g=m}}
 
 # {{inflection of|de|Abgesandter||str|nom//acc|p|;|wk|nom|s}}
 
@@ -46234,6 +46686,11 @@ Substantivization of {{m|de|staatenlos||stateless}}.
 ====Declension====
 {{de-ndecl|+}}
 
+===Noun===
+{{head|de|noun form|g=f}}
+
+# {{inflection of|de|Staatenlose||str|gen//dat|s|;|str|gen|p}}
+
 ===Further reading===
 * {{R:Duden}}
 
@@ -46250,11 +46707,6 @@ Substantivization of {{m|de|staatenlos||stateless}}.
 * {{audio|de|De-Staatenlose.ogg|Audio}}
 
 ===Noun===
-{{head|de|noun form|g=m}}
-
-# {{inflection of|de|Staatenloser||str|nom//acc|p|;|wk|nom|s}}
-
-===Noun===
 {{de-noun|+|m=+}}
 
 # {{female equivalent of|de|Staatenloser}}: [[female]] [[stateless]] [[person]]
@@ -46264,6 +46716,11 @@ Substantivization of {{m|de|staatenlos||stateless}}.
 
 ====Related terms====
 * {{l|de|Staatenlosigkeit||[[statelessness]]}}
+
+===Noun===
+{{head|de|noun form|g=m}}
+
+# {{inflection of|de|Staatenloser||str|nom//acc|p|;|wk|nom|s}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -47368,11 +47825,17 @@ From {{m|de|einheimisch}}.
 
 ====Declension====
 {{de-ndecl|+}}
-{{C|de|People}}
+
+===Noun===
+{{head|de|noun form|g=f}}
+
+# {{inflection of|de|Einheimische||str|gen//dat|s|;|str|gen|p}}
 
 ===Further reading===
 * {{R:DWDS}}
 * {{R:UniLeipzig}}
+
+{{C|de|People}}
 -------- end text --------
 Page 1803 Medizinstudentin: Found match for regex: =
 Page 1803 Medizinstudentin: -------- begin text --------
@@ -47405,11 +47868,6 @@ From the superlative {{m|de|ältesten}}.
 * {{IPA|de|/ˈɛltəstə/}}
 
 ===Noun===
-{{head|de|noun form|g=m}}
-
-# {{inflection of|de|Ältester||str|nom//acc|p|;|wk|nom|s}}
-
-===Noun===
 {{de-noun|+|m=+}}
 
 # {{female equivalent of|de|Ältester}}: [[female]] [[elder]]; (the) [[oldest]], [[eldest]] (female)
@@ -47419,7 +47877,11 @@ From the superlative {{m|de|ältesten}}.
 
 ====Related terms====
 * {{l|de|alt}}
-* {{l|de|Ältester}}
+
+===Noun===
+{{head|de|noun form|g=m}}
+
+# {{inflection of|de|Ältester||str|nom//acc|p|;|wk|nom|s}}
 
 {{C|de|People|Religion}}
 -------- end text --------
@@ -47561,7 +48023,7 @@ Nominalization of {{m|de|schiffbrüchig}}.
 {{de-ndecl|+}}
 
 ===Noun===
-{{head|de|noun form|g=}}
+{{head|de|noun form|g=m}}
 
 # {{inflection of|de|Schiffbrüchiger||str|nom//acc|p|;|wk|nom|s}}
 
@@ -47579,6 +48041,11 @@ Page 1810 Ausgestossener: -------- begin text --------
 
 ====Declension====
 {{de-ndecl|+}}
+
+===Noun===
+{{head|de|noun form|g=f}}
+
+# {{inflection of|de|Ausgestossene||str|gen//dat|s|;|str|gen|p}}
 -------- end text --------
 Page 1811 Ausgestossene: Found match for regex: =
 Page 1811 Ausgestossene: -------- begin text --------
@@ -47922,7 +48389,7 @@ Substantivisation of {{m|de|heranwachsend}}.
 {{de-ndecl|+}}
 
 ===Noun===
-{{head|de|noun form}}
+{{head|de|noun form|g=m}}
 
 # {{inflection of|de|Heranwachsender||str|nom//acc|p|;|wk|nom|s}}
 
@@ -47976,7 +48443,7 @@ Substantivisation of {{m|de|blind}}.
 {{de-ndecl|+}}
 
 ===Noun===
-{{head|de|noun form}}
+{{head|de|noun form|g=m}}
 
 # {{inflection of|de|Blinder||str|nom//acc|p|;|wk|nom|s}}
 
@@ -48057,6 +48524,11 @@ Substantivisation of {{m|de|alliiert}}.
 
 ====Declension====
 {{de-ndecl|+}}
+
+===Noun===
+{{head|de|noun form|g=f}}
+
+# {{inflection of|de|Alliierte||str|gen//dat|s|;|str|gen|p}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -48318,6 +48790,11 @@ Page 1843 Verrückter: -------- begin text --------
 
 ====Declension====
 {{de-ndecl|+}}
+
+===Noun===
+{{head|de|noun form|g=f}}
+
+# {{inflection of|de|Verrückte||str|gen//dat|s|;|str|gen|p}}
 
 {{C|de|People}}
 -------- end text --------
@@ -49001,6 +49478,11 @@ From {{m|de|afrodeutsch}}.
 ====Declension====
 {{de-ndecl|+}}
 
+===Noun===
+{{head|de|noun form|g=f}}
+
+# {{inflection of|de|Afrodeutsche||str|gen//dat|s|;|str|gen|p}}
+
 ===Further reading===
 * {{R:Duden}}
 -------- end text --------
@@ -49023,6 +49505,11 @@ From {{m|de|afrodeutsch}}.
 
 ====Declension====
 {{de-ndecl|+}}
+
+===Noun===
+{{head|de|noun form|g=m}}
+
+# {{inflection of|de|Afrodeutscher||str|nom//acc|p|;|wk|nom|s}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -49345,6 +49832,11 @@ Page 1890 Altvorderer: -------- begin text --------
 
 ====Declension====
 {{de-ndecl|+}}
+
+===Noun===
+{{head|de|noun form|g=f}}
+
+# {{inflection of|de|Altvordere||str|gen//dat|s|;|str|gen|p}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -50956,7 +51448,11 @@ Nominalization of the adjective {{m|de|umgekommen}}.
 
 ====Declension====
 {{de-ndecl|+}}
-See declension of {{m|de|umgekommen}}.
+
+===Noun===
+{{head|de|noun form|g=f}}
+
+# {{inflection of|de|Umgekommene||str|gen//dat|s|;|str|gen|p}}
 -------- end text --------
 Page 1964 Unentschlossener: Found match for regex: =
 Page 1964 Unentschlossener: -------- begin text --------
@@ -50976,7 +51472,11 @@ Nominalization of the adjective {{m|de|unentschlossen}}.
 
 ====Declension====
 {{de-ndecl|+}}
-See declension of {{m|de|unentschlossen}}.
+
+===Noun===
+{{head|de|noun form|g=f}}
+
+# {{inflection of|de|Unentschlossene||str|gen//dat|s|;|str|gen|p}}
 -------- end text --------
 Page 1965 Dachverbandsvorsitzender: Found match for regex: =
 Page 1965 Dachverbandsvorsitzender: -------- begin text --------
@@ -50991,6 +51491,11 @@ Page 1965 Dachverbandsvorsitzender: -------- begin text --------
 
 ====Declension====
 {{de-ndecl|+}}
+
+===Noun===
+{{head|de|noun form|g=f}}
+
+# {{inflection of|de|Dachverbandsvorsitzende||str|gen//dat|s|;|str|gen|p}}
 -------- end text --------
 Page 1966 Bezugsverlust: Found match for regex: =
 Page 1966 Bezugsverlust: -------- begin text --------
@@ -51068,6 +51573,11 @@ From {{m|de|geimpft}}.
 ====Related terms====
 * {{l|de|Impfling}}
 
+===Noun===
+{{head|de|noun form|g=f}}
+
+# {{inflection of|de|Geimpfte||str|gen//dat|s|;|str|gen|p}}
+
 ===Further reading===
 * {{R:UniLeipzig}}
 * {{R:DWDS}}
@@ -51091,6 +51601,11 @@ From {{m|de|ungeimpft}}.
 
 ====Declension====
 {{de-ndecl|+}}
+
+===Noun===
+{{head|de|noun form|g=f}}
+
+# {{inflection of|de|Ungeimpfte||str|gen//dat|s|;|str|gen|p}}
 
 ===Further reading===
 * {{R:UniLeipzig}}
@@ -51204,6 +51719,11 @@ From {{m|de|versehrt}}.
 ====Hyponyms====
 * {{l|de|Kriegsversehrter}}
 
+===Noun===
+{{head|de|noun form|g=f}}
+
+# {{inflection of|de|Versehrte||str|gen//dat|s|;|str|gen|p}}
+
 ===Further reading===
 * {{R:UniLeipzig}}
 * {{R:Duden}}
@@ -51233,6 +51753,11 @@ From {{compound|de|Krieg|-s-|Versehrter}}.
 * {{l|de|Kriegsberichterstatter}}
 * {{l|de|Kriegsveteran}}
 
+===Noun===
+{{head|de|noun form|g=f}}
+
+# {{inflection of|de|Kriegsversehrte||str|gen//dat|s|;|str|gen|p}}
+
 ===Further reading===
 * {{R:Duden}}
 * {{R:UniLeipzig}}
@@ -51254,6 +51779,11 @@ From {{affix|de|Datenschutz|beauftragen}}.
 
 ====Declension====
 {{de-ndecl|+}}
+
+===Noun===
+{{head|de|noun form|g=m}}
+
+# {{inflection of|de|Datenschutzbeauftragter||str|nom//acc|p|;|wk|nom|s}}
 -------- end text --------
 Page 1980 Datenschutzbeauftragter: Found match for regex: =
 Page 1980 Datenschutzbeauftragter: -------- begin text --------
@@ -51268,6 +51798,11 @@ From {{affix|de|Datenschutz|Beauftragter}}.
 
 ====Declension====
 {{de-ndecl|+}}
+
+===Noun===
+{{head|de|noun form|g=f}}
+
+# {{inflection of|de|Datenschutzbeauftragte||str|gen//dat|s|;|str|gen|p}}
 -------- end text --------
 Page 1981 Ladevorgang: Found match for regex: =
 Page 1981 Ladevorgang: -------- begin text --------
@@ -52036,6 +52571,11 @@ From {{com|de|Ost|Deutscher}}.
 ====Declension====
 {{de-ndecl|+}}
 
+===Noun===
+{{head|de|noun form|g=f}}
+
+# {{inflection of|de|Ostdeutsche||str|gen//dat|s|;|str|gen|p}}
+
 ===Further reading===
 * {{R:Duden}}
 * {{R:UniLeipzig}}
@@ -52061,6 +52601,11 @@ From {{com|de|Ost|Deutsche}}.
 
 ====Declension====
 {{de-ndecl|+}}
+
+===Noun===
+{{head|de|noun form|g=m}}
+
+# {{inflection of|de|Ostdeutscher||str|nom//acc|p|;|wk|nom|s}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -52103,6 +52648,11 @@ From {{com|de|West|Deutscher}}.
 ====Declension====
 {{de-ndecl|+}}
 
+===Noun===
+{{head|de|noun form|g=f}}
+
+# {{inflection of|de|Westdeutsche||str|gen//dat|s|;|str|gen|p}}
+
 ===Further reading===
 * {{R:Duden}}
 * {{R:UniLeipzig}}
@@ -52128,6 +52678,11 @@ From {{com|de|West|Deutsche}}.
 
 ====Declension====
 {{de-ndecl|+}}
+
+===Noun===
+{{head|de|noun form|g=m}}
+
+# {{inflection of|de|Westdeutscher||str|nom//acc|p|;|wk|nom|s}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -52620,6 +53175,11 @@ From {{com|de|Fraktion|-s-|Vorsitzender}}.
 ====Declension====
 {{de-ndecl|+}}
 
+===Noun===
+{{head|de|noun form|g=f}}
+
+# {{inflection of|de|Fraktionsvorsitzende||str|gen//dat|s|;|str|gen|p}}
+
 ===Further reading===
 * {{R:Duden}}
 * {{R:DWDS}}
@@ -52941,6 +53501,11 @@ Page 2050 Geschworener: -------- begin text --------
 ====Declension====
 {{de-ndecl|+}}
 
+===Noun===
+{{head|de|noun form|g=f}}
+
+# {{inflection of|de|Geschworene||str|gen//dat|s|;|str|gen|p}}
+
 ===Further reading===
 * {{R:Duden}}
 * {{R:DWDS}}
@@ -52982,6 +53547,11 @@ From {{affix|de|Kartoffel|Deutscher}}.
 
 ====Declension====
 {{de-ndecl|+}}
+
+===Noun===
+{{head|de|noun form|g=f}}
+
+# {{inflection of|de|Kartoffeldeutsche||str|gen//dat|s|;|str|gen|p}}
 -------- end text --------
 Page 2053 Youtuber: Found match for regex: =
 Page 2053 Youtuber: -------- begin text --------
@@ -53575,6 +54145,11 @@ Page 2083 Vorgesetzter: -------- begin text --------
 
 ====Declension====
 {{de-ndecl|+}}
+
+===Noun===
+{{head|de|noun form|g=f}}
+
+# {{inflection of|de|Vorgesetzte||str|gen//dat|s|;|str|gen|p}}
 
 ===Further reading===
 * {{R:Duden}}
