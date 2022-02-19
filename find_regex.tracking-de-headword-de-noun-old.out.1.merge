@@ -933,7 +933,7 @@ Page 28 tour de force: -------- begin text --------
 ===Noun===
 {{de-noun|tour<f,s> de force|nolinkhead=1}}
 
-# {{alternative form of|de|Tour de Force}}
+# {{alternative spelling of|de|Tour de Force}}
 
 ====Declension====
 {{de-ndecl|tour<f,s> de force}}
@@ -1154,8 +1154,8 @@ From {{af|de|Mensch|t1=man, human being, person|-n-|alt2=-en-|Affe|t3=ape}}, cog
 ===Noun===
 {{de-noun|m.weak|f=^in}}
 
-# {{lb|de|colloquial}} An [[ape]] or [[great ape]] {{q|male or of unspecified gender}} {{gloss|a tail-less [[primate]]}}.
-# {{lb|de|scientific}} A [[hominid]] {{q|male or of unspecified gender}} {{gloss|a member of the family [[Hominidae]], including [[human]]s}}.
+# {{lb|de|colloquial}} [[ape]] or [[great ape]] {{q|male or of unspecified gender}} {{gloss|a tail-less [[primate]]}}
+# {{lb|de|scientific}} [[hominid]] {{q|male or of unspecified gender}} {{gloss|a member of the family [[Hominidae]], including [[human]]s}}
 
 ====Declension====
 {{de-ndecl|m.weak}}
@@ -3221,7 +3221,7 @@ Page 81 Deutscher: -------- begin text --------
 ===Noun===
 {{de-noun|+|f=+}}
 
-# [[German]]
+# [[German]] {{q|male or of unspecified gender}}
 #: {{uxi|de|Sind Sie Deutscher?|Are you German?|q=formal, to a man}}
 #: {{uxi|de|Bist du Deutscher?|Are you German?|q=informal,  to a man or a boy}}
 #: {{uxi|de|Seid ihr Deutsche?|Are you Germans?|q=informal, to a group of people}}
@@ -5494,14 +5494,12 @@ Borrowed from {{bor|de|en|sandwich}}.
 * {{audio|de|De-Sandwich.ogg|audio}}
 
 ===Noun===
-{{de-noun|n|g2=m|Sandwiches|gen2=Sandwichs|gen3=Sandwich|Sandwiches|pl2=Sandwichs|pl3=Sandwiche}}
+{{de-noun|n:m[also in Germany],s:es:-,s:es:e}}
 
 # [[sandwich]] (snack)
 
 ====Declension====
-{{de-decl-noun-n|(e)s|pl=[[Sandwiches]],<br>[[Sandwichs]]}}
-;masculine, uncommon
-{{de-decl-noun-m|(e)s|e}}
+{{de-ndecl|n:m[also in Germany],s:es:-,s:es:e}}
 
 ====Usage notes====
 * The German word is commonly used only for more richly filled sandwiches, typically with salad and sauce, normally featuring [[toast|toasted bread]] or a bread roll. Plainer variants with traditional German bread go by a variant of regional German names like {{m|de|Stulle}}. Variants with a bread roll often go simply by {{m|de|Brötchen||bread roll}}.
@@ -5522,15 +5520,13 @@ Page 138 Satyr: -------- begin text --------
 * {{audio|de|De-Satyr.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m|Satyrs|gen2=Satyrn|gen3=Satyren|Satyrn}}
+{{de-noun|((<m,,n>,<m,,n.weak.sync_sg>,<m,,n.weak>))}}
 
 # {{lb|de|Greek mythology}} a [[satyr]] {{gloss|half-man and half-goat being}}
 # {{lb|de|figurative}} a very [[lecherous]] [[man]]
 
 ====Declension====
-{{de-decl-noun-m|s|n}}
-{{de-decl-noun-m|n|n}}
-{{de-decl-noun-m|en|n}}
+{{de-ndecl|((<m,,n>,<m,,n.weak.sync_sg>,<m,,n.weak>))}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -5547,15 +5543,12 @@ Borrowed from {{bor|de|fi|sauna}}.
 * {{audio|de|De-Sauna.ogg|Audio}}
 
 ===Noun===
-{{de-noun|f||Saunen|pl2=Saunas}}
+{{de-noun|f,en:s[uncommon]}}
 
 # [[sauna]]
 
 ====Declension====
-* Plural in ''-en'' (predominant)
-{{de-decl-noun-f|pl=Saunen}}
-* Plural in ''-s'' (rarer)
-{{de-decl-noun-f|s}}
+{{de-ndecl|f,en:s[uncommon]}}
 
 ====Derived terms====
 * {{l|de|saunen}}
@@ -5574,7 +5567,7 @@ From {{bor|de|la|senior}}.
 * {{audio|de|De-Senior.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m|Senioren|Senioren|f=Seniorin}}
+{{de-noun|m,s,en|f=in}}
 
 # [[father]], [[senior]], the [[elder]] {{gloss|older of two close male relatives, especially with the same name}}
 #: {{syn|de|Sen.|q1=abbreviation}}
@@ -5588,7 +5581,7 @@ From {{bor|de|la|senior}}.
 #: {{ux|de|Nächstes Jahr werd ich 19, da spiel ich dann schon bei den '''Senioren'''.|I’m turning 19 next year, so I’ll be playing with the '''adults'''.}}
 
 ====Declension====
-{{de-decl-noun-m|s|en}}
+{{de-ndecl|m,s,en|f=in}}
 
 ====Derived terms====
 * {{l|de|Seniorenheim}}
@@ -5612,13 +5605,13 @@ Borrowed from {{bor|de|en|slang}}.
 * {{audio|de|De-Slang.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m|g2=n|Slangs|Slangs}}
+{{de-noun|m:n[rare],s,s}}
 
 # [[slang]]
 #: {{syn|de|Jargon|q=dated}}
 
 ====Declension====
-{{de-decl-noun-n|s|s}}
+{{de-ndecl|m:n[rare],s,s}}
 
 ====Usage notes====
 * The neuter gender is uncommon nowadays.
@@ -5643,13 +5636,13 @@ Borrowed from {{bor|de|en|soul}}, from {{der|de|enm|-}}, from {{der|de|ang|sāwo
 * {{IPA|de|[sɔʊ̯l]|[zoːl]}}
 
 ====Noun====
-{{de-noun|m|g2=n|Souls|gen2=Soul|-}}
+{{de-noun|m,-:s,-}}
 
 # {{lb|de|music genre}} [[soul music]], [[soul]]
 #: {{syn|de|Soulmusik|g1=f}}
 
 =====Declension=====
-{{de-decl-noun-m|(s)|n=sg}}
+{{de-ndecl|m,-:s,-}}
 
 ===Etymology 2===
 
@@ -5686,9 +5679,8 @@ From {{der|de|grc|Σφῐ́γξ}}.
 * {{IPA|de|/sfɪŋ(k)s/}}
 
 ===Noun===
-{{de-noun|f||Sphinxen|pl2=Sphingen}}
-
-{{de-noun|m|Sphinx|gen2=Sphinxes|Sphinxe|pl2=Sphingen}}
+{{de-noun|f,e}} ''or''<br />
+{{de-noun|m[sometimes in scientific usage with male beings/statues],-:es,e:Sphingen}}
 
 # [[sphinx]]
 
@@ -5696,10 +5688,8 @@ From {{der|de|grc|Σφῐ́γξ}}.
 * Generally speaking, the word is feminine like its Greek etymon. The masculine is sometimes used in scientific usage when the being or statue in question is male. Since this is the case of the {{w|Sphinx of Giza}}, a hypercorrect belief that the masculine is generally more appropriate may exist in some semi-educated speakers.
 
 ====Declension====
-; Feminine
-{{de-decl-noun-f|en}}
-; Masculine
-{{de-decl-noun-m||e}}
+{{de-ndecl|f,e}}
+{{de-ndecl|m[sometimes in scientific usage with male beings/statues],-:es,e:Sphingen}}
 
 ----
 
@@ -5712,12 +5702,12 @@ Page 144 Supernova: -------- begin text --------
 * {{audio|de|De-Supernova.ogg|Audio}}
 
 ===Noun===
-{{de-noun|f||Supernovae}}
+{{de-noun|f,e.nodatpln}}
 
 # {{lb|de|astronomy}} [[supernova]]
 
 ====Declension====
-{{de-decl-noun-f|e|dp=Supernovae}}
+{{de-ndecl|f,e.nodatpln}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -5734,13 +5724,13 @@ From {{bor|de|la|symbolum}}.
 * {{audio|de|De-Symbol2.ogg|audio (Berlin)}}
 
 ===Noun===
-{{de-noun|n|Symbols|Symbole}}
+{{de-noun|n.dat_with_e}}
 
 # [[symbol]], [[icon]]
 #: {{syn|de|Sinnbild}}
 
 ====Declension====
-{{de-decl-noun-n|(e)s|e}}
+{{de-ndecl|n.dat_with_e}}
 
 ====Derived terms====
 * {{l|de|Friedenssymbol}}
@@ -5770,7 +5760,7 @@ From {{bor|de|en|tank}}.
 * {{rhymes|de|aŋk|s=1}}
 
 ===Noun===
-{{de-noun|m|Tanks|gen2=Tankes|Tanks|pl2=Tanke}}
+{{de-noun|m,s:es,s:e[rare]}}
 
 # [[tank]] {{gloss|container for liquids or gases}}
 # {{lb|de|military|archaic|_|to|_|obsolete}} [[tank]] {{gloss|armoured fighting vehicle}}
@@ -5780,8 +5770,7 @@ From {{bor|de|en|tank}}.
 * The usual plural is {{m|de||Tanks}}; the form {{m|de||Tanke}} is very rare.
 
 ====Declension====
-{{de-decl-noun-m|s|s}}
-{{de-decl-noun-m|(e)s|e}}
+{{de-ndecl|m,s:es,s:e[rare]}}
 
 ====Hyponyms====
 * {{l|de|Benzintank}}
@@ -5814,7 +5803,7 @@ Borrowed from {{bor|de|fr|taxi}}.
 * {{audio|de|De-Taxi.ogg|audio}}
 
 ===Noun===
-{{de-noun|n|Taxis|Taxis|pl2=Taxen|g2=m}}
+{{de-noun|n:m[alternatively (but rarely) in Switzerland],s,s}}
 
 # [[taxi]], [[cab]]
 
@@ -5822,7 +5811,7 @@ Borrowed from {{bor|de|fr|taxi}}.
 Alternative masculine form (“der Taxi") in Switzerland (rare).
 
 ====Declension====
-{{de-decl-noun-n|s|s}}
+{{de-ndecl|n:m[alternatively (but rarely) in Switzerland],s,s}}
 
 ====Derived terms====
 {{der-top}}
@@ -5849,15 +5838,12 @@ Page 148 Teddy: Found match for regex: =
 Page 148 Teddy: -------- begin text --------
 
 ===Noun===
-{{de-noun|m||Teddys|pl2=Teddies}}
+{{de-noun|m,s,s}}
 
 # {{clipping of|de|Teddybär|t=teddy bear}}
 
-====Usage notes====
-See the entry at {{m|de|Bär}} for details about declension.
-
 ====Declension====
-{{de-decl-noun-m|en|en}}
+{{de-ndecl|m,s,s}}
 
 ====Further reading====
 * {{R:Duden}}
@@ -5872,13 +5858,12 @@ From {{inh|de|gmh|tenōr}}, from {{der|de|it|tenore}}, from {{der|de|la|tenor}}.
 * {{IPA|de|/teˈnoːr/|[teˈnoːɐ̯]|[teˈnoːr]}}
 
 ====Noun====
-{{de-noun|m|Tenors|Tenöre|pl2=Tenore}}
+{{de-noun|m,s:es,^e:e}}
 
 # {{lb|de|music}} [[tenor]]
 
 =====Declension=====
-{{de-decl-noun-m|(e)s|pl=Tenöre}}
-{{de-decl-noun-m|(e)s|pl=Tenore}}
+{{de-ndecl|m,s:es,^e:e}}
 
 =====Related terms=====
 * {{l|de|Tenorposaune}}, {{l|de|Tenorsänger}}, {{l|de|Tenorstimme}}
@@ -5891,14 +5876,14 @@ From {{bor|de|la|tenor}}.
 * {{IPA|de|/ˈteːnoːr/|[ˈteːnoːɐ̯]|[ˈteːnoːr]}}
 
 ====Noun====
-{{de-noun|m|Tenors|-}}
+{{de-noun|m.sg}}
 
 # [[essence]] of [[argumentation]], [[tenor]] {{gloss|tone, as of a conversation}}
 # {{lb|de|law|Germany|sometimes|_|Austria}} [[operative part]] of a [[court]] [[order]]
 #: {{syn|de|Entscheidungsformel|q1=Germany|Dispositiv|q2=Switzerland|Urteilsspruch|q3=Austria}}
 
 =====Declension=====
-{{de-decl-noun-m|(e)s|pl=-}}
+{{de-ndecl|m.sg}}
 
 =====Derived terms=====
 * {{l|de|tenorieren|t=to impart an operative part}}
@@ -5921,10 +5906,10 @@ Page 150 Test: -------- begin text --------
 * {{rhymes|de|ɛst|s=1}}
 
 ===Etymology 1===
-From {{der|de|en|test}}, from {{der|de|fro|test||pot; melting pot, especially one in which metals were tried}}, from {{der|de|la|testum||pot}}. Compare etymology 2 below. The development from “melting pot” to “procedure of testing metals” also happened natively in earlier German, but the further generalisation is exclusively English.
+{{bor+|de|en|test}}, from {{der|de|fro|test||pot; melting pot, especially one in which metals were tried}}, from {{der|de|la|testum||pot}}. Compare etymology 2 below. The development from “melting pot” to “procedure of testing metals” also happened natively in earlier German, but the further generalisation is exclusively English.
 
 ====Noun====
-{{de-noun|m|Tests|gen2=Testes|Tests|pl2=Teste|Testchen}}
+{{de-noun|m,s:es,s:e[colloquial]|dim=chen}}
 
 # [[test]]
 
@@ -5932,8 +5917,7 @@ From {{der|de|en|test}}, from {{der|de|fro|test||pot; melting pot, especially on
 * The commoner plural is '''''Tests'''''. The form ''Teste'' is chiefly colloquial.
 
 =====Declension=====
-{{de-decl-noun-m|s|s}}
-{{de-decl-noun-m|es|e}}
+{{de-ndecl|m,s:es,s:e[colloquial]}}
 
 =====Hyponyms=====
 {{col4|de|Abreißtest|Abschlusstest|Abwurftest|Achievementtest|AIDS-Test (Aidstest)|Alkoholtest|Atomtest|Aufnahmetest|Ausdruckstest
@@ -5975,13 +5959,13 @@ Page 151 Tetraeder: -------- begin text --------
 * {{audio|de|De-Tetraeder.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m|g2=n|Tetraeders|Tetraeder}}
+{{de-noun|n}}<!-- dewikt gives as alternatively masculine, but this is not found in either DWDS or Duden -->
 
 # {{lb|de|geometry}} [[tetrahedron]]
 #: {{syn|de|Vierflächner}}
 
 ====Declension====
-{{de-decl-noun-n|s|}}
+{{de-ndecl|n}}<!-- dewikt gives as alternatively masculine, but this is not found in either DWDS or Duden -->
 
 ====Derived terms====
 * {{l|de|tetraedrisch}}
@@ -6002,19 +5986,30 @@ Page 152 Titan: -------- begin text --------
 * {{rhymes|de|aːn|s=2}}
 
 ===Etymology 1===
-{{bor|de|la|[[Tītān]] ([[Tītānus]])}}, {{bor|de|grc|Τιτάν}}
+{{bor+|de|la|Tītān}}, {{m|la|Tītānus}}, {{bor|de|grc|Τιτάν}}.
+
+====Alternative forms====
+* {{alt|de|Titane<g:m>}}
 
 ====Noun====
-{{de-noun|m|Titans|gen2=Titanen|Titanen}}
+{{de-noun|m.weak}}
 
-# [[titan]] (giant)
+# {{lb|de|Greek mythology}} [[Titan]]
+# {{lb|de|higher register}} [[titan]]
 
 =====Declension=====
-{{de-decl-noun-m|s|en}}
-{{de-decl-noun-m|en|en}}
+{{de-ndecl|m.weak}}
 
-=====Related terms=====
+=====Derived terms=====
 * {{l|de|titanisch}}
+
+====Proper noun====
+{{de-proper noun|m,s:-[only with an article]}}
+
+# {{lb|de|astronomy}} [[Titan]] {{gl|one of Saturn's moons}}
+
+=====Declension=====
+{{de-ndecl|m,s:-[only with an article].sg}}
 
 ===Etymology 2===
 
@@ -6046,18 +6041,14 @@ Borrowed from {{bor|de|en|toast}}.
 * {{audio|de|De-Toast.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m|g2=n|Toastes|gen2=Toasts|Toaste|pl2=Toasts}}
+{{de-noun|m,es:s,s:e}}
 
 # [[toast]] {{gloss|salutation}}
 # [[toast]] {{gloss|toasted bread}}
 # {{lb|de|short for|_|[[Toastbrot]]}} soft, roughly square [[white bread]], toasted or not
 
-====Usage notes====
-* ''Toast'' is always masculine when meaning “salutation”, otherwise it can be masculine or neuter.
-
 ====Declension====
-{{de-decl-noun-m|(e)s|e}}
-{{de-decl-noun-m|s|s}}
+{{de-ndecl|m,es:s,s:e}}
 
 ====Related terms====
 * {{l|de|toasten}}
@@ -6071,50 +6062,70 @@ Borrowed from {{bor|de|en|toast}}.
 Page 154 Tram: Found match for regex: =
 Page 154 Tram: -------- begin text --------
 
-===Etymology===
+===Etymology 1===
 From {{bor|de|en|tram}}.
 
-===Pronunciation===
+====Pronunciation====
 * {{IPA|de|/tram/}}
 * {{audio|de|LL-Q188 (deu)-Sebastian Wallroth-Tram.wav|Audio}}
 
-===Noun===
-{{de-noun|f|g2=n|Tram|gen2=Trams|Trams}}
+====Noun====
+{{de-noun|f,s}} ''or''<br />
+{{de-noun|n[commonly in Switzerland],s,s}}
 
 # [[tram]]
 #: {{syn|de|Straßenbahn|Trambahn}}
 
-====Usage notes====
-In Switzerland commonly used as a neuter noun.
+=====Usage notes=====
+* In Switzerland commonly used as a neuter noun.
 
-====Declension====
-;feminine declension
-{{de-decl-noun-f|s}}
-;neuter declension
-{{de-decl-noun-n|s|s}}
+=====Declension=====
+{{de-ndecl|f,s}}
+{{de-ndecl|n[commonly in Switzerland],s,s}}
 
-===Further reading===
+====Further reading====
 * {{R:Duden|Tram_Straszenbahn}}
+
+===Etymology 2===
+{{inh+|de|gmh|trām}}, {{m|gmh|trāme}}.
+
+====Alternative forms====
+* {{alt|de|Tramen}}
+
+====Pronunciation====
+* {{IPA|de|/traːm/}}
+
+====Noun====
+{{de-noun|m,s:es,e:^e}}
+
+# {{lb|de|Austria|otherwise|archaic}} [[large]] [[wooden]] [[beam]]
+
+=====Declension=====
+{{de-ndecl|m,s:es,e:^e}}
+
+====Further reading====
+* {{R:Duden|Tram_Balken}}
 -------- end text --------
 Page 155 Tsunami: Found match for regex: {
 Page 155 Tsunami: -------- begin text --------
 {{wikipedia|lang=de}}
 
 ===Etymology===
-From {{der|de|ja|津波||[[seismic]] sea wave|lit=harbour wave|tr=tsunami}}.
+{{bor+|de|ja|津波||[[seismic]] sea wave|lit=harbour wave|tr=tsunami}}.
 
 ===Pronunciation===
 * {{IPA|de|/tsuˈnaːmi/}}
 * {{audio|de|De-Tsunami.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m|g2=f|Tsunami|gen2=Tsunamis|Tsunamis|pl2=Tsunami}}
+{{de-noun|m,s,s}} ''or''<br />
+{{de-noun|f,s:-}}
 
 # [[tsunami]] {{gloss|large, destructive wave generally caused by a tremendous disturbance in the ocean}}
 
 ====Declension====
-{{de-decl-noun-m|(s)|s}}
-{{de-decl-noun-m|(s)}}
+{{de-ndecl|m,s,s}}
+{{de-ndecl|f,s:-}}
 
 ====Derived terms====
 * {{l|de|Tsunamifrühwarnsystem}}
@@ -6139,15 +6150,13 @@ Borrowed from {{bor|de|la|tumor|t=swelling}}.
 * {{audio|de|De-Tumor.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m|Tumors|Tumoren|pl2=Tumore}}
+{{de-noun|m,s,en:e}}
 
 # [[tumor]], [[tumour]]
 #: {{syn|de|Geschwulst}}
 
 ====Declension====
-{{de-decl-noun-m|s|en}}
-Alternative plural:
-{{de-decl-noun-m|s|e}}
+{{de-ndecl|m,s,en:e}}
 
 ===Further reading===
 * {{R:DWDS}}
@@ -6163,7 +6172,7 @@ Page 157 Tunnel: Found match for regex: =
 Page 157 Tunnel: -------- begin text --------
 
 ===Alternative forms===
-*{{alter|de|Tunell||Austrian}}
+* {{alt|de|Tunell||Austria|Switzerland}}
 
 ===Etymology===
 From {{bor|de|en|tunnel}}.
@@ -6174,7 +6183,7 @@ From {{bor|de|en|tunnel}}.
 * {{audio|de|De-Tunnel.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m|g2=n|Tunnels|Tunnel|pl2=Tunnels}}
+{{de-noun|m:n[alternatively in southern Germany, Austria and Switzerland],s,-:s[Switzerland or dated]}}
 
 # [[tunnel]]
 # {{lb|de|ball games}} [[nutmeg]] {{gloss|act of playing the ball through an opponent's legs}}
@@ -6184,8 +6193,7 @@ From {{bor|de|en|tunnel}}.
 * The predominant gender is masculine. The word may, alternatively, be neuter in southern Germany, Austria, and Switzerland.
 
 ====Declension====
-{{de-decl-noun-m|s|}}
-{{de-decl-noun-n|s|s}}
+{{de-ndecl|m:n[alternatively in southern Germany, Austria and Switzerland],s,-:s[Switzerland or dated]}}
 
 ====Derived terms====
 * {{l|de|tunnelartig}}, {{l|de|tunnelförmig}}
@@ -6218,7 +6226,7 @@ From {{bor|de|la|verbum||word; verb}}.
 * {{audio|de|De-Verbum fcm.ogg|Audio}}
 
 ===Noun===
-{{de-noun|n||Verba|pl2=Verben}}
+{{de-noun|n,s,Verba}}<!-- plural ''Verben'' not in Duden, DWDS or Pons -->
 
 # {{lb|de|dated}} [[word]]
 #: {{syn|de|Wort}}
@@ -6226,7 +6234,7 @@ From {{bor|de|la|verbum||word; verb}}.
 #: {{syn|de|Verb|Zeitwort|Tätigkeitswort}}
 
 ====Declension====
-{{de-decl-noun-n|s|pl=[[Verba]]<br>[[Verben]]}}
+{{de-ndecl|n,s,Verba}}<!-- plural ''Verben'' not in Duden, DWDS or Pons -->
 
 ====Hyponyms====
 * {{l|de|Hauptverbum}}
@@ -6247,6 +6255,9 @@ Page 159 Voodoo: Found match for regex: {
 Page 159 Voodoo: -------- begin text --------
 {{wikipedia|lang=de}}
 
+===Alternative forms===
+* {{alt|de|Voudou}}
+
 ===Etymology===
 From {{bor|de|en|voodoo}}, from a West African language.
 
@@ -6255,12 +6266,12 @@ From {{bor|de|en|voodoo}}, from a West African language.
 * {{audio|de|De-Voodoo.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m|g2=n|Voodoo|gen2=Voodoos|-}}
+{{de-noun|m,-.sg}}<!-- neuter gender, alternative genitive ''Voodoos'' not in Duden, DWDS, dewikt or Pons -->
 
 # [[voodoo]]
 
 ====Declension====
-{{de-decl-noun-m|(s)|n=sg}}
+{{de-ndecl|m,-.sg}}<!-- neuter gender, alternative genitive ''Voodoos'' not in Duden, DWDS, dewikt or Pons -->
 
 ====Derived terms====
 * {{l|de|Voodoopuppe}}
@@ -6287,13 +6298,13 @@ From the adjective {{m|de|weiß}}.
 * {{hyphenation|de|Weiß}}
 
 ===Noun===
-{{de-noun|n|Weißes|-}}
+{{de-noun|n,-:es.-[rare]}}
 
 # [[white]], [[whiteness]]
 # [[powder]], [[face powder]]
 
 ====Declension====
-{{de-decl-noun-n|es|n=sg}}
+{{de-ndecl|n,-:es.-[rare]}}
 
 ====Derived terms====
 * {{l|de|Weißbier}}
@@ -6327,14 +6338,14 @@ From {{m|de|winken||to wave}}.
 * {{audio|de|De-Wink.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m|Winks|gen2=Winkes|Winke}}
+{{de-noun|m,s:es}}
 
 # [[wave]] {{q|a loose back-and-forth movement, as of the hands}}
 # [[sign]]
 # [[hint]], [[cue]], [[suggestion]]
 
 ====Declension====
-{{de-decl-noun-m|ns=Wink|gs=Winkes, Winks|ds=Wink|as=Wink|np=Winke|gp=Winke|dp=Winken|ap=Winke}}
+{{de-ndecl|m,s:es}}
 
 ====Related terms====
 * {{l|de|winken}}
@@ -6368,7 +6379,7 @@ Page 163 Wrack: -------- begin text --------
 {{wikipedia|lang=de}}
 
 ===Etymology===
-From {{der|de|gml|wrak}}, probably from {{der|de|osx|*wrak}}, derived from {{m|osx|wrekan}}, from {{der|de|gmw-pro|*wrekan}}, from {{der|de|gem-pro|*wrekaną}}, whence also {{cog|de|rächen}} and {{cog|en|wreak}}. Cognate with {{cog|nl|wrak}}, {{cog|en|wrack}}, {{m|en|wreck}}, and Scandinavian ''[[vrak]]'' (from Low German).
+From {{der|de|gml|wrak}}, probably from {{der|de|osx|*wrak}}, derived from {{m|osx|wrekan}}, from {{der|de|gmw-pro|*wrekan}}, from {{der|de|gem-pro|*wrekaną}}, whence also {{cog|de|rächen}} and {{cog|en|wreak}}. Cognate with {{cog|nl|wrak}}, {{cog|en|wrack}}, {{m|en|wreck}}, {{cog|nb|vrak}}, {{cog|nn|vrak}}, {{cog|sv|vrak}} (from Low German).
 
 ===Pronunciation===
 * {{IPA|de|/vʁak/}}
@@ -6376,7 +6387,7 @@ From {{der|de|gml|wrak}}, probably from {{der|de|osx|*wrak}}, derived from {{m|o
 * {{rhymes|de|ak|s=1}}
 
 ===Noun===
-{{de-noun|n|Wracks|gen2=Wrackes|Wracks|pl2=Wracke}}
+{{de-noun|n,s:es,s:e[rare]}}
 
 # [[wreck]] {{gloss|damaged remains of a ship, airplane, etc.}}
 #: {{ux|de|Das '''Wrack''' des Schiffs wurde mit Spezialkränen geborgen.|The '''wreck''' of the ship was recovered with specialized cranes.}}
@@ -6388,8 +6399,7 @@ From {{der|de|gml|wrak}}, probably from {{der|de|osx|*wrak}}, derived from {{m|o
 * The normal plural is '''''Wracks'''''. The form ''Wracke'' is rare.
 
 ====Declension====
-{{de-decl-noun-n|s|s}}
-{{de-decl-noun-n|(e)s|e}}
+{{de-ndecl|n,s:es,s:e[rare]}}
 
 ====Derived terms====
 * {{l|de|abwracken}}
@@ -6418,13 +6428,13 @@ From {{bor|de|en|yak}}, from {{der|de|bo|གཡག}}.
 * {{rhymes|de|ak|s=1}}
 
 ===Noun===
-{{de-noun|m|Yaks|Yaks|g2=n}}
+{{de-noun|m[in technical writing]:n[alternatively],s,s}}
 
 # [[yak]] {{gloss|Asian bovine}}
-#:{{syn|de|Grunzochse}}
+#: {{syn|de|Grunzochse}}
 
 ====Declension====
-{{de-decl-noun-m|s|s}}
+{{de-ndecl|m[in technical writing]:n[alternatively],s,s}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -6440,12 +6450,12 @@ Page 165 Zebra: -------- begin text --------
 * {{audio|de|De-at-Zebra.ogg|audio (Austria)}}
 
 ===Noun===
-{{de-noun|n||Zebras}}
+{{de-noun|n,s,s}}
 
 # [[zebra]]
 
 ====Declension====
-{{de-decl-noun-m|s|s}}
+{{de-ndecl|n,s,s}}
 
 ====Derived terms====
 * {{l|de|Bergzebra}}
@@ -6493,15 +6503,12 @@ Page 167 Bison: -------- begin text --------
 * {{audio|de|De-Bison.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m|g2=n||Bisons|pl2=Bisone}}
+{{de-noun|m:n,s,s}}<!-- plural ''Bisone'' not in Duden, DWDS or dewikt -->
 
 # {{l|en|bison}} ({{m|mul|Bison bison}}) {{defdate|from 16th c.}}
 
-====Usage notes====
-* The normal plural is {{m|de||Bisons}}. The form {{m|de|Bisone}} is rare.
-
 ====Declension====
-{{de-decl-noun-m|s|s}}
+{{de-ndecl|m:n,s,s}}<!-- plural ''Bisone'' not in Duden, DWDS or dewikt -->
 
 ===Further reading===
 * {{R:Duden}}
@@ -6679,7 +6686,7 @@ Page 172 Obdachlose: -------- begin text --------
 ===Noun===
 {{de-noun|+|m=+}}
 
-# ([[female]]) [[homeless]] person
+# {{female equivalent of|de|Obdachloser}}: [[female]] [[homeless]] [[person]]
 
 ====Declension====
 {{de-ndecl|+}}
@@ -7668,7 +7675,7 @@ Substantivization of {{m|de|taub||deaf}}.
 ====Noun====
 {{de-noun|+|m=+}}
 
-# A [[deaf]] woman or girl.
+# {{female equivalent of|de|Tauber}}: [[deaf]] [[woman]] or [[girl]]
 
 =====Declension=====
 {{de-ndecl|+}}
@@ -7830,7 +7837,7 @@ See also {{l|de|Federweiß}}.
 * {{audio|de|De-Federweißer.ogg|Audio}}
 
 ===Noun===
-{{de-noun|+}} {{qualifier|der [[Federweiße]], ein Federweißer}}
+{{de-noun|+}}
 
 # {{lb|de|oenology}} [[Federweisser]], [[must]] made from white [[grapes]] that has begun to [[ferment]] but that has not yet turned into [[wine]]
 #: {{syn|de|Sturm|Sauser|Neuer Wein}}
@@ -9914,9 +9921,9 @@ From the adjective {{m|de|alt}}.
 # {{inflection of|de|Alter||str|nom//acc|p|;|wk|nom|s}}
 
 ===Noun===
-{{de-noun|+}}
+{{de-noun|+|m=+}}
 
-# [[old woman]]
+# {{female equivalent of|de|Alter}}: [[old]] [[woman]]
 
 ====Declension====
 {{de-ndecl|+}}
@@ -10092,7 +10099,7 @@ From {{inh|de|gmh|vīge}}, from {{inh|de|goh|fīga}}, from {{der|de|fro|figue}},
 ====Noun====
 {{de-noun|+|m=+}}
 
-# {{lb|de|rare}} [[cowardly]] [[woman]]
+# {{lb|de|rare}} {{female equivalent of|de|Feiger}}: [[cowardly]] [[woman]]
 
 =====Declension=====
 {{de-ndecl|+}}
@@ -10424,7 +10431,7 @@ Substantivization of the adjective {{m|de|irre}}.
 {{de-noun|+|m=+}}
 
 # the state of [[err]]ing, the state of being wrong
-# a [[mentally ill]] woman
+# {{female equivalent of|de|Irrer}}: [[mentally ill]] [[woman]] or [[girl]]
 
 ====Declension====
 {{de-ndecl|+}}
@@ -11351,7 +11358,7 @@ From {{inh|de|goh|wīsa}}, from {{inh|de|gem-pro|*wīsaz||wise}}.
 ====Noun====
 {{de-noun|+|m=+}}
 
-# {{female equivalent of|de|Weiser||sage, wisewoman}}
+# {{female equivalent of|de|Weiser}}: [[female]] [[sage]], [[wisewoman]]
 
 =====Declension=====
 {{de-ndecl|+}}
@@ -11590,16 +11597,13 @@ Page 289 Teddybär: -------- begin text --------
 * {{hyphenation|de|Ted|dy|bär}}
 
 ===Noun===
-{{de-noun|m|Teddybärs|gen2=Teddybären|Teddybären|f=Teddybärin}}
+{{de-noun|((<m.weak>,<m,s,en.[informal]>))|f=in}}
 
-# A [[teddybear]]
+# [[teddybear]]
 #: {{syn|de|Teddy|Kuschelbär|Plüschbär|Bärchen}}
 
 ====Declension====
-;strong declension
-{{de-decl-noun-m|s|pl=Teddybären}}
-;weak declension
-{{de-decl-noun-m|en|pl=Teddybären}}
+{{de-ndecl|((<m.weak>,<m,s,en.[informal]>))}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -12352,7 +12356,7 @@ Compound of [[außer]]/[[außerhalb]] "[[outside]]" (of) + [[irdisch]]/[[Erde]] 
 ===Noun===
 {{de-noun|+|m=+}}
 
-# [[alien]] (from space), creature not from [[Earth]], [[extraterrestrial#Noun|extraterrestrial]] (female)
+# {{female equivalent of|de|Außerirdischer}}: [[female]] [[space]] [[alien]], [[female]] [[extraterrestrial#Noun|extraterrestrial]]
 
 ====Declension====
 {{de-ndecl|+}}
@@ -12702,7 +12706,7 @@ From {{m|de|schwul}}.
 ===Noun===
 {{de-noun|+|f=+}}
 
-# [[gay]] man, [[homosexual]], [[faggot]], [[queer]] {{q|male or of unspecified gender}}
+# [[gay]] [[man]] {{q|male or of unspecified gender}}
 
 ====Declension====
 {{de-ndecl|+}}
@@ -13582,8 +13586,8 @@ Page 351 Ungläubige: -------- begin text --------
 ===Noun===
 {{de-noun|+|m=+}}
 
-# {{lb|de|religion}} [[infidel]], [[heathen]], [[disbeliever]], [[unbeliever]] (female)
-# {{lb|de|rare|or|dated}} [[nonbeliever]] (female)
+# {{lb|de|religion}} {{female equivalent of|de|Ungläubiger}}: [[female]] [[infidel]]/[[heathen]]/[[disbeliever]]/[[unbeliever]]
+# {{lb|de|rare|or|dated}} {{female equivalent of|de|Ungläubiger}}: [[female]] [[nonbeliever]]
 #: {{syn|de|Nichtgläubige|Unreligiöse}}
 
 ====Declension====
@@ -13855,7 +13859,7 @@ Page 361 Verlobte: -------- begin text --------
 ===Noun===
 {{de-noun|+|m=+}}
 
-# a [[fiancée]], [[fiancé]] / [[fiance]] {{q|female}}
+# {{female equivalent of|de|Verlobter}}: [[fiancée]]
 
 ====Declension====
 {{de-ndecl|+}}
@@ -14012,7 +14016,7 @@ Nowadays often superficially analyzed as a shortened form of the rare {{m|de|Bea
 ===Noun===
 {{de-noun|+|f=Beamtin}}
 
-# [[government]] [[employee]], (government) [[official]], [[civil servant]], [[public servant]], (police) [[officer]]
+# [[government]] [[employee]], (government) [[official]], [[civil servant]], [[public servant]], (police) [[officer]] {{q|male or of unspecified gender}}
 #: {{syn|de|Amtsträger|Staatsbediensteter|Staatsdiener}}
 #: {{ant|de|Angestellter|Arbeiter|Unternehmer}}
 
@@ -14085,7 +14089,7 @@ Page 368 Prostituierte: -------- begin text --------
 ===Noun===
 {{de-noun|+|m=+}}
 
-# [[prostitute]] ([[female]])
+# {{female equivalent of|de|Prostituierter}}: ([[female]]) [[prostitute]]
 
 ====Declension====
 {{de-ndecl|+}}
@@ -14225,7 +14229,7 @@ Page 372 Schaulustige: -------- begin text --------
 ===Noun===
 {{de-noun|+|m=+}}
 
-# {{female equivalent of|de|Schaulustiger}}
+# {{female equivalent of|de|Schaulustiger}}: [[female]] [[rubbernecker]], [[female]] [[onlooker]]
 
 ====Declension====
 {{de-ndecl|+}}
@@ -14349,8 +14353,8 @@ Page 377 Unparteiische: -------- begin text --------
 ===Noun===
 {{de-noun|+|m=+}}
 
-# female who is impartial
-# {{lb|de|sports}} [[female]] [[referee]]
+# {{female equivalent of|de|Unparteiischer}}: [[impartial]] [[female]]
+# {{lb|de|sports}} {{female equivalent of|de|Unparteiischer}}: [[female]] [[referee]]
 #: {{syn|de|Schiedsrichterin}}
 
 ====Declension====
@@ -14373,8 +14377,8 @@ Page 378 Unparteiischer: -------- begin text --------
 ===Noun===
 {{de-noun|+|f=+}}
 
-# someone who is [[impartial]]
-# {{lb|de|sports}} [[referee]]
+# [[impartial]] [[person]] {{q|male or of unspecified gender}}
+# {{lb|de|sports}} [[referee]] {{q|male or of unspecified gender}}
 #: {{syn|de|Schiedsrichter}}
 
 ====Declension====
@@ -14507,7 +14511,7 @@ Substantivisation of {{m|de|verdächtig}}.
 ===Noun===
 {{de-noun|+|f=+}}
 
-# [[suspect]]
+# [[suspect]] {{q|male or of unspecified gender}}
 
 ====Declension====
 {{de-ndecl|+}}
@@ -14750,7 +14754,7 @@ Page 391 Erziehungsberechtigte: -------- begin text --------
 ===Etymology 1===
 
 ====Noun====
-{{de-noun|+|m=er}}
+{{de-noun|+|m=+}}
 
 # {{female equivalent of|de|Erziehungsberechtigter}}: [[female]] [[parent]], [[female]] ([[legal]]) [[guardian]]
 
@@ -14905,7 +14909,7 @@ Substantivization of {{m|de|freiwillig||voluntary}}.
 ===Noun===
 {{de-noun|+|m=+}}
 
-# (female) [[volunteer]]
+# {{female equivalent of|de|Freiwilliger}}: [[female]] [[volunteer]]
 
 ====Declension====
 {{de-ndecl|+}}
@@ -14971,7 +14975,7 @@ From {{m|de|arbeitslos}}.
 ====Noun====
 {{de-noun|+|m=+}}
 
-# [[unemployed]] [[woman]]
+# {{female equivalent of|de|Arbeitsloser}}: [[unemployed]] [[woman]]
 
 =====Declension=====
 {{de-ndecl|+}}
@@ -15489,7 +15493,7 @@ Substantivization of {{m|de|jugendlich||youthful}}.
 ===Noun===
 {{de-noun|+|m=+}}
 
-# [[youth]], [[teenager]], [[adolescent]] (female) {{q|up to 17–19 years of age}}
+# {{female equivalent of|de|Jugendlicher}}: [[female]] [[youth]], [[female]] [[teenager]], [[female]] [[adolescent]] {{q|up to 17–19 years of age}}
 
 ====Declension====
 {{de-ndecl|+}}
@@ -15710,10 +15714,9 @@ Page 426 Auszubildende: -------- begin text --------
 * {{audio|de|De-Auszubildende.ogg|Audio}}
 
 ===Noun===
-{{de-noun|+}}
+{{de-noun|+|m=+}}
 
-# [[apprentice]]
-# [[trainee]]
+# {{female equivalent of|de|Auszubildender}}: [[female]] [[appentice]], [[female]] [[trainee]]
 
 ====Declension====
 {{de-ndecl|+}}
@@ -16093,8 +16096,8 @@ Page 440 Alkoholkranke: -------- begin text --------
 ===Noun===
 {{de-noun|+|m=+}}
 
-# [[alcoholic]] (female)
-#: {{syn|de|Alkoholiker|Alkoholikerin|;|Säufer|Säuferin}}
+# {{female equivalent of|de|Alkoholkranker}}: [[female]] [[alcoholic]]
+#: {{syn|de|Alkoholikerin|Säuferin}}
 
 ====Declension====
 {{de-ndecl|+}}
@@ -16192,7 +16195,7 @@ Page 443 Verletzte: -------- begin text --------
 ===Noun===
 {{de-noun|+|m=+}}
 
-# [[female]] [[injured]] (person), [[casualty]]
+# {{female equivalent of|de|Verletzter}}: [[female]] [[injured]] (person), [[female]] [[casualty]]
 
 ====Declension====
 {{de-ndecl|+}}
@@ -16214,7 +16217,7 @@ Page 444 Verletzter: -------- begin text --------
 ===Noun===
 {{de-noun|+|f=+}}
 
-# [[injured]] (person), [[casualty]]
+# [[injured]] (person), [[casualty]] {{q|male or of unspecified gender}}
 
 ====Declension====
 {{de-ndecl|+}}
@@ -16362,7 +16365,7 @@ Page 448 Verwandte: -------- begin text --------
 ===Noun===
 {{de-noun|+|m=+}}
 
-# [[relative]] (female)
+# {{female equivalent of|de|Verwandter}}: [[female]] [[relative]]
 
 ====Declension====
 {{de-ndecl|+}}
@@ -16478,7 +16481,7 @@ Substantivization of {{m|de|freiwillig||voluntary}}.
 ===Noun===
 {{de-noun|+|f=+}}
 
-# (male) [[volunteer]]
+# [[volunteer]] {{q|male or of unspecified gender}}
 
 ====Declension====
 {{de-ndecl|+}}
@@ -17066,7 +17069,7 @@ Page 476 Größenwahnsinnige: -------- begin text --------
 ===Noun===
 {{de-noun|+|m=+}}
 
-# [[female]] [[megalomaniac]]
+# {{female equivalent of|de|Größenwahnsinniger}}: [[female]] [[megalomaniac]]
 
 ====Declension====
 {{de-ndecl|+}}
@@ -17092,7 +17095,7 @@ From {{m|de|größenwahnsinnig}}.
 ===Noun===
 {{de-noun|+|f=+}}
 
-# [[megalomaniac]] (male)
+# [[megalomaniac]] {{q|male or of unspecified gender}}
 
 ====Declension====
 {{de-ndecl|+}}
@@ -17362,17 +17365,13 @@ Page 486 Neugeborenes: -------- begin text --------
 * {{audio|de|De-Neugeborenes.ogg|Audio}}
 
 ===Noun===
-{{de-noun|+}}
+{{de-noun|+|m=+|f=+}}
 
 # {{q|male or female}} [[newborn]], [[neonate]]
 #: {{syn|de|[[neugeboren]]es [[Baby]]|[[neugeboren]]es [[Kind]]}}
 
 ====Declension====
 {{de-ndecl|+}}
-
-====Hyponyms====
-* {{l|de|Neugeborene}} {{q|female}}
-* {{l|de|Neugeborener}} {{q|male}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -18199,7 +18198,7 @@ Page 516 Amputierte: -------- begin text --------
 ===Noun===
 {{de-noun|+|m=+}}
 
-# [[female]] [[amputee]]
+# {{female equivalent of|de|Amputierter}}: [[female]] [[amputee]]
 
 ====Declension====
 {{de-ndecl|+}}
@@ -18223,9 +18222,9 @@ Page 517 Amputierter: Found match for regex: =
 Page 517 Amputierter: -------- begin text --------
 
 ===Noun===
-{{de-noun|+|f=Amputierte}}
+{{de-noun|+|f=+}}
 
-# [[amputee]]
+# [[amputee]] {{q|male or of unspecified gender}}
 
 ====Declension====
 {{de-ndecl|+}}
@@ -18244,7 +18243,7 @@ Page 518 Eingeweihte: -------- begin text --------
 ===Noun===
 {{de-noun|+|m=+}}
 
-# [[female]] [[insider]], [[initiate]]
+# {{female equivalent of|de|Eingeweihter}}: [[female]] [[insider]], [[female]] [[initiate]]
 
 ====Declension====
 {{de-ndecl|+}}
@@ -18263,7 +18262,7 @@ Page 519 Eingeweihter: -------- begin text --------
 ===Noun===
 {{de-noun|+|f=+}}
 
-# [[insider]], [[initiate]]
+# [[insider]], [[initiate]] {{q|male or of unspecified gender}}
 
 ====Declension====
 {{de-ndecl|+}}
@@ -18314,7 +18313,7 @@ From {{m|de|angestellt}}.
 ====Noun====
 {{de-noun|+|m=+}}
 
-# [[employee]], [[worker]], [[clerk]], [[servant]], [[staffer]], [[staff]] [[member]] (all female)
+# {{female equivalent of|de|Angestellter}}: [[female]] [[employee]]/[[worker]]/[[clerk]]/[[servant]]/[[staffer]]/[[staff]] [[member]]
 
 =====Declension=====
 {{de-ndecl|+}}
@@ -18469,7 +18468,7 @@ Page 523 Zollbeamter: -------- begin text --------
 ===Noun===
 {{de-noun|+|f=Zollbeamtin}}
 
-# [[customs officer]]
+# [[customs officer]] {{q|male or of unspecified gender}}
 #: {{syn|de|Zöllner}}
 
 ====Declension====
@@ -18494,7 +18493,7 @@ From {{m|de|bekannt}}.
 ===Noun===
 {{de-noun|+|f=+}}
 
-# an [[acquaintance]], a [[friend]]
+# [[acquaintance]], [[friend]] {{q|male or of unspecified gender}}
 
 ====Declension====
 {{de-ndecl|+}}
@@ -18735,7 +18734,7 @@ Page 535 Toter: Found match for regex: =
 Page 535 Toter: -------- begin text --------
 
 ===Etymology===
-Substantivation of {{m|de|tot}}
+Substantivation of {{m|de|tot}}.
 
 ===Pronunciation===
 * {{audio|de|De-Toter.ogg|Audio}}
@@ -18743,7 +18742,7 @@ Substantivation of {{m|de|tot}}
 ===Noun===
 {{de-noun|+|f=+}}
 
-# [[cadaver]]; [[corpse]] {{gloss|dead person}}
+# [[cadaver]]; [[corpse]] {{q|male or of unspecified gender}}
 
 ====Declension====
 {{de-ndecl|+}}
@@ -18824,7 +18823,7 @@ Substantivization of {{m|de|interniert||interned}}.
 ===Noun===
 {{de-noun|+|m=+}}
 
-# [[internee]] (female)
+# {{female equivalent of|de|Internierter}}: [[female]] [[internee]]
 
 ====Declension====
 {{de-ndecl|+}}
@@ -18927,13 +18926,13 @@ Page 542 Hexaeder: -------- begin text --------
 * {{audio|de|De-Hexaeder.ogg|Audio}}
 
 ===Noun===
-{{de-noun|n|g2=m||Hexaeder}}
+{{de-noun|n}}<!-- dewikt gives as alternatively masculine, but this is not found in either DWDS or Duden -->
 
 # {{lb|de|geometry}} [[hexahedron]]
 #: {{syn|de|Sechsflächner|Sechsflach}}
 
 ====Declension====
-{{de-decl-noun-n|s|}}
+{{de-ndecl|n}}<!-- dewikt gives as alternatively masculine, but this is not found in either DWDS or Duden -->
 
 ===Further reading===
 * {{R:Duden}}
@@ -19152,17 +19151,11 @@ Nominalisation of {{m|de|schwarz}}.
 {{de-noun|+|f=+}}
 
 # a [[black]] object or [[being]]
-## {{qualifier|specifically}} a [[black]] person, a person of naturally dark skin
+## {{qualifier|specifically}} a [[black]] person, a person of naturally dark skin {{q|male or of unspecified gender}}
+##: {{syn|de|Maximalpigmentierter<qq:humorous><t:maximally-pigmented person>|Mohr<qq:dated, now offensive>|Neger<qq:dated, now offensive>|Negro<qq:dated><t:Negro>}}
 
 ====Declension====
 {{de-ndecl|+}}
-
-====Synonyms====
-{{sense|black person}}
-* {{l|de|Maximalpigmentierter}}
-* {{l|de|Mohr}}
-* {{l|de|Neger}}
-* {{l|de|Negro}} (pl. {{l|de|Negros}})
 
 ====Hypernyms====
 {{sense|black person}}
@@ -19488,7 +19481,7 @@ Page 563 Leidtragende: -------- begin text --------
 ===Noun===
 {{de-noun|+|m=+}}
 
-# [[mourner]], [[sufferer]]
+# {{female equivalent of|de|Leidtragender}}: [[female]] [[mourner]], [[female]] [[sufferer]]
 
 ====Declension====
 {{de-ndecl|+}}
@@ -19505,7 +19498,7 @@ Page 564 Leidtragender: -------- begin text --------
 ===Noun===
 {{de-noun|+}}
 
-# [[mourner]], [[sufferer]]
+# [[mourner]], [[sufferer]] {{q|male or of unspecified gender}}
 
 ====Declension====
 {{de-ndecl|+}}
@@ -19543,7 +19536,7 @@ Nominalisation of {{m|de|weiß||white}}.
 ====Noun====
 {{de-noun|+|f=+}}
 
-# [[white]] person {{gloss|[[Caucasian]] person}} {{q|male or of unspecified gender}}
+# [[white]] [[person]] {{gloss|[[Caucasian]] person}} {{q|male or of unspecified gender}}
 
 =====Declension=====
 {{de-ndecl|+}}
@@ -19618,7 +19611,7 @@ Page 568 Linke: -------- begin text --------
 {{de-noun|+|m=+}}
 
 # {{lb|de|politics}} [[left wing]]
-# female [[leftist]]
+# {{female equivalent of|de|Linker}}: [[female]] [[leftist]]
 # [[left]] [[hand]]
 # [[left]] {{gloss|the left side}}
 
@@ -19825,13 +19818,13 @@ Page 574 Polyeder: -------- begin text --------
 * {{audio|de|De-Polyeder.ogg|Audio}}
 
 ===Noun===
-{{de-noun|n|g2=m||Polyeder}}
+{{de-noun|n}}<!-- dewikt gives as alternatively masculine, but this is not found in either DWDS or Duden -->
 
 # {{lb|de|geometry}} [[polyhedron]]
 #: {{syn|de|Vielflächner}}
 
 ====Declension====
-{{de-decl-noun-n|s|}}
+{{de-ndecl|n}}<!-- dewikt gives as alternatively masculine, but this is not found in either DWDS or Duden -->
 
 ====Hyponyms====
 * {{l|de|Tetraeder}}, {{l|de|Oktaeder}}, {{l|de|Ikosaeder}}
@@ -19853,7 +19846,7 @@ From {{m|de|schwarz||black}}.
 ====Noun====
 {{de-noun|+|m=+}}
 
-# [[black]] [[woman]]
+# {{female equivalent of|de|Schwarzer}}: [[black]] [[woman]]
 
 =====Declension=====
 {{de-ndecl|+}}
@@ -20222,17 +20215,17 @@ Page 591 Reiche: -------- begin text --------
 Substantivisation of {{m|de|reich}}.
 
 ====Noun====
-{{head|de|noun form}}
-
-# {{inflection of|de|Reicher||str|nom//acc|p|;|wk|nom|s}}
-
-====Noun====
 {{de-noun|+|m=+}}
 
-# [[rich]] woman
+# {{female equivalent of|de|Reicher}}: [[rich]] [[woman]] or [[girl]]
 
 =====Declension=====
 {{de-ndecl|+}}
+
+====Noun====
+{{head|de|noun form}}
+
+# {{inflection of|de|Reicher||str|nom//acc|p|;|wk|nom|s}}
 
 ===Etymology 2===
 
@@ -20423,7 +20416,7 @@ See the lemma {{m|de|weiß}}.
 ====Noun====
 {{de-noun|+|m=+}}
 
-# [[white]] (female) {{gloss|woman/girl, female [[Caucasian]] person}}
+# {{female equivalent of|de|Weißer}}: [[white]] [[female]], [[Caucasian]] [[female]]
 # one of a variety of beers, including the Bavarian [[weissbier]], but especially the one called {{m|de|Berliner Weiße}}
 
 =====Declension=====
@@ -20501,7 +20494,7 @@ Page 600 Erwachsener: -------- begin text --------
 ====Noun====
 {{de-noun|+|f=+|n=+}}
 
-# [[adult]] (fully grown human); [[grown-up]] {{q|male or of unspecified gender}}
+# [[adult]], [[grown-up]] {{q|male or of unspecified gender}}
 #* '''2009''', ''Die Todesopfer an der Berliner Mauer 1961-1989. Ein biographisches Handbuch'', p. 20:
 #*: Zu den Todesopfern zählen Männer und Frauen, Kinder und Jugendliche: [...] 13 '''Erwachsene''' zwischen 31 und 40 Jahren, darunter eine Frau; 12 '''Erwachsene''' zwischen 41 und 80 Jahren, darunter drei Frauen [...].
 #* '''2016''', Melanie Herget, ''Mobilität von Familien im ländlichen Raum: Arbeitsteilung, Routinen und typische Bewältigungsstrategien'', Springer VS, p. 89:
@@ -20684,7 +20677,7 @@ Substantivization of {{m|de|geliebt||loved, beloved}}, the past participle of {{
 ===Noun===
 {{de-noun|+|m=+}}
 
-# [[beloved]]; female [[lover]]; [[romantic]] [[partner]]; {{non-gloss definition|now usually implying an affair, otherwise somewhat poetic}}
+# {{female equivalent of|de|Geliebter}}: [[female]] [[beloved]]; [[female]] [[lover]] or [[romantic]] [[partner]] {{q|now usually implying an affair, otherwise somewhat poetic}}
 #: {{syn|de|Liebhaberin}}
 
 ====Declension====
@@ -20919,7 +20912,7 @@ Substantivization of {{m|de|taub}}.
 ====Noun====
 {{de-noun|+|f=+}}
 
-# a [[deaf]] man or boy
+# [[deaf]] [[person]] {{q|male or of unspecified gender}}
 
 =====Declension=====
 {{de-ndecl|+}}
@@ -21004,7 +20997,7 @@ Page 616 Oppositionelle: -------- begin text --------
 ===Noun===
 {{de-noun|+|m=+}}
 
-# {{female equivalent of|de|Oppositioneller}}
+# {{female equivalent of|de|Oppositioneller}}: [[female]] [[member]] of the [[opposition]]
 
 ====Declension====
 {{de-ndecl|+}}
@@ -21013,6 +21006,7 @@ Page 616 Oppositionelle: -------- begin text --------
 {{head|de|noun form|g=m}}
 
 # {{inflection of|de|Oppositioneller||str|nom//acc|p|;|wk|nom|s}}
+
 ===Further reading===
 * {{R:DWDS}}
 * {{R:UniLeipzig}}
@@ -21043,12 +21037,12 @@ Page 619 Ehemalige: Found match for regex: =
 Page 619 Ehemalige: -------- begin text --------
 
 ===Etymology===
-From the adjective ''[[ehemalig]]''.
+From the adjective {{m|de|ehemalig}}.
 
 ===Noun===
 {{de-noun|+|m=+}}
 
-# a (female) [[former]] (student, lover, office holder &mdash; context must clarify)
+# {{female equivalent of|de|Ehemaliger}}: [[female]] [[former]] [[student]]/[[lover]]/[[officeholder]]/etc. {{q|context must clarify}}
 #: {{ux|de|Die [http://www.goerres-ehemalige.de/ Ehemaligen] sind immer hocherfreut, ihre früheren Lehrerinnen und Lehrer wiederzutreffen.|The former [students/pupils] are always overjoyed to meet their former teachers again.}}
 
 ====Declension====
@@ -21513,11 +21507,11 @@ From {{suf|de|fremd|er}}. Compare {{cog|nds|[[Frümeder]] (en Frümeder, dei Fr�
 ===Noun===
 {{de-noun|+|f=+}}
 
-# A [[stranger]]: someone whom one does not know.
+# [[stranger]] {{gl|someone whom one does not know}} {{q|male or of unspecified gender}}
 #: {{ux|de|Mitten in der Nacht stand ein '''Fremder''' vor der Tür und sagte, dass wir die Polizei rufen müssen.|translation=In the middle of the night there was a '''stranger''' at the door who said we had to call the police.}}
 #: {{syn|de|Unbekannter}}
 #: {{ant|de|Bekannter}}
-# A stranger, a [[foreigner]]: someone from a different country, or from a different part of a country.
+# [[stranger]], [[foreigner]] {{gl|someone from a different country, or from a different part of a country}}
 #: {{ux|de|In einer neuen Stadt bist du zunächst ein '''Fremder'''.|translation=Initially you are a '''stranger''' in a new city.}}
 #: {{syn|de|Fremdling}}
 #: {{ant|de|Einheimischer}}
@@ -21544,7 +21538,7 @@ Substantivisation of {{m|de|verdächtig}}.
 ===Noun===
 {{de-noun|+|m=+}}
 
-# {{q|female}} [[suspect]]
+# {{female equivalent of|de|Verdächtiger}}: [[female]] [[suspect]]
 
 ====Declension====
 {{de-ndecl|+}}
@@ -21623,7 +21617,7 @@ Page 644 Angeklagter: -------- begin text --------
 ===Noun===
 {{de-noun|+|f=+}}
 
-# [[defendant]] (person prosecuted or sued)
+# [[defendant]] {{gl|person prosecuted or sued}} {{q|male or of unspecified gender}}
 
 ====Declension====
 {{de-ndecl|+}}
@@ -22071,7 +22065,7 @@ Page 667 Aufständischer: -------- begin text --------
 ===Noun===
 {{de-noun|+|f=+}}
 
-# [[insurgent]] (rebel)
+# [[insurgent]], [[rebel]] {{q|male or of unspecified gender}}
 #: {{syn|de|Insurgent}}
 
 ====Declension====
@@ -23064,7 +23058,7 @@ Page 709 Angeklagte: -------- begin text --------
 ===Noun===
 {{de-noun|+|m=+}}
 
-# {{lb|de|legal}} [[accused]]; [[defendant]]
+# {{lb|de|legal}} {{female equivalent of|de|Angeklagter}}: [[female]] [[accused]]; [[female]] [[defendant]]
 
 ====Declension====
 {{de-ndecl|+}}
@@ -23137,7 +23131,7 @@ Page 713 Tote: -------- begin text --------
 ===Noun===
 {{de-noun|+|m=+}}
 
-# [[cadaver]]; [[corpse]] (female dead person)
+# {{female equivalent of|de|Toter}}: [[female]] [[cadaver]]; [[female]] [[corpse]]
 
 ====Declension====
 {{de-ndecl|+}}
@@ -24175,7 +24169,7 @@ From the fact that the rank was originally ''freed'' from sentry duty.
 ===Noun===
 {{de-noun|+}}
 
-# {{lb|de|military}} [[lance corporal]] {{gloss|military rank}}
+# {{lb|de|military}} [[lance corporal]] {{gloss|military rank}} {{q|male or of unspecified gender}}
 
 ====Declension====
 {{de-ndecl|+}}
@@ -24295,7 +24289,7 @@ Page 763 Drogenbeauftragter: -------- begin text --------
 ===Noun===
 {{de-noun|+|f=+}}
 
-# A [[drug]] [[czar]], [[commissioner]] or [[representative]] for [[drugs]]. {{q|male or of unspecified gender}}
+# [[drug]] [[czar]], [[commissioner]] or [[representative]] for [[drugs]] {{q|male or of unspecified gender}}
 
 ====Declension====
 {{de-ndecl|+}}
@@ -24782,7 +24776,7 @@ Page 788 Eisheilige: -------- begin text --------
 ====Noun====
 {{de-noun|+|m=+}}
 
-# a female "[[ice]] [[saint]]": one of the saints on whose feast days frost is likely
+# {{female equivalent of|de|Eisheiliger}}: [[female]] "[[ice]] [[saint]]" {{gl|one of the saints on whose feast days frost is likely}}
 #* '''2013''', Felicitas Gruber, ''Die Kalte Sofie: Ein München-Krimi'', Diana Verlag.
 #*: «{{...}} Und die '''Eisheilige''' Kalte Sophie, der du deinen Namen verdankst, hat zum Glück nicht allzu schlimm zugeschlagen. {{...}}»
 #* '''2016''' May 14, Norbert Jonscher, "31. Mittelalterlicher Markt ist eröffnet", ''Brauinschweiger Zeitung''.
@@ -25099,7 +25093,7 @@ From {{af|de|Arbeit|-s-|pflichtig|alt3=pflichtiger}}.
 ===Noun===
 {{de-noun|+}}
 
-# a person who has the [[duty]] to work
+# a person who has the [[duty]] to work {{q|male or of unspecified gender}}
 
 ====Declension====
 {{de-ndecl|+}}
@@ -25212,7 +25206,7 @@ Page 810 Schuldiger: -------- begin text --------
 ===Noun===
 {{de-noun|+|f=+}}
 
-# [[culprit]]
+# [[culprit]] {{q|male or of unspecified gender}}
 
 ====Declension====
 {{de-ndecl|+}}
@@ -25807,7 +25801,7 @@ From {{m|de|schaulustig}}.
 ===Noun===
 {{de-noun|+|f=+}}
 
-# [[rubberneck]], [[onlooker]]
+# [[rubbernecker]], [[onlooker]] {{q|male or of unspecified gender}}
 #: {{syn|de|Gaffer}}
 
 ====Declension====
@@ -25834,13 +25828,12 @@ Page 860 Schirmherr: -------- begin text --------
 * {{audio|de|De-Schirmherr.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m|Schirmherrn|gen2=Schirmherren|Schirmherren}}
+{{de-noun|((<m.weak.sync_sg>,<m.weak>))}}
 
 # [[patron]]
 
 ====Declension====
-{{de-decl-noun-m|n|n}}
-{{de-decl-noun-m|en|en}}
+{{de-ndecl|((<m.weak.sync_sg>,<m.weak>))}}
 
 ====Related terms====
 * {{l|de|Schirmfrau}}
@@ -25892,8 +25885,8 @@ Page 863 Auszubildender: -------- begin text --------
 ===Noun===
 {{de-noun|+|f=+}}
 
-# [[apprentice]]
-# [[trainee]]
+# [[apprentice]] {{q|male or of unspecified gender}}
+# [[trainee]] {{q|male or of unspecified gender}}
 
 ====Declension====
 {{de-ndecl|+}}
@@ -25923,8 +25916,8 @@ Page 864 Vorsitzender: -------- begin text --------
 ===Noun===
 {{de-noun|+}}
 
-# [[chairman]], [[chairperson]], [[chair]], [[board chairman]]
-# [[president]]
+# [[chairman]], [[chairperson]], [[chair]], [[board chairman]] {{q|male or of unspecified gender}}
+# [[president]] {{q|male or of unspecified gender}}
 
 ====Declension====
 {{de-ndecl|+}}
@@ -25970,8 +25963,7 @@ Page 865 Vorsitzende: -------- begin text --------
 ===Noun===
 {{de-noun|+}}
 
-# [[chairwoman]], [[chairperson]], [[chair]], [[board chairwoman]]
-# [[president]]
+# {{female equivalent of|de|Vorsitzender}}: [[chairwoman]], [[female]] [[chairperson]], [[female]] [[chair]], [[board chairwoman]]; [[female]] [[president]]
 
 ====Declension====
 {{de-ndecl|+}}
@@ -26183,18 +26175,18 @@ Page 874 Letzter: Found match for regex: =
 Page 874 Letzter: -------- begin text --------
 
 ===Etymology===
-Substantivisation of {{m|de|letzter||last}}
+Substantivisation of {{m|de|letzter||last}}.
 
 ===Pronunciation===
 * {{audio|de|De-Letzter.ogg|Audio}}
 
 ===Noun===
-{{de-noun|+|f=Letzte}}
+{{de-noun|+.article|f=+}}
 
-# the [[last]] one
+# the [[last]] one {{q|male or of unspecified gender}}
 
 ====Declension====
-{{de-ndecl|+}}
+{{de-ndecl|+.article}}
 -------- end text --------
 Page 875 Massendefekt: Found match for regex: =
 Page 875 Massendefekt: -------- begin text --------
@@ -26419,7 +26411,7 @@ From {{affix|de|Reich|-s-|Deutscher}}.
 ===Noun===
 {{de-noun|+|f=+}}
 
-# {{lb|de|historical}} a (ethnic) [[German]] citizen or resident of [[Germany]]
+# {{lb|de|historical}} [[ethnic]] [[German]] [[citizen]] or [[resident]] {{q|male or of unspecified gender}}
 #: {{ant|de|Auslandsdeutscher}}
 
 ====Declension====
@@ -26447,7 +26439,7 @@ From {{affix|de|Ausland|-s-|Deutscher}}.
 ===Noun===
 {{de-noun|+|f=+}}
 
-# a [[German]] living abroad {{qualifier|outside Germany}}
+# [[German]] [[living]] [[abroad]] {{q|outside Germany; male or of unspecified gender}}
 #: {{ant|de|Reichsdeutscher}}
 
 ====Declension====
@@ -26474,7 +26466,7 @@ Page 889 Volksdeutscher: -------- begin text --------
 ===Noun===
 {{de-noun|+|f=+}}
 
-# {{lb|de|historical}} an (ethnic) [[German]] living abroad {{qualifier|outside Germany}}
+# {{lb|de|historical}} [[ethnic]] [[German]] [[live|living]] [[abroad]] {{q|outside Germany; male or of unspecified gender}}
 
 ====Declension====
 {{de-ndecl|+}}
@@ -26965,7 +26957,7 @@ Page 912 Grüne: -------- begin text --------
 ====Noun====
 {{de-noun|+|m=+}}
 
-# female [[green]] (member of an environmentalist party), female [[environmentalist]]
+# {{female equivalent of|de|Grüner}}: [[female]] [[green]] {{gl|member of an environmentalist party}}, [[female]] [[environmentalist]]
 
 =====Declension=====
 {{de-ndecl|+}}
@@ -27244,7 +27236,7 @@ A substantivization of {{m|de|geistlich||spiritual}}.
 ===Noun===
 {{de-noun|+|m=+}}
 
-# [[priest]], [[clergywoman]], [[clergyperson]], [[cleric]] (female)
+# {{female equivalent of|de|Geistlicher}}: [[female]] [[priest]], [[clergywoman]], [[female]] [[clergyperson]], [[female]] [[cleric]]
 
 ====Declension====
 {{de-ndecl|+}}
@@ -27296,7 +27288,7 @@ From {{m|de|krank}}.
 ===Noun===
 {{de-noun|+|m=+}}
 
-# [[sick]] [[person]] (female), [[sufferer]] (from a [[disease]]), [[patient]], [[invalid]]
+# {{female equivalent of|de|Kranker}}: [[sick]] [[female]], [[female]] [[sufferer]] (from a [[disease]]), [[female]] [[patient]], [[female]] [[invalid]]
 
 ====Declension====
 {{de-ndecl|+}}
@@ -27378,7 +27370,7 @@ From {{m|de|krank}}.
 ===Noun===
 {{de-noun|+|f=+}}
 
-# [[sick]] [[person]] {{q|male or of unspecified gender}}, [[sufferer]] (from a [[disease]]), [[patient]], [[invalid]]
+# [[sick]] [[person]], [[sufferer]] (from a [[disease]]), [[patient]], [[invalid]] {{q|male or of unspecified gender}}
 
 ====Declension====
 {{de-ndecl|+}}
@@ -28144,7 +28136,7 @@ Page 959 Beschäftigter: -------- begin text --------
 ===Noun===
 {{de-noun|+|f=+}}
 
-# {{nominalization of|de|beschäftigter}}: [[employee]]
+# {{nominalization of|de|beschäftigt}}: [[employee]] {{q|male or of unspecified gender}}
 #: {{syn|de|Angestellter<g:m>|Arbeiter<g:m>|Arbeitnehmer<g:m>|Mitarbeiter<g:m>|Werktätiger<g:m>}}
 #: {{ant|de|Arbeitsloser<g:m>|Arbeitgeber<g:m>}}
 
@@ -28201,7 +28193,7 @@ Page 961 Beschäftigte: -------- begin text --------
 ===Noun===
 {{de-noun|+|m=+}}
 
-# [[female]] [[employee]]
+# {{female equivalent of|de|Beschäftigter}}: [[female]] [[employee]]
 
 ====Declension====
 {{de-ndecl|+}}
@@ -28918,7 +28910,7 @@ Page 997 Große: -------- begin text --------
 ===Noun===
 {{de-noun|+|m=+}}
 
-# {{female equivalent of|de|Großer}}
+# {{female equivalent of|de|Großer}}: [[female]] [[adult]]; [[female]] [[great]] (person) {{q|title}}
 
 ====Declension====
 {{de-ndecl|+}}
@@ -28934,9 +28926,9 @@ Page 998 Frühgeborene: -------- begin text --------
 * {{hyphenation|de|Früh|ge|bo|re|ne}}
 
 ===Noun===
-{{de-noun|+|m=+}}
+{{de-noun|+|m=+|n=+}}
 
-# female [[premature]] [[baby]] ([[baby girl]])
+# {{female equivalent of|de|Frühgeborener}}: [[premature]] [[baby]] [[girl]]
 #: {{syn|de|Frühchen}}
 
 ====Declension====
@@ -28986,7 +28978,7 @@ Page 1000 Abgeordneter: -------- begin text --------
 ===Noun===
 {{de-noun|+|f=+}}
 
-# [[delegate]], [[assemblyman]], [[representative]], [[Member of Parliament]]
+# [[delegate]], [[assemblyman]], [[representative]], [[Member of Parliament]] {{q|male or of unspecified gender}}
 #: {{syn|de|Parlamentarier|Repräsentant}}
 
 ====Declension====
@@ -29026,7 +29018,7 @@ Page 1001 Abgeordnete: -------- begin text --------
 ===Noun===
 {{de-noun|+|m=+}}
 
-# [[female]] [[Member of Parliament]]
+# {{female equivalent of|de|Abgeordneter}}: [[female]] [[Member of Parliament]]
 
 ====Declension====
 {{de-ndecl|+}}
@@ -29065,8 +29057,8 @@ Substantivization of {{m|de|betroffen||affected}}
 ===Noun===
 {{de-noun|+}}
 
-# [[person]] [[affected]] by something
-# [[victim]]
+# [[person]] [[affected]] by something {{q|male or of unspecified gender}}
+# [[victim]] {{q|male or of unspecified gender}}
 #: {{syn|de|Opfer}}
 
 ====Declension====
@@ -29082,7 +29074,7 @@ Page 1004 Erste: Found match for regex: =
 Page 1004 Erste: -------- begin text --------
 
 ===Etymology===
-Substantivization of {{m|de|erster||first}}
+Substantivization of {{m|de|erster||first}}.
 
 ===Pronunciation===
 * {{IPA|de|[ˈʔeːɐ̯stə]}}
@@ -29092,7 +29084,7 @@ Substantivization of {{m|de|erster||first}}
 ===Noun===
 {{de-noun|+|m=+}}
 
-# {{female equivalent of|de|Erster}}
+# {{female equivalent of|de|Erster}}: [[female]] [[winner]]
 
 ====Declension====
 {{de-ndecl|+}}
@@ -29177,7 +29169,7 @@ Page 1007 Liberaler: -------- begin text --------
 ===Noun===
 {{de-noun|+|f=+}}
 
-# [[Liberal]]
+# [[Liberal]] {{q|male or of unspecified gender}}
 
 ====Declension====
 {{de-ndecl|+}}
@@ -29189,9 +29181,10 @@ Page 1007 Liberaler: -------- begin text --------
 -------- end text --------
 Page 1008 Delegierter: Found match for regex: =
 Page 1008 Delegierter: -------- begin text --------
+{{wikipedia|lang=de}}
 
 ===Etymology===
-Substantivization of {{m|de|delegiert||delegated}}
+Substantivization of {{m|de|delegiert||delegated}}.
 
 ===Pronunciation===
 * {{IPA|de|[deleˈɡiːɐ̯tɐ]}}
@@ -29199,10 +29192,9 @@ Substantivization of {{m|de|delegiert||delegated}}
 * {{hyphenation|de|De|le|gier|ter}}
 
 ===Noun===
-{{wikipedia|lang=de}}
 {{de-noun|+|f=+}}
 
-# [[delegate]], [[representative]]
+# [[delegate]], [[representative]] {{q|male or of unspecified gender}}
 
 ====Conjugation====
 {{de-ndecl|+}}
@@ -29214,7 +29206,7 @@ Page 1009 Kleine: Found match for regex: =
 Page 1009 Kleine: -------- begin text --------
 
 ===Etymology===
-Substantivization of {{m|de|klein||small}}
+Substantivization of {{m|de|klein||small}}.
 
 ===Pronunciation===
 * {{audio|de|De-Kleine.ogg|Audio}}
@@ -29222,7 +29214,7 @@ Substantivization of {{m|de|klein||small}}
 ===Noun===
 {{de-noun|+|m=+}}
 
-# [[girl]]; [[young]] [[woman]]
+# {{female equivalent of|de|Kleiner}}: [[girl]]; [[young]] [[woman]]
 
 ====Declension====
 {{de-ndecl|+}}
@@ -29243,8 +29235,7 @@ Substantivization of {{m|de|angehörig||belonging}}.
 ===Noun===
 {{de-noun|+|m=+}}
 
-# [[relative]], [[next of kin]], [[relation]] (female)
-# [[member]] (of an organization), [[national]] (of a country) (female)
+# {{female equivalent of|de|Angehöriger}}: [[female]] [[relative]]/[[next of kin]]/[[relation]]; [[female]] [[member]] {{q|of an organization}}; [[female]] [[national]] {{q|of a country}}
 
 ====Declension====
 {{de-ndecl|+}}
@@ -29454,8 +29445,7 @@ Page 1019 Fremde: -------- begin text --------
 ===Noun===
 {{de-noun|+|m=+}}
 
-# female [[stranger]]
-# female [[alien]], female foreigner
+# {{female equivalent of|de|Fremder}}: [[female]] [[stranger]]; [[female]] [[alien]], [[female]] [[foreigner]]
 # foreign [[land]]
 
 ====Declension====
@@ -29474,7 +29464,7 @@ Substantivization of {{m|de|obdachlos||homeless}}.
 ===Noun===
 {{de-noun|+|f=+}}
 
-# ([[male]]) [[homeless]] person
+# [[homeless]] [[person]] {{q|male or of unspecified gender}}
 
 ====Declension====
 {{de-ndecl|+}}
@@ -29505,7 +29495,7 @@ Substantivisation of {{m|de|delegiert}}.
 ===Noun===
 {{de-noun|+|m=+}}
 
-# {{female equivalent of|de|Delegierter}}
+# {{female equivalent of|de|Delegierter}}: [[female]] [[delegate]], [[female]] [[representative]]
 
 ====Declension====
 {{de-ndecl|+}}
@@ -29519,7 +29509,7 @@ Page 1022 Kleiner: -------- begin text --------
 ===Noun===
 {{de-noun|+|f=+}}
 
-# [[boy]], young man
+# [[boy]], [[young]] [[man]]
 
 ====Declension====
 {{de-ndecl|+}}
@@ -29543,7 +29533,7 @@ Substantivization of {{m|de|geliebt||loved, beloved}}, the past participle of {{
 ===Noun===
 {{de-noun|+|f=+}}
 
-# [[lover]]; [[romantic]] [[partner]]; {{non-gloss definition|now usually implying an affair, otherwise somewhat poetic}}
+# [[lover]], [[romantic]] [[partner]] {{q|male or of unspecified gender; now usually implying an affair, otherwise somewhat poetic}}
 #: {{syn|de|Freund|Liebhaber|Lover}}
 
 ====Declension====
@@ -29599,7 +29589,7 @@ Substantivisation of {{m|de|erster||first}}
 ===Noun===
 {{de-noun|+|f=+}}
 
-# [[winner]] {{gloss|person in first place}}
+# [[winner]] {{gloss|person in first place}} {{q|male or of unspecified gender}}
 
 ====Declension====
 {{de-ndecl|+}}
@@ -29660,12 +29650,12 @@ Page 1028 Letzte: -------- begin text --------
 # {{inflection of|de|Letzter||str|nom//acc|p|;|wk|nom|s}}
 
 ===Noun===
-{{de-noun|+|m=Letzter}}
+{{de-noun|+.article|m=+}}
 
-# {{female equivalent of|de|Letzter}}
+# {{female equivalent of|de|Letzter}}: the [[last]] [[woman]] or [[girl]]
 
 ====Declension====
-{{de-ndecl|+}}
+{{de-ndecl|+.article}}
 -------- end text --------
 Page 1029 Polizeibeamter: Found match for regex: =
 Page 1029 Polizeibeamter: -------- begin text --------
@@ -29681,7 +29671,7 @@ From {{compound|de|Polizei|Beamter|gloss1=police|gloss2=officer}}.
 ===Noun===
 {{de-noun|+|f=Polizeibeamtin}}
 
-# [[policeman]], [[police officer]]
+# [[policeman]], [[police officer]] {{q|male or of unspecified gender}}
 
 ====Declension====
 {{de-ndecl|+}}
@@ -29706,7 +29696,7 @@ Page 1030 Reisende: -------- begin text --------
 ===Noun===
 {{de-noun|+|m=+}}
 
-# {{female equivalent of|de|Reisender}}
+# {{female equivalent of|de|Reisender}}: [[female]] [[tourist]]; [[female]] [[traveller]], [[female]] [[voyager]]
 
 ====Declension====
 {{de-ndecl|+}}
@@ -29762,13 +29752,14 @@ Page 1032 Studierende: -------- begin text --------
 ===Noun===
 {{de-noun|+|m=+}}
 
-# [[female]] [[student]]
+# {{female equivalent of|de|Studierender}}: [[female]] [[student]]
 
 ====Declension====
 {{de-ndecl|+}}
 -------- end text --------
 Page 1033 Unbekannte: Found match for regex: =
 Page 1033 Unbekannte: -------- begin text --------
+{{wikipedia|lang=de}}
 
 ===Etymology===
 Substantivisation of {{m|de|unbekannt}} and shorting of {{m|de|[[unbekannt]]e [[Größe]]}}, known in Latin as {{m|la|[[quantitas]] [[incognitus|incognita]]}}
@@ -29777,10 +29768,9 @@ Substantivisation of {{m|de|unbekannt}} and shorting of {{m|de|[[unbekannt]]e [[
 * {{audio|de|De-Unbekannte.ogg|Audio}}
 
 ===Noun===
-{{wikipedia|lang=de}}
-{{de-noun|+}}
+{{de-noun|+|m=+}}
 
-# [[stranger]]
+# {{female equivalent of|de|Unbekannter}}: [[female]] [[stranger]] {{gl|someone unknown}}
 # {{lb|de|mathematics}} [[unknown]]
 
 ====Declension====
@@ -29807,9 +29797,12 @@ Page 1035 Überlebende: -------- begin text --------
 * {{audio|de|De-Überlebende.ogg|Audio}}
 
 ===Noun===
-{{de-noun|f|Überlebenden|Überlebenden}}
+{{de-noun|+|m=+}}
 
-# [[survivor]] {{gloss|a woman who survived}}
+# {{female equivalent of|de|Überlebender}}: [[female]] [[survivor]]
+
+====Declension====
+{{de-ndecl|+}}
 
 ===Noun===
 {{head|de|noun form|g=m}}
@@ -29846,10 +29839,10 @@ From {{com|de|Vorstand|-s-|Vorsitzender}}.
 * {{hyph|de|Vor·stands·vor·sit·zen·der}}
 
 ===Noun===
-{{de-noun|+}}
+{{de-noun|+|f=+}}
 
-# [[CEO]]
-# [[chairman]]
+# [[CEO]] {{q|male or of unspecified gender}}
+# [[chairman]] {{q|male or of unspecified gender}}
 
 ====Declension====
 {{de-ndecl|+}}
@@ -29868,7 +29861,7 @@ Page 1038 Zweiter: -------- begin text --------
 ===Noun===
 {{de-noun|+|f=+}}
 
-# [[runner-up]]
+# [[runner-up]] {{q|male or of unspecified gender}}
 #: {{syn|de|Zweitplatzierter}}
 
 ====Declension====
@@ -29883,7 +29876,7 @@ Page 1039 Zweite: -------- begin text --------
 ===Noun===
 {{de-noun|+|m=+}}
 
-# female [[runner-up]]
+# {{female equivalent of|de|Zweiter}}: [[female]] [[runner-up]]
 
 ====Declension====
 {{de-ndecl|+}}
@@ -30262,7 +30255,7 @@ Substantivization of the adjective {{m|de|irre}}.
 ===Noun===
 {{de-noun|+|f=+}}
 
-# a [[mentally ill]] man, [[lunatic]]
+# [[mentally ill]] [[person]], [[lunatic]] {{q|male or of unspecified gender}}
 
 ====Declension====
 {{de-ndecl|+}}
@@ -30346,13 +30339,10 @@ Page 1063 Vorgesetzte: -------- begin text --------
 ===Noun===
 {{de-noun|+|m=+}}
 
-# female [[superior]], [[person in charge]]
+# {{female equivalent of|de|Vorgesetzter}}: [[female]] [[superior]], [[female]] [[person in charge]]
 
 ====Declension====
 {{de-ndecl|+}}
-
-====Related terms====
-* {{l|de|Vorgesetzter|g=m}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -30399,18 +30389,13 @@ Substantivization of {{m|de|rauschgiftsüchtig||drug-addicted}}.
 * {{IPA|de|[ˈʁaʊʃɡɪftˌzʏçtɪɡə]}}
 
 ===Noun===
-{{de-noun|+}}
+{{de-noun|+|m=+}}
 
-# female [[drug addict]]
+# {{female equivalent of|de|Rauschgiftsüchtiger}}: [[female]] [[drug addict]]
+#: {{syn|de|Drogensüchtige|Drogenabhängige|Junkie<q:slang><t:junkie>}}
 
 ====Declension====
 {{de-ndecl|+}}
-
-====Related terms====
-* {{l|de|Rauschgiftsüchtiger}}<!-- male version -->
-* {{l|de|Drogensüchtiger}}
-* {{l|de|Drogenabhängiger}}
-* {{l|de|Junkie}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -30425,9 +30410,9 @@ Substantivization of {{m|de|rauschgiftsüchtig||drug-addicted}}.
 {{IPA|de|[ˈʁaʊʃɡɪftˌzʏçtɪɡɐ]}}
 
 ===Noun===
-{{de-noun|+}}
+{{de-noun|+|f=+}}
 
-# [[drug addict]]
+# [[drug addict]] {{q|male or of unspecified gender}}
 #: {{syn|de|Drogenabhängiger|Drogensüchtiger}}
 
 ====Declension====
@@ -31829,17 +31814,17 @@ Page 1122 Maximalpigmentierter: Found match for regex: =
 Page 1122 Maximalpigmentierter: -------- begin text --------
 
 ===Etymology===
-{{compound|de|maximal|pigmentiert|t1=maximal(ly)|t2=pigmented|pos2=''from'' {{m|la|pigmentieren||to pigment}}}}
+Literally, "maximally pigmented person". {{compound|de|maximal|pigmentiert|t1=maximal(ly)|t2=pigmented}}, from {{m|de|pigmentieren||to pigment}}.
 
 ===Pronunciation===
 * {{a|standard, central Germany}} {{IPA|de|[mäksiˌmäːlpʰiɡmɛnˈtʰiːɐ̯tʰɐ]}}
 * {{hyphenation|de|Ma|xi|mal|pig|men|tier|ter}}
 
 ===Noun===
-{{de-noun|+}}
+{{de-noun|+|f=+}}
 
 # {{lb|de|humorous}} [[black]] [[man]]
-#: {{syn|de|Neger|Schwarzer}}
+#: {{syn|de|Neger<q:dated, now offensive>|Schwarzer<q:neutral>}}
 
 ====Declension====
 {{de-ndecl|+}}
@@ -31960,8 +31945,8 @@ Page 1125 Heilige: -------- begin text --------
 ====Noun====
 {{de-noun|+|m=+}}
 
-# [[female]] [[saint]]
-# {{lb|de|informal}} [[virtuous]], [[honest]] [[woman]]
+# {{female equivalent of|de|Heiliger}}: [[female]] [[saint]]
+# {{lb|de|informal}} {{female equivalent of|de|Heiliger}}: [[virtuous]], [[honest]] [[woman]]
 
 =====Declension=====
 {{de-ndecl|+}}
@@ -31984,7 +31969,7 @@ Masculine substantive of {{m|de|heilig||holy, sacred}}.
 {{de-noun|+|f=+}}
 
 # [[saint]] {{q|male or of unspecified gender}}
-# {{lb|de|informal}} [[virtuous]], [[honest]] [[man]]
+# {{lb|de|informal}} [[virtuous]], [[honest]] [[person]] {{q|male or of unspecified gender}}
 
 ====Declension====
 {{de-ndecl|+}}
@@ -32022,16 +32007,14 @@ Page 1127 Fraw: -------- begin text --------
 -->
 
 ===Noun===
-{{de-noun|f|Fraw|gen2=Frawen|Frawen}}
+{{de-noun|f.gen:-:en.dat:-:en}}
 
 # {{obsolete form of|de|Frau}} {{defdate|especially in the 17th century}}
 #* '''1648''', Everardus Nidhardus, ''LeichPredig. Von dem Gottsförchtigen und Tugendtlichen Leben und Ableiben Der Hoch: vnd Wolgebornen Frawen Frawen SVSANNAE VERONICAE Trauthsonin Gräfin zu Falckenstain. Weiland Herrn Ferdinandt Helfriden Freyherrns von Meggau/gewesten LandtHauptmans in Oesterreich ob der Ens. Vnd Frawen SVSANNAE Gebornen Freyin von Harrach Tochter; Vnd Herrn Pauln Sixt Trauthson Grafens zu Falckenstain/Freyherrns zu Sprechenstain vnd Schrofenstain/ Herrns zu Mattray/ Kaya/ Laa/ Neuschloß vnd Sant Pölten/ Obristen Erbhofmaisters in Oesterreich vnter der Ens/ vnd Erbland Marschallens in Tyrol/ Ritters deß Ordens von dem guldenen Vellus. Röm: Kays: Mt: gewesten gehaimen Raths/ Cammerers vnd Statthalters deß Regiments der Nider Oesterreichischen Landen/ hinterlassenen Wittiben. Seeliger Gedächtnuß. Welche die Königliche Majestätten Ferdinandum den Vierten Königen zu Hungarn vnd Böhaimb rc. vnd Mariam Annam Königin in Hispanien auch Seine Ertzfürstl. Durchl. Leopoldum den Jüngern Ertzhertzogen zu Oesterreich rc. von Geburt an als Obriste Hofmaisterin erzogen hat. Alßdann den 15. Jenner deß 1648. Jahrs in der Kayserlichen Burgg zu Wienn Seeliglich in GOtt entschlaffen ist. Geprediget bey Ihren Exequijs in Sant Michaëlis Kirchen zu Wienn den 21. Jenner Durch R.&nbsp;P. Everardum Nidhardum der Societet Iesu Priestern.'', p. ''E ij'':
 #*: So last vns dann ihr wol meritirtes vnd einer Gottförchtenden '''Frawen''' zuständiges Lob herfür bringen vnd ihr darreichen.
 
 ====Declension====
-{{de-decl-noun-f|en}}
-: ''or''
-{{de-decl-noun-f|en|gs=Frawen|ds=Frawen}}
+{{de-ndecl|f.gen:-:en.dat:-:en}}
 -------- end text --------
 Page 1128 Display: Found match for regex: {
 Page 1128 Display: -------- begin text --------
@@ -32559,7 +32542,7 @@ Page 1156 Weiser: -------- begin text --------
 ===Noun===
 {{de-noun|+|f=+}}
 
-# [[sage]]
+# [[sage]] {{q|male or of unspecified gender}}
 
 ====Declension====
 {{de-ndecl|+}}
@@ -33776,9 +33759,9 @@ Page 1217 Geschworene: -------- begin text --------
 * {{audio|de|De-Geschworene.ogg|Audio}}
 
 ===Noun===
-{{de-noun|+}}
+{{de-noun|+|m=+}}
 
-# {{female equivalent of|de|Geschworener}}; [[juror]]
+# {{female equivalent of|de|Geschworener}}: [[female]] [[juror]]
 
 ====Declension====
 {{de-ndecl|+}}
@@ -34213,7 +34196,7 @@ Page 1233 Eisheiliger: -------- begin text --------
 # {{lb|de|in the plural}} a period in May with increased likelihood of [[night]] [[frost]], falling on the [[name days]] of certain saints; a [[blackberry winter]]
 #* '''2014''' May 2, Ulli Kulke, "Ist das schon der Überfall der eiligen Eisheiligen?", ''Die Welt'':
 #*: Typisch für die '''Eisheiligen''' ist eine Nord- oder Nordost-Wetterlage.
-# one (male) of these saints; a male "ice saint"
+# one of these saints {{q|male or of unspecified gender}}; an "ice saint"
 #* '''2016''' May 16, Friedemann Bräuer, "Poswiat verlangt Kochems alles ab", ''Westdeutsche Zeitung''.
 #*: {{quote|de|Waren die von vielen Zuschauern verfolgten Titelkämpfe bis Freitagabend, wo es das traditionelle Spanferkelessen zum Ende der Halbfinals gab, von der Sonne verwöhnt, so hatte der '''Eisheilige''' Bonifatius am Samstag die Temperaturen in den einstelligen Bereich sinken lassen, was aber nicht für nachlassende Stimmung auf und neben den Plätzen sorgte.|The title-determining games, which many viewers eagerly watched, lasted until the evening of Friday, where the traditional eating of the piglet at the end of the semifinal took place, being treated kindly by the sun, then the '''ice saint''' Bonifatius had, on Saturday, let the temperatures sink to the one-digit area, which, however, did not result in a dampering of the mood on and near the plazas.}}
 
@@ -35129,7 +35112,7 @@ Page 1271 Wolhyniendeutscher: -------- begin text --------
 ===Noun===
 {{de-noun|+|f=+}}
 
-# [[Volhynia]] [[German]], [[Volhynian]] [[German]] {{q|male or of unspecified gender}} (a German native or inhabitant of Volhynia, or a descendant of one)
+# [[Volhynia]] [[German]], [[Volhynian]] [[German]] {{q|male or of unspecified gender}} {{gl|a German native or inhabitant of Volhynia, or a descendant of one}}
 
 ====Declension====
 {{de-ndecl|+}}
@@ -35240,7 +35223,7 @@ Substantivisation of {{m|de|link}}.
 ===Noun===
 {{de-noun|+|f=+}}
 
-# [[left-winger]], [[leftist]]
+# [[left-winger]], [[leftist]] {{q|male or of unspecified gender}}
 #:{{antonyms|de|Rechter}}
 
 ====Declension====
@@ -35318,7 +35301,7 @@ From {{m|de|arm||poor}}.
 ===Noun===
 {{de-noun|+|f=+}}
 
-# [[pauper]] (poor person)
+# [[pauper]], [[poor]] [[person]] {{q|male or of unspecified gender}}
 
 ====Declension====
 {{de-ndecl|+}}
@@ -35418,12 +35401,12 @@ Page 1284 Mietshaus: -------- begin text --------
 * {{audio|de|De-Mietshaus.ogg|Audio}}
 
 ===Noun===
-{{de-noun|n|Mietshauses|Mietshäuser}}
+{{de-noun|n,es,^er}}
 
 # any house where people live for [[rent]], e.g. an [[apartment building]]
 
 ====Declension====
-{{de-decl-noun-n|(e)s|pl=Mietshäuser}}
+{{de-ndecl|n,es,^er}}
 -------- end text --------
 Page 1285 Verlobter: Found match for regex: =
 Page 1285 Verlobter: -------- begin text --------
@@ -35437,7 +35420,7 @@ From {{suffix|de|verlobt|er}}.
 ===Noun===
 {{de-noun|+|f=+}}
 
-# a [[fiancé]] / [[fiance]] {{q|male}}
+# [[fiancé]]/[[fiance]] {{q|male or of unspecified gender}}
 
 ====Declension====
 {{de-ndecl|+}}
@@ -35780,13 +35763,13 @@ From {{der|de|la|recēnsens||reviewer}}, from {{m|la|recēnseō||review}}, from 
 * {{audio|de|De-Rezensent.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m|Rezensenten|Rezensenten|f=Rezensentin}}
+{{de-noun|m.weak|f=in}}
 
 # [[reviewer]]
 # creator of a [[recension]] of a text
 
 ====Declension====
-{{de-decl-noun-m|en}}
+{{de-ndecl|m.weak|f=in}}
 -------- end text --------
 Page 1301 Alkoholkranker: Found match for regex: =
 Page 1301 Alkoholkranker: -------- begin text --------
@@ -36257,7 +36240,7 @@ Page 1318 Allerwertester: Found match for regex: =
 Page 1318 Allerwertester: -------- begin text --------
 
 ===Etymology===
-From {{m|de|allerwertest-}} ({{m|de|allerwertester}}/{{m|de|allerwerteste}}).
+From {{m|de|allerwertesten|allerwertest-}}.
 
 ===Pronunciation===
 * {{audio|de|De-Allerwertester.ogg|Audio}}
@@ -36695,7 +36678,7 @@ From {{m|de|heterosexuell}}.
 ===Noun===
 {{de-noun|+|m=+}}
 
-# [[heterosexual]] (female)
+# {{female equivalent of|de|Heterosexueller}}: [[female]] [[heterosexual]]
 
 ====Declension====
 {{de-ndecl|+}}
@@ -37241,7 +37224,7 @@ Page 1341 Gelehrte: -------- begin text --------
 ===Noun===
 {{de-noun|+|m=+}}
 
-# female [[scholar]], [[savant]], [[pundit]], [[woman of letters]], [[academic]]
+# {{female equivalent of|de|Gelehrter}}: [[female]] [[scholar]]/[[savant]]/[[pundit]]; [[woman of letters]], [[female]] [[academic]]
 
 ====Declension====
 {{de-ndecl|+}}
@@ -37305,7 +37288,7 @@ Substantivization of {{m|de|minderjährig}}.
 ===Noun===
 {{de-noun|+|f=+}}
 
-# {{lb|de|Law}} [[minor]] {{gloss|someone below the legal age}}
+# {{lb|de|Law}} [[minor]] {{gloss|someone below the legal age}} {{q|male or of unspecified gender}}
 
 ====Declension====
 {{de-ndecl|+}}
@@ -37818,18 +37801,13 @@ Page 1371 Ahnherr: -------- begin text --------
 * {{audio|de|De-Ahnherr.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m|Ahnherrn|gen2=Ahnherren|Ahnherren|pl2=Ahnherrn}}
+{{de-noun|((<m.weak.sync_sg>,<m.weak>))}}
 
 # [[primogenitor]], first [[ancestor]]
 # [[forefather]]
 
 ====Declension====
-* Contemporary standard:
-{{de-decl-noun-m|n|en}}
-
-* Without functional split of ''-n/-en'':
-{{de-decl-noun-m|n|n}}
-{{de-decl-noun-m|en|en}}
+{{de-ndecl|((<m.weak.sync_sg>,<m.weak>))}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -38005,7 +37983,7 @@ Page 1380 Seelenverwandter: -------- begin text --------
 ===Noun===
 {{de-noun|+|f=+}}
 
-# male [[soulmate]]
+# [[soulmate]] {{q|male or of unspecified gender}}
 
 ====Declension====
 {{de-ndecl|+}}
@@ -38405,7 +38383,7 @@ From {{compound|de|Bank|t1=bank|Angestellter|t2=employee}}.
 ===Noun===
 {{de-noun|+|f=+}}
 
-# [[bank]] [[employee]], bank [[assistant]], bank [[clerk]] {{q|male or of unspecified gender}} (anyone who works at a bank) 
+# [[bank]] [[employee]], bank [[assistant]], bank [[clerk]] {{q|male or of unspecified gender}} {{gl|anyone who works at a bank}}
 
 ====Declension====
 {{de-ndecl|+}}
@@ -38424,12 +38402,12 @@ Page 1403 Moosachat: -------- begin text --------
 {{compound|de|Moos|Achat}}.
 
 ===Noun===
-{{de-noun|m|Moosachats|Moosachate}}
+{{de-noun|m,s:es}}
 
 # [[moss agate]]
 
 ====Declension====
-{{de-decl-noun-m|(e)s|e}}
+{{de-ndecl|m,s:es}}
 
 {{C|de|Minerals}}
 -------- end text --------
@@ -38443,7 +38421,7 @@ From {{af|de|Flottille|Admiral}}.
 * {{audio|de|De-Flottillenadmiral.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m|Flotillenadmirals|Flotillenadmirale|pl2=Flotillenadmiräle}}
+{{de-noun|m,s,e:^e.dat_with_e}}
 
 # [[commodore]], [[flotilla admiral]] {{gloss|the lowest flag rank in the modern German navy}}
 
@@ -38451,8 +38429,7 @@ From {{af|de|Flottille|Admiral}}.
 * {{l|de|Kommodore}}
 
 ====Declension====
-{{de-decl-noun-m|s|e}}
-{{de-decl-noun-m|s|pl=Flotillenadmiräle}}
+{{de-ndecl|m,s,e:^e.dat_with_e}}
 -------- end text --------
 Page 1405 Kommodore: Found match for regex: =
 Page 1405 Kommodore: -------- begin text --------
@@ -38464,7 +38441,7 @@ From {{bor|de|en|commodore}}. {{doublet|de|Kommandeur}}.
 * {{audio|de|De-Kommodore.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m|Kommodore|gen2=Kommodores|Kommodores|pl2=Kommodoren}}
+{{de-noun|m,s:-,s:en}}
 
 # [[commodore]] {{gloss|the lowest flag rank in English-speaking countries, or in the merchant marine}}
 # {{lb|de|historical}} [[commodore]] {{gloss|the lowest flag rank in historical German-speaking navies}}
@@ -38473,8 +38450,7 @@ From {{bor|de|en|commodore}}. {{doublet|de|Kommandeur}}.
 * {{l|de|Flottillenadmiral}}
 
 ====Declension====
-{{de-decl-noun-m||s}}
-{{de-decl-noun-m|s|n}}
+{{de-ndecl|m,s:-,s:en}}
 -------- end text --------
 Page 1406 Schulterhalfter: Found match for regex: =
 Page 1406 Schulterhalfter: -------- begin text --------
@@ -38488,15 +38464,16 @@ Page 1406 Schulterhalfter: -------- begin text --------
 * {{hyphenation|de|Schul|ter|half|ter}}
 
 ===Noun===
-{{de-noun|n|Schulterhalfters|Schulterhalfter}}<br />{{de-noun|f|Schulterhalfter|Schulterhalftern}}
+{{de-noun|n}} ''or''<br />
+{{de-noun|f}}
 
 # [[shoulder holster]]
 #: {{syn|de|Schulterholster<g:n>|;|Achselhalfter<g:n,f>|Achselholster<g:n>}}
 #* {{quote-book|de|author=Carl Weissner, transl.|title=Ausgeträumt: Roman|location=München|publisher=Deutscher Taschenbuch Verlag|year=1997|isbn=3-423-12342-7|page=96|original=Pulp|by=Charles Bukowski|passage=Ich tastete nach der Waffe im '''Schulterhalfter'''.|translation=I groped for the gun in the '''shoulder holster'''.}}
 
 ====Declension====
-{{de-decl-noun-n|s|}}
-{{de-decl-noun-f|n}}
+{{de-ndecl|n}}
+{{de-ndecl|f}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -38531,7 +38508,7 @@ Page 1408 Flugabwehrkanone: -------- begin text --------
 * {{audio|de|De-at-Flugabwehrkanone.ogg|Audio (Austria)}}
 
 ===Noun===
-{{de-noun|old=1}}
+{{de-noun|f}}
 
 # {{synonym of|de|Fliegerabwehrkanone}}
 
@@ -38555,11 +38532,12 @@ Page 1409 Halbpension: -------- begin text --------
 * {{audio|de|De-Halbpension.ogg|audio}}
 
 ===Noun===
-{{de-noun|f||-}}
+{{de-noun|f.sg}}
+
 # {{lb|de|tourism}} [[half-board]]
 
 ====Declension====
-{{de-decl-noun-pl}}
+{{de-ndecl|f.sg}}
 
 ====Related terms====
 {{rel3|de
@@ -38612,11 +38590,12 @@ Page 1412 Stellenangebot: -------- begin text --------
 * {{hyph|de|Stel|len|an|ge|bot}}
 
 ===Noun===
-{{de-noun|n|Stellenangebots|gen2=Stellenangebots|Stellenangebote}}
-#[[job]] [[offer]], offer of employment
+{{de-noun|n,s:es}}
+
+# [[job]] [[offer]], offer of employment
 
 ====Declension====
-{{de-decl-noun-n|(e)s|e}}
+{{de-ndecl|n,s:es}}
 
 ===Further reading===
 * {{R:DWDS}}
@@ -38631,12 +38610,12 @@ Page 1413 Damespiel: -------- begin text --------
 * {{audio|de|De-Damespiel.ogg|Audio}}
 
 ===Noun===
-{{de-noun|n|Damespiels|Damespiele}}
+{{de-noun|n,s:es}}
 
 # {{lb|de|board games}} [[draughts]] {{q|British}}, [[checkers]] {{q|US}}
 
 ====Declension====
-{{de-decl-noun-n|(e)s|e}}
+{{de-ndecl|n,s:es}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -38650,7 +38629,7 @@ Substantivisation of {{m|de|leibeigen||unfree}}.
 ===Noun===
 {{de-noun|+|f=+}}
 
-# An [[unfree]] person; a [[slave]], [[serf]] or [[indentured servant]]
+# [[unfree]] [[person]]; [[slave]], [[serf]] or [[indentured servant]] {{q|male or of unspecified gender}}
 
 ====Declension====
 {{de-ndecl|+}}
@@ -38668,12 +38647,12 @@ Page 1415 Differenzialsperre: -------- begin text --------
 * {{IPA|de|/dɪfərɛnˈt͡si̯aːlʃpɛrə/}}
 
 ===Noun===
-{{de-noun|f||Differentialsperren}}
+{{de-noun|f}}
 
 # {{lb|de|automotive}} [[differential lock]]
 
 ====Declension====
-{{de-decl-noun-f|n}}
+{{de-ndecl|f}}
 
 ====Related terms====
 * {{l|de|Sperrdifferential}}
@@ -38690,13 +38669,13 @@ Page 1416 Koalitionsvertrag: -------- begin text --------
 * {{audio|de|De-Koalitionsvertrag.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m|Koalitionsvertrags|gen2=Koalitonsvertrages|Koalitionsverträge}}
+{{de-noun|m,s:es,^e}}
 
 # {{lb|de|politics}} [[coalition]] [[agreement]]
 #: {{syn|de|Koalitionsvereinbarung}}
 
 ====Declension====
-{{de-decl-noun-m|(e)s|pl=Koalitionsverträge}}
+{{de-ndecl|m,s:es,^e}}
 
 ===Further reading===
 * {{R:DWDS}}
@@ -38735,13 +38714,13 @@ Page 1419 Nachbarjunge: -------- begin text --------
 * {{hyphenation|de|Nach|bar|jun|ge}}
 
 ===Noun===
-{{de-noun|m|Nachbarjungen|Nachbarjungen}}
+{{de-noun|m.weak}}
 
 # [[neighbor]] [[boy]]
 # [[boy next door]]
 
 ====Declension====
-{{de-decl-noun-n|es|pl=Nachbarjungen}}
+{{de-ndecl|m.weak}}
 
 ====Synonyms====
 * {{l|de|Junge von nebenan}}
@@ -38764,12 +38743,12 @@ From {{com|de|Auto|t1=car|Korso|t2=celebratory row of vehicles}}. The latter fro
 * {{audio|de|De-Autokorso.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m|g2=n||Autokorsos}}
+{{de-noun|m,s,s}}<!-- not given as neuter in Duden, DWDS,  Pons or dewikt -->
 
 # a public [[celebration]] with [[honk]]ing cars driving in a row; on any [[occasion]], but commonest with [[wedding]]s and [[football]] victories
 
 ====Declension====
-{{de-decl-noun-m|s|s}}
+{{de-ndecl|m,s,s}}<!-- not given as neuter in Duden, DWDS,  Pons or dewikt -->
 
 ====Related terms====
 * {{l|de|Fahrradkorso}}, {{l|de|Hochzeitskorso}},  {{l|de|Kutschenkorso}}, {{l|de|Motorradkorso}}
@@ -38788,7 +38767,7 @@ From {{der|de|it|corso}} in the archaic sense of “horse race” (for which now
 * {{audio|de|De-Korso.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m|g2=n||Korsos}}
+{{de-noun|m,s,s}}<!-- not given as neuter in Duden, DWDS,  Pons or dewikt -->
 
 # {{lb|de|chiefly in compounds}} a public [[celebration]] with [[vehicle]]s driving in a row; on any [[occasion]], but commonest with [[wedding]]s and [[football]] victories
 
@@ -38796,7 +38775,7 @@ From {{der|de|it|corso}} in the archaic sense of “horse race” (for which now
 * A {{m|de||Korso}} is distinct from an {{m|de|Umzug|t=parade}} in that its organisation is usually private and often spontaneous. In some cases, however, the two words may overlap.
 
 ====Declension====
-{{de-decl-noun-m|s|s}}
+{{de-ndecl|m,s,s}}<!-- not given as neuter in Duden, DWDS,  Pons or dewikt -->
 
 ====Derived terms====
 * {{l|de|Autokorso}}
@@ -38814,7 +38793,7 @@ Page 1422 Verbindungsbeamter: -------- begin text --------
 ===Noun===
 {{de-noun|+|f=Verbindungsbeamtin}}
 
-# [[liaison]] [[officer]]
+# [[liaison]] [[officer]] {{q|male or of unspecified gender}}
 
 ====Declension====
 {{de-ndecl|+}}
@@ -38856,7 +38835,7 @@ Substantivisation of {{m|de|bevollmächtigt}}.
 ===Noun===
 {{de-noun|+|f=+}}
 
-# {{qualifier|male}} [[plenipotentiary]]
+# [[plenipotentiary]] {{q|male or of unspecified gender}}
 # {{lb|de|law}} [[attorney-in-fact]], [[agent]], [[proxy]]
 
 ====Declension====
@@ -38879,7 +38858,7 @@ Substantivisation of {{m|de|bevollmächtigt}}.
 ===Noun===
 {{de-noun|+|m=+}}
 
-# {{qualifier|female}} [[plenipotentiary]]
+# {{female equivalent of|de|Bevollmächtigter}}: [[female]] [[plenipotentiary]]
 
 ====Declension====
 {{de-ndecl|+}}
@@ -38899,13 +38878,12 @@ Page 1426 Tabuthema: -------- begin text --------
 * {{audio|de|De-Tabuthema.ogg|Audio}}
 
 ===Noun===
-{{de-noun|n|Tabuthema|Tabuthemen|pl2=Tabuthemata}}
+{{de-noun|n,s,Tabuthemen:ta}}
 
 # [[taboo]] subject
 
 ====Declension====
-{{de-decl-noun-n|s|pl=Tabuthemen}}
-{{de-decl-noun-n|s|pl=Tabuthemata}}
+{{de-ndecl|n,s,Tabuthemen:ta}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -38921,14 +38899,16 @@ Apparently via earlier {{m|de|Zürbel}} distorted from {{der|de|la|sorbus}} (unt
 * {{IPA|de|/ˈt͡sʏrɡəl/|[ˈt͡sʏʁɡəl]|[ˈt͡sʏʁɡl̩]|[ˈt͡sʏrɡəl]|[ˈt͡sʏrɡl̩]|[ˈt͡sʏɐ̯ɡəl]|[ˈt͡sʏɐ̯ɡl̩]}}
 
 ===Noun===
-{{de-noun|m||Zürgel}}<br/>
-{{de-noun|f|Zürgel|Zürgeln}}
+{{de-noun|m}}
 
-# [[hackberry]], [[nettle tree]] {{gloss|''[[Celtis]]'' gen. et spp.}}
+# {{lb|de|obsolete}} [[hackberry]], [[nettle tree]] {{gloss|''[[Celtis]]'' gen. et spp.}}
+#: {{syn|de|Zürgelbaum<q:modern term>}}
+
+====Usage notes====
+* Documented in Grimm's dictionary as masculine and possibly also feminine.
 
 ====Declension====
-{{de-decl-noun-m|s|pl=Zürgel}}
-{{de-decl-noun-f|n}}
+{{de-ndecl|m}}
 
 ====Derived terms====
 * {{l|de|Zürgelbaum}}
@@ -38966,13 +38946,13 @@ Page 1429 Flederhund: -------- begin text --------
 * {{audio|de|De-Flederhund.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m|Flederhundes|gen2=Flederhunds|Flederhunde}}
+{{de-noun|m,s:es}}
 
 # [[megabat]]
 #: {{syn|de|Flughund}}
 
 ====Declension====
-{{de-decl-noun-n|(e)s|e}}
+{{de-ndecl|m,s:es}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -38991,7 +38971,7 @@ Substantivisation of {{m|de|asozial}}.
 ===Noun===
 {{de-noun|+|f=+}}
 
-# {{lb|de|derogatory}} [[antisocial]] person
+# {{lb|de|derogatory}} [[antisocial]] person {{q|male or of unspecified gender}}
 #: {{syn|de|Asso|q1=colloquial|Assi|q2=colloquial}}
 
 ====Declension====
@@ -39014,7 +38994,7 @@ Substantivisation of {{m|de|asozial}}.
 ===Noun===
 {{de-noun|+|m=+}}
 
-# {{qualifier|female}} [[antisocial]] person
+# {{lb|de|derogatory}} {{female equivalent of|de|Asozialer}}: [[antisocial]] [[female]]
 
 ====Declension====
 {{de-ndecl|+}}
@@ -39099,7 +39079,7 @@ Page 1435 Hilfswilliger: -------- begin text --------
 ===Noun===
 {{de-noun|+|f=+}}
 
-# voluntary [[assistant]]
+# [[voluntary]] [[assistant]] {{q|male or of unspecified gender}}
 # {{lb|de|historical|Nazi}} [[Hiwi]]; foreign collaborator in the [[Wehrmacht]] or the [[SS]]
 
 ====Declension====
@@ -39187,12 +39167,12 @@ From {{bor|de|en|pogo}}.
 * {{audio|de|De-Pogo.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m||-}}
+{{de-noun|m,-.sg}}
 
 # {{lb|de|dance}} [[pogo]]
 
 ====Declension====
-{{de-decl-noun-m|n=sg}}
+{{de-ndecl|m,-.sg}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -39200,18 +39180,25 @@ From {{bor|de|en|pogo}}.
 Page 1440 Sesterz: Found match for regex: =
 Page 1440 Sesterz: -------- begin text --------
 
-===Noun===
-{{de-noun|m|g2=n|Sesterzes|Sesterze}} {{q|strong}}<br/>
-{{de-noun|m|g2=n|Sesterzen|Sesterzen}} {{q|weak}}
+===Alternative forms===
+* {{alt|de|Sesterze|g=f}}
 
-#{{lb|de|numismatics}} [[sestertius]] {{gloss|Roman coin}}
-#: {{syn|de|Sesterze}}
+===Etymology===
+{{bor+|de|la|sestertius}}.
+
+===Noun===
+{{de-noun|((<m>,<m.weak.[rare]>))}}
+
+# {{lb|de|numismatics}} [[sestertius]] {{gloss|Roman coin}}
 
 ====Usage notes====
 * Mostly masculine, but sometimes (particularly before the 20th century) feminine or neuter.
 
 ====Declension====
-{{de-decl-noun-m|es|e}}
+{{de-ndecl|((<m>,<m.weak.[rare]>))}}
+
+===Further reading===
+* {{R:Duden}}
 
 {{C|de|Currency}}
 -------- end text --------
@@ -39225,13 +39212,13 @@ Page 1441 Uferweg: -------- begin text --------
 * {{audio|de|De-Uferweg.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m||Uferweges|Uferwege}}
+{{de-noun|m,s:es}}
 
 # a [[path]] alongside a [[bank]] or [[shore]]; a [[towpath]]; a [[lakeside]] path
 # {{lb|de|less common}} a path leading up to a bank or shore
 
 ====Declension====
-{{de-decl-noun-m|(e)s|e}}
+{{de-ndecl|m,s:es}}
 
 ====Synonyms====
 * {{l|de|Uferpfad}}
@@ -39251,12 +39238,12 @@ Borrowed from {{bor|de|fr|eau de toilette}}.
 * {{audio|de|De-Eau de Toilette.ogg|Audio}}
 
 ===Noun===
-{{de-noun|n|Eau de Toilette|Eaux de Toilette|head=Eau de [[Toilette]]}}
+{{de-noun|Eau<n,-,x> de [[Toilette]]}}
 
-# [[eau de toilette]], [[toilet water]]
+# [[eau de toilette]]
 
 ====Declension====
-{{de-decl-noun-n||pl=Eaux de Toilette|dp=Eaux de Toilette}}
+{{de-ndecl|Eau<n,-,x> de [[Toilette]]}}
 -------- end text --------
 Page 1443 historische Sprachwissenschaft: Found match for regex: =
 Page 1443 historische Sprachwissenschaft: -------- begin text --------
@@ -39316,14 +39303,14 @@ Page 1444 Binnen-I: -------- begin text --------
 * {{m|de|Radfahrerinnen|RadfahrerInnen}}
 * {{m|de|Studentinnen|StudentInnen}}
 }}
-{{de-noun|n|Binnen-Is|Binnen-Is|pl2=Binnen-I|gen2=Binnen-I|head=[[binnen|Binnen]]-[[I]]}}
+{{de-noun|n,-:s,-:s}}
 
 # {{lb|de|typography}} word-internal capital I {{gloss|inserted to mark a word as [[gender-neutral]]}}
 #: {{syn|de|Majuskel-I|Versalien-I}}
 #: {{hyper|de|Binnenmajuskel}}
 
 ====Declension====
-{{de-decl-noun-n|s|s}}
+{{de-ndecl|n,-:s,-:s}}
 
 ====See also====
 * {{l|de|Gendergap}}
@@ -39344,14 +39331,14 @@ Page 1445 Crack: -------- begin text --------
 {{ubor|de|en|crack|id=best}}.
 
 ====Noun====
-{{de-noun|m|Cracks|Cracks}}
+{{de-noun|m,s,s}}
 
 # {{lb|de|sport}} [[champion]]
 # {{lb|de|colloquial}} [[pro]] {{gloss|highly trained and competent person}}
 # {{lb|de|equestrianism}} successful [[racehorse]]
 
 =====Declension=====
-{{de-decl-noun-n|s|s}}
+{{de-ndecl|m,s,s}}
 
 ===Etymology 2===
 {{ubor|de|en|crack|id=cocaine}}.
@@ -39393,12 +39380,12 @@ Page 1447 Ramschniveau: -------- begin text --------
 * {{IPA|de|/ˈramʃnivoː/}}
 
 ===Noun===
-{{de-noun|n|Ramschniveaus|-}}
+{{de-noun|n,s.sg}}
 
 # {{lb|de|finance|colloquial}}  [[junk status]]
 
 ====Declension====
-{{de-decl-noun-n||n=sg}}
+{{de-ndecl|n,s.sg}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -39417,20 +39404,19 @@ From {{der|de|gmh|wambes}}, {{m|gmh|wambeis}}, from {{der|de|fro|wambais}}, from
 * {{audio|de|De-Wams.ogg|Audio}}
 
 ===Noun===
-{{de-noun|n|g2=m|Wamses|Wämser|pl2=Wämse|pl3=Wamse|Wämschen}}
+{{de-noun|n,es,^er|dim=^chen}}
 
 # {{lb|de|historical}} [[jerkin]], [[doublet]]
 
 ====Declension====
-{{de-decl-noun-n|es|pl=Wämser}}
-{{de-decl-noun-m|es|pl=Wämse}}
+{{de-ndecl|n,es,^er}}
 
 ====Usage notes====
-* Mostly neuter, but also masculine, especially in northern and central Germany.
-* The usual plural was {{m|de||Wämser}} in the neuter and {{m|de||Wämse}} in the plural. The form {{m|de||Wamse}} was quite rare, but it is sometimes seen now that the word has become unfamiliar.
+* In obsolete usage this could also be masculine, especially in northern and central Germany, with plural {{m|de||Wämse}}.
 
 ===References===
 * {{R:Duden}}
+* {{R:Grimm}}
 
 {{C|de|Clothing}}
 -------- end text --------
@@ -39441,12 +39427,12 @@ Page 1449 Kaiserhaus: -------- begin text --------
 {{compound|de|Kaiser|Haus}}
 
 ===Noun===
-{{de-noun|n|Kaiserhauses|Kaiserhäuser}}
+{{de-noun|n,es,^er}}
 
 # [[imperial]] [[family]]
 
 ====Declension====
-{{de-decl-noun-n|(e)s|pl=Kaiserhäuser}}
+{{de-ndecl|n,es,^er}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -39464,8 +39450,8 @@ Substantivisation of {{m|de|welsch}}.
 ===Noun===
 {{de-noun|+|f=+}}
 
-# [[Romance language]] speaker
-# {{lb|de|Swiss}} [[French]] native speaker
+# [[Romance language]] speaker {{q|male or of unspecified gender}}
+# {{lb|de|Swiss}} [[French]] native speaker {{q|male or of unspecified gender}}
 
 ====Declension====
 {{de-ndecl|+}}
@@ -39486,14 +39472,14 @@ Page 1451 Kreuzbube: -------- begin text --------
 * {{audio|de|De-Kreuzbube.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m|Kreuzbuben}}
+{{de-noun|m.weak}}
 
 # [[jack of clubs]], [[knave of clubs]] {{gloss|playing card}}
 #: {{syn|de|Kreuz-Bauer}}
 #: {{ant|de|Kreuzkönig|Kreuzdame|Kreuzzehn|Kreuzneun|;|Pikbube|Herzbube|Karobube}}
 
 ====Declension====
-{{de-decl-noun-m|n|n}}
+{{de-ndecl|m.weak}}
 
 ===Further reading===
 * {{R:DWDS}}
@@ -39512,14 +39498,14 @@ Page 1452 Karobube: -------- begin text --------
 * {{audio|de|De-Karobube.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m|Karobuben}}
+{{de-noun|m.weak}}
 
 # [[jack of diamonds]], [[knave of diamonds]] {{gloss|playing card}}
 #: {{syn|de|Karo-Bauer}}
 #: {{ant|de|Karokönig|Karodame|Karozehn|Karoneun|;|Kreuzbube|Pikbube|Herzbube}}
 
 ====Declension====
-{{de-decl-noun-m|n|n}}
+{{de-ndecl|m.weak}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -39537,14 +39523,14 @@ Page 1453 Herzbube: -------- begin text --------
 * {{audio|de|De-Herzbube.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m|Herzbuben}}
+{{de-noun|m.weak}}
 
 # [[jack of hearts]], [[knave of hearts]] {{gloss|playing card}}
 #: {{syn|de|Herz-Bauer}}
 #: {{ant|de|Herzkönig|Herzdame|Herzzehn|;|Kreuzbube|Pikbube|Karobube}}
 
 ====Declension====
-{{de-decl-noun-m|n|n}}
+{{de-ndecl|m.weak}}
 
 ===Further reading===
 * {{R:DWDS}}
@@ -39563,14 +39549,14 @@ Page 1454 Pikbube: -------- begin text --------
 * {{audio|de|De-Pikbube.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m|Pikbuben}}
+{{de-noun|m.weak}}
 
 # [[jack of spades]], [[knave of spades]] {{gloss|playing card}}
 #: {{syn|de|Pik-Bauer|Schippenbube}}
 #: {{ant|de|Pikkönig|Pikdame|Pikzehn|Pikneun|;|Kreuzbube|Herzbube|Karobube}}
 
 ====Declension====
-{{de-decl-noun-m|n|n}}
+{{de-ndecl|m.weak}}
 
 ===Further reading===
 * {{R:DWDS}}
@@ -39585,18 +39571,15 @@ Page 1455 Weltnetz: -------- begin text --------
 * {{IPA|de|/vɛltnɛt͡s/}}
 
 ===Noun===
-{{de-noun|n|Weltnetz|Weltnetze}}
+{{de-noun|n,es}}
 
-# [[global]] [[network]], [[world]] [[network]]
+# {{lb|de|rare}} [[global]] [[network]], [[world]] [[network]]
 #: {{uxi|de|Weltnetz der Biosphärenreservate|{{w|World Network of Biosphere Reserves}}}}
-# the [[Net]], the [[Internet]] or [[World Wide Web]]
+# {{lb|de|right-wing politics}} the [[Net]], the [[Internet]] or [[World Wide Web]]
 #* {{quote-song|de|author=Übermensch|title=Stillstand|album=Schicksalsgemeinschaft|note=track 10|year=2015|passage=Er wünscht sich Beziehung, Familie im Haus.<br/>Doch läßt er es bleiben – bleibt lieber allein.<br/>Die Traumfrau im '''Weltnetz''' war doch nicht dabei.|translation=He desires relationship, family in the house.<br/>But he lets it be – bides at home instead.<br/>The dream woman on the '''Net''' yet has not been there.}}
 
 ====Declension====
-{{de-decl-noun-n|es|e}}
-
-====Usage notes====
-This is not a common word but in the first sense an [[occasionalism]] and in the second one associated with [[rightist]] [[scene]]s, being motivated by [[purism]]. As a function of the scene use it might not be ascertainable if it technically means the Internet or the World Wide Web – it meaning a social phenomenon rather than a technical one.
+{{de-ndecl|n,es}}
 -------- end text --------
 Page 1456 Kundendienst: Found match for regex: =
 Page 1456 Kundendienst: -------- begin text --------
@@ -39608,17 +39591,17 @@ Page 1456 Kundendienst: -------- begin text --------
 * {{audio|de|De-Kundendienst.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m|Kundendiensts|gen2=Kundendienstes|Kundendienste}}
+{{de-noun|m,s:es}}
 
 # [[customer service]]
 #: {{syn|de|Kundenservice}}
 
 ====Declension====
-{{de-decl-noun-n|(e)s|e}}
+{{de-ndecl|m,s:es}}
 
 ====Related terms====
-*{{l|de|Kundenberatung}}
-*{{l|de|Nachtdienst}}
+* {{l|de|Kundenberatung}}
+* {{l|de|Nachtdienst}}
 
 ===Further reading===
 * {{R:DWDS}}
@@ -39637,21 +39620,21 @@ Page 1457 Fährdienst: -------- begin text --------
 {{rfap|de}}
 
 ===Noun===
-{{de-noun|m|Fährdiensts|gen2=Fährdienstes|Fährdienste}}
+{{de-noun|m,s:es}}
 
 # [[ferry]] [[service]]
 #: {{syn|de|Fährbetrieb}}
 
 ====Declension====
-{{de-decl-noun-n|(e)s|e}}
+{{de-ndecl|m,s:es}}
 
 ====Related terms====
-*{{l|de|Fährschiff}}
-*{{l|de|Nachtfähre}}
-*{{l|de|Fährverbindung}}
-*{{l|de|Kundendienst}}
-*{{l|de|Nachtdienst}}
-*{{l|de|Dienstplan}}
+* {{l|de|Fährschiff}}
+* {{l|de|Nachtfähre}}
+* {{l|de|Fährverbindung}}
+* {{l|de|Kundendienst}}
+* {{l|de|Nachtdienst}}
+* {{l|de|Dienstplan}}
 
 ===Further reading===
 * {{R:DWDS}}
@@ -39670,14 +39653,14 @@ Page 1458 Spätdienst: -------- begin text --------
 {{rfap|de}}
 
 ===Noun===
-{{de-noun|m|Spätdiensts|gen2=Spätdienstes|Spätdienste}}
+{{de-noun|m,s:es}}
 
 # [[late]] [[shift]]
 #: {{syn|de|Spätschicht}}
 #: {{ant|de|Frühdienst|Zwischendienst|Nachtdienst}}
 
 ====Declension====
-{{de-decl-noun-n|(e)s|e}}
+{{de-ndecl|m,s:es}}
 
 ====Related terms====
 * {{l|de|Spätgeburt}}
@@ -39698,12 +39681,12 @@ Page 1459 Mohrin: -------- begin text --------
 * {{audio|de|De-Mohrin.ogg|Audio}}
 
 ===Noun===
-{{de-noun|f||Mohrinnen|m=Mohr}}
+{{de-noun|f|m=+}}
 
-# black female, [[negress]]
+# {{lb|de|dated|now|offensive}} [[negress]]
 
 ====Declension====
-{{de-decl-noun-f|nin}}
+{{de-ndecl|f}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -39720,12 +39703,12 @@ Page 1460 Fehdehandschuh: -------- begin text --------
 {{rfap|de}}
 
 ===Noun===
-{{de-noun|m|Fehdehandschuhs|gen2=Fehdehandschuhes|Fehdehandschuhe|pl2=Fehdehandschuh}}
+{{de-noun|m,s:es,e:-[archaic in writing, still common in speech]}}
 
 # a [[glove]] (literal of figurative) used for [[challenge|challenging]] someone, cf. {{m+|en|throw down the gauntlet}}
 
 ====Declension====
-{{de-decl-noun-m|(e)s|en}}
+{{de-ndecl|m,s:es,e:-[archaic in writing, still common in speech]}}
 
 ===References===
 * {{R:Duden}}
@@ -39744,13 +39727,13 @@ From {{af|de|Geige|t1=violin|-n-|Kasten|t3=box, case}}.
 * {{hyphenation|de|Gei|gen|kas|ten}}
 
 ===Noun===
-{{de-noun|m|old=1}}
+{{de-noun|m,s,^:-[obsolete]}}
 
 # [[violin]] [[case]]
 #: {{syn|de|Violinenkasten|Geigenkoffer}}
 
 ====Declension====
-{{de-decl-noun-m|s|pl=Geigenkästen}}
+{{de-ndecl|m,s,^:-[obsolete]}}
 
 ====Related terms====
 {{col4|de
@@ -39776,13 +39759,13 @@ From {{compound|de|Mannschaft|Riege|t1=crew, team||t2=lineup}}.
 * {{hyphenation|de|Mann|schafts|riege}}
 
 ===Noun===
-{{de-noun|f||Mannschaftsriegen}}
+{{de-noun|f}}
 
 # [[team]] [[selection]], [[team]] [[side]], [[team]] [[lineup]] {{gloss|sports, politics etc.}}
 #: {{syn|de|Mannschaftsaufstellung|Mannschaftsaufgebot|Mannschaftsauswahl|Mannschaftsbesetzung|Teamauswahl}}
 
 ====Declension====
-{{de-decl-noun-m|(e)s|e}}
+{{de-ndecl|f}}
 
 ====Related terms====
 * {{l|de|Mannschaftsraum}}
@@ -39799,13 +39782,12 @@ Page 1463 Xenolith: Found match for regex: =
 Page 1463 Xenolith: -------- begin text --------
 
 ===Noun===
-{{de-noun|m|Xenoliths|gen2=Xenolithen|Xenolithe|pl2=Xenolithen}}
+{{de-noun|((<m>,<m.weak>))}}
 
 # {{lb|de|geology}} [[xenolith]]
 
 ====Declension====
-{{de-decl-noun-m|s|e}}
-{{de-decl-noun-m|en|en}}
+{{de-ndecl|((<m>,<m.weak>))}}
 -------- end text --------
 Page 1464 Kurznachrichtendienst: Found match for regex: =
 Page 1464 Kurznachrichtendienst: -------- begin text --------
@@ -39817,14 +39799,14 @@ From {{af|de|Kurznachricht|-en-|Dienst|t1=short message|t3=service}}.
 * {{audio|de|De-Kurznachrichtendienst.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m|Kurznachrichtendienstes|Kurznachrichtendienste|gen2=Kurznachrichtendiensts}}
+{{de-noun|m,s:es}}
 
 # [[short message service]]
 #: {{syn|de|Kurzbotschaftendienst}}
 #: {{hypo|de|SMS|Twitter|Mikrobloggingdienst}}
 
 ====Declension====
-{{de-decl-noun-n|(e)s|e}}
+{{de-ndecl|m,s:es}}
 
 ====Related terms====
 {{col3|de
@@ -39862,12 +39844,12 @@ Page 1466 Hektoliter: -------- begin text --------
 * {{audio|de|De-Hektoliter.ogg|Audio}}
 
 ===Noun===
-{{de-noun|n|g2=m||Hektoliter}}
+{{de-noun|n:m}}
 
 # [[hectoliter]], [[hectolitre]]
 
 ====Declension====
-{{de-decl-noun-n|s}}
+{{de-ndecl|n:m}}
 
 ====Derived terms====
 * {{l|de|hektoliterweise}}
@@ -39884,12 +39866,12 @@ Page 1467 Gewahrsame: -------- begin text --------
 * {{hyphenation|de|Ge|wahr|sa|me}}
 
 ===Noun===
-{{de-noun|f|Gewahrsame|-}}
+{{de-noun|f.sg}}
 
 # {{archaic form of|de|nocap=1|Gewahrsam|nodot=1}}
 
 ====Declension====
-{{de-decl-noun-m||n=sg}}
+{{de-ndecl|f.sg}}
 
 ===Noun===
 {{head|de|noun form}}
@@ -39908,7 +39890,7 @@ Literally, "half the rent", apparently originating in the game of [[Skat]].<ref>
 {{de-noun|[[halb]]e<+> [[Miete]]<f.sg>}}
 
 # {{lb|de|idiomatic}} half the [[battle]], half of the [[story]]
-#: {{uxi|de|Vorbereitung ist die '''halbe Miete'''|Preparation is '''half of the story'''.}}
+#: {{uxi|de|Vorbereitung ist die '''halbe Miete'''|Preparation is '''half the battle'''.}}
 #* '''2012''', Eva Kloth, ''Du und Dein Welpe: Aufbau einer Beziehung mit Herz und Verstand'', BoD – Books on Demand ({{ISBN|9783844872408}}), page 125:
 #*: Gegenseitiges Verstehen ist die '''halbe Miete'''! Zum Thema Verständigung mit  deinem Welpen und somit auch mit deinem später erwachsenen Hund ist noch einiges zu sagen.
 #* '''2012''', Inge Kloepfer, ''Glucken, Drachen, Rabenmütter: Wie junge Menschen erzogen werden wollen'', Hoffmann und Campe ({{ISBN|9783455850253}})
@@ -39932,13 +39914,12 @@ From Late {{inh|de|gmh|beger}}.
 * {{audio|de|De-Begehr.ogg|Audio}}
 
 ===Noun===
-{{de-noun|n|g2=m|Begehrs|-}}
+{{de-noun|n:m.sg}}
 
 # {{lb|de|formal}} [[desire]], [[wish]]
 
 ====Declension====
-{{de-decl-noun-n|n=sg}}
-{{de-decl-noun-m|n=sg}}
+{{de-ndecl|n:m.sg}}
 
 ====Derived terms====
 * {{l|de|begehrlich}}
@@ -39950,13 +39931,13 @@ Page 1470 blaues Auge: Found match for regex: =
 Page 1470 blaues Auge: -------- begin text --------
 
 ===Noun===
-{{de-noun|[[blau]]es<+> [[Auge]]<n>}}
+{{de-noun|[[blau]]es<+> [[Auge]]<n,s,n>}}
 
 # [[black eye]]
 #: {{syn|de|Veilchen|q1=colloquial}}
 
 ====Declension====
-{{de-ndecl|[[blau]]es<+> [[Auge]]<n>}}
+{{de-ndecl|[[blau]]es<+> [[Auge]]<n,s,n>}}
 
 ===Further reading===
 * {{pedia|lang=de}}
@@ -39965,7 +39946,7 @@ Page 1471 Kelter: Found match for regex: =
 Page 1471 Kelter: -------- begin text --------
 
 ===Etymology===
-{{inh|de|gmh|kelter}}, {{inh|de|goh|calcture}}, from {{der|de|la|calcātūra}}.
+{{inh+|de|gmh|kelter}}, from {{inh|de|goh|calcture}}, from {{der|de|la|calcātūra}}.
 
 ===Pronunciation===
 * {{IPA|de|/ˈkɛltɐ/}}
@@ -39973,13 +39954,13 @@ Page 1471 Kelter: -------- begin text --------
 * {{hyphenation|de|Kel|ter}}
 
 ===Noun===
-{{de-noun|m||Keltern}}
+{{de-noun|f}}
 
 # [[winepress]]
 #: {{syn|de|Trotte|q1=regional|Torkel|q2=regional}}
 
 ====Declension====
-{{de-decl-noun-f|n}}
+{{de-ndecl|f}}
 
 ====Related terms====
 * {{l|de|keltern|pos=v}}
@@ -40000,13 +39981,12 @@ Page 1472 Obfrau: -------- begin text --------
 * {{audio|de|De-Obfrau.ogg|Audio}}
 
 ===Noun===
-{{de-noun|f|Obmanns|gen2=Obmannes|Obfrauen|pl2=Obleute|f=Obfrau}}
+{{de-noun|f|m=Obmann}}
 
-# [[chairwoman]]
-# [[representative]]
+# {{female equivalent of|de|Obmann}}: [[chairwoman]]; [[female]] [[representative]]
 
 ====Declension====
-{{de-decl-noun-f|en}}
+{{de-ndecl|f}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -40021,12 +40001,12 @@ Page 1473 Tankini: -------- begin text --------
 * {{audio|de|De-Tankini.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m||Tankinis}}
+{{de-noun|m,s,s}}
 
 # [[tankini]]
 
 ====Declension====
-{{de-decl-noun-n|s|s}}
+{{de-ndecl|m,s,s}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -40041,13 +40021,13 @@ Compound of {{com|de|Wetter|Fahne}}.
 * {{audio|de|De-Wetterfahne.ogg|Audio}}
 
 ===Noun===
-{{de-noun|f||Wetterfahne}}
+{{de-noun|f}}
 
 # [[weather vane]], [[weathervane]]
 #: {{syn|de|Windfahne}}
 
 ====Declension====
-{{de-decl-noun-f|n}}
+{{de-ndecl|f}}
 
 ===Further reading===
 * {{R:DWDS}}
@@ -40076,14 +40056,14 @@ From {{bor|de|LL.|breve}}.
 * {{IPA|de|/bʁeːvə/}}
 
 ===Noun===
-{{de-noun|n|Breve|Breven|pl2=Breves}}
+{{de-noun|n,s,n:s}}
 
 # [[breve]] {{gloss|semicircular diacritical mark}}
 #: {{syn|de|Verkürzungszeichen}}
 #: {{ant|de|Makron}}
 
 ====Declension====
-{{de-decl-noun-n|s|n}}
+{{de-ndecl|n,s,n:s}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -40120,12 +40100,12 @@ From {{compound|de|Stimme|t1=voice|Bruch|t2=break, breaking}}.
 * {{audio|de|De-Stimmbruch.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m|Stimmbruchs|gen2=Stimmbruchs|Stimmbrüche}}
+{{de-noun|m,es:s,^e}}
 
 # the [[gradual]] [[deepen]]ing of a [[boy]]'s [[voice]] during [[puberty]]: [[voice change]], [[voice mutation]], [[voice break]], [[voice crack]]
 
 ====Declension====
-{{de-decl-noun-m|(e)s|pl=Stimmbrüche}}
+{{de-ndecl|m,es:s,^e}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -40144,7 +40124,7 @@ From {{der|de|en|high society}} and {{m|de|Snob}} (itself from {{m+|en|snob}}). 
 * {{audio|de|De-High Snobiety.ogg|Audio}}
 
 ===Noun===
-{{de-noun|f||-|head=High Snobiety}}
+{{de-noun|f.sg|nolinkhead=1}}
 
 # {{lb|de|sometimes|_|pejorative}} [[high society|High society]], [[posh]] people, especially those with [[snobbish]] attitudes.
 #* {{quote-journal
@@ -40170,7 +40150,7 @@ From {{der|de|en|high society}} and {{m|de|Snob}} (itself from {{m+|en|snob}}). 
 |text=Das gleiche gilt für das so genannte Haas-Haus, direkt an der Ecke Stephansplatz-Graben, ca 50 m von der Stephanskirche entfernt. Mit Nobelrestaurant im letzen Stock. Hier feiert üblicherweise ein Teil der '''High-Snobiety''' den Jahreswechsel.|t=The same applies to the Haas Haus, located right on the corner of Graben and Stephansplatz, about 50 metres from St. Stephen's Cathedral. It has an elegant restaurant on the highest floor. Here is where some members of '''high society''' celebrate the New Year.}}
 
 ====Declension====
-{{de-decl-noun-f|n=sg}}
+{{de-ndecl|f.sg}}
 
 ====Further reading====
 * {{R:Duden}}
@@ -40181,12 +40161,12 @@ Page 1480 Recensent: Found match for regex: =
 Page 1480 Recensent: -------- begin text --------
 
 ===Noun===
-{{de-noun|m|Recensenten|Recensenten|f=Recensentin}}
+{{de-noun|m.weak|f=in}}
 
 # {{obsolete spelling of|de|Rezensent}}
 
 ====Declension====
-{{de-decl-noun-m|en}}
+{{de-ndecl|m.weak|f=in}}
 -------- end text --------
 Page 1481 Wenigkeit: Found match for regex: =
 Page 1481 Wenigkeit: -------- begin text --------
@@ -40199,12 +40179,12 @@ Page 1481 Wenigkeit: -------- begin text --------
 * {{hyph|de|We|nig|keit}}
 
 ===Noun===
-{{de-noun|f||-}}
+{{de-noun|f.sg}}
 
 # [[paucity]]
 
 ====Declension====
-{{de-decl-noun-f}}
+{{de-ndecl|f.sg}}
 
 ====Derived terms====
 * {{l|de|meine Wenigkeit}}
@@ -40221,7 +40201,7 @@ Page 1482 Normalsterbliche: -------- begin text --------
 ===Noun===
 {{de-noun|+|m=+}}
 
-# {{lb|de|humorous|female}} mere [[mortal]]
+# {{lb|de|humorous}} {{female equivalent of|de|Normalsterblicher}}: [[female]] [[mere]] [[mortal]]
 
 ====Declension====
 {{de-ndecl|+}}
@@ -40238,7 +40218,7 @@ Page 1483 Normalsterblicher: -------- begin text --------
 ===Noun===
 {{de-noun|+|f=+}}
 
-# {{lb|de|humorous|male}} mere [[mortal]]
+# {{lb|de|humorous}} [[mere]] [[mortal]] {{q|male or of unspecified gender}}
 
 ====Declension====
 {{de-ndecl|+}}
@@ -40260,7 +40240,7 @@ Substantivisation of {{m|de|sterblich}}.
 ===Noun===
 {{de-noun|+|f=+}}
 
-# {{qualifier|male}} [[mortal]]
+# [[mortal]] {{q|male or of unspecified gender}}
 
 ====Declension====
 {{de-ndecl|+}}
@@ -40282,7 +40262,7 @@ Substantivisation of {{m|de|sterblich}}.
 ===Noun===
 {{de-noun|+|m=+}}
 
-# {{qualifier|female}} [[mortal]]
+# {{female equivalent of|de|Sterblicher}}: [[female]] [[mortal]]
 
 ====Declension====
 {{de-ndecl|+}}
@@ -40305,8 +40285,8 @@ Substantivisation of {{m|de|heimatvertrieben}}.
 ===Noun===
 {{de-noun|+|f=+}}
 
-# someone forced to leave their [[homeland]]
-## a German expelled from their home after the [[Second World War]]
+# someone forced to leave their [[homeland]] {{q|male or of unspecified gender}}
+## a German expelled from their home after the [[Second World War]] {{q|male or of unspecified gender}}
 
 ====Declension====
 {{de-ndecl|+}}
@@ -40318,15 +40298,15 @@ Page 1487 Wotanstag: Found match for regex: =
 Page 1487 Wotanstag: -------- begin text --------
 
 ===Etymology===
-{{compound|de|Wotan|-s-|Tag}}. Compare {{cog|en|Wednesday}}
+{{compound|de|Wotan|-s-|Tag}}. Compare {{cog|en|Wednesday}}.
 
 ===Noun===
-{{de-noun|m|Wotanstags|gen2=Wotanstags|Wotanstage}}
+{{de-noun|m,s:es}}
 
 # {{lb|de|dated|or|regional}} [[Wednesday]]
 
 ====Declension====
-{{de-decl-noun-m|(e)s|e}}
+{{de-ndecl|m,s:es}}
 
 ====Related terms====
 * {{l|de|Wodenstag}}
@@ -40344,12 +40324,12 @@ Page 1488 Kackbratze: -------- begin text --------
 * {{audio|de|De-Kackbratze.ogg|Audio}}
 
 ===Noun===
-{{de-noun|f||Kackbratzen}}
+{{de-noun|f}}
 
-# {{lb|de|derogatory|vulgar|colloquial}} [[ugly]] person
+# {{lb|de|derogatory|vulgar|colloquial}} [[ugly]] [[person]] {{q|usually a woman, but can also refer to a man or child}}
 
 ====Declension====
-{{de-decl-noun-f}}
+{{de-ndecl|f}}
 -------- end text --------
 Page 1489 Rektionskompositum: Found match for regex: =
 Page 1489 Rektionskompositum: -------- begin text --------
@@ -40363,13 +40343,12 @@ Page 1489 Rektionskompositum: -------- begin text --------
 * {{audio|de|De-Rektionskompositum.ogg|Audio}}
 
 ===Noun===
-{{de-noun|n|Rektionskompositums|Rektionskomposita|pl2=Rektionskomposites}}
+{{de-noun|n,s,Rektionskomposita:+}}
 
 # [[compound]] in which the head case-governs the non-head
 
 ====Declension====
-{{de-decl-noun-n|s|pl=Rektionskomposita}}
-{{de-decl-noun-n|s|pl=Rektionskompositen}}
+{{de-ndecl|n,s,Rektionskomposita:+}}
 -------- end text --------
 Page 1490 Weichteile: Found match for regex: =
 Page 1490 Weichteile: -------- begin text --------
@@ -40383,13 +40362,13 @@ Page 1490 Weichteile: -------- begin text --------
 * {{audio|de|De-Weichteile.ogg|Audio}}
 
 ===Noun===
-{{de-noun|p|old=1}}
+{{de-noun|p}}
 
 # {{lb|de|anatomy}} [[soft tissue]]
 # {{lb|de|colloquial}} [[private parts]]
 
 ====Declension====
-{{de-decl-noun-n|n=pl}}
+{{de-ndecl|p}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -40403,13 +40382,12 @@ Page 1491 Isolani: -------- begin text --------
 * {{audio|de|De-Isolani.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m|Isolanis|gen2=Isolani|Isolanis|pl2=Isolani}}
+{{de-noun|m,-:s,-:s}}
 
 # {{lb|de|chess}} [[isolated pawn]]
 
 ====Declension====
-{{de-decl-noun-m|s|s}}
-{{de-decl-noun-m||}}
+{{de-ndecl|m,-:s,-:s}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -40429,13 +40407,12 @@ Page 1492 Raketenstart: -------- begin text --------
 * {{audio|de|De-Raketenstart.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m|Raketenstarts|gen2=Raketenstartes|Raketenstarts|pl2=Raketenstarte}}
+{{de-noun|m,s:es,s:e}}
 
 # [[rocket]] [[launch]]
 
 ====Declension====
-{{de-decl-noun-m|s|s}}
-{{de-decl-noun-m|(e)s|e}}
+{{de-ndecl|m,s:es,s:e}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -40448,12 +40425,12 @@ Page 1493 Brustbehaarung: -------- begin text --------
 {{compound|de|Brust|Behaarung}}
 
 ===Noun===
-{{de-noun|f|||old=1}}
+{{de-noun|f}}
 
 # [[chest hair]]
 
 ====Declension====
-{{de-decl-noun-f|}}
+{{de-ndecl|f}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -40483,7 +40460,7 @@ Substantivisation of {{m|de|sachverständig}}.
 ===Noun===
 {{de-noun|+|f=+}}
 
-# {{qualifier|male}} [[expert]]
+# [[expert]] {{q|male or of unspecified gender}}
 
 ====Declension====
 {{de-ndecl|+}}
@@ -40503,9 +40480,9 @@ Substantivisation of {{m|de|sachverständig}}.
 * {{audio|de|De-Sachverständige.ogg|Audio}}
 
 ===Noun===
-{{de-noun|+|f=+}}
+{{de-noun|+|m=+}}
 
-# {{qualifier|female}} [[expert]]
+# {{female equivalent of|de|Sachverständiger}}: [[female]] [[expert]]
 
 ====Declension====
 {{de-ndecl|+}}
@@ -40520,12 +40497,12 @@ Page 1497 Heidengeld: -------- begin text --------
 {{compound|de|Heide|-n-|Geld}}
 
 ===Noun===
-{{de-noun|n|Heidengelds|gen2=Heidengeldes|-}}
+{{de-noun|n,s:es.sg}}
 
 # large amount of [[money]]; [[mint]]
 
 ====Declension====
-{{de-decl-noun-m|(e)s|n=sg}}
+{{de-ndecl|n,s:es.sg}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -40541,13 +40518,13 @@ Page 1498 Sachwalter: -------- begin text --------
 * {{audio|de|De-Sachwalter.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m|Sachwalter|Sachwalter|f=Sachwalterin}}
+{{de-noun|m|f=in}}
 
 # [[advocate]]
 # [[custodian]]
 
 ====Declension====
-{{de-decl-noun-m|s|}}
+{{de-ndecl|m}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -40563,19 +40540,7 @@ From {{bor|de|ja|神風|tr=kamikaze|t=divine wind}}.
 * {{audio|de|De-Kamikaze.ogg|Audio}}
 
 ===Noun===
-{{de-noun|f||-}}
-
-# {{lb|de|uncountable|military|or|figurative}} a risky, seemingly [[suicidal]] course of action
-#: {{ux|de|Das ist reine '''Kamikaze'''.|This is utter '''suicide'''.}}
-
-====Declension====
-{{de-decl-noun-f|n=sg}}
-
-====Usage notes====
-* Often replaced with compounds like {{m|de|Kamikazeangriff}}, {{m|de|Kamikazeaktion}} and the like.
-
-===Noun===
-{{de-noun|m|Kamikaze|gen2=Kamikazes|gen3=Kamikazen|Kamikaze|pl2=Kamikazes|pl3=Kamikazen}}
+{{de-noun|m,-:s,-:s:n[rare].nodatpln}}
 
 # {{lb|de|historical}} [[kamikaze]] {{gloss|kind of Japanese fighter pilot}}
 
@@ -40583,10 +40548,19 @@ From {{bor|de|ja|神風|tr=kamikaze|t=divine wind}}.
 * Often replaced with compounds like {{m|de|Kamikazeflieger}}, {{m|de|Kamikazekämpfer}}, {{m|de|Kamikazepilot}} and the like.
 
 ====Declension====
-{{de-decl-noun-m|||dp=Kamikaze}}
-{{de-decl-noun-m|s|}}
-{{de-decl-noun-m|s|s}}
-{{de-decl-noun-m|n|n}}
+{{de-ndecl|m,-:s,-:s:n[rare].nodatpln}}
+
+===Noun===
+{{de-noun|f.sg}}
+
+# {{lb|de|uncountable|military|or|figurative}} a risky, seemingly [[suicidal]] course of action
+#: {{ux|de|Das ist reine '''Kamikaze'''.|This is utter '''suicide'''.}}
+
+====Declension====
+{{de-ndecl|f.sg}}
+
+====Usage notes====
+* Often replaced with compounds like {{m|de|Kamikazeangriff}}, {{m|de|Kamikazeaktion}} and the like.
 -------- end text --------
 Page 1500 Wadenkrampf: Found match for regex: =
 Page 1500 Wadenkrampf: -------- begin text --------
@@ -40600,12 +40574,12 @@ Page 1500 Wadenkrampf: -------- begin text --------
 * {{audio|de|De-Wadenkrampf.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m|Weinkrampfs|gen2=Weinkrampfes|Weinkrämpfe}}
+{{de-noun|m,s:es,^e}}
 
 # calf-muscle [[cramp]]; [[charley horse]]
 
 ====Declension====
-{{de-decl-noun-m|(e)s|pl=Weinkrämpfe}}
+{{de-ndecl|m,s:es,^e}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -40617,7 +40591,7 @@ Page 1501 Orgon: -------- begin text --------
 Coined by {{w|Wilhelm Reich}}.
 
 ===Noun===
-{{de-noun|n|Orgons|-}}
+{{de-noun|n,s.sg}}
 
 # {{lb|de|pseudoscience}} [[orgone]] {{gloss|form of sexual energy}}
 #: {{syn|de|Orgonenergie}}
@@ -40625,7 +40599,7 @@ Coined by {{w|Wilhelm Reich}}.
 #*: Das '''Orgon''' verweist also auf die Leere, die dem Subjekt zugrunde liegt. Um die Lebensenergie nachzuweisen, baute Wilhelm Reich also den Orgon-Akkumulator, mit dessen Hilfe er die Strahlung vermeintlich nachwies.
 
 ====Declension====
-{{de-decl-noun-n|n=sg}}
+{{de-ndecl|n,s.sg}}
 
 ====Derived terms====
 * {{l|de|Orgonomie}}
@@ -40644,12 +40618,12 @@ From {{inh|de|gmh|enphencnisse}}, from {{inh|de|goh|intfangnissa}}. Equivalent t
 * {{audio|de|De-Empfängnis.ogg|Audio}}
 
 ===Noun===
-{{de-noun|f||Empfängnisse}}
+{{de-noun|f}}
 
 # [[conception]]; the act of becoming [[pregnant]]
 
 ====Declension====
-{{de-decl-noun-f|e}}
+{{de-ndecl|f}}
 
 ====Derived terms====
 * {{l|de|Empfängnisverhütung}}
@@ -40693,14 +40667,14 @@ Page 1505 Grundrente: -------- begin text --------
 {{compound|de|Grund|Rente}}
 
 ===Noun===
-{{de-noun|f||Grundrente}}
+{{de-noun|f}}
 
 # [[ground rent]]
 #* '''1848''', Karl Marx, ''Manifest der Kommunistischen Partei'', pages 16
 #*:Von dem Augenblick an, wo die Arbeit nicht mehr in Kapital, Geld, '''Grundrente''', kurz, in eine monopolisirbare gesellschaftliche Macht verwandelt werden kann, d. h. von dem Augenblick, wo das persönliche Eigenthum nicht mehr in bürgerliches umschlagen kann, von dem Augenblick an erklärt Ihr die Person sei aufgehoben.
 
 ====Declension====
-{{de-decl-noun-f|n}}
+{{de-ndecl|f}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -40717,15 +40691,12 @@ Page 1506 Mundschenk: -------- begin text --------
 * {{audio|de|De-Mundschenk.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m|Mundschenks|gen2=Mundschenkes|Mundschenke}}
+{{de-noun|((<m,s:es>,<m.weak>))}}
 
-{{de-noun|m|Mundschenken|Mundschenken}}
-
-# [[cupbearer]]
+# {{lb|de|historical}} [[cupbearer]]
 
 ====Declension====
-{{de-decl-noun-m|(e)s|e}}
-{{de-decl-noun-m|en|en}}
+{{de-ndecl|((<m,s:es>,<m.weak>))}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -40755,12 +40726,12 @@ Page 1508 Landesinneres: -------- begin text --------
 * {{audio|de|De-Landesinneres.ogg|Audio}}
 
 ===Noun===
-{{de-noun|+.sg}}
+{{de-noun|+.sg.article}}
 
 # [[interior]] of a [[country]]
 
 ====Declension====
-{{de-ndecl|+.sg}}
+{{de-ndecl|+.sg.article}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -40795,7 +40766,7 @@ Borrowed from {{bor|de|it|rivoluzionario}}.
 * {{hyphenation|de|Re|vo|luz|zer}}
 
 ===Noun===
-{{de-noun|m||Revoluzzer|f=Revoluzzerin}}
+{{de-noun|m|f=in}}
 
 # {{lb|de|derogatory}} [[would-be]] [[revolutionary]]
 #* {{quote-song
@@ -40807,7 +40778,7 @@ Borrowed from {{bor|de|it|rivoluzionario}}.
 |translation=He was once a '''revolutionary''', / Civicly lamp cleaner; / Went the revolutionary's step / together with the revolutionaries.}}
 
 ====Declension====
-{{de-decl-noun-m}}
+{{de-ndecl|m|f=in}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -40824,12 +40795,12 @@ Page 1511 Nebenzimmer: -------- begin text --------
 * {{audio|de|De-Nebenzimmer.ogg|Audio}}
 
 ===Noun===
-{{de-noun|n|Nebenzimmers|}}
+{{de-noun|n}}
 
-# neighbouring [[room]]
+# [[neighbour]]ing [[room]], [[adjacent]] [[room]]
 
 ====Declension====
-{{de-decl-noun-n|s|}}
+{{de-ndecl|n}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -40846,12 +40817,12 @@ Page 1512 Paketbote: -------- begin text --------
 * {{audio|de|De-Paketbote.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m|Paketboten|Paketboten|f=Paketbotin}}
+{{de-noun|m.weak|f=in}}
 
 # [[package]] [[carrier]]
 
 ====Declension====
-{{de-decl-noun-n|n|n}}
+{{de-ndecl|m.weak}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -40926,13 +40897,13 @@ From {{bor|de|en|electronic}} {{m|en|card}}.
 * {{IPA|de|/ɪlɛkˈtrɔnɪk ˈkɑːd/}}
 
 ===Noun===
-{{de-noun|f||Electronic Cards|head=Electronic Card}}
+{{de-noun|f,s|nolinkhead=1}}
 
 # [[ecard]] {{gloss|electronic greeting card}}
 # {{lb|de|Austria}} [[electronic]] [[health insurance]] [[card]]
 
 ====Declension====
-{{de-decl-noun-f|s}}
+{{de-ndecl|f,s}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -40946,14 +40917,15 @@ Page 1518 Hasenjunges: -------- begin text --------
 ===Noun===
 {{de-noun|+}}
 
-# {{lb|de|Austria}} Pieces of [[hare]] [[meat]] too small for a [[roast]]; i.e. the lower [[leg]]s, [[head]], [[neck]], [[heart]], [[kidney]]s and [[liver]].
-# [[leveret]]
+# [[leveret]], [[young]] [[hare]]
+# {{lb|de|Austria}} [[piece]]s of [[hare]] [[meat]] too small for a [[roast]]; i.e. the lower [[leg]]s, [[head]], [[neck]], [[heart]], [[kidney]]s and [[liver]]
 
 ====Declension====
 {{de-ndecl|+}}
 
 ===Further reading===
 * {{R:Duden}}
+
 {{C|de|Baby animals|Hares|Meats}}
 -------- end text --------
 Page 1519 Ungläubiger: Found match for regex: =
@@ -40989,7 +40961,7 @@ From {{m|de|grün}}.
 ===Noun===
 {{de-noun|+|f=+}}
 
-# [[green]] (member of an environmentalist party; supporter of green politics), [[environmentalist]]
+# [[green]] {{gl|member of an environmentalist party; supporter of green politics}}, [[environmentalist]] {{q|male or of unspecified gender}}
 # {{lb|de|in plural, collectively|often with the definite article}} the German [[green party]], 'Die Grünen' or since 1993 'Bündnis 90/Die Grünen'
 #: {{syn|de|([[der|die]]) [[grün]]e [[Partei]]}}
 #* '''1995''', Rainer Berger, ''SPD und Grüne: Eine vergleichende Studie ihrer kommunalen Politik: sozialstrukturelle Basis – programmatische Ziele – Verhältnis zueinander'', Westdeutscher Verlag in Opladen, p. 221:
@@ -41014,13 +40986,13 @@ Page 1521 Regierungsbüro: -------- begin text --------
 {{compound|de|Regierung|Büro}}
 
 ===Noun===
-{{de-noun|n||Regierungsbüros}}
+{{de-noun|n,s,s}}
 
 # {{lb|de|officialese|Austria}} [[seat]] of the [[government]]
 # the [[office]] of a government [[official]]
 
 ====Declension====
-{{de-decl-noun-m|s|s}}
+{{de-ndecl|n,s,s}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -41034,7 +41006,7 @@ Nominalization of {{m|de|intern||internal}}.
 ===Noun===
 {{de-noun|+|m=+}}
 
-# (female) [[boarding school]] [[student]]
+# {{female equivalent of|de|Interner}}: [[female]] [[boarding school]] [[student]]
 # {{lb|de|Austria}} [[department]] of [[internal medicine]] at a [[hospital]]
 
 ====Declension====
@@ -41056,13 +41028,13 @@ Page 1523 Universitätsdozent: -------- begin text --------
 {{rfap|de}}
 
 ===Noun===
-{{de-noun|m|Universitätsozenten|}}
+{{de-noun|m.weak}}
 
 # [[lecturer]], [[instructor]] (at a university)
 # {{lb|de|Austria}} [[privatdozent]]
 
 ====Declension====
-{{de-decl-noun-m|en|en}}
+{{de-ndecl|m.weak}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -41079,15 +41051,13 @@ Page 1524 Ehrenschutz: -------- begin text --------
 * {{audio|de|De-Ehrenschutz.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m||Ehrenschutze|pl2=Ehrenschütze}}
+{{de-noun|m,es,e:^e[rare, mostly found in Switzerland]}}
 
 # {{lb|de|law}} [[protection]] of [[honor]]
 # {{lb|de|Austria}} [[patronage]], [[auspices]]
 
 ====Declension====
-{{de-decl-noun-m|es|e}}
-or rarely in {{w|Swiss Standard German}}
-{{de-decl-noun-m|es|pl=Ehrenschütze}}
+{{de-ndecl|m,es,e:^e[rare, mostly found in Switzerland]}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -41102,16 +41072,13 @@ From {{der|de|LL.|officialis}}.
 * {{audio|de|De-Offizial.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m|Offizials|gen2=Offizialen|Offiziale|pl2=Offizialen|f=Offizialin}}
+{{de-noun|((<m>,<m.weak>))|f=in}}
 
 # {{lb|de|Roman Catholicism}} [[judicial vicar]]
 # {{lb|de|Austria}} title for [[civil servant]]s
 
 ====Declension====
-strong:
-{{de-decl-noun-m|s|e}}
-weak:
-{{de-decl-noun-m|en|en}}
+{{de-ndecl|((<m>,<m.weak>))|f=in}}
 
 ====Related terms====
 * {{l|de|Official}}
@@ -41132,7 +41099,7 @@ Page 1526 Kulturlandschaft: -------- begin text --------
 * {{audio|de|De-Kulturlandschaft.ogg|Audio}}
 
 ===Noun===
-{{de-noun|f||Kulturlandlandschaften}}
+{{de-noun|f}}
 
 # [[cultural landscape]] {{gloss|landscape designed and created intentionally by man}}
 #: {{ant|de|Naturlandschaft}}
@@ -41140,7 +41107,7 @@ Page 1526 Kulturlandschaft: -------- begin text --------
 #*: Konsequenter Prozessschutz auf Arealen der mitteleuropäischen '''Kulturlandschaft''' führt zu (sekundärer) Wildnis, die nach Broggi (1999) wie folgt  definiert ist: «Wildnis ist jener Raum, – in dem wir jede Nutzung und Gestaltung  bewusst unterlassen, {{...}}
 
 ====Declension====
-{{de-decl-noun-f|en}}
+{{de-ndecl|f}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -41149,20 +41116,33 @@ Page 1526 Kulturlandschaft: -------- begin text --------
 Page 1527 Adjunkt: Found match for regex: =
 Page 1527 Adjunkt: -------- begin text --------
 
-===Etymology===
-From {{bor|de|la|adiūnctum}}.
-
 ===Pronunciation===
 * {{audio|de|LL-Q188 (deu)-Frank C. Müller-Adjunkt.wav|Audio}}
 
-===Noun===
-{{de-noun|m|Adjunkten|gen2=Adjunkts|Adjunkten|pl2=Adjunkte|f=Adjunktin}}
+===Etymology 1===
+{{bor|de|la|adiūnctus}}.
 
-# {{lb|de|dated}} [[assistant]], [[adjunct]]
+====Noun====
+{{de-noun|m.weak|f=in}}
 
-====Declension====
-{{de-decl-noun-m|en|en}}
-{{de-decl-noun-m|s|e}}
+# {{lb|de|dated}} [[official]]'s [[clerk]]
+# {{lb|de|Austria|dated}} [[low]] [[official]]
+# {{lb|de|Switzerland}} [[senior]] [[civil servant]]
+# [[academic]] [[assistant]] at a [[university]], [[adjunct]] [[professor]]
+
+=====Declension=====
+{{de-ndecl|m.weak}}
+
+===Etymology 2===
+{{bor|de|la|adiūnctum}}.
+
+====Noun====
+{{de-noun|n}}
+
+# {{lb|de|linguistics}} [[adjunct]]
+
+=====Declension=====
+{{de-ndecl|n}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -41178,13 +41158,13 @@ Borrowed from {{bor|de|en|switch}}.
 * {{audio|de|De-Switch.ogg}}
 
 ===Noun===
-{{de-noun|m|Switchs|gen2=Switches|Switches}}
+{{de-noun|m,s:es,s:es.dat:-.datpl:+:en}}
 
 # {{lb|de|networking}} [[switch]]
 #: {{syn|de|Verteiler}}
 
 ====Declension====
-{{de-decl-noun-m|(e)s|(e)s}}
+{{de-ndecl|m,s:es,s:es.dat:-.datpl:+:en}}
 
 ===Further reading===
 * {{R:DWDS}}
@@ -41203,7 +41183,7 @@ From {{m|de|halbstark}}.
 ===Noun===
 {{de-noun|+|f=+}}
 
-# {{lb|de|colloquial|derogatory}} [[teenager]], [[yob]]
+# {{lb|de|colloquial|derogatory}} [[teenager]], [[yob]] {{q|male or of unspecified gender}}
 #* {{quote-web
 |de
 |date=2019-05-23
@@ -41231,12 +41211,12 @@ From {{suffix|de|Madrid|-er}}.
 * {{audio|de|De-Madrider.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m||Madrider}}
+{{de-noun|m}}
 
-# {{lb|de|chiefly|informal}} {{synonym of|de|Madrilene|t=someone from Madrid}}
+# {{lb|de|chiefly|informal}} {{synonym of|de|Madrilene|t=someone from Madrid}} {{q|male or of unspecified gender}}
 
 ====Declension====
-{{de-decl-noun-m}}
+{{de-ndecl|m}}
 
 ===Adjective===
 {{de-adj|-}}
@@ -41261,7 +41241,7 @@ Borrowed from {{bor|de|fr|tour de force}}.
 * {{audio|de|De-Tour de Force.ogg|Audio}}
 
 ===Noun===
-{{de-noun|f|Tour de Force|Tours de Force|head=Tour de Force}}
+{{de-noun|Tour<f,s> de Force|nolinkhead=1}}
 
 # {{lb|de|literary}} [[tour de force]]
 #: {{syn|de|Kraftakt|Gewaltaktion}}
@@ -41275,7 +41255,7 @@ Borrowed from {{bor|de|fr|tour de force}}.
 |passage=Stefanie ist der Alptraum jedes Therapeuten: Sie ist manipulativ, grenzüberschreitend und so liebeshungrig wie selbstzerstörerisch. Die schauspielerische '''Tour de Force''', die Franziska Hartmann hier abliefert, stellt sie auf einen Rang mit der großartigen Bibiana Beglau.}}
 
 ====Declension====
-{{de-decl-noun-f|pl=Tours de Force|dp=Tours de Force}}
+{{de-ndecl|Tour<f,s> de Force}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -41284,12 +41264,12 @@ Page 1532 Tour de force: Found match for regex: =
 Page 1532 Tour de force: -------- begin text --------
 
 ===Noun===
-{{de-noun|f|Tour de force|Tours de force|head=Tour de force}}
+{{de-noun|Tour<f,s> de force|nolinkhead=1}}
 
-# {{alternative form of|de|Tour de Force}}
+# {{alternative spelling of|de|Tour de Force}}
 
 ====Declension====
-{{de-decl-noun-f|pl=Tours de force|dp=Tours de force}}
+{{de-ndecl|Tour<f,s> de force|nolinkhead=1}}
 -------- end text --------
 Page 1533 K-Frage: Found match for regex: =
 Page 1533 K-Frage: -------- begin text --------
@@ -41302,7 +41282,7 @@ First used in the run-up to the 2002 German federal elections.
 * {{audio|de|De-K-Frage.ogg|Audio}}
 
 ===Noun===
-{{de-noun|f||K-Fragen|head=[[K]]-[[Frage]]}}
+{{de-noun|f}}
 
 # {{lb|de|colloquial|German politics}} {{short for|de|Kanzlerkandidatenfrage|t=chancellor candidate question}}
 #* {{quote-web
@@ -41324,7 +41304,7 @@ First used in the run-up to the 2002 German federal elections.
 |passage=Dass die '''K-Frage''' überhaupt gestellt und dann gegen Podolski entschieden wurde, belegt die neue Machtstruktur.}}
 
 ====Declension====
-{{de-decl-noun-f|n}}
+{{de-ndecl|f}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -41341,7 +41321,7 @@ Page 1534 Zmorgen: -------- begin text --------
 Contraction of {{m|de|[[zum]] [[Morgen]]|t=in the morning}}.
 
 ===Noun===
-{{de-noun|m:n,(s).sg}}
+{{de-noun|m:n,s:-.sg}}
 
 # {{lb|de|Switzerland}} [[breakfast]]
 #: {{syn|de|Frühstück|Morgenessen|q2=Switzerland}}
@@ -41350,7 +41330,7 @@ Contraction of {{m|de|[[zum]] [[Morgen]]|t=in the morning}}.
 #*: Danach mache ich '''Zmorgen'''. Und zwar mache ich zum '''Zmorgen''' immer etwas mit Früchten und Flöcklein und einen Grüntee. In der Zwischenzeit steht Helene auf.
 
 ====Declension====
-{{de-ndecl|m:n,(s).sg}}
+{{de-ndecl|m:n,s:-.sg}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -41372,7 +41352,7 @@ From {{inh|de|gmh|truhtsæze|t=steward}}, from {{der|de|goh|truhtsāzzo}}, compo
 * {{hyphenation|de|Truch|sess}}
 
 ===Noun===
-{{de-noun|m|Truchsesses|gen2=Truchsessen|Truchsesse}}
+{{de-noun|((<m>,<m.weak>))}}<!-- Duden only lists Truchsesse but I think this is an oversight; genitive Truchsessen is specified as "älter"; DWDS gives Truchsessen as the plural -->
 
 # {{lb|de|historical}} [[steward]]
 
@@ -41380,11 +41360,7 @@ From {{inh|de|gmh|truhtsæze|t=steward}}, from {{der|de|goh|truhtsāzzo}}, compo
 * The word may be declined according to the strong or the weak pattern.
 
 ====Declension====
-Strong declension:
-{{de-decl-noun-m|es|e}}
-
-Weak declension:
-{{de-decl-noun-m|en|e}}
+{{de-ndecl|((<m>,<m.weak>))}}
 
 ====Related terms====
 * {{l|de|Insasse}}
@@ -41401,12 +41377,12 @@ Compound of {{compound|de|Temminck|Strandläufer|t2=sandpiper, stint}}, {{named-
 * {{hyphenation|de|Tem|minck|strand|läu|fer}}
 
 ===Noun===
-{{de-noun|m||Temmincktrandläufer}}
+{{de-noun|m}}
 
 # [[Temminck's stint]] {{gloss|bird of the species ''[[Calidris temminckii]]''}}
 
 ====Declension====
-{{de-decl-noun-m|s}}
+{{de-ndecl|m}}
 
 ====Coordinate terms====
 * {{l|de|Alpenstrandläufer}}
@@ -41430,13 +41406,13 @@ Page 1537 Wechselbalg: -------- begin text --------
 * {{hyphenation|de|We|chsel|balg|}}
 
 ===Noun===
-{{de-noun|m||Wechselbälger}}
+{{de-noun|m,s:es,^er[northern Germany]:^e[southern Germany]}}
 
 # {{lb|de|mythology}} [[changeling]] {{gloss|an [[infant]] that was secretly exchanged for a mother's own baby by an evil creature}}
 # {{qualifier|dated}} [[child]] born [[out of wedlock]]
 
 ====Declension====
-{{de-decl-noun-n|(e)s|pl=Wechselbälger}}
+{{de-ndecl|m,s:es,^er[northern Germany]:^e[southern Germany]}}
 
 ===Further reading===
 * {{R:DWDS}}
@@ -41457,12 +41433,12 @@ Page 1538 Trauerschnäpper: -------- begin text --------
 * {{hyphenation|de|Trau|er|schnäp|per}}
 
 ===Noun===
-{{de-noun|m|Trauerschnäpper|Trauerschnäpper}}
+{{de-noun|m}}
 
 # the {{vern|Eurasian pied flycatcher}} {{gloss|[[bird]] in the [[flycatcher]] family, ''[[Ficedula hypoleuca]]''}}
 
 ====Declension====
-{{de-decl-noun-m|s|pl=Trauerschnäpper}}
+{{de-ndecl|m}}
 
 ====Hypernyms====
 * {{l|de|Fliegenschnäpper}}
@@ -41489,12 +41465,12 @@ From {{prefix|de|miss-|Mut|t2=mood}}.
 * {{audio|de|De-Missmut.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m|Missmutes|gen2=Missmuts|-}}
+{{de-noun|m,s:es.sg}}
 
 # [[discontent]], [[moroseness]]
 
 ====Declension====
-{{de-decl-noun-n|(e)s|n=sg}}
+{{de-ndecl|m,s:es.sg}}
 
 ====Derived terms====
 * {{l|de|missmutig}}
@@ -41518,12 +41494,12 @@ From {{bor|de|la|commercium}}. {{doublet|de|Kommerz}}.
 * {{audio|de|De-Kommers.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m|Kommerses|Kommerse}}
+{{de-noun|m}}
 
-# {{lb|de|dated|student slang}} [[jamboree]], a [[wingding]] in the [[beer hall]] after the [[task]]s of the day have been finished; [[commercium]]
+# {{lb|de|dated|student slang}} [[jamboree]], a [[party]] in the [[beer hall]] after the [[task]]s of the day have been finished; [[commercium]]
 
 ====Declension====
-{{de-decl-noun-m|es}}
+{{de-ndecl|m}}
 
 ====Derived terms====
 * {{l|de|kommersieren}}
@@ -41542,13 +41518,13 @@ Page 1541 Nestflüchter: -------- begin text --------
 * {{IPA|de|/ˈnɛstˌflʏçtɐ/}}
 
 ===Noun===
-{{de-noun|m||Nesthocker|f=Nestflüchterin}}
+{{de-noun|m|f=in}}
 
 # a [[nidifugous]] [[bird]]
 #: {{ant|de|Nesthocker}}
 
 ====Declension====
-{{de-decl-noun-m|s}}
+{{de-ndecl|m|f=in}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -41560,13 +41536,13 @@ Page 1542 Mutterschwester: -------- begin text --------
 {{compound|de|Mutter|Schwester}}
 
 ===Noun===
-{{de-noun|m|Mutterschwester|Mutterschwestern}}
+{{de-noun|f}}
 
 # {{lb|de|dated}} [[maternal]] [[aunt]]
 #: {{syn|de|Muhme}}
 
 ====Declension====
-{{de-decl-noun-f|n}}
+{{de-ndecl|f}}
 
 ===Further reading===
 * {{R:Grimm}}
@@ -41641,7 +41617,8 @@ From {{af|de|Bär|Wurz|gloss1=bear|gloss2=root}}. Compare {{cog|en|bearwort}}.
 * {{hyphenation|de|Bär|wurz}}
 
 ===Noun===
-{{de-noun|f||Bärwurzen}} or {{de-noun|m|Bärwurzes|Bärwurze}}
+{{de-noun|f.sg}} ''or''<br />
+{{de-noun|m[less common].sg}}
 
 # [[baldmoney]], [[spignel]] {{gloss|{{m|mul|Meum athamanticum}}}}
 
@@ -41649,16 +41626,16 @@ From {{af|de|Bär|Wurz|gloss1=bear|gloss2=root}}. Compare {{cog|en|bearwort}}.
 * Originally and predominantly feminine, but masculine use is also found.
 
 ====Declension====
-{{de-decl-noun-f|en}}
-{{de-decl-noun-m|es|e}}
+{{de-ndecl|f.sg}}
+{{de-ndecl|m[less common].sg}}
 
 ===Noun===
-{{de-noun|m|Bärwurzes|Bärwurze}}
+{{de-noun|m}}
 
 # a [[Bavarian]] [[liquor]] made from the above plant
 
 ====Declension====
-{{de-decl-noun-m|es|e}}
+{{de-ndecl|m}}
 
 ===Further reading===
 * {{R:Duden|Baerwurz_Pflanze}}
@@ -41677,7 +41654,7 @@ Page 1547 Bohei: -------- begin text --------
 * {{audio|de|De-Bohei.ogg}}
 
 ===Noun===
-{{de-noun|n|g2=m||-}}
+{{de-noun|n:m.sg}}
 
 # {{lb|de|colloquial}} [[fuss]]
 #: {{uxi|de|ein großes '''Bohei''' machen}}
@@ -41692,7 +41669,7 @@ Page 1547 Bohei: -------- begin text --------
 |passage=Der neue Tropen-Verleger Tom Müller hat Simon Strauß' "Sieben Nächte" als Programmleiter bei Blumenbar betreut und den Autor von dort mitgenommen. Mit entsprechendem '''Bohei''' wird "Römische Tage" jetzt präsentiert.}}
 
 ====Declension====
-{{de-decl-noun-n|s|n=sg}}
+{{de-ndecl|n:m.sg}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -41704,12 +41681,12 @@ Page 1548 Gottesleugnung: -------- begin text --------
 {{compound|de|Gott|-es-|Leugnung}}
 
 ===Noun===
-{{de-noun|f|||old=1}}
+{{de-noun|f}}
 
 # [[atheism]]
 
 ====Declension====
-{{de-decl-noun-f|}}
+{{de-ndecl|f}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -41721,13 +41698,13 @@ Page 1549 Verräterei: -------- begin text --------
 {{suffix|de|verraten|-erei}}
 
 ===Noun===
-{{de-noun|f|||old=1}}
+{{de-noun|f}}
 
-# The action of [[divulging]], [[revealing]], [[blurting out]] something.
+# the action of [[divulging]], [[revealing]], [[blurting out]] something
 # [[treachery]], [[treacherousness]]
 
 ====Declension====
-{{de-decl-noun-f|}}
+{{de-ndecl|f}}
 
 ====Related terms====
 * {{l|de|Verrat}}
@@ -41749,12 +41726,12 @@ Page 1550 Lobgesang: -------- begin text --------
 * {{audio|de|De-Lobgesang.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m|Lobgesanges|gen2=Lobgesangs|Lobgesänge}}
+{{de-noun|m,es:s,^e}}
 
 # [[song]] of [[praise]]
 
 ====Declension====
-{{de-decl-noun-m|(e)s|e}}
+{{de-ndecl|m,es:s,^e}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -41766,12 +41743,12 @@ Page 1551 Kassandraruf: -------- begin text --------
 {{compound|de|Kassandra|Ruf}}
 
 ===Noun===
-{{de-noun|m|Kassandrarufes|gen2=Kassandrarufs|Kassandraruf}}
+{{de-noun|m,s:es}}
 
 # [[warning]] of impending [[doom]]
 
 ====Declension====
-{{de-decl-noun-m|(e)s|e}}
+{{de-ndecl|m,s:es}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -42049,13 +42026,13 @@ From {{bor|de|fr|piment}}, from {{der|de|es|pimiento}}, from {{der|de|la|pigment
 * {{audio|de|De-Piment.ogg|Audio}}
 
 ===Noun===
-{{de-noun|n|g2=m|Piments|Pimente|gen2=Pimentes}}
+{{de-noun|m:n,s:es}}
 
 # [[allspice]]
 #: {{syn|de|Neugewürz|Modegewürz|Nelkenpfeffer|Jamaikapfeffer}}
 
 ====Declension====
-{{de-decl-noun-n|(e)s|e}}
+{{de-ndecl|m:n,s:es}}
 
 ===Further reading===
 * {{R:DWDS}}
@@ -42075,12 +42052,12 @@ Page 1573 Nationalepos: -------- begin text --------
 * {{audio|de|De-Nationalepos.ogg|Audio}}
 
 ===Noun===
-{{de-noun|n||Nationalepen}}
+{{de-noun|n,-,Nationalepen}}
 
 # [[national epic]]
 
 ====Declension====
-{{de-decl-noun-n||pl=Nationalepen}}
+{{de-ndecl|n,-,Nationalepen}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -42094,12 +42071,12 @@ Page 1574 Allerheiligstes: -------- begin text --------
 * {{audio|de|De-Allerheiligstes.ogg|Audio}}
 
 ===Noun===
-{{de-noun|+}}
+{{de-noun|+.sg}}
 
 # [[Holy of Holies]]
 
 ====Declension====
-{{de-ndecl|+}}
+{{de-ndecl|+.sg}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -42178,17 +42155,15 @@ From {{inh|de|gmh|ungestüeme|g=n|g2=f}}, from {{inh|de|goh|ungistuomi|g=n}} and
 * {{audio|de|De-Ungestüm.ogg|Audio}}
 
 ===Noun===
-{{de-noun|n|g2=m|Ungestüms|gen2=Ungestümes|-}}
-
-{{de-noun|f||-}}
+{{de-noun|n:m[uncommon, proscribed],s:es.sg}}
 
 # [[impetuosity]], [[impetuousness]]
 
 ====Usage notes====
-* The only gender recognised by most dictionaries is the neuter. However, since the word occurs most often in prepositional expressions in the dative case (where masculine and neuter are indistinguishable) the masculine is also common and readily attestable in edited texts. The feminine is archaic.
+* The only gender recognised by most dictionaries is the neuter. However, since the word occurs most often in prepositional expressions in the dative case (where masculine and neuter are indistinguishable) the masculine is also found in edited texts. In archaic usage, the word may be feminine.
 
 ====Declension====
-{{de-decl-noun-n|(e)s|n=sg}}
+{{de-ndecl|n:m[uncommon, proscribed],s:es.sg}}
 
 ====Related terms====
 * {{l|de|ungestüm}}
@@ -42211,12 +42186,12 @@ From {{affix|de|Stunde|gloss1=hour|-n-|glas|gloss3=glass}}.
 * {{hyphenation|de|Stun|den|glas}}
 
 ===Noun===
-{{de-noun|n|Stundenglases|Stundengläser}}
+{{de-noun|n,es,^er}}
 
 # [[hourglass]]
 
 ====Declension====
-{{de-decl-noun-n|es|pl=Gläser}}
+{{de-ndecl|n,es,^er}}
 
 ====Related terms====
 * {{l|de|Sanduhr}}
@@ -42240,12 +42215,12 @@ From {{der|de|la|perpendiculum|t=plumbline, plummet}}.
 * {{rhymes|de|iːkl̩}}
 
 ===Noun===
-{{de-noun|n|old=1}}
+{{de-noun|n}}
 
 # [[pendulum]]
 
 ====Declension====
-{{de-decl-noun-n|s}}
+{{de-ndecl|n}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -42263,12 +42238,12 @@ From {{compound|de|Blei|t1=[[lead]]|Platte|t2=[[plate]]}}.
 * {{audio|de|De-Bleiplatte.ogg|Audio}}
 
 ===Noun===
-{{de-noun|f||Bleiplatten}}
+{{de-noun|f}}
 
 # [[lead]] [[plate]]
 
 ====Declension====
-{{de-decl-noun-f}}
+{{de-ndecl|f}}
 -------- end text --------
 Page 1583 Käfter: Found match for regex: =
 Page 1583 Käfter: -------- begin text --------
@@ -42280,14 +42255,14 @@ From {{inh|de|gmh|chafter|t=beehive; little chamber, closet}}, from {{inh|de|goh
 * {{IPA|de|[kʰɛftər]|[kʰɛftɐ]}}
 
 ===Noun===
-{{de-noun|n|Käfters|Käfter|Käfterchen|dim2=Käfterlein}}
+{{de-noun|n|dim=chen,lein}}
 
 # {{tlb|de|Central German}} [[little]] [[chamber]], [[closet]]
-#* {{quote-book|de|year=1798|last=Stieglitz|first=Christian Ludwig|entry=Tollhaus|authorlink=de:Christian Ludwig Stieglitz (Jurist, 1756)|title=Encyklopädie der bürgerlichen Baukunst, in welcher alle Fächer dieser Kunst nach alphabetischer Ordnung abgehandelt sind|volume=5: Schi–Z|location=Leipzig|publisher=Caspar Fritsch|page=276|pageurl=https://books.google.com/books?id=bBJQAAAAcAAJ&pg=PA276|passage=Alle '''Käfter''' der Rasenden, so wie auch die Zimmer der Melancholischen müssen im Winter geheitzt werden können.|t=All lunatic '''closets''' as well as the rooms of the melancholics must allow heating in winter.}}
+#* {{quote-book|de|year=1798|last=Stieglitz|first=Christian Ludwig|entry=Tollhaus|authorlink=de:Christian Ludwig Stieglitz (Jurist, 1756)|title=Encyklopädie der bürgerlichen Baukunst, in welcher alle Fächer dieser Kunst nach alphabetischer Ordnung abgehandelt sind|volume=5: Schi–Z|location=Leipzig|publisher=Caspar Fritsch|page=276|pageurl=https://books.google.com/books?id=bBJQAAAAcAAJ&pg=PA276|passage=Alle '''Käfter''' der Rasenden, so wie auch die Zimmer der Melancholischen müssen im Winter geheitzt werden können.|t=All lunatics' '''closets''' as well as the rooms of the melancholics must allow heating in winter.}}
 #: {{syn|de|Kamurke|Kammer|Stübchen}}
 
 ====Declension====
-{{de-decl-noun-m|s|}}
+{{de-ndecl|n}}
 
 ===Further reading===
 * {{R:DWDS}}
@@ -42302,7 +42277,7 @@ Page 1584 Spielhaus: -------- begin text --------
 {{compound|de|spielen|Haus}}
 
 ===Noun===
-{{de-noun|n|Spielhauses|Spielhäuser}}
+{{de-noun|n,es,^er}}
 
 # [[toy]] [[house]]
 # [[gymnasium]]
@@ -42310,7 +42285,7 @@ Page 1584 Spielhaus: -------- begin text --------
 #*: {{quote|de|Gerade unter der Burg baute er ein '''Spielhaus''' und verordnete, daß sich die stärksten jungen Gesellen darin üben sollten.|For he built gladly a '''place of exercise''' under the tower itself, and brought the chief young men under his subjection, and made them wear a hat.}}
 
 ====Declension====
-{{de-decl-noun-m|es|pl=Spielhäuser}}
+{{de-ndecl|n,es,^er}}
 
 ===Further reading===
 * {{R:Grimm}}
@@ -42352,12 +42327,12 @@ Page 1587 Aufmerksamkeitsdefizit-Hyperaktivitätsstörung: -------- begin text -
 * {{audio|de|De-Aufmerksamkeitsdefizit-Hyperaktivitätsstörung.ogg|Audio}}
 
 ===Noun===
-{{de-noun|f|||head=Aufmerksamkeitsdefizit-Hyperaktivitätsstörung|old=1}}
+{{de-noun|f}}
 
 # [[attention deficit hyperactivity disorder]]
 
 ====Declension====
-{{de-decl-noun-f|en}}
+{{de-ndecl|f}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -42389,9 +42364,9 @@ Page 1589 Rechtsgelehrter: -------- begin text --------
 * {{audio|de|De-Rechtsgelehrter.ogg|Audio}}
 
 ===Noun===
-{{de-noun|+}}
+{{de-noun|+|f=+}}
 
-# legal [[scholar]]
+# [[legal]] [[scholar]] {{q|male or of unspecified gender}}
 
 ====Declension====
 {{de-ndecl|+}}
@@ -42413,7 +42388,7 @@ Page 1590 Schriftgelehrter: -------- begin text --------
 ===Noun===
 {{de-noun|+|f=+}}
 
-# [[scribe]]
+# [[scribe]] {{q|male or of unspecified gender}}
 #*'''1912''', [[:w:Martin Luther|Martin Luther]], ''Lutherbibel von 1912'', Matthew 5:20 (with KJV translation)
 #*: {{quote|de|Denn ich sage euch: Es sei denn eure Gerechtigkeit besser als der '''Schriftgelehrten''' und Pharisäer, so werdet ihr nicht in das Himmelreich kommen.|For I say unto you, That except your righteousness shall exceed the righteousness of the '''scribes''' and Pharisees, ye shall in no case enter into the kingdom of heaven.}}
 
@@ -42442,7 +42417,7 @@ Page 1591 Schutzheiliger: -------- begin text --------
 ===Noun===
 {{de-noun|+|f=+}}
 
-# {{q|male}} [[patron saint]]
+# [[patron saint]] {{q|male or of unspecified gender}}
 
 ====Declension====
 {{de-ndecl|+}}
@@ -42464,7 +42439,7 @@ Page 1592 Schutzheilige: -------- begin text --------
 ===Noun===
 {{de-noun|+|m=+}}
 
-# {{q|female}} [[patron saint]]
+# {{female equivalent of|de|Schutzheiliger}}: [[female]] [[patron saint]]
 
 ====Declension====
 {{de-ndecl|+}}
@@ -42484,13 +42459,13 @@ Page 1593 Klebestreifen: -------- begin text --------
 * {{audio|de|De-Klebestreifen.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m|Klebestreifens|Klebestreifen}}
+{{de-noun|m}}
 
 # [[adhesive tape]]
 #: {{syn|de|Klebeband}}
 
 ====Declension====
-{{de-decl-noun-n|s|}}
+{{de-ndecl|m}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -42507,12 +42482,12 @@ Page 1594 Wasserscheu: -------- begin text --------
 * {{audio|de|De-wasserscheu.ogg|Audio}}
 
 ===Noun===
-{{de-noun|f||-}}
+{{de-noun|f.sg}}
 
 # [[hydrophobia]]
 
 ====Declension====
-{{de-decl-noun-f|n-sg}}
+{{de-ndecl|f.sg}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -42529,14 +42504,14 @@ From {{af|de|poltern|Abend|lit=noisy party}}, from the custom of breaking porcel
 * {{hyphenation|de|Pol|ter|abend}}
 
 ===Noun===
-{{de-noun|m|old=1}}
+{{de-noun|m}}
 
 # wedding-eve [[party]]
 #* 1995, Annette Remberg, ''Wandel des Hochzeitsbrauchtums im 20. Jahrhundert dargestellt am Beispiel einer Mittelstadt'', Waxmann Verlag ({{ISBN|9783830953616}}), page [https://books.google.se/books?id=4lEHD5xicU0C&lpg=PA113&dq=%22Polterabend%22&pg=PA113#v=onepage&q=%22Polterabend%22&f=false 113]:
 #*: Der '''Polterabend''' ist der seit Anfang des 16. Jahrhunderts bezeugte Vorabend der Hochzeit, mit dem in ausgelassener Stimmung ein  Lärmen und das "Produzieren" von Scherben einhergeht.
 
 ====Declension====
-{{de-decl-noun-m|s|e}}
+{{de-ndecl|m}}
 
 ====Related terms====
 * {{l|de|Poltergeist}}, {{l|de|Polterplatz}}
@@ -42565,13 +42540,12 @@ Page 1596 Schlepptop: -------- begin text --------
 * {{audio|de|De-Schlepptop.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m|g2=n|Schlepptops|Schlepptops}}
+{{de-noun|m:n,s,s}}
 
 # {{lb|de|colloquial}} [[laptop]]
 
 ====Declension====
-{{de-decl-noun-m|s|s}}
-{{de-decl-noun-m|n|s}}
+{{de-ndecl|m:n,s,s}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -42614,7 +42588,7 @@ Substantivisation of {{m|de|außen}} + {{m|de|stehend}}.
 ===Noun===
 {{de-noun|+|f=+}}
 
-# [[outsider]]
+# [[outsider]] {{q|male or of unspecified gender}}
 
 ====Declension====
 {{de-ndecl|+}}
@@ -42636,7 +42610,7 @@ Substantivisation of {{m|de|beteiligt}}.
 ===Noun===
 {{de-noun|+|f=+}}
 
-# {{q|male}} [[participant]]
+# [[participant]] {{q|male or of unspecified gender}}
 
 ====Declension====
 {{de-ndecl|+}}
@@ -42659,7 +42633,7 @@ Substantivisation of {{m|de|asylsuchend}}.
 ===Noun===
 {{de-noun|+|f=+}}
 
-#  [[asylum seeker]]
+# [[asylum seeker]] {{q|male or of unspecified gender}}
 #: {{syn|de|Asylbewerber|Asylant|Asylwerber}}
 
 ====Declension====
@@ -42683,9 +42657,9 @@ Substantivisation of {{m|de|groß}}.
 ===Noun===
 {{de-noun|+|f=+}}
 
-# {{lb|de|title}} [[great]]
+# {{lb|de|title}} [[great]] {{q|referring to a male}}
 #: {{uxi|de|Alexander der '''Große'''|Alexander the '''Great'''}}
-# [[adult]]
+# [[adult]] {{q|male or of unspecified gender}}
 
 ====Declension====
 {{de-ndecl|+}}
@@ -42852,9 +42826,9 @@ Page 1608 Frühgeborener: -------- begin text --------
 * {{hyphenation|de|Früh|ge|bo|re|ner}}
 
 ===Noun===
-{{de-noun|+|f=+}}
+{{de-noun|+|f=+|n=+}}
 
-# [[premature]] [[baby]] ([[baby boy]]) {{q|male or of unspecified gender}}
+# [[premature]] [[baby]] {{q|male or of unspecified gender}}
 #: {{syn|de|Frühgeborenes|Frühchen}}
 
 ====Declension====
@@ -42873,10 +42847,10 @@ Page 1609 Frühgeborenes: -------- begin text --------
 * {{hyphenation|de|Früh|ge|bo|re|nes}}
 
 ===Noun===
-{{de-noun|+|f=Frühgeborene|m=Frühgeborener}}
+{{de-noun|+|m=+|f=+}}
 
-# {{nominalization of|de|frühgeborenes}}: [[premature]] [[baby]] (= premature [[baby boy]] or [[baby girl]]) {{q|unspecified gender}}
-#: {{syn|de|Frühchen|;|[[frühgeboren]]es [[Kind]]|;|Frühgeborener|Frühgeborene}}
+# {{nominalization of|de|frühgeborenes}}: [[premature]] [[baby]] {{q|unspecified gender}}
+#: {{syn|de|Frühchen|;|[[frühgeboren]]es [[Kind]]}}
 
 ====Declension====
 {{de-ndecl|+}}
@@ -44871,7 +44845,7 @@ From {{compound|de|Militär|Angehöriger}}.
 ===Noun===
 {{de-noun|+|f=+}}
 
-# [[servicemember]], [[serviceman]]
+# [[servicemember]], [[serviceman]] {{q|male or of unspecified gender}}
 #: {{syn|de|Militär|g=m}} {{q|rare in this broad sense}}
 
 ====Declension====
@@ -45172,8 +45146,8 @@ Substantivisation of {{m|de|recht}}.
 ===Noun===
 {{de-noun|+|f=+}}
 
-# [[right-winger]], [[rightist]]
-#:{{antonyms|de|Linker}}
+# [[right-winger]], [[rightist]] {{q|male or of unspecified gender}}
+#: {{ant|de|Linker}}
 
 ====Declension====
 {{de-ndecl|+}}
@@ -45202,7 +45176,7 @@ Substantivisation of {{m|de|wachhabend}}.
 ===Noun===
 {{de-noun|+|f=+}}
 
-# [[watchman]]
+# [[watchman]] {{q|male or of unspecified gender}}
 
 ====Declension====
 {{de-ndecl|+}}
@@ -45554,7 +45528,7 @@ Substantivisation of {{m|de|reich}}.
 ===Noun===
 {{de-noun|+|f=+}}
 
-# [[rich]] [[man]]
+# [[rich]] [[person]] {{q|male or of unspecified gender}}
 
 ====Declension====
 {{de-ndecl|+}}
@@ -47399,7 +47373,7 @@ From {{m|de|einheimisch}}.
 ===Noun===
 {{de-noun|+|f=+}}
 
-# [[local]], [[native]], [[one]] of the [[locals]]
+# [[local]], [[native]], [[one]] of the [[locals]] {{q|male or of unspecified gender}}
 
 ====Declension====
 {{de-ndecl|+}}
@@ -47475,7 +47449,7 @@ Substantivisation of {{m|de|ausgestoßen}}.
 ===Noun===
 {{de-noun|+|f=+}}
 
-# [[outcast]], [[leper]], [[castaway]], [[pariah]]
+# [[outcast]], [[leper]], [[castaway]], [[pariah]] {{q|male or of unspecified gender}}
 #:{{synonyms|de|Außenseiter|Geächteter|Aussätziger|Outcast|Paria}}
 
 ====Declension====
@@ -47530,7 +47504,7 @@ Substantivisation of {{suffix|de|ausgestoßen|e}}.
 ===Noun===
 {{de-noun|+|m=+}}
 
-# {{female equivalent of|de|Ausgestoßener}}: [[female]] [[outsider]]
+# {{female equivalent of|de|Ausgestoßener}}: [[female]] [[outsider]]/[[outcast]]
 
 ====Declension====
 {{de-ndecl|+}}
@@ -47554,7 +47528,7 @@ Nominalization of {{m|de|schiffbrüchig}}.
 ===Noun===
 {{de-noun|+|f=+}}
 
-# [[castaway]]
+# [[castaway]] {{q|male or of unspecified gender}}
 #: {{syn|de|[[schiffbrüchiger]] [[Mensch]]|[[in]] [[Seenot]] [[geraten]]e [[Person]]}}
 
 ====Declension====
@@ -48349,7 +48323,7 @@ Page 1843 Verrückter: -------- begin text --------
 ===Noun===
 {{de-noun|+|f=+}}
 
-# [[madman]], [[crazy]] [[man]], [[crazy]] [[person]], [[lunatic]], [[maniac]], [[nutcase]], [[nutter]]
+# [[crazy]] [[person]], [[lunatic]], [[maniac]] {{q|male or of unspecified gender}}
 
 ====Declension====
 {{de-ndecl|+}}
@@ -48497,7 +48471,7 @@ Substantivisation of {{m|de|alleinstehend}}.
 ===Noun===
 {{de-noun|+|f=+}}
 
-# [[single]] [[man]], [[single]] [[person]]
+# [[single]] [[man]], [[single]] [[person]] {{q|male or of unspecified gender}}
 
 ====Declension====
 {{de-ndecl|+}}
@@ -48551,7 +48525,7 @@ Substantivisation of {{m|de|uniformiert}}.
 ===Noun===
 {{de-noun|+|f=+}}
 
-# [[man]] or [[person]] in [[uniform]]
+# [[person]] in [[uniform]] {{q|male or of unspecified gender}}
 
 ====Declension====
 {{de-ndecl|+}}
@@ -49031,7 +49005,7 @@ From {{m|de|afrodeutsch}}.
 ===Noun===
 {{de-noun|+|f=+}}
 
-# [[Afro-German]]
+# [[Afro-German]] {{q|male or of unspecified gender}}
 
 ====Declension====
 {{de-ndecl|+}}
@@ -49373,7 +49347,7 @@ Page 1890 Altvorderer: -------- begin text --------
 ===Noun===
 {{de-noun|+|f=+}}
 
-# {{lb|de|elevated|often|in the plural}} [[ancestor]]
+# {{lb|de|elevated|often|in the plural}} [[ancestor]] {{q|male or of unspecified gender}}
 #: {{syn|de|Vorfahre|Ahn}}
 #* '''2013''', Gottfried Schramm, ''Zweigliedrige Personennamen der Germanen'', Walter de Gruyter ({{ISBN|9783110324747}}), page 257:
 #*: Aber auch damit stünden wir nicht besser da als unsere von zünftiger Wissenschaft noch unbeschwerten  '''Altvordereren'''{{sic}}, die sich einen rätselhaften ''Arminius'' als ''Hermann'' zurechtlegten.
@@ -50986,7 +50960,7 @@ Nominalization of the adjective {{m|de|umgekommen}}.
 ===Noun===
 {{de-noun|+|f=+}}
 
-# a [[killed]] person, a [[perished]] person
+# [[kill]]ed person, [[person]] who has [[perish]]ed {{q|male or of unspecified gender}}
 #: {{ant|de|Überlebender}}
 
 ====Declension====
@@ -51006,7 +50980,7 @@ Nominalization of the adjective {{m|de|unentschlossen}}.
 ===Noun===
 {{de-noun|+|f=+}}
 
-# an [[indecisive]] person, an [[irresolute]] person
+# [[indecisive]] person, [[irresolute]] person {{q|male or of unspecified gender}}
 #: {{ant|de|Entschlossener}}
 
 ====Declension====
@@ -51022,7 +50996,7 @@ Page 1965 Dachverbandsvorsitzender: -------- begin text --------
 ===Noun===
 {{de-noun|+}}
 
-# [[chairman]] of an [[umbrella organization]]
+# [[chairman]] of an [[umbrella organization]] {{q|male or of unspecified gender}}
 
 ====Declension====
 {{de-ndecl|+}}
@@ -51094,7 +51068,7 @@ From {{m|de|geimpft}}.
 ===Noun===
 {{de-noun|+|f=+}}
 
-# {{nominalization of|de|geimpft}}: a [[vaccinated]] [[male]] [[person]]
+# {{nominalization of|de|geimpft}}: [[vaccinated]] [[person]] {{q|male or of unspecified gender}}
 #: {{ant|de|Ungeimpfter|Impfkandidat}}
 
 ====Declension====
@@ -51121,7 +51095,7 @@ From {{m|de|ungeimpft}}.
 ===Noun===
 {{de-noun|+|f=+}}
 
-# {{nominalization of|de|ungeimpft}}: an [[unvaccinated]] [[male]] [[person]]
+# {{nominalization of|de|ungeimpft}}: [[unvaccinated]] [[person]] {{q|male or of unspecified gender}}
 #: {{ant|de|Geimpfter}}
 
 ====Declension====
@@ -51299,7 +51273,7 @@ From {{affix|de|Datenschutz|Beauftragter}}.
 ===Noun===
 {{de-noun|+|f=+}}
 
-# [[male]] [[privacy officer]], [[male]] [[data]] [[protection]] [[officer]]
+# [[privacy officer]], [[data]] [[protection]] [[officer]] {{q|male or of unspecified gender}}
 
 ====Declension====
 {{de-ndecl|+}}
@@ -52066,7 +52040,7 @@ From {{com|de|Ost|Deutscher}}.
 ===Noun===
 {{de-noun|+|f=+}}
 
-# {{l|en|East German}} (male person)
+# [[East German]] {{q|male or of unspecified gender}}
 
 ====Declension====
 {{de-ndecl|+}}
@@ -52092,7 +52066,7 @@ From {{com|de|Ost|Deutsche}}.
 ===Noun===
 {{de-noun|+|m=+}}
 
-# {{l|en|East German}} (female person)
+# {{female equivalent of|de|Ostdeutscher}}: [[female]] [[East German]]
 
 ====Declension====
 {{de-ndecl|+}}
@@ -52133,7 +52107,7 @@ From {{com|de|West|Deutscher}}.
 ===Noun===
 {{de-noun|+|f=+}}
 
-# {{l|en|West German}} (male person)
+# [[West German]] {{q|male or of unspecified gender}}
 
 ====Declension====
 {{de-ndecl|+}}
@@ -52159,7 +52133,7 @@ From {{com|de|West|Deutsche}}.
 ===Noun===
 {{de-noun|+|m=+}}
 
-# {{l|en|West German}} (female person)
+# {{female equivalent of|de|Westdeutscher}}: [[female]] [[West German]]
 
 ====Declension====
 {{de-ndecl|+}}
@@ -52649,8 +52623,8 @@ From {{com|de|Fraktion|-s-|Vorsitzender}}.
 ===Noun===
 {{de-noun|+}}
 
-# {{label|de|politics}} [[floor]] [[leader]]
-# {{label|de|politics}} [[party whip]]
+# {{label|de|politics}} [[floor]] [[leader]] {{q|male or of unspecified gender}}
+# {{label|de|politics}} [[party whip]] {{q|male or of unspecified gender}}
 
 ====Declension====
 {{de-ndecl|+}}
@@ -52971,7 +52945,7 @@ Page 2050 Geschworener: -------- begin text --------
 ===Noun===
 {{de-noun|+|f=+}}
 
-# {{lb|de|law}} [[juror]]
+# {{lb|de|law}} [[juror]] {{q|male or of unspecified gender}}
 
 ====Declension====
 {{de-ndecl|+}}
@@ -53012,8 +52986,8 @@ From {{affix|de|Kartoffel|Deutscher}}.
 ===Noun===
 {{de-noun|+|f=+}}
 
-# somebody who or whose ancestors settled in [[Jutland]] in the 18th century to introduce [[potato]] [[farming]], [[Potato Germans|Potato German]]
-# {{lb|de|derogatory}} an [[ethnic]] [[German]]
+# somebody who or whose ancestors settled in [[Jutland]] in the 18th century to introduce [[potato]] [[farming]], [[Potato Germans|Potato German]] {{q|male or of unspecified gender}}
+# {{lb|de|derogatory}} an [[ethnic]] [[German]] {{q|male or of unspecified gender}}
 
 ====Declension====
 {{de-ndecl|+}}
@@ -53606,7 +53580,7 @@ Page 2083 Vorgesetzter: -------- begin text --------
 ===Noun===
 {{de-noun|+|f=+}}
 
-# [[boss]], [[superior]]
+# [[boss]], [[superior]] {{q|male or of unspecified gender}}
 
 ====Declension====
 {{de-ndecl|+}}
