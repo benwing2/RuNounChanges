@@ -1,4 +1,4 @@
-Beginning at Fri Feb 18 01:42:18 2022
+Beginning at Sat Feb 19 01:41:14 2022
 Page 1 A: Found match for regex: =
 Page 1 A: -------- begin text --------
 
@@ -572,13 +572,13 @@ From {{inh|de|gmh|mittetac}}, from {{inh|de|goh|mittitac}}, compound of {{m|goh|
 Shortened from {{m|de|Mittagessen}}.
 
 ====Noun====
-{{de-noun|n,,s:es.sg}}
+{{de-noun|n,s:es.sg}}
 
 # {{lb|de|somewhat|informal}} [[lunch]] {{gloss|light meal eaten around midday}}
 #: {{ux|de|Wann gibt's '''Mittag'''?|When is '''lunch''' ready?}}
 
 =====Declension=====
-{{de-ndecl|n,,s:es.sg}}
+{{de-ndecl|n,s:es.sg}}
 
 ===Further reading===
 * {{R:DWDS}}
@@ -729,7 +729,7 @@ Page 23 St. Vincent und die Grenadinen: -------- begin text --------
 # {{place|de|archipelago/and/country|r/Caribbean|t=Saint Vincent and the Grenadines}}
 
 ====Declension====
-{{de-ndecl|toponym,St\. Vincents und der Grenadinen|head=[[St. Vincent]] [[und]] [[die]] [[Grenadinen]]}}
+{{de-ndecl|toponym,St\. Vincents und der Grenadinen}}
 -------- end text --------
 Page 24 Jesus: Found match for regex: =
 Page 24 Jesus: -------- begin text --------
@@ -1322,7 +1322,7 @@ From {{inh|de|gmh|herre}}, from {{inh|de|goh|hēriro}}, {{m|goh|hērro||grey, gr
 * {{homophones|de|Heer|hehr|her}} {{q|common merger}}
 
 ===Noun===
-{{de-noun|m,n:en[archaic],en:n[archaic].weak.acc:n:en[archaic].dat:n:en[archaic]|dim=chen,lein}}
+{{de-noun|((<m.weak.sync_sg>,<m,,n.weak.[archaic]>))|dim=chen,lein}}
 
 # [[man]], [[gentleman]] ''(polite term)''
 #: {{ux|de|'''Herren'''bekleidung|'''gentlemen's''' wear}}
@@ -1362,7 +1362,7 @@ From {{inh|de|gmh|herre}}, from {{inh|de|goh|hēriro}}, {{m|goh|hērro||grey, gr
 
 ====Declension====
 * The forms {{m|de|Herrn}} and {{m|de|Herren}} were originally simple phonetic/graphic variants. Both were used for the singular and plural inflections. In contemporary standard German they are—usually—distinguished functionally, ''Herrn'' being the inflected singular, ''Herren'' the plural.
-{{de-ndecl|m,n:en[archaic],en:n[archaic].weak.acc:n:en[archaic].dat:n:en[archaic]}}
+{{de-ndecl|((<m.weak.sync_sg>,<m,,n.weak.[archaic]>))}}
 
 ====Derived terms====
 {{der-top}}
@@ -1905,12 +1905,12 @@ From Vulgate {{bor|de|la|Maria}}, from {{der|de|grc|Μαρία}}, {{m|grc|Μαρ
 * {{hyphenation|de|Ma|ri|a}}
 
 ===Proper noun===
-{{de-proper noun|f,s.gen:s,Mariens[usually only with the Virgin Mary],Mariä[in fixed Catholic expressions]}}
+{{de-proper noun|f,s.gen:s:Mariens[usually only with the Virgin Mary]:Mariä[in fixed Catholic expressions]}}
 
 # {{given name|de|female|eq=Mary}}
 
 ====Declension====
-{{de-ndecl|f,s.gen:s,Mariens[usually only with the Virgin Mary],Mariä[in fixed Catholic expressions]}}
+{{de-ndecl|f,s.gen:s:Mariens[usually only with the Virgin Mary]:Mariä[in fixed Catholic expressions]}}
 
 ====Usage notes====
 * The genitive form ''Mariä'' is restricted to Catholic contexts, and chiefly to the [[Virgin Mary]]. It is now very rare outside of fixed terms like {{m|de|Mariä Verkündigung||Feast of the [[Annunciation]]}}. In contemporary German, the genitive ''Mariens'' is also widely restricted to the Virgin, while the only form commonly used for other persons is ''Marias''.
@@ -2217,12 +2217,16 @@ From {{der|de|nds|-}} and {{der|de|fy|-}}.
 {{de-ndecl|f,n:s[colloquial].gen:s}}
 
 ===Etymology 4===
-From {{inh|de|gmh|anke}}, or borrowed from {{bor|de|gsw|Anke}}.
+{{bor+|de|gsw|Anke}}, from {{der|de|gmh|anke}}.
 
 ====Noun====
 {{de-noun|m,-.sg}}
 
-# {{senseid|de|butter}} {{lb|de|dialectal|Switzerland}} {{synonym of|de|Butter}}
+# {{senseid|de|butter}} {{lb|de|dialectal|Switzerland}} [[butter]]
+#: {{syn|de|Butter}}
+
+=====Declension=====
+{{de-ndecl|m,-.sg}}
 
 =====Alternative forms=====
 * {{alter|de|Anken}}
@@ -2542,7 +2546,7 @@ From {{inh|de|gmh|bant}}.
 * The plural ''Bande'' is used in the figurative sense of “bond” and in the poetic meaning “shackles” (for which usually {{m|de|Fessel}} is used). In early modern German, the two plurals were widely interchangeable.
 
 =====Declension=====
-{{de-ndecl|n,es:s,^er:e[figurative or poetic]|dim=^chen,^lein}}
+{{de-ndecl|n,es:s,^er:e[figurative or poetic]}}
 
 =====Derived terms=====
 {{col3|de
@@ -2891,7 +2895,7 @@ Though originally feminine, the word became masculine throughout [[Upper German]
 * {{rhymes|de|ʊtɐ}}
 
 ===Noun===
-{{de-noun|f|g2=m||-}}
+{{de-noun|f.sg}} or {{q|dialectal}} {{de-noun|m.sg}}
 
 # [[butter]]
 #: {{syn|de|Anke|q=Switzerland|id1=butter}}
@@ -2900,8 +2904,8 @@ Though originally feminine, the word became masculine throughout [[Upper German]
 * In the formal standard language, {{m|de|Butter}} is exclusively feminine. Masculine use is sometimes adopted from local dialects into colloquial German, especially in Swabia.
 
 ====Declension====
-{{de-decl-noun-f|n=sg}}
-{{de-decl-noun-m|s|n=sg}}
+{{de-ndecl|f.sg}}
+{{de-ndecl|m.sg}}
 
 ====Derived terms====
 {{der3|de
@@ -5027,7 +5031,9 @@ Page 125 Piano: -------- begin text --------
 #: {{syn|de|Klavier}}
 
 ====Usage notes====
-* Although {{m|de|Klavier}} is the commoner word in all contexts, it would not be unusual to say of a renowned pianist: {{uxi|de|Er ist ein Meister am Piano||He’s a master of the piano}}. However, it would be likely to sound odd if the word were used in non-professional contexts, such as referring to a piano in one’s living-room or to one’s child’s piano lessons.
+* Although {{m|de|Klavier}} is the commoner word in all contexts, it would not be unusual to say of a renowned pianist:
+{{uxi|de|Er ist ein Meister am Piano.|He’s a master of the piano.}}
+However, it would be likely to sound odd if the word were used in non-professional contexts, such as referring to a piano in one’s living-room or to one’s child’s piano lessons.
 
 ====Declension====
 {{de-ndecl|n,s,s}}
@@ -11662,29 +11668,24 @@ From {{inh|de|gmh|vesper}}, from {{inh|de|goh|vespera}}, from {{der|de|la|vesper
 * {{audio|de|De-Vesper.ogg|Audio}}
 
 ===Noun===
-{{de-noun|f||Vespern}}
+{{de-noun|f}}
 
 # {{lb|de|Christianity}} [[Vespers]] {{gloss|service in the late afternoon or early evening}}
 
 ====Declension====
-{{de-decl-noun-f|n}}
+{{de-ndecl|f}}
 
 ====Derived terms====
 * {{l|de|Christvesper}}
 
 ===Noun===
-{{de-noun|f||Vespern}}
-
-{{de-noun|n|Vespers|Vesper}}
+{{de-noun|f:n,-:s,n:-}}
 
 # {{lb|de|regional|southern Germany|Austria|Switzerland}} [[snack]]; light meal (especially but not exclusively in the afternoon)
 
 ====Declension====
-;Feminine
-{{de-decl-noun-f|n}}
-
-;Neuter
-{{de-decl-noun-n|s}}
+{{de-ndecl|f}}
+{{de-ndecl|n,,-}}
 
 ====Derived terms====
 * {{l|de|Vesperbrot}}
@@ -13269,7 +13270,7 @@ Borrowed from {{bor|de|en|jungle}}.
 
 ===Noun===
 {{de-noun|m:n[rare],s,-:n[archaic]:s[archaic]}} ''or''<br />
-{{de-noun|f[now rare],s,-:n[archaic]:s[archaic]}}
+{{de-noun|f[now rare],-:n[archaic]:s[archaic]}}
 
 # [[jungle]]
 #* '''2004''', Herbert Kranz, ''Im '''Dschungel''' abgestürzt'', page 27:
@@ -13281,7 +13282,7 @@ Borrowed from {{bor|de|en|jungle}}.
 
 ====Declension====
 {{de-ndecl|m:n[rare],s,-:n[archaic]:s[archaic]}}
-{{de-ndecl|f[now rare],s,-:n[archaic]:s[archaic]}}
+{{de-ndecl|f[now rare],-:n[archaic]:s[archaic]}}
 
 ====Derived terms====
 * {{l|de|Abkürzungsdschungel}}
@@ -15673,7 +15674,7 @@ Page 424 Datteln: -------- begin text --------
 # {{place|de|city|in the|area/Ruhr Area|s/North Rhine-Westphalia|c/Germany}}
 
 ====Declension====
-{{de-decl-noun-n|toponym}}
+{{de-ndecl|toponym}}
 -------- end text --------
 Page 425 Peters: Found match for regex: =
 Page 425 Peters: -------- begin text --------
@@ -17221,15 +17222,13 @@ From {{der|de|la|nervus}}, partly via {{der|de|fr|nerf}}.
 * The standard pronunciation is for this stem to be realised with {{IPAchar|/f/}} when the preceding syllable has primary stress (as e.g. in {{m|de|Nerven}}, {{m|de|entnerven}}, {{m|de|nervig}}), but with {{IPAchar|/v/}} when the stress moves forward (as e.g. in {{m|de|nervös}}, {{m|de|enervieren}}). However, a minority of speakers may use {{IPAchar|/v/}} in all prevocalic positions. Compare the same in {{m|de|Larve}}.
 
 ===Noun===
-{{de-noun|m|Nervs|gen2=Nerves|gen3=Nerven|Nerven}}
+{{de-noun|m,(e)s:en[rare],en}}
 
 # [[nerve]]
 
 ====Declension====
-* Mixed (highly predominant)
-{{de-decl-noun-m|(e)s|en}}
-* Weak (very rare)
-{{de-decl-noun-m|en|en}}
+{{de-ndecl|m,(e)s,en}}
+{{de-ndecl|m[very rare].weak}}
 
 ====Derived terms====
 {{der4|de
@@ -17315,12 +17314,12 @@ Page 484 Erster Weltkrieg: -------- begin text --------
 * {{audio|de|De-Erster Weltkrieg.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|[[erste|Erster]]<+> [[Weltkrieg]]<m,s:es..article>}}
+{{de-proper noun|[[erste|Erster]]<+> [[Weltkrieg]]<m,s:es.article>}}
 
 # the [[First World War]], [[World War I]]
 
 ====Declension====
-{{de-ndecl|[[erste|Erster]]<+> [[Weltkrieg]]<m,s:es.sg..article>}}
+{{de-ndecl|[[erste|Erster]]<+> [[Weltkrieg]]<m,s:es.sg.article>}}
 
 {{C|de|War}}
 -------- end text --------
@@ -18553,13 +18552,13 @@ Page 527 Theophilus: Found match for regex: =
 Page 527 Theophilus: -------- begin text --------
 
 ===Proper noun===
-{{de-proper noun|m,',se:-:'[colloquial]]}}
+{{de-proper noun|m,',se:-:'[colloquial]}}
 
 # {{lb|de|biblical character}} [[#English|Theophilus]] {{gloss|biblical figure}}
 # {{given name|de|male|usage=rare}}
 
 ====Declension====
-{{de-ndecl|m,',se:-:'[colloquial]]}}
+{{de-ndecl|m,',se:-:'[colloquial]}}
 
 {{C|de|Individuals}}
 
@@ -21031,7 +21030,7 @@ From {{m|de|oppositionell|t=oppositional|pos=a}}.
 ===Noun===
 {{de-noun|+|f=+}}
 
-# [[oppositionist]], [[dissident]] {{gloss|member of an opposition}}
+# [[member]] of the [[opposition]] {{q|male or of unspecified gender}}
 #: {{uxi|de|der '''Oppositionelle''' sagt, …|the '''member of the opposition''' says, …}}
 
 ====Declension====
@@ -21237,13 +21236,13 @@ Derived from {{suffix|de|Mutter|-i|t1=mother}}.
 {{de-ndecl|f,s.gen:s:-[only with an article]}}
 
 ===Proper noun===
-{{de-proper noun|f,s.gen:s:-[only with an article]}}
+{{de-proper noun|f.gen:s:-[only with an article]}}
 
 # ''a nickname for'' [[w:Angela Merkel|Angela Merkel]]
 #: {{syn|de|Mama}}
 
 ====Declension====
-{{de-ndecl|f,s.gen:s:-[only with an article].sg}}
+{{de-ndecl|f.gen:s:-[only with an article].sg}}
 
 ====Usage notes====
 * The word is commonly used with a definite article in most parts of central Germany, southern Germany, and Austria: ''Wo ist die Mutti?'' – “Where is Mum?” In northern Germany—and generally in writing—no article tends to be used: ''Wo ist Mutti?''
@@ -22130,13 +22129,13 @@ Borrowed from {{bor|de|he|יום כיפור|יוֹם כִּפּוּר|sc=Hebr|tr
 * {{audio|de|De-Jom Kippur.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|m,-,-.nolinkhead=1}}
+{{de-proper noun|m,-,-|nolinkhead=1}}
 
 # [[Yom Kippur]] (Day of Atonement)
 #: {{syn|de|Versöhnungsfest|Versöhnungstag}}
 
 ====Declension====
-{{de-ndecl|m,-,-.nolinkhead=1}}
+{{de-ndecl|m,-,-}}
 
 {{C|de|Judaism}}
 -------- end text --------
@@ -22364,7 +22363,7 @@ Page 679 Zimmermann: -------- begin text --------
 * {{audio|de|De-Zimmermann.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m|Zimmermannes|gen2=Zimmermanns|Zimmerleute|pl2=Zimmermänner|f=Zimmerfrau}}
+{{de-noun|m,(e)s,^er:Zimmerleute|f=Zimmerfrau}}
 
 # [[carpenter]] {{gloss|worker skilled at handling timber for the construction of houses}}
 #: {{syn|de|Bauschreiner|Bautischler|Zimmerer}}
@@ -22372,8 +22371,7 @@ Page 679 Zimmermann: -------- begin text --------
 #: {{syn|de|Weberknecht}}
 
 ====Declension====
-{{de-decl-noun-m|(e)s|pl=Zimmerleute}}
-{{de-decl-noun-m|(e)s|pl=Zimmermänner}}
+{{de-ndecl|m,(e)s,^er:Zimmerleute}}
 
 ====Derived terms====
 {{der3|de|da hat der Zimmermann das Loch gelassen|die Axt im Haus ersetzt den Zimmermann|einen Zimmermann erkennt man an den Spänen|Freizeitzimmermann|Schiffszimmermann|Zar und Zimmermann|Zimmermannsaxt|Zimmermannsbeil|Zimmermannsbock|Zimmermannsgehilfe|Zimmermannsgehilfin|Zimmermannshammer|Zimmermannshandwerk|Zimmermannshose|Zimmermannsklüpfel|Zimmermannsknoten|Zimmermannslehrling|Zimmermannsnagel|Zimmermannssäge|Zimmermannsspruch|Zimmermannsstift|Zimmermannstracht|Zimmermannswerkbank|Zimmermannswerkstatt|Zimmermannswinkel|Zimmermannszeichen}}
@@ -24073,14 +24071,12 @@ Borrowed from {{bor|de|fr|jupe}}.
 * {{IPA|de|/ʒyːp/}}
 
 ===Noun===
-{{de-noun|f|g2=m|g3=n||Jupes}}
+{{de-noun|f:m:n,-,s}}
 
 # {{lb|de|Swiss}} [[skirt]]
 
 ====Declension====
-{{de-decl-noun-f|s}}
-{{de-decl-noun-m||s}}
-{{de-decl-noun-n||s}}
+{{de-ndecl|f:m:n,-,s}}
 
 ====Further reading====
 * {{R:Duden}}
@@ -24327,7 +24323,7 @@ Page 765 eulersche Identität: -------- begin text --------
 # {{lb|de|complex analysis}} [[Euler's identity]]
 
 ====Declension====
-{{de-ndecl|[[eulersch]]e<+> [[Identität]]<f.article.sg}}
+{{de-ndecl|[[eulersch]]e<+> [[Identität]]<f.article.sg>}}
 -------- end text --------
 Page 766 eulersche Formel: Found match for regex: =
 Page 766 eulersche Formel: -------- begin text --------
@@ -28393,7 +28389,7 @@ Page 968 Königsberger Klops: -------- begin text --------
 ====Declension====
 {{de-decl-noun-m|es|e}}
 -------- end text --------
-Page 969 Escher: Found match for regex: =
+Page 969 Escher: Found match for regex: {
 Page 969 Escher: -------- begin text --------
 {{wikipedia|lang=de}}
 
@@ -28485,7 +28481,7 @@ Page 973 Arsengehalt: -------- begin text --------
 ====Declension====
 {{de-decl-noun-m|s|e}}
 -------- end text --------
-Page 974 Eichinger: Found match for regex: =
+Page 974 Eichinger: Found match for regex: {
 Page 974 Eichinger: -------- begin text --------
 {{wikipedia|lang=de}}
 
@@ -33516,17 +33512,14 @@ The sense “dining table” is due to the fact that several sailors would eat f
 * {{homophones|de|back|Bug|q2=“computer bug”}}
 
 ====Noun====
-{{de-noun|f|Back|Backen}}
-
-{{de-noun|n|Backs|Backen}}
+{{de-noun|f:n,-:s,en}}
 
 # {{lb|de|nautical}} [[forecastle]] {{gloss|raised part of the upper deck}}
 # {{lb|de|nautical}} a large [[wooden]] [[bowl]] in which the [[meal]] is served
 # {{lb|de|nautical}} a [[dining table]] used by the [[crew]] of a [[ship]], often [[foldable]]
 
 =====Declension=====
-{{de-decl-noun-f|en}}
-{{de-decl-noun-n|s|en}}
+{{de-ndecl|f:n,-:s,en}}
 
 ===Etymology 2===
 From {{bor|de|en|back}}. {{doublet|de|Bache}}.
@@ -33729,15 +33722,14 @@ From {{affix|de|kehren|-ich|-t|pos3=an element of no semantic content appearing 
 * {{audio|de|De-Kehricht.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m|Kehrichts|-|g2=n}}
+{{de-noun|m:n.sg}}
 
 # [[dust]], [[grime]], [[soil]] [[spread]]ing the [[ground]] in a [[flat]] [[fashion]] and [[attainable]] by the [[besom]]
 # {{lb|de|Switzerland}} [[garbage]], [[trash]] in general
 #: {{syn|de|Müll|Abfall}}
 
 ====Declension====
-{{de-decl-noun-m|s|e}}
-{{de-decl-noun-n|s|e}}
+{{de-ndecl|m:n,,e}}
 
 ====Derived terms====
 {{col2|de|Abkehricht|Auskehricht|Kehrichtkäfer|Kehrichtbeseitigung|Kehrichtschaufel|Kehrichtverbrennung|Kehrichtverwertung|Überkehricht|Kehrichtwinkel|Kehrichtkorb|Kehrichtkasten|Kehrichtkübel|Kehrichteimer|Kehrichthaufen|Kehrichtfass|Kehrichtraum|einen feuchten Kehricht|Kehrichtabfuhr|Kehrichtwagen|Kehrichtmann|Kehrichtfrau|Kehrichtlager}}
@@ -38075,13 +38067,13 @@ Page 1384 Grüsch: -------- begin text --------
 From {{inh|de|gmh|grüsch}}, {{inh|de|goh|*kruska}}.
 
 ===Noun===
-{{de-noun|n|Grüsch|gen3=Grüsches|gen2=Grüschs|-}}
+{{de-noun|n,-:(e)s.sg}}
 
 # {{lb|de|Switzerland}} [[bran]]
 #: {{syn|de|Kleie}}
 
 ====Declension====
-{{de-decl-noun-m|(s)|n=sg}}
+{{de-ndecl|n,-:(e)s.sg}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -38839,13 +38831,16 @@ Page 1422 Verbindungsbeamter: -------- begin text --------
 Page 1423 Fußgängerstreifen: Found match for regex: =
 Page 1423 Fußgängerstreifen: -------- begin text --------
 
+===Alternative forms===
+* {{alt-de-ch}}
+
 ===Noun===
-{{de-noun|m|Fusgängerstreifens|Fußgängerstreifen}}
+{{de-noun|m}}
 
 # {{lb|de|Switzerland}} [[pedestrian crossing]]; [[crosswalk]] {{i|US|Australia}}
 
 ====Declension====
-{{de-decl-noun-m|s|}}
+{{de-ndecl|m}}
 -------- end text --------
 Page 1424 Bevollmächtigter: Found match for regex: =
 Page 1424 Bevollmächtigter: -------- begin text --------
@@ -38951,14 +38946,12 @@ Page 1428 Zürbel: -------- begin text --------
 * {{IPA|de|/ˈt͡sʏrbəl/|[ˈt͡sʏʁbəl]|[ˈt͡sʏʁbl̩]|[ˈt͡sʏrbəl]|[ˈt͡sʏrbl̩]|[ˈt͡sʏɐ̯bəl]|[ˈt͡sʏɐ̯bl̩]}}
 
 ===Noun===
-{{de-noun|m||Zürbel}}<br/>
-{{de-noun|f|Zürbel|Zürbeln}}
+{{de-noun|f}}
 
-# {{archaic form of|de|nocap=1|Zürgel}}
+# {{alt form|de|Zirbel|t=Swiss pine}}
 
 ====Declension====
-{{de-decl-noun-m|s|}}
-{{de-decl-noun-f|n}}
+{{de-ndecl|f}}
 
 ====Derived terms====
 * {{l|de|Zürbelbaum}}
@@ -41348,7 +41341,7 @@ Page 1534 Zmorgen: -------- begin text --------
 Contraction of {{m|de|[[zum]] [[Morgen]]|t=in the morning}}.
 
 ===Noun===
-{{de-noun|m|Zmorgens|-|g2=n|gen2=Zmorgen}}
+{{de-noun|m:n,(s).sg}}
 
 # {{lb|de|Switzerland}} [[breakfast]]
 #: {{syn|de|Frühstück|Morgenessen|q2=Switzerland}}
@@ -41357,10 +41350,7 @@ Contraction of {{m|de|[[zum]] [[Morgen]]|t=in the morning}}.
 #*: Danach mache ich '''Zmorgen'''. Und zwar mache ich zum '''Zmorgen''' immer etwas mit Früchten und Flöcklein und einen Grüntee. In der Zwischenzeit steht Helene auf.
 
 ====Declension====
-; masculine
-{{de-decl-noun-m|s|n=sg}}
-; neuter
-{{de-decl-noun-n|(s)|n=sg}}
+{{de-ndecl|m:n,(s).sg}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -43522,7 +43512,7 @@ From {{compound|de|Metall|Löffel|gloss1=metal|gloss2=spoon}}.
 {{rfap|de}}
 
 ===Noun===
-{{de-noun|m|dim=^chen}}
+{{de-noun|m|dim=chen}}
 
 # [[metal]] [[spoon]]
 
@@ -43548,7 +43538,7 @@ From {{compound|de|Silber|Löffel|gloss1=silver|gloss2=spoon}}.
 * {{hyphenation|de|Sil|ber|löf|fel}}
 
 ===Noun===
-{{de-noun|m|dim=^chen}}
+{{de-noun|m|dim=chen}}
 
 # [[silver]] [[spoon]]
 
@@ -44832,13 +44822,13 @@ Page 1693 Tschungel: -------- begin text --------
 
 ===Noun===
 {{de-noun|m:n[rare],s,-:n[archaic]:s[archaic]}} ''or''<br />
-{{de-noun|f[now rare],s,-:n[archaic]:s[archaic]}}
+{{de-noun|f[now rare],-:n[archaic]:s[archaic]}}
 
 # {{lb|de|rare|usually|_|Switzerland}} {{alt sp|de|Dschungel||jungle}}
 
 ====Declension====
 {{de-ndecl|m:n[rare],s,-:n[archaic]:s[archaic]}}
-{{de-ndecl|f[now rare],s,-:n[archaic]:s[archaic]}}
+{{de-ndecl|f[now rare],-:n[archaic]:s[archaic]}}
 -------- end text --------
 Page 1694 Himmelszelt: Found match for regex: =
 Page 1694 Himmelszelt: -------- begin text --------
@@ -48726,7 +48716,7 @@ Page 1860 Klio: -------- begin text --------
 * {{audio|de|De-Klio.ogg}}
 
 ===Proper noun===
-{{de-proper noun|f.s:-[with an article]}}
+{{de-proper noun|f.gen:s:-[with an article]}}
 
 # [[Clio]]
 
@@ -49020,7 +49010,7 @@ From {{bor|de|fr|apéro}}.
 
 # {{lb|de|especially|Switzerland}} [[apéritif]] (an appetizer [[snack]] or [[drink]])
 #: {{syn|de|Aperitif}}
-# {{lb|de|business|_|jargon}} (a form of [[professional]] [[get-together]] wherein such appetizers are consumed)
+# {{lb|de|business|_|jargon|common in|_|Switzerland}} [[apéritif]] (a form of [[professional]] [[get-together]] wherein such appetizers are consumed)
 #* {{quote-web|de|work={{w|Aargauer Zeitung}}|title=Sprechstunde für die eigenen Visionen: In Olten wird ein Zukunftbureau eröffnet|date=23-01-2021|url=https://www.aargauerzeitung.ch/solothurn/olten/sprechstunde-fur-die-eigenen-visionen-in-olten-wird-ein-zukunftbureau-eroffnet-ld.2089208|passage=Der geplante '''Eröffnungsapéro''' musste aufgrund der Coronakrise virtuell abgehalten werden. […] Die während des '''Apéro''' präsentierte Grundidee eines Zukunftbureaus klingt zuerst etwas absurd. Menschen sollen ihre Ideen, Visionen und Projekte ins Büro bringen und dieses zwei Stunden später mit einem klaren Blick in die Zukunft und voller Motivation wieder verlassen.|t=}}
 
 ====Declension====
@@ -49908,8 +49898,7 @@ Page 1914 Kolter: -------- begin text --------
 {{inh+|de|gmh|kolter|g=m|g2=f|g3=n}}, from {{der|de|fro|coultre||quilt}}, from {{der|de|VL.|*culcitra}}, from {{der|de|la|culcita||pillow, upholstery, mattress}}. Cognate with {{cog|en|quilt}} and {{m|en|quoit}}.
 
 ====Noun====
-{{de-noun|m}} ''or''<br />
-{{de-noun|f}}
+{{de-noun|m:f}}
 
 # {{lb|de|Hessian}} [[blanket]], [[quilt]], [[bedspread]]
 
@@ -50512,7 +50501,7 @@ From {{com|de|Lampe|Flora|gloss1=artificial light|gloss2=plant life|lit=lamp flo
 # [[lampenflora]]
 
 ====Declension====
-{{de-ndecl|f,Lampenfloren|head=[[Lampen]][[Flora|flora]]}}
+{{de-ndecl|[[Lampen]][[Flora|flora]]<f,Lampenfloren>}}
 
 ====Descendants====
 * {{desc|en|lampenflora|bor=1}}
@@ -50532,7 +50521,7 @@ Borrowed from {{bor|de|en|deep learning}}.
 # [[deep learning]]
 
 ====Declension====
-{{de-ndecl|n.sg|nolinkhead=1}}
+{{de-ndecl|n.sg}}
 
 ====Related terms====
 * {{l|de|Deepfake}}
@@ -52298,14 +52287,14 @@ Page 2021 Bergfex: -------- begin text --------
 * {{rhyme|de|ɛks}}
 
 ===Noun===
-{{de-noun|m|((<m>,<m.weak>))|f=in}}
+{{de-noun|((<m>,<m.weak>))|f=in}}
 
 # {{lb|de|colloquial|dated|Southern German|Austria}} passionate [[hiker]] or [[alpinist]]
 #: {{hyper|de|Bergsteiger}}
 #* {{quote-book|de|title= Ferien an der Adria|author=Jakob Christoph Heer|url=https://www.gutenberg.org/cache/epub/50888/pg50888-images.html|page=36|year=1918|publisher=Huber & Co.|location=Frauenfeld und Leipzig|passage=Es war bereits Nachmittag, als ich von Görz her an den Fuß des Berges gelangte. Nur der Vorsatz, das Isonzodefile zu sehen, hatte mich hieher geleitet; aber nun wurde der '''Bergfex''' in mir lebendig, und das hat mich nicht gereut.}}
 
 ====Declension====
-{{de-ndecl|m|((<m>,<m.weak>))}}
+{{de-ndecl|((<m>,<m.weak>))}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -52322,14 +52311,14 @@ Perhaps shortened from older pseudo-Latin {{m|de|Narrifex}} (15–17th c.), from
 * {{rhyme|de|ɛks}}
 
 ===Noun===
-{{de-noun|m|((<m>,<m.weak>))|f=in}}
+{{de-noun|((<m>,<m.weak>))|f=in}}
 
 # {{lb|de|colloquial|dated|Southern German|Austria}} [[enthusiast]], [[freak]]
 #: {{syn|de|Narr}}
 #* {{RQ:Goethe Faust|part=II|scene=Finstere Gallerie|passage=Mit Hexen-'''Fexen''', mit Gespenst-Gespinsten, / Kielkröpfigen Zwergen steh' ich gleich zu Diensten;}}
 
 ====Declension====
-{{de-ndecl|m|((<m>,<m.weak>))}}
+{{de-ndecl|((<m>,<m.weak>))}}
 
 ====Derived terms====
 * {{l|de|Bergfex}}
@@ -53791,5 +53780,5 @@ Page 2091 Fatzke: -------- begin text --------
 * {{R:Duden}}
 * {{R:DWDS}}
 -------- end text --------
-Elapsed time: 4 mins 33.32 secs
-Ending at Fri Feb 18 01:46:51 2022
+Elapsed time: 4 mins 26.53 secs
+Ending at Sat Feb 19 01:45:41 2022
