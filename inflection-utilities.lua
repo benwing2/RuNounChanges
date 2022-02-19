@@ -509,6 +509,33 @@ function export.expand_footnote(note)
 end
 
 
+function export.fetch_headword_qualifiers_and_references(footnotes)
+	if not footnotes then
+		return nil
+	end
+	local quals, refs
+	for _, qualifier in ipairs(footnotes) do
+		local this_footnote, this_refs = export.expand_footnote_or_references(qualifier, "return raw")
+		if this_refs then
+			if not refs then
+				refs = this_refs
+			else
+				for _, ref in ipairs(this_refs) do
+					table.insert(refs, ref)
+				end
+			end
+		else
+			if not quals then
+				quals = {this_footnote}
+			else
+				table.insert(quals, this_footnote)
+			end
+		end
+	end
+	return quals, refs
+end
+
+
 -- Combine a form (either a string or a table) with additional footnotes, possibly replacing the form string and/or
 -- translit in the process. Normally called in one of two ways:
 -- (1) combine_form_and_footnotes(FORM_OBJ, ADDL_FOOTNOTES, NEW_FORM, NEW_TRANSLIT) where FORM_OBJ is an existing
