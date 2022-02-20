@@ -1,4 +1,4 @@
-Beginning at Sat Feb 19 15:36:30 2022
+Beginning at Sat Feb 19 22:51:18 2022
 Page 1 A: Found match for regex: =
 Page 1 A: -------- begin text --------
 
@@ -6920,24 +6920,24 @@ Page 178 Bäuerchen: -------- begin text --------
 {{suffix|de|Bauer|-chen}}
 
 ====Noun====
-{{de-noun|n||Bäuerchen}}
+{{de-noun|n,s,-}}
 
 # {{diminutive of|de|Bauer}}
 
 =====Declension=====
-{{de-decl-noun-m|s}}
+{{de-ndecl|n,s,-}}
 
 ===Etymology 2===
 From an onomatopoeia for burping like {{cog|en|burp}} itself. This form {{m|de||*bur}} (or similar) was then associated, possibly at first in a non-diphthongizing dialect, with the word {{m|de|Bauer}} (“farmer”, etymology 1 above), partly due to the perception of farmers as unmannered people. See the same in {{cog|nl|boer||farmer; burp}}.
 
 ====Noun====
-{{de-noun|n||Bäuerchen}}
+{{de-noun|n,s,-}}
 
 # the [[burp]] or slight [[vomit]] of a [[baby]]
 # {{lb|de|rare|or|jocular}} an instance of burping or vomiting by an adult
 
 =====Declension=====
-{{de-decl-noun-m|s}}
+{{de-ndecl|n,s,-}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -7045,16 +7045,19 @@ Probably related to {{m|de|Zinke||point, prong}}, from {{der|de|goh|zint||a jag,
 Page 181 Bismut: Found match for regex: =
 Page 181 Bismut: -------- begin text --------
 
+===Alternative forms===
+* {{alt|de|Bismuth||obsolete}}
+
 ===Pronunciation===
 * {{audio|de|De-Bismut.ogg|Audio}}
 
 ===Noun===
-{{de-noun|n||-}}
+{{de-noun|n,s:es[rare].sg}}
 
 # [[bismuth]]
 
 ====Declension====
-{{de-decl-noun-n|(e)s|n=sg}}
+{{de-ndecl|n,s:es[rare].sg}}
 
 ====Coordinate terms====
 * {{sense|Chemical Element}} Previous: {{l|de|Blei}}. Next: {{l|de|Polonium}}
@@ -7175,14 +7178,15 @@ From {{bor|de|en|boomerang}}.
 * {{audio|de|De-Bumerang.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m|g2=n|Bumerangs|gen2=Bumeranges|Bumerange|pl2=Bumerangs}}
+{{de-noun|m:n[nonstandard, rare],s:es[rare],s:e}}
 
 # [[boomerang]]
 
 ====Declension====
-{{de-decl-noun-m|(e)s|e}}
+{{de-ndecl|m:n[nonstandard, rare],s:es[rare],s:e}}
 
 ===Further reading===
+* {{R:DWDS}}
 * {{R:Duden}}
 -------- end text --------
 Page 186 Aar: Found match for regex: =
@@ -12789,16 +12793,19 @@ Page 322 Gutschein: -------- begin text --------
 * {{audio|de|De-Gutschein.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m|Gutscheins|gen2=Gutscheines|Gutscheine}}
+{{de-noun|m,s:es,e}}
 
-# [[voucher]], [[gift certificate]]
-# [[coupon]]
-# [[rain check]]
+# something that [[attest]]s ([[monetary]]) [[value]], particularly a [[voucher]], [[gift certificate]], [[coupon]]{{,}} or [[rain check]]
+#: {{hypo|de|Coupon|Bon}}
 
 ====Declension====
-{{de-decl-noun-n|(e)s|e}}
+{{de-ndecl|m,s:es,e}}
+
+====Derived terms====
+* {{l|de|Gutscheincode}}
 
 ===Further reading===
+* {{R:DWDS}}
 * {{R:Duden}}
 -------- end text --------
 Page 323 Automat: Found match for regex: =
@@ -12878,12 +12885,12 @@ Page 325 Duschgel: -------- begin text --------
 * {{audio|de|De-Duschgel.ogg|Audio}}
 
 ===Noun===
-{{de-noun|n||Duschgels|pl2=Duschgele}}
+{{de-noun|n,s,s:e}}
 
 # [[shower gel]]
 
 ====Declension====
-{{de-decl-noun-n|(e)s|e}}
+{{de-ndecl|n,s,s:e}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -13366,7 +13373,7 @@ From {{bor|de|la|comprōmissum}}.
 * {{audio|de|De-Kompromiss.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m|g2=n|Kompromisses|Kompromisse}}
+{{de-noun|m:n[rare],es,e}}
 
 # [[compromise]]
 #: {{syn|de|beiderseitige Übereinkunft|;|[[Verständigung]] [[durch]] [[beiderseitiges]] [[Nachgeben]]<q:descriptive>|;|[[durch]] [[gegenseitige]] [[Zugeständnisse]] [[gewonnene]] [[Übereinkunft]]<q:descriptive>}}
@@ -13376,7 +13383,7 @@ From {{bor|de|la|comprōmissum}}.
 The usage of the neuter gender is rare.
 
 ====Declension====
-{{de-decl-noun-m|es|e}}
+{{de-ndecl|m:n[rare],es,e}}
 
 ====Derived terms====
 * {{l|de|kompromissbereit}}
@@ -13401,14 +13408,15 @@ Via {{der|de|gml|-}} from {{der|de|dum|dûne}}, from {{der|de|odt|dūna}}, from 
 * {{audio|de|De-Düne.ogg|Audio}}
 
 ===Noun===
-{{de-noun|f||Dünen}}
+{{de-noun|f,n}}
 
-# [[dune]] (usually by the sea)
+# [[dune]]
 
 ====Declension====
-{{de-decl-noun-f|n}}
+{{de-ndecl|f,n}}
 
 ====Derived terms====
+* {{l|de|Sanddüne}}
 * {{l|de|Wanderdüne}}
 
 ===Proper noun===
@@ -17257,7 +17265,7 @@ From {{der|de|la|nervus}}, partly via {{der|de|fr|nerf}}.
 
 ====Declension====
 {{de-ndecl|m,(e)s,en}}
-{{de-ndecl|m[very rare].weak}}
+{{de-ndecl|m[rare].weak}}
 
 ====Derived terms====
 {{der4|de
@@ -25457,14 +25465,14 @@ Page 824 Vorhängeschloß: Found match for regex: =
 Page 824 Vorhängeschloß: -------- begin text --------
 
 ===Noun===
-{{de-noun|n|Vorhängeschlosses|Vorhängeschlösser}}
+{{de-noun|n,es,^er.ss}}
 
 # {{alternative form of|de|Vorhängeschloss}}
 #* '''2016''', James Jones (original English author), Edith Massmann (translator), ''Kraftproben: Roman''
 #*: Dieser sogenannte ›Keller‹ lag über der Erde und war nur mit einer Lattentür und einem '''Vorhängeschloß''' versperrt.
 
 ====Declension====
-{{de-decl-noun-m|es|pl=Vorhängeschlösser|ss=1}}
+{{de-ndecl|n,es,^er.ss}}
 -------- end text --------
 Page 825 Fünfte Kolonne: Found match for regex: {
 Page 825 Fünfte Kolonne: -------- begin text --------
@@ -25611,7 +25619,7 @@ Page 836 Bärlauch: -------- begin text --------
 [[File:Цибуля ведмежа в ур. Холодний Яр.jpg|thumb|right|{{lang|de|Bärlauch}}, Habitus|upright=1.35]]
 
 ===Etymology===
-From {{compound|de|Bär|Lauch|t1=bear|t2=leek}}. {{calque|de|la|[[allium]] [[ursīnum]]|lit=bear garlic}}.
+From {{compound|de|Bär|Lauch|t1=bear|t2=leek}}. {{calque|de|la|allium ursīnum|lit=bear garlic}}.
 
 ===Pronunciation===
 * {{IPA|de|/ˈbɛːɐ̯ˌlaʊx/}}
@@ -25619,12 +25627,12 @@ From {{compound|de|Bär|Lauch|t1=bear|t2=leek}}. {{calque|de|la|[[allium]] [[urs
 * {{hyphenation|de|Bär|lauch}}
 
 ===Noun===
-{{de-noun|m||gen2=Bärlauchs|Bärlauche}}
+{{de-noun|m,s:es,e}}
 
-# [[ramsons]] {{gloss|''[[Allium ursinum]]'' L.}}
+# {{lb|de|chiefly|singular}} [[ramsons]] {{gloss|''[[Allium ursinum]]'' L.}}
 
 ====Declension====
-{{de-decl-noun-m|(e)s|e}}
+{{de-ndecl|m,s:es,e}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -25645,12 +25653,12 @@ Page 838 Mock-Objekt: -------- begin text --------
 {{wikipedia|lang=de}}
 
 ===Noun===
-{{de-noun|head=Mock-[[Objekt]]|n|Mock-Objekts|gen2=Mock-Objektes|Mock-Objekte}}
+{{de-noun|head=Mock-[[Objekt]]|n,(e)s,e}}
 
-# {{lb|de|programming|object-oriented}} [[mock object]]
+# {{lb|de|object-oriented programming}} [[mock object]]
 
 ====Declension====
-{{de-decl-noun-n|(e)s|e}}
+{{de-ndecl|n,(e)s,e}}
 -------- end text --------
 Page 839 testgetriebene Entwicklung: Found match for regex: =
 Page 839 testgetriebene Entwicklung: -------- begin text --------
@@ -25688,19 +25696,26 @@ Page 841 Drei gewinnt: -------- begin text --------
 ====Declension====
 {{de-decl-noun-n|n=sg}}
 -------- end text --------
-Page 843 Rothaarige: Found match for regex: {
+Page 843 Rothaarige: Found match for regex: =
 Page 843 Rothaarige: -------- begin text --------
-{{rfc|de|it's "der Rotharige / ein {{m|de|Rothariger}}"}}
-[[Image:Redheaded child mesmerized 2.jpg|thumb|right|Ein Rotkopf-Kind]]
 
-===Noun===
-{{de-noun|m|g2=f|Rothaarigen|Rothaarigen}}
+===Etymology 1===
+Nominalization of {{m|de|rothaarig}}.
 
-# A [[redhead]] person
+====Noun====
+{{de-noun|+|m=+}}
 
-====Declension====
-{{de-decl-noun-m|n|n}}
-{{de-decl-noun-f|n}}
+# [[female]] [[redhead]]
+
+=====Declension=====
+{{de-ndecl|+}}
+
+===Etymology 2===
+
+====Noun====
+{{head|de|noun form|g=m}}
+
+# {{inflection of|de|Rothaariger||str|nom//acc|p|;|wk|nom|s}}
 
 {{C|de|People}}
 -------- end text --------
@@ -25724,9 +25739,12 @@ Page 845 Killerin: -------- begin text --------
 * {{audio|de|De-Killerin.ogg|Audio}}
 
 ===Noun===
-{{de-noun|f|Killer|Killerinnen|m=Killer}}
+{{de-noun|f,nen|m=Killer}}
 
 # A paid [[killer]] or [[contract killer]], [[murderer]] (female), [[gunwoman]], [[hitwoman]].
+
+====Declension====
+{{de-ndecl|f,nen}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -25745,9 +25763,13 @@ Page 846 Uhrmacherin: -------- begin text --------
 * {{audio|de|De-Uhrmacherin.ogg|Audio}}
 
 ===Noun===
-{{de-noun|f|Uhrmacher|Uhrmacherinnen|m=Uhrmacher}}
+{{de-noun|f,nen|m=Uhrmacher}}
 
 # [[clockmaker]], [[watchmaker]], [[horologist]] (female)
+#: {{syn|de|q=less common|Uhrenmacherin}}
+
+====Declension====
+{{de-ndecl|f,nen}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -25764,12 +25786,12 @@ Page 847 Jongleurin: -------- begin text --------
 * {{IPA|de|/ʒɔŋˈløːʁɪn/}}
 
 ===Noun===
-{{de-noun|m|Jongleurin|Jongleurinnen|m=Jongleur}}
+{{de-noun|f,nen|m=Jongleur}}
 
 # [[juggler]] (female)
 
 ====Declension====
-{{de-decl-noun-f|nen}}
+{{de-ndecl|f,nen}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -29190,7 +29212,7 @@ Page 1000 Abgeordneter: -------- begin text --------
 * {{R:OpenThesaurus}}
 * {{pedia|lang=de}}
 -------- end text --------
-Page 1001 Abgeordnete: Found match for regex:  
+Page 1001 Abgeordnete: Found match for regex: =
 Page 1001 Abgeordnete: -------- begin text --------
 
 ===Pronunciation===
@@ -29297,7 +29319,7 @@ Page 1005 Europäische Kommission: -------- begin text --------
 
 # {{lb|de|EU|politics}} [[European Commission]]
 -------- end text --------
-Page 1006 Angehöriger: Found match for regex: =
+Page 1006 Angehöriger: Found match for regex: {
 Page 1006 Angehöriger: -------- begin text --------
 {{wikipedia|lang=de}}
 
@@ -30821,13 +30843,13 @@ Page 1072 Einführungsjahr: -------- begin text --------
 {{compound|de|Einführung|Jahr}}
 
 ===Noun===
-{{de-noun|n||Einführungsjahre}}
+{{de-noun|n,(e)s,e}}
 
 # year of introduction
 # {{qualifier|of a company}} [[founded]]
 
 ====Declension====
-{{de-decl-noun-n|es|e}}
+{{de-ndecl|n,(e)s,e}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -30942,12 +30964,12 @@ Page 1077 Dschihadistin: -------- begin text --------
 * {{hyphenation|de|Dschi|ha|dis|tin}}
 
 ===Noun===
-{{de-noun|f|Dschihadistinnen|m=Dschihadist}}
+{{de-noun|f,nen|m=Dschihadist}}
 
 # [[jihadist]] (female)
 
 ====Declension====
-{{de-decl-noun-f|nen}}
+{{de-ndecl|f,nen}}
 
 ====Related terms====
 * {{l|de|Dschihad}}, {{l|de|Djihad}}, {{l|de|Jihad}}
@@ -31871,14 +31893,6 @@ From {{bor|de|hu|ispán}}.
 * {{R:Duden|Gespan_Beamter_Ungarn}}
 
 {{C|de|Nobility|People}}
--------- end text --------
-Page 1112 Hess: Found match for regex: =
-Page 1112 Hess: -------- begin text --------
-
-===Noun===
-{{de-noun||Hesses}}
-
-# {{standard spelling of|de|from=SLDE|Heß}}
 -------- end text --------
 Page 1113 Spritzfisch: Found match for regex: =
 Page 1113 Spritzfisch: -------- begin text --------
@@ -33031,12 +33045,12 @@ Page 1167 Merseburgerin: -------- begin text --------
 {{suffix|de|Merseburger|in}}
 
 ===Noun===
-{{de-noun|m|Merseburgerin|Merseburgerinnen}}
+{{de-noun|f,nen}}
 
 # [[Merseburger]] {{gloss|female person from Merseburg}}
 
 ====Declension====
-{{de-decl-noun-f|nen}}
+{{de-ndecl|f,nen}}
 
 {{C|de|Demonyms}}
 -------- end text --------
@@ -33105,9 +33119,12 @@ Page 1171 Mondamin: -------- begin text --------
 The name of one brand of cornstarch, adopted in 1896 as a reference to Longfellow's ''Song of Hiawatha'', in which the Algonquian {{w|Mondamin (deity)|maize deity Mondamin}} appears.
 
 ===Noun===
-{{de-noun|||-}}
+{{de-noun|n,(s).sg}}
 
 # [[cornstarch]]
+
+====Declension====
+{{de-ndecl|n,(s).sg}}
 -------- end text --------
 Page 1172 Fienen: Found match for regex: =
 Page 1172 Fienen: -------- begin text --------
@@ -33170,14 +33187,14 @@ From {{compound|de|Hals|t1=neck|Band|t2=band}}.
 * {{hyphenation|de|Hals|band}}
 
 ===Noun===
-{{de-noun|n|Halsbands|gen2=Halsbandes|Halsbänder}}
+{{de-noun|n,es:s,^er}}
 
 # a [[band]] of [[fabric]], [[leather]], or [[solid]] material worn around the neck: a [[collar]], [[necklet]], [[necklace]]
 # {{lb|de|rare|or|dated}} a [[necklace]] in the form of a [[chain]]
 #: {{syn|de|Halskette|q=usually}}
 
 ====Declension====
-{{de-decl-noun-m|(e)s|pl=Halsbänder}}
+{{de-ndecl|n,es:s,^er}}
 
 ====Derived terms====
 * {{l|de|Halsbandaffäre}}
@@ -34215,7 +34232,7 @@ From the {{inh|de|gmh|spilman}}, from the {{inh|de|goh|spiliman}}, from {{compou
 # a member of a [[marching band]]
 
 ====Declension====
-{{de-ndecl|m,es:s,^er|dim=^chen}}
+{{de-ndecl|m,es:s,^er}}
 
 ====Derived terms====
 * {{l|de|Spielmannsdichtung}}
@@ -35046,7 +35063,7 @@ From {{inh|de|gmh|geswulst}}, from {{inh|de|goh|giswulst}}, from the root of {{d
 #: {{syn|de|Tumor}}
 
 ====Declension====
-{{de-ndecl|f,^e:e|dim=^chen,^lein}}
+{{de-ndecl|f,^e:e}}
 {{de-ndecl|n,s:es,^e:e}}
 
 ===Further reading===
@@ -54320,5 +54337,5 @@ Page 2091 Fatzke: -------- begin text --------
 * {{R:Duden}}
 * {{R:DWDS}}
 -------- end text --------
-Elapsed time: 4 mins 33.16 secs
-Ending at Sat Feb 19 15:41:03 2022
+Elapsed time: 4 mins 38.66 secs
+Ending at Sat Feb 19 22:55:57 2022
