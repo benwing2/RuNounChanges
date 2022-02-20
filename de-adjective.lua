@@ -111,7 +111,7 @@ add_slots(adjective_slot_list_comparative)
 add_slots(adjective_slot_list_superlative)
 
 local function add(base, slot, stem, ending, footnotes)
-	if not ending or base.suppress[ending] then
+	if not ending or base.suppress and base.suppress[ending] then
 		return
 	end
 	local function do_combine_stem_ending(stem, ending)
@@ -206,7 +206,7 @@ local function parse_indicator_spec(angle_bracket_spec, lemma, pagename)
 				end
 				dot_separated_group[1] = rest
 				base[spectype] = com.fetch_specs(iut, dot_separated_group, ":", spectype, nil, parse_err)
-			if rfind(part, "^suppress:") then
+			elseif rfind(part, "^suppress:") then
 				if #dot_separated_group > 1 then
 					parse_err("Can't specify footnotes with suppress: '" .. table.concat(dot_separated_group) .. "'")
 				end
