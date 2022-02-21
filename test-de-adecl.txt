@@ -18,10 +18,10 @@
 {{User:Benwing2/de-adecl|comp:+:^.ss|pagename=naß}}
 {{User:Benwing2/de-adecl|stem:rosan:+.comp:rosaner.sup:rosanst:rosast|pagename=rosa}}
 {{User:Benwing2/de-adecl|stem:lilan:+|pagename=lila}}
-{{User:Benwing2/de-adecl|-e.comp:+:^[alternatively in Austrian German].sup:dunkelst|pagename=dunkel}}
+{{User:Benwing2/de-adecl|stem:-e.comp:+:^[alternatively in Austrian German].sup:dunkelst|pagename=dunkel}}
 ; should automatically have comparative simpler but superlative simpelst
-{{User:Benwing2/de-adecl|-e.comp|pagename=simpel}}
-{{User:Benwing2/de-adecl|-e.comp|pagename=aper}}
+{{User:Benwing2/de-adecl|stem:-e.comp|pagename=simpel}}
+{{User:Benwing2/de-adecl|stem:-e.comp|pagename=aper}}
 ; should have comparative either abgeschlossener or abgeschlossner
 {{User:Benwing2/de-adecl|comp:+:-e|pagename=abgeschlossen}}
 ; should have comparative either aufrechter, superlative aufrechtest- or aufrechtst-
@@ -36,11 +36,12 @@
 {{User:Benwing2/de-adecl|comp:-.sup:+|pagename=allerdurchlauchtig}}
 ; superlative but no comparative, no predicate
 {{User:Benwing2/de-adecl|comp:-.sup:+.pred:-|pagename=inner}}
-{{User:Benwing2/de-adecl|[[an]] [[den]] [[Haar]]en [[herbeiziehen|herbeigezogen]]<comp:+er:mehr<> +.sup:+st.sup:meist<> +>|pagename=an den Haaren herbeigezogen}}
+{{User:Benwing2/de-adecl|[[an]] [[den]] [[Haar]]en [[herbeiziehen|herbeigezogen]]<comp:+er:mehr<> +.sup:+st:meist<> +>|pagename=an den Haaren herbeigezogen}}
 {{User:Benwing2/de-adecl|comp:-.sup:+.pred:-|pagename=inner}}
-{{User:Benwing2/de-adecl|stem:+[formal]:+en[informal].comp.sup:+est[formal]:+enst[informal]|pagename=orange}}
-{{User:Benwing2/de-adecl|stem:+[formal]:+en[informal].comp.sup:+est[formal]:+enst[informal]|pagename=weit hergeholt}}
+{{User:Benwing2/de-adecl|stem:+[formal]:+en[informal].comp.sup:orangest[formal]:orangenst[informal]|pagename=orange}}
 ; should derive superlatives wenigst, mindest
 {{User:Benwing2/de-adecl|comp:+:minder|pagename=wenig}}
 {{User:Benwing2/de-adecl|comp:+:weitergehend.sup:+:weitestgehend|pagename=weitgehend}}
 {{User:Benwing2/de-adecl|comp:weiter hergeholt:weit hergeholter[informal].sup:weites hergeholt:weit hergeholtest[informal].sup_pred:am weitesten hergeholt:am weit hergeholtesten[informal]|pagename=weit hergeholt}}
+{{User:Benwing2/de-adecl|((<stem:ander:andr[mostly in speech].pred:->,<stem:ander[mostly in speech].sync_mn.pred:->))|pagename=anderer}}
+{{User:Benwing2/de-adecl|((<>,<sync_n.suppress:e:em:er:es>))|pagename=dunkel}}
