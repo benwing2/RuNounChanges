@@ -110,6 +110,13 @@ pos_functions.adjectives = function(class, args, data, proper)
 	if ine(args.old) or ine(args[2]) or ine(args.comp1) or ine(args.comp2) or ine(args.comp3) or
 		ine(args.sup1) or ine(args.sup2) or ine(args.sup3) or args[1] == "-" then
 		return old_adjectives(class, args, data)
+	else
+		-- Remove this code once we convert to the new format.
+		track("de-adj-need-old")
+	end
+	-- FIXME, delete this once we are ready to convert to the new format.
+	if not ine(args.new) then
+		return old_adjectives(class, args, data)
 	end
 
 	local alternant_multiword_spec = require("Module:de-adjective").do_generate_forms(args, nil, "from headword")
@@ -144,8 +151,8 @@ pos_functions.adjectives = function(class, args, data, proper)
 	end
 
 	local should_comp_sup = alternant_multiword_spec.forms.comp_pred or alternant_multiword_spec.forms.sup_pred
-	do_noun_form("comp_pred", glossary_link("comparative"), should_comp_sup, "comparative")
-	do_noun_form("sup_pred", glossary_link("superlative"), should_comp_sup, "superlative")
+	do_adj_form("comp_pred", glossary_link("comparative"), should_comp_sup, "comparative")
+	do_adj_form("sup_pred", glossary_link("superlative"), should_comp_sup, "superlative")
 
 	-- Add categories.
 	for _, cat in ipairs(alternant_multiword_spec.categories) do
@@ -283,6 +290,12 @@ pos_functions.nouns = function(class, args, data, proper)
 	data.genders = alternant_multiword_spec.genders
 	data.id = alternant_multiword_spec.args.id
 	data.sort = alternant_multiword_spec.args.sort
+	if not proper then
+		data.pos_category = alternant_multiword_spec.pos
+		if alternant_multiword_spec.pos == "suffixes" then
+			table.insert(data.categories, "German noun-forming suffixes")
+		end
+	end
 
 	local function get_nom_articles(alternant_multiword_spec)
 		local articles = {}
@@ -429,6 +442,8 @@ pos_functions.nouns = function(class, args, data, proper)
 			do_noun_form("nom_p", "plural", not proper)
 		end
 	end
+	-- FIXME: Should we include the article in the singular equivalent if .article is given? I have no examples to go by.
+	do_noun_form("sg", "singular")
 	do_noun_form("dim", "diminutive", nil, "diminutive", {"n"}, article and "[[das]]" or nil)
 	do_noun_form("m", "masculine", nil, nil, nil, article and "[[der]]" or nil)
 	do_noun_form("f", "feminine", nil, "feminine", nil, article and "[[die]]" or nil)
@@ -442,7 +457,7 @@ pos_functions.nouns = function(class, args, data, proper)
 	-- Use the "linked" form of the lemma as the head if no head= explicitly given.
 	if #data.heads == 0 then
 		data.heads = {}
-		local lemmas = m_de_noun.get_lemmas(alternant_multiword_spec)
+		local lemmas = m_de_noun.get_lemmas(alternant_multiword_spec, "linked variant")
 		for _, lemma_obj in ipairs(lemmas) do
 			local head = alternant_multiword_spec.args.nolinkhead and lemma_obj.form or
 				require("Module:headword utilities").add_lemma_links(lemma_obj.form, alternant_multiword_spec.args.splithyph)
