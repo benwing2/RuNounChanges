@@ -3,13 +3,13 @@ Page 7 AGB: Found match for regex: =
 Page 7 AGB: -------- begin text --------
 
 ===Noun===
-{{head|de|noun|g=p}}
+{{de-noun|fp}}
 
 # {{lb|de|business}} {{initialism of|de|Allgemeine Geschäftsbedingungen}}
 #: {{syn|de|AGBs<g:p>}}
 
 ====Declension====
-{{de-decl-noun-pl|dp=AGB}}
+{{de-ndecl|fp}}
 -------- end text --------
 Page 8 Jura: Found match for regex: {
 Page 8 Jura: -------- begin text --------
@@ -50,7 +50,7 @@ Page 8 Jura: -------- begin text --------
 Borrowed from {{bor|de|la|iūra}}, nominative plural of {{m|la|iūs|t=law, right}}.
 
 ====Noun====
-{{head|de|noun}} {{tlb|de|plurale tantum}}
+{{de-noun|p}}
 
 # [[law]] {{gloss|study}}
 #: {{uxi|de|Ich habe '''Jura''' studiert.|I studied '''law'''.}}
@@ -60,7 +60,7 @@ Borrowed from {{bor|de|la|iūra}}, nominative plural of {{m|la|iūs|t=law, right
 * Often used in {{m|de|Jura [[studieren]]}}.
 
 =====Declension=====
-{{de-decl-noun-pl}}
+{{de-ndecl|p}}
 
 =====Synonyms=====
 * {{sense|law}} {{l|de|Jurisprudenz}}, {{l|de|Jus|id=law}} {{qualifier|Switzerland|Austria}}, {{l|de|Rechtswissenschaft}}, {{l|de|Recht}}, {{l|de|Rechte}}, {{l|de|Juristerei}} {{q|humorous}}
@@ -69,7 +69,7 @@ Borrowed from {{bor|de|la|iūra}}, nominative plural of {{m|la|iūs|t=law, right
 * {{l|de|Jurastudent}}
 * {{l|de|Jurastudium}}, {{l|de|Jura-Studium}}
 
-{{C|de|Mountains|Departments of France|Geology|Time|Law}}
+{{C|de|Departments of France|Geology|Time|Law}}
 
 ----
 
@@ -89,30 +89,13 @@ Page 9 Mäuse: -------- begin text --------
 # {{inflection of|de|Maus||nom//acc//gen|p|t=mouse}}
 
 ===Noun===
-{{head|de|noun|g=f-p}}
+{{de-noun|fp}}
 
 # {{lb|de|slang}} [[money]]
 #: {{syn|de|Thesaurus:Geld}}
 
 ====Declension====
-{{rfc|de|This displays: "Declension of Mäuse (plural only)" and "singular" which doesn't fit.}} 
-{{de-decl-noun-pl}}
-
-{{cln|de|pluralia tantum}}
--------- end text --------
-Page 10 Labia: Found match for regex: =
-Page 10 Labia: -------- begin text --------
-
-===Noun===
-{{head|de|noun form|g=p}}
-
-# {{plural of|de|Labium}}: [[labia]]
-
-===Further reading===
-* {{R:Duden}}
-
-----
-
+{{de-ndecl|fp}}
 -------- end text --------
 Page 11 Kröten: Found match for regex: =
 Page 11 Kröten: -------- begin text --------
@@ -125,13 +108,15 @@ Page 11 Kröten: -------- begin text --------
 {{head|de|noun form|g=f}}
 
 # {{plural of|de|Kröte}}
+
+===Noun===
+{{de-noun|fp}}
+
 # {{lb|de|slang}} [[money]]
 #: {{syn|de|Thesaurus:Geld}}
 
 ====Declension====
-{{de-decl-noun-pl}}
-
-[[Category:German pluralia tantum]]
+{{de-ndecl|fp}}
 -------- end text --------
 Page 12 Gebrüder: Found match for regex: =
 Page 12 Gebrüder: -------- begin text --------
@@ -144,9 +129,9 @@ From {{inh|de|gmh|gebruoder}}, {{m|gmh|gebrüeder}}; synchronically {{prefix|de|
 * {{audio|de|De-Gebrüder.ogg|Audio}}
 
 ===Noun===
-{{head|de|noun|g=m-p}}
+{{de-noun|mp}}
 
-# {{lb|de|plurale tantum|dated|_|except in company names}} [[brother]]s, [[brother|brethren]]
+# {{lb|de|dated|_|except in company names}} [[brother]]s, [[brother|brethren]]
 #* '''1865''', Luise Reinhardt, ''Die Gebrüder Koltrum: Novelle'', page 207:
 #*: Frau Osterhof hatte nicht ganz Unrecht gehabt, wenn sie die '''Gebrüder''' Koltrum  mit ihrer Fabrik gleich einer gefallenen Größe zu behandeln Lust bezeigte. Der Geist, welcher das Unternehmen hielt, war wie vernichtet und zerstört.
 #* '''2014''', Michaela Dimova, ''Märchenhaftes Frauenbild. Welche Bezüge bestehen zwischen den Figuren der Gebrüder Grimm und der Frau des 19. Jahrhunderts?'', GRIN Verlag ({{ISBN|9783656754534}}), page 3:
@@ -156,7 +141,7 @@ From {{inh|de|gmh|gebruoder}}, {{m|gmh|gebrüeder}}; synchronically {{prefix|de|
 * ''Gebrüder'' is properly used only when referring to a group of persons who are each other's brothers and have no other siblings.
 
 ====Declension====
-{{de-decl-noun-pl}}
+{{de-ndecl|mp}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -178,7 +163,7 @@ From {{inh|de|goh|eltirōn}}, from {{inh|de|gem-pro|*alþizô}}. Cognate with {{
 * {{audio|de|De-at-Eltern.ogg|audio (Austria)}}
 
 ===Noun===
-{{head|de|noun|g=m-p|g2=n-p}}
+{{de-noun|mp:np[rare]}}
 
 # [[parents]]
 
@@ -196,7 +181,7 @@ From {{inh|de|goh|eltirōn}}, from {{inh|de|gem-pro|*alþizô}}. Cognate with {{
 :*: Z.&nbsp;B. der Urgroßvater A hat '''zwey Eltern''' Vater und Mutter B. C. und so weiter.
 
 ====Declension====
-{{de-decl-noun-pl}}
+{{de-ndecl|mp:np[rare]}}
 
 ====Derived terms====
 {{der3|de
@@ -242,7 +227,7 @@ Compare {{cog|nl|[[lieden]], [[luden]], [[luiden]]|people}}, {{cog|non|lýðr|l�
 * {{homophones|de|läute|Läute}}
 
 ===Noun===
-{{head|de|noun|g=m-p|diminutive|Leutchen|or|Leutlein}}
+{{de-noun|mp|dim=chen,lein}}
 
 # [[people]] {{gloss|several individual [[person]]s, a [[group]] of people in general, esp. of one kind or another}}, [[folk]] ([[folks]]), [[peeps]] {{q|[[slang]]}}, [[guys]] ([[boy]]s and/or [[girl]]s)
 #* '''1754''', ''Der Königl. Akademie der Wissenschaften in Paris Physische Abhandlungen, Zehnter Theil, welcher die Jahre 1733 und 1734 in sich hält. Aus dem Französischen übersetzt von Wolf Balth. Adolph von Steinwehr'', Breslau, p. 598:
@@ -250,7 +235,7 @@ Compare {{cog|nl|[[lieden]], [[luden]], [[luiden]]|people}}, {{cog|non|lýðr|l�
 #*:: Note: The work also has masculine ''zween Theile'', ''zween Zoll'', ''zween Beobachter'', feminine ''zwo oder drey Linien'', ''zwo neue Wahrheiten'', neuter ''zwey Stücke'', ''zwey kleine Glasfenster''.
 
 ====Declension====
-{{de-decl-noun-pl}}
+{{de-ndecl|mp}}
 
 ====Usage notes====
 * A backformed singular {{m|de|Leut|g=n||person}} may be heard in colloquial speech. It is rare and usually humorous.
@@ -266,8 +251,6 @@ Compare {{cog|nl|[[lieden]], [[luden]], [[luiden]]|people}}, {{cog|non|lýðr|l�
 * {{R:Duden}}
 * {{pedia|lang=de}}
 * {{R:Kluge 1891}}
-
-{{cln|de|pluralia tantum}}
 -------- end text --------
 Page 15 Trümmer: Found match for regex: =
 Page 15 Trümmer: -------- begin text --------
@@ -295,9 +278,9 @@ The new singular ''Trümmer'' (predominantly feminine, occasionally masculine or
 #*: {{quote|de|Keine Stunde hielt es an, bis die Mühle borst in '''Trümmer'''.|before the end of an hour, the mill collapsed in '''ruins'''}}
 
 ====Declension====
-{{de-noun|np}}
-{{de-noun|f[archaic]}}
-{{de-noun|m[archaic, rare]}}
+{{de-ndecl|np}}
+{{de-ndecl|f[archaic]}}
+{{de-ndecl|m[archaic, rare]}}
 
 ====Derived terms====
 * {{l|de|Trümmerfrau}}
@@ -322,12 +305,12 @@ Page 16 Oberschenkelinnenseiten: -------- begin text --------
 {{com|de|Oberschenkel|t1=upper thigh|innen|t2=inside|Seite|g3=f|t3=side}} or {{com|de|Oberschenkel|t1=upper thigh|Innenseite|g2=f|t2=inner side}}
 
 ===Noun===
-{{head|de|noun|g=f-p}}
+{{de-noun|fp}}
 
-# the insides of the upper thighs ''(area of the body)''
+# the [[inside]] of the [[upper]] [[thigh]]s
 
 ====Declension====
-{{de-decl-noun-pl}}
+{{de-ndecl|fp}}
 
 ===See also===
 * {{l|de|Oberschenkelinnenseite|g=f}}
@@ -345,12 +328,12 @@ From {{m|de|Krokodil}} and {{m|de|Träne|g=f}}
 * {{audio|de|De-Krokodilstränen.ogg|Audio}}
 
 ===Noun===
-{{head|de|noun|g=f-p}}
+{{de-noun|fp}}
 
 # [[crocodile tears]]
 
 ====Declension====
-{{de-decl-noun-pl}}
+{{de-ndecl|fp}}
 -------- end text --------
 Page 18 Flitterwochen: Found match for regex: =
 Page 18 Flitterwochen: -------- begin text --------
@@ -363,12 +346,12 @@ Page 18 Flitterwochen: -------- begin text --------
 * {{audio|de|De-Flitterwochen.ogg|Audio}}
 
 ===Noun===
-{{head|de|noun|g=f-p}} {{tlb|de|no singular}}
+{{de-noun|fp}}
 
 # [[honeymoon]]
 
 ====Declension====
-{{de-decl-noun-pl}}
+{{de-ndecl|fp}}
 
 ====Derived terms====
 * {{l|de|flittern|pos=v}}
@@ -393,13 +376,13 @@ From {{bor|de|fr|mémoires}}, plural of {{m|fr|mémoire}}.
 * {{audio|de|De-Memoiren.ogg|Audio}}
 
 ===Noun===
-{{de-noun|p||Memoiren}}
+{{de-noun|p}}<!-- gender unclear; gender of French ''mémoire'' in this meaning is masculine -->
 
 # [[memoirs]]
 #: {{syn|de|Autobiografie}}
 
 ====Declension====
-{{de-decl-noun-pl}}
+{{de-ndecl|p}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -413,12 +396,12 @@ Page 20 Bauarbeiten: -------- begin text --------
 * {{audio|de|De-Bauarbeiten.ogg|Audio}}
 
 ===Noun===
-{{head|de|noun|g=f-p}}
+{{de-noun|fp}}
 
-# {{lb|de|plurale tantum}} [[construction works]]
+# [[construction works]]
 
 ====Declension====
-{{de-decl-noun-pl}}
+{{de-ndecl|fp}}
 
 ====Related terms====
 * {{l|de|Bauarbeit}}
@@ -429,12 +412,12 @@ Page 21 Kronjuwelen: -------- begin text --------
 {{wikipedia|lang=de}}
 
 ===Noun===
-{{head|de|noun|g=n-p}}
+{{de-noun|np}}
 
 # [[crown jewels]]
 
 ====Declension====
-{{de-decl-noun-pl}}
+{{de-ndecl|np}}
 -------- end text --------
 Page 22 Subtropen: Found match for regex: {
 Page 22 Subtropen: -------- begin text --------
@@ -447,14 +430,14 @@ Page 22 Subtropen: -------- begin text --------
 * {{audio|de|De-Subtropen.ogg|Audio}}
 
 ===Noun===
-{{head|de|noun|g=f-p}}
+{{de-noun|fp}}
 
 # [[subtropics]]
 #: {{syn|de|warmgemäßigte Zone}}
 #: {{ant|de|Tropen}}
 
 ====Declension====
-{{de-decl-noun-pl}}
+{{de-ndecl|fp}}
 
 ====Related terms====
 * {{l|de|[[subtropisches]] [[Klima]]}}
@@ -471,12 +454,12 @@ Page 23 Fahrzeugpapiere: -------- begin text --------
 * {{audio|de|De-Fahrzeugpapiere.ogg|Audio}}
 
 ===Noun===
-{{head|de|noun|g=n-p}}
+{{de-noun|np}}
 
 # [[car]] [[documents]]
 
 ====Declension====
-{{de-decl-noun-pl}}
+{{de-ndecl|np}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -493,12 +476,12 @@ Page 24 Windpocken: -------- begin text --------
 * {{audio|de|De-Windpocken.ogg|Audio}}
 
 ===Noun===
-{{head|de|noun|g=f-p}}
+{{de-noun|fp}}
 
 # [[chickenpox]]
 
 ====Declension====
-{{de-decl-noun-pl}}
+{{de-nndecl|fp}}
 
 ===Further reading===
 * {{R:DWDS}}
@@ -518,14 +501,18 @@ Plural of {{m|de|Manier}}.
 * {{audio|de|De-Manieren.ogg|Audio}}
 
 ===Noun===
-{{head|de|noun|g=f-p}}
+{{head|de|noun form|g=f-p}}
 
 # {{plural of|de|Manier}}
+
+===Noun===
+{{de-noun|fp}}
+
 # [[manners]]
 #: {{syn|de|Benehmen|Etikette|Umgangsformen}}
 
 ====Declension====
-{{de-decl-noun-pl}}
+{{de-ndecl|fp}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -538,15 +525,19 @@ Page 26 Tage: -------- begin text --------
 * {{audio|de|De-Tage.ogg|audio}}
 
 ===Noun===
-{{head|de|noun form}}
+{{head|de|noun form|g=m-p}}
 
 # {{inflection of|de|Tag||nom//acc//gen|p}}
-# {{dative singular of|de|Tag}}
-# {{lb|de|plurale tantum}} [[that time of the month]] {{q|when accompanied by possessive adjective}}; [[period]] {{gloss|female menstruation}}
+# {{lb|de|archaic}} {{dative singular of|de|Tag}}
+
+===Noun===
+{{de-noun|mp}}
+
+# [[that time of the month]] {{q|when accompanied by possessive adjective}}; [[period]] {{gloss|female menstruation}}
 #: {{syn|de|Periode}}
 
 ====Declension====
-{{de-decl-noun-pl}}
+{{de-ndecl|mp}}
 
 ====Usage notes====
 * The sense of "period" was initially a [[euphemism]], but is now a regular synonym of {{m|de|Periode}}. It is always used with either a definite article (''die '''Tage''''') or possessive pronoun (''meine '''Tage''''').
@@ -571,13 +562,13 @@ From the plural of {{inh|de|gmh|gezīt||particular time, such as a feast or pray
 * {{audio|de|De-Gezeiten.ogg|Audio}}
 
 ===Noun===
-{{head|de|noun|g=p}}
+{{de-noun|fp}}
 
-# {{lb|de|plural only}} [[tide]]s {{gloss|periodic change of the sea level}}
+# [[tide]]s {{gloss|periodic change of the sea level}}
 #: {{syn|de|Tide}}
 
 ====Declension====
-{{de-decl-noun-pl}}
+{{de-ndecl|fp}}
 -------- end text --------
 Page 28 Karten: Found match for regex: =
 Page 28 Karten: -------- begin text --------
@@ -586,13 +577,17 @@ Page 28 Karten: -------- begin text --------
 * {{audio|de|De-Karten.ogg|Audio}}
 
 ===Noun===
-{{head|de|noun plural form|g=f}}
+{{head|de|noun form|g=f}}
 
 # {{plural of|de|Karte}} ([[cards]])
-# {{lb|de|plurale tantum}} [[card game]]
+
+===Noun===
+{{de-noun|fp}}
+
+# [[card game]]
 
 ====Declension====
-{{de-decl-noun-pl}}
+{{de-ndecl|fp}}
 -------- end text --------
 Page 29 Sichtverhältnisse: Found match for regex: =
 Page 29 Sichtverhältnisse: -------- begin text --------
@@ -604,13 +599,13 @@ Page 29 Sichtverhältnisse: -------- begin text --------
 * {{audio|de|De-Sichtverhältnisse.ogg|Audio}}
 
 ===Noun===
-{{head|de|noun|g=n-p|singular|Sichtverhältnis}}
+{{de-noun|np|sg=Sichtverhältnis}}
 
 # [[visibility]] [[conditions]]
 #: {{syn|de|Sicht|Sichtweite}}
 
 ====Declension====
-{{de-decl-noun-pl}}
+{{de-ndecl|np}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -623,23 +618,23 @@ Page 30 Nebenkosten: -------- begin text --------
 * {{audio|de|De-Nebenkosten.ogg|Audio}}
 
 ===Noun===
-{{head|de|noun}} {{tlb|de|plurale tantum}}
+{{de-noun|p}}
 
 # [[side]] [[costs]], [[additional]] [[costs]]
 
 ====Declension====
-{{de-decl-noun-pl}}
+{{de-ndecl|p}}
 -------- end text --------
 Page 31 Mieteinnahmen: Found match for regex: =
 Page 31 Mieteinnahmen: -------- begin text --------
 
 ===Noun===
-{{head|de|noun|g=f-p}} {{tlb|de|plurale tantum}}
+{{de-noun|fp}}
 
 # [[rental]] [[income]]
 
 ====Declension====
-{{de-decl-noun-pl}}
+{{de-ndecl|fp}}
 -------- end text --------
 Page 32 Niagarafälle: Found match for regex: {
 Page 32 Niagarafälle: -------- begin text --------
@@ -650,12 +645,12 @@ Page 32 Niagarafälle: -------- begin text --------
 * {{audio|de|De-Niagarafälle.ogg|Audio}}
 
 ===Proper noun===
-{{head|de|proper noun|g=m-p}}
+{{de-proper noun|mp}}
 
 # [[Niagara Falls]]
 
 ====Declension====
-{{de-decl-noun-pl|prop=yes}}
+{{de-ndecl|mp}}
 
 ====Alternative forms====
 * {{l|de|Niagara-Wasserfälle}}, {{l|de|Niagarawasserfälle}} {{q|rare}}
@@ -678,13 +673,13 @@ Page 33 Koteletten: -------- begin text --------
 * {{audio|de|De-Koteletten.ogg|Audio}}
 
 ====Noun====
-{{head|de|noun|g=f-p|singular|Kotelette}}
+{{de-noun|fp|sg=Kotelette}}
 
 # [[sideburns]] {{gloss|facial hair extending on the sides of the face near the ears}}
 # {{lb|de|by extension}} the [[hair]] directly in front of the [[ear]]s (even when short or in a woman)
 
 =====Declension=====
-{{de-decl-noun-pl}}
+{{de-ndecl|fp}}
 
 ===Etymology 2===
 
@@ -710,12 +705,12 @@ Page 34 Malediven: -------- begin text --------
 * {{audio|de|De-Malediven.ogg|Audio}}
 
 ===Proper noun===
-{{head|de|proper noun|g=p}}
+{{de-proper noun|fp}}
 
 # {{place|de|country/and/archipelago|r/South Asia|in the|ocean/Indian Ocean|t1=Maldives}}
 
 ====Declension====
-{{de-decl-noun-pl}}
+{{de-ndecl|fp}}
 
 ====Related terms====
 * {{l|de|Malediver}}
@@ -734,13 +729,13 @@ Page 35 Innereien: -------- begin text --------
 * {{audio|de|De-Innereien.ogg|Audio}}
 
 ===Noun===
-{{head|de|noun|g=f-p}}
+{{de-noun|fp}}
 
 # [[guts]], [[innards]]
 #: {{syn|de|Eingeweide}}
 
 ====Declension====
-{{de-decl-noun-pl}}
+{{de-ndecl|fp}}
 -------- end text --------
 Page 36 Geowissenschaften: Found match for regex: =
 Page 36 Geowissenschaften: -------- begin text --------
@@ -752,12 +747,12 @@ From {{af|de|geo-|Wissenschaften}}.
 * {{audio|de|De-Geowissenschaften.ogg|Audio}}
 
 ===Noun===
-{{head|de|noun|g=f-p|signular|Geowissenschaft}}
+{{de-noun|fp|sg=Geowissenschaft}}
 
 # [[geoscience]], [[earth science]]
 
 ====Declension====
-{{de-decl-noun-pl}}
+{{de-ndecl|fp}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -770,12 +765,12 @@ Page 37 Pocken: -------- begin text --------
 * {{audio|de|De-Pocken.ogg|Audio}}
 
 ===Noun===
-{{head|de|noun|g=f-p}}
+{{de-noun|fp}}
 
 # [[smallpox]] {{gloss|disease}}
 
 ====Declension====
-{{de-decl-noun-pl}}
+{{de-ndecl|fp}}
 
 ====Derived terms====
 * {{l|de|Affenpocken}}
@@ -801,16 +796,16 @@ Page 38 Pampas: -------- begin text --------
 ===Noun===
 {{head|de|noun form|g=f}}
 
-# {{n-g|inflected form of {{m|de|Pampa}}}}
+# {{plural of|de|Pampa}}
 
 ===Noun===
-{{head|de|noun|g=p}}
+{{de-noun|fp}}
 
 # [[pampas]], [[pampa]]
 # {{lb|de|colloquial}} [[back of beyond]]; a remote place
 
 ====Declension====
-{{de-decl-noun-pl}}
+{{de-ndecl|fp}}
 -------- end text --------
 Page 39 Kordilleren: Found match for regex: {
 Page 39 Kordilleren: -------- begin text --------
@@ -820,12 +815,12 @@ Page 39 Kordilleren: -------- begin text --------
 * {{audio|de|De-Kordilleren.ogg|Audio}}
 
 ===Noun===
-{{head|de|noun|g=f-p}}
+{{de-noun|fp}}
 
 # [[cordillera]]
 
 ====Declension====
-{{de-decl-noun-pl}}
+{{de-ndecl|fp}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -838,12 +833,12 @@ Page 40 Maskarenen: -------- begin text --------
 * {{audio|de|LL-Q188 (deu)-Sebastian Wallroth-Maskarenen.wav|Audio}}
 
 ===Proper noun===
-{{head|de|proper noun|g=f-p}}
+{{de-proper noun|fp}}
 
 # {{place|de|<<archipelago>> in the <<ocean/Indian Ocean>>, politically belonging to <<c/Mauritius>> and <<c/France>>|t=Mascarenes|t2=Mascarene Islands}}
 
 ====Declension====
-{{de-decl-noun-pl}}
+{{de-ndecl|fp}}
 -------- end text --------
 Page 41 Familienbande: Found match for regex: =
 Page 41 Familienbande: -------- begin text --------
@@ -852,12 +847,12 @@ Page 41 Familienbande: -------- begin text --------
 {{com|de|Familie|Band}}
 
 ===Noun===
-{{head|de|noun|g=p}}
+{{de-noun|np}}
 
 # [[family]] [[ties]]
 
 ====Declension====
-{{de-decl-noun-pl}}
+{{de-ndecl|np}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -870,17 +865,17 @@ Page 42 Simsen: -------- begin text --------
 * {{audio|de|De-Simsen.ogg|Audio}}
 
 ===Noun===
-{{head|de|noun form}}
+{{head|de|noun form|g=f}}
 
 # {{plural of|de|Simse}}
 
 ===Proper noun===
-{{head|de|proper noun|g=p}}
+{{de-proper noun|fp}}
 
 # the genus ''[[Scirpus]]''
 
 ====Declension====
-{{de-decl-noun-pl}}
+{{de-ndecl|fp}}
 -------- end text --------
 Page 43 Menschenrechte: Found match for regex: =
 Page 43 Menschenrechte: -------- begin text --------
@@ -889,13 +884,17 @@ Page 43 Menschenrechte: -------- begin text --------
 * {{audio|de|De-Menschenrechte.ogg|Audio}}
 
 ===Noun===
-{{head|de|noun form}}
+{{head|de|noun form|g=n}}
 
 # {{inflection of|de|Menschenrecht||nom//acc//gen|p}}
+
+===Noun===
+{{de-noun|np}}
+
 # [[human rights]]
 
 ====Declension====
-{{de-decl-noun-pl}}
+{{de-ndecl|np}}
 
 [[Category:de:Law]]
 -------- end text --------
@@ -907,13 +906,17 @@ Page 44 Streptokokken: -------- begin text --------
 * {{audio|de|De-Streptokokken.ogg|Audio}}
 
 ===Noun===
-{{head|de|noun|g=p}}
+{{head|de|noun form|g=m-p}}
 
-# [[streptococcus]]
-# ''[[Streptococcus]]''
+# {{plural of|de|Streptokokkus}}
+
+===Noun===
+{{de-noun|mp}}
+
+# ''[[Streptococcus]]'' {{i|genus of bacteria}}
 
 ====Declension====
-{{de-decl-noun-pl}}
+{{de-ndecl|mp}}
 
 {{C|de|Bacteria}}
 -------- end text --------
@@ -924,13 +927,13 @@ Page 45 Regenbogenfarben: -------- begin text --------
 * {{audio|de|De-Regenbogenfarben.ogg|Audio}}
 
 ===Noun===
-{{head|de|noun|g=f-p}}
+{{de-noun|fp}}
 
 # [[prismatic colors]]
 #: {{syn|de|Spektralfarben}}
 
 ====Declension====
-{{de-decl-noun-pl}}
+{{de-ndecl|fp}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -944,13 +947,13 @@ Page 46 Spektralfarben: -------- begin text --------
 * {{audio|de|De-Spektralfarben.ogg|Audio}}
 
 ===Noun===
-{{head|de|noun|g=f-p}}
+{{de-noun|fp}}
 
 # [[prismatic colors]]
 #: {{syn|de|Regenbogenfarben}}
 
 ====Declension====
-{{de-decl-noun-pl}}
+{{de-ndecl|fp}}
 
 {{C|de|Optics}}
 -------- end text --------
@@ -958,14 +961,14 @@ Page 47 Müllereierzeugnisse: Found match for regex: =
 Page 47 Müllereierzeugnisse: -------- begin text --------
 
 ===Noun===
-{{head|de|noun|g=n-p}}
+{{de-noun|np}}
 
 # milling-industry products, the products of the milling industry
 #* '''1904''', ''Der Verkehr auf den deutschen Wasserstraßen. Bemerkungen zu den Übersichten.'', ''Statistik des Deutschen Reichs'', volume 161, page 8:
 #*: {{quote|de|Talwärts kamen neben Baumaterialien, die mit 2&nbsp;095&nbsp;604&nbsp;t über 68&nbsp;% der Gesamttalzufuhr ausmachten, hauptsächlich ... Mehl und '''Müllereierzeugnisse''' (63&nbsp;508&nbsp;t) und Zucker.|To the valleys came, aside from construction materials, which at 2,095,604 tonnes made up 68% of the total delivery to the valleys, principally ... flour and '''milling-industry products''' (63,508 tonnes) and sugar.}}
 
 ====Declension====
-{{de-decl-noun-pl}}
+{{de-ndecl|np}}
 
 ===See also===
 * {{l|de|Müllereierzeugnis}}
@@ -981,7 +984,7 @@ From {{compound|de|spendieren|Hosen|gloss1=to be generous|gloss2=trousers|lit=ge
 * {{IPA|de|/ʃpɛnˈdiːɐ̯ˌhoːzən/}}
 
 ===Noun===
-{{head|de|noun}} {{lb|de|pluralonly}}
+{{de-noun|fp}}
 
 # {{lb|de|idiomatic}} {{non-gloss definition|a metaphorical representation of a feeling of [[generosity]]}}
 #: {{ux|de|Er hat heute die '''Spendierhosen''' an; er hat mir ein Auto gekauft!|lit=He's wearing '''generosity trousers''' today; he bought me a car!|He's feeling generous today; he bought me a car!}}
@@ -992,7 +995,7 @@ From {{compound|de|spendieren|Hosen|gloss1=to be generous|gloss2=trousers|lit=ge
 #: {{syn|de|Spendierbüchsen}}
 
 ====Declension====
-{{de-decl-noun-pl}}
+{{de-ndecl|fp}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -1001,12 +1004,12 @@ Page 49 Eisenspäne: Found match for regex: =
 Page 49 Eisenspäne: -------- begin text --------
 
 ===Noun===
-{{head|de|noun|g=m-p|singular|Eisenspan}}
+{{de-noun|mp|sg=Eisenspan}}
 
 # [[iron filings]]
 
 ====Declension====
-{{de-decl-noun-pl}}
+{{de-ndecl|mp}}
 -------- end text --------
 Page 50 Basisdaten: Found match for regex: {
 Page 50 Basisdaten: -------- begin text --------
@@ -1019,12 +1022,12 @@ Page 50 Basisdaten: -------- begin text --------
 * {{hyphenation|de|Ba|sis|da|ten}}
 
 ===Noun===
-{{head|de|noun|g=p}}
+{{de-noun|np}}
 
-# {{lb|de|plurale tantum|computer science}} [[basic data]]
+# {{lb|de|computer science}} [[basic data]]
 
 ====Declension====
-{{de-decl-noun-pl}}
+{{de-ndecl|np}}
 -------- end text --------
 Page 51 Gemüsekonserven: Found match for regex: =
 Page 51 Gemüsekonserven: -------- begin text --------
@@ -1036,12 +1039,12 @@ Page 51 Gemüsekonserven: -------- begin text --------
 * {{audio|de|De-Gemüsekonserven.ogg|Audio}}
 
 ===Noun===
-{{head|de|noun|g=f-p|often in plural, singular|Gemüsekonserve}}
+{{de-noun|fp|sg=Gemüsekonserve}}
 
 # [[tinned]] / [[canned]] [[vegetable]]s
 
 ====Declension====
-{{de-decl-noun-pl}}
+{{de-ndecl|fp}}
 -------- end text --------
 Page 52 Mykoplasmen: Found match for regex: {
 Page 52 Mykoplasmen: -------- begin text --------
@@ -1051,15 +1054,22 @@ Page 52 Mykoplasmen: -------- begin text --------
 * {{audio|de|De-Mykoplasmen.ogg|Audio}}
 
 ===Noun===
-{{head|de|noun|g=p}}
+{{head|de|noun form|g=m-p}}
 
-# {{lb|de|bacteriology}} [[mycoplasma]]
+# {{plural of|de|Mykoplasma}}
+
+===Noun===
+{{de-noun|np}}
+
+# ''[[Mycoplasma]]'' {{i|genus of bacteria}}
 
 ====Declension====
-{{de-decl-noun-pl}}
+{{de-ndecl|np}}
 
 ===Further reading===
 * {{R:Duden}}
+
+{{C|de|Bacteria}}
 -------- end text --------
 Page 53 Herstellungskosten: Found match for regex: =
 Page 53 Herstellungskosten: -------- begin text --------
@@ -1071,12 +1081,12 @@ Page 53 Herstellungskosten: -------- begin text --------
 * {{audio|de|De-Herstellungskosten.ogg|Audio}}
 
 ===Noun===
-{{head|de|noun|g=p}}
+{{de-noun|p}}
 
 # [[production]] [[costs]]
 
 ====Declension====
-{{de-decl-noun-pl}}
+{{de-ndecl|p}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -1088,12 +1098,12 @@ Page 54 Wechseljahre: -------- begin text --------
 {{compound|de|Wechsel|Jahre}}
 
 ===Noun===
-{{head|de|noun|g=n-p}}
+{{de-noun|np}}
 
 # [[menopause]], [[change of life]]
 
 ====Declension====
-{{de-decl-noun-pl}}
+{{de-ndecl|np}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -1105,12 +1115,12 @@ Page 55 Fäzes: -------- begin text --------
 * {{alter|de|Faeces}}
 
 ===Noun===
-{{head|de|noun|g=p}}
+{{de-noun|p}}
 
 # {{lb|de|medicine}} [[faeces]]
 
 ====Declension====
-{{de-decl-noun-pl}}
+{{de-ndecl|p}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -1125,12 +1135,12 @@ From {{affix|de|Austritt|gloss1=resignation|-s-|Zahlen|gloss3=numbers}}.
 * {{IPA|de|[ˈʔaʊ̯stʁɪtsˌtsaːln̩]|[ˈʔaʊ̯stʁɪtsˌtsaːlən]}}
 
 ===Noun===
-{{head|de|noun|g=p}}
+{{de-noun|fp}}
 
 # the [[numbers]] of people who [[resign]] (from an association, party, etc.)
 
 ====Declension====
-{{de-decl-noun-pl}}
+{{de-ndecl|fp}}
 -------- end text --------
 Page 57 Schmuckwaren: Found match for regex: =
 Page 57 Schmuckwaren: -------- begin text --------
@@ -1139,12 +1149,12 @@ Page 57 Schmuckwaren: -------- begin text --------
 {{compound|de|Schmuck|Waren}}
 
 ===Noun===
-{{head|de|noun|g=f-p|singular|Schmuckware}}
+{{de-noun|fp|sg=Schmuckware}}
 
 # [[jewellery]] (as merchandise)
 
 ====Declension====
-{{de-decl-noun-pl}}
+{{de-ndecl|fp}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -1160,12 +1170,12 @@ From {{compound|de|Lohn|Nebenkosten|t1=wage|t2=additional costs}}.
 * {{hyphenation|de|Lohn|ne|ben|kos|ten}}
 
 ===Noun===
-{{head|de|noun|g=p}}
+{{de-noun|p}}
 
-# {{lb|de|plurale tantum}} [[incidental]] [[wage]] [[cost]]
+# [[incidental]] [[wage]] [[cost]]
 
 ====Declension====
-{{de-decl-noun-pl}}
+{{de-ndecl|p}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -1180,13 +1190,13 @@ Page 59 Ostgebiete: -------- begin text --------
 From {{compound|de|Ost|Gebiet|g2=n}}. Short for {{m|de|[[deutsch|deutsche]] Ostgebiete||German territories in the East}}.
 
 ====Noun====
-{{head|de|noun|g=p}}
+{{de-noun|np}}
 
 # {{lb|de|historic}} the pre-1938 territories of the German [[Reich]] east of the [[Oder-Neisse line]], from where the German population was [[expel]]led after [[World War II]], and which are now parts of [[Poland]] and [[Russia]]
 # {{lb|de|sometimes also}} the even vaster pre-1918 territories of the Reich as well as, possibly, the [[Sudetenland]], which was German between 1938 and 1945 (areas conquered during WWII are never included)
 
 =====Declension=====
-{{de-decl-noun-pl}}
+{{de-ndecl|np}}
 
 =====Usage notes=====
 * In 1990, the Federal Republic of Germany officially dropped its claim to the territories (having generally not referred to the claims since the normalization of relations in 1970). Since then, and even sometimes before, they have often been referred to as {{m|de|[[ehemalig|ehemalige]] (deutsche) Ostgebiete||former German territories in the East}}.
@@ -1215,12 +1225,12 @@ Compound of either {{m|de|essen||to eat}} or {{compound|de|Essen|t1=food|Waren|t
 * {{alter|de|Eßwaren}}
 
 ===Noun===
-{{head|de|noun|g=f-p|singular|Essware}}
+{{de-noun|fp|sg=Essware}}
 
 # [[foodstuff]]s
 
 ====Declension====
-{{de-decl-noun-pl}}
+{{de-ndecl|fp}}
 
 ====Usage notes====
 * {{U:de:deprecated spelling|1902}}
@@ -1236,12 +1246,12 @@ From {{affix|de|Regierung|gloss1=government|-s-|Geschäfte|gloss3=businesses}}.
 * {{audio|de|De-Regierungsgeschäfte.ogg|Audio}}
 
 ===Noun===
-{{head|de|noun|g=p}}
+{{de-noun|np}}
 
-# {{lb|de|plurale tantum}} [[government]] [[business]]
+# [[government]] [[business]]
 
 ====Declension====
-{{de-decl-noun-pl}}
+{{de-ndecl|np}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -1258,13 +1268,13 @@ Borrowed from {{bor|de|en|news}}.
 * {{audio|de|De-News.ogg|Audio}}
 
 ===Noun===
-{{head|de|noun|g=p}}
+{{de-noun|p}}
 
 # (latest) [[news]]
 #: {{ux|de|Jeden Morgen lese ich die '''News'''.|t=Every morning I read the '''news'''.}}
 
 ====Declension====
-{{de-decl-noun-pl}}
+{{de-ndecl|p}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -1276,12 +1286,12 @@ Page 63 Y-Reisen: -------- begin text --------
 From the fact German army vehicles have a Y as the sole letter of the license plate code.
 
 ===Noun===
-{{de-noun|p}}
+{{de-noun|[[Y]]-[[Reise]]n<fp>}}
 
 # {{lb|de|slang}} the [[Bundeswehr]]
 
 ====Declension====
-{{de-ndecl|p}}
+{{de-ndecl|[[Y]]-[[Reise]]n<fp>}}
 -------- end text --------
 Page 64 Klöten: Found match for regex: =
 Page 64 Klöten: -------- begin text --------
@@ -1294,13 +1304,13 @@ Plural of {{bor|de|nds-de|Kloot}}, from {{der|de|gml|klôt}} from {{der|de|gem-p
 * {{audio|de|De-Klöten.ogg|Audio}}
 
 ===Noun===
-{{head|de|noun|g=p}}
+{{de-noun|fp}}
 
 # {{lb|de|colloquial|vulgar}} [[testicles]]
 #: {{syn|de|Eier|Hoden|Nüsse}}
 
 ====Declension====
-{{de-decl-noun-pl}}
+{{de-ndecl|fp}}
 
 ====Usage notes====
 * Rarely, a backformed singular ''die'' {{m|de|Klöte}} may be heard.
@@ -1309,7 +1319,7 @@ Page 65 Sozialabgaben: Found match for regex: =
 Page 65 Sozialabgaben: -------- begin text --------
 
 ===Etymology===
-From {{m|de|sozial}} and {{m|de|Abgabe|g=f}}
+From {{m|de|sozial}} and {{m|de|Abgabe|g=f}}.
 
 ===Pronunciation===
 * {{IPA|de|/zoˈt͡si̯aːlˌʔapɡaːbn̩/}}
@@ -1319,12 +1329,12 @@ From {{m|de|sozial}} and {{m|de|Abgabe|g=f}}
 * {{hyphenation|de|So|zi|al|ab|ga|ben}}
 
 ===Noun===
-{{head|de|noun|g=f-p|singular|Sozialabgabe}}
+{{de-noun|fp|sg=Sozialabgabe}}
 
 # [[social security]] [[contributions]], contributions to the social security ([[unemployment]] [[aid]] etc.)
 
 ====Declension====
-{{de-decl-noun-pl}}
+{{de-ndecl|fp}}
 -------- end text --------
 Page 66 Fisimatenten: Found match for regex: =
 Page 66 Fisimatenten: -------- begin text --------
@@ -1339,7 +1349,7 @@ From {{der|de|gmw-cfr||visimetent}} (“nonsense”, attested 1499 in Cologne; n
 * {{audio|de|De-Fisimatenten.ogg|Audio}}
 
 ===Noun===
-{{head|de|noun|plural only, diminutive|Fisimatentchen}}
+{{de-noun|p|dim=Fisimatentchen}}
 
 # {{lb|de|colloquial}} [[fuss]]; [[ado]]; useless or [[fretful]] behaviour, talk
 #: {{syn|de|Mätzchen|Sperenzchen}}
@@ -1347,7 +1357,7 @@ From {{der|de|gmw-cfr||visimetent}} (“nonsense”, attested 1499 in Cologne; n
 #* {{RQ:Mann Untertan|page=380|translation=“The First Lieutenant has certainly made a mistake with the house number” Diederich remarked gently; but it made no difference. “Rubbish. Let’s be clear. No '''idle chatter'''. That’s an order. Keep your trap shut and sell, otherwise God help you.”|passage=„Herr Premierleutnant haben sich gewiß in der Hausnummer geirrt“, bemerkte Diederich schonend; aber es half nichts. „Quatsch. Weiß Bescheid. Nur keine '''Fisimatenten'''. Höherer Befehl. Schnauze halten und verkaufen, sonst gnade Gott.“}}
 
 ====Declension====
-{{de-decl-noun-pl}}
+{{de-ndecl|p}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -1364,12 +1374,12 @@ Page 67 ABC-Waffen: -------- begin text --------
 * {{audio|de|De-ABC-Waffen.ogg|Audio}}
 
 ===Noun===
-{{head|de|noun|g=f-p|rare singular|ABC-Waffe}}
+{{de-noun|[[ABC]]-[[Waffe]]n<fp>|sg=ABC-Waffe[rare]}}
 
 # [[NBC]] weapons
 
 ====Declension====
-{{de-decl-noun-pl}}
+{{de-ndecl|[[ABC]]-[[Waffe]]n<fp>}}
 
 ====Derived terms====
 * {{l|de|ABC-Waffen-frei}}
@@ -1384,15 +1394,15 @@ Page 68 Fördergelder: Found match for regex: =
 Page 68 Fördergelder: -------- begin text --------
 
 ===Etymology===
-{{m|de|fördern}} + {{m|de|Geld}}
+From {{af|de|fördern|Geld}}.
 
 ===Noun===
-{{head|de|noun|g=n-p}}
+{{de-noun|np}}
 
-# {{lb|de|plurale tantum}} [[subsidies]], [[grant]] money
+# [[subsidies]], [[grant]] money
 
 ====Declension====
-{{de-decl-noun-pl}}
+{{de-ndecl|np}}
 
 ====Related terms====
 * {{l|de|Fördergeld}}
@@ -1404,13 +1414,13 @@ Page 69 Ardennen: -------- begin text --------
 * {{audio|de|De-Ardennen.ogg|Audio}}
 
 ===Proper noun===
-{{head|de|proper noun|g=p}}
+{{de-proper noun|fp}}
 
 # {{place|de|t1=Ardennes|<<forest>> and mountainous <<region>> in <<c/France>>, <<c/Belgium>>, <<c/Germany>> and <<c/Luxembourg>>}}
 # {{place|de|t1=Ardennes|department|r:suf/Grand Est|c/France}}
 
 ====Declension====
-{{de-decl-noun-pl}}
+{{de-ndecl|fp}}
 
 ====Derived terms====
 * {{l|de|Ardennenoffensive}}
@@ -1422,13 +1432,13 @@ Page 70 Paradieskörner: -------- begin text --------
 From {{m|de|Paradies||[[Paradise]]}} + {{m|de|Korn||[[kernel]], [[seed]], [[grain]]}}. Cf. {{cog|en|grains of paradise}} and {{cog|fr|graines de paradis}}.
 
 ===Noun===
-{{head|de|noun|g=n-p|singular|Paradieskorn}}
+{{de-noun|np|sg=Paradieskorn}}
 
 # [[grains of paradise]]
 #: {{syn|de|Malagettapfeffer|Guineapfeffer|Meleguetapfeffer}}
 
 ====Declension====
-{{de-decl-noun-pl}}
+{{de-ndecl|np}}
 -------- end text --------
 Page 71 Seevölker: Found match for regex: {
 Page 71 Seevölker: -------- begin text --------
@@ -1446,12 +1456,12 @@ Inflected forms.
 {{compound|de|See|Völker}}
 
 ====Noun====
-{{head|de|noun form|g=n-p}}
+{{de-noun|np}}
 
 # [[Sea Peoples]]
 
 =====Declension=====
-{{de-decl-noun-pl}}
+{{de-ndecl|np}}
 -------- end text --------
 Page 72 Kavaliersschmerzen: Found match for regex: =
 Page 72 Kavaliersschmerzen: -------- begin text --------
@@ -1460,12 +1470,12 @@ Page 72 Kavaliersschmerzen: -------- begin text --------
 {{compound|de|Kavalier|Schmerzen}}
 
 ===Noun===
-{{head|de|noun|g=m-p}}
+{{de-noun|mp}}
 
 # {{lb|de|colloquial}} [[blue balls]]
 
 ====Declension====
-{{de-decl-noun-pl}}
+{{de-ndecl|mp}}
 -------- end text --------
 Page 73 Basics: Found match for regex: =
 Page 73 Basics: -------- begin text --------
@@ -1479,12 +1489,12 @@ From {{bor|de|en|basics}}.
 * {{audio|de|De-Basics.ogg|Audio}}
 
 ===Noun===
-{{head|de|noun|g=p}}
+{{de-noun|p}}
 
 # [[basics]]
 
 ====Declension====
-{{de-decl-noun-pl}}
+{{de-ndecl|p}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -1500,13 +1510,13 @@ Page 74 Nullerjahre: -------- begin text --------
 * {{audio|de|De-Nullerjahre.ogg}}
 
 ===Noun===
-{{head|de|noun|g=n-p}}
+{{de-noun|np}}
 
 # [[2000s]], [[noughties]]
 #* {{quote-web|de|title=Taugt Realität für gutes Kino?|work=Die Zeit|author=Oliver Kaever|url=https://www.zeit.de/kultur/film/2016-05/tomorrow-dokumentarfilm-nachhaltigkeit|date=2016-06-06|passage=Das ist auch der österreichischen Schule zu verdanken, die seit Mitte der '''Nullerjahre''' erstaunliche Erfolge bei Publikum und Kritik feierte.}}
 
 ====Declension====
-{{de-decl-noun-pl}}
+{{de-ndecl|np}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -1515,15 +1525,16 @@ Page 75 Tortellini: Found match for regex: =
 Page 75 Tortellini: -------- begin text --------
 
 ===Etymology===
-From {{bor|de|it|tortellini}}
+{{bor+|de|it|tortellini}}.
 
 ===Noun===
-{{head|de|noun|g=p|singular|[[Tortellino]] {{g|m}}|or|[[Tortellini]] {{g|f}}}}
+{{de-noun|mp|sg=Tortellino}} ''or''<br />
+{{de-noun|fp|sg=Tortellini}}
 
 # [[tortellini]]
 
 ====Declension====
-{{de-decl-noun-pl}}
+{{de-ndecl|mp:fp}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -1539,7 +1550,7 @@ Page 76 Kaldaunen: -------- begin text --------
 * {{hyph|de|Kal|dau|nen}}
 
 ===Noun===
-{{head|de|noun|g=p}}
+{{de-noun|p}}
 
 # {{lb|de|uncommon|chiefly|Northern Germany}} [[tripe]] {{gloss|of an animal, for food}}
 #: {{syn|de|Kutteln}}
@@ -1547,7 +1558,7 @@ Page 76 Kaldaunen: -------- begin text --------
 #: {{syn|de|Eingeweide}}
 
 ====Declension====
-{{de-decl-noun-pl}}
+{{de-ndecl|p}}
 
 ===Further reading===
 * {{pedialite|lang=de}}
@@ -1557,15 +1568,17 @@ Page 77 Zerealien: Found match for regex: =
 Page 77 Zerealien: -------- begin text --------
 
 ===Noun===
-{{head|de|noun form}}
+{{head|de|noun form|g=f-p}}
 
 # {{plural of|de|Zerealie}}
+
+===Noun===
+{{de-noun|fp}}
+
 # [[breakfast cereal]]
 
 ====Declension====
-{{de-decl-noun-pl}}
-
-{{catlangname|de|pluralia tantum}}
+{{de-ndecl|fp}}
 -------- end text --------
 Elapsed time: 0 mins 10.15 secs
 Ending at Sun Feb 20 20:10:46 2022
