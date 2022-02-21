@@ -1,4 +1,4 @@
-Beginning at Sat Feb 19 17:43:47 2022
+Beginning at Sun Feb 20 20:10:35 2022
 Page 7 AGB: Found match for regex: =
 Page 7 AGB: -------- begin text --------
 
@@ -104,12 +104,9 @@ Page 10 Labia: Found match for regex: =
 Page 10 Labia: -------- begin text --------
 
 ===Noun===
-{{head|de|noun|g=p}}
+{{head|de|noun form|g=p}}
 
-# [[labia]]
-
-====Declension====
-{{de-decl-noun-pl}}
+# {{plural of|de|Labium}}: [[labia]]
 
 ===Further reading===
 * {{R:Duden}}
@@ -277,14 +274,16 @@ Page 15 Trümmer: -------- begin text --------
 
 ===Etymology===
 Plural of {{m|de|Trumm}} ({{inh|de|gmh|drum}}, {{inh|de|goh|trum}}, {{der|de|gem-pro|*þrum-}}), which has acquired a separate meaning. The Middle High German plural was ''drum'' or ''drumer'', Early Modern High German ''trumer, trumeren, trummer, trimmer, trümmern''.
-The new singular ''Trümmer'' (either feminine, masculine or neuter) arises in the 18th century ([[:w:Friedrich Gottlieb Klopstock|Klopstock]]). The singular remained in common use until the end of the 19th century. In the 20th century, use as ''plurale tantum'' became prevalent, and use as a singular is now dated.
+The new singular ''Trümmer'' (predominantly feminine, occasionally masculine or neuter) arises in the 18th century ([[:w:Friedrich Gottlieb Klopstock|Klopstock]]). The singular remained in common use until the end of the 19th century. In the 20th century, use as ''plurale tantum'' became prevalent, and use as a singular is now dated.
 
 ===Pronunciation===
 * {{IPA|de|[ˈtʁʏmɐ]}}
 * {{audio|de|De-Trümmer.ogg|Audio}}
 
 ===Noun===
-{{de-noun|p|old=1}}; {{de-noun|m|Trümmers|Trümmer}}; {{de-noun|f|Trümmer|Trümmern}}
+{{de-noun|np}} ''or''<br />
+{{de-noun|f[archaic]}} ''or''<br />
+{{de-noun|m[archaic, rare]}}
 
 # [[ruins]], [[debris]], [[wreckage]], [[remains]], [[fragments]]
 #* '''1780''', Klopstock, ''Messias'' 172:
@@ -296,10 +295,9 @@ The new singular ''Trümmer'' (either feminine, masculine or neuter) arises in t
 #*: {{quote|de|Keine Stunde hielt es an, bis die Mühle borst in '''Trümmer'''.|before the end of an hour, the mill collapsed in '''ruins'''}}
 
 ====Declension====
-{{de-decl-noun-pl}}
-; Dated declension
-{{de-decl-noun-m|s|}}
-{{de-decl-noun-f|n}}
+{{de-noun|np}}
+{{de-noun|f[archaic]}}
+{{de-noun|m[archaic, rare]}}
 
 ====Derived terms====
 * {{l|de|Trümmerfrau}}
@@ -1278,12 +1276,12 @@ Page 63 Y-Reisen: -------- begin text --------
 From the fact German army vehicles have a Y as the sole letter of the license plate code.
 
 ===Noun===
-{{de-noun|p|head=[[Y]]-[[Reisen]]|old=1}}
+{{de-noun|p}}
 
-# {{lb|de|slang}} The [[Bundeswehr]].
+# {{lb|de|slang}} the [[Bundeswehr]]
 
 ====Declension====
-{{de-decl-noun-pl}}
+{{de-ndecl|p}}
 -------- end text --------
 Page 64 Klöten: Found match for regex: =
 Page 64 Klöten: -------- begin text --------
@@ -1569,5 +1567,5 @@ Page 77 Zerealien: -------- begin text --------
 
 {{catlangname|de|pluralia tantum}}
 -------- end text --------
-Elapsed time: 0 mins 22.53 secs
-Ending at Sat Feb 19 17:44:10 2022
+Elapsed time: 0 mins 10.15 secs
+Ending at Sun Feb 20 20:10:46 2022
