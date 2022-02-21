@@ -665,6 +665,7 @@ function export.do_generate_forms(parent_args, pos, from_headword, def)
 		params["id"] = {}
 		params["sort"] = {}
 		params["splithyph"] = {type = "boolean"}
+		params["new"] = {type = "boolean"}
 	end
 
 	local args = require("Module:parameters").process(parent_args, params)
@@ -709,6 +710,7 @@ function export.do_generate_forms(parent_args, pos, from_headword, def)
 	}
 	local alternant_multiword_spec = iut.parse_inflected_text(arg1, parse_props)
 	alternant_multiword_spec.pos = pos or "adjectives"
+    alternant_multiword_spec.args = args
 	alternant_multiword_spec.forms = {}
 	alternant_multiword_spec.props = {}
 	detect_all_indicator_specs(alternant_multiword_spec)
