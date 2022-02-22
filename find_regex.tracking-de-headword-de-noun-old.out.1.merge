@@ -10882,7 +10882,7 @@ From {{m|de|Schnitz||cut-off piece}}. Pertaining to {{m|de|schneiden||to cut}}. 
 * {{audio|de|De-Schnitzel.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m|g2=n|Schnitzels|Schnitzel}}
+{{de-noun|m:n[Austria, southern Germany]}}
 
 # [[scrap]] {{gloss|small piece of paper, etc.}}
 #: {{syn|de|Schnipsel<q:more common>}}
@@ -10891,7 +10891,7 @@ From {{m|de|Schnitz||cut-off piece}}. Pertaining to {{m|de|schneiden||to cut}}. 
 * The neuter gender is chiefly Austro-Bavarian.
 
 ====Declension====
-{{de-decl-noun-m|s|}}
+{{de-ndecl|m:n[Austria, southern Germany]}}
 
 ====Derived terms====
 * {{l|de|schnitzelartig}}
@@ -13724,12 +13724,12 @@ Page 355 Kanarische Inseln: -------- begin text --------
 * {{audio|de|De-Kanarische Inseln.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|[[kanarisch|Kanarische]]<+> [[Insel]]n<p.article>}}
+{{de-proper noun|[[kanarisch|Kanarische]]<+> [[Insel]]n<fp.article>}}
 
 # {{place|de|archipelago/and/autonomous community|c/Spain|t=Canary Islands}}
 
 ====Declension====
-{{de-ndecl|[[kanarisch|Kanarische]]<+> [[Insel]]n<p.article>}}
+{{de-ndecl|[[kanarisch|Kanarische]]<+> [[Insel]]n<fp.article>}}
 -------- end text --------
 Page 356 Kommentar: Found match for regex:  
 Page 356 Kommentar: -------- begin text --------
@@ -18810,12 +18810,12 @@ Page 534 Marshallinseln: -------- begin text --------
 * {{audio|de|De-Marshallinseln.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|p.article}}
+{{de-proper noun|fp.article}}
 
 # {{place|de|country/and/archipelago|r/Micronesia|t1=Marshall Islands}}
 
 ====Declension====
-{{de-ndecl|p.article}}
+{{de-ndecl|fp.article}}
 
 ====Related terms====
 * {{l|de|Marshallesisch}}
@@ -20769,16 +20769,13 @@ From {{bor|de|la|icterus}}, from {{der|de|grc|ἴκτερος||jaundice}}.
 * {{hyphenation|de|Ik|te|rus}}
 
 ===Noun===
-{{de-noun|m|Ikterus|Ikteri}}
+{{de-noun|m,-.sg}}
 
 # [[jaundice]] {{gloss|morbid condition}}
 #: {{syn|de|Gelbsucht}}
 
 ====Declension====
-Most often without a plural:
-{{de-decl-noun-m|n=sg}}
-But sometimes the plural is seen:
-{{de-decl-noun-m||n|pl=Ikteri}}
+{{de-ndecl|m,-.sg}}
 
 ====Derived terms====
 * {{l|de|Kernikterus}}
@@ -20802,12 +20799,12 @@ Page 603 Iraker: -------- begin text --------
 * {{audio|de|De-Iraker.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m|Irakers|Iraker}}
+{{de-noun|m|f=in}}
 
-# [[Iraqi]] ([male or female] person from Iraq)
+# [[Iraqi]] {{q|male or of unspecified gender}}
 
 ====Declension====
-{{de-decl-noun-m|en}}
+{{de-ndecl|m}}
 
 ====Derived terms====
 * {{l|de|Irakerin}}
@@ -20856,22 +20853,22 @@ Substantivization of {{m|de|geliebt||loved, beloved}}, the past participle of {{
 Page 605 Dekan: Found match for regex: =
 Page 605 Dekan: -------- begin text --------
 
-===Etymology===
-Borrowed from {{bor|de|LL.|decānus}}.
-
 ===Pronunciation===
 * {{audio|de|De-Dekan.ogg|Audio}}
 * {{rhymes|de|aːn|s=2}}
 
-===Noun===
-{{de-noun|m|Dekans|Dekane|f=Dekanin}}
+===Etymology 1===
+Borrowed from {{bor|de|LL.|decānus}}.
+
+====Noun====
+{{de-noun|m|f=in}}
 
 # [[dean]] {{q|male or of unspecified gender}} (senior official in college or university)
 
-====Declension====
-{{de-decl-noun-m|s|e}}
+=====Declension=====
+{{de-ndecl|m}}
 
-====Derived terms====
+=====Derived terms=====
 {{der3|de
 |Dekanat
 |Dekan der Fakultät
@@ -20886,16 +20883,18 @@ Borrowed from {{bor|de|LL.|decānus}}.
 |Studiendekan
 }}
 
-===Noun===
-{{de-noun|n||Dekane}}
+===Etymology 2===
+
+====Noun====
+{{de-noun|n}}
 
 # {{lb|de|organic compound}} [[decane]] {{q|alternative spelling of}} {{l|de|Decan|g=n}}
 
-====Declension====
-{{de-decl-noun-n||e}}
+=====Declension=====
+{{de-ndecl|n}}
 
-===See also===
-* {{lb|de|astrology}} {{l|de|Dekan|g=n||[[decan]]}}
+====See also====
+* {{l|de|Dekan|g=n||[[decan]] {{q|astrology}}}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -20912,7 +20911,7 @@ Page 606 Vergnügungspark: -------- begin text --------
 * {{hyphenation|de|Ver|gnü|gungs|park}}
 
 ===Noun===
-{{de-noun|m|Vergnügungsparkes|gen2=Vergnügungsparks|Vergnügungsparks|pl2=Vergnügungsparke}}
+{{de-noun|m,s:es,s:e[rare]:^e[usually in Switzerland]}}
 
 # [[amusement park]]
 #: {{syn|de|Freizeitpark}}
@@ -20951,12 +20950,12 @@ Page 608 Olympische Winterspiele: -------- begin text --------
 * {{audio|de|De-Olympische Winterspiele.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|[[olympisch|Olympische]]<+> [[Winterspiele]]<p.article>}}
+{{de-proper noun|[[olympisch|Olympische]]<+> [[Winterspiele]]<np.article>}}
 
 # [[Olympic Winter Games]], [[Winter Olympics]]
 
 ====Declension====
-{{de-ndecl|[[olympisch|Olympische]]<+> [[Winterspiele]]<p.article>}}
+{{de-ndecl|[[olympisch|Olympische]]<+> [[Winterspiele]]<np.article>}}
 
 {{C|de|Winter sports}}
 -------- end text --------
@@ -21084,12 +21083,12 @@ From {{compound|de|Pfingsten|Montag}}.
 * {{audio|de|De-Pfingstmontag.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m|Pfingstmontags|gen2=Pfingstmontages|Pfingstmontage}}
+{{de-noun|m,s:es}}
 
 # [[Whit Monday]], [[Pentecost Monday]]
 
 ====Declension====
-{{de-decl-noun-n|(e)s|e}}
+{{de-ndecl|m,s:es}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -21104,43 +21103,52 @@ Page 614 Erdgeschoß: -------- begin text --------
 ** {{audio|de|De-at-Erdgeschoß.ogg|Audio (Austria)}}
 
 ===Noun===
-{{de-noun|n|Erdgeschoßes|Erdgeschoße}}
+{{de-noun|n}}
 
-# {{lb|de|alternative|or|Austria}} {{alt sp|de|Erdgeschoss||[[ground floor]]}}
+# {{lb|de|Austria}} {{alt sp|de|Erdgeschoss||[[ground floor]]}}
 
 ====Usage notes====
-{{U:de:deprecated spelling|1996}} However, it remains in use in Austria because the word is pronounced with a long vowel in Austrian German (as opposed to Standard German, where it is pronounced with a short vowel).
+* With the given declension, the word remains in use in Austria because the word is pronounced with a long vowel in Austrian German (as opposed to Standard German, where it is pronounced with a short vowel).
 
 ====Declension====
-{{de-decl-noun-n|es|e}}
-;Germany, Switzerland, deprecated
-{{de-decl-noun-m|es|e|ss=1}}
+{{de-ndecl|n}}
+
+===Noun===
+{{de-noun|n.ss}}
+
+# {{de-superseded spelling of|Erdgeschoss|used=pre-1996}}
+
+====Usage notes====
+{{U:de:deprecated spelling|1996}} However, it remains in use in Austria; see above. The pre-1996 inflected forms (spelled with ''ss'') differ from the modern Austrian inflected forms (spelled with ''ß'').
+
+====Declension====
+{{de-ndecl|n.ss}}
 -------- end text --------
 Page 615 Wiener Schnitzel: Found match for regex: =
 Page 615 Wiener Schnitzel: -------- begin text --------
+{{wikipedia|lang=de}}
 
 ===Etymology===
-{{m|de|Wiener||Viennese}} {{m|de|Schnitzel||schnitzel}}
-
-{{wikipedia|lang=de}}
+{{af|de|Wiener|t1=Viennese|Schnitzel|t2=schnitzel}}
 
 ===Pronunciation===
 * {{audio|de|De-Wiener Schnitzel.ogg|Audio}}
 
 ===Noun===
-{{de-noun|head=[[Wiener]] [[Schnitzel]]|n||Wiener Schnitzel}}
+{{de-noun|m:n[Austria, southern Germany]}}
 
 # [[Wiener schnitzel]], veal [[schnitzel]]
 
 ====Declension====
-{{de-decl-noun-n|s|}}
+{{de-ndecl|m:n[Austria, southern Germany]}}
 
 ====Usage notes====
 * Officially, a ''Wiener Schnitzel'' is made with [[veal]], while a [[schnitzel]] of this style made from a different meat is a ''Schnitzel Wiener [[Art]]'' or is qualified as e.g. a ''Wiener Schnitzel vom [[Schwein]]''.
 
 ====Related terms====
-*{{l|de|Paprikaschnitzel}}
-*{{l|de|Jägerschnitzel}}
+* {{l|de|Paprikaschnitzel}}
+* {{l|de|Jägerschnitzel}}
+
 {{C|de|Meats}}
 -------- end text --------
 Page 616 Oppositionelle: Found match for regex: =
@@ -21263,7 +21271,7 @@ Borrowed from {{bor|de|fr|passe-partout}}.
 * {{rhymes|de|uː|s=3}}
 
 ===Noun===
-{{de-noun|n||Passepartouts|g2=m}}
+{{de-noun|n:m,s,s}}
 
 # [[matte]] {{gloss|thick paper or paperboard border used to inset and center the contents of a frame}}
 # {{lb|de|chiefly|Switzerland}} [[master key]] (a key that opens a set of several locks)
@@ -21272,7 +21280,7 @@ Borrowed from {{bor|de|fr|passe-partout}}.
 #: {{syn|de|Dauerkarte}}
 
 ====Declension====
-{{de-decl-noun-n|s|s}}
+{{de-ndecl|n:m,s,s}}
 
 ===Further reading===
 * {{R:DWDS}}
@@ -21289,13 +21297,13 @@ Page 622 Balearische Inseln: -------- begin text --------
 * {{audio|de|De-Balearische Inseln.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|[[balearisch|Balearische]]<+> [[Insel]]n<p.article>}}
+{{de-proper noun|[[balearisch|Balearische]]<+> [[Insel]]n<fp.article>}}
 
 # {{place|de|archipelago/autonomous community/and/province|c/Spain|t=Balearic Islands}}
 #: {{syn|de|Balearen}}
 
 ====Declension====
-{{de-ndecl|[[balearisch|Balearische]]<+> [[Insel]]n<p.article>}}
+{{de-ndecl|[[balearisch|Balearische]]<+> [[Insel]]n<fp.article>}}
 -------- end text --------
 Page 623 Werktag: Found match for regex: =
 Page 623 Werktag: -------- begin text --------
@@ -21304,12 +21312,12 @@ Page 623 Werktag: -------- begin text --------
 * {{audio|de|De-Werktag.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m|Werktages|Werktage}}
+{{de-noun|m,es:s}}
 
 # [[working day]] (day of a week in which work is done; usually Monday to Saturday)
 
 ====Declension====
-{{de-decl-noun-m|(e)s|e}}
+{{de-ndecl|m,es:s}}
 
 ====Related terms====
 * {{l|de|werktags}}
@@ -21339,9 +21347,12 @@ Page 625 Monophthongisierung: Found match for regex: =
 Page 625 Monophthongisierung: -------- begin text --------
 
 ===Noun===
-{{de-noun|f|Monophthongisierungen}}
+{{de-noun|f}}
 
 # [[monophthongization]]
+
+====Declension====
+{{de-ndecl|f}}
 -------- end text --------
 Page 626 Hinterkopf: Found match for regex: =
 Page 626 Hinterkopf: -------- begin text --------
@@ -21354,12 +21365,12 @@ Page 626 Hinterkopf: -------- begin text --------
 * {{audio|de|De-Hinterkopf.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m||Hinterköpfe}}
+{{de-noun|m,es:s,^e}}
 
 # [[occiput]]
 
 ====Declension====
-{{de-decl-noun-m|(e)s|pl=Hinterköpfe}}
+{{de-ndecl|m,es:s,^e}}
 
 ====Related terms====
 * {{l|de|Hinterstübchen}}
@@ -21421,18 +21432,18 @@ Derived from {{suffix|de|Mutter|-i|t1=mother}}.
 -------- end text --------
 Page 628 Wiederkäuer: Found match for regex: =
 Page 628 Wiederkäuer: -------- begin text --------
+{{wikipedia|lang=de}}
 
 ===Pronunciation===
 * {{audio|de|De-Wiederkäuer.ogg|Audio}}
 
 ===Noun===
-{{wikipedia|lang=de}}
-{{de-noun|m|Wiederkäuers|Wiederkäuer}}
+{{de-noun|m}}
 
 # [[ruminant]] (artiodactyl ungulate mammal which chews cud)
 
 ====Declension====
-{{de-decl-noun-n|s}}
+{{de-ndecl|m}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -21445,12 +21456,12 @@ Page 629 Tupel: -------- begin text --------
 * {{audio|de|De-Tupel.ogg|Audio}}
 
 ===Noun===
-{{de-noun|n||Tupel}}
+{{de-noun|n}}
 
 # {{lb|de|mathematics|set theory}} [[tuple]]
 
 ====Declension====
-{{de-decl-noun-n|s|s}}
+{{de-ndecl|n}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -21469,12 +21480,12 @@ Page 630 Homogenität: -------- begin text --------
 * {{hyphenation|de|Ho|mo|ge|ni|tät}}
 
 ===Noun===
-{{de-noun|f,en}}
+{{de-noun|f}}
 
 # [[homogeneity]] (quality of being homogeneous)
 
 ====Declension====
-{{de-ndecl|f,en}}
+{{de-ndecl|f}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -21511,13 +21522,13 @@ Page 632 Piedestal: -------- begin text --------
 * {{rhymes|de|aːl|s=3}}
 
 ===Noun===
-{{de-noun|n||gen2=Piedestals|Piedestale}}
+{{de-noun|n}}
 
 # [[pedestal]]
 # circus [[platform]]
 
 ====Declension====
-{{de-decl-noun-n|(e)s|e}}
+{{de-ndecl|n}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -21584,7 +21595,7 @@ From {{inh|de|gmh|æ}}.
 ===Letter===
 {{de-noun|n,-:s,-:s}}
 
-# {{ngd|A letter used in German [[spelling]]: an [[umlaut]]ed version of [[A#German|A]].}}
+# {{ngd|a letter used in German [[spelling]]: an [[umlaut]]ed version of [[A#German|A]]}}
 
 ====Declension====
 {{de-ndecl|n,-:s,-:s}}
@@ -21607,12 +21618,12 @@ Page 636 Nachtdienst: -------- begin text --------
 * {{audio|de|De-Nachtdienst.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m|Nachtdiensts|gen2=Nachtdienstes|Nachtdienste}}
+{{de-noun|m,s:es}}
 
 # [[night]] [[service]]
 
 ====Declension====
-{{de-decl-noun-n|(e)s|e}}
+{{de-ndecl|m,s:es}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -21639,7 +21650,7 @@ From {{af|de|Nachricht|-en-|Dienst|t1=message|t3=service}}.
 * {{audio|de|De-Nachrichtendienst.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m|Nachrichtendienstes|Nachrichtendienste}}
+{{de-noun|m,s:es}}
 
 # [[intelligence agency]] (a department, agency or unit designed to gather such information)
 #: {{syn|de|Geheimdienst}}
@@ -21648,7 +21659,7 @@ From {{af|de|Nachricht|-en-|Dienst|t1=message|t3=service}}.
 #: {{syn|de|Nachrichtenagentur|Presseagentur}}
 
 ====Declension====
-{{de-decl-noun-n|(e)s|e}}
+{{de-ndecl|m,s:es}}
 
 ====Related terms====
 {{col4|de
@@ -21741,7 +21752,7 @@ Page 641 eierlegende Wollmilchsau: -------- begin text --------
 ===Noun===
 {{de-noun|[[eierlegend]]e<+> [[Wollmilchsau]]<f,^e>}}
 
-# {{lb|de|colloquial|often|_|disapprovingly}} An [[all-in-one]] [[device]] or [[person]] which has (or claims to have) only positive attributes and which can (or attempts to) do the work of several specialized tools.
+# {{lb|de|colloquial|often|pejorative}} an [[all-in-one]] [[device]] or [[person]] which has (or claims to have) only positive attributes and which can (or attempts to) do the work of several specialized tools
 #* '''2002''', Dietmar Prudix, Oliver Prüfer, ''Die Eierlegende Wollmilchsau'', page 7:
 #*: {{quote|de|Die '''eierlegende Wollmilchsau''' (der Bewerber, der alles kann und keine Schwächen hat) lebt - in den Köpfen von Job-Entscheidern und in den Köpfen von Arbeitsplatzsuchenden.|The '''egg-laying wooly milk-pig''' (the applicant who can do everything and has no weaknesses) exists - in the heads of hiring managers and in the heads of those seeking jobs.}}
 
@@ -21846,13 +21857,13 @@ Page 647 Wettlauf: -------- begin text --------
 * {{audio|de|De-Wettlauf.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m|Wettlaufs|gen2=Wettlaufes|Wettläufe}}
+{{de-noun|m,s:es,^e}}
 
 # [[footrace]]
 #: {{hyper|de|Wettrennen}}
 
 ====Declension====
-{{de-decl-noun-m|(e)s|pl=Läufe}}
+{{de-ndecl|m,s:es,^e}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -21902,12 +21913,14 @@ Page 649 Hufe: -------- begin text --------
 # {{inflection of|de|Huf||nom//acc//gen|p}}
 
 ===Noun===
-{{de-noun|f|Hufen|Hufen}}
+{{wikipedia|lang=de}}
+{{de-noun|f}}
 
 # land unit approximately equal to a [[virgate]]
 
-===References===
-[https://de.wikipedia.org/wiki/Hufe de.Wikipedia]
+====Declension====
+{{de-ndecl|f}}
+
 {{C|de|Units of measure}}
 
 ----
@@ -21938,12 +21951,12 @@ Page 651 Octan: -------- begin text --------
 * {{rhymes|de|aːn|s=2}}
 
 ===Noun===
-{{de-noun|n||Octane}}
+{{de-noun|n}}
 
 # {{lb|de|organic compound}} [[octane]]
 
 ====Declension====
-{{de-decl-noun-n||e}}
+{{de-ndecl|n}}
 -------- end text --------
 Page 652 Frühstücksflocken: Found match for regex: =
 Page 652 Frühstücksflocken: -------- begin text --------
@@ -21983,7 +21996,7 @@ Page 654 Knackarsch: -------- begin text --------
 * {{audio|de|De-Knackarsch.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m|Knackarsches|Knackärsche}}
+{{de-noun|m,es:s,^e}}
 
 # {{lb|de|colloquial}} a [[firm]], [[sexy]] [[ass]]
 #* '''2004''', Hildegunde Artmeier, ''Drachenfrau'', page 117
@@ -21994,7 +22007,7 @@ Page 654 Knackarsch: -------- begin text --------
 #*: {{quote|de|Er trug gerne enge Jeans, weil er wusste, dass er darin einen '''Knackarsch''' hatte, auf den die Mädchen abfuhren. Obwohl es ihm eigentlich egal war, ob die Mädchen nun auf ihn abfuhren oder nicht.|He liked to wear tight jeans because he knew he had a nice firm ass that the girls went for. Although he didn't really care whether the girls went for him or not.}}
 
 ====Declension====
-{{de-decl-noun-m|(e)s|pl=Knackärsche}}
+{{de-ndecl|m,es:s,^e}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -22163,12 +22176,12 @@ From {{bor|de|ru|шашлы́к}}, from {{der|de|trk}}; compare {{cog|tr|şişli
 * {{hyphenation|de|Schasch|lik}}
 
 ===Noun===
-{{de-noun|m|Schaschliks|Schaschliks|g2=n}}
+{{de-noun|m:n,s,s}}
 
 # [[shashlik]]
 
 ====Declension====
-{{de-decl-noun-m|s|s}}
+{{de-ndecl|m:n,s,s}}
 
 ===Further reading===
 * {{pedialite|lang=de}}
@@ -22315,12 +22328,12 @@ Page 670 Dezibel: -------- begin text --------
 * {{audio|de|De-Dezibel.ogg|Audio}}
 
 ===Noun===
-{{de-noun|n||Dezibel}}
+{{de-noun|n.nodatpln}}<!-- no dative plural in -n per Duden -->
 
 # [[decibel]] (a common measure of sound intensity)
 
 ====Declension====
-{{de-decl-noun-n|s||dp=Dezibel}}
+{{de-ndecl|n.nodatpln}}<!-- no dative plural in -n per Duden -->
 
 ===Further reading===
 * {{R:Duden}}
@@ -22411,7 +22424,7 @@ Page 674 Paragraphenreiter: -------- begin text --------
 * {{audio|de|De-Paragraphenreiter.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m|Paragraphenreiter|Paragraphenreiter}}
+{{de-noun|m}}
 
 # {{lb|de|chiefly|derogatory}} [[legalist]], [[pedant]], [[bureaucrat]]
 #: {{syn|de|Paragraphenhengst}}
@@ -22421,7 +22434,7 @@ Page 674 Paragraphenreiter: -------- begin text --------
 #* {{quote-web|de|url=https://www.zeit.de/1985/22/im-deutschen-dschungel|date=1985-05-24|title=Im deutschen Dschungel|author=Christiana Haack|work=Die Zeit|passage=Die Idee, die Zulassungsbestimmungen für ehemals Privatversicherte in diesem Fall ein wenig locker und wohlwollend zu interpretieren, kann nur einem völlig unbürokratischen Gehirn entspringen. Für echte '''Paragraphenreiter''' ist es selbstverständlich, staatliche Versicherungen im Notfall als private Träger zu klassifizieren.}}
 
 ====Declension====
-{{de-decl-noun-m|s}}
+{{de-ndecl|m}}
 
 ====See also====
 * {{l|de|Amtsschimmel}}
@@ -22588,12 +22601,12 @@ Page 680 Sternenmeer: -------- begin text --------
 * {{audio|de|De-Sternenmeer.ogg|Audio}}
 
 ===Noun===
-{{de-noun|n|Sternenmeers|-}}
+{{de-noun|n,s:es.sg.article}}
 
-# {{lb|de|poetic}} the [[starry]] [[night]] [[sky]].
+# {{lb|de|poetic}} the [[starry]] [[night]] [[sky]]
 
 ====Declension====
-{{de-decl-noun-n|(e)s|pl=-}}
+{{de-ndecl|n,s:es.sg.article}}
 
 ====Related terms====
 * {{l|de|Sternenglanz|g=m}}, {{l|de|Sternenschimmer|g=m}}
@@ -22611,12 +22624,12 @@ From {{affix|de|Hand|gloss1=hand|Schlag|gloss2=blow, hit}}.
 * {{hyph|de|Hand|schlag}}
 
 ===Noun===
-{{de-noun|m||Handschläge}}
+{{de-noun|m,es:s,^e}}
 
 # [[handshake]]
 
 ====Declension====
-{{de-decl-noun-m|(e)s|pl=Handschläge}}
+{{de-ndecl|m,es:s,^e}}
 
 ===Further reading===
 * {{R:UniLeipzig}}
@@ -22636,16 +22649,12 @@ From {{der|de|la|pontificātus}}.
 * {{rhymes|de|aːt|s=4}}
 
 ===Noun===
-{{de-noun|m|g2=n||Pontifikate}}
+{{de-noun|n:m}}
 
 # [[pontificate]] (state of a pontifex)
 
 ====Declension====
-; Masculine:
-{{de-decl-noun-m|s|e}}
-
-; Neuter:
-{{de-decl-noun-n|s|e}}
+{{de-ndecl|n:m}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -22660,12 +22669,14 @@ Borrowed from {{bor|de|fr|bain-marie}}.
 * {{IPA|de|/bɛ̃maˈʁiː/}}
 
 ===Noun===
-{{de-noun|n||Bains-Marie}}
+{{de-noun|n,-:s,Bains-Marie.nodatpln|nolinkhead=1}} ''or''<br />
+{{de-noun|f,s,Bains-Marie.nodatpln|nolinkhead=1}}
 
 # [[bain-marie]] {{gloss|pan containing hot water}}
 
 ====Declension====
-{{de-decl-noun-n|s|<!--|n-->|pl=Bains-Marie|dp=Bains-Marie}}<!-- for some reason 3=n isn't working -->
+{{de-ndecl|n,-:s,Bains-Marie.nodatpln}}
+{{de-ndecl|f,s,Bains-Marie.nodatpln}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -22711,16 +22722,12 @@ Formed from {{m|de|ob||on account of, pertaining to}} + {{m|de|erst||first, fore
 * {{audio|de|De-Oberst.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m|Obersten|gen2=Obersts|Obersten|pl2=Oberste}}
+{{de-noun|((<m>,<m.weak>))}}
 
 # [[colonel]]
 
 ====Declension====
-: Strong declension
-{{de-decl-noun-m|s|e}}
-
-: Weak declension
-{{de-decl-noun-m|en|en}}
+{{de-ndecl|((<m>,<m.weak>))}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -22743,12 +22750,12 @@ Page 686 Hundstage: -------- begin text --------
 * {{audio|de|De-Hundstage.ogg|Audio}}
 
 ===Noun===
-{{de-noun|p|old=1}}
+{{de-noun|mp}}
 
 # [[dog days]]
 
 ====Declension====
-{{de-decl-noun-m|n=pl}}
+{{de-ndecl|mp}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -22760,19 +22767,16 @@ Page 687 Obazda: -------- begin text --------
 {{wikipedia|lang=de}}
 
 ===Etymology===
-From {{der|de|bar|Obaatzda}}.
+{{bor+|de|bar|Obaatzda}}.
 
 ===Noun===
-{{de-noun|m|Obazden|Obazden}}
+{{de-noun|m,Obazden,Obazden.weak.dat:Obazden.acc:Obazden}}
 
 # [[Obatzda]], a [[Bavaria]]n [[cheese]] [[delicacy]]
 #: {{syn|de|Obatzda|Obatzter}}
 
 ====Declension====
-{{de-decl-noun-m|gs=Obazden|as=Obazden|ds=Obazden|pl=Obazden}}
-
-====Synonyms====
-* {{l|de|Obaatzda}} (Bavarian)
+{{de-ndecl|m,Obazden,Obazden.weak.dat:Obazden.acc:Obazden}}
 
 {{C|de|Cheeses}}
 -------- end text --------
@@ -22808,14 +22812,14 @@ Page 689 Weltfrieden: -------- begin text --------
 * {{audio|de|De-Weltfrieden.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m|Weltfriedens|-}}
+{{de-noun|m.sg}}
 
 # [[world peace]], [[universal]] [[peace]]
 #* '''1990''', ''[[s:de:Zwei-plus-Vier-Vertrag|Zwei-plus-Vier-Vertrag]]'', in: [[w:de:Bundesgesetzblatt (Deutschland)|Bundesgesetzblatt]] 1990, part 2, page 1318:
 #*: {{quote|de|entschlossen, in Übereinstimmung mit ihren Verpflichtungen aus der Charta der Vereinten Nationen freundschaftliche, auf der Achtung vor dem Grundsatz der Gleichberechtigung und Selbstbestimmung der Völker beruhende Beziehungen zwischen den Nationen zu entwickeln und andere geeignete Maßnahmen zur Festigung des '''Weltfriedens''' zu treffen, [...]|Resolved, in accordance with their obligations under the Charter of the United Nations to develop friendly relations among nations based on respect for the principle of equal rights and self-determination of peoples, and to take other appropriate measures to strengthen universal peace; [...]}}
 
 ====Declension====
-{{de-decl-noun-m|s}}
+{{de-ndecl|m.sg}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -22831,7 +22835,7 @@ Page 690 Holzscheit: -------- begin text --------
 * {{audio|de|De-Holzscheit.ogg|Audio}}
 
 ===Noun===
-{{de-noun|n|g2=m|Holzscheits|gen2=Holzscheites|Holzscheite|pl2=Holzscheiter}}
+{{de-noun|n[originally]:m[now common],s:es,e:er[alternatively in southern Germany, Austria and Switzerland]}}
 
 # [[log]] (split wood used as firewood)
 #* '''1931''', [[w:Arthur Schnitzler|Arthur Schnitzler]], ''[[s:de:Flucht in die Finsternis|Flucht in die Finsternis]]'', S. Fischer Verlag, page 158–159:
@@ -22841,7 +22845,7 @@ Page 690 Holzscheit: -------- begin text --------
 * For notes on gender and plural see the simplex {{m|de|Scheit}}.
 
 ====Declension====
-{{de-decl-noun-n|(e)s|e}}
+{{de-ndecl|n[originally]:m[now common],s:es,e:er[alternatively in southern Germany, Austria and Switzerland]}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -22850,12 +22854,12 @@ Page 691 Schlegel: Found match for regex: =
 Page 691 Schlegel: -------- begin text --------
 
 ===Noun===
-{{de-noun|m||Schlegel}}
+{{de-noun|m}}
 
 # {{obsolete spelling of|de|Schlägel}}
 
 ====Declension====
-{{de-decl-noun-m|s|pl=Schlegel}}
+{{de-ndecl|m}}
 
 ===Proper noun===
 {{de-proper noun|surname}}
@@ -23049,7 +23053,7 @@ From {{prefix|de|ge|Sims}}.
 * {{audio|de|De-Gesims.ogg|Audio}}
 
 ===Noun===
-{{de-noun|n|Gesimses|Gesimse}}
+{{de-noun|n}}
 
 # {{lb|de|architectural element}} [[cornice]]
 # {{lb|de|dated}} [[moulding]]
@@ -23057,7 +23061,7 @@ From {{prefix|de|ge|Sims}}.
 #*: {{quote|de|Die Orgel stand auf der einen Seite der Altarempore. Sie war in ein weißgoldenes Gehäuse eingebaut. Das Schnitzwerk seines '''Gesimses''' stellte kleine, pausbäckige Engelchen dar, die zwischen allerhand Schnörkeln, wie in einem Irrgarten gefangen saßen.|The pipe organ stood on the one side of the altar choir. It was built into a white-golden case. The carving of its moulding depicted small, chubby-faced little angels, which sat between all sorts of embellishments, like trapped in a maze.}}
 
 ====Declension====
-{{de-decl-noun-m|es|e}}
+{{de-ndecl|n}}
 
 ====Descendants====
 * {{desc|pl|gzyms|bor=1}}
