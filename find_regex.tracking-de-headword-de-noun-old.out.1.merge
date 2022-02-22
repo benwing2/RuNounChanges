@@ -1,4 +1,4 @@
-Beginning at Mon Feb 21 19:50:43 2022
+Beginning at Mon Feb 21 22:46:16 2022
 Page 1 A: Found match for regex: =
 Page 1 A: -------- begin text --------
 
@@ -4832,14 +4832,14 @@ Page 119 Oktaeder: -------- begin text --------
 * {{audio|de|De-Oktaeder.ogg|Audio}}
 
 ===Noun===
-{{de-noun|n}}<!-- dewikt gives as alternatively masculine, but this is not found in either DWDS or Duden -->
+{{de-noun|n:m}}<!-- masculine not in DWDS or Duden but relatively common per [[User:Fytcha]] -->
 
 # {{lb|de|geometry}} [[octahedron]]
 #: {{syn|de|Achtflächner}}
 #:{{ux|de|Das '''Oktaeder''' hat 8 Seitenflächen, 12 Kanten und 6 Ecken.|The '''octahedron''' has 8 faces, 12 edges and 6 vertices.|inline=0}}
 
 ====Declension====
-{{de-ndecl|n}}<!-- dewikt gives as alternatively masculine, but this is not found in either DWDS or Duden -->
+{{de-ndecl|n:m}}<!-- masculine not in DWDS or Duden but relatively common per [[User:Fytcha]] -->
 
 ====Derived terms====
 * {{l|de|oktaedrisch}}
@@ -5966,13 +5966,13 @@ Page 151 Tetraeder: -------- begin text --------
 * {{audio|de|De-Tetraeder.ogg|Audio}}
 
 ===Noun===
-{{de-noun|n}}<!-- dewikt gives as alternatively masculine, but this is not found in either DWDS or Duden -->
+{{de-noun|n:m}}<!-- masculine not in DWDS or Duden but relatively common per [[User:Fytcha]] -->
 
 # {{lb|de|geometry}} [[tetrahedron]]
 #: {{syn|de|Vierflächner}}
 
 ====Declension====
-{{de-ndecl|n}}<!-- dewikt gives as alternatively masculine, but this is not found in either DWDS or Duden -->
+{{de-ndecl|n:m}}<!-- masculine not in DWDS or Duden but relatively common per [[User:Fytcha]] -->
 
 ====Derived terms====
 * {{l|de|tetraedrisch}}
@@ -19027,13 +19027,13 @@ Page 542 Hexaeder: -------- begin text --------
 * {{audio|de|De-Hexaeder.ogg|Audio}}
 
 ===Noun===
-{{de-noun|n}}<!-- dewikt gives as alternatively masculine, but this is not found in either DWDS or Duden -->
+{{de-noun|n:m}}<!-- masculine not in DWDS or Duden but relatively common per [[User:Fytcha]] -->
 
 # {{lb|de|geometry}} [[hexahedron]]
 #: {{syn|de|Sechsflächner|Sechsflach}}
 
 ====Declension====
-{{de-ndecl|n}}<!-- dewikt gives as alternatively masculine, but this is not found in either DWDS or Duden -->
+{{de-ndecl|n:m}}<!-- masculine not in DWDS or Duden but relatively common per [[User:Fytcha]] -->
 
 ===Further reading===
 * {{R:Duden}}
@@ -20972,18 +20972,6 @@ Page 609 Hellenische Republik: -------- begin text --------
 
 # {{place|de|country|r/Southern Europe|t=Hellenic Republic|t2=Greece}}
 #: {{syn|de|Griechenland<g:n>}}
--------- end text --------
-Page 610 indol: Found match for regex: {
-Page 610 indol: -------- begin text --------
-{{wikipedia|lang=de}}
-
-===Noun===
-{{de-noun|||old=1}}
-
-# {{lb|de|organic compound}} [[indole]]
-
-----
-
 -------- end text --------
 Page 611 Ebenholz: Found match for regex: {
 Page 611 Ebenholz: -------- begin text --------
@@ -24169,7 +24157,7 @@ From {{bor|de|gml|geck||fool}}. The same word has later been borrowed again from
 * {{audio|de|De-Geck.ogg|Audio}}
 
 ===Noun===
-{{de-noun|((<m.weak>,<m.[uncommon]>))|dim=chen}}
+{{de-noun|((<m.weak>,<m.[uncommon, nonstandard]>))|dim=chen}}
 
 # {{lb|de|pejorative|somewhat|dated}} [[dandy]], [[fop]], [[poser]] {{gloss|vain, narcissistic man}}
 #: {{syn|de|Laffe|Stutzer|Zierbengel|Gigerl<q:chiefly Austria, fashionable in the 1880s>|Lackaffe<q:colloquial>|Fatzke<q:colloquial, regional>|Poser<q:youth slang>}}
@@ -24178,7 +24166,7 @@ From {{bor|de|gml|geck||fool}}. The same word has later been borrowed again from
 * The word can be declined according to the weak or the strong pattern. The weak declension is standard and is the only one mentioned in dictionaries.
 
 ====Declension====
-{{de-ndecl|((<m.weak>,<m.[uncommon, nonstandard]>))|dim=chen}}
+{{de-ndecl|((<m.weak>,<m.[uncommon, nonstandard]>))}}
 
 ====Derived terms====
 * {{l|de|Geckerei}}
@@ -25351,7 +25339,7 @@ Borrowed from {{bor|de|en|[[public]] [[viewing]]}}.
 #* {{quote-journal|de|date=2012-06-08|newspaper=Der Stern|title=Fit fürs Public Viewing: essen, trinken and bewegen|url=http://www.stern.de/gesundheit/trinken-essen-und-bewegen-1838216.html|passage=Gedränge und stundenlanges Rumstehen beim '''Public Viewing''' kann ganz schön anstrengend werden.|translation=Crowding and standing for hours at public screenings can be rather tiring.}}
 
 ====Declension====
-{{de-ndecl|n,s,s|nolinkhead=1}}
+{{de-ndecl|n,s,s}}
 -------- end text --------
 Page 806 Großer Wagen: Found match for regex: =
 Page 806 Großer Wagen: -------- begin text --------
@@ -25540,7 +25528,7 @@ Page 818 Alawit: -------- begin text --------
 # {{lb|de|religion}} (male) [[Alawite]], Alawite boy or man
 
 ====Declension====
-{{de-ndecl|m.weak|f=in}}
+{{de-ndecl|m.weak}}
 -------- end text --------
 Page 819 Klassenvariable: Found match for regex: =
 Page 819 Klassenvariable: -------- begin text --------
@@ -27241,7 +27229,7 @@ Page 910 Aalfett: -------- begin text --------
 * {{hyphenation|de|Aal|fett}}
 
 ===Noun===
-{{de-noun|s:es}}
+{{de-noun|n,s:es}}
 
 # {{lb|de|dated}} [[eel]] [[fat]]
 
@@ -27249,7 +27237,7 @@ Page 910 Aalfett: -------- begin text --------
 * The inflected forms are rarely used.
 
 ====Declension====
-{{de-ndecl|s:es}}
+{{de-ndecl|n,s:es}}
 
 {{C|de|Fats and oils}}
 -------- end text --------
@@ -28281,7 +28269,7 @@ Page 947 Dachdeckung: -------- begin text --------
 |Überdeckung
 }}
 -------- end text --------
-Page 948 Silberoxid: Found match for regex: =
+Page 948 Silberoxid: Found match for regex: {
 Page 948 Silberoxid: -------- begin text --------
 {{wikipedia|lang=de}}
 
@@ -28372,7 +28360,7 @@ Page 952 Sozialdemokrat: -------- begin text --------
 # [[social democrat]]
 
 ====Declension====
-{{de-ndecl|m.weak|f=in}}
+{{de-ndecl|m.weak}}
 
 ====Derived terms====
 * {{l|de|Sozi|g=m}}
@@ -29135,7 +29123,7 @@ Page 988 Kurbad: -------- begin text --------
 * {{R:UniLeipzig}}
 * {{R:Duden}}
 -------- end text --------
-Page 989 Comic: Found match for regex: =
+Page 989 Comic: Found match for regex: {
 Page 989 Comic: -------- begin text --------
 {{wikipedia|lang=de}}
 
@@ -29175,7 +29163,7 @@ Borrowed from {{bor|de|en|comic}}.
 
 {{C|de|Comics}}
 -------- end text --------
-Page 990 Geigerzähler: Found match for regex: =
+Page 990 Geigerzähler: Found match for regex: {
 Page 990 Geigerzähler: -------- begin text --------
 {{wikipedia|lang=de}}
 
@@ -29198,7 +29186,7 @@ Page 990 Geigerzähler: -------- begin text --------
 * {{R:DWDS}}
 * {{R:Duden}}
 -------- end text --------
-Page 991 Getter: Found match for regex: =
+Page 991 Getter: Found match for regex: {
 Page 991 Getter: -------- begin text --------
 {{wikipedia|lang=de}}
 
@@ -29249,7 +29237,7 @@ Page 993 Permanentmagnet: -------- begin text --------
 ===Further reading===
 * {{R:Duden}}
 -------- end text --------
-Page 994 Witherit: Found match for regex: =
+Page 994 Witherit: Found match for regex: {
 Page 994 Witherit: -------- begin text --------
 {{wikipedia|lang=de}}
 
@@ -29278,7 +29266,7 @@ Page 995 Eisengranat: -------- begin text --------
 ====Usage notes====
 * Used especially in the mineral {{m|de|Yttrium-Eisengranat}}.
 -------- end text --------
-Page 996 Yttrium-Eisengranat: Found match for regex: =
+Page 996 Yttrium-Eisengranat: Found match for regex: {
 Page 996 Yttrium-Eisengranat: -------- begin text --------
 {{wikipedia|Yttrium-Eisen-Granat|lang=de}}
 
@@ -48034,12 +48022,12 @@ Page 1799 abgeschrägtes Dodekaeder: -------- begin text --------
 * {{hyph|de|ab|ge|schräg|tes Do|de|ka|eder}}
 
 ===Noun===
-{{de-noun|[[abgeschrägt]]es<+> [[Dodekaeder]]<n>}}
+{{de-noun|[[abgeschrägt]]es<+> [[Dodekaeder]]<n:m>}}<!-- masculine not in DWDS or Duden but relatively common per [[User:Fytcha]] -->
 
 # {{lb|de|geometry}} [[snub dodecahedron]]
 
 ====Declension====
-{{de-ndecl|[[abgeschrägt]]es<+> [[Dodekaeder]]<n>}}
+{{de-ndecl|[[abgeschrägt]]es<+> [[Dodekaeder]]<n:m>}}<!-- masculine not in DWDS or Duden but relatively common per [[User:Fytcha]] -->
 
 ====Coordinate terms====
 * {{l|de|Kuboktaeder}}, {{l|de|Ikosaederstumpf}}
@@ -54600,6 +54588,9 @@ Page 2091 Fatzke: -------- begin text --------
 ===Further reading===
 * {{R:Duden}}
 * {{R:DWDS}}
+
+===References===
+<references/>
 -------- end text --------
-Elapsed time: 5 mins 17.86 secs
-Ending at Mon Feb 21 19:56:01 2022
+Elapsed time: 4 mins 56.34 secs
+Ending at Mon Feb 21 22:51:13 2022
