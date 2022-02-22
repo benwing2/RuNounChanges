@@ -1,4 +1,4 @@
-Beginning at Mon Feb 21 22:46:16 2022
+Beginning at Tue Feb 22 01:50:31 2022
 Page 1 A: Found match for regex: =
 Page 1 A: -------- begin text --------
 
@@ -18227,7 +18227,7 @@ Page 514 Dingsbums: -------- begin text --------
 * {{audio|de|De-Dingsbums.ogg|Audio}}
 
 ===Noun===
-{{de-noun|n|g2=m|g3=f|Dingsbums|Dingsbumse}}
+{{de-noun|n:m:f,-,e}}
 
 # {{lb|de|colloquial}} [[thingy]], [[thingie]], [[thingamajig]], [[thingamabob]] {{gloss|something whose name one cannot recall}}
 #: {{syn|de|Thesaurus:Dings}}
@@ -18238,7 +18238,7 @@ Page 514 Dingsbums: -------- begin text --------
 * {{U:de:three genders}}
 
 ====Declension====
-{{de-decl-noun-n||e}}
+{{de-ndecl|n:m:f,-,e}}
 
 ====Descendants====
 * {{desc|nb|dingseboms}}
@@ -18676,15 +18676,12 @@ Page 528 Eichen: -------- begin text --------
 * Many speakers disallow a syllabic nasal in the diminutive suffix {{m|de|-chen}}; for them the two etymologies are not homophonic.
 
 ====Noun====
-{{de-noun|n||Eichen|pl2=Eierchen}}
+{{de-noun|n,s,-:Eierchen}}
 
 # {{diminutive of|de|Ei}}: little [[egg]]
 
 =====Declension=====
-;Regular declension
-{{de-decl-noun-n|s|}}
-;Irregular declension
-{{de-decl-noun-n|s|pl=Eierchen}}
+{{de-ndecl|n,s,-:Eierchen}}
 -------- end text --------
 Page 529 Pentan: Found match for regex: {
 Page 529 Pentan: -------- begin text --------
@@ -18696,12 +18693,12 @@ Page 529 Pentan: -------- begin text --------
 * {{rhymes|de|aːn|s=2}}
 
 ===Noun===
-{{de-noun|n||Pentane}}
+{{de-noun|n}}
 
 # {{lb|de|organic compound}} [[pentane]] (aliphatic hydrocarbon: C<sub>5</sub>H<sub>12</sub>)
 
 ====Declension====
-{{de-decl-noun-n||e}}
+{{de-ndecl|n}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -18718,12 +18715,12 @@ Borrowed from {{bor|de|ML.|contrapunctum}}.
 * {{hyphenation|de|Kon|tra|punkt}}
 
 ===Noun===
-{{de-noun|m|Kontrapunkts|Kontrapunkte|gen2=Kontrapunktes}}
+{{de-noun|m,s:es}}
 
 # {{lb|de|music}} [[counterpoint]] {{gloss|melody added to an existing one}}
 
 ====Declension====
-{{de-decl-noun-n|(e)s|e}}
+{{de-ndecl|m,s:es}}
 
 ====Derived terms====
 * {{l|de|kunterbunt}}
@@ -18858,13 +18855,13 @@ Page 536 Demonstrativpronomen: -------- begin text --------
 * {{hyph|de|De|mon|stra|tiv|pro|no|men}}
 
 ===Noun===
-{{de-noun|n|Demonstrativpronomens|Demonstrativpronomen|pl2=Demonstrativpronomina}}
+{{de-noun|n,s,-:Demonstrativpronomina}}
 
 # a [[demonstrative pronoun]] (a pronoun which replaces a noun), such as ''[[dieser]]'' in the sentence '''''dieser''' ist rot'' ('''''this one''' is red'').
 #: {{syn|de|Demonstrativ|Demonstrativum|[[hinweisendes]] [[Fürwort]]}}
 
 ====Declension====
-{{de-decl-noun-n|s|pl=Demoonstrativpronomen, [[Demonstrativpronomina]]}}
+{{de-ndecl|n,s,-:Demonstrativpronomina}}
 
 ====Hypernyms====
 * {{l|de|Pronomen}}; {{l|de|Wortart}}
@@ -19002,20 +18999,15 @@ Page 541 Thermostat: -------- begin text --------
 {{rfap|de}}
 
 ===Noun===
-{{de-noun|m|g2=n|Thermostats|gen2=Thermostates|gen3=Thermostaten|pl2=Thermostate}}
+{{de-noun|m:n,s:es}} ''or''<br />
+{{de-noun|m.weak}}
 
 # [[thermostat]]
 #: {{syn|de|Temperaturregler|Wärmeregler}}
 
 ====Declension====
-: Masculine and strong declension:
-{{de-decl-noun-m|(e)s|e}}
-
-: Masculine and weak declension:
-{{de-decl-noun-m|en|en}}
-
-: Neuter declension:
-{{de-decl-noun-n|(e)s|e}}
+{{de-ndecl|m:n,s:es}}
+{{de-ndecl|m.weak}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -19087,13 +19079,13 @@ Page 545 Rotlichtbezirk: -------- begin text --------
 * {{audio|de|De-Rotlichtbezirk.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m|Rotlichtbezirks|gen2=Rotlichtbezirkes|Rotlichtbezirke}}
+{{de-noun|m,s:es}}
 
 # [[red-light district]]
 #: {{syn|de|Rotlichtviertel}}
 
 ====Declension====
-{{de-decl-noun-n|(e)s|e}}
+{{de-ndecl|m,s:es}}
 
 ===Further reading===
 * {{R:DWDS}}
@@ -19411,9 +19403,10 @@ From {{inh|de|gmh|rīchtuom}}, from {{inh|de|goh|rīhhituom}}, {{m|goh|rīhtuom}
 * {{hyph|de|Reich|tum}}
 
 ===Noun===
-{{de-noun|m|Reichtums|gen2=Reichtumes|Reichtümer}}
+{{de-noun|m,s:es[rare],^er}}<!-- only Pons lists genitive in -es -->
 
-# [[wealth]], [[richness]], [[riches]]
+# [[wealth]], [[richness]]
+# {{lb|de|pluralonly}} [[riches]]
 # [[affluence]], [[abundance]], [[treasure]]
 # [[variety]]
 
@@ -19421,7 +19414,7 @@ From {{inh|de|gmh|rīchtuom}}, from {{inh|de|goh|rīhhituom}}, {{m|goh|rīhtuom}
 The plural has the meaning of {{cog|en|riches}}.
 
 ====Declension====
-{{de-decl-noun-n|(e)s|pl=Reichtümer}}
+{{de-ndecl|m,s:es[rare],^er}}<!-- only Pons lists genitive in -es -->
 
 ====Antonyms====
 * {{l|de|Armut}}
@@ -19482,6 +19475,7 @@ The plural has the meaning of {{cog|en|riches}}.
 * {{R:DWDS}}
 * {{R:UniLeipzig}}
 * {{R:Duden}}
+
 {{C|de|Money}}
 -------- end text --------
 Page 559 Antal: Found match for regex: =
@@ -19518,13 +19512,12 @@ Substanivization of {{m|de|hosianna}}.
 * {{audio|de|De-Hosianna.ogg|Audio}}
 
 ===Noun===
-{{de-noun|n|Hosianna|gen2=Hosiannas|Hosianna|pl2=Hosiannas}}
+{{de-noun|n,-:s,-:s}}
 
 # [[hosanna]]
 
 ====Declension====
-{{de-decl-noun-n||}}
-{{de-decl-noun-n|s|s}}
+{{de-ndecl|n,-:s,-:s}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -19755,14 +19748,15 @@ From {{bor|de|la|euangelium}} (also {{l|la|evangelium}}), from {{der|de|grc|ε�
 * {{audio|de|De-Evangelium.ogg|Audio}}
 
 ===Noun===
-{{de-noun|n|Evangeliums|Evangelien}}
+{{de-noun|n}} ''or (Latinate declension)''<br />
+{{de-noun|n,Evangelii,Evangelia.dat:Evangelio.genpl:Evangeliorum.datpl:Evangeliis}}
 
 # [[gospel]] (in the Bible, the "good news" of salvation through Jesus)
 
 ====Declension====
-{{de-decl-noun-n|s|pl=Evangelien}}
-Latinate declension:
-{{de-decl-noun-n|n=full|ns=Evangelium|gs=Evangelii|ds=Evangelio|as=Evangelium|np=Evangelia|gp=Evangeliorum|dp=Evangeliis|ap=Evangelia}}
+{{de-ndecl|n}}
+;Latinate declension:
+{{de-ndecl|n,Evangelii,Evangelia.dat:Evangelio.genpl:Evangeliorum.datpl:Evangeliis}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -20208,12 +20202,12 @@ Page 583 Bankraub: -------- begin text --------
 * {{rhymes|de|aʊ̯p}}
 
 ===Noun===
-{{de-noun|m|Bankraubs|gen2=Bankraubes|Bankraube}}
+{{de-noun|m,s:es}}
 
 # [[bank]] [[robbery]]
 
 ====Declension====
-{{de-decl-noun-n|(e)s|e}}
+{{de-ndecl|m,s:es}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -20234,7 +20228,7 @@ Borrowed from {{bor|de|en|blog}}.
 * {{audio|de|De-Blog.ogg|Audio}}
 
 ===Noun===
-{{de-noun|n|g2=m|Blogs|Blogs}}
+{{de-noun|n:m,s,s}}
 
 # [[blog]]
 
@@ -20242,11 +20236,7 @@ Borrowed from {{bor|de|en|blog}}.
 The word may be used as a neuter or a masculine noun. Neither has as yet become predominant, although the neuter seems to be somewhat more frequent.
 
 ====Declension====
-; masculine
-{{de-decl-noun-m|s|s}}
-
-; neuter
-{{de-decl-noun-n|s|s}}
+{{de-ndecl|n:m,s,s}}
 
 ====Related terms====
 * {{l|de|Blogger}}
@@ -20459,12 +20449,12 @@ From {{inh|de|gmh|}}, from {{inh|de|goh|}}.
 * {{hyphenation|de|Ge|währ}}
 
 ===Noun===
-{{de-noun|f||-}}
+{{de-noun|f.sg}}
 
 # [[guarantee]], [[warranty]]
 
 ====Declension====
-{{de-decl-noun-n|n=sg}}
+{{de-ndecl|f.sg}}
 
 ====Derived terms====
 * {{l|de|ohne Gewähr}}
@@ -20483,12 +20473,12 @@ From {{m|de|Schutz||protection}} + {{m|de|Geld||money}}.
 * {{audio|de|De-Schutzgeld.ogg|Audio}}
 
 ===Noun===
-{{de-noun|n|Lösegelds|gen2=Lösegeldes|Lösegelder}}
+{{de-noun|n,es:s,er}}
 
 # [[protection money]]
 
 ====Declension====
-{{de-decl-noun-n|(e)s|er}}
+{{de-ndecl|n,es:s,er}}
 
 ====Hypernyms====
 * {{l|de|Erpressungsgeld}}
@@ -21124,7 +21114,7 @@ Page 614 Erdgeschoß: -------- begin text --------
 ====Declension====
 {{de-ndecl|n.ss}}
 -------- end text --------
-Page 615 Wiener Schnitzel: Found match for regex: =
+Page 615 Wiener Schnitzel: Found match for regex: {
 Page 615 Wiener Schnitzel: -------- begin text --------
 {{wikipedia|lang=de}}
 
@@ -21430,7 +21420,7 @@ Derived from {{suffix|de|Mutter|-i|t1=mother}}.
 ----
 
 -------- end text --------
-Page 628 Wiederkäuer: Found match for regex: =
+Page 628 Wiederkäuer: Found match for regex: {
 Page 628 Wiederkäuer: -------- begin text --------
 {{wikipedia|lang=de}}
 
@@ -22670,13 +22660,13 @@ Borrowed from {{bor|de|fr|bain-marie}}.
 
 ===Noun===
 {{de-noun|n,-:s,Bains-Marie.nodatpln|nolinkhead=1}} ''or''<br />
-{{de-noun|f,s,Bains-Marie.nodatpln|nolinkhead=1}}
+{{de-noun|f,Bains-Marie.nodatpln|nolinkhead=1}}
 
 # [[bain-marie]] {{gloss|pan containing hot water}}
 
 ====Declension====
 {{de-ndecl|n,-:s,Bains-Marie.nodatpln}}
-{{de-ndecl|f,s,Bains-Marie.nodatpln}}
+{{de-ndecl|f,Bains-Marie.nodatpln}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -23896,15 +23886,12 @@ Page 738 Singularetantum: -------- begin text --------
 ===Noun===
 {{de-noun|n,s,Singulariatantum:s}}
 
-|Singularetantums|Singularitantum|pl2=Singularetantums|pl3=Singularetanta}}
-
-# {{lb|de|grammar}} [[singulare tantum]] (a noun that has no plural form)
+# {{lb|de|grammar}} [[singulare tantum]] {{gl|a noun that has no plural form}}
 #: {{syn|de|Singularwort}}
 #: {{ant|de|Pluraletantum<t:[[plurale tantum]]>|Pluralwort<lit:plural word>|Dualetantum<t:[[duale tantum]]>}}
 
 ====Declension====
-{{de-decl-noun-n|s|pl=Singulariatantum}}
-{{de-decl-noun-n|s|s}}
+{{de-ndecl|n,s,Singulariatantum:s}}
 
 ===Further reading===
 * {{R:DWDS}}
@@ -54596,5 +54583,5 @@ Page 2091 Fatzke: -------- begin text --------
 ===References===
 <references/>
 -------- end text --------
-Elapsed time: 4 mins 56.34 secs
-Ending at Mon Feb 21 22:51:13 2022
+Elapsed time: 4 mins 55.37 secs
+Ending at Tue Feb 22 01:55:26 2022
