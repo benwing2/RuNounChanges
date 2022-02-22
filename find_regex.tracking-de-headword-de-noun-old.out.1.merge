@@ -15589,12 +15589,12 @@ Page 419 Fuhrpark: -------- begin text --------
 * {{hyphenation|de|Fuhr|park}}
 
 ===Noun===
-{{de-noun|m|Fuhrparks|gen2=Fuhrparkes|Fuhrparks|pl2=Fuhrparke}}
+{{de-noun|m,s:es,s:e[rare]:^e[usually in Switzerland]}}
 
 # {{l|en|carfleet}}
 
 ====Declension====
-{{de-decl-noun-m|(e)s|en}}
+{{de-ndecl|m,s:es,s:e[rare]:^e[usually in Switzerland]}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -17930,16 +17930,13 @@ Page 503 Astronom: -------- begin text --------
 * {{rhymes|de|oːm|s=3}}
 
 ===Noun===
-{{de-noun|m|Astronoms|gen2=Astronomen|Astronomen|f=Astronomin}}
+{{de-noun|((<m.weak>,<m.[nonstandard]>))|f=in}}
 
 # [[astronomer]]
 #: {{syn|de|Astronomus|Himmelskundler|Sternkundiger|Sterngucker}}
 
 ====Declension====
-Weak:
-{{de-decl-noun-m|en|en}}
-Strong:
-{{de-decl-noun-m|s|en}}
+{{de-ndecl|((<m.weak>,<m.[nonstandard]>))}}
 
 ===Further reading===
 * {{R:DWDS}}
@@ -17956,12 +17953,12 @@ Page 504 Beitritt: -------- begin text --------
 * {{audio|de|De-Beitritt.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m|Beitrittes|gen2=Beitritts|Beitritte}}
+{{de-noun|m,es:s}}
 
 # the [[joining]], [[entry]] into, becoming a [[member]] of (a club, organization, etc.)
 
 ====Declension====
-{{de-decl-noun-n|(e)s|e}}
+{{de-ndecl|m,es:s}}
 
 ====Related terms====
 * {{l|de|beitreten}}
@@ -17986,13 +17983,12 @@ From {{bor|de|en|deodorant}}.
 * {{rhymes|de|ant|s=4}}
 
 ===Noun===
-{{de-noun|n|g2=m|Deodorants|Deodorants|pl2=Deodorante}}
+{{de-noun|n,s,s:e[rare]}}<!-- no evidence of masculine gender in Duden, DWDS, Pons or dewikt -->
 
 # {{lb|de|chiefly|formal}} [[deodorant]]
 
 ====Declension====
-{{de-decl-noun-n|s|s}}
-{{de-decl-noun-n|s|e}}
+{{de-ndecl|n,s,s:e[rare]}}<!-- no evidence of masculine gender in Duden, DWDS, Pons or dewikt -->
 
 ===Further reading===
 * {{R:Duden}}
@@ -18005,13 +18001,13 @@ Page 506 Geleitzug: -------- begin text --------
 * {{audio|de|De-Geleitzug.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m|Geleitzugs|gen2=Geleitzuges|Geleitzüge}}
+{{de-noun|m,s:es,^e}}
 
 # {{lb|de|military|nautical}} [[convoy]]
 #: {{syn|de|Konvoi}}
 
 ====Declension====
-{{de-decl-noun-n|(e)s|pl=Geleitzüge}}
+{{de-ndecl|m,s:es,^e}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -18029,7 +18025,7 @@ From {{bor|de|iu|-}} (Inuvialuktun{{attn|ikt|should the preceding 'iu' be change
 * {{audio|de|De-Kajak.ogg|Audio}}
 
 ===Noun===
-{{de-noun|n|g2=m|Kajaks|Kajaks|pl2=Kajake}}
+{{de-noun|n:m,s,s:e[less common]}}<!-- -e mentioned only by DWDS, not Duden or Pons -->
 
 # [[kayak]] (small boat)
 #* '''2011''', Johannes Friebel, ''Kajak-Selbstbau'', BoD – Books on Demand ({{ISBN|9783867419888}}), page 19:
@@ -18040,9 +18036,7 @@ From {{bor|de|iu|-}} (Inuvialuktun{{attn|ikt|should the preceding 'iu' be change
 #*: Mit vollen Bäuchen zogen Alexej und ich los, um die Gepäckaufgabe zu finden, wo wir das '''Kajak''' deklarieren und wiegen lassen mussten.
 
 ====Declension====
-{{de-decl-noun-n|s|s}}
-{{de-decl-noun-m|s|s}}
-{{de-decl-noun-m|s|e}}
+{{de-ndecl|n:m,s,s:e[less common]}}<!-- -e mentioned only by DWDS, not Duden or Pons -->
 
 ===Further reading===
 * {{R:Duden}}
@@ -18154,13 +18148,13 @@ Page 511 Tramper: -------- begin text --------
 * {{hyphenation|de|Tram|per}}
 
 ===Noun===
-{{de-noun|m|Trampers|Tramper|f=Tramperin}}
+{{de-noun|m|f=in}}
 
 # {{lb|de|colloquial}} [[hitchhiker]]
 #: {{syn|de|Anhalter}}
 
 ====Declension====
-{{de-decl-noun-m|s|en}}
+{{de-ndecl|m}}
 
 ====Related terms====
 * {{l|de|trampen}}
@@ -18178,12 +18172,12 @@ From {{af|de|haben|alt1=habe|nichts|t1=have|t2=nothing}}.
 * {{audio|de|De-Habenichts.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m|Habenichts|gen2=Habenichtses|Habenichtse}}
+{{de-noun|m,-:es,e}}
 
 # [[have-not]]
 
 ====Declension====
-{{de-decl-noun-m|es|e|gs=[[Habenichtses]],<br>Habenichts}}
+{{de-ndecl|m,-:es,e}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -18199,20 +18193,16 @@ Page 513 Steinmetz: -------- begin text --------
 * {{audio|de|De-Steinmetz.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m|Steinmetzen|gen2=Steinmetzes|Steinmetzen|pl2=Steinmetze|f=Steinmetzin}}
+{{de-noun|((<m,es.[spoken or written]>,<m.weak.[mostly only when written]>))|f=in}}
 
 # [[stonemason]] {{q|male or of unspecified gender}}
 #: {{syn|de|Steinhauer}}
 
 ====Declension====
-Weak declensionː
-{{de-decl-noun-m|en|en}}
-
-Strong declensionː
-{{de-decl-noun-m|es|e}}
+{{de-ndecl|((<m,es.[spoken or written]>,<m.weak.[mostly only when written]>))|f=in}}
 
 ====Usage notes====
-The word may follow either the weak or strong declension pattern. In the written language, both are common; in regular spoken language, however, strong declension prevails.
+* The word may follow either the weak or strong declension pattern, although most dictionaries mention only the weak declension. In the written language, both are common; in regular spoken language, however, strong declension prevails.
 
 ===Further reading===
 * {{R:Duden}}
@@ -18257,7 +18247,7 @@ Page 515 Infinitiv: -------- begin text --------
 * {{audio|de|De-Infinitiv.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m|g2=n|Infinitivs|Infinitive}}
+{{de-noun|m:n[rare, nonstandard]}}
 
 # {{lb|de|grammar}} [[infinitive]]
 # {{lb|de|grammar}} [[gerund]]; [[verbal noun]]; {{ngd|if formally identical to the infinitive (as e.g. in German) or if the language does not otherwise have an infinitive form (as e.g. in Arabic)}}
@@ -18267,7 +18257,7 @@ Page 515 Infinitiv: -------- begin text --------
 * Exclusively masculine in contemporary standard usage, but otherwise occasionally (though rarely) neuter.
 
 ====Declension====
-{{de-decl-noun-m|s|e}}
+{{de-ndecl|m:n[rare, nonstandard]}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -18627,13 +18617,13 @@ From {{af|de|Tier|Park}}.
 * {{hyphenation|de|Tier|park}}
 
 ===Noun===
-{{de-noun|m|Tierparks|gen2=Tierparkes|Tierparks|pl2=Tierparke|pl3=Tierpärke}}
+{{de-noun|m,s:es,s:e[rare]:^e[usually in Switzerland]}}
 
 # [[zoo]] (park where live animals are exhibited)
 #:{{syn|de|Zoo|Tiergarten}}
 
 ====Declension====
-{{de-decl-noun-m|(e)s|en}}
+{{de-ndecl|m,s:es,s:e[rare]:^e[usually in Switzerland]}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -18743,7 +18733,7 @@ Borrowed from {{bor|de|la|fētus||offspring}}.
 * {{hyphenation|de|Fö|tus}}
 
 ===Noun===
-{{de-noun|m|Fötus|gen2=Fötusses|Föten|pl2=Fötusse}}
+{{de-noun|m,-:ses[less common],Föten:se[less common]}}
 
 # [[fetus]]
 
@@ -18751,8 +18741,7 @@ Borrowed from {{bor|de|la|fētus||offspring}}.
 * The genitive form '''Fötus''' is more common than '''Fötusses'''. The plural form '''Föten''' is more common than '''Fötusse'''.
 
 ====Declension====
-{{de-decl-noun-m|gs=Fötus, [[Fötusses]]|pl=Föten}}
-{{de-decl-noun-m|gs=Fötus, [[Fötusses]]|pl=Fötusse}}
+{{de-ndecl|m,-:ses[less common],Föten:se[less common]}}
 
 ====Related terms====
 * {{l|de|fötal}}
@@ -18776,7 +18765,7 @@ Page 533 Tschick: -------- begin text --------
 * {{audio|de|De-Tschick.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m||gen2=Tschick|Tschicks|pl2=Tschick}}
+{{de-noun|m,s:-,s:-}}
 
 # {{lb|de|Austrian|colloquial}} [[cigarette]]
 #: {{syn|de|Kippe|Zigarette}}
@@ -18791,7 +18780,7 @@ Page 533 Tschick: -------- begin text --------
 #: {{syn|de|Zigarettenstummel}}
 
 ====Declension====
-{{de-decl-noun-m|(s)|np=Tschicks/Tschick|gp=Tschicks/Tschick|dp=Tschicks/Tschick|ap=Tschicks/Tschick}}
+{{de-ndecl|m,s:-,s:-}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -18881,7 +18870,7 @@ Page 537 Seemann: -------- begin text --------
 * {{hyphenation|de|See|mann}}
 
 ===Noun===
-{{de-noun|m||gen2=Seemannes|Seeleute|pl2=Seemänner|f=Seefrau|f2=Seemännin}}
+{{de-noun|m,s:es,Seeleute:^er|f=Seefrau[rare],^in[very rare]}}
 
 # [[sailor]] {{gloss|worker on a ship}}
 # [[seaman]]
@@ -18890,10 +18879,7 @@ Page 537 Seemann: -------- begin text --------
 Unlike most German nouns denoting human beings, this word has no commonly used distinct feminine. A female sailor or seaman is also called {{m|de||Seemann}}; the feminine {{m|de||Seemännin}} is very rare.
 
 ====Declension====
-With plural {{m|de||Seeleute}}
-{{de-decl-noun-m|(e)s|pl=Seeleute}}
-With plural {{m|de||Seemänner}}
-{{de-decl-noun-m|(e)s|pl=Seemänner}}
+{{de-ndecl|m,s:es,Seeleute:^er}}
 
 ====Synonyms====
 * {{l|de|Matrose}}
@@ -19101,17 +19087,13 @@ Page 546 Untertan: -------- begin text --------
 * {{audio|de|De-Untertan.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m|Untertans|gen2=Untertanen|Untertanen|f=Untertanin}}
+{{de-noun|((<m,s,en>,<m.weak>))|f=in}}
 
 # a [[citizen]] in a [[monarchy]]; a [[subject]]
 # {{lb|de|figurative}} a citizen in any kind of [[state]] who is [[naive]]ly [[uncritical]] of the [[government]]; or anybody who is [[habitual]]ly very [[obedient]] to their [[superior]]s
 
 ====Declension====
-; Weak declension:
-{{de-decl-noun-m|en|en}}
-
-; Strong declension:
-{{de-decl-noun-m|s|en}}
+{{de-ndecl|((<m,s,en>,<m.weak>))}}
 
 ====Synonyms====
 * {{l|de|Staatsbürger}}, {{l|de|Staatsbürgerin}}
@@ -19165,7 +19147,7 @@ From {{m|de|Sack||sack}}, which was used in the 19th century to refer to an unwa
 * {{audio|de|De-Sakko.ogg|Audio}}
 
 ===Noun===
-{{de-noun|n|g2=m|Sakkos|Sakkos}}
+{{de-noun|n[northern and central Germany]:m[alternatively in southern Germany, Austria and Switzerland],s,s}}
 
 # [[sportcoat]]; [[sports coat]]; [[sports jacket]]
 
@@ -19173,7 +19155,7 @@ From {{m|de|Sack||sack}}, which was used in the 19th century to refer to an unwa
 * The word is exclusively neuter in the northern half of the language area, but may alternatively be masculine in the south.
 
 ====Declension====
-{{de-decl-noun-m|s|s}}
+{{de-ndecl|n[northern and central Germany]:m[alternatively in southern Germany, Austria and Switzerland],s,s}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -19190,12 +19172,12 @@ From {{m|de|drei||three}} + {{m|de|Rad||wheel}}.
 * {{audio|de|De-Dreirad.ogg|Audio}}
 
 ===Noun===
-{{de-noun|n|Dreirads|gen2=Dreirades|Dreiräder}}
+{{de-noun|n,s:es,^er}}
 
 # [[tricycle]]
 
 ====Declension====
-{{de-decl-noun-m|(e)s|pl=Dreiräder}}
+{{de-ndecl|n,s:es,^er}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -19306,7 +19288,7 @@ From {{compound|de|Uhrzeiger|gloss1=clock hand|Sinn}}. The latter word is used h
 * {{audio|de|De-Uhrzeigersinn.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m|Uhrzeigersinns|-}}
+{{de-noun|m,es:s.sg}}
 
 # [[clockwise]] [[direction]]
 #: {{syn|de|Uhr|q=informal}}
@@ -19314,7 +19296,7 @@ From {{compound|de|Uhrzeiger|gloss1=clock hand|Sinn}}. The latter word is used h
 #: {{uxi|de|gegen den Uhrzeigersinn|[[widdershins]], [[counterclockwise]]}}
 
 ====Declension====
-{{de-decl-noun-m|(e)s|n=sg}}
+{{de-ndecl|m,es:s.sg}}
 
 ===Further reading===
 * {{R:DWDS}}
@@ -19352,12 +19334,12 @@ From {{der|de|grc|-}} {{m|grc|ἀρχι-|t=leading}} + {{m|grc|πέλαγος|g=
 * {{audio|de|De-Archipel2.ogg|Archipel}}
 
 ===Noun===
-{{de-noun|m|g2=n|Archipels|Archipele}}
+{{de-noun|m}}<!-- no evidence of neuter in Duden, DWDS, Pons or dewikt -->
 
 # [[archipelago]]
 
 ====Declension====
-{{de-decl-noun-m|s|e}}
+{{de-ndecl|m}}<!-- no evidence of neuter in Duden, DWDS, Pons or dewikt -->
 
 ===Further reading===
 * {{R:Duden}}
@@ -19369,9 +19351,12 @@ Page 556 Leukotrien: Found match for regex: =
 Page 556 Leukotrien: -------- begin text --------
 
 ===Noun===
-{{de-noun|||Leukotriene}}
+{{de-noun|n}}
 
 # [[leukotriene]]
+
+====Declension====
+{{de-ndecl|n}}
 -------- end text --------
 Page 557 ziviler Ungehorsam: Found match for regex: =
 Page 557 ziviler Ungehorsam: -------- begin text --------
@@ -19534,13 +19519,15 @@ Page 561 Nahtod-Erfahrung: -------- begin text --------
 * {{audio|de|De-Nahtoderfahrung.ogg}}
 
 ===Noun===
-{{de-noun|f||Nahtod-Erfahrungen|head=[[Nahtod]]-[[Erfahrung]]}}
+{{de-noun|f}}
 
 # [[near-death experience]]
 #: {{syn|de|Todesnähe-Erfahrung}}
 
+====Declension====
+{{de-ndecl|f}}
+
 ===Further reading===
- 
 * {{R:UniLeipzig}}
 * {{R:Duden|Nahtoderfahrung}}
 -------- end text --------
@@ -19554,13 +19541,13 @@ From {{affix|de|Stroh|t1=straw|Feuer|t2=fire}}.
 * {{audio|de|De-Strohfeuer.ogg|Audio}}
 
 ===Noun===
-{{de-noun|n||Strohfeuer}}
+{{de-noun|n}}
 
 # [[straw]] [[fire]]
 # {{lb|de|idiomatic}} [[flash in the pan]]
 
 ====Declension====
-{{de-decl-noun-m|s}}
+{{de-ndecl|n}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -19680,7 +19667,8 @@ Page 567 Skorbut: -------- begin text --------
 * {{audio|de|De-Skorbut.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m|g2=f|Skorbuts|gen2=Skorbutes|gen3=Skorbut|-}}
+{{de-noun|m,s:es.sg}} ''or''<br />
+{{de-noun|f[rare].sg}}
 
 # [[scurvy]]
 #: {{syn|de|Scharbock|q=archaic}}
@@ -19689,7 +19677,8 @@ Page 567 Skorbut: -------- begin text --------
 * Generally and originally masculine. Occasionally feminine by analogy with most words for diseases.
 
 ====Declension====
-{{de-decl-noun-m|(e)s|n=sg}}
+{{de-ndecl|m,s:es.sg}}
+{{de-ndecl|f[rare].sg}}
 
 ====Derived terms====
 * {{l|de|skorbutisch}}
@@ -19774,7 +19763,7 @@ From {{inh|de|goh|gifugili}}. The expected modern form is *''Gefügel'', a colle
 * {{audio|de|De-Geflügel.ogg|Audio}}
 
 ===Noun===
-{{de-noun|n||Geflügel}}
+{{de-noun|n,s,-[referring to different species of birds]}}
 
 # [[poultry]], meat from birds
 #* '''2012''', Markus Hofstetter, ''Geflügel: Die Beliebtheit bei den deutschen Verbrauchern wächst'' 5.
@@ -19785,7 +19774,7 @@ From {{inh|de|goh|gifugili}}. The expected modern form is *''Gefügel'', a colle
 #*: Insekten als Nahrungsmittel als ökologisch und ernährungsphysiologisch vorteilhaft im Vergleich mit Rindern, Schweinen oder '''Geflügel'''.
 
 ====Declension====
-{{de-decl-noun-m|s}}
+{{de-ndecl|n,s,-[referring to different species of birds]}}
 
 ====Related terms====
 * {{l|de|Geflügelbraten}}
@@ -19832,14 +19821,14 @@ Page 572 Liebling: -------- begin text --------
 * {{audio|de|De-Liebling.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m||Lieblinge|f=Lieblingin}}
+{{de-noun|m|f=in}}
 
 # [[darling]], (my) [[dear]]
 # [[favorite]]
 # {{lb|de|in compounds}} [[favorite]]
 
 ====Declension====
-{{de-decl-noun-m|s|e}}
+{{de-ndecl|m}}
 
 ====Derived terms====
 {{der3|de|{{l|de|Lieblingin}}
@@ -19899,11 +19888,21 @@ Page 573 Guerilla: -------- begin text --------
 * {{audio|de|De-Guerilla.ogg|Audio}}
 
 ===Noun===
-{{de-noun|f||Guerillas}}
-{{de-noun|m|Guerillas|Guerillas}}
+{{de-noun|f,s}}
+
+# [[guerrilla warfare]]
+# [[guerrilla]] [[unit]]
+
+====Declension====
+{{de-ndecl|f,s}}
+
+===Noun===
+{{de-noun|m,-:s,s}}
 
 # [[guerrilla]]
-# [[guerrilla warfare]]
+
+====Declension====
+{{de-ndecl|m,-:s,s}}
 
 ====Related terms====
 * {{l|de|Guerillakrieg|g=m}}
@@ -20023,7 +20022,7 @@ Page 576 Ghanaer: -------- begin text --------
 * {{audio|de|De-Ghanaer.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m||Ganaer|f=Ganaerin}}
+{{de-noun|m|f=in}}
 
 # [[Ghanaian]] {{gloss|person from Ghana or of Ghanaian descent; male or of unspecified gender}}
 
@@ -20031,7 +20030,7 @@ Page 576 Ghanaer: -------- begin text --------
 * Due to the rather awkward pronunciation, speakers will often tend to avoid the word and replace it with constructions such as {{m|de|aus}} {{m|de|Ghana}} (“from Ghana”).
 
 ====Declension====
-{{de-decl-noun-m|s}}
+{{de-ndecl|m}}
 
 ====Derived terms====
 * {{l|de|Ghanaerin}}
@@ -20112,13 +20111,13 @@ Borrowed from {{bor|de|en|laptop}}.
 * {{audio|de|De-Laptop.ogg|Laptop}}
 
 ===Noun===
-{{de-noun|m|g2=n|Laptops|Laptops}}
+{{de-noun|m:n,s,s}}
 
 # [[laptop computer]]
 #: {{syn|de|Klapprechner|Notebook}}
 
 ====Declension====
-{{de-decl-noun-m|s|s}}
+{{de-ndecl|m:n,s,s}}
 
 ====Hypernyms====
 * {{l|de|Computer}}
@@ -20163,13 +20162,13 @@ Page 581 Rubik's Cube: -------- begin text --------
 From {{bor|de|en|[[Rubik's Cube]], [[Rubik's cube]]}}.
 
 ===Noun===
-{{de-noun|m||Rubik's Cube|head=Rubik's Cube}}
+{{de-noun|m,s,s|nolinkhead=1}}
 
 # [[Rubik's cube]]
 #: {{syn|de|Zauberwürfel<g:m>|Rubik-Würfel<g:m>}}
 
 ====Declension====
-{{de-decl-noun-m|s|s}}
+{{de-ndecl|m,s,s}}
 -------- end text --------
 Page 582 Astronomische Einheit: Found match for regex: {
 Page 582 Astronomische Einheit: -------- begin text --------
@@ -20325,12 +20324,13 @@ Page 589 Tsatsiki: -------- begin text --------
 * {{audio|de|De-Tsatsiki.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m|g2=n|Tsatsikis|Tsatsikis}}
+{{de-noun|m:n,s,s}}
 
 # [[tzatziki|Tzatziki]], [[tzadziki]], or [[tsatsiki]], a Greek [[meze]] or [[appetizer]], made of strained yoghurt with cucumbers, garlic, salt and spices
 
 ====Declension====
-{{de-decl-noun-m|s|s}}
+{{de-ndecl|m:n,s,s}}
+
 {{C|de|Foods}}
 -------- end text --------
 Page 590 Kalte Schnauze: Found match for regex: {
@@ -20338,7 +20338,7 @@ Page 590 Kalte Schnauze: -------- begin text --------
 {{wikipedia|lang=de}}
 
 ===Etymology===
-[[kalt]] "[[cold]]" + [[Schnauze]] "[[snout]]"
+{{af|de|kalt|t1=cold|Schnauze|t2=snout}}
 
 ===Noun===
 {{de-noun|[[kalt|Kalte]]<+> [[Schnauze]]<f>}}
@@ -20525,12 +20525,12 @@ Page 597 Europäer: -------- begin text --------
 * {{hyphenation|de|Eu|ro|pä|er}}
 
 ===Noun===
-{{de-noun|m,s,-}}
+{{de-noun|m}}
 
 # [[European]] (person)
 
 ====Declension====
-{{de-ndecl|m,s,-}}
+{{de-ndecl|m}}
 
 ====Derived terms====
 * {{l|de|Europäerin}}
@@ -20619,13 +20619,13 @@ Page 599 Pflegling: -------- begin text --------
 * {{audio|de|De-Pflegling.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m|Pfleglinges|Pfleglinge}}
+{{de-noun|m}}
 
 # [[foster child]]
 #: {{syn|de|Pflegekind}}
 
 ====Declension====
-{{de-decl-noun-m|(e)s|e}}
+{{de-ndecl|m}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -20907,7 +20907,7 @@ Page 606 Vergnügungspark: -------- begin text --------
 #: {{syn|de|Freizeitpark}}
 
 ====Declension====
-{{de-decl-noun-m|(e)s|en}}
+{{de-ndecl|m,s:es,s:e[rare]:^e[usually in Switzerland]}}
 
 ===Further reading===
 * {{R:DWDS}}
