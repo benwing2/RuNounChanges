@@ -34,6 +34,7 @@ FIXME:
 6. Allow embedded links in genitive/plural/feminine/diminutive/masculine specs, e.g. 'f=![[weiblich]]er Geschäftspartner'.
 7. Add 'prop' indicator to indicate proper nouns and suppress the indefinite article.
 8. Add 'surname' indicator to indicate surnames, decline appropriately and include both masc and fem variants in the table. (DONE)
+9. Add 'langname' indicator to indicate langnames and decline appropriately with its own table with two alternatives. (DONE)
 ]=]
 
 local lang = require("Module:languages").getByCode("de")
@@ -86,8 +87,8 @@ end
 
 local states = { "str", "wk", "mix" }
 local definitenesses = { "ind", "def" }
-local cases = { "nom", "gen", "dat", "acc", "abl", "voc" }
-local adj_cases = { "nom", "gen", "dat", "acc" }
+local cases_with_abl_voc = { "nom", "gen", "dat", "acc", "abl", "voc" }
+local basic_cases = { "nom", "gen", "dat", "acc" }
 local numbers = { "s", "p" }
 local gender_spec_to_full_gender = {
 	m = "masculine",
@@ -95,7 +96,7 @@ local gender_spec_to_full_gender = {
 	n = "neuter",
 }
 
-local case_set = m_table.listToSet(cases)
+local case_set_with_abl_voc = m_table.listToSet(cases_with_abl_voc)
 
 
 local function add_equiv(slot_list)
@@ -107,23 +108,16 @@ end
 
 -- Construct noun slots.
 
-local noun_slot_list = {
-	{"nom_s", "nom|s"},
-	{"gen_s", "gen|s"},
-	{"dat_s", "dat|s"},
-	{"acc_s", "acc|s"},
-	{"abl_s", "abl|s"},
-	{"voc_s", "voc|s"},
-	{"nom_p", "nom|p"},
-	{"gen_p", "gen|p"},
-	{"dat_p", "dat|p"},
-	{"acc_p", "acc|p"},
-}
+local noun_slot_list = {}
 add_equiv(noun_slot_list)
-noun_slot_set = {}
-for _, slotaccel in ipairs(noun_slot_list) do
-	local slot, accel = unpack(slotaccel)
-	noun_slot_set[slot] = true
+local noun_slot_set = {}
+for _, number in ipairs(numbers) do
+	for _, case in ipairs(number == "s" and cases_with_abl_voc or basic_cases) do
+		local slot = case .. "_" .. number
+		local accel = case .. "|" .. number
+		table.insert(noun_slot_list, {slot, accel})
+		noun_slot_set[slot] = true
+	end
 end
 
 
@@ -137,7 +131,7 @@ local surname_endings = {
 	{"f_s", "f|s"},
 	{"p", "p"},
 }
-for _, case in ipairs(adj_cases) do
+for _, case in ipairs(basic_cases) do
 	for _, ending_and_accel in ipairs(surname_endings) do
 		local ending, ending_accel = unpack(ending_and_accel)
 		local slot = case .. "_" .. ending
@@ -148,24 +142,44 @@ for _, case in ipairs(adj_cases) do
 end
 
 
--- Construct adjectival slots.
+-- Construct noun langname slots.
 
-local adjectival_slot_list = {}
-add_equiv(adjectival_slot_list)
-local adjective_slot_set = {}
-for _, state in ipairs(states) do
-	for _, case in ipairs(adj_cases) do
-		for _, number in ipairs(numbers) do
-			local slot = state .. "_" .. case .. "_" .. number
-			local accel = state .. "|" .. case .. "|" .. number
-			table.insert(adjectival_slot_list, {slot, accel})
-			adjective_slot_set[slot] = true
+local langname_slot_list = {
+}
+local langname_slot_set = {}
+for _, case in ipairs(basic_cases) do
+	for _, number in ipairs(numbers) do
+		for is_alt in ipairs { false, true } do
+			local slot = case .. "_" .. number .. (is_alt and "_alt" or "")
+			-- FIXME: We should add accelerators for the alternative forms, but this requires hacking the accelerator
+			-- code in [[Module:inflection utilities]] to specify the alternative lemma; e.g. genitive singular
+			-- ''Deutschen'' needs to have lemma [[Deutsche]] not [[Deutsch]].
+			local accel = is_alt and "-" or case .. "|" .. number
+			table.insert(langname_slot_list, {slot, accel})
+			langname_slot_set[slot] = true
 		end
 	end
 end
 
 
--- Construct linked variants.
+-- Construct adjectival slots.
+
+local adjectival_slot_list = {}
+add_equiv(adjectival_slot_list)
+local adjectival_slot_set = {}
+for _, state in ipairs(states) do
+	for _, case in ipairs(basic_cases) do
+		for _, number in ipairs(numbers) do
+			local slot = state .. "_" .. case .. "_" .. number
+			local accel = state .. "|" .. case .. "|" .. number
+			table.insert(adjectival_slot_list, {slot, accel})
+			adjectival_slot_set[slot] = true
+		end
+	end
+end
+
+
+-- Construct expanded slot lists including linked variants.
 
 local noun_slot_list_with_linked = m_table.shallowcopy(noun_slot_list)
 table.insert(noun_slot_list_with_linked, {"nom_s_linked", "nom|s"})
@@ -174,34 +188,38 @@ table.insert(noun_slot_list_with_linked, {"nom_p_linked", "nom|p"})
 local surname_slot_list_with_linked = m_table.shallowcopy(surname_slot_list)
 table.insert(surname_slot_list_with_linked, {"nom_m_s_linked", "nom|m|s"})
 
+local langname_slot_list_with_linked = m_table.shallowcopy(langname_slot_list)
+table.insert(langname_slot_list_with_linked, {"nom_s_linked", "nom|s"})
+
 local adjectival_slot_list_with_linked = m_table.shallowcopy(adjectival_slot_list)
 table.insert(adjectival_slot_list_with_linked, {"str_nom_s_linked", "str|nom|s"})
 table.insert(adjectival_slot_list_with_linked, {"str_nom_p_linked", "str|nom|p"})
 
 
--- Construct linked+article variants.
-local noun_slot_list_with_linked_and_articles = m_table.shallowcopy(noun_slot_list_with_linked)
-local adjectival_slot_list_with_linked_and_articles = m_table.shallowcopy(adjectival_slot_list_with_linked)
-for _, case in ipairs(cases) do
-	for _, number in ipairs(numbers) do
-		for _, def in ipairs(definitenesses) do
-			local slotaccel = {"art_" .. def .. "_" .. case .. "_" .. number, "-"}
-			table.insert(noun_slot_list_with_linked_and_articles, slotaccel)
-			table.insert(adjectival_slot_list_with_linked_and_articles, slotaccel)
+-- Construct expanded slot lists including linked variants and articles.
+
+local function add_slot_articles(slot_list, cases, numbers)
+	for _, case in ipairs(cases) do
+		for _, number in ipairs(numbers) do
+			for _, def in ipairs(definitenesses) do
+				local slotaccel = {"art_" .. def .. "_" .. case .. "_" .. number, "-"}
+				table.insert(slot_list, slotaccel)
+			end
 		end
 	end
 end
 
+local noun_slot_list_with_linked_and_articles = m_table.shallowcopy(noun_slot_list_with_linked)
+add_slot_articles(noun_slot_list_with_linked_and_articles, cases_with_abl_voc, numbers)
 
 local surname_slot_list_with_linked_and_articles = m_table.shallowcopy(surname_slot_list_with_linked)
-for _, case in ipairs(cases) do
-	for _, gender_number in ipairs {"m_s", "f_s", "p" } do
-		for _, def in ipairs(definitenesses) do
-			local slotaccel = {"art_" .. def .. "_" .. case .. "_" .. gender_number, "-"}
-			table.insert(surname_slot_list_with_linked_and_articles, slotaccel)
-		end
-	end
-end
+add_slot_articles(surname_slot_list_with_linked_and_articles, basic_cases, {"m_s", "f_s", "p"})
+
+local langname_slot_list_with_linked_and_articles = m_table.shallowcopy(langname_slot_list_with_linked)
+add_slot_articles(langname_slot_list_with_linked_and_articles, basic_cases, {"s"})
+
+local adjectival_slot_list_with_linked_and_articles = m_table.shallowcopy(adjectival_slot_list_with_linked)
+add_slot_articles(adjectival_slot_list_with_linked_and_articles, basic_cases, numbers)
 
 
 local function skip_slot(number, slot)
@@ -473,15 +491,7 @@ local function get_default_pl(base, gender)
 end
 
 
-local function decline_plural(base, def_pl)
-	add_spec(base, "nom_p", base.pls, nil, def_pl)
-	add_spec(base, "gen_p", base.pls, nil, def_pl)
-	add_dative_plural(base, base.pls, def_pl)
-	add_spec(base, "acc_p", base.pls, nil, def_pl)
-end
-
-
-local function decline_singular_and_plural(base, gender, def_gen, def_pl)
+local function decline_singular(base, gender, def_gen)
 	add(base, "nom_s", nil, "", gender)
 	add_spec(base, "gen_s", base.gens, gender, def_gen)
 	if base.props.weak then
@@ -493,7 +503,51 @@ local function decline_singular_and_plural(base, gender, def_gen, def_pl)
 		add_archaic_dative_singular(base, gender, def_gen)
 		add(base, "acc_s", nil, "", gender)
 	end
-	decline_plural(base, def_pl)
+end
+
+
+local function decline_plural(base, def_pl)
+	add_spec(base, "nom_p", base.pls, nil, def_pl)
+	add_spec(base, "gen_p", base.pls, nil, def_pl)
+	add_dative_plural(base, base.pls, def_pl)
+	add_spec(base, "acc_p", base.pls, nil, def_pl)
+end
+
+
+local function decline_noun(base)
+	if base.number == "pl" then
+		decline_plural(base, "")
+		if rfind(base.lemma, "innen$") then
+			--- Ends in -innen, likely feminine. Chop off, and convert e.g. Chinesinnen -> Chinesen.
+			local masc = rsub(base.lemma, "innen$", "")
+			if rfind(masc, "es$") then
+				masc = masc .. "en"
+			end
+			-- No need to specify gender for *_equiv; will be handled correctly in [[Module:de-headword]].
+			add(base, "m_equiv", masc, "")
+		else
+			-- Likely masculine. Try to convert Chinesen -> Chinesinnen, and -er -> -erinnen.
+			local femstem = rsub(base.lemma, "en$", "")
+			add(base, "f_equiv", femstem, "innen")
+		end
+	else
+		for _, genderspec in ipairs(base.genders) do
+			local gender = genderspec.form
+			decline_singular(base, gender, get_default_gen(base, gender))
+			decline_plural(base, get_default_pl(base, gender))
+			if gender == "m" then
+				add(base, "f_equiv", rsub(base.lemma, "e$", ""), "in") -- feminine
+			elseif gender == "f" then
+				-- Try (sort of) to get the masculine. Remove final -in, and if the result ends in -es, convert to -ese
+				-- (e.g. Chinesin -> Chinese).
+				local masc = rsub(base.lemma, "in$", "")
+				if rfind(masc, "es$") then
+					masc = masc .. "e"
+				end
+				add(base, "m_equiv", masc, "")
+			end -- do nothing for neuter
+		end
+	end
 end
 
 
@@ -566,39 +620,18 @@ local function decline_toponym(base)
 end
 
 
-local function decline_noun(base)
-	if base.number == "pl" then
-		decline_plural(base, "")
-		if rfind(base.lemma, "innen$") then
-			--- Ends in -innen, likely feminine. Chop off, and convert e.g. Chinesinnen -> Chinesen.
-			local masc = rsub(base.lemma, "innen$", "")
-			if rfind(masc, "es$") then
-				masc = masc .. "en"
-			end
-			-- No need to specify gender for *_equiv; will be handled correctly in [[Module:de-headword]].
-			add(base, "m_equiv", masc, "")
-		else
-			-- Likely masculine. Try to convert Chinesen -> Chinesinnen, and -er -> -erinnen.
-			local femstem = rsub(base.lemma, "en$", "")
-			add(base, "f_equiv", femstem, "innen")
-		end
-	else
-		for _, genderspec in ipairs(base.genders) do
-			local gender = genderspec.form
-			decline_singular_and_plural(base, gender, get_default_gen(base, gender), get_default_pl(base, gender))
-			if gender == "m" then
-				add(base, "f_equiv", rsub(base.lemma, "e$", ""), "in") -- feminine
-			elseif gender == "f" then
-				-- Try (sort of) to get the masculine. Remove final -in, and if the result ends in -es, convert to -ese
-				-- (e.g. Chinesin -> Chinese).
-				local masc = rsub(base.lemma, "in$", "")
-				if rfind(masc, "es$") then
-					masc = masc .. "e"
-				end
-				add(base, "m_equiv", masc, "")
-			end -- do nothing for neuter
-		end
-	end
+local function decline_langname(base)
+	-- We don't specify gender here, which is always neuter.
+	add(base, "nom_s", nil, "")
+	add(base, "gen_s", nil, "")
+	-- If explicit genitive singular given, add it (in addition to the null genitive singular), otherwise default to -s.
+	add_spec(base, "gen_s", base.gens, nil, "s")
+	add(base, "dat_s", nil, "")
+	add(base, "acc_s", nil, "")
+	add(base, "nom_s_alt", nil, "e")
+	add(base, "gen_s_alt", nil, "en")
+	add(base, "dat_s_alt", nil, "en")
+	add(base, "acc_s_alt", nil, "e")
 end
 
 
@@ -652,7 +685,7 @@ local function decline_adjective(base)
 	local function copy_gender_forms(gender)
 		local number = gender == "p" and "p" or "s"
 		for _, state in ipairs(states) do
-			for _, case in ipairs(adj_cases) do
+			for _, case in ipairs(basic_cases) do
 				copy(state .. "_" .. case .. "_" .. gender, state .. "_" .. case .. "_" .. number)
 			end
 		end
@@ -681,17 +714,41 @@ local function decline_adjective(base)
 end
 
 
+-- Return the slots that may contain a lemma, in the order they should be checked. `props` is a property table,
+-- coming either from `base` or `alternant_multiword_spec`.
+local function get_lemma_slots(props)
+	if props.surname then
+		return {"nom_m_s"}
+	elseif props.overall_adj then
+		return {"str_nom_s", "str_nom_p"}
+	else
+		return {"nom_s", "nom_p"}
+	end
+end
+
+
+-- Return the lemmas for this term. The return value is a list of {form = FORM, footnotes = FOOTNOTES}.
+-- If `linked_variant` is given, return the linked variants (with embedded links if specified that way by the user),
+-- otherwies return variants with any embedded links removed.
+function export.get_lemmas(alternant_multiword_spec, linked_variant)
+	local slots_to_fetch = get_lemma_slots(alternant_multiword_spec.props)
+	local linked_suf = linked_variant and "_linked" or ""
+	for _, slot in ipairs(slots_to_fetch) do
+		if alternant_multiword_spec.forms[slot .. linked_suf] then
+			return alternant_multiword_spec.forms[slot .. linked_suf]
+		end
+	end
+	return {}
+end
+
+
 local function handle_derived_slots_and_overrides(base)
 	process_slot_overrides(base)
 
 	-- Compute linked versions of potential lemma slots, for use in {{de-noun}}.
 	-- We substitute the original lemma (before removing links) for forms that
 	-- are the same as the lemma, if the original lemma has links.
-	for _, slot in ipairs(
-		base.props.surname and {"nom_m_s"}
-		or base.props.overall_adj and {"str_nom_s", "str_nom_p"}
-		or {"nom_s", "nom_p"}
-	) do
+	for _, slot in ipairs(get_lemma_slots(base.props)) do
 		iut.insert_forms(base.forms, slot .. "_linked", iut.map_forms(base.forms[slot], function(form)
 			if form == base.orig_lemma_no_links and rfind(base.orig_lemma, "%[%[") then
 				return base.orig_lemma
@@ -787,7 +844,7 @@ local function parse_indicator_spec(angle_bracket_spec, lemma, pagename, proper_
 		local part = segments[1]
 		local offset = 4
 		local case = usub(part, 1, 3)
-		if not case_set[case] then
+		if not case_set_with_abl_voc[case] then
 			parse_err("Internal error: unrecognized case in override: '" .. table.concat(segments) .. "'")
 		end
 		local indicator = case
@@ -826,8 +883,7 @@ local function parse_indicator_spec(angle_bracket_spec, lemma, pagename, proper_
 				local saw_non_gendered_pl = false
 				local saw_mn = false
 				local saw_adj = false
-				local saw_surname = false
-				local saw_toponym = false
+				local special_variant = nil
 				for _, genderspec in ipairs(base.genders) do
 					local g = genderspec.form
 					if g == "m" or g == "n" then
@@ -849,16 +905,11 @@ local function parse_indicator_spec(angle_bracket_spec, lemma, pagename, proper_
 						if g ~= "+" then
 							saw_pl = true
 						end
-					elseif g == "surname" then
+					elseif g == "surname" or g == "toponym" or g == "langname" then
 						if #base.genders > 1 then
-							parse_err("Can't specify multiple genders with surname declension")
+							parse_err("Can't specify multiple genders with " .. g .. " declension")
 						end
-						saw_surname = true
-					elseif g == "toponym" then
-						if #base.genders > 1 then
-							parse_err("Can't specify multiple genders with toponym declension")
-						end
-						saw_toponym = true
+						special_variant = g
 					else
 						parse_err("Unrecognized gender spec '" .. g .. "'")
 					end
@@ -869,44 +920,49 @@ local function parse_indicator_spec(angle_bracket_spec, lemma, pagename, proper_
 				if saw_gendered_pl and saw_non_gendered_pl then
 					parse_err("Can't specify both 'p' and gendered plural specs")
 				end
-				local pl_index = (saw_adj or saw_pl) and 1 or (saw_mn or saw_surname or saw_toponym) and 3 or 2
+				local gen_index = (saw_mn or special_variant) and 2 or 1
+				local pl_index =
+					(saw_adj or saw_pl) and 1 or
+					(saw_mn or special_variant == "surname" or special_variant == "toponym") and 3 or
+					2
 				if #comma_separated_groups > pl_index then
 					if saw_adj then
 						parse_err("Can't specify plurals or genitives with adjectival declension")
 					elseif saw_pl then
 						parse_err("Can't specify plurals or genitives with plural-only nouns")
 					elseif saw_mn then
-						parse_err("Can specify at most three comma-separated specs when the gender is masculine, "
-							.. "neuter or 'surname' (gender/'surname', genitive, plural)")
+						parse_err("Can specify at most three comma-separated specs when the gender is masculine or "
+							.. "neuter (gender, genitive, plural)")
+					elseif special_variant == "surname" or special_variant == "toponym" then
+						parse_err("Can specify at most three comma-separated specs with '" .. special_variant .. "' "
+							.. "nouns ('" .. special_variant .. "', genitive, plural)")
+					elseif special_variant == "langname" then
+						parse_err("Can specify at most two comma-separated specs with 'langname' "
+							.. " ('langname', genitive)")
 					else
-						parse_err("Can specify at most two comma-separated specs when then gender is feminine "
+						parse_err("Can specify at most two comma-separated specs when the gender is feminine "
 							.. "(gender, plural)")
 					end
 				end
-				if #comma_separated_groups > 1 and (saw_mn or saw_surname or saw_toponym) then
-					base.gens = com.fetch_specs(iut, comma_separated_groups[2], ":", "genitive", "allow blank", parse_err)
+				if #comma_separated_groups >= gen_index and gen_index > 1 then
+					base.gens = com.fetch_specs(iut, comma_separated_groups[gen_index], ":", "genitive", "allow blank", parse_err)
 				end
-				if #comma_separated_groups == pl_index and pl_index > 1 then
+				if #comma_separated_groups >= pl_index and pl_index > gen_index then
 					base.pls = com.fetch_specs(iut, comma_separated_groups[pl_index], ":", "plural", "allow blank", parse_err)
 				end
-				if saw_surname then
+				if special_variant then
 					if #base.genders > 1 then
-						parse_err("Internal error: More than one gender spec for 'surname'")
+						parse_err("Internal error: More than one gender spec for '" .. special_variant .. "'")
 					else
-						base.props.surname = true
-						-- FIXME, does it make sense to put the footnotes on the feminine gender (they appear after the gender)?
-						base.genders = {{form = "m"}, {form = "f", footnotes = base.genders[1].footnotes}}
+						base.props[special_variant] = true
+						if special_variant == "surname" then
+							-- FIXME, does it make sense to put the footnotes on the feminine gender (they appear after the gender)?
+							base.genders = {{form = "m"}, {form = "f", footnotes = base.genders[1].footnotes}}
+						else
+							base.genders = {{form = "n", footnotes = base.genders[1].footnotes}}
+						end
 					end
-				end
-				if saw_toponym then
-					if #base.genders > 1 then
-						parse_err("Internal error: More than one gender spec for 'toponym'")
-					else
-						base.props.toponym = true
-						base.genders = {{form = "n", footnotes = base.genders[1].footnotes}}
-					end
-				end
-				if saw_adj then
+				elseif saw_adj then
 					if #base.genders > 1 then
 						parse_err("Internal error: More than one gender spec for adjectival declension")
 					else
@@ -949,7 +1005,7 @@ local function parse_indicator_spec(angle_bracket_spec, lemma, pagename, proper_
 				-- override
 				-- FIXME: Handle adjectival overrides
 				local case_prefix = usub(part, 1, 3)
-				if case_set[case_prefix] then
+				if case_set_with_abl_voc[case_prefix] then
 					local slot, slot_indicator, override = parse_override(dot_separated_group)
 					if base.overrides[slot] then
 						parse_err("Can't specify override twice for slot '" .. slot_indicator .. "'")
@@ -1018,19 +1074,28 @@ local function detect_indicator_spec(alternant_multiword_spec, base)
 	if base.props.article then
 		alternant_multiword_spec.props.article = true
 	end
-	if base.props.toponym then
-		alternant_multiword_spec.props.toponym = true
+	for _, prop in ipairs {"surname", "toponym", "langname"} do
+		if alternant_multiword_spec.props[prop] == nil then
+			alternant_multiword_spec.props[prop] = base.props[prop]
+		elseif alternant_multiword_spec.props[prop] ~= base.props[prop] then
+			-- We do this because we have a special table with its own slots for each of these special variants.
+			-- FIXME: Consider supporting adjectives with these variants. That requires that we copy the adjectival
+			-- declensions to the appropriate per-variant slots.
+			error("If some alternants set '" .. prop .. "', all must do so")
+		end
 	end
 	if base.props.adj then
 		alternant_multiword_spec.props.overall_adj = true
 		synthesize_adj_lemma(base)
 	else
 		-- Set default values.
-		base.number = base.number or base.props.surname and "both" or base.pls and "both" or
-			(alternant_multiword_spec.props.is_proper or base.props.toponym) and "sg" or "both"
-		if base.props.surname then
-			alternant_multiword_spec.props.surname = true
-		else
+		base.number =
+			base.number or
+			base.props.surname and "both" or
+			base.pls and "both" or
+			(alternant_multiword_spec.props.is_proper or base.props.toponym or base.props.langname) and "sg" or
+			"both"
+		if not base.props.surname then
 			-- Compute overall weakness for use in headword.
 			if alternant_multiword_spec.props.weak == nil then
 				alternant_multiword_spec.props.weak = {base.props.weak or false}
@@ -1062,9 +1127,6 @@ local function detect_all_indicator_specs(alternant_multiword_spec)
 	-- Now propagate some properties downwards.
 	iut.map_word_specs(alternant_multiword_spec, function(base)
 		base.props.overall_adj = alternant_multiword_spec.props.overall_adj
-		if alternant_multiword_spec.props.surname and not base.props.surname then
-			error("If some alternants are surnames, all must be")
-		end
 	end)
 end
 
@@ -1236,6 +1298,8 @@ local function decline_noun_or_adjective(base)
 		decline_surname(base)
 	elseif base.props.toponym then
 		decline_toponym(base)
+	elseif base.props.langname then
+		decline_langname(base)
 	elseif base.props.adj then
 		decline_adjective(base)
 	else
@@ -1251,7 +1315,7 @@ local function compute_non_surname_articles(alternant_multiword_spec)
 	if alternant_multiword_spec.number ~=  "pl" then
 		iut.map_word_specs(alternant_multiword_spec, function(base)
 			for _, genderspec in ipairs(base.genders) do
-				for _, case in ipairs(cases) do
+				for _, case in ipairs(cases_with_abl_voc) do
 					for _, def in ipairs(definitenesses) do
 						iut.insert_form(alternant_multiword_spec.forms, "art_" .. def .. "_" .. case .. "_s",
 							{form = com.articles[genderspec.form][def .. "_" .. case]})
@@ -1260,7 +1324,7 @@ local function compute_non_surname_articles(alternant_multiword_spec)
 			end
 		end)
 	end
-	for _, case in ipairs(cases) do
+	for _, case in ipairs(basic_cases) do
 		for _, def in ipairs(definitenesses) do
 			iut.insert_form(alternant_multiword_spec.forms, "art_" .. def .. "_" .. case .. "_p",
 				{form = com.articles.p[def .. "_" .. case]})
@@ -1273,14 +1337,14 @@ end
 -- '[[der]] [[und]] [[der]]' for conjoined nouns.
 local function compute_surname_articles(alternant_multiword_spec)
 	for _, gender in ipairs {"m", "f"} do
-		for _, case in ipairs(cases) do
+		for _, case in ipairs(basic_cases) do
 			for _, def in ipairs(definitenesses) do
 				iut.insert_form(alternant_multiword_spec.forms, "art_" .. def .. "_" .. case .. "_" .. gender .. "_s",
 					{form = "([[" .. com.articles[gender][def .. "_" .. case] .. "]])"})
 			end
 		end
 	end
-	for _, case in ipairs(cases) do
+	for _, case in ipairs(basic_cases) do
 		iut.insert_form(alternant_multiword_spec.forms, "art_def_" .. case .. "_p",
 			{form = "([[" .. com.articles.p["def_" .. case] .. "]])"})
 	end
@@ -1373,6 +1437,8 @@ local function compute_categories_and_annotation(alternant_multiword_spec)
 			m_table.insertIfNot(decldescs, "surname")
 		elseif base.props.toponym then
 			m_table.insertIfNot(decldescs, "toponym")
+		elseif base.props.langname then
+			m_table.insertIfNot(decldescs, "langname")
 		elseif saw_m_or_n then
 			if base.props.weak then
 				insert("weak ~")
@@ -1383,7 +1449,7 @@ local function compute_categories_and_annotation(alternant_multiword_spec)
 		end
 	end
 
-	-- Use the surname/toponym/weak/strong properties of the noun(s).
+	-- Use the surname/toponym/langname/weak/strong properties of the noun(s).
 	map_first_noun(alternant_multiword_spec, do_word_spec)
 
 	if #genderdescs > 0 then
@@ -1397,25 +1463,6 @@ local function compute_categories_and_annotation(alternant_multiword_spec)
 		table.insert(annparts, "adjectival")
 	end
 	alternant_multiword_spec.annotation = table.concat(annparts, ", ")
-end
-
-
-function export.get_lemmas(alternant_multiword_spec, linked_variant)
-	local slots_to_fetch
-	if alternant_multiword_spec.props.surname then
-		slots_to_fetch = {"nom_m_s"}
-	elseif alternant_multiword_spec.props.overall_adj then
-		slots_to_fetch = {"str_nom_s", "str_nom_p"}
-	else
-		slots_to_fetch = {"nom_s", "nom_p"}
-	end
-	local linked_suf = linked_variant and "_linked" or ""
-	for _, slot in ipairs(slots_to_fetch) do
-		if alternant_multiword_spec.forms[slot .. linked_suf] then
-			return alternant_multiword_spec.forms[slot .. linked_suf]
-		end
-	end
-	return {}
 end
 
 
@@ -1493,6 +1540,7 @@ local function show_forms(alternant_multiword_spec)
 		lang = lang,
 		lemmas = lemmas,
 		slot_list = alternant_multiword_spec.props.surname and surname_slot_list_with_linked_and_articles
+			or alternant_multiword_spec.props.langname and langname_slot_list_with_linked_and_articles
 			or alternant_multiword_spec.props.overall_adj and adjectival_slot_list_with_linked_and_articles
 			or noun_slot_list_with_linked_and_articles,
 	}
@@ -1759,7 +1807,48 @@ local noun_template_surname = [=[
 | {acc_p}
 |{\cl}{notes_clause}</div></div>]=]
 
-	local adjectival_template_both = [=[
+
+local noun_template_langname = [=[
+<div class="NavFrame" style="width:100%">
+<div class="NavHead">{title}{annotation}</div>
+<div class="NavContent">
+{\op}| border="1px solid #505050" style="border-collapse:collapse; background:#FAFAFA; text-align:center; width:100%" class="inflection-table inflection-table-de inflection-table-de-langname"
+! style="background:#AAB8C0;width:15%" | 
+! colspan="5" style="background:#AAB8C0;width:85%" | singular &nbsp; ''([[Wiktionary:About German#Declension of language names|explanation of the use and meaning of the forms]])''
+|-
+! style="background:#BBC9D0" |
+! style="background:#BBC9D0;width:14%" | (usually without article)
+! style="background:#BBC9D0;width:32%" | noun
+! style="background:#BBC9D0;width:7%" | [[definite article|def.]]
+! style="background:#BBC9D0;width:32%" | noun
+|-
+! style="background:#BBC9D0" | nominative
+| style="background:#EEEEEE" | ({art_def_nom_s})
+| {nom_s}
+| style="background:#EEEEEE" | {art_def_nom_s}
+| {nom_s_alt}
+|-
+! style="background:#BBC9D0" | genitive
+| style="background:#EEEEEE" | ({art_def_gen_s})
+| {gen_s}
+| style="background:#EEEEEE" | {art_def_gen_s}
+| {gen_s_alt}
+|-
+! style="background:#BBC9D0" | dative
+| style="background:#EEEEEE" | ({art_def_dat_s})
+| {dat_s}
+| style="background:#EEEEEE" | {art_def_dat_s}
+| {dat_s_alt}
+|-
+! style="background:#BBC9D0" | accusative
+| style="background:#EEEEEE" | ({art_def_acc_s})
+| {acc_s}
+| style="background:#EEEEEE" | {art_def_acc_s}
+| {acc_s_alt}
+|{\cl}{notes_clause}</div></div>]=]
+
+
+local adjectival_template_both = [=[
 <div class="NavFrame">
 <div class="NavHead">{title}{annotation}</div>
 <div class="NavContent">
@@ -1843,7 +1932,7 @@ local noun_template_surname = [=[
 |{\cl}{notes_clause}</div></div>]=]
 
 
-	local adjectival_template_sg = [=[
+local adjectival_template_sg = [=[
 <div class="NavFrame" style="width:500px">
 <div class="NavHead">{title}{annotation}</div>
 <div class="NavContent">
@@ -1906,7 +1995,7 @@ local noun_template_surname = [=[
 |{\cl}{notes_clause}</div></div>]=]
 
 
-	local notes_template = [===[
+local notes_template = [===[
 <div style="width:100%;text-align:left;background:#d9ebff">
 <div style="display:inline-block;text-align:left;padding-left:1em;padding-right:1em">
 {footnote}
@@ -1933,6 +2022,8 @@ local function make_table(alternant_multiword_spec)
 	local table_spec
 	if alternant_multiword_spec.props.surname then
 		table_spec = noun_template_surname
+	elseif alternant_multiword_spec.props.langname then
+		table_spec = noun_template_langname
 	elseif alternant_multiword_spec.props.overall_adj then
 		table_spec =
 			alternant_multiword_spec.number == "sg" and adjectival_template_sg or
@@ -2038,6 +2129,7 @@ function export.do_generate_forms(parent_args, pos, from_headword, is_proper, de
 			return skip_slot(alternant_multiword_spec.number, slot)
 		end,
 		slot_list = alternant_multiword_spec.props.surname and surname_slot_list_with_linked
+			or alternant_multiword_spec.props.langname and langname_slot_list_with_linked
 			or alternant_multiword_spec.props.overall_adj and adjectival_slot_list_with_linked
 			or noun_slot_list_with_linked,
 		inflect_word_spec = decline_noun_or_adjective,
@@ -2088,9 +2180,10 @@ end
 local function concat_forms(alternant_multiword_spec, include_props)
 	local ins_text = {}
 	for _, slotaccel in ipairs(
-		alternant_multiword_spec.props.surname and surname_slot_list_with_linked
-			or alternant_multiword_spec.props.overall_adj and adjectival_slot_list_with_linked
-			or noun_slot_list_with_linked
+		alternant_multiword_spec.props.surname and surname_slot_list_with_linked or
+		alternant_multiword_spec.props.langname and langname_slot_list_with_linked or
+		alternant_multiword_spec.props.overall_adj and adjectival_slot_list_with_linked or
+		noun_slot_list_with_linked
 	) do
 		local slot, accel = unpack(slotaccel)
 		local formtext = iut.concat_forms_in_slot(alternant_multiword_spec.forms[slot])
