@@ -387,6 +387,7 @@ pos_functions.nouns = function(class, args, data, proper)
 	local overall_adj = alternant_multiword_spec.props.overall_adj
 	local article = alternant_multiword_spec.props.article
 	local surname = alternant_multiword_spec.props.surname
+	local langname = alternant_multiword_spec.props.langname
 	local saw_f = false
 	local saw_mn = false
 	for _, gender in ipairs(alternant_multiword_spec.genders) do
@@ -403,6 +404,9 @@ pos_functions.nouns = function(class, args, data, proper)
 	if surname then
 		table.insert(data.inflections, {label = "surname"})
 	end
+	if langname then
+		table.insert(data.inflections, {label = "langname name"})
+	end
 	if alternant_multiword_spec.number == "pl" then
 		table.insert(data.inflections, {label = glossary_link("plural only")})
 	end
@@ -416,6 +420,12 @@ pos_functions.nouns = function(class, args, data, proper)
 	elseif surname then
 		do_noun_form("gen_m_s", "masculine genitive", true)
 		do_noun_form("gen_f_s", "feminine genitive", true)
+		do_noun_form("nom_p", "plural", true)
+	elseif langname then
+		do_noun_form("nom_s_alt", "alternative nominative (used with the definite article)", true)
+		do_noun_form("gen_s", "genitive", true)
+		do_noun_form("gen_s_alt", "alternative genitive", true)
+		-- There should be no plural; this will trigger the display of 'no plural'.
 		do_noun_form("nom_p", "plural", true)
 	elseif overall_adj then
 		if article then
