@@ -90,6 +90,7 @@ function export.default_entry(params)
 		["f|s"] = "feminine singular of",
 		["m|p"] = "masculine plural of",
 		["f|p"] = "feminine plural of",
+		["pejorative"] = "pejorative of",
 	}
 	
 	if params.form == "comparative" or params.form == "superlative" or params.form == "equative" then
