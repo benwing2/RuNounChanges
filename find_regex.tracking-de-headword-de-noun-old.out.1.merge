@@ -12006,9 +12006,12 @@ Page 302 Dangme: Found match for regex: =
 Page 302 Dangme: -------- begin text --------
 
 ===Proper noun===
-{{de-proper noun|old=1}}
+{{de-proper noun|n,-.sg}}
 
 # The [[Adangme]] ([[#English|Dangme]]) language
+
+====Declension====
+{{de-ndecl|n,-.sg}}
 
 {{C|de|Languages}}
 -------- end text --------
@@ -12064,7 +12067,7 @@ Page 305 Schock: -------- begin text --------
 Chiefly a borrowing (since 18th century), partly from {{der|de|fr|choc}}, partly from {{der|de|en|shock}}, both derived from {{der|de|fro|choquer}}, from {{der|de|frk|*skukkōn}}, from {{der|de|gem-pro|*skukkōną}}. There was also an uncommon native cognate, from {{inh|de|gmh|schoc}} (“wind gust”, rarely also “shock, thrust”), from {{inh|de|goh|scoc}}, which may have been merged with the borrowing.
 
 ====Noun====
-{{de-noun|m|Schocks|gen2=Schockes|Schocks|pl2=Schocke|Schöckchen}}
+{{de-noun|m,s:es,s:e[dated]|dim=^chen[uncommon, jocular]}}
 
 # [[shock]] {{gloss|mental or medical condition}}
 
@@ -12075,8 +12078,7 @@ Chiefly a borrowing (since 18th century), partly from {{der|de|fr|choc}}, partly
 * {{alter|de|Chok||obsolete}}
 
 =====Declension=====
-{{de-decl-noun-m|s|s}}
-{{de-decl-noun-m|(e)s|e}}
+{{de-ndecl|m,s:es,s:e[dated]}}
 
 =====Derived terms=====
 * {{l|de|Eiweißschock}}
@@ -12089,13 +12091,14 @@ Chiefly a borrowing (since 18th century), partly from {{der|de|fr|choc}}, partly
 Compare {{cog|nl|schok}}, {{cog|da|skok}}, {{cog|sv|skock}}, {{cog|no|skok}}.
 
 ====Noun====
-{{de-noun|n,(e)s,-:e}}
+{{de-noun|n,s:es,e:-[with a dimension]}}
 
-# {{lb|de|archaic}} A [[unitless]] [[measure]] indicating [[sixty]] (as in five [[dozen]]s, or three [[score]]s).
-# {{lb|de|obsolete}} Such a measure indicating [[twenty]] or [[forty]].
+# {{lb|de|archaic}} [[three]] [[score]] {{gl|a unitless measure indicating sixty of anything}}
+# {{lb|de|obsolete}} [[one]] [[score]]; [[two]] [[score]] {{gl|a unitless measure indicating twenty or forty of anything}}
+# {{lb|de|colloquial|dated}} a [[heap]], a [[bunch]] {{gl|a large, indefinite number}}
 
 =====Declension=====
-{{de-ndecl|n,(e)s,-:e}}
+{{de-ndecl|n,s:es,e:-[with a dimension]}}
 
 =====Derived terms=====
 * {{l|de|schockweise}}
@@ -12114,12 +12117,12 @@ Page 306 Montrealer: -------- begin text --------
 {{af|de|Montreal|-er}}
 
 ===Noun===
-{{de-noun|m,s,-|f=in}}
+{{de-noun|m|f=in}}
 
 # a [[#English|Montrealer]] {{gloss|native or inhabitant of Montreal}}
 
 ====Declension====
-{{de-ndecl|m,s,-}}
+{{de-ndecl|m}}
 
 {{C|de|Demonyms}}
 -------- end text --------
@@ -12136,7 +12139,7 @@ From {{inh|de|gmh|papegei}}, from {{der|de|fro|papegai}}, from {{der|de|osp|papa
 * {{rhymes|de|aɪ̯|s=3}}
 
 ===Noun===
-{{de-noun|m|Papageis|Papageien|gen2=Papageien}}
+{{de-noun|((<m,s,en>,<m.weak.[less common]>,<m.[rare]>))}}
 
 # [[parrot]]
 
@@ -12144,11 +12147,7 @@ From {{inh|de|gmh|papegei}}, from {{der|de|fro|papegai}}, from {{der|de|osp|papa
 * The word may be declined according to the strong or the weak pattern. Strong declension prevails considerably in both spoken and written German. The genitive ({{m|de||des}}) {{m|de||Papageien}} is somewhat more competitive than the other weak forms, but is still fairly rare.
 
 ====Declension====
-Strong declension:
-{{de-decl-noun-m|s|en}}
-
-Weak declension:
-{{de-decl-noun-m|en|en}}
+{{de-ndecl|((<m,s,en>,<m.weak.[less common]>,<m.[rare]>))}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -12205,7 +12204,7 @@ From {{inh|de|gmh|kapitān}}, borrowed (13th c.) in the military sense from {{de
 * {{audio|de|De-Kapitän.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m|Kapitäns|Kapitäne|f=Kapitänin}}
+{{de-noun|m|f=in}}
 
 # {{lb|de|nautical|aviation}} [[captain]]
 #: {{syn|de|Käpt'n|Käpten|Kaptein|q=all informal}}
@@ -12218,7 +12217,7 @@ From {{inh|de|gmh|kapitān}}, borrowed (13th c.) in the military sense from {{de
 #: {{syn|de|Spielführer}}
 
 ====Declension====
-{{de-decl-noun-m|(e)s|e}}
+{{de-ndecl|m}}
 
 ====Related terms====
 * {{l|de|Flottenkapitän}}
@@ -12250,7 +12249,7 @@ Borrowed from {{bor|de|fr|guépard}}, from {{der|de|it|gattopardo||ocelot, leopa
 * {{audio|de|De-Gepard.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m|Gepards|gen2=Geparden|Geparde|pl2=Geparden|f=Gepardin}}
+{{de-noun|((<m>,<m.weak>))|f=in}}
 
 # [[cheetah]] {{gloss|[[Acinonyx jubatus]]}}
 #: {{syn|de|Jagdleopard}}
@@ -12259,11 +12258,7 @@ Borrowed from {{bor|de|fr|guépard}}, from {{der|de|it|gattopardo||ocelot, leopa
 * Weak declension is only used by speakers who stress the word on the last syllable. Strong declension can be used with both accentuations.
 
 ====Declension====
-Strong declension:
-{{de-decl-noun-m|s|e}}
-
-Weak declension:
-{{de-decl-noun-m|en|en}}
+{{de-ndecl|((<m>,<m.weak>))|f=in}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -12282,13 +12277,13 @@ A late 18th century relatinized form from early modern {{m|de|Babst}}, {{m|de|Ba
 * {{IPA|de|/paːpst/}}
 
 ===Noun===
-{{de-noun|m|Papstes|Päpste|f=Päpstin}}
+{{de-noun|m,es:s,^e|f=^in}}
 
 # [[pope]] {{q|male or of unspecified gender}} (head of the [[Roman Catholic Church]]; title of other religious leaders such as the ''Coptic Pope'')
 # [[expert]], [[pundit]] {{q|used in various compounds}}
 
 ====Declension====
-{{de-decl-noun-m|(e)s|pl=Päpste}}
+{{de-ndecl|m,es:s,^e}}
 
 ====Derived terms====
 {{der4|de
@@ -12416,7 +12411,7 @@ Page 313 Außerirdische: Found match for regex: =
 Page 313 Außerirdische: -------- begin text --------
 
 ===Etymology===
-Compound of [[außer]]/[[außerhalb]] "[[outside]]" (of) + [[irdisch]]/[[Erde]] "[[earthly]]/[[Earth]]".
+From {{af|de|außer|t1=outside|irdisch|t2=earthly}}.
 
 ===Pronunciation===
 * {{audio|de|De-Außerirdische.ogg|Audio}}
@@ -12450,9 +12445,10 @@ Page 314 Koks: -------- begin text --------
 Borrowing from {{bor|de|en|coke|coke(s)}}.
 
 ====Noun====
-{{de-noun|m}}
+{{de-noun|m,,+[rare, referring to different types]}}
 
 # [[coke]]
+# {{lb|de|singularonly|jocular}} ([[ready]]) [[cash]]
 
 =====Declension=====
 {{de-ndecl|m}}
@@ -12461,14 +12457,37 @@ Borrowing from {{bor|de|en|coke|coke(s)}}.
 Truncation of {{m|de|Kokain}}.
 
 ====Noun====
-{{de-noun|n|Kokses|-|g2=m}}
+{{de-noun|n:m,es.sg}}
 
 # {{lb|de|informal|slang}} [[cocaine]]
 #* '''1996''', Falco, "Mutter, der Mann mit dem Koks ist da".
 #*: {{quote|de|Mutter, der Mann mit dem '''Koks''' ist da.|Mother, the man with the '''coke''' is here. {{q|pop song by Falco plays with the double meaning}}|inline=1}}
 
 =====Declension=====
-{{de-decl-noun-n|es|n=sg}}
+{{de-ndecl|n:m,es.sg}}
+
+===Etymology 3===
+{{unk|de|title=Unclear}}.
+
+====Noun====
+{{de-noun|m,-:es}}
+
+# {{lb|de|colloquial|dated}} [[stiff]] [[hat]]
+
+=====Declension=====
+{{de-ndecl|m,-:es}}
+
+===Etymology 3===
+{{unk|de}}.
+
+====Noun====
+{{de-noun|m,-,-}}
+
+# {{lb|de|regional}} [[glass]] of [[rum]] with [[dice]]d [[sugar]] and a [[coffee]] [[bean]]
+# {{lb|de|colloquial|singularonly}} [[nonsense]]
+
+=====Declension=====
+{{de-ndecl|m,-,-}}
 -------- end text --------
 Page 315 Jogurt: Found match for regex: =
 Page 315 Jogurt: -------- begin text --------
@@ -12577,14 +12596,12 @@ From {{bor|de|gsw|Müesli}}, diminutive of {{m|gsw|Mues}}, itself cognate to {{c
 * {{rhymes|de|yːsli|s=2}}
 
 ===Noun===
-{{de-noun|n|Müsli|gen2=Müslis|Müsli|pl2=Müslis}}
+{{de-noun|n,-:s,-[rare]:s[rare]}}
 
 # [[muesli]], [[granola]]
 
 ====Declension====
-{{de-decl-noun-n||}}
-{{de-decl-noun-n|s|}}
-{{de-decl-noun-n|s|s}}
+{{de-ndecl|n,-:s,-[rare]:s[rare]}}
 
 ====Descendants====
 * {{desc|hu|müzli|bor=1}}
@@ -12604,13 +12621,13 @@ From {{inh|de|gmh|paradīs|paradīs(e)}}, from {{inh|de|goh|paradīs}}, borrowed
 * {{audio|de|De-Paradies.ogg|audio}}
 
 ===Noun===
-{{de-noun|n,es,e}}
+{{de-noun|n}}
 
 # [[paradise]]
 # {{lb|de|architecture}} [[atrium]]
 
 ====Declension====
-{{de-ndecl|n,es,e}}
+{{de-ndecl|n}}
 
 ====Derived terms====
 {{der4|de
@@ -12861,7 +12878,7 @@ Page 323 Automat: -------- begin text --------
 * {{rhymes|de|aːt|s=3}}
 
 ===Noun===
-{{de-noun|n|g2=m|Automaten|Automaten}}
+{{de-noun|m:n[uncommon.weak}}
 
 # [[automaton]], [[machine]]
 # [[vending machine]] {{qualifier|short for the lengthy and unusual {{m|de|Verkaufsautomat}}}}
@@ -12872,7 +12889,7 @@ Page 323 Automat: -------- begin text --------
 * The neuter gender is uncommon nowadays.
 
 ====Declension====
-{{de-decl-noun-m|en|en}}
+{{de-ndecl|m:n[uncommon.weak}}
 
 ====Derived terms====
 {{der4|de
@@ -13013,14 +13030,14 @@ From {{bor|de|la|continēns}}.
 * {{audio|de|De-Kontinent.ogg|audio}}
 
 ===Noun===
-{{de-noun|m,es:s,e}}
+{{de-noun|m,es:s}}
 
 # [[continent]]
 #: {{syn|de|Festland|Erdteil}}
 #: {{ux|de|Europa wird als '''Kontinent''' betrachtet.|Europe is regarded as a '''continent'''.}}
 
 ====Declension====
-{{de-ndecl|m,es:s,e}}
+{{de-ndecl|m,es:s}}
 
 ====Derived terms====
 {{der4|de
@@ -13073,7 +13090,7 @@ From {{inh|de|gmh|wīwer}}, {{m|gmh|wīwære}}, from {{inh|de|goh|wīwāri}}, fr
 * {{audio|de|LL-Q188 (deu)-Sebastian Wallroth-Weiher.wav|Audio}}
 
 ===Noun===
-{{de-noun|m||Weiher}}
+{{de-noun|m}}
 
 # [[pond]]
 #: {{syn|de|Teich|;|Tümpel<q:shallow>}}
@@ -13082,7 +13099,7 @@ From {{inh|de|gmh|wīwer}}, {{m|gmh|wīwære}}, from {{inh|de|goh|wīwāri}}, fr
 * The distinction between {{m|de||Weiher}} and {{m|de|Teich}} was originally purely regional, the former being chiefly western and southern, the latter northern and eastern. Today, both words are used alongside for natural ponds, but ''Teich'' is strongly predominant for man-made ones.
 
 ====Declension====
-{{de-decl-noun-n|s}}
+{{de-ndecl|m}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -13144,7 +13161,7 @@ From {{inh|de|gmh|kamîn}}, from {{der|de|goh|kemîn}}, from {{der|de|la|camīnu
 * {{hyph|de|Ka|min}}
 
 ===Noun===
-{{de-noun|m,(e)s,e}}
+{{de-noun|m:n[usually in Switzerland],s:es}}
 
 # [[fireplace]]
 #: {{syn|de|Feuerstätte|Herd|q2=dated|Cheminée|q3=Switzerland}}
@@ -13155,7 +13172,7 @@ From {{inh|de|gmh|kamîn}}, from {{der|de|goh|kemîn}}, from {{der|de|la|camīnu
 In order to specify the sense “fireplace” as opposed to “chimney”, the former can be referred to as {{m|de|offener}} ''Kamin''.
 
 ====Declension====
-{{de-ndecl|m,(e)s,e}}
+{{de-ndecl|m:n[usually in Switzerland],s:es}}
 
 ====Coordinate terms====
 * {{l|de|Schornstein}}
@@ -13203,7 +13220,7 @@ Radler is the [[Bavarian]] dialect word for {{m|de|Radfahrer||cyclist}}. There a
 * {{audio|de|De-Radler.ogg|Audio}}
 
 ===Noun===
-{{de-noun|n:m,s,-}}
+{{de-noun|n:m}}
 
 # {{lb|de|chiefly|Southern Germany}} [[shandy]] (beer mixed with lemonade)
 #: {{syn|de|Alsterwasser|Alster|Panaché|q3=Switzerland}}
@@ -13212,16 +13229,16 @@ Radler is the [[Bavarian]] dialect word for {{m|de|Radfahrer||cyclist}}. There a
 * {{l|de|Radlermaß}}
 
 ====Declension====
-{{de-ndecl|n:m,s,-}}
+{{de-ndecl|n:m}}
 
 ===Noun===
-{{de-noun|m,s,-|f=in}}
+{{de-noun|m|f=in}}
 
 # {{lb|de|cycling|colloquial}} [[cyclist]]
 #: {{syn|de|Fahrradfahrer}}
 
 ====Declension====
-{{de-ndecl|m,s,-}}
+{{de-ndecl|m}}
 
 ====Derived terms====
 * {{l|de|Kampfradler}}
@@ -13268,12 +13285,12 @@ From {{inh|de|gmh|bezirc}}, from {{m|gmh|be-}} + {{m|gmh|zirc}}, from {{der|de|l
 * {{audio|de|De-Bezirk.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m|Bezirkes|gen2=Bezirks|Bezirke}}
+{{de-noun|m,s:es}}
 
-# A [[district]], [[borough]] {{q|formal administrative division}}
+# [[district]], [[borough]] {{q|formal administrative division}}
 
 ====Declension====
-{{de-decl-noun-n|(e)s|e}}
+{{de-ndecl|m,s:es}}
 
 ====Related terms====
 * {{l|de|Bezirksamt}}, {{l|de|Bezirksausschuss}}, {{l|de|Bezirksregierung}}
@@ -13300,12 +13317,12 @@ From {{bor|de|fr|millionnaire}}.
 * {{hyphenation|de|Mil|li|o|när}}
 
 ===Noun===
-{{de-noun|m|Millionärs|Millionäre|f=Millionärin}}
+{{de-noun|m|f=in}}
 
 # [[millionaire]] {{q|male or of unspecified gender}}
 
 ====Declension====
-{{de-decl-noun-m|s|en}}
+{{de-ndecl|m}}
 
 ====Derived terms====
 {{der3|de
@@ -13389,7 +13406,7 @@ From {{af|de|Hure|-n-|Kind|t1=whore|t3=child}}.
 * {{audio|de|De-Hurenkind.ogg|Audio}}
 
 ===Noun===
-{{de-noun|n||Hurenkinder}}
+{{de-noun|n,es:s,er}}
 
 # {{lb|de|offensive}} [[bastard]]; [[illegitimate]] [[child]] (also specifically that of a [[prostitute]], but not necessarily)
 #: {{syn|de|Bastard|Bankert}}
@@ -13397,7 +13414,7 @@ From {{af|de|Hure|-n-|Kind|t1=whore|t3=child}}.
 #: {{syn|de|Witwe}}
 
 ====Declension====
-{{de-decl-noun-n||er}}
+{{de-ndecl|n,es:s,er}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -13450,12 +13467,12 @@ Via {{der|de|gml|-}} from {{der|de|dum|dûne}}, from {{der|de|odt|dūna}}, from 
 * {{audio|de|De-Düne.ogg|Audio}}
 
 ===Noun===
-{{de-noun|f,n}}
+{{de-noun|f}}
 
 # [[dune]]
 
 ====Declension====
-{{de-ndecl|f,n}}
+{{de-ndecl|f}}
 
 ====Derived terms====
 * {{l|de|Sanddüne}}
@@ -13484,13 +13501,13 @@ From {{der|de|gmh|verlust}}, from {{der|de|goh|farlust}}.
 * {{audio|de|De-Verlust.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m,(e)s,e}}
+{{de-noun|m,es:s}}
 
 # [[loss]] {{gloss|all senses, except {{m|en|defeat}} for which {{m|de|Niederlage}} used}}
 #: {{ant|de|Gewinn}}
 
 ====Declension====
-{{de-ndecl|m,(e)s,e}}
+{{de-ndecl|m,es:s}}
 
 ====Related terms====
 * {{l|de|verlieren}}
@@ -13669,11 +13686,9 @@ Page 352 Trampel: Found match for regex: =
 Page 352 Trampel: -------- begin text --------
 
 ===Noun===
-{{de-noun|m|Trampels|Trampel}}
+{{de-noun|m:n}}
 
-{{de-noun|n|Trampels|Trampel}}
-
-# {{qualifier|an insensitive or coarse person}} [[clod]]
+# {{lb|de|colloquial|pejorative}} [[clod]], [[oaf]] {{gl|insensitive or coarse person}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -13749,13 +13764,13 @@ From {{bor|de|la|commentarius}}.
 * {{rhymes|de|aːɐ̯|s=3}}
 
 ===Noun===
-{{de-noun|m|g2=n|Kommentars|gen2=Kommentares|Kommentare}}
+{{de-noun|m}}<!-- no evidence of neuter gender in Duden, DWDS, Pons or dewikt -->
 
 # [[comment]]
 # [[commentary]]
 
 ====Declension====
-{{de-decl-noun-m|s|e}}
+{{de-ndecl|m}}<!-- no evidence of neuter gender in Duden, DWDS, Pons or dewikt -->
 
 ====Derived terms====
 * {{l|de|kommentarlos}}
@@ -13814,13 +13829,12 @@ From {{bor|de|la|globus}}.
 * {{audio|de|De-Globus.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m|Globus|gen2=Globusses|Globen|pl2=Globusse}}
+{{de-noun|m,-:ses,Globen:se}}
 
 # [[globe]]
 
 ====Declension====
-{{de-decl-noun-m|pl=Globen}}
-{{de-decl-noun-m|ses|se}}
+{{de-ndecl|m,-:ses,Globen:se}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -13889,7 +13903,7 @@ From {{inh|de|gmh|fleischer}}, {{m|gmh|vleischer}}, {{m|gmh|vleischære}}, equiv
 * {{audio|de|De-Fleischer.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m||Fleischer|f=Fleischerin}}
+{{de-noun|m|f=in}}
 
 # {{lb|de|regional|chiefly|northern and eastern Germany}} [[butcher]] {{q|male or of unspecified gender}}
 #: {{syn|de|Fleischhacker|;|Fleischhauer|;|Katzoff|Katzuff|;|Knochenhauer|;|Metzger|;|Metzler|;|Schächter|;|Schlachter|;|Schlächter}}
@@ -13898,7 +13912,7 @@ From {{inh|de|gmh|fleischer}}, {{m|gmh|vleischer}}, {{m|gmh|vleischære}}, equiv
 * This is the preferred term in government and other official contexts in Germany.
 
 ====Declension====
-{{de-decl-noun-m|s}}
+{{de-ndecl|m}}
 
 ===Proper noun===
 {{de-proper noun|surname}}
@@ -13978,12 +13992,12 @@ Page 363 Mindestlohn: -------- begin text --------
 * {{audio|de|De-Mindestlohn.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m|Mindestlohns|gen2=Mindestlohnes|Mindestlöhne}}
+{{de-noun|m,s:es,^e}}
 
 # [[minimum wage]]
 
 ====Declension====
-{{de-decl-noun-m|(e)s|pl=Löhne}}
+{{de-ndecl|m,s:es,^e}}
 
 ====Related terms====
 * {{l|de|Mindestgröße}}, {{l|de|Mindestmaß}}, {{l|de|zumindest}}
@@ -13997,7 +14011,7 @@ Page 364 Prostitutierte: Found match for regex: =
 Page 364 Prostitutierte: -------- begin text --------
 
 ===Noun===
-{{de-noun|+}}
+{{head|de|misspelling}}
 
 # {{misspelling of|de|Prostituierte}}
 
@@ -14018,7 +14032,7 @@ From {{bor|de|fr|balcon}}, from {{der|de|it|balcone}}, from {{der|de|lng|balko|*
 * {{audio|de|De-Balkon.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m|Balkons|Balkons|pl2=Balkone}}
+{{de-noun|m,s,s[northern and central Germany]:e[southern Germany, Austria, Switzerland]}}
 
 # {{lb|de|architectural element}} [[balcony]] {{gloss|an accessible structure extending from a building, especially outside a window or overlooking a stage}}
 
@@ -14026,11 +14040,7 @@ From {{bor|de|fr|balcon}}, from {{der|de|it|balcone}}, from {{der|de|lng|balko|*
 The plural ''Balkons'' goes along with the northern pronunciation of the word; the plural ''Balkone'' goes with the southern one. Some northern speakers use the form ''Balkone'' and change the pronunciation of the second syllable accordingly in the plural.
 
 ====Declension====
-; ''Plural'' -s
-{{de-decl-noun-m|s|s}}
-
-; ''Plural'' -e
-{{de-decl-noun-m|s|e}}
+{{de-ndecl|m,s,s[northern and central Germany]:e[southern Germany, Austria, Switzerland]}}
 
 ====Synonyms====
 * {{l|de|Blk.}} (abbreviation in advertisements)
@@ -14057,12 +14067,12 @@ Page 366 Erntedankfest: -------- begin text --------
 * {{hyphenation|de|Ern|te|dank|fest}}
 
 ===Noun===
-{{de-noun|n,es:s,e}}
+{{de-noun|n,es:s}}
 
 # [[Thanksgiving]]
 
 ====Declension====
-{{de-ndecl|n,es:s,e}}
+{{de-ndecl|n,es:s}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -14230,7 +14240,7 @@ Borrowed from {{bor|de|it|marzapane}}. See {{cog|en|marzipan}} for more.
 * {{rhymes|de|aːn|s=3}}
 
 ===Noun===
-{{de-noun|n|g2=m|Marzipans|Marzipane}}
+{{de-noun|n:m[also in southern Germany and especially Austria],s,e[rare, referring to different types]}}
 
 # {{lb|de|generally|_|uncountable}} [[marzipan]]
 
@@ -14239,7 +14249,7 @@ Borrowed from {{bor|de|it|marzapane}}. See {{cog|en|marzipan}} for more.
 * The plural is only used to refer to different kinds of marzipan.
 
 ====Declension====
-{{de-decl-noun-n|s|e}}
+{{de-ndecl|n:m[also in southern Germany and especially Austria],s,e[rare, referring to different types]}}
 
 ====Derived terms====
 * {{l|de|Marzipankartoffel}}
@@ -14274,13 +14284,13 @@ Page 371 Sicherheitsgurt: -------- begin text --------
 * {{hyphenation|de|Si|cher|heits|gurt}}
 
 ===Noun===
-{{de-noun|m,(e)s,e}}
+{{de-noun|m,s:es}}
 
 # [[seat belt]], [[safety belt]]
 #: {{syn|de|Anschnallgurt<q:colloquial>}}
 
 ====Declension====
-{{de-ndecl|m,(e)s,e}}
+{{de-ndecl|m,s:es}}
 
 ====Related terms====
 * {{l|de|Sicherheitsnadel}}, {{l|de|Sicherheitsabschnitt}}
@@ -14412,12 +14422,12 @@ From {{affix|de|gegen-|Teil}}.
 * {{audio|de|De-Gegenteil.ogg|Audio}}
 
 ===Noun===
-{{de-noun|n,es:s,e}}
+{{de-noun|n,es:s}}
 
 # [[opposite]] (contrary thing)
 
 ====Declension====
-{{de-ndecl|n,es:s,e}}
+{{de-ndecl|n,es:s}}
 
 ====Derived terms====
 * {{l|de|gegenteilig}}
@@ -14564,7 +14574,7 @@ Page 382 schwarzes Loch: -------- begin text --------
 * {{alter|de|Schwarzes Loch}}
 
 ===Etymology===
-{{m|de|schwarz||black}} + {{m|de|Loch||hole}}
+{{af|de|schwarz|t1=black|Loch|t2=hole}}
 
 ===Pronunciation===
 * {{IPA|de|/ˈʃvaʁt͡səs lɔx/}}
@@ -14647,12 +14657,12 @@ Page 385 Scheich: -------- begin text --------
 * {{rhymes|de|aɪ̯ç|s=1}}
 
 ===Noun===
-{{de-noun|m,(e)s,e:s}}
+{{de-noun|m,s:es,e:s}}
 
 # [[sheik]]
 
 ====Declension====
-{{de-ndecl|m,(e)s,e:s}}
+{{de-ndecl|m,s:es,e:s}}
 
 ====Derived terms====
 * {{l|de|Ölscheich}}
@@ -14883,19 +14893,19 @@ From substantive use of {{bor|de|LL.|prīmās||chief; noble}} (genitive {{m|la|p
 * {{rhymes|de|aːt|s=2}}
 
 ===Noun===
-{{de-noun|m|Primaten|Primaten|f=[[Primatin]] {{q|for the animal}}}}
+{{de-noun|m.weak|f=in[for the animal]}}
 
 # {{lb|de|ecclesiastical}} [[primate]]
 # {{lb|de|zoology}} [[primate]]
 
 ====Declension====
-{{de-decl-noun-m|en|en}}
+{{de-ndecl|m.weak}}
 
 ====Synonyms====
 * {{sense|ecclesiastical position}} {{l|de|Primas}}
 
 ===Noun===
-{{de-noun|n|g2=m|Primats|gen2=Primates|Primate}}
+{{de-noun|n:m,s:es}}
 
 # [[primacy]], [[supremacy]]
 #* '''2010''', ''{{w|Der Spiegel}}'', issue [http://www.spiegel.de/spiegel/print/index-2010-21.html 21/2010], page 37:
@@ -14905,9 +14915,7 @@ From substantive use of {{bor|de|LL.|prīmās||chief; noble}} (genitive {{m|la|p
 # {{lb|de|wine}} [[#English|Primat]]
 
 ====Declension====
-{{de-decl-noun-n|(e)s|e}}
-or
-{{de-decl-noun-m|(e)s|e}}
+{{de-ndecl|n:m,s:es}}
 
 ====Synonyms====
 * {{sense|ecclesiastical station}} {{l|de|Primas}}
@@ -15024,7 +15032,7 @@ From earlier {{m|de|Apostrophus|g=m}}, from {{bor|de|la|apostrophus|g=f}}.
 * {{hyphenation|de|Apo|stroph}}; ''also'' {{hyphenation|de|Apos|troph|nocaption=1}} ''or'' {{hyphenation|de|Apost|roph|nocaption=1}}
 
 ===Noun===
-{{de-noun|m|g2=n|Apostrophs|gen2=Apostrophes|Apostrophe}}
+{{de-noun|m:n[nonstandard but common informally],s:es[rare]}}
 
 # {{lb|de|typography}} [[apostrophe]]
 #: {{syn|de|Auslassungszeichen}}
@@ -15034,7 +15042,7 @@ From earlier {{m|de|Apostrophus|g=m}}, from {{bor|de|la|apostrophus|g=f}}.
 Only the masculine gender is (official) standard, but the neuter gender is also used (especially informally).
 
 ====Declension====
-{{de-decl-noun-m|(e)s|e}}
+{{de-ndecl|m:n[nonstandard but common informally],s:es[rare]}}
 
 ====Derived terms====
 * {{l|de|Apostrophitis}}
@@ -15106,12 +15114,12 @@ Page 401 Sabbatjahr: -------- begin text --------
 * {{audio|de|De-Sabbatjahr.ogg|Audio}}
 
 ===Noun===
-{{de-noun|n,es:s,e}}
+{{de-noun|n,es:s}}
 
 # [[sabbatical]] ([[year]])
 
 ====Declension====
-{{de-ndecl|n,es:s,e}}
+{{de-ndecl|n,es:s}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -15133,7 +15141,9 @@ Borrowed from {{bor|de|en|small talk}}.
 {{de-noun|m:n[rare],s,s}}
 
 # [[small talk]]
-#:{{syn|de|Plauderei}}
+#: {{syn|de|Plauderei}}
+# a [[conversation]] [[involve|involving]] [[small talk]]
+#: {{syn|de|Plauderei}}
 
 ====Declension====
 {{de-ndecl|m:n[rare],s,s}}
@@ -15155,12 +15165,12 @@ Page 403 Komoren: -------- begin text --------
 * {{audio|de|De-Komoren.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|p.article}}
+{{de-proper noun|fp.article}}
 
 # {{place|de|archipelago/and/country|r/East Africa|in the|ocean/Indian Ocean|t=Comoros}}
 
 ====Declension====
-{{de-ndecl|p.article}}
+{{de-ndecl|fp.article}}
 
 {{C|de|Exonyms}}
 -------- end text --------
@@ -15192,9 +15202,12 @@ Page 405 Gouda: -------- begin text --------
 * {{audio|de|De-Gouda.ogg|Audio}}
 
 ===Proper noun===
-{{de-proper noun|n|Goudas}}
+{{de-proper noun|toponym}}
 
 # {{place|de|t1=Gouda|city|p/South Holland|c/Netherlands}}
+
+====Declension====
+{{de-ndecl|toponym}}
 
 ===Noun===
 {{de-noun|m,s,s}}
@@ -15238,6 +15251,10 @@ Borrowed from {{bor|de|tr|döner}}.
 ====Declension====
 {{de-ndecl|m:n[uncommon, see [[#Usage notes|usage notes]]],s,-}}
 
+====Synonyms====
+* {{sense|döner kebap}} {{l|de|Dönerkebab}}, {{l|de|Dönertasche}}
+* {{sense|meat}} {{l|de|Dönerfleisch}}
+
 ====Derived terms====
 * {{l|de|Dönerfleisch}}
 * {{l|de|Dönerland}}
@@ -15280,12 +15297,12 @@ From {{affix|de|Panther|Pilz}}.
 * {{audio|de|De-Pantherpilz.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m,es,e}}
+{{de-noun|m}}
 
 # [[panther cap]], [[Amanita pantherina]]
 
 ====Declension====
-{{de-ndecl|m,es,e}}
+{{de-ndecl|m}}
 
 ===Further reading===
 * {{wpl|de}}
@@ -15309,35 +15326,35 @@ Page 409 Puff: -------- begin text --------
 * {{alter|de|Buff|Buf}}
 
 ====Noun====
-{{de-noun|m,(e)s,e:^e}}
+{{de-noun|m,s:es,e:^e}}
 
-# {{tlb|de|now|_|regional}} [[thud]], [[wham]]
+# {{tlb|de|colloquial|now|_|regional}} [[thud]], [[wham]]; [[light]], [[harmless]] [[blow]]
 
 =====Declension=====
-{{de-ndecl|m,(e)s,e:^e}}
+{{de-ndecl|m,s:es,e:^e}}
 
 ===Etymology 2===
 {{onomatopoeic|de}} from the sound of the [[dice shaker]] hitting the ground.
 
 ====Noun====
-{{de-noun|n|Puffs|gen2=Puffes|-}}
+{{de-noun|n,s:es.sg}}
 
 # {{C|de|Dice games}} {{tlb|de|obsolete|_|because hardly played}} a kind of [[dice game]], [[anterior]] to [[backgammon]]
 
 =====Declension=====
-{{de-decl-noun-m|(e)s|pl=-}}
+{{de-ndecl|n,s:es.sg}}
 
 ===Etymology 3===
-From the dice game, from disguising idioms<!--verhüllende Wendungen--> like „zum Puff gehen“ meaning really going to the bawdy house.
+From the dice game, from disguising idioms<!--verhüllende Wendungen--> like „zum Puff gehen“ actually meaning going to a brothel.
 
 ====Noun====
-{{de-noun|m|g2=n|Puffs|gen2=Puffes|Puffs}}
+{{de-noun|m:n,s:es,s}}
 
 # {{C|de|Prostitution}} {{tlb|de|colloquial}} [[brothel]], [[whorehouse]], [[bordello]]
 #: {{syn|de|Bordell|Freudenhaus|Hurenhaus}}
 
 =====Declension=====
-{{de-decl-noun-m|(e)s|s}}
+{{de-ndecl|m:n,s:es,s}}
 
 =====Descendants=====
 * {{desc|fr|pouf|t=brothel|sml=1}}
@@ -15345,8 +15362,11 @@ From the dice game, from disguising idioms<!--verhüllende Wendungen--> like „
 ===Etymology 4===
 From the sense “thud, wham” understood as a whoosh forming a bulge, and in the sense “cushion seat” {{sl|de|fr|pouf|nocap=1}}, the “laundry basket” apparently not present in French but extended in German from the broad sense in French of any textile heap.
 
+====Alternative forms====
+* {{sense|bulge in drapery}} {{alter|de|Puffe}}
+
 ====Noun====
-{{de-noun|m,(e)s}}
+{{de-noun|m,s:es}}
 
 # {{lb|de|archaic}} [[puff]], a [[bulge]] in [[drapery]]
 #* {{quote-book|de|year=1930|last=Musil|first=Robert|authorlink=Robert Musil|title={{w|Der Mann ohne Eigenschaften}}|section=Book 1, Chapter 45|passage=Aus der senkrechten Bügelfalte empor, schien Arnheims Leib in der Gotteseinsamkeit der Bergriesen dazustehn; durch die Welle des Tals mit ihm vereint, stand auf der anderen Seite einsamkeitsüberglänzt Diotima, in ihrem Kleid der damaligen Mode, das an den Oberarmen kleine '''Puffen''' bildete, über dem Magen den Busen in eine kunstvoll gefaltete Weite auflöste und unter der Kniekehle sich wieder an die Wade legte.}}
@@ -15356,22 +15376,19 @@ From the sense “thud, wham” understood as a whoosh forming a bulge, and in t
 #: {{hyper|de|Sitzsack}}
 # {{C|de|Containers}} [[laundry basket]], {{m|de|Wäschepuff}}
 
-=====Alternative forms=====
-* {{sense|bulge in drapery}} {{alter|de|Puffe}}
-
 =====Declension=====
-{{de-ndecl|m,(e)s}}
+{{de-ndecl|m,s:es}}
 
 ===Etymology 5===
 From {{bor|de|en|puff}}, hence often italicized and written with minuscule in early occurrences, and probably also sharing the English pronunciation.
 
 ====Noun====
-{{de-noun|m,(e)s,s}}
+{{de-noun|m,s:es,s}}
 
 # {{lb|de|genetics}} a [[chromosome]] [[puff]]
 
 =====Declension=====
-{{de-ndecl|m,(e)s,s}}
+{{de-ndecl|m,s:es,s}}
 
 ===Further reading===
 * {{R:DWDS}}
@@ -15478,12 +15495,12 @@ From {{com|de|vier|Ecke}}.
 * {{hyphenation|de|Vier|eck}}
 
 ===Noun===
-{{de-noun|n||Vierecke}}
+{{de-noun|n,es:s}}
 
 # [[quadrangle]], [[quadrilateral]]
 
 ====Declension====
-{{de-decl-noun-n|(e)s|e}}
+{{de-ndecl|n,es:s}}
 
 ====Hypernyms====
 * {{l|de|Vieleck}}, {{l|de|Polygon}}
@@ -15520,13 +15537,13 @@ From {{com|de|fünf|Ecke}}.
 * {{hyphenation|de|Fünf|eck}}
 
 ===Noun===
-{{de-noun|n,s:es,e}}
+{{de-noun|n,s:es}}
 
 # [[pentagon]]
 #: {{syn|de|Pentagon}}
 
 ====Declension====
-{{de-ndecl|n,s:es,e}}
+{{de-ndecl|n,s:es}}
 
 ====Derived terms====
 * {{l|de|fünfeckig}}
@@ -15548,7 +15565,7 @@ Page 417 zweite Wahl: Found match for regex: =
 Page 417 zweite Wahl: -------- begin text --------
 
 ===Etymology===
-{{m|de|zweite}} + {{m|de|Wahl}}.
+From {{af|de|zweite|t1=second|Wahl|t2=choice}}.
 
 ===Pronunciation===
 * {{IPA|de|/ˈtsvaɪ̯tə vaːl/}}
@@ -15630,12 +15647,14 @@ Borrowed from {{bor|de|it|capitale|t=(economic) capital}}, from {{der|de|la|capi
 * {{audio|de|De-Kapital.ogg|Audio}}
 
 ===Noun===
-{{de-noun|n,s:es[rare].sg}}
+{{de-noun|n,s:es[rare],e[rare]:ien[rare]}}
 
-# {{lb|de|economics}} [[capital]]
+# {{lb|de|economics|rarely|_|in the plural}} [[capital]]
+# {{lb|de|Marxism|singularonly}} [[capital]]
+# {{lb|de|East Germany|singularonly}} [[capitalist]]s [[collectively]]
 
 ====Declension====
-{{de-ndecl|n,s:es[rare].sg}}
+{{de-ndecl|n,s:es[rare],e[rare]:ien[rare]}}
 
 ====Derived terms====
 * {{l|de|kapitalartig}}, {{l|de|kapitallos}}, {{l|de|kapitalmäßig}}
@@ -15723,21 +15742,21 @@ Page 423 Sims: Found match for regex: =
 Page 423 Sims: -------- begin text --------
 
 ===Etymology===
-From {{inh|de|gmh|simez}}, from {{inh|de|goh|simiz}}. Lacking cognates in Germanic, therefore usually connected to {{der|de|la|sima|t=horizontal element at the top of a column}}, perhaps trough {{der|de|LL.|simatus}}.
+From {{inh|de|gmh|simez}}, from {{inh|de|goh|simiz}}. Lacking cognates in Germanic, therefore usually connected to {{der|de|la|sima|t=horizontal element at the top of a column}}, perhaps through {{der|de|LL.|simatus}}.
 
 ===Pronunciation===
 * {{IPA|de|/zɪms/}}
 * {{audio|de|De-Sims.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m|g2=n|Simses|gen2=Sims|Simse}}
+{{de-noun|m:n,es:-[rare in the simplex]}}
 
 # [[horizontal]] [[protusion]] or [[ridge]] on a [[wall]] etc.
 ## [[ledge]] {{gloss|one inside which can be used as a shelf}}
 ## [[cornice]] {{gloss|one outside, for draining or ornamentation}}
 
 ====Declension====
-{{de-decl-noun-m|es|e}}
+{{de-ndecl|m:n,es:-[rare in the simplex]}}
 
 ====Usage notes====
 * The genitive singular is normally {{m|de||des Simses}}. The unchanged variant sounds somewhat odd in the simplex, but is quite acceptable in compounds, e.g. {{m|de||des Kaminsims}}.
@@ -15979,7 +15998,7 @@ From {{der|de|grc|τᾰ́χος|t=speed}} + {{m|grc|μέτρον|t=something use
 * {{audio|de|De-Tachometer.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m:n,s,-}}
+{{de-noun|m:n}}
 
 # [[speedometer]]
 #: {{syn|de|Geschwindigkeitsmesser|q2=colloquial|Tacho}}
@@ -15989,7 +16008,7 @@ From {{der|de|grc|τᾰ́χος|t=speed}} + {{m|grc|μέτρον|t=something use
 #: {{syn|de|Kilometerzähler}}
 
 ====Declension====
-{{de-ndecl|m:n,s,-}}
+{{de-ndecl|m:n}}
 
 ====Derived terms====
 * {{l|de|Tacho|g=m}} {{q|clipping}}
@@ -16065,13 +16084,13 @@ Page 435 Kartoffelbrei: -------- begin text --------
 * {{audio|de|De-Kartoffelbrei.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m,(e)s,e}}
+{{de-noun|m,s:es}}
 
 # {{lb|de|chiefly|singular}} [[mashed potatoes]]
 #: {{syn|de|Kartoffelpüree|Kartoffelmus|q3=Switzerland|Kartoffelstock}}
 
 ====Declension====
-{{de-ndecl|m,(e)s,e}}
+{{de-ndecl|m,s:es}}
 
 ===Further reading===
 * {{wpl|de}}
@@ -16093,7 +16112,7 @@ From {{bor|de|gml|lek}}, a nominalization of the adjective {{m|de|leck||leaky}}.
 * {{audio|de|De-Leck.ogg|Audio}}
 
 ===Noun===
-{{de-noun|n|Lecks|gen2=Leckes|Lecks|pl2=Lecke}}
+{{de-noun|n,s:es,s:e[rare]}}
 
 # [[leak]] {{gloss|hole in a large container, such as in a tank}}
 # {{lb|de|nautical}} [[leak]] {{gloss|hole in the body of a ship}}
@@ -16102,8 +16121,7 @@ From {{bor|de|gml|lek}}, a nominalization of the adjective {{m|de|leck||leaky}}.
 * The normal plural is '''''Lecks'''''. The form ''Lecke'' is rare.
 
 ====Declension====
-{{de-decl-noun-n|s|s}}
-{{de-decl-noun-n|(e)s|e}}
+{{de-ndecl|n,s:es,s:e[rare]}}
 
 ====Derived terms====
 * {{l|de|Datenleck}}
@@ -16141,12 +16159,12 @@ From {{compound|de|nähren|alt1=nähr(en)|Wert}}.
 * {{hyphenation|de|Nähr|wert}}
 
 ===Noun===
-{{de-noun|m,es:s,e}}
+{{de-noun|m,es:s}}
 
 # [[nutritional]] [[value]]
 
 ====Declension====
-{{de-ndecl|m,es:s,e}}
+{{de-ndecl|m,es:s}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -16218,17 +16236,21 @@ From {{inh|de|gmh|latin}}.
 * {{rhymes|de|aɪ̯n|s=2}}
 * {{audio|de|De-Latein.ogg|Audio}}
 
-===Noun===
-{{de-noun|n||-}}
+===Proper noun===
+{{de-proper noun|n.-:s}}
 
 # {{qualifier|language}} [[Latin]]
 #: {{syn|de|Lateinisch}}
 
 ====Declension====
+{{de-ndecl|n.-:s.sg}}
 {{de-decl-noun-n|(s)|n=sg}}
+<!-- These are rare and obsolete.
+
 Additional forms are:
 * Genitive singular: {{m|de|Lateines}}
 * Dative singular: {{m|de|Lateine}}
+-->
 
 ====Derived terms====
 {{der4|de
@@ -16407,12 +16429,12 @@ Page 446 Silvester: -------- begin text --------
 From [[w:Pope Silvester I|Pope Silvester I]], whose feast-day has been the 31st of December since the Gregorian calendar reform of 1582.
 
 ====Noun====
-{{de-noun|n||gen2=Silvester|Silvester}}
+{{de-noun|n:m,s,-[uncommon]}}
 
 # [[New Year's Eve]]
 
 =====Declension=====
-{{de-decl-noun-n|dp=Silvester}}
+{{de-ndecl|n:m,s,-[uncommon]}}
 
 ===Etymology 2===
 From {{der|de|la|Silvester}}.
@@ -16442,7 +16464,7 @@ From {{compound|de|neu|Jahr|gloss1=new|gloss2=year}}.
 * {{hyphenation|de|Neu|jahr}}
 
 ===Noun===
-{{de-noun|n,s:es,e}}
+{{de-noun|n,s:es}}
 
 # [[New Year]]
 #: {{syn|de|Neujahrstag}}
@@ -16450,7 +16472,7 @@ From {{compound|de|neu|Jahr|gloss1=new|gloss2=year}}.
 #*: ˈHappy ˈ'New Yearˈ'!ˈ
 
 ====Declension====
-{{de-ndecl|n,s:es,e}}
+{{de-ndecl|n,s:es}}
 
 ====Related terms====
 * {{l|de|Neujahrsansprache}}, {{l|de|Neujahrsbrezel}}, {{l|de|Neujahrsempfang}}, {{l|de|Neujahrsfeier}}, {{l|de|Neujahrsfest}}, {{l|de|Neujahrskonzert}}, {{l|de|Neujahrsmorgen}}, {{l|de|Neujahrsröllchen}}, {{l|de|Neujahrsvorsatz}}, {{l|de|Neujahrswunsch}}
@@ -16557,12 +16579,12 @@ Page 450 Déjà-vu-Erlebnis: -------- begin text --------
 * {{audio|de|De-Déjà-vu-Erlebnis.ogg|Audio}}
 
 ===Noun===
-{{de-noun|head=[[Déjà-vu]]-[[Erlebnis]]|n,ses,se}}
+{{de-noun|[[Déjà-vu]]-[[Erlebnis]]<n>}}
 
 # [[déjà vu]]
 
 ====Declension====
-{{de-ndecl|n,ses,se}}
+{{de-ndecl|[[Déjà-vu]]-[[Erlebnis]]<n>}}
 
 ====Synonyms====
 * {{sense|déjà vu}} {{l|de|Déjà-vu}}, {{l|de|Erinnerungstäuschung}}
@@ -16572,7 +16594,6 @@ Page 450 Déjà-vu-Erlebnis: -------- begin text --------
 -------- end text --------
 Page 451 Freiwilliger: Found match for regex:  
 Page 451 Freiwilliger: -------- begin text --------
- 
 
 ===Etymology===
 Substantivization of {{m|de|freiwillig||voluntary}}.
@@ -16632,29 +16653,34 @@ Borrowed from {{bor|de|la|monastērium}}, from {{der|de|grc|μοναστήριο
 * {{R:Duden|Muenster_Stadt}}
 
 ===Noun===
-{{de-noun|n|g2=m||Münster}}
+{{de-noun|n:m}}
 
 # [[minster]] {{gloss|monastic church}}
 
 ====Declension====
-As a neuter noun:
-{{de-decl-noun-n|s}}
-As a masculine noun:
-{{de-decl-noun-m|s}}
+{{de-ndecl|n:m}}
 
 ====References====
 * {{R:Duden|Muenster_Kirche}}
 
 ===Noun===
-{{de-noun|m||Münster}}
+{{de-noun|m}}
 
 # [[muenster]] [[cheese]], {{m|de|Münsterkäse}}
 
 ====Declension====
-{{de-decl-noun-m|s}}
+{{de-ndecl|m}}
 
 ====References====
 * {{R:Duden|Muenster_Kaese}}
+
+===Proper noun===
+{{de-proper noun|surname}}
+
+# {{surname|de}}
+
+====Declension====
+{{de-ndecl|surname}}
 
 ===Further reading===
 * {{pedia|lang=de}}
@@ -16905,13 +16931,13 @@ From {{m|de|Krieg||war}} + {{m|de|Beil||hatchet}}.
 * {{audio|de|De-Kriegsbeil.ogg|Audio}}
 
 ===Noun===
-{{de-noun|n,(e)s,e|dim=chen[rare]}}
+{{de-noun|n,s:es|dim=chen[rare]}}
 
 # [[tomahawk]]
 #: {{syn|de|Streitaxt|Tomahawk}}
 
 ====Declension====
-{{de-ndecl|n,(e)s,e}}
+{{de-ndecl|n,s:es}}
 
 ====Derived terms====
 * {{l|de|das Kriegsbeil ausgraben}}
@@ -16932,7 +16958,7 @@ Borrowed from {{bor|de|fr|enfant terrible}}.
 * {{audio|de|De-Enfant terrible.ogg|Audio}}
 
 ===Noun===
-{{de-noun|n|head=Enfant terrible|Enfant terrible|Enfants terribles}}
+{{de-noun|n,-,Enfants terribles|nolinkhead=1}}
 
 # [[enfant terrible]]
 
@@ -16968,12 +16994,12 @@ Borrowed from {{bor|de|fr|frotté}}.
 * {{audio|de|De-Frottee.ogg|Audio}}
 
 ===Noun===
-{{de-noun|n|g2=m|Frottees|Frottees}}
+{{de-noun|n:m,s:-,s}}
 
 # [[terrycloth]], [[towelling]]
 
 ====Declension====
-{{de-decl-noun-n|s|s}}
+{{de-ndecl|n:m,s:-,s}}
 
 ====Related terms====
 * {{l|de|frottieren||to rub down}}
@@ -17337,13 +17363,12 @@ From {{der|de|la|nervus}}, partly via {{der|de|fr|nerf}}.
 * The standard pronunciation is for this stem to be realised with {{IPAchar|/f/}} when the preceding syllable has primary stress (as e.g. in {{m|de|Nerven}}, {{m|de|entnerven}}, {{m|de|nervig}}), but with {{IPAchar|/v/}} when the stress moves forward (as e.g. in {{m|de|nervös}}, {{m|de|enervieren}}). However, a minority of speakers may use {{IPAchar|/v/}} in all prevocalic positions. Compare the same in {{m|de|Larve}}.
 
 ===Noun===
-{{de-noun|m,(e)s:en[rare],en}}
+{{de-noun|((<m,s:es,en>,<m.weak.[rarely in technical usage]>))}}
 
 # [[nerve]]
 
 ====Declension====
-{{de-ndecl|m,(e)s,en}}
-{{de-ndecl|m[rare].weak}}
+{{de-ndecl|((<m,s:es,en>,<m.weak.[rarely in technical usage]>))}}
 
 ====Derived terms====
 {{der4|de
@@ -17517,16 +17542,16 @@ From {{bor|de|fr|complot}}.
 * {{audio|de|De-Komplott.ogg|Audio}}
 
 ===Noun===
-{{de-noun|n:m[colloquial],s:es,e}}
+{{de-noun|n:m[colloquial],s:es}}
 
 # [[plot]] {{gloss|conspiracy against a person}}
 #: {{syn|de|Intrige|Kabale|Verschwörung}}
 
 ====Usage notes====
-Regularly neuter (''das Komplott''), colloquially also masculine (''der Komplott'').
+* Regularly neuter (''das Komplott''), colloquially also masculine (''der Komplott'').
 
 ====Declension====
-{{de-ndecl|n:m[colloquial],s:es,e}}
+{{de-ndecl|n:m[colloquial],s:es}}
 
 ====Derived terms====
 * {{l|de|ein Komplott schmieden}}
@@ -17599,12 +17624,12 @@ From {{affix|de|Schlacht|Feld}}.
 * {{audio|de|De-Schlachtfeld.ogg|Audio}}
 
 ===Noun===
-{{de-noun|n,(e)s,er}}
+{{de-noun|n,s:es,er}}
 
 # [[battlefield]]
 
 ====Declension====
-{{de-ndecl|n,(e)s,er}}
+{{de-ndecl|n,s:es,er}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -17681,12 +17706,10 @@ From {{affix|de|Wahl|t1=election|Kampf|t2=fight}}.
 * {{audio|de|De-Wahlkampf.ogg|Audio}}
 
 ===Noun===
-{{de-noun|m,(e)s,^e}}
-
-# [[election campaign]], run for office
+{{de-noun|m,s:es,^e}}
 
 ====Declension====
-{{de-ndecl|m,(e)s,^e}}
+{{de-ndecl|m,s:es,^e}}
 
 ====Hyponyms====
 * {{l|de|Präsidentschaftswahlkampf}}
@@ -17796,6 +17819,9 @@ Named after the German physicist {{w|Wilhelm Conrad Röntgen}}.
 {{de-noun|n}}
 
 # [[röntgen]], [[X-ray]]
+
+=====Declension=====
+{{de-ndecl|n}}
 
 =====Derived terms=====
 {{der3|de|{{l|de|röntgenabsorbierend|pos=adj||X-ray-absorbing}}
