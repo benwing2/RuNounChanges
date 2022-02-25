@@ -149,7 +149,7 @@ local langname_slot_list = {
 local langname_slot_set = {}
 for _, case in ipairs(basic_cases) do
 	for _, number in ipairs(numbers) do
-		for is_alt in ipairs { false, true } do
+		for _, is_alt in ipairs { false, true } do
 			local slot = case .. "_" .. number .. (is_alt and "_alt" or "")
 			-- FIXME: We should add accelerators for the alternative forms, but this requires hacking the accelerator
 			-- code in [[Module:inflection utilities]] to specify the alternative lemma; e.g. genitive singular
@@ -421,12 +421,15 @@ end
 
 
 local function get_n_ending(base, stem, is_sg)
-	if rfind(stem, "e$") or rfind(stem, "e[lr]$") and not rfind(stem, com.NV .. "[ei]e[lr]$") then
+	if rfind(stem, "e$") then
+		-- typical feminine or weak masculine in -e
+		return "n"
+	elseif rfind(stem, "e[lr]$") and not rfind(stem, com.NV .. "[ei]e[lr]$") then
 		-- [[Kammer]], [[Feier]], [[Leier]], but not [[Spur]], [[Beer]], [[Manier]], [[Schmier]] or [[Vier]]
 		-- similarly, [[Achsel]], [[Gabel]], [[Tafel]], etc. but not [[Ziel]]
 		return "n"
-	elseif base.props.sync_sg and is_sg then
-		-- ''des Herrn'', ''des Satyrn'', etc.
+	elseif base.props.weak_n then
+		-- ''des Nachbarn'', ''des Herrn'', ''des Satyrn'', etc.
 		return "n"
 	elseif rfind(stem, "[^aeAE]in$") then
 		-- [[Chinesin]], [[Doktorin]], etc.; but not words in -ein or -ain such as [[Pein]]
@@ -1032,11 +1035,15 @@ local function parse_indicator_spec(angle_bracket_spec, lemma, pagename, proper_
 					end
 				end
 				base.number = part
-			elseif not base.props.adj and (part == "weak" or part == "ss" or part == "nodatpln" or part == "article" or part == "dat_with_e" or part == "sync_sg") then
+			elseif not base.props.adj and (part == "weak" or part == "weak_n" or part == "ss" or part == "nodatpln" or part == "article" or part == "dat_with_e") then
 				if base.props[part] then
 					parse_err("Can't specify '" .. part .. "' twice")
 				end
 				base.props[part] = true
+				if part == "weak_n" then
+					-- weak_n implies weak
+					base.props.weak = true
+				end
 			elseif base.props.adj and (part == "ss" or part == "article" or part == "sync_n" or part == "sync_mn" or part == "sync_mns") then
 				if base.props[part] then
 					parse_err("Can't specify '" .. part .. "' twice")
@@ -1461,6 +1468,9 @@ local function compute_categories_and_annotation(alternant_multiword_spec)
 	if not alternant_multiword_spec.first_noun and alternant_multiword_spec.first_adj then
 		insert("adjectival ~")
 		table.insert(annparts, "adjectival")
+	end
+	if alternant_multiword_spec.props.langname then
+		insert("specially-declined language names")
 	end
 	alternant_multiword_spec.annotation = table.concat(annparts, ", ")
 end
