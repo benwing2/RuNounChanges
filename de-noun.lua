@@ -222,6 +222,12 @@ local adjectival_slot_list_with_linked_and_articles = m_table.shallowcopy(adject
 add_slot_articles(adjectival_slot_list_with_linked_and_articles, basic_cases, numbers)
 
 
+-- Return true if `prop` is a recognized indicator that can be specified on adjectives in [[Module:de-adjective]].
+local function is_adjectival_decl_indicator(prop)
+	return prop == "ss" or prop == "sync_n" or prop == "sync_mn" or prop == "sync_mns"
+end
+
+
 local function skip_slot(number, slot)
 	return number == "sg" and rfind(slot, "_p$") or
 		number == "pl" and rfind(slot, "_s$")
@@ -385,20 +391,6 @@ local function process_slot_overrides(base)
 end
 
 
-local function add_dative_plural(base, specs, def_pl)
-	local function process_combined_stem_ending(stem_ending)
-		if base.props.nodatpln then
-			return stem_ending
-		elseif rfind(stem_ending, "e[lr]?$") or rfind(stem_ending, "erl$") then
-			return stem_ending .. "n"
-		else
-			return stem_ending
-		end
-	end
-	add_spec(base, "dat_p", specs, nil, def_pl, nil, nil, process_combined_stem_ending)
-end
-
-
 local function add_archaic_dative_singular(base, gender, def_gen)
 	for _, ending in ipairs(base.gens) do
 		local dat_ending
@@ -510,9 +502,33 @@ end
 
 
 local function decline_plural(base, def_pl)
-	add_spec(base, "nom_p", base.pls, nil, def_pl)
+	base.decl_type = {}
+	local function process_nom_pl_for_decl_type(stem_ending)
+		if base.props.saw_mn then
+			if base.props.weak then
+				m_table.insertIfNot(base.decl_type, "weak")
+			elseif stem_ending == base.lemma .. "n" or stem_ending == base.lemma .. "en" then
+				m_table.insertIfNot(base.decl_type, "mixed")
+			else
+				m_table.insertIfNot(base.decl_type, "strong")
+			end
+		end
+		return stem_ending
+	end
+
+	local function process_dat_pl_to_add_n(stem_ending)
+		if base.props.nodatpln then
+			return stem_ending
+		elseif rfind(stem_ending, "e[lr]?$") or rfind(stem_ending, "erl$") then
+			return stem_ending .. "n"
+		else
+			return stem_ending
+		end
+	end
+
+	add_spec(base, "nom_p", base.pls, nil, def_pl, nil, nil, process_nom_pl_for_decl_type)
 	add_spec(base, "gen_p", base.pls, nil, def_pl)
-	add_dative_plural(base, base.pls, def_pl)
+	add_spec(base, "dat_p", base.pls, nil, def_pl, nil, nil, process_dat_pl_to_add_n)
 	add_spec(base, "acc_p", base.pls, nil, def_pl)
 end
 
@@ -674,7 +690,7 @@ local function decline_adjective(base)
 		insert_footnotes(base.footnotes)
 	end
 	for prop, _ in pairs(base.props) do
-		if prop ~= "adj" and prop ~= "overall_adj" and prop ~= "article" then
+		if is_adjectival_decl_indicator(prop) then
 			ins_dot()
 			ins(prop)
 		end
@@ -884,13 +900,13 @@ local function parse_indicator_spec(angle_bracket_spec, lemma, pagename, proper_
 				local saw_pl = false
 				local saw_gendered_pl = false
 				local saw_non_gendered_pl = false
-				local saw_mn = false
 				local saw_adj = false
 				local special_variant = nil
 				for _, genderspec in ipairs(base.genders) do
 					local g = genderspec.form
 					if g == "m" or g == "n" then
-						saw_mn = true
+						-- Set this on `base.props` as it's used in various other places.
+						base.props.saw_mn = true
 						saw_sg = true
 					elseif g == "f" then
 						saw_sg = true
@@ -923,17 +939,17 @@ local function parse_indicator_spec(angle_bracket_spec, lemma, pagename, proper_
 				if saw_gendered_pl and saw_non_gendered_pl then
 					parse_err("Can't specify both 'p' and gendered plural specs")
 				end
-				local gen_index = (saw_mn or special_variant) and 2 or 1
+				local gen_index = (base.props.saw_mn or special_variant) and 2 or 1
 				local pl_index =
 					(saw_adj or saw_pl) and 1 or
-					(saw_mn or special_variant == "surname" or special_variant == "toponym") and 3 or
+					(base.props.saw_mn or special_variant == "surname" or special_variant == "toponym") and 3 or
 					2
 				if #comma_separated_groups > pl_index then
 					if saw_adj then
 						parse_err("Can't specify plurals or genitives with adjectival declension")
 					elseif saw_pl then
 						parse_err("Can't specify plurals or genitives with plural-only nouns")
-					elseif saw_mn then
+					elseif base.props.saw_mn then
 						parse_err("Can specify at most three comma-separated specs when the gender is masculine or "
 							.. "neuter (gender, genitive, plural)")
 					elseif special_variant == "surname" or special_variant == "toponym" then
@@ -1044,7 +1060,7 @@ local function parse_indicator_spec(angle_bracket_spec, lemma, pagename, proper_
 					-- weak_n implies weak
 					base.props.weak = true
 				end
-			elseif base.props.adj and (part == "ss" or part == "article" or part == "sync_n" or part == "sync_mn" or part == "sync_mns") then
+			elseif base.props.adj and (part == "article" or is_adjectival_decl_indicator(part)) then
 				if base.props[part] then
 					parse_err("Can't specify '" .. part .. "' twice")
 				end
@@ -1434,19 +1450,26 @@ local function compute_categories_and_annotation(alternant_multiword_spec)
 	end
 
 	local function do_word_spec(base)
-		local saw_m_or_n = false
-		for _, gender in ipairs(base.genders) do
-			if gender.form == "m" or gender.form == "n" then
-				saw_m_or_n = true
-			end
-		end
 		if base.props.surname then
 			m_table.insertIfNot(decldescs, "surname")
 		elseif base.props.toponym then
 			m_table.insertIfNot(decldescs, "toponym")
 		elseif base.props.langname then
 			m_table.insertIfNot(decldescs, "langname")
-		elseif saw_m_or_n then
+		elseif base.decl_type then
+			-- strong/weak/mixed declension type; should only be present on masculine or neuter nouns with a plural
+			for _, decl_type in ipairs(base.decl_type) do
+				if decl_type == "weak" then
+					insert("weak ~")
+				elseif decl_type == "mixed" then
+					insert("mixed ~")
+				end
+				m_table.insertIfNot(decldescs, decl_type)
+			end
+		elseif base.props.saw_mn then
+			-- For singular-only masculine or neuter nouns, we can still classify as strong or weak.
+			-- We don't try to classify plural-only nouns. Even for nouns in -n or -en, we have no idea if they are
+			-- strong (-en is part of the stem), mixed or weak.
 			if base.props.weak then
 				insert("weak ~")
 				m_table.insertIfNot(decldescs, "weak")
