@@ -10,115 +10,6 @@ from collections import defaultdict
 # FIXME: Declension before Derived terms etc.
 # FIXME: Better handling of Alternative Forms
 
-appendix_only_langnames = [
-  "Afrihili",
-  "Black Speech",
-  "Bolak",
-  "Communicationssprache",
-  "Dothraki",
-  "Eloi",
-  "Glosa",
-  "Goa'uld",
-  "Interlingue",
-  "Klingon",
-  "Kotava",
-  u"Láadan",
-  "Lapine",
-  "Lingua Franca Nova",
-  "Lojban",
-  "Mandalorian",
-  "Medefaidrin",
-  "Mundolinco",
-  "Na'vi",
-  "Neo",
-  "Novial",
-  "Noxilo",
-  "Quenya",
-  "Romanova",
-  "Sindarin",
-  "Talossan",
-  "Toki Pona",
-  "Unas",
-]
-
-lemma_poses = [
-  "Abbreviation",
-  "Acronym",
-  "Adjectival noun", # Japanese-specific
-  "Adjective",
-  "Adnominal",
-  "Adposition",
-  "Adverb",
-  "Affix",
-  "Ambiposition",
-  "Article",
-  "Cardinal number",
-  "Circumfix",
-  "Circumposition",
-  "Classifier",
-  "Combined form",
-  "Combining form",
-  "Confix",
-  "Conjunction",
-  "Contraction",
-  "Converb",
-  "Counter",
-  "Determiner",
-  "Diacritical mark",
-  "Gerund",
-  "Han character",
-  "Han tu",
-  "Hanja",
-  "Hanzi",
-  "Ideophone",
-  "Idiom",
-  "Infinitive",
-  "Infix",
-  "Initialism",
-  "Interfix",
-  "Interjection",
-  "Jyutping",
-  "Kanji",
-  "Kanji reading",
-  "Letter",
-  "Ligature",
-  "Misspelling",
-  "Morpheme",
-  "Noun",
-  "Number",
-  "Numeral",
-  "Numeral symbol",
-  "Particle",
-  "Participle",
-  "Pinyin",
-  "Phrase",
-  "Postposition",
-  "Postpositional phrase",
-  "Predicative",
-  "Prefix",
-  "Preposition",
-  "Prepositional phrase",
-  "Preverb",
-  "Pronominal adverb",
-  "Pronoun",
-  "Proper noun",
-  "Proverb",
-  "Punctuation mark",
-  "Relative",
-  "Romaji",
-  "Romanization",
-  "Root",
-  "Singulative",
-  "Stem",
-  "Suffix",
-  "Syllable",
-  "Symbol",
-  "Verb",
-]
-
-re_escaped_lemma_poses = [re.escape(k) for k in lemma_poses]
-pos_regex = "==(%s)==" % "|".join(re_escaped_lemma_poses)
-
 chinese_low_surrogates = (
   "[" +
   # The following should be the SIP: U+20000 (D840+DC00) to U+2EBEF (D87A+DFEF): #u"𠀀-𮯯"
@@ -227,7 +118,7 @@ def group_correction_notes(template, notes):
 def allowed_non_mainspace_pagetitle(pagetitle):
   if pagetitle.startswith("Reconstruction:"):
     return True
-  for lang in appendix_only_langnames:
+  for lang in blib.appendix_only_langnames:
     if pagetitle.startswith("Appendix:%s/" % lang):
       return True
   return False
@@ -377,7 +268,7 @@ def check_for_bad_subsections(secbody, pagetitle, pagemsg, langname):
       pos_since_etym_section = 0
       num_seen_by_header_since_etym_section = defaultdict(int)
       pos_sections_seen_by_header_since_etym_section = defaultdict(set)
-    if re.search(pos_regex, subsections[k]):
+    if re.search(blib.pos_regex, subsections[k]):
       pos_since_etym_section += 1
     m = re.search(header_to_reindent_regex, subsections[k])
     if m:
@@ -471,7 +362,7 @@ def check_for_bad_subsections(secbody, pagetitle, pagemsg, langname):
       dont_correct_until_etym_header = False
     if dont_correct_until_etym_header:
       continue
-    if re.search(pos_regex, subsections[k]):
+    if re.search(blib.pos_regex, subsections[k]):
       if has_etym_sections and k < beginning_of_etym_sections:
         pagemsg("WARNING: Saw POS header before beginning of multi-etym sections in section %s" % (subsection_id(k)))
         dont_correct_until_etym_header = True
