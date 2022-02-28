@@ -19,41 +19,69 @@ local function rsub(term, foo, bar)
 end
 
 
-ending_tags = {
-  ["en"] = {"str|gen|m//n|s", "wk//mix|gen//dat|all-gender|s", "str//wk//mix|acc|m|s", "str|dat|p", "wk//mix|all-case|p"},
-  ["e"] = {"str//mix|nom//acc|f|s", "str|nom//acc|p", "wk|nom|all-gender|s", "wk|acc|f//n|s"},
-  ["er"] = {"str//mix|nom|m|s", "str|gen//dat|f|s", "str|gen|p"},
-  ["es"] = {"str//mix|nom//acc|n|s"},
-  ["em"] = {"str|dat|m//n|s"},
+adjective_ending_tags = {
+	["en"] = {"str|gen|m//n|s", "wk//mix|gen//dat|all-gender|s", "str//wk//mix|acc|m|s", "str|dat|p", "wk//mix|all-case|p"},
+	["e"] = {"str//mix|nom//acc|f|s", "str|nom//acc|p", "wk|nom|all-gender|s", "wk|acc|f//n|s"},
+	["er"] = {"str//mix|nom|m|s", "str|gen//dat|f|s", "str|gen|p"},
+	["es"] = {"str//mix|nom//acc|n|s"},
+	["em"] = {"str|dat|m//n|s"},
 }
 
-ending_keys = {}
-for key, _ in pairs(ending_tags) do
-	table.insert(ending_keys, key)
+noun_ending_tags = {
+	["m"] = {
+		["en"] = {"str|gen|s", "wk//mix|gen//dat|s", "str//wk//mix|acc|s", "str|dat|p", "wk//mix|all-case|p"},
+		["e"] = {"str|nom//acc|p", "wk|nom|s"},
+		-- lemma: ["er"] = {"str//mix|nom|s", "str|gen|p"},
+		["em"] = {"str|dat|s"},
+	},
+	["f"] = {
+		["en"] = {"wk//mix|gen//dat|s", "str|dat|p", "wk//mix|all-case|p"},
+		-- lemma: ["e"] = {"str//wk//mix|nom//acc|s", "str|nom//acc|p"},
+		["er"] = {"str|gen//dat|f|s", "str|gen|p"},
+	},
+	["n"] = {
+		["en"] = {"str|gen|s", "wk//mix|gen//dat|s", "str|dat|p", "wk//mix|all-case|p"},
+		["e"] = {"str|nom//acc|p", "wk|nom//acc|s"},
+		["er"] = {"str|gen|p"},
+		-- lemma: ["es"] = {"str//mix|nom//acc|s"},
+		["em"] = {"str|dat|s"},
+	}
+}
+
+
+-- Generate the correct tags for each recognized adjective ending key.
+
+-- (1) The positive form keys.
+adjective_ending_keys = {}
+for key, _ in pairs(adjective_ending_tags) do
+	table.insert(adjective_ending_keys, key)
 end
 
-for _, key in ipairs(ending_keys) do
-	local tags = ending_tags[key]
+-- (2) The comparative form keys.
+for _, key in ipairs(adjective_ending_keys) do
+	local tags = adjective_ending_tags[key]
 	local erkey = "er" .. key
-	ending_tags[erkey] = {}
+	adjective_ending_tags[erkey] = {}
 	for _, tag in ipairs(tags) do
-		table.insert(ending_tags[erkey], tag .. "|comd")
+		table.insert(adjective_ending_tags[erkey], tag .. "|comd")
 	end
 end
 
-for _, key in ipairs(ending_keys) do
-	local tags = ending_tags[key]
+-- (3) The superlative form keys.
+for _, key in ipairs(adjective_ending_keys) do
+	local tags = adjective_ending_tags[key]
 	local stkey = "st" .. key
-	ending_tags[stkey] = {}
+	adjective_ending_tags[stkey] = {}
 	for _, tag in ipairs(tags) do
-		table.insert(ending_tags[stkey], tag .. "|supd")
+		table.insert(adjective_ending_tags[stkey], tag .. "|supd")
 	end
 	-- flott -> flottesten, barsch -> barschesten, betagt -> betagtesten,
 	-- herzlos -> herzlosesten, frohgemut -> frohgemutesten,
 	-- amyloid -> amyloidesten, erdnah -> erdnahesten, and others
 	-- unpredictably; allow for endings like -esten
-	ending_tags["e" .. stkey] = ending_tags[stkey]
+	adjective_ending_tags["e" .. stkey] = adjective_ending_tags[stkey]
 end
+
 
 function export.show_adj_form(frame)
 	local params = {
@@ -75,7 +103,7 @@ function export.show_adj_form(frame)
 	local function try(modlemma)
 		-- Need to escape regex chars in lemma, esp. hyphen
 		local potential_ending = rmatch(PAGENAME, "^" .. rsub(modlemma, "([^A-Za-z0-9 ])", "%%%1") .. "(.*)$")
-		if potential_ending and ending_tags[potential_ending] then
+		if potential_ending and adjective_ending_tags[potential_ending] then
 			ending = potential_ending
 		end
 	end
@@ -110,7 +138,7 @@ function export.show_adj_form(frame)
 		error("Unable to find adjective ending from page name '" .. PAGENAME .. "' based on lemma '" .. lemma .. "'")
 	end
 
-	local tags = ending_tags[ending]
+	local tags = adjective_ending_tags[ending]
 
 	if not tags then
 		error("Unrecognized adjective ending '" .. ending .. "'")
@@ -127,5 +155,90 @@ function export.show_adj_form(frame)
 	return m_form_of.tagged_inflections({ tags = tags, terminfo = terminfo, terminfo_face = "term" }) .. 
 		require("Module:utilities").format_categories(categories, lang, args["sort"])
 end
+
+
+function export.show_adj_noun_form(frame)
+	local params = {
+		[1] = {required = true, default = "mfn"},
+		["etymno"] = {type = "number"},
+		["level"] = {type = "number"},
+		["pagename"] = {},
+		["sort"] = {},
+	}
+
+	local parargs = frame:getParent().args
+	local args = require("Module:parameters").process(parargs, params)
+
+	-- Validate and fetch etymno and level params.
+	if args.etymno and args.level then
+		error("Specify only one of etymno= or level=")
+	end
+	if args.etymno and arg.etymno < 1 then
+		error("etymno=" .. args.etymno .. ", but should be >= 1")
+	end
+	if args.level and arg.level < 3 then
+		error("level=" .. args.level .. ", but should be >= 3")
+	end
+	local level = args.level or args.etymno and 4 or 3
+
+	-- Validate and fetch genders.
+	local genders = args[1]
+	local gender_list = rsplit(genders, "") -- split into individual characters
+	for _, gender in ipairs(gender_list) do
+		if gender ~= "m" and gender ~= "f" and gender ~= "n" then
+			error("Unrecognized gender '" .. gender .. "' in gender spec '" .. genders .. "'")
+		end
+	end
+
+	-- Get the stem and ending.
+	local pagename = args.pagename or PAGENAME
+	local stem, ending = rmatch(pagename, "^(.*)(e[mnrs]?)$")
+	if not stem then
+		error("Pagename '" .. pagename .. "' should end with -e, -em, -en, -er or -es; use pagename= for testing purposes")
+	end
+
+	local parts = {}
+
+	-- Generate text for each gender.
+	for i, gender in ipairs(gender_list) do
+		local lemma_ending
+		if gender == "m" then
+			lemma_ending = "er"
+		elseif gender == "f" then
+			lemma_ending = "e"
+		elseif gender == "n" then
+			lemma_ending = "es"
+		else
+			error("Internal error: Unrecognized gender '" .. gender .. "'")
+		end
+
+		if ending == lemma_ending then
+			error("Pagename '" .. pagename .. "' is the lemma for gender '" .. gender .. "', but this template is " ..
+				"intended for non-lemma forms")
+		end
+		local tags = noun_ending_tags[gender][ending]
+		if not tags then
+			error("Unrecognized ending '" .. ending .. "' for gender '" .. gender .. "'")
+		end
+		local lemma = stem .. lemma_ending
+
+		local function add(text)
+			table.insert(parts, text)
+		end
+
+		if i ~= 1 then
+			add("\n\n")
+		end
+		if args.etymno then
+			add(("===Etymology %s===\n{{nonlemma}}\n\n"):format(args.etymno + i - 1))
+		end
+		add("=":rep(level) .. "Noun" .. "=":rep(level) .. "\n")
+		add(("{{head|de|noun form|g=%s}}\n\n"):format(gender))
+		add(("# {{inflection of|de|%s||%s}}"):format(lemma, tags))
+	end
+
+	return frame:preprocess(table.concat(parts))
+end
+
 
 return export
