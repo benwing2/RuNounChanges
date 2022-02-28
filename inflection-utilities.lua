@@ -275,6 +275,15 @@ function export.concat_forms_in_slot(forms)
 end
 
 
+local function extract_footnote_modifiers(footnote)
+	local footnote_mods, footnote_without_mods = rmatch(footnote, "^%[([!*+]?)(.*)%]$")
+	if not footnote_mods then
+		error("Saw footnote '" .. footnote .. "' not surrounded by brackets")
+	end
+	return footnote_mods, footnote_without_mods
+end
+
+
 -- Insert a form (an object of the form {form=FORM, translit=MANUAL_TRANSLIT, footnotes=FOOTNOTES}) into a list of such
 -- forms. If the form is already present, the footnotes of the existing and new form might be combined (specifically,
 -- footnotes in the new form beginning with ! will be combined).
@@ -289,12 +298,39 @@ function export.insert_form_into_list(list, form)
 		if listform.form == form.form and listform.translit == form.translit then
 			-- Form already present; maybe combine footnotes.
 			if form.footnotes then
+				-- Check to see if there are existing footnotes with *; if so, remove them.
+				if listform.footnotes then
+					local any_footnotes_with_asterisk = false
+					for _, footnote in ipairs(listform.footnotes) do
+						local footnote_mods, _ = extract_footnote_modifiers(footnote)
+						if rfind(footnote_mods, "%*") then
+							any_footnotes_with_asterisk = true
+							break
+						end
+					end
+					if any_footnotes_with_asterisk then
+						local filtered_footnotes = {}
+						for _, footnote in ipairs(listform.footnotes) do
+							local footnote_mods, _ = extract_footnote_modifiers(footnote)
+							if not rfind(footnote_mods, "%*") then
+								table.insert(filtered_footnotes, footnote)
+							end
+						end
+						if #filtered_footnotes > 0 then
+							listform.footnotes = filtered_footnotes
+						else
+							listform.footnotes = nil
+						end
+					end
+				end
+
 				-- The behavior here has changed; track cases where the old behavior might
 				-- be needed by adding ! to the footnote.
 				require("Module:debug").track("inflection-utilities/combining-footnotes")
 				local any_footnotes_with_bang = false
 				for _, footnote in ipairs(form.footnotes) do
-					if rfind(footnote, "^%[!") then
+					local footnote_mods, _ = extract_footnote_modifiers(footnote)
+					if rfind(footnote_nods, "[!+]") then
 						any_footnotes_with_bang = true
 						break
 					end
@@ -307,9 +343,12 @@ function export.insert_form_into_list(list, form)
 					end
 					for _, footnote in ipairs(form.footnotes) do
 						local already_seen = false
-						if rfind(footnote, "^%[!") then
+						local footnote_mods, footnote_without_mods = extract_footnote_modifiers(footnote)
+						if rfind(footnote_nods, "[!+]") then
 							for _, existing_footnote in ipairs(listform.footnotes) do
-								if rsub(existing_footnote, "^%[!", "") == rsub(footnote, "^%[!", "") then
+								local existing_footnote_mods, existing_footnote_without_mods =
+									extract_footnote_modifiers(existing_footnote)
+								if existing_footnote_without_mods == footnote_without_mods then
 									already_seen = true
 									break
 								end
@@ -465,10 +504,7 @@ end
 -- {text = TEXT, name = NAME, group = GROUP} if the footnote is a reference and `no_parse_refs` is not given, otherwise
 -- nil). Unless `return_raw` is given, the returned footnote string is capitalized and has a final period added.
 function export.expand_footnote_or_references(note, return_raw, no_parse_refs)
-	local notetext = rmatch(note, "^%[!?(.*)%]$")
-	if not notetext then
-		error("Internal error: Footnote should be surrounded by brackets: " .. note)
-	end
+	local _, notetext = extract_footnote_modifiers(note)
 	if not no_parse_refs and notetext:find("^ref:") then
 		-- a reference
 		notetext = rsub(notetext, "^ref:", "")
