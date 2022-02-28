@@ -9,6 +9,30 @@ local split_term_regex = "%*~!"
 messages = require("Module:array")() -- intentionally global
 
  
+--[=[
+The purpose of the acceleration code is to auto-generate pages for non-lemma forms (inflections) of a given lemma.
+The way it works is approximately as follows:
+
+1. When you click on a green link, and you have the accelerator gadget in [[MediaWiki:Gadget-AcceleratedFormCreation.js]] enabled,
+   the JavaScript code gathers all the green links on the page 
+
+]=]
+	local entry = {
+		pronunc = nil,
+		pos_header = mw.getContentLanguage():ucfirst(params.pos),
+		head = make_head(params.pos .. " form"),
+		def = make_def("inflection of", "||" .. params.form),
+		inflection = nil,
+		declension = nil,
+		conjugation = nil,
+		mutation = nil,
+		altforms = nil,
+		-- also pass in functions
+		make_head = make_head,
+		make_def = make_def,
+		no_rule_error = no_rule_error,
+	}
+	
 function export.default_entry(params)
 	local function make_head(pos, default_gender)
 		local gender = params.gender or default_gender
@@ -437,6 +461,10 @@ function export.test_combine_tag_sets_into_multipart(frame)
 	return table.concat(combined_tags, "|")
 end
 
+-- Check whether `entry` (an object describing a given non-lemma form, with properties such as `pronunc` for
+-- pronunciation, `def` for definition, etc.) can be merged with any of the existing entries listed in `candidates`.
+-- "Can be merged" means that all relevant properties (basically, everything but the definition) can are the same.
+-- Return the first such candidate found, or nil if no candidates match `entry`.
 local function find_mergeable(entry, candidates)
 	local function can_merge(candidate)
 		for _, key in ipairs({"pronunc", "pos_header", "head", "inflection", "declension", "conjugation", "altforms"}) do
@@ -501,8 +529,6 @@ end
 --
 --    Here, 17 separate tag sets are combined down into 3.
 local function merge_entries(entries)
-	local entries_new = {}
-
 	-- First rewrite {{inflection of|...|lang=LANG}} to {{inflection of|LANG|...}}
 	for _, entry in ipairs(entries) do
 		local params = entry.def:match("^{{inflection of|([^{}]+)}}$")
@@ -520,6 +546,8 @@ local function merge_entries(entries)
 			entry.def = "{{inflection of|" .. table.concat(new_params, "|") .. "}}"
 		end
 	end
+
+	local entries_new = {}
 
 	-- Merge entries that match in all of the following properties:
 	-- "pronunc", "pos_header", "head", "inflection", "declension", "conjugation", "altforms"
@@ -737,6 +765,9 @@ function export.generate(frame)
 	
 	local entries = {}
 	
+	-- Try to use a language-specific module, if one exists
+	local success, lang_module = pcall(require, "Module:accel/" .. args.lang)
+	
 	-- Generate each entry
 	for i = 1, args.num do
 		local params = {
@@ -759,9 +790,6 @@ function export.generate(frame)
 		
 		-- Make a default entry
 		local entry = export.default_entry(params)
-		
-		-- Try to use a language-specific module, if one exists
-		local success, lang_module = pcall(require, "Module:accel/" .. args.lang)
 		
 		if success then
 			lang_module.generate(params, entry)
