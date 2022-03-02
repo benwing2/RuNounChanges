@@ -13,7 +13,7 @@ def process_text_on_page(index, pagetitle, text):
 
   notes = []
 
-  retval = blib.find_modifiable_lang_section(text, None if args.partial_page else "Italian", pagemsg,
+  retval = blib.find_modifiable_lang_section(text, None if args.partial_page else args.lang, pagemsg,
     force_final_nls=True)
   if retval is None:
     return
@@ -51,23 +51,15 @@ def process_text_on_page(index, pagetitle, text):
             notes.append("move {{wikipedia}} line to top of etym section")
         else:
           lines_so_far.append(line)
-      parsed = blib.parse_text(subsections[k + 1])
-      for t in parsed.filter_templates():
-        tn = tname(t)
-        def getp(param):
-          return getparam(t, param)
-        if tn in ["it-noun", "it-proper noun", "it-verb", "it-adj", "it-adv", "it-card-adj", "it-card-noun",
-            "it-card-inv", "it-prefix", "it-prepositional phrase", "it-letter", "it-det", "it-pron-adj",
-            "it-phrase", "it-plural noun", "it-pp"] or (
-            tn == "head" and getp("1") == "it" and getp("2") in ["noun", "verb", "adjective", "adverb", "proper noun",
-              "determiner", "pronoun", "participle", "past participle", "gerund", "preposition",
-              "prepositional phrase", "phrase", "interjection", "conjunction", "numeral", "cardinal numeral",
-              "cardinal number", "circumfix", "idiom", "interfix", "letter", "prefix", "suffix", "proverb"]):
-          if tn == "head":
-            lemma = "head|it|%s" % getp("2")
-          else:
-            lemma = tn
-          seen_lemmas.append(lemma)
+      if re.search(blib.pos_regex, subsections[k]): # Maybe a lemma
+        lines = subsections[k + 1].strip().split("\n")
+        for lineind, line in enumerate(lines):
+          if re.search(r"\{\{(head\|[^{}]*|[a-z][a-z][a-z]?-[^{}|]*)forms?\b", line):
+            pagemsg("Saw potential lemma section %s but appears to be a non-lemma form due to line #%s: %s" %
+                (subsections[k].strip(), lineind + 1, line))
+            break
+        else: # no break
+          seen_lemmas.append(subsections[k].strip())
 
   secbody = "".join(subsections)
   # Strip extra newlines added to secbody
@@ -86,8 +78,8 @@ def process_text_on_page(index, pagetitle, text):
 parser = blib.create_argparser("Move {{wikipedia}} lines to top of etym section",
   include_pagefile=True, include_stdin=True)
 parser.add_argument("--partial-page", action="store_true", help="Input was generated with 'find_regex.py --lang LANG' and has no ==LANG== header.")
+parser.add_argument("--lang", help="Only do this language name (optional).")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-blib.do_pagefile_cats_refs(args, start, end, process_text_on_page, edit=True, stdin=True,
-    default_cats="Italian lemmas")
+blib.do_pagefile_cats_refs(args, start, end, process_text_on_page, edit=True, stdin=True)
