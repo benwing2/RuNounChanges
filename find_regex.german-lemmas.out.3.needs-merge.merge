@@ -1,21 +1,31 @@
-Beginning at Wed Mar  2 00:31:31 2022
+Beginning at Wed Mar  2 02:21:57 2022
 Page 665 Abendausgabe: Found match for regex: =
 Page 665 Abendausgabe: -------- begin text --------
 ===Noun===
-{{head|de|noun|g=f}}
+{{de-noun|f}}
 # [[evening]] [[edition]]
+
+====Declension====
+{{de-ndecl|f}}
 -------- end text --------
 Page 728 Abessinier: Found match for regex: =
 Page 728 Abessinier: -------- begin text --------
 ===Noun===
-{{head|de|noun|g=m}}
+{{de-noun|m,,-}}
 #[[Abyssinian]]
+
+====Declension====
+{{de-ndecl|m,,-}}
 -------- end text --------
 Page 1088 Abmarsch: Found match for regex: =
 Page 1088 Abmarsch: -------- begin text --------
+
 ===Noun===
-{{head|de|noun|g=m}}
+{{de-noun|m,(e)s,^e}}
 # [[start]]
+
+=====Declension=====
+{{de-ndecl|m,(e)s,^e}}
 -------- end text --------
 Page 1374 Absolventin: Found match for regex: {
 Page 1374 Absolventin: -------- begin text --------
@@ -29,9 +39,12 @@ Page 1374 Absolventin: -------- begin text --------
 * {{audio|de|De-Absolventin.ogg|Audio}}
 
 ===Noun===
-{{head|de|noun|g=f}}
+{{de-noun|f}}
 
 # female [[alumnus]], [[graduate]] (of an educational institution)
+
+====Declension====
+{{de-ndecl|f}}
 
 ====Related terms====
 * {{l|de|Absolvent}}
@@ -48,7 +61,7 @@ Page 1657 Acetaldehyd: -------- begin text --------
 * {{audio|de|LL-Q188 (deu)-Frank C. Müller-Acetaldehyd.wav|Audio}}
 
 ===Noun===
-{{head|de|noun|g=m}}
+{{de-noun|m:n,,.sg}}
 
 # [[acetaldehyde]] (the organic compound CH<sub>3</sub>CHO)
 
@@ -68,9 +81,12 @@ Page 1912 Adenosintriphosphat: -------- begin text --------
 * {{audio|de|De-Adenosintriphosphat.ogg|Audio}}
 
 ===Noun===
-{{head|de|noun|g=n}}
+{{de-noun|n}}
 
 # {{lb|de|biochemistry}} [[adenosine triphosphate]]
+
+====Declension====
+{{de-ndecl|n}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -80,7 +96,8 @@ Page 1953 Admiral: -------- begin text --------
 {{wp|lang=de}}
 
 ===Etymology===
-{{bor+|de|ar|أَمِير اَلْبَحْر|t=commander of the fleet}}. Cognate with {{cog|en|admiral}}, {{cog|fr|amiral}}, etc.
+{{root|de|ar|ء م ر}}
+Borrowed from {{bor|de|en|admiral}}, from {{der|de|enm|amiral}}, from {{der|de|fro|amirail}}, {{m|fro|amiral}}, from {{der|de|ar|أَمِير اَلبَحْر|t=commander of the fleet|lit=sea commander}}. Cognate with {{cog|fr|amiral}}, etc.
 
 ===Pronunciation===
 * {{IPA|de|/admiˈʁaːl/}}
@@ -96,12 +113,15 @@ Page 1953 Admiral: -------- begin text --------
 {{de-ndecl|m,,e:^e.dat_with_e}}
 
 ====Derived terms====
-* {{l|de|Flottillenadmiral|gloss=commodore}}
+* {{l|de|Flottillenadmiral|t=commodore}}
+* {{l|de|Generaladmiral}}
+* {{l|de|Großadmiral}}
+* {{l|de|Konteradmiral}}
 * {{l|de|Vizeadmiral}}
 
 ===Further reading===
 * {{R:Duden}}
-
+* {{R:DWDS}}
 {{C|de|Military ranks}}
 -------- end text --------
 Page 2149 Agnostizismus: Found match for regex: =
@@ -112,16 +132,20 @@ Page 2149 Agnostizismus: -------- begin text --------
 * {{rhymes|de|ɪsmʊs|s=5}}
 
 ===Noun===
-{{head|de|noun}}
+{{de-noun|m.sg}}
 
 # [[agnosticism]]
+
+====Declension====
+{{de-ndecl|m.sg}}
+
+===Further reading===
+* {{R:DWDS}}
+* {{R:UniLeipzig}}
 
 {{C|de|Religion}}
 
 {{cln|de|words suffixed with -ismus}}
-===Further reading===
-* {{R:DWDS}}
-* {{R:UniLeipzig}}
 -------- end text --------
 Page 2163 Agrarpolitik: Found match for regex: =
 Page 2163 Agrarpolitik: -------- begin text --------
@@ -133,9 +157,12 @@ Page 2163 Agrarpolitik: -------- begin text --------
 * {{audio|de|De-Agrarpolitik.ogg|Audio}}
 
 ===Noun===
-{{head|de|noun|g=f}}
+{{de-noun|f}}
 
 # [[agricultural]] [[policy]]
+
+====Declension====
+{{de-ndecl|f}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -144,9 +171,12 @@ Page 2263 Akkadier: Found match for regex: =
 Page 2263 Akkadier: -------- begin text --------
 
 ===Noun===
-{{head|de|noun|g=m}}
+{{de-noun|m}}
 
 # [[Akkadian]], man from Akkad
+
+====Declension====
+{{de-ndecl|m}}
 
 ====Related terms====
 * {{l|de|Akkadierin}}
@@ -162,8 +192,8 @@ Page 2927 Altlatein: -------- begin text --------
 ===Etymology===
 From {{affix|de|alt|gloss1=old|Latein|gloss2=Latin}}.
 
-===Noun===
-{{head|de|noun|g=n}}
+===Proper noun===
+{{de-proper noun|langname}}
 
 # [[Old Latin]] (language)
 #: {{syn|de|Altlateinisch|altlateinische Sprache}}
@@ -180,7 +210,7 @@ Page 2936 Altmetall: -------- begin text --------
 * {{audio|de|De-Altmetall.ogg|Audio}}
 
 ===Noun===
-{{head|de|noun|g=n}}
+{{de-noun|n}}
 
 # [[scrap metal]]
 #: {{syn|de|Metallschrott}}
@@ -196,9 +226,12 @@ Page 3142 Amerikanistik: -------- begin text --------
 * {{IPA|de|/ameʁikaˈnɪstɪk/|[ʔameʁikʰaˈnɪstɪkʰ]}}
 
 ===Noun===
-{{head|de|noun|g=f}}
+{{de-noun|f.sg}}
 
 # [[American studies]] (academic study of language and literature of North America)
+
+====Declension====
+{{de-ndecl|f.sg}}
 
 ====Hypernyms====
 * {{l|de|Anglistik}}
@@ -223,9 +256,12 @@ Page 3178 Ammoniumchlorid: -------- begin text --------
 {{compound|de|Ammonium|Chlorid}}
 
 ===Noun===
-{{head|de|noun|g=n}}
+{{de-noun|n}}
 
 # {{lb|de|inorganic compound}} [[ammonium chloride]]
+
+====Declension====
+{{de-ndecl|n}}
 -------- end text --------
 Page 3183 Ammoniumnitrat: Found match for regex: =
 Page 3183 Ammoniumnitrat: -------- begin text --------
@@ -237,9 +273,12 @@ Page 3183 Ammoniumnitrat: -------- begin text --------
 * {{audio|de|De-Ammoniumnitrat.ogg|Audio}}
 
 ===Noun===
-{{head|de|noun|g=n}}
+{{de-noun|n}}
 
 # {{lb|de|inorganic compound}} [[ammonium nitrate]]
+
+====Declension====
+{{de-ndecl|n}}
 
 ===See also===
 * {{l|de|Ammoniumnitrit}}
@@ -254,9 +293,12 @@ Page 3184 Ammoniumnitrit: -------- begin text --------
 {{compound|de|Ammonium|Nitrit}}
 
 ===Noun===
-{{head|de|noun|g=n}}
+{{de-noun|n}}
 
 # {{lb|de|inorganic compound}} [[ammonium nitrite]]
+
+====Declension====
+{{de-ndecl|n}}
 
 ===See also===
 * {{l|de|Ammoniumnitrat}}
@@ -269,9 +311,12 @@ Page 3333 Analverkehr: -------- begin text --------
 * {{audio|de|De-Analverkehr fcm.ogg|Audio (Germany)}}
 
 ===Noun===
-{{head|de|noun|g=m}}
+{{de-noun|m,(e)s}}
 
 # [[anal sex]] (sex involving the anus)
+
+====Declension====
+{{de-ndecl|m,(e)s}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -285,9 +330,12 @@ Page 3695 Anglistik: -------- begin text --------
 * {{audio|de|De-Anglistik.ogg|Audio}}
 
 ===Noun===
-{{head|de|noun|g=f}}
+{{de-noun|f.sg}}
 
 # [[English studies]]
+
+====Declension====
+{{de-ndecl|f.sg}}
 
 ====Hyponyms====
 * {{l|de|Amerikanistik}}
@@ -312,6 +360,7 @@ From {{affix|de|annullieren|gloss1=to annul, nullify, cancel|-ung|gloss2=-ing}} 
 
 ===Pronunciation===
 * {{IPA|de|/anʊˈliːʁʊŋ/|[ʔanʊˈliːʁʊŋ]}}
+* {{audio|de|De-Annullierung.ogg|Audio}}
 
 ===Noun===
 {{de-noun|f}}
@@ -334,9 +383,12 @@ Page 4297 Anthropomorphismus: -------- begin text --------
 * {{audio|de|De-Anthropomorphismus.ogg|Audio}}
 
 ===Noun===
-{{head|de|noun|g=m}}
+{{de-noun|m,,Anthropomorphismen}}
 
 # [[anthropomorphism]] (the attribution or ascription of human-like characteristics to animals and inanimate objects)
+
+====Declension====
+{{de-ndecl|m,,Anthropomorphismen}}
 
 ====Related terms====
 * {{l|de|anthropomorph}}
@@ -351,9 +403,12 @@ Page 4364 Antimaterie: -------- begin text --------
 * {{audio|de|De-Antimaterie.ogg|Audio}}
 
 ===Noun===
-{{head|de|noun|g=f|invariable}}
+{{de-noun|f.sg}}
 
 # {{lb|de|physics}} [[antimatter]]
+
+====Declension====
+{{de-ndecl|f.sg}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -362,12 +417,18 @@ Page 4512 Anxiolytikum: Found match for regex: =
 Page 4512 Anxiolytikum: -------- begin text --------
 
 ===Noun===
-{{head|de|noun|g=n}}
+{{de-noun|n,,Anxiolytika}}
 
 # [[anxiolytic]]
 
 ====Hypernyms====
 * {{l|de|Psychopharmakon}}
+
+===Further reading===
+<!--* {{R:DWDS}}
+* {{R:Duden}}-->
+* {{pedia|lang=de}}
+
 {{C|de|Pharmaceutical drugs}}
 -------- end text --------
 Page 4531 Anziehsachen: Found match for regex: =
@@ -381,7 +442,7 @@ Page 4531 Anziehsachen: -------- begin text --------
 * {{audio|de|De-Anziehsachen.ogg|Audio}}
 
 ===Noun===
-{{head|de|noun|plural only}}
+{{de-noun|p}}
 
 # {{lb|de|slightly|informal}} [[clothes]]
 #: {{syn|de|Klamotten<q:colloquial>}}
@@ -400,10 +461,13 @@ Page 4709 Apposition: -------- begin text --------
 * {{audio|de|De-Apposition.ogg|Audio}}
 
 ===Noun===
-{{head|de|noun|g=f}}
+{{de-noun|f}}
 
 # {{lb|de|grammar}} [[apposition]]
 #: {{syn|de|Beifügung|;|Beisatz|;|Beistellung|;|Einschub<q:colloquial>|;|Erklärungszusatz}}
+
+====Declension====
+{{de-ndecl|f}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -416,10 +480,13 @@ Page 4776 Arabistik: -------- begin text --------
 * {{IPA|de|/aʁaˈbɪstɪk/|[ʔaʁaˈbɪstɪkʰ]}}
 
 ===Noun===
-{{head|de|noun|g=f}}
+{{de-noun|f.sg}}
 
 # [[Arab studies]]
 #: {{syn|de|arabische Philologie}}
+
+====Declension====
+{{de-ndecl|f.sg}}
 
 ====Related terms====
 * {{l|de|Arabist}}
@@ -435,9 +502,12 @@ Page 4836 Arbeitshypothese: Found match for regex: =
 Page 4836 Arbeitshypothese: -------- begin text --------
 
 ===Noun===
-{{head|de|noun|g=f}}
+{{de-noun|f}}
 
 # [[working hypothesis]]
+
+====Declension====
+{{de-ndecl|f}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -446,18 +516,28 @@ Page 4836 Arbeitshypothese: -------- begin text --------
 Page 4883 Arbeitsteilung: Found match for regex: =
 Page 4883 Arbeitsteilung: -------- begin text --------
 ===Noun===
-{{head|de|noun|g=f}}
+{{de-noun|f}}
 # [[labor]] [[division]]
 # [[differentiation]] of labour
+
+====Declension====
+{{de-ndecl|f}}
+
+===Further reading===
+* {{R:DWDS}}
+* {{pedia|lang=de}}
 -------- end text --------
 Page 4963 Arginin: Found match for regex: {
 Page 4963 Arginin: -------- begin text --------
 {{wikipedia|lang=de}}
 
 ===Noun===
-{{head|de|noun|g=n}}
+{{de-noun|n}}
 
 # [[arginine]] (amino acid)
+
+====Declension====
+{{de-ndecl|n}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -468,9 +548,12 @@ Page 4986 Arianer: Found match for regex: =
 Page 4986 Arianer: -------- begin text --------
 
 ===Noun===
-{{head|de|noun|g=m}}
+{{de-noun|m}}
 
 # {{lb|de|Christianity}} [[Arian]], a follower of [[Arius]] or the [[Arianism]]
+
+====Declension====
+{{de-ndecl|m}}
 
 ====Derived terms====
 * {{l|de|Arianerin}}
@@ -489,9 +572,12 @@ Page 4987 Arianerin: -------- begin text --------
 {{af|de|Arianer|-in}}
 
 ===Noun===
-{{head|de|noun|g=f}}
+{{de-noun|f}}
 
 # {{lb|de|Christianity}} [[female]] [[Arian]], a follower of [[Arius]] or the [[Arianism]]
+
+====Declension====
+{{de-ndecl|f}}
 
 ====Related terms====
 * {{l|de|Arianer}}
@@ -505,9 +591,12 @@ Page 4989 Arianismus: Found match for regex: =
 Page 4989 Arianismus: -------- begin text --------
 
 ===Noun===
-{{head|de|noun|g=m}}
+{{de-noun|m.sg}}
 
 # {{lb|de|Christianity}} [[Arianism]]
+
+====Declension====
+{{de-ndecl|m.sg}}
 
 ====Related terms====
 * {{l|de|Arianer}}
@@ -526,9 +615,12 @@ Page 5274 Ascorbinsäure: -------- begin text --------
 * {{audio|de|De-Ascorbinsäure.ogg|Audio}}
 
 ===Noun===
-{{head|de|noun|g=f}}
+{{de-noun|f}}
 
 # {{lb|de|chemistry}} [[ascorbic acid]] (the white crystalline organic compound, C<sub>6</sub>H<sub>8</sub>O<sub>6</sub>)
+
+====Declension====
+{{de-ndecl|f}}
 
 ====Related terms====
 * {{l|de|Vitamin C}}
@@ -546,10 +638,13 @@ Page 5331 Aspiration: -------- begin text --------
 * {{audio|de|De-Aspiration.ogg|Audio}}
 
 ===Noun===
-{{head|de|noun|g=f}}
+{{de-noun|f}}
 
 # [[aspiration]] (burst of air that follows the release of some consonants)
 #: {{syn|de|Behauchung}}
+
+====Declension====
+{{de-ndecl|f}}
 
 ===Further reading===
 * {{R:DWDS}}
@@ -561,7 +656,7 @@ Page 5333 Aspirin: Found match for regex: =
 Page 5333 Aspirin: -------- begin text --------
 
 ===Etymology===
-From {{af|de|[[acetyliert]]e [[Spirsäure]]|lit=acetylated salicylic acid}}. The second word is from the plant name ''[[Spiraea]]''.
+From {{m|de|[[acetyliert]]e [[Spirsäure]]|lit=acetylated salicylic acid}}. The second word is from the plant name ''[[Spiraea]]''.
 
 ===Pronunciation===
 * {{audio|de|De-Aspirin.ogg|Audio}}
@@ -586,9 +681,12 @@ Page 5371 Assyriologie: -------- begin text --------
 * {{audio|de|De-Assyriologie.ogg|Audio}}
 
 ===Noun===
-{{head|de|noun|g=f}}
+{{de-noun|f.sg}}
 
 # [[Assyriology]]
+
+====Declension====
+{{de-ndecl|f.sg}}
 
 ====Related terms====
 * {{l|de|Assyriologe}}
@@ -610,9 +708,12 @@ From {{af|de|lang1=la|atheos|t1=atheist|-ismus}}.
 * {{audio|de|De-Atheismus.ogg|Audio}}
 
 ===Noun===
-{{head|de|noun|g=m}}
+{{de-noun|m.sg}}
 
 # [[atheism]]
+
+====Declension====
+{{de-ndecl|m.sg}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -630,21 +731,26 @@ Page 5563 Atropin: -------- begin text --------
 * {{audio|de|De-Atropin.ogg|Audio}}
 
 ===Noun===
-{{head|de|noun|g=n}}
+{{de-noun|n.sg}}
 
 # {{lb|de|organic chemistry}} [[atropine]]
+
+====Declension====
+{{de-ndecl|n.sg}}
 
 ===Further reading===
 * {{R:Duden}}
 -------- end text --------
 Page 6061 Aufschrei: Found match for regex: =
 Page 6061 Aufschrei: -------- begin text --------
+
 ===Noun===
-{{head|de|noun|g=m}}
-#[[outcry]]
-#[[scream]]
-#[[squeal]]
-#[[exclamation]]
+{{de-noun|m,(e)s}}
+#[[outcry]], [[exclamation]]
+#[[scream]], [[squeal]]
+
+====Declension====
+{{de-ndecl|m,(e)s}}
 -------- end text --------
 Page 6077 Aufsichtsbehörde: Found match for regex: =
 Page 6077 Aufsichtsbehörde: -------- begin text --------
@@ -653,8 +759,11 @@ Page 6077 Aufsichtsbehörde: -------- begin text --------
 From {{affix|de|Aufsicht|-s-|Behörde}}.
 
 ===Noun===
-{{head|de|noun|g=f}}
+{{de-noun|f}}
 # [[regulatory]] [[authority]]
+
+====Declension====
+{{de-ndecl|f}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -668,13 +777,17 @@ Page 6110 Auftakt: -------- begin text --------
 * {{audio|de|De-Auftakt.ogg|Audio}}
 
 ===Noun===
-{{head|de|noun|g=m}}
+{{de-noun|m,(e)s,e}}
 
 # {{lb|de|prosody}} [[anacrusis]] (an unstressed syllable at the start of a verse)
 # (musical) [[anacrusis]]
 #:{{syn|de|Aufschlag}}
 # [[kick-off]] (opening sequence of any event)
 #:{{syn|de|Beginn|Eröffnung}}
+
+====Declension====
+{{de-ndecl|m,(e)s,e}}
+
 ===Further reading===
 * {{R:DWDS}}
 * {{R:UniLeipzig}}
@@ -690,9 +803,12 @@ From {{m|de|ausmerzen}}.
 * {{audio|de|De-Ausmerzung.ogg|Audio}}
 
 ===Noun===
-{{head|de|noun|g=f}}
+{{de-noun|f}}
 
 # [[weeding out]], [[elimination]], [[eradication]]
+
+====Declension====
+{{de-ndecl|f}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -707,9 +823,12 @@ Page 7023 Autofellatio: -------- begin text --------
 * {{audio|de|De-Autofellatio.ogg|Audio}}
 
 ===Noun===
-{{head|de|noun|g=f}}
+{{de-noun|f.sg}}
 
 # ''(sexual practise)'' [[autofellatio]] (oral stimulation of one's own penis)
+
+====Declension====
+{{de-ndecl|f.sg}}
 -------- end text --------
 Page 7211 Baathismus: Found match for regex: =
 Page 7211 Baathismus: -------- begin text --------
@@ -718,9 +837,12 @@ Page 7211 Baathismus: -------- begin text --------
 {{suf|de|Baath|ismus}}
 
 ===Noun===
-{{head|de|noun|g=m}}
+{{de-noun|m.sg}}
 
 # [[Baathism]]
+
+====Declension====
+{{de-ndecl|m.sg}}
 -------- end text --------
 Page 7399 Bahrainer: Found match for regex: =
 Page 7399 Bahrainer: -------- begin text --------
@@ -729,9 +851,12 @@ Page 7399 Bahrainer: -------- begin text --------
 * {{audio|de|De-Bahrainer.ogg|Audio}}
 
 ===Noun===
-{{head|de|noun|g=m}}
+{{de-noun|m|f=+}}
 
 # [[Bahraini]] (man from Bahrain)
+
+====Declension====
+{{de-ndecl|m}}
 
 ====Derived terms====
 * {{l|de|Bahrainerin}}
@@ -754,9 +879,12 @@ Page 7400 Bahrainerin: -------- begin text --------
 * {{audio|de|De-Bahrainerin.ogg|Audio}}
 
 ===Noun===
-{{head|de|noun|g=f}}
+{{de-noun|f}}
 
 # [[Bahraini]] (woman from Bahrain)
+
+====Declension====
+{{de-ndecl|f}}
 
 ====Related terms====
 * {{l|de|Bahrainer}}
@@ -774,7 +902,7 @@ Page 7432 Bakteriologe: -------- begin text --------
 * {{audio|de|De-Bakteriologe.ogg|Audio}}
 
 ===Noun===
-{{head|de|noun|g=m}}
+{{de-noun|m.weak}}
 
 # [[bacteriologist]]
 
@@ -801,6 +929,7 @@ The plural form {{m|de|Bankkaufleute}} can be used for mixed-sex groups while {{
 
 ===Further reading===
 * {{R:Duden}}
+* {{R:DWDS}}
 
 {{C|de|Occupations}}
 -------- end text --------
@@ -815,9 +944,12 @@ Page 7779 Baschkirin: -------- begin text --------
 * {{audio|de|De-Baschkirin.ogg|Audio}}
 
 ===Noun===
-{{head|de|noun|g=f}}
+{{de-noun|f}}
 
 # [[Bashkir]] (woman of Bashkir origin)
+
+====Declension====
+{{de-ndecl|f}}
 
 ====Related terms====
 * {{l|de|Baschkire}}
@@ -834,9 +966,12 @@ Page 7881 Bauart: -------- begin text --------
 * {{audio|de|De-Bauart.ogg|Audio}}
 
 ===Noun===
-{{head|de|noun|f}}
+{{de-noun|f}}
 
 # [[design]], [[layout]] {{gloss|type of construction}}
+
+====Declension====
+{{de-ndecl|f}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -848,10 +983,13 @@ Page 8816 Belarussin: -------- begin text --------
 {{suffix|de|Belarusse|gloss1=Belarusian|in}}
 
 ===Noun===
-{{head|de|noun|plural|Belarussinnen|g=f}}
+{{de-noun|f}}
 
 # [[Belarusian]] (woman from [[Belarus]] or of Belarusian descent)
 #: {{syn|de|Weißrussin}}
+
+====Declension====
+{{de-ndecl|f}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -862,7 +1000,7 @@ Page 9125 Bergtürken: Found match for regex: =
 Page 9125 Bergtürken: -------- begin text --------
 
 ===Noun===
-{{head|de|noun|g=m}}
+{{head|de|noun form}}
 
 # {{inflection of|de|Bergtürke||gen//dat//acc|s|;|nom//gen//dat//acc|p}}
 -------- end text --------
@@ -873,9 +1011,12 @@ Page 9238 Berylliumacetat: -------- begin text --------
 {{compound|de|Beryllium|Acetat}}
 
 ===Noun===
-{{head|de|noun|g=n}}
+{{de-noun|n}}
 
 # {{lb|de|inorganic compound}} [[beryllium acetate]]
+
+====Declension====
+{{de-ndecl|n}}
 -------- end text --------
 Page 9239 Berylliumcarbid: Found match for regex: =
 Page 9239 Berylliumcarbid: -------- begin text --------
@@ -884,9 +1025,12 @@ Page 9239 Berylliumcarbid: -------- begin text --------
 {{compound|de|Beryllium|Carbid}}
 
 ===Noun===
-{{head|de|noun|g=n}}
+{{de-noun|n}}
 
 # {{lb|de|inorganic compound}} [[beryllium carbide]]
+
+====Declension====
+{{de-ndecl|n}}
 -------- end text --------
 Page 9240 Berylliumchlorid: Found match for regex: =
 Page 9240 Berylliumchlorid: -------- begin text --------
@@ -895,9 +1039,12 @@ Page 9240 Berylliumchlorid: -------- begin text --------
 {{compound|de|Beryllium|Chlorid}}
 
 ===Noun===
-{{head|de|noun|g=n}}
+{{de-noun|n}}
 
 # {{lb|de|inorganic compound}} [[beryllium chloride]]
+
+====Declension====
+{{de-ndecl|n}}
 -------- end text --------
 Page 9242 Berylliumfluorid: Found match for regex: =
 Page 9242 Berylliumfluorid: -------- begin text --------
@@ -906,9 +1053,12 @@ Page 9242 Berylliumfluorid: -------- begin text --------
 {{compound|de|Beryllium|Fluorid}}
 
 ===Noun===
-{{head|de|noun|g=n}}
+{{de-noun|n}}
 
 # {{lb|de|inorganic compound}} [[beryllium fluoride]]
+
+====Declension====
+{{de-ndecl|n}}
 -------- end text --------
 Page 9244 Berylliumhydrid: Found match for regex: =
 Page 9244 Berylliumhydrid: -------- begin text --------
@@ -917,9 +1067,12 @@ Page 9244 Berylliumhydrid: -------- begin text --------
 {{compound|de|Beryllium|Hydrid}}
 
 ===Noun===
-{{head|de|noun|g=n}}
+{{de-noun|n}}
 
 # {{lb|de|inorganic compound}} [[beryllium hydride]]
+
+====Declension====
+{{de-ndecl|n}}
 -------- end text --------
 Page 9245 Berylliumhydroxid: Found match for regex: =
 Page 9245 Berylliumhydroxid: -------- begin text --------
@@ -928,9 +1081,12 @@ Page 9245 Berylliumhydroxid: -------- begin text --------
 {{compound|de|Beryllium|Hydroxid}}
 
 ===Noun===
-{{head|de|noun|g=n}}
+{{de-noun|n}}
 
 # {{lb|de|inorganic compound}} [[beryllium hydroxide]]
+
+====Declension====
+{{de-ndecl|n}}
 -------- end text --------
 Page 9248 Berylliumnitrid: Found match for regex: =
 Page 9248 Berylliumnitrid: -------- begin text --------
@@ -939,9 +1095,12 @@ Page 9248 Berylliumnitrid: -------- begin text --------
 {{compound|de|Beryllium|Nitrid}}
 
 ===Noun===
-{{head|de|noun|g=n}}
+{{de-noun|n}}
 
 # {{lb|de|inorganic compound}} [[beryllium nitride]]
+
+====Declension====
+{{de-ndecl|n}}
 -------- end text --------
 Page 9249 Berylliumoxid: Found match for regex: =
 Page 9249 Berylliumoxid: -------- begin text --------
@@ -950,10 +1109,13 @@ Page 9249 Berylliumoxid: -------- begin text --------
 {{compound|de|Beryllium|Oxid}}
 
 ===Noun===
-{{head|de|noun|g=n}}
+{{de-noun|n,(e)s}}
 
 # {{lb|de|inorganic compound}} [[beryllium oxide]]
 #: {{syn|de|Beryllerde}}
+
+====Declension====
+{{de-ndecl|n,(e)s}}
 -------- end text --------
 Page 9252 Berylliumtellurid: Found match for regex: =
 Page 9252 Berylliumtellurid: -------- begin text --------
@@ -962,9 +1124,12 @@ Page 9252 Berylliumtellurid: -------- begin text --------
 {{compound|de|Beryllium|Tellurid}}
 
 ===Noun===
-{{head|de|noun|g=n}}
+{{de-noun|n}}
 
 # {{lb|de|inorganic compound}} [[beryllium telluride]]
+
+====Declension====
+{{de-ndecl|n}}
 -------- end text --------
 Page 10212 Bilingualismus: Found match for regex: {
 Page 10212 Bilingualismus: -------- begin text --------
@@ -975,10 +1140,13 @@ Page 10212 Bilingualismus: -------- begin text --------
 * {{audio|de|De-Bilingualismus.ogg|Audio}}
 
 ===Noun===
-{{head|de|noun|g=m}}
+{{de-noun|m.sg}}
 
 # [[bilingualism]] (condition of being bilingual)
 #: {{syn|de|Zweisprachigkeit}}
+
+====Declension====
+{{de-ndecl|m.sg}}
 
 ====Related terms====
 * {{l|de|bilingual}}
@@ -1014,6 +1182,7 @@ Page 11110 Bomber: -------- begin text --------
 
 ===Further reading===
 * {{R:Duden}}
+* {{R:DWDS}}
 -------- end text --------
 Page 11161 Borcarbid: Found match for regex: =
 Page 11161 Borcarbid: -------- begin text --------
@@ -1026,9 +1195,12 @@ Page 11161 Borcarbid: -------- begin text --------
 
 ===Noun===
 {{wikipedia|lang=de}}
-{{head|de|noun|g=n}}
+{{de-noun|n}}
 
 # {{lb|de|inorganic compound}} [[boron carbide]]
+
+====Declension====
+{{de-ndecl|n}}
 -------- end text --------
 Page 11207 Bortrichlorid: Found match for regex: =
 Page 11207 Bortrichlorid: -------- begin text --------
@@ -1037,9 +1209,12 @@ Page 11207 Bortrichlorid: -------- begin text --------
 {{compound|de|Bor|Trichlorid}}
 
 ===Noun===
-{{head|de|noun|g=n}}
+{{de-noun|n}}
 
 # {{lb|de|inorganic compound}} [[boron trichloride]]
+
+====Declension====
+{{de-ndecl|n}}
 -------- end text --------
 Page 11208 Bortrioxid: Found match for regex: =
 Page 11208 Bortrioxid: -------- begin text --------
@@ -1048,9 +1223,12 @@ Page 11208 Bortrioxid: -------- begin text --------
 {{compound|de|Bor|Trioxid}}
 
 ===Noun===
-{{head|de|noun|g=n}}
+{{de-noun|n}}
 
 # {{lb|de|inorganic compound}} [[boron trioxide]]
+
+====Declension====
+{{de-ndecl|n}}
 -------- end text --------
 Page 11267 Botulismus: Found match for regex: =
 Page 11267 Botulismus: -------- begin text --------
@@ -1062,9 +1240,12 @@ A pseudo-Latinism, coined from {{der|de|la|botulus||sausage}} with the addition 
 * {{audio|de|De-Botulismus.ogg|Audio}}
 
 ===Noun===
-{{head|de|noun|g=m}}
+{{de-noun|m.sg}}
 
 # [[botulism]]
+
+====Declension====
+{{de-ndecl|m.sg}}
 
 ====Descendants====
 {{top2}}
@@ -1092,9 +1273,12 @@ From {{affix|de|Braille|Schrift|gloss2=alphabet}}, named after Louis Braille.
 * {{audio|de|De-Brailleschrift.ogg|Audio}}
 
 ===Noun===
-{{head|de|noun|g=f}}
+{{de-noun|f}}
 
 # [[Braille]] (system of writing using raised dots)
+
+====Declension====
+{{de-ndecl|f}}
 
 ====Related terms====
 * {{l|de|Blindenschrift}}
@@ -1110,19 +1294,26 @@ Page 12307 Butyllithium: Found match for regex: =
 Page 12307 Butyllithium: -------- begin text --------
 
 ===Noun===
-{{head|de|noun|g=n}}
+{{de-noun|n.sg}}
 
 # {{lb|de|organic compound}} [[butyllithium]]
+
+====Declension====
+{{de-ndecl|n.sg}}
 -------- end text --------
 Page 12439 Caprinsäure: Found match for regex: {
 Page 12439 Caprinsäure: -------- begin text --------
 {{wikipedia|lang=de}}
 
 ===Noun===
-{{head|de|noun|g=f}}
+{{de-noun|f}}
 
 # [[decanoic acid]], [[capric acid]]
 #: {{syn|de|Decansäure<g:f>|Nonancarbonsäure<g:f>}}
+
+====Declension====
+{{de-ndecl|f}}
+
 {{C|de|Chemistry}}
 -------- end text --------
 Page 12441 Capronsäure: Found match for regex: {
@@ -1130,10 +1321,14 @@ Page 12441 Capronsäure: -------- begin text --------
 {{wikipedia|lang=de}}
 
 ===Noun===
-{{head|de|noun|g=f}}
+{{de-noun|f}}
 
 # [[hexanoic acid]], [[caproic acid]]
 #: {{syn|de|Hexansäure<g:f>|Pentancarbonsäure<g:f>}}
+
+====Declension====
+{{de-ndecl|f}}
+
 {{C|de|Chemistry}}
 -------- end text --------
 Page 12442 Caprylsäure: Found match for regex: {
@@ -1141,10 +1336,14 @@ Page 12442 Caprylsäure: -------- begin text --------
 {{wikipedia|lang=de}}
 
 ===Noun===
-{{head|de|noun|g=f}}
+{{de-noun|f}}
 
 # [[caprylic acid]]
 #: {{syn|de|Octansäure<g:f>|Heptancarbonsäure<g:f>}}
+
+====Declension====
+{{de-ndecl|f}}
+
 {{C|de|Chemistry}}
 -------- end text --------
 Page 12617 Chassidismus: Found match for regex: =
@@ -1157,9 +1356,12 @@ Page 12617 Chassidismus: -------- begin text --------
 * {{audio|de|De-Chassidismus.ogg|Audio}}
 
 ===Noun===
-{{head|de|noun|g=m}}
+{{de-noun|m.sg}}
 
 # [[Hassidism]]
+
+====Declension====
+{{de-ndecl|m.sg}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -1173,9 +1375,12 @@ Page 12834 Christianisierung: -------- begin text --------
 * {{audio|de|De-Christianisierung.ogg|Audio}}
 
 ===Noun===
-{{head|de|noun|g=f}}
+{{de-noun|f}}
 
 # [[Christianisation]] / [[Christianization]] ([[Christianising]] / [[Christianizing]] {{q|nouns}})
+
+====Declension====
+{{de-ndecl|f}}
 
 ====Related terms====
 * {{l|de|christianisieren}}
@@ -1196,9 +1401,12 @@ Page 12876 Chromnitrid: -------- begin text --------
 {{compound|de|Chrom|Nitrid}}
 
 ===Noun===
-{{head|de|noun|g=n}}
+{{de-noun|n}}
 
 # {{lb|de|inorganic compound}} [[chromium nitride]]
+
+====Declension====
+{{de-ndecl|n}}
 -------- end text --------
 Page 13221 Cycloalkan: Found match for regex: =
 Page 13221 Cycloalkan: -------- begin text --------
@@ -1208,9 +1416,12 @@ Page 13221 Cycloalkan: -------- begin text --------
 * {{rhymes|de|aːn|s=4}}
 
 ===Noun===
-{{head|de|noun|g=n}}
+{{de-noun|n}}
 
 # {{lb|de|organic chemistry}} [[cycloalkane]]
+
+====Declension====
+{{de-ndecl|n}}
 -------- end text --------
 Page 13224 Cycloheptan: Found match for regex: {
 Page 13224 Cycloheptan: -------- begin text --------
@@ -1221,9 +1432,12 @@ Page 13224 Cycloheptan: -------- begin text --------
 * {{rhymes|de|aːn|s=4}}
 
 ===Noun===
-{{head|de|noun|g=n}}
+{{de-noun|n}}
 
 # {{lb|de|organic compound}} [[cycloheptane]]
+
+====Declension====
+{{de-ndecl|n}}
 -------- end text --------
 Page 13227 Cyclopentan: Found match for regex: {
 Page 13227 Cyclopentan: -------- begin text --------
@@ -1234,9 +1448,12 @@ Page 13227 Cyclopentan: -------- begin text --------
 * {{rhymes|de|aːn|s=4}}
 
 ===Noun===
-{{head|de|noun|g=n}}
+{{de-noun|n}}
 
 # {{lb|de|organic compound}} [[cyclopentane]]
+
+====Declension====
+{{de-ndecl|n}}
 -------- end text --------
 Page 13228 Cyclopropan: Found match for regex: {
 Page 13228 Cyclopropan: -------- begin text --------
@@ -1247,15 +1464,21 @@ Page 13228 Cyclopropan: -------- begin text --------
 * {{rhymes|de|aːn|s=4}}
 
 ===Noun===
-{{head|de|noun|g=n}}
+{{de-noun|n.sg}}
 
 # {{lb|de|organic compound}} [[cyclopropane]]
+
+====Declension====
+{{de-ndecl|n.sg}}
 -------- end text --------
 Page 14305 Dezimalzahl: Found match for regex: =
 Page 14305 Dezimalzahl: -------- begin text --------
 ===Noun===
-{{head|de|noun|g=f}}
+{{de-noun|f}}
 #[[decimal]] [[number]]/[[digit]]
+
+====Declension====
+{{de-ndecl|f}}
 -------- end text --------
 Page 14335 Diagramm: Found match for regex: =
 Page 14335 Diagramm: -------- begin text --------
@@ -1269,14 +1492,22 @@ Page 14335 Diagramm: -------- begin text --------
 # [[diagram]]
 # [[chart]]
 
+====Declension====
+{{de-ndecl|n,(e)s}}
+
 ===Further reading===
 * {{R:Duden}}
+* {{R:DWDS}}
 -------- end text --------
 Page 14539 Dienststelle: Found match for regex: =
 Page 14539 Dienststelle: -------- begin text --------
+
 ===Noun===
-{{head|de|noun|g=f}}
+{{de-noun|f}}
 #[[office]], [[agency]]
+
+====Declension====
+{{de-ndecl|f}}
 -------- end text --------
 Page 15081 Doppelschleifer: Found match for regex: [
 Page 15081 Doppelschleifer: -------- begin text --------
@@ -1284,6 +1515,9 @@ Page 15081 Doppelschleifer: -------- begin text --------
 
 ===Etymology===
 From the shortening of {{suffix|de|Doppelschleifmaschine|er}}.
+
+===Pronunciation===
+* {{audio|de|De-Doppelschleifer.ogg|Audio}}
 
 ===Noun===
 {{de-noun|m}}
@@ -1305,6 +1539,7 @@ From {{com|de|[[Doppel]]/[[doppelt]]|t1=double|schleifen|t2=grind|Maschine|t3=ma
 
 ===Pronunciation===
 * {{IPA|de|/ˈdɔpl̩ʃlaɪ̯fmaˌʃiːnə/}}
+* {{audio|de|De-Doppelschleifmaschine.ogg|Audio}}
 
 ===Noun===
 {{de-noun|f}}
@@ -1325,6 +1560,9 @@ Page 16133 Eckrohrzange: -------- begin text --------
 ===Etymology===
 From {{com|de|Ecke|t1=corner|Rohr|t2=pipe, tube|Zange|t3=pincers, pliers}}.
 
+===Pronunciation===
+* {{audio|de|De-Eckrohrzange.ogg|Audio}}
+
 ===Noun===
 {{de-noun|f}}
 
@@ -1344,8 +1582,8 @@ From {{compound|de|Einkauf|-s-|Beutel|gloss1=purchased goods|gloss3=bag}}.
 
 ===Pronunciation===
 * {{IPA|de|/ˈaɪ̯nkaʊ̯fsˌbɔɪ̯tl̩/}}
+* {{audio|de|De-Einkaufsbeutel.ogg|Audio}}
 * {{hyphenation|de|Ein|kaufs|beu|tel}}
-{{rfap|de}}
 
 ===Noun===
 {{de-noun|m}}
@@ -1371,9 +1609,12 @@ Page 17426 Eklektizismus: -------- begin text --------
 * {{audio|de|De-Eklektizismus.ogg|Audio}}
 
 ===Noun===
-{{head|de|noun}}
+{{de-noun|m.sg}}
 
 # [[eclecticism]]
+
+====Declension====
+{{de-ndecl|m.sg}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -1381,12 +1622,20 @@ Page 17426 Eklektizismus: -------- begin text --------
 Page 18296 Entsendung: Found match for regex: =
 Page 18296 Entsendung: -------- begin text --------
 ===Noun===
-{{head|de|noun|g=f}}
+{{de-noun|f}}
 # [[delegation]]
 # [[dispatch]]
+
+====Declension====
+{{de-ndecl|f}}
+===Further reading===
+* {{R:DWDS}}
 -------- end text --------
 Page 20482 Federung: Found match for regex: =
 Page 20482 Federung: -------- begin text --------
+
+===Pronunciation===
+* {{audio|de|De-Federung.ogg|Audio}}
 
 ===Noun===
 {{de-noun|f}}
@@ -1418,13 +1667,28 @@ Page 21335 Fjord: -------- begin text --------
 
 ===Further reading===
 * {{R:Duden}}
+* {{R:DWDS}}
 {{C|de|Geography|Landforms}}
 -------- end text --------
 Page 23175 Futteral: Found match for regex: =
 Page 23175 Futteral: -------- begin text --------
+
+===Etymology===
+From {{inh|de|gmh|vouter}}, {{m|gmh|vōder}}, influenced by {{der|de|ML.|fotrale}}, a form of {{m|ML.|fotrum|t=capsule, case}}.
+
 ===Noun===
-{{head|de|noun|g=n}}
-#[[case]], [[sheath]]
+{{de-noun|n,s:es[less common],e}}
+
+# [[case]], [[sheath]], [[étui]]
+
+====Declension====
+{{de-ndecl|n,s:es[less common],e}}
+
+===Further reading===
+* {{wpl|de}}
+* {{R:DWDS}}
+* {{R:Duden}}
+* {{R:UniLeipzig}}
 -------- end text --------
 Page 23215 Gabuner: Found match for regex: =
 Page 23215 Gabuner: -------- begin text --------
@@ -1437,9 +1701,12 @@ Page 23215 Gabuner: -------- begin text --------
 * {{audio|de|De-Gabuner.ogg|Audio}}
 
 ===Noun===
-{{head|de|noun|g=m}}
+{{de-noun|m|f=+}}
 
 # [[Gabonese]] (A man from Gabon or of Gabonese descent)
+
+====Declension====
+{{de-ndecl|m}}
 
 ====Derived terms====
 * {{l|de|Gabunerin}}
@@ -1453,10 +1720,14 @@ Page 23215 Gabuner: -------- begin text --------
 -------- end text --------
 Page 23329 Gambe: Found match for regex: =
 Page 23329 Gambe: -------- begin text --------
+
 ===Noun===
-{{head|de|noun|g=f}}
+{{de-noun|f}}
 
 # {{lb|de|musical instrument}} [[viol]], [[viola da gamba]]
+
+====Declension====
+{{de-ndecl|f}}
 -------- end text --------
 Page 24544 Georgier: Found match for regex: {
 Page 24544 Georgier: -------- begin text --------
@@ -1467,9 +1738,12 @@ Page 24544 Georgier: -------- begin text --------
 * {{audio|de|De-Georgier.ogg|Audio}}
 
 ===Noun===
-{{head|de|noun|g=m}}
+{{de-noun|m,,-}}
 
 # [[Georgian]] (man from the country of Georgia)
+
+====Declension====
+{{de-ndecl|m,,-}}
 
 ====Derived terms====
 * {{l|de|Georgierin}}
@@ -1496,9 +1770,12 @@ Page 26174 Gravitationskonstante: -------- begin text --------
 * {{audio|de|De-Gravitationskonstante.ogg|Audio}}
 
 ===Noun===
-{{head|de|noun|g=f}}
+{{de-noun|f}}
 
 # [[gravitational constant]]
+
+====Declension====
+{{de-ndecl|f}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -1507,9 +1784,13 @@ Page 26174 Gravitationskonstante: -------- begin text --------
 -------- end text --------
 Page 27371 Handelsbilanz: Found match for regex: =
 Page 27371 Handelsbilanz: -------- begin text --------
+
 ===Noun===
-{{head|de|noun|g=f}}
+{{de-noun|f}}
 #[[trade]] [[balance]]
+
+====Declension====
+{{de-ndecl|f}}
 -------- end text --------
 Page 28376 Henotheismus: Found match for regex: {
 Page 28376 Henotheismus: -------- begin text --------
@@ -1524,10 +1805,13 @@ From {{der|de|grc||ἕνα θεόν}}.
 * {{hyphenation|de|He|no|the|is|mus}}
 
 ===Noun===
-{{head|de|noun|g=m}}
+{{de-noun|m.sg}}
 
 # {{lb|de|religion}} [[henotheism]] {{gloss|belief in one ("main") deity without denying the existence of other deities}}
 #: {{ant|de|Monotheismus|Polytheismus}}
+
+====Declension====
+{{de-ndecl|m.sg}}
 
 ====Derived terms====
 * {{l|de|henotheistisch}}
@@ -1547,8 +1831,8 @@ From {{der|de|sa|सिन्धु}}.
 * {{audio|de|De-Hindi.ogg|audio}}
 * {{audio|de|De-Hindi2.ogg|audio}}
 
-===Noun===
-{{head|de|noun|g=n}}
+===Proper noun===
+{{de-proper noun|langname}}
 
 # the [[#English|Hindi]] language
 
@@ -1559,6 +1843,8 @@ From {{der|de|sa|सिन्धु}}.
 
 ===Further reading===
 * {{R:Duden}}
+* {{R:DWDS}}
+
 {{C|de|Languages}}
 
 ----
@@ -1571,18 +1857,25 @@ Page 30189 Hussitismus: -------- begin text --------
 {{af|de|Hussit|-ismus}}
 
 ===Noun===
-{{head|de|noun|g=m}}
+{{de-noun|m.sg}}
 
 # [[Hussitism]]
+
+====Declension====
+{{de-ndecl|m.sg}}
 
 ===Further reading===
 * {{R:Duden}}
 -------- end text --------
 Page 30983 Infarkt: Found match for regex: =
 Page 30983 Infarkt: -------- begin text --------
+
 ===Noun===
-{{head|de|noun|g=m}}
+{{de-noun|m,(e)s}}
 #[[infarct]]
+
+====Declension====
+{{de-ndecl|m,(e)s}}
 -------- end text --------
 Page 31181 Inneres: Found match for regex: =
 Page 31181 Inneres: -------- begin text --------
@@ -1591,7 +1884,8 @@ Page 31181 Inneres: -------- begin text --------
 * {{audio|de|De-Inneres.ogg|Audio}}
 
 ===Noun===
-{{de-noun|n,Inneren:Innern,Innere}}
+{{de-noun|+}}
+
 # {{nominalization of|de|inneres}}:
 ## [[inside]], [[interior]]
 ##: ''das Bundesministerium des '''Innern''''' — ''the federal ministry of the '''interior'''''
@@ -1622,6 +1916,7 @@ Page 31410 Internat: -------- begin text --------
 
 ===Further reading===
 * {{R:Duden}}
+* {{R:DWDS}}
 {{C|de|Schools}}
 -------- end text --------
 Page 32654 Kaliumcarbonat: Found match for regex: =
@@ -1635,9 +1930,12 @@ Page 32654 Kaliumcarbonat: -------- begin text --------
 
 ===Noun===
 {{wikipedia|lang=de}}
-{{head|de|noun|g=n}}
+{{de-noun|n}}
 
 # {{lb|de|inorganic compound}} [[potassium carbonate]]
+
+====Declension====
+{{de-ndecl|n}}
 -------- end text --------
 Page 32656 Kaliumchlorid: Found match for regex: =
 Page 32656 Kaliumchlorid: -------- begin text --------
@@ -1647,9 +1945,12 @@ Page 32656 Kaliumchlorid: -------- begin text --------
 
 ===Noun===
 {{wikipedia|lang=de}}
-{{head|de|noun|g=n}}
+{{de-noun|n}}
 
 # {{lb|de|inorganic compound}} [[potassium chloride]]
+
+====Declension====
+{{de-ndecl|n}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -1661,16 +1962,19 @@ Page 32659 Kaliumcyanid: -------- begin text --------
 {{compound|de|Kalium|Cyanid}}
 
 ===Noun===
-{{head|de|noun|g=n}}
+{{de-noun|n}}
 
 # {{lb|de|inorganic compound}} [[potassium cyanide]]
+
+====Declension====
+{{de-ndecl|n}}
 -------- end text --------
 Page 32880 Kannada: Found match for regex: {
 Page 32880 Kannada: -------- begin text --------
 {{wikipedia|lang=de}}
 
-===Noun===
-{{head|de|noun|g=n}}
+===Proper noun===
+{{de-proper noun|langname}}
 
 # one of the languages of India; [[#English|Kannada]]
 
@@ -1685,8 +1989,11 @@ Page 33494 Kegelrobbe: -------- begin text --------
 * {{audio|de|De-Kegelrobbe.ogg|Audio}}
 
 ===Noun===
-{{head|de|noun|g=f}}
+{{de-noun|f}}
 # [[grey seal]] ({{taxlink|Halichoerus grypus|species|noshow=1|ver=161006}}).
+
+====Declension====
+{{de-ndecl|f}}
 
 ===Further reading===
 * {{R:DWDS}}
@@ -1703,11 +2010,14 @@ Page 34170 Klassizismus: -------- begin text --------
 * {{rhymes|de|ɪsmʊs|s=4}}
 
 ===Noun===
-{{head|de|noun|g=m}}
+{{de-noun|m,,Klassizismen}}
 
 # a [[neoclassical]] style in [[architecture]], [[neoclassical]] [[architecture]]
 # [[classicism]] (in art)
 # [[neoclassicism]] ({{clipping of|de|Neoklassizismus|nocap=1}})
+
+====Declension====
+{{de-ndecl|m,,Klassizismen}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -1725,9 +2035,12 @@ Page 36839 Kurie: -------- begin text --------
 *{{IPA|de|/ˈkuːʁi̯ə/}}
 
 ===Noun===
-{{head|de|noun|g=f}}
+{{de-noun|f}}
 
 # [[Curia]]
+
+====Declension====
+{{de-ndecl|f}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -1737,9 +2050,12 @@ Page 36839 Kurie: -------- begin text --------
 Page 37542 Laubwerk: Found match for regex: =
 Page 37542 Laubwerk: -------- begin text --------
 ===Noun===
-{{head|de|noun|g=n}}
+{{de-noun|n,(e)s,e}}
 # [[foliage]]
 # [[leafwork]]
+
+====Declension====
+{{de-ndecl|n,(e)s,e}}
 -------- end text --------
 Page 38700 Lithiumacetat: Found match for regex: =
 Page 38700 Lithiumacetat: -------- begin text --------
@@ -1748,9 +2064,12 @@ Page 38700 Lithiumacetat: -------- begin text --------
 {{compound|de|Lithium|Acetat}}
 
 ===Noun===
-{{head|de|noun|g=n}}
+{{de-noun|n}}
 
 # {{lb|de|inorganic compound}} [[lithium acetate]]
+
+====Declension====
+{{de-ndecl|n}}
 -------- end text --------
 Page 38701 Lithiumaluminiumhydrid: Found match for regex: =
 Page 38701 Lithiumaluminiumhydrid: -------- begin text --------
@@ -1759,9 +2078,12 @@ Page 38701 Lithiumaluminiumhydrid: -------- begin text --------
 {{compound|de|Lithium|Aluminium|Hydrid}}
 
 ===Noun===
-{{head|de|noun|g=n}}
+{{de-noun|n}}
 
 # {{lb|de|inorganic compound}} [[lithium aluminium hydride]]
+
+====Declension====
+{{de-ndecl|n}}
 -------- end text --------
 Page 38703 Lithiumamid: Found match for regex: =
 Page 38703 Lithiumamid: -------- begin text --------
@@ -1770,9 +2092,12 @@ Page 38703 Lithiumamid: -------- begin text --------
 {{compound|de|Lithium|Amid}}
 
 ===Noun===
-{{head|de|noun|g=n}}
+{{de-noun|n}}
 
 # {{lb|de|inorganic compound}} [[lithium amide]]
+
+====Declension====
+{{de-ndecl|n}}
 -------- end text --------
 Page 38705 Lithiumborhydrid: Found match for regex: =
 Page 38705 Lithiumborhydrid: -------- begin text --------
@@ -1781,9 +2106,12 @@ Page 38705 Lithiumborhydrid: -------- begin text --------
 {{compound|de|Lithium|Borhydrid}}
 
 ===Noun===
-{{head|de|noun|g=n}}
+{{de-noun|n}}
 
 # {{lb|de|inorganic compound}} [[lithium borohydride]]
+
+====Declension====
+{{de-ndecl|n}}
 -------- end text --------
 Page 38706 Lithiumbromid: Found match for regex: =
 Page 38706 Lithiumbromid: -------- begin text --------
@@ -1792,9 +2120,12 @@ Page 38706 Lithiumbromid: -------- begin text --------
 {{compound|de|Lithium|Bromid}}
 
 ===Noun===
-{{head|de|noun|g=n}}
+{{de-noun|n}}
 
 # {{lb|de|inorganic compound}} [[lithium bromide]]
+
+====Declension====
+{{de-ndecl|n}}
 -------- end text --------
 Page 38707 Lithiumcarbonat: Found match for regex: =
 Page 38707 Lithiumcarbonat: -------- begin text --------
@@ -1803,9 +2134,12 @@ Page 38707 Lithiumcarbonat: -------- begin text --------
 {{compound|de|Lithium|Carbonat}}
 
 ===Noun===
-{{head|de|noun|g=n}}
+{{de-noun|n}}
 
 # {{lb|de|inorganic compound}} [[lithium carbonate]]
+
+====Declension====
+{{de-ndecl|n}}
 -------- end text --------
 Page 38708 Lithiumchlorid: Found match for regex: =
 Page 38708 Lithiumchlorid: -------- begin text --------
@@ -1814,9 +2148,12 @@ Page 38708 Lithiumchlorid: -------- begin text --------
 {{compound|de|Lithium|Chlorid}}
 
 ===Noun===
-{{head|de|noun|g=n}}
+{{de-noun|n}}
 
 # {{lb|de|inorganic compound}} [[lithium chloride]]
+
+====Declension====
+{{de-ndecl|n}}
 -------- end text --------
 Page 38709 Lithiumcitrat: Found match for regex: =
 Page 38709 Lithiumcitrat: -------- begin text --------
@@ -1825,9 +2162,12 @@ Page 38709 Lithiumcitrat: -------- begin text --------
 {{compound|de|Lithium|Citrat}}
 
 ===Noun===
-{{head|de|noun|g=n}}
+{{de-noun|n}}
 
 # {{lb|de|inorganic compound}} [[lithium citrate]]
+
+====Declension====
+{{de-ndecl|n}}
 -------- end text --------
 Page 38710 Lithiumdeuterid: Found match for regex: =
 Page 38710 Lithiumdeuterid: -------- begin text --------
@@ -1836,9 +2176,12 @@ Page 38710 Lithiumdeuterid: -------- begin text --------
 {{compound|de|Lithium|Deuterid}}
 
 ===Noun===
-{{head|de|noun|g=n}}
+{{de-noun|n}}
 
 # {{lb|de|inorganic compound}} [[lithium deuteride]]
+
+====Declension====
+{{de-ndecl|n}}
 -------- end text --------
 Page 38711 Lithiumfluorid: Found match for regex: =
 Page 38711 Lithiumfluorid: -------- begin text --------
@@ -1847,9 +2190,12 @@ Page 38711 Lithiumfluorid: -------- begin text --------
 {{compound|de|Lithium|Fluorid}}
 
 ===Noun===
-{{head|de|noun|g=n}}
+{{de-noun|n}}
 
 # {{lb|de|inorganic compound}} [[lithium fluoride]]
+
+====Declension====
+{{de-ndecl|n}}
 -------- end text --------
 Page 38712 Lithiumhexafluorophosphat: Found match for regex: =
 Page 38712 Lithiumhexafluorophosphat: -------- begin text --------
@@ -1858,17 +2204,23 @@ Page 38712 Lithiumhexafluorophosphat: -------- begin text --------
 {{compound|de|Lithium|Hexafluorophosphat}}
 
 ===Noun===
-{{head|de|noun|g=n}}
+{{de-noun|n}}
 
 # {{lb|de|inorganic compound}} [[lithium hexafluorophosphate]]
+
+====Declension====
+{{de-ndecl|n}}
 -------- end text --------
 Page 38713 Lithiumhydrid: Found match for regex: =
 Page 38713 Lithiumhydrid: -------- begin text --------
 
 ===Noun===
-{{head|de|noun}}
+{{de-noun|n}}
 
 # [[lithium hydride]]
+
+====Declension====
+{{de-ndecl|n}}
 
 {{C|de|Inorganic chemistry}}
 -------- end text --------
@@ -1879,9 +2231,12 @@ Page 38714 Lithiumhydroxid: -------- begin text --------
 {{compound|de|Lithium|Hydroxid}}
 
 ===Noun===
-{{head|de|noun|g=n}}
+{{de-noun|n}}
 
 # {{lb|de|inorganic compound}} [[lithium hydroxide]]
+
+====Declension====
+{{de-ndecl|n}}
 -------- end text --------
 Page 38715 Lithiumiodid: Found match for regex: =
 Page 38715 Lithiumiodid: -------- begin text --------
@@ -1890,9 +2245,12 @@ Page 38715 Lithiumiodid: -------- begin text --------
 {{compound|de|Lithium|Iodid}}
 
 ===Noun===
-{{head|de|noun|g=n}}
+{{de-noun|n}}
 
 # {{lb|de|inorganic compound}} [[lithium iodide]]
+
+====Declension====
+{{de-ndecl|n}}
 -------- end text --------
 Page 38719 Lithiummetaborat: Found match for regex: =
 Page 38719 Lithiummetaborat: -------- begin text --------
@@ -1901,9 +2259,12 @@ Page 38719 Lithiummetaborat: -------- begin text --------
 {{compound|de|Lithium|Metaborat}}
 
 ===Noun===
-{{head|de|noun|g=n}}
+{{de-noun|n}}
 
 # {{lb|de|inorganic compound}} [[lithium metaborate]]
+
+====Declension====
+{{de-ndecl|n}}
 -------- end text --------
 Page 38723 Lithiumnitrat: Found match for regex: =
 Page 38723 Lithiumnitrat: -------- begin text --------
@@ -1912,9 +2273,12 @@ Page 38723 Lithiumnitrat: -------- begin text --------
 {{compound|de|Lithium|Nitrat}}
 
 ===Noun===
-{{head|de|noun|g=n}}
+{{de-noun|n}}
 
 # {{lb|de|inorganic compound}} [[lithium nitrate]]
+
+====Declension====
+{{de-ndecl|n}}
 -------- end text --------
 Page 38724 Lithiumnitrid: Found match for regex: =
 Page 38724 Lithiumnitrid: -------- begin text --------
@@ -1923,9 +2287,12 @@ Page 38724 Lithiumnitrid: -------- begin text --------
 {{compound|de|Lithium|Nitrid}}
 
 ===Noun===
-{{head|de|noun|g=n}}
+{{de-noun|n}}
 
 # {{lb|de|inorganic compound}} [[lithium nitride]]
+
+====Declension====
+{{de-ndecl|n}}
 -------- end text --------
 Page 38727 Lithiumoxid: Found match for regex: =
 Page 38727 Lithiumoxid: -------- begin text --------
@@ -1934,9 +2301,12 @@ Page 38727 Lithiumoxid: -------- begin text --------
 {{compound|de|Lithium|Oxid}}
 
 ===Noun===
-{{head|de|noun|g=n}}
+{{de-noun|n}}
 
 # {{lb|de|inorganic compound}} [[lithium oxide]]
+
+====Declension====
+{{de-ndecl|n}}
 -------- end text --------
 Page 38728 Lithiumperchlorat: Found match for regex: =
 Page 38728 Lithiumperchlorat: -------- begin text --------
@@ -1945,9 +2315,12 @@ Page 38728 Lithiumperchlorat: -------- begin text --------
 {{compound|de|Lithium|Perchlorat}}
 
 ===Noun===
-{{head|de|noun|g=n}}
+{{de-noun|n}}
 
 # {{lb|de|inorganic compound}} [[lithium perchlorate]]
+
+====Declension====
+{{de-ndecl|n}}
 -------- end text --------
 Page 38729 Lithiumperoxid: Found match for regex: =
 Page 38729 Lithiumperoxid: -------- begin text --------
@@ -1956,9 +2329,12 @@ Page 38729 Lithiumperoxid: -------- begin text --------
 {{compound|de|Lithium|Peroxid}}
 
 ===Noun===
-{{head|de|noun|g=n}}
+{{de-noun|n}}
 
 # {{lb|de|inorganic compound}} [[lithium peroxide]]
+
+====Declension====
+{{de-ndecl|n}}
 -------- end text --------
 Page 38730 Lithiumphosphat: Found match for regex: =
 Page 38730 Lithiumphosphat: -------- begin text --------
@@ -1967,9 +2343,12 @@ Page 38730 Lithiumphosphat: -------- begin text --------
 {{compound|de|Lithium|Phosphat}}
 
 ===Noun===
-{{head|de|noun|g=n}}
+{{de-noun|n}}
 
 # {{lb|de|inorganic compound}} [[lithium phosphate]]
+
+====Declension====
+{{de-ndecl|n}}
 -------- end text --------
 Page 38734 Lithiumtetraborat: Found match for regex: =
 Page 38734 Lithiumtetraborat: -------- begin text --------
@@ -1978,9 +2357,12 @@ Page 38734 Lithiumtetraborat: -------- begin text --------
 {{compound|de|Lithium|Tetraborat}}
 
 ===Noun===
-{{head|de|noun|g=n}}
+{{de-noun|n}}
 
 # {{lb|de|inorganic compound}} [[lithium tetraborate]]
+
+====Declension====
+{{de-ndecl|n}}
 -------- end text --------
 Page 38737 Lithiumtritid: Found match for regex: =
 Page 38737 Lithiumtritid: -------- begin text --------
@@ -1989,9 +2371,12 @@ Page 38737 Lithiumtritid: -------- begin text --------
 {{compound|de|Lithium|Tritid}}
 
 ===Noun===
-{{head|de|noun|g=n}}
+{{de-noun|n}}
 
 # {{lb|de|inorganic compound}} [[lithium tritide]]
+
+====Declension====
+{{de-ndecl|n}}
 -------- end text --------
 Page 39467 Magnesiumcarbonat: Found match for regex: =
 Page 39467 Magnesiumcarbonat: -------- begin text --------
@@ -2000,9 +2385,12 @@ Page 39467 Magnesiumcarbonat: -------- begin text --------
 {{compound|de|Magnesium|Carbonat}}
 
 ===Noun===
-{{head|de|noun|g=n}}
+{{de-noun|n}}
 
 # {{lb|de|inorganic compound}} [[magnesium carbonate]]
+
+====Declension====
+{{de-ndecl|n}}
 -------- end text --------
 Page 39470 Magnesiumdiborid: Found match for regex: =
 Page 39470 Magnesiumdiborid: -------- begin text --------
@@ -2011,9 +2399,12 @@ Page 39470 Magnesiumdiborid: -------- begin text --------
 {{compound|de|Magnesium|Borid}}
 
 ===Noun===
-{{head|de|noun|g=n}}
+{{de-noun|n}}
 
 # {{lb|de|inorganic compound}} [[magnesium boride]]
+
+====Declension====
+{{de-ndecl|n}}
 -------- end text --------
 Page 39480 Magnesiumnitrid: Found match for regex: =
 Page 39480 Magnesiumnitrid: -------- begin text --------
@@ -2022,15 +2413,21 @@ Page 39480 Magnesiumnitrid: -------- begin text --------
 {{compound|de|Magnesium|Nitrid}}
 
 ===Noun===
-{{head|de|noun|g=n}}
+{{de-noun|n}}
 
 # {{lb|de|inorganic compound}} [[magnesium nitride]]
+
+====Declension====
+{{de-ndecl|n}}
 -------- end text --------
 Page 39575 Maische: Found match for regex: =
 Page 39575 Maische: -------- begin text --------
 ===Noun===
-{{head|de|noun|g=f}}
+{{de-noun|f}}
 # [[mash]]
+
+====Declension====
+{{de-ndecl|f}}
 -------- end text --------
 Page 39647 Malayalam: Found match for regex: =
 Page 39647 Malayalam: -------- begin text --------
@@ -2045,8 +2442,8 @@ From {{der|de|ml|-}}.
 * {{IPA|de|/malaˈjaːlam/|/malajaˈlaːm/}}
 * {{audio|de|De-Malayalam.ogg|Audio}}
 
-===Noun===
-{{head|de|noun|g=n}}
+===Proper noun===
+{{de-proper noun|langname}}
 
 # {{l|en|Malayalam}} (language)
 
@@ -2085,8 +2482,8 @@ Page 39916 Marathi: -------- begin text --------
 ===Pronunciation===
 * {{audio|de|De-Marathi.ogg|Audio}}
 
-===Noun===
-{{head|de|noun|g=n}}
+===Proper noun===
+{{de-proper noun|langname}}
 
 # one of the languages spoken in India; [[#English|Marathi]]
 
@@ -2115,6 +2512,7 @@ Page 40150 Masochismus: -------- begin text --------
 
 ===Further reading===
 * {{R:Duden}}
+* {{R:DWDS}}
 
 {{C|de|BDSM}}
 
@@ -2123,8 +2521,11 @@ Page 40150 Masochismus: -------- begin text --------
 Page 40854 Menschenkunde: Found match for regex: =
 Page 40854 Menschenkunde: -------- begin text --------
 ===Noun===
-{{head|de|noun|g=f}}
+{{de-noun|f.sg}}
 #[[anthropology]]
+
+====Declension====
+{{de-ndecl|f.sg}}
 -------- end text --------
 Page 41118 Methyllithium: Found match for regex: =
 Page 41118 Methyllithium: -------- begin text --------
@@ -2134,9 +2535,12 @@ Page 41118 Methyllithium: -------- begin text --------
 
 ===Noun===
 {{wikipedia|lang=de}}
-{{head|de|noun|g=n}}
+{{de-noun|n.sg}}
 
 # {{lb|de|organic compound}} [[methyllithium]]
+
+====Declension====
+{{de-ndecl|n.sg}}
 -------- end text --------
 Page 41812 Mittellatein: Found match for regex: {
 Page 41812 Mittellatein: -------- begin text --------
@@ -2148,10 +2552,13 @@ From {{affix|de|mittel-|gloss1=middle|Latein|gloss2=Latin}}.
 ===Pronunciation===
 * {{audio|de|De-Mittellatein.ogg|Audio}}
 
-===Noun===
-{{head|de|noun|g=n}}
+===Proper noun===
+{{de-proper noun|n,-:s}}
 
 # [[Medieval Latin]] (language)
+
+====Declension====
+{{de-ndecl|n,-:s.sg}}
 
 ====Derived terms====
 * {{l|de|mittellateinisch}}
@@ -2175,7 +2582,7 @@ From {{affix|de|mittel-|gloss1=middle|Niederdeutsch|gloss2=Low German}}.
 * {{audio|de|De-Mittelniederdeutsch.ogg|Audio}}
 
 ===Noun===
-{{head|de|noun|g=n}}
+{{de-proper noun|langname}}
 
 # [[Middle Low German]] (the Middle Low German language)
 #: {{syn|de|[[mittelniederdeutsch]]e [[Sprache]]}}
@@ -2204,9 +2611,12 @@ Page 42200 Monophysitismus: -------- begin text --------
 * {{audio|de|De-Monophysitismus.ogg|Audio}}
 
 ===Noun===
-{{head|de|noun|g=m}}
+{{de-noun|m.sg}}
 
 # {{lb|de|Christianity}} [[monophysitism]]
+
+====Declension====
+{{de-ndecl|m.sg}}
 
 ====Related terms====
 * {{l|de|monophysitisch}}
@@ -2229,10 +2639,13 @@ Page 43137 Nachtklub: -------- begin text --------
 * {{audio|de|De-Nachtklub.ogg|Audio}}
 
 ===Noun===
-{{head|de|noun|g=m}}
+{{de-noun|m,,s}}
 
 # [[nightclub]]
 #: {{syn|de|Nachtbar}}
+
+====Declension====
+{{de-ndecl|m,,s}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -2249,9 +2662,12 @@ Page 43345 Namibierin: -------- begin text --------
 * {{audio|de|De-Namibierin.ogg|Audio}}
 
 ===Noun===
-{{head|de|noun|g=f}}
+{{de-noun|f}}
 
 # [[Namibian]] (a female person from Namibia or of Namibian descent)
+
+====Declension====
+{{de-ndecl|f}}
 
 ====Related terms====
 * {{l|de|Namibier}}
@@ -2269,9 +2685,12 @@ Page 43538 Natriumazid: -------- begin text --------
 {{compound|de|Natrium|Azid}}
 
 ===Noun===
-{{head|de|noun|g=n}}
+{{de-noun|n}}
 
 # {{lb|de|inorganic compound}} [[sodium azide]]
+
+====Declension====
+{{de-ndecl|n}}
 -------- end text --------
 Page 43539 Natriumberyllat: Found match for regex: =
 Page 43539 Natriumberyllat: -------- begin text --------
@@ -2280,9 +2699,12 @@ Page 43539 Natriumberyllat: -------- begin text --------
 {{compound|de|Natrium|Beryllat}}
 
 ===Noun===
-{{head|de|noun|g=n}}
+{{de-noun|n}}
 
 # {{lb|de|inorganic compound}} [[sodium beryllate]]
+
+====Declension====
+{{de-ndecl|n}}
 -------- end text --------
 Page 43542 Natriumcarbonat: Found match for regex: =
 Page 43542 Natriumcarbonat: -------- begin text --------
@@ -2294,9 +2716,12 @@ Page 43542 Natriumcarbonat: -------- begin text --------
 * {{audio|de|LL-Q188 (deu)-Jeuwre-Natriumcarbonat.wav|Audio}}
 
 ===Noun===
-{{head|de|noun|g=n}}
+{{de-noun|n}}
 
 # {{lb|de|inorganic compound}} [[sodium carbonate]]
+
+====Declension====
+{{de-ndecl|n}}
 -------- end text --------
 Page 43546 Natriumcyanid: Found match for regex: =
 Page 43546 Natriumcyanid: -------- begin text --------
@@ -2305,9 +2730,12 @@ Page 43546 Natriumcyanid: -------- begin text --------
 {{compound|de|Natrium|Cyanid}}
 
 ===Noun===
-{{head|de|noun|g=n}}
+{{de-noun|n}}
 
 # {{lb|de|inorganic compound}} [[sodium cyanide]]
+
+====Declension====
+{{de-ndecl|n}}
 -------- end text --------
 Page 43571 Natriumperborat: Found match for regex: =
 Page 43571 Natriumperborat: -------- begin text --------
@@ -2316,9 +2744,12 @@ Page 43571 Natriumperborat: -------- begin text --------
 {{compound|de|Natrium|Borat}}
 
 ===Noun===
-{{head|de|noun|g=n}}
+{{de-noun|n}}
 
 # {{lb|de|inorganic compound}} [[sodium borate]]
+
+====Declension====
+{{de-ndecl|n}}
 -------- end text --------
 Page 43581 Natriumtetraborat: Found match for regex: =
 Page 43581 Natriumtetraborat: -------- begin text --------
@@ -2327,18 +2758,24 @@ Page 43581 Natriumtetraborat: -------- begin text --------
 {{compound|de|Natrium|Tetraborat}}
 
 ===Noun===
-{{head|de|noun|g=n}}
+{{de-noun|n}}
 
 # {{lb|de|inorganic compound}} [[sodium tetraborate]]
+
+====Declension====
+{{de-ndecl|n}}
 -------- end text --------
 Page 43905 Nestorianismus: Found match for regex: {
 Page 43905 Nestorianismus: -------- begin text --------
 {{wikipedia|lang=de}}
 
 ===Noun===
-{{head|de|noun|g=m}}
+{{de-noun|m.sg}}
 
 # {{lb|de|Christianity}} [[Nestorianism]]
+
+====Declension====
+{{de-ndecl|m.sg}}
 
 ====Related terms====
 * {{l|de|Nestorianer}}
@@ -2369,45 +2806,30 @@ Page 43934 Neubau: -------- begin text --------
 
 ===Further reading===
 * {{R:Duden}}
+* {{R:DWDS}}
 {{C|de|Buildings}}
 -------- end text --------
 Page 43954 Neues: Found match for regex: =
 Page 43954 Neues: -------- begin text --------
 
 ===Etymology===
-[[nominalization|Nominalization]] of the adjective {{m|de|neu||new}}; compare {{m+|nds|Nigges}} {{q|Paderbornisch, Sauerländisch}}.
+{{nom|de|neu||new}}; compare {{m+|nds|Nigges}} {{q|Paderbornisch, Sauerländisch}}.
 
 ===Pronunciation===
 * {{IPA|de|[ˈnɔɪ̯əs]}}
 * {{audio|de|De-Neues.ogg|Audio}}
 
 ===Noun===
-{{de-noun|n,Neuen.sg}}
+{{de-noun|+.sg|m=+|f=+}}
 
 # {{nominalization of|de|neues}}: something new
 #: {{syn|de|Neuigkeit}}
 #: {{ant|de|Altes}}
-#: {{uxi|de|Was gibt's Neues?|What's the latest news?}}
-#: {{uxi|de|Auf ein Neues.|Starting over.}}
+#: {{uxi|de|Was gibt's '''Neues'''?|What's the latest '''news'''?}}
+#: {{uxi|de|Auf ein '''Neues'''.|Starting over.}}
 
 ====Declension====
-''singular - strong declension ''
-* {{l|de|Neues}}
-* {{l|de|Neuen}}
-* {{l|de|Neuem}}
-*{{l|de|Neues}}
-
-''singular - weak declension ''
-*{{l|de|[[das]] [[Neue]]}}
-*{{l|de|[[des]] [[Neuen]]}}
-*{{l|de|[[dem]] [[Neuen]]}}
-*{{l|de|[[das]] [[Neue]]}}
-
-''singular - mixed declension ''
-*{{l|de|[[ein]] [[Neues]]}}
-*{{l|de|[[eines]] [[Neuen]]}}
-*{{l|de|[[einem]] [[Neuem]]}}
-*{{l|de|[[ein]] [[Neues]]}}
+{{de-ndecl|+.sg}}
 
 ===See also===
 * {{l|de|Junges}}, {{l|de|Frisches}}, {{l|de|Schönes}}
@@ -2423,9 +2845,12 @@ Page 44675 Normalteiler: -------- begin text --------
 * {{audio|de|De-Normalteiler.ogg|Audio}}
 
 ===Noun===
-{{head|de|noun|g=m}}
+{{de-noun|m}}
 
 # [[normal subgroup]] (subgroup that is invariant under conjugation)
+
+====Declension====
+{{de-ndecl|m}}
 
 {{C|de|Algebra}}
 
@@ -2438,10 +2863,13 @@ Page 45539 Onomastik: -------- begin text --------
 * {{audio|de|De-Onomastik.ogg|Audio}}
 
 ===Noun===
-{{head|de|noun|g=f}}
+{{de-noun|f.sg}}
 
 # [[onomastics]]
 #: {{syn|de|Namenkunde}}
+
+====Declension====
+{{de-ndecl|f.sg}}
 
 ====Related terms====
 * {{l|de|onomastisch}} {{q|see for more terms}}
@@ -2455,7 +2883,7 @@ Page 45773 Oriya: -------- begin text --------
 {{wikipedia|lang=de}}
 
 ===Noun===
-{{head|de|noun|g=n}}
+{{de-proper noun|langname}}
 
 # one of the languages spoken in India; [[#English|Oriya]]
 
@@ -2471,10 +2899,13 @@ Page 45780 Ornithologie: -------- begin text --------
 * {{audio|de|De-Ornithologie.OGG|Audio}}
 
 ===Noun===
-{{head|de|noun|g=f}}
+{{de-noun|f.sg}}
 
 # [[ornithology]] (scientific study of birds)
 #:{{syn|de|Vogelkunde}}
+
+====Declension====
+{{de-ndecl|f.sg}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -2487,9 +2918,12 @@ Page 45834 Orwellismus: -------- begin text --------
 {{af|de|Orwell|-ismus}}
 
 ===Noun===
-{{head|de|noun|g=m}}
+{{de-noun|m.sg}}
 
 # [[Orwellianism]]
+
+====Declension====
+{{de-ndecl|m.sg}}
 -------- end text --------
 Page 46267 Panentheismus: Found match for regex: =
 Page 46267 Panentheismus: -------- begin text --------
@@ -2501,9 +2935,12 @@ Derived from {{der|de|grc|[[πᾶν]] [[ἐν]] [[θεῷ]]|lit=all in god}}{{su
 * {{audio|de|De-Panentheismus.ogg|Audio}}
 
 ===Noun===
-{{head|de|noun|g=m}}
+{{de-noun|m.sg}}
 
 # {{lb|de|religion}} [[panentheism]]
+
+====Declension====
+{{de-ndecl|m.sg}}
 
 ====Descendants====
 * {{desc|it|panenteismo|bor=1}}
@@ -2515,9 +2952,12 @@ Page 46274 Pangermanismus: -------- begin text --------
 * {{audio|de|De-Pangermanismus.ogg|Audio}}
 
 ===Noun===
-{{head|de|noun|g=m}}
+{{de-noun|m.sg}}
 
 # [[Pan-Germanism]]
+
+====Declension====
+{{de-ndecl|m.sg}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -2530,7 +2970,7 @@ Page 46614 Paschtu: -------- begin text --------
 * {{audio|de|De-Paschtu.ogg|Audio}}
 
 ===Noun===
-{{head|de|noun|g=n}}
+{{de-proper noun|langname}}
 
 # language mainly spoken in Afghanistan; [[Pashto]]
 #: {{syn|de|Afghanisch|Paschto|Paschtunisch|Paschtunische Sprache}}
@@ -2544,7 +2984,7 @@ Page 47106 Petrus: -------- begin text --------
 {{bor+|de|la|Petrus}}.
 
 ===Proper noun===
-{{head|de|proper noun|g=m|genitive|Petri|or|Petrus'|or|[[Petrus]] (with article)}}
+{{de-proper noun|m,Petrus':Petrus:Petri[archaic]}}
 
 # {{lb|de|Biblical}} [[Peter]]
 #* {{rfc-sense|de|which bible? Luther-Bibel, Einheitsübersetzung, another one?}} '''1985''' translation, ''Bibel'', ''Matthäus 16:18'':
@@ -2563,7 +3003,6 @@ Page 47106 Petrus: -------- begin text --------
 * {{R:Duden}}
 
 {{C|de|Biblical characters|Individuals}}
-
 {{cln|de|eponyms}}
 
 ----
@@ -2580,7 +3019,7 @@ Page 47900 Plattdeutsch: -------- begin text --------
 * {{audio|de|De-Plattdeutsch.oga|Audio}}
 
 ===Noun===
-{{head|de|noun|g=n}}
+{{de-proper noun|langname}}
 
 # [[Low German]], [[#English|Plattdeutsch]]
 #: {{ant|de|Hochdeutsch}}
@@ -2691,10 +3130,13 @@ Page 48887 Professionelle: -------- begin text --------
 * {{audio|de|De-Professionelle.ogg|Audio}}
 
 ===Noun===
-{{head|de|noun|g=m|g2=f}} (cf., ein {{l|de|Professioneller|g=m}}, der {{l|de|Professionelle|g=m}}; eine {{l|de|Professionelle|g=f}}, die {{l|de|Professionelle|g=f}})
+{{de-noun|+|f=+}}
 
 # [[professional]], [[pro]]
 # {{lb|de|euphemistic}} [[prostitute]]
+
+====Declension====
+{{de-ndecl|+}}
 
 ====Synonyms====
 * {{l|de|Profi}}
@@ -2712,10 +3154,13 @@ Page 49009 Propylen: -------- begin text --------
 * {{audio|de|De-Propylen.ogg|Audio}}
 
 ===Noun===
-{{head|de|noun|g=n}}
+{{de-noun|n}}
 
 # {{lb|de|organic compound}} [[propylene]]
 #: {{syn|de|Propen}}
+
+====Declension====
+{{de-ndecl|n}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -2727,15 +3172,21 @@ Page 49010 Propylenoxid: -------- begin text --------
 {{compound|de|Propylen|Oxid}}
 
 ===Noun===
-{{head|de|noun|g=n}}
+{{de-noun|n}}
 
 # {{lb|de|organic compound}} [[propylene oxide]]
+
+====Declension====
+{{de-ndecl|n}}
 -------- end text --------
 Page 49768 Radiowelle: Found match for regex: =
 Page 49768 Radiowelle: -------- begin text --------
 ===Noun===
-{{head|de|noun|g=f}}
+{{de-noun|f}}
 #[[radio]] [[wave]]
+
+====Declension====
+{{de-ndecl|f}}
 -------- end text --------
 Page 50616 Reglementarismus: Found match for regex: =
 Page 50616 Reglementarismus: -------- begin text --------
@@ -2744,11 +3195,14 @@ Page 50616 Reglementarismus: -------- begin text --------
 {{l|de|reglementieren}}
 
 ===Noun===
-{{head|de|noun|g=m}}
+{{de-noun|m.sg}}
 
 # the policy of subjecting social behaviors seen as problematic to stringent, detailed [[regulation]] rather than outright [[prohibition]]
 #* 1908, ''Das Recht: Volkstümliche Zeitschrift für österreichisches Rechtsleben'', Volumes 6-7:
 #*: Der Verfasser des vorliegenden Büchleins tritt mit der ganzen Macht seiner Fachkenntnis für den Reglementarismus ein, der ihm das Interesse der Volksgesundheit in richtiger Weise zu wahren geeignet scheint.
+
+====Declension====
+{{de-ndecl|m.sg}}
 -------- end text --------
 Page 50869 Rekordwert: Found match for regex: =
 Page 50869 Rekordwert: -------- begin text --------
@@ -2758,7 +3212,9 @@ Page 50869 Rekordwert: -------- begin text --------
 
 ===Noun===
 {{de-noun|m,(e)s}}
-# record value, all-time high
+
+# [[record]] [[value]]; [[all-time]] [[high]]
+#: {{syn|de|Höchstwert}}
 
 ====Declension====
 {{de-ndecl|m,(e)s}}
@@ -2777,9 +3233,12 @@ Page 51241 Rheniumdiborid: -------- begin text --------
 * {{audio|de|LL-Q188 (deu)-Sebastian Wallroth-Rheniumdiborid.wav|Audio}}
 
 ===Noun===
-{{head|de|noun|g=n}}
+{{de-noun|n}}
 
 # {{lb|de|inorganic compound}} [[rhenium boride]]
+
+====Declension====
+{{de-ndecl|n}}
 -------- end text --------
 Page 52483 Salafismus: Found match for regex: =
 Page 52483 Salafismus: -------- begin text --------
@@ -2788,9 +3247,12 @@ Page 52483 Salafismus: -------- begin text --------
 * {{audio|de|De-Salafismus.ogg|Audio}}
 
 ===Noun===
-{{head|de|noun|g=m}}
+{{de-noun|m.sg}}
 
 # [[Salafism]]
+
+====Declension====
+{{de-ndecl|m.sg}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -2803,7 +3265,7 @@ Page 52732 Sanskrit: -------- begin text --------
 * {{audio|de|De-Sanskrit.ogg|Audio}}
 
 ===Noun===
-{{head|de|noun|g=n}}
+{{de-proper noun|langname}}
 
 # [[#English|Sanskrit]]
 #: {{syn|de|Altindisch|altindische Sprache}}
@@ -2834,51 +3296,39 @@ Page 53854 Schleifstein: -------- begin text --------
 # [[grindstone]]
 # [[whetstone]], [[sharpening]] [[stone]]
 
+====Declension====
+{{de-ndecl|m,(e)s}}
+
 ====Synonyms====
 * {{l|de|Abziehstein}}
 * {{l|de|Wetzstein}}
 
 ===Further reading===
 * {{R:Duden}}
+* {{R:DWDS}}
 {{C|de|Geology}}
 -------- end text --------
 Page 54469 Schönes: Found match for regex: =
 Page 54469 Schönes: -------- begin text --------
 
 ===Etymology===
-[[nominalization|Nominalization]] of the adjective {{m|de|schön||beautiful}}.
+{{nom|de|schön||beautiful}}.
 
 ===Pronunciation===
 * {{IPA|de|[ˈʃøːnəs]}}
 
 ===Noun===
-{{de-noun|n,Schönen.sg}}
+{{de-noun|+.sg}}
 
-# {{nominalization of|de|schönes}}: Something beautiful
+# {{nominalization of|de|schön}}: something beautiful
 #: {{ant|de|Unschönes|Hässliches}}
 #: Es gab sehr viel '''Schönes''' im Zimmer zu sehen.— ''Many ''' beautiful objects'''  could be seen in the room.''
 #: {{uxi|de|Dies ist der Anfang von etwas '''Schönem'''.|This is the start of something '''beautiful'''.}}
-#: {{uxi|de|das Gute, das Wahre und das '''Schöne'''|the good, the true and the '''beautiful'''}}
-#: {{uxi|de|Beobachtungen über das Gefühl des '''Schönen''' und Erhabenen|Observations on the Feeling of the '''Beautiful''' and Sublime|footer=(a 1764 book by Immanuel Kant)}}
+#: {{uxi|de|das Gute, das Wahre und das '''Schöne'''|the good, the true{{,}} and the '''beautiful'''}}
+#: {{uxi|de|Beobachtungen über das Gefühl des '''Schönen''' und Erhabenen|{{w|Observations on the Feeling of the Beautiful and Sublime|Observations on the Feeling of the '''Beautiful''' and Sublime}}|footer=(a 1764 book by Immanuel Kant)}}
 
 ====Declension====
-''singular - strong declension ''
-* {{l|de|Schönes}}
-* {{l|de|Schönen}}
-* {{l|de|Schönem}}
-*{{l|de|Schönes}}
-
-''singular - weak declension ''
-*{{l|de|[[das]] [[Schöne]]}}
-*{{l|de|[[des]] [[Schönen]]}}
-*{{l|de|[[dem]] [[Schönen]]}}
-*{{l|de|[[das]] [[Schöne]]}}
-
-''singular - mixed declension ''
-*{{l|de|[[ein]] [[Schönes]]}}
-*{{l|de|[[eines]] [[Schönen]]}}
-*{{l|de|[[einem]] [[Schönen]]}}
-*{{l|de|[[ein]] [[Schönes]]}}
+{{de-ndecl|+.sg}}
 
 ====Related terms====
 * {{l|de|Schönheit}}
@@ -2894,11 +3344,14 @@ Page 54469 Schönes: -------- begin text --------
 Page 55411 Schwund: Found match for regex: =
 Page 55411 Schwund: -------- begin text --------
 ===Noun===
-{{head|de|noun|g=m}}
+{{de-noun|m.sg}}
 # [[depletion]]
 # [[shrinkage]]
 # [[atrophy]]
 # [[dwindling]]
+
+====Declension====
+{{de-ndecl|m.sg}}
 -------- end text --------
 Page 56047 Senkblei: Found match for regex: =
 Page 56047 Senkblei: -------- begin text --------
@@ -2916,6 +3369,7 @@ Page 56047 Senkblei: -------- begin text --------
 
 ===Further reading===
 * {{R:Duden}}
+* {{R:DWDS}}
 -------- end text --------
 Page 56217 Sextourismus: Found match for regex: {
 Page 56217 Sextourismus: -------- begin text --------
@@ -2928,9 +3382,12 @@ From {{af|de|Sex|Tourismus|t1=sex|t2=tourism}}.
 * {{audio|de|De-Sextourismus.ogg|Audio}}
 
 ===Noun===
-{{head|de|noun|g=m}}
+{{de-noun|m.sg}}
 
 # [[sex tourism]]
+
+====Declension====
+{{de-ndecl|m.sg}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -2942,9 +3399,12 @@ Page 56638 Siliciumcarbid: -------- begin text --------
 {{compound|de|Silicium|Carbid}}
 
 ===Noun===
-{{head|de|noun|g=n}}
+{{de-noun|n}}
 
 # {{lb|de|inorganic compound}} {{alternative form of|de|Siliziumcarbid}}
+
+====Declension====
+{{de-ndecl|n}}
 -------- end text --------
 Page 56644 Siliciumnitrid: Found match for regex: =
 Page 56644 Siliciumnitrid: -------- begin text --------
@@ -2956,9 +3416,12 @@ Page 56644 Siliciumnitrid: -------- begin text --------
 * {{audio|de|LL-Q188 (deu)-Sebastian Wallroth-Siliciumnitrid.wav|Audio}}
 
 ===Noun===
-{{head|de|noun|g=n}}
+{{de-noun|n}}
 
 # {{lb|de|inorganic compound}} [[silicon nitride]]
+
+====Declension====
+{{de-ndecl|n}}
 -------- end text --------
 Page 56656 Siliziumcarbid: Found match for regex: =
 Page 56656 Siliziumcarbid: -------- begin text --------
@@ -2967,16 +3430,19 @@ Page 56656 Siliziumcarbid: -------- begin text --------
 {{compound|de|Silizium|Carbid}}
 
 ===Noun===
-{{head|de|noun|g=n}}
+{{de-noun|n}}
 
 # {{lb|de|inorganic compound}} [[silicon carbide]]
+
+====Declension====
+{{de-ndecl|n}}
 -------- end text --------
 Page 56701 Sindhi: Found match for regex: {
 Page 56701 Sindhi: -------- begin text --------
 {{wikipedia|lang=de}}
 
-===Noun===
-{{head|de|noun|g=n}}
+===Proper noun===
+{{de-proper noun|langname}}
 
 # a language spoken in parts of India and Pakistan; [[#English|Sindhi]]
 
@@ -3005,7 +3471,7 @@ From {{affix|de|Sommer|gloss1=summer|Wetter|gloss2=weather}}.
 
 ===Further reading===
 * {{R:Duden}}
-
+* {{R:DWDS}}
 {{C|de|Seasons}}
 
 {{C|de|Weather}}
@@ -3017,9 +3483,12 @@ Page 57367 Sozialdarwinismus: -------- begin text --------
 * {{audio|de|De-Sozialdarwinismus.ogg|Audio}}
 
 ===Noun===
-{{head|de|noun|g=m}}
+{{de-noun|m.sg}}
 
 # [[social Darwinism]] (theory)
+
+====Declension====
+{{de-ndecl|m.sg}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -3036,10 +3505,12 @@ Page 57663 Sperma: -------- begin text --------
 [[Image:Human semen in petri dish2.jpg|thumb|Sperma]]
 
 ===Noun===
-{{head|de|noun|g=n}}
-
+{{de-noun|n,,Spermen:Spermata}}
 # [[sperm]] ''(semen; male reproductory fluid)''
 #: {{syn|de|Samen|;|Samenflüssigkeit|;|Wichse<q:vulgar>}}
+
+====Declension====
+{{de-ndecl|n,,Spermen:Spermata}}
 
 ====Related terms====
 * {{l|de|Spermium}}
@@ -3057,9 +3528,31 @@ Page 57663 Sperma: -------- begin text --------
 -------- end text --------
 Page 58136 Spüle: Found match for regex: =
 Page 58136 Spüle: -------- begin text --------
+
+===Etymology===
+From {{m|de|spülen}}.
+
+===Pronunciation===
+* {{IPA|de|/ˈʃpyːlə/}}
+* {{audio|de|De-Spüle.ogg|Audio}}
+* {{rhyme|de|yːlə|s=2}}
+* {{hyph|de|Spü|le}}
+
 ===Noun===
-{{head|de|noun|g=f}}
-# [[sink]]
+{{de-noun|f,n}}
+
+# {{lb|de|colloquial}} [[sink]], especially [[kitchen sink]]
+#: {{syn|de|Spülbecken}}
+#: {{hypo|de|Küchenspüle}}
+
+====Declension====
+{{de-ndecl|f,n}}
+
+===Further reading===
+* {{wpl|de}}
+* {{R:DWDS}}
+* {{R:Duden}}
+* {{R:UniLeipzig}}
 -------- end text --------
 Page 58925 Stickstoffdioxid: Found match for regex: =
 Page 58925 Stickstoffdioxid: -------- begin text --------
@@ -3068,9 +3561,12 @@ Page 58925 Stickstoffdioxid: -------- begin text --------
 {{compound|de|Stickstoff|Dioxid}}
 
 ===Noun===
-{{head|de|noun|g=n}}
+{{de-noun|n}}
 
 # {{lb|de|inorganic compound}} [[nitrogen dioxide]]
+
+====Declension====
+{{de-ndecl|n}}
 -------- end text --------
 Page 58933 Stickstoffmonoxid: Found match for regex: =
 Page 58933 Stickstoffmonoxid: -------- begin text --------
@@ -3082,18 +3578,24 @@ Page 58933 Stickstoffmonoxid: -------- begin text --------
 * {{audio|de|De-Stickstoffmonoxid.ogg|Audio}}
 
 ===Noun===
-{{head|de|noun|g=n}}
+{{de-noun|n}}
 
 # {{lb|de|inorganic compound}} [[nitric oxide]]
+
+====Declension====
+{{de-ndecl|n}}
 -------- end text --------
 Page 59192 Strabismus: Found match for regex: {
 Page 59192 Strabismus: -------- begin text --------
 {{wikipedia|lang=de}}
 
 ===Noun===
-{{head|de|noun|g=m}}
+{{de-noun|m.sg}}
 
-# [[strabismus]]
+#{{lb|de|medicine}} [[strabismus]]
+
+====Declension====
+{{de-ndecl|m.sg}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -3107,9 +3609,12 @@ Page 59551 Strontiumborid: -------- begin text --------
 {{compound|de|Strontium|Borid}}
 
 ===Noun===
-{{head|de|noun|g=n}}
+{{de-noun|n}}
 
 # {{lb|de|inorganic compound}} [[strontium boride]]
+
+====Declension====
+{{de-ndecl|n}}
 -------- end text --------
 Page 60034 Supermann: Found match for regex: =
 Page 60034 Supermann: -------- begin text --------
@@ -3121,9 +3626,12 @@ Page 60034 Supermann: -------- begin text --------
 * {{audio|de|De-Supermann.ogg|Audio}}
 
 ===Noun===
-{{head|de|noun|g=m}}
+{{de-noun|m,es:s,^er}}
 
 # [[superman]]
+
+====Declension====
+{{de-ndecl|m,es:s,^er}}
 
 ===Further reading===
 * {{R:Duden}}
@@ -3138,9 +3646,12 @@ Page 60153 Sweatshirt: -------- begin text --------
 * {{audio|de|De-Sweatshirt.ogg|Audio}}
 
 ===Noun===
-{{head|de|noun|g=n}}
+{{de-noun|n,,s}}
 
 # [[sweatshirt]]
+
+====Declension====
+{{de-ndecl|n,,s}}
 
 ===Further reading===
 * {{R:DWDS}}
@@ -3159,7 +3670,7 @@ Page 60933 Telugu: -------- begin text --------
 * {{audio|de|De-Telugu fcm.ogg|Audio}}
 
 ===Noun===
-{{head|de|noun|g=n}}
+{{de-proper noun|langname}}
 
 # a language spoken in parts of India; [[#English|Telugu]]
 
@@ -3167,9 +3678,14 @@ Page 60933 Telugu: -------- begin text --------
 -------- end text --------
 Page 62041 Tränengasgranate: Found match for regex: =
 Page 62041 Tränengasgranate: -------- begin text --------
+
 ===Noun===
 {{de-noun|f}}
-# teargas grenade
+
+# [[teargas]] [[grenade]]
+
+====Declension====
+{{de-ndecl|f}}
 -------- end text --------
 Page 63951 umweltverträglich: Found match for regex: =
 Page 63951 umweltverträglich: -------- begin text --------
@@ -3191,6 +3707,9 @@ Page 63951 umweltverträglich: -------- begin text --------
 
 ====Declension====
 {{de-decl-adj|umweltverträglich|umweltverträglicher|umweltverträglichst}}
+
+====Derived terms====
+* {{l|de|Umweltverträglichkeit}}
 -------- end text --------
 Page 67103 Versager: Found match for regex: =
 Page 67103 Versager: -------- begin text --------
@@ -3205,9 +3724,12 @@ From [[versagen]] "to [[fail]]/to [[flop]]".
 {{de-noun|m}}
 # someone who fails, a [[loser]]
 
+====Declension====
+{{de-ndecl|m}}
+
 ===Further reading===
 * {{R:Duden}}
-
+* {{R:DWDS}}
 {{C|de|People}}
 -------- end text --------
 Page 71135 Wiedereingliederung: Found match for regex: =
@@ -3217,12 +3739,21 @@ Page 71135 Wiedereingliederung: -------- begin text --------
 {{de-noun|f}}
 #[[reintegration]]
 
+====Declension====
+{{de-ndecl|f}}
+
 ===Further reading===
 * {{R:DWDS}}
 * {{R:UniLeipzig}}
 -------- end text --------
 Page 71386 windschnittig: Found match for regex: =
 Page 71386 windschnittig: -------- begin text --------
+
+===Pronunciation===
+* {{IPA|de|[ˈvɪntˌʃnɪtɪç]|[ˈvɪntˌʃnɪtɪk]}}
+* {{audio|de|De-windschnittig.ogg|Audio}}, {{audio|de|De-windschnittig2.ogg|Audio}}
+* {{hyphenation|de|wind|schnit|tig}}
+
 ===Adjective===
 {{de-adj|er|sten}}
 # [[streamlined]]
@@ -3234,9 +3765,12 @@ Page 71735 Wolframcarbid: -------- begin text --------
 {{compound|de|Wolfram|Carbid}}
 
 ===Noun===
-{{head|de|noun|g=n}}
+{{de-noun|n}}
 
 # {{lb|de|inorganic compound}} [[tungsten carbide]]
+
+====Declension====
+{{de-ndecl|n}}
 -------- end text --------
 Page 72815 Zerstörer: Found match for regex: [
 Page 72815 Zerstörer: -------- begin text --------
@@ -3257,7 +3791,7 @@ Page 72815 Zerstörer: -------- begin text --------
 
 ===Further reading===
 * {{R:Duden}}
-
+* {{R:DWDS}}
 {{C|de|Warships|Weapons}}
 -------- end text --------
 Page 73004 Zinkcarbonat: Found match for regex: =
@@ -3267,16 +3801,23 @@ Page 73004 Zinkcarbonat: -------- begin text --------
 {{compound|de|Zink|Carbonat}}
 
 ===Noun===
-{{head|de|noun|g=n}}
+{{de-noun|n}}
 
 # {{lb|de|inorganic compound}} [[zinc carbonate]]
+
+====Declension====
+{{de-ndecl|n}}
 -------- end text --------
 Page 73327 Züchter: Found match for regex: =
 Page 73327 Züchter: -------- begin text --------
+
 ===Noun===
-{{head|de|noun|g=m}}
+{{de-noun|m}}
 # [[grower]]
 # [[breeder]]
+
+====Declension====
+{{de-ndecl|m}}
 -------- end text --------
-Elapsed time: 0 mins 6.90 secs
-Ending at Wed Mar  2 00:31:38 2022
+Elapsed time: 0 mins 26.90 secs
+Ending at Wed Mar  2 02:22:24 2022
