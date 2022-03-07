@@ -314,7 +314,7 @@ local function process_spec(base, destforms, slot, specs, base_stem, form_defaul
 					error("Can't use '-e' with stem '" .. form .. "'; should end in -el, -em, -en or -er")
 				end
 				if base.props.ss then
-					non_ending = rsub(non_ending, "ss$", "ß$")
+					non_ending = rsub(non_ending, "ss$", "ß")
 				end
 				return do_form_default(non_ending .. OMITTED_E .. ending)
 			end)
