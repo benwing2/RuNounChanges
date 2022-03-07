@@ -106,6 +106,51 @@ local function add_equiv(slot_list)
 end
 
 
+local special_proper_nouns = {
+	["surname"] = {
+		has_gen_slot = true, -- FIXME, change this
+		has_default_pl = true,
+		default_gender = {"m", "f"},
+		display = "surname",
+	},
+	["toponym"] = {
+		has_gen_slot = true, -- FIXME, change this
+		default_gender = "n",
+		display = "toponym",
+		no_indef = true,
+	},
+	["langname"] = {
+		default_gender = "n",
+		display = "language name",
+		no_indef = true,
+	},
+	["mgiven"] = {
+		has_default_pl = true,
+		default_gender = "m",
+		display = "given name",
+	},
+	["fgiven"] = {
+		has_default_pl = true,
+		default_gender = "f",
+		display = "given name",
+	},
+	["mname"] = {
+		default_gender = "m",
+		display = "name",
+		no_indef = true,
+	},
+	["fname"] = {
+		default_gender = "f",
+		display = "name",
+		no_indef = true,
+	},
+	["nname"] = {
+		default_gender = "n",
+		display = "name",
+		no_indef = true,
+	},
+}
+
 -- Construct noun slots.
 
 local noun_slot_list = {}
@@ -613,8 +658,8 @@ local function decline_surname(base)
 end
 
 
-local function decline_toponym(base)
-	-- We don't specify gender here, which is always neuter.
+local function decline_toponym_mgiven(base)
+	-- We don't specify gender here, which is always fixed.
 	add(base, "nom_s", nil, "")
 	local gen_s
 	local null_footnote
@@ -891,6 +936,7 @@ local function parse_indicator_spec(angle_bracket_spec, lemma, pagename, proper_
 	if inside ~= "" then
 		local segments = iut.parse_balanced_segment_run(inside, "[", "]")
 		local dot_separated_groups = split_alternating_runs_with_escapes(segments, "%.")
+		local special_proper = nil
 		for i, dot_separated_group in ipairs(dot_separated_groups) do
 			local part = dot_separated_group[1]
 			if i == 1 then
@@ -901,7 +947,6 @@ local function parse_indicator_spec(angle_bracket_spec, lemma, pagename, proper_
 				local saw_gendered_pl = false
 				local saw_non_gendered_pl = false
 				local saw_adj = false
-				local special_variant = nil
 				for _, genderspec in ipairs(base.genders) do
 					local g = genderspec.form
 					if g == "m" or g == "n" then
@@ -924,11 +969,11 @@ local function parse_indicator_spec(angle_bracket_spec, lemma, pagename, proper_
 						if g ~= "+" then
 							saw_pl = true
 						end
-					elseif g == "surname" or g == "toponym" or g == "langname" then
+					elseif special_proper[g] then
 						if #base.genders > 1 then
 							parse_err("Can't specify multiple genders with " .. g .. " declension")
 						end
-						special_variant = g
+						special_proper = g
 					else
 						parse_err("Unrecognized gender spec '" .. g .. "'")
 					end
@@ -939,10 +984,10 @@ local function parse_indicator_spec(angle_bracket_spec, lemma, pagename, proper_
 				if saw_gendered_pl and saw_non_gendered_pl then
 					parse_err("Can't specify both 'p' and gendered plural specs")
 				end
-				local gen_index = (base.props.saw_mn or special_variant) and 2 or 1
+				local gen_index = (base.props.saw_mn or special_proper) and 2 or 1
 				local pl_index =
 					(saw_adj or saw_pl) and 1 or
-					(base.props.saw_mn or special_variant == "surname" or special_variant == "toponym") and 3 or
+					(base.props.saw_mn or special_proper_nouns[special_proper].has_gen_slot) and 3 or
 					2
 				if #comma_separated_groups > pl_index then
 					if saw_adj then
@@ -952,12 +997,12 @@ local function parse_indicator_spec(angle_bracket_spec, lemma, pagename, proper_
 					elseif base.props.saw_mn then
 						parse_err("Can specify at most three comma-separated specs when the gender is masculine or "
 							.. "neuter (gender, genitive, plural)")
-					elseif special_variant == "surname" or special_variant == "toponym" then
-						parse_err("Can specify at most three comma-separated specs with '" .. special_variant .. "' "
-							.. "nouns ('" .. special_variant .. "', genitive, plural)")
-					elseif special_variant == "langname" then
-						parse_err("Can specify at most two comma-separated specs with 'langname' "
-							.. " ('langname', genitive)")
+					elseif special_proper_nouns[special_proper].has_gen_slot then
+						parse_err("Can specify at most three comma-separated specs with '" .. special_proper .. "' "
+							.. "nouns ('" .. special_proper .. "', genitive, plural)")
+					elseif special_proper then
+						parse_err("Can specify at most two comma-separated specs with '" .. special_proper .. "' "
+							.. "nouns ('" .. special_proper .. "', plural)")
 					else
 						parse_err("Can specify at most two comma-separated specs when the gender is feminine "
 							.. "(gender, plural)")
@@ -969,14 +1014,18 @@ local function parse_indicator_spec(angle_bracket_spec, lemma, pagename, proper_
 				if #comma_separated_groups >= pl_index and pl_index > gen_index then
 					base.pls = com.fetch_specs(iut, comma_separated_groups[pl_index], ":", "plural", "allow blank", parse_err)
 				end
-				if special_variant then
+				if special_proper then
 					if #base.genders > 1 then
-						parse_err("Internal error: More than one gender spec for '" .. special_variant .. "'")
+						parse_err("Internal error: More than one gender spec for '" .. special_proper .. "'")
 					else
-						base.props[special_variant] = true
-						if special_variant == "surname" then
+						base.props[special_proper] = true
+						if special_proper == "surname" then
 							-- FIXME, does it make sense to put the footnotes on the feminine gender (they appear after the gender)?
 							base.genders = {{form = "m"}, {form = "f", footnotes = base.genders[1].footnotes}}
+						elseif special_proper == "mgiven" then
+							base.genders = {{form = "m", footnotes = base.genders[1].footnotes}}
+						elseif special_proper == "fgiven" then
+							base.genders = {{form = "f", footnotes = base.genders[1].footnotes}}
 						else
 							base.genders = {{form = "n", footnotes = base.genders[1].footnotes}}
 						end
@@ -1021,18 +1070,34 @@ local function parse_indicator_spec(angle_bracket_spec, lemma, pagename, proper_
 				end
 				base.footnotes = com.fetch_footnotes(dot_separated_group, parse_err)
 			elseif part:find(":") then
-				-- override
-				-- FIXME: Handle adjectival overrides
-				local case_prefix = usub(part, 1, 3)
-				if case_set_with_abl_voc[case_prefix] then
-					local slot, slot_indicator, override = parse_override(dot_separated_group)
-					if base.overrides[slot] then
-						parse_err("Can't specify override twice for slot '" .. slot_indicator .. "'")
+				local indicator, rest = rmatch(part, "^([^:]*):(.*)$")
+				if not indicator then
+					parse_err("Internal error: Can't parse indicator and remainder: " .. part)
+				end
+				if indicator == "noartgen" or indicator == "optartgen" or indicator == "artgen" then
+					if not special_proper then
+						parse_err("Indicator '" .. indicator .."' can only be used with special proper-noun variants")
 					else
-						base.overrides[slot] = override
-					end
+						dot_separated_group[1] = rest
+						local desc =
+							indicator == "noartgen" and "no-article genitive" or
+							indicator == "optartgen" and "optional-article genitive" or
+							"with-article genitive"
+						base[indicator] = com.fetch_specs(iut, dot_separated_group, ":", desc, nil, parse_err)
 				else
-				parse_err("Unrecognized indicator '" .. part .. "'")
+					-- override
+					-- FIXME: Handle adjectival overrides
+					local case_prefix = usub(part, 1, 3)
+					if case_set_with_abl_voc[case_prefix] then
+						local slot, slot_indicator, override = parse_override(dot_separated_group)
+						if base.overrides[slot] then
+							parse_err("Can't specify override twice for slot '" .. slot_indicator .. "'")
+						else
+							base.overrides[slot] = override
+						end
+					else
+					parse_err("Unrecognized indicator '" .. part .. "'")
+					end
 				end
 			elseif #dot_separated_group > 1 then
 				local errmsg
@@ -1093,49 +1158,52 @@ local function synthesize_adj_lemma(base)
 end
 
 
+local function get_default_number(alternant_multiword_spec, base)
+	return
+		base.pls and "both" or
+		base.special_proper and not specs[base.special_proper].has_default_pl and "sg" or
+		alternant_multiword_spec.props.is_proper and "sg" or
+		"both"
+end
+
+
 local function detect_indicator_spec(alternant_multiword_spec, base)
 	if base.props.article then
 		alternant_multiword_spec.props.article = true
-	end
-	for _, prop in ipairs {"surname", "toponym", "langname"} do
-		if alternant_multiword_spec.props[prop] == nil then
-			alternant_multiword_spec.props[prop] = base.props[prop]
-		elseif alternant_multiword_spec.props[prop] ~= base.props[prop] then
-			-- We do this because we have a special table with its own slots for each of these special variants.
-			-- FIXME: Consider supporting adjectives with these variants. That requires that we copy the adjectival
-			-- declensions to the appropriate per-variant slots.
-			error("If some alternants set '" .. prop .. "', all must do so")
-		end
 	end
 	if base.props.adj then
 		alternant_multiword_spec.props.overall_adj = true
 		synthesize_adj_lemma(base)
 	else
+		if base.special_proper then
+			if alternant_multiword_spec.special_proper == nil then
+				alternant_multiword_spec.special_proper == base.special_proper
+			elseif alternant_multiword_spec.special_proper ~= base.special_proper then
+				-- We do this because we have a special table with its own slots for each of these special variants.
+				-- FIXME: This might be too strong of a restriction.
+				-- FIXME: Consider supporting adjectives with these variants. That requires that we copy the adjectival
+				-- declensions to the appropriate per-variant slots.
+				error("If some alternants set '" .. base.special_proper .. "', all must do so")
+			end
+		end
 		-- Set default values.
-		base.number =
-			base.number or
-			base.props.surname and "both" or
-			base.pls and "both" or
-			(alternant_multiword_spec.props.is_proper or base.props.toponym or base.props.langname) and "sg" or
-			"both"
-		if not base.props.surname then
-			-- Compute overall weakness for use in headword.
-			if alternant_multiword_spec.props.weak == nil then
-				alternant_multiword_spec.props.weak = {base.props.weak or false}
-			else
-				m_table.insertIfNot(alternant_multiword_spec.props.weak, base.props.weak or false)
+		base.number = base.number or get_default_number(alternant_multiword_spec, base)
+		-- Compute overall weakness for use in headword.
+		if alternant_multiword_spec.props.weak == nil then
+			alternant_multiword_spec.props.weak = {base.props.weak or false}
+		else
+			m_table.insertIfNot(alternant_multiword_spec.props.weak, base.props.weak or false)
+		end
+		if base.number == "pl" then
+			if base.gens then
+				error("Internal error: With plural-only noun, no genitive singular specs should be allowed")
 			end
-			if base.number == "pl" then
-				if base.gens then
-					error("Internal error: With plural-only noun, no genitive singular specs should be allowed")
-				end
-				if base.pls then
-					error("Internal error: With plural-only noun, no plural specs should be allowed")
-				end
+			if base.pls then
+				error("Internal error: With plural-only noun, no plural specs should be allowed")
 			end
-			if base.pls and base.number == "sg" then
-				error("Can't specify explicit plural specs along with explicit '.sg'")
-			end
+		end
+		if base.pls and base.number == "sg" then
+			error("Can't specify explicit plural specs along with explicit '.sg'")
 		end
 		base.gens = base.gens or {{form = "+"}}
 		base.pls = base.pls or {{form = "+"}}
@@ -1150,6 +1218,10 @@ local function detect_all_indicator_specs(alternant_multiword_spec)
 	-- Now propagate some properties downwards.
 	iut.map_word_specs(alternant_multiword_spec, function(base)
 		base.props.overall_adj = alternant_multiword_spec.props.overall_adj
+		if not base.props.adj and alternant_multiword_spec.special_proper ~= base.special_proper then
+			-- See above.
+			error("If some alternants set '" .. alternant_multiword_spec.special_proper .. "', all must do so")
+		end
 	end)
 end
 
@@ -1450,12 +1522,8 @@ local function compute_categories_and_annotation(alternant_multiword_spec)
 	end
 
 	local function do_word_spec(base)
-		if base.props.surname then
-			m_table.insertIfNot(decldescs, "surname")
-		elseif base.props.toponym then
-			m_table.insertIfNot(decldescs, "toponym")
-		elseif base.props.langname then
-			m_table.insertIfNot(decldescs, "langname")
+		if base.special_proper then
+			m_table.insertIfNot(decldescs, special_proper_nouns[special_proper].display)
 		elseif base.decl_type then
 			-- strong/weak/mixed declension type; should only be present on masculine or neuter nouns with a plural
 			for _, decl_type in ipairs(base.decl_type) do
@@ -1479,7 +1547,7 @@ local function compute_categories_and_annotation(alternant_multiword_spec)
 		end
 	end
 
-	-- Use the surname/toponym/langname/weak/strong properties of the noun(s).
+	-- Use the special proper/weak/strong properties of the noun(s).
 	map_first_noun(alternant_multiword_spec, do_word_spec)
 
 	if #genderdescs > 0 then
@@ -2072,7 +2140,9 @@ local function make_table(alternant_multiword_spec)
 			forms.gender = "''" .. table.concat(genderdesc_parts, " or ") .. " gender ''"
 		end
 	else
-		local no_indef = alternant_multiword_spec.props.toponym or alternant_multiword_spec.props.article
+		local no_indef =
+			alternant_multiword_spec.special_proper and special_proper_nouns[alternant_multiword_spec.special_proper].no_indef
+			or alternant_multiword_spec.props.article
 		table_spec =
 			alternant_multiword_spec.number == "sg" and (no_indef and noun_template_sg_no_indef or noun_template_sg) or
 			alternant_multiword_spec.number == "pl" and noun_template_pl or
@@ -2151,8 +2221,7 @@ function export.do_generate_forms(parent_args, pos, from_headword, is_proper, de
 	alternant_multiword_spec.props = {}
 	alternant_multiword_spec.props.is_proper = is_proper
 	detect_all_indicator_specs(alternant_multiword_spec)
-	local default_number =
-		(alternant_multiword_spec.props.is_proper or alternant_multiword_spec.props.toponym) and "sg" or "both"
+	local default_number = get_default_number(alternant_multiword_spec, nil)
 	propagate_properties(alternant_multiword_spec, "number", default_number, "both")
 	-- FIXME, maybe should check that noun genders match adjective genders
 	determine_adjectival_genders(alternant_multiword_spec)
