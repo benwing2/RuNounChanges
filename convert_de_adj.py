@@ -384,7 +384,7 @@ def do_headword_template(headt, declts, pagetitle, subsections, subsection_with_
       else:
         supspec = "sup:%s" % ":".join(supspecs)
     predspec = ""
-    if "nopred" in dtn:
+    if "nopred" in dtn or declt and (getparam(declt, "pred") == "-" or getparam(declt, "strong_pred")):
       predspec = "pred:-"
     ssspec = ""
     if ss:
