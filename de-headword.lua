@@ -150,9 +150,40 @@ pos_functions.adjectives = function(class, args, data, proper)
 		table.insert(data.inflections, retval)
 	end
 
-	local should_comp_sup = alternant_multiword_spec.forms.comp_pred or alternant_multiword_spec.forms.sup_pred
-	do_adj_form("comp_pred", glossary_link("comparative"), should_comp_sup, "comparative")
-	do_adj_form("sup_pred", glossary_link("superlative"), should_comp_sup, "superlative")
+	if alternant_multiword_spec.props.indecl then
+		table.insert(data.inflections, {label = glossary_link("indeclinable")})
+		if alternant_multiword_spec.props.predonly then
+			table.insert(data.inflections, {label = "predicative only"})
+		elseif alternant_multiword_spec.props.nopred then
+			table.insert(data.inflections, {label = "no predicative form"})
+		end
+	else
+		if alternant_multiword_spec.props.nopred then
+			table.insert(data.inflections, {label = "no predicative form"})
+		end
+		do_adj_form("str_nom_m", "strong nominative masculine singular", true)
+		local should_comp_sup =
+			alternant_multiword_spec.forms.comp_pred or alternant_multiword_spec.forms.sup_pred or
+			alternant_multiword_spec.forms.comp_str_nom_m or alternant_multiword_spec.forms.sup_str_nom_m
+		if not should_comp_sup then
+			table.insert(data.inflections, {label = "not comparable"})
+		else
+			-- If there is no predicative comparative, but there is an attributive comparative, include it;
+			-- otherwise, include the predicative comparative (if any). If there is no comparative but a superlative,
+			-- this will display "no comparative".
+			if not alternant_multiword_spec.forms.comp_pred and alternant_multiword_spec.forms.comp_str_nom_m then
+				do_adj_form("comp_str_nom_m", "strong comparative nominative masculine singular", true)
+			else
+				do_adj_form("comp_pred", glossary_link("comparative"), true, "comparative")
+			end
+			-- Same as above, for the superlative.
+			if not alternant_multiword_spec.forms.sup_pred and alternant_multiword_spec.forms.sup_str_nom_m then
+				do_adj_form("sup_str_nom_m", "strong superlative nominative masculine singular", true)
+			else
+				do_adj_form("sup_pred", glossary_link("superlative"), true, "superlative")
+			end
+		end
+	end
 
 	-- Add categories.
 	for _, cat in ipairs(alternant_multiword_spec.categories) do

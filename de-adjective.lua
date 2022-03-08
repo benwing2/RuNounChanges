@@ -148,16 +148,18 @@ end
 
 local function decline_singular(base, stem, compsup)
 	add_cases(base, stem, compsup .. "str", "m", "er", "en", "em", "en")
-	add_cases(base, stem, compsup .. "wk", "m", "e", "en", "en", "en")
-	add_cases(base, stem, compsup .. "mix", "m", "er", "en", "en", "en")
-
 	add_cases(base, stem, compsup .. "str", "f", "e", "er", "er", "e")
-	add_cases(base, stem, compsup .. "wk", "f", "e", "en", "en", "e")
-	add_cases(base, stem, compsup .. "mix", "f", "e", "en", "en", "e")
-
 	add_cases(base, stem, compsup .. "str", "n", "es", "en", "em", "es")
+
+	add_cases(base, stem, compsup .. "wk", "m", "e", "en", "en", "en")
+	add_cases(base, stem, compsup .. "wk", "f", "e", "en", "en", "e")
 	add_cases(base, stem, compsup .. "wk", "n", "e", "en", "en", "e")
-	add_cases(base, stem, compsup .. "mix", "n", "es", "en", "en", "es")
+
+	if not base.props.nomixed then
+		add_cases(base, stem, compsup .. "mix", "m", "er", "en", "en", "en")
+		add_cases(base, stem, compsup .. "mix", "f", "e", "en", "en", "e")
+		add_cases(base, stem, compsup .. "mix", "n", "es", "en", "en", "es")
+	end
 end
 
 
@@ -237,7 +239,8 @@ local function parse_indicator_spec(angle_bracket_spec, lemma, pagename)
 				base.footnotes = com.fetch_footnotes(dot_separated_group, parse_err)
 			elseif #dot_separated_group > 1 then
 				parse_err("Footnotes only allowed with slot overrides, comp:, sup:, stem: or by themselves: '" .. table.concat(dot_separated_group) .. "'")
-			elseif part == "ss" or part == "sync_n" or part == "sync_mn" or part == "sync_mns" then
+			elseif part == "ss" or part == "indecl" or part == "predonly" or part == "nomixed" or
+				part == "sync_n" or part == "sync_mn" or part == "sync_mns" then
 				if base.props[part] then
 					parse_err("Can't specify '" .. part .. "' twice")
 				end
@@ -258,7 +261,7 @@ local function generate_default_stem(base)
 	if base.lemma:find("e$") then
 		return rsub(base.lemma, "e$", "")
 	end
-	return rsub(base.lemma, "([ai])bel$", "%1bl")
+	return rsub(base.lemma, "([ai])bel$", "%1b" .. OMITTED_E .. "l")
 end
 
 
@@ -278,10 +281,55 @@ local function generate_default_sup(base, stem)
 			non_ending = rsub(non_ending, "ß$", "ss")
 		end
 		return non_ending .. "e" .. ending .. "st"
-	elseif rfind(stem, "gr[oö]ß$") then
+	elseif rfind(stem, "gr[oö]ß$") or rfind(stem, "gr[oö]ss$") then
+		-- Write this way so we can be called either on positive or comparative stem.
 		return stem .. "t"
-	elseif rfind(stem, "[szxßd]$") or rfind(stem, "[^e]t$") then
+	elseif rfind(stem, "h[oö]h$") then
+		-- [[hoch]], [[ranghoch]], etc.
+		-- Write this way so we can be called either on positive or comparative stem.
+		return rsub(stem, "..$", "öchst")
+	elseif rfind(stem, "n[aä]h$") then
+		-- [[nah]], [[äquatornah]], [[bahnhofsnah]], [[bodennah]], [[citynah]], [[hautnah]] (has no comp in dewikt),
+		-- [[körpernah]], [[zeitnah]], etc.
+		-- NOTE: [[erdnah]], [[praxisnah]] can be either regular (like [[froh]] below) or following [[nah]].
+		-- Write this way so we can be called either on positive or comparative stem.
+		return rsub(stem, "..$", "ächst")
+	elseif rfind(stem, "[aeiouäöü]h$") then
+		-- [[froh]], [[farbenfroh]], [[lebensfroh]], [[schadenfroh]], [[früh]], [[jäh]] (has only jähest in dewikt), [[rauh]],
+		-- [[roh]], [[weh]], [[zäh]]
+		return {stem .. "st", stem .. "est"}
+	elseif rfind(stem, "e[rl]?nd$") then
+		-- Present participles; non-present-participles like [[elend]], [[behend]]/[[behende]], [[horrend]] need special-casing
+		return stem .. "st"
+	elseif rfind(stem, "[^wi]e[rl]?t$") then
+		-- Most adjectives in -et, -elt, -ert (past participles specifically), but not adjectives in -iert, -ielt or
+		-- non-past-participles in -wert; other non-past-participles like [[alert]], [[inert]], [[concret]], [[discret]],
+		-- [[obsolet]] need special-casing
+		return stem .. "st"
+	elseif rfind(stem, "[^e]igt$") then
+		-- Most adjectives in -igt (past participles specifically), but not adjectives in -eigt such as [[abgeneigt]];
+		-- exceptions like [[gewitzigt]], [[gerechtfertigt]] need special-casing
+		return stem .. "st"
+	elseif rfind(stem, "[ae][iuwy]$") then
+		-- Those ending in diphthongs can take either -est -or -st (scheu, neu, schlau, frei, blau/blaw, etc.)
+		return {stem .. "est", stem .. "st"}
+	elseif rfind(stem, "[szxßdt]$") then
+		if base.props.ss and rfind(stem, "ß$") then
+			return rsub(stem, ".$", "ssest")
+		end
 		return stem .. "est"
+	elseif rfind(stem, "sk$") then
+		-- [[burlesk]], [[chevaleresk]], [[dantesk]], [[grotesk]], [[pittoresk]], [[pythonesk]]; also [[brüsk]], [[promisk]]
+		return stem .. "est"
+	elseif rfind(stem, "[^i]sch$") then
+		-- Adjectives in -sch where it is not an adjective-forming ending typically can take either -est or -st; examples
+		-- are [[barsch]], [[falsch]], [[fesch]], [[forsch]]/[[nassforsch]], [[frisch]]/[[taufrisch]], [[harsch]],
+		-- [[keusch]]/[[unkeusch]], [[lasch]], [[morsch]], [[rasch]], [[wirsch]]/[[unwirsch]]; maybe [[krüsch]]/[[krütsch]]?
+		-- (dewikt says sup. only ''krüschst'', Duden says only ''krüschest''); a few can take only -est per dewikt
+		-- [[deutsch]]/[[süddeutsch]]/[[teutsch]], [[hübsch]], [[krosch]], [[resch]], [[rösch]]
+		-- Cases where -sch without -isch occurs that is an adjective-forming ending need special-casing, e.g.
+		-- [[figelinsch]]
+		return {stem .. "est", stem .. "st"}
 	else
 		return stem .. "st"
 	end
@@ -290,7 +338,11 @@ end
 
 local function process_spec(base, destforms, slot, specs, base_stem, form_default)
 	local function do_form_default(form)
-		return form_default(base, form)
+		local retval = form_default(base, form)
+		if type(retval) ~= "table" then
+			retval = {retval}
+		end
+		return retval
 	end
 	specs = specs or {{form = "+"}}
 	for _, spec in ipairs(specs) do
@@ -298,17 +350,17 @@ local function process_spec(base, destforms, slot, specs, base_stem, form_defaul
 		if spec.form == "-" then
 			-- Skip "-"; effectively, no forms get inserted into output.comp.
 		elseif spec.form == "+" then
-			forms = iut.map_forms(base_stem, do_form_default)
+			forms = iut.flatmap_forms(base_stem, do_form_default)
 		elseif rfind(spec.form, "^%+") then
 			local ending = rsub(spec.form, "^%+", "")
 			forms = iut.map_forms(base_stem, function(form) return form .. ending end)
 		elseif spec.form == "^" then
-			forms = iut.map_forms(base_stem, function(form) return do_form_default(com.apply_umlaut(form)) end)
+			forms = iut.flatmap_forms(base_stem, function(form) return do_form_default(com.apply_umlaut(form)) end)
 		elseif rfind(spec.form, "^%^") then
 			local ending = rsub(spec.form, "^%^", "")
 			forms = iut.map_forms(base_stem, function(form) return com.apply_umlaut(form) .. ending end)
 		elseif spec.form == "-e" then
-			forms = iut.map_forms(base_stem, function(form)
+			forms = iut.flatmap_forms(base_stem, function(form)
 				local non_ending, ending = rmatch(form, "^(.*)e([lmnr])$")
 				if not non_ending then
 					error("Can't use '-e' with stem '" .. form .. "'; should end in -el, -em, -en or -er")
@@ -348,28 +400,50 @@ local function detect_indicator_spec(alternant_multiword_spec, base)
 	end
 	-- Next, if comparative specified but not superlative, derive the superlative(s) from the comparative(s).
 	if base.stems.comp and not base.sup then
-		local sups = iut.map_forms(base.stems.comp, function(form)
+		local sups = iut.flatmap_forms(base.stems.comp, function(form)
 			if not rfind(form, "er$") then
 				error("Don't know how to derive superlative from comparative '" .. form .. "' because it doesn't end in -er; specify the superlative explicitly using sup:...")
 			end
-			return generate_default_sup(base, rsub(form, "er$", ""))
+			local retval = generate_default_sup_list(base, rsub(form, "er$", ""))
+			if type(retval) ~= "table" then
+				retval = {retval}
+			end
+			return retval
 		end)
 		iut.insert_forms(base.stems, "sup", sups)
 	end
 
 	-- Make sure all alternants agree in having a comparative and/or superlative.
-	local has_comp = not not base.stems.comp
-	if alternant_multiword_spec.props.has_comp == nil then
-		alternant_multiword_spec.props.has_comp = has_comp
-	elseif alternant_multiword_spec.props.has_comp ~= has_comp then
-		error("If one alternant has a comparative, all must")
+	for _, compsup in ipairs { {"comp", "has_comp", "comparative"}, {"sup", "has_sup", "superlative"} } do
+		local stem, altprop, desc = unpack(compsup)
+		local has_stem = not not base.stems[stem]
+		if alternant_multiword_spec.props[altprop] == nil then
+			alternant_multiword_spec.props[altprop] = has_stem
+		elseif alternant_multiword_spec.props[altprop] ~= has_stem then
+			error("If one alternant has a " .. desc .. ", all must")
+		end
 	end
 
-	local has_sup = not not base.stems.sup
-	if alternant_multiword_spec.props.has_sup == nil then
-		alternant_multiword_spec.props.has_sup = has_sup
-	elseif alternant_multiword_spec.props.has_sup ~= has_sup then
-		error("If one alternant has a superlative, all must")
+	if base.props.predonly then
+		base.props.indecl = true
+	end
+	if base.overrides.pred and base.overrides.pred[1].form == "-" then
+		base.props.nopred = true
+	end
+	if base.props.predonly and base.props.nopred then
+		error("Can't be both 'predonly' and 'pred:-'")
+	end
+
+	-- Make sure all alternants agree in various properties.
+	for _, propdesc in ipairs { {"indecl"}, {"nopred", "pred:-"}, {"predonly"}, {"nomixed"} } do
+		local prop, desc = unpack(propdesc)
+		desc = desc or prop
+		local val = not not base.props[prop]
+		if alternant_multiword_spec.props[prop] == nil then
+			alternant_multiword_spec.prop[prop] = val
+		elseif alternant_multiword_spec.props[prop] ~= val then
+			error("If one alternant specifies '" .. desc .. "', all must")
+		end
 	end
 end
 
@@ -403,10 +477,10 @@ local function decline_adjective(base)
 	end
 	add(base, "the_lemma", base.orig_lemma, "")
 	add(base, "pred", base.lemma, "")
-	if base.stems.comp then
+	if base.stems.comp and not base.props.nopred then
 		add(base, "comp_pred", base.stems.comp, "")
 	end
-	if base.stems.sup then
+	if base.stems.sup and not base.props.nopred then
 		add(base, "sup_pred", iut.map_forms(base.stems.sup, function(form)
 			if not rfind(form, "[%[%]]") then
 				form = "[[" .. form .. "en]]"
@@ -504,6 +578,16 @@ end
 
 
 local function make_table(alternant_multiword_spec)
+	if alternant_multiword_spec.props.indecl then
+		if alternant_multiword_spec.props.predonly then
+			return "Indeclinable, predicative-only."
+		elseif alternant_multiword_spec.props.nopred then
+			return "Indeclinable, no predicative."
+		else
+			return "Indeclinable."
+		end
+	end
+
 	local forms = alternant_multiword_spec.forms
 
 	local table_spec = [=[
