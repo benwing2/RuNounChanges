@@ -74,8 +74,8 @@ def generate_default_sup(stem, ss):
     # Most adjectives in -igt (past participles specifically), but not adjectives in -eigt such as [[abgeneigt]];
     # exceptions like [[gewitzigt]], [[gerechtfertigt]] need special-casing
     return stem + "st"
-  elif re.search("([ae][iu])$", stem):
-    # Those ending in diphthongs can take either -est -or -st (scheu, neu, schlau, frei, etc.)
+  elif re.search("[ae][iuwy]$", stem):
+    # Those ending in diphthongs can take either -est -or -st (scheu, neu, schlau, frei, blau/blaw, etc.)
     return [stem + "est", stem + "st"]
   elif re.search(u"[szxßdt]$", stem):
     if ss and stem.endswith(u"ß"):
@@ -158,6 +158,7 @@ def analyze_comp_sup(stems, forms, generate_default, desc, pagemsg):
     if not (set(default_forms) <= set(forms)):
       pagemsg("WARNING: Saw %s form %s a subset of generated forms '%s' = %s, but remaining generated forms are not in total forms %s"
         % (desc, form, to_append, ":".join(default_forms), ":".join(origforms)))
+      return forms, False
     retval_spec.append(to_append)
     remaining_forms = []
     for form in forms:
@@ -168,31 +169,40 @@ def analyze_comp_sup(stems, forms, generate_default, desc, pagemsg):
           retval_forms.append(map_to_source_forms[form])
         else:
           retval_forms.append(form)
-    return remaining_forms
+    return remaining_forms, True
 
   while forms:
     form = forms[0]
     if form in default_forms:
-      forms = check_in_remainder(form, default_forms, "+")
-    elif form in default_umlauted_forms:
-      forms = check_in_remainder(form, default_umlauted_forms, "^")
-    elif all(minus_e_forms) and form in minus_e_forms:
+      forms, success = check_in_remainder(form, default_forms, "+")
+      if success:
+        continue
+    if form in default_umlauted_forms:
+      forms, success = check_in_remainder(form, default_umlauted_forms, "^")
+      if success:
+        continue
+    if all(minus_e_forms) and form in minus_e_forms:
       # FIXME, handle '.ss'
-      forms = check_in_remainder(form, minus_e_forms, "-e", minus_e_forms_to_forms_with_omitted_e)
-    elif form.startswith(stems[0]):
+      forms, success = check_in_remainder(form, minus_e_forms, "-e", minus_e_forms_to_forms_with_omitted_e)
+      if success:
+        continue
+    if form.startswith(stems[0]):
       suffix = form[len(stems[0]):]
       forms_to_check = [stem + suffix for stem in stems]
-      forms = check_in_remainder(form, forms_to_check, "+%s" % suffix)
-    elif all(umlauted_stems) and form.startswith(umlauted_stems[0]):
+      forms, success = check_in_remainder(form, forms_to_check, "+%s" % suffix)
+      if success:
+        continue
+    if all(umlauted_stems) and form.startswith(umlauted_stems[0]):
       suffix = form[len(umlauted_stems[0]):]
       forms_to_check = [stem + suffix for stem in umlauted_stems]
-      forms = check_in_remainder(form, forms_to_check, "^%s" % suffix)
-    else:
-      pagemsg("WARNING: Can't analyze %s form %s with respect to stem(s) %s, returning full form"
-        % (desc, form, ":".join(stems)))
-      retval_spec.append(form)
-      retval_forms.append(form)
-      forms = forms[1:]
+      forms, success = check_in_remainder(form, forms_to_check, "^%s" % suffix)
+      if success:
+        continue
+    pagemsg("WARNING: Can't analyze %s form %s with respect to stem(s) %s, returning full form"
+      % (desc, form, ":".join(stems)))
+    retval_spec.append(form)
+    retval_forms.append(form)
+    forms = forms[1:]
   return retval_spec, retval_forms
 
 
@@ -357,11 +367,11 @@ def do_headword_template(headt, declts, pagetitle, subsections, subsection_with_
       if default_sup_from_comp is None:
         return
       if set(sups) == set(default_sup_from_comp):
-        pagemsg("Superative(s) %s same as default superlative(s) generated from comparative(s) %s" % (
+        pagemsg("Superlative(s) %s same as default superlative(s) generated from comparative(s) %s" % (
           ":".join(sups), ":".join(comps)))
         supspecs = []
       else:
-        pagemsg("Superative(s) %s NOT same as default superlative(s) %s generated from comparative(s) %s" % (
+        pagemsg("Superlative(s) %s NOT same as default superlative(s) %s generated from comparative(s) %s" % (
           ":".join(sups), ":".join(default_sup_from_comp), ":".join(modified_comps)))
         supspecs, _ = analyze_comp_sup(analyzed_stems, sups, lambda stem: generate_default_sup(stem, ss), "superlative",
             pagemsg)
