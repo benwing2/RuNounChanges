@@ -341,6 +341,9 @@ def do_headword_template(headt, declts, pagetitle, subsections, subsection_with_
         decl_sups = []
     if not head_comps and not head_sups and not decl_comps and not decl_sups:
       pagemsg("Non-comparable: headt=%s, declt=%s" % (unicode(headt), unicode(declt)))
+    elif re.search("[ai]bel$", pagetitle):
+      pagemsg("WARNING: Comparable adjective ending in -abel/-ibel, probable mistaken declension, correcting")
+      compspec = "comp"
     else:
       if declt:
         if headt and tname(headt) != "head":
@@ -416,6 +419,7 @@ def do_headword_template(headt, declts, pagetitle, subsections, subsection_with_
         return
 
   elif headt:
+    old_style_headt = False
     for param in ["old", "2", "comp1", "comp2", "comp3", "sup1", "sup2", "sup3"]:
       if getparam(headt, param):
         old_style_headt = True
