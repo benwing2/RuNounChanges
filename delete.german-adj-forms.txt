@@ -1,0 +1,161 @@
+ABC: send to RFV
+abstinenter, abstinentst/abstinentest and forms
+ambivalentst and forms
+angehimmeltest and forms
+ängstigendest and forms
+assertorischt and forms
+forms of ausdrucksvollen-
+ausgeklügelst and forms
+forms of auskommentierter-
+forms of außer Betrieb-
+beängstigendest and forms
+beschränktst and forms
+Bio: move adjective to [[bio]]: {{short for|de|biologisch}} (indecl adj); possible synonym öko
+desiderabeler, desiderabelest and forms
+dickköpfiger - check if comparative
+dickköpfigst - check if superlative
+drittgrößteer, drittgrößtest and forms
+drittrangiger, drittrangigst and forms
+effizientst and forms
+elegischest and forms
+empörtst and forms
+erbarmunglosest and forms
+erhaltenswürdig and forms
+erheiternst and forms
+erstbester: move to erstbeste
+abundantst and forms
+anarchischest and forms
+aufkonzentrierter, aufkonzentriertst and forms
+ausgegrauter, ausgegrautst and forms
+bahnhofsnaher, bahnhofsnahst and forms
+behütetest and forms
+bemerkenswertst and forms
+bemitleidenswertst and forms
+dreistst and forms
+durchdachtst and forms
+erfolglosst and forms
+flächengroßer, flächengroßt and forms
+föderativer, föderativst and forms
+frühreifest and forms
+geachtetest and forms
+geilo: pred or indecl?
+geschweifter, geschweiftest and forms
+check lemma listed for forms of anhäufend, häufend
+hiebfester, hiebfestst, hiebfestest and forms
+hönischst and forms
+hyperkomplexer, hyperkomplexest, hyperkomplexst and forms
+inkonsistentst and forms
+geänderter, geändertest and forms
+gebeugtst and forms
+gefragtst and forms
+gekünsteltest and forms
+gepflegtst and forms
+gerechtfertigtest and forms
+gesteigertest and forms
+getigerter, getigertest and forms
+gewitzigtest and forms
+grifffester, grifffestest,grifffestst and forms
+herrenloser, herrenlosst, herrenlosest and forms
+higher, highest, highst and forms
+impotentst and forms
+inadäquatst and forms
+isländischer, isländischst, isländischest and forms
+jungenhaftst and forms
+kaputtst and forms
+kauderwelscher, kauderwelschst, kauderwelschest and forms
+KBC: send to RFV
+knallenger, knallengst, knallengest and forms
+kölnischer, kölnischst, kölnischest and forms
+kölscher, kölschst, kölschest and forms
+komplexst and forms
+konturloser, konturlosest, konturlosst and forms
+kosteneffizientst and forms
+kreideig and forms
+kreuzigbar, kreuzigbarer, kreuzigbarst and forms: send to RFV
+Kreuzigbarkeit: send to RFV
+kroscher, kroschst, kroschest and forms
+kurzketteig and forms
+kompromissbereitst and forms
+laienhaftst and forms
+libanesischer, libanesischst, libanesischest and forms
+lohnenswertst and formsa
+madegassischer, madegassischst and forms
+manganreichest and forms
+mehrlappenig, mehrlappeniger, mehrlappenigst and forms
+molekularpathologischer, molekularpathologischst and forms
+morbidst and forms
+müdst and forms
+niederschlagsarmer, niederschlagsarmest and forms
+nikotinarmer, nikotinarmest and forms
+onkelhafter, onkelhaftst, onkelhaftest and forms
+opakest and forms
+parvenühafter, parvenühaftst, parvenühaftest and forms
+pikantst and forms
+pinker, pinkst, pinkest and forms
+pixeligt, pixeliger, pixeligst and forms
+potentst and forms
+raßst and forms
+räßst and forms
+reinrassiger, reinrassigest, reinrassigst and forms
+reiss: send to RFV
+renaissancistischer, renaissancistischest, renaissancistischst and forms
+resistentst and forms
+Schiff-Luft: send to RFD
+schusssicherer, schusssicherst and forms
+schwindelfreier, schwindelfreiest, schwindelfreist and forms
+schwulig, schwuliger, schwuligst and forms
+soigniertst and forms
+speicherprogrammierbarer, speicherprogrammierbarst and forms
+sprunghaftst and forms
+stichfestst and forms
+störungsfreist and forms
+süddeutscher, süddeutschst, süddeutschest and forms
+supranationaler, supranationalst and forms
+schmerzlosst and forms
+schwätzichter, schwätzichtst and forms
+stimmhafter, stimmhafterst, stimmhaftest and forms
+teilnahmlosest and forms
+texicanischer, texicanischst and forms
+überdünischer: send to RFV
+übernationaler, übernationalst and forms
+uneitlst and forms
+unsoigniertst and forms
+unüberwindlichest and forms
+unangebrachtst and forms
+unaufgeräumtst and forms
+unbedarftst and forms
+unbekümmertest and forms
+unentwegtst and forms
+ungepflegtst and forms
+ungerechtfertigtest and forms
+unkluger and forms
+unverblümtst and forms
+verbeultst and forms
+verhutzeltest and forms
+verkrmapftest and forms
+verquertest and forms
+verscheitest and forms
+violettst and forms
+vorgelagerter, vorgelagertest, vorgelagertst and forms
+verbrüderbar: send to RFV
+vedeckter, vedecktest and forms
+verrostetest and forms
+verschlüsselst and forms
+verzweigtketteig and forms
+vorder: RFD ?
+vorstelltig and forms
+warziger, warzigst and forms
+weißglühender, weißglühendst and forms
+welscher, welschest, welschst and forms
+pythischer, pythischst and forms
+Woronesch'sch: send to RFV
+zeichenbarer, zeichenbarst and forms
+zeitgerechtst and forms, zeitgerechsten
+zivilisationmüder, zivilisationmüdest, zivilisationmüdst, zivilisationsmüder, zivilisationsmüdest, zivilisationsmüdst and forms
+zweitrangiger, zweitrangigst and forms
+würdelosst and forms
+
+
+
+Q: where to place superlatives? [[erstbester]], [[nächster]] vs. [[achthäufigste]], [[allererste]], [[äußerste]], [[dreihundertste]], [[drittwichtigste]], [[einhunderterste]], [[fünfhundertste]], [[hunderterste]], [[hunderttausendste]], [[sechsthäufigste]], [[siebzehnhundertste]], [[zehntausendste]], [[zweithäufigste]] vs. [[allerliebst]], [[allermeist]], [[einzigst]], [[herzallerliebst]], [[jüngst]], [[meist]], [[urst]], [[zweithöchst]], [[zweitleichtest]] vs. typical superlatives in -sten
+Q: where to place other adjectives without predicative form? -er, -e, -, etc.: [[anderer]], [[äußere]], [[wievielter]], etc.
