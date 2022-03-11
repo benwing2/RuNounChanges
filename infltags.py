@@ -78,6 +78,24 @@ def combine_tag_set_group(group):
     result.extend(tag_set)
   return result
 
+# Split a tag set possibly containing multipart tags into one or more tag sets not containing such tags.
+def split_multipart_tag_set(ts):
+  for i, tag in enumerate(ts):
+    if "//" in tag:
+      single_tags = tag.split("//")
+      pre_tags = ts[0:i]
+      post_tags = ts[i+1:]
+      tag_sets = []
+      for single_tag in single_tags:
+        tag_sets.extend(split_multipart_tag_set(
+          pre_tags + [single_tag] + post_tags))
+      return tag_sets
+  return [ts]
+
+# Split a list of tag sets possibly containing multipart tags into a list of tag sets not containing such tags.
+def split_multipart_tag_sets(tag_sets):
+  return [ts for tag_set in tag_sets for ts in split_multipart_tag_set(tag_set)]
+
 def construct_abbreviated_template(tn, lang, lemma):
   if lang:
     return "{{%s|%s|%s}}" % (tn, lang, lemma)
