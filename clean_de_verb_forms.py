@@ -8,7 +8,7 @@ from blib import getparam, rmparam, tname, pname, msg, site
 import infltags
 
 """
-Examples of past participle forms to convert:
+Examples of verb forms to convert:
 
 Page 1 aal: -------- begin text --------
 
@@ -560,7 +560,7 @@ def process_text_on_page(index, pagetitle, text):
       raise BreakException()
 
   def verify_verb_lemma(t, term):
-    if not re.search("(e[rl]?n|th?un)$", term):
+    if not re.search("(e[rl]*n|th?un|sein)$", term):
       pagemsg("WARNING: Term %s doesn't look like an infinitive: %s" % (term, unicode(t)))
       raise BreakException()
 
@@ -570,15 +570,8 @@ def process_text_on_page(index, pagetitle, text):
       raise BreakException()
 
   def verify_present_participle(t, term):
-    if not re.search("e[rl]?nd$", term):
+    if not re.search("e[rl]*nd$", term):
       pagemsg("WARNING: Term %s doesn't look like a present participle: %s" % (term, unicode(t)))
-      raise BreakException()
-
-  def verify_form_for_correct_lemma(t, pplemma):
-    should_be_lemma = pagetitle[:-1] + "o"
-    if should_be_lemma != pplemma:
-      pagemsg("WARNING: Found past participle form for incorrect lemma %s, should be %s: %s" % (
-        pplemma, should_be_lemma, unicode(t)))
       raise BreakException()
 
   def check_unrecognized_params(t, allowed_params, no_break=False):
@@ -881,10 +874,6 @@ def process_text_on_page(index, pagetitle, text):
 
         elif saw_part_of and saw_verb_form_of:
           check_unrecognized_params(head_template, ["1", "2", "head"])
-          pos = getparam(head_template, "2")
-          if pos != "verb form":
-            pagemsg("WARNING: Saw participle and {{verb form of}} under strange POS: <<%s>>" % newsubseck)
-            raise BreakException()
           lines = newsubseck.rstrip("\n").split("\n")
           headword_line = None
           lines_for_verb_form_of = []
