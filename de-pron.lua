@@ -27,6 +27,7 @@ The following symbols can be used:
 --   otherwise would. 
 -- _ (underscore) to force the letters on either side to be interpreted independently, when the combination of the two
 --   would normally have a special meaning.
+--  ̣ (dot under) on any vowel in a word or component to prevent it from getting any stress.
 
 Notes:
 
@@ -84,6 +85,7 @@ FIXME:
 7. Implement nasal vowels.
 8. Implement underscore to prevent assimilation/interpretation as a multigraph.
 9. Implement [b] [d] [g] [z] [v] [ʒ] [x].
+10. Implement dot-under to prevent stress.
 ]=]
 
 local export = {}
@@ -246,80 +248,106 @@ local wordsep_c = "[" .. wordsep .. "]"
 local cons_guts = "^" .. vowel .. wordsep .. "_" -- guts of consonant class
 local C = "[" .. cons_guts .. "]" -- consonant
 local C_not_lr = "[" .. cons_guts .. "lr]" -- consonant not 'l' or 'r'
+-- Include both regular g and IPA ɡ so it can be used anywhere
+local obstruent_non_sibilant = "pbfvkgɡtdxç" .. EXPLICIT_B .. EXPLICIT_D .. EXPLICIT_G .. EXPLICIT_V .. EXPLICIT_X
+local obstruent_non_sibilant_c = "[" .. obstruent_non_sibilant .. "]"
+local unvoiced_cons = "ptkfsßʃxç" .. EXPLICIT_S .. EXPLICIT_X
+local unvoiced_cons_c = "[" .. unvoiced_cons .. "]"
 
 
+-- FIXME: -ge- and -zu- can occur after any stressed prefix.
 local prefixes = {
-	{export.decompose("ā"), {verb = "unstressed", noun = "stressed"}},
-	{"ab", {verb = "unstressed"}},
-	{"an", {verb = "unstressed"}},
-	{"æfter", {verb = "secstressed", noun = "stressed"}}, -- not very common
-	{"and", {verb = "unstressed", noun = "stressed"}},
-	{"an", {verb = "unstressed", noun = "stressed"}},
-	{"be", {verb = "unstressed", noun = "unstressed", restriction = "^[^" .. accent .. "ao]"}},
-	{export.decompose("bī"), {noun = "stressed"}},
-	{"ed", {verb = "unstressed", noun = "stressed"}}, -- not very common
-	{"fore", {verb = "unstressed", noun = "stressed", restriction = "^[^" .. accent .. "ao]"}},
-	{"for[þð]", {verb = "unstressed", noun = "stressed"}},
-	{"for", {verb = "unstressed", noun = "unstressed"}},
-	{"fram", {verb = "unstressed", noun = "stressed"}}, -- not very common
-	-- following is rare as a noun, mostly from verbal forms
-	{"ġeond", {verb = "unstressed"}}, 
-	{"ge", {verb = "unstressed", noun = "unstressed", restriction = "^[^" .. accent .. "ao]"}},
-	{"in", {verb = "unstressed", noun = "stressed"}}, -- not very common
-	{"mis", {verb = "unstressed"}},
-	{"ofer", {verb = "secstressed", noun = "stressed"}},
-	{"of", {verb = "unstressed", noun = "stressed"}},
-	{"on", {verb = "unstressed", noun = "stressed"}},
-	{"or", {noun = "stressed"}},
-	{"o[þð]", {verb = "unstressed"}},
-	{export.decompose("stēop"), {noun = "stressed"}},
-	{export.decompose("tō"), {verb = "unstressed", noun = "stressed"}},
-	{"under", {verb = "secstressed", noun = "stressed"}},
-	{"un", {verb = "secstressed", noun = "stressed"}}, -- uncommon as verb
-	{"up", {verb = "unstressed", noun = "stressed"}},
-	{export.decompose("ūt"), {verb = "unstressed", noun = "stressed"}},
-	{export.decompose("ū[þð]"), {noun = "stressed"}},
-	{"[wƿ]i[þð]er", {verb = "secstressed", noun = "stressed"}},
-	{"[wƿ]i[þð]", {verb = "unstressed"}},
-	{"ymb", {verb = "unstressed", noun = "stressed"}},
-	{"[þð]urh", {verb = "unstressed", noun = "stressed"}},
+	{"ab", {respelling = "ább"}},
+	{"an", {respelling = "ánn"}},
+	{"auf", {respelling = "áuf"}},
+	{"aus", {respelling = "áus"}},
+	{"auseinander", {respelling = "àus-einánder"}},
+	{"bei", {respelling = "béi"}},
+	{"be", {respelling = "bə", restriction = "^[^u]"}},
+	{"durch", {respelling = "dúrch"}},
+	{"ein", {respelling = "éin"}},
+	{"emp", {restriction = "^f"}},
+	{"ent"},
+	{"fort", {respelling = "fórt"}},
+	-- Most words in 'gei-' aren't past participles. There are only a few, e.g. [[geimpft]].
+	-- No restriction on 'geu-' because only one non-past-participle observed: [[Geusenwort]], and there are
+	-- various past participles in 'geu-', especially 'geur-'.
+	{"ge", {respelling = "gə", restriction = "^[^i]"}},
+	{"herab", {respelling = "herrább"}},
+	{"heran", {respelling = "herránn"}},
+	{"herauf", {respelling = "herráuf"}},
+	{"heraus", {respelling = "herráus"}},
+	{"herbei", {respelling = "herbéi"}},
+	{"herein", {respelling = "herréin"}},
+	{"herüber", {respelling = "herrǘber"}},
+	{"herum", {respelling = "herrúmm"}},
+	{"herunter", {respelling = "herrúnter"}},
+	{"hervor", {respelling = "herfór"}},
+	{"her", {respelling = "hérr"}},
+	{"hinab", {respelling = "hinnább"}},
+	{"hinan", {respelling = "hinnánn"}},
+	{"hinauf", {respelling = "hinnáuf"}},
+	{"hinaus", {respelling = "hinnáus"}},
+	{"hinbe", {respelling = "hínbe"}}, --barely exists
+	-- hinbei doesn't appear to exist
+	{"hinein", {respelling = "hinnéin"}},
+	{"hinter", {respelling = "hínter"}},
+	{"hinüber", {respelling = "hinnǘber"}},
+	-- hinum doesn't appear to exist
+	{"hinunter", {respelling = "hinnúnter"}},
+	-- hinvor doesn't appear to exist
+	{"hin", {respelling = "hínn"}},
+	-- too many false positives for in-
+	{"miss"},
+	{"mit", {respelling = "mítt"}},
+	{"über", {respelling = "ǘber"}},
+	{"um", {respelling = "úmm"}},
+	{"un", {respelling = "únn", combinable = true}},
+	{"unter", {respelling = "únter"}},
+	{"ver", {respelling = "ferr"}},
+	{"voran", {respelling = "foránn"}},
+	{"voraus", {respelling = "foráus"}},
+	{"vorbei", {respelling = "fohrbéi"}}, -- respelling per dewikt pronun
+	{"vorbe", {respelling = "fóhrbe", restriction = "^[^u]"}}, -- respelling per dewikt pronun
+	{"vorder", {respelling = "fórder"}},
+	{"vorher", {respelling = "fohrhér"}}, -- respelling per dewikt pronun
+	{"vorüber", {respelling = "forǘber"}},
+	{"vorver", {respelling = "fóhrfer"}}, -- respelling per dewikt pronun
+	{"vor", {respelling = "fór"}},
+	{"wider", {respelling = {n = "wíder", v = "wìder"}}},
+	{"wieder", {respelling = "wíeder"}},
+	{"wiederver", {respelling = "wíeder-ferr<"}},
+	{"zer", {respelling = "zerr"}},
 }
 
 export.suffixes = {
+	{"([ae])nt", {respell = "%1́nt", pos = {"n", "a"}}},
 	{"([ai])bel", {respell = "%1́bel", pos = "a"}},
 	-- Normally following consonant but there a few exceptions like [[abbaubar]], [[recyclebar]], [[unüberschaubar]].
 	-- Cases like [[isobar]] will be respelled with an accent and not affected.
-	{"bar", {respell = "bàhr", pos = "a"}},
+	{"bar", {respell = "bàr", pos = "a"}},
 	-- Restrict to not follow a vowel or s (except for -ss) to avoid issues with nominalized infinitives in -chen.
 	-- Words with -chen after a vowel or s need to be respelled with '>chen', as in [[Frauchen]], [[Wodkachen]],
 	-- [[Häuschen]], [[Bläschen]], [[Füchschen]], [[Gänschen]], etc. Occasional gerunds of verbs in -rchen may need
 	-- to be respelled with '+chen' to avoid the preceding vowel being long, as in [[Schnarchen]].
 	{"chen", {respell = "çen", pos = "n", restriction = {"[^" .. accent .. vowel .. "]$", "[^s]s$"}}},
+	{"ei", {respell = "éi", pos = "n", restriction = cons_c .. "$"}},
 	-- Normally following consonant but there a few exceptions like [[säurefest]]. Cases like [[manifest]] will be
 	-- respelled with an accent and not affected.
 	{"fest", {respell = "fèst", pos = "a"}},
-	{"schaft", {respell = "schàft"}},
-	{"haft", {respell = "hàft"}},
+	{"schaft", {respell = "schàft", pos = "n"}},
+	{"haft", {respell = "hàft", pos = "a"}},
 	{"([hk])eit", {respell = "%1èit", pos = "n"}},
 	-- NOTE: This will get converted to secondary stress if there is a primary stress elsewhere in the word (e.g. in
 	-- compound words).
 	{"ie", {respell = "íe", pos = "n", restriction = cons_c .. "$"}},
 	-- No restriction to not occur after a/e; [[kreieren]] does occur and noun form and verbs in -en after -aier/-eier
 	-- should not occur (instead you get -aiern/-eiern). Occurs with both nouns and verbs.
-	{"ieren", {respell = "íeren"}},
+	{"ieren", {respell = "íeren", pos = "v"}},
 	-- See above. Occurs with adjectives and participles, and also [[Gefiert]].
-	{"iert", {respell = "íert"}},
+	{"iert", {respell = "íert", pos = "a"}},
 	-- See above. Occurs with nouns.
-	{"ierung", {respell = "íerung"}},
-	-- FIXME, needs style restriction/differentiation once those are implemented, as southern Germany/Austria uses
-	-- respelling with -ick. Not restricted to verbs/adjectives because there are nominalized adjectives esp.
-	-- numbers, e.g. [[Achtundzwanzig]], toponyms like [[Danzig]], random nouns like [[König]] and [[Essig]], etc.
-	-- Don't trigger on [[Braunschweig]], [[Kuchenteig]], [[feig]], etc. Other vowels are OK, cf. [[breiig]] "mushy",
-	-- [[eineiig]] "monozygotic", [[etwaig]] "possible", [[reuig]] "remorseful", as are vowel + e, as in
-	-- [[schneeig]] "snowy".
-	-- This needs to be handled specially.
-	-- {"ig", {respell = "ich", restriction = {V .. ".*[^e]$", V .. "e$"}}},
-	{"in", {respell = "inn", restriction = {V .. ".*[^e]$", V .. "e$"}},
+	{"ierung", {respell = "íerung", pos = "n"}},
 	-- "isch" not needed here; no respelling needed and vowel-initial
 	-- NOTE: This will get converted to secondary stress if there is a primary stress elsewhere in the word (e.g. in
 	-- compound words like [[Abwehrmechanismus]] or [[Lügenjournalismus]]).
@@ -329,36 +357,26 @@ export.suffixes = {
 	-- Almost all words in -tät are in -ität but a few aren't: [[Majestät]], [[Fakultät]], [[Pietät]], [[Pubertät]],
 	-- [[Sozietät]], [[Varietät]].
 	{"lich", {pos = "a"}},
+	{"los", {respell = "lòs", pos = "a"}},
+	-- Included because of words like [[Ergebnis]], [[Erlebnis]], [[Befugnis]], [[Begräbnis]], [[Betrübnis]],
+	-- [[Gelöbnis]], [[Ödnis]], [[Verlöbnis]], [[Wagnis]], etc. A few words in -nis don't belong, e.g. [[Anis]],
+	-- [[Denis]], [[Penis]], [[Tennis]], [[Spiritus lenis]], [[Tunis]], and may need respelling.
+	{"nis", {pos = "n"}},
 	{"reich", {respell = "rèich", pos = "a"}},
-	{"tät", {respell = "tä́t"}},
-	{"tion", {respell = "zión"}},
+	{"sam", {respell = {"sahm", "sam"}, pos = "a"}},
+	{"tät", {respell = "tä́t", pos = "n"}},
+	{"tion", {respell = "zión", pos = "n"}},
+	-- This must follow -tion. Most words in -ion besides those in -tion are still end-stressed abstract nouns, e.g.
+	-- [[Religion]], [[Version]], [[Union]], [[Vision]], [[Explosion]], [[Aggression]], [[Rebellion]], or other words
+	-- with the same stress pattern, e.g. [[Skorpion]], [[Million]], [[Fermion]]. There are several in -ion that are
+	-- various types of ions, e.g. [[Cadiumion]], [[Hydridion]], [[Gegenion]], which need respelling with a hyphen, and
+	-- some miscellaneous words that aren't end-stressed, e.g. [[Amnion]], [[Champion]], [[Camion]], [[Ganglion]],
+	-- needing respelling of various sorts.
+	{"ion", {respell = "ión", pos = "n", restriction = cons_c .. "$"}},
 	-- "ung" not needed here; no respelling needed and vowel-initial
+	{"voll", {respell = "fòll", pos = "a"}},
 	{"weise", {respell = "wèise", pos = "a"}},
-
-
-
-
-
-
-
-
-
-	{"", {noun = "secstressed"}},
-	{"full?", {noun = "unstressed"}},
-	{"lēas", {noun = "secstressed"}},
-	-- These can be "verbal" if following a verbal past participle or similar
-	{"līċe", {noun = "secstressed", verb = "secstressed"}},
-	{"l[īi][ċc]", {noun = "unstressed", verb = "unstressed"}},
-	{"ness?", {noun = "unstressed", verb = "unstressed"}},
-	{"n[iy]s", {noun = "unstressed", verb = "unstressed"}},
-	{"sum", {noun = "unstressed"}},
 }
-
--- Include both regular g and IPA ɡ so it can be used anywhere
-local obstruent_non_sibilant = "pbfvkgɡtdxç" .. EXPLICIT_B .. EXPLICIT_D .. EXPLICIT_G .. EXPLICIT_V .. EXPLICIT_X
-local obstruent_non_sibilant_c = "[" .. obstruent_non_sibilant .. "]"
-local unvoiced_cons = "ptkfsʃxç" .. EXPLICIT_S .. EXPLICIT_X
-local unvoiced_cons_c = "[" .. unvoiced_cons .. "]"
 
 -- These rules operate in order, and apply to the actual spelling, after (1) decomposition, (2) prefix and suffix
 -- splitting, (3) addition of default primary and secondary stresses (acute and grave, respectively) after the
@@ -644,6 +662,7 @@ local phonemic_rules = {
 		["ʦ"] = "t͡s",
 		["g"] = "ɡ", -- map to IPA ɡ
 		["r"] = "ʁ",
+		["ß"] = "s",
 	}},
 	{"əʁ", "ɐ"},
 
