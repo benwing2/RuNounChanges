@@ -1,0 +1,252 @@
+# ch
+Bach	Bach	baχ
+Aachener	Aachener	ˈaːxənɐ
+Milch	Milch	mɪlç
+Knöchel	Knöchel	[ˈknœçl̩]
+Chemie	Chemie	çeˈmiː
+Agrochemie	Agro-chemie	ˈaːɡʁoçeˌmiː
+Chaos	Kaos	ˈkaːɔs
+Chamäleon	Kamä́leònn	kaˈmɛːleˌɔn
+Chor	Kor	[koːɐ̯]
+Chuzpe	[X]uzpe	ˈxʊt͡spə
+Mädchen	Mädchen	ˈmɛːtçən
+# -chen is not recognized as a suffix after a vowel, and only recognized in nouns (beginning with a capital letter)
+Freimachen	Frei-machen	ˈfʁaɪ̯ˌmaxən
+Kaputtmachen	Kapútt-machen	[kaˈpʊtˌmaxn̩]
+Verachtfachen	Veracht-fachen	[fɛɐ̯ˈʔaxtˌfaxn̩]
+Verfünfzehnfachen	Verfünfzehn-fachen	[fɛɐ̯ˈfʏnft͡seːnˌfaxn̩]
+Verursachen	Verursachen	[fɛɐ̯ˈʔuːɐ̯ˌzaxn̩]
+Gewaltverbrechen	Gewalt-verbrechen	[ɡəˈvaltfɛɐ̯ˌbʁɛçn̩]
+# FIXME, is it correct to have two secondary stresses?
+Absatzzeichen	Absatz-zeichen	ˈapˌzatsˌtsaɪ̯çən
+Anführungszeichen	Anführungs-zeichen	[ˈanˌfyːʁʊŋsˌt͡saɪ̯çn̩]
+# FIXME, is it correct to have two secondary stresses?
+Autokennzeichen	Auto-kenn-zeichen	[ˈaʊ̯toˌkɛnˌt͡saɪ̯çn̩]
+Hauptbetonungszeichen	Haupt-betonungs-zeichen	[ˈhaʊ̯ptbətoːnʊŋsˌt͡saɪ̯çn̩]
+Gleichheitszeichen	Gleichheit-s-zeichen	ˈɡlaɪ̯çhaɪ̯tsˌtsaɪ̯çən
+Minuszeichen	Minus-zeichen	ˈmiːnʊsˌtsaɪ̯çən
+Unterstreichen	Unterstreichen	ʔʊntɐˈʃtʁaɪ̯çən
+Ermöglichen	Ermög>lichen	[ɛɐ̯ˈmøːklɪçn̩]
+Backenknochen	Backen-knochen	[ˈbakn̩ˌknɔxn̩]
+Oberschenkelknochen	Ober-schenkel-knochen	ˈoːbɐˌʃɛŋkəlˌknɔxən
+Apfelkuchen	Apfel-kuchen	ˈapfəlkuːχn̩
+Passivrauchen	Passîv-rauchen	[ˈpasiːfˌʁaʊ̯χn̩]
+Untertauchen	Untertauchen	[ˈʊntɐˌtaʊ̯χn̩]
+Verscheuchen	Verscheuchen	[fɛɐ̯ˈʃɔɪ̯çn̩]
+Bärchen	Bärchen	ˈbɛːʁçən
+Hintertürchen	Hintertürchen	[ˈhɪntɐˌtyːɐ̯çn̩]
+# -chen is not a suffix here; without the +, -a- would be long
+Schnarchen	Schnar+chen	ˈʃnaʁçən
+Dingenskirchen	Dingens-kirchen	ˈdɪŋənsˌkɪʁçən
+horchen	horchen	ˈhɔʁçən
+horchen	horchen	[ˈhɔɐ̯çn̩]
+# use > to explicitly denote a suffix
+Ehefrauchen	Ehe-frau>chen	ˈeːəˌfʁaʊ̯çən
+Opachen	Opa>chen	ˈoːpaçən
+Wodkachen	Wodka>chen	ˈvɔtkaçən
+Hörnchen	Hörnchen	ˈhœʁnçən
+
+# French-derived words
+Baguette	Bagétt	baˈɡɛt
+Chaiselongue	Schẹselóng	ʃɛzəˈlɔŋ	dewikt pron #1
+Chaiselongue	SchẹselóNk	ʃɛzəˈlɔ̃ːk	dewikt pron #2
+Chaiselongue	Schês-lóNng	ʃeːsˈlɔ̃ːŋ	dewikt pron #1 (Austrian)
+Chaiselongue	Schês-lóhNk	ʃeːsˈlõːk	dewikt pron #2 (Austrian)
+Chaiselongue	Schẹ[z]-lóN[g]	ʃɛzˈlɔ̃ːɡ	dewikt pron #3 (Austrian)
+Champignon	Schampinjòng  ˈʃam.pɪnˌjɔŋ
+Champignon	SchampinjòN  ˈʃam.pɪnˌjɔ̃ː
+Chefredakteur	Scheff-redaktö̀r	[ˈʃɛfʁedakˌtøːɐ̯]
+Chefredakteur	Schef-redaktö̀r	[ˈʃeːfʁedakˌtøːɐ̯]	usually in Austria
+Guillotine	Gi.otíne	ɡioˈtiːnə
+orange	oráNʒ	oˈʁãːʃ	enwikt pron #1
+orange	orángʒ	oˈʁaŋʃ	enwikt pron #2
+orange	oróNʒ	oˈʁɔ̃ːʃ	enwikt pron #3
+orange	oróngʒ	oˈʁɔŋʃ	enwikt pron #4
+Orange	OráNʒe	oˈʁãːʒə	enwikt pron #1
+
+
+# English-derived words
+Bodyguard	Bóddigàhrd	[ˈbɔdiˌɡaːɐ̯t]
+
+
+# -i- in hiatus
+Addition	Àddition	ˌadiˈt͡si̯oːn
+Historiolinguistik	Històriolinguístik	hɪsˌtoːʁi̯olɪŋˈɡu̯ɪstɪk
+
+# -gu- in hiatus
+Ambiguität	Ambigu.ität	ambiɡuiˈtɛːt
+Antigua	Antíguah	anˌtiːɡu̯aː
+Äquatorialguinea	Äquatori.ál-ginèa	ɛkvatoʁiˈaːlɡiˌneːa	per enwikt
+Äquatorialguinea	Ä̀quatoriál-ginèa	ˌɛkvatoˈʁi̯aːlɡiˌneːa	per dewikt
+Bilingualismus	Bilinggualísmus	bilɪŋɡʊ̯aˈlɪsmʊs
+Guacamole	Guakamóle	ɡu̯akaˈmoːlə
+Guano	Guano	ˈɡu̯aːno
+Guatemalteke	Guatemaltéke	ɡu̯atemalˈteːkə
+Guerilla	Gerílja	ɡeˈʁɪlja
+Jaguar	Jaguahr	[ˈjaːɡu̯aːɐ̯]
+Papua-Neuguinea	Papua Nèuginéa	ˈpaːpu̯a ˌnɔɪ̯ɡiˈneːa	per enwikt
+Papua-Neuguinea	Papu.a-neuginéa	ˌpaːpuanɔɪ̯ɡiˈneːa	per dewikt
+Paraguay	Paragway	ˈpaːʁaɡvaɪ̯	dewikt pron #1
+Paraguay	Parragway	ˈpaʁaɡvaɪ̯	dewikt pron #2
+Paraguay	Paraguáy	paʁaˈɡu̯aɪ̯	dewikt pron #3
+Patholinguistik	Pátholinguìstik	ˈpaːtolɪŋˌɡu̯ɪstɪk	dewikt pron #1
+Patholinguistik	Pátholingu.ìstik	ˈpaːtolɪŋɡuˌɪstɪk	dewikt pron #2
+Patholinguistik	Patholinguístik	patolɪŋˈɡu̯ɪstɪk	dewikt pron #3
+Patholinguistik	Pàttholingu.ístik	ˌpatolɪŋɡuˈɪstɪk	dewikt pron #4
+Patholinguistik	Pàtholingu-ístik	ˌpatolɪŋɡuˈʔɪstɪk	dewikt pron #5
+# other -u- in hiatus
+aktualisieren	àktu.alisieren	ˌaktualiˈziːʁən
+Asexualität	Ắsexualitä̀t	ˈazɛksu̯aliˌtɛːt
+Asexualität	Ássexualitä̀t	ˈasɛksu̯aliˌtɛːt
+Botsuana	Botsuána	bɔˈt͡su̯aːna	enwikt
+Botsuana	Botsu.ána	bɔt͡suˈaːna	dewikt pron #1
+Botsuana	Bọtsu-ána	bɔt͡suˈʔaːna	dewikt pron #2
+dual	du.ál	duˈaːl
+Dual-SIM-Smartphone	Du.ál-Sîmm-Smàhrtphohn	duˈaːlzɪmˌsmaːɐ̯tfoːn
+Dualsystem	Du.ál-systèm	duˈaːlzʏsˌteːm
+Ecuador	Ekuadór	eku̯aˈdoːɐ̯
+evaluativ	evalu.atív	evaluaˈtiːf
+evaluieren	evalu.ieren	evaluˈiːʁən
+Situation	Situ.azión	zituaˈt͡si̯oːn
+
+# -y-
+paraguayanisch	paraguayánisch	paʁaɡu̯aɪ̯ˈaːnɪʃ	enwikt pron #1
+paraguayanisch	paragwayánisch	paʁaɡvaɪ̯ˈaːnɪʃ	enwikt pron #2
+uruguayisch	uru.gwayisch	ˈuːʁuɡvaɪ̯ɪʃ
+
+# -ng-
+abdrängen	abdrängen	ˈapˌdʁɛŋən
+Abgang	Abgang	ˈapˌɡaŋ
+Abhängigkeit	Abhängigkeit	ˈaphɛŋɪçˌkaɪ̯t
+distinguiert	distinggiert	dɪstɪŋˈɡiːʁt
+Hengst	Hengst	hɛŋst
+konsanguin	konsanguín	kɔnzaŋˈɡu̯iːn
+Linguistik	Linguístick	lɪŋˈɡu̯ɪstɪk
+Pinguin	Pinguìn	ˈpɪŋˌɡu̯iːn
+Pinguin	Pingu.ìn	ˈpɪŋɡuˌiːn
+
+# -ph-
+Ableitungsmorphem	Ableitungs-morphèm	ˈaplaɪ̯tʊŋsmɔʁˌfeːm
+Paragraphenhengst	Paragráphen-hengst	[paʁaˈɡʁaːfn̩ˌhɛŋst]
+
+# Use of ^
+# Passiv	Passihv	ˈpasiːf
+
+# Internal glottal stops
+Osterei	Ohster-ei	 [ˈoːstɐˌʔaɪ̯]
+unendlich	unéndlich	ʊnˈʔɛntlɪç
+
+# Unstressed -e-
+Benediktinerkloster	Benǝdiktíner-klohster	benədɪkˈtiːnɐˌkloːstɐ
+Benediktinerkloster	Benediktíner-klohster	benedɪkˈtiːnɐˌkloːstɐ
+
+# Syllable boundaries
+Adlatus	Àd.látus	ˌatˈlaːtʊs
+Adlatus	À.dlátus	ˌaˈdlaːtʊs
+ewiglich	ewiglich	ˈeː.vɪk.lɪç
+ewiglich	ewi.glich	ˈeː.vɪ.ɡlɪç
+
+# hyphen indicates a compound; 
+aalähnlich	aal-ähnlich	ˈaːlˌʔɛːnlɪç
+# secondary pronunciation ˈaːlˌʔaːɐ̯tɪk will also be shown, with the following: "common form in southern Germany, Austria, and Switzerland"
+aalartig	aal-artig	ˈaːlˌʔaːɐ̯tɪç
+# + prevents ab- from being recognized as a prefix
+Abend	Ab+end	ˈaːbn̩t
+# + prevents ab- from being recognized as a prefix
+abenteuerdurstig	ab+enteuer-durstig	ˈaːbn̩tɔɪ̯ɐˌdʊʁstɪç
+# ab- is a recognized prefix when stressed
+abfällig	abfällig	ˈapˌfɛlɪç
+# ab- is a recognized prefix when stressed; ge- is a recognized unstressed prefix
+abgelegen	abgelegen	ˈapɡəˌleːɡn̩
+abkommen	abkommen	ˈapˌkɔmən
+# ver- is a recognized unstressed prefix
+Abkürzungsverzeichnis	Abkürzungs-verzeichnis	ˈapˌkʏʁt͡sʊŋsfɛɐ̯ˌt͡saɪ̯çnɪs
+# primary and secondary stressed syllables are long before a single consonant
+Ablativ	Ab+latìv	ˈablaˌtiːf
+Ablativ	Ablatìv	ˈaplaˌtiːf
+Absence	Ab[s]áNs	apˈsãːs
+Absatzzeichen	Absatz-zeichen	ˈapˌzatsˌtsaɪ̯çən
+abstinent	abstinent	apstiˈnɛnt
+abstoßend	abstoßend	ˈapˌʃtoːsn̩t
+abstrus	abstrús	apˈstʁuːs
+absurd	absúrd	apˈzʊʁt
+abtrünnig	abtrünnig	ˈʔapˌtʁʏnɪç
+abundant	ab+undant	abʊnˈdant
+abwehrbereit	abwehr-bereit	ˈapveːɐ̯bəˌʁaɪ̯t
+Abwehrspielerin	Abwehr-spielerin	ˈapveːɐ̯ˌʃpiːləʁɪn
+abweichend	abweichend	ˈapˌvaɪ̯çn̩t
+abzählbar	ab-zählbar	ˈapt͡sɛːlbaːɐ̯
+Akkordeon	Akkórdeon	aˈkɔʁdeɔn
+# -abel is a recognized suffix
+inakzeptabel	in-akzeptabel	ˈɪnʔakt͡sɛpˌtaːbl̩
+# in is recognized specially so it has a short vowel
+ineffizient	in-effizient	ˈɪnʔɛfiˌt͡si̯ɛnt
+ineffizient	in-effiziént	ˈɪnʔɛfiˌt͡si̯ɛnt
+effizient	effizient	ɛfiˈt͡si̯ɛnt
+getrost	getrost	 ɡəˈtʁoːst
+hochwertig	hohch-wehrtig	ˈhoːxˌveːɐ̯tɪç
+höfisch	höfisch	ˈhøːfɪʃ
+# -lich is a recognized suffix; the remainder is processed as if word-final
+höflich	höflich	ˈhøːflɪç
+holografisch	holográfisch	holoˈɡʁaːfɪʃ
+# -t would be interpreted as a suffix, leading to long u
+just	jusst	jʊst
+# -t would be interpreted as a suffix, leading to long u
+robust	robússt	ʁoˈbʊst
+korrupt	korrúpt	kɔˈʁʊpt
+# -bar is a recognized suffix
+kostbar	kostbar	ˈkɔstbaːɐ̯
+kostendeckend	kosten-deckend	ˈkɔstn̩ˌdɛkn̩t
+# -fest is a recognized suffix (in particular the -t is not interpreted as a suffix)
+säurefest	säurefest	ˈzɔɪ̯ʁəˌfɛst
+# -haft is a recognized suffix (in particular the -t is not interpreted as a suffix, and scham is treated by itself, hence the long -a-)
+schamhaft	schamhaft	ˈʃaːmhaft
+separat	separát	zepaˈʁaːt	standard per dewikt
+separat	sèparát	ˌzeːpaˈʁaːt	standard per enwikt
+separat	sèpperát	ˌzɛpəˈʁaːt	variant in common speech
+situiert	situ.iert	zituˈiːɐ̯t
+Stabsarzt	Stab-s-ahrzt	ˈʃtaːpsˌʔaːɐ̯t͡st
+soigniert	so̯anjiert	zo̯anˈjiːɐt
+todernst	tod-ernst	ˈtoːtˌʔɛʁnst
+traditionsbewusst	traditions-bewusst	tʁadiˈt͡si̯oːnsbəˌvʊst
+trägt	trägt	tʁɛːkt
+# über- is a recognized prefix
+überdimensionieren	überdimensionieren	ˈyːbɐdimɛnzi̯oˌniːʁən
+# -t is treated as a suffix, so -o- is long
+überholt	überhólt	ˌyːbɐˈhoːlt
+# un- is a recognized stressed prefix; when not stressed it doesn't get secondary stress, as in [[unglaublich]] (FIXME: is this correct?)
+ungar	ungar	ˈʔʊnˌɡaːʁ
+# -st would be interpreted as a suffix, leading to long -e-
+ungebremst	ungebremmst	ˈʊnɡəˌbʁɛmst
+ungelöst	ungelöst	ˈʊnɡəˌløːst
+unglaublich	unglaublich	ˈʊnɡlaʊ̯plɪç
+unglaublich	ungláublich	ʊnˈɡlaʊ̯plɪç
+# need to double the t otherwise the stressed -a- would be long
+ungrammatisch	ungrammàttisch	ˈʊnɡʁaˌmatɪʃ
+# I think this is doable without respelling; -y- between vowels is treated like -i-
+uruguayisch	urugwayisch	ˈuːʁuɡvaɪ̯ɪʃ
+versiert	ver+siert	vɛʁˈziːɐ̯t
+vertiert	vertiert	fɛɐ̯ˈtiːɐ̯
+# ver- is a recognized prefix, -bar is a recognized suffix
+vertretbar	vertretbar	ˌfɛɐ̯ˈtʁeːtˌbaːɐ̯
+# By default, -st after a consonant in a suffix, so -ch gets interpreted as a fricative; to force a stop, respell
+# using -ck- or mark -t as a suffix using >t, so that -chs gets interpreted as a cluster with a stop
+wachen	wachen	ˈvaxn̩
+wachsen	wachsen	ˈvaksn̩
+wachst	wachst	vaxst
+wachst	wackst	vakst
+wachst	wachs>t	vakst
+# Maybe -weit should be recognized as a suffix
+webweit	webb-weit	vɛpˌvaɪ̯t
+wiederentdecken	wiederentdecken	ˈviːdɐʔɛntˌdɛkn̩
+wüst	wüst	vyːst
+wutentbrannt	wut-entbrannt	ˈvuːtʔɛntˌbʁant
+zweirädrig	zwei-rädrig	ˈt͡svaɪ̯ˌʁɛːdʁɪç
+zweiprozentig	zwei-prozèntig	ˈt͡svaɪ̯pʁoˌt͡sɛntɪç
+zweimonatlich	zwei-monatlich	ˈt͡svaɪ̯ˌmoːnatlɪç
+zweiminütig	zwei-minǜtig	ˈt͡svaɪ̯miˌnyːtɪç
+zuständig	zuständig	ˈt͡suːˌʃtɛndɪç
+# ge- is recognized as inseparable by default
+# stressed -an is lengthened by default
+zugetan	zugetan	ˈt͡suːɡəˌtaːn
+zugespitzt	zugespitzt	ˈt͡suːɡəˌʃpɪt͡st
