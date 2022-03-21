@@ -5,97 +5,95 @@ Implementation of pronunciation-generation module from spelling for German.
 Author: Benwing
 
 The following symbols can be used:
--- 'h' after a vowel to force it to be long
--- acute accent on a vowel to override the position of primary stress
---   (in a diphthong, put it over the first vowel)
--- grave accent to add secondary stress
--- circumflex to force no stress on the word or prefix (e.g. in a compound)
--- . (period) to force a syllable boundary
--- - (hyphen) to force a prefix/word or word/word boundary in a compound word;
---   the result will be displayed as a single word but the consonants on
---   either side treated as if they occurred at the beginning/end of the word
--- + (plus) is the opposite of -; it forces a prefix/word or word/word boundary
---   to *NOT* occur when it otherwise would
--- _ (underscore) to force the letters on either side to be interpreted
---   independently, when the combination of the two would normally have a
---   special meaning
+-- Acute accent on a vowel to override the position of primary stress; in a diphthong, put it over the first vowel:
+--   á é í ó ú ä́ ö́ ǘ ái éi áu ä́u éu
+-- Grave accent to add secondary stress: à è ì ò ù ä̀ ö̀ ǜ ài èi àu ä̀u èu
+-- 'h' or ː after a vowel to force it to be long.
+-- Circumflex on a vowel (â ê î ô û ä̂ ö̂ ü̂) to force it to have closed quality.
+-- Breve on a vowel, including a stressed vowel (ă ĕ ĭ ŏ ŭ ä̆ ö̆ ü̆) to force it to have open quality.
+-- Tilde on a vowel or capital N afterwards to indicate nasalization.
+-- For an unstressed 'e', force its quality using schwa (ə) to indicate a schwa, breve (ĕ) to indicate open quality /ɛ/,
+--   circumflex (ê) to indicate closed quality /e/.
+-- . (period) to force a syllable boundary.
+-- - (hyphen) to indicate a word/word boundary in a compound word; the result will be displayed as a single word but
+--   the consonants on either side treated as if they occurred at the beginning/end of the word, and each part of the
+--   compound gets its own stress (primary stress on the first part unless another part has primary stress, secondary
+--   stress on the remaining parts unless stress is explicitly included).
+-- < (less-than) to indicate a prefix/word or prefix/prefix boundary; similar to - for word/word boundary, but the
+--   prefix before the < sign will be unstressed.
+-- > (greater-than) to indicate a word/suffix or suffix/suffix boundary; similar to - for word/word boundary, but the
+--   suffix after the > sign will be unstressed.
+-- + (plus) is the opposite of -; it forces a prefix/word, word/word or word/suffix boundary to *NOT* occur when it
+--   otherwise would. 
+-- _ (underscore) to force the letters on either side to be interpreted independently, when the combination of the two
+--   would normally have a special meaning.
+
+Notes:
+
+1. Doubled consonants, as well as digraphs/trigraphs etc. like 'ch', 'ng', 'tz', 'sch', 'tsch', etc. cause a
+   preceding vowel to be short and open (/ɛ ɪ ɔ ʊ œ ʏ/) unless lengthened with h or ː.
+2. With occasional exceptions, a vowel before a single consonant (including at the end of a word or compound part)
+   is closed (/e i o u ø y/), and long if stressed (primary or secondary). 
+3. The vowel 'e' is rendered by default as schwa (/ə/) in the following circumstances:
+   a. The prefixes 'ge-', 'be-' are recognized specially and rendered with a schwa and without stress. This doesn't
+      apply if the 'e' is respelled with an accent, e.g. 'Génitiev' for [[Genitiv]] "genitive" or 'géstern' for
+	  [[gestern]] "yesterday".
+	  It also doesn't happen if a + is placed at the putative prefix boundary, hence [[Geograf]] "geographer" could be
+	  respelled 'Ge+ográf' to prevent 'Ge' from being interpreted as a prefix. Finally, it doesn't happen if the
+	  cluster following the 'ge-' or 'be-' cannot be the start of a German word, e.g. [[bellen]] "to bark" ('ll' cannot
+	  start a word) or [[bengalisch]] "Bengal" ('ng' cannot start a word).
+   a. If there is a following stress in the word, only in an internal (non-initial) open unstressed syllable (i.e.
+      followed by only a single consonant) when 'r' follows, as in Temp̱e̱ratur, Gene̱ralität, Souve̱ränität, Hete̱rogenität,
+      degene̱rieren, where the underlined vowels are by default rendered as a schwa. Other cases with schwa like
+	  [[Sozietät]] or [[Pietät]] need to be respelled with a schwa, e.g. 'Soziǝtät', 'Pìǝtät'.
+   b. If there is no following stress, any 'e' word-finally or followed by consonants that might form part of an
+      inflectional ending is rendered as a schwa, e.g. Lage̱, zuminde̱ste̱ns, verschiede̱ne̱n, verwende̱t. Examples where
+	  this does not happen are Late̱x, Ahme̱d, Bize̱ps, Borre̱tsch, Brege̱nz, which would be rendered by default with /ɛ/ or
+	  /e/. Cases like [[Achilles]] and [[Agens]] that have /ɛ/ but end in what looks like an inflectional ending should
+	  be respelled with ĕ.
+4. Obstruents 'b' 'd' 'g' 'v' 'ʒ' are normally rendered as voiceless /p t k f ʃ/ at the end of a word or syllable.
+   To cause them to be voiced, one way is to move the syllable boundary before the consonant by inserting a . before
+   the consonant. If that isn't appropriate, put brackets around the sound, as in '[b]', '[d]', '[z]', etc.
+5. 'v' is normally rendered as underlying /v/ (which becomes /f/ at the end of a word or syllable). Words like [[vier]],
+   [[viel]], [[Vater]], etc. need respelling using 'f'. Note that prefixes ver-, vor-, voraus-, vorher-, etc. are
+   recognized specially.
+6. French-derived words often need respelling and may have sounds in them that don't have standard spellings in
+   German. For example, [[Orange]] can be spelled 'Orã́ʒe' or 'OráNʒe'; use a tilde or a following capital N to
+   indicate a nasal vowel, and use a 'ʒ' character to render the sound /ʒ/.
+7. Rendering of 'ch' using ich-laut /ç/ or ach-laut /x/ is automatic. To force one or the other, use 'ç' explicitly
+   (as in 'Açilles-ferse' for one pronunciation of [[Achillesferse]] "Achilles heel") or 'x' explicitly (as in
+   '[X]uzpe' for [[Chuzpe]] "chutzpah").
+8. Vowels 'i' and 'u' in hiatus (i.e. directly before another vowel) are normally converted into glides, i.e. /i̯ u̯/,
+   as in [[effizient]] (no respelling needed as '-ent' is recognized as a stressed suffix), [[Antigua]] (respelled
+   'Antíguah'). To preven this, add a '.' between the vowels to force a syllable boundary, as in [[aktualisieren]]
+   'àktu.alisieren'. An exception to the glide conversion is the digraph 'ie'; to force glide conversion, as in
+   [[Familie]], use 'i̯' explicitly (respelled 'Famíli̯e'). Occasionally the  ̯ symbol needs to be added to other vowels,
+   e.g. in [[Ichthyologie]] respelled 'Ichthy̯ologie' (note that '-ie' is a recognized stressed suffix) and
+   [[soigniert]] respelled 'so̯anjiert' ('-iert' is a recognized stressed suffix).
 
 FIXME:
 
-1. Implement < and > which works like - but don't trigger secondary stress
-   (< after a prefix, > before a suffix) (DONE)
-2. Recognize -lēas and -l[iī][cċ] as suffixes. (DONE)
-2b. Recognize -fæst, -ful, -full as suffixes (so no voicing of initial
-    fricative). (DONE)
-3. If explicit syllable boundary in cluster after prefix, don't recognize as
-   prefix (hence ġeddung could be written ġed.dung, bedreda bed.reda) (DONE)
-4. Two bugs in swīþfèrhþ: missing initial stress, front h should be back (DONE)
-5. Check Urszag's code changes for /h/. (DONE)
-6. Bug in wasċan; probably sċ between vowels should be ʃʃ (DONE)
-7. Bug in ġeddung, doesn't have allowed onset with ġe-ddung (DONE)
-8. āxiġendlīc -- x is not an allowed onset (DONE)
-9. Handle prefixes/suffixes denoted with initial/final hyphen -- shouldn't
-   trigger automatic stress when multisyllabic. (DONE)
-10. Don't remove user-specified accents on monosyllabic words. (DONE)
-11. Final -þu/-þo after a consonant should always be voiceless (but controlled
-    by a param). (DONE BUT NOT YET CONTROLLED BY PARAM)
-12. Fricative voiced between voiced sounds even across prefix/compound
-    boundary when before (but not after) the boundary. (DONE)
-13. Fricative between unstressed vowels should be voiceless (e.g. adesa);
-    maybe only after the stress? (DONE)
-14. Resonant after fricative/stop in a given syllable should be rendered
-    as syllabic (e.g. ādl [ˈɑːdl̩], botm [botm̥], bōsm, bēacn [ˈbæːɑ̯kn̩];
-	also -mn e.g stemn /ˈstemn̩/. (DONE)
-15. Add aġēn- and onġēan- prefixes with secondary stress for verbs.
-    (WILL NOT DO)
-16. and- (and maybe all others) should be unstressed as verbal prefix.
-    andswarian is an exception. (DONE)
-17. Support multiple pronunciations as separate numbered params. (DONE)
-17b. Additional specifiers should follow each pronun as PRONUN<K:V,K2:V2,...>.
-    This includes the current pos=.
-18. Double hh should be pronounced as [xː]. (DONE)
-19. Add -bǣre as a suffix with secondary stress. (DONE)
-20. Add -līċ(e), lī[cċ]nes(s) as suffixes with secondary stress. -lī[cċ]nes(s)
-    should behave like -līċ(e) in that what's before is checked to determine
-	the pos. (DONE)
-21. -lēasnes should be a recognized suffix with secondary stress. (DONE)
-22. Fix handling of crinċġan, dynċġe, should behave as if ċ isn't there. (DONE)
-23. Rewrite to use [[Module:ang-common]]. (DONE)
-24. Ignore final period/question mark/exclamation point. (DONE)
-25. Implement pos=verbal for handling un-. (DONE)
-26. Simplify geminate consonants within a single syllable. (DONE)
-
-QUESTIONS:
-
-1. Should /an/, /on/ be pronounced [ɒn]? Same for /am/, /om/. [NO]
-2. Should final /ɣ/ be rendered as [x]? [NO]
-3. Should word-final double consonants be simplified in phonetic representation?
-   Maybe also syllable-final except obstruents before [lr]? [YES]
-4. Should we use /x/ instead of /h/? [YES]
-5. Should we recognize from- along with fram-? [NO]
-6. Should we recognize bi- along with be-? (danger of false positives) [NO]
-7. Should fricative be voiced before voicd sound across word boundary?
-   (dæġes ēage [ˈdæːjez ˈæːɑ̯ɣe]?) [NO]
-8. Ask about pronunciation of bræġn, is the n syllabic? It's given as
-   /ˈbræjn̩/. Similarly, seġl given as /ˈsejl̩/. [NO; HUNDWINE AND URSZAG DISAGREE]
-9. Ask about pronunciation of ġeond-, can it be either [eo] or [o]? [UNCLEAR]
-10. Is final -ol pronounced [ul] e.g regol [ˈreɣul]? Hundwine has created
-    entries this way. What about final -oc etc.? [NO]
-11. Is final -ian pronounced [jan] or [ian]? Cf. sċyldigian given as
-    {{IPA|/ˈʃyldiɣiɑn/|/ˈʃyldiɣjɑn/}}. What about spyrian given as /ˈspyr.jɑn/?
-	[-ian in weak II verbs, -jan in weak I verbs]
-12. seht given as /seçt/ but sehtlian given as /ˈsextliɑn/. Which one is
-    correct? [ç]
-13. Final -liċ or -līċ, with or without secondary stress?
-14. Should we special-case -sian [sian]? Then we need support for [z] notation
-    to override phonetics.
+1. Implement < and > which works like - but don't trigger secondary stress (< after a prefix, > before a suffix).
+2. Implement prefix/suffix stripping; don't do it if explicit syllable boundary in cluster after prefix, or if no
+   vowel in main, or if impossible prefix/suffix onset/offset.
+3. Finish entering prefixes and suffixes.
+4. Add default stresses.
+5. Handle inflectional suffixes: adjectival -e, -en, -em, -er, -es, also after adjectival -er, -st; nominal -(e)s,
+   -(e)n; verbal -e, -(e)st, -(e)t, -(e)n, -(e)te, -(e)tst, -(e)tet, -(e)ten.
+6. Ignore final period/question mark/exclamation point.
+7. Implement nasal vowels.
+8. Implement underscore to prevent assimilation/interpretation as a multigraph.
+9. Implement [b] [d] [g] [z] [v] [ʒ] [x].
 ]=]
+
+local export = {}
+
+local force_cat = false -- for testing
 
 local strutils = require("Module:string utilities")
 local m_table = require("Module:table")
 local m_IPA = require("Module:IPA")
-local lang = require("Module:languages").getByCode("ang")
-local com = require("Module:ang-common")
+local lang = require("Module:languages").getByCode("de")
 
 local u = mw.ustring.char
 local rsubn = mw.ustring.gsub
@@ -106,18 +104,21 @@ local rgsplit = mw.text.gsplit
 local ulen = mw.ustring.len
 local ulower = mw.ustring.lower
 
-local AC = u(0x0301)
-local GR = u(0x0300)
-local CFLEX = u(0x0302)
-local TILDE = u(0x0303) -- tilde =  ̃
-local MACRON = u(0x0304) -- macron =  ̄
-local BREVE = u(0x0306) -- breve =  ̆
-local DIA = u(0x0308) -- diaeresis = ̈
-local DOTOVER = u(0x0307) -- dot over =  ̇
-local DOTUNDER = u(0x0323) -- dot under =  ̣
-local Inon_VBREVEBELOW = u(0x032F) -- inverted breve below =  ̯
-local LINEUNDER = u(0x0331) -- line under =  ̱
-local TIE = u(0x0361) -- tie =  ͡
+local AC = u(0x0301) -- COMBINING ACUTE ACCENT =  ́
+local GR = u(0x0300) -- COMBINING GRAVE ACCENT =  ̀
+local CFLEX = u(0x0302) -- COMBINING CIRCUMFLEX ACCENT =  ̂
+local TILDE = u(0x0303) -- COMBINING TILDE =  ̃
+local MACRON = u(0x0304) -- COMBINING MACRON =  ̄
+local BREVE = u(0x0306) -- COMBINING BREVE =  ̆
+local DIA = u(0x0308) -- COMBINING DIAERESIS =  ̈
+local DOTOVER = u(0x0307) -- COMBINING DOT ABOVE =  ̇
+local UNRELEASED = u(0x031A) -- COMBINING LEFT ANGLE ABOVE =  ̚
+local DOTUNDER = u(0x0323) -- COMBINING DOT BELOW =  ̣
+local UNVOICED = u(0x0325) -- COMBINING RING BELOW =  ̥
+local SYLLABIC = u(0x0329) -- COMBINING VERTICAL LINE BELOW =  ̩
+local INVBREVEBELOW = u(0x032F) -- COMBINING INVERTED BREVE BELOW =  ̯
+local LINEUNDER = u(0x0331) -- COMBINING MACRON BELOW =  ̱
+local TIE = u(0x0361) -- COMBINING DOUBLE INVERTED BREVE =  ͡
 
 -- version of rsubn() that discards all but the first return value
 local function rsub(term, foo, bar, n)
@@ -131,7 +132,40 @@ local function gsub(term, foo, bar, n)
 	return retval
 end
 
-local export = {}
+-- apply rsub() repeatedly until no change
+local function rsub_repeatedly(term, foo, bar)
+	while true do
+		local new_term = rsub(term, foo, bar)
+		if new_term == term then
+			return term
+		end
+		term = new_term
+	end
+end
+
+-- Apply canonical Unicode decomposition to text, e.g. è → e + ◌̀. But recompose ä ö ü so we can treat them as single
+-- vowels, and put stress accents (acute/grave) after indicators of length and quality.
+local function decompose(text)
+	text = mw.ustring.toNFD(text)
+	text = rsub(text, "." .. DIA, {
+		["a" .. DIA] = "ä",
+		["A" .. DIA] = "Ä",
+		["o" .. DIA] = "ö",
+		["O" .. DIA] = "Ö",
+		["u" .. DIA] = "ü",
+		["U" .. DIA] = "Ü",
+	})
+	text = rsub(text, "([" .. AC .. GR .. "])([" .. BREVE .. CFLEX .. MACRON .. "ː]+)", "%2%1")
+	return text
+end
+
+-- Canonicalize multiple spaces and remove leading and trailing spaces.
+local function canon_spaces(text)
+	text = rsub(text, "%s+", " ")
+	text = rsub(text, "^ ", "")
+	text = rsub(text, " $", "")
+	return text
+end
 
 -- When auto-generating primary and secondary stress accents, we use these
 -- special characters, and later convert to normal IPA accent marks, so
@@ -139,111 +173,80 @@ local export = {}
 local AUTOACUTE = u(0xFFF0)
 local AUTOGRAVE = u(0xFFF1)
 
--- When the user uses the "explicit allophone" notation such as [z] or [ç] to
--- force a particular allophone, we internally convert that notation into a
--- single special character.
-local EXPLICIT_TH = u(0xFFF2)
-local EXPLICIT_DH = u(0xFFF3)
-local EXPLICIT_S = u(0xFFF4)
-local EXPLICIT_Z = u(0xFFF5)
-local EXPLICIT_F = u(0xFFF6)
-local EXPLICIT_V = u(0xFFF7)
-local EXPLICIT_G = u(0xFFF8)
-local EXPLICIT_GH = u(0xFFF9)
-local EXPLICIT_H = u(0xFFFA)
-local EXPLICIT_X = u(0xFFFB)
-local EXPLICIT_C = u(0xFFFC)
-local EXPLICIT_I = u(0xFFFD)
-
-local explicit_cons = EXPLICIT_TH .. EXPLICIT_DH .. EXPLICIT_S .. EXPLICIT_Z ..
-	EXPLICIT_F .. EXPLICIT_V .. EXPLICIT_G .. EXPLICIT_GH .. EXPLICIT_H ..
-	EXPLICIT_X .. EXPLICIT_C
+-- When the user uses the "explicit allophone" notation such as [z] or [x] to force a particular allophone, we
+-- internally convert that notation into a single special character.
+local EXPLICIT_S = u(0xFFF2)
+local EXPLICIT_Z = u(0xFFF3)
+local EXPLICIT_V = u(0xFFF4)
+local EXPLICIT_B = u(0xFFF5)
+local EXPLICIT_D = u(0xFFF6)
+local EXPLICIT_G = u(0xFFF7)
+local EXPLICIT_X = u(0xFFF8)
 
 -- Map "explicit allophone" notation into special char. See above.
 local char_to_explicit_char = {
-	["þ"] = EXPLICIT_TH,
-	["ð"] = EXPLICIT_DH,
 	["s"] = EXPLICIT_S,
 	["z"] = EXPLICIT_Z,
-	["f"] = EXPLICIT_F,
 	["v"] = EXPLICIT_V,
+	["b"] = EXPLICIT_B,
+	["d"] = EXPLICIT_D,
 	["g"] = EXPLICIT_G,
-	["ɣ"] = EXPLICIT_GH,
-	["h"] = EXPLICIT_H,
 	["x"] = EXPLICIT_X,
-	["ç"] = EXPLICIT_C,
-	["i"] = EXPLICIT_I,
 }
 
 -- Map "explicit allophone" notation into normal spelling, for supporting ann=.
 local char_to_spelling = {
-	["þ"] = "þ",
-	["ð"] = "þ",
 	["s"] = "s",
 	["z"] = "s",
-	["f"] = "f",
-	["v"] = "f",
+	["v"] = "v",
+	["b"] = "b",
+	["d"] = "d",
 	["g"] = "g",
-	["ɣ"] = "g",
-	["h"] = "h",
-	["x"] = "h",
-	["ç"] = "h",
-	["i"] = "i",
+	["x"] = "ch",
 }
 
--- Map "explicit allophone" notation into phonemes, for phonemic output.
+-- Map "explicit allophone" notation into phonemes.
 local explicit_char_to_phonemic = {
-	[EXPLICIT_TH] = "θ",
-	[EXPLICIT_DH] = "θ",
-	[EXPLICIT_S] = "s",
-	[EXPLICIT_Z] = "s",
-	[EXPLICIT_F] = "f",
-	[EXPLICIT_V] = "f",
-	[EXPLICIT_G] = "ɡ", -- IPA ɡ!
-	[EXPLICIT_GH] = "ɡ", -- IPA ɡ!
-	[EXPLICIT_H] = "x",
-	[EXPLICIT_X] = "x",
-	[EXPLICIT_C] = "x",
-	[EXPLICIT_I] = "i",
-}
-
--- Map "explicit allophone" notation into IPA phones, for phonetic output.
-local explicit_char_to_phonetic = {
-	[EXPLICIT_TH] = "θ",
-	[EXPLICIT_DH] = "ð",
 	[EXPLICIT_S] = "s",
 	[EXPLICIT_Z] = "z",
-	[EXPLICIT_F] = "f",
 	[EXPLICIT_V] = "v",
+	[EXPLICIT_B] = "b",
+	[EXPLICIT_D] = "d",
 	[EXPLICIT_G] = "ɡ", -- IPA ɡ!
-	[EXPLICIT_GH] = "ɣ",
-	[EXPLICIT_H] = "h",
 	[EXPLICIT_X] = "x",
-	[EXPLICIT_C] = "ç",
-	[EXPLICIT_I] = "i",
 }
 
-local accent = com.MACRON .. com.ACUTE .. com.GRAVE .. com.CFLEX .. AUTOACUTE .. AUTOGRAVE
+local stress = AC .. GR
+local stress_c = "[" .. stress .. "]"
+local accent_non_stress_non_invbrevebelow = BREVE .. CFLEX .. MACRON .. "ː"
+local accent_non_stress = accent_non_stress_non_invbrevebelow .. INVBREVEBELOW
+local accent_non_stress_c = "[" .. accent_non_stress .. "]"
+local accent = stress .. accent_non_stress
 local accent_c = "[" .. accent .. "]"
+local accent_non_invbrevebelow = stress .. accent_non_stress_non_invbrevebelow
+local accent_non_invbrevebelow_c = "[" .. accent_non_invbrevebelow .. "]"
 local non_accent_c = "[^" .. accent .. "]"
-local stress_accent = com.ACUTE .. com.GRAVE .. com.CFLEX .. AUTOACUTE .. AUTOGRAVE
-local stress_accent_c = "[" .. stress_accent .. "]"
-local back_vowel = "aɑou"
-local front_vowel = "eiyæœø" .. EXPLICIT_I
-local vowel = back_vowel .. front_vowel
-local vowel_or_accent = vowel .. accent
+-- Use both IPA symbols and letters so it can be used at any step of the process.
+local back_vowel_non_glide = "aɑoɔuʊ"
+local back_vowel = back_vowel_non_glide .. "U"
+local back_vowel_c = "[" .. back_vowel .. "]"
+local front_vowel_non_glide = "eɛiɪyʏøœäöü"
+local front_vowel = front_vowel_non_glide .. "I"
+local vowel = back_vowel .. front_vowel .. "ə"
 local V = "[" .. vowel .. "]"
-local vowel_or_accent_c = "[" .. vowel_or_accent .. "]"
 local non_V = "[^" .. vowel .. "]"
-local front_V = "[" .. front_vowel .. "]"
--- The following include both IPA symbols and letters (including regular g and IPA ɡ)
--- so it can be used at any step of the process.
-local obstruent = "bcċçdfgɡɣhkpqstvxzþðθʃʒ" .. explicit_cons
-local resonant = "lmnŋrɫ"
-local glide = "ġjwƿ"
-local cons = obstruent .. resonant .. glide
-local cons_c = "[" .. cons .. "]"
-local voiced_sound = vowel .. "lrmnwjbdɡ" -- WARNING, IPA ɡ used here
+local vowel_non_glide = back_vowel_non_glide .. front_vowel_non_glide .. "ə"
+local V_non_glide = "[" .. vowel_non_glide .. "]"
+local vowel_unmarked_for_quality = "aeiouäöü"
+local V_unmarked_for_quality = "[" .. vowel_unmarked_for_quality .. "]"
+local charsep = accent .. "." .. SYLDIV
+local charsep_c = "[" .. charsep .. "]"
+local wordsep = charsep .. " ⁀"
+local wordsep_c = "[" .. wordsep .. "]"
+local cons_guts = "^" .. vowel .. wordsep .. "_" -- guts of consonant class
+local C = "[" .. cons_guts .. "]" -- consonant
+local C_not_lr = "[" .. cons_guts .. "lr]" -- consonant not 'l' or 'r'
+
 
 local prefixes = {
 	{export.decompose("ā"), {verb = "unstressed", noun = "stressed"}},
@@ -283,19 +286,15 @@ local prefixes = {
 }
 
 export.suffixes = {
-	{"[ai]bel", {respell = "bàhr", pos = "a"}},
+	{"([ai])bel", {respell = "%1́bel", pos = "a"}},
 	-- Normally following consonant but there a few exceptions like [[abbaubar]], [[recyclebar]], [[unüberschaubar]].
 	-- Cases like [[isobar]] will be respelled with an accent and not affected.
 	{"bar", {respell = "bàhr", pos = "a"}},
-	-- Without this the -i- would be long. (FIXME: Should it be long?)
-	{"kirchen", {pos = "n"}},
 	-- Restrict to not follow a vowel or s (except for -ss) to avoid issues with nominalized infinitives in -chen.
 	-- Words with -chen after a vowel or s need to be respelled with '>chen', as in [[Frauchen]], [[Wodkachen]],
 	-- [[Häuschen]], [[Bläschen]], [[Füchschen]], [[Gänschen]], etc. Occasional gerunds of verbs in -rchen may need
 	-- to be respelled with '+chen' to avoid the preceding vowel being long, as in [[Schnarchen]].
 	{"chen", {respell = "çen", pos = "n", restriction = {"[^" .. accent .. vowel .. "]$", "[^s]s$"}}},
-	-- Avoid firing on words like [[Trend]].
-	{"end", {respell = "ənd", restriction = V}},
 	-- Normally following consonant but there a few exceptions like [[säurefest]]. Cases like [[manifest]] will be
 	-- respelled with an accent and not affected.
 	{"fest", {respell = "fèst", pos = "a"}},
@@ -355,19 +354,19 @@ export.suffixes = {
 	{"sum", {noun = "unstressed"}},
 }
 
--- These rules operate in order, and apply to the actual spelling,
--- after (1) macron decomposition, (2) syllable and prefix splitting,
--- (3) placement of primary and secondary stresses at the beginning
--- of the syllable. Each syllable will be separated either by ˈ
--- (if the following syllable is stressed), by ˌ (if the following
--- syllable has secondary stress), or by . (otherwise). In addition,
--- morpheme boundaries where the consonants on either side should be
--- treated as at the beginning/end of word (i.e. between prefix and
--- word, or between words in a compound word) will be marked with ⁀
--- before the syllable separator, and the beginning and end of text
--- will be marked by ⁀⁀. The output of this is fed into phonetic_rules,
--- and then is used to generate the displayed phonemic pronunciation
--- by removing ⁀ symbols.
+-- Include both regular g and IPA ɡ so it can be used anywhere
+local obstruent_non_sibilant = "pbfvkgɡtdxç" .. EXPLICIT_B .. EXPLICIT_D .. EXPLICIT_G .. EXPLICIT_V .. EXPLICIT_X
+local obstruent_non_sibilant_c = "[" .. obstruent_non_sibilant .. "]"
+local unvoiced_cons = "ptkfsʃxç" .. EXPLICIT_S .. EXPLICIT_X
+local unvoiced_cons_c = "[" .. unvoiced_cons .. "]"
+
+-- These rules operate in order, and apply to the actual spelling, after (1) decomposition, (2) prefix and suffix
+-- splitting, (3) addition of default primary and secondary stresses (acute and grave, respectively) after the
+-- appropriate syllable, (4) addition of ⁀ at boundaries of words, compound parts, prefixes and suffixes. The beginning
+-- and end of text is marked by ⁀⁀. Each rule is of the form {FROM, TO, REPEAT} where FROM is a Lua pattern, TO is
+-- its replacement, and REPEAT is true if the rule should be executed using `rsub_repeatedly()` (which will make the
+-- change repeatedly until nothing happens). The output of this is fed into phonetic_rules, and is also used to
+-- generate the displayed phonemic pronunciation by removing ⁀ symbols.
 local phonemic_rules = {
 	{"ǝ", "ə"}, -- "Wrong" schwa (U+01DD) to correct schwa (U+0259)
 	{"x", "ks"},
@@ -424,7 +423,7 @@ local phonemic_rules = {
 	-- syllable-initial, e.g. [[ahistorisch]], [[Ahorn]], [[adhäsiv]], [[Lahar]], [[Mahagoni]].
 	{"h(" .. V .. accent_non_stress_c .. "*" .. stress_c .. ")", "H%1"},
 	-- Remaining 'h' after a vowel (not including a glide like I or U from dipthongs) indicates vowel length.
-	{"(" .. vowel_non_glide_c .. ")(" .. stress_c .. "*" .. ")h", "%1ː%2"},
+	{"(" .. V_non_glide .. ")(" .. stress_c .. "*" .. ")h", "%1ː%2"},
 	-- Remaining 'h' after a vowel is superfluous, e.g. [[Vieh]], [[ziehen]], [[rauh]], [[leihen]], [[Geweih]].
 	{"(" .. V .. accent_c .. "*" .. ")h", "%1"},
 	-- Convert special 'H' symbol (to indicate pronounced /h/ between vowels) back to /h/.
@@ -463,6 +462,9 @@ local phonemic_rules = {
 	{"(" .. non_V .. ")(" .. C .. ")%2", "%1%2"},
 	{"(" .. C .. ")%1(" .. C_not_lr .. ")", "%1%2"},
 
+	-- 'i' and 'u' in hiatus should be nonsyllabic by default; add '.' afterwards to prevent this.
+	{"(" .. C .. "[iu])(" .. V .. ")", "%1" .. INVBREVEBELOW .. "%2"},
+
 	-- Divide into syllables.
 	-- Existing potentially-relevant hyphenations/pronunciations: [[abenteuerdurstig]] -> aben|teu|er|durs|tig,
 	-- [[Agraffe]] -> /aˈɡʁafə/ (but Ag|raf|fe); [[Agrarbiologie]] -> /aˈɡʁaːɐ̯bioloˌɡiː/ (but Ag|rar|bio|lo|gie);
@@ -483,17 +485,24 @@ local phonemic_rules = {
 	-- like [[Adler]] /ˈʔaːdlɐ/ (reduced from ''*Adeler'') suggest we should keep 'dl' together. For 'tl', we have
 	-- on the one hand [[Atlas]] /ˈatlas/ and [[Detlef]] [ˈdɛtlɛf] (dewikt) but on the other hand [[Bethlehem]]
 	-- /ˈbeːt.ləˌhɛm/. For simplicity we treat 'dl' and 'tl' the same.
-	{"([pbfvkgtd])%.([lr])", ".%1%2"},
+	{"(" .. obstruent_non_sibilant_c .. ")%.([lr])", ".%1%2"},
 	-- Cf. [[Liquid]] [liˈkviːt]; [[Liquida]] [ˈliːkvida]; [[Mikwe]] /miˈkveː/; [[Taekwondo]] [tɛˈkvɔndo] (dewikt);
 	-- [[Uruguayerin]] [ˈuːʁuɡvaɪ̯əʁɪn] (dewikt)
-	{"([kg]).v", ".%1v"},
+	{"([kg])%.v", ".%1v"},
+	-- [[Signal]] [zɪˈɡnaːl] (dewikt); [[designieren]] [dezɪˈɡniːʁən] (dewikt); if split 'g.n', we'd expect [k.n].
+	-- But notice the short 'i'. Cf. [[Kognition]] [ˌkɔɡniˈt͡si̯oːn] (dewikt) and [[Kognat]] [kɔˈɡnaːt] (dewikt) vs.
+	-- [[Prognose]] [ˌpʁoˈɡnoːzə] (dewikt) with short closed 'o' despite secondary stress. Cf. also [[orthognath]]
+	-- [ɔʁtoˈɡnaːt] (dewikt), [[prognath]] [pʁoˈɡnaːt] (dewikt). Cf. [[Agnes]] [ˈaɡnɛs] (dewikt) but /ˈaː.ɡnəs/
+	-- (enwikt). Cf. [[regnen]] /ˈʁeː.ɡnən/ "prescriptive standard" (enwikt), /ˈʁeːk.nən/ "most common" (enwikt).
+	-- Similarly [[Gegner]], [[segnen]], [[Regnum]]. Also [[leugnen]], [[Leugner]] with the same /gn/ prescriptive,
+	-- /kn/ more common; whereas [[Zeugnis]] always with /kn/ (suggests -nis is a suffix we need to handle).
+	-- FIXME: Handle this all.
+	{"g%.n", ".gn"},
 	-- Divide two vowels; but not if the first vowel is indicated as non-syllabic ([[Familie]], [[Ichthyologie]], etc.).
-	{"(" .. V .. accent_c_no_inv_breve_below .. "*)(" .. V .. ")", "%1.%2", true},
+	{"(" .. V .. accent_non_invbrevebelow_c .. "*)(" .. V .. ")", "%1.%2", true},
 	-- User-specified syllable divider should now be treated like regular one.
 	{SYLDIV, "."},
 
-	-- Handle vowel quality/length changes in open vs. closed syllables.
-	--
 	-- Convert some unstressed 'e' to schwa. It seems the following holds (excluding [[be-]] and [[ge-]] from
 	-- consideration):
 	-- 1. 'e' is less likely to be schwa before the stress than after.
@@ -534,6 +543,35 @@ local phonemic_rules = {
 			return "e" .. rest
 		end
 	end, true},
+
+	-- Handle vowel quality/length changes in open vs. closed syllables, part a: Some vowels that would be
+	-- expected to be long (particularly before a single consonant word-finally) are actually short.
+	-- Unstressed final 'i' before a single consonant is short: especially in -in, -is, -ig, but also -ik as in
+	-- [[Organik]], [[Linguistik]], etc.; -im as in [[Interim]], [[Isegrim]], [[Joachim]], [[Muslim]] (one
+	-- pronunciation), [[privatim]], [[Achim]] (one pronunciation), etc. Those in -il are usually end-stressed
+	-- with long 'i', e.g. [[Automobil]], [[fragil]], [[Fossil]], [[grazil]], [[hellenophil]], [[stabil]], [[imbezil]],
+	-- [[mobil]], [[fertil]], etc. Those in -it are usually end-stressed and refer to minerals, where the 'i' can be
+	-- long or short. Those in -id are usually end-stressed and refer to chemicals, with long 'i'; but cf. [[David]]
+	-- /ˈdaːvɪt/; [[Ingrid]] [ˈɪŋɡʁɪt] or [ˈɪŋɡʁiːt] (dewikt).
+	{"i(" .. C .. "⁀)", "i" .. BREVE .. "%1"},
+	-- 'i' before 'g' is short including across syllable boundaries without a following stress ([[Entschuldigung]],
+	-- [[verständigen]], [[Königin]], [[ängstigend]]; [[ewiglich]] with voiced [g]).
+	{"i(%.?g[^⁀" .. stress .. "]*⁀)", "i" .. BREVE .. "%1", true},
+	-- 'i' before 'gn' is short including across syllable boundaries, even with a following stress ([[Signal]],
+	-- [[designieren]], [[indigniert]], [[Lignin]] with voiced [g]). Not commonly before gl + stress, e.g.
+	-- [[Diglossie]], [[Triglyph]], [[Epiglottis]] or gr + stress, e.g. [[Digraph]], [[Emigrant]], [[Epigramm]],
+	-- [[filigran]], [[Kalligraphie]], [[Migräne]], [[Milligramm]]. [[ewiglich]], [[königlich]] etc. with short 'i'
+	-- handled by previous entry.
+	{"i(%.?gn)", "i" .. BREVE .. "%1"},
+	-- Unstressed final '-us', '-um' normally short, e.g. [[Kaktus]], [[Museum]].
+	{"u([ms]⁀)", "u" .. BREVE .. "%1"},
+	-- Unstressed final '-on' normally short, e.g. [[Aaron]], [[Abaton]], [[Natron]], [[Analogon]], [[Myon]], [[Anton]]
+	-- (either long or short 'o'), [[Argon]], [[Axon]], [[Bariton]], [[Biathlon]], [[Bison]], etc. Same with unstressed
+	-- '-os', e.g. [[Albatros]], [[Amos]], [[Amphiprostylos]], [[Barbados]], [[Chaos]], [[Epos]], [[Gyros]], [[Heros]],
+	-- [[Kokos]], [[Kolchos]], [[Kosmos]], etc.
+	{"o([ns]⁀)", "o" .. BREVE .. "%1"},
+	--
+	-- Handle vowel quality/length changes in open vs. closed syllables, part b: Lengthen/shorten as appropriate.
 	-- Stressed vowel in open syllable lengthens.
 	{"(" .. V_unmarked_for_quality .. ")(" .. stress_c .. "[.⁀])", "%1ː%2"},
 	-- Same when followed by a single consonant word-finally.
@@ -574,6 +612,10 @@ local phonemic_rules = {
 	-- this may not be the case in the presence of user-specified syllable boundaries.
 	{"(" .. C .. ")(%.?)%1", "%1", true},
 
+	-- 'ĭg' is pronounced [ɪç] word-finally or before an obstruent (not before an approximant as in [[ewiglich]] or
+	-- [[Königreich]] when divided as ''ewig.lich'', ''König.reich'').
+	{"ɪg⁀", "ɪç"},
+	{"ɪg(%.?" .. C_not_approximant .. ")", "ɪç%1"},
 	-- Devoice consonants coda-finally. There may be more than one such consonant to devoice (cf. [[Magd]]), or the
 	-- consonant to devoice may be surrounded by non-voiced or non-devoicing consonants (cf. [[Herbst]]).
 	{"(" .. V .. accent_c .. "*" .. C .. "*)([bdgvzʒʤ])", function(init, voiced)
@@ -613,127 +655,45 @@ local phonemic_rules = {
 	-- Suppress syllable mark before IPA stress indicator.
 	{"%.([ˈˌ])", "%1"},
 
-
-
-
-
-
-
-
-
-
-
-
-
-	-- sċ between vowels when at the beginning of a syllable should be ʃ.ʃ
-	{"(" .. V .. "ː?)([.ˈˌ]?)sċ(" .. V .. ")", "%1ʃ%2ʃ%3"},
-	-- other sċ should be ʃ; note that sċ divided between syllables becomes s.t͡ʃ
-	{"sċ", "ʃ"},
-	-- x between vowels when at the beginning of a syllable should be k.s;
-	-- remaining x handled below
-	{"(" .. V .. "ː?)([.ˈˌ]?)x(" .. V .. ")", "%1k%2s%3"},
-	-- z between vowels when at the beginning of a syllable should be t.s;
-	-- remaining z handled below
-	{"(" .. V .. "ː?)([.ˈˌ]?)z(" .. V .. ")", "%1t%2s%3"},
-	{"nċ([.ˈˌ]?)ġ", "n%1j"},
-	{"ċ([.ˈˌ]?)ġ", "j%1j"},
-	{"c([.ˈˌ]?)g", "g%1g"},
-	{"ċ([.ˈˌ]?)ċ", "t%1t͡ʃ"},
-	{".", {
-		["ċ"] = "t͡ʃ",
-		["c"] = "k",
-		["ġ"] = "j",
-		["h"] = "x",
-		["þ"] = "θ",
-		["ð"] = "θ",
-		["ƿ"] = "w",
-		["x"] = "ks",
-		["z"] = "ts",
-		["g"] = "ɡ", -- map to IPA ɡ
-		["a"] = "ɑ",
-		["œ"] = "ø",
-	}},
+	-- Convert explicit character notation to regular character.
+	{".", explicit_char_to_phonemic},
 }
 
-local fricative_to_voiced = {
-	["f"] = "v",
-	["s"] = "z",
-	["θ"] = "ð",
-}
-
-local fricative_to_unvoiced = {
-	["v"] = "f",
-	["z"] = "s",
-	["ð"] = "θ",
-}
-
--- These rules operate in order, on the output of phonemic_rules.
--- The output of this is used to generate the displayed phonemic
--- pronunciation by removing ⁀ symbols.
+-- These rules operate in order, on the output of phonemic_rules. Each rule is of the form {FROM, TO, REPEAT} where
+-- FROM is a Lua pattern, TO is its replacement, and REPEAT is true if the rule should be executed using
+-- `rsub_repeatedly()` (which will make the change repeatedly until nothing happens). The output of this is used to
+-- generate the displayed phonetic pronunciation by removing ⁀ symbols.
 local phonetic_rules = {
-	-- Fricative voicing between voiced sounds. Note, the following operates
-	-- across a ⁀ boundary for a fricative before the boundary but not after.
-	{"([" .. voiced_sound .. "][ː.ˈˌ]*)([fsθ])([ː.ˈˌ⁀]*[" .. voiced_sound .. "])",
-		function(s1, c, s2)
-			return s1 .. fricative_to_voiced[c] .. s2
-		end
-	},
-	-- Fricative between unstressed vowels should be devoiced.
-	-- Note that unstressed syllables are preceded by . while stressed
-	-- syllables are preceded by a stress mark.
-	{"(%.[^.⁀][" .. vowel .. com.DOUBLE_BREVE_BELOW .. "ː]*%.)([vzð])",
-		function(s1, c)
-			return s1 .. fricative_to_unvoiced[c]
-		end
-	},
-	-- Final unstressed -þu/-þo after a consonant should be devoiced.
-	{"(" .. cons_c .. "ː?" .. "%.)ð([uo]⁀)",
-		function(s1, s2)
-			return s1 .. "θ" .. s2
-		end
-	},
-	{"x[wnlr]", {
-		["xw"] = "ʍ",
-		["xl"] = "l̥",
-		["xn"] = "n̥",
-		["xr"] = "r̥",
-	}},
-	-- Note, the following will not operate across a ⁀ boundary.
-	{"n([.ˈˌ]?[ɡk])", "ŋ%1"}, -- WARNING, IPA ɡ used here
-	{"n([.ˈˌ]?)j", "n%1d͡ʒ"},
-	{"j([.ˈˌ]?)j", "d%1d͡ʒ"},
-	{"([^x][⁀.ˈˌ])x", "%1h"},      -- [h] occurs as a syllable-initial allophone
-	{"(" .. front_V .. ")x", "%1ç"}, -- [ç] occurs after front vowels
-	-- An IPA ɡ after a word/prefix boundary, after another ɡ or after n
-	-- (previously converted to ŋ in this circumstance) should remain as ɡ,
-	-- while all other ɡ's should be converted to ɣ except that word-final ɡ
-	-- becomes x. We do this by converting the ɡ's that should remain to regular
-	-- g (which should never occur otherwise), convert the remaining IPA ɡ's to ɣ
-	-- or x, and then convert the regular g's back to IPA ɡ.
-	{"([ŋɡ⁀][.ˈˌ]?)ɡ", "%1g"}, -- WARNING, IPA ɡ on the left, regular g on the right
-	{"ɡ", "ɣ"},
-	{"g", "ɡ"}, -- WARNING, regular g on the left, IPA ɡ on the right
-	{"l([.ˈˌ]?)l", "ɫ%1ɫ"},
-	{"r([.ˈˌ]?)r", "rˠ%1rˠ"},
-	{"l([.ˈˌ]?" .. cons_c .. ")", "ɫ%1"},
-	{"r([.ˈˌ]?" .. cons_c .. ")", "rˠ%1"},
-	-- Geminate consonants within a single syllable are pronounced singly.
-	-- Does not apply e.g. to ''ǣttren'', which will be divided as ''ǣt.tren''.
-	{"(" .. cons_c .. ")%1", "%1"},
-	{"rˠrˠ", "rˠ"},
-	-- In the sequence vowel + obstruent + resonant in a single syllable,
-	-- the resonant should become syllabic, e.g. ādl [ˈɑːdl̩], blōstm [bloːstm̩],
-	-- fæþm [fæðm̩], bēacn [ˈbæːɑ̯kn̩]. We allow anything but a syllable or word
-	-- boundary betweent the vowel and the obstruent.
-	{"(" .. V .. "[^.ˈˌ⁀]*[" .. obstruent .. "]ː?[" .. resonant .. "])", "%1" .. com.SYLLABIC},
-	-- also -mn e.g stemn /ˈstemn̩/; same for m + other resonants except m
-	{"(" .. V .. "[^.ˈˌ⁀]*mː?[lnŋrɫ])", "%1" .. com.SYLLABIC},
-	{".", explicit_char_to_IPA},
+	-- -ken, -gen at end of word have syllabic ŋ
+	{"([kɡ]ə)n⁀", "%1" .. "ŋ⁀"}, -- IPA ɡ
+	-- schwa + resonant becomes syllabic (written over ŋ, otherwise under)
+	{"ə([lmn])", "%1" .. SYLLABIC},
+	{"əŋ", "ŋ̍"},
+	-- coda r /ʁ/ becomes a semivowel
+	{"(" .. V .. "ː?)ʁ", "%1ɐ̯"},
+	-- unvoiced stops and affricates become affricated word-finally and before vowel, /ʁ/ or /l/ (including syllabic
+	-- /l/), but not before syllabic nasal; cf. [[zurücktreten]], with aspirated 'z', 'ck' and first 't' but not second;
+	-- also not before homorganic stop across prefix/compound boundary like [[Abbildung]] [ˈʔap̚.b̥ɪl.dʊŋ]
+	{"p([.⁀]b)", "p" .. UNRELEASED .. "%1"},
+	{"t([.⁀]d)", "t" .. UNRELEASED .. "%1"},
+	{"k([.⁀]ɡ)", "k" .. UNRELEASED .. "%1"}, -- IPA ɡ
+	{"([ptk])(%.?[⁀" .. vowel .. "ʁl])", "%1ʰ%2"},
+	{"(t" .. TIE .. "[sʃ])(%.?[⁀" .. vowel .. "ʁl])", "%1ʰ%2"},
+	-- voiced stops/fricatives become unvoiced after unvoiced sound; cf. [[Abbildung]] [ˈʔap̚.b̥ɪl.dʊŋ]
+	{"(" .. unvoiced_cons_c .. "[.⁀]*[bdɡvzʒ])", "%1" .. UNVOICED}, -- IPA ɡ
+	-- FIXME: Other possible phonemic/phonetic differences:
+	-- (1) Omit syllable boundaries in phonemic notation?
+	-- (2) Maybe not show some or all glottal stops in phonemic notation? Existing phonemic examples tend to omit it.
 }
 
 local function apply_rules(word, rules)
 	for _, rule in ipairs(rules) do
-		word = rsub(word, rule[1], rule[2])
+		local from, to, rept = unpack(rule)
+		if rept then
+			word = rsub_repeatedly(word, from, to)
+		else
+			word = rsub(word, from, to)
+		end
 	end
 	return word
 end
