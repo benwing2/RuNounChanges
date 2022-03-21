@@ -71,6 +71,7 @@ komplexst and forms
 konturloser, konturlosest, konturlosst and forms
 kosteneffizientst and forms
 kreideig and forms
+kreidener, kreidenst and forms
 kreuzigbar, kreuzigbarer, kreuzigbarst and forms: send to RFV
 Kreuzigbarkeit: send to RFV
 kroscher, kroschst, kroschest and forms
