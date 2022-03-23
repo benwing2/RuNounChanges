@@ -177,30 +177,6 @@ local function rsub_repeatedly(term, foo, bar)
 	end
 end
 
--- Apply canonical Unicode decomposition to text, e.g. è → e + ◌̀. But recompose ä ö ü so we can treat them as single
--- vowels, and put stress accents (acute/grave) after indicators of length and quality.
-local function decompose(text)
-	text = mw.ustring.toNFD(text)
-	text = rsub(text, "." .. DIA, {
-		["a" .. DIA] = "ä",
-		["A" .. DIA] = "Ä",
-		["o" .. DIA] = "ö",
-		["O" .. DIA] = "Ö",
-		["u" .. DIA] = "ü",
-		["U" .. DIA] = "Ü",
-	})
-	text = rsub(text, "([" .. ACUTE .. GRAVE .. "])([" .. BREVE .. CFLEX .. MACRON .. "ː]+)", "%2%1")
-	return text
-end
-
--- Canonicalize multiple spaces and remove leading and trailing spaces.
-local function canon_spaces(text)
-	text = rsub(text, "%s+", " ")
-	text = rsub(text, "^ ", "")
-	text = rsub(text, " $", "")
-	return text
-end
-
 -- When auto-generating primary and secondary stress accents, we use these special characters, and later convert to
 -- normal IPA accent marks, so we can distinguish auto-generated stress from user-specified stress.
 local AUTOACUTE = u(0xFFF0)
@@ -251,7 +227,7 @@ local explicit_char_to_phonemic = {
 
 local stress = ACUTE .. GRAVE
 local stress_c = "[" .. stress .. "]"
-local accent_non_stress_non_invbrevebelow = BREVE .. CFLEX .. MACRON .. "ː"
+local accent_non_stress_non_invbrevebelow = BREVE .. CFLEX .. MACRON .. TILDE .. "ː"
 local accent_non_stress = accent_non_stress_non_invbrevebelow .. INVBREVEBELOW
 local accent_non_stress_c = "[" .. accent_non_stress .. "]"
 local accent = stress .. accent_non_stress
@@ -513,6 +489,7 @@ local suffixes = {
 -- generate the displayed phonemic pronunciation by removing ⁀ symbols.
 local phonemic_rules = {
 	{"ǝ", "ə"}, -- "Wrong" schwa (U+01DD) to correct schwa (U+0259)
+	{MACRON, "ː"}, -- The user can use respelling with macrons but internally we convert to the long mark ː
 	{"x", "ks"},
 	-- WE treat written 'ts' same as 'tz', e.g. [[aufwärts]], [[Aufenhaltsgenehmigung]], [[Rätsel]] and
 	-- foreign-derived words such as [[Botsuana]], [[Fietse]], [[Lotse]], [[Mitsubishi]], [[Hatsa]], [[Tsatsiki]],
@@ -819,6 +796,7 @@ local phonemic_rules = {
 	{".", explicit_char_to_phonemic},
 }
 
+
 -- These rules operate in order, on the output of phonemic_rules. Each rule is of the form {FROM, TO, REPEAT} where
 -- FROM is a Lua pattern, TO is its replacement, and REPEAT is true if the rule should be executed using
 -- `rsub_repeatedly()` (which will make the change repeatedly until nothing happens). The output of this is used to
@@ -847,6 +825,87 @@ local phonetic_rules = {
 	-- (3) Maybe show -ieren as if written -iern; but this may be colloquial.
 }
 
+
+local function reorder_accents(text)
+	-- FIXME: What about order of DOTUNDER to indicate no stress? Maybe doesn't matter too much because it is
+	-- removed early when generating the default stress, but maybe it should go first of all so it's easy to spot.
+	-- The order should be: (1) DOTUNDER (removed early) (2) BREVE/CFLEX, (3) TILDE, (4) MACRON/ː, (5) ACUTE/GRAVE.
+	-- First: Remove duplicate accents. FIXME: Possibly do this if separated by other accents.
+	text = rsub_repeatedly(text, "(" .. accent_c .. ")%1", "%1")
+	-- Second, DOTUNDER first among all.
+	text = rsub(text, "([" .. ACUTE .. GRAVE .. BREVE .. CFLEX .. TILDE .. MACRON .. "ː]+)([" .. DOTUNDER .. "])", "%2%1")
+	-- Third, ACUTE/GRAVE last among all remaining.
+	text = rsub(text, "([" .. ACUTE .. GRAVE .. "])([" .. BREVE .. CFLEX .. TILDE .. MACRON .. "ː]+)", "%2%1")
+	-- Fourth, put BREVE/CFLEX first among TILDE and MACRON/ː.
+	text = rsub(text, "([" .. TILDE .. MACRON .. "ː]+)([" .. BREVE .. CFLEX .. "])", "%2%1")
+	-- Fifth, put TILDE before MACRON/ː.
+	text = rsub(text, "([" .. MACRON .. "ː]+)([" .. TILDE ..  "])", "%2%1")
+	return text
+end
+
+-- Apply canonical Unicode decomposition to text, e.g. è → e + ◌̀. But recompose ä ö ü so we can treat them as single
+-- vowels, and put stress accents (acute/grave) after indicators of length and quality.
+local function decompose(text)
+	text = mw.ustring.toNFD(text)
+	text = rsub(text, "." .. DIA, {
+		["a" .. DIA] = "ä",
+		["A" .. DIA] = "Ä",
+		["o" .. DIA] = "ö",
+		["O" .. DIA] = "Ö",
+		["u" .. DIA] = "ü",
+		["U" .. DIA] = "Ü",
+	})
+end
+
+-- Canonicalize multiple spaces, remove leading and trailing spaces, remove exclamation points, question marks and
+-- periods at end of sentence. Convert capital N after a vowel into a tilde to mark nasalization, and macron to long
+-- mark (ː).
+local function canonicalize(text)
+	text = decompose(text)
+	text = rsub(text, "%s+", " ")
+	text = rsub(text, "^ ", "")
+	text = rsub(text, " $", "")
+	-- Capital N after a vowel (including after vowel + accent marks) denotes nasalization.
+	text = rsub(text, "(" .. V .. accent_c .. "*)N", "%1" .. TILDE)
+	-- The user can use respelling with macrons but internally we convert to the long mark ː
+	text = rsub(MACRON, "ː")
+	-- Reorder so ACUTE and GRAVE go last.
+	text = reorder_accents(text)
+
+	-- convert commas and en/en dashes to IPA foot boundaries
+	text = rsub_repeatedly(text, "%s*[–—]%s*", " | ")
+	-- comma must be followed by a space; otherwise it might denote multiple respellings
+	text = rsub_repeatedly(text, "%s*,%s", " | ")
+	-- period, question mark, exclamation point in the middle of a sentence or end of a non-final sentence -> IPA foot
+	-- boundary; there must be a space after the punctuation, as we use ! and ? in component-separation indicators to
+	-- control the production of glottal stops at the beginning of the next word.
+	text = rsub_repeatedly(text, "([^%s])%s*[!?.]%s([^%s])", "%1 | %2")
+	text = rsub(text, "[!?.]$", "") -- eliminate absolute phrase-final punctuation
+
+	return text
+end
+
+
+-- This should run on the output of canonicalize(). It splits the text into words, lowercases each word, but identifies
+-- whether the word was initially capitalized.
+local function split_words(text)
+	local result = {}
+	for word in rgsplit(text, " ") do
+		-- Lowercase the word and check if it was capitalized; be careful with cases like '[X]uzpe', which we treat as
+		-- capitalized and lowercase to '[x]uzpe'.
+		local init_bracket, rest = rmatch(word, "^(%[)(.*)$")
+		if not init_bracket then
+			init_bracket = ""
+			rest = text
+		end
+		local lcrest = mw.getContentLanguage():lcfirst(rest)
+		local is_cap = lcrest ~= rest
+		table.insert(result, {word = ulower(word), is_cap = is_cap})
+	end
+	return result
+end
+
+
 local function apply_rules(word, rules)
 	for _, rule in ipairs(rules) do
 		local from, to, rept = unpack(rule)
@@ -859,6 +918,7 @@ local function apply_rules(word, rules)
 	return word
 end
 
+
 local function check_onset_offset(cluster, patterns)
 	for _, pattern in ipairs(patterns) do
 		if rfind(cluster, "^" .. pattern .. "$") then
@@ -868,11 +928,36 @@ local function check_onset_offset(cluster, patterns)
 	return false
 end
 
+
+-- Check text against a pattern restriction. If it matches, return false (restricted); otherwise, return true.
+-- If the restriction is a list of patterns, return false if any of them matches.
+local function meets_restriction(rest, restriction)
+	if restriction == nil then
+		-- no restriction.
+		return true
+	end
+	if type(restriction) == "table" then
+		-- If any of the restrictions pass, the affix is restricted.
+		for _, restrict in ipairs(restriction) do
+			if rfind(rest, restrict) then
+				return false
+			end
+		end
+	else
+		if rfind(rest, restrict) then
+			return false
+		end
+	end
+	return true
+end
+
+
 local function lookup_stress_spec(stress_spec, pos)
 	return stress_spec[pos] or (pos == "verbal" and stress_spec["verb"]) or nil
 end
 
-local function split_on_word_boundaries(word, pos)
+
+local function split_word_on_components_and_apply_affixes(word, pos)
 	local retparts = {}
 	local parts = strutils.capturing_split(word, "([<>%-])")
 	local i = 1
@@ -895,7 +980,7 @@ local function split_on_word_boundaries(word, pos)
 					if prefix then
 						if not pos_stress then
 							-- prefix not recognized for this POS, don't split here
-						elseif prefixspec.restriction and not rfind(rest, prefixspec.restriction) then
+						elseif not meets_restriction(rest, prefixspec.restriction) then
 							-- restriction not met, don't split here
 						elseif rfind(rest, "^%+") then
 							-- explicit non-boundary here, so don't split here
@@ -967,13 +1052,12 @@ local function split_on_word_boundaries(word, pos)
 				local broke_suffix = false
 				for _, suffixspec in ipairs(suffixes) do
 					local suffix_pattern = suffixspec[1]
-					local stress_spec = suffixspec[2]
 					local pos_stress = lookup_stress_spec(stress_spec, pos)
 					local rest, suffix = rmatch(parts[i], "^(.-)(" .. suffix_pattern .. ")$")
 					if suffix then
 						if not pos_stress then
 							-- suffix not recognized for this POS, don't split here
-						elseif stress_spec.restriction and not rfind(rest, stress_spec.restriction) then
+						elseif not meets_restriction(rest, suffixspec.restriction) then
 							-- restriction not met, don't split here
 						elseif rfind(rest, "%+$") then
 							-- explicit non-boundary here, so don't split here
@@ -1241,6 +1325,7 @@ function export.phonemic(text, pos)
 		text = text[1]
 	end
 	local result = {}
+	text = canon_spaces(text)
 	text = ulower(text)
 	for word in rgsplit(text, " ") do
 		table.insert(result, generate_phonemic_word(word, pos))
