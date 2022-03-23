@@ -28,6 +28,14 @@ The following symbols can be used:
 -- _ (underscore) to force the letters on either side to be interpreted independently, when the combination of the two
 --   would normally have a special meaning.
 --  ̣ (dot under) on any vowel in a word or component to prevent it from getting any stress.
+--  ̯ (inverted breve under) to indicate a non-syllabic vowel. Most common uses: i̯ in words like [[Familie]]
+--   respelled 'Famíli̯e'; o̯ in French-derived words like [[soigniert]] respelled 'so̯anjiert' (-iert automatically gets
+--   primary stress); occasionally y̯ in words like [[Ichthyologie]] respelled 'Ichthy̯ologie' (-ie automatically gets
+--   primary stress).  There is also u̯ but it's mostly unnecessary as a 'u' directly followed by another vowel by
+--   default becomes non-syllabic. Finally, the generated phonemic notation includes /aɪ̯/ for spelled 'ei' and 'ai';
+--   /ɔɪ̯/ for spelled 'eu' and 'äu'; and /aʊ̯/ for spelled 'au'; and the generated phonetic notation includes [ɐ̯] for
+--   vocalized /ʁ/ (i.e. written 'r' in a syllable coda). However, you rarely if ever need to type these symbols
+--   explicitly.
 
 Notes:
 
@@ -75,17 +83,41 @@ Notes:
 FIXME:
 
 1. Implement < and > which works like - but don't trigger secondary stress (< after a prefix, > before a suffix).
-2. Implement prefix/suffix stripping; don't do it if explicit syllable boundary in cluster after prefix, or if no
+2. Implement <!, -! which work with < and - but suppress the vowel-initial glottal stop; <?, -? which work similarly
+   but allow for optional glottal stop.
+3. Implement prefix/suffix stripping; don't do it if explicit syllable boundary in cluster after prefix, or if no
    vowel in main, or if impossible prefix/suffix onset/offset.
-3. Finish entering prefixes and suffixes.
-4. Add default stresses.
-5. Handle inflectional suffixes: adjectival -e, -en, -em, -er, -es, also after adjectival -er, -st; nominal -(e)s,
+4. Automatically support -ge-, -zu- after stressed verbal prefixes.
+5. Figure out how to support stacked suffixes like -barkeit, -samkeit, -lichkeit, -schaftlich, -licherweise. Perhaps
+   there is a small enough set of common stacked suffixes to just list them all.
+6. Finish entering prefixes and suffixes.
+7. Add default stresses (primary stress on first syllable of first stressed component, etc.).
+8. Handle inflectional suffixes: adjectival -e, -en, -em, -er, -es, also after adjectival -er, -st; nominal -(e)s,
    -(e)n; verbal -e, -(e)st, -(e)t, -(e)n, -(e)te, -(e)tst, -(e)tet, -(e)ten.
-6. Ignore final period/question mark/exclamation point.
-7. Implement nasal vowels.
-8. Implement underscore to prevent assimilation/interpretation as a multigraph.
-9. Implement [b] [d] [g] [z] [v] [ʒ] [x].
-10. Implement dot-under to prevent stress.
+9. Ignore final period/question mark/exclamation point.
+10. Implement nasal vowels.
+11. Implement underscore to prevent assimilation/interpretation as a multigraph.
+12. Implement [b] [d] [g] [z] [v] [ʒ] [x].
+13. Implement dot-under to prevent stress.
+14. Check allowed onsets with prefixes.
+15. Implement allowed offsets and check with suffixes.
+16. Implement 'style' ala Spanish pronun to handle standard vs. northern/Eastern vs. southern:
+    e.g. [[berufsunfähig]]:
+	/bəˈʁuːfsʔʊnˌfɛːɪç/ {{qualifier|standard; used naturally in western Germany and Switzerland}}
+	/-ʔʊnˌfeːɪç/ {{qualifier|overall more common; particularly northern and eastern regions}}
+	/-ʔʊnˌfɛːɪk/ {{qualifier|common form in southern Germany, Austria, and Switzerland}}
+	e.g. [[aufrichtig]]:
+	/ˈaʊf.ʁɪç.tɪç/ {{qualifier|standard}}
+	/ˈaʊf.ʁɪç.tɪk/ {{qualifier|common form in southern Germany, Austria, and Switzerland}}
+	e.g. [[Universität]]:
+	/ˌuni.vɛʁ.ziˈtɛːt/ {{qualifier|standard; used naturally in western Germany and Switzerland}}
+	/ˌuni.vɛʁ.ziˈteːt/ {{qualifier|overall more common; particularly northern and eastern regions}}
+17. Implement splitting prefix/suffix pronun for -sam, with two pronunciations.
+18. n before g/k in the same syllable should be ŋ. Sometimes also across syllables, cf. [[Ingrid]].
+19. Written 'ts' in the same syllable should be rendered with a tie, e.g. [[aufwärts]], [[Aufenhaltsgenehmigung]].
+    [[Botsuana]] is tricky as it normally would have syllable division 't.s', but maybe we should special-case it
+	so we get /bɔˈtsu̯aːna/. Other examples: [[enträtseln]], [[Fietse]], [[Lotse]], [[Mitsubishi]], [[Outsider]],
+	[[Outsourcing]], [[Rätsel]], [[Hatsa]], [[Tsatsiki]], [[Whatsapp]].
 ]=]
 
 local export = {}
@@ -106,8 +138,8 @@ local rgsplit = mw.text.gsplit
 local ulen = mw.ustring.len
 local ulower = mw.ustring.lower
 
-local AC = u(0x0301) -- COMBINING ACUTE ACCENT =  ́
-local GR = u(0x0300) -- COMBINING GRAVE ACCENT =  ̀
+local ACUTE = u(0x0301) -- COMBINING ACUTE ACCENT =  ́
+local GRAVE = u(0x0300) -- COMBINING GRAVE ACCENT =  ̀
 local CFLEX = u(0x0302) -- COMBINING CIRCUMFLEX ACCENT =  ̂
 local TILDE = u(0x0303) -- COMBINING TILDE =  ̃
 local MACRON = u(0x0304) -- COMBINING MACRON =  ̄
@@ -157,7 +189,7 @@ local function decompose(text)
 		["u" .. DIA] = "ü",
 		["U" .. DIA] = "Ü",
 	})
-	text = rsub(text, "([" .. AC .. GR .. "])([" .. BREVE .. CFLEX .. MACRON .. "ː]+)", "%2%1")
+	text = rsub(text, "([" .. ACUTE .. GRAVE .. "])([" .. BREVE .. CFLEX .. MACRON .. "ː]+)", "%2%1")
 	return text
 end
 
@@ -169,9 +201,8 @@ local function canon_spaces(text)
 	return text
 end
 
--- When auto-generating primary and secondary stress accents, we use these
--- special characters, and later convert to normal IPA accent marks, so
--- we can distinguish auto-generated stress from user-specified stress.
+-- When auto-generating primary and secondary stress accents, we use these special characters, and later convert to
+-- normal IPA accent marks, so we can distinguish auto-generated stress from user-specified stress.
 local AUTOACUTE = u(0xFFF0)
 local AUTOGRAVE = u(0xFFF1)
 
@@ -218,7 +249,7 @@ local explicit_char_to_phonemic = {
 	[EXPLICIT_X] = "x",
 }
 
-local stress = AC .. GR
+local stress = ACUTE .. GRAVE
 local stress_c = "[" .. stress .. "]"
 local accent_non_stress_non_invbrevebelow = BREVE .. CFLEX .. MACRON .. "ː"
 local accent_non_stress = accent_non_stress_non_invbrevebelow .. INVBREVEBELOW
@@ -234,10 +265,11 @@ local back_vowel = back_vowel_non_glide .. "U"
 local back_vowel_c = "[" .. back_vowel .. "]"
 local front_vowel_non_glide = "eɛiɪyʏøœäöü"
 local front_vowel = front_vowel_non_glide .. "I"
-local vowel = back_vowel .. front_vowel .. "ə"
+local schwalike = "əɐ"
+local vowel = back_vowel .. front_vowel .. schwalike
 local V = "[" .. vowel .. "]"
 local non_V = "[^" .. vowel .. "]"
-local vowel_non_glide = back_vowel_non_glide .. front_vowel_non_glide .. "ə"
+local vowel_non_glide = back_vowel_non_glide .. front_vowel_non_glide .. schwalike
 local V_non_glide = "[" .. vowel_non_glide .. "]"
 local vowel_unmarked_for_quality = "aeiouäöü"
 local V_unmarked_for_quality = "[" .. vowel_unmarked_for_quality .. "]"
@@ -248,134 +280,228 @@ local wordsep_c = "[" .. wordsep .. "]"
 local cons_guts = "^" .. vowel .. wordsep .. "_" -- guts of consonant class
 local C = "[" .. cons_guts .. "]" -- consonant
 local C_not_lr = "[" .. cons_guts .. "lr]" -- consonant not 'l' or 'r'
+local C_not_h = "[" .. cons_guts .. "h]" -- consonant not 'h'
 -- Include both regular g and IPA ɡ so it can be used anywhere
 local obstruent_non_sibilant = "pbfvkgɡtdxç" .. EXPLICIT_B .. EXPLICIT_D .. EXPLICIT_G .. EXPLICIT_V .. EXPLICIT_X
 local obstruent_non_sibilant_c = "[" .. obstruent_non_sibilant .. "]"
 local unvoiced_cons = "ptkfsßʃxç" .. EXPLICIT_S .. EXPLICIT_X
-local unvoiced_cons_c = "[" .. unvoiced_cons .. "]"
+local unvoiced_C = "[" .. unvoiced_cons .. "]"
 
-
--- FIXME: -ge- and -zu- can occur after any stressed prefix.
-local prefixes = {
-	{"ab", {respelling = "ább"}},
-	{"an", {respelling = "ánn"}},
-	{"auf", {respelling = "áuf"}},
-	{"aus", {respelling = "áus"}},
-	{"auseinander", {respelling = "àus-einánder"}},
-	{"bei", {respelling = "béi"}},
-	{"be", {respelling = "bə", restriction = "^[^u]"}},
-	{"durch", {respelling = "dúrch"}},
-	{"ein", {respelling = "éin"}},
-	{"emp", {restriction = "^f"}},
-	{"ent"},
-	{"fort", {respelling = "fórt"}},
-	-- Most words in 'gei-' aren't past participles. There are only a few, e.g. [[geimpft]].
-	-- No restriction on 'geu-' because only one non-past-participle observed: [[Geusenwort]], and there are
-	-- various past participles in 'geu-', especially 'geur-'.
-	{"ge", {respelling = "gə", restriction = "^[^i]"}},
-	{"herab", {respelling = "herrább"}},
-	{"heran", {respelling = "herránn"}},
-	{"herauf", {respelling = "herráuf"}},
-	{"heraus", {respelling = "herráus"}},
-	{"herbei", {respelling = "herbéi"}},
-	{"herein", {respelling = "herréin"}},
-	{"herüber", {respelling = "herrǘber"}},
-	{"herum", {respelling = "herrúmm"}},
-	{"herunter", {respelling = "herrúnter"}},
-	{"hervor", {respelling = "herfór"}},
-	{"her", {respelling = "hérr"}},
-	{"hinab", {respelling = "hinnább"}},
-	{"hinan", {respelling = "hinnánn"}},
-	{"hinauf", {respelling = "hinnáuf"}},
-	{"hinaus", {respelling = "hinnáus"}},
-	{"hinbe", {respelling = "hínbe"}}, --barely exists
-	-- hinbei doesn't appear to exist
-	{"hinein", {respelling = "hinnéin"}},
-	{"hinter", {respelling = "hínter"}},
-	{"hinüber", {respelling = "hinnǘber"}},
-	-- hinum doesn't appear to exist
-	{"hinunter", {respelling = "hinnúnter"}},
-	-- hinvor doesn't appear to exist
-	{"hin", {respelling = "hínn"}},
-	-- too many false positives for in-
-	{"miss"},
-	{"mit", {respelling = "mítt"}},
-	{"über", {respelling = "ǘber"}},
-	{"um", {respelling = "úmm"}},
-	{"un", {respelling = "únn", combinable = true}},
-	{"unter", {respelling = "únter"}},
-	{"ver", {respelling = "ferr"}},
-	{"voran", {respelling = "foránn"}},
-	{"voraus", {respelling = "foráus"}},
-	{"vorbei", {respelling = "fohrbéi"}}, -- respelling per dewikt pronun
-	{"vorbe", {respelling = "fóhrbe", restriction = "^[^u]"}}, -- respelling per dewikt pronun
-	{"vorder", {respelling = "fórder"}},
-	{"vorher", {respelling = "fohrhér"}}, -- respelling per dewikt pronun
-	{"vorüber", {respelling = "forǘber"}},
-	{"vorver", {respelling = "fóhrfer"}}, -- respelling per dewikt pronun
-	{"vor", {respelling = "fór"}},
-	{"wider", {respelling = {n = "wíder", v = "wìder"}}},
-	{"wieder", {respelling = "wíeder"}},
-	{"wiederver", {respelling = "wíeder-ferr<"}},
-	{"zer", {respelling = "zerr"}},
+local allowed_onsets = {
+	"[bcdfghjklmnpqrstvwxz]",
+	-- Many single consonants can be followed by j but they are all foreign terms that can't be prefixed.
+	"ch[lr]?",
+	"sch[lmnr]?",
+	"[td]sch",
+	"[kg]n",
+	"[kgbpfc]l",
+	"[kgbpdtfc]r",
+	"[kgbpdt]h",
+	"ph[lr]",
+	"thr",
+	"s[ckpt]r?",
+	"s[pk]l",
+	"s[pt]h",
+	"sz",
+	"vl",
+	"w[lr]",
 }
 
-export.suffixes = {
-	{"([ae])nt", {respell = "%1́nt", pos = {"n", "a"}}},
-	{"([ai])bel", {respell = "%1́bel", pos = "a"}},
+-- Pretty much all allowed offsets can additionally end in -s, except after ß, s, x, z.
+local allowed_offsets = {
+	"[bcdfghjklmnpqrstvwxz]",
+	"([bfglmnprstz])%1",
+	"r[bcdfgklmnptvwxz]",
+	"l[bdfgkmnptz]",
+	"n[cdfgktxz]",
+	"m[bdlpt]", -- ml only occurs in [[Kreml]]
+	"s[hklpt]", -- sp does not occur but may occur in compounds; sl is rare
+	"t[hlz]", -- tl is rare
+	"[kb]t",
+	"g[tdhln]", -- gl, gn is rare
+	"f[tzn]", -- fn is rare
+	"ch[tz]", -- chz is rare
+	-- FIXME
+}
+
+-- The format of the following is {PREFIX, RESPELLING, PROPS...} where PROPS are optional named properties, such as
+-- 'restriction' (place additional restrictions on when the prefix can occur), 'prefixtype' (override the
+-- autodetected type of prefix).
+--
+-- In general, there are three types of prefixes: stressed and unstressed, and un-. Stressed prefixes can be followed
+-- by unstressed prefixes (e.g. [[Aufenthalt]]), and sometimes unstressed prefixes can be followed by stressed
+-- prefixes (e.g. [[beabsichtigen]], [[veranlagen]]), but otherwise prefixes cannot be combined, except for un-, which
+-- can be followed by either stressed or unstressed prefixes (but not another un-); cf. [[unausgegoren]], with three
+-- prefixes (un- + stressed + unstressed) or [[unzerstörbar]], with two prefixes (un- + unstressed).
+--
+-- Some prefixes can be both stressed and unstressed, e.g. durch-, unter-, über-, wieder-. For some, e.g. miss- and
+-- wider-, there are systematic alternations in stress: unstressed when functioning as a verbal prefix followed by an
+-- initial-stressed verb, stressed otherwise. This is too complex and unpredictable for us to handle, so we treat all
+-- these prefixes as stressed. Respell using < when unstressed, e.g. 'umfahren' "to knock down with a vehicle",
+-- 'um<fahren' "to drive around, to bypass".
+local prefixes = {
+	{"ab", "ább"},
+	{"an", "ánn"},
+	{"auf", "áuf"},
+	{"aus", "áus"},
+	{"auseinander", "àus-einánder"},
+	{"bei", "béi"},
+	{"be", "bə", restriction = "^[^u]"},
+	{"daher", "dahér"},
+	{"dahin", "dahín"},
+	{"durch", "dúrch"},
+	{"ein", "éin"},
+	{"emp", "emp", restriction = "^f"},
+	{"ent", "ent"},
+	{"er", "err"},
+	{"fort", "fórt"},
+	-- Most words in 'gei-' aren't past participles, cf. [[Geier]], [[Geifer]], [[geifern]], [[Geige]], [[geigen]],
+	-- [[Geiger]], [[geil]], [[geilo]], [[Geisel]], [[Geiser]], [[Geisha]], [[Geiß]], [[Geißel]], [[geißeln]],
+	-- [[Geist]], [[Geister]], [[geistig]], [[Geiz]], [[geizen]]. There are only a few, e.g. [[geimpft]], which need
+	-- respelling, e.g. 'ge<impft'. No restriction on 'geu-' because only one non-past-participle observed:
+	-- [[Geusenwort]] (which needs respelling like 'Géusen-wort'), and there are various past participles in 'geu-',
+	-- especially 'geur-'.
+	{"ge", "gə", restriction = "^[^i]"},
+	{"herab", "herrább"},
+	{"heran", "herránn"},
+	{"herauf", "herráuf"},
+	{"heraus", "herráus"},
+	{"herbei", "herbéi"},
+	{"herein", "herréin"},
+	{"herüber", "herrǘber"},
+	{"herum", "herrúmm"},
+	{"herunter", "herrúnter"},
+	{"hervor", "herfór"},
+	{"her", "hérr"},
+	{"hinab", "hinnább"},
+	{"hinan", "hinnánn"},
+	{"hinauf", "hinnáuf"},
+	{"hinaus", "hinnáus"},
+	-- hinbei doesn't appear to exist
+	{"hinein", "hinnéin"},
+	{"hinter", "hínter"},
+	{"hinüber", "hinnǘber"},
+	-- hinum doesn't appear to exist
+	{"hinunter", "hinnúnter"},
+	-- hinvor doesn't appear to exist
+	{"hin", "hínn"},
+	-- too many false positives for in-
+	{"miss", "míss"},
+	{"nieder", "níeder"},
+	{"mit", "mítt"},
+	{"über", "ǘber"},
+	{"um", "úmm"},
+	{"un", "únn", prefixtype = "un"},
+	{"unter", "únter"},
+	{"ver", "ferr"},
+	{"voran", "foránn"},
+	{"voraus", "foráus"},
+	{"vorbei", "fohrbéi"}, -- respell per dewikt pronun
+	{"vorher", "fohrhér"}, -- respell per dewikt pronun
+	{"vorüber", "forǘber"},
+	{"vor", "fór"},
+	{"weg", "wéck"},
+	{"weiter", "wéiter"},
+	{"wider", "wíder"},
+	{"wieder", "wíeder"},
+	{"zer", "zerr"},
+	-- Listed twice, first as stressed then as unstressed, because of zu-infinitives like [[anzufangen]]. At the
+	-- beginning of a word, stressed zú- will take precedence, but after another prefix, stressed prefixes can't occur,
+	-- and unstressed -zu- will occur.
+	{"zu", "zú"},
+	{"zu", "zu"},
+	{"zurecht", "zurécht"},
+	{"zurück", "zurǘck"},
+}
+
+-- Suffix combinations:
+-- -barkeit
+-- -lichkeit
+-- -samkeit
+-- -loskeit (only [[Freudloskeit]], [[Zusammenhangloskeit]]?)
+-- -barlich (only [[sichtbarlich]], [[wunderbarlich]]?)
+-- -barschaft (only [[Nachtbarschaft]]?)
+-- -nisreich (only [[ereignisreich]], [[erlebnisreich]], [[kenntnisreich]]?)
+local suffixes = {
+	{"ant", "ánt", pos = {"n", "a"}},
+	{"anz", "ánz", pos = "n"},
+	{"abel", "ábel", pos = "a"},
+	{"ibel", "íbel", pos = "a"},
+	-- I considered an exception for -mal but there are many counter-exceptions like [[normal]], [[minimal]],
+	-- [[dermal]], [[dezimal]], [[prodromal]].
+	{"al", "ál", pos = "a"},
 	-- Normally following consonant but there a few exceptions like [[abbaubar]], [[recyclebar]], [[unüberschaubar]].
 	-- Cases like [[isobar]] will be respelled with an accent and not affected.
-	{"bar", {respell = "bàr", pos = "a"}},
+	{"bar", "bàr", pos = "a"},
 	-- Restrict to not follow a vowel or s (except for -ss) to avoid issues with nominalized infinitives in -chen.
 	-- Words with -chen after a vowel or s need to be respelled with '>chen', as in [[Frauchen]], [[Wodkachen]],
 	-- [[Häuschen]], [[Bläschen]], [[Füchschen]], [[Gänschen]], etc. Occasional gerunds of verbs in -rchen may need
 	-- to be respelled with '+chen' to avoid the preceding vowel being long, as in [[Schnarchen]].
-	{"chen", {respell = "çen", pos = "n", restriction = {"[^" .. accent .. vowel .. "]$", "[^s]s$"}}},
-	{"ei", {respell = "éi", pos = "n", restriction = cons_c .. "$"}},
+	{"chen", "çen", pos = "n", restriction = {"[^" .. accent .. vowel .. "]$", "[^s]s$"}},
+	{"erei", "əréi", pos = "n", restriction = C .. "$"},
+	{"ei", "éi", pos = "n", restriction = C .. "$"},
+	{"ent", "ént", pos = {"n", "a"}},
+	{"enz", "énz", pos = "n"},
+	{"erweise", "ərwèise", restriction = C .. "$", pos = "b"},
 	-- Normally following consonant but there a few exceptions like [[säurefest]]. Cases like [[manifest]] will be
 	-- respelled with an accent and not affected.
-	{"fest", {respell = "fèst", pos = "a"}},
-	{"schaft", {respell = "schàft", pos = "n"}},
-	{"haft", {respell = "hàft", pos = "a"}},
-	{"([hk])eit", {respell = "%1èit", pos = "n"}},
+	{"fest", "fèst", pos = "a"},
+	{"barschaft", "bahrschàft", pos = "n"},
+	{"schaft", "schàft", pos = "n"},
+	{"haft", "hàft", pos = "a"},
+	{"heit", "hèit", pos = "n"},
 	-- NOTE: This will get converted to secondary stress if there is a primary stress elsewhere in the word (e.g. in
 	-- compound words).
-	{"ie", {respell = "íe", pos = "n", restriction = cons_c .. "$"}},
+	{"ie", "íe", restriction = C .. "$", pos = "n"},
 	-- No restriction to not occur after a/e; [[kreieren]] does occur and noun form and verbs in -en after -aier/-eier
 	-- should not occur (instead you get -aiern/-eiern). Occurs with both nouns and verbs.
-	{"ieren", {respell = "íeren", pos = "v"}},
+	{"ieren", "íeren", pos = "v"},
 	-- See above. Occurs with adjectives and participles, and also [[Gefiert]].
-	{"iert", {respell = "íert", pos = "a"}},
+	{"iert", "íert", pos = "a"},
 	-- See above. Occurs with nouns.
-	{"ierung", {respell = "íerung", pos = "n"}},
+	{"ierung", "íerung", pos = "n"},
 	-- "isch" not needed here; no respelling needed and vowel-initial
 	-- NOTE: This will get converted to secondary stress if there is a primary stress elsewhere in the word (e.g. in
 	-- compound words like [[Abwehrmechanismus]] or [[Lügenjournalismus]]).
-	{"ismus", {respell = "ísmus", pos = "n"}},
-	{"ist", {respell = "íst", pos = "n"}},
-	{"istisch", {respell = "ístisch", pos = "a"}},
+	{"ismus", "ísmus", pos = "n"},
+	-- Restrict to not occur after -a or -e as it may form a diphthong ([[allermeist]], [[verwaist]], etc.). Words
+	-- with suffix -ist after -a or -e need respelling, e.g. [[Judaist]], [[Atheist]], [[Deist]], [[Monotheist]].
+	{"ist", "íst", respelling = "[^ae]$", pos = "n"},
+	{"istisch", "ístisch", respelling = "[^ae]$", pos = "a"},
+	{"barkeit", "bahrkèit", pos = "n"},
+	{"lichkeit", "lichkèit", pos = "n"},
+	{"loskeit", "lohskèit", pos = "n"},
+	{"samkeit", {"sahmkèit", "samkèit"}, pos = "n"},
+	{"keit", "kèit", pos = "n"},
+	{"barlich", "bahrlìch", pos = "a"},
+	{"lich", "lich", pos = "a"},
+	{"los", "lòs", pos = "a"},
+	-- Included because of words like [[Ergebnis]], [[Erlebnis]], [[Befugnis]], [[Begräbnis]], [[Betrübnis]],
+	-- [[Gelöbnis]], [[Ödnis]], [[Verlöbnis]], [[Wagnis]], etc. Only recognized when following a consonant to exclude
+	-- [[Anis]], [[Denis]], [[Penis]], [[Spiritus lenis]], [[Tunis]] (although these would be excluded in any case
+	-- for the pre-suffix part being too short). [[Tennis]] needs respelling 'Ten+nis'.
+	{"nis", "nis", restriction = C .. "$", pos = "n"},
+	{"ös", "ö́s", pos = "a"},
+	{"nisreich", "nisrèich", restriction = C .. "$", pos = "a"},
+	{"reich", "rèich", pos = "a"},
+	-- Two possible pronunciations (long and short). Occurs after a vowel in [[grausam]] (also false positives
+	-- [[Bisam]], [[Sesam]], which will be excluded as the pre-suffix part is too short).
+	{"sam", {"sahm", "sam"}, pos = "a"},
+	-- schaft is further up, above [[haft]]
 	-- Almost all words in -tät are in -ität but a few aren't: [[Majestät]], [[Fakultät]], [[Pietät]], [[Pubertät]],
 	-- [[Sozietät]], [[Varietät]].
-	{"lich", {pos = "a"}},
-	{"los", {respell = "lòs", pos = "a"}},
-	-- Included because of words like [[Ergebnis]], [[Erlebnis]], [[Befugnis]], [[Begräbnis]], [[Betrübnis]],
-	-- [[Gelöbnis]], [[Ödnis]], [[Verlöbnis]], [[Wagnis]], etc. A few words in -nis don't belong, e.g. [[Anis]],
-	-- [[Denis]], [[Penis]], [[Tennis]], [[Spiritus lenis]], [[Tunis]], and may need respelling.
-	{"nis", {pos = "n"}},
-	{"reich", {respell = "rèich", pos = "a"}},
-	{"sam", {respell = {"sahm", "sam"}, pos = "a"}},
-	{"tät", {respell = "tä́t", pos = "n"}},
-	{"tion", {respell = "zión", pos = "n"}},
+	{"tät", "tä́t", pos = "n"},
+	{"tion", "zión", pos = "n"},
 	-- This must follow -tion. Most words in -ion besides those in -tion are still end-stressed abstract nouns, e.g.
 	-- [[Religion]], [[Version]], [[Union]], [[Vision]], [[Explosion]], [[Aggression]], [[Rebellion]], or other words
 	-- with the same stress pattern, e.g. [[Skorpion]], [[Million]], [[Fermion]]. There are several in -ion that are
 	-- various types of ions, e.g. [[Cadiumion]], [[Hydridion]], [[Gegenion]], which need respelling with a hyphen, and
 	-- some miscellaneous words that aren't end-stressed, e.g. [[Amnion]], [[Champion]], [[Camion]], [[Ganglion]],
 	-- needing respelling of various sorts.
-	{"ion", {respell = "ión", pos = "n", restriction = cons_c .. "$"}},
+	{"ion", "ión", restriction = C .. "$", pos = "n"},
 	-- "ung" not needed here; no respelling needed and vowel-initial
-	{"voll", {respell = "fòll", pos = "a"}},
-	{"weise", {respell = "wèise", pos = "a"}},
+	{"voll", "fòll", pos = "a"},
+	{"weise", "wèise", pos = "a"},
 }
 
 -- These rules operate in order, and apply to the actual spelling, after (1) decomposition, (2) prefix and suffix
@@ -388,7 +514,11 @@ export.suffixes = {
 local phonemic_rules = {
 	{"ǝ", "ə"}, -- "Wrong" schwa (U+01DD) to correct schwa (U+0259)
 	{"x", "ks"},
-	{"tz", "ʦʦ"},
+	-- WE treat written 'ts' same as 'tz', e.g. [[aufwärts]], [[Aufenhaltsgenehmigung]], [[Rätsel]] and
+	-- foreign-derived words such as [[Botsuana]], [[Fietse]], [[Lotse]], [[Mitsubishi]], [[Hatsa]], [[Tsatsiki]],
+	-- [[Whatsapp]]. To prevent this, insert a syllable boundary (.), a component boundary (-), a prefix or suffix
+	-- boundary (< or >), etc.
+	{"t[sz]", "ʦʦ"},
 	{"z", "ʦ"},
 	{"qu", "kv"},
 	{"q", "k"},
@@ -630,6 +760,17 @@ local phonemic_rules = {
 	-- this may not be the case in the presence of user-specified syllable boundaries.
 	{"(" .. C .. ")(%.?)%1", "%1", true},
 
+	-- FIXME: Should we do this across syllable boundaries? There are words where ŋ spelled 'n' occurs before 'k' or 'g'
+	-- across a syllable boundary, e.g. [[Inka]], [[Ingo]], [[Ingolf]], [[Ingrid]], [[Kongo]], optionally [[kongruent]].
+	-- But the words with 'ng' usually require respelling in any case as otherwise e.g. [[Kongo]] would be rendered
+	-- /kɔŋo/. This way, words beginning with 'ink-' where 'in-' is a Latinate prefix don't require respelling with
+	-- 'in<...', e.g. [[Inkarnation]], [[Inklusion]], [[inkohärent]], [[inkompatibel]], [[inkompetent]],
+	-- [[inkremental]], etc. [[ingeniös]] and [[Ingredienz]] need a syllable divider 'in.geniös', 'In.gredienz';
+	-- [[Ingrid]], [[Kongo]] need respelling 'Inggrid', 'Konggo'.
+	{"n([gk])", "ŋ%1"},
+	-- As an exception, 'n' -> /ŋ/ before k + schwa to handle numerous cases like [[bedanken]], [[Denke]], [[Flanke]],
+	-- [[Funke]], [[Gedanke]], [[Kranker]], etc.
+	{"n(%.kə)", "ŋ%1"},
 	-- 'ĭg' is pronounced [ɪç] word-finally or before an obstruent (not before an approximant as in [[ewiglich]] or
 	-- [[Königreich]] when divided as ''ewig.lich'', ''König.reich'').
 	{"ɪg⁀", "ɪç"},
@@ -667,8 +808,8 @@ local phonemic_rules = {
 	{"əʁ", "ɐ"},
 
 	-- Generate IPA stress marks.
-	{AC, "ˈ"},
-	{GR, "ˌ"},
+	{ACUTE, "ˈ"},
+	{GRAVE, "ˌ"},
 	-- Move IPA stress marks to the beginning of the syllable.
 	{"([.⁀])([^.⁀ˈˌ]*)([ˈˌ])", "%1%3%2"},
 	-- Suppress syllable mark before IPA stress indicator.
@@ -699,10 +840,11 @@ local phonetic_rules = {
 	{"([ptk])(%.?[⁀" .. vowel .. "ʁl])", "%1ʰ%2"},
 	{"(t" .. TIE .. "[sʃ])(%.?[⁀" .. vowel .. "ʁl])", "%1ʰ%2"},
 	-- voiced stops/fricatives become unvoiced after unvoiced sound; cf. [[Abbildung]] [ˈʔap̚.b̥ɪl.dʊŋ]
-	{"(" .. unvoiced_cons_c .. "[.⁀]*[bdɡvzʒ])", "%1" .. UNVOICED}, -- IPA ɡ
+	{"(" .. unvoiced_C .. "[.⁀]*[bdɡvzʒ])", "%1" .. UNVOICED}, -- IPA ɡ
 	-- FIXME: Other possible phonemic/phonetic differences:
 	-- (1) Omit syllable boundaries in phonemic notation?
 	-- (2) Maybe not show some or all glottal stops in phonemic notation? Existing phonemic examples tend to omit it.
+	-- (3) Maybe show -ieren as if written -iern; but this may be colloquial.
 }
 
 local function apply_rules(word, rules)
@@ -717,6 +859,15 @@ local function apply_rules(word, rules)
 	return word
 end
 
+local function check_onset_offset(cluster, patterns)
+	for _, pattern in ipairs(patterns) do
+		if rfind(cluster, "^" .. pattern .. "$") then
+			return true
+		end
+	end
+	return false
+end
+
 local function lookup_stress_spec(stress_spec, pos)
 	return stress_spec[pos] or (pos == "verbal" and stress_spec["verb"]) or nil
 end
@@ -727,21 +878,24 @@ local function split_on_word_boundaries(word, pos)
 	local i = 1
 	local saw_primary_stress = false
 	while i <= #parts do
-		local split_part = false
 		local insert_position = #retparts + 1
 		if parts[i + 1] ~= "<" and parts[i - 1] ~= ">" then
 			-- Split off any prefixes.
 			while true do
 				local broke_prefix = false
-				for _, prefixspec in ipairs(com.prefixes) do
+				local saw_un = false
+				local saw_unstressed = false
+				local saw_stressed = false
+				for _, prefixspec in ipairs(prefixes) do
 					local prefix_pattern = prefixspec[1]
-					local stress_spec = prefixspec[2]
+					local prefixtype = prefixspec.prefixtype or rfind(prefix_respell, stress_c) and "stressed" or
+						"unstressed"
 					local pos_stress = lookup_stress_spec(stress_spec, pos)
 					local prefix, rest = rmatch(parts[i], "^(" .. prefix_pattern .. ")(.*)$")
 					if prefix then
 						if not pos_stress then
 							-- prefix not recognized for this POS, don't split here
-						elseif stress_spec.restriction and not rfind(rest, stress_spec.restriction) then
+						elseif prefixspec.restriction and not rfind(rest, prefixspec.restriction) then
 							-- restriction not met, don't split here
 						elseif rfind(rest, "^%+") then
 							-- explicit non-boundary here, so don't split here
@@ -751,31 +905,51 @@ local function split_on_word_boundaries(word, pos)
 							-- only two letters, unlikely to be a word, probably an ending, so don't split
 							-- here
 						else
+							-- Use non_V so that we pick up things like explicit syllable divisions, which will
+							-- prevent the allowed-onset check from succeeding.
 							local initial_cluster, after_cluster = rmatch(rest, "^(" .. non_V .. "*)(.-)$")
-							if rfind(initial_cluster, "..") and (
-								not (com.onsets_2[initial_cluster] or com.secondary_onsets_2[initial_cluster] or
-									com.onsets_3[initial_cluster])) then
+							if not check_onset_offset(initial_cluster, allowed_onsets) then
 								-- initial cluster isn't a possible onset, don't split here
-							elseif rfind(initial_cluster, "^x") then
-								-- initial cluster isn't a possible onset, don't split here
-							elseif rfind(after_cluster, "^" .. V .. "$") then
-								-- remainder is a cluster + short vowel,
-								-- unlikely to be a word so don't split here
+							elseif rfind(after_cluster, "^" .. V .. "?$") then
+								-- remainder is a cluster + single vowel, unlikely to be a word so don't split here
+								-- most such words have impermissible onsets, but cf. [[Beta]], [[Bete]], [[Bede]],
+								-- [[Bethe]], [[Geste]], [[verso]], [[Verve]], [[vorne]], [[Erbe]], [[Erde]], [[ergo]],
+								-- [[Erle]], [[erste]],  etc.
+							elseif not rfind(prefix, stress_c) and rfind(after_cluster, "^e" .. C_not_h .. "$") then
+								-- remainder is a cluster + e + single consonant after an unstressed prefix, unlikely
+								-- to be a word so don't split here; most such words have impermissible onsets, but cf.
+								-- [[Bebel]], [[beben]], [[Besen]], [[beten]], [[geben]], [[Geber]], [[gegen]],
+								-- [[gehen]], [[geten]], [[Becher]], [[Gegner]], [[Verschen]], [[erben]], [[erden]],
+								-- [[Erker]], [[erlen]], [[Erpel]], [[erzen]], [[Erster]], etc.; a few legitimate
+								-- prefixed words get rejected, e.g. [[Beleg]], [[Gebet]], which need respelling
+							elseif prefixtype == "un" and (saw_un or saw_unstressed or saw_stressed) then
+								-- un- cannot occur after any other prefixes
+							elseif prefixtype == "unstressed" and saw_unstressed then
+								-- unstressed prefixes like ge- cannot occur after other unstressed prefixes
+							elseif prefixtype == "stressed" and saw_stressed then
+								-- stressed prefixes like an- cannot occur after other stressed prefixes, except
+								-- in certain combinations like voran- that we treat as single prefixes
 							else
-								-- break the word in two; next iteration we process
-								-- the rest, which may need breaking again
+								-- break the word in two; next iteration we process the rest, which may need breaking
+								-- again
 								parts[i] = rest
-								if pos_stress == "unstressed" then
-									-- don't do anything
-								elseif pos_stress == "secstressed" or (saw_primary_stress and pos_stress == "stressed") then
-									prefix = rsub(prefix, "(" .. V .. ")", "%1" .. AUTOGRAVE, 1)
-								elseif pos_stress == "stressed" then
-									prefix = rsub(prefix, "(" .. V .. ")", "%1" .. AUTOACUTE, 1)
-									saw_primary_stress = true
+								if prefixtype == "un" then
+									saw_un = true
+								elseif prefixtype == "unstressed" then
+									saw_unstressed = true
 								else
-									error("Unrecognized stress spec for pos=" .. pos .. ", prefix=" .. prefix .. ": " .. pos_stress)
+									saw_stressed = true
 								end
-								table.insert(retparts, insert_position, prefix)
+								local prefix_respell = decompose(prefixspec[2])
+								prefix_respell = gsub(prefix_respell, ACUTE, AUTOACUTE)
+								prefix_respell = gsub(prefix_respell, GRAVE, AUTOGRAVE)
+								if rfind(prefix_respell, AUTOACUTE) then
+									if saw_primary_stress then
+										prefix_respell = rsub(prefix_respell, AUTOACUTE, AUTOGRAVE)
+									end
+									saw_primary_stress = true
+								end
+								table.insert(retparts, insert_position, prefix_respell)
 								insert_position = insert_position + 1
 								broke_prefix = true
 								break
@@ -791,7 +965,7 @@ local function split_on_word_boundaries(word, pos)
 			-- Now do the same for suffixes.
 			while true do
 				local broke_suffix = false
-				for _, suffixspec in ipairs(com.suffixes) do
+				for _, suffixspec in ipairs(suffixes) do
 					local suffix_pattern = suffixspec[1]
 					local stress_spec = suffixspec[2]
 					local pos_stress = lookup_stress_spec(stress_spec, pos)
@@ -837,10 +1011,10 @@ local function split_on_word_boundaries(word, pos)
 		end
 
 		local acc = rfind(parts[i], "(" .. stress_accent_c .. ")")
-		if acc == com.CFLEX then
+		if acc == CFLEX then
 			-- remove circumflex but don't accent
-			parts[i] = gsub(parts[i], com.CFLEX, "")
-		elseif acc == com.ACUTE or acc == AUTOACUTE then
+			parts[i] = gsub(parts[i], CFLEX, "")
+		elseif acc == ACUTE or acc == AUTOACUTE then
 			saw_primary_stress = true
 		elseif not acc and parts[i + 1] ~= "<" and parts[i - 1] ~= ">" then
 			-- Add primary or secondary stress on the part; primary stress if no primary
@@ -982,9 +1156,9 @@ end
 local function combine_syllables_moving_stress(syllables, no_auto_stress)
 	local modified_syls = {}
 	for i, syl in ipairs(syllables) do
-		if syl:find(com.ACUTE) or syl:find(AUTOACUTE) and not no_auto_stress then
+		if syl:find(ACUTE) or syl:find(AUTOACUTE) and not no_auto_stress then
 			syl = "ˈ" .. syl
-		elseif syl:find(com.GRAVE) or syl:find(AUTOGRAVE) and not no_auto_stress then
+		elseif syl:find(GRAVE) or syl:find(AUTOGRAVE) and not no_auto_stress then
 			syl = "ˌ" .. syl
 		elseif i > 1 then
 			syl = "." .. syl
@@ -1010,7 +1184,7 @@ local function combine_parts(parts)
 end
 
 local function transform_word(word, pos, no_auto_stress)
-	word = com.decompose(word)
+	word = decompose(word)
 	local parts = split_on_word_boundaries(word, pos)
 	for i, part in ipairs(parts) do
 		local syllables = split_into_syllables(part)
@@ -1094,7 +1268,7 @@ end
 function export.show(frame)
 	local parent_args = frame:getParent().args
 	local params = {
-		[1] = { required = true, default = "hlǣf-dīġe", list = true },
+		[1] = { required = true, default = "Aufenthalts-genehmigung", list = true },
 		["pos"] = {},
 		["ann"] = {},
 	}
@@ -1115,12 +1289,12 @@ function export.show(frame)
 		anntext = {}
 		for _, arg in ipairs(args[1]) do
 			-- remove all spelling markup except ġ/ċ and macrons
-			arg = rsub(com.decompose(arg), "[%-+._<>" .. com.ACUTE .. com.GRAVE .. com.CFLEX .. "]", "")
+			arg = rsub(decompose(arg), "[%-+._<>" .. ACUTE .. GRAVE .. CFLEX .. "]", "")
 			arg = rsub(arg, "%[(.)%]", char_to_spelling)
 			m_table.insertIfNot(anntext, "'''" .. arg .. "'''")
 		end
 		anntext = table.concat(anntext, ", ") .. ":&#32;"
-	elseif args.ann then
+	if args.ann then
 		anntext = "'''" .. args.ann .. "''':&#32;"
 	else
 		anntext = ""
