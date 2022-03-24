@@ -19,6 +19,9 @@ The following symbols can be used:
 --   the consonants on either side treated as if they occurred at the beginning/end of the word, and each part of the
 --   compound gets its own stress (primary stress on the first part unless another part has primary stress, secondary
 --   stress on the remaining parts unless stress is explicitly included).
+-- -- (double hyphen) to indicate a word/word boundary in a compound word where one (or both) of the component words
+--    itself is a compound. Here, the original secondary stresses turn into tertiary stresses (not shown) and the
+--    primary stress the second component (and further components) becomes secondary. See discussion below.
 -- < (less-than) to indicate a prefix/word or prefix/prefix boundary; similar to - for word/word boundary, but the
 --   prefix before the < sign will be unstressed.
 -- > (greater-than) to indicate a word/suffix or suffix/suffix boundary; similar to - for word/word boundary, but the
@@ -79,6 +82,40 @@ Notes:
    [[Familie]], use 'i̯' explicitly (respelled 'Famíli̯e'). Occasionally the  ̯ symbol needs to be added to other vowels,
    e.g. in [[Ichthyologie]] respelled 'Ichthy̯ologie' (note that '-ie' is a recognized stressed suffix) and
    [[soigniert]] respelled 'so̯anjiert' ('-iert' is a recognized stressed suffix).
+9. The double hyphen is used when joining compound words together. For example, [[Hubschrauber]] "helicopter" respelled
+   'Hub-schrauber' is rendered as [ˈhuːpˌʃʁaʊ̯bɐ] while [[Landeplatz]] "landing place; airstrip; wharf, pier" respelled
+   'Lande-platz' is rendered [ˈlandəˌplat͡s], and the combination [[Hubschrauberlandeplatz]] "heliport, helicopter port"
+   respelled 'Hub-schrauber--lande-platz' is rendered [ˈhuːpʃʁaʊ̯bɐˌlandəplat͡s]. Here, the original secondary
+   stresses turn into tertiary stresses (not shown) and the primary stress in [[Landeplatz]] becomes secondary.
+   The loss of secondary stress has no other effect on the phonology. For example, consider [[Rundflug]]
+   "sightseeing flight" (lit. "circular flight") respelled 'Rund-flug' and rendered [ˈʁʊntˌfluːk]. When combined
+   with [[Hubschrauber]], the result [[Hubschrauberrundflug]] "helicopter sightseeing flight" respelled
+   'Hub-schrauber--rund-flug' is rendered [ˈhuːpʃʁaʊ̯bɐˌʁʊntfluːk], where the last vowel is still long despite
+   (apparently) losing the stress. Another example is [[Hubschrauberpilot]] "helicopter pilot", compounded of
+   [[Hubschrauber]] and [[Pilot]] "pilot". The latter must be respelled 'Pilót' due to the unexpected stress.
+   The combination [[Hubschrauberpilot]] should be respelled 'Hub-schrauber--pilòt', rendered as
+   [ˈhupʃʁaʊ̯bɐpiˌloːt]. Here, the primary stress should be converted to secondary; otherwise the word would
+   wrongly end up rendered as [ˌhupʃʁaʊ̯bɐpiˈloːt], where the module assumes that since the second word has the
+   primary stress, other words (including the first one) should have secondary stress. Other similar examples:
+   [[Hubschrauberabsturz]] "helicopter crash" 'Hub-schrauber--absturz' [ˈhuːpʃʁaʊ̯bɐˌʔapʃtʊʁt͡s] (the stressed
+   prefix ab- is automatically recognized) and [[Maulwurfshügel]] "molehill" [ˈmaʊ̯lvʊʁfsˌhyːɡl̩]. Occasionally the
+   double hyphen should be used even when no single hyphens occur. Another example of note is [[Aufenthaltsgenehmigung]]
+   "residence permit". [[Aufenthalt]] by itself (without respelling) is rendered [ˈaʊ̯f(ʔ)ɛntˌhalt], i.e. it has
+   secondary stress. The respelling 'Aufenthalts-genehmigung' is rendered [ˈaʊ̯fʔɛnthalt͡sɡəˌneːmɪɡʊŋ] without the
+   original secondary stress; the module recognizes the need to remove the secondary stress here. Essentially, if two
+   words are joined by an ordinary hyphen and one of them has secondary stress due to a stressed prefix, the hyphen
+   is implicitly "upgraded" to a double hyphen.
+
+   Things may get more complex when stresses "bump up" against each other. For example, [[Abhängigkeit]] "dependency"
+   with no respelling is rendered [ˈapˌhɛŋɪçkaɪ̯t]. In combination as e.g. [[Drogenabhängigkeit]] "drug dependency,
+   drug addiction" respelled 'Drogen-abhängigkeit', the result is [ˈdʁoːɡn̩ˌʔaphɛŋɪçkaɪ̯t], which appears correct.
+   In combination as e.g. [[Alkoholabhängigkeit]] respelled 'Alkohól-abhängigkeit', the result is
+   [alkoˈhoːlˌʔaphɛŋɪçkaɪ̯t], which may sound wrong to native ears because of the two stresses bumping up against each
+   other. The actual pronunciation may be more like [alkoˈhoːlʔapˌhɛŋɪçkaɪ̯t] with the secondary stress moving
+   (respell 'Alkohól-abhä̀ngigkeit') or [alkoˈhoːlʔaphɛŋɪçkaɪ̯t] with the secondary stress disappearing (respell
+   'Alkohól-ȧbhängigkeit' where the dot-above suppresses the stress marker but otherwise doesn't change the
+   phonology).
+
 
 FIXME:
 
@@ -97,7 +134,7 @@ FIXME:
 9. Ignore final period/question mark/exclamation point.
 10. Implement nasal vowels.
 11. Implement underscore to prevent assimilation/interpretation as a multigraph.
-12. Implement [b] [d] [g] [z] [v] [ʒ] [x].
+12. Implement [b] [d] [g] [z] [v] [s] [x].
 13. Implement dot-under to prevent stress.
 14. Check allowed onsets with prefixes.
 15. Implement allowed offsets and check with suffixes.
@@ -116,8 +153,9 @@ FIXME:
 18. n before g/k in the same syllable should be ŋ. Sometimes also across syllables, cf. [[Ingrid]].
 19. Written 'ts' in the same syllable should be rendered with a tie, e.g. [[aufwärts]], [[Aufenhaltsgenehmigung]].
     [[Botsuana]] is tricky as it normally would have syllable division 't.s', but maybe we should special-case it
-	so we get /bɔˈtsu̯aːna/. Other examples: [[enträtseln]], [[Fietse]], [[Lotse]], [[Mitsubishi]], [[Outsider]],
-	[[Outsourcing]], [[Rätsel]], [[Hatsa]], [[Tsatsiki]], [[Whatsapp]].
+	so we get /bɔˈtsu̯aːna/. Other examples: [[enträtseln]], [[Fietse]], [[Lotse]], [[Mitsubishi]], [[Rätsel]],
+	[[Hatsa]], [[Tsatsiki]], [[Whatsapp]]. In [[Outsider]] and [[Outsourcing]], the 't' and 's' are pronounced
+	separately, respelled 'Aut-[s]aider' and 'Aut-[s]ŏhßing' (or similar).
 ]=]
 
 local export = {}
@@ -257,6 +295,7 @@ local cons_guts = "^" .. vowel .. wordsep .. "_" -- guts of consonant class
 local C = "[" .. cons_guts .. "]" -- consonant
 local C_not_lr = "[" .. cons_guts .. "lr]" -- consonant not 'l' or 'r'
 local C_not_h = "[" .. cons_guts .. "h]" -- consonant not 'h'
+local C_not_s = "[" .. cons_guts .. "s]" -- consonant not 's'
 -- Include both regular g and IPA ɡ so it can be used anywhere
 local obstruent_non_sibilant = "pbfvkgɡtdxç" .. EXPLICIT_B .. EXPLICIT_D .. EXPLICIT_G .. EXPLICIT_V .. EXPLICIT_X
 local obstruent_non_sibilant_c = "[" .. obstruent_non_sibilant .. "]"
@@ -306,9 +345,10 @@ local allowed_offsets = {
 --
 -- In general, there are three types of prefixes: stressed and unstressed, and un-. Stressed prefixes can be followed
 -- by unstressed prefixes (e.g. [[Aufenthalt]]), and sometimes unstressed prefixes can be followed by stressed
--- prefixes (e.g. [[beabsichtigen]], [[veranlagen]]), but otherwise prefixes cannot be combined, except for un-, which
--- can be followed by either stressed or unstressed prefixes (but not another un-); cf. [[unausgegoren]], with three
--- prefixes (un- + stressed + unstressed) or [[unzerstörbar]], with two prefixes (un- + unstressed).
+-- prefixes (e.g. [[beabsichtigen]], [[veranlagen]]) or by un- (e.g. [[verunglücken]], [[Verunreinigung]],
+-- [[verunstalten]], [[beunruhigen]]), but otherwise prefixes cannot be combined, except for un-, which can be followed
+-- by either stressed or unstressed prefixes (but not another un-); cf. [[unausgegoren]], with three prefixes (un- +
+-- stressed + unstressed) or [[unzerstörbar]], with two prefixes (un- + unstressed).
 --
 -- Some prefixes can be both stressed and unstressed, e.g. durch-, unter-, über-, wieder-. For some, e.g. miss- and
 -- wider-, there are systematic alternations in stress: unstressed when functioning as a verbal prefix followed by an
@@ -322,7 +362,8 @@ local prefixes = {
 	{"aus", "áus"},
 	{"auseinander", "àus-einánder"},
 	{"bei", "béi"},
-	{"be", "bə", restriction = "^[^u]"},
+	-- Allow be- before -u- only in beur-, beun-; cf. [[beurlauben]], [[Beunruhigung]].
+	{"be", "bə", restriction = {"^[^u]", "^u[rn]"}},
 	{"daher", "dahér"},
 	{"dahin", "dahín"},
 	{"durch", "dúrch"},
@@ -390,6 +431,15 @@ local prefixes = {
 	{"zurück", "zurǘck"},
 }
 
+-- Suffix stress:
+-- -- Suffixes like [[-lein]] seem to take secondary stress only when the preceding syllable has no stress and there
+--    is no preceding secondary stress, e.g. [[Fingerlein]], [[Schwesterlein]] or [[Müllerlein]] /ˈmʏlɐˌlaɪ̯n/. In most
+--    words, this condition doesn't hold, and so -lein has no stress, e.g. [[Äuglein]] [ˈɔɪ̯klaɪ̯n] or [[Bäumlein]]
+--    [ˈbɔɪ̯mlaɪ̯n]. This includes secondary stress of the type found in [[Ecklädlein]] /ˈɛkˌlɛːtlaɪn/; [[Hofkirchlein]]
+--    /ˈhoːfˌkɪʁçlaɪ̯n/; [[Apfelbäumlein]] /ˈap͡fl̩ˌbɔɪ̯mlaɪ̯n/. This is contrary to the behavior of compounds-of-compounds
+--    like [[Hubschrauberlandeplatz]] and [[Maulwurfshügel]] described above; by that rule, we'd expect
+--    #/ˈap͡fl̩bɔɪ̯mˌlaɪ̯n/ or similar. Cf. similar behavior with -keit: [[Abhängigkeit]] [ˈapˌhɛŋɪçkaɪ̯t].
+--
 -- Suffix combinations:
 -- -barkeit
 -- -lichkeit
@@ -413,7 +463,7 @@ local suffixes = {
 	-- Words with -chen after a vowel or s need to be respelled with '>chen', as in [[Frauchen]], [[Wodkachen]],
 	-- [[Häuschen]], [[Bläschen]], [[Füchschen]], [[Gänschen]], etc. Occasional gerunds of verbs in -rchen may need
 	-- to be respelled with '+chen' to avoid the preceding vowel being long, as in [[Schnarchen]].
-	{"chen", "çen", pos = "n", restriction = {"[^" .. accent .. vowel .. "]$", "[^s]s$"}},
+	{"chen", "çen", pos = "n", restriction = {C_not_s .. "$", "ss$"}},
 	{"erei", "əréi", pos = "n", restriction = C .. "$"},
 	{"ei", "éi", pos = "n", restriction = C .. "$"},
 	{"ent", "ént", pos = {"n", "a"}},
@@ -449,8 +499,14 @@ local suffixes = {
 	{"loskeit", "lohskèit", pos = "n"},
 	{"samkeit", {"sahmkèit", "samkèit"}, pos = "n"},
 	{"keit", "kèit", pos = "n"},
+	-- See comment above about secondary stress.
+	{"lein", "lèin", pos = "n"},
 	{"barlich", "bahrlìch", pos = "a"},
 	{"lich", "lich", pos = "a"},
+	-- Restrict to not be after -l (cf. [[Drilling]], [[Helling]], [[Marshalling]], [[Schilling]], [[Spilling]],
+	-- [[Zwilling]]). Instances after vowels do occur ([[Dreiling]], [[Edeling]], [[Neuling]], [[Reling]]); words
+	-- [[Feeling]], [[Homeschooling]] need respelling in any case.
+	{"ling", "ling", restriction = "[^l]$", pos = "n"},
 	{"los", "lòs", pos = "a"},
 	-- Included because of words like [[Ergebnis]], [[Erlebnis]], [[Befugnis]], [[Begräbnis]], [[Betrübnis]],
 	-- [[Gelöbnis]], [[Ödnis]], [[Verlöbnis]], [[Wagnis]], etc. Only recognized when following a consonant to exclude
@@ -502,6 +558,20 @@ local phonemic_rules = {
 	{"w", "v"},
 	-- [[Pinguin]], [[Linguistik]], [[konsanguin]], [[Lingua franca]], [[bilingual]]
 	{"ngu(" .. V .. ")", "ŋgu%1"},
+	-- Most words with -ngr- without a clear component boundary pronounce the g. Examples: [[Engramm]] (arguably has a
+	-- component boundary, pronounced with /n/?); [[Gangrän]] (/ŋ/); [[Ingredienz]] (arguably has a component boundary,
+	-- pronounced with /n/); [[Ingrid]] (/ŋ/); [[Ingrimm]] (with component boundary but still /ŋ/); [[inkongruent]],
+	-- [[kongruent]], [[Kongruenz]] (arguably has a component boundary, optionally with /ŋ/ or /n/); [[Kaliningrad]],
+	-- [[Leningrad]], [[Stalingrad]] (ditto); [[Kongress]] (ditto); [[Mangrove]] (with /ŋ/); [[Sangria]] (with /ŋ/);
+	-- only [[hungrig]] has /ŋr/ without /g/. Choosing this default simplifies handling the cases with /ngr/ (which
+	-- should add a syllable boundary 'n.gr') and /ŋr/ (which should add a syllable boundary 'ng.r').
+	--
+	-- With -ngl- we have [[Angler]] /ŋl/; [[Anglikaner]], [[anglikanisch]], [[Anglistik]], [[Anglizismus]], [[Anglo-]],
+	-- etc. with /ŋgl/; [[Bangladesch]] and related with /ŋl/; [[England]], [[Engländer], [[English]], [[Denglish]],
+	-- [[einenglischen]] and related with /ŋl/; [[Ganglion]] with /ŋl/ or /ŋgl/; [[Jingle]] respelled 'Dschingel';
+	-- [[Jonglage]], [[Jongleur]], [[jonglieren]] with /ɔ̃gl/, /ɔŋgl/ or /ɔŋl/; [[Konglomerat]] with /ŋgl/ or /ngl/;
+	-- [[Ringlotte]] ?; [[Single]] respelled '[S]ingel'; [[Spengler]] with /ŋl/; [[Umzinglung]] with /ŋl/
+	{"ngr", "ŋgr"},
 	{"ng", "ŋŋ"},
 	{"dt", "tt"},
 
@@ -576,7 +646,7 @@ local phonemic_rules = {
 	-- with a nasal vowel in it.
 	--
 	-- For /gs/, [[bugsieren]] is an exception with [ks]. Cf. also [[pumperlgsund]] with [ks]. All other examples with
-	-- /gs/ in enwikt have a clear morpheme boundary in a compound or with a suffix.
+	-- /gs/ in enwikt have a component boundary in the middle.
 	--
 	-- No apparent examples involving /vs/, /zs/, /(d)ʒs/ that don't involve clear morpheme boundaries.
 	{"([bd])s(" .. V .. ")([^⁀]*" .. stress_c .. ")", "%1z%2"},
@@ -732,9 +802,9 @@ local phonemic_rules = {
 		["ü"] = "ʏ",
 	}},
 
-	-- Eliminate remaining geminate consonants within a compound part (geminates can legitimately exist across the
-	-- boundary of parts of a compound). Normally such geminates will always occur across a syllable boundary, but
-	-- this may not be the case in the presence of user-specified syllable boundaries.
+	-- Eliminate remaining geminate consonants within a compound part (geminates can legitimately exist across a
+	-- component boundary). Normally such geminates will always occur across a syllable boundary, but this may not be
+	-- the case in the presence of user-specified syllable boundaries.
 	{"(" .. C .. ")(%.?)%1", "%1", true},
 
 	-- FIXME: Should we do this across syllable boundaries? There are words where ŋ spelled 'n' occurs before 'k' or 'g'
@@ -745,8 +815,9 @@ local phonemic_rules = {
 	-- [[inkremental]], etc. [[ingeniös]] and [[Ingredienz]] need a syllable divider 'in.geniös', 'In.gredienz';
 	-- [[Ingrid]], [[Kongo]] need respelling 'Inggrid', 'Konggo'.
 	{"n([gk])", "ŋ%1"},
-	-- As an exception, 'n' -> /ŋ/ before k + schwa to handle numerous cases like [[bedanken]], [[Denke]], [[Flanke]],
-	-- [[Funke]], [[Gedanke]], [[Kranker]], etc.
+	-- As an exception, 'n' -> /ŋ/ before k/g + unstressed ending to handle numerous cases like [[bedanken]], [[Denke]],
+	-- [[Flanke]], [[Funke]], [[Gedanke]], [[Kranker]], [[Beschränkung]], [[Erkrankung]], [[Verrenkung]], [[gelenkig]],
+	-- [[stinkig]], etc.
 	{"n(%.kə)", "ŋ%1"},
 	-- 'ĭg' is pronounced [ɪç] word-finally or before an obstruent (not before an approximant as in [[ewiglich]] or
 	-- [[Königreich]] when divided as ''ewig.lich'', ''König.reich'').
@@ -811,7 +882,7 @@ local phonetic_rules = {
 	{"(" .. V .. "ː?)ʁ", "%1ɐ̯"},
 	-- unvoiced stops and affricates become affricated word-finally and before vowel, /ʁ/ or /l/ (including syllabic
 	-- /l/), but not before syllabic nasal; cf. [[zurücktreten]], with aspirated 'z', 'ck' and first 't' but not second;
-	-- also not before homorganic stop across prefix/compound boundary like [[Abbildung]] [ˈʔap̚.b̥ɪl.dʊŋ]
+	-- also not before homorganic stop across component boundary like [[Abbildung]] [ˈʔap̚.b̥ɪl.dʊŋ]
 	{"p([.⁀]b)", "p" .. UNRELEASED .. "%1"},
 	{"t([.⁀]d)", "t" .. UNRELEASED .. "%1"},
 	{"k([.⁀]ɡ)", "k" .. UNRELEASED .. "%1"}, -- IPA ɡ
@@ -929,8 +1000,8 @@ local function check_onset_offset(cluster, patterns)
 end
 
 
--- Check text against a pattern restriction. If it matches, return false (restricted); otherwise, return true.
--- If the restriction is a list of patterns, return false if any of them matches.
+-- Check text against a pattern restriction. If it matches, return true; otherwise, return false. If the restriction
+-- is a list of patterns, return true if any of them matches.
 local function meets_restriction(rest, restriction)
 	if restriction == nil then
 		-- no restriction.
@@ -940,15 +1011,15 @@ local function meets_restriction(rest, restriction)
 		-- If any of the restrictions pass, the affix is restricted.
 		for _, restrict in ipairs(restriction) do
 			if rfind(rest, restrict) then
-				return false
+				return true
 			end
 		end
 	else
 		if rfind(rest, restrict) then
-			return false
+			return true
 		end
 	end
-	return true
+	return false
 end
 
 
