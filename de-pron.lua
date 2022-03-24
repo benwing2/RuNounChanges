@@ -8,6 +8,11 @@ The following symbols can be used:
 -- Acute accent on a vowel to override the position of primary stress; in a diphthong, put it over the first vowel:
 --   á é í ó ú ä́ ö́ ǘ ái éi áu ä́u éu
 -- Grave accent to add secondary stress: à è ì ò ù ä̀ ö̀ ǜ ài èi àu ä̀u èu
+-- Double grave accent to add tertiary stress: ȁ ȅ ȉ ȍ ȕ ä̏ ö̏ ü̏ ȁi ȅi ȁu ä̏u ȅu. Tertiary stress has the same effect on
+--   vowels as secondary stress (e.g. they lengthen in open syllables) but is rendered without a stress mark. Under
+--   normal circumstances, you do not have to explicitly add tertiary stress. Rather, secondary stresses (including
+--   those generated automatically) are automatically converted to tertiary stress in certain circumstances, e.g.
+--   when compounding two words that are already compounds. See the discussion on -- (double hyphen) below.
 -- 'h' or ː after a vowel to force it to be long.
 -- Circumflex on a vowel (â ê î ô û ä̂ ö̂ ü̂) to force it to have closed quality.
 -- Breve on a vowel, including a stressed vowel (ă ĕ ĭ ŏ ŭ ä̆ ö̆ ü̆) to force it to have open quality.
@@ -156,6 +161,8 @@ FIXME:
 	so we get /bɔˈtsu̯aːna/. Other examples: [[enträtseln]], [[Fietse]], [[Lotse]], [[Mitsubishi]], [[Rätsel]],
 	[[Hatsa]], [[Tsatsiki]], [[Whatsapp]]. In [[Outsider]] and [[Outsourcing]], the 't' and 's' are pronounced
 	separately, respelled 'Aut-[s]aider' and 'Aut-[s]ŏhßing' (or similar).
+20. Implement handling of written 'y'.
+21. Implement double hyphen and conversion of secondary to tertiary accents.
 ]=]
 
 local export = {}
@@ -184,6 +191,7 @@ local MACRON = u(0x0304) -- COMBINING MACRON =  ̄
 local BREVE = u(0x0306) -- COMBINING BREVE =  ̆
 local DIA = u(0x0308) -- COMBINING DIAERESIS =  ̈
 local DOTOVER = u(0x0307) -- COMBINING DOT ABOVE =  ̇
+local DOUBLEGRAVE = u(0x030F) -- COMBINING DOUBLE GRAVE ACCENT =  ̏
 local UNRELEASED = u(0x031A) -- COMBINING LEFT ANGLE ABOVE =  ̚
 local DOTUNDER = u(0x0323) -- COMBINING DOT BELOW =  ̣
 local UNVOICED = u(0x0325) -- COMBINING RING BELOW =  ̥
@@ -263,7 +271,7 @@ local explicit_char_to_phonemic = {
 	[EXPLICIT_X] = "x",
 }
 
-local stress = ACUTE .. GRAVE
+local stress = ACUTE .. GRAVE .. DOUBLEGRAVE
 local stress_c = "[" .. stress .. "]"
 local accent_non_stress_non_invbrevebelow = BREVE .. CFLEX .. MACRON .. TILDE .. "ː"
 local accent_non_stress = accent_non_stress_non_invbrevebelow .. INVBREVEBELOW
@@ -472,7 +480,7 @@ local suffixes = {
 	-- Normally following consonant but there a few exceptions like [[säurefest]]. Cases like [[manifest]] will be
 	-- respelled with an accent and not affected.
 	{"fest", "fèst", pos = "a"},
-	{"barschaft", "bahrschàft", pos = "n"},
+	{"barschaft", "bàhrschaft", pos = "n"},
 	{"schaft", "schàft", pos = "n"},
 	{"haft", "hàft", pos = "a"},
 	{"heit", "hèit", pos = "n"},
@@ -494,14 +502,16 @@ local suffixes = {
 	-- with suffix -ist after -a or -e need respelling, e.g. [[Judaist]], [[Atheist]], [[Deist]], [[Monotheist]].
 	{"ist", "íst", respelling = "[^ae]$", pos = "n"},
 	{"istisch", "ístisch", respelling = "[^ae]$", pos = "a"},
-	{"barkeit", "bahrkèit", pos = "n"},
-	{"lichkeit", "lichkèit", pos = "n"},
-	{"loskeit", "lohskèit", pos = "n"},
-	{"samkeit", {"sahmkèit", "samkèit"}, pos = "n"},
+	{"barkeit", "bàhrkeit", pos = "n"},
+	{"schaftlichkeit", "schàft.lichkeit", pos = "n"},
+	{"lichkeit", "lichkeit", pos = "n"},
+	{"losigkeit", "lòsigkeit", pos = "n"},
+	{"samkeit", {"sahmkeit", "samkeit"}, pos = "n"},
 	{"keit", "kèit", pos = "n"},
 	-- See comment above about secondary stress.
 	{"lein", "lèin", pos = "n"},
-	{"barlich", "bahrlìch", pos = "a"},
+	{"barlich", "bàhrlich", pos = "a"},
+	{"schaftlich", "schàft.lich", pos = "a"},
 	{"lich", "lich", pos = "a"},
 	-- Restrict to not be after -l (cf. [[Drilling]], [[Helling]], [[Marshalling]], [[Schilling]], [[Spilling]],
 	-- [[Zwilling]]). Instances after vowels do occur ([[Dreiling]], [[Edeling]], [[Neuling]], [[Reling]]); words
@@ -532,6 +542,7 @@ local suffixes = {
 	-- needing respelling of various sorts.
 	{"ion", "ión", restriction = C .. "$", pos = "n"},
 	-- "ung" not needed here; no respelling needed and vowel-initial
+	{"nisvoll", "nisfòll", restriction = C .. "$", pos = "a"},
 	{"voll", "fòll", pos = "a"},
 	{"weise", "wèise", pos = "a"},
 }
@@ -570,7 +581,8 @@ local phonemic_rules = {
 	-- etc. with /ŋgl/; [[Bangladesch]] and related with /ŋl/; [[England]], [[Engländer], [[English]], [[Denglish]],
 	-- [[einenglischen]] and related with /ŋl/; [[Ganglion]] with /ŋl/ or /ŋgl/; [[Jingle]] respelled 'Dschingel';
 	-- [[Jonglage]], [[Jongleur]], [[jonglieren]] with /ɔ̃gl/, /ɔŋgl/ or /ɔŋl/; [[Konglomerat]] with /ŋgl/ or /ngl/;
-	-- [[Ringlotte]] ?; [[Single]] respelled '[S]ingel'; [[Spengler]] with /ŋl/; [[Umzinglung]] with /ŋl/
+	-- [[Ringlotte]] ?; [[Single]] respelled '[S]ingel'; [[Spengler]] with /ŋl/; [[Umzinglung]] with /ŋl/; [[Wängle]] ?;
+	-- [[Wurmzüngler]] presumably with /ŋl/.
 	{"ngr", "ŋgr"},
 	{"ng", "ŋŋ"},
 	{"dt", "tt"},
@@ -858,6 +870,7 @@ local phonemic_rules = {
 	-- Generate IPA stress marks.
 	{ACUTE, "ˈ"},
 	{GRAVE, "ˌ"},
+	{DOUBLEGRAVE, ""},
 	-- Move IPA stress marks to the beginning of the syllable.
 	{"([.⁀])([^.⁀ˈˌ]*)([ˈˌ])", "%1%3%2"},
 	-- Suppress syllable mark before IPA stress indicator.
@@ -900,13 +913,14 @@ local phonetic_rules = {
 local function reorder_accents(text)
 	-- FIXME: What about order of DOTUNDER to indicate no stress? Maybe doesn't matter too much because it is
 	-- removed early when generating the default stress, but maybe it should go first of all so it's easy to spot.
-	-- The order should be: (1) DOTUNDER (removed early) (2) BREVE/CFLEX, (3) TILDE, (4) MACRON/ː, (5) ACUTE/GRAVE.
-	-- First: Remove duplicate accents. FIXME: Possibly do this if separated by other accents.
+	-- The order should be: (1) DOTUNDER (removed early) (2) BREVE/CFLEX, (3) TILDE, (4) MACRON/ː,
+	-- (5) ACUTE/GRAVE/DOUBLEGRAVE. First: Remove duplicate accents. FIXME: Possibly do this if separated by other
+	-- accents.
 	text = rsub_repeatedly(text, "(" .. accent_c .. ")%1", "%1")
 	-- Second, DOTUNDER first among all.
-	text = rsub(text, "([" .. ACUTE .. GRAVE .. BREVE .. CFLEX .. TILDE .. MACRON .. "ː]+)([" .. DOTUNDER .. "])", "%2%1")
+	text = rsub(text, "([" .. stress .. BREVE .. CFLEX .. TILDE .. MACRON .. "ː]+)([" .. DOTUNDER .. "])", "%2%1")
 	-- Third, ACUTE/GRAVE last among all remaining.
-	text = rsub(text, "([" .. ACUTE .. GRAVE .. "])([" .. BREVE .. CFLEX .. TILDE .. MACRON .. "ː]+)", "%2%1")
+	text = rsub(text, "(" .. stress_c .. ")([" .. BREVE .. CFLEX .. TILDE .. MACRON .. "ː]+)", "%2%1")
 	-- Fourth, put BREVE/CFLEX first among TILDE and MACRON/ː.
 	text = rsub(text, "([" .. TILDE .. MACRON .. "ː]+)([" .. BREVE .. CFLEX .. "])", "%2%1")
 	-- Fifth, put TILDE before MACRON/ː.
@@ -940,7 +954,7 @@ local function canonicalize(text)
 	text = rsub(text, "(" .. V .. accent_c .. "*)N", "%1" .. TILDE)
 	-- The user can use respelling with macrons but internally we convert to the long mark ː
 	text = rsub(MACRON, "ː")
-	-- Reorder so ACUTE and GRAVE go last.
+	-- Reorder so ACUTE/GRAVE/DOUBLEGRAVE go last.
 	text = reorder_accents(text)
 
 	-- convert commas and en/en dashes to IPA foot boundaries
