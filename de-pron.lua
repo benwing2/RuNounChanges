@@ -165,10 +165,14 @@ FIXME:
 21. Implement handling of written 'y'.
 22. Implement double hyphen and conversion of secondary to tertiary accents.
 23. Handle unstressed words like [[und]] and [[von]] correctly.
-24. Implement optional glottal stops when the following syllable isn't stressed.
+24. Implement optional glottal stops when the following syllable isn't stressed (but only after a consonant; cf.
+    [[wiederentdecken]] ˈviːdɐʔɛntˌdɛkən).
 25. Use x@ etc. to get EXPLICIT_X etc. instead of [x], so that [...] can be used after a word to indicate word
     properties.
 26. Handle prefixes/suffixes/interfixes indicated with initial and/or final hyphen.
+27. t-s- should render as t͡s e.g. [[Gleichheitszeichen]] respelled 'Gleichheit-s-zeichen' and [[Aufenthaltstitel]]
+    respelled 'Aufenthalt-s-titel'.
+28. Need syllable dividers at component boundaries before unstressed syllables.
 ]=]
 
 local export = {}
@@ -1276,9 +1280,33 @@ local phonemic_rules = {
 	{"(" .. C .. ")([.‿]*)%1", "%1", true},
 
 	-- Add glottal stop at beginning of component before a vowel. FIXME: Sometimes this should not be present, I think.
-	-- We need symbols to control this. FIXME: Maybe by default this should be marked as optional if the following
-	-- syllable isn't stressed (cf. [[Aufenthalt]] /ˈʔaʊ̯f.(ʔ)ɛntˌhalt/ or similar).
-	{"⁀(" .. V .. ")", "⁀ʔ%1"},
+	-- We need symbols to control this.
+	-- If previous component ends in a vowel, glottal stop is mandatory, e.g. [[wiederentdecken]].
+	{"(" .. V .. accent_c .. "*⁀)(" .. V .. ")", "%1ʔ%2"},
+	-- At beginning of word, glottal stop is mandatory.
+	{"(⁀⁀)(" .. V .. ")", "%1ʔ%2"},
+	-- Before a stressed vowel, glottal stop is mandatory.
+	{"⁀(" .. V .. accent_c .. "*" .. stress_c .. ")", "⁀ʔ%1"},
+	-- Before an unstressed vowel, glottal stop is optional, e.g. [[Aufenthalt]] /ˈʔaʊ̯f.(ʔ)ɛntˌhalt/.
+	{"⁀(" .. V .. ")", "⁀(ʔ)%1"},
+
+	-- Remove ⁀ and ‿ (component/suffix boundaries) before non-syllabic components and suffixes. Examples where this
+	-- can occur are final -t/-st inflectional suffixes (-t for third-person singular, second-person plural or past
+	-- participle; -st for second-person singular or superlative) and -s- interfix between components, which may be
+	-- respelled with hyphens around it (in such a case it should be grouped with the preceding syllable). Don't do
+	-- this at the beginning of a word (which normally shouldn't happen but might in a dialectal word). This should
+	-- precede 'ts' -> 'ʦ' just below.
+	{"([^⁀‿])([⁀‿])(" .. non_V .. "*[⁀‿])", "%1%2", true},
+	-- FIXME: Consider removing ⁀ and ‿ after non-syllabic component/prefix at the beginning of a word in case of
+	-- dialectal spellings like 'gsund' for [[gesund]]; but to handle this properly we need additional rules to
+	-- devoice the 'g' in such circumstances.
+
+	-- -s- frequently occurs as a component by itself (really an interfix), e.g. in [[Wirtschaftswissenschaft]]
+	-- respelled 'Wirtschaft-s-wissenschaft' to make it easier to identify suffixes like the -schaft in [[Wirtschaft]].
+	-- Once we remove ⁀ and ‿ before non-syllabic components and suffixes, we get lots of 'ts' that should be rendered
+	-- as t͡s. Handle this now. This should also apply in 'd-s-' e.g. [[Abschiedsbrief]] respelled 'Abschied-s-brief'
+	-- /ˈʔapʃiːt͡sˌbʁiːf/, as coda 'd' gets devoiced to /t/ above.
+	{"ts", "ʦ"},
 
 	-- Misc symbol conversions.
 	{".", {
@@ -1293,17 +1321,8 @@ local phonemic_rules = {
 	}},
 	{"əʁ", "ɐ"},
 
-	-- Remove ⁀ and ‿ (component/suffix boundaries) before non-syllabic components and suffixes. Examples where this
-	-- can occur are final -t/-st inflectional suffixes (-t for third-person singular, second-person plural or past
-	-- participle; -st for second-person singular or superlative) and -s- interfix between components, which may be
-	-- respelled with hyphens around it (in such a case it should be grouped with the preceding syllable). Don't do
-	-- this at the beginning of a word (which normally shouldn't happen but might in a dialectal word).
-	{"([^⁀‿])([⁀‿])(" .. non_V .. "*[⁀‿])", "%1%2", true},
-	-- FIXME: Consider removing ⁀ and ‿ after non-syllabic component/prefix at the beginning of a word in case of
-	-- dialectal spellings like 'gsund' for [[gesund]]; but to handle this properly we need additional rules to
-	-- devoice the 'g' in such circumstances.
-
-	-- Convert ORIG_SUFFIX_GRAVE to either GRAVE or nothing.
+	-- Convert ORIG_SUFFIX_GRAVE to either GRAVE or nothing. This must happen after removing ⁀ and ‿ before
+	-- non-syllabic components and suffixes because it depends on being able to accurately identify syllables.
 	handle_suffix_secondary_stress,
 
 	-- Generate IPA stress marks.
@@ -1336,9 +1355,9 @@ local phonetic_rules = {
 	-- unvoiced stops and affricates become affricated word-finally and before vowel, /ʁ/ or /l/ (including syllabic
 	-- /l/), but not before syllabic nasal; cf. [[zurücktreten]], with aspirated 'z', 'ck' and first 't' but not second;
 	-- also not before homorganic stop across component boundary like [[Abbildung]] [ˈʔap̚.b̥ɪl.dʊŋ]
-	{"p([.⁀]b)", "p" .. UNRELEASED .. "%1"},
-	{"t([.⁀]d)", "t" .. UNRELEASED .. "%1"},
-	{"k([.⁀]ɡ)", "k" .. UNRELEASED .. "%1"}, -- IPA ɡ
+	{"p([.⁀]*b)", "p" .. UNRELEASED .. "%1"},
+	{"t([.⁀]*d)", "t" .. UNRELEASED .. "%1"},
+	{"k([.⁀]*ɡ)", "k" .. UNRELEASED .. "%1"}, -- IPA ɡ
 	{"([ptk])(%.?[⁀" .. vowel .. "ʁl])", "%1ʰ%2"},
 	{"(t" .. TIE .. "[sʃ])(%.?[⁀" .. vowel .. "ʁl])", "%1ʰ%2"},
 	-- voiced stops/fricatives become unvoiced after unvoiced sound; cf. [[Abbildung]] [ˈʔap̚.b̥ɪl.dʊŋ]
