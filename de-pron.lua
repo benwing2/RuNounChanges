@@ -213,9 +213,9 @@ local function gsub(term, foo, bar, n)
 end
 
 -- apply rsub() repeatedly until no change
-local function rsub_repeatedly(term, foo, bar)
+local function rsub_repeatedly(term, foo, bar, n)
 	while true do
-		local new_term = rsub(term, foo, bar)
+		local new_term = rsub(term, foo, bar, n)
 		if new_term == term then
 			return term
 		end
@@ -227,16 +227,21 @@ end
 -- normal IPA accent marks, so we can distinguish auto-generated stress from user-specified stress.
 local AUTOACUTE = u(0xFFF0)
 local AUTOGRAVE = u(0xFFF1)
+-- An auto-generated secondary stress in a suffix is converted to the following if the word is not composed of
+-- multiple (hyphen or double-hyphen separated) components. It is eventually converted to secondary stress (if there is
+-- no preceding secondary stress, and the directly preceding syllable does not have primary stress), and otherwise
+-- removed.
+local ORIG_SUFFIX_GRAVE = u(0xFFF2)
 
 -- When the user uses the "explicit allophone" notation such as [z] or [x] to force a particular allophone, we
 -- internally convert that notation into a single special character.
-local EXPLICIT_S = u(0xFFF2)
-local EXPLICIT_Z = u(0xFFF3)
-local EXPLICIT_V = u(0xFFF4)
-local EXPLICIT_B = u(0xFFF5)
-local EXPLICIT_D = u(0xFFF6)
-local EXPLICIT_G = u(0xFFF7)
-local EXPLICIT_X = u(0xFFF8)
+local EXPLICIT_S = u(0xFFF3)
+local EXPLICIT_Z = u(0xFFF4)
+local EXPLICIT_V = u(0xFFF5)
+local EXPLICIT_B = u(0xFFF6)
+local EXPLICIT_D = u(0xFFF7)
+local EXPLICIT_G = u(0xFFF8)
+local EXPLICIT_X = u(0xFFF9)
 
 -- Map "explicit allophone" notation into special char. See above.
 local char_to_explicit_char = {
@@ -741,7 +746,7 @@ local phonemic_rules = {
 	-- Implement (7b) above. We exclude 'e' from the 'rest' portion below so we work right-to-left and correctly
 	-- convert 'e' to schwa in cases like [[Indexen]].
 	{"e([^⁀" .. stress .. "e]*⁀)", function(rest)
-		local rest_no_syldiv = rsub(rest, "%.", "")
+		local rest_no_syldiv = gsub(rest, "%.", "")
 		local cl = rmatch(rest_no_syldiv, "^(" .. C .. "*)")
 		if rfind(cl, "^[lmrn]s?$") or rfind(cl, "^[lr]ns?$") or rfind(cl, "^rlns?$") or rfind(cl, "^s?t?$") or
 			rfind(cl, "^nds?$") then
@@ -1042,164 +1047,262 @@ local function lookup_stress_spec(stress_spec, pos)
 end
 
 
-local function split_word_on_components_and_apply_affixes(word, pos)
-	local retparts = {}
-	local parts = strutils.capturing_split(word, "([<>%-])")
-	local i = 1
-	local saw_primary_stress = false
-	while i <= #parts do
-		local insert_position = #retparts + 1
-		if parts[i + 1] ~= "<" and parts[i - 1] ~= ">" then
-			-- Split off any prefixes.
-			while true do
-				local broke_prefix = false
-				local saw_un = false
-				local saw_unstressed = false
-				local saw_stressed = false
-				for _, prefixspec in ipairs(prefixes) do
-					local prefix_pattern = prefixspec[1]
-					local prefixtype = prefixspec.prefixtype or rfind(prefix_respell, stress_c) and "stressed" or
-						"unstressed"
-					local pos_stress = lookup_stress_spec(stress_spec, pos)
-					local prefix, rest = rmatch(parts[i], "^(" .. prefix_pattern .. ")(.*)$")
-					if prefix then
-						if not pos_stress then
-							-- prefix not recognized for this POS, don't split here
-						elseif not meets_restriction(rest, prefixspec.restriction) then
-							-- restriction not met, don't split here
-						elseif rfind(rest, "^%+") then
-							-- explicit non-boundary here, so don't split here
-						elseif not rfind(rest, V) then
-							-- no vowels, don't split here
-						elseif rfind(rest, "^..?$") then
-							-- only two letters, unlikely to be a word, probably an ending, so don't split
-							-- here
-						else
-							-- Use non_V so that we pick up things like explicit syllable divisions, which will
-							-- prevent the allowed-onset check from succeeding.
-							local initial_cluster, after_cluster = rmatch(rest, "^(" .. non_V .. "*)(.-)$")
-							if not check_onset_offset(initial_cluster, allowed_onsets) then
-								-- initial cluster isn't a possible onset, don't split here
-							elseif rfind(after_cluster, "^" .. V .. "?$") then
-								-- remainder is a cluster + single vowel, unlikely to be a word so don't split here
-								-- most such words have impermissible onsets, but cf. [[Beta]], [[Bete]], [[Bede]],
-								-- [[Bethe]], [[Geste]], [[verso]], [[Verve]], [[vorne]], [[Erbe]], [[Erde]], [[ergo]],
-								-- [[Erle]], [[erste]],  etc.
-							elseif not rfind(prefix, stress_c) and rfind(after_cluster, "^e" .. C_not_h .. "$") then
-								-- remainder is a cluster + e + single consonant after an unstressed prefix, unlikely
-								-- to be a word so don't split here; most such words have impermissible onsets, but cf.
-								-- [[Bebel]], [[beben]], [[Besen]], [[beten]], [[geben]], [[Geber]], [[gegen]],
-								-- [[gehen]], [[geten]], [[Becher]], [[Gegner]], [[Verschen]], [[erben]], [[erden]],
-								-- [[Erker]], [[erlen]], [[Erpel]], [[erzen]], [[Erster]], etc.; a few legitimate
-								-- prefixed words get rejected, e.g. [[Beleg]], [[Gebet]], which need respelling
-							elseif prefixtype == "un" and (saw_un or saw_unstressed or saw_stressed) then
-								-- un- cannot occur after any other prefixes
-							elseif prefixtype == "unstressed" and saw_unstressed then
-								-- unstressed prefixes like ge- cannot occur after other unstressed prefixes
-							elseif prefixtype == "stressed" and saw_stressed then
-								-- stressed prefixes like an- cannot occur after other stressed prefixes, except
-								-- in certain combinations like voran- that we treat as single prefixes
-							else
-								-- break the word in two; next iteration we process the rest, which may need breaking
-								-- again
-								parts[i] = rest
-								if prefixtype == "un" then
-									saw_un = true
-								elseif prefixtype == "unstressed" then
-									saw_unstressed = true
-								else
-									saw_stressed = true
-								end
-								local prefix_respell = decompose(prefixspec[2])
-								prefix_respell = gsub(prefix_respell, ACUTE, AUTOACUTE)
-								prefix_respell = gsub(prefix_respell, GRAVE, AUTOGRAVE)
-								if rfind(prefix_respell, AUTOACUTE) then
-									if saw_primary_stress then
-										prefix_respell = rsub(prefix_respell, AUTOACUTE, AUTOGRAVE)
-									end
-									saw_primary_stress = true
-								end
-								table.insert(retparts, insert_position, prefix_respell)
-								insert_position = insert_position + 1
-								broke_prefix = true
-								break
-							end
-						end
-					end
-				end
-				if not broke_prefix then
-					break
-				end
-			end
-
-			-- Now do the same for suffixes.
-			while true do
-				local broke_suffix = false
-				for _, suffixspec in ipairs(suffixes) do
-					local suffix_pattern = suffixspec[1]
-					local pos_stress = lookup_stress_spec(stress_spec, pos)
-					local rest, suffix = rmatch(parts[i], "^(.-)(" .. suffix_pattern .. ")$")
-					if suffix then
-						if not pos_stress then
-							-- suffix not recognized for this POS, don't split here
-						elseif not meets_restriction(rest, suffixspec.restriction) then
-							-- restriction not met, don't split here
-						elseif rfind(rest, "%+$") then
-							-- explicit non-boundary here, so don't split here
-						elseif not rfind(rest, V) then
-							-- no vowels, don't split here
-						else
-							local before_cluster, final_cluster = rmatch(rest, "^(.-)(" .. non_V .. "*)$")
-							if rfind(final_cluster, "%..") then
-								-- syllable division within or before final
-								-- cluster, don't split here
-							else
-								-- break the word in two; next iteration we process
-								-- the rest, which may need breaking again
-								parts[i] = rest
-								if pos_stress == "unstressed" then
-									-- don't do anything
-								elseif pos_stress == "secstressed" then
-									prefix = rsub(suffix, "(" .. V .. ")", "%1" .. AUTOGRAVE, 1)
-								elseif pos_stress == "stressed" then
-									error("Primary stress not allowed for suffixes (suffix=" .. suffix .. ")")
-								else
-									error("Unrecognized stress spec for pos=" .. pos .. ", suffix=" .. suffix .. ": " .. pos_stress)
-								end
-								table.insert(retparts, insert_position, suffix)
-								broke_suffix = true
-								break
-							end
-						end
-					end
-				end
-				if not broke_suffix then
-					break
-				end
-			end
-		end
-
-		local acc = rfind(parts[i], "(" .. stress_accent_c .. ")")
-		if acc == CFLEX then
-			-- remove circumflex but don't accent
-			parts[i] = gsub(parts[i], CFLEX, "")
-		elseif acc == ACUTE or acc == AUTOACUTE then
-			saw_primary_stress = true
-		elseif not acc and parts[i + 1] ~= "<" and parts[i - 1] ~= ">" then
-			-- Add primary or secondary stress on the part; primary stress if no primary
-			-- stress yet, otherwise secondary stress.
-			acc = saw_primary_stress and AUTOGRAVE or AUTOACUTE
-			saw_primary_stress = true
-			parts[i] = rsub(parts[i], "(" .. V .. ")", "%1" .. acc, 1)
-		end
-		table.insert(retparts, insert_position, parts[i])
-		i = i + 2
+local function split_word_on_components_and_apply_affixes(word, pos, depth, partno, is_compound)
+	-- Make sure there aren't two primary stresses in the word.
+	if rfind(word, ACUTE .. ".*" .. ACUTE) then
+		error("Saw two primary stresses in word: " .. word)
 	end
+
+	depth = depth or 0
+	if depth == 0 or depth == 1 then
+		local parts = rsplit(word, depth == 0 and "%-%-" or "%-")
+		if len(parts) == 1 then
+			return split_word_on_components_and_apply_affixes(word, pos, depth + 1, 1)
+		else
+			for i, part in ipairs(parts) do
+				parts[i] = split_word_on_components_and_apply_affixes(part, pos, depth + 1, i, "is compound")
+				parts[i] = rsub(parts[i], "[" .. AUTOGRAVE .. ORIG_SUFFIX_GRAVE .. "]", DOUBLEGRAVE)
+				if i > 1 then
+					parts[i] = rsub(parts[i], AUTOACUTE, AUTOGRAVE)
+				end
+			end
+			return table.concat(parts, "⁀")
+		end
+	end
+
+	local retparts = {}
+	local parts = strutils.capturing_split(word, "([<>])")
+	local saw_un_prefix = false
+	local saw_unstressed_prefix = false
+	local saw_stressed_prefix = false
+	local saw_primary_prefix_stress = false
+	local saw_primary_suffix_stress = false
+
+	local function has_user_specified_primary_stress(part)
+		-- If there are multiple components (separated by - or --), we want to treat explicit user-specified
+		-- secondary stress like primary stress because we only show the component primary stresses. The overall
+		-- word primary stress shows as ˈ and other component primary stresses show as ˌ.
+		return rfind(part, ACUTE) or is_compound and rfind(part, GRAVE)
+	end
+
+	-- Break off any explicitly-specified prefixes.
+	local from_left = 1
+	while from_left < #parts and parts[from_left + 1] == "<" do
+		if has_user_specified_primary_stress(parts[from_left]) then
+			saw_primary_prefix_stress = true
+		end
+		if rsub(parts[from_left], stress_c, "") == "un" then
+			saw_un_prefix = true
+		elseif rfind(parts[from_left], stress_c) then
+			saw_stressed_prefix = true
+		else
+			saw_unstressed_prefix = true
+		end
+		table.insert(retparts, parts[from_left])
+		from_left = from_left + 2
+	end
+
+	-- Break off any explicitly-specified suffixes.
+	local insert_position = #retparts + 1
+	local from_right = #parts
+	while from_right > 1 and parts[from_right - 1] == ">" do
+		if has_user_specified_primary_stress(parts[from_right]) then
+			saw_primary_suffix_stress = true
+		end
+		table.insert(retparts, insert_position, parts[from_right])
+		from_right = from_right - 2
+	end
+	if from_left ~= from_right then
+		error("Saw < to the right of > in word: " .. word)
+	end
+
+	local mainpart = parts[from_left]
+	local saw_primary_mainpart_stress = has_user_specified_primary_stress(mainpart)
+
+	-- Split off any remaining prefixes.
+	while true do
+		local broke_prefix = false
+		for _, prefixspec in ipairs(prefixes) do
+			local prefix_pattern = prefixspec[1]
+			local prefixtype = prefixspec.prefixtype or rfind(prefix_respell, stress_c) and "stressed" or
+				"unstressed"
+			local pos_stress = lookup_stress_spec(stress_spec, pos)
+			local prefix, rest = rmatch(mainpart, "^(" .. prefix_pattern .. ")(.*)$")
+			if prefix then
+				if not pos_stress then
+					-- prefix not recognized for this POS, don't split here
+				elseif not meets_restriction(rest, prefixspec.restriction) then
+					-- restriction not met, don't split here
+				elseif rfind(rest, "^%+") then
+					-- explicit non-boundary here, so don't split here
+				elseif not rfind(rest, V) then
+					-- no vowels, don't split here
+				elseif rfind(rest, "^..?$") then
+					-- only two letters, unlikely to be a word, probably an ending, so don't split
+					-- here
+				else
+					-- Use non_V so that we pick up things like explicit syllable divisions, which will
+					-- prevent the allowed-onset check from succeeding.
+					local initial_cluster, after_cluster = rmatch(rest, "^(" .. non_V .. "*)(.-)$")
+					if not check_onset_offset(initial_cluster, allowed_onsets) then
+						-- initial cluster isn't a possible onset, don't split here
+					elseif rfind(after_cluster, "^" .. V .. "?$") then
+						-- remainder is a cluster + single vowel, unlikely to be a word so don't split here
+						-- most such words have impermissible onsets, but cf. [[Beta]], [[Bete]], [[Bede]],
+						-- [[Bethe]], [[Geste]], [[verso]], [[Verve]], [[vorne]], [[Erbe]], [[Erde]], [[ergo]],
+						-- [[Erle]], [[erste]],  etc.
+					elseif not rfind(prefix, stress_c) and rfind(after_cluster, "^e" .. C_not_h .. "$") then
+						-- remainder is a cluster + e + single consonant after an unstressed prefix, unlikely
+						-- to be a word so don't split here; most such words have impermissible onsets, but cf.
+						-- [[Bebel]], [[beben]], [[Besen]], [[beten]], [[geben]], [[Geber]], [[gegen]],
+						-- [[gehen]], [[geten]], [[Becher]], [[Gegner]], [[Verschen]], [[erben]], [[erden]],
+						-- [[Erker]], [[erlen]], [[Erpel]], [[erzen]], [[Erster]], etc.; a few legitimate
+						-- prefixed words get rejected, e.g. [[Beleg]], [[Gebet]], which need respelling
+					elseif prefixtype == "un" and (saw_un_prefix or saw_unstressed_prefix or saw_stressed_prefix) then
+						-- un- cannot occur after any other prefixes
+					elseif prefixtype == "unstressed" and saw_unstressed_prefix then
+						-- unstressed prefixes like ge- cannot occur after other unstressed prefixes
+					elseif prefixtype == "stressed" and saw_stressed_prefix then
+						-- stressed prefixes like an- cannot occur after other stressed prefixes, except
+						-- in certain combinations like voran- that we treat as single prefixes
+					else
+						-- break the word in two; next iteration we process the rest, which may need breaking
+						-- again
+						mainpart = rest
+						if prefixtype == "un" then
+							saw_un_prefix = true
+						elseif prefixtype == "unstressed" then
+							saw_unstressed_prefix = true
+						else
+							saw_stressed_prefix = true
+						end
+						local prefix_respell = decompose(prefixspec[2])
+						prefix_respell = gsub(prefix_respell, ACUTE, AUTOACUTE)
+						prefix_respell = gsub(prefix_respell, GRAVE, AUTOGRAVE)
+						if rfind(prefix_respell, AUTOACUTE) then
+							if saw_primary_prefix_stress or saw_primary_mainpart_stress or saw_primary_suffix_stress then
+								prefix_respell = gsub(prefix_respell, AUTOACUTE, AUTOGRAVE)
+							end
+							saw_primary_stress = true
+						end
+						table.insert(retparts, insert_position, prefix_respell)
+						insert_position = insert_position + 1
+						broke_prefix = true
+						break
+					end
+				end
+			end
+		end
+		if not broke_prefix then
+			break
+		end
+	end
+
+	-- Now do the same for suffixes.
+	while true do
+		-- If there was a user-specified suffix with explicit stress, don't try to look for more suffixes.
+		if saw_primary_suffix_stress then
+			break
+		end
+		local broke_suffix = false
+		for _, suffixspec in ipairs(suffixes) do
+			local suffix_pattern = suffixspec[1]
+			local pos_stress = lookup_stress_spec(stress_spec, pos)
+			local rest, suffix = rmatch(mainpart, "^(.-)(" .. suffix_pattern .. ")$")
+			if suffix then
+				if not pos_stress then
+					-- suffix not recognized for this POS, don't split here
+				elseif not meets_restriction(rest, suffixspec.restriction) then
+					-- restriction not met, don't split here
+				elseif rfind(rest, "%+$") then
+					-- explicit non-boundary here, so don't split here
+				elseif not rfind(rest, V) then
+					-- no vowels, don't split here
+				else
+					local suffix_respell = decompose(suffixspec[2])
+					if saw_primary_mainpart_stress and rfind(suffix_respell, ACUTE) then
+						-- primary-stressed suffix like -iert but main part already has primary stress; don't split here
+					else
+						-- Use non_V so that we pick up things like explicit syllable divisions, which we
+						-- check for below.
+						local before_cluster, final_cluster = rmatch(rest, "^(.-)(" .. non_V .. "*)$")
+						if rfind(final_cluster, "%..") then
+							-- syllable division within or before final cluster, don't split here
+						else
+							-- break the word in two; next iteration we process the rest, which may need breaking
+							-- again
+							mainpart = rest
+
+							-- We may remove the suffix grave entirely later on. For now, convert it to a special
+							-- symbol so we can handle it properly later, after splitting on syllables.
+							suffix_respell = gsub(suffix_respell, GRAVE, ORIG_SUFFIX_GRAVE)
+							if rfind(suffix_respell, ACUTE) then
+								saw_primary_suffix_stress = true
+								if saw_primary_prefix_stress then
+									-- We have already rejected cases with primary mainpart or suffix stress and
+									-- acute accent in the respelling.
+									suffix_respell = gsub(suffix_respell, ACUTE, AUTOGRAVE)
+								else
+									suffix_respell = gsub(suffix_respell, AUTOGRAVE, AUTOACUTE)
+								end
+							end
+							table.insert(retparts, insert_position, suffix_respell)
+							broke_suffix = true
+							break
+						end
+					end
+				end
+			end
+		end
+		-- FIXME: Once we implement support for inflectional suffixes, we won't necessarily break here.
+		break
+	end
+
+	if rfind(mainpart, DOTUNDER) then
+		-- remove DOTUNDER but don't accent
+		mainpart = gsub(mainpart, DOTUNDER, "")
+	elseif saw_primary_mainpart_stress or saw_primary_suffix_stress then
+		-- do nothing
+	elseif rfind(mainpart, "^" .. non_V .. "*" .. V .. accent_c .. "*" .. stress_c) then
+		-- first vowel already followed by a stress accent; do nothing
+	else
+		-- Add primary or secondary stress on the part; primary stress if no primary stress yet, otherwise secondary
+		-- stress.
+		local accent_to_add = saw_primary_prefix_stress and AUTOGRAVE or AUTOACUTE
+	end
+	table.insert(retparts, insert_position, mainpart)
+	insert_position = insert_position + 1
 
 	-- remove any +, which has served its purpose
 	for i, part in ipairs(retparts) do
 		retparts[i] = gsub(part, "%+", "")
 	end
+
+	-- Put components together. Vowel-initial suffixes join directly to preceding component; otherwise, put ⁀ between
+	-- components to they are treated similarly to separate words.
+	local wordparts = {}
+	for i, part in ipairs(retparts) do
+		if i >= insert_position and rfind(part, "^" .. V) then
+			wordparts[#wordparts] = wordparts[#wordparts] .. part
+		else
+			table.insert(wordparts, part)
+		end
+	end
+	return table.concat(wordparts, "⁀")
+end
+
+local function handle_suffix_secondary_stress(word)
+	-- FIXME
+	-- Secondary stress in a suffix disappears if there is a preceding secondary stress or if the immediately preceding
+	-- syllable has primary stress. If there are multiple such secondary stresses, I *think* we need to process them
+	-- left to right because of the way words are built up. E.g. FOObarkeit is really (FOO + -bar) + -keit, so if FOO is
+	-- one syllable, we get Fúbarkèit (-bar loses secondary stress because of the immediately preceding primary stress,
+	-- then -keit keeps it) but if FOO is two syllables, we get Fúdebàrkeit (-bar keeps stress so -keit loses it
+	-- because there is a preceding secondary stress).
+	local primary_stress = ACUTE .. AUTOACUTE .. (is_compound and GRAVE or "")
+	local secondary_stress = AUTOGRAVE .. DOUBLEGRAVE .. ORIG_SUFFIX_GRAVE .. (is_compound and "" or GRAVE) 
+	retval = rsub_repeatedly(retval, "^(.-" .. secondary_stress .. ".-)" .. ORIG_SUFFIX_GRAVE, "%1")
+
 	return retparts
 end
 
