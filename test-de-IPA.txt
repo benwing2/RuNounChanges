@@ -1,3 +1,8 @@
+# Digraphs, trigraphs
+Stadt	Stadt	ʃtat
+verwandte	verwandte	fɛʁˈvantə
+
+
 # ch
 Bach	Bach	bax
 Aachener	Aachener	ˈaːxənɐ
@@ -7,12 +12,11 @@ Chemie	Chemie	çeˈmiː
 Agrochemie	Agro-chemie	ˈaːɡʁoçeˌmiː
 Chaos	Kaos	ˈkaːɔs
 Chamäleon	Kamä́leònn	kaˈmɛːleˌɔn
-Chor	Kor	[koːʁ]
-Chuzpe	X@uzpe	ˈxʊt͡spə
+Chor	Kor	koːʁ
+Chuzpe	X*uzpe	ˈxʊt͡spə
 # -chen is not a suffix here; without the +, -a- would be long
 Schnarchen	Schnar+chen	ˈʃnaʁçən
 horchen	horchen	ˈhɔʁçən
-horchen	horchen	[ˈhɔʁçən]
 # use > to explicitly denote a suffix
 Ehefrauchen	Ehe-frau>chen	ˈeːəˌfʁaʊ̯çən
 Opachen	Opa>chen	ˈoːpaçən
@@ -21,30 +25,76 @@ Hörnchen	Hörnchen	ˈhœʁnçən
 
 # French-derived words
 Baguette	Bagétt	baˈɡɛt
-Chaiselongue	Schẹselóng	ʃɛzəˈlɔŋ	dewikt pron #1
+Chaiselongue	Schĕselóng	ʃɛzəˈlɔŋ	dewikt pron #1
 Chaiselongue	SchẹselóNk	ʃɛzəˈlɔ̃ːk	dewikt pron #2
-Chaiselongue	Schês-lóNng	ʃeːsˈlɔ̃ːŋ	dewikt pron #1 (Austrian)
-Chaiselongue	Schês-lóhNk	ʃeːsˈlõːk	dewikt pron #2 (Austrian)
-Chaiselongue	Schẹz@-lóNg@	ʃɛzˈlɔ̃ːɡ	dewikt pron #3 (Austrian)
-Champignon	Schampinjòng  ˈʃam.pɪnˌjɔŋ
-Champignon	SchampinjòN  ˈʃam.pɪnˌjɔ̃ː
+Chaiselongue	Schehs-lóNng	ʃeːsˈlɔ̃ːŋ	dewikt pron #1 (Austrian)
+Chaiselongue	SchehslóhNk	ʃeːsˈlõːk	dewikt pron #2 (Austrian)
+Chaiselongue	Schĕz*lɔhNg*	ʃɛzˈlɔ̃ːɡ	dewikt pron #3 (Austrian)
+Champignon	Schampinjòng	ˈʃam.pɪnˌjɔŋ
+Champignon	Schampinjõ̀	ˈʃam.pɪnˌjɔ̃ː
 Chefredakteur	Scheff-redaktö̀r	[ˈʃɛfʁedakˌtøːʁ]
 Chefredakteur	Schef-redaktö̀r	[ˈʃeːfʁedakˌtøːʁ]	usually in Austria
 Guillotine	Gi.otíne	ɡioˈtiːnə
-orange	oráNʒ	oˈʁãːʃ	enwikt pron #1
+orange	orã́ʒ	oˈʁãːʃ	enwikt pron #1
 orange	orángʒ	oˈʁaŋʃ	enwikt pron #2
-orange	oróNʒ	oˈʁɔ̃ːʃ	enwikt pron #3
+orange	orṍʒ	oˈʁõːʃ	enwikt pron #3
 orange	oróngʒ	oˈʁɔŋʃ	enwikt pron #4
-Orange	OráNʒe	oˈʁãːʒə	enwikt pron #1
+Orange	Orã́ʒe	oˈʁãːʒə	enwikt pron #1
+arrangieren	arrãʒieren	aʁãˈʒiːʁən
+Avance	Avã́s	aˈvãːs
+Bombardement	Bòmbardəmã́	ˌbɔmbaʁdəˈmãː
+Branche	Brãsche	ˈbʁãːʃə
+Branche	Brangsche	ˈbʁaŋʃə
+Champagner	Schampánjer	ʃamˈpanjɐ
+Parfum	Parfö́N	paʁˈfœ̃ː
+Nonchalance	Nõschalã́s	nõʃaˈlãːs
+Pompon	Põpṍ	põˈpõː
+Pompon	Pompṍ	pɔmˈpõ
+Saison	Sĕsṍ	zɛˈzõː
+Saison	Sĕsóng	zɛˈzɔŋ
+salonfähig	salṍ-fähig	zaˈlõːˌfɛːɪç
+Bain-Marie	Bẽmarie	bɛ̃maˈʁiː
+Bohemien	Boemiẽ́	boeˈmjɛ̃ː
+Bohemien	Bo.hemiẽ́	boheˈmjɛ̃ː
+Cousin	Kusẽ́	kuˈzɛ̃ː
+Cousin	Kuséng	kuˈzɛŋ
+Lingerie	Lẽʒerie	lɛ̃ʒəˈʁiː
+Lingerie	Lẽʒrie	lɛ̃ʒˈʁiː
+Mannequin	Mannəkẽ́	manəˈkɛ̃ː
+Mannequin	Mannəkẽ	ˈmanəkɛ̃ː
+Pointe	Po̯ẽ́te	Po̯ɛ̃ːte
+Pointe	POeNte	Po̯ɛ̃ːte
+Toilette	To̯alétte	to̯aˈlɛtə
+Toilette	Tolétte	toˈlɛtə
+Voyeur	Vo̯ajö́r	vo̯aˈjøːʁ
+Bourgeoisie	Bùrʒo̯asie	ˌbʊʁʒo̯aˈziː
+Couloir	Kulo̯ár	kuˈlo̯aːʁ
+Croissant	Cro̯assã́	kʁo̯aˈsãː
+Croissant	Crôssóng	kʁoˈsɔŋ
+flamboyant	flãbo̯ajant	flãbo̯aˈjant
+Rendezvous	Rã̀devú	ˌʁãdeˈvuː
 
 
 # English-derived words
-Bodyguard	Bóddigàhrd	[ˈbɔdiˌɡaːʁt]
-
-
-# -i- in hiatus
-Addition	Àddition	ˌadiˈt͡si̯oːn
-Historiolinguistik	Històriolinguístik	hɪsˌtoːʁi̯olɪŋˈɡu̯ɪstɪk
+Bodyguard	Boddigàhrd	ˈbɔdiˌɡaːʁt
+Champion	Tschempiən	ˈt͡ʃɛmpi̯ən
+Whiskey	Wiski	ˈvɪski
+Whiskey	W*iski	ˈwɪski
+T-Shirt	Ti-Schöhrt	ˈtiːˌʃøːʁt
+Thriller	θriller	ˈθʁɪlɐ
+Thriller	S*riller	ˈsʁɪlɐ
+Rock	Rock	ʁɔk
+Rock	ɹock	ɹɔk
+Sound	S*aund	saʊ̯nt
+Steak	S*teIk	stɛɪ̯k
+Steak	S*tehk	stɛːk
+Spray	SpreI	ʃpʁɛɪ̯
+Airbag	Ähr-begg	ˈɛːʁˌbɛk
+Homepage	HoUmpehdsch	ˈhɔʊ̯mpeːt͡ʃ
+Homepage	Hohmpehdsch	ˈhoːmpeːt͡ʃ
+Cowboy	KauboI	ˈkaʊ̯bɔɪ̯
+Playboy	Pleh-boI	ˈpleːˌbɔɪ̯
+Comeback	Kambeck	ˈkambɛk
 
 # -gu- in hiatus
 Ambiguität	Ambigu.ität	ambiɡuiˈtɛːt
@@ -55,8 +105,7 @@ Bilingualismus	Bilinggualísmus	bilɪŋɡʊ̯aˈlɪsmʊs
 Guacamole	Guakamóle	ɡu̯akaˈmoːlə
 Guano	Guano	ˈɡu̯aːno
 Guatemalteke	Guatemaltéke	ɡu̯atemalˈteːkə
-Guerilla	Gerílja	ɡeˈʁɪlja
-Jaguar	Jaguahr	[ˈjaːɡu̯aːʁ]
+Jaguar	Jaguahr	ˈjaːɡu̯aːʁ
 Papua-Neuguinea	Papua Nèuginéa	ˈpaːpu̯a ˌnɔɪ̯ɡiˈneːa	per enwikt
 Papua-Neuguinea	Papu.a-neuginéa	ˌpaːpuanɔɪ̯ɡiˈneːa	per dewikt
 Paraguay	Paragway	ˈpaːʁaɡvaɪ̯	dewikt pron #1
@@ -75,7 +124,7 @@ Botsuana	Botsuána	bɔˈt͡su̯aːna	enwikt
 Botsuana	Botsu.ána	bɔt͡suˈaːna	dewikt pron #1
 Botsuana	Bọtsu-ána	bɔt͡suˈʔaːna	dewikt pron #2
 dual	du.ál	duˈaːl
-Dual-SIM-Smartphone	Du.ál-Sîmm-Smàhrtphohn	duˈaːlzɪmˌsmaːʁtfoːn
+Dual-SIM-Smartphone	Du.ál-Sịmm-Smàhrtphohn	duˈaːlzɪmˌsmaːʁtfoːn
 Dualsystem	Du.ál-systèm	duˈaːlzʏsˌteːm
 Ecuador	Ekuadór	eku̯aˈdoːʁ
 evaluativ	evalu.atív	evaluaˈtiːf
@@ -87,38 +136,228 @@ paraguayanisch	paraguayánisch	paʁaɡu̯aɪ̯ˈaːnɪʃ	enwikt pron #1
 paraguayanisch	paragwayánisch	paʁaɡvaɪ̯ˈaːnɪʃ	enwikt pron #2
 uruguayisch	uru.gwayisch	ˈuːʁuɡvaɪ̯ɪʃ
 
-# -ng-
+# -ng-, -nk-
 abdrängen	abdrängen	ˈapˌdʁɛŋən
 Abgang	Abgang	ˈapˌɡaŋ
 Abhängigkeit	Abhängigkeit	ˈaphɛŋɪçˌkaɪ̯t
-distinguiert	distinggiert	dɪstɪŋˈɡiːʁt
+distinguiert	distingiert	dɪstɪŋˈɡiːʁt
 Hengst	Hengst	hɛŋst
 konsanguin	konsanguín	kɔnzaŋˈɡu̯iːn
-Linguistik	Linguístick	lɪŋˈɡu̯ɪstɪk
+Linguistik	Linguístik	lɪŋˈɡu̯ɪstɪk
 Pinguin	Pinguìn	ˈpɪŋˌɡu̯iːn
 Pinguin	Pingu.ìn	ˈpɪŋɡuˌiːn
+kongruent	kon.gru.ent	kɔnɡʁuˈɛnt
+kongruent	kongru.ent	kɔŋɡʁuˈɛnt
+Danke	Danke	ˈdaŋkə
+gelenkig	gelenkig	ɡəˈlɛŋkɪç
+Erkrankung	Erkrankung	ɛʁˈkʁaŋkʊŋ
+trinkbar	trinkbar	ˈtʁɪŋkbaːʁ
+Frankreich	Frank-reich	ˈfʁaŋkʁaɪ̯ç
+Kongo	Kongo	ˈkɔŋɡo
+Gangrän	Gangrä́n	ɡaŋˈɡʁɛːn
+Mangrove	Mangróve	maŋˈɡʁoːvə
+Anglikaner	Anglikáner	aŋɡliˈkaːnɐ
+Bankett	Bankétt	baŋˈkɛt
+Concorde	Konkórd	kɔŋˈkɔʁt
+Delinquent	Delinquent	delɪŋˈkvɛnt
+Frankierung	Frankierung	fʁaŋˈkiːʁʊŋ
+melancholisch	melankólisch	melaŋˈkoːlɪʃ
+ingeniös	in.geniös	ɪnɡeˈni̯øːs
+Ingredienz	In.gredienz	ɪnɡʁeˈdi̯ɛnt͡s
+Inkarnation	In.karnation	ɪnkaʁnaˈt͡si̯oːn
+inkohärent	ìn.ko.härent	ˌɪnkohɛˈʁɛnt
+inkohärent	ín.ko.härent	ˈɪnkohɛˌʁɛnt
+inkompatibel	in.kompatibel	ɪnkɔmpaˈtiːbəl
+inkompatibel	ín.kompatibel	ˈɪnkɔmpaˌtiːbəl
+inkompetent	ín.kompətent	ˈɪnkɔmpəˌtɛnt
+inkompetent	ìn.kompətent	ˌɪnkɔmpəˈtɛnt
 
 # -ph-
 Ableitungsmorphem	Ableitungs-morphèm	ˈaplaɪ̯tʊŋsmɔʁˌfeːm
-Paragraphenhengst	Paragráphen-hengst	[paʁaˈɡʁaːfənˌhɛŋst]
-
-# Use of ^
-# Passiv	Passihv	ˈpasiːf
+Paragraphenhengst	Paragráphen-hengst	paʁaˈɡʁaːfənˌhɛŋst
 
 # Internal glottal stops
 Osterei	Ohster-ei	 ˈoːstɐˌʔaɪ̯
 unendlich	unéndlich	ʊnˈʔɛntlɪç
+Patholinguistik	Pàtholingu-ístik	ˌpatolɪŋɡuˈʔɪstɪk	dewikt pron #5
+Botsuana	Bọtsu-ána	bɔt͡suˈʔaːna	dewikt pron #2
+Aufenthalt	Aufenthalt	ˈaʊ̯f(ʔ)ɛntˌhalt
+aalähnlich	aal-ähnlich	ˈaːlˌʔɛːnlɪç
 
 # Unstressed -e-
-Benediktinerkloster	Benədiktíner-klohster	benədɪkˈtiːnɐˌkloːstɐ
-Benediktinerkloster	Benediktíner-klohster	benedɪkˈtiːnɐˌkloːstɐ
+Elektrizität	Elektrizität	elɛktʁit͡siˈtɛːt
+Negativität	Nègativität	ˌneɡativiˈtɛːt
+Benediktiner	Benədiktíner	benədɪkˈtiːnɐ
+Benediktiner	Benediktíner	benedɪkˈtiːnɐ
+Idealisierung	Idealisierung	idealiˈziːʁʊŋ
+Temperatur	Temperatúr	tɛmpəʁaˈtuːʁ
+Generalität	Generalität	ɡenəʁaliˈtɛːt
+Souveränität	Souveränität	zuvəʁɛniˈtɛːt
+Heterogenität	Heterogenität	hetəʁoɡeniˈtɛːt
+Kanzerogenität	Kànzerogenität	ˌkant͡səʁoɡeniˈtɛːt
+Immaterialität	Ímmaterialität	ˈɪmatəʁialiˌtɛːt	dewikt (secondary stress not explicitly marked but present in audio)
+Immaterialität	Ìmmatêrialität	ˌɪmateʁi̯aliˈtɛːt	enwikt
+Pietät	Pìətät	ˌpiːəˈtɛːt
+Sozietät	Soziətät	zot͡si̯əˈtɛːt
+Varietät	Vari.etät	vaʁieˈtɛːt	dewikt
+Varietät	Vàri̯etät	ˌvaʁi̯eˈtɛːt	enwikt
+abalienieren	àbb-ali̯enieren	ˌapʔali̯eˈniːʁən
+Extremität	Extremität	ɛkstʁemiˈtɛːt
+Illegalität	Illegalität	ɪleɡaliˈtɛːt
+Illegalität	Íllegalität	ˈɪleɡaliˌtɛːt
+Integrität	Integrität	ɪnteɡʁiˈtɛːt
+Abbreviation	Ab+breviation	abʁevi̯aˈt͡si̯oːn
+acetylieren	acetylieren	at͡setyˈliːʁən
+akkreditieren	akkreditieren	akʁediˈtiːʁən
+ameliorieren	ameliorieren	ameli̯oˈʁiːʁən
+anästhesieren	anästhesieren	anɛsteˈziːʁən
+degenerieren	degenêrieren	deɡeneˈʁiːʁən	dewikt
+degenerieren	degenerieren	deɡenəˈʁiːʁən	enwikt
+zumindestens	zumindestens	t͡suˈmɪndəstəns
+Latex	Latex	ˈlaːtɛks
+Index	Index	ɪndɛks
+Alex	Alex	ˈaːlɛks	dewikt; enwikt has short 'a'
+Achilles	Achillĕs	aˈxɪlɛs
+Adjektiv	Adjektìv	ˈatjɛkˌtiːf
+Adjektiv	A*.djektìv	ˈadjɛkˌtiːf	first pronun of enwikt; may be wrong
+Adstringens	Adstrin.gĕns	atˈstrɪŋɡɛns
+Adverb	Adverb	ˈatvɛʁp
+Adverb	Advérb	atˈvɛʁp
+Agens	Agĕns	ˈaːɡɛns
+Ahmed	Achmedd	ˈaxmɛt
+Bizeps	Bizeps	ˈbiːtsɛps
+Borretsch	Borretsch	bɔʁɛt͡ʃ
+Bregenz	Bregenz	ˈbʁeːɡɛnt͡s
+Clemens	Klemĕns	ˈkleːmɛns
+Daniel	Daniell	ˈdaːni̯ɛl
+Dezibel	Dezibell	ˈdeːtsibɛl
+Diabetes	Di.abétes	diaˈbeːtəs
+Diabetes	Di.abétĕs	diaˈbeːtɛs
+Dolmetscher	Dolmetscher	ˈdɔlmɛtʃər
+Dubstep	Dabstepp	ˈdapstɛp
 
-# Syllable boundaries
+# Syllable boundary between obstruent and [lr]
+Agrobiologie	Agro-bi.ologie	ˈaːɡʁobioloˌɡiː
+Algebra	Algebra	ˈalɡebʁa
+Algebra	Algébra	alˈɡeːbʁa	Austria
+Capri	Kapri	ˈkaːpʁi
+deprekativ	deprekatív	depʁekaˈtiːf
+deprimierend	deprimierend	depʁiˈmiːʁənt
+Ruprecht	Ruprecht	ʁuːpʁɛçt
+Ruprecht	Rupprecht	ˈʁʊpʁɛçt
+Sopran	Soprán	zoˈpʁaːn
+Gabelstapler	Gabel-stapler	ˈɡaːbəlˌʃtaːplɐ
+Makler	Makler	ˈmaːklɐ
+Deklaration	Dèklaration	ˌdeklaʁaˈt͡si̯oːn
+Metrik	Metrik	ˈmeːtʁɪk
 Adlatus	Àd.látus	ˌatˈlaːtʊs
-Adlatus	À.dlátus	ˌaˈdlaːtʊs
-ewiglich	ewiglich	ˈeː.vɪk.lɪç
-ewiglich	ewi.glich	ˈeː.vɪ.ɡlɪç
+Adlatus	Àdlátus	ˌaˈdlaːtʊs
+Adler	Adler	ˈaːdlɐ
+Bethlehem	Bethlə.hemm	ˈbeːtləhɛm
+Detlef	Dettlef	ˈdɛtlɛf
+ewiglich	ewiglich	ˈeː.vɪk.lɪç	because -lich is a suffix
+Diglossie	Diglossie	diɡlɔˈsiː
+Triglyph	Triglýph	tʁiˈɡlyːf
+Epiglottis	Epiglóttis	epiˈɡlɔtɪs
+Digraph	Digráph	diˈɡʁaːf
+Emigrant	Emigrant	emiˈɡʁant
+Epigramm	Epigrámm	epiˈɡʁam
+filigran	filigrán	filiˈɡʁaːn
+Kalligraphie	Kàlligraphie	ˌkaliɡʁaˈfiː
+Migräne	Migrä́ne	miˈɡʁɛːnə
+Milligramm	Milligràmm	ˈmɪliˌɡʁam
+Milligramm	Milligrámm	mɪliˈɡʁam
 
+# Syllable boundary in -kv-, -gv-
+Liquid	Liquíd	liˈkviːt
+Liquida	Liquida	ˈliːkvida
+Mikwe	Mikwé	miˈkveː
+Taekwondo	Täkwóndo	tɛˈkvɔndo
+Uruguayerin	Urugwayerin	ˈuːʁuɡvaɪ̯əʁɪn
+
+# Syllable boundary in -gn-
+Signal	Signál	zɪˈɡnaːl
+designieren	designieren	dezɪˈɡniːʁən
+Kognition	Koggnition	ˌkɔɡniˈt͡si̯oːn
+Kognat	Koggnát	kɔˈɡnaːt
+Prognose	Prògnóse	ˌpʁoˈɡnoːzə
+orthognath	orthognáth	ɔʁtoˈɡnaːt
+prognath	prognáth	pʁoˈɡnaːt
+Agnes	Aggnĕs	ˈaɡnɛs	per dewikt
+Agnes	Agnes	ˈaːɡnəs	per enwikt
+regnen	regnen	ˈʁeːɡnən	enwikt: "prescriptive standard"
+regnen	rehg.nen	ˈʁeːknən	enwikt: "most common"
+Leugner	Leugner	ˈlɔɪ̯ɡnɐ	prescriptive
+Leugner	Leug.ner	ˈlɔɪ̯knɐ	more common
+Zeugnis	Zeugnis	ˈt͡sɔɪ̯knɪs	because -nis is a suffix
+
+# Hiatus
+Addition	Àddition	ˌadiˈt͡si̯oːn
+Historiolinguistik	Històrio-linguístik	hɪsˌtoːʁi̯olɪŋˈɡu̯ɪstɪk
+Familie	Famíli̯e	faˈmiːli̯ə
+Guerilla	Gerílja	ɡeˈʁɪlja	note short 'i' here but long in [[Familie]]
+Ichthyologie	Ichthy̯ologie	ɪçty̯oloˈɡiː
+soigniert	so̯anjiert	zo̯anˈjiːʁt
+soigniert	sOanjiert	zo̯anˈjiːʁt
+
+# Unstressed final i
+Musikerin	Musickerin	ˈmuːzɪkəʁɪn
+Genesis	Genêsis	ˈɡeːnezɪs
+Genesis	Gennêsis	ˈɡɛnezɪs
+Organik	Orgánik	ɔʁˈɡaːnɪk
+Linguistik	Linguístik	lɪŋˈɡu̯ɪstɪk
+Linguistik	Lingu.ístik	lɪŋɡuˈɪstɪk
+Linguistik	Linguʔístik	lɪŋɡuˈʔɪstɪk
+Interim	Interim	ˈɪntəʁɪm
+Isegrim	Isəgrim	ˈiːzəɡʁɪm
+Joachim	Jóachim	ˈjoːaxɪm
+Joachim	Joʔáchim	joˈʔaxɪm
+Muslim	Muslim	ˈmʊslɪm
+Muslim	Mu*slîm	ˈmuslim
+privatim	privátim	pʁiˈvaːtɪm
+Achim	Achim	ˈaxɪm
+Achim	Achihm	ˈaxiːm
+David	David	ˈdaːvɪt
+Ingrid	Inggrid	ˈɪŋɡʁɪt	one pronunciation
+
+# Unstressed medial i before g followed by unstressed vowels
+Entschuldigung	Entschuldigung	ɛntˈʃʊldɪɡʊŋ
+verständigen	verständigen	fɛʁˈʃtɛndɪɡən
+Königin	Königin	ˈkøːnɪɡɪn
+ängstigend	ängstigend	ˈɛŋstɪɡənt
+ewiglich	ewi.glich	ˈeː.vɪ.ɡlɪç	explicit syllable boundary prevents suffix
+
+# Unstressed medial i before gn
+indigniert	indigniert	ɪndɪˈɡniːʁt
+Lignin	Lignín	lɪˈɡniːn
+
+# Unstressed final -us, -um
+Kaktus	Kaktus	ˈkaktʊs
+Museum	Museum	muˈzeːʊm
+
+# Unstressed final -on, -os
+Aaron	Aaron	ˈaːʁɔn
+Abaton	Abaton	ˈaːbatɔn
+Natron	Natron	ˈnaːtʁɔn
+Analogon	Análogon	aˈnaːloɡɔn
+Myon	Mýon	ˈmyːɔn
+Bariton	Barriton	ˈbaʁitɔn
+Bariton	Bariton	ˈbaːʁitɔn
+Biathlon	Biathlon	ˈbiːatlɔn
+Bison	Bison	ˈbiːzɔn
+Albatros	Albatros	ˈalbatʁɔs
+Amos	Amos	ˈaːmɔs
+Amphiprostylos	Àmfipróstylos	ˌamfiˈpʁɔstylɔs
+Barbados	Barbádos	baʁˈbaːdɔs
+Chaos	Kaos	ˈkaːɔs
+Epos	Epos	ˈeːpɔs
+Gyros	Gyros	ˈɡyːʁɔs
+Heros	Heros	ˈheːʁɔs
+Kosmos	Kosmos	ˈkɔsmɔs
+
+# Consonant devoicing
+Magd	Mahgd	maːkt
+Herbst	Herbst	hɛʁpst
 
 # Compounds
 Hubschrauber	Hub-schrauber	ˈhuːpˌʃʁaʊ̯bɐ
@@ -128,27 +367,26 @@ Rundflug	Rund-flug	ˈʁʊntˌfluːk
 Hubschrauberrundflug	Hub-schrauber--rund-flug	ˈhuːpʃʁaʊ̯bɐˌʁʊntfluːk
 Pilot	Pilót	piˈloːt
 Hubschrauberpilot	Hub-schrauber--pilòt	ˈhupʃʁaʊ̯bɐpiˌloːt
-Absturz	Absturz	ˈʔapʃtʊʁt͡s
+Absturz	Absturz	ˈapʃtʊʁt͡s
 Hubschrauberabsturz	Hub-schrauber--absturz	ˈhuːpʃʁaʊ̯bɐˌʔapʃtʊʁt͡s
 Maulwurfshügel	Maul-wurf-s--hügel	ˈmaʊ̯lvʊʁfsˌhyːɡəl
-Aufenthalt	Aufenthalt	ˈʔaʊ̯f(ʔ)ɛntˌhalt
-Aufenthaltsgenehmigung	Aufenthalt-s-genehmigung	ˈʔaʊ̯f(ʔ)ɛnthalt͡sɡəˌneːmɪɡʊŋ
-Abhängigkeit	Abhängigkeit	ˈʔapˌhɛŋɪçkaɪ̯t
+Aufenthaltsgenehmigung	Aufenthalt-s-genehmigung	ˈaʊ̯f(ʔ)ɛnthalt͡sɡəˌneːmɪɡʊŋ
+Abhängigkeit	Abhängigkeit	ˈapˌhɛŋɪçkaɪ̯t
 Drogenabhängigkeit	Drogen-abhängigkeit	ˈdʁoːɡənˌʔaphɛŋɪçkaɪ̯t
-Alkoholabhängigkeit	Alkohól-abhä̀ngigkeit	ʔalkoˈhoːlʔapˌhɛŋɪçkaɪ̯t
-Alkoholabhängigkeit	Alkohól-ȧbhängigkeit	ʔalkoˈhoːlʔaphɛŋɪçkaɪ̯t
+Alkoholabhängigkeit	Alkohól-abhä̀ngigkeit	alkoˈhoːl(ʔ)apˌhɛŋɪçkaɪ̯t
+Alkoholabhängigkeit	Alkohól-ȧbhängigkeit	alkoˈhoːlʔaphɛŋɪçkaɪ̯t
 Mädchen	Mädchen	ˈmɛːtçən
 # -chen is not recognized as a suffix after a vowel, and is only recognized in nouns (beginning with a capital letter)
 Freimachen	Frei-machen	ˈfʁaɪ̯ˌmaxən
 Kaputtmachen	Kapútt-machen	kaˈpʊtˌmaxən
 Verachtfachen	Veracht-fachen	fɛʁˈʔaxtˌfaxən
 Verfünfzehnfachen	Verfünf-zehn--fachen	fɛʁˈfʏnft͡seːnˌfaxən
-Verursachen	Verur-sachen	fɛˈʔuːʁˌzaxən
+Verursachen	Verur-sachen	fɛʁˈʔuːʁˌzaxən
 Gewaltverbrechen	Gewalt-verbrechen	ɡəˈvaltfɛʁˌbʁɛçən
 Absatzzeichen	Absatz-zeichen	ˈapzat͡sˌt͡saɪ̯çən
 Anführungszeichen	Anführungs-zeichen	ˈanfyːʁʊŋsˌt͡saɪ̯çən
 Autokennzeichen	Auto--kenn-zeichen	ˈaʊ̯toˌkɛnt͡saɪ̯çən
-Hauptbetonungszeichen	Haupt-betonung-s--zeichen	[ˈhaʊ̯ptbətoːnʊŋsˌt͡saɪ̯çən]
+Hauptbetonungszeichen	Haupt-betonung-s--zeichen	ˈhaʊ̯ptbətoːnʊŋsˌt͡saɪ̯çən
 Gleichheitszeichen	Gleichheit-s-zeichen	ˈɡlaɪ̯çhaɪ̯t͡sˌt͡saɪ̯çən
 Minuszeichen	Minus-zeichen	ˈmiːnʊsˌt͡saɪ̯çən
 Unterstreichen	Unterstreichen	ʔʊntɐˈʃtʁaɪ̯çən
@@ -156,19 +394,22 @@ Ermöglichen	Ermöglichen	ɛʁˈmøːklɪçən
 Backenknochen	Backen-knochen	ˈbakənˌknɔxən
 Oberschenkelknochen	Ober-schenkel--knochen	ˈoːbɐʃɛŋkəlˌknɔxən
 Apfelkuchen	Apfel-kuchen	ˈapfəlˌkuːxən
-Passivrauchen	Passîv-rauchen	ˈpasiːfˌʁaʊ̯xən
+Passivrauchen	Passihv-rauchen	ˈpasiːfˌʁaʊ̯xən
 Untertauchen	Untertauchen	ˈʊn.tɐˌtaʊ̯xən
 Verscheuchen	Verscheuchen	fɛʁˈʃɔɪ̯çən
 Bärchen	Bärchen	ˈbɛːʁçən
 Hintertürchen	Hintertürchen	ˈhɪntɐˌtyːʁçən
 Dingenskirchen	Dingens-kirchen	ˈdɪŋənsˌkɪʁçən
-aalähnlich	aal-ähnlich	ˈaːlˌʔɛːnlɪç
 Abkürzungsverzeichnis	Abkürzung-s-verzeichnis	ˈapkʏʁt͡sʊŋsfɛʁˌt͡saɪ̯çnɪs
 Abschiedsbrief	Abschied-s-brief	ˈapʃiːt͡sˌbʁiːf
 
 
+# Suffix handling
+verträglich	verträglich	fɛʁˌtʁɛːklɪç
+
+
 # secondary pronunciation ˈaːlˌʔaːʁtɪk will also be shown, with the following: "common form in southern Germany, Austria, and Switzerland"
-aalartig	aal-artig	ˈaːlˌʔaːʁtɪç
+aalartig	aal-ahrtig	ˈaːlˌʔaːʁtɪç
 # + prevents ab- from being recognized as a prefix
 Abend	Ab+end	ˈaːbənt
 # + prevents ab- from being recognized as a prefix
@@ -179,9 +420,9 @@ abfällig	abfällig	ˈapˌfɛlɪç
 abgelegen	abgelegen	ˈapɡəˌleːɡən
 abkommen	abkommen	ˈapˌkɔmən
 # primary and secondary stressed syllables are long before a single consonant
-Ablativ	Ab+latìv	ˈablaˌtiːf
-Ablativ	Ablatìv	ˈaplaˌtiːf
-Absence	Ab[s]áNs	apˈsãːs
+Ablativ	A.blatìv	ˈablaˌtiːf
+Ablativ	Ab+latìv	ˈaplaˌtiːf
+Absence	Abs*áNs	apˈsãːs
 abstinent	abstinent	apstiˈnɛnt
 abstoßend	abstoßend	ˈapˌʃtoːsənt
 abstrus	abstrús	apˈstʁuːs
@@ -191,11 +432,10 @@ abundant	ab+undant	abʊnˈdant
 abwehrbereit	abwehr-bereit	ˈapveːʁbəˌʁaɪ̯t
 Abwehrspielerin	Abwehr-spielerin	ˈapveːʁˌʃpiːləʁɪn
 abweichend	abweichend	ˈapˌvaɪ̯çənt
-abzählbar	ab-zählbar	ˈapt͡sɛːlbaːʁ
+abzählbar	abzählbar	ˈapt͡sɛːlbaːʁ
 Akkordeon	Akkórdeon	aˈkɔʁdeɔn
 # -abel is a recognized suffix
 inakzeptabel	in-akzeptabel	ˈɪnʔakt͡sɛpˌtaːbl̩
-# in is recognized specially so it has a short vowel
 ineffizient	in-effizient	ˈɪnʔɛfiˌt͡si̯ɛnt
 ineffizient	in-effiziént	ˈɪnʔɛfiˌt͡si̯ɛnt
 effizient	effizient	ɛfiˈt͡si̯ɛnt
@@ -266,3 +506,10 @@ zuständig	zuständig	ˈt͡suːˌʃtɛndɪç
 # stressed -an is lengthened by default
 zugetan	zugetan	ˈt͡suːɡəˌtaːn
 zugespitzt	zugespitzt	ˈt͡suːɡəˌʃpɪt͡st
+
+# secondary stress
+Lethargie	Lèthargie	ˌletaʁˈɡiː
+liberal	liberál	libeˈʁaːl	dewikt
+liberal	lìberál	ˌlibəˈʁaːl	enwikt
+hyperaktiv	hỳ*per-áktihv	ˌhypɐˈʔaktiːf
+Universität	Ùniversität	ˌunivɛʁziˈtɛːt

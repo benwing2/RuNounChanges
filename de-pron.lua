@@ -102,22 +102,22 @@ Notes:
    [ˈhupʃʁaʊ̯bɐpiˌloːt]. Here, the primary stress should be converted to secondary; otherwise the word would
    wrongly end up rendered as [ˌhupʃʁaʊ̯bɐpiˈloːt], where the module assumes that since the second word has the
    primary stress, other words (including the first one) should have secondary stress. Other similar examples:
-   [[Hubschrauberabsturz]] "helicopter crash" 'Hub-schrauber--absturz' [ˈhuːpʃʁaʊ̯bɐˌʔapʃtʊʁt͡s] (the stressed
-   prefix ab- is automatically recognized) and [[Maulwurfshügel]] "molehill" [ˈmaʊ̯lvʊʁfsˌhyːɡl̩]. Occasionally the
+   [[Hubschrauberabsturz]] "helicopter crash" 'Hub-schrauber--absturz' /ˈhuːpʃʁaʊ̯bɐˌʔapʃtʊʁt͡s/ (the stressed
+   prefix ab- is automatically recognized) and [[Maulwurfshügel]] "molehill" /ˈmaʊ̯lvʊʁfsˌhyːɡəl/. Occasionally the
    double hyphen should be used even when no single hyphens occur. Another example of note is [[Aufenthaltsgenehmigung]]
-   "residence permit". [[Aufenthalt]] by itself (without respelling) is rendered [ˈaʊ̯f(ʔ)ɛntˌhalt], i.e. it has
-   secondary stress. The respelling 'Aufenthalts-genehmigung' is rendered [ˈaʊ̯fʔɛnthalt͡sɡəˌneːmɪɡʊŋ] without the
+   "residence permit". [[Aufenthalt]] by itself (without respelling) is rendered /ˈaʊ̯f(ʔ)ɛntˌhalt/, i.e. it has
+   secondary stress. The respelling 'Aufenthalts-genehmigung' is rendered /ˈaʊ̯f(ʔ)ɛnthalt͡sɡəˌneːmɪɡʊŋ/ without the
    original secondary stress; the module recognizes the need to remove the secondary stress here. Essentially, if two
    words are joined by an ordinary hyphen and one of them has secondary stress due to a stressed prefix, the hyphen
    is implicitly "upgraded" to a double hyphen.
 
    Things may get more complex when stresses "bump up" against each other. For example, [[Abhängigkeit]] "dependency"
    with no respelling is rendered [ˈapˌhɛŋɪçkaɪ̯t]. In combination as e.g. [[Drogenabhängigkeit]] "drug dependency,
-   drug addiction" respelled 'Drogen-abhängigkeit', the result is [ˈdʁoːɡn̩ˌʔaphɛŋɪçkaɪ̯t], which appears correct.
+   drug addiction" respelled 'Drogen-abhängigkeit', the result is /ˈdʁoːɡənˌʔaphɛŋɪçkaɪ̯t/, which appears correct.
    In combination as e.g. [[Alkoholabhängigkeit]] respelled 'Alkohól-abhängigkeit', the result is
-   [alkoˈhoːlˌʔaphɛŋɪçkaɪ̯t], which may sound wrong to native ears because of the two stresses bumping up against each
-   other. The actual pronunciation may be more like [alkoˈhoːlʔapˌhɛŋɪçkaɪ̯t] with the secondary stress moving
-   (respell 'Alkohól-abhä̀ngigkeit') or [alkoˈhoːlʔaphɛŋɪçkaɪ̯t] with the secondary stress disappearing (respell
+   /alkoˈhoːlˌʔaphɛŋɪçkaɪ̯t/, which may sound wrong to native ears because of the two stresses bumping up against each
+   other. The actual pronunciation may be more like /alkoˈhoːl(ʔ)apˌhɛŋɪçkaɪ̯t/ with the secondary stress moving
+   (respell 'Alkohól-abhä̀ngigkeit') or /alkoˈhoːlʔaphɛŋɪçkaɪ̯t/ with the secondary stress disappearing (respell
    'Alkohól-ȧbhängigkeit' where the dot-above suppresses the stress marker but otherwise doesn't change the
    phonology).
 
@@ -146,7 +146,7 @@ FIXME:
 16. Implement allowed offsets and check with suffixes.
 17. Implement 'style' ala Spanish pronun to handle standard vs. northern/Eastern vs. southern:
     e.g. [[berufsunfähig]]:
-	/bəˈʁuːfsʔʊnˌfɛːɪç/ {{qualifier|standard; used naturally in western Germany and Switzerland}}
+	/bəˈʁuːfs(ʔ)ʊnˌfɛːɪç/ {{qualifier|standard; used naturally in western Germany and Switzerland}}
 	/-ʔʊnˌfeːɪç/ {{qualifier|overall more common; particularly northern and eastern regions}}
 	/-ʔʊnˌfɛːɪk/ {{qualifier|common form in southern Germany, Austria, and Switzerland}}
 	e.g. [[aufrichtig]]:
@@ -167,12 +167,22 @@ FIXME:
 23. Handle unstressed words like [[und]] and [[von]] correctly.
 24. Implement optional glottal stops when the following syllable isn't stressed (but only after a consonant; cf.
     [[wiederentdecken]] ˈviːdɐʔɛntˌdɛkən).
-25. Use x@ etc. to get EXPLICIT_X etc. instead of [x], so that [...] can be used after a word to indicate word
+25. Use x* etc. to get EXPLICIT_X etc. instead of [x], so that [...] can be used after a word to indicate word
     properties.
 26. Handle prefixes/suffixes/interfixes indicated with initial and/or final hyphen.
 27. t-s- should render as t͡s e.g. [[Gleichheitszeichen]] respelled 'Gleichheit-s-zeichen' and [[Aufenthaltstitel]]
     respelled 'Aufenthalt-s-titel'.
 28. Need syllable dividers at component boundaries before unstressed syllables.
+29. Open syllables with secondary stress get close but not lengthened vowel if there is a following primary stress
+    within the component bounadry; cf. [[iterativ]] 'ìtêratív' [ˌiteʁaˈtiːf], [[Lethargie]] 'Lèthargie' [ˌletaʁˈɡiː].
+	Across a component bounadry this doesn't apply, so that e.g. [[hyperaktiv]] 'hỳper-áktihv' would be
+	[ˌhyːpɐˈʔaktiːf]; if we need short /y/, either make it unstressed, e.g. 'hyper<aktihv' or use *, e.g.
+	'hỳ*per-áktiv'.
+30. Use [vf] after a word for "verb form" to get verbal endings -st, -t, -tet etc. recognized. Expand this to handle
+    all inflectional endings.
+31. Support non-initial capital O for o̯, non-initial N for nasal vowel including after lengthening h, digraphs eI and
+    oU for /ɛɪ̯/ and /ɔʊ̯/.
+32. Nasal vowels should be long when stressed, and use the phonemes ã ɛ̃ õ œ̃ per Wikipedia.
 ]=]
 
 local export = {}
@@ -255,6 +265,10 @@ local AUTOGRAVE = u(0xFFF1)
 -- removed.
 local ORIG_SUFFIX_GRAVE = u(0xFFF2)
 
+-- Used to temporarily substitute capital I and U when lowercasing
+local TEMP_I = u(0xFFF0)
+local TEMP_U = u(0xFFF1)
+
 -- When the user uses the "explicit allophone" notation such as [z] or [x] to force a particular allophone, we
 -- internally convert that notation into a single special character.
 local EXPLICIT_S = u(0xFFF3)
@@ -300,7 +314,7 @@ local explicit_char_to_phonemic = {
 
 local stress = ACUTE .. GRAVE .. DOUBLEGRAVE
 local stress_c = "[" .. stress .. "]"
-local accent_non_stress_non_invbrevebelow = BREVE .. CFLEX .. TILDE .. DOTUNDER .. MACRON .. "ː"
+local accent_non_stress_non_invbrevebelow = BREVE .. CFLEX .. TILDE .. DOTUNDER .. MACRON .. "ː*"
 local accent_non_stress = accent_non_stress_non_invbrevebelow .. INVBREVEBELOW
 local accent_non_stress_c = "[" .. accent_non_stress .. "]"
 local accent = stress .. accent_non_stress
@@ -534,9 +548,10 @@ local suffixes = {
 	{"ling", "ling", restriction = "[^l]$", pos = "n"},
 	{"los", "lòs", pos = "a"},
 	-- Included because of words like [[Ergebnis]], [[Erlebnis]], [[Befugnis]], [[Begräbnis]], [[Betrübnis]],
-	-- [[Gelöbnis]], [[Ödnis]], [[Verlöbnis]], [[Wagnis]], etc. Only recognized when following a consonant to exclude
-	-- [[Anis]], [[Denis]], [[Penis]], [[Spiritus lenis]], [[Tunis]] (although these would be excluded in any case
-	-- for the pre-suffix part being too short). [[Tennis]] needs respelling 'Ten+nis'.
+	-- [[Gelöbnis]], [[Ödnis]], [[Verlöbnis]], [[Wagnis]], etc. Also [[Zeugnis]] with /k/ (syllable division 'g.n')
+	-- instead of expected syllable division '.gn'. Only recognized when following a consonant to exclude [[Anis]],
+	-- [[Denis]], [[Penis]], [[Spiritus lenis]], [[Tunis]] (although these would be excluded in any case for the
+	-- pre-suffix part being too short). [[Tennis]] needs respelling 'Ten+nis'.
 	{"nis", "nis", restriction = C .. "$", pos = "n"},
 	{"ös", "ö́s", pos = "a"},
 	{"nisreich", "nisrèich", restriction = C .. "$", pos = "a"},
@@ -563,20 +578,30 @@ local suffixes = {
 }
 
 local function reorder_accents(text)
-	-- FIXME: What about order of DOTUNDER to indicate no stress? Maybe doesn't matter too much because it is
-	-- removed early when generating the default stress, but maybe it should go first of all so it's easy to spot.
-	-- The order should be: (1) DOTUNDER (removed early) (2) BREVE/CFLEX, (3) TILDE, (4) MACRON/ː,
-	-- (5) ACUTE/GRAVE/DOUBLEGRAVE. First: Remove duplicate accents. FIXME: Possibly do this if separated by other
-	-- accents.
+	-- The order should be: (1) DOTUNDER (removed early) (2) *, (3) TILDE, (4) BREVE/CFLEX, (5) MACRON/ː,
+	-- (6) ACUTE/GRAVE/DOUBLEGRAVE.
+	local function reorder_accent_string(accentstr)
+		local accents = rsplit(accentstr, "")
+		local accent_order = {
+			[DOTUNDER] = 1,
+			["*"] = 2,
+			[TILDE] = 3,
+			[BREVE] = 4,
+			[CFLEX] = 4,
+			[MACRON] = 5,
+			["ː"] = 5,
+			[ACUTE] = 6,
+			[GRAVE] = 6,
+			[DOUBLEGRAVE] = 6,
+		}
+		table.sort(accents, function(ac1, ac2)
+			return accent_order[ac1] < accent_order[ac2]
+		end)
+		return table.concat(accents)
+	end
+	text = rsub(text, "(" .. accent_c .. "+)", reorder_accent_string)
+	-- Remove duplicate accents.
 	text = rsub_repeatedly(text, "(" .. accent_c .. ")%1", "%1")
-	-- Second, DOTUNDER first among all.
-	text = rsub(text, "([" .. stress .. BREVE .. CFLEX .. TILDE .. MACRON .. "ː]+)([" .. DOTUNDER .. "])", "%2%1")
-	-- Third, ACUTE/GRAVE last among all remaining.
-	text = rsub(text, "(" .. stress_c .. ")([" .. BREVE .. CFLEX .. TILDE .. MACRON .. "ː]+)", "%2%1")
-	-- Fourth, put BREVE/CFLEX first among TILDE and MACRON/ː.
-	text = rsub(text, "([" .. TILDE .. MACRON .. "ː]+)([" .. BREVE .. CFLEX .. "])", "%2%1")
-	-- Fifth, put TILDE before MACRON/ː.
-	text = rsub(text, "([" .. MACRON .. "ː]+)([" .. TILDE ..  "])", "%2%1")
 	return text
 end
 
@@ -602,8 +627,8 @@ local function canonicalize(text)
 	text = rsub(text, "%s+", " ")
 	text = rsub(text, "^ ", "")
 	text = rsub(text, " $", "")
-	-- Capital N after a vowel (including after vowel + accent marks) denotes nasalization.
-	text = rsub(text, "(" .. V .. accent_c .. "*)N", "%1" .. TILDE)
+	-- Capital N after a vowel (including after vowel + accent marks + possibly an h) denotes nasalization.
+	text = rsub(text, "(" .. V .. accent_c .. "*)(h?)N", "%1" .. TILDE .. "%2")
 	-- The user can use respelling with macrons but internally we convert to the long mark ː
 	text = rsub(MACRON, "ː")
 	-- Reorder so ACUTE/GRAVE/DOUBLEGRAVE go last.
@@ -631,6 +656,12 @@ local function split_words(text)
 		-- Lowercase the word and check if it was capitalized.
 		local lcword = mw.getContentLanguage():lcfirst(word)
 		local is_cap = lcword ~= word
+		word = rsub(word, "O", "o̯")
+		word = rsub(word, "I", TEMP_I)
+		word = rsub(word, "U", TEMP_U)
+		word = ulower(word)
+		word = rsub(word, TEMP_I, "I")
+		word = rsub(word, TEMP_U, "U")
 		table.insert(result, {word = ulower(word), is_cap = is_cap})
 	end
 	return result
@@ -997,22 +1028,37 @@ local phonemic_rules = {
 	{"w", "v"},
 	-- [[Pinguin]], [[Linguistik]], [[konsanguin]], [[Lingua franca]], [[bilingual]]
 	{"ngu(" .. V .. ")", "ŋgu%1"},
-	-- Most words with -ngr- without a clear component boundary pronounce the g. Examples: [[Engramm]] (arguably has a
-	-- component boundary, pronounced with /n/?); [[Gangrän]] (/ŋ/); [[Ingredienz]] (arguably has a component boundary,
-	-- pronounced with /n/); [[Ingrid]] (/ŋ/); [[Ingrimm]] (with component boundary but still /ŋ/); [[inkongruent]],
-	-- [[kongruent]], [[Kongruenz]] (arguably has a component boundary, optionally with /ŋ/ or /n/); [[Kaliningrad]],
-	-- [[Leningrad]], [[Stalingrad]] (ditto); [[Kongress]] (ditto); [[Mangrove]] (with /ŋ/); [[Sangria]] (with /ŋ/);
-	-- only [[hungrig]] has /ŋr/ without /g/. Choosing this default simplifies handling the cases with /ngr/ (which
-	-- should add a syllable boundary 'n.gr') and /ŋr/ (which should add a syllable boundary 'ng.r').
+	-- In -ngr-, -ngl-, -ngV- with a following stress in the same component, the 'g' is usually pronounced and the 'n'
+	-- is usually /ŋ/. Cf. [[Gangrän]], [[kongruent]], [[Kongruenz]], [[Kaliningrad]]/[[Leningrad]]/[[Stalingrad]],
+	-- [[Kongress]], [[Mangrove]], [[Sangria]], [[Anglikaner]], [[anglikanisch]], [[Anglistik]], [[Anglizismus]],
+	-- [[Bangladesch]], [[Jonglage]]/[[Jongleur]]/[[jonglieren]], [[Konglomerat]], [[Angela]], [[Angeliter]],
+	-- [[Angola]], [[Angolaner]], [[evangelisch]], [[Evangelium]], [[fingieren]], [[fungieren]], [[fungibilität]],
+	-- [[Gingivitis]], [[Klingonisch]], [[Kongolese]], [[Kontingenz]], [[Langobarde]], [[Languste]], [[Mangan]],
+	-- [[Mongolisch]], [[rektangulär]], [[restringieren]], [[singapurisch]], [[singulär]], [[Singultus]],
+	-- [[stringent]], [[tangibel]], [[tangieren]], [[triangulieren]], [[Vercingetorix]], etc. Cases without stress and
+	-- with the 'g' unpronounced are [[hungrig]], [[Angler]], [[Spengler]], [[Umzinglung]], [[England]], [[Engländer]],
+	-- [[Englisch]], [[Denglisch]], [[einenglischen]], etc. Some of the above optionally have /n/ instead of /ŋ/; these
+	-- need respelling with 'n.gr' or 'n.gl'.
 	--
-	-- With -ngl- we have [[Angler]] /ŋl/; [[Anglikaner]], [[anglikanisch]], [[Anglistik]], [[Anglizismus]], [[Anglo-]],
-	-- etc. with /ŋgl/; [[Bangladesch]] and related with /ŋl/; [[England]], [[Engländer], [[English]], [[Denglish]],
-	-- [[einenglischen]] and related with /ŋl/; [[Ganglion]] with /ŋl/ or /ŋgl/; [[Jingle]] respelled 'Dschingel';
-	-- [[Jonglage]], [[Jongleur]], [[jonglieren]] with /ɔ̃gl/, /ɔŋgl/ or /ɔŋl/; [[Konglomerat]] with /ŋgl/ or /ngl/;
-	-- [[Ringlotte]] ?; [[Single]] respelled '[S]ingel'; [[Spengler]] with /ŋl/; [[Umzinglung]] with /ŋl/; [[Wängle]] ?;
-	-- [[Wurmzüngler]] presumably with /ŋl/.
-	{"ngr", "ŋgr"},
+	-- 'ng' followed by 'a' or 'o' also usually has pronounced 'g' and /ŋ/, e.g. [[Bungalow]], [[Ingolstadt]],
+	-- [[Kongo]], [[Manga]], [[Singapur]], [[Tango]], [[Tonga]], [[Ungar]].
+	--
+	-- Exceptions to both rules will need respelling, e.g. [[Ingrid]] 'Inggrid', [[Ganglion]] 'Ganggli.on' (one
+	-- pronunciation; unpronounced 'g' is also possible), [[Adstringens]] 'Adstrínggĕns', [[Anilingus]] 'Anilínggus',
+	-- [[Ingrimm] 'Inggrimm', [[Singular]] 'Singgular' (although if spelled 'Singulàr', the first rule will take effect
+	-- with the following stress).
+	{"ng([lr]?" .. V .. "[^⁀‿]*" .. stress_c .. ")", "ŋ.g%1", true},
+	{"ng([lr]?[ao])", "ŋ.g%1"},
 	{"ng", "ŋŋ"},
+	-- Cf. [[Funke]], [[Gedanke]], [[Kranker]], [[Beschränkung]], [[Erkrankung]], [[Verrenkung]], [[gelenkig]],
+	-- [[stinkig]], etc. with no following stress; [[trinkbar]], [[Frankreich]], etc. within a syllable; [[Bankett]],
+	-- [[bankrott]], [[Concorde]], [[Delinquent]] ('qu' respelled 'kv' above, feeding this rule), [[flankieren]],
+	-- [[Frankierung]], [[Konklave]], [[Konkordia]], [[konkret]], [[melancholisch]] (respelled 'melankólisch'),
+	-- etc. with following stress. Words with initial 'in-' pronounced /ɪn/ e.g. [[Inkarnation]], [[Inklusion]],
+	-- [[inkohärent]], [[inkompatibel]], [[inkompetent]] will need respelling with a syllable divider 'In.karnation',
+	-- 'In.klusion', 'in.ko.härent', [[in.kompatibel]], [[in.kompetent]]. (Similarly [[ingeniös]], [[Ingredienz]]
+	-- respelled 'in.geniös', 'In.grêdienz'.)
+	{"nk", "ŋk"},
 	{"dt", "tt"},
 
 	-- Handling of 'c' other than 'ch'.
@@ -1064,6 +1110,16 @@ local phonemic_rules = {
 	-- Convert special 'H' symbol (to indicate pronounced /h/ between vowels) back to /h/.
 	{"H", "h"},
 
+	-- Handling of French and English sounds.
+	{"([eo])(" .. accent_c .. "*[IU])", function(eo, iu)
+		-- 'eI' as in 'SpreI' for [[Spray]]; 'eU' not in French or English but kept for parallelism
+		-- 'oI' as in 'KauboI' for [[Cowboy]]; 'oU' as in 'HoUmpehdsch' for [[Homepage]]
+		local lower_eo = {["e"] = "ɛ", ["o"] = "ɔ"}
+		return lower_eo .. iu
+	end},
+	{"e" .. TILDE, "ɛ" .. TILDE},
+	{"ö" .. TILDE, "œ" .. TILDE},
+
 	-- Handling of 'ch'. Must follow diphthong handling so 'äu', 'eu' trigger ich-laut.
 	{"tsch", "ʧʧ"},
 	{"dsch", "ʤʤ"},
@@ -1106,18 +1162,18 @@ local phonemic_rules = {
 	-- [[Anagramm]] -> (per dewikt) [anaˈɡʁam] Ana·gramm; [[Abraham]] -> /ˈaːbʁaˌha(ː)m/; [[Fabrik]] -> (per dewikt)
 	-- [faˈbʁiːk] Fa·b·rik; [[administrativ]] -> /atminɪstʁaˈtiːf/; [[adjazent]] -> (per dewikt) [ˌatjaˈt͡sɛnt]
 	-- ad·ja·zent; [[Adjektiv]] -> /ˈa.djɛkˌtiːf/ or /ˈat.jɛk-/, but only [ˈatjɛktiːf] per dewikt; [[Adlatus]] ->
-	-- /ˌatˈlaːtʊs/ or /ˌaˈdlaːtʊs/ (same in dewikt); [[Adler]] -> /ˈʔaːdlɐ/; [[adrett]] -> /aˈdʁɛt/; [[Adstrat]] ->
-	-- [atˈstʁaːt]; [[asthenisch]] -> /asˈteːnɪʃ/; [[Asthenosphäre]] -> /astenoˈsfɛːʀə/; [[Asthma]] -> [ˈast.ma];
-	-- [[Astronaut]] -> /ˌas.tʁoˈnaʊ̯t/; [[asturisch]] -> [ʔasˈtuːʁɪʃ]; [[synchron]] -> /zʏnˈkʁoːn/; [[Syndrom]] ->
+	-- /ˌatˈlaːtʊs/ or /ˌaˈdlaːtʊs/ (same in dewikt); [[Adler]] -> /ˈaːdlɐ/; [[adrett]] -> /aˈdʁɛt/; [[Adstrat]] ->
+	-- [atˈstʁaːt]; [[asthenisch]] -> /asˈteːnɪʃ/; [[Asthenosphäre]] -> /astenoˈsfɛːʁə/; [[Asthma]] -> [ˈast.ma];
+	-- [[Astronaut]] -> /ˌas.tʁoˈnaʊ̯t/; [[asturisch]] -> /asˈtuːʁɪʃ/; [[synchron]] -> /zʏnˈkʁoːn/; [[Syndrom]] ->
 	-- [zʏnˈdʁoːm]; [[System]] -> /zɪsˈteːm/ or /zʏsˈteːm/.
 	-- Change user-specified . into SYLDIV so we don't shuffle it around when dividing into syllables.
 	{"%.", SYLDIV},
-	-- Divide before the last consonant (possibly followed by a glide). We then move the syllable division marker
-	-- leftwards over clusters that can form onsets.
+	-- Divide before the last consonant. We then move the syllable division marker leftwards over clusters that can
+	-- form onsets.
 	{"(" .. V .. accent_c .. "*" .. C .. "-)(" .. C .. V .. ")", "%1.%2", true},
 	-- Cases like [[Agrobiologie]] /ˈaːɡʁobioloˌɡiː/ show that Cl or Cr where C is a non-sibilant obstruent should be
 	-- kept together. It's unclear with 'dl', cf. [[Adlatus]] /ˌatˈlaːtʊs/ or /ˌaˈdlaːtʊs/; but the numerous words
-	-- like [[Adler]] /ˈʔaːdlɐ/ (reduced from ''*Adeler'') suggest we should keep 'dl' together. For 'tl', we have
+	-- like [[Adler]] /ˈaːdlɐ/ (reduced from ''*Adeler'') suggest we should keep 'dl' together. For 'tl', we have
 	-- on the one hand [[Atlas]] /ˈatlas/ and [[Detlef]] [ˈdɛtlɛf] (dewikt) but on the other hand [[Bethlehem]]
 	-- /ˈbeːt.ləˌhɛm/. For simplicity we treat 'dl' and 'tl' the same.
 	{"(" .. obstruent_non_sibilant_c .. ")%.([lr])", ".%1%2"},
@@ -1125,13 +1181,13 @@ local phonemic_rules = {
 	-- [[Uruguayerin]] [ˈuːʁuɡvaɪ̯əʁɪn] (dewikt)
 	{"([kg])%.v", ".%1v"},
 	-- [[Signal]] [zɪˈɡnaːl] (dewikt); [[designieren]] [dezɪˈɡniːʁən] (dewikt); if split 'g.n', we'd expect [k.n].
-	-- But notice the short 'i'. Cf. [[Kognition]] [ˌkɔɡniˈt͡si̯oːn] (dewikt) and [[Kognat]] [kɔˈɡnaːt] (dewikt) vs.
-	-- [[Prognose]] [ˌpʁoˈɡnoːzə] (dewikt) with short closed 'o' despite secondary stress. Cf. also [[orthognath]]
-	-- [ɔʁtoˈɡnaːt] (dewikt), [[prognath]] [pʁoˈɡnaːt] (dewikt). Cf. [[Agnes]] [ˈaɡnɛs] (dewikt) but /ˈaː.ɡnəs/
-	-- (enwikt). Cf. [[regnen]] /ˈʁeː.ɡnən/ "prescriptive standard" (enwikt), /ˈʁeːk.nən/ "most common" (enwikt).
-	-- Similarly [[Gegner]], [[segnen]], [[Regnum]]. Also [[leugnen]], [[Leugner]] with the same /gn/ prescriptive,
-	-- /kn/ more common; whereas [[Zeugnis]] always with /kn/ (suggests -nis is a suffix we need to handle).
-	-- FIXME: Handle this all.
+	-- But notice the short 'i' (which we handle by a rule below). Cf. [[Kognition]] [ˌkɔɡniˈt͡si̯oːn] (dewikt) and
+	-- [[Kognat]] [kɔˈɡnaːt] (dewikt) vs. [[Prognose]] [ˌpʁoˈɡnoːzə] (dewikt) with short closed 'o' (secondary stress
+	-- doesn't lengthen vowel before primary stress). Cf. also [[orthognath]] [ɔʁtoˈɡnaːt] (dewikt), [[prognath]]
+	-- [pʁoˈɡnaːt] (dewikt). Cf. [[Agnes]] [ˈaɡnɛs] (dewikt) but /ˈaː.ɡnəs/ (enwikt). Cf. [[regnen]] /ˈʁeː.ɡnən/
+	-- "prescriptive standard" (enwikt), /ˈʁeːk.nən/ "most common" (enwikt). Similarly [[Gegner]], [[segnen]],
+	-- [[Regnum]]. Also [[leugnen]], [[Leugner]] with the same /gn/ prescriptive, /kn/ more common; whereas [[Zeugnis]]
+	-- always with /kn/ (because -nis is a suffix).
 	{"g%.n", ".gn"},
 	-- Divide two vowels; but not if the first vowel is indicated as non-syllabic ([[Familie]], [[Ichthyologie]], etc.).
 	{"(" .. V .. accent_non_invbrevebelow_c .. "*)(" .. V .. ")", "%1.%2", true},
@@ -1153,7 +1209,7 @@ local phonemic_rules = {
 	--    [[acetylieren]] with /e/; [[akkreditieren]] with /e/; [[ameliorieren]] with /e/; [[anästhesieren]] with /e/;
 	--    [[degenerieren]] with /e/ /e/ /ə/; etc.
 	-- 6. After the stress, 'e' is more likely to be schwa, e.g. [[zumindestens]] /t͡suˈmɪndəstəns/. But not always,
-	--    e.g. [[Latex]] [ˈlaːtɛks] (dewikt); [[Index]] /ʔɪndɛks/; [[Alex]] /ˈalɛks/; [[Achilles]] [aˈxɪlɛs] (dewikt);
+	--    e.g. [[Latex]] [ˈlaːtɛks] (dewikt); [[Index]] /ɪndɛks/; [[Alex]] /ˈalɛks/; [[Achilles]] [aˈxɪlɛs] (dewikt);
 	--    [[Adjektiv]] /ˈa.djɛkˌtiːf/ or /ˈat.jɛk-/; [[Adstringens]] [atˈstrɪŋɡɛns]; [[Adverb]] /ˈat.vɛʁp/
 	--    (or /atˈvɛʁp/); [[Agens]] /ˈaːɡɛns/; [[Ahmed]] /ˈaxmɛt/; [[Bizeps]] /ˈbiːtsɛps/; [[Borretsch]] /ˈbɔʁɛt͡ʃ/;
 	--    [[Bregenz]] /ˈbʁeːɡɛnt͡s/; [[Clemens]] [ˈkleːmɛns]; [[Comeback]] /ˈkambɛk/; [[Daniel]] /ˈdaːni̯ɛl/;
@@ -1205,12 +1261,32 @@ local phonemic_rules = {
 	-- '-os', e.g. [[Albatros]], [[Amos]], [[Amphiprostylos]], [[Barbados]], [[Chaos]], [[Epos]], [[Gyros]], [[Heros]],
 	-- [[Kokos]], [[Kolchos]], [[Kosmos]], etc.
 	{"o([ns][⁀‿])", "o" .. BREVE .. "%1"},
-	--
+
 	-- Handle vowel quality/length changes in open vs. closed syllables, part b: Lengthen/shorten as appropriate.
-	-- Stressed vowel in open syllable lengthens.
+	--
+	-- Vowel with secondary stress in open syllable before primary stress later in the same component takes close
+	-- quality without lengthening.
+	{"(" .. V_unmarked_for_quality .. ")([" .. GRAVE .. DOUBLEGRAVE .. "][.‿][^⁀]*" .. ACUTE .. ")", "%1" .. CFLEX .. "%2", true},
+	-- Any nasal vowel with secondary stress before primary stress later in the same component does not lengthen.
+	-- Cf. [[Rendezvous]]. We signal that by inserting a circumflex before the tilde, which normally comes directly
+	-- after the vowel.
+	{"(" .. V .. ")" .. TILDE .. "([" .. GRAVE .. DOUBLEGRAVE .. "][^⁀]*" .. ACUTE .. ")", "%1" .. CFLEX .. TILDE .. "%2", true},
+	-- Vowel with tertiary stress in open syllable before secondary stress later in the same component takes close
+	-- quality without lengthening if component has no primary stress.
+	{"⁀[^⁀" .. ACUTE .. "]*" .. V_unmarked_for_quality .. ")(" .. DOUBLEGRAVE .. "[.‿][^⁀" .. ACUTE .. "]*" .. GRAVE .. "[^⁀" .. ACUTE .. "]*⁀)",
+		"%1" .. CFLEX .. "%2", true},
+	-- Any nasal vowel with tertiary stress before secondary stress later in the same component takes does not lengthen
+	-- if component has no primary stress. See above change for [[Rendezvous]].
+	{"⁀[^⁀" .. ACUTE .. "]*" .. V .. ")" .. TILDE .. "(" .. DOUBLEGRAVE .. "[^⁀" .. ACUTE .. "]*" .. GRAVE .. "[^⁀" .. ACUTE .. "]*⁀)",
+		"%1" .. CFLEX .. TILDE .. "%2", true},
+	-- Remaining stressed vowel in open syllable lengthens.
 	{"(" .. V_unmarked_for_quality .. ")(" .. stress_c .. "[.⁀‿])", "%1ː%2"},
 	-- Same when followed by a single consonant word-finally or before a suffix.
 	{"(" .. V_unmarked_for_quality .. ")(" .. stress_c .. C .. "[⁀‿])", "%1ː%2"},
+	-- Remaining stressed nasal vowel lengthens.
+	{"(" .. V .. TILDE .. ")(" .. stress_c .. "[.⁀‿])", "%1ː%2"},
+	-- Now remove CFLEX before TILDE, which was inserted to prevent lengthening.
+	{CFLEX .. TILDE, TILDE},
 	-- Unstressed vowel in open syllable takes close quality without lengthening.
 	{"(" .. V_unmarked_for_quality .. ")(" .. "[.⁀‿])", "%1" .. CFLEX .. "%2"},
 	-- Same when followed by a single consonant word-finally or before a suffix.
@@ -1241,19 +1317,9 @@ local phonemic_rules = {
 		["ö"] = "œ",
 		["ü"] = "ʏ",
 	}},
+	-- Remove * that prevents vowel quality/length changes.
+	{"(" .. V .. ")%*", "%1"},
 
-	-- FIXME: Should we do this across syllable boundaries? There are words where ŋ spelled 'n' occurs before 'k' or 'g'
-	-- across a syllable boundary, e.g. [[Inka]], [[Ingo]], [[Ingolf]], [[Ingrid]], [[Kongo]], optionally [[kongruent]].
-	-- But the words with 'ng' usually require respelling in any case as otherwise e.g. [[Kongo]] would be rendered
-	-- /kɔŋo/. This way, words beginning with 'ink-' where 'in-' is a Latinate prefix don't require respelling with
-	-- 'in<...', e.g. [[Inkarnation]], [[Inklusion]], [[inkohärent]], [[inkompatibel]], [[inkompetent]],
-	-- [[inkremental]], etc. [[ingeniös]] and [[Ingredienz]] need a syllable divider 'in.geniös', 'In.gredienz';
-	-- [[Ingrid]], [[Kongo]] need respelling 'Inggrid', 'Konggo'.
-	{"n([gk])", "ŋ%1"},
-	-- As an exception, 'n' -> /ŋ/ before k/g + unstressed ending to handle numerous cases like [[bedanken]], [[Denke]],
-	-- [[Flanke]], [[Funke]], [[Gedanke]], [[Kranker]], [[Beschränkung]], [[Erkrankung]], [[Verrenkung]], [[gelenkig]],
-	-- [[stinkig]], etc.
-	{"n(%.kə)", "ŋ%1"},
 	-- 'ĭg' is pronounced [ɪç] word-finally or before an obstruent (not before an approximant as in [[ewiglich]] or
 	-- [[Königreich]] when divided as ''ewig.lich'', ''König.reich'').
 	{"ɪg⁀", "ɪç⁀"},
@@ -1283,11 +1349,11 @@ local phonemic_rules = {
 	-- We need symbols to control this.
 	-- If previous component ends in a vowel, glottal stop is mandatory, e.g. [[wiederentdecken]].
 	{"(" .. V .. accent_c .. "*⁀)(" .. V .. ")", "%1ʔ%2"},
-	-- At beginning of word, glottal stop is mandatory.
-	{"(⁀⁀)(" .. V .. ")", "%1ʔ%2"},
-	-- Before a stressed vowel, glottal stop is mandatory.
+	-- At beginning of word, glottal stop is mandatory, but not shown in the phonemic notation.
+	-- Before a stressed vowel at a component boundary, glottal stop is mandatory.
 	{"⁀(" .. V .. accent_c .. "*" .. stress_c .. ")", "⁀ʔ%1"},
-	-- Before an unstressed vowel, glottal stop is optional, e.g. [[Aufenthalt]] /ˈʔaʊ̯f.(ʔ)ɛntˌhalt/.
+	-- Before an unstressed vowel at a component boundary, glottal stop is optional, e.g. [[Aufenthalt]]
+	-- /ˈaʊ̯f.(ʔ)ɛntˌhalt/.
 	{"⁀(" .. V .. ")", "⁀(ʔ)%1"},
 
 	-- Remove ⁀ and ‿ (component/suffix boundaries) before non-syllabic components and suffixes. Examples where this
@@ -1305,7 +1371,7 @@ local phonemic_rules = {
 	-- respelled 'Wirtschaft-s-wissenschaft' to make it easier to identify suffixes like the -schaft in [[Wirtschaft]].
 	-- Once we remove ⁀ and ‿ before non-syllabic components and suffixes, we get lots of 'ts' that should be rendered
 	-- as t͡s. Handle this now. This should also apply in 'd-s-' e.g. [[Abschiedsbrief]] respelled 'Abschied-s-brief'
-	-- /ˈʔapʃiːt͡sˌbʁiːf/, as coda 'd' gets devoiced to /t/ above.
+	-- /ˈapʃiːt͡sˌbʁiːf/, as coda 'd' gets devoiced to /t/ above.
 	{"ts", "ʦ"},
 
 	-- Misc symbol conversions.
@@ -1344,6 +1410,8 @@ local phonemic_rules = {
 -- `rsub_repeatedly()` (which will make the change repeatedly until nothing happens). The output of this is used to
 -- generate the displayed phonetic pronunciation by removing ⁀ and ‿ symbols.
 local phonetic_rules = {
+	-- At the beginning of a word, glottal stop is mandatory before a vowel.
+	{"(⁀⁀)(" .. V .. ")", "%1ʔ%2"},
 	-- FIXME: Evaluate whether the following rules should apply across the ‿ symbol.
 	-- -ken, -gen at end of word have syllabic ŋ
 	{"([kɡ]ə)n⁀", "%1" .. "ŋ⁀"}, -- IPA ɡ
@@ -1561,7 +1629,7 @@ end
 ]=]
 
 local function generate_phonemic_word(word, is_cap)
-	word = rsub(word, "(.)@", char_to_explicit_char)
+	word = rsub(word, "(.)%*", char_to_explicit_char)
 	-- local pos = default_pos(word, pos)
 	local pos = nil
 	local affix_type
@@ -1574,6 +1642,8 @@ local function generate_phonemic_word(word, is_cap)
 	end
 	word = gsub(word, "^%-?(.-)%-?$", "%1")
 	word = split_word_on_components_and_apply_affixes(word, pos, affix_type)
+	word = rsub(word, AUTOACUTE, ACUTE)
+	word = rsub(word, AUTOGRAVE, GRAVE)
 	word = "⁀⁀" .. word .. "⁀⁀"
 	word = apply_rules(word, phonemic_rules)
 	return word
