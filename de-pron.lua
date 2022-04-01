@@ -183,6 +183,9 @@ FIXME:
 31. Support non-initial capital O for o̯, non-initial N for nasal vowel including after lengthening h, digraphs eI and
     oU for /ɛɪ̯/ and /ɔʊ̯/.
 32. Nasal vowels should be long when stressed, and use the phonemes ã ɛ̃ õ œ̃ per Wikipedia.
+33. Remove primary stress from a single-syllable word.
+34. -ik- in the middle of a word should have short 'i', e.g. [[Musikerin]]; not sure if also applies when stress
+    follows.
 ]=]
 
 local export = {}

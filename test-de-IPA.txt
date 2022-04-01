@@ -2,26 +2,57 @@
 Stadt	Stadt	ʃtat
 verwandte	verwandte	fɛʁˈvantə
 
-
-# ch
+# Digraphs with h
 Bach	Bach	bax
 Aachener	Aachener	ˈaːxənɐ
 Milch	Milch	mɪlç
 Knöchel	Knöchel	ˈknœçəl
-Chemie	Chemie	çeˈmiː
 Agrochemie	Agro-chemie	ˈaːɡʁoçeˌmiː
-Chaos	Kaos	ˈkaːɔs
-Chamäleon	Kamä́leònn	kaˈmɛːleˌɔn
-Chor	Kor	koːʁ
+durch	durch	dʊʁç
 Chuzpe	X*uzpe	ˈxʊt͡spə
-# -chen is not a suffix here; without the +, -a- would be long
-Schnarchen	Schnar+chen	ˈʃnaʁçən
-horchen	horchen	ˈhɔʁçən
-# use > to explicitly denote a suffix
-Ehefrauchen	Ehe-frau>chen	ˈeːəˌfʁaʊ̯çən
-Opachen	Opa>chen	ˈoːpaçən
-Wodkachen	Wodka>chen	ˈvɔtkaçən
-Hörnchen	Hörnchen	ˈhœʁnçən
+Tisch	Tisch	tɪʃ
+Haschisch	Haschisch	ˈhaʃɪʃ
+wünschen	wünschen	ˈvʏnʃən
+Wünschen	Wünschen	ˈvʏnʃən
+tschüss	tschüss	t͡ʃʏs
+Dschungel	Dschungel	ˈd͡ʒʊŋəl
+Buddha	Buddha	ˈbʊda
+Abu Dhabi	Abu Dhabi	ˈabu ˈdaːbi
+Sindhi	ˈzɪndi
+Adhäsion	Ad.häsion	athɛˈzi̯oːn
+Methode	Methóde	meˈtoːdə
+Abendroth	Ab+end-roth	ˈaːbəntˌʁoːt
+Absinth	Absínth	apˈzɪnt
+Theater	Theáter	teˈaːtɐ
+Theater	Theʔáter	teˈʔaːtɐ
+Agathe	Agáthe	aˈɡaːtə
+Akolyth	Akolýth	akoˈlyːt
+Algorithmus	Àlgoríthmus	ˌalɡoˈʁɪtmʊs
+katholisch	kathólisch	kaˈtoːlɪʃ
+Khaki	Khaki	ˈkaːki
+Afghane	Afgháne	afˈɡaːnə
+Afghanistan	Afghánistahn	afˈɡaːnɪstaːn
+Ghana	Ghana	ˈɡaːna
+Ghetto	Ghetto	ˈɡɛto
+Joghurt	Joghurt	ˈjoːɡʊʁt
+Maghreb	Magghrebb	ˈmaɡʁɛp
+Sorghum	Sorghum	ˈzɔʁɡʊm
+Spaghetti	Spaghétti	ʃpaˈɡɛti
+Spaghetti	S*paghétti	spaˈɡɛti
+Bhutan	Bhutann	ˈbuːtan
+Diarrhö	Di.arrhö́	diaˈʁøː
+Diarrhoe	Di.arrhö́	diaˈʁøː
+Rhythmus	Rhythmus	ˈʁʏtmʊs
+Rhodos	Rhoddos	ˈʁɔdɔs
+Rhabarber	Rhabarber	ʁaˈbaʁbɐ
+Rhapsodie	Rhàpsodie	ˌʁapsoˈdiː
+Rheda	Rheda	ˈʁeːda
+Rhein	Rhein	ʁaɪ̯n
+Rhenium	Rhenium	ˈʁeːni̯ʊm
+Rhetorik	Rhetórik	ʁeˈtoːʁɪk
+Rheuma	Rheuma	ˈʁɔɪ̯ma
+Rhone	Rhone	ˈʁoːnə
+
 
 # French-derived words
 Baguette	Bagétt	baˈɡɛt
@@ -95,6 +126,9 @@ Homepage	Hohmpehdsch	ˈhoːmpeːt͡ʃ
 Cowboy	KauboI	ˈkaʊ̯bɔɪ̯
 Playboy	Pleh-boI	ˈpleːˌbɔɪ̯
 Comeback	Kambeck	ˈkambɛk
+Edinburgh	Eddinbere	ˈɛdɪnbərə
+Ghostwriter	GhoUst-raiter	ˈɡoʊ̯stˌʁaɪ̯tɐ
+Ghostwriter	Ghohst-raiter	ˈɡoːstˌʁaɪ̯tɐ
 
 # -gu- in hiatus
 Ambiguität	Ambigu.ität	ambiɡuiˈtɛːt
@@ -183,6 +217,7 @@ Patholinguistik	Pàtholingu-ístik	ˌpatolɪŋɡuˈʔɪstɪk	dewikt pron #5
 Botsuana	Bọtsu-ána	bɔt͡suˈʔaːna	dewikt pron #2
 Aufenthalt	Aufenthalt	ˈaʊ̯f(ʔ)ɛntˌhalt
 aalähnlich	aal-ähnlich	ˈaːlˌʔɛːnlɪç
+wiederentdecken	wiederentdecken	ˈviːdɐʔɛntˌdɛkn̩
 
 # Unstressed -e-
 Elektrizität	Elektrizität	elɛktʁit͡siˈtɛːt
@@ -333,6 +368,7 @@ Lignin	Lignín	lɪˈɡniːn
 
 # Unstressed final -us, -um
 Kaktus	Kaktus	ˈkaktʊs
+Tempus	Tempus	ˈtɛmpʊs
 Museum	Museum	muˈzeːʊm
 
 # Unstressed final -on, -os
@@ -375,7 +411,6 @@ Abhängigkeit	Abhängigkeit	ˈapˌhɛŋɪçkaɪ̯t
 Drogenabhängigkeit	Drogen-abhängigkeit	ˈdʁoːɡənˌʔaphɛŋɪçkaɪ̯t
 Alkoholabhängigkeit	Alkohól-abhä̀ngigkeit	alkoˈhoːl(ʔ)apˌhɛŋɪçkaɪ̯t
 Alkoholabhängigkeit	Alkohól-ȧbhängigkeit	alkoˈhoːlʔaphɛŋɪçkaɪ̯t
-Mädchen	Mädchen	ˈmɛːtçən
 # -chen is not recognized as a suffix after a vowel, and is only recognized in nouns (beginning with a capital letter)
 Freimachen	Frei-machen	ˈfʁaɪ̯ˌmaxən
 Kaputtmachen	Kapútt-machen	kaˈpʊtˌmaxən
@@ -404,8 +439,86 @@ Abkürzungsverzeichnis	Abkürzung-s-verzeichnis	ˈapkʏʁt͡sʊŋsfɛʁˌt͡saɪ
 Abschiedsbrief	Abschied-s-brief	ˈapʃiːt͡sˌbʁiːf
 
 
+# Prefix handling
+Geier	Geier	ˈɡaɪ̯ɐ
+Geifer	Geifer	ˈɡaɪ̯fɐ
+geifern	geifern	ˈɡaɪ̯fɐn
+Geiger	Geiger	ˈɡaɪ̯ɡɐ
+Geisel	Geisel	ˈɡaɪ̯zəl
+Geisha	Gehscha	ˈɡeːʃa
+Geisha	Geischa	ˈɡaɪ̯ʃa
+Geisha	GeIscha	ˈɡɛɪ̯ʃa
+geißeln	geißeln	ˈɡaɪ̯səln
+Geister	Geister	ˈɡaɪ̯stɐ
+geizen	geizende	ˈɡaɪ̯t͡səndə
+geimpft	ge<impft	ɡəˈʔɪmp͡ft
+geuden	géuden	ˈɡɔɪ̯dən
+geurasst	geurasst	ɡəˈʔuːʁast
+geunkt	geunkt	ɡəˈʔʊŋkt
+geulkt	geulkt	ɡəˈʔʊlkt
+Bede	Bede	ˈbeːdə	too short after be-
+Gertrud	Gertrud	ˈɡɛʁtʁuːt	impermissible onset after ge-
+Geste	Gehste	ˈɡeːstə	too short after ge-
+Geste	Geste	ˈɡɛstə	too short after ge-
+Verve	Verve	ˈvɛʁvə	too short after ver-
+vorne	forne	ˈfɔʁnə	needs respelling; vor- not recognized
+erste	erste	ˈɛʁstə	too short after er-; second pronunciation
+ergo	ergo	ˈɛʁɡo	too short after er-
+beben	beben	ˈbeːbən	cluster + e + single consonant is too short
+Becher	Becher	ˈbɛçɐ	ditto
+Erker	Erker	ˈɛʁkɐ	ditto
+erzen	erzen	ˈɛʁt͡sən	ditto; second pronunciation
+Beleg	Be<leg	bəˈleːk	need respelling to recognize prefix
+Gebet	Ge<bet	ɡəˈbeːt	need respelling to recognize prefix
+Zukunft	Zukunft	ˈt͡suːˌkʊnft
+anzufangen	anzufangen	ˈant͡suˌfaŋən
+# stressed or unstressed prefixes
+umfahren	umfahren	ˈʊmˌfaːʁən	to "drive over", "to knock down by driving"
+umfahren	um<fahren	ʊmˈfaːʁən	to "drive around", "to bypass"
+# double/triple prefixes
+beabsichtigen	beabsichtigen	bəˈʔapzɪçtɪɡən
+veranlagen	veranlagen	fɛʁˈʔanlaːɡən
+verunglücken	verunglücken	fɛʁˈʔʊnɡlʏkən
+Verunreinigung	Verunreinigung	fɛɐ̯ˈʔʊnˌʁaɪ̯nɪɡʊŋ
+verunstalten	verunstalten	fɛɐ̯ˈʔʊnˌʃtaltən
+beunruhigen	beunruhigen	bəˈʔʊnˌʁuːɪɡn̩
+unausgegoren	unausgegoren	ˈʊnˌʔaʊ̯sɡəɡoːʁən
+unausgegoren	unausgegòren	ˈʊnʔaʊ̯sɡəˌɡoːʁən	should get tertiary stress on aus-?
+unzerstörbar	unzerstörbar	ˈʊnt͡sɛʁˌʃtøːʁbaːʁ
+unzerstörbar	unzerstö́rbar	ˌʊnt͡sɛʁˈʃtøːʁbaːʁ
+
 # Suffix handling
+dreist	dreist	dʁaɪ̯st
+Deist	De.ist	deˈɪst
+Deist	Deʔist	deˈʔɪst
+Atheist	Athe.ist	ateˈɪst
+Atheist	Atheʔist	ateˈʔɪst
+verwaist	verwaist	fɛʁˈvaɪ̯st
+Judaist	Juda.ist	judaˈɪst
+Judaist	Judaʔist	judaˈʔɪst
+abbaubar	abbaubar	ˈapˌbaʊ̯baːʁ
+recyclebar	rißáikelbar	ʁiˈsaɪ̯kəlˌbaːʁ
+unüberschaubar	unüberscháubar	ˌʊnʔyːbɐˈʃaʊ̯baːʁ
+unüberschaubar	unüberschàubar	ˈʊnʔyːbɐˌʃaʊ̯baːʁ
+isobar	isobár	izoˈbaːʁ
+Mädchen	Mädchen	ˈmɛːtçən
+Hörnchen	Hörnchen	ˈhœʁnçən
+# use > to explicitly denote a suffix
+Ehefrauchen	Ehe-frau>chen	ˈeːəˌfʁaʊ̯çən
+Opachen	Opa>chen	ˈoːpaçən
+Wodkachen	Wodka>chen	ˈvɔtkaçən
+Verschen	Fers>chen	fɛʁsçən
+Häuschen	Häus>chen	ˈhɔɪ̯sçən
+Bläschen	Bläs>chen	ˈblɛːsçən
+Füchschen	Füchs>chen	ˈfʏksçən
+Gänschen	Gäns>chen	ˈɡɛnsçən
+bisschen	bisschen	ˈbɪsçən
+horchen	horchen	ˈhɔʁçən	-chen only recognized with an initial capital
+wachen	wachen	ˈvaxən	ditto
+# -chen is not a suffix here; without the +, -a- would be long
+Schnarchen	Schnar+chen	ˈʃnaʁçən
 verträglich	verträglich	fɛʁˌtʁɛːklɪç
+Wirtschaftswissenschaft	Wirtschaft-s-wissenschaft	ˈvɪʁtʃaft͡sˌvɪsənʃaft
 
 
 # secondary pronunciation ˈaːlˌʔaːʁtɪk will also be shown, with the following: "common form in southern Germany, Austria, and Switzerland"
@@ -485,9 +598,6 @@ versiert	ver+siert	vɛʁˈziːʁt
 vertiert	vertiert	fɛʁˈtiːʁt
 # ver- is a recognized prefix, -bar is a recognized suffix
 vertretbar	vertretbar	fɛʁˈtʁeːtbaːʁ
-# By default, -st after a consonant in a suffix, so -ch gets interpreted as a fricative; to force a stop, respell
-# using -ck- or mark -t as a suffix using >t, so that -chs gets interpreted as a cluster with a stop
-wachen	wachen	ˈvaxən
 wachsen	wachsen	ˈvaksən
 wachst	wachst	vaxst
 wachst	wackst	vakst
