@@ -130,6 +130,47 @@ Edinburgh	Eddinbere	ˈɛdɪnbərə
 Ghostwriter	GhoUst-raiter	ˈɡoʊ̯stˌʁaɪ̯tɐ
 Ghostwriter	Ghohst-raiter	ˈɡoːstˌʁaɪ̯tɐ
 
+# bs, ds, gs
+absurd	ab+súrd	apˈzʊʁt
+obsessiv	obsessív	ɔpzɛˈsiːf	# /ps/ in dewikt but probably wrong
+Obsoleszenz	Obsoleszenz	ɔpzolɛsˈt͡sɛnt͡s
+subsumtiv	subsumtív	zʊpzʊmˈtiːf
+Erbse	Erbse	ˈɛʁpsə
+obsen	obsen	ˈɔpsən
+adsorbieren	adsorbieren	atzɔʁˈbiːʁən
+Landser	Landser	ˈlant͡sɐ
+Trübsal	Trüb>sal
+bugsieren	bugsieren	bʊkˈsiːʁən	# bʊˈksiːʁən in dewikt but seems wrong
+pumperlgsund	pumperl.gsùnd	ˈpʊmpɐlˌksʊnt
+
+# -h- between vowels
+Bedrohung	Bedrohung	bəˈdʁoːʊŋ
+arbeitsfähig	arbeit-s-fähig	ˈaʁbaɪ̯t͡sˌfɛːɪç
+befähigt	befähigt	bəˈfɛːɪçt
+Beruhigen	Beruhigen	bəˈʁuːɪɡən
+Ehe	Ehe	ˈeːə
+viehisch	fiehisch	ˈfiːɪʃ
+Dschihadist	Dschihahdist	d͡ʒihaːˈdɪst
+Johann	Johann	ˈjoːhan
+Maharadscha	Maharahdscha	mahaˈʁaːdʒa	prescriptive
+Maharadscha	Maharadscha	mahaˈʁadʒa	enwikt: "slightly more common"
+Maharadscha	Maharatscha	mahaˈʁatʃa	enwikt: "usual"
+Mohammed	Mohammedd	ˈmoːhamɛt
+Rehabilitation	Rèhabilitation	ˌʁehabilitaˈt͡si̯oːn
+Tomahawk	Tommahak	ˈtɔmahaːk
+Tomahawk	Tommahok	ˈtɔmahoːk
+Bohemistik	Bohemistik	boheˈmɪstɪk
+Ahorn	Ahorn	ˈaːhɔʁn
+Alkoholismus	Àlkoholismus	ˌalkohoˈlɪsmʊs
+Jehova	Jehóva	jeˈhoːva
+Kohorte	Kohorte	koˈhɔʁtə
+Bahuvrihi	Bahuvrihi	bahuˈvʁiːhi
+Bahuvrihi	Bahuvrihi	bahuˈvʁiːhi
+nihilistisch	nihilistisch	nihiˈlɪstɪʃ
+huhu	huhu	ˈhuːhu
+Uhudler	U.huhdler	ˈuːhuːdlɐ
+Estomihi	Estomíhi	ɛstoˈmiːhi
+
 # -gu- in hiatus
 Ambiguität	Ambigu.ität	ambiɡuiˈtɛːt
 Antigua	Antíguah	anˌtiːɡu̯aː
@@ -453,6 +494,8 @@ Geister	Geister	ˈɡaɪ̯stɐ
 geizen	geizende	ˈɡaɪ̯t͡səndə
 geimpft	ge<impft	ɡəˈʔɪmp͡ft
 geuden	géuden	ˈɡɔɪ̯dən
+beuteln	beuteln	ˈbɔɪ̯təln
+Beugungen	Beugungen	ˈbɔɪ̯ɡʊŋən
 geurasst	geurasst	ɡəˈʔuːʁast
 geunkt	geunkt	ɡəˈʔʊŋkt
 geulkt	geulkt	ɡəˈʔʊlkt
@@ -472,6 +515,14 @@ Beleg	Be<leg	bəˈleːk	need respelling to recognize prefix
 Gebet	Ge<bet	ɡəˈbeːt	need respelling to recognize prefix
 Zukunft	Zukunft	ˈt͡suːˌkʊnft
 anzufangen	anzufangen	ˈant͡suˌfaŋən
+auszubedingen	auszubedingen	ˈaʊ̯st͡subəˌdɪŋən
+# checking prefix handling
+auseinanderstreben	auseinanderstreben	aʊ̯s(ʔ)aɪ̯ˈnandɐˌʃtʁeːbən
+auseinanderentwickeln	auseinanderentwickeln	aʊ̯s(ʔ)aɪ̯ˈnandɐʔɛntˌvɪkəln
+daherreden	daherreden	daˈheːʁˌʁeːdən
+daherzureden	daherzureden	daˈheːʁt͡suˌʁeːdən
+dahingehen	dahingehen	daˈhɪnˌɡeːən
+dahinvegetieren	dahinvegetieren	daˈhɪnveɡeˌtiːʁən
 # stressed or unstressed prefixes
 umfahren	umfahren	ˈʊmˌfaːʁən	to "drive over", "to knock down by driving"
 umfahren	um<fahren	ʊmˈfaːʁən	to "drive around", "to bypass"
@@ -481,9 +532,9 @@ veranlagen	veranlagen	fɛʁˈʔanlaːɡən
 verunglücken	verunglücken	fɛʁˈʔʊnɡlʏkən
 Verunreinigung	Verunreinigung	fɛɐ̯ˈʔʊnˌʁaɪ̯nɪɡʊŋ
 verunstalten	verunstalten	fɛɐ̯ˈʔʊnˌʃtaltən
-beunruhigen	beunruhigen	bəˈʔʊnˌʁuːɪɡn̩
-unausgegoren	unausgegoren	ˈʊnˌʔaʊ̯sɡəɡoːʁən
-unausgegoren	unausgegòren	ˈʊnʔaʊ̯sɡəˌɡoːʁən	should get tertiary stress on aus-?
+beunruhigen	beunruhigen	bəˈʔʊnˌʁuːɪɡən
+beurlauben	beur-lauben	bəˈʔuːʁˌlaʊ̯bən
+unausgegoren	unausgegoren	ˈʊnʔaʊ̯sɡəˌɡoːʁən
 unzerstörbar	unzerstörbar	ˈʊnt͡sɛʁˌʃtøːʁbaːʁ
 unzerstörbar	unzerstö́rbar	ˌʊnt͡sɛʁˈʃtøːʁbaːʁ
 

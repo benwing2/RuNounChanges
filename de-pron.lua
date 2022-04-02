@@ -185,7 +185,31 @@ FIXME:
 32. Nasal vowels should be long when stressed, and use the phonemes ã ɛ̃ õ œ̃ per Wikipedia.
 33. Remove primary stress from a single-syllable word.
 34. -ik- in the middle of a word should have short 'i', e.g. [[Musikerin]]; not sure if also applies when stress
-    follows.
+    follows. Cf. [[Abdikation]] /ˌapdikaˈt͡si̯oːn/, [[Partikel]] /paʁˈtɪkl̩/ or also /paʁˈtiːkl̩/, [[Affrikate]]
+	/ˌafʁiˈkaːtə/, [[Afrika]] /ˈaːfʁika/ or /ˈafʁika/, [[afrikaans]] /ˌafʁiˈkaːns/, [[Agnostiker]] /aˈɡnɔstɪkɐ/,
+	[[Agrikultur]] /ˌaɡʁikʊlˈtuːɐ̯/, [[Akademikerin]] /akaˈdeːmɪkəʁɪn/, [[Silikat]] /ziliˈkaːt/, [[Amerika]]
+	/aˈmeːʁika/, [[amikal]] /amiˈkaːl/, [[Anabolikum]] /anaˈboːlikʊm/, [[Syndikalismus]] /zʏndikaˈlɪsmʊs/,
+	[[Angelika]] /aŋˈɡeːlika/, [[Anglikaner]] /aŋɡliˈkaːnɐ/, [[Antibiotikum]] /antiˈbi̯oːtikʊm/, [[Antipyretikum]]
+	/antipyˈʁeːtikʊm/, [[apikal]] /apiˈkaːl/, [[appendikuliert]] /apɛndikuˈliːɐ̯t/, [[Applikation]] /aplikaˈt͡si̯oːn/,
+	[[Aprikose]] /ˌapʁiˈkoːzə/, [[Olympionikin]] /olʏmpi̯oˈniːkɪn/, [[Tsatsiki]] /t͡saˈt͡siːki/, [[Artikel]]
+	/ˌaʁˈtiːkl̩/ or /ˌaʁˈtɪkl̩/, [[Batiken]] /ˈbaːtɪkn̩/. Seems to apply only to unstressed '-ik-' followed by 'e' +
+	no stress.
+35. 'h' between vowels should be lengthening only if no stress follows and the following vowel isn't a or o. Cf.
+    [[Reha]] /ˈʁeːha/, [[Dschihadist]] /d͡ʒihaːˈdɪst/, [[Johann]] /ˈjoːhan/, [[Lahar]] /ˈlaːhaʁ/, [[Mahagoni]]
+	/ˌmahaˈɡoːni/, [[Maharadscha]] /ˌmahaˈʁaːdʒa/ (prescriptive) or /ˌmahaˈʁadʒa/ (more common) or /ˌmahaˈʁatʃa/
+	(usual), [[Mohammed]] /ˈmoː.(h)a.mɛt/, [[Rehabilitation]] /ˌʁehabilitaˈt͡si̯oːn/, [[stenohalin]] /ʃtenohaˈliːn/,
+	[[Tomahawk]] /ˈtɔ.ma.haːk/ or /ˈtɔ.ma.hoːk/, [[Bethlehem]] /ˈbeːt.ləˌhɛm/ or /ˈbeːt.ləˌheːm/ (sometimes without
+	secondary stress), [[Bohemien]] /bo.(h)eˈmjɛ̃/, [[Bohemistik]] /boheˈmɪstɪk/, [[Ahorn]] /ˈʔaːhɔʁn/, [[Alkoholismus]]
+	/ˌalkohoˈlɪsmʊs/, [[Jehova]] /jeˈhoːva/, [[Kohorte]] /koˈhɔʁtə/, [[Nihonium]] /niˈhoːni̯ʊm/, [[Bahuvrihi]]
+	/bahuˈvʁiːhi/, [[Marihuana]] 'Marihu.ána' /maʁihuˈaːna/ (one pronunciation per dewikt), [[abstrahieren]]
+	/apstʁaˈhiːʁən/, [[ahistorisch]] /ˈahɪsˌtoːʁɪʃ/, [[Annihilation]] /anihilaˈt͡si̯oːn/, [[Antihistaminikum]]
+	/antihɪstaˈmiːnikʊm/ [[Mohammedaner]] /mohameˈdaːnɐ/, [[nihilistisch]] /nihiˈlɪstɪʃ/, [[Prohibition]]
+	/pʁohibiˈt͡si̯oːn/, [[Vehikel]] /veˈhiːkl̩/ vs. [[Abziehung]] /ˈaptsiːʊŋ/, [[Aufblähung]] /ˈaʊ̯fˌblɛːʊŋ/,
+	[[Auferstehung]] /ˈaʊ̯f(ʔ)ɛʁˈʃteːʊŋ/, [[Bedrohung]] /bəˈdʁoːʊŋ/, [[arbeitsfähig]] /ˈaʁbaɪ̯t͡sˌfɛːɪç/, [[befähigt]]
+	/bəˈfɛːɪçt/, [[Beruhigen]] /bəˈʁuːɪɡn̩/, [[Ehe]], /ˈeːə/, [[viehisch]] /ˈfiːɪʃ/.
+	Exception: [[huhu]] 'hu.hu' /ˈhuːhu/, [[Tohuwabohu]] 'Tòh.huwabó.hu' /ˌtoːhuvaˈboːhu/, [[Uhu]] 'U.hu' /ˈuːhu/,
+	[[Uhudler]] 'U.huhdler' /ˈuːhuːdlɐ/, [[Estomihi]] 'Estomí.hi' /ɛstoˈmiːhi/.
+36. Re-parse prefix/suffix respellings for <, e.g. auseinander-.
 ]=]
 
 local export = {}
@@ -412,7 +436,7 @@ local prefixes = {
 	{"an", "ánn"},
 	{"auf", "áuf"},
 	{"aus", "áus"},
-	{"auseinander", "àus-einánder"},
+	{"auseinander", "aus<einánder"},
 	{"bei", "béi"},
 	-- Allow be- before -u- only in beur-, beun-; cf. [[beurlauben]], [[Beunruhigung]].
 	{"be", "bə", restriction = {"^[^u]", "^u[rn]"}},
@@ -478,7 +502,9 @@ local prefixes = {
 	-- beginning of a word, stressed zú- will take precedence, but after another prefix, stressed prefixes can't occur,
 	-- and unstressed -zu- will occur.
 	{"zu", "zú"},
-	{"zu", "zu"},
+	-- We use a separate type for unstressed -zu- because it can be followed by another unstressed prefix, e.g.
+	-- [[auszubedingen]], whereas normally two unstressed prefixes cannot occur.
+	{"zu", "zu", prefixtype = "unstressed-zu"},
 	{"zurecht", "zurécht"},
 	{"zurück", "zurǘck"},
 }
@@ -753,6 +779,7 @@ local function split_word_on_components_and_apply_affixes(word, pos, affix_type,
 	local parts = strutils.capturing_split(word, "([<>])")
 	local saw_un_prefix = false
 	local saw_unstressed_prefix = false
+	local saw_unstressed_zu_prefix = false
 	local saw_stressed_prefix = false
 	local saw_primary_prefix_stress = false
 	local saw_primary_suffix_stress = false
@@ -774,6 +801,8 @@ local function split_word_on_components_and_apply_affixes(word, pos, affix_type,
 			saw_un_prefix = true
 		elseif rfind(parts[from_left], stress_c) then
 			saw_stressed_prefix = true
+		elseif parts[from_left] == "zu" then
+			saw_unstressed_zu_prefix = true
 		else
 			saw_unstressed_prefix = true
 		end
@@ -837,13 +866,17 @@ local function split_word_on_components_and_apply_affixes(word, pos, affix_type,
 						-- [[gehen]], [[geten]], [[Becher]], [[Gegner]], [[Verschen]], [[erben]], [[erden]],
 						-- [[Erker]], [[erlen]], [[Erpel]], [[erzen]], [[Erster]], etc.; a few legitimate
 						-- prefixed words get rejected, e.g. [[Beleg]], [[Gebet]], which need respelling
-					elseif prefixtype == "un" and (saw_un_prefix or saw_unstressed_prefix or saw_stressed_prefix) then
+					elseif prefixtype == "un" and (saw_un_prefix or saw_unstressed_prefix or saw_unstressed_zu_prefix
+						or saw_stressed_prefix) then
 						-- un- cannot occur after any other prefixes
 					elseif prefixtype == "unstressed" and saw_unstressed_prefix then
 						-- unstressed prefixes like ge- cannot occur after other unstressed prefixes
-					elseif prefixtype == "stressed" and saw_stressed_prefix then
+					elseif prefixtype == "unstressed-zu" and (saw_unstressed_prefix or saw_unstressed_zu_prefix) then
+						-- unstressed -zu- cannot occur after unstressed prefixes
+					elseif prefixtype == "stressed" and (saw_stressed_prefix or saw_unstressed_zu_prefix) then
 						-- stressed prefixes like an- cannot occur after other stressed prefixes, except
-						-- in certain combinations like voran- that we treat as single prefixes
+						-- in certain combinations like voran- that we treat as single prefixes, and cannot occur
+						-- after unstressed -zu-
 					else
 						-- break the word in two; next iteration we process the rest, which may need breaking
 						-- again
@@ -852,6 +885,8 @@ local function split_word_on_components_and_apply_affixes(word, pos, affix_type,
 							saw_un_prefix = true
 						elseif prefixtype == "unstressed" then
 							saw_unstressed_prefix = true
+						elseif prefixtype == "unstressed-zu" then
+							saw_unstressed_zu_prefix = true
 						else
 							saw_stressed_prefix = true
 						end
@@ -859,10 +894,12 @@ local function split_word_on_components_and_apply_affixes(word, pos, affix_type,
 						prefix_respell = gsub(prefix_respell, ACUTE, AUTOACUTE)
 						prefix_respell = gsub(prefix_respell, GRAVE, AUTOGRAVE)
 						if rfind(prefix_respell, AUTOACUTE) then
-							if saw_primary_prefix_stress or saw_primary_mainpart_stress or saw_primary_suffix_stress then
+							if saw_primary_prefix_stress then
+								prefix_respell = gsub(prefix_respell, AUTOACUTE, DOUBLEGRAVE)
+							elseif saw_primary_mainpart_stress or saw_primary_suffix_stress then
 								prefix_respell = gsub(prefix_respell, AUTOACUTE, AUTOGRAVE)
 							end
-							saw_primary_stress = true
+							saw_primary_prefix_stress = true
 						end
 						table.insert(retparts, insert_position, prefix_respell)
 						insert_position = insert_position + 1
@@ -922,7 +959,7 @@ local function split_word_on_components_and_apply_affixes(word, pos, affix_type,
 									-- acute accent in the respelling.
 									suffix_respell = gsub(suffix_respell, ACUTE, AUTOGRAVE)
 								else
-									suffix_respell = gsub(suffix_respell, AUTOGRAVE, AUTOACUTE)
+									suffix_respell = gsub(suffix_respell, ACUTE, AUTOACUTE)
 								end
 							end
 							table.insert(retparts, insert_position, suffix_respell)
@@ -948,6 +985,7 @@ local function split_word_on_components_and_apply_affixes(word, pos, affix_type,
 		-- Add primary or secondary stress on the part; primary stress if no primary stress yet, otherwise secondary
 		-- stress.
 		local accent_to_add = saw_primary_prefix_stress and AUTOGRAVE or AUTOACUTE
+		mainpart = rsub(mainpart, "^(" .. non_V .. "*" .. V .. accent_c .. "*)", "%1" .. accent_to_add)
 	end
 	table.insert(retparts, insert_position, mainpart)
 	insert_position = insert_position + 1
