@@ -433,15 +433,24 @@ local allowed_offsets = {
 -- 'um<fahren' "to drive around, to bypass".
 local prefixes = {
 	{"ab", "ább"},
+	{"aneinander", "ann<einánder"},
+	-- Must follow aneinander.
 	{"an", "ánn"},
+	{"aufeinander", "auf<einánder"},
+	-- Must follow aufeinander.
 	{"auf", "áuf"},
-	{"aus", "áus"},
 	{"auseinander", "aus<einánder"},
+	-- Must follow auseinander.
+	{"aus", "áus"},
+	{"beieinander", "bei<einánder"},
+	-- Must follow beieinander.
 	{"bei", "béi"},
-	-- Allow be- before -u- only in beur-, beun-; cf. [[beurlauben]], [[Beunruhigung]].
-	{"be", "bə", restriction = {"^[^u]", "^u[rn]"}},
+	-- Allow be- before -u- only in beur-, beun-; cf. [[beurlauben]], [[Beunruhigung]]. Must follow bei-.
+	{"be", "bə", restriction = {"^[^ui]", "^u[rn]"}},
 	{"daher", "dahér"},
-	{"dahin", "dahín"},
+	{"dahin", "dahínn"},
+	{"durcheinander", "durch<einánder"},
+	-- Must follow durcheinander.
 	{"durch", "dúrch"},
 	{"ein", "éin"},
 	{"emp", "emp", restriction = "^f"},
@@ -461,52 +470,62 @@ local prefixes = {
 	{"heraus", "herráus"},
 	{"herbei", "herbéi"},
 	{"herein", "herréin"},
+	{"hernieder", "herníeder"},
 	{"herüber", "herrǘber"},
 	{"herum", "herrúmm"},
 	{"herunter", "herrúnter"},
 	{"hervor", "herfór"},
-	{"her", "hérr"},
+	-- Must follow herab-, heran-, etc.
+	{"her", "hér"},
 	{"hinab", "hinnább"},
 	{"hinan", "hinnánn"},
 	{"hinauf", "hinnáuf"},
 	{"hinaus", "hinnáus"},
-	-- hinbei doesn't appear to exist
+	{"hindurch", "hindúrch"},
 	{"hinein", "hinnéin"},
 	{"hinter", "hínter"},
 	{"hinüber", "hinnǘber"},
-	-- hinum doesn't appear to exist
 	{"hinunter", "hinnúnter"},
-	-- hinvor doesn't appear to exist
+	{"hinweg", "hinwéck"},
+	-- Must follow hinab-, hinan-, etc.
 	{"hin", "hínn"},
 	-- too many false positives for in-
 	{"miss", "míss"},
-	{"nieder", "níeder"},
 	{"mit", "mítt"},
+	{"nieder", "níeder"},
+	{"übereinander", "ühber<einánder"},
+	-- Must follow übereinander.
 	{"über", "ǘber"},
+	-- umeinander- only dialectal (West Bavarian)
 	{"um", "úmm"},
-	{"un", "únn", prefixtype = "un"},
 	{"unter", "únter"},
+	-- Must follow unter-.
+	{"un", "únn", prefixtype = "un"},
 	{"ver", "ferr"},
+	-- vorab-: only [[vorabeintscheiden]]
 	{"voran", "foránn"},
+	-- vorauf-: only [[voraufgehen]]
 	{"voraus", "foráus"},
 	{"vorbei", "fohrbéi"}, -- respell per dewikt pronun
 	{"vorher", "fohrhér"}, -- respell per dewikt pronun
 	{"vorüber", "forǘber"},
+	-- Must follow voran-, voraus-, etc.
 	{"vor", "fór"},
 	{"weg", "wéck"},
 	{"weiter", "wéiter"},
 	{"wider", "wíder"},
 	{"wieder", "wíeder"},
 	{"zer", "zerr"},
+	{"zueinander", "zu<einánder"},
+	{"zurecht", "zurécht"},
+	{"zurück", "zurǘck"},
 	-- Listed twice, first as stressed then as unstressed, because of zu-infinitives like [[anzufangen]]. At the
 	-- beginning of a word, stressed zú- will take precedence, but after another prefix, stressed prefixes can't occur,
-	-- and unstressed -zu- will occur.
+	-- and unstressed -zu- will occur. Must follow zueinander, zurecht, etc.
 	{"zu", "zú"},
 	-- We use a separate type for unstressed -zu- because it can be followed by another unstressed prefix, e.g.
 	-- [[auszubedingen]], whereas normally two unstressed prefixes cannot occur.
 	{"zu", "zu", prefixtype = "unstressed-zu"},
-	{"zurecht", "zurécht"},
-	{"zurück", "zurǘck"},
 }
 
 -- Suffix stress:
@@ -714,6 +733,18 @@ local function apply_rules(word, rules)
 end
 
 
+local function check_for_affix_respelling(affix, affix_specs)
+	for _, spec in ipairs(affix_specs) do
+		if affix == spec[1] then
+			-- The user didn't request stress, so replace stress marks with double-grave, which preserves length
+			-- in originally stressed syllables (e.g. in über-).
+			return rsub(decompose(spec[2]), stress_c, DOUBLEGRAVE)
+		end
+	end
+	return nil
+end
+
+
 local function check_onset_offset(cluster, patterns)
 	for _, pattern in ipairs(patterns) do
 		if rfind(cluster, "^" .. pattern .. "$") then
@@ -759,6 +790,8 @@ local function split_word_on_components_and_apply_affixes(word, pos, affix_type,
 	end
 
 	depth = depth or 0
+	-- If at depth 0, split on --, recursively process the parts, and combine. Similarly, at depth 1, split on -,
+	-- recursively process the parts, and combine. At depth 2 we do the actual work.
 	if depth == 0 or depth == 1 then
 		local parts = rsplit(word, depth == 0 and "%-%-" or "%-")
 		if len(parts) == 1 then
@@ -784,6 +817,18 @@ local function split_word_on_components_and_apply_affixes(word, pos, affix_type,
 	local saw_primary_prefix_stress = false
 	local saw_primary_suffix_stress = false
 
+	local function replace_part_with_multiple_parts(new_parts, inspos, separator)
+		-- Replace the original part that the new parts were derived from.
+		parts[inspos] = new_parts[1]
+		local i = 2
+		for i=2, #new_parts do
+			inspos = inspos + 1
+			table.insert(parts, inspos, separator)
+			inspos = inspos + 1
+			table.insert(parts, inspos, new_parts[i])
+		end
+	end
+
 	local function has_user_specified_primary_stress(part)
 		-- If there are multiple components (separated by - or --), we want to treat explicit user-specified
 		-- secondary stress like primary stress because we only show the component primary stresses. The overall
@@ -794,20 +839,32 @@ local function split_word_on_components_and_apply_affixes(word, pos, affix_type,
 	-- Break off any explicitly-specified prefixes.
 	local from_left = 1
 	while from_left < #parts and parts[from_left + 1] == "<" do
-		if has_user_specified_primary_stress(parts[from_left]) then
-			saw_primary_prefix_stress = true
+		local prefix = parts[from_left]
+		local respelling = check_for_affix_respelling(prefix, prefixes)
+		local must_continue = false
+		if respelling then
+			local respelling_parts = rsplit(respelling, "<")
+			if #respelling_parts > 1 then
+				replace_part_with_multiple_parts(respelling_parts, from_left, "<")
+				must_continue = true
+			end
 		end
-		if rsub(parts[from_left], stress_c, "") == "un" then
-			saw_un_prefix = true
-		elseif rfind(parts[from_left], stress_c) then
-			saw_stressed_prefix = true
-		elseif parts[from_left] == "zu" then
-			saw_unstressed_zu_prefix = true
-		else
-			saw_unstressed_prefix = true
+		if not must_continue then
+			if has_user_specified_primary_stress(prefix) then
+				saw_primary_prefix_stress = true
+			end
+			if rsub(prefix, stress_c, "") == "un" then
+				saw_un_prefix = true
+			elseif rfind(prefix, stress_c) then
+				saw_stressed_prefix = true
+			elseif prefix == "zu" then
+				saw_unstressed_zu_prefix = true
+			else
+				saw_unstressed_prefix = true
+			end
+			table.insert(retparts, prefix)
+			from_left = from_left + 2
 		end
-		table.insert(retparts, parts[from_left])
-		from_left = from_left + 2
 	end
 
 	-- Break off any explicitly-specified suffixes.
@@ -832,11 +889,12 @@ local function split_word_on_components_and_apply_affixes(word, pos, affix_type,
 		local broke_prefix = false
 		for _, prefixspec in ipairs(prefixes) do
 			local prefix_pattern = prefixspec[1]
-			local prefixtype = prefixspec.prefixtype or rfind(prefix_respell, stress_c) and "stressed" or
-				"unstressed"
 			local pos_stress = lookup_stress_spec(stress_spec, pos)
 			local prefix, rest = rmatch(mainpart, "^(" .. prefix_pattern .. ")(.*)$")
 			if prefix then
+				local prefix_respell = decompose(prefixspec[2])
+				local prefixtype = prefixspec.prefixtype or rfind(prefix_respell, stress_c) and "stressed" or
+					"unstressed"
 				if not pos_stress then
 					-- prefix not recognized for this POS, don't split here
 				elseif not meets_restriction(rest, prefixspec.restriction) then
@@ -890,7 +948,6 @@ local function split_word_on_components_and_apply_affixes(word, pos, affix_type,
 						else
 							saw_stressed_prefix = true
 						end
-						local prefix_respell = decompose(prefixspec[2])
 						prefix_respell = gsub(prefix_respell, ACUTE, AUTOACUTE)
 						prefix_respell = gsub(prefix_respell, GRAVE, AUTOGRAVE)
 						if rfind(prefix_respell, AUTOACUTE) then
@@ -901,8 +958,12 @@ local function split_word_on_components_and_apply_affixes(word, pos, affix_type,
 							end
 							saw_primary_prefix_stress = true
 						end
-						table.insert(retparts, insert_position, prefix_respell)
-						insert_position = insert_position + 1
+						-- Split on < (e.g. for auseindander- respelled 'aus<einánder') and insert each part.
+						local prefix_respell_parts = rsplit(prefix_respell, "<")
+						for _, part in ipairs(prefix_respell_parts) do
+							table.insert(retparts, insert_position, part)
+							insert_position = insert_position + 1
+						end
 						broke_prefix = true
 						break
 					end

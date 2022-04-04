@@ -478,6 +478,7 @@ Hintertürchen	Hintertürchen	ˈhɪntɐˌtyːʁçən
 Dingenskirchen	Dingens-kirchen	ˈdɪŋənsˌkɪʁçən
 Abkürzungsverzeichnis	Abkürzung-s-verzeichnis	ˈapkʏʁt͡sʊŋsfɛʁˌt͡saɪ̯çnɪs
 Abschiedsbrief	Abschied-s-brief	ˈapʃiːt͡sˌbʁiːf
+Einzugsermächtigungsverfahren	Einzug-s-ermächtigung-s--verfahren	ˈaɪ̯nt͡suːks(ʔ)ɛʁmɛçtɪɡʊŋsfɛʁˌfaːʁən
 
 
 # Prefix handling
@@ -514,18 +515,124 @@ erzen	erzen	ˈɛʁt͡sən	ditto; second pronunciation
 Beleg	Be<leg	bəˈleːk	need respelling to recognize prefix
 Gebet	Ge<bet	ɡəˈbeːt	need respelling to recognize prefix
 Zukunft	Zukunft	ˈt͡suːˌkʊnft
-anzufangen	anzufangen	ˈant͡suˌfaŋən
-auszubedingen	auszubedingen	ˈaʊ̯st͡subəˌdɪŋən
 # checking prefix handling
+abstellen	abstellen	ˈapˌʃtɛlən
+abgelegen	abgelegen	ˈapɡəˌleːɡən
+# + prevents ab- from being recognized as a prefix
+Abend	Ab+end	ˈaːbənt
+abenteuerdurstig	ab+enteuer-durstig	ˈaːbəntɔɪ̯ɐˌdʊʁstɪç
+abundant	ab+undant	abʊnˈdant
+abstrus	ab+strús	apˈstʁuːs
+abfällig	abfällig	ˈapˌfɛlɪç
+abzählbar	abzählbar	ˈapˌt͡sɛːlbaːʁ
+# primary and secondary stressed syllables are long before a single consonant
+Ablativ	A.blatìv	ˈablaˌtiːf
+Ablativ	Ab+latìv	ˈaplaˌtiːf
+Absence	Ab+s*áNs	apˈsãːs
+aneinandergeraten	aneinandergeraten	an(ʔ)aɪ̯ˈnandɐɡəˌʁaːtn̩
+anstellen	anstellen	ˈanˌʃtɛlən
+anzufangen	anzufangen	ˈant͡suˌfaŋən
+angefangen	angefangen	ˈanɡəˌfaŋən
+aufeinanderzupassende	aufeinanderzupassende	aʊ̯f(ʔ)aɪ̯ˈnandɐt͡suˌpasəndə
+aufstöbern	aufstöbern	ˈaʊ̯fˌʃtøːbɐn
 auseinanderstreben	auseinanderstreben	aʊ̯s(ʔ)aɪ̯ˈnandɐˌʃtʁeːbən
 auseinanderentwickeln	auseinanderentwickeln	aʊ̯s(ʔ)aɪ̯ˈnandɐʔɛntˌvɪkəln
+auszubedingen	auszubedingen	ˈaʊ̯st͡subəˌdɪŋən
+beieinanderstehen	beieinanderstehen	baɪ̯(ʔ)aɪ̯ˈnandɐˌʃteːən
+beisteuernder	beisteuernder	ˈbaɪ̯ˌʃtɔɪ̯ɐndɐ
 daherreden	daherreden	daˈheːʁˌʁeːdən
 daherzureden	daherzureden	daˈheːʁt͡suˌʁeːdən
 dahingehen	dahingehen	daˈhɪnˌɡeːən
 dahinvegetieren	dahinvegetieren	daˈhɪnveɡeˌtiːʁən
+durcheinanderessen	durcheinanderessen	dʊʁç(ʔ)aɪ̯ˈnandɐˌʔɛsən
+durchschlagen	durchschlagen	ˈdʊʁçˌʃlaːɡən
+durchschlagen	durch<schlagen	dʊʁçˈʃlaːɡən
+durchbekommenes	durchbekommenes	ˈdʊʁçbəˌkɔmənəs
+Durchmesser	Durchmesser	ˈdʊʁçˌmɛsɐ
+Durchschnittsmensch	Durchschnitt-s-mensch	ˈdʊʁçʃnɪt͡sˌmɛnʃ
+einstellen	einstellen	ˈaɪ̯nˌʃtɛlən
+einzubestellendem	einzubestellendem	ˈaɪ̯nt͡subəˌʃtɛləndəm
+Einstein	Einstein	ˈaɪ̯nˌʃtaɪ̯n
+Eintrag	Eintrag	ˈaɪ̯nˌtʁaːk
+# "zel" is too short of a main part for "Ein-" to be partitioned off here.
+Einzelzimmer	Einzel-zimmer	ˈaɪ̯nt͡səlˌt͡sɪmɐ
+empirisch	empírisch	ɛmˈpiːʁɪʃ
+emphatisch	emphátisch	ɛmˈfaːtɪʃ
+Empfang	Empfang	ɛmpˈfaŋ
+Empfindsamkeit	Empfindsamkeit	ɛmpˈfɪntzaːmˌkaɪ̯t
+entsprechend	entsprechend	ɛntˈʃpʁɛçənt
+entscheiden	entscheiden	ɛntˈʃaɪ̯dən
+Ergebnis	Ergebnis	ɛʁˈɡeːpnɪs
+erarbeiten	erarbeiten	ɛʁˈʔaʁbaɪ̯tən
+errackern	errackern	ɛʁˈʁakɐn
+Auferstehung	Auferstehung	ˈaʊ̯f(ʔ)ɛʁˌʃteːʊŋ
+fortbewegen	fortbewegen	ˈfɔʁtbəˌveːɡən
+Fortentwicklung	Fortentwicklung	ˈfɔʁt(ʔ)ɛntˌvɪklʊŋ
+fortstoßen	fortstoßen	ˈfɔʁtˌʃtoːsən
+herabstürzen	herabstürzen	hɛˈʁapˌʃtʏʁt͡sən
+herabgestuft	herabgestuf>t	hɛˈʁapɡəˌʃtuːft
+herantasten	herantasten	hɛˈʁanˌtastən
+Herangewanze	Herangewanze	hɛˈʁanɡəˌvant͡sə
+heraufbefördernd	heraufbefördernd	hɛˈʁaʊ̯fbəˌfœʁdɐnt
+herauffahren	herauffahren	hɛˈʁaʊ̯fˌfaːʁən
+heraufzubeschwörendes	heraufzubeschwörendes	hɛˈʁaʊ̯ft͡subəˌʃvøːʁəndəs
+herausstellen	herausstellen	hɛˈʁaʊ̯sˌʃtɛlən
+herbeieilen	herbeieilen	hɛʁˈbaɪ̯ˌʔaɪ̯lən
+herbeigeschafft	herbeigeschafft	hɛʁˈbaɪ̯ɡəˌʃaft
+hereinsteckendes	hereinsteckendes	hɛˈʁaɪ̯nˌʃtɛkəndəs
+hereinzugeheimnissen	hereinzugeheimnissen	hɛˈʁaɪ̯nt͡suɡəˌhaɪ̯mnɪsən
+herniederregnen	herniederregnen	hɛʁˈniːdɐˌʁeːɡnən
+herniederzubrechen	herniederzubrechen	hɛʁˈniːdɐt͡suˌbʁɛçən
+herübergefahren	herübergefahren	hɛˈʁyːbɐɡəˌfaːʁən
+herüberzuwechseln	herüberzuwechseln	hɛˈʁyːbɐt͡suˌvɛksəln
+herumscharwenzeln	herumscharwènzeln	hɛˈʁʊmʃaʁˌvɛnt͡səln
+herumspinnen	herumspinnen	hɛˈʁʊmˌʃpɪnən
+herumexperimentieren	herumexpêrimentieren	hɛˈʁʊm(ʔ)ɛkspeʁimɛnˌtiːʁən
+herumeiernde	herumeiernde	hɛˈʁʊmˌʔaɪ̯ɐndə
+herumzuerzählen	herumzuerzählen	hɛˈʁʊmt͡su(ʔ)ɛʁˌt͡sɛːlən
+herunterspielen	herunterspielen	hɛˈʁʊntɐˌʃpiːlən
+herunterzuhandeln	herunterzuhandeln	hɛˈʁʊntɐt͡suˌhandəln
+hervorstechen	hervorstechen	hɛʁˈfoːʁˌʃtɛçən
+herstellen	herstellen	ˈheːʁˌʃtɛlən
+hergebetene	hergebetene	ˈheːʁɡəˌbeːtənə
+hinabsteigen	hinabsteigen	hɪˈnapˌʃtaɪ̯ɡən
+hinabbaumele	hinabbaumele	hɪˈnapˌbaʊ̯mələ
+hinangearbeitetes	hinangearbeitetes	hɪˈnanɡəˌʔaʁbaɪ̯tətəs
+hinaufsteigen	hinaufsteigen	hɪˈnaʊ̯fˌʃtaɪ̯ɡən
+hinaufgestiegener	hinaufgestiegener	hɪˈnaʊ̯fɡəˌʃtiːɡənɐ
+hinauskatapultieren	hinauskatapultieren	hɪˈnaʊ̯skatapʊlˌtiːʁən
+hinausposaunen	hinausposàunen	hɪˈnaʊ̯spoˌzaʊ̯nən
+hinauszuposaunen	hinauszuposàunen	hɪˈnaʊ̯st͡supoˌzaʊ̯nən
+hindurchbewegen	hindurchbewegen	hɪnˈdʊʁçbəˌvəɡən
+hineinstecken	hineinstecken	hɪˈnaɪ̯nˌʃtɛkən
+hineingebären	hineingebären	hɪˈnaɪ̯nɡəˌbɛːʁən
+Hintergedanke	Hintergedanke	ˈhɪntɐɡəˌdaŋkə
+Hinterwäldler	Hinterwäld.ler	ˈhɪntɐˌvɛltlɐ
+hinüberbefördern	hinüberbefördern	hɪˈnyːbɐbəˌfœʁdɐn
+hinunterbekommen	hinunterbekommen	hɪˈnʊntɐbəˌkɔmən
+hinwegmarschieren	hinwegmarschieren	hɪnˈvɛkmaʁˌʃiːʁən
+hinwegsehen	hinwegsehen	hɪnˈvɛkˌzeːən
+hinkriegen	hinkriegen	ˈhɪnˌkʁiːɡən
+missachten	miss<achten	mɪsˈʔaxtən
+missbrauchen	miss<brauchen	mɪsˈbʁaʊ̯xən
+missinterpretieren	missintərpretieren	ˈmɪs(ʔ)ɪntɐpʁeˌtiːʁən
+missgestaltet	missgestaltet	ˈmɪsɡəˌʃtaltət
+Missverständnis	Missverständnis	ˈmɪsfɛʁˌʃtɛntnɪs
+mitbestimmen	mitbestimmen	ˈmɪtbəˌʃtɪmən
+mitteilen	mitteilen	ˈmɪtˌtaɪ̯lən
+mitansehen	mit<ansehen	mɪtˈʔanˌzeːən
+mitanzugebenden	mit<anzuge+benden	mɪtˈʔant͡suˌɡeːbəndən
+Mittag	Mit+tag	ˈmɪtaːk
+mitigieren	mit+igieren	mitiˈɡiːʁən
+niederstürzen	niederstürzen	ˈniːdɐˌʃtʏʁt͡sən
+niederzuzerren	niederzuzerren	ˈniːdɐt͡suˌt͡sɛʁən
 # stressed or unstressed prefixes
 umfahren	umfahren	ˈʊmˌfaːʁən	to "drive over", "to knock down by driving"
 umfahren	um<fahren	ʊmˈfaːʁən	to "drive around", "to bypass"
+überfahren	überfahren	ˈyːbɐˌfaːʁən
+# über- should be recognized, translated to ǘber- and then to ü̏ber- (i.e. with double grave), so that
+# length is preserved.
+überfahren	über<fahren	yːbɐˈfaːʁən
 # double/triple prefixes
 beabsichtigen	beabsichtigen	bəˈʔapzɪçtɪɡən
 veranlagen	veranlagen	fɛʁˈʔanlaːɡən
@@ -574,29 +681,6 @@ Wirtschaftswissenschaft	Wirtschaft-s-wissenschaft	ˈvɪʁtʃaft͡sˌvɪsənʃaft
 
 # secondary pronunciation ˈaːlˌʔaːʁtɪk will also be shown, with the following: "common form in southern Germany, Austria, and Switzerland"
 aalartig	aal-ahrtig	ˈaːlˌʔaːʁtɪç
-# + prevents ab- from being recognized as a prefix
-Abend	Ab+end	ˈaːbənt
-# + prevents ab- from being recognized as a prefix
-abenteuerdurstig	ab+enteuer-durstig	ˈaːbəntɔɪ̯ɐˌdʊʁstɪç
-# ab- is a recognized prefix when stressed
-abfällig	abfällig	ˈapˌfɛlɪç
-# ab- is a recognized prefix when stressed; ge- is a recognized unstressed prefix
-abgelegen	abgelegen	ˈapɡəˌleːɡən
-abkommen	abkommen	ˈapˌkɔmən
-# primary and secondary stressed syllables are long before a single consonant
-Ablativ	A.blatìv	ˈablaˌtiːf
-Ablativ	Ab+latìv	ˈaplaˌtiːf
-Absence	Abs*áNs	apˈsãːs
-abstinent	abstinent	apstiˈnɛnt
-abstoßend	abstoßend	ˈapˌʃtoːsənt
-abstrus	abstrús	apˈstʁuːs
-absurd	absúrd	apˈzʊʁt
-abtrünnig	abtrünnig	ˈʔapˌtʁʏnɪç
-abundant	ab+undant	abʊnˈdant
-abwehrbereit	abwehr-bereit	ˈapveːʁbəˌʁaɪ̯t
-Abwehrspielerin	Abwehr-spielerin	ˈapveːʁˌʃpiːləʁɪn
-abweichend	abweichend	ˈapˌvaɪ̯çənt
-abzählbar	abzählbar	ˈapt͡sɛːlbaːʁ
 Akkordeon	Akkórdeon	aˈkɔʁdeɔn
 # -abel is a recognized suffix
 inakzeptabel	in-akzeptabel	ˈɪnʔakt͡sɛpˌtaːbl̩
