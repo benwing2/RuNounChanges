@@ -157,8 +157,8 @@ Maharadscha	Maharadscha	mahaˈʁadʒa	enwikt: "slightly more common"
 Maharadscha	Maharatscha	mahaˈʁatʃa	enwikt: "usual"
 Mohammed	Mohammedd	ˈmoːhamɛt
 Rehabilitation	Rèhabilitation	ˌʁehabilitaˈt͡si̯oːn
-Tomahawk	Tommahak	ˈtɔmahaːk
-Tomahawk	Tommahok	ˈtɔmahoːk
+Tomahawk	Tommahahk	ˈtɔmahaːk
+Tomahawk	Tommahohk	ˈtɔmahoːk
 Bohemistik	Bohemistik	boheˈmɪstɪk
 Ahorn	Ahorn	ˈaːhɔʁn
 Alkoholismus	Àlkoholismus	ˌalkohoˈlɪsmʊs
@@ -277,7 +277,7 @@ Pietät	Pìətät	ˌpiːəˈtɛːt
 Sozietät	Soziətät	zot͡si̯əˈtɛːt
 Varietät	Vari.etät	vaʁieˈtɛːt	dewikt
 Varietät	Vàri̯etät	ˌvaʁi̯eˈtɛːt	enwikt
-abalienieren	àbb-ali̯enieren	ˌapʔali̯eˈniːʁən
+abalienieren	ab-ali̯eniéren	ˌapʔali̯eˈniːʁən
 Extremität	Extremität	ɛkstʁemiˈtɛːt
 Illegalität	Illegalität	ɪleɡaliˈtɛːt
 Illegalität	Íllegalität	ˈɪleɡaliˌtɛːt
@@ -626,13 +626,17 @@ Mittag	Mit+tag	ˈmɪtaːk
 mitigieren	mit+igieren	mitiˈɡiːʁən
 niederstürzen	niederstürzen	ˈniːdɐˌʃtʏʁt͡sən
 niederzuzerren	niederzuzerren	ˈniːdɐt͡suˌt͡sɛʁən
-# stressed or unstressed prefixes
-umfahren	umfahren	ˈʊmˌfaːʁən	to "drive over", "to knock down by driving"
-umfahren	um<fahren	ʊmˈfaːʁən	to "drive around", "to bypass"
+übereinanderstapeln	übereinanderstapeln	yːbɐʔaɪ̯ˈnandɐˌʃtaːpəln
+übereinanderzuschlagenden	übereinanderzuschlagenden	yːbɐʔaɪ̯ˈnandɐt͡suˌʃlaːɡəndən
+übereinstimmen	über<einstimmen	yːbɐˈʔaɪ̯nˌʃtɪmən
 überfahren	überfahren	ˈyːbɐˌfaːʁən
 # über- should be recognized, translated to ǘber- and then to ü̏ber- (i.e. with double grave), so that
 # length is preserved.
 überfahren	über<fahren	yːbɐˈfaːʁən
+überbeanspruchen	überbeanspruchen	ˈyːbɐbəˌʔanʃpʁʊxn̩
+überzubeanspruchen	überzubeanspruchen	ˈyːbɐt͡subəˌʔanʃpʁʊxn̩
+umfahren	umfahren	ˈʊmˌfaːʁən	to "drive over", "to knock down by driving"
+umfahren	um<fahren	ʊmˈfaːʁən	to "drive around", "to bypass"
 # double/triple prefixes
 beabsichtigen	beabsichtigen	bəˈʔapzɪçtɪɡən
 veranlagen	veranlagen	fɛʁˈʔanlaːɡən
@@ -646,14 +650,24 @@ unzerstörbar	unzerstörbar	ˈʊnt͡sɛʁˌʃtøːʁbaːʁ
 unzerstörbar	unzerstö́rbar	ˌʊnt͡sɛʁˈʃtøːʁbaːʁ
 
 # Suffix handling
-dreist	dreist	dʁaɪ̯st
-Deist	De.ist	deˈɪst
-Deist	Deʔist	deˈʔɪst
-Atheist	Athe.ist	ateˈɪst
-Atheist	Atheʔist	ateˈʔɪst
-verwaist	verwaist	fɛʁˈvaɪ̯st
-Judaist	Juda.ist	judaˈɪst
-Judaist	Judaʔist	judaˈʔɪst
+Emigrant	Emigrant	emiˈɡʁant
+tolerant	tolerant	toləˈʁant
+Abglanz	Abglanz	ˈapˌɡlant͡s	main part too short to be interpreted as suffix
+Akzeptanz	Akzeptanz	akt͡sɛpˈtant͡s
+Allianz	Allianz	aˈli̯ant͡s
+Bratengabel	Braten-gabel	ˈbʁaːtənˌɡaːbəl	main part too short to be interpreted as suffix
+deplorabel	deplorabel	deploˈʁaːbəl
+Dezibel	Dezi-bel	ˈdeːt͡siˌbɛl
+disponibel	disponibel	dɪspoˈniːbəl
+Doppelmoral	Doppel-moral	ˈdɔpəlmoˌʁaːl
+dorsal	dorsal	dɔʁˈzaːl
+manchmal	mánchmal	ˈmançmaːl
+manchmal	manch>mal	ˈmançmaːl
+optimal	optimal	ɔptiˈmaːl
+realisierbar	realisierbar	ʁealiˈziːʁbaːʁ
+prognostizierbar	prognostizierbar	pʁoɡnɔstiˈt͡siːʁbaːʁ
+undefinierbar	undefinierbar	ˈʊndefiˌniːʁbaːʁ
+undefinierbar	undefiniérbar	ʊndefiˈniːʁbaːʁ
 abbaubar	abbaubar	ˈapˌbaʊ̯baːʁ
 recyclebar	rißáikelbar	ʁiˈsaɪ̯kəlˌbaːʁ
 unüberschaubar	unüberscháubar	ˌʊnʔyːbɐˈʃaʊ̯baːʁ
@@ -675,6 +689,76 @@ horchen	horchen	ˈhɔʁçən	-chen only recognized with an initial capital
 wachen	wachen	ˈvaxən	ditto
 # -chen is not a suffix here; without the +, -a- would be long
 Schnarchen	Schnar+chen	ˈʃnaʁçən
+Bücherei	Bücherei	byçəˈʁaɪ̯	dewikt says long /yː/ but audio doesn't agree
+Gärtnerei	Gä̀rtnerei	ˌɡɛʁtnəˈʁaɪ̯
+Ausbeuterei	Ausbeuterei	ˌaʊ̯sbɔɪ̯təˈʀaɪ̯
+Seeräuberei	Sèe-räuberei	ˌzeːʁɔɪ̯bəˈʁaɪ̯
+Rosinenpickerei	Rosínen-pickerei	ʁoˈziːnənpɪkəˌʁaɪ̯
+Barbarei	Barbarei	baʁbaˈʁaɪ̯
+Audiodatei	Audio-datei	ˈaʊ̯di̯odaˌtaɪ̯
+allerlei	aller-lei	ˈalɐˌlaɪ̯
+Aufschrei	Aufschrei	ˈaʊ̯fˌʃʁaɪ̯	-ei not interpreted here as suffix
+biolumineszent	bìolumineszent	ˌbioluminɛsˈt͡sɛnt
+Bundespräsident	Bundes-präsident	ˈbʊndəspʁɛziˌdɛnt
+different	different	dɪfəˈʁɛnt
+Eloquenz	Èloquenz	ˌeloˈkvɛnt͡s
+Obsoleszenz	Obsoleszenz	ɔpzolɛsˈt͡sɛnt͡s
+möglicherweise	möglicherweise	ˈmøːklɪçɐˈvaɪ̯zə
+unfreundlicherweise	unfreundlicherweise	ˈʔʊnfʁɔɪ̯ntlɪçɐˌvaɪ̯zə
+seltsamerweise	seltsamerweise	ˈzɛltzaːmɐˌvaɪ̯zə
+ungerechterweise	ungerechterweise	ˈʊnɡəʁɛçtɐˌvaɪ̯zə
+ungewöhnlicherweise	ungewöhnlicherweise	ˈʊnɡəvøːnlɪçɐˌvaɪ̯zə
+unzulässigerweise	unzulässigerweise	ˈʊntsulɛsɪɡɐˌvaɪ̯zə
+verbotenerweise	verbotenerweise	fɛʁˈboːtənɐˌvaɪ̯zə
+Wissenschaft	Wissenschaft	ˈvɪsənˌʃaft
+Barschaft	Barschaft	ˈbaːʁʃaft
+Botschaft	Botschaft	ˈboːtʃaft
+Komplizenschaft	Komplízenschaft	kɔmˈpliːt͡sənˌʃaft
+reißfest	reiß-fest	ˈʁaɪ̯sˌfɛst
+albtraumhaft	alb-traum--haft	ˈalptʁaʊ̯mˌhaft
+dauerhaft	dauer-haft	ˈdaʊ̯ɐˌhaft
+Abgeschiedenheit	Abgeschiedenheit	ˈapɡəˌʃiːdənhaɪ̯t
+Absolutheit	Absolutheit	Ab+solútheit	apzoˈluːthaɪ̯t
+Abwesenheit	Abwesenheit	ˈapˌveːzənhaɪ̯t
+Allgemeinheit	All-geméinheit	ˌalɡəˈmaɪ̯nhaɪ̯t
+Freiheit	Freiheit	ˈfʁaɪ̯haɪ̯t
+Bescheidenheit	Bescheidenheit	bəˈʃaɪ̯dənˌhaɪ̯t
+Grobheit	Grobheit	ˈɡʁoːphaɪ̯t
+Apoplexie	Apoplexie	apoplɛˈksiː
+Biologie	Bìologie	ˌbioloˈɡiː
+Fotografie	Fotografie	fotoɡʁaˈfiː
+Fantasie	Fantasie	fantaˈziː
+Informationstechnologie	Information-s-technologie	ɪnfɔʁmaˈt͡si̯oːnstɛçnoloˌɡiː
+Familie	Famíli̯e	faˈmiːli̯ə
+degradieren	degradieren	deɡʁaˈdiːʁən
+ausprobieren	ausprobieren	ˈaʊ̯spʁoˌbiːʁən
+Umstrukturieren	Umstrukturieren	ˈʊmʃtʁʊktuˌʁiːʁən
+entionisieren	entionisieren	ɛnt(ʔ)i̯oniˈziːʁən
+vertelefonieren	verteləfonieren	fɛʁteləfoˈniːʁən
+definiert	definiert	defiˈniːʁt
+kompliziert	kompliziert	kɔmpliˈt͡siːʁt
+hochdekoriert	hohch-dekoriert	ˈhoːxdekoˌʁiːʁt
+Konsolidierung	Konsolidierung	kɔnzoliˈdiːʁʊŋ
+Maximierung	Maximierung	maksiˈmiːʁʊŋ
+Quantifizierung	Quantifizierung	kvantifiˈt͡siːʁʊŋ
+Stipulierung	Stipulierung	ʃtipuˈliːʁʊŋ
+Stipulierung	S*tipulierung	stipuˈliːʁʊŋ
+Selbstregierung	Selbst-regierung	ˈzɛlpstʁeˌɡiːʁʊŋ
+Fakultät	Fakultät	fakʊlˈtɛːt
+Konvention	Konvention	kɔnvɛnˈt͡si̯oːn
+Infektion	Infektion	ɪnfɛkˈt͡si̯oːn
+Bastion	Bastion	basˈti̯oːn
+
+
+
+dreist	dreist	dʁaɪ̯st
+Deist	De.ist	deˈɪst
+Deist	Deʔist	deˈʔɪst
+Atheist	Athe.ist	ateˈɪst
+Atheist	Atheʔist	ateˈʔɪst
+verwaist	verwaist	fɛʁˈvaɪ̯st
+Judaist	Juda.ist	judaˈɪst
+Judaist	Judaʔist	judaˈʔɪst
 verträglich	verträglich	fɛʁˌtʁɛːklɪç
 Wirtschaftswissenschaft	Wirtschaft-s-wissenschaft	ˈvɪʁtʃaft͡sˌvɪsənʃaft
 

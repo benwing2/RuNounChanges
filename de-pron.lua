@@ -32,7 +32,7 @@ The following symbols can be used:
 -- > (greater-than) to indicate a word/suffix or suffix/suffix boundary; similar to - for word/word boundary, but the
 --   suffix after the > sign will be unstressed.
 -- + (plus) is the opposite of -; it forces a prefix/word, word/word or word/suffix boundary to *NOT* occur when it
---   otherwise would. 
+--   otherwise would.
 -- _ (underscore) to force the letters on either side to be interpreted independently, when the combination of the two
 --   would normally have a special meaning.
 --  ̣ (dot under) on any vowel in a word or component to prevent it from getting any stress.
@@ -50,7 +50,7 @@ Notes:
 1. Doubled consonants, as well as digraphs/trigraphs etc. like 'ch', 'ng', 'tz', 'sch', 'tsch', etc. cause a
    preceding vowel to be short and open (/ɛ ɪ ɔ ʊ œ ʏ/) unless lengthened with h or ː.
 2. With occasional exceptions, a vowel before a single consonant (including at the end of a word or component)
-   is closed (/e i o u ø y/), and long if stressed (primary or secondary). 
+   is closed (/e i o u ø y/), and long if stressed (primary or secondary).
 3. The vowel 'e' is rendered by default as schwa (/ə/) in the following circumstances:
    a. The prefixes 'ge-', 'be-' are recognized specially and rendered with a schwa and without stress. This doesn't
       apply if the 'e' is respelled with an accent, e.g. 'Génitiev' for [[Genitiv]] "genitive" or 'géstern' for
@@ -210,6 +210,8 @@ FIXME:
 	Exception: [[huhu]] 'hu.hu' /ˈhuːhu/, [[Tohuwabohu]] 'Tòh.huwabó.hu' /ˌtoːhuvaˈboːhu/, [[Uhu]] 'U.hu' /ˈuːhu/,
 	[[Uhudler]] 'U.huhdler' /ˈuːhuːdlɐ/, [[Estomihi]] 'Estomí.hi' /ɛstoˈmiːhi/.
 36. Re-parse prefix/suffix respellings for <, e.g. auseinander-.
+37. Reimplement prefix-type restrictions using a finite state machine and handle secondary stress appropriately.
+38. ks should divide .ks but shorten preceding vowels.
 ]=]
 
 local export = {}
@@ -415,16 +417,28 @@ local allowed_offsets = {
 	-- FIXME
 }
 
+-- We view the possible combinations of prefixes through the lens of a finite state machine. This allows us to
+-- handle occasional cases where more than one of a given type of prefix occurs (e.g. [[überzubeanspruchen]]).
+-- NOTE ABOUT STRESS: After un-, stressed prefixes lose their stress and the root takes secondary stress; cf.
+-- 'únausgegòren'. But otherwise if there are two stressed prefixes, the second one takes secondary stress and
+-- the root loses the stress; cf. 'ǘberbeànspruchen', 'ǘberzubeànspruchen'.
+local prefix_previous_allowed_states = {
+	-- un- can occur after unstressed prefixes; cf. [[verunglücken]], [[Verunreinigung]], [[verunstalten]],
+	-- [[beunruhigen]]
+	["un"] = m_table.listToSet { "unstressed" },
+	-- stressed prefixes can occur after un- ([[unausgegoren]]) or after unstressed prefixes ([[beauftragen]],
+	-- [[beabsichtigen]], [[veranlagen]])
+	["stressed"] = m_table.listToSet { "un", "unstressed" },
+	-- unstressed prefixes can occur after un- ([[unzerstörbar]]), after stressed prefixes ([[aufbewahren]],
+	-- [[Aufenthalt]]), or after unstressed -zu- ([[aufzubewahren]])
+	["unstressed"] = m_table.listToSet { "un", "stressed", "unstressed-zu" },
+	-- unstressed -zu- can occur after stressed prefixes only ([[anzufangen]])
+	["unstressed-zu"] = m_table.listToSet { "stressed" },
+}
+
 -- The format of the following is {PREFIX, RESPELLING, PROPS...} where PROPS are optional named properties, such as
 -- 'restriction' (place additional restrictions on when the prefix can occur), 'prefixtype' (override the
 -- autodetected type of prefix).
---
--- In general, there are three types of prefixes: stressed and unstressed, and un-. Stressed prefixes can be followed
--- by unstressed prefixes (e.g. [[Aufenthalt]]), and sometimes unstressed prefixes can be followed by stressed
--- prefixes (e.g. [[beabsichtigen]], [[veranlagen]]) or by un- (e.g. [[verunglücken]], [[Verunreinigung]],
--- [[verunstalten]], [[beunruhigen]]), but otherwise prefixes cannot be combined, except for un-, which can be followed
--- by either stressed or unstressed prefixes (but not another un-); cf. [[unausgegoren]], with three prefixes (un- +
--- stressed + unstressed) or [[unzerstörbar]], with two prefixes (un- + unstressed).
 --
 -- Some prefixes can be both stressed and unstressed, e.g. durch-, unter-, über-, wieder-. For some, e.g. miss- and
 -- wider-, there are systematic alternations in stress: unstressed when functioning as a verbal prefix followed by an
@@ -544,6 +558,7 @@ local suffixes = {
 	-- I considered an exception for -mal but there are many counter-exceptions like [[normal]], [[minimal]],
 	-- [[dermal]], [[dezimal]], [[prodromal]].
 	{"al", "ál", pos = "a"},
+	{"ierbar", "íerbàr", pos = "a"},
 	-- Normally following consonant but there a few exceptions like [[abbaubar]], [[recyclebar]], [[unüberschaubar]].
 	-- Cases like [[isobar]] will be respelled with an accent and not affected.
 	{"bar", "bàr", pos = "a"},
@@ -556,14 +571,25 @@ local suffixes = {
 	{"ei", "éi", pos = "n", restriction = C .. "$"},
 	{"ent", "ént", pos = {"n", "a"}},
 	{"enz", "énz", pos = "n"},
-	{"licherweise", "lichərwèise", pos = "b"},
-	{"erweise", "ərwèise", restriction = C .. "$", pos = "b"},
-	-- Normally following consonant but there a few exceptions like [[säurefest]]. Cases like [[manifest]] will be
-	-- respelled with an accent and not affected.
-	{"fest", "fèst", pos = "a"},
-	{"barschaft", "bàhrschàft", pos = "n"},
+	-- The following type handled specially due to the stress behavior.
+	-- {"licherweise", "lichərwèise", pos = "b"},
+	-- {"erweise", "ərwèise", restriction = C .. "$", pos = "b"},
+	-- FIXME: Is the secondary stress correct? It occurs in some words in enwikt with an intervening unstressed
+	-- syllable, as in [[Bauerschaft]], [[Leidenschaft]], [[Liegenschaft]], [[Mutterschaft]], [[Schwägerschaft]],
+	-- [[Täterschaft]], [[Wissenschafterin]], [[Wissenschaftlerin]], [[Witwenschaft]], [[Zeugenschaft]], but not
+	-- in many similar words, e.g. [[Bauernschaft]], [[Eigenschaft]], [[Elternschaft]], [[Errungenschaft]],
+	-- [[Hundertschaft]], [[Komplizenschaft]], [[Leserschaft]], [[Partnerschaft]], [[Priesterschaft]],
+	-- [[Rechenschaft]], [[Richterschaft]], [[Ritterschaft]], [[Schwangerschaft]], [[Vaterschaft]], [[Völkerschaft]],
+	-- [[Wählerschaft]], [[Wanderschaft]], [[Wissenschaft]]. In dewikt, of the above words, [[Mutterschaft]] and
+	-- [[Schwägerschaft]] (from the former list) and [[Elternschaft]] and [[Vaterschaft]] (from the latter list) are
+	-- the only ones with secondary stress on -schaft.
 	{"schaft", "schàft", pos = "n"},
-	{"haft", "hàft", pos = "a"},
+
+	-- Appears to maintain its stress after a stressed syllable, as in [[handfest]], [[reißfest]], and to "steal" the
+	-- secondary stress, as in [[albtraumhaft]] /ˈalptʁaʊ̯mˌhaft/. This means they need to be spelled with '-'. Note
+	-- {"fest", "fèst", pos = "a"}, -- can follow a vowel as in [[säurefest]]
+	-- {"haft", "hàft", pos = "a"},
+
 	{"heit", "hèit", pos = "n"},
 	{"ie", "íe", restriction = C .. "$", pos = "n"},
 	-- No restriction to not occur after a/e; [[kreieren]] does occur and noun form and verbs in -en after -aier/-eier
@@ -609,9 +635,12 @@ local suffixes = {
 	{"sam", {"sahm", "sam"}, pos = "a"},
 	-- schaft is further up, above [[haft]]
 	-- Almost all words in -tät are in -ität but a few aren't: [[Majestät]], [[Fakultät]], [[Pietät]], [[Pubertät]],
-	-- [[Sozietät]], [[Varietät]].
+	-- [[Sozietät]], [[Varietät]]. Unlike most other suffixes, -tät after a consonant does not result in the
+	-- preceding vowel being pronounced close. Cf. [[Fakultät]]
 	{"tät", "tä́t", pos = "n"},
-	{"tion", "zión", pos = "n"},
+	-- Unlike most other suffixes, -tion after a consonant does not result in the preceding vowel being pronounced
+	-- close. Cf. [[Produktion]] /pʁodʊkˈt͡si̯oːn/, [[Konvention]] /kɔnvɛnˈt͡si̯oːn/.
+	{"tion", "zión", restriction = "[^s]$", pos = "n"},
 	-- This must follow -tion. Most words in -ion besides those in -tion are still end-stressed abstract nouns, e.g.
 	-- [[Religion]], [[Version]], [[Union]], [[Vision]], [[Explosion]], [[Aggression]], [[Rebellion]], or other words
 	-- with the same stress pattern, e.g. [[Skorpion]], [[Million]], [[Fermion]]. There are several in -ion that are
@@ -783,6 +812,16 @@ local function lookup_stress_spec(stress_spec, pos)
 end
 
 
+-- "Demote" autogenerated grave to double-grave, and maybe autogenerated acute to grave.
+local function demote_stress(part, demote_acute)
+	part = rsub(part, "[" .. AUTOGRAVE .. ORIG_SUFFIX_GRAVE .. "]", DOUBLEGRAVE)
+	if demote_acute then
+		part = rsub(part, AUTOACUTE, AUTOGRAVE)
+	end
+	return part
+end
+
+
 local function split_word_on_components_and_apply_affixes(word, pos, affix_type, depth, is_compound)
 	-- Make sure there aren't two primary stresses in the word.
 	if rfind(word, ACUTE .. ".*" .. ACUTE) then
@@ -790,19 +829,46 @@ local function split_word_on_components_and_apply_affixes(word, pos, affix_type,
 	end
 
 	depth = depth or 0
+
+	-- First check for -erweise suffix. We handle this specially because from the point of view of stress, it behaves
+	-- similarly to a separate component; cf. [[unglücklich]] 'únglǜcklich' but [[unglücklicherweise]]
+	-- 'únglücklicherwèise' as if it were 'únglücklicher-wèise'. Normal suffix behavior would lead to
+	-- #'únglǜcklicherweise'.
+	if depth == 0 then
+		local rest, weise = rmatch(word, "^(.*" .. C .. ")er(we" .. stress_c .. "?ise)$")
+		if rest then
+			if rfind(rest, "%+$") then
+				-- explicit non-boundary here, so don't split here
+			elseif not rfind(rest, V) then
+				-- no vowels, don't split here
+			else
+				-- Use non_V so that we pick up things like explicit syllable divisions, which we check for below.
+				local before_cluster, final_cluster = rmatch(rest, "^(.-)(" .. non_V .. "*)$")
+				if rfind(final_cluster, "%..") then
+					-- syllable division within or before final cluster, don't split here
+				else
+					local splitrest = split_word_on_components_and_apply_affixes(rest, pos, affix_type, 0, "is compound")
+					local weise_acute = rfind(weise, ACUTE)
+					if not rfind(weise, stress_c) then
+						weise = "we" .. AUTOGRAVE .. "ise"
+					end
+					splitrest = demote_stress(splitrest, weise_acute)
+					return splitrest .. "er⁀" .. weise
+				end
+			end
+		end
+	end
+
 	-- If at depth 0, split on --, recursively process the parts, and combine. Similarly, at depth 1, split on -,
 	-- recursively process the parts, and combine. At depth 2 we do the actual work.
 	if depth == 0 or depth == 1 then
 		local parts = rsplit(word, depth == 0 and "%-%-" or "%-")
 		if len(parts) == 1 then
-			return split_word_on_components_and_apply_affixes(word, pos, affix_type, depth + 1)
+			return split_word_on_components_and_apply_affixes(word, pos, affix_type, depth + 1, is_compound)
 		else
 			for i, part in ipairs(parts) do
 				parts[i] = split_word_on_components_and_apply_affixes(part, pos, affix_type, depth + 1, "is compound")
-				parts[i] = rsub(parts[i], "[" .. AUTOGRAVE .. ORIG_SUFFIX_GRAVE .. "]", DOUBLEGRAVE)
-				if i > 1 then
-					parts[i] = rsub(parts[i], AUTOACUTE, AUTOGRAVE)
-				end
+				parts[i] = demote_stress(parts[i], i > 1)
 			end
 			return table.concat(parts, "⁀")
 		end
@@ -810,11 +876,18 @@ local function split_word_on_components_and_apply_affixes(word, pos, affix_type,
 
 	local retparts = {}
 	local parts = strutils.capturing_split(word, "([<>])")
-	local saw_un_prefix = false
-	local saw_unstressed_prefix = false
-	local saw_unstressed_zu_prefix = false
-	local saw_stressed_prefix = false
+	-- The type of the preceding prefix. Used to implement a finite state machine to track allowable combinations of
+	-- prefixes.
+	local previous_prefixtype = nil
+	-- Have we seen stressed un- previously? If so, a following stressed suffix loses its stress, while the main part
+	-- gets secondary stress, cf. [[unausgegoren]] 'únausgegòren'.
+	local saw_primary_un_stress = false
+	-- Have we seen a stressed prefix previously? If so, the main part gets secondary stress.
 	local saw_primary_prefix_stress = false
+	-- Have we seen two primary stressed prefixes, as in [[überbeanspruchen]] 'ǘberbeànspruchen'? If so, the main part
+	-- loses its stress.
+	local saw_double_primary_prefix_stress = false
+	-- Have we seen a primary-stressed suffix like -anz or -ieren? If so, the main part loses its stress.
 	local saw_primary_suffix_stress = false
 
 	local function replace_part_with_multiple_parts(new_parts, inspos, separator)
@@ -840,6 +913,21 @@ local function split_word_on_components_and_apply_affixes(word, pos, affix_type,
 	local from_left = 1
 	while from_left < #parts and parts[from_left + 1] == "<" do
 		local prefix = parts[from_left]
+		if rsub(prefix, stress_c, "") == "un" then
+			previous_prefixtype = "un"
+		elseif rfind(prefix, stress_c) then
+			previous_prefixtype = "stressed"
+		elseif prefix == "zu" then
+			previous_prefixtype = "unstressed-zu"
+		else
+			previous_prefixtype = "unstressed"
+		end
+		if has_user_specified_primary_stress(prefix) then
+			saw_primary_prefix_stress = true
+			if previous_prefixtype == "un" then
+				saw_primary_un_stress = true
+			end
+		end
 		local respelling = check_for_affix_respelling(prefix, prefixes)
 		local must_continue = false
 		if respelling then
@@ -850,18 +938,6 @@ local function split_word_on_components_and_apply_affixes(word, pos, affix_type,
 			end
 		end
 		if not must_continue then
-			if has_user_specified_primary_stress(prefix) then
-				saw_primary_prefix_stress = true
-			end
-			if rsub(prefix, stress_c, "") == "un" then
-				saw_un_prefix = true
-			elseif rfind(prefix, stress_c) then
-				saw_stressed_prefix = true
-			elseif prefix == "zu" then
-				saw_unstressed_zu_prefix = true
-			else
-				saw_unstressed_prefix = true
-			end
 			table.insert(retparts, prefix)
 			from_left = from_left + 2
 		end
@@ -924,36 +1000,28 @@ local function split_word_on_components_and_apply_affixes(word, pos, affix_type,
 						-- [[gehen]], [[geten]], [[Becher]], [[Gegner]], [[Verschen]], [[erben]], [[erden]],
 						-- [[Erker]], [[erlen]], [[Erpel]], [[erzen]], [[Erster]], etc.; a few legitimate
 						-- prefixed words get rejected, e.g. [[Beleg]], [[Gebet]], which need respelling
-					elseif prefixtype == "un" and (saw_un_prefix or saw_unstressed_prefix or saw_unstressed_zu_prefix
-						or saw_stressed_prefix) then
-						-- un- cannot occur after any other prefixes
-					elseif prefixtype == "unstressed" and saw_unstressed_prefix then
-						-- unstressed prefixes like ge- cannot occur after other unstressed prefixes
-					elseif prefixtype == "unstressed-zu" and (saw_unstressed_prefix or saw_unstressed_zu_prefix) then
-						-- unstressed -zu- cannot occur after unstressed prefixes
-					elseif prefixtype == "stressed" and (saw_stressed_prefix or saw_unstressed_zu_prefix) then
-						-- stressed prefixes like an- cannot occur after other stressed prefixes, except
-						-- in certain combinations like voran- that we treat as single prefixes, and cannot occur
-						-- after unstressed -zu-
+					elseif previous_prefixtype and not prefix_previous_allowed_states[prefixtype][previous_prefixtype] then
+						-- disallowed prefixtype transition
 					else
 						-- break the word in two; next iteration we process the rest, which may need breaking
 						-- again
 						mainpart = rest
-						if prefixtype == "un" then
-							saw_un_prefix = true
-						elseif prefixtype == "unstressed" then
-							saw_unstressed_prefix = true
-						elseif prefixtype == "unstressed-zu" then
-							saw_unstressed_zu_prefix = true
-						else
-							saw_stressed_prefix = true
-						end
+						previous_prefixtype = prefixtype
 						prefix_respell = gsub(prefix_respell, ACUTE, AUTOACUTE)
 						prefix_respell = gsub(prefix_respell, GRAVE, AUTOGRAVE)
 						if rfind(prefix_respell, AUTOACUTE) then
-							if saw_primary_prefix_stress then
+							-- Stressed prefix. If we've seen un- already, the prefix loses its stress (marked with
+							-- double grave to preserve length on the stressed syllable, in über-); cf. [[unausgegoren]]
+							-- 'únausgegòren'. Otherwise if we've seen a stressed prefix, the prefix gets secondary
+							-- stress, cf. [[überbeanspruchen]] 'ǘberbeànspruchen'. Otherwise it retains primary
+							-- stress.
+							if saw_primary_un_stress then
 								prefix_respell = gsub(prefix_respell, AUTOACUTE, DOUBLEGRAVE)
-							elseif saw_primary_mainpart_stress or saw_primary_suffix_stress then
+							elseif saw_primary_prefix_stress or saw_primary_mainpart_stress or saw_primary_suffix_stress then
+								if saw_primary_prefix_stress then
+									-- main part should not get stress, as in [[überbeanspruchen]]
+									saw_double_primary_prefix_stress = true
+								end
 								prefix_respell = gsub(prefix_respell, AUTOACUTE, AUTOGRAVE)
 							end
 							saw_primary_prefix_stress = true
@@ -1011,17 +1079,13 @@ local function split_word_on_components_and_apply_affixes(word, pos, affix_type,
 							mainpart = rest
 
 							-- We may remove the suffix grave entirely later on. For now, convert it to a special
-							-- symbol so we can handle it properly later, after splitting on syllables.
+							-- symbol so we can handle it properly later (in handle_suffix_secondary_stress), after
+							-- splitting on syllables.
 							suffix_respell = gsub(suffix_respell, GRAVE, ORIG_SUFFIX_GRAVE)
 							if rfind(suffix_respell, ACUTE) then
 								saw_primary_suffix_stress = true
-								if saw_primary_prefix_stress then
-									-- We have already rejected cases with primary mainpart or suffix stress and
-									-- acute accent in the respelling.
-									suffix_respell = gsub(suffix_respell, ACUTE, AUTOGRAVE)
-								else
-									suffix_respell = gsub(suffix_respell, ACUTE, AUTOACUTE)
-								end
+								-- If there is primary prefix stress, we later convert this to AUTOGRAVE.
+								suffix_respell = gsub(suffix_respell, ACUTE, AUTOACUTE)
 							end
 							table.insert(retparts, insert_position, suffix_respell)
 							broke_suffix = true
@@ -1038,7 +1102,7 @@ local function split_word_on_components_and_apply_affixes(word, pos, affix_type,
 	if rfind(mainpart, DOTUNDER) then
 		-- remove DOTUNDER but don't accent
 		mainpart = gsub(mainpart, DOTUNDER, "")
-	elseif saw_primary_mainpart_stress or saw_primary_suffix_stress then
+	elseif saw_primary_mainpart_stress or saw_primary_suffix_stress or saw_double_primary_prefix_stress then
 		-- do nothing
 	elseif rfind(mainpart, "^" .. non_V .. "*" .. V .. accent_c .. "*" .. stress_c) then
 		-- first vowel already followed by a stress accent; do nothing
@@ -1056,13 +1120,23 @@ local function split_word_on_components_and_apply_affixes(word, pos, affix_type,
 		retparts[i] = gsub(part, "%+", "")
 	end
 
-	-- Put components together. Vowel-initial suffixes join directly to preceding part; otherwise, put ⁀ before a
-	-- prefix or main part, ‿ before a suffix.
+	-- Put components together. Put ⁀ between two prefixes or between prefix and main part. Suffixes may join directly
+	-- to preceding part; otherwise, put ‿ before a suffix.
 	local wordparts = {}
 	for i, part in ipairs(retparts) do
 		if i >= insert_position then
-			-- handling a suffix
-			if rfind(part, "^" .. V) then
+			-- Handling a suffix. Vowel-initial suffixes join directly to the preceding part so that e.g. written 'ig'
+			-- is pronounced as IPA /ɪɡ/ not as /ɪç/. Primary-stressed consonant-initial suffixes (-tät, -tion) also
+			-- join directly to the preceding part so that a preceding vowel-consonant sequence as in [[Fakultät]],
+			-- [[Konvention]] does not result in a close vowel, e.g. /kɔnvɛnˈt͡si̯oːn/ not #/kɔnvenˈt͡si̯oːn/ (in other
+			-- consonant-initial suffixes, the vowel does lengthen and become close, as in [[möglich]] /ˈmøːklɪç/).
+			local join_directly = rfind(part, "^" .. V)  or rfind(part, AUTOACUTE) or rfind(part, ACUTE)
+			if saw_primary_prefix_stress then
+				-- Primary-stressed suffix gets demoted to secondary stress if there is a primary-stressed prefix, e.g.
+				-- [[ausprobieren]] /ˈaʊ̯spʁoˌbiːʁən/.
+				part = gsub(part, AUTOACUTE, AUTOGRAVE)
+			end
+			if join_directly then
 				wordparts[#wordparts] = wordparts[#wordparts] .. part
 			else
 				table.insert(wordparts, "‿" .. part)
@@ -1280,8 +1354,12 @@ local phonemic_rules = {
 	-- /ˈbeːt.ləˌhɛm/. For simplicity we treat 'dl' and 'tl' the same.
 	{"(" .. obstruent_non_sibilant_c .. ")%.([lr])", ".%1%2"},
 	-- Cf. [[Liquid]] [liˈkviːt]; [[Liquida]] [ˈliːkvida]; [[Mikwe]] /miˈkveː/; [[Taekwondo]] [tɛˈkvɔndo] (dewikt);
-	-- [[Uruguayerin]] [ˈuːʁuɡvaɪ̯əʁɪn] (dewikt)
+	-- [[Uruguayerin]] [ˈuːʁuɡvaɪ̯əʁɪn] (dewikt).
 	{"([kg])%.v", ".%1v"},
+	-- We need special handling of /ks/ so it stays together on the same side of the syllable divider but triggers
+	-- vowel shortening; cf. [[Oxid]] /ɔˈksiːt/, [[Reflexion]] /ʁeflɛˈksi̯oːn/. The extra /k/ will be removed below
+	-- when we remove remaining geminates within a component.
+	{"k%.s", "k.ks"},
 	-- [[Signal]] [zɪˈɡnaːl] (dewikt); [[designieren]] [dezɪˈɡniːʁən] (dewikt); if split 'g.n', we'd expect [k.n].
 	-- But notice the short 'i' (which we handle by a rule below). Cf. [[Kognition]] [ˌkɔɡniˈt͡si̯oːn] (dewikt) and
 	-- [[Kognat]] [kɔˈɡnaːt] (dewikt) vs. [[Prognose]] [ˌpʁoˈɡnoːzə] (dewikt) with short closed 'o' (secondary stress
@@ -1445,7 +1523,7 @@ local phonemic_rules = {
 	-- boundary). These have served their purpose of keeping the preceding vowel short. Normally such geminates will
 	-- always occur across a syllable boundary, but this may not be the case in the presence of user-specified syllable
 	-- boundaries. We do this after coda devoicing so we eliminate the 'd' in words like [[verwandte]].
-	{"(" .. C .. ")([.‿]*)%1", "%1", true},
+	{"(" .. C .. ")([.‿]*)%1", "%2%1", true},
 
 	-- Add glottal stop at beginning of component before a vowel. FIXME: Sometimes this should not be present, I think.
 	-- We need symbols to control this.
@@ -1557,7 +1635,7 @@ local function break_vowels(vowelseq)
 			i = i + 1
 		else
 			if i < #chars - 1 and com.diphthongs[
-				rsub(chars[i], stress_accent_c, "") .. rsub(chars[i + 2], stress_accent_c, "")
+				rsub(chars[i], stress_c, "") .. rsub(chars[i + 2], stress_c, "")
 			] then
 				check_empty(chars[i + 1])
 				table.insert(vowels, chars[i] .. chars[i + 2])
@@ -1670,7 +1748,7 @@ local function combine_syllables_moving_stress(syllables, no_auto_stress)
 		elseif i > 1 then
 			syl = "." .. syl
 		end
-		syl = rsub(syl, stress_accent_c, "")
+		syl = rsub(syl, stress_c, "")
 		table.insert(modified_syls, syl)
 	end
 	return table.concat(modified_syls)
