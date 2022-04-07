@@ -600,11 +600,13 @@ local suffixes = {
 	-- See above. Occurs with nouns.
 	{"ierung", "íerung", pos = "n"},
 	-- "isch" not needed here; no respelling needed and vowel-initial
+	{"tionismus", "zionísmus", restriction = "[^s]$", pos = "n"},
 	{"ismus", "ísmus", pos = "n"},
 	-- Restrict to not occur after -a or -e as it may form a diphthong ([[allermeist]], [[verwaist]], etc.). Words
 	-- with suffix -ist after -a or -e need respelling, e.g. [[Judaist]], [[Atheist]], [[Deist]], [[Monotheist]].
 	{"ist", "íst", respelling = "[^ae]$", pos = "n"},
 	{"istisch", "ístisch", respelling = "[^ae]$", pos = "a"},
+	{"ierbarkeit", "íerbàhrkèit", pos = "n"},
 	{"barkeit", "bàhrkèit", pos = "n"},
 	{"schaftlichkeit", "schàft.lichkèit", pos = "n"},
 	{"lichkeit", "lichkèit", pos = "n"},
@@ -636,7 +638,7 @@ local suffixes = {
 	-- schaft is further up, above [[haft]]
 	-- Almost all words in -tät are in -ität but a few aren't: [[Majestät]], [[Fakultät]], [[Pietät]], [[Pubertät]],
 	-- [[Sozietät]], [[Varietät]]. Unlike most other suffixes, -tät after a consonant does not result in the
-	-- preceding vowel being pronounced close. Cf. [[Fakultät]]
+	-- preceding vowel being pronounced close. Cf. [[Fakultät]] /fakʊlˈtɛːt/.
 	{"tät", "tä́t", pos = "n"},
 	-- Unlike most other suffixes, -tion after a consonant does not result in the preceding vowel being pronounced
 	-- close. Cf. [[Produktion]] /pʁodʊkˈt͡si̯oːn/, [[Konvention]] /kɔnvɛnˈt͡si̯oːn/.

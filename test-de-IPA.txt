@@ -745,12 +745,12 @@ Stipulierung	Stipulierung	ʃtipuˈliːʁʊŋ
 Stipulierung	S*tipulierung	stipuˈliːʁʊŋ
 Selbstregierung	Selbst-regierung	ˈzɛlpstʁeˌɡiːʁʊŋ
 Fakultät	Fakultät	fakʊlˈtɛːt
-Konvention	Konvention	kɔnvɛnˈt͡si̯oːn
-Infektion	Infektion	ɪnfɛkˈt͡si̯oːn
-Bastion	Bastion	basˈti̯oːn
-
-
-
+Exhibitionismus	Exhibitionismus	ɛkshibit͡si̯oˈnɪsmʊs
+Perfektionismus	Perfektionismus	pɛʁfɛkt͡si̯oˈnɪsmʊs
+Protestantismus	Protestantismus	pʁotɛstanˈtɪsmʊs
+Sozialismus	Sozialismus	zot͡si̯aˈlɪsmʊs
+Multikulturalismus	Multikulturalismus	mʊltikʊltuʁaˈlɪsmʊs
+Pseudoanglizismus	Pseudo-anglizismus	ˈpsɔɪ̯doʔaŋɡliˌt͡sɪsmʊs
 dreist	dreist	dʁaɪ̯st
 Deist	De.ist	deˈɪst
 Deist	Deʔist	deˈʔɪst
@@ -759,6 +759,39 @@ Atheist	Atheʔist	ateˈʔɪst
 verwaist	verwaist	fɛʁˈvaɪ̯st
 Judaist	Juda.ist	judaˈɪst
 Judaist	Judaʔist	judaˈʔɪst
+euphemistisch	euphemistisch	ɔɪ̯feˈmɪstɪʃ
+rechtsextremistisch	recht-s-extremistisch	ˈʁɛçt͡s(ʔ)ɛkstʁeˌmɪstɪʃ
+postkommunistisch	post-kommunistisch	ˈpɔstkɔmuˌnɪstɪʃ
+unrealistisch	unrealistisch	ˈʊnʁeaˌlɪstɪʃ
+avantgardistisch	avãgardistisch	avãɡaʁˈdɪstɪʃ
+computerlinguistisch	kom.pjúter-linguistisch	kɔmˈpjuːtɐlɪŋˌɡu̯ɪstɪʃ
+computerlinguistisch	kom.pjúter-lingu.istisch	kɔmˈpjuːtɐlɪŋɡuˌɪstɪʃ
+Korrumpierbarkeit	Korrumpierbarkeit	kɔʁʊmˈpiːʁbaːʁˌkaɪ̯t
+# Here, dewikt and enwikt have no secondary stress on -keit.
+Verfügbarkeit	Verfügbarkeit	fɛʁˈfyːkbaːʁˌkaɪ̯t
+# Here, dewikt and enwikt agree with our rules.
+Dienstbarkeit	Dienstbarkeit	ˈdiːnstbaːʁˌkaɪ̯t
+# FIXME! dewikt has ˈapbaʊ̯baːɐ̯ˌkaɪ̯t. Our rules generate ˈapˌbaʊ̯baːɐ̯kaɪ̯t. Need to verify with native speaker.
+Abbaubarkeit	Abbaubarkeit	ˈapˌbaʊ̯baːʁkaɪ̯t
+# Here, dewikt agrees with our rules.
+Durchführbarkeit	Durchführbarkeit	ˈdʊʁçˌfyːʁbaːʁkaɪ̯t
+# Here, enwikt agrees with our rules.
+Sonderbarkeit	Sonderbarkeit	ˈzɔndɐˌbaːʁkaɪ̯t
+# Here, dewikt and wikt have no secondary stress on -keit.
+Übertragbarkeit	Über<tragbarkeit	yːbɐˈtʁaːkbaːʁˌkaɪ̯t
+# Here, dewikt has no secondary stress on -keit.
+Unabwendbarkeit	Unabwéndbarkeit	ʊn(ʔ)apˈvɛntbaːʁˌkaɪ̯t
+Unabwendbarkeit	Unabwendbarkeit	ˈʊn(ʔ)apˌvɛntbaːʁkaɪ̯t
+# Here, enwikt agrees with our rules.
+Undankbarkeit	Undankbarkeit	ˈʊnˌdaŋkbaːʁkaɪ̯t
+# Here, enwikt agrees with our rules.
+Unzerstörbarkeit	Unzerstörbarkeit	ˈʊnt͡sɛʁˌʃtøːʁbaːʁkaɪ̯t
+Konvention	Konvention	kɔnvɛnˈt͡si̯oːn
+Infektion	Infektion	ɪnfɛkˈt͡si̯oːn
+Bastion	Bastion	basˈti̯oːn
+
+
+
 verträglich	verträglich	fɛʁˌtʁɛːklɪç
 Wirtschaftswissenschaft	Wirtschaft-s-wissenschaft	ˈvɪʁtʃaft͡sˌvɪsənʃaft
 
