@@ -211,7 +211,8 @@ FIXME:
 	[[Uhudler]] 'U.huhdler' /ˈuːhuːdlɐ/, [[Estomihi]] 'Estomí.hi' /ɛstoˈmiːhi/.
 36. Re-parse prefix/suffix respellings for <, e.g. auseinander-.
 37. Reimplement prefix-type restrictions using a finite state machine and handle secondary stress appropriately.
-38. ks should divide .ks but shorten preceding vowels.
+38. ks should divide .ks but shorten preceding vowels. (DONE)
+39. Implement component_like_suffixes.
 ]=]
 
 local export = {}
@@ -341,7 +342,7 @@ local explicit_char_to_phonemic = {
 	[EXPLICIT_X] = "x",
 }
 
-local stress = ACUTE .. GRAVE .. DOUBLEGRAVE
+local stress = ACUTE .. GRAVE .. DOUBLEGRAVE .. AUTOACUTE .. AUTOGRAVE .. ORIG_SUFFIX_GRAVE
 local stress_c = "[" .. stress .. "]"
 local accent_non_stress_non_invbrevebelow = BREVE .. CFLEX .. TILDE .. DOTUNDER .. MACRON .. "ː*"
 local accent_non_stress = accent_non_stress_non_invbrevebelow .. INVBREVEBELOW
@@ -542,6 +543,82 @@ local prefixes = {
 	{"zu", "zu", prefixtype = "unstressed-zu"},
 }
 
+-- These suffixes maintain their stress after a stressed syllable, as in [[handfest]], [[reißfest]], and "steal" the
+-- secondary stress, as in [[albtraumhaft]] /ˈalptʁaʊ̯mˌhaft/.
+local component_like_suffixes = {
+	-- Examples: [[bibelfest]] /ˈbiːbl̩ˌfɛst/ (would be same if regular stress), [[bissfest]] /ˈbɪsˌfɛst/, [[handfest]]
+	-- /ˈhantˌfɛst/, [[kratzfest]] /ˈkʁat͡sˌfɛst/, [[krisenfest]] /ˈkʁiːzənˌfɛst/ (would be same if regular stress),
+	-- [[reißfest]] /ˈʁaɪ̯sˌfɛst/, [[säurefest]] /ˈzɔɪ̯ʁəˌfɛst/ (would be same if regular stress), [[schossfest]]
+	-- /ˈʃɔsˌfɛst/, [[wasserfest]] /ˈvasɐˌfɛst/ (would be same if regular stress), [[witterungsfest]] /ˈvɪtəʁʊŋsˌfɛst/
+	-- (would be same if regular stress)
+	{"fest", "--fest", pos = "a"}, -- can follow a vowel as in [[säurefest]]
+	-- Examples: [[akzentfrei]] /akˈt͡sɛntˌfʁaɪ̯/, [[alkoholfrei]] /alkoˈhoːlˌfʁaɪ̯/, [[apothekenfrei]] /apoˈteːkn̩ˌfʁaɪ̯/
+	-- (would be same if regular stress), [[bleifrei]] /ˈblaɪ̯ˌfʁaɪ̯/, [[bündnisfrei]] /ˈbʏntnɪsˌfʁaɪ̯/ (would be same if
+	-- regular stress), [[einwandfrei]] /ˈaɪ̯nvantˌfʁaɪ̯/, [[erschütterungsfrei]] /ɛɐ̯ˈʃʏtəʁʊŋsˌfʁaɪ̯/ (would be same if
+	-- regular stress), [[gastfrei]] /ˈɡastˌfʁaɪ̯/, [[gemeinfrei]] /ɡəˈmaɪ̯nˌfʁaɪ̯/, [[glutenfrei]] /ɡluˈteːnˌfʁaɪ̯/,
+	-- [[holzschlifffrei]] /ˈhɔlt͡sʃlɪfˌfʁaɪ̯/, [[keimfrei]] /ˈkaɪ̯mˌfʁaɪ̯/, [[kontextfrei]] /ˈkɔntɛkstˌfʁaɪ̯/
+	-- (would be same if regular stress), [[niederschlagsfrei]] /ˈniːdɐʃlaːksˌfʁaɪ̯/, [[nikotinfrei]] /nikoˈtiːnfʁaɪ̯/,
+	-- [[rechtsfrei]] /ˈʁɛçt͡sˌfʁaɪ̯/, [[säurefrei]] /ˈzɔɪ̯ʁəˌfʁaɪ̯/ (would be same if regular stress), [[schadstofffrei]]
+	-- /ˈʃaːtʃtɔfˌfʁaɪ̯/, [[schneefrei]] /ˈʃneːˌfʁaɪ̯/, [[schulfrei]] /ˈʃuːlˌfʁaɪ̯/, [[steuerfrei]] /ˈʃtɔɪ̯ɐˌfʁaɪ̯/,
+	-- [[straffrei]] /ˈʃtʁaːfˌfʁaɪ̯/, [[stressfrei]] /ˈʃtʁɛsˌfʁaɪ̯/, [[unfallfrei]] /ˈʊnfalˌfʁaɪ̯/, [[versandkostenfrei]]
+	-- /fɛɐ̯ˈzantkɔstn̩ˌfʁaɪ̯/, [[vibrationsfrei]] /vibʁaˈtsi̯oːnsˌfʁaɪ̯/, [[visafrei]] /ˈviːzaˌfʁaɪ̯/ (would be same if
+	-- regular stress)
+	{"frei", "--frei", pos = "a"},
+	-- Not necessary; we split off -erweise in a first pass, and then -lich will be recognized.
+	-- {"licherweise", ">lich>er-weise", pos = "b"},
+	{"erweise", ">er--weise", restriction = C .. "$", pos = "b"},
+	-- Examples: [[Arbeitslosigkeit]] /ˈaʁbaɪ̯tsˌloːzɪçkaɪ̯t/ (would be same if regular suffix), [[Arglosigkeit]]
+	-- /ˈaʁkˌloːzɪçkaɪ̯t/, [[Ausnahmslosigkeit]] /ˈaʊ̯snaːmsloːzɪçkaɪ̯t/, [[Bedeutungslosigkeit]] /bəˈdɔɪ̯tʊŋsˌloːzɪçkaɪ̯t/
+	-- (would be same if regular suffix), [[Charakterlosigkeit]] /kaˈʁaktɐˌloːzɪçkaɪ̯t/ (would be same if regular
+	-- suffix), [[Gefühllosigkeit]] /ɡəˈfyːlˌloːzɪçkaɪ̯t/, [[Jugendarbeitslosigkeit]] /ˈjuːɡəntˌʔaʁbaɪ̯t͡sloːzɪçkaɪ̯t/
+	-- (FIXME: our rules produce ˈjuːɡəntʔaʁbaɪ̯t͡sˌloːzɪçkaɪ̯t), [[Obdachlosigkeit]] /ˈɔpdaxˌloːzɪçkaɪ̯t/ (FIXME: dewikt
+	-- and enwikt have no secondary stress), [[Pietätlosigkeit]] /ˌpiːəˈtɛːtlozɪçˌkaɪ̯t/ (FIXME: our rules produce
+	-- ˌpiːəˈtɛːtˌlozɪçkaɪ̯t), [[Reglosigkeit]] /ˈʁeːkˌloːzɪçkaɪ̯t/ (FIXME: dewikt and enwikt have no secondary stress),
+	-- [[Ruchlosigkeit]] /ˈʁuːxˌloːzɪçkaɪ̯t/ or /ˈʁʊxˌloːzɪçkaɪ̯t/, [[Rücksichtslosigkeit]] /ˈʁʏkzɪçt͡sˌloːzɪçkaɪ̯t/,
+	-- [[Schlaflosigkeit]] /ˈʃlaːfloːzɪçkaɪ̯t/ (FIXME: dewikt and enwikt have no secondary stress),
+	-- [[Teilnahmslosigkeit]] /ˈtaɪ̯lnaːmsˌloːzɪçkaɪ̯t/, [[Willenlosigkeit]] /ˈvɪlənˌloːsɪçkaɪ̯t/ (would be same if
+	-- regular stress), [[Zügellosigkeit]] /ˈt͡syːɡl̩ˌloːzɪçkaɪ̯t/ (would be same if regular stress)
+	{"losigkeit", "--losigkèit", pos = "n"},
+	-- Examples: [[alternativlos]] /ˌaltɐnaˈtiːfˌloːs/, [[anstandslos]] /ˈanʃtantsˌloːs/, [[arglos]] /ˈaʁkˌloːs/,
+	-- [[atemlos]] /ˈaːtəmˌloːs/ (would be same if regular suffix), [[ausdruckslos]] /ˈaʊ̯sdʁʊksˌloːs/, [[ausweglos]]
+	-- /ˈaʊ̯sveːkˌloːs/, [[bargeldlos]] /ˈbaːɐ̯ɡɛltˌloːs/, [[bedingungslos]] /bəˈdɪŋʊŋsˌloːs/ (would be same if regular
+	-- suffix), [[besitzlos]] /bəˈzɪtsˌloːs/ (FIXME: enwikt but not dewikt have secondary stress), [[charakterlos]]
+	-- /kaˈʁaktɐˌloːs/ (would be same if regular suffix), [[einflusslos]] /ˈaɪ̯nflʊsˌloːs/, [[ersatzlos]] /ɛɐ̯ˈzat͡sˌloːs/,
+	-- [[erwerbslos]] /ɛɐ̯ˈvɛʁpsˌloːs/, [[fraglos]] /ˈfʁaːkˌloːs/ (FIXME: dewikt and enwikt have no secondary stress),
+	-- [[furchtlos]] /ˈfʊʁçtˌloːs/, [[gefühllos]] /ɡəˈfyːlˌloːs/, [[gesichtslos]] /ɡəˈzɪçt͡sˌloːs/, [[gottlos]]
+	-- /ˈɡɔtˌloːs/, [[haarlos]] /ˈhaːɐ̯ˌloːs/, [[inhaltslos]] /ˈɪnhalt͡sˌloːs/, [[konkurrenzlos]] /kɔŋkʊˈʁɛntsˌloːs/,
+	-- [[kontrolllos]] /kɔnˈtʁɔlˌloːs/, [[kopflos]] /ˈkɔp͡fˌloːs/, [[leidenschaftslos]] /ˈlaɪ̯dənʃaftsˌloːs/,
+	-- [[merkmallos]] /ˈmɛʁkmaːlˌloːs/, [[papierlos]] /paˈpiːɐ̯ˌloːs/, [[planlos]] /ˈplaːnˌloːs/, [[reglos]]
+	-- /ˈʁeːkˌloːs/, [[schnurlos]] /ˈʃnuːʁˌloːs/, [[stillos]] /ˈʃtiːlˌloːs/ or /ˈstiːlˌloːs/, [[systemlos]]
+	-- /zʏsˈteːmˌloːs/, [[tonlos]] /ˈtoːnˌloːs/, [[verständnislos]] /fɛɐ̯ˈʃtɛntnɪsˌloːs/ (would be same if regular
+	-- prefix), [[zahnlos]] /ˈt͡saːnˌloːs/, [[zwanglos]] /ˈt͡svaŋˌloːs/
+	{"los", "--los", pos = "a"},
+	-- Not necessary; we split off -reich in a first pass, and then -nis will be recognized.
+	-- {"nisreich", ">nis-reich", restriction = C .. "$", pos = "a"},
+	-- Examples: [[anregungsreich]] /ˈanʁeːɡʊŋsˌʁaɪ̯ç/, [[einfallsreich]] /ˈaɪ̯nfalsˌʁaɪ̯ç/, [[einwohnerreich]]
+	-- /ˈaɪ̯nvoːnɐˌʁaɪ̯ç/, [[geistreich]] /ˈɡaɪ̯stˌʁaɪ̯ç/, [[glorreich]] /ˈɡloːɐ̯ˌʁaɪ̯ç/, [[kohlenhydratreich]]
+	-- /ˈkoːlənhydʁaːtˌʁaɪ̯ç/, [[nährstoffreich]] /ˈnɛːɐ̯ʃtɔfˌʁaɪ̯ç/, [[niederschlagsreich]] /ˈniːdɐʃlaːksˌʁaɪ̯ç/,
+	-- [[ruhmreich]] /ˈʁuːmˌʁaɪ̯ç/, [[schneereich]] /ˈʃneːˌʁaɪ̯ç/, [[siegreich]] /ˈziːkˌʁaɪ̯ç/, [[tugendreich]]
+	-- /ˈtuːɡn̩tˌʁaɪ̯ç/ (would be same if regular suffix), [[verlustreich]] /fɛɐ̯ˈlʊstˌʁaɪ̯ç/
+	{"reich", "--reich", pos = "a"},
+	-- Not necessary; we split off -voll in a first pass, and then -nis will be recognized.
+	-- {"nisvoll", "nisfòll", restriction = C .. "$", pos = "a"},
+	-- Examples: [[eindrucksvoll]] /ˈaɪ̯ndʁʊksˌfɔl/, [[gefühlvoll]] /ɡəˈfyːlˌfɔl/, [[geheimnisvoll]] /ɡəˈhaɪ̯mnɪsˌfɔl/
+	-- (would be same if regular suffix), [[geräuschvoll]] /ɡəˈʁɔɪ̯ʃˌfɔl/, [[gramvoll]] /ˈɡʁaːmˌfɔl/ (NOTE: enwikt has
+	-- no secondary stress here), [[humorvoll]] /huˈmoːɐ̯ˌfɔl/, [[klangvoll]] /ˈklaŋˌfɔl/, [[kraftvoll]] /ˈkʁaftˌfɔl/,
+	-- [[maßvoll]] /ˈmaːsˌfɔl/, [[qualvoll]] /ˈkvaːlˌfɔl/, [[randvoll]] /ˈʁantˌfɔl/, [[respektvoll]] /ʁeˈspɛktˌfɔl/,
+	-- [[rücksichtsvoll]] /ˈʁʏkzɪçt͡sˌfɔl/, [[unheilvoll]] /ˈʊnhaɪ̯lˌfɔl/, [[unschuldsvoll]] /ˈʊnʃʊlt͡sˌfɔl/,
+	-- [[verantwortungsvoll]] /fɛɐ̯ˈʔantvɔʁtʊŋsˌfɔl/, [[wundervoll]] /ˈvʊndɐˌfɔl/ (would be same if regular suffix)
+	{"voll", "--foll", pos = "a"},
+	-- Examples: [[abschnittweise]] /ˈapʃnɪtˌvaɪ̯zə/, [[allerleiweise]] /ˈalɐlaɪ̯ˌvaɪ̯zə/, [[ansatzweise]] /ˈanzat͡sˌvaɪ̯zə/,
+	-- [[ausnahmsweise]] /ˈaʊ̯snaːmsˌvaɪ̯zə/, [[beispielsweise]] /ˈbaɪ̯ʃpiːlsˌvaɪ̯zə/, [[esslöffelweise]] /ˈɛslœfl̩ˌvaɪ̯zə/,
+	-- [[fallweise]] /ˈfalˌvaɪ̯zə/, [[haufenweise]] /ˈhaʊ̯fn̩ˌvaɪ̯zə/ (would be same if regular suffix), [[leihweise]]
+	-- /ˈlaɪ̯ˌvaɪ̯zə/, [[probeweise]] /ˈpʁoːbəˌvaɪ̯zə/ (would be same if regualr suffix), [[quartalsweise]]
+	-- /kvaʁˈtaːlsˌvaɪ̯zə/, [[scheibchenweise]] /ˈʃaɪ̯bçənˌvaɪ̯zə/, [[stückchenweise]] /ˈʃtʏkçənˌvaɪ̯zə/, [[stückweise]]
+	-- /ˈʃtʏkˌvaɪ̯zə/, [[teilweise]] /ˈtaɪ̯lˌvaɪ̯zə/, [[versuchsweise]] /fɛɐ̯ˈzuːxsˌvaɪ̯zə/, [[zwangsweise]] /ˈt͡svaŋsˌvaɪ̯zə/
+	{"weise", "--weise", pos = "a"},
+}
+
 -- Suffix stress:
 -- -- Suffixes like [[-lein]] seem to take secondary stress only when the preceding syllable has no stress and there
 --    is no preceding secondary stress, e.g. [[Fingerlein]], [[Schwesterlein]] or [[Müllerlein]] /ˈmʏlɐˌlaɪ̯n/. In most
@@ -571,25 +648,7 @@ local suffixes = {
 	{"ei", "éi", pos = "n", restriction = C .. "$"},
 	{"ent", "ént", pos = {"n", "a"}},
 	{"enz", "énz", pos = "n"},
-	-- The following type handled specially due to the stress behavior.
-	-- {"licherweise", "lichərwèise", pos = "b"},
-	-- {"erweise", "ərwèise", restriction = C .. "$", pos = "b"},
-	-- FIXME: Is the secondary stress correct? It occurs in some words in enwikt with an intervening unstressed
-	-- syllable, as in [[Bauerschaft]], [[Leidenschaft]], [[Liegenschaft]], [[Mutterschaft]], [[Schwägerschaft]],
-	-- [[Täterschaft]], [[Wissenschafterin]], [[Wissenschaftlerin]], [[Witwenschaft]], [[Zeugenschaft]], but not
-	-- in many similar words, e.g. [[Bauernschaft]], [[Eigenschaft]], [[Elternschaft]], [[Errungenschaft]],
-	-- [[Hundertschaft]], [[Komplizenschaft]], [[Leserschaft]], [[Partnerschaft]], [[Priesterschaft]],
-	-- [[Rechenschaft]], [[Richterschaft]], [[Ritterschaft]], [[Schwangerschaft]], [[Vaterschaft]], [[Völkerschaft]],
-	-- [[Wählerschaft]], [[Wanderschaft]], [[Wissenschaft]]. In dewikt, of the above words, [[Mutterschaft]] and
-	-- [[Schwägerschaft]] (from the former list) and [[Elternschaft]] and [[Vaterschaft]] (from the latter list) are
-	-- the only ones with secondary stress on -schaft.
-	{"schaft", "schàft", pos = "n"},
-
-	-- Appears to maintain its stress after a stressed syllable, as in [[handfest]], [[reißfest]], and to "steal" the
-	-- secondary stress, as in [[albtraumhaft]] /ˈalptʁaʊ̯mˌhaft/. This means they need to be spelled with '-'. Note
-	-- {"fest", "fèst", pos = "a"}, -- can follow a vowel as in [[säurefest]]
-	-- {"haft", "hàft", pos = "a"},
-
+	-- -haft is down below -schaft
 	{"heit", "hèit", pos = "n"},
 	{"ie", "íe", restriction = C .. "$", pos = "n"},
 	-- No restriction to not occur after a/e; [[kreieren]] does occur and noun form and verbs in -en after -aier/-eier
@@ -610,7 +669,6 @@ local suffixes = {
 	{"barkeit", "bàhrkèit", pos = "n"},
 	{"schaftlichkeit", "schàft.lichkèit", pos = "n"},
 	{"lichkeit", "lichkèit", pos = "n"},
-	{"losigkeit", "lòsigkèit", pos = "n"},
 	{"samkeit", {"sahmkèit", "samkèit"}, pos = "n"},
 	{"keit", "kèit", pos = "n"},
 	-- See comment above about secondary stress.
@@ -622,7 +680,6 @@ local suffixes = {
 	-- [[Zwilling]]). Instances after vowels do occur ([[Dreiling]], [[Edeling]], [[Neuling]], [[Reling]]); words
 	-- [[Feeling]], [[Homeschooling]] need respelling in any case.
 	{"ling", "ling", restriction = "[^l]$", pos = "n"},
-	{"los", "lòs", pos = "a"},
 	-- Included because of words like [[Ergebnis]], [[Erlebnis]], [[Befugnis]], [[Begräbnis]], [[Betrübnis]],
 	-- [[Gelöbnis]], [[Ödnis]], [[Verlöbnis]], [[Wagnis]], etc. Also [[Zeugnis]] with /k/ (syllable division 'g.n')
 	-- instead of expected syllable division '.gn'. Only recognized when following a consonant to exclude [[Anis]],
@@ -630,12 +687,25 @@ local suffixes = {
 	-- pre-suffix part being too short). [[Tennis]] needs respelling 'Ten+nis'.
 	{"nis", "nis", restriction = C .. "$", pos = "n"},
 	{"ös", "ö́s", pos = "a"},
-	{"nisreich", "nisrèich", restriction = C .. "$", pos = "a"},
-	{"reich", "rèich", pos = "a"},
 	-- Two possible pronunciations (long and short). Occurs after a vowel in [[grausam]] (also false positives
 	-- [[Bisam]], [[Sesam]], which will be excluded as the pre-suffix part is too short).
 	{"sam", {"sahm", "sam"}, pos = "a"},
-	-- schaft is further up, above [[haft]]
+	-- FIXME: Is the secondary stress correct? It occurs in some words in enwikt with an intervening unstressed
+	-- syllable, as in [[Bauerschaft]], [[Leidenschaft]], [[Liegenschaft]], [[Mutterschaft]], [[Schwägerschaft]],
+	-- [[Täterschaft]], [[Wissenschafterin]], [[Wissenschaftlerin]], [[Witwenschaft]], [[Zeugenschaft]], but not
+	-- in many similar words, e.g. [[Bauernschaft]], [[Eigenschaft]], [[Elternschaft]], [[Errungenschaft]],
+	-- [[Hundertschaft]], [[Komplizenschaft]], [[Leserschaft]], [[Partnerschaft]], [[Priesterschaft]],
+	-- [[Rechenschaft]], [[Richterschaft]], [[Ritterschaft]], [[Schwangerschaft]], [[Vaterschaft]], [[Völkerschaft]],
+	-- [[Wählerschaft]], [[Wanderschaft]], [[Wissenschaft]]. In dewikt, of the above words, [[Mutterschaft]] and
+	-- [[Schwägerschaft]] (from the former list) and [[Elternschaft]] and [[Vaterschaft]] (from the latter list) are
+	-- the only ones with secondary stress on -schaft.
+	{"schaft", "schàft", pos = "n"},
+	-- Examples: [[beispielhaft]] /ˈbaɪ̯ˌʃpiːlhaft/ (FIXME: dewikt and enwikt have no secondary stress but audio sounds
+	-- more like our rendering), [[engelhaft]] /ˈɛŋl̩ˌhaft/, [[fabelhaft]] /ˈfaːbəlˌhaft/, [[gebresthaft]]
+	-- /ɡəˈbʁɛsthaft/, [[glaubhaft]] /ˈɡlaʊ̯phaft/, [[habhaft]] /ˈhaːphaft/, [[kometenhaft]] /koˈmeːtn̩ˌhaft/,
+	-- [[mädchenhaft]] /ˈmɛːtçənhaft/, [[namhaft]] /ˈnaːmhaft/, [[rechtsfehlerhaft]] /ˈʁɛçt͡sˌfeːlɐhaft/,
+	-- [[unstatthaft]] /ˈʊnˌʃtathaft/, [[vorbildhaft]] /ˈfoːɐ̯ˌbɪlthaft/
+	{"haft", "hàft", pos = "a"},
 	-- Almost all words in -tät are in -ität but a few aren't: [[Majestät]], [[Fakultät]], [[Pietät]], [[Pubertät]],
 	-- [[Sozietät]], [[Varietät]]. Unlike most other suffixes, -tät after a consonant does not result in the
 	-- preceding vowel being pronounced close. Cf. [[Fakultät]] /fakʊlˈtɛːt/.
@@ -651,9 +721,6 @@ local suffixes = {
 	-- needing respelling of various sorts.
 	{"ion", "ión", restriction = C .. "$", pos = "n"},
 	-- "ung" not needed here; no respelling needed and vowel-initial
-	{"nisvoll", "nisfòll", restriction = C .. "$", pos = "a"},
-	{"voll", "fòll", pos = "a"},
-	{"weise", "wèise", pos = "a"},
 }
 
 local function reorder_accents(text)
@@ -767,9 +834,10 @@ end
 local function check_for_affix_respelling(affix, affix_specs)
 	for _, spec in ipairs(affix_specs) do
 		if affix == spec[1] then
-			-- The user didn't request stress, so replace stress marks with double-grave, which preserves length
-			-- in originally stressed syllables (e.g. in über-).
-			return rsub(decompose(spec[2]), stress_c, DOUBLEGRAVE)
+			local respelling = decompose(spec[2])
+			respelling = gsub(respelling, ACUTE, AUTOACUTE)
+			respelling = gsub(respelling, GRAVE, AUTOGRAVE)
+			return respelling
 		end
 	end
 	return nil
@@ -832,33 +900,53 @@ local function split_word_on_components_and_apply_affixes(word, pos, affix_type,
 
 	depth = depth or 0
 
-	-- First check for -erweise suffix. We handle this specially because from the point of view of stress, it behaves
-	-- similarly to a separate component; cf. [[unglücklich]] 'únglǜcklich' but [[unglücklicherweise]]
-	-- 'únglücklicherwèise' as if it were 'únglücklicher-wèise'. Normal suffix behavior would lead to
-	-- #'únglǜcklicherweise'.
+	-- First check for component-like suffixes. An example is '-los', which, from the point of view of stress, behave
+	-- similarly to a separate component; cf. [[Ausdruck]] 'Áusdrùck' but [[ausdrucklos]] 'áusdrucklòs' as if it were
+	-- 'ausdruck-los'. Normal suffix behavior would lead to #'áusdrùcklos'.
 	if depth == 0 then
-		local rest, weise = rmatch(word, "^(.*" .. C .. ")er(we" .. stress_c .. "?ise)$")
-		if rest then
-			if rfind(rest, "%+$") then
-				-- explicit non-boundary here, so don't split here
-			elseif not rfind(rest, V) then
-				-- no vowels, don't split here
-			else
-				-- Use non_V so that we pick up things like explicit syllable divisions, which we check for below.
-				local before_cluster, final_cluster = rmatch(rest, "^(.-)(" .. non_V .. "*)$")
-				if rfind(final_cluster, "%..") then
-					-- syllable division within or before final cluster, don't split here
-				else
-					local splitrest = split_word_on_components_and_apply_affixes(rest, pos, affix_type, 0, "is compound")
-					local weise_acute = rfind(weise, ACUTE)
-					if not rfind(weise, stress_c) then
-						weise = "we" .. AUTOGRAVE .. "ise"
+		local components = strutils.capturing_split(word, "(%-%-?)")
+		for i, component in ipairs(components) do
+			if i % 2 == 1 then -- component, not separator
+				local parts = strutils.capturing_split(component, "([<>])")
+				local j = #parts
+				while j >= 1 do
+					if j > 1 and parts[j - 1] == ">" then -- suffix
+						local respelling = check_for_affix_respelling(parts[j], component_like_suffixes)
+						if respelling then
+							parts[j] = respelling
+							parts[j - 1] = ""
+						end
+					else
+						for _, suffixspec in ipairs(component_like_suffixes) do
+							local suffix_pattern = suffixspec[1]
+							local rest = rmatch(parts[j], "^(.-)" .. suffix_pattern .. "$")
+							if rest then
+								if not meets_restriction(rest, suffixspec.restriction) then
+									-- restriction not met, don't split here
+								if rfind(rest, "%+$") then
+									-- explicit non-boundary here, so don't split here
+								elseif not rfind(rest, V) then
+									-- no vowels, don't split here
+								else
+									-- Use non_V so that we pick up things like explicit syllable divisions, which we
+									-- check for below.
+									local before_cluster, final_cluster = rmatch(rest, "^(.-)(" .. non_V .. "*)$")
+									if rfind(final_cluster, "%..") then
+										-- syllable division within or before final cluster, don't split here
+									else
+										parts[j] = rest .. suffixspec[2]
+										break
+									end
+								end
+							end
+						end
 					end
-					splitrest = demote_stress(splitrest, weise_acute)
-					return splitrest .. "er⁀" .. weise
+					j = j - 2
 				end
+				components[i] = table.concat(parts)
 			end
 		end
+		word = table.concat(components)
 	end
 
 	-- If at depth 0, split on --, recursively process the parts, and combine. Similarly, at depth 1, split on -,
@@ -933,6 +1021,9 @@ local function split_word_on_components_and_apply_affixes(word, pos, affix_type,
 		local respelling = check_for_affix_respelling(prefix, prefixes)
 		local must_continue = false
 		if respelling then
+			-- The user didn't request stress, so replace stress marks with double-grave, which preserves length
+			-- in originally stressed syllables (e.g. in über-).
+			respelling = rsub(respelling, stress_c, DOUBLEGRAVE)
 			local respelling_parts = rsplit(respelling, "<")
 			if #respelling_parts > 1 then
 				replace_part_with_multiple_parts(respelling_parts, from_left, "<")
@@ -1055,8 +1146,8 @@ local function split_word_on_components_and_apply_affixes(word, pos, affix_type,
 		for _, suffixspec in ipairs(suffixes) do
 			local suffix_pattern = suffixspec[1]
 			local pos_stress = lookup_stress_spec(stress_spec, pos)
-			local rest, suffix = rmatch(mainpart, "^(.-)(" .. suffix_pattern .. ")$")
-			if suffix then
+			local rest = rmatch(mainpart, "^(.-)" .. suffix_pattern .. "$")
+			if rest then
 				if not pos_stress then
 					-- suffix not recognized for this POS, don't split here
 				elseif not meets_restriction(rest, suffixspec.restriction) then

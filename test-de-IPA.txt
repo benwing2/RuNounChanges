@@ -786,6 +786,22 @@ Unabwendbarkeit	Unabwendbarkeit	ˈʊn(ʔ)apˌvɛntbaːʁkaɪ̯t
 Undankbarkeit	Undankbarkeit	ˈʊnˌdaŋkbaːʁkaɪ̯t
 # Here, enwikt agrees with our rules.
 Unzerstörbarkeit	Unzerstörbarkeit	ˈʊnt͡sɛʁˌʃtøːʁbaːʁkaɪ̯t
+Wirtschaftlichkeit	Wirtschaftlichkeit	ˈvɪʁtʃaftlɪçˌkaɪ̯t
+# FIXME: Is the secondary stress here correct?
+Wissenschaftlichkeit	Wissenschaftlichkeit	ˈvɪsənˌʃaftlɪçkaɪ̯t
+Unwissenschaftlichkeit	Unwissenschaftlichkeit	ˈʊnˌvɪsənʃaftlɪçkaɪ̯t
+# FIXME: Is the secondary stress here correct? In enwikt but not dewikt.
+Möglichkeit	Möglichkeit	ˈmøːklɪçˌkaɪ̯t
+# FIXME: Is the secondary stress here correct? In enwikt but not dewikt.
+Brüderlichkeit	Brüderlichkeit	ˈbʁyːdɐlɪçˌkaɪ̯t
+# FIXME: Is the secondary stress here correct? Not in dewikt or enwikt.
+Abscheulichkeit	Abschéulichkeit	apˈʃɔɪ̯lɪçˌkaɪ̯t
+# FIXME: Is the secondary stress here correct? Not in enwikt.
+Entzündlichkeit	Entzündlichkeit	ɛntˈt͡sʏntlɪçˌkaɪ̯t
+Unannehmlichkeit	Unannehmlichkeit	ˈʊn(ʔ)anˌneːmlɪçkaɪ̯t
+Unfreundlichkeit	Unfreundlichkeit	ˈʊnˌfʁɔɪ̯ntlɪçkaɪ̯t
+# FIXME: Is the secondary stress here correct? Not in dewikt.
+Unendlichkeit	Unéndlichkeit	ʊnˈʔɛntlɪçˌkaɪ̯t
 Konvention	Konvention	kɔnvɛnˈt͡si̯oːn
 Infektion	Infektion	ɪnfɛkˈt͡si̯oːn
 Bastion	Bastion	basˈti̯oːn
