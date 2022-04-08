@@ -213,6 +213,7 @@ FIXME:
 37. Reimplement prefix-type restrictions using a finite state machine and handle secondary stress appropriately.
 38. ks should divide .ks but shorten preceding vowels. (DONE)
 39. Implement component_like_suffixes.
+40. Make sure [[kohlenhydratreich]] respelled 'kohlen-hydrȁt>reich' works.
 ]=]
 
 local export = {}
@@ -546,6 +547,9 @@ local prefixes = {
 -- These suffixes maintain their stress after a stressed syllable, as in [[handfest]], [[reißfest]], and "steal" the
 -- secondary stress, as in [[albtraumhaft]] /ˈalptʁaʊ̯mˌhaft/.
 local component_like_suffixes = {
+	-- Not necessary; we split off -erweise in a first pass, and then -lich will be recognized.
+	-- {"licherweise", ">lich>er-weise", pos = "b"},
+	{"erweise", ">er--weise", restriction = C .. "$", pos = "b"},
 	-- Examples: [[bibelfest]] /ˈbiːbl̩ˌfɛst/ (would be same if regular stress), [[bissfest]] /ˈbɪsˌfɛst/, [[handfest]]
 	-- /ˈhantˌfɛst/, [[kratzfest]] /ˈkʁat͡sˌfɛst/, [[krisenfest]] /ˈkʁiːzənˌfɛst/ (would be same if regular stress),
 	-- [[reißfest]] /ˈʁaɪ̯sˌfɛst/, [[säurefest]] /ˈzɔɪ̯ʁəˌfɛst/ (would be same if regular stress), [[schossfest]]
@@ -564,9 +568,6 @@ local component_like_suffixes = {
 	-- /fɛɐ̯ˈzantkɔstn̩ˌfʁaɪ̯/, [[vibrationsfrei]] /vibʁaˈtsi̯oːnsˌfʁaɪ̯/, [[visafrei]] /ˈviːzaˌfʁaɪ̯/ (would be same if
 	-- regular stress)
 	{"frei", "--frei", pos = "a"},
-	-- Not necessary; we split off -erweise in a first pass, and then -lich will be recognized.
-	-- {"licherweise", ">lich>er-weise", pos = "b"},
-	{"erweise", ">er--weise", restriction = C .. "$", pos = "b"},
 	-- Examples: [[Arbeitslosigkeit]] /ˈaʁbaɪ̯tsˌloːzɪçkaɪ̯t/ (would be same if regular suffix), [[Arglosigkeit]]
 	-- /ˈaʁkˌloːzɪçkaɪ̯t/, [[Ausnahmslosigkeit]] /ˈaʊ̯snaːmsloːzɪçkaɪ̯t/, [[Bedeutungslosigkeit]] /bəˈdɔɪ̯tʊŋsˌloːzɪçkaɪ̯t/
 	-- (would be same if regular suffix), [[Charakterlosigkeit]] /kaˈʁaktɐˌloːzɪçkaɪ̯t/ (would be same if regular
@@ -613,7 +614,7 @@ local component_like_suffixes = {
 	-- Examples: [[abschnittweise]] /ˈapʃnɪtˌvaɪ̯zə/, [[allerleiweise]] /ˈalɐlaɪ̯ˌvaɪ̯zə/, [[ansatzweise]] /ˈanzat͡sˌvaɪ̯zə/,
 	-- [[ausnahmsweise]] /ˈaʊ̯snaːmsˌvaɪ̯zə/, [[beispielsweise]] /ˈbaɪ̯ʃpiːlsˌvaɪ̯zə/, [[esslöffelweise]] /ˈɛslœfl̩ˌvaɪ̯zə/,
 	-- [[fallweise]] /ˈfalˌvaɪ̯zə/, [[haufenweise]] /ˈhaʊ̯fn̩ˌvaɪ̯zə/ (would be same if regular suffix), [[leihweise]]
-	-- /ˈlaɪ̯ˌvaɪ̯zə/, [[probeweise]] /ˈpʁoːbəˌvaɪ̯zə/ (would be same if regualr suffix), [[quartalsweise]]
+	-- /ˈlaɪ̯ˌvaɪ̯zə/, [[probeweise]] /ˈpʁoːbəˌvaɪ̯zə/ (would be same if regular suffix), [[quartalsweise]]
 	-- /kvaʁˈtaːlsˌvaɪ̯zə/, [[scheibchenweise]] /ˈʃaɪ̯bçənˌvaɪ̯zə/, [[stückchenweise]] /ˈʃtʏkçənˌvaɪ̯zə/, [[stückweise]]
 	-- /ˈʃtʏkˌvaɪ̯zə/, [[teilweise]] /ˈtaɪ̯lˌvaɪ̯zə/, [[versuchsweise]] /fɛɐ̯ˈzuːxsˌvaɪ̯zə/, [[zwangsweise]] /ˈt͡svaŋsˌvaɪ̯zə/
 	{"weise", "--weise", pos = "a"},
