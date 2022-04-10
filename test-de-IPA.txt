@@ -44,7 +44,7 @@ Diarrhö	Di.arrhö́	diaˈʁøː
 Diarrhoe	Di.arrhö́	diaˈʁøː
 Rhythmus	Rhythmus	ˈʁʏtmʊs
 Rhodos	Rhoddos	ˈʁɔdɔs
-Rhabarber	Rhabarber	ʁaˈbaʁbɐ
+Rhabarber	Rhabárber	ʁaˈbaʁbɐ
 Rhapsodie	Rhàpsodie	ˌʁapsoˈdiː
 Rheda	Rheda	ˈʁeːda
 Rhein	Rhein	ʁaɪ̯n
@@ -57,14 +57,14 @@ Rhone	Rhone	ˈʁoːnə
 # French-derived words
 Baguette	Bagétt	baˈɡɛt
 Chaiselongue	Schĕselóng	ʃɛzəˈlɔŋ	dewikt pron #1
-Chaiselongue	SchẹselóNk	ʃɛzəˈlɔ̃ːk	dewikt pron #2
-Chaiselongue	Schehs-lóNng	ʃeːsˈlɔ̃ːŋ	dewikt pron #1 (Austrian)
-Chaiselongue	SchehslóhNk	ʃeːsˈlõːk	dewikt pron #2 (Austrian)
-Chaiselongue	Schĕz*lɔhNg*	ʃɛzˈlɔ̃ːɡ	dewikt pron #3 (Austrian)
+Chaiselongue	SchẹselóNk	ʃɛzəˈlõːk	dewikt pron #2
+Chaiselongue	SchehslóNng	ʃeːsˈlõːŋ	dewikt pron #1 (Austrian)
+Chaiselongue	SchehslóNk	ʃeːsˈlõːk	dewikt pron #2 (Austrian)
+Chaiselongue	Schĕz*lóNg*	ʃɛzˈlõːɡ	dewikt pron #3 (Austrian)
 Champignon	Schampinjòng	ˈʃam.pɪnˌjɔŋ
-Champignon	Schampinjõ̀	ˈʃam.pɪnˌjɔ̃ː
-Chefredakteur	Scheff-redaktö̀r	[ˈʃɛfʁedakˌtøːʁ]
-Chefredakteur	Schef-redaktö̀r	[ˈʃeːfʁedakˌtøːʁ]	usually in Austria
+Champignon	Schampinjõ̀	ˈʃam.pɪnˌjõː
+Chefredakteur	Scheff-redaktö́r	[ˈʃɛfʁedakˌtøːʁ]
+Chefredakteur	Schef-redaktö́r	[ˈʃeːfʁedakˌtøːʁ]	usually in Austria
 Guillotine	Gi.otíne	ɡioˈtiːnə
 orange	orã́ʒ	oˈʁãːʃ	enwikt pron #1
 orange	orángʒ	oˈʁaŋʃ	enwikt pron #2
@@ -108,7 +108,7 @@ Rendezvous	Rã̀devú	ˌʁãdeˈvuː
 
 # English-derived words
 Bodyguard	Boddigàhrd	ˈbɔdiˌɡaːʁt
-Champion	Tschempiən	ˈt͡ʃɛmpi̯ən
+Champion	Tschempi̯en	ˈt͡ʃɛmpi̯ən
 Whiskey	Wiski	ˈvɪski
 Whiskey	W*iski	ˈwɪski
 T-Shirt	Ti-Schöhrt	ˈtiːˌʃøːʁt
@@ -141,11 +141,11 @@ adsorbieren	adsorbieren	atzɔʁˈbiːʁən
 Landser	Landser	ˈlant͡sɐ
 Trübsal	Trüb>sal
 bugsieren	bugsieren	bʊkˈsiːʁən	# bʊˈksiːʁən in dewikt but seems wrong
-pumperlgsund	pumperl.gsùnd	ˈpʊmpɐlˌksʊnt
+pumperlgsund	pumperl-gsund	ˈpʊmpɐlˌksʊnt
 
 # -h- between vowels
 Bedrohung	Bedrohung	bəˈdʁoːʊŋ
-arbeitsfähig	arbeit-s-fähig	ˈaʁbaɪ̯t͡sˌfɛːɪç
+arbeitsfähig	arbeit>s-fähig	ˈaʁbaɪ̯t͡sˌfɛːɪç
 befähigt	befähigt	bəˈfɛːɪçt
 Beruhigen	Beruhigen	bəˈʁuːɪɡən
 Ehe	Ehe	ˈeːə
@@ -174,15 +174,15 @@ Estomihi	Estomíhi	ɛstoˈmiːhi
 # -gu- in hiatus
 Ambiguität	Ambigu.ität	ambiɡuiˈtɛːt
 Antigua	Antíguah	anˌtiːɡu̯aː
-Äquatorialguinea	Äquatori.ál-ginèa	ɛkvatoʁiˈaːlɡiˌneːa	per enwikt
-Äquatorialguinea	Ä̀quatoriál-ginèa	ˌɛkvatoˈʁi̯aːlɡiˌneːa	per dewikt
+Äquatorialguinea	Äquatori.al-ginéa	ɛkvatoʁiˈaːlɡiˌneːa	per enwikt
+Äquatorialguinea	Ä̀quatorial-ginéa	ˌɛkvatoˈʁi̯aːlɡiˌneːa	per dewikt
 Bilingualismus	Bilinggualísmus	bilɪŋɡʊ̯aˈlɪsmʊs
 Guacamole	Guakamóle	ɡu̯akaˈmoːlə
 Guano	Guano	ˈɡu̯aːno
 Guatemalteke	Guatemaltéke	ɡu̯atemalˈteːkə
 Jaguar	Jaguahr	ˈjaːɡu̯aːʁ
 Papua-Neuguinea	Papua Nèuginéa	ˈpaːpu̯a ˌnɔɪ̯ɡiˈneːa	per enwikt
-Papua-Neuguinea	Papu.a-neuginéa	ˌpaːpuanɔɪ̯ɡiˈneːa	per dewikt
+Papua-Neuguinea	Papu.a-*neuginéa	ˌpaːpuanɔɪ̯ɡiˈneːa	per dewikt
 Paraguay	Paragway	ˈpaːʁaɡvaɪ̯	dewikt pron #1
 Paraguay	Parragway	ˈpaʁaɡvaɪ̯	dewikt pron #2
 Paraguay	Paraguáy	paʁaˈɡu̯aɪ̯	dewikt pron #3
@@ -190,17 +190,17 @@ Patholinguistik	Pátholinguìstik	ˈpaːtolɪŋˌɡu̯ɪstɪk	dewikt pron #1
 Patholinguistik	Pátholingu.ìstik	ˈpaːtolɪŋɡuˌɪstɪk	dewikt pron #2
 Patholinguistik	Patholinguístik	patolɪŋˈɡu̯ɪstɪk	dewikt pron #3
 Patholinguistik	Pàttholingu.ístik	ˌpatolɪŋɡuˈɪstɪk	dewikt pron #4
-Patholinguistik	Pàtholingu-ístik	ˌpatolɪŋɡuˈʔɪstɪk	dewikt pron #5
+Patholinguistik	Pàtholinguʔístik	ˌpatolɪŋɡuˈʔɪstɪk	dewikt pron #5
 # other -u- in hiatus
 aktualisieren	àktu.alisieren	ˌaktualiˈziːʁən
 Asexualität	Ắsexualitä̀t	ˈazɛksu̯aliˌtɛːt
 Asexualität	Ássexualitä̀t	ˈasɛksu̯aliˌtɛːt
 Botsuana	Botsuána	bɔˈt͡su̯aːna	enwikt
 Botsuana	Botsu.ána	bɔt͡suˈaːna	dewikt pron #1
-Botsuana	Bọtsu-ána	bɔt͡suˈʔaːna	dewikt pron #2
+Botsuana	Botsuʔána	bɔt͡suˈʔaːna	dewikt pron #2
 dual	du.ál	duˈaːl
-Dual-SIM-Smartphone	Du.ál-Sịmm-Smàhrtphohn	duˈaːlzɪmˌsmaːʁtfoːn
-Dualsystem	Du.ál-systèm	duˈaːlzʏsˌteːm
+Dual-SIM-Smartphone	Du.ál-Sịmm-Smahrtphohn	duˈaːlzɪmˌsmaːʁtfoːn
+Dualsystem	Du.ál-systém	duˈaːlzʏsˌteːm
 Ecuador	Ekuadór	eku̯aˈdoːʁ
 evaluativ	evalu.atív	evaluaˈtiːf
 evaluieren	evalu.ieren	evaluˈiːʁən
@@ -209,7 +209,6 @@ Situation	Situ.azión	zituaˈt͡si̯oːn
 # -y-
 paraguayanisch	paraguayánisch	paʁaɡu̯aɪ̯ˈaːnɪʃ	enwikt pron #1
 paraguayanisch	paragwayánisch	paʁaɡvaɪ̯ˈaːnɪʃ	enwikt pron #2
-uruguayisch	uru.gwayisch	ˈuːʁuɡvaɪ̯ɪʃ
 
 # -ng-, -nk-
 abdrängen	abdrängen	ˈapˌdʁɛŋən
@@ -240,25 +239,25 @@ melancholisch	melankólisch	melaŋˈkoːlɪʃ
 ingeniös	in.geniös	ɪnɡeˈni̯øːs
 Ingredienz	In.gredienz	ɪnɡʁeˈdi̯ɛnt͡s
 Inkarnation	In.karnation	ɪnkaʁnaˈt͡si̯oːn
-inkohärent	ìn.ko.härent	ˌɪnkohɛˈʁɛnt
-inkohärent	ín.ko.härent	ˈɪnkohɛˌʁɛnt
+inkohärent	ìn.kohärent	ˌɪnkohɛˈʁɛnt
+inkohärent	ín.kohärent	ˈɪnkohɛˌʁɛnt
 inkompatibel	in.kompatibel	ɪnkɔmpaˈtiːbəl
 inkompatibel	ín.kompatibel	ˈɪnkɔmpaˌtiːbəl
 inkompetent	ín.kompətent	ˈɪnkɔmpəˌtɛnt
 inkompetent	ìn.kompətent	ˌɪnkɔmpəˈtɛnt
 
 # -ph-
-Ableitungsmorphem	Ableitungs-morphèm	ˈaplaɪ̯tʊŋsmɔʁˌfeːm
+Ableitungsmorphem	Ableitungs-morphém	ˈaplaɪ̯tʊŋsmɔʁˌfeːm
 Paragraphenhengst	Paragráphen-hengst	paʁaˈɡʁaːfənˌhɛŋst
 
 # Internal glottal stops
 Osterei	Ohster-ei	 ˈoːstɐˌʔaɪ̯
 unendlich	unéndlich	ʊnˈʔɛntlɪç
-Patholinguistik	Pàtholingu-ístik	ˌpatolɪŋɡuˈʔɪstɪk	dewikt pron #5
-Botsuana	Bọtsu-ána	bɔt͡suˈʔaːna	dewikt pron #2
+Patholinguistik	Pàtholinguʔístik	ˌpatolɪŋɡuˈʔɪstɪk	dewikt pron #5
+Botsuana	Botsuʔána	bɔt͡suˈʔaːna	dewikt pron #2
 Aufenthalt	Aufenthalt	ˈaʊ̯f(ʔ)ɛntˌhalt
 aalähnlich	aal-ähnlich	ˈaːlˌʔɛːnlɪç
-wiederentdecken	wiederentdecken	ˈviːdɐʔɛntˌdɛkn̩
+wiederentdecken	wiederentdecken	ˈviːdɐʔɛntˌdɛkən
 
 # Unstressed -e-
 Elektrizität	Elektrizität	elɛktʁit͡siˈtɛːt
@@ -277,7 +276,7 @@ Pietät	Pìətät	ˌpiːəˈtɛːt
 Sozietät	Soziətät	zot͡si̯əˈtɛːt
 Varietät	Vari.etät	vaʁieˈtɛːt	dewikt
 Varietät	Vàri̯etät	ˌvaʁi̯eˈtɛːt	enwikt
-abalienieren	ab-ali̯eniéren	ˌapʔali̯eˈniːʁən
+abalienieren	abali̯eniéren	apʔali̯eˈniːʁən
 Extremität	Extremität	ɛkstʁemiˈtɛːt
 Illegalität	Illegalität	ɪleɡaliˈtɛːt
 Illegalität	Íllegalität	ˈɪleɡaliˌtɛːt
@@ -301,12 +300,12 @@ Adverb	Adverb	ˈatvɛʁp
 Adverb	Advérb	atˈvɛʁp
 Agens	Agĕns	ˈaːɡɛns
 Ahmed	Achmedd	ˈaxmɛt
-Bizeps	Bizeps	ˈbiːtsɛps
+Bizeps	Bizeps	ˈbiːt͡sɛps
 Borretsch	Borretsch	bɔʁɛt͡ʃ
 Bregenz	Bregenz	ˈbʁeːɡɛnt͡s
 Clemens	Klemĕns	ˈkleːmɛns
 Daniel	Daniell	ˈdaːni̯ɛl
-Dezibel	Dezibell	ˈdeːtsibɛl
+Dezibel	Dezibell	ˈdeːt͡sibɛl
 Diabetes	Di.abétes	diaˈbeːtəs
 Diabetes	Di.abétĕs	diaˈbeːtɛs
 Dolmetscher	Dolmetscher	ˈdɔlmɛtʃər
@@ -349,7 +348,7 @@ Liquid	Liquíd	liˈkviːt
 Liquida	Liquida	ˈliːkvida
 Mikwe	Mikwé	miˈkveː
 Taekwondo	Täkwóndo	tɛˈkvɔndo
-Uruguayerin	Urugwayerin	ˈuːʁuɡvaɪ̯əʁɪn
+Uruguayerin	Ur+ugwayerin	ˈuːʁuɡvaɪ̯əʁɪn
 
 # Syllable boundary in -gn-
 Signal	Signál	zɪˈɡnaːl
@@ -369,7 +368,7 @@ Zeugnis	Zeugnis	ˈt͡sɔɪ̯knɪs	because -nis is a suffix
 
 # Hiatus
 Addition	Àddition	ˌadiˈt͡si̯oːn
-Historiolinguistik	Històrio-linguístik	hɪsˌtoːʁi̯olɪŋˈɡu̯ɪstɪk
+Historiolinguistik	Històriolinguístik	hɪsˌtoːʁi̯olɪŋˈɡu̯ɪstɪk
 Familie	Famíli̯e	faˈmiːli̯ə
 Guerilla	Gerílja	ɡeˈʁɪlja	note short 'i' here but long in [[Familie]]
 Ichthyologie	Ichthy̯ologie	ɪçty̯oloˈɡiː
@@ -442,44 +441,76 @@ Landeplatz	Lande-platz	ˈlandəˌplat͡s
 Hubschrauberlandeplatz	Hub-schrauber--lande-platz	ˈhuːpʃʁaʊ̯bɐˌlandəplat͡s
 Rundflug	Rund-flug	ˈʁʊntˌfluːk
 Hubschrauberrundflug	Hub-schrauber--rund-flug	ˈhuːpʃʁaʊ̯bɐˌʁʊntfluːk
-Pilot	Pilót	piˈloːt
-Hubschrauberpilot	Hub-schrauber--pilòt	ˈhupʃʁaʊ̯bɐpiˌloːt
-Absturz	Absturz	ˈapʃtʊʁt͡s
+Hubschrauberpilot	Hub-schrauber--pilót	ˈhupʃʁaʊ̯bɐpiˌloːt
 Hubschrauberabsturz	Hub-schrauber--absturz	ˈhuːpʃʁaʊ̯bɐˌʔapʃtʊʁt͡s
-Maulwurfshügel	Maul-wurf-s--hügel	ˈmaʊ̯lvʊʁfsˌhyːɡəl
-Aufenthaltsgenehmigung	Aufenthalt-s-genehmigung	ˈaʊ̯f(ʔ)ɛnthalt͡sɡəˌneːmɪɡʊŋ
-Abhängigkeit	Abhängigkeit	ˈapˌhɛŋɪçkaɪ̯t
+Maulwurfshügel	Maul-wurf>s--hügel	ˈmaʊ̯lvʊʁfsˌhyːɡəl
+Aufenthaltsgenehmigung	Aufenthalt>s-genehmigung	ˈaʊ̯f(ʔ)ɛnthalt͡sɡəˌneːmɪɡʊŋ
 Drogenabhängigkeit	Drogen-abhängigkeit	ˈdʁoːɡənˌʔaphɛŋɪçkaɪ̯t
-Alkoholabhängigkeit	Alkohól-abhä̀ngigkeit	alkoˈhoːl(ʔ)apˌhɛŋɪçkaɪ̯t
-Alkoholabhängigkeit	Alkohól-ȧbhängigkeit	alkoˈhoːlʔaphɛŋɪçkaɪ̯t
-# -chen is not recognized as a suffix after a vowel, and is only recognized in nouns (beginning with a capital letter)
-Freimachen	Frei-machen	ˈfʁaɪ̯ˌmaxən
-Kaputtmachen	Kapútt-machen	kaˈpʊtˌmaxən
-Verachtfachen	Veracht-fachen	fɛʁˈʔaxtˌfaxən
-Verfünfzehnfachen	Verfünf-zehn--fachen	fɛʁˈfʏnft͡seːnˌfaxən
-Verursachen	Verur-sachen	fɛʁˈʔuːʁˌzaxən
-Gewaltverbrechen	Gewalt-verbrechen	ɡəˈvaltfɛʁˌbʁɛçən
-Absatzzeichen	Absatz-zeichen	ˈapzat͡sˌt͡saɪ̯çən
-Anführungszeichen	Anführungs-zeichen	ˈanfyːʁʊŋsˌt͡saɪ̯çən
-Autokennzeichen	Auto--kenn-zeichen	ˈaʊ̯toˌkɛnt͡saɪ̯çən
-Hauptbetonungszeichen	Haupt-betonung-s--zeichen	ˈhaʊ̯ptbətoːnʊŋsˌt͡saɪ̯çən
-Gleichheitszeichen	Gleichheit-s-zeichen	ˈɡlaɪ̯çhaɪ̯t͡sˌt͡saɪ̯çən
-Minuszeichen	Minus-zeichen	ˈmiːnʊsˌt͡saɪ̯çən
-Unterstreichen	Unterstreichen	ʔʊntɐˈʃtʁaɪ̯çən
-Ermöglichen	Ermöglichen	ɛʁˈmøːklɪçən
-Backenknochen	Backen-knochen	ˈbakənˌknɔxən
-Oberschenkelknochen	Ober-schenkel--knochen	ˈoːbɐʃɛŋkəlˌknɔxən
-Apfelkuchen	Apfel-kuchen	ˈapfəlˌkuːxən
-Passivrauchen	Passihv-rauchen	ˈpasiːfˌʁaʊ̯xən
-Untertauchen	Untertauchen	ˈʊn.tɐˌtaʊ̯xən
-Verscheuchen	Verscheuchen	fɛʁˈʃɔɪ̯çən
-Bärchen	Bärchen	ˈbɛːʁçən
-Hintertürchen	Hintertürchen	ˈhɪntɐˌtyːʁçən
-Dingenskirchen	Dingens-kirchen	ˈdɪŋənsˌkɪʁçən
-Abkürzungsverzeichnis	Abkürzung-s-verzeichnis	ˈapkʏʁt͡sʊŋsfɛʁˌt͡saɪ̯çnɪs
-Abschiedsbrief	Abschied-s-brief	ˈapʃiːt͡sˌbʁiːf
-Einzugsermächtigungsverfahren	Einzug-s-ermächtigung-s--verfahren	ˈaɪ̯nt͡suːks(ʔ)ɛʁmɛçtɪɡʊŋsfɛʁˌfaːʁən
-
+Alkoholabhängigkeit	Alkohól-abhängigkeit	alkoˈhoːlʔaphɛŋɪçkaɪ̯t
+Alkoholabhängigkeit	Alkohól-abhä́ngigkeit	alkoˈhoːl(ʔ)apˌhɛŋɪçkaɪ̯t
+Abkürzungsverzeichnis	Abkürzung>s-verzeichnis	ˈapkʏʁt͡sʊŋsfɛʁˌt͡saɪ̯çnɪs
+Abschiedsbrief	Abschied>s-brief	ˈapʃiːt͡sˌbʁiːf
+Massenkarambolage	Massen-karamboláʒe
+Aufmerksamkeitsdefizit-Hyperaktivitätsstörung	Aufmerksamkeit>s-defizit--Hyper<aktivität>s-störung	ˈaʊ̯fmɛʁkzaːmkaɪ̯t͡sdeːfit͡sɪthypɐʔaktiviˌtɛːt͡sʃtøːʁʊŋ
+Donaudampfschifffahrtsgesellschaftskapitän	Donau-dampf-schiff-fahrt>s-gesellschaft>s--kapitä́n	ˈdoːnaʊ̯damp͡fʃɪffaːʁt͡sɡəzɛlʃaft͡skapiˌtɛːn
+# FIXME: dewikt has primary stress on both 'Eierschalen' and 'sollbruchstellen' rather than secondary stress on the latter.
+Eierschalensollbruchstellenverursacher	Eier-schalen--soll-bruch-stellen--verursacher	ˈaɪ̯ɐʃaːlənˌzɔlbʁʊxʃtɛlənfɛʁˌʔuːʁzaxɐ
+Kraftfahrzeug-Haftpflichtversicherung	Kraft-fahr-zeug--Haft-pflicht-versicherung	ˈkʁaftfaːʁt͡sɔɪ̯kˌhaftp͡flɪçtfɛʁzɪçəʁʊŋ
+# FIXME: verify the secondary stresses; not in dewikt
+neuntausendneunhundertneunundneunzig	neun-tausend--neun-hundert--neun-und--neunzig	ˈnɔɪ̯ntaʊ̯zəntˌnɔɪ̯nhʊndɐtˌnɔɪ̯nʔʊntˌnɔɪ̯nt͡sɪç
+Arbeitsunfähigkeitsbescheinigung	Arbeit>s-unfähigkeit>s--bescheinigung	ˈaʁbaɪ̯t͡sʔʊnfɛːɪçkaɪ̯t͡sbəˌʃaɪ̯nɪɡʊŋ
+Schwarzarbeitsbekämpfungsgesetz	Schwarz-arbeit>s--bekämpfung>s-gesetz	ˈʃvaʁt͡sʔaʁbaɪ̯t͡sbəˌkɛmp͡fʊŋsɡəˌzɛt͡s
+Aufmerksamkeitsdefizitsyndrom	Aufmerksamkeit>s--defizit-syndróm	ˈaʊ̯fmɛʁkzaːmkaɪ̯t͡sˌdefit͡sɪtzʏndʁoːm
+Bauchspeicheldrüsenentzündung	Bauch-speichel-drüsen--entzündung	ˈbaʊ̯xʃpaɪ̯çəldʁyːzn̩(ʔ)ɛntˌt͡sʏndʊŋ
+Einzugsermächtigungsverfahren	Einzug>s-ermächtigung>s--verfahren	ˈaɪ̯nt͡suːks(ʔ)ɛʁmɛçtɪɡʊŋsfɛʁˌfaːʁən
+Ministerpräsidentenkandidatin	Miníster-präsident>en-kandidátin	miˈnɪstɐpʁɛziˌdɛntənkandiˌdaːtɪn
+# FIXME: enwikt has secondary stress on 'instrumenten' and stresses 'hersteller' as 'herstéller'
+Streichinstrumentenhersteller	Streich-instruménten--hersteller	ˈʃtʁaɪ̯ç(ʔ)ɪnstʁumɛntənˌheːʁʃtɛlɐ
+# FIXME: should this be segmented Geschlecht>s-identität>s--störung?
+Geschlechtsidentitätsstörung	Geschlecht>s-identität>s-störung	ɡəˈʃlɛçt͡sʔidɛntiˌtɛːt͡sˌʃtøːʁʊŋ
+Geschwindigkeitsbeschränkung	Geschwindigkeit>s-beschränkung	ɡəˈʃvɪndɪçkaɪ̯t͡sbəˌʃʁɛŋkʊŋ
+Arbeitsbeschaffungsmaßnahme	Arbeits-beschaffungs--maß-nahme	ˈaʁbaɪ̯t͡sbəʃafʊŋsˌmaːsnaːmə
+Arbeitsbeschaffungsprogramm	Arbeits-beschaffungs--prográmm	ˈaʁbaɪ̯t͡sbəʃafʊŋspʁoˌɡʁam
+Aufenthaltsbestimmungsrecht	Aufenthalts--bestimmungs-recht	ˈaʊ̯f(ʔ)ɛnthalt͡sbəˌʃtɪmʊŋsʁɛçt
+Kreuzschlitzschraubenzieher	Kreuz-schlitz--schrauben-zieher	ˈkʁɔɪ̯t͡sʃlɪt͡sˌʃʁaʊ̯bəndʁeːɐ
+Meerwasserentsalzungsanlage	Meer-wasser--entsalzungs-anlage	ˈmeːʁvasɐʔɛntˌzalt͡sʊŋsʔanlaːɡə
+Nichtregierungsorganisation	Nicht-*regierung>s-organisation	ˌnɪçtʁeˈɡiːʁʊŋs(ʔ)ɔʁɡanizaˌt͡si̯oːn
+# FIXME: The double primary stress matches dewikt; correct?
+Sicherheitsvertrauensperson	*Sicherheit>s--*vertrauens-persón	ˈzɪçɐhaɪ̯t͡sfɛʁˈtʁaʊ̯ənspɛʁˌzoːn
+Sprachverschlüsselungsgerät	Sprahch-verschlüsselungs-gerät	ˈʃpʁaːxfɛʁˌʃlʏsəlʊŋsɡəˌʁɛːt
+Verschlüsselungsalgorithmus	Verschlüsselungs-algoríthmus	fɛʁˈʃlʏsəlʊŋs(ʔ)alɡoˌʁɪtmʊs
+# FIXME: dewikt has no secondary stress on 'organisation'; verify
+Weltgesundheitsorganisation	Welt-gesundheit>s-organisation	ˈvɛltɡəˌzʊnthaɪ̯t͡s(ʔ)ɔʁɡanizaˌt͡si̯oːn
+Hals-Nasen-Ohren-Heilkunde	Hals--Nasen--*Ohren--Heil-kunde	halsˌnaːzənˈʔoːʁənˌhaɪ̯lkʊndə
+Konspirationstheoretikerin	Konspiration>s-theorétikerin	kɔnspiʁaˈt͡si̯oːnsteoˌʁeːtɪkəʁɪn
+Kopfsteinpflastersträßchen	Kopf-stein--pflaster-sträßchen	ˈkɔp͡fʃtaɪ̯nˌp͡flastɐʃtrɛːsçən
+Literaturwissenschaftlerin	Litteratúr-wissenschaftlerin	lɪtəʁaˈtuːʁˌvɪsənʃaftləʁɪn
+Magenschleimhautentzündung	Magen-schleim-haut--entzündung	ˈmaːɡənʃlaɪ̯mhaʊ̯t(ʔ)ɛntˌt͡sʏndʊŋ
+Nachrichtenkorrespondentin	Nahch-richten--korrespondéntin	ˈnaːxʁɪçtənkɔʁɛspɔnˌdɛntɪn	
+Präsidentschaftskandidatin	Präsident>schaft>s-kandidátin	pʁɛziˈdɛntʃaft͡skandiˌdaːtɪn
+Rundfunkberichterstatterin	Rund-funk--bericht-erstatterin	ˈʁʊntfʊŋkbəˌʁɪçt(ʔ)ɛʁʃtatəʁɪn
+Zusammengehörigkeitsgefühl	Zu<sammen-gehörigkeit>s--gefühl	t͡suˈzamənɡəhøːʁɪçkaɪ̯t͡sɡəˌfyːl
+Internationalprozessrecht	Inter<nazional--prozéss-recht	ɪntɐnat͡si̯oˈnaːlpʁoˌt͡sɛsʁɛçt
+Lebensabschnittsgefährtin	Lebens-abschnitts-gefährtin	ˈleːbənsˌʔapʃnɪt͡sɡəˌfɛːʁtɪn
+Mehrspartenhauseinführung	Mehr-sparten--haus-einführung	ˈmeːʁʃpaʁtənˌhaʊ̯sʔaɪ̯nfyːʁʊŋ
+Science-Fiction-Literatur	S*aiens-*Fickschen--Litteratúr	saɪ̯ənsˈfɪkʃənlɪtəʁaˌtuːʁ
+Sozialversicherungsnummer	Sozial--versicherungs-nummer	zoˈt͡si̯aːlfɛɐ̯ˌzɪçəʁʊŋsnʊmɐ
+Textverarbeitungsprogramm	Text-verarbeitungs-prográmm	ˈtɛkstfɛʁˌʔaʁbaɪ̯tʊŋspʁoˌɡʁam
+Vervielfältigungszahlwort	Verviel-fältigungs--zahl-wort	fɛʁˈfiːlfɛltɪɡʊŋsˌt͡saːlvɔʁt
+Waffenstillstandsabkommen	Waffen-still-stands--abkommen	ˈvafənʃtɪlʃtant͡sˌapkɔmən
+Betriebswirtschaftslehre	Betrieb>s-wirtschaft>s--lehre	bəˈtʁiːpsvɪʁtʃaft͡sˌleːʁə
+Einschulungsuntersuchung	Einschulungs-unter<suhchung	ˈaɪ̯nʃuːlʊŋs(ʔ)ʊntɐˌzuːxʊŋ
+Finanztransaktionssteuer	Finanz-trans<aktion>s-steuer	fiˈnant͡stʁans(ʔ)akˌt͡si̯oːnsˌʃtɔɪ̯ɐ
+Fischfrikadellenbrötchen	Fisch-frikadéllen-brötchen	ˈfɪʃfʁikaˌdɛlənˌbʁøːtçən
+Kapitalverkehrskontrolle	Kapital-verkehrs--kontrólle	kapiˈtaːlfɛʁkeːʁskɔnˌtʁɔlə
+Langzeitarbeitslosigkeit	Lang-zeit--arbeitslosigkeit	ˈlaŋt͡saɪ̯tˌʔaʁbaɪ̯t͡sloːzɪçkaɪ̯t
+Lebensmitteleinzelhandel	Lebens-mittel--einzel-handel	ˈleːbənsmɪtəlˌaint͡səlhandəl
+Mindesthaltbarkeitsdatum	Mindest-haltbarkeit>s-datum	ˈmɪndəstˌhaltbaːʁkaɪ̯t͡sˌdaːtʊm
+Abgassonderuntersuchung	Abgas--sonder-unter<suchung	ˈapɡaːsˌzɔndɐʊntɐzuːxʊŋ
+Nachrichtenübermittlung	Nahch-richten--über<mittlung	ˈnaːxʁɪçtənʔyːbɐˌmɪtlʊŋ
+Determinativkompositum	Determinatív-kompósitum	detɛʁminaˈtiːfkɔmˌpoːzitʊm
+Hochtemperaturreaktor	Hohch-temperatúr-reáktohr	ˈhoːxtɛmpəʁaˌtuːʁʁeˌaktoːʁ
+Hochtemperaturreaktor	Hohch-temperatúr-reʔáktohr	ˈhoːxtɛmpəʁaˌtuːʁʁeˌʔaktoːʁ
 
 # Prefix handling
 Geier	Geier	ˈɡaɪ̯ɐ
@@ -529,7 +560,7 @@ abzählbar	abzählbar	ˈapˌt͡sɛːlbaːʁ
 Ablativ	A.blatìv	ˈablaˌtiːf
 Ablativ	Ab+latìv	ˈaplaˌtiːf
 Absence	Ab+s*áNs	apˈsãːs
-aneinandergeraten	aneinandergeraten	an(ʔ)aɪ̯ˈnandɐɡəˌʁaːtn̩
+aneinandergeraten	aneinandergeraten	an(ʔ)aɪ̯ˈnandɐɡəˌʁaːtən
 anstellen	anstellen	ˈanˌʃtɛlən
 anzufangen	anzufangen	ˈant͡suˌfaŋən
 angefangen	angefangen	ˈanɡəˌfaŋən
@@ -549,7 +580,7 @@ durchschlagen	durchschlagen	ˈdʊʁçˌʃlaːɡən
 durchschlagen	durch<schlagen	dʊʁçˈʃlaːɡən
 durchbekommenes	durchbekommenes	ˈdʊʁçbəˌkɔmənəs
 Durchmesser	Durchmesser	ˈdʊʁçˌmɛsɐ
-Durchschnittsmensch	Durchschnitt-s-mensch	ˈdʊʁçʃnɪt͡sˌmɛnʃ
+Durchschnittsmensch	Durchschnitt>s-mensch	ˈdʊʁçʃnɪt͡sˌmɛnʃ
 einstellen	einstellen	ˈaɪ̯nˌʃtɛlən
 einzubestellendem	einzubestellendem	ˈaɪ̯nt͡subəˌʃtɛləndəm
 Einstein	Einstein	ˈaɪ̯nˌʃtaɪ̯n
@@ -585,6 +616,7 @@ herniederregnen	herniederregnen	hɛʁˈniːdɐˌʁeːɡnən
 herniederzubrechen	herniederzubrechen	hɛʁˈniːdɐt͡suˌbʁɛçən
 herübergefahren	herübergefahren	hɛˈʁyːbɐɡəˌfaːʁən
 herüberzuwechseln	herüberzuwechseln	hɛˈʁyːbɐt͡suˌvɛksəln
+# FIXME, will the secondary stress work?
 herumscharwenzeln	herumscharwènzeln	hɛˈʁʊmʃaʁˌvɛnt͡səln
 herumspinnen	herumspinnen	hɛˈʁʊmˌʃpɪnən
 herumexperimentieren	herumexpêrimentieren	hɛˈʁʊm(ʔ)ɛkspeʁimɛnˌtiːʁən
@@ -601,7 +633,9 @@ hinangearbeitetes	hinangearbeitetes	hɪˈnanɡəˌʔaʁbaɪ̯tətəs
 hinaufsteigen	hinaufsteigen	hɪˈnaʊ̯fˌʃtaɪ̯ɡən
 hinaufgestiegener	hinaufgestiegener	hɪˈnaʊ̯fɡəˌʃtiːɡənɐ
 hinauskatapultieren	hinauskatapultieren	hɪˈnaʊ̯skatapʊlˌtiːʁən
+# FIXME, will the secondary stress work?
 hinausposaunen	hinausposàunen	hɪˈnaʊ̯spoˌzaʊ̯nən
+# FIXME, will the secondary stress work?
 hinauszuposaunen	hinauszuposàunen	hɪˈnaʊ̯st͡supoˌzaʊ̯nən
 hindurchbewegen	hindurchbewegen	hɪnˈdʊʁçbəˌvəɡən
 hineinstecken	hineinstecken	hɪˈnaɪ̯nˌʃtɛkən
@@ -633,16 +667,26 @@ niederzuzerren	niederzuzerren	ˈniːdɐt͡suˌt͡sɛʁən
 # über- should be recognized, translated to ǘber- and then to ü̏ber- (i.e. with double grave), so that
 # length is preserved.
 überfahren	über<fahren	yːbɐˈfaːʁən
-überbeanspruchen	überbeanspruchen	ˈyːbɐbəˌʔanʃpʁʊxn̩
-überzubeanspruchen	überzubeanspruchen	ˈyːbɐt͡subəˌʔanʃpʁʊxn̩
+überbeanspruchen	überbeanspruchen	ˈyːbɐbəˌʔanʃpʁʊxən
+überzubeanspruchen	überzubeanspruchen	ˈyːbɐt͡subəˌʔanʃpʁʊxən
 umfahren	umfahren	ˈʊmˌfaːʁən	to "drive over", "to knock down by driving"
 umfahren	um<fahren	ʊmˈfaːʁən	to "drive around", "to bypass"
+Urlaub	Urlaub	ˈuːʁˌlaʊ̯p
+Ursache	Ursache	ˈuːʁˌzaxə
+Urszene	Urszene	ˈuːʁˌst͡senə
+uramerikanisch	uramêrikànisch	ˈuːʁ(ʔ)ameʁiˌkaːnɪʃ
+uraufgeführt	uraufgeführt	ˈuːʁʔaʊ̯fɡəˌfyːʁt
+Urvertrauen	Urvertrauen	ˈuːʁfɛʁˌtʁaʊ̯ən
+Urethan	Urethán	uʁeˈtaːn	ur- should not be segmented due to following primary stress
+urbanisieren	urbanisieren	ʊʁbaniˈziːʁən	ur- should not be segmented due to following primary stress
+Uranus	Ur+anus	ˈuːʁanʊs
+uruguayisch	ur+ugwayisch	ˈuːʁuɡvaɪ̯ɪʃ
 # double/triple prefixes
 beabsichtigen	beabsichtigen	bəˈʔapzɪçtɪɡən
 veranlagen	veranlagen	fɛʁˈʔanlaːɡən
 verunglücken	verunglücken	fɛʁˈʔʊnɡlʏkən
-Verunreinigung	Verunreinigung	fɛɐ̯ˈʔʊnˌʁaɪ̯nɪɡʊŋ
-verunstalten	verunstalten	fɛɐ̯ˈʔʊnˌʃtaltən
+Verunreinigung	Verunreinigung	fɛʁˈʔʊnˌʁaɪ̯nɪɡʊŋ
+verunstalten	verunstalten	fɛʁˈʔʊnˌʃtaltən
 beunruhigen	beunruhigen	bəˈʔʊnˌʁuːɪɡən
 beurlauben	beur-lauben	bəˈʔuːʁˌlaʊ̯bən
 unausgegoren	unausgegoren	ˈʊnʔaʊ̯sɡəˌɡoːʁən
@@ -657,7 +701,7 @@ unfreundlicherweise	unfreundlicherweise	ˈʔʊnfʁɔɪ̯ntlɪçɐˌvaɪ̯zə
 seltsamerweise	seltsamerweise	ˈzɛltzaːmɐˌvaɪ̯zə
 ungerechterweise	ungerechterweise	ˈʊnɡəʁɛçtɐˌvaɪ̯zə
 ungewöhnlicherweise	ungewöhnlicherweise	ˈʊnɡəvøːnlɪçɐˌvaɪ̯zə
-unzulässigerweise	unzulässigerweise	ˈʊntsulɛsɪɡɐˌvaɪ̯zə
+unzulässigerweise	unzulässigerweise	ˈʊnt͡sulɛsɪɡɐˌvaɪ̯zə
 verbotenerweise	verbotenerweise	fɛʁˈboːtənɐˌvaɪ̯zə
 
 # -fest
@@ -673,24 +717,24 @@ einwandfrei	einwandfrei	ˈaɪ̯nvantˌfʁaɪ̯
 schneefrei	schneefrei	ˈʃneːˌfʁaɪ̯
 straffrei	straffrei	ˈʃtʁaːfˌfʁaɪ̯
 unfallfrei	unfallfrei	ˈʊnfalˌfʁaɪ̯
-vibrationsfrei	vibration>s>frei	vibʁaˈtsi̯oːnsˌfʁaɪ̯
-niederschlagsfrei	niederschlag>s>frei	ˈniːdɐʃlaːksˌfʁaɪ̯
-holzschlifffrei	holz-schliff>frei	ˈhɔlt͡sʃlɪfˌfʁaɪ̯
-versandkostenfrei	versand-kosten>frei	fɛʁˈzantkɔstənˌfʁaɪ̯
+vibrationsfrei	vibration>s>>frei	vibʁaˈt͡si̯oːnsˌfʁaɪ̯
+niederschlagsfrei	niederschlag>s>>frei	ˈniːdɐʃlaːksˌfʁaɪ̯
+holzschlifffrei	holz-schlifffrei	ˈhɔlt͡sʃlɪfˌfʁaɪ̯
+versandkostenfrei	versand-kostenfrei	fɛʁˈzantkɔstənˌfʁaɪ̯
 
 # -losigkeit
 Reglosigkeit	Reglosigkeit	ˈʁeːkˌloːzɪçkaɪ̯t
-Arbeitslosigkeit	Arbeitslosigkeit	ˈaʁbaɪ̯tsˌloːzɪçkaɪ̯t
+Arbeitslosigkeit	Arbeitslosigkeit	ˈaʁbaɪ̯t͡sˌloːzɪçkaɪ̯t
 Ausnahmslosigkeit	Ausnahmslosigkeit	ˈaʊ̯snaːmsˌloːzɪçkaɪ̯t
 Bedeutungslosigkeit	Bedeutungslosigkeit	bəˈdɔɪ̯tʊŋsˌloːzɪçkaɪ̯t
 Charakterlosigkeit	Karákterlosigkeit	kaˈʁaktɐˌloːzɪçkaɪ̯t
 Gefühllosigkeit	Gefühllosigkeit	ɡəˈfyːlˌloːzɪçkaɪ̯t
-Jugendarbeitslosigkeit	Jugend--arbeits-losigkeit	ˈjuːɡəntˌʔaʁbaɪ̯t͡sloːzɪçkaɪ̯t
-Obdachlosigkeit	Ob-dach>losigkeit	ˈɔpdaxˌloːzɪçkaɪ̯t
+Jugendarbeitslosigkeit	Jugend--arbeitslosigkeit	ˈjuːɡəntˌʔaʁbaɪ̯t͡sloːzɪçkaɪ̯t
+Obdachlosigkeit	Ob-dachlosigkeit	ˈɔpdaxˌloːzɪçkaɪ̯t
 Ruchlosigkeit	Ruhchlosigkeit	ˈʁuːxˌloːzɪçkaɪ̯t
 Ruchlosigkeit	Ruchlosigkeit	ˈʁʊxˌloːzɪçkaɪ̯t
 Schlaflosigkeit	Schlaflosigkeit	ˈʃlaːfˌloːzɪçkaɪ̯t
-Teilnahmslosigkeit	Teil-nahms>losigkeit	ˈtaɪ̯lnaːmsˌloːzɪçkaɪ̯t
+Teilnahmslosigkeit	Teil-nahmslosigkeit	ˈtaɪ̯lnaːmsˌloːzɪçkaɪ̯t
 Pietätlosigkeit	Piːetä́tlosigkeit	piːeˈtɛːtˌlozɪçkaɪ̯t
 Willenlosigkeit	Willenlosigkeit	ˈvɪlənˌloːzɪçkaɪ̯t
 
@@ -704,7 +748,7 @@ reglos	reglos	ˈʁeːkˌloːs
 stillos	stillos	ˈʃtiːlˌloːs
 stillos	s*tillos	ˈstiːlˌloːs
 atemlos	atemlos	ˈaːtəmˌloːs
-konkurrenzlos	konkurrenzlos	kɔŋkʊˈʁɛntsˌloːs
+konkurrenzlos	konkurrenzlos	kɔŋkʊˈʁɛnt͡sˌloːs
 papierlos	papíerlos	paˈpiːʁˌloːs
 systemlos	systémlos	zʏsˈteːmˌloːs
 kontrolllos	kontrólllos	kɔnˈtʁɔlˌloːs
@@ -713,13 +757,13 @@ besitzlos	besitzlos	bəˈzɪt͡sˌloːs
 ersatzlos	ersatzlos	ɛʁˈzat͡sˌloːs
 gefühllos	gefühllos	ɡəˈfyːlˌloːs
 gesichtslos	gesichtslos	ɡəˈzɪçt͡sˌloːs
-anstandslos	anstandslos	ˈanʃtantsˌloːs
+anstandslos	anstandslos	ˈanʃtant͡sˌloːs
 ausdruckslos	ausdruckslos	ˈaʊ̯sdʁʊksˌloːs
 ausweglos	ausweglos	ˈaʊ̯sveːkˌloːs
 einflusslos	einflusslos	ˈaɪ̯nflʊsˌloːs
 alternativlos	alternatívlos	altɛʁnaˈtiːfˌloːs
-bargeldlos	bar-geld>los	ˈbaːʁɡɛltˌloːs
-inhaltslos	in-halts>los	ˈɪnhalt͡sˌloːs
+bargeldlos	bar-geldlos	ˈbaːʁɡɛltˌloːs
+inhaltslos	in-haltslos	ˈɪnhalt͡sˌloːs
 
 # -reich
 geistreich	geistreich	ˈɡaɪ̯stˌʁaɪ̯ç
@@ -730,8 +774,8 @@ verlustreich	verlustreich	fɛʁˈlʊstˌʁaɪ̯ç
 anregungsreich	anregungsreich	ˈanʁeːɡʊŋsˌʁaɪ̯ç
 einfallsreich	einfallsreich	ˈaɪ̯nfalsˌʁaɪ̯ç
 einwohnerreich	einwohnerreich	ˈaɪ̯nvoːnɐˌʁaɪ̯ç
-kohlenhydratreich	kohlen-hydrȁt>reich	ˈkoːlənhydʁaːtˌʁaɪ̯ç
-niederschlagsreich	niederschlag>s>reich	ˈniːdɐʃlaːksˌʁaɪ̯ç
+kohlenhydratreich	kohlen-hydrátreich	ˈkoːlənhydʁaːtˌʁaɪ̯ç
+niederschlagsreich	niederschlag>s>>reich	ˈniːdɐʃlaːksˌʁaɪ̯ç
 
 # -voll
 kraftvoll	kraftvoll	ˈkʁaftˌfɔl
@@ -745,7 +789,7 @@ geheimnisvoll	geheimnisvoll	ɡəˈhaɪ̯mnɪsˌfɔl
 wundervoll	wundervoll	ˈvʊndɐˌfɔl
 eindrucksvoll	eindrucksvoll	ˈaɪ̯ndʁʊksˌfɔl
 verantwortungsvoll	verantwortungsvoll	fɛʁˈʔantvɔʁtʊŋsˌfɔl
-rücksichtsvoll	rück-sichts>voll	ˈʁʏkzɪçt͡sˌfɔl
+rücksichtsvoll	rück-sichtsvoll	ˈʁʏkzɪçt͡sˌfɔl
 unheilvoll	unheilvoll	ˈʊnhaɪ̯lˌfɔl
 unschuldsvoll	unschuldsvoll	ˈʊnʃʊlt͡sˌfɔl
 
@@ -756,14 +800,14 @@ leihweise	leihweise	ˈlaɪ̯ˌvaɪ̯zə
 zwangsweise	zwangsweise	ˈt͡svaŋsˌvaɪ̯zə
 haufenweise	haufenweise	ˈhaʊ̯fənˌvaɪ̯zə
 probeweise	probeweise	ˈpʁoːbəˌvaɪ̯zə
-quartalsweise	quartál>s>weise	kvaʁˈtaːlsˌvaɪ̯zə
-versuchsweise	versuch>s>weise	fɛʁˈzuːxsˌvaɪ̯zə
+quartalsweise	quartál>s>>weise	kvaʁˈtaːlsˌvaɪ̯zə
+versuchsweise	versuch>s>>weise	fɛʁˈzuːxsˌvaɪ̯zə
 abschnittweise	abschnittweise	ˈapʃnɪtˌvaɪ̯zə
 ansatzweise	ansatzweise	ˈanzat͡sˌvaɪ̯zə
 ausnahmsweise	ausnahmsweise	ˈaʊ̯snaːmsˌvaɪ̯zə
 beispielsweise	beispielsweise	ˈbaɪ̯ʃpiːlsˌvaɪ̯zə
-allerleiweise	aller>lei>weise	ˈalɐlaɪ̯ˌvaɪ̯zə
-esslöffelweise	ess-löffel>weise	ˈɛslœfl̩ˌvaɪ̯zə
+allerleiweise	aller>lei>>weise	ˈalɐlaɪ̯ˌvaɪ̯zə
+esslöffelweise	ess-löffelweise	ˈɛslœfl̩ˌvaɪ̯zə
 scheibchenweise	scheibchenweise	ˈʃaɪ̯bçənˌvaɪ̯zə	FIXME: make sure this works!
 
 # -ant
@@ -818,6 +862,29 @@ horchen	horchen	ˈhɔʁçən	-chen only recognized with an initial capital
 wachen	wachen	ˈvaxən	ditto
 # -chen is not a suffix here; without the +, -a- would be long
 Schnarchen	Schnar+chen	ˈʃnaʁçən
+# -chen is not recognized as a suffix after a vowel, and is only recognized in nouns (beginning with a capital letter)
+Freimachen	Frei-machen	ˈfʁaɪ̯ˌmaxən
+Kaputtmachen	Kapútt-machen	kaˈpʊtˌmaxən
+Verachtfachen	Veracht-fachen	fɛʁˈʔaxtˌfaxən
+Verfünfzehnfachen	Verfünf-zehn--fachen	fɛʁˈfʏnft͡seːnˌfaxən
+Gewaltverbrechen	Gewalt-verbrechen	ɡəˈvaltfɛʁˌbʁɛçən
+Absatzzeichen	Absatz-zeichen	ˈapzat͡sˌt͡saɪ̯çən
+Anführungszeichen	Anführungs-zeichen	ˈanfyːʁʊŋsˌt͡saɪ̯çən
+Autokennzeichen	Auto--kenn-zeichen	ˈaʊ̯toˌkɛnt͡saɪ̯çən
+Hauptbetonungszeichen	Haupt-betonung>s--zeichen	ˈhaʊ̯ptbətoːnʊŋsˌt͡saɪ̯çən
+Gleichheitszeichen	Gleichheit>s-zeichen	ˈɡlaɪ̯çhaɪ̯t͡sˌt͡saɪ̯çən
+Minuszeichen	Minus-zeichen	ˈmiːnʊsˌt͡saɪ̯çən
+Unterstreichen	Unterstreichen	ʔʊntɐˈʃtʁaɪ̯çən
+Ermöglichen	Ermöglichen	ɛʁˈmøːklɪçən
+Backenknochen	Backen-knochen	ˈbakənˌknɔxən
+Oberschenkelknochen	Ober-schenkel--knochen	ˈoːbɐʃɛŋkəlˌknɔxən
+Apfelkuchen	Apfel-kuchen	ˈapfəlˌkuːxən
+Passivrauchen	Passihv-rauchen	ˈpasiːfˌʁaʊ̯xən
+Untertauchen	Untertauchen	ˈʊn.tɐˌtaʊ̯xən
+Verscheuchen	Verscheuchen	fɛʁˈʃɔɪ̯çən
+Bärchen	Bärchen	ˈbɛːʁçən
+Hintertürchen	Hintertürchen	ˈhɪntɐˌtyːʁçən
+Dingenskirchen	Dingens-kirchen	ˈdɪŋənsˌkɪʁçən
 
 # -erei
 Bücherei	Bücherei	byçəˈʁaɪ̯	dewikt says long /yː/ but audio doesn't agree
@@ -865,7 +932,7 @@ Apoplexie	Apoplexie	apoplɛˈksiː
 Biologie	Bìologie	ˌbioloˈɡiː
 Fotografie	Fotografie	fotoɡʁaˈfiː
 Fantasie	Fantasie	fantaˈziː
-Informationstechnologie	Information-s-technologie	ɪnfɔʁmaˈt͡si̯oːnstɛçnoloˌɡiː
+Informationstechnologie	Information>s-technologie	ɪnfɔʁmaˈt͡si̯oːnstɛçnoloˌɡiː
 Familie	Famíli̯e	faˈmiːli̯ə
 
 # -ieren
@@ -910,7 +977,7 @@ Judaist	Judaʔist	judaˈʔɪst
 
 # -istisch
 euphemistisch	euphemistisch	ɔɪ̯feˈmɪstɪʃ
-rechtsextremistisch	recht-s-extremistisch	ˈʁɛçt͡s(ʔ)ɛkstʁeˌmɪstɪʃ
+rechtsextremistisch	recht>s-extremistisch	ˈʁɛçt͡s(ʔ)ɛkstʁeˌmɪstɪʃ
 postkommunistisch	post-kommunistisch	ˈpɔstkɔmuˌnɪstɪʃ
 unrealistisch	unrealistisch	ˈʊnʁeaˌlɪstɪʃ
 avantgardistisch	avãgardistisch	avãɡaʁˈdɪstɪʃ
@@ -925,7 +992,7 @@ Korrumpierbarkeit	Korrumpierbarkeit	kɔʁʊmˈpiːʁbaːʁˌkaɪ̯t
 Verfügbarkeit	Verfügbarkeit	fɛʁˈfyːkbaːʁˌkaɪ̯t
 # Here, dewikt and enwikt agree with our rules.
 Dienstbarkeit	Dienstbarkeit	ˈdiːnstbaːʁˌkaɪ̯t
-# FIXME! dewikt has ˈapbaʊ̯baːɐ̯ˌkaɪ̯t. Our rules generate ˈapˌbaʊ̯baːɐ̯kaɪ̯t. Need to verify with native speaker.
+# FIXME! dewikt has ˈapbaʊ̯baːʁˌkaɪ̯t. Our rules generate ˈapˌbaʊ̯baːʁkaɪ̯t. Need to verify with native speaker.
 Abbaubarkeit	Abbaubarkeit	ˈapˌbaʊ̯baːʁkaɪ̯t
 # Here, dewikt agrees with our rules.
 Durchführbarkeit	Durchführbarkeit	ˈdʊʁçˌfyːʁbaːʁkaɪ̯t
@@ -1019,6 +1086,76 @@ Ungerechtigkeit	Ungerechtigkeit	ˈʊnɡəˌʁɛçtɪçkaɪ̯t
 # FIXME: Are we sure this is correct? Logically, it should be ˈʊnˌʁeːɡəlmɛːsɪçkaɪ̯t
 Unregelmäßigkeit	Unregel-mäßigkeit	ˈʊnʁeːɡəlˌmɛːsɪçkaɪ̯t
 
+# -lein
+Apfelbäumlein	Apfel-bäumlein	ˈap͡fəlˌbɔɪ̯mlaɪ̯n
+Äuglein	Äuglein	ˈɔɪ̯klaɪ̯n
+Blumenlädlein	Blumen-lädlein	ˈbluːmənˌlɛːtlaɪ̯n
+Büchlein	Bühchlein	ˈbyːçlaɪ̯n
+Ecklädlein	Eck-lädlein	ˈɛkˌlɛːtlaɪ̯n
+Fräulein	Fräulein	ˈfʁɔɪ̯laɪ̯n
+Hofkirchlein	Hof-kirchlein	ˈhoːfˌkɪʁçlaɪ̯n
+Kindelein	Kindelein	ˈkɪndəˌlaɪ̯n
+Kindlein	Kindlein	ˈkɪntlaɪ̯n
+Kügellein	Kügellein	ˈkyːɡəlˌlaɪ̯n
+Müllerlein	Müllerlein	ˈmʏlɐˌlaɪ̯n
+Osterkerzlein	Ohster-kerzlein	ˈoːstɐˌkɛʁt͡slaɪ̯n
+Privatsträßlein	Privát-sträßlein	priˈvaːtˌʃtʁɛːslaɪ̯n
+Wachsfigürlein	Wachs-figǜrlein	ˈvaksfiˌɡyːʁlaɪ̯n
+Walnussbäumlein	Walnuss-bäumlein	ˈvalnʊsˌbɔɪ̯mlaɪ̯n
+Walnussbäumlein	Wal-nuss--bäumlein	ˈvaːlnʊsˌbɔɪ̯mlaɪ̯n
+Weihnachtskerzlein	Weih-nachts--kerzlein	ˈvaɪ̯naxt͡sˌkɛʁt͡slaɪ̯n
+
+# -barlich
+sichtbarlich	sichtbarlich	ˈzɪçtbaːʁlɪç
+wunderbarlich	wunderbarlich	ˈvʊndɐˌbaːʁlɪç
+
+# -schaftlich
+freundschaftlich	freundschaftlich	ˈfʁɔɪ̯ntʃaftlɪç
+betriebswirtschaftlich	betriebs-wirtschaftlich	bəˈtʁiːpsˌvɪʁtʃaftlɪç
+geisteswissenschaftlich	geistes-wissenschaftlich	ˈɡaɪ̯stəsˌvɪsənʃaftlɪç
+gemeinschaftlich	gemeinschaftlich	ɡəˈmaɪ̯nʃaftlɪç
+# FIXME: Is secondary stress correct?
+genossenschaftlich	genossenschaftlich	ɡəˈnɔsənˌʃaftlɪç
+ingenieurwissenschaftlich	inʒeniö́r-wissenschaftlich	ɪnʒeˈni̯øːʁˌvɪsənʃaftlɪç
+kameradschaftlich	kamerádschaftlich	kaməˈʁaːtʃaftlɪç
+# FIXME: Is secondary stress correct?
+landwirtschaftlich	land-wirtschaftlich	ˈlantˌvɪʁtʃaftlɪç
+# FIXME: Is secondary stress correct?
+partnerschaftlich	partnerschaftlich	ˈpaʁtnɐˌʃaftlɪç
+pseudowissenschaftlich	pseudo-wissenschaftlich	ˈpsɔɪ̯doˌvɪsənʃaftlɪç
+# FIXME: Is the secondary stress in the right position? I might expect /ˈʊnˌvɪʁtʃaftlɪç/.
+unwirtschaftlich	unwirtschaftlich	ˈʊnvɪʁtˌʃaftlɪç
+verwandtschaftlich	verwandtschaftlich	fɛʁˈvantʃaftlɪç
+wirtschaftswissenschaftlich	wirtschaft>s-wissenschaftlich	ˈvɪʁtʃaft͡sˌvɪsənʃaftlɪç
+# FIXME: Is secondary stress correct?
+wissenschaftlich	wissenschaftlich	ˈvɪsənˌʃaftlɪç
+
+# -lich
+bläulich	bläulich	ˈblɔɪ̯lɪç
+fraglich	fraglich	ˈfʁaːklɪç
+bitterlich	bitterlich	ˈbɪtɐlɪç
+brüderlich	brüderlich	ˈbʁyːdɐlɪç
+abkömmlich	abkömmlich	ˈapˌkœmlɪç
+beweglich	beweglich	bəˈveːklɪç
+blutähnlich	blut-ähnlich	ˈbluːtˌʔɛːnlɪç
+bildungssprachlich	bildungs-sprahchlich	ˈbɪldʊŋsˌʃpʁaːxlɪç
+brandgefährlich	brand-gefährlich	ˈbʁantɡəˌfɛːʁlɪç
+buchstäblich	buhch-stäblich	ˈbuːxˌʃtɛːplɪç
+gegenständlich	gegen-ständlich	ˈɡeːɡənˌʃtɛntlɪç
+despektierlich	despektíerlich	despɛkˈtiːʁlɪç
+eigenverantwortlich	eigen-verantwortlich	ˈaɪ̯ɡənfɛʁˌʔantvɔʁtlɪç
+eigentümlich	eigen-tümlich	ˈaɪɡənˌtyːmlɪç
+einvernehmlich	einvernehmlich	ˈaɪ̯nfɛʁˌneːmlɪç
+erträglich	erträglich	ɛʁˈtʁɛːklɪç
+ewiglich	ewiglich	ˈeːvɪklɪç
+ewiglich	ewi.glich	ˈeːvɪɡlɪç
+figürlich	figürlich	fiˈɡyːʁlɪç
+freiheitlich	frei>heit>lich	ˈfʁaɪ̯haɪ̯tlɪç
+gemeingefährlich	gemein-gefährlich	ɡəˈmaɪ̯nɡəˌfɛːʁlɪç
+hauptamtlich	haupt-amtlich	ˈhaʊ̯ptˌʔamtlɪç
+jungsteinzeitlich	jung-stein--zeitlich	ˈjʊŋʃtaɪ̯nˌt͡saɪ̯tlɪç
+maschinenschriftlich	maschínen-schriftlich	maˈʃiːnənˌʃʁɪftlɪç
+
 
 # -tion
 Konvention	Konvention	kɔnvɛnˈt͡si̯oːn
@@ -1031,7 +1168,7 @@ Fakultät	Fakultät	fakʊlˈtɛːt
 
 
 verträglich	verträglich	fɛʁˌtʁɛːklɪç
-Wirtschaftswissenschaft	Wirtschaft-s-wissenschaft	ˈvɪʁtʃaft͡sˌvɪsənʃaft
+Wirtschaftswissenschaft	Wirtschaft>s-wissenschaft	ˈvɪʁtʃaft͡sˌvɪsənʃaft
 
 
 # secondary pronunciation ˈaːlˌʔaːʁtɪk will also be shown, with the following: "common form in southern Germany, Austria, and Switzerland"
@@ -1064,7 +1201,7 @@ separat	separát	zepaˈʁaːt	standard per dewikt
 separat	sèparát	ˌzeːpaˈʁaːt	standard per enwikt
 separat	sèpperát	ˌzɛpəˈʁaːt	variant in common speech
 situiert	situ.iert	zituˈiːʁt
-Stabsarzt	Stab-s-ahrzt	ˈʃtaːpsˌʔaːʁt͡st
+Stabsarzt	Stab>s-ahrzt	ˈʃtaːpsˌʔaːʁt͡st
 soigniert	so̯anjiert	zo̯anˈjiːʁt
 todernst	tod-ernst	ˈtoːtˌʔɛʁnst
 traditionsbewusst	traditions-bewusst	tʁadiˈt͡si̯oːnsbəˌvʊst
@@ -1082,8 +1219,6 @@ unglaublich	unglaublich	ˈʊnɡlaʊ̯plɪç
 unglaublich	ungláublich	ʊnˈɡlaʊ̯plɪç
 # need to double the t otherwise the stressed -a- would be long
 ungrammatisch	ungrammàttisch	ˈʊnɡʁaˌmatɪʃ
-# I think this is doable without respelling; -y- between vowels is treated like -i-
-uruguayisch	urugwayisch	ˈuːʁuɡvaɪ̯ɪʃ
 versiert	ver+siert	vɛʁˈziːʁt
 vertiert	vertiert	fɛʁˈtiːʁt
 # ver- is a recognized prefix, -bar is a recognized suffix

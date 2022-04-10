@@ -515,8 +515,20 @@ local prefixes = {
 	-- umeinander- only dialectal (West Bavarian)
 	{"um", "úmm"},
 	{"unter", "únter"},
-	-- Must follow unter-.
+	-- Must follow unter-. Has its own prefixtype; cf. [[unvorhergesehen]] /ˈʊnfoːʁheːʁɡəˌzeːən/.
 	{"un", "únn", prefixtype = "un"},
+	-- To reduce false positives, don't recognize when main part or suffix has primary stress, e.g. [[Urämie]]
+	-- /uʁɛˈmiː/, [[Uran]] /uˈʁaːn/, [[uranhaltig]] /uˈʁaːnˌhaltɪç/, [[urban]] /ʊʁˈbaːn/, [[urbanisieren]]
+	-- /ʊʁbaniˈziːʁən/, [[urbanophil]] /ʊʁbanoˈfiːl/, [[Urethan]] /uʁeˈtaːn/, [[urgieren]] /ʊʁˈɡiːʁən/, [[Urin]]
+	-- /uˈʁiːn/, [[urinal]] /uʁiˈnaːl/, [[urinieren]] /uʁiˈniːʁən/, [[uroborisch]] /uˈʁoːboʁɪʃ/, [[Urologe]]
+	-- /ˌuʁoˈloːɡə/, [[Urologin]] /ˌuʁoˈloːɡɪn/, [[urologisch]] /ˌuːʁoˈloːɡɪʃ/. We don't restrict to not preceding
+	-- vowels because of words like [[uramerikanisch]], [[Uraufführung]], [[Ureinwohner]], [[Uropa]]. We still
+	-- have a few false positives needing '+', e.g. [[Uranus]] /ˈuːʁanʊs/, [[uruguayisch]] /ˈuːʁuɡvaɪ̯ɪʃ/.
+	--
+	-- Stress pattern is like un-; [[Urabstimmung]] /ˈuːʁʔapˌʃtɪmʊŋ/, [[Uraufführung]] /ˈuːʁʔaʊ̯fˌfyːʁʊŋ/,
+	-- [[uraufgeführt]] /ˈuːʁʔaʊ̯fɡəˌfyːʁt/, [[Ureinwohner]] /ˈuːʁʔaɪ̯nˌvoːnɐ/; note [[Urzustand]] given in dewikt as
+	-- /ˈuːʁˌt͡suːʃtant/ but audio sounds more like /ˈuːʁt͡suːˌʃtant/.
+	{"ur", "úr", prefixtype = "un", not_with_following_primary_stress = true},
 	{"ver", "ferr"},
 	-- vorab-: only [[vorabeintscheiden]]
 	{"voran", "foránn"},
@@ -1004,7 +1016,8 @@ local function split_word_on_components_and_apply_affixes(word, pos, affix_type,
 	local from_left = 1
 	while from_left < #parts and parts[from_left + 1] == "<" do
 		local prefix = parts[from_left]
-		if rsub(prefix, stress_c, "") == "un" then
+		local unstressed_prefix = rsub(prefix, stress_c, "")
+		if unstressed_prefix == "un" or unstressed_prefix == "ur" then
 			previous_prefixtype = "un"
 		elseif rfind(prefix, stress_c) then
 			previous_prefixtype = "stressed"
@@ -1054,6 +1067,63 @@ local function split_word_on_components_and_apply_affixes(word, pos, affix_type,
 	local mainpart = parts[from_left]
 	local saw_primary_mainpart_stress = has_user_specified_primary_stress(mainpart)
 
+	-- Split off any remaining suffixes. Do this before splitting prefixes as for some prefixes (e.g. ur-) we need to
+	-- know if there is a stressed suffix.
+	while true do
+		-- If there was a user-specified suffix with explicit stress, don't try to look for more suffixes.
+		if saw_primary_suffix_stress then
+			break
+		end
+		local broke_suffix = false
+		for _, suffixspec in ipairs(suffixes) do
+			local suffix_pattern = suffixspec[1]
+			local pos_stress = lookup_stress_spec(stress_spec, pos)
+			local rest = rmatch(mainpart, "^(.-)" .. suffix_pattern .. "$")
+			if rest then
+				if not pos_stress then
+					-- suffix not recognized for this POS, don't split here
+				elseif not meets_restriction(rest, suffixspec.restriction) then
+					-- restriction not met, don't split here
+				elseif rfind(rest, "%+$") then
+					-- explicit non-boundary here, so don't split here
+				elseif not rfind(rest, V) then
+					-- no vowels, don't split here
+				else
+					local suffix_respell = decompose(suffixspec[2])
+					if saw_primary_mainpart_stress and rfind(suffix_respell, ACUTE) then
+						-- primary-stressed suffix like -iert but main part already has primary stress; don't split here
+					else
+						-- Use non_V so that we pick up things like explicit syllable divisions, which we
+						-- check for below.
+						local before_cluster, final_cluster = rmatch(rest, "^(.-)(" .. non_V .. "*)$")
+						if rfind(final_cluster, "%..") then
+							-- syllable division within or before final cluster, don't split here
+						else
+							-- break the word in two; next iteration we process the rest, which may need breaking
+							-- again
+							mainpart = rest
+
+							-- We may remove the suffix grave entirely later on. For now, convert it to a special
+							-- symbol so we can handle it properly later (in handle_suffix_secondary_stress), after
+							-- splitting on syllables.
+							suffix_respell = gsub(suffix_respell, GRAVE, ORIG_SUFFIX_GRAVE)
+							if rfind(suffix_respell, ACUTE) then
+								saw_primary_suffix_stress = true
+								-- If there is primary prefix stress, we later convert this to AUTOGRAVE.
+								suffix_respell = gsub(suffix_respell, ACUTE, AUTOACUTE)
+							end
+							table.insert(retparts, insert_position, suffix_respell)
+							broke_suffix = true
+							break
+						end
+					end
+				end
+			end
+		end
+		-- FIXME: Once we implement support for inflectional suffixes, we won't necessarily break here.
+		break
+	end
+
 	-- Split off any remaining prefixes.
 	while true do
 		local broke_prefix = false
@@ -1067,6 +1137,9 @@ local function split_word_on_components_and_apply_affixes(word, pos, affix_type,
 					"unstressed"
 				if not pos_stress then
 					-- prefix not recognized for this POS, don't split here
+				elseif prefixspec.not_with_following_primary_stress and (
+					saw_primary_mainpart_stress or saw_primary_suffix_stress) then
+					-- prefix not allowed when mainpart or suffix stress, don't split here
 				elseif not meets_restriction(rest, prefixspec.restriction) then
 					-- restriction not met, don't split here
 				elseif rfind(rest, "^%+") then
@@ -1135,62 +1208,6 @@ local function split_word_on_components_and_apply_affixes(word, pos, affix_type,
 		if not broke_prefix then
 			break
 		end
-	end
-
-	-- Now do the same for suffixes.
-	while true do
-		-- If there was a user-specified suffix with explicit stress, don't try to look for more suffixes.
-		if saw_primary_suffix_stress then
-			break
-		end
-		local broke_suffix = false
-		for _, suffixspec in ipairs(suffixes) do
-			local suffix_pattern = suffixspec[1]
-			local pos_stress = lookup_stress_spec(stress_spec, pos)
-			local rest = rmatch(mainpart, "^(.-)" .. suffix_pattern .. "$")
-			if rest then
-				if not pos_stress then
-					-- suffix not recognized for this POS, don't split here
-				elseif not meets_restriction(rest, suffixspec.restriction) then
-					-- restriction not met, don't split here
-				elseif rfind(rest, "%+$") then
-					-- explicit non-boundary here, so don't split here
-				elseif not rfind(rest, V) then
-					-- no vowels, don't split here
-				else
-					local suffix_respell = decompose(suffixspec[2])
-					if saw_primary_mainpart_stress and rfind(suffix_respell, ACUTE) then
-						-- primary-stressed suffix like -iert but main part already has primary stress; don't split here
-					else
-						-- Use non_V so that we pick up things like explicit syllable divisions, which we
-						-- check for below.
-						local before_cluster, final_cluster = rmatch(rest, "^(.-)(" .. non_V .. "*)$")
-						if rfind(final_cluster, "%..") then
-							-- syllable division within or before final cluster, don't split here
-						else
-							-- break the word in two; next iteration we process the rest, which may need breaking
-							-- again
-							mainpart = rest
-
-							-- We may remove the suffix grave entirely later on. For now, convert it to a special
-							-- symbol so we can handle it properly later (in handle_suffix_secondary_stress), after
-							-- splitting on syllables.
-							suffix_respell = gsub(suffix_respell, GRAVE, ORIG_SUFFIX_GRAVE)
-							if rfind(suffix_respell, ACUTE) then
-								saw_primary_suffix_stress = true
-								-- If there is primary prefix stress, we later convert this to AUTOGRAVE.
-								suffix_respell = gsub(suffix_respell, ACUTE, AUTOACUTE)
-							end
-							table.insert(retparts, insert_position, suffix_respell)
-							broke_suffix = true
-							break
-						end
-					end
-				end
-			end
-		end
-		-- FIXME: Once we implement support for inflectional suffixes, we won't necessarily break here.
-		break
 	end
 
 	if rfind(mainpart, DOTUNDER) then
