@@ -346,7 +346,7 @@ local explicit_char_to_phonemic = {
 	[EXPLICIT_X] = "x",
 }
 
-local stress = ACUTE .. GRAVE .. DOUBLEGRAVE .. AUTOACUTE .. AUTOGRAVE .. ORIG_SUFFIX_GRAVE
+local stress = ACUTE .. GRAVE .. DOUBLEGRAVE .. AUTOACUTE .. AUTOGRAVE .. ORIG_SUFFIX_GRAVE .. "ˈˌ"
 local stress_c = "[" .. stress .. "]"
 local accent_non_stress_non_invbrevebelow = BREVE .. CFLEX .. TILDE .. DOTUNDER .. MACRON .. "ː*"
 local accent_non_stress = accent_non_stress_non_invbrevebelow .. INVBREVEBELOW
@@ -451,10 +451,64 @@ local prefix_previous_allowed_states = {
 -- these prefixes as stressed. Respell using < when unstressed, e.g. 'umfahren' "to knock down with a vehicle",
 -- 'um<fahren' "to drive around, to bypass".
 local prefixes = {
-	{"ab", "ább"},
+	-- To reduce false positives, we don't recognize when main part or suffix has primary stress, e.g. [[abandonnieren]]
+	-- /abandɔnˈiːʁən/, [[Abasie]] /abaˈziː/, [[Abbreviation]] /abʁevi̯aˈt͡si̯oːn/, [[Abbreviatur]] /abʁevi̯aˈtuːɐ̯/,
+	-- [[Abchasisch]] /apˈχaːzɪʃ/, [[abdominal]] /apdomiˈnaːl/, [[Abduktor]] /apˈdʊktoːɐ̯/, [[abessinisch]] /abɛˈsiːnɪʃ/,
+	-- [[Abitur]] /ˌabiˈtuːɐ̯/, [[Abonnement]] /abɔnəˈmɑ̃ː/, [[abonnieren]] /abɔˈniːʁən/, [[Abort]] (one meaning)
+	-- /aˈbɔʁt/, [[Abrasion]] /apʁaˈzi̯oːn/ or /abʁaˈzi̯oːn/, [[abrasiv]] /abʁaˈziːf/, [[Absence]] /apˈsãːs/, [[Absinth]]
+	-- /apˈzɪnt/, [[absolut]] /apzoˈluːt/, [[Absolvent]] /apz̥ɔlˈvɛnt/, [[absorbieren]] /apzɔʁˈbiːʁən/, [[Absorption]]
+	-- /apzɔʁpˈt͡si̯oːn/, [[abstinent]] /apstiˈnɛnt/, [[Abstinenz]] /apstiˈnɛnt͡s/, [[abstrahieren]] /apstʁaˈhiːʁən/,
+	-- [[Abstraktum]] /apˈstʀaktʊm/, [[abstrus]] /apˈstʁuːs/, [[absurd]] /apˈzʊʁt/, [[Absurdität]] /ˌapzʊʁdiˈtɛːt/,
+	-- [[Abtei]] /apˈtaɪ̯/, [[Abu Dhabi]] [[ˈabu ˈdaːbi]], [[Abulie]] /abuˈliː/, [[abundant]] /abʊnˈdant/.
+	--
+	-- We don't restrict to not preceding vowels because of words like [[abändern]], [[abarbeiten]], [[Abart]],
+	-- [[abeisen]], [[aberkennen]], [[abirren]], [[abisolieren]], [[Abordnung]], [[Abort]] (one meaning).
+	--
+	-- We still have a few false positives needing '+', e.g. [[Abakus]] /ˈabakʊs/, [[Abend]] /ˈaːbənt/, [[Abenteuer]]
+	-- /ˈaːbəntɔʏ̯ɐ/, ([[aber]] /ˈaːbɐ/; main part too short so won't be segmented in any case), [[Ablativ]]
+	-- /ˈaplaˌtiːf/, [[Abraham]] /ˈaːbʁaˌha(ː)m/.
+	--
+	-- We have a few false negatives needing '<' or '<<', e.g. [[Abalienation]] /ˌapˌʔali̯enaˈt͡si̯oːn/, [[abalienieren]]
+	-- /ˌapʔali̯eˈniːʁən/, [[abaxial]] /apʔaˈksi̯aːl/, [[abhanden]] /apˈhandn̩/, [[abscheulich]] /apˈʃɔɪ̯lɪç/.
+	{"ab", "ább", not_with_following_primary_stress = true},
 	{"aneinander", "ann<einánder"},
 	-- Must follow aneinander.
-	{"an", "ánn"},
+	--
+	-- To reduce false positives, we don't recognize when main part or suffix has primary stress, e.g. [[anabol]]
+	-- /anaˈboːl/, [[Anabolikum]] /anaˈboːlikʊm/, [[anal]] /aˈnaːl/, [[analog]] /anaˈloːk/, [[Analogie]] /analoˈɡiː/,
+	-- [[Analyse]] /ʔanaˈlyːzə/, [[analysieren]] /ˌanalyːˈziːʁən/, [[Analysis]] /aˈnaːlyzɪs/, [[analytisch]]
+	-- /ˌanaˈlyːtɪʃ/, [[anamorph]] /anaˈmɔʁf/, [[Anapäst]] /anaˈpɛːst/, [[Anaptyxe]] /anapˈtʏksə/, [[anarchisch]]
+	-- /aˈnaɐχiʃ/, [[Anathema]] /aˈnaːtema/, [[Anatomie]] /ʔanatoˈmiː/, [[anatomisch]] /anaˈtoːmɪʃ/, [[Anchovis]]
+	-- /anˈʃoːvɪs/, [[Andalusien]] /ˌandaˈluːzi̯ən/, [[Andorraner]] /andɔˈʁaːnɐ/, [[Andrea]] /anˈdʁeːa/, [[Androgen]]
+	-- /andʁoˈɡeːn/, [[androgyn]] /andʁoˈɡyːn/, [[Android]] /andʁoˈiːt/, [[Andrologie]] /andʁoloˈɡiː/, [[Anekdote]]
+	-- /anɛkˈdoːtə/, [[Angela]] /aŋˈɡeːla/, [[Angeliter]] /aŋɡeˈliːtɐ/, [[Anglikaner]] /ʔaŋɡliˈkaːnɐ/, [[Anglistik]]
+	-- /aŋˈɡlɪstɪk/, [[Angola]] /aŋˈɡoːlaː/, [[angolanisch]] /aŋɡoˈlaːnɪʃ/, [[Anilingus]] /aniˈlɪŋɡʊs/, [[Animation]]
+	-- /ʔanimaˈtsi̯oːn/, [[animieren]] /aniˈmiːʁən/, [[Animosität]] /ˌanimoziˈtɛːt/, [[Anis]] /aˈniːs/, [[Annalen]]
+	-- /aˈnaːlən/, [[annektieren]] /anɛkˈtiːʁən/, [[annullieren]] /anʊˈliːʁən/, [[anonym]] /ˌanoˈnyːm/, [[Anonymität]]
+	-- /anonymiˈtɛːt/, [[Antagonismus]] /antaɡoˈnɪsmʊs/, [[Antenne]] /anˈtɛnə/, [[anterior]] /anˈteːʁioːɐ̯/,
+	-- [[Anthrazit]] /ˌantʁaˈtsiːt/ or /ˌantʁaˈtsɪt/, [[Anthropologie]] /antʁopoloˈɡiː/, [[anthropomorph]]
+	-- /antʁopoˈmɔʁf/, [[Anthropomorphismus]] /ˌantʁopomɔʁˈfɪsmʊs/, [[Anthroposophie]] /antʁopozoˈfiː/, [[Antonym]]
+	-- /antoˈnyːm/, [[Antonymie]] /antonyˈmiː/, [[Antwerpen]] /antˈvɛʁpn̩/.
+	--
+	-- We don't restrict to not preceding vowels because of words like [[anecken]] /ˈanˌʔɛkn̩/, [[Aneignung]]
+	-- /ˈanˌʔaɪ̯ɡnʊŋ/, [[anekeln]] /ˈanˌʔeːkl̩n/, [[Anerbieten]] /ˈanʔɛɐ̯ˌbiːtn̩/, [[anerkennen]] /ˈan.(ʔ)ɛrˌkɛnən/,
+	-- [[anöden]] /ˈanˌʔøːdn̩/, [[anordnen]] /ˈanˌʔɔʁdnən/.
+	--
+	-- We still have some false positives needing '+', e.g. [[Ananas]] /ˈananas/, ([[Anden]] /ˈandn̩/; main part too
+	-- short so won't be segmented in any case), [[anderens]] /ˈandərəns/, [[anderer]] /ˈandərər/, [[anderleuts]]
+	-- /ˈandɐˌlɔʏ̯ts/, [[Aneis]] /ˈanaɪ̯s/, ([[Angel]] /ˈaŋəl/; main part too short so won't be segmented in any case),
+	-- [[Angela]] /ˈaŋɡela/ or /ˈaŋəla/, [[angeln]] /ˈaŋl̩n/, ([[Anger]] /ˈaŋər/; main part too short so won't be
+	-- segmented in any case), ([[Angler]] /ˈaŋlɐ/; main part too short so won't be segmented in any case), [[Anika]]
+	-- /ˈaniˌka/, [[Anime]] /ˈanime/, ([[Anis]] /ˈaːnɪs/ or /ˈanɪs/; main part too short so won't be segmented in any
+	-- case), [[ankern]] /ˈaŋkɐn/, ([[Anna]] /ˈʔana/; main part too short so won't be segmented in any case), [[Annam]]
+	-- /ˈanam/, [[Annika]] /ˈaniˌka/, [[Anorak]] /ˈanoʁak/, [[Anton]] /ˈantoːn/ ([[Anus]] /ˈʔaːnʊs/; main part too
+	-- short so won't be segmented in any case).
+	--
+	-- We have a few false negatives needing '<' or '<<': [[aneinander]] /anʔaɪ̯ˈnandɐ/, [[anhand]] /ʔanˈhant/,
+	-- [[anheim-]] /anˈhaɪ̯m/ (FIXME: make this a recognized prefix?).
+	--
+	-- We add a restriction to not segment in anti-.
+	{"an", "ánn", not_with_following_primary_stress = true, restriction = {"^[^t]", "^t[^i]"}},
 	{"aufeinander", "auf<einánder"},
 	-- Must follow aufeinander.
 	{"auf", "áuf"},
@@ -495,7 +549,18 @@ local prefixes = {
 	{"herunter", "herrúnter"},
 	{"hervor", "herfór"},
 	-- Must follow herab-, heran-, etc.
-	{"her", "hér"},
+	--
+	-- To reduce false positives, we don't recognize when main part or suffix has primary stress, e.g. [[Heraldik]]
+	-- /heˈʁaldɪk/, [[Herbarium]] /hɛʁˈbaːʁi̯ʊm/, [[hereditär]] /heʁediˈtɛːɐ̯/, [[herein]] /hɛˈʁain/, [[Hermaphrodit]]
+	-- /ˌhɛʁ.ma.fʁoˈdiːt/ or /ˌhɛʁm.ʔa.fʁoˈdiːt/, [[Hermelin]] /hɛʁməˈliːn/, [[Hermeneutik]] /ˌhɛʁmeˈnɔɪ̯tɪk/,
+	-- [[hermetisch]] /hɛʁˈmeːtɪʃ/, [[hermitesch]] /hɛʁˈmiːtɛʃ/, [[Heroin]] /heʁoˈiːn/, [[heroisch]] /heˈʁoːɪʃ/,
+	-- [[Herold]] /ˈheːrɔlt/, [[Herzegowina]] /ˌhɛʁt͡seˈɡoːvina/ or /ˌhɛʁt͡seɡoˈviːna/.
+	--
+	-- We still have some false positives needing '+', e.g. [[Herberge]] /ˈhɛʁˌbɛʁɡə/, [[Hering]] /ˈheːʁɪŋ/,
+	-- [[Herkules]] /ˈhɛʁkuˌlɛs/, [[Herling]] /ˈheːɐ̯.lɪŋ/, [[Hermann]] /ˈhɛʁ.man/, ([[Heros]] /ˈheːʁɔs/; main part too
+	-- short so won't be segmented in any case), [[Herrin]] /ˈhɛʁɪn/, [[herrisch]] /ˈhɛʁɪʃ/, [[herzig]] /ˈhɛʁtsɪç/,
+	-- [[Herzog]] /ˈhɛʁˌt͡soːk/.
+	{"her", "hér", not_with_following_primary_stress = true},
 	{"hinab", "hinnább"},
 	{"hinan", "hinnánn"},
 	{"hinauf", "hinnáuf"},
@@ -507,7 +572,7 @@ local prefixes = {
 	{"hinunter", "hinnúnter"},
 	{"hinweg", "hinwéck"},
 	-- Must follow hinab-, hinan-, etc.
-	{"hin", "hínn"},
+	{"hin", "hínn", not_with_following_primary_stress = true},
 	-- too many false positives for in-
 	{"miss", "míss"},
 	{"mit", "mítt"},
@@ -520,7 +585,7 @@ local prefixes = {
 	{"unter", "únter"},
 	-- Must follow unter-. Has its own prefixtype; cf. [[unvorhergesehen]] /ˈʊnfoːʁheːʁɡəˌzeːən/.
 	{"un", "únn", prefixtype = "un"},
-	-- To reduce false positives, don't recognize when main part or suffix has primary stress, e.g. [[Urämie]]
+	-- To reduce false positives, we don't recognize when main part or suffix has primary stress, e.g. [[Urämie]]
 	-- /uʁɛˈmiː/, [[Uran]] /uˈʁaːn/, [[uranhaltig]] /uˈʁaːnˌhaltɪç/, [[urban]] /ʊʁˈbaːn/, [[urbanisieren]]
 	-- /ʊʁbaniˈziːʁən/, [[urbanophil]] /ʊʁbanoˈfiːl/, [[Urethan]] /uʁeˈtaːn/, [[urgieren]] /ʊʁˈɡiːʁən/, [[Urin]]
 	-- /uˈʁiːn/, [[urinal]] /uʁiˈnaːl/, [[urinieren]] /uʁiˈniːʁən/, [[uroborisch]] /uˈʁoːboʁɪʃ/, [[Urologe]]
@@ -681,6 +746,10 @@ local suffixes = {
 	-- with suffix -ist after -a or -e need respelling, e.g. [[Judaist]], [[Atheist]], [[Deist]], [[Monotheist]].
 	{"ist", "íst", respelling = "[^ae]$", pos = "n"},
 	{"istisch", "ístisch", respelling = "[^ae]$", pos = "a"},
+	{"iv", "ív", pos = {"n", "a"}},
+	-- This entry causes unstressed -iv to still be lengthened. The previous entry won't apply when the main part has
+	-- primary stress, in which case this entry applies.
+	{"iv", "ihv", pos = {"n", "a"}},
 	{"ierbarkeit", "íerbàhrkèit", pos = "n"},
 	{"barkeit", "bàhrkèit", pos = "n"},
 	{"schaftlichkeit", "schàft.lichkèit", pos = "n"},
@@ -702,6 +771,7 @@ local suffixes = {
 	-- [[Denis]], [[Penis]], [[Spiritus lenis]], [[Tunis]] (although these would be excluded in any case for the
 	-- pre-suffix part being too short). [[Tennis]] needs respelling 'Ten+nis'.
 	{"nis", "nis", restriction = C .. "$", pos = "n"},
+	{"or", "ohr", pos = "n"},
 	{"ös", "ö́s", pos = "a"},
 	-- Two possible pronunciations (long and short). Occurs after a vowel in [[grausam]] (also false positives
 	-- [[Bisam]], [[Sesam]], which will be excluded as the pre-suffix part is too short).
@@ -741,7 +811,7 @@ local suffixes = {
 
 local function reorder_accents(text)
 	-- The order should be: (1) DOTUNDER (removed early) (2) *, (3) TILDE, (4) BREVE/CFLEX, (5) MACRON/ː,
-	-- (6) ACUTE/GRAVE/DOUBLEGRAVE.
+	-- (6) ˈ and ˌ, (7) ACUTE/GRAVE/DOUBLEGRAVE.
 	local function reorder_accent_string(accentstr)
 		local accents = rsplit(accentstr, "")
 		local accent_order = {
@@ -752,15 +822,20 @@ local function reorder_accents(text)
 			[CFLEX] = 4,
 			[MACRON] = 5,
 			["ː"] = 5,
-			[ACUTE] = 6,
-			[GRAVE] = 6,
-			[DOUBLEGRAVE] = 6,
+			["ˈ"] = 6,
+			["ˌ"] = 6,
+			[ACUTE] = 7,
+			[GRAVE] = 7,
+			[DOUBLEGRAVE] = 7,
 		}
 		table.sort(accents, function(ac1, ac2)
 			return accent_order[ac1] < accent_order[ac2]
 		end)
 		return table.concat(accents)
 	end
+	-- IPA stress marks as given by the user should precede a vowel; make them follow so they become part of the set of
+	-- accents following a vowel.
+	text = rsub(text, "([ˈˌ])(" .. V .. ")", "%2%1")
 	text = rsub(text, "(" .. accent_c .. "+)", reorder_accent_string)
 	-- Remove duplicate accents.
 	text = rsub_repeatedly(text, "(" .. accent_c .. ")%1", "%1")
@@ -970,6 +1045,14 @@ local function split_word_on_components_and_apply_affixes(word, pos, affix_type,
 		end
 	end
 
+	-- Interaction between stresses in prefix/mainpart/suffix:
+	-- 1. By default, a normally stressed suffix like -ieren takes secondary stress if there is a stressed prefix.
+	-- Cf. [[ausprobieren]] /ˈʔaʊ̯spʁoˌbiːʁən/, [[ausstaffieren]] /ˈaʊ̯sʃtaˌfiːʁən/, [[aufaddieren]] /ˈaʊ̯fʔaˌdiːʁən/,
+	-- [[aufmarschieren]] /ˈaʊ̯fmaʁˌʃiːʁən/, [[anprobieren]] /ˈanpʁoˌbiːʁən/, [[anlegieren]] /ˈanleˌɡiːʁən/,
+	-- [[überdosieren]] /ˈyːbɐdoˌziːʁən/, [[überreagieren]] /ˈyːbɐʁeaˌɡiːʁən/.
+	-- 2. If the mainpart is given an explicit primary stress, sometimes a prefix gets secondary stress, sometimes not.
+	-- a prefix is normally unstressed, as in 
+	--
 	local retparts = {}
 	local parts = strutils.capturing_split(word, "([<>])")
 	-- The type of the preceding prefix. Used to implement a finite state machine to track allowable combinations of
@@ -1000,9 +1083,9 @@ local function split_word_on_components_and_apply_affixes(word, pos, affix_type,
 
 	local function has_user_specified_primary_stress(part)
 		-- If there are multiple components (separated by - or --), we want to treat explicit user-specified
-		-- secondary stress like primary stress because we only show the component primary stresses. The overall
-		-- word primary stress shows as ˈ and other component primary stresses show as ˌ.
-		return rfind(part, ACUTE) or is_compound and rfind(part, GRAVE)
+		-- absolute secondary stress like primary stress because we only show the component primary stresses.
+		-- The overall word primary stress shows as ˈ and other component primary stresses show as ˌ.
+		return rfind(part, "[" .. ACUTE .. "ˈ]") or is_compound and rfind(part, "ˌ")
 	end
 
 	-- Break off any explicitly-specified prefixes.

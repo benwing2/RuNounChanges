@@ -55,6 +55,7 @@ Rhone	Rhone	ˈʁoːnə
 
 
 # French-derived words
+Absence	Abs*áNs	apˈsãːs
 Baguette	Bagétt	baˈɡɛt
 Chaiselongue	Schĕselóng	ʃɛzəˈlɔŋ	dewikt pron #1
 Chaiselongue	SchẹselóNk	ʃɛzəˈlõːk	dewikt pron #2
@@ -413,7 +414,7 @@ Museum	Museum	muˈzeːʊm
 
 # Unstressed final -on, -os
 Aaron	Aaron	ˈaːʁɔn
-Abaton	Abaton	ˈaːbatɔn
+Abaton	Ab+aton	ˈaːbatɔn
 Natron	Natron	ˈnaːtʁɔn
 Analogon	Análogon	aˈnaːloɡɔn
 Myon	Mýon	ˈmyːɔn
@@ -546,122 +547,206 @@ erzen	erzen	ˈɛʁt͡sən	ditto; second pronunciation
 Beleg	Be<leg	bəˈleːk	need respelling to recognize prefix
 Gebet	Ge<bet	ɡəˈbeːt	need respelling to recognize prefix
 Zukunft	Zukunft	ˈt͡suːˌkʊnft
-# checking prefix handling
+
+# ab-
 abstellen	abstellen	ˈapˌʃtɛlən
 abgelegen	abgelegen	ˈapɡəˌleːɡən
-# + prevents ab- from being recognized as a prefix
-Abend	Ab+end	ˈaːbənt
-abenteuerdurstig	ab+enteuer-durstig	ˈaːbəntɔɪ̯ɐˌdʊʁstɪç
-abundant	ab+undant	abʊnˈdant
-abstrus	ab+strús	apˈstʁuːs
+aberkennen	aberkennen	ˈap(ʔ)ɛʁˌkɛnən
 abfällig	abfällig	ˈapˌfɛlɪç
 abzählbar	abzählbar	ˈapˌt͡sɛːlbaːʁ
-# primary and secondary stressed syllables are long before a single consonant
-Ablativ	A.blatìv	ˈablaˌtiːf
-Ablativ	Ab+latìv	ˈaplaˌtiːf
-Absence	Ab+s*áNs	apˈsãːs
+ab	ab	ˈap
+ab-	ab-	ap
+abandonnieren	abandonnieren	abandɔnˈiːʁən
+Abbreviation	Abbreviation	abʁevi̯aˈt͡si̯oːn
+abundant	abundant	abʊnˈdant
+abstrus	abstrús	apˈstʁuːs
+Abend	Ab+end	ˈaːbənt
+abenteuerdurstig	ab+enteuer-durstig	ˈaːbəntɔɪ̯ɐˌdʊʁstɪç
+Aberglaube	Aber-glaube	ˈaːbɐˌɡlaʊ̯bə
+Abort	Abort	ˈabˌʔɔʁt
+Abort	Abórt	aˈbɔʁt
+abaxial	ab<axial	ap(ʔ)aˈksi̯aːl
+abalienieren	àb<ali̯enieren	ˌap(ʔ)ali̯eˈniːʁən
+
+# an-
 aneinandergeraten	aneinandergeraten	an(ʔ)aɪ̯ˈnandɐɡəˌʁaːtən
 anstellen	anstellen	ˈanˌʃtɛlən
 anzufangen	anzufangen	ˈant͡suˌfaŋən
 angefangen	angefangen	ˈanɡəˌfaŋən
+
+# auf-
 aufeinanderzupassende	aufeinanderzupassende	aʊ̯f(ʔ)aɪ̯ˈnandɐt͡suˌpasəndə
 aufstöbern	aufstöbern	ˈaʊ̯fˌʃtøːbɐn
 auseinanderstreben	auseinanderstreben	aʊ̯s(ʔ)aɪ̯ˈnandɐˌʃtʁeːbən
 auseinanderentwickeln	auseinanderentwickeln	aʊ̯s(ʔ)aɪ̯ˈnandɐʔɛntˌvɪkəln
 auszubedingen	auszubedingen	ˈaʊ̯st͡subəˌdɪŋən
+
+# bei-
 beieinanderstehen	beieinanderstehen	baɪ̯(ʔ)aɪ̯ˈnandɐˌʃteːən
 beisteuernder	beisteuernder	ˈbaɪ̯ˌʃtɔɪ̯ɐndɐ
+
+# daher-
 daherreden	daherreden	daˈheːʁˌʁeːdən
 daherzureden	daherzureden	daˈheːʁt͡suˌʁeːdən
+
+# dahin-
 dahingehen	dahingehen	daˈhɪnˌɡeːən
 dahinvegetieren	dahinvegetieren	daˈhɪnveɡeˌtiːʁən
+
+# durch-
 durcheinanderessen	durcheinanderessen	dʊʁç(ʔ)aɪ̯ˈnandɐˌʔɛsən
 durchschlagen	durchschlagen	ˈdʊʁçˌʃlaːɡən
 durchschlagen	durch<schlagen	dʊʁçˈʃlaːɡən
 durchbekommenes	durchbekommenes	ˈdʊʁçbəˌkɔmənəs
 Durchmesser	Durchmesser	ˈdʊʁçˌmɛsɐ
 Durchschnittsmensch	Durchschnitt>s-mensch	ˈdʊʁçʃnɪt͡sˌmɛnʃ
+
+# ein-
 einstellen	einstellen	ˈaɪ̯nˌʃtɛlən
 einzubestellendem	einzubestellendem	ˈaɪ̯nt͡subəˌʃtɛləndəm
 Einstein	Einstein	ˈaɪ̯nˌʃtaɪ̯n
 Eintrag	Eintrag	ˈaɪ̯nˌtʁaːk
 # "zel" is too short of a main part for "Ein-" to be partitioned off here.
 Einzelzimmer	Einzel-zimmer	ˈaɪ̯nt͡səlˌt͡sɪmɐ
+
+# emp-
 empirisch	empírisch	ɛmˈpiːʁɪʃ
 emphatisch	emphátisch	ɛmˈfaːtɪʃ
 Empfang	Empfang	ɛmpˈfaŋ
 Empfindsamkeit	Empfindsamkeit	ɛmpˈfɪntzaːmˌkaɪ̯t
+
+# ent-
 entsprechend	entsprechend	ɛntˈʃpʁɛçənt
 entscheiden	entscheiden	ɛntˈʃaɪ̯dən
+
+# er-
 Ergebnis	Ergebnis	ɛʁˈɡeːpnɪs
 erarbeiten	erarbeiten	ɛʁˈʔaʁbaɪ̯tən
 errackern	errackern	ɛʁˈʁakɐn
 Auferstehung	Auferstehung	ˈaʊ̯f(ʔ)ɛʁˌʃteːʊŋ
+
+# fort-
 fortbewegen	fortbewegen	ˈfɔʁtbəˌveːɡən
 Fortentwicklung	Fortentwicklung	ˈfɔʁt(ʔ)ɛntˌvɪklʊŋ
 fortstoßen	fortstoßen	ˈfɔʁtˌʃtoːsən
+
+# herab-
 herabstürzen	herabstürzen	hɛˈʁapˌʃtʏʁt͡sən
 herabgestuft	herabgestuf>t	hɛˈʁapɡəˌʃtuːft
+
+# heran-
 herantasten	herantasten	hɛˈʁanˌtastən
 Herangewanze	Herangewanze	hɛˈʁanɡəˌvant͡sə
+
+# herauf-
 heraufbefördernd	heraufbefördernd	hɛˈʁaʊ̯fbəˌfœʁdɐnt
 herauffahren	herauffahren	hɛˈʁaʊ̯fˌfaːʁən
 heraufzubeschwörendes	heraufzubeschwörendes	hɛˈʁaʊ̯ft͡subəˌʃvøːʁəndəs
+
+# heraus-
 herausstellen	herausstellen	hɛˈʁaʊ̯sˌʃtɛlən
+
+# herbei-
 herbeieilen	herbeieilen	hɛʁˈbaɪ̯ˌʔaɪ̯lən
 herbeigeschafft	herbeigeschafft	hɛʁˈbaɪ̯ɡəˌʃaft
+
+# herein-
 hereinsteckendes	hereinsteckendes	hɛˈʁaɪ̯nˌʃtɛkəndəs
 hereinzugeheimnissen	hereinzugeheimnissen	hɛˈʁaɪ̯nt͡suɡəˌhaɪ̯mnɪsən
+
+# hernieder-
 herniederregnen	herniederregnen	hɛʁˈniːdɐˌʁeːɡnən
 herniederzubrechen	herniederzubrechen	hɛʁˈniːdɐt͡suˌbʁɛçən
+
+# herüber-
 herübergefahren	herübergefahren	hɛˈʁyːbɐɡəˌfaːʁən
 herüberzuwechseln	herüberzuwechseln	hɛˈʁyːbɐt͡suˌvɛksəln
+
+# herum-
 # FIXME, will the secondary stress work?
 herumscharwenzeln	herumscharwènzeln	hɛˈʁʊmʃaʁˌvɛnt͡səln
 herumspinnen	herumspinnen	hɛˈʁʊmˌʃpɪnən
 herumexperimentieren	herumexpêrimentieren	hɛˈʁʊm(ʔ)ɛkspeʁimɛnˌtiːʁən
 herumeiernde	herumeiernde	hɛˈʁʊmˌʔaɪ̯ɐndə
 herumzuerzählen	herumzuerzählen	hɛˈʁʊmt͡su(ʔ)ɛʁˌt͡sɛːlən
+
+# herunter-
 herunterspielen	herunterspielen	hɛˈʁʊntɐˌʃpiːlən
 herunterzuhandeln	herunterzuhandeln	hɛˈʁʊntɐt͡suˌhandəln
+
+# hervor-
 hervorstechen	hervorstechen	hɛʁˈfoːʁˌʃtɛçən
+
+# her-
 herstellen	herstellen	ˈheːʁˌʃtɛlən
 hergebetene	hergebetene	ˈheːʁɡəˌbeːtənə
+
+# hinab-
 hinabsteigen	hinabsteigen	hɪˈnapˌʃtaɪ̯ɡən
 hinabbaumele	hinabbaumele	hɪˈnapˌbaʊ̯mələ
+
+# hinan-
 hinangearbeitetes	hinangearbeitetes	hɪˈnanɡəˌʔaʁbaɪ̯tətəs
+
+# hinauf-
 hinaufsteigen	hinaufsteigen	hɪˈnaʊ̯fˌʃtaɪ̯ɡən
 hinaufgestiegener	hinaufgestiegener	hɪˈnaʊ̯fɡəˌʃtiːɡənɐ
+
+# hinaus-
 hinauskatapultieren	hinauskatapultieren	hɪˈnaʊ̯skatapʊlˌtiːʁən
 # FIXME, will the secondary stress work?
 hinausposaunen	hinausposàunen	hɪˈnaʊ̯spoˌzaʊ̯nən
 # FIXME, will the secondary stress work?
 hinauszuposaunen	hinauszuposàunen	hɪˈnaʊ̯st͡supoˌzaʊ̯nən
+
+# hindurch-
 hindurchbewegen	hindurchbewegen	hɪnˈdʊʁçbəˌvəɡən
+
+# hinein-
 hineinstecken	hineinstecken	hɪˈnaɪ̯nˌʃtɛkən
 hineingebären	hineingebären	hɪˈnaɪ̯nɡəˌbɛːʁən
+
+# hinter-
 Hintergedanke	Hintergedanke	ˈhɪntɐɡəˌdaŋkə
 Hinterwäldler	Hinterwäld.ler	ˈhɪntɐˌvɛltlɐ
+
+# hinüber-
 hinüberbefördern	hinüberbefördern	hɪˈnyːbɐbəˌfœʁdɐn
+
+# hinüber-
 hinunterbekommen	hinunterbekommen	hɪˈnʊntɐbəˌkɔmən
+
+# hinweg-
 hinwegmarschieren	hinwegmarschieren	hɪnˈvɛkmaʁˌʃiːʁən
 hinwegsehen	hinwegsehen	hɪnˈvɛkˌzeːən
+
+# hin-
 hinkriegen	hinkriegen	ˈhɪnˌkʁiːɡən
+
+# miss-
 missachten	miss<achten	mɪsˈʔaxtən
 missbrauchen	miss<brauchen	mɪsˈbʁaʊ̯xən
 missinterpretieren	missintərpretieren	ˈmɪs(ʔ)ɪntɐpʁeˌtiːʁən
 missgestaltet	missgestaltet	ˈmɪsɡəˌʃtaltət
 Missverständnis	Missverständnis	ˈmɪsfɛʁˌʃtɛntnɪs
+
+# mit-
 mitbestimmen	mitbestimmen	ˈmɪtbəˌʃtɪmən
 mitteilen	mitteilen	ˈmɪtˌtaɪ̯lən
 mitansehen	mit<ansehen	mɪtˈʔanˌzeːən
 mitanzugebenden	mit<anzuge+benden	mɪtˈʔant͡suˌɡeːbəndən
 Mittag	Mit+tag	ˈmɪtaːk
 mitigieren	mit+igieren	mitiˈɡiːʁən
+
+# nieder-
 niederstürzen	niederstürzen	ˈniːdɐˌʃtʏʁt͡sən
 niederzuzerren	niederzuzerren	ˈniːdɐt͡suˌt͡sɛʁən
+
+# übereinander-
 übereinanderstapeln	übereinanderstapeln	yːbɐʔaɪ̯ˈnandɐˌʃtaːpəln
 übereinanderzuschlagenden	übereinanderzuschlagenden	yːbɐʔaɪ̯ˈnandɐt͡suˌʃlaːɡəndən
+
+# über-
 übereinstimmen	über<einstimmen	yːbɐˈʔaɪ̯nˌʃtɪmən
 überfahren	überfahren	ˈyːbɐˌfaːʁən
 # über- should be recognized, translated to ǘber- and then to ü̏ber- (i.e. with double grave), so that
@@ -669,8 +754,12 @@ niederzuzerren	niederzuzerren	ˈniːdɐt͡suˌt͡sɛʁən
 überfahren	über<fahren	yːbɐˈfaːʁən
 überbeanspruchen	überbeanspruchen	ˈyːbɐbəˌʔanʃpʁʊxən
 überzubeanspruchen	überzubeanspruchen	ˈyːbɐt͡subəˌʔanʃpʁʊxən
+
+# um-
 umfahren	umfahren	ˈʊmˌfaːʁən	to "drive over", "to knock down by driving"
 umfahren	um<fahren	ʊmˈfaːʁən	to "drive around", "to bypass"
+
+# ur-
 Urlaub	Urlaub	ˈuːʁˌlaʊ̯p
 Ursache	Ursache	ˈuːʁˌzaxə
 Urszene	Urszene	ˈuːʁˌst͡senə
@@ -681,6 +770,7 @@ Urethan	Urethán	uʁeˈtaːn	ur- should not be segmented due to following primar
 urbanisieren	urbanisieren	ʊʁbaniˈziːʁən	ur- should not be segmented due to following primary stress
 Uranus	Ur+anus	ˈuːʁanʊs
 uruguayisch	ur+ugwayisch	ˈuːʁuɡvaɪ̯ɪʃ
+
 # double/triple prefixes
 beabsichtigen	beabsichtigen	bəˈʔapzɪçtɪɡən
 veranlagen	veranlagen	fɛʁˈʔanlaːɡən
@@ -692,6 +782,7 @@ beurlauben	beur-lauben	bəˈʔuːʁˌlaʊ̯bən
 unausgegoren	unausgegoren	ˈʊnʔaʊ̯sɡəˌɡoːʁən
 unzerstörbar	unzerstörbar	ˈʊnt͡sɛʁˌʃtøːʁbaːʁ
 unzerstörbar	unzerstö́rbar	ˌʊnt͡sɛʁˈʃtøːʁbaːʁ
+
 
 # Suffix handling
 
@@ -890,7 +981,7 @@ Dingenskirchen	Dingens-kirchen	ˈdɪŋənsˌkɪʁçən
 Bücherei	Bücherei	byçəˈʁaɪ̯	dewikt says long /yː/ but audio doesn't agree
 Gärtnerei	Gä̀rtnerei	ˌɡɛʁtnəˈʁaɪ̯
 Ausbeuterei	Ausbeuterei	ˌaʊ̯sbɔɪ̯təˈʀaɪ̯
-Seeräuberei	Sèe-räuberei	ˌzeːʁɔɪ̯bəˈʁaɪ̯
+Seeräuberei	See-*räuberei	ˌzeːʁɔɪ̯bəˈʁaɪ̯
 Rosinenpickerei	Rosínen-pickerei	ʁoˈziːnənpɪkəˌʁaɪ̯
 
 # -ei
@@ -983,6 +1074,20 @@ unrealistisch	unrealistisch	ˈʊnʁeaˌlɪstɪʃ
 avantgardistisch	avãgardistisch	avãɡaʁˈdɪstɪʃ
 computerlinguistisch	kom.pjúter-linguistisch	kɔmˈpjuːtɐlɪŋˌɡu̯ɪstɪʃ
 computerlinguistisch	kom.pjúter-lingu.istisch	kɔmˈpjuːtɐlɪŋɡuˌɪstɪʃ
+
+# -iv
+Motiv	Motiv	moˈtiːf
+Leitmotiv	Leit-motiv	ˈlaɪ̯tmoˌtiːf
+Detektiv	Detektiv	detɛkˈtiːf
+diminutiv	diminutiv	diminuˈtiːf
+naiv	naiv	naˈiːf
+interrogativ	inter-*rogativ	ˌɪntɐʁoɡaˈtiːf
+# Should still be lengthened even when unstressed.
+Genitiv	Génitiv	ˈɡeːnitiːf
+Passiv	Pássiv	ˈpasiːf
+Adjektiv	Ádjektiv	ˈatjɛktiːf
+Ablativ	Ab+blatìv	ˈablaˌtiːf
+Ablativ	Ab.latìv	ˈaplaˌtiːf
 
 # -ierbarkeit
 Korrumpierbarkeit	Korrumpierbarkeit	kɔʁʊmˈpiːʁbaːʁˌkaɪ̯t
@@ -1100,7 +1205,7 @@ Kügellein	Kügellein	ˈkyːɡəlˌlaɪ̯n
 Müllerlein	Müllerlein	ˈmʏlɐˌlaɪ̯n
 Osterkerzlein	Ohster-kerzlein	ˈoːstɐˌkɛʁt͡slaɪ̯n
 Privatsträßlein	Privát-sträßlein	priˈvaːtˌʃtʁɛːslaɪ̯n
-Wachsfigürlein	Wachs-figǜrlein	ˈvaksfiˌɡyːʁlaɪ̯n
+Wachsfigürlein	Wachs-figǘrlein	ˈvaksfiˌɡyːʁlaɪ̯n
 Walnussbäumlein	Walnuss-bäumlein	ˈvalnʊsˌbɔɪ̯mlaɪ̯n
 Walnussbäumlein	Wal-nuss--bäumlein	ˈvaːlnʊsˌbɔɪ̯mlaɪ̯n
 Weihnachtskerzlein	Weih-nachts--kerzlein	ˈvaɪ̯naxt͡sˌkɛʁt͡slaɪ̯n
@@ -1156,6 +1261,11 @@ hauptamtlich	haupt-amtlich	ˈhaʊ̯ptˌʔamtlɪç
 jungsteinzeitlich	jung-stein--zeitlich	ˈjʊŋʃtaɪ̯nˌt͡saɪ̯tlɪç
 maschinenschriftlich	maschínen-schriftlich	maˈʃiːnənˌʃʁɪftlɪç
 
+# -or
+Gladiator	Gladiator	ɡlaˈdi̯aːtoːʁ
+Korridor	Korridor	ˈkɔʁidoːʁ
+Sektor	Sektor	ˈzɛktoːʁ
+Fluor	Fluor	ˈfluːoːʁ
 
 # -tion
 Konvention	Konvention	kɔnvɛnˈt͡si̯oːn
@@ -1233,9 +1343,9 @@ wiederentdecken	wiederentdecken	ˈviːdɐʔɛntˌdɛkən
 wüst	wüst	vyːst
 wutentbrannt	wut-entbrannt	ˈvuːtʔɛntˌbʁant
 zweirädrig	zwei-rädrig	ˈt͡svaɪ̯ˌʁɛːdʁɪç
-zweiprozentig	zwei-prozèntig	ˈt͡svaɪ̯pʁoˌt͡sɛntɪç
+zweiprozentig	zwei-prozéntig	ˈt͡svaɪ̯pʁoˌt͡sɛntɪç
 zweimonatlich	zwei-monatlich	ˈt͡svaɪ̯ˌmoːnatlɪç
-zweiminütig	zwei-minǜtig	ˈt͡svaɪ̯miˌnyːtɪç
+zweiminütig	zwei-minǘtig	ˈt͡svaɪ̯miˌnyːtɪç
 zuständig	zuständig	ˈt͡suːˌʃtɛndɪç
 # ge- is recognized as inseparable by default
 # stressed -an is lengthened by default
