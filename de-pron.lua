@@ -505,7 +505,8 @@ local prefixes = {
 	-- /ˌapʔali̯eˈniːʁən/, [[abaxial]] /apʔaˈksi̯aːl/, [[abhanden]] /apˈhandən/, [[abscheulich]] /apˈʃɔɪ̯lɪç/.
 	{"ab", "ább", not_with_following_primary_stress = true},
 	{"aneinander", "ann<einánder", secstress = "aneinànder"},
-	-- Must follow aneinander.
+	{"anheim", "ann<héim", secstress = "anhèim"},
+	-- Must follow aneinander- and anheim-.
 	--
 	-- To reduce false positives, we don't recognize when main part or suffix has primary stress, e.g. [[anabol]]
 	-- /anaˈboːl/, [[Anabolikum]] /anaˈboːlikʊm/, [[anal]] /aˈnaːl/, [[analog]] /anaˈloːk/, [[Analogie]] /analoˈɡiː/,
@@ -538,7 +539,7 @@ local prefixes = {
 	-- short so won't be segmented in any case).
 	--
 	-- We have a few false negatives needing '<' or '<<': [[aneinander]] /anʔaɪ̯ˈnandɐ/, [[anhand]] /anˈhant/,
-	-- [[anheim-]] /anˈhaɪ̯m/ (FIXME: make this a recognized prefix?).
+	-- [[anheim-]] /anˈhaɪ̯m/ (we could make this a recognized
 	--
 	-- We add a restriction to not segment in anti-.
 	{"an", "ánn", not_with_following_primary_stress = true, restriction = {"^[^t]", "^t[^i]"}},
@@ -600,6 +601,7 @@ local prefixes = {
 	{"hinaus", "hinnáus", secstress = "hinàus"},
 	{"hindurch", "hindúrch", secstress = "hindùrch"},
 	{"hinein", "hinnéin", secstress = "hinèin"},
+	{"hinterher", "hinter<hér", secstress = "hinterhèr"},
 	{"hinter", "hínter"},
 	{"hinüber", "hinnǘber", secstress = "hinǜber"},
 	{"hinunter", "hinnúnter", secstress = "hinùnter"},

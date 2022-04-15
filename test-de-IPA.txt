@@ -530,6 +530,7 @@ Mecklenburg-Vorpommern	Mecklen-burg--*Vorpommern	ˌmɛklənbʊʁkˈfoːʁpɔmɐn
 Lebensmittelgroßhandel	Leben>s-mittel--groß-handel	ˈleːbənsmɪtəlˌɡroːshandəl
 Hochtemperaturreaktor	Hohch-temperatúr-reáktor	ˈhoːxtɛmpəʁaˌtuːʁʁeˌaktoːʁ
 Hochtemperaturreaktor	Hohch-temperatúr-reʔáktor	ˈhoːxtɛmpəʁaˌtuːʁʁeˌʔaktoːʁ
+Goldkopflöwenäffchen	Gold-kopf--*löwen-äffchen	ˌɡɔltkɔp͡fˈløːvənʔɛfçən
 
 # Prefix handling
 Geier	Geier	ˈɡaɪ̯ɐ
@@ -572,8 +573,8 @@ abgelegen	abgelegen	ˈapɡəˌleːɡən
 aberkennen	aberkennen	ˈap(ʔ)ɛʁˌkɛnən
 abfällig	abfällig	ˈapˌfɛlɪç
 abzählbar	abzählbar	ˈapˌt͡sɛːlbaːʁ
-ab	ab	ˈap
-ab-	ab-	ap
+ab-	ab-	ˈap
+ab	ab	ap
 abandonnieren	abandonnieren	abandɔnˈiːʁən
 Abbreviation	Abbreviation	abʁevi̯aˈt͡si̯oːn
 abundant	abundant	abʊnˈdant
@@ -590,6 +591,11 @@ abalienieren	àb<ali̯enieren	ˌap(ʔ)ali̯eˈniːʁən
 aneinandergeraten	aneinandergeraten	an(ʔ)aɪ̯ˈnandɐɡəˌʁaːtən
 aneinander	aneinander	an(ʔ)aɪ̯ˈnandɐ
 
+# anheim-
+anheimfallen	anheimfallen	anˈhaɪ̯mˌfalən
+anheimzustellen	anheimzustellen	anˈhaɪ̯mt͡suˌʃtɛlən
+anheim	anheim	anˈhaɪ̯m
+
 # an-
 anstellen	anstellen	ˈanˌʃtɛlən
 anöden	anöden	ˈanˌʔøːdən
@@ -604,6 +610,7 @@ Anonymität	Anonymität	anonymiˈtɛːt
 anderer	an+derer	ˈandəʁɐ
 Annika	An+nika	ˈanika
 anhand	an<hand	anˈhant
+Antiheld	Anti.held	ˈantihɛlt
 
 # aufeinander-
 aufeinanderzupassende	aufeinanderzupassende	aʊ̯f(ʔ)aɪ̯ˈnandɐt͡suˌpasəndə
@@ -751,6 +758,11 @@ hindurchbewegen	hindurchbewegen	hɪnˈdʊʁçbəˌvəɡən
 # hinein-
 hineinstecken	hineinstecken	hɪˈnaɪ̯nˌʃtɛkən
 hineingebären	hineingebären	hɪˈnaɪ̯nɡəˌbɛːʁən
+
+# hinterher-
+hinterherhinken	hinterherhinken	hɪntɐˈheːʁˌhɪŋkən
+hinterherspionieren	hinterherspionieren	hɪntɐˈheːʁʃpi̯oˌniːʁən
+hinterherzugehen	hinterherzugehen	hɪntɐˈheːʁt͡suˌɡeːən
 
 # hinter-
 Hintergedanke	Hintergedanke	ˈhɪntɐɡəˌdaŋkə
