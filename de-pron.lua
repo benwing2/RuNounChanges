@@ -538,8 +538,7 @@ local prefixes = {
 	-- /ˈanam/, [[Annika]] /ˈaniˌka/, [[Anorak]] /ˈanoʁak/, [[Anton]] /ˈantoːn/ ([[Anus]] /ˈʔaːnʊs/; main part too
 	-- short so won't be segmented in any case).
 	--
-	-- We have a few false negatives needing '<' or '<<': [[aneinander]] /anʔaɪ̯ˈnandɐ/, [[anhand]] /anˈhant/,
-	-- [[anheim-]] /anˈhaɪ̯m/ (we could make this a recognized
+	-- We have a few false negatives needing '<' or '<<': [[aneinander]] /anʔaɪ̯ˈnandɐ/, [[anhand]] /anˈhant/.
 	--
 	-- We add a restriction to not segment in anti-.
 	{"an", "ánn", not_with_following_primary_stress = true, restriction = {"^[^t]", "^t[^i]"}},
@@ -1099,19 +1098,29 @@ local function split_word_on_components_and_apply_affixes(word, pos, affix_type,
 	-- similarly to a separate component; cf. [[Ausdruck]] 'Áusdrùck' but [[ausdrucklos]] 'áusdrucklòs' as if it were
 	-- 'ausdruck-los'. Normal suffix behavior would lead to #'áusdrùcklos'.
 	if depth == 0 then
+		local has_double_dash = rfind(word, "%-%-")
+
+		local function respell_respelling(respelling)
+			if has_double_dash then
+				respelling = rsub(respelling, "%-%-", "-")
+			end
+			return respelling
+		end
+
 		local components = strutils.capturing_split(word, "(%-%-?)")
 		for i, component in ipairs(components) do
 			if i % 2 == 1 then -- component, not separator
-				local parts = strutils.capturing_split(component, "([<>])")
+				local parts = strutils.capturing_split(component, "([<>]+)")
 				local j = #parts
 				while j >= 1 do
-					if j > 1 and parts[j - 1] == ">" then -- suffix
+					if j > 1 and parts[j - 1] == ">>" then -- suffix
 						local respelling = check_for_affix_respelling(parts[j], component_like_suffixes)
 						if respelling then
-							parts[j] = respelling
+							parts[j] = respell_respelling(respelling)
 							parts[j - 1] = ""
 						end
 					else
+						-- FIXME! Handle secondary-stressed suffixes.
 						for _, suffixspec in ipairs(component_like_suffixes) do
 							local suffix_pattern = suffixspec[1]
 							local rest = rmatch(parts[j], "^(.-)" .. suffix_pattern .. "$")
@@ -1129,7 +1138,7 @@ local function split_word_on_components_and_apply_affixes(word, pos, affix_type,
 									if rfind(final_cluster, "%..") then
 										-- syllable division within or before final cluster, don't split here
 									else
-										parts[j] = rest .. suffixspec[2]
+										parts[j] = rest .. respell_respelling(suffixspec[2])
 										break
 									end
 								end
@@ -1209,6 +1218,8 @@ local function split_word_on_components_and_apply_affixes(word, pos, affix_type,
 
 			-- Finally, put the components together.
 			return table.concat(parts, "⁀"), saw_explicit_propagating_stress
+			-- FIXME! Need wrapper that splits words, call split_word_on_components_and_apply_affixes() on each
+			-- word, and adds ⁀⁀ at beginning and end.
 		end
 	end
 
@@ -1258,8 +1269,12 @@ local function split_word_on_components_and_apply_affixes(word, pos, affix_type,
 		return rfind(part, "[" .. ACUTE .. "ˈ]") or is_compound and rfind(part, "ˌ")
 	end
 
+	-- FIXME! Handle absolute stresses using ˈ and ˌ.
+	-- FIXME! Clarify why we still need AUTOACUTE and AUTOGRAVE when they are relative.
+
 	-- Break off any explicitly-specified prefixes.
 	local from_left = 1
+	-- FIXME! Recognize <<.
 	while from_left < #parts and parts[from_left + 1] == "<" do
 		local prefix = parts[from_left]
 		local unstressed_prefix = rsub(prefix, stress_c, "")
@@ -1298,10 +1313,12 @@ local function split_word_on_components_and_apply_affixes(word, pos, affix_type,
 	-- Break off any explicitly-specified suffixes.
 	local insert_position = #retparts + 1
 	local from_right = #parts
+	-- FIXME! Recognize >>.
 	while from_right > 1 and parts[from_right - 1] == ">" do
 		if has_user_specified_primary_stress(parts[from_right]) then
 			saw_primary_suffix_stress = true
 		end
+		-- FIXME! Use check_for_affix_respelling().
 		table.insert(retparts, insert_position, parts[from_right])
 		from_right = from_right - 2
 	end
@@ -1320,6 +1337,9 @@ local function split_word_on_components_and_apply_affixes(word, pos, affix_type,
 			break
 		end
 		local broke_suffix = false
+		-- FIXME! Handle secondary-stressed suffixes.
+		-- FIXME! Handle restrictions on -chen suffix (initial capital unless component-like suffix occurs as in
+		-- [[scheibchenweise]]).
 		for _, suffixspec in ipairs(suffixes) do
 			local suffix_pattern = suffixspec[1]
 			local rest = rmatch(mainpart, "^(.-)" .. suffix_pattern .. "$")
