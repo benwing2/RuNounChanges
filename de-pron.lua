@@ -159,7 +159,7 @@ FIXME:
 19. n before g/k in the same syllable should be ŋ. Sometimes also across syllables, cf. [[Ingrid]].
 20. Written 'ts' in the same syllable should be rendered with a tie, e.g. [[aufwärts]], [[Aufenhaltsgenehmigung]].
     [[Botsuana]] is tricky as it normally would have syllable division 't.s', but maybe we should special-case it
-	so we get /bɔˈtsu̯aːna/. Other examples: [[enträtseln]], [[Fietse]], [[Lotse]], [[Mitsubishi]], [[Rätsel]],
+	so we get /bɔˈt͡su̯aːna/. Other examples: [[enträtseln]], [[Fietse]], [[Lotse]], [[Mitsubishi]], [[Rätsel]],
 	[[Hatsa]], [[Tsatsiki]], [[Whatsapp]]. In [[Outsider]] and [[Outsourcing]], the 't' and 's' are pronounced
 	separately, respelled 'Aut-s*aider' and 'Aut-s*ŏhßing' (or similar).
 21. Implement handling of written 'y'.
@@ -185,14 +185,14 @@ FIXME:
 32. Nasal vowels should be long when stressed, and use the phonemes ã ɛ̃ õ œ̃ per Wikipedia.
 33. Remove primary stress from a single-syllable word.
 34. -ik- in the middle of a word should have short 'i', e.g. [[Musikerin]]; not sure if also applies when stress
-    follows. Cf. [[Abdikation]] /ˌapdikaˈt͡si̯oːn/, [[Partikel]] /paʁˈtɪkl̩/ or also /paʁˈtiːkl̩/, [[Affrikate]]
+    follows. Cf. [[Abdikation]] /ˌapdikaˈt͡si̯oːn/, [[Partikel]] /paʁˈtɪkəl/ or also /paʁˈtiːkəl/, [[Affrikate]]
 	/ˌafʁiˈkaːtə/, [[Afrika]] /ˈaːfʁika/ or /ˈafʁika/, [[afrikaans]] /ˌafʁiˈkaːns/, [[Agnostiker]] /aˈɡnɔstɪkɐ/,
-	[[Agrikultur]] /ˌaɡʁikʊlˈtuːɐ̯/, [[Akademikerin]] /akaˈdeːmɪkəʁɪn/, [[Silikat]] /ziliˈkaːt/, [[Amerika]]
+	[[Agrikultur]] /ˌaɡʁikʊlˈtuːʁ/, [[Akademikerin]] /akaˈdeːmɪkəʁɪn/, [[Silikat]] /ziliˈkaːt/, [[Amerika]]
 	/aˈmeːʁika/, [[amikal]] /amiˈkaːl/, [[Anabolikum]] /anaˈboːlikʊm/, [[Syndikalismus]] /zʏndikaˈlɪsmʊs/,
 	[[Angelika]] /aŋˈɡeːlika/, [[Anglikaner]] /aŋɡliˈkaːnɐ/, [[Antibiotikum]] /antiˈbi̯oːtikʊm/, [[Antipyretikum]]
-	/antipyˈʁeːtikʊm/, [[apikal]] /apiˈkaːl/, [[appendikuliert]] /apɛndikuˈliːɐ̯t/, [[Applikation]] /aplikaˈt͡si̯oːn/,
+	/antipyˈʁeːtikʊm/, [[apikal]] /apiˈkaːl/, [[appendikuliert]] /apɛndikuˈliːʁt/, [[Applikation]] /aplikaˈt͡si̯oːn/,
 	[[Aprikose]] /ˌapʁiˈkoːzə/, [[Olympionikin]] /olʏmpi̯oˈniːkɪn/, [[Tsatsiki]] /t͡saˈt͡siːki/, [[Artikel]]
-	/ˌaʁˈtiːkl̩/ or /ˌaʁˈtɪkl̩/, [[Batiken]] /ˈbaːtɪkn̩/. Seems to apply only to unstressed '-ik-' followed by 'e' +
+	/ˌaʁˈtiːkəl/ or /ˌaʁˈtɪkəl/, [[Batiken]] /ˈbaːtɪkən/. Seems to apply only to unstressed '-ik-' followed by 'e' +
 	no stress.
 35. 'h' between vowels should be lengthening only if no stress follows and the following vowel isn't a or o. Cf.
     [[Reha]] /ˈʁeːha/, [[Dschihadist]] /d͡ʒihaːˈdɪst/, [[Johann]] /ˈjoːhan/, [[Lahar]] /ˈlaːhaʁ/, [[Mahagoni]]
@@ -204,9 +204,9 @@ FIXME:
 	/bahuˈvʁiːhi/, [[Marihuana]] 'Marihu.ána' /maʁihuˈaːna/ (one pronunciation per dewikt), [[abstrahieren]]
 	/apstʁaˈhiːʁən/, [[ahistorisch]] /ˈahɪsˌtoːʁɪʃ/, [[Annihilation]] /anihilaˈt͡si̯oːn/, [[Antihistaminikum]]
 	/antihɪstaˈmiːnikʊm/ [[Mohammedaner]] /mohameˈdaːnɐ/, [[nihilistisch]] /nihiˈlɪstɪʃ/, [[Prohibition]]
-	/pʁohibiˈt͡si̯oːn/, [[Vehikel]] /veˈhiːkl̩/ vs. [[Abziehung]] /ˈaptsiːʊŋ/, [[Aufblähung]] /ˈaʊ̯fˌblɛːʊŋ/,
+	/pʁohibiˈt͡si̯oːn/, [[Vehikel]] /veˈhiːkəl/ vs. [[Abziehung]] /ˈapt͡siːʊŋ/, [[Aufblähung]] /ˈaʊ̯fˌblɛːʊŋ/,
 	[[Auferstehung]] /ˈaʊ̯f(ʔ)ɛʁˈʃteːʊŋ/, [[Bedrohung]] /bəˈdʁoːʊŋ/, [[arbeitsfähig]] /ˈaʁbaɪ̯t͡sˌfɛːɪç/, [[befähigt]]
-	/bəˈfɛːɪçt/, [[Beruhigen]] /bəˈʁuːɪɡn̩/, [[Ehe]], /ˈeːə/, [[viehisch]] /ˈfiːɪʃ/.
+	/bəˈfɛːɪçt/, [[Beruhigen]] /bəˈʁuːɪɡən/, [[Ehe]], /ˈeːə/, [[viehisch]] /ˈfiːɪʃ/.
 	Exception: [[huhu]] 'hu.hu' /ˈhuːhu/, [[Tohuwabohu]] 'Tòh.huwabó.hu' /ˌtoːhuvaˈboːhu/, [[Uhu]] 'U.hu' /ˈuːhu/,
 	[[Uhudler]] 'U.huhdler' /ˈuːhuːdlɐ/, [[Estomihi]] 'Estomí.hi' /ɛstoˈmiːhi/.
 36. Re-parse prefix/suffix respellings for <, e.g. auseinander-.
@@ -217,6 +217,8 @@ FIXME:
 41. Redo multicomponent handling according to recent changes whereby acute and grave indicate relative stress rather
     than absolute stress; absolute stress can be specified using ˈ and ˌ or ' (single quote) and , (comma). Component
 	stress is specified using * (primary stress) or ** (secondary stress) at the beginning of the component.
+42. Prefix standing alone as a word or component should be recognized and respelled appropriately; cf. words like
+    [[vorüber]], [[auseinander]], [[ab]], [[um]].
 ]=]
 
 local export = {}
@@ -441,20 +443,51 @@ local prefix_previous_allowed_states = {
 	["unstressed-zu"] = m_table.listToSet { "stressed" },
 }
 
--- The format of the following is {PREFIX, RESPELLING, PROPS...} where PROPS are optional named properties, such as
--- 'restriction' (place additional restrictions on when the prefix can occur), 'prefixtype' (override the
--- autodetected type of prefix).
---
--- Some prefixes can be both stressed and unstressed, e.g. durch-, unter-, über-, wieder-. For some, e.g. miss- and
--- wider-, there are systematic alternations in stress: unstressed when functioning as a verbal prefix followed by an
--- initial-stressed verb, stressed otherwise. This is too complex and unpredictable for us to handle, so we treat all
--- these prefixes as stressed. Respell using < when unstressed, e.g. 'umfahren' "to knock down with a vehicle",
--- 'um<fahren' "to drive around, to bypass".
+--[=[
+The following contains prefixes to be recognized specially, segmented off automatically and respelled appropriately.
+The format of each entry is {PREFIX, RESPELLING, PROPS...} where PREFIX is the actual spelling of the prefix (without
+any stress marks), RESPELLING is the appropriate phonemic respelling, spelled as if the prefix were a word by itself
+(with appropriate acute and grave accents marking primary and secondary stress). PROPS are optional named properties;
+see below. Order of the entries is important as they are checked in order. In particular, B must follow A if B is a
+prefix of A. For example, "her" must follow "heraus", "herbei", "herüber", etc. and "un" must follow "unter".
+
+The following named properties are currently recognized:
+* 'restriction': Place additional restrictions on when the prefix can occur. Value is either a regex that must match
+  the part of the word to the right of the prefix, or a list of such regexes, where one of them must match in the
+  same fashion. An example is "emp", which has a restriction so that it is only recognized in the form "empf-", i.e.
+  where the rest of the word begins with an f.
+* 'prefixtype': Override the autodetected type of prefix, one of "stressed", "unstressed", "unstressed-zu" or "un".
+  The types "stressed" and "unstressed" are autodetected and don't normally need to be given, but the other two must
+  be given using 'prefixtype' whenever they are applicable.
+* 'secstress': If the prefix is stressed, i.e. its respelling has an acute accent, this should specify the prefix --
+  in its original form, not respelled form -- with the appropriate vowel given a grave accent. This can be omitted
+  if the secondary stress goes on the first vowel. This is used so that the user can put secondary stress on a
+  prefix (whether or not explicitly sectioned off using '<') and still have it recognized and respelled
+  appropriately. An example is [[unkalkulierbar]], respelled 'ùnkalkulierbar', which generates /ˌʊnkalkuˈliːʁbaːʁ/.
+  Note for example that the 'n' shows up as /n/ not /ŋ/ before 'k', and 'u' shows up as /ʊ/ not /u/, which indicates
+  that 'ùn-' is correctly sectioned off as a prefix and given a respelling of 'ùnn-'.
+* 'not_with_following_primary_stress': Do not recognize this prefix if there is a primary stress later on in the
+  word. This is used with prefixes such as 'ab-', 'an-', 'her-', 'mit-', 'ur-' that frequently form non-prefix parts
+  of foreign-origin words (e.g. [[abundant]], [[Animation]], [[hereditär]], [[mitigieren]], [[Urbanisierung]]).
+  This is a heuristic as most foreign-origin words have non-initial stress; but it produces some false positives
+  e.g. [[Abenteuer]], [[Annika]], [[Herkules]], [[uruguayisch]] (which need respelling like 'Ab+enteuer' with '+'
+  to indicate no prefix boundary or alternatively 'Ábenteuer' with explicit stress) and occasional false negatives
+  e.g. [[abalienieren]], [[anhand]] (which need respelling using '<', like 'an<hand' or 'àb<ali̯enieren'; the latter
+  also puts secondary stress on the prefix, which will be propagated onto the respelling 'àbb', and uses 'i̯' to get
+  a glide rather than 'ie' being interpreted as a long vowel).
+
+Some prefixes can be both stressed and unstressed, e.g. durch-, unter-, über-, wieder-. For some, e.g. miss- and
+wider-, there are systematic alternations in stress: unstressed when functioning as a verbal prefix followed by an
+initial-stressed verb, stressed otherwise. This is too complex and unpredictable for us to handle, so we treat all
+these prefixes as stressed. Respell using < when unstressed, e.g. 'umfahren' "to knock down with a vehicle",
+'um<fahren' "to drive around, to bypass".
+]=]
+
 local prefixes = {
 	-- To reduce false positives, we don't recognize when main part or suffix has primary stress, e.g. [[abandonnieren]]
-	-- /abandɔnˈiːʁən/, [[Abasie]] /abaˈziː/, [[Abbreviation]] /abʁevi̯aˈt͡si̯oːn/, [[Abbreviatur]] /abʁevi̯aˈtuːɐ̯/,
-	-- [[Abchasisch]] /apˈχaːzɪʃ/, [[abdominal]] /apdomiˈnaːl/, [[Abduktor]] /apˈdʊktoːɐ̯/, [[abessinisch]] /abɛˈsiːnɪʃ/,
-	-- [[Abitur]] /ˌabiˈtuːɐ̯/, [[Abonnement]] /abɔnəˈmɑ̃ː/, [[abonnieren]] /abɔˈniːʁən/, [[Abort]] (one meaning)
+	-- /abandɔnˈiːʁən/, [[Abasie]] /abaˈziː/, [[Abbreviation]] /abʁevi̯aˈt͡si̯oːn/, [[Abbreviatur]] /abʁevi̯aˈtuːʁ/,
+	-- [[Abchasisch]] /apˈxaːzɪʃ/, [[abdominal]] /apdomiˈnaːl/, [[Abduktor]] /apˈdʊktoːʁ/, [[abessinisch]] /abɛˈsiːnɪʃ/,
+	-- [[Abitur]] /ˌabiˈtuːʁ/, [[Abonnement]] /abɔnəˈmɑ̃ː/, [[abonnieren]] /abɔˈniːʁən/, [[Abort]] (one meaning)
 	-- /aˈbɔʁt/, [[Abrasion]] /apʁaˈzi̯oːn/ or /abʁaˈzi̯oːn/, [[abrasiv]] /abʁaˈziːf/, [[Absence]] /apˈsãːs/, [[Absinth]]
 	-- /apˈzɪnt/, [[absolut]] /apzoˈluːt/, [[Absolvent]] /apz̥ɔlˈvɛnt/, [[absorbieren]] /apzɔʁˈbiːʁən/, [[Absorption]]
 	-- /apzɔʁpˈt͡si̯oːn/, [[abstinent]] /apstiˈnɛnt/, [[Abstinenz]] /apstiˈnɛnt͡s/, [[abstrahieren]] /apstʁaˈhiːʁən/,
@@ -465,64 +498,64 @@ local prefixes = {
 	-- [[abeisen]], [[aberkennen]], [[abirren]], [[abisolieren]], [[Abordnung]], [[Abort]] (one meaning).
 	--
 	-- We still have a few false positives needing '+', e.g. [[Abakus]] /ˈabakʊs/, [[Abend]] /ˈaːbənt/, [[Abenteuer]]
-	-- /ˈaːbəntɔʏ̯ɐ/, ([[aber]] /ˈaːbɐ/; main part too short so won't be segmented in any case), [[Ablativ]]
+	-- /ˈaːbəntɔɪ̯ɐ/, ([[aber]] /ˈaːbɐ/; main part too short so won't be segmented in any case), [[Ablativ]]
 	-- /ˈaplaˌtiːf/, [[Abraham]] /ˈaːbʁaˌha(ː)m/.
 	--
 	-- We have a few false negatives needing '<' or '<<', e.g. [[Abalienation]] /ˌapˌʔali̯enaˈt͡si̯oːn/, [[abalienieren]]
-	-- /ˌapʔali̯eˈniːʁən/, [[abaxial]] /apʔaˈksi̯aːl/, [[abhanden]] /apˈhandn̩/, [[abscheulich]] /apˈʃɔɪ̯lɪç/.
+	-- /ˌapʔali̯eˈniːʁən/, [[abaxial]] /apʔaˈksi̯aːl/, [[abhanden]] /apˈhandən/, [[abscheulich]] /apˈʃɔɪ̯lɪç/.
 	{"ab", "ább", not_with_following_primary_stress = true},
-	{"aneinander", "ann<einánder"},
+	{"aneinander", "ann<einánder", secstress = "aneinànder"},
 	-- Must follow aneinander.
 	--
 	-- To reduce false positives, we don't recognize when main part or suffix has primary stress, e.g. [[anabol]]
 	-- /anaˈboːl/, [[Anabolikum]] /anaˈboːlikʊm/, [[anal]] /aˈnaːl/, [[analog]] /anaˈloːk/, [[Analogie]] /analoˈɡiː/,
-	-- [[Analyse]] /ʔanaˈlyːzə/, [[analysieren]] /ˌanalyːˈziːʁən/, [[Analysis]] /aˈnaːlyzɪs/, [[analytisch]]
+	-- [[Analyse]] /anaˈlyːzə/, [[analysieren]] /ˌanalyːˈziːʁən/, [[Analysis]] /aˈnaːlyzɪs/, [[analytisch]]
 	-- /ˌanaˈlyːtɪʃ/, [[anamorph]] /anaˈmɔʁf/, [[Anapäst]] /anaˈpɛːst/, [[Anaptyxe]] /anapˈtʏksə/, [[anarchisch]]
-	-- /aˈnaɐχiʃ/, [[Anathema]] /aˈnaːtema/, [[Anatomie]] /ʔanatoˈmiː/, [[anatomisch]] /anaˈtoːmɪʃ/, [[Anchovis]]
+	-- /aˈnaʁxiʃ/, [[Anathema]] /aˈnaːtema/, [[Anatomie]] /anatoˈmiː/, [[anatomisch]] /anaˈtoːmɪʃ/, [[Anchovis]]
 	-- /anˈʃoːvɪs/, [[Andalusien]] /ˌandaˈluːzi̯ən/, [[Andorraner]] /andɔˈʁaːnɐ/, [[Andrea]] /anˈdʁeːa/, [[Androgen]]
 	-- /andʁoˈɡeːn/, [[androgyn]] /andʁoˈɡyːn/, [[Android]] /andʁoˈiːt/, [[Andrologie]] /andʁoloˈɡiː/, [[Anekdote]]
-	-- /anɛkˈdoːtə/, [[Angela]] /aŋˈɡeːla/, [[Angeliter]] /aŋɡeˈliːtɐ/, [[Anglikaner]] /ʔaŋɡliˈkaːnɐ/, [[Anglistik]]
+	-- /anɛkˈdoːtə/, [[Angela]] /aŋˈɡeːla/, [[Angeliter]] /aŋɡeˈliːtɐ/, [[Anglikaner]] /aŋɡliˈkaːnɐ/, [[Anglistik]]
 	-- /aŋˈɡlɪstɪk/, [[Angola]] /aŋˈɡoːlaː/, [[angolanisch]] /aŋɡoˈlaːnɪʃ/, [[Anilingus]] /aniˈlɪŋɡʊs/, [[Animation]]
-	-- /ʔanimaˈtsi̯oːn/, [[animieren]] /aniˈmiːʁən/, [[Animosität]] /ˌanimoziˈtɛːt/, [[Anis]] /aˈniːs/, [[Annalen]]
+	-- /animaˈt͡si̯oːn/, [[animieren]] /aniˈmiːʁən/, [[Animosität]] /ˌanimoziˈtɛːt/, [[Anis]] /aˈniːs/, [[Annalen]]
 	-- /aˈnaːlən/, [[annektieren]] /anɛkˈtiːʁən/, [[annullieren]] /anʊˈliːʁən/, [[anonym]] /ˌanoˈnyːm/, [[Anonymität]]
-	-- /anonymiˈtɛːt/, [[Antagonismus]] /antaɡoˈnɪsmʊs/, [[Antenne]] /anˈtɛnə/, [[anterior]] /anˈteːʁioːɐ̯/,
-	-- [[Anthrazit]] /ˌantʁaˈtsiːt/ or /ˌantʁaˈtsɪt/, [[Anthropologie]] /antʁopoloˈɡiː/, [[anthropomorph]]
+	-- /anonymiˈtɛːt/, [[Antagonismus]] /antaɡoˈnɪsmʊs/, [[Antenne]] /anˈtɛnə/, [[anterior]] /anˈteːʁioːʁ/,
+	-- [[Anthrazit]] /ˌantʁaˈt͡siːt/ or /ˌantʁaˈt͡sɪt/, [[Anthropologie]] /antʁopoloˈɡiː/, [[anthropomorph]]
 	-- /antʁopoˈmɔʁf/, [[Anthropomorphismus]] /ˌantʁopomɔʁˈfɪsmʊs/, [[Anthroposophie]] /antʁopozoˈfiː/, [[Antonym]]
-	-- /antoˈnyːm/, [[Antonymie]] /antonyˈmiː/, [[Antwerpen]] /antˈvɛʁpn̩/.
+	-- /antoˈnyːm/, [[Antonymie]] /antonyˈmiː/, [[Antwerpen]] /antˈvɛʁpən/.
 	--
-	-- We don't restrict to not preceding vowels because of words like [[anecken]] /ˈanˌʔɛkn̩/, [[Aneignung]]
-	-- /ˈanˌʔaɪ̯ɡnʊŋ/, [[anekeln]] /ˈanˌʔeːkl̩n/, [[Anerbieten]] /ˈanʔɛɐ̯ˌbiːtn̩/, [[anerkennen]] /ˈan.(ʔ)ɛrˌkɛnən/,
-	-- [[anöden]] /ˈanˌʔøːdn̩/, [[anordnen]] /ˈanˌʔɔʁdnən/.
+	-- We don't restrict to not preceding vowels because of words like [[anecken]] /ˈanˌʔɛkən/, [[Aneignung]]
+	-- /ˈanˌʔaɪ̯ɡnʊŋ/, [[anekeln]] /ˈanˌʔeːkəln/, [[Anerbieten]] /ˈan(ʔ)ɛʁˌbiːtən/, [[anerkennen]] /ˈan(ʔ)ɛʁˌkɛnən/,
+	-- [[anöden]] /ˈanˌʔøːdən/, [[anordnen]] /ˈanˌʔɔʁdnən/.
 	--
-	-- We still have some false positives needing '+', e.g. [[Ananas]] /ˈananas/, ([[Anden]] /ˈandn̩/; main part too
+	-- We still have some false positives needing '+', e.g. [[Ananas]] /ˈananas/, ([[Anden]] /ˈandən/; main part too
 	-- short so won't be segmented in any case), [[anderens]] /ˈandərəns/, [[anderer]] /ˈandərər/, [[anderleuts]]
-	-- /ˈandɐˌlɔʏ̯ts/, [[Aneis]] /ˈanaɪ̯s/, ([[Angel]] /ˈaŋəl/; main part too short so won't be segmented in any case),
-	-- [[Angela]] /ˈaŋɡela/ or /ˈaŋəla/, [[angeln]] /ˈaŋl̩n/, ([[Anger]] /ˈaŋər/; main part too short so won't be
+	-- /ˈandɐˌlɔɪ̯t͡s/, [[Aneis]] /ˈanaɪ̯s/, ([[Angel]] /ˈaŋəl/; main part too short so won't be segmented in any case),
+	-- [[Angela]] /ˈaŋɡela/ or /ˈaŋəla/, [[angeln]] /ˈaŋəln/, ([[Anger]] /ˈaŋər/; main part too short so won't be
 	-- segmented in any case), ([[Angler]] /ˈaŋlɐ/; main part too short so won't be segmented in any case), [[Anika]]
 	-- /ˈaniˌka/, [[Anime]] /ˈanime/, ([[Anis]] /ˈaːnɪs/ or /ˈanɪs/; main part too short so won't be segmented in any
 	-- case), [[ankern]] /ˈaŋkɐn/, ([[Anna]] /ˈʔana/; main part too short so won't be segmented in any case), [[Annam]]
 	-- /ˈanam/, [[Annika]] /ˈaniˌka/, [[Anorak]] /ˈanoʁak/, [[Anton]] /ˈantoːn/ ([[Anus]] /ˈʔaːnʊs/; main part too
 	-- short so won't be segmented in any case).
 	--
-	-- We have a few false negatives needing '<' or '<<': [[aneinander]] /anʔaɪ̯ˈnandɐ/, [[anhand]] /ʔanˈhant/,
+	-- We have a few false negatives needing '<' or '<<': [[aneinander]] /anʔaɪ̯ˈnandɐ/, [[anhand]] /anˈhant/,
 	-- [[anheim-]] /anˈhaɪ̯m/ (FIXME: make this a recognized prefix?).
 	--
 	-- We add a restriction to not segment in anti-.
 	{"an", "ánn", not_with_following_primary_stress = true, restriction = {"^[^t]", "^t[^i]"}},
-	{"aufeinander", "auf<einánder"},
+	{"aufeinander", "auf<einánder", secstress = "aufeinànder"},
 	-- Must follow aufeinander.
 	{"auf", "áuf"},
-	{"auseinander", "aus<einánder"},
+	{"auseinander", "aus<einánder", secstress = "auseinànder"},
 	-- Must follow auseinander.
 	{"aus", "áus"},
-	{"beieinander", "bei<einánder"},
+	{"beieinander", "bei<einánder", secstress = "beieinànder"},
 	-- Must follow beieinander.
 	{"bei", "béi"},
 	-- Allow be- before -u- only in beur-, beun-; cf. [[beurlauben]], [[Beunruhigung]]. Must follow bei-.
 	{"be", "bə", restriction = {"^[^ui]", "^u[rn]"}},
-	{"daher", "dahér"},
-	{"dahin", "dahínn"},
-	{"durcheinander", "durch<einánder"},
+	{"daher", "dahér", secstress = "dahèr"},
+	{"dahin", "dahínn", secstress = "dahìn"},
+	{"durcheinander", "durch<einánder", secstress = "durcheinànder"},
 	-- Must follow durcheinander.
 	{"durch", "dúrch"},
 	{"ein", "éin"},
@@ -537,47 +570,47 @@ local prefixes = {
 	-- [[Geusenwort]] (which needs respelling like 'Géusen-wort'), and there are various past participles in 'geu-',
 	-- especially 'geur-'.
 	{"ge", "gə", restriction = "^[^i]"},
-	{"herab", "herrább"},
-	{"heran", "herránn"},
-	{"herauf", "herráuf"},
-	{"heraus", "herráus"},
-	{"herbei", "herbéi"},
-	{"herein", "herréin"},
-	{"hernieder", "herníeder"},
-	{"herüber", "herrǘber"},
-	{"herum", "herrúmm"},
-	{"herunter", "herrúnter"},
-	{"hervor", "herfór"},
+	{"herab", "herrább", secstress = "heràb"},
+	{"heran", "herránn", secstress = "heràn"},
+	{"herauf", "herráuf", secstress = "heràuf"},
+	{"heraus", "herráus", secstress = "heràus"},
+	{"herbei", "herbéi", secstress = "herbèi"},
+	{"herein", "herréin", secstress = "herèin"},
+	{"hernieder", "herníeder", secstress = "hernìeder"},
+	{"herüber", "herrǘber", secstress = "herǜber"},
+	{"herum", "herrúmm", secstress = "herùm"},
+	{"herunter", "herrúnter", secstress = "herùnter"},
+	{"hervor", "herfór", secstress = "hervòr"},
 	-- Must follow herab-, heran-, etc.
 	--
 	-- To reduce false positives, we don't recognize when main part or suffix has primary stress, e.g. [[Heraldik]]
-	-- /heˈʁaldɪk/, [[Herbarium]] /hɛʁˈbaːʁi̯ʊm/, [[hereditär]] /heʁediˈtɛːɐ̯/, [[herein]] /hɛˈʁain/, [[Hermaphrodit]]
+	-- /heˈʁaldɪk/, [[Herbarium]] /hɛʁˈbaːʁi̯ʊm/, [[hereditär]] /heʁediˈtɛːʁ/, [[herein]] /hɛˈʁain/, [[Hermaphrodit]]
 	-- /ˌhɛʁ.ma.fʁoˈdiːt/ or /ˌhɛʁm.ʔa.fʁoˈdiːt/, [[Hermelin]] /hɛʁməˈliːn/, [[Hermeneutik]] /ˌhɛʁmeˈnɔɪ̯tɪk/,
 	-- [[hermetisch]] /hɛʁˈmeːtɪʃ/, [[hermitesch]] /hɛʁˈmiːtɛʃ/, [[Heroin]] /heʁoˈiːn/, [[heroisch]] /heˈʁoːɪʃ/,
 	-- [[Herold]] /ˈheːrɔlt/, [[Herzegowina]] /ˌhɛʁt͡seˈɡoːvina/ or /ˌhɛʁt͡seɡoˈviːna/.
 	--
 	-- We still have some false positives needing '+', e.g. [[Herberge]] /ˈhɛʁˌbɛʁɡə/, [[Hering]] /ˈheːʁɪŋ/,
-	-- [[Herkules]] /ˈhɛʁkuˌlɛs/, [[Herling]] /ˈheːɐ̯.lɪŋ/, [[Hermann]] /ˈhɛʁ.man/, ([[Heros]] /ˈheːʁɔs/; main part too
-	-- short so won't be segmented in any case), [[Herrin]] /ˈhɛʁɪn/, [[herrisch]] /ˈhɛʁɪʃ/, [[herzig]] /ˈhɛʁtsɪç/,
+	-- [[Herkules]] /ˈhɛʁkuˌlɛs/, [[Herling]] /ˈheːʁ.lɪŋ/, [[Hermann]] /ˈhɛʁ.man/, ([[Heros]] /ˈheːʁɔs/; main part too
+	-- short so won't be segmented in any case), [[Herrin]] /ˈhɛʁɪn/, [[herrisch]] /ˈhɛʁɪʃ/, [[herzig]] /ˈhɛʁt͡sɪç/,
 	-- [[Herzog]] /ˈhɛʁˌt͡soːk/.
 	{"her", "hér", not_with_following_primary_stress = true},
-	{"hinab", "hinnább"},
-	{"hinan", "hinnánn"},
-	{"hinauf", "hinnáuf"},
-	{"hinaus", "hinnáus"},
-	{"hindurch", "hindúrch"},
-	{"hinein", "hinnéin"},
+	{"hinab", "hinnább", secstress = "hinàb"},
+	{"hinan", "hinnánn", secstress = "hinàn"},
+	{"hinauf", "hinnáuf", secstress = "hinàuf"},
+	{"hinaus", "hinnáus", secstress = "hinàus"},
+	{"hindurch", "hindúrch", secstress = "hindùrch"},
+	{"hinein", "hinnéin", secstress = "hinèin"},
 	{"hinter", "hínter"},
-	{"hinüber", "hinnǘber"},
-	{"hinunter", "hinnúnter"},
-	{"hinweg", "hinwéck"},
+	{"hinüber", "hinnǘber", secstress = "hinǜber"},
+	{"hinunter", "hinnúnter", secstress = "hinùnter"},
+	{"hinweg", "hinwéck", secstress = "hinwèg"},
 	-- Must follow hinab-, hinan-, etc.
-	{"hin", "hínn", not_with_following_primary_stress = true},
+	{"hin", "hínn"},
 	-- too many false positives for in-
 	{"miss", "míss"},
-	{"mit", "mítt"},
+	{"mit", "mítt", not_with_following_primary_stress = true},
 	{"nieder", "níeder"},
-	{"übereinander", "ühber<einánder"},
+	{"übereinander", "ühber<einánder", secstress = "übereinànder"},
 	-- Must follow übereinander.
 	{"über", "ǘber"},
 	-- umeinander- only dialectal (West Bavarian)
@@ -599,12 +632,12 @@ local prefixes = {
 	{"ur", "úr", prefixtype = "un", not_with_following_primary_stress = true},
 	{"ver", "ferr"},
 	-- vorab-: only [[vorabeintscheiden]]
-	{"voran", "foránn"},
+	{"voran", "foránn", secstress = "voràn"},
 	-- vorauf-: only [[voraufgehen]]
-	{"voraus", "foráus"},
-	{"vorbei", "fohrbéi"}, -- respell per dewikt pronun
-	{"vorher", "fohrhér"}, -- respell per dewikt pronun
-	{"vorüber", "forǘber"},
+	{"voraus", "foráus", secstress = "voràus"},
+	{"vorbei", "fohrbéi", secstress = "vorbèi"}, -- respell per dewikt pronun
+	{"vorher", "fohrhér", secstress = "vorhèr"}, -- respell per dewikt pronun
+	{"vorüber", "forǘber", secstress = "vorǜber"},
 	-- Must follow voran-, voraus-, etc.
 	{"vor", "fór"},
 	{"weg", "wéck"},
@@ -612,9 +645,9 @@ local prefixes = {
 	{"wider", "wíder"},
 	{"wieder", "wíeder"},
 	{"zer", "zerr"},
-	{"zueinander", "zu<einánder"},
-	{"zurecht", "zurécht"},
-	{"zurück", "zurǘck"},
+	{"zueinander", "zu<einánder", secstress = "zueinànder"},
+	{"zurecht", "zurécht", secstress = "zurècht"},
+	{"zurück", "zurǘck", secstress = "zurǜck"},
 	-- Listed twice, first as stressed then as unstressed, because of zu-infinitives like [[anzufangen]]. At the
 	-- beginning of a word, stressed zú- will take precedence, but after another prefix, stressed prefixes can't occur,
 	-- and unstressed -zu- will occur. Must follow zueinander, zurecht, etc.
@@ -624,31 +657,45 @@ local prefixes = {
 	{"zu", "zu", prefixtype = "unstressed-zu"},
 }
 
--- These suffixes maintain their stress after a stressed syllable, as in [[handfest]], [[reißfest]], and "steal" the
--- secondary stress, as in [[albtraumhaft]] /ˈalptʁaʊ̯mˌhaft/.
+--[=[
+The following contains suffixes that maintain their stress after a stressed syllable, as in [[handfest]], [[reißfest]],
+and "steal" the secondary stress, as in [[albtraumhaft]] /ˈalptʁaʊ̯mˌhaft/. The format of each entry is approximately
+the same as for prefixes above. The differences are:
+* Order matters, as for prefixes, but in this case the rule is that B must follow A if B is a suffix of A, e.g. "bar"
+  must follow "ierbar" and "haft" must follow "schaft".
+* The respelling can be a list of possible pronunciations, in which case multiple pronunciations are produced on
+  output. This is used e.g. for "-sam", which has two possible pronunciations, with the vowel long or short.
+* There is an additional named property 'pos' that is intended to specify the resulting part of speech (a string, one
+  of 'n' = noun, 'v' = verb, 'a' = adjective, 'b' = adverb, or a list of such strings). This is currently underused and
+  may be deleted.
+* The named properties 'prefixtype' and 'not_with_following_primary_stress' do not exist.
+* The named property 'restriction' works as for prefixes except that it matches the part *before* the suffix. For
+  example, "erweise" is restricted to follow a consonant.
+]=]
+
 local component_like_suffixes = {
 	-- Not necessary; we split off -erweise in a first pass, and then -lich will be recognized.
 	-- {"licherweise", ">lich>er-weise", pos = "b"},
 	{"erweise", ">er--weise", restriction = C .. "$", pos = "b"},
-	-- Examples: [[bibelfest]] /ˈbiːbl̩ˌfɛst/ (would be same if regular stress), [[bissfest]] /ˈbɪsˌfɛst/, [[handfest]]
+	-- Examples: [[bibelfest]] /ˈbiːbəlˌfɛst/ (would be same if regular stress), [[bissfest]] /ˈbɪsˌfɛst/, [[handfest]]
 	-- /ˈhantˌfɛst/, [[kratzfest]] /ˈkʁat͡sˌfɛst/, [[krisenfest]] /ˈkʁiːzənˌfɛst/ (would be same if regular stress),
 	-- [[reißfest]] /ˈʁaɪ̯sˌfɛst/, [[säurefest]] /ˈzɔɪ̯ʁəˌfɛst/ (would be same if regular stress), [[schossfest]]
 	-- /ˈʃɔsˌfɛst/, [[wasserfest]] /ˈvasɐˌfɛst/ (would be same if regular stress), [[witterungsfest]] /ˈvɪtəʁʊŋsˌfɛst/
 	-- (would be same if regular stress)
 	{"fest", "--fest", pos = "a"}, -- can follow a vowel as in [[säurefest]]
-	-- Examples: [[akzentfrei]] /akˈt͡sɛntˌfʁaɪ̯/, [[alkoholfrei]] /alkoˈhoːlˌfʁaɪ̯/, [[apothekenfrei]] /apoˈteːkn̩ˌfʁaɪ̯/
+	-- Examples: [[akzentfrei]] /akˈt͡sɛntˌfʁaɪ̯/, [[alkoholfrei]] /alkoˈhoːlˌfʁaɪ̯/, [[apothekenfrei]] /apoˈteːkənˌfʁaɪ̯/
 	-- (would be same if regular stress), [[bleifrei]] /ˈblaɪ̯ˌfʁaɪ̯/, [[bündnisfrei]] /ˈbʏntnɪsˌfʁaɪ̯/ (would be same if
-	-- regular stress), [[einwandfrei]] /ˈaɪ̯nvantˌfʁaɪ̯/, [[erschütterungsfrei]] /ɛɐ̯ˈʃʏtəʁʊŋsˌfʁaɪ̯/ (would be same if
+	-- regular stress), [[einwandfrei]] /ˈaɪ̯nvantˌfʁaɪ̯/, [[erschütterungsfrei]] /ɛʁˈʃʏtəʁʊŋsˌfʁaɪ̯/ (would be same if
 	-- regular stress), [[gastfrei]] /ˈɡastˌfʁaɪ̯/, [[gemeinfrei]] /ɡəˈmaɪ̯nˌfʁaɪ̯/, [[glutenfrei]] /ɡluˈteːnˌfʁaɪ̯/,
 	-- [[holzschlifffrei]] /ˈhɔlt͡sʃlɪfˌfʁaɪ̯/, [[keimfrei]] /ˈkaɪ̯mˌfʁaɪ̯/, [[kontextfrei]] /ˈkɔntɛkstˌfʁaɪ̯/
 	-- (would be same if regular stress), [[niederschlagsfrei]] /ˈniːdɐʃlaːksˌfʁaɪ̯/, [[nikotinfrei]] /nikoˈtiːnfʁaɪ̯/,
 	-- [[rechtsfrei]] /ˈʁɛçt͡sˌfʁaɪ̯/, [[säurefrei]] /ˈzɔɪ̯ʁəˌfʁaɪ̯/ (would be same if regular stress), [[schadstofffrei]]
 	-- /ˈʃaːtʃtɔfˌfʁaɪ̯/, [[schneefrei]] /ˈʃneːˌfʁaɪ̯/, [[schulfrei]] /ˈʃuːlˌfʁaɪ̯/, [[steuerfrei]] /ˈʃtɔɪ̯ɐˌfʁaɪ̯/,
 	-- [[straffrei]] /ˈʃtʁaːfˌfʁaɪ̯/, [[stressfrei]] /ˈʃtʁɛsˌfʁaɪ̯/, [[unfallfrei]] /ˈʊnfalˌfʁaɪ̯/, [[versandkostenfrei]]
-	-- /fɛɐ̯ˈzantkɔstn̩ˌfʁaɪ̯/, [[vibrationsfrei]] /vibʁaˈtsi̯oːnsˌfʁaɪ̯/, [[visafrei]] /ˈviːzaˌfʁaɪ̯/ (would be same if
+	-- /fɛʁˈzantkɔstənˌfʁaɪ̯/, [[vibrationsfrei]] /vibʁaˈt͡si̯oːnsˌfʁaɪ̯/, [[visafrei]] /ˈviːzaˌfʁaɪ̯/ (would be same if
 	-- regular stress)
 	{"frei", "--frei", pos = "a"},
-	-- Examples: [[Arbeitslosigkeit]] /ˈaʁbaɪ̯tsˌloːzɪçkaɪ̯t/ (would be same if regular suffix), [[Arglosigkeit]]
+	-- Examples: [[Arbeitslosigkeit]] /ˈaʁbaɪ̯t͡sˌloːzɪçkaɪ̯t/ (would be same if regular suffix), [[Arglosigkeit]]
 	-- /ˈaʁkˌloːzɪçkaɪ̯t/, [[Ausnahmslosigkeit]] /ˈaʊ̯snaːmsloːzɪçkaɪ̯t/, [[Bedeutungslosigkeit]] /bəˈdɔɪ̯tʊŋsˌloːzɪçkaɪ̯t/
 	-- (would be same if regular suffix), [[Charakterlosigkeit]] /kaˈʁaktɐˌloːzɪçkaɪ̯t/ (would be same if regular
 	-- suffix), [[Gefühllosigkeit]] /ɡəˈfyːlˌloːzɪçkaɪ̯t/, [[Jugendarbeitslosigkeit]] /ˈjuːɡəntˌʔaʁbaɪ̯t͡sloːzɪçkaɪ̯t/
@@ -658,56 +705,65 @@ local component_like_suffixes = {
 	-- [[Ruchlosigkeit]] /ˈʁuːxˌloːzɪçkaɪ̯t/ or /ˈʁʊxˌloːzɪçkaɪ̯t/, [[Rücksichtslosigkeit]] /ˈʁʏkzɪçt͡sˌloːzɪçkaɪ̯t/,
 	-- [[Schlaflosigkeit]] /ˈʃlaːfloːzɪçkaɪ̯t/ (FIXME: dewikt and enwikt have no secondary stress),
 	-- [[Teilnahmslosigkeit]] /ˈtaɪ̯lnaːmsˌloːzɪçkaɪ̯t/, [[Willenlosigkeit]] /ˈvɪlənˌloːsɪçkaɪ̯t/ (would be same if
-	-- regular stress), [[Zügellosigkeit]] /ˈt͡syːɡl̩ˌloːzɪçkaɪ̯t/ (would be same if regular stress)
+	-- regular stress), [[Zügellosigkeit]] /ˈt͡syːɡəlˌloːzɪçkaɪ̯t/ (would be same if regular stress)
 	{"losigkeit", "--losigkèit", pos = "n"},
-	-- Examples: [[alternativlos]] /ˌaltɐnaˈtiːfˌloːs/, [[anstandslos]] /ˈanʃtantsˌloːs/, [[arglos]] /ˈaʁkˌloːs/,
+	-- Examples: [[alternativlos]] /ˌaltɐnaˈtiːfˌloːs/, [[anstandslos]] /ˈanʃtant͡sˌloːs/, [[arglos]] /ˈaʁkˌloːs/,
 	-- [[atemlos]] /ˈaːtəmˌloːs/ (would be same if regular suffix), [[ausdruckslos]] /ˈaʊ̯sdʁʊksˌloːs/, [[ausweglos]]
-	-- /ˈaʊ̯sveːkˌloːs/, [[bargeldlos]] /ˈbaːɐ̯ɡɛltˌloːs/, [[bedingungslos]] /bəˈdɪŋʊŋsˌloːs/ (would be same if regular
-	-- suffix), [[besitzlos]] /bəˈzɪtsˌloːs/ (FIXME: enwikt but not dewikt have secondary stress), [[charakterlos]]
-	-- /kaˈʁaktɐˌloːs/ (would be same if regular suffix), [[einflusslos]] /ˈaɪ̯nflʊsˌloːs/, [[ersatzlos]] /ɛɐ̯ˈzat͡sˌloːs/,
-	-- [[erwerbslos]] /ɛɐ̯ˈvɛʁpsˌloːs/, [[fraglos]] /ˈfʁaːkˌloːs/ (FIXME: dewikt and enwikt have no secondary stress),
+	-- /ˈaʊ̯sveːkˌloːs/, [[bargeldlos]] /ˈbaːʁɡɛltˌloːs/, [[bedingungslos]] /bəˈdɪŋʊŋsˌloːs/ (would be same if regular
+	-- suffix), [[besitzlos]] /bəˈzɪt͡sˌloːs/ (FIXME: enwikt but not dewikt have secondary stress), [[charakterlos]]
+	-- /kaˈʁaktɐˌloːs/ (would be same if regular suffix), [[einflusslos]] /ˈaɪ̯nflʊsˌloːs/, [[ersatzlos]] /ɛʁˈzat͡sˌloːs/,
+	-- [[erwerbslos]] /ɛʁˈvɛʁpsˌloːs/, [[fraglos]] /ˈfʁaːkˌloːs/ (FIXME: dewikt and enwikt have no secondary stress),
 	-- [[furchtlos]] /ˈfʊʁçtˌloːs/, [[gefühllos]] /ɡəˈfyːlˌloːs/, [[gesichtslos]] /ɡəˈzɪçt͡sˌloːs/, [[gottlos]]
-	-- /ˈɡɔtˌloːs/, [[haarlos]] /ˈhaːɐ̯ˌloːs/, [[inhaltslos]] /ˈɪnhalt͡sˌloːs/, [[konkurrenzlos]] /kɔŋkʊˈʁɛntsˌloːs/,
-	-- [[kontrolllos]] /kɔnˈtʁɔlˌloːs/, [[kopflos]] /ˈkɔp͡fˌloːs/, [[leidenschaftslos]] /ˈlaɪ̯dənʃaftsˌloːs/,
-	-- [[merkmallos]] /ˈmɛʁkmaːlˌloːs/, [[papierlos]] /paˈpiːɐ̯ˌloːs/, [[planlos]] /ˈplaːnˌloːs/, [[reglos]]
+	-- /ˈɡɔtˌloːs/, [[haarlos]] /ˈhaːʁˌloːs/, [[inhaltslos]] /ˈɪnhalt͡sˌloːs/, [[konkurrenzlos]] /kɔŋkʊˈʁɛnt͡sˌloːs/,
+	-- [[kontrolllos]] /kɔnˈtʁɔlˌloːs/, [[kopflos]] /ˈkɔp͡fˌloːs/, [[leidenschaftslos]] /ˈlaɪ̯dənʃaft͡sˌloːs/,
+	-- [[merkmallos]] /ˈmɛʁkmaːlˌloːs/, [[papierlos]] /paˈpiːʁˌloːs/, [[planlos]] /ˈplaːnˌloːs/, [[reglos]]
 	-- /ˈʁeːkˌloːs/, [[schnurlos]] /ˈʃnuːʁˌloːs/, [[stillos]] /ˈʃtiːlˌloːs/ or /ˈstiːlˌloːs/, [[systemlos]]
-	-- /zʏsˈteːmˌloːs/, [[tonlos]] /ˈtoːnˌloːs/, [[verständnislos]] /fɛɐ̯ˈʃtɛntnɪsˌloːs/ (would be same if regular
+	-- /zʏsˈteːmˌloːs/, [[tonlos]] /ˈtoːnˌloːs/, [[verständnislos]] /fɛʁˈʃtɛntnɪsˌloːs/ (would be same if regular
 	-- prefix), [[zahnlos]] /ˈt͡saːnˌloːs/, [[zwanglos]] /ˈt͡svaŋˌloːs/
 	{"los", "--los", pos = "a"},
 	-- Not necessary; we split off -reich in a first pass, and then -nis will be recognized.
 	-- {"nisreich", ">nis-reich", restriction = C .. "$", pos = "a"},
 	-- Examples: [[anregungsreich]] /ˈanʁeːɡʊŋsˌʁaɪ̯ç/, [[einfallsreich]] /ˈaɪ̯nfalsˌʁaɪ̯ç/, [[einwohnerreich]]
-	-- /ˈaɪ̯nvoːnɐˌʁaɪ̯ç/, [[geistreich]] /ˈɡaɪ̯stˌʁaɪ̯ç/, [[glorreich]] /ˈɡloːɐ̯ˌʁaɪ̯ç/, [[kohlenhydratreich]]
-	-- /ˈkoːlənhydʁaːtˌʁaɪ̯ç/, [[nährstoffreich]] /ˈnɛːɐ̯ʃtɔfˌʁaɪ̯ç/, [[niederschlagsreich]] /ˈniːdɐʃlaːksˌʁaɪ̯ç/,
+	-- /ˈaɪ̯nvoːnɐˌʁaɪ̯ç/, [[geistreich]] /ˈɡaɪ̯stˌʁaɪ̯ç/, [[glorreich]] /ˈɡloːʁˌʁaɪ̯ç/, [[kohlenhydratreich]]
+	-- /ˈkoːlənhydʁaːtˌʁaɪ̯ç/, [[nährstoffreich]] /ˈnɛːʁʃtɔfˌʁaɪ̯ç/, [[niederschlagsreich]] /ˈniːdɐʃlaːksˌʁaɪ̯ç/,
 	-- [[ruhmreich]] /ˈʁuːmˌʁaɪ̯ç/, [[schneereich]] /ˈʃneːˌʁaɪ̯ç/, [[siegreich]] /ˈziːkˌʁaɪ̯ç/, [[tugendreich]]
-	-- /ˈtuːɡn̩tˌʁaɪ̯ç/ (would be same if regular suffix), [[verlustreich]] /fɛɐ̯ˈlʊstˌʁaɪ̯ç/
+	-- /ˈtuːɡəntˌʁaɪ̯ç/ (would be same if regular suffix), [[verlustreich]] /fɛʁˈlʊstˌʁaɪ̯ç/
 	{"reich", "--reich", pos = "a"},
 	-- Not necessary; we split off -voll in a first pass, and then -nis will be recognized.
 	-- {"nisvoll", "nisfòll", restriction = C .. "$", pos = "a"},
 	-- Examples: [[eindrucksvoll]] /ˈaɪ̯ndʁʊksˌfɔl/, [[gefühlvoll]] /ɡəˈfyːlˌfɔl/, [[geheimnisvoll]] /ɡəˈhaɪ̯mnɪsˌfɔl/
 	-- (would be same if regular suffix), [[geräuschvoll]] /ɡəˈʁɔɪ̯ʃˌfɔl/, [[gramvoll]] /ˈɡʁaːmˌfɔl/ (NOTE: enwikt has
-	-- no secondary stress here), [[humorvoll]] /huˈmoːɐ̯ˌfɔl/, [[klangvoll]] /ˈklaŋˌfɔl/, [[kraftvoll]] /ˈkʁaftˌfɔl/,
+	-- no secondary stress here), [[humorvoll]] /huˈmoːʁˌfɔl/, [[klangvoll]] /ˈklaŋˌfɔl/, [[kraftvoll]] /ˈkʁaftˌfɔl/,
 	-- [[maßvoll]] /ˈmaːsˌfɔl/, [[qualvoll]] /ˈkvaːlˌfɔl/, [[randvoll]] /ˈʁantˌfɔl/, [[respektvoll]] /ʁeˈspɛktˌfɔl/,
 	-- [[rücksichtsvoll]] /ˈʁʏkzɪçt͡sˌfɔl/, [[unheilvoll]] /ˈʊnhaɪ̯lˌfɔl/, [[unschuldsvoll]] /ˈʊnʃʊlt͡sˌfɔl/,
-	-- [[verantwortungsvoll]] /fɛɐ̯ˈʔantvɔʁtʊŋsˌfɔl/, [[wundervoll]] /ˈvʊndɐˌfɔl/ (would be same if regular suffix)
+	-- [[verantwortungsvoll]] /fɛʁˈʔantvɔʁtʊŋsˌfɔl/, [[wundervoll]] /ˈvʊndɐˌfɔl/ (would be same if regular suffix)
 	{"voll", "--foll", pos = "a"},
 	-- Examples: [[abschnittweise]] /ˈapʃnɪtˌvaɪ̯zə/, [[allerleiweise]] /ˈalɐlaɪ̯ˌvaɪ̯zə/, [[ansatzweise]] /ˈanzat͡sˌvaɪ̯zə/,
-	-- [[ausnahmsweise]] /ˈaʊ̯snaːmsˌvaɪ̯zə/, [[beispielsweise]] /ˈbaɪ̯ʃpiːlsˌvaɪ̯zə/, [[esslöffelweise]] /ˈɛslœfl̩ˌvaɪ̯zə/,
-	-- [[fallweise]] /ˈfalˌvaɪ̯zə/, [[haufenweise]] /ˈhaʊ̯fn̩ˌvaɪ̯zə/ (would be same if regular suffix), [[leihweise]]
+	-- [[ausnahmsweise]] /ˈaʊ̯snaːmsˌvaɪ̯zə/, [[beispielsweise]] /ˈbaɪ̯ʃpiːlsˌvaɪ̯zə/, [[esslöffelweise]] /ˈɛslœfəlˌvaɪ̯zə/,
+	-- [[fallweise]] /ˈfalˌvaɪ̯zə/, [[haufenweise]] /ˈhaʊ̯fənˌvaɪ̯zə/ (would be same if regular suffix), [[leihweise]]
 	-- /ˈlaɪ̯ˌvaɪ̯zə/, [[probeweise]] /ˈpʁoːbəˌvaɪ̯zə/ (would be same if regular suffix), [[quartalsweise]]
 	-- /kvaʁˈtaːlsˌvaɪ̯zə/, [[scheibchenweise]] /ˈʃaɪ̯bçənˌvaɪ̯zə/, [[stückchenweise]] /ˈʃtʏkçənˌvaɪ̯zə/, [[stückweise]]
-	-- /ˈʃtʏkˌvaɪ̯zə/, [[teilweise]] /ˈtaɪ̯lˌvaɪ̯zə/, [[versuchsweise]] /fɛɐ̯ˈzuːxsˌvaɪ̯zə/, [[zwangsweise]] /ˈt͡svaŋsˌvaɪ̯zə/
+	-- /ˈʃtʏkˌvaɪ̯zə/, [[teilweise]] /ˈtaɪ̯lˌvaɪ̯zə/, [[versuchsweise]] /fɛʁˈzuːxsˌvaɪ̯zə/, [[zwangsweise]] /ˈt͡svaŋsˌvaɪ̯zə/
 	{"weise", "--weise", pos = "a"},
 }
 
--- Suffix stress:
--- -- Suffixes like [[-lein]] seem to take secondary stress only when the preceding syllable has no stress and there
---    is no preceding secondary stress, e.g. [[Fingerlein]], [[Schwesterlein]] or [[Müllerlein]] /ˈmʏlɐˌlaɪ̯n/. In most
---    words, this condition doesn't hold, and so -lein has no stress, e.g. [[Äuglein]] [ˈɔɪ̯klaɪ̯n] or [[Bäumlein]]
---    [ˈbɔɪ̯mlaɪ̯n]. This includes secondary stress of the type found in [[Ecklädlein]] /ˈɛkˌlɛːtlaɪn/; [[Hofkirchlein]]
---    /ˈhoːfˌkɪʁçlaɪ̯n/; [[Apfelbäumlein]] /ˈap͡fl̩ˌbɔɪ̯mlaɪ̯n/. This is contrary to the behavior of compounds-of-compounds
---    like [[Hubschrauberlandeplatz]] and [[Maulwurfshügel]] described above; by that rule, we'd expect
---    #/ˈap͡fl̩bɔɪ̯mˌlaɪ̯n/ or similar. Cf. similar behavior with -keit: [[Abhängigkeit]] [ˈapˌhɛŋɪçkaɪ̯t].
+--[=[
+The following contains suffixes that have regular suffix stress. That is, if stressed with secondary stress, they take
+secondary stress only when the preceding syllable has no stress and there is no preceding secondary stress, e.g. for
+-lein in [[Fingerlein]], [[Schwesterlein]] or [[Müllerlein]] /ˈmʏlɐˌlaɪ̯n/. In most words, this condition doesn't hold,
+and so e.g. -lein has no stress, e.g. [[Äuglein]] /ˈɔɪ̯klaɪ̯n/ or [[Bäumlein]] /ˈbɔɪ̯mlaɪ̯n/. This includes secondary
+stress of the type found in [[Ecklädlein]] /ˈɛkˌlɛːtlaɪn/, [[Hofkirchlein]] /ˈhoːfˌkɪʁçlaɪ̯n/, [[Apfelbäumlein]]
+/ˈap͡fəlˌbɔɪ̯mlaɪ̯n/. This is contrary to the behavior of compounds-of-compounds like [[Hubschrauberlandeplatz]] and
+[[Maulwurfshügel]] described above; by that rule, we'd expect #/ˈap͡fəlbɔɪ̯mˌlaɪ̯n/ or similar. Cf. similarly
+[[Abhängigkeit]] /ˈapˌhɛŋɪçkaɪ̯t/.
+
+The format of each entry is as for component-like suffixes above.
+
+Note that vowel-initial suffixes are joined phonemically directly onto the preceding part, without any sort of morpheme
+boundary. As a result, vowel-initial suffixes that bear no stress and require no respelling, such as "ung" and "isch",
+do not need to be given here.
+]=]
+
 local suffixes = {
 	{"ant", "ánt", pos = {"n", "a"}},
 	{"anz", "ánz", pos = "n"},
@@ -787,10 +843,10 @@ local suffixes = {
 	-- the only ones with secondary stress on -schaft.
 	{"schaft", "schàft", pos = "n"},
 	-- Examples: [[beispielhaft]] /ˈbaɪ̯ˌʃpiːlhaft/ (FIXME: dewikt and enwikt have no secondary stress but audio sounds
-	-- more like our rendering), [[engelhaft]] /ˈɛŋl̩ˌhaft/, [[fabelhaft]] /ˈfaːbəlˌhaft/, [[gebresthaft]]
-	-- /ɡəˈbʁɛsthaft/, [[glaubhaft]] /ˈɡlaʊ̯phaft/, [[habhaft]] /ˈhaːphaft/, [[kometenhaft]] /koˈmeːtn̩ˌhaft/,
+	-- more like our rendering), [[engelhaft]] /ˈɛŋəlˌhaft/, [[fabelhaft]] /ˈfaːbəlˌhaft/, [[gebresthaft]]
+	-- /ɡəˈbʁɛsthaft/, [[glaubhaft]] /ˈɡlaʊ̯phaft/, [[habhaft]] /ˈhaːphaft/, [[kometenhaft]] /koˈmeːtənˌhaft/,
 	-- [[mädchenhaft]] /ˈmɛːtçənhaft/, [[namhaft]] /ˈnaːmhaft/, [[rechtsfehlerhaft]] /ˈʁɛçt͡sˌfeːlɐhaft/,
-	-- [[unstatthaft]] /ˈʊnˌʃtathaft/, [[vorbildhaft]] /ˈfoːɐ̯ˌbɪlthaft/
+	-- [[unstatthaft]] /ˈʊnˌʃtathaft/, [[vorbildhaft]] /ˈfoːʁˌbɪlthaft/
 	{"haft", "hàft", pos = "a"},
 	-- Almost all words in -tät are in -ität but a few aren't: [[Majestät]], [[Fakultät]], [[Pietät]], [[Pubertät]],
 	-- [[Sozietät]], [[Varietät]]. Unlike most other suffixes, -tät after a consonant does not result in the
@@ -922,15 +978,51 @@ local function apply_rules(word, rules)
 end
 
 
-local function check_for_affix_respelling(affix, affix_specs)
+local function replace_stress_with_auto(respelling)
+	respelling = gsub(respelling, ACUTE, AUTOACUTE)
+	respelling = gsub(respelling, GRAVE, AUTOGRAVE)
+	return respelling
+end
+
+
+-- Check a user-specified affix `affix` against a known list of affixes in `affix_specs`. If the affix is found, return
+-- the corresponding respelling given in `affix_specs`. This respelling is originally given in `affix_specs` with acute
+-- and grave accents marking primary and secondary stress; decompose and convert the accents to their auto-variants
+-- (ACUTE -> AUTOACUTE, GRAVE -> AUTOGRAVE), since the user didn't originally specify them. Furthermore, if
+-- `replace_stress_with_double_grave` is given, convert acute and grave accents to double-grave (tertiary stress),
+-- so that stressed vowels are still lengthened in open syllables but no visible stress marker is included.
+--
+-- In addition, for affixes in `affix_specs` that have primary stress, if the user-specified affix includes secondary
+-- stress on the stressed syllable but otherwise matches, return the corresponding respelling with primary stress
+-- (acute) replaced with secondary stress (grave). Here, we do not convert to AUTOGRAVE because the secondary stress
+-- was explicitly given by the user.
+--
+-- If no affixes match, return nil.
+local function check_for_affix_respelling(affix, affix_specs, replace_stress_with_double_grave)
 	for _, spec in ipairs(affix_specs) do
 		if affix == spec[1] then
 			local respelling = decompose(spec[2])
-			respelling = gsub(respelling, ACUTE, AUTOACUTE)
-			respelling = gsub(respelling, GRAVE, AUTOGRAVE)
+			respelling = replace_stress_with_auto(respelling)
+			if replace_stress_with_double_grave then
+				-- The user didn't request stress, so replace stress marks with double-grave, which preserves length
+				-- in originally stressed syllables (e.g. in über-).
+				respelling = rsub(respelling, stress_c, DOUBLEGRAVE)
+			end
 			return respelling
 		end
 	end
+
+	-- Also check for secondary-stress variant.
+	for _, spec in ipairs(affix_specs) do
+		local respelling = decompose(spec[2])
+		if rfind(respelling, ACUTE) then
+			local secstressed_affix = spec.secstress or rsub(spec[1], "^(.-" .. V .. accent_c .. "*)", "%1" .. GRAVE)
+			if affix == secstressed_affix then
+				return rsub(respelling, ACUTE, GRAVE)
+			end
+		end
+	end
+
 	return nil
 end
 
@@ -978,6 +1070,26 @@ local function demote_stress(part, demote_acute)
 end
 
 
+-- Split a word into components and split off any prefixes or suffixes. On entry, components are separated by '-' or
+-- '--'. Prefixes may be explicitly notated using '<' and suffixes using '>'. A component may be prefixed with '*' to
+-- indicate it takes primary stress and '**' to indicate secondary stress; otherwise, the first component takes
+-- primary stress and all others take secondary stress. On exit, (1) stress marks are added to components and affixes
+-- as appropriate; (2) component boundaries are indicated by ⁀; (3) prefix-prefix and prefix-mainpart boundaries are
+-- indicated by ⁀; (4) suffix-suffix and mainpart-suffix boundaries are indicated by ‿; (5) word boundaries are
+-- indicated by ⁀⁀.
+--
+-- The following parameters are used:
+-- * `word` is the word to split.
+-- * `pos` is the "part of speech" (currently underused).
+-- * `affix_type` is "prefix" if the word itself is a prefix (indicated by '-' at the end of the word), "suffix" if
+--   the word itself is a suffix (indicated by '-' at the beginning of the word), else nil.
+-- * `depth` is used internally to handle components separated by '-' and '--': at depth 0 (or nil), we split on '--'
+--   and recursively process each component; at depth 1, we further split on '-' and recursively process each
+--   component; at depth 2 we do the actual work of handling prefixes and suffixes and assigning stress.
+-- * `is_compound` is true when this function is called recursively and there is more than one component. In this case,
+--   original secondary stress is demoted to tertiary (double-grave) stress (which causes vowels in open syllables to
+--   lengthen, as with primary and secondary stress, but does not display with an explicit stress mark), and original
+--   primary stress is demoted to secondary stress if the component does not carry primary stress.
 local function split_word_on_components_and_apply_affixes(word, pos, affix_type, depth, is_compound)
 	depth = depth or 0
 
@@ -1037,11 +1149,64 @@ local function split_word_on_components_and_apply_affixes(word, pos, affix_type,
 		if len(parts) == 1 then
 			return split_word_on_components_and_apply_affixes(word, pos, affix_type, depth + 1, is_compound)
 		else
+			-- Figure out which components bear primary stress. We check for * or + before a component, which indicates
+			-- primary stress. If * is used, the component stress "propagates" up to top level. For example, in
+			-- a compound of the form A-B--C-*D, subcomponent D gets primary stress and component C-D also gets primary
+			-- stress, whereas in a compound of the form A-B--C-+D, subcomponent D gets primary stress but component
+			-- C-D gets secondary stress, with the primary component stress on A-B (meaning that relative primary
+			-- stress on D ends up as absolute secondary stress, whereas relative primary stress on A ends up as
+			-- absolute primary stress and relative primary stress on B and C end up as absolute tertiary stress).
+			local stresses = {}
+			-- Did we see explicit stress on a non-initial component? If so, the first component doesn't get primary
+			-- stress.
+			local saw_non_initial_stress = false
+			-- Did we see explicit '*'? If so, propagate it up so the higher-level component also bears stress.
+			local saw_explicit_propagating_stress = false
+
+			-- First, pull out * and + indicators.
 			for i, part in ipairs(parts) do
-				parts[i] = split_word_on_components_and_apply_affixes(part, pos, affix_type, depth + 1, "is compound")
-				parts[i] = demote_stress(parts[i], i > 1)
+				local rest
+				local stress_marker, rest = rmatch(part, "^([*+])(.-)$")
+				if stress_marker then
+					stresses[i] = true
+					parts[i] = rest
+					if i > 1 then
+						saw_non_initial_stress = true
+					end
+				end
+				if stress_marker == "*" then
+					saw_explicit_propagating_stress = true
+				end
 			end
-			return table.concat(parts, "⁀")
+
+			-- Recursively compute the stress.
+			for i, part in ipairs(parts) do
+				local saw_explicit_stress
+				parts[i], saw_explicit_stress = split_word_on_components_and_apply_affixes(part, pos, affix_type, depth + 1, "is compound")
+				if saw_explicit_stress then
+					-- * was used in a non-initial subcomponent. The component containing this subcomponent also
+					-- gets primary stress.
+					stresses[i] = true
+					if i > 1 then
+						saw_non_initial_stress = true
+					end
+					saw_explicit_propagating_stress = true
+				end
+			end
+
+			-- Initial component gets auto-stressed unless another component was explicitly marked as such.
+			if not saw_non_initial_stress then
+				stresses[1] = true
+			end
+
+			-- Now "demote" the component stresses. Secondary stress becomes tertiary, and primary stress becomes
+			-- secondary unless the component is marked for primary stress.
+			for i, part in ipairs(parts) do
+				parts[i] = demote_stress(part, not stresses[i])
+			end
+
+			-- Finally, put the components together.
+			return table.concat(parts, "⁀"), saw_explicit_propagating_stress
 		end
 	end
 
@@ -1051,8 +1216,11 @@ local function split_word_on_components_and_apply_affixes(word, pos, affix_type,
 	-- [[aufmarschieren]] /ˈaʊ̯fmaʁˌʃiːʁən/, [[anprobieren]] /ˈanpʁoˌbiːʁən/, [[anlegieren]] /ˈanleˌɡiːʁən/,
 	-- [[überdosieren]] /ˈyːbɐdoˌziːʁən/, [[überreagieren]] /ˈyːbɐʁeaˌɡiːʁən/.
 	-- 2. If the mainpart is given an explicit primary stress, sometimes a prefix gets secondary stress, sometimes not.
-	-- a prefix is normally unstressed, as in 
-	--
+	-- We handle this by assuming a prefix has no stress in this situation. If the prefix needs secondary stress, add
+	-- it explicitly; we will still recognize the prefix provided it is stressable (e.g. vor- but not ver-, which is
+	-- always unstressed).
+	-- 3. If a suffix is given explicit primary stress, the same rules apply as in (2).
+
 	local retparts = {}
 	local parts = strutils.capturing_split(word, "([<>])")
 	-- The type of the preceding prefix. Used to implement a finite state machine to track allowable combinations of
@@ -1108,12 +1276,11 @@ local function split_word_on_components_and_apply_affixes(word, pos, affix_type,
 				saw_primary_un_stress = true
 			end
 		end
-		local respelling = check_for_affix_respelling(prefix, prefixes)
+		-- The user didn't request stress, so replace stress marks with double-grave, which preserves length
+		-- in originally stressed syllables (e.g. in über-).
+		local respelling = check_for_affix_respelling(prefix, prefixes, "replace stress with double grave")
 		local must_continue = false
 		if respelling then
-			-- The user didn't request stress, so replace stress marks with double-grave, which preserves length
-			-- in originally stressed syllables (e.g. in über-).
-			respelling = rsub(respelling, stress_c, DOUBLEGRAVE)
 			local respelling_parts = rsplit(respelling, "<")
 			if #respelling_parts > 1 then
 				replace_part_with_multiple_parts(respelling_parts, from_left, "<")
@@ -1202,11 +1369,20 @@ local function split_word_on_components_and_apply_affixes(word, pos, affix_type,
 		local broke_prefix = false
 		for _, prefixspec in ipairs(prefixes) do
 			local prefix_pattern = prefixspec[1]
+			local prefix_respell = decompose(prefixspec[2])
+			local stressed_prefix = rfind(prefix_respell, ACUTE)
 			local prefix, rest = rmatch(mainpart, "^(" .. prefix_pattern .. ")(.*)$")
+			if not prefix and stressed_prefix then
+				-- Also check for secondary-stress variant.
+				local secstressed_prefix = prefixspec.secstress or
+					rsub(prefix_pattern, "^(.-" .. V .. accent_c .. "*)", "%1" .. GRAVE)
+				prefix, rest = rmatch(mainpart, "^(" .. secstressed_prefix .. ")(.*)$")
+				if prefix then
+					prefix_respell = rsub(prefix_respell, ACUTE, GRAVE)
+				end
+			end
 			if prefix then
-				local prefix_respell = decompose(prefixspec[2])
-				local prefixtype = prefixspec.prefixtype or rfind(prefix_respell, stress_c) and "stressed" or
-					"unstressed"
+				local prefixtype = prefixspec.prefixtype or stressed_prefix and "stressed" or "unstressed"
 				if prefixspec.not_with_following_primary_stress and (
 					saw_primary_mainpart_stress or saw_primary_suffix_stress) then
 					-- prefix not allowed when mainpart or suffix stress, don't split here
@@ -1244,8 +1420,7 @@ local function split_word_on_components_and_apply_affixes(word, pos, affix_type,
 						-- again
 						mainpart = rest
 						previous_prefixtype = prefixtype
-						prefix_respell = gsub(prefix_respell, ACUTE, AUTOACUTE)
-						prefix_respell = gsub(prefix_respell, GRAVE, AUTOGRAVE)
+						prefix_respell = replace_stress_with_auto(prefix_respell)
 						if rfind(prefix_respell, AUTOACUTE) then
 							-- Stressed prefix. If we've seen un- already, the prefix loses its stress (marked with
 							-- double grave to preserve length on the stressed syllable, in über-); cf. [[unausgegoren]]
@@ -1287,6 +1462,9 @@ local function split_word_on_components_and_apply_affixes(word, pos, affix_type,
 		-- do nothing
 	elseif rfind(mainpart, "^" .. non_V .. "*" .. V .. accent_c .. "*" .. stress_c) then
 		-- first vowel already followed by a stress accent; do nothing
+	elseif saw_primary_prefix_stress and rfind(mainpart, GRAVE) then
+		-- going to add secondary stress but secondary stress already present, e.g. [[hinausposaunen]] respelled
+		-- 'hinausposàunen'; do nothing
 	else
 		-- Add primary or secondary stress on the part; primary stress if no primary stress yet, otherwise secondary
 		-- stress.
@@ -1515,7 +1693,7 @@ local phonemic_rules = {
 
 	-- Divide into syllables.
 	-- Existing potentially-relevant hyphenations/pronunciations: [[abenteuerdurstig]] -> aben|teu|er|durs|tig,
-	-- [[Agraffe]] -> /aˈɡʁafə/ (but Ag|raf|fe); [[Agrarbiologie]] -> /aˈɡʁaːɐ̯bioloˌɡiː/ (but Ag|rar|bio|lo|gie);
+	-- [[Agraffe]] -> /aˈɡʁafə/ (but Ag|raf|fe); [[Agrarbiologie]] -> /aˈɡʁaːʁbioloˌɡiː/ (but Ag|rar|bio|lo|gie);
 	-- [[Anagramm]] -> (per dewikt) [anaˈɡʁam] Ana·gramm; [[Abraham]] -> /ˈaːbʁaˌha(ː)m/; [[Fabrik]] -> (per dewikt)
 	-- [faˈbʁiːk] Fa·b·rik; [[administrativ]] -> /atminɪstʁaˈtiːf/; [[adjazent]] -> (per dewikt) [ˌatjaˈt͡sɛnt]
 	-- ad·ja·zent; [[Adjektiv]] -> /ˈa.djɛkˌtiːf/ or /ˈat.jɛk-/, but only [ˈatjɛktiːf] per dewikt; [[Adlatus]] ->
@@ -1572,9 +1750,9 @@ local phonemic_rules = {
 	-- 6. After the stress, 'e' is more likely to be schwa, e.g. [[zumindestens]] /t͡suˈmɪndəstəns/. But not always,
 	--    e.g. [[Latex]] [ˈlaːtɛks] (dewikt); [[Index]] /ɪndɛks/; [[Alex]] /ˈalɛks/; [[Achilles]] [aˈxɪlɛs] (dewikt);
 	--    [[Adjektiv]] /ˈa.djɛkˌtiːf/ or /ˈat.jɛk-/; [[Adstringens]] [atˈstrɪŋɡɛns]; [[Adverb]] /ˈat.vɛʁp/
-	--    (or /atˈvɛʁp/); [[Agens]] /ˈaːɡɛns/; [[Ahmed]] /ˈaxmɛt/; [[Bizeps]] /ˈbiːtsɛps/; [[Borretsch]] /ˈbɔʁɛt͡ʃ/;
+	--    (or /atˈvɛʁp/); [[Agens]] /ˈaːɡɛns/; [[Ahmed]] /ˈaxmɛt/; [[Bizeps]] /ˈbiːt͡sɛps/; [[Borretsch]] /ˈbɔʁɛt͡ʃ/;
 	--    [[Bregenz]] /ˈbʁeːɡɛnt͡s/; [[Clemens]] [ˈkleːmɛns]; [[Comeback]] /ˈkambɛk/; [[Daniel]] /ˈdaːni̯ɛl/;
-	--    [[Dezibel]] /ˈdeːtsibɛl/; [[Diabetes]] /diaˈbeːtəs/ or /-tɛs/; [[Dolmetscher]] /ˈdɔlmɛtʃər/;
+	--    [[Dezibel]] /ˈdeːt͡sibɛl/; [[Diabetes]] /diaˈbeːtəs/ or /-tɛs/; [[Dolmetscher]] /ˈdɔlmɛtʃər/;
 	--    [[Dubstep]] /ˈdapstɛp/; etc.
 	-- 7. Given this analysis, we do the following:
 	--    a. If before the stress, 'e' -> schwa only in an internal open syllable preceding 'r'.
@@ -2045,7 +2223,7 @@ end
 function export.show(frame)
 	local parent_args = frame:getParent().args
 	local params = {
-		[1] = { required = true, default = "Aufenthalt-s-genehmigung", list = true },
+		[1] = { required = true, default = "Aufenthalt>s-genehmigung", list = true },
 		["pos"] = {},
 		["ann"] = {},
 	}

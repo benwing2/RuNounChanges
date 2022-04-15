@@ -39,7 +39,7 @@ Maghreb	Magghrebb	ˈmaɡʁɛp
 Sorghum	Sorghum	ˈzɔʁɡʊm
 Spaghetti	Spaghétti	ʃpaˈɡɛti
 Spaghetti	S*paghétti	spaˈɡɛti
-Bhutan	Bhutann	ˈbuːtan
+Bhutan	Bhutan	ˈbuːtan
 Diarrhö	Di.arrhö́	diaˈʁøː
 Diarrhoe	Di.arrhö́	diaˈʁøː
 Rhythmus	Rhythmus	ˈʁʏtmʊs
@@ -64,8 +64,8 @@ Chaiselongue	SchehslóNk	ʃeːsˈlõːk	dewikt pron #2 (Austrian)
 Chaiselongue	Schĕz*lóNg*	ʃɛzˈlõːɡ	dewikt pron #3 (Austrian)
 Champignon	Schampinjòng	ˈʃam.pɪnˌjɔŋ
 Champignon	Schampinjõ̀	ˈʃam.pɪnˌjõː
-Chefredakteur	Scheff-redaktö́r	[ˈʃɛfʁedakˌtøːʁ]
-Chefredakteur	Schef-redaktö́r	[ˈʃeːfʁedakˌtøːʁ]	usually in Austria
+Chefredakteur	Scheff-redaktö́r	ˈʃɛfʁedakˌtøːʁ
+Chefredakteur	Schef-redaktö́r	ˈʃeːfʁedakˌtøːʁ	usually in Austria
 Guillotine	Gi.otíne	ɡioˈtiːnə
 orange	orã́ʒ	oˈʁãːʃ	enwikt pron #1
 orange	orángʒ	oˈʁaŋʃ	enwikt pron #2
@@ -132,7 +132,7 @@ Ghostwriter	GhoUst-raiter	ˈɡoʊ̯stˌʁaɪ̯tɐ
 Ghostwriter	Ghohst-raiter	ˈɡoːstˌʁaɪ̯tɐ
 
 # bs, ds, gs
-absurd	ab+súrd	apˈzʊʁt
+absurd	absúrd	apˈzʊʁt
 obsessiv	obsessív	ɔpzɛˈsiːf	# /ps/ in dewikt but probably wrong
 Obsoleszenz	Obsoleszenz	ɔpzolɛsˈt͡sɛnt͡s
 subsumtiv	subsumtív	zʊpzʊmˈtiːf
@@ -282,7 +282,7 @@ Extremität	Extremität	ɛkstʁemiˈtɛːt
 Illegalität	Illegalität	ɪleɡaliˈtɛːt
 Illegalität	Íllegalität	ˈɪleɡaliˌtɛːt
 Integrität	Integrität	ɪnteɡʁiˈtɛːt
-Abbreviation	Ab+breviation	abʁevi̯aˈt͡si̯oːn
+Abbreviation	Abbreviation	abʁevi̯aˈt͡si̯oːn
 acetylieren	acetylieren	at͡setyˈliːʁən
 akkreditieren	akkreditieren	akʁediˈtiːʁən
 ameliorieren	ameliorieren	ameli̯oˈʁiːʁən
@@ -401,7 +401,7 @@ Entschuldigung	Entschuldigung	ɛntˈʃʊldɪɡʊŋ
 verständigen	verständigen	fɛʁˈʃtɛndɪɡən
 Königin	Königin	ˈkøːnɪɡɪn
 ängstigend	ängstigend	ˈɛŋstɪɡənt
-ewiglich	ewi.glich	ˈeː.vɪ.ɡlɪç	explicit syllable boundary prevents suffix
+ewiglich	ewi.glich	ˈeːvɪɡlɪç	explicit syllable boundary prevents suffix
 
 # Unstressed medial i before gn
 indigniert	indigniert	ɪndɪˈɡniːʁt
@@ -417,7 +417,7 @@ Aaron	Aaron	ˈaːʁɔn
 Abaton	Ab+aton	ˈaːbatɔn
 Natron	Natron	ˈnaːtʁɔn
 Analogon	Análogon	aˈnaːloɡɔn
-Myon	Mýon	ˈmyːɔn
+Myon	Myon	ˈmyːɔn
 Bariton	Barriton	ˈbaʁitɔn
 Bariton	Bariton	ˈbaːʁitɔn
 Biathlon	Biathlon	ˈbiːatlɔn
@@ -482,12 +482,12 @@ Sprachverschlüsselungsgerät	Sprahch-verschlüsselungs-gerät	ˈʃpʁaːxfɛʁ�
 Verschlüsselungsalgorithmus	Verschlüsselungs-algoríthmus	fɛʁˈʃlʏsəlʊŋs(ʔ)alɡoˌʁɪtmʊs
 # FIXME: dewikt has no secondary stress on 'organisation'; verify
 Weltgesundheitsorganisation	Welt-gesundheit>s-organisation	ˈvɛltɡəˌzʊnthaɪ̯t͡s(ʔ)ɔʁɡanizaˌt͡si̯oːn
-Hals-Nasen-Ohren-Heilkunde	Hals--Nasen--*Ohren--Heil-kunde	halsˌnaːzənˈʔoːʁənˌhaɪ̯lkʊndə
+Hals-Nasen-Ohren-Heilkunde	Hals--Nasen--*Ohren--Heil-kunde	ˌhalsˌnaːzənˈʔoːʁənˌhaɪ̯lkʊndə
 Konspirationstheoretikerin	Konspiration>s-theorétikerin	kɔnspiʁaˈt͡si̯oːnsteoˌʁeːtɪkəʁɪn
 Kopfsteinpflastersträßchen	Kopf-stein--pflaster-sträßchen	ˈkɔp͡fʃtaɪ̯nˌp͡flastɐʃtrɛːsçən
 Literaturwissenschaftlerin	Litteratúr-wissenschaftlerin	lɪtəʁaˈtuːʁˌvɪsənʃaftləʁɪn
 Magenschleimhautentzündung	Magen-schleim-haut--entzündung	ˈmaːɡənʃlaɪ̯mhaʊ̯t(ʔ)ɛntˌt͡sʏndʊŋ
-Nachrichtenkorrespondentin	Nahch-richten--korrespondéntin	ˈnaːxʁɪçtənkɔʁɛspɔnˌdɛntɪn	
+Nachrichtenkorrespondentin	Nahch-richten--korrespondéntin	ˈnaːxʁɪçtənkɔʁɛspɔnˌdɛntɪn
 Präsidentschaftskandidatin	Präsident>schaft>s-kandidátin	pʁɛziˈdɛntʃaft͡skandiˌdaːtɪn
 Rundfunkberichterstatterin	Rund-funk--bericht-erstatterin	ˈʁʊntfʊŋkbəˌʁɪçt(ʔ)ɛʁʃtatəʁɪn
 Zusammengehörigkeitsgefühl	Zu<sammen-gehörigkeit>s--gefühl	t͡suˈzamənɡəhøːʁɪçkaɪ̯t͡sɡəˌfyːl
@@ -495,7 +495,7 @@ Internationalprozessrecht	Inter<nazional--prozéss-recht	ɪntɐnat͡si̯oˈnaːl
 Lebensabschnittsgefährtin	Lebens-abschnitts-gefährtin	ˈleːbənsˌʔapʃnɪt͡sɡəˌfɛːʁtɪn
 Mehrspartenhauseinführung	Mehr-sparten--haus-einführung	ˈmeːʁʃpaʁtənˌhaʊ̯sʔaɪ̯nfyːʁʊŋ
 Science-Fiction-Literatur	S*aiens-*Fickschen--Litteratúr	saɪ̯ənsˈfɪkʃənlɪtəʁaˌtuːʁ
-Sozialversicherungsnummer	Sozial--versicherungs-nummer	zoˈt͡si̯aːlfɛɐ̯ˌzɪçəʁʊŋsnʊmɐ
+Sozialversicherungsnummer	Sozial--versicherungs-nummer	zoˈt͡si̯aːlfɛʁˌzɪçəʁʊŋsnʊmɐ
 Textverarbeitungsprogramm	Text-verarbeitungs-prográmm	ˈtɛkstfɛʁˌʔaʁbaɪ̯tʊŋspʁoˌɡʁam
 Vervielfältigungszahlwort	Verviel-fältigungs--zahl-wort	fɛʁˈfiːlfɛltɪɡʊŋsˌt͡saːlvɔʁt
 Waffenstillstandsabkommen	Waffen-still-stands--abkommen	ˈvafənʃtɪlʃtant͡sˌapkɔmən
@@ -507,11 +507,29 @@ Kapitalverkehrskontrolle	Kapital-verkehrs--kontrólle	kapiˈtaːlfɛʁkeːʁskɔ
 Langzeitarbeitslosigkeit	Lang-zeit--arbeitslosigkeit	ˈlaŋt͡saɪ̯tˌʔaʁbaɪ̯t͡sloːzɪçkaɪ̯t
 Lebensmitteleinzelhandel	Lebens-mittel--einzel-handel	ˈleːbənsmɪtəlˌaint͡səlhandəl
 Mindesthaltbarkeitsdatum	Mindest-haltbarkeit>s-datum	ˈmɪndəstˌhaltbaːʁkaɪ̯t͡sˌdaːtʊm
-Abgassonderuntersuchung	Abgas--sonder-unter<suchung	ˈapɡaːsˌzɔndɐʊntɐzuːxʊŋ
+Abgassonderuntersuchung	Abgas--sonder-unter<suhchung	ˈapɡaːsˌzɔndɐʊntɐzuːxʊŋ
+Eigenverantwortlichkeit	Eigen-verantwortlichkeit	ˈaɪ̯ɡənfɛʁˌʔantvɔʁtlɪçkaɪ̯t
+Eisbearbeitungsmaschine	Eis-bearbeitung>s--maschíne	ˈaɪ̯sbəʔaʁbaɪ̯tʊŋsmaˌʃiːnə
+Gebühreneinzugszentrale	Gebühren-einzug>s--zentrále	ɡəˈbyːʁənʔaɪ̯nt͡suːkst͡sɛnˌtʁaːlə
+Innensechskantschlüssel	Innen-*sechs-kant--schlüssel	ɪnənˈzɛkskantˌʃlʏsəl
+Junggesellinnenabschied	Jung-gesellinnen--abschied	ˈjʊŋɡəzɛlɪnənˌʔapʃiːt
+Knappschaftskrankenhaus	Knappschaft>s--kranken-haus	ˈknapʃaft͡sˌkʁaŋkənhaʊ̯s
+Kopfsteinpflasterstraße	Kopf-stein--pflaster-straße	ˈkɔp͡fʃtaɪ̯nˌp͡flastɐʃtraːsə
+Kundgebungsteilnehmerin	Kund-ge+bung>s--teil-nehmerin	ˈkʊntɡeːbʊŋsˌtaɪ̯lneːməʁɪn
 Nachrichtenübermittlung	Nahch-richten--über<mittlung	ˈnaːxʁɪçtənʔyːbɐˌmɪtlʊŋ
-Determinativkompositum	Determinatív-kompósitum	detɛʁminaˈtiːfkɔmˌpoːzitʊm
-Hochtemperaturreaktor	Hohch-temperatúr-reáktohr	ˈhoːxtɛmpəʁaˌtuːʁʁeˌaktoːʁ
-Hochtemperaturreaktor	Hohch-temperatúr-reʔáktohr	ˈhoːxtɛmpəʁaˌtuːʁʁeˌʔaktoːʁ
+Medienwissenschaftlerin	Medi̯en-wissenschaft>lerin	ˈmeːdi̯ənˌvɪsn̩ʃaftləʁɪn
+Partizipialkonstruktion	Partizipial-konstruktion	paʁtit͡siˈpi̯aːlkɔnstʁʊkˌt͡si̯oːn
+Rezeptor-Bindungsdomäne	Rezéptor-Bindungs-domä́ne	ʁeˈt͡sɛptoːʁˌbɪndʊŋsdoˌmɛːnə
+ungerechtfertigterweise	ungerecht-fertigterweise	ˈʊnɡəʁɛçtfɛʁtɪçtɐˌvaɪ̯zə
+Untersuchungskommission	Unter<suhchung>s-kommission	ʊntɐˈzuːxʊŋskɔmɪˌsi̯oːn
+Zusammenziehungszeichen	Zu<sammen-ziehung>s--zeichen	t͡suˈzamənt͡siːʊŋsˌt͡saɪ̯çən
+Basisreproduktionszahl	Basis-reproduktion>s--zahl	ˈbaːzɪsʁepʁodʊkt͡si̯oːnsˌt͡saːl
+Determinativkompositum	Determinativ-kompósitum	detɛʁminaˈtiːfkɔmˌpoːzitʊm
+Gebärmutterschleimhaut	Gebär-mutter--schleim-haut	ɡəˈbɛːʁmʊtɐˌʃlaɪ̯mhaʊ̯t
+Mecklenburg-Vorpommern	Mecklen-burg--*Vorpommern	ˌmɛklənbʊʁkˈfoːʁpɔmɐn
+Lebensmittelgroßhandel	Leben>s-mittel--groß-handel	ˈleːbənsmɪtəlˌɡroːshandəl
+Hochtemperaturreaktor	Hohch-temperatúr-reáktor	ˈhoːxtɛmpəʁaˌtuːʁʁeˌaktoːʁ
+Hochtemperaturreaktor	Hohch-temperatúr-reʔáktor	ˈhoːxtɛmpəʁaˌtuːʁʁeˌʔaktoːʁ
 
 # Prefix handling
 Geier	Geier	ˈɡaɪ̯ɐ
@@ -568,22 +586,47 @@ Abort	Abórt	aˈbɔʁt
 abaxial	ab<axial	ap(ʔ)aˈksi̯aːl
 abalienieren	àb<ali̯enieren	ˌap(ʔ)ali̯eˈniːʁən
 
-# an-
+# aneinander-
 aneinandergeraten	aneinandergeraten	an(ʔ)aɪ̯ˈnandɐɡəˌʁaːtən
+aneinander	aneinander	an(ʔ)aɪ̯ˈnandɐ
+
+# an-
 anstellen	anstellen	ˈanˌʃtɛlən
+anöden	anöden	ˈanˌʔøːdən
+anekeln	anekeln	ˈanˌʔeːkəln
 anzufangen	anzufangen	ˈant͡suˌfaŋən
 angefangen	angefangen	ˈanɡəˌfaŋən
+Anerbieten	Anerbieten	ˈan(ʔ)ɛʁˌbiːtən
+analog	analóg	anaˈloːk
+analysieren	analysieren	analyˈziːʁən
+Anglistik	Anglistik	aŋˈɡlɪstɪk
+Anonymität	Anonymität	anonymiˈtɛːt
+anderer	an+derer	ˈandəʁɐ
+Annika	An+nika	ˈanika
+anhand	an<hand	anˈhant
+
+# aufeinander-
+aufeinanderzupassende	aufeinanderzupassende	aʊ̯f(ʔ)aɪ̯ˈnandɐt͡suˌpasəndə
 
 # auf-
-aufeinanderzupassende	aufeinanderzupassende	aʊ̯f(ʔ)aɪ̯ˈnandɐt͡suˌpasəndə
 aufstöbern	aufstöbern	ˈaʊ̯fˌʃtøːbɐn
+Auferstehung	Auferstehung	ˈaʊ̯f(ʔ)ɛʁˌʃteːʊŋ
+
+# auseinander-
 auseinanderstreben	auseinanderstreben	aʊ̯s(ʔ)aɪ̯ˈnandɐˌʃtʁeːbən
 auseinanderentwickeln	auseinanderentwickeln	aʊ̯s(ʔ)aɪ̯ˈnandɐʔɛntˌvɪkəln
+
+# aus-
 auszubedingen	auszubedingen	ˈaʊ̯st͡subəˌdɪŋən
 
 # bei-
 beieinanderstehen	beieinanderstehen	baɪ̯(ʔ)aɪ̯ˈnandɐˌʃteːən
 beisteuernder	beisteuernder	ˈbaɪ̯ˌʃtɔɪ̯ɐndɐ
+
+# be-
+beabsichtigen	beabsichtigen	bəˈʔapzɪçtɪɡən
+beunruhigen	beunruhigen	bəˈʔʊnˌʁuːɪɡən
+beurlauben	beurlauben	bəˈʔuːʁˌlaʊ̯bən
 
 # daher-
 daherreden	daherreden	daˈheːʁˌʁeːdən
@@ -593,8 +636,10 @@ daherzureden	daherzureden	daˈheːʁt͡suˌʁeːdən
 dahingehen	dahingehen	daˈhɪnˌɡeːən
 dahinvegetieren	dahinvegetieren	daˈhɪnveɡeˌtiːʁən
 
-# durch-
+# durcheinander-
 durcheinanderessen	durcheinanderessen	dʊʁç(ʔ)aɪ̯ˈnandɐˌʔɛsən
+
+# durch-
 durchschlagen	durchschlagen	ˈdʊʁçˌʃlaːɡən
 durchschlagen	durch<schlagen	dʊʁçˈʃlaːɡən
 durchbekommenes	durchbekommenes	ˈdʊʁçbəˌkɔmənəs
@@ -623,7 +668,6 @@ entscheiden	entscheiden	ɛntˈʃaɪ̯dən
 Ergebnis	Ergebnis	ɛʁˈɡeːpnɪs
 erarbeiten	erarbeiten	ɛʁˈʔaʁbaɪ̯tən
 errackern	errackern	ɛʁˈʁakɐn
-Auferstehung	Auferstehung	ˈaʊ̯f(ʔ)ɛʁˌʃteːʊŋ
 
 # fort-
 fortbewegen	fortbewegen	ˈfɔʁtbəˌveːɡən
@@ -668,7 +712,7 @@ herumscharwenzeln	herumscharwènzeln	hɛˈʁʊmʃaʁˌvɛnt͡səln
 herumspinnen	herumspinnen	hɛˈʁʊmˌʃpɪnən
 herumexperimentieren	herumexpêrimentieren	hɛˈʁʊm(ʔ)ɛkspeʁimɛnˌtiːʁən
 herumeiernde	herumeiernde	hɛˈʁʊmˌʔaɪ̯ɐndə
-herumzuerzählen	herumzuerzählen	hɛˈʁʊmt͡su(ʔ)ɛʁˌt͡sɛːlən
+herumzuerzählen	herumzuerzählen	hɛˈʁʊmt͡suʔɛʁˌt͡sɛːlən
 
 # herunter-
 herunterspielen	herunterspielen	hɛˈʁʊntɐˌʃpiːlən
@@ -680,6 +724,10 @@ hervorstechen	hervorstechen	hɛʁˈfoːʁˌʃtɛçən
 # her-
 herstellen	herstellen	ˈheːʁˌʃtɛlən
 hergebetene	hergebetene	ˈheːʁɡəˌbeːtənə
+hereditär	hereditär	heʁediˈtɛːʁ
+heraldik	heráldik	heˈʁaldɪk
+Herkules	Her+kulĕs	ˈhɛʁkulɛs
+Herberge	Hérberge	ˈhɛʁbɛʁɡə
 
 # hinab-
 hinabsteigen	hinabsteigen	hɪˈnapˌʃtaɪ̯ɡən
@@ -694,9 +742,7 @@ hinaufgestiegener	hinaufgestiegener	hɪˈnaʊ̯fɡəˌʃtiːɡənɐ
 
 # hinaus-
 hinauskatapultieren	hinauskatapultieren	hɪˈnaʊ̯skatapʊlˌtiːʁən
-# FIXME, will the secondary stress work?
 hinausposaunen	hinausposàunen	hɪˈnaʊ̯spoˌzaʊ̯nən
-# FIXME, will the secondary stress work?
 hinauszuposaunen	hinauszuposàunen	hɪˈnaʊ̯st͡supoˌzaʊ̯nən
 
 # hindurch-
@@ -736,7 +782,7 @@ mitteilen	mitteilen	ˈmɪtˌtaɪ̯lən
 mitansehen	mit<ansehen	mɪtˈʔanˌzeːən
 mitanzugebenden	mit<anzuge+benden	mɪtˈʔant͡suˌɡeːbəndən
 Mittag	Mit+tag	ˈmɪtaːk
-mitigieren	mit+igieren	mitiˈɡiːʁən
+mitigieren	mitigieren	mitiˈɡiːʁən
 
 # nieder-
 niederstürzen	niederstürzen	ˈniːdɐˌʃtʏʁt͡sən
@@ -759,6 +805,36 @@ niederzuzerren	niederzuzerren	ˈniːdɐt͡suˌt͡sɛʁən
 umfahren	umfahren	ˈʊmˌfaːʁən	to "drive over", "to knock down by driving"
 umfahren	um<fahren	ʊmˈfaːʁən	to "drive around", "to bypass"
 
+# un-
+ungar	ungar	ˈʊnˌɡaːʁ
+Ungar	Un+gar	ˈʊŋɡaʁ
+unglaublich	unglaublich	ˈʊnɡlaʊ̯plɪç
+unglaublich	ungláublich	ʊnˈɡlaʊ̯plɪç
+ungebremst	ungebremst	ˈʊnɡəˌbʁɛmst
+ungelöst	ungelös>t	ˈʊnɡəˌløːst
+unartig	unahrtig	ˈʊnˌʔaːʁtɪç
+unanständig	unanständig	ˈʊnʔanˌʃtɛndɪç
+unpathetisch	unpathètisch	ˈʊnpaˌteːtɪʃ
+unprätentiös	unprätentiös	ˈʊnpʁɛtɛnˌt͡si̯øːs
+unsexy	uns*exi	ˈʊnˌsɛksi
+unislamisch	unislàmisch	ˈʊn(ʔ)ɪsˌlaːmɪʃ
+unorthodox	unorthodòx	ˈʊn(ʔ)ɔʁtoˌdɔks
+unangenehm	unangenehm	ˈʊnʔanɡəˌneːm
+unausgegoren	unausgegoren	ˈʊnʔaʊ̯sɡəˌɡoːʁən
+unkaputtbar	unkapúttbar	ʊnkaˈpʊtbaːʁ	not /ʊŋ-/
+unkalkulierbar	unkalkulierbar	ˈʊnkalkuˌliːʁbaːʁ
+# un- should be recognized even with secondary stress. We should not get /ʊŋ-/ or /un-/.
+unkalkulierbar	ùnkalkulierbar	ˌʊnkalkuˈliːʁbaːʁ
+unzerstörbar	unzerstörbar	ˈʊnt͡sɛʁˌʃtøːʁbaːʁ
+unzerstörbar	unzerstö́rbar	ʊnt͡sɛʁˈʃtøːʁbaːʁ
+unzerstörbar	ùnzerstörbar	ˌʊnt͡sɛʁˈʃtøːʁbaːʁ
+undulös	un+dulös	ʊnduˈløːs
+unieren	un+ieren	uˈniːʁən
+Uniform	Un+nifòrm	ˈʊniˌfɔʁm
+unikal	ùn+ickal	ˌunɪˈkaːl
+universal	un+iversal	univɛʁˈzaːl
+Union	Un+ion	uˈni̯oːn
+
 # ur-
 Urlaub	Urlaub	ˈuːʁˌlaʊ̯p
 Ursache	Ursache	ˈuːʁˌzaxə
@@ -771,18 +847,16 @@ urbanisieren	urbanisieren	ʊʁbaniˈziːʁən	ur- should not be segmented due to
 Uranus	Ur+anus	ˈuːʁanʊs
 uruguayisch	ur+ugwayisch	ˈuːʁuɡvaɪ̯ɪʃ
 
-# double/triple prefixes
-beabsichtigen	beabsichtigen	bəˈʔapzɪçtɪɡən
+# ver-
 veranlagen	veranlagen	fɛʁˈʔanlaːɡən
 verunglücken	verunglücken	fɛʁˈʔʊnɡlʏkən
 Verunreinigung	Verunreinigung	fɛʁˈʔʊnˌʁaɪ̯nɪɡʊŋ
 verunstalten	verunstalten	fɛʁˈʔʊnˌʃtaltən
-beunruhigen	beunruhigen	bəˈʔʊnˌʁuːɪɡən
-beurlauben	beur-lauben	bəˈʔuːʁˌlaʊ̯bən
-unausgegoren	unausgegoren	ˈʊnʔaʊ̯sɡəˌɡoːʁən
-unzerstörbar	unzerstörbar	ˈʊnt͡sɛʁˌʃtøːʁbaːʁ
-unzerstörbar	unzerstö́rbar	ˌʊnt͡sɛʁˈʃtøːʁbaːʁ
 
+# zu-
+zuständig	zuständig	ˈt͡suːˌʃtɛndɪç
+zugetan	zugetan	ˈt͡suːɡəˌtaːn
+zugespitzt	zugespitzt	ˈt͡suːɡəˌʃpɪt͡st
 
 # Suffix handling
 
@@ -892,7 +966,7 @@ zwangsweise	zwangsweise	ˈt͡svaŋsˌvaɪ̯zə
 haufenweise	haufenweise	ˈhaʊ̯fənˌvaɪ̯zə
 probeweise	probeweise	ˈpʁoːbəˌvaɪ̯zə
 quartalsweise	quartál>s>>weise	kvaʁˈtaːlsˌvaɪ̯zə
-versuchsweise	versuch>s>>weise	fɛʁˈzuːxsˌvaɪ̯zə
+versuchsweise	versuhch>s>>weise	fɛʁˈzuːxsˌvaɪ̯zə
 abschnittweise	abschnittweise	ˈapʃnɪtˌvaɪ̯zə
 ansatzweise	ansatzweise	ˈanzat͡sˌvaɪ̯zə
 ausnahmsweise	ausnahmsweise	ˈaʊ̯snaːmsˌvaɪ̯zə
@@ -923,6 +997,16 @@ manchmal	mánchmal	ˈmançmaːl
 manchmal	manch>mal	ˈmançmaːl
 optimal	optimal	ɔptiˈmaːl
 
+# -tionär
+Revolutionär	Revolutionär	ʁevolut͡si̯oˈnɛːʁ
+quasistationär	quasi-stationär	ˈkvaːziʃtat͡si̯oˌnɛːʁ
+
+# -är
+singulär	singulär	zɪŋɡuˈlɛːʁ
+intermediär	inter<mediär	ɪntɐmeˈdi̯ɛːʁ
+Veterinär	Veterinär	vetəʁiˈnɛːʁ
+unpopulär	unpopulär	ˈʊnpopuˌlɛːʁ
+
 # -ierbar
 realisierbar	realisierbar	ʁealiˈziːʁbaːʁ
 prognostizierbar	prognostizierbar	pʁoɡnɔstiˈt͡siːʁbaːʁ
@@ -930,10 +1014,17 @@ undefinierbar	undefinierbar	ˈʊndefiˌniːʁbaːʁ
 undefinierbar	undefiniérbar	ʊndefiˈniːʁbaːʁ
 
 # -bar
+strafbar	strafbar	ˈʃtʁaːfbaːʁ
+jagdbar	jagdbar	ˈjaːktbaːʁ
 abbaubar	abbaubar	ˈapˌbaʊ̯baːʁ
+unbesiegbar	ùnbesiegbar	ˌʊnbəˈziːkbaːʁ
+unbesiegbar	unbesiegbar	ˈʊnbəˌziːkbaːʁ
+unüberschaubar	ùnüberscháubar	ˌʊnʔyːbɐˈʃaʊ̯baːʁ
+unüberschaubar	unüberschaubar	ˈʊnʔyːbɐˌʃaʊ̯baːʁ
+unauffindbar	unauffíndbar	ʊnʔaʊ̯fˈfɪntbaːʁ
 recyclebar	rißáikelbar	ʁiˈsaɪ̯kəlˌbaːʁ
-unüberschaubar	unüberscháubar	ˌʊnʔyːbɐˈʃaʊ̯baːʁ
-unüberschaubar	unüberschàubar	ˈʊnʔyːbɐˌʃaʊ̯baːʁ
+downloadbar	daun-loUdbar	ˈdaʊ̯nˌlɔʊ̯tbaːʁ
+downloadbar	daun-lodbar	ˈdaʊ̯nˌloːtbaːʁ
 isobar	isobár	izoˈbaːʁ
 
 # -chen
@@ -969,8 +1060,8 @@ Unterstreichen	Unterstreichen	ʔʊntɐˈʃtʁaɪ̯çən
 Ermöglichen	Ermöglichen	ɛʁˈmøːklɪçən
 Backenknochen	Backen-knochen	ˈbakənˌknɔxən
 Oberschenkelknochen	Ober-schenkel--knochen	ˈoːbɐʃɛŋkəlˌknɔxən
-Apfelkuchen	Apfel-kuchen	ˈapfəlˌkuːxən
-Passivrauchen	Passihv-rauchen	ˈpasiːfˌʁaʊ̯xən
+Apfelkuchen	Apfel-kuhchen	ˈapfəlˌkuːxən
+Passivrauchen	Pássiv-rauchen	ˈpasiːfˌʁaʊ̯xən
 Untertauchen	Untertauchen	ˈʊn.tɐˌtaʊ̯xən
 Verscheuchen	Verscheuchen	fɛʁˈʃɔɪ̯çən
 Bärchen	Bärchen	ˈbɛːʁçən
@@ -1011,7 +1102,7 @@ dauerhaft	dauerhaft	ˈdaʊ̯ɐˌhaft
 
 # -heit
 Abgeschiedenheit	Abgeschiedenheit	ˈapɡəˌʃiːdənhaɪ̯t
-Absolutheit	Absolutheit	Ab+solútheit	apzoˈluːthaɪ̯t
+Absolutheit	Absolútheit	apzoˈluːthaɪ̯t
 Abwesenheit	Abwesenheit	ˈapˌveːzənhaɪ̯t
 Allgemeinheit	All-geméinheit	ˌalɡəˈmaɪ̯nhaɪ̯t
 Freiheit	Freiheit	ˈfʁaɪ̯haɪ̯t
@@ -1320,13 +1411,6 @@ trägt	trägt	tʁɛːkt
 überdimensionieren	überdimensionieren	ˈyːbɐdimɛnzi̯oˌniːʁən
 # -t is treated as a suffix, so -o- is long
 überholt	überhólt	ˌyːbɐˈhoːlt
-# un- is a recognized stressed prefix; when not stressed it doesn't get secondary stress, as in [[unglaublich]] (FIXME: is this correct?)
-ungar	ungar	ˈʔʊnˌɡaːʁ
-# -st would be interpreted as a suffix, leading to long -e-
-ungebremst	ungebremmst	ˈʊnɡəˌbʁɛmst
-ungelöst	ungelöst	ˈʊnɡəˌløːst
-unglaublich	unglaublich	ˈʊnɡlaʊ̯plɪç
-unglaublich	ungláublich	ʊnˈɡlaʊ̯plɪç
 # need to double the t otherwise the stressed -a- would be long
 ungrammatisch	ungrammàttisch	ˈʊnɡʁaˌmatɪʃ
 versiert	ver+siert	vɛʁˈziːʁt
@@ -1346,15 +1430,10 @@ zweirädrig	zwei-rädrig	ˈt͡svaɪ̯ˌʁɛːdʁɪç
 zweiprozentig	zwei-prozéntig	ˈt͡svaɪ̯pʁoˌt͡sɛntɪç
 zweimonatlich	zwei-monatlich	ˈt͡svaɪ̯ˌmoːnatlɪç
 zweiminütig	zwei-minǘtig	ˈt͡svaɪ̯miˌnyːtɪç
-zuständig	zuständig	ˈt͡suːˌʃtɛndɪç
-# ge- is recognized as inseparable by default
-# stressed -an is lengthened by default
-zugetan	zugetan	ˈt͡suːɡəˌtaːn
-zugespitzt	zugespitzt	ˈt͡suːɡəˌʃpɪt͡st
 
 # secondary stress
 Lethargie	Lèthargie	ˌletaʁˈɡiː
-liberal	liberál	libeˈʁaːl	dewikt
-liberal	lìberál	ˌlibəˈʁaːl	enwikt
+liberal	liberal	libeˈʁaːl	dewikt
+liberal	lìberal	ˌlibəˈʁaːl	enwikt
 hyperaktiv	hỳ*per-áktihv	ˌhypɐˈʔaktiːf
-Universität	Ùniversität	ˌunivɛʁziˈtɛːt
+Universität	Ùn+iversität	ˌunivɛʁziˈtɛːt
