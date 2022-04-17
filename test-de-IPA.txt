@@ -87,7 +87,7 @@ Saison	Sĕsóng	zɛˈzɔŋ
 salonfähig	salṍ-fähig	zaˈlõːˌfɛːɪç
 Bain-Marie	Bẽmarie	bɛ̃maˈʁiː
 Bohemien	Boemiẽ́	boeˈmjɛ̃ː
-Bohemien	Bo.hemiẽ́	boheˈmjɛ̃ː
+Bohemien	Bohemiẽ́	boheˈmjɛ̃ː
 Cousin	Kusẽ́	kuˈzɛ̃ː
 Cousin	Kuséng	kuˈzɛŋ
 Lingerie	Lẽʒerie	lɛ̃ʒəˈʁiː
@@ -166,11 +166,11 @@ Alkoholismus	Àlkoholismus	ˌalkohoˈlɪsmʊs
 Jehova	Jehóva	jeˈhoːva
 Kohorte	Kohorte	koˈhɔʁtə
 Bahuvrihi	Bahuvrihi	bahuˈvʁiːhi
-Bahuvrihi	Bahuvrihi	bahuˈvʁiːhi
 nihilistisch	nihilistisch	nihiˈlɪstɪʃ
+Estomihi	Estomíhi	ɛstoˈmiːhi
+Tohuwabohu	Tòhhuwabóhu	ˌtoːhuvaˈboːhu
 huhu	huhu	ˈhuːhu
 Uhudler	U.huhdler	ˈuːhuːdlɐ
-Estomihi	Estomíhi	ɛstoˈmiːhi
 
 # -gu- in hiatus
 Ambiguität	Ambigu.ität	ambiɡuiˈtɛːt
@@ -317,7 +317,7 @@ Agrobiologie	Agro-bi.ologie	ˈaːɡʁobioloˌɡiː
 Algebra	Algebra	ˈalɡebʁa
 Algebra	Algébra	alˈɡeːbʁa	Austria
 Capri	Kapri	ˈkaːpʁi
-deprekativ	deprekatív	depʁekaˈtiːf
+deprekativ	deprekativ	depʁekaˈtiːf
 deprimierend	deprimierend	depʁiˈmiːʁənt
 Ruprecht	Ruprecht	ʁuːpʁɛçt
 Ruprecht	Rupprecht	ˈʁʊpʁɛçt
@@ -352,7 +352,7 @@ Taekwondo	Täkwóndo	tɛˈkvɔndo
 Uruguayerin	Ur+ugwayerin	ˈuːʁuɡvaɪ̯əʁɪn
 
 # Syllable boundary in -gn-
-Signal	Signál	zɪˈɡnaːl
+Signal	Signal	zɪˈɡnaːl
 designieren	designieren	dezɪˈɡniːʁən
 Kognition	Koggnition	ˌkɔɡniˈt͡si̯oːn
 Kognat	Koggnát	kɔˈɡnaːt
@@ -451,7 +451,7 @@ Alkoholabhängigkeit	Alkohól-abhängigkeit	alkoˈhoːlʔaphɛŋɪçkaɪ̯t
 Alkoholabhängigkeit	Alkohól-abhä́ngigkeit	alkoˈhoːl(ʔ)apˌhɛŋɪçkaɪ̯t
 Abkürzungsverzeichnis	Abkürzung>s-verzeichnis	ˈapkʏʁt͡sʊŋsfɛʁˌt͡saɪ̯çnɪs
 Abschiedsbrief	Abschied>s-brief	ˈapʃiːt͡sˌbʁiːf
-Massenkarambolage	Massen-karamboláʒe
+Massenkarambolage	Massen-karamboláʒe	ˈmasənkaʁamboˌlaːʒə
 Aufmerksamkeitsdefizit-Hyperaktivitätsstörung	Aufmerksamkeit>s-defizit--Hyper<aktivität>s-störung	ˈaʊ̯fmɛʁkzaːmkaɪ̯t͡sdeːfit͡sɪthypɐʔaktiviˌtɛːt͡sʃtøːʁʊŋ
 Donaudampfschifffahrtsgesellschaftskapitän	Donau-dampf-schiff-fahrt>s-gesellschaft>s--kapitä́n	ˈdoːnaʊ̯damp͡fʃɪffaːʁt͡sɡəzɛlʃaft͡skapiˌtɛːn
 # FIXME: dewikt has primary stress on both 'Eierschalen' and 'sollbruchstellen' rather than secondary stress on the latter.
@@ -460,20 +460,20 @@ Kraftfahrzeug-Haftpflichtversicherung	Kraft-fahr-zeug--Haft-pflicht-versicherung
 # FIXME: verify the secondary stresses; not in dewikt
 neuntausendneunhundertneunundneunzig	neun-tausend--neun-hundert--neun-und--neunzig	ˈnɔɪ̯ntaʊ̯zəntˌnɔɪ̯nhʊndɐtˌnɔɪ̯nʔʊntˌnɔɪ̯nt͡sɪç
 Arbeitsunfähigkeitsbescheinigung	Arbeit>s-unfähigkeit>s--bescheinigung	ˈaʁbaɪ̯t͡sʔʊnfɛːɪçkaɪ̯t͡sbəˌʃaɪ̯nɪɡʊŋ
-Schwarzarbeitsbekämpfungsgesetz	Schwarz-arbeit>s--bekämpfung>s-gesetz	ˈʃvaʁt͡sʔaʁbaɪ̯t͡sbəˌkɛmp͡fʊŋsɡəˌzɛt͡s
+Schwarzarbeitsbekämpfungsgesetz	Schwarz-arbeit>s--bekämpfung>s--gesetz	ˈʃvaʁt͡sʔaʁbaɪ̯t͡sbəˌkɛmp͡fʊŋsɡəˌzɛt͡s
 Aufmerksamkeitsdefizitsyndrom	Aufmerksamkeit>s--defizit-syndróm	ˈaʊ̯fmɛʁkzaːmkaɪ̯t͡sˌdefit͡sɪtzʏndʁoːm
 Bauchspeicheldrüsenentzündung	Bauch-speichel-drüsen--entzündung	ˈbaʊ̯xʃpaɪ̯çəldʁyːzn̩(ʔ)ɛntˌt͡sʏndʊŋ
 Einzugsermächtigungsverfahren	Einzug>s-ermächtigung>s--verfahren	ˈaɪ̯nt͡suːks(ʔ)ɛʁmɛçtɪɡʊŋsfɛʁˌfaːʁən
 Ministerpräsidentenkandidatin	Miníster-präsident>en-kandidátin	miˈnɪstɐpʁɛziˌdɛntənkandiˌdaːtɪn
 # FIXME: enwikt has secondary stress on 'instrumenten' and stresses 'hersteller' as 'herstéller'
-Streichinstrumentenhersteller	Streich-instruménten--hersteller	ˈʃtʁaɪ̯ç(ʔ)ɪnstʁumɛntənˌheːʁʃtɛlɐ
+Streichinstrumentenhersteller	Streich-instrument>en--hersteller	ˈʃtʁaɪ̯ç(ʔ)ɪnstʁumɛntənˌheːʁʃtɛlɐ
 # FIXME: should this be segmented Geschlecht>s-identität>s--störung?
 Geschlechtsidentitätsstörung	Geschlecht>s-identität>s-störung	ɡəˈʃlɛçt͡sʔidɛntiˌtɛːt͡sˌʃtøːʁʊŋ
 Geschwindigkeitsbeschränkung	Geschwindigkeit>s-beschränkung	ɡəˈʃvɪndɪçkaɪ̯t͡sbəˌʃʁɛŋkʊŋ
 Arbeitsbeschaffungsmaßnahme	Arbeits-beschaffungs--maß-nahme	ˈaʁbaɪ̯t͡sbəʃafʊŋsˌmaːsnaːmə
 Arbeitsbeschaffungsprogramm	Arbeits-beschaffungs--prográmm	ˈaʁbaɪ̯t͡sbəʃafʊŋspʁoˌɡʁam
 Aufenthaltsbestimmungsrecht	Aufenthalts--bestimmungs-recht	ˈaʊ̯f(ʔ)ɛnthalt͡sbəˌʃtɪmʊŋsʁɛçt
-Kreuzschlitzschraubenzieher	Kreuz-schlitz--schrauben-zieher	ˈkʁɔɪ̯t͡sʃlɪt͡sˌʃʁaʊ̯bəndʁeːɐ
+Kreuzschlitzschraubenzieher	Kreuz-schlitz--schrauben-zieher	ˈkʁɔɪ̯t͡sʃlɪt͡sˌʃʁaʊ̯bənt͡siːɐ
 Meerwasserentsalzungsanlage	Meer-wasser--entsalzungs-anlage	ˈmeːʁvasɐʔɛntˌzalt͡sʊŋsʔanlaːɡə
 Nichtregierungsorganisation	Nicht-*regierung>s-organisation	ˌnɪçtʁeˈɡiːʁʊŋs(ʔ)ɔʁɡanizaˌt͡si̯oːn
 # FIXME: The double primary stress matches dewikt; correct?
@@ -635,13 +635,49 @@ beabsichtigen	beabsichtigen	bəˈʔapzɪçtɪɡən
 beunruhigen	beunruhigen	bəˈʔʊnˌʁuːɪɡən
 beurlauben	beurlauben	bəˈʔuːʁˌlaʊ̯bən
 
+# dafür-
+dafürsprechen	dafürsprechen	daˈfyːʁˌʃpʁɛçən
+dafürzuhalten	dafürzuhalten	daˈfyːʁt͡suˌhaltən
+
+# dagegen-
+dagegenstimmen	dagegenstimmen	daˈɡeːɡənˌʃtɪmən
+dagegengehaltenem	dagegengehaltenem	daˈɡeːɡənɡəˌhaltənəm
+
 # daher-
 daherreden	daherreden	daˈheːʁˌʁeːdən
 daherzureden	daherzureden	daˈheːʁt͡suˌʁeːdən
 
+# dahinter-
+dahinterstehen	dahinterstehen	daˈhɪntɐˌʃteːən
+dahinterzuknien	dahinterzuknien	daˈhɪntɐt͡suˌkniːn
+# FIXME, make sure the following works
+dahinterzuknieen	dahinterzuknieen	daˈhɪntɐt͡suˌkniːən
+
 # dahin-
 dahingehen	dahingehen	daˈhɪnˌɡeːən
 dahinvegetieren	dahinvegetieren	daˈhɪnveɡeˌtiːʁən
+
+# daneben-
+danebengeraten	danebengeraten	daˈneːbənɡəˌʁaːtən
+danebenzubenehmen	danebenzubenehmen	daˈneːbənt͡subəˌneːmən
+
+# dar-
+darstellen	darstellen	ˈdaːʁˌʃtɛlən
+Darbietung	Darbietung	ˈdaːʁˌbiːtʊŋ
+darzutun	darzutun	ˈdaːʁt͡suˌtuːn
+darüber	darǘber	daˈʁyːbɐ
+
+# davon-
+davonstehlen	davonstehlen	daˈfɔnˌʃteːlən
+davongejagte	davongejag>te	daˈfɔnɡəˌjaːktə
+
+# davor-
+davorstellen	davorstellen	daˈfoːʁˌʃtɛlən
+davorzuhängen	davorzuhängen	daˈfoːʁt͡suˌhɛŋən
+
+# dazu-
+dazuaddieren	dazuaddieren	daˈt͡suːʔaˌdiːʁən
+dazuzugehören	dazuzugehören	daˈt͡suːt͡suɡəˌhøːʁən
 
 # durcheinander-
 durcheinanderessen	durcheinanderessen	dʊʁç(ʔ)aɪ̯ˈnandɐˌʔɛsən
@@ -661,11 +697,29 @@ Eintrag	Eintrag	ˈaɪ̯nˌtʁaːk
 # "zel" is too short of a main part for "Ein-" to be partitioned off here.
 Einzelzimmer	Einzel-zimmer	ˈaɪ̯nt͡səlˌt͡sɪmɐ
 
+# empor-
+emporsteigen	emporsteigen	ɛmˈpoːʁˌʃtaɪ̯ɡən
+emporgearbeiteter	emporgearbeiteter	ɛmˈpoːʁɡəˌʔaʁbaɪ̯tətɐ
+Emporium	Empóri.um	ɛmˈpoːʁiʊm
+
 # emp-
 empirisch	empírisch	ɛmˈpiːʁɪʃ
 emphatisch	emphátisch	ɛmˈfaːtɪʃ
 Empfang	Empfang	ɛmpˈfaŋ
 Empfindsamkeit	Empfindsamkeit	ɛmpˈfɪntzaːmˌkaɪ̯t
+
+# entgegen-
+entgegensehen	entgegensehen	ɛntˈɡeːɡənˌzeːən
+entgegenzustrecken	entgegenzustrecken	ɛntˈɡeːɡənt͡suˌʃtʁɛkən
+entgegen-	entgegen-	ɛntˈɡeːɡən
+
+# entlang-
+entlangeilen	entlangeilen	ɛntˈlaŋˌʔaɪ̯lən
+entlangmarschieren	entlangmarschieren	ɛntˈlaŋmaʁˌʃiːʁən
+
+# entzwei-
+entzweispringen	entzweispringen	ɛntˈt͡svaɪ̯ˌʃpʁɪŋən
+entzweigegangen	entzweigegangen	ɛntˈt͡svaɪ̯ɡəˌɡaŋən
 
 # ent-
 entsprechend	entsprechend	ɛntˈʃpʁɛçənt
@@ -680,6 +734,10 @@ errackern	errackern	ɛʁˈʁakɐn
 fortbewegen	fortbewegen	ˈfɔʁtbəˌveːɡən
 Fortentwicklung	Fortentwicklung	ˈfɔʁt(ʔ)ɛntˌvɪklʊŋ
 fortstoßen	fortstoßen	ˈfɔʁtˌʃtoːsən
+
+# gegenüber-
+gegenüberstehen	gegenüberstehen	ɡeːɡənˈʔyːbɐˌʃteːən
+gegenübergesessen	gegenübergesessen	ɡeːɡənˈʔyːbɐɡəˌzɛsən
 
 # herab-
 herabstürzen	herabstürzen	hɛˈʁapˌʃtʏʁt͡sən
@@ -714,7 +772,6 @@ herübergefahren	herübergefahren	hɛˈʁyːbɐɡəˌfaːʁən
 herüberzuwechseln	herüberzuwechseln	hɛˈʁyːbɐt͡suˌvɛksəln
 
 # herum-
-# FIXME, will the secondary stress work?
 herumscharwenzeln	herumscharwènzeln	hɛˈʁʊmʃaʁˌvɛnt͡səln
 herumspinnen	herumspinnen	hɛˈʁʊmˌʃpɪnən
 herumexperimentieren	herumexpêrimentieren	hɛˈʁʊm(ʔ)ɛkspeʁimɛnˌtiːʁən
@@ -805,17 +862,26 @@ niederzuzerren	niederzuzerren	ˈniːdɐt͡suˌt͡sɛʁən
 übereinanderzuschlagenden	übereinanderzuschlagenden	yːbɐʔaɪ̯ˈnandɐt͡suˌʃlaːɡəndən
 
 # über-
-übereinstimmen	über<einstimmen	yːbɐˈʔaɪ̯nˌʃtɪmən
 überfahren	überfahren	ˈyːbɐˌfaːʁən
 # über- should be recognized, translated to ǘber- and then to ü̏ber- (i.e. with double grave), so that
 # length is preserved.
 überfahren	über<fahren	yːbɐˈfaːʁən
+überdimensionieren	überdimensionieren	ˈyːbɐdimɛnzi̯oˌniːʁən
+# über- should still be recognized with secondary stress on it.
+überholt	ǜberhol>t	ˌyːbɐˈhoːlt
+übereinstimmen	über<einstimmen	yːbɐˈʔaɪ̯nˌʃtɪmən
+überanstrengen	über<anstrengen	yːbɐˈʔanˌʃtʁɛŋən
 überbeanspruchen	überbeanspruchen	ˈyːbɐbəˌʔanʃpʁʊxən
 überzubeanspruchen	überzubeanspruchen	ˈyːbɐt͡subəˌʔanʃpʁʊxən
+Überangebot	Über-angebot	ˈyːbɐˌʔanɡəboːt
 
 # um-
 umfahren	umfahren	ˈʊmˌfaːʁən	to "drive over", "to knock down by driving"
 umfahren	um<fahren	ʊmˈfaːʁən	to "drive around", "to bypass"
+umzustrukturieren	umzustrukturieren	ˈʊmt͡suʃtʁʊktuˌʁiːʁən
+umzustrukturieren	umzus*trukturieren	ˈʊmt͡sustʁʊktuˌʁiːʁən
+umzuerziehende	umzuerziehende	ˈʊmt͡suʔɛʁˌt͡siːəndə
+Umgebindehaus	Umgebinde-haus	ˈʊmɡəbɪndəˌhaʊ̯s
 
 # un-
 ungar	ungar	ˈʊnˌɡaːʁ
@@ -827,6 +893,7 @@ ungelöst	ungelös>t	ˈʊnɡəˌløːst
 unartig	unahrtig	ˈʊnˌʔaːʁtɪç
 unanständig	unanständig	ˈʊnʔanˌʃtɛndɪç
 unpathetisch	unpathètisch	ˈʊnpaˌteːtɪʃ
+ungrammatisch	ungrammàttisch	ˈʊnɡʁaˌmatɪʃ
 unprätentiös	unprätentiös	ˈʊnpʁɛtɛnˌt͡si̯øːs
 unsexy	uns*exi	ˈʊnˌsɛksi
 unislamisch	unislàmisch	ˈʊn(ʔ)ɪsˌlaːmɪʃ
@@ -845,6 +912,7 @@ unieren	un+ieren	uˈniːʁən
 Uniform	Un+nifòrm	ˈʊniˌfɔʁm
 unikal	ùn+ickal	ˌunɪˈkaːl
 universal	un+iversal	univɛʁˈzaːl
+Universität	Ùn+iversität	ˌunivɛʁziˈtɛːt
 Union	Un+ion	uˈni̯oːn
 
 # ur-
@@ -864,11 +932,43 @@ veranlagen	veranlagen	fɛʁˈʔanlaːɡən
 verunglücken	verunglücken	fɛʁˈʔʊnɡlʏkən
 Verunreinigung	Verunreinigung	fɛʁˈʔʊnˌʁaɪ̯nɪɡʊŋ
 verunstalten	verunstalten	fɛʁˈʔʊnˌʃtaltən
+verträglich	verträglich	fɛʁˌtʁɛːklɪç
+versiert	ver+siert	vɛʁˈziːʁt
+vertiert	vertiert	fɛʁˈtiːʁt
+vertretbar	vertretbar	fɛʁˈtʁeːtbaːʁ
+
+# zueinander-
+zueinandergehalten	zueinandergehalten	t͡suʔaɪ̯ˈnandɐɡəˌhaltən
+zueinanderzufinden	zueinanderzufinden	t͡suʔaɪ̯ˈnandɐt͡suˌfɪndən
+
+# zurecht-
+zurechtrücken	zurechtrücken	t͡suˈʁɛçtˌʁʏkən
+zurechtzubekommen	zurechtzubekommen	t͡suˈʁɛçtt͡subəˌkɔmən
+
+# zurück-
+zurückstecken	zurückstecken	t͡suˈʁʏkˌʃtɛkən
+zurückverlegt	zurückverleg>t	t͡suˈʁʏkfɛʁˌleːkt
+zurückerstatten	zurückerstatten	t͡suˈʁʏk(ʔ)ɛʁˌʃtatən
+zurücküberweisen	zurücküberweisen	t͡suˈʁʏk(ʔ)yːbɐˌvaɪ̯zən
+zurückzuüberweisen	zurückzuüberweisen	t͡suˈʁʏkt͡su(ʔ)yːbɐˌvaɪ̯zən
+
+# zusammen-
+Zusammenspiel	Zusammenspiel	t͡suˈzamənˌʃpiːl
+zusammenarbeitetest	zusammenarbeitetest	t͡suˈzamənˌʔaʁbaɪ̯tətəst
+zusammenveranlagtem	zusammenveranlag>tem	t͡suˈzamənfɛʁˌʔanlaːktəm
+zusammenzuveranlagender	zusammenzuveranlagender	t͡suˈzamənt͡sufɛʁˌʔanlaːɡəndɐ
+zusammenzuaddierendes	zusammenzuaddierendes	t͡suˈzamənt͡suʔaˌdiːʁəndəs
 
 # zu-
 zuständig	zuständig	ˈt͡suːˌʃtɛndɪç
 zugetan	zugetan	ˈt͡suːɡəˌtaːn
 zugespitzt	zugespitzt	ˈt͡suːɡəˌʃpɪt͡st
+zuzugestehen	zuzugestehen	ˈt͡suːt͡suɡəˌʃteːən
+
+# zwischen-
+Zwischenbemerkung	Zwischenbemerkung	ˈt͡svɪʃənbəˌmɛʁkʊŋ
+zwischengeschlechtlich	zwischengeschlechtlich	ˈt͡svɪʃənɡəˌʃlɛçtlɪç
+
 
 # Suffix handling
 
@@ -977,7 +1077,7 @@ leihweise	leihweise	ˈlaɪ̯ˌvaɪ̯zə
 zwangsweise	zwangsweise	ˈt͡svaŋsˌvaɪ̯zə
 haufenweise	haufenweise	ˈhaʊ̯fənˌvaɪ̯zə
 probeweise	probeweise	ˈpʁoːbəˌvaɪ̯zə
-quartalsweise	quartál>s>>weise	kvaʁˈtaːlsˌvaɪ̯zə
+quartalsweise	quartal>s>>weise	kvaʁˈtaːlsˌvaɪ̯zə
 versuchsweise	versuhch>s>>weise	fɛʁˈzuːxsˌvaɪ̯zə
 abschnittweise	abschnittweise	ˈapʃnɪtˌvaɪ̯zə
 ansatzweise	ansatzweise	ˈanzat͡sˌvaɪ̯zə
@@ -1107,6 +1207,7 @@ Wissenschaft	Wissenschaft	ˈvɪsənˌʃaft
 Barschaft	Barschaft	ˈbaːʁʃaft
 Botschaft	Botschaft	ˈboːtʃaft
 Komplizenschaft	Komplízenschaft	kɔmˈpliːt͡sənˌʃaft
+Wirtschaftswissenschaft	Wirtschaft>s-wissenschaft	ˈvɪʁtʃaft͡sˌvɪsənʃaft
 
 # -haft
 albtraumhaft	alb-traum>haft	ˈalpˌtʁaʊ̯mhaft
@@ -1380,10 +1481,6 @@ Fakultät	Fakultät	fakʊlˈtɛːt
 
 
 
-verträglich	verträglich	fɛʁˌtʁɛːklɪç
-Wirtschaftswissenschaft	Wirtschaft>s-wissenschaft	ˈvɪʁtʃaft͡sˌvɪsənʃaft
-
-
 # secondary pronunciation ˈaːlˌʔaːʁtɪk will also be shown, with the following: "common form in southern Germany, Austria, and Switzerland"
 aalartig	aal-ahrtig	ˈaːlˌʔaːʁtɪç
 Akkordeon	Akkórdeon	aˈkɔʁdeɔn
@@ -1398,17 +1495,10 @@ höfisch	höfisch	ˈhøːfɪʃ
 # -lich is a recognized suffix; the remainder is processed as if word-final
 höflich	höflich	ˈhøːflɪç
 holografisch	holográfisch	holoˈɡʁaːfɪʃ
-# -t would be interpreted as a suffix, leading to long u
-just	jusst	jʊst
-# -t would be interpreted as a suffix, leading to long u
-robust	robússt	ʁoˈbʊst
-korrupt	korrúpt	kɔˈʁʊpt
 # -bar is a recognized suffix
 kostbar	kostbar	ˈkɔstbaːʁ
 kostendeckend	kosten-deckend	ˈkɔstənˌdɛkənt
-# -fest is a recognized suffix (in particular the -t is not interpreted as a suffix)
 säurefest	säurefest	ˈzɔɪ̯ʁəˌfɛst
-# -haft is a recognized suffix (in particular the -t is not interpreted as a suffix, and scham is treated by itself, hence the long -a-)
 schamhaft	schamhaft	ˈʃaːmhaft
 separat	separát	zepaˈʁaːt	standard per dewikt
 separat	sèparát	ˌzeːpaˈʁaːt	standard per enwikt
@@ -1418,25 +1508,15 @@ Stabsarzt	Stab>s-ahrzt	ˈʃtaːpsˌʔaːʁt͡st
 soigniert	so̯anjiert	zo̯anˈjiːʁt
 todernst	tod-ernst	ˈtoːtˌʔɛʁnst
 traditionsbewusst	traditions-bewusst	tʁadiˈt͡si̯oːnsbəˌvʊst
-trägt	trägt	tʁɛːkt
-# über- is a recognized prefix
-überdimensionieren	überdimensionieren	ˈyːbɐdimɛnzi̯oˌniːʁən
-# -t is treated as a suffix, so -o- is long
-überholt	überhólt	ˌyːbɐˈhoːlt
-# need to double the t otherwise the stressed -a- would be long
-ungrammatisch	ungrammàttisch	ˈʊnɡʁaˌmatɪʃ
-versiert	ver+siert	vɛʁˈziːʁt
-vertiert	vertiert	fɛʁˈtiːʁt
-# ver- is a recognized prefix, -bar is a recognized suffix
-vertretbar	vertretbar	fɛʁˈtʁeːtbaːʁ
+trägt	träg>t	tʁɛːkt
+wüst	wüs>t	vyːst
 wachsen	wachsen	ˈvaksən
-wachst	wachst	vaxst
-wachst	wackst	vakst
+wachst	wach>st	vaxst
+wachst	wachst	vakst
 wachst	wachs>t	vakst
 # Maybe -weit should be recognized as a suffix
 webweit	webb-weit	vɛpˌvaɪ̯t
 wiederentdecken	wiederentdecken	ˈviːdɐʔɛntˌdɛkən
-wüst	wüst	vyːst
 wutentbrannt	wut-entbrannt	ˈvuːtʔɛntˌbʁant
 zweirädrig	zwei-rädrig	ˈt͡svaɪ̯ˌʁɛːdʁɪç
 zweiprozentig	zwei-prozéntig	ˈt͡svaɪ̯pʁoˌt͡sɛntɪç
@@ -1447,5 +1527,4 @@ zweiminütig	zwei-minǘtig	ˈt͡svaɪ̯miˌnyːtɪç
 Lethargie	Lèthargie	ˌletaʁˈɡiː
 liberal	liberal	libeˈʁaːl	dewikt
 liberal	lìberal	ˌlibəˈʁaːl	enwikt
-hyperaktiv	hỳ*per-áktihv	ˌhypɐˈʔaktiːf
-Universität	Ùn+iversität	ˌunivɛʁziˈtɛːt
+hyperaktiv	hỳ*per-áktiv	ˌhypɐˈʔaktiːf

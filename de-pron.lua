@@ -4,101 +4,75 @@ Implementation of pronunciation-generation module from spelling for German.
 
 Author: Benwing
 
-The following symbols can be used:
--- Acute accent on a vowel to override the position of primary stress; in a diphthong, put it over the first vowel:
---   á é í ó ú ä́ ö́ ǘ ái éi áu ä́u éu
--- Grave accent to add secondary stress: à è ì ò ù ä̀ ö̀ ǜ ài èi àu ä̀u èu
--- Double grave accent to add tertiary stress: ȁ ȅ ȉ ȍ ȕ ä̏ ö̏ ü̏ ȁi ȅi ȁu ä̏u ȅu. Tertiary stress has the same effect on
---   vowels as secondary stress (e.g. they lengthen in open syllables) but is rendered without a stress mark. Under
---   normal circumstances, you do not have to explicitly add tertiary stress. Rather, secondary stresses (including
---   those generated automatically) are automatically converted to tertiary stress in certain circumstances, e.g.
---   when compounding two words that are already compounds. See the discussion on -- (double hyphen) below.
--- 'h' or ː after a vowel to force it to be long.
--- Circumflex on a vowel (â ê î ô û ä̂ ö̂ ü̂) to force it to have closed quality.
--- Breve on a vowel, including a stressed vowel (ă ĕ ĭ ŏ ŭ ä̆ ö̆ ü̆) to force it to have open quality.
--- Tilde on a vowel or capital N afterwards to indicate nasalization.
--- For an unstressed 'e', force its quality using schwa (ə) to indicate a schwa, breve (ĕ) to indicate open quality /ɛ/,
---   circumflex (ê) to indicate closed quality /e/.
--- . (period) to force a syllable boundary.
--- - (hyphen) to indicate a word/word boundary in a compound word; the result will be displayed as a single word but
---   the consonants on either side treated as if they occurred at the beginning/end of the word, and each part of the
---   compound gets its own stress (primary stress on the first part unless another part has primary stress, secondary
---   stress on the remaining parts unless stress is explicitly included).
--- -- (double hyphen) to indicate a word/word boundary in a compound word where one (or both) of the component words
---    itself is a compound. Here, the original secondary stresses turn into tertiary stresses (not shown) and the
---    primary stress the second component (and further components) becomes secondary. See discussion below.
--- < (less-than) to indicate a prefix/word or prefix/prefix boundary; similar to - for word/word boundary, but the
---   prefix before the < sign will be unstressed.
--- > (greater-than) to indicate a word/suffix or suffix/suffix boundary; similar to - for word/word boundary, but the
---   suffix after the > sign will be unstressed.
--- + (plus) is the opposite of -; it forces a prefix/word, word/word or word/suffix boundary to *NOT* occur when it
---   otherwise would.
--- _ (underscore) to force the letters on either side to be interpreted independently, when the combination of the two
---   would normally have a special meaning.
---  ̣ (dot under) on any vowel in a word or component to prevent it from getting any stress.
---  ̯ (inverted breve under) to indicate a non-syllabic vowel. Most common uses: i̯ in words like [[Familie]]
---   respelled 'Famíli̯e'; o̯ in French-derived words like [[soigniert]] respelled 'so̯anjiert' (-iert automatically gets
---   primary stress); occasionally y̯ in words like [[Ichthyologie]] respelled 'Ichthy̯ologie' (-ie automatically gets
---   primary stress).  There is also u̯ but it's mostly unnecessary as a 'u' directly followed by another vowel by
---   default becomes non-syllabic. Finally, the generated phonemic notation includes /aɪ̯/ for spelled 'ei' and 'ai';
---   /ɔɪ̯/ for spelled 'eu' and 'äu'; and /aʊ̯/ for spelled 'au'; and the generated phonetic notation includes [ɐ̯] for
---   vocalized /ʁ/ (i.e. written 'r' in a syllable coda). However, you rarely if ever need to type these symbols
---   explicitly.
+-------------------- STRESS ----------------
 
-Notes:
+If there are no prefixes or suffixes, the default position of the stress is on the first syllable; e.g. [[arbeiten]]
+/ˈaʁbaɪ̯tən/ "to work" or [[hundert]] /ˈhʊndɐt/ "hundert". This may change in the presence of prefixes or suffixes. For
+example, the module recognizes the prefix er- as unstressed, and hence in a word like [[Ermächtigung]] /ɛʁˈmɛçtɪɡʊŋ/
+"authorization" the stress is instead placed on the first syllable of the main part. Similarly, the module recognizes
+the suffix -ieren as stressed, and hence [[abandonnieren]] /abandɔnˈiːʁən/ "to abandon". The module also knows about
+stressed prefixes such as auf-, aus-, über-, etc. and unstressed suffixes as -chen and -lich. Although they don't
+change the position of the stress, they have other effects. For example, in [[aufstellen]] /ˈaʊ̯fˌʃtɛlən/ "to set up"
+the main part following the stressed prefix gets secondary stress and is treated as word-initial (hence 'st-' is
+rendered as /ʃt/). Similarly, in [[Mädchen]] /ˈmɛːtçən/ "girl" the main part is treated as if word-final and hence the
+stressed vowel 'ä' is lengthened before a single word-final consonant. In the presence of both a stressed prefix and
+suffix, the prefix takes precedence and the suffix gets secondary stress, hence [[ausprobieren]] /ˈaʊ̯spʁoˌbiːʁən/
+"to try out".
 
-1. Doubled consonants, as well as digraphs/trigraphs etc. like 'ch', 'ng', 'tz', 'sch', 'tsch', etc. cause a
-   preceding vowel to be short and open (/ɛ ɪ ɔ ʊ œ ʏ/) unless lengthened with h or ː.
-2. With occasional exceptions, a vowel before a single consonant (including at the end of a word or component)
-   is closed (/e i o u ø y/), and long if stressed (primary or secondary).
-3. The vowel 'e' is rendered by default as schwa (/ə/) in the following circumstances:
-   a. The prefixes 'ge-', 'be-' are recognized specially and rendered with a schwa and without stress. This doesn't
-      apply if the 'e' is respelled with an accent, e.g. 'Génitiev' for [[Genitiv]] "genitive" or 'géstern' for
-	  [[gestern]] "yesterday".
-	  It also doesn't happen if a + is placed at the putative prefix boundary, hence [[Geograf]] "geographer" could be
-	  respelled 'Ge+ográf' to prevent 'Ge' from being interpreted as a prefix. Finally, it doesn't happen if the
-	  cluster following the 'ge-' or 'be-' cannot be the start of a German word, e.g. [[bellen]] "to bark" ('ll' cannot
-	  start a word) or [[bengalisch]] "Bengal" ('ng' cannot start a word).
-   a. If there is a following stress in the word, only in an internal (non-initial) open unstressed syllable (i.e.
-      followed by only a single consonant) when 'r' follows, as in Temp̱e̱ratur, Gene̱ralität, Souve̱ränität, Hete̱rogenität,
-      degene̱rieren, where the underlined vowels are by default rendered as a schwa. Other cases with schwa like
-	  [[Sozietät]] or [[Pietät]] need to be respelled with a schwa, e.g. 'Soziǝtät', 'Pìǝtät'.
-   b. If there is no following stress, any 'e' word-finally or followed by consonants that might form part of an
-      inflectional ending is rendered as a schwa, e.g. Lage̱, zuminde̱ste̱ns, verschiede̱ne̱n, verwende̱t. Examples where
-	  this does not happen are Late̱x, Ahme̱d, Bize̱ps, Borre̱tsch, Brege̱nz, which would be rendered by default with /ɛ/ or
-	  /e/. Cases like [[Achilles]] and [[Agens]] that have /ɛ/ but end in what looks like an inflectional ending should
-	  be respelled with ĕ.
-4. Obstruents 'b' 'd' 'g' 'v' 'ʒ' are normally rendered as voiceless /p t k f ʃ/ at the end of a word or syllable.
-   To cause them to be voiced, one way is to move the syllable boundary before the consonant by inserting a . before
-   the consonant. If that isn't appropriate, put brackets around the sound, as in '[b]', '[d]', '[z]', etc.
-5. 'v' is normally rendered as underlying /v/ (which becomes /f/ at the end of a word or syllable). Words like [[vier]],
-   [[viel]], [[Vater]], etc. need respelling using 'f'. Note that prefixes ver-, vor-, voraus-, vorher-, etc. are
-   recognized specially.
-6. French-derived words often need respelling and may have sounds in them that don't have standard spellings in
-   German. For example, [[Orange]] can be spelled 'Orã́ʒe' or 'OráNʒe'; use a tilde or a following capital N to
-   indicate a nasal vowel, and use a 'ʒ' character to render the sound /ʒ/.
-7. Rendering of 'ch' using ich-laut /ç/ or ach-laut /x/ is automatic. To force one or the other, use 'ç' explicitly
-   (as in 'Açilles-ferse' for one pronunciation of [[Achillesferse]] "Achilles heel") or 'x' explicitly (as in
-   '[X]uzpe' for [[Chuzpe]] "chutzpah").
-8. Vowels 'i' and 'u' in hiatus (i.e. directly before another vowel) are normally converted into glides, i.e. /i̯ u̯/,
-   as in [[effizient]] (no respelling needed as '-ent' is recognized as a stressed suffix), [[Antigua]] (respelled
-   'Antíguah'). To preven this, add a '.' between the vowels to force a syllable boundary, as in [[aktualisieren]]
-   'àktu.alisieren'. An exception to the glide conversion is the digraph 'ie'; to force glide conversion, as in
-   [[Familie]], use 'i̯' explicitly (respelled 'Famíli̯e'). Occasionally the  ̯ symbol needs to be added to other vowels,
-   e.g. in [[Ichthyologie]] respelled 'Ichthy̯ologie' (note that '-ie' is a recognized stressed suffix) and
-   [[soigniert]] respelled 'so̯anjiert' ('-iert' is a recognized stressed suffix).
-9. The double hyphen is used when joining compound words together. For example, [[Hubschrauber]] "helicopter" respelled
-   'Hub-schrauber' is rendered as [ˈhuːpˌʃʁaʊ̯bɐ] while [[Landeplatz]] "landing place; airstrip; wharf, pier" respelled
-   'Lande-platz' is rendered [ˈlandəˌplat͡s], and the combination [[Hubschrauberlandeplatz]] "heliport, helicopter port"
-   respelled 'Hub-schrauber--lande-platz' is rendered [ˈhuːpʃʁaʊ̯bɐˌlandəplat͡s]. Here, the original secondary
-   stresses turn into tertiary stresses (not shown) and the primary stress in [[Landeplatz]] becomes secondary.
-   The loss of secondary stress has no other effect on the phonology. For example, consider [[Rundflug]]
-   "sightseeing flight" (lit. "circular flight") respelled 'Rund-flug' and rendered [ˈʁʊntˌfluːk]. When combined
-   with [[Hubschrauber]], the result [[Hubschrauberrundflug]] "helicopter sightseeing flight" respelled
-   'Hub-schrauber--rund-flug' is rendered [ˈhuːpʃʁaʊ̯bɐˌʁʊntfluːk], where the last vowel is still long despite
-   (apparently) losing the stress. Another example is [[Hubschrauberpilot]] "helicopter pilot", compounded of
-   [[Hubschrauber]] and [[Pilot]] "pilot". The latter must be respelled 'Pilót' due to the unexpected stress.
-   The combination [[Hubschrauberpilot]] should be respelled 'Hub-schrauber--pilòt', rendered as
+Use an acute accent on a vowel to override the position of primary stress (in a diphthong, put it over the first
+vowel): á é í ó ú ä́ ö́ ǘ ái éi áu ä́u éu. Examples: [[systemisch]] 'systémisch' /zʏsˈteːmɪʃ/ "systemic", [[Migräne]]
+'Migrä́ne' /miˈɡʁɛːnə/ "migraine". Use a grave accent to add secondary stress: à è ì ò ù ä̀ ö̀ ǜ ài èi àu ä̀u èu. Examples:
+[[Prognose]] 'Prògnóse' /ˌpʁoˈɡnoːzə/ "forecast", [[Milligramm]] 'Milligràmm' /ˈmɪliˌɡʁam/ "milligram" (the primary
+stress takes its default position on the first syllable, as it is unmarked).
+
+-------------------- COMPOUNDS ------------------
+
+Use a hyphen (-) to indicate a word/word boundary in a compound word. The result will be displayed as a single word but
+the consonants on either side treated as if they occurred at the beginning/end of the word, and each part of the
+compound gets its own stress (normally primary stress on the first part and secondary stress on the remaining parts).
+Examples: [[Hubschrauber]] 'Hub-schrauber' /ˈhuːpˌʃʁaʊ̯bɐ/ "helicopter", [[Landeplatz]] 'Lande-platz' /ˈlandəˌplat͡s/
+"landing place, landing pad".
+
+Use a double hyphen (--) to indicate a word/word boundary in a compound word where one or both of the component words
+itself are themselves compounds. Here, the original secondary stresses turn into tertiary stresses (which aren't shown
+but are treated internally as stressed) and the primary stress in the second and further components becomes secondary.
+An example is [[Hubschrauberlandeplatz]] "helipad" (literally "helicopter landing pad") respelled
+'Hub-schrauber--lande-platz' and rendered [ˈhuːpʃʁaʊ̯bɐˌlandəplat͡s]. Comparing this with the above renderings of
+[[Hubschrauber]] and [[Landeplatz]], it can be seen that the original primary stress in [[Landeplatz]] becomes
+secondary while the original secondary stresses disappear. The loss of secondary stress has no other effect on the
+phonology. For example, consider [[Rundflug]] 'Rund-flug' /ˈʁʊntˌfluːk/ "sightseeing flight" (literally "circular
+flight"). When combined with [[Hubschrauber]], the result is [[Hubschrauberrundflug]] 'Hub-schrauber--rund-flug'
+/ˈhuːpʃʁaʊ̯bɐˌʁʊntfluːk/ "helicopter sightseeing flight", where the last vowel stays long despite (apparently) losing
+the stress.
+
+Other examples to demonstrate the use of single and double hyphens in compounds:
+* [[Maulwurfshügel]] 'Maul-wurfs--hügel' /maʊ̯lvʊʁfsˌhyːɡəl/ "molehill"
+* [[Hubschrauberabsturz]] 'Hub-schrauber--absturz' /ˈhuːpʃʁaʊ̯bɐˌʔapʃtʊʁt͡s/ "helicopter crash"
+* [[Aufenthaltsgenehmigung]] 'Aufenthalts-genehmigung' /ˈaʊ̯f(ʔ)ɛnthalt͡sɡəˌneːmɪɡʊŋ/ "residence permit"
+* [[Magenschleimhautentzündung]] 'Magen-schleim-haut--entzündung' /ˈmaːɡənʃlaɪ̯mhaʊ̯t(ʔ)ɛntˌt͡sʏndʊŋ/ "gastritis"
+  (literally "gastric mucosal inflammation")
+* [[Kraftfahrzeug-Haftpflichtversicherung]] 'Kraft-fahr-zeug--Haft-pflicht-versicherung'
+  'ˈkʁaftfaːʁt͡sɔɪ̯kˌhaftp͡flɪçtfɛʁzɪçəʁʊŋ' "motor vehicle liability insurance"
+* [[Eierschalensollbruchstellenverursacher]] 'Eier-schalen--soll-bruch-stellen--verursacher'
+  /ˈaɪ̯ɐʃaːlənˌzɔlbʁʊxʃtɛlənfɛʁˌʔuːʁzaxɐ/ "egg cracker, eggshell breaker" (literally "eggshell breaking point causer")
+
+Explicitly marked stresses using acute and grave accents are *relative* stresses, i.e. they are relative to the
+component they are within. To make this clear, consider [[Pilot]] 'Pilót' /piˈloːt/ "pilot". When combined with
+[[Hubschrauber]], the result is [[Hubschrauberpilot]] 'Hub-schrauber--pilót' /ˈhupʃʁaʊ̯bɐpiˌloːt/ "helicopter pilot".
+Here, the rule of compound stressing specifies that the first component gets primary stress while remaining components
+get secondary stress. The primary stress specified here by the acute accent on [[Pilot]] is *relative* to the overall
+component stress, and hence it is displayed as secondary stress.
+
+Other examples with explicitly marked stress in compounds:
+* [[Ministerpräsidentenkandidatin]] 'Miníster-präsidénten-kandidátin' /miˈnɪstɐpʁɛziˌdɛntənkandiˌdaːtɪn/
+  "(female) prime minister candidate"
+* [[Eisbearbeitungsmaschine]] 'Eis-bearbeitungs--maschíne' /ˈaɪ̯sbəʔaʁbaɪ̯tʊŋsmaˌʃiːnə/ "ice resurfacing machine"
+* [[Hochtemperaturreaktor]] 'Hohch-temperatúr-reáktor' /ˈhoːxtɛmpəʁaˌtuːʁʁeˌaktoːʁ/ "high temperature reactor"
+* [[Arbeitsbeschaffungsprogramm]] 'Arbeits-beschaffungs--prográmm' /ˈaʁbaɪ̯t͡sbəʃafʊŋspʁoˌɡʁam/ "job creation program"
+
+
+"helicopter pilot", compounded of [[Hubschrauber]] and [[Pilot]] "pilot". The latter must be respelled 'Pilót' due to the unexpected stress.
+   The combination [[Hubschrauberpilot]] should correspondingly be respelled 'Hub-schrauber--pilót', rendered as
    [ˈhupʃʁaʊ̯bɐpiˌloːt]. Here, the primary stress should be converted to secondary; otherwise the word would
    wrongly end up rendered as [ˌhupʃʁaʊ̯bɐpiˈloːt], where the module assumes that since the second word has the
    primary stress, other words (including the first one) should have secondary stress. Other similar examples:
@@ -121,6 +95,89 @@ Notes:
    'Alkohól-ȧbhängigkeit' where the dot-above suppresses the stress marker but otherwise doesn't change the
    phonology).
 
+
+2. To specify absolute stress
+  c. NOTE: "Relative" stress refers to how stress is handled specifies the stress on a particular com
+Double grave accent to add tertiary stress: ȁ ȅ ȉ ȍ ȕ ä̏ ö̏ ü̏ ȁi ȅi ȁu ä̏u ȅu. Tertiary stress has the same effect on
+  vowels as secondary stress (e.g. they lengthen in open syllables) but is rendered without a stress mark. Under
+  normal circumstances, you do not have to explicitly add tertiary stress. Rather, secondary stresses (including
+  those generated automatically) are automatically converted to tertiary stress in certain circumstances, e.g.
+  when compounding two words that are already compounds. See the discussion on -- (double hyphen) below.
+'h' or ː after a vowel to force it to be long.
+Circumflex on a vowel (â ê î ô û ä̂ ö̂ ü̂) to force it to have closed quality.
+Breve on a vowel, including a stressed vowel (ă ĕ ĭ ŏ ŭ ä̆ ö̆ ü̆) to force it to have open quality.
+Tilde on a vowel or capital N afterwards to indicate nasalization.
+For an unstressed 'e', force its quality using schwa (ə) to indicate a schwa, breve (ĕ) to indicate open quality /ɛ/,
+  circumflex (ê) to indicate closed quality /e/.
+. (period) to force a syllable boundary.
+- (hyphen) to indicate a word/word boundary in a compound word; the result will be displayed as a single word but
+  the consonants on either side treated as if they occurred at the beginning/end of the word, and each part of the
+  compound gets its own stress (primary stress on the first part unless another part has primary stress, secondary
+  stress on the remaining parts unless stress is explicitly included).
+-- (double hyphen) to indicate a word/word boundary in a compound word where one (or both) of the component words
+   itself is a compound. Here, the original secondary stresses turn into tertiary stresses (not shown) and the
+   primary stress the second component (and further components) becomes secondary. See discussion below.
+< (less-than) to indicate a prefix/word or prefix/prefix boundary; similar to - for word/word boundary, but the
+  prefix before the < sign will be unstressed.
+> (greater-than) to indicate a word/suffix or suffix/suffix boundary; similar to - for word/word boundary, but the
+  suffix after the > sign will be unstressed.
++ (plus) is the opposite of -; it forces a prefix/word, word/word or word/suffix boundary to *NOT* occur when it
+  otherwise would.
+_ (underscore) to force the letters on either side to be interpreted independently, when the combination of the two
+  would normally have a special meaning.
+ ̣ (dot under) on any vowel in a word or component to prevent it from getting any stress.
+ ̯ (inverted breve under) to indicate a non-syllabic vowel. Most common uses: i̯ in words like [[Familie]]
+  respelled 'Famíli̯e'; o̯ in French-derived words like [[soigniert]] respelled 'so̯anjiert' (-iert automatically gets
+  primary stress); occasionally y̯ in words like [[Ichthyologie]] respelled 'Ichthy̯ologie' (-ie automatically gets
+  primary stress).  There is also u̯ but it's mostly unnecessary as a 'u' directly followed by another vowel by
+  default becomes non-syllabic. Finally, the generated phonemic notation includes /aɪ̯/ for spelled 'ei' and 'ai';
+  /ɔɪ̯/ for spelled 'eu' and 'äu'; and /aʊ̯/ for spelled 'au'; and the generated phonetic notation includes [ɐ̯] for
+  vocalized /ʁ/ (i.e. written 'r' in a syllable coda). However, you rarely if ever need to type these symbols
+  explicitly.
+
+Notes:
+
+1. Doubled consonants, as well as digraphs/trigraphs etc. like 'ch', 'ng', 'tz', 'sch', 'tsch', etc. cause a
+   preceding vowel to be short and open (/ɛ ɪ ɔ ʊ œ ʏ/) unless lengthened with h or ː.
+2. With occasional exceptions, a vowel before a single consonant (including at the end of a word or component)
+   is closed (/e i o u ø y/), and long if stressed (primary or secondary).
+3. The vowel 'e' is rendered by default as schwa (/ə/) in the following circumstances:
+   a. The prefixes 'ge-', 'be-' are recognized specially and rendered with a schwa and without stress. This doesn't
+      apply if:
+	  i. The 'e' is respelled with an accent, e.g. 'Génitiv' for [[Genitiv]] "genitive" or 'géstern' for [[gestern]]
+		 "yesterday".
+	  ii. A + is placed at the putative prefix boundary. Hence [[Geograf]] "geographer" could be respelled 'Ge+ográf'
+		  to prevent 'Ge' from being interpreted as a prefix.
+	  iii. The cluster following the 'ge-' or 'be-' cannot be the start of a German word, e.g. [[bellen]] "to bark"
+		   ('ll' cannot start a word) or [[bengalisch]] "Bengal" ('ng' cannot start a word).
+   a. If there is a following stress in the word, only in an internal (non-initial) open unstressed syllable (i.e.
+      followed by only a single consonant) when 'r' follows, as in Temp̱e̱ratur, Gene̱ralität, Souve̱ränität, Hete̱rogenität,
+      degene̱rieren, where the underlined vowels are by default rendered as a schwa. Other cases with schwa like
+	  [[Sozietät]] or [[Pietät]] need to be respelled with a schwa, e.g. 'Soziǝtät', 'Pìǝtät'.
+   b. If there is no following stress, any 'e' word-finally or followed by consonants that might form part of an
+      inflectional ending is rendered as a schwa, e.g. Lage̱, zuminde̱ste̱ns, verschiede̱ne̱n, verwende̱t. Examples where
+	  this does not happen are Late̱x, Ahme̱d, Bize̱ps, Borre̱tsch, Brege̱nz, which would be rendered by default with /ɛ/ or
+	  /e/. Cases like [[Achilles]] and [[Agens]] that have /ɛ/ but end in what looks like an inflectional ending should
+	  be respelled with ĕ.
+4. Obstruents 'b' 'd' 'g' 'v' 'ʒ' are normally rendered as voiceless /p t k f ʃ/ at the end of a word or syllable.
+   To cause them to be voiced, one way is to move the syllable boundary before the consonant by inserting a . before
+   the consonant. If that isn't appropriate, add a * after the sound, as in 'b*', 'd*', 'z*', etc.
+5. 'v' is normally rendered as underlying /v/ (which becomes /f/ at the end of a word or syllable). Words like [[vier]],
+   [[viel]], [[Vater]], etc. need respelling using 'f'. Note that prefixes ver-, vor-, voraus-, vorher-, etc. are
+   recognized specially.
+6. French-derived words often need respelling and may have sounds in them that don't have standard spellings in
+   German. For example, [[Orange]] can be spelled 'Orã́ʒe' or 'OráNʒe'; use a tilde or a following capital N to
+   indicate a nasal vowel, and use a 'ʒ' character to render the sound /ʒ/.
+7. Rendering of 'ch' using ich-laut /ç/ or ach-laut /x/ is automatic. To force one or the other, use 'ç' explicitly
+   (as in 'Açilles-ferse' for one pronunciation of [[Achillesferse]] "Achilles heel") or 'x' explicitly (as in
+   'X*uzpe' for [[Chuzpe]] "chutzpah").
+8. Vowels 'i' and 'u' in hiatus (i.e. directly before another vowel) are normally converted into glides, i.e. /i̯ u̯/,
+   as in [[effizient]] (no respelling needed as '-ent' is recognized as a stressed suffix), [[Antigua]] (respelled
+   'Antíguah'). To preven this, add a '.' between the vowels to force a syllable boundary, as in [[aktualisieren]]
+   'àktu.alisieren'. An exception to the glide conversion is the digraph 'ie'; to force glide conversion, as in
+   [[Familie]], use 'i̯' explicitly (respelled 'Famíli̯e'). Occasionally the  ̯ symbol needs to be added to other vowels,
+   e.g. in [[Ichthyologie]] respelled 'Ichthy̯ologie' (note that '-ie' is a recognized stressed suffix) and
+   [[soigniert]] respelled 'so̯anjiert' ('-iert' is a recognized stressed suffix).
 
 FIXME:
 
@@ -194,21 +251,8 @@ FIXME:
 	[[Aprikose]] /ˌapʁiˈkoːzə/, [[Olympionikin]] /olʏmpi̯oˈniːkɪn/, [[Tsatsiki]] /t͡saˈt͡siːki/, [[Artikel]]
 	/ˌaʁˈtiːkəl/ or /ˌaʁˈtɪkəl/, [[Batiken]] /ˈbaːtɪkən/. Seems to apply only to unstressed '-ik-' followed by 'e' +
 	no stress.
-35. 'h' between vowels should be lengthening only if no stress follows and the following vowel isn't a or o. Cf.
-    [[Reha]] /ˈʁeːha/, [[Dschihadist]] /d͡ʒihaːˈdɪst/, [[Johann]] /ˈjoːhan/, [[Lahar]] /ˈlaːhaʁ/, [[Mahagoni]]
-	/ˌmahaˈɡoːni/, [[Maharadscha]] /ˌmahaˈʁaːdʒa/ (prescriptive) or /ˌmahaˈʁadʒa/ (more common) or /ˌmahaˈʁatʃa/
-	(usual), [[Mohammed]] /ˈmoː.(h)a.mɛt/, [[Rehabilitation]] /ˌʁehabilitaˈt͡si̯oːn/, [[stenohalin]] /ʃtenohaˈliːn/,
-	[[Tomahawk]] /ˈtɔ.ma.haːk/ or /ˈtɔ.ma.hoːk/, [[Bethlehem]] /ˈbeːt.ləˌhɛm/ or /ˈbeːt.ləˌheːm/ (sometimes without
-	secondary stress), [[Bohemien]] /bo.(h)eˈmjɛ̃/, [[Bohemistik]] /boheˈmɪstɪk/, [[Ahorn]] /ˈʔaːhɔʁn/, [[Alkoholismus]]
-	/ˌalkohoˈlɪsmʊs/, [[Jehova]] /jeˈhoːva/, [[Kohorte]] /koˈhɔʁtə/, [[Nihonium]] /niˈhoːni̯ʊm/, [[Bahuvrihi]]
-	/bahuˈvʁiːhi/, [[Marihuana]] 'Marihu.ána' /maʁihuˈaːna/ (one pronunciation per dewikt), [[abstrahieren]]
-	/apstʁaˈhiːʁən/, [[ahistorisch]] /ˈahɪsˌtoːʁɪʃ/, [[Annihilation]] /anihilaˈt͡si̯oːn/, [[Antihistaminikum]]
-	/antihɪstaˈmiːnikʊm/ [[Mohammedaner]] /mohameˈdaːnɐ/, [[nihilistisch]] /nihiˈlɪstɪʃ/, [[Prohibition]]
-	/pʁohibiˈt͡si̯oːn/, [[Vehikel]] /veˈhiːkəl/ vs. [[Abziehung]] /ˈapt͡siːʊŋ/, [[Aufblähung]] /ˈaʊ̯fˌblɛːʊŋ/,
-	[[Auferstehung]] /ˈaʊ̯f(ʔ)ɛʁˈʃteːʊŋ/, [[Bedrohung]] /bəˈdʁoːʊŋ/, [[arbeitsfähig]] /ˈaʁbaɪ̯t͡sˌfɛːɪç/, [[befähigt]]
-	/bəˈfɛːɪçt/, [[Beruhigen]] /bəˈʁuːɪɡən/, [[Ehe]], /ˈeːə/, [[viehisch]] /ˈfiːɪʃ/.
-	Exception: [[huhu]] 'hu.hu' /ˈhuːhu/, [[Tohuwabohu]] 'Tòh.huwabó.hu' /ˌtoːhuvaˈboːhu/, [[Uhu]] 'U.hu' /ˈuːhu/,
-	[[Uhudler]] 'U.huhdler' /ˈuːhuːdlɐ/, [[Estomihi]] 'Estomí.hi' /ɛstoˈmiːhi/.
+35. 'h' between vowels should be lengthening only if no stress follows and the following vowel isn't a or o, and if
+    followed by i or u, that vowel should not be word-final. (DONE)
 36. Re-parse prefix/suffix respellings for <, e.g. auseinander-.
 37. Reimplement prefix-type restrictions using a finite state machine and handle secondary stress appropriately.
 38. ks should divide .ks but shorten preceding vowels. (DONE)
@@ -407,23 +451,6 @@ local allowed_onsets = {
 	"w[lr]",
 }
 
--- Pretty much all allowed offsets can additionally end in -s, except after ß, s, x, z.
-local allowed_offsets = {
-	"[bcdfghjklmnpqrstvwxz]",
-	"([bfglmnprstz])%1",
-	"r[bcdfgklmnptvwxz]",
-	"l[bdfgkmnptz]",
-	"n[cdfgktxz]",
-	"m[bdlpt]", -- ml only occurs in [[Kreml]]
-	"s[hklpt]", -- sp does not occur but may occur in compounds; sl is rare
-	"t[hlz]", -- tl is rare
-	"[kb]t",
-	"g[tdhln]", -- gl, gn is rare
-	"f[tzn]", -- fn is rare
-	"ch[tz]", -- chz is rare
-	-- FIXME
-}
-
 -- We view the possible combinations of prefixes through the lens of a finite state machine. This allows us to
 -- handle occasional cases where more than one of a given type of prefix occurs (e.g. [[überzubeanspruchen]]).
 -- NOTE ABOUT STRESS: After un-, stressed prefixes lose their stress and the root takes secondary stress; cf.
@@ -504,7 +531,7 @@ local prefixes = {
 	-- We have a few false negatives needing '<' or '<<', e.g. [[Abalienation]] /ˌapˌʔali̯enaˈt͡si̯oːn/, [[abalienieren]]
 	-- /ˌapʔali̯eˈniːʁən/, [[abaxial]] /apʔaˈksi̯aːl/, [[abhanden]] /apˈhandən/, [[abscheulich]] /apˈʃɔɪ̯lɪç/.
 	{"ab", "ább", not_with_following_primary_stress = true},
-	{"aneinander", "ann<einánder", secstress = "aneinànder"},
+	{"aneinander", "ànn<einánder", secstress = "aneinànder"},
 	{"anheim", "ann<héim", secstress = "anhèim"},
 	-- Must follow aneinander- and anheim-.
 	--
@@ -543,26 +570,50 @@ local prefixes = {
 	-- We add a restriction to not segment in anti-.
 	{"an", "ánn", not_with_following_primary_stress = true, restriction = {"^[^t]", "^t[^i]"}},
 	{"aufeinander", "auf<einánder", secstress = "aufeinànder"},
-	-- Must follow aufeinander.
+	-- Must follow aufeinander-.
 	{"auf", "áuf"},
 	{"auseinander", "aus<einánder", secstress = "auseinànder"},
-	-- Must follow auseinander.
+	-- Must follow auseinander-.
 	{"aus", "áus"},
+	{"außer", "áußer"},
 	{"beieinander", "bei<einánder", secstress = "beieinànder"},
-	-- Must follow beieinander.
+	-- FIXME, secondary stress in beiseite should get demoted to tertiary when handling explicit secondary stress
+	-- from user.
+	{"beiseite", "beiséite", secstress = "beisèite"},
+	-- Must follow beieinander-.
 	{"bei", "béi"},
 	-- Allow be- before -u- only in beur-, beun-; cf. [[beurlauben]], [[Beunruhigung]]. Must follow bei-.
 	{"be", "bə", restriction = {"^[^ui]", "^u[rn]"}},
+	{"dafür", "dafǘr", secstress = "dafǜr"},
+	{"dagegen", "dagégen", secstress = "dagègen"},
 	{"daher", "dahér", secstress = "dahèr"},
+	{"dahinter", "dahínter", secstress = "dahìnter"},
+	-- Must follow dahinter-.
 	{"dahin", "dahínn", secstress = "dahìn"},
+	{"daneben", "danében", secstress = "danèben"},
+	-- To reduce false positives, we don't recognize when main part or suffix has primary stress, e.g. [[darauf]]
+	-- /daˈʁaʊ̯f/, and additionally include a restriction to not segment when a vowel follows, e.g. the alternative
+	-- pronunciation of [[darauf]] as /ˈdaːʁaʊ̯f/ (without this restriction we'd get #/ˈdaːʁˌʔaʊ̯f/). The
+	-- `not_with_following_primary_stress` condition is mostly redundant given the non-vowel restriction.
+	{"dar", "dár", not_with_following_primary_stress = true, restriction = "^" .. C},
+	{"davon", "dafónn", secstress = "davòn"},
+	{"davor", "dafór", secstress = "davòr"},
+	{"dazu", "dazú", secstress = "dazù"},
 	{"durcheinander", "durch<einánder", secstress = "durcheinànder"},
-	-- Must follow durcheinander.
+	-- Must follow durcheinander-.
 	{"durch", "dúrch"},
 	{"ein", "éin"},
+	{"empor", "empór", secstress = "empòr"},
+	-- Must follow empor-.
 	{"emp", "emp", restriction = "^f"},
+	{"entgegen", "entgégen", secstress = "entgègen"},
+	{"entlang", "ent.láng", secstress = "entlàng"},
+	{"entzwei", "ent.zwéi", secstress = "entzwèi"},
+	-- Must follow entgegen- and entlang-.
 	{"ent", "ent"},
 	{"er", "err"},
 	{"fort", "fórt"},
+	{"gegenüber", "gehgen<ǘber", secstress = "gegenǜber"},
 	-- Most words in 'gei-' aren't past participles, cf. [[Geier]], [[Geifer]], [[geifern]], [[Geige]], [[geigen]],
 	-- [[Geiger]], [[geil]], [[geilo]], [[Geisel]], [[Geiser]], [[Geisha]], [[Geiß]], [[Geißel]], [[geißeln]],
 	-- [[Geist]], [[Geister]], [[geistig]], [[Geiz]], [[geizen]]. There are only a few, e.g. [[geimpft]], which need
@@ -610,10 +661,14 @@ local prefixes = {
 	-- too many false positives for in-
 	{"miss", "míss"},
 	{"mit", "mítt", not_with_following_primary_stress = true},
+	{"nebeneinander", "nehben<einánder", secstress = "nebeneinànder"},
+	{"neben", "nében"},
 	{"nieder", "níeder"},
 	{"übereinander", "ühber<einánder", secstress = "übereinànder"},
-	-- Must follow übereinander.
+	-- Must follow übereinander-.
 	{"über", "ǘber"},
+	-- Unstressed variant of über-. We include this for cases like [[zürucküberweisen]].
+	{"über", "ühber"},
 	-- umeinander- only dialectal (West Bavarian)
 	{"um", "úmm"},
 	{"unter", "únter"},
@@ -649,13 +704,15 @@ local prefixes = {
 	{"zueinander", "zu<einánder", secstress = "zueinànder"},
 	{"zurecht", "zurécht", secstress = "zurècht"},
 	{"zurück", "zurǘck", secstress = "zurǜck"},
+	{"zusammen", "zusámmen", secstress = "zusàmmen"},
 	-- Listed twice, first as stressed then as unstressed, because of zu-infinitives like [[anzufangen]]. At the
 	-- beginning of a word, stressed zú- will take precedence, but after another prefix, stressed prefixes can't occur,
-	-- and unstressed -zu- will occur. Must follow zueinander, zurecht, etc.
+	-- and unstressed -zu- will occur. Must follow zueinander-, zurecht-, etc.
 	{"zu", "zú"},
 	-- We use a separate type for unstressed -zu- because it can be followed by another unstressed prefix, e.g.
 	-- [[auszubedingen]], whereas normally two unstressed prefixes cannot occur.
 	{"zu", "zu", prefixtype = "unstressed-zu"},
+	{"zwischen", "zwíschen"},
 }
 
 --[=[
@@ -1644,8 +1701,6 @@ local phonemic_rules = {
 	-- rh: [[Arrhythmie]], [[Rhythmus]], [[Rhodos]], [[Rhabarber]], [[Rhapsodie]], [[Rheda]], [[Rhein]], [[Rhenium]],
 	--     [[Rhetorik]], [[Rheuma]], [[rhexigen]], [[Rhone]], etc.
 	{"([dtkgbr])h", "%1"},
-	-- Doubled vowels as in [[Haar]], [[Boot]], [[Schnee]], [[dööfer]], etc. become long.
-	{"([aeoäöü])(" .. accent_c .. "*" .. ")%1(" .. non_accent_c .. ")", "%1ː%2%3", true},
 	-- 'äu', 'eu' -> /ɔɪ̯/. /ɪ̯/ is two characters so we use I to represent it and convert later.
 	{"[äe](" .. accent_c .. "*" .. ")u(" .. non_accent_c .. ")", "ɔ%1I%2", true},
 	-- 'au' -> /aʊ̯/. /ʊ̯/ is two characters so we use U to represent it and convert later.
@@ -1654,15 +1709,45 @@ local phonemic_rules = {
 	{"[ae](" .. accent_c .. "*" .. ")i(" .. non_accent_c .. ")", "a%1I%2", true},
 	-- 'ie' -> /iː/.
 	{"i(" .. accent_c .. "*" .. ")e(" .. non_accent_c .. ")", "iː%1%2", true},
-	-- 'h' after a vowel followed by a stressed vowel should actually be pronounced, e.g. [[Abraham]], [[abstrahieren]],
-	-- [[Alkohol]], [[Kisuaheli]], [[Kontrahent]], [[Bahaitum]], [[Bahamas]], [[daheim]], [[Mudschahed]]. Other 'h'
-	-- between vowels are normally not pronounced, e.g. [[bähen]], [[beinahe]], [[Bejahung]]. Other cases of pronounced
-	-- 'h' between vowels should be indicated by placing a syllable divider '.' before the 'h' to make it
-	-- syllable-initial, e.g. [[ahistorisch]], [[Ahorn]], [[adhäsiv]], [[Lahar]], [[Mahagoni]].
-	{"h(" .. V .. accent_non_stress_c .. "*" .. stress_c .. ")", "H%1"},
-	-- Remaining 'h' after a vowel (not including a glide like I or U from dipthongs) indicates vowel length.
-	{"(" .. V_non_glide .. ")(" .. stress_c .. "*" .. ")h", "%1ː%2"},
-	-- Remaining 'h' after a vowel is superfluous, e.g. [[Vieh]], [[ziehen]], [[rauh]], [[leihen]], [[Geweih]].
+	-- Doubled vowels as in [[Haar]], [[Boot]], [[Schnee]], [[dööfer]], etc. become long. This should follow -ie-
+	-- handling to get the right output for 'knieen' (respelling or old spelling of [[knien]]).
+	{"([aeoäöü])(" .. accent_c .. "*" .. ")%1(" .. non_accent_c .. ")", "%1ː%2%3", true},
+	--[=[
+	'h' between vowels should be lengthening only if no stress follows and the following vowel isn't a or o, and if
+	followed by i or u, that vowel should not be word-final (cf. [[Estomihi]], [[Uhu]], [[Bahuvrihi]] with pronounced
+	'h' before word-final 'i' or 'u').
+	
+	Cf. [[Reha]] /ˈʁeːha/, [[Dschihadist]] /d͡ʒihaːˈdɪst/, [[Johann]] /ˈjoːhan/, [[Lahar]] /ˈlaːhaʁ/, [[Mahagoni]]
+	/ˌmahaˈɡoːni/, [[Maharadscha]] /ˌmahaˈʁaːdʒa/ (prescriptive) or /ˌmahaˈʁadʒa/ (more common) or /ˌmahaˈʁatʃa/
+	(usual), [[Mohammed]] /ˈmoː.(h)a.mɛt/, [[Rehabilitation]] /ˌʁehabilitaˈt͡si̯oːn/, [[stenohalin]] /ʃtenohaˈliːn/,
+	[[Tomahawk]] /ˈtɔ.ma.haːk/ or /ˈtɔ.ma.hoːk/, [[Bethlehem]] /ˈbeːt.ləˌhɛm/ or /ˈbeːt.ləˌheːm/ (sometimes without
+	secondary stress), [[Bohemien]] /bo.(h)eˈmjɛ̃/, [[Bohemistik]] /boheˈmɪstɪk/, [[Ahorn]] /ˈʔaːhɔʁn/, [[Alkoholismus]]
+	/ˌalkohoˈlɪsmʊs/, [[Jehova]] /jeˈhoːva/, [[Kohorte]] /koˈhɔʁtə/, [[Nihonium]] /niˈhoːni̯ʊm/, [[Bahuvrihi]]
+	/bahuˈvʁiːhi/, [[Marihuana]] 'Marihu.ána' /maʁihuˈaːna/ (one pronunciation per dewikt), [[abstrahieren]]
+	/apstʁaˈhiːʁən/, [[ahistorisch]] /ˈahɪsˌtoːʁɪʃ/, [[Annihilation]] /anihilaˈt͡si̯oːn/, [[Antihistaminikum]]
+	/antihɪstaˈmiːnikʊm/ [[Mohammedaner]] /mohameˈdaːnɐ/, [[nihilistisch]] /nihiˈlɪstɪʃ/, [[Prohibition]]
+	/pʁohibiˈt͡si̯oːn/, [[Vehikel]] /veˈhiːkəl/, [[huhu]] /ˈhuːhu/, [[Uhu]] /ˈuːhu/, [[Estomihi]] /ɛstoˈmiːhi/,
+	[[Tohuwabohu]] /ˌtoːhuvaˈboːhu/.
+	
+	Cf. (not pronounced) [[Abziehung]] /ˈapt͡siːʊŋ/, [[Aufblähung]] /ˈaʊ̯fˌblɛːʊŋ/, [[Auferstehung]] /ˈaʊ̯f(ʔ)ɛʁˈʃteːʊŋ/,
+	[[Bedrohung]] /bəˈdʁoːʊŋ/, [[arbeitsfähig]] /ˈaʁbaɪ̯t͡sˌfɛːɪç/, [[befähigt]] /bəˈfɛːɪçt/, [[Beruhigen]] /bəˈʁuːɪɡən/,
+	[[Ehe]], /ˈeːə/, [[viehisch]] /ˈfiːɪʃ/.
+
+	Exception needing respelling with '.' before the 'h': [[Uhudler]] 'U.huhdler' /ˈuːhuːdlɐ/.
+
+	We temporarily convert 'h' that should be preserved to 'H', then remove remaining 'h' after vowel, then convert
+	'H' back to 'h'.
+	]=]
+	{"h(" .. V .. "[^⁀‿]*" .. stress_c .. ")", "H%1", true},
+	{"h([ao])", "H%1"},
+	{"h([iu][⁀‿])", "H%1"},
+	-- Remaining 'h' after a vowel (not including a glide like I or U from dipthongs) indicates vowel length. Make sure
+	-- to put the ː before stress marks.
+	{"(" .. V_non_glide .. accent_non_invbrevebelow_c .. "-)(" .. stress_c .. "*" .. ")h", "%1ː%2"},
+	-- If we ended up with two ː signs (e.g. from superfluous lengthening 'h' as in [[Vieh]], [[ziehen]]), remove one
+	-- of them.
+	{"ːː", "ː"},
+	-- Remaining 'h' after a vowel is superfluous, e.g. [[rauh]], [[leihen]], [[Geweih]].
 	{"(" .. V .. accent_c .. "*" .. ")h", "%1"},
 	-- Convert special 'H' symbol (to indicate pronounced /h/ between vowels) back to /h/.
 	{"H", "h"},
@@ -1997,197 +2082,6 @@ local phonetic_rules = {
 	-- (3) Maybe show -ieren as if written -iern; but this may be colloquial.
 }
 
-
---[=[
-
-local function break_vowels(vowelseq)
-	local function check_empty(char)
-		if char ~= "" then
-			error("Something wrong, non-vowel '" .. char .. "' seen in vowel sequence '" .. vowelseq .. "'")
-		end
-	end
-
-	local vowels = {}
-	local chars = strutils.capturing_split(vowelseq, "(" .. V .. accent_c .. "*)")
-	local i = 1
-	while i <= #chars do
-		if i % 2 == 1 then
-			check_empty(chars[i])
-			i = i + 1
-		else
-			if i < #chars - 1 and com.diphthongs[
-				rsub(chars[i], stress_c, "") .. rsub(chars[i + 2], stress_c, "")
-			] then
-				check_empty(chars[i + 1])
-				table.insert(vowels, chars[i] .. chars[i + 2])
-				i = i + 3
-			else
-				table.insert(vowels, chars[i])
-				i = i + 1
-			end
-		end
-	end
-	return vowels
-end
-
--- Break a word into alternating C and V components where a C component is a run
--- of zero or more consonants and a V component in a single vowel or dipthong.
--- There will always be an odd number of components, where all odd-numbered
--- components (starting from 1) are C components and all even-numbered components
--- are V components.
-local function break_into_c_and_v_components(word)
-	local cons_vowel = strutils.capturing_split(word, "(" .. vowel_or_accent_c .. "+)")
-	local components = {}
-	for i = 1, #cons_vowel do
-		if i % 2 == 1 then
-			table.insert(components, cons_vowel[i])
-		else
-			local vowels = break_vowels(cons_vowel[i])
-			for j = 1, #vowels do
-				if j == 1 then
-					table.insert(components, vowels[j])
-				else
-					table.insert(components, "")
-					table.insert(components, vowels[j])
-				end
-			end
-		end
-	end
-	return components
-end
-
-local function split_into_syllables(word)
-	local cons_vowel = break_into_c_and_v_components(word)
-	if #cons_vowel == 1 then
-		return cons_vowel
-	end
-	for i = 1, #cons_vowel do
-		if i % 2 == 1 then
-			-- consonant
-			local cluster = cons_vowel[i]
-			local len = ulen(cluster)
-			if i == 1 then
-				cons_vowel[i + 1] = cluster .. cons_vowel[i + 1]
-			elseif i == #cons_vowel then
-				cons_vowel[i - 1] = cons_vowel[i - 1] .. cluster
-			elseif rfind(cluster, "%.") then
-				local before_break, after_break = rmatch(cluster, "^(.-)%.(.*)$")
-				cons_vowel[i - 1] = cons_vowel[i - 1] .. before_break
-				cons_vowel[i + 1] = after_break .. cons_vowel[i + 1]
-			elseif len == 0 then
-				-- do nothing
-			elseif len == 1 then
-				cons_vowel[i + 1] = cluster .. cons_vowel[i + 1]
-			elseif len == 2 then
-				local c1, c2 = rmatch(cluster, "^(.)(.)$")
-				if c1 == "s" and c2 == "ċ" then
-					cons_vowel[i + 1] = "sċ" .. cons_vowel[i + 1]
-				else
-					cons_vowel[i - 1] = cons_vowel[i - 1] .. c1
-					cons_vowel[i + 1] = c2 .. cons_vowel[i + 1]
-				end
-			else
-				-- check for onset_3 preceded by consonant(s).
-				local first, last3 = rmatch(cluster, "^(.-)(...)$")
-				if #first > 0 and com.onsets_3[last3] then
-					cons_vowel[i - 1] = cons_vowel[i - 1] .. first
-					cons_vowel[i + 1] = last3 .. cons_vowel[i + 1]
-				else
-					local first, last2 = rmatch(cluster, "^(.-)(..)$")
-					if com.onsets_2[last2] or (com.secondary_onsets_2[last2] and not first:find("[lr]$")) then
-						cons_vowel[i - 1] = cons_vowel[i - 1] .. first
-						cons_vowel[i + 1] = last2 .. cons_vowel[i + 1]
-					else
-						local first, last = rmatch(cluster, "^(.-)(.)$")
-						cons_vowel[i - 1] = cons_vowel[i - 1] .. first
-						cons_vowel[i + 1] = last .. cons_vowel[i + 1]
-					end
-				end
-			end
-		end
-	end
-
-	local retval = {}
-	for i = 1, #cons_vowel do
-		if i % 2 == 0 then
-			-- remove any stray periods.
-			table.insert(retval, rsub(cons_vowel[i], "%.", ""))
-		end
-	end
-	return retval
-end
-
--- Combine syllables into a word, moving stress markers (acute/grave) to the
--- beginning of the syllable.
-local function combine_syllables_moving_stress(syllables, no_auto_stress)
-	local modified_syls = {}
-	for i, syl in ipairs(syllables) do
-		if syl:find(ACUTE) or syl:find(AUTOACUTE) and not no_auto_stress then
-			syl = "ˈ" .. syl
-		elseif syl:find(GRAVE) or syl:find(AUTOGRAVE) and not no_auto_stress then
-			syl = "ˌ" .. syl
-		elseif i > 1 then
-			syl = "." .. syl
-		end
-		syl = rsub(syl, stress_c, "")
-		table.insert(modified_syls, syl)
-	end
-	return table.concat(modified_syls)
-end
-
--- Combine word parts (split-off prefixes, suffixes or parts of a compound word)
--- into a single word. Separate parts with ⁀ and the put ⁀⁀ at word boundaries.
-local function combine_parts(parts)
-	local text = {}
-	for i, part in ipairs(parts) do
-		if i > 1 and not rfind(part, "^[ˈˌ]") then
-			-- Need a syllable boundary if there isn't a stress marker.
-			table.insert(text, ".")
-		end
-		table.insert(text, part)
-	end
-	return "⁀⁀" .. table.concat(text, "⁀") .. "⁀⁀"
-end
-
-local function transform_word(word, pos, no_auto_stress)
-	word = decompose(word)
-	local parts = split_on_word_boundaries(word, pos)
-	for i, part in ipairs(parts) do
-		local syllables = split_into_syllables(part)
-		parts[i] = combine_syllables_moving_stress(syllables,
-			no_auto_stress or (#parts == 1 and #syllables == 1))
-	end
-	return combine_parts(parts)
-end
-
-local function default_pos(word, pos)
-	if not pos then
-		-- verbs in -an/-ōn/-ēon, inflected infinitives in -enne
-		if rfind(word, "[aāō]n$") or rfind(word, "ēon$") or rfind(word, "enne$") then
-			pos = "verb"
-		else
-			-- adjectives in -līċ, adverbs in -līċe and nouns in -nes can follow
-			-- nouns or participles (which are "verbal"); truncate the ending
-			-- and check what precedes
-			word = rsub(word, "^(.*" .. V .. ".*)l[iī][cċ]e?$", "%1")
-			word = rsub(word, "^(.*" .. V .. ".*)n[eiy]ss?$", "%1")
-			-- participles in -end(e)/-en/-ed/-od, verbal nouns in -ing/-ung
-			if rfind(word, "ende?$") or rfind(word, "[eo]d$") or rfind(word, "en$")
-				or rfind(word, "[iu]ng$") then
-				pos = "verbal"
-			else
-				pos = "noun"
-			end
-		end
-	elseif pos == "adj" or pos == "adjective" then
-		pos = "noun"
-	elseif pos ~= "noun" and pos ~= "verb" and pos ~= "verbal" then
-		error("Unrecognized part of speech: " .. pos)
-	end
-	return pos
-end
-
-]=]
 
 local function generate_phonemic_word(word, is_cap)
 	word = rsub(word, "(.)%*", char_to_explicit_char)
