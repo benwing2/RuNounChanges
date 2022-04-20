@@ -816,6 +816,10 @@ hindurchbewegen	hindurchbewegen	hɪnˈdʊʁçbəˌvəɡən
 hineinstecken	hineinstecken	hɪˈnaɪ̯nˌʃtɛkən
 hineingebären	hineingebären	hɪˈnaɪ̯nɡəˌbɛːʁən
 
+# hintan-
+hintanstellen	hintanstellen	hɪntˈʔanˌʃtɛlən
+hintangehalten	hintangehalten	hɪntˈʔanɡəˌhaltən
+
 # hinterher-
 hinterherhinken	hinterherhinken	hɪntɐˈheːʁˌhɪŋkən
 hinterherspionieren	hinterherspionieren	hɪntɐˈheːʁʃpi̯oˌniːʁən
@@ -852,6 +856,13 @@ mitansehen	mit<ansehen	mɪtˈʔanˌzeːən
 mitanzugebenden	mit<anzuge+benden	mɪtˈʔant͡suˌɡeːbəndən
 Mittag	Mit+tag	ˈmɪtaːk
 mitigieren	mitigieren	mitiˈɡiːʁən
+
+# nach-
+nachalarmieren	nachalarmieren	ˈnaːx(ʔ)alaʁˌmiːʁən
+nachversteuern	nachversteuern	ˈnaːxfɛʁˌʃtɔɪ̯ɐn
+nachschlägt	nachschläg>t	ˈnaːxˌʃlɛːkt
+Nachentgelt	Nachentgelt	ˈnaːx(ʔ)ɛntˌɡɛlt
+nachzuvollziehen	nachzufollzìehen	ˈnaːxt͡sufɔlˌt͡siːən
 
 # nieder-
 niederstürzen	niederstürzen	ˈniːdɐˌʃtʏʁt͡sən

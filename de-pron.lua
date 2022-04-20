@@ -651,6 +651,7 @@ local prefixes = {
 	{"hinaus", "hinnáus", secstress = "hinàus"},
 	{"hindurch", "hindúrch", secstress = "hindùrch"},
 	{"hinein", "hinnéin", secstress = "hinèin"},
+	{"hintan", "hint<ánn", secstress = "hintàn"},
 	{"hinterher", "hinter<hér", secstress = "hinterhèr"},
 	{"hinter", "hínter"},
 	{"hinüber", "hinnǘber", secstress = "hinǜber"},
@@ -661,6 +662,7 @@ local prefixes = {
 	-- too many false positives for in-
 	{"miss", "míss"},
 	{"mit", "mítt", not_with_following_primary_stress = true},
+	{"nach", "nahch"},
 	{"nebeneinander", "nehben<einánder", secstress = "nebeneinànder"},
 	{"neben", "nében"},
 	{"nieder", "níeder"},
@@ -1275,8 +1277,6 @@ local function split_word_on_components_and_apply_affixes(word, pos, affix_type,
 
 			-- Finally, put the components together.
 			return table.concat(parts, "⁀"), saw_explicit_propagating_stress
-			-- FIXME! Need wrapper that splits words, call split_word_on_components_and_apply_affixes() on each
-			-- word, and adds ⁀⁀ at beginning and end.
 		end
 	end
 
