@@ -1687,6 +1687,54 @@ local phonemic_rules = {
 	{"cc", "kk"},
 	{"c([^h])", "ʦ%1"},
 
+	--[=[
+	Handling of 'y'. In general, we convert 'y' to either 'ü', 'i', 'I' or 'j'. Do this before handling diphthongs
+	because the resulting 'i' may be in the combination 'ai' or 'ei', which needs to be handled as a diphthong.
+
+	1. Accented 'y' always becomes 'ü'.
+	2. Initial 'y' followed by a vowel becomes 'j', as in [[New York]] respelled 'Nju Yórk' /njuː ˈjɔrk/, [[Yacht]]
+	/jaxt/, [[Yak]] /jak/, [[Yang]] /jaŋ/, [[Yannick]] /ˈjanɪk/, [[Yen]] /jɛn/, [[Yersiniose]] /jɛʁziˈni̯oːzə/, [[Yeti]]
+	/ˈjeːti/, [[Yobibyte]] respelled 'Yóbibàit' /ˈjoːbiˌbaɪ̯t/, [[Yoga]] /ˈjoːɡa/, [[Yoni]] /ˈjoːni/, [[Yottabyte]]
+	respelled 'Yóttabàit' /ˈjɔtaˌbaɪ̯t/, [[Yuppie]] respelled 'Yuppi' /ˈjʊpi/.
+	3. Initial 'y' not followed by a vowel becomes 'ü', as in [[Ylid]] /yˈliːt/, [[Yperit]] /ypəˈʁiːt/, [[Ypern]]
+	/ˈyːpɐn/, [[Ypsilon]] /ˈʏpsilɔn/, [[Ytterbium]] /ʏˈtɛʁbi̯ʊm/, [[Yttererde]] /ˈʏtɐˌʔeːɐ̯də/, [[Yttrium]] /ˈʏtʁiʊm/.
+	Some words of this form need respelling: [[Ybbsitz]] respelled 'Ibbsitz', [[Ysop]] respelled 'Isop', [[Yspertal]]
+	respelled 'Isper-tal', [[Yvonne]] respelled 'Ivónn'.
+	4. Final 'y' after a consonant becomes 'i', as in [[Hobby]] /ˈhɔbi/, [[Body]] respelled 'Boddy' /ˈbɔdi/,
+    [[Stransky]] /ˈʃtʀanski/, [[Monopoly]] /moˈnoːpoli/, [[Whisky]] /ˈwɪski/, [[Sony]] /ˈzoːni/, etc.
+	5. Other 'y' after a consonant becomes 'ü', as in [[symmetrisch]] /zʏˈmeːtʁɪʃ/, [[Pyramide]] /ˌpyʁaˈmiːdə/,
+	[[Psychologie]] /psyçoloˈɡiː/, [[Acryl]] /aˈkʁyːl/, [[Aerodynamik]] /aeʁodyˈnaːmɪk/, [[Ägypten]] /ˌɛˈɡʏptn̩/,
+	[[analytisch]] /anaˈlyːtɪʃ/, [[Beryllium]] /beˈʁʏli̯ʊm/, etc. Also between a consonant and a vowel, e.g. [[Cyan]]
+	/t͡syˈaːn/, [[Kryometer]] /kʁyoˈmeːtɐ/, [[Dryade]] /dʁyˈaːdə/, [[Eukaryot]] /ɔɪ̯kaʁyˈoːt/, [[euryök]] /ɔɪ̯ʁyˈʔøːk/,
+	[[Harpyie]] /haʁˈpyːjə/, [[Amblyopie]] /amblyoˈpiː/, [[Myon]] /ˈmyːɔn/, [[Karyatide]] /kaʁyaˈtiːdə/. Some words of
+	the latter form need respelling, e.g. [[Myanmar]] respelled 'Miánmahr' /ˈmi̯anmaːɐ̯/, [[Libyen]] respelled 'Libien'
+	/ˈliːbi̯ən/, [[Magyar]] respelled 'Madjáhr' /maˈdjaːɐ̯/, [[Polyamorie]] respelled 'Poly-amoríe' /ˌpoːliʔamoˈʁiː/,
+	[[Polyester]] respelled 'Poliéster' /poˈli̯ɛstɐ/, [[Prokaryot]] respelled 'Prokary̯ót' /pʁokaˈʁy̯oːt/, [[Rallye]]
+	respelled 'Rally' /ˈʁali/ or 'Relly' /ˈʁɛli/, [[Canyon]] respelled 'Kenjen' /ˈkɛnjən/, [[Babyöl]] respelled
+	'Beby-öl' /ˈbeːbiˌʔøːl/, [[Ichthyologie]] respelled 'Ichthy̯ologie' /ɪçty̯oloˈɡiː/, etc. More rarely, some words of
+	the former form also need respelling, e.g. [[Calypso]] respelled 'Kalípso' /kaˈlɪpso/.
+	6. In the sequences 'ay', 'oy' not followed by a vowel, or followed by e/i/u and no stress follows, the 'y'
+	becomes 'I', e.g. [[Bayern]] /ˈbaɪ̯ɐn/, [[Hoyerswerda]] respelled 'Hoyers-*verda' /hɔɪ̯ɐsˈvɛʁda/, [[Mayer]] /ˈmaɪ̯ɐ/,
+	[[Paraguay]] /ˈpaːʁaɡvaɪ̯/ or /ˈpaʁaɡvaɪ̯/ or /paʁaˈɡu̯aɪ̯/, [[Uraguayer]] /ˈuːʁuɡvaɪ̯ɐ/ or /ˈʊʁuɡvaɪ̯ɐ/ or /ˌuʁuˈɡu̯aɪ̯ɐ/,
+	[[Payerbach]] respelled 'Payer-bach', [[Bayreuth]] /baɪ̯ˈʁɔʏ̯t/, [[bayrisch]] /ˈbaɪ̯ʁɪʃ/, [[Boykott]] /ˌbɔɪ̯ˈkɔt/,
+	[[Malaysia]] /maˈlaɪ̯zi̯a/, [[Maybach]] /ˈmaɪbax/.
+	7. In the sequence 'ey' in the same circumstances as the previous entry, the 'y' becomes 'i', e.g. [[Meyer]]
+	/ˈmaɪ̯ɐ/, [[Leyermann]] respelled 'Leyer-mann' /ˈlaɪ̯ɐˌman/, [[Speyer]] /ˈʃpaɪ̯ɐ/, [[Leyen]] /ˈlaɪ̯ən/, obsolete
+	spellings like [[beyde]] for [[beide]] or [[dabey]] for [[dabei]] or [[meyn]] for [[mein]], [[Geysir]] /ɡaɪ̯ˈziːʁ/.
+	8. Other 'y' after vowels becomes 'j', e.g. [[Alija]] /aˈlija/, [[Ayatollah]] /ˌajaˈtɔla/, [[Ayurveda]]
+	/ajʊʁˈveːda/, [[Cayenne]] respelled 'Kayén' /kaˈjɛn/, [[Chaya]] respelled 'Tschaya' /ˈt͡ʃaːja/, [[Cherimoya]]
+	respelled 'Tscherimoya' /t͡ʃeʁiˈmoːja/, [[flamboyant]] respelled 'flãbOayant' /flɑ̃bo̯aˈjant/, [[Guyana]] /ɡuˈjaːna/,
+	[[Französisch-Guayana]] /[fʁanˌt͡søːzɪʃ ɡuaˈjaːna/, [[Himalaya]] /hiˈmaːlaja/ or /himaˈlaːja/, [[Larmoyanz]]
+	respelled 'LarmOayanz' /laʁmo̯aˈjant͡s/, [[loyal]] /loˈjaːl/, [[Malayalam]] /malaˈjaːlam/ or /malajaˈlaːm/, [[Maya]]
+	/ˈmaːja/, [[Mayo]] /ˈmaːjo/, [[oktroyieren]] respelled 'oktrOayieren' /ɔktʁo̯aˈjiːʁən/, [[Oriya]] /oˈʁiːja/,
+	[[Papaya]] /paˈpaːja/, [[Toyota]] /toˈjoːta/.
+	]=]
+	{"y(" .. V .. accent_c .. "*" .. stress_c .. ")", "ü%1"}, -- #1 above
+	{"([⁀‿])y(" .. V .. ")", "%1j%2"}, -- #2 above
+	{"([⁀‿])y", "%1ü"}, -- #3 above
+	{"(" .. C .. "%.?)y([⁀‿])", "%1i%2"}, -- #4 above
+	{"(" .. C .. "%.?)y", "%1ü"}, -- #5 above
+	--
 	-- Handling of diphthongs and 'h'.
 	-- Not ff. Compare [[Graph]] with long /a/, [[Apostrophe]] with long second /o/.
 	{"ph", "f"},
@@ -1700,7 +1748,8 @@ local phonemic_rules = {
 	-- bh: [[Bhutan]].
 	-- rh: [[Arrhythmie]], [[Rhythmus]], [[Rhodos]], [[Rhabarber]], [[Rhapsodie]], [[Rheda]], [[Rhein]], [[Rhenium]],
 	--     [[Rhetorik]], [[Rheuma]], [[rhexigen]], [[Rhone]], etc.
-	{"([dtkgbr])h", "%1"},
+	-- wh: [[Whatsapp]], [[Whirlpool]], [[Whisky]], [[Whist]], [[Whistleblower]], [[Whiteboard]], [[Whiteout]], etc.
+	{"([dtkgbrw])h", "%1"},
 	-- 'äu', 'eu' -> /ɔɪ̯/. /ɪ̯/ is two characters so we use I to represent it and convert later.
 	{"[äe](" .. accent_c .. "*" .. ")u(" .. non_accent_c .. ")", "ɔ%1I%2", true},
 	-- 'au' -> /aʊ̯/. /ʊ̯/ is two characters so we use U to represent it and convert later.
