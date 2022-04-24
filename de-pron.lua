@@ -394,6 +394,7 @@ local explicit_char_to_phonemic = {
 
 local stress = ACUTE .. GRAVE .. DOUBLEGRAVE .. AUTOACUTE .. AUTOGRAVE .. ORIG_SUFFIX_GRAVE .. "ˈˌ"
 local stress_c = "[" .. stress .. "]"
+local non_stress_c = "[^" .. stress .. "]"
 local accent_non_stress_non_invbrevebelow = BREVE .. CFLEX .. TILDE .. DOTUNDER .. MACRON .. "ː*"
 local accent_non_stress = accent_non_stress_non_invbrevebelow .. INVBREVEBELOW
 local accent_non_stress_c = "[" .. accent_non_stress .. "]"
@@ -972,10 +973,18 @@ local function decompose(text)
 	})
 end
 
--- Canonicalize multiple spaces, remove leading and trailing spaces, remove exclamation points, question marks and
--- periods at end of sentence. Convert capital N after a vowel into a tilde to mark nasalization, and macron to long
--- mark (ː).
-local function canonicalize(text)
+-- Decompose the text, canonicalize in various ways, lowercase and split into words, returning each word along with
+-- whether the word was initially capitalized.
+--
+-- The canonicalization does the following:
+-- * remove leading, trailing and multiple spaces
+-- * remove exclamation points, question marks and periods at end of sentence (elsewhere they become foot boundaries)
+-- * convert commas and em/en dashes to foot boundaries
+-- * handle special uses of capital letters (N = nasalization, O/U/I/Y after consonant = high glide, I/U after vowel =
+--   near-high glide)
+-- * convert macrons to long marks
+-- * reorder accents appropriately
+local function canonicalize_and_split_words(text)
 	text = decompose(text)
 	text = rsub(text, "%s+", " ")
 	text = rsub(text, "^ ", "")
@@ -987,7 +996,7 @@ local function canonicalize(text)
 	-- Reorder so ACUTE/GRAVE/DOUBLEGRAVE go last.
 	text = reorder_accents(text)
 
-	-- convert commas and en/en dashes to IPA foot boundaries
+	-- convert commas and em/en dashes to IPA foot boundaries
 	text = rsub_repeatedly(text, "%s*[–—]%s*", " | ")
 	-- comma must be followed by a space; otherwise it might denote absolute secondary stress
 	text = rsub_repeatedly(text, "%s*,%s", " | ")
@@ -997,19 +1006,17 @@ local function canonicalize(text)
 	text = rsub_repeatedly(text, "([^%s])%s*[!?.]%s([^%s])", "%1 | %2")
 	text = rsub(text, "[!?.]$", "") -- eliminate absolute phrase-final punctuation
 
-	return text
-end
-
-
--- This should run on the output of canonicalize(). It splits the text into words, lowercases each word, but identifies
--- whether the word was initially capitalized.
-local function split_words(text)
 	local result = {}
 	for word in rgsplit(text, " ") do
 		-- Lowercase the word and check if it was capitalized.
 		local lcword = mw.getContentLanguage():lcfirst(word)
 		local is_cap = lcword ~= word
-		word = rsub(word, "O(" .. V .. ")", "o̯%1")
+		-- capital vowel between consonant and vowel represents a glide o̯/u̯/i̯/y̯
+		word = rsub(word, "(" .. C .. "%.?)([OUIY])(" .. V .. ")", function(c, cap_v, v)
+			return c .. ulower(cap_v) .. INVBREVEBELOW .. v
+		end)
+		-- Capital I/U after another vowel represents a near-high glide ɪ̯/ʊ̯; but conversion to these symbols happens
+		-- late, so we need to maintain the I/U when lowercasing the word.
 		word = rsub(word, "(" .. V .. accent_c .. "*)I", "%1" .. TEMP_I)
 		word = rsub(word, "(" .. V .. accent_c .. "*)U", "%1" .. TEMP_U)
 		word = ulower(word)
@@ -1729,11 +1736,16 @@ local phonemic_rules = {
 	/ˈmaːja/, [[Mayo]] /ˈmaːjo/, [[oktroyieren]] respelled 'oktrOayieren' /ɔktʁo̯aˈjiːʁən/, [[Oriya]] /oˈʁiːja/,
 	[[Papaya]] /paˈpaːja/, [[Toyota]] /toˈjoːta/.
 	]=]
-	{"y(" .. V .. accent_c .. "*" .. stress_c .. ")", "ü%1"}, -- #1 above
+	{"y(" .. accent_c .. "*" .. stress_c .. ")", "ü%1"}, -- #1 above
 	{"([⁀‿])y(" .. V .. ")", "%1j%2"}, -- #2 above
 	{"([⁀‿])y", "%1ü"}, -- #3 above
 	{"(" .. C .. "%.?)y([⁀‿])", "%1i%2"}, -- #4 above
 	{"(" .. C .. "%.?)y", "%1ü"}, -- #5 above
+	{"([ao]" .. accent_c .. "*" .. ")y(" .. non_V .. ")", "%1I%2"}, -- #6 above
+	{"([ao]" .. accent_c .. "*" .. ")y([eiu" .. schwalike .. "]" .. non_stress_c .. "*[⁀‿])", "%1I%2"}, -- #6 above
+	{"(e" .. accent_c .. "*" .. ")y(" .. non_V .. ")", "%1i%2"}, -- #7 above
+	{"(e" .. accent_c .. "*" .. ")y([eiu" .. schwalike .. "]" .. non_stress_c .. "*[⁀‿])", "%1i%2"}, -- #7 above
+	{"y", "j"}, -- #8 above
 	--
 	-- Handling of diphthongs and 'h'.
 	-- Not ff. Compare [[Graph]] with long /a/, [[Apostrophe]] with long second /o/.
@@ -2159,8 +2171,7 @@ local function do_phonemic_phonetic(text, pos, is_phonetic)
 		text = text[1]
 	end
 	local result = {}
-	text = canonicalize(text)
-	local words = split_words(text)
+	local words = canonicalize_and_split_words(text)
 	for _, wordspec in ipairs(words) do
 		local word = generate_phonemic_word(wordspec.word, wordspec.is_cap)
 		if is_phonetic then

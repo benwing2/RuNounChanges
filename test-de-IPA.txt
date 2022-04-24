@@ -98,7 +98,7 @@ Pointe	Po̯ẽ́te	Po̯ɛ̃ːte
 Pointe	POeNte	Po̯ɛ̃ːte
 Toilette	To̯alétte	to̯aˈlɛtə
 Toilette	Tolétte	toˈlɛtə
-Voyeur	Vo̯ajö́r	vo̯aˈjøːʁ
+Voyeur	Vo̯ayö́r	vo̯aˈjøːʁ
 Bourgeoisie	Bùrʒo̯asie	ˌbʊʁʒo̯aˈziː
 Couloir	Kulo̯ár	kuˈlo̯aːʁ
 Croissant	Cro̯assã́	kʁo̯aˈsãː
@@ -109,8 +109,8 @@ Rendezvous	Rã̀devú	ˌʁãdeˈvuː
 
 # English-derived words
 Bodyguard	Boddigàhrd	ˈbɔdiˌɡaːʁt
-Champion	Tschempi̯en	ˈt͡ʃɛmpi̯ən
-Whiskey	Wiski	ˈvɪski
+Champion	TschempIen	ˈt͡ʃɛmpi̯ən
+Whiskey	Whiski	ˈvɪski
 Whiskey	W*iski	ˈwɪski
 T-Shirt	Ti-Schöhrt	ˈtiːˌʃøːʁt
 Thriller	θriller	ˈθʁɪlɐ
@@ -124,12 +124,13 @@ Spray	SpreI	ʃpʁɛɪ̯
 Airbag	Ähr-begg	ˈɛːʁˌbɛk
 Homepage	HoUmpehdsch	ˈhɔʊ̯mpeːt͡ʃ
 Homepage	Hohmpehdsch	ˈhoːmpeːt͡ʃ
-Cowboy	KauboI	ˈkaʊ̯bɔɪ̯
-Playboy	Pleh-boI	ˈpleːˌbɔɪ̯
+Cowboy	Kauboy	ˈkaʊ̯bɔɪ̯
+Playboy	Pleh-boy	ˈpleːˌbɔɪ̯
 Comeback	Kambeck	ˈkambɛk
 Edinburgh	Eddinbere	ˈɛdɪnbərə
 Ghostwriter	GhoUst-raiter	ˈɡoʊ̯stˌʁaɪ̯tɐ
 Ghostwriter	Ghohst-raiter	ˈɡoːstˌʁaɪ̯tɐ
+Canyon	Kenjen	ˈkɛnjən
 
 # bs, ds, gs
 absurd	absúrd	apˈzʊʁt
@@ -208,8 +209,67 @@ evaluieren	evalu.ieren	evaluˈiːʁən
 Situation	Situ.azión	zituaˈt͡si̯oːn
 
 # -y-
-paraguayanisch	paraguayánisch	paʁaɡu̯aɪ̯ˈaːnɪʃ	enwikt pron #1
-paraguayanisch	paragwayánisch	paʁaɡvaɪ̯ˈaːnɪʃ	enwikt pron #2
+# Stressed y
+Acryl	Acrýl	aˈkʁyːl
+analytisch	analýtisch	anaˈlyːtɪʃ
+Beryllium	Berýllium	beˈʁʏli̯ʊm
+Ägypten	Ägýpten	ɛˈɡʏptən
+Harpyie	Harpýje	haʁˈpyːjə
+# Initial y followed by vowel
+Yacht	Yacht	jaxt
+New York	Nju̇ York	njuː ˈjɔrk
+Yoga	Yoga	ˈjoːɡa
+Yottabyte	Yóttabàit	ˈjɔtaˌbaɪ̯t
+Yuppie	Yuppi	ˈjʊpi
+# Initial y followed by consonant
+Ypern	Ypern	ˈyːpɐn
+Ypsilon	Ypsilon	ˈʏpsilɔn
+Ytterbium	Yttérbium	ʏˈtɛʁbi̯ʊm
+# Final y after a consonant
+Hobby	Hobby	ˈhɔbi
+Sony	Sony	ˈzoːni
+Monopoly	Monópoly	moˈnoːpoli
+Stransky	Stransky	ˈʃtʀanski
+Babyöl	Beby-öl	ˈbeːbiˌʔøːl
+#  Non-final y after a consonant
+symmetrisch	symmétrisch	zʏˈmeːtʁɪʃ
+Psychologie	Psychologie	psyçoloˈɡiː
+Aerodynamik	Aerodynámik	aeʁodyˈnaːmɪk
+Zyan	Zyán	t͡syˈaːn
+Myon	Myon	ˈmyːɔn
+Kryometer	Kryométer	kʁyoˈmeːtɐ
+# ay/oy not followed by a vowel or followed by e/i/u and no stress follows
+Bayern	Bayern	ˈbaɪ̯ɐn
+Hoyerswerda	Hoyers-*verda	hɔɪ̯ɐsˈvɛʁda
+Mayer	Mayer	ˈmaɪ̯ɐ
+Paraguay	Paragway	ˈpaːʁaɡvaɪ̯
+Bayreuth	Bayréuth	baɪ̯ˈʁɔʏ̯t
+Boykott	Bòykótt	ˌbɔɪ̯ˈkɔt
+Malaysia	Maláysia	maˈlaɪ̯zi̯a
+Maybach	Maybach	ˈmaɪbax
+# ey not followed by a vowel or followed by e/i/u and no stress follows
+Meyer	Meyer	ˈmaɪ̯ɐ
+Leyen	Leyen	ˈlaɪ̯ən
+Leyermann	Leyer-mann	ˈlaɪ̯ɐˌman
+beyde	beyde	ˈbaɪ̯də
+dabey	dabéy	daˈbaɪ̯
+meyn	meyn	maɪ̯n
+Geysir	Geysír	ɡaɪ̯ˈziːʁ
+# Other y after vowels
+Ayurveda	Ayurvéda	ajʊʁˈveːda
+Oriya	Oríya	oˈʁiːja
+Mayo	Mayo	ˈmaːjo
+Toyota	Toyóta	toˈjoːta
+Larmoyanz	LarmOayanz	laʁmo̯aˈjant͡s
+Guyana	Guyána	ɡuˈjaːna
+Cayenne	Kayén	kaˈjɛn
+# y needing respelling
+Myanmar	Miánmahr	ˈmi̯anmaːʁ
+Libyen	LibIen	ˈliːbi̯ən
+Magyar	Madjáhr	maˈdjaːʁ
+Polyester	Poliéster	poˈli̯ɛstɐ
+Prokaryot	Prokary̯ót	pʁokaˈʁy̯oːt
+Calypso	Kalípso	kaˈlɪpso
 
 # -ng-, -nk-
 abdrängen	abdrängen	ˈapˌdʁɛŋən
@@ -276,8 +336,8 @@ Immaterialität	Ìmmatêrialität	ˌɪmateʁi̯aliˈtɛːt	enwikt
 Pietät	Pìətät	ˌpiːəˈtɛːt
 Sozietät	Soziətät	zot͡si̯əˈtɛːt
 Varietät	Vari.etät	vaʁieˈtɛːt	dewikt
-Varietät	Vàri̯etät	ˌvaʁi̯eˈtɛːt	enwikt
-abalienieren	abali̯eniéren	apʔali̯eˈniːʁən
+Varietät	VàrIetät	ˌvaʁi̯eˈtɛːt	enwikt
+abalienieren	abalIeniéren	apʔali̯eˈniːʁən
 Extremität	Extremität	ɛkstʁemiˈtɛːt
 Illegalität	Illegalität	ɪleɡaliˈtɛːt
 Illegalität	Íllegalität	ˈɪleɡaliˌtɛːt
@@ -371,8 +431,10 @@ Zeugnis	Zeugnis	ˈt͡sɔɪ̯knɪs	because -nis is a suffix
 Addition	Àddition	ˌadiˈt͡si̯oːn
 Historiolinguistik	Històriolinguístik	hɪsˌtoːʁi̯olɪŋˈɡu̯ɪstɪk
 Familie	Famíli̯e	faˈmiːli̯ə
+Familie	FamílIe	faˈmiːli̯ə
 Guerilla	Gerílja	ɡeˈʁɪlja	note short 'i' here but long in [[Familie]]
 Ichthyologie	Ichthy̯ologie	ɪçty̯oloˈɡiː
+Ichthyologie	IchthYologie	ɪçty̯oloˈɡiː
 soigniert	so̯anjiert	zo̯anˈjiːʁt
 soigniert	sOanjiert	zo̯anˈjiːʁt
 
@@ -517,7 +579,7 @@ Knappschaftskrankenhaus	Knappschaft>s--kranken-haus	ˈknapʃaft͡sˌkʁaŋkənha
 Kopfsteinpflasterstraße	Kopf-stein--pflaster-straße	ˈkɔp͡fʃtaɪ̯nˌp͡flastɐʃtraːsə
 Kundgebungsteilnehmerin	Kund-ge+bung>s--teil-nehmerin	ˈkʊntɡeːbʊŋsˌtaɪ̯lneːməʁɪn
 Nachrichtenübermittlung	Nahch-richten--über<mittlung	ˈnaːxʁɪçtənʔyːbɐˌmɪtlʊŋ
-Medienwissenschaftlerin	Medi̯en-wissenschaft>lerin	ˈmeːdi̯ənˌvɪsn̩ʃaftləʁɪn
+Medienwissenschaftlerin	MedIen-wissenschaft>lerin	ˈmeːdi̯ənˌvɪsn̩ʃaftləʁɪn
 Partizipialkonstruktion	Partizipial-konstruktion	paʁtit͡siˈpi̯aːlkɔnstʁʊkˌt͡si̯oːn
 Rezeptor-Bindungsdomäne	Rezéptor-Bindungs-domä́ne	ʁeˈt͡sɛptoːʁˌbɪndʊŋsdoˌmɛːnə
 ungerechtfertigterweise	ungerecht-fertigterweise	ˈʊnɡəʁɛçtfɛʁtɪçtɐˌvaɪ̯zə
@@ -585,7 +647,7 @@ Aberglaube	Aber-glaube	ˈaːbɐˌɡlaʊ̯bə
 Abort	Abort	ˈabˌʔɔʁt
 Abort	Abórt	aˈbɔʁt
 abaxial	ab<axial	ap(ʔ)aˈksi̯aːl
-abalienieren	àb<ali̯enieren	ˌap(ʔ)ali̯eˈniːʁən
+abalienieren	àb<alIenieren	ˌap(ʔ)ali̯eˈniːʁən
 
 # aneinander-
 aneinandergeraten	aneinandergeraten	an(ʔ)aɪ̯ˈnandɐɡəˌʁaːtən
@@ -1239,7 +1301,7 @@ Biologie	Bìologie	ˌbioloˈɡiː
 Fotografie	Fotografie	fotoɡʁaˈfiː
 Fantasie	Fantasie	fantaˈziː
 Informationstechnologie	Information>s-technologie	ɪnfɔʁmaˈt͡si̯oːnstɛçnoloˌɡiː
-Familie	Famíli̯e	faˈmiːli̯ə
+Familie	FamílIe	faˈmiːli̯ə
 
 # -ieren
 degradieren	degradieren	deɡʁaˈdiːʁən
