@@ -105,6 +105,7 @@ Croissant	Cro̯assã́	kʁo̯aˈsãː
 Croissant	Crôssóng	kʁoˈsɔŋ
 flamboyant	flãbo̯ajant	flãbo̯aˈjant
 Rendezvous	Rã̀devú	ˌʁãdeˈvuː
+Negligé	Negliʒé	neɡliˈʒeː
 
 
 # English-derived words
@@ -131,6 +132,8 @@ Edinburgh	Eddinbere	ˈɛdɪnbərə
 Ghostwriter	GhoUst-raiter	ˈɡoʊ̯stˌʁaɪ̯tɐ
 Ghostwriter	Ghohst-raiter	ˈɡoːstˌʁaɪ̯tɐ
 Canyon	Kenjen	ˈkɛnjən
+Jazz	Dschäß	d͡ʒɛːs
+Jazz	Dschess	d͡ʒɛs
 
 # bs, ds, gs
 absurd	absúrd	apˈzʊʁt
@@ -1314,6 +1317,7 @@ vertelefonieren	verteləfonieren	fɛʁteləfoˈniːʁən
 definiert	definiert	defiˈniːʁt
 kompliziert	kompliziert	kɔmpliˈt͡siːʁt
 hochdekoriert	hohch-dekoriert	ˈhoːxdekoˌʁiːʁt
+situiert	situ.iert	zituˈiːʁt
 
 # -ierung
 Konsolidierung	Konsolidierung	kɔnzoliˈdiːʁʊŋ
@@ -1576,9 +1580,7 @@ schamhaft	schamhaft	ˈʃaːmhaft
 separat	separát	zepaˈʁaːt	standard per dewikt
 separat	sèparát	ˌzeːpaˈʁaːt	standard per enwikt
 separat	sèpperát	ˌzɛpəˈʁaːt	variant in common speech
-situiert	situ.iert	zituˈiːʁt
 Stabsarzt	Stab>s-ahrzt	ˈʃtaːpsˌʔaːʁt͡st
-soigniert	so̯anjiert	zo̯anˈjiːʁt
 todernst	tod-ernst	ˈtoːtˌʔɛʁnst
 traditionsbewusst	traditions-bewusst	tʁadiˈt͡si̯oːnsbəˌvʊst
 trägt	träg>t	tʁɛːkt
