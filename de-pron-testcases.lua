@@ -1,8 +1,58 @@
-# Digraphs, trigraphs
+local tests = require("Module:UnitTests")
+local m_de_pron = require("Module:de-pron")
+local m_links = require("Module:links")
+local m_table = require("Module:table")
+local lang = require("Module:languages").getByCode("de")
+
+local rsplit = mw.text.split
+local rmatch = mw.ustring.match
+
+local function tag_IPA(IPA)
+	return '<span class="IPA">' .. IPA .. "</span>"
+end
+
+local function link(text)
+	return m_links.full_link{ term = text, lang = lang }
+end
+
+local options = { display = tag_IPA }
+
+--[=[
+In the following examples, each line is either a section header beginning with a ##, a comment beginning with # but not
+##, a blank line or an example. Examples consist of three tab-separated fields, followed by an optional comment to be
+shown along with the example (delimited by a # preceded by whitespace). The first field is the actual spelling of the
+term in question. The second field is the respelling. The third field is the expected phonemic IPA pronunciation.
+
+Example #1:
+
+Aachener	Aachener	ˈaːxənɐ
+
+This specifies a word [[Aachener]], respelled 'Aachener' (i.e. same as the actual spelling), with phonemic pronunciation
+/ˈaːxənɐ/.
+
+Example #2:
+
+Bodyguard	Boddigàhrd	ˈbɔdiˌɡaːʁt
+
+This specifies a word [[Bodyguard]], respelled 'Boddigàhrd', with phonemic pronunciation /ˈbɔdiˌɡaːʁt/.
+
+Example #3:
+
+Chefredakteur	Schef-redaktö́r	ˈʃeːfʁedakˌtøːʁ # usually in Austria
+
+This specifies a word [[Chefredakteur]], respelled 'Schef-redaktö́r', with phonemic pronunciation /ˈʃeːfʁedakˌtøːʁ/ and
+a comment "usually in Austria".
+
+
+FIXME: We should have support for higher-level section headers designated using ###.
+]=]
+
+local examples = [==[
+## Digraphs, trigraphs
 Stadt	Stadt	ʃtat
 verwandte	verwandte	fɛʁˈvantə
 
-# Digraphs with h
+## Digraphs with h
 Bach	Bach	bax
 Aachener	Aachener	ˈaːxənɐ
 Milch	Milch	mɪlç
@@ -54,24 +104,24 @@ Rheuma	Rheuma	ˈʁɔɪ̯ma
 Rhone	Rhone	ˈʁoːnə
 
 
-# French-derived words
+## French-derived words
 Absence	Abs*áNs	apˈsãːs
 Baguette	Bagétt	baˈɡɛt
-Chaiselongue	Schĕselóng	ʃɛzəˈlɔŋ	dewikt pron #1
-Chaiselongue	SchẹselóNk	ʃɛzəˈlõːk	dewikt pron #2
-Chaiselongue	SchehslóNng	ʃeːsˈlõːŋ	dewikt pron #1 (Austrian)
-Chaiselongue	SchehslóNk	ʃeːsˈlõːk	dewikt pron #2 (Austrian)
-Chaiselongue	Schĕz*lóNg*	ʃɛzˈlõːɡ	dewikt pron #3 (Austrian)
+Chaiselongue	Schĕselóng	ʃɛzəˈlɔŋ # dewikt pron #1
+Chaiselongue	SchẹselóNk	ʃɛzəˈlõːk # dewikt pron #2
+Chaiselongue	SchehslóNng	ʃeːsˈlõːŋ # dewikt pron #1 (Austrian)
+Chaiselongue	SchehslóNk	ʃeːsˈlõːk # dewikt pron #2 (Austrian)
+Chaiselongue	Schĕz*lóNg*	ʃɛzˈlõːɡ # dewikt pron #3 (Austrian)
 Champignon	Schampinjòng	ˈʃam.pɪnˌjɔŋ
 Champignon	Schampinjõ̀	ˈʃam.pɪnˌjõː
 Chefredakteur	Scheff-redaktö́r	ˈʃɛfʁedakˌtøːʁ
-Chefredakteur	Schef-redaktö́r	ˈʃeːfʁedakˌtøːʁ	usually in Austria
+Chefredakteur	Schef-redaktö́r	ˈʃeːfʁedakˌtøːʁ # usually in Austria
 Guillotine	Gi.otíne	ɡioˈtiːnə
-orange	orã́ʒ	oˈʁãːʃ	enwikt pron #1
-orange	orángʒ	oˈʁaŋʃ	enwikt pron #2
-orange	orṍʒ	oˈʁõːʃ	enwikt pron #3
-orange	oróngʒ	oˈʁɔŋʃ	enwikt pron #4
-Orange	Orã́ʒe	oˈʁãːʒə	enwikt pron #1
+orange	orã́ʒ	oˈʁãːʃ # enwikt pron #1
+orange	orángʒ	oˈʁaŋʃ # enwikt pron #2
+orange	orṍʒ	oˈʁõːʃ # enwikt pron #3
+orange	oróngʒ	oˈʁɔŋʃ # enwikt pron #4
+Orange	Orã́ʒe	oˈʁãːʒə # enwikt pron #1
 arrangieren	arrãʒieren	aʁãˈʒiːʁən
 Avance	Avã́s	aˈvãːs
 Bombardement	Bòmbardəmã́	ˌbɔmbaʁdəˈmãː
@@ -108,7 +158,7 @@ Rendezvous	Rã̀devú	ˌʁãdeˈvuː
 Negligé	Negliʒé	neɡliˈʒeː
 
 
-# English-derived words
+## English-derived words
 Bodyguard	Boddigàhrd	ˈbɔdiˌɡaːʁt
 Champion	TschempIen	ˈt͡ʃɛmpi̯ən
 Whiskey	Whiski	ˈvɪski
@@ -135,9 +185,9 @@ Canyon	Kenjen	ˈkɛnjən
 Jazz	Dschäß	d͡ʒɛːs
 Jazz	Dschess	d͡ʒɛs
 
-# bs, ds, gs
+## bs, ds, gs
 absurd	absúrd	apˈzʊʁt
-obsessiv	obsessív	ɔpzɛˈsiːf	# /ps/ in dewikt but probably wrong
+obsessiv	obsessív	ɔpzɛˈsiːf # /ps/ in dewikt but probably wrong
 Obsoleszenz	Obsoleszenz	ɔpzolɛsˈt͡sɛnt͡s
 subsumtiv	subsumtív	zʊpzʊmˈtiːf
 Erbse	Erbse	ˈɛʁpsə
@@ -145,10 +195,10 @@ obsen	obsen	ˈɔpsən
 adsorbieren	adsorbieren	atzɔʁˈbiːʁən
 Landser	Landser	ˈlant͡sɐ
 Trübsal	Trüb>sal
-bugsieren	bugsieren	bʊkˈsiːʁən	# bʊˈksiːʁən in dewikt but seems wrong
+bugsieren	bugsieren	bʊˈksiːʁən
 pumperlgsund	pumperl-gsund	ˈpʊmpɐlˌksʊnt
 
-# -h- between vowels
+## -h- between vowels
 Bedrohung	Bedrohung	bəˈdʁoːʊŋ
 arbeitsfähig	arbeit>s-fähig	ˈaʁbaɪ̯t͡sˌfɛːɪç
 befähigt	befähigt	bəˈfɛːɪçt
@@ -157,9 +207,9 @@ Ehe	Ehe	ˈeːə
 viehisch	fiehisch	ˈfiːɪʃ
 Dschihadist	Dschihahdist	d͡ʒihaːˈdɪst
 Johann	Johann	ˈjoːhan
-Maharadscha	Maharahdscha	mahaˈʁaːdʒa	prescriptive
-Maharadscha	Maharadscha	mahaˈʁadʒa	enwikt: "slightly more common"
-Maharadscha	Maharatscha	mahaˈʁatʃa	enwikt: "usual"
+Maharadscha	Maharáhdscha	mahaˈʁaːdʒa # prescriptive
+Maharadscha	Maharádscha	mahaˈʁadʒa # enwikt: "slightly more common"
+Maharadscha	Maharátscha	mahaˈʁatʃa # enwikt: "usual"
 Mohammed	Mohammedd	ˈmoːhamɛt
 Rehabilitation	Rèhabilitation	ˌʁehabilitaˈt͡si̯oːn
 Tomahawk	Tommahahk	ˈtɔmahaːk
@@ -168,41 +218,42 @@ Bohemistik	Bohemistik	boheˈmɪstɪk
 Ahorn	Ahorn	ˈaːhɔʁn
 Alkoholismus	Àlkoholismus	ˌalkohoˈlɪsmʊs
 Jehova	Jehóva	jeˈhoːva
-Kohorte	Kohorte	koˈhɔʁtə
-Bahuvrihi	Bahuvrihi	bahuˈvʁiːhi
+Kohorte	Kohórte	koˈhɔʁtə
+Bahuvrihi	Bahuvríhi	bahuˈvʁiːhi
 nihilistisch	nihilistisch	nihiˈlɪstɪʃ
 Estomihi	Estomíhi	ɛstoˈmiːhi
 Tohuwabohu	Tòhhuwabóhu	ˌtoːhuvaˈboːhu
 huhu	huhu	ˈhuːhu
 Uhudler	U.huhdler	ˈuːhuːdlɐ
 
-# -gu- in hiatus
+## -gu- in hiatus
 Ambiguität	Ambigu.ität	ambiɡuiˈtɛːt
 Antigua	Antíguah	anˌtiːɡu̯aː
-Äquatorialguinea	Äquatori.al-ginéa	ɛkvatoʁiˈaːlɡiˌneːa	per enwikt
-Äquatorialguinea	Ä̀quatorial-ginéa	ˌɛkvatoˈʁi̯aːlɡiˌneːa	per dewikt
+Äquatorialguinea	Äquatori.al-ginéa	ɛkvatoʁiˈaːlɡiˌneːa # per enwikt
+Äquatorialguinea	Ä̀quatorial-ginéa	ˌɛkvatoˈʁi̯aːlɡiˌneːa # per dewikt
 Bilingualismus	Bilinggualísmus	bilɪŋɡʊ̯aˈlɪsmʊs
 Guacamole	Guakamóle	ɡu̯akaˈmoːlə
 Guano	Guano	ˈɡu̯aːno
 Guatemalteke	Guatemaltéke	ɡu̯atemalˈteːkə
 Jaguar	Jaguahr	ˈjaːɡu̯aːʁ
-Papua-Neuguinea	Papua Nèuginéa	ˈpaːpu̯a ˌnɔɪ̯ɡiˈneːa	per enwikt
-Papua-Neuguinea	Papu.a-*neuginéa	ˌpaːpuanɔɪ̯ɡiˈneːa	per dewikt
-Paraguay	Paragway	ˈpaːʁaɡvaɪ̯	dewikt pron #1
-Paraguay	Parragway	ˈpaʁaɡvaɪ̯	dewikt pron #2
-Paraguay	Paraguáy	paʁaˈɡu̯aɪ̯	dewikt pron #3
-Patholinguistik	Pátholinguìstik	ˈpaːtolɪŋˌɡu̯ɪstɪk	dewikt pron #1
-Patholinguistik	Pátholingu.ìstik	ˈpaːtolɪŋɡuˌɪstɪk	dewikt pron #2
-Patholinguistik	Patholinguístik	patolɪŋˈɡu̯ɪstɪk	dewikt pron #3
-Patholinguistik	Pàttholingu.ístik	ˌpatolɪŋɡuˈɪstɪk	dewikt pron #4
-Patholinguistik	Pàtholinguʔístik	ˌpatolɪŋɡuˈʔɪstɪk	dewikt pron #5
-# other -u- in hiatus
+Papua-Neuguinea	Papua Nèuginéa	ˈpaːpu̯a ˌnɔɪ̯ɡiˈneːa # per enwikt
+Papua-Neuguinea	Papu.a-*neuginéa	ˌpaːpuanɔɪ̯ɡiˈneːa # per dewikt
+Paraguay	Paragway	ˈpaːʁaɡvaɪ̯ # dewikt pron #1
+Paraguay	Parragway	ˈpaʁaɡvaɪ̯ # dewikt pron #2
+Paraguay	Paraguáy	paʁaˈɡu̯aɪ̯ # dewikt pron #3
+Patholinguistik	Pátholinguìstik	ˈpaːtolɪŋˌɡu̯ɪstɪk # dewikt pron #1
+Patholinguistik	Pátholingu.ìstik	ˈpaːtolɪŋɡuˌɪstɪk # dewikt pron #2
+Patholinguistik	Patholinguístik	patolɪŋˈɡu̯ɪstɪk # dewikt pron #3
+Patholinguistik	Pàttholingu.ístik	ˌpatolɪŋɡuˈɪstɪk # dewikt pron #4
+Patholinguistik	Pàtholinguʔístik	ˌpatolɪŋɡuˈʔɪstɪk # dewikt pron #5
+
+## other -u- in hiatus
 aktualisieren	àktu.alisieren	ˌaktualiˈziːʁən
 Asexualität	Ắsexualitä̀t	ˈazɛksu̯aliˌtɛːt
 Asexualität	Ássexualitä̀t	ˈasɛksu̯aliˌtɛːt
-Botsuana	Botsuána	bɔˈt͡su̯aːna	enwikt
-Botsuana	Botsu.ána	bɔt͡suˈaːna	dewikt pron #1
-Botsuana	Botsuʔána	bɔt͡suˈʔaːna	dewikt pron #2
+Botsuana	Botsuána	bɔˈt͡su̯aːna # enwikt
+Botsuana	Botsu.ána	bɔt͡suˈaːna # dewikt pron #1
+Botsuana	Botsuʔána	bɔt͡suˈʔaːna # dewikt pron #2
 dual	du.ál	duˈaːl
 Dual-SIM-Smartphone	Du.ál-Sịmm-Smahrtphohn	duˈaːlzɪmˌsmaːʁtfoːn
 Dualsystem	Du.ál-systém	duˈaːlzʏsˌteːm
@@ -211,37 +262,43 @@ evaluativ	evalu.atív	evaluaˈtiːf
 evaluieren	evalu.ieren	evaluˈiːʁən
 Situation	Situ.azión	zituaˈt͡si̯oːn
 
-# -y-
-# Stressed y
+# --------- -y- ---------
+
+## Stressed y
 Acryl	Acrýl	aˈkʁyːl
 analytisch	analýtisch	anaˈlyːtɪʃ
 Beryllium	Berýllium	beˈʁʏli̯ʊm
 Ägypten	Ägýpten	ɛˈɡʏptən
 Harpyie	Harpýje	haʁˈpyːjə
-# Initial y followed by vowel
+
+## Initial y followed by vowel
 Yacht	Yacht	jaxt
 New York	Nju̇ York	njuː ˈjɔrk
 Yoga	Yoga	ˈjoːɡa
 Yottabyte	Yóttabàit	ˈjɔtaˌbaɪ̯t
 Yuppie	Yuppi	ˈjʊpi
-# Initial y followed by consonant
+
+## Initial y followed by consonant
 Ypern	Ypern	ˈyːpɐn
 Ypsilon	Ypsilon	ˈʏpsilɔn
 Ytterbium	Yttérbium	ʏˈtɛʁbi̯ʊm
-# Final y after a consonant
+
+## Final y after a consonant
 Hobby	Hobby	ˈhɔbi
 Sony	Sony	ˈzoːni
 Monopoly	Monópoly	moˈnoːpoli
 Stransky	Stransky	ˈʃtʀanski
 Babyöl	Beby-öl	ˈbeːbiˌʔøːl
-#  Non-final y after a consonant
+
+##  Non-final y after a consonant
 symmetrisch	symmétrisch	zʏˈmeːtʁɪʃ
 Psychologie	Psychologie	psyçoloˈɡiː
 Aerodynamik	Aerodynámik	aeʁodyˈnaːmɪk
 Zyan	Zyán	t͡syˈaːn
 Myon	Myon	ˈmyːɔn
 Kryometer	Kryométer	kʁyoˈmeːtɐ
-# ay/oy not followed by a vowel or followed by e/i/u and no stress follows
+
+## ay/oy not followed by a vowel or followed by e/i/u and no stress follows
 Bayern	Bayern	ˈbaɪ̯ɐn
 Hoyerswerda	Hoyers-*verda	hɔɪ̯ɐsˈvɛʁda
 Mayer	Mayer	ˈmaɪ̯ɐ
@@ -250,7 +307,8 @@ Bayreuth	Bayréuth	baɪ̯ˈʁɔʏ̯t
 Boykott	Bòykótt	ˌbɔɪ̯ˈkɔt
 Malaysia	Maláysia	maˈlaɪ̯zi̯a
 Maybach	Maybach	ˈmaɪbax
-# ey not followed by a vowel or followed by e/i/u and no stress follows
+
+## ey not followed by a vowel or followed by e/i/u and no stress follows
 Meyer	Meyer	ˈmaɪ̯ɐ
 Leyen	Leyen	ˈlaɪ̯ən
 Leyermann	Leyer-mann	ˈlaɪ̯ɐˌman
@@ -258,7 +316,8 @@ beyde	beyde	ˈbaɪ̯də
 dabey	dabéy	daˈbaɪ̯
 meyn	meyn	maɪ̯n
 Geysir	Geysír	ɡaɪ̯ˈziːʁ
-# Other y after vowels
+
+## Other y after vowels
 Ayurveda	Ayurvéda	ajʊʁˈveːda
 Oriya	Oríya	oˈʁiːja
 Mayo	Mayo	ˈmaːjo
@@ -266,7 +325,8 @@ Toyota	Toyóta	toˈjoːta
 Larmoyanz	LarmOayanz	laʁmo̯aˈjant͡s
 Guyana	Guyána	ɡuˈjaːna
 Cayenne	Kayén	kaˈjɛn
-# y needing respelling
+
+## y needing respelling
 Myanmar	Miánmahr	ˈmi̯anmaːʁ
 Libyen	LibIen	ˈliːbi̯ən
 Magyar	Madjáhr	maˈdjaːʁ
@@ -274,7 +334,7 @@ Polyester	Poliéster	poˈli̯ɛstɐ
 Prokaryot	Prokary̯ót	pʁokaˈʁy̯oːt
 Calypso	Kalípso	kaˈlɪpso
 
-# -ng-, -nk-
+## -ng-, -nk-
 abdrängen	abdrängen	ˈapˌdʁɛŋən
 Abgang	Abgang	ˈapˌɡaŋ
 Abhängigkeit	Abhängigkeit	ˈaphɛŋɪçˌkaɪ̯t
@@ -310,20 +370,21 @@ inkompatibel	ín.kompatibel	ˈɪnkɔmpaˌtiːbəl
 inkompetent	ín.kompətent	ˈɪnkɔmpəˌtɛnt
 inkompetent	ìn.kompətent	ˌɪnkɔmpəˈtɛnt
 
-# -ph-
+## -ph-
 Ableitungsmorphem	Ableitungs-morphém	ˈaplaɪ̯tʊŋsmɔʁˌfeːm
 Paragraphenhengst	Paragráphen-hengst	paʁaˈɡʁaːfənˌhɛŋst
 
-# Internal glottal stops
+## Internal glottal stops
 Osterei	Ohster-ei	 ˈoːstɐˌʔaɪ̯
 unendlich	unéndlich	ʊnˈʔɛntlɪç
-Patholinguistik	Pàtholinguʔístik	ˌpatolɪŋɡuˈʔɪstɪk	dewikt pron #5
-Botsuana	Botsuʔána	bɔt͡suˈʔaːna	dewikt pron #2
+Patholinguistik	Pàtholinguʔístik	ˌpatolɪŋɡuˈʔɪstɪk # dewikt pron #5
+Botsuana	Botsuʔána	bɔt͡suˈʔaːna # dewikt pron #2
 Aufenthalt	Aufenthalt	ˈaʊ̯f(ʔ)ɛntˌhalt
 aalähnlich	aal-ähnlich	ˈaːlˌʔɛːnlɪç
+aalartig	aal-ahrtig	ˈaːlˌʔaːʁtɪç # secondary pronunciation ˈaːlˌʔaːʁtɪk will also be shown, with the following: "common form in southern Germany, Austria, and Switzerland"
 wiederentdecken	wiederentdecken	ˈviːdɐʔɛntˌdɛkən
 
-# Unstressed -e-
+## Unstressed -e-
 Elektrizität	Elektrizität	elɛktʁit͡siˈtɛːt
 Negativität	Nègativität	ˌneɡativiˈtɛːt
 Benediktiner	Benədiktíner	benədɪkˈtiːnɐ
@@ -334,12 +395,12 @@ Generalität	Generalität	ɡenəʁaliˈtɛːt
 Souveränität	Souveränität	zuvəʁɛniˈtɛːt
 Heterogenität	Heterogenität	hetəʁoɡeniˈtɛːt
 Kanzerogenität	Kànzerogenität	ˌkant͡səʁoɡeniˈtɛːt
-Immaterialität	Ímmaterialität	ˈɪmatəʁialiˌtɛːt	dewikt (secondary stress not explicitly marked but present in audio)
-Immaterialität	Ìmmatêrialität	ˌɪmateʁi̯aliˈtɛːt	enwikt
+Immaterialität	Ímmaterialität	ˈɪmatəʁialiˌtɛːt # dewikt (secondary stress not explicitly marked but present in audio)
+Immaterialität	Ìmmatêrialität	ˌɪmateʁi̯aliˈtɛːt # enwikt
 Pietät	Pìətät	ˌpiːəˈtɛːt
 Sozietät	Soziətät	zot͡si̯əˈtɛːt
-Varietät	Vari.etät	vaʁieˈtɛːt	dewikt
-Varietät	VàrIetät	ˌvaʁi̯eˈtɛːt	enwikt
+Varietät	Vari.etät	vaʁieˈtɛːt # dewikt
+Varietät	VàrIetät	ˌvaʁi̯eˈtɛːt # enwikt
 abalienieren	abalIeniéren	apʔali̯eˈniːʁən
 Extremität	Extremität	ɛkstʁemiˈtɛːt
 Illegalität	Illegalität	ɪleɡaliˈtɛːt
@@ -350,15 +411,15 @@ acetylieren	acetylieren	at͡setyˈliːʁən
 akkreditieren	akkreditieren	akʁediˈtiːʁən
 ameliorieren	ameliorieren	ameli̯oˈʁiːʁən
 anästhesieren	anästhesieren	anɛsteˈziːʁən
-degenerieren	degenêrieren	deɡeneˈʁiːʁən	dewikt
-degenerieren	degenerieren	deɡenəˈʁiːʁən	enwikt
+degenerieren	degenêrieren	deɡeneˈʁiːʁən # dewikt
+degenerieren	degenerieren	deɡenəˈʁiːʁən # enwikt
 zumindestens	zumindestens	t͡suˈmɪndəstəns
 Latex	Latex	ˈlaːtɛks
 Index	Index	ɪndɛks
-Alex	Alex	ˈaːlɛks	dewikt; enwikt has short 'a'
+Alex	Alex	ˈaːlɛks # dewikt; enwikt has short 'a'
 Achilles	Achillĕs	aˈxɪlɛs
 Adjektiv	Adjektìv	ˈatjɛkˌtiːf
-Adjektiv	A*.djektìv	ˈadjɛkˌtiːf	first pronun of enwikt; may be wrong
+Adjektiv	A*.djektìv	ˈadjɛkˌtiːf # first pronun of enwikt; may be wrong
 Adstringens	Adstrin.gĕns	atˈstrɪŋɡɛns
 Adverb	Adverb	ˈatvɛʁp
 Adverb	Advérb	atˈvɛʁp
@@ -375,10 +436,10 @@ Diabetes	Di.abétĕs	diaˈbeːtɛs
 Dolmetscher	Dolmetscher	ˈdɔlmɛtʃər
 Dubstep	Dabstepp	ˈdapstɛp
 
-# Syllable boundary between obstruent and [lr]
+## Syllable boundary between obstruent and [lr]
 Agrobiologie	Agro-bi.ologie	ˈaːɡʁobioloˌɡiː
 Algebra	Algebra	ˈalɡebʁa
-Algebra	Algébra	alˈɡeːbʁa	Austria
+Algebra	Algébra	alˈɡeːbʁa # Austria
 Capri	Kapri	ˈkaːpʁi
 deprekativ	deprekativ	depʁekaˈtiːf
 deprimierend	deprimierend	depʁiˈmiːʁənt
@@ -394,7 +455,7 @@ Adlatus	Àdlátus	ˌaˈdlaːtʊs
 Adler	Adler	ˈaːdlɐ
 Bethlehem	Bethlə.hemm	ˈbeːtləhɛm
 Detlef	Dettlef	ˈdɛtlɛf
-ewiglich	ewiglich	ˈeː.vɪk.lɪç	because -lich is a suffix
+ewiglich	ewiglich	ˈeː.vɪk.lɪç # because -lich is a suffix
 Diglossie	Diglossie	diɡlɔˈsiː
 Triglyph	Triglýph	tʁiˈɡlyːf
 Epiglottis	Epiglóttis	epiˈɡlɔtɪs
@@ -407,14 +468,14 @@ Migräne	Migrä́ne	miˈɡʁɛːnə
 Milligramm	Milligràmm	ˈmɪliˌɡʁam
 Milligramm	Milligrámm	mɪliˈɡʁam
 
-# Syllable boundary in -kv-, -gv-
+## Syllable boundary in -kv-, -gv-
 Liquid	Liquíd	liˈkviːt
 Liquida	Liquida	ˈliːkvida
 Mikwe	Mikwé	miˈkveː
 Taekwondo	Täkwóndo	tɛˈkvɔndo
 Uruguayerin	Ur+ugwayerin	ˈuːʁuɡvaɪ̯əʁɪn
 
-# Syllable boundary in -gn-
+## Syllable boundary in -gn-
 Signal	Signal	zɪˈɡnaːl
 designieren	designieren	dezɪˈɡniːʁən
 Kognition	Koggnition	ˌkɔɡniˈt͡si̯oːn
@@ -422,26 +483,26 @@ Kognat	Koggnát	kɔˈɡnaːt
 Prognose	Prògnóse	ˌpʁoˈɡnoːzə
 orthognath	orthognáth	ɔʁtoˈɡnaːt
 prognath	prognáth	pʁoˈɡnaːt
-Agnes	Aggnĕs	ˈaɡnɛs	per dewikt
-Agnes	Agnes	ˈaːɡnəs	per enwikt
-regnen	regnen	ˈʁeːɡnən	enwikt: "prescriptive standard"
-regnen	rehg.nen	ˈʁeːknən	enwikt: "most common"
-Leugner	Leugner	ˈlɔɪ̯ɡnɐ	prescriptive
-Leugner	Leug.ner	ˈlɔɪ̯knɐ	more common
-Zeugnis	Zeugnis	ˈt͡sɔɪ̯knɪs	because -nis is a suffix
+Agnes	Aggnĕs	ˈaɡnɛs # per dewikt
+Agnes	Agnes	ˈaːɡnəs # per enwikt
+regnen	regnen	ˈʁeːɡnən # enwikt: "prescriptive standard"
+regnen	rehg.nen	ˈʁeːknən # enwikt: "most common"
+Leugner	Leugner	ˈlɔɪ̯ɡnɐ # prescriptive
+Leugner	Leug.ner	ˈlɔɪ̯knɐ # more common
+Zeugnis	Zeugnis	ˈt͡sɔɪ̯knɪs # because -nis is a suffix
 
-# Hiatus
+## Hiatus
 Addition	Àddition	ˌadiˈt͡si̯oːn
 Historiolinguistik	Històriolinguístik	hɪsˌtoːʁi̯olɪŋˈɡu̯ɪstɪk
 Familie	Famíli̯e	faˈmiːli̯ə
 Familie	FamílIe	faˈmiːli̯ə
-Guerilla	Gerílja	ɡeˈʁɪlja	note short 'i' here but long in [[Familie]]
+Guerilla	Gerílja	ɡeˈʁɪlja # note short 'i' here but long in [[Familie]]
 Ichthyologie	Ichthy̯ologie	ɪçty̯oloˈɡiː
 Ichthyologie	IchthYologie	ɪçty̯oloˈɡiː
 soigniert	so̯anjiert	zo̯anˈjiːʁt
 soigniert	sOanjiert	zo̯anˈjiːʁt
 
-# Unstressed final i
+## Unstressed final i
 Musikerin	Musickerin	ˈmuːzɪkəʁɪn
 Genesis	Genêsis	ˈɡeːnezɪs
 Genesis	Gennêsis	ˈɡɛnezɪs
@@ -459,25 +520,25 @@ privatim	privátim	pʁiˈvaːtɪm
 Achim	Achim	ˈaxɪm
 Achim	Achihm	ˈaxiːm
 David	David	ˈdaːvɪt
-Ingrid	Inggrid	ˈɪŋɡʁɪt	one pronunciation
+Ingrid	Inggrid	ˈɪŋɡʁɪt # one pronunciation
 
-# Unstressed medial i before g followed by unstressed vowels
+## Unstressed medial i before g followed by unstressed vowels
 Entschuldigung	Entschuldigung	ɛntˈʃʊldɪɡʊŋ
 verständigen	verständigen	fɛʁˈʃtɛndɪɡən
 Königin	Königin	ˈkøːnɪɡɪn
 ängstigend	ängstigend	ˈɛŋstɪɡənt
-ewiglich	ewi.glich	ˈeːvɪɡlɪç	explicit syllable boundary prevents suffix
+ewiglich	ewi.glich	ˈeːvɪɡlɪç # explicit syllable boundary prevents suffix
 
-# Unstressed medial i before gn
+## Unstressed medial i before gn
 indigniert	indigniert	ɪndɪˈɡniːʁt
 Lignin	Lignín	lɪˈɡniːn
 
-# Unstressed final -us, -um
+## Unstressed final -us, -um
 Kaktus	Kaktus	ˈkaktʊs
 Tempus	Tempus	ˈtɛmpʊs
 Museum	Museum	muˈzeːʊm
 
-# Unstressed final -on, -os
+## Unstressed final -on, -os
 Aaron	Aaron	ˈaːʁɔn
 Abaton	Ab+aton	ˈaːbatɔn
 Natron	Natron	ˈnaːtʁɔn
@@ -497,11 +558,11 @@ Gyros	Gyros	ˈɡyːʁɔs
 Heros	Heros	ˈheːʁɔs
 Kosmos	Kosmos	ˈkɔsmɔs
 
-# Consonant devoicing
+## Consonant devoicing
 Magd	Mahgd	maːkt
 Herbst	Herbst	hɛʁpst
 
-# Compounds
+## Compounds
 Hubschrauber	Hub-schrauber	ˈhuːpˌʃʁaʊ̯bɐ
 Landeplatz	Lande-platz	ˈlandəˌplat͡s
 Hubschrauberlandeplatz	Hub-schrauber--lande-platz	ˈhuːpʃʁaʊ̯bɐˌlandəplat͡s
@@ -512,28 +573,24 @@ Hubschrauberabsturz	Hub-schrauber--absturz	ˈhuːpʃʁaʊ̯bɐˌʔapʃtʊʁt͡s
 Maulwurfshügel	Maul-wurf>s--hügel	ˈmaʊ̯lvʊʁfsˌhyːɡəl
 Aufenthaltsgenehmigung	Aufenthalt>s-genehmigung	ˈaʊ̯f(ʔ)ɛnthalt͡sɡəˌneːmɪɡʊŋ
 Drogenabhängigkeit	Drogen-abhängigkeit	ˈdʁoːɡənˌʔaphɛŋɪçkaɪ̯t
-Alkoholabhängigkeit	Alkohól-abhängigkeit	alkoˈhoːlʔaphɛŋɪçkaɪ̯t
+Alkoholabhängigkeit	Alkohól-abhängigkeit	alkoˈhoːlˌʔaphɛŋɪçkaɪ̯t
 Alkoholabhängigkeit	Alkohól-abhä́ngigkeit	alkoˈhoːl(ʔ)apˌhɛŋɪçkaɪ̯t
 Abkürzungsverzeichnis	Abkürzung>s-verzeichnis	ˈapkʏʁt͡sʊŋsfɛʁˌt͡saɪ̯çnɪs
 Abschiedsbrief	Abschied>s-brief	ˈapʃiːt͡sˌbʁiːf
 Massenkarambolage	Massen-karamboláʒe	ˈmasənkaʁamboˌlaːʒə
 Aufmerksamkeitsdefizit-Hyperaktivitätsstörung	Aufmerksamkeit>s-defizit--Hyper<aktivität>s-störung	ˈaʊ̯fmɛʁkzaːmkaɪ̯t͡sdeːfit͡sɪthypɐʔaktiviˌtɛːt͡sʃtøːʁʊŋ
 Donaudampfschifffahrtsgesellschaftskapitän	Donau-dampf-schiff-fahrt>s-gesellschaft>s--kapitä́n	ˈdoːnaʊ̯damp͡fʃɪffaːʁt͡sɡəzɛlʃaft͡skapiˌtɛːn
-# FIXME: dewikt has primary stress on both 'Eierschalen' and 'sollbruchstellen' rather than secondary stress on the latter.
-Eierschalensollbruchstellenverursacher	Eier-schalen--soll-bruch-stellen--verursacher	ˈaɪ̯ɐʃaːlənˌzɔlbʁʊxʃtɛlənfɛʁˌʔuːʁzaxɐ
+Eierschalensollbruchstellenverursacher	Eier-schalen--soll-bruch-stellen--verursacher	ˈaɪ̯ɐʃaːlənˌzɔlbʁʊxʃtɛlənfɛʁˌʔuːʁzaxɐ # FIXME: dewikt has primary stress on both 'Eierschalen' and 'sollbruchstellen' rather than secondary stress on the latter.
 Kraftfahrzeug-Haftpflichtversicherung	Kraft-fahr-zeug--Haft-pflicht-versicherung	ˈkʁaftfaːʁt͡sɔɪ̯kˌhaftp͡flɪçtfɛʁzɪçəʁʊŋ
-# FIXME: verify the secondary stresses; not in dewikt
-neuntausendneunhundertneunundneunzig	neun-tausend--neun-hundert--neun-und--neunzig	ˈnɔɪ̯ntaʊ̯zəntˌnɔɪ̯nhʊndɐtˌnɔɪ̯nʔʊntˌnɔɪ̯nt͡sɪç
+neuntausendneunhundertneunundneunzig	neun-tausend--neun-hundert--neun-und--neunzig	ˈnɔɪ̯ntaʊ̯zəntˌnɔɪ̯nhʊndɐtˌnɔɪ̯nʔʊntˌnɔɪ̯nt͡sɪç # FIXME: verify the secondary stresses; not in dewikt
 Arbeitsunfähigkeitsbescheinigung	Arbeit>s-unfähigkeit>s--bescheinigung	ˈaʁbaɪ̯t͡sʔʊnfɛːɪçkaɪ̯t͡sbəˌʃaɪ̯nɪɡʊŋ
 Schwarzarbeitsbekämpfungsgesetz	Schwarz-arbeit>s--bekämpfung>s--gesetz	ˈʃvaʁt͡sʔaʁbaɪ̯t͡sbəˌkɛmp͡fʊŋsɡəˌzɛt͡s
 Aufmerksamkeitsdefizitsyndrom	Aufmerksamkeit>s--defizit-syndróm	ˈaʊ̯fmɛʁkzaːmkaɪ̯t͡sˌdefit͡sɪtzʏndʁoːm
 Bauchspeicheldrüsenentzündung	Bauch-speichel-drüsen--entzündung	ˈbaʊ̯xʃpaɪ̯çəldʁyːzn̩(ʔ)ɛntˌt͡sʏndʊŋ
 Einzugsermächtigungsverfahren	Einzug>s-ermächtigung>s--verfahren	ˈaɪ̯nt͡suːks(ʔ)ɛʁmɛçtɪɡʊŋsfɛʁˌfaːʁən
 Ministerpräsidentenkandidatin	Miníster-präsident>en-kandidátin	miˈnɪstɐpʁɛziˌdɛntənkandiˌdaːtɪn
-# FIXME: enwikt has secondary stress on 'instrumenten' and stresses 'hersteller' as 'herstéller'
-Streichinstrumentenhersteller	Streich-instrument>en--hersteller	ˈʃtʁaɪ̯ç(ʔ)ɪnstʁumɛntənˌheːʁʃtɛlɐ
-# FIXME: should this be segmented Geschlecht>s-identität>s--störung?
-Geschlechtsidentitätsstörung	Geschlecht>s-identität>s-störung	ɡəˈʃlɛçt͡sʔidɛntiˌtɛːt͡sˌʃtøːʁʊŋ
+Streichinstrumentenhersteller	Streich-instrument>en--hersteller	ˈʃtʁaɪ̯ç(ʔ)ɪnstʁumɛntənˌheːʁʃtɛlɐ # FIXME: enwikt has secondary stress on 'instrumenten' and stresses 'hersteller' as 'herstéller'
+Geschlechtsidentitätsstörung	Geschlecht>s-identität>s-störung	ɡəˈʃlɛçt͡sʔidɛntiˌtɛːt͡sˌʃtøːʁʊŋ # FIXME: should this be segmented Geschlecht>s-identität>s--störung?
 Geschwindigkeitsbeschränkung	Geschwindigkeit>s-beschränkung	ɡəˈʃvɪndɪçkaɪ̯t͡sbəˌʃʁɛŋkʊŋ
 Arbeitsbeschaffungsmaßnahme	Arbeits-beschaffungs--maß-nahme	ˈaʁbaɪ̯t͡sbəʃafʊŋsˌmaːsnaːmə
 Arbeitsbeschaffungsprogramm	Arbeits-beschaffungs--prográmm	ˈaʁbaɪ̯t͡sbəʃafʊŋspʁoˌɡʁam
@@ -541,12 +598,10 @@ Aufenthaltsbestimmungsrecht	Aufenthalts--bestimmungs-recht	ˈaʊ̯f(ʔ)ɛnthalt�
 Kreuzschlitzschraubenzieher	Kreuz-schlitz--schrauben-zieher	ˈkʁɔɪ̯t͡sʃlɪt͡sˌʃʁaʊ̯bənt͡siːɐ
 Meerwasserentsalzungsanlage	Meer-wasser--entsalzungs-anlage	ˈmeːʁvasɐʔɛntˌzalt͡sʊŋsʔanlaːɡə
 Nichtregierungsorganisation	Nicht-*regierung>s-organisation	ˌnɪçtʁeˈɡiːʁʊŋs(ʔ)ɔʁɡanizaˌt͡si̯oːn
-# FIXME: The double primary stress matches dewikt; correct?
-Sicherheitsvertrauensperson	*Sicherheit>s--*vertrauens-persón	ˈzɪçɐhaɪ̯t͡sfɛʁˈtʁaʊ̯ənspɛʁˌzoːn
+Sicherheitsvertrauensperson	*Sicherheit>s--*vertrauens-persón	ˈzɪçɐhaɪ̯t͡sfɛʁˈtʁaʊ̯ənspɛʁˌzoːn # FIXME: The double primary stress matches dewikt; correct?
 Sprachverschlüsselungsgerät	Sprahch-verschlüsselungs-gerät	ˈʃpʁaːxfɛʁˌʃlʏsəlʊŋsɡəˌʁɛːt
 Verschlüsselungsalgorithmus	Verschlüsselungs-algoríthmus	fɛʁˈʃlʏsəlʊŋs(ʔ)alɡoˌʁɪtmʊs
-# FIXME: dewikt has no secondary stress on 'organisation'; verify
-Weltgesundheitsorganisation	Welt-gesundheit>s-organisation	ˈvɛltɡəˌzʊnthaɪ̯t͡s(ʔ)ɔʁɡanizaˌt͡si̯oːn
+Weltgesundheitsorganisation	Welt-gesundheit>s-organisation	ˈvɛltɡəˌzʊnthaɪ̯t͡s(ʔ)ɔʁɡanizaˌt͡si̯oːn # FIXME: dewikt has no secondary stress on 'organisation'; verify
 Hals-Nasen-Ohren-Heilkunde	Hals--Nasen--*Ohren--Heil-kunde	ˌhalsˌnaːzənˈʔoːʁənˌhaɪ̯lkʊndə
 Konspirationstheoretikerin	Konspiration>s-theorétikerin	kɔnspiʁaˈt͡si̯oːnsteoˌʁeːtɪkəʁɪn
 Kopfsteinpflastersträßchen	Kopf-stein--pflaster-sträßchen	ˈkɔp͡fʃtaɪ̯nˌp͡flastɐʃtrɛːsçən
@@ -597,7 +652,9 @@ Hochtemperaturreaktor	Hohch-temperatúr-reáktor	ˈhoːxtɛmpəʁaˌtuːʁʁeˌa
 Hochtemperaturreaktor	Hohch-temperatúr-reʔáktor	ˈhoːxtɛmpəʁaˌtuːʁʁeˌʔaktoːʁ
 Goldkopflöwenäffchen	Gold-kopf--*löwen-äffchen	ˌɡɔltkɔp͡fˈløːvənʔɛfçən
 
-# Prefix handling
+# --------- Prefix handling ---------
+
+## Cases where prefixes should not be segmented off
 Geier	Geier	ˈɡaɪ̯ɐ
 Geifer	Geifer	ˈɡaɪ̯fɐ
 geifern	geifern	ˈɡaɪ̯fɐn
@@ -616,23 +673,23 @@ Beugungen	Beugungen	ˈbɔɪ̯ɡʊŋən
 geurasst	geurasst	ɡəˈʔuːʁast
 geunkt	geunkt	ɡəˈʔʊŋkt
 geulkt	geulkt	ɡəˈʔʊlkt
-Bede	Bede	ˈbeːdə	too short after be-
-Gertrud	Gertrud	ˈɡɛʁtʁuːt	impermissible onset after ge-
-Geste	Gehste	ˈɡeːstə	too short after ge-
-Geste	Geste	ˈɡɛstə	too short after ge-
-Verve	Verve	ˈvɛʁvə	too short after ver-
-vorne	forne	ˈfɔʁnə	needs respelling; vor- not recognized
-erste	erste	ˈɛʁstə	too short after er-; second pronunciation
-ergo	ergo	ˈɛʁɡo	too short after er-
-beben	beben	ˈbeːbən	cluster + e + single consonant is too short
-Becher	Becher	ˈbɛçɐ	ditto
-Erker	Erker	ˈɛʁkɐ	ditto
-erzen	erzen	ˈɛʁt͡sən	ditto; second pronunciation
-Beleg	Be<leg	bəˈleːk	need respelling to recognize prefix
-Gebet	Ge<bet	ɡəˈbeːt	need respelling to recognize prefix
+Bede	Bede	ˈbeːdə # too short after be-
+Gertrud	Gertrud	ˈɡɛʁtʁuːt # impermissible onset after ge-
+Geste	Gehste	ˈɡeːstə # too short after ge-
+Geste	Geste	ˈɡɛstə # too short after ge-
+Verve	Verve	ˈvɛʁvə # too short after ver-
+vorne	forne	ˈfɔʁnə # needs respelling; vor- not recognized
+erste	erste	ˈɛʁstə # too short after er-; second pronunciation
+ergo	ergo	ˈɛʁɡo # too short after er-
+beben	beben	ˈbeːbən # cluster + e + single consonant is too short
+Becher	Becher	ˈbɛçɐ # ditto
+Erker	Erker	ˈɛʁkɐ # ditto
+erzen	erzen	ˈɛʁt͡sən # ditto; second pronunciation
+Beleg	Be<leg	bəˈleːk # need respelling to recognize prefix
+Gebet	Ge<bet	ɡəˈbeːt # need respelling to recognize prefix
 Zukunft	Zukunft	ˈt͡suːˌkʊnft
 
-# ab-
+## ab-
 abstellen	abstellen	ˈapˌʃtɛlən
 abgelegen	abgelegen	ˈapɡəˌleːɡən
 aberkennen	aberkennen	ˈap(ʔ)ɛʁˌkɛnən
@@ -652,16 +709,16 @@ Abort	Abórt	aˈbɔʁt
 abaxial	ab<axial	ap(ʔ)aˈksi̯aːl
 abalienieren	àb<alIenieren	ˌap(ʔ)ali̯eˈniːʁən
 
-# aneinander-
+## aneinander-
 aneinandergeraten	aneinandergeraten	an(ʔ)aɪ̯ˈnandɐɡəˌʁaːtən
 aneinander	aneinander	an(ʔ)aɪ̯ˈnandɐ
 
-# anheim-
+## anheim-
 anheimfallen	anheimfallen	anˈhaɪ̯mˌfalən
 anheimzustellen	anheimzustellen	anˈhaɪ̯mt͡suˌʃtɛlən
 anheim	anheim	anˈhaɪ̯m
 
-# an-
+## an-
 anstellen	anstellen	ˈanˌʃtɛlən
 anöden	anöden	ˈanˌʔøːdən
 anekeln	anekeln	ˈanˌʔeːkəln
@@ -677,180 +734,178 @@ Annika	An+nika	ˈanika
 anhand	an<hand	anˈhant
 Antiheld	Anti.held	ˈantihɛlt
 
-# aufeinander-
+## aufeinander-
 aufeinanderzupassende	aufeinanderzupassende	aʊ̯f(ʔ)aɪ̯ˈnandɐt͡suˌpasəndə
 
-# auf-
+## auf-
 aufstöbern	aufstöbern	ˈaʊ̯fˌʃtøːbɐn
 Auferstehung	Auferstehung	ˈaʊ̯f(ʔ)ɛʁˌʃteːʊŋ
 
-# auseinander-
+## auseinander-
 auseinanderstreben	auseinanderstreben	aʊ̯s(ʔ)aɪ̯ˈnandɐˌʃtʁeːbən
 auseinanderentwickeln	auseinanderentwickeln	aʊ̯s(ʔ)aɪ̯ˈnandɐʔɛntˌvɪkəln
 
-# aus-
+## aus-
 auszubedingen	auszubedingen	ˈaʊ̯st͡subəˌdɪŋən
 
-# bei-
+## bei-
 beieinanderstehen	beieinanderstehen	baɪ̯(ʔ)aɪ̯ˈnandɐˌʃteːən
 beisteuernder	beisteuernder	ˈbaɪ̯ˌʃtɔɪ̯ɐndɐ
 
-# be-
+## be-
 beabsichtigen	beabsichtigen	bəˈʔapzɪçtɪɡən
 beunruhigen	beunruhigen	bəˈʔʊnˌʁuːɪɡən
 beurlauben	beurlauben	bəˈʔuːʁˌlaʊ̯bən
 
-# dafür-
+## dafür-
 dafürsprechen	dafürsprechen	daˈfyːʁˌʃpʁɛçən
 dafürzuhalten	dafürzuhalten	daˈfyːʁt͡suˌhaltən
 
-# dagegen-
+## dagegen-
 dagegenstimmen	dagegenstimmen	daˈɡeːɡənˌʃtɪmən
 dagegengehaltenem	dagegengehaltenem	daˈɡeːɡənɡəˌhaltənəm
 
-# daher-
+## daher-
 daherreden	daherreden	daˈheːʁˌʁeːdən
 daherzureden	daherzureden	daˈheːʁt͡suˌʁeːdən
 
-# dahinter-
+## dahinter-
 dahinterstehen	dahinterstehen	daˈhɪntɐˌʃteːən
 dahinterzuknien	dahinterzuknien	daˈhɪntɐt͡suˌkniːn
-# FIXME, make sure the following works
-dahinterzuknieen	dahinterzuknieen	daˈhɪntɐt͡suˌkniːən
+dahinterzuknieen	dahinterzuknieen	daˈhɪntɐt͡suˌkniːən # FIXME, make sure this works
 
-# dahin-
+## dahin-
 dahingehen	dahingehen	daˈhɪnˌɡeːən
 dahinvegetieren	dahinvegetieren	daˈhɪnveɡeˌtiːʁən
 
-# daneben-
+## daneben-
 danebengeraten	danebengeraten	daˈneːbənɡəˌʁaːtən
 danebenzubenehmen	danebenzubenehmen	daˈneːbənt͡subəˌneːmən
 
-# dar-
+## dar-
 darstellen	darstellen	ˈdaːʁˌʃtɛlən
 Darbietung	Darbietung	ˈdaːʁˌbiːtʊŋ
 darzutun	darzutun	ˈdaːʁt͡suˌtuːn
 darüber	darǘber	daˈʁyːbɐ
 
-# davon-
+## davon-
 davonstehlen	davonstehlen	daˈfɔnˌʃteːlən
 davongejagte	davongejag>te	daˈfɔnɡəˌjaːktə
 
-# davor-
+## davor-
 davorstellen	davorstellen	daˈfoːʁˌʃtɛlən
 davorzuhängen	davorzuhängen	daˈfoːʁt͡suˌhɛŋən
 
-# dazu-
+## dazu-
 dazuaddieren	dazuaddieren	daˈt͡suːʔaˌdiːʁən
 dazuzugehören	dazuzugehören	daˈt͡suːt͡suɡəˌhøːʁən
 
-# durcheinander-
+## durcheinander-
 durcheinanderessen	durcheinanderessen	dʊʁç(ʔ)aɪ̯ˈnandɐˌʔɛsən
 
-# durch-
+## durch-
 durchschlagen	durchschlagen	ˈdʊʁçˌʃlaːɡən
 durchschlagen	durch<schlagen	dʊʁçˈʃlaːɡən
 durchbekommenes	durchbekommenes	ˈdʊʁçbəˌkɔmənəs
 Durchmesser	Durchmesser	ˈdʊʁçˌmɛsɐ
 Durchschnittsmensch	Durchschnitt>s-mensch	ˈdʊʁçʃnɪt͡sˌmɛnʃ
 
-# ein-
+## ein-
 einstellen	einstellen	ˈaɪ̯nˌʃtɛlən
 einzubestellendem	einzubestellendem	ˈaɪ̯nt͡subəˌʃtɛləndəm
 Einstein	Einstein	ˈaɪ̯nˌʃtaɪ̯n
 Eintrag	Eintrag	ˈaɪ̯nˌtʁaːk
-# "zel" is too short of a main part for "Ein-" to be partitioned off here.
-Einzelzimmer	Einzel-zimmer	ˈaɪ̯nt͡səlˌt͡sɪmɐ
+Einzelzimmer	Einzel-zimmer	ˈaɪ̯nt͡səlˌt͡sɪmɐ # "zel" is too short of a main part for "Ein-" to be partitioned off here.
 
-# empor-
+## empor-
 emporsteigen	emporsteigen	ɛmˈpoːʁˌʃtaɪ̯ɡən
 emporgearbeiteter	emporgearbeiteter	ɛmˈpoːʁɡəˌʔaʁbaɪ̯tətɐ
 Emporium	Empóri.um	ɛmˈpoːʁiʊm
 
-# emp-
+## emp-
 empirisch	empírisch	ɛmˈpiːʁɪʃ
 emphatisch	emphátisch	ɛmˈfaːtɪʃ
 Empfang	Empfang	ɛmpˈfaŋ
 Empfindsamkeit	Empfindsamkeit	ɛmpˈfɪntzaːmˌkaɪ̯t
 
-# entgegen-
+## entgegen-
 entgegensehen	entgegensehen	ɛntˈɡeːɡənˌzeːən
 entgegenzustrecken	entgegenzustrecken	ɛntˈɡeːɡənt͡suˌʃtʁɛkən
 entgegen-	entgegen-	ɛntˈɡeːɡən
 
-# entlang-
+## entlang-
 entlangeilen	entlangeilen	ɛntˈlaŋˌʔaɪ̯lən
 entlangmarschieren	entlangmarschieren	ɛntˈlaŋmaʁˌʃiːʁən
 
-# entzwei-
+## entzwei-
 entzweispringen	entzweispringen	ɛntˈt͡svaɪ̯ˌʃpʁɪŋən
 entzweigegangen	entzweigegangen	ɛntˈt͡svaɪ̯ɡəˌɡaŋən
 
-# ent-
+## ent-
 entsprechend	entsprechend	ɛntˈʃpʁɛçənt
 entscheiden	entscheiden	ɛntˈʃaɪ̯dən
 
-# er-
+## er-
 Ergebnis	Ergebnis	ɛʁˈɡeːpnɪs
 erarbeiten	erarbeiten	ɛʁˈʔaʁbaɪ̯tən
 errackern	errackern	ɛʁˈʁakɐn
 
-# fort-
+## fort-
 fortbewegen	fortbewegen	ˈfɔʁtbəˌveːɡən
 Fortentwicklung	Fortentwicklung	ˈfɔʁt(ʔ)ɛntˌvɪklʊŋ
 fortstoßen	fortstoßen	ˈfɔʁtˌʃtoːsən
 
-# gegenüber-
+## gegenüber-
 gegenüberstehen	gegenüberstehen	ɡeːɡənˈʔyːbɐˌʃteːən
 gegenübergesessen	gegenübergesessen	ɡeːɡənˈʔyːbɐɡəˌzɛsən
 
-# herab-
+## herab-
 herabstürzen	herabstürzen	hɛˈʁapˌʃtʏʁt͡sən
 herabgestuft	herabgestuf>t	hɛˈʁapɡəˌʃtuːft
 
-# heran-
+## heran-
 herantasten	herantasten	hɛˈʁanˌtastən
 Herangewanze	Herangewanze	hɛˈʁanɡəˌvant͡sə
 
-# herauf-
+## herauf-
 heraufbefördernd	heraufbefördernd	hɛˈʁaʊ̯fbəˌfœʁdɐnt
 herauffahren	herauffahren	hɛˈʁaʊ̯fˌfaːʁən
 heraufzubeschwörendes	heraufzubeschwörendes	hɛˈʁaʊ̯ft͡subəˌʃvøːʁəndəs
 
-# heraus-
+## heraus-
 herausstellen	herausstellen	hɛˈʁaʊ̯sˌʃtɛlən
 
-# herbei-
+## herbei-
 herbeieilen	herbeieilen	hɛʁˈbaɪ̯ˌʔaɪ̯lən
 herbeigeschafft	herbeigeschafft	hɛʁˈbaɪ̯ɡəˌʃaft
 
-# herein-
+## herein-
 hereinsteckendes	hereinsteckendes	hɛˈʁaɪ̯nˌʃtɛkəndəs
 hereinzugeheimnissen	hereinzugeheimnissen	hɛˈʁaɪ̯nt͡suɡəˌhaɪ̯mnɪsən
 
-# hernieder-
+## hernieder-
 herniederregnen	herniederregnen	hɛʁˈniːdɐˌʁeːɡnən
 herniederzubrechen	herniederzubrechen	hɛʁˈniːdɐt͡suˌbʁɛçən
 
-# herüber-
+## herüber-
 herübergefahren	herübergefahren	hɛˈʁyːbɐɡəˌfaːʁən
 herüberzuwechseln	herüberzuwechseln	hɛˈʁyːbɐt͡suˌvɛksəln
 
-# herum-
+## herum-
 herumscharwenzeln	herumscharwènzeln	hɛˈʁʊmʃaʁˌvɛnt͡səln
 herumspinnen	herumspinnen	hɛˈʁʊmˌʃpɪnən
 herumexperimentieren	herumexpêrimentieren	hɛˈʁʊm(ʔ)ɛkspeʁimɛnˌtiːʁən
 herumeiernde	herumeiernde	hɛˈʁʊmˌʔaɪ̯ɐndə
 herumzuerzählen	herumzuerzählen	hɛˈʁʊmt͡suʔɛʁˌt͡sɛːlən
 
-# herunter-
+## herunter-
 herunterspielen	herunterspielen	hɛˈʁʊntɐˌʃpiːlən
 herunterzuhandeln	herunterzuhandeln	hɛˈʁʊntɐt͡suˌhandəln
 
-# hervor-
+## hervor-
 hervorstechen	hervorstechen	hɛʁˈfoːʁˌʃtɛçən
 
-# her-
+## her-
 herstellen	herstellen	ˈheːʁˌʃtɛlən
 hergebetene	hergebetene	ˈheːʁɡəˌbeːtənə
 hereditär	hereditär	heʁediˈtɛːʁ
@@ -858,63 +913,63 @@ heraldik	heráldik	heˈʁaldɪk
 Herkules	Her+kulĕs	ˈhɛʁkulɛs
 Herberge	Hérberge	ˈhɛʁbɛʁɡə
 
-# hinab-
+## hinab-
 hinabsteigen	hinabsteigen	hɪˈnapˌʃtaɪ̯ɡən
 hinabbaumele	hinabbaumele	hɪˈnapˌbaʊ̯mələ
 
-# hinan-
+## hinan-
 hinangearbeitetes	hinangearbeitetes	hɪˈnanɡəˌʔaʁbaɪ̯tətəs
 
-# hinauf-
+## hinauf-
 hinaufsteigen	hinaufsteigen	hɪˈnaʊ̯fˌʃtaɪ̯ɡən
 hinaufgestiegener	hinaufgestiegener	hɪˈnaʊ̯fɡəˌʃtiːɡənɐ
 
-# hinaus-
+## hinaus-
 hinauskatapultieren	hinauskatapultieren	hɪˈnaʊ̯skatapʊlˌtiːʁən
 hinausposaunen	hinausposàunen	hɪˈnaʊ̯spoˌzaʊ̯nən
 hinauszuposaunen	hinauszuposàunen	hɪˈnaʊ̯st͡supoˌzaʊ̯nən
 
-# hindurch-
+## hindurch-
 hindurchbewegen	hindurchbewegen	hɪnˈdʊʁçbəˌvəɡən
 
-# hinein-
+## hinein-
 hineinstecken	hineinstecken	hɪˈnaɪ̯nˌʃtɛkən
 hineingebären	hineingebären	hɪˈnaɪ̯nɡəˌbɛːʁən
 
-# hintan-
+## hintan-
 hintanstellen	hintanstellen	hɪntˈʔanˌʃtɛlən
 hintangehalten	hintangehalten	hɪntˈʔanɡəˌhaltən
 
-# hinterher-
+## hinterher-
 hinterherhinken	hinterherhinken	hɪntɐˈheːʁˌhɪŋkən
 hinterherspionieren	hinterherspionieren	hɪntɐˈheːʁʃpi̯oˌniːʁən
 hinterherzugehen	hinterherzugehen	hɪntɐˈheːʁt͡suˌɡeːən
 
-# hinter-
+## hinter-
 Hintergedanke	Hintergedanke	ˈhɪntɐɡəˌdaŋkə
 Hinterwäldler	Hinterwäld.ler	ˈhɪntɐˌvɛltlɐ
 
-# hinüber-
+## hinüber-
 hinüberbefördern	hinüberbefördern	hɪˈnyːbɐbəˌfœʁdɐn
 
-# hinüber-
+## hinunter-
 hinunterbekommen	hinunterbekommen	hɪˈnʊntɐbəˌkɔmən
 
-# hinweg-
+## hinweg-
 hinwegmarschieren	hinwegmarschieren	hɪnˈvɛkmaʁˌʃiːʁən
 hinwegsehen	hinwegsehen	hɪnˈvɛkˌzeːən
 
-# hin-
+## hin-
 hinkriegen	hinkriegen	ˈhɪnˌkʁiːɡən
 
-# miss-
+## miss-
 missachten	miss<achten	mɪsˈʔaxtən
 missbrauchen	miss<brauchen	mɪsˈbʁaʊ̯xən
 missinterpretieren	missintərpretieren	ˈmɪs(ʔ)ɪntɐpʁeˌtiːʁən
 missgestaltet	missgestaltet	ˈmɪsɡəˌʃtaltət
 Missverständnis	Missverständnis	ˈmɪsfɛʁˌʃtɛntnɪs
 
-# mit-
+## mit-
 mitbestimmen	mitbestimmen	ˈmɪtbəˌʃtɪmən
 mitteilen	mitteilen	ˈmɪtˌtaɪ̯lən
 mitansehen	mit<ansehen	mɪtˈʔanˌzeːən
@@ -922,44 +977,41 @@ mitanzugebenden	mit<anzuge+benden	mɪtˈʔant͡suˌɡeːbəndən
 Mittag	Mit+tag	ˈmɪtaːk
 mitigieren	mitigieren	mitiˈɡiːʁən
 
-# nach-
+## nach-
 nachalarmieren	nachalarmieren	ˈnaːx(ʔ)alaʁˌmiːʁən
 nachversteuern	nachversteuern	ˈnaːxfɛʁˌʃtɔɪ̯ɐn
 nachschlägt	nachschläg>t	ˈnaːxˌʃlɛːkt
 Nachentgelt	Nachentgelt	ˈnaːx(ʔ)ɛntˌɡɛlt
 nachzuvollziehen	nachzufollzìehen	ˈnaːxt͡sufɔlˌt͡siːən
 
-# nieder-
+## nieder-
 niederstürzen	niederstürzen	ˈniːdɐˌʃtʏʁt͡sən
 niederzuzerren	niederzuzerren	ˈniːdɐt͡suˌt͡sɛʁən
 
-# übereinander-
+## übereinander-
 übereinanderstapeln	übereinanderstapeln	yːbɐʔaɪ̯ˈnandɐˌʃtaːpəln
 übereinanderzuschlagenden	übereinanderzuschlagenden	yːbɐʔaɪ̯ˈnandɐt͡suˌʃlaːɡəndən
 
-# über-
+## über-
 überfahren	überfahren	ˈyːbɐˌfaːʁən
-# über- should be recognized, translated to ǘber- and then to ü̏ber- (i.e. with double grave), so that
-# length is preserved.
-überfahren	über<fahren	yːbɐˈfaːʁən
+überfahren	über<fahren	yːbɐˈfaːʁən # über- should be recognized, translated to ǘber- and then to ü̏ber- (i.e. with double grave), so that length is preserved.
 überdimensionieren	überdimensionieren	ˈyːbɐdimɛnzi̯oˌniːʁən
-# über- should still be recognized with secondary stress on it.
-überholt	ǜberhol>t	ˌyːbɐˈhoːlt
+überholt	ǜberhol>t	ˌyːbɐˈhoːlt # über- should still be recognized with secondary stress on it.
 übereinstimmen	über<einstimmen	yːbɐˈʔaɪ̯nˌʃtɪmən
 überanstrengen	über<anstrengen	yːbɐˈʔanˌʃtʁɛŋən
 überbeanspruchen	überbeanspruchen	ˈyːbɐbəˌʔanʃpʁʊxən
 überzubeanspruchen	überzubeanspruchen	ˈyːbɐt͡subəˌʔanʃpʁʊxən
 Überangebot	Über-angebot	ˈyːbɐˌʔanɡəboːt
 
-# um-
-umfahren	umfahren	ˈʊmˌfaːʁən	to "drive over", "to knock down by driving"
-umfahren	um<fahren	ʊmˈfaːʁən	to "drive around", "to bypass"
+## um-
+umfahren	umfahren	ˈʊmˌfaːʁən # to "drive over", "to knock down by driving"
+umfahren	um<fahren	ʊmˈfaːʁən # to "drive around", "to bypass"
 umzustrukturieren	umzustrukturieren	ˈʊmt͡suʃtʁʊktuˌʁiːʁən
 umzustrukturieren	umzus*trukturieren	ˈʊmt͡sustʁʊktuˌʁiːʁən
 umzuerziehende	umzuerziehende	ˈʊmt͡suʔɛʁˌt͡siːəndə
 Umgebindehaus	Umgebinde-haus	ˈʊmɡəbɪndəˌhaʊ̯s
 
-# un-
+## un-
 ungar	ungar	ˈʊnˌɡaːʁ
 Ungar	Un+gar	ˈʊŋɡaʁ
 unglaublich	unglaublich	ˈʊnɡlaʊ̯plɪç
@@ -976,10 +1028,9 @@ unislamisch	unislàmisch	ˈʊn(ʔ)ɪsˌlaːmɪʃ
 unorthodox	unorthodòx	ˈʊn(ʔ)ɔʁtoˌdɔks
 unangenehm	unangenehm	ˈʊnʔanɡəˌneːm
 unausgegoren	unausgegoren	ˈʊnʔaʊ̯sɡəˌɡoːʁən
-unkaputtbar	unkapúttbar	ʊnkaˈpʊtbaːʁ	not /ʊŋ-/
+unkaputtbar	unkapúttbar	ʊnkaˈpʊtbaːʁ # not /ʊŋ-/
 unkalkulierbar	unkalkulierbar	ˈʊnkalkuˌliːʁbaːʁ
-# un- should be recognized even with secondary stress. We should not get /ʊŋ-/ or /un-/.
-unkalkulierbar	ùnkalkulierbar	ˌʊnkalkuˈliːʁbaːʁ
+unkalkulierbar	ùnkalkulierbar	ˌʊnkalkuˈliːʁbaːʁ # un- should be recognized even with secondary stress. We should not get /ʊŋ-/ or /un-/.
 unzerstörbar	unzerstörbar	ˈʊnt͡sɛʁˌʃtøːʁbaːʁ
 unzerstörbar	unzerstö́rbar	ʊnt͡sɛʁˈʃtøːʁbaːʁ
 unzerstörbar	ùnzerstörbar	ˌʊnt͡sɛʁˈʃtøːʁbaːʁ
@@ -991,19 +1042,19 @@ universal	un+iversal	univɛʁˈzaːl
 Universität	Ùn+iversität	ˌunivɛʁziˈtɛːt
 Union	Un+ion	uˈni̯oːn
 
-# ur-
+## ur-
 Urlaub	Urlaub	ˈuːʁˌlaʊ̯p
 Ursache	Ursache	ˈuːʁˌzaxə
 Urszene	Urszene	ˈuːʁˌst͡senə
 uramerikanisch	uramêrikànisch	ˈuːʁ(ʔ)ameʁiˌkaːnɪʃ
 uraufgeführt	uraufgeführt	ˈuːʁʔaʊ̯fɡəˌfyːʁt
 Urvertrauen	Urvertrauen	ˈuːʁfɛʁˌtʁaʊ̯ən
-Urethan	Urethán	uʁeˈtaːn	ur- should not be segmented due to following primary stress
-urbanisieren	urbanisieren	ʊʁbaniˈziːʁən	ur- should not be segmented due to following primary stress
+Urethan	Urethán	uʁeˈtaːn # ur- should not be segmented due to following primary stress
+urbanisieren	urbanisieren	ʊʁbaniˈziːʁən # ur- should not be segmented due to following primary stress
 Uranus	Ur+anus	ˈuːʁanʊs
 uruguayisch	ur+ugwayisch	ˈuːʁuɡvaɪ̯ɪʃ
 
-# ver-
+## ver-
 veranlagen	veranlagen	fɛʁˈʔanlaːɡən
 verunglücken	verunglücken	fɛʁˈʔʊnɡlʏkən
 Verunreinigung	Verunreinigung	fɛʁˈʔʊnˌʁaɪ̯nɪɡʊŋ
@@ -1013,42 +1064,47 @@ versiert	ver+siert	vɛʁˈziːʁt
 vertiert	vertiert	fɛʁˈtiːʁt
 vertretbar	vertretbar	fɛʁˈtʁeːtbaːʁ
 
-# zueinander-
+## zueinander-
 zueinandergehalten	zueinandergehalten	t͡suʔaɪ̯ˈnandɐɡəˌhaltən
 zueinanderzufinden	zueinanderzufinden	t͡suʔaɪ̯ˈnandɐt͡suˌfɪndən
 
-# zurecht-
+## zurecht-
 zurechtrücken	zurechtrücken	t͡suˈʁɛçtˌʁʏkən
 zurechtzubekommen	zurechtzubekommen	t͡suˈʁɛçtt͡subəˌkɔmən
 
-# zurück-
+## zurück-
 zurückstecken	zurückstecken	t͡suˈʁʏkˌʃtɛkən
 zurückverlegt	zurückverleg>t	t͡suˈʁʏkfɛʁˌleːkt
 zurückerstatten	zurückerstatten	t͡suˈʁʏk(ʔ)ɛʁˌʃtatən
 zurücküberweisen	zurücküberweisen	t͡suˈʁʏk(ʔ)yːbɐˌvaɪ̯zən
 zurückzuüberweisen	zurückzuüberweisen	t͡suˈʁʏkt͡su(ʔ)yːbɐˌvaɪ̯zən
 
-# zusammen-
+## zusammen-
 Zusammenspiel	Zusammenspiel	t͡suˈzamənˌʃpiːl
 zusammenarbeitetest	zusammenarbeitetest	t͡suˈzamənˌʔaʁbaɪ̯tətəst
 zusammenveranlagtem	zusammenveranlag>tem	t͡suˈzamənfɛʁˌʔanlaːktəm
 zusammenzuveranlagender	zusammenzuveranlagender	t͡suˈzamənt͡sufɛʁˌʔanlaːɡəndɐ
 zusammenzuaddierendes	zusammenzuaddierendes	t͡suˈzamənt͡suʔaˌdiːʁəndəs
 
-# zu-
+## zu-
 zuständig	zuständig	ˈt͡suːˌʃtɛndɪç
 zugetan	zugetan	ˈt͡suːɡəˌtaːn
 zugespitzt	zugespitzt	ˈt͡suːɡəˌʃpɪt͡st
 zuzugestehen	zuzugestehen	ˈt͡suːt͡suɡəˌʃteːən
 
-# zwischen-
+## zwischen-
 Zwischenbemerkung	Zwischenbemerkung	ˈt͡svɪʃənbəˌmɛʁkʊŋ
 zwischengeschlechtlich	zwischengeschlechtlich	ˈt͡svɪʃənɡəˌʃlɛçtlɪç
 
+## Explicitly indicated prefixes
+inakzeptabel	inn-akzeptabel	ˈɪn(ʔ)akt͡sɛpˌtaːbl̩ # -abel is a recognized suffix
+ineffizient	inn-effizient	ˈɪn(ʔ)ɛfiˌt͡si̯ɛnt # -ent is a recognized suffix
+ineffizient	inn-effiziént	ˈɪn(ʔ)ɛfiˌt͡si̯ɛnt
 
-# Suffix handling
 
-# -erweise
+# --------- Suffix handling ---------
+
+## -erweise
 möglicherweise	möglicherweise	ˈmøːklɪçɐˈvaɪ̯zə
 unfreundlicherweise	unfreundlicherweise	ˈʔʊnfʁɔɪ̯ntlɪçɐˌvaɪ̯zə
 seltsamerweise	seltsamerweise	ˈzɛltzaːmɐˌvaɪ̯zə
@@ -1057,12 +1113,12 @@ ungewöhnlicherweise	ungewöhnlicherweise	ˈʊnɡəvøːnlɪçɐˌvaɪ̯zə
 unzulässigerweise	unzulässigerweise	ˈʊnt͡sulɛsɪɡɐˌvaɪ̯zə
 verbotenerweise	verbotenerweise	fɛʁˈboːtənɐˌvaɪ̯zə
 
-# -fest
+## -fest
 bissfest	bissfest	ˈbɪsˌfɛst
 wasserfest	wasserfest	ˈvasɐˌfɛst
 witterungsfest	witterungsfest	ˈvɪtəʁʊŋsˌfɛst
 
-# -frei
+## -frei
 bleifrei	bleifrei	ˈblaɪ̯ˌfʁaɪ̯
 alkoholfrei	alkohólfrei	alkoˈhoːlˌfʁaɪ̯
 bündnisfrei	bündnisfrei	ˈbʏntnɪsˌfʁaɪ̯
@@ -1075,7 +1131,7 @@ niederschlagsfrei	niederschlag>s>>frei	ˈniːdɐʃlaːksˌfʁaɪ̯
 holzschlifffrei	holz-schlifffrei	ˈhɔlt͡sʃlɪfˌfʁaɪ̯
 versandkostenfrei	versand-kostenfrei	fɛʁˈzantkɔstənˌfʁaɪ̯
 
-# -losigkeit
+## -losigkeit
 Reglosigkeit	Reglosigkeit	ˈʁeːkˌloːzɪçkaɪ̯t
 Arbeitslosigkeit	Arbeitslosigkeit	ˈaʁbaɪ̯t͡sˌloːzɪçkaɪ̯t
 Ausnahmslosigkeit	Ausnahmslosigkeit	ˈaʊ̯snaːmsˌloːzɪçkaɪ̯t
@@ -1091,7 +1147,7 @@ Teilnahmslosigkeit	Teil-nahmslosigkeit	ˈtaɪ̯lnaːmsˌloːzɪçkaɪ̯t
 Pietätlosigkeit	Piːetä́tlosigkeit	piːeˈtɛːtˌlozɪçkaɪ̯t
 Willenlosigkeit	Willenlosigkeit	ˈvɪlənˌloːzɪçkaɪ̯t
 
-# -los
+## -los
 arglos	arglos	ˈaʁkˌloːs
 fraglos	fraglos	ˈfʁaːkˌloːs
 gottlos	gottlos	ˈɡɔtˌloːs
@@ -1118,7 +1174,7 @@ alternativlos	alternatívlos	altɛʁnaˈtiːfˌloːs
 bargeldlos	bar-geldlos	ˈbaːʁɡɛltˌloːs
 inhaltslos	in-haltslos	ˈɪnhalt͡sˌloːs
 
-# -reich
+## -reich
 geistreich	geistreich	ˈɡaɪ̯stˌʁaɪ̯ç
 glorreich	glorreich	ˈɡloːʁˌʁaɪ̯ç
 siegreich	siegreich	ˈziːkˌʁaɪ̯ç
@@ -1130,7 +1186,7 @@ einwohnerreich	einwohnerreich	ˈaɪ̯nvoːnɐˌʁaɪ̯ç
 kohlenhydratreich	kohlen-hydrátreich	ˈkoːlənhydʁaːtˌʁaɪ̯ç
 niederschlagsreich	niederschlag>s>>reich	ˈniːdɐʃlaːksˌʁaɪ̯ç
 
-# -voll
+## -voll
 kraftvoll	kraftvoll	ˈkʁaftˌfɔl
 gramvoll	gramvoll	ˈɡʁaːmˌfɔl
 qualvoll	qualvoll	ˈkvaːlˌfɔl
@@ -1146,7 +1202,7 @@ rücksichtsvoll	rück-sichtsvoll	ˈʁʏkzɪçt͡sˌfɔl
 unheilvoll	unheilvoll	ˈʊnhaɪ̯lˌfɔl
 unschuldsvoll	unschuldsvoll	ˈʊnʃʊlt͡sˌfɔl
 
-# -weise
+## -weise
 stückweise	stückweise	ˈʃtʏkˌvaɪ̯zə
 teilweise	teilweise	ˈtaɪ̯lˌvaɪ̯zə
 leihweise	leihweise	ˈlaɪ̯ˌvaɪ̯zə
@@ -1161,49 +1217,49 @@ ausnahmsweise	ausnahmsweise	ˈaʊ̯snaːmsˌvaɪ̯zə
 beispielsweise	beispielsweise	ˈbaɪ̯ʃpiːlsˌvaɪ̯zə
 allerleiweise	aller>lei>>weise	ˈalɐlaɪ̯ˌvaɪ̯zə
 esslöffelweise	ess-löffelweise	ˈɛslœfl̩ˌvaɪ̯zə
-scheibchenweise	scheibchenweise	ˈʃaɪ̯bçənˌvaɪ̯zə	FIXME: make sure this works!
+scheibchenweise	scheibchenweise	ˈʃaɪ̯bçənˌvaɪ̯zə # FIXME: make sure this works!
 
-# -ant
+## -ant
 Emigrant	Emigrant	emiˈɡʁant
 tolerant	tolerant	toləˈʁant
 
-# -anz
-Abglanz	Abglanz	ˈapˌɡlant͡s	main part too short to be interpreted as suffix
+## -anz
+Abglanz	Abglanz	ˈapˌɡlant͡s # main part too short to be interpreted as suffix
 Akzeptanz	Akzeptanz	akt͡sɛpˈtant͡s
 Allianz	Allianz	aˈli̯ant͡s
 
-# -abel, -ibel
-Bratengabel	Braten-gabel	ˈbʁaːtənˌɡaːbəl	main part too short to be interpreted as suffix
+## -abel, -ibel
+Bratengabel	Braten-gabel	ˈbʁaːtənˌɡaːbəl # main part too short to be interpreted as suffix
 deplorabel	deplorabel	deploˈʁaːbəl
 Dezibel	Dezi-bel	ˈdeːt͡siˌbɛl
 disponibel	disponibel	dɪspoˈniːbəl
 
-# -al
+## -al
 Doppelmoral	Doppel-moral	ˈdɔpəlmoˌʁaːl
 dorsal	dorsal	dɔʁˈzaːl
 manchmal	mánchmal	ˈmançmaːl
 manchmal	manch>mal	ˈmançmaːl
 optimal	optimal	ɔptiˈmaːl
 
-# -tionär
+## -tionär
 Revolutionär	Revolutionär	ʁevolut͡si̯oˈnɛːʁ
 quasistationär	quasi-stationär	ˈkvaːziʃtat͡si̯oˌnɛːʁ
 
-# -är
+## -är
 singulär	singulär	zɪŋɡuˈlɛːʁ
 intermediär	inter<mediär	ɪntɐmeˈdi̯ɛːʁ
 Veterinär	Veterinär	vetəʁiˈnɛːʁ
 unpopulär	unpopulär	ˈʊnpopuˌlɛːʁ
 
-# -ierbar
+## -ierbar
 realisierbar	realisierbar	ʁealiˈziːʁbaːʁ
 prognostizierbar	prognostizierbar	pʁoɡnɔstiˈt͡siːʁbaːʁ
 undefinierbar	undefinierbar	ˈʊndefiˌniːʁbaːʁ
 undefinierbar	undefiniérbar	ʊndefiˈniːʁbaːʁ
 
-# -bar
+## -bar
 strafbar	strafbar	ˈʃtʁaːfbaːʁ
-jagdbar	jagdbar	ˈjaːktbaːʁ
+jagdbar	jahgdbar	ˈjaːktbaːʁ
 abbaubar	abbaubar	ˈapˌbaʊ̯baːʁ
 unbesiegbar	ùnbesiegbar	ˌʊnbəˈziːkbaːʁ
 unbesiegbar	unbesiegbar	ˈʊnbəˌziːkbaːʁ
@@ -1215,11 +1271,10 @@ downloadbar	daun-loUdbar	ˈdaʊ̯nˌlɔʊ̯tbaːʁ
 downloadbar	daun-lodbar	ˈdaʊ̯nˌloːtbaːʁ
 isobar	isobár	izoˈbaːʁ
 
-# -chen
+## -chen
 Mädchen	Mädchen	ˈmɛːtçən
 Hörnchen	Hörnchen	ˈhœʁnçən
-# use > to explicitly denote a suffix
-Ehefrauchen	Ehe-frau>chen	ˈeːəˌfʁaʊ̯çən
+Ehefrauchen	Ehe-frau>chen	ˈeːəˌfʁaʊ̯çən # use > to explicitly denote a suffix
 Opachen	Opa>chen	ˈoːpaçən
 Wodkachen	Wodka>chen	ˈvɔtkaçən
 Verschen	Fers>chen	fɛʁsçən
@@ -1228,12 +1283,10 @@ Bläschen	Bläs>chen	ˈblɛːsçən
 Füchschen	Füchs>chen	ˈfʏksçən
 Gänschen	Gäns>chen	ˈɡɛnsçən
 bisschen	bisschen	ˈbɪsçən
-horchen	horchen	ˈhɔʁçən	-chen only recognized with an initial capital
-wachen	wachen	ˈvaxən	ditto
-# -chen is not a suffix here; without the +, -a- would be long
-Schnarchen	Schnar+chen	ˈʃnaʁçən
-# -chen is not recognized as a suffix after a vowel, and is only recognized in nouns (beginning with a capital letter)
-Freimachen	Frei-machen	ˈfʁaɪ̯ˌmaxən
+horchen	horchen	ˈhɔʁçən # -chen only recognized with an initial capital
+wachen	wachen	ˈvaxən # ditto
+Schnarchen	Schnar+chen	ˈʃnaʁçən # -chen is not a suffix here; without the +, -a- would be long
+Freimachen	Frei-machen	ˈfʁaɪ̯ˌmaxən # -chen is not recognized as a suffix after a vowel, and is only recognized in nouns (beginning with a capital letter)
 Kaputtmachen	Kapútt-machen	kaˈpʊtˌmaxən
 Verachtfachen	Veracht-fachen	fɛʁˈʔaxtˌfaxən
 Verfünfzehnfachen	Verfünf-zehn--fachen	fɛʁˈfʏnft͡seːnˌfaxən
@@ -1256,40 +1309,41 @@ Bärchen	Bärchen	ˈbɛːʁçən
 Hintertürchen	Hintertürchen	ˈhɪntɐˌtyːʁçən
 Dingenskirchen	Dingens-kirchen	ˈdɪŋənsˌkɪʁçən
 
-# -erei
-Bücherei	Bücherei	byçəˈʁaɪ̯	dewikt says long /yː/ but audio doesn't agree
+## -erei
+Bücherei	Bücherei	byçəˈʁaɪ̯ # dewikt says long /yː/ but audio doesn't agree
 Gärtnerei	Gä̀rtnerei	ˌɡɛʁtnəˈʁaɪ̯
 Ausbeuterei	Ausbeuterei	ˌaʊ̯sbɔɪ̯təˈʀaɪ̯
 Seeräuberei	See-*räuberei	ˌzeːʁɔɪ̯bəˈʁaɪ̯
 Rosinenpickerei	Rosínen-pickerei	ʁoˈziːnənpɪkəˌʁaɪ̯
 
-# -ei
+## -ei
 Barbarei	Barbarei	baʁbaˈʁaɪ̯
 Audiodatei	Audio-datei	ˈaʊ̯di̯odaˌtaɪ̯
 allerlei	aller-lei	ˈalɐˌlaɪ̯
-Aufschrei	Aufschrei	ˈaʊ̯fˌʃʁaɪ̯	-ei not interpreted here as suffix
+Aufschrei	Aufschrei	ˈaʊ̯fˌʃʁaɪ̯ # -ei not interpreted here as suffix
 
-# -ent
+## -ent
 biolumineszent	bìolumineszent	ˌbioluminɛsˈt͡sɛnt
 Bundespräsident	Bundes-präsident	ˈbʊndəspʁɛziˌdɛnt
 different	different	dɪfəˈʁɛnt
 
-# -enz
+## -enz
 Eloquenz	Èloquenz	ˌeloˈkvɛnt͡s
 Obsoleszenz	Obsoleszenz	ɔpzolɛsˈt͡sɛnt͡s
 
-# -schaft
+## -schaft
 Wissenschaft	Wissenschaft	ˈvɪsənˌʃaft
 Barschaft	Barschaft	ˈbaːʁʃaft
 Botschaft	Botschaft	ˈboːtʃaft
 Komplizenschaft	Komplízenschaft	kɔmˈpliːt͡sənˌʃaft
 Wirtschaftswissenschaft	Wirtschaft>s-wissenschaft	ˈvɪʁtʃaft͡sˌvɪsənʃaft
 
-# -haft
+## -haft
 albtraumhaft	alb-traum>haft	ˈalpˌtʁaʊ̯mhaft
 dauerhaft	dauerhaft	ˈdaʊ̯ɐˌhaft
+schamhaft	schamhaft	ˈʃaːmhaft
 
-# -heit
+## -heit
 Abgeschiedenheit	Abgeschiedenheit	ˈapɡəˌʃiːdənhaɪ̯t
 Absolutheit	Absolútheit	apzoˈluːthaɪ̯t
 Abwesenheit	Abwesenheit	ˈapˌveːzənhaɪ̯t
@@ -1298,7 +1352,7 @@ Freiheit	Freiheit	ˈfʁaɪ̯haɪ̯t
 Bescheidenheit	Bescheidenheit	bəˈʃaɪ̯dənˌhaɪ̯t
 Grobheit	Grobheit	ˈɡʁoːphaɪ̯t
 
-# -ie
+## -ie
 Apoplexie	Apoplexie	apoplɛˈksiː
 Biologie	Bìologie	ˌbioloˈɡiː
 Fotografie	Fotografie	fotoɡʁaˈfiː
@@ -1306,20 +1360,20 @@ Fantasie	Fantasie	fantaˈziː
 Informationstechnologie	Information>s-technologie	ɪnfɔʁmaˈt͡si̯oːnstɛçnoloˌɡiː
 Familie	FamílIe	faˈmiːli̯ə
 
-# -ieren
+## -ieren
 degradieren	degradieren	deɡʁaˈdiːʁən
 ausprobieren	ausprobieren	ˈaʊ̯spʁoˌbiːʁən
 Umstrukturieren	Umstrukturieren	ˈʊmʃtʁʊktuˌʁiːʁən
 entionisieren	entionisieren	ɛnt(ʔ)i̯oniˈziːʁən
 vertelefonieren	verteləfonieren	fɛʁteləfoˈniːʁən
 
-# -iert
+## -iert
 definiert	definiert	defiˈniːʁt
 kompliziert	kompliziert	kɔmpliˈt͡siːʁt
 hochdekoriert	hohch-dekoriert	ˈhoːxdekoˌʁiːʁt
 situiert	situ.iert	zituˈiːʁt
 
-# -ierung
+## -ierung
 Konsolidierung	Konsolidierung	kɔnzoliˈdiːʁʊŋ
 Maximierung	Maximierung	maksiˈmiːʁʊŋ
 Quantifizierung	Quantifizierung	kvantifiˈt͡siːʁʊŋ
@@ -1327,17 +1381,17 @@ Stipulierung	Stipulierung	ʃtipuˈliːʁʊŋ
 Stipulierung	S*tipulierung	stipuˈliːʁʊŋ
 Selbstregierung	Selbst-regierung	ˈzɛlpstʁeˌɡiːʁʊŋ
 
-# -tionismus
+## -tionismus
 Exhibitionismus	Exhibitionismus	ɛkshibit͡si̯oˈnɪsmʊs
 Perfektionismus	Perfektionismus	pɛʁfɛkt͡si̯oˈnɪsmʊs
 
-# -ismus
+## -ismus
 Protestantismus	Protestantismus	pʁotɛstanˈtɪsmʊs
 Sozialismus	Sozialismus	zot͡si̯aˈlɪsmʊs
 Multikulturalismus	Multikulturalismus	mʊltikʊltuʁaˈlɪsmʊs
 Pseudoanglizismus	Pseudo-anglizismus	ˈpsɔɪ̯doʔaŋɡliˌt͡sɪsmʊs
 
-# -ist
+## -ist
 dreist	dreist	dʁaɪ̯st
 Deist	De.ist	deˈɪst
 Deist	Deʔist	deˈʔɪst
@@ -1347,7 +1401,7 @@ verwaist	verwaist	fɛʁˈvaɪ̯st
 Judaist	Juda.ist	judaˈɪst
 Judaist	Judaʔist	judaˈʔɪst
 
-# -istisch
+## -istisch
 euphemistisch	euphemistisch	ɔɪ̯feˈmɪstɪʃ
 rechtsextremistisch	recht>s-extremistisch	ˈʁɛçt͡s(ʔ)ɛkstʁeˌmɪstɪʃ
 postkommunistisch	post-kommunistisch	ˈpɔstkɔmuˌnɪstɪʃ
@@ -1356,102 +1410,75 @@ avantgardistisch	avãgardistisch	avãɡaʁˈdɪstɪʃ
 computerlinguistisch	kom.pjúter-linguistisch	kɔmˈpjuːtɐlɪŋˌɡu̯ɪstɪʃ
 computerlinguistisch	kom.pjúter-lingu.istisch	kɔmˈpjuːtɐlɪŋɡuˌɪstɪʃ
 
-# -iv
+## -iv
 Motiv	Motiv	moˈtiːf
 Leitmotiv	Leit-motiv	ˈlaɪ̯tmoˌtiːf
 Detektiv	Detektiv	detɛkˈtiːf
 diminutiv	diminutiv	diminuˈtiːf
 naiv	naiv	naˈiːf
 interrogativ	inter-*rogativ	ˌɪntɐʁoɡaˈtiːf
-# Should still be lengthened even when unstressed.
-Genitiv	Génitiv	ˈɡeːnitiːf
+Genitiv	Génitiv	ˈɡeːnitiːf # Should still be lengthened even when unstressed.
 Passiv	Pássiv	ˈpasiːf
 Adjektiv	Ádjektiv	ˈatjɛktiːf
 Ablativ	Ab+blatìv	ˈablaˌtiːf
 Ablativ	Ab.latìv	ˈaplaˌtiːf
 
-# -ierbarkeit
+## -ierbarkeit
 Korrumpierbarkeit	Korrumpierbarkeit	kɔʁʊmˈpiːʁbaːʁˌkaɪ̯t
 
-# -barkeit
-# Here, dewikt and enwikt have no secondary stress on -keit.
-Verfügbarkeit	Verfügbarkeit	fɛʁˈfyːkbaːʁˌkaɪ̯t
-# Here, dewikt and enwikt agree with our rules.
-Dienstbarkeit	Dienstbarkeit	ˈdiːnstbaːʁˌkaɪ̯t
-# FIXME! dewikt has ˈapbaʊ̯baːʁˌkaɪ̯t. Our rules generate ˈapˌbaʊ̯baːʁkaɪ̯t. Need to verify with native speaker.
-Abbaubarkeit	Abbaubarkeit	ˈapˌbaʊ̯baːʁkaɪ̯t
-# Here, dewikt agrees with our rules.
-Durchführbarkeit	Durchführbarkeit	ˈdʊʁçˌfyːʁbaːʁkaɪ̯t
-# Here, enwikt agrees with our rules.
-Sonderbarkeit	Sonderbarkeit	ˈzɔndɐˌbaːʁkaɪ̯t
-# Here, dewikt and wikt have no secondary stress on -keit.
-Übertragbarkeit	Über<tragbarkeit	yːbɐˈtʁaːkbaːʁˌkaɪ̯t
-# Here, dewikt has no secondary stress on -keit.
-Unabwendbarkeit	Unabwéndbarkeit	ʊn(ʔ)apˈvɛntbaːʁˌkaɪ̯t
+## -barkeit
+Verfügbarkeit	Verfügbarkeit	fɛʁˈfyːkbaːʁˌkaɪ̯t # Here, dewikt and enwikt have no secondary stress on -keit.
+Dienstbarkeit	Dienstbarkeit	ˈdiːnstbaːʁˌkaɪ̯t # Here, dewikt and enwikt agree with our rules.
+Abbaubarkeit	Abbaubarkeit	ˈapˌbaʊ̯baːʁkaɪ̯t # FIXME! dewikt has ˈapbaʊ̯baːʁˌkaɪ̯t. Our rules generate ˈapˌbaʊ̯baːʁkaɪ̯t. Need to verify with native speaker.
+Durchführbarkeit	Durchführbarkeit	ˈdʊʁçˌfyːʁbaːʁkaɪ̯t # Here, dewikt agrees with our rules.
+Sonderbarkeit	Sonderbarkeit	ˈzɔndɐˌbaːʁkaɪ̯t # Here, enwikt agrees with our rules.
+Übertragbarkeit	Über<tragbarkeit	yːbɐˈtʁaːkbaːʁˌkaɪ̯t # Here, dewikt and wikt have no secondary stress on -keit.
+Unabwendbarkeit	Unabwéndbarkeit	ʊn(ʔ)apˈvɛntbaːʁˌkaɪ̯t # Here, dewikt has no secondary stress on -keit.
 Unabwendbarkeit	Unabwendbarkeit	ˈʊn(ʔ)apˌvɛntbaːʁkaɪ̯t
-# Here, enwikt agrees with our rules.
-Undankbarkeit	Undankbarkeit	ˈʊnˌdaŋkbaːʁkaɪ̯t
-# Here, enwikt agrees with our rules.
-Unzerstörbarkeit	Unzerstörbarkeit	ˈʊnt͡sɛʁˌʃtøːʁbaːʁkaɪ̯t
+Undankbarkeit	Undankbarkeit	ˈʊnˌdaŋkbaːʁkaɪ̯t # Here, enwikt agrees with our rules.
+Unzerstörbarkeit	Unzerstörbarkeit	ˈʊnt͡sɛʁˌʃtøːʁbaːʁkaɪ̯t # Here, enwikt agrees with our rules.
 
-# -schaftlichkeit
+## -schaftlichkeit
 Wirtschaftlichkeit	Wirtschaftlichkeit	ˈvɪʁtʃaftlɪçˌkaɪ̯t
-# FIXME: Is the secondary stress here correct?
-Wissenschaftlichkeit	Wissenschaftlichkeit	ˈvɪsənˌʃaftlɪçkaɪ̯t
+Wissenschaftlichkeit	Wissenschaftlichkeit	ˈvɪsənˌʃaftlɪçkaɪ̯t # FIXME: Is the secondary stress here correct?
 Unwissenschaftlichkeit	Unwissenschaftlichkeit	ˈʊnˌvɪsənʃaftlɪçkaɪ̯t
 
-# -lichkeit
-# FIXME: Is the secondary stress here correct? In enwikt but not dewikt.
-Möglichkeit	Möglichkeit	ˈmøːklɪçˌkaɪ̯t
-# FIXME: Is the secondary stress here correct? In enwikt but not dewikt.
-Brüderlichkeit	Brüderlichkeit	ˈbʁyːdɐlɪçˌkaɪ̯t
-# FIXME: Is the secondary stress here correct? Not in dewikt or enwikt.
-Abscheulichkeit	Abschéulichkeit	apˈʃɔɪ̯lɪçˌkaɪ̯t
-# FIXME: Is the secondary stress here correct? Not in dewikt or enwikt.
-Behaglichkeit	Behaglichkeit	bəˈhaːklɪçˌkaɪ̯t
-# FIXME: Is the secondary stress here correct? Not in dewikt or enwikt.
-Gemütlichkeit	Gemütlichkeit	ɡəˈmyːtlɪçˌkaɪ̯t
-# FIXME: Is the secondary stress here correct? Not in enwikt.
-Entzündlichkeit	Entzündlichkeit	ɛntˈt͡sʏntlɪçˌkaɪ̯t
+## -lichkeit
+Möglichkeit	Möglichkeit	ˈmøːklɪçˌkaɪ̯t # FIXME: Is the secondary stress here correct? In enwikt but not dewikt.
+Brüderlichkeit	Brüderlichkeit	ˈbʁyːdɐlɪçˌkaɪ̯t # FIXME: Is the secondary stress here correct? In enwikt but not dewikt.
+Abscheulichkeit	Abschéulichkeit	apˈʃɔɪ̯lɪçˌkaɪ̯t # FIXME: Is the secondary stress here correct? Not in dewikt or enwikt.
+Behaglichkeit	Behaglichkeit	bəˈhaːklɪçˌkaɪ̯t # FIXME: Is the secondary stress here correct? Not in dewikt or enwikt.
+Gemütlichkeit	Gemütlichkeit	ɡəˈmyːtlɪçˌkaɪ̯t # FIXME: Is the secondary stress here correct? Not in dewikt or enwikt.
+Entzündlichkeit	Entzündlichkeit	ɛntˈt͡sʏntlɪçˌkaɪ̯t # FIXME: Is the secondary stress here correct? Not in enwikt.
 Unannehmlichkeit	Unannehmlichkeit	ˈʊn(ʔ)anˌneːmlɪçkaɪ̯t
 Unfreundlichkeit	Unfreundlichkeit	ˈʊnˌfʁɔɪ̯ntlɪçkaɪ̯t
-# FIXME: Is the secondary stress here correct? Not in dewikt.
-Unendlichkeit	Unéndlichkeit	ʊnˈʔɛntlɪçˌkaɪ̯t
+Unendlichkeit	Unéndlichkeit	ʊnˈʔɛntlɪçˌkaɪ̯t # FIXME: Is the secondary stress here correct? Not in dewikt.
 Anwendungsmöglichkeit	Anwendungsmöglichkeit	ˈanvɛndʊŋsˌmøːklɪçkaɪ̯t
 Arbeitsmöglichkeit	Arbeits-möglichkeit	ˈaʁbaɪ̯t͡sˌmøːklɪçkaɪ̯t
 Eigenverantwortlichkeit	Eigen-verantwortlichkeit	ˈaɪ̯ɡənfɛʁˌʔantvɔʁtlɪçkaɪ̯t
 Flugtauglichkeit	Flug-tauglichkeit	ˈfluːkˌtaʊ̯klɪçkaɪ̯t
 
-# -samkeit
+## -samkeit
 Einsamkeit	Einsamkeit	ˈaɪ̯nzaːmˌkaɪ̯t
-# FIXME: Is the secondary stress here correct? Not in dewikt or enwikt.
-Langsamkeit	Langsamkeit	ˈlaŋzaːmˌkaɪ̯t
-# FIXME: Is the secondary stress here correct? Not in dewikt or enwikt.
-Genügsamkeit	Genügsamkeit	ɡəˈnyːkzaːmˌkaɪ̯t
-# FIXME: Is the secondary stress here correct? Not in dewikt or enwikt.
-Bedeutsamkeit	Bedeutsamkeit	bəˈdɔɪ̯tzaːmˌkaɪ̯t
-# FIXME: Is the secondary stress here correct? Not in dewikt or enwikt.
-Beredsamkeit	Beredsamkeit	bəˈʁeːtzaːmˌkaɪ̯t
+Langsamkeit	Langsamkeit	ˈlaŋzaːmˌkaɪ̯t # FIXME: Is the secondary stress here correct? Not in dewikt or enwikt.
+Genügsamkeit	Genügsamkeit	ɡəˈnyːkzaːmˌkaɪ̯t # FIXME: Is the secondary stress here correct? Not in dewikt or enwikt.
+Bedeutsamkeit	Bedeutsamkeit	bəˈdɔɪ̯tzaːmˌkaɪ̯t # FIXME: Is the secondary stress here correct? Not in dewikt or enwikt.
+Beredsamkeit	Beredsamkeit	bəˈʁeːtzaːmˌkaɪ̯t # FIXME: Is the secondary stress here correct? Not in dewikt or enwikt.
 Aufmerksamkeit	Aufmerksamkeit	ˈaʊ̯fˌmɛʁkzaːmkaɪ̯t
-Selbstgenügsamkeit	Selbst-genügsamkeit	ˈzɛlpstɡəˌnyːkzaːmkaɪ̯t	FIXME: make sure this works!
-# FIXME: Is the secondary stress here correct? Not in dewikt or enwikt.
-Unachtsamkeit	Unachtsamkeit	ˈʊnˌʔaxtzaːmkaɪ̯t
+Selbstgenügsamkeit	Selbst-genügsamkeit	ˈzɛlpstɡəˌnyːkzaːmkaɪ̯t # FIXME: make sure this works!
+Unachtsamkeit	Unachtsamkeit	ˈʊnˌʔaxtzaːmkaɪ̯t # FIXME: Is the secondary stress here correct? Not in dewikt or enwikt.
 Unaufmerksamkeit	Unaufmerksamkeit	ˈʊn(ʔ)aʊ̯fˌmɛʁkzaːmkaɪ̯t
 Unbedeutsamkeit	Unbedeutsamkeit	ˈʊnbəˌdɔɪ̯tzaːmkaɪ̯t
 Waldeinsamkeit	Wald-einsamkeit	ˈvaltˌʔaɪ̯nzaːmkaɪ̯t
 
-# -keit
+## -keit
 Aufrichtigkeit	Aufrichtigkeit	ˈaʊ̯fˌʁɪçtɪçkaɪ̯t
-# FIXME! [[Anständigkeit]] is given as /ˈanʃtɛndɪçˌkaɪ̯t/ in dewikt when our rules generate /ˈanˌʃtɛndɪçkaɪ̯t/.
-Anpassungsfähigkeit	Anpassungs-fähigkeit	ˈanpasʊŋsˌfɛːɪçkaɪ̯t
-# FIXME: Is the secondary stress here correct? Not in dewikt or enwikt.
-Bedürftigkeit	Bedürftigkeit	bəˈdʏʁftɪçˌkaɪ̯t
+Anpassungsfähigkeit	Anpassungs-fähigkeit	ˈanpasʊŋsˌfɛːɪçkaɪ̯t # FIXME! [[Anständigkeit]] is given as /ˈanʃtɛndɪçˌkaɪ̯t/ in dewikt when our rules generate /ˈanˌʃtɛndɪçkaɪ̯t/.
+Bedürftigkeit	Bedürftigkeit	bəˈdʏʁftɪçˌkaɪ̯t # FIXME: Is the secondary stress here correct? Not in dewikt or enwikt.
 Bereitwilligkeit	Bereit-willigkeit	bəˈʁaɪ̯tˌvɪlɪçkaɪ̯t
 Bettlägerigkeit	Bett-lägerigkeit	ˈbɛtˌlɛːɡəʁɪçkaɪ̯t
-# FIXME: Is the secondary stress here correct? Not in dewikt or enwikt.
-Billigkeit	Billigkeit	ˈbɪlɪçˌkaɪ̯t
-# FIXME: Is the secondary stress here correct? Not in dewikt or enwikt.
-Bitterkeit	Bitterkeit	ˈbɪtɐˌkaɪ̯t
+Billigkeit	Billigkeit	ˈbɪlɪçˌkaɪ̯t # FIXME: Is the secondary stress here correct? Not in dewikt or enwikt.
+Bitterkeit	Bitterkeit	ˈbɪtɐˌkaɪ̯t # FIXME: Is the secondary stress here correct? Not in dewikt or enwikt.
 Doppeldeutigkeit	Doppel-deutigkeit	ˈdɔpəlˌdɔɪ̯tɪçkaɪ̯t
 Dreifaltigkeit	Drei-fáltigkeit	dʁaɪ̯ˈfaltɪçˌkaɪ̯t
 Drogenabhängigkeit	Drogen-abhängigkeit	ˈdʁoːɡənˌʔaphɛŋɪçkaɪ̯t
@@ -1460,8 +1487,7 @@ Durchsichtigkeit	Durchsichtigkeit	ˈdʊʁçˌzɪçtɪçkaɪ̯t
 Einsprachigkeit	Einsprahchigkeit	ˈaɪ̯nˌʃpʁaːxɪçkaɪ̯t
 Einträchtigkeit	Einträchtigkeit	ˈaɪ̯nˌtʀɛçtɪçkaɪ̯t
 Endgeschwindigkeit	End-geschwindigkeit	ˈɛntɡəˌʃvɪndɪçkaɪ̯t
-# FIXME: Is the secondary stress here correct? Not in dewikt or enwikt.
-Ewigkeit	Ewigkeit	ˈeːvɪçˌkaɪ̯t
+Ewigkeit	Ewigkeit	ˈeːvɪçˌkaɪ̯t # FIXME: Is the secondary stress here correct? Not in dewikt or enwikt.
 Fingerfertigkeit	Finger-fertigkeit	ˈfɪŋɐˌfɛʁtɪçkaɪ̯t
 Flüssigkeit	Flüssigkeit	ˈflʏsɪçˌkaɪ̯t
 Gebärfreudigkeit	Gebär-freudigkeit	ɡəˈbɛːʁˌfʁɔɪ̯dɪçkaɪ̯t
@@ -1469,10 +1495,9 @@ Unauffälligkeit	Unauffälligkeit	ˈʊn(ʔ)aʊ̯fˌfɛlɪçkaɪ̯t
 Undurchsichtigkeit	Undurchsichtigkeit	ˈʊndʊʁçˌzɪçtɪçkaɪ̯t
 Uneinigkeit	Uneinigkeit	ˈʊnˌʔaɪ̯nɪçkaɪ̯t
 Ungerechtigkeit	Ungerechtigkeit	ˈʊnɡəˌʁɛçtɪçkaɪ̯t
-# FIXME: Are we sure this is correct? Logically, it should be ˈʊnˌʁeːɡəlmɛːsɪçkaɪ̯t
-Unregelmäßigkeit	Unregel-mäßigkeit	ˈʊnʁeːɡəlˌmɛːsɪçkaɪ̯t
+Unregelmäßigkeit	Unregel-mäßigkeit	ˈʊnʁeːɡəlˌmɛːsɪçkaɪ̯t # FIXME: Are we sure this is correct? Logically, it should be ˈʊnˌʁeːɡəlmɛːsɪçkaɪ̯t
 
-# -lein
+## -lein
 Apfelbäumlein	Apfel-bäumlein	ˈap͡fəlˌbɔɪ̯mlaɪ̯n
 Äuglein	Äuglein	ˈɔɪ̯klaɪ̯n
 Blumenlädlein	Blumen-lädlein	ˈbluːmənˌlɛːtlaɪ̯n
@@ -1491,32 +1516,27 @@ Walnussbäumlein	Walnuss-bäumlein	ˈvalnʊsˌbɔɪ̯mlaɪ̯n
 Walnussbäumlein	Wal-nuss--bäumlein	ˈvaːlnʊsˌbɔɪ̯mlaɪ̯n
 Weihnachtskerzlein	Weih-nachts--kerzlein	ˈvaɪ̯naxt͡sˌkɛʁt͡slaɪ̯n
 
-# -barlich
+## -barlich
 sichtbarlich	sichtbarlich	ˈzɪçtbaːʁlɪç
 wunderbarlich	wunderbarlich	ˈvʊndɐˌbaːʁlɪç
 
-# -schaftlich
+## -schaftlich
 freundschaftlich	freundschaftlich	ˈfʁɔɪ̯ntʃaftlɪç
 betriebswirtschaftlich	betriebs-wirtschaftlich	bəˈtʁiːpsˌvɪʁtʃaftlɪç
 geisteswissenschaftlich	geistes-wissenschaftlich	ˈɡaɪ̯stəsˌvɪsənʃaftlɪç
 gemeinschaftlich	gemeinschaftlich	ɡəˈmaɪ̯nʃaftlɪç
-# FIXME: Is secondary stress correct?
-genossenschaftlich	genossenschaftlich	ɡəˈnɔsənˌʃaftlɪç
+genossenschaftlich	genossenschaftlich	ɡəˈnɔsənˌʃaftlɪç # FIXME: Is secondary stress correct?
 ingenieurwissenschaftlich	inʒeniö́r-wissenschaftlich	ɪnʒeˈni̯øːʁˌvɪsənʃaftlɪç
 kameradschaftlich	kamerádschaftlich	kaməˈʁaːtʃaftlɪç
-# FIXME: Is secondary stress correct?
-landwirtschaftlich	land-wirtschaftlich	ˈlantˌvɪʁtʃaftlɪç
-# FIXME: Is secondary stress correct?
-partnerschaftlich	partnerschaftlich	ˈpaʁtnɐˌʃaftlɪç
+landwirtschaftlich	land-wirtschaftlich	ˈlantˌvɪʁtʃaftlɪç # FIXME: Is secondary stress correct?
+partnerschaftlich	partnerschaftlich	ˈpaʁtnɐˌʃaftlɪç # FIXME: Is secondary stress correct?
 pseudowissenschaftlich	pseudo-wissenschaftlich	ˈpsɔɪ̯doˌvɪsənʃaftlɪç
-# FIXME: Is the secondary stress in the right position? I might expect /ˈʊnˌvɪʁtʃaftlɪç/.
-unwirtschaftlich	unwirtschaftlich	ˈʊnvɪʁtˌʃaftlɪç
+unwirtschaftlich	unwirtschaftlich	ˈʊnvɪʁtˌʃaftlɪç # FIXME: Is the secondary stress in the right position? I might expect /ˈʊnˌvɪʁtʃaftlɪç/.
 verwandtschaftlich	verwandtschaftlich	fɛʁˈvantʃaftlɪç
 wirtschaftswissenschaftlich	wirtschaft>s-wissenschaftlich	ˈvɪʁtʃaft͡sˌvɪsənʃaftlɪç
-# FIXME: Is secondary stress correct?
-wissenschaftlich	wissenschaftlich	ˈvɪsənˌʃaftlɪç
+wissenschaftlich	wissenschaftlich	ˈvɪsənˌʃaftlɪç # FIXME: Is secondary stress correct?
 
-# -lich
+## -lich
 bläulich	bläulich	ˈblɔɪ̯lɪç
 fraglich	fraglich	ˈfʁaːklɪç
 bitterlich	bitterlich	ˈbɪtɐlɪç
@@ -1542,64 +1562,86 @@ hauptamtlich	haupt-amtlich	ˈhaʊ̯ptˌʔamtlɪç
 jungsteinzeitlich	jung-stein--zeitlich	ˈjʊŋʃtaɪ̯nˌt͡saɪ̯tlɪç
 maschinenschriftlich	maschínen-schriftlich	maˈʃiːnənˌʃʁɪftlɪç
 
-# -or
+## -or
 Gladiator	Gladiator	ɡlaˈdi̯aːtoːʁ
 Korridor	Korridor	ˈkɔʁidoːʁ
 Sektor	Sektor	ˈzɛktoːʁ
 Fluor	Fluor	ˈfluːoːʁ
 
-# -tion
+## -tion
 Konvention	Konvention	kɔnvɛnˈt͡si̯oːn
 Infektion	Infektion	ɪnfɛkˈt͡si̯oːn
 Bastion	Bastion	basˈti̯oːn
 
-# -tät
+## -tät
 Fakultät	Fakultät	fakʊlˈtɛːt
 
-
-
-# secondary pronunciation ˈaːlˌʔaːʁtɪk will also be shown, with the following: "common form in southern Germany, Austria, and Switzerland"
-aalartig	aal-ahrtig	ˈaːlˌʔaːʁtɪç
-Akkordeon	Akkórdeon	aˈkɔʁdeɔn
-# -abel is a recognized suffix
-inakzeptabel	in-akzeptabel	ˈɪnʔakt͡sɛpˌtaːbl̩
-ineffizient	in-effizient	ˈɪnʔɛfiˌt͡si̯ɛnt
-ineffizient	in-effiziént	ˈɪnʔɛfiˌt͡si̯ɛnt
-effizient	effizient	ɛfiˈt͡si̯ɛnt
-getrost	getrost	 ɡəˈtʁoːst
-hochwertig	hohch-wehrtig	ˈhoːxˌveːʁtɪç
-höfisch	höfisch	ˈhøːfɪʃ
-# -lich is a recognized suffix; the remainder is processed as if word-final
-höflich	höflich	ˈhøːflɪç
-holografisch	holográfisch	holoˈɡʁaːfɪʃ
-# -bar is a recognized suffix
-kostbar	kostbar	ˈkɔstbaːʁ
-kostendeckend	kosten-deckend	ˈkɔstənˌdɛkənt
-säurefest	säurefest	ˈzɔɪ̯ʁəˌfɛst
-schamhaft	schamhaft	ˈʃaːmhaft
-separat	separát	zepaˈʁaːt	standard per dewikt
-separat	sèparát	ˌzeːpaˈʁaːt	standard per enwikt
-separat	sèpperát	ˌzɛpəˈʁaːt	variant in common speech
-Stabsarzt	Stab>s-ahrzt	ˈʃtaːpsˌʔaːʁt͡st
-todernst	tod-ernst	ˈtoːtˌʔɛʁnst
-traditionsbewusst	traditions-bewusst	tʁadiˈt͡si̯oːnsbəˌvʊst
+## Explicitly indicated suffixes
 trägt	träg>t	tʁɛːkt
 wüst	wüs>t	vyːst
 wachsen	wachsen	ˈvaksən
 wachst	wach>st	vaxst
 wachst	wachst	vakst
 wachst	wachs>t	vakst
-# Maybe -weit should be recognized as a suffix
-webweit	webb-weit	vɛpˌvaɪ̯t
-wiederentdecken	wiederentdecken	ˈviːdɐʔɛntˌdɛkən
-wutentbrannt	wut-entbrannt	ˈvuːtʔɛntˌbʁant
-zweirädrig	zwei-rädrig	ˈt͡svaɪ̯ˌʁɛːdʁɪç
-zweiprozentig	zwei-prozéntig	ˈt͡svaɪ̯pʁoˌt͡sɛntɪç
-zweimonatlich	zwei-monatlich	ˈt͡svaɪ̯ˌmoːnatlɪç
-zweiminütig	zwei-minǘtig	ˈt͡svaɪ̯miˌnyːtɪç
+Stabsarzt	Stab>s-ahrzt	ˈʃtaːpsˌʔaːʁt͡st
 
-# secondary stress
+## secondary stress
 Lethargie	Lèthargie	ˌletaʁˈɡiː
-liberal	liberal	libeˈʁaːl	dewikt
-liberal	lìberal	ˌlibəˈʁaːl	enwikt
+liberal	liberal	libeˈʁaːl # dewikt
+liberal	lìberal	ˌlibəˈʁaːl # enwikt
 hyperaktiv	hỳ*per-áktiv	ˌhypɐˈʔaktiːf
+separat	separát	zepaˈʁaːt # standard per dewikt
+separat	sèparát	ˌzeːpaˈʁaːt # standard per enwikt
+separat	sèpperát	ˌzɛpəˈʁaːt # variant in common speech
+]==]
+
+function tests:check_ipa(spelling, respelling, expected, comment)
+	local phonemic = m_de_pron.phonemic(respelling)
+	options.comment = comment or ""
+	self:equals(
+		link(spelling) .. (respelling == spelling and "" or ", respelled " .. respelling),
+		phonemic,
+		expected,
+		options
+	)
+end
+
+local function parse(examples)
+	-- The following is a list of parsed examples where each element is a four-element list of
+	-- {SPELLING, RESPELLING, EXPECTED, COMMENT}. SPELLING is the actual spelling of the term; RESPELLING is the
+	-- respelling; EXPECTED is the phonemic IPA; and COMMENT is an optional comment or nil.
+	local parsed_examples = {}
+	-- Snarf each line.
+	for line in examples:gmatch "[^\n]+" do
+		-- Trim whitespace at beginning and end.
+		line = line:gsub("^%s*(.-)%s*$", "%1")
+		local function err(msg)
+			error(msg .. ": " .. line)
+		end
+		if line == "" then
+			-- Skip blank lines.
+		elseif line:find("^##") then
+			-- Line beginning with ## is a section header.
+			line = line:gsub("^##%s*", "")
+			table.insert(parsed_examples, line)
+		elseif line:find("^#") then
+			-- Line beginning with # but not ## is a comment; ignore.
+		else
+			local line_no_comment, comment = rmatch(line, "^(.-)%s+#%s*(.*)$")
+			line_no_comment = line_no_comment or line
+			local parts = rsplit(line_no_comment, "\t")
+			if #parts ~= 3 then
+				err("Expected 3 in example (not including any comment)")
+			end
+			table.insert(parts, comment)
+			table.insert(parsed_examples, parts)
+		end
+	end
+	return parsed_examples
+end
+
+function tests:test()
+	self:iterate(parse(examples), "check_ipa")
+end
+
+return tests
