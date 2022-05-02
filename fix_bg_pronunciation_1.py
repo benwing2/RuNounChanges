@@ -55,8 +55,8 @@ def process_text_on_page(index, pagetitle, text):
       pronsec = subsections[k].strip()
       pronsec = re.sub(r"^\{\{rfc-pron-n.*?\}\}\n", "", pronsec, 0, re.M)
     else:
-    pronsec_text_parts.append(subsections[k - 1])
-    pronsec_text_parts.append(subsections[k])
+      pronsec_text_parts.append(subsections[k - 1])
+      pronsec_text_parts.append(subsections[k])
   if pronsec is None:
     pagemsg("WARNING: Something wrong, didn't see any Pronunciation sections")
     return
@@ -116,9 +116,16 @@ def process_text_on_page(index, pagetitle, text):
             pronsec_type = "aorist participle"
           elif "impf" in tag_set and "part" in tag_set:
             pronsec_type = "imperfect participle"
+          elif "indef" in tag_set and "p" in tag_set:
+            pronsec_type = "indefinite plural"
+          elif "def" in tag_set and "p" in tag_set:
+            pronsec_type = "definite plural"
+          elif "voc" in tag_set and "s" in tag_set:
+            pronsec_type = "vocative singular"
           else:
             pagemsg("WARNING: Unrecognized tag set %s, skipping: %s" %
               ("|".join(tag_set), unicode(t)))
+            return
           if pronsec_type not in pronsec_types:
             pronsec_types.append(pronsec_type)
     if not pronsec_types:
@@ -136,10 +143,38 @@ def process_text_on_page(index, pagetitle, text):
         observed_pronuns.append((pronsec_pron, pronsec_types))
 
   # Reformat section using new pronunciations
+  top_pron_section_parts = ["===Pronunciation===\n"]
+  distinct_prons = []
+  for (pron, endschwa), prontypes in observed_pronuns:
+    if pron not in distinct_prons:
+      distinct_prons.append(pron)
+  for (pron, endschwa), prontypes in observed_pronuns:
+    pron_template = "{{bg-IPA|%s%s%s}}" % (pron, "|endschwa=1" if endschwa else "",
+      "|ann=1" if len(distinct_prons) > 1 else "")
+    if len(prontypes) == 0:
+      pagemsg("WARNING: Something wrong, for pronunciation %s with endschwa=%s saw no pronunciation types" %
+        (pron, endschwa))
+      return
+    if len(prontypes) == 1:
+      pron_template_types = prontypes[0]
+    elif len(prontypes) == 2:
+      pron_template_types = "%s and %s" % (prontypes[0], prontypes[1])
+    else:
+      pron_template_types = "%s and %s" % (", ".join(prontypes[:-1]), prontypes[-1])
+    pron_line = "* %s {{i|%s}}\n" % (pron_template, pron_template_types)
+    top_pron_section_parts.append(pron_line)
+    top_pron_section_parts.append("\n")
 
-  secbody = ...
+  secbody_parts = ["".join(top_pron_section_parts)]
+  for pronsec_index, (pronsec, pronsec_text) in enumerate(pronunciation_secs):
+    # Remove one indentation level
+    pronsec_text = re.sub("^=(.*)=$", r"\1", pronsec_text, 0, re.M)
+    secbody_parts.append(pronsec_text)
+  secbody = "".join(secbody_parts)
   # Strip extra newlines added to secbody
   sections[j] = secbody.rstrip("\n") + sectail
+
+  notes.append("reformat ==Pronunciation 1== Bulgarian entry to use top-level pronunciation section")
   return "".join(sections), notes
 
 parser = blib.create_argparser("Reformat Bulgarian pages with ==Pronunciation 1==", include_pagefile=True,

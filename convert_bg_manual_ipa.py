@@ -421,7 +421,7 @@ def process_text_on_page(index, pagetitle, text):
     pagemsg("WARNING: Skipping because in deny list")
     return
 
-  retval = blib.find_modifiable_lang_section(text, None if args.partial_page else "Polish", pagemsg,
+  retval = blib.find_modifiable_lang_section(text, None if args.partial_page else "Bulgarian", pagemsg,
     force_final_nls=True)
   if retval is None:
     return
