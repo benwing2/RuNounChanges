@@ -133,11 +133,12 @@ def process_text_on_page(index, pagetitle, text):
         (pronsec_index + 1))
       return
     for pronsec_pron in pronsec_prons:
-      for observed_pronun, observed_pronun_types in observed_pronuns:
+      for i, (observed_pronun, observed_pronun_types) in enumerate(observed_pronuns):
         if pronsec_pron == observed_pronun:
           for pronsec_type in pronsec_types:
             if pronsec_type not in observed_pronun_types:
-              observed_pronun_types.append(pronsec_type)
+              observed_pronun_types = observed_pronun_types + [pronsec_type]
+              observed_pronuns[i] = (observed_pronun, observed_pronun_types)
           break
       else: # no break
         observed_pronuns.append((pronsec_pron, pronsec_types))
@@ -156,7 +157,17 @@ def process_text_on_page(index, pagetitle, text):
         (pron, endschwa))
       return
     if len(prontypes) == 1:
-      pron_template_types = prontypes[0]
+      # If there is one type, and it also occurs with another pronunciation that is associated with multiple types,
+      # add the word "only", so that e.g. we see "imperfect and aorist" for the one with multiple types, and
+      # "aorist only" for the one with a single type. This way we make it clear that the type listed in the other
+      # pronunciation does not apply to this one. Note that we are checking all pronunciations including the current
+      # one, but we won't get confused by it because the current pronunciation has only one type whereas we only
+      # consider "other" pronunciations with multiple types.
+      need_only = ""
+      for (other_pron, other_endschwa), other_prontypes in observed_pronuns:
+        if prontypes[0] in other_prontypes and len(other_prontypes) > 1:
+          need_only = " only"
+      pron_template_types = prontypes[0] + need_only
     elif len(prontypes) == 2:
       pron_template_types = "%s and %s" % (prontypes[0], prontypes[1])
     else:
