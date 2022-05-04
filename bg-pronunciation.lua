@@ -183,7 +183,11 @@ function export.toIPA(term, endschwa)
 	end
 
 	-- FIXME: This needs to be rewritten entirely and moved above stress movement.
+	-- /a/ directly before the stress is [ɐ].
 	term = rsub(term, "a(" .. non_vowels_c .. "*" .. accents_c .. ")", "ɐ%1")
+	-- Reduce all vowels before the stress, except if the word has no accent at all. (FIXME: This is presumably
+	-- intended for single-syllable words without accents, but if the word is multisyllabic without accents,
+	-- presumably all vowels should be reduced.)
 	term = rsub(term, "(#[^#" .. accents .. "]*)(.)", function(a, b)
 		if b == "#" then
 			return a .. b
@@ -191,9 +195,11 @@ function export.toIPA(term, endschwa)
 			return reduce_vowel(a) .. b
 		end
 	end)
+	-- Reduce all vowels after the accent except the first vowel after the accent mark (which is stressed).
 	term = rsub(term, "(" .. accents_c .. "[^aɛiɔuɤ#]*[aɛiɔuɤ])([^#" .. accents .. "]*)", function(a, b)
 		return a .. reduce_vowel(b)
 	end)
+	-- /u/ directly before the stress is [u] not [ʊ]. (FIXME: Correct?)
 	term = rsub(term, "ʊ(" .. non_vowels_c .. "*" .. accents_c .. ")", "u%1")
 
 	-------------------- Vowel assimilation to adjacent consonants (fronting/raising) ---------------
