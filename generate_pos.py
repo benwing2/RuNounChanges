@@ -136,6 +136,7 @@ def generate_defn(defns, pos, lang):
   # semicolon in the next line
   for defn in re.split(r"(?<![\\]);", defns):
     saw_refl = False
+    saw_actual_defn = False
     defn = defn.replace(r"\;", ";")
     if defn == "-":
       defnlines.append("# {{rfdef|%s}}\n" % lang)
@@ -157,6 +158,7 @@ def generate_defn(defns, pos, lang):
         defntext += " {{i|%s}}" % ", ".join(labels)
       defnlines.append(defntext + "\n")
     else:
+      saw_actual_defn = True
       prefix = ""
       defn, labels = parse_off_labels(defn)
       if labels:
@@ -201,7 +203,7 @@ def generate_defn(defns, pos, lang):
       defnlines.append("# %s%s\n" % (prefix, defnline))
     if saw_refl:
       ever_saw_refl = True
-    elif ever_saw_refl:
+    elif ever_saw_refl and saw_actual_defn:
       return None, "Saw non-reflexive definition '%s' after reflexive definition" % defn
 
   return "".join(defnlines), addlprops

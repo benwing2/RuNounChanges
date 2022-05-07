@@ -111,7 +111,7 @@ opt_arg_regex = r"^(%s):(.*)" % "|".join(props)
 # declension template.
 #
 # ETYM normally consists of one or more parts separated by + symbols; the
-# parts go directly into parameters of {{affix}}. If the field consists of
+# parts go directly into parameters of {{af}}. If the field consists of
 # -, the etym section will contain a request for etymology; if the field
 # is --, the etym section will be omitted (used for participles and such).
 # For substantivized adjectives, the etym section can begin with sm:, sf:
@@ -119,8 +119,8 @@ opt_arg_regex = r"^(%s):(.*)" % "|".join(props)
 # the etym section will say "Substantivized [gender] of {{m|uk|TERM}}."
 # For borrowed terms, the field should be prefixed with a language code
 # followed by a colon, e.g. "fr:attitude". If what follows contains no + sign,
-# the etym section will use {{bor|uk|LANG|TERM}}; else {{affix|...}} will be
-# used; e.g. "fr:spectral+-ный" becomes {{affix|uk|spectral|-ный|lang1=fr}}.
+# the etym section will use {{bor+|uk|LANG|TERM}}; else {{af|...}} will be
+# used; e.g. "fr:spectral+-ный" becomes {{af|uk|spectral|-ный|lang1=fr}}.
 # The etym section can begin with ?, indicating that the etymology is
 # uncertain (it will be prefixed with "Perhaps from" or "Perhaps borrowed from"
 # as appropriate), or with <<, indicating an ultimate etymology (it will be
@@ -338,18 +338,24 @@ def process_line(line, etymnum, pronuns, pronuns_at_top):
       _, inhlang, inhterm = do_split(":", etym)
       etymtext = "Inherited from {{inh|%s|%s|%s}}." % (lang, inhlang, inhterm)
     elif ":" in etym and "+" not in etym:
+      nocap = False
+      use_der = False
       if etym.startswith("?"):
-        prefix = "Perhaps borrowed from "
+        prefix = "Perhaps "
+        nocap = True
         etym = re.sub(r"^\?", "", etym)
       elif etym.startswith("<<"):
-        prefix = "Ultimately borrowed from "
+        prefix = "Ultimately from "
+        nocap = True
+        use_der = True
         etym = re.sub(r"^<<", "", etym)
       else:
-        prefix = "Borrowed from "
+        prefix = ""
       m = re.search(r"^([a-zA-Z.-]+):(.*)", etym)
       if not m:
         error("Bad etymology form: %s" % etym)
-      etymtext = "%s{{bor|%s|%s|%s}}." % (prefix, lang, m.group(1), m.group(2))
+      etymtext = "%s{{%s|%s|%s|%s%s}}." % (prefix, ("der" if use_der else "bor+"), lang, m.group(1), m.group(2),
+        "|nocap=1" if nocap else "")
     else:
       prefix = ""
       suffix = ""
@@ -369,7 +375,7 @@ def process_line(line, etymnum, pronuns, pronuns_at_top):
         langtext = ""
       if "{{" in etym:
         error("Saw {{ in etymology text, probably needs to be prefixed with 'raw:': %s" % etym)
-      etymtext = "%s{{affix|%s|%s%s}}%s" % (prefix, lang,
+      etymtext = "%s{{af|%s|%s%s}}%s" % (prefix, lang,
           "|".join(do_split(r"\+", re.sub(", *", ", ", etym))), langtext,
           suffix)
     etymtext = "%s%s\n\n" % (etymheader, etymtext)
@@ -655,7 +661,7 @@ def process_line(line, etymnum, pronuns, pronuns_at_top):
       if "{{" in vals:
         alttext += "* %s\n" % vals
       else:
-        alttext += "* {{alter|%s|%s}}\n" % (lang, vals.replace(",", "|"))
+        alttext += "* {{alt|%s|%s}}\n" % (lang, vals.replace(",", "|"))
     elif sartype == "part":
       verbs, parttypes, partdecl = do_split(":", vals)
       infleclines = []
