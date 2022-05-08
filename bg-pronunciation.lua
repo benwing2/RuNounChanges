@@ -116,7 +116,7 @@ function export.toIPA(term, endschwa)
 		
 	local origterm = term
 	
-	term = mw.ustring.toNFC(term):rsub("й", "j")
+	term = rsub(mw.ustring.toNFC(term), "й", "j")
 	term = mw.ustring.toNFD(mw.ustring.lower(term))
 
 	if term:find(GRAVE) and not term:find(ACUTE) then
@@ -159,7 +159,7 @@ function export.toIPA(term, endschwa)
 	-- If we ended up in the middle of a tied affricate, move to its right.
 	term = rsub(term, "(" .. TIE .. ")(" .. accents_c .. ")(" .. cons_c .. ")", "%1%3%2")
 	-- Then, move leftwards over any remaining consonants at the beginning of a word.
-	term = rsub(term, r"#(" .. cons_c .. "*)(" .. accents_c .. ")", "#%2%1")
+	term = rsub(term, "#(" .. cons_c .. "*)(" .. accents_c .. ")", "#%2%1")
 	-- Then correct for known prefixes.
 	for _, prefix in ipairs(prefixes) do
 		prefix_prefix, prefix_final_cons = rmatch(prefix, "^(.-)(" .. cons_c .. "*)$")
