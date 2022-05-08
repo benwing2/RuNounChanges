@@ -274,6 +274,9 @@ local m_table = require("Module:table")
 local m_IPA = require("Module:IPA")
 local lang = require("Module:languages").getByCode("de")
 
+
+------------------------- Aliases for Unicode-safe versions of string functions -------------------------
+
 local u = mw.ustring.char
 local rsubn = mw.ustring.gsub
 local rfind = mw.ustring.find
@@ -282,6 +285,9 @@ local rsplit = mw.text.split
 local rgsplit = mw.text.gsplit
 local ulen = mw.ustring.len
 local ulower = mw.ustring.lower
+
+
+------------------------- Unicode combining characters -------------------------
 
 local ACUTE = u(0x0301) -- COMBINING ACUTE ACCENT =  ́
 local GRAVE = u(0x0300) -- COMBINING GRAVE ACCENT =  ̀
@@ -299,6 +305,9 @@ local SYLLABIC = u(0x0329) -- COMBINING VERTICAL LINE BELOW =  ̩
 local INVBREVEBELOW = u(0x032F) -- COMBINING INVERTED BREVE BELOW =  ̯
 local LINEUNDER = u(0x0331) -- COMBINING MACRON BELOW =  ̱
 local TIE = u(0x0361) -- COMBINING DOUBLE INVERTED BREVE =  ͡
+
+
+------------------------- Pattern-substitution function wrappers -------------------------
 
 -- version of rsubn() that discards all but the first return value
 local function rsub(term, foo, bar, n)
@@ -323,8 +332,9 @@ local function rsub_repeatedly(term, foo, bar, n)
 	end
 end
 
--- INTERNALLY-USED SYMBOLS
---
+
+------------------------- Internally-used symbols -------------------------
+
 -- We use the following internally:
 -- ⁀ represents a component boundary. Two components within an orthographic word are separated by ⁀; the edge of an
 --   orthographic word is denoted by ⁀⁀. The division between prefix and component, or between prefix and prefix, is
@@ -332,6 +342,7 @@ end
 -- ‿ represents the division between component and suffix, or suffix and suffix. We need to distinguish this from ⁀
 --   for certain purposes, e.g. 'st' at the beginning of a component is /ʃt/ but 'st' at the beginning of a suffix is
 --   /st/.
+-- . represents a syllable boundary.
 -- AUTOACUTE, AUTOGRAVE, ORIG_SUFFIX_GRAVE: Described below.
 -- EXPLICIT_*: Described below.
 
@@ -350,6 +361,9 @@ local AUTOGRAVE = u(0xFFF1)
 -- removed.
 local ORIG_SUFFIX_GRAVE = u(0xFFF2)
 local SYLDIV = u(0xFFF3)
+
+
+------------------------- Explicit allophone notation -------------------------
 
 -- When the user uses the "explicit allophone" notation such as [z] or [x] to force a particular allophone, we
 -- internally convert that notation into a single special character.
@@ -394,6 +408,9 @@ local explicit_char_to_phonemic = {
 	[EXPLICIT_X] = "x",
 }
 
+
+------------------------- Character classes to simplify use of patterns -------------------------
+
 local stress = ACUTE .. GRAVE .. DOUBLEGRAVE .. AUTOACUTE .. AUTOGRAVE .. ORIG_SUFFIX_GRAVE .. "ˈˌ"
 local stress_c = "[" .. stress .. "]"
 local non_stress_c = "[^" .. stress .. "]"
@@ -434,6 +451,12 @@ local obstruent_non_sibilant_c = "[" .. obstruent_non_sibilant .. "]"
 local unvoiced_cons = "ptkfsßʃxç" .. EXPLICIT_S .. EXPLICIT_X
 local unvoiced_C = "[" .. unvoiced_cons .. "]"
 
+
+------------------------- Allowed onsets for prefix-splitting -------------------------
+
+-- This is a list of patterns that collectively describe all possible orthographic word onsets. This is used when
+-- splitting off prefixes like [[ge-]] and [[be-]] to prevent splitting in words like [[Gertrud]] ('rtr-' is not a
+-- possible word onset).
 local allowed_onsets = {
 	"[bcdfghjklmnpqrstvwxz]",
 	-- Many single consonants can be followed by j but they are all foreign terms that can't be prefixed.
@@ -454,6 +477,9 @@ local allowed_onsets = {
 	"w[lr]",
 }
 
+
+------------------------- Possible state transitions when handling prefix combinations -------------------------
+
 -- We view the possible combinations of prefixes through the lens of a finite state machine. This allows us to
 -- handle occasional cases where more than one of a given type of prefix occurs (e.g. [[überzubeanspruchen]]).
 -- NOTE ABOUT STRESS: After un-, stressed prefixes lose their stress and the root takes secondary stress; cf.
@@ -472,6 +498,9 @@ local prefix_previous_allowed_states = {
 	-- unstressed -zu- can occur after stressed prefixes only ([[anzufangen]])
 	["unstressed-zu"] = m_table.listToSet { "stressed" },
 }
+
+
+------------------------- Recognized prefixes -------------------------
 
 --[=[
 The following contains prefixes to be recognized specially, segmented off automatically and respelled appropriately.
@@ -720,6 +749,9 @@ local prefixes = {
 	{"zwischen", "zwíschen"},
 }
 
+
+------------------------- Recognized "component-like" suffixes -------------------------
+
 --[=[
 The following contains suffixes that maintain their stress after a stressed syllable, as in [[handfest]], [[reißfest]],
 and "steal" the secondary stress, as in [[albtraumhaft]] /ˈalptʁaʊ̯mˌhaft/. The format of each entry is approximately
@@ -728,6 +760,7 @@ the same as for prefixes above. The differences are:
   must follow "ierbar" and "haft" must follow "schaft".
 * The respelling can be a list of possible pronunciations, in which case multiple pronunciations are produced on
   output. This is used e.g. for "-sam", which has two possible pronunciations, with the vowel long or short.
+  (FIXME: We don't actually support this yet.)
 * There is an additional named property 'pos' that is intended to specify the resulting part of speech (a string, one
   of 'n' = noun, 'v' = verb, 'a' = adjective, 'b' = adverb, or a list of such strings). This is currently underused and
   may be deleted.
@@ -809,6 +842,9 @@ local component_like_suffixes = {
 	-- /ˈʃtʏkˌvaɪ̯zə/, [[teilweise]] /ˈtaɪ̯lˌvaɪ̯zə/, [[versuchsweise]] /fɛʁˈzuːxsˌvaɪ̯zə/, [[zwangsweise]] /ˈt͡svaŋsˌvaɪ̯zə/
 	{"weise", "--weise", pos = "a"},
 }
+
+
+------------------------- Recognized regular-stressing suffixes -------------------------
 
 --[=[
 The following contains suffixes that have regular suffix stress. That is, if stressed with secondary stress, they take
@@ -1617,19 +1653,37 @@ local function handle_suffix_secondary_stress(word)
 end
 
 
--- This function contains the main rules that transform an orthographic word into IPA. The word on entry has already
--- had the following applied: (1) decomposition, (2) prefix and suffix splitting, (3) addition of default primary and
--- secondary stresses (acute and grave, respectively) after the appropriate syllable, (4) addition of ⁀ or ‿ at
--- boundaries of words, components, prefixes and suffixes; see comment at top of split_word_on_components_and_apply_affixes().
--- beginning and end of text is marked by ⁀⁀. Each rule is of the form {FROM, TO, REPEAT} where FROM is a Lua pattern,
--- TO is its replacement, and REPEAT is true if the rule should be executed using `rsub_repeatedly()` (which will make
--- the change repeatedly until nothing happens). The output of this is fed into phonetic_rules, and is also used to
--- generate the displayed phonemic pronunciation by removing ⁀ and ‿ symbols.
+-- This function contains the main rules that transform an orthographic word into "phonemic" IPA. In reality we show
+-- some things that are arguably allophonic, such as displaying /əʁ/ as /ɐ/ (but otherwise syllable-final /ʁ/ is still
+-- shown as such); showing word-internal glottal stops; and showing /ŋ/, which in some analyses is treated as
+-- underlyingly being /nɡ/.
+--
+-- The word on entry has already had the following applied:
+-- (1) Unicode decomposition.
+-- (2) Prefix and suffix splitting, with the addition of ⁀ or ‿ at boundaries of words, components, prefixes and
+--     suffixes; see comment at top of split_word_on_components_and_apply_affixes().
+-- (3) Addition of default primary and secondary stresses on the appropriate vowels. Autogenerated stresses use the
+--     symbols AUTOACUTE, AUTOGRAVE and ORIG_SUFFIX_GRAVE, while user-specified stresses use ACUTE and GRAVE, so that
+--     they can be distinguished (e.g. towards the end we remove autogenerated primary stress in monosyllabic words,
+--     but leave user-specified primary stress).
+-- The output of this function is maybe fed into apply_phonetic_rules() to get "phonetic", i.e. narrower, IPA. In
+-- addition, the actual displayed phonemic pronunciation is obtained by removing ⁀ and ‿ symbols as well as the dot (.)
+-- symbol marking syllable boundaries.
+--
+-- Note that if the input contains multiple words, they are split on spaces and passed separately to this function,
+-- and then put back together at the end.
 local function apply_phonemic_rules(word)
+
+	------------------------- Misc early conversions -------------------------
+
 	word = rsub(word, "ǝ", "ə") -- "Wrong" schwa (U+01DD) to correct schwa (U+0259)
 	word = rsub(word, MACRON, "ː") -- The user can use respelling with macrons but internally we convert to the long mark ː
 	word = rsub(word, "x", "ks")
-	-- WE treat written 'ts' same as 'tz', e.g. [[aufwärts]], [[Aufenhaltsgenehmigung]], [[Rätsel]] and
+	-- 'sch' and related graphemes; must precede handling of 'ts'
+	word = rsub(word, "tsch", "ʧʧ")
+	word = rsub(word, "dsch", "ʤʤ")
+	word = rsub(word, "sch", "ʃʃ")
+	-- We treat written 'ts' same as 'tz', e.g. [[aufwärts]], [[Aufenhaltsgenehmigung]], [[Rätsel]] and
 	-- foreign-derived words such as [[Botsuana]], [[Fietse]], [[Lotse]], [[Mitsubishi]], [[Hatsa]], [[Tsatsiki]],
 	-- [[Whatsapp]]. To prevent this, insert a syllable boundary (.), a component boundary (-), a prefix or suffix
 	-- boundary (< or >), etc.
@@ -1638,6 +1692,11 @@ local function apply_phonemic_rules(word)
 	word = rsub(word, "qu", "kv")
 	word = rsub(word, "q", "k")
 	word = rsub(word, "w", "v")
+	word = rsub(word, "dt", "tt")
+
+
+	------------------------- Generation of /ŋ/ -------------------------
+
 	-- [[Pinguin]], [[Linguistik]], [[konsanguin]], [[Lingua franca]], [[bilingual]]
 	word = rsub(word, "ngu(" .. V .. ")", "ŋgu%1")
 	-- In -ngr-, -ngl-, -ngV- with a following stress in the same component, the 'g' is usually pronounced and the 'n'
@@ -1671,9 +1730,10 @@ local function apply_phonemic_rules(word)
 	-- 'In.klusion', 'in.ko.härent', [[in.kompatibel]], [[in.kompetent]]. (Similarly [[ingeniös]], [[Ingredienz]]
 	-- respelled 'in.geniös', 'In.grêdienz'.)
 	word = rsub(word, "nk", "ŋk")
-	word = rsub(word, "dt", "tt")
 
-	-- Handling of 'c' other than 'ch'.
+
+	------------------------- 'c' other than 'ch' -------------------------
+
 	-- Italian-derived words: [[Catenaccio]], [[Stracciatella]]
 	word = rsub(word, "cci(" .. V .. ")", "ʧʧ%1")
 	-- Italian-derived words: [[Cappuccino]], [[Fibonaccizahl]]
@@ -1685,9 +1745,12 @@ local function apply_phonemic_rules(word)
 	word = rsub(word, "cc", "kk")
 	word = rsub(word, "c([^h])", "ʦ%1")
 
+
+	------------------------- 'y' -------------------------
+
 	--[=[
-	Handling of 'y'. In general, we convert 'y' to either 'ü', 'i', 'I' or 'j'. Do this before handling diphthongs
-	because the resulting 'i' may be in the combination 'ai' or 'ei', which needs to be handled as a diphthong.
+	In general, we convert 'y' to either 'ü', 'i', 'I' or 'j'. Do this before handling diphthongs because the resulting
+	'i' may be in the combination 'ai' or 'ei', which needs to be handled as a diphthong.
 
 	1. Accented 'y' always becomes 'ü'.
 	2. Initial 'y' followed by a vowel becomes 'j', as in [[New York]] respelled 'Nju Yórk' /njuː ˈjɔrk/, [[Yacht]]
@@ -1737,8 +1800,25 @@ local function apply_phonemic_rules(word)
 	word = rsub(word, "(e" .. accent_c .. "*" .. ")y(" .. non_V .. ")", "%1i%2") -- #7 above
 	word = rsub(word, "(e" .. accent_c .. "*" .. ")y([eiu" .. schwalike .. "]" .. non_stress_c .. "*[⁀‿])", "%1i%2") -- #7 above
 	word = rsub(word, "y", "j") -- #8 above
-	--
-	-- Handling of diphthongs and 'h'.
+
+
+	------------------------- Diphthongs -------------------------
+
+	-- 'äu', 'eu' -> /ɔɪ̯/. /ɪ̯/ is two characters so we use I to represent it and convert later.
+	word = rsub_repeatedly(word, "[äe](" .. accent_c .. "*" .. ")u(" .. non_accent_c .. ")", "ɔ%1I%2")
+	-- 'au' -> /aʊ̯/. /ʊ̯/ is two characters so we use U to represent it and convert later.
+	word = rsub_repeatedly(word, "a(" .. accent_c .. "*" .. ")u(" .. non_accent_c .. ")", "a%1U%2")
+	-- 'ai', 'ei' -> /aɪ̯/.
+	word = rsub_repeatedly(word, "[ae](" .. accent_c .. "*" .. ")i(" .. non_accent_c .. ")", "a%1I%2")
+	-- 'ie' -> /iː/.
+	word = rsub_repeatedly(word, "i(" .. accent_c .. "*" .. ")e(" .. non_accent_c .. ")", "iː%1%2")
+	-- Doubled vowels as in [[Haar]], [[Boot]], [[Schnee]], [[dööfer]], etc. become long. This should follow -ie-
+	-- handling to get the right output for 'knieen' (respelling or old spelling of [[knien]]).
+	word = rsub_repeatedly(word, "([aeoäöü])(" .. accent_c .. "*" .. ")%1(" .. non_accent_c .. ")", "%1ː%2%3")
+
+
+	------------------------- Consonant clusters with 'h' -------------------------
+
 	-- Not ff. Compare [[Graph]] with long /a/, [[Apostrophe]] with long second /o/.
 	word = rsub(word, "ph", "f")
 	-- dh: [[Buddha]], [[Abu Dhabi]], [[Sindhi]]; [[Adhäsion]], [[adhäsiv]] are exceptions, can be written ''ad.häsív''
@@ -1753,17 +1833,14 @@ local function apply_phonemic_rules(word)
 	--     [[Rhetorik]], [[Rheuma]], [[rhexigen]], [[Rhone]], etc.
 	-- wh: [[Whatsapp]], [[Whirlpool]], [[Whisky]], [[Whist]], [[Whistleblower]], [[Whiteboard]], [[Whiteout]], etc.
 	word = rsub(word, "([dtkgbrw])h", "%1")
-	-- 'äu', 'eu' -> /ɔɪ̯/. /ɪ̯/ is two characters so we use I to represent it and convert later.
-	word = rsub_repeatedly(word, "[äe](" .. accent_c .. "*" .. ")u(" .. non_accent_c .. ")", "ɔ%1I%2")
-	-- 'au' -> /aʊ̯/. /ʊ̯/ is two characters so we use U to represent it and convert later.
-	word = rsub_repeatedly(word, "a(" .. accent_c .. "*" .. ")u(" .. non_accent_c .. ")", "a%1U%2")
-	-- 'ai', 'ei' -> /aɪ̯/.
-	word = rsub_repeatedly(word, "[ae](" .. accent_c .. "*" .. ")i(" .. non_accent_c .. ")", "a%1I%2")
-	-- 'ie' -> /iː/.
-	word = rsub_repeatedly(word, "i(" .. accent_c .. "*" .. ")e(" .. non_accent_c .. ")", "iː%1%2")
-	-- Doubled vowels as in [[Haar]], [[Boot]], [[Schnee]], [[dööfer]], etc. become long. This should follow -ie-
-	-- handling to get the right output for 'knieen' (respelling or old spelling of [[knien]]).
-	word = rsub_repeatedly(word, "([aeoäöü])(" .. accent_c .. "*" .. ")%1(" .. non_accent_c .. ")", "%1ː%2%3")
+	-- Handling of 'ch'. Must follow diphthong handling so 'äu', 'eu' trigger ich-laut.
+	word = rsub(word, "chs", "ks")
+	word = rsub(word, "([aɔoʊuU]" .. accent_c .. "*)ch", "%1xx")
+	word = rsub(word, "ch", "çç")
+
+
+	------------------------- Remaining 'h' -------------------------
+
 	--[=[
 	'h' between vowels should be lengthening only if no stress follows and the following vowel isn't a or o, and if
 	followed by i or u, that vowel should not be word-final (cf. [[Estomihi]], [[Uhu]], [[Bahuvrihi]] with pronounced
@@ -1804,7 +1881,9 @@ local function apply_phonemic_rules(word)
 	-- Convert special 'H' symbol (to indicate pronounced /h/ between vowels) back to /h/.
 	word = rsub(word, "H", "h")
 
-	-- Handling of French and English sounds.
+
+	------------------------- French and English sounds -------------------------
+
 	word = rsub(word, "([eo])(" .. accent_c .. "*[IU])", function(eo, iu)
 		-- 'eI' as in 'SpreI' for [[Spray]]; 'eU' not in French or English but kept for parallelism
 		-- 'oI' as in 'KauboI' for [[Cowboy]]; 'oU' as in 'HoUmpehdsch' for [[Homepage]]
@@ -1814,15 +1893,9 @@ local function apply_phonemic_rules(word)
 	word = rsub(word, "e" .. TILDE, "ɛ" .. TILDE)
 	word = rsub(word, "ö" .. TILDE, "œ" .. TILDE)
 
-	-- Handling of 'ch'. Must follow diphthong handling so 'äu', 'eu' trigger ich-laut.
-	word = rsub(word, "tsch", "ʧʧ")
-	word = rsub(word, "dsch", "ʤʤ")
-	word = rsub(word, "sch", "ʃʃ")
-	word = rsub(word, "chs", "ks")
-	word = rsub(word, "([aɔoʊuU]" .. accent_c .. "*)ch", "%1xx")
-	word = rsub(word, "ch", "çç")
 
-	-- Handling of 's'.
+	------------------------- 's' -------------------------
+
 	word = rsub(word, "([⁀‿])s(" .. V .. ")", "%1z%2")
 	word = rsub(word, "([" .. vowel .. "lrmnŋj]" .. accent_c .. "*%.?)s(" .. V .. ")", "%1z%2")
 	-- /bs/ -> [pz] before the stress as in [[absentieren]], [[Absinth]], [[absolut]], [[absorbieren]], [[absurd]],
@@ -1842,6 +1915,8 @@ local function apply_phonemic_rules(word)
 	word = rsub(word, "([bd])s(" .. V .. ")([^⁀‿]*" .. stress_c .. ")", "%1z%2")
 	word = rsub(word, "⁀s([pt])", "⁀ʃ%1")
 
+	------------------------- Reduce extraneous geminate consonants -------------------------
+
 	-- Reduce extraneous geminate consonants (some generated above when handling digraphs etc.). Geminate consonants
 	-- only have an effect directly after a vowel, and not when before a consonant other than l or r.
 	-- FIXME: Probably not necessary since we remove geminates down below after vowel lengthening, and causes problems.
@@ -1849,10 +1924,15 @@ local function apply_phonemic_rules(word)
 	-- word = rsub(word, "(" .. non_V .. ")(" .. C .. ")%2", "%1%2")
 	-- word = rsub(word, "(" .. C .. ")%1(" .. C_not_lr .. ")", "%1%2")
 
+
+	------------------------- 'i' and 'u' in hiatus -------------------------
+
 	-- 'i' and 'u' in hiatus should be nonsyllabic by default; add '.' afterwards to prevent this.
 	word = rsub(word, "(" .. C .. "[iu])(" .. V .. ")", "%1" .. INVBREVEBELOW .. "%2")
 
-	-- Divide into syllables.
+
+	------------------------- Divide into syllables -------------------------
+
 	-- Existing potentially-relevant hyphenations/pronunciations: [[abenteuerdurstig]] -> aben|teu|er|durs|tig,
 	-- [[Agraffe]] -> /aˈɡʁafə/ (but Ag|raf|fe); [[Agrarbiologie]] -> /aˈɡʁaːʁbioloˌɡiː/ (but Ag|rar|bio|lo|gie);
 	-- [[Anagramm]] -> (per dewikt) [anaˈɡʁam] Ana·gramm; [[Abraham]] -> /ˈaːbʁaˌha(ː)m/; [[Fabrik]] -> (per dewikt)
@@ -1894,8 +1974,10 @@ local function apply_phonemic_rules(word)
 	-- User-specified syllable divider should now be treated like regular one.
 	word = rsub(word, SYLDIV, ".")
 
-	-- Convert some unstressed 'e' to schwa. It seems the following holds (excluding [[be-]] and [[ge-]] from
-	-- consideration):
+
+	------------------------- Convert some unstressed 'e' to schwa -------------------------
+
+	-- It seems the following holds (excluding [[be-]] and [[ge-]] from -- consideration):
 	-- 1. 'e' is less likely to be schwa before the stress than after.
 	-- 2. Before the stress, 'e' in a closed syllable is never a schwa.
 	-- 2. Initial unstressed 'e' as in [[Elektrizität]] is never a schwa.
@@ -1935,6 +2017,9 @@ local function apply_phonemic_rules(word)
 		end
 	end)
 
+
+	------------------------- Mark some vowels as short -------------------------
+
 	-- Handle vowel quality/length changes in open vs. closed syllables, part a: Some vowels that would be
 	-- expected to be long (particularly before a single consonant word-finally) are actually short.
 	-- Unstressed final 'i' before a single consonant is short: especially in -in, -is, -ig, but also -ik as in
@@ -1961,6 +2046,9 @@ local function apply_phonemic_rules(word)
 	-- '-os', e.g. [[Albatros]], [[Amos]], [[Amphiprostylos]], [[Barbados]], [[Chaos]], [[Epos]], [[Gyros]], [[Heros]],
 	-- [[Kokos]], [[Kolchos]], [[Kosmos]], etc.
 	word = rsub(word, "o([ns][⁀‿])", "o" .. BREVE .. "%1")
+
+
+	------------------------- Handle vowel quality/length changes  -------------------------
 
 	-- Handle vowel quality/length changes in open vs. closed syllables, part b: Lengthen/shorten as appropriate.
 	--
@@ -2020,6 +2108,9 @@ local function apply_phonemic_rules(word)
 	-- Remove * that prevents vowel quality/length changes.
 	word = rsub(word, "(" .. V .. ")%*", "%1")
 
+
+	------------------------- Devoice consonants coda-finally  -------------------------
+
 	-- 'ĭg' is pronounced [ɪç] word-finally or before an obstruent (not before an approximant as in [[ewiglich]] or
 	-- [[Königreich]] when divided as ''ewig.lich'', ''König.reich'').
 	word = rsub(word, "ɪg⁀", "ɪç⁀")
@@ -2039,22 +2130,32 @@ local function apply_phonemic_rules(word)
 		return init .. voiced_to_voiceless[voiced]
 	end)
 
+
+	------------------------- Eliminate remaining geminate consonants  -------------------------
+
 	-- Eliminate remaining geminate consonants within a component (geminates can legitimately exist across a component
 	-- boundary). These have served their purpose of keeping the preceding vowel short. Normally such geminates will
 	-- always occur across a syllable boundary, but this may not be the case in the presence of user-specified syllable
 	-- boundaries. We do this after coda devoicing so we eliminate the 'd' in words like [[verwandte]].
 	word = rsub_repeatedly(word, "(" .. C .. ")([.‿]*)%1", "%2%1")
 
+
+	------------------------- Add glottal stops  -------------------------
+
 	-- Add glottal stop at beginning of component before a vowel. FIXME: Sometimes this should not be present, I think.
 	-- We need symbols to control this.
+	--
 	-- If previous component ends in a vowel, glottal stop is mandatory, e.g. [[wiederentdecken]].
 	word = rsub(word, "(" .. V .. accent_c .. "*⁀)(" .. V .. ")", "%1ʔ%2")
-	-- At beginning of word, glottal stop is mandatory, but not shown in the phonemic notation.
-	-- Before a stressed vowel at a component boundary, glottal stop is mandatory.
-	word = rsub(word, "⁀(" .. V .. accent_c .. "*" .. stress_c .. ")", "⁀ʔ%1")
-	-- Before an unstressed vowel at a component boundary, glottal stop is optional, e.g. [[Aufenthalt]]
-	-- /ˈaʊ̯f.(ʔ)ɛntˌhalt/.
-	word = rsub(word, "⁀(" .. V .. ")", "⁀(ʔ)%1")
+	-- Before a stressed vowel at a component boundary, glottal stop is mandatory (except at beginning of word, where
+	-- it is not shown in the phonemic notation).
+	word = rsub(word, "([^⁀]⁀)(" .. V .. accent_c .. "*" .. stress_c .. ")", "%1ʔ%2")
+	-- Before an unstressed vowel at a component boundary (again, except at beginning of word), glottal stop is
+	-- optional, e.g. [[Aufenthalt]] /ˈaʊ̯f.(ʔ)ɛntˌhalt/.
+	word = rsub(word, "([^⁀]⁀)(" .. V .. ")", "%1(ʔ)%2")
+
+
+	------------------------- Remove ⁀ and ‿ before non-syllabic components  -------------------------
 
 	-- Remove ⁀ and ‿ (component/suffix boundaries) before non-syllabic components and suffixes. Examples where this
 	-- can occur are final -t/-st inflectional suffixes (-t for third-person singular, second-person plural or past
@@ -2066,6 +2167,9 @@ local function apply_phonemic_rules(word)
 	-- FIXME: Consider removing ⁀ and ‿ after non-syllabic component/prefix at the beginning of a word in case of
 	-- dialectal spellings like 'gsund' for [[gesund]]; but to handle this properly we need additional rules to
 	-- devoice the 'g' in such circumstances.
+
+	
+	------------------------- Misc late symbol conversions  -------------------------
 
 	-- -s- frequently occurs as a component by itself (really an interfix), e.g. in [[Wirtschaftswissenschaft]]
 	-- respelled 'Wirtschaft-s-wissenschaft' to make it easier to identify suffixes like the -schaft in [[Wirtschaft]].
@@ -2087,11 +2191,19 @@ local function apply_phonemic_rules(word)
 	})
 	word = rsub(word, "əʁ", "ɐ")
 
-	-- Convert ORIG_SUFFIX_GRAVE to either GRAVE or nothing. This must happen after removing ⁀ and ‿ before
-	-- non-syllabic components and suffixes because it depends on being able to accurately identify syllables.
+
+	------------------------- Convert ORIG_SUFFIX_GRAVE to either GRAVE or nothing -------------------------
+
+	-- This must happen after removing ⁀ and ‿ before non-syllabic components and suffixes because it depends on being
+	-- able to accurately identify syllables.
 	word = handle_suffix_secondary_stress(word)
 
-	-- Generate IPA stress marks.
+
+	------------------------- Generate IPA stress marks  -------------------------
+
+	-- Remove primary stress from monosyllabic words. (FIXME: We only want to do that if the user didn't explicitly
+	-- add a stress mark.)
+	word = rsub(word, "^([^.]*)" .. ACUTE .. "([^.]*)$", "%1%2")
 	word = rsub(word, ACUTE, "ˈ")
 	word = rsub(word, GRAVE, "ˌ")
 	word = rsub(word, DOUBLEGRAVE, "")
@@ -2100,6 +2212,9 @@ local function apply_phonemic_rules(word)
 	-- Suppress syllable mark before IPA stress indicator.
 	word = rsub(word, "%.([ˈˌ])", "%1")
 
+
+	------------------------- Convert explicit character notations -------------------------
+
 	-- Convert explicit character notation to regular character.
 	word = rsub(word, ".", explicit_char_to_phonemic)
 
@@ -2107,10 +2222,10 @@ local function apply_phonemic_rules(word)
 end
 
 
--- These rules operate in order, on the output of phonemic_rules. Each rule is of the form {FROM, TO, REPEAT} where
--- FROM is a Lua pattern, TO is its replacement, and REPEAT is true if the rule should be executed using
--- `rsub_repeatedly()` (which will make the change repeatedly until nothing happens). The output of this is used to
--- generate the displayed phonetic pronunciation by removing ⁀ and ‿ symbols.
+-- This function contains the main rules that transform from phonemic IPA to phonetic IPA. This is called on the output
+-- of apply_phonemic_rules().
+--
+-- FIXME: This needs work before being ready for release.
 local function apply_phonetic_rules(word)
 	-- At the beginning of a word, glottal stop is mandatory before a vowel.
 	word = rsub(word, "(⁀⁀)(" .. V .. ")", "%1ʔ%2")
