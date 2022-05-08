@@ -21,7 +21,7 @@ suffix, the prefix takes precedence and the suffix gets secondary stress, hence 
 
 Use an acute accent on a vowel to override the position of primary stress (in a diphthong, put it over the first
 vowel): á é í ó ú ä́ ö́ ǘ ái éi áu ä́u éu. Examples: [[systemisch]] 'systémisch' /zʏsˈteːmɪʃ/ "systemic", [[Migräne]]
-'Migrä́ne' /miˈɡʁɛːnə/ "migraine". Use a grave accent to add secondary stress: à è ì ò ù ä̀ ö̀ ǜ ài èi àu ä̀u èu. Examples:
+'Migrä́ne' /miˈɡʁɛːnə/ "migraine". Use a grave accent to add secondary stress: à è ì ò ù ä̀ ö̀ ǜ ài èi àu ä̀u èu. Examples:
 [[Prognose]] 'Prògnóse' /ˌpʁoˈɡnoːzə/ "forecast", [[Milligramm]] 'Milligràmm' /ˈmɪliˌɡʁam/ "milligram" (the primary
 stress takes its default position on the first syllable, as it is unmarked).
 
@@ -104,8 +104,8 @@ Double grave accent to add tertiary stress: ȁ ȅ ȉ ȍ ȕ ä̏ ö̏ ü̏ ȁi ȅ
   those generated automatically) are automatically converted to tertiary stress in certain circumstances, e.g.
   when compounding two words that are already compounds. See the discussion on -- (double hyphen) below.
 'h' or ː after a vowel to force it to be long.
-Circumflex on a vowel (â ê î ô û ä̂ ö̂ ü̂) to force it to have closed quality.
-Breve on a vowel, including a stressed vowel (ă ĕ ĭ ŏ ŭ ä̆ ö̆ ü̆) to force it to have open quality.
+Circumflex on a vowel (â ê î ô û ä̂ ö̂ ü̂) to force it to have closed quality.
+Breve on a vowel, including a stressed vowel (ă ĕ ĭ ŏ ŭ ä̆ ö̆ ü̆) to force it to have open quality.
 Tilde on a vowel or capital N afterwards to indicate nasalization.
 For an unstressed 'e', force its quality using schwa (ə) to indicate a schwa, breve (ĕ) to indicate open quality /ɛ/,
   circumflex (ê) to indicate closed quality /e/.
@@ -1617,9 +1617,10 @@ local function handle_suffix_secondary_stress(word)
 end
 
 
--- These rules operate in order, and apply to the actual spelling, after (1) decomposition, (2) prefix and suffix
--- splitting, (3) addition of default primary and secondary stresses (acute and grave, respectively) after the
--- appropriate syllable, (4) addition of ⁀ or ‿ at boundaries of words, components, prefixes and suffixes. The
+-- This function contains the main rules that transform an orthographic word into IPA. The word on entry has already
+-- had the following applied: (1) decomposition, (2) prefix and suffix splitting, (3) addition of default primary and
+-- secondary stresses (acute and grave, respectively) after the appropriate syllable, (4) addition of ⁀ or ‿ at
+-- boundaries of words, components, prefixes and suffixes; see comment at top of split_word_on_components_and_apply_affixes().
 -- beginning and end of text is marked by ⁀⁀. Each rule is of the form {FROM, TO, REPEAT} where FROM is a Lua pattern,
 -- TO is its replacement, and REPEAT is true if the rule should be executed using `rsub_repeatedly()` (which will make
 -- the change repeatedly until nothing happens). The output of this is fed into phonetic_rules, and is also used to
@@ -1843,8 +1844,10 @@ local function apply_phonemic_rules(word)
 
 	-- Reduce extraneous geminate consonants (some generated above when handling digraphs etc.). Geminate consonants
 	-- only have an effect directly after a vowel, and not when before a consonant other than l or r.
-	word = rsub(word, "(" .. non_V .. ")(" .. C .. ")%2", "%1%2")
-	word = rsub(word, "(" .. C .. ")%1(" .. C_not_lr .. ")", "%1%2")
+	-- FIXME: Probably not necessary since we remove geminates down below after vowel lengthening, and causes problems.
+	-- Once we're sure these aren't necessary, remove them.
+	-- word = rsub(word, "(" .. non_V .. ")(" .. C .. ")%2", "%1%2")
+	-- word = rsub(word, "(" .. C .. ")%1(" .. C_not_lr .. ")", "%1%2")
 
 	-- 'i' and 'u' in hiatus should be nonsyllabic by default; add '.' afterwards to prevent this.
 	word = rsub(word, "(" .. C .. "[iu])(" .. V .. ")", "%1" .. INVBREVEBELOW .. "%2")
@@ -2020,7 +2023,7 @@ local function apply_phonemic_rules(word)
 	-- 'ĭg' is pronounced [ɪç] word-finally or before an obstruent (not before an approximant as in [[ewiglich]] or
 	-- [[Königreich]] when divided as ''ewig.lich'', ''König.reich'').
 	word = rsub(word, "ɪg⁀", "ɪç⁀")
-	word = rsub(word, "ɪg(%.?" .. C_not_lr .. ")", "ɪç%1")
+	word = rsub(word, "ɪg([.‿]*" .. C_not_lr .. ")", "ɪç%1")
 	-- Devoice consonants coda-finally. There may be more than one such consonant to devoice (cf. [[Magd]]), or the
 	-- consonant to devoice may be surrounded by non-voiced or non-devoicing consonants (cf. [[Herbst]]).
 	word = rsub_repeatedly(word, "(" .. V .. accent_c .. "*" .. C .. "*)([bdgvzʒʤ])", function(init, voiced)
@@ -2059,7 +2062,7 @@ local function apply_phonemic_rules(word)
 	-- respelled with hyphens around it (in such a case it should be grouped with the preceding syllable). Don't do
 	-- this at the beginning of a word (which normally shouldn't happen but might in a dialectal word). This should
 	-- precede 'ts' -> 'ʦ' just below.
-	word = rsub_repeatedly(word, "([^⁀‿])([⁀‿])(" .. non_V .. "*[⁀‿])", "%1%2")
+	word = rsub_repeatedly(word, "([^⁀‿])([⁀‿])(" .. non_V .. "*[⁀‿])", "%1%3")
 	-- FIXME: Consider removing ⁀ and ‿ after non-syllabic component/prefix at the beginning of a word in case of
 	-- dialectal spellings like 'gsund' for [[gesund]]; but to handle this properly we need additional rules to
 	-- devoice the 'g' in such circumstances.
@@ -2072,7 +2075,7 @@ local function apply_phonemic_rules(word)
 	word = rsub(word, "ts", "ʦ")
 
 	-- Misc symbol conversions.
-	word = rsub(".", {
+	word = rsub(word, ".", {
 		["I"] = "ɪ̯",
 		["U"] = "ʊ̯",
 		["ʧ"] = "t͡ʃ",
@@ -2149,6 +2152,7 @@ local function generate_phonemic_word(word, is_cap)
 	elseif word:find("^%-") then
 		affix_type = "suffix"
 	end
+	-- FIXME: Handling of prefixes/suffixes is currently broken.
 	word = gsub(word, "^%-?(.-)%-?$", "%1")
 	word = split_word_on_components_and_apply_affixes(word, pos, affix_type)
 	word = rsub(word, AUTOACUTE, ACUTE)
@@ -2160,7 +2164,6 @@ end
 
 local function do_phonemic_phonetic(text, pos, is_phonetic)
 	if type(text) == "table" then
-		pos = text.args["pos"]
 		text = text[1]
 	end
 	local result = {}
@@ -2173,7 +2176,7 @@ local function do_phonemic_phonetic(text, pos, is_phonetic)
 		table.insert(result, word)
 	end
 	result = table.concat(result, " ")
-	result = gsub(result, "⁀", "")
+	result = rsub(result, "[⁀‿]", "")
 	if not is_phonetic then
 		-- Remove explicit syllable boundaries in phonemic notation. (FIXME: Is this the right thing to do?)
 		result = gsub(result, "%.", "")
@@ -2181,12 +2184,14 @@ local function do_phonemic_phonetic(text, pos, is_phonetic)
 	return result
 end
 
-function export.phonemic(text, pos)
-	return do_phonemic_phonetic(text, pos, false)
+-- External entry point to convert arbitrary text to its phonemic IPA representation.
+function export.phonemic(text)
+	return do_phonemic_phonetic(text, false)
 end
 
-function export.phonetic(text, pos)
-	return do_phonemic_phonetic(text, pos, true)
+-- External entry point to convert arbitrary text to its phonetic IPA representation.
+function export.phonetic(text)
+	return do_phonemic_phonetic(text, true)
 end
 
 function export.show(frame)
