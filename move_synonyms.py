@@ -299,7 +299,7 @@ def process_text_on_page(pageindex, pagetitle, text):
         else:
           subsections[k - 1] = ""
           subsections[k] = ""
-        notes.append("Convert %ss in %s subsection %s to inline %ss in subsection %s based on %s" % (
+        notes.append("convert %ss in %s subsection %s to inline %ss in subsection %s based on %s" % (
           syntype, args.langname, k // 2 + 1, syntype, defn_subsection // 2 + 1, syndesc))
 
       # Pull out all synonyms by number
@@ -388,11 +388,11 @@ def process_text_on_page(pageindex, pagetitle, text):
         if not line.strip():
           skipped_lines.append(lineno)
           continue
-        m = re.search(r"^\* *\(''([^']*?)''\) *(.*?)$", line)
+        m = re.search(r"^\* *\(''([^']*?)''\):? *(.*?)$", line)
         if m:
           tag, syns = m.groups()
         else:
-          m = re.search(r"^\* *''\(([^']*?)\)'' *(.*?)$", line)
+          m = re.search(r"^\* *''\(([^']*?)\):?'':? *(.*?)$", line)
           if m:
             tag, syns = m.groups()
           else:
