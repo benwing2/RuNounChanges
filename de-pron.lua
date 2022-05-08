@@ -414,6 +414,10 @@ local explicit_char_to_phonemic = {
 local stress = ACUTE .. GRAVE .. DOUBLEGRAVE .. AUTOACUTE .. AUTOGRAVE .. ORIG_SUFFIX_GRAVE .. "ˈˌ"
 local stress_c = "[" .. stress .. "]"
 local non_stress_c = "[^" .. stress .. "]"
+local acute = ACUTE .. AUTOACUTE
+local acute_c = "[" .. acute .. "]"
+local grave = GRAVE .. AUTOGRAVE
+local grave_c = "[" .. grave .. "]"
 local accent_non_stress_non_invbrevebelow = BREVE .. CFLEX .. TILDE .. DOTUNDER .. MACRON .. "ː*"
 local accent_non_stress = accent_non_stress_non_invbrevebelow .. INVBREVEBELOW
 local accent_non_stress_c = "[" .. accent_non_stress .. "]"
@@ -1637,15 +1641,14 @@ local function handle_suffix_secondary_stress(word)
 	-- There should never be ORIG_SUFFIX_GRAVE in a compound word (i.e. multicomponent word where the components were
 	-- originally separated by hyphen or double hyphen in respelling), so we should treat user-specified GRAVE as
 	-- secondary stress rather than as primary stress in a non-primary component.
-	local primary_stress = ACUTE .. AUTOACUTE
-	local secondary_stress = AUTOGRAVE .. DOUBLEGRAVE .. ORIG_SUFFIX_GRAVE .. GRAVE
+	local secondary_stress_c = "[" .. grave .. DOUBLEGRAVE .. ORIG_SUFFIX_GRAVE .. "]"
 	for i, part in ipairs(parts) do
 		if i % 2 == 1 then
 			if saw_secondary_stress or saw_primary_stress_preceding then
 				parts[i] = rsub(part, ORIG_SUFFIX_GRAVE, "")
 			end
-			saw_secondary_stress = saw_secondary_stress or rfind(part, secondary_stress)
-			saw_primary_stress_preceding = rfind(part, primary_stress)
+			saw_secondary_stress = saw_secondary_stress or rfind(part, secondary_stress_c)
+			saw_primary_stress_preceding = rfind(part, acute_c)
 		end
 	end
 
@@ -1912,7 +1915,7 @@ local function apply_phonemic_rules(word)
 	-- /gs/ in enwikt have a component boundary in the middle.
 	--
 	-- No apparent examples involving /vs/, /zs/, /(d)ʒs/ that don't involve clear morpheme boundaries.
-	word = rsub(word, "([bd])s(" .. V .. ")([^⁀‿]*" .. stress_c .. ")", "%1z%2")
+	word = rsub(word, "([bd])s(" .. V .. "[^⁀‿]*" .. stress_c .. ")", "%1z%2")
 	word = rsub(word, "⁀s([pt])", "⁀ʃ%1")
 
 	------------------------- Reduce extraneous geminate consonants -------------------------
@@ -1969,8 +1972,9 @@ local function apply_phonemic_rules(word)
 	-- [[Regnum]]. Also [[leugnen]], [[Leugner]] with the same /gn/ prescriptive, /kn/ more common; whereas [[Zeugnis]]
 	-- always with /kn/ (because -nis is a suffix).
 	word = rsub(word, "g%.n", ".gn")
-	-- Divide two vowels; but not if the first vowel is indicated as non-syllabic ([[Familie]], [[Ichthyologie]], etc.).
-	word = rsub_repeatedly(word, "(" .. V .. accent_non_invbrevebelow_c .. "*)(" .. V .. ")", "%1.%2")
+	-- Divide two vowels; but not if the first vowel is indicated as non-syllabic ([[Familie]], [[Ichthyologie]], etc.)
+	-- or if either vowel is a glide (I or U).
+	word = rsub_repeatedly(word, "(" .. V_non_glide .. accent_non_invbrevebelow_c .. "*)(" .. V_non_glide .. ")", "%1.%2")
 	-- User-specified syllable divider should now be treated like regular one.
 	word = rsub(word, SYLDIV, ".")
 
@@ -2054,18 +2058,18 @@ local function apply_phonemic_rules(word)
 	--
 	-- Vowel with secondary stress in open syllable before primary stress later in the same component takes close
 	-- quality without lengthening.
-	word = rsub_repeatedly(word, "(" .. V_unmarked_for_quality .. ")([" .. GRAVE .. DOUBLEGRAVE .. "][.‿][^⁀]*" .. ACUTE .. ")", "%1" .. CFLEX .. "%2")
+	word = rsub_repeatedly(word, "(" .. V_unmarked_for_quality .. ")([" .. grave .. DOUBLEGRAVE .. "][.‿][^⁀]*" .. acute_c .. ")", "%1" .. CFLEX .. "%2")
 	-- Any nasal vowel with secondary stress before primary stress later in the same component does not lengthen.
 	-- Cf. [[Rendezvous]]. We signal that by inserting a circumflex before the tilde, which normally comes directly
 	-- after the vowel.
-	word = rsub_repeatedly(word, "(" .. V .. ")" .. TILDE .. "([" .. GRAVE .. DOUBLEGRAVE .. "][^⁀]*" .. ACUTE .. ")", "%1" .. CFLEX .. TILDE .. "%2")
+	word = rsub_repeatedly(word, "(" .. V .. ")" .. TILDE .. "([" .. grave .. DOUBLEGRAVE .. "][^⁀]*" .. acute_c .. ")", "%1" .. CFLEX .. TILDE .. "%2")
 	-- Vowel with tertiary stress in open syllable before secondary stress later in the same component takes close
 	-- quality without lengthening if component has no primary stress.
-	word = rsub_repeatedly(word, "(⁀[^⁀" .. ACUTE .. "]*" .. V_unmarked_for_quality .. ")(" .. DOUBLEGRAVE .. "[.‿][^⁀" .. ACUTE .. "]*" .. GRAVE .. "[^⁀" .. ACUTE .. "]*⁀)",
+	word = rsub_repeatedly(word, "(⁀[^⁀" .. acute .. "]*" .. V_unmarked_for_quality .. ")(" .. DOUBLEGRAVE .. "[.‿][^⁀" .. acute .. "]*" .. grave_c .. "[^⁀" .. acute .. "]*⁀)",
 		"%1" .. CFLEX .. "%2")
 	-- Any nasal vowel with tertiary stress before secondary stress later in the same component takes does not lengthen
 	-- if component has no primary stress. See above change for [[Rendezvous]].
-	word = rsub_repeatedly(word, "(⁀[^⁀" .. ACUTE .. "]*" .. V .. ")" .. TILDE .. "(" .. DOUBLEGRAVE .. "[^⁀" .. ACUTE .. "]*" .. GRAVE .. "[^⁀" .. ACUTE .. "]*⁀)",
+	word = rsub_repeatedly(word, "(⁀[^⁀" .. acute .. "]*" .. V .. ")" .. TILDE .. "(" .. DOUBLEGRAVE .. "[^⁀" .. acute .. "]*" .. grave_c .. "[^⁀" .. acute .. "]*⁀)",
 		"%1" .. CFLEX .. TILDE .. "%2")
 	-- Remaining stressed vowel in open syllable lengthens.
 	word = rsub(word, "(" .. V_unmarked_for_quality .. ")(" .. stress_c .. "[.⁀‿])", "%1ː%2")
@@ -2109,6 +2113,18 @@ local function apply_phonemic_rules(word)
 	word = rsub(word, "(" .. V .. ")%*", "%1")
 
 
+	------------------------- Eliminate remaining geminate consonants  -------------------------
+
+	-- Eliminate remaining geminate consonants within a component (geminates can legitimately exist across a component
+	-- boundary). These have served their purpose of keeping the preceding vowel short. Normally such geminates will
+	-- always occur across a syllable boundary, but this may not be the case in the presence of user-specified syllable
+	-- boundaries. We need to do this prior to coda devoicing to avoid a word like [[Buddha]] ending up as /ˈbʊtda/.
+	local function eliminate_geminates(word)
+		return rsub_repeatedly(word, "(" .. C .. ")([.‿]*)%1", "%2%1")
+	end
+	word = eliminate_geminates(word)
+
+
 	------------------------- Devoice consonants coda-finally  -------------------------
 
 	-- 'ĭg' is pronounced [ɪç] word-finally or before an obstruent (not before an approximant as in [[ewiglich]] or
@@ -2129,15 +2145,8 @@ local function apply_phonemic_rules(word)
 		}
 		return init .. voiced_to_voiceless[voiced]
 	end)
-
-
-	------------------------- Eliminate remaining geminate consonants  -------------------------
-
-	-- Eliminate remaining geminate consonants within a component (geminates can legitimately exist across a component
-	-- boundary). These have served their purpose of keeping the preceding vowel short. Normally such geminates will
-	-- always occur across a syllable boundary, but this may not be the case in the presence of user-specified syllable
-	-- boundaries. We do this after coda devoicing so we eliminate the 'd' in words like [[verwandte]].
-	word = rsub_repeatedly(word, "(" .. C .. ")([.‿]*)%1", "%2%1")
+	-- Eliminate geminates again so we eliminate the 'd' in words like [[verwandte]].
+	word = eliminate_geminates(word)
 
 
 	------------------------- Add glottal stops  -------------------------
@@ -2201,11 +2210,11 @@ local function apply_phonemic_rules(word)
 
 	------------------------- Generate IPA stress marks  -------------------------
 
-	-- Remove primary stress from monosyllabic words. (FIXME: We only want to do that if the user didn't explicitly
-	-- add a stress mark.)
-	word = rsub(word, "^([^.]*)" .. ACUTE .. "([^.]*)$", "%1%2")
-	word = rsub(word, ACUTE, "ˈ")
-	word = rsub(word, GRAVE, "ˌ")
+	-- Remove primary stress from monosyllabic words, but only for autogenerated stress, not if the user explicitly
+	-- added a stress mark.
+	word = rsub(word, "^([^.]*)" .. AUTOACUTE .. "([^.]*)$", "%1%2")
+	word = rsub(word, acute_c, "ˈ")
+	word = rsub(word, grave_c, "ˌ")
 	word = rsub(word, DOUBLEGRAVE, "")
 	-- Move IPA stress marks to the beginning of the syllable.
 	word = rsub(word, "([.⁀‿])([^.⁀‿ˈˌ]*)([ˈˌ])", "%1%3%2")
@@ -2270,8 +2279,6 @@ local function generate_phonemic_word(word, is_cap)
 	-- FIXME: Handling of prefixes/suffixes is currently broken.
 	word = gsub(word, "^%-?(.-)%-?$", "%1")
 	word = split_word_on_components_and_apply_affixes(word, pos, affix_type)
-	word = rsub(word, AUTOACUTE, ACUTE)
-	word = rsub(word, AUTOGRAVE, GRAVE)
 	word = "⁀⁀" .. word .. "⁀⁀"
 	word = apply_phonemic_rules(word)
 	return word
