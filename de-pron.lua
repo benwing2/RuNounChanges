@@ -20,8 +20,8 @@ suffix, the prefix takes precedence and the suffix gets secondary stress, hence 
 "to try out".
 
 Use an acute accent on a vowel to override the position of primary stress (in a diphthong, put it over the first
-vowel): á é í ó ú ä́ ö́ ǘ ái éi áu ä́u éu. Examples: [[systemisch]] 'systémisch' /zʏsˈteːmɪʃ/ "systemic", [[Migräne]]
-'Migrä́ne' /miˈɡʁɛːnə/ "migraine". Use a grave accent to add secondary stress: à è ì ò ù ä̀ ö̀ ǜ ài èi àu ä̀u èu. Examples:
+vowel): á é í ó ú ä́ ö́ ǘ ái éi áu ä́u éu. Examples: [[systemisch]] 'systémisch' /zʏsˈteːmɪʃ/ "systemic", [[Migräne]]
+'Migrä́ne' /miˈɡʁɛːnə/ "migraine". Use a grave accent to add secondary stress: à è ì ò ù ä̀ ö̀ ǜ ài èi àu ä̀u èu. Examples:
 [[Prognose]] 'Prògnóse' /ˌpʁoˈɡnoːzə/ "forecast", [[Milligramm]] 'Milligràmm' /ˈmɪliˌɡʁam/ "milligram" (the primary
 stress takes its default position on the first syllable, as it is unmarked).
 
@@ -335,6 +335,11 @@ end
 -- AUTOACUTE, AUTOGRAVE, ORIG_SUFFIX_GRAVE: Described below.
 -- EXPLICIT_*: Described below.
 
+-- Used to temporarily substitute capital I and U when lowercasing in canonicalize_and_split_words(). It is OK if these
+-- overlap with other substitution symbols because their use is before any of the other symbols are used.
+local TEMP_I = u(0xFFF0)
+local TEMP_U = u(0xFFF1)
+
 -- When auto-generating primary and secondary stress accents, we use these special characters, and later convert to
 -- normal IPA accent marks, so we can distinguish auto-generated stress from user-specified stress.
 local AUTOACUTE = u(0xFFF0)
@@ -344,20 +349,17 @@ local AUTOGRAVE = u(0xFFF1)
 -- no preceding secondary stress, and the directly preceding syllable does not have primary stress), and otherwise
 -- removed.
 local ORIG_SUFFIX_GRAVE = u(0xFFF2)
-
--- Used to temporarily substitute capital I and U when lowercasing
-local TEMP_I = u(0xFFF0)
-local TEMP_U = u(0xFFF1)
+local SYLDIV = u(0xFFF3)
 
 -- When the user uses the "explicit allophone" notation such as [z] or [x] to force a particular allophone, we
 -- internally convert that notation into a single special character.
-local EXPLICIT_S = u(0xFFF3)
-local EXPLICIT_Z = u(0xFFF4)
-local EXPLICIT_V = u(0xFFF5)
-local EXPLICIT_B = u(0xFFF6)
-local EXPLICIT_D = u(0xFFF7)
-local EXPLICIT_G = u(0xFFF8)
-local EXPLICIT_X = u(0xFFF9)
+local EXPLICIT_S = u(0xFFF4)
+local EXPLICIT_Z = u(0xFFF5)
+local EXPLICIT_V = u(0xFFF6)
+local EXPLICIT_B = u(0xFFF7)
+local EXPLICIT_D = u(0xFFF8)
+local EXPLICIT_G = u(0xFFF9)
+local EXPLICIT_X = u(0xFFFA)
 
 -- Map "explicit allophone" notation into special char. See above.
 local char_to_explicit_char = {
@@ -456,7 +458,7 @@ local allowed_onsets = {
 -- handle occasional cases where more than one of a given type of prefix occurs (e.g. [[überzubeanspruchen]]).
 -- NOTE ABOUT STRESS: After un-, stressed prefixes lose their stress and the root takes secondary stress; cf.
 -- 'únausgegòren'. But otherwise if there are two stressed prefixes, the second one takes secondary stress and
--- the root loses the stress; cf. 'ǘberbeànspruchen', 'ǘberzubeànspruchen'.
+-- the root loses the stress; cf. 'ǘberbeànspruchen', 'ǘberzubeànspruchen'.
 local prefix_previous_allowed_states = {
 	-- un- can occur after unstressed prefixes; cf. [[verunglücken]], [[Verunreinigung]], [[verunstalten]],
 	-- [[beunruhigen]]
@@ -585,7 +587,7 @@ local prefixes = {
 	{"bei", "béi"},
 	-- Allow be- before -u- only in beur-, beun-; cf. [[beurlauben]], [[Beunruhigung]]. Must follow bei-.
 	{"be", "bə", restriction = {"^[^ui]", "^u[rn]"}},
-	{"dafür", "dafǘr", secstress = "dafǜr"},
+	{"dafür", "dafǘr", secstress = "dafǜr"},
 	{"dagegen", "dagégen", secstress = "dagègen"},
 	{"daher", "dahér", secstress = "dahèr"},
 	{"dahinter", "dahínter", secstress = "dahìnter"},
@@ -614,7 +616,7 @@ local prefixes = {
 	{"ent", "ent"},
 	{"er", "err"},
 	{"fort", "fórt"},
-	{"gegenüber", "gehgen<ǘber", secstress = "gegenǜber"},
+	{"gegenüber", "gehgen<ǘber", secstress = "gegenǜber"},
 	-- Most words in 'gei-' aren't past participles, cf. [[Geier]], [[Geifer]], [[geifern]], [[Geige]], [[geigen]],
 	-- [[Geiger]], [[geil]], [[geilo]], [[Geisel]], [[Geiser]], [[Geisha]], [[Geiß]], [[Geißel]], [[geißeln]],
 	-- [[Geist]], [[Geister]], [[geistig]], [[Geiz]], [[geizen]]. There are only a few, e.g. [[geimpft]], which need
@@ -629,7 +631,7 @@ local prefixes = {
 	{"herbei", "herbéi", secstress = "herbèi"},
 	{"herein", "herréin", secstress = "herèin"},
 	{"hernieder", "herníeder", secstress = "hernìeder"},
-	{"herüber", "herrǘber", secstress = "herǜber"},
+	{"herüber", "herrǘber", secstress = "herǜber"},
 	{"herum", "herrúmm", secstress = "herùm"},
 	{"herunter", "herrúnter", secstress = "herùnter"},
 	{"hervor", "herfór", secstress = "hervòr"},
@@ -655,7 +657,7 @@ local prefixes = {
 	{"hintan", "hint<ánn", secstress = "hintàn"},
 	{"hinterher", "hinter<hér", secstress = "hinterhèr"},
 	{"hinter", "hínter"},
-	{"hinüber", "hinnǘber", secstress = "hinǜber"},
+	{"hinüber", "hinnǘber", secstress = "hinǜber"},
 	{"hinunter", "hinnúnter", secstress = "hinùnter"},
 	{"hinweg", "hinwéck", secstress = "hinwèg"},
 	-- Must follow hinab-, hinan-, etc.
@@ -669,7 +671,7 @@ local prefixes = {
 	{"nieder", "níeder"},
 	{"übereinander", "ühber<einánder", secstress = "übereinànder"},
 	-- Must follow übereinander-.
-	{"über", "ǘber"},
+	{"über", "ǘber"},
 	-- Unstressed variant of über-. We include this for cases like [[zürucküberweisen]].
 	{"über", "ühber"},
 	-- umeinander- only dialectal (West Bavarian)
@@ -696,7 +698,7 @@ local prefixes = {
 	{"voraus", "foráus", secstress = "voràus"},
 	{"vorbei", "fohrbéi", secstress = "vorbèi"}, -- respell per dewikt pronun
 	{"vorher", "fohrhér", secstress = "vorhèr"}, -- respell per dewikt pronun
-	{"vorüber", "forǘber", secstress = "vorǜber"},
+	{"vorüber", "forǘber", secstress = "vorǜber"},
 	-- Must follow voran-, voraus-, etc.
 	{"vor", "fór"},
 	{"weg", "wéck"},
@@ -706,7 +708,7 @@ local prefixes = {
 	{"zer", "zerr"},
 	{"zueinander", "zu<einánder", secstress = "zueinànder"},
 	{"zurecht", "zurécht", secstress = "zurècht"},
-	{"zurück", "zurǘck", secstress = "zurǜck"},
+	{"zurück", "zurǘck", secstress = "zurǜck"},
 	{"zusammen", "zusámmen", secstress = "zusàmmen"},
 	-- Listed twice, first as stressed then as unstressed, because of zu-infinitives like [[anzufangen]]. At the
 	-- beginning of a word, stressed zú- will take precedence, but after another prefix, stressed prefixes can't occur,
@@ -871,7 +873,9 @@ local suffixes = {
 	{"barkeit", "bàhrkèit", pos = "n"},
 	{"schaftlichkeit", "schàft.lichkèit", pos = "n"},
 	{"lichkeit", "lichkèit", pos = "n"},
-	{"samkeit", {"sahmkèit", "samkèit"}, pos = "n"},
+	-- FIXME! Allow two replacement specs.
+	-- {"samkeit", {"sahmkèit", "samkèit"}, pos = "n"},
+	{"samkeit", "sahmkèit", pos = "n"},
 	{"keit", "kèit", pos = "n"},
 	-- See comment above about secondary stress.
 	{"lein", "lèin", pos = "n"},
@@ -892,7 +896,9 @@ local suffixes = {
 	{"ös", "ö́s", pos = "a"},
 	-- Two possible pronunciations (long and short). Occurs after a vowel in [[grausam]] (also false positives
 	-- [[Bisam]], [[Sesam]], which will be excluded as the pre-suffix part is too short).
-	{"sam", {"sahm", "sam"}, pos = "a"},
+	-- FIXME! Allow two replacement specs.
+	-- {"sam", {"sahm", "sam"}, pos = "a"},
+	{"sam", "sahm", pos = "a"},
 	-- FIXME: Is the secondary stress correct? It occurs in some words in enwikt with an intervening unstressed
 	-- syllable, as in [[Bauerschaft]], [[Leidenschaft]], [[Liegenschaft]], [[Mutterschaft]], [[Schwägerschaft]],
 	-- [[Täterschaft]], [[Wissenschafterin]], [[Wissenschaftlerin]], [[Witwenschaft]], [[Zeugenschaft]], but not
@@ -971,6 +977,7 @@ local function decompose(text)
 		["u" .. DIA] = "ü",
 		["U" .. DIA] = "Ü",
 	})
+	return text
 end
 
 -- Decompose the text, canonicalize in various ways, lowercase and split into words, returning each word along with
@@ -992,7 +999,7 @@ local function canonicalize_and_split_words(text)
 	-- Capital N after a vowel (including after vowel + accent marks + possibly an h) denotes nasalization.
 	text = rsub(text, "(" .. V .. accent_c .. "*)(h?)N", "%1" .. TILDE .. "%2")
 	-- The user can use respelling with macrons but internally we convert to the long mark ː.
-	text = rsub(MACRON, "ː")
+	text = rsub(text, MACRON, "ː")
 	-- Reorder so ACUTE/GRAVE/DOUBLEGRAVE go last.
 	text = reorder_accents(text)
 
@@ -1028,17 +1035,30 @@ local function canonicalize_and_split_words(text)
 end
 
 
+local function apply_single_rule(word, from, to, rept)
+	if rept then
+		word = rsub_repeatedly(word, from, to)
+	else
+		word = rsub(word, from, to)
+	end
+	return word
+end
+
+	
 local function apply_rules(word, rules)
 	for _, rule in ipairs(rules) do
 		if type(rule) == "function" then
 			word = rule(word)
 		else
 			local from, to, rept = unpack(rule)
-			if rept then
-				word = rsub_repeatedly(word, from, to)
-			else
-				word = rsub(word, from, to)
+			local success, new_word_or_errmsg = pcall(apply_single_rule, word, from, to, rept)
+			if not success then
+				local fromstr = type(from) == "string" and from or mw.dumpObject(from)
+				local tostr = type(to) == "string" and to or mw.dumpObject(to)
+				error(("Error applying rule to word '%s': from=%s, to=%s, rept=%s: %s"):format(
+					word, fromstr, tostr, rept and "true" or "false", new_word_or_errmsg))
 			end
+			word = new_word_or_errmsg
 		end
 	end
 	return word
@@ -1119,7 +1139,7 @@ local function meets_restriction(rest, restriction)
 			end
 		end
 	else
-		if rfind(rest, restrict) then
+		if rfind(rest, restriction) then
 			return true
 		end
 	end
@@ -1193,7 +1213,7 @@ local function split_word_on_components_and_apply_affixes(word, pos, affix_type,
 							if rest then
 								if not meets_restriction(rest, suffixspec.restriction) then
 									-- restriction not met, don't split here
-								if rfind(rest, "%+$") then
+								elseif rfind(rest, "%+$") then
 									-- explicit non-boundary here, so don't split here
 								elseif not rfind(rest, V) then
 									-- no vowels, don't split here
@@ -1223,7 +1243,7 @@ local function split_word_on_components_and_apply_affixes(word, pos, affix_type,
 	-- recursively process the parts, and combine. At depth 2 we do the actual work.
 	if depth == 0 or depth == 1 then
 		local parts = rsplit(word, depth == 0 and "%-%-" or "%-")
-		if len(parts) == 1 then
+		if #parts == 1 then
 			return split_word_on_components_and_apply_affixes(word, pos, affix_type, depth + 1, is_compound)
 		else
 			-- Figure out which components bear primary stress. We check for * or + before a component, which indicates
@@ -1308,7 +1328,7 @@ local function split_word_on_components_and_apply_affixes(word, pos, affix_type,
 	local saw_primary_un_stress = false
 	-- Have we seen a stressed prefix previously? If so, the main part gets secondary stress.
 	local saw_primary_prefix_stress = false
-	-- Have we seen two primary stressed prefixes, as in [[überbeanspruchen]] 'ǘberbeànspruchen'? If so, the main part
+	-- Have we seen two primary stressed prefixes, as in [[überbeanspruchen]] 'ǘberbeànspruchen'? If so, the main part
 	-- loses its stress.
 	local saw_double_primary_prefix_stress = false
 	-- Have we seen a primary-stressed suffix like -anz or -ieren? If so, the main part loses its stress.
@@ -1511,7 +1531,7 @@ local function split_word_on_components_and_apply_affixes(word, pos, affix_type,
 							-- Stressed prefix. If we've seen un- already, the prefix loses its stress (marked with
 							-- double grave to preserve length on the stressed syllable, in über-); cf. [[unausgegoren]]
 							-- 'únausgegòren'. Otherwise if we've seen a stressed prefix, the prefix gets secondary
-							-- stress, cf. [[überbeanspruchen]] 'ǘberbeànspruchen'. Otherwise it retains primary
+							-- stress, cf. [[überbeanspruchen]] 'ǘberbeànspruchen'. Otherwise it retains primary
 							-- stress.
 							if saw_primary_un_stress then
 								prefix_respell = gsub(prefix_respell, AUTOACUTE, DOUBLEGRAVE)
@@ -1818,7 +1838,7 @@ local phonemic_rules = {
 		-- 'eI' as in 'SpreI' for [[Spray]]; 'eU' not in French or English but kept for parallelism
 		-- 'oI' as in 'KauboI' for [[Cowboy]]; 'oU' as in 'HoUmpehdsch' for [[Homepage]]
 		local lower_eo = {["e"] = "ɛ", ["o"] = "ɔ"}
-		return lower_eo .. iu
+		return lower_eo[eo] .. iu
 	end},
 	{"e" .. TILDE, "ɛ" .. TILDE},
 	{"ö" .. TILDE, "œ" .. TILDE},
@@ -1980,11 +2000,11 @@ local phonemic_rules = {
 	{"(" .. V .. ")" .. TILDE .. "([" .. GRAVE .. DOUBLEGRAVE .. "][^⁀]*" .. ACUTE .. ")", "%1" .. CFLEX .. TILDE .. "%2", true},
 	-- Vowel with tertiary stress in open syllable before secondary stress later in the same component takes close
 	-- quality without lengthening if component has no primary stress.
-	{"⁀[^⁀" .. ACUTE .. "]*" .. V_unmarked_for_quality .. ")(" .. DOUBLEGRAVE .. "[.‿][^⁀" .. ACUTE .. "]*" .. GRAVE .. "[^⁀" .. ACUTE .. "]*⁀)",
+	{"(⁀[^⁀" .. ACUTE .. "]*" .. V_unmarked_for_quality .. ")(" .. DOUBLEGRAVE .. "[.‿][^⁀" .. ACUTE .. "]*" .. GRAVE .. "[^⁀" .. ACUTE .. "]*⁀)",
 		"%1" .. CFLEX .. "%2", true},
 	-- Any nasal vowel with tertiary stress before secondary stress later in the same component takes does not lengthen
 	-- if component has no primary stress. See above change for [[Rendezvous]].
-	{"⁀[^⁀" .. ACUTE .. "]*" .. V .. ")" .. TILDE .. "(" .. DOUBLEGRAVE .. "[^⁀" .. ACUTE .. "]*" .. GRAVE .. "[^⁀" .. ACUTE .. "]*⁀)",
+	{"(⁀[^⁀" .. ACUTE .. "]*" .. V .. ")" .. TILDE .. "(" .. DOUBLEGRAVE .. "[^⁀" .. ACUTE .. "]*" .. GRAVE .. "[^⁀" .. ACUTE .. "]*⁀)",
 		"%1" .. CFLEX .. TILDE .. "%2", true},
 	-- Remaining stressed vowel in open syllable lengthens.
 	{"(" .. V_unmarked_for_quality .. ")(" .. stress_c .. "[.⁀‿])", "%1ː%2"},
@@ -2030,7 +2050,7 @@ local phonemic_rules = {
 	-- 'ĭg' is pronounced [ɪç] word-finally or before an obstruent (not before an approximant as in [[ewiglich]] or
 	-- [[Königreich]] when divided as ''ewig.lich'', ''König.reich'').
 	{"ɪg⁀", "ɪç⁀"},
-	{"ɪg(%.?" .. C_not_approximant .. ")", "ɪç%1"},
+	{"ɪg(%.?" .. C_not_lr .. ")", "ɪç%1"},
 	-- Devoice consonants coda-finally. There may be more than one such consonant to devoice (cf. [[Magd]]), or the
 	-- consonant to devoice may be surrounded by non-voiced or non-devoicing consonants (cf. [[Herbst]]).
 	{"(" .. V .. accent_c .. "*" .. C .. "*)([bdgvzʒʤ])", function(init, voiced)
