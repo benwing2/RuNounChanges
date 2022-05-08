@@ -1,5 +1,5 @@
 local tests = require("Module:UnitTests")
-local m_de_pron = require("Module:de-pron")
+local m_de_pron = require("Module:User:Benwing2/de-pron")
 local m_links = require("Module:links")
 local m_table = require("Module:table")
 local lang = require("Module:languages").getByCode("de")
@@ -68,7 +68,7 @@ tschüss	tschüss	t͡ʃʏs
 Dschungel	Dschungel	ˈd͡ʒʊŋəl
 Buddha	Buddha	ˈbʊda
 Abu Dhabi	Abu Dhabi	ˈabu ˈdaːbi
-Sindhi	ˈzɪndi
+Sindhi	Sindhi	ˈzɪndi
 Adhäsion	Ad.häsion	athɛˈzi̯oːn
 Methode	Methóde	meˈtoːdə
 Abendroth	Ab+end-roth	ˈaːbəntˌʁoːt
@@ -119,7 +119,7 @@ Chefredakteur	Schef-redaktö́r	ˈʃeːfʁedakˌtøːʁ # usually in Austria
 Guillotine	Gi.otíne	ɡioˈtiːnə
 orange	orã́ʒ	oˈʁãːʃ # enwikt pron #1
 orange	orángʒ	oˈʁaŋʃ # enwikt pron #2
-orange	orṍʒ	oˈʁõːʃ # enwikt pron #3
+orange	orṍʒ	oˈʁõːʃ # enwikt pron #3
 orange	oróngʒ	oˈʁɔŋʃ # enwikt pron #4
 Orange	Orã́ʒe	oˈʁãːʒə # enwikt pron #1
 arrangieren	arrãʒieren	aʁãˈʒiːʁən
@@ -130,12 +130,12 @@ Branche	Brangsche	ˈbʁaŋʃə
 Champagner	Schampánjer	ʃamˈpanjɐ
 Parfum	Parfö́N	paʁˈfœ̃ː
 Nonchalance	Nõschalã́s	nõʃaˈlãːs
-Pompon	Põpṍ	põˈpõː
-Pompon	Pompṍ	pɔmˈpõ
-Saison	Sĕsṍ	zɛˈzõː
+Pompon	Põpṍ	põˈpõː
+Pompon	Pompṍ	pɔmˈpõ
+Saison	Sĕsṍ	zɛˈzõː
 Saison	Sĕsóng	zɛˈzɔŋ
-salonfähig	salṍ-fähig	zaˈlõːˌfɛːɪç
-Bain-Marie	Bẽmarie	bɛ̃maˈʁiː
+salonfähig	salṍ-fähig	zaˈlõːˌfɛːɪç
+Bain-Marie	Bẽmarie	bɛ̃maˈʁiː
 Bohemien	Boemiẽ́	boeˈmjɛ̃ː
 Bohemien	Bohemiẽ́	boheˈmjɛ̃ː
 Cousin	Kusẽ́	kuˈzɛ̃ː
@@ -194,7 +194,7 @@ Erbse	Erbse	ˈɛʁpsə
 obsen	obsen	ˈɔpsən
 adsorbieren	adsorbieren	atzɔʁˈbiːʁən
 Landser	Landser	ˈlant͡sɐ
-Trübsal	Trüb>sal
+Trübsal	Trüb-sal	ˈtʁyːpˌzaːl
 bugsieren	bugsieren	bʊˈksiːʁən
 pumperlgsund	pumperl-gsund	ˈpʊmpɐlˌksʊnt
 
@@ -249,7 +249,7 @@ Patholinguistik	Pàtholinguʔístik	ˌpatolɪŋɡuˈʔɪstɪk # dewikt pron #5
 
 ## other -u- in hiatus
 aktualisieren	àktu.alisieren	ˌaktualiˈziːʁən
-Asexualität	Ắsexualitä̀t	ˈazɛksu̯aliˌtɛːt
+Asexualität	Ắsexualitä̀t	ˈazɛksu̯aliˌtɛːt
 Asexualität	Ássexualitä̀t	ˈasɛksu̯aliˌtɛːt
 Botsuana	Botsuána	bɔˈt͡su̯aːna # enwikt
 Botsuana	Botsu.ána	bɔt͡suˈaːna # dewikt pron #1
@@ -786,7 +786,7 @@ danebenzubenehmen	danebenzubenehmen	daˈneːbənt͡subəˌneːmən
 darstellen	darstellen	ˈdaːʁˌʃtɛlən
 Darbietung	Darbietung	ˈdaːʁˌbiːtʊŋ
 darzutun	darzutun	ˈdaːʁt͡suˌtuːn
-darüber	darǘber	daˈʁyːbɐ
+darüber	darǘber	daˈʁyːbɐ
 
 ## davon-
 davonstehlen	davonstehlen	daˈfɔnˌʃteːlən
@@ -994,9 +994,9 @@ niederzuzerren	niederzuzerren	ˈniːdɐt͡suˌt͡sɛʁən
 
 ## über-
 überfahren	überfahren	ˈyːbɐˌfaːʁən
-überfahren	über<fahren	yːbɐˈfaːʁən # über- should be recognized, translated to ǘber- and then to ü̏ber- (i.e. with double grave), so that length is preserved.
+überfahren	über<fahren	yːbɐˈfaːʁən # über- should be recognized, translated to ǘber- and then to ü̏ber- (i.e. with double grave), so that length is preserved.
 überdimensionieren	überdimensionieren	ˈyːbɐdimɛnzi̯oˌniːʁən
-überholt	ǜberhol>t	ˌyːbɐˈhoːlt # über- should still be recognized with secondary stress on it.
+überholt	ǜberhol>t	ˌyːbɐˈhoːlt # über- should still be recognized with secondary stress on it.
 übereinstimmen	über<einstimmen	yːbɐˈʔaɪ̯nˌʃtɪmən
 überanstrengen	über<anstrengen	yːbɐˈʔanˌʃtʁɛŋən
 überbeanspruchen	überbeanspruchen	ˈyːbɐbəˌʔanʃpʁʊxən
@@ -1511,7 +1511,7 @@ Kügellein	Kügellein	ˈkyːɡəlˌlaɪ̯n
 Müllerlein	Müllerlein	ˈmʏlɐˌlaɪ̯n
 Osterkerzlein	Ohster-kerzlein	ˈoːstɐˌkɛʁt͡slaɪ̯n
 Privatsträßlein	Privát-sträßlein	priˈvaːtˌʃtʁɛːslaɪ̯n
-Wachsfigürlein	Wachs-figǘrlein	ˈvaksfiˌɡyːʁlaɪ̯n
+Wachsfigürlein	Wachs-figǘrlein	ˈvaksfiˌɡyːʁlaɪ̯n
 Walnussbäumlein	Walnuss-bäumlein	ˈvalnʊsˌbɔɪ̯mlaɪ̯n
 Walnussbäumlein	Wal-nuss--bäumlein	ˈvaːlnʊsˌbɔɪ̯mlaɪ̯n
 Weihnachtskerzlein	Weih-nachts--kerzlein	ˈvaɪ̯naxt͡sˌkɛʁt͡slaɪ̯n
@@ -1631,7 +1631,7 @@ local function parse(examples)
 			line_no_comment = line_no_comment or line
 			local parts = rsplit(line_no_comment, "\t")
 			if #parts ~= 3 then
-				err("Expected 3 in example (not including any comment)")
+				err("Expected 3 tab-separated components in example (not including any comment)")
 			end
 			table.insert(parts, comment)
 			table.insert(parsed_examples, parts)
