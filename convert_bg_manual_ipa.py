@@ -461,7 +461,7 @@ def process_text_on_page(index, pagetitle, text):
           respellings.append(new_respelling)
           endschwa_note = " with endschwa=1" if endschwa else ""
           pagemsg("Converting IPA %s to respelling %s%s" % (ipa, respelling, endschwa_note))
-          this_notes.append("convert IPA %s to respelling %s%s" % (ipa, respelling, endschwa_note))
+          this_notes.append("convert Bulgarian manual IPA %s to respelling %s%s" % (ipa, respelling, endschwa_note))
       if must_continue:
         continue
       if len(respellings) == 1:
