@@ -991,7 +991,7 @@ local function reveal_unicode(text)
 			table.insert(parts, u(codepoint))
 		end
 	end
-	
+
 	return table.concat(parts)
 end
 
@@ -1737,7 +1737,7 @@ local function apply_phonemic_rules(word)
 		-- Don't display line number of dbg() call itself, but of caller.
 		error(reveal_unicode(word), 2)
 	end
-		
+
 	------------------------- Misc early conversions -------------------------
 
 	word = rsub(word, "ǝ", "ə") -- "Wrong" schwa (U+01DD) to correct schwa (U+0259)
@@ -2074,8 +2074,11 @@ local function apply_phonemic_rules(word)
 	-- Implement (7a) above.
 
 	word = rsub_repeatedly(word, "(" .. V .. "[^⁀‿]*)e(%.r[^⁀‿]*" .. stress_c .. ")", "%1ə%2")
-	-- Implement (7b) above. We exclude 'e' from the 'rest' portion below so we work right-to-left and correctly
-	-- convert 'e' to schwa in cases like [[Indexen]].
+	-- Implement (7b) above.
+	-- First, make sure we don't convert any 'e' to schwa that is followed by an accent or length mark.
+	word = rsub(word, "e(" .. accent_c .. ")", "E%1")
+	-- Now convert 'e' to schwa when followed by the right clusters. Exclude 'e' from the capture directly following
+	-- the 'e' that will be converted, so we work right-to-left and handle cases like [[Indexen]].
 	word = rsub_repeatedly(word, "e([^⁀" .. stress .. "e]*⁀)", function(rest)
 		local rest_no_syldiv = gsub(rest, "%.", "")
 		local cl = rmatch(rest_no_syldiv, "^(" .. C .. "*)")
@@ -2086,6 +2089,8 @@ local function apply_phonemic_rules(word)
 			return "e" .. rest
 		end
 	end)
+	-- Now put back the 'e' that we protected from being converted.
+	word = rsub(word, "E", "e")
 
 
 	------------------------- Mark some vowels as short -------------------------
@@ -2245,7 +2250,7 @@ local function apply_phonemic_rules(word)
 	-- dialectal spellings like 'gsund' for [[gesund]]; but to handle this properly we need additional rules to
 	-- devoice the 'g' in such circumstances.
 
-	
+
 	------------------------- Misc late symbol conversions  -------------------------
 
 	-- -s- frequently occurs as a component by itself (really an interfix), e.g. in [[Wirtschaftswissenschaft]]
@@ -2253,7 +2258,7 @@ local function apply_phonemic_rules(word)
 	-- Once we remove ⁀ and ‿ before non-syllabic components and suffixes, we get lots of 'ts' that should be rendered
 	-- as t͡s. Handle this now. This should also apply in 'd-s-' e.g. [[Abschiedsbrief]] respelled 'Abschied-s-brief'
 	-- /ˈapʃiːt͡sˌbʁiːf/, as coda 'd' gets devoiced to /t/ above.
-	word = rsub(word, "ts", "ʦ")
+	word = rsub(word, "t(%.?)s", "%1ʦ")
 
 	-- Misc symbol conversions.
 	word = rsub(word, ".", {
@@ -2266,7 +2271,7 @@ local function apply_phonemic_rules(word)
 		["r"] = "ʁ",
 		["ß"] = "s",
 	})
-	word = rsub(word, "pf", "p͡f")
+	word = rsub(word, "p(%.?)f", "%1p͡f")
 
 
 	------------------------- Convert ORIG_SUFFIX_GRAVE to either GRAVE or nothing -------------------------
