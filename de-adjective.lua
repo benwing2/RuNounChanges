@@ -404,7 +404,7 @@ local function detect_indicator_spec(alternant_multiword_spec, base)
 			if not rfind(form, "er$") then
 				error("Don't know how to derive superlative from comparative '" .. form .. "' because it doesn't end in -er; specify the superlative explicitly using sup:...")
 			end
-			local retval = generate_default_sup_list(base, rsub(form, "er$", ""))
+			local retval = generate_default_sup(base, rsub(form, "er$", ""))
 			if type(retval) ~= "table" then
 				retval = {retval}
 			end
@@ -440,7 +440,7 @@ local function detect_indicator_spec(alternant_multiword_spec, base)
 		desc = desc or prop
 		local val = not not base.props[prop]
 		if alternant_multiword_spec.props[prop] == nil then
-			alternant_multiword_spec.prop[prop] = val
+			alternant_multiword_spec.props[prop] = val
 		elseif alternant_multiword_spec.props[prop] ~= val then
 			error("If one alternant specifies '" .. desc .. "', all must")
 		end
@@ -722,7 +722,7 @@ local function make_table(alternant_multiword_spec)
 
 	-- Maybe format the superlative table.
 	local superlative_table = ""
-	if alternant_multiword_spec.props.has_comp then
+	if alternant_multiword_spec.props.has_sup then
 		local superlative_table_spec = rsub(table_spec, "COMPSUP", "sup_")
 		forms.title = "Superlative forms of " .. ital_lemma
 		forms.footnote = alternant_multiword_spec.footnote_superlative
@@ -749,6 +749,7 @@ function export.do_generate_forms(parent_args, pos, from_headword, def)
 		params["id"] = {}
 		params["sort"] = {}
 		params["splithyph"] = {type = "boolean"}
+		params["nolinkhead"] = {type = "boolean"}
 		params["new"] = {type = "boolean"}
 	end
 
@@ -794,7 +795,7 @@ function export.do_generate_forms(parent_args, pos, from_headword, def)
 	}
 	local alternant_multiword_spec = iut.parse_inflected_text(arg1, parse_props)
 	alternant_multiword_spec.pos = pos or "adjectives"
-    alternant_multiword_spec.args = args
+	alternant_multiword_spec.args = args
 	alternant_multiword_spec.forms = {}
 	alternant_multiword_spec.props = {}
 	detect_all_indicator_specs(alternant_multiword_spec)
