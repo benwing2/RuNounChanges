@@ -1,4 +1,5 @@
 ABC: send to RFV
+comparative/superative abgeriebener, abgeriebenst and forms
 abstinenter, abstinentst/abstinentest and forms
 ambivalentst and forms
 angehimmeltest and forms
@@ -11,6 +12,7 @@ forms of außer Betrieb-
 beängstigendest and forms
 beschränktst and forms
 Bio: move adjective to [[bio]]: {{short for|de|biologisch}} (indecl adj); possible synonym öko
+bleibbar: send to RFV
 desiderabeler, desiderabelest and forms
 dickköpfiger - check if comparative
 dickköpfigst - check if superlative
