@@ -590,7 +590,9 @@ local function make_table(alternant_multiword_spec)
 
 	local forms = alternant_multiword_spec.forms
 
-	local table_spec = [=[
+	local table_spec = (not alternant_multiword_spec.args.truncate and
+-- Normal (non-truncated) table
+[=[
 <div class="NavFrame">
 <div class="NavHead" style="text-align: left">{title}{annotation}</div>
 <div class="NavContent">
@@ -687,6 +689,61 @@ local function make_table(alternant_multiword_spec)
 | {COMPSUPmix_acc_p}
 |{\cl}{notes_clause}</div></div>]=]
 
+or
+
+-- Truncated table, for the documentation page where otherwise we'd hit the template expand limit
+[=[
+<div class="NavFrame">
+<div class="NavHead" style="text-align: left">{title}{annotation}</div>
+<div class="NavContent">
+{\op}| border="1px solid #cdcdcd" style="border-collapse:collapse; background:#FEFEFE; width:100%" class="inflection-table"
+|-
+! colspan="2" rowspan="2" style="background:#C0C0C0" | number & gender
+! colspan="3" style="background:#C0C0C0" | singular
+! style="background:#C0C0C0" | plural
+|-
+! style="background:#C0C0C0" | masculine
+! style="background:#C0C0C0" | feminine
+! style="background:#C0C0C0" | neuter
+! style="background:#C0C0C0" | all genders
+|-
+! colspan="2" style="background:#EEEEB0" | predicative
+| {COMPSUPpred_m}
+| {COMPSUPpred_f}
+| {COMPSUPpred_n}
+| {COMPSUPpred_p}
+|-
+! rowspan="2" style="background:#c0cfe4" | strong declension <br/> (without article)
+! style="background:#c0cfe4" | nominative
+| {COMPSUPstr_nom_m}
+| {COMPSUPstr_nom_f}
+| {COMPSUPstr_nom_n}
+| {COMPSUPstr_nom_p}
+|-
+! style="background:#c0cfe4" | ...
+| colspan="4" | ...
+|-
+! rowspan="2" style="background:#c0e4c0" | weak declension <br/> (with definite article)
+! style="background:#c0e4c0" | nominative
+| {COMPSUPwk_nom_m}
+| {COMPSUPwk_nom_f}
+| {COMPSUPwk_nom_n}
+| {COMPSUPwk_nom_p}
+|-
+! style="background:#c0cfe4" | ...
+| colspan="4" | ...
+|-
+! rowspan="2" style="background:#e4d4c0" | mixed declension <br/> (with indefinite article)
+! style="background:#e4d4c0" | nominative
+| {COMPSUPmix_nom_m}
+| {COMPSUPmix_nom_f}
+| {COMPSUPmix_nom_n}
+| {COMPSUPmix_nom_p}
+|-
+! style="background:#c0cfe4" | ...
+| colspan="4" | ...
+|{\cl}{notes_clause}</div></div>]=])
+
 	local notes_template = [===[
 <div style="width:100%;text-align:left;background:#d9ebff">
 <div style="display:inline-block;text-align:left;padding-left:1em;padding-right:1em">
@@ -743,6 +800,9 @@ function export.do_generate_forms(parent_args, pos, from_headword, def)
 	local params = {
 		[1] = {},
 		pagename = {},
+		-- If truncate=1 is specified, truncate the tables to reduce the template expansion size,
+		-- for use on documentation and test pages.
+		truncate = {type = "boolean"},
 	}
 	if from_headword or pretend_from_headword then
 		params["head"] = {list = true}
