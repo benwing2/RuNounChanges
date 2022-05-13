@@ -933,11 +933,11 @@ def process_text_on_page(index, pagetitle, text):
             newpos = "past participle"
           headword_line_2 = "{{head|de|%s}}" % newpos
           
-          newsubsecheader = newsubsecheader.replace("Participle", "Verb")
+          newsubsecheader = re.sub("(Verb|Noun)", "Participle", newsubsecheader)
           newsubseck_lines = (
-            [headword_line_1] + lines_for_verb_form_of
-            + ["", re.sub("(Verb|Noun)", "Participle", newsubsecheader).rstrip("\n"), headword_line_2, ""]
-            + lines_for_part
+            [headword_line_2, ""] + lines_for_part
+            + ["", newsubsecheader.replace("Participle", "Verb").rstrip("\n"), headword_line_1]
+            + lines_for_verb_form_of
           )
           newsubseck = "\n".join(newsubseck_lines) + "\n\n"
           this_sec_notes.append("split verb form and past participle into two subsections")
