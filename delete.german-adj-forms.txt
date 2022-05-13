@@ -1,3 +1,23 @@
+# ABC: send to RFV
+# Bio: move adjective to [[bio]]: {{short for|de|biologisch}} (indecl adj); possible synonym öko
+# bleibbar: send to RFV
+# erstbester: move to erstbeste
+# geilo: pred or indecl?
+# check lemma listed for forms of anhäufend, häufend
+# KBC: send to RFV
+# kreuzigbar, kreuzigbarer, kreuzigbarst and forms: send to RFV
+# Kreuzigbarkeit: send to RFV
+# reiss: send to RFV
+# Schiff-Luft: send to RFD
+# überdünischer: send to RFV
+# vorder: RFD ?
+# verbrüderbar: send to RFV
+# Woronesch'sch: send to RFV
+
+
+
+
+
 ABC: send to RFV
 comparative/superative abgeriebener, abgeriebenst and forms
 abstinenter, abstinentst/abstinentest and forms
