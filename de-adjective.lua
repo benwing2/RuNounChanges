@@ -85,6 +85,8 @@ for _, comp in ipairs(comps) do
 				local slot = compsup .. state .. "_" .. case .. "_" .. gender
 				local accel_gender = gender == "p" and "p" or gender .. "|s"
 				local accel = state .. "|" .. case .. "|" .. accel_gender .. (comp and "|" .. comp or "")
+				-- FIXME! Disable acceleration for now; reenable when we've implemented {{de-adj form of}} for inflections
+				accel = "-"
 				table.insert(slot_list, {slot, accel})
 			end
 		end
@@ -99,8 +101,10 @@ local adjective_slot_set = {}
 local all_adjective_slot_list = {}
 local function add_slots(slot_list)
 	for _, slot_accel in ipairs(slot_list) do
-		table.insert(all_adjective_slot_list, slot_accel)
 		local slot, accel = unpack(slot_accel)
+		-- FIXME! Disable acceleration for now; reenable when we've implemented {{de-adj form of}} for inflections
+		accel = "-"
+		table.insert(all_adjective_slot_list, {slot, accel})
 		if slot ~= "the_lemma" then
 			adjective_slot_set[slot] = true
 		end
@@ -730,7 +734,7 @@ or
 | {COMPSUPwk_nom_n}
 | {COMPSUPwk_nom_p}
 |-
-! style="background:#c0cfe4" | ...
+! style="background:#c0e4c0" | ...
 | colspan="4" | ...
 |-
 ! rowspan="2" style="background:#e4d4c0" | mixed declension <br/> (with indefinite article)
@@ -740,7 +744,7 @@ or
 | {COMPSUPmix_nom_n}
 | {COMPSUPmix_nom_p}
 |-
-! style="background:#c0cfe4" | ...
+! style="background:#e4d4c0" | ...
 | colspan="4" | ...
 |{\cl}{notes_clause}</div></div>]=])
 
