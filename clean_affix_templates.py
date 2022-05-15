@@ -9,15 +9,9 @@ from blib import getparam, rmparam, msg, site, tname
 prefix_templates = ["pre", "prefix"]
 suffix_templates = ["suf", "suffix"]
 confix_templates = ["con", "confix"]
+compound_templates = ["com", "compound"]
 
-abbreviated_templates_to_convert = ["pre", "suf", "con"]
-full_templates_to_convert = ["prefix", "suffix", "confix"]
-
-templates_to_move_lang = prefix_templates + suffix_templates + confix_templates + [
-  "circumfix",
-  "infix",
-  "com", "compound"
-]
+templates_to_convert = prefix_templates + suffix_templates + confix_templates + compound_templates + ["affix"]
 
 hyphens = {
   "ar": u"ـ",
@@ -26,37 +20,18 @@ hyphens = {
   "yi": u"־",
 }
 
-def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
+def process_text_on_page(index, pagetitle, text):
+  global args
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
-  pagemsg("Processing")
   notes = []
+
+  parsed = blib.parse_text(text)
 
   for t in parsed.filter_templates():
     origt = unicode(t)
     tn = tname(t)
-    if tn in templates_to_move_lang:
-      lang = getparam(t, "lang")
-      if lang:
-        # Fetch all params.
-        params = []
-        for param in t.params:
-          pname = unicode(param.name)
-          if pname.strip() != "lang":
-            params.append((pname, param.value, param.showkey))
-        # Erase all params.
-        del t.params[:]
-        t.add("1", lang)
-        # Put remaining parameters in order.
-        for name, value, showkey in params:
-          if re.search("^[0-9]+$", name):
-            t.add(str(int(name) + 1), value, showkey=showkey, preserve_spacing=False)
-          else:
-            t.add(name, value, showkey=showkey, preserve_spacing=False)
-        notes.append("move lang= to 1= in {{%s}}" % tn)
-
     lang = getparam(t, "1")
     sc = getparam(t, "sc")
 
@@ -94,12 +69,16 @@ def process_page(page, index, parsed):
       make_prefix_1("tr%s" % (paramno - 1), "-")
       make_prefix_1("ts%s" % (paramno - 1), "-")
 
-    def make_non_affix(paramno):
+    def make_non_affix(paramno, circumflex_if_empty=True):
       hyph = get_hyphen(paramno)
       val = getparam(t, str(paramno))
-      if not val or val.startswith(hyph) or val.startswith("*" + hyph) or val.endswith(hyph):
+      if (circumflex_if_empty and not val) or val.startswith(hyph) or val.startswith("*" + hyph) or val.endswith(hyph):
         val = "^" + val
         t.add(str(paramno), val)
+
+    if tn in compound_templates:
+      for i in range(2, 31):
+        make_non_affix(i, circumflex_if_empty=False)
 
     if tn in suffix_templates:
       make_non_affix(2)
@@ -129,23 +108,19 @@ def process_page(page, index, parsed):
       else:
         make_suffix(3)
 
-    if tn in abbreviated_templates_to_convert:
+    if tn in templates_to_convert:
+      # Formerly we converted full templates to {{affix}} and abbreviated templates to {{af}}.
       blib.set_template_name(t, "af")
       notes.append("convert {{%s}} to {{af}}" % tn)
-    elif tn in full_templates_to_convert:
-      blib.set_template_name(t, "affix")
-      notes.append("convert {{%s}} to {{affix}}" % tn)
 
     if unicode(t) != origt:
-      pagemsg("Replaced <%s> with <%s>" % (origt, unicode(t)))
+      pagemsg("Replaced %s with %s" % (origt, unicode(t)))
 
   return unicode(parsed), notes
 
-parser = blib.create_argparser("Clean up *fix-related templates, moving lang= to 1= and renaming some to use {{affix}}")
+parser = blib.create_argparser("Convert *fix templates to {{af}}", include_pagefile=True, include_stdin=True)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-for template in templates_to_move_lang:
-  msg("Processing references to Template:%s" % template)
-  for i, page in blib.references("Template:%s" % template, start, end):
-    blib.do_edit(page, i, process_page, save=args.save, verbose=args.verbose)
+blib.do_pagefile_cats_refs(args, start, end, process_text_on_page, edit=True, stdin=True,
+  default_refs = ["Template:%s" % template for template in templates_to_convert])
