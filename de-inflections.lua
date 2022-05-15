@@ -83,34 +83,18 @@ for _, key in ipairs(adjective_ending_keys) do
 end
 
 
-function export.show_adj_form(frame)
-	local params = {
-		[1] = {required = true, default = "flott"},
-		[2] = {},
-		["sort"] = {},
-	}
-
-	local parargs = frame:getParent().args
-	local args = require("Module:parameters").process(parargs, params)
-
-	local lemma = args[1]
-	local ending = args[2]
-
-	if PAGENAME == "de-adj form of" and not ending then
-		ending = "esten"
-	end
+function export.determine_adj_ending(lemma, form)
+	local ending
 
 	local function try(modlemma)
 		-- Need to escape regex chars in lemma, esp. hyphen
-		local potential_ending = rmatch(PAGENAME, "^" .. rsub(modlemma, "([^A-Za-z0-9 ])", "%%%1") .. "(.*)$")
+		local potential_ending = rmatch(form, "^" .. rsub(modlemma, "([^A-Za-z0-9 ])", "%%%1") .. "(.*)$")
 		if potential_ending and adjective_ending_tags[potential_ending] then
 			ending = potential_ending
 		end
 	end
 
-	if not ending then
-		try(lemma)
-	end
+	try(lemma)
 	if not ending and lemma:find("e[mnlr]$") then
 		-- simpel -> simplen
 		try(lemma:gsub("e([mnlr])$", "%1"))
@@ -134,8 +118,36 @@ function export.show_adj_form(frame)
 			try(init .. umlauts[vowel] .. final_cons)
 		end
 	end
+
+	return ending
+end
+
+
+function export.show_adj_form(frame)
+	local params = {
+		[1] = {required = true, default = "flott"},
+		[2] = {},
+		["pagename"] = {},
+		["sort"] = {},
+	}
+
+	local parargs = frame:getParent().args
+	local args = require("Module:parameters").process(parargs, params)
+
+	local lemma = args[1]
+	local ending = args[2]
+
+	local pagename = args.pagename or PAGENAME
+	if pagename == "de-adj form of" and not ending then
+		ending = "esten"
+	end
+
 	if not ending then
-		error("Unable to find adjective ending from page name '" .. PAGENAME .. "' based on lemma '" .. lemma .. "'")
+		ending = export.determine_adj_ending(lemma, pagename)
+	end
+
+	if not ending then
+		error("Unable to find adjective ending from page name '" .. pagename .. "' based on lemma '" .. lemma .. "'")
 	end
 
 	local tags = adjective_ending_tags[ending]
@@ -157,10 +169,11 @@ function export.show_adj_form(frame)
 end
 
 
-function export.show_adj_noun_form(frame)
+function export.show_adj_noun_forms(frame)
 	local params = {
 		[1] = {required = true, default = "mfn"},
 		["etymno"] = {type = "number"},
+		["etym"] = {alias_of = "etymno", type = "number"},
 		["level"] = {type = "number"},
 		["pagename"] = {},
 		["sort"] = {},
@@ -173,10 +186,10 @@ function export.show_adj_noun_form(frame)
 	if args.etymno and args.level then
 		error("Specify only one of etymno= or level=")
 	end
-	if args.etymno and arg.etymno < 1 then
+	if args.etymno and args.etymno < 1 then
 		error("etymno=" .. args.etymno .. ", but should be >= 1")
 	end
-	if args.level and arg.level < 3 then
+	if args.level and args.level < 3 then
 		error("level=" .. args.level .. ", but should be >= 3")
 	end
 	local level = args.level or args.etymno and 4 or 3
@@ -190,8 +203,15 @@ function export.show_adj_noun_form(frame)
 		end
 	end
 
-	-- Get the stem and ending.
-	local pagename = args.pagename or PAGENAME
+	-- Get the pagename, stem and ending.
+	local args_pagename
+	if PAGENAME == "de-adj noun forms of" and not args.pagename then
+		args_pagename = "Guten"
+	else
+		args_pagename = args.pagename
+	end
+	local pagename = args_pagename or PAGENAME
+
 	local stem, ending = rmatch(pagename, "^(.*)(e[mnrs]?)$")
 	if not stem then
 		error("Pagename '" .. pagename .. "' should end with -e, -em, -en, -er or -es; use pagename= for testing purposes")
@@ -220,6 +240,7 @@ function export.show_adj_noun_form(frame)
 		if not tags then
 			error("Unrecognized ending '" .. ending .. "' for gender '" .. gender .. "'")
 		end
+		tags = table.concat(tags, "|;|")
 		local lemma = stem .. lemma_ending
 
 		local function add(text)
@@ -232,8 +253,10 @@ function export.show_adj_noun_form(frame)
 		if args.etymno then
 			add(("===Etymology %s===\n{{nonlemma}}\n\n"):format(args.etymno + i - 1))
 		end
-		add("=":rep(level) .. "Noun" .. "=":rep(level) .. "\n")
-		add(("{{head|de|noun form|g=%s}}\n\n"):format(gender))
+		local indent = ("="):rep(level)
+		add(("%sNoun%s\n"):format(indent, indent))
+		local explicit_head = args_pagename and "|head=" .. args_pagename or ""
+		add(("{{head|de|noun form%s|g=%s}}\n\n"):format(explicit_head, gender))
 		add(("# {{inflection of|de|%s||%s}}"):format(lemma, tags))
 	end
 

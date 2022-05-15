@@ -60,6 +60,28 @@ local function link_term(term, face)
 end
 
 
+local endings = {
+	["str"] = {
+		["m"] = {"er", "en", "em", "en"},
+		["f"] = {"e", "er", "er", "e"},
+		["n"] = {"es", "en", "em", "es"},
+		["p"] = {"e", "er", "en", "e"},
+	},
+	["wk"] = {
+		["m"] = {"e", "en", "en", "en"},
+		["f"] = {"e", "en", "en", "e"},
+		["n"] = {"e", "en", "en", "e"},
+		["p"] = {"en", "en", "en", "en"},
+	},
+	["mix"] = {
+		["m"] = {"er", "en", "en", "en"},
+		["f"] = {"e", "en", "en", "e"},
+		["n"] = {"es", "en", "en", "es"},
+		["p"] = {"en", "en", "en", "en"},
+	},
+}
+
+
 local cases = { "nom", "gen", "dat", "acc" }
 local genders = { "m", "f", "n", "p" }
 local states = { "str", "wk", "mix" }
@@ -80,13 +102,12 @@ for _, comp in ipairs(comps) do
 		adjective_slot_list_superlative
 	local compsup = comp ~= "" and comp .. "_" or ""
 	for _, state in ipairs(states) do
-		for _, case in ipairs(cases) do
-			for _, gender in ipairs(genders) do
+		for _, gender in ipairs(genders) do
+			local case_endings = endings[state][gender]
+			for i, case in ipairs(cases) do
 				local slot = compsup .. state .. "_" .. case .. "_" .. gender
-				local accel_gender = gender == "p" and "p" or gender .. "|s"
-				local accel = state .. "|" .. case .. "|" .. accel_gender .. (comp and "|" .. comp or "")
-				-- FIXME! Disable acceleration for now; reenable when we've implemented {{de-adj form of}} for inflections
-				accel = "-"
+				local comp_ending = comp == "comp" and "er" or comp == "sup" and "st" or ""
+				local accel = "adj-form-" .. comp_ending .. case_endings[i]
 				table.insert(slot_list, {slot, accel})
 			end
 		end
@@ -101,10 +122,8 @@ local adjective_slot_set = {}
 local all_adjective_slot_list = {}
 local function add_slots(slot_list)
 	for _, slot_accel in ipairs(slot_list) do
+		table.insert(all_adjective_slot_list, slot_accel)
 		local slot, accel = unpack(slot_accel)
-		-- FIXME! Disable acceleration for now; reenable when we've implemented {{de-adj form of}} for inflections
-		accel = "-"
-		table.insert(all_adjective_slot_list, {slot, accel})
 		if slot ~= "the_lemma" then
 			adjective_slot_set[slot] = true
 		end
@@ -135,34 +154,14 @@ local function add(base, slot, stem, ending, footnotes)
 end
 
 
-local function add_cases(base, stem, prefix, gender, nom, gen, dat, acc, footnotes)
-	add(base, prefix .. "_nom_" .. gender, stem, nom, footnotes)
-	add(base, prefix .. "_gen_" .. gender, stem, gen, footnotes)
-	add(base, prefix .. "_dat_" .. gender, stem, dat, footnotes)
-	add(base, prefix .. "_acc_" .. gender, stem, acc, footnotes)
-end
-
-
-local function decline_plural(base, stem, compsup)
-	add_cases(base, stem, compsup .. "str", "p", "e", "er", "en", "e")
-	add_cases(base, stem, compsup .. "wk", "p", "en", "en", "en", "en")
-	add_cases(base, stem, compsup .. "mix", "p", "en", "en", "en", "en")
-end
-
-
-local function decline_singular(base, stem, compsup)
-	add_cases(base, stem, compsup .. "str", "m", "er", "en", "em", "en")
-	add_cases(base, stem, compsup .. "str", "f", "e", "er", "er", "e")
-	add_cases(base, stem, compsup .. "str", "n", "es", "en", "em", "es")
-
-	add_cases(base, stem, compsup .. "wk", "m", "e", "en", "en", "en")
-	add_cases(base, stem, compsup .. "wk", "f", "e", "en", "en", "e")
-	add_cases(base, stem, compsup .. "wk", "n", "e", "en", "en", "e")
-
-	if not base.props.nomixed then
-		add_cases(base, stem, compsup .. "mix", "m", "er", "en", "en", "en")
-		add_cases(base, stem, compsup .. "mix", "f", "e", "en", "en", "e")
-		add_cases(base, stem, compsup .. "mix", "n", "es", "en", "en", "es")
+local function decline(base, stem, compsup)
+	for _, state in ipairs(states) do
+		local prefix = compsup .. state .. "_"
+		for _, gender in ipairs(genders) do
+			for i, case in ipairs(cases) do
+				add(base, prefix .. case .. "_" .. gender, stem, endings[state][gender][i])
+			end
+		end
 	end
 end
 
@@ -212,9 +211,21 @@ local function parse_indicator_spec(angle_bracket_spec, lemma, pagename)
 				end
 				dot_separated_group[1] = rest
 				base[spectype] = com.fetch_specs(iut, dot_separated_group, ":", spectype, nil, parse_err)
+			elseif rfind(part, "^state:") then
+				if #dot_separated_group > 1 then
+					parse_err("Can't specify footnotes with 'state': '" .. table.concat(dot_separated_group) .. "'")
+				end
+				if base.state then
+					parse_err("Can't specify value for 'state:' twice")
+				end
+				local state = rsub(part, "state:", "")
+				if not m_table.contains(states, state) then
+					parse_err("Unrecognized state '" .. state .. "', should be one of " .. table.concat(states, "/"))
+				end
+				base.state = state
 			elseif rfind(part, "^suppress:") then
 				if #dot_separated_group > 1 then
-					parse_err("Can't specify footnotes with suppress: '" .. table.concat(dot_separated_group) .. "'")
+					parse_err("Can't specify footnotes with 'suppress': '" .. table.concat(dot_separated_group) .. "'")
 				end
 				if base.suppress then
 					parse_err("Can't specify value for 'suppress:' twice")
@@ -243,7 +254,7 @@ local function parse_indicator_spec(angle_bracket_spec, lemma, pagename)
 				base.footnotes = com.fetch_footnotes(dot_separated_group, parse_err)
 			elseif #dot_separated_group > 1 then
 				parse_err("Footnotes only allowed with slot overrides, comp:, sup:, stem: or by themselves: '" .. table.concat(dot_separated_group) .. "'")
-			elseif part == "ss" or part == "indecl" or part == "predonly" or part == "nomixed" or
+			elseif part == "ss" or part == "indecl" or part == "predonly" or
 				part == "sync_n" or part == "sync_mn" or part == "sync_mns" then
 				if base.props[part] then
 					parse_err("Can't specify '" .. part .. "' twice")
@@ -438,8 +449,16 @@ local function detect_indicator_spec(alternant_multiword_spec, base)
 		error("Can't be both 'predonly' and 'pred:-'")
 	end
 
+	-- Make sure all alternants agree in 'state' if specified.
+	local stateval = base.state or false
+	if alternant_multiword_spec.state == nil then
+		alternant_multiword_spec.state = stateval
+	elseif alternant_multiword_spec.state ~= stateval then
+		error("All alternants must agree in the value of 'state', if specified")
+	end
+
 	-- Make sure all alternants agree in various properties.
-	for _, propdesc in ipairs { {"indecl"}, {"nopred", "pred:-"}, {"predonly"}, {"nomixed"} } do
+	for _, propdesc in ipairs { {"indecl"}, {"nopred", "pred:-"}, {"predonly"} } do
 		local prop, desc = unpack(propdesc)
 		desc = desc or prop
 		local val = not not base.props[prop]
@@ -469,15 +488,12 @@ end
 
 
 local function decline_adjective(base)
-	decline_singular(base, base.stems.stem, "")
-	decline_plural(base, base.stems.stem, "")
+	decline(base, base.stems.stem, "")
 	if base.stems.comp then
-		decline_singular(base, base.stems.comp, "comp_")
-		decline_plural(base, base.stems.comp, "comp_")
+		decline(base, base.stems.comp, "comp_")
 	end
 	if base.stems.sup then
-		decline_singular(base, base.stems.sup, "sup_")
-		decline_plural(base, base.stems.sup, "sup_")
+		decline(base, base.stems.sup, "sup_")
 	end
 	add(base, "the_lemma", base.orig_lemma, "")
 	add(base, "pred", base.lemma, "")
@@ -581,6 +597,34 @@ local function show_forms(alternant_multiword_spec)
 end
 
 
+local single_state_table_spec = [=[
+! style="background:#COLOR" | nominative
+| {COMPSUPSTATE_nom_m}
+| {COMPSUPSTATE_nom_f}
+| {COMPSUPSTATE_nom_n}
+| {COMPSUPSTATE_nom_p}
+|-
+! style="background:#COLOR" | genitive
+| {COMPSUPSTATE_gen_m}
+| {COMPSUPSTATE_gen_f}
+| {COMPSUPSTATE_gen_n}
+| {COMPSUPSTATE_gen_p}
+|-
+! style="background:#COLOR" | dative
+| {COMPSUPSTATE_dat_m}
+| {COMPSUPSTATE_dat_f}
+| {COMPSUPSTATE_dat_n}
+| {COMPSUPSTATE_dat_p}
+|-
+! style="background:#COLOR" | accusative
+| {COMPSUPSTATE_acc_m}
+| {COMPSUPSTATE_acc_f}
+| {COMPSUPSTATE_acc_n}
+| {COMPSUPSTATE_acc_p}
+|-
+]=]
+
+
 local function make_table(alternant_multiword_spec)
 	if alternant_multiword_spec.props.indecl then
 		if alternant_multiword_spec.props.predonly then
@@ -594,7 +638,29 @@ local function make_table(alternant_multiword_spec)
 
 	local forms = alternant_multiword_spec.forms
 
-	local table_spec = (not alternant_multiword_spec.args.truncate and
+	local table_spec = (alternant_multiword_spec.state and
+-- Single-state table
+[=[
+<div class="NavFrame"style = "width:50%;">
+<div class="NavHead" style="text-align: left;">{title}{annotation}</div>
+<div class="NavContent">
+{\op}| border="1px solid #cdcdcd" style="border-collapse:collapse; background:#FEFEFE; width:100%;" class="inflection-table"
+|-
+! rowspan="2" style="background:#C0C0C0" | number & gender
+! colspan="3" style="background:#C0C0C0" | singular
+! style="background:#C0C0C0" | plural
+|-
+! style="background:#C0C0C0" | masculine
+! style="background:#C0C0C0" | feminine
+! style="background:#C0C0C0" | neuter
+! style="background:#C0C0C0" | all genders
+|-
+]=] ..
+rsub(rsub(single_state_table_spec, "COLOR", "efefff"), "STATE", alternant_multiword_spec.state) .. [=[
+|{\cl}{notes_clause}</div></div>]=]
+
+or not alternant_multiword_spec.args.truncate and
+
 -- Normal (non-truncated) table
 [=[
 <div class="NavFrame">
@@ -618,79 +684,14 @@ local function make_table(alternant_multiword_spec)
 | {COMPSUPpred_p}
 |-
 ! rowspan="4" style="background:#c0cfe4" | strong declension <br/> (without article)
-! style="background:#c0cfe4" | nominative
-| {COMPSUPstr_nom_m}
-| {COMPSUPstr_nom_f}
-| {COMPSUPstr_nom_n}
-| {COMPSUPstr_nom_p}
-|-
-! style="background:#c0cfe4" | genitive
-| {COMPSUPstr_gen_m}
-| {COMPSUPstr_gen_f}
-| {COMPSUPstr_gen_n}
-| {COMPSUPstr_gen_p}
-|-
-! style="background:#c0cfe4" | dative
-| {COMPSUPstr_dat_m}
-| {COMPSUPstr_dat_f}
-| {COMPSUPstr_dat_n}
-| {COMPSUPstr_dat_p}
-|-
-! style="background:#c0cfe4" | accusative
-| {COMPSUPstr_acc_m}
-| {COMPSUPstr_acc_f}
-| {COMPSUPstr_acc_n}
-| {COMPSUPstr_acc_p}
-|-
+]=] ..
+rsub(rsub(single_state_table_spec, "COLOR", "c0cfe4"), "STATE", "str") .. [=[
 ! rowspan="4" style="background:#c0e4c0" | weak declension <br/> (with definite article)
-! style="background:#c0e4c0" | nominative
-| {COMPSUPwk_nom_m}
-| {COMPSUPwk_nom_f}
-| {COMPSUPwk_nom_n}
-| {COMPSUPwk_nom_p}
-|-
-! style="background:#c0e4c0" | genitive
-| {COMPSUPwk_gen_m}
-| {COMPSUPwk_gen_f}
-| {COMPSUPwk_gen_n}
-| {COMPSUPwk_gen_p}
-|-
-! style="background:#c0e4c0" | dative
-| {COMPSUPwk_dat_m}
-| {COMPSUPwk_dat_f}
-| {COMPSUPwk_dat_n}
-| {COMPSUPwk_dat_p}
-|-
-! style="background:#c0e4c0" | accusative
-| {COMPSUPwk_acc_m}
-| {COMPSUPwk_acc_f}
-| {COMPSUPwk_acc_n}
-| {COMPSUPwk_acc_p}
-|-
+]=] ..
+rsub(rsub(single_state_table_spec, "COLOR", "c0e4c0"), "STATE", "wk") .. [=[
 ! rowspan="4" style="background:#e4d4c0" | mixed declension <br/> (with indefinite article)
-! style="background:#e4d4c0" | nominative
-| {COMPSUPmix_nom_m}
-| {COMPSUPmix_nom_f}
-| {COMPSUPmix_nom_n}
-| {COMPSUPmix_nom_p}
-|-
-! style="background:#e4d4c0" | genitive
-| {COMPSUPmix_gen_m}
-| {COMPSUPmix_gen_f}
-| {COMPSUPmix_gen_n}
-| {COMPSUPmix_gen_p}
-|-
-! style="background:#e4d4c0" | dative
-| {COMPSUPmix_dat_m}
-| {COMPSUPmix_dat_f}
-| {COMPSUPmix_dat_n}
-| {COMPSUPmix_dat_p}
-|-
-! style="background:#e4d4c0" | accusative
-| {COMPSUPmix_acc_m}
-| {COMPSUPmix_acc_f}
-| {COMPSUPmix_acc_n}
-| {COMPSUPmix_acc_p}
+]=] ..
+rsub(rsub(single_state_table_spec, "COLOR", "e4d4c0"), "STATE", "mix") .. [=[
 |{\cl}{notes_clause}</div></div>]=]
 
 or
