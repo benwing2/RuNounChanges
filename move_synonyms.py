@@ -33,32 +33,45 @@ def process_text_on_page(pageindex, pagetitle, text):
 
   subsections = re.split("(^==+[^=\n]+==+\n)", secbody, 0, re.M)
 
-  defn_subsection = None
-  saw_two_defn_subsections = False
+  lemma_defn_subsection = None
+  non_lemma_defn_subsection = None
+  num_defn_subsections_seen = 0
   for k in xrange(2, len(subsections), 2):
     if re.search("=Etymology", subsections[k - 1]):
-      defn_subsection = None
-      saw_two_defn_subsections = False
+      lemma_defn_subsection = None
+      non_lemma_defn_subsection = None
+      num_defn_subsections_seen = 0
     if "\n#" in subsections[k] and not re.search("=(Etymology|Pronunciation|Usage notes)", subsections[k - 1]):
-      if defn_subsection:
-        saw_two_defn_subsections = True
-      defn_subsection = k
+      lines = subsections[k].strip().split("\n")
+      for lineind, line in enumerate(lines):
+        if re.search(r"\{\{(head\|[^{}]*|[a-z][a-z][a-z]?-[^{}|]*)forms?\b", line):
+          pagemsg("Saw potential lemma section #%s %s but appears to be a non-lemma form due to line #%s, not counting as lemma: %s" %
+              (k // 2 + 1, subsections[k - 1].strip(), lineind + 1, line))
+          non_lemma_defn_subsection = k
+          break
+      else: # no break
+        lemma_defn_subsection = k
+        num_defn_subsections_seen += 1
       defn_subsection_level = get_subsection_level(subsections[k - 1])
       saw_nyms_already = set()
     m = re.search("=(Synonyms|Antonyms)=", subsections[k - 1])
     if m:
       syntype = m.group(1).lower()[:-1]
-      if defn_subsection is None:
+      if lemma_defn_subsection is None and non_lemma_defn_subsection is None:
         pagemsg("WARNING: Encountered %ss section #%s without preceding definition section" % (syntype, k // 2 + 1))
         continue
       synant_subsection_level = get_subsection_level(subsections[k - 1])
-      if saw_two_defn_subsections and synant_subsection_level <= defn_subsection_level:
-        pagemsg("WARNING: Saw two definition sections followed by %s section #%s at same level or higher, skipping section" % (
-          syntype, k // 2 + 1))
+      if num_defn_subsections_seen > 1 and synant_subsection_level <= defn_subsection_level:
+        pagemsg("WARNING: Saw %s definition sections followed by %s section #%s at same level or higher, skipping section" % (
+          num_defn_subsections_seen, syntype, k // 2 + 1))
         continue
       if syntype in saw_nyms_already:
           pagemsg("WARNING: Encountered two %s sections without intervening definition section" % syntype)
           continue
+      prev_num_defn_subsections_seen = num_defn_subsections_seen
+      num_defn_subsections_seen = 0
+      # Prefer the last lemma definition subsection, if any, over a subsequent non-lemma definition subsection.
+      defn_subsection = lemma_defn_subsection or non_lemma_defn_subsection
 
       def parse_syns(syns):
         retval = []
@@ -499,6 +512,10 @@ def process_text_on_page(pageindex, pagetitle, text):
         continue
 
       # Add synonyms if only one definition or --do-your-best
+      if prev_num_defn_subsections_seen > 1:
+        pagemsg("WARNING: Saw %s definition sections followed by %s section #%s and didn't match by sense tags, can't add" % (
+          prev_num_defn_subsections_seen, syntype, k // 2 + 1))
+        continue
       if len(defns) > 1:
         pagemsg("WARNING: Saw %s subsection %s with %s definitions and don't know where to add, %s" % (
           syntype, k // 2 + 1, len(defns), "adding to first definition" if args.do_your_best else "can't add"))
