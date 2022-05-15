@@ -346,9 +346,6 @@ def handle_process_page_retval(retval, existing_text, pagemsg, verbose, do_diff)
   else:
     new, comment = retval
 
-  if type(comment) is list:
-    comment = "; ".join(group_notes(comment))
-
   if new:
     new = unicode(new)
 
@@ -373,6 +370,9 @@ def handle_process_page_retval(retval, existing_text, pagemsg, verbose, do_diff)
       elif verbose:
         pagemsg("Replacing <%s> with <%s>" % (existing_text, new))
       assert comment, "Text has changed without a comment specified"
+
+  if type(comment) is list:
+    comment = "; ".join(group_notes(comment))
 
   return new, comment, has_changed
 
@@ -880,6 +880,21 @@ def iter_items(items, startsort=None, endsort=None, get_name=get_page_name, get_
 
       pywikibot.output(str(i) + "/" + str(actual_endsort) + tdisp)
 
+# Parse the output of group_notes() back into individual notes. If a note is repeated, include that many copies
+# in the result.
+def parse_grouped_notes(comment):
+  # FIXME: We should probably check for balanced parens/brackets/braces and not split semicolons inside them
+  comment_parts = comment.split("; ")
+  notes = []
+  for comment_part in comment_parts:
+    m = re.search(r"^(.*) \(([0-9]+)\)$", comment_part)
+    if m:
+      note, repfactor = m.groups()
+      notes.extend([note] * int(repfactor))
+    else:
+      notes.append(comment_part)
+  return notes
+
 def group_notes(notes):
   if isinstance(notes, basestring):
     return [notes]
@@ -1036,14 +1051,33 @@ def do_pagefile_cats_refs(args, start, end, process, default_cats=[],
   args_filter_pages = args.filter_pages and args.filter_pages.decode("utf-8")
   args_filter_pages_not = args.filter_pages_not and args.filter_pages_not.decode("utf-8")
 
-  def do_handle_find_regex_retval(retval, text, pagemsg):
-    new, comment, has_changed = handle_process_page_retval(retval, text, pagemsg, args.verbose, args.diff)
+  def do_handle_find_regex_retval(retval, text, prev_comment, pagemsg):
+    new, this_comment, has_changed = handle_process_page_retval(retval, text, pagemsg, args.verbose, args.diff)
     new = new or text
     if has_changed:
       assert edit, "Changed text without edit=True given"
     if edit:
+      # Join previous and this comment. Either may be None, a list of individual notes, an empty string (equivalent to
+      # None), or a non-empty string specifying a single comment.
+      if not prev_comment and not this_comment:
+        comment = None
+      elif not prev_comment:
+        comment = this_comment
+      elif not this_comment:
+        comment = prev_comment
+      else:
+        if type(prev_comment) is not list:
+          prev_comment = [prev_comment]
+        if type(this_comment) is not list:
+          this_comment = [this_comment]
+        comment = prev_comment + this_comment
+      if type(comment) is list:
+        comment = "; ".join(group_notes(comment))
+
       if has_changed:
         pagemsg("Would save with comment = %s" % comment)
+      elif comment:
+        pagemsg("Skipped, no changes; previous comment = %s" % comment)
       else:
         pagemsg("Skipped, no changes")
       if not args.no_output:
@@ -1107,14 +1141,16 @@ def do_pagefile_cats_refs(args, start, end, process, default_cats=[],
         return None, None
       return process(index, pagetitle, text)
 
-  def process_page(page, i):
+  # Process a page read from Wiktionary using Pywikibot (as opposed to a page read from stdin, either from find_regex
+  # output or from a dump file).
+  def process_pywikibot_page(index, page):
     pagetitle = unicode(page.title())
     if page_should_be_filtered_out(pagetitle):
       return
     def pagemsg(txt):
-      msg("Page %s %s: %s" % (i, pagetitle, txt))
+      msg("Page %s %s: %s" % (index, pagetitle, txt))
     def errandpagemsg(txt):
-      errandmsg("Page %s %s: %s" % (i, pagetitle, txt))
+      errandmsg("Page %s %s: %s" % (index, pagetitle, txt))
     def do_process_page(page, index, parsed=None):
       if stdin:
         pagetext = safe_page_text(page, errandpagemsg)
@@ -1130,14 +1166,15 @@ def do_pagefile_cats_refs(args, start, end, process, default_cats=[],
           return process(page, index)
 
     if args.find_regex:
-      retval = do_process_page(page, i)
+      # We are reading from Wiktionary but asked to output in find_regex format.
+      retval = do_process_page(page, index)
       pagetext = safe_page_text(page, errandpagemsg)
-      do_handle_find_regex_retval(retval, pagetext, pagemsg)
+      do_handle_find_regex_retval(retval, pagetext, None, pagemsg)
     elif edit:
-      do_edit(page, i, do_process_page, save=args.save, verbose=args.verbose,
+      do_edit(page, index, do_process_page, save=args.save, verbose=args.verbose,
           diff=args.diff)
     else:
-      do_process_page(page, i)
+      do_process_page(page, index)
 
   if stdin and args.stdin:
     pages_to_filter = None
@@ -1160,39 +1197,41 @@ def do_pagefile_cats_refs(args, start, end, process, default_cats=[],
         return do_process_text_on_page(index, pagetitle, text, pagemsg)
     if args.find_regex:
       utf8_stdin = (line.decode("utf-8") for line in sys.stdin)
-      index_pagetitle_and_text = yield_text_from_find_regex(utf8_stdin, args.verbose)
-      for _, (index, pagetitle, text) in iter_items(index_pagetitle_and_text, start, end,
+      index_pagetitle_text_comment = yield_text_from_find_regex(utf8_stdin, args.verbose)
+      for _, (index, pagetitle, text, prev_comment) in iter_items(index_pagetitle_text_comment, start, end,
           get_name=lambda x:x[1], get_index=lambda x:x[0]):
         retval = do_process_stdin_text_on_page(index, pagetitle, text)
         def pagemsg(txt):
           msg("Page %s %s: %s" % (index, pagetitle, txt))
-        do_handle_find_regex_retval(retval, text, pagemsg)
+        if prev_comment:
+          prev_comment = parse_grouped_notes(prev_comment)
+        do_handle_find_regex_retval(retval, text, prev_comment, pagemsg)
     else:
       parse_dump(sys.stdin, do_process_stdin_text_on_page, start, end)
 
   elif args_has_non_default_pages(args):
     if args.pages:
       pages = split_arg(args.pages)
-      for i, pagetitle in iter_items(pages, start, end):
-        process_page(pywikibot.Page(site, pagetitle), i)
+      for index, pagetitle in iter_items(pages, start, end):
+        process_pywikibot_page(index, pywikibot.Page(site, pagetitle))
     if args.pagefile:
       pages = iter_pages_from_file(args.pagefile)
-      for i, pagetitle in iter_items(pages, start, end):
-        process_page(pywikibot.Page(site, pagetitle), i)
+      for index, pagetitle in iter_items(pages, start, end):
+        process_pywikibot_page(index, pywikibot.Page(site, pagetitle))
     if args.pages_from_find_regex:
-      index_pagetitle_and_text = yield_text_from_find_regex(
+      index_pagetitle_text_comment = yield_text_from_find_regex(
         codecs.open(args.pages_from_find_regex, "r", "utf-8"), args.verbose
       )
-      for _, (i, pagetitle, _) in iter_items(index_pagetitle_and_text, start, end,
+      for _, (index, pagetitle, _, _) in iter_items(index_pagetitle_text_comment, start, end,
           get_name=lambda x:x[1], get_index=lambda x:x[0]):
-        process_page(pywikibot.Page(site, pagetitle), i)
+        process_pywikibot_page(index, pywikibot.Page(site, pagetitle))
     if args.pages_from_previous_output:
       index_pagetitle = yield_pages_from_previous_output(
         codecs.open(args.pages_from_previous_output, "r", "utf-8"), args.verbose
       )
-      for _, (i, pagetitle) in iter_items(index_pagetitle, start, end,
+      for _, (index, pagetitle) in iter_items(index_pagetitle, start, end,
           get_name=lambda x:x[1], get_index=lambda x:x[0]):
-        process_page(pywikibot.Page(site, pagetitle), i)
+        process_pywikibot_page(index, pywikibot.Page(site, pagetitle))
     if args.cats:
       args_prune_cats = args.prune_cats and args.prune_cats.decode("utf-8") or None
       if args.track_seen:
@@ -1201,45 +1240,45 @@ def do_pagefile_cats_refs(args, start, end, process, default_cats=[],
         seen = None
       for cat in split_arg(args.cats):
         if args.do_cat_and_subcats:
-          for i, subcat in cat_subcats(cat, start, end, seen=seen, prune_cats_regex=args_prune_cats,
+          for index, subcat in cat_subcats(cat, start, end, seen=seen, prune_cats_regex=args_prune_cats,
               do_this_page=True, recurse=args.recursive):
-            process_page(subcat, i)
+            process_pywikibot_page(index, subcat)
         elif args.do_subcats:
-          for i, subcat in cat_subcats(cat, start, end, seen=seen, prune_cats_regex=args_prune_cats,
+          for index, subcat in cat_subcats(cat, start, end, seen=seen, prune_cats_regex=args_prune_cats,
               do_this_page=False, recurse=args.recursive):
-            process_page(subcat, i)
+            process_pywikibot_page(index, subcat)
         else:
-          for i, page in cat_articles(cat, start, end, seen=seen, prune_cats_regex=args_prune_cats,
+          for index, page in cat_articles(cat, start, end, seen=seen, prune_cats_regex=args_prune_cats,
               recurse=args.recursive, track_seen=args.track_seen):
-            process_page(page, i)
+            process_pywikibot_page(index, page)
     if args.refs:
       for ref in split_arg(args.refs):
         # We don't use ref_namespaces here because the user might not want it.
-        for i, page in references(ref, start, end, namespaces=args_ref_namespaces):
-          process_page(page, i)
+        for index, page in references(ref, start, end, namespaces=args_ref_namespaces):
+          process_pywikibot_page(index, page)
     if args.specials:
       for special in split_arg(args.specials):
-        for i, page in query_special_pages(special, start, end):
-          process_page(page, i)
+        for index, page in query_special_pages(special, start, end):
+          process_pywikibot_page(index, page)
     if args.contribs:
       for contrib in split_arg(args.contribs):
-        for i, page in query_usercontribs(contrib, start, end, starttime=args.contribs_start, endtime=args.contribs_end):
-          process_page(pywikibot.Page(site, page['title']), i)
+        for index, page in query_usercontribs(contrib, start, end, starttime=args.contribs_start, endtime=args.contribs_end):
+          process_pywikibot_page(index, pywikibot.Page(site, page['title']))
     if args.prefix_pages:
       for prefix in split_arg(args.prefix_pages):
         namespace = args.prefix_namespace and args.prefix_namespace.decode("utf-8") or None
-        for i, page in prefix_pages(prefix, start, end, namespace):
-          process_page(page, i)
+        for index, page in prefix_pages(prefix, start, end, namespace):
+          process_pywikibot_page(index, page)
 
   else:
     if not default_cats and not default_refs:
       raise ValueError("One of --pages, --pagefile, --cats, --refs, --specials, --contribs or --prefix-pages should be specified")
     for cat in default_cats:
-      for i, page in cat_articles(cat, start, end, track_seen=args.track_seen):
-        process_page(page, i)
+      for index, page in cat_articles(cat, start, end, track_seen=args.track_seen):
+        process_pywikibot_page(index, page)
     for ref in default_refs:
-      for i, page in references(ref, start, end, namespaces=ref_namespaces):
-        process_page(page, i)
+      for index, page in references(ref, start, end, namespaces=ref_namespaces):
+        process_pywikibot_page(index, page)
 
   elapsed_time()
 
@@ -2125,6 +2164,7 @@ def parse_dump(fp, pagecallback, startsort=None, endsort=None,
 
 def yield_text_from_find_regex(lines, verbose):
   in_multiline = False
+  comment = None
   while True:
     try:
       line = next(lines)
@@ -2132,7 +2172,8 @@ def yield_text_from_find_regex(lines, verbose):
       break
     if in_multiline and re.search("^-+ end text -+$", line):
       in_multiline = False
-      yield pagenum, pagename, "".join(templines)
+      yield pagenum, pagename, "".join(templines), comment
+      comment = None
     elif in_multiline:
       if line.rstrip('\n').endswith(':'):
         if verbose:
@@ -2145,14 +2186,23 @@ def yield_text_from_find_regex(lines, verbose):
       #  in_multiline = True
       #  templines = []
       #else:
-      m = re.search("^Page ([0-9]+) (.*): -+ begin text -+$", line)
+      m = re.search("^Page ([0-9]+) (.*): (?:Would save with comment|Skipped, no changes; previous comment) = (.*)$", line)
       if m:
-        pagenum = int(m.group(1))
-        pagename = m.group(2)
-        in_multiline = True
-        templines = []
-      elif verbose:
-        msg("Skipping: %s" % line)
+        comment_pagenum, comment_pagename, comment = m.groups()
+        comment_pagenum = int(comment_pagenum)
+      else:
+        m = re.search("^Page ([0-9]+) (.*): -+ begin text -+$", line)
+        if m:
+          pagenum, pagename = m.groups()
+          pagenum = int(pagenum)
+          if comment is not None and (pagenum != comment_pagenum or pagename != comment_pagename):
+            errmsg("WARNING: Processing text for index %s, page '%s' but saw comment '%s' for different index %s, page '%s'; ignoring"
+              % (pagenum, pagename, comment, comment_pagenum, comment_pagename))
+            comment = None
+          in_multiline = True
+          templines = []
+        elif verbose:
+          msg("Skipping: %s" % line)
 
 def yield_text_from_diff(lines, verbose):
   in_multiline = False
