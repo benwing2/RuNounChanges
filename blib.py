@@ -699,14 +699,21 @@ def stream(st, startsort = None, endsort = None):
 
     yield i, pywikibot.Page(site, name)
 
-def split_arg(arg):
-  return [x.decode("utf-8") for x in re.split(r",(?! )", arg)]
+def split_arg(arg, canonicalize=None):
+  def process(pagename):
+    pagename = pagename.decode("utf-8")
+    if canonicalize:
+      pagename = canonicalize(pagename)
+    return pagename
+  return [process(x) for x in re.split(r",(?! )", arg)]
 
-def iter_pages_from_file(filename):
+def iter_pages_from_file(filename, canonicalize=None):
   for line in codecs.open(filename, "r", "utf-8"):
     line = line.strip()
     if line.startswith("#"):
       continue
+    if canonicalize:
+      line = canonicalize(line)
     yield line
 
 def get_page_name(page):
@@ -992,10 +999,9 @@ def args_has_non_default_pages(args):
   return not not (args.pages or args.pagefile or args.pages_from_find_regex or args.pages_from_previous_output
       or args.cats or args.refs or args.specials or args.contribs or args.prefix_pages)
 
-# Process a run of pages, with the set of pages coming from either
-# --pagefile, --cats, --refs, or (if --stdin is given) from a Wiktionary
-# dump read from stdin. PROCESS is called to process the page, and has
-# different calling conventions depending on the EDIT and STDIN flags:
+# Process a run of pages, with the set of pages specified in various possible ways, e.g. from --pagefile, --cats,
+# --refs, or (if --stdin is given) from a Wiktionary dump or find_regex.py output read from stdin. PROCESS is called
+# to process the page, and has different calling conventions depending on the EDIT and STDIN flags:
 #
 # If stdin=True, PROCESS should be defined like this:
 #
@@ -1014,39 +1020,33 @@ def args_has_non_default_pages(args):
 #
 # FIXME: The PARSED argument is unnecessary and shouldn't be passed in.
 #
-# The return value of PROCESS is immaterial if edit=False; otherwise it
-# should be NEWTEXT, NOTES where NEWTEXT is the new text of the page,
-# and NOTES is either a string (the comment to use when saving the page)
-# or a list of strings (which are grouped together using blib.group_notes()
-# to form the comment to use when saving the page). To make no change,
-# return None, None.
-#
-# Note that if stdin=True and edit=True, there's (currently) no way to save
-# a page if the page's source is a dump on stdin; in that circumstance, the
-# return value is ignored.
+# The return value of PROCESS is immaterial if edit=False; otherwise it should be NEWTEXT, NOTES where NEWTEXT is the
+# new text of the page, and NOTES is either a string (the comment to use when saving the page) or a list of strings
+# (which are grouped together using blib.group_notes() to form the comment to use when saving the page). To make no
+# change, return None or just use `return`.
 #
 # The pages iterated over will be:
 #
-# 1. Those from the dump on stdin if stdin=True and --stdin is given.
-# 2. Else, the pages in --pages, --pagefile, --cats, --refs, --specials,
-#    --contribs and/or --prefix-pages if any of those arguments are given.
-# 3. Else, pages in the category/categories in default_cats[] and/or pages
-#    referring to the page(s) specified in default_refs[], if either argument
-#    is given.
-# 4. Else, an error is thrown.
+# 1. Those from find_regex.py output on stdin if stdin=True and --stdin and --find-regex are given.
+# 2. Else, those from a Wiktionary dump on stdin if stdin=True and --stdin is given.
+# 3. Else, the pages in --pages, --pagefile, --cats, --refs, --specials, --contribs and/or --prefix-pages if any of
+#    those arguments are given.
+# 4. Else, pages in the category/categories in default_cats[] and/or pages referring to the page(s) specified in
+#    default_refs[], if either argument is given.
+# 5. Else, an error is thrown.
 #
-# If only_lang is given, it should be a canonical name of a language (e.g.
-# "Latin"), and pages not containing this language will be skipped. (This is
-# especially useful in conjunction with dumps on stdin, where it can greatly
-# speed up processing by avoiding the need to parse every page.) Not to be
-# confused with the --only-lang user-specifiable parameter, which causes
-# processing over only the section of a given language.
+# If only_lang is given, it should be a canonical name of a language (e.g. "Latin"), and pages not containing this
+# language will be skipped. (This is especially useful in conjunction with dumps on stdin, where it can greatly speed
+# up processing by avoiding the need to parse every page.) Not to be confused with the --only-lang user-specifiable
+# parameter, which causes processing over only the section of a given language.
 #
-# If filter_pages is given, it should be an unanchored regex used to filter
-# page titles.
+# If filter_pages is given, it should be an unanchored regex used to filter page titles.
+#
+# If canonicalize_pagename is given, it should be a function of one argument, which is called on pagenames specified
+# on the command line using --pages or read from a file using --pagefile.
 def do_pagefile_cats_refs(args, start, end, process, default_cats=[],
     default_refs=[], edit=False, stdin=False, only_lang=None,
-    filter_pages=None, ref_namespaces=None):
+    filter_pages=None, ref_namespaces=None, canonicalize_pagename=None):
   args_ref_namespaces = args.ref_namespaces and args.ref_namespaces.decode("utf-8").split(",")
   args_filter_pages = args.filter_pages and args.filter_pages.decode("utf-8")
   args_filter_pages_not = args.filter_pages_not and args.filter_pages_not.decode("utf-8")
@@ -1179,9 +1179,9 @@ def do_pagefile_cats_refs(args, start, end, process, default_cats=[],
   if stdin and args.stdin:
     pages_to_filter = None
     if args.pages:
-      pages_to_filter = set(split_arg(args.pages))
+      pages_to_filter = set(split_arg(args.pages, canonicalize_pagename))
     if args.pagefile:
-      new_pages_to_filter = set(iter_pages_from_file(args.pagefile))
+      new_pages_to_filter = set(iter_pages_from_file(args.pagefile, canonicalize_pagename))
       if pages_to_filter is None:
         pages_to_filter = new_pages_to_filter
       else:
@@ -1211,11 +1211,11 @@ def do_pagefile_cats_refs(args, start, end, process, default_cats=[],
 
   elif args_has_non_default_pages(args):
     if args.pages:
-      pages = split_arg(args.pages)
+      pages = split_arg(args.pages, canonicalize_pagename)
       for index, pagetitle in iter_items(pages, start, end):
         process_pywikibot_page(index, pywikibot.Page(site, pagetitle))
     if args.pagefile:
-      pages = iter_pages_from_file(args.pagefile)
+      pages = iter_pages_from_file(args.pagefile, canonicalize_pagename)
       for index, pagetitle in iter_items(pages, start, end):
         process_pywikibot_page(index, pywikibot.Page(site, pagetitle))
     if args.pages_from_find_regex:
@@ -1890,7 +1890,7 @@ def output_process_links_template_counts(templates_seen, templates_changed):
 
 def find_lang_section(pagename, lang, pagemsg, errandpagemsg):
   page = pywikibot.Page(site, pagename)
-  if safe_page_exists(page, errandpagemsg):
+  if not safe_page_exists(page, errandpagemsg):
     pagemsg("Page %s doesn't exist" % pagename)
     return False
 
