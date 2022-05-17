@@ -1,30 +1,13 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#    find_russian_need_vowels.py is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
-#
-#    You should have received a copy of the GNU General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-# Despite its name, this is actually a script to add accents, links and
-# boldface to Russian text inside of templates like {{l|ru|...}}, {{m|ru|...}},
-# {{ux|ru|...}}, etc. This is done by looking up words in the dictionary
-# and adding information if it's unambiguous (e.g. we don't add accents to a
-# term if it has multiple possible accentuations, and we don't add links to a
-# term if it corresponds to multiple possible lemmas). We're actually somewhat
-# smarter than this, e.g. we first try looking up the whole phrase, then
-# partition into linked blocks of words and individual non-linked words and
-# look them up, and then break up linked blocks of words into single words and
-# look them up, and finally break individual words on hyphens and look up the
-# components.
+# This script adds accents, links and boldface to Russian text inside of templates like {{l|ru|...}}, {{m|ru|...}},
+# {{ux|ru|...}}, etc. This is done by looking up words in the dictionary and adding information if it's unambiguous
+# (e.g. we don't add accents to a term if it has multiple possible accentuations, and we don't add links to a term if
+# it corresponds to multiple possible lemmas). We're actually somewhat smarter than this, e.g. we first try looking up
+# the whole phrase, then partition into linked blocks of words and individual non-linked words and look them up, and
+# then break up linked blocks of words into single words and look them up, and finally break individual words on
+# hyphens and look up the components.
 #
 # Note:
 #
@@ -1142,7 +1125,7 @@ def process_template(pagetitle, index, pagetext, template, ruparam, trparam,
     ", subst=" + ",".join(substs) if substs else "")] if changed else False
 
 # Main function to implement the whole script.
-def find_russian_need_vowels(find_accents, accent_hidden, cattype, direcfile,
+def auto_accent_auto_bracket_russian(find_accents, accent_hidden, cattype, direcfile,
     save, verbose, startFrom, upTo):
   if direcfile:
     processing_lines = []
@@ -1192,7 +1175,7 @@ def find_russian_need_vowels(find_accents, accent_hidden, cattype, direcfile,
         upTo, check_template_for_missing_accent,
         join_actions=join_changelog_notes, split_templates=None)
 
-pa = blib.init_argparser("Find Russian terms needing accents")
+pa = blib.init_argparser("Auto-accent and auto-bracket Russian terms")
 pa.add_argument("--cattype", default="vocab",
     help="Categories to examine ('vocab', 'borrowed', 'translation')")
 pa.add_argument("--file",
@@ -1211,7 +1194,7 @@ semi_verbose = params.semi_verbose or params.verbose
 global_disable_cache = params.no_cache
 startFrom, upTo = blib.parse_start_end(params.start, params.end)
 
-find_russian_need_vowels(params.find_accents, params.accent_hidden,
+auto_accent_auto_bracket_russian(params.find_accents, params.accent_hidden,
     params.cattype, params.file, params.save, params.verbose, startFrom, upTo)
 
 blib.elapsed_time()
