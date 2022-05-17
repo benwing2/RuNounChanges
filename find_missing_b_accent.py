@@ -1,38 +1,37 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# Find places where accent b is likely missing.
+# Find places where accent b is likely missing in Russian noun declensions.
 
 import pywikibot, re, sys, codecs, argparse
 
 import blib
-from blib import getparam, rmparam, msg, site
+from blib import getparam, rmparam, msg, site, tname
 
-def process_page(index, page, save, verbose):
-  pagetitle = unicode(page.title())
+def process_text_on_page(index, pagetitle, text):
+  global args
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
-  pagemsg("Processing")
+  notes = []
 
   if not re.search(ur"(ник|ок)([ -]|$)", pagetitle):
     return
 
-  parsed = blib.parse(page)
+  parsed = blib.parse_text(text)
   for t in parsed.filter_templates():
-    tname = unicode(t.name)
-    if tname == "ru-noun-table":
+    tn = tname(t)
+    if tn == "ru-noun-table":
       ut = unicode(t)
       if re.search(ur"ни́к(\||$)", ut) and "|b" not in ut:
         pagemsg("WARNING: Likely missing accent b: %s" % ut)
       if re.search(ur"о́к(\||$)", ut) and "*" in ut and "|b" not in ut:
         pagemsg("WARNING: Likely missing accent b: %s" % ut)
 
-parser = blib.create_argparser(u"Find likely missing accent b")
+parser = blib.create_argparser("Find places where accent b is likely missing in Russian noun declensions",
+    include_pagefile=True, include_stdin=True)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-for category in ["Russian nouns"]:
-  msg("Processing category: %s" % category)
-  for i, page in blib.cat_articles(category, start, end):
-    process_page(i, page, args.save, args.verbose)
+blib.do_pagefile_cats_refs(args, start, end, process_text_on_page, edit=True, stdin=True,
+  default_cats=["Russian nouns"])

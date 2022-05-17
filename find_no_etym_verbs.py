@@ -8,6 +8,8 @@ from blib import getparam, rmparam, msg, errandmsg, site
 
 import rulib
 
+lemmas = []
+
 def is_transitive_verb(pagename, pagemsg, errandpagemsg):
   verb_section = blib.find_lang_section(pagename, "Russian", pagemsg, errandpagemsg)
   if not verb_section:
@@ -16,7 +18,7 @@ def is_transitive_verb(pagename, pagemsg, errandpagemsg):
 
   parsed = blib.parse_text(verb_section)
   for t in parsed.filter_templates():
-    if unicode(t.name) == "ru-verb":
+    if tname(t) == "ru-verb":
       if getparam(t, "2") in ["impf", "pf", "both"]:
         pagemsg("Saw transitive verb: %s" % unicode(t))
         return True
@@ -24,16 +26,14 @@ def is_transitive_verb(pagename, pagemsg, errandpagemsg):
 
   return False
 
-def process_page(index, page, lemmas):
-  pagetitle = unicode(page.title())
+def process_text_on_page(index, pagetitle, text):
+  global args
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
   def errandpagemsg(txt):
     errandmsg("Page %s %s: %s" % (index, pagetitle, txt))
 
-  pagemsg("Processing")
-
-  pagetext = unicode(page.text)
+  notes = []
 
   section = blib.find_lang_section_from_text(pagetext, "Russian", pagemsg)
   if not section:
@@ -46,21 +46,21 @@ def process_page(index, page, lemmas):
     return
   parsed = blib.parse_text(section)
   for t in parsed.filter_templates():
-    if unicode(t.name) in ["ru-participle of"]:
+    if tname(t) in ["ru-participle of"]:
       pagemsg("Skipping participle")
       return
   saw_verb = False
   saw_passive = False
   saw_bad_passive = False
   for t in parsed.filter_templates():
-    if unicode(t.name) in ["passive of", "passive form of"]:
+    if tname(t) in ["passive of", "passive form of"]:
       saw_passive = True
   if not saw_passive and ("passive of" in section or
     "passive form of" in section):
     saw_bad_passive = True
   splits = []
   for t in parsed.filter_templates():
-    if unicode(t.name) == "ru-verb":
+    if tname(t) == "ru-verb":
       saw_verb = True
       saw_paired_verb = False
       printed_msg = False
@@ -168,23 +168,14 @@ def process_page(index, page, lemmas):
   if not saw_verb:
         msg("%s no-etym misc" % pagetitle)
 
-parser = blib.create_argparser("Find analyses for verbs without declension")
-parser.add_argument('--lemmafile', help="File of lemmas to process. May have accents.")
+# Pages specified using --pages or --pagefile may have accents, which will be stripped.
+parser = blib.create_argparser("Find analyses for verbs without declension",
+    include_pagefile=True, include_stdin=True, canonicalize_pagename=rulib.remove_accents)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-if args.lemmafile:
-  lemmas = []
-  for i, page in blib.cat_articles(args.cats):
-    lemmas.append(page.title())
-  for i, pagename in blib.iter_items([rulib.remove_accents(x.strip()) for x in codecs.open(args.lemmafile, "r", "utf-8")]):
-    page = pywikibot.Page(site, pagename)
-    process_page(i, page, lemmas)
-else:
-  for cat in ["Russian verbs"]:
-    msg("Processing category: %s" % cat)
-    lemmas = []
-    for i, page in blib.cat_articles(cat):
-      lemmas.append(page.title())
-    for i, page in blib.cat_articles(cat, start, end):
-      process_page(i, page, lemmas)
+def scrape_pagetitle(page, index):
+  lemmas.append(unicode(page.title()))
+blib.do_pagefile_cats_refs(args, start, end, scrape_pagetitle, default_cats=["Russian verbs"])
+blib.do_pagefile_cats_refs(args, start, end, process_text_on_page, edit=True, stdin=True,
+  default_cats=["Russian verbs"])

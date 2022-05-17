@@ -1,20 +1,7 @@
 #!/usr/bin/env python
 #coding: utf-8
 
-#    find_multiword_red_links.py is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
-#
-#    You should have received a copy of the GNU General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-# Find redlinks (non-existent pages) in multiword lemmas, i.e. individual
+# Find redlinks (non-existent pages) in multiword Russian lemmas, i.e. individual
 # words in multiword lemmas that don't exist as lemmas. Output data in two
 # ways: As we encounter each redlink (but only the first time encountered),
 # and sorted by number of occurrences.
@@ -23,7 +10,7 @@ import pywikibot, re, sys, codecs, argparse
 import traceback
 
 import blib
-from blib import getparam, rmparam, msg, site
+from blib import getparam, rmparam, msg, errandmsg, site, tname
 
 import rulib
 
@@ -37,23 +24,18 @@ nonexistent_lemmas = {}
 nonexistent_lemmas_refs = {}
 lemmas = set()
 
-def process_page(index, page, verbose):
-  pagetitle = unicode(page.title())
-  subpagetitle = re.sub("^.*:", "", pagetitle)
+def process_text_on_page(index, pagetitle, text):
+  global args
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
-
-  pagemsg("Processing")
-
-  if ":" in pagetitle:
-    pagemsg("WARNING: Colon in page title, skipping")
-    return
-
+  def errandpagemsg(txt):
+    errandmsg("Page %s %s: %s" % (index, pagetitle, txt))
   def expand_text(tempcall):
-    return blib.expand_text(tempcall, pagetitle, pagemsg, verbose)
+    return blib.expand_text(tempcall, pagetitle, pagemsg, args.verbose)
 
-  origtext = page.text
-  parsed = blib.parse_text(origtext)
+  notes = []
+
+  parsed = blib.parse_text(text)
 
   def check_lemma(lemma):
     if lemma in lemma_count:
@@ -64,16 +46,11 @@ def process_page(index, page, verbose):
       lemma_count[lemma] = 1
       if lemma not in lemmas:
         page = pywikibot.Page(site, lemma)
-        try:
-          exists = page.exists()
-        except pywikibot.exceptions.InvalidTitle as e:
-          pagemsg("WARNING: Invalid title: %s" % lemma)
-          traceback.print_exc(file=sys.stdout)
-          exists = False
-        if exists:
-          if re.search("#redirect", unicode(page.text), re.I):
+        if blib.safe_page_exists(page, errandpagemsg):
+          pagetext = blib.safe_page_text(page, errandpagemsg)
+          if re.search("#redirect", pagetext, re.I):
             nonexistent_msg = "exists as redirect"
-          elif re.search(r"\{\{superlative of", unicode(page.text)):
+          elif re.search(r"\{\{superlative of", pagetext):
             nonexistent_msg = "exists as superlative"
           else:
             nonexistent_msg = "exists as non-lemma"
@@ -155,19 +132,20 @@ def process_page(index, page, verbose):
         check_lemma(word)
 
   for t in parsed.filter_templates():
-    tname = unicode(t.name)
-    if tname == "ru-decl-noun-see":
+    tn = tname(t)
+    if tn == "ru-decl-noun-see":
       pagemsg("WARNING: Skipping ru-decl-noun-see, can't handle yet: %s" % unicode(t))
-    elif tname in ["ru-noun+", "ru-proper noun+"]:
+    elif tn in ["ru-noun+", "ru-proper noun+"]:
       pagemsg("Found %s" % unicode(t))
       process_new_style_headword(t)
-    elif tname in ["ru-verb"]:
+    elif tn in ["ru-verb"]:
       pagemsg("Found %s" % unicode(t))
       process_verb_headword(t)
-    elif tname in ["ru-noun", "ru-proper noun"]:
+    elif tn in ["ru-noun", "ru-proper noun"]:
       pagemsg("WARNING: Skipping ru-noun or ru-proper noun, can't handle yet: %s" % unicode(t))
 
-parser = blib.create_argparser(u"Find red links in multiword lemmas")
+parser = blib.create_argparser(u"Find red links in multiword Russian lemmas",
+    include_pagefile=True, include_stdin=True)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
@@ -175,11 +153,9 @@ msg("Reading Russian lemmas")
 for i, page in blib.cat_articles("Russian lemmas", start, end):
   lemmas.add(unicode(page.title()))
 
-for pos in ["nouns", "proper nouns", "verbs"]:
-  tracking_page = "Template:tracking/ru-headword/space-in-headword/" + pos
-  msg("PROCESSING REFERENCES TO: %s" % tracking_page)
-  for index, page in blib.references(tracking_page, start, end):
-    process_page(index, page, args.verbose)
+blib.do_pagefile_cats_refs(args, start, end, process_text_on_page, edit=True, stdin=True,
+  default_refs=["Template:tracking/ru-headword/space-in-headword/" + pos
+    for pos in ["nouns", "proper nouns", "verbs"]])
 
 for lemma, nonexistent_msg in sorted(nonexistent_lemmas.items(), key=lambda pair:(-lemma_count[pair[0]], pair[0])):
   msg("* [[%s]] (%s occurrence%s): %s (refs: %s)" % (lemma, lemma_count[lemma],

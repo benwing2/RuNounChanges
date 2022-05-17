@@ -1,39 +1,23 @@
 #!/usr/bin/env python
-#coding: utf-8
-
-#    find_no_etym_ost.py is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
-#
-#    You should have received a copy of the GNU General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-# Try to construct etymologies of nouns in -ость from adjectives.
+# -*- coding: utf-8 -*-
 
 import pywikibot, re, sys, codecs, argparse
 
 import blib
-from blib import getparam, rmparam, msg, errandmsg, site
+from blib import getparam, rmparam, msg, errandmsg, site, tname
 
 import rulib
 
-def process_page(index, page, save, verbose, nouns):
-  pagetitle = unicode(page.title())
+nouns = []
+
+def process_text_on_page(index, pagetitle, text):
+  global args
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
   def errandpagemsg(txt):
     errandmsg("Page %s %s: %s" % (index, pagetitle, txt))
 
-  def expand_text(tempcall):
-    return blib.expand_text(tempcall, pagetitle, pagemsg, verbose)
-
-  pagemsg("Processing")
+  notes = []
 
   if not re.search(u"[иы]й$", pagetitle):
     pagemsg(u"Skipping adjective not in -ый or -ий")
@@ -43,44 +27,44 @@ def process_page(index, page, save, verbose, nouns):
   if noun not in nouns:
     return
 
-  text = unicode(page.text)
-  parsed = blib.parse(page)
+  if rulib.check_for_alt_yo_terms(text, pagemsg):
+    return
+
+  parsed = blib.parse_text(text)
 
   for t in parsed.filter_templates():
-    tname = unicode(t.name)
-    if tname == u"ru-adj-alt-ё":
-      pagemsg(u"Skipping alt-ё adjective")
-      return
-
-  for t in parsed.filter_templates():
-    tname = unicode(t.name)
-    if tname == "ru-adj":
+    tn = tname(t)
+    if tn == "ru-adj":
       heads = blib.fetch_param_chain(t, "1", "head", pagetitle)
       if len(heads) > 1:
         pagemsg("Skipping adjective with multiple heads: %s" % ",".join(heads))
-        return
-      tr = getparam(t, "tr")
-
-      nounsection = blib.find_lang_section(noun, "Russian", pagemsg, errandpagemsg)
+        continue
+      noun_page = pywikibot.Page(site, noun)
+      noun_text = blib.safe_page_text(page, errandpagemsg)
+      if not noun_text:
+        pagemsg("Page %s doesn't exist or is empty" % noun)
+        continue
+      nounsection = blib.find_lang_section_from_text(noun_text, "Russian", pagemsg)
       if not nounsection:
         pagemsg("Couldn't find Russian section for %s" % noun)
         continue
       if "==Etymology" in nounsection:
         pagemsg("Noun %s already has etymology" % noun)
         continue
+      tr = getparam(t, "tr")
       if tr:
         msg(u"%s %s+tr1=%s+-ость no-etym" % (noun, heads[0], tr))
       else:
         msg(u"%s %s+-ость no-etym" % (noun, heads[0]))
 
-parser = blib.create_argparser(u"Find etymologies for nouns in -ость")
+# Pages specified using --pages or --pagefile may have accents, which will be stripped.
+parser = blib.create_argparser(u"Try to construct etymologies of nouns in -ость from adjectives",
+    include_pagefile=True, include_stdin=True, canonicalize_pagename=rulib.remove_accents)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-nouns = []
 for i, page in blib.cat_articles("Russian nouns"):
-  nouns.append(page.title())
+  nouns.append(unicode(page.title()))
 
-for category in ["Russian adjectives"]:
-  for i, page in blib.cat_articles(category, start, end):
-    process_page(i, page, args.save, args.verbose, nouns)
+blib.do_pagefile_cats_refs(args, start, end, process_text_on_page, edit=True, stdin=True,
+  default_cats=["Russian adjectives"])

@@ -57,16 +57,16 @@ def find_noun_lemmas(parsed, pagetitle, errandpagemsg, expand_text):
         add_if_not(noun_lemmas, lemma)
   return noun_lemmas
 
-def process_page(index, page, save, verbose, adverbs, all_derived_lemmas):
-  pagetitle = unicode(page.title())
+def process_text_on_page(index, pagetitle, text):
+  global args
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
   def errandpagemsg(txt):
     errandmsg("Page %s %s: %s" % (index, pagetitle, txt))
   def expand_text(tempcall):
-    return blib.expand_text(tempcall, pagetitle, pagemsg, verbose)
+    return blib.expand_text(tempcall, pagetitle, pagemsg, args.verbose)
 
-  pagemsg("Processing")
+  notes = []
 
   # ending and whether final consonant is palatal
   endings = [
@@ -169,12 +169,10 @@ def process_page(index, page, save, verbose, adverbs, all_derived_lemmas):
 
   would_output = False
   for possible_derived, suffix in possible:
-    if possible_derived in all_derived_lemmas:
+    if possible_derived in derived_lemmas:
       would_output = True
   if not would_output:
     return
-
-  text = unicode(page.text)
 
   if rulib.check_for_alt_yo_terms(text, pagemsg):
     return
@@ -182,7 +180,7 @@ def process_page(index, page, save, verbose, adverbs, all_derived_lemmas):
   base_lemmas = []
 
   for possible_derived, suffix in possible:
-    if possible_derived in all_derived_lemmas:
+    if possible_derived in derived_lemmas:
       derived_section = blib.find_lang_section(possible_derived, "Russian", pagemsg, errandpagemsg)
       if not derived_section:
         errandpagemsg("WARNING: Couldn't find Russian section for derived term %s" %
@@ -200,7 +198,7 @@ def process_page(index, page, save, verbose, adverbs, all_derived_lemmas):
 
       derived_parsed = blib.parse_text(derived_section)
       derived_lemmas = find_noun_lemmas(derived_parsed, possible_derived, errandpagemsg,
-        lambda tempcall: blib.expand_text(tempcall, possible_derived, pagemsg, verbose))
+        lambda tempcall: blib.expand_text(tempcall, possible_derived, pagemsg, args.verbose))
       for t in derived_parsed.filter_templates():
         if tname(t) in ["ru-adj", "ru-adv"]:
           lemmas = blib.fetch_param_chain(t, "1", "head", possible_derived)
@@ -264,26 +262,21 @@ def process_page(index, page, save, verbose, adverbs, all_derived_lemmas):
           " WARNING:%s" % ",".join(warnings) if warnings else "",
           concat_defns(base_defns), concat_defns(derived_defns)))
 
-parser = blib.create_argparser(u"Find etymologies for adjectives and nouns with common suffixes")
+# Pages specified using --pages or --pagefile may have accents, which will be stripped.
+parser = blib.create_argparser(u"Find etymologies for adjectives and nouns with common suffixes",
+    include_pagefile=True, include_stdin=True, canonicalize_pagename=rulib.remove_accents)
 parser.add_argument("--nouns", action='store_true', help="Do derived nouns instead of adjectives")
 parser.add_argument("--adverbs", action='store_true', help="Do derived adverbs")
-parser.add_argument("--base-lemmafile", help="File containing base lemmas")
 parser.add_argument("--derived-lemmafile", help="File containing derived lemmas")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
 derived_lemmas = []
 if args.derived_lemmafile:
-  derived_lemmas = [rulib.remove_accents(x.strip()) for x in codecs.open(args.derived_lemmafile, "r", "utf-8")]
+  derived_lemmas = blib.iter_pages_from_file(args.derived_lemmafile, rulib.remove_accents)
 else:
   for i, page in blib.cat_articles("Russian adverbs" if args.adverbs else "Russian nouns" if args.nouns else "Russian adjectives"):
-    derived_lemmas.append(page.title())
+    derived_lemmas.append(unicode(page.title()))
 
-if args.base_lemmafile:
-  for i, pagename in blib.iter_items([rulib.remove_accents(x.strip()) for x in codecs.open(args.base_lemmafile, "r", "utf-8")]):
-    page = pywikibot.Page(site, pagename)
-    process_page(i, page, args.save, args.verbose, derived_lemmas)
-else:
-  for category in ["Russian adjectives"] if args.adverbs else ["Russian proper nouns", "Russian nouns", "Russian verbs"]:
-    for i, page in blib.cat_articles(category, start, end):
-      process_page(i, page, args.save, args.verbose, args.adverbs, derived_lemmas)
+blib.do_pagefile_cats_refs(args, start, end, process_text_on_page, edit=True, stdin=True,
+  default_cats=["Russian adjectives"] if args.adverbs else ["Russian proper nouns", "Russian nouns", "Russian verbs"])

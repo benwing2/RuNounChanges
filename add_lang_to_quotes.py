@@ -18,15 +18,13 @@ quote_templates = ["quote-av", "quote-book", "quote-hansard",
 ]
 blib.getData()
 
-def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
+def process_text_on_page(index, pagetitle, text):
+  global args
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
-  if blib.page_should_be_ignored(pagetitle):
-    pagemsg("Skipping ignored page")
-    return None, None
-      
+  notes = []
+
   def hack_templates(parsed, langname, subsectitle, langnamecode=None,
       is_citation=False):
     if langname not in blib.languages_byCanonicalName:
@@ -88,9 +86,6 @@ def process_page(page, index, parsed):
 
   pagemsg("Processing")
 
-  text = unicode(page.text)
-  notes = []
-
   sections = re.split("(^==[^=]*==\n)", text, 0, re.M)
 
   if not pagetitle.startswith("Citations"):
@@ -125,11 +120,10 @@ def process_page(page, index, parsed):
   newtext = "".join(sections)
   return newtext, notes
 
-parser = blib.create_argparser("Add language to quote-* templates, based on the section it's within")
+parser = blib.create_argparser("Add language to quote-* templates, based on the section it's within",
+    include_pagefile=True, include_stdin=True)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-for cat in ["Undetermined terms with quotations", "Quotations with missing lang parameter"]:
-  msg("Processing category %s" % cat)
-  for i, page in blib.cat_articles(cat, start, end):
-    blib.do_edit(page, i, process_page, save=args.save, verbose=args.verbose)
+blib.do_pagefile_cats_refs(args, start, end, process_text_on_page, edit=True, stdin=True,
+  default_cats=["Undetermined terms with quotations", "Quotations with missing lang parameter"])

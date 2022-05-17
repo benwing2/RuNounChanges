@@ -1,35 +1,22 @@
 #!/usr/bin/env python
 #coding: utf-8
 
-#    find_missing_phon_or_translit.py is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
-#
-#    You should have received a copy of the GNU General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-# Go through looking for pages with missing phon= or missing translit.
+# Go through Russian lemmas looking for pages with missing phon= or missing translit.
 # Currently we just look for э in the ru-IPA call but not in the page title.
 
 import pywikibot, re, sys, codecs, argparse
 
 import blib
-from blib import getparam, rmparam, msg, site
+from blib import getparam, rmparam, msg, site, tname
 
 import runounlib
 
-def process_page(index, page, save, verbose):
-  pagetitle = unicode(page.title())
+def process_text_on_page(index, pagetitle, text):
+  global args
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
-  pagemsg("Processing")
+  notes = []
 
   if u"э" in pagetitle:
     pagemsg(u"Skipping because has э in page title")
@@ -37,16 +24,15 @@ def process_page(index, page, save, verbose):
 
   words = re.split("[ -]", pagetitle)
 
-  text = unicode(page.text)
-  parsed = blib.parse(page)
+  parsed = blib.parse_text(text)
   found_ru_ipa = []
   prons = []
   saw_phon = False
   saw_epsilon_pron = [False] * len(words)
   saw_no_epsilon_pron = [False] * len(words)
   for t in parsed.filter_templates():
-    tname = unicode(t.name)
-    if tname == "ru-IPA":
+    tn = tname(t)
+    if tn == "ru-IPA":
       pron = getparam(t, "phon")
       if pron:
         found_ru_ipa.append(("phon", pron))
@@ -74,8 +60,8 @@ def process_page(index, page, save, verbose):
   pronstr = ",".join(prons)
 
   for t in parsed.filter_templates():
-    tname = unicode(t.name)
-    if tname in ["ru-noun+", "ru-proper noun+"]:
+    tn = tname(t)
+    if tn in ["ru-noun+", "ru-proper noun+"]:
       per_word_info = runounlib.split_noun_decl_arg_sets(t, pagemsg)
       if len(per_word_info) != len(words):
         pagemsg("WARNING: Something wrong, %s words but %s lemmas" % (
@@ -123,14 +109,11 @@ def process_page(index, page, save, verbose):
               pagemsg(u"WARNING: Saw decl %s without ɛ but not pron %s without э for word %s"
                   % (lemmastr, pronstr, word))
 
-parser = blib.create_argparser(u"Find missing phon= or translit")
-parser.add_argument("--cat", help="Category to check.")
-parser.add_argument("--fix-star", action="store_true",
-  help="Fix pronun lines missing * at beginning")
+parser = blib.create_argparser("Find missing phon= or transit in Russian lemmas",
+    include_pagefile=True, include_stdin=True)
+parser.add_argument("--fix-star", action="store_true", help="Fix pronun lines missing * at beginning")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-category = args.cat or "Russian lemmas"
-msg("Processing category: %s" % category)
-for i, page in blib.cat_articles(category, start, end):
-  process_page(i, page, args.save, args.verbose)
+blib.do_pagefile_cats_refs(args, start, end, process_text_on_page, edit=True, stdin=True,
+  default_cats=["Russian lemmas"])

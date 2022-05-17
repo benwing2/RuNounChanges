@@ -1,43 +1,35 @@
 #!/usr/bin/env python
-#coding: utf-8
+# -*- coding: utf-8 -*-
 
-#    clean_verb_headword.py is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
-#
-#    You should have received a copy of the GNU General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+import pywikibot, re, sys, codecs, argparse
 
-import re
+import blib
+from blib import getparam, rmparam, msg, site, tname
 
-import blib, pywikibot
-from blib import msg, getparam
+def process_text_on_page(index, pagetitle, text):
+  global args
+  def pagemsg(txt):
+    msg("Page %s %s: %s" % (index, pagetitle, txt))
 
-# Clean the verb headword templates on a given page with the given text.
-# Returns the changed text along with a changelog message.
-def clean_one_page_verb_headword(page, index, text):
-  pagetitle = page.title()
   actions_taken = []
-  for template in text.filter_templates():
+
+  parsed = blib.parse_text(text)
+
+  for t in parsed.filter_templates():
+    origt = unicode(t)
+    tn = tname(t)
     paramschanged = []
-    if template.name in ["ar-verb"]:
-      form = getparam(template, "form")
+    if tn in ["ar-verb"]:
+      form = getparam(t, "form")
       if form == "1" or form == "I":
-        msg("Page %s %s: skipped ar-verb because form I" % (index, pagetitle))
+        pagemsg("skipped ar-verb because form I")
         continue
-      elif getparam(template, "useparam"):
-        msg("Page %s %s: skipped ar-verb because useparam" % (index, pagetitle))
+      elif getparam(t, "useparam"):
+        pagemsg("skipped ar-verb because useparam")
         continue
-      origtemp = unicode(template)
       def remove_param(param):
-        if template.has(param):
-          template.remove(param)
+        if t.has(param):
+          t.remove(param)
           paramschanged.append(param)
       remove_param("head")
       remove_param("head2")
@@ -46,38 +38,31 @@ def clean_one_page_verb_headword(page, index, text):
       remove_param("impf")
       remove_param("impfhead")
       remove_param("impftr")
-      if getparam(template, "sc") == "Arab":
+      if getparam(t, "sc") == "Arab":
         remove_param("sc")
-      I = getparam(template, "I")
+      I = getparam(t, "I")
       if I in [u"ء", u"و", u"ي"] and form not in ["8", "VIII"]:
-        msg("Page %s %s: form=%s, removing I=%s" % (index, pagetitle, form, I))
+        pagemsg("form=%s, removing I=%s" % (form, I))
         remove_param("I")
-      II = getparam(template, "II")
+      II = getparam(t, "II")
       if (II == u"ء" or II in [u"و", u"ي"] and
           form in ["2", "II", "3", "III", "5", "V", "6", "VI"]):
-        msg("Page %s %s: form=%s, removing II=%s" % (index, pagetitle, form, II))
+        pagemsg("form=%s, removing II=%s" % (form, II))
         remove_param("II")
-      III = getparam(template, "III")
+      III = getparam(t, "III")
       if III == u"ء":
-        msg("Page %s %s: form=%s, removing III=%s" % (index, pagetitle, form, III))
+        pagemsg("form=%s, removing III=%s" % (form, III))
         remove_param("III")
-      newtemp = unicode(template)
-      if origtemp != newtemp:
-        msg("Replacing %s with %s" % (origtemp, newtemp))
+      if unicode(t) != origt:
+        pagemsg("Replaced %s with %s" % (origt, unicode(t)))
       if len(paramschanged) > 0:
         actions_taken.append("form=%s (%s)" % (form, ', '.join(paramschanged)))
   changelog = "ar-verb: remove params: %s" % '; '.join(actions_taken)
-  #if len(actions_taken) > 0:
-  msg("Change log = %s" % changelog)
-  return text, changelog
+  return unicode(parsed), changelog
 
-def clean_verb_headword(save, startFrom, upTo):
-  for cat in [u"Arabic verbs"]:
-    for index, page in blib.cat_articles(cat, startFrom, upTo):
-      blib.do_edit(page, index, clean_one_page_verb_headword, save=save)
+parser = blib.create_argparser("Clean up Arabic vevrb headword templates", include_pagefile=True, include_stdin=True)
+args = parser.parse_args()
+start, end = blib.parse_start_end(args.start, args.end)
 
-pa = blib.init_argparser("Clean up verb headword templates")
-params = pa.parse_args()
-startFrom, upTo = blib.parse_start_end(params.start, params.end)
-
-clean_verb_headword(params.save, startFrom, upTo)
+blib.do_pagefile_cats_refs(args, start, end, process_text_on_page, edit=True, stdin=True,
+  default_cats = ["Arabic verbs"])

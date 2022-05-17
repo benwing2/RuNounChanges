@@ -46,17 +46,15 @@ def find_stress(term, pagemsg):
         (term, stringize_heads(heads)))
   return term, None
 
-def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
+def process_text_on_page(index, pagetitle, text):
+  global args
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
-  pagemsg("Processing")
-
-  found_affix = False
   notes = []
+  found_affix = False
 
-  text = unicode(page.text)
+  parsed = blib.parse_text(text)
 
   for t in parsed.filter_templates():
     origt = unicode(t)
@@ -160,14 +158,13 @@ def process_page(page, index, parsed):
 
   return unicode(parsed), notes
 
-parser = blib.create_argparser('Convert use of alt1= in etyms to proper use of interfixes')
+parser = blib.create_argparser('Convert use of alt1= in etyms to proper use of interfixes',
+    include_pagefile=True, include_stdin=True)
 parser.add_argument('--etym-change', action="store_true",
     help="If specified, output warning lines in a format that they can be edited and the changes uploaded.")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 etym_change = args.etym_change
 
-for category in ["Russian compound words"]:
-  msg("Processing category: %s" % category)
-  for i, page in blib.cat_articles(category, start, end):
-    blib.do_edit(page, i, process_page, save=args.save, verbose=args.verbose)
+blib.do_pagefile_cats_refs(args, start, end, process_text_on_page, edit=True, stdin=True,
+  default_cats=["Russian compound words"])

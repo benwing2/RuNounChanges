@@ -1,19 +1,6 @@
 #!/usr/bin/env python
 #coding: utf-8
 
-#    find_no_etym_verbal_noun_adj.py is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
-#
-#    You should have received a copy of the GNU General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 # Try to construct etymologies of verbal nouns in -ние and verbal adjectives
 # in -тельный.
 
@@ -63,7 +50,7 @@
 import pywikibot, re, sys, codecs, argparse
 
 import blib
-from blib import getparam, rmparam, msg, errandmsg, site
+from blib import getparam, rmparam, msg, errandmsg, site, tname
 
 import rulib
 
@@ -94,7 +81,7 @@ def find_noun(pagename, pagemsg, errandpagemsg, expand_text):
   parsed = blib.parse_text(section)
   nouns = []
   for t in parsed.filter_templates():
-    if unicode(t.name) == "ru-noun+":
+    if tname(t) == "ru-noun+":
       generate_template = re.sub(r"^\{\{ru-noun\+",
           "{{ru-generate-noun-forms", unicode(t))
       generate_result = expand_text(generate_template)
@@ -123,7 +110,7 @@ def find_adj(pagename, pagemsg, errandpagemsg, expand_text):
   parsed = blib.parse_text(section)
   adjs = []
   for t in parsed.filter_templates():
-    if unicode(t.name) == "ru-adj":
+    if tname(t) == "ru-adj":
       heads = blib.fetch_param_chain(t, "1", "head", pagename)
       if len(heads) > 1:
         pagemsg("WARNING: Multiple lemmas for adjective: %s" % ",".join(heads))
@@ -184,27 +171,25 @@ def form_ppp(conjtype, pagetitle, args):
   else:
     return None
 
-def process_page(index, page, save, verbose, nouns, adjectives):
-  pagetitle = unicode(page.title())
+def process_text_on_page(index, pagetitle, text):
+  global args
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
   def errandpagemsg(txt):
     errandmsg("Page %s %s: %s" % (index, pagetitle, txt))
-
   def expand_text(tempcall):
-    return blib.expand_text(tempcall, pagetitle, pagemsg, verbose)
+    return blib.expand_text(tempcall, pagetitle, pagemsg, args.verbose)
 
-  pagemsg("Processing")
+  notes = []
 
   if re.search(u"с[яь]$", pagetitle):
     pagemsg("Skipping reflexive verb")
     return
 
-  text = unicode(page.text)
-  parsed = blib.parse(page)
+  parsed = blib.parse_text(text)
   for t in parsed.filter_templates():
-    tname = unicode(t.name)
-    if tname == "ru-conj":
+    tn = tname(t)
+    if tn == "ru-conj":
       if [x for x in t.params if unicode(x.value) == "or"]:
         pagemsg("WARNING: Skipping multi-arg conjugation: %s" % unicode(t))
         continue
@@ -295,7 +280,9 @@ def process_page(index, page, save, verbose, nouns, adjectives):
         else:
           msg(u"%s %s+-тельный no-etym verbal-adj" % (verbal_adj, stem))
 
-parser = blib.create_argparser(u"Find etymologies for verbal nouns in -ние and verbal adjectives in -тельный")
+# Pages specified using --pages or --pagefile may have accents, which will be stripped.
+parser = blib.create_argparser(u"Find etymologies for Russian verbal nouns in -ние and verbal adjectives in -тельный",
+    include_pagefile=True, include_stdin=True, canonicalize_pagename=rulib.remove_accents)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
@@ -306,6 +293,5 @@ adjectives = []
 for i, page in blib.cat_articles("Russian adjectives"):
   adjectives.append(page.title())
 
-for category in ["Russian verbs"]:
-  for i, page in blib.cat_articles(category, start, end):
-    process_page(i, page, args.save, args.verbose, nouns, adjectives)
+blib.do_pagefile_cats_refs(args, start, end, process_text_on_page, edit=True, stdin=True,
+  default_cats=["Russian verbs"])

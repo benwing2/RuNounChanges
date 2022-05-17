@@ -1,20 +1,7 @@
 #!/usr/bin/env python
 #coding: utf-8
 
-#    find_headword_secondary_stress.py is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
-#
-#    You should have received a copy of the GNU General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-# Go through all the lemmas looking for headwords with secondary stress in them.
+# Go through all Russian lemmas looking for headwords with secondary stress in them.
 
 import pywikibot, re, sys, codecs, argparse
 import unicodedata
@@ -47,49 +34,49 @@ def output_heads_seen(overall=False):
   for head, count in sorted(dic.items(), key=lambda x:-x[1]):
     msg("  %s = %s" % (head, count))
 
-def process_page(index, page, save, verbose):
-  pagetitle = unicode(page.title())
+def process_text_on_page(index, pagetitle, text):
+  global args
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
   def expand_text(tempcall):
-    return blib.expand_text(tempcall, pagetitle, pagemsg, verbose)
+    return blib.expand_text(tempcall, pagetitle, pagemsg, args.verbose)
 
-  pagemsg("Processing")
+  notes = []
 
-  parsed = blib.parse(page)
+  parsed = blib.parse_text(text)
   found_page_head = False
   for t in parsed.filter_templates():
     found_this_head = False
-    if tname(t) in ru_normal_head_templates:
+    tn = tname(t)
+    if tn in ru_normal_head_templates:
       heads = blib.fetch_param_chain(t, "1", "head")
       for head in heads:
         if has_secondary_stress(head):
           pagemsg("Found secondarily stressed head %s in %s" % (head,
             unicode(t)))
-    elif tname(t) == "head" and getparam(t, "1") == "ru":
+    elif tn == "head" and getparam(t, "1") == "ru":
       heads = blib.fetch_param_chain(t, "head", "head")
       for head in heads:
         if has_secondary_stress(head):
           pagemsg("Found secondarily stressed head %s in %s" % (head,
             unicode(t)))
-    elif tname(t) in ["ru-noun+", "ru-proper noun+", "ru-noun-table", "ru-noun-old"]:
+    elif tn in ["ru-noun+", "ru-proper noun+", "ru-noun-table", "ru-noun-old"]:
       per_word_objs = runounlib.split_noun_decl_arg_sets(t, pagemsg)
       for per_word in per_word_objs:
         for arg_set in per_word:
           if has_secondary_stress(arg_set[1]):
             pagemsg("Found secondarily stressed head %s in %s" % (
               arg_set[1], unicode(t)))
-    elif tname(t) == "ru-decl-adj":
+    elif tn == "ru-decl-adj":
       head = getparam(t, "1")
       if has_secondary_stress(head):
         pagemsg("Found secondarily stressed head %s in %s" % (head,
           unicode(t)))
 
-parser = blib.create_argparser(u"Find Russian terms without a proper headword line")
+parser = blib.create_argparser("Find Russian terms with secondary stress in the headword",
+    include_pagefile=True, include_stdin=True)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-for category in ["Russian lemmas", "Russian non-lemma forms"]:
-  msg("Processing category: %s" % category)
-  for i, page in blib.cat_articles(category, start, end):
-    process_page(i, page, args.save, args.verbose)
+blib.do_pagefile_cats_refs(args, start, end, process_text_on_page, edit=True, stdin=True,
+  default_cats=["Russian lemmas", "Russian non-lemma forms"])

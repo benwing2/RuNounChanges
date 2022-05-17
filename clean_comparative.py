@@ -13,13 +13,14 @@ is_lemma_templates = [
   "en-superlative of",
 ]
 
-def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
+def process_text_on_page(index, pagetitle, text):
+  global args
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
-  pagemsg("Processing")
   notes = []
+
+  parsed = blib.parse_text(text)
 
   for t in parsed.filter_templates():
     origt = unicode(t)
@@ -37,11 +38,10 @@ def process_page(page, index, parsed):
 
   return unicode(parsed), notes
 
-parser = blib.create_argparser("Remove is lemma= and is_lemma= from comparative/superlative templates")
+parser = blib.create_argparser("Remove is lemma= and is_lemma= from comparative/superlative templates",
+    include_pagefile=True, include_stdin=True)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-for category in ["comparative of with is lemma", "superlative of with is lemma"]:
-  msg("Processing category '%s'" % category)
-  for i, page in blib.cat_articles(category, start, end):
-    blib.do_edit(page, i, process_page, save=args.save, verbose=args.verbose)
+blib.do_pagefile_cats_refs(args, start, end, process_text_on_page, edit=True, stdin=True,
+  default_cats = ["comparative of with is lemma", "superlative of with is lemma"])

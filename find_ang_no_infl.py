@@ -6,13 +6,14 @@ import pywikibot, re, sys, codecs, argparse
 import blib
 from blib import getparam, rmparam, msg, site, tname
 
-def process_page(index, page, cat):
-  pagetitle = unicode(page.title())
+def process_text_on_page(index, pagetitle, text):
+  global args
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
-  pagemsg("Processing")
-  parsed = blib.parse(page)
+  notes = []
+
+  parsed = blib.parse_text(text)
 
   found_infl = False
   for t in parsed.filter_templates():
@@ -29,10 +30,10 @@ def process_page(index, page, cat):
   if not found_infl:
     pagemsg("WARNING: Couldn't find inflection template")
 
-parser = blib.create_argparser("Find Old English terms without inflection")
+parser = blib.create_argparser("Find Old English terms without inflection",
+    include_pagefile=True, include_stdin=True)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-for pos in ["nouns", "verbs", "adjectives"]:
-  for index, page in blib.cat_articles("Old English %s" % pos, start, end):
-    process_page(index, page, pos)
+blib.do_pagefile_cats_refs(args, start, end, process_text_on_page, edit=True, stdin=True,
+  default_cats=["Old English %s" % pos for pos in ["nouns", "verbs", "adjectives"])

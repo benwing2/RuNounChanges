@@ -1,34 +1,31 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# Use past_adv_part_short=- instead of past_adv_part_short=
-
 import pywikibot, re, sys, codecs, argparse
 
 import blib
-from blib import getparam, rmparam, msg, site
+from blib import getparam, rmparam, msg, site, tname
 
-def process_page(index, page, save, verbose):
-  pagetitle = unicode(page.title())
+def process_text_on_page(index, pagetitle, text):
+  global args
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
-  pagemsg("Processing")
+  notes = []
 
-  text = unicode(page.text)
-  parsed = blib.parse(page)
+  parsed = blib.parse_text(text)
+
   found_inflection_of = False
   for t in parsed.filter_templates():
-    if unicode(t.name) in ["inflection of"]:
+    if tname(t) in ["inflection of"]:
       found_inflection_of = True
   if not found_inflection_of:
     pagemsg("WARNING: No 'inflection of'")
 
-parser = blib.create_argparser(u"Find badly formatted Russian noun forms")
+parser = blib.create_argparser("Find badly formatted Russian noun forms",
+    include_pagefile=True, include_stdin=True)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-for category in ["Russian noun forms"]:
-  msg("Processing category: %s" % category)
-  for i, page in blib.cat_articles(category, start, end):
-    process_page(i, page, args.save, args.verbose)
+blib.do_pagefile_cats_refs(args, start, end, process_text_on_page, edit=True, stdin=True,
+  default_cats=["Russian noun forms"])
