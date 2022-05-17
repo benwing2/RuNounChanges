@@ -28,7 +28,7 @@ def process_page(index, page):
         notes.append("found head header (%s)" % getparam(t, "2"))
     pagemsg("Missing adj headword template%s" % (notes and "; " + ",".join(notes)))
 
-parser = blib.create_argparser("Find missing adjective headwords")
+parser = blib.create_argparser("Find missing Russian adjective headwords")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
