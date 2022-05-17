@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-#coding: utf-8
+# -*- coding: utf-8 -*-
 
 #    revert_bad_back_formation_changes.py is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by

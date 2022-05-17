@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-#coding: utf-8
+# -*- coding: utf-8 -*-
 
 # Try to construct etymologies of verbal nouns in -ние and verbal adjectives
 # in -тельный.

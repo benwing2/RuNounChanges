@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-#coding: utf-8
+# -*- coding: utf-8 -*-
 
 # Go through all Russian lemmas looking for headwords with secondary stress in them.
 

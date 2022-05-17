@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-#coding: utf-8
+# -*- coding: utf-8 -*-
 
 #    find_regex.py is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by

@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-#coding: utf-8
+# -*- coding: utf-8 -*-
  
 import blib, pywikibot, re, string, sys, codecs
 from blib import addparam

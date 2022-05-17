@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-#coding: utf-8
+# -*- coding: utf-8 -*-
 
 # Find Russian verbs with missing past passive participles. All such verbs should
 # be imperfective transitive, since perfective transitive verbs lacking

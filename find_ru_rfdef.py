@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-#coding: utf-8
+# -*- coding: utf-8 -*-
 
 # Find pages that need definitions among a set list (e.g. most frequent words).
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-#coding: utf-8
+# -*- coding: utf-8 -*-
 
 # Go through all the terms we can find looking for pages that are
 # missing a headword declaration.

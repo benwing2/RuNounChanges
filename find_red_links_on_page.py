@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-#coding: utf-8
+# -*- coding: utf-8 -*-
 
 # Find redlinks (non-existent pages) and yellow links (non-existent language section)
 # on a set of pages.
