@@ -1044,27 +1044,28 @@ def do_pagefile_cats_refs(args, start, end, process, default_cats=[],
     if has_changed:
       assert edit, "Changed text without edit=True given"
     if edit:
-      # Join previous and this comment. Either may be None, a list of individual notes, an empty string (equivalent to
-      # None), or a non-empty string specifying a single comment.
-      if not prev_comment and not this_comment:
-        comment = None
-      elif not prev_comment:
-        comment = this_comment
-      elif not this_comment:
-        comment = prev_comment
-      else:
-        if type(prev_comment) is not list:
-          prev_comment = [prev_comment]
-        if type(this_comment) is not list:
-          this_comment = [this_comment]
-        comment = prev_comment + this_comment
-      if type(comment) is list:
-        comment = "; ".join(group_notes(comment))
-
       if has_changed:
+        # Join previous and this comment. Either may be None, a list of individual notes, an empty string (equivalent to
+        # None), or a non-empty string specifying a single comment.
+        if not prev_comment and not this_comment:
+          comment = None
+        elif not prev_comment:
+          comment = this_comment
+        elif not this_comment:
+          comment = prev_comment
+        else:
+          if type(prev_comment) is not list:
+            prev_comment = [prev_comment]
+          if type(this_comment) is not list:
+            this_comment = [this_comment]
+          comment = prev_comment + this_comment
+        if type(comment) is list:
+          comment = "; ".join(group_notes(comment))
         pagemsg("Would save with comment = %s" % comment)
-      elif comment:
-        pagemsg("Skipped, no changes; previous comment = %s" % comment)
+      elif prev_comment:
+        if type(prev_comment) is list:
+          prev_comment = "; ".join(group_notes(prev_comment))
+        pagemsg("Skipped, no changes; previous comment = %s" % prev_comment)
       else:
         pagemsg("Skipped, no changes")
       if not args.no_output:
