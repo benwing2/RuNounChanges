@@ -7,7 +7,7 @@ import pywikibot
 from arabiclib import reorder_shadda
 
 def rename_pages(refrom, reto, refs, pages_and_refs, cats, pages, pagefile,
-    from_to_pagefile, comment, filter_pages, save, verbose, startFrom, upTo):
+    from_to_pagefile, comment, filter_pages, save, verbose, start, end):
   def rename_one_page(page, totitle, index):
     pagetitle = unicode(page.title())
     def pagemsg(txt):
@@ -43,31 +43,29 @@ def rename_pages(refrom, reto, refs, pages_and_refs, cats, pages, pagefile,
 
   def yield_pages():
     if pages:
-      for index, page in blib.iter_items(pages, startFrom, upTo):
+      for index, page in blib.iter_items(pages, start, end):
         yield index, pywikibot.Page(blib.site, page), None
     if pagefile:
-      lines = [x.strip() for x in codecs.open(pagefile, "r", "utf-8")]
-      for index, page in blib.iter_items(lines, startFrom, upTo):
+      for index, page in blib.iter_items_from_file(pagefile, start, end):
         yield index, pywikibot.Page(blib.site, page), None
     if from_to_pagefile:
-      lines = [x.strip() for x in codecs.open(from_to_pagefile, "r", "utf-8")]
-      for index, line in blib.iter_items(lines, startFrom, upTo):
+      for index, line in blib.iter_items_from_file(from_to_pagefile, start, end):
         if " ||| " not in line:
-          msg("WARNING: Saw bad line in --from-to-pagefile: %s" % line)
+          msg("Line %s: WARNING: Saw bad line in --from-to-pagefile: %s" % (index, line))
           continue
         frompage, topage = line.split(" ||| ")
         yield index, pywikibot.Page(blib.site, frompage), topage
     if refs:
       for ref in refs:
-        for index, page in blib.references(ref, startFrom, upTo, only_template_inclusion=False):
+        for index, page in blib.references(ref, start, end, only_template_inclusion=False):
           yield index, page, None
     if pages_and_refs:
       for page_and_refs in pages_and_refs:
-        for index, page in blib.references(page_and_refs, startFrom, upTo, only_template_inclusion=False, include_page=True):
+        for index, page in blib.references(page_and_refs, start, end, only_template_inclusion=False, include_page=True):
           yield index, page, None
     if cats:
       for cat in cats:
-        for index, page in blib.cat_articles(cat, startFrom, upTo):
+        for index, page in blib.cat_articles(cat, start, end):
           yield index, page, None
 
   for index, page, totitle in yield_pages():
@@ -83,7 +81,7 @@ def rename_pages(refrom, reto, refs, pages_and_refs, cats, pages, pagefile,
       rename_one_page(page, totitle, index)
 
 
-pa = blib.init_argparser("Rename pages")
+pa = blib.create_argparser("Rename pages")
 pa.add_argument("-f", "--from", help="From regex, can be specified multiple times",
     metavar="FROM", dest="from_", action="append")
 pa.add_argument("-t", "--to", help="To regex, can be specified multiple times",
@@ -99,7 +97,7 @@ pa.add_argument('--pages', help="List of pages to rename, comma-separated.")
 pa.add_argument('--pagefile', help="File containing pages to rename.")
 pa.add_argument('--from-to-pagefile', help="File containing pairs of from/to pages to rename, separated by ' ||| '.")
 params = pa.parse_args()
-startFrom, upTo = blib.parse_start_end(params.start, params.end)
+start, end = blib.parse_start_end(params.start, params.end)
 
 if (not params.references and not params.pages_and_refs
     and not params.categories and not params.pages and not params.pagefile
@@ -122,4 +120,4 @@ if len(from_) != len(to):
 
 rename_pages(from_, to, references, pages_and_refs, categories, pages, pagefile,
     from_to_pagefile, comment, filter_pages, params.save, params.verbose,
-    startFrom, upTo)
+    start, end)

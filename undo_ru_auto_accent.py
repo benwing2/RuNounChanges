@@ -13,21 +13,19 @@ from blib import msg, getparam, addparam
 
 site = pywikibot.Site()
 
-def undo_ru_auto_accent(save, verbose, direcfile, startFrom, upTo):
+def undo_ru_auto_accent(save, verbose, direcfile, start, end):
   template_removals = []
-  for line in codecs.open(direcfile, "r", encoding="utf-8"):
-    line = line.strip()
+  for lineno, line in blib.iter_items_from_file(direcfile, start, end):
     m = re.search(r"^Page [0-9]+ (.*?): Replaced (\{\{.*?\}\}) with (\{\{.*?\}\})$",
         line)
     if not m:
-      msg("WARNING: Unable to parse line: [%s]" % line)
+      msg("Line %s: WARNING: Unable to parse line: [%s]" % (lineno, line))
     else:
       template_removals.append(m.groups())
 
-  for current, index in blib.iter_pages(template_removals, startFrom, upTo,
-      # key is the page name
-      key = lambda x: x[0]):
-    pagename, orig_template, repl_template = current
+  for index, (pagename, removed_param, template_text) in blib.iter_items(
+      template_removals, get_name = lambda x: x[0]):
+
     if not re.search(r"^\{\{(ux|usex|ru-ux|lang)\|", orig_template):
       continue
     def undo_one_page_ru_auto_accent(page, index, text):
@@ -65,11 +63,11 @@ def undo_ru_auto_accent(save, verbose, direcfile, startFrom, upTo):
       blib.do_edit(page, index, undo_one_page_ru_auto_accent, save=save,
           verbose=verbose)
 
-pa = blib.init_argparser("Undo auto-accent changes involving ux, usex and lang templates that look like direct quotes")
-pa.add_argument("--file",
-    help="File containing log file from original auto-accent run")
+params = blib.create_argparser("Undo auto-accent changes involving ux, usex and lang templates that look like direct quotes")
+params.add_argument("--file",
+    help="File containing log file from original auto-accent run", required=True)
 
-params = pa.parse_args()
-startFrom, upTo = blib.parse_start_end(params.start, params.end)
+args = params.parse_args()
+start, end = blib.parse_start_end(args.start, args.end)
 
-undo_ru_auto_accent(params.save, params.verbose, params.file, startFrom, upTo)
+undo_ru_auto_accent(args.save, args.verbose, args.file, start, end)

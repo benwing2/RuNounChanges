@@ -172,24 +172,18 @@ keep_locative = [
     u"Западный берег"
 ]
     
-def process_page(page, index, parsed):
+def process_text_on_page(index, pagetitle, text):
   global args
-  pagetitle = unicode(page.title())
-  subpagetitle = re.sub("^.*:", "", pagetitle)
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
-
-  pagemsg("Processing")
-
-  if ":" in pagetitle:
-    pagemsg("WARNING: Colon in page title, skipping")
-    return
-
   def expand_text(tempcall):
     return blib.expand_text(tempcall, pagetitle, pagemsg, args.verbose)
 
-  origtext = page.text
-  parsed = blib.parse_text(origtext)
+  subpagetitle = re.sub("^.*:", "", pagetitle)
+
+  notes = []
+
+  parsed = blib.parse_text(text)
 
   # Find the declension arguments for LEMMA and inflected form INFL,
   # the WORDINDth word in the expression. Return value is a tuple of
@@ -955,7 +949,7 @@ def process_page(page, index, parsed):
   return newtext, notes
 
 parser = blib.create_argparser("Convert ru-noun to ru-noun+, ru-proper noun to ru-proper noun+ for multiword nouns",
-  include_pagefile=True)
+  include_pagefile=True, include_stdin=True)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
@@ -966,5 +960,5 @@ for pos in ["nouns", "proper nouns"]:
       "Template:tracking/ru-headword/hyphen-no-space-in-headword/%s" % pos]:
     refs.append(refpage)
 
-blib.do_pagefile_cats_refs(args, start, end, process_page, edit=True,
+blib.do_pagefile_cats_refs(args, start, end, process_text_on_page, edit=True, stdin=True,
   default_refs=refs)

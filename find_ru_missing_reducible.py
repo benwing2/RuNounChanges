@@ -15,11 +15,11 @@ def process_text_on_page(index, pagetitle, text):
 
   notes = []
 
-  if not re.search(ur"(ник|ок)([ -]|$)", pagetitle):
+  if not re.search(ur"(ник|ок|ка)([ -]|$)", pagetitle):
     return
 
   cons = u"[бцдфгчйклмнпрствшхзжщ]"
-  if (pagetitle.endswith(u"ство") or (
+  if (pagetitle.endswith(u"ство") or pagetitle.endswith(u"ёнок") or re.search(u"[шжчщ]онок$", pagetitle) or (
       not re.search(cons + u"[кц][оаяеёыи]$", pagetitle) and
       not re.search(cons + cons + u"[оаяеёыи]$", pagetitle) and
       # not re.search(u"[оеё]" + cons + "$", pagetitle) and # but too many false positives

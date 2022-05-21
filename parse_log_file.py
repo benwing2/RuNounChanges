@@ -38,10 +38,10 @@ import re, codecs, argparse
 import blib
 from blib import msg
 
-pa = argparse.ArgumentParser(description="Parse log files from canon_arabic etc.")
-pa.add_argument("-f", "--file", help="Log file")
-pa.add_argument("start", nargs="?", help="First page to work on")
-pa.add_argument("end", nargs="?", help="Last page to work on")
+parser = blib.create_argparser("Parse log files from canon_arabic etc.")
+parser.add_argument("-f", "--file", help="Log file", required=True)
+args = parser.parse_args()
+start, end = blib.parse_start_end(args.start, args.end)
 
 def yield_page_lines(fn):
   index = None
@@ -189,7 +189,4 @@ def parse_log_file(fn, startFrom, upTo):
       else:
         msg(line)
 
-params = pa.parse_args()
-startFrom, upTo = blib.parse_start_end(params.start, params.end)
-
-parse_log_file(params.file, startFrom, upTo)
+parse_log_file(args.file, start, end)

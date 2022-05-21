@@ -36,7 +36,7 @@ args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
 if args.textfile:
-  with codecs.open(args.textfile, "r", "utf-8") as fp:
+  with codecs.open(args.textfile.decode("utf-8"), "r", "utf-8") as fp:
     text = fp.read()
   pages = re.split('\nPage [0-9]+ ', text)
   title_text_split = ': Found match for regex: '

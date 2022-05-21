@@ -7,7 +7,7 @@ import blib
 import grc_translit
 from canon_foreign import canon_links
 
-pa = blib.init_argparser("Canonicalize Greek and translit")
+pa = blib.create_argparser("Canonicalize Greek and translit")
 pa.add_argument("--cattype", default="borrowed",
     help="""Categories to examine ('vocab', 'borrowed', 'translation',
 'links', 'pagetext', 'pages' or comma-separated list)""")

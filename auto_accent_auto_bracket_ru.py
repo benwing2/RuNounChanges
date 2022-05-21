@@ -1129,25 +1129,20 @@ def auto_accent_auto_bracket_russian(find_accents, accent_hidden, cattype, direc
     save, verbose, startFrom, upTo):
   if direcfile:
     processing_lines = []
-    for line in codecs.open(direcfile, "r", encoding="utf-8"):
-      line = line.strip()
+    for index, line in blib.iter_items_from_file(direcfile, startFrom, upTo):
       m = re.match(r"^(Page [^ ]+ )(.*?)(: .*?:) Processing: (\{\{.*?\}\})( <- \{\{.*?\}\} \(\{\{.*?\}\}\))$",
           line)
-      if m:
-        processing_lines.append(m.groups())
-
-    for current, index in blib.iter_pages(processing_lines, startFrom, upTo,
-        # key is the page name
-        key = lambda x:x[1]):
-
-      pagenum, pagename, tempname, repltext, rest = current
+      if not m:
+        msg("Line %s: WARNING: Unable to parse line: %s" % (index, line))
+        continue
+      pagenum, pagetitle, tempname, repltext, rest = m.groups()
 
       def pagemsg(text):
         msg("Page %s(%s) %s: %s" % (pagenum, index, pagetitle, text))
       def check_template_for_missing_accent(pagetitle, index, pagetext,
           template, templang, ruparam, trparam):
         def output_line(directive):
-          msg("* %s[[%s]]%s %s: <nowiki>%s%s</nowiki>" % (pagenum, pagename,
+          msg("* %s[[%s]]%s %s: <nowiki>%s%s</nowiki>" % (pagenum, pagetitle,
               tempname, directive, unicode(template), rest))
         return process_template(pagetitle, index, pagetext, template, ruparam,
             trparam, output_line, find_accents, accent_hidden, verbose)
@@ -1155,7 +1150,7 @@ def auto_accent_auto_bracket_russian(find_accents, accent_hidden, cattype, direc
       blib.process_links(save, verbose, "ru", "Russian", "pagetext", None,
           None, check_template_for_missing_accent,
           join_actions=join_changelog_notes, split_templates=None,
-          pages_to_do=[(pagename, repltext)], quiet=True)
+          pages_to_do=[(pagetitle, repltext)], quiet=True)
       if index % 100 == 0:
         ruheadlib.output_stats(pagemsg)
   else:
@@ -1175,7 +1170,7 @@ def auto_accent_auto_bracket_russian(find_accents, accent_hidden, cattype, direc
         upTo, check_template_for_missing_accent,
         join_actions=join_changelog_notes, split_templates=None)
 
-pa = blib.init_argparser("Auto-accent and auto-bracket Russian terms")
+pa = blib.create_argparser("Auto-accent and auto-bracket Russian terms")
 pa.add_argument("--cattype", default="vocab",
     help="Categories to examine ('vocab', 'borrowed', 'translation')")
 pa.add_argument("--file",

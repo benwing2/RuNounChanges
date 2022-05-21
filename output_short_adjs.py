@@ -6,16 +6,15 @@ import rulib
 from collections import OrderedDict
 
 parser = argparse.ArgumentParser(description="Output short adjectives in Wiktionary, ordered by frequency.")
-parser.add_argument("--freq-adjs",
-    help=u"""Adjectives ordered by frequency, without accents or ё.""")
+parser.add_argument("--freq-adjs", help=u"""Adjectives ordered by frequency, without accents or ё.""",
+    required=True)
 parser.add_argument("--wiktionary-short-adjs",
     help=u"""Adjectives in Wiktionary with short forms, in alphabetical order.
-Should be accented and with ё.""")
+Should be accented and with ё.""", required=True)
 args = parser.parse_args()
 
-short_adjs = OrderedDict((rulib.make_unstressed_ru(x.strip()), True) for x in codecs.open(args.wiktionary_short_adjs, "r", "utf-8"))
-for line in codecs.open(args.freq_adjs, "r", "utf-8"):
-  line = line.strip()
+short_adjs = OrderedDict((rulib.make_unstressed_ru(x), True) for x in blib.yield_items_from_file(args.wiktionary_short_adjs))
+for line in blib.yield_items_from_file(args.freq_adjs):
   if line in short_adjs:
     print line.encode("utf-8")
     del short_adjs[line]

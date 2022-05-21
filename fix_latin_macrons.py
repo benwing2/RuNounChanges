@@ -14,14 +14,9 @@ parser.add_argument("--direcfile", help="List of directives to process.",
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-direcfile = args.direcfile.decode("utf-8")
-lines = [line.rstrip('\n') for line in codecs.open(direcfile, "r", "utf-8")]
-for lineno, line in blib.iter_items(lines, start, end):
+for lineno, line in blib.iter_items_from_file(args.direcfile, start, end):
   def err(text):
     errmsg("Line %s: %s" % (lineno, text))
-  if line.startswith("#"):
-    msg(line)
-    continue
   # break off transitive/intransitive notation after verbs
   m = re.search(r"^(.*?)((?: *\[.*\])?)$", line)
   parttext, transtext = m.groups()

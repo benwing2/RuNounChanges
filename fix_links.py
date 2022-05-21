@@ -518,7 +518,7 @@ def process_text_on_page(index, pagetitle, text):
       sections[j] = do_section(sections[j], thislangname)
     newtext = "".join(sections)
 
-  return newtext, "Replace raw links with templated links: %s" % ",".join(subbed_links)
+  return newtext, "replace raw links with templated links: %s" % ",".join(subbed_links)
 
 if __name__ == "__main__":
   parser = blib.create_argparser("Replace raw links with templated links",

@@ -8,21 +8,18 @@ from blib import msg, getparam, addparam
 
 site = pywikibot.Site()
 
-def undo_greek_removal(save, verbose, direcfile, startFrom, upTo):
+def undo_greek_removal(save, verbose, direcfile, start, end):
   template_removals = []
-  for line in codecs.open(direcfile, "r", encoding="utf-8"):
-    line = line.strip()
+  for lineno, line in blib.iter_items_from_file(direcfile, start, end):
     m = re.match(r"\* \[\[(.*?)]]: Removed (.*?)=.*?: <nowiki>(.*?)</nowiki>$",
         line)
     if not m:
-      msg("WARNING: Unable to parse line: [%s]" % line)
+      msg("Line %s: WARNING: Unable to parse line: [%s]" % (lineno, line))
     else:
       template_removals.append(m.groups())
 
-  for current, index in blib.iter_pages(template_removals, startFrom, upTo,
-      # key is the page name
-      key = lambda x: x[0]):
-    pagename, removed_param, template_text = current
+  for index, (pagename, removed_param, template_text) in blib.iter_items(
+      template_removals, get_name = lambda x: x[0]):
 
     def undo_one_page_greek_removal(page, index, text):
       def pagemsg(txt):
@@ -65,11 +62,11 @@ def undo_greek_removal(save, verbose, direcfile, startFrom, upTo):
       blib.do_edit(page, index, undo_one_page_greek_removal, save=save,
           verbose=verbose)
 
-pa = blib.init_argparser("Undo Greek transliteration removal")
-pa.add_argument("--file",
-    help="File containing templates and removal directives to undo")
+params = blib.create_argparser("Undo Greek transliteration removal")
+params.add_argument("--file",
+    help="File containing templates and removal directives to undo", required=True)
 
-params = pa.parse_args()
-startFrom, upTo = blib.parse_start_end(params.start, params.end)
+args = params.parse_args()
+start, end = blib.parse_start_end(args.start, args.end)
 
-undo_greek_removal(params.save, params.verbose, params.file, startFrom, upTo)
+undo_greek_removal(args.save, args.verbose, args.file, start, end)

@@ -33,8 +33,7 @@ parser.add_argument("--direcfile", help="List of directives to process.",
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-lines = [x.rstrip('\n') for x in codecs.open(args.direcfile, "r", "utf-8")]
-for i, line in blib.iter_items(lines, start, end):
+for i, line in blib.iter_items_from_file(args.direcfile, start, end):
   m = re.search("^Page [0-9]+ (Reconstruction:.*): WARNING: Saw verb headword template but no conjugation template: ({{la-verb.*}})$", line)
   if m:
     page, template = m.groups()

@@ -69,7 +69,6 @@ parser.add_argument("--forms", help="Form codes of forms to delete.")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-lines = [x.strip() for x in codecs.open(args.declfile, "r", "utf-8")]
 if args.forms == "all-verb":
   forms = [
       "pres_1sg", "pres_2sg", "pres_3sg", "pres_1pl", "pres_2pl", "pres_3pl",
@@ -113,8 +112,8 @@ elif args.forms == "pl":
         "ins_pl", "pre_pl"
   ]
 else:
-  forms = re.split(",", args.forms)
-for i, line in blib.iter_items(lines, start, end):
+  forms = blib.split_utf8_arg(args.forms)
+for i, line in blib.iter_items_from_file(args.declfile, start, end):
   if "!!!" in line:
     pagetitle, decl = re.split("!!!", line)
   else:

@@ -269,10 +269,7 @@ args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
 verbs = {}
-for line in codecs.open(args.direcfile, "r", encoding="utf-8"):
-  line = line.strip()
-  if line.startswith("#"):
-    continue
+for line in blib.yield_items_from_file(args.direcfile.decode("utf-8")):
   if args.mode == "full-conj":
     verb = re.sub("<.*?>", "", line)
     verbs[verb] = line

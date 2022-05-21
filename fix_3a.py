@@ -98,14 +98,9 @@ parser.add_argument('--delete-bad', action="store_true", help="Delete bad forms.
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-pagedirecs = []
-lines = [x.strip() for x in codecs.open(args.direcfile, "r", "utf-8")]
-for i, line in blib.iter_items(lines, start, end):
-  if line.startswith("#"):
-    msg("Skipping comment: %s" % line)
-  else:
-    page, direc = re.split(" ", line)
-    def do_process_page(page, index, parsed):
-      return process_page(index, page, direc, args.delete_bad, args.verbose)
-    blib.do_edit(pywikibot.Page(site, page), i, do_process_page, save=args.save,
-      verbose=args.verbose, diff=args.diff)
+for i, line in blib.iter_items_from_file(args.direcfile, start, end):
+  page, direc = re.split(" ", line)
+  def do_process_page(page, index, parsed):
+    return process_page(index, page, direc, args.delete_bad, args.verbose)
+  blib.do_edit(pywikibot.Page(site, page), i, do_process_page, save=args.save,
+    verbose=args.verbose, diff=args.diff)

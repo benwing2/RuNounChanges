@@ -77,11 +77,10 @@ parser.add_argument("--direcfile", required=True)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-lines = [x.rstrip('\n') for x in codecs.open(args.direcfile, "r", "utf-8")]
-for i, line in blib.iter_items(lines, start, end):
+for i, line in blib.iter_items_from_file(lines, start, end):
   m = re.search("^(.*?) /// (.*?) /// .*? /// .*?$", line)
   if not m:
-    msg("Page %s: Unrecognized line: %s" % (i, line))
+    msg("Line %s: Unrecognized line: %s" % (i, line))
     continue
   adv, adj = m.groups()
   def do_process_page(page, index, parsed):

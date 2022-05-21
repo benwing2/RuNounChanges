@@ -201,7 +201,7 @@ def process_links(save, verbose, cattype, startFrom, upTo):
   return blib.process_links(save, verbose, "ar", "Arabic", cattype,
       startFrom, upTo, do_process_param, sort_group_changelogs)
 
-pa = blib.init_argparser("Remove redundant translit")
+pa = blib.create_argparser("Remove redundant translit")
 pa.add_argument("-l", "--links", action='store_true',
     help="Vocalize links")
 pa.add_argument("--cattype", default="borrowed",

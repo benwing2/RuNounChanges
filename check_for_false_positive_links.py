@@ -41,5 +41,5 @@ start, end = blib.parse_start_end(args.start, args.end)
 
 blib.parse_dump(sys.stdin, find_english_pages)
 
-for index, line in blib.iter_items(codecs.open(args.direcfile, "r", encoding="utf-8"), start, end):
+for index, line in blib.iter_items_from_file(args.direcfile, start, end):
   process_line(index, line)

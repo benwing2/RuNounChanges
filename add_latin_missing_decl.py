@@ -88,14 +88,13 @@ parser.add_argument("--direcfile", help="File of output directives from make_lat
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-lines = [x.rstrip('\n') for x in codecs.open(args.direcfile, "r", "utf-8")]
-for i, line in blib.iter_items(lines, start, end):
+for lineno, line in blib.iter_items_from_file(args.direcfile, start, end):
   m = re.search("^Page [0-9]+ (.*?): For noun (.*?), declension (.*?)$", line)
   if not m:
-    msg("Unrecognized line, skipping: %s" % line)
+    msg("Line %s: Unrecognized line, skipping: %s" % (lineno, line))
   else:
     pagename, headword_template, decl_template = m.groups()
     def do_process_page(page, index, parsed):
       return process_page(page, index, headword_template, decl_template)
-    blib.do_edit(pywikibot.Page(site, pagename), i, do_process_page, save=args.save,
+    blib.do_edit(pywikibot.Page(site, pagename), lineno, do_process_page, save=args.save,
         verbose=args.verbose, diff=args.diff)

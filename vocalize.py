@@ -189,7 +189,7 @@ def vocalize_links(save, verbose, cattype, startFrom, upTo):
   return blib.process_links(save, verbose, "ar", "Arabic", cattype,
       startFrom, upTo, process_param, join_actions)
 
-pa = blib.init_argparser("Correct vocalization and translit")
+pa = blib.create_argparser("Correct vocalization and translit")
 pa.add_argument("-l", "--links", action='store_true',
     help="Vocalize links")
 pa.add_argument("--cattype", default="borrowed",

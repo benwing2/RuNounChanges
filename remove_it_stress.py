@@ -6,80 +6,6 @@ import pywikibot, re, sys, codecs, argparse
 import blib
 from blib import getparam, rmparam, msg, errandmsg, site, tname, pname
 
-import lalib
-from lalib import remove_macrons
-
-def process_form(index, page, lemma, formind, formval, subs):
-  pagetitle = unicode(page.title())
-
-  def pagemsg(txt):
-    msg("Page %s %s: form %s %s: %s" % (index, lemma, formind, formval, txt))
-
-  notes = []
-
-  parsed = blib.parse(page)
-
-  for t in parsed.filter_templates():
-    origt = unicode(t)
-    tn = tname(t)
-
-    def fix_head(headparam, head, tn):
-      for badstem, goodstem in subs:
-        if head.startswith(badstem):
-          newhead = goodstem + head[len(badstem):]
-          t.add(headparam, newhead)
-          notes.append("correct stem %s -> %s in {{%s}}" % (
-            badstem, goodstem, tn))
-          return newhead
-      else:
-        # no break
-        pagemsg("WARNING: Head %s not same as page title and doesn't begin with bad stem %s: %s" % (
-          head, " or ".join(badstem for badstem, goodstem in subs), unicode(t)))
-        return False
-
-    # la-suffix-form has its own format, don't handle
-    if tn in lalib.la_nonlemma_headword_templates and tn != "la-suffix-form":
-      headparam = "head"
-      head = getparam(t, headparam)
-      if not head:
-        headparam = "1"
-        head = getparam(t, headparam)
-      if remove_macrons(head) != pagetitle:
-        newhead = fix_head(headparam, head, tn)
-        if newhead and remove_macrons(newhead) != pagetitle:
-          pagemsg("WARNING: Replacement head %s not same as page title: %s" % (
-            newhead, unicode(t)))
-    elif tn in lalib.la_infl_of_templates:
-      langparam = "lang"
-      headparam = "1"
-      altparam = "2"
-      lang = getparam(t, langparam)
-      if not lang:
-        langparam = "1"
-        headparam = "2"
-        altparam = "3"
-        lang = getparam(t, langparam)
-      if lang == "la":
-        link = getparam(t, headparam)
-        alt = getparam(t, altparam)
-        head = alt or link
-        if remove_macrons(head) != remove_macrons(lemma):
-          if subs:
-            newhead = fix_head(headparam, head, tn + "|la")
-            if newhead:
-              t.add(altparam, "")
-              if remove_macrons(newhead) != remove_macrons(lemma):
-                pagemsg("WARNING: Replacement lemma %s not same as lemma %s: %s" % (
-                  newhead, lemma, unicode(t)))
-        else:
-          if link != lemma or alt != "":
-            t.add(headparam, lemma)
-            t.add(altparam, "")
-            notes.append("correct lemma and/or move alt text to link text in {{%s|la}}" % tn)
-    if origt != unicode(t):
-      pagemsg("Replaced %s with %s" % (origt, unicode(t)))
-  return unicode(parsed), notes
-
 remove_stress_table = {
   u'à': 'a',
   u'á': 'a',
@@ -272,19 +198,13 @@ def process_page(index, page, title_with_syllable_divs=None):
   sections[j] = secbody + sectail
   return "".join(sections), notes
 
-  for formind, form in blib.iter_items(forms_to_delete):
-    def handler(page, formind, parsed):
-      return process_form(index, page, lemma, formind, form, subs)
-    blib.do_edit(pywikibot.Page(site, remove_macrons(form)), formind, handler, save=save, verbose=verbose)
-
 parser = blib.create_argparser(u"Transfer accent from {{it-stress}} to {{hyph|it}} and remove {{it-stress}}, or replace {{it-stress}} with synthesized {{hyph|it}}")
 parser.add_argument("--stressfile", help="List of pages with stress.")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
 if args.stressfile:
-  lines = [x.rstrip('\n') for x in codecs.open(args.stressfile, "r", "utf-8")]
-  for index, line in blib.iter_items(lines, start, end):
+  for index, line in blib.iter_items_from_file(args.stressfile, start, end):
     m = re.search(r"^\* Page [0-9]+ \[\[(Rhymes:.*?)\]\]: WARNING: Saw it-stress template \{\{temp\|it-stress\|(.*?)\}\}.*$", line)
     if m:
       title, title_with_syllable_divs = m.groups()
@@ -294,7 +214,7 @@ if args.stressfile:
         title = m.group(1)
         title_with_syllable_divs = title.replace(".", "")
       else:
-        msg("WARNING: Unable to parse: %s" % line)
+        msg("Line %s: WARNING: Unable to parse: %s" % (index, line))
         continue
     page = pywikibot.Page(site, title)
     def handler(page, index, parsed):

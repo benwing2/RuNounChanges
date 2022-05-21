@@ -48,11 +48,10 @@ args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
 # * Page 3574 [[коала]]: WARNING: Gender mismatch, existing=m-an,f-an, new=f-an
-lines = [x.strip() for x in codecs.open(args.pagefile, "r", "utf-8")]
-for i, line in blib.iter_items(lines, start, end):
+for i, line in blib.iter_items_from_file(args.pagefile, start, end):
   m = re.search("^\* Page [0-9]+ \[\[(.*?)\]\]: WARNING: Gender mismatch, existing=(.*?), new=.*?$", line)
   if not m:
-    msg("WARNING: Can't process line: %s" % line)
+    msg("Line %s: WARNING: Can't process line: %s" % (i, line))
   else:
     page, genders = m.groups()
     msg("Page %s %s: Processing: %s" % (i, page, line))

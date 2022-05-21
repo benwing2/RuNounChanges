@@ -912,13 +912,6 @@ def process_lemma(index, pagetitle, slots, program_args):
                     save=program_args.save, verbose=program_args.verbose,
                     diff=program_args.diff)
 
-def read_pages(filename, start, end):
-  lines = [x.strip() for x in codecs.open(filename, "r", "utf-8")]
-  for i, line in blib.iter_items(lines, start, end):
-    if line.startswith("#"):
-      continue
-    yield i, line
-
 parser = blib.create_argparser("Add pronunciation sections to Latin Wiktionary entries", include_pagefile=True)
 parser.add_argument('--lemma-file', help="File containing lemmas to process, one per line; non-lemma forms will be done")
 parser.add_argument('--lemmas', help="List of comma-separated lemmas to process; non-lemma forms will be done")
@@ -931,7 +924,7 @@ if args.lemma_file or args.lemmas:
   slots = args.slots.split(",")
 
   if args.lemma_file:
-    lemmas = read_pages(args.lemma_file, start, end)
+    lemmas = blib.iter_items_from_file(args.lemma_file, start, end)
   else:
     lemmas = blib.iter_items(re.split(",", args.lemmas.decode("utf-8")), start, end)
   for i, lemma in lemmas:

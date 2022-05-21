@@ -31,11 +31,9 @@ args = params.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
 comment = args.comment and args.comment.decode("utf-8")
-direcfile = args.direcfile and args.direcfile.decode("utf-8")
 
-if direcfile:
-  lines = [x.strip() for x in codecs.open(direcfile, "r", "utf-8")]
-  for index, line in blib.iter_items(lines, start, end):
+if args.direcfile:
+  for index, line in blib.iter_items_from_file(args.direcfile, start, end):
     if " ||| " in line:
       pagetitle, page_comment = line.split(" ||| ")
     else:

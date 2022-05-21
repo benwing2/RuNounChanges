@@ -142,7 +142,8 @@ def process_text_in_section(sectext, pagemsg):
               pbase = mm.group(1)
               pind = int(mm.group(2) or "1")
               maxparam = max(maxparam, pind)
-              mergedt.add("%s%s" % (pbase, pind + index - 1), pv)
+              paramno = pind + index - 1
+              mergedt.add("%s%s" % (pbase, "" if paramno == 1 else paramno), pv)
             elif pn == "1":
               pass
             elif re.search("^[0-9]+$", pn):

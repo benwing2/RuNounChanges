@@ -164,12 +164,7 @@ start, end = blib.parse_start_end(args.start, args.end)
 
 if args.mode == "full-conj":
   verbs = {}
-  lineno = 0
-  for line in codecs.open(args.direcfile, "r", encoding="utf-8"):
-    lineno += 1
-    line = line.strip()
-    if line.startswith("#"):
-      continue
+  for lineno, line in blib.iter_items_from_file(args.direcfile, start, end):
     verb = blib.remove_links(re.sub("<.*?>", "", line))
     verbs[verb] = line
     def do_process_page(page, index, parsed=None):
@@ -182,12 +177,9 @@ if args.mode == "full-conj":
     blib.do_edit(page, lineno, do_process_page, save=args.save, verbose=args.verbose, diff=args.diff)
 elif args.mode == "generate":
   verbs = {}
-  for line in codecs.open(args.direcfile, "r", encoding="utf-8"):
-    line = line.strip()
-    if line.startswith("#"):
-      continue
+  for lineno, line in blib.yield_items_from_file(args.direcfile, include_original_lineno=True):
     if " " not in line:
-      errandmsg("WARNING: No space in line: %s" %  line)
+      errandmsg("Line %s: WARNING: No space in line: %s" % (lineno, line))
       continue
     verb, spec = line.split(" ", 1)
     verbs[verb] = spec
@@ -195,19 +187,14 @@ elif args.mode == "generate":
     return process_page_for_generate(page, index, verbs)
   blib.do_pagefile_cats_refs(args, start, end, do_process_page)
 else:
-  lineno = 0
-  for line in codecs.open(args.direcfile, "r", encoding="utf-8"):
-    lineno += 1
-    line = line.strip()
-    if line.startswith("#"):
-      continue
+  for lineno, line in blib.iter_items_from_file(args.direcfile, start, end):
     if " " not in line:
-      errandmsg("WARNING: No space in line: %s" %  line)
+      errandmsg("Line %s: WARNING: No space in line: %s" % (lineno, line))
       continue
     verb, spec = line.split(" ", 1)
     page = pywikibot.Page(site, verb)
     if not page.exists():
-      errandmsg("WARNING: Page %s doesn't exist" % verb)
+      errandmsg("Page %s %s: WARNING: Page doesn't exist" % (lineno, verb))
     else:
       def do_process_page(page, index, parsed=None):
         pagetitle = unicode(page.title())

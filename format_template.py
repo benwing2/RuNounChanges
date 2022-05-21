@@ -212,7 +212,7 @@ def correct_link_formatting(save, startFrom, upTo):
     for index, page in blib.cat_articles(cat, startFrom, upTo):
       blib.do_edit(page, index, correct_one_page_link_formatting, save=save)
 
-pa = blib.init_argparser("Correct formatting of headword templates")
+pa = blib.create_argparser("Correct formatting of headword templates")
 pa.add_argument("-l", "--links", action='store_true',
     help="Vocalize links")
 

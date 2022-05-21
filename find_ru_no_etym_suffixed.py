@@ -260,7 +260,7 @@ start, end = blib.parse_start_end(args.start, args.end)
 
 derived_lemmas = []
 if args.derived_lemmafile:
-  derived_lemmas = blib.iter_pages_from_file(args.derived_lemmafile, rulib.remove_accents)
+  derived_lemmas = blib.yield_items_from_file(args.derived_lemmafile, canonicalize=rulib.remove_accents)
 else:
   for i, page in blib.cat_articles("Russian adverbs" if args.adverbs else "Russian nouns" if args.nouns else "Russian adjectives"):
     derived_lemmas.append(unicode(page.title()))

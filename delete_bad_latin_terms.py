@@ -99,7 +99,7 @@ parser.add_argument('--output-pages-to-delete', help="File to write pages to del
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-headtemp = args.headtemp.decode('utf-8').split(',')
+headtemp = blib.split_utf8_arg(args.headtemp)
 
 def process_page(page, index, parsed):
   return delete_term(index, page, headtemp)

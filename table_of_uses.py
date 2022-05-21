@@ -17,13 +17,11 @@ args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 ref_namespaces = args.ref_namespaces and args.ref_namespaces.decode("utf-8") or None
 
-lines = [x.strip() for x in codecs.open(args.tempfile, "r", "utf-8")]
-
 msg('{|class="wikitable"')
 msg("! Aliased template !! Canonical template !! #Uses%s%s" %
   (" !! Refs" if args.include_refs else "",
    " !! Suggested disposition" if args.include_disposition else ""))
-for ref_and_aliases in lines:
+for lineno, ref_and_aliases in blib.iter_items_from_file(args.tempfile):
   split_refs = re.split(",", ref_and_aliases)
   mainref = "Template:%s" % split_refs[0]
   aliases = split_refs[1:]

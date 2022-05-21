@@ -7,7 +7,7 @@ import blib
 import ru_translit
 from canon_foreign import canon_links
 
-pa = blib.init_argparser("Canonicalize Russian and translit")
+pa = blib.create_argparser("Canonicalize Russian and translit")
 pa.add_argument("--cattype", default="borrowed",
     help="""Categories to examine ('vocab', 'borrowed', 'translation',
 'links', 'pagetext', 'pages', an arbitrary category or comma-separated list)""")

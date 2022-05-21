@@ -686,22 +686,40 @@ def stream(st, startsort = None, endsort = None):
 
     yield i, pywikibot.Page(site, name)
 
-def split_arg(arg, canonicalize=None):
+def split_utf8_arg(arg, canonicalize=None):
+  arg = arg.decode("utf-8")
   def process(pagename):
-    pagename = pagename.decode("utf-8")
     if canonicalize:
       pagename = canonicalize(pagename)
     return pagename
   return [process(x) for x in re.split(r",(?! )", arg)]
 
-def iter_pages_from_file(filename, canonicalize=None):
+def yield_items_from_file(filename, canonicalize=None, filename_is_utf8=True, include_original_lineno=False,
+    preserve_blank_lines=False):
+  if filename_is_utf8:
+    filename = filename.decode("utf-8")
+  lineno = 0
   for line in codecs.open(filename, "r", "utf-8"):
+    lineno += 1
     line = line.strip()
     if line.startswith("#"):
       continue
+    if not line and not preserve_blank_lines:
+      continue
     if canonicalize:
       line = canonicalize(line)
-    yield line
+    if include_original_lineno:
+      yield lineno, line
+    else:
+      yield line
+
+def iter_items_from_file(filename, startsort=None, endsort=None, canonicalize=None, filename_is_utf8=True,
+    preserve_blank_lines=False, skip_ignorable_pages=False):
+  file_items = yield_items_from_file(filename, canonicalize=canonicalize, filename_is_utf8=filename_is_utf8,
+      include_original_lineno=True, preserve_blank_lines=preserve_blank_lines)
+  for _, (index, line) in iter_items(file_items, startsort=startsort, endsort=endsort, get_name=lambda x:x[1], get_index=lambda x:x[0],
+      skip_ignorable_pages=skip_ignorable_pages):
+    yield index, line
 
 def get_page_name(page):
   if isinstance(page, basestring):
@@ -955,9 +973,6 @@ def create_argparser(desc, include_pagefile=False, include_stdin=False,
     parser.add_argument("--only-lang", help="Only process the section of a page for this language (a canonical language name).")
   return parser
 
-def init_argparser(desc):
-  return create_argparser(desc)
-
 def parse_args(args = sys.argv[1:]):
   startsort = None
   endsort = None
@@ -1167,9 +1182,9 @@ def do_pagefile_cats_refs(args, start, end, process, default_cats=[],
   if stdin and args.stdin:
     pages_to_filter = None
     if args.pages:
-      pages_to_filter = set(split_arg(args.pages, canonicalize_pagename))
+      pages_to_filter = set(split_utf8_arg(args.pages, canonicalize=canonicalize_pagename))
     if args.pagefile:
-      new_pages_to_filter = set(iter_pages_from_file(args.pagefile, canonicalize_pagename))
+      new_pages_to_filter = set(yield_items_from_file(args.pagefile, canonicalize=canonicalize_pagename))
       if pages_to_filter is None:
         pages_to_filter = new_pages_to_filter
       else:
@@ -1199,23 +1214,22 @@ def do_pagefile_cats_refs(args, start, end, process, default_cats=[],
 
   elif args_has_non_default_pages(args):
     if args.pages:
-      pages = split_arg(args.pages, canonicalize_pagename)
+      pages = split_utf8_arg(args.pages, canonicalize=canonicalize_pagename)
       for index, pagetitle in iter_items(pages, start, end):
         process_pywikibot_page(index, pywikibot.Page(site, pagetitle))
     if args.pagefile:
-      pages = iter_pages_from_file(args.pagefile, canonicalize_pagename)
-      for index, pagetitle in iter_items(pages, start, end):
+      for index, pagetitle in iter_items_from_file(args.pagefile, start, end, canonicalize=canonicalize_pagename):
         process_pywikibot_page(index, pywikibot.Page(site, pagetitle))
     if args.pages_from_find_regex:
       index_pagetitle_text_comment = yield_text_from_find_regex(
-        codecs.open(args.pages_from_find_regex, "r", "utf-8"), args.verbose
+        codecs.open(args.pages_from_find_regex.decode("utf-8"), "r", "utf-8"), args.verbose
       )
       for _, (index, pagetitle, _, _) in iter_items(index_pagetitle_text_comment, start, end,
           get_name=lambda x:x[1], get_index=lambda x:x[0]):
         process_pywikibot_page(index, pywikibot.Page(site, pagetitle))
     if args.pages_from_previous_output:
       index_pagetitle = yield_pages_from_previous_output(
-        codecs.open(args.pages_from_previous_output, "r", "utf-8"), args.verbose
+        codecs.open(args.pages_from_previous_output.decode("utf-8"), "r", "utf-8"), args.verbose
       )
       for _, (index, pagetitle) in iter_items(index_pagetitle, start, end,
           get_name=lambda x:x[1], get_index=lambda x:x[0]):
@@ -1226,7 +1240,7 @@ def do_pagefile_cats_refs(args, start, end, process, default_cats=[],
         seen = set()
       else:
         seen = None
-      for cat in split_arg(args.cats):
+      for cat in split_utf8_arg(args.cats):
         if args.do_cat_and_subcats:
           for index, subcat in cat_subcats(cat, start, end, seen=seen, prune_cats_regex=args_prune_cats,
               do_this_page=True, recurse=args.recursive):
@@ -1240,20 +1254,20 @@ def do_pagefile_cats_refs(args, start, end, process, default_cats=[],
               recurse=args.recursive, track_seen=args.track_seen):
             process_pywikibot_page(index, page)
     if args.refs:
-      for ref in split_arg(args.refs):
+      for ref in split_utf8_arg(args.refs):
         # We don't use ref_namespaces here because the user might not want it.
         for index, page in references(ref, start, end, namespaces=args_ref_namespaces):
           process_pywikibot_page(index, page)
     if args.specials:
-      for special in split_arg(args.specials):
+      for special in split_utf8_arg(args.specials):
         for index, page in query_special_pages(special, start, end):
           process_pywikibot_page(index, page)
     if args.contribs:
-      for contrib in split_arg(args.contribs):
+      for contrib in split_utf8_arg(args.contribs):
         for index, page in query_usercontribs(contrib, start, end, starttime=args.contribs_start, endtime=args.contribs_end):
           process_pywikibot_page(index, pywikibot.Page(site, page['title']))
     if args.prefix_pages:
-      for prefix in split_arg(args.prefix_pages):
+      for prefix in split_utf8_arg(args.prefix_pages):
         namespace = args.prefix_namespace and args.prefix_namespace.decode("utf-8") or None
         for index, page in prefix_pages(prefix, start, end, namespace):
           process_pywikibot_page(index, page)

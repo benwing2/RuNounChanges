@@ -30,7 +30,7 @@ def fix_tool_place_noun(save, verbose, startFrom, upTo):
       blib.do_edit(page, index, fix_one_page_tool_place_noun, save=save,
           verbose=verbose)
 
-pa = blib.init_argparser("Fix lc vs. cap in tool/place noun etym templates")
+pa = blib.create_argparser("Fix lc vs. cap in tool/place noun etym templates")
 params = pa.parse_args()
 startFrom, upTo = blib.parse_start_end(params.start, params.end)
 

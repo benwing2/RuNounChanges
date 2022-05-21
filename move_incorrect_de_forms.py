@@ -7,18 +7,18 @@ import blib
 from blib import getparam, rmparam, msg, site
 
 parser = blib.create_argparser(u"Delete obsolete pages")
-parser.add_argument('--pagefile', help="File of ///-separated pairs of base declensions to move")
+parser.add_argument('--pagefile', help="File of ///-separated pairs of base declensions to move",
+    required=True)
 parser.add_argument('--comment', help="Comment to use when deleting")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
-
-pages_to_move = [x.rstrip('\n').split("///") for x in codecs.open(args.pagefile, "r", "utf-8")]
 
 comment = args.comment or "Move erroneously-created non-lemma form"
 
 endings = ["e", "en", "er", "em", "es"]
 
-for i, (frombase, tobase) in blib.iter_items(pages_to_move, start, end, get_name=lambda x: x[1]):
+for i, line in blib.iter_items_from_file(args.pagefile, start, end):
+  frombase, tobase = line.split("///")
   for ending in endings:
     page = pywikibot.Page(site, frombase + ending)
     def pagemsg(txt):

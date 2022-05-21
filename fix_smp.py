@@ -38,7 +38,7 @@ def fix_smp(save, verbose, startFrom, upTo):
       blib.do_edit(page, index, fix_one_page_smp, save=save,
           verbose=verbose)
 
-pa = blib.init_argparser("Change |pl=smp to |pl=sp in declension templates")
+pa = blib.create_argparser("Change |pl=smp to |pl=sp in declension templates")
 params = pa.parse_args()
 startFrom, upTo = blib.parse_start_end(params.start, params.end)
 

@@ -79,10 +79,8 @@ if not args.direcfile:
 if not args.lemmafile:
   lemmas = None
 else:
-  lemmas = set(x.strip() for x in codecs.open(args.lemmafile, "r", "utf-8"))
-for i, line in blib.iter_items(codecs.open(args.direcfile, "r", "utf-8"),
-    start, end):
-  line = line.strip()
+  lemmas = set(blib.yield_items_from_file(args.lemmafile))
+for i, line in blib.iter_items_from_file(args.direcfile, start, end):
   if not line.startswith("*"):
     msg("Page %s ???: Ignoring line: %s" % (i, line))
   else:

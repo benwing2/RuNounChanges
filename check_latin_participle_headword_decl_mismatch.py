@@ -14,11 +14,9 @@ parser.add_argument("--direcfile", help="Output from find_template.participles.*
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-direcfile = args.direcfile.decode("utf-8")
-lines = [line.rstrip('\n') for line in codecs.open(direcfile, "r", "utf-8")]
 last_part_headword = None
 last_adecl_headword = None
-for lineno, line in blib.iter_items(lines, start, end):
+for lineno, line in blib.iter_items_from_file(args.direcfile, start, end):
   def err(text):
     msg("Line %s: %s" % (lineno, text))
   m = re.search(r"Found la-part template: \{\{la-part\|(.*?)(\|.*)?\}\}", line)
@@ -31,6 +29,5 @@ for lineno, line in blib.iter_items(lines, start, end):
       continue
     last_adecl_headword = adecl_headword
     if last_part_headword != last_adecl_headword:
-      msg("Mismatch between {{la-part|%s}} and %s" % (
-        last_part_headword, m.group(1)))
+      err("Mismatch between {{la-part|%s}} and %s" % (last_part_headword, m.group(1)))
     last_part_headword = None

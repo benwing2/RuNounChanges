@@ -6,13 +6,14 @@ import pywikibot, re, sys, codecs, argparse
 import blib
 from blib import getparam, rmparam, msg, site, tname
 
-def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
+def process_text_on_page(index, pagetitle, text):
+  global args
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
-  pagemsg("Processing")
   notes = []
+
+  parsed = blib.parse_text(text)
 
   for t in parsed.filter_templates():
     origt = unicode(t)
@@ -45,11 +46,10 @@ def process_page(page, index, parsed):
 
   return unicode(parsed), notes
 
-parser = blib.create_argparser("Clean up use of dot= and .= in {{&lit}}, {{&oth}}, rename {{&oth}} to {{&lit}}")
+parser = blib.create_argparser("Clean up use of dot= and .= in {{&lit}}, {{&oth}}, rename {{&oth}} to {{&lit}}",
+    include_pagefile=True, include_stdin=True)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-for template in ["&lit", "&oth"]:
-  msg("Processing references to Template:%s" % template)
-  for i, page in blib.references("Template:%s" % template, start, end):
-    blib.do_edit(page, i, process_page, save=args.save, verbose=args.verbose)
+blib.do_pagefile_cats_refs(args, start, end, process_text_on_page, edit=True, stdin=True,
+    default_refs=["Template:&lit", "Template:&oth"])

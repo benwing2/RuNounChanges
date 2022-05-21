@@ -96,7 +96,7 @@ def do_verbs(save, startFrom, upTo):
   for index, page in blib.cat_articles("Arabic verbs", startFrom, upTo):
     blib.do_edit(page, index, do_one_page_verb, save=save, verbose=verbose)
           
-pa = blib.init_argparser("Remove i3rab")
+pa = blib.create_argparser("Remove i3rab")
 pa.add_argument("--verb", action='store_true',
     help="Do verbal nouns in verbs")
 pa.add_argument("--noun", action='store_true',

@@ -23,10 +23,8 @@ for i, page in blib.cat_articles("%s lemmas" % args.lang, start, end):
 
 words_freq = {}
 
-lines = [re.split(r"\s", x.strip()) for x in codecs.open(args.pagefile, "r", "utf-8")]
-lines = [(x[args.field - 1], x) for x in lines]
-
-for i, (pagename, origline) in blib.iter_items(lines, start, end):
+for i, line in blib.iter_items_from_file(args.pagefile, start, end):
+  pagename = re.split(r"\s", line)[args.field - 1]
   m = re.search(u"[^-'Ѐ-џҊ-ԧꚀ-ꚗ]", pagename)
   if m:
     outtext = "skipped due to non-Cyrillic characters"
@@ -53,7 +51,7 @@ for i, (pagename, origline) in blib.iter_items(lines, start, end):
     else:
       outtext = "does not exist"
   if args.output_orig:
-    msg("| %s || %s || %s" % (i, " || ".join(origline), outtext))
+    msg("| %s || %s || %s" % (i, " || ".join(line), outtext))
     msg("|-")
   else:
     msg("Page %s [[%s]]: %s" % (i, pagename, outtext))

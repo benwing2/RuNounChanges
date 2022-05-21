@@ -696,11 +696,6 @@ def process_text_on_page(index, pagetitle, text):
   sections[j] = secbody + sectail
   return "".join(sections), notes
 
-def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
-  text = unicode(page.text)
-  return process_text_on_page(index, pagetitle, text)
-
 parser = blib.create_argparser("Check for Latin forms that don't match headword",
     include_pagefile=True, include_stdin=True)
 parser.add_argument("--fix-macrons", help="Correct macron differences.", action="store_true")

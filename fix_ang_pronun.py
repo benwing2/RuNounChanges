@@ -187,16 +187,12 @@ if not args.new_pronuns:
   blib.do_pagefile_cats_refs(args, start, end, process_text_on_page,
       default_cats=["Old English lemmas"], stdin=True)
 else:
-  lines = codecs.open(args.new_pronuns, "r", "utf-8")
   new_pronuns = {}
   bad_pagename = None
-  for line in lines:
-    line = line.strip()
-    if line.startswith("#"):
-      continue
+  for lineno, line in blib.iter_items_from_file(args.new_pronuns):
     m = re.search("^Page [0-9]+ (.*?): WARNING: Didn't see pronunciation for headword (.*?) <new> (.*?) <end>$", line)
     if not m:
-      msg("WARNING: Unparsable line: %s" % line)
+      msg("Line %s: WARNING: Unparsable line: %s" % (lineno, line))
       continue
     pagename, headword, new_pronun = m.groups()
     if pagename == bad_pagename:
@@ -207,8 +203,8 @@ else:
       broken = False
       for this_headword, this_new_pronun in new_pronuns[pagename]:
         if this_headword == headword and this_new_pronun != new_pronun:
-          msg("WARNING: Saw multiple pronuns for headword %s: %s and %s" % (
-            headword, this_new_pronun, new_pronun))
+          msg("Line %s: WARNING: Saw multiple pronuns for headword %s: %s and %s" % (
+            lineno, headword, this_new_pronun, new_pronun))
           broken = True
           break
       if broken:

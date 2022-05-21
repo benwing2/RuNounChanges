@@ -3525,21 +3525,21 @@ params = pa.parse_args()
 startFrom, upTo = blib.parse_start_end(params.start, params.end)
 
 if params.lemmafile:
-  lemmas_to_process = [x.strip() for x in codecs.open(params.lemmafile, "r", "utf-8")]
+  lemmas_to_process = list(blib.yield_items_from_file(params.lemmafile))
 elif params.lemmas:
-  lemmas_to_process = re.split(",", params.lemmas.decode("utf-8"))
+  lemmas_to_process = blib.split_utf8_arg(params.lemmas)
 else:
   lemmas_to_process = []
 if params.overwrite_lemmas:
-  lemmas_to_overwrite = [x.strip() for x in codecs.open(params.overwrite_lemmas, "r", "utf-8")]
+  lemmas_to_overwrite = list(blib.yield_items_from_file(params.overwrite_lemmas))
 else:
   lemmas_to_overwrite = []
 if params.lemmas_to_not_overwrite:
-  lemmas_to_not_overwrite = [x.strip() for x in codecs.open(params.lemmas_to_not_overwrite, "r", "utf-8")]
+  lemmas_to_not_overwrite = list(blib.yield_items_from_file(params.lemmas_to_not_overwrite))
 else:
   lemmas_to_not_overwrite = []
 if params.perfective_past_passive_participles:
-  pppp_set = set(x.strip() for x in codecs.open(params.perfective_past_passive_participles, "r", "utf-8"))
+  pppp_set = set(blib.yield_items_from_file(params.perfective_past_passive_participles))
 else:
   pppp_set = None
 if params.adj_form:

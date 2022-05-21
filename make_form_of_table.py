@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from blib import getparam, rmparam, msg, errmsg, site
+from blib import msg
 import pywikibot, re, sys, codecs, argparse
 
 import form_of_templates

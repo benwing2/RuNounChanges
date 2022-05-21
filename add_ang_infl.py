@@ -160,14 +160,13 @@ start, end = blib.parse_start_end(args.start, args.end)
 pages_to_infls = {}
 if args.new_infls:
   saw_multiple = set()
-  for line in codecs.open(args.new_infls, "r", "utf-8"):
-    line = line.strip()
-    m = re.search("^Page [0-9]+ (.*?): .*<new> (.*?) <end>", line)
+  for line in blib.yield_items_from_file(args.new_infls):
+    m = re.search("^Page ([0-9]+) (.*?): .*<new> (.*?) <end>", line)
     if m:
-      page, decl = m.groups()
+      index, page, decl = m.groups()
       if page in pages_to_infls:
-        msg("WARNING: Saw multiple inflections for %s: %s and %s, skipping" % (
-          page, pages_to_infls[page], decl))
+        msg("Page %s %s: WARNING: Saw multiple inflections %s and %s, skipping" % (
+          index, page, pages_to_infls[page], decl))
         saw_multiple.add(page)
       pages_to_infls[page] = decl
   for page in saw_multiple:

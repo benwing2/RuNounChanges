@@ -550,10 +550,7 @@ start, end = blib.parse_start_end(args.start, args.end)
 
 pages_to_delete = []
 if args.pos_slot_inflfile:
-  lines = [x.strip() for x in codecs.open(args.pos_slot_inflfile, "r", "utf-8")]
-  for index, line in blib.iter_items(lines, start, end):
-    if line.startswith("#"):
-      continue
+  for index, line in blib.iter_items_from_file(args.pos_slot_inflfile, start, end):
     if "!!!" in line:
       pos, lemma, slots, infl = re.split("!!!", line)
     else:
@@ -563,10 +560,7 @@ if args.pos_slot_inflfile:
 elif args.slot_inflfile:
   if not args.pos:
     raise ValueError("If --slot-inflfile given, --pos must be given")
-  lines = [x.strip() for x in codecs.open(args.slot_inflfile, "r", "utf-8")]
-  for index, line in blib.iter_items(lines, start, end):
-    if line.startswith("#"):
-      continue
+  for index, line in blib.iter_items_from_file(args.slot_inflfile, start, end):
     if "!!!" in line:
       lemma, slots, infl = re.split("!!!", line)
     else:
@@ -576,10 +570,7 @@ elif args.slot_inflfile:
 else:
   if not args.inflfile or not args.slots or not args.pos:
     raise ValueError("If --slot-inflfile not given, --inflfile, --pos and --slots must be given")
-  lines = [x.strip() for x in codecs.open(args.inflfile, "r", "utf-8")]
-  for index, line in blib.iter_items(lines, start, end):
-    if line.startswith("#"):
-      continue
+  for index, line in blib.iter_items_from_file(args.inflfile, start, end):
     if "!!!" in line:
       lemma, infl = re.split("!!!", line)
     else:

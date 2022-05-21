@@ -1,15 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import re
-import codecs
-import time
+import pywikibot, re, sys, codecs, argparse, time
 
-import blib, pywikibot
-from blib import msg, errandmsg, getparam, addparam, remove_links
+import blib
+from blib import getparam, addparam, rmparam, set_template_name, msg, errandmsg, site, tname, remove_links
+
 from arabiclib import *
-
-site = pywikibot.Site()
 
 verbose = True
 personal = False
@@ -2182,8 +2179,7 @@ def parse_elative_defn(spec):
 
 def create_elatives(save, elfile, startFrom, upTo):
   elative_defns = []
-  for line in codecs.open(elfile, "r", encoding="utf-8"):
-    line = line.strip()
+  for line in blib.yield_items_from_file(elfile):
     elative_defns.append(parse_elative_defn(line))
   for current, index in blib.iter_pages(elative_defns, startFrom, upTo,
       # key is the elative
@@ -2229,7 +2225,7 @@ def create_elatives(save, elfile, startFrom, upTo):
       page = pywikibot.Page(site, remove_diacritics(arpositive))
       blib.do_edit(page, index, add_elative_param, save=save)
 
-pa = blib.init_argparser("Create Arabic inflection entries")
+pa = blib.create_argparser("Create Arabic inflection entries")
 pa.add_argument("-p", "--plural", action='store_true',
     help="Do plural inflections")
 pa.add_argument("-f", "--feminine", action='store_true',

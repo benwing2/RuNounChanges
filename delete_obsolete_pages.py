@@ -14,7 +14,7 @@ parser.add_argument('--comment', help="Comment to use when deleting")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-pages_to_delete = [x.strip() for x in codecs.open(args.pagefile, "r", "utf-8")]
+pages_to_delete = list(blib.yield_items_from_file(args.pagefile))
 
 comment = args.comment and args.comment.decode('utf-8') or "Delete obsolete page"
 doc_comment = "Delete documentation page of " + re.sub("^([Dd]elete|[Rr]emove) ", "", comment)

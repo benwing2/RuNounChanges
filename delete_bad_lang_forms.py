@@ -290,7 +290,7 @@ def process_page(index, lemma, forms, lang, pages_to_delete, save, verbose, diff
   for formind, form in blib.iter_items(forms):
     delete_form(index, lemma, formind, form, lang, save, verbose, diff)
 
-parser = blib.create_argparser(u"Delete bad forms for inflected languages")
+parser = blib.create_argparser("Delete bad forms for inflected languages")
 parser.add_argument('--formfile', help="File containing lemmas and forms to delete.", required=True)
 parser.add_argument('--lang', help="Language ('es' or 'it').", choices=["es", "it"], required=True)
 parser.add_argument('--output-pages-to-delete', help="File to write pages to delete.")
@@ -298,10 +298,7 @@ args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
 pages_to_delete = []
-lines = [x.strip() for x in codecs.open(args.formfile, "r", "utf-8")]
-for index, line in blib.iter_items(lines, start, end):
-  if line.startswith("#"):
-    continue
+for index, line in blib.iter_items_from_file(args.formfile, start, end):
   lemma, forms = re.split(": *", line)
   forms = re.split(", *", forms)
   process_page(index, lemma, forms, args.lang, pages_to_delete, args.save, args.verbose, args.diff)

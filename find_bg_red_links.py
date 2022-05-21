@@ -8,7 +8,7 @@ import pywikibot, re, sys, codecs, argparse
 import blib
 from blib import getparam, rmparam, msg, site
 
-parser = blib.create_argparser(u"Find red links")
+parser = blib.create_argparser(u"Find Bulgarian red links")
 parser.add_argument("--pagefile", help="File containing pages to check")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
@@ -18,10 +18,7 @@ msg("Reading Bulgarian lemmas")
 for i, page in blib.cat_articles("Bulgarian lemmas", start, end):
   lemmas.add(unicode(page.title()))
 
-lines = [x.strip() for x in codecs.open(args.pagefile, "r", "utf-8")]
-words = lines
-
-for i, line in blib.iter_items(words, start, end):
+for i, line in blib.iter_items_from_file(args.pagefile, start, end):
   pagename, freq = line.split("\t")
   m = re.search(u"[^-Ѐ-џҊ-ԧꚀ-ꚗ]", pagename)
   def fmsg(txt):

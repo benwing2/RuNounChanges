@@ -120,27 +120,22 @@ def replace_decl(page, index, parsed, decl, declforms):
   return unicode(parsed), notes
 
 parser = blib.create_argparser("Replace manual declensions with given automatic ones")
-parser.add_argument("--declfile", help="File containing replacement declensions")
-parser.add_argument("--lang", required=True, help="Language (uk or be)")
+parser.add_argument("--declfile", help="File containing replacement declensions", required=True)
+parser.add_argument("--lang", required=True, help="Language (uk or be)", choices=["uk", "be"])
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-if args.lang not in ["uk", "be"]:
-  raise ValueError("Unrecognized language: %s" % args.lang)
-
-lines = [x.strip() for x in codecs.open(args.declfile, "r", "utf-8")]
-
 def yield_decls():
-  for line in lines:
+  for lineno, line in blib.iter_items_from_file(args.declfile, start, end):
     found_ndecl_style = False
     for m in re.finditer(r"\{\{(?:User:Benwing2/)?" + args.lang + "-ndecl\|(.*?)\}\}", line):
       found_ndecl_style = True
-      yield m.group(1)
+      yield lineno, m.group(1)
     if not found_ndecl_style:
       for m in re.finditer(r"\(\(.*?\)\)|[^| \[\]]+<.*?\>", line):
-        yield m.group(0)
+        yield lineno, m.group(0)
 
-for index, decl in blib.iter_items(yield_decls(), start, end):
+for index, decl in yield_decls():
   module = uk if args.lang == "uk" else be
   if decl.startswith("(("):
     m = re.search(r"^\(\((.*)\)\)$", decl)

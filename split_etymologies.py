@@ -230,7 +230,7 @@ def split_etymologies(save, verbose, startFrom, upTo):
     blib.do_edit(page, index, split_page_etymologies, save=save,
         verbose=verbose)
 
-pa = blib.init_argparser("Split etymology sections")
+pa = blib.create_argparser("Split etymology sections")
 params = pa.parse_args()
 startFrom, upTo = blib.parse_start_end(params.start, params.end)
 

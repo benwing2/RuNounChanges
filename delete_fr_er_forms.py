@@ -68,9 +68,5 @@ parser.add_argument("--all-suffixes", action="store_true",
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-lines = [x.strip() for x in codecs.open(args.declfile, "r", "utf-8")]
-for i, line in blib.iter_items(lines, start, end):
-  line = re.sub(r"\s*#.*$", "", line) # remove comments
-  line = line.strip()
-  if line:
-    process_er_verb(i, line, args.save, args.verbose, args.all_suffixes)
+for i, line in blib.iter_items_from_file(args.declfile, start, end):
+  process_er_verb(i, line, args.save, args.verbose, args.all_suffixes)

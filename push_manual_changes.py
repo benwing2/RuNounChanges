@@ -15,10 +15,11 @@ def truncate(text):
     return text
   return text[0:max_truncate_len] + "..."
 
-def push_manual_changes(save, verbose, diff, direcfile, annotation, startFrom, upTo):
+def push_manual_changes(save, verbose, diff, direcfile, annotation, start, end):
   template_changes = []
-  for line in codecs.open(direcfile, "r", encoding="utf-8"):
-    line = line.strip()
+  for lineno, line in blib.iter_items_from_file(direcfile, start, end):
+    def linemsg(txt):
+      msg("Line %s: %s" % (lineno, txt))
     repl_on_right = False
     m = re.match(r"^Page [^ ]+ (.*?): .*?: (\{\{.*?\}\}) <- \{\{.*?\}\} \((\{\{.*?\}\})\)$",
         line)
@@ -37,7 +38,7 @@ def push_manual_changes(save, verbose, diff, direcfile, annotation, startFrom, u
         # processing a template such as cardinalbox or compound that has
         # more than one foreign-language parameter in it.
         if len(template_changes) > 0 and template_changes[-1][2] == m.group(3):
-          msg("Ignoring change for pagename %s, %s -> %s" % template_changes[-1])
+          linemsg("Ignoring change for pagename %s, %s -> %s" % template_changes[-1])
           template_changes.pop()
         if repl_on_right:
           pagename, curr, repl = m.groups()
@@ -45,11 +46,11 @@ def push_manual_changes(save, verbose, diff, direcfile, annotation, startFrom, u
         else:
           template_changes.append(m.groups())
       else:
-        msg("WARNING: Ignoring line with from=to: %s" % line)
+        linemsg("WARNING: Ignoring line with from=to: %s" % line)
     else:
       mpage = re.search(r"^(?:Page [^ ]+ )(.*?): (.*)$", line)
       if not mpage:
-        msg("WARNING: Unable to parse line: [%s]" % line)
+        linemsg("WARNING: Unable to parse line: [%s]" % line)
         continue
       pagename, directives = mpage.groups()
       for m in re.finditer("<from> (.*?) <to> (.*?) <end>", directives):
@@ -57,13 +58,9 @@ def push_manual_changes(save, verbose, diff, direcfile, annotation, startFrom, u
         if curr != repl:
           template_changes.append((pagename, repl, curr))
         else:
-          msg("WARNING: Ignoring line with from=to: %s" % line)
+          linemsg("WARNING: Ignoring line with from=to: %s" % line)
 
-  for current, index in blib.iter_pages(template_changes, startFrom, upTo,
-      # key is the page name
-      key = lambda x: x[0]):
-    pagename, repl_template, curr_template = current
-
+  for index, (pagename, repl_template, curr_template) in blib.iter_items(template_changes, get_name = lambda x: x[0]):
     def push_one_manual_change(page, index, text):
       def pagemsg(txt):
         msg("Page %s %s: %s" % (index, unicode(page.title()), txt))
@@ -119,13 +116,13 @@ def push_manual_changes(save, verbose, diff, direcfile, annotation, startFrom, u
       blib.do_edit(page, index, push_one_manual_change, save=save,
           verbose=verbose, diff=diff)
 
-pa = blib.init_argparser("Push manual changes to Wiktionary")
-pa.add_argument("--file",
-    help="File containing templates to change, as output by parse_log_file.py")
-pa.add_argument("--annotation", default="manually",
+params = blib.create_argparser("Push manual changes to Wiktionary")
+params.add_argument("--file", help="File containing templates to change, as output by parse_log_file.py",
+    required=True)
+params.add_argument("--annotation", default="manually",
     help="Annotation in change log message used to indicate source of changes (default 'manually')")
 
-params = pa.parse_args()
-startFrom, upTo = blib.parse_start_end(params.start, params.end)
+args = params.parse_args()
+start, end = blib.parse_start_end(args.start, args.end)
 
-push_manual_changes(params.save, params.verbose, params.diff, params.file, params.annotation.decode('utf-8'), startFrom, upTo)
+push_manual_changes(args.save, args.verbose, args.diff, args.file, args.annotation.decode("utf-8"), start, end)

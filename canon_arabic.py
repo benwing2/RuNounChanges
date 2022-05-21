@@ -403,7 +403,7 @@ def canon_links(save, verbose, cattype, startFrom, upTo, pages_to_do=[]):
       pages_to_do=pages_to_do, split_templates=u"[,،/]")
 
 if __name__ == "__main__":
-  pa = blib.init_argparser("Correct vocalization and translit")
+  pa = blib.create_argparser("Correct vocalization and translit")
   pa.add_argument("--headwords", action='store_true',
       help="Correct vocalization and translit of headwords")
   pa.add_argument("--cattype", default="borrowed",

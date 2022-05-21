@@ -5,12 +5,13 @@ import blib
 from blib import getparam, rmparam, msg, errandmsg, site
 import pywikibot, re, sys, codecs, argparse
 
-parser = argparse.ArgumentParser(description="Generate form-of documentation pages.")
-parser.add_argument('--direcfile', help="File containing directives.")
+parser = blib.create_argparser("Generate form-of documentation pages.")
+parser.add_argument('--direcfile', help="File containing directives.", required=True)
 parser.add_argument('--save', help="Save pages.", action="store_true")
 args = parser.parse_args()
+start, end = blib.parse_start_end(args.start, args.end)
 
-lines = codecs.open(args.direcfile, "r", "utf-8")
+lines = codecs.open(args.direcfile.decode("utf-8"), "r", "utf-8")
 in_multiline = False
 
 nextpage = 0

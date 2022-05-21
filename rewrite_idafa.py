@@ -146,14 +146,10 @@ def rewrite_one_page_idafa(page, index, text):
     return text, changelog
   return text, ""
 
-def rewrite_idafa(save, verbose, startFrom, upTo):
-  for template in arabic_decl_templates:
-    for index, page in blib.references("Template:" + template, startFrom, upTo):
-      blib.do_edit(page, index, rewrite_one_page_idafa, save=save,
-          verbose=verbose)
+parser = blib.create_argparser(u"Rewrite ʾidāfa params with idafa= param, and related changes",
+    include_pagefile=True, include_stdin=True)
+args = parser.parse_args()
+start, end = blib.parse_start_end(args.start, args.end)
 
-pa = blib.init_argparser(u"Rewrite ʾidāfa params with idafa= param, and related changes")
-params = pa.parse_args()
-startFrom, upTo = blib.parse_start_end(params.start, params.end)
-
-rewrite_idafa(params.save, params.verbose, startFrom, upTo)
+blib.do_pagefile_cats_refs(args, start, end, process_text_on_page, edit=True, stdin=True,
+  default_refs=["Template:%s" % template for template in arabic_decl_templates])

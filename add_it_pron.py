@@ -367,15 +367,14 @@ parser.add_argument("--old-it-ipa", action="store_true", help="Store as {{it-IPA
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-lines = [x.strip() for x in codecs.open(args.direcfile.decode("utf-8"), "r", "utf-8") if not x.startswith("#")]
-lines = [x for x in lines if x]
+lines = blib.yield_items_from_file(args.direcfile, include_original_lineno=True)
 
 def get_items(lines):
-  for line in lines:
-    m = re.search("^Page ([0-9]*) (.*): <respelling> *(.*?) *<end>", line)
+  for lineno, line in lines:
+    m = re.search("^Page ([0-9]+) (.*): <respelling> *(.*?) *<end>", line)
     if not m:
       # Not a warning, there will be several of these from output of snarf_it_pron.py
-      msg("Unrecognized line: %s" % line)
+      msg("Line %s: Unrecognized line: %s" % (lineno, line))
     else:
       yield m.groups()
 

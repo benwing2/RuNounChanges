@@ -2445,23 +2445,8 @@ def process_text_on_page(index, pagetitle, text):
 
 parser = blib.create_argparser("Templatize place specs into {{place}}",
   include_pagefile=True, include_stdin=True)
-parser.add_argument("--linefile", help="File containing lines output by find_regex.py")
-parser.add_argument("--sample", help="Sample text to parse")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-if args.linefile:
-  linefile = args.linefile.decode("utf-8")
-  lines = codecs.open(linefile, "r", encoding="utf-8")
-  for index, line in blib.iter_items(lines, start, end):
-    m = re.search("^Page [0-9]+ (.*): Found match for regex: (.*\n)$", line)
-    if not m:
-      msg("Can't parse line: %s" % line.strip())
-    else:
-      process_text_on_page(index, m.group(1), m.group(2))
-elif args.sample:
-      text, notes = process_text_on_page(1, "Foo", "==English==\n# " + args.sample)
-      msg("Result of parsing: %s" % text)
-else:
-  blib.do_pagefile_cats_refs(args, start, end, process_text_on_page, edit=True, stdin=True)
+blib.do_pagefile_cats_refs(args, start, end, process_text_on_page, edit=True, stdin=True)
 output_stats(5000)

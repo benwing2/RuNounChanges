@@ -4,11 +4,12 @@
 import re, sys, codecs, argparse
 
 from blib import msg, errmsg, remove_links
+import blib
 import rulib
 import generate_pos
 
-parser = argparse.ArgumentParser(description="Generate adjective stubs.")
-parser.add_argument('--direcfile', help="File containing directives.")
+parser = blib.create_argparser("Generate derived-verb tables.")
+parser.add_argument('--direcfile', help="File containing directives.", required=True)
 parser.add_argument('--pos', action="store_true",
     help="First field is part of speech (n, adj, adv, pcl, pred, prep, conj, int).")
 parser.add_argument('--adverb', action="store_true",
@@ -16,6 +17,7 @@ parser.add_argument('--adverb', action="store_true",
 parser.add_argument('--noun', action="store_true",
     help="Directive file contains nouns instead of adjectives.")
 args = parser.parse_args()
+start, end = blib.parse_start_end(args.start, args.end)
 
 pos_to_full_pos = {
   # The first three are special-cased
@@ -148,7 +150,7 @@ def do_split(sep, text):
   elems = re.split(r"(?<![\\])%s" % sep, text)
   return [re.sub(r"\\(%s)" % sep, r"\1", elem) for elem in elems]
 
-peeker = generate_pos.Peeker(codecs.open(args.direcfile, "r", "utf-8"))
+peeker = generate_pos.Peeker(codecs.open(args.direcfile.decode("utf-8"), "r", "utf-8"))
 while True:
   line = peeker.get_next_line()
   if line == None:

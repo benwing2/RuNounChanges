@@ -492,7 +492,7 @@ def process_page(index, num, save, verbose, params):
     else:
       pagemsg("Would save with comment = %s" % comment)
 
-pa = blib.init_argparser("Save Russian numbers to Wiktionary")
+pa = blib.create_argparser("Save Russian numbers to Wiktionary")
 pa.add_argument("--offline", help="Operate offline, outputting text of new pages", action="store_true")
 pa.add_argument("--overwrite-page", action="store_true",
     help=u"""If specified, overwrite the entire existing page of inflections.

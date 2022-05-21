@@ -4,11 +4,13 @@
 import re, sys, codecs, argparse
 
 from blib import msg
+import blib
 import rulib
 
-parser = argparse.ArgumentParser(description="Generate derived-verb tables.")
-parser.add_argument('--direcfile', help="File containing directives.")
+parser = blib.create_argparser("Generate derived-verb tables.")
+parser.add_argument('--direcfile', help="File containing directives.", required=True)
 args = parser.parse_args()
+start, end = blib.parse_start_end(args.start, args.end)
 
 def render_groups(groups):
   def is_noequiv(x):
@@ -83,11 +85,8 @@ groups = []
 group = []
 pfsuffixes = None
 impfsuffixes = None
-for line in codecs.open(args.direcfile, "r", "utf-8"):
-  line = line.strip()
-  if not line or line.startswith("#"):
-    pass # Skip blank and comment lines
-  elif re.search("^--+$", line):
+for lineno, line in blib.iter_items_from_file(args.direcfile, start, end):
+  if re.search("^--+$", line):
     # End of table; other tables may follow
     if group:
       groups.append(group)

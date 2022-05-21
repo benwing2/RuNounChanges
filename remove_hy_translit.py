@@ -341,7 +341,7 @@ def remove_translit(params, startFrom, upTo):
         blib.do_edit(page, index, remove_translit_one_page, save=params.save,
             verbose=params.verbose)
 
-pa = blib.init_argparser("Remove translit, sc= from hy, xcl, ka, el, grc templates")
+pa = blib.create_argparser("Remove translit, sc= from hy, xcl, ka, el, grc templates")
 pa.add_argument("--langs", default="all",
     help="Languages to do, a comma-separated list or 'all'")
 pa.add_argument("--cattype", default="all",

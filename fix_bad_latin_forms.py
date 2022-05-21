@@ -104,17 +104,12 @@ def process_page(index, pos, lemma, subs, infl, save, verbose):
       return process_form(index, page, lemma, formind, form, subs)
     blib.do_edit(pywikibot.Page(site, remove_macrons(form)), formind, handler, save=save, verbose=verbose)
 
-parser = blib.create_argparser(u"Fix up bad Latin forms")
-parser.add_argument('--declfile', help="File containing pos lemma bad:good,... infl")
+parser = blib.create_argparser("Fix up bad Latin forms")
+parser.add_argument('--declfile', help="File containing pos lemma bad:good,... infl", required=True)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-if not args.declfile:
-  raise ValueError("--declfile required")
-lines = [x.strip() for x in codecs.open(args.declfile, "r", "utf-8")]
-for index, line in blib.iter_items(lines, start, end):
-  if line.startswith("#"):
-    continue
+for index, line in blib.iter_items_from_file(args.declfile, start, end):
   if "!!!" in line:
     pos, lemma, subs, infl = re.split("!!!", line)
   else:

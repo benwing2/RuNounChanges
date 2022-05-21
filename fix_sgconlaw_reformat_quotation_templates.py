@@ -71,10 +71,9 @@ args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
 templates_to_rename = []
-direcfile_lines = [x.strip() for x in codecs.open(args.direcfile, "r", "utf-8")]
-for line in direcfile_lines:
+for lineno, line in blib.iter_items_from_file(args.direcfile):
   if " ||| " not in line:
-    msg("WARNING: Saw bad line in --from-to-pagefile: %s" % line)
+    msg("Line %s: WARNING: Saw bad line in --from-to-pagefile: %s" % (lineno, line))
     continue
   fromtemp, totemp = line.split(" ||| ")
   templates_to_rename.append((fromtemp, totemp))

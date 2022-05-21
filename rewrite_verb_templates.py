@@ -90,7 +90,7 @@ def canonicalize_verb_form(save, startFrom, upTo, tempname, formarg):
   for index, page in blib.references("Template:%s" % tempname, startFrom, upTo):
     blib.do_edit(page, index, canonicalize_one_page_verb_form, save=save)
 
-pa = blib.init_argparser("Rewrite form= to 1= in verb headword templates")
+pa = blib.create_argparser("Rewrite form= to 1= in verb headword templates")
 pa.add_argument("--headword", action='store_true',
     help="Rewrite form= to 1= in ar-verb and canonicalize")
 pa.add_argument("--canonicalize", action='store_true',

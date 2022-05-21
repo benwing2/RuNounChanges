@@ -145,7 +145,7 @@ def canon_links(save, verbose, cattype, lang, longlang,
       startFrom, upTo, process_param, sort_group_changelogs,
       pages_to_do=pages_to_do)
 
-pa = blib.init_argparser("Remove redundant foreign translit and script")
+pa = blib.create_argparser("Remove redundant foreign translit and script")
 pa.add_argument("--lang",
     help="""Language to use when --cattype is 'vocab' or 'borrowed'.""")
 pa.add_argument("--cattype", default="borrowed",
@@ -156,18 +156,17 @@ pa.add_argument("--page-file",
 or list of pages when --cattype pages""")
 
 params = pa.parse_args()
-startFrom, upTo = blib.parse_start_end(params.start, params.end)
+start, end = blib.parse_start_end(params.start, params.end)
 pages_to_do = []
 if params.page_file:
-  for line in codecs.open(params.page_file, "r", encoding="utf-8"):
-    line = line.strip()
+  for lineno, line in blib.iter_items_from_file(params.page_file, start, end):
     # FIXME: We don't yet support a cattype list containing 'pages'
     if params.cattype == "pages":
       pages_to_do.append(line)
     else:
       m = re.match(r"^Page [0-9]+ (.*?): [^:]*: Processing (.*?)$", line)
       if not m:
-        msg("WARNING: Unable to parse line: [%s]" % line)
+        msg("Line %s: WARNING: Unable to parse line: [%s]" % (lineno, line))
       else:
         pages_to_do.append(m.groups())
 longlang = None

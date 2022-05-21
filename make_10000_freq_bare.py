@@ -3,6 +3,7 @@
 
 import re, codecs, argparse
 from blib import msg
+import blib
 import rulib
 
 parser = argparse.ArgumentParser(description="Make bare and list versions of 10,000-word frequency list from the Internet.")

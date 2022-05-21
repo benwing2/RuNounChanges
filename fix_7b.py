@@ -87,15 +87,11 @@ parser.add_argument('--direcfile', help="File containing pages to fix and direct
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-pagedirecs = []
-lines = [x.strip() for x in codecs.open(args.direcfile, "r", "utf-8")]
-for i, line in blib.iter_items(lines, start, end):
-  if line.startswith("#"):
-    msg("Skipping comment: %s" % line)
-  elif " " not in line:
-    msg("Skipping because no space: %s" % line)
+for i, line in blib.iter_items_from_file(args.direcfile, start, end):
+  if " " not in line:
+    msg("Line %s: Skipping because no space: %s" % (i, line))
   elif "7b" not in line:
-    msg("Skipping because 7b not in line: %s" % line)
+    msg("Line %s: Skipping because 7b not in line: %s" % (i, line))
   else:
     page, direc = re.split(" ", line)
     def do_process_page(page, index, parsed):

@@ -534,7 +534,7 @@ export.numbers[%s] = {
   msg(u"""
 return export""")
 
-pa = blib.init_argparser("Save numbers to Wiktionary")
+pa = blib.create_argparser("Save numbers to Wiktionary")
 pa.add_argument("--lemmas", action="store_true",
     help="Do lemmas from 21-99.")
 pa.add_argument("--non-lemmas", action="store_true",

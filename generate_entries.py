@@ -13,8 +13,8 @@ langname = None
 module = None
 
 parser = argparse.ArgumentParser(description="Generate adjective stubs.")
-parser.add_argument('--direcfile', help="File containing directives.")
-parser.add_argument('--lang', help="Language: uk or bg")
+parser.add_argument('--direcfile', help="File containing directives.", required=True)
+parser.add_argument('--lang', help="Language: uk or bg", choices=["uk", "bg"])
 parser.add_argument('--pos', help="Specify part of speech (v, n, pn, adj, adjform, adv, pcl, pred, prep, conj, int) instead of including it as first field.")
 args = parser.parse_args()
 
@@ -890,7 +890,7 @@ def process_line(line, etymnum, pronuns, pronuns_at_top):
 
   return headertext, bodytext, footertext
 
-peeker = generate_pos.Peeker(codecs.open(args.direcfile, "r", "utf-8"))
+peeker = generate_pos.Peeker(codecs.open(args.direcfile.decode("utf-8"), "r", "utf-8"))
 nextpage = 0
 
 def get_lemmas(line):

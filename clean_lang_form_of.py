@@ -49,23 +49,18 @@ def init_all_templates(move_dot):
   )
 
 
-def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
+def process_text_on_page(index, pagetitle, text):
+  global args
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
-  pagemsg("Processing")
   notes = []
 
-  text = unicode(page.text)
-
-  if ":" in pagetitle and not re.search(
-      "^(Citations|Appendix|Reconstruction|Transwiki|Talk|Wiktionary|[A-Za-z]+ talk):", pagetitle):
-    pagemsg("WARNING: Colon in page title and not a recognized namespace to include, skipping page")
-    return None, None
+  parsed = blib.parse_text(text)
 
   templates_to_replace = []
 
+  # begin original process_page() code
   for t in parsed.filter_templates():
     tn = tname(t)
 
@@ -133,24 +128,9 @@ def process_page(page, index, parsed):
     text, replaced = blib.replace_in_text(text, curr_template, repl_template, pagemsg)
     if replaced:
       notes.append(note)
+  # end original process_page() code
 
-  return text, notes
-
-def process_page_2(page, index, parsed):
-  pagetitle = unicode(page.title())
-  def pagemsg(txt):
-    msg("Page %s %s: %s" % (index, pagetitle, txt))
-
-  pagemsg("Processing")
-  notes = []
-
-  text = unicode(page.text)
-
-  if ":" in pagetitle and not re.search(
-      "^(Citations|Appendix|Reconstruction|Transwiki|Talk|Wiktionary|[A-Za-z]+ talk):", pagetitle):
-    pagemsg("WARNING: Colon in page title and not a recognized namespace to include, skipping page")
-    return None, None
-
+  # begin original process_page_2() code
   newtext = re.sub(r"(\{\{en-third-person singular of.*?\}\}.*?)\.$", r"\1", text, 0, re.M)
   if newtext != text:
     notes.append("remove final period after {{en-third-person singular of}}")
@@ -171,25 +151,17 @@ def process_page_2(page, index, parsed):
   if newtext != text:
     notes.append("add colon after non-final {{ro-form-verb}}")
     text = newtext
+  # end original process_page_2() code
 
   return text, notes
 
-parser = blib.create_argparser("Clean up various form-of templates needing text moved outside of template into separate template")
-parser.add_argument('--move-dot', help="Move .= outside of template",
-    action="store_true")
-parser.add_argument("--pagefile", help="List of pages to process.")
+parser = blib.create_argparser("Clean up various form-of templates needing text moved outside of template into separate template",
+    include_pagefile=True, include_stdin=True)
+parser.add_argument('--move-dot', help="Move .= outside of template", action="store_true")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
 init_all_templates(args.move_dot)
 
-for template in all_templates:
-  errandmsg("Processing references to Template:%s" % template)
-  for i, page in blib.references("Template:%s" % template, start, end):
-    blib.do_edit(page, i, process_page, save=args.save, verbose=args.verbose)
-
-if args.pagefile:
-  pages = [x.rstrip('\n') for x in codecs.open(args.pagefile, "r", "utf-8")]
-  for i, page in blib.iter_items(pages, start, end):
-    blib.do_edit(pywikibot.Page(site, page), i, process_page_2, save=args.save,
-        verbose=args.verbose)
+blib.do_pagefile_cats_refs(args, start, end, process_text_on_page, edit=True, stdin=True,
+  default_refs=["Template:%s" % template for template in all_templates])

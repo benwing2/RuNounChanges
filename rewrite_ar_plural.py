@@ -16,7 +16,7 @@ def rewrite_ar_plural(save, verbose, startFrom, upTo):
     for index, page in blib.cat_articles(cat, startFrom, upTo):
       blib.do_edit(page, index, rewrite_one_page_ar_plural, save=save, verbose=verbose)
 
-pa = blib.init_argparser("Rewrite ar-plural to ar-noun-pl templates")
+pa = blib.create_argparser("Rewrite ar-plural to ar-noun-pl templates")
 params = pa.parse_args()
 startFrom, upTo = blib.parse_start_end(params.start, params.end)
 

@@ -599,7 +599,7 @@ def create_declensions(save, pos, tempname, decltempname, sgnum,
     create_declension(page, index, save, pos, tempname, decltempname, sgnum,
         removeparams, is_proper=is_proper)
 
-pa = blib.init_argparser("Create Arabic declensions")
+pa = blib.create_argparser("Create Arabic declensions")
 pa.add_argument("--proper", action='store_true',
     help="Do proper nouns only")
 

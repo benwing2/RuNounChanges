@@ -62,8 +62,7 @@ parser.add_argument("--direcfile", help="File listing directives to apply to nou
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-for i, line in blib.iter_items(codecs.open(args.direcfile, "r", "utf-8"), start, end):
-  line = line.strip()
+for i, line in blib.iter_items_from_file(args.direcfile, start, end):
   if "!!!" in line:
     page, direc = re.split("!!!", line)
   else:

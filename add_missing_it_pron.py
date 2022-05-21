@@ -562,13 +562,10 @@ start, end = blib.parse_start_end(args.start, args.end)
 ipa_directives = {}
 
 if args.ipa_direcfile:
-  for line in codecs.open(args.ipa_direcfile.decode("utf-8"), "r", encoding="utf-8"):
-    line = line.strip()
-    if not line or line.startswith("#"):
-      continue
-    m = re.search("^Page [0-9]* (.*?): <respelling> *(.*?) *<end>", line)
+  for lineno, line in blib.yield_items_from_file(args.ipa_direcfile, include_original_lineno=True):
+    m = re.search("^Page [0-9]+ (.*?): <respelling> *(.*?) *<end>", line)
     if not m:
-      msg("WARNING: Unrecognized line: %s" % line)
+      msg("Line %s: WARNING: Unrecognized line: %s" % (lineno, line))
     else:
       page, respellings = m.groups()
       respellings = [respelling.replace("_", " ") for respelling in respellings.split(" ")]
@@ -577,13 +574,10 @@ if args.ipa_direcfile:
 rhyme_directives = {}
 
 if args.rhyme_direcfile:
-  for line in codecs.open(args.rhyme_direcfile.decode("utf-8"), "r", encoding="utf-8"):
-    line = line.strip()
-    if not line or line.startswith("#"):
-      continue
-    m = re.search("^Page [0-9]* (.*?): <rhyme-respelling> *(.*?) *<end>", line)
+  for lineno, line in blib.yield_items_from_file(args.rhyme_direcfile, include_original_lineno=True):
+    m = re.search("^Page [0-9]+ (.*?): <rhyme-respelling> *(.*?) *<end>", line)
     if not m:
-      msg("WARNING: Unrecognized line: %s" % line)
+      msg("Line %s: WARNING: Unrecognized line: %s" % (lineno, line))
     else:
       page, respellings = m.groups()
       respellings = [respelling.replace("_", " ") for respelling in respellings.split(" ")]

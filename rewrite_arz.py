@@ -76,7 +76,7 @@ def rewrite_arz_headword(save, verbose, startFrom, upTo):
       blib.do_edit(page, index, rewrite_one_page_arz_headword, save=save,
           verbose=verbose)
 
-pa = blib.init_argparser("Rewrite Egyptian Arabic headword templates")
+pa = blib.create_argparser("Rewrite Egyptian Arabic headword templates")
 params = pa.parse_args()
 startFrom, upTo = blib.parse_start_end(params.start, params.end)
 

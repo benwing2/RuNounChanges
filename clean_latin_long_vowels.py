@@ -1275,17 +1275,12 @@ if __name__ == "__main__":
   args = parser.parse_args()
   start, end = blib.parse_start_end(args.start, args.end)
 
-  direcfile = args.direcfile.decode("utf-8")
-
   lemmas = []
 
-  for line in codecs.open(direcfile, "r", "utf-8"):
-    line = line.rstrip('\n')
+  for lineno, line in blib.iter_items_from_file(args.direcfile, start, end):
     if line.startswith("*"):
       line = line[1:]
-      msg("Need to investigate: %s" % line)
-    if line.startswith("#"):
-      continue
+      msg("Line %s: Need to investigate: %s" % (lineno, line))
     # remove transitive/intransitive notation after verbs
     line = re.sub(r" *\[.*\]$", "", line)
     parts = line.split(" ")
@@ -1343,9 +1338,9 @@ if __name__ == "__main__":
       explicit_stem = parts[2:]
       lemmas.append(("verb", infl, lemma, explicit_stem))
     else:
-      errandmsg("Unrecognized line: %s" % line)
+      errandmsg("Line %s: Unrecognized line: %s" % (lineno, line))
 
-  for index, (pos, infl, lemma, explicit_stem) in blib.iter_items(lemmas, start, end,
+  for index, (pos, infl, lemma, explicit_stem) in blib.iter_items(lemmas,
       get_name=lambda lemmas: remove_macrons(lemmas[2])):
     def pagemsg(txt):
       msg("Page %s %s: %s" % (index, lemma, txt))
@@ -1365,4 +1360,5 @@ if __name__ == "__main__":
     def handler(page, index, parsed):
       return do_process_lemma(index, page, pos, infl, lemmaspec, lemma, explicit_stem, args)
 
-    blib.do_edit(pywikibot.Page(site, remove_macrons(lemma)), index, handler, save=args.save, verbose=args.verbose, diff=args.diff)
+    blib.do_edit(pywikibot.Page(site, remove_macrons(lemma)), index, handler, save=args.save,
+        verbose=args.verbose, diff=args.diff)

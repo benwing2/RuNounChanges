@@ -140,21 +140,16 @@ def find_noun_word_types(lemma, pagemsg):
 
   return per_word_types, seen_poses
 
-def process_page(page, index, parsed):
-  pagetitle = unicode(page.title())
-  subpagetitle = re.sub("^.*:", "", pagetitle)
+def process_text_on_page(index, pagetitle, text):
+  global args
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
-  pagemsg("Processing")
+  notes = []
 
   override_pos = pages_pos.get(pagetitle, None)
   if override_pos:
     del pages_pos[pagetitle]
-
-  if ":" in pagetitle:
-    pagemsg("WARNING: Colon in page title, skipping page")
-    return
 
   titlewords = split_words(pagetitle, True)
   saw_e = False
@@ -169,9 +164,6 @@ def process_page(page, index, parsed):
   #if (" " in pagetitle or "-" in pagetitle) and not override_pos:
   #  pagemsg(u"WARNING: Space or hyphen in page title and probable final unstressed -е, not sure how to handle yet")
   #  return
-
-  text = unicode(page.text)
-  notes = []
 
   foundrussian = False
   sections = re.split("(^==[^=]*==\n)", text, 0, re.M)
@@ -636,26 +628,21 @@ def process_page(page, index, parsed):
     return new_text, notes
 
 parser = blib.create_argparser(u"Add pos= to final -е ru-IPA, fix use of phonetic -и/-я",
-  include_pagefile=True)
+  include_pagefile=True, include_stdin=True)
 parser.add_argument('--posfile', help="File containing parts of speech for pages, in the form of part of speech, space, page name, one per line")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
 if args.posfile:
-  for line in codecs.open(args.posfile, "r", "utf-8"):
-    # Ignore comments and blank lines
-    line = re.sub("#.*$", "", line)
-    line = line.strip()
-    if not line:
-      continue
+  for lineno, line in blib.yield_items_from_file(args.posfile, include_original_lineno=True):
     m = re.search(r"^(.*?) (.*)$", line)
     if not m:
-      msg("WARNING: Can't parse line: %s" % line)
+      msg("Line %s: WARNING: Can't parse line: %s" % (lineno, line))
     else:
       pos, page = m.groups()
       pages_pos[page] = pos
 
-blib.do_pagefile_cats_refs(args, start, end, process_page, edit=True,
+blib.do_pagefile_cats_refs(args, start, end, process_text_on_page, edit=True, stdin=True,
   default_cats=["Russian lemmas", "Russian non-lemma forms"])
 
 for page, pos in pages_pos.iteritems():

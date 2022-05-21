@@ -1203,10 +1203,7 @@ def process_lemma(index, pagetitle, forms):
               process_page(formpage, index)
 
 def read_pages(filename, start, end):
-  lines = [x.strip() for x in codecs.open(filename, "r", "utf-8")]
-  for i, line in blib.iter_items(lines, start, end):
-    if line.startswith("#"):
-      continue
+  for i, line in blib.iter_items_from_file(filename, start, end):
     m = re.search(r"^\* Page ([0-9]+) \[\[(.*?)\]\]: ", line)
     if m:
       page = m.group(2)

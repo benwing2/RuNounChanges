@@ -60,11 +60,9 @@ def process_line(index, line):
         pagemsg("WARNING: Don't recognize structure of place template: %s" % unicode(t))
 
 parser = blib.create_argparser("Remove redundant manually-added categories when {{place}} also adds them")
-parser.add_argument("--direcfile", help="File containing lines from templatize_place.py")
+parser.add_argument("--direcfile", help="File containing lines from templatize_place.py", required=True)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-lines = codecs.open(args.direcfile, "r", "utf-8")
-
-for index, line in blib.iter_items(lines, start, end):
+for index, line in blib.iter_items_from_file(args.direcfile, start, end):
   process_line(index, line)

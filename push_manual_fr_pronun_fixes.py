@@ -81,11 +81,10 @@ parser.add_argument("--direcfile", help="File of directives", required=True)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-for index, line in blib.iter_items(codecs.open(args.direcfile, "r", encoding="utf-8"), start, end):
-  line = line.strip()
+for index, line in blib.iter_items_from_file(args.direcfile, start, end):
   m = re.search(r"^(.*?)\|Page [0-9]+ (.*?): WARNING: Can't replace (\{\{IPA\|fr\|.*?\}\}) with (\{\{.*?\}\}) because auto-generated pron .*$", line)
   if not m:
-    errandmsg("Unrecognized line: %s" % line)
+    errandmsg("Line %s: Unrecognized line: %s" % (index, line))
     continue
   respelling, page, orig_template, repl_template = m.groups()
   def do_process_page(page, index, parsed):
