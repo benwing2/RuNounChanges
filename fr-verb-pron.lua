@@ -105,14 +105,15 @@ end
 
 -- Construct the pronunciation of future and conditional. STEM is used for
 -- all parts but 1p/2p of the conditional, which uses STEM2 (which defaults to
--- STEM). Either or both stems may be multipart (see add()).
+-- STEM). Either or both stems may be multipart (see add()). The stem should
+-- contain the 'r' of the infinitive.
 pron["ind_f"] = function(data, stem, stem2)
-	data.prons.ind_f_1s = add(stem, "ʁe")
-	data.prons.ind_f_2s = add(stem, "ʁa")
-	data.prons.ind_f_3s = add(stem, "ʁa")
-	data.prons.ind_f_1p = add(stem, "ʁɔ̃")
-	data.prons.ind_f_2p = add(stem, "ʁe")
-	data.prons.ind_f_3p = add(stem, "ʁɔ̃")
+	data.prons.ind_f_1s = add(stem, "e")
+	data.prons.ind_f_2s = add(stem, "a")
+	data.prons.ind_f_3s = add(stem, "a")
+	data.prons.ind_f_1p = add(stem, "ɔ̃")
+	data.prons.ind_f_2p = add(stem, "e")
+	data.prons.ind_f_3p = add(stem, "ɔ̃")
 
 	pron["cond_p"](data, stem, stem2)
 end
@@ -121,12 +122,12 @@ end
 -- passed in may be multipart (see add()).
 pron["cond_p"] = function(data, stem, stem2)
 	stem2 = stem2 or stem
-	data.prons.cond_p_1s = add(stem,"ʁɛ")
-	data.prons.cond_p_2s = add(stem,"ʁɛ")
-	data.prons.cond_p_3s = add(stem,"ʁɛ")
-	data.prons.cond_p_1p = add(stem2,"ʁjɔ̃")
-	data.prons.cond_p_2p = add(stem2,"ʁje")
-	data.prons.cond_p_3p = add(stem,"ʁɛ")
+	data.prons.cond_p_1s = add(stem,"ɛ")
+	data.prons.cond_p_2s = add(stem,"ɛ")
+	data.prons.cond_p_3s = add(stem,"ɛ")
+	data.prons.cond_p_1p = add(stem2,"jɔ̃")
+	data.prons.cond_p_2p = add(stem2,"je")
+	data.prons.cond_p_3p = add(stem,"ɛ")
 end
 
 -- Construct the pronunciation of the present subjunctive given two stems
@@ -160,12 +161,12 @@ end
 --   STEM_NONFINAL_I is used for those forms beginning with /j/ (1p and 2p of
 --     present subjunctive and imperfect indicative), and should not contain
 --     a final /j/;
---   STEM_FUT is used for the future and conditional (and should not contain
+--   STEM_FUT is used for the future and conditional (and should contain
 --     a final /ʁ/), except that:
---   STEM_FUT_I is used for 1p and 2p of the conditional (and should not
---     contain a final /ʁj/).
+--   STEM_FUT_I is used for 1p and 2p of the conditional (and should contain
+--     a final /ʁ/).
 pron["er"] = function(data, stem_final, stem_nonfinal, stem_nonfinal_i, stem_fut, stem_fut_i)
-	stem_fut = stem_fut or add(stem_nonfinal, "ə.")
+	stem_fut = stem_fut or add(stem_nonfinal, "ə.ʁ")
 	data.prons.ppr = add(stem_nonfinal,"ɑ̃")
 	data.prons.pp = add(stem_nonfinal,"e")
 
