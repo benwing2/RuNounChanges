@@ -19,6 +19,24 @@ local function rsub(term, foo, bar)
 	return retval
 end
 
+local function verb_slot_to_accel(slot)
+	return rsub(slot, "^([a-z_]+)_([123])([sp])$",
+		function(mood_tense, person, number)
+			local mood_tense_to_infl = {
+				["ind_p"] = "pres|indc",
+				["ind_i"] = "impf|indc",
+				["ind_ps"] = "phis",
+				["ind_f"]  = "futr",
+				["cond_p"] = "cond",
+				["sub_p"] = "pres|subj",
+				["sub_pa"] = "impf|subj",
+				["imp_p"] = "impr"
+			}
+			return person .. "|" .. number .. "|" .. mood_tense_to_infl[mood_tense]
+		end
+	)
+end
+
 local function map(seq, fun)
 	if type(seq) == "table" then
 		local ret = {}
@@ -428,7 +446,9 @@ function export.link(data)
 		for i,form in ipairs(val) do
 			local newform = form
 			if not rmatch(key,"nolink") and not rmatch(form,"—") then
-				newform = m_links.full_link({term = form, lang = lang})
+				newform = m_links.full_link({term = form, lang = lang,
+					accel = { form = verb_slot_to_accel(key) }
+				})
 			end
 			if rmatch(form, "—") then
 				newform = "—"
