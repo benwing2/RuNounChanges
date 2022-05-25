@@ -12,13 +12,13 @@ FIXME:
 
 1. (DONE) Use ‿ to join reflexive pronouns.
 2. montre-toi needs a schwa in it.
-3. ‘etre’ and ‘avoir_or_etre’ tables should be moved to the template call.
+3. 'etre' and 'avoir_or_etre' tables should be moved to the template call.
 3a. (DONE) Make sure aux= is supported at the template level.
-4. Implement ‘aspirated h’; not all vowel-initial verbs have elision with
+4. Implement 'aspirated h'; not all vowel-initial verbs have elision with
    reflexive pronouns.
 5. Document the various override arguments.
 6. Implement conjugation for -éyer.
-7. (MAYBE? MAYBE NOT NECESSARY, {{fr-conj-ir}} doesn’t seem to use it,
+7. (MAYBE? MAYBE NOT NECESSARY, {{fr-conj-ir}} doesn't seem to use it,
    MAYBE ALREADY DONE IN THE HEADWORD CODE?) Implement sort= for sort key,
    and handle most cases automatically (e.g. chérir with sort=cherir).
 8. (DONE) Copy notes from {{fr-conj-ir}} to our conj["ir"].
@@ -30,11 +30,11 @@ FIXME:
 	remove it, including all calls from this module.
 12. (ALREADY DONE) Support sevrer, two-stem e/è verb.
 13. (DONE) Autodetect e-er verbs including eCer as well as eCler and eCrer verbs
-	like sevrer, and eguer/equer (if they exist). Make sure there aren’t
-	verbs of this form that aren’t e-er by looking for them in the list of
+	like sevrer, and eguer/equer (if they exist). Make sure there aren't
+	verbs of this form that aren't e-er by looking for them in the list of
 	fr-conj-auto verbs that have an empty typ arg (possibly enough to look
 	at all fr-conj-auto verbs).
-14. Check pronunciation of ‘pleuvoir’. TLFi says /pløvwaʁ/, frwikt says /plœvwaʁ/.
+14. Check pronunciation of 'pleuvoir'. TLFi says /pløvwaʁ/, frwikt says /plœvwaʁ/.
 15. (DONE) Check if -er-type conjugations of -aillir, -cueillir, braire are
 	correct.
 16. (DONE) Fix notes for prefixed croitre/croître verbs, based on the old-style
@@ -44,9 +44,9 @@ FIXME:
 18. (DONE) Fix schwa in -ayer, -eyer pronunciation and check other uses of
 	ind_f() to see if they need a fut_stem_i.
 19. Implement sort key in {{fr-verb}}. Should map accented letters to
-	unaccented letters and rearrange “se regarded” to “regarded, se” and
-	similarly for “s’infiltrer”.
-20. “se regarder” should have optional schwa in re-.
+	unaccented letters and rearrange "se regarded" to "regarded, se" and
+	similarly for "s'infiltrer".
+20. "se regarder" should have optional schwa in re-.
 
 Remaining templates:
 
@@ -55,21 +55,21 @@ Remaining templates:
 
 -- Table of exported functions.
 local export = {}
--- Table of conjugation functions. The keys are verbal suffixes (e.g. “ir”,
--- “iller”) and the values are no-argument functions that apply to verbs whose
+-- Table of conjugation functions. The keys are verbal suffixes (e.g. "ir",
+-- "iller") and the values are no-argument functions that apply to verbs whose
 -- infinitive contains that suffix, unless the verb also matches a conjugation
 -- corresponding to a longer suffix. The values take all info on the verb
--- from ‘data’ (see below) and set properties of ‘data’ to indicate the
+-- from 'data' (see below) and set properties of 'data' to indicate the
 -- verb forms and pronunciation.
 local conj = {}
 
 -- If not false, compare this module with new version of module to make
--- sure all conjugations and pronunciations are the same. If “error”, issue
+-- sure all conjugations and pronunciations are the same. If "error", issue
 -- an error whenever they are different, with the contents of the error
 -- indicating the different forms; otherwise, use the tracking category
 -- [[Template:tracking/fr-verb/different-conj]] (see what links there to see
--- the differing verbs; there’s also [[Template:tracking/fr-verb/same-conj]]
--- for the verbs that don’t differ, which can be used to verify that all verbs
+-- the differing verbs; there's also [[Template:tracking/fr-verb/same-conj]]
+-- for the verbs that don't differ, which can be used to verify that all verbs
 -- have been processed, as it takes awhile for this to happen).
 local test_new_fr_verb_module = false
 
@@ -171,7 +171,7 @@ local all_verb_props = {
 	"imp_p_2s", "imp_p_1p", "imp_p_2p"
 }
 
--- List of verbs are conjugated using ‘être’ in the passé composé.
+-- List of verbs are conjugated using 'être' in the passé composé.
 -- FIXME: This should be in the template, not here.
 local etre = {
 	"aller",
@@ -192,7 +192,7 @@ for _,key in ipairs(etre) do
 	etre[key] = true
 end
 
--- List of verbs that can be conjugated using either ‘avoir’ or ‘être’ in the
+-- List of verbs that can be conjugated using either 'avoir' or 'être' in the
 -- passé composé. FIXME: This should be in the template, not here.
 local avoir_or_etre = {
 	"descendre", "monter", "paraitre", "paraître", "passer",
@@ -207,7 +207,7 @@ end
 -- Table mapping verb suffixes to other verb suffixes that they are
 -- conjugated the same as. Only required when there is a shorter-length
 -- suffix of the verb that has a different conjugation (in this case,
--- ‘naitre’ and ‘naître’).
+-- 'naitre' and 'naître').
 local alias = {
 	["connaitre"] = "aitre",
 	["connaître"] = "aître",
@@ -231,7 +231,7 @@ local function link(term, alt)
 	return m_links.full_link({lang = lang, term = term, alt = alt}, "term")
 end
 
--- Clone parent’s args while also assigning nil to empty strings.
+-- Clone parent's args while also assigning nil to empty strings.
 local function clone_args(frame)
 	local args = {}
 	for pname, param in pairs(frame:getParent().args) do
@@ -261,7 +261,7 @@ local function strip_pron_ending(pron, ending)
 	end
 	return map(pron, function(val)
 		if not rfind(val, ending .. "$") then
-			error('Internal error: expected pronunciation “' .. val .. '” to end with “' .. ending .. '”')
+			error('Internal error: expected pronunciation "' .. val .. '" to end with "' .. ending .. '"')
 		end
 		return rsub(val, ending .. "$", "")
 	end)
@@ -275,7 +275,7 @@ local function strip_respelling_ending(pron, ending)
 	end
 	return map(pron, function(val)
 		if not rfind(val, ending .. "$") then
-			error('Expected respelling “' .. val .. '” to end with “' .. ending .. '”')
+			error('Expected respelling "' .. val .. '" to end with "' .. ending .. '"')
 		end
 		return rsub(val, ending .. "$", "")
 	end)
@@ -298,7 +298,7 @@ local function strip_respelling_beginning(pron, beginning, split)
 		return table.concat(stripped_pronvals, ",")
 	end
 	if not rfind(pron, "^" .. beginning) then
-		error('Expected respelling “' .. pron .. '” to begin with “' .. beginning .. '”')
+		error('Expected respelling "' .. pron .. '" to begin with "' .. beginning .. '"')
 	end
 	return rsub(pron, "^" .. beginning, "")
 end
@@ -307,15 +307,15 @@ end
 -- pronunciation respelling of the stem (minus -er). If PRONSTEM_FINAL_FUT is
 -- given, it is used in place of PRONSTEM for the forms without a pronounced
 -- ending (i.e. 1s/2s/3s/3p present) and for the future and conditional; this
--- is used with two-stem verbs such as mener (with stems ‘men’ and ‘mèn’) and
--- céder (with stems ‘céd’ and ‘cèd’).
+-- is used with two-stem verbs such as mener (with stems 'men' and 'mèn') and
+-- céder (with stems 'céd' and 'cèd').
 local function construct_er_pron(data, pronstem, pronstem_final_fut)
 	pronstem_final_fut = pronstem_final_fut or pronstem
 	pronstem = map(pronstem, function(stem) return data.pronstem .. stem end)
 	pronstem_final_fut = map(pronstem_final_fut, function(stem)
 		stem = data.pronstem .. stem
 		-- In pronstem_final_fut, convert é+C in the last syllable to è even if
-		-- the caller didn’t do it. This is principally useful with pron=
+		-- the caller didn't do it. This is principally useful with pron=
 		-- specifications, so that e.g. pron=blésser,blèsser works.
 		stem = rsub(stem, "é(" .. written_cons_c .. "+)$", "è%1")
 		return rsub(stem, "é([gq]u)$", "è%1")
@@ -337,7 +337,7 @@ end
 --    imperfect, and the present participle;
 -- * PRES_3P_STEM is used for pres indic 3p and the whole of the pres subj;
 -- * PAST_STEM is used for the past historic and past participle;
--- * FUT_STEM (which should end with ‘r’) is used for the future and
+-- * FUT_STEM (which should end with 'r') is used for the future and
 --    conditional. If omitted, it is taken from the infinitive minus final -e.
 -- * PP is the past participle. If omitted, if defaults to PAST_STEM.
 -- * PRES_SUBJ_STEM if given overrides the present subjunctive stem.
@@ -367,12 +367,12 @@ local function construct_non_er_conj(data, pres_sg_stem, pres_12p_stem,
 	end
 	m_core.make_ind_f(data, fut_stem)
 
-	-- Most of the time it works to add ‘s’ to produce the 1sg (it doesn’t
+	-- Most of the time it works to add 's' to produce the 1sg (it doesn't
 	-- always work to use the stem directly, cf. apparais vs. apparai). But
-	-- this fails with stems ending in -er, e.g ‘resser-’ from ‘resservir’,
-	-- because the ‘r’ will be silent. In that case, we add ‘t’ to produce
-	-- the 3sg. We can’t always add ‘t’ because that will fail with e.g.
-	-- ‘ressen-’ from ‘ressentir’, where the resulting ‘-ent’ will be silent.
+	-- this fails with stems ending in -er, e.g 'resser-' from 'resservir',
+	-- because the 'r' will be silent. In that case, we add 't' to produce
+	-- the 3sg. We can't always add 't' because that will fail with e.g.
+	-- 'ressen-' from 'ressentir', where the resulting '-ent' will be silent.
 	if pres_sg_stem ~= "—" then
 		if er_present then
 			local stem_final_pron = dopron(data, pres_sg_stem, "e")
@@ -429,7 +429,7 @@ end
 -- * PRES_STEM is used for the whole of the present as well as the imperfect
 --    indicative;
 -- * PAST_STEM is used for the past historic and past participle;
--- * FUT_STEM (which should end with ‘r’) is used for the future and
+-- * FUT_STEM (which should end with 'r') is used for the future and
 --    conditional. If omitted, it is taken from the infinitive minus final -e.
 -- * PP is the past participle. If omitted, if defaults to PAST_STEM.
 -- * PRES_SUBJ_STEM if given overrides the present subjunctive stem.
@@ -493,7 +493,7 @@ end
 conj["cer"] = function(data)
 	m_core.make_ind_p_e(data, "c", "ç")
 
-	data.notes = "This verb is part of a group of " .. link("-er") .. " verbs for which ‘c’ is softened to a ‘ç’ before the vowels ‘a’ and ‘o’."
+	data.notes = "This verb is part of a group of " .. link("-er") .. " verbs for which 'c' is softened to a 'ç' before the vowels 'a' and 'o'."
 	construct_er_pron(data, "c")
 	data.group = 1
 	data.conjcat = "-cer"
@@ -503,7 +503,7 @@ conj["ger"] = function(data)
 	m_core.make_ind_p_e(data, "g", "ge")
 
 	data.notes = "This is a regular " .. link("-er") .. " verb, but the stem is written ''{stem}ge-'' before endings that begin with ''-a-'' or ''-o-'' "
-	data.notes = data.notes .. "(to indicate that the ''-g-'' is a “soft” " .. IPA("/ʒ/") .. " and not a “hard” " .. IPA("/ɡ/") .. "). "
+	data.notes = data.notes .. "(to indicate that the ''-g-'' is a \"soft\" " .. IPA("/ʒ/") .. " and not a \"hard\" " .. IPA("/ɡ/") .. "). "
 	data.notes = data.notes .. "This spelling-change occurs in all verbs in ''-ger'', such as "
 	data.notes = data.notes .. link(data.stem == "nei" and "bouger" or "neiger") .. " and "
 	data.notes = data.notes .. link(data.stem == "man" and "ranger" or "manger") .. "."
@@ -522,7 +522,7 @@ conj["ayer"] = function(data)
 		.. "when it precedes a silent &lt;e&gt; (compare verbs in ''-eyer'', "
 		.. "which never have this spelling change, and verbs in ''-oyer'' "
 		.. "and ''-uyer'', which always have it; verbs in ''-ayer'' belong to "
-		.. "either group, according to the writer’s preference)."
+		.. "either group, according to the writer's preference)."
 
 	m_core.make_ind_p_e(data, {"ay", "ai"}, "ay", "ay")
 	construct_er_pron(data, {"ay", "éy"}, {"ay", "ai"})
@@ -542,7 +542,7 @@ conj["yer"] = function(data)
 		.. " verbs that conjugate like "
 		.. link(data.stem == "no" and "employer" or "noyer") .. " or "
 		.. link(data.stem == "ennu" and "appuyer" or "ennuyer") .. ". These "
-		.. "verbs always replace the ‘y’ with an ‘i’ before a silent ‘e’."
+		.. "verbs always replace the 'y' with an 'i' before a silent 'e'."
 
 	m_core.make_ind_p_e(data, "i", "y", "y")
 	construct_er_pron(data, "y", "i")
@@ -553,7 +553,7 @@ end
 conj["xxer"] = function(data)
 	local newstem, consonant = rmatch(data.stem, "^(.*)e(" .. written_cons_c .. ")$")
 	if not consonant then
-		error("Stem ‘" .. data.stem .. "’ should end with -e- + consonant")
+		error("Stem '" .. data.stem .. "' should end with -e- + consonant")
 	end
 	data.forms.inf = "e" .. consonant .. "er" -- not xxer
 	local origstem = data.stem
@@ -579,7 +579,7 @@ end
 conj["e-er"] = function(data)
 	local newstem, consonant = rmatch(data.stem, "^(.*)e(" .. written_cons_c .. "+)$")
 	if not consonant then
-		error("Stem ‘" .. data.stem .. "’ should end with -e- + one or more consonants")
+		error("Stem '" .. data.stem .. "' should end with -e- + one or more consonants")
 	end
 	local stem = 'e' .. consonant
 	local stem2 = 'è' .. consonant
@@ -620,7 +620,7 @@ conj["é-er"] = function(data)
 		newstem, consonant = rmatch(data.stem, "^(.*)é([gq]u)$")
 	end
 	if not consonant then
-		error("Stem ‘" .. data.stem .. "’ should end with -e- + one or more consonants")
+		error("Stem '" .. data.stem .. "' should end with -e- + one or more consonants")
 	end
 	local stem = 'é' .. consonant
 	local stem2 = 'è' .. consonant
@@ -636,8 +636,8 @@ conj["é-er"] = function(data)
 		data.notes = data.notes .. link("céder")
 	end
 	data.notes = data.notes .. ". It is a regular " .. link("-er") .. " verb, "
-	data.notes = data.notes .. "except that its last stem vowel alternates between " .. IPA("/e/") .. " (written ‘é’) and "
-	data.notes = data.notes .. IPA("/ɛ/") .. " (written ‘è’), with the latter being used before mute ‘e’.\n"
+	data.notes = data.notes .. "except that its last stem vowel alternates between " .. IPA("/e/") .. " (written 'é') and "
+	data.notes = data.notes .. IPA("/ɛ/") .. " (written 'è'), with the latter being used before mute 'e'.\n"
 	data.notes = data.notes .. "One special case is the future stem, used in the future and the conditional. "
 	data.notes = data.notes .. "Before 1990, the future stem of such verbs was written ''{stem}" .. stem .. "er-'', "
 	data.notes = data.notes .. "reflecting the historic pronunciation " .. IPA("/e/") .. ". "
@@ -656,9 +656,9 @@ end
 
 conj["écer"] = function(data)
 	data.notes = "This verb is conjugated like " .. link("rapiécer") .. ". It has both the spelling irregularities of other verbs in ''<span lang=\"fr\">-cer</span>'' "
-	data.notes = data.notes .. "(such as " .. link("pincer") .. ", where a silent ‘e’ is inserted before ‘a’ and ‘o’ endings (to indicate the " .. IPA("/s/") .. " sound), "
+	data.notes = data.notes .. "(such as " .. link("pincer") .. ", where a silent 'e' is inserted before 'a' and 'o' endings (to indicate the " .. IPA("/s/") .. " sound), "
 	data.notes = data.notes .. "and the spelling and pronunciation irregularities of other verbs in ''<span lang=\"fr\">-é-er</span>'' (such as " .. link("céder") .. ", "
-	data.notes = data.notes .. "where the last stem vowel alternates between " .. IPA("/e/") .. " (written ‘é’) and " .. IPA("/ɛ/") .. " (written ‘è’)."
+	data.notes = data.notes .. "where the last stem vowel alternates between " .. IPA("/e/") .. " (written 'é') and " .. IPA("/ɛ/") .. " (written 'è')."
 
 	m_core.make_ind_p_e(data, "èc", "éç", "éc")
 	m_core.make_ind_f(data, {"écer", "ècer"})
@@ -675,9 +675,9 @@ conj["éger"] = function(data)
 		data.notes = data.notes .. link("protéger")
 	end
 	data.notes = data.notes .. ". It has both the spelling irregularities of other verbs in ''-ger'' (such as " .. link("manger") .. ", "
-	data.notes = data.notes .. "where a silent ‘e’ is inserted before ‘a’ and ‘o’ endings (to indicate the " .. IPA("/ʒ/") .. " sound), "
+	data.notes = data.notes .. "where a silent 'e' is inserted before 'a' and 'o' endings (to indicate the " .. IPA("/ʒ/") .. " sound), "
 	data.notes = data.notes .. "and the spelling and pronunciation irregularities of other verbs in ''-é-er'' (such as " .. link("céder") .. "), "
-	data.notes = data.notes .. "where the last stem vowel alternates between " .. IPA("/e/") .. " (written ‘é’) and " .. IPA("/ɛ/") .. " (written ‘è’)."
+	data.notes = data.notes .. "where the last stem vowel alternates between " .. IPA("/e/") .. " (written 'é') and " .. IPA("/ɛ/") .. " (written 'è')."
 
 	m_core.make_ind_p_e(data, "èg", "ége", "ég")
 	m_core.make_ind_f(data, {"éger", "èger"})
@@ -704,8 +704,8 @@ conj["ir-s"] = function(data)
 	else
 		data.notes = data.notes .. link("dormir")
 	end
-	data.notes = data.notes .. ". The most significant difference between these verbs’ conjugation and that of the regular ''-ir'' verbs is that "
-	data.notes = data.notes .. "these verbs’ conjugation does not use the infix " .. link("-iss-") .. ". "
+	data.notes = data.notes .. ". The most significant difference between these verbs' conjugation and that of the regular ''-ir'' verbs is that "
+	data.notes = data.notes .. "these verbs' conjugation does not use the infix " .. link("-iss-") .. ". "
 	data.notes = data.notes .. "Further, this conjugation has the forms " .. link("{stem}s", "(je, tu) {stem}s") .. " and " .. link("{stem}t", "(il) {stem}t") .. " "
 	data.notes = data.notes .. "in the present indicative and imperative, whereas a regular ''-ir'' verb would have ''*{stem}" .. ending .. "is'' and ''*{stem}" .. ending .. "it'' (as in the past historic)."
 
@@ -856,7 +856,7 @@ conj["aillir"] = function(data)
 	.. link("-ir") .. " that conjugate in the indicative imperfect and "
 	.. "present, the subjunctive present, and the present participle, as if "
 	.. "they ended in " .. link("-er") .. ". They are sometimes written with "
-	.. "an ‘e’ in the future and imperfect, like " .. link("cueillir")
+	.. "an 'e' in the future and imperfect, like " .. link("cueillir")
 	.. " and other verbs in ''-llir''."
 	construct_non_er_conj_er_present(data, "aill", "ailli", {"aillir", "ailler"})
 end
@@ -892,8 +892,8 @@ conj["choir"] = function(data)
 	elseif data.stem == "dé" then
 		data.notes = "This verb is [[defective]] in that it is not conjugated in certain tenses. It has no indicative imperfect form, no imperative form and no present participle."
 		m_core.make_ind_i(data, "—")
-		-- FIXME! frwikt does not indicate ‘chet’ as an alternative. Based on
-		-- échoir, we’d expect ‘chettent’ as alternative as well.
+		-- FIXME! frwikt does not indicate 'chet' as an alternative. Based on
+		-- échoir, we'd expect 'chettent' as alternative as well.
 		setform(data, "ind_p_3s", {"choit", "chet"})
 		-- FIXME! frwikt lists rare ppr déchoyant.
 	elseif data.stem == "é" then
@@ -914,7 +914,7 @@ end
 
 conj["courir"] = function(data)
 	data.notes = "This verb is conjugated like other regular " .. link("-ir") .. " verbs, "
-	data.notes = data.notes .. "except that in the conditional and future tenses an extra ‘r’ is added to the end of the stem "
+	data.notes = data.notes .. "except that in the conditional and future tenses an extra 'r' is added to the end of the stem "
 	data.notes = data.notes .. "and the past participle ends in ''-u''. All verb ending in ''-courir'' are conjugated this way."
 
 	construct_non_er_conj(data, "cour", "cour", "cour", "couru", {{"courr", respelling="cour_r"}})
@@ -947,7 +947,7 @@ conj["faillir"] = function(data)
 		.. link("faillir") .. " itself, conjugate similarly to other verbs in "
 		.. "''-illir'', such as " .. link("assaillir") .. " and "
 		.. link("cueillir") .. "."
-		-- frwikt doesn’t include forms like -faillerai
+		-- frwikt doesn't include forms like -faillerai
 		construct_non_er_conj_er_present(data, "faill", "failli", "faillir")
 	end
 end
@@ -1020,7 +1020,7 @@ conj["nuire"] = function(data)
 end
 
 conj["aitre"] = function(data)
-	data.notes = "This verb is one of a fairly small group of " .. link("-re") .. " verbs, that are all conjugated the same way. They are conjugated the same as the alternative spelling, which has a [[circumflex]] over the ‘i’, except that the circumflex is dropped here."
+	data.notes = "This verb is one of a fairly small group of " .. link("-re") .. " verbs, that are all conjugated the same way. They are conjugated the same as the alternative spelling, which has a [[circumflex]] over the 'i', except that the circumflex is dropped here."
 
 	-- future stem must be nil here because we are called from conj["aître"]
 	construct_non_er_conj(data, "ai", "aiss", "aiss", "u", nil, "u")
@@ -1028,12 +1028,12 @@ end
 
 conj["aître"] = function(data)
 	conj["aitre"](data)
-	data.notes = "This verb is one of a fairly small group of " .. link("-re") .. " verbs, that are all conjugated the same way. They are unlike other verb groups in that the ‘i’ is given a circumflex before a ‘t’."
+	data.notes = "This verb is one of a fairly small group of " .. link("-re") .. " verbs, that are all conjugated the same way. They are unlike other verb groups in that the 'i' is given a circumflex before a 't'."
 	data.forms.ind_p_3s = "aît"
 end
 
 conj["oître"] = function(data)
-	data.notes = "This verb is one of a fairly small group of " .. link("-re") .. " verbs, that are all conjugated the same way. They are unlike other verb groups in that the ‘i’ is given a circumflex before a ‘t’. This conjugation pattern is no longer in use and has been replaced by -aître."
+	data.notes = "This verb is one of a fairly small group of " .. link("-re") .. " verbs, that are all conjugated the same way. They are unlike other verb groups in that the 'i' is given a circumflex before a 't'. This conjugation pattern is no longer in use and has been replaced by -aître."
 
 	m_core.make_ind_p(data, "oi", "oiss")
 	data.forms.ind_p_3s = "oît"
@@ -1054,7 +1054,7 @@ conj["indre"] = function(data)
 		.. link(data.stem == "pei" and "plaindre" or "peindre")
 		.. ". It uses the same endings as " .. link("rendre") .. " or "
 		.. link("vendre") .. ", but its ''-nd-'' becomes ''-gn-'' before a "
-		.. "vowel, and its past participle ends in ‘t’ instead of a vowel."
+		.. "vowel, and its past participle ends in 't' instead of a vowel."
 	construct_non_er_conj(data, "in", "ign", "ign", "igni", nil, "int")
 end
 
@@ -1072,7 +1072,7 @@ conj["raire"] = function(data) --braire, traire
 	data.notes = "This verb traditionally has no past historic or imperfect "
 		.. "subjunctive. They would be formed on a -{stem}ray- root: "
 		.. "*je {stem}rayis, *que nous {stem}rayissions etc. Forms using "
-		.. "the ‘a’ endings of verbs in -er are now used when there is an "
+		.. "the 'a' endings of verbs in -er are now used when there is an "
 		.. "unavoidable need to use these forms.\n"
 		.. "The root -{stem}rais- was used instead of -{stem}ray- in the "
 		.. "18th century, and remains in Swiss and Savoy dialects."
@@ -1305,7 +1305,7 @@ conj["prendre"] = function(data)
 		data.notes = "This verb is quite irregular, with the following patterns:\n"
 	end
 	data.notes = data.notes .. "*In the infinitive, in the singular forms of the present indicative, and in the future and the conditional, it is conjugated like " .. link("rendre") .. ", " .. link("perdre") .. ", etc. (sometimes called the regular " .. link("-re") .. " verbs).\n"
-	data.notes = data.notes .. "*In the plural forms of the present indicative and imperative, in the imperfect indicative, in the present subjunctive, and in the present participle, it is conjugated like " .. link("appeler") .. " or " .. link("jeter") .. ", using the stem ''{stem}prenn-'' before mute ‘e’ and the stem ''{stem}pren-'' elsewhere.\n"
+	data.notes = data.notes .. "*In the plural forms of the present indicative and imperative, in the imperfect indicative, in the present subjunctive, and in the present participle, it is conjugated like " .. link("appeler") .. " or " .. link("jeter") .. ", using the stem ''{stem}prenn-'' before mute 'e' and the stem ''{stem}pren-'' elsewhere.\n"
 	data.notes = data.notes .. "*In the past participle, and in the past historic and the imperfect subjunctive, its conjugation resembles that of " .. link("mettre") .. "."
 
 	construct_non_er_conj(data, "prend", "pren", "prenn", "pri", nil, "pris")
@@ -1571,7 +1571,7 @@ end
 conj["plaire"] = function(data)
 	data.notes = link("plaire") .. " and its derived verbs conjugate like "
 		.. link("taire") .. ", except that the third person singular of the "
-		.. "present indicative may take a circumflex on the ‘i’."
+		.. "present indicative may take a circumflex on the 'i'."
 	construct_non_er_conj(data, "plai", "plais", "plais", "plu")
 	data.forms.ind_p_3s = {"plaît", "plait"}
 end
@@ -1607,10 +1607,10 @@ end
 
 -- Conjugate the verb according to the TYPE, which is either explicitly
 -- specified by the caller of {{fr-conj-auto}} or derived automatically.
--- NOTE: Verbs of of type ‘xxer’ (i.e. ‘appeler’, ‘jeter’ and derivatives)
+-- NOTE: Verbs of of type 'xxer' (i.e. 'appeler', 'jeter' and derivatives)
 -- need to have their type explicitly specified, e.g.:
--- * ‘ler’ for ‘appeler’ and derivatives
--- * ‘ter’ for ‘jeter’ and derivatives
+-- * 'ler' for 'appeler' and derivatives
+-- * 'ter' for 'jeter' and derivatives
 --
 -- appeler: {{fr-conj-auto|appe|ler}}
 -- jeter: {{fr-conj-auto|je|ter}}
@@ -1650,18 +1650,18 @@ local function conjugate(data, typ)
 	elseif conj[typ] then
 		call_conj(data, typ)
 	elseif typ ~= "" then
-		error('The type “' .. typ .. '” is not recognized')
+		error('The type "' .. typ .. '" is not recognized')
 	end
 end
 
 -- Autodetect the conjugation type and extract the preceding stem. We have
 -- special handling for verbs in -éCer and -eCer for C = consonant. Otherwise,
 -- the conjugation type is the longest suffix of the infinitive for which
--- there’s an entry in conj[], and stem is the preceding text. (As an
+-- there's an entry in conj[], and stem is the preceding text. (As an
 -- exception, certain longer suffixes are mapped to the conjugation type of
--- shorter suffixes using alias[]. An example is ‘connaitre’, which conjugates
--- like ‘-aitre’ verbs rather than like ‘naitre’ and its derivatives.) Note
--- that for many irregular verbs, the “stem” is actually the prefix, or empty
+-- shorter suffixes using alias[]. An example is 'connaitre', which conjugates
+-- like '-aitre' verbs rather than like 'naitre' and its derivatives.) Note
+-- that for many irregular verbs, the "stem" is actually the prefix, or empty
 -- if the verb has no prefix.
 local function auto(pagename)
 	local stem
@@ -1756,10 +1756,17 @@ function export.do_generate_forms(args)
 	local typ = args[2] or ""
 	local argspron = args.pron
 	local prefix, preftype
+	local pagename_from_args
+	
+	local PAGENAME = mw.title.getCurrentTitle().text
+
+	if stem == "" and typ == "" then
+		pagename_from_args = PAGENAME
+	else
+		pagename_from_args = stem .. typ
+	end
 
 	if typ == "" then typ = stem; stem = ""; end
-
-	local PAGENAME = mw.title.getCurrentTitle().text
 
 	if stem == "" and typ == "" then
 		-- most common situation, {{fr-conj-auto}}
@@ -1769,6 +1776,16 @@ function export.do_generate_forms(args)
 		-- (NOTE: stem moved to typ above)
 		stem, typ = auto(typ)
 	-- else, explicitly specified stem and type, e.g. {{fr-conj-auto|appe|ler}}
+	end
+
+	-- expand + and [...] notations
+	if argspron then
+		local pronvals = rsplit(argspron, ",")
+		local expanded_pronvals = {}
+		for _, pronval in ipairs(pronvals) do
+			table.insert(expanded_pronvals, m_fr_pron.canonicalize_pron(pronval, pagename_from_args))
+		end
+		argspron = table.concat(expanded_pronvals, ",")
 	end
 
 	-- autodetect prefixed verbs
@@ -1816,7 +1833,7 @@ function export.do_generate_forms(args)
 
 	-- FIXME! From here on out we use the value of data.notes, data.stem
 	-- and data.cat as set/modified in the conjugation functions of the last
-	-- iteration of the loop above. As it happens, this doesn’t matter
+	-- iteration of the loop above. As it happens, this doesn't matter
 	-- because we iterate over pronunciations keeping the stem and conjugation
 	-- type the same, but might matter one day if we break this assumption.
 	m_core.extract(data, args)
@@ -1894,7 +1911,7 @@ function export.do_generate_forms(args)
 		data.aux = "avoir or être"
 	end
 	local aux_prefix = data.prefix or ""
-	aux_prefix = rsub(aux_prefix, "l[ae] $", "l’")
+	aux_prefix = rsub(aux_prefix, "l[ae] $", "l'")
 	if args.aux == "a" or args.aux == "avoir" then
 		data.aux = aux_prefix .. "avoir"
 	elseif args.aux == "e" or args.aux == "être" then
@@ -1902,7 +1919,7 @@ function export.do_generate_forms(args)
 	elseif args.aux == "ae" or args.aux == "avoir,être" or args.aux == "avoir or être" then
 		data.aux = aux_prefix .. "avoir or être"
 	elseif args.aux then
-		error("Unrecognized value for aux=, should be ‘a’, ‘e’, ‘ae’, ‘avoir’, ‘être’, or ‘avoir,être’")
+		error("Unrecognized value for aux=, should be 'a', 'e', 'ae', 'avoir', 'être', or 'avoir,être'")
 	end
 
 	data.forms.inf_nolink = data.forms.inf_nolink or data.forms.inf
@@ -1937,7 +1954,7 @@ function export.generate_forms(frame)
 				end
 			end
 			-- Ignore pronunciation if dash present in form.
-			-- FIXME, we shouldn’t generate the pronunciation at all in that
+			-- FIXME, we shouldn't generate the pronunciation at all in that
 			-- case, so we can support both dash and another form.
 			if arrayname == "prons" then
 				local val = data.forms[prop]
@@ -1968,7 +1985,7 @@ function export.show(frame)
 	local args_clone
 	if test_new_fr_verb_module then
 		-- clone in case export.do_generate_forms() modifies args
-		-- (I don’t think it does currently)
+		-- (I don't think it does currently)
 		args_clone = mw.clone(args)
 	end
 
@@ -2036,6 +2053,3 @@ function export.show(frame)
 end
 
 return export
-
--- For Vim, so we get 4-space tabs
--- vim: set ts=4 sw=4 noet:
