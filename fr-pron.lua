@@ -1,6 +1,6 @@
 --[=[
 
-Author: Originally Kc kennylau; rewritten and expanded by Benwing
+Author: Benwing, rewritten from original by Kc kennylau
 
 Generates French IPA from spelling. Implements template {{fr-IPA}}; also
 used in [[Module:fr-verb]] (particularly [[Module:fr-verb/pron]], the submodule
@@ -9,6 +9,8 @@ handling pronunciation of verbs).
 --]=]
 
 local export = {}
+
+local str_gsub = string.gsub
 
 local u = mw.ustring.char
 local rfind = mw.ustring.find
@@ -19,6 +21,14 @@ local ulower = mw.ustring.lower
 local uupper = mw.ustring.upper
 local usub = mw.ustring.sub
 local ulen = mw.ustring.len
+
+local EXPLICIT_H = u(0xFFF0)
+
+-- If enabled, compare this module with new version of module in
+-- [[Module:User:Benwing2/fr-pron]] to make sure all pronunciations are the same.
+-- To check for differences, go to [[Template:tracking/fr-pron/different-pron]]
+-- and look at what links to the page.
+local test_new_fr_pron_module = false
 
 -- version of rsubn() that discards all but the first return value
 local function rsub(term, foo, bar)
@@ -41,185 +51,414 @@ local function ine(x)
 	if x == "" then return nil else return x end
 end
 
--- pairs of consonants where a schwa between then can never be deleted;
--- primarily, consonants that are the same except possibly for voicing
-local no_delete_schwa_between_list = {
+local function track(page)
+	local m_debug = require("Module:debug").track("fr-pron/" .. page)
+	return true
+end
+
+-- pairs of consonants where a schwa between them cannot be deleted in VCəCV
+-- within a word
+local no_delete_schwa_in_vcvcv_word_internally_list = {
+	'ʁʁ', 'ɲʁ', 'ɲl'
+}
+-- generate set
+local no_delete_schwa_in_vcvcv_word_internally = {}
+for _, x in ipairs(no_delete_schwa_in_vcvcv_word_internally_list) do
+	no_delete_schwa_in_vcvcv_word_internally[x] = true
+end
+
+-- pairs of consonants where a schwa between them cannot be deleted in VCəVC
+-- across a word boundary; primarily, consonants that are the same except
+-- possibly for voicing
+local no_delete_schwa_in_vcvcv_across_words_list = {
 	'kɡ', 'ɡk', 'kk', 'ɡɡ', -- WARNING: IPA ɡ used here
 	'td', 'dt', 'tt', 'dd',
 	'bp', 'pb', 'pp', 'bb',
 	'ʃʒ', 'ʒʃ', 'ʃʃ', 'ʒʒ',
 	'fv', 'vf', 'ff', 'vv',
 	'sz', 'zs', 'ss', 'zz',
-	'jj', 'ww', 'ʁʁ', 'll', 'ɲɲ',
-	-- pairs of non-homorganic consonants:
-	'pz', -- empeser, repeser, soupeser
-	'sv' -- forms or recevoir, décevoir, concevoir
+	'jj', 'ww', 'ʁʁ', 'll', 'nn', 'ɲɲ', 'mm'
 	-- FIXME, should be others
 }
 -- generate set
-local no_delete_schwa_between = {}
-for _, x in ipairs(no_delete_schwa_between_list) do
-	no_delete_schwa_between[x] = true
+local no_delete_schwa_in_vcvcv_across_words = {}
+for _, x in ipairs(no_delete_schwa_in_vcvcv_across_words_list) do
+	no_delete_schwa_in_vcvcv_across_words[x] = true
 end
 
 local remove_diaeresis_from_vowel =
 	{['ä']='a', ['ë']='e', ['ï']='i', ['ö']='o', ['ü']='u', ['ÿ']='i'}
 
+-- True if C1 and C2 form an allowable onset (in which case we always
+-- attempt to place them after the syllable break)
+local function allow_onset_2(c1, c2)
+	-- WARNING: Both IPA and non-IPA g below, and both r and ʁ, because it is
+	-- called both before and after the substitutions of these chars.
+	return (c2 == "l" or c2 == "r" or c2 == "ʁ") and rmatch(c1, "[bkdfgɡpstv]") or
+		c1 == "d" and c2 == "ʒ" or
+		c1 ~= "j" and (c2 == "j" or c2 == "w" or c2 == "W" or c2 == "ɥ")
+end
+
 -- list of vowels, including both input Latin and output IPA; note that
 -- IPA nasal vowels are two-character sequences with a combining tilde,
 -- which we include as the last char
-local vowel_no_tilde = "aeiouyəAEIOUYƏéàèùâêîôûŷäëïöüÿăĕŏŭɑɛɔæœø"
-local vowel = vowel_no_tilde .. "̃"
+local oral_vowel_no_schwa = "aeiouyAEIOUYéàèùâêîôûŷäëïöüÿăŏŭɑɛɔæœø"
+local oral_vowel = oral_vowel_no_schwa .. "əƏĕė"
+local vowel_no_schwa = oral_vowel_no_schwa .. "̃"
+local vowel = oral_vowel .. "̃"
 local vowel_c = "[" .. vowel .. "]"
-local vowel_no_tilde_c = "[" .. vowel_no_tilde .. "]"
-local vowel_no_i = "aeouəAEOUƏéàèùâêôûäëöüăĕŏŭɛɔæœø"
+local vowel_no_schwa_c = "[" .. vowel_no_schwa .. "]"
+local vowel_maybe_nasal_r = "[" .. oral_vowel .. "]̃?"
+local non_vowel_c = "[^" .. vowel .. "]"
+local oral_vowel_c = "[" .. oral_vowel .. "]"
+local vowel_no_i = "aeouəAEOUƏéàèùâêôûäëöüăĕŏŭėɑɛɔæœø"
 local vowel_no_i_c = "[" .. vowel_no_i .. "]"
-local cons_c = "[^" .. vowel .. ".⁀ ]"
-local cons_no_quote_c = "[^" .. vowel .. "'‿.⁀ ]"
-local front_vowel = "eiéèêɛæy" -- should not include capital E, used in cœur etc.
+-- special characters that should be carried through but largely ignored when
+-- syllabifying; single quote prevents interpretation of sequences,
+-- ‿ indicates liaison, ⁀ is a word boundary marker, - is a literal hyphen
+-- (we include word boundary markers because they mark word boundaries with
+-- words joined by hyphens, but should be ignored for syllabification in
+-- such a case), parens are used to explicitly indicate an optional sound, esp.
+-- a schwa
+local syljoiner_c = "[_'‿⁀%-()]" -- don't include syllable marker or space
+local opt_syljoiners_c = syljoiner_c .. "*"
+local schwajoiner_c = "[_'‿⁀%-. ]" -- also include . and space but not ()
+local opt_schwajoiners_c = schwajoiner_c .. "*"
+local cons_c = "[^" .. vowel .. ".⁀ %-]" -- includes underscore, quote and liaison marker
+local cons_no_liaison_c = "[^" .. vowel .. ".⁀‿ %-]" -- includes underscore and quote but not liaison marker
+local real_cons_c = "[^" .. vowel .. "_'‿.⁀ %-()]" -- excludes underscore, quote and liaison marker
+local cons_or_joiner_c = "[^" .. vowel .. ". ]" -- includes all joiners
+local front_vowel = "eiîéèêĕėəɛæœy" -- should not include capital E, used in cœur etc.
 local front_vowel_c = "[" .. front_vowel .. "]"
+local word_begin = "'‿⁀%-" -- characters indicating the beginning of a word
+local word_begin_c = "[" .. word_begin .. "]"
 
+-- Actual implementation of [[Template:fr-IPA]], compatible in spirit with
+-- [[Template:IPA]].
+function export.fr_IPA(frame)
+	local params = {
+		[1] = {list = true, allow_holes = true},
+		["n"] = {list = true, allow_holes = true},
+		["qual"] = {list = true, allow_holes = true},
+		["pos"] = {required = false},
+		["debug"] = {required = false},
+	}
 	
-function export.show(text, pos, do_debug)
-	if type(text) == 'table' then
-		text, pos, do_debug = ine(text.args[1]), ine(text.args.pos), ine(text.args.debug)
+	local err = nil
+	local args = require("Module:parameters").process(frame:getParent().args, params)
+
+	local items = {}
+
+	for i = 1, math.max(args[1].maxindex, args["n"].maxindex, 1) do
+		local pron = "/" .. export.show(args[1][i], args["pos"], args["debug"]) .. "/"
+		-- If explicit pronunciation given, track whether it's redundant or not.
+		if args[1][i] and args[1][i] ~= "+" then
+			local default_pron = "/" .. export.show(nil, args["pos"], args["debug"], "no test new module") .. "/"
+			if pron == default_pron then
+				track("redundant-pron")
+			else
+				track("needed-pron")
+			end
+		end
+		local note = args["n"][i]
+		local qual = args["qual"][i]
+		
+		if pron or note or qual then
+			table.insert(items, {pron = pron, note = note, qualifiers = {qual}})
+		end
 	end
-	text = text or mw.title.getCurrentTitle().text
+
+	local lang = require("Module:languages").getByCode("fr")
+	return require("Module:IPA").format_IPA_full(lang, items, err)
+end
+
+
+function export.canonicalize_pron(text, pagename)
+	if not text or text == "+" then
+		text = pagename
+	end
+	
+	text = rsub(text, "%[[hH]%]", EXPLICIT_H)
+
+	if rfind(text, "^%[.*%]$") then
+		local subs = rsplit(rmatch(text, "^%[(.*)%]$"), ",")
+		text = pagename
+		for _, sub in ipairs(subs) do
+			local fromto = rsplit(sub, ":")
+			if #fromto ~= 2 then
+				error("Bad substitution spec " .. sub .. " in {{fr-IPA}}")
+			end
+			local from, to = fromto[1], fromto[2]
+			if rfind(from, "^~") then
+				from = rmatch(from, "^~(.*)$")
+				text = rsub(text, require("Module:utilities").pattern_escape(from), to)
+			else
+				text = rsub(text, "%f[%a]" .. require("Module:utilities").pattern_escape(from) .. "%f[%A]", to)
+			end
+		end
+	end
+
 	text = ulower(text)
+	return text
+end
+
+
+function export.show(text, pos, do_debug, no_test_new_module)
+	-- check_new_module=1 can be passed from a bot to compare to the new
+	-- module. In that case, if there's a difference, the return value will
+	-- be a string "OLD_RESULT || NEW_RESULT".
+	--
+	-- no_test_new_module can be passed from module code to disable the
+	-- new-module check. This is used when checking for redundant pronunciation
+	-- to avoid excess triggering of the [[Template:tracking/fr-pron/different-pron]]
+	-- page.
+	local check_new_module
+	if type(text) == 'table' then
+		pos = ine(text.args.pos)
+		do_debug = ine(text.args.debug)
+		check_new_module = ine(text.args.check_new_module)
+		text = ine(text.args[1])
+	end
+
+	local new_module_result
+	-- Test code to compare existing module to new one.
+	if (test_new_fr_pron_module or check_new_module) and not no_test_new_module then
+		local m_new_fr_pron = require("Module:User:Benwing2/fr-pron")
+		new_module_result = m_new_fr_pron.show(text, pos, do_debug)
+	end
+
+	local pagename = mw.title.getCurrentTitle().text 
+	
+	text = export.canonicalize_pron(text, pagename)
+
+	-- track quote-separator if different numbers of quote symbols
+	if ulen(rsub(text, "[^']", "")) ~= ulen(rsub(pagename, "[^']", "")) then
+		track("quote-separator")
+	end
 	
 	local debug = {}
 
 	-- To simplify checking for word boundaries and liaison markers, we
 	-- add ⁀ at the beginning and end of all words, and remove it at the end.
 	-- Note that the liaison marker is ‿.
-	text = rsub(text, "[%s-]+", '⁀ ⁀')
-	text = '⁀' .. text .. '⁀'
+	text = rsub(text, "%s*,%s*", '⁀⁀ | ⁀⁀')
+	text = rsub(text, "%s+", '⁀ ⁀')
+	text = rsub(text, "%-+", '⁀-⁀')
+	text = '⁀⁀' .. text .. '⁀⁀'
+
+	-- various early substitutions
+	text = str_gsub(text, 'ǝ', 'ə') -- replace wrong schwa with same-looking correct one
+	text = str_gsub(text, 'œu', 'Eu') -- capital E so it doesn't trigger c -> s
+	text = str_gsub(text, 'oeu', 'Eu')
+	text = str_gsub(text, 'œil', 'Euil')
+	text = str_gsub(text, 'œ', 'æ') -- keep as æ, mapping later to è or é
+
+	-- Handle soft c, g. Do these near the very beginning before any changes
+	-- that disturb the orthographic front/back vowel distinction (e.g.
+	-- -ai -> -é when pos == "v" in the next section); but after special
+	-- handling of œu (which should not trigger softening, as in cœur), whereas
+	-- other occurrences of œ do trigger softening (cœliaque).
+	text = rsub(text, "c('?" .. front_vowel_c .. ')', 'ç%1')
+	text = rsub(text, 'ge([aoAOàâôäöăŏɔ])', 'j%1')
+	text = rsub(text, 'g(' .. front_vowel_c .. ')', 'j%1')
 
 	if pos == "v" then
 		-- special-case for verbs
 		text = rsub(text, 'ai⁀', 'é⁀')
+		-- final -ent is silent except in single-syllable words (ment, sent);
 		-- vient, tient, and compounds will have to be special-cased, no easy
 		-- way to distinguish e.g. initient (silent) from retient (not silent).
-		text = rsub(text, 'ent⁀', 'e⁀')
+		text = rsub(text, '(' .. vowel_c .. cons_no_liaison_c .. '*' .. ')ent⁀', '%1e⁀')
+		text = rsub(text, '(' .. vowel_c .. cons_no_liaison_c .. '*' .. ')ent‿', '%1ət‿')
 		-- portions, retiens as verbs should not have /s/
-		text = rsub(text, 'ti([oe])ns([⁀‿])', "t'i%1ns%2")
+		text = rsub(text, 'ti([oe])ns([⁀‿])', "t_i%1ns%2")
 	end
-	-- various early substitutions
-	text = rsub(text, 'œu', 'Eu') -- capital E so it doesn't trigger c -> s
-	text = rsub(text, 'oeu', 'Eu')
-	text = rsub(text, 'œil', 'Euil')
-	text = rsub(text, 'o[eê]l', 'wal') -- moelle, poêle; don't map to 'oil'
-	text = rsub(text, 'œ', 'æ') -- keep as æ, mapping later to è or é
-	text = rsub(text, '[aä]([sz])⁀', 'â%1⁀') -- pas, gaz; later on we affect all a before /z/
-	text = rsub(text, 'à', 'a')
-	text = rsub(text, 'ù', 'u')
-	text = rsub(text, 'î', 'i')
-	text = rsub(text, '[Ee]û', 'ø')
-	text = rsub(text, 'û', 'u')
-	text = rsub(text, 'bs', 'ps') -- absolute, obstacle, subsumer, etc.
-	text = rsub(text, 'ph', 'f')
-	text = rsub(text, 'gn', 'ɲ')
-	text = rsub(text, '⁀désh', '⁀déz')
-	text = rsub(text, '⁀ress', '⁀rəss') -- ressortir, etc. should have schwa
-	text = rsub(text, '⁀trans(' .. vowel_c .. ')', '⁀tranz%1')
-	-- adverbial -emment is pronounced -amment
-	text = rsub(text, 'emment⁀', 'amment⁀') 
-	text = rsub(text, 'ieds?⁀', 'ié⁀') -- pied, assieds, etc.
-	text = rsub(text, 'oien', 'oyen') -- iroquoien
 
-	--s, c, ç, g, j, qu
-	text = rsub(text, 'cueil', 'keuil') -- accueil, etc.
-	text = rsub(text, 'gueil', 'gueuil') -- orgueil
-	text = rsub(text, '(' .. vowel_c .. ')s(‿?' .. vowel_c .. ')', '%1z%2')
-	text = rsub(text, 'ç', 's') -- must follow s -> z between vowels
-	text = rsub(text, 'c(' .. front_vowel_c .. ')', 's%1')
-	text = rsub(text, "qu'", "k'") -- qu'on
+	-- various early substitutions #2
+	text = rsub(text, '[aä]([sz][⁀‿])', 'â%1') -- pas, gaz
+	text = str_gsub(text, 'à', 'a')
+	text = str_gsub(text, 'ù', 'u')
+	text = str_gsub(text, 'î', 'i')
+	text = str_gsub(text, '[Ee]û', 'ø')
+	text = str_gsub(text, 'û', 'u')
+	-- absolute, obstacle, subsumer, etc.; but not toubibs
+	text = str_gsub(text, 'bs([^⁀‿])', 'ps%1')
+	text = str_gsub(text, 'ph', 'f')
+	text = str_gsub(text, 'gn', 'ɲ')
+	text = str_gsub(text, 'compt', 'cont')
+	text = str_gsub(text, 'psych', 'psik')
+	-- -chrom-, -chron-, chrétien, etc.; -chlor-, etc.; -techn-, arachn-, etc.; use 'sh' to get /ʃ/
+	text = str_gsub(text, 'ch([rln])', 'c%1')
+	-- dinosaure, taure, restaurant, etc.; in unstressed syllables both /ɔ/ and /o/ are usually possible,
+	-- but /ɔ/ is more common/natural; not in -eaur-, which occurs in compounds e.g. [[Beauregard]]
+	text = str_gsub(text, '([^e])aur', '%1or')
+	text = rsub(text, '(' .. word_begin_c .. ')désh', '%1déz')
+	text = rsub(text, '(' .. word_begin_c .. ')et([⁀‿])', '%1é%2')
+	text = rsub(text, '(' .. word_begin_c .. ')es([⁀‿])', '%1ès%2')
+	text = rsub(text, '(' .. word_begin_c .. ')est([⁀‿])', '%1èt%2')
+	text = rsub(text, '(' .. word_begin_c .. ')ress', '%1rəss') -- ressortir, etc. should have schwa
+	text = rsub(text, '(' .. word_begin_c .. ')intrans(' .. vowel_c .. ')', '%1intranz%2')
+	text = rsub(text, '(' .. word_begin_c .. ')trans(' .. vowel_c .. ')', '%1tranz%2')
+	text = rsub(text, '(' .. word_begin_c .. ')eu', '%1ø') -- even in euro-
+	text = rsub(text, '(' .. word_begin_c .. ')neur', '%1nør') -- neuro-, neuralgie, etc.
+	 -- hyperactif, etc.; without this we get /i.pʁak.tif/ etc.
+	text = rsub(text, '(' .. word_begin_c .. ')hyper', '%1hypèr')
+	 -- superessif, etc.; without this we get /sy.pʁɛ.sif/ etc.
+	text = rsub(text, '(' .. word_begin_c .. ')super', '%1supèr')
+	-- adverbial -emment is pronounced -amment
+	text = rsub(text, 'emment([⁀‿])', 'amment%1') 
+	text = rsub(text, 'ie(ds?[⁀‿])', 'ié%1') -- pied, assieds, etc.
+	text = rsub(text, '[eæ]([dgpt]s?[⁀‿])', 'è%1') -- permet
+	text = rsub(text, 'ez([⁀‿])', 'éz%1') -- assez, avez, etc.
+	text = str_gsub(text, 'er‿', 'èr‿') -- premier étage
+	text = rsub(text, '([⁀‿]' .. cons_c .. '*)er(s?[⁀‿])', '%1èr%2') -- cher, fer, vers
+	text = rsub(text, 'er(s?[⁀‿])', 'ér%1') -- premier(s)
+	text = rsub(text, '(' .. word_begin_c .. cons_c .. '*)e(s[⁀‿])', '%1é%2') -- ses, tes, etc.
+	text = str_gsub(text, 'oien', 'oyen') -- iroquoien
+	-- bien, européens, païen, moyen; only word finally or before final s
+	-- (possibly in liaison); doesn't apply to influence, omniscient, réengager,
+	-- etc.; cases where -ien- is [jɛ̃] elsewhere in the word require respelling 
+	-- using 'iain' or 'ien-', e.g. 'tient', 'viendra', 'bientôt', 'Vientiane'
+	text = rsub(text, '([iïéy])en(s?[⁀‿])', '%1ɛn%2')
+	-- special-case for words beginning with bien- (bientôt, bienvenu, bienheureux, etc.)
+	text = rsub(text, '(' .. word_begin_c .. ')bien', '%1biɛn')
+
+	--s, c, g, j, q (soft c/g handled above; ç handled below after dropping
+	-- silent -s; x handled below)
+	text = str_gsub(text, 'cueil', 'keuil') -- accueil, etc.
+	text = str_gsub(text, 'gueil', 'gueuil') -- orgueil
+	text = rsub(text, '(' .. vowel_c .. ')s(' .. vowel_c .. ')', '%1z%2')
+	text = str_gsub(text, "qu'", "k'") -- qu'on
 	text = rsub(text, 'qu(' .. vowel_c .. ')', 'k%1')
-	text = rsub(text, 'ge(' .. vowel_c .. ')', 'j%1')
-	text = rsub(text, 'g(' .. front_vowel_c .. ')', 'j%1')
+
 	-- gu+vowel -> g+vowel, but gu+vowel+diaeresis -> gu+vowel
 	text = rsub(text, 'gu(' .. vowel_c .. ')', function(vowel)
 		local undo_diaeresis = remove_diaeresis_from_vowel[vowel]
 		return undo_diaeresis and 'gu' .. undo_diaeresis or 'g' .. vowel
 		end)
-	text = rsub(text, 'gü', 'gu') -- aiguë might be spelled aigüe
-	text = rsub(text, '(' .. cons_c .. ')ing⁀', '%1iŋ⁀') -- parking, footing etc.
-	-- also -ing' e.g. swinguer respelled swing'guer, Washington respelled Washing'tonne
-	text = rsub(text, '(' .. cons_c .. ")ing'", "%1iŋ'")
-	text = rsub(text, 'ng⁀', 'n⁀') -- long, sang, poing, parpaing, shampooing etc.
-	text = rsub(text, 'ngt', 'nt') -- vingt, longtemps
-	text = rsub(text, 'j', 'ʒ')
-	text = rsub(text, 's?[cs]h', 'ʃ')
-	text = rsub(text, '[cq]', 'k')
+	text = str_gsub(text, 'gü', 'gu') -- aiguë might be spelled aigüe
+	-- parking, footing etc.; also -ing_ e.g. swinguer respelled swing_guer,
+	-- Washington respelled Washing'tonne
+	text = rsub(text, '(' .. cons_c .. ")ing(s?[_'⁀‿])", "%1iŋ%2")
+	text = str_gsub(text, 'ngt', 'nt') -- vingt, longtemps
+	text = str_gsub(text, 'j', 'ʒ')
+	text = str_gsub(text, 's?[cs]h', 'ʃ')
+	text = str_gsub(text, '[cq]', 'k')
 	-- following two must follow s -> z between vowels
-	text = rsub(text, '([^sçx⁀])ti([oe])n', '%1si%2n') -- tion, tien
-	text = rsub(text, '([^sçx⁀])tial', '%1sial')
+	text = rsub(text, '([^sçx⁀])ti([oeɛ])n', '%1si%2n') -- tion, tien
+	text = rsub(text, '([^sçx⁀])ti([ae])l', '%1si%2l') -- tial, tiel
 	table.insert(debug, text)
 
 	-- special hack for uï; must follow guï handling and precede ill handling
-	text = rsub(text, 'uï', 'ui') -- ouir, etc.
+	text = str_gsub(text, 'uï', 'ui') -- ouir, etc.
+
+	-- special hack for oel, oil, oêl; must follow intervocal s -> z and
+	-- ge + o -> j, and precede -il- handling
+	text = rsub(text, 'o[eê]l', 'wAl') -- moelle, poêle
+	-- poil but don't affect -oill- (otherwise interpreted as /ɔj/)
+	text = str_gsub(text, 'oil([^l])', 'wAl%1')
 
 	-- ill, il; must follow j -> ʒ above
-	-- special-casing for C+uill (juillet, cuillère, aiguille respelled
-	-- aiguïlle)
-	text = rsub_repeatedly(text, '(' .. cons_c .. ')uill(' .. vowel_c .. ')',
-		'%1ɥij%2')
-	-- repeat if necessary in case of VillVill sequence (ailloille
-	-- respelling of ayoye)
-	text = rsub_repeatedly(text, '(' .. vowel_c .. ')ill(' .. vowel_c .. ')',
-		'%1j%2')
-	-- any other ill, except word-initially
-	text = rsub(text, '([^⁀])ill(' .. vowel_c .. ')', '%1ij%2')
-	text = rsub(text, '(' .. vowel_c .. ')il⁀', '%1j⁀')
+	-- NOTE: In all of the following, we purposely do not check for a vowel
+	-- following -ill-, so that respellings can use it before a consonant
+	-- (e.g. [[boycotter]] respelled 'boillcotter')
+	-- (1) special-casing for C+uill (juillet, cuillère, aiguille respelled
+	--     aiguïlle)
+	text = rsub_repeatedly(text, '(' .. cons_c .. ')uill', '%1ɥij')
+	-- (2) -ill- after a vowel; repeat if necessary in case of VillVill
+	--     sequence (ailloille respelling of ayoye)
+	text = rsub_repeatedly(text, '(' .. vowel_c .. ')ill', '%1j')
+	-- (3) any other ill, except word-initially (illustrer etc.)
+	text = rsub(text, '([^⁀])ill', '%1ij')
+	-- (4) final -il after a vowel; we consider final -Cil to contain a
+	--     pronounced /l/ (e.g. 'il', 'fil', 'avril', 'exil', 'volatil', 'profil')
+	text = rsub(text, '(' .. vowel_c .. ')il([⁀‿])', '%1j%2')
+	-- (5) -il- after a vowel, before a consonant (not totally necessary;
+	--     unlikely to occur normally, respelling can use -ill-)
 	text = rsub(text, '(' .. vowel_c .. ')il(' .. cons_c .. ')', '%1j%2')
 
 	-- y; include before removing final -e so we can distinguish -ay from
 	-- -aye
-	text = rsub(text, 'ay⁀', 'ai⁀') -- Gamay
-	text = rsub(text, 'éy', 'éj') -- used in respellings, eqv. to 'éill'
+	text = rsub(text, 'ay([⁀‿])', 'ai%1') -- Gamay
+	text = str_gsub(text, 'éy', 'éj') -- used in respellings, eqv. to 'éill'
 	text = rsub(text, '(' .. vowel_no_i_c .. ')y', '%1iy')
 	text = rsub(text, 'yi([' .. vowel .. '.])', 'y.y%1')
-	text = rsub(text, '(' .. cons_c .. ')y(' .. cons_c .. ')', '%1i%2')
-	text = rsub(text, '(' .. cons_c .. ')ye?⁀', '%1i⁀')
-	text = rsub(text, '⁀y(' .. cons_c .. ')', '⁀i%1')
-	text = rsub(text, '⁀y⁀', '⁀i⁀')
-	text = rsub(text, 'y', 'j')
+	text = str_gsub(text, "'y‿", "'j‿") -- il n'y‿a
+	text = rsub_repeatedly(text, '(' .. cons_c .. ')y(' .. cons_c .. ')', '%1i%2')
+	text = rsub(text, '(' .. cons_c .. ')ye?([⁀‿])', '%1i%2')
+	text = rsub(text, '(' .. word_begin_c .. ')y(' .. cons_c .. ')', '%1i%2')
+	text = str_gsub(text, '⁀y⁀', '⁀i⁀')
+	-- CyV -> CiV; will later be converted back to /j/ in most cases, but
+	-- allows correct handling of embryon, dryade, cryolithe, glyoxylique, etc.
+	text = rsub(text, '(' .. cons_c .. ')y(' .. vowel_c .. ')', '%1i%2')
+	text = str_gsub(text, 'y', 'j')
 
 	-- nasal hacks
-	text = rsub(text, 'mn', 'Mn') -- make 'm' in 'mn' pronounced in full
-	text = rsub(text, 'n‿', 'nN‿') -- make 'n' before liaison both nasal and pronounced
+	 -- make 'n' before liaison in certain cases both nasal and pronounced
+	text = rsub(text, '(' .. word_begin_c .. '[mts]?on)‿', '%1N‿') --mon, son, ton, on
+	text = str_gsub(text, "('on)‿", '%1N‿') --qu'on, l'on
+	text = str_gsub(text, '([eɛu]n)‿', '%1N‿') --en, bien, un, chacun etc.
+	-- in bon, certain etc. the preceding vowel isn't nasal
+	text = str_gsub(text, 'n‿', "N‿")
+
+	-- other liaison hacks
+	text = str_gsub(text, 'd‿', 't‿') -- grand arbre, pied-à-terre
+	text = str_gsub(text, '[sx]‿', 'z‿') -- vis-a-vis, beaux-arts, premiers enfants, etc.
+	text = str_gsub(text, 'f‿', 'v‿') -- neuf ans, etc.
+	-- treat liaison consonants that would be dropped as if they are extra-word,
+	-- so that preceding "word-final" letters are still dropped and preceding
+	-- vowels take on word-final qualities
+	text = str_gsub(text, '([bdgkpstxz]‿)', '⁀%1')
+	text = str_gsub(text, 'i‿', 'ij‿') -- y a-t-il, gentil enfant
 
 	--silent letters
-	text = rsub(text, '⁀(' .. cons_c .. '*)es⁀', '⁀%1é⁀') -- ses, tes, etc.
-	text = rsub(text, '[sx]⁀', '⁀')
+	-- do this first so we also drop preceding letters if needed
+	text = str_gsub(text, '[sz]⁀', '⁀')
+	-- final -x silent in prix, chevaux, eux (with eu -> ø above)
+	text = str_gsub(text, '([iuø])x⁀', '%1⁀')
 	-- silence -c and -ct in nc(t), but not otherwise
-	text = rsub(text, 'nkt?⁀', 'n⁀')
-	text = rsub(text, '([ks])t⁀', '%1te⁀')
-	text = rsub(text, 'e[rz]⁀', 'é⁀') -- assez, premier, etc.
-	-- do the following two after er -> é so we don't affect dessert
-	text = rsub(text, '[eæ][dgpt]⁀', 'è⁀') -- permet
-	text = rsub(text, '[dgpt]⁀', '⁀')
-	text = rsub(text, 'mb⁀', 'm⁀') -- plomb
+	text = str_gsub(text, 'nkt?⁀', 'n⁀')
+	text = str_gsub(text, '([ks])t⁀', '%1T⁀') -- final -kt, -st pronounced
+	text = str_gsub(text, 'ér⁀', 'é⁀') -- premier, converted earlier to premiér
+	-- p in -mp, b in -mb will be dropped, but temporarily convert to capital
+	-- letter so a trace remains below when we handle nasals
+	text = str_gsub(text, 'm([bp])⁀', function(bp)
+		local capbp = {b='B', p='P'}
+		return 'm' .. capbp[bp] .. '⁀'
+	end) -- plomb
+	-- do the following after dropping r so we don't affect -rt
+	text = str_gsub(text, '[dgpt]⁀', '⁀')
 	-- remove final -e in various circumstances; leave primarily when
 	-- preceded by two or more distinct consonants; in V[mn]e and Vmme/Vnne,
 	-- use [MN] so they're pronounced in full
-	text = rsub(text, '(' .. vowel_c .. ')n+e⁀', '%1N⁀')
-	text = rsub(text, '(' .. vowel_c .. ')m+e⁀', '%1M⁀')
-	text = rsub(text, '(' .. cons_c .. ')%1e⁀', '%1⁀')
-	text = rsub(text, '([mn]' .. cons_c .. ')e⁀', '%1⁀')
-	text = rsub(text, '(' .. vowel_c .. cons_c .. '?)e⁀', '%1⁀')
+	text = rsub(text, '(' .. vowel_c .. ')n+e([⁀‿])', '%1N%2')
+	text = rsub(text, '(' .. vowel_c .. ')m+e([⁀‿])', '%1M%2')
+	text = rsub(text, '(' .. cons_c .. ')%1e([⁀‿])', '%1%2')
+	text = rsub(text, '([mn]' .. cons_c .. ')e([⁀‿])', '%1%2')
+	text = rsub(text, '(' .. vowel_c .. cons_c .. '?)e([⁀‿])', '%1%2')
 	table.insert(debug, text)
-	
-	-- x
-	text = rsub(text, '[eæ]x(' .. vowel_c .. ')', 'egz%1')
-	text = rsub(text, '⁀x', '⁀gz')
-	text = rsub(text, 'x', 'ks')
-	-- double consonants: eCC treated specially, then CC -> C
-	text = rsub(text, '⁀e([mn])%1(' .. vowel_c .. ')', "⁀e%1'%1%2") -- emmener, ennui
-	text = rsub(text, '⁀(h?)[eæ](' .. cons_c .. ')%2', '⁀%1é%2') -- effacer, essui, errer, emmental, henné
+
+	-- ç; must follow s -> z between vowels (above); do after dropping final s
+	-- so that ç can be used in respelling to force a pronounced s
+	text = str_gsub(text, 'ç', 's')
+
+	-- x; (h)ex- at beginning of word (examen, exister, hexane, etc.) and after
+	-- a vowel (coexister, réexaminer) and after in- (inexact, inexorable) is
+	-- pronounced [egz], x- at beginning of word also pronounced [gz], all-
+	-- other x's pronounced [ks] (including -ex- in lexical, sexy, perplexité,
+	-- etc.).
+	text = rsub(text, '([' .. word_begin .. vowel .. ']h?)[eæ]x(h?' .. vowel_c .. ')', '%1egz%2')
+	text = rsub(text, '(' .. word_begin_c .. 'in)[eæ]xh?(h?' .. vowel_c .. ')', '%1egz%2')
+	text = rsub(text, '(' .. word_begin_c .. ')x', '%1gz')
+	text = str_gsub(text, 'x', 'ks')
+	table.insert(debug, text)
+
+	-- double consonants: eCC treated specially, then CC -> C; do after
+	-- x -> ks so we handle exciter correctly
+	text = rsub(text, '(' .. word_begin_c .. ')e([mn])%2(' .. vowel_c .. ')', '%1en_%2%3') -- emmener, ennui
+	text = rsub(text, '(' .. word_begin_c .. ')(h?)[eæ](' .. cons_c .. ')%3', '%1%2é%3') -- effacer, essui, errer, henné
 	text = rsub(text, '[eæ](' .. cons_c .. ')%1', 'è%1') -- mett(r)ons, etc.
 	text = rsub(text, '(' .. cons_c .. ')%1', '%1')
-	table.insert(debug, text)
 
 	--diphthongs
 	--uppercase is used to avoid the output of one change becoming the input
@@ -228,83 +467,157 @@ function export.show(text, pos, do_debug)
 	--and before nasal handling because e.g. ou before n is not converted
 	--into a nasal vowel (Bouroundi, Cameroun); au probably too, but there
 	--may not be any such words
-	text = rsub(text, 'ou', 'U')
-	text = rsub(text, 'e?au', 'O')
-	text = rsub(text, '[Ee]uz', 'øz')
-	text = rsub(text, '[Ee]u⁀', 'ø⁀')
+	text = str_gsub(text, 'ou', 'U')
+	text = str_gsub(text, 'e?au', 'O')
+	text = str_gsub(text, '[Ee]u([zt])', 'ø%1')
+	text = rsub(text, '[Ee]uh?([⁀‿])', 'ø%1') -- (s)chleuh has /ø/
 	text = rsub(text, '[Ee][uŭ]', 'œ')
-	text = rsub(text, 'oi', 'wA')
-	text = rsub(text, '[ae]i', 'ɛ')
+	text = str_gsub(text, '[ae]i', 'ɛ')
 
-	-- remove silent h
-	-- do after diphthongs to keep vowels apart as in envahir, but do
-	-- before syllabification so it is ignored in words like hémorrhagie
-	text = rsub(text, 'h', '')
+	-- Before implementing nasal vowels, convert nh to n to correctly handle
+	-- inhérent, anhédonie, bonheur, etc. But preserve enh- to handle
+	-- enhardir, enharnacher, enhaché, enhoncher, enhotter, enhucher (all
+	-- with "aspirate h"). Words with "mute h" need respelling with enn-, e.g.
+	-- enharmonie, enherber.
+	text = rsub(text, '(' .. word_begin_c .. ')enh', '%1en_h')
+	text = str_gsub(text, 'nh', 'n')
+	
+	-- Nasalize vowel + n, m
+	-- Do before syllabification so we syllabify quatre-vingt-un correctly.
+	-- We affect (1) n before non-vowel, (2) m before b/p/f (including B/P,
+	-- which indicate original b/p that are slated to be deleted in words like
+	-- plomb, champs; f predominantly from original ph, as in symphonie,
+	-- emphatiser; perhaps we should distinguish original ph from original f,
+	-- as in occasional words such as Zemfira), (3) -om (nom, dom, pronom,
+	-- condom, etc.) and (4) -aim/-eim (faim, Reims etc.), (4). We leave alone
+	-- other m's, including most final m. We do this after diphthongization,
+	-- which arguably simplifies things somewhat; but we need to handle the
+	-- 'oi' diphthong down below so we don't run into problems with the 'noi'
+	-- sequence (otherwise we'd map 'oi' to 'wa' and then nasalize the n
+	-- because it no longer precedes a vowel).
+	text = rsub_repeatedly(text, '(.)(' .. vowel_c .. ')([mn])(' .. non_vowel_c .. ')',
+		function(v1, v2, mn, c)
+			if mn == 'n' or rfind(c, '[bpBPf]') or (v2 == 'o' or v2 == 'ɛ') and c == '⁀' then
+				local nasaltab = {['a']='ɑ̃', ['ä']='ɑ̃', ['e']='ɑ̃', ['ë']='ɑ̃',
+					['ɛ']='ɛ̃', ['i']='ɛ̃', ['ï'] = 'ɛ̃', ['o']='ɔ̃', ['ö']='ɔ̃',
+					['ø']='œ̃', ['œ']='œ̃', ['u']='œ̃', ['ü']='œ̃'} -- à jeun
+				if v1 == 'o' and v2 == 'i' then
+					return 'wɛ̃' .. c -- coin, point
+				elseif nasaltab[v2] then
+					return v1 .. nasaltab[v2] .. c
+				end
+			end
+			return v1 .. v2 .. mn .. c
+		end)
+	-- special hack for maximum, aquarium, circumlunaire, etc.
+	text = rsub(text, 'um(' .. non_vowel_c .. ')', 'ɔm%1')
+	-- now remove BP that represent original b/p to be deleted, which we've
+	-- preserved so far so that we know that preceding m can be nasalized in
+	-- words like plomb, champs
+	text = str_gsub(text, '[BP]', '')
+	table.insert(debug, text)
+
+	-- do after nasal handling so 'chinois' works correctly
+	text = str_gsub(text, 'oi', 'wA')
+
+	-- Remove silent h (but keep as _ after i/u to prevent glide conversion in
+	-- nihilisme, jihad, etc.; don't do this after original ou, as souhaite is
+	-- pronounced /swɛt/).
+	-- Do after diphthongs to keep vowels apart as in envahir, but do
+	-- before syllabification so it is ignored in words like hémorrhagie.
+	text = str_gsub(text, '([iu])h', '%1_')
+	text = str_gsub(text, 'h', '')
 
 	--syllabify
 	-- (1) break up VCV as V.CV, and VV as V.V; repeat to handle successive
 	--     syllables
-	text = rsub_repeatedly(text, "(" .. vowel_c .. "['‿]*)(" .. cons_no_quote_c .. "?['‿]*" .. vowel_c .. ')', '%1.%2')
-	-- (2) break up V[mn]CCV as V[mn]C.CV; repeat to handle successive syllables
-	text = rsub_repeatedly(text, "(" .. vowel_c .. "[mn]['‿]*" .. cons_no_quote_c .. "['‿]*)(" .. cons_no_quote_c .. "['‿]*" .. vowel_c .. ")", "%1.%2")
-	-- (3) break up other VCCCV as VC.CCV, and VCCV as VC.CV; repeat to handle successive syllables
-	text = rsub_repeatedly(text, "(" .. vowel_c .. "['‿]*" .. cons_no_quote_c .. "['‿]*)(" .. cons_c .. "+" .. vowel_c .. ")", '%1.%2')
-	-- (4) resyllabify C.[lr] as .C[lr] for C = various obstruents
-	text = rsub(text, "([bkdfgpstv])%.([lr])", ".%1%2")
-	-- (5) resyllabify d.ʒ, C.w, C.ɥ as .dʒ, .Cw, .Cɥ (C.w comes from
-	--     written Coi; C.ɥ comes from written Cuill; post-consonantal j
-	--     generated later)
-	text = rsub(text, "d%.ʒ", ".dʒ")
-	text = rsub(text, '(' .. cons_c .. ')%.([wWɥ])', '.%1%2')
-	-- [(6) resyllabify C.sC as Cs.C]
-	-- comment this out; seems wrong in most cases e.g. perçois should be
-	-- /pɛʁ.swa/ not */pɛʁs.wa/, and only maybe makes sense in expansion
-	-- and other words in exC-, but even then it makes just as much sense
-	-- to write /ɛk.spɑ̃.sjɔ̃/ as /ɛks.pɑ̃.sjɔ̃/.
-	-- text = rsub(text, '(' .. cons_c .. ')%.s(' .. cons_c .. ')', "%1s.%2")
-	-- (7) eliminate diaeresis (note, uï converted early)
+	text = rsub_repeatedly(text, "(" .. vowel_maybe_nasal_r .. opt_syljoiners_c .. ")(" .. real_cons_c .. "?" .. opt_syljoiners_c .. oral_vowel_c .. ')', '%1.%2')
+	-- (2) break up other VCCCV as VC.CCV, and VCCV as VC.CV; repeat to handle successive syllables
+	text = rsub_repeatedly(text, "(" .. vowel_maybe_nasal_r .. opt_syljoiners_c .. real_cons_c .. opt_syljoiners_c .. ")(" .. real_cons_c .. cons_or_joiner_c .. "*" .. oral_vowel_c .. ")", '%1.%2')
+	
+	local function resyllabify(text)
+		-- (3) resyllabify C.C as .CC for various CC that can form an onset:
+		--     resyllabify C.[lr] as .C[lr] for C = various obstruents;
+		--     resyllabify d.ʒ, C.w, C.ɥ, C.j as .dʒ, .Cw, .Cɥ, .Cj (C.w comes from
+		--     written Coi; C.ɥ comes from written Cuill; C.j comes e.g. from
+		--     des‿yeux, although most post-consonantal j generated later);
+		--     don't resyllabify j.j
+		text = rsub(text, "(%(?)(" .. real_cons_c .. ")(" .. opt_syljoiners_c .. ")%.(" .. opt_syljoiners_c .. ")(" .. real_cons_c .. ")",
+			function(lparen, c1, j1, j2, c2)
+				if allow_onset_2(c1, c2) then
+					return "." .. lparen .. c1 .. j1 .. j2 .. c2
+				end
+			end)
+		-- (4) resyllabify .CC as C.C for CC that can't form an onset (opposite of
+		--     the previous step); happens e.g. in ouest-quart
+		text = rsub(text, "%.(" .. opt_syljoiners_c .. ")(" .. real_cons_c .. ")(%)?)(" .. opt_syljoiners_c .. ")(" .. real_cons_c .. ")",
+			function(j1, c1, rparen, j2, c2)
+				if not allow_onset_2(c1, c2) and not (c1 == "s" and rfind(c2, "^[ptk]$")) then
+					return j1 .. c1 .. rparen .. "." .. j2 .. c2
+				end
+			end)
+		-- (5) fix up dʒ and tʃ followed by another consonant (management respelled
+		--     'manadjment' or similar)
+		text = rsub(text, "%.([%(]?[dt]" .. opt_syljoiners_c .. "[ʒʃ])(" .. opt_syljoiners_c .. ")(" .. real_cons_c .. ")",
+			"%1.%2%3")
+		return text
+	end
+	
+	text = resyllabify(text)
+	
+	-- (6) eliminate diaeresis (note, uï converted early)
 	text = rsub(text, '[äëïöüÿ]', remove_diaeresis_from_vowel)
 	table.insert(debug, text)
 
-	--n
-	text = rsub(text, '([éi])%.e[mn]', '%1.ɛ̃') -- bien, européen
-	text = rsub(text, 'je[mn]', 'jɛ̃') -- moyen
-	text = rsub(text, 'wA[mn]', 'wɛ̃') -- coin, point
-	text = rsub(text, '[ae][mn]', 'ɑ̃')
-	text = rsub(text, '[ɛi][mn]', 'ɛ̃')
-	text = rsub(text, 'o[mn]', 'ɔ̃')
-	text = rsub(text, '[øœ][mn]', 'œ̃') -- à jeun
-	text = rsub(text, 'um⁀', 'ɔm⁀') -- maximum, aquarium, etc.
-	text = rsub(text, 'u[mn]', 'œ̃')
-	table.insert(debug, text)
-
 	--single vowels
-	text = rsub(text, 'â', 'ɑ')
-	text = rsub(text, 'az', 'ɑz')
-	text = rsub(text, 'ă', 'a')
-	text = rsub(text, 'e%.j', 'ɛ.j') -- réveiller
-	text = rsub(text, 'e%.', 'ə.')
-	text = rsub(text, 'e⁀', 'ə⁀')
-	text = rsub(text, 'æ%.', 'é.')
-	text = rsub(text, 'æ⁀', 'é⁀')
+	text = str_gsub(text, 'â', 'ɑ')
+	--don't do this, too many exceptions
+	--text = rsub(text, 'a(%.?)z', 'ɑ%1z')
+	text = str_gsub(text, 'ă', 'a')
+	text = str_gsub(text, 'e%.j', 'ɛ.j') -- réveiller
+	text = rsub_repeatedly(text, 'e%.(' .. cons_no_liaison_c .. '*' .. vowel_c .. ')', 'ə.%1')
+	text = rsub(text, 'e([⁀‿])', 'ə%1')
+	text = str_gsub(text, 'æ%.', 'é.')
+	text = rsub(text, 'æ([⁀‿])', 'é%1')
 	text = rsub(text, '[eèêæ]', 'ɛ')
-	text = rsub(text, 'é', 'e')
-	text = rsub(text, 'o⁀', 'O⁀')
-	text = rsub(text, 'o(%.?)z', 'O%1z')
+	text = str_gsub(text, 'é', 'e')
+	text = rsub(text, 'o([⁀‿])', 'O%1')
+	text = str_gsub(text, 'o(%.?)z', 'O%1z')
 	text = rsub(text, '[oŏ]', 'ɔ')
-	text = rsub(text, 'ô', 'o')
-	text = rsub(text, 'u', 'y')
+	text = str_gsub(text, 'ô', 'o')
+	text = str_gsub(text, 'u', 'y')
 
 	--other consonants
-	text = rsub(text, 'r', 'ʁ')
-	text = rsub(text, 'g', 'ɡ') -- use IPA variant of g
+	text = str_gsub(text, 'r', 'ʁ')
+	text = str_gsub(text, 'g', 'ɡ') -- use IPA variant of g
 	table.insert(debug, text)
-	
-	--various changes for vowels in context
-	--delete final schwa
-	text = rsub(text, '%.([^ə.]+)ə⁀', '%1⁀')
-	--delete schwa after any vowel (agréerons, soierie)
+
+	--(mostly) final schwa deletions (FIXME, combine with schwa deletions below)
+	--1. delete all instances of ė
+	text = rsub(text, '%.([^.⁀]+)ė', '%1')
+	--2. delete final schwa, only in the last word, not in single-syllable word
+	--   (⁀. can occur after a hyphen, e.g. in puis-je)
+	text = rsub(text, '([^⁀])%.([^ə.⁀]+)ə⁀⁀', '%1%2⁀')
+	--3. delete final schwa before vowel in the next word, not in a single-
+	--   syllable word (croyez-le ou non); the out-of-position %4 looks weird
+	--   but the effect is that we preserve the initial period when there's a
+	--   hyphen and period after the schwa (con.tre-.a.tta.quer ->
+	--   con.tra.tta.quer) but not across a space (con.tre a.tta.quer ->
+	--   contr a.tta.quer)
+	text = rsub(text, '([^⁀])%.([^ə.⁀]+)ə⁀([⁀ %-]*)(%.?)(' .. vowel_c .. ')', '%1%4%2⁀%3%5')
+	--4. delete final schwa before vowel in liaison, not in a single-syllable
+	--   word
+	text = rsub(text, '([^⁀]%.[^ə.⁀]+)ə‿%.?(' .. vowel_c .. ')', '%1‿%2')
+	--5. delete schwa after any vowel (agréerons, soierie)
 	text = rsub(text, '(' .. vowel_c .. ').ə', '%1')
+	--6. make final schwa optional after two consonants except obstruent + approximant
+	--   and [lmn] + ʁ
+	text = rsub(text, '(' .. cons_c .. ')(' .. '%.?' .. ')(' .. cons_c .. ')ə⁀',
+		function(a, dot, b)
+			return a .. dot .. b .. (
+				rfind(a, '[bdfɡkpstvzʃʒ]') and rfind(b, '[mnlʁwj]') and 'ə'
+				or rfind(a, '[lmn]') and b == 'ʁ' and 'ə' or '(ə)') .. '⁀'
+		end)
 
 	--i/u/ou -> glide before vowel
 	-- -- do from right to left to handle continuions and étudiions
@@ -329,7 +642,7 @@ function export.show(text, pos, do_debug)
 	end
 
 	--hack for agréions, pronounced with /j.j/
-	text = rsub(text, 'e.J', 'ej.J')
+	text = str_gsub(text, 'e%.J', 'ej%.J')
 
 	--glides -> full vowels after two consonants in the same syllable
 	--(e.g. fl, tr, etc.), but only glides from original i/u/ou (see above)
@@ -338,18 +651,42 @@ function export.show(text, pos, do_debug)
 	text = rsub(text, '(' .. cons_c .. '[lʁ])J(' .. vowel_c .. ')', '%1i.j%2')
 	text = rsub(text, '(' .. cons_c .. '[lʁ])W(' .. vowel_c .. ')', '%1u.%2')
 	text = rsub(text, '(' .. cons_c .. '[lʁ])ɥ(' .. vowel_no_i_c .. ')', '%1y.%2')
-	-- remove ' that prevents interpretation of letter sequences; do this
+	-- remove _ that prevents interpretation of letter sequences; do this
 	-- before deleting internal schwas
-	text = rsub(text, "'", "")
-	-- make optional internal schwa in VCəCV sequence (FIXME, needs to be
-	-- smarter); needs to happen after /e/ -> /ɛ/ before schwa in next
-	-- syllable and after removing ' (or we need to take ' into account);
+	text = str_gsub(text, "_", "")
+	
+	-- internal schwa
+	-- 1. delete schwa in VCəCV sequence word-internally when neither V is
+	--    schwa, except in a few sequences such as ʁəʁ (déchirerez), ɲəʁ
+	--    (indignerez), ɲəl (agnelet); use uppercase schwa when not deleting it,
+	--    see below; FIXME, we might want to prevent schwa deletion with other
+	--    consonant sequences
+	text = rsub_repeatedly(text, '(' .. vowel_no_schwa_c .. ')%.(' .. real_cons_c ..
+		')ə%.(' .. real_cons_c .. ')(' .. vowel_no_schwa_c .. ')',
+		function(v1, c1, c2, v2)
+			if no_delete_schwa_in_vcvcv_word_internally[c1 .. c2] then
+				return v1 .. '.' .. c1 .. 'Ə.' .. c2 .. v2
+			else
+				return v1 .. c1 .. '.' .. c2 .. v2
+			end
+		end)
+	-- 2. delete schwa in VCə.Cʁə, VCə.Clə sequence word-internally
+	--    (palefrenier, vilebrequin).
+	text = rsub(text, '(' .. vowel_no_schwa_c .. ')%.(' .. real_cons_c ..
+		')ə%.(' .. real_cons_c .. ')([lʁ]ə)', '%1%2.%3%4')
+	-- 3. make optional internal schwa in remaining VCəCV sequences, including
+	-- across words, except between certain pairs of consonants (FIXME, needs
+	-- to be smarter); needs to happen after /e/ -> /ɛ/ before schwa in next
+	-- syllable and after removing ' and _ (or we need to take them into account);
 	-- include .* so we go right-to-left, convert to uppercase schwa so
 	-- we can handle sequences of schwas and not get stuck if we want to
 	-- leave a schwa alone.
-	text = rsub_repeatedly(text, '(.*' .. vowel_c .. '[⁀‿ .]*)(' .. cons_c .. ')([⁀‿ .]*)ə([⁀‿ .]*)(' .. cons_c .. ')([⁀‿ .]*' .. vowel_c .. ')',
+	text = rsub_repeatedly(text, '(.*' .. vowel_c .. opt_schwajoiners_c ..
+		')(' .. real_cons_c .. ')(' .. opt_schwajoiners_c.. ')ə(' ..
+		opt_schwajoiners_c .. ')(' .. real_cons_c .. ')(' ..
+		opt_schwajoiners_c .. vowel_c .. ')',
 		function(v1, c1, sep1, sep2, c2, v2)
-			if no_delete_schwa_between[c1 .. c2] then
+			if no_delete_schwa_in_vcvcv_across_words[c1 .. c2] then
 				return v1 .. c1 .. sep1 .. 'Ə' .. sep2 .. c2 .. v2
 			else
 				return v1 .. c1 .. sep1 .. '(Ə)' .. sep2 .. c2 .. v2
@@ -361,11 +698,40 @@ function export.show(text, pos, do_debug)
 	text = ulower(text)
 	
 	--ĕ forces a pronounced schwa
-	text = rsub(text, 'ĕ', 'ə')
+	text = str_gsub(text, 'ĕ', 'ə')
 
-	text = rsub(text, '⁀', '')
-	if do_debug == 'yes' then return table.concat(debug, ':') end
-	return text
+	-- need to resyllabify again in cases like 'saladerie', where deleting the
+	-- schwa above caused a 'd.r' boundary that needs to become '.dr'.
+	text = resyllabify(text)
+
+	-- rewrite apostrophes as liaison markers
+	text = str_gsub(text, "'", "‿")
+	--remove hyphens and word-boundary markers
+	text = rsub(text, '[⁀%-]', '')
+	
+	-- convert explicit-notation characters to their final result
+	text = rsub(text, EXPLICIT_H, "h")
+
+	local result = do_debug and table.concat(debug, ':') or text
+
+	-- Handle test_new_fr_pron_module/check_new_module if specified.
+	if new_module_result then
+		if test_new_fr_pron_module then
+			if new_module_result ~= result then
+				--error(result .. " || " .. new_module_result)
+				track("different-pron")
+			else
+				track("same-pron")
+			end
+		end
+		if check_new_module then
+			if new_module_result ~= result then
+				result = result .. " || " .. new_module_result
+			end
+		end
+	end
+
+	return result
 end
 
 return export
