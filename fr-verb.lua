@@ -79,7 +79,7 @@ local m_links = require("Module:links")
 local m_conj = require("Module:fr-conj")
 local m_fr_pron = require("Module:fr-pron")
 local lang = require("Module:languages").getByCode("fr")
-local ut = require("Module:utils")
+local m_table = require("Module:table")
 local m_utilities = require("Module:utilities")
 local m_debug = require("Module:debug")
 
@@ -107,13 +107,12 @@ end
 
 -- Map a function over one of the following:
 -- (1) a single string (return value will be FUN(STRING))
--- (2) a list of either strings or tables of the form {"STEM", RESPELLING="RESPELLING"};
---     the return value is a list of calls to FUN, with one element per element in SEQ;
---     if an element of SEQ is a string, the corresponding return value will be
---     FUN(STRING); if an element of SEQ is a table, the corresponding return value
---     will be FUN("STEM"), unless third arg USE_RESPELLING is given, in which case
---     the corresponding return value will be FUN("RESPELLING").
-local function map(seq, fun, use_respelling)
+-- (2) a list SEQ of either strings or tables of the form {"STEM", respelling="RESPELLING"}; the return value is a
+--     list of calls to FUN, with one element per element in SEQ, flattened if DO_FLATMAP is specified and the return
+--     value of FUN is a list; if an element of SEQ is a string, the corresponding return value will be FUN(STRING);
+--     if an element of SEQ is a table of the above form, the corresponding return value will be FUN("STEM"), unless
+--     third arg USE_RESPELLING is given, in which case the corresponding return value will be FUN("RESPELLING").
+local function map(seq, fun, use_respelling, do_flatmap)
 	if type(seq) == "table" then
 		local ret = {}
 		for _, s in ipairs(seq) do
@@ -126,9 +125,14 @@ local function map(seq, fun, use_respelling)
 					s = s[1]
 				end
 			end
-			-- store in separate var in case fun() has multiple retvals
 			local retval = fun(s)
-			table.insert(ret, retval)
+			if do_flatmap and type(retval) == "table" then
+				for _, item in ipairs(retval) do
+					m_table.insertIfNot(ret, retval)
+				end
+			else
+				m_table.insertIfNot(ret, retval)
+			end
 		end
 		return ret
 	else
@@ -150,12 +154,17 @@ local function dopron(data, stem, suffix)
 	suffix = suffix or ""
 	return map(stem, function(s)
 		return pron((data and data.pronstem or "") .. s .. suffix)
-	end, "respelling")
+	end, "respelling", "flatmap")
 end
 
 local function setform(data, form, val)
 	data.forms[form] = val
 	data.prons[form] = dopron(data, val)
+end
+
+local function copyform(data, fromform, toform, newformval)
+	data.forms[toform] = newformval or data.forms[fromform]
+	data.prons[toform] = data.prons[fromform]
 end
 
 local all_verb_props = {
@@ -329,6 +338,39 @@ local function construct_er_pron(data, pronstem, pronstem_final_fut)
 		stem_fut, stem_fut_i)
 end
 
+local function make_passe_simple(data, past_stem)
+	-- Passé simple
+	m_core.make_ind_ps(data, past_stem)
+	if past_stem ~= "—" then
+		local past_stem_pron = dopron(data, past_stem)
+		m_pron.ind_ps(data, past_stem_pron)
+	end
+end
+
+local function make_future_conditional(data, fut_stem)
+	-- Future/conditional
+	if not fut_stem then
+		fut_stem = rsub(data.forms.inf, "e$", "")
+	end
+	m_core.make_ind_f(data, fut_stem)
+	if fut_stem ~= "—" then
+		local fut_stem_pron = strip_pron_ending(dopron(data, fut_stem, "ez"), "e")
+		-- If the future stem ends in -er, the schwa is optional in -erez but
+		-- not in -eriez; examples are assaillir, cueillir, refaire, défaire,
+		-- contrefaire, méfaire (the latter four have the future pronounced
+		-- -fer-). Also, if the future stem ends in -Cr, there will be an
+		-- extra syllable inserted before -ions, -iez.
+		local fut_stem_pron_i = strip_pron_ending(dopron(data, fut_stem, "iez"), "je")
+		m_pron.ind_f(data, fut_stem_pron, fut_stem_pron_i)
+	end
+end
+
+local function make_imperfect_indicative(data, impf_stem, pronstem_nonfinal, pronstem_nonfinal_i)
+	pronstem_nonfinal_i = pronstem_nonfinal_i or strip_pron_ending(dopron(nil, pronstem, "ez"), "e")
+	local stem_nonfinal_i = strip_pron_ending(dopron(nil, pronstem, "iez"), "je")
+end
+
+
 -- Construct the conjugation and pronunciation of all forms of a non-er verb.
 -- DATA holds the forms and pronunciations. The remaining args are stems:
 --
@@ -361,11 +403,9 @@ local function construct_non_er_conj(data, pres_sg_stem, pres_12p_stem,
 	else
 		m_core.make_ind_p(data, pres_sg_stem, pres_12p_stem, pres_3p_stem)
 	end
-	m_core.make_ind_ps(data, past_stem)
-	if not fut_stem then
-		fut_stem = rsub(data.forms.inf, "e$", "")
-	end
-	m_core.make_ind_f(data, fut_stem)
+
+	make_passe_simple(data, past_stem)
+	make_future_conditional(data, fut_stem)
 
 	-- Most of the time it works to add 's' to produce the 1sg (it doesn't
 	-- always work to use the stem directly, cf. apparais vs. apparai). But
@@ -389,20 +429,6 @@ local function construct_non_er_conj(data, pres_sg_stem, pres_12p_stem,
 			local pre_j_stem_pron = strip_pron_ending(dopron(data, pres_12p_stem, "iez"), "je")
 			m_pron.ind_p(data, pres_sg_stem_pron, pres_12p_stem_pron, pres_3p_stem_pron, pre_j_stem_pron)
 		end
-	end
-	if past_stem ~= "—" then
-		local past_stem_pron = dopron(data, past_stem)
-		m_pron.ind_ps(data, past_stem_pron)
-	end
-	if fut_stem ~= "—" then
-		local fut_stem_pron = strip_pron_ending(dopron(data, fut_stem, "ez"), "e")
-		-- If the future stem ends in -er, the schwa is optional in -erez but
-		-- not in -eriez; examples are assaillir, cueillir, refaire, défaire,
-		-- contrefaire, méfaire (the latter four have the future pronounced
-		-- -fer-). Also, if the future stem ends in -Cr, there will be an
-		-- extra syllable inserted before -ions, -iez.
-		local fut_stem_pron_i = strip_pron_ending(dopron(data, fut_stem, "iez"), "je")
-		m_pron.ind_f(data, fut_stem_pron, fut_stem_pron_i)
 	end
 
 	if pp then
@@ -1094,21 +1120,9 @@ end
 conj["clore"] = function(data)
 	data.notes = "This verb is not conjugated in certain tenses."
 
-	m_core.make_ind_p(data, "clo", "clos")
-	data.forms.ind_p_3s = "clôt"
+	construct_non_er_conj(data, "clo", "clos", "clos", "—", nil, "clos")
 	m_core.make_ind_i(data, "—")
-	m_core.make_ind_ps(data, "—")
-	data.forms.ppr = "closant"
-	data.forms.pp = "clos"
-
-	local stem = dopron(data, "clo")
-	local stem2 = stem .. ".z"
-	local stem3 = stem .. "z"
-	local stem4 = dopron(data, "clɔ") .. ".ʁ"
-
-	m_pron.ind_p(data, stem, stem2, stem3)
-	m_pron.ind_f(data, stem4)
-	data.prons.pp = stem
+	data.forms.ind_p_3s = "clôt"
 	data.cat = "defective"
 end
 
@@ -1370,55 +1384,38 @@ conj["avoir"] = function(data)
 end
 
 conj["être"] = function(data)
-	data.forms.ind_p_1s = "suis"
-	data.forms.ind_p_2s = "es"
-	data.forms.ind_p_3s = "est"
-	data.forms.ind_p_1p = "sommes"
-	data.forms.ind_p_2p = "êtes"
-	data.forms.ind_p_3p = "sont"
+	setform(data, "ind_p_1s", "suis")
+	setform(data, "ind_p_2s", "es")
+	setform(data, "ind_p_3s", "est")
+	setform(data, "ind_p_1p", "sommes")
+	setform(data, "ind_p_2p", "êtes")
+	setform(data, "ind_p_3p", "sont")
+
+	setform(data, "sub_p_1s", "sois")
+	copyform(data, "sub_p_1s", "sub_p_2s")
+	copyform(data, "sub_p_1s", "sub_p_3s", "soit")
+	setform(data, "sub_p_1p", "soyons")
+	setform(data, "sub_p_2p", "soyez")
+	copyform(data, "sub_p_1s", "sub_p_3p", "soiend")
+
+	copyform(data, "sub_p_2s", "imp_p_2s")
+	copyform(data, "sub_p_1p", "imp_p_1p")
+	copyform(data, "sub_p_2p", "imp_p_2p")
 
 	m_core.make_ind_i(data, "ét")
 	m_core.make_ind_ps(data, "fu")
-	m_core.make_ind_f(data, "ser")
 
-	data.forms.sub_p_1s = "sois"
-	data.forms.sub_p_2s = "sois"
-	data.forms.sub_p_3s = "soit"
-	data.forms.sub_p_1p = "soyons"
-	data.forms.sub_p_2p = "soyez"
-	data.forms.sub_p_3p = "soient"
+	make_passe_simple(data, "fu")
+	make_future_conditional(data, "ser")
 
-	m_core.make_imp_p_sub(data)
-	data.forms.pp = "été"
-	data.forms.ppr = "étant"
+	setform(data, "pp", "été")
+	setform(data, "ppr", "étant")
 
-	local root_s = rsub(dopron(data, "sa"),"sa$","")
 	local root_e = rsub(dopron(data, "é"),"e$","")
-	local root_f = rsub(dopron(data, "fa"),"fa$","")
 
-	local stem = root_e .. "ɛ"
 	local stem2 = root_e .. "e.t"
-	local stem3 = root_f .. "fy"
-	local stem4 = root_s .. "sə.ʁ"
-	local stem5 = root_s .. "swa"
-	local stem6 = root_s .. "swa."
 
-	data.prons.ind_p_1s = root_s .. "sɥi"
-	data.prons.ind_p_2s = stem
-	data.prons.ind_p_3s = stem
-	data.prons.ind_p_1p = root_s .. "sɔm"
-	data.prons.ind_p_2p = stem .. "t"
-	data.prons.ind_p_3p = root_s .. "sɔ̃"
 	m_pron.ind_i(data, stem2)
-	m_pron.ind_ps(data, stem3)
-	m_pron.ind_f(data, stem4)
-	m_pron.sub_p(data, stem5, stem6)
-
-	data.prons.imp_p_2s = stem5
-	data.prons.imp_p_1p = stem6 .. "jɔ̃"
-	data.prons.imp_p_2p = stem6 .. "je"
-	data.prons.ppr = stem2 .. "ɑ̃"
-	data.prons.pp = stem2 .. "e"
 
 	data.cat = "defective"
 end
@@ -1715,7 +1712,7 @@ local function append_tables(tab1, tab2)
 			values = {values}
 		end
 		for _, val in ipairs(values) do
-			ut.insert_if_not(t1, val)
+			m_table.insertIfNot(t1, val)
 		end
 		tab1[k] = t1
 	end
@@ -2008,7 +2005,7 @@ function export.show(frame)
 				-- and list
 				if type(val) == "string" then val = {val} end
 				if type(newval) == "string" then newval = {newval} end
-				if not ut.equals(val, newval) then
+				if not m_table.deepEquals(val, newval) then
 					if test_new_fr_verb_module == "error" then
 						table.insert(difforms, arrayname .. "." .. prop .. " " .. (val and table.concat(val, ",") or "nil") .. " || " .. (newval and table.concat(newval, ",") or "nil"))
 					end

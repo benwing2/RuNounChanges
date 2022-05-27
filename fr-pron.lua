@@ -22,7 +22,25 @@ local uupper = mw.ustring.upper
 local usub = mw.ustring.sub
 local ulen = mw.ustring.len
 
+local TILDE = u(0x0303) -- tilde =  ̃
+
 local EXPLICIT_H = u(0xFFF0)
+local EXPLICIT_X = u(0xFFF1)
+local EXPLICIT_J = u(0xFFF2)
+
+local explicit_sound_to_substitution = {
+	["h"] = EXPLICIT_H,
+	["x"] = EXPLICIT_X,
+	["j"] = EXPLICIT_J,
+}
+
+local explicit_substitution_to_sound = {}
+local explicit_substitution_regex = {}
+for from, to in pairs(explicit_sound_to_substitution) do
+	explicit_substitution_to_sound[to] = from
+	table.insert(explicit_substitution_regex, to)
+end
+explicit_substitution_regex = "[" .. table.concat(explicit_substitution_regex) .. "]"
 
 -- If enabled, compare this module with new version of module in
 -- [[Module:User:Benwing2/fr-pron]] to make sure all pronunciations are the same.
@@ -102,16 +120,22 @@ end
 -- list of vowels, including both input Latin and output IPA; note that
 -- IPA nasal vowels are two-character sequences with a combining tilde,
 -- which we include as the last char
-local oral_vowel_no_schwa = "aeiouyAEIOUYéàèùâêîôûŷäëïöüÿăŏŭɑɛɔæœø"
-local oral_vowel = oral_vowel_no_schwa .. "əƏĕė"
-local vowel_no_schwa = oral_vowel_no_schwa .. "̃"
-local vowel = oral_vowel .. "̃"
+local oral_vowel_no_schwa_no_i = "aeouAEOUéàèùâêôûäëöüăŏŭɑɛɔæœø"
+local oral_vowel_schwa = "əƏĕė"
+local oral_vowel_i = "iyIYîŷïÿ"
+local oral_vowel = oral_vowel_no_schwa_no_i .. oral_vowel_schwa .. oral_vowel_i
+local nasal_vowel = TILDE
+local non_nasal_c = "[^" .. TILDE .. "]"
+local vowel_no_schwa = oral_vowel_no_schwa_no_i .. oral_vowel_i .. nasal_vowel
+local vowel = oral_vowel .. nasal_vowel
 local vowel_c = "[" .. vowel .. "]"
 local vowel_no_schwa_c = "[" .. vowel_no_schwa .. "]"
-local vowel_maybe_nasal_r = "[" .. oral_vowel .. "]̃?"
+local vowel_maybe_nasal_r = "[" .. oral_vowel .. "]" .. TILDE .. "?"
 local non_vowel_c = "[^" .. vowel .. "]"
 local oral_vowel_c = "[" .. oral_vowel .. "]"
-local vowel_no_i = "aeouəAEOUƏéàèùâêôûäëöüăĕŏŭėɑɛɔæœø"
+-- FIXME: Previously vowel_no_i specified the vowels explicitly and didn't include the nasal combining diacritic;
+-- should we include it?
+local vowel_no_i = oral_vowel_no_schwa_no_i .. oral_vowel_schwa
 local vowel_no_i_c = "[" .. vowel_no_i .. "]"
 -- special characters that should be carried through but largely ignored when
 -- syllabifying; single quote prevents interpretation of sequences,
@@ -128,7 +152,7 @@ local cons_c = "[^" .. vowel .. ".⁀ %-]" -- includes underscore, quote and lia
 local cons_no_liaison_c = "[^" .. vowel .. ".⁀‿ %-]" -- includes underscore and quote but not liaison marker
 local real_cons_c = "[^" .. vowel .. "_'‿.⁀ %-()]" -- excludes underscore, quote and liaison marker
 local cons_or_joiner_c = "[^" .. vowel .. ". ]" -- includes all joiners
-local front_vowel = "eiîéèêĕėəɛæœy" -- should not include capital E, used in cœur etc.
+local front_vowel = "eiîéèêĕėəɛæœyŷ" -- should not include capital E, used in cœur etc.
 local front_vowel_c = "[" .. front_vowel .. "]"
 local word_begin = "'‿⁀%-" -- characters indicating the beginning of a word
 local word_begin_c = "[" .. word_begin .. "]"
@@ -140,31 +164,69 @@ function export.fr_IPA(frame)
 		[1] = {list = true, allow_holes = true},
 		["n"] = {list = true, allow_holes = true},
 		["qual"] = {list = true, allow_holes = true},
+		["noalternatives"] = {type = "boolean"},
 		["pos"] = {required = false},
-		["debug"] = {required = false},
 	}
-	
+
 	local err = nil
 	local args = require("Module:parameters").process(frame:getParent().args, params)
 
 	local items = {}
 
-	for i = 1, math.max(args[1].maxindex, args["n"].maxindex, 1) do
-		local pron = "/" .. export.show(args[1][i], args["pos"], args["debug"]) .. "/"
-		-- If explicit pronunciation given, track whether it's redundant or not.
-		if args[1][i] and args[1][i] ~= "+" then
-			local default_pron = "/" .. export.show(nil, args["pos"], args["debug"], "no test new module") .. "/"
-			if pron == default_pron then
-				track("redundant-pron")
-			else
-				track("needed-pron")
+	local has_refs_or_quals = args.n.maxindex > 0 or args.qual.maxindex > 0
+
+	if has_refs_or_quals then
+		local default_prons
+		-- If there are references or qualifiers, don't remove duplicates; it gets harder to handle duplicates properly
+		-- in the presence of references or qualifiers, and it may in any case be wrong.
+		for i = 1, math.max(args[1].maxindex, args.n.maxindex, 1) do
+			local prons = export.show(args[1][i], args.pos, args.noalternatives)
+			for _, pron in ipairs(prons) do
+				local note = args.n[i]
+				local qual = args.qual[i]
+				table.insert(items, {pron = "/" .. pron .. "/", note = note, qualifiers = {qual}})
+			end
+
+			-- Check whether explicitly given pronunciations are redundant.
+			if args[1][i] and args[1][i] ~= "+" then
+				default_prons = default_prons or export.show(nil, args.pos, args.noalternatives, "no test new module")
+				for _, default_pron in ipairs(default_prons) do
+					if require("Module:table").contains(prons, default_pron) then
+						track("redundant-pron")
+					else
+						track("needed-pron")
+					end
+				end
 			end
 		end
-		local note = args["n"][i]
-		local qual = args["qual"][i]
-		
-		if pron or note or qual then
-			table.insert(items, {pron = pron, note = note, qualifiers = {qual}})
+	else
+		local all_prons
+		for i = 1, math.max(args[1].maxindex, 1) do
+			local prons = export.show(args[1][i], args.pos, args.noalternatives)
+			if not all_prons then
+				all_prons = prons
+			else
+				for _, pron in ipairs(prons) do
+					require("Module:table").insertIfNot(all_prons, pron)
+				end
+			end
+		end
+		for _, pron in ipairs(all_prons) do
+			table.insert(items, {pron = "/" .. pron .. "/"})
+		end
+
+		-- Check whether explicitly given pronunciations are redundant.
+		for i = 1, args[1].maxindex do
+			if args[1][i] and args[1][i] ~= "+" then
+				local default_prons = export.show(nil, args.pos, args.noalternatives, "no test new module")
+				for _, default_pron in ipairs(default_prons) do
+					if require("Module:table").contains(all_prons, default_pron) then
+						track("redundant-pron")
+					else
+						track("needed-pron")
+					end
+				end
+			end
 		end
 	end
 
@@ -177,8 +239,10 @@ function export.canonicalize_pron(text, pagename)
 	if not text or text == "+" then
 		text = pagename
 	end
-	
-	text = rsub(text, "%[[hH]%]", EXPLICIT_H)
+
+	text = rsub(text, "%[([hHxXjJ])%]", function(sound)
+		return explicit_sound_to_substitution[ulower(sound)]
+	end)
 
 	if rfind(text, "^%[.*%]$") then
 		local subs = rsplit(rmatch(text, "^%[(.*)%]$"), ",")
@@ -203,7 +267,7 @@ function export.canonicalize_pron(text, pagename)
 end
 
 
-function export.show(text, pos, do_debug, no_test_new_module)
+function export.show(text, pos, noalternatives, no_test_new_module)
 	-- check_new_module=1 can be passed from a bot to compare to the new
 	-- module. In that case, if there's a difference, the return value will
 	-- be a string "OLD_RESULT || NEW_RESULT".
@@ -215,7 +279,6 @@ function export.show(text, pos, do_debug, no_test_new_module)
 	local check_new_module
 	if type(text) == 'table' then
 		pos = ine(text.args.pos)
-		do_debug = ine(text.args.debug)
 		check_new_module = ine(text.args.check_new_module)
 		text = ine(text.args[1])
 	end
@@ -224,19 +287,17 @@ function export.show(text, pos, do_debug, no_test_new_module)
 	-- Test code to compare existing module to new one.
 	if (test_new_fr_pron_module or check_new_module) and not no_test_new_module then
 		local m_new_fr_pron = require("Module:User:Benwing2/fr-pron")
-		new_module_result = m_new_fr_pron.show(text, pos, do_debug)
+		new_module_result = m_new_fr_pron.show(text, pos, noalternatives)
 	end
 
 	local pagename = mw.title.getCurrentTitle().text 
-	
+
 	text = export.canonicalize_pron(text, pagename)
 
 	-- track quote-separator if different numbers of quote symbols
 	if ulen(rsub(text, "[^']", "")) ~= ulen(rsub(pagename, "[^']", "")) then
 		track("quote-separator")
 	end
-	
-	local debug = {}
 
 	-- To simplify checking for word boundaries and liaison markers, we
 	-- add ⁀ at the beginning and end of all words, and remove it at the end.
@@ -347,7 +408,6 @@ function export.show(text, pos, do_debug, no_test_new_module)
 	-- following two must follow s -> z between vowels
 	text = rsub(text, '([^sçx⁀])ti([oeɛ])n', '%1si%2n') -- tion, tien
 	text = rsub(text, '([^sçx⁀])ti([ae])l', '%1si%2l') -- tial, tiel
-	table.insert(debug, text)
 
 	-- special hack for uï; must follow guï handling and precede ill handling
 	text = str_gsub(text, 'uï', 'ui') -- ouir, etc.
@@ -436,7 +496,6 @@ function export.show(text, pos, do_debug, no_test_new_module)
 	text = rsub(text, '(' .. cons_c .. ')%1e([⁀‿])', '%1%2')
 	text = rsub(text, '([mn]' .. cons_c .. ')e([⁀‿])', '%1%2')
 	text = rsub(text, '(' .. vowel_c .. cons_c .. '?)e([⁀‿])', '%1%2')
-	table.insert(debug, text)
 
 	-- ç; must follow s -> z between vowels (above); do after dropping final s
 	-- so that ç can be used in respelling to force a pronounced s
@@ -451,7 +510,6 @@ function export.show(text, pos, do_debug, no_test_new_module)
 	text = rsub(text, '(' .. word_begin_c .. 'in)[eæ]xh?(h?' .. vowel_c .. ')', '%1egz%2')
 	text = rsub(text, '(' .. word_begin_c .. ')x', '%1gz')
 	text = str_gsub(text, 'x', 'ks')
-	table.insert(debug, text)
 
 	-- double consonants: eCC treated specially, then CC -> C; do after
 	-- x -> ks so we handle exciter correctly
@@ -481,7 +539,7 @@ function export.show(text, pos, do_debug, no_test_new_module)
 	-- enharmonie, enherber.
 	text = rsub(text, '(' .. word_begin_c .. ')enh', '%1en_h')
 	text = str_gsub(text, 'nh', 'n')
-	
+
 	-- Nasalize vowel + n, m
 	-- Do before syllabification so we syllabify quatre-vingt-un correctly.
 	-- We affect (1) n before non-vowel, (2) m before b/p/f (including B/P,
@@ -515,7 +573,6 @@ function export.show(text, pos, do_debug, no_test_new_module)
 	-- preserved so far so that we know that preceding m can be nasalized in
 	-- words like plomb, champs
 	text = str_gsub(text, '[BP]', '')
-	table.insert(debug, text)
 
 	-- do after nasal handling so 'chinois' works correctly
 	text = str_gsub(text, 'oi', 'wA')
@@ -534,7 +591,7 @@ function export.show(text, pos, do_debug, no_test_new_module)
 	text = rsub_repeatedly(text, "(" .. vowel_maybe_nasal_r .. opt_syljoiners_c .. ")(" .. real_cons_c .. "?" .. opt_syljoiners_c .. oral_vowel_c .. ')', '%1.%2')
 	-- (2) break up other VCCCV as VC.CCV, and VCCV as VC.CV; repeat to handle successive syllables
 	text = rsub_repeatedly(text, "(" .. vowel_maybe_nasal_r .. opt_syljoiners_c .. real_cons_c .. opt_syljoiners_c .. ")(" .. real_cons_c .. cons_or_joiner_c .. "*" .. oral_vowel_c .. ")", '%1.%2')
-	
+
 	local function resyllabify(text)
 		-- (3) resyllabify C.C as .CC for various CC that can form an onset:
 		--     resyllabify C.[lr] as .C[lr] for C = various obstruents;
@@ -562,12 +619,11 @@ function export.show(text, pos, do_debug, no_test_new_module)
 			"%1.%2%3")
 		return text
 	end
-	
+
 	text = resyllabify(text)
-	
+
 	-- (6) eliminate diaeresis (note, uï converted early)
 	text = rsub(text, '[äëïöüÿ]', remove_diaeresis_from_vowel)
-	table.insert(debug, text)
 
 	--single vowels
 	text = str_gsub(text, 'â', 'ɑ')
@@ -590,7 +646,6 @@ function export.show(text, pos, do_debug, no_test_new_module)
 	--other consonants
 	text = str_gsub(text, 'r', 'ʁ')
 	text = str_gsub(text, 'g', 'ɡ') -- use IPA variant of g
-	table.insert(debug, text)
 
 	--(mostly) final schwa deletions (FIXME, combine with schwa deletions below)
 	--1. delete all instances of ė
@@ -654,7 +709,7 @@ function export.show(text, pos, do_debug, no_test_new_module)
 	-- remove _ that prevents interpretation of letter sequences; do this
 	-- before deleting internal schwas
 	text = str_gsub(text, "_", "")
-	
+
 	-- internal schwa
 	-- 1. delete schwa in VCəCV sequence word-internally when neither V is
 	--    schwa, except in a few sequences such as ʁəʁ (déchirerez), ɲəʁ
@@ -696,7 +751,7 @@ function export.show(text, pos, do_debug, no_test_new_module)
 	-- lowercase any uppercase letters (AOUMNJW etc.); they were there to
 	-- prevent certain later rules from firing
 	text = ulower(text)
-	
+
 	--ĕ forces a pronounced schwa
 	text = str_gsub(text, 'ĕ', 'ə')
 
@@ -706,27 +761,67 @@ function export.show(text, pos, do_debug, no_test_new_module)
 
 	-- rewrite apostrophes as liaison markers
 	text = str_gsub(text, "'", "‿")
-	--remove hyphens and word-boundary markers
-	text = rsub(text, '[⁀%-]', '')
-	
-	-- convert explicit-notation characters to their final result
-	text = rsub(text, EXPLICIT_H, "h")
 
-	local result = do_debug and table.concat(debug, ':') or text
+	-- convert explicit-notation characters to their final result
+	text = rsub(text, explicit_substitution_regex, explicit_substitution_to_sound)
+
+	-- remove hyphens
+	text = rsub(text, '%-', '')
+
+	local function flatmap_result(items, fun)
+		local new = {}
+		for _, item in ipairs(items) do
+			local results = fun(item)
+			for _, result in ipairs(results) do
+				table.insert(new, result)
+			end
+		end
+		return new
+	end
+
+	local result = {text}
+	if not noalternatives then
+		-- Include alternative with harmonized é/è
+		if rfind(text, "ɛ%.") or rfind(text, "e" .. real_cons_c .. "+%.") then
+			result = flatmap_result(result, function(item)
+				return {item, rsub(rsub(item, "ɛ%.", "e."), "e(" .. real_cons_c .. "+%.)", "ɛ%1")}
+			end)
+		end
+		if rfind(text, "ism[⁀‿]") then
+			result = flatmap_result(result, function(item)
+				return {item, rsub(item, "ism([⁀‿])", "izm%1")}
+			end)
+		end
+		if rfind(text, "is%.mə[⁀‿]") then
+			result = flatmap_result(result, function(item)
+				return {item, rsub(item, "is%.mə([⁀‿])", "iz.mə%1")}
+			end)
+		end
+		if rfind(text, "ɑ" .. non_nasal_c) then
+			result = flatmap_result(result, function(item)
+				return {rsub_repeatedly(item, "ɑ(" .. non_nasal_c .. ")", "a%1"), item}
+			end)
+		end
+	end
+
+	--remove word-boundary markers
+	for i, item in ipairs(result) do
+		result[i] = rsub(item, '⁀', '')
+	end
 
 	-- Handle test_new_fr_pron_module/check_new_module if specified.
 	if new_module_result then
 		if test_new_fr_pron_module then
-			if new_module_result ~= result then
-				--error(result .. " || " .. new_module_result)
+			if not require("Module:table").deepEquals(new_module_result, result) then
+				--error(table.concat(result, ",") .. " || " .. table.concat(new_module_result, ","))
 				track("different-pron")
 			else
 				track("same-pron")
 			end
 		end
 		if check_new_module then
-			if new_module_result ~= result then
-				result = result .. " || " .. new_module_result
+			if not require("Module:table").deepEquals(new_module_result, result) then
+				result = table.concat(result, ",") .. " || " .. table.concat(new_module_result, ",")
 			end
 		end
 	end
