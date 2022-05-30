@@ -73,11 +73,11 @@ local conj = {}
 -- have been processed, as it takes awhile for this to happen).
 local test_new_fr_verb_module = false
 
-local m_core = require("Module:fr-verb/core")
+local m_core = require("Module:User:Benwing2/fr-verb/core")
 local m_pron = require("Module:fr-verb/pron")
 local m_links = require("Module:links")
 local m_conj = require("Module:fr-conj")
-local m_fr_pron = require("Module:fr-pron")
+local m_fr_pron = require("Module:User:Benwing2/fr-pron")
 local lang = require("Module:languages").getByCode("fr")
 local m_table = require("Module:table")
 local m_utilities = require("Module:utilities")
@@ -128,7 +128,7 @@ local function map(seq, fun, use_respelling, do_flatmap)
 			local retval = fun(s)
 			if do_flatmap and type(retval) == "table" then
 				for _, item in ipairs(retval) do
-					m_table.insertIfNot(ret, retval)
+					m_table.insertIfNot(ret, item)
 				end
 			else
 				m_table.insertIfNot(ret, retval)
@@ -157,9 +157,9 @@ local function dopron(data, stem, suffix)
 	end, "respelling", "flatmap")
 end
 
-local function setform(data, form, val)
+local function setform(data, form, val, pron)
 	data.forms[form] = val
-	data.prons[form] = dopron(data, val)
+	data.prons[form] = dopron(data, pron or val)
 end
 
 local function copyform(data, fromform, toform, newformval)
@@ -338,12 +338,20 @@ local function construct_er_pron(data, pronstem, pronstem_final_fut)
 		stem_fut, stem_fut_i)
 end
 
-local function make_passe_simple(data, past_stem)
+local function make_passe_simple(data, past_stem, er_past)
 	-- Passé simple
-	m_core.make_ind_ps(data, past_stem)
+	if er_past then
+		m_core.make_ind_ps_a(data, past_stem)
+	else
+		m_core.make_ind_ps(data, past_stem)
+	end
 	if past_stem ~= "—" then
 		local past_stem_pron = dopron(data, past_stem)
-		m_pron.ind_ps(data, past_stem_pron)
+		if er_past then
+			m_pron.ind_ps_a(data, past_stem_pron)
+		else
+			m_pron.ind_ps(data, past_stem_pron)
+		end
 	end
 end
 
@@ -365,47 +373,36 @@ local function make_future_conditional(data, fut_stem)
 	end
 end
 
-local function make_imperfect_indicative(data, impf_stem, pronstem_nonfinal, pronstem_nonfinal_i)
-	pronstem_nonfinal_i = pronstem_nonfinal_i or strip_pron_ending(dopron(nil, pronstem, "ez"), "e")
-	local stem_nonfinal_i = strip_pron_ending(dopron(nil, pronstem, "iez"), "je")
-end
-
-
 -- Construct the conjugation and pronunciation of all forms of a non-er verb.
 -- DATA holds the forms and pronunciations. The remaining args are stems:
 --
--- * PRES_SG_STEM is used for pres indic/imper 1s/2s/3s;
--- * PRES_12P_STEM is used for pres indic/imper 1p/2p, the whole of the
---    imperfect, and the present participle;
--- * PRES_3P_STEM is used for pres indic 3p and the whole of the pres subj;
--- * PAST_STEM is used for the past historic and past participle;
--- * FUT_STEM (which should end with 'r') is used for the future and
---    conditional. If omitted, it is taken from the infinitive minus final -e.
+-- * PRES_SG_STEM is used for pres indicative 1s/2s/3s and the imperative 2s;
+-- * PRES_12P_STEM is used for pres indicative/imperative 1p/2p, the whole of the imperfect, the present participle,
+--    and (unless PRES_SUBJ_STEM is given) the pres subjunctive 1p/2p;
+-- * PRES_3P_STEM is used for pres indicative 3p and pres subjunctive 1s/2s/3s/3p;
+-- * PAST_STEM is used for the past historic, the imperfect subjunctive and (unless PP is given) the past participle;
+-- * FUT_STEM (which should end with 'r') is used for the future and conditional. If omitted, it is taken from the
+--    infinitive minus any final -e.
 -- * PP is the past participle. If omitted, if defaults to PAST_STEM.
 -- * PRES_SUBJ_STEM if given overrides the present subjunctive stem.
--- * PRES_SUBJ_NONFINAL_STEM if given overrides the present subjunctive stem
---    specifically for 1p/2p, defaulting to PRES_SUBJ_STEM.
--- * ER_PRESENT, if true, specifies that the present singular follows an
---    -er type of conjugation (endings -e, -es, -e in place of -s, -s, -t).
---    In this case, PRES_12P_STEM and PRES_3P_STEM are currently ignored.
---    Normally, use construct_non_er_conj_er_present() in place of this arg.
+-- * PRES_SUBJ_NONFINAL_STEM if given overrides the present subjunctive stem specifically for 1p/2p, defaulting to
+--    PRES_SUBJ_STEM.
+-- * ER_PRESENT, if true, specifies that the present singular follows an -er type of conjugation (endings -e, -es, -e
+--    in place of -s, -s, -t). In this case, PRES_12P_STEM and PRES_3P_STEM are currently ignored. Normally, use
+--    construct_non_er_conj_er_present() in place of this arg.
+-- * ER_PAST, if true, specifies that the past historic and imperfect subjunctive follow an -er type of conjugation.
 --
--- Any of the stem arguments may actually be a table, where each element can be
--- a string (a stem) or a table of the form {"STEM", RESPELLING="RESPELLING"},
--- specifying a stem to use for constructing the verb forms and the corresponding
--- respelling to use when constructing the pronunciation. This is used, for
--- example, in mourir and courir.
-local function construct_non_er_conj(data, pres_sg_stem, pres_12p_stem,
-	pres_3p_stem, past_stem, fut_stem, pp, pres_subj_stem,
-	pres_subj_nonfinal_stem, er_present)
+-- Any of the stem arguments may be "—" to indicate that it is missing, or a table, where each element can be a string
+-- (a stem) or a table of the form {"STEM", RESPELLING="RESPELLING"}, specifying a stem to use for constructing the
+-- verb forms and the corresponding respelling to use when constructing the pronunciation. This is used, for example,
+-- in [[mourir]], [[courir]] and [[avoir]].
+local function construct_non_er_conj(data, pres_sg_stem, pres_12p_stem, pres_3p_stem, past_stem, fut_stem, pp,
+	pres_subj_stem, pres_subj_nonfinal_stem, er_present, er_past)
 	if er_present then
 		m_core.make_ind_p_e(data, pres_sg_stem)
 	else
 		m_core.make_ind_p(data, pres_sg_stem, pres_12p_stem, pres_3p_stem)
 	end
-
-	make_passe_simple(data, past_stem)
-	make_future_conditional(data, fut_stem)
 
 	-- Most of the time it works to add 's' to produce the 1sg (it doesn't
 	-- always work to use the stem directly, cf. apparais vs. apparai). But
@@ -423,13 +420,16 @@ local function construct_non_er_conj(data, pres_sg_stem, pres_12p_stem,
 		else
 			local pres_sg_stem_pron = map(pres_sg_stem, function(stem)
 				return rmatch(data.pronstem .. stem, "er$") and dopron(data, stem, "t") or dopron(data, stem, "s")
-			end, "respelling")
+			end, "respelling", "flatmap")
 			local pres_12p_stem_pron = strip_pron_ending(dopron(data, pres_12p_stem, "ez"), "e")
 			local pres_3p_stem_pron = dopron(data, pres_3p_stem, "e")
 			local pre_j_stem_pron = strip_pron_ending(dopron(data, pres_12p_stem, "iez"), "je")
 			m_pron.ind_p(data, pres_sg_stem_pron, pres_12p_stem_pron, pres_3p_stem_pron, pre_j_stem_pron)
 		end
 	end
+
+	make_passe_simple(data, past_stem, er_past)
+	make_future_conditional(data, fut_stem)
 
 	if pp then
 		data.forms.pp = pp
@@ -466,21 +466,9 @@ end
 local function construct_non_er_conj_er_present(data, pres_stem, past_stem,
 	fut_stem, pp, pres_subj_stem, pres_subj_nonfinal_stem)
 	-- Specify the pp explicitly, explicitly defaulting to the past_stem,
-	-- else if will end in -é.
+	-- else it will end in -é.
 	construct_non_er_conj(data, pres_stem, nil, nil, past_stem, fut_stem,
 	pp or past_stem, pres_subj_stem, pres_subj_nonfinal_stem, "er-present")
-end
-
-local function copy_ind_pron_to_imp(data)
-	data.prons.imp_p_2s = data.prons.ind_p_2s
-	data.prons.imp_p_1p = data.prons.ind_p_1p
-	data.prons.imp_p_2p = data.prons.ind_p_2p
-end
-
-local function generate_imp_pron_from_forms(data)
-	data.prons.imp_p_2s = dopron(data, data.forms.imp_p_2s)
-	data.prons.imp_p_1p = dopron(data, data.forms.imp_p_1p)
-	data.prons.imp_p_2p = dopron(data, data.forms.imp_p_2p)
 end
 
 local function impersonal_verb(data)
@@ -551,14 +539,14 @@ conj["ayer"] = function(data)
 		.. "either group, according to the writer's preference)."
 
 	m_core.make_ind_p_e(data, {"ay", "ai"}, "ay", "ay")
-	construct_er_pron(data, {"ay", "éy"}, {"ay", "ai"})
+	construct_er_pron(data, "ay", {"ay", "ai"})
 	data.group = 1
 	data.conjcat = "-ayer"
 end
 
 conj["eyer"] = function(data)
 	m_core.make_ind_p_e(data, "ey")
-	construct_er_pron(data, {"ey", "éy"}, "ey")
+	construct_er_pron(data, "ey", "ey")
 	data.group = 1
 	data.conjcat = "-eyer"
 end
@@ -782,16 +770,8 @@ end
 conj["ouïr"] = function(data)
 	data.notes = "The forms beginning with ''oi-'', ''oy-'', or ''orr-'' are archaic."
 
-	construct_non_er_conj(data, {"ouï", "oi"}, {"ouïss", "oy"},
+	construct_non_er_conj(data, {"ouï", "oi"}, {"ouïss", {"oy", respelling="oill"}},
 		{"ouïss", "oi"}, "ouï", {"ouïr", "oir", "orr"})
-	-- Need to override the pronunciations of all forms in oy-.
-	data.prons.ind_p_1p = dopron(data, {"ouïssons", "oillons"})
-	data.prons.ind_p_2p = dopron(data, {"ouïssez", "oillez"})
-	copy_ind_pron_to_imp(data)
-	m_pron.ind_i(data, strip_pron_ending(dopron(data, {"ouïssez", "oillez"}), "e"))
-	m_pron.sub_p(data, dopron(data, {"ouïsse", "oie"}), strip_pron_ending(
-		dopron(data, {"ouïssiez", "oilliez"}), "je"))
-	data.prons.ppr = dopron(data, {"ouïssant", "oillant"})
 	data.conjcat = "ouïr"
 end
 
@@ -804,10 +784,9 @@ conj["asseoir"] = function(data)
 end
 
 conj["surseoir"] = function(data)
-	construct_non_er_conj(data, "sursoi", "sursoy", "sursoi", "sursi", nil,
-		"sursis")
 	-- Pronunciation in future/cond as if written sursoir- not surseoir-
-	m_pron.ind_f(data, strip_pron_ending(dopron(data, "sursoirez"), "e"))
+	construct_non_er_conj(data, "sursoi", "sursoy", "sursoi", "sursi", {{"surseoir", respelling="sursoir"}},
+		"sursis")
 	data.conjcat = "seoir"
 end
 
@@ -816,7 +795,7 @@ conj["seoir"] = function(data)
 
 	construct_non_er_conj(data, "sied", "sey", "sié", "—", "siér")
 	only_third_verb(data)
-	setform(data, "ppr", {"séant","seyant"})
+	setform(data, "ppr", {"séant", "seyant"})
 	data.conjcat = "seoir"
 	data.cat = "defective"
 end
@@ -948,8 +927,7 @@ end
 
 conj["falloir"] = function(data)
 	data.notes = "This verb is defective, only conjugated in the third-person singular."
-	construct_non_er_conj(data, "fau", "fall", "fall", "fallu", "faudr", nil,
-		"faill")
+	construct_non_er_conj(data, "fau", "fall", "fall", "fallu", "faudr", nil, "faill")
 	impersonal_verb(data)
 	data.cat = {"defective", "impersonal"}
 end
@@ -962,8 +940,7 @@ conj["faillir"] = function(data)
 			.. "past historic, and the composed tenses. The third-person singular "
 			.. "present indicative " .. link("faut") .. " is also found in "
 			.. "certain set phrases."
-		construct_non_er_conj(data, "fau", "faill", "faill", "failli",
-			{"faudr", "faillir"})
+		construct_non_er_conj(data, "fau", "faill", "faill", "failli", {"faudr", "faillir"})
 		data.forms.ind_p_1s = "faux"
 		data.forms.ind_p_2s = "faux"
 		m_core.clear_imp(data)
@@ -1061,18 +1038,8 @@ end
 conj["oître"] = function(data)
 	data.notes = "This verb is one of a fairly small group of " .. link("-re") .. " verbs, that are all conjugated the same way. They are unlike other verb groups in that the 'i' is given a circumflex before a 't'. This conjugation pattern is no longer in use and has been replaced by -aître."
 
-	m_core.make_ind_p(data, "oi", "oiss")
-	data.forms.ind_p_3s = "oît"
-	m_core.make_ind_ps(data, "u")
-
-	local stem = dopron(data, "ais")
-	local stem2 = stem .. ".s"
-	local stem3 = stem .. "s"
-	local stem4 = dopron(data, "u")
-
-	m_pron.ind_p(data, stem, stem2, stem3)
-	m_pron.ind_ps(data, stem4)
-	m_pron.ind_f(data, stem .. ".tʁ", stem .. ".tʁi.")
+	construct_non_er_conj(data, {{"oi", respelling="ai"}}, {{"oiss", respelling="aiss"}},
+		{{"oiss", respelling="aiss"}}, "u", {{"oîtr", respelling="aitr"}})
 end
 
 conj["indre"] = function(data)
@@ -1102,26 +1069,14 @@ conj["raire"] = function(data) --braire, traire
 		.. "unavoidable need to use these forms.\n"
 		.. "The root -{stem}rais- was used instead of -{stem}ray- in the "
 		.. "18th century, and remains in Swiss and Savoy dialects."
-	m_core.make_ind_p(data, "rai", "ray", "rai")
-	m_core.make_ind_ps_a(data, "ray")
-
-	local stem = dopron(data, "rais")
-	data.forms.pp = "rait"
-
-	local stem2 = stem .. ".j"
-	local stem3 = stem .. ".ʁ"
-
-	m_pron.ind_p(data, stem, stem2)
-	m_pron.ind_ps_a(data, stem2)
-	m_pron.ind_f(data, stem3)
-	data.prons.pp = stem
+	construct_non_er_conj(data, "rai", "ray", "rai", "ray", nil, "rait", nil, nil, nil, "er past")
 end
 
 conj["clore"] = function(data)
 	data.notes = "This verb is not conjugated in certain tenses."
 
 	construct_non_er_conj(data, "clo", "clos", "clos", "—", nil, "clos")
-	m_core.make_ind_i(data, "—")
+	m_core.make_ind_i(data, "—") -- no imperfect
 	data.forms.ind_p_3s = "clôt"
 	data.cat = "defective"
 end
@@ -1326,17 +1281,11 @@ conj["prendre"] = function(data)
 end
 
 conj["faire"] = function(data)
-	construct_non_er_conj(data, "fai", "fais", "fais", "fi", "fer", "fait",
+	construct_non_er_conj(data, "fai", {{"fais", respelling="fes"}}, {{"fais", respelling="fes"}}, "fi", "fer", "fait",
 		"fass")
-	-- Need to override the present indicative 2p and 3p, the imperative 2p,
-	-- and the pronunciations of these forms as well as all forms in fais-.
 	setform(data, "ind_p_2p", "faites")
 	setform(data, "ind_p_3p", "font")
-	data.prons.ind_p_1p = dopron(data, "fesons")
-	data.forms.imp_p_2p = "faites"
-	copy_ind_pron_to_imp(data)
-	m_pron.ind_i(data, strip_pron_ending(dopron(data, "fesez"), "e"))
-	data.prons.ppr = dopron(data, "fesant")
+	copyform(data, "ind_p_2p", "imp_p_2p")
 end
 
 conj["boire"] = function(data)
@@ -1351,39 +1300,25 @@ conj["devoir"] = function(data)
 end
 
 conj["avoir"] = function(data)
-	m_core.make_ind_p(data, "a", "av")
-	data.forms.ind_p_1s = "ai"
-	data.forms.ind_p_3s = "a"
-	data.forms.ind_p_3p = "ont"
-	m_core.make_ind_ps(data, "eu")
-	m_core.make_ind_f(data, "aur")
-	m_core.make_sub_p(data, "ai")
+	-- Need to specify a value for singular present to get proper pronunciation for present tense,
+	-- even though we override it.
+	construct_non_er_conj(data, "a", "av", "—", {{"eu", respelling="u"}}, {"aur", {"aur", respelling="ôr"}}, nil,
+		"ai", "ay")
+	setform(data, "ind_p_1s", "ai")
+	setform(data, "ind_p_2s", "as", "a")
+	setform(data, "ind_p_3s", "a")
+	setform(data, "ind_p_3p", "ont")
+	setform(data, "ppr", "ayant")
 	data.forms.sub_p_3s = "ait"
-	data.forms.sub_p_1p = "ayons"
-	data.forms.sub_p_2p = "ayez"
-	m_core.make_imp_p_sub(data)
-	data.forms.ppr = "ayant"
-
-	local root = rsub(dopron(data, "a"),"a$","")
-
-	local stem = root .. "a"
-	local stem2 = root .. "a.v"
-	local stem3 = root .. "y"
-	local stem4 = root .. "o.ʁ"
-	local stem5 = root .. "ɛ"
-	local stem6 = root .. "ɛ."
-
-	m_pron.ind_p(data, stem, stem2)
-	data.prons.ind_p_1s = root .. "e"
-	data.prons.ind_p_3p = root .. "ɔ̃"
-	m_pron.ind_ps(data, stem3)
-	m_pron.ind_f(data, stem4)
-	m_pron.sub_p(data, stem5, stem6)
-	generate_imp_pron_from_forms(data)
-	data.prons.ppr = stem6 .. "jɑ̃"
+	setform(data, "sub_p_1p", "ayons")
+	setform(data, "sub_p_2p", "ayez")
+	copyform(data, "sub_p_1s", "imp_p_2s")
+	copyform(data, "sub_p_1p", "imp_p_1p")
+	copyform(data, "sub_p_2p", "imp_p_2p")
 end
 
 conj["être"] = function(data)
+	construct_non_er_conj(data, "e", "ét", "—", "fu", "ser", "été", "soi", "soy")
 	setform(data, "ind_p_1s", "suis")
 	setform(data, "ind_p_2s", "es")
 	setform(data, "ind_p_3s", "est")
@@ -1396,37 +1331,22 @@ conj["être"] = function(data)
 	copyform(data, "sub_p_1s", "sub_p_3s", "soit")
 	setform(data, "sub_p_1p", "soyons")
 	setform(data, "sub_p_2p", "soyez")
-	copyform(data, "sub_p_1s", "sub_p_3p", "soiend")
 
 	copyform(data, "sub_p_2s", "imp_p_2s")
 	copyform(data, "sub_p_1p", "imp_p_1p")
 	copyform(data, "sub_p_2p", "imp_p_2p")
-
-	m_core.make_ind_i(data, "ét")
-	m_core.make_ind_ps(data, "fu")
-
-	make_passe_simple(data, "fu")
-	make_future_conditional(data, "ser")
-
-	setform(data, "pp", "été")
-	setform(data, "ppr", "étant")
-
-	local root_e = rsub(dopron(data, "é"),"e$","")
-
-	local stem2 = root_e .. "e.t"
-
-	m_pron.ind_i(data, stem2)
-
-	data.cat = "defective"
 end
 
 conj["estre"] = function(data)
 	conj["être"](data)
 
 	for key,val in pairs(data.forms) do
-		data.forms[key] = rsub(val, "[éê]", "es")
-		data.forms[key] = rsub(data.forms[key], "û", "us")
-		data.forms[key] = rsub(data.forms[key], "ai", "oi")
+		data.forms[key] = map(val, function(form)
+			form = rsub(form, "[éê]", "es")
+			form = rsub(form, "û", "us")
+			form = rsub(form, "ai", "oi")
+			return form
+		end)
 	end
 
 	data.forms.ind_ps_1p = "fumes"
@@ -1448,14 +1368,8 @@ conj["envoyer"] = function(data)
 	data.notes = "This verb is one of a few verbs that conjugate like " .. link("noyer") .. ", except in the future and conditional, where they conjugate like " .. link("voir") .. "."
 
 	m_core.make_ind_p_e(data, "envoi", "envoy", "envoy")
-	m_core.make_ind_f(data, "enverr")
-
-	local stem = dopron(data, "envoi")
-	local stem2 = stem .. ".j"
-	local stem3 = dopron(data, "envè") .. ".ʁ"
-
-	m_pron.er(data, stem, stem2)
-	m_pron.ind_f(data, stem3)
+	construct_er_pron(data, "envoy", "envoi")
+	make_future_conditional(data, "enverr")
 	data.group = 1
 	data.irregular = "yes"
 end
@@ -1463,22 +1377,15 @@ end
 conj["irreg-aller"] = function(data)
 	data.notes = "The verb ''{stem}aller'' has a unique and highly irregular conjugation. The second-person singular imperative ''[[va]]'' additionally combines with ''[[y]]'' to form ''[[vas-y]]'' instead of the expected ''va-y''."
 
-	m_core.make_ind_p_e(data, "all")
-	m_core.make_ind_f(data, "ir")
-	m_core.make_sub_p(data, "aill", "all")
-
-	local stem = dopron(data, "a")
-	local stem2 = dopron(data, "i") .. ".ʁ"
-
-	m_pron.er(data, stem .. "l", stem .. ".l")
-	m_pron.ind_f(data, stem2)
-	m_pron.sub_p(data, stem .. "j", stem .. ".l")
-
+	-- Need to specify a value for singular present to get proper pronunciation for present tense,
+	-- even though we override it.
+	construct_non_er_conj(data, "va", "all", "—", "all", "ir", "allé", "aill", "all", nil, "er past")
 	setform(data, "ind_p_1s", "vais")
-	setform(data, "ind_p_2s", "vas")
+	-- TLFi says /va/ even for 2s, not /vɑ/.
+	setform(data, "ind_p_2s", "vas", "va")
 	setform(data, "ind_p_3s", "va")
 	setform(data, "ind_p_3p", "vont")
-	setform(data, "imp_p_2s", "va")
+	copyform(data, "ind_p_3s", "imp_p_2s")
 end
 
 conj["dire"] = function(data)
@@ -1486,7 +1393,7 @@ conj["dire"] = function(data)
 
 	if data.stem == "" or data.stem == "re" then
 		setform(data, "ind_p_2p", "dites")
-		setform(data, "imp_p_2p", "dites")
+		copyform(data, "ind_p_2p", "imp_p_2p")
 	else
 		data.notes = "This verb is one of a group of " .. link("-re") .. " verbs all ending in ''-dire''. "
 		data.notes = data.notes .. "They are conjugated exactly like " .. link("dire") .. ", "
@@ -1501,21 +1408,19 @@ conj["vivre"] = function(data)
 end
 
 conj["mourir"] = function(data)
-	construct_non_er_conj(data, "meur", "mour", "meur", "mouru", {{"mourr", respelling="mour_r"}},
-		"mort")
+	construct_non_er_conj(data, "meur", "mour", "meur", "mouru", {{"mourr", respelling="mour_r"}}, "mort")
 end
 
 conj["savoir"] = function(data)
-	construct_non_er_conj(data, "sai", "sav", "sav", "su", {{"saur", respelling="sor"}}, nil,
-		"sach")
-	m_core.make_imp_p_sub(data)
+	construct_non_er_conj(data, "sai", "sav", "sav", "su", {"saur", {"saur", respelling="sôr"}}, nil, "sach")
+	copyform(data, "sub_p_1s", "imp_p_2s") -- sache
+	setform(data, "imp_p_1p", "sachons")
+	setform(data, "imp_p_2p", "sachez")
 	setform(data, "ppr", "sachant")
-	generate_imp_pron_from_forms(data)
 end
 
 conj["pouvoir"] = function(data)
-	construct_non_er_conj(data, "peu", "pouv", "peuv", "pu", "pourr", nil,
-		"puiss")
+	construct_non_er_conj(data, "peu", "pouv", "peuv", "pu", "pourr", nil, "puiss")
 	data.forms.ind_p_1s = "peux"
 	data.forms.ind_p_2s = "peux"
 	m_core.clear_imp(data)
@@ -1523,8 +1428,7 @@ conj["pouvoir"] = function(data)
 end
 
 conj["ouloir"] = function(data) -- vouloir, revouloir, douloir
-	construct_non_er_conj(data, "eu", "oul", "eul", "oulu", "oudr", nil,
-		"euill", "oul")
+	construct_non_er_conj(data, "eu", "oul", "eul", "oulu", "oudr", nil, "euill", "oul")
 	data.forms.ind_p_1s = "eux"
 	data.forms.ind_p_2s = "eux"
 	if data.stem == "v" then -- irregular imperative for vouloir
@@ -1833,7 +1737,6 @@ function export.do_generate_forms(args)
 	-- iteration of the loop above. As it happens, this doesn't matter
 	-- because we iterate over pronunciations keeping the stem and conjugation
 	-- type the same, but might matter one day if we break this assumption.
-	m_core.extract(data, args)
 
 	if args.archaic then
 		for k, v in pairs(data.forms) do
@@ -1875,6 +1778,9 @@ function export.do_generate_forms(args)
 		if type(val) == "table" then
 			for i,form in ipairs(val) do
 				if form ~= "—" then
+					if type(form) == "table" then
+						error(("Internal error: Saw table value for key '%s': %s"):format(key, mw.dumpObject(form)))
+					end
 					data.forms[key][i] = data.stem .. form
 				end
 			end

@@ -4,7 +4,7 @@ local m_conj = require("Module:fr-conj")
 local m_links = require("Module:links")
 local lang = require("Module:languages").getByCode("fr")
 local IPA = function(str)
-	return require("Module:IPA").format_IPA(nil,str)
+	return require("Module:IPA").format_IPA(nil, str)
 end
 
 local rmatch = mw.ustring.match
@@ -65,120 +65,120 @@ function export.make_ind_p_e(data, stem, stem2, stem3)
 	stem2 = stem2 or stem
 	stem3 = stem3 or stem
 
-	data.forms.ind_p_1s = add(stem,"e")
-	data.forms.ind_p_2s = add(stem,"es")
-	data.forms.ind_p_3s = add(stem,"e")
-	data.forms.ind_p_3p = add(stem,"ent")
-	data.forms.ind_p_1p = add(stem2,"ons")
+	data.forms.ind_p_1s = add(stem, "e")
+	data.forms.ind_p_2s = add(stem, "es")
+	data.forms.ind_p_3s = add(stem, "e")
+	data.forms.ind_p_3p = add(stem, "ent")
+	data.forms.ind_p_1p = add(stem2, "ons")
 	-- stem3 is used in -ger and -cer verbs
-	data.forms.ind_p_2p = add(stem3,"ez")
+	data.forms.ind_p_2p = add(stem3, "ez")
 
 	export.make_ind_i(data, stem2, stem3)
 	export.make_ind_ps_a(data, stem2, stem3)
 	export.make_sub_p(data, stem, stem3)
 	export.make_imp_p_ind(data)
 	export.make_ind_f(data, add(stem, "er"))
-	data.forms.ppr = add(stem2,"ant")
+	data.forms.ppr = add(stem2, "ant")
 end
 
 function export.make_ind_p(data, stem, stem2, stem3)
 	stem2 = stem2 or stem
 	stem3 = stem3 or stem2
-	data.forms.ind_p_1s = add(stem,"s")
-	data.forms.ind_p_2s = add(stem,"s")
+	data.forms.ind_p_1s = add(stem, "s")
+	data.forms.ind_p_2s = add(stem, "s")
 	-- add t unless stem ends in -t (e.g. met), -d (e.g. vend, assied) or
 	-- -c (e.g. vainc).
 	data.forms.ind_p_3s = map(stem, function(s)
 		return add(s, rmatch(s, "[tdc]$") and "" or "t")
 	end)
-	data.forms.ind_p_1p = add(stem2,"ons")
-	data.forms.ind_p_2p = add(stem2,"ez")
-	data.forms.ind_p_3p = add(stem3,"ent")
+	data.forms.ind_p_1p = add(stem2, "ons")
+	data.forms.ind_p_2p = add(stem2, "ez")
+	data.forms.ind_p_3p = add(stem3, "ent")
 
 	export.make_ind_i(data, stem2)
 	export.make_sub_p(data, stem3, stem2)
 	export.make_imp_p_ind(data)
-	data.forms.ppr = add(stem2,"ant")
+	data.forms.ppr = add(stem2, "ant")
 end
 
 function export.make_ind_i(data, stem, stem2)
 	stem2 = stem2 or stem
-	data.forms.ind_i_1s = add(stem,"ais")
-	data.forms.ind_i_2s = add(stem,"ais")
-	data.forms.ind_i_3s = add(stem,"ait")
-	data.forms.ind_i_1p = add(stem2,"ions")
-	data.forms.ind_i_2p = add(stem2,"iez")
-	data.forms.ind_i_3p = add(stem,"aient")
+	data.forms.ind_i_1s = add(stem, "ais")
+	data.forms.ind_i_2s = add(stem, "ais")
+	data.forms.ind_i_3s = add(stem, "ait")
+	data.forms.ind_i_1p = add(stem2, "ions")
+	data.forms.ind_i_2p = add(stem2, "iez")
+	data.forms.ind_i_3p = add(stem, "aient")
 end
 
 function export.make_ind_ps_a(data, stem, stem2)
 	stem2 = stem2 or stem
-	data.forms.ind_ps_1s = add(stem,"ai")
-	data.forms.ind_ps_2s = add(stem,"as")
-	data.forms.ind_ps_3s = add(stem,"a")
-	data.forms.ind_ps_1p = add(stem,"âmes")
-	data.forms.ind_ps_2p = add(stem,"âtes")
-	data.forms.ind_ps_3p = add(stem2,"èrent")
+	data.forms.ind_ps_1s = add(stem, "ai")
+	data.forms.ind_ps_2s = add(stem, "as")
+	data.forms.ind_ps_3s = add(stem, "a")
+	data.forms.ind_ps_1p = add(stem, "âmes")
+	data.forms.ind_ps_2p = add(stem, "âtes")
+	data.forms.ind_ps_3p = add(stem2, "èrent")
 
-	export.make_sub_pa(data,add(stem,"a"))
+	export.make_sub_pa(data, add(stem, "a"))
 
-	data.forms.pp = data.forms.pp or add(stem2,"é")
+	data.forms.pp = data.forms.pp or add(stem2, "é")
 end
 
 local function fix_circumflex(val)
-	return rsub(val, "[aiïu]n?%^",{["a^"]="â", ["i^"]="î", ["ï^"]="ï", ["in^"]="în", ["u^"]="û"})
+	return rsub(val, "[aiïu]n?%^", {["a^"]="â", ["i^"]="î", ["ï^"]="ï", ["in^"]="în", ["u^"]="û"})
 end
 
 function export.make_ind_ps(data, stem)
-	data.forms.ind_ps_1s = add(stem,"s")
-	data.forms.ind_ps_2s = add(stem,"s")
-	data.forms.ind_ps_3s = add(stem,"t")
-	data.forms.ind_ps_1p = map(add(stem,"^mes"), fix_circumflex)
-	data.forms.ind_ps_2p = map(add(stem,"^tes"), fix_circumflex)
-	data.forms.ind_ps_3p = add(stem,"rent")
+	data.forms.ind_ps_1s = add(stem, "s")
+	data.forms.ind_ps_2s = add(stem, "s")
+	data.forms.ind_ps_3s = add(stem, "t")
+	data.forms.ind_ps_1p = map(add(stem, "^mes"), fix_circumflex)
+	data.forms.ind_ps_2p = map(add(stem, "^tes"), fix_circumflex)
+	data.forms.ind_ps_3p = add(stem, "rent")
 
-	export.make_sub_pa(data,stem)
+	export.make_sub_pa(data, stem)
 
-	data.forms.pp = data.forms.pp or stem
+	data.forms.pp = data.forms.pp or add(stem, "")
 end
 
 function export.make_ind_f(data, stem)
-	data.forms.ind_f_1s = add(stem,"ai")
-	data.forms.ind_f_2s = add(stem,"as")
-	data.forms.ind_f_3s = add(stem,"a")
-	data.forms.ind_f_1p = add(stem,"ons")
-	data.forms.ind_f_2p = add(stem,"ez")
-	data.forms.ind_f_3p = add(stem,"ont")
+	data.forms.ind_f_1s = add(stem, "ai")
+	data.forms.ind_f_2s = add(stem, "as")
+	data.forms.ind_f_3s = add(stem, "a")
+	data.forms.ind_f_1p = add(stem, "ons")
+	data.forms.ind_f_2p = add(stem, "ez")
+	data.forms.ind_f_3p = add(stem, "ont")
 
 	export.make_cond_p(data, stem)
 end
 
 function export.make_cond_p(data, stem)
-	data.forms.cond_p_1s = add(stem,"ais")
-	data.forms.cond_p_2s = add(stem,"ais")
-	data.forms.cond_p_3s = add(stem,"ait")
-	data.forms.cond_p_1p = add(stem,"ions")
-	data.forms.cond_p_2p = add(stem,"iez")
-	data.forms.cond_p_3p = add(stem,"aient")
+	data.forms.cond_p_1s = add(stem, "ais")
+	data.forms.cond_p_2s = add(stem, "ais")
+	data.forms.cond_p_3s = add(stem, "ait")
+	data.forms.cond_p_1p = add(stem, "ions")
+	data.forms.cond_p_2p = add(stem, "iez")
+	data.forms.cond_p_3p = add(stem, "aient")
 end
 
 function export.make_sub_p(data, stem, stem2)
 	stem2 = stem2 or stem
-	data.forms.sub_p_1s = add(stem,"e")
-	data.forms.sub_p_2s = add(stem,"es")
-	data.forms.sub_p_3s = add(stem,"e")
-	data.forms.sub_p_3p = add(stem,"ent")
-	data.forms.sub_p_1p = add(stem2,"ions")
-	data.forms.sub_p_2p = add(stem2,"iez")
+	data.forms.sub_p_1s = add(stem, "e")
+	data.forms.sub_p_2s = add(stem, "es")
+	data.forms.sub_p_3s = add(stem, "e")
+	data.forms.sub_p_3p = add(stem, "ent")
+	data.forms.sub_p_1p = add(stem2, "ions")
+	data.forms.sub_p_2p = add(stem2, "iez")
 end
 
 function export.make_sub_pa(data, stem)
-	data.forms.sub_pa_1s = add(stem,"sse")
-	data.forms.sub_pa_2s = add(stem,"sses")
-	data.forms.sub_pa_3s = map(add(stem,"^t"), fix_circumflex)
-	data.forms.sub_pa_1p = add(stem,"ssions")
-	data.forms.sub_pa_2p = add(stem,"ssiez")
-	data.forms.sub_pa_3p = add(stem,"ssent")
+	data.forms.sub_pa_1s = add(stem, "sse")
+	data.forms.sub_pa_2s = add(stem, "sses")
+	data.forms.sub_pa_3s = map(add(stem, "^t"), fix_circumflex)
+	data.forms.sub_pa_1p = add(stem, "ssions")
+	data.forms.sub_pa_2p = add(stem, "ssiez")
+	data.forms.sub_pa_3p = add(stem, "ssent")
 end
 
 function export.make_imp_p_ind(data)
@@ -187,30 +187,6 @@ function export.make_imp_p_ind(data)
 	end)
 	data.forms.imp_p_1p = data.forms.ind_p_1p
 	data.forms.imp_p_2p = data.forms.ind_p_2p
-end
-
-function export.make_imp_p_ind_sub(data)
-	data.forms.imp_p_2s = map(data.forms.ind_p_2s, function(form)
-		return rsub(form, "([ae])s$", "%1")
-	end)
-	data.forms.imp_p_1p = map(data.forms.sub_p_1p, function(form)
-		return rsub(form, "ions$", "ons")
-	end)
-	data.forms.imp_p_2p = map(data.forms.sub_p_2p, function(form)
-		return rsub(form, "iez$", "ez")
-	end)
-end
-
-function export.make_imp_p_sub(data)
-	data.forms.imp_p_2s = map(data.forms.sub_p_2s, function(form)
-		return rsub(form, "es$", "e")
-	end)
-	data.forms.imp_p_1p = map(data.forms.sub_p_1p, function(form)
-		return rsub(form, "ions$", "ons")
-	end)
-	data.forms.imp_p_2p = map(data.forms.sub_p_2p, function(form)
-		return rsub(form, "iez$", "ez")
-	end)
 end
 
 function export.clear_imp(data)
@@ -443,9 +419,9 @@ function export.link(data)
 		-- don't destructively modify data.forms[key][i] because it might
 		-- be shared among different keys
 		local newval = {}
-		for i,form in ipairs(val) do
+		for i, form in ipairs(val) do
 			local newform = form
-			if not rmatch(key,"nolink") and not rmatch(form,"—") then
+			if not rmatch(key, "nolink") and not rmatch(form, "—") then
 				newform = m_links.full_link({term = form, lang = lang,
 					accel = { form = verb_slot_to_accel(key) }
 				})
@@ -458,15 +434,15 @@ function export.link(data)
 		data.forms[key] = table.concat(newval, " or ")
 	end
 	for key, val in pairs(data.prons) do
-		if not rmatch(key,"nolink") then
+		if not rmatch(key, "nolink") then
 			if type(val) ~= "table" then
 				val = {val}
 			end
 			-- don't destructively modify data.forms[key][i] because it might
 			-- be shared among different keys
 			local newprons = {}
-			for i,form in ipairs(val) do
-				if not rmatch(form,"—") then
+			for i, form in ipairs(val) do
+				if not rmatch(form, "—") then
 					table.insert(newprons, IPA('/' .. form .. '/'))
 				end
 			end
@@ -482,97 +458,4 @@ function export.make_table(data)
 	return m_conj.make_table(data)
 end
 
-function export.extract(data, args)
-	if args.inf then
-		data.forms.inf = args.inf
-		export.make_ind_f(data, rsub(args.inf,"e$",""))
-		export.make_cond_p(data, rsub(args.inf,"e$",""))
-	end
-	if args.pp then
-		data.forms.pp = args.pp
-		if rmatch(args.pp, "[iu]$") then
-			export.make_ind_ps(data, args.pp)
-			export.make_sub_pa(data, args.pp)
-		end
-	end
-	for _,form in ipairs({"ind_p","ind_i","ind_ps","ind_f","cond_p","sub_p","sub_pa","imp_p"}) do
-		local dot_form = rsub(form,"_",".")
-		if args[dot_form] then
-			if form == "ind_p" then
-				local stem = args[dot_form]
-				local stem2 = stem
-				local stem3 = stem
-				if rmatch(stem, "^[^/]+/[^/]+/[^/]+$") then
-					stem = rsub(stem, "^([^/]+)/([^/]+)/([^/]+)$", "%1")
-					stem2 = rsub(stem2, "^([^/]+)/([^/]+)/([^/]+)$", "%2")
-					stem3 = rsub(stem3, "^([^/]+)/([^/]+)/([^/]+)$", "%3")
-				elseif rmatch(stem, "^[^/]+/[^/]+$") then
-					stem = rsub(stem, "^([^/]+)/([^/]+)$", "%1")
-					stem2 = rsub(stem2, "^([^/]+)/([^/]+)$", "%2")
-					stem3 = stem2
-				end
-				if args["ind.p_e"] then
-					export.make_ind_p_e(data, stem, stem2, stem3)
-				else
-					export.make_ind_p(data, stem, stem2, stem3)
-				end
-				for _,person in ipairs({"1s","2s","3s","1p","2p","3p"}) do
-					data.forms[form .. "_" .. person] = args[dot_form .. "." .. person] or data.forms[form .. "_" .. person]
-				end
-				export.make_imp_p_ind(data)
-			elseif form == "ind_i" then
-				export.make_ind_i(data, args[dot_form])
-			elseif form == "ind_ps" then
-				if rmatch(args["ind.ps"], "a$") then
-					local stem = rsub(args[dot_form],"a$","")
-					export.make_ind_ps_a(data, stem)
-				else
-					export.make_ind_ps(data, args[dot_form])
-				end
-				export.make_sub_pa(data, args[dot_form])
-			elseif form == "ind_f" then
-				export.make_ind_f(data, args[dot_form])
-			elseif form == "cond_p" then
-				export.make_cond_p(data, args[dot_form])
-			elseif form == "sub_p" then
-				local stem = args[dot_form]
-				local stem2 = stem
-				if rmatch(stem, "^[^/]+/[^/]+$") then
-					stem = rsub(stem, "^([^/]+)/([^/]+)$", "%1")
-					stem2 = rsub(stem2, "^([^/]+)/([^/]+)$", "%2")
-				end
-				export.make_sub_p(data, stem, stem2)
-			elseif form == "sub_pa" then
-				export.make_sub_pa(data, args[dot_form])
-			elseif form == "imp_p" then
-				if args[dot_form] == "sub" then
-					export.make_imp_p_sub(data)
-				elseif args[dot_form] == "ind_sub" then
-					export.make_imp_p_ind_sub(data)
-				else
-					export.make_imp_p_ind(data)
-				end
-			end
-		end
-		for _,person in ipairs({"1s","2s","3s","1p","2p","3p"}) do
-			data.forms[form .. "_" .. person] = args[dot_form .. "." .. person] or data.forms[form .. "_" .. person]
-		end
-	end
-
-	data.forms.ppr = args.ppr or data.forms.ppr
-	if not data.forms.ppr then
-		if data.forms.ind_p_1p then
-			data.forms.ppr = map(data.forms.ind_p_1p, function(val)
-				return rsub(val, "ons$", "ant")
-			end)
-		else
-			data.forms.ppr = ""
-		end
-	end
-	data.forms.pp = args.pp or data.forms.pp
-end
-
 return export
-
--- For Vim, so we get 4-space tabs
--- vim: set ts=4 sw=4 noet:
