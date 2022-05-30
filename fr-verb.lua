@@ -12,11 +12,11 @@ FIXME:
 
 1. (DONE) Use ‿ to join reflexive pronouns.
 2. montre-toi needs a schwa in it.
-3. 'etre' and 'avoir_or_etre' tables should be moved to the template call.
+3. (DONE) 'etre' and 'avoir_or_etre' tables should be moved to the template call.
 3a. (DONE) Make sure aux= is supported at the template level.
 4. Implement 'aspirated h'; not all vowel-initial verbs have elision with
    reflexive pronouns.
-5. Document the various override arguments.
+5. (REMOVED THE ARGUMENTS, NOT USED) Document the various override arguments.
 6. Implement conjugation for -éyer.
 7. (MAYBE? MAYBE NOT NECESSARY, {{fr-conj-ir}} doesn't seem to use it,
    MAYBE ALREADY DONE IN THE HEADWORD CODE?) Implement sort= for sort key,
@@ -73,11 +73,11 @@ local conj = {}
 -- have been processed, as it takes awhile for this to happen).
 local test_new_fr_verb_module = false
 
-local m_core = require("Module:User:Benwing2/fr-verb/core")
+local m_core = require("Module:fr-verb/core")
 local m_pron = require("Module:fr-verb/pron")
 local m_links = require("Module:links")
 local m_conj = require("Module:fr-conj")
-local m_fr_pron = require("Module:User:Benwing2/fr-pron")
+local m_fr_pron = require("Module:fr-pron")
 local lang = require("Module:languages").getByCode("fr")
 local m_table = require("Module:table")
 local m_utilities = require("Module:utilities")
@@ -179,39 +179,6 @@ local all_verb_props = {
 	"sub_pa_1s", "sub_pa_2s", "sub_pa_3s", "sub_pa_1p", "sub_pa_2p", "sub_pa_3p",
 	"imp_p_2s", "imp_p_1p", "imp_p_2p"
 }
-
--- List of verbs are conjugated using 'être' in the passé composé.
--- FIXME: This should be in the template, not here.
-local etre = {
-	"aller",
-	"apparaitre", "apparaître",
-	"arriver",
-	"entrer",
-	"mourir",
-	"naitre", "naître", "renaitre", "renaître",
-	"partir", "repartir",
-	"repasser",
-	"rester",
-	"surmener",
-	"retomber",
-	"venir", "advenir", "bienvenir", "devenir", "intervenir", "obvenir", "parvenir", "provenir", "redevenir", "revenir", "survenir"
-}
-
-for _,key in ipairs(etre) do
-	etre[key] = true
-end
-
--- List of verbs that can be conjugated using either 'avoir' or 'être' in the
--- passé composé. FIXME: This should be in the template, not here.
-local avoir_or_etre = {
-	"descendre", "monter", "paraitre", "paraître", "passer",
-	"rentrer", "repartir", "ressortir", "retourner", "réapparaitre", "réapparaître",
-	"sortir", "tomber"
-}
-
-for _,key in ipairs(avoir_or_etre) do
-	avoir_or_etre[key] = true
-end
 
 -- Table mapping verb suffixes to other verb suffixes that they are
 -- conjugated the same as. Only required when there is a shorter-length
@@ -1808,11 +1775,6 @@ function export.do_generate_forms(args)
 		end
 	end
 
-	if etre[data.forms.inf] then
-		data.aux = "être"
-	elseif avoir_or_etre[data.forms.inf] then
-		data.aux = "avoir or être"
-	end
 	local aux_prefix = data.prefix or ""
 	aux_prefix = rsub(aux_prefix, "l[ae] $", "l'")
 	if args.aux == "a" or args.aux == "avoir" then
