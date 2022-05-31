@@ -517,6 +517,9 @@ pos_functions["nouns"] = {
 		["m"] = {list = true}, --masculine form(s)
 		["fpl"] = {list = true}, --feminine plural override(s)
 		["mpl"] = {list = true}, --masculine plural override(s)
+		["dim"] = {list = true}, --diminutive(s)
+		["aug"] = {list = true}, --diminutive(s)
+		["pej"] = {list = true}, --pejorative(s)
 	},
 	func = function(args, data, tracking_categories)
 		local allowed_genders = {
@@ -582,9 +585,13 @@ pos_functions["nouns"] = {
 			-- Check for special plural signals
 			local mode = nil
 
-			if plurals[1] == "?" or plurals[1] == "!" or plurals[1] == "-" or plurals[1] == "~" then
-				mode = plurals[1]
-				table.remove(plurals, 1)  -- Remove the mode parameter
+			if #plurals > 0 and #plurals[1] == 1 then
+				if plurals[1] == "?" or plurals[1] == "!" or plurals[1] == "-" or plurals[1] == "~" then
+					mode = plurals[1]
+					table.remove(plurals, 1)  -- Remove the mode parameter
+				else
+					error("Unexpected plural code")
+				end
 			end
 
 			if mode == "?" then
@@ -716,6 +723,9 @@ pos_functions["nouns"] = {
 		check_all_missing(feminine_plurals, "nouns", tracking_categories)
 		check_all_missing(masculines, "nouns", tracking_categories)
 		check_all_missing(masculine_plurals, "nouns", tracking_categories)
+		check_all_missing(args.dim, "nouns", tracking_categories)
+		check_all_missing(args.aug, "nouns", tracking_categories)
+		check_all_missing(args.pej, "nouns", tracking_categories)
 
 		local function redundant_plural(pl)
 			for _, p in ipairs(plurals) do
@@ -763,6 +773,21 @@ pos_functions["nouns"] = {
 		if #masculine_plurals > 0 then
 			masculine_plurals.label = "masculine plural"
 			table.insert(data.inflections, masculine_plurals)
+		end
+
+		if #args.dim > 0 then
+			args.dim.label = glossary_link("diminutive")
+			table.insert(data.inflections, args.dim)
+		end
+
+		if #args.aug > 0 then
+			args.aug.label = glossary_link("augmentative")
+			table.insert(data.inflections, args.aug)
+		end
+
+		if #args.pej > 0 then
+			args.pej.label = glossary_link("pejorative")
+			table.insert(data.inflections, args.pej)
 		end
 	end
 }
