@@ -62,8 +62,10 @@ local function make_plural(form, special)
 		return retval
 	end
 
-	if rfind(form, "[sx]$") then
+	if rfind(form, "[sxz]$") then
 		return form
+	elseif rfind(rorm, "au$") then
+		return form .. "x"
 	elseif rfind(rorm, "al$") then
 		return rsub(item, "al$", "aux")
 	else
@@ -72,7 +74,7 @@ local function make_plural(form, special)
 end
 
 local function make_feminine(form, special)
-	local retval = require("Module:romance utilities").handle_multiword(form, special, make_plural, prepositions)
+	local retval = require("Module:romance utilities").handle_multiword(form, special, make_feminine, prepositions)
 	if retval then
 		return retval
 	end
@@ -99,6 +101,8 @@ local function make_feminine(form, special)
 		return rsub(form, "if$", "ive")
 	elseif rfind(form, "c$") then
 		return rsub(form, "c$", "que")
+	elseif rfind(form, "eau$") then
+		return rsub(form, "eau$", "elle")
 	else
 		return form .. "e"
 	end
@@ -127,16 +131,16 @@ local no_split_words = {
 	["aujourd'hui"] = true,
 }
 
--- Auto-add links to a “space word” (after splitting on spaces). We split off
+-- Auto-add links to a "space word" (after splitting on spaces). We split off
 -- final punctuation, and then split on hyphens if split_dash is given, and
 -- also split on apostrophes, including the apostrophe in the link to its left
--- (so we auto-split “l’eau” as “[[l']][[eau]]”).
+-- (so we auto-split "l'eau" as "[[l']][[eau]]").
 local function add_space_word_links(space_word, split_dash)
 	local space_word_no_punct, punct = rmatch(space_word, "^(.*)([,;:?!])$")
 	space_word_no_punct = space_word_no_punct or space_word
 	punct = punct or ""
 	local words
-	-- don’t split prefixes and suffixes
+	-- don't split prefixes and suffixes
 	if not split_dash or rfind(space_word_no_punct, "^%-") or rfind(space_word_no_punct, "%-$") then
 		words = {space_word_no_punct}
 	else
@@ -158,13 +162,13 @@ end
 -- Auto-add links to a lemma. We split on spaces, and also on hyphens
 -- if split_dash is given or the word has no spaces. In addition, we split
 -- on apostrophes, including the apostrophe in the link to its left
--- (so we auto-split "de l’eau" as "[[de]] [[l']][[eau]]"). We don’t always
--- split on hyphens because of cases like “boire du petit-lait” where
--- “petit-lait” should be linked as a whole, but provide the option to do it
--- for cases like “croyez-le ou non”. If there’s no space, however, then
--- it makes sense to split on hyphens by default (e.g. for “avant-avant-hier”).
+-- (so we auto-split "de l'eau" as "[[de]] [[l']][[eau]]"). We don't always
+-- split on hyphens because of cases like "boire du petit-lait" where
+-- "petit-lait" should be linked as a whole, but provide the option to do it
+-- for cases like "croyez-le ou non". If there's no space, however, then
+-- it makes sense to split on hyphens by default (e.g. for "avant-avant-hier").
 -- Cases where only some of the hyphens should be split can always be handled
--- by explicitly specifying the head (e.g. “Nord-Pas-de-Calais”).
+-- by explicitly specifying the head (e.g. "Nord-Pas-de-Calais").
 local function add_lemma_links(lemma, split_dash)
 	if not rfind(lemma, " ") then
 		split_dash = true
@@ -507,7 +511,7 @@ local function get_pronoun_pos()
 				if g == "?" and mw.title.getCurrentTitle().nsText == "Template" then
 					-- allow unknown gender in template example
 				elseif g == "?" then
-					-- FIXME, remove this branch once we’ve added the required genders
+					-- FIXME, remove this branch once we've added the required genders
 					track("missing-pron-gender")
 				elseif g and g ~= "" and not allowed_genders[g] and not additional_allowed_pronoun_genders[g] then
 					error("Unrecognized French gender: " .. g)
