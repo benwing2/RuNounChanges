@@ -95,6 +95,7 @@ local ulen = mw.ustring.len
 
 local written_vowel = "aàâeéèêiîoôuûäëïöüÿ"
 local written_cons_c = "[^%-" .. written_vowel .. "]"
+local written_cons_no_y_c = "[^%-y" .. written_vowel .. "]"
 local written_cons_no_cgy_c = "[^%-cgy" .. written_vowel .. "]"
 local written_cons_no_cgyx_c = "[^%-cgyx" .. written_vowel .. "]"
 local written_cons_no_lryx_c = "[^%-lryx" .. written_vowel .. "]"
@@ -1533,8 +1534,9 @@ end
 -- if the verb has no prefix.
 local function auto(pagename)
 	local stem
-	-- check for espérer, céder, etc.; exclude -écer, -éger, -éyer
-	stem = rmatch(pagename, "^(.*é" .. written_cons_c .. "*" .. written_cons_no_cgy_c .. ")er$")
+	-- check for espérer, céder, etc.; exclude y so as not to be confused by [[acétyler]], [[déméthyler]];
+	-- exclude -écer, -éger, -éyer
+	stem = rmatch(pagename, "^(.*é" .. written_cons_no_y_c .. "*" .. written_cons_no_cgy_c .. ")er$")
 	if stem then
 		return stem, "é-er"
 	end
