@@ -107,7 +107,7 @@ def handle_multiword(form, special, inflect):
   else:
     assert not special, "Saw unrecognized special=%s" % special
 
-  m = re.search("^(.*?)( (?:%s))( .*)$" % "|".join(prepositions), form)
+  m = re.search("^(.*?)( (?:%s))(.*)$" % "|".join(prepositions), form)
 
   if m:
     first, space_prep, rest = m.groups()
