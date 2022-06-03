@@ -1488,30 +1488,11 @@ local function conjugate(data, typ)
 	local future_stem = rsub(data.forms.inf, "e$", "")
 	m_core.make_ind_f(data, future_stem)
 
-	local cons = rmatch(typ, "^(" .. written_cons_c .. ")er$")
-	if cons and typ ~= "cer" and typ ~= "ger"  and typ ~= "yer" then
-		data.stem = data.stem .. cons
-		call_conj(data, "xxer", strip_respelling_ending(data.pron, "er"))
+	if typ == "xxer" or typ == "e-er" or typ == "é-er" then
+		call_conj(data, typ, strip_respelling_ending(data.pron, "er"))
 		return
 	end
-	local cons = rmatch(typ, "^e(" .. written_cons_c .. "+)er$")
-	if cons and typ ~= "ecer" and typ ~= "eger" and typ ~= "eyer" then
-		data.stem = data.stem .. "e" .. cons
-		call_conj(data, "e-er", strip_respelling_ending(data.pron, "er"))
-		return
-	end
-	local cons = rmatch(typ, "^é(" .. written_cons_c .. "+)er$")
-	if cons and typ ~= "écer" and typ ~= "éger"  and typ ~= "éyer" then
-		data.stem = data.stem .. "é" .. cons
-		call_conj(data, "é-er", strip_respelling_ending(data.pron, "er"))
-		return
-	end
-	local cons = rmatch(typ, "^é([gq]u)er$") -- alléguer, disséquer, etc.
-	if cons then
-		data.stem = data.stem .. "é" .. cons
-		call_conj(data, "é-er", strip_respelling_ending(data.pron, "er"))
-		return
-	end
+
 	if alias[typ] then
 		data.stem = data.stem .. rsub(typ, alias[typ] .. "$", "")
 		data.forms.inf = alias[typ]
@@ -1532,8 +1513,20 @@ end
 -- like '-aitre' verbs rather than like 'naitre' and its derivatives.) Note
 -- that for many irregular verbs, the "stem" is actually the prefix, or empty
 -- if the verb has no prefix.
-local function auto(pagename)
+local function auto(pagename, argstype, argsstem)
 	local stem
+
+	if argstype then
+		local tostrip
+		if argstype == "xxer" or argstype == "é-er" or argstype == "e-er" then
+			tostrip = "er"
+		else
+			tostrip = argstype
+		end
+		stem = argsstem or strip_respelling_ending(pagename, tostrip)
+		return stem, argstype
+	end
+
 	-- check for espérer, céder, etc.; exclude y so as not to be confused by [[acétyler]], [[déméthyler]];
 	-- exclude -écer, -éger, -éyer
 	stem = rmatch(pagename, "^(.*é" .. written_cons_no_y_c .. "*" .. written_cons_no_cgy_c .. ")er$")
@@ -1631,22 +1624,17 @@ function export.do_generate_forms(args)
 	local PAGENAME = mw.title.getCurrentTitle().text
 
 	if stem == "" and typ == "" then
-		pagename_from_args = PAGENAME
+		pagename_from_args = args.pagename or PAGENAME
 	else
-		pagename_from_args = stem .. typ
+		error("Specifying 1= or 2= not supported any more; use type=, stem= and/or pagename=")
 	end
 
-	if typ == "" then typ = stem; stem = ""; end
+	local argstype = args.type
+	if argstype == "" then argstype = nil; end
+	local argsstem = args.stem
+	if argsstem == "" then argsstem = nil; end
 
-	if stem == "" and typ == "" then
-		-- most common situation, {{fr-conj-auto}}
-		stem, typ = auto(PAGENAME)
-	elseif stem == "" then
-		-- explicitly specified stem, e.g. {{fr-conj-auto|aimer}} in userspace
-		-- (NOTE: stem moved to typ above)
-		stem, typ = auto(typ)
-	-- else, explicitly specified stem and type, e.g. {{fr-conj-auto|appe|ler}}
-	end
+	stem, typ = auto(pagename_from_args, argstype, argsstem)
 
 	-- expand + and [...] notations
 	if argspron then
@@ -1706,6 +1694,11 @@ function export.do_generate_forms(args)
 	-- iteration of the loop above. As it happens, this doesn't matter
 	-- because we iterate over pronunciations keeping the stem and conjugation
 	-- type the same, but might matter one day if we break this assumption.
+
+	-- FIXME, allow all overrides
+	if args.inf then
+		data.forms.inf = args.inf
+	end
 
 	if args.archaic then
 		for k, v in pairs(data.forms) do
