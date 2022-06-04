@@ -957,6 +957,7 @@ def create_argparser(desc, include_pagefile=False, include_stdin=False,
       help="Track previously seen articles and don't visit them again.")
     parser.add_argument("--prune-cats", help="Regex to use to prune categories when processing subcategories recursively; any categories matching the regex will be skipped along with any of their subcategories (unless reachable in some other manner).")
     parser.add_argument("--refs", help="List of references to process, comma-separated.")
+    parser.add_argument("--pages-and-refs", help="List of pages to process, comma-separated, along with references to those pages.")
     parser.add_argument("--specials", help="Special pages to do, comma-separated.")
     parser.add_argument("--contribs", help="Names of users whose contributions to iterate over, comma-separated.")
     parser.add_argument("--contribs-start", help="Timestamp to start doing contributions at.")
@@ -999,7 +1000,8 @@ def parse_start_end(startsort, endsort):
 
 def args_has_non_default_pages(args):
   return not not (args.pages or args.pagefile or args.pages_from_find_regex or args.pages_from_previous_output
-      or args.cats or args.refs or args.specials or args.contribs or args.prefix_pages)
+      or args.cats or args.refs or args.specials or args.contribs or args.prefix_pages
+      or args.pages_and_refs)
 
 # Process a run of pages, with the set of pages specified in various possible ways, e.g. from --pagefile, --cats,
 # --refs, or (if --stdin is given) from a Wiktionary dump or find_regex.py output read from stdin. PROCESS is called
@@ -1257,6 +1259,12 @@ def do_pagefile_cats_refs(args, start, end, process, default_cats=[],
       for ref in split_utf8_arg(args.refs):
         # We don't use ref_namespaces here because the user might not want it.
         for index, page in references(ref, start, end, namespaces=args_ref_namespaces):
+          process_pywikibot_page(index, page)
+    if args.pages_and_refs:
+      for page_and_ref in split_utf8_arg(args.pages_and_refs):
+        # We don't use ref_namespaces here because the user might not want it.
+        for index, page in references(page_and_ref, start, end, namespaces=args_ref_namespaces,
+            include_page=True):
           process_pywikibot_page(index, page)
     if args.specials:
       for special in split_utf8_arg(args.specials):
