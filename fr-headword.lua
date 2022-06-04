@@ -6,6 +6,7 @@ local rsubn = mw.ustring.gsub
 local rsplit = mw.text.split
 
 local lang = require("Module:languages").getByCode("fr")
+local langname = lang:getCanonicalName()
 
 local suffix_categories = {
 	["adjectives"] = true,
@@ -30,6 +31,8 @@ local prepositions = {
 	"dans ",
 	"contre ",
 	"sans ",
+	"comme ",
+	"jusqu['’]",
 	-- We could list others but you get diminishing returns
 }
 
@@ -58,7 +61,7 @@ end
 local function check_exists(forms, cats, pos)
 	for _, form in ipairs(forms) do
 		if not exists(form) then
-			table.insert(data.categories, "French " .. pos .. " with red links in their headword lines")
+			table.insert(data.categories, langname .. " " .. pos .. " with red links in their headword lines")
 			return false
 		end
 	end
@@ -155,16 +158,12 @@ function export.show(frame)
 
 	local params = {
 		["head"] = {list = true},
-		["suff"] = {type = "boolean"},
 		["splithyph"] = {type = "boolean"},
 		["nolinkhead"] = {type = "boolean"},
 		["pagename"] = {}, -- for testing
 	}
 
 	local pagename = args.pagename or mw.title.getCurrentTitle().text
-	if rfind(pagename, " ") then
-		track("space")
-	end
 
 	if pos_functions[poscat] then
 		for key, val in pairs(pos_functions[poscat].params) do
@@ -208,15 +207,10 @@ function export.show(frame)
 		pagename = pagename
 	}
 
-	if args["suff"] then
+	if pagename:find("^%-") and suffix_categories[poscat] then
 		data.pos_category = "suffixes"
-
-		if suffix_categories[poscat] then
-			local singular_poscat = poscat:gsub("s$", "")
-			table.insert(data.categories, lang:getCanonicalName() .. " " .. singular_poscat .. "-forming suffixes")
-		else
-			error("No category exists for suffixes forming " .. poscat .. ".")
-		end
+		local singular_poscat = poscat:gsub("s$", "")
+		table.insert(data.categories, langname .. " " .. singular_poscat .. "-forming suffixes")
 	end
 
 	if pos_functions[poscat] then
@@ -297,7 +291,7 @@ local function get_noun_pos(is_proper)
 					-- since there are currently so many proper nouns with
 					-- unspecified gender
 				elseif g and g ~= "" and not allowed_genders[g] then
-					error("Unrecognized French gender: " .. g)
+					error("Unrecognized " .. langname .. " gender: " .. g)
 				end
 			end
 
@@ -307,11 +301,11 @@ local function get_noun_pos(is_proper)
 			if mode == "!" then
 				-- Plural is not attested
 				table.insert(data.inflections, {label = "plural not attested"})
-				table.insert(data.categories, "French nouns with unattested plurals")
+				table.insert(data.categories, langname .. " " .. pos .. " with unattested plurals")
 			elseif mode == "p" then
 				-- Plural-only noun, doesn't have a plural
 				table.insert(data.inflections, {label = "plural only"})
-				table.insert(data.categories, "French pluralia tantum")
+				table.insert(data.categories, langname .. " pluralia tantum")
 			else
 				if mode == "?" then
 					-- Plural is unknown
@@ -319,13 +313,13 @@ local function get_noun_pos(is_proper)
 				elseif mode == "-" then
 					-- Uncountable noun; may occasionally have a plural
 					table.remove(plurals, 1)  -- Remove the mode parameter
-					table.insert(data.categories, "French uncountable nouns")
+					table.insert(data.categories, langname .. " uncountable " .. pos)
 
 					-- If plural forms were given explicitly, then show "usually"
 					if #plurals > 0 then
 						track("count-uncount")
 						table.insert(data.inflections, {label = "usually " .. glossary_link("uncountable")})
-						table.insert(data.categories, "French countable nouns")
+						table.insert(data.categories, langname .. " countable " .. pos)
 					else
 						table.insert(data.inflections, {label = glossary_link("uncountable")})
 					end
@@ -333,8 +327,8 @@ local function get_noun_pos(is_proper)
 					-- Mixed countable/uncountable noun, always has a plural
 					table.remove(plurals, 1)  -- Remove the mode parameter
 					table.insert(data.inflections, {label = glossary_link("countable") .. " and " .. glossary_link("uncountable")})
-					table.insert(data.categories, "French uncountable nouns")
-					table.insert(data.categories, "French countable nouns")
+					table.insert(data.categories, langname .. " uncountable " .. pos)
+					table.insert(data.categories, langname .. " countable " .. pos)
 
 					-- If no plural was given, add a default one now
 					if #plurals == 0 then
@@ -343,13 +337,13 @@ local function get_noun_pos(is_proper)
 				elseif is_proper then
 					-- Default proper noun; uncountable unless plural(s) specified
 					if #plurals > 0 then
-						table.insert(data.categories, "French countable nouns")
+						table.insert(data.categories, langname .. " countable " .. pos)
 					else
-						table.insert(data.categories, "French uncountable nouns")
+						table.insert(data.categories, langname .. " uncountable " .. pos)
 					end
 				else
 					-- The default, always has a plural
-					table.insert(data.categories, "French countable nouns")
+					table.insert(data.categories, langname .. " countable " .. pos)
 
 					-- If no plural was given, add a default one now
 					if #plurals == 0 then
@@ -361,10 +355,8 @@ local function get_noun_pos(is_proper)
 				for i, pl in ipairs(plurals) do
 					if pl == "*" or pl == "#" then
 						pl = lemma
-					elseif pl == "s" then
-						pl = lemma .. "s"
-					elseif pl == "x" then
-						pl = lemma .. "x"
+					elseif pl == "s" or pl == "x" then
+						pl = lemma .. pl
 					elseif pl == "+" then
 						pl = make_plural(lemma)
 					elseif pl:find("^%+") then
@@ -373,7 +365,7 @@ local function get_noun_pos(is_proper)
 					end
 
 					if not exists(pl) then
-						table.insert(data.categories, "French nouns with red links in their headword lines")
+						table.insert(data.categories, langname .. " " .. pos .. " with red links in their headword lines")
 					end
 
 					plurals[i] = pl
@@ -465,13 +457,8 @@ local function get_pronoun_pos()
 				end
 			end
 
-			-- Gather all inflections.
-			process_inflection("masculine", args["m"], args["mqual"])
-			process_inflection("masculine singular before vowel", args["mv"], args["mvqual"])
-			process_inflection("feminine", args["f"], args["fqual"])
-			process_inflection("masculine plural", args["mp"], args["mpqual"])
-			process_inflection("feminine plural", args["fp"], args["fpqual"])
-			process_inflection("plural", args["p"], args["pqual"])
+			local function insert_inflection()
+			end
 
 			-- Validate/canonicalize genders
 			for i, g in ipairs(data.genders) do
@@ -481,9 +468,17 @@ local function get_pronoun_pos()
 					-- FIXME, remove this branch once we’ve added the required genders
 					track("missing-pron-gender")
 				elseif g and not allowed_genders[g] and not additional_allowed_pronoun_genders[g] then
-					error("Unrecognized French gender: " .. g)
+					error("Unrecognized " .. langname .. " gender: " .. g)
 				end
 			end
+
+			-- Gather all inflections.
+			process_inflection("masculine", args["m"], args["mqual"])
+			process_inflection("masculine singular before vowel", args["mv"], args["mvqual"])
+			process_inflection("feminine", args["f"], args["fqual"])
+			process_inflection("masculine plural", args["mp"], args["mpqual"])
+			process_inflection("feminine plural", args["fp"], args["fpqual"])
+			process_inflection("plural", args["p"], args["pqual"])
 
 			-- Add the inflections
 			if #args["m"] > 0 then
@@ -565,31 +560,63 @@ local function do_adjective(pos)
 			["intr"] = {type = "boolean"},
 			},
 		func = function(args, data)
+			local lemma = data.pagename
 			if args.onlyg == "p" or args.onlyg == "m-p" or args.onlyg == "f-p" then
-				table.insert(data.categories, "French pluralia tantum")
+				table.insert(data.categories, langname .. " pluralia tantum")
 			end
 			if args.onlyg == "s" or args.onlyg == "f-s" or args.onlyg == "f-s" then
-				table.insert(data.categories, "French singularia tantum")
+				table.insert(data.categories, langname .. " singularia tantum")
 			end
 			if args.onlyg then
-				table.insert(data.categories, "French defective " .. pos)
+				table.insert(data.categories, langname .. " defective " .. pos)
 			end
 
 			local function process_inflection(label, arg, accel, get_default)
-				local orig_infls = #args[arg] > 0 and args[arg] or get_default and get_default() or {}
+				local default_val
+				local function default()
+					if default_val == nil then
+						if get_default then
+							default_val = get_default()
+						else
+							default_val = false
+						end
+					end
+					return default_val
+				end
+				local orig_infls = #args[arg] > 0 and args[arg] or default() or {}
+				local infls = {}
 				if #orig_infls > 0 then
-					local infls = mw.clone(orig_infls)
 					infls.label = label
 					infls.accel = accel and {form = accel} or nil
 					local quals = args[arg .. "qual"]
-					for i, infl in ipairs(infls) do
-						if quals[i] then
-							infls[i] = {term = infl, qualifiers = {quals[i]}}
+					for i, infl in ipairs(orig_infls) do
+						if infl == "#" then
+							infl = lemma
+						elseif infl == "e" or infl == "s" or infl == "x" then
+							infl = lemma .. infl
+						elseif infl == "+" then
+							infl = default()
+							if not infl then
+								error("Can't use '+' with " .. arg .. "=; no default available")
+							end
+						end
+						if type(infl) == "table" then
+							for _, inf in ipairs(infl) do
+								if quals[i] then
+									table.insert(infls, {term = inf, qualifiers = {quals[i]}})
+								else
+									table.insert(infls, inf)
+								end
+							end
+						elseif quals[i] then
+							table.insert(infls, {term = infl, qualifiers = {quals[i]}})
+						else
+							table.insert(infls, infl)
 						end
 					end
 					table.insert(data.inflections, infls)
 				end
-				return orig_infls
+				return infls
 			end
 
 			if args.sp and not require("Module:romance utilities").allowed_special_indicators[args.sp] then
@@ -642,7 +669,8 @@ local function do_adjective(pos)
 				local gender = args[1]
 				-- Default to mf if base form ends in -e and no feminine,
 				-- feminine plural or gender specified
-				if not gender and #args.f == 0 and #args.fp == 0 and rfind(data.pagename, "e$") then
+				if not gender and #args.f == 0 and #args.fp == 0 and rfind(data.pagename, "e$")
+					and not rfind(data.pagename, " ") then
 					gender = "mf"
 				end
 
@@ -712,29 +740,39 @@ pos_functions["verbs"] = {
 		["type"] = {list = true},
 	},
 	func = function(args, data)
+		local pos = "verbs"
 		for _, ty in ipairs(args.type) do
 			local category, label
 			if ty == "auxiliary" then
-				category = "auxiliary verbs"
+				category = "auxiliary"
 			elseif ty == "defective" then
-				category = "defective verbs"
-				label = "[[defective]]"
+				category = "defective"
+				label = glossary_link("defective")
 			elseif ty == "impersonal" then
-				category = "impersonal verbs"
-				label = "[[impersonal]]"
+				category = "impersonal"
+				label = glossary_link("impersonal")
 			elseif ty == "modal" then
-				category = "modal verbs"
+				category = "modal"
 			elseif ty == "reflexive" then
-				category = "reflexive verbs"
+				category = "reflexive"
 			elseif ty == "transitive" then
-				label = "[[transitive]]"
+				label = glossary_link("transitive")
+				category = "transitive"
 			elseif ty == "intransitive" then
-				label = "[[intransitive]]"
+				label = glossary_link("intransitive")
+				category = "intransitive"
 			elseif ty == "ambitransitive" or ty == "ambi" then
-				label = "[[transitive]] and [[intransitive]]"
+				category = {"transitive", "intransitive"}
+				label = glossary_link("transitive") .. " and " .. glossary_link("intransitive")
 			end
 			if category then
-				table.insert(data.categories, "French " .. category)
+				if type(category) == "table" then
+					for _, cat in ipairs(category) do
+						table.insert(data.categories, langname .. " " .. cat .. " " .. pos)
+					end
+				else
+					table.insert(data.categories, langname .. " " .. category .. " " .. pos)
+				end
 			end
 			if label then
 				table.insert(data.inflections, {label = label})
