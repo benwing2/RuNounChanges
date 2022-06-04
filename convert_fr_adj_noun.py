@@ -21,14 +21,13 @@ prepositions = {
   "dans ",
   "contre ",
   "sans ",
+  "comme ",
+  u"jusqu['’]",
 }
 
 all_specials = ["first", "second", "first-second", "first-last", "last", "each"]
 
 TEMPCHAR = u"\uFFF1"
-
-old_adj_template = "fr-adj-old"
-#old_adj_template = "fr-adj"
 
 def add_endings(bases, endings):
   if bases is None or endings is None:
@@ -175,7 +174,7 @@ def process_text_on_page(index, pagetitle, text):
 
   notes = []
 
-  if old_adj_template not in text and "fr-noun" not in text:
+  if "fr-noun" not in text and "fr-adj" not in text:
     return
 
   if ":" in pagetitle:
@@ -198,15 +197,44 @@ def process_text_on_page(index, pagetitle, text):
       return getparam(t, param)
     def join_with_brackets(args):
       return ",".join("'%s'" % arg if arg in ["s", "x"] else "[[%s]]" % arg for arg in args)
-    if tn == "fr-noun" and args.remove_redundant_noun_args:
+    if tn == "fr-noun" and args.do_nouns:
       origt = unicode(t)
+      from_to_end = "<from> %s <to> %s <end>" % (origt, origt)
       lemma = pagetitle
+
+      head = getp("head")
+      use_nolinkhead = False
+      remove_head = False
+      headnotes = []
+      if head == lemma:
+        if " " not in lemma and "-" not in lemma and "'" not in lemma:
+          pagemsg("Unnecessary head=%s, removing" % head)
+          headnotes.append("remove redundant head= in {{fr-adj}}")
+          head = None
+          remove_head = True
+        else:
+          pagemsg("Replacing head=%s with nolinkhead=1" % head)
+          headnotes.append("replace head=%s with nolinkhead=1 in {{fr-adj}}" % head)
+          head = None
+          use_nolinkhead = True
+
+      def add_head_params():
+        if remove_head:
+          rmparam(t, "head")
+        elif use_nolinkhead:
+          t.add("nolinkhead", "1", before="head")
+          rmparam(t, "head")
+        notes.extend(headnotes)
+        if origt != unicode(t):
+          pagemsg("Replaced %s with %s" % (origt, unicode(t)))
+
       g = getp("1")
       pls = blib.fetch_param_chain(t, "2")
       if g.endswith("-p"):
         if pls:
-          pagemsg("WARNING: Plural-only noun with explicit plurals: %s" % unicode(t))
+          pagemsg("WARNING: Plural-only noun with explicit plurals: %s" % from_to_end)
         continue
+
       if not pls:
         if " " in lemma:
           old_algorithm_pl = do_make_plural(lemma, "last")
@@ -216,20 +244,23 @@ def process_text_on_page(index, pagetitle, text):
                 % (",".join(old_algorithm_pl), unicode(t)))
           else:
             pagemsg("WARNING: Space in headword and old default noun algorithm applying, leading to '%s' which is not the same as new algorithm '%s': %s"
-                % (",".join(old_algorithm_pl), ",".join(new_algorithm_pl), unicode(t)))
+                % (",".join(old_algorithm_pl), ",".join(new_algorithm_pl), from_to_end))
+            continue
+        add_head_params()
         continue
+
       orig_pls = pls
       pls = [lemma + pl if pl in ["s", "x"] else pl for pl in pls]
       pls_with_def = []
       pls_with_def_notes = []
       defpl = do_make_plural(lemma)
-      if not defpl:
-        continue
+      assert defpl
       if len(defpl) > 1:
         if set(pls) == set(defpl):
           pls_with_def = ["+"]
         elif set(pls) < set(defpl):
-          pagemsg("WARNING: pls=%s subset of defpls=%s, replacing with default" % (",".join(pls), ",".join(defpl)))
+          pagemsg("WARNING: pls=%s subset of defpls=%s, replacing with default: %s"
+              % (",".join(pls), ",".join(defpl), from_to_end))
           pls_with_def = ["+"]
         else:
           pls_with_def = pls
@@ -262,8 +293,8 @@ def process_text_on_page(index, pagetitle, text):
         if special_pl is None:
           continue
         if len(special_pl) > 1 and set(pls) < set(special_pl):
-          pagemsg("WARNING: for special=%s, pls=%s subset of special_pl=%s, allowing" % (
-            special, ",".join(pls), ",".join(special_pl)))
+          pagemsg("WARNING: for special=%s, pls=%s subset of special_pl=%s, allowing: %s" % (
+            special, ",".join(pls), ",".join(special_pl), from_to_end))
           actual_special = special
           break
         if set(pls) == set(special_pl):
@@ -317,163 +348,288 @@ def process_text_on_page(index, pagetitle, text):
       handle_mf("f", "feminine", make_feminine)
       handle_mf("m", "masculine", make_masculine)
 
+      add_head_params()
+      continue
+
+    if tn == "fr-adj" and args.do_adjectives:
+      origt = unicode(t)
+      from_to_end = "<from> %s <to> %s <end>" % (origt, origt)
+      lemma = pagetitle
       head = getp("head")
+      use_nolinkhead = False
+      remove_head = False
+      headnotes = []
       if head == lemma:
         if " " not in lemma and "-" not in lemma and "'" not in lemma:
-          pagemsg("WARNING: Unnecessary head=%s, removing" % head)
-          rmparam(t, "head")
-          notes.append("remove redundant head=")
+          pagemsg("Unnecessary head=%s, removing" % head)
+          headnotes.append("remove redundant head= in {{fr-adj}}")
+          head = None
+          remove_head = True
         else:
           pagemsg("Replacing head=%s with nolinkhead=1" % head)
-          notes.append("replace head=%s with nolinkhead=1" % head)
+          headnotes.append("replace head=%s with nolinkhead=1 in {{fr-adj}}" % head)
+          head = None
+          use_nolinkhead = True
+
+      if getp("sp") or getp("inv"):
+        pagemsg("Already saw sp= or inv= in {{fr-adj}}, skipping other than maybe removing head=: %s" % unicode(t))
+        if remove_head:
+          rmparam(t, "head")
+        elif use_nolinkhead:
           t.add("nolinkhead", "1", before="head")
           rmparam(t, "head")
+        notes.extend(headnotes)
+        if origt != unicode(t):
+          pagemsg("Replaced %s with %s" % (origt, unicode(t)))
+        continue
 
-      if origt != unicode(t):
-        pagemsg("Replaced %s with %s" % (origt, unicode(t)))
+      fs = blib.fetch_param_chain(t, "f")
+      mpls = blib.fetch_param_chain(t, "mp")
+      fpls = blib.fetch_param_chain(t, "fp")
+      pls = blib.fetch_param_chain(t, "p")
+      gender = getp("1")
+      all_defaulted = not fs and not mpls and not fpls
+      if len(fs) > 1 or len(mpls) > 1 or len(fpls) > 1:
+        pagemsg("WARNING: Saw multiple values for inflections, can't handle yet: %s" % from_to_end)
+        continue
+
+      if " " in lemma and not fs and not fpls and lemma.endswith("e"):
+        pagemsg("WARNING: Multiword lemma ending in -e without f= or fpl=, would be mf= before, won't now, review manually: %s"
+          % from_to_end)
+        continue
+
+      def expand_shortcuts(value, default):
+        if value == "+":
+          return default
+        if value == "#":
+          return lemma
+        if value == "e":
+          return lemma + "e"
+        if value == "s":
+          return lemma + "s"
+        if value == "x":
+          return lemma + "x"
+        return value
+
+      def replace_with_shortcuts(value, default):
+        if value == default:
+          return "+"
+        if value == lemma:
+          return "#"
+        if value == lemma + "e":
+          return "e"
+        if value == lemma + "s":
+          return "s"
+        if value == lemma + "x":
+          return "x"
+        return value
+
+      def add_head_params():
+        if head:
+          t.add("head", head)
+        if use_nolinkhead:
+          t.add("nolinkhead", "1")
+        notes.extend(headnotes)
+        if origt != unicode(t):
+          pagemsg("Replaced %s with %s" % (origt, unicode(t)))
+          if not notes:
+            # This can happen e.g. if we end up just moving head= to the end, or we convert |1=mf to |mf
+            notes.append("clean up {{fr-adj}}")
+
+      if gender and gender != "mf":
+        pagemsg("WARNING: Saw gender=%s not 'mf', can't handle: %s" % (gender, from_to_end))
+        continue
+      automf = " " not in lemma and lemma.endswith("e")
+      if gender != "mf" and not automf and pls:
+        pagemsg("WARNING: Saw pl= and not gender=mf, can't handle: %s" % from_to_end)
+        continue
+      if len(pls) > 1:
+        pagemsg("WARNING: Saw multiple pl=, can't handle yet: %s" % from_to_end)
+        continue
+      if gender == "mf" or automf:
+        if not all_defaulted:
+          pagemsg("WARNING: Saw gendered inflections along with 1=mf, can't handle: %s" % from_to_end)
+          continue
+        gendernotes = []
+
+        if automf:
+          if gender:
+            gendernotes.append("remove redundant 1=mf in {{fr-adj}}")
+          gender = None
+        defpl = make_plural(lemma)
+        if len(pls) > 0:
+          pl = expand_shortcuts(pls[0], defpl)
+        else:
+          pl = defpl
+
+        must_continue = False
+        for param in t.params:
+          pn = pname(param)
+          pv = unicode(param.value)
+          if pn not in ["head", "1", "p"]:
+            pagemsg("WARNING: Saw unrecognized param %s=%s: %s" % (pn, pv, from_to_end))
+            must_continue = True
+            break
+        if must_continue:
+          continue
+
+        if not pls and " " in lemma:
+          old_algorithm_pl = make_plural(lemma, "last")
+          if old_algorithm_pl == pl:
+            pagemsg("Space in headword and old default noun algorithm applying, leading to same results as new: pl='%s': %s"
+                % (old_algorithm_pl, unicode(t)))
+          else:
+            pagemsg("WARNING: Space in headword and old default noun algorithm applying, leading to values not all same as new algorithm: oldpl='%s', newpl='%s': %s"
+                % (old_algorithm_pl, pl, from_to_end))
+            continue
+
+        if pl == defpl:
+          del t.params[:]
+          if pls:
+            notes.append("remove redundant {{fr-adj}} params")
+          if gender:
+            t.add("1", gender)
+          notes.extend(gendernotes)
+          add_head_params()
+          continue
+
+        actual_special = None
+        for special in all_specials:
+          spdefpl = make_plural(lemma, special)
+          if pl == spdefpl:
+            actual_special = special
+            break
+        if actual_special:
+          del t.params[:]
+          assert pls
+          if gender:
+            t.add("1", gender)
+          notes.extend(gendernotes)
+          t.add("sp", actual_special)
+          notes.append("replace {{fr-adj}} params with sp=%s" % actual_special)
+          add_head_params()
+          continue
+
+        pl = replace_with_shortcuts(pl, defpl)
+
+        del t.params[:]
+        assert pls
+        if gender:
+          t.add("1", gender)
+        notes.extend(gendernotes)
+        if pl == "#":
+          notes.append("replace {{fr-adj}} params with inv=1")
+          t.add("inv", "1")
+        else:
+          if pl != "+":
+            t.add("p", pl)
+          if [pl] != pls:
+            notes.append("remove unnecessary {{fr-adj}} params and/or replace with shortcut(s)")
+        add_head_params()
+        continue
+
+      deff = make_feminine(lemma)
+      defmpl = make_plural(lemma)
+      if len(fs) > 0:
+        f = expand_shortcuts(fs[0], deff)
       else:
-        pagemsg("No changes to %s" % unicode(t))
+        f = deff
+      if len(mpls) > 0:
+        mpl = expand_shortcuts(mpls[0], defmpl)
+      else:
+        mpl = defmpl
+      deffpl = make_plural(f)
+      if len(fpls) > 0:
+        fpl = expand_shortcuts(fpls[0], deffpl)
+      else:
+        fpl = deffpl
 
-#    if tn == old_adj_template:
-#      if not getp("1") and not getp("2") and not getp("3") and not getp("4") and not getp("5"):
-#        pagemsg("WARNING: no numbered params: %s" % unicode(t))
-#        continue
-#      origt = unicode(t)
-#      stem = getp("1")
-#      end1 = getp("2")
-#
-#      if not stem: # all specified
-#        if not end1:
-#          pagemsg("WARNING: 1= not given and 2=missing: %s" % unicode(t))
-#        f = getp("3")
-#        if not f:
-#          pagemsg("WARNING: 1= not given and 3=missing: %s" % unicode(t))
-#        mpl = getp("4")
-#        if not mpl:
-#          pagemsg("WARNING: 1= not given and 4=missing: %s" % unicode(t))
-#        fpl = getp("5")
-#        if not fpl:
-#          pagemsg("WARNING: 1= not given and 5=missing: %s" % unicode(t))
-#      elif not end1: # no ending vowel parameters - generate default
-#        f = stem + "a"
-#        mpl = make_plural(stem + "o", "m", False) # not new_algorithm as this is old algorithm
-#        fpl = make_plural(stem + "a", "f", False) # not new_algorithm as this is old algorithm
-#      else:
-#        end2 = getp("3") # or error("Either 0, 2 or 4 vowel endings should be supplied!")
-#        end3 = getp("4")
-#        
-#        if not end3: # 2 ending vowel parameters - m and f are identical
-#          f = pagetitle
-#          mpl = stem + end2
-#          fpl = mpl
-#        else: # 4 ending vowel parameters - specify exactly
-#          end4 = getp("5") # or error("Either 0, 2 or 4 vowel endings should be supplied!")
-#          f = stem + end2
-#          mpl = stem + end3
-#          fpl = stem + end4
-#
-#      lemma = pagetitle
-#      deff = make_feminine(pagetitle)
-#      defmpl = do_make_plural(pagetitle, "m")
-#      fs = []
-#      fullfs = []
-#      fullfs.append(f)
-#      if f == deff:
-#        f = "+"
-#      elif f == lemma:
-#        f = "#"
-#      fs.append(f)
-#      mpls = []
-#      mpls.append(mpl)
-#      fullmpls = mpls
-#      # should really check for subsequence but it never occurs
-#      if set(mpls) == set(defmpl):
-#        mpls = ["+"]
-#      elif set(mpls) < set(defmpl):
-#        pagemsg("WARNING: mpls=%s subset of defmpl=%s, replacing with default" % (",".join(mpls), ",".join(defmpl)))
-#        mpls = ["+"]
-#      mpls = ["#" if x == lemma else x for x in mpls]
-#      deffpl = [x for f in fullfs for x in do_make_plural(f, "f")]
-#      fpls = []
-#      fpls.append(fpl)
-#      fullfpls = fpls
-#      # should really check for subsequence but it never occurs
-#      if set(fpls) == set(deffpl):
-#        fpls = ["+"]
-#      elif set(fpls) < set(deffpl):
-#        pagemsg("WARNING: fpls=%s subset of deffpl=%s, replacing with default" % (",".join(fpls), ",".join(deffpl)))
-#        fpls = ["+"]
-#      fpls = ["#" if x == lemma else x for x in fpls]
-#      actual_special = None
-#      for special in all_specials:
-#        deff = make_feminine(pagetitle, special)
-#        if deff is None:
-#          continue
-#        defmpl = do_make_plural(pagetitle, "m", special)
-#        deffpl = do_make_plural(deff, "f", special)
-#        deff = [deff]
-#        if fullfs == deff and fullmpls == defmpl and fullfpls == deffpl:
-#          actual_special = special
-#          break
-#
-#      head = getp("head")
-#      sort = getp("sort")
-#
-#      must_continue = False
-#      for param in t.params:
-#        pn = pname(param)
-#        pv = unicode(param.value)
-#        if pn not in ["head", "1", "2", "3", "4", "5", "sort"]:
-#          pagemsg("WARNING: Saw unrecognized param %s=%s in %s" % (pn, pv, unicode(t)))
-#          must_continue = True
-#          break
-#      if must_continue:
-#        continue
-#
-#      del t.params[:]
-#      if head:
-#        t.add("head", head)
-#      blib.set_template_name(t, "fr-adj")
-#      if fullfs == [pagetitle] and fullmpls == [pagetitle] and fullfpls == [pagetitle]:
-#        t.add("inv", "1")
-#      else:
-#        if actual_special:
-#          t.add("sp", actual_special)
-#        else:
-#          if fs != ["+"]:
-#            blib.set_param_chain(t, fs, "f")
-#
-#          if mpls == fpls and ("+" not in mpls or defmpl == deffpl):
-#            # masc and fem pl the same
-#            if mpls != ["+"]:
-#              blib.set_param_chain(t, mpls, "pl")
-#          else:
-#            if mpls != ["+"]:
-#              blib.set_param_chain(t, mpls, "mpl")
-#            if fpls != ["+"]:
-#              blib.set_param_chain(t, fpls, "fpl")
-#
-#      if origt != unicode(t):
-#        pagemsg("Replaced %s with %s" % (origt, unicode(t)))
-#        if old_adj_template == tname(t):
-#          notes.append("convert {{%s}} to new format" % old_adj_template)
-#        else:
-#          notes.append("convert {{%s}} to new {{%s}} format" % (old_adj_template, tname(t)))
-#      else:
-#        pagemsg("No changes to %s" % unicode(t))
+      must_continue = False
+      for param in t.params:
+        pn = pname(param)
+        pv = unicode(param.value)
+        if pn not in ["head", "f", "mp", "fp"]:
+          pagemsg("WARNING: Saw unrecognized param %s=%s: %s" % (pn, pv, from_to_end))
+          must_continue = True
+          break
+      if must_continue:
+        continue
+
+      if (not fs or not mpls or not fpls) and " " in lemma:
+        old_algorithm_f = make_feminine(lemma, "last")
+        assert old_algorithm_f
+        old_algorithm_mpl = make_plural(lemma, "last")
+        old_algorithm_fpl = make_plural(old_algorithm_f, "last")
+        if (fs or old_algorithm_f == f) and (mpls or old_algorithm_mpl == mpl) and (fpls or old_algorithm_fpl == fpl):
+          pagemsg("Space in headword and old default noun algorithm applying, leading to same results as new: f='%s', mpl='%s', fpl='%s': %s"
+              % (old_algorithm_f, old_algorithm_mpl, old_algorithm_fpl, unicode(t)))
+        else:
+          pagemsg("WARNING: Space in headword and old default noun algorithm applying, leading to values not all same as new algorithm: %s; %s; %s: %s"
+              % (fs and "explicit-f=%s" % f or "oldf='%s', newf='%s'" % (old_algorithm_f, f),
+                 mpls and "explicit-mpl=%s" % mpl or "oldmpl='%s', newmpl='%s'" % (old_algorithm_mpl, mpl),
+                 fpls and "explicit-fpl=%s" % fpl or "oldfpl='%s', newfpl='%s'" % (old_algorithm_fpl, fpl),
+                 from_to_end))
+          continue
+
+      if f == deff and mpl == defmpl and fpl == deffpl:
+        del t.params[:]
+        if not all_defaulted:
+          notes.append("remove redundant {{fr-adj}} params")
+        add_head_params()
+        continue
+
+      actual_special = None
+      for special in all_specials:
+        spdeff = make_feminine(lemma, special)
+        if spdeff is None:
+          continue
+        spdefmpl = make_plural(lemma, special)
+        spdeffpl = make_plural(spdeff, special)
+        if f == spdeff and mpl == spdefmpl and fpl == spdeffpl:
+          actual_special = special
+          break
+      if actual_special:
+        del t.params[:]
+        assert not all_defaulted
+        t.add("sp", actual_special)
+        notes.append("replace {{fr-adj}} params with sp=%s" % actual_special)
+        add_head_params()
+        continue
+
+      f = replace_with_shortcuts(f, deff)
+      mpl = replace_with_shortcuts(mpl, defmpl)
+      fpl = replace_with_shortcuts(fpl, deffpl)
+
+      del t.params[:]
+      assert not all_defaulted
+      if f == "#" and mpl == "#" and fpl == "#":
+        notes.append("replace {{fr-adj}} params with inv=1")
+        t.add("inv", "1")
+      elif f == "#" and mpl == fpl:
+        notes.append("convert {{fr-adj}} to 1=mf")
+        t.add("1", "mf")
+        if mpl != "+":
+          t.add("p", mpl)
+      else:
+        if f != "+":
+          t.add("f", f)
+        if mpl != "+":
+          t.add("mp", mpl)
+        if fpl != "+":
+          t.add("fp", fpl)
+        if [f] != fs or [mpl] != mpls or [fpl] != fpls:
+          notes.append("remove unnecessary {{fr-adj}} params and/or replace with shortcut(s)")
+      add_head_params()
+      continue
 
   return unicode(parsed), notes
 
-parser = blib.create_argparser("Convert {{fr-adj}} templates to new format or remove redundant args in {{fr-noun}}",
+parser = blib.create_argparser("Remove redundant params in {{fr-noun}}/{{fr-adj}} or replace with shortcut(s)",
   include_pagefile=True, include_stdin=True)
-parser.add_argument("--remove-redundant-noun-args", action="store_true")
+parser.add_argument("--do-nouns", action="store_true")
+parser.add_argument("--do-adjectives", action="store_true")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-if args.remove_redundant_noun_args:
-  default_refs=["Template:fr-noun"]
-else:
-  default_refs=["Template:%s" % old_adj_template]
-
 blib.do_pagefile_cats_refs(args, start, end, process_text_on_page, edit=True, stdin=True,
-  default_refs=default_refs)
+  default_refs=["Template:fr-noun", "Template:fr-adj"])
