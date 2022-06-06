@@ -60,8 +60,11 @@ end
 
 local function check_exists(forms, cats, pos)
 	for _, form in ipairs(forms) do
+		if type(form) == "table" then
+			form = form.term
+		end
 		if not exists(form) then
-			table.insert(data.categories, langname .. " " .. pos .. " with red links in their headword lines")
+			table.insert(cats, langname .. " " .. pos .. " with red links in their headword lines")
 			return false
 		end
 	end
@@ -129,8 +132,7 @@ end
 
 local function add_suffix(list, suffix, special)
 	local newlist = {}
-	for _, item in ipairs(list) do
-		local form
+	for _, form in ipairs(list) do
 		if suffix == "s" then
 			form = make_plural(form, special)
 		elseif suffix == "e" then
@@ -163,8 +165,6 @@ function export.show(frame)
 		["pagename"] = {}, -- for testing
 	}
 
-	local pagename = args.pagename or mw.title.getCurrentTitle().text
-
 	if pos_functions[poscat] then
 		for key, val in pairs(pos_functions[poscat].params) do
 			params[key] = val
@@ -173,6 +173,8 @@ function export.show(frame)
 
 	local parargs = frame:getParent().args
 	local args = require("Module:parameters").process(parargs, params)
+
+	local pagename = args.pagename or mw.title.getCurrentTitle().text
 
 	local heads = args["head"]
 	if pos_functions[poscat] and pos_functions[poscat].param1_is_head and args[1] then
@@ -298,6 +300,16 @@ local function get_noun_pos(is_proper)
 			-- Decide how to show the plurals
 			mode = mode or plurals[1]
 
+			local function insert_countable_cat()
+				table.insert(data.categories, langname .. " countable " .. pos)
+			end
+			local function insert_uncountable_cat()
+				-- Most proper nouns are uncountable, so don't create a category for them
+				if not is_proper then
+					table.insert(data.categories, langname .. " uncountable " .. pos)
+				end
+			end
+				
 			if mode == "!" then
 				-- Plural is not attested
 				table.insert(data.inflections, {label = "plural not attested"})
@@ -313,13 +325,13 @@ local function get_noun_pos(is_proper)
 				elseif mode == "-" then
 					-- Uncountable noun; may occasionally have a plural
 					table.remove(plurals, 1)  -- Remove the mode parameter
-					table.insert(data.categories, langname .. " uncountable " .. pos)
+					insert_uncountable_cat()
 
 					-- If plural forms were given explicitly, then show "usually"
 					if #plurals > 0 then
 						track("count-uncount")
 						table.insert(data.inflections, {label = "usually " .. glossary_link("uncountable")})
-						table.insert(data.categories, langname .. " countable " .. pos)
+						insert_countable_cat()
 					else
 						table.insert(data.inflections, {label = glossary_link("uncountable")})
 					end
@@ -327,8 +339,8 @@ local function get_noun_pos(is_proper)
 					-- Mixed countable/uncountable noun, always has a plural
 					table.remove(plurals, 1)  -- Remove the mode parameter
 					table.insert(data.inflections, {label = glossary_link("countable") .. " and " .. glossary_link("uncountable")})
-					table.insert(data.categories, langname .. " uncountable " .. pos)
-					table.insert(data.categories, langname .. " countable " .. pos)
+					insert_uncountable_cat()
+					insert_countable_cat()
 
 					-- If no plural was given, add a default one now
 					if #plurals == 0 then
@@ -337,13 +349,13 @@ local function get_noun_pos(is_proper)
 				elseif is_proper then
 					-- Default proper noun; uncountable unless plural(s) specified
 					if #plurals > 0 then
-						table.insert(data.categories, langname .. " countable " .. pos)
+						insert_countable_cat()
 					else
-						table.insert(data.categories, langname .. " uncountable " .. pos)
+						insert_uncountable_cat()
 					end
 				else
 					-- The default, always has a plural
-					table.insert(data.categories, langname .. " countable " .. pos)
+					insert_countable_cat()
 
 					-- If no plural was given, add a default one now
 					if #plurals == 0 then
@@ -353,7 +365,7 @@ local function get_noun_pos(is_proper)
 
 				-- Gather plurals, handling requests for default plurals
 				for i, pl in ipairs(plurals) do
-					if pl == "*" or pl == "#" then
+					if pl == "#" then
 						pl = lemma
 					elseif pl == "s" or pl == "x" then
 						pl = lemma .. pl
@@ -385,7 +397,7 @@ local function get_noun_pos(is_proper)
 			local function insert_inflection(label, arg, process_arg)
 				local forms = args[arg]
 				if process_arg then
-					for _, form in ipairs(forms) do
+					for i, form in ipairs(forms) do
 						forms[i] = process_arg(form)
 					end
 				end
@@ -399,8 +411,12 @@ local function get_noun_pos(is_proper)
 
 			-- Add the feminine forms
 			local fems = insert_inflection("feminine", "f", function(form)
-				-- Allow '+' and '+first', etc. for feminine.
-				if form == "+" then
+				-- Allow '#', 'e', '+', '+first', etc. for feminine.
+				if form == "#" then
+					return lemma
+				elseif form == "e" then
+					return lemma .. form
+				elseif form == "+" then
 					return make_feminine(lemma)
 				elseif form:find("^%+") then
 					form = require("Module:romance utilities").get_special_indicator(form)
@@ -540,8 +556,9 @@ local function do_adjective(pos)
 			[1] = {},
 			["inv"] = {type = "boolean"},
 			["sp"] = {}, -- special indicator: "first", "first-last", etc.
-			["m2"] = {alias_of = "mv"},
 			["onlyg"] = {},
+			["m"] = {list = true},
+			["mqual"] = {list = true},
 			["mv"] = {list = true},
 			["mvqual"] = {list = true},
 			["f"] = {list = true},
@@ -571,7 +588,7 @@ local function do_adjective(pos)
 				table.insert(data.categories, langname .. " defective " .. pos)
 			end
 
-			local function process_inflection(label, arg, accel, get_default)
+			local function process_inflection(label, arg, accel, get_default, explicit_default_only)
 				local default_val
 				local function default()
 					if default_val == nil then
@@ -583,7 +600,7 @@ local function do_adjective(pos)
 					end
 					return default_val
 				end
-				local orig_infls = #args[arg] > 0 and args[arg] or default() or {}
+				local orig_infls = #args[arg] > 0 and args[arg] or explicit_default_only and {} or default() or {}
 				local infls = {}
 				if #orig_infls > 0 then
 					infls.label = label
@@ -689,11 +706,15 @@ local function do_adjective(pos)
 				-- Handle plurals of mf adjectives
 				if not args.inv and gender == "mf" then
 					process_inflection("plural", "p", "p", function()
-						return {data.pagename .. "s"}
+						return add_suffix(get_current(), "s", args.sp)
 					end)
 				end
 
 				if not args.inv and gender ~= "mf" then
+					-- Handle masculine form if not same as lemma; e.g. [[sûr de soi]] with m=+, m2=sûr de lui
+					process_inflection("masculine singular", "m", "m|s",
+						function() return {data.pagename} end, "explicit default only")
+
 					-- Handle case of special masculine singular before vowel
 					process_inflection("masculine singular before vowel", "mv", "m|s")
 
