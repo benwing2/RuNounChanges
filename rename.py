@@ -17,9 +17,9 @@ def rename_page(index, page, totitle, comment, refrom, reto):
     for fromval, toval in zipped_fromto:
       text = re.sub(fromval, toval, text)
     return text
-  this_comment = comment or "rename based on regex %s" % (
+  this_comment = comment or zipped_fromto and "rename based on regex %s" % (
     ", ".join("%s -> %s" % (f, t) for f, t in zipped_fromto)
-  )
+  ) or "rename page"
   if not blib.safe_page_exists(page, errandpagemsg):
     pagemsg("Skipping because page doesn't exist")
     return
@@ -69,7 +69,8 @@ params.add_argument("-f", "--from", help="From regex, can be specified multiple 
     metavar="FROM", dest="from_", action="append")
 params.add_argument("-t", "--to", help="To regex, can be specified multiple times",
     action="append")
-params.add_argument("--comment", help="Specify the change comment to use")
+params.add_argument("--rename-comment", "--comment", help="Specify the change comment to use when renaming")
+params.add_argument("--delete-comment", help="Specify the change comment to use when deleting")
 params.add_argument("--delete-from-direcfile", action="store_true",
     help="If only a single page given in --direcfile, delete it.")
 params.add_argument("--direcfile", help="File containing pairs of from/to pages to rename, separated by ' ||| '.")
@@ -79,22 +80,34 @@ start, end = blib.parse_start_end(args.start, args.end)
 from_ = [x.decode("utf-8") for x in args.from_] if args.from_ else []
 to = [x.decode("utf-8") for x in args.to] if args.to else []
 direcfile = args.direcfile and args.direcfile.decode("utf-8")
-comment = args.comment and args.comment.decode("utf-8")
+rename_comment = args.rename_comment and args.rename_comment.decode("utf-8")
+delete_comment = args.delete_comment and args.delete_comment.decode("utf-8")
 
 if len(from_) != len(to):
   raise ValueError("Same number of --from and --to arguments must be specified")
 
-if args.direcfile:
+if args.delete_from_direcfile:
+  pages_to_delete = []
+  pages_to_rename = []
+  for index, line in blib.iter_items_from_file(args.direcfile, start, end):
+    if " ||| " not in line:
+      pages_to_delete.append((index, line))
+    else:
+      frompage, topage = line.split(" ||| ")
+      pages_to_rename.append((index, frompage, topage))
+  for index, page in pages_to_delete:
+    delete_page(index, pywikibot.Page(blib.site, page), delete_comment)
+  for index, frompage, topage in pages_to_rename:
+    rename_page(index, pywikibot.Page(blib.site, frompage), topage, rename_comment, from_, to)
+elif args.direcfile:
   for index, line in blib.iter_items_from_file(args.direcfile, start, end):
     if " ||| " not in line:
       if args.delete_from_direcfile:
-        delete_page(index, pywikibot.Page(blib.site, line), comment)
-      else:
         msg("Line %s: WARNING: Saw bad line in --from-to-pagefile: %s" % (index, line))
       continue
     frompage, topage = line.split(" ||| ")
-    rename_page(index, pywikibot.Page(blib.site, frompage), topage, comment, from_, to)
+    rename_page(index, pywikibot.Page(blib.site, frompage), topage, rename_comment, from_, to)
 else:
   def do_process_page(page, index):
-    return rename_page(index, page, None, comment, from_, to)
+    return rename_page(index, page, None, rename_comment, from_, to)
   blib.do_pagefile_cats_refs(args, start, end, do_process_page)
