@@ -196,7 +196,7 @@ def process_text_on_page(index, pagetitle, text):
     def getp(param):
       return getparam(t, param)
     def join_with_brackets(args):
-      return ",".join("'%s'" % arg if arg in ["s", "x"] else "[[%s]]" % arg for arg in args)
+      return ",".join("'%s'" % arg if arg in ["s", "x", "e", "+", "#"] else "[[%s]]" % arg for arg in args)
     if tn == "fr-noun" and args.do_nouns:
       origt = unicode(t)
       from_to_end = "<from> %s <to> %s <end>" % (origt, origt)
@@ -235,8 +235,13 @@ def process_text_on_page(index, pagetitle, text):
           pagemsg("WARNING: Plural-only noun with explicit plurals: %s" % from_to_end)
         continue
 
+      mode = []
+      if pls and pls[0] in ["~", "-"]:
+        mode = [pls[0]]
+        pls = pls[1:]
+
       if not pls:
-        if " " in lemma:
+        if " " in lemma and mode != ["-"]:
           old_algorithm_pl = do_make_plural(lemma, "last")
           new_algorithm_pl = do_make_plural(lemma)
           if old_algorithm_pl == new_algorithm_pl:
@@ -246,76 +251,78 @@ def process_text_on_page(index, pagetitle, text):
             pagemsg("WARNING: Space in headword and old default noun algorithm applying, leading to '%s' which is not the same as new algorithm '%s': %s"
                 % (",".join(old_algorithm_pl), ",".join(new_algorithm_pl), from_to_end))
             continue
-        add_head_params()
-        continue
 
-      orig_pls = pls
-      pls = [lemma + pl if pl in ["s", "x"] else pl for pl in pls]
-      pls_with_def = []
-      pls_with_def_notes = []
-      defpl = do_make_plural(lemma)
-      assert defpl
-      if len(defpl) > 1:
-        if set(pls) == set(defpl):
-          pls_with_def = ["+"]
-        elif set(pls) < set(defpl):
-          pagemsg("WARNING: pls=%s subset of defpls=%s, replacing with default: %s"
-              % (",".join(pls), ",".join(defpl), from_to_end))
-          pls_with_def = ["+"]
-        else:
-          pls_with_def = pls
       else:
-        for i, pl in enumerate(pls):
-          if pl == defpl[0]:
-            pls_with_def.append("+")
-            pls_with_def_notes.append("replace default plural %s with '+' in {{fr-noun}}"
-                % join_with_brackets(defpl))
-          elif pl == lemma:
-            pls_with_def.append("#")
-            pls_with_def_notes.append("replace unchanged plural with '#' in {{fr-noun}}")
-          elif pl == lemma + "s":
-            pls_with_def.append("s")
-            if orig_pls[i] != "s":
-              pls_with_def_notes.append("replace plural in '-s' with 's' in {{fr-noun}}")
-          elif pl == lemma + "x":
-            pls_with_def.append("x")
-            if orig_pls[i] != "x":
-              pls_with_def_notes.append("replace plural in '-x' with 'x' in {{fr-noun}}")
-          elif pl == "*":
-            pls_with_def.append("#")
-            pls_with_def_notes.append("replace unchanged plural indicator '*' with '#' in {{fr-noun}}")
+        orig_pls = pls
+        pls = [lemma + pl if pl in ["s", "x"] else pl for pl in pls]
+        pls_with_def = []
+        pls_with_def_notes = []
+        defpl = do_make_plural(lemma)
+        assert defpl
+        if len(defpl) > 1:
+          if set(pls) == set(defpl):
+            pls_with_def = ["+"]
+          elif set(pls) < set(defpl):
+            pagemsg("WARNING: pls=%s subset of defpls=%s, replacing with default: %s"
+                % (",".join(pls), ",".join(defpl), from_to_end))
+            pls_with_def = ["+"]
           else:
-            pls_with_def.append(pl)
+            pls_with_def = pls
+        else:
+          for i, pl in enumerate(pls):
+            if pl == defpl[0]:
+              pls_with_def.append("+")
+              pls_with_def_notes.append("replace default plural %s with '+' in {{fr-noun}}"
+                  % join_with_brackets(defpl))
+            elif pl == lemma:
+              pls_with_def.append("#")
+              pls_with_def_notes.append("replace unchanged plural with '#' in {{fr-noun}}")
+            elif pl == lemma + "s":
+              pls_with_def.append("s")
+              if orig_pls[i] != "s":
+                pls_with_def_notes.append("replace plural in '-s' with 's' in {{fr-noun}}")
+            elif pl == lemma + "x":
+              pls_with_def.append("x")
+              if orig_pls[i] != "x":
+                pls_with_def_notes.append("replace plural in '-x' with 'x' in {{fr-noun}}")
+            elif pl == "*":
+              pls_with_def.append("#")
+              pls_with_def_notes.append("replace unchanged plural indicator '*' with '#' in {{fr-noun}}")
+            else:
+              pls_with_def.append(pl)
 
-      actual_special = None
-      for special in all_specials:
-        special_pl = do_make_plural(lemma, special)
-        if special_pl is None:
-          continue
-        if len(special_pl) > 1 and set(pls) < set(special_pl):
-          pagemsg("WARNING: for special=%s, pls=%s subset of special_pl=%s, allowing: %s" % (
-            special, ",".join(pls), ",".join(special_pl), from_to_end))
-          actual_special = special
-          break
-        if set(pls) == set(special_pl):
-          pagemsg("Found special=%s with special_pl=%s" % (special, ",".join(special_pl)))
-          actual_special = special
-          break
+        actual_special = None
+        for special in all_specials:
+          special_pl = do_make_plural(lemma, special)
+          if special_pl is None:
+            continue
+          if len(special_pl) > 1 and set(pls) < set(special_pl):
+            pagemsg("WARNING: for special=%s, pls=%s subset of special_pl=%s, allowing: %s" % (
+              special, ",".join(pls), ",".join(special_pl), from_to_end))
+            actual_special = special
+            break
+          if set(pls) == set(special_pl):
+            pagemsg("Found special=%s with special_pl=%s" % (special, ",".join(special_pl)))
+            actual_special = special
+            break
 
-      if pls_with_def == ["+"]:
-        notes.append("remove redundant plural%s %s from {{fr-noun}}"
-            % ("s" if len(pls) > 1 else "", join_with_brackets(orig_pls)))
-        blib.remove_param_chain(t, "2")
-      elif pls_with_def in [["#"], ["s"], ["x"]]:
-        notes.extend(pls_with_def_notes)
-        blib.set_param_chain(t, pls_with_def, "2")
-      elif actual_special:
-        notes.append("replace plural%s %s with +%s in {{fr-noun}}" % (
-          "s" if len(pls) > 1 else "", join_with_brackets(orig_pls), actual_special))
-        blib.set_param_chain(t, ["+" + actual_special], "2")
-      elif pls_with_def != pls:
-        notes.extend(pls_with_def_notes)
-        blib.set_param_chain(t, pls_with_def, "2")
+        if pls_with_def == ["+"] and mode != ["-"]:
+          notes.append("remove redundant plural%s %s from {{fr-noun}}"
+              % ("s" if len(pls) > 1 else "", join_with_brackets(orig_pls)))
+          if not mode:
+            blib.remove_param_chain(t, "2")
+          else:
+            blib.set_param_chain(t, mode, "2")
+        elif pls_with_def in [["+"], ["#"], ["s"], ["x"]]:
+          notes.extend(pls_with_def_notes)
+          blib.set_param_chain(t, mode + pls_with_def, "2")
+        elif actual_special:
+          notes.append("replace plural%s %s with +%s in {{fr-noun}}" % (
+            "s" if len(pls) > 1 else "", join_with_brackets(orig_pls), actual_special))
+          blib.set_param_chain(t, mode + ["+" + actual_special], "2")
+        elif pls_with_def != orig_pls:
+          notes.extend(pls_with_def_notes)
+          blib.set_param_chain(t, mode + pls_with_def, "2")
 
       def handle_mf(mf, mf_full, make_mf):
         mfs = blib.fetch_param_chain(t, mf, mf)
@@ -556,7 +563,7 @@ def process_text_on_page(index, pagetitle, text):
         continue
 
       if (not fs or not mpls or not fpls) and " " in lemma:
-        old_algorithm_f = make_feminine(lemma, "last")
+        old_algorithm_f = fs and fs[0] or make_feminine(lemma, "last")
         assert old_algorithm_f
         old_algorithm_mpl = make_plural(lemma, "last")
         old_algorithm_fpl = make_plural(old_algorithm_f, "last")
