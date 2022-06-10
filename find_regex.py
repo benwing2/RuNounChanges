@@ -17,11 +17,6 @@ def process_text_on_page(index, pagetitle, text, regex, invert, verbose,
   if verbose:
     pagemsg("Processing")
 
-  if mainspace_only and ":" in pagetitle:
-    if verbose:
-      pagemsg("WARNING: Colon in page title, skipping page")
-    return
-
   if not lang_only:
     text_to_search = text
   else:
@@ -78,7 +73,8 @@ def search_pages(args, regex, invert, input_from_diff, start, end, lang_only):
       do_process_text_on_page(index, pagename, text)
     return
 
-  blib.do_pagefile_cats_refs(args, start, end, do_process_text_on_page, stdin=True)
+  blib.do_pagefile_cats_refs(args, start, end, do_process_text_on_page, stdin=True,
+      filter_pages=args.mainspace_only and (lambda x: ":" not in x) or None)
 
 if __name__ == "__main__":
   parser = blib.create_argparser("Search on pages", include_pagefile=True,
