@@ -1,9 +1,9 @@
-Beginning at Fri Jun 10 01:00:01 2022
+Beginning at Fri Jun 10 01:00:49 2022
 Page 5847 anxiété: Found match for regex: =
 Page 5847 anxiété: -------- begin text --------
 
 ===Etymology===
-{{af|fr|anxieux|-té}}, from {{etyl|la|fr}} {{m|fr|anxietas|}}.
+{{af|fr|anxieux|-té}}, from {{uder|fr|la|anxietas|}}.
 
 ===Pronunciation===
 * {{fr-IPA}}
@@ -44,7 +44,7 @@ Page 6901 Armel: Found match for regex: =
 Page 6901 Armel: -------- begin text --------
 
 ===Etymology===
-Name of a [[Breton]] saint, possibly from {{etyl|cel|fr}} {{m|und|Arthmael}}, from words meaning "bear" and "prince".
+Name of a [[Breton]] saint, from {{inh|fr|LL.|Armagilus}}, of {{der|fr|cel|-}} origin; compare {{cog|cy|Arthfael|lit=bear-prince}}.<!-- Wikipedia says "wolf-prince" but this is wrong; 'arth' means "bear". -->
 
 ===Pronunciation===
 * {{fr-IPA}}
@@ -66,7 +66,7 @@ Page 10924 bergère: -------- begin text --------
 [[File:Bergeres.jpg|thumb]]
 
 ===Etymology===
-{{etyl|fro|fr}} {{m|fr|bergiere}}
+{{uder|fr|fro|bergiere}}
 
 ===Pronunciation===
 * {{fr-IPA}}
@@ -95,7 +95,7 @@ Page 11226 biche: -------- begin text --------
 * {{audio|fr|Fr-biche.ogg|Audio: {{m|fr||une biche}}}}
 
 ===Etymology 1===
-From {{inh|fr|frm|biche}}, from {{inh|fr|fro|biche||doe, female deer}} and {{m|fro|bisse||wild animal}}, of uncertain origin and relation. The form {{m|fro|bisse}} is almost certainly from {{inh|fr|VL.|bīstia}}, variant of {{inh|fr|la|bēstia}} (compare {{m|fr|bête}}); however, the contemporary {{m|fro|biche}} is an enigma, and possibly unrelated. It may be the [[Picard]] form of {{m|fro|bisse}}, (compare {{m|fro|chent}} for {{m|fro|cent}}) or may share origin with {{uder|fr|frm|bique||nanny-goat}}, believed to be derived from {{der|fr|gem-pro|*bik||goat}}. More at {{l|fr|bouc}}.
+From {{inh|fr|frm|biche}}, from {{inh|fr|fro|biche||doe, female deer}} and {{m|fro|bisse||wild animal}}, of uncertain origin and relation. The form {{m|fro|bisse}} is almost certainly from {{inh|fr|VL.|bīstia}}, variant of {{inh|fr|la|bēstia}} (compare {{m|fr|bête}}); however, the contemporary {{m|fro|biche}} is an enigma, and possibly unrelated. It may be the [[Picard]] form of {{m|fro|bisse}}, (compare {{m|fro|chent}} for {{m|fro|cent}}) or may share origin with {{cog|frm|bique||nanny-goat}}, believed to be derived from {{der|fr|gem-pro|*bik||goat}}. More at {{l|fr|bouc}}.
 
 ====Noun====
 {{fr-noun|f}}
@@ -128,7 +128,7 @@ Page 11228 bicher: Found match for regex: =
 Page 11228 bicher: -------- begin text --------
 
 ===Etymology===
-From {{etyl|fro|fr}} {{m|fr|bécher||to bite}}, from {{uder|fr|la|beccus||beak, bill}}.
+From {{uder|fr|fro|bécher||to bite}}, from {{uder|fr|la|beccus||beak, bill}}.
 
 ===Pronunciation===
 * {{fr-IPA|pos=v}}
@@ -153,7 +153,7 @@ Page 13040 braconner: Found match for regex: =
 Page 13040 braconner: -------- begin text --------
 
 ===Etymology===
-From {{etyl|oc|fr}} {{m|fr|bracon}}.
+From {{uder|fr|oc|bracon}}.
 
 ===Pronunciation===
 * {{audio|fr|LL-Q150 (fra)-Lyokoï-braconner.wav|Audio}}
@@ -179,7 +179,7 @@ Page 17653 cicérone: Found match for regex: =
 Page 17653 cicérone: -------- begin text --------
 
 ===Etymology===
-From {{etyl|it|fr}} {{m|fr|cicerone}}.
+From {{uder|fr|it|cicerone}}.
 
 ===Pronunciation===
 * {{fr-IPA}}
@@ -196,7 +196,7 @@ Page 18285 clopiner: Found match for regex: =
 Page 18285 clopiner: -------- begin text --------
 
 ===Etymology===
-{{uder|fr|fro|clop||that hobbles; hobbling}}, from {{etyl|Late Latin|fr}} {{m|la|*cloppus}}
+From {{der|fr|fro|clop||that hobbles; hobbling}}, from {{der|fr|LL.|*cloppus}}.
 
 ===Pronunciation===
 * {{fr-IPA|pos=v}}
@@ -214,12 +214,14 @@ Page 18285 clopiner: -------- begin text --------
 
 ===Further reading===
 * {{R:TLFi}}
+
+{{C|fr|Gaits}}
 -------- end text --------
 Page 19430 conchyliculture: Found match for regex: =
 Page 19430 conchyliculture: -------- begin text --------
 
 ===Etymology===
-From {{etyl|la|fr}} {{m|fr|conchylium|tr=shellfish}} + {{l|fr|culture}}.
+From {{uder|fr|la|conchylium|tr=shellfish}} + {{l|fr|culture}}.
 
 ===Pronunciation===
 * {{fr-IPA|conkyliculture}}
@@ -237,7 +239,7 @@ Page 27243 dulcifier: Found match for regex: =
 Page 27243 dulcifier: -------- begin text --------
 
 ===Etymology===
-From {{etyl|la|fr}} {{m|fr|dulcifico|dulcificō, dulcificāre|sweeten, make sweeter}}.
+From {{uder|fr|la|dulcifico|dulcificō, dulcificāre|sweeten, make sweeter}}.
 
 ===Pronunciation===
 * {{fr-IPA|pos=v}}
@@ -262,7 +264,7 @@ Page 27721 éclatement: Found match for regex: =
 Page 27721 éclatement: -------- begin text --------
 
 ===Etymology===
-From {{etyl|frm|fr}} {{l|fr|esclatement}}, {{af|fr|éclater|-ment}}.
+From {{uder|fr|frm|-}} {{l|fr|esclatement}}, {{af|fr|éclater|-ment}}.
 
 ===Noun===
 {{fr-noun|m}}
@@ -282,7 +284,7 @@ Page 28534 éloquent: Found match for regex: =
 Page 28534 éloquent: -------- begin text --------
 
 ===Etymology===
-From {{etyl|frm|fr}} {{m|fr|eloquent}}, from {{uder|fr|fro|eloquent}}, from {{uder|fr|la|eloquens||speaking, having the faculty of speech, eloquent}}, present participle of {{m|la|eloqui||to speak out}}, from {{m|la|e-||out}} + {{m|la|loqui||to speak}}.
+From {{uder|fr|frm|eloquent}}, from {{uder|fr|fro|eloquent}}, from {{uder|fr|la|eloquens||speaking, having the faculty of speech, eloquent}}, present participle of {{m|la|eloqui||to speak out}}, from {{m|la|e-||out}} + {{m|la|loqui||to speak}}.
 
 ===Pronunciation===
 * {{fr-IPA}}
@@ -306,7 +308,7 @@ Page 28846 empan: Found match for regex: =
 Page 28846 empan: -------- begin text --------
 
 ===Etymology===
-From {{etyl|fro|fr}} {{m|fr|espan}}, of {{der|fr|gem|-}} origin, from {{der|fr|frk|*spanna}}, from {{der|fr|gem-pro|*spānnõ}}, from {{der|fr|ine-pro|*(s)pend-|t=to stretch}}. Cognate with {{cog|en|span}}.
+From {{uder|fr|fro|espan}}, of {{der|fr|gem|-}} origin, from {{der|fr|frk|*spanna}}, from {{der|fr|gem-pro|*spānnõ}}, from {{der|fr|ine-pro|*(s)pend-|t=to stretch}}. Cognate with {{cog|en|span}}.
 
 ===Pronunciation===
 * {{fr-IPA}}
@@ -326,7 +328,7 @@ Page 29875 ennuyeux: Found match for regex: =
 Page 29875 ennuyeux: -------- begin text --------
 
 ===Etymology===
-{{etyl|fro|fr}} {{m|fr|enuieus}}, corresponding to {{m|fr|ennui}} + {{m|fr|-eux}}. Compare {{cog|oc|enugiu}}.
+{{uder|fr|fro|enuieus}}, corresponding to {{m|fr|ennui}} + {{m|fr|-eux}}. Compare {{cog|oc|enugiu}}.
 
 ===Pronunciation===
 * {{fr-IPA}}
@@ -364,7 +366,7 @@ Page 30748 équidé: Found match for regex: =
 Page 30748 équidé: -------- begin text --------
 
 ===Etymology===
-{{etyl|NL.|fr}} {{m|fr|Equidae}}
+{{uder|fr|NL.|Equidae}}
 
 ===Pronunciation===
 * {{audio|fr|LL-Q150 (fra)-0x010C-équidé.wav|Audio}}
@@ -392,6 +394,7 @@ From {{inh|fr|frm|gerber}}, from {{m|frm|gerbe||sheaf}}, from {{der|fr|fro|jarbe
 {{fr-verb}}
 
 # to [[sheave]]
+# to [[stack]]
 # {{lb|fr|slang}} to [[puke]], to [[throw up]]
 #: {{syn|fr|dégueuler}}
 
@@ -420,7 +423,7 @@ Page 43311 Intériste: Found match for regex: =
 Page 43311 Intériste: -------- begin text --------
 
 ===Etymology===
-From {{etyl|it|fr}} {{m|fr|interiste}}.
+From {{uder|fr|it|interiste}}.
 
 ===Pronunciation===
 * {{fr-IPA}}
@@ -434,7 +437,7 @@ Page 44303 jaquette: Found match for regex: =
 Page 44303 jaquette: -------- begin text --------
 
 ===Etymology===
-From {{etyl|fro|fr}} {{m|la|jaquet}}, diminutive of {{m|la|jaque}}.
+From {{inh|en|enm}}, from {{der|en|fro|jaquet}}, diminutive of {{m|la|jaque}}.
 
 ===Pronunciation===
 * {{fr-IPA}}
@@ -462,7 +465,7 @@ Page 49119 Manuel: -------- begin text --------
 ===Proper noun===
 {{fr-proper noun|g=m}}
 
-# {{given name|fr|male}} borrowed from {{etyl|es|fr}} and {{etyl|pt|fr}}
+# {{given name|fr|male|from=Spanish|from2=Portuguese}}
 
 ----
 
@@ -495,6 +498,7 @@ From {{inh|fr|fro|-}}, from {{inh|fr|la|malva||mallow}}, which has a purple colo
 =====Descendants=====
 * {{desc|en|mauve|bor=1}}
 * {{desc|ro|mov|bor=1}}
+* {{desc|ru|мов|bor=1}}
 
 ===Etymology 2===
 From {{inh|fr|frm|mauve}}, from {{inh|fr|fro|mave||mew}}, from {{der|fr|ang|mǣw||mew, seagull}}, from {{der|fr|gem-pro|*maihwaz}}, {{m|gem-pro|*maiwaz||seagull}}. Related to {{m|fr|mouette}}. Cognate with {{cog|de|Möwe||seagull}}, {{cog|nl|meeuw||seagull}}, {{cog|da|måge||seagull}}, {{cog|is|mávur||seagull}}, {{cog|pl|mewa||seagull}} (from {{cog|gem}}). More at {{l|en|mew}}.
@@ -521,7 +525,7 @@ Page 53129 mulot: Found match for regex: =
 Page 53129 mulot: -------- begin text --------
 
 ===Etymology===
-Diminutive of {{etyl|fro|fr}} {{m|fr|mul}}, from Old Low Franconian {{m|odt|muli}} (pl.) ‘moles’ (Reichenau Glosses, 8th cent.) (compare {{cog|nl|mol}}).
+Diminutive of {{uder|fr|fro|mul}}, from Old Low Franconian {{m|odt|muli}} (pl.) ‘moles’ (Reichenau Glosses, 8th cent.) (compare {{cog|nl|mol}}).
 
 ===Pronunciation===
 * {{fr-IPA}}
@@ -548,7 +552,7 @@ Page 59625 pensif: Found match for regex: =
 Page 59625 pensif: -------- begin text --------
 
 ===Etymology===
-From {{etyl|Late Latin|fr}} {{m|la|pēnsō}}.
+{{inh+|fr|fro|pensif}}.
 
 ===Pronunciation===
 * {{fr-IPA}}
@@ -568,7 +572,7 @@ Page 61745 plaisir: Found match for regex: =
 Page 61745 plaisir: -------- begin text --------
 
 ===Etymology===
-From {{inh|fr|frm|plaisir}}, from {{inh|fr|fro|plaisir}}, from {{inh|fr|la|placēre}}, present active infinitive of {{m|la|placeō}}. Compare {{cog|oc|plaser||pleasure}}, {{cog|ca|plaer||pleasure}}, {{cog|it|piacere||pleasure}}, {{cog|es|placer||pleasure}}, {{cog|pt|prazer||pleasure}}, {{cog|ro|plăcere||pleasure}}.
+From {{inh|fr|frm|plaisir}}, from {{inh|fr|fro|plaisir}}, from {{inh|fr|la|placeo|placēre}}. Compare {{cog|oc|plaser}}, {{cog|ca|plaer}}.
 
 ===Pronunciation===
 * {{fr-IPA|+|plésir}}
@@ -578,6 +582,10 @@ From {{inh|fr|frm|plaisir}}, from {{inh|fr|fro|plaisir}}, from {{inh|fr|la|plac�
 {{fr-noun|m}}
 
 # [[pleasure]]
+#: {{coi|fr|avec bien de plaisir|with much pleasure}}
+#: {{coi|fr|avec grand plaisir|with great pleasure}}
+#: {{coi|fr|priver quelqu'un du plaisir de faire quelque chose|to deprive someone of the pleasure of doing something}}
+#: {{coi|fr|avoir eu le plaisir de faire quelque chose|to have had the pleasure of doing something}}
 
 ====Derived terms====
 * {{l|fr|avec plaisir}}
@@ -603,7 +611,7 @@ Page 66171 quiche: -------- begin text --------
 * {{fr-IPA}}
 
 ===Etymology 1===
-From [[Lorraine]] {{der|fr|gmw-rfr|Küeche}}, from {{der|fr|gmh|kuoche}}, from {{der|fr|goh|kuocho}}, {{m|goh|kuohho}}, from {{der|fr|gem-pro|*kōkô}}, from {{der|fr|ine-pro|*gog||ball-shaped object}}. First attested in French in 1805. More at {{l|en|cake}}.
+From [[Lorraine]] {{der|fr|gmw-rfr|Küeche}}, from {{der|fr|gmh|kuoche}}, from {{der|fr|goh|kuocho}}, {{m|goh|kuohho}}, from {{der|fr|gem-pro|*kōkô}}, from {{der|fr|ine-pro|*gog-||ball-shaped object}}. First attested in French in 1805. More at {{l|en|cake}}.
 
 ====Noun====
 {{fr-noun|f}}
@@ -651,13 +659,16 @@ From [[Lorraine]] {{der|fr|gmw-rfr|Küeche}}, from {{der|fr|gmh|kuoche}}, from {
 Page 69782 Ronan: Found match for regex: =
 Page 69782 Ronan: -------- begin text --------
 
+===Etymology===
+{{bor+|fr|ga|Rónán}}.
+
 ===Pronunciation===
 * {{fr-IPA|+|Ronane}}
 
 ===Proper noun===
 {{fr-proper noun|m}}
 
-# {{given name|fr|male|Irish}}, derived from {{etyl|ga|fr}} {{m|ga|Rónán}}
+# {{given name|fr|male|from=Irish}}.
 -------- end text --------
-Elapsed time: 0 mins 7.51 secs
-Ending at Fri Jun 10 01:00:09 2022
+Elapsed time: 0 mins 3.96 secs
+Ending at Fri Jun 10 01:00:53 2022
