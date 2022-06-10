@@ -1044,7 +1044,7 @@ def args_has_non_default_pages(args):
 # up processing by avoiding the need to parse every page.) Not to be confused with the --only-lang user-specifiable
 # parameter, which causes processing over only the section of a given language.
 #
-# If filter_pages is given, it should be an unanchored regex used to filter page titles.
+# If filter_pages is given, it should be a function of one argument (a page title) that returns True to accept a page.
 #
 # If canonicalize_pagename is given, it should be a function of one argument, which is called on pagenames specified
 # on the command line using --pages or read from a file using --pagefile.
