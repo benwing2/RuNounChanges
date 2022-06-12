@@ -267,7 +267,7 @@ local lang = require("Module:languages").getByCode("it")
 local m_string_utilities = require("Module:string utilities")
 local m_links = require("Module:links")
 local m_table = require("Module:table")
-local iut = require("Module:User:Benwing2/inflection utilities")
+local iut = require("Module:inflection utilities")
 
 local force_cat = false -- set to true for debugging
 local check_for_red_links = false -- set to false for debugging
@@ -3205,7 +3205,7 @@ end
 -- for a given slot is a list of objects {form=FORM, footnotes=FOOTNOTES}.
 function export.do_generate_forms(parent_args, from_headword, def)
 	local params = {
-		[1] = {required = true, default = def or "mettere<a\é,mìsi,mésso>"},
+		[1] = {required = true, default = def or "mettere<a\\é,mìsi,mésso>"},
 		["noautolinktext"] = {type = "boolean"},
 		["noautolinkverb"] = {type = "boolean"},
 		["pagename"] = {} -- for testing
