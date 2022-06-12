@@ -21,22 +21,25 @@ def process_page(index, page, template, new_name, params_to_add, params_to_remov
     origt = unicode(t)
     tn = tname(t)
     if tn == template:
+      must_continue = False
       for filt in filters:
         m = re.search("^(.*)=(.*)$", filt)
         if m:
           if getparam(t, m.group(1)) != m.group(2):
-            pagemsg("Skipping %s because filter %s doesn't match" %
-              origt, filt)
-          continue
+            pagemsg("Skipping %s because filter %s doesn't match" % (origt, filt))
+            must_continue = True
+            break
         else:
           m = re.search("^(.*)~(.*)$", filt)
           if m:
             if not re.search(m.group(2), getparam(t, m.group(1))):
-              pagemsg("Skipping %s because filter %s doesn't match" %
-                origt, filt)
-            continue
+              pagemsg("Skipping %s because filter %s doesn't match" % (origt, filt))
+              must_continue = True
+              break
           else:
             raise ValueError("Unrecognized filter %s" % filt)
+      if must_continue:
+        continue
       for old_param, new_param in params_to_rename:
         if t.has(old_param):
           t.add(new_param, getparam(t, old_param), before=old_param, preserve_spacing=False)
