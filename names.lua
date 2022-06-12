@@ -577,10 +577,12 @@ function export.given_name(frame)
 		m_utilities.format_categories(categories, lang, args.sort, nil, force_cat)
 end
 
--- The entry point for {{name translit}} and {{name respelling}}.
+-- The entry point for {{name translit}}, {{name respelling}}, {{name obor}} and {{foreign name}}.
 function export.name_translit(frame)
     local iparams = {
         ["desctext"] = {required = true},
+        ["obor"] = {type = "boolean"},
+        ["foreign_name"] = {type = "boolean"},
     }
     local iargs = require("Module:parameters").process(frame.args, iparams)
 
@@ -606,6 +608,7 @@ function export.name_translit(frame)
 		["aug"] = { type = "boolean" },
 		["nocap"] = { type = "boolean" },
 		["sort"] = {},
+		["pagename"] = {},
 	}
 	
 	local args = require("Module:parameters").process(parent_args, params)
@@ -641,28 +644,46 @@ function export.name_translit(frame)
 		end
 	end
 
+	local SUBPAGENAME = args.pagename or mw.title.getCurrentTitle().subpageText
+	
 	local textsegs = {}
 	table.insert(textsegs, "<span class='use-with-mention'>")
 	local desctext = iargs.desctext
 	if not args.nocap then
 		desctext = mw.getContentLanguage():ucfirst(desctext)
 	end
-	table.insert(textsegs, desctext)
-	table.insert(textsegs, " of ")
+	table.insert(textsegs, desctext .. " ")
+	if not iargs.foreign_name then
+		table.insert(textsegs, "of ")
+	end
 	local langsegs = {}
 	for i, source in ipairs(sources) do
 		local sourcename = source:getCanonicalName()
 		local function get_source_link()
-			if args[3][1] then
-				return m_links.language_link {
-					lang = source_non_etym_langs[i], term = args[3][1], alt = sourcename, tr = "-"
-				}
+			local term_to_link = args[3][1] or SUBPAGENAME
+			-- We link the language name to either the first specified name or the pagename, in the following circumstances:
+			-- (1) More than one language was given along with at least one name; or
+			-- (2) We're handling {{foreign name}} or {{name obor}}, and no name was given.
+			-- The reason for (1) is that if more than one language was given, we want a link to the name
+			-- in each language, as the name that's displayed is linked only to the first specified language.
+			-- However, if only one language was given, linking the language to the name is redundant.
+			-- The reason for (2) is that {{foreign name}} is often used when the name in the destination language
+			-- is spelled the same as the name in the source language (e.g. [[Clinton]] or [[Obama]] in Italian),
+			-- and in that case no name will be explicitly specified but we still want a link to the name in the
+			-- source language. The reason we restrict this to {{foreign name}} or {{name obor}}, not to {{name translit}}
+			-- or {{name respelling}}, is that {{name translit}} and {{name respelling}} ought to be used for names
+			-- spelled differently in the destination language (either transliterated or respelled), so assuming the
+			-- pagename is the name in the source language is wrong.
+			if args[3][1] and #sources > 1 or (iargs.foreign_name or iargs.obor) and not args[3][1] then
+				return m_links.language_link({
+					lang = source_non_etym_langs[i], term = term_to_link, alt = sourcename, tr = "-"
+				}, "allow self link")
 			else
 				return sourcename
 			end
 		end
 		
-		if i == 1 then
+		if i == 1 and not iargs.foreign_name then
 			-- If at least one name is given, we say "A transliteration of the LANG surname FOO", linking LANG to FOO.
 			-- Otherwise we say "A transliteration of a LANG surname".
 			if maxmaxindex > 0 then
@@ -674,16 +695,32 @@ function export.name_translit(frame)
 			table.insert(langsegs, get_source_link())
 		end
 	end
-	table.insert(textsegs, m_table.serialCommaJoin(langsegs, {conj = "or"}))
-	table.insert(textsegs, " " .. m_table.serialCommaJoin(nametypes))
+	local langseg_text = m_table.serialCommaJoin(langsegs, {conj = "or"})
+	local augdim_text
 	if args.dim then
-		table.insert(textsegs, " [[diminutive]]")
+		augdim_text = " [[diminutive]]"
 	elseif args.aug then
-		table.insert(textsegs, " [[augmentative]]")
+		augdim_text = " [[augmentative]]"
+	else
+		augdim_text = ""
 	end
-	table.insert(textsegs, " ")
-	local names = {}
+	local nametype_text = m_table.serialCommaJoin(nametypes) .. augdim_text
 
+	if not iargs.foreign_name then
+		table.insert(textsegs, langseg_text .. " ")
+		table.insert(textsegs, nametype_text)
+		if maxmaxindex > 0 then
+			table.insert(textsegs, " ")
+		end
+	else
+		table.insert(textsegs, nametype_text)
+		table.insert(textsegs, " in " .. langseg_text)
+		if maxmaxindex > 0 then
+			table.insert(textsegs, ", ")
+		end
+	end
+
+	local names = {}
 	local embedded_comma = false
 
 	for i = 1, maxmaxindex do
@@ -694,7 +731,7 @@ function export.name_translit(frame)
 			tr = args["tr"][i], ts = args["ts"][i], gloss = args["t"][i],
 			genders = args["g"][i] and rsplit(args["g"][i], ",") or {}
 		}
-		local linked_term = m_links.full_link(terminfo, "term")
+		local linked_term = m_links.full_link(terminfo, "term", "allow self link")
 		if  args["q"][i] then
 			linked_term = require("Module:qualifier").format_qualifier(args["q"][i]) .. " " .. linked_term
 		end
@@ -726,6 +763,11 @@ function export.name_translit(frame)
 				end
 				for i, source in ipairs(sources) do
 					table.insert(categories, lang:getCode() .. ":" .. source:getCanonicalName() .. " " .. isdim .. ty .. "s")
+					table.insert(categories, lang:getCanonicalName() .. " terms derived from " .. source:getCanonicalName())
+					table.insert(categories, lang:getCanonicalName() .. " terms borrowed from " .. source:getCanonicalName())
+					if iargs.obor then
+						table.insert(categories, lang:getCanonicalName() .. " orthographic borrowings from " .. source:getCanonicalName())
+					end
 					local sourcelang = source_non_etym_langs[i]
 					if source:getCode() ~= sourcelang:getCode() then
 						-- etymology language
@@ -746,6 +788,19 @@ function export.name_translit(frame)
 
 	return table.concat(textsegs, "") ..
 		m_utilities.format_categories(categories, lang, args.sort, nil, force_cat)
+end
+
+function export.do_xlits(frame)
+	local parent_args = frame:getParent().args
+
+	local params = {
+		[1] = { required = true, default = "und" },
+		["xlit"] = { list = true },
+	}
+
+	local args = require("Module:parameters").process(parent_args, params, true)
+	local lang = m_languages.getByCode(args[1], 1)
+	return (join_names(nil, args, "xlit"))
 end
 
 return export
