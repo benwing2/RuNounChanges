@@ -1052,7 +1052,24 @@ local function general_list_form_contains_form(list, form, process_form)
 end
 
 
-local function process_specs(base, destforms, slot, specs, special_case)
+-- Process the user-given specs in `specs` in order to generate verb forms, and insert the resulting forms into
+-- `destforms`[`slot`]. If the destination slot has no forms yet (i.e. it is nil), it will be first set to {}.
+-- Duplicate forms will not be inserted.
+--
+-- `specs` is a list of objects of the form {form = SPEC, footnotes = FOOTNOTES}, where FOOTNOTES is a list of
+-- user-specified footnotes/qualifiers (given after the spec using brackets) or nil if no footnotes. `specs` can be
+-- nil, which is equivalent to specifying "+" to request the default. A given SPEC may be "-" to indicate that the
+-- corresponding forms are missing, or be decorated with preceding decorators like !! (= "elevated style"),
+-- ! (= "careful style") or # (= "traditional"), or with following decorators like ! (= preserve monosyllabic accent),
+-- * (= verb form triggers syntactic gemination of following consonant), ** (= verb form triggers optional syntactic
+-- gemination).
+--
+-- Processing is done by calling `generate_forms` on each spec after stripping decorators. If spec is "+", that will be
+-- passed directly to `generate_forms`, but if spec is "-", `generate_forms` will not be called. The return value of
+-- `generate_forms` can be anything that is convertible to a list of {form = SPEC, footnotes = FOOTNOTES} objects using
+-- iut.convert_to_general_list_form(). In other words, it can be a single string (a form), a single object of the form
+-- {form = FORM, footnotes = FOOTNOTES, ...}, or a list of either of these.
+local function process_specs(base, destforms, slot, specs, generate_forms)
 	specs = specs or {{form = "+"}}
 	for _, spec in ipairs(specs) do
 		local decorated_form = spec.form
@@ -1060,11 +1077,11 @@ local function process_specs(base, destforms, slot, specs, special_case)
 		if decorated_form ~= "-" then
 			local prespec, form, postspec =
 				rmatch(decorated_form, "^([!#]*)(.-)([*!]*)$")
-			local forms = special_case(base, form)
-			-- If `special_case` return nil, no forms get inserted into destforms[slot]. This happens e.g. when
+			local forms = generate_forms(form)
+			-- If `generate_forms` return nil, no forms get inserted into destforms[slot]. This happens e.g. when
 			-- fut:- is given and no explicit conditional principal part is given. In that case,
 			-- generate_default_conditional_principal_part() fetches the future principal parts, which don't exist,
-			-- so it returns nil, and the surrounding principal_part_special_case() also returns nil. The effect is
+			-- so it returns nil, and the surrounding generate_principal_part_forms() also returns nil. The effect is
 			-- that the conditional principal part ends up nil and no conditional parts get inserted.
 			if forms then
 				forms = iut.convert_to_general_list_form(forms, spec.footnotes)
@@ -1137,7 +1154,7 @@ local function add_default_verb_forms(base, from_headword)
 
 	local ending_vowel
 	if base.principal_part_specs.explicit_stem_spec then
-		local function explicit_stem_special_case(base, form)
+		local function generate_explicit_stem_forms(form)
 			local stem, this_ending_vowel
 			if form == "+" then
 				stem = ret.default_stem
@@ -1160,7 +1177,7 @@ local function add_default_verb_forms(base, from_headword)
 			return stem
 		end
 		-- Put the explicit stem in ret.stem (i.e. base.verb.stem).
-		process_specs(base, ret, "stem", base.principal_part_specs.explicit_stem_spec, explicit_stem_special_case)
+		process_specs(base, ret, "stem", base.principal_part_specs.explicit_stem_spec, generate_explicit_stem_forms)
 	else
 		if base.props.syncopated then
 			if not from_headword then
@@ -1310,7 +1327,7 @@ end
 
 
 local function do_root_stressed_inf(base, specs)
-	local function root_stressed_inf_special_case(base, spec, form_to_do, from_defaulted_pres)
+	local function generate_root_stressed_inf_forms(base, spec, form_to_do, from_defaulted_pres)
 		if spec == "-" then
 			error("Spec '-' not allowed as root-stressed infinitive spec")
 		end
@@ -1331,8 +1348,11 @@ local function do_root_stressed_inf(base, specs)
 			else
 				-- Use the single-vowel spec(s) in the present tense principal part.
 				local temp = {}
-				process_specs(base, temp, "temp", base.principal_part_specs.pres, function(base, form)
-					return root_stressed_inf_special_case(base, form, form_to_do, "from defaulted pres") end)
+				process_specs(base, temp, "temp", base.principal_part_specs.pres, function(form)
+					return generate_root_stressed_inf_forms(base, form, form_to_do, "from defaulted pres") end)
+				if not temp.temp then
+					error("Unable to generate infinitive from present tense")
+				end
 				return temp.temp
 			end
 		end
@@ -1357,10 +1377,10 @@ local function do_root_stressed_inf(base, specs)
 		end
 	end
 
-	process_specs(base, base.principal_part_forms, "root_stressed_stem", specs, function(base, form)
-		return root_stressed_inf_special_case(base, form, "stem") end)
-	process_specs(base, base.forms, "inf", specs, function(base, form)
-		return root_stressed_inf_special_case(base, form, "inf") end)
+	process_specs(base, base.principal_part_forms, "root_stressed_stem", specs, function(form)
+		return generate_root_stressed_inf_forms(base, form, "stem") end)
+	process_specs(base, base.forms, "inf", specs, function(form)
+		return generate_root_stressed_inf_forms(base, form, "inf") end)
 end
 
 
@@ -1384,7 +1404,7 @@ local function add_infinitive_reflexive_clitics(base, rowslot)
 end
 
 
-local function pres_special_case(base, form)
+local function generate_pres_forms(base, form)
 	local principal_part_desc = "first-singular present indicative"
 	if form == "+" then
 		check_not_null(base, base.verb.pres, form, principal_part_desc)
@@ -1427,7 +1447,7 @@ local function pres_special_case(base, form)
 end
 
 
-local function pres3s_special_case(base, form)
+local function generate_pres3s_forms(base, form)
 	local principal_part_desc = "third-singular present indicative"
 	if form == "+" then
 		check_not_null(base, base.verb.pres3s, form, principal_part_desc)
@@ -1462,9 +1482,17 @@ end
 
 -- Generate the present indicative. See "RULES FOR CONJUGATION" near the top of the file for the detailed rules.
 local function add_present_indic(base, rowslot)
-	process_specs(base, base.principal_part_forms, "pres", base.principal_part_specs.pres, pres_special_case)
+	process_specs(base, base.principal_part_forms, "pres", base.principal_part_specs.pres, function(form)
+		return generate_pres_forms(base, form) end)
 	if base.principal_part_specs.pres3s then
-		process_specs(base, base.principal_part_forms, "pres3s", base.principal_part_specs.pres3s, pres3s_special_case)
+		process_specs(base, base.principal_part_forms, "pres3s", base.principal_part_specs.pres3s, function(form)
+			return generate_pres3s_forms(base, form) end)
+	end
+
+	-- If no present indcative principal parts (user specified 'pres:-'), don't generate any present indicative forms.
+	-- Otherwise we will end up generating pres23s and pres12p forms based on the overall verb stem(s).
+	if not base.principal_part_forms.pres and not base.principal_part_forms.pres3s then
+		return
 	end
 
 	local function addit(pers, stems, endings)
@@ -1519,6 +1547,12 @@ end
 
 -- Generate the present subjunctive. See "RULES FOR CONJUGATION" near the top of the file for the detailed rules.
 local function add_present_subj(base, rowslot)
+	-- If no present subjunctive principal parts (user specified 'sub:-'), don't generate any present subjunctive forms.
+	-- Otherwise we will end up generating sub12p forms based on the present indicative.
+	if not base.principal_part_forms.sub then
+		return
+	end
+
 	local function addit(pers, stems, endings)
 		add(base, rowslot .. pers, stems, endings)
 	end
@@ -1555,14 +1589,15 @@ end
 
 -- Generate the imperative. See "RULES FOR CONJUGATION" near the top of the file for the detailed rules.
 local function add_imperative(base, rowslot)
-	local function copy(pers, forms)
-		copy_forms(base, rowslot .. pers, forms)
-	end
-
 	if not base.principal_part_forms.imp then
 		-- If imp:- given, suppress the whole imperative.
 		return
 	end
+
+	local function copy(pers, forms)
+		copy_forms(base, rowslot .. pers, forms)
+	end
+
 	-- Copy first imperative form (user specified or taken from present indicative 3s for conj vowel à, or from
 	-- present indicative 2s for other conj vowels) to imperative 2s.
 	copy("2s", base.principal_part_forms.imp)
@@ -1787,6 +1822,32 @@ The order listed here matters. It determines the order of generating row forms. 
 by add_infinitive; the present subjunctive uses generated forms from the present indicative; the imperative uses
 forms from the present subjunctive and present indicative; and the negative imperative uses forms from the infinitive
 and the imperative. Similarly we must have 'fut' < 'cond' because the conditional uses the future principal part.
+
+The following specs are allowed:
+
+-- `desc` must be present and is an all-lowercase English description of the row. It is used in error messages and in
+   generating categories of the form 'Italian verbs with irregular ROW' and 'Italian verbs with missing ROW'.
+-- `tag_suffix` must be present is a string containing the {{inflection of}} tags that are appended onto the
+   person/number tags to form the accelerator spec. For example, the spec "pres|sub" means that the accelerator spec
+   for the third singular present subjunctive will be "3|s|pres|sub". This accelerator spec is passed to
+   [[Module:inflection utilities]], which in turn passes it to [[Module:links]] when generating the link(s) for the
+   corresponding verb form(s). The spec ultimately gets processed by [[Module:accel]] to generate the definition line
+   for nonexistent verb forms. (FIXME: Accelerator support is currently disabled for forms with non-final accents.
+   We need to change the code in [[Module:inflection utilities]] so it sets the correct target not containing the
+   non-final accent.)
+-- `persnums` must be present and specifies the possible person/number suffixes to add onto the row-level slot
+   (e.g. "phis" for the past historic) to form the individual person/number-specific slot (e.g. "phis2s" for the
+   second-person singular past historic).
+-- `row_override_persnums`
+-- `row_override_persnums_to_full_persnums`
+-- `generate_default_principal_part`
+-- `conjugate`
+-- `no_explicit_principal_part`
+-- `no_row_overrides`
+-- `no_single_overrides`
+-- `add_reflexive_clitics`
+-- `dont_check_defective_status`
+-- `dont_add_prefix`
 ]=]
 local row_conjugations = {
 	{"inf", {
@@ -1807,10 +1868,10 @@ local row_conjugations = {
 		-- No generate_default_principal_part; handled specially in add_present_indic because we actually have
 		-- two principal parts for the present indicative ("pres" and "pres3s").
 		conjugate = add_present_indic,
-		-- Set to `true` because handled specially in PRES^PRES3S,PHIS,PP spec; not set to "builtin" because
-		-- handled specially for built-in verbs as well. (This is because there are two principal parts involved,
-		-- "pres" and "pres3s".)
-		no_explicit_principal_part = true,
+		-- No setting for no_explicit_principal_part here because it would never be checked; we special-case 'pres:'
+		-- overrides before checking no_explicit_principal_part. The reason for special-casing is because there are two
+		-- principal parts involved, "pres" and "pres3s", and we allow both to be specified using the syntax
+		-- 'pres:PRES^PRES3S'.
 		add_reflexive_clitics = add_finite_reflexive_clitics,
 	}},
 	{"sub", {
@@ -1981,7 +2042,7 @@ local function handle_row_overrides_for_row(base, rowslot)
 		for persnum, specs in pairs(base.row_override_specs[rowslot]) do
 			local slot = rowslot .. persnum
 			local existing_generated_form = base.forms[slot]
-			local function row_override_special_case(base, form)
+			local function generate_row_override_forms(form)
 				if form == "+" then
 					if not existing_generated_form then
 						error(("Default form '+' requested in row override '%s:' for slot %s but no default-generated form available; "
@@ -2014,7 +2075,7 @@ local function handle_row_overrides_for_row(base, rowslot)
 				return form
 			end
 			base.forms[slot] = nil -- erase existing form before generating override
-			process_specs(base, base.forms, slot, specs, row_override_special_case)
+			process_specs(base, base.forms, slot, specs, generate_row_override_forms)
 		end
 	end
 end
@@ -2030,7 +2091,7 @@ local function handle_single_overrides_for_row(base, rowslot)
 		local slot = rowslot .. persnum
 		if base.single_override_specs[slot] then
 			local existing_generated_form = base.forms[slot]
-			local function override_special_case(base, form)
+			local function generate_override_forms(form)
 				if form == "+" then
 					if not existing_generated_form then
 						error(("Default form '+' requested in override for slot %s but no default-generated form available; "
@@ -2047,7 +2108,7 @@ local function handle_single_overrides_for_row(base, rowslot)
 				return form
 			end
 			base.forms[slot] = nil -- erase existing form before generating override
-			process_specs(base, base.forms, slot, base.single_override_specs[slot], override_special_case)
+			process_specs(base, base.forms, slot, base.single_override_specs[slot], generate_override_forms)
 		end
 	end
 end
@@ -2062,7 +2123,7 @@ local function conjugate_row(base, rowslot)
 
 	-- Generate the principal part for this row now if it has an entry for `generate_default_principal_part`.
 	if rowspec.generate_default_principal_part then
-		local function principal_part_special_case(base, form)
+		local function generate_principal_part_forms(form)
 			local default_principal_part = rowspec.generate_default_principal_part(base, form == "+")
 			if default_principal_part then
 				-- There may be no default; e.g. if fut:- is given, the default conditional principal part is nil.
@@ -2085,7 +2146,7 @@ local function conjugate_row(base, rowslot)
 
 		local principal_part_specs = base.principal_part_specs[rowslot] or rowspec.not_defaulted and {{form = "-"}}
 			or {{form = "+"}}
-		process_specs(base, base.principal_part_forms, rowslot, principal_part_specs, principal_part_special_case)
+		process_specs(base, base.principal_part_forms, rowslot, principal_part_specs, generate_principal_part_forms)
 	end
 
 	if type(rowspec.conjugate) == "table" then
@@ -2402,6 +2463,10 @@ local function find_builtin_verb(verb)
 end
 
 
+-- Parse the "inside" of an angle bracket spec (e.g. "a/é"), storing the results into `base`. This is the actual
+-- function that parses indicator specs. It is separated from, and called from, parse_indicator_spec() in order to
+-- deal with built-in verbs, which have their own indicator specs that must be combined with the indicator spec given
+-- by the user. `is_builtin_verb` is true if we're processing a built-in verb spec, as opposed to a user-specified one.
 local function parse_inside(base, inside, is_builtin_verb)
 	local function parse_err(msg)
 		error((is_builtin_verb and "Internal error processing built-in verb spec: " or "") .. msg
@@ -2687,6 +2752,18 @@ local function create_base()
 end
 
 
+-- Parse the indicator spec of an Italian verb, e.g. '<a/é>'. `angle_bracket_spec` is the indicator spec itself,
+-- surrounded by angle brackets. `lemma` is the verb lemma specified before the indicator spec, possibly with brackets
+-- if so specified by the user, and an empty string if no lemma was given. `pagename` is the pagename, either the
+-- actual name of the page or the value of pagename= if given.
+--
+-- For example:
+-- * If the user said {{it-conj|a/é}} or {{it-conj|<a/é>}} then angle_bracket_spec == "<a/é>" and lemma == "".
+-- * If the user said {{it-conj|partecipare<a/é>}} then angle_bracket_spec == "<a/é>" and lemma == "partecipare".
+-- * If the user said {{it-conj|[[annunciare|annunciarsi|]]<ù>}} then angle_bracket_spec == "<ù>" and
+--   lemma == "[[annunciare|annunciarsi]]".
+--
+-- This function returns a `base` object (see create_base()) describing the parsed spec.
 local function parse_indicator_spec(angle_bracket_spec, lemma, pagename)
 	local base = create_base()
 	if lemma == "" then
