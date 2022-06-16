@@ -11,6 +11,9 @@ blib.getLanguageData()
 topics_templates = ["topics", "topic", "top", "c", "C", "catlangcode"]
 catlangname_templates = ["catlangname", "cln"]
 categorize_templates = ["categorize", "cat"]
+no_lang_templates = {
+  "zh-cat": "zh",
+}
 
 def process_text_on_page(index, pagetitle, text):
   global args
@@ -30,18 +33,26 @@ def process_text_on_page(index, pagetitle, text):
   parsed = blib.parse_text(text)
 
   text_to_remove = []
+
   for t in parsed.filter_templates():
     tn = tname(t)
-    if tn in topics_templates or tn in catlangname_templates or tn in categorize_templates:
-      lang = getparam(t, "1").strip()
+    if tn in topics_templates or tn in catlangname_templates or tn in categorize_templates or tn in no_lang_templates:
+      if tn in no_lang_templates:
+        first_cat_param = 1
+        has_lang_param = False
+        lang = no_lang_templates[tn]
+      else:
+        first_cat_param = 2
+        has_lang_param = True
+        lang = getparam(t, "1").strip()
       cats = []
-      for paramno in xrange(2, 30):
+      for paramno in xrange(first_cat_param, 30):
         cat = getparam(t, str(paramno)).strip()
         if cat:
           cats.append(cat)
       filtered_cats = []
       for cat in cats:
-        if tn in topics_templates:
+        if tn in topics_templates or tn in no_lang_templates:
           full_cat = "%s:%s" % (lang, cat)
         elif tn in categorize_templates:
           full_cat = cat
@@ -70,15 +81,17 @@ def process_text_on_page(index, pagetitle, text):
         # Erase all params.
         del t.params[:]
         # Put back new params.
-        t.add("1", lang)
+        if has_lang_param:
+          t.add("1", lang)
         for catind, cat in enumerate(filtered_cats):
-          t.add(str(catind + 2), cat)
+          t.add(str(catind + first_cat_param), cat)
         for pname, pval, showkey in non_numbered_params:
           t.add(pname, pval, showkey=showkey, preserve_spacing=False)
         if origt != unicode(t):
           pagemsg("Replaced %s with %s" % (origt, unicode(t)))
       else:
         text_to_remove.append(unicode(t))
+
   text = unicode(parsed)
 
   for m in re.finditer(r"\[\[(?:Category|category|CAT):(.*?)\]\]\n?", text):
