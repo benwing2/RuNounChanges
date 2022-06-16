@@ -261,6 +261,9 @@ FIXME:
 30. Instead of a qualifier for syntactic gemination, use a superscripted symbol with a tooltip, as for {{it-IPA}}.
     Do this automatically for multisyllabic terms ending in a stressed vowel, but don't do it if the verb ends up
 	non-final, as in [[andare a letto]].
+31. [[darsi]]: imp2s is wrong; it generates [[datti|dàtti]] and also [[dàtti]] (which is wrong)
+32. [[liquefare]]: forms like liquefà missing the indication of following syntactic gemination; it should be automatic
+    in multisyllabic words.
 --]=]
 
 local lang = require("Module:languages").getByCode("it")
@@ -348,8 +351,8 @@ local builtin_verbs = {
 	-- soffolcere (suffolcere, soffolgere, suffulcere): archaic, defective
 	-- molcere: poetic, defective
 	{"vincere", "ì,vìnsi,vìnto", "<<vincere>> and derivatives"},
-	{"cuocere", "cuòcio^ò,còssi,còtto.stem:cuòce:còce", "<<cuocere>> and derivatives"},
-	{"nuocere", "nòccio:nuòccio^ò,nòcqui,nociùto:nuociùto[rare].stem:nuòce:nòce.presp:nocènte",
+	{"cuocere", "ò\\cuòcio^ò,còssi,còtto.stem:cuòce:còce", "<<cuocere>> and derivatives"},
+	{"nuocere", "ò\\nòccio:nuòccio^ò,nòcqui,nociùto:nuociùto[rare].stem:nuòce:nòce.presp:nocènte",
 		"<<nuocere>>, <<rinuocere>>"},
 	{"torcere", "ò,tòrsi,tòrto", "<<torcere>> and derivatives"},
 	{"nascere", "à,nàcqui,nàto", "<<nascere>>, <<rinascere>>, <<prenascere>>"},
@@ -370,19 +373,20 @@ local builtin_verbs = {
 	-- we need to split these verbs.
 	{"adere", "à,àsi,àso", "<<radere>> and derivatives; <<suadere>> and derivatives; verbs in ''-vadere'' (<<invadere>>, <<evadere>>, <<pervadere>>); but not <<cadere>> and derivatives"},
 	-- reddere: archaic for rendere
+	{"succedere", "è,succèssi:+[more common in the sense \"to succeed (someone in an office)\"],succèsso:+[more common in the sense \"to succeed (someone in an office)\"]", "<<succedere>>"},
 	-- cedere: cèssi is archaic
-	{"cedere", "è", "<<cedere>> and derivatives"},
-	{"chiedere", "è:é,chièsi:chiési.chièsto:chiésto", "<<chiedere>> and derivatives"},
+	{"cedere", "è", "<<cedere>> and derivatives; but not <<succedere>>"},
+	{"chiedere", "è:é,chièsi:chiési,chièsto:chiésto", "<<chiedere>> and derivatives"},
 	-- riedere: variant of poetic/archaic defective redire (reddire)
 	{"siedere", "è:é", "verbs in ''-siedere'' (<<presiedere>>, <<risiedere>>)"},
 	{"ledere", "è,lési,léso", "<<ledere>>"},
 	-- credere: crési is archaic
 	{"credere", "é", "<<credere>> and derivatives (<<discredere>>, <<miscredere>>, <<ricredere>>, <<scredere>>)"},
 	-- pedere: obsolete, regular but lacking past participle
-	{"sedere", "sièdo:sèggo[literary]^sièdi.fut:+:siederò[popular]", "<<sedere>> and derivatives"},
+	{"sedere", "sièdo:sèggo[literary]^siède.fut:+:siederò[popular]", "<<sedere>> and derivatives"},
 	-- divedere: defective
 	{{term = "vedere", prefixes = {"pre"}}, "é,vìdi,vìsto:vedùto[less popular].fut:vedrò:vederò.presp:+:veggènte", "<<prevedere>>"},
-	{{term = "vedere", prefixes = {"prov", "prov"}}, "é,vìdi,vìsto:vedùto[less popular].presp:+:veggènte", "<<provvedere>> (archaic <<provedere>>) and derivatives"},
+	{{term = "vedere", prefixes = {"prov", "pro"}}, "é,vìdi,vìsto:vedùto[less popular].presp:+:veggènte", "<<provvedere>> (archaic <<provedere>>) and derivatives"},
 	-- the following per Dizionario d'ortografia e di pronunzia
 	{{term = "vedere", prefixes = {"rav"}}, "é,vìdi,vedùto.fut:vedrò:vederò.presp:+:veggènte", "<<ravvedere>>"},
 	{{term = "vedere", prefixes = {"^tra", "tras", "trans", "stra", "anti"}}, "é,vìdi,vedùto.fut:vedrò.presp:+:veggènte", "<<travedere>> and variants, <<stravedere>>, <<antivedere>>"},
@@ -391,7 +395,7 @@ local builtin_verbs = {
 	{"stridere", "ì,+,-", "<<stridere>>"},
 	-- NOTE: [[ridere]] has past historic [[risi]], with /z/ or traditional /s/, whereas the past historic of the
 	-- other verbs has only /z/; see comment above about 'adere'.
-	{"idere", "ì:ìsi:ìso", "verbs in ''-cidere'' (<<incidere>>, <<coincidere>>, <<uccidere>>, <<decidere>>, etc.; verbs in ''-lidere'' (<<elidere>>, <<collidere>>, <<allidere>>); <<ridere>> and derivatives; <<assidere>>; <<dividere>> and derivatives; but not <<stridere>>"},
+	{"idere", "ì,ìsi,ìso", "verbs in ''-cidere'' (<<incidere>>, <<coincidere>>, <<uccidere>>, <<decidere>>, etc.; verbs in ''-lidere'' (<<elidere>>, <<collidere>>, <<allidere>>); <<ridere>> and derivatives; <<assidere>>; <<dividere>> and derivatives; but not <<stridere>>"},
 	-- Treccani (under [[espandere]]) says past historic only spànsi, past participle only spànso. Hoepli says past
 	-- historic spandéi or (uncommon) spandètti or spànsi, past participle spànto or archaic spànso or spandùto.
 	-- The reality from reverso.net is somewhere in between.
@@ -399,7 +403,7 @@ local builtin_verbs = {
 	-- must precede cendere
 	{"scendere", "é:è,scési,scéso", "<<scendere>> and derivatives"},
 	{"cendere", "è,cési,céso", "<<accendere>> and derivatives, <<incendere>>"},
-	{{term = "fendere", prefixes = {"di", "de", "of"}}, "è,difési,diféso", "<<difendere>> (archaic <<defendere>>), <<offendere>> and derivatives"},
+	{{term = "fendere", prefixes = {"di", "de", "of"}}, "è,fési,féso", "<<difendere>> (archaic <<defendere>>), <<offendere>> and derivatives"},
 	{"fendere", "è,+,+:fésso", "<<fendere>>, <<rifendere>>, <<sfendere>>; but not <<offendere>>, <<difendere>> or respective derivatives"},
 	-- stridere: past participle is rare (per Hoepli), not used (per DOP and Treccani)
 	{"splendere", "è,+,-", "<<splendere>> and derivatives"},
@@ -407,7 +411,7 @@ local builtin_verbs = {
 	{"propendere", "è,+,propéso[rare]", "<<propendere>>"},
 	{"pendere", "è,pési,péso", "<<appendere>>, <<dipendere>>, <<spendere>>, <<sospendere>> and other verbs and derivatives in ''-pendere'' other than <<pendere>> and <<propendere>>"},
 	{"prendere", "è,prési,préso", "<<prendere>> and derivatives"},
-	{"rendere", "è,rési:+[literary],réso", "<<rendere>>, <<arrendere>> and <<rirendere>>"},
+	{"rendere", "è,rési:+[rare, literary],réso", "<<rendere>>, <<arrendere>> and <<rirendere>>"},
 	{"tendere", "è,tési,téso", "<<tendere>>, <<stendere>> and derivatives of each"},
 	{"vendere", "é", "<<vendere>> and derivatives"},
 	{"scindere", "ì,scìssi,scìsso", "<<scindere>> and derivatives"},
@@ -433,11 +437,11 @@ local builtin_verbs = {
 	{"figgere", "ì,ìssi,ìsso", "most derivatives of <<figgere>> (<<affiggere>>, <<crocifiggere>> and variants, <<defiggere>>, <<infiggere>>, <<prefiggere>>, <<suffiggere>>, and derivatives), with past participle in ''-fisso''"},
 	{"fliggere", "ì,flìssi,flìtto", "verbs in ''-fliggere'' (<<affliggere>>, <<confliggere>>, <<infliggere>>)"},
 	{"friggere", "ì,frìssi,frìtto", "<<friggere>> and derivatives"},
-	{"struggere", "ì,strùssi,strùtto", "<<struggere>> and derivatives"},
+	{"struggere", "ù,strùssi,strùtto", "<<struggere>> and derivatives"},
 	{"redigere", "ì,redàssi,redàtto", "<<redigere>>"},
 	-- indigere: archaic, defective
 	-- negligere: uncommon, defective
-	{"diligere", "ì,dilèssi,dilètto", "<<diligere>> and derivatives"},
+	{"diligere", "ì+,dilèssi,dilètto", "<<diligere>> and derivatives"},
 	{"rigere", "ì,rèssi,rètto", "<<erigere>>, <<dirigere>> and derivatives"},
 	{"sigere", "ì,+[uncommon],sàtto", "<<esigere>> and <<transigere>>"},
 	{"vigere", "ì,vigéi,-.only3sp", "<<vigere>>"},
@@ -462,34 +466,36 @@ local builtin_verbs = {
 	{"ungere", "ù,ùnsi,ùnto", "<<ungere>>; <<giungere>> and derivatives; <<mungere>> and derivatives; <<pungere>> and derivatives; but not <<fungere>> and derivatives (past participle is formed the same way but rare)"},
 	-- arrogere: archaic, defective
 	-- allargere: send to RFV
+	{"spargere", "à,spàrsi,spàrso", "<<spargere>> and derivatives"},
 	{{term = "ergere", prefixes = {"^", "ad", "ri"}}, "è,èrsi,èrto:#érto", "<<ergere>>, <<adergere>>, <<riergere>>; but not any other verbs in ''-ergere''"},
 	{{term = "ergere", prefixes = {"m", "sp", "t"}}, "è,èrsi,èrso", "<<mergere>> and derivatives; <<spergere>> and derivatives; <<tergere>> and derivatives"},
 	{"^vergere", "è,vergéi,-", "<<vergere>>; but not any derivatives"},
 	{"convergere", "è,convèrsi:+[rare],convèrso[rare]", "<<convergere>>"},
 	{"divergere", "è,divèrsi[rare],-", "<<divergere>>"},
-	{{term = "orgere", prefixes = {"sc", "p"}}, "ò:ó,òrsi:órsi,òrto:órto", "<<scorgere>>; <<porgere>> and derivatives"},
+	{{term = "orgere", prefixes = {"c", "p"}}, "ò:ó,òrsi:órsi,òrto:órto", "<<accorgersi>> and derivatives; <<scorgere>>; <<porgere>> and derivatives"},
 	{"sorgere", "ó:ò,sórsi:sòrsi,sórto:sòrto", "<<sorgere>>"},
-	{"urgere", "ù,-,-", "<<urgere>>"},
 	{"surgere", "ù,sùrsi,sùrto", "<<surgere>> and derivatives"},
+	{"urgere", "ù,-,-", "<<urgere>>"},
 	-- turgere: poetic, defective
 	{"scegliere", "é\\scélgo,scélsi,scélto", "<<scegliere>> and derivatives"},
 	-- svegliere: archaic form of svellere, defective
 	{{term = "ogliere", prefixes = {"c", "sci", "t"}}, "ò\\òlgo,òlsi,òlto", "<<cogliere>> and derivatives; <<sciogliere>> and derivatives; <<togliere>> and derivatives"},
 	{"adempiere", "é,adempiéi.pres2p:adempìte", "<<adempiere>>; see also <<adempire>> of the same meaning"},
-	{"empiere", "émpio,empìi,empiéi[less common],empiùto.stem:émpi", "<<empiere>>, <<riempiere>>; but not <<adempiere>>, which borrows fewer forms from <<adempire>>; see also <<empire>>, <<riempire>> of the same meaning"},
+	-- Can't use é for present spec because stem:émpi specified; we'd get present #émpo
+	{"empiere", "é\\émpio,empìi:empiéi[less common],empiùto.stem:émpi", "<<empiere>>, <<riempiere>>; but not <<adempiere>>, which borrows fewer forms from <<adempire>>; see also <<empire>>, <<riempire>> of the same meaning"},
 	{"compiere", [=[
-	ó:ò,compiéi,compìi[more common],+.pres2p:compiéte,compìte[more common].
+	ó:ò,compiéi:compìi[more common].pres2p:compiéte,compìte[more common].
 	imperf:compiévo,compìvo[more common].
 	impsub:compiéssi,compìssi[more common].
 	fut:compierò:compirò[more common]
 ]=], "<<compiere>>, <<ricompiere>>; see also <<compire>>, <<ricompire>>"},
 	-- calere: rare/literary, defective
 	{"valere", "vàlgo^à,vàlsi,vàlso.fut:varrò", "<<valere>> and derivatives"},
-	{"eccellere", "è,eccèlsi,eccèlso[rare]", "<<eccellere>>"},
+	{"eccellere", "è+,eccèlsi,eccèlso[rare]", "<<eccellere>>"},
 	{"pellere", "è,pùlsi,pùlso", "verbs in ''-pellere'' (<<espellere>>, <<impellere>>, <<propellere>>, <<repellere>>, etc."},
 	{"avellere", "è,vùlsi,vùlso", "<<avellere>>"},
-	{"svellere", "è:svèlgo,svèlsi,svèlto", "<<svellere>>, <<disvellere>>"},
-	{"vellere", "è:vèlgo,vèlsi:vùlsi[uncommon or archaic],vèlto:vùlso[uncommon or archaic]",
+	{"svellere", "è\\è:svèlgo,svèlsi,svèlto", "<<svellere>>, <<disvellere>>"},
+	{"vellere", "è\\è:vèlgo,vèlsi:vùlsi[uncommon or archaic],vèlto:vùlso[uncommon or archaic]",
 		"<<vellere>> and certain derivatives, especially <<divellere>>; note that <<evellere>> and <<convellere>> need special handling as they are defective"},
 	-- evellere, convellere: literary or archaic, defective
 	-- tollere: archaic, unclear conjugation
@@ -497,8 +503,12 @@ local builtin_verbs = {
 	-- colere: archaic, defective
 	{"dolere", "dòlgo^duòle,dòlsi,+.fut:dorrò", "<<dolere>> and derivatives"},
 	{"solere", "sòglio^suòle,soléi[rare],sòlito.pres1p:sogliàmo.fut:-.imp:-.presp:-", "<<solere>>"},
-	{"volere", "-,vòlli.presrow:vòglio,vuòi,vuòle,vogliàmo,voléte,vògliono.fut:vorrò",
-		"<<volere>> and derivatives"},
+	{"volere", [=[
+		-,vòlli.
+		presrow:vòglio,vuòi,vuòle,vogliàmo,voléte,vògliono.
+		fut:vorrò.
+		imp:vògli,vogliàte
+]=], "<<volere>> and derivatives"},
 	{"gemere", "è", "<<gemere>> and derivatives"},
 	{"fremere", "è", "<<fremere>>"},
 	-- premere, spremere: regular; past historic prèssi and past participle prèsso archaic
@@ -506,7 +516,7 @@ local builtin_verbs = {
 	{"temere", "è:#é", "<<temere>> and derivatives"},
 	{"redimere", "ì,redènsi,redènto", "<<redimere>>"},
 	{"perplimere", "ì,+,perplèsso:perplimùto[rare]", "<<perplimere>>"},
-	{"dirimere", "ì,+[rare],-", "<<dirimere>>"},
+	{"dirimere", "ì+,+[rare],-", "<<dirimere>>"},
 	{"primere", "ì,prèssi,prèsso", "verbs in ''-primere'' (<<comprimere>>, <<deprimere>>, <<esprimere>>, <<imprimere>>, etc."},
 	{"esimere", "ì,+,-", "<<esimere>>"},
 	-- presummere: obsolete, unclear conjugation
@@ -517,13 +527,15 @@ local builtin_verbs = {
 	{"tenere", "tèngo^tiène,ténni.fut:terrò", "<<tenere>> and derivatives"},
 	{"spegnere", "é:#è\\spéngo:#spèngo,spénsi:#spènsi,spénto:#spènto", "<<spegnere>> and derivatives"},
 	-- accignere, scignere, pignere and derivatives, strignere and derivatives, ugnere: all obsolete, unclear conjugation
-	{"cernere", "è,+,cernìto[uncommon]", "<<cernere>> and derivatives"},
+	{"cernere", "è,+,cernìto[uncommon]:cernùto[rare]", "<<cernere>> and derivatives"},
+	-- Hoepli specifically says that [[sapere]] lacks a present participle, hence [[sapiente]] isn't it
 	{"sapere", [=[
 		-,sèppi.
 		presrow:sò*,sài,sà*,sappiàmo,sapéte,sànno.
 		fut:saprò.
 		sub:sàppia.
-		improw:sàppi:sappiàte
+		improw:sàppi,sappiàte.
+		presp:-
 ]=], "<<sapere>> and derivatives"},
 	{"rompere", "ó,rùppi,rótto", "<<rompere>> and derivatives"},
 	-- scerpere: archaic/obsolete, unclear conjugation
@@ -543,7 +555,7 @@ local builtin_verbs = {
 		fut:sarò.
 		sub:sìa.
 		impsub:fóssi.
-		improw:sìi:siàte.
+		improw:sìi,siàte.
 		presp:essènte[rare]
 ]=], "<<essere>>, <<riessere>>"},
 	{"tessere", "è,tesséi,+", "<<tessere>> and derivatives"},
@@ -566,8 +578,8 @@ local builtin_verbs = {
 	{"sistere", "ì,+,sistìto", "verbs in ''-sistere'' (<<consistere>>, <<esistere>>, <<insistere>>, <<resistere>>, etc.)"},
 	{"battere", "à", "<<battere>> and derivatives"},
 	{"flettere", "è,flettéi:flèssi[less common],flèsso", "<<flettere>> and derivatives; <<riflettere>> needs an override to handle differences in the past participle"},
-	{"mettere", "é,mìsi,mìso", "<<mettere>> and derivatives"},
-	{"nettere", "é:#è,+,nésso:#nèsso", "verbs in ''-nettere'' (<<annettere>>, <<connettere>> and derivatives)"},
+	{"mettere", "é,mìsi,mésso", "<<mettere>> and derivatives"},
+	{"nettere", "é:#è,+:néssi[less common]:#nèssi[less common],nésso:#nèsso", "verbs in ''-nettere'' (<<annettere>>, <<connettere>> and derivatives)"},
 	{"fottere", "ó,fottéi", "<<fottere>> and derivatives"},
 	-- Hoepli says [[incutere]] has past historic ''incutéi'' or ''incùssi''; DOP says "[[incussi]] (non [[incutei]])";
 	-- Treccani agrees with DOP, saying [[incutere]] is conjugated like [[discutere]]
@@ -587,14 +599,14 @@ local builtin_verbs = {
 		presrow:hò*,hài,hà*,abbiàmo,avéte,hànno.
 		fut:avrò.
 		sub:àbbia.
-		imp:àbbi.
+		imp:àbbi,abbiàte.
 		presp:avènte,abbiènte
 ]=], "<<avere>> (but not derivative <<riavere>>)"},
 	-- bevere: archaic; handled under bere below
 	{"ricevere", "é", "<<ricevere>> and derivatives"},
 	{"scrivere", "ì,scrìssi,scrìtto", "<<scrivere>> and derivatives"},
-	{{term = "vivere", prefixes = {"con", "soprav"}}, "ì:vìssi:vissùto.fut:vivrò:+", "<<convivere>>, <<sopravvivere>>"},
-	{"vivere", "ì:vìssi:vissùto.fut:vivrò", "<<vivere>>, <<rivivere>>"},
+	{{term = "vivere", prefixes = {"con", "soprav"}}, "ì,vìssi,vissùto.fut:vivrò:+", "<<convivere>>, <<sopravvivere>>"},
+	{"vivere", "ì,vìssi,vissùto.fut:vivrò", "<<vivere>>, <<rivivere>>"},
 	{"sciolvere", "ò,+:sciòlsi,sciòlto", "<<sciolvere>>, <<asciolvere>>"},
 	{"^solvere", "ò,+,solùto", "<<solvere>>; but not any derivatives"},
 	{"solvere", "ò,sòlsi:+[rare],sòlto", "verbs in ''-solvere'' (<<assolvere>>, <<dissolvere>>, <<risolvere>>, etc.); but not <<solvere>>"},
@@ -697,11 +709,11 @@ local builtin_verbs = {
 		imp:fà*:fài:fà'
 ]=], "<<fare>> and derivatives; but not <<disfare>>, <<soddisfare>> or <<liquefare>>"},
 	{"trarre", "tràggo,tràssi,tràtto.stem:tràe"},
-	-- archaic variant of trarre, with some different present tense (hence conditional/imperative) forms
+	-- archaic variant of trarre, with some different present tense (hence subjunctive/imperative) forms
 	{"traggere", "tràggo^tràgge,tràssi,tràtto.pres1p:traggiàmo.fut:trarrò.stem:tràe"},
-	{"bere", "é,bévvi:bevétti:bevéi[rare].fut:berrò.stem:béve",
+	{{term = "bere", prefixes = {"^", "ri", "stra"}}, "bévo,bévvi:bevétti:bevéi[rare].fut:berrò.stem:béve",
 		"<<bere>>, <<strabere>>, <<ribere>>; but not <<ebere||to weaken>> or <<iubere||to command, to order>>"},
-	{"bevere", "é,bévvi:bevétti:bevéi[rare]", "<<bevere>> and derivatives (archaic variant of <<bere>>)"},
+	{"bevere", "é,bévvi:bevétti:bevéi[rare].fut:berrò", "<<bevere>> and derivatives (archaic variant of <<bere>>)"},
 	-- benedire (strabenedire, ribenedire), maledire (stramaledire, rimaledire)
 	{{term = "dire", prefixes = {"bene", "male"}}, "+,dìssi:dìi[popular],détto.stem:dìce.pres2p:dìte.imperf:+:dìvo[popular]", "<<benedire>>, <<maledire>> and derivatives"},
 	-- dire, ridire
@@ -711,11 +723,11 @@ local builtin_verbs = {
 	-- dicere: archaic; not included due to multiple variants
 	{"porre", "ó\\póngo,pósi,pósto:pòsto.stem:póne"},
 	-- archaic variant of porre
-	{"ponere", "ó\\póngo,pósi,pósto:pòsto"},
+	{"ponere", "ó\\póngo,pósi,pósto:pòsto.fut:porrò"},
 	-- condurre, etc.
 	{"durre", "+,dùssi,dótto.stem:dùce"},
 	-- archaic variant of -durre
-	{"ducere", "+,dùssi,dótto"},
+	{"ducere", "ù,dùssi,dótto.fut:durrò"},
 }
 
 -- Used to create the accelerator entries in all_verb_slots.
@@ -1109,7 +1121,7 @@ local function process_specs(base, destforms, slot, specs, generate_forms)
 					end
 					local unaccented_form
 					if preserve_monosyllabic_accent and rfind(form, "^" .. NMAV .. "*" .. AV .. "$")  then
-						-- final accented vowel without preceding vowel, and "*" before form; add PRESERVE_ACCENT
+						-- final accented vowel without preceding vowel, and "!" after form; add PRESERVE_ACCENT
 						form = PRESERVE_ACCENT .. form
 					end
 					if postspec == "*" then
@@ -1332,6 +1344,9 @@ local function do_root_stressed_inf(base, specs)
 			error("Spec '-' not allowed as root-stressed infinitive spec")
 		end
 		if spec == "+" then
+			if from_defaulted_pres then
+				error("Can't use + for present tense with root-stressed infinitive, would trigger infinite loop")
+			end
 			local rre_vowel = rmatch(base.verb.verb, "([aiu])rre$")
 			if rre_vowel then
 				-- do_root_stressed_inf is used for verbs in -ere and -rre. If the root-stressed vowel isn't explicitly
@@ -1389,7 +1404,8 @@ local function add_infinitive(base, rowslot)
 	-- by add_present_indic(), so we have to do this before conjugating the present indicative.
 	if base.principal_part_specs.root_stressed_inf then
 		do_root_stressed_inf(base, base.principal_part_specs.root_stressed_inf)
-	else
+	end
+	if not base.principal_part_specs.root_stressed_inf or base.props.opt_root_stressed_inf then
 		do_ending_stressed_inf(base)
 	end
 end
@@ -1415,6 +1431,7 @@ local function generate_pres_forms(base, form)
 	elseif is_single_vowel_spec(form) then
 		check_not_null(base, base.verb.pres, form, principal_part_desc)
 		return iut.map_forms(base.verb.pres, function(defform)
+			defform = remove_accents(defform) -- in case we specified 'stem:...' with an accent
 			local pres = rmatch(defform, "^(.*)o$")
 			if not pres then
 				error("Internal error: Default present '" .. defform .. "' doesn't end in -o")
@@ -1458,6 +1475,7 @@ local function generate_pres3s_forms(base, form)
 	elseif is_single_vowel_spec(form) then
 		check_not_null(base, base.verb.pres3s, form, principal_part_desc)
 		return iut.map_forms(base.verb.pres3s, function(defform)
+			defform = remove_accents(defform) -- in case we specified 'stem:...' with an accent
 			local pres3s, final_vowel = rmatch(defform, "^(.*)([ae])$")
 			if not pres3s then
 				error("Internal error: Default third-person singular present '" .. defform .. "' doesn't end in -a or -e")
@@ -2439,7 +2457,35 @@ local function match_spec_against_verb(spec, verb)
 end
 
 
--- Find and return the prefix, main verb and conj spec for a built-in verb.
+-- Subfunction of find_builtin_verb(). Match a single prefix + spec (where the prefix may begin with ^ to anchor
+-- against the beginning, otherwise anchored only at the end) against `verb`. Return the prefix and main verb.
+local function match_prefixed_spec_against_verb(specprefix, spec, verb)
+	if specprefix:find("^%^") then
+		-- must match exactly
+		specprefix = specprefix:gsub("^%^", "")
+		if specprefix == "" then
+			-- We can't use the second branch of the if-else statement because an empty () returns the current position
+			-- in rmatch().
+			local main_verb = rmatch(verb, "^(" .. spec .. ")$")
+			if main_verb then
+				return "", main_verb
+			end
+		else
+			local prefix, main_verb = rmatch(verb, "^(" .. specprefix .. ")(" .. spec .. ")$")
+			if prefix then
+				return prefix, main_verb
+			end
+		end
+	else
+		local prefix, main_verb = rmatch(verb, "^(.*" .. specprefix .. ")(" .. spec .. ")$")
+		if prefix then
+			return prefix, main_verb
+		end
+	end
+end
+
+
+-- Find and return the prefix, main verb and conj spec for the built-in verb matching user-specified verb `verb`.
 local function find_builtin_verb(verb)
 	for _, builtin_verb in ipairs(builtin_verbs) do
 		local spec, conj, desc = unpack(builtin_verb)
@@ -2453,7 +2499,7 @@ local function find_builtin_verb(verb)
 			-- Of the form {term = "ergere", prefixes = {"^", "ad", "ri"}}. Note that the prefixes not preceded by ^
 			-- can have further prefixes before them.
 			for _, spec_prefix in ipairs(spec.prefixes) do
-				local prefix, main_verb = match_spec_against_verb(spec_prefix .. spec.term, verb)
+				local prefix, main_verb = match_prefixed_spec_against_verb(spec_prefix, spec.term, verb)
 				if prefix then
 					return prefix, main_verb, conj
 				end
@@ -2524,13 +2570,17 @@ local function parse_inside(base, inside, is_builtin_verb)
 		end
 	end
 
+	local function is_root_stressed(separator)
+		return separator == "\\" or separator == "\\/"
+	end
+
 	local segments = iut.parse_balanced_segment_run(inside, "[", "]")
 	local dot_separated_groups = split_alternating_runs_and_strip_spaces(segments, "%.")
 	for i, dot_separated_group in ipairs(dot_separated_groups) do
 		local first_element = dot_separated_group[1]
 
 		if i == 1 then -- first dot-separated group is PRES,PHIS,PP or PRES^PRES3S,PHIS,PP or similar.
-			local comma_separated_groups = split_alternating_runs_and_strip_spaces(dot_separated_group, "[,\\/]",
+			local comma_separated_groups = split_alternating_runs_and_strip_spaces(dot_separated_group, "[,\\/]+",
 				"preserve splitchar")
 			local presind = 1
 			local first_separator = #comma_separated_groups > 1 and comma_separated_groups[2][1]
@@ -2539,11 +2589,11 @@ local function parse_inside(base, inside, is_builtin_verb)
 					presind = 3
 					-- Fetch root-stressed infinitive, if given.
 					local specs = fetch_specs(comma_separated_groups[1], "allow blank")
-					if first_separator == "\\" then
+					if is_root_stressed(first_separator) then
 						-- For verbs like [[scegliersi]] and [[proporsi]], allow either 'é\scélgo' or '\é\scélgo'
 						-- and similarly either 'ó+\propóngo' or '\ó+\propóngo'.
 						if specs == nil then
-							if #comma_separated_groups > 3 and comma_separated_groups[4][1] == "\\" then
+							if #comma_separated_groups > 3 and is_root_stressed(comma_separated_groups[4][1]) then
 								base.principal_part_specs.root_stressed_inf = fetch_specs(comma_separated_groups[3])
 								presind = 5
 							else
@@ -2552,11 +2602,16 @@ local function parse_inside(base, inside, is_builtin_verb)
 						else
 							base.principal_part_specs.root_stressed_inf = specs
 						end
+						if first_separator == "\\/" then
+							base.props.opt_root_stressed_inf = true
+						end
 					elseif specs ~= nil then
 						local errpref = is_builtin_verb and "With built-in verb" or "With reflexive verb"
 						parse_err(errpref .. ", can't specify anything before initial slash, but saw '"
 							.. table.concat(comma_separated_groups[1]))
 					end
+				elseif not is_builtin_verb and rfind(base.verb.raw_verb, "er$") then
+					parse_err("With reflexive -ere verb, must precede present spec with / or \\ to indicate whether infinitive is root-stressed")
 				end
 				if not is_builtin_verb then
 					base.principal_part_specs.aux = {{form = "èssere"}}
@@ -2598,12 +2653,15 @@ local function parse_inside(base, inside, is_builtin_verb)
 				end
 
 				-- Fetch root-stressed infinitive, if given.
-				if first_separator == "\\" then
-					if #comma_separated_groups > 3 and comma_separated_groups[4][1] == "\\" then
+				if is_root_stressed(first_separator) then
+					if #comma_separated_groups > 3 and is_root_stressed(comma_separated_groups[4][1]) then
 						base.principal_part_specs.root_stressed_inf = fetch_specs(comma_separated_groups[3])
 						presind = 5
 					else
 						base.principal_part_specs.root_stressed_inf = {{form = "+"}}
+					end
+					if first_separator == "\\/" then
+						base.props.opt_root_stressed_inf = true
 					end
 				end
 			end
@@ -2982,7 +3040,7 @@ local function add_categories_and_annotation(alternant_multiword_spec, base, mul
 		insert_cat("syncopated verbs")
 	elseif base.principal_part_specs.root_stressed_inf then
 		insert_ann("conj", "root-stressed -ere")
-		insert_cat("root-stressed verbs")
+		insert_cat("verbs with root-stressed infinitive")
 		insert_cat("verbs ending in -ere")
 	else
 		local ending = base.conj_vowel == "à" and "are" or base.conj_vowel == "é" and "ere" or "ire"
@@ -3262,7 +3320,11 @@ local basic_table = [=[
 local function make_table(alternant_multiword_spec)
 	local forms = alternant_multiword_spec.forms
 
-	forms.title = m_links.full_link({ lang = lang, term = alternant_multiword_spec.lemmas[1].form }, "term")
+	local lemma_links = {}
+	for _, lemma in ipairs(alternant_multiword_spec.lemmas) do
+		table.insert(lemma_links, m_links.full_link({ lang = lang, term = lemma.form }, "term"))
+	end
+	forms.title = table.concat(lemma_links, " or ")
 
 	if alternant_multiword_spec.annotation ~= "" then
 		forms.title = forms.title .. " (" .. alternant_multiword_spec.annotation .. ")"
@@ -3285,7 +3347,8 @@ function export.do_generate_forms(parent_args, from_headword, def)
 		[1] = {required = true, default = def or "mettere<a\\é,mìsi,mésso>"},
 		["noautolinktext"] = {type = "boolean"},
 		["noautolinkverb"] = {type = "boolean"},
-		["pagename"] = {} -- for testing
+		["pagename"] = {}, -- for testing
+		["json"] = {type = "boolean"}, -- for bot use
 	}
 
 	if from_headword then
@@ -3347,6 +3410,9 @@ function export.do_generate_forms(parent_args, from_headword, def)
 	compute_auxiliary(alternant_multiword_spec)
 	convert_accented_links(alternant_multiword_spec)
 	compute_categories_and_annotation(alternant_multiword_spec, from_headword)
+	if args.json then
+		return require("Module:JSON").toJSON(alternant_multiword_spec)
+	end
 	return alternant_multiword_spec
 end
 
@@ -3356,6 +3422,9 @@ end
 function export.show(frame)
 	local parent_args = frame:getParent().args
 	local alternant_multiword_spec = export.do_generate_forms(parent_args)
+	if type(alternant_multiword_spec) == "string" then
+		return alternant_multiword_spec
+	end
 	show_forms(alternant_multiword_spec)
 	return make_table(alternant_multiword_spec) ..
 		require("Module:utilities").format_categories(alternant_multiword_spec.categories, lang, nil, nil, force_cat)
