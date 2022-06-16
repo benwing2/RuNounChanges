@@ -1983,7 +1983,7 @@ def split_trailing_separator_and_categories(sectext):
     sectail = ""
 
   # Split off categories at end
-  mm = re.match(r"^(.*?\n)(\n*((?:\[\[Category:[^\[\]\n]+\]\]|\{\{(?:c|C|cat|cln|topic|topics|categorize|catlangname|catlangcode)\|[^{}\n]*\}\})\n*)*)$",
+  mm = re.match(r"^(.*?\n)(\n*((?:\[\[Category:[^\[\]\n]+\]\]|\{\{(?:c|C|cat|cln|top|topic|topics|categorize|catlangname|catlangcode)\|[^{}\n]*\}\})\n*)*)$",
       secbody, re.S)
   if mm:
     secbody, secbodytail = mm.group(1), mm.group(2)
@@ -2095,7 +2095,13 @@ def compare_new_and_old_template_forms(origt, newt, generate_old_forms, generate
       if not show_all:
         return False
       continue
-    if new_forms[form] != old_forms[form]:
+    nforms = new_forms[form]
+    if type(nforms) is list:
+      nforms = set(nforms)
+    oforms = old_forms[form]
+    if type(oforms) is list:
+      oforms = set(oforms)
+    if nforms != oforms:
       pagemsg("WARNING: for original %s and new %s, form %s=%s in old forms but =%s in new forms" % (
         origt, newt, form, old_forms[form], new_forms[form]))
       bad = True
