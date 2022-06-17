@@ -631,7 +631,7 @@ local function get_form(forms)
 			trentry, trnotes = m_table_tools.get_notes(tr)
 		end
 		ruentry = m_links.remove_links(ruentry)
-		m_table.insertIfNot(canon_forms, {ruentry, trentry}, "deepCompare")
+		m_table.insertIfNot(canon_forms, {ruentry, trentry}, nil, "deepCompare")
 	end
 	return com.concat_forms(canon_forms)
 end
