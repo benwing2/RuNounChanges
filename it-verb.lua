@@ -126,15 +126,16 @@ EXAMPLES OF CONJUGATION:
 {{it-conj|dire<a/+,dìssi,détto.
   stem:dìce.
   pres2p:dìte.
-  imp:dì':dì*+
+  imp:dì':dì*!
 >}}
 
-{{it-conj|dare<a/dò*:dò*+,dièdi:dètti,dàto.
-  presrow:dò*:dò*+,dài,dà*+,diàmo,dàte,dànno.
-  sub:dìa.
+{{it-conj|dare<a/-,dièdi:diédi:détti.
+  phisstem:dé.
+  presrow:dò*:dò*![less common],dài,dà*!,diàmo,dàte,dànno.
   fut:darò.
+  sub:dìa.
   impsub:déssi.
-  imp:dài:dà':dà*+
+ imp:dài:dà':dà*!
 >}}
 
 {{it-conj|dovere<a:e[as an auxiliary, with main verbs taking ''essere'']/dèvo:dévo:dèbbo:débbo^dève:déve.
@@ -250,9 +251,9 @@ FIXME:
 21. Instead of * before, use ! after so that * before can be used for reconstructed terms. (DONE)
 22. When handling built-in verbs, automatically add + after vowel in cases like comporre. (DONE; HANDLED AUTOMATICALLY)
 23. When handling built-in verbs, make sure we correctly handle root-stressed infinitives. (DONE)
-24. When handling built-in verbs, make sure explicit * afterwards is handled as if automatically there when a
+24. When handling built-in verbs, make sure explicit ! afterwards is handled as if automatically there when a
     prefix is added, and make sure final accent is handled correct when a prefix is added. In both cases, verify
-	both sfare and rifare, sdare and ridare. (DONE)
+	both sfare and rifare, sdarsi and ridare. (DONE)
 25. When handling built-in verbs, make sure we handle prefixes correctly w.r.t. negative imperatives. (DONE)
 26. Support ref: in footnotes. (DONE)
 27. Finish built-in -ire verbs.
@@ -261,9 +262,11 @@ FIXME:
 30. Instead of a qualifier for syntactic gemination, use a superscripted symbol with a tooltip, as for {{it-IPA}}.
     Do this automatically for multisyllabic terms ending in a stressed vowel, but don't do it if the verb ends up
 	non-final, as in [[andare a letto]].
-31. [[darsi]]: imp2s is wrong; it generates [[datti|dàtti]] and also [[dàtti]] (which is wrong)
+31. [[darsi]]: imp2s is wrong; it generates [[datti|dàtti]] and also [[dàtti]] (which is wrong) (DONE)
 32. [[liquefare]]: forms like liquefà missing the indication of following syntactic gemination; it should be automatic
     in multisyllabic words.
+33. [[ridare]] has ridò with a syntactic gemination footnote, but liquefà doesn't have it (see #32). It should be a
+    tooltip.
 --]=]
 
 local lang = require("Module:languages").getByCode("it")
@@ -322,18 +325,20 @@ local builtin_verbs = {
 	-- NOTE: specifying détti autogenerates #dètti
 	{"dare", [=[
 		-,dièdi:diédi:détti.
+		phisstem:dé.
 		presrow:dò*:dò*![less common],dài,dà*!,diàmo,dàte,dànno.
-		sub:dìa.
 		fut:darò.
+		sub:dìa.
 		impsub:déssi.
 		imp:dài:dà':dà*!
-]=], "<<dare>> and derivatives (<<addare>>, <<ridare>>, <<sdare>>); but not <<andare>> or derivatives"},
+]=], "<<dare>> and derivatives (<<addare>>, <<ridare>>, <<sdarsi>>); but not <<andare>> or derivatives"},
 	-- NOTE: specifying stétti autogenerates #stètti
 	{"stare", [=[
 		-,stétti:stièdi[popular or Tuscan]:stiédi[popular or Tuscan].
+		phisstem:sté.
 		presrow:stò*,stài,stà*,stiàmo,stàte,stànno.
-		sub:stìa.
 		fut:starò.
+		sub:stìa.
 		impsub:stéssi.
 		imp:stài:stà':stà*
 ]=], "<<stare>> and derivatives (<<ristare>>, <<soprastare>>, <<sottostare>>); not <<sovrastare>>"},
@@ -689,7 +694,7 @@ local builtin_verbs = {
 	{"disfare", [=[
 		-,disféci,disfàtto.
 		stem:disfàce.
-		presrow:disfàccio:dìsfo:disfò[less common],dìsfi:disfài[less common],dìsfa:disfà[less common],disfacciàmo:disfiàmo[common but proscribed],disfàte,dìsfano:disfànno[less common].
+		presrow:disfàccio:dìsfo:disfò[literary, archaic or regional],dìsfi:disfài[less common],dìsfa:disfà[less common],disfacciàmo:disfiàmo[common but proscribed],disfàte,dìsfano:disfànno[less common].
 		sub:dìsfi:disfàccia[less common].
 		fut:disfarò:disferò[informal].
 		imp:fà*:fài:fà'
@@ -697,14 +702,14 @@ local builtin_verbs = {
 	{"liquefare", [=[
 		-,liqueféci,liquefàtto.
 		stem:liquefàce.
-		presrow:liquefàccio:liquefò[less common]:lìquefo[proscribed],liquefài,liquefà:lìquefa[proscribed],liquefacciàmo,liquefàte,liquefànno:lìquefano[proscribed].
+		presrow:liquefàccio:liquefò[literary, archaic or regional]:lìquefo[proscribed],liquefài,liquefà:lìquefa[proscribed],liquefacciàmo,liquefàte,liquefànno:lìquefano[proscribed].
 		sub:liquefàccia.
 		imp:liquefà:liquefài:liquefà'
 ]=], "<<liquefare>>"},
 	{"fare", [=[
 		-,féci,fàtto.
 		stem:fàce.
-		presrow:fàccio:fò*[less common],fài,fà*,facciàmo,fàte,fànno.
+		presrow:fàccio:fò*[literary, archaic or regional],fài,fà*,facciàmo,fàte,fànno.
 		sub:fàccia.
 		imp:fà*:fài:fà'
 ]=], "<<fare>> and derivatives; but not <<disfare>>, <<soddisfare>> or <<liquefare>>"},
@@ -833,20 +838,35 @@ local function add_links(form, multiword_only)
 end
 
 
+-- Add prefix to form, removing the PRESERVE_ACCENT notation if present (as for [[ridare]], [[sdarsi]]).
+local function add_prefix_to_form(prefix, form)
+	if prefix ~= "" then
+		return prefix .. rsub(form, PRESERVE_ACCENT, "")
+	else
+		return form
+	end
+end
+
+
+-- Add suffix to form, removing the PRESERVE_ACCENT notation if present (as for [[datti]] of [[dare]]).
+local function add_suffix_to_form(form, suffix)
+	if suffix ~= "" then
+		return rsub(form, PRESERVE_ACCENT, "") .. suffix
+	else
+		return form
+	end
+end
+
+
 local function convert_accented_links_in_text(text)
 	local need_preserve_accent_note = false
 	local retval = rsub(text, "%[%[([^%[%]|]+)%]%]",
 		function(linktext)
-			if rfind(linktext, "^.*" .. MAV .. ".*" .. AV .. "$") then
-				-- Final accented vowel with preceding vowel; keep accent, and remove redundant PRESERVE_ACCENT char.
-				-- The redundant character happens in a case like [[ridare]] leveraging built-in [[dare]], where the
-				-- spec for [[dare]] in the third-singular present indicative says "dà*!", where ! indicates that the
-				-- accent should be preserved. This maps to "\uFFF0dà", which in turn becomes "ri\uFFF0dà" when the
-				-- prefix is added, with a redundant PRESERVE_ACCENT character in the middle.
-				linktext = rsub(linktext, PRESERVE_ACCENT, "")
-			elseif rfind(linktext, PRESERVE_ACCENT) then
+			if rfind(linktext, PRESERVE_ACCENT) then
 				linktext = rsub(linktext, PRESERVE_ACCENT, "")
 				need_preserve_accent_note = true
+			elseif rfind(linktext, "^.*" .. MAV .. ".*" .. AV .. "$") then
+				-- Final accented vowel with preceding vowel; keep accent.
 			else
 				local unaccented = remove_accents(linktext)
 				if unaccented == linktext then
@@ -864,32 +884,13 @@ end
 -- Convert links around accented words to two-part links without extra accents. Remove PRESERVE_ACCENT characters,
 -- and if necessary, insert a footnote indicating that a written accent on a monosyllabic verb is preserved.
 local function convert_accented_links(alternant_multiword_spec)
-	-- Convert accented forms to two-part forms and remove PRESERVE_ACCENT characters.
 	for slot, forms in pairs(alternant_multiword_spec.forms) do
-		local saw_preserve_accent = false
+		-- Side-effect the forms to save memory.
 		for _, form in ipairs(forms) do
-			if rfind(form.form, PRESERVE_ACCENT) then
-				saw_preserve_accent = true
-				break
-			end
-		end
-		if not saw_preserve_accent then
-			-- If we didn't see a PRESERVE_ACCENT marker, we can just side-effect the forms to save memory.
-			for _, form in ipairs(forms) do
-				form.form = convert_accented_links_in_text(form.form)
-			end
-		else
-			-- Otherwise, we might need to add a footnote and/or merge two forms into one. For example, [[dare]] for
-			-- the first-person singular present indicative specifies "dò*,dò*!". The first "dò*" means written [[do]]
-			-- pronounced "dò" with syntactic gemination; the second "dò*!" means written [[dò]] pronounced "dò" with
-			-- syntactic gemination. In a prefixed variant like [[ridare]], the written accent is always preserved;
-			-- both forms map to written [[ridò]], and need to be deduplicated.
-			alternant_multiword_spec.forms[slot] = nil
-			for _, form in ipairs(forms) do
-				local new_form, need_preserve_accent_note = convert_accented_links_in_text(form.form)
-				iut.insert_form(alternant_multiword_spec.forms, slot, iut.combine_form_and_footnotes(
-					form, need_preserve_accent_note and "[with written accent on monosyllabic verb]" or nil,
-					new_form))
+			local new_form, need_preserve_accent_note = convert_accented_links_in_text(form.form)
+			form.form = new_form
+			if need_preserve_accent_note then
+				form.footnotes = iut.combine_footnotes(form.footnotes, {"[with written accent on monosyllabic verb]"})
 			end
 		end
 	end
@@ -1115,11 +1116,11 @@ local function process_specs(base, destforms, slot, specs, generate_forms)
 						qualifiers = iut.combine_footnotes({"[traditional]"}, qualifiers)
 						prespec = rsub(prespec, "#", "")
 					end
+					local preserve_monosyllabic_accent
 					if postspec:find("!") then
 						preserve_monosyllabic_accent = true
 						postspec = rsub(postspec, "!", "")
 					end
-					local unaccented_form
 					if preserve_monosyllabic_accent and rfind(form, "^" .. NMAV .. "*" .. AV .. "$")  then
 						-- final accented vowel without preceding vowel, and "!" after form; add PRESERVE_ACCENT
 						form = PRESERVE_ACCENT .. form
@@ -1158,12 +1159,19 @@ end
 local function add_default_verb_forms(base, from_headword)
 	local ret = base.verb
 
+	-- Process 'phisstem:...' spec.
+	if base.principal_part_specs.explicit_phis_stem_spec then
+		-- Put the explicit past historic stem in ret.phisstem (i.e. base.verb.phisstem).
+		process_specs(base, ret, "phisstem", base.principal_part_specs.explicit_phis_stem_spec, iut.identity)
+	end
+
 	ret.default_stem, ret.default_ending_vowel = rmatch(base.verb.verb, "^(.-)([aeir])re$")
 	if not ret.default_stem then
 		error("Unrecognized verb '" .. base.verb.verb .. "', doesn't end in -are, -ere, -ire or -rre")
 	end
 	base.props.syncopated = base.props.rre or ret.default_ending_vowel == "r"
 
+	-- Process 'stem:...' spec.
 	local ending_vowel
 	if base.principal_part_specs.explicit_stem_spec then
 		local function generate_explicit_stem_forms(form)
@@ -1176,9 +1184,9 @@ local function add_default_verb_forms(base, from_headword)
 				end
 			else
 				base.explicit_non_default_stem_spec = true
-				stem, this_ending_vowel = rmatch(form, "^(.*)([aei])$")
+				stem, this_ending_vowel = rmatch(form, "^(.*)([aeiàéì])$")
 				if not stem then
-					error("Unrecognized stem '" .. form .. "', should end in -a, -e or -i")
+					error("Unrecognized stem '" .. form .. "', should end in -a, -e, -i, -à, -é or -ì")
 				end
 			end
 			if ending_vowel and ending_vowel ~= this_ending_vowel then
@@ -1203,7 +1211,11 @@ local function add_default_verb_forms(base, from_headword)
 		ending_vowel = ret.default_ending_vowel
 	end
 
-	base.conj_vowel = ending_vowel == "a" and "à" or ending_vowel == "e" and "é" or "ì"
+	base.conj_vowel =
+		ending_vowel == "a" and "à" or
+		ending_vowel == "e" and "é" or
+		ending_vowel == "i" and "ì" or
+		ending_vowel
 
 	if base.props.syncopated and not base.principal_part_specs.explicit_stem_spec then
 		-- Can't generate defaults for verbs in -rre; currently we only can get here if from_headword.
@@ -1639,16 +1651,18 @@ local function add_imperative_reflexive_clitics(base, rowslot)
 		form = rsub(form, "'$", "") -- dà', fà', etc.
 		if rfind(form, AV .. "$") then -- final stressed vowel; implement syntactic gemination
 			if rfind(s2suf, "^gli") then
-				return {form .. s2suf}
+				return {add_suffix_to_form(form, s2suf)}
 			else
-				return {form .. usub(s2suf, 1, 1) .. s2suf}
+				return {add_suffix_to_form(form, usub(s2suf, 1, 1) .. s2suf)}
 			end
 		elseif rfind(form, "ài$") then
 			return {}
 		else
-			return {form .. s2suf}
+			return {add_suffix_to_form(form, s2suf)}
 		end
 	end)
+	-- For the following, we shouldn't need to use add_suffix_to_form(), which handles PRESERVE_ACCENT, because
+	-- PRESERVE_ACCENT occurs only with monosyllabic forms, and the 1p/2p forms are never monosyllabic.
 	for _, persnum in ipairs({"1p", "2p"}) do
 		local suf = get_unlinked_clitic_suffix(base, persnum)
 		base.forms[rowslot .. persnum] = iut.map_forms(base.forms[rowslot .. persnum], function(form)
@@ -1674,7 +1688,7 @@ local function add_negative_imperative(base)
 			-- We need to add the prefix explicitly here because it has to go inside the [[non]]. Accordingly, we
 			-- set dont_add_prefix in the row_conjugations entry for negative imperatives so we don't get the prefix
 			-- added again at the end.
-			return "[[non]] [[" .. (base.verb.prefix or "") .. form .. "]]"
+			return "[[non]] [[" .. add_prefix_to_form(base.verb.prefix or "", form) .. "]]"
 		end))
 	end
 end
@@ -1752,8 +1766,12 @@ local function add_past_historic(base, rowslot)
 			pref = rmatch(form.form, "^(.*)i$")
 			if pref then
 				add_phis(pref, "i", {}, "e", {}, {}, "ero")
-				add_phis(base.verb.stem, {}, base.conj_vowel .. "sti", {}, base.conj_vowel .. "mmo",
-					base.conj_vowel .. "ste", {})
+				if base.verb.phisstem then
+					add_phis(base.verb.phisstem, {}, "sti", {}, "mmo", "ste", {})
+				else
+					add_phis(base.verb.stem, {}, base.conj_vowel .. "sti", {}, base.conj_vowel .. "mmo",
+						base.conj_vowel .. "ste", {})
+				end
 				break
 			end
 			error("phisrow: must be given in order to generate the past historic because explicit first-person "
@@ -1767,13 +1785,24 @@ local function generate_default_future_principal_part(base, do_err)
 	-- FIXME, when we're sure we won't ever be called with a different suffix, inline the suffix.
 	local suffix = "ò"
 	if base.conj_vowel == "à" then
-		return iut.map_forms(base.verb.unaccented_stem, function(stem)
+		-- FIXME, why are we checking unaccented_stem rather than the infinitive in base.verb.verb?
+		return iut.flatmap_forms(base.verb.unaccented_stem, function(stem)
 			if stem:find("[cg]$") then
-				return stem .. "her" .. suffix
+				return {stem .. "her" .. suffix}
 			elseif stem:find("[cg]i$") then
-				return rsub(stem, "i$", "er") .. suffix
+				-- Verbs in -ciare/-giare with the accent on the final -ì in the present singular take future in
+				-- -cier-/-gier- not -cer-/-ger-. Compare [[sciare]] "to ski", pres1s ''scìo'', fut1s ''scierò'' vs.
+				-- [[lasciare]] "to let", pres1s ''làscio'', fut1s ''lascerò''. The only way to make this distinction
+				-- is to check the present singular, e.g. pres1s.
+				return iut.map_forms(base.forms.pres1s, function(form)
+					if rfind(form, "ìo$") then
+						return stem .. "er" .. suffix
+					else
+						return rsub(stem, "i$", "er") .. suffix
+					end
+				end)
 			else
-				return stem .. "er" .. suffix
+				return {stem .. "er" .. suffix}
 			end
 		end)
 	else
@@ -1792,7 +1821,7 @@ local function generate_default_conditional_principal_part(base, do_err)
 			error(("Internal error: When generating conditional, saw principal part for future '%s' that does not end in -ò")
 				:format(form))
 		end
-		return pref .. "éi"
+		return pref .. "èi"
 	end)
 end
 
@@ -1978,8 +2007,8 @@ local row_conjugations = {
 		persnums = full_person_number_list,
 		generate_default_principal_part = generate_default_conditional_principal_part,
 		principal_part_desc = "first-person conditional",
-		principal_part_ending = "éi",
-		conjugate = {"éi", "ésti", {"èbbe", "ébbe"}, "émmo", "éste", {"èbbero", "ébbero"}},
+		principal_part_ending = "èi",
+		conjugate = {"èi", "ésti", {"èbbe", "ébbe"}, "émmo", "éste", {"èbbero", "ébbero"}},
 		add_reflexive_clitics = add_finite_reflexive_clitics,
 	}},
 	{"pp", {
@@ -2214,8 +2243,25 @@ local function add_prefix_to_forms(base)
 				for _, persnum in ipairs(rowspec.persnums) do
 					local slot = rowslot .. persnum
 					if base.forms[slot] then -- slot may not have any forms, e.g. the present participle
+						local saw_preserve_accent = false
 						for _, form in ipairs(base.forms[slot]) do
-							form.form = base.verb.prefix .. form.form
+							if rfind(form.form, PRESERVE_ACCENT) then
+								saw_preserve_accent = true
+								break
+							end
+						end
+						if saw_preserve_accent then
+							-- We have to do it the "hard" way, re-inserting the forms, in case of redundancy.
+							local existing_forms = base.forms[slot]
+							base.forms[slot] = {}
+							insert_forms(base, slot, iut.map_forms(existing_forms, function(form)
+								return add_prefix_to_form(base.verb.prefix, form)
+							end))
+						else
+							-- To save on memory, side-effect the existing forms.
+							for _, form in ipairs(base.forms[slot]) do
+								form.form = base.verb.prefix .. form.form
+							end
 						end
 					end
 				end
@@ -2708,6 +2754,8 @@ local function parse_inside(base, inside, is_builtin_verb)
 			dot_separated_group[1] = first_element_minus_prefix
 			if first_element_prefix == "stem" then
 				base.principal_part_specs.explicit_stem_spec = fetch_specs(dot_separated_group)
+			elseif first_element_prefix == "phisstem" then
+				base.principal_part_specs.explicit_phis_stem_spec = fetch_specs(dot_separated_group)
 			elseif first_element_prefix == "pres" then
 				if not base.props.builtin then
 					parse_err("Can't specify 'pres:' override except when '@' is given to request a built-in verb")
