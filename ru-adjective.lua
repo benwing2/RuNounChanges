@@ -147,7 +147,7 @@ local function insert_forms_into_existing_forms(existing, newforms, notesym)
 	end
 	local inserted = false
 	for _, item in ipairs(newforms) do
-		if not m_table.contains(existing, item, "deepCompare") then
+		if not m_table.contains(existing, item) then
 			if notesym then
 				item = com.concat_paired_russian_tr(item, {notesym})
 			end
@@ -332,13 +332,16 @@ function export.do_generate_forms(args, old, manual)
 			if datedrare == "none" then
 				saw_no_short = true
 			end
+			local proper_decl = m_table.contains({"proper", "stressed-proper"}, decl_type)
+			-- Use args.real_surname to avoid overwriting args.surname, since we may be overwriting
+			-- `args` multiple times. FIXME: Use a separate data structure for this.
+			args.real_surname = proper_decl or args.surname
 			local short_title
 			if short_accent then
 				short_title = short_accent
-			elseif m_table.contains({"proper", "stressed-proper"}, decl_type) then
+			elseif args.real_surname then
 				short_title = "surname"
-			elseif m_table.contains({"ьій", "ьий", "short", "stressed-short", "mixed"},
-				decl_type) then
+			elseif m_table.contains({"ьій", "ьий", "short", "stressed-short", "mixed"}, decl_type) then
 				short_title = "possessive"
 			end
 			if short_title then	
@@ -551,9 +554,39 @@ function export.do_generate_forms(args, old, manual)
 	return args
 end
 
+
+local function process_params(frame, include_form)
+	local params = {
+		[1] = {},
+		[2] = {},
+		suffix = {},
+		title = {},
+		special = {},
+		shorttail = {},
+		shorttailall = {},
+		notes = {},
+		old = {type = "boolean"},
+		noneuter = {type = "boolean"},
+		nofull = {type = "boolean"},
+		surname = {type = "boolean"},
+	}
+	if include_form then
+		params.form = {required = true}
+	end
+	for _, case in ipairs(all_cases) do
+		params[case] = {}
+		params[case .. "_tail"] = {}
+		params[case .. "_tailall"] = {}
+	end
+
+	local parent_args = frame:getParent().args
+	return require("Module:parameters").process(parent_args, params)
+end
+
+
 -- Implementation of main entry point
 local function do_show(frame, old, manual)
-	local args = clone_args(frame)
+	local args = process_params(frame)
 	local args = export.do_generate_forms(args, old, manual)
 	return make_table(args) .. m_utilities.format_categories(args.categories, lang)
 end
@@ -631,14 +664,14 @@ local function get_form(forms)
 			trentry, trnotes = m_table_tools.get_notes(tr)
 		end
 		ruentry = m_links.remove_links(ruentry)
-		m_table.insertIfNot(canon_forms, {ruentry, trentry}, nil, "deepCompare")
+		m_table.insertIfNot(canon_forms, {ruentry, trentry})
 	end
 	return com.concat_forms(canon_forms)
 end
 
 -- The entry point for 'ru-adj-forms' to generate all adjective forms.
 function export.generate_forms(frame)
-	local args = clone_args(frame)
+	local args = process_params(frame)
 	local args = export.do_generate_forms(args, false)
 	local ins_text = {}
 	for _, case in ipairs(all_cases) do
@@ -651,10 +684,7 @@ end
 
 -- The entry point for 'ru-adj-form' to generate a particular adjective form.
 function export.generate_form(frame)
-	local args = clone_args(frame)
-	if not args.form then
-		error("Must specify desired form using form=")
-	end
+	local args = process_params(frame, "include form")
 	local form = args.form
 	if not m_table.contains(all_cases, form) then
 		error("Unrecognized form " .. form)
@@ -730,17 +760,17 @@ tracking_code = function(decl_class, args, orig_short_accent, short_accent,
 end
 
 -- Insert the category CAT (a string) into list CATEGORIES. String will
--- have "Russian " prepended and ~ substituted for the part of speech --
--- currently always "adjectives".
-local function insert_category(categories, cat)
-	table.insert(categories, "Russian " .. rsub(cat, "~", "adjectives"))
+-- have "Russian " prepended and ~ substituted for the part of speech.
+local function insert_category(categories, cat, plpos)
+	table.insert(categories, "Russian " .. rsub(cat, "~", plpos))
 end
 
 categorize = function(decl_type, args, orig_short_accent, short_accent,
 	short_stem)
+	local plpos = args.real_surname and "surnames" or "adjectives"
 	-- Insert category CAT into the list of categories in ARGS.
 	local function insert_cat(cat)
-		insert_category(args.categories, cat)
+		insert_category(args.categories, cat, plpos)
 	end
 
 	-- FIXME: For compatibility with old {{temp|ru-adj7}}, {{temp|ru-adj8}},
@@ -757,7 +787,11 @@ categorize = function(decl_type, args, orig_short_accent, short_accent,
 	elseif m_table.contains({"mixed"}, decl_type) then
 		insert_cat("mixed possessive ~")
 	elseif m_table.contains({"proper", "stressed-proper"}, decl_type) then
-		insert_cat("proper-name ~")
+		-- Don't insert a category like [[:Category:Russian proper-name surnames]]. Instead, rely on
+		-- [[:Category:Russian possessive surnames]] generated above.
+		if not args.real_surname then
+			insert_cat("proper-name ~")
+		end
 	elseif decl_type == "$" then
 		insert_cat("indeclinable ~")
 	else
@@ -1789,12 +1823,17 @@ local template = nil
 local full_clause = nil
 local template_no_neuter = nil
 local full_clause_no_neuter = nil
-local proper_name_template = nil
-local proper_name_full_clause = nil
+local surname_full_clause = nil
 local template_mp = nil
 local full_clause_mp = nil
 local template_mp_no_neuter = nil
 local full_clause_mp_no_neuter = nil
+local surname_full_clause_mp = nil
+local template_dva = nil
+local full_clause_dva = nil
+local full_clause_compound_dva = nil
+local template_oba = nil
+local full_clause_oba = nil
 local short_clause_separator = nil
 local short_clause = nil
 local short_clause_no_neuter_separator = nil
@@ -1891,10 +1930,13 @@ make_table = function(args)
 		if args[case] then
 			local accel_form = accel_forms[case]
 			if not accel_form then
-				error("Unrecognized case " .. case .. " when looking up accelerator form")
+				error("Internal error: Unrecognized case " .. case .. " when looking up accelerator form")
 			end
-			if noneuter then
+			if args.noneuter or args.real_surname then
 				accel_form = rsub(accel_form, "//n", "")
+			end
+			if args.real_surname then
+				accel_form = rsub(accel_form, "an|", "")
 			end
 			args[case] = nom.show_form(args[case], false, accel_form, lemma_forms)
 		else
@@ -1902,21 +1944,35 @@ make_table = function(args)
 		end
 	end
 
-	local temp = args.special == "oba" and template_oba or
-		(args.special == "dva" or args.special == "cdva") and template_dva or
-		not args.nom_n and proper_name_template or
-		args.noneuter and args.old and has_nom_mp and template_mp_no_neuter or
-		args.noneuter and template_no_neuter or
-		args.old and has_nom_mp and template_mp or
-		template
-	local fullc = args.special == "oba" and full_clause_oba or
-		args.special == "dva" and full_clause_dva or
-		args.special == "cdva" and full_clause_compound_dva or
-		not args.nom_n and proper_name_full_clause or
-		args.noneuter and args.old and has_nom_mp and full_clause_mp_no_neuter or
-		args.noneuter and full_clause_no_neuter or
-		args.old and has_nom_mp and full_clause_mp or
-		full_clause
+	local temp, fullc
+	if args.special == "oba" then
+		temp = template_oba
+		fullc = full_clause_oba
+	elseif args.special == "dva" then
+		temp = template_dva
+		fullc = full_clause_dva
+	elseif args.special == "cdva" then
+		temp = template_dva -- no template_cdva
+		fullc = full_clause_compound_dva
+	elseif args.real_surname and args.old and has_nom_mp then
+		temp = template_mp_no_neuter
+		fullc = surname_full_clause_mp
+	elseif args.real_surname then
+		temp = template_no_neuter
+		fullc = surname_full_clause
+	elseif args.noneuter and args.old and has_nom_mp then
+		temp = template_mp_no_neuter
+		fullc = full_clause_mp_no_neuter
+	elseif args.noneuter then
+		temp = template_no_neuter
+		fullc = full_clause_no_neuter
+	elseif args.old and has_nom_mp then
+		temp = template_mp
+		fullc = full_clause_mp
+	else
+		temp = template
+		fullc = full_clause
+	end
 
 	if args.old then
 		if has_nom_mp then
@@ -2147,15 +2203,7 @@ full_clause_no_neuter = [===[
 ]===]
 
 -- Used for both new-style and old-style templates
-proper_name_template = template_prelude("55") .. [===[
-! style="width:20%;background:#d9ebff" colspan="2" |
-! style="background:#d9ebff" | masculine
-! style="background:#d9ebff" | feminine
-! style="background:#d9ebff" | plural
-]===] .. template_postlude()
-
--- Used for both new-style and old-style templates
-proper_name_full_clause = [===[
+surname_full_clause = [===[
 |-
 ! style="background:#eff7ff" colspan="2" | nominative
 | {nom_m}
@@ -2247,7 +2295,7 @@ template_mp_no_neuter = template_prelude("60") .. [===[
 ! style="background:#d9ebff" | masculine
 ! style="background:#d9ebff" | feminine
 ! style="background:#d9ebff" | m. plural
-! style="background:#d9ebff" | n./f. plural
+! style="background:#d9ebff" | f. plural
 ]===] .. template_postlude()
 
 -- Used for old-style templates
@@ -2279,6 +2327,41 @@ full_clause_mp_no_neuter = [===[
 | {acc_m_in}
 | {acc_mp_in}
 | {acc_p_in}
+|-
+! style="background:#eff7ff" colspan="2" | instrumental
+| {ins_m}
+| {ins_f}
+| colspan="2" | {ins_p}
+|-
+! style="background:#eff7ff" colspan="2" | prepositional
+| {pre_m}
+| {pre_f}
+| colspan="2" | {pre_p}
+]===]
+
+-- Used for some old-style templates
+surname_full_clause_mp = [===[
+|-
+! style="background:#eff7ff" colspan="2" | nominative
+| {nom_m}
+| {nom_f}
+| {nom_mp}
+| {nom_p}
+|-
+! style="background:#eff7ff" colspan="2" | genitive
+| {gen_m}
+| {gen_f}
+| colspan="2" | {gen_p}
+|-
+! style="background:#eff7ff" colspan="2" | dative
+| {dat_m}
+| {dat_f}
+| colspan="2" | {dat_p}
+|-
+! style="background:#eff7ff" colspan="2" | accusative
+| {acc_m_an}
+| {acc_f}
+| colspan="2" | {acc_p_an}
 |-
 ! style="background:#eff7ff" colspan="2" | instrumental
 | {ins_m}
