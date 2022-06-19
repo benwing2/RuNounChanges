@@ -149,9 +149,6 @@ def process_text_on_page(index, pagetitle, text):
       if not arg:
         pagemsg("WARNING: Saw {{it-verb-old}} without param in -are verb, skipping: %s" % unicode(t))
         return
-      if "." in arg and re.search("ar(e|si)$", pagetitle):
-        pagemsg("WARNING: Saw . in -are verb, skipping: %s" % unicode(t))
-        return
       if headt:
         pagemsg("WARNING: Saw multiple head templates: %s and %s" % (unicode(headt), unicode(t)))
         return
@@ -163,12 +160,14 @@ def process_text_on_page(index, pagetitle, text):
       conjt = t
       conjt_str = unicode(conjt)
       headarg1 = getparam(headt, "1")
-      if re.search("ar(e|si)$", pagetitle):
+      if re.search("ar(e|si)$", pagetitle) and ("." not in headarg1 or "only3s" in headarg1): # including only3sp
         pass
-      elif re.search("(rre|ere)$", pagetitle):
+      elif re.search("(rre|ere|are)$", pagetitle):
         headarg1 = re.sub(r"([/\\]).*$", r"\1@", headarg1)
       elif re.search("[ou]rsi$", pagetitle):
         headarg1 = "\\@"
+      elif re.search("arsi$", pagetitle):
+        headarg1 = "@"
       elif re.search("ersi$", pagetitle):
         if "\\" in headarg1:
           headarg1 = "\\@"
