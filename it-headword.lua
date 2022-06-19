@@ -9,7 +9,8 @@
 -- * {{it-presp}};
 -- * {{it-card-noun}}, {{it-card-adj}}, {{it-card-inv}};
 -- * {{it-adv}}.
--- See [[Module:it-conj]] for Italian conjugation templates.
+-- See [[Module:it-verb]] for Italian conjugation templates.
+-- See [[Module:it-conj]] for an older Italian conjugation module that is still widely used but will be going away.
 local export = {}
 local pos_functions = {}
 
