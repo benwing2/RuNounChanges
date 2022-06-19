@@ -1117,10 +1117,16 @@ pos_functions["verbs"] = {
 				return quals, refs
 			end
 
-			local function do_verb_form(slot, label)
+			local function do_verb_form(slot, label, rowslot, rowlabel)
 				local forms = alternant_multiword_spec.forms[slot]
 				local retval
-				if not forms then
+				if not alternant_multiword_spec.row_has_forms[rowslot] then
+					if not alternant_multiword_spec.row_is_defective[rowslot] then
+						-- No forms, but none expected; don't display anything
+						return
+					end
+					retval = {label = "no " .. rowlabel}
+				elseif not forms then
 					retval = {label = "no " .. label}
 				else
 					-- Disable accelerators for now because we don't want the added accents going into the headwords.
@@ -1153,25 +1159,33 @@ pos_functions["verbs"] = {
 			do_verb_form(thirdonly and "phis3s" or "phis1s", sing_label .. " past historic")
 			do_verb_form("pp", "past participle")
 			for _, rowspec in ipairs {
+				{"pres", "present", true},
+				{"phis", "past historic", true},
+				{"pp", "past participle", true},
 				{"imperf", "imperfect"},
 				{"fut", "future"},
 				{"sub", "subjunctive"},
 				{"impsub", "imperfect subjunctive"},
 			} do
-				local rowslot, desc = unpack(rowspec)
+				local rowslot, desc, always_show = unpack(rowspec)
 				local slot = rowslot .. (thirdonly and "3s" or "1s")
 				local must_show = alternant_multiword_spec.is_irreg[slot]
-				-- If there is an explicit stem spec, make sure it gets displayed; the imperfect is a good way of
-				-- showing this.
-				if rowslot == "imperf" and alternant_multiword_spec.props.has_explicit_stem_spec then
+				if always_show then
 					must_show = true
-				end
-				-- If the principal part is unexpectedly missing, make sure we show this.
-				if not alternant_multiword_spec.forms[slot] then
+				elseif rowslot == "imperf" and alternant_multiword_spec.props.has_explicit_stem_spec then
+					-- If there is an explicit stem spec, make sure it gets displayed; the imperfect is a good way of
+					-- showing this.
+					must_show = true
+				elseif not alternant_multiword_spec.forms[slot] then
+					-- If the principal part is unexpectedly missing, make sure we show this.
 					must_show = true
 				end
 				if must_show then
-					do_verb_form(slot, sing_label .. " " .. desc)
+					if rowslot == "pp" then
+						do_verb_form(rowslot, desc, rowslot, desc)
+					else
+						do_verb_form(slot, sing_label .. " " .. desc, rowslot, desc)
+					end
 				end
 			end
 			-- Also do the imperative, but not for third-only verbs, which are always missing the imperative.
