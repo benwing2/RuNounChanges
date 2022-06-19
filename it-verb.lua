@@ -75,27 +75,6 @@ RULES FOR CONJUGATION:
 
 EXAMPLES OF CONJUGATION:
 
-{{it-conj|mettere<a\é,mìsi,mésso>}}
-
-{{it-conj|arrivare<e:a[transitive]/ì>}}
-
-{{it-conj|trovare<a/ò>}}
-
-{{it-conj|sembrare<e/é>}}
-
-{{it-conj|temprare<e/é:#è>}}
-
-{{it-conj|essere<e\è\-,-,stàto.
-  presrow:sóno,sèi,è,siàmo,siète,sóno.
-  imperfrow:èro,èri,èra,eravàmo,eravàte,èrano.
-  phisrow:fùi,fósti,fù*,fùmmo,fóste,fùrono.
-  fut:sarò.
-  sub:sìa.
-  impsub:fóssi.
-  improw:sìi:siàte.
-  presp:essènte[rare]
->}}
-
 ; Including archaic and literary forms:
 {{it-conj|essere<e\è\-,-,stàto:essùto[archaic]:sùto[archaic].
   presrow:sóno,sèi,è,siàmo:sémo[archaic],siète:sète[archaic],sóno:èmmo[archaic].
@@ -391,9 +370,9 @@ local builtin_verbs = {
 	{"sedere", "sièdo:sèggo[literary]^siède.fut:+:siederò[popular]", "<<sedere>> and derivatives"},
 	-- divedere: defective
 	{{term = "vedere", prefixes = {"pre"}}, "é,vìdi,vìsto:vedùto[less popular].fut:vedrò:vederò.presp:+:veggènte", "<<prevedere>>"},
-	{{term = "vedere", prefixes = {"prov", "pro"}}, "é,vìdi,vìsto:vedùto[less popular].presp:+:veggènte", "<<provvedere>> (archaic <<provedere>>) and derivatives"},
+	{{term = "vedere", prefixes = {"prov", "pro"}}, "é,vìdi,vedùto:vìsto[rare in a verbal sense].presp:+:veggènte", "<<provvedere>> (archaic <<provedere>>) and derivatives"},
 	-- the following per Dizionario d'ortografia e di pronunzia
-	{{term = "vedere", prefixes = {"rav"}}, "é,vìdi,vedùto.fut:vedrò:vederò.presp:+:veggènte", "<<ravvedere>>"},
+	{{term = "vedere", prefixes = {"^rav"}}, "é,vìdi,vedùto.fut:vedrò:vederò.presp:+:veggènte", "<<ravvedere>>"},
 	{{term = "vedere", prefixes = {"^tra", "tras", "trans", "stra", "anti"}}, "é,vìdi,vedùto.fut:vedrò.presp:+:veggènte", "<<travedere>> and variants, <<stravedere>>, <<antivedere>>"},
 	{"vedere", "é,vìdi,vìsto:vedùto[less popular].fut:vedrò.presp:+:veggènte", "<<vedere>> and some derivatives (e.g. <<avvedere>>, <<intravedere>>, <<rivedere>>); may need overrides, e.g. <<rivedere>> in the meaning \"to revise\" has only <<riveduto>> as past participle"},
 	-- stridere: past participle is lacking (per Hoepli), not used (per DOP) or extremely rare (per Treccani)
@@ -624,7 +603,7 @@ local builtin_verbs = {
 		sub:dèbba:débba:dèva[rare]:déva[rare].
 		imp:-
 ]=]},
-	{"piovere", "ò,piòvvi,+.only3sp", "<<piovere>> and derivatives"},
+	{"piovere", "ò,piòvvi", "<<piovere>> and derivatives"},
 	-- movere and derivatives: archaic
 	{"muovere", "ò\\muòvo^muòve,mòssi,mòsso.stem:mòve:muòve.presp:movènte"},
 	{"fervere", "è,+[rare],-"},
@@ -2277,7 +2256,9 @@ local function check_for_defective_rows(base)
 		if not rowspec.dont_check_defective_status then
 			for i, persnum in ipairs(rowspec.persnums) do
 				local slot = rowslot .. persnum
-				if not base.forms[slot] and not skip_slot(base, slot) then
+				if base.forms[slot] then
+					base.row_has_forms[rowslot] = true
+				elseif not skip_slot(base, slot) then
 					base.is_row_defective[rowslot] = true
 				end
 			end
@@ -2850,11 +2831,15 @@ local function create_base()
 	-- `is_row_defective` is a table indexed by the row slot ("pres", "sub", etc.) whose value is true or false
 	--    indicating whether a given row is defective (missing one or more forms). Forms expected to be missing due to
 	--    'only3s' or 'only3sp' don't count.
+	-- `row_has_forms` is a table indexed by the row slot ("pres", "sub", etc.) whose value is true or false
+	--    indicating whether a given row has any forms (i.e. is not completely defective). A row is completely defective
+	--    if `is_row_defective[row]` and not `row_has_forms[row]` (we need both checks in case of expected missing rows,
+	--    such as imperative with 'only3s' or 'only3sp').
 	-- `props` is a table of miscellaneous properties.
 	--
 	-- There should be no other properties set directly at the `base` level.
 	return {forms = {}, principal_part_specs = {}, principal_part_forms = {}, row_override_specs = {},
-		single_override_specs = {}, is_irreg = {}, is_row_irreg = {}, is_row_defective = {}, props = {}}
+		single_override_specs = {}, is_irreg = {}, is_row_irreg = {}, is_row_defective = {}, row_has_forms = {}, props = {}}
 end
 
 
@@ -3407,6 +3392,7 @@ function export.do_generate_forms(parent_args, from_headword, def)
 	end
 
 	local args = require("Module:parameters").process(parent_args, params)
+	local pagename = args.pagename or mw.title.getCurrentTitle().text
 
 	local arg1 = args[1]
 	local need_surrounding_angle_brackets = true
@@ -3427,11 +3413,35 @@ function export.do_generate_forms(parent_args, from_headword, def)
 		end
 	end
 	if need_surrounding_angle_brackets then
-		arg1 = "<" .. arg1 .. ">"
+		if pagename:find(" ") then
+			-- If multiword lemma without <...> already, try to add it after the first word.
+			local need_explicit_angle_brackets = false
+			if arg1:find("%(%(") then
+				need_explicit_angle_brackets = true
+			else
+				-- Try to preserve the brackets in the part after the verb, but don't do it
+				-- if there aren't the same number of left and right brackets in the verb
+				-- (which means the verb was linked as part of a larger expression).
+				local refl_clitic_verb, post = rmatch(pagename, "^(.-)( .*)$")
+				local left_brackets = rsub(refl_clitic_verb, "[^%[]", "")
+				local right_brackets = rsub(refl_clitic_verb, "[^%]]", "")
+				if #left_brackets == #right_brackets then
+					arg1 = refl_clitic_verb .. "<" .. arg1 .. ">" .. post
+				else
+					need_explicit_angle_brackets = true
+				end
+			end
+
+			if need_explicit_angle_brackets then
+				error("Multiword argument without <> and with alternants, a multiword linked verb or " ..
+					"unbalanced brackets; please include <> explicitly: " .. arg1)
+			end
+		else
+			arg1 = "<" .. arg1 .. ">"
+		end
 	end
 
 	local function do_parse_indicator_spec(angle_bracket_spec, lemma)
-		local pagename = args.pagename or mw.title.getCurrentTitle().text
 		return parse_indicator_spec(angle_bracket_spec, lemma, pagename)
 	end
 
