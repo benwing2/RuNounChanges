@@ -1435,7 +1435,7 @@ local function generate_pres_forms(base, form)
 		local unaccented_form = remove_accents(form)
 		if not general_list_form_contains_form(base.verb.pres, unaccented_form, remove_accents)
 			and (base.verb.isc_pres and not general_list_form_contains_form(base.verb.isc_pres, unaccented_form, remove_accents)) then
-			base.is_row_irreg.pres = true
+			base.row_is_irreg.pres = true
 			-- FIXME! Here we are encoding knowledge of the algorithm in add_present_indic() to determine how to
 			-- propagate irregular present 1s to other forms. This duplicates the logic of that algorithm, and if that
 			-- code ever changes, this code needs to change too. In practice, it doesn't currently matter so much
@@ -1479,7 +1479,7 @@ local function generate_pres3s_forms(base, form)
 		local unaccented_form = remove_accents(form)
 		if not general_list_form_contains_form(base.verb.pres3s, unaccented_form, remove_accents)
 			and (base.verb.isc_pres3s and not general_list_form_contains_form(base.verb.isc_pres3s, unaccented_form, remove_accents)) then
-			base.is_row_irreg.pres = true
+			base.row_is_irreg.pres = true
 			base.is_irreg.pres3s = true
 			-- pres3s is copied to pres2s.
 			base.is_irreg.pres2s = true
@@ -2080,7 +2080,7 @@ local function handle_row_overrides_for_row(base, rowslot)
 				-- Check whether the row override form is the same as the default; if not, it's an irregularity.
 				if not general_list_form_contains_form(existing_generated_form, form) then
 					-- Note that the row has an irregularity in it.
-					base.is_row_irreg[rowslot] = true
+					base.row_is_irreg[rowslot] = true
 					-- Now note that the individual form is irregular. If the row override is for a combined form like
 					-- 123s, we have to map that to the individual forms (1s, 2s, 3s).
 					local rowspec = row_conjugation_map[rowslot]
@@ -2128,7 +2128,7 @@ local function handle_single_overrides_for_row(base, rowslot)
 				end
 				-- Check whether the single override form is the same as the default; if not, it's an irregularity.
 				if not general_list_form_contains_form(existing_generated_form, form) then
-					base.is_row_irreg[rowslot] = true
+					base.row_is_irreg[rowslot] = true
 					base.is_irreg[slot] = true
 				end
 				return form
@@ -2162,7 +2162,7 @@ local function conjugate_row(base, rowslot)
 			end
 			-- Check whether the principal part is the same as the default; if not, the entire row is irregular.
 			if not general_list_form_contains_form(default_principal_part, form) then
-				base.is_row_irreg[rowslot] = true
+				base.row_is_irreg[rowslot] = true
 				for _, persnum in ipairs(rowspec.persnums) do
 					base.is_irreg[rowslot .. persnum] = true
 				end
@@ -2259,13 +2259,13 @@ local function check_for_defective_rows(base)
 				if base.forms[slot] then
 					base.row_has_forms[rowslot] = true
 				elseif not skip_slot(base, slot) then
-					base.is_row_defective[rowslot] = true
+					base.row_is_defective[rowslot] = true
 				end
 			end
 		end
 	end
 	if not base.principal_part_specs.aux and not base.verb.is_reflexive then
-		base.is_row_defective.aux = true
+		base.row_is_defective.aux = true
 	end
 end
 
@@ -2825,21 +2825,21 @@ local function create_base()
 	-- `is_irreg` is a table indexed by an individual form slot ("pres1s", "sub2s", "pp", etc.) whose value is true or
 	--    false indicating whether a given form is irregular. Currently, the values in `is_irreg` are used only by the
 	--    code in [[Module:it-headword]] to determine whether to show irregular principal parts.
-	-- `is_row_irreg` is a table indexed by the row slot ("pres", "sub", etc.) whose value is true or false indicating
+	-- `row_is_irreg` is a table indexed by the row slot ("pres", "sub", etc.) whose value is true or false indicating
 	--    whether a given row is irregular. The values here are currently used to determine whether to add categories
 	--    like [[:Category:Italian verbs with irregular imperfect subjunctive]].
-	-- `is_row_defective` is a table indexed by the row slot ("pres", "sub", etc.) whose value is true or false
+	-- `row_is_defective` is a table indexed by the row slot ("pres", "sub", etc.) whose value is true or false
 	--    indicating whether a given row is defective (missing one or more forms). Forms expected to be missing due to
 	--    'only3s' or 'only3sp' don't count.
 	-- `row_has_forms` is a table indexed by the row slot ("pres", "sub", etc.) whose value is true or false
 	--    indicating whether a given row has any forms (i.e. is not completely defective). A row is completely defective
-	--    if `is_row_defective[row]` and not `row_has_forms[row]` (we need both checks in case of expected missing rows,
+	--    if `row_is_defective[row]` and not `row_has_forms[row]` (we need both checks in case of expected missing rows,
 	--    such as imperative with 'only3s' or 'only3sp').
 	-- `props` is a table of miscellaneous properties.
 	--
 	-- There should be no other properties set directly at the `base` level.
 	return {forms = {}, principal_part_specs = {}, principal_part_forms = {}, row_override_specs = {},
-		single_override_specs = {}, is_irreg = {}, is_row_irreg = {}, is_row_defective = {}, row_has_forms = {}, props = {}}
+		single_override_specs = {}, is_irreg = {}, row_is_irreg = {}, row_is_defective = {}, row_has_forms = {}, props = {}}
 end
 
 
@@ -2991,15 +2991,20 @@ local function detect_all_indicator_specs(alternant_multiword_spec, from_headwor
 end
 
 
--- Propagate indications of irregularity and other properties upward from individual `base` forms to the overall
--- `alternant_multiword_spec`. The overall indications of irregularity are used in [[Module:it-headword]] to show
--- irregular principal parts, and other properties are used similarly in [[Module:it-headword]]. This needs to be
--- done later than detect_all_indicator_specs() because it depends on the result of parsing the angle bracket spec.
+-- Propagate indications of irregularity, defectiveness and other properties upward from individual `base` forms to the
+-- overall `alternant_multiword_spec`. The overall indications of irregularity/defectiveness are used in
+-- [[Module:it-headword]] to show irregular/defective principal parts, and other properties are used similarly in
+-- [[Module:it-headword]]. This needs to be done later than detect_all_indicator_specs() because it depends on the
+-- result of parsing and conjugating the angle bracket spec.
 local function propagate_properties_upward(alternant_multiword_spec)
-	alternant_multiword_spec.is_irreg = {}
 	iut.map_word_specs(alternant_multiword_spec, function(base)
-		for slot, irreg in pairs(base.is_irreg) do
-			alternant_multiword_spec.is_irreg[slot] = alternant_multiword_spec.is_irreg[slot] or irreg
+		for _, slotprop in ipairs { "is_irreg", "row_is_irreg", "row_is_defective", "row_has_forms" } do
+			if not alternant_multiword_spec[slotprop] then
+				alternant_multiword_spec[slotprop] = {}
+			end
+			for slot, propval in pairs(base[slotprop]) do
+				alternant_multiword_spec[slotprop][slot] = alternant_multiword_spec[slotprop][slot] or propval
+			end
 		end
 		-- If there is an explicit stem spec, we display the imperfect principal part explicitly even if not marked
 		-- as irregular.
@@ -3095,14 +3100,14 @@ local function add_categories_and_annotation(alternant_multiword_spec, base, mul
 	local is_defective = false
 	for _, rowconj in ipairs(row_conjugations) do
 		local rowslot, rowspec = unpack(rowconj)
-		if base.is_row_irreg[rowslot] then
+		if base.row_is_irreg[rowslot] then
 			if not is_irreg then
 				is_irreg = true
 				insert_cat("irregular verbs")
 			end
 			insert_cat("verbs with irregular " .. rowspec.desc)
 		end 
-		if base.is_row_defective[rowslot] then
+		if base.row_is_defective[rowslot] then
 			if not is_defective then
 				is_defective = true
 				insert_cat("defective verbs")
