@@ -221,7 +221,7 @@ FIXME:
 13. Consider displaying irregular forms in a different color, as with the old [[Module:es-conj]], or adding
    a triangle next to them, as with [[Module:ru-verb]].
 14. Consider supporting replace_reflexive_indicators().
-15. Add post-clitic-addition overrides.
+15. Add late (post-clitic-addition) overrides. (DONE)
 16. PRES/PAST/PP spec should be required to come first to avoid ambiguities. (DONE)
 17. Add variant codes to avoid mismatching variants in the conditional -èbbe/-ébbe, -éttero vs. érono, etc.
 18. If explicit fut: given, it should control the conditional as well. (DONE)
@@ -246,6 +246,8 @@ FIXME:
     in multisyllabic words.
 33. [[ridare]] has ridò with a syntactic gemination footnote, but liquefà doesn't have it (see #32). It should be a
     tooltip.
+34. Add 'addnote[SLOT_SPEC]' to make [[tangere]] with disused 1s/2s/1p/2p easier to handle. (DONE)
+35. Throw an error if comma seen in single form specs like 'imp:'. (DONE)
 --]=]
 
 local lang = require("Module:languages").getByCode("it")
@@ -491,7 +493,7 @@ local builtin_verbs = {
 		-,vòlli.
 		presrow:vòglio,vuòi,vuòle,vogliàmo,voléte,vògliono.
 		fut:vorrò.
-		imp:vògli,vogliàte
+		improw:vògli,vogliàte
 ]=], "<<volere>> and derivatives"},
 	{"gemere", "è", "<<gemere>> and derivatives"},
 	{"fremere", "è", "<<fremere>>"},
@@ -575,16 +577,16 @@ local builtin_verbs = {
 		presrow:riò,riài,rià,riabbiàmo,riavéte,riànno.
 		fut:riavrò.
 		sub:riàbbia.
-		imp:riàbbi.
-		presp:riavènte,riabbiènte
+		improw:riàbbi,riabbiàte.
+		presp:riavènte:riabbiènte
 ]=], "<<riavere>>"},
 	{"^avere", [=[
-		-,èbbi.
+		-,èbbi:ébbi.
 		presrow:hò*,hài,hà*,abbiàmo,avéte,hànno.
 		fut:avrò.
 		sub:àbbia.
-		imp:àbbi,abbiàte.
-		presp:avènte,abbiènte
+		improw:àbbi,abbiàte.
+		presp:avènte:abbiènte
 ]=], "<<avere>> (but not derivative <<riavere>>)"},
 	-- bevere: archaic; handled under bere below
 	{"ricevere", "é", "<<ricevere>> and derivatives"},
@@ -695,9 +697,9 @@ local builtin_verbs = {
 	{"trarre", "tràggo,tràssi,tràtto.stem:tràe"},
 	-- archaic variant of trarre, with some different present tense (hence subjunctive/imperative) forms
 	{"traggere", "tràggo^tràgge,tràssi,tràtto.pres1p:traggiàmo.fut:trarrò.stem:tràe"},
-	{{term = "bere", prefixes = {"^", "ri", "stra"}}, "bévo,bévvi:bevétti:bevéi[rare].fut:berrò.stem:béve",
-		"<<bere>>, <<strabere>>, <<ribere>>; but not <<ebere||to weaken>> or <<iubere||to command, to order>>"},
-	{"bevere", "é,bévvi:bevétti:bevéi[rare].fut:berrò", "<<bevere>> and derivatives (archaic variant of <<bere>>)"},
+	{{term = "bere", prefixes = {"^", "ri", "tra"}}, "bévo,bévvi:bevétti.fut:berrò.stem:béve",
+		"<<bere>>, <<strabere>>, <<trabere>>, <<ribere>>; but not <<ebere||to weaken>> or <<iubere||to command, to order>>"},
+	{"bevere", "é,bévvi:bevétti.fut:berrò", "<<bevere>> and derivatives (archaic variant of <<bere>>)"},
 	-- benedire (strabenedire, ribenedire), maledire (stramaledire, rimaledire)
 	{{term = "dire", prefixes = {"bene", "male"}}, "+,dìssi:dìi[popular],détto.stem:dìce.pres2p:dìte.imperf:+:dìvo[popular]", "<<benedire>>, <<maledire>> and derivatives"},
 	-- dire, ridire
@@ -2042,9 +2044,8 @@ for _, rowconj in ipairs(row_conjugations) do
 end
 
 
-local overridable_participle_slot_set = {}
-
-local overridable_slot_set = m_table.shallowcopy(overridable_participle_slot_set)
+local overridable_slot_set = {}
+local late_overridable_slot_set = {}
 
 -- Populate all_verb_slots and overridable_slot_set.
 for _, rowconj in ipairs(row_conjugations) do
@@ -2060,6 +2061,8 @@ for _, rowconj in ipairs(row_conjugations) do
 		if not rowspec.no_single_overrides then
 			overridable_slot_set[slot] = true
 		end
+		-- For now, we allow all slots to be late-overridable. Maybe we will rethink this later.
+		late_overridable_slot_set[slot] = true
 	end
 end
 
@@ -2107,15 +2110,17 @@ local function handle_row_overrides_for_row(base, rowslot)
 end
 
 
-local function handle_single_overrides_for_row(base, rowslot)
+local function handle_single_overrides_for_row(base, override_spec, rowslot)
 	local rowspec = row_conjugation_map[rowslot]
 	if not rowspec then
 		error("Internal error: No row conjugation spec for " .. rowslot)
 	end
 
+	-- FIXME: We may need to rethink the handling of irregularity markers. If the user e.g. sets an irregular
+	-- override using 'pres1p:' and then sets it back to regular using 'pres1p!:', it ends up irregular.
 	for _, persnum in ipairs(rowspec.persnums) do
 		local slot = rowslot .. persnum
-		if base.single_override_specs[slot] then
+		if base[override_spec][slot] then
 			local existing_generated_form = base.forms[slot]
 			local function generate_override_forms(form)
 				if form == "+" then
@@ -2134,7 +2139,7 @@ local function handle_single_overrides_for_row(base, rowslot)
 				return form
 			end
 			base.forms[slot] = nil -- erase existing form before generating override
-			process_specs(base, base.forms, slot, base.single_override_specs[slot], generate_override_forms)
+			process_specs(base, base.forms, slot, base[override_spec][slot], generate_override_forms)
 		end
 	end
 end
@@ -2207,7 +2212,7 @@ local function conjugate_row(base, rowslot)
 		end
 	end
 
-	handle_single_overrides_for_row(base, rowslot)
+	handle_single_overrides_for_row(base, "single_override_specs", rowslot)
 end
 
 
@@ -2242,6 +2247,24 @@ local function add_prefix_to_forms(base)
 								form.form = base.verb.prefix .. form.form
 							end
 						end
+					end
+				end
+			end
+		end
+	end
+end
+
+
+-- Process specs given by the user using 'addnote[SLOTSPEC][FOOTNOTE][FOOTNOTE][...]'.
+local function process_addnote_specs(base)
+	for _, spec in ipairs(base.addnote_specs) do
+		for _, slot_spec in ipairs(spec.slot_specs) do
+			slot_spec = "^" .. slot_spec .. "$"
+			for slot, forms in pairs(base.forms) do
+				if rfind(slot, slot_spec) then
+					-- To save on memory, side-effect the existing forms.
+					for _, form in ipairs(forms) do
+						form.footnotes = iut.combine_footnotes(form.footnotes, spec.footnotes)
 					end
 				end
 			end
@@ -2303,6 +2326,11 @@ local function conjugate_verb(base)
 		end
 	end
 	erase_suppressed_slots(base)
+	for _, rowconj in ipairs(row_conjugations) do
+		local rowslot, rowspec = unpack(rowconj)
+		handle_single_overrides_for_row(base, "late_single_override_specs", rowslot)
+	end
+	process_addnote_specs(base)
 	check_for_defective_rows(base)
 	if base.args.noautolinkverb then
 		remove_links_from_forms(base)
@@ -2573,6 +2601,9 @@ local function parse_inside(base, inside, is_builtin_verb)
 				parse_err("Blank form not allowed here, but saw '" ..
 					table.concat(comma_separated_group) .. "'")
 			end
+			if form:find(",") then
+				parse_err("Comma in form '" .. form .. "', did you mean to use a colon?")
+			end
 			local new_spec = {form = form, footnotes = parse_qualifiers(colon_separated_group)}
 			for _, existing_spec in ipairs(specs) do
 				if m_table.deepEquals(existing_spec, new_spec) then
@@ -2725,9 +2756,24 @@ local function parse_inside(base, inside, is_builtin_verb)
 				parse_err("No footnotes allowed with '" .. first_element .. "' spec")
 			end
 			base.props[first_element] = true
+		elseif first_element == "addnote" then
+			local spec_and_footnotes = parse_qualifiers(dot_separated_group)
+			if #spec_and_footnotes < 2 then
+				parse_err("Spec with 'addnote' should be of the form 'addnote[SLOTSPEC][FOOTNOTE][FOOTNOTE][...]'")
+			end
+			local slot_spec = table.remove(spec_and_footnotes, 1)
+			local slot_spec_inside = rmatch(slot_spec, "^%[(.*)%]$")
+			if not slot_spec_inside then
+				parse_err("Internal error: slot_spec " .. slot_spec .. " should be surrounded with brackets")
+			end
+			local slot_specs = rsplit(slot_spec_inside, ",")
+			for j, spec in ipairs(slot_specs) do
+				slot_specs[j] = strip_spaces(spec)
+			end
+			table.insert(base.addnote_specs, {slot_specs = slot_specs, footnotes = spec_and_footnotes})
 		else
 			local first_element_prefix, first_element_minus_prefix = rmatch(first_element,
-				"^%s*([a-z0-9_]+)%s*:%s*(.-)%s*$")
+				"^%s*([a-z0-9_!]+)%s*:%s*(.-)%s*$")
 			if not first_element_prefix then
 				parse_err("Dot-separated element should be either 'only3s', 'only3p', 'rre' or be of the form "
 					.. "'PREFIX:SPEC', but saw '" .. table.concat(dot_separated_group) .. "'")
@@ -2752,6 +2798,14 @@ local function parse_inside(base, inside, is_builtin_verb)
 				end
 			elseif overridable_slot_set[first_element_prefix] then
 				base.single_override_specs[first_element_prefix] = fetch_specs(dot_separated_group)
+			elseif first_element_prefix:find("!$") then
+				local late_override_slot = rmatch(first_element_prefix, "^(.*)!$")
+				if late_overridable_slot_set[late_override_slot] then
+					base.late_single_override_specs[late_override_slot] = fetch_specs(dot_separated_group)
+				else
+					parse_err("Late override " .. first_element_prefix .. " refers to an unrecognized slot in '" ..
+						table.concat(dot_separated_group) .. "'")
+				end
 			elseif first_element_prefix:find("row$") then
 				local row_override_slot = rmatch(first_element_prefix, "^(.*)row$")
 				if row_conjugation_map[row_override_slot] then
@@ -2822,6 +2876,12 @@ local function create_base()
 	--    are in the same format as `principal_part_specs`.
 	-- `single_override_specs` contains user-specified forms using 'pres1s:', 'sub3p:', etc. The key is the slot
 	--    ("pres1s", "sub3p", etc.) and the value is of the same format as `principal_part_specs`.
+	-- `late_single_override_specs` contains user-specified forms using 'pres1s!:', 'sub3p!:', etc., specifying late
+	--    overrides that take place after copying forms from one place to another and after adding reflexive clitics.
+	--    The key is the slot ("pres1s", "sub3p", etc.) and the value is of the same format as `principal_part_specs`.
+	-- `addnote_specs` contains specs specifying footnotes to add to individual slots or collections of slots using
+	--    'addnote[SLOTSPEC,SLOTSPEC][FOOTNOTE][FOOTNOTE][...]'. Each element is an object of the form
+	--    {slotspec = {SLOTSPEC, ...}, footnotes = {FOOTNOTE, ...}}.
 	-- `is_irreg` is a table indexed by an individual form slot ("pres1s", "sub2s", "pp", etc.) whose value is true or
 	--    false indicating whether a given form is irregular. Currently, the values in `is_irreg` are used only by the
 	--    code in [[Module:it-headword]] to determine whether to show irregular principal parts.
@@ -2839,7 +2899,8 @@ local function create_base()
 	--
 	-- There should be no other properties set directly at the `base` level.
 	return {forms = {}, principal_part_specs = {}, principal_part_forms = {}, row_override_specs = {},
-		single_override_specs = {}, is_irreg = {}, row_is_irreg = {}, row_is_defective = {}, row_has_forms = {}, props = {}}
+		single_override_specs = {}, late_single_override_specs = {}, addnote_specs = {}, is_irreg = {},
+		row_is_irreg = {}, row_is_defective = {}, row_has_forms = {}, props = {}}
 end
 
 
@@ -2905,9 +2966,15 @@ local function parse_indicator_spec(angle_bracket_spec, lemma, pagename)
 			-- Cancel out the user's spec so it doesn't override the built-in spec.
 			base.principal_part_specs.root_stressed_inf = nil
 		end
-		for _, prop_table in ipairs { "principal_part_specs", "row_override_specs", "single_override_specs", "props" } do
+		for _, prop_table in ipairs { "principal_part_specs", "row_override_specs", "single_override_specs",
+			"late_single_override_specs", "props" } do
 			for slot, prop in pairs(base[prop_table]) do
 				nbase[prop_table][slot] = prop
+			end
+		end
+		for _, prop_list in ipairs { "addnote_specs" } do
+			for _, prop in ipairs(base[prop_list]) do
+				m_table.insertIfNot(nbase[prop_list], prop)
 			end
 		end
 		return nbase
