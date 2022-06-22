@@ -129,7 +129,7 @@ def process_text_on_page(index, pagetitle, text):
 
   notes = []
 
-  if "it-verb-old" not in text:
+  if "it-verb" not in text:
     return
 
   parsed = blib.parse_text(text)
@@ -142,12 +142,12 @@ def process_text_on_page(index, pagetitle, text):
     origt = unicode(t)
     def getp(param):
       return getparam(t, param)
-    if tn in ["it-verb-old"]:
+    if tn in ["it-verb-old", "it-verb"]:
       pagemsg("Saw %s" % unicode(t))
       saw_headt = True
       arg = getp("1")
       if not arg:
-        pagemsg("WARNING: Saw {{it-verb-old}} without param in -are verb, skipping: %s" % unicode(t))
+        pagemsg("WARNING: Saw {{%s}} without param, skipping: %s" % (tn, unicode(t)))
         return
       if headt:
         pagemsg("WARNING: Saw multiple head templates: %s and %s" % (unicode(headt), unicode(t)))
@@ -155,12 +155,15 @@ def process_text_on_page(index, pagetitle, text):
       headt = t
     elif tn.startswith("it-conj-"):
       if not headt:
-        pagemsg("WARNING: Saw conjugation template without {{it-verb-old}} head template: %s" % unicode(conjt))
+        pagemsg("WARNING: Saw conjugation template without {{it-verb-old}}/{{it-verb}} head template: %s" % unicode(conjt))
         return
       conjt = t
       conjt_str = unicode(conjt)
+      headtn = tname(headt)
       headarg1 = getparam(headt, "1")
-      if re.search("ar(e|si)$", pagetitle) and ("." not in headarg1 or "only3s" in headarg1): # including only3sp
+      if headtn == "it-verb":
+        pass
+      elif re.search("ar(e|si)$", pagetitle) and ("." not in headarg1 or "only3s" in headarg1): # including only3sp
         pass
       elif re.search("(rre|ere|are)$", pagetitle):
         headarg1 = re.sub(r"([/\\]).*$", r"\1@", headarg1)
@@ -182,25 +185,29 @@ def process_text_on_page(index, pagetitle, text):
       newconjt_str = u"{{it-conj|%s}}" % conjarg1
 
       if compare_new_and_old_templates(conjt_str, newconjt_str, pagetitle, pagemsg, errandpagemsg):
-        orig_headt = unicode(headt)
-        blib.set_template_name(headt, "it-verb")
-        headt.add("1", headarg1)
-        pagemsg("Replaced %s with %s" % (orig_headt, unicode(headt)))
+        if headtn == "it-verb-old":
+          orig_headt = unicode(headt)
+          blib.set_template_name(headt, "it-verb")
+          headt.add("1", headarg1)
+          pagemsg("Replaced %s with %s" % (orig_headt, unicode(headt)))
         orig_conjt = unicode(conjt)
         del conjt.params[:]
         conjt.add("1", conjarg1)
         blib.set_template_name(conjt, "it-conj")
         pagemsg("Replaced %s with %s" % (orig_conjt, unicode(conjt)))
-        notes.append("convert {{it-verb-old}}/{{it-conj-*}} to new {{it-verb}}/{{it-conj}}")
+        if headtn == "it-verb-old":
+          notes.append("convert {{it-verb-old}}/{{it-conj-*}} to new {{it-verb}}/{{it-conj}}")
+        else:
+          notes.append("convert {{it-conj-*}} to new {{it-conj}}")
       headt = None
 
   if not saw_headt:
-    pagemsg("WARNING: Didn't see {{it-verb-old}} head template")
+    pagemsg("WARNING: Didn't see {{it-verb-old}}/{{it-verb}} head template")
     return
 
   return unicode(parsed), notes
 
-parser = blib.create_argparser("Convert {{it-verb-old}}/{{it-conj-*}} to {{it-verb}}/{{it-conj}}",
+parser = blib.create_argparser("Convert {{it-verb-old}}/{{it-verb}}/{{it-conj-*}} to {{it-verb}}/{{it-conj}}",
   include_pagefile=True, include_stdin=True)
 parser.add_argument("--ending", choices=["are", "ere", "ire", "rre"],
   help="Verb ending to process.")
