@@ -117,12 +117,6 @@ EXAMPLES OF CONJUGATION:
  imp:dài:dà':dà*!
 >}}
 
-{{it-conj|dovere<a:e[as an auxiliary, with main verbs taking ''essere'']/dèvo:dévo:dèbbo:débbo^dève:déve.
-  fut:dovrò.
-  sub:dèbba:débba:dèva[rare]:déva[rare].
-  imp:-
->}}
-
 ; Including archaic and poetic forms:
 {{it-conj|dovere<a:e[as an auxiliary, with main verbs taking ''essere'']/-.
   presrow:
@@ -337,8 +331,8 @@ local builtin_verbs = {
 	-- soffolcere (suffolcere, soffolgere, suffulcere): archaic, defective
 	-- molcere: poetic, defective
 	{"vincere", "ì,vìnsi,vìnto", "<<vincere>> and derivatives"},
-	{"cuocere", "ò\\cuòcio^ò,còssi,còtto.stem:cuòce:còce", "<<cuocere>> and derivatives"},
-	{"nuocere", "ò\\nòccio:nuòccio^ò,nòcqui,nociùto:nuociùto[rare].stem:nuòce:nòce.presp:nocènte",
+	{"cuocere", "ò\\cuòcio^ò,còssi,còtto.unstressed_stem:cuoce:coce[now rare]", "<<cuocere>> and derivatives"},
+	{"nuocere", "ò\\nòccio:nuòccio^ò,nòcqui,nociùto:nuociùto[rare].unstressed_stem:nuoce:noce[now rare].presp:nocènte",
 		"<<nuocere>>, <<rinuocere>>"},
 	{"torcere", "ò,tòrsi,tòrto", "<<torcere>> and derivatives"},
 	{"nascere", "à,nàcqui,nàto", "<<nascere>>, <<rinascere>>, <<prenascere>>"},
@@ -397,7 +391,7 @@ local builtin_verbs = {
 	{"propendere", "è,+,propéso[rare]", "<<propendere>>"},
 	{"pendere", "è,pési,péso", "<<appendere>>, <<dipendere>>, <<spendere>>, <<sospendere>> and other verbs and derivatives in ''-pendere'' other than <<pendere>> and <<propendere>>"},
 	{"prendere", "è,prési,préso", "<<prendere>> and derivatives"},
-	{"rendere", "è,rési:+[rare, literary],réso", "<<rendere>>, <<arrendere>> and <<rirendere>>"},
+	{"rendere", "è,rési,réso", "<<rendere>>, <<arrendere>> and <<rirendere>>"},
 	{"tendere", "è,tési,téso", "<<tendere>>, <<stendere>> and derivatives of each"},
 	{"vendere", "é", "<<vendere>> and derivatives"},
 	{"scindere", "ì,scìssi,scìsso", "<<scindere>> and derivatives"},
@@ -407,7 +401,7 @@ local builtin_verbs = {
 	-- Hoepli says tònso but I suspect it's a mistake; Olivetti says tónso
 	{"tondere", "ó,+,+:tónso", "<<tondere>>"},
 	{"tundere", "ù,tùsi,tùso", "<<contundere>> and <<ottundere>>"},
-	{"godere", "ò,+,+.fut:godrò:goderò[uncommon]", "<<godere>> and derivatives"},
+	{"godere", "ò,godètti:godéi[now uncommon].fut:godrò", "<<godere>> and derivatives"},
 	{"plodere", "ò,plòsi,plòso", "<<esplodere>>, <<implodere>> and derivatives"},
 	{"rodere", "ó,rósi,róso", "<<rodere>> and derivatives"},
 	{"ardere", "à,àrsi,àrso", "<<ardere>> and derivatives"},
@@ -526,7 +520,7 @@ local builtin_verbs = {
 	{"rompere", "ó,rùppi,rótto", "<<rompere>> and derivatives"},
 	-- scerpere: archaic/obsolete, unclear conjugation
 	{"serpere", "è,-,-", "<<serpere>>"},
-	{"^parere", "pàio^à,pàrvi,pàrso.pres1p:paiàmo.fut:parrò", "<<parere>>"},
+	{"^parere", "pàio^à,pàrvi,pàrso.pres1p:paiàmo.fut:parrò.imp:-.presp:parvènte", "<<parere>>"},
 	-- sparere, trasparere: archaic/obsolete, unclear conjugation
 	-- sofferere: archaic/obsolete, unclear conjugation
 	-- cherere, chierere: archaic/obsolete, unclear conjugation
@@ -555,7 +549,8 @@ local builtin_verbs = {
 		imp:-
 ]=], "<<potere>> and derivatives"},
 	{"cotere", "ò,còssi,còsso", "verbs in ''-cotere'' (popular or poetic variant of verbs in ''-cuotere'', such as <<percuotere>> and <<scuotere>>)"},
-	{"cuotere", "ò,còssi,còsso.stem:cuòte[now preferred]:còte[also found]", "verbs in ''-cuotere'' (<<percuotere>>, <<scuotere>>, etc.)"},
+	{"cuotere", "ò,còssi,còsso.unstressed_stem:cuote:cote[now rare]",
+		"verbs in ''-cuotere'' (<<percuotere>>, <<scuotere>>, etc.)"},
 	{"^vertere", "è,vertéi,-.only3sp", "<<vertere>> (but not any derivatives)"},
 	-- divertere, convertere, etc.: archaic, unclear conjugation
 	-- avertere: archaic
@@ -563,10 +558,10 @@ local builtin_verbs = {
 	{{term = "vertere", prefixes = {"estro", "intro"}}, "è,-,vèrso:vertìto", "<<estrovertere>> and <<introvertere>>"},
 	{"sistere", "ì,+,sistìto", "verbs in ''-sistere'' (<<consistere>>, <<esistere>>, <<insistere>>, <<resistere>>, etc.)"},
 	{"battere", "à", "<<battere>> and derivatives"},
-	{"flettere", "è,flettéi:flèssi[less common],flèsso", "<<flettere>> and derivatives; <<riflettere>> needs an override to handle differences in the past participle"},
+	{"flettere", "è,+:flèssi[less common],flèsso", "<<flettere>> and derivatives; <<riflettere>> needs an override to handle differences in the past participle"},
 	{"mettere", "é,mìsi,mésso", "<<mettere>> and derivatives"},
 	{"nettere", "é:#è,+:néssi[less common]:#nèssi[less common],nésso:#nèsso", "verbs in ''-nettere'' (<<annettere>>, <<connettere>> and derivatives)"},
-	{"fottere", "ó,fottéi", "<<fottere>> and derivatives"},
+	{"fottere", "ó", "<<fottere>> and derivatives"},
 	-- Hoepli says [[incutere]] has past historic ''incutéi'' or ''incùssi''; DOP says "[[incussi]] (non [[incutei]])";
 	-- Treccani agrees with DOP, saying [[incutere]] is conjugated like [[discutere]]
 	{"cutere", "ù,cùssi,cùsso", "verbs in ''-cutere'' (<<discutere>>, <<escutere>>, <<incutere>>)"},
@@ -600,14 +595,15 @@ local builtin_verbs = {
 	-- volvere, svolvere, etc. archaic
 	{"involvere", "ò,-,involùto", "<<involvere>>"}, -- DOP says pp also invòlto
 	{"dovere", [=[
-		dèvo:dévo:dèbbo:débbo^dève:déve.
+		dèvo:dévo:dèbbo:débbo^dève:déve.pres1p:dobbiàmo.
 		fut:dovrò.
 		sub:dèbba:débba:dèva[rare]:déva[rare].
+		presp:+[uncommon].
 		imp:-
 ]=]},
 	{"piovere", "ò,piòvvi", "<<piovere>> and derivatives"},
 	-- movere and derivatives: archaic
-	{"muovere", "ò\\muòvo^muòve,mòssi,mòsso.stem:mòve:muòve.presp:movènte"},
+	{"muovere", "ò,mòssi,mòsso.unstressed_stem:muove:move[now rare]"},
 	{"fervere", "è,+[rare],-"},
 
 	---------------------------------------------- -ire verbs --------------------------------------------
@@ -1181,11 +1177,7 @@ local function add_default_verb_forms(base, from_headword)
 		process_specs(base, ret, "stem", base.principal_part_specs.explicit_stem_spec, generate_explicit_stem_forms)
 	else
 		if base.props.syncopated then
-			if not from_headword then
-				error("With syncopated verb '" .. ret.verb .. "', must use 'stem:' to specify an explicit stem")
-			else
-				ret.default_ending_vowel = "e"
-			end
+			error("With syncopated verb '" .. ret.verb .. "', must use 'stem:' to specify an explicit stem")
 		end
 		-- Convert to general list form so we can call iut.map_forms() over it.
 		ret.stem = iut.convert_to_general_list_form(ret.default_stem)
@@ -1198,28 +1190,55 @@ local function add_default_verb_forms(base, from_headword)
 		ending_vowel == "i" and "ì" or
 		ending_vowel
 
-	if base.props.syncopated and not base.principal_part_specs.explicit_stem_spec then
-		-- Can't generate defaults for verbs in -rre; currently we only can get here if from_headword.
-		return
+	-- Process 'unstressed_stem:...' spec.
+	if base.principal_part_specs.explicit_unstressed_stem_spec then
+		local function generate_explicit_stem_forms(form)
+			local stem
+			if form == "+" then
+				stem = ret.default_stem
+				if base.props.syncopated then
+					error("Can't use + with 'unstressed_stem:' in syncopated verbs; specify an explicit stem")
+				end
+			else
+				base.explicit_non_default_unstressed_stem_spec = true
+				stem = rmatch(form, "^(.*)" .. ret.default_ending_vowel .. "$")
+				if not stem then
+					error("Stem vowel of stem '" .. form .."' specified with 'unstressed_stem:' must end in conjugation vowel -" .. default_ending_vowel)
+				end
+			end
+			return stem
+		end
+		-- Put the explicit stem in ret.unstressed_stem (i.e. base.verb.unstressed_stem).
+		process_specs(base, ret, "unstressed_stem", base.principal_part_specs.explicit_unstressed_stem_spec,
+			generate_explicit_stem_forms)
+	else
+		ret.unstressed_stem = iut.map_forms(ret.stem, function(stem) return remove_accents(stem) end)
 	end
 
-	ret.unaccented_stem = iut.map_forms(ret.stem, function(stem) return remove_accents(stem) end)
 	ret.pres = iut.map_forms(ret.stem, function(stem) return stem .. "o" end)
 	ret.pres3s = iut.map_forms(ret.stem, function(stem) return ending_vowel == "a" and stem .. "a" or stem .. "e" end)
 	if ending_vowel == "i" then
-		ret.isc_pres = iut.map_forms(ret.unaccented_stem, function(stem) return stem .. "ìsco" end)
-		ret.isc_pres3s = iut.map_forms(ret.unaccented_stem, function(stem) return stem .. "ìsce" end)
+		ret.isc_pres = iut.map_forms(ret.unstressed_stem, function(stem) return stem .. "ìsco" end)
+		ret.isc_pres3s = iut.map_forms(ret.unstressed_stem, function(stem) return stem .. "ìsce" end)
 	end
-	ret.phis = iut.flatmap_forms(ret.unaccented_stem, function(stem)
+	ret.phis = iut.map_forms(ret.unstressed_stem, function(stem)
 		if ending_vowel == "a" then
-			return {stem .. "ài"}
+			return stem .. "ài"
 		elseif ending_vowel == "e" then
-			return {stem .. "éi", stem .. "étti"}
+			-- Per Anna M. Thornton, "Overabundance: Multiple Forms Realizing the Same Cell" in ''Morphological Autonomy'', p. 366
+			-- [https://www.google.com/books/edition/Morphological_Autonomy/oh3UlV6xSQEC?hl=en&gbpv=1&dq=%22fottette%22&pg=PA366&printsec=frontcover],
+			-- -éi tends to occur only with stems ending in -t, while -étti/-ètti occurs with stems not ending in -t.
+			-- The opposite combinations are almost vanishingly rare, and should not be included.
+			if stem:find("t$") then
+				return stem .. "éi"
+			else
+				return stem .. "étti"
+			end
 		else
-			return {stem .. "ìi"}
+			return stem .. "ìi"
 		end
 	end)
-	ret.pp = iut.map_forms(ret.unaccented_stem, function(stem)
+	ret.pp = iut.map_forms(ret.unstressed_stem, function(stem)
 		if ending_vowel == "a" then
 			return stem .. "àto"
 		elseif ending_vowel == "e" then
@@ -1534,8 +1553,8 @@ local function add_present_indic(base, rowslot)
 	end
 	addit("2s", pres23s_stem, "i")
 	addit("3s", pres23s_stem, base.conj_vowel == "à" and "a" or "e")
-	addit("1p", base.verb.unaccented_stem, "iàmo")
-	addit("2p", base.verb.unaccented_stem, base.conj_vowel .. "te")
+	addit("1p", base.verb.unstressed_stem, "iàmo")
+	addit("2p", base.verb.unstressed_stem, base.conj_vowel .. "te")
 end
 
 
@@ -1750,7 +1769,7 @@ local function add_past_historic(base, rowslot)
 				if base.verb.phisstem then
 					add_phis(base.verb.phisstem, {}, "sti", {}, "mmo", "ste", {})
 				else
-					add_phis(base.verb.stem, {}, base.conj_vowel .. "sti", {}, base.conj_vowel .. "mmo",
+					add_phis(base.verb.unstressed_stem, {}, base.conj_vowel .. "sti", {}, base.conj_vowel .. "mmo",
 						base.conj_vowel .. "ste", {})
 				end
 				break
@@ -1763,31 +1782,40 @@ end
 
 
 local function generate_default_future_principal_part(base, do_err)
-	-- FIXME, when we're sure we won't ever be called with a different suffix, inline the suffix.
-	local suffix = "ò"
-	if base.conj_vowel == "à" then
-		-- FIXME, why are we checking unaccented_stem rather than the infinitive in base.verb.verb?
-		return iut.flatmap_forms(base.verb.unaccented_stem, function(stem)
-			if stem:find("[cg]$") then
-				return {stem .. "her" .. suffix}
-			elseif stem:find("[cg]i$") then
-				-- Verbs in -ciare/-giare with the accent on the final -ì in the present singular take future in
-				-- -cier-/-gier- not -cer-/-ger-. Compare [[sciare]] "to ski", pres1s ''scìo'', fut1s ''scierò'' vs.
-				-- [[lasciare]] "to let", pres1s ''làscio'', fut1s ''lascerò''. The only way to make this distinction
-				-- is to check the present singular, e.g. pres1s.
-				return iut.map_forms(base.forms.pres1s, function(form)
-					if rfind(form, "ìo$") then
-						return stem .. "er" .. suffix
-					else
-						return rsub(stem, "i$", "er") .. suffix
-					end
-				end)
-			else
-				return {stem .. "er" .. suffix}
-			end
-		end)
+	-- For -are verbs, we may need to make some adjustments to form the future principal part.
+	local function are_stem_to_future_principal_part(stem)
+		if stem:find("[cg]$") then
+			return {stem .. "herò"}
+		elseif stem:find("[cg]i$") then
+			-- Verbs in -ciare/-giare with the accent on the final -ì in the present singular take future in
+			-- -cier-/-gier- not -cer-/-ger-. Compare [[sciare]] "to ski", pres1s ''scìo'', fut1s ''scierò'' vs.
+			-- [[lasciare]] "to let", pres1s ''làscio'', fut1s ''lascerò''. The only way to make this distinction
+			-- is to check the present singular, e.g. pres1s.
+			return iut.map_forms(base.forms.pres1s, function(form)
+				if rfind(form, "ìo$") then
+					return stem .. "erò"
+				else
+					return rsub(stem, "i$", "erò")
+				end
+			end)
+		else
+			return {stem .. "erò"}
+		end
+	end
+
+	if base.explicit_non_default_unstressed_stem_spec then
+		-- If user gave 'unstressed_stem:', use it here.
+		if base.conj_vowel == "à" then
+			return iut.flatmap_forms(base.verb.unstressed_stem, are_stem_to_future_principal_part)
+		else
+			return iut.map_forms(base.verb.unstressed_stem, function(form)
+				return form .. base.verb.default_ending_vowel .. "rò"
+			end)
+		end
+	elseif base.conj_vowel == "à" then
+		return are_stem_to_future_principal_part(rsub(base.verb.verb, "are$", ""))
 	else
-		return rsub(base.verb.verb, "e$", suffix)
+		return rsub(base.verb.verb, "e$", "ò")
 	end
 end
 
@@ -1821,7 +1849,7 @@ end
 
 
 local function generate_default_gerund_principal_part(base, do_err)
-	return iut.map_forms(base.verb.unaccented_stem, function(stem)
+	return iut.map_forms(base.verb.unstressed_stem, function(stem)
 		return stem .. (base.conj_vowel == "à" and "àndo" or "èndo")
 	end)
 end
@@ -1835,7 +1863,7 @@ end
 
 
 local function generate_default_present_participle_principal_part(base, do_err)
-	return iut.map_forms(base.verb.unaccented_stem, function(stem)
+	return iut.map_forms(base.verb.unstressed_stem, function(stem)
 		return stem .. (base.conj_vowel == "à" and "ànte" or "ènte")
 	end)
 end
@@ -1952,7 +1980,7 @@ local row_conjugations = {
 		desc = "imperfect indicative",
 		tag_suffix = "impf|ind",
 		persnums = full_person_number_list,
-		generate_default_principal_part = function(base) return iut.map_forms(base.verb.unaccented_stem,
+		generate_default_principal_part = function(base) return iut.map_forms(base.verb.unstressed_stem,
 			function(stem) return stem .. base.conj_vowel .. "vo" end) end,
 		principal_part_desc = "first-person imperfect",
 		principal_part_ending = "o",
@@ -1965,7 +1993,7 @@ local row_conjugations = {
 		persnums = full_person_number_list,
 		row_override_persnums = {"12s", "3s", "1p", "2p", "3p"},
 		row_override_persnums_to_full_persnums = {["12s"] = {"1s", "2s"}},
-		generate_default_principal_part = function(base) return iut.map_forms(base.verb.unaccented_stem,
+		generate_default_principal_part = function(base) return iut.map_forms(base.verb.unstressed_stem,
 			function(stem) return stem .. base.conj_vowel .. "ssi" end) end,
 		principal_part_desc = "first/second-person imperfect subjunctive",
 		principal_part_ending = "ssi",
@@ -2176,6 +2204,8 @@ local function conjugate_row(base, rowslot)
 		end
 
 		local principal_part_specs = base.principal_part_specs[rowslot] or rowspec.not_defaulted and {{form = "-"}}
+			-- If a row override was given, the principal part doesn't matter, but we may get an error if we use "+"
+			or base.row_override_specs[rowslot] and {{form = "-"}}
 			or {{form = "+"}}
 		process_specs(base, base.principal_part_forms, rowslot, principal_part_specs, generate_principal_part_forms)
 	end
@@ -2783,6 +2813,8 @@ local function parse_inside(base, inside, is_builtin_verb)
 				base.principal_part_specs.explicit_stem_spec = fetch_specs(dot_separated_group)
 			elseif first_element_prefix == "phisstem" then
 				base.principal_part_specs.explicit_phis_stem_spec = fetch_specs(dot_separated_group)
+			elseif first_element_prefix == "unstressed_stem" then
+				base.principal_part_specs.explicit_unstressed_stem_spec = fetch_specs(dot_separated_group)
 			elseif first_element_prefix == "pres" then
 				if not base.props.builtin then
 					parse_err("Can't specify 'pres:' override except when '@' is given to request a built-in verb")
