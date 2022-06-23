@@ -56,11 +56,6 @@ labels["borrowed terms"] = {
 	parents = {"terms by etymology"},
 }
 
-labels["calques"] = {
-	description = "{{{langname}}} [[Appendix:Glossary#calque|calques]], i.e. terms formed by piece-by-piece translations of terms from other languages.",
-	parents = {"terms by etymology"},
-}
-
 labels["catachreses"] = {
 	description = "{{{langname}}} terms derived from misuses or misapplications of other terms.",
 	parents = {"terms by etymology"},
@@ -245,11 +240,6 @@ labels["itaretara dvandva compounds"] = {
 	parents = {"dvandva compounds"},
 }
 
-labels["learned borrowings"] = {
-	description = "{{{langname}}} terms that are learned [[loanword]]s, that is, words that were directly incorporated from another language instead of through normal language contact.",
-	parents = {"borrowed terms"},
-}
-
 labels["legal doublets"] = {
 	description = "{{{langname}}} legal [[doublet]]s &ndash; a legal doublet is a standardized phrase commonly use in legal documents, proceedings etc which includes two words that are near synonyms.",
 	parents = {"coordinated pairs"},
@@ -290,28 +280,8 @@ labels["onomatopoeias"] = {
 	parents = {"terms by etymology"},
 }
 
-labels["orthographic borrowings"] = {
-	description = "{{{langname}}} orthographic loans, i.e. terms that were borrowed in their script forms, not their pronunciations.",
-	parents = {"borrowed terms"},
-}
-
-labels["partial calques"] = {
-	description = "{{{langname}}} [[Appendix:Glossary#partial calque|partial calques]], i.e. terms formed partly by piece-by-piece translations of terms from other languages and partly by direct borrowing.",
-	parents = {"terms by etymology"},
-}
-
-labels["phono-semantic matchings"] = {
-	description = "{{{langname}}} terms that were borrowed by matching the etymon phonetically and semantically.",
-	parents = {"borrowed terms"},
-}
-
 labels["piecewise doublets"] = {
 	description = "{{{langname}}} terms that are [[Appendix:Glossary#piecewise doublet|piecewise doublets]].",
-	parents = {"terms by etymology"},
-}
-
-labels["pseudo-loans"] = {
-	description = "{{{langname}}} terms that are [[pseudo-loan]]s.",
 	parents = {"terms by etymology"},
 }
 
@@ -399,16 +369,6 @@ labels["samahara dvandva compounds"] = {
 	description = "{{{langname}}} words composed of two or more stems whose stems could be connected by an 'and'.",
 	umbrella_parents = "Types of compound words by language",
 	parents = {"dvandva compounds"},
-}
-
-labels["semantic loans"] = {
-	description = "{{{langname}}} terms one or more of whose definitions was borrowed from a term in another language.",
-	parents = {"terms by etymology"},
-}
-
-labels["semi-learned borrowings"] = {
-	description = "{{{langname}}} terms that are [[semi-learned borrowing|semi-learned]] [[loanword]]s, that is, words borrowed from a [[classical language]] into a modern language and partly reshaped based on later [[sound change]]s or by analogy with [[inherit]]ed words in the language.",
-	parents = {"borrowed terms"},
 }
 
 labels["shitgibbons"] = {
@@ -581,11 +541,6 @@ labels["terms with unknown etymologies"] = {
 labels["twice-borrowed terms"] = {
 	description = "{{{langname}}} terms that were borrowed from another language that originally borrowed the term from {{{langname}}}.",
 	parents = {"terms by etymology", "borrowed terms"},
-}
-
-labels["unadapted borrowings"] = {
-	description = "{{{langname}}} [[loanword]]s that have not been conformed to the morpho-syntactic, phonological and/or phonotactical rules of the target language.",
-	parents = {"borrowed terms"},
 }
 
 labels["univerbations"] = {
@@ -1204,57 +1159,100 @@ local function borrowing_subtype_handler(source_name, parent_cat, desc, no_by_la
 	}
 end
 
-local borrowing_descriptions = {
-	["learned borrowings"] =
-		"terms that are learned [[loanword]]s from SOURCE, that is, words that were directly incorporated from SOURCE instead of through normal language contact.",
-	["semi-learned borrowings"] =
-		"terms that are [[semi-learned borrowing|semi-learned]] [[loanword]]s from SOURCE, that is, words borrowed from SOURCE (a [[classical language]]) into the target language (a modern language) and partly reshaped based on later [[sound change]]s or by analogy with [[inherit]]ed words in the language.",
-	["orthographic borrowings"]	=
-		"terms that are orthographic loans from SOURCE, i.e. words that were borrowed from SOURCE in their script forms, not their pronunciations.",
-	["unadapted borrowings"] =
-		"[[loanword]]s from SOURCE that have not been conformed to the morpho-syntactic, phonological and/or phonotactical rules of the target language.",
+-- Specs describing types of borrowings.
+-- `from_source_desc` is the English description used in categories of the form "LANGUAGE BORTYPE from SOURCE",
+--    e.g. "Arabic semantic loans from English". "SOURCE" in the description is replaced by the source language.
+-- `umbrella_desc` is the English description used in categories of the form "LANGUAGE BORTYPE", e.g.
+--    "Arabic semantic loans". This is an umbrella category grouping all the source-language-specific categories.
+-- `uses_subtype_handler`, if true, means that the handler for "LANGUAGE BORTYPE from SOURCE" categories is
+--    implemented by a generic "TYPE borrowings" handler (at the bottom of this section), so we don't need to
+--    create a BORTYPE-specific handler.
+-- `umbrella_parent`, if given, is the parent category of the umbrella categories of the form "LANGUAGE BORTYPE".
+--    By default it is "borrowed terms". Some borrowing types replace this with "terms by etymology". (FIXME:
+--    Review whether this is correct.)
+-- `label_pattern`, if given, is a Lua pattern that matches the category name minus the language at the beginning.
+--    It should have one capture, which is the source language. An example is "^terms partially calqued from (.+)$".
+--    If omitted, it is generated from BORTYPE.
+-- `no_by_language`, if true, means that the umbrella category grouping borrowings of the appropriate type from a
+--    specific source language is named "BORTYPE from SOURCE" in place of "BORTYPE from SOURCE by language"
+--    (e.g. "Semantic loans from English" in place of "Semantic loans from English by language").
+--
+local borrowing_specs = {
+	["learned borrowings"] = {
+		from_source_desc = "terms that are learned [[loanword]]s from SOURCE, that is, words that were directly incorporated from SOURCE instead of through normal language contact.",
+		umbrella_desc = "terms that are learned [[loanword]]s, that is, words that were directly incorporated from another language instead of through normal language contact.",
+		uses_subtype_handler = true,
+	},
+	["semi-learned borrowings"] = {
+		from_source_desc = "terms that are [[semi-learned borrowing|semi-learned]] [[loanword]]s from SOURCE, that is, words borrowed from SOURCE (a [[classical language]]) into the target language (a modern language) and partly reshaped based on later [[sound change]]s or by analogy with [[inherit]]ed words in the language.",
+		umbrella_desc = "terms that are [[semi-learned borrowing|semi-learned]] [[loanword]]s, that is, words borrowed from a [[classical language]] into a modern language and partly reshaped based on later [[sound change]]s or by analogy with [[inherit]]ed words in the language.",
+		uses_subtype_handler = true,
+	},
+	["orthographic borrowings"]	= {
+		from_source_desc = "orthographic loans from SOURCE, i.e. terms that were borrowed from SOURCE in their script forms, not their pronunciations.",
+		umbrella_desc = "orthographic loans, i.e. terms that were borrowed in their script forms, not their pronunciations.",
+		uses_subtype_handler = true,
+	},
+	["unadapted borrowings"] = {
+		from_source_desc = "[[loanword]]s from SOURCE that have not been conformed to the morpho-syntactic, phonological and/or phonotactical rules of the target language.",
+		umbrella_desc = "[[loanword]]s that have not been conformed to the morpho-syntactic, phonological and/or phonotactical rules of the target language.",
+		uses_subtype_handler = true,
+	},
+	["semantic loans"] = {
+		from_source_desc = "terms that are [[Appendix:Glossary#semantic loan|semantic loans]] from SOURCE.",
+		umbrella_desc = "terms one or more of whose definitions was borrowed from a term in another language.",
+		umbrella_parent = "terms by etymology",
+		no_by_language = true,
+	},
+	["partial calques"] = {
+		from_source_desc = "terms that were [[Appendix:Glossary#partial calque|partially calqued]] from SOURCE.",
+		umbrella_desc = "[[Appendix:Glossary#partial calque|partial calques]], i.e. terms formed partly by piece-by-piece translations of terms from other languages and partly by direct borrowing.",
+		umbrella_parent = "terms by etymology",
+		label_pattern = "^terms partially calqued from (.+)$",
+		no_by_language = true,
+	},
+	["calques"] = {
+		from_source_desc = "terms that were [[Appendix:Glossary#calque|calqued]] from SOURCE.",
+		umbrella_desc = "[[Appendix:Glossary#calque|calques]], i.e. terms formed by piece-by-piece translations of terms from other languages.",
+		umbrella_parent = "terms by etymology",
+		label_pattern = "^terms calqued from (.+)$",
+		no_by_language = true,
+	},
+	["phono-semantic matchings"] = {
+		from_source_desc = "terms that are [[w:Phono-semantic matching|phono-semantic matchings]] from SOURCE.",
+		umbrella_desc = "terms that were borrowed by matching the etymon phonetically and semantically.",
+		no_by_language = true,
+	},
+	["pseudo-loans"] = {
+		from_source_desc = "[[Appendix:Glossary#pseudo-loan|pseudo-loans]] from SOURCE, i.e. are terms that appear to be SOURCE, but are not used or have an unrelated meaning in SOURCE itself.",
+		umbrella_desc = "[[Appendix:Glossary#pseudo-loan|pseudo-loans]], i.e. terms that appear to be derived from another language, but are not used or have an unrelated meaning in that language itself.",
+	},
 }
+
+for bortype, spec in pairs(borrowing_specs) do
+	labels[bortype] = {
+		description = "{{{langname}}} " .. spec.umbrella_desc,
+		parents = {spec.umbrella_parent or "borrowed terms"},
+	}
+	if not spec.uses_subtype_handler then
+		-- If the label pattern isn't specifically given, generate it from the `bortype`; but make sure to
+		-- escape hyphens in the pattern.
+		local label_pattern = spec.label_pattern or "^" .. bortype:gsub("%-", "%%-") .. " from (.+)$"
+		table.insert(handlers, function(data)
+			local source_name = data.label:match(label_pattern)
+			if source_name then
+				return borrowing_subtype_handler(source_name, bortype,
+					spec.from_source_desc, spec.no_by_language)
+			end
+		end)
+	end
+end
 
 table.insert(handlers, function(data)
 	local borrowing_type, source_name = data.label:match("^(.+ borrowings) from (.+)$")
 	if borrowing_type then
-		return borrowing_subtype_handler(source_name, borrowing_type, borrowing_descriptions[borrowing_type])
-	end
-end)
-
-table.insert(handlers, function(data)
-	local source_name = data.label:match("^semantic loans from (.+)$")
-	if source_name then
-		return borrowing_subtype_handler(source_name, "semantic loans",
-			"terms that are [[Appendix:Glossary#semantic loan|semantic loans]] from SOURCE.",
-			"no by language")
-	end
-end)
-
-table.insert(handlers, function(data)
-	local source_name = data.label:match("^terms partially calqued from (.+)$")
-	if source_name then
-		return borrowing_subtype_handler(source_name, "partial calques",
-			"terms that were [[Appendix:Glossary#partial calque|partially calqued]] from SOURCE.",
-			"no by language")
-	end
-end)
-
-table.insert(handlers, function(data)
-	local source_name = data.label:match("^terms calqued from (.+)$")
-	if source_name then
-		return borrowing_subtype_handler(source_name, "calques",
-			"terms that were [[Appendix:Glossary#calque|calqued]] from SOURCE.",
-			"no by language")
-	end
-end)
-
-table.insert(handlers, function(data)
-	local source_name = data.label:match("^phono%-semantic matchings from (.+)$")
-	if source_name then
-		return borrowing_subtype_handler(source_name, "phono-semantic matchings",
-			"terms that are [[w:Phono-semantic matching|phono-semantic matchings]] from SOURCE.",
-			"no by language")
+		return borrowing_subtype_handler(source_name, borrowing_type,
+			borrowing_descriptions[borrowing_type].from_source_desc)
 	end
 end)
 
