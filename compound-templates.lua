@@ -7,65 +7,22 @@ local m_debug = require("Module:debug")
 local rsplit = mw.text.split
 
 
-local function if_not_empty(val)
-	if val == "" then
-		return nil
-	else
-		return val
-	end
+local function fetch_script(sc, param)
+	return sc and require("Module:scripts").getByCode(sc, param) or nil
 end
 
 
-local function to_boolean(val)
-	if not val or val == "" then
-		return false
-	else
-		return true
-	end
-end
-
-
-local function fetch_lang(args, allow_compat)
-	local compat = true
-
-	if not allow_compat and args["lang"] then
-		error('The |lang= parameter is not used by this template. Place the language code in parameter 1 instead.')
-	end
-	
-	local lang = allow_compat and if_not_empty(args["lang"]) or nil
-	if not lang then
-		compat = false
-		lang = if_not_empty(args[1])
-	end
-	
-	if not lang and mw.title.getCurrentTitle().nsText == "Template" then
-		lang = "und"
-	end
-	
-	lang = lang and m_languages.getByCode(lang) or m_languages.err(lang, compat and "lang" or 1)
-	return lang, compat
-end
-
-	
-local function fetch_script(sc)
-	sc = if_not_empty(sc)
-	if sc then
-		return require("Module:scripts").getByCode(sc) or error("The script code \"" .. sc .. "\" is not valid.")
-	else
-		return nil
-	end
-end
-
-
-local function parse_args(args, allow_compat, hack_params)
+local function parse_args(args, allow_compat, hack_params, has_source)
 	local compat = args["lang"]
 	if compat and not allow_compat then
-		error('The |lang= parameter is not used by this template. Place the language code in parameter 1 instead.')
+		error("The |lang= parameter is not used by this template. Place the language code in parameter 1 instead.")
 	end
 
+	local lang_index = compat and "lang" or 1
+	local term_index = (compat and 1 or 2) + (has_source and 1 or 0)
 	local params = {
-		[compat and "lang" or 1] = {required = true, default = "und"},
-		[compat and 1 or 2] = {list = true, allow_holes = true},
+		[lang_index] = {required = true, default = "und"},
+		[term_index] = {list = true, allow_holes = true},
 		
 		["t"] = {list = true, allow_holes = true, require_index = true},
 		["gloss"] = {list = true, allow_holes = true, require_index = true, alias_of = "t"},
@@ -95,21 +52,32 @@ local function parse_args(args, allow_compat, hack_params)
 		["force_cat"] = {type = "boolean"},
 	}
 
+	local source_index
+	if has_source then
+		source_index = term_index - 1
+		params[source_index] = {required = true, default = "und"}
+	end
+
 	if hack_params then
 		hack_params(params)
 	end
 
 	args = require("Module:parameters").process(args, params)
-	return args, compat and args[1] or args[2], fetch_lang(args, allow_compat), fetch_script(args["sc"])
+	local lang = m_languages.getByCode(args[lang_index], lang_index)
+	local source
+	if has_source then
+		source = m_languages.getByCode(args[source_index], source_index, "allow etym")
+	end
+	return args, term_index, lang, fetch_script(args["sc"], "sc"), source
 end
 
 
-local function get_parsed_part(template, args, terms, i)
-	local term = terms[i]
+local function get_parsed_part(template, args, term_index, i)
+	local term = args[term_index][i]
 	local alt = args["alt"][i]
 	local id = args["id"][i]
 	local lang = args["partlang"][i]
-	local sc = fetch_script(args["partsc"][i])
+	local sc = fetch_script(args["partsc"][i], "partsc" .. i)
 	
 	local tr = args["tr"][i]
 	local ts = args["ts"][i]
@@ -120,17 +88,28 @@ local function get_parsed_part(template, args, terms, i)
 	local g = args["g"][i]
 
 	if lang then
-		lang =
-			m_languages.getByCode(lang) or
-			require("Module:etymology languages").getByCode(lang) or
-			m_languages.err(lang, "lang" .. i)
+		lang = m_languages.getByCode(lang, "lang" .. i, "allow etym")
 	end
 	
 	if not (term or alt or tr or ts) then
 		require("Module:debug").track(template .. "/no term or alt or tr")
 		return nil
 	else
-		return { term = term, alt = alt, id = id, lang = lang, sc = sc, tr = tr,
+		local termlang, actual_term
+		if term then
+			termlang, actual_term = term:match("^([A-Za-z0-9._-]+):(.*)$")
+			if termlang and termlang ~= "w" then -- special handling for w:... links to Wikipedia
+				-- -1 since i is one-based
+				termlang = m_languages.getByCode(termlang, term_index + i - 1, "allow etym")
+			else
+				termlang = nil
+				actual_term = term
+			end
+		end
+		if lang and termlang then
+			error(("Both lang%s= and a language in %s= given; specify one or the other"):format(i, term_index + i - 1))
+		end
+		return { term = actual_term, alt = alt, id = id, lang = lang or termlang, sc = sc, tr = tr,
 			ts = ts, gloss = gloss, pos = pos, lit = lit, q = q,
 			genders = g and rsplit(g, ",") or {}
 		}
@@ -138,7 +117,7 @@ local function get_parsed_part(template, args, terms, i)
 end
 
 
-local function get_parsed_parts(template, args, terms, start_index)
+local function get_parsed_parts(template, args, term_index, start_index)
 	local parts = {}
 	start_index = start_index or 1
 
@@ -151,7 +130,7 @@ local function get_parsed_parts(template, args, terms, start_index)
 	end
 
 	for index = start_index, maxmaxindex do
-		local part = get_parsed_part(template, args, terms, index)
+		local part = get_parsed_part(template, args, term_index, index)
 		parts[index - start_index + 1] = part
 	end
 	
@@ -166,13 +145,13 @@ function export.affix(frame)
 		params["notext"] = {type = "boolean"}
 	end
 
-	local args, terms, lang, sc = parse_args(frame:getParent().args, nil, hack_params)
+	local args, term_index, lang, sc = parse_args(frame:getParent().args, nil, hack_params)
 
 	if args["type"] and not m_compound.compound_types[args["type"]] then
 		error("Unrecognized compound type: '" .. args["type"] .. "'")
 	end
 
-	local parts = get_parsed_parts("affix", args, terms)
+	local parts = get_parsed_parts("affix", args, term_index)
 	
 	-- There must be at least one part to display. If there are gaps, a term
 	-- request will be shown.
@@ -196,13 +175,13 @@ function export.compound(frame)
 		params["notext"] = {type = "boolean"}
 	end
 
-	local args, terms, lang, sc = parse_args(frame:getParent().args, nil, hack_params)
+	local args, term_index, lang, sc = parse_args(frame:getParent().args, nil, hack_params)
 
 	if args["type"] and not m_compound.compound_types[args["type"]] then
 		error("Unrecognized compound type: '" .. args["type"] .. "'")
 	end
 
-	local parts = get_parsed_parts("compound", args, terms)
+	local parts = get_parsed_parts("compound", args, term_index)
 	
 	-- There must be at least one part to display. If there are gaps, a term
 	-- request will be shown.
@@ -226,7 +205,7 @@ function export.compound_like(frame)
 		params["notext"] = {type = "boolean"}
 	end
 
-	local args, terms, lang, sc = parse_args(frame:getParent().args, nil, hack_params)
+	local args, term_index, lang, sc = parse_args(frame:getParent().args, nil, hack_params)
 
 	local template = frame.args["template"]
 	local nocat = args["nocat"]
@@ -235,7 +214,7 @@ function export.compound_like(frame)
 	local oftext = not notext and (frame.args["oftext"] or text and "of")
 	local cat = not nocat and frame.args["cat"]
 
-	local parts = get_parsed_parts(template, args, terms)
+	local parts = get_parsed_parts(template, args, term_index)
 
 	if not next(parts) then
 		if mw.title.getCurrentTitle().nsText == "Template" then
@@ -243,14 +222,14 @@ function export.compound_like(frame)
 		end
 	end
 	
-	return m_compound.show_compound_like(lang, sc, parts, args["sort"], text, oftext, cat, args["lit"], args["force_cat"])
+	return m_compound.show_compound_like(lang, sc, parts, args["sort"], text, oftext, cat, args["nocat"], args["lit"], args["force_cat"])
 end
 
 
 function export.interfix_compound(frame)
-	local args, terms, lang, sc = parse_args(frame:getParent().args)
+	local args, term_index, lang, sc = parse_args(frame:getParent().args)
 
-	local parts = get_parsed_parts("interfix-compound", args, terms)
+	local parts = get_parsed_parts("interfix-compound", args, term_index)
 	local base1 = parts[1]
 	local interfix = parts[2]
 	local base2 = parts[3]
@@ -271,9 +250,9 @@ end
 
 
 function export.circumfix(frame)
-	local args, terms, lang, sc = parse_args(frame:getParent().args)
+	local args, term_index, lang, sc = parse_args(frame:getParent().args)
 
-	local parts = get_parsed_parts("circumfix", args, terms)
+	local parts = get_parsed_parts("circumfix", args, term_index)
 	local prefix = parts[1]
 	local base = parts[2]
 	local suffix = parts[3]
@@ -294,9 +273,9 @@ end
 
 
 function export.confix(frame)
-	local args, terms, lang, sc = parse_args(frame:getParent().args)
+	local args, term_index, lang, sc = parse_args(frame:getParent().args)
 
-	local parts = get_parsed_parts("confix", args, terms)
+	local parts = get_parsed_parts("confix", args, term_index)
 	local prefix = parts[1]
 	local base = #parts >= 3 and parts[2] or nil
 	local suffix = #parts >= 3 and parts[3] or parts[2]
@@ -315,10 +294,26 @@ function export.confix(frame)
 end
 
 
-function export.infix(frame)
-	local args, terms, lang, sc = parse_args(frame:getParent().args)
+function export.pseudo_loan(frame)
+	local function hack_params(params)
+		params["pos"] = nil
+		params["nocap"] = {type = "boolean"}
+		params["notext"] = {type = "boolean"}
+	end
 
-	local parts = get_parsed_parts("infix", args, terms)
+	local args, term_index, lang, sc, source = parse_args(frame:getParent().args, nil, hack_params, "has source")
+
+	local parts = get_parsed_parts("pseudo-loan", args, term_index)
+	
+	return require("Module:compound/pseudo-loan").show_pseudo_loan(lang, source, sc, parts, args["sort"],
+		args["nocap"], args["notext"], args["nocat"], args["lit"], args["force_cat"])
+end
+
+
+function export.infix(frame)
+	local args, term_index, lang, sc = parse_args(frame:getParent().args)
+
+	local parts = get_parsed_parts("infix", args, term_index)
 	local base = parts[1]
 	local infix = parts[2]
 	
@@ -337,9 +332,9 @@ end
 
 
 function export.prefix(frame)
-	local args, terms, lang, sc = parse_args(frame:getParent().args)
+	local args, term_index, lang, sc = parse_args(frame:getParent().args)
 
-	local prefixes = get_parsed_parts("prefix", args, terms)
+	local prefixes = get_parsed_parts("prefix", args, term_index)
 	local base = nil
 	
 	if #prefixes >= 2 then
@@ -362,10 +357,10 @@ end
 
 
 function export.suffix(frame)
-	local args, terms, lang, sc = parse_args(frame:getParent().args)
+	local args, term_index, lang, sc = parse_args(frame:getParent().args)
 
-	local base = get_parsed_part("suffix", args, terms, 1)
-	local suffixes = get_parsed_parts("suffix", args, terms, 2)
+	local base = get_parsed_part("suffix", args, term_index, 1)
+	local suffixes = get_parsed_parts("suffix", args, term_index, 2)
 	
 	-- Just to make sure someone didn't use the template in a silly way
 	if #suffixes == 0 then
@@ -396,8 +391,8 @@ function export.transfix(frame)
 	
 	local args = require("Module:parameters").process(frame:getParent().args, params)
 	
-	local lang = m_languages.getByCode(args[1]) or m_languages.err(lang, 1)
-	local sc = fetch_script(args["sc"])
+	local lang = m_languages.getByCode(args[1], 1)
+	local sc = fetch_script(args["sc"], "sc")
 
 	local base = {term = args[2]}
 	local transfix = {term = args[3]}
@@ -407,51 +402,60 @@ end
 
 
 function export.derivsee(frame)
-	local args = frame:getParent().args
+	local iargs = frame.args
+	local iparams = {
+		["derivtype"] = {},
+		["mode"] = {},
+	}
+	local iargs = require("Module:parameters").process(frame.args, iparams)
+
+	local params = {
+		["head"] = {},
+		["id"] = {},
+		["sc"] = {},
+		["pos"] = {},
+	}
+	local derivtype = iargs.derivtype
+	if derivtype == "PIE root" then
+		params[1] = {}
+	else
+		params[1] = {required = "true", default = "und"}
+		params[2] = {}
+	end
 	
-	local derivtype = frame.args["derivtype"]
-	local mode = if_not_empty(frame.args["mode"])
+	local args = require("Module:parameters").process(frame:getParent().args, params)
+
 	local lang
 	local term
 	
 	if derivtype == "PIE root" then
 		lang = m_languages.getByCode("ine-pro")
-		term = if_not_empty(args[1] or args["head"])
+		term = args[1] or args["head"]
 
 		if term then
 			term = "*" .. term .. "-"
 		end
 	else
-		lang = fetch_lang(args)
-		term = if_not_empty(args[2] or args["head"])
+		lang = m_languages.getByCode(args[1], 1)
+		term = args[2] or args["head"]
 	end
 	
-	local id = if_not_empty(args["id"])
-	local sc = fetch_script(args["sc"])
-	local pos = if_not_empty(args["pos"])
-
-	pos = pos or "word"
-	
-	-- Pluralize the part of speech name
-	if pos:find("[sx]$") then
-		pos = pos .. "es"
-	else
-		pos = pos .. "s"
-	end
+	local id = args.id
+	local sc = fetch_script(args.sc, "sc")
+	local pos = require("Module:string utilities").pluralize(args.pos or "word")
 	
 	if not term then
+		local SUBPAGE = mw.title.getCurrentTitle().subpageText
 		if lang:getType() == "reconstructed" then
-			term = "*" .. mw.title.getCurrentTitle().subpageText
+			term = "*" .. SUBPAGE
 		elseif lang:getType() == "appendix-constructed" then
-			term = mw.title.getCurrentTitle().subpageText
+			term = SUBPAGE
 		elseif mw.title.getCurrentTitle().nsText == "Reconstruction" then
-			term = "*" .. mw.title.getCurrentTitle().subpageText
+			term = "*" .. SUBPAGE
 		else
-			term = mw.title.getCurrentTitle().subpageText
+			term = SUBPAGE
 		end
 	end
-	
-	local category = nil
 	
 	if derivtype == "PIE root" then
 		return frame:callParserFunction{
@@ -460,15 +464,19 @@ function export.derivsee(frame)
 				"Terms derived from the Proto-Indo-European root " .. term .. (id and " (" .. id .. ")" or ""),
 				depth = 0,
 				class = "\"derivedterms\"",
-				mode = mode,
+				mode = iargs.mode,
 				}
 			}
 	end
-	
-	if derivtype == "compound" then
-		category = lang:getCanonicalName() .. " compounds with " .. term
+
+	local category = nil
+	local langname = lang:getCanonicalName()
+	if (derivtype == "compound" and pos == nil) then
+		category = langname .. " compounds with " .. term
+	elseif derivtype == "compound" then
+		category = langname .. " compound " .. pos .. " with " .. term
 	else
-		category = lang:getCanonicalName() .. " " .. pos .. " " .. derivtype .. "ed with " .. term .. (id and " (" .. id .. ")" or "")
+		category = langname .. " " .. pos .. " " .. derivtype .. "ed with " .. term .. (id and " (" .. id .. ")" or "")
 	end
 	
 	return frame:callParserFunction{

@@ -11,6 +11,9 @@ local ulen = mw.ustring.len
 local rfind = mw.ustring.find
 local rmatch = mw.ustring.match
 
+local debug_force_cat = false -- if set to true, always display categories even on userspace pages
+
+
 -- ABOUT TEMPLATE AND DISPLAY HYPHENS:
 --
 -- The "template hyphen" is the per-script hyphen character that is used in
@@ -137,10 +140,9 @@ end
 local display_hyphens = {
 	-- Arabic scripts get added below
 	["Hani"] = no_display_hyphen,
-	-- The following two are mixtures of several scripts. Hopefully
+	-- The following is a mixture of several scripts. Hopefully
 	-- the specs here are correct!
 	["Jpan"] = no_display_hyphen,
-	["Kore"] = no_display_hyphen,
 	["Laoo"] = no_display_hyphen,
 	["Nshu"] = no_display_hyphen,
 	["Thai"] = no_display_hyphen,
@@ -155,50 +157,56 @@ local function glossary_link(entry, text)
 end
 
 
+local function make_compound_type(typ, alttext)
+	return {
+		text = glossary_link(typ, alttext) .. " compound",
+		cat = typ .. " compounds",
+	}
+end
+
+
+-- Make a compound type entry with a simple rather than glossary link.
+-- These should be replaced with a glossary link when the entry in the glossary
+-- is created.
+local function make_non_glossary_compound_type(typ, alttext)
+	local link = alttext and "[[" .. typ .. "|" .. alttext .. "]]" or "[[" .. typ .. "]]"
+	return {
+		text = link .. " compound",
+		cat = typ .. " compounds",
+	}
+end
+
+
 export.compound_types = {
-	["bahuvrihi"] = {
-		text = glossary_link("bahuvrihi", "bahuvrīhi") .. " compound",
-		cat = "bahuvrihi compounds",
-	},
+	["alliterative"] = make_non_glossary_compound_type("alliterative"),
+	["allit"] = "alliterative",
+	["antonymous"] = make_non_glossary_compound_type("antonymous"),
+	["ant"] = "antonymous",
+	["bahuvrihi"] = make_compound_type("bahuvrihi", "bahuvrīhi"),
 	["bahu"] = "bahuvrihi",
 	["bv"] = "bahuvrihi",
-	["karmadharaya"] = {
-		text = glossary_link("karmadharaya", "karmadhāraya") .. " compound",
-		cat = "karmadharaya compounds",
-	},
+	["coordinative"] = make_compound_type("coordinative"),
+	["coord"] = "coordinative",
+	["descriptive"] = make_compound_type("descriptive"),
+	["desc"] = "descriptive",
+	["determinative"] = make_compound_type("determinative"),
+	["det"] = "determinative",
+	["dvandva"] = make_compound_type("dvandva"),
+	["dva"] = "dvandva",
+	["endocentric"] = make_compound_type("endocentric"),
+	["endo"] = "endocentric",
+	["exocentric"] = make_compound_type("exocentric"),
+	["exo"] = "exocentric",
+	["karmadharaya"] = make_compound_type("karmadharaya", "karmadhāraya"),
 	["karma"] = "karmadharaya",
 	["kd"] = "karmadharaya",
-	["tatpurusa"] = {
-		text = glossary_link("tatpurusa", "tatpuruṣa") .. " compound",
-		cat = "tatpurusa compounds",
-	},
+	["rhyming"] = make_non_glossary_compound_type("rhyming"),
+	["rhy"] = "rhyming",
+	["synonymous"] = make_non_glossary_compound_type("synonymous"),
+	["syn"] = "synonymous",
+	["tatpurusa"] = make_compound_type("tatpurusa", "tatpuruṣa"),
 	["tat"] = "tatpurusa",
 	["tp"] = "tatpurusa",
-	["dvandva"] = {
-		text = glossary_link("dvandva") .. " compound",
-		cat = "dvandva compounds",
-	},
-	["dva"] = "dvandva",
-	["alliterative"] = {
-		text = "[[alliterative]] compound",
-		cat = "alliterative compounds",
-	},
-	["allit"] = "alliterative",
-	["antonymous"] = {
-		text = "[[antonymous]] compound",
-		cat = "antonymous compounds",
-	},
-	["ant"] = "antonymous",
-	["rhyming"] = {
-		text = "[[rhyming]] compound",
-		cat = "rhyming compounds",
-	},
-	["rhy"] = "rhyming",
-	["synonymous"] = {
-		text = "[[synonymous]] compound",
-		cat = "synonymous compounds",
-	},
-	["syn"] = "synonymous",
 }
 
 
@@ -218,13 +226,14 @@ local function make_entry_name_no_links(lang, term)
 	return m_lang.getNonEtymological(lang):makeEntryName(m_links.remove_links(term))
 end
 
-local function link_term(terminfo, display_term, lang, sc, sort_key, force_cat)
+function export.link_term(terminfo, display_term, lang, sc, sort_key, force_cat, nocat)
 	local terminfo_new = require("Module:table").shallowcopy(terminfo)
 	local result
 
 	terminfo_new.term = display_term
 	if terminfo_new.lang then
-		result = require("Module:etymology").format_derived(lang, terminfo_new, sort_key, nil, force_cat)
+		result = require("Module:etymology").format_derived(lang, terminfo_new, sort_key, nocat,
+			force_cat or debug_force_cat)
 	else
 		terminfo_new.lang = lang
 		terminfo_new.sc = terminfo_new.sc or sc
@@ -353,7 +362,8 @@ end
 
 -- Iterate an array up to the greatest integer index found.
 local function ipairs_with_gaps(t)
-	local max_index = math.max(unpack(require("Module:table").numKeys(t)))
+	local indices = require("Module:table").numKeys(t)
+	local max_index = #indices > 0 and math.max(unpack(indices)) or 0
 	local i = 0
 	return function()
 		while i < max_index do
@@ -371,16 +381,18 @@ export.ipairs_with_gaps = ipairs_with_gaps
 -- (which is formatted using SORT_KEY) or a table of the form {cat=CATEGORY, sort_key=SORT_KEY, sort_base=SORT_BASE},
 -- specifying the sort key and sort base to use when formatting the category. If NOCAT is given, no
 -- categories are added.
-local function concat_parts(lang, parts_formatted, categories, nocat, sort_key, lit, force_cat)
+function export.concat_parts(lang, parts_formatted, categories, nocat, sort_key, lit, force_cat)
 	local cattext
 	if nocat then
 		cattext = ""
 	else
 		for i, cat in ipairs(categories) do
 			if type(cat) == "table" then
-				categories[i] = m_utilities.format_categories({lang:getCanonicalName() .. " " .. cat.cat}, lang, cat.sort_key, cat.sort_base, force_cat)
+				categories[i] = m_utilities.format_categories({lang:getCanonicalName() .. " " .. cat.cat}, lang,
+					cat.sort_key, cat.sort_base, force_cat or debug_force_cat)
 			else
-				categories[i] = m_utilities.format_categories({lang:getCanonicalName() .. " " .. cat}, lang, sort_key, nil, force_cat)
+				categories[i] = m_utilities.format_categories({lang:getCanonicalName() .. " " .. cat}, lang,
+					sort_key, nil, force_cat or debug_force_cat)
 			end
 		end
 		cattext = table.concat(categories)
@@ -389,7 +401,7 @@ local function concat_parts(lang, parts_formatted, categories, nocat, sort_key, 
 end
 
 
-local function process_compound_type(typ, nocap)
+local function process_compound_type(typ, nocap, notext, has_parts)
 	local text_sections = {}
 	local categories = {}
 
@@ -410,7 +422,7 @@ local function process_compound_type(typ, nocap)
 	
 		if not notext then
 			table.insert(text_sections, text)
-			if #parts > 0 then
+			if has_parts then
 				table.insert(text_sections, " ")
 				table.insert(text_sections, oftext)
 				table.insert(text_sections, " ")
@@ -428,7 +440,7 @@ function export.show_affixes(lang, sc, parts, pos, sort_key, typ, nocap, notext,
 
 	pos = pluralize(pos)
 
-	local text_sections, categories = process_compound_type(typ, nocap)
+	local text_sections, categories = process_compound_type(typ, nocap, notext, #parts > 0)
 
 	-- Process each part
 	local parts_formatted = {}
@@ -449,7 +461,7 @@ function export.show_affixes(lang, sc, parts, pos, sort_key, typ, nocap, notext,
 			-- {{suffix|mul||idae}} to {{affix|mul|^|-idae}}.
 			table.insert(parts_formatted, "")
 		else
-			table.insert(parts_formatted, link_term(part, display_term, lang, sc, sort_key, force_cat))
+			table.insert(parts_formatted, export.link_term(part, display_term, lang, sc, sort_key, force_cat, nocat))
 		end
 
 		if affix_type then
@@ -490,17 +502,17 @@ function export.show_affixes(lang, sc, parts, pos, sort_key, typ, nocap, notext,
 		error("The parameters did not include any affixes, and the word is not a compound. Please provide at least one affix.")
 	end
 
-	table.insert(text_sections, concat_parts(lang, parts_formatted, categories, nocat, sort_key, lit, force_cat))
+	table.insert(text_sections, export.concat_parts(lang, parts_formatted, categories, nocat, sort_key, lit, force_cat))
 	return table.concat(text_sections)
 end
 
 
-function export.show_compound(lang, sc, parts, pos, sort_key, typ, nocap, nocat, lit, force_cat)
+function export.show_compound(lang, sc, parts, pos, sort_key, typ, nocap, notext, nocat, lit, force_cat)
 	pos = pos or "word"
 
 	pos = pluralize(pos)
 
-	local text_sections, categories = process_compound_type(typ, nocap)
+	local text_sections, categories = process_compound_type(typ, nocap, notext, #parts > 0)
 
 	local parts_formatted = {}
 	table.insert(categories, "compound " .. pos)
@@ -532,7 +544,7 @@ function export.show_compound(lang, sc, parts, pos, sort_key, typ, nocap, nocat,
 				whole_words = whole_words + 1
 			end
 		end
-		table.insert(parts_formatted, link_term(part, display_term, lang, sc, sort_key, force_cat))
+		table.insert(parts_formatted, export.link_term(part, display_term, lang, sc, sort_key, force_cat, nocat))
 	end
 
 	if whole_words == 1 then
@@ -541,12 +553,12 @@ function export.show_compound(lang, sc, parts, pos, sort_key, typ, nocap, nocat,
 		require("Module:debug").track("compound/looks like confix")
 	end
 
-	table.insert(text_sections, concat_parts(lang, parts_formatted, categories, nocat, sort_key, lit, force_cat))
+	table.insert(text_sections, export.concat_parts(lang, parts_formatted, categories, nocat, sort_key, lit, force_cat))
 	return table.concat(text_sections)
 end
 
 
-function export.show_compound_like(lang, sc, parts, sort_key, text, oftext, cat, lit, force_cat)
+function export.show_compound_like(lang, sc, parts, sort_key, text, oftext, cat, nocat, lit, force_cat)
 	local parts_formatted = {}
 	local categories = {}
 
@@ -556,7 +568,7 @@ function export.show_compound_like(lang, sc, parts, sort_key, text, oftext, cat,
 
 	-- Make links out of all the parts
 	for i, part in ipairs(parts) do
-		table.insert(parts_formatted, link_term(part, part.term, lang, sc, sort_key, force_cat))
+		table.insert(parts_formatted, export.link_term(part, part.term, lang, sc, sort_key, force_cat, nocat))
 	end
 
 	local text_sections = {}
@@ -568,8 +580,7 @@ function export.show_compound_like(lang, sc, parts, sort_key, text, oftext, cat,
 		table.insert(text_sections, oftext)
 		table.insert(text_sections, " ")
 	end
-	-- FIXME, should support nocat=
-	table.insert(text_sections, concat_parts(lang, parts_formatted, categories, nil, sort_key, lit, force_cat))
+	table.insert(text_sections, export.concat_parts(lang, parts_formatted, categories, nocat, sort_key, lit, force_cat))
 	return table.concat(text_sections)
 end
 
@@ -586,8 +597,9 @@ local function make_part_affix(part, lang, sc, affix_type)
 
 	part.term = export.make_affix(part.term, part_lang, part_sc, affix_type)
 	part.alt = export.make_affix(part.alt, part_lang, part_sc, affix_type)
-	part.tr = export.make_affix(part.tr, part_lang, require("Module:scripts").getByCode("Latn"), affix_type)
-	part.ts = export.make_affix(part.ts, part_lang, require("Module:scripts").getByCode("Latn"), affix_type)
+	local Latn = require("Module:scripts").getByCode("Latn")
+	part.tr = export.make_affix(part.tr, part_lang, Latn, affix_type)
+	part.ts = export.make_affix(part.ts, part_lang, Latn, affix_type)
 end
 
 
@@ -651,14 +663,14 @@ function export.show_circumfix(lang, sc, prefix, base, suffix, pos, sort_key, no
 		sort_base = make_entry_name_no_links(base.lang or lang, base.term)
 	end
 
-	table.insert(parts_formatted, link_term(prefix, prefix.term, lang, sc, sort_key, force_cat))
-	table.insert(parts_formatted, link_term(base, base.term, lang, sc, sort_key, force_cat))
-	table.insert(parts_formatted, link_term(suffix, suffix.term, lang, sc, sort_key, force_cat))
+	table.insert(parts_formatted, export.link_term(prefix, prefix.term, lang, sc, sort_key, force_cat, nocat))
+	table.insert(parts_formatted, export.link_term(base, base.term, lang, sc, sort_key, force_cat, nocat))
+	table.insert(parts_formatted, export.link_term(suffix, suffix.term, lang, sc, sort_key, force_cat, nocat))
 
 	-- Insert the categories
 	table.insert(categories, {cat=pos .. " circumfixed with " .. make_entry_name_no_links(prefix.lang or lang, circumfix), sort_key=sort_key, sort_base=sort_base})
 
-	return concat_parts(lang, parts_formatted, categories, nocat, sort_key, lit, force_cat)
+	return export.concat_parts(lang, parts_formatted, categories, nocat, sort_key, lit, force_cat)
 end
 
 
@@ -685,17 +697,17 @@ function export.show_confix(lang, sc, prefix, base, suffix, pos, sort_key, nocat
 	end
 	local categories = {}
 
-	table.insert(parts_formatted, link_term(prefix, prefix.term, lang, sc, sort_key, force_cat))
+	table.insert(parts_formatted, export.link_term(prefix, prefix.term, lang, sc, sort_key, force_cat, nocat))
 	insert_affix_category(categories, lang, pos, "prefix", prefix, sort_key, prefix_sort_base)
 
 	if base then
-		table.insert(parts_formatted, link_term(base, base.term, lang, sc, sort_key, force_cat))
+		table.insert(parts_formatted, export.link_term(base, base.term, lang, sc, sort_key, force_cat, nocat))
 	end
 
-	table.insert(parts_formatted, link_term(suffix, suffix.term, lang, sc, sort_key, force_cat))
+	table.insert(parts_formatted, export.link_term(suffix, suffix.term, lang, sc, sort_key, force_cat, nocat))
 	insert_affix_category(categories, lang, pos, "suffix", suffix)
 
-	return concat_parts(lang, parts_formatted, categories, nocat, sort_key, lit, force_cat)
+	return export.concat_parts(lang, parts_formatted, categories, nocat, sort_key, lit, force_cat)
 end
 
 
@@ -714,13 +726,13 @@ function export.show_infix(lang, sc, base, infix, pos, sort_key, nocat, lit, for
 	-- Make links out of all the parts
 	local parts_formatted = {}
 
-	table.insert(parts_formatted, link_term(base, base.term, lang, sc, sort_key, force_cat))
-	table.insert(parts_formatted, link_term(infix, infix.term, lang, sc, sort_key, force_cat))
+	table.insert(parts_formatted, export.link_term(base, base.term, lang, sc, sort_key, force_cat, nocat))
+	table.insert(parts_formatted, export.link_term(infix, infix.term, lang, sc, sort_key, force_cat, nocat))
 
 	-- Insert the categories
 	insert_affix_category(categories, lang, pos, "infix", infix)
 
-	return concat_parts(lang, parts_formatted, categories, nocat, sort_key, lit, force_cat)
+	return export.concat_parts(lang, parts_formatted, categories, nocat, sort_key, lit, force_cat)
 end
 
 
@@ -752,17 +764,17 @@ function export.show_prefixes(lang, sc, prefixes, base, pos, sort_key, nocat, li
 	end
 
 	for i, prefix in ipairs(prefixes) do
-		table.insert(parts_formatted, link_term(prefix, prefix.term, lang, sc, sort_key, force_cat))
+		table.insert(parts_formatted, export.link_term(prefix, prefix.term, lang, sc, sort_key, force_cat, nocat))
 		insert_affix_category(categories, lang, pos, "prefix", prefix, sort_key, i == 1 and first_sort_base or nil)
 	end
 
 	if base then
-		table.insert(parts_formatted, link_term(base, base.term, lang, sc, sort_key, force_cat))
+		table.insert(parts_formatted, export.link_term(base, base.term, lang, sc, sort_key, force_cat, nocat))
 	else
 		table.insert(parts_formatted, "")
 	end
 
-	return concat_parts(lang, parts_formatted, categories, nocat, sort_key, lit, force_cat)
+	return export.concat_parts(lang, parts_formatted, categories, nocat, sort_key, lit, force_cat)
 end
 
 
@@ -787,13 +799,13 @@ function export.show_suffixes(lang, sc, base, suffixes, pos, sort_key, nocat, li
 	local parts_formatted = {}
 
 	if base then
-		table.insert(parts_formatted, link_term(base, base.term, lang, sc, sort_key, force_cat))
+		table.insert(parts_formatted, export.link_term(base, base.term, lang, sc, sort_key, force_cat, nocat))
 	else
 		table.insert(parts_formatted, "")
 	end
 
 	for i, suffix in ipairs(suffixes) do
-		table.insert(parts_formatted, link_term(suffix, suffix.term, lang, sc, sort_key, force_cat))
+		table.insert(parts_formatted, export.link_term(suffix, suffix.term, lang, sc, sort_key, force_cat, nocat))
 	end
 
 	-- Insert the categories
@@ -807,7 +819,7 @@ function export.show_suffixes(lang, sc, base, suffixes, pos, sort_key, nocat, li
 		end
 	end
 
-	return concat_parts(lang, parts_formatted, categories, nocat, sort_key, lit, force_cat)
+	return export.concat_parts(lang, parts_formatted, categories, nocat, sort_key, lit, force_cat)
 end
 
 
@@ -823,13 +835,13 @@ function export.show_transfix(lang, sc, base, transfix, pos, sort_key, nocat, li
 	-- Make links out of all the parts
 	local parts_formatted = {}
 
-	table.insert(parts_formatted, link_term(base, base.term, lang, sc, sort_key, force_cat))
-	table.insert(parts_formatted, link_term(transfix, transfix.term, lang, sc, sort_key, force_cat))
+	table.insert(parts_formatted, export.link_term(base, base.term, lang, sc, sort_key, force_cat, nocat))
+	table.insert(parts_formatted, export.link_term(transfix, transfix.term, lang, sc, sort_key, force_cat, nocat))
 
 	-- Insert the categories
 	insert_affix_category(categories, lang, pos, "transfix", transfix)
 
-	return concat_parts(lang, parts_formatted, categories, nocat, sort_key, lit, force_cat)
+	return export.concat_parts(lang, parts_formatted, categories, nocat, sort_key, lit, force_cat)
 end
 
 
