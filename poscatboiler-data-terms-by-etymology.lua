@@ -1199,32 +1199,32 @@ local borrowing_specs = {
 		uses_subtype_handler = true,
 	},
 	["semantic loans"] = {
-		from_source_desc = "terms that are [[Appendix:Glossary#semantic loan|semantic loans]] from SOURCE.",
-		umbrella_desc = "terms one or more of whose definitions was borrowed from a term in another language.",
+		from_source_desc = "[[Appendix:Glossary#semantic loan|semantic loans]] from SOURCE, i.e. terms one or more of whose definitions was borrowed from a term in SOURCE.",
+		umbrella_desc = "[[Appendix:Glossary#semantic loan|semantic loans]], i.e. terms one or more of whose definitions was borrowed from a term in another language.",
 		umbrella_parent = "terms by etymology",
 		no_by_language = true,
 	},
 	["partial calques"] = {
-		from_source_desc = "terms that were [[Appendix:Glossary#partial calque|partially calqued]] from SOURCE.",
+		from_source_desc = "terms that were [[Appendix:Glossary#partial calque|partially calqued]] from SOURCE, i.e. terms formed partly by piece-by-piece translations of SOURCE terms and partly by direct borrowing.",
 		umbrella_desc = "[[Appendix:Glossary#partial calque|partial calques]], i.e. terms formed partly by piece-by-piece translations of terms from other languages and partly by direct borrowing.",
 		umbrella_parent = "terms by etymology",
 		label_pattern = "^terms partially calqued from (.+)$",
 		no_by_language = true,
 	},
 	["calques"] = {
-		from_source_desc = "terms that were [[Appendix:Glossary#calque|calqued]] from SOURCE.",
+		from_source_desc = "terms that were [[Appendix:Glossary#calque|calqued]] from SOURCE, i.e. terms formed by piece-by-piece translations of SOURCE terms.",
 		umbrella_desc = "[[Appendix:Glossary#calque|calques]], i.e. terms formed by piece-by-piece translations of terms from other languages.",
 		umbrella_parent = "terms by etymology",
 		label_pattern = "^terms calqued from (.+)$",
 		no_by_language = true,
 	},
 	["phono-semantic matchings"] = {
-		from_source_desc = "terms that are [[w:Phono-semantic matching|phono-semantic matchings]] from SOURCE.",
-		umbrella_desc = "terms that were borrowed by matching the etymon phonetically and semantically.",
+		from_source_desc = "[[Appendix:Glossary#phono-semantic matching|phono-semantic matchings]] from SOURCE, i.e. terms that were borrowed by matching the etymon phonetically and semantically.",
+		umbrella_desc = "[[Appendix:Glossary#phono-semantic matching|phono-semantic matchings]], i.e. terms that were borrowed by matching the etymon phonetically and semantically.",
 		no_by_language = true,
 	},
 	["pseudo-loans"] = {
-		from_source_desc = "[[Appendix:Glossary#pseudo-loan|pseudo-loans]] from SOURCE, i.e. are terms that appear to be SOURCE, but are not used or have an unrelated meaning in SOURCE itself.",
+		from_source_desc = "[[Appendix:Glossary#pseudo-loan|pseudo-loans]] from SOURCE, i.e. terms that appear to be SOURCE, but are not used or have an unrelated meaning in SOURCE itself.",
 		umbrella_desc = "[[Appendix:Glossary#pseudo-loan|pseudo-loans]], i.e. terms that appear to be derived from another language, but are not used or have an unrelated meaning in that language itself.",
 	},
 }
@@ -1233,6 +1233,7 @@ for bortype, spec in pairs(borrowing_specs) do
 	labels[bortype] = {
 		description = "{{{langname}}} " .. spec.umbrella_desc,
 		parents = {spec.umbrella_parent or "borrowed terms"},
+		umbrella_parents = "Terms by etymology subcategories by language",
 	}
 	if not spec.uses_subtype_handler then
 		-- If the label pattern isn't specifically given, generate it from the `bortype`; but make sure to
@@ -1252,7 +1253,7 @@ table.insert(handlers, function(data)
 	local borrowing_type, source_name = data.label:match("^(.+ borrowings) from (.+)$")
 	if borrowing_type then
 		return borrowing_subtype_handler(source_name, borrowing_type,
-			borrowing_descriptions[borrowing_type].from_source_desc)
+			borrowing_specs[borrowing_type].from_source_desc)
 	end
 end)
 
