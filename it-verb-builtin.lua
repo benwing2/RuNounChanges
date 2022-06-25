@@ -292,7 +292,7 @@ export.builtin_verbs = {
 		sub:sìa.
 		impsub:fóssi.
 		improw:sìi,siàte.
-		presp:essènte[rare]
+		presp:-
 ]=], "<<essere>>, <<riessere>>"},
 	{"tessere", "è,tesséi,+", "<<tessere>> and derivatives"},
 	{"mietere", "è:é,mietéi,+", "<<mietere>>"},
