@@ -194,7 +194,7 @@ export.builtin_verbs = {
 	{"frangere", "à,frànsi,frànto", "<<frangere>> and derivatives"},
 	-- tangere: literary, defective
 	-- etc.
-	{"spengere", "è:é,spènsi:spénsi,spènto:spénto", "<<spengere>> (Tuscan variant of <<spegnere>>)"},
+	{"spengere", "é:#è,spénsi:#spènsi,spénto:#spènto", "<<spengere>> (Tuscan variant of <<spegnere>>)"},
 	{"mingere", "ì,mìnsi,-", "<<mingere>> and derivatives"},
 	{"stringere", "ì,strìnsi,strétto", "<<stringere>> and derivatives"},
 	{"ingere", "ì,ìnsi,ìnto", "<<cingere>> and derivatives; <<fingere>> and derivatives; <<pingere>> and derivatives; <<spingere>> and derivatives; <<tingere>> and derivatives; but not <<mingere>> (lacking the past participle), and not <<stringere>> and derivatives (with past participle <<stretto>> etc.)"},
