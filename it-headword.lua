@@ -1120,7 +1120,7 @@ pos_functions["verbs"] = {
 			local function do_verb_form(slot, label, rowslot, rowlabel)
 				local forms = alternant_multiword_spec.forms[slot]
 				local retval
-				if not alternant_multiword_spec.row_has_forms[rowslot] then
+				if rowslot and not alternant_multiword_spec.row_has_forms[rowslot] then
 					if not alternant_multiword_spec.row_is_defective[rowslot] then
 						-- No forms, but none expected; don't display anything
 						return
@@ -1155,9 +1155,6 @@ pos_functions["verbs"] = {
 			
 			local thirdonly = alternant_multiword_spec.props.only3s or alternant_multiword_spec.props.only3sp
 			local sing_label = thirdonly and "third-person singular" or "first-person singular"
-			do_verb_form(thirdonly and "pres3s" or "pres1s", sing_label .. " present")
-			do_verb_form(thirdonly and "phis3s" or "phis1s", sing_label .. " past historic")
-			do_verb_form("pp", "past participle")
 			for _, rowspec in ipairs {
 				{"pres", "present", true},
 				{"phis", "past historic", true},
@@ -1191,7 +1188,7 @@ pos_functions["verbs"] = {
 			-- Also do the imperative, but not for third-only verbs, which are always missing the imperative.
 			if not thirdonly and (alternant_multiword_spec.is_irreg.imp2s
 				or not alternant_multiword_spec.forms.imp2s) then
-				do_verb_form("imp2s", "second-person singular imperative")
+				do_verb_form("imp2s", "second-person singular imperative", "imp", "imperative")
 			end
 			-- If there is a past participle but no auxiliary (e.g. [[malfare]]), explicitly add "no auxiliary". In
 			-- cases where there's no past participle and no auxiliary (e.g. [[irrompere]]), we don't do this as we
