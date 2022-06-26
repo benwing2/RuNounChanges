@@ -1983,7 +1983,7 @@ def split_trailing_separator_and_categories(sectext):
     sectail = ""
 
   # Split off categories at end
-  mm = re.match(r"^(.*?\n)(\n*((?:\[\[Category:[^\[\]\n]+\]\]|\{\{(?:c|C|cat|cln|top|topic|topics|categorize|catlangname|catlangcode)\|[^{}\n]*\}\})\n*)*)$",
+  mm = re.match(r"^(.*?\n)(\n*((?:\[\[[Cc]ategory:[^\[\]\n]+\]\]|\{\{(?:c|C|cat|cln|top|topic|topics|categorize|catlangname|catlangcode)\|[^{}\n]*\}\})\n*)*)$",
       secbody, re.S)
   if mm:
     secbody, secbodytail = mm.group(1), mm.group(2)

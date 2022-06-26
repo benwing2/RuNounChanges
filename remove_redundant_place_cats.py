@@ -103,7 +103,7 @@ def process_page(page, index, parsed):
       wikicode = expand_text(unicode(t))
       if not wikicode:
         continue
-      for m in re.finditer(r"\[\[Category:(.*?)\]\]", wikicode):
+      for m in re.finditer(r"\[\[(?:[Cc]ategory|CAT):(.*?)\]\]", wikicode):
         cat = m.group(1)
         cat = re.sub(r"\|.*", "", cat)
         auto_added_categories.add(cat)
@@ -151,7 +151,7 @@ def process_page(page, index, parsed):
         text_to_remove.append(unicode(t))
   text = unicode(parsed)
 
-  for m in re.finditer(r"\[\[Category:(.*?)\]\]\n?", text):
+  for m in re.finditer(r"\[\[(?:[Cc]ategory|CAT):(.*?)\]\]\n?", text):
     cat = m.group(1)
     cat = re.sub(r"\|.*", "", cat)
     if should_remove_cat(cat):
