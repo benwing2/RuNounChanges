@@ -48,30 +48,30 @@ export.builtin_verbs = {
 	-- must precede dare; va vs. rivà handled automatically
 	{"andare", [=[
 		-.
-		presrow:vàdo:vò*[less common],vài,và*,andiàmo,andàte,vànno.
+		presrow:vàdo,vài,và*,andiàmo,andàte,vànno.
 		fut:andrò.
 		sub:vàda.
-		imp:vài:và':và*
+		imp:vài:và'
 ]=], "<<andare>> and derivatives (<<riandare>>, <<trasandare>>/<<transandare>>)"},
 	-- NOTE: specifying détti autogenerates #dètti
 	{"dare", [=[
 		-,dièdi:diédi:détti.
 		phisstem:dé.
-		presrow:dò*:dò*![less common],dài,dà*!,diàmo,dàte,dànno.
+		presrow:dò*,dài,dà*!,diàmo,dàte,dànno.
 		fut:darò.
 		sub:dìa.
 		impsub:déssi.
-		imp:dài:dà':dà*!
+		imp:dài:dà'
 ]=], "<<dare>> and derivatives (<<addare>>, <<ridare>>, <<sdarsi>>); but not <<andare>> or derivatives"},
 	-- NOTE: specifying stétti autogenerates #stètti
 	{"stare", [=[
-		-,stétti:stièdi[popular or Tuscan]:stiédi[popular or Tuscan].
+		-,stétti.
 		phisstem:sté.
 		presrow:stò*,stài,stà*,stiàmo,stàte,stànno.
 		fut:starò.
 		sub:stìa.
 		impsub:stéssi.
-		imp:stài:stà':stà*
+		imp:stài:stà'
 ]=], "<<stare>> and derivatives (<<ristare>>, <<soprastare>>, <<sottostare>>); not <<sovrastare>>"},
 
 	---------------------------------------------- -ere verbs --------------------------------------------
@@ -109,9 +109,14 @@ export.builtin_verbs = {
 	-- we need to split these verbs.
 	{"adere", "à,àsi,àso", "<<radere>> and derivatives; <<suadere>> and derivatives; verbs in ''-vadere'' (<<invadere>>, <<evadere>>, <<pervadere>>); but not <<cadere>> and derivatives"},
 	-- reddere: archaic for rendere
-	{"succedere", "è,succèssi:+[more common in the sense \"to succeed (someone in an office)\"],succèsso:+[more common in the sense \"to succeed (someone in an office)\"]", "<<succedere>>"},
+	{"succedere", "è,succèssi:+,succèsso:+", "<<succedere> (needs overrides to handle different past historic and past participle in different meanings)"},
+	{"concedere", "è,concèssi:+,concèsso", "<<concedere>> and derivatives"},
+	-- Hoepli says [[retrocedere]] is conjugated like [[cedere]], but in fact ''retrocesso'' is much more common than ''retroceduto''
+	-- (Hoepli even gives two examples using ''retrocesso''), while ''retrocessero'' and ''retrocedettero'' are equally common.
+	-- Treccani correctly says "(pass. rem. io retrocèssi [anche retrocedéi o retrocedètti], tu retrocedésti, ecc.; part. pass. retrocèsso)".
+	{"retrocedere", "è,retrocèssi:+,retrocèsso", "<<retrocedere>>"},
 	-- cedere: cèssi is archaic
-	{"cedere", "è", "<<cedere>> and derivatives; but not <<succedere>>"},
+	{"cedere", "è", "<<cedere>> and derivatives; but not <<succedere>>, <<concedere>>, <<retrocedere>> or derivatives"},
 	{"chiedere", "è:é,chièsi:chiési,chièsto:chiésto", "<<chiedere>> and derivatives"},
 	-- riedere: variant of poetic/archaic defective redire (reddire)
 	{"siedere", "è:é", "verbs in ''-siedere'' (<<presiedere>>, <<risiedere>>)"},
@@ -119,7 +124,14 @@ export.builtin_verbs = {
 	-- credere: crési is archaic
 	{"credere", "é", "<<credere>> and derivatives (<<discredere>>, <<miscredere>>, <<ricredere>>, <<scredere>>)"},
 	-- pedere: obsolete, regular but lacking past participle
-	{"sedere", "sièdo:sèggo[literary]^siède.fut:+:siederò[popular]", "<<sedere>> and derivatives"},
+	-- Treccani and Hoepli say [[possedere]] and [[sedere]] are conjugated the same; Hoepli says "''sièdo'' o ''sèggo''"
+	-- and Treccani says ''sèggo'' is literary. But a corpus study by Anna M. Thornton, "Overabundance: Multiple Forms Realizing the Same Cell"
+	-- in ''Morphological Autonomy'', p. 366
+	-- [https://www.google.com/books/edition/Morphological_Autonomy/oh3UlV6xSQEC?hl=en&gbpv=1&dq=%22posseggo%22&pg=PA363&printsec=frontcover]
+	-- shows that ''seggo'' is rare but ''posseggo'' is not (''possiedo'' 140 to ''posseggo'' 95; ''possiedono'' 1236 to ''posseggono'' 755;
+	-- ''possieda'' 174 to ''possegga'' 132; ''possiedano'' 46 to ''posseggano'' 65).
+	{"possedere", "possièdo:possiédo:possèggo:posséggo^possiède:possiéde.fut:possiederò[now more common, especially in speech]:+", "<<possedere>> and derivatives"},
+	{"sedere", "sièdo:siédo.fut:siederò[now more common, especially in speech]:+", "<<sedere>> and derivatives; but not <<possedere>> or derivatives"},
 	-- divedere: defective
 	{{term = "vedere", prefixes = {"pre"}}, "é,vìdi,vìsto:vedùto[less popular].fut:vedrò:vederò.presp:+:veggènte", "<<prevedere>>"},
 	{{term = "vedere", prefixes = {"prov", "pro"}}, "é,vìdi,vedùto:vìsto[rare in a verbal sense].presp:+:veggènte", "<<provvedere>> (archaic <<provedere>>) and derivatives"},
@@ -157,7 +169,7 @@ export.builtin_verbs = {
 	-- Hoepli says tònso but I suspect it's a mistake; Olivetti says tónso
 	{"tondere", "ó,+,+:tónso", "<<tondere>>"},
 	{"tundere", "ù,tùsi,tùso", "<<contundere>> and <<ottundere>>"},
-	{"godere", "ò,godètti:godéi[now uncommon].fut:godrò", "<<godere>> and derivatives"},
+	{"godere", "ò.fut:godrò", "<<godere>> and derivatives"},
 	{"plodere", "ò,plòsi,plòso", "<<esplodere>>, <<implodere>> and derivatives"},
 	{"rodere", "ó,rósi,róso", "<<rodere>> and derivatives"},
 	{"ardere", "à,àrsi,àrso", "<<ardere>> and derivatives"},
@@ -353,8 +365,8 @@ export.builtin_verbs = {
 	{"dovere", [=[
 		dèvo:dévo:dèbbo:débbo^dève:déve.pres1p:dobbiàmo.
 		fut:dovrò.
-		sub:dèbba:débba:dèva[rare]:déva[rare].
-		presp:+[uncommon].
+		sub:dèbba:débba.
+		presp:-.
 		imp:-
 ]=]},
 	{"piovere", "ò,piòvvi", "<<piovere>> and derivatives"},
@@ -369,6 +381,7 @@ export.builtin_verbs = {
 
 	-- ire: archaic, defective
 	--
+	-- assorbire: assòrto as pp is archaic
 	{{term = "sorbire", prefixes = {"as", "ad", "de"}}, "+isc:ò.presp:+", "<<assorbire>>, <<adsorbire>>, rare <<desorbire>>; but not <<sorbire>>"},
 	-- folcire: rare, literary, defective: fólce, folcìsse
 	{"escire", "è.presp:+", "<<escire>> and derivatives (archaic/popular for <<uscire>>)"},
@@ -377,11 +390,12 @@ export.builtin_verbs = {
 	{"sdrucire", "+isc:sdrùcio[rare]^+isc:ù[rare].pres3p:sdrucìscono:sdrùciono[rare]:sdrùcono[rare].presp:+", "<<sdrucire>> and derivatives"},
 	-- redire, reddire: poetic, highly defective
 	{"applaudire", "à:+isc[rare].presp:+", "<<applaudire>> and derivatives"},
-	{"udire", "òdo.fut:+:udrèi.presp:+:udiènte", "<<udire>> and derivatives"}, -- must precede dire
+	{"udire", "òdo.fut:udrò:+.presp:+:udiènte", "<<udire>> and derivatives"}, -- must precede dire
 	{"fuggire", "ù.presp:+", "<<fuggire>> and derivatives"},
 	-- gire: archaic, defective
 	{"salire", "sàlgo^à.presp:+:saliènte", "<<salire>> and derivatives"},
 	-- boglire: archaic, unclear conjugation
+	{"seppellire", "+isc,+,+:sepólto", "<<seppellire>> and derivatives"},
 	{"sbollire", "ó:+isc.presp:+", "<<sbollire>>"},
 	{"bollire", "ó.presp:+", "<<bollire>> and derivatives, except <<sbollire>>"},
 	{"dormire", "ò.presp:+:dormiènte", "<<dormire>> and derivatives"},
@@ -415,6 +429,9 @@ export.builtin_verbs = {
 	-- {"putire", ...},
 	-- {"languire", ...},
 	-- {"seguire/eseguire/conseguire/proseguire/perseguire/inseguire/susseguire/asseguire", ...},
+	-- costruire (archaic construire): costrùssi, costrùtto given as "literary" by Hoepli; costrùssi just as an alternative
+	--   by Treccani, costrùtto as "less common". Per Anna Thornton in ''Morphological Autonomy'' p. 368, [[costrutto]] is
+	--   no longer recognized as a pp in modern Italian but only as a noun.
 	-- {"servire", ...},
 
 	------------------------------------------- syncopated verbs -----------------------------------------
@@ -442,9 +459,9 @@ export.builtin_verbs = {
 	{"fare", [=[
 		-,féci,fàtto.
 		stem:fàce.
-		presrow:fàccio:fò*[literary, archaic or regional],fài,fà*,facciàmo,fàte,fànno.
+		presrow:fàccio,fài,fà*,facciàmo,fàte,fànno.
 		sub:fàccia.
-		imp:fà*:fài:fà'
+		imp:fài:fà'
 ]=], "<<fare>> and derivatives; but not <<disfare>>, <<soddisfare>> or <<liquefare>>"},
 	{"trarre", "tràggo,tràssi,tràtto.stem:tràe"},
 	-- archaic variant of trarre, with some different present tense (hence subjunctive/imperative) forms
