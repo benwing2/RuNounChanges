@@ -357,11 +357,10 @@ export.builtin_verbs = {
 	{{term = "vivere", prefixes = {"con", "soprav"}}, "ì,vìssi,vissùto.fut:vivrò:+", "<<convivere>>, <<sopravvivere>>"},
 	{"vivere", "ì,vìssi,vissùto.fut:vivrò", "<<vivere>>, <<rivivere>>"},
 	{"sciolvere", "ò,+:sciòlsi,sciòlto", "<<sciolvere>>, <<asciolvere>>"},
-	{"^solvere", "ò,+,solùto", "<<solvere>>; but not any derivatives"},
-	{"solvere", "ò,sòlsi:+[rare],sòlto", "verbs in ''-solvere'' (<<assolvere>>, <<dissolvere>>, <<risolvere>>, etc.); but not <<solvere>>"},
-	{{term = "volvere", prefixes = {"de", "e"}}, "ò,+:vòlsi[less common],volùto", "<<devolvere>>, <<evolvere>>"},
+	-- solvere: archaic
+	{"solvere", "ò,sòlsi,sòlto", "verbs in ''-solvere'' (<<assolvere>>, <<dissolvere>>, <<risolvere>>, etc.)"},
 	-- volvere, svolvere, etc. archaic
-	{"involvere", "ò,-,involùto", "<<involvere>>"}, -- DOP says pp also invòlto
+	{"volvere", "ò,vòlsi:+,volùto", "<<devolvere>>, <<evolvere>>"},
 	{"dovere", [=[
 		dèvo:dévo:dèbbo:débbo^dève:déve.pres1p:dobbiàmo.
 		fut:dovrò.

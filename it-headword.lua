@@ -1134,9 +1134,40 @@ pos_functions["verbs"] = {
 					-- so we can add the accelerators back with a param to avoid the accents.
 					local accel_form = nil -- all_verb_slots[slot]
 					retval = {label = label, accel = accel_form and {form = accel_form} or nil}
+					local prev_footnotes = nil
+					-- If the footnotes for this form are the same as the footnotes for the preceding form or
+					-- contain the preceding footnotes, replace the footnotes that are the same with "ditto".
+					-- This avoids repetition on pages like [[succedere]] where the form ''succedétti'' has a long
+					-- footnote which gets repeated in the traditional form ''succedètti'' (which also has the
+					-- footnote "[traditional]").
 					for _, form in ipairs(forms) do
 						local quals, refs = expand_footnotes_and_references(form.footnotes)
-						table.insert(retval, {term = form.form, qualifiers = quals, refs = refs})
+						local quals_with_ditto = quals
+						if quals and prev_footnotes then
+							local quals_contains_previous = true
+							for _, qual in ipairs(prev_footnotes) do
+								if not m_table.contains(quals, qual) then
+									quals_contains_previous = false
+									break
+								end
+							end
+							if quals_contains_previous then
+								local inserted_ditto = false
+								quals_with_ditto = {}
+								for _, qual in ipairs(quals) do
+									if m_table.contains(prev_footnotes, qual) then
+										if not inserted_ditto then
+											table.insert(quals_with_ditto, "ditto")
+											inserted_ditto = true
+										end
+									else
+										table.insert(quals_with_ditto, qual)
+									end
+								end
+							end
+						end
+						prev_footnotes = quals
+						table.insert(retval, {term = form.form, qualifiers = quals_with_ditto, refs = refs})
 					end
 				end
 

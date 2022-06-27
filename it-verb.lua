@@ -284,11 +284,14 @@ local PRESERVE_ACCENT = u(0xFFF0)
 local full_person_number_list = {"1s", "2s", "3s", "1p", "2p", "3p"}
 local imp_person_number_list = {"2s", "3s", "1p", "2p", "3p"}
 
-local person_number_list_desc = {
-	["1s"] = "first-person singular ",
-	["12s"] = "first/second-person singular ",
-	["123s"] = "first/second/third-person singular ",
-	["2s"] = "second-person singular ",
+-- Used only in error messages concerning the principal part for a given row, to generate the English description
+-- (by concatenating the following person/number description to the overall description for the row, taken from
+-- the `.desc` element of the rowspec).
+local principal_part_person_number_desc = {
+	["1s"] = "first-singular ",
+	["12s"] = "first/second-singular ",
+	["123s"] = "first/second/third-singular ",
+	["2s"] = "second-singular ",
 	[""] = "",
 }
 
@@ -1103,7 +1106,7 @@ local function add_present_indic(base, rowslot)
 			return generate_pres3s_forms(base, form) end)
 	end
 
-	-- If no present indcative principal parts (user specified 'pres:-'), don't generate any present indicative forms.
+	-- If no present indicative principal parts (user specified 'pres:-'), don't generate any present indicative forms.
 	-- Otherwise we will end up generating pres23s and pres12p forms based on the overall verb stem(s).
 	if not base.principal_part_forms.pres and not base.principal_part_forms.pres3s then
 		return
@@ -1478,16 +1481,40 @@ The following specs are allowed:
 -- `persnums` must be present and specifies the possible person/number suffixes to add onto the row-level slot
    (e.g. "phis" for the past historic) to form the individual person/number-specific slot (e.g. "phis2s" for the
    second-person singular past historic).
--- `row_override_persnums`
--- `row_override_persnums_to_full_persnums`
--- `generate_default_principal_part`
--- `conjugate`
--- `no_explicit_principal_part`
--- `no_row_overrides`
--- `no_single_overrides`
--- `add_reflexive_clitics`
--- `dont_check_defective_status`
--- `dont_add_prefix`
+-- `row_override_persnums`, if present, specifies the person/number suffixes that are specified by a row override.
+   If omitted, `persnums` is used.
+-- `row_override_persnums_to_full_persnums`, if present, specifies a mapping from the person/number suffixes
+   specified by a row override to the person/number/suffixes used for conjugating the row. This is used, for example,
+   with the subjunctive and imperfect subjunctive, where the first element of the row override specifies
+   (respectively) the 123s and 12s forms, which need to be copied (respectively) to the 1s/2s/3s and 1s/3s forms.
+   If omitted, no such copying happens. It's still possible for the row override persnums to disagree with the
+   overall persnums. This happens, for example, with the imperative, where the 'improw:' row override spec specifies
+   only the 2s and 2p forms; the remaining forms (3s, 1p, 3p) are generated during conjugation by copying from other
+   forms, and can't be overridden using a row override. (They can still be overridden using a single override such
+   as 'imp3s:...' or a late single override such as 'imp3s!:...'.
+-- `generate_default_principal_part`, if present, should be a function of two arguments, `base` and `do_err`, and
+   should return the principal part(s) for the row. The return value can be anything that is convertible to the
+   "general list form" of a slot's forms, i.e. it can return a string, an object
+   {form = FORM, footnotes = {FOOTNOTE, FOOTNOTE, ...}}, or a list of either. It must be present if `conjugate` is
+   a table, but may be missing if `conjugate` is a function, in which case the function needs to generate the
+   principal part itself or otherwise handle things differently. For example, the present indicative does not
+   specify a value for `generate_default_principal_part` because there are actually two principal parts for the
+   present tense (first and third singular), which are processed at the beginning of the present indicative
+   `conjugate` function. Similarly, the infinitive does not specify a value for `generate_default_principal_part`
+   because there is no principal part to speak of; the infinitive is generated directly from the lemma in combination
+   with the slash or backslash that follows the auxiliary and (in the case of a root-stressed infinitive) the
+   single-vowel spec following the backslash. If `do_err` is given to this function, the function may throw an error
+   if it can't generate the principal part; otherwise it should return nil.
+-- `conjugate` is either a function to conjugate the row (of two arguments, `base` and `rowslot`), or a table
+   containing the endings to add onto the principal part to conjugate the row. In the latter case, there should be
+   the same number of elements in the table as there are elements in `row_override_persnums` (if given) or
+   `persnums` (otherwise).
+-- `no_explicit_principal_part` (DOCUMENT ME)
+-- `no_row_overrides` (DOCUMENT ME)
+-- `no_single_overrides` (DOCUMENT ME)
+-- `add_reflexive_clitics` (DOCUMENT ME)
+-- `dont_check_defective_status` (DOCUMENT ME)
+-- `dont_add_prefix` (DOCUMENT ME)
 ]=]
 local row_conjugations = {
 	{"inf", {
@@ -1566,8 +1593,6 @@ local row_conjugations = {
 		persnums = full_person_number_list,
 		generate_default_principal_part = function(base) return iut.map_forms(base.verb.unstressed_stem,
 			function(stem) return stem .. base.conj_vowel .. "vo" end) end,
-		principal_part_desc = "first-person imperfect",
-		principal_part_ending = "o",
 		conjugate = {"o", "i", "a", "àmo", "àte", "ano"},
 		add_reflexive_clitics = add_finite_reflexive_clitics,
 	}},
@@ -1579,8 +1604,6 @@ local row_conjugations = {
 		row_override_persnums_to_full_persnums = {["12s"] = {"1s", "2s"}},
 		generate_default_principal_part = function(base) return iut.map_forms(base.verb.unstressed_stem,
 			function(stem) return stem .. base.conj_vowel .. "ssi" end) end,
-		principal_part_desc = "first/second-person imperfect subjunctive",
-		principal_part_ending = "ssi",
 		conjugate = {"ssi", "sse", "ssimo", "ste", "ssero"},
 		add_reflexive_clitics = add_finite_reflexive_clitics,
 	}},
@@ -1589,8 +1612,6 @@ local row_conjugations = {
 		tag_suffix = "fut",
 		persnums = full_person_number_list,
 		generate_default_principal_part = generate_default_future_principal_part,
-		principal_part_desc = "first-person future",
-		principal_part_ending = "ò",
 		conjugate = {"ò", "ài", "à", "émo", "éte", "ànno"},
 		add_reflexive_clitics = add_finite_reflexive_clitics,
 	}},
@@ -1599,8 +1620,6 @@ local row_conjugations = {
 		tag_suffix = "cond",
 		persnums = full_person_number_list,
 		generate_default_principal_part = generate_default_conditional_principal_part,
-		principal_part_desc = "first-person conditional",
-		principal_part_ending = "èi",
 		conjugate = {"èi", "ésti", {"èbbe", "ébbe"}, "émmo", "éste", {"èbbero", "ébbero"}},
 		add_reflexive_clitics = add_finite_reflexive_clitics,
 	}},
@@ -1609,8 +1628,6 @@ local row_conjugations = {
 		tag_suffix = "past|part",
 		persnums = {""},
 		generate_default_principal_part = generate_default_past_participle_principal_part,
-		principal_part_desc = "past participle",
-		principal_part_ending = "",
 		conjugate = {""},
 		add_reflexive_clitics = add_participle_reflexive_clitics,
 		-- Set to "builtin" because normally handled specially in PRES^PRES3S,PHIS,PP spec, but when a built-in verb
@@ -1624,8 +1641,6 @@ local row_conjugations = {
 		tag_suffix = "ger",
 		persnums = {""},
 		generate_default_principal_part = generate_default_gerund_principal_part,
-		principal_part_desc = "gerund",
-		principal_part_ending = "",
 		conjugate = {""},
 		add_reflexive_clitics = add_gerund_reflexive_clitics,
 		no_row_overrides = true, -- useless because there's only one form; use explicit principal part
@@ -1636,8 +1651,6 @@ local row_conjugations = {
 		tag_suffix = "pres|part",
 		persnums = {""},
 		generate_default_principal_part = generate_default_present_participle_principal_part,
-		principal_part_desc = "present participle",
-		principal_part_ending = "",
 		conjugate = {""},
 		add_reflexive_clitics = add_participle_reflexive_clitics,
 		no_row_overrides = true, -- useless because there's only one form; use explicit principal part
@@ -1686,7 +1699,7 @@ local function handle_row_overrides_for_row(base, rowslot)
 			local function generate_row_override_forms(form)
 				if form == "+" then
 					if not existing_generated_form then
-						error(("Default form '+' requested in row override '%s:' for slot %s but no default-generated form available; "
+						error(("Default form '+' requested in row override '%srow:' for slot %s but no default-generated form available; "
 							.. "typically this means the principal part was given as '-'")
 							:format(rowslot, slot))
 					end
@@ -1758,7 +1771,6 @@ end
 
 
 local function conjugate_row(base, rowslot)
-	add_default_verb_forms(base)
 	local rowspec = row_conjugation_map[rowslot]
 	if not rowspec then
 		error("Internal error: Unrecognized row slot '" .. rowslot .. "'")
@@ -1767,7 +1779,14 @@ local function conjugate_row(base, rowslot)
 	-- Generate the principal part for this row now if it has an entry for `generate_default_principal_part`.
 	if rowspec.generate_default_principal_part then
 		local function generate_principal_part_forms(form)
-			local default_principal_part = rowspec.generate_default_principal_part(base, form == "+")
+			-- If form == "+", either the user did not specify a principal part override (like 'sub:') or gave the value as '+'.
+			-- In this circumstance, and provided the user did not specify a row override (like 'subrow:'), we need the default
+			-- principal part in order to conjugate the row, so throw an error if we can't generate it. (If the user gave a row
+			-- override, we may still need the default principal part if the row override contains '+', so we could check for
+			-- this and set 'do_err', but it seems simpler to rely on the check in `handle_row_overrides_for_row` that makes
+			-- sure that a default form is available when the user specifies '+' in a row override.)
+			local do_err = form == "+" and not base.row_override_specs[rowslot]
+			local default_principal_part = rowspec.generate_default_principal_part(base, do_err)
 			if default_principal_part then
 				-- There may be no default; e.g. if fut:- is given, the default conditional principal part is nil.
 				-- process_specs() calls convert_to_general_list_form() on the output in any case and we need it in this form
@@ -1788,8 +1807,6 @@ local function conjugate_row(base, rowslot)
 		end
 
 		local principal_part_specs = base.principal_part_specs[rowslot] or rowspec.not_defaulted and {{form = "-"}}
-			-- If a row override was given, the principal part doesn't matter, but we may get an error if we use "+"
-			or base.row_override_specs[rowslot] and {{form = "-"}}
 			or {{form = "+"}}
 		process_specs(base, base.principal_part_forms, rowslot, principal_part_specs, generate_principal_part_forms)
 	end
@@ -1801,12 +1818,22 @@ local function conjugate_row(base, rowslot)
 				.. ", but saw " .. #rowspec.conjugate)
 		end
 		local stem = iut.map_forms(base.principal_part_forms[rowslot], function(form)
-			if not rfind(form, rowspec.principal_part_ending .. "$") then
-				error(rowslot .. "row: must be given in order to generate the " .. rowspec.desc .. " because"
-					.. "explicit " .. rowspec.principal_part_desc .. " '" .. form .. "' does not end in -"
-					.. rowspec.principal_part_ending)
+			local principal_part_ending = rowspec.conjugate[1]
+			if type(principal_part_ending) ~= "string" then
+				error(("Internal error: First element of the `.conjugate` table of the rowspec for row '%s' is not "
+					.. "a single string; if this is needed, either use a conjugate function instead of a table, "
+					.. "generalize the code following this error message, or introduce an additional rowspec element "
+					.. "`principal_part_ending` containing a single string"):format(rowslot))
 			end
-			return rsub(form, rowspec.principal_part_ending .. "$", "")
+			if not rfind(form, principal_part_ending .. "$") then
+				-- Generate the principal part description from the first person/number of the row (which should
+				-- always be the principal part) + the overall row description.
+				local principal_part_desc = principal_part_person_number_desc[persnums[1]] .. rowspec.desc
+				error(rowslot .. "row: must be given in order to generate the " .. rowspec.desc .. " because"
+					.. "explicit " .. principal_part_desc .. " '" .. form .. "' does not end in -"
+					.. principal_part_ending)
+			end
+			return rsub(form, principal_part_ending .. "$", "")
 		end)
 		for i, persnum in ipairs(persnums) do
 			add(base, rowslot .. persnum, stem, rowspec.conjugate[i])
@@ -1928,6 +1955,7 @@ end
 
 
 local function conjugate_verb(base)
+	add_default_verb_forms(base)
 	for _, rowconj in ipairs(row_conjugations) do
 		local rowslot, rowspec = unpack(rowconj)
 		conjugate_row(base, rowslot)
