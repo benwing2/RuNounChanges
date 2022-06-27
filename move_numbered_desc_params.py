@@ -15,7 +15,7 @@ def process_text_on_page(index, pagename, text):
   if "desc" not in text:
     return
 
-  pagemsg("Processing")
+  #pagemsg("Processing")
 
   notes = []
 
