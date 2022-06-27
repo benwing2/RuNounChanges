@@ -1,0 +1,99 @@
+Beginning at Mon Jun 13 21:49:58 2022
+Page 1 akuszer: Skipped, no changes
+Page 2 alopata: Removed {{C|pl|Male healthcare occupations}}
+Page 2 alopata: Diff:
+--- 
++++ 
+@@ -23,8 +23,6 @@
+ * {{R:pl:WSJP}}
+ * {{R:pl:PWN}}
+ 
+-{{C|pl|Male healthcare occupations}}
+-
+ ----
+ 
+ ==Portuguese==
+Page 2 alopata: Saving with comment = remove categories: pl:Male healthcare occupations
+Page 2 alopata: WARNING: Error when trying to save page: Page [[en:alopata]] could not be saved due to an edit conflict
+Traceback (most recent call last):
+  File "/Users/benwing/Documents/temp-writings/RuNounChanges/blib.py", line 1393, in try_repeatedly
+    return fun()
+  File "/Users/benwing/Documents/temp-writings/RuNounChanges/blib.py", line 1436, in do_save
+    page.save(comment=comment)
+  File "/Users/benwing/software/pywikibot/pywikibot/tools/__init__.py", line 1744, in wrapper
+    return obj(*__args, **__kw)
+  File "/Users/benwing/software/pywikibot/pywikibot/tools/__init__.py", line 1744, in wrapper
+    return obj(*__args, **__kw)
+  File "/Users/benwing/software/pywikibot/pywikibot/page.py", line 1293, in save
+    cc=apply_cosmetic_changes, quiet=quiet, **kwargs)
+  File "/Users/benwing/software/pywikibot/pywikibot/page.py", line 133, in wrapper
+    handle(func, self, *args, **kwargs)
+  File "/Users/benwing/software/pywikibot/pywikibot/page.py", line 124, in handle
+    raise err
+EditConflict: Page [[en:alopata]] could not be saved due to an edit conflict
+Page 2 alopata: Sleeping for 5 seconds
+Page 3 anestezjolog: Skipped, no changes
+Page 4 balwierz: Skipped, no changes
+Page 5 doktor: Removed {{C|pl|Male healthcare occupations|Male occupations}}
+Page 5 doktor: Removed [[Category:cs:Male occupations]]\n
+Page 5 doktor: Removed [[Category:sh:Male occupations]]\n
+Page 5 doktor: Removed [[Category:sk:Male occupations]]\n
+Page 5 doktor: Diff:
+--- 
++++ 
+@@ -136,8 +136,6 @@
+ ===Further reading===
+ * {{R:PSJC}}
+ * {{R:SSJC}}
+-
+-[[Category:cs:Male occupations]]
+ 
+ ----
+ 
+@@ -415,8 +413,6 @@
+ * {{R:pl:WSJP}}
+ * {{R:pl:PWN}}
+ 
+-{{C|pl|Male healthcare occupations|Male occupations}}
+-
+ ----
+ 
+ ==Serbo-Croatian==
+@@ -446,8 +442,6 @@
+ * {{l|sh|dȍktorica}}
+ * {{l|sh|doktorka}}
+ 
+-[[Category:sh:Male occupations]]
+-
+ ----
+ 
+ ==Slovak==
+@@ -474,8 +468,6 @@
+ ====Derived terms====
+ * {{l|sk|doktorka}}
+ * {{l|sk|doktorový}}
+-
+-[[Category:sk:Male occupations]]
+ 
+ ----
+ 
+Page 5 doktor: Saving with comment = remove categories: pl:Male healthcare occupations,pl:Male occupations,cs:Male occupations,sh:Male occupations,sk:Male occupations
+Page 5 doktor: WARNING: Error when trying to save page: Page [[en:doktor]] could not be saved due to an edit conflict
+Traceback (most recent call last):
+  File "/Users/benwing/Documents/temp-writings/RuNounChanges/blib.py", line 1393, in try_repeatedly
+    return fun()
+  File "/Users/benwing/Documents/temp-writings/RuNounChanges/blib.py", line 1436, in do_save
+    page.save(comment=comment)
+  File "/Users/benwing/software/pywikibot/pywikibot/tools/__init__.py", line 1744, in wrapper
+    return obj(*__args, **__kw)
+  File "/Users/benwing/software/pywikibot/pywikibot/tools/__init__.py", line 1744, in wrapper
+    return obj(*__args, **__kw)
+  File "/Users/benwing/software/pywikibot/pywikibot/page.py", line 1293, in save
+    cc=apply_cosmetic_changes, quiet=quiet, **kwargs)
+  File "/Users/benwing/software/pywikibot/pywikibot/page.py", line 133, in wrapper
+    handle(func, self, *args, **kwargs)
+  File "/Users/benwing/software/pywikibot/pywikibot/page.py", line 124, in handle
+    raise err
+EditConflict: Page [[en:doktor]] could not be saved due to an edit conflict
+Page 5 doktor: Sleeping for 5 seconds
+Page 5 doktor: WARNING: Error
