@@ -382,6 +382,28 @@ local function remove_accents(form)
 end
 
 
+-- Map a function over `forms` (a list of form objects of the form {form=FORM, footnotes=FOOTNOTES}) and modify the
+-- form objects in `forms` in-place. If `include_footnotes` is given, the function is called with two arguments
+-- (the existing form and footnotes) and should return two arguments, the new form and footnotes; otherwise, the
+-- function is called with one argument (the existing form) and should return the new form.
+--
+-- WARNING: This is dangerous and should only be done near the end.
+local function map_side_effecting_forms(forms, fun, include_footnotes)
+	for _, form in ipairs(forms) do
+		if form.form ~= "?" then
+			if include_footnotes then
+				local new_form, new_footnotes = fun(form.form, form.footnotes)
+				form.form = new_form
+				form.footnotes = new_footnotes
+			else
+				local new_form = fun(form.form)
+				form.form = new_form
+			end
+		end
+	end
+end
+
+
 -- Add links around words. If multiword_only, do it only in multiword forms.
 local function add_links(form, multiword_only)
 	if form == "" or form == " " then
@@ -450,13 +472,13 @@ end
 local function convert_accented_links(alternant_multiword_spec)
 	for slot, forms in pairs(alternant_multiword_spec.forms) do
 		-- Side-effect the forms to save memory.
-		for _, form in ipairs(forms) do
-			local new_form, need_preserve_accent_note = convert_accented_links_in_text(form.form)
-			form.form = new_form
+		map_side_effecting_forms(forms, function(form, footnotes)
+			local new_form, need_preserve_accent_note = convert_accented_links_in_text(form)
 			if need_preserve_accent_note then
-				form.footnotes = iut.combine_footnotes(form.footnotes, {"[with written accent on monosyllabic verb]"})
+				footnotes = iut.combine_footnotes(footnotes, {"[with written accent on monosyllabic verb]"})
 			end
-		end
+			return new_form, footnotes
+		end, "include footnotes")
 	end
 end
 
@@ -654,7 +676,7 @@ local function process_specs(base, destforms, slot, specs, generate_forms)
 		if decorated_form ~= "-" then
 			local prespec, form, postspec =
 				rmatch(decorated_form, "^([!#]*)(.-)([*!]*)$")
-			local forms = generate_forms(form)
+			local forms = form == "?" and "?" or generate_forms(form)
 			-- If `generate_forms` return nil, no forms get inserted into destforms[slot]. This happens e.g. when
 			-- fut:- is given and no explicit conditional principal part is given. In that case,
 			-- generate_default_conditional_principal_part() fetches the future principal parts, which don't exist,
@@ -1328,6 +1350,10 @@ local function add_past_historic(base, rowslot)
 			addit("3p", p3)
 		end
 		while true do
+			if form.form == "?" then
+				add_phis("?", "?", "?", "?", "?", "?", "?")
+				break
+			end
 			local pref = rmatch(form.form, "^(.*)ài$")
 			if pref then
 				add_phis(pref, "ài", "àsti", "ò", "àmmo", "àste", "àrono")
@@ -1884,9 +1910,9 @@ local function add_prefix_to_forms(base)
 							end))
 						else
 							-- To save on memory, side-effect the existing forms.
-							for _, form in ipairs(base.forms[slot]) do
-								form.form = base.verb.prefix .. form.form
-							end
+							map_side_effecting_forms(base.forms[slot], function(form)
+								return base.verb.prefix .. form
+							end)
 						end
 					end
 				end
@@ -1937,9 +1963,7 @@ end
 -- Any forms without links should get them now. Redundant ones will be stripped later.
 local function add_missing_links_to_forms(base)
 	for slot, forms in pairs(base.forms) do
-		for _, form in ipairs(forms) do
-			form.form = add_links(form.form)
-		end
+		map_side_effecting_forms(forms, add_links)
 	end
 end
 
@@ -1947,9 +1971,7 @@ end
 local function remove_links_from_forms(base)
 	-- Remove links from forms in case of noautolinkverb.
 	for slot, forms in pairs(base.forms) do
-		for _, form in ipairs(forms) do
-			form.form = m_links.remove_links(form.form)
-		end
+		map_side_effecting_forms(forms, m_links.remove_links)
 	end
 end
 
