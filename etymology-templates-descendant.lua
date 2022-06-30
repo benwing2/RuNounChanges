@@ -15,6 +15,15 @@ local function track(page)
 end
 
 
+local function ine(arg)
+	if arg == "" then
+		return nil
+	else
+		return arg
+	end
+end
+
+
 local function add_tooltip(text, tooltip)
 	return '<span class="desc-arr" title="' .. tooltip .. '">' .. text .. '</span>'
 end
@@ -93,18 +102,17 @@ local function desc_or_desc_tree(frame, desc_tree)
 		parent_args = frame:getParent().args
 	end
 
-	-- Tracking for use of 3=, 4=, or g2=/g3= etc., so we can clean these uses up.
-	if parent_args[3] then
-		track("descendants/arg3")
+	-- Error to catch most uses of old-style parameters.
+	if ine(parent_args[4]) and not ine(parent_args[3]) and not ine(parent_args.tr2) and not ine(parent_args.ts2)
+		and not ine(parent_args.t2) and not ine(parent_args.gloss2) and not ine(parent_args.g2)
+		and not ine(parent_args.alt2) then
+		error("You specified a term in 4= and not one in 3=. You probably meant to use t= to specify a gloss instead. "
+			.. "If you intended to specify two terms, put the second term in 3=.")
 	end
-	if parent_args[4] then
-		track("descendants/arg4")
-	end
-
-	for i=2,10 do
-		if parent_args["g" .. i] then
-			track("descendants/arggn")
-		end
+	if not ine(parent_args[3]) and not ine(parent_args.alt2) and not ine(parent_args.tr2) and not ine(parent_args.ts2)
+		and ine(parent_args.g2) then
+		error("You specified a gender in g2= but no term in 3=. You were probably trying to specify two genders for "
+			.. "a single term. To do that, put both genders in g=, comma-separated.")
 	end
 
 	local args = require("Module:parameters").process(parent_args, params)
@@ -114,7 +122,7 @@ local function desc_or_desc_tree(frame, desc_tree)
 			error("The sandbox module, Module:descendants tree/sandbox, should not be used in entries.")
 		end
 	end
-	
+
 	local m_desctree
 	if desc_tree or args["alts"] then
 		if args.sandbox or require("Module:yesno")(frame.args.sandbox, false) then
@@ -134,25 +142,25 @@ local function desc_or_desc_tree(frame, desc_tree)
 			terms.maxindex = 1
 		end
 	end
-	
+
 	local m_languages = require("Module:languages")
 	lang = m_languages.getByCode(lang, 1, "allow etym")
 	local entryLang = m_languages.getNonEtymological(lang)
-	
+
 	if not desc_tree and entryLang:getType() == "family" then
 		error("Cannot use language family code in [[Template:desc]].")
 	end
-	
+
 	if lang:getCode() ~= entryLang:getCode() then
 		-- [[Special:WhatLinksHere/Template:tracking/descendant/etymological]]
 		track("descendant/etymological")
 		track("descendant/etymological/" .. lang:getCode())
 	end
-	
+
 	local languageName = lang:getCanonicalName()
 
 	local label
-	
+
 	if args["sclb"] then
 		local sc = args["sc"][1] and require("Module:scripts").getByCode(args["sc"][1], "sc")
 		local term = terms[1]
@@ -208,7 +216,7 @@ local function desc_or_desc_tree(frame, desc_tree)
 		if val("der") then
 			arrow = arrow .. add_tooltip("⇒", "reshaped by analogy or addition of morphemes")
 		end
-		
+
 		if val("unc") then
 			arrow = arrow .. add_tooltip("?", "uncertain")
 		end
@@ -280,7 +288,7 @@ local function desc_or_desc_tree(frame, desc_tree)
 		local g = args["g"][i] and rsplit(args["g"][i], "%s*,%s*") or {}
 
 		local link = ""
-		
+
 		if term and term ~= "-" then
 			link = require("Module:links").full_link(
 				{
@@ -323,7 +331,7 @@ local function desc_or_desc_tree(frame, desc_tree)
 		local arrow = get_arrow(i)
 		local postqs = get_post_qualifiers(i)
 		local alts
-		
+
 		if desc_tree and term and term ~= "-" then
 			table.insert(seen_terms, term)
 			-- This is what I ([[User:Benwing2]]) had in Nov 2020 when I first implemented this.
@@ -336,7 +344,7 @@ local function desc_or_desc_tree(frame, desc_tree)
 		end
 
 		descendants[i] = descendants[i] or ""
-		
+
 		if desc_tree and not args["noalts"] or not desc_tree and args["alts"] then
 			-- [[Special:WhatLinksHere/Template:tracking/desc/alts]]
 			track("desc/alts")
@@ -387,7 +395,7 @@ local function desc_or_desc_tree(frame, desc_tree)
 		return table.concat{initial_arrow, label, ":", all_linktext ~= "" and " " or "", all_linktext}
 	end
 end
-	
+
 function export.descendant(frame)
 	return desc_or_desc_tree(frame, false) .. require("Module:TemplateStyles")("Module:etymology/style.css")
 end
