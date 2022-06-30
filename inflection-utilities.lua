@@ -34,6 +34,10 @@ function export.remove_redundant_links(text)
 	return rsub(text, "^%[%[([^%[%]|]*)%]%]$", "%1")
 end
 
+------------------------------------------------------------------------------------------------------------
+--                                             PARSING CODE                                               --
+------------------------------------------------------------------------------------------------------------
+
 --[=[
 In order to understand the following parsing code, you need to understand how inflected text specs work. They are
 intended to work with inflected text where individual words to be inflected may be followed by inflection specs in
@@ -275,6 +279,47 @@ function export.concat_forms_in_slot(forms)
 end
 
 
+------------------------------------------------------------------------------------------------------------
+--                                             INFLECTION CODE                                            --
+------------------------------------------------------------------------------------------------------------
+
+--[=[
+The following code is used in building up the inflection of terms in inflected languages, where a term can potentially
+consist of several inflected words, each surrounded by fixed text, and a given slot (e.g. accusative singular) of a
+given word can potentially consist of multiple possible inflected forms. In addition, each form may be associated with
+a manual translation and/or a list of footnotes (or qualifiers, in the case of headword lines). The following
+terminology is helpful to understand:
+
+* An `inflection dimension` is a particular dimension over which a term may be inflected, such as case, number, gender,
+  person, tense, mood, voice, aspect, etc.
+* A `term` is a word or multiword expression that can be inflected. A multiword term may in turn consist of several
+  single-word inflected terms with surrounding fixed text. A term belongs to a particular `part of speech` (e.g. noun,
+  verb, adjective, etc.).
+* A `slot` is a particular combination of inflection dimensions. An example might be "accusative plural" for a noun,
+  or "first-person singular present indicative" for a verb. Slots are named in a language-specific fashion. For
+  example, the slot "accusative plural" might have a name "accpl", while "first-person singular present indicative"
+  might be variously named "pres1s", "pres_ind_1_sg", etc. Each slot is filled with zero or more `forms`.
+* A `form` is a particular inflection of a slot for a particular term. Forms are described using `form objects`, which
+  are Lua objects taking the form {form="FORM", translit="MANUAL_TRANSLIT", footnotes={"FOOTNOTE", "FOOTNOTE", ...}}.
+  FORM is a `form string` specifying the value of the form itself. MANUAL_TRANSLIT specifies optional manual
+  transliteration for the form, in case (a) the form string is in a different script; and (b) either the form's
+  automatic transliteration is incorrect and needs to be overridden, or the language of the term has no automatic
+  transliteration (e.g. in the case of Persian and Hebrew). FOOTNOTE is a footnote to be attached to the form in
+  question, and should be e.g. "[archaic]" or "[only in the meaning 'to succeed (an officeholder)']", i.e. the string
+  must be surrounded by brackets and should begin with a lowercase letter and not end in a period/full stop. When such
+  footnotes are converted to actual footnotes in a table of inflected forms, the brackets will be removed, the first
+  letter will be capitalized and a period/full stop will be added to the end. (However, when such footnotes are used
+  as qualifiers in headword lines, only the brackets will be removed, with no capitalization or final period.) Note
+  that only FORM is mandatory. 
+* The `lemma` is the particular form of a term under which the term is entered into a dictionary. For example, for
+  verbs, it is most commonly the infinitive, but this differs for some languages: e.g. Latin, Greek and Bulgarian use
+  the first-person singular present indicative (active voice in the case of Latin and Greek); Sanskrit and Macedonian
+  use the third-person singular present indicative (active voice in the case of Sanskrit); Hebrew and Arabic use the
+  third-person singular masculine past (aka "perfect"); etc. For nouns, the lemma form is most commonly the nominative
+  singular, but e.g. for Old French it is the objective singular and for Sanskrit it is the root.
+]=]
+
+
 local function extract_footnote_modifiers(footnote)
 	local footnote_mods, footnote_without_mods = rmatch(footnote, "^%[([!*+]?)(.*)%]$")
 	if not footnote_mods then
@@ -330,7 +375,7 @@ function export.insert_form_into_list(list, form)
 				local any_footnotes_with_bang = false
 				for _, footnote in ipairs(form.footnotes) do
 					local footnote_mods, _ = extract_footnote_modifiers(footnote)
-					if rfind(footnote_nods, "[!+]") then
+					if rfind(footnote_mods, "[!+]") then
 						any_footnotes_with_bang = true
 						break
 					end
@@ -401,39 +446,61 @@ function export.identity(form, translit)
 end
 
 
--- Map a function over the form values in FORMS (a list of objects of the form
--- {form=FORM, translit=MANUAL_TRANSLIT, footnotes=FOOTNOTES}). The function is called with two arguments, the original
--- form and manual translit; if manual translit isn't relevant, it's fine to declare the function with only one
--- argument. The return value is either a single value (the new form) or two values (the new form and new manual
--- translit). Use insert_form_into_list() to insert them into the returned list in case two different forms map to the
--- same thing.
+local function call_map_function_str(str, fun)
+	if str_or_formobj == "?" then
+		return "?"
+	end
+	local newform, newtranslit = fun(str_or_formobj)
+	if newtranslit then
+		return {form=newform, translit=newtranslit}
+	else
+		return newform
+	end
+end
+
+
+local function call_map_function_obj(form, fun)
+	if form.form == "?" then
+		return {form = "?", footnotes = forms.footnotes}
+	end
+	local newform, newtranslit = fun(form.form, form.translit)
+	return {form=newform, translit=newtranslit, footnotes=form.footnotes}
+end
+
+
+-- Map a function over the form values in FORMS (a list of form objects of the form {form=FORM,
+-- translit=MANUAL_TRANSLIT, footnotes=FOOTNOTES}). If the input form is "?", it is preserved on output and the
+-- function is not called. The function is called with two arguments, the original form and manual translit; if manual
+-- translit isn't relevant, it's fine to declare the function with only one argument. The return value is either a
+-- single value (the new form) or two values (the new form and new manual translit). The footnotes (if any) from the
+-- input form objects are preserved on output. Uses insert_form_into_list() to insert the resulting form objects into
+-- the returned list in case two different forms map to the same thing.
 function export.map_forms(forms, fun)
 	if not forms then
 		return nil
 	end
 	local retval = {}
 	for _, form in ipairs(forms) do
-		local newform, newtranslit = fun(form.form, form.translit)
-		newform = {form=newform, translit=newtranslit, footnotes=form.footnotes}
-		export.insert_form_into_list(retval, newform)
+		export.insert_form_into_list(retval, call_map_function_obj(form, fun))
 	end
 	return retval
 end
 
 
--- Map a list-returning function over the form values in FORMS (a list of objects of the form
--- {form=FORM, translit=MANUAL_TRANSLIT, footnotes=FOOTNOTES}). The function is called with two arguments, the original
--- form and manual translit; if manual translit isn't relevant, it's fine to declare the function with only one
--- argument. The return value is either a list of forms or a list of objects of the form
--- {form=FORM, translit=MANUAL_TRANSLIT}. Use insert_form_into_list() to insert them into the returned list in case two
--- different forms map to the same thing.
+-- Map a list-returning function over the form values in FORMS (a list of form objects of the form {form=FORM,
+-- translit=MANUAL_TRANSLIT, footnotes=FOOTNOTES}). If the input form is "?", it is preserved on output and the
+-- function is not called. The function is called with two arguments, the original form and manual translit; if manual
+-- translit isn't relevant, it's fine to declare the function with only one argument. The return value is either a list
+-- of forms or a list of form objects of the form {form=FORM, translit=MANUAL_TRANSLIT}. The footnotes (if any) from
+-- the input form objects are preserved on output. Uses insert_form_into_list() to insert the resulting form objects
+-- into the returned list in case two different forms map to the same thing.
 function export.flatmap_forms(forms, fun)
 	if not forms then
 		return nil
 	end
 	local retval = {}
 	for _, form in ipairs(forms) do
-		local funret = fun(form.form, form.translit)
+		local funret = form.form == "?" and {"?"} or fun(form.form, form.translit)
 		for _, fr in ipairs(funret) do
 			local newform
 			if type(fr) == "table" then
@@ -448,30 +515,30 @@ function export.flatmap_forms(forms, fun)
 end
 
 
--- Map a function over the form values in FORMS (a single string, a single object of the form
--- {form=FORM, translit=MANUAL_TRANSLIT, footnotes=FOOTNOTES}, or a list of either of the previous two types). If
--- FIRST_ONLY is given and FORMS is a list, only map over the first element. Return value is of the same form as FORMS.
--- The function is called with  arguments, the original form and manual translit; if manual translit isn't relevant,
--- it's fine to declare the function with only one argument. The return value is either a single value (the new form)
--- or two values (the new form and new manual translit).
-function export.map_form_or_forms(forms, fn, first_only)
-	if forms == nil then
+-- Map a function over the form values in FORMS (a single string, a form object of the form {form=FORM,
+-- translit=MANUAL_TRANSLIT, footnotes=FOOTNOTES}, or a list of either of the previous two types). If the input form is
+-- "?", it is preserved on output and the function is not called. If FIRST_ONLY is given and FORMS is a list, only map
+-- over the first element. Return value is of the same form as FORMS, unless FORMS is a string and the function return
+-- both form and manual translit (in which case the return value is a form object). The function is called with two
+-- arguments, the original form and manual translit; if manual translit isn't relevant, it's fine to declare the
+-- function with only one argument. The return value is either a single value (the new form) or two values (the new
+-- form and new manual translit). The footnotes (if any) from the input form objects are preserved on output.
+--
+-- FIXME: This function is used only in [[Module:bg-verb]] and should be moved into that module.
+function export.map_form_or_forms(forms, fun, first_only)
+	if not forms then
 		return nil
 	elseif type(forms) == "string" then
-		return forms == "?" and "?" or fn(forms)
+		return call_map_function_str(forms, fun)
 	elseif forms.form then
-		if forms.form == "?" then
-			return {form = "?", footnotes = forms.footnotes}
-		end
-		local newform, newtranslit = fn(forms.form, forms.translit)
-		return {form=newform, translit=newtranslit, footnotes=forms.footnotes}
+		return call_map_function_obj(forms, fun)
 	else
 		local retval = {}
 		for i, form in ipairs(forms) do
 			if first_only then
-				return export.map_form_or_forms(form, fn)
+				return export.map_form_or_forms(form, fun)
 			end
-			table.insert(retval, export.map_form_or_forms(form, fn))
+			table.insert(retval, export.map_form_or_forms(form, fun))
 		end
 		return retval
 	end
@@ -663,16 +730,29 @@ local function is_table_of_strings(forms)
 end
 
 
-function export.add_forms(forms, slot, stems, endings, combine_stem_ending,
-	lang, combine_stem_ending_tr, footnotes)
+-- Combine `stems` and `endings` and store into slot `slot` of form table `forms`. Either of `stems` and `endings` can
+-- be nil, a single string, a list of strings, a form object or a list of form objects. The combination of a given stem
+-- and ending happens using `combine_stem_ending`, which takes two parameters (stem and ending, each a string) and
+-- returns one value (a string). If manual transliteration is present in either `stems` or `endings`, `lang` (a
+-- language object) along with `combine_stem_ending_tr` (a function like `combine_stem_ending` for combining manual
+-- transliteration) must be given. `footnotes`, if specified, is a list of additional footnotes to attach to the
+-- resulting inflections (stem+ending combinations). The resulting inflections are inserted into the form table using
+-- export.insert_form(), in case of duplication.
+function export.add_forms(forms, slot, stems, endings, combine_stem_ending, lang, combine_stem_ending_tr, footnotes)
 	if stems == nil or endings == nil then
 		return
 	end
+	local function combine(stem, ending)
+		if stem == "?" or ending == "?" then
+			return "?"
+		end
+		return combine_stem_ending(stem, ending)
+	end
 	if type(stems) == "string" and type(endings) == "string" then
-		export.insert_form(forms, slot, {form = combine_stem_ending(stems, endings), footnotes = footnotes})
+		export.insert_form(forms, slot, {form = combine(stems, endings), footnotes = footnotes})
 	elseif type(stems) == "string" and is_table_of_strings(endings) then
 		for _, ending in ipairs(endings) do
-			export.insert_form(forms, slot, {form = combine_stem_ending(stems, ending), footnotes = footnotes})
+			export.insert_form(forms, slot, {form = combine(stems, ending), footnotes = footnotes})
 		end
 	else
 		stems = export.convert_to_general_list_form(stems)
@@ -690,9 +770,9 @@ function export.add_forms(forms, slot, stems, endings, combine_stem_ending,
 				elseif ending.footnotes then
 					footnotes = ending.footnotes
 				end
-				local new_form = combine_stem_ending(stem.form, ending.form)
+				local new_form = combine(stem.form, ending.form)
 				local new_translit
-				if stem.translit or ending.translit then
+				if new_form ~= "?" and (stem.translit or ending.translit) then
 					if not lang or not combine_stem_ending_tr then
 						error("Internal error: With manual translit, 'lang' and 'combine_stem_ending_tr' must be passed to 'add_forms'")
 					end
@@ -1005,7 +1085,7 @@ function export.parse_inflected_text(text, props)
 end
 
 
--- Older entry point. FIXME: Convert all uses of this to use export.parse_inflected_text instead. 
+-- Older entry point. FIXME: Convert all uses of this to use export.parse_inflected_text() instead. 
 function export.parse_alternant_multiword_spec(text, parse_indicator_spec, allow_default_indicator, allow_blank_lemma)
 	local props = {
 		parse_indicator_spec = parse_indicator_spec,
@@ -1032,8 +1112,28 @@ local function inflect_alternants(alternant_spec, props)
 end
 
 
-local function append_forms(props, formtable, slot, forms, before_text, before_text_no_links,
-	before_text_translit)
+
+--[=[
+Subfunction of export.inflect_multiword_or_alternant_multiword_spec(). This is used in building up the inflections of
+multiword expressions. The basic purpose of this function is to append a set of forms representing the inflections of
+a given inflected term in a given slot onto the existing forms for that slot. Given a multiword expression potentially
+consisting of several inflected terms along with fixed text in between, we work iteratively from left to right, adding
+the new forms onto the existing ones. Normally, all combinations of new and existing forms are created, meaning if
+there are M existing forms and N new ones, we will end up with M*N forms. However, some of these combinations can be
+rejected using the variant mechanism (see the description of get_variants below).
+
+Specifically, `formtable` is a table of per-slot forms, where the key is a slot and the value is a list of form objects
+(objects of the form {form=FORM, translit=MANUAL_TRANSLIT, footnotes=FOOTNOTES}). `slot` is the slot in question.
+`forms` specifies the forms to be appended onto the existing forms, and is likewise a list of form objects. `props`
+is the same as in export.inflect_multiword_or_alternant_multiword_spec(). `before_text` is the fixed text that goes
+before the forms to be added. `before_text_no_links` is the same as `before_text` but with any links (i.e. hyperlinks
+of the form [[TERM]] or [[TERM|DISPLAY]]) converted into raw terms using remove_links() in [[Module:links]], and
+`before_text_translit` is optional manual translit of `before_text_no_links`.
+
+Note that the value "?" in a form is "infectious" in that if either the existing or new form has the value "?", the
+resulting combination will also be "?". This allows "?" to be used to mean "unknown".
+]=]
+local function append_forms(props, formtable, slot, forms, before_text, before_text_no_links, before_text_translit)
 	if not forms then
 		return
 	end
@@ -1046,18 +1146,24 @@ local function append_forms(props, formtable, slot, forms, before_text, before_t
 			if old_form_vars ~= "" and form_vars ~= "" and old_form_vars ~= form_vars then
 				-- Reject combination due to non-matching variant codes.
 			else
-				local new_form = old_form.form .. before_text .. form.form
+				local new_form
 				local new_translit
-				if old_form.translit or before_text_translit or form.translit then
-					if not props.lang then
-						error("Internal error: If manual translit is given, 'props.lang' must be set")
+				if old_form.form == "?" or form.from == "?" then
+					new_form = "?"
+				else
+					new_form = old_form.form .. before_text .. form.form
+					new_translit
+					if old_form.translit or before_text_translit or form.translit then
+						if not props.lang then
+							error("Internal error: If manual translit is given, 'props.lang' must be set")
+						end
+						if not before_text_translit then
+							before_text_translit = props.lang:transliterate(before_text_no_links) or ""
+						end
+						local old_translit = old_form.translit or props.lang:transliterate(m_links.remove_links(old_form.form)) or ""
+						local translit = form.translit or props.lang:transliterate(m_links.remove_links(form.form)) or ""
+						new_translit = old_translit .. before_text_translit .. translit
 					end
-					if not before_text_translit then
-						before_text_translit = props.lang:transliterate(before_text_no_links) or ""
-					end
-					local old_translit = old_form.translit or props.lang:transliterate(m_links.remove_links(old_form.form)) or ""
-					local translit = form.translit or props.lang:transliterate(m_links.remove_links(form.form)) or ""
-					new_translit = old_translit .. before_text_translit .. translit
 				end
 				local new_footnotes = export.combine_footnotes(old_form.footnotes, form.footnotes)
 				table.insert(ret_forms, {form=new_form, translit=new_translit,
