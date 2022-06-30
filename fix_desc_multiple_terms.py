@@ -9,6 +9,11 @@ from blib import getparam, rmparam, tname, pname, msg, site
 from fix_cog_usage import etym_language_to_parent, language_name_to_code
 from fix_links import language_codes_to_properties, sh_remove_accents
 
+global_params = [
+  "bor", "lbor", "slb", "translit", "der", "clq", "cal", "calq", "calque", "pclq", "sml", "unc", "nolb", "sclb"
+]
+global_params_at_end = ["q", "alts"]
+item_params = ["alt", "g", "gloss", "t", "id", "lit", "pos", "tr", "ts", "sc"]
 def process_text_on_page(index, pagetitle, pagetext):
   global args
   def pagemsg(txt):
@@ -123,12 +128,25 @@ def process_text_on_page(index, pagetitle, pagetext):
         % (langcode, link_langcode, origtext))
       return origtext
 
+    desc_params_at_beginning = []
+    desc_params_at_end = []
     for param in desct.params:
       pn = pname(param)
-      if pn not in ["1", "2"]:
+      pv = unicode(param.value)
+      if pn in ["1", "2"] or pn in item_params:
+        pass
+      elif pn in global_params:
+        desc_params_at_beginning.append((pn, pv))
+      elif pn in global_params_at_end:
+        desc_params_at_end.append((pn, pv))
+      else:
         pagemsg("WARNING: Can't yet handle param %s=%s in {{desc}}: %s"
-          % (pn, unicode(param.value), origtext))
+          % (pn, pv, origtext))
         return origtext
+    for pn, pv in desc_params_at_beginning:
+      rmparam(desct, pn)
+      if pv:
+        desct.add(pn, pv, before="1", preserve_spacing=False)
 
     link_langcode_remove_accents = None
     if link_langcode in language_codes_to_properties:
@@ -188,10 +206,22 @@ def process_text_on_page(index, pagetitle, pagetext):
         return origtext
       term = getp("2")
       desct.add(str(term_index + 1), term)
+      genders = []
+      g = getp("g")
+      if g:
+        genders.append(g)
+      for i in xrange(2, 20):
+        g = getp("g%s" % i)
+        if g:
+          genders.append(g)
+      if genders:
+        desct.add("g%s" % term_index, ",".join(genders))
       for param in t.params:
         pn = pname(param)
         pv = unicode(param.value)
         if pn == "1" or pn == "2" or not pv:
+          continue
+        if re.search("^g[0-9]*$", pn):
           continue
         if pn == "3":
           desct.add("alt%s" % term_index, pv)
@@ -208,6 +238,10 @@ def process_text_on_page(index, pagetitle, pagetext):
         else:
           desct.add("%s%s" % (pn, term_index), pv)
     notes.append("incorporate %s {{l}} links into {{desc}}" % (term_index - 1))
+    for pn, pv in desc_params_at_end:
+      rmparam(desct, pn)
+      if pv:
+        desct.add(pn, pv, preserve_spacing=False)
 
     newtext = "%s%s" % (bullets, unicode(desct))
     pagemsg("Replacing <%s> with <%s>" % (origtext, newtext))
