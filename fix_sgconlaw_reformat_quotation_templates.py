@@ -16,7 +16,15 @@
 import pywikibot, re, sys, codecs, argparse
 
 import blib
-from blib import getparam, rmparam, set_template_name, msg, errmsg, site, tname
+from blib import getparam, rmparam, set_template_name, msg, errmsg, site, tname, pname
+
+def add_params_to_template(t, params):
+  pn = None
+  for param in t.params:
+    pn = pname(param)
+    break
+  for param, value in params:
+    t.add(param, value, before=pn)
 
 def process_text_on_page(index, pagename, text):
   def pagemsg(txt):
@@ -30,7 +38,7 @@ def process_text_on_page(index, pagename, text):
 
   curtext = text + "\n"
 
-  for fromtemp, totemp in templates_to_rename:
+  for fromtemp, (totemp, params) in templates_to_rename:
     def reformat_template(m):
       template, text = m.groups()
       parsed = blib.parse_text(template)
@@ -46,8 +54,10 @@ def process_text_on_page(index, pagename, text):
       text = re.sub(r"^''(.*)''$", r"\1", text)
       t.add("passage", text)
       blib.set_template_name(t, totemp)
-      notes.append("reformat {{%s}} into {{%s}}, incorporating following raw passage text into passage=" %
-          (fromtemp, totemp))
+      if params:
+        add_params_to_template(t, params)
+      notes.append("reformat {{%s}} into {{%s%s}}, incorporating following raw passage text into passage=" %
+          (fromtemp, totemp, "".join("|%s=%s" % (param, value) for param, value in params)))
       return unicode(t) + "\n"
 
     curtext = re.sub(r"(\{\{%s.*?\}\})\n#+\*:\s*(.*?)\n" % re.escape(fromtemp),
@@ -57,8 +67,12 @@ def process_text_on_page(index, pagename, text):
   for t in parsed.filter_templates():
     tn = tname(t)
     if tn in templates_to_rename_dict:
-      blib.set_template_name(t, templates_to_rename_dict[tn])
-      notes.append("rename {{%s}} to {{%s}}" % (tn, templates_to_rename_dict[tn]))
+      totemp, params = templates_to_rename_dict[tn]
+      blib.set_template_name(t, totemp)
+      if params:
+        add_params_to_template(t, params)
+      notes.append("rename {{%s}} to {{%s%s}}" % (tn, totemp,
+        "".join("|%s=%s" % (param, value) for param, value in params)))
   curtext = unicode(parsed)
 
   return curtext.rstrip("\n"), notes
@@ -76,7 +90,18 @@ for lineno, line in blib.iter_items_from_file(args.direcfile):
     msg("Line %s: WARNING: Saw bad line in --from-to-pagefile: %s" % (lineno, line))
     continue
   fromtemp, totemp = line.split(" ||| ")
-  templates_to_rename.append((fromtemp, totemp))
+  if "|" in totemp:
+    totemp, combined_params = totemp.split("|", 1)
+    combined_params = combined_params.split("|")
+    params = []
+    for combined_param in combined_params:
+      if "=" not in combined_param:
+        raise ValueError("Param %s doesn't have an = sign" % combined_param)
+      param, value = combined_param.split("=")
+      params.append((param, value))
+  else:
+    params = []
+  templates_to_rename.append((fromtemp, (totemp, params)))
 templates_to_rename_dict = dict(templates_to_rename)
 blib.do_pagefile_cats_refs(args, start, end, process_text_on_page,
     default_refs=["Template:%s" % fromtemp for fromtemp, totemp in templates_to_rename],
