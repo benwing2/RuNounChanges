@@ -23,7 +23,7 @@ def process_text_on_page(index, pagename, text):
   for t in parsed.filter_templates():
     origt = unicode(t)
     tn = tname(t)
-    if tn in ["desc", "desctree"]:
+    if tn in ["desc", "descendant", "desctree", "descendants tree"]:
       if t.has("4"):
         gloss = getparam(t, "4")
         if gloss:
