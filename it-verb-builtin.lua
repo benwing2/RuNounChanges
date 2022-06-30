@@ -75,7 +75,8 @@ export.builtin_verbs = {
 ]=], "<<stare>> and derivatives (<<ristare>>, <<soprastare>>, <<sottostare>>); not <<sovrastare>>"},
 
 	---------------------------------------------- -ere verbs --------------------------------------------
-	{"combere", "ó,+,-", "verbs in ''-combere'' (<<incombere>>, <<procombere>>, <<soccombere>>)"},
+	{"soccombere", "ó+,+,+", "<<soccombere>>"},
+	{"combere", "ó,+,-", "<<incombere>>, <<procombere>>"},
 	-- iubere: archaic, defective
 	-- giacere, piacere, tacere; Hoepli says piacciàmo only, taciàmo only and either giaccìamo or giaciàmo;
 	-- but Treccani says all should be in -acciàmo. DOP says piaciàmo and taciàmo are errors and giaciàmo is
@@ -275,7 +276,11 @@ export.builtin_verbs = {
 	{"tenere", "tèngo^tiène,ténni.fut:terrò", "<<tenere>> and derivatives"},
 	{"spegnere", "é:#è\\spéngo:#spèngo,spénsi:#spènsi,spénto:#spènto", "<<spegnere>> and derivatives"},
 	-- accignere, scignere, pignere and derivatives, strignere and derivatives, ugnere: all obsolete, unclear conjugation
-	{"cernere", "è,+,cernìto[uncommon]:cernùto[rare]", "<<cernere>> and derivatives"},
+	-- Past participle cernìto; lacking in derivatives or rare -crèto. Both cerné and cernétte/cernètte
+	-- are very rare, with the former actually occuring more often (same in derivatives).
+	{"^cernere", "è,-,cernìto", "<<cernere>> and derivatives"},
+	{{term = "cernere", prefixes = {"con", "dis"}}, "è,-,-", "<<concernere>>, <<discernere>> and derivatives"},
+	{"secernere", "è,+,secrèto", "<<secernere>>"},
 	-- Hoepli specifically says that [[sapere]] lacks a present participle, hence [[sapiente]] isn't it
 	{"sapere", [=[
 		-,sèppi.
@@ -319,10 +324,12 @@ export.builtin_verbs = {
 	{"cotere", "ò,còssi,còsso", "verbs in ''-cotere'' (popular or poetic variant of verbs in ''-cuotere'', such as <<percuotere>> and <<scuotere>>)"},
 	{"cuotere", "ò,còssi,còsso.unstressed_stem:cuote:cote[now rare]",
 		"verbs in ''-cuotere'' (<<percuotere>>, <<scuotere>>, etc.)"},
-	{"^vertere", "è,vertéi,-.only3sp", "<<vertere>> (but not any derivatives)"},
+	{"^vertere", "è,+,-", "<<vertere>> (but not any derivatives)"},
 	-- divertere, convertere, etc.: archaic, unclear conjugation
 	-- avertere: archaic
-	{"controvertere", "è,-,-.stem:controvèrti.fut:-.imp:-.presp:-", "<<controvertere>>"},
+	-- Treccani and Hoepli say [[controvertere]] is conjugated as if it were ''controvertire'', but Google
+	-- disagrees except for ''controvertito'' (which is rare).
+	{"controvertere", "è,-,-", "<<controvertere>>"},
 	{{term = "vertere", prefixes = {"estro", "intro"}}, "è,-,vèrso:vertìto", "<<estrovertere>> and <<introvertere>>"},
 	{"sistere", "ì,+,sistìto", "verbs in ''-sistere'' (<<consistere>>, <<esistere>>, <<insistere>>, <<resistere>>, etc.)"},
 	{"battere", "à", "<<battere>> and derivatives"},
@@ -466,7 +473,7 @@ export.builtin_verbs = {
 	-- archaic variant of trarre, with some different present tense (hence subjunctive/imperative) forms
 	{"traggere", "tràggo^tràgge,tràssi,tràtto.pres1p:traggiàmo.fut:trarrò.stem:tràe"},
 	{{term = "bere", prefixes = {"^", "ri", "tra"}}, "bévo,bévvi:bevétti.fut:berrò.stem:béve",
-		"<<bere>>, <<strabere>>, <<trabere>>, <<ribere>>; but not <<ebere||to weaken>> or <<iubere||to command, to order>>"},
+		"<<bere>>, <<strabere>>, <<trabere>>, <<ribere>>; but not verbs in ''-combere'', archiac <<ebere||to weaken>>, archiac <<iubere||to command, to order>> or obsolete <<assorbere>>"},
 	{"bevere", "é,bévvi:bevétti.fut:berrò", "<<bevere>> and derivatives (archaic variant of <<bere>>)"},
 	-- benedire (strabenedire, ribenedire), maledire (stramaledire, rimaledire)
 	{{term = "dire", prefixes = {"bene", "male"}}, "+,dìssi:dìi[popular],détto.stem:dìce.pres2p:dìte.imperf:+:dìvo[popular]", "<<benedire>>, <<maledire>> and derivatives"},
