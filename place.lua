@@ -7,12 +7,14 @@ local m_debug = require("Module:debug")
 local data = require("Module:place/data")
 
 local rmatch = mw.ustring.match
+local rfind = mw.ustring.find
 local rsplit = mw.text.split
 
 local cat_data = data.cat_data
 
 local namespace = mw.title.getCurrentTitle().nsText
 
+local force_cat = false -- set to true for testing
 
 
 ----------- Wikicode utility functions
@@ -32,7 +34,8 @@ end
 -- Return the category link for a category, given the language code and the
 -- name of the category.
 local function catlink(lang, text, sort_key)
-	return require("Module:utilities").format_categories({lang:getCode() .. ":" .. data.remove_links_and_html(text)}, lang, sort_key)
+	return require("Module:utilities").format_categories({lang:getCode() .. ":" .. data.remove_links_and_html(text)}, lang,
+		sort_key, nil, force_cat or data.force_cat)
 end
 
 
@@ -88,17 +91,17 @@ local function get_synergy_table(place1, place2)
 end
 
 
--- Return the article that is used with a word. It is fetched from the cat_data
+-- Return the article that is used with a place type. It is fetched from the cat_data
 -- table; if that doesn’t exist, "an" is given for words beginning with a vowel
 -- and "a" otherwise.
 -- If sentence == true, the first letter of the article is made upper-case.
-local function get_article(word, sentence)
-	local art = ""
+local function get_placetype_article(placetype, sentence)
+	local art
 
-	local pt_data = data.get_equiv_placetype_prop(word, function(pt) return cat_data[pt] end)
+	local pt_data = data.get_equiv_placetype_prop(placetype, function(pt) return cat_data[pt] end)
 	if pt_data and pt_data.article then
 		art = pt_data.article
-	elseif word:find("^[aeiou]") then
+	elseif placetype:find("^[aeiou]") then
 		art = "an"
 	else
 		art = "a"
@@ -276,7 +279,7 @@ local function split_holonym(datum)
 			function(pt) return data.placename_display_aliases[pt] and lookup_placename_alias(datum[2], data.placename_display_aliases[pt]) end
 		) or datum[2]
 
-		if not data.get_equiv_placetype_prop(datum[1], function(pt) return data.autolink[datum[3] and pt] end) then
+		if not datum[3] then
 			datum[3] = "en"
 		end
 	end
@@ -299,24 +302,24 @@ end
 -- amid otherwise raw text.  Return value is a place spec, as documented in
 -- parse_place_specs().
 local function parse_new_style_place_spec(text)
+	local placetypes = {}
 	local segments = m_strutils.capturing_split(text, "<<(.-)>>")
-	local retval = {"foobar", {}, raw = {}, order = {}}
+	local retval = {"foobar", true, order = {}}
 	for i, segment in ipairs(segments) do
 		if i % 2 == 1 then
-			table.insert(retval.raw, segment)
-			table.insert(retval.order, {"raw", #retval.raw})
+			table.insert(retval.order, {"raw", segment})
 		elseif segment:find("/") then
 			local holonym, is_multi = split_holonym(segment)
 			if is_multi then
 				for j, single_holonym in ipairs(holonym) do
 					if j > 1 then
 						if j == #holonym then
-							table.insert(retval.raw, " and ")
-							table.insert(retval.order, {"raw", #retval.raw})
+							table.insert(retval.order, {"raw", " and "})
 						else
-							table.insert(retval.raw, ", ")
-							table.insert(retval.order, {"raw", #retval.raw})
+							table.insert(retval.order, {"raw", ", "})
 						end
+						-- Signal that "the" needs to be added if appropriate
+						table.insert(single_holonym[4], "_art_")
 					end
 					table.insert(retval, single_holonym)
 					table.insert(retval.order, {"holonym", #retval})
@@ -328,11 +331,33 @@ local function parse_new_style_place_spec(text)
 				key_holonym_spec_into_place_spec(retval, holonym)
 			end
 		else
-			table.insert(retval[2], segment)
-			table.insert(retval.order, {"placetype", #retval[2]})
+			-- see if the placetype segment is just qualifiers
+			local only_qualifiers = true
+			local split_segments = rsplit(segment, " ", true)
+			for _, split_segment in ipairs(split_segments) do
+				if not data.placetype_qualifiers[split_segment] then
+					only_qualifiers = false
+					break
+				end
+			end
+			table.insert(placetypes, {segment, only_qualifiers})
+			if only_qualifiers then
+				table.insert(retval.order, {"qualifier", segment})
+			else
+				table.insert(retval.order, {"placetype", segment})
+			end
 		end
 	end
 
+	local final_placetypes = {}
+	for i, placetype in ipairs(placetypes) do
+		if i > 1 and placetypes[i - 1][2] then
+			final_placetypes[#final_placetypes] = final_placetypes[#final_placetypes] .. " " .. placetypes[i][1]
+		else
+			table.insert(final_placetypes, placetypes[i][1])
+		end
+	end
+	retval[2] = final_placetypes
 	return retval
 end
 
@@ -359,7 +384,19 @@ local function parse_place_specs(numargs)
 	local last_was_new_style = false
 
 	while numargs[c] do
-		if numargs[c] == ";" then
+		if numargs[c] == ";" or numargs[c]:find("^;[^ ]") then
+			if numargs[c] == ";" then
+				specs[cY].joiner = "; "
+			elseif numargs[c] == ";;" then
+				specs[cY].joiner = " "
+			else
+				local joiner = numargs[c]:sub(2)
+				if rfind(joiner, "^%a") then
+					specs[cY].joiner = " " .. joiner .. " "
+				else
+					specs[cY].joiner = joiner .. " "
+				end
+			end
 			cY = cY + 1
 			cX = 2
 			last_was_new_style = false
@@ -388,9 +425,13 @@ local function parse_place_specs(numargs)
 					local holonym, is_multi = split_holonym(numargs[c])
 					if is_multi then
 						for j, single_holonym in ipairs(holonym) do
-							if j > 1 and j == #holonym then
-								specs[cY][cX] = {nil, "and", nil, {}}
-								cX = cX + 1
+							if j > 1 then
+								-- Signal that "the" needs to be added if appropriate
+								table.insert(single_holonym[4], "_art_")
+								if j == #holonym then
+									specs[cY][cX] = {nil, "and", nil, {}}
+									cX = cX + 1
+								end
 							end
 							specs[cY][cX] = single_holonym
 							key_holonym_spec_into_place_spec(specs[cY], specs[cY][cX])
@@ -413,6 +454,12 @@ local function parse_place_specs(numargs)
 	for _, spec in ipairs(specs) do
 		for _, entry_placetype in ipairs(spec[2]) do
 			track("entry-placetype/" .. entry_placetype)
+			local splits = data.split_qualifiers_from_placetype(entry_placetype, "no canon qualifiers")
+			for _, split in ipairs(splits) do
+				local prev_qualifier, this_qualifier, bare_placetype = unpack(split)
+				track("entry-placetype/" .. bare_placetype)
+				track("entry-qualifier/" .. this_qualifier)
+			end
 		end
 		cY = 3
 		while spec[cY] do
@@ -446,24 +493,24 @@ end
 
 -- Prepend the appropriate article if needed to LINKED_PLACENAME, where PLACENAME
 -- is the corresponding unlinked placename and PLACETYPE its placetype.
-local function prepend_article(placetype, placename, linked_placename)
+local function get_holonym_article(placetype, placename, linked_placename)
 	placename = data.remove_links_and_html(placename)
 	local unlinked_placename = data.remove_links_and_html(linked_placename)
 	if unlinked_placename:find("^the ") then
-		return linked_placename
+		return nil
 	end
 	local art = data.get_equiv_placetype_prop(placetype, function(pt) return data.placename_article[pt] and data.placename_article[pt][placename] end)
 	if art then
-		return art .. " " .. linked_placename
+		return art
 	end
 	art = data.get_equiv_placetype_prop(placetype, function(pt) return cat_data[pt] and cat_data[pt].holonym_article end)
 	if art then
-		return art .. " " .. linked_placename
+		return art
 	end
 	local universal_res = data.placename_the_re["*"]
 	for _, re in ipairs(universal_res) do
 		if unlinked_placename:find(re) then
-			return "the " .. linked_placename
+			return "the"
 		end
 	end
 	local matched = data.get_equiv_placetype_prop(placetype, function(pt)
@@ -479,22 +526,31 @@ local function prepend_article(placetype, placename, linked_placename)
 		return nil
 	end)
 	if matched then
-		return "the " .. linked_placename
+		return "the"
 	end
-	return linked_placename
+	return nil
 end
 
 
--- Return a string containing a placename, with an extra article if necessary and in the
+-- Return the description of a holonym, with an extra article if necessary and in the
 -- wikilinked display form if necessary.
 -- Examples:
 -- ({"country", "United States", "en", {}}, true, true) returns the template-expanded
 -- equivalent of "the {{l|en|United States}}".
 -- ({"region", "O'Higgins", "en", {"suf"}}, false, true) returns the template-expanded
 -- equivalent of "{{l|en|O'Higgins}} region".
-local function get_place_string(place, needs_article, display_form)
+local function get_holonym_description(place, needs_article, display_form)
 	local ps = place[2]
 	local affix_type_pt_data, affix_type, affix, no_affix_strings, pt_equiv_for_affix_type, already_seen_affix
+
+	if not needs_article then
+		for _, mod in ipairs(place[4]) do
+			if mod == "_art_" then
+				needs_article = true
+				break
+			end
+		end
+	end
 
 	if display_form then
 		-- Implement display handlers.
@@ -533,7 +589,10 @@ local function get_place_string(place, needs_article, display_form)
 	end
 
 	if needs_article then
-		ps = prepend_article(place[1], place[2], ps)
+		local article = get_holonym_article(place[1], place[2], ps)
+		if article then
+			ps = article .. " " .. ps
+		end
 	end
 
 	if display_form then
@@ -558,14 +617,14 @@ local function get_synergic_description(synergy, place1, place2)
 			desc = desc .. " " .. synergy.before
 		end
 
-		desc = desc .. " " .. get_place_string(place1, true, true)
+		desc = desc .. " " .. get_holonym_description(place1, true, true)
 	end
 
 	if synergy.between then
 		desc = desc .. " " .. synergy.between
 	end
 
-	desc = desc .. " "  .. get_place_string(place2, true, true)
+	desc = desc .. " "  .. get_holonym_description(place2, true, true)
 
 	if synergy.after then
 		desc = desc .. " " .. synergy.after
@@ -601,7 +660,7 @@ end
 -- should be formatted in the gloss, considering the entry’s place type, the
 -- place preceding it in the template’s parameter (place1) and following it
 -- (place3), and whether it is the first place (parameter 4 of the function).
-local function get_holonym_description(entry_placetype, place1, place2, place3, first)
+local function get_contextual_holonym_description(entry_placetype, place1, place2, place3, first)
 	local desc = ""
 
 	local synergy = get_synergy_table(place2, place3)
@@ -631,7 +690,7 @@ local function get_holonym_description(entry_placetype, place1, place2, place3, 
 	end
 
 	if not synergy then
-		desc = desc .. get_place_string(place2, first, true)
+		desc = desc .. get_holonym_description(place2, first, true)
 	else
 		desc = desc .. get_synergic_description(synergy, place1, place2)
 	end
@@ -677,10 +736,10 @@ local function get_placetype_description(placetype)
 	if linked_version then
 		return linked_version
 	else
-		local splits = data.split_and_canonicalize_placetype(placetype)
+		local splits = data.split_qualifiers_from_placetype(placetype)
 		local prefix = ""
 		for _, split in ipairs(splits) do
-			local prev_qualifier, this_qualifier, bare_placetype = split[1], split[2], split[3]
+			local prev_qualifier, this_qualifier, bare_placetype = unpack(split)
 			prefix = (prev_qualifier and prev_qualifier .. " " .. this_qualifier or this_qualifier) .. " "
 			local linked_version = get_linked_placetype(bare_placetype)
 			if linked_version then
@@ -693,11 +752,19 @@ local function get_placetype_description(placetype)
 end
 
 
+-- Return the linked description of a qualifier (which may be multiple words).
+local function get_qualifier_description(qualifier)
+	local splits = data.split_qualifiers_from_placetype(qualifier .. " foo")
+	local prev_qualifier, this_qualifier, bare_placetype = unpack(splits[#splits])
+	return prev_qualifier and prev_qualifier .. " " .. this_qualifier or this_qualifier
+end
+	
+
 -- Return a string with extra information that is sometimes added to a
 -- definition. This consists of the tag, a whitespace and the value (wikilinked
 -- if it language contains a language code; if sentence == true, ". " is added
 -- before the string and the first character is made upper case.
-local function get_extra_info(tag, values, sentence)
+local function get_extra_info(tag, values, sentence, auto_plural, with_colon)
 	if not values then
 		return ""
 	end
@@ -707,7 +774,15 @@ local function get_extra_info(tag, values, sentence)
 	if #values == 0 then
 		return ""
 	end
-	
+
+	if auto_plural and #values > 1 then
+		tag = m_strutils.pluralize(tag)
+	end
+
+	if with_colon then
+		tag = tag .. ":"
+	end
+
 	local linked_values = {}
 
 	for _, value in ipairs(values) do
@@ -759,7 +834,7 @@ local function get_old_style_gloss(args, spec, with_article, sentence)
 			-- if they're not joined with "and" (so we get "city and county seat of ..."
 			-- but "city, the county seat of ...").
 			if n2 > 1 and spec[2][n2-1] ~= "and" and spec[2][n2-1] ~= "or" then
-				local article = get_article(placetype)
+				local article = get_placetype_article(placetype)
 				if article ~= "the" then
 					-- Temporary tracking. Formerly we didn't insert an article in this case.
 					track("multiple-placetypes-no-the")
@@ -786,12 +861,12 @@ local function get_old_style_gloss(args, spec, with_article, sentence)
 			prev = {}
 		end
 
-		gloss = gloss .. get_holonym_description(placetype_for_in_or_of, prev, spec[c], spec[c+1], (c == 3))
+		gloss = gloss .. get_contextual_holonym_description(placetype_for_in_or_of, prev, spec[c], spec[c+1], (c == 3))
 		c = c + 1
 	end
 
 	if with_article then
-		gloss = (args["a"] or get_article(spec[2][1], sentence)) .. " " .. gloss
+		gloss = (args["a"] or get_placetype_article(spec[2][1], sentence)) .. " " .. gloss
 	end
 
 	return gloss
@@ -809,13 +884,15 @@ local function get_new_style_gloss(args, spec, with_article)
 	end
 
 	for _, order in ipairs(spec.order) do
-		local segment_type, segment_num = order[1], order[2]
+		local segment_type, segment = order[1], order[2]
 		if segment_type == "raw" then
-			table.insert(parts, spec.raw[segment_num])
+			table.insert(parts, segment)
 		elseif segment_type == "placetype" then
-			table.insert(parts, get_placetype_description(spec[2][segment_num]))
+			table.insert(parts, get_placetype_description(segment))
+		elseif segment_type == "qualifier" then
+			table.insert(parts, get_qualifier_description(segment))
 		elseif segment_type == "holonym" then
-			table.insert(parts, get_place_string(spec[segment_num], false, true))
+			table.insert(parts, get_holonym_description(spec[segment], false, true))
 		else
 			error("Internal error: Unrecognized segment type '" .. segment_type .. "'")
 		end
@@ -840,15 +917,18 @@ local function get_gloss(args, specs, sentence)
 		else
 			table.insert(glosses, get_old_style_gloss(args, spec, n == 1, sentence))
 		end
+		if spec.joiner then
+			table.insert(glosses, spec.joiner)
+		end
 	end
 
-	local ret = {table.concat(glosses, "; ")}
+	local ret = {table.concat(glosses)}
 
-	table.insert(ret, get_extra_info("modern", args["modern"], false))
-	table.insert(ret, get_extra_info("official name:", args["official"], sentence))
-	table.insert(ret, get_extra_info("capital:", args["capital"], sentence))
-	table.insert(ret, get_extra_info("largest city:", args["largest city"], sentence))
-	table.insert(ret, get_extra_info("capital and largest city:", args["caplc"], sentence))
+	table.insert(ret, get_extra_info("modern", args["modern"], false, false, false))
+	table.insert(ret, get_extra_info("official name", args["official"], sentence, "auto plural", "with colon"))
+	table.insert(ret, get_extra_info("capital", args["capital"], sentence, "auto plural", "with colon"))
+	table.insert(ret, get_extra_info("largest city", args["largest city"], sentence, "auto plural", "with colon"))
+	table.insert(ret, get_extra_info("capital and largest city", args["caplc"], sentence, false, "with colon"))
 	local placetype = specs[1][2][1]
 	if placetype == "county" or placetype == "counties" then
 		placetype = "county seat"
@@ -859,16 +939,8 @@ local function get_gloss(args, specs, sentence)
 	else
 		placetype = "seat"
 	end
-	if #args["seat"] > 1 then
-		placetype = placetype .. "s"
-	end
-	table.insert(ret, get_extra_info(placetype .. ":", args["seat"], sentence))
-	if #args["shire town"] > 1 then
-		placetype = "shire towns"
-	else
-		placetype = "shire town"
-	end
-	table.insert(ret, get_extra_info(placetype .. ":", args["shire town"], sentence))
+	table.insert(ret, get_extra_info(placetype, args["seat"], sentence, "auto plural", "with colon"))
+	table.insert(ret, get_extra_info("shire town", args["shire town"], sentence, "auto plural", "with colon"))
 
 	return table.concat(ret)
 end
@@ -1138,7 +1210,7 @@ local function cat_specs_to_category_wikicode(lang, cat_specs, entry_placetype, 
 				cat = cat_spec
 			end
 
-			cat = cat:gsub("%+%+%+", get_place_string(holonym, true, false))
+			cat = cat:gsub("%+%+%+", get_holonym_description(holonym, true, false))
 			all_cats = all_cats .. catlink(lang, cat, sort_key)
 		end
 	else
@@ -1214,7 +1286,7 @@ end
 -- Iterate through each type of place given in parameter 2 (a list of place specs, as documented
 -- in parse_place_specs()) and return a string with the links to all categories that need to be
 -- added to the entry.
-local function get_cats(lang, place_specs, sort_key)
+local function get_cats(lang, place_specs, additional_cats, sort_key)
 	local cats = {}
 
 	handle_implications(place_specs, data.cat_implications, true)
@@ -1228,6 +1300,10 @@ local function get_cats(lang, place_specs, sort_key)
 		-- Also add base categories for the holonyms listed (e.g. a category like
 		-- 'en:Places in Merseyside, England'). This is handled through the special placetype "*".
 		table.insert(cats, get_cat(lang, place_spec, "*", sort_key))
+	end
+
+	for _, addl_cat in ipairs(additional_cats) do
+		table.insert(cats, catlink(lang, addl_cat, sort_key))
 	end
 
 	return table.concat(cats)
@@ -1245,26 +1321,27 @@ function export.show(frame)
 		[2] = {required = true, list = true},
 		["t"] = {list = true},
 		["tid"] = {list = true, allow_holes = true},
+		["cat"] = {list = true},
+		["sort"] = {},
 
 		["a"] = {},
 		["also"] = {},
 		["def"] = {},
 
-		["modern"] = {},
-		["official"] = {},
-		["capital"] = {},
-		["largest city"] = {},
+		["modern"] = {list = true},
+		["official"] = {list = true},
+		["capital"] = {list = true},
+		["largest city"] = {list = true},
 		["caplc"] = {},
 		["seat"] = {list = true},
 		["shire town"] = {list = true},
-		["sort"] = {},
 	}
 
 	local args = require("Module:parameters").process(frame:getParent().args, params)
 	local lang = require("Module:languages").getByCode(args[1]) or error("The language code \"" .. args[1] .. "\" is not valid.")
 	local place_specs = parse_place_specs(args[2])
 
-	return get_def(args, place_specs) .. get_cats(lang, place_specs, args["sort"])
+	return get_def(args, place_specs) .. get_cats(lang, place_specs, args["cat"], args["sort"])
 end
 
 

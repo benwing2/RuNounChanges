@@ -39,7 +39,7 @@ export.political_subdivisions = {
 	["countries"] = "[[country|countries]]",
 	["delegations"] = "[[delegation]]s",
 	["departments"] = "[[department]]s",
-	["dependencies"] = "[[dependency|dependencies]]",
+	["dependent territories"] = "[[w:dependent territory|dependent territories]]",
 	["districts"] = "[[district]]s",
 	["districts and autonomous regions"] = "[[district]]s and [[autonomous region]]s",
 	["divisions"] = "[[division]]s",
@@ -282,7 +282,7 @@ export.countries = {
 	["Cyprus"] = {parents = {"Europe", "Asia"}, poldiv = {"districts"}, british_spelling = true},
 	["the Czech Republic"] = {parents = {"Europe"}, poldiv = {"regions", "districts"}, british_spelling = true},
 	["the Democratic Republic of the Congo"] = {parents = {"Africa"}, poldiv = {"provinces", "territories"}},
-	["Denmark"] = {parents = {"Europe"}, poldiv = {"regions", "municipalities", "territories"}, british_spelling = true},
+	["Denmark"] = {parents = {"Europe"}, poldiv = {"regions", "municipalities", "dependent territories"}, british_spelling = true},
 	["Djibouti"] = {parents = {"Africa"}, poldiv = {"regions", "districts"}},
 	["Dominica"] = {parents = {"North America"}, poldiv = {"parishes"}, british_spelling = true},
 	["the Dominican Republic"] = {parents = {"North America"}, poldiv = {"provinces", "municipalities"},
@@ -299,7 +299,7 @@ export.countries = {
 	["Fiji"] = {parents = {"Melanesia"}, poldiv = {"divisions", "provinces"}, british_spelling = true},
 	["Finland"] = {parents = {"Europe"}, poldiv = {"regions", "municipalities"}, british_spelling = true},
 	["France"] = {parents = {"Europe"}, poldiv = {"regions", "departments", "collectivities", "municipalities",
-		"territories"}, miscdiv = {"provinces"}, british_spelling = true},
+		"dependent territories", "territories"}, miscdiv = {"provinces"}, british_spelling = true},
 	["Gabon"] = {parents = {"Africa"}, poldiv = {"provinces", "departments"}},
 	["the Gambia"] = {parents = {"Africa"}, poldiv = {"divisions", "districts"}, british_spelling = true},
 	["Georgia"] = {parents = {"Europe", "Asia"}, poldiv = {"regions", "districts"}, keydesc = "the country of [[Georgia]], in [[Eurasia]]", british_spelling = true},
@@ -347,7 +347,7 @@ export.countries = {
 	["Malaysia"] = {parents = {"Asia"}, poldiv = {"states", "federal territories", "districts"}, british_spelling = true},
 	["the Maldives"] = {parents = {"Asia"}, poldiv = {"provinces", "administrative atolls"}, british_spelling = true},
 	["Mali"] = {parents = {"Africa"}, poldiv = {"regions", "cercles"}},
-	["Malta"] = {parents = {"Europe"}, poldiv = {"local councils"}, british_spelling = true},
+	["Malta"] = {parents = {"Europe"}, poldiv = {"regions", "local councils"}, british_spelling = true},
 	["the Marshall Islands"] = {parents = {"Micronesia"}, poldiv = {"municipalities"}},
 	["Mauritania"] = {parents = {"Africa"}, poldiv = {"regions", "departments"}},
 	["Mauritius"] = {parents = {"Africa"}, poldiv = {"districts"}, british_spelling = true},
@@ -361,14 +361,14 @@ export.countries = {
 	["Namibia"] = {parents = {"Africa"}, poldiv = {"regions", "constituencies"}, british_spelling = true},
 	["Nauru"] = {parents = {"Micronesia"}, poldiv = {"districts"}, british_spelling = true},
 	["Nepal"] = {parents = {"Asia"}, poldiv = {"provinces", "districts"}},
-	["the Netherlands"] = {parents = {"Europe"}, poldiv = {"provinces", "municipalities"}, british_spelling = true},
-	["New Zealand"] = {parents = {"Polynesia"}, poldiv = {"regions", "territorial authorities"}, british_spelling = true},
+	["the Netherlands"] = {parents = {"Europe"}, poldiv = {"provinces", "municipalities", "dependent territories"}, british_spelling = true},
+	["New Zealand"] = {parents = {"Polynesia"}, poldiv = {"regions", "dependent territories", "territorial authorities"}, british_spelling = true},
 	["Nicaragua"] = {parents = {"Central America"}, poldiv = {"departments", "municipalities"}},
 	["Niger"] = {parents = {"Africa"}, poldiv = {"regions", "departments"}},
 	["Nigeria"] = {parents = {"Africa"}, poldiv = {"states", "local government areas"}, british_spelling = true},
 	["North Korea"] = {parents = {"Asia", "Korea"}, poldiv = {"provinces", "counties"}},
 	["North Macedonia"] = {parents = {"Europe"}, poldiv = {"municipalities"}, british_spelling = true},
-	["Norway"] = {parents = {"Europe"}, poldiv = {"counties", "municipalities", "dependencies"},
+	["Norway"] = {parents = {"Europe"}, poldiv = {"counties", "municipalities", "dependent territories"},
 		miscdiv = {"districts", "unincorporated areas"}, british_spelling = true},
 	["Oman"] = {parents = {"Asia"}, poldiv = {"governorates", "provinces"}},
 	["Pakistan"] = {parents = {"Asia"}, poldiv = {"provinces", "districts"}, british_spelling = true},
@@ -430,10 +430,10 @@ export.countries = {
 	["Ukraine"] = {parents = {"Europe"}, poldiv = {"oblasts", "municipalities", "raions"}, british_spelling = true},
 	["the United Arab Emirates"] = {parents = {"Asia"}, poldiv = {"emirates"}},
 	["the United Kingdom"] = {parents = {"Europe", "British Isles"},
-		poldiv = {"countries", "territories", "dependencies"},
+		poldiv = {"countries", "territories", "dependent territories"},
 		keydesc = "the [[United Kingdom]] of Great Britain and Northern Ireland", british_spelling = true},
 	["the United States"] = {parents = {"North America"},
-		poldiv = {"counties", "county seats", "states", "territories",
+		poldiv = {"counties", "county seats", "states", "territories", "dependent territories",
 			"municipalities", -- these exist politically at least in Colorado and Connecticut
 		}, miscdiv = {"regions"}},
 	["Uruguay"] = {parents = {"South America"}, poldiv = {"departments", "municipalities"}},
@@ -453,6 +453,7 @@ export.pseudo_countries = {
 	["Akrotiri and Dhekelia"] = {divtype = {"overseas territory", "territory"}, parents = {"Cyprus", "Europe", "United Kingdom"}, british_spelling = true},
 	-- unincorporated territory of the United States
 	["American Samoa"] = {divtype = {"unincorporated territory", "overseas territory", "territory"}, parents = {"Polynesia", "United States"}},
+	["United States Minor Outlying Islands"] = {divtype = {"unincorporated territory", "overseas territory", "territory"}, parents = {"Islands", "Micronesia", "Polynesia", "United States"}},
 	-- British Overseas Territory
 	["Anguilla"] = {divtype = {"overseas territory", "territory"}, parents = {"North America", "United Kingdom"}, british_spelling = true},
 	-- de-facto independent state, internationally recognized as part of Georgia
@@ -504,13 +505,13 @@ export.pseudo_countries = {
 	-- unincorporated territory of the United States
 	["Guam"] = {divtype = {"unincorporated territory", "overseas territory", "territory"}, parents = {"United States", "Micronesia"}},
 	-- self-governing British Crown dependency; technically called the Bailiwick of Guernsey
-	["Guernsey"] = {divtype = {"crown dependency", "dependency", "bailiwick", "territory"}, parents = {"British Isles", "Europe"}, british_spelling = true},
+	["Guernsey"] = {divtype = {"crown dependency", "dependency", "dependent territory", "bailiwick", "territory"}, parents = {"British Isles", "Europe"}, british_spelling = true},
 	-- special administrative region of China
 	["Hong Kong"] = {divtype = "special administrative region", parents = {"China"}},
 	-- self-governing British Crown dependency
-	["the Isle of Man"] = {divtype = {"crown dependency", "dependency", "territory"}, parents = {"British Isles", "Europe"}, british_spelling = true},
+	["the Isle of Man"] = {divtype = {"crown dependency", "dependency", "dependent territory", "territory"}, parents = {"British Isles", "Europe"}, british_spelling = true},
 	-- self-governing British Crown dependency; technically called the Bailiwick of Jersey
-	["Jersey"] = {divtype = {"crown dependency", "dependency", "bailiwick", "territory"}, parents = {"British Isles", "Europe"}, british_spelling = true},
+	["Jersey"] = {divtype = {"crown dependency", "dependency", "dependent territory", "bailiwick", "territory"}, parents = {"British Isles", "Europe"}, british_spelling = true},
 	-- special administrative region of China
 	["Macau"] = {divtype = "special administrative region", parents = {"China"}},
 	-- overseas department of France
@@ -927,6 +928,14 @@ local function japanese_placename_to_key(placename)
 	end
 	return placename .. " Prefecture"
 end
+
+export.maltese_regions = {
+	["Central Region, Malta"] = {},
+	["Gozo Region, Malta"] = {},
+	["Northern Region, Malta"] = {},
+	["South Eastern Region, Malta"] = {},
+	["Southern Region, Malta"] = {},
+}
 
 export.mexican_states = {
 	["Aguascalientes"] = {},
@@ -2392,6 +2401,19 @@ export.polities = {
 		data = export.japanese_prefectures,
 	},
 
+	-- regions of Malta
+	{
+		key_to_placename = chop(", Malta$"),
+		placename_to_key = append(", Malta"),
+		bare_label_setter = subpolity_bare_label_setter("Malta"),
+		value_transformer = subpolity_value_transformer("Malta"),
+		place_cat_handler = default_place_cat_handler(),
+		default_divtype = "region",
+		british_spelling = true,
+		data = export.maltese_regions,
+	},
+
+
 	-- Mexican states
 	{
 		bare_label_setter = subpolity_bare_label_setter("Mexico"),
@@ -2420,6 +2442,7 @@ export.polities = {
 		place_cat_handler = default_place_cat_handler(),
 		default_divtype = "province",
 		default_poldiv = {{"municipalities", parent="municipalities of the Netherlands"}},
+		british_spelling = true,
 		data = export.netherlands_provinces,
 	},
 
