@@ -170,11 +170,11 @@ EXAMPLES OF CONJUGATION:
 
 ; Third-person only verbs:
 
-{{it-conj|bufare<e/ù.only3s>}}
+{{it-conj|bufare<e/ù.impers>}}
 
-{{it-verb|accadere<e/à+,accàdde.fut:accadrà.only3sp>}}
+{{it-verb|accadere<e/à+,accàdde.fut:accadrà.thirdonly>}}
 
-{{it-verb|volerci<e/vuòle,vòlle.fut:vorrà.sub:vòglia.only3s>}}
+{{it-verb|volerci<e/vuòle,vòlle.fut:vorrà.sub:vòglia.impers>}}
 
 ; Defective verbs:
 
@@ -517,7 +517,15 @@ end
 
 
 local function skip_slot(base, slot)
-	if base.props.only3s or base.props.only3sp then
+	if base.props.nofinite and slot:find("[123]") then
+		-- Skip all finite (1/2/3-person) slots.
+		return true
+	end
+	if base.props.presonly and slot:find("[123]") and not slot:find("^pres") then
+		-- Skip all finite (1/2/3-person) slots except the present indicative.
+		return true
+	end
+	if base.props.impers or base.props.thirdonly then
 		-- Impersonal or third-person-only verb.
 		if slot:find("[12]") and not slot:find("3") then
 			-- Skip slots for 1/2 person that don't also reference 3rd person (hence we don't skip sub123s).
@@ -528,7 +536,7 @@ local function skip_slot(base, slot)
 			return true
 		end
 	end
-	if base.props.only3s and slot:find("3p") then
+	if base.props.impers and slot:find("3p") then
 		-- Skip third plural slots for impersonal verbs.
 		return true
 	end
@@ -1065,7 +1073,7 @@ local function generate_pres_forms(base, form)
 		local unaccented_form = remove_accents(form)
 		if not general_list_form_contains_form(base.verb.pres, unaccented_form, remove_accents)
 			and (base.verb.isc_pres and not general_list_form_contains_form(base.verb.isc_pres, unaccented_form, remove_accents)) then
-			base.row_is_irreg.pres = true
+			base.rowprops.irreg.pres = true
 			-- FIXME! Here we are encoding knowledge of the algorithm in add_present_indic() to determine how to
 			-- propagate irregular present 1s to other forms. This duplicates the logic of that algorithm, and if that
 			-- code ever changes, this code needs to change too. In practice, it doesn't currently matter so much
@@ -1109,7 +1117,7 @@ local function generate_pres3s_forms(base, form)
 		local unaccented_form = remove_accents(form)
 		if not general_list_form_contains_form(base.verb.pres3s, unaccented_form, remove_accents)
 			and (base.verb.isc_pres3s and not general_list_form_contains_form(base.verb.isc_pres3s, unaccented_form, remove_accents)) then
-			base.row_is_irreg.pres = true
+			base.rowprops.irreg.pres = true
 			base.is_irreg.pres3s = true
 			-- pres3s is copied to pres2s.
 			base.is_irreg.pres2s = true
@@ -1256,7 +1264,22 @@ end
 
 local function add_imperative_reflexive_clitics(base, rowslot)
 	local s2suf = get_unlinked_clitic_suffix(base, "2s")
-	base.forms[rowslot .. "2s"] = iut.flatmap_forms(base.forms[rowslot .. "2s"], function(form)
+	local saw_form_with_apostrophe = false
+
+	-- Check if there is a 2s imperative ending in an apostrophe, e.g. dà', fà'. If so, there is probably also an
+	-- imperative in -ài, but we don't want to generate a reflexive imperative from it (#dàiti). Otherwise, we want to
+	-- generative a reflexive imperative as normal (e.g. ''distràiti'' from [[distrarsi]]).
+	local imp2s_forms = base.forms[rowslot .. "2s"]
+	if imp2s_forms then
+		for _, form in ipairs(imp2s_forms) do
+			if rfind(form.form, "'$") then
+				saw_form_with_apostrophe = true
+				break
+			end
+		end
+	end
+
+	base.forms[rowslot .. "2s"] = iut.flatmap_forms(imp2s_forms, function(form)
 		form = rsub(form, "'$", "") -- dà', fà', etc.
 		if rfind(form, AV .. "$") then -- final stressed vowel; implement syntactic gemination
 			if rfind(s2suf, "^gli") then
@@ -1264,7 +1287,8 @@ local function add_imperative_reflexive_clitics(base, rowslot)
 			else
 				return {add_suffix_to_form(form, usub(s2suf, 1, 1) .. s2suf)}
 			end
-		elseif rfind(form, "ài$") then
+		elseif rfind(form, "ài$") and saw_form_with_apostrophe then
+			-- Skip this imperative; see above.
 			return {}
 		else
 			return {add_suffix_to_form(form, s2suf)}
@@ -1734,7 +1758,7 @@ local function handle_row_overrides_for_row(base, rowslot)
 				-- Check whether the row override form is the same as the default; if not, it's an irregularity.
 				if not general_list_form_contains_form(existing_generated_form, form) then
 					-- Note that the row has an irregularity in it.
-					base.row_is_irreg[rowslot] = true
+					base.rowprops.irreg[rowslot] = true
 					-- Now note that the individual form is irregular. If the row override is for a combined form like
 					-- 123s, we have to map that to the individual forms (1s, 2s, 3s).
 					local rowspec = row_conjugation_map[rowslot]
@@ -1784,7 +1808,7 @@ local function handle_single_overrides_for_row(base, override_spec, rowslot)
 				end
 				-- Check whether the single override form is the same as the default; if not, it's an irregularity.
 				if not general_list_form_contains_form(existing_generated_form, form) then
-					base.row_is_irreg[rowslot] = true
+					base.rowprops.irreg[rowslot] = true
 					base.is_irreg[slot] = true
 				end
 				return form
@@ -1824,7 +1848,7 @@ local function conjugate_row(base, rowslot)
 			end
 			-- Check whether the principal part is the same as the default; if not, the entire row is irregular.
 			if not general_list_form_contains_form(default_principal_part, form) then
-				base.row_is_irreg[rowslot] = true
+				base.rowprops.irreg[rowslot] = true
 				for _, persnum in ipairs(rowspec.persnums) do
 					base.is_irreg[rowslot .. persnum] = true
 				end
@@ -1940,22 +1964,45 @@ local function process_addnote_specs(base)
 end
 
 
-local function check_for_defective_rows(base)
+local function check_for_defective_and_unknown_rows(base)
 	for _, rowconj in ipairs(row_conjugations) do
 		local rowslot, rowspec = unpack(rowconj)
 		if not rowspec.dont_check_defective_status then
+			local row_not_entirely_unknown = false
+			local row_not_entirely_missing = false
 			for i, persnum in ipairs(rowspec.persnums) do
 				local slot = rowslot .. persnum
 				if base.forms[slot] then
-					base.row_has_forms[rowslot] = true
+					row_not_entirely_missing = true
+					for _, form in ipairs(base.forms[slot]) do
+						if form.form == "?" then
+							base.rowprops.unknown[rowslot] = true
+						else
+							row_not_entirely_unknown = true
+						end
+					end
 				elseif not skip_slot(base, slot) then
-					base.row_is_defective[rowslot] = true
+					base.rowprops.defective[rowslot] = true
 				end
 			end
+			base.rowprops.all_unknown[rowslot] = not row_not_entirely_unknown
+			base.rowprops.all_defective[rowslot] = not row_not_entirely_missing
 		end
 	end
 	if not base.principal_part_specs.aux and not base.verb.is_reflexive then
-		base.row_is_defective.aux = true
+		base.rowprops.defective.aux = true
+		base.rowprops.all_defective.aux = true
+	end
+	if base.principal_part_specs.aux then
+		local row_not_entirely_unknown = false
+		for _, form in ipairs(base.principal_part_specs.aux) do
+			if form.form == "?" then
+				base.rowprops.unknown.aux = true
+			else
+				row_not_entirely_unknown = true
+			end
+		end
+		base.rowprops.all_unknown.aux = not row_not_entirely_unknown
 	end
 end
 
@@ -1995,7 +2042,7 @@ local function conjugate_verb(base)
 		handle_single_overrides_for_row(base, "late_single_override_specs", rowslot)
 	end
 	process_addnote_specs(base)
-	check_for_defective_rows(base)
+	check_for_defective_and_unknown_rows(base)
 	if base.args.noautolinkverb then
 		remove_links_from_forms(base)
 	else
@@ -2359,6 +2406,8 @@ local function parse_inside(base, inside, is_builtin_verb)
 							parse_err("No footnotes allowed with '-' spec for auxiliary")
 						end
 						aux = nil
+					elseif aux == "?" then
+						-- remains as-is
 					else
 						parse_err("Unrecognized auxiliary '" .. aux ..
 							"', should be 'a' (for [[avere]]), 'e' (for [[essere]]), or '-' if no past participle")
@@ -2418,7 +2467,8 @@ local function parse_inside(base, inside, is_builtin_verb)
 					parse_err("Extraneous text after past participle")
 				end
 			end
-		elseif first_element == "only3s" or first_element == "only3sp" or first_element == "rre" then
+		elseif first_element == "impers" or first_element == "thirdonly" or first_element == "rre" or
+			first_element == "nofinite" or first_element == "presonly" then
 			if #dot_separated_group > 1 then
 				parse_err("No footnotes allowed with '" .. first_element .. "' spec")
 			end
@@ -2442,7 +2492,7 @@ local function parse_inside(base, inside, is_builtin_verb)
 			local first_element_prefix, first_element_minus_prefix = rmatch(first_element,
 				"^%s*([a-z0-9_!]+)%s*:%s*(.-)%s*$")
 			if not first_element_prefix then
-				parse_err("Dot-separated element should be either 'only3s', 'only3p', 'rre' or be of the form "
+				parse_err("Dot-separated element should be either 'impers', 'thirdonly', 'nofinite', 'presonly', 'rre' or be of the form "
 					.. "'PREFIX:SPEC', but saw '" .. table.concat(dot_separated_group) .. "'")
 			end
 			dot_separated_group[1] = first_element_minus_prefix
@@ -2554,22 +2604,38 @@ local function create_base()
 	-- `is_irreg` is a table indexed by an individual form slot ("pres1s", "sub2s", "pp", etc.) whose value is true or
 	--    false indicating whether a given form is irregular. Currently, the values in `is_irreg` are used only by the
 	--    code in [[Module:it-headword]] to determine whether to show irregular principal parts.
-	-- `row_is_irreg` is a table indexed by the row slot ("pres", "sub", etc.) whose value is true or false indicating
-	--    whether a given row is irregular. The values here are currently used to determine whether to add categories
-	--    like [[:Category:Italian verbs with irregular imperfect subjunctive]].
-	-- `row_is_defective` is a table indexed by the row slot ("pres", "sub", etc.) whose value is true or false
-	--    indicating whether a given row is defective (missing one or more forms). Forms expected to be missing due to
-	--    'only3s' or 'only3sp' don't count.
-	-- `row_has_forms` is a table indexed by the row slot ("pres", "sub", etc.) whose value is true or false
-	--    indicating whether a given row has any forms (i.e. is not completely defective). A row is completely defective
-	--    if `row_is_defective[row]` and not `row_has_forms[row]` (we need both checks in case of expected missing rows,
-	--    such as imperative with 'only3s' or 'only3sp').
-	-- `props` is a table of miscellaneous properties.
+	-- `props` is a table of miscellaneous Boolean properties. Current properties:
+	--    - `impers` (impersonal verb, with only third-singular forms)
+	--    - `thirdonly` (third-person only verb)
+	--    - `nofinite` (verb is missing all finite forms)
+	--    - `presonly` (verb is missing all finite forms except the present indicative)
+	--    - `rre` (user specified the 'rre' indicator in conjunction with a syncopated reflexive verb like
+	--             [[contrarsi]] reflexive of [[contrarre]], which otherwise would get interpreted as the reflexive of
+	--             [[contrare]])
+	--    - `syncopated` (verb is syncopated, i.e. the infinitive ends in '-rre'; includes verbs with '-rre' infinitive
+	--                    as well as reflexive verbs ending in '-orsi' or '-ursi' and verbs where the 'rre' indicator
+	--                    was given by the user)
+	--    - `builtin` (verb uses a built-in conjugation in [[Module:it-verb/builtin]])
+	--    - `opt_root_stressed_inf` (verb used the \/ notation to indicate an optionally root-stressed infinitive; to
+	--                               determine if a verb used the \ notation, look for a value in
+	--                               base.principal_part_specs.root_stressed_inf)
+	-- `rowprops` is a table of tables of row-specific Boolean properties. Each subtable specifies a property of a
+	--    given row, such as whether the row is irregular. Specifically:
+	--    - `rowprops.irreg`: The row is irregular, i.e. at least one slot has an irregular form. Currently used to
+	--       determine whether to add categories like [[:Category:Italian verbs with irregular imperfect subjunctive]],
+	--       and whether to display the row's principal part in the headword line.
+	--    - `rowprops.defective`: The row is defective (missing one or more forms). Forms expected to be missing due to
+	--       'impers' or 'thirdonly' don't count.
+	--    - `rowprops.all_defective`: The row is missing all forms. A row should be considered completely defective if
+	--       `rowprops.defective[row]` and `rowprops.all_defective[row]` (we need both checks in case of expected
+	--       missing rows, such as imperative with 'impers' or 'thirdonly').
+	--    - `rowprops.unknown`: The row has at least one unknown form.
+	--    - `rowprops.all_unknown`: All forms of the row are unknown.
 	--
 	-- There should be no other properties set directly at the `base` level.
 	return {forms = {}, principal_part_specs = {}, principal_part_forms = {}, row_override_specs = {},
-		single_override_specs = {}, late_single_override_specs = {}, addnote_specs = {}, is_irreg = {},
-		row_is_irreg = {}, row_is_defective = {}, row_has_forms = {}, props = {}}
+		single_override_specs = {}, late_single_override_specs = {}, addnote_specs = {}, is_irreg = {}, props = {},
+		rowprops = {irreg = {}, defective = {}, all_defective = {}, unknown = {}, all_unknown = {}}}
 end
 
 
@@ -2681,13 +2747,13 @@ local function normalize_all_lemmas(alternant_multiword_spec)
 end
 
 
--- Detect inconsistencies in indicator specs. This checks that the properties 'only3s' and 'only3sp' are consistent
+-- Detect inconsistencies in indicator specs. This checks that the properties 'impers' and 'thirdonly' are consistent
 -- across all verbs; checks that if the past participle is given as -, the auxiliary is also given as -; and propagates
 -- certain properties (the `from_headword` property and the template args) down to each `base`.
 local function detect_all_indicator_specs(alternant_multiword_spec, from_headword)
 	alternant_multiword_spec.props = {}
 
-	local props_that_must_be_consistent = {"only3s", "only3sp"}
+	local props_that_must_be_consistent = {"impers", "thirdonly"}
 	-- Propagate some settings up or down.
 	iut.map_word_specs(alternant_multiword_spec, function(base)
 		for _, prop in ipairs(props_that_must_be_consistent) do
@@ -2710,8 +2776,8 @@ local function detect_all_indicator_specs(alternant_multiword_spec, from_headwor
 	end
 
 	iut.map_word_specs(alternant_multiword_spec, function(base)
-		if base.props.only3s and base.props.only3sp then
-			error("'only3s' and 'only3sp' cannot both be specified")
+		if base.props.impers and base.props.thirdonly then
+			error("'impers' and 'thirdonly' cannot both be specified")
 		end
 
 		-- Check for missing past participle -> missing auxiliary.
@@ -2734,13 +2800,20 @@ end
 -- result of parsing and conjugating the angle bracket spec.
 local function propagate_properties_upward(alternant_multiword_spec)
 	iut.map_word_specs(alternant_multiword_spec, function(base)
-		for _, slotprop in ipairs { "is_irreg", "row_is_irreg", "row_is_defective", "row_has_forms" } do
-			if not alternant_multiword_spec[slotprop] then
-				alternant_multiword_spec[slotprop] = {}
+		local function copy_property_table(dest_table, source_table, slotprop)
+			if not dest_table[slotprop] then
+				dest_table[slotprop] = {}
 			end
-			for slot, propval in pairs(base[slotprop]) do
-				alternant_multiword_spec[slotprop][slot] = alternant_multiword_spec[slotprop][slot] or propval
+			for slot, propval in pairs(source_table[slotprop]) do
+				dest_table[slotprop][slot] = dest_table[slotprop][slot] or propval
 			end
+		end
+		copy_property_table(alternant_multiword_spec, base, "is_irreg")
+		if not alternant_multiword_spec.rowprops then
+			alternant_multiword_spec.rowprops = {}
+		end
+		for subtable_key, subtable in pairs(base.rowprops) do
+			copy_property_table(alternant_multiword_spec.rowprops, base.rowprops, subtable_key)
 		end
 		-- If there is an explicit stem spec, we display the imperfect principal part explicitly even if not marked
 		-- as irregular.
@@ -2822,10 +2895,10 @@ local function add_categories_and_annotation(alternant_multiword_spec, base, mul
 		insert_cat("verbs ending in -" .. ending)
 	end
 
-	if base.props.only3s then
+	if base.props.impers then
 		insert_ann("third_only", "impersonal")
 		insert_cat("impersonal verbs")
-	elseif base.props.only3sp then
+	elseif base.props.thirdonly then
 		insert_ann("third_only", "third-person only")
 		insert_cat("third-person-only verbs")
 	else
@@ -2836,14 +2909,14 @@ local function add_categories_and_annotation(alternant_multiword_spec, base, mul
 	local is_defective = false
 	for _, rowconj in ipairs(row_conjugations) do
 		local rowslot, rowspec = unpack(rowconj)
-		if base.row_is_irreg[rowslot] then
+		if base.rowprops.irreg[rowslot] then
 			if not is_irreg then
 				is_irreg = true
 				insert_cat("irregular verbs")
 			end
 			insert_cat("verbs with irregular " .. rowspec.desc)
 		end 
-		if base.row_is_defective[rowslot] then
+		if base.rowprops.defective[rowslot] then
 			if not is_defective then
 				is_defective = true
 				insert_cat("defective verbs")
@@ -2873,10 +2946,12 @@ local function add_categories_and_annotation(alternant_multiword_spec, base, mul
 
 	if not base.verb.is_reflexive and base.principal_part_specs.aux then
 		for _, auxform in ipairs(base.principal_part_specs.aux) do
-			-- No auxiliaries end in a stressed vowel so this is safe.
-			local aux_no_accents = remove_accents(auxform.form)
-			insert_ann("aux", aux_no_accents)
-			insert_cat("verbs taking " .. aux_no_accents .. " as auxiliary")
+			if auxform.form ~= "?" then
+				-- No auxiliaries end in a stressed vowel so this is safe.
+				local aux_no_accents = remove_accents(auxform.form)
+				insert_ann("aux", aux_no_accents)
+				insert_cat("verbs taking " .. aux_no_accents .. " as auxiliary")
+			end
 		end
 	end
 
