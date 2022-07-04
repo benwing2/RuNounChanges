@@ -237,7 +237,8 @@ def process_text_on_page(index, pagetitle, pagetext):
           return origtext
         else:
           desct.add("%s%s" % (pn, term_index), pv)
-    notes.append("incorporate %s {{l}} links into {{desc}}" % (term_index - 1))
+    notes.append("incorporate %s {{l}} link%s into {{desc|%s}}" % (
+      term_index - 1, "s" if term_index - 1 > 1 else "", langcode))
     for pn, pv in desc_params_at_end:
       rmparam(desct, pn)
       if pv:
