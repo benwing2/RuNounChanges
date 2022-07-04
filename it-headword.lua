@@ -1120,14 +1120,18 @@ pos_functions["verbs"] = {
 			local function do_verb_form(slot, label, rowslot, rowlabel)
 				local forms = alternant_multiword_spec.forms[slot]
 				local retval
-				if rowslot and not alternant_multiword_spec.row_has_forms[rowslot] then
-					if not alternant_multiword_spec.row_is_defective[rowslot] then
+				if alternant_multiword_spec.rowprops.all_defective[rowslot] then
+					if not alternant_multiword_spec.rowprops.defective[rowslot] then
 						-- No forms, but none expected; don't display anything
 						return
 					end
 					retval = {label = "no " .. rowlabel}
 				elseif not forms then
 					retval = {label = "no " .. label}
+				elseif alternant_multiword_spec.rowprops.all_unknown[rowslot] then
+					retval = {label = "unknown " .. rowlabel}
+				elseif forms[1].form == "?" then
+					retval = {label = "unknown " .. label}
 				else
 					-- Disable accelerators for now because we don't want the added accents going into the headwords.
 					-- FIXME: We now have support in [[Module:accel]] to specify the target explicitly; we can use this
@@ -1177,14 +1181,14 @@ pos_functions["verbs"] = {
 			if alternant_multiword_spec.props.is_pronominal then
 				table.insert(data.inflections, {label = glossary_link("pronominal")})
 			end
-			if alternant_multiword_spec.props.only3s then
+			if alternant_multiword_spec.props.impers then
 				table.insert(data.inflections, {label = glossary_link("impersonal")})
 			end
-			if alternant_multiword_spec.props.only3sp then
+			if alternant_multiword_spec.props.thirdonly then
 				table.insert(data.inflections, {label = "third-person only"})
 			end
 			
-			local thirdonly = alternant_multiword_spec.props.only3s or alternant_multiword_spec.props.only3sp
+			local thirdonly = alternant_multiword_spec.props.impers or alternant_multiword_spec.props.thirdonly
 			local sing_label = thirdonly and "third-person singular" or "first-person singular"
 			for _, rowspec in ipairs {
 				{"pres", "present", true},
@@ -1207,6 +1211,9 @@ pos_functions["verbs"] = {
 				elseif not alternant_multiword_spec.forms[slot] then
 					-- If the principal part is unexpectedly missing, make sure we show this.
 					must_show = true
+				elseif alternant_multiword_spec.forms[slot][1].form == "?" then
+					-- If the principal part is unknown, make sure we show this.
+					must_show = true
 				end
 				if must_show then
 					if rowslot == "pp" then
@@ -1228,7 +1235,7 @@ pos_functions["verbs"] = {
 			if alternant_multiword_spec.props.is_non_reflexive and (
 				alternant_multiword_spec.forms.aux or alternant_multiword_spec.forms.pp 
 			) then
-				do_verb_form("aux", "auxiliary")
+				do_verb_form("aux", "auxiliary", "aux", "auxiliary")
 			end
 
 			-- Add categories.
