@@ -2,6 +2,8 @@ local export = {}
 
 local rsplit = mw.text.split
 
+local error_on_no_descendants = false
+
 
 local function qualifier(content)
 	if content then
@@ -11,7 +13,7 @@ end
 
 
 local function track(page)
-	return require("Module:debug/track")(page)
+	return require("Module:debug/track")("descendant/" .. page)
 end
 
 
@@ -87,7 +89,8 @@ local function desc_or_desc_tree(frame, desc_tree)
 		["sclb"] = {type = "boolean"},
 		["nolb"] = {type = "boolean"},
 		["q"] = {},
-		["partq"] = {list = "q", allow_holes = true, require_index = true},
+		["qq"] = {},
+		["partqq"] = {list = "qq", allow_holes = true, require_index = true},
 		["sandbox"] = {type = "boolean"},
 	}) do
 		params[k] = v
@@ -113,6 +116,11 @@ local function desc_or_desc_tree(frame, desc_tree)
 		and ine(parent_args.g2) then
 		error("You specified a gender in g2= but no term in 3=. You were probably trying to specify two genders for "
 			.. "a single term. To do that, put both genders in g=, comma-separated.")
+	end
+
+	if parent_args.q then
+		track("q")
+		error("Please use qq= not q=. q= will be switching to put the qualifier *before* the term, not after.")
 	end
 
 	local args = require("Module:parameters").process(parent_args, params)
@@ -153,8 +161,8 @@ local function desc_or_desc_tree(frame, desc_tree)
 
 	if lang:getCode() ~= entryLang:getCode() then
 		-- [[Special:WhatLinksHere/Template:tracking/descendant/etymological]]
-		track("descendant/etymological")
-		track("descendant/etymological/" .. lang:getCode())
+		track("etymological")
+		track("etymological/" .. lang:getCode())
 	end
 
 	local languageName = lang:getCanonicalName()
@@ -206,7 +214,7 @@ local function desc_or_desc_tree(frame, desc_tree)
 			arrow = add_tooltip("→", "partial calque")
 		elseif val("sml") then
 			arrow = add_tooltip("→", "semantic loan")
-		elseif val("unc") and not val("der") then
+		elseif val("inh") or (val("unc") and not val("der")) then
 			arrow = add_tooltip(">", "inherited")
 		else
 			arrow = ""
@@ -260,8 +268,11 @@ local function desc_or_desc_tree(frame, desc_tree)
 			table.insert(postqs, qualifier("semantic loan"))
 		end
 		-- FIXME, should we use the qualifier support in full_link() (in which case the qualifier precedes the term)?
-		if val("q") then
+		if index == 0 and val("q") then -- FIXME: Switch to pre-term qualifier
 			table.insert(postqs, require("Module:qualifier").format_qualifier(val("q")))
+		end
+		if val("qq") then
+			table.insert(postqs, require("Module:qualifier").format_qualifier(val("qq")))
 		end
 		if #postqs > 0 then
 			return " " .. table.concat(postqs, " ")
@@ -289,7 +300,7 @@ local function desc_or_desc_tree(frame, desc_tree)
 
 		local link = ""
 
-		if term and term ~= "-" then
+		if term ~= "-" then -- including term == nil
 			link = require("Module:links").full_link(
 				{
 					lang = entryLang,
@@ -308,7 +319,7 @@ local function desc_or_desc_tree(frame, desc_tree)
 				true)
 		elseif ts or gloss or #g > 0 then
 			-- [[Special:WhatLinksHere/Template:tracking/descendant/no term]]
-			track("descendant/no term")
+			track("no term")
 			link = require("Module:links").full_link(
 				{
 					lang = entryLang,
@@ -325,7 +336,7 @@ local function desc_or_desc_tree(frame, desc_tree)
 				:gsub("%[%[Category:[^%[%]]+ term requests%]%]", "")
 		else -- display no link at all
 			-- [[Special:WhatLinksHere/Template:tracking/descendant/no term or annotations]]
-			track("descendant/no term or annotations")
+			track("no term or annotations")
 		end
 
 		local arrow = get_arrow(i)
@@ -345,9 +356,9 @@ local function desc_or_desc_tree(frame, desc_tree)
 
 		descendants[i] = descendants[i] or ""
 
-		if desc_tree and not args["noalts"] or not desc_tree and args["alts"] then
-			-- [[Special:WhatLinksHere/Template:tracking/desc/alts]]
-			track("desc/alts")
+		if term and (desc_tree and not args["noalts"] or not desc_tree and args["alts"]) then
+			-- [[Special:WhatLinksHere/Template:tracking/descendant/alts]]
+			track("alts")
 			alts = m_desctree.getAlternativeForms(entryLang, term, id)
 		else
 			alts = ""
@@ -362,7 +373,7 @@ local function desc_or_desc_tree(frame, desc_tree)
 		end
 	end
 
-	if desc_tree and not saw_descendants then
+	if error_on_no_descendants and desc_tree and not saw_descendants then
 		if #seen_terms == 0 then
 			error("[[Template:desctree]] invoked but no terms to retrieve descendants from")
 		elseif #seen_terms == 1 then
