@@ -1,9 +1,10 @@
 local export = {}
 
 local rsplit = mw.text.split
+local u = mw.ustring.char
+local TEMPCOMMA = u(0xFFF0)
 
 local error_on_no_descendants = false
-
 
 local function qualifier(content)
 	if content then
@@ -30,6 +31,46 @@ local function add_tooltip(text, tooltip)
 	return '<span class="desc-arr" title="' .. tooltip .. '">' .. text .. '</span>'
 end
 
+local function escape_comma_whitespace(val)
+	local need_tempcomma_undo = false
+	if val:find(",%s") then
+		-- We want to split on comma but not if followed by whitespace. Lua doesn't have negative lookahead
+		-- assertions so it's a bit harder to do this. We do it by replacing comma followed by whitespace
+		-- with a temporary char, doing the split and undoing the temporary char replacement.
+		val = val:gsub(",(%s)", TEMPCOMMA .. "%1")
+		need_tempcomma_undo = true
+	end
+	return val, need_tempcomma_undo
+end
+
+local function unescape_comma_whitespace(val)
+	val = val:gsub(TEMPCOMMA, ",") -- assign to temp to discard second retval
+	return val
+end
+
+local function split_on_comma(val)
+	local escaped_val, need_tempcomma_undo = escape_comma_whitespace(val)
+	escaped_val = rsplit(escaped_val, ",")
+	if need_tempcomma_undo then
+		escaped_val = unescape_comma_whitespace(escaped_val)
+	return escaped_val
+end
+
+local function escape_comma_whitespace_in_alternating_run(run)
+	local need_tempcomma_undo = false
+	for i, seg in ipairs(run) do
+		if i % 2 == 1 then
+			local this_need_tempcomma_undo
+			run[i], this_need_tempcomma_undo = escape_comma_whitespace(val)
+			need_tempcomma_undo = need_tempcomma_undo or this_need_tempcomma_undo
+		end
+	end
+	return need_tempcomma_undo
+end
+
+local function split_alternating_run_on_comma_and_unescape_comma_whitespace(run)
+	return iut.split_alternating_runs_and_frob_raw_text(run, ",", false, unescape_comma_whitespace)
+end
 
 local function desc_or_desc_tree(frame, desc_tree)
 	local params
@@ -49,48 +90,49 @@ local function desc_or_desc_tree(frame, desc_tree)
 		}
 	end
 
+	-- Add a "regular" list param such as g=, gloss=, lit=, etc. "Regular" here means that `param` and `param1` are
+	-- the same thing. `type` if given is the param type (e.g. "boolean") and `alias_of` is used for params that are
+	-- aliases of other params.
+	local function add_regular_list_param(param, type, alias_of)
+		params[param] = {type = type, alias_of = alias_of, list = true, allow_holes = true}
+	end
+	-- Add an index-separated list param such as bor=, calq=, qq=, etc. "Index-separated" means that `param` and
+	-- `param1` are different. Non-numbered `param` is accessible as `args.param` while numbered `param1`, `param2`,
+	-- etc. are accessible as `args.partparam[1]`, `args.partparam[2]`, etc. `type` if given is the param type (e.g.
+	-- "boolean") and `alias_of` is used for params that are aliases of other params.
+	local function add_index_separated_list_param(param, type, alias_of)
+		params[param] = {alias_of = alias_of, type = type}
+		params["part" .. param] = {alias_of = alias_of and "part" .. alias_of or nil, type = type,
+			list = param, allow_holes = true, require_index = true}
+	end
+
+	-- Params that modify a descendant term (as also supported by {{l}}, {{m}}). 
+	for _, term_mod in ipairs {"alt", "g", "id", "lit", "pos", "sc", "t", "tr", "ts"} do
+		add_regular_list_param(term_mod)
+	end
+	-- Handle gloss= specially because it's an alias.
+	add_regular_list_param("gloss", nil, "t")
+	-- Boolean params indicating whether a descendant term (or all terms) are particular sorts of borrowings.
+	for _, bortype in ipairs {"inh", "bor", "lbor", "slb", "translit", "der", "clq", "pclq", "sml", "unc"} do
+		add_index_separated_list_param(bortype, "boolean")
+	end
+	-- Aliases of clq=.
+	for _, calque_alias in ipairs {"cal", "calq", "calque"} do
+		add_index_separated_list_param(calque_alias, "boolean", "clq")
+	end
+	-- Aliases of pclq=.
+	for _, partial_calque_alias in ipairs {"pcal", "pcalq", "pcalque"} do
+		add_index_separated_list_param(partial_calque_alias, "boolean", "pclq")
+	end
+	-- Miscellaneous list params.
+	for _, misc_list_param in ipairs {"q", "qq", "tag"} do
+		add_index_separated_list_param(misc_list_param)
+	end
+
+	-- Add other single params.
 	for k, v in pairs({
-		["alt"] = {list = true, allow_holes = true},
-		["g"] = {list = true, allow_holes = true},
-		["gloss"] = {alias_of = "t", list = true, allow_holes = true},
-		["id"] = {list = true, allow_holes = true},
-		["lit"] = {list = true, allow_holes = true},
-		["pos"] = {list = true, allow_holes = true},
-		["t"] = {list = true, allow_holes = true},
-		["tr"] = {list = true, allow_holes = true},
-		["ts"] = {list = true, allow_holes = true},
-		["sc"] = {list = true, allow_holes = true},
-		["inh"] = {type = "boolean"},
-		["partinh"] = {type = "boolean", list = "inh", allow_holes = true, require_index = true},
-		["bor"] = {type = "boolean"},
-		["partbor"] = {type = "boolean", list = "bor", allow_holes = true, require_index = true},
-		["lbor"] = {type = "boolean"},
-		["partlbor"] = {type = "boolean", list = "lbor", allow_holes = true, require_index = true},
-		["slb"] = {type = "boolean"},
-		["partslb"] = {type = "boolean", list = "slb", allow_holes = true, require_index = true},
-		["translit"] = {type = "boolean"},
-		["parttranslit"] = {type = "boolean", list = "translit", allow_holes = true, require_index = true},
-		["der"] = {type = "boolean"},
-		["partder"] = {type = "boolean", list = "der", allow_holes = true, require_index = true},
-		["clq"] = {type = "boolean"},
-		["partclq"] = {type = "boolean", list = "clq", allow_holes = true, require_index = true},
-		["cal"] = {alias_of = "clq", type = "boolean"},
-		["partcal"] = {alias_of = "partclq", type = "boolean", list = "cal", allow_holes = true, require_index = true},
-		["calq"] = {alias_of = "clq", type = "boolean"},
-		["partcalq"] = {alias_of = "partclq", type = "boolean", list = "calq", allow_holes = true, require_index = true},
-		["calque"] = {alias_of = "clq", type = "boolean"},
-		["partcalque"] = {alias_of = "partclq", type = "boolean", list = "calque", allow_holes = true, require_index = true},
-		["pclq"] = {type = "boolean"},
-		["partpclq"] = {type = "boolean", list = "pclq", allow_holes = true, require_index = true},
-		["sml"] = {type = "boolean"},
-		["partsml"] = {type = "boolean", list = "sml", allow_holes = true, require_index = true},
-		["unc"] = {type = "boolean"},
-		["partunc"] = {type = "boolean", list = "unc", allow_holes = true, require_index = true},
 		["sclb"] = {type = "boolean"},
 		["nolb"] = {type = "boolean"},
-		["q"] = {},
-		["qq"] = {},
-		["partqq"] = {list = "qq", allow_holes = true, require_index = true},
 		["sandbox"] = {type = "boolean"},
 	}) do
 		params[k] = v
@@ -118,7 +160,9 @@ local function desc_or_desc_tree(frame, desc_tree)
 			.. "a single term. To do that, put both genders in g=, comma-separated.")
 	end
 
-	if parent_args.q then
+	-- FIXME: Remove this after a few days.
+	if parent_args.q or parent_args.q1 or parent_args.q2 or parent_args.q3 or parent_args.q4 or parent_args.q5
+		or parent_args.q6 or parent_args.q7 or parent_args.q8 or parent_args.q9 then
 		track("q")
 		error("Please use qq= not q=. q= will be switching to put the qualifier *before* the term, not after.")
 	end
@@ -189,15 +233,30 @@ local function desc_or_desc_tree(frame, desc_tree)
 		end
 	end
 
-	local function get_arrow(index)
-		local function val(arg)
+	-- Convert a raw tag= param (or nil) to a list of formatted dialect tags; unrecognized tags are passed through
+	-- unchanged. Return nil if nil passed in.
+	local function tags_to_dialects(tags)
+		if not tags then
+			return nil
+		end
+		return require("Module:alternative forms").make_dialects(split_on_comma(tags), lang)
+	end
+
+	-- Return a function of one argument `arg` (a param name), which fetches args[`arg`] if index == 0, else
+	-- args["part" .. `arg`][index].
+	local function get_val(index)
+		return function(arg)
 			if index == 0 then
 				return args[arg]
 			else
 				return args["part" .. arg][index]
 			end
 		end
+	end
 
+	-- Return the arrow text for the `index`th term, or the overall arrow text if index == 0.
+	local function get_arrow(index)
+		local val = get_val(index)
 		local arrow
 
 		if val("bor") then
@@ -236,16 +295,30 @@ local function desc_or_desc_tree(frame, desc_tree)
 		return arrow
 	end
 
-	local function get_post_qualifiers(index)
-		local function val(arg)
-			if index == 0 then
-				return args[arg]
-			else
-				return args["part" .. arg][index]
-			end
-		end
+	-- Return the pre-qualifier text for the `index`th term, or the overall pre-qualifier text if index == 0.
+	local function get_pre_qualifiers(index)
+		local val = get_val(index)
+		local quals
 
+		if index > 0 then
+			quals = tags_to_dialects(val("tag"))
+		end
+		if val("q") then
+			quals = quals or {}
+			table.insert(quals, val("q"))
+		end
+		if quals then
+			return require("Module:qualifier").format_qualifier(quals) .. " "
+		else
+			return ""
+		end
+	end
+
+	-- Return the post-qualifier text for the `index`th term, or the overall post-qualifier text if index == 0.
+	local function get_post_qualifiers(index)
+		local val = get_val(index)
 		local postqs = {}
+
 		if val("inh") then
 			table.insert(postqs, qualifier("inherited"))
 		end
@@ -267,12 +340,17 @@ local function desc_or_desc_tree(frame, desc_tree)
 		if val("sml") then
 			table.insert(postqs, qualifier("semantic loan"))
 		end
-		-- FIXME, should we use the qualifier support in full_link() (in which case the qualifier precedes the term)?
-		if index == 0 and val("q") then -- FIXME: Switch to pre-term qualifier
-			table.insert(postqs, require("Module:qualifier").format_qualifier(val("q")))
-		end
 		if val("qq") then
 			table.insert(postqs, require("Module:qualifier").format_qualifier(val("qq")))
+		end
+		if index == 0 then
+			local dialects = tags_to_dialects(val("tag"))
+			if dialects then
+				dialects = "&ndash; ''" .. table.concat(dialects, ", ") .. "''"
+				-- Fixes the problem of '' being added to '' at the end of last dialect parameter
+				dialects = dialects:gsub("''''", "")
+				table.insert(postqs, dialects)
+			end
 		end
 		if #postqs > 0 then
 			return " " .. table.concat(postqs, " ")
@@ -285,91 +363,182 @@ local function desc_or_desc_tree(frame, desc_tree)
 	local descendants = {}
 	local saw_descendants = false
 	local seen_terms = {}
+	local iut
+	local use_semicolon = false
 
+	-- If an individual term has a literal comma in it, use semicolons for all joiners. Otherwise we use semicolon
+	-- only if the user specified a literal semicolon as a term.
 	for i = 1, maxmaxindex do
 		local term = terms[i]
-		local alt = args["alt"][i]
-		local id = args["id"][i]
-		local sc = args["sc"][i] and require("Module:scripts").getByCode(args["sc"][i], "sc" .. (i == 1 and "" or i))
-		local tr = args["tr"][i]
-		local ts = args["ts"][i]
-		local gloss = args["t"][i]
-		local pos = args["pos"][i]
-		local lit = args["lit"][i]
-		local g = args["g"][i] and rsplit(args["g"][i], "%s*,%s*") or {}
-
-		local link = ""
-
-		if term ~= "-" then -- including term == nil
-			link = require("Module:links").full_link(
-				{
-					lang = entryLang,
-					sc = sc,
-					term = term,
-					alt = alt,
-					id = id,
-					tr = tr,
-					ts = ts,
-					genders = g,
-					gloss = gloss,
-					pos = pos,
-					lit = lit,
-				},
-				nil,
-				true)
-		elseif ts or gloss or #g > 0 then
-			-- [[Special:WhatLinksHere/Template:tracking/descendant/no term]]
-			track("no term")
-			link = require("Module:links").full_link(
-				{
-					lang = entryLang,
-					sc = sc,
-					ts = ts,
-					gloss = gloss,
-					genders = g,
-				},
-				nil,
-				true)
-			link = link
-				:gsub("<small>%[Term%?%]</small> ", "")
-				:gsub("<small>%[Term%?%]</small>&nbsp;", "")
-				:gsub("%[%[Category:[^%[%]]+ term requests%]%]", "")
-		else -- display no link at all
-			-- [[Special:WhatLinksHere/Template:tracking/descendant/no term or annotations]]
-			track("no term or annotations")
+		if term and term:find(",", 1, true) then
+			use_semicolon = true
 		end
+	end
 
-		local arrow = get_arrow(i)
-		local postqs = get_post_qualifiers(i)
-		local alts
+	local ind = 0
+	for i = 1, maxmaxindex do
+		local term = terms[i]
+		if term ~= ";" then
+			ind = ind + 1
+			local alt = args["alt"][ind]
+			local id = args["id"][ind]
+			local sc = args["sc"][ind] and require("Module:scripts").getByCode(args["sc"][ind], "sc" .. (ind == 1 and "" or ind)) or nil
+			local tr = args["tr"][ind]
+			local ts = args["ts"][ind]
+			local gloss = args["t"][ind]
+			local pos = args["pos"][ind]
+			local lit = args["lit"][ind]
+			local g = args["g"][ind] and rsplit(args["g"][ind], "%s*,%s*") or {}
+			local link
 
-		if desc_tree and term and term ~= "-" then
-			table.insert(seen_terms, term)
-			-- This is what I ([[User:Benwing2]]) had in Nov 2020 when I first implemented this.
-			-- Since then, [[User:Fytcha]] added `true` as the fourth param.
-			-- descendants[i] = m_desctree.getDescendants(entryLang, term, id, maxmaxindex > 1)
-			descendants[i] = m_desctree.getDescendants(entryLang, term, id, true)
-			if descendants[i] then
-				saw_descendants = true
+			local function get_link(term)
+				local link = ""
+				if term ~= "-" then -- including term == nil
+					link = require("Module:links").full_link(
+						{
+							lang = entryLang,
+							sc = sc,
+							term = term,
+							alt = alt,
+							id = id,
+							tr = tr,
+							ts = ts,
+							genders = g,
+							gloss = gloss,
+							pos = pos,
+							lit = lit,
+						},
+						nil,
+						true)
+				elseif ts or gloss or #g > 0 then
+					-- [[Special:WhatLinksHere/Template:tracking/descendant/no term]]
+					track("no term")
+					link = require("Module:links").full_link(
+						{
+							lang = entryLang,
+							sc = sc,
+							ts = ts,
+							gloss = gloss,
+							genders = g,
+						},
+						nil,
+						true)
+					link = link
+						:gsub("<small>%[Term%?%]</small> ", "")
+						:gsub("<small>%[Term%?%]</small>&nbsp;", "")
+						:gsub("%[%[Category:[^%[%]]+ term requests%]%]", "")
+				else -- display no link at all
+					-- [[Special:WhatLinksHere/Template:tracking/descendant/no term or annotations]]
+					track("no term or annotations")
+				end
+				return link
 			end
-		end
 
-		descendants[i] = descendants[i] or ""
+			-- Check for new-style argument, e.g. מרים<tr:Miryem>. But exclude HTML entry with <span ...>, <i ...>,
+			-- <br/> or similar in it, caused by wrapping an argument in {{l|...}}, {{af|...}} or similar. Basically,
+			-- all tags of the sort we parse here should consist of less-than + letters + greater-than, e.g. <bor>, or
+			-- less-than + letters + colon + arbitrary text with balanced angle brackets + greater-than, e.g. <tr:...>,
+			-- so if we see a tag on the outer level that isn't in this format, we don't try to parse it. The
+			-- restriction to the outer level is to allow generated HTML inside of e.g. qualifier tags, such as
+			-- foo<q:similar to {{m|fr|bar}}>.
+			if term and term:find("<") and not term:find("^[^<]*<[a-z]*[^a-z:]") then
+				if not iut then
+					iut = require("Module:inflection utilities")
+				end
+				local run = iut.parse_balanced_segment_run(term, "<", ">")
+				local sub_terms = ...
 
-		if term and (desc_tree and not args["noalts"] or not desc_tree and args["alts"]) then
-			-- [[Special:WhatLinksHere/Template:tracking/descendant/alts]]
-			track("alts")
-			alts = m_desctree.getAlternativeForms(entryLang, term, id)
-		else
-			alts = ""
-		end
+				local function parse_err(msg)
+					error(msg .. ": " .. (i + 1) .. "=" .. table.concat(run))
+				end
+				termobj.term.term = run[1]
 
-		local linktext = table.concat{link, alts, postqs}
-		if not args["notext"] then
-			linktext = arrow .. linktext
-		end
-		if linktext ~= "" then
-			table.insert(parts, linktext)
+				for j = 2, #run - 1, 2 do
+					if run[j + 1] ~= "" then
+						parse_err("Extraneous text '" .. run[j + 1] .. "' after modifier")
+					end
+					local modtext = run[j]:match("^<(.*)>$")
+					if not modtext then
+						parse_err("Internal error: Modifier '" .. modtext .. "' isn't surrounded by angle brackets")
+					end
+					local prefix, arg = modtext:match("^([a-z]+):(.*)$")
+					if not prefix then
+						parse_err("Modifier " .. run[j] .. " lacks a prefix, should begin with one of '" ..
+							table.concat(param_mods, ":', '") .. ":'")
+					end
+					if param_mod_set[prefix] then
+						local obj_to_set
+						if prefix == "q" or prefix == "qq" then
+							obj_to_set = termobj
+						else
+							obj_to_set = termobj.term
+						end
+						if prefix == "t" then
+							prefix = "gloss"
+						elseif prefix == "g" then
+							prefix = "genders"
+							arg = rsplit(arg, ",")
+						elseif prefix == "sc" then
+							arg = require("Module:scripts").getByCode(arg, "" .. (i + 1) .. ":sc")
+						end
+						if obj_to_set[prefix] then
+							parse_err("Modifier '" .. prefix .. "' occurs twice, second occurrence " .. run[j])
+						end
+						obj_to_set[prefix] = arg
+					else
+						parse_err("Unrecognized prefix '" .. prefix .. "' in modifier " .. run[j])
+					end
+				end
+			if term and term:find(",") then
+				local sub_terms = split_on_comma(term)
+				local sub_links = {}
+				for _, sub_term in ipairs(sub_terms) do
+					local sub_link = get_link(sub_term)
+					if sub_link ~= "" then
+						table.insert(sub_links, sub_link)
+					end
+				end
+				link = table.concat(sub_links, ", ")
+			else
+				link = get_link(term)
+			end
+
+			local arrow = get_arrow(ind)
+			local preqs = get_pre_qualifiers(ind)
+			local postqs = get_post_qualifiers(ind)
+			local alts
+
+			if desc_tree and term and term ~= "-" then
+				table.insert(seen_terms, term)
+				-- This is what I ([[User:Benwing2]]) had in Nov 2020 when I first implemented this.
+				-- Since then, [[User:Fytcha]] added `true` as the fourth param.
+				-- descendants[ind] = m_desctree.getDescendants(entryLang, term, id, maxmaxindex > 1)
+				descendants[ind] = m_desctree.getDescendants(entryLang, term, id, true)
+				if descendants[ind] then
+					saw_descendants = true
+				end
+			end
+
+			descendants[ind] = descendants[ind] or ""
+
+			if term and (desc_tree and not args["noalts"] or not desc_tree and args["alts"]) then
+				-- [[Special:WhatLinksHere/Template:tracking/descendant/alts]]
+				track("alts")
+				alts = m_desctree.getAlternativeForms(entryLang, term, id)
+			else
+				alts = ""
+			end
+
+			local linktext = table.concat{preqs, link, alts, postqs}
+			if not args["notext"] then
+				linktext = arrow .. linktext
+			end
+			if linktext ~= "" then
+				if i > 1 then
+					table.insert(parts, (use_semicolon or terms[i - 1] == ";") and "; " or ", ")
+				end
+				table.insert(parts, linktext)
+			end
 		end
 	end
 
@@ -394,9 +563,10 @@ local function desc_or_desc_tree(frame, desc_tree)
 	end
 
 	local initial_arrow = get_arrow(0)
+	local initial_preqs = get_pre_qualifiers(0)
 	local final_postqs = get_post_qualifiers(0)
 
-	local all_linktext = table.concat(parts, ", ") .. final_postqs .. descendants
+	local all_linktext = initial_preqs .. table.concat(parts) .. final_postqs .. descendants
 
 	if args["notext"] then
 		return all_linktext
