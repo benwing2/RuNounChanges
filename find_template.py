@@ -7,16 +7,21 @@ from collections import defaultdict
 import blib
 from blib import getparam, rmparam, msg, site, tname
 
-def process_page(page, index, templates, paramspecs, negate, from_to,
+def process_text_on_page(index, pagetitle, text, templates, paramspecs, negate, from_to,
     countparams, counted_param_values_by_template):
-  pagetitle = unicode(page.title())
+  if not any(template in text for template in templates):
+    return
+  #if not re.search(r"\{\{\s*(%s)" % "|".join(templates), text):
+  #  return
+
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
-  pagemsg("Processing")
+  if not args.stdin:
+    pagemsg("Processing")
   notes = []
 
-  parsed = blib.parse(page)
+  parsed = blib.parse_text(text)
 
   paramset = paramspecs and set(paramspecs) or set()
 
@@ -88,7 +93,7 @@ def process_page(page, index, templates, paramspecs, negate, from_to,
     pagemsg("Output %s lines" % lines_output)
 
 parser = blib.create_argparser("Find templates with specified params",
-    include_pagefile=True)
+    include_pagefile=True, include_stdin=True)
 parser.add_argument("--templates",
     help=u"""Comma-separated list of templates to check params of.""")
 parser.add_argument("--params",
@@ -140,10 +145,10 @@ if args.negate:
 countparams = re.split(",", args.count) if args.count else []
 
 counted_param_values_by_template = {template: {} for template in templates}
-def do_process_page(page, index):
-  process_page(page, index, templates, paramspecs, args.negate, args.from_to,
+def do_process_text_on_page(index, pagetitle, text):
+  process_text_on_page(index, pagetitle, text, templates, paramspecs, args.negate, args.from_to,
       countparams, counted_param_values_by_template)
-blib.do_pagefile_cats_refs(args, start, end, do_process_page,
+blib.do_pagefile_cats_refs(args, start, end, do_process_text_on_page, stdin=True,
     default_refs=["Template:%s" % template for template in templates])
 
 for template in templates:
