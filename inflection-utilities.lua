@@ -240,21 +240,30 @@ local function strip_spaces(text)
 end
 
 
--- Like split_alternating_runs() but strips spaces from both ends of the odd-numbered elements (only in
--- odd-numbered runs if preserve_splitchar is given). Effectively we leave alone the footnotes and splitchars
--- themselves, but otherwise strip extraneous spaces. Spaces in the middle of an element are also left alone.
-function export.split_alternating_runs_and_strip_spaces(segment_runs, splitchar, preserve_splitchar)
+-- Like split_alternating_runs() but applies an arbitrary function `frob` to odd-numbered elements (only in
+-- odd-numbered runs if preserve_splitchar is given). Effectively we leave alone the footnotes, stuff within angle
+-- brackets and the like, as well as splitchars themselves, but otherwise apply the function. `frob` is a function of
+-- one argument (the string to frob) and should return one argument (the frobbed string).
+function export.split_alternating_runs_and_frob_raw_text(segment_runs, splitchar, preserve_splitchar, frob)
 	local split_runs = export.split_alternating_runs(segment_runs, splitchar, preserve_splitchar)
 	for i, run in ipairs(split_runs) do
 		if not preserve_splitchar or i % 2 == 1 then
 			for j, element in ipairs(run) do
 				if j % 2 == 1 then
-					run[j] = strip_spaces(element)
+					run[j] = frob(element)
 				end
 			end
 		end
 	end
 	return split_runs
+end
+
+
+-- Like split_alternating_runs() but strips spaces from both ends of the odd-numbered elements (only in
+-- odd-numbered runs if preserve_splitchar is given). Effectively we leave alone the footnotes and splitchars
+-- themselves, but otherwise strip extraneous spaces. Spaces in the middle of an element are also left alone.
+function export.split_alternating_runs_and_strip_spaces(segment_runs, splitchar, preserve_splitchar)
+	return export.split_alternating_runs_and_frob_raw_text(segment_runs, splitchar, preserve_splitchar, strip_spaces)
 end
 
 
