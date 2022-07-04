@@ -516,14 +516,18 @@ local function check_not_null(base, form, spec, principal_part_desc)
 end
 
 
-local function skip_slot(base, slot)
-	if base.props.nofinite and slot:find("[123]") then
-		-- Skip all finite (1/2/3-person) slots.
-		return true
-	end
-	if base.props.presonly and slot:find("[123]") and not slot:find("^pres") then
-		-- Skip all finite (1/2/3-person) slots except the present indicative.
-		return true
+-- Indicate whether to skip `slot` when conjugating. If `checking_defective` is given, we are checking for defective
+-- rows and only want some user-specified indicators respected.
+local function skip_slot(base, slot, checking_defective)
+	if not checking_defective then
+		if base.props.nofinite and slot:find("[123]") then
+			-- Skip all finite (1/2/3-person) slots.
+			return true
+		end
+		if base.props.presonly and slot:find("[123]") and not slot:find("^pres") then
+			-- Skip all finite (1/2/3-person) slots except the present indicative.
+			return true
+		end
 	end
 	if base.props.impers or base.props.thirdonly then
 		-- Impersonal or third-person-only verb.
@@ -620,7 +624,7 @@ local function combine_stem_ending(base, slot, stem, ending)
 end
 
 
-local function add(base, slot, stems, endings, allow_overrides)
+local function add_forms(base, slot, stems, endings, allow_overrides)
 	local function do_combine_stem_ending(stem, ending)
 		return combine_stem_ending(base, slot, stem, ending)
 	end
@@ -634,9 +638,9 @@ end
 
 
 local function copy_forms(base, slot, forms)
-	-- FIXME, is this needed? This is the same as insert_forms() but clones `forms`.
-	-- Probably not needed as I don't think we ever side-effect existing forms up to this point.
-	insert_forms(base, slot, iut.map_forms(forms, iut.identity))
+	-- When copying forms, clone the form objects because in various later places, we side-effect existing form objects
+	-- and don't want any shared objects.
+	insert_forms(base, slot, mw.clone(forms))
 end
 
 
@@ -1142,11 +1146,11 @@ local function add_present_indic(base, rowslot)
 		return
 	end
 
-	local function addit(pers, stems, endings)
-		add(base, rowslot .. pers, stems, endings)
+	local function add(pers, stems, endings)
+		add_forms(base, rowslot .. pers, stems, endings)
 	end
 
-	addit("1s", base.principal_part_forms.pres, "")
+	add("1s", base.principal_part_forms.pres, "")
 	local pres1s_stem = iut.map_forms(base.principal_part_forms.pres, function(form)
 		if not form:find("o$") then
 			error("presrow: must be given in order to generate the present indicative because explicit first-person "
@@ -1154,7 +1158,7 @@ local function add_present_indic(base, rowslot)
 		end
 		return rsub(form, "o$", "")
 	end)
-	addit("3p", pres1s_stem, base.conj_vowel == "à" and "ano" or "ono")
+	add("3p", pres1s_stem, base.conj_vowel == "à" and "ano" or "ono")
 	local pres23s_stem
 	if base.principal_part_forms.pres3s then
 		pres23s_stem = iut.map_forms(base.principal_part_forms.pres3s, function(form)
@@ -1168,10 +1172,10 @@ local function add_present_indic(base, rowslot)
 		pres23s_stem = base.explicit_non_default_stem_spec and base.verb.stem
 			or base.principal_part_forms.root_stressed_stem or pres1s_stem
 	end
-	addit("2s", pres23s_stem, "i")
-	addit("3s", pres23s_stem, base.conj_vowel == "à" and "a" or "e")
-	addit("1p", base.verb.unstressed_stem, "iàmo")
-	addit("2p", base.verb.unstressed_stem, base.conj_vowel .. "te")
+	add("2s", pres23s_stem, "i")
+	add("3s", pres23s_stem, base.conj_vowel == "à" and "a" or "e")
+	add("1p", base.verb.unstressed_stem, "iàmo")
+	add("2p", base.verb.unstressed_stem, base.conj_vowel .. "te")
 end
 
 
@@ -1200,20 +1204,20 @@ local function add_present_subj(base, rowslot)
 		return
 	end
 
-	local function addit(pers, stems, endings)
-		add(base, rowslot .. pers, stems, endings)
+	local function add(pers, stems, endings)
+		add_forms(base, rowslot .. pers, stems, endings)
 	end
-	local function insit(pers, forms)
+	local function ins(pers, forms)
 		insert_forms(base, rowslot .. pers, forms)
 	end
 
 	-- Generate the 123s and 3p forms.
-	addit("123s", base.principal_part_forms.sub, "")
-	addit("3p", base.principal_part_forms.sub, "no")
+	add("123s", base.principal_part_forms.sub, "")
+	add("3p", base.principal_part_forms.sub, "no")
 	-- Copy present indicative 1p to present subjunctive.
 	copy_forms(base, rowslot .. "1p", base.forms.pres1p)
 	-- Generate present subjunctive 2p from present indicative 1p by replacing -mo with -te.
-	insit("2p", iut.map_forms(base.forms.pres1p, function(form)
+	ins("2p", iut.map_forms(base.forms.pres1p, function(form)
 		if not form:find("mo$") then
 			error("subrow: must be given in order to generate the second-person plural present subjunctive "
 				.. "because first-person plural present indicative '" .. form .. "' does not end in -mo")
@@ -1363,15 +1367,15 @@ local function add_past_historic(base, rowslot)
 	for _, form in ipairs(base.principal_part_forms.phis) do
 		local function add_phis(pref, s1, s2, s3, p1, p2, p3)
 			local newform = form.footnotes and iut.convert_to_general_list_form(pref, form.footnotes) or pref
-			local function addit(pers, endings)
-				add(base, rowslot .. pers, newform, endings)
+			local function add(pers, endings)
+				add_forms(base, rowslot .. pers, newform, endings)
 			end
-			addit("1s", s1)
-			addit("2s", s2)
-			addit("3s", s3)
-			addit("1p", p1)
-			addit("2p", p2)
-			addit("3p", p3)
+			add("1s", s1)
+			add("2s", s2)
+			add("3s", s3)
+			add("1p", p1)
+			add("2p", p2)
+			add("3p", p3)
 		end
 		while true do
 			if form.form == "?" then
@@ -1886,7 +1890,7 @@ local function conjugate_row(base, rowslot)
 			return rsub(form, principal_part_ending .. "$", "")
 		end)
 		for i, persnum in ipairs(persnums) do
-			add(base, rowslot .. persnum, stem, rowspec.conjugate[i])
+			add_forms(base, rowslot .. persnum, stem, rowspec.conjugate[i])
 		end
 	else
 		rowspec.conjugate(base, rowslot)
@@ -1981,7 +1985,7 @@ local function check_for_defective_and_unknown_rows(base)
 							row_not_entirely_unknown = true
 						end
 					end
-				elseif not skip_slot(base, slot) then
+				elseif not skip_slot(base, slot, "checking defective") then
 					base.rowprops.defective[rowslot] = true
 				end
 			end
