@@ -447,10 +447,10 @@ end
 
 
 local function call_map_function_str(str, fun)
-	if str_or_formobj == "?" then
+	if str == "?" then
 		return "?"
 	end
-	local newform, newtranslit = fun(str_or_formobj)
+	local newform, newtranslit = fun(str)
 	if newtranslit then
 		return {form=newform, translit=newtranslit}
 	else
@@ -461,7 +461,7 @@ end
 
 local function call_map_function_obj(form, fun)
 	if form.form == "?" then
-		return {form = "?", footnotes = forms.footnotes}
+		return {form = "?", footnotes = form.footnotes}
 	end
 	local newform, newtranslit = fun(form.form, form.translit)
 	return {form=newform, translit=newtranslit, footnotes=form.footnotes}
@@ -1152,7 +1152,6 @@ local function append_forms(props, formtable, slot, forms, before_text, before_t
 					new_form = "?"
 				else
 					new_form = old_form.form .. before_text .. form.form
-					new_translit
 					if old_form.translit or before_text_translit or form.translit then
 						if not props.lang then
 							error("Internal error: If manual translit is given, 'props.lang' must be set")
