@@ -6,21 +6,28 @@ import pywikibot, re, sys, codecs, argparse
 import blib
 from blib import getparam, rmparam, msg, site, tname
 
-def process_page(index, page, template, new_name, params_to_add, params_to_remove,
+def process_text_on_page(index, pagetitle, text, templates, new_names, params_to_add, params_to_remove,
     params_to_rename, filters, comment):
-  pagetitle = unicode(page.title())
+  if not any(template in text for template in templates):
+    return
+  if not re.search(r"\{\{\s*(%s)" % "|".join(templates), text):
+    return
+
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
   pagemsg("Processing")
   notes = []
 
-  parsed = blib.parse(page)
+  if new_names:
+    template_to_new_name_dict = dict(zip(templates, new_names))
+
+  parsed = blib.parse_text(text)
 
   for t in parsed.filter_templates():
     origt = unicode(t)
     tn = tname(t)
-    if tn == template:
+    if tn in templates:
       must_continue = False
       for filt in filters:
         m = re.search("^(.*)=(.*)$", filt)
@@ -53,9 +60,10 @@ def process_page(index, page, template, new_name, params_to_add, params_to_remov
         if getparam(t, param) != value:
           t.add(param, value)
           notes.append("add %s=%s to {{%s}}" % (param, value, tn))
-      if new_name:
+      if new_names:
+        new_name = template_to_new_name_dict[tn]
         blib.set_template_name(t, new_name)
-        notes.append("rename {{%s}} to {{%s}}" % (template, new_name))
+        notes.append("rename {{%s}} to {{%s}}" % (tn, new_name))
 
     if unicode(t) != origt:
       pagemsg("Replaced <%s> with <%s>" % (origt, unicode(t)))
@@ -63,9 +71,9 @@ def process_page(index, page, template, new_name, params_to_add, params_to_remov
   return unicode(parsed), comment or notes
 
 pa = blib.create_argparser("Rewrite templates, possibly renaming params or the template itself, or removing params",
-  include_pagefile=True)
-pa.add_argument("-t", "--template", help="Name of template", required=True)
-pa.add_argument("-n", "--new-name", help="New name of template")
+  include_pagefile=True, include_stdin=True)
+pa.add_argument("-t", "--template", help="Name of template; separate with a comma for multiple templates", required=True)
+pa.add_argument("-n", "--new-name", help="New name of template; separate with a comma for multiple templates")
 pa.add_argument("-r", "--remove", help="Param to remove, can be specified multiple times",
     action="append")
 pa.add_argument("--from", help="Old name of param, can be specified multiple times",
@@ -80,8 +88,11 @@ pa.add_argument("-c", "--comment", help="Comment to use in place of auto-generat
 args = pa.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
-template = args.template.decode("utf-8")
-new_name = args.new_name and args.new_name.decode("utf-8")
+templates = args.template.decode("utf-8").split(",")
+new_names = args.new_name and args.new_name.decode("utf-8").split(",")
+if new_names and len(new_names) != len(templates):
+  raise ValueError("Saw %s template(s) '%s' but %s new name(s) '%s'; both must agree in number" %
+    (len(templates), ",".join(templates), len(new_names), ",".join(new_names)))
 from_ = [x.decode("utf-8") for x in args.from_] if args.from_ else []
 to = [x.decode("utf-8") for x in args.to] if args.to else []
 addspecs = [x.decode("utf-8") for x in args.add] if args.add else []
@@ -100,9 +111,9 @@ if len(from_) != len(to):
 
 params_to_rename = zip(from_, to)
 
-def do_process_page(page, index, parsed):
-  return process_page(index, page, template, new_name, params_to_add, params_to_remove,
+def do_process_text_on_page(index, pagetitle, text):
+  return process_text_on_page(index, pagetitle, text, templates, new_names, params_to_add, params_to_remove,
     params_to_rename, filters, comment)
 
-blib.do_pagefile_cats_refs(args, start, end, do_process_page, edit=True,
-  default_refs=["Template:%s" % template])
+blib.do_pagefile_cats_refs(args, start, end, do_process_text_on_page, edit=True, stdin=True,
+  default_refs=["Template:%s" % template for template in templates])
