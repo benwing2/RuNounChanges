@@ -100,7 +100,8 @@ export.builtin_verbs = {
 	-- mansuescere: archaic, rare, infinitive only
 	{"noscere", "ó,nóbbi", "<<conoscere>>, archaic <<cognoscere>> and derivatives"},
 	-- ducere and derivatives: archaic; handled under -durre below
-	-- lucere, tralucere, rilucere: archaic, defective
+	-- [[lucere]] itself is poetic and lacking the past historic
+	{{"lucere", prefixes={"tra", "ri"}}, "ù,+,-", "<<rilucere>>, <<tralucere>>"},
 	-- 'cadere' must precede 'adere'
 	{"cadere", "à,càddi.fut:cadrò", "<<cadere>> and derivatives"},
 	-- NOTE: (1) per DiPI, [[suadere]] can be pronounced suadére (per Treccani/Hoepli) or suàdere.
@@ -183,7 +184,7 @@ export.builtin_verbs = {
 	-- traggere and derivatives: archaic; handled under trarre below
 	{"eggere", "è,èssi,ètto", "<<leggere>> and derivatives; <<reggere>> and derivatives; <<proteggere>> and derivatives"},
 	{{term = "figgere", prefixes = {"^", "con", "ri", "scal", "tra"}}, "ì,fìssi,fìtto", "<<figgere>> and some derivatives (<<configgere>>, <<rifiggere>>, <<scalfiggere>>, <<trafiggere>> and derivatives), with past participle in ''-fitto''"},
-	{"figgere", "ì,ìssi,ìsso", "most derivatives of <<figgere>> (<<affiggere>>, <<crocifiggere>> and variants, <<defiggere>>, <<infiggere>>, <<prefiggere>>, <<suffiggere>>, and derivatives), with past participle in ''-fisso''"},
+	{"figgere", "ì,fìssi,fìsso", "most derivatives of <<figgere>> (<<affiggere>>, <<crocifiggere>> and variants, <<defiggere>>, <<infiggere>>, <<prefiggere>>, <<suffiggere>>, and derivatives), with past participle in ''-fisso''"},
 	{"fliggere", "ì,flìssi,flìtto", "verbs in ''-fliggere'' (<<affliggere>>, <<confliggere>>, <<infliggere>>)"},
 	{"friggere", "ì,frìssi,frìtto", "<<friggere>> and derivatives"},
 	{"struggere", "ù,strùssi,strùtto", "<<struggere>> and derivatives"},
@@ -214,7 +215,6 @@ export.builtin_verbs = {
 	{"fungere", "ù,fùnsi,fùnto[rare]", "<<fungere>> and derivatives"},
 	{"ungere", "ù,ùnsi,ùnto", "<<ungere>>; <<giungere>> and derivatives; <<mungere>> and derivatives; <<pungere>> and derivatives; but not <<fungere>> and derivatives (past participle is formed the same way but rare)"},
 	-- arrogere: archaic, defective
-	-- allargere: send to RFV
 	{"spargere", "à,spàrsi,spàrso", "<<spargere>> and derivatives"},
 	{{term = "ergere", prefixes = {"^", "ad", "ri"}}, "è,èrsi,èrto:#érto", "<<ergere>>, <<adergere>>, <<riergere>>; but not any other verbs in ''-ergere''"},
 	{{term = "ergere", prefixes = {"m", "sp", "t"}}, "è,èrsi,èrso", "<<mergere>> and derivatives; <<spergere>> and derivatives; <<tergere>> and derivatives"},
@@ -473,7 +473,7 @@ export.builtin_verbs = {
 	-- archaic variant of trarre, with some different present tense (hence subjunctive/imperative) forms
 	{"traggere", "tràggo^tràgge,tràssi,tràtto.pres1p:traggiàmo.fut:trarrò.stem:tràe"},
 	{{term = "bere", prefixes = {"^", "ri", "tra"}}, "bévo,bévvi:bevétti.fut:berrò.stem:béve",
-		"<<bere>>, <<strabere>>, <<trabere>>, <<ribere>>; but not verbs in ''-combere'', archiac <<ebere||to weaken>>, archiac <<iubere||to command, to order>> or obsolete <<assorbere>>"},
+		"<<bere>>, <<strabere>>, <<trabere>>, <<ribere>>; but not verbs in ''-combere'', archaic <<ebere||to weaken>>, archaic <<iubere||to command, to order>> or obsolete <<assorbere>>"},
 	{"bevere", "é,bévvi:bevétti.fut:berrò", "<<bevere>> and derivatives (archaic variant of <<bere>>)"},
 	-- benedire (strabenedire, ribenedire), maledire (stramaledire, rimaledire)
 	{{term = "dire", prefixes = {"bene", "male"}}, "+,dìssi:dìi[popular],détto.stem:dìce.pres2p:dìte.imperf:+:dìvo[popular]", "<<benedire>>, <<maledire>> and derivatives"},
