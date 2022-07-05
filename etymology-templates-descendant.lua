@@ -1,5 +1,6 @@
 local export = {}
 
+local listToSet = require("Module:table/listToSet")
 local rsplit = mw.text.split
 local u = mw.ustring.char
 local TEMPCOMMA = u(0xFFF0)
@@ -31,46 +32,67 @@ local function add_tooltip(text, tooltip)
 	return '<span class="desc-arr" title="' .. tooltip .. '">' .. text .. '</span>'
 end
 
+-- Used when splitting on commas. If comma+whitespace is seen, replace the comma with a temporary char. Return whether
+-- the replacement was done (meaning that it has to be undone).
 local function escape_comma_whitespace(val)
 	local need_tempcomma_undo = false
 	if val:find(",%s") then
-		-- We want to split on comma but not if followed by whitespace. Lua doesn't have negative lookahead
-		-- assertions so it's a bit harder to do this. We do it by replacing comma followed by whitespace
-		-- with a temporary char, doing the split and undoing the temporary char replacement.
 		val = val:gsub(",(%s)", TEMPCOMMA .. "%1")
 		need_tempcomma_undo = true
 	end
 	return val, need_tempcomma_undo
 end
 
+-- Undo the replacement of comma with a temporary char. See split_on_comma().
 local function unescape_comma_whitespace(val)
 	val = val:gsub(TEMPCOMMA, ",") -- assign to temp to discard second retval
 	return val
 end
 
+-- Split a value on commas, but don't split on comma+whitespace. Lua doesn't have negative lookahead
+-- assertions so it's a bit harder to do this. We do it by replacing comma followed by whitespace
+-- with a temporary char, doing the split and undoing the temporary char replacement.
 local function split_on_comma(val)
 	local escaped_val, need_tempcomma_undo = escape_comma_whitespace(val)
 	escaped_val = rsplit(escaped_val, ",")
 	if need_tempcomma_undo then
-		escaped_val = unescape_comma_whitespace(escaped_val)
+		for i, ev in ipairs(escaped_val) do
+			escaped_val[i] = unescape_comma_whitespace(ev)
+		end
+	end
 	return escaped_val
 end
 
+-- Replace comma+whitespace in the non-modifier parts of an alternating run (after parse_balanced_segment_run() is
+-- called). See split_on_comma().
 local function escape_comma_whitespace_in_alternating_run(run)
 	local need_tempcomma_undo = false
 	for i, seg in ipairs(run) do
 		if i % 2 == 1 then
 			local this_need_tempcomma_undo
-			run[i], this_need_tempcomma_undo = escape_comma_whitespace(val)
+			run[i], this_need_tempcomma_undo = escape_comma_whitespace(seg)
 			need_tempcomma_undo = need_tempcomma_undo or this_need_tempcomma_undo
 		end
 	end
 	return need_tempcomma_undo
 end
 
-local function split_alternating_run_on_comma_and_unescape_comma_whitespace(run)
-	return iut.split_alternating_runs_and_frob_raw_text(run, ",", false, unescape_comma_whitespace)
-end
+-- Params that modify a descendant term (as also supported by {{l}}, {{m}}). Doesn't include gloss=, which we
+-- handle specially.
+local param_term_mods = {"alt", "g", "id", "lit", "pos", "sc", "t", "tr", "ts"}
+local param_term_mod_set = listToSet(param_term_mods)
+-- Boolean params indicating whether a descendant term (or all terms) are particular sorts of borrowings.
+local bortypes = {"inh", "bor", "lbor", "slb", "translit", "der", "clq", "pclq", "sml", "unc"}
+local bortype_set = listToSet(bortypes)
+-- Aliases of clq=.
+local calque_aliases = {"cal", "calq", "calque"}
+local calque_alias_set = listToSet(calque_aliases)
+-- Aliases of pclq=.
+local partial_calque_aliases = {"pcal", "pcalq", "pcalque"}
+local partial_calque_alias_set = listToSet(partial_calque_aliases)
+-- Miscellaneous list params.
+local misc_list_params = {"q", "qq", "tag"}
+local misc_list_param_set = listToSet(misc_list_params)
 
 local function desc_or_desc_tree(frame, desc_tree)
 	local params
@@ -106,26 +128,21 @@ local function desc_or_desc_tree(frame, desc_tree)
 			list = param, allow_holes = true, require_index = true}
 	end
 
-	-- Params that modify a descendant term (as also supported by {{l}}, {{m}}). 
-	for _, term_mod in ipairs {"alt", "g", "id", "lit", "pos", "sc", "t", "tr", "ts"} do
+	for _, term_mod in ipairs(param_term_mods) do
 		add_regular_list_param(term_mod)
 	end
 	-- Handle gloss= specially because it's an alias.
 	add_regular_list_param("gloss", nil, "t")
-	-- Boolean params indicating whether a descendant term (or all terms) are particular sorts of borrowings.
-	for _, bortype in ipairs {"inh", "bor", "lbor", "slb", "translit", "der", "clq", "pclq", "sml", "unc"} do
+	for _, bortype in ipairs(bortypes) do
 		add_index_separated_list_param(bortype, "boolean")
 	end
-	-- Aliases of clq=.
-	for _, calque_alias in ipairs {"cal", "calq", "calque"} do
+	for _, calque_alias in ipairs(calque_aliases) do
 		add_index_separated_list_param(calque_alias, "boolean", "clq")
 	end
-	-- Aliases of pclq=.
-	for _, partial_calque_alias in ipairs {"pcal", "pcalq", "pcalque"} do
+	for _, partial_calque_alias in ipairs(partial_calque_aliases) do
 		add_index_separated_list_param(partial_calque_alias, "boolean", "pclq")
 	end
-	-- Miscellaneous list params.
-	for _, misc_list_param in ipairs {"q", "qq", "tag"} do
+	for _, misc_list_param in ipairs(misc_list_params) do
 		add_index_separated_list_param(misc_list_param)
 	end
 
@@ -363,17 +380,8 @@ local function desc_or_desc_tree(frame, desc_tree)
 	local descendants = {}
 	local saw_descendants = false
 	local seen_terms = {}
-	local iut
+	local put
 	local use_semicolon = false
-
-	-- If an individual term has a literal comma in it, use semicolons for all joiners. Otherwise we use semicolon
-	-- only if the user specified a literal semicolon as a term.
-	for i = 1, maxmaxindex do
-		local term = terms[i]
-		if term and term:find(",", 1, true) then
-			use_semicolon = true
-		end
-	end
 
 	local ind = 0
 	for i = 1, maxmaxindex do
@@ -391,38 +399,39 @@ local function desc_or_desc_tree(frame, desc_tree)
 			local g = args["g"][ind] and rsplit(args["g"][ind], "%s*,%s*") or {}
 			local link
 
-			local function get_link(term)
+			local termobj =	{
+				lang = entryLang,
+			}
+			-- Initialize `termobj` with indexed modifier params such as t1, t2, etc. and alt1, alt2, etc. Inline
+			-- modifiers specified using the <...> notation override these.
+			local function reinit_termobj(term)
+				termobj.term = term
+				termobj.sc = sc
+				termobj.term = term
+				termobj.alt = alt
+				termobj.id = id
+				termobj.tr = tr
+				termobj.ts = ts
+				termobj.genders = g
+				termobj.gloss = gloss
+				termobj.pos = pos
+				termobj.lit = lit
+			end
+			-- Construct a link out of `termobj`.
+			local function get_link()
 				local link = ""
-				if term ~= "-" then -- including term == nil
-					link = require("Module:links").full_link(
-						{
-							lang = entryLang,
-							sc = sc,
-							term = term,
-							alt = alt,
-							id = id,
-							tr = tr,
-							ts = ts,
-							genders = g,
-							gloss = gloss,
-							pos = pos,
-							lit = lit,
-						},
-						nil,
-						true)
-				elseif ts or gloss or #g > 0 then
+				-- If an individual term has a literal comma in it, use semicolons for all joiners. Otherwise we use
+				-- semicolon only if the user specified a literal semicolon as a term.
+				if termobj.term and termobj.term:find(",") then
+					use_semicolon = true
+				end
+				if termobj.term ~= "-" then -- including term == nil
+					link = require("Module:links").full_link(termobj, nil, true)
+				elseif termobj.ts or termobj.gloss or #termobj.genders > 0 then
 					-- [[Special:WhatLinksHere/Template:tracking/descendant/no term]]
 					track("no term")
-					link = require("Module:links").full_link(
-						{
-							lang = entryLang,
-							sc = sc,
-							ts = ts,
-							gloss = gloss,
-							genders = g,
-						},
-						nil,
-						true)
+					termobj.term = nil
+					link = require("Module:links").full_link(termobj, nil, true)
 					link = link
 						:gsub("<small>%[Term%?%]</small> ", "")
 						:gsub("<small>%[Term%?%]</small>&nbsp;", "")
@@ -441,66 +450,100 @@ local function desc_or_desc_tree(frame, desc_tree)
 			-- so if we see a tag on the outer level that isn't in this format, we don't try to parse it. The
 			-- restriction to the outer level is to allow generated HTML inside of e.g. qualifier tags, such as
 			-- foo<q:similar to {{m|fr|bar}}>.
-			if term and term:find("<") and not term:find("^[^<]*<[a-z]*[^a-z:]") then
-				if not iut then
-					iut = require("Module:inflection utilities")
+			if term and term:find("<") and not term:find("^[^<]*<[a-z]*[^a-z:>]") then
+				if not put then
+					put = require("Module:User:Benwing2/parse utilities")
 				end
-				local run = iut.parse_balanced_segment_run(term, "<", ">")
-				local sub_terms = ...
+				local run = put.parse_balanced_segment_run(term, "<", ">")
+				-- Split the non-modifier parts of an alternating run on comma, but not on comma+whitespace.
+				local need_tempcomma_undo = escape_comma_whitespace_in_alternating_run(run)
+				local comma_separated_runs
+				if need_tempcomma_undo then
+					comma_separated_runs =
+						put.split_alternating_runs_and_frob_raw_text(run, ",", unescape_comma_whitespace)
+				else
+					comma_separated_runs = put.split_alternating_runs(run, ",")
+				end
+				local sub_links = {}
 
 				local function parse_err(msg)
-					error(msg .. ": " .. (i + 1) .. "=" .. table.concat(run))
+					local parts = {}
+					for _, run in ipairs(comma_separated_runs) do
+						table.insert(parts, table.concat(run))
+					end
+					error(msg .. ": " .. (i + 1) .. "=" .. table.concat(parts, ","))
 				end
-				termobj.term.term = run[1]
-
-				for j = 2, #run - 1, 2 do
-					if run[j + 1] ~= "" then
-						parse_err("Extraneous text '" .. run[j + 1] .. "' after modifier")
-					end
-					local modtext = run[j]:match("^<(.*)>$")
-					if not modtext then
-						parse_err("Internal error: Modifier '" .. modtext .. "' isn't surrounded by angle brackets")
-					end
-					local prefix, arg = modtext:match("^([a-z]+):(.*)$")
-					if not prefix then
-						parse_err("Modifier " .. run[j] .. " lacks a prefix, should begin with one of '" ..
-							table.concat(param_mods, ":', '") .. ":'")
-					end
-					if param_mod_set[prefix] then
-						local obj_to_set
-						if prefix == "q" or prefix == "qq" then
-							obj_to_set = termobj
+				for _, run in ipairs(comma_separated_runs) do
+					reinit_termobj(run[1])
+					local seen_mods = {}
+					for j = 2, #run - 1, 2 do
+						if run[j + 1] ~= "" then
+							parse_err("Extraneous text '" .. run[j + 1] .. "' after modifier")
+						end
+						local modtext = run[j]:match("^<(.*)>$")
+						if not modtext then
+							parse_err("Internal error: Modifier '" .. modtext .. "' isn't surrounded by angle brackets")
+						end
+						local prefix, arg = modtext:match("^([a-z]+):(.*)$")
+						if prefix then
+							if seen_mods[prefix] then
+								parse_err("Modifier '" .. prefix .. "' occurs twice, second occurrence " .. run[j])
+							end
+							seen_mods[prefix] = true
+							if prefix == "t" or prefix == "gloss" then
+								termobj.gloss = arg
+							elseif prefix == "g" then
+								termobj.genders = rsplit(arg, "%s*,%s*")
+							elseif prefix == "sc" then
+								termobj.sc = require("Module:scripts").getByCode(arg, "" .. (i + 1) .. ":sc")
+							elseif param_term_mod_set[prefix] then
+								termobj[prefix] = arg
+							elseif misc_list_param_set[prefix] then
+								if j < #run - 1 then
+									parse_err("Modifier " .. run[j] .. " should come after the last term")
+								end
+								args["part" .. prefix][ind] = arg
+							else
+								parse_err("Unrecognized prefix '" .. prefix .. "' in modifier " .. run[j])
+							end
+						elseif j < #run - 1 then
+							parse_err("Modifier " .. run[j] .. " should come after the last term")
 						else
-							obj_to_set = termobj.term
+							if seen_mods[modtext] then
+								parse_err("Modifier '" .. modtext .. "' occurs twice")
+							end
+							seen_mods[modtext] = true
+							if bortype_set[modtext] then
+								args["part" .. modtext][ind] = true
+							elseif calque_alias_set[modtext] then
+								args.partclq[ind] = true
+							elseif partial_calque_alias_set[modtext] then
+								args.partpclq[ind] = true
+							else
+								parse_err("Unrecognized modifier '" .. modtext .. "'")
+							end
 						end
-						if prefix == "t" then
-							prefix = "gloss"
-						elseif prefix == "g" then
-							prefix = "genders"
-							arg = rsplit(arg, ",")
-						elseif prefix == "sc" then
-							arg = require("Module:scripts").getByCode(arg, "" .. (i + 1) .. ":sc")
-						end
-						if obj_to_set[prefix] then
-							parse_err("Modifier '" .. prefix .. "' occurs twice, second occurrence " .. run[j])
-						end
-						obj_to_set[prefix] = arg
-					else
-						parse_err("Unrecognized prefix '" .. prefix .. "' in modifier " .. run[j])
 					end
-				end
-			if term and term:find(",") then
-				local sub_terms = split_on_comma(term)
-				local sub_links = {}
-				for _, sub_term in ipairs(sub_terms) do
-					local sub_link = get_link(sub_term)
+					local sub_link = get_link()
 					if sub_link ~= "" then
 						table.insert(sub_links, sub_link)
 					end
 				end
-				link = table.concat(sub_links, ", ")
+				link = table.concat(sub_links, "/")
+			elseif term and term:find(",") then
+				local sub_terms = split_on_comma(term)
+				local sub_links = {}
+				for _, sub_term in ipairs(sub_terms) do
+					reinit_termobj(sub_term)
+					local sub_link = get_link()
+					if sub_link ~= "" then
+						table.insert(sub_links, sub_link)
+					end
+				end
+				link = table.concat(sub_links, "/")
 			else
-				link = get_link(term)
+				reinit_termobj(term)
+				link = get_link()
 			end
 
 			local arrow = get_arrow(ind)
@@ -535,7 +578,7 @@ local function desc_or_desc_tree(frame, desc_tree)
 			end
 			if linktext ~= "" then
 				if i > 1 then
-					table.insert(parts, (use_semicolon or terms[i - 1] == ";") and "; " or ", ")
+					table.insert(parts, terms[i - 1] == ";" and "; " or ", ")
 				end
 				table.insert(parts, linktext)
 			end
@@ -565,6 +608,12 @@ local function desc_or_desc_tree(frame, desc_tree)
 	local initial_arrow = get_arrow(0)
 	local initial_preqs = get_pre_qualifiers(0)
 	local final_postqs = get_post_qualifiers(0)
+
+	if use_semicolon then
+		for i = 2, #parts - 1, 2 do
+			parts[i] = ";"
+		end
+	end
 
 	local all_linktext = initial_preqs .. table.concat(parts) .. final_postqs .. descendants
 
