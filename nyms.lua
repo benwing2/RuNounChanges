@@ -68,7 +68,7 @@ function export.nyms(frame)
 	local thesaurus, link_maxindex = get_thesaurus_text(lang, args, maxindex)
 	
 	local items = {}
-	local iut
+	local put
 	local use_semicolon = false
 
 	local syn = 0
@@ -99,10 +99,10 @@ function export.nyms(frame)
 			-- we don't try to parse it. The restriction to the outer level is to allow generated HTML inside
 			-- of e.g. qualifier tags, such as foo<q:similar to {{m|fr|bar}}>.
 			if item and item:find("<") and not item:find("^[^<]*<[a-z]*[^a-z:]") then
-				if not iut then
-					iut = require("Module:inflection utilities")
+				if not put then
+					put = require("Module:parse utilities")
 				end
-				local run = iut.parse_balanced_segment_run(item, "<", ">")
+				local run = put.parse_balanced_segment_run(item, "<", ">")
 				local function parse_err(msg)
 					error(msg .. ": " .. (i + 1) .. "=" .. table.concat(run))
 				end
