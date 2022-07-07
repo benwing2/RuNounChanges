@@ -15,6 +15,24 @@ for _, param_mod in ipairs(param_mods) do
 	param_mod_set[param_mod] = true
 end
 
+local m_dialect_tags
+local function memoize_require_dialect_tags()
+	if not m_dialect_tags then
+		m_dialect_tags = require("Module:dialect tags")
+	end
+	return m_dialect_tags
+end
+
+-- Convert a raw tag= param (or nil) to a list of formatted dialect tags; unrecognized tags are passed through
+-- unchanged. Return nil if nil passed in.
+local function tags_to_dialects(lang, tags)
+	if not tags then
+		return nil
+	end
+	local m_dialect_tags = memoize_require_dialect_tags()
+	return m_dialect_tags.make_dialects(m_dialect_tags.split_on_comma(tags), lang)
+end
+
 local function get_thesaurus_text(lang, args, maxindex)
 	local thesaurus
 	local thesaurus_links = {}
@@ -57,7 +75,9 @@ function export.nyms(frame)
 	for _, param_mod in ipairs(param_mods) do
 		params[param_mod] = list_with_holes
 	end
-	
+	params.tag = {}
+	params.parttag = {list = "tag", allow_holes = true, require_index = true}
+
 	local args = require("Module:parameters").process(frame:getParent().args, params)
 	
 	local nym_type = frame.args[1]
@@ -83,6 +103,7 @@ function export.nyms(frame)
 				joiner = i > 1 and (args[2][i - 1] == ";" and "; " or ", ") or "",
 				q = args["q"][syn],
 				qq = args["qq"][syn],
+				tag = args["parttag"][syn],
 				term = {
 					lang = lang, term = item, id = args["id"][syn],
 					sc = args["sc"][syn] and require("Module:scripts").getByCode(args["sc"][syn], "sc" .. syn) or nil,
@@ -121,9 +142,9 @@ function export.nyms(frame)
 						parse_err("Modifier " .. run[j] .. " lacks a prefix, should begin with one of '" ..
 							table.concat(param_mods, ":', '") .. ":'")
 					end
-					if param_mod_set[prefix] then
+					if param_mod_set[prefix] or prefix == "tag" then
 						local obj_to_set
-						if prefix == "q" or prefix == "qq" then
+						if prefix == "q" or prefix == "qq" or prefix == "tag" then
 							obj_to_set = termobj
 						else
 							obj_to_set = termobj.term
@@ -161,13 +182,26 @@ function export.nyms(frame)
 	end
 
 	for i, item in ipairs(items) do
-		items[i] = item.joiner .. (item.q and require("Module:qualifier").format_qualifier({item.q}) .. " " or "")
-			.. m_links.full_link(item.term) .. (item.qq and " " .. require("Module:qualifier").format_qualifier({item.qq}) or "")
+		local preq_text
+		if item.q or item.tag then
+			local preq = tags_to_dialects(lang, item.tag)
+			if item.q then
+				preq = preq or {}
+				table.insert(preq, item.q)
+			end
+			preq_text = require("Module:qualifier").format_qualifier(preq) .. " "
+		else
+			preq_text = ""
+		end
+		items[i] = item.joiner .. preq_text .. m_links.full_link(item.term)
+			.. (item.qq and " " .. require("Module:qualifier").format_qualifier(item.qq) or "")
 	end
-	
+
+	local dialects = tags_to_dialects(lang, args.tag)
+	local tag_postq = dialects and " " .. memoize_require_dialect_tags().post_format_dialects(dialects) or ""
 	return "<span class=\"nyms " .. nym_type_class .. "\"><span class=\"defdate\">" .. 
 		mw.getContentLanguage():ucfirst(nym_type) .. ((#items > 1 or thesaurus ~= "") and "s" or "") ..
-		":</span> " .. table.concat(items) .. thesaurus .. "</span>"
+		":</span> " .. table.concat(items) .. tag_postq .. thesaurus .. "</span>"
 end
 
 
