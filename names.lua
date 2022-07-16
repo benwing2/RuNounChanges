@@ -577,6 +577,192 @@ function export.given_name(frame)
 		m_utilities.format_categories(categories, lang, args.sort, nil, force_cat)
 end
 
+-- The entry point for {{surname}}.
+function export.surname(frame)
+	local parent_args = frame:getParent().args
+	local compat = parent_args.lang
+	local offset = compat and 0 or 1
+
+	local params = {
+		[compat and "lang" or 1] = { required = true, default = "und" },
+		["g"] = {list = true}, -- gender(s)
+		[1 + offset] = {}, -- adjective/qualifier
+		["usage"] = {},
+		["origin"] = {},
+		["popular"] = {},
+		["populartype"] = {},
+		["meaning"] = { list = true },
+		["meaningtype"] = {},
+		["q"] = {},
+		-- initial article: A or An
+		["A"] = {},
+		["sort"] = {},
+		["from"] = { list = true },
+		["fromtype"] = {},
+		["xlit"] = { list = true },
+		["eq"] = { list = true },
+		["eqtype"] = {},
+		["varof"] = { list = true },
+		["varoftype"] = {},
+		["var"] = { alias_of = "varof", list = true },
+		["vartype"] = { alias_of = "varoftype" },
+		["varform"] = { list = true },
+		["blend"] = { list = true },
+		["blendtype"] = {},
+		["m"] = { list = true },
+		["mtype"] = {},
+		["f"] = { list = true },
+		["ftype"] = {},
+		["dot"] = {},
+		["nodot"] = {type = "boolean"},
+	}
+
+	local args = require("Module:parameters").process(parent_args, params)
+	
+	local textsegs = {}
+	local lang = m_languages.getByCode(args[compat and "lang" or 1], compat and "lang" or 1)
+
+	local function fetch_typetext(param)
+		return args[param] and args[param] .. " " or ""
+	end
+
+	local adj = args[1 + offset]
+	local xlittext = join_names(nil, args, "xlit")
+	local blendtext = join_names(lang, args, "blend", "and")
+	local varoftext = join_names(lang, args, "varof")
+	local mtext = join_names(lang, args, "m")
+	local ftext = join_names(lang, args, "f")
+	local varformtext, numvarforms = join_names(lang, args, "varform", ", ")
+	local meaningsegs = {}
+	for _, meaning in ipairs(args.meaning) do
+		table.insert(meaningsegs, '"' .. meaning .. '"')
+	end
+	local meaningtext = m_table.serialCommaJoin(meaningsegs, {conj = "or"})
+	local eqtext = get_eqtext(args)
+
+	table.insert(textsegs, "<span class='use-with-mention'>")
+	local article = args.A or
+		args.g[1] == "unknown-gender" and "An" or
+		adj and rfind(adj, "^[aeiouAEIOU]") and "An" or
+		"A"
+
+	table.insert(textsegs, article .. " ")
+	local genders = {}
+	for _, g in ipairs(args.g) do
+		local origg = g
+		if g == "unknown-gender" then
+			track("unknown gender")
+		else
+			if g == "unisex" or g == "common gender" then
+				g = "common-gender"
+			end
+			if g ~= "male" and g ~= "female" and g ~= "common-gender" then
+				error("Unrecognized gender: " .. origg)
+			end
+		end
+		table.insert(genders, g)
+	end
+	if #genders > 0 then
+		table.insert(textsegs, table.concat(genders, " or ") .. " ")
+	end
+	if adj then
+		table.insert(textsegs, adj .. " ")
+	table.insert(textsegs, "[[surname]]")
+	local need_comma = false
+	if xlittext ~= "" then
+		table.insert(textsegs, ", " .. xlittext)
+		need_comma = true
+	end
+	local from_catparts = {}
+	if #args.from > 0 then
+		if need_comma then
+			table.insert(textsegs, ",")
+		end
+		need_comma = true
+		table.insert(textsegs, " " .. fetch_typetext("fromtype"))
+		local textseg, this_catparts = get_fromtext(lang, args)
+		for _, catpart in ipairs(this_catparts) do
+			m_table.insertIfNot(from_catparts, catpart)
+		end
+		table.insert(textsegs, textseg)
+	end
+	
+	if meaningtext ~= "" then
+		if need_comma then
+			table.insert(textsegs, ",")
+		end
+		need_comma = true
+		table.insert(textsegs, " " .. fetch_typetext("meaningtype") .. "meaning " .. meaningtext)
+	end
+	if args.origin then
+		if need_comma then
+			table.insert(textsegs, ",")
+		end
+		need_comma = true
+		table.insert(textsegs, " of " .. args.origin .. " origin")
+	end
+	if args.usage then
+		if need_comma then
+			table.insert(textsegs, ",")
+		end
+		need_comma = true
+		table.insert(textsegs, " of " .. args.usage .. " usage")
+	end
+	if varoftext ~= "" then
+		table.insert(textsegs, ", " ..fetch_typetext("varoftype") .. "variant of " .. varoftext)
+	end
+	if blendtext ~= "" then
+		table.insert(textsegs, ", " .. fetch_typetext("blendtype") .. "blend of " .. blendtext)
+	end
+	if args.popular then
+		table.insert(textsegs, ", " .. fetch_typetext("populartype") .. "popular " .. args.popular)
+	end
+	if mtext ~= "" then
+		table.insert(textsegs, ", " .. fetch_typetext("mtype") .. "masculine equivalent " .. mtext)
+	end
+	if ftext ~= "" then
+		table.insert(textsegs, ", " .. fetch_typetext("ftype") .. "feminine equivalent " .. ftext)
+	end
+	if eqtext ~= "" then
+		table.insert(textsegs, ", " .. fetch_typetext("eqtype") .. "equivalent to " .. eqtext)
+	end
+	if args.q then
+		table.insert(textsegs, ", " .. args.q)
+	end
+	if varformtext ~= "" then
+		table.insert(textsegs, "; variant form" .. (numvarforms > 1 and "s" or "") .. " " .. varformtext)
+	end
+	table.insert(textsegs, "</span>")
+
+	local categories = {}
+	local langname = lang:getCanonicalName() .. " "
+	local function insert_cats(g)
+		g = g and g .. " " or ""
+		table.insert(categories, langname .. g .. "surnames")
+		for _, catpart in ipairs(from_catparts) do
+			table.insert(categories, langname .. g .. "surnames from " .. catpart)
+		end
+	end
+	insert_cats(nil)
+	local function insert_cats_gender(g)
+		local origg = g
+		if g == "unknown-gender" then
+			return
+		end
+		if g == "common-gender" then
+			insert_cats_gender("male")
+			insert_cats_gender("female")
+		end
+		insert_cats(g)
+	end
+	for _, g in ipairs(genders) do
+		insert_cats_gender(g)
+	end
+
+	return table.concat(textsegs, "") ..
+		m_utilities.format_categories(categories, lang, args.sort, nil, force_cat)
+end
+
 -- The entry point for {{name translit}}, {{name respelling}}, {{name obor}} and {{foreign name}}.
 function export.name_translit(frame)
     local iparams = {
