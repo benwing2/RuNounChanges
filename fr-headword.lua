@@ -129,6 +129,13 @@ local function make_feminine(form, special)
 	end
 end
 
+-- For bot use
+function export.make_feminine(frame)
+	local masc = frame.args[1] or error("Masculine in 1= is required.")
+	local special = frame.args[2]
+	return make_feminine(masc, special)
+end
+
 
 local function add_suffix(list, suffix, special)
 	local newlist = {}
