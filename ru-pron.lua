@@ -190,10 +190,10 @@ FIXME:
     нерассуди́тельный, etc.).
 ]]
 
-local ut = require("Module:utils")
 local com = require("Module:ru-common")
 local m_ru_translit = require("Module:ru-translit")
 local strutils = require("Module:string utilities")
+local listToSet = require("Module:table/listToSet")
 
 local export = {}
 local u = mw.ustring.char
@@ -264,7 +264,7 @@ local acc = AC .. GR .. CFLEX .. DOTABOVE .. DOTBELOW
 local accents = '[' .. acc .. ']'
 local stress_accents = '[' .. AC .. GR .. ']'
 
-local perm_syl_onset = ut.list_to_set({
+local perm_syl_onset = listToSet({
 	'spr', 'str', 'skr', 'spl', 'skl',
 	-- FIXME, do we want sc?
 	'sp', 'st', 'sk', 'sf', 'sx', 'sc',
@@ -518,9 +518,9 @@ local phonetic_subs = {
 
 local cons_assim_palatal = {
 	-- assimilation of tn, dn, sn, zn, st, zd, nč, nɕ is handled specially
-	compulsory = ut.list_to_set({'ntʲ', 'ndʲ', 'xkʲ',
+	compulsory = listToSet({'ntʲ', 'ndʲ', 'xkʲ',
 	    'csʲ', 'ĵzʲ', 'ncʲ', 'nĵʲ'}),
-	optional = ut.list_to_set({'slʲ', 'zlʲ', 'nsʲ', 'nzʲ',
+	optional = listToSet({'slʲ', 'zlʲ', 'nsʲ', 'nzʲ',
 		'mpʲ', 'mbʲ', 'mfʲ', 'fmʲ'})
 }
 
@@ -530,7 +530,7 @@ local cons_assim_palatal = {
 -- по́ небу vs. по не́бу, etc.
 local accentless = {
 	-- class 'pre': particles that join with a following word
-	pre = ut.list_to_set({'bez', 'bliz', 'v', 'vo', 'da', 'do',
+	pre = listToSet({'bez', 'bliz', 'v', 'vo', 'da', 'do',
        'za', 'iz', 'iz-pod', 'iz-za', 'izo', 'k', 'ko', 'mež',
        'na', 'nad', 'nado', 'ne', 'ni', 'ob', 'obo', 'ot', 'oto',
        'pered', 'peredo', 'po', 'pod', 'podo', 'pred', 'predo', 'pri', 'pro',
@@ -539,13 +539,13 @@ local accentless = {
 	--   if a space (not a hyphen) separates them; hyphens are used here
 	--   to spell out letters, e.g. а-эн-бэ́ for АНБ (NSA = National Security
 	--   Agency) or о-а-э́ for ОАЭ (UAE = United Arab Emirates)
-	prespace = ut.list_to_set({'a', 'o'}),
+	prespace = listToSet({'a', 'o'}),
 	-- class 'post': particles that join with a preceding word
-	post = ut.list_to_set({'by', 'b', 'ž', 'že', 'li', 'libo', 'lʹ', 'ka',
+	post = listToSet({'by', 'b', 'ž', 'že', 'li', 'libo', 'lʹ', 'ka',
 	   'nibudʹ', 'tka'}),
 	-- class 'posthyphen': particles that join with a preceding word, but only
 	--   if a hyphen (not a space) separates them
-	posthyphen = ut.list_to_set({'to'}),
+	posthyphen = listToSet({'to'}),
 }
 
 -- Pronunciation of final unstressed -е, depending on the part of speech and
@@ -1507,18 +1507,21 @@ ru_ipa_main = function(text, adj, gem, bracket, pos)
 	else
 		text = { text }
 	end
-	
+
 	for i, pronunciation in ipairs(text) do
 		-- 5. Undo addition of soft symbol to inherently soft consonants.
 		pronunciation = rsub(pronunciation, '([čǰɕӂj])ʲ', '%1')
-	
+
 		-- convert special symbols to IPA
 		pronunciation = rsub(pronunciation, '[cĵ]ʲ', translit_conv_j)
 		pronunciation = rsub(pronunciation, '[cčgĉĝĵǰšžɕӂ]', translit_conv)
-	
+
 		-- Assimilation involving hiatus of ɐ and ə
 		pronunciation = rsub(pronunciation, 'ə([‿⁀]*)[ɐə]', 'ɐ%1ɐ')
-	
+
+		-- Use ɫ for dark l
+		pronunciation = rsub(pronunciation, 'l([^ʲ])', 'ɫ%1')
+
 		-- eliminate ⁀ symbol at word boundaries
 		-- eliminate _ symbol that prevents assimilations
 		-- eliminate pseudoconsonant at beginning of suffixes or end of prefixes
@@ -1537,6 +1540,3 @@ function export.ipa_string(text, adj, gem, bracket, pos, zhpal, is_transformed)
 end
 
 return export
-
--- For Vim, so we get 4-space tabs
--- vim: set ts=4 sw=4 noet:
