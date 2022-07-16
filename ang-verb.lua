@@ -1,7 +1,7 @@
 local m_links = require("Module:links")
 local m_utilities = require("Module:utilities")
 local strutils = require("Module:string utilities")
-local ut = require("Module:utils")
+local m_table = require("Module:table")
 
 local com = require("Module:ang-common")
 local lang = require("Module:languages").getByCode("ang")
@@ -47,8 +47,8 @@ local cons = single_cons .. "xz"
 local cons_c = "[" .. cons .. "]"
 
 local slots_and_accel = {
-	["infinitive"] = "",
-	["infinitive2"] = "",
+	["infinitive"] = "inf",
+	["infinitive2"] = "inflected|inf",
 	["1sg_pres_indc"] = "1|s|pres|indc",
 	["2sg_pres_indc"] = "2|s|pres|indc",
 	["3sg_pres_indc"] = "3|s|pres|indc",
@@ -144,33 +144,33 @@ local function make_table(forms)
 <div class="NavContent">
 {\op}| style="background:#F9F9F9;text-align:center;width:{width}em" class="inflection-table"
 |-
-! style="font-size:90%; background-color:#FFFFE0; text-align: left" | [[infinitive]]
+! style="font-size:90%; background-color:#FFFFE0; text-align: left" | infinitive
 | {infinitive}
 | {infinitive2}
 |-
-! style="font-size:80%;" | [[indicative mood|indicative]]
-! style="font-size:80%; background-color:#EFEFFF" | [[present tense|present]]
-! style="font-size:80%; background-color:#EFEFFF" | [[past tense|past]]
+! style="font-size:80%;" | indicative mood
+! style="font-size:80%; background-color:#EFEFFF" | present tense
+! style="font-size:80%; background-color:#EFEFFF" | past tense
 |-
-! style="font-size:90%; background-color:#FFFFE0; text-align: left" | [[first person|1st-person]] [[singular]]
+! style="font-size:90%; background-color:#FFFFE0; text-align: left" | first person singular
 | {1sg_pres_indc}
 | {1sg_past_indc}
 |-
-! style="font-size:90%; background-color:#FFFFE0; text-align: left" | [[second person|2nd-person]] singular
+! style="font-size:90%; background-color:#FFFFE0; text-align: left" | second person singular
 | {2sg_pres_indc}
 | {2sg_past_indc}
 |-
-! style="font-size:90%; background-color:#FFFFE0; text-align: left" | [[third person|3rd-person]] singular
+! style="font-size:90%; background-color:#FFFFE0; text-align: left" | third person singular
 | {3sg_pres_indc}
 | {3sg_past_indc}
 |-
-! style="font-size:90%; background-color:#FFFFE0; text-align: left" | [[plural]]
+! style="font-size:90%; background-color:#FFFFE0; text-align: left" | plural
 | {pl_pres_indc}
 | {pl_past_indc}
 |-
-! style="font-size:80%;" | [[subjunctive]]
-! style="font-size:80%; background-color:#EFEFFF" | [[present tense|present]]
-! style="font-size:80%; background-color:#EFEFFF" | [[past tense|past]]
+! style="font-size:80%;" | subjunctive
+! style="font-size:80%; background-color:#EFEFFF" | present tense
+! style="font-size:80%; background-color:#EFEFFF" | past tense
 |-
 ! style="font-size:90%; background-color:#FFFFE0; text-align: left" | singular
 | {sg_pres_subj}
@@ -180,7 +180,7 @@ local function make_table(forms)
 | {pl_pres_subj}
 | {pl_past_subj}
 |-
-! style="font-size:80%;" | [[imperative]]
+! style="font-size:80%;" | imperative
 ! style="font-size:80%; background-color:#EFEFFF" colspan="2" | 
 |-
 ! style="font-size:90%; background-color:#FFFFE0; text-align: left" | singular
@@ -189,9 +189,9 @@ local function make_table(forms)
 ! style="font-size:90%; background-color:#FFFFE0; text-align: left" | plural
 | colspan="2" | {pl_impr}
 |-
-! style="font-size:80%;" |[[participle]]
-! style="font-size:80%; background-color:#EFEFFF" | [[present]]
-! style="font-size:80%; background-color:#EFEFFF" | [[past]]
+! style="font-size:80%;" | participle
+! style="font-size:80%; background-color:#EFEFFF" | present
+! style="font-size:80%; background-color:#EFEFFF" | past
 |-
 ! style="font-size:90%; background-color:#FFFFE0; text-align: left" |
 | {pres_ptc}
@@ -215,19 +215,24 @@ function export.make_table(frame)
 	return make_table(args)
 end
 
-local function vernerize_cons(cons, verner)
+local function vernerize_cons(suf, verner)
 	if not verner then
-		return cons
+		return suf
+	end
+	local first_cons, cons = rmatch(suf, "^(.*)([sþðh])$")
+	if not first_cons then
+		return suf
 	end
 	if cons == "s" then
-		return "r"
+		cons = "r"
 	elseif cons == "þ" or cons == "ð" then
-		return "d"
+		cons = "d"
 	elseif cons == "h" then
-		return "g"
+		cons = "g"
 	else
-		return cons
+		error("Internal error in vernerize_cons(): Unexpected suffix " .. suf)
 	end
+	return first_cons .. cons
 end
 
 local function depalatalize_final_cons_before_cons(word)
@@ -371,10 +376,10 @@ local function add_form_to_slot(args, slot, form)
 		args[slot] = {}
 	end
 	if type(form) == "string" then
-		ut.insert_if_not(args[slot], form)
+		m_table.insertIfNot(args[slot], form)
 	else
 		for _, f in ipairs(form) do
-			ut.insert_if_not(args[slot], f)
+			m_table.insertIfNot(args[slot], f)
 		end
 	end
 end
@@ -1635,7 +1640,7 @@ function export.show(frame)
 						data.presefin = splitv
 					elseif typ == "weak" and k == "presenfin" then
 						data.presenfin = splitv
-					elseif typ == "strong" and k == "past" then
+					elseif k == "past" then
 						data.past = splitv
 						data.pastsg = splitv
 						data.pastpl = splitv
@@ -1724,13 +1729,13 @@ function export.show(frame)
 		else
 			for k, v in pairs(forms) do
 				for _, form in ipairs(v) do
-					ut.insert_if_not(allforms[k], form)
+					m_table.insertIfNot(allforms[k], form)
 				end
 			end
 		end
 		local cats = set_categories(typ, class)
 		for _, cat in ipairs(cats) do
-			ut.insert_if_not(allcats, cat)
+			m_table.insertIfNot(allcats, cat)
 		end
 	end
 	local table = make_table(allforms)
