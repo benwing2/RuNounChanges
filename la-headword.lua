@@ -1,14 +1,12 @@
 local export = {}
 local pos_functions = {}
 
--- FIXME: Replace with Module:table
-local ut = require("Module:utils")
+local m_table = require("Module:table")
 
 local legal_gender = {
 	["m"] = true,
 	["f"] = true,
 	["n"] = true,
-	["c"] = true,
 	["?"] = true,
 }
 
@@ -24,7 +22,6 @@ local gender_names = {
 	["m"] = "masculine",
 	["f"] = "feminine",
 	["n"] = "neuter",
-	["c"] = "common",
 	["?"] = "unknown gender",
 }
 
@@ -81,14 +78,12 @@ function export.show(frame)
 
 	local iparams = {
 		[1] = {required = true},
-		[2] = {},
 		["def"] = {},
 		["suff_type"] = {},
 	}
 	local iargs = require("Module:parameters").process(frame.args, iparams)
 	local args = frame:getParent().args
 	local poscat = iargs[1]
-	local class = iargs[2]
 	local def = iargs.def
 	local suff_type = iargs.suff_type
 	local postype = nil
@@ -98,7 +93,7 @@ function export.show(frame)
 		postype = poscat
 	end
 
-	local data = {lang = lang, pos_category = (NAMESPACE == "Reconstruction" and "reconstructed " or "") .. poscat, categories = {}, heads = {}, genders = {}, inflections = {}}
+	local data = {lang = lang, categories = {}, heads = {}, genders = {}, inflections = {}}
 	local infl_classes = {}
 	local appendix = {}
 	local postscript = {}
@@ -108,12 +103,23 @@ function export.show(frame)
 	end
 
 	if pos_functions[postype] then
-		pos_functions[postype](class, def, args, data, infl_classes, appendix, postscript)
+		local new_poscat = pos_functions[postype](def, args, data, infl_classes, appendix, postscript)
+		if new_poscat then
+			poscat = new_poscat
+		end
 	end
 
-	if mw.ustring.find(mw.ustring.gsub(PAGENAME,"qu","kv"),"[aeiouāēīōū][iu][aeiouāēīōū]") then
-		table.insert(data.categories, "Kenny's testing category 7")
+	if not rfind(poscat, " forms?$") then
+		for _, head in ipairs(data.heads) do
+			-- Don't trigger on prefixes or suffixes.
+			if (rfind(head, " ") or rfind(head, ".%-.")) then
+				table.insert(data.categories, "Latin multiword terms")
+				break
+			end
+		end
 	end
+
+	data.pos_category = (NAMESPACE == "Reconstruction" and "reconstructed " or "") .. poscat
 
 	postscript = table.concat(postscript, ", ")
 
@@ -152,7 +158,7 @@ local function nouns(pos, def, args, data, infl_classes, appendix)
 		pos = "nouns"
 	end
 	local decldata = require("Module:la-nominal").do_generate_noun_forms(
-	  args, pos, true, is_num)
+	  args, pos, true, def, is_num)
 	local lemma = decldata.overriding_lemma
 	local lemma_num = decldata.num == "pl" and "pl" or "sg"
 	if not lemma or #lemma == 0 then
@@ -161,9 +167,7 @@ local function nouns(pos, def, args, data, infl_classes, appendix)
 
 	data.heads = lemma
 	data.id = decldata.id
-	data.pos_category = (NAMESPACE == "Reconstruction" and "reconstructed " or "") ..
-		(is_pn and decldata.pos == "nouns" and "proper nouns" or decldata.pos)
-
+	
 	local genders = decldata.overriding_genders
 	if #genders == 0 then
 		if decldata.gender then
@@ -244,7 +248,7 @@ local function nouns(pos, def, args, data, infl_classes, appendix)
 						else
 							is_decl = true
 						end
-						ut.insert_if_not(decl_list, d)
+						m_table.insertIfNot(decl_list, d)
 					end
 				else
 					if decl == "indecl" or decl == "0" then
@@ -252,7 +256,7 @@ local function nouns(pos, def, args, data, infl_classes, appendix)
 					else
 						is_decl = true
 					end
-					ut.insert_if_not(decl_list, decl)
+					m_table.insertIfNot(decl_list, decl)
 				end
 			end
 		end
@@ -273,7 +277,7 @@ local function nouns(pos, def, args, data, infl_classes, appendix)
 					has_multiple_variants = true
 				end
 				for _, d in ipairs(alternant_decls) do
-					ut.insert_if_not(decls, d)
+					m_table.insertIfNot(decls, d)
 				end
 			end
 		end
@@ -356,23 +360,29 @@ local function nouns(pos, def, args, data, infl_classes, appendix)
 	end
 
 	for _, cat in ipairs(decldata.categories) do
-		ut.insert_if_not(data.categories, cat)
+		m_table.insertIfNot(data.categories, cat)
 	end
+
+	for _, cat in ipairs(decldata.cat) do
+		m_table.insertIfNot(data.categories, "Latin " .. cat)
+	end
+	
+	return is_pn and decldata.pos == "nouns" and "proper nouns" or decldata.pos
 end
 
-pos_functions["nouns"] = function(class, def, args, data, infl_classes, appendix)
+pos_functions["nouns"] = function(def, args, data, infl_classes, appendix)
 	return nouns("nouns", def, args, data, infl_classes, appendix)
 end
 
-pos_functions["proper nouns"] = function(class, def, args, data, infl_classes, appendix)
+pos_functions["proper nouns"] = function(def, args, data, infl_classes, appendix)
 	return nouns("proper nouns", def, args, data, infl_classes, appendix)
 end
 
-pos_functions["suffixes-noun"] = function(class, def, args, data, infl_classes, appendix)
+pos_functions["suffixes-noun"] = function(def, args, data, infl_classes, appendix)
 	return nouns("suffixes", def, args, data, infl_classes, appendix)
 end
 
-pos_functions["numerals-noun"] = function(class, def, args, data, infl_classes, appendix)
+pos_functions["numerals-noun"] = function(def, args, data, infl_classes, appendix)
 	return nouns("numerals", def, args, data, infl_classes, appendix)
 end
 
@@ -407,11 +417,13 @@ export.allowed_subtypes = {
 	["highlydef"] = true,
 }
 
-pos_functions["verbs"] = function(class, def, args, data, infl_classes, appendix)
+pos_functions["verbs"] = function(def, args, data, infl_classes, appendix)
 	local m_la_verb = require("Module:la-verb")
+	local NAMESPACE = mw.title.getCurrentTitle().nsText
 	local def1, def2
 	if def then
 		def1, def2 = rmatch(def, "^(.*):(.*)$")
+	end
 	local conjdata, typeinfo = m_la_verb.make_data(args, true, def1, def2)
 	local lemma_forms = conjdata.overriding_lemma
 	if not lemma_forms or #lemma_forms == 0 then
@@ -430,14 +442,13 @@ pos_functions["verbs"] = function(class, def, args, data, infl_classes, appendix
 
 	local function insert_inflection(infl, label)
 		for _, form in ipairs(infl) do
-			if rsub(form, "^[*%[%]a-zA-ZĀāĒēĪīŌōŪūȲȳÄäËëÏïÖöÜüŸÿĂăĔĕĬĭŎŏŬŭ " .. accents .. "]+$", "") ~= "" then
+			if rsub(form, "^[*%[%]|%-a-zA-ZĀāĒēĪīŌōŪūȲȳÄäËëÏïÖöÜüŸÿĂăĔĕĬĭŎŏŬŭ " .. accents .. "]+$", "") ~= "" then
 				table.insert(data.categories, "la-verb invalid parameters")
 			end
 		end
 		infl.label = label
 		table.insert(data.inflections, infl)
 	end
-
 
 	local inf = m_la_verb.get_valid_forms(conjdata.forms["pres_actv_inf"])
 	if #inf > 0 then
@@ -592,11 +603,10 @@ end
 
 pos_functions["suffixes-verb"] = pos_functions["verbs"]
 
-local function adjectives_new(pos, def, args, data, infl_classes, appendix)
-	local NAMESPACE = mw.title.getCurrentTitle().nsText
+local function adjectives(pos, def, args, data, infl_classes, appendix)
 	local is_num = pos == "numerals"
 	local decldata = require("Module:la-nominal").do_generate_adj_forms(
-	  args, pos, true, is_num)
+	  args, pos, true, def, is_num)
 	local lemma = decldata.overriding_lemma
 	local lemma_num = decldata.num == "pl" and "pl" or "sg"
 	if not lemma or #lemma == 0 then
@@ -605,7 +615,6 @@ local function adjectives_new(pos, def, args, data, infl_classes, appendix)
 
 	data.heads = lemma
 	data.id = decldata.id
-	data.pos_category = (NAMESPACE == "Reconstruction" and "reconstructed " or "") .. decldata.pos
 
 	if is_num then
 		process_num_type(decldata.num_type, data.categories)
@@ -615,48 +624,60 @@ local function adjectives_new(pos, def, args, data, infl_classes, appendix)
 		table.insert(data.categories, "Latin plural-only " .. decldata.pos)
 	end
 
-	local masc = decldata.forms["nom_" .. lemma_num .. "_m"]
-	local fem = decldata.forms["nom_" .. lemma_num .. "_f"]
-	local neut = decldata.forms["nom_" .. lemma_num .. "_n"]
-	local gen = decldata.forms["gen_" .. lemma_num .. "_m"]
+	if decldata.indecl then
+		table.insert(data.inflections, {label = glossary_link("indeclinable")})
 
-	if decldata.pos == "participles" then
-		if rfind(masc, "ūrus$") then
-			table.insert(data.category, "Latin future participles")
-		elseif rfind(masc, "ndus$") then
-			-- FIXME, should rename to "Latin gerundives")
-			table.insert(data.category, "Latin future passive participles")
-		elseif rfind(masc, "[stx]us$") then
-			table.insert(data.category, "Latin perfect participles")
-		elseif rfind(masc, "ns$") then
-			table.insert(data.category, "Latin present participles")
-		else
-			error("Unrecognized participle ending: " .. masc)
+		if decldata.pos == "participles" then
+			if rfind(lemma[1], "[stxu]um$") then
+				table.insert(data.categories, "Latin perfect participles")
+			end
 		end
-	end
-
-	local function is_missing(form)
-		return not form or form == "" or form == "—" or #form == 0
-	end
-	-- We display the inflections in three different ways to mimic the
-	-- old way of doing things:
-	--
-	-- 1. If masc and fem are different, show masc, fem and neut.
-	-- 2. Otherwise, if masc and neut are different, show masc and neut.
-	-- 3. Otherwise, show masc nominative and masc genitive.
-	if not is_missing(fem) and not ut.equals(masc, fem) then
-		fem.label = "feminine"
-		table.insert(data.inflections, fem)
-		if not is_missing(neut) then
+	else
+		local masc = decldata.forms["nom_" .. lemma_num .. "_m"]
+		local fem = decldata.forms["nom_" .. lemma_num .. "_f"]
+		local neut = decldata.forms["nom_" .. lemma_num .. "_n"]
+		local gen = decldata.forms["gen_" .. lemma_num .. "_m"]
+	
+		if decldata.pos == "participles" then
+			if rfind(masc[1], "ūrus$") then
+				table.insert(data.categories, "Latin future participles")
+			elseif rfind(masc[1], "ndus$") then
+				-- FIXME, should rename to "Latin gerundives")
+				table.insert(data.categories, "Latin future passive participles")
+			elseif rfind(masc[1], "[stxu]us$") then
+				table.insert(data.categories, "Latin perfect participles")
+			elseif rfind(masc[1], "ns$") then
+				table.insert(data.categories, "Latin present participles")
+			else
+				error("Unrecognized participle ending: " .. masc[1])
+			end
+		end
+	
+		local function is_missing(form)
+			return not form or form == "" or form == "—" or #form == 0
+		end
+		-- We display the inflections in three different ways to mimic the
+		-- old way of doing things:
+		--
+		-- 1. If masc and fem are different, show masc, fem and neut.
+		-- 2. Otherwise, if masc and neut are different, show masc and neut.
+		-- 3. Otherwise, show masc nominative and masc genitive.
+		if not is_missing(fem) and not m_table.deepEquals(masc, fem) then
+			fem.label = "feminine"
+			table.insert(data.inflections, fem)
+			if not is_missing(neut) then
+				neut.label = "neuter"
+				table.insert(data.inflections, neut)
+			end
+		elseif not is_missing(neut) and not m_table.deepEquals(masc, neut) then
 			neut.label = "neuter"
 			table.insert(data.inflections, neut)
+		elseif not is_missing(gen) then
+			gen.label = "genitive"
+			table.insert(data.inflections, gen)
 		end
-	elseif not is_missing(neut) and not ut.equals(masc, neut) then
-		neut.label = "neuter"
-		table.insert(data.inflections, neut)
-	elseif not is_missing(gen) then
-		gen.label = "genitive"
-		table.insert(data.inflections, gen)
+
+		table.insert(infl_classes, decldata.title)
 	end
 
 	if #decldata.comp > 0 then
@@ -667,26 +688,39 @@ local function adjectives_new(pos, def, args, data, infl_classes, appendix)
 		decldata.sup.label = "superlative"
 		table.insert(data.inflections, decldata.sup)
 	end
-
-	table.insert(infl_classes, decldata.title)
+	if #decldata.adv > 0 then
+		decldata.adv.label = "adverb"
+		table.insert(data.inflections, decldata.adv)
+	end
 
 	for _, cat in ipairs(decldata.categories) do
-		ut.insert_if_not(data.categories, cat)
+		m_table.insertIfNot(data.categories, cat)
 	end
+
+	for _, cat in ipairs(decldata.cat) do
+		m_table.insertIfNot(data.categories, "Latin " .. cat)
+	end
+	
+	return decldata.pos
 end
 
 local function adjectives_comp(pos, def, args, data, infl_classes, appendix)
 	local params = {
 		[1] = {alias_of = 'head'},
-		[2] = {alias_of = 'comp'},
+		[2] = {alias_of = 'pos'},
 		["head"] = {list = true, default = mw.title.getCurrentTitle().text},
-		["comp"] = {},
+		["pos"] = {list = true},
+		["is_lemma"] = {type = "boolean"},
 		["id"] = {},
 	}
 	local args = require("Module:parameters").process(args, params)
 	data.heads = args.head
 	data.id = args.id
-	table.insert(data.categories, "Latin comparative " .. pos)
+	if args.is_lemma then
+		-- See below. This happens automatically by virtue of the default POS
+		-- unless we overrride it, which we do when is_lemma.
+		table.insert(data.categories, "Latin comparative " .. pos)
+	end
 	table.insert(infl_classes, "[[Appendix:Latin third declension|third declension]]")
 
 	local n = {label = "neuter"}
@@ -697,25 +731,41 @@ local function adjectives_comp(pos, def, args, data, infl_classes, appendix)
 
 	table.insert(data.inflections, n)
 
-	if args.comp then
-		-- [[Special:WhatLinksHere/Template:tracking/adjectives/comp]]
-		track("adjectives/comp")
+	if #args.pos > 0 then
+		args.pos.label = "positive"
+		table.insert(data.inflections, args.pos)
+	end
+	if args.is_lemma then
+		-- If is_lemma, we're a comparative adjective without positive form,
+		-- so we're treated as a lemma. In that case, we return "adjectives" as
+		-- the part of speech, which will automatically categorize into
+		-- "Latin adjectives" and "Latin lemmas", otherwise we don't return
+		-- anything, which defaults to the passed-in POS (usually
+		-- "comparative adjectives"), which will automatically categorize into
+		-- that POS (e.g. "Latin comparative adjectives") and into
+		-- "Latin non-lemma forms".
+		return pos
 	end
 end
 
 local function adjectives_sup(pos, def, args, data, infl_classes, appendix)
 	local params = {
 		[1] = {alias_of = 'head'},
-		[2] = {alias_of = 'sup'},
+		[2] = {alias_of = 'pos'},
 		["head"] = {list = true, default = mw.title.getCurrentTitle().text},
-		["sup"] = {},
+		["pos"] = {list = true},
+		["is_lemma"] = {type = "boolean"},
 		["id"] = {},
 	}
 	local args = require("Module:parameters").process(args, params)
 	data.heads = args.head
 	data.id = args.id
 
-	table.insert(data.categories, "Latin superlative " .. pos)
+	if args.is_lemma then
+		-- See below. This happens automatically by virtue of the default POS
+		-- unless we overrride it, which we do when is_lemma.
+		table.insert(data.categories, "Latin superlative " .. pos)
+	end
 	table.insert(infl_classes, "[[Appendix:Latin first declension|first]]")
 	table.insert(infl_classes, "[[Appendix:Latin second declension|second declension]]")
 
@@ -729,39 +779,56 @@ local function adjectives_sup(pos, def, args, data, infl_classes, appendix)
 	table.insert(data.inflections, f)
 	table.insert(data.inflections, n)
 
-	if args.sup then
-		-- [[Special:WhatLinksHere/Template:tracking/adjectives/sup]]
-		track("adjectives/sup")
+	if #args.pos > 0 then
+		args.pos.label = "positive"
+		table.insert(data.inflections, args.pos)
+	end
+	if args.is_lemma then
+		-- If is_lemma, we're a superlative adjective without positive form,
+		-- so we're treated as a lemma. In that case, we return "adjectives" as
+		-- the part of speech, which will automatically categorize into
+		-- "Latin adjectives" and "Latin lemmas", otherwise we don't return
+		-- anything, which defaults to the passed-in POS (usually
+		-- "superlative adjectives"), which will automatically categorize into
+		-- that POS (e.g. "Latin superlative adjectives") and into
+		-- "Latin non-lemma forms".
+		return pos
 	end
 end
 
-local function adjectives(pos, class, def, args, data, infl_classes, appendix)
-	if class == "new" then
-		return adjectives_new(pos, def, args, data, infl_classes, appendix)
-	elseif class == "comp" then
-		return adjectives_comp(pos, def, args, data, infl_classes, appendix)
-	elseif class == "sup" then
-		return adjectives_sup(pos, def, args, data, infl_classes, appendix)
-	end
+pos_functions["adjectives"] = function(def, args, data, infl_classes, appendix)
+	return adjectives("adjectives", def, args, data, infl_classes, appendix)
 end
 
-pos_functions["adjectives"] = function(class, def, args, data, infl_classes, appendix)
-	return adjectives("adjectives", class, def, args, data, infl_classes, appendix)
+pos_functions["comparative adjectives"] = function(def, args, data, infl_classes, appendix)
+	return adjectives_comp("adjectives", def, args, data, infl_classes, appendix)
 end
 
-pos_functions["participles"] = function(class, def, args, data, infl_classes, appendix)
-	return adjectives("participles", class, def, args, data, infl_classes, appendix)
+pos_functions["superlative adjectives"] = function(def, args, data, infl_classes, appendix)
+	return adjectives_sup("adjectives", def, args, data, infl_classes, appendix)
 end
 
-pos_functions["suffixes-adjective"] = function(class, def, args, data, infl_classes, appendix)
-	return adjectives("suffixes", class, def, args, data, infl_classes, appendix)
+pos_functions["participles"] = function(def, args, data, infl_classes, appendix)
+	return adjectives("participles", def, args, data, infl_classes, appendix)
 end
 
-pos_functions["numerals-adjective"] = function(class, def, args, data, infl_classes, appendix)
-	return adjectives("numerals", class, def, args, data, infl_classes, appendix)
+pos_functions["determiners"] = function(def, args, data, infl_classes, appendix)
+	return adjectives("determiners", def, args, data, infl_classes, appendix)
 end
 
-pos_functions["adverbs"] = function(class, def, args, data, infl_classes, appendix)
+pos_functions["pronouns"] = function(def, args, data, infl_classes, appendix)
+	return adjectives("pronouns", def, args, data, infl_classes, appendix)
+end
+
+pos_functions["suffixes-adjective"] = function(def, args, data, infl_classes, appendix)
+	return adjectives("suffixes", def, args, data, infl_classes, appendix)
+end
+
+pos_functions["numerals-adjective"] = function(def, args, data, infl_classes, appendix)
+	return adjectives("numerals", def, args, data, infl_classes, appendix)
+end
+
+pos_functions["adverbs"] = function(def, args, data, infl_classes, appendix)
 	local params = {
 		[1] = {alias_of = 'head'},
 		[2] = {alias_of = 'comp'},
@@ -842,7 +909,7 @@ local prepositional_cases = {
 	genitive = true, accusative = true, ablative = true,
 }
 
-pos_functions["prepositions"] = function(class, def, args, data, infl_classes, appendix, postscript)
+pos_functions["prepositions"] = function(def, args, data, infl_classes, appendix, postscript)
 	local params = {
 		[1] = {list = true, required = true}, -- headword or cases
 		["head"] = {list = true},
@@ -880,6 +947,57 @@ pos_functions["prepositions"] = function(class, def, args, data, infl_classes, a
 	data.heads = args.head
 	data.id = args.id
 end
+
+pos_functions["gerunds"] = function(def, args, data, infl_classes, appendix, postscript)
+	local params = {
+		[1] = {required = true, default = "labōrandum"}, -- headword
+		[2] = {}, -- gerundive
+	}
+
+	local args = require("Module:parameters").process(args, params)
+
+	data.heads = {args[1]}
+	table.insert(data.inflections, {label = "[[Appendix:Glossary#accusative|accusative]]"})
+	local stem = rmatch(args[1], "^(.*)um$")
+	if not stem then
+		error("Unrecognized gerund ending: " .. stem)
+	end
+	if args[2] == "-" then
+		table.insert(data.inflections, {label = "no [[Appendix:Glossary#gerundive|gerundive]]"})
+	else
+		table.insert(data.inflections, {[1] = args[2] or stem .. "us", label = "[[Appendix:Glossary#gerundive|gerundive]]"})
+	end
+end
+
+local function non_lemma_forms(def, args, data, infl_classes, appendix, postscript)
+	local params = {
+		[1] = {required = true, default = def}, -- headword or cases
+		["head"] = {list = true, require_index = true},
+		["g"] = {list = true},
+		["id"] = {},
+	}
+
+	local args = require("Module:parameters").process(args, params)
+
+	local heads = {args[1]}
+	for _, head in ipairs(args.head) do
+		table.insert(heads, head)
+	end
+	data.heads = heads
+	data.genders = args.g
+	data.id = args.id
+end
+
+pos_functions["noun forms"] = non_lemma_forms
+pos_functions["proper noun forms"] = non_lemma_forms
+pos_functions["pronoun forms"] = non_lemma_forms
+pos_functions["verb forms"] = non_lemma_forms
+pos_functions["gerund forms"] = non_lemma_forms
+pos_functions["adjective forms"] = non_lemma_forms
+pos_functions["participle forms"] = non_lemma_forms
+pos_functions["determiner forms"] = non_lemma_forms
+pos_functions["numeral forms"] = non_lemma_forms
+pos_functions["suffix forms"] = non_lemma_forms
 
 return export
 
