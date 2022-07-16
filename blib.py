@@ -133,6 +133,10 @@ def remove_right_side_links(text):
   text = re.sub(r"\[\[|\]\]", "", text)
   return text
 
+def remove_redundant_links(text):
+  # remove redundant link surrounding entire text
+  return re.sub(r"^\[\[([^\[\]|]*)\]\]$", r"\1", text)
+
 def msg(text):
   #pywikibot.output(text.encode('utf-8'), toStdout = True)
   print text.encode('utf-8')
@@ -215,6 +219,23 @@ def do_assert(cond, msg=None):
     assert cond
   return True
 
+# Return the name of the first parameter in template T.
+def find_first_param(t):
+  if len(t.params) > 0:
+    return pname(t.params[0])
+  else:
+    return None
+
+# Return the name of the parameter following PARAM in template T.
+def find_following_param(t, param):
+  for i, par in enumerate(t.params):
+    if pname(par) == param:
+      if i < len(t.params) - 1:
+        return pname(t.params[i + 1])
+      else:
+        return None
+  return None
+
 # Retrieve a chain of parameters from template T, where the first parameter
 # is named FIRST, and the remainder are named PREF2, PREF3, etc. FIRST can be
 # a list of parameters to try in turn. If FIRSTDEFAULT is given, use if FIRST
@@ -258,13 +279,20 @@ def append_param_to_chain(t, val, firstparam, parampref=None, before=None):
   if parampref is None:
     parampref = "" if is_number else firstparam
   paramno = int(firstparam) - 1 if is_number else 0
+  if is_number:
+    insert_before_param = find_first_param(t)
+  else:
+    insert_before_param = None
   changed = False
   while True:
     paramno += 1
     next_param = firstparam if paramno == 1 and not is_number else "%s%s" % (
         parampref, paramno)
-    if not getparam(t, next_param):
-      t.add(next_param, val, before=before)
+    # When adding a param, we want to add directly after the last-existing param.
+    if getparam(t, next_param):
+      insert_before_param = find_following_param(t, next_param)
+    else:
+      t.add(next_param, val, before=before or insert_before_param)
       return next_param
 
 def remove_param_chain(t, firstparam, parampref=None):
@@ -288,19 +316,25 @@ def set_param_chain(t, values, firstparam, parampref=None, before=None):
   if parampref is None:
     parampref = "" if is_number else firstparam
   paramno = int(firstparam) - 1 if is_number else 0
+  if is_number:
+    insert_before_param = find_first_param(t)
+  else:
+    insert_before_param = None
   for val in values:
     paramno += 1
     next_param = firstparam if paramno == 1 and not is_number else "%s%s" % (
         parampref, paramno)
-    t.add(next_param, val, before=before)
-  while True:
-    paramno += 1
-    next_param = firstparam if paramno == 1 and not is_number else "%s%s" % (
-        parampref, paramno)
-    if getparam(t, next_param):
-      rmparam(t, next_param)
+    # When adding a param, if the param already exists, we want to just replace the param.
+    # Otherwise, we want to add directly after the last-added param.
+    if t.has(next_param):
+      t.add(next_param, val, before=before)
     else:
-      break
+      t.add(next_param, val, before=before or insert_before_param)
+    insert_before_param = find_following_param(t, next_param)
+  for i in xrange(paramno + 1, 30):
+    next_param = firstparam if i == 1 and not is_number else "%s%s" % (
+        parampref, i)
+    rmparam(t, next_param)
 
 def sort_params(t):
   numbered_params = []
@@ -310,7 +344,7 @@ def sort_params(t):
       numbered_params.append((param.name, param.value))
     else:
       named_params.append((param.name, param.value))
-  numbered_params.sort(key=lambda nameval:int(unicode(nameval[0])))
+  numbered_params.sort(key=lambda nameval: int(unicode(nameval[0])))
   del t.params[:]
   for name, value in numbered_params:
     t.add(name, value)
@@ -502,7 +536,7 @@ def page_should_be_ignored(pagetitle, allow_user_pages=False):
   for ignore_re in non_talk_ignore_regexps:
     if re.search(ignore_re, pagetitle):
       return True
-  if not allow_user_pages and pagetitle.startswith('User:'):
+  if not allow_user_pages and pagetitle.startswith("User:"):
     return True
   return False
 
@@ -969,6 +1003,7 @@ def create_argparser(desc, include_pagefile=False, include_stdin=False,
     parser.add_argument("--filter-pages-not", help="Regex to use to filter page names; only includes pages not matching this regex.")
     parser.add_argument("--find-regex", help="Output as by find_regex.py.", action="store_true")
     parser.add_argument("--no-output", help="In conjunction with --find-regex, don't output processed text.", action = "store_true")
+    parser.add_argument("--skip-ignorable-pages", help="Skip 'ignorable' pages (talk pages, user pages, etc.).", action="store_true")
   if include_stdin:
     parser.add_argument("--stdin", help="Read dump from stdin.", action="store_true")
     parser.add_argument("--only-lang", help="Only process the section of a page for this language (a canonical language name).")
@@ -1055,6 +1090,8 @@ def do_pagefile_cats_refs(args, start, end, process, default_cats=[],
   args_filter_pages = args.filter_pages and args.filter_pages.decode("utf-8")
   args_filter_pages_not = args.filter_pages_not and args.filter_pages_not.decode("utf-8")
 
+  seen = set() if args.track_seen else None
+
   def do_handle_find_regex_retval(retval, text, prev_comment, pagemsg):
     new, this_comment, has_changed = handle_process_page_retval(retval, text, pagemsg, args.verbose, args.diff)
     new = new or text
@@ -1099,6 +1136,8 @@ def do_pagefile_cats_refs(args, start, end, process, default_cats=[],
         return True
       if args_filter_pages_not and re.search(args_filter_pages_not, pagetitle):
         return True
+    if args.skip_ignorable_pages and page_should_be_ignored(pagetitle):
+      return True
     return False
 
   def find_lang_section_for_only_lang(text, lang, pagemsg):
@@ -1150,6 +1189,10 @@ def do_pagefile_cats_refs(args, start, end, process, default_cats=[],
   # output or from a dump file).
   def process_pywikibot_page(index, page):
     pagetitle = unicode(page.title())
+    if seen is not None:
+      if pagetitle in seen:
+        return
+      seen.add(pagetitle)
     if page_should_be_filtered_out(pagetitle):
       return
     def pagemsg(txt):
@@ -1238,10 +1281,6 @@ def do_pagefile_cats_refs(args, start, end, process, default_cats=[],
         process_pywikibot_page(index, pywikibot.Page(site, pagetitle))
     if args.cats:
       args_prune_cats = args.prune_cats and args.prune_cats.decode("utf-8") or None
-      if args.track_seen:
-        seen = set()
-      else:
-        seen = None
       for cat in split_utf8_arg(args.cats):
         if args.do_cat_and_subcats:
           for index, subcat in cat_subcats(cat, start, end, seen=seen, prune_cats_regex=args_prune_cats,
