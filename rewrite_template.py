@@ -4,10 +4,10 @@
 import pywikibot, re, sys, codecs, argparse
 
 import blib
-from blib import getparam, rmparam, msg, site, tname
+from blib import getparam, rmparam, msg, site, tname, pname
 
-def process_text_on_page(index, pagetitle, text, templates, new_names, params_to_add, params_to_remove,
-    params_to_rename, filters, comment):
+def process_text_on_page(index, pagetitle, text, templates, new_names, params_to_add, params_to_insert,
+    params_to_remove, params_to_rename, filters, comment):
   if not any(template in text for template in templates):
     return
   if not re.search(r"\{\{\s*(%s)" % "|".join(templates), text):
@@ -60,6 +60,55 @@ def process_text_on_page(index, pagetitle, text, templates, new_names, params_to
         if getparam(t, param) != value:
           t.add(param, value)
           notes.append("add %s=%s to {{%s}}" % (param, value, tn))
+      if params_to_insert:
+        new_params = []
+        params_to_insert = sorted(params_to_insert, key=lambda x: x[0])
+        last_param_inserted = 0
+        param_offset = 0
+        max_existing_numeric_param = 0
+        for param in t.params:
+          pn = pname(param)
+          if re.search("^[0-9]+$", pn):
+            pnint = int(pn)
+            max_existing_numeric_param = max(max_existing_numeric_param, pnint)
+        def insert_remaining_numeric_params():
+          local_last_param_inserted = last_param_inserted
+          local_param_offset = param_offset
+          # insert any new numeric params greater than those inserted so far
+          for param_to_insert, values_to_insert in params_to_insert:
+            if param_to_insert > local_last_param_inserted:
+              # add blank params to avoid leading a gap between last param so far and new params
+              for i in xrange(max(max_existing_numeric_param, local_last_param_inserted) + 1, param_to_insert):
+                new_params.append((unicode(i + local_param_offset), ""))
+              for i, value_to_insert in enumerate(values_to_insert):
+                new_params.append((unicode(param_to_insert + local_param_offset + i), value_to_insert))
+              notes.append("insert %s=%s into {{%s}}" % (param_to_insert, "|".join(values_to_insert), tn))
+              local_last_param_inserted = param_to_insert
+              # subtract one because we're not inserting a param after the numeric params just inserted
+              local_param_offset += len(values_to_insert) - 1
+        if max_existing_numeric_param == 0:
+          insert_remaining_numeric_params()
+        for param in t.params:
+          pn = pname(param)
+          pv = unicode(param.value)
+          if re.search("^[0-9]+$", pn):
+            pnint = int(pn)
+            for param_to_insert, values_to_insert in params_to_insert:
+              if param_to_insert > last_param_inserted and param_to_insert <= pnint:
+                for i, value_to_insert in enumerate(values_to_insert):
+                  new_params.append((unicode(param_to_insert + param_offset + i), value_to_insert))
+                notes.append("insert %s=%s into {{%s}}" % (param_to_insert, "|".join(values_to_insert), tn))
+                last_param_inserted = param_to_insert
+                param_offset += len(values_to_insert)
+            new_params.append((unicode(pnint + param_offset), pv))
+            if pnint == max_existing_numeric_param:
+              insert_remaining_numeric_params()
+          else:
+            new_params.append((pn, pv))
+        del t.params[:]
+        for pn, pv in new_params:
+          t.add(pn, pv, preserve_spacing=False)
+
       if new_names:
         new_name = template_to_new_name_dict[tn]
         blib.set_template_name(t, new_name)
@@ -82,7 +131,9 @@ pa.add_argument("--to", help="New name of param, can be specified multiple times
     action="append")
 pa.add_argument("--add", help="PARAM=VALUE to add, can be specified multiple times",
     action="append")
-pa.add_argument("--filter", help="Only take action on templates matching the filter, which should be either PARAM=VALUE meaning the parameter must have the given value, or PARAM~REGEXP meaning the parameter must match the given regular expression (unanchored). Can be specified multiple times and all must match.",
+pa.add_argument("--insert", help="Insert numeric PARAM=VALUE|VALUE|..., moving greater numeric params to the right; can be specified multiple times, works from right to left",
+    action="append")
+pa.add_argument("--filter", help="Only take action on templates matching the filter, which should be either PARAM=VALUE meaning the parameter must have the given value, or PARAM~REGEXP meaning the parameter's value must match the given regular expression (unanchored). Can be specified multiple times and all must match.",
     action="append")
 pa.add_argument("-c", "--comment", help="Comment to use in place of auto-generated ones.")
 args = pa.parse_args()
@@ -102,6 +153,16 @@ for spec in addspecs:
   if len(specparts) != 2:
     raise ValueError("Value %s to --add must have the form PARAM=VALUE" % spec)
   params_to_add.append(specparts)
+insertspecs = [x.decode("utf-8") for x in args.insert] if args.insert else []
+params_to_insert = []
+for spec in insertspecs:
+  specparts = spec.split("=")
+  if len(specparts) != 2:
+    raise ValueError("Value %s to --insert must have the form PARAM=VALUE" % spec)
+  param, value = specparts
+  if not re.search("^[0-9]+$", param):
+    raise ValueError("Parameter %s to --insert must be numeric" % param)
+  params_to_insert.append((int(param), value.split("|")))
 params_to_remove = [x.decode("utf-8") for x in args.remove] if args.remove else []
 filters = [x.decode("utf-8") for x in args.filter] if args.filter else []
 comment = args.comment and args.comment.decode("utf-8")
@@ -112,8 +173,8 @@ if len(from_) != len(to):
 params_to_rename = zip(from_, to)
 
 def do_process_text_on_page(index, pagetitle, text):
-  return process_text_on_page(index, pagetitle, text, templates, new_names, params_to_add, params_to_remove,
-    params_to_rename, filters, comment)
+  return process_text_on_page(index, pagetitle, text, templates, new_names, params_to_add, params_to_insert,
+    params_to_remove, params_to_rename, filters, comment)
 
 blib.do_pagefile_cats_refs(args, start, end, do_process_text_on_page, edit=True, stdin=True,
   default_refs=["Template:%s" % template for template in templates])
