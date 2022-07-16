@@ -17,7 +17,7 @@ the old [[Module:la-decl-multi]] by KC Kenny Lau.
 -- (DONE) Handle loc in adjectives
 -- Error on bad subtypes
 -- Make sure Google Books link still works.
--- (DONE) Make sure .sufn triggers insertion of 'with m -> n in compounds' in title.
+-- (DONE) Make sure .sufn triggers insertion of 'with m optionally -> n in compounds' in title.
 -- (DONE) Make sure title returned to la-adj lowercases the first letter even with a custom title.
 
 --[=[
@@ -54,7 +54,7 @@ TERMINOLOGY:
 local lang = require("Module:languages").getByCode("la")
 local m_links = require("Module:links")
 local m_utilities = require("Module:utilities")
-local ut = require("Module:utils")
+local m_table = require("Module:table")
 local m_string_utilities = require("Module:string utilities")
 local m_para = require("Module:parameters")
 
@@ -109,6 +109,8 @@ local irreg_noun_to_decl = {
 	["domus"] = "4,2",
 	["Iēsus"] = "4",
 	["Jēsus"] = "4",
+	["Iēsūs"] = "4",
+	["Jēsūs"] = "4",
 	["iūgerum"] = "2,3",
 	["jūgerum"] = "2,3",
 	["sūs"] = "3",
@@ -347,7 +349,7 @@ local function process_noun_forms_and_overrides(data, args)
 					local title = lang:makeEntryName(form)
 					local t = mw.title.new(title)
 					if t and not t.exists then
-						table.insert(data.categories, "Latin " .. data.pos .. " with red links in their declension tables")
+						table.insert(data.categories, "Latin " .. data.pos .. " with red links in their inflection tables")
 						redlink = true
 					end
 				end
@@ -363,6 +365,10 @@ local function process_adj_forms_and_overrides(data, args)
 	for slot in iter_adj_slots() do
 		-- If noneut=1 passed, clear out all neuter forms.
 		if data.noneut and slot:find("_n") then
+			data.forms[slot] = nil
+		end
+		-- If nomf=1 passed, clear out all masculine and feminine forms.
+		if data.nomf and (slot:find("_m") or slot:find("_f")) then
 			data.forms[slot] = nil
 		end
 		local val = nil
@@ -449,7 +455,7 @@ local function process_adj_forms_and_overrides(data, args)
 					local title = lang:makeEntryName(form)
 					local t = mw.title.new(title)
 					if t and not t.exists then
-						table.insert(data.categories, "Latin " .. data.pos .. " with red links in their declension tables")
+						table.insert(data.categories, "Latin " .. data.pos .. " with red links in their inflection tables")
 						redlink = true
 					end
 				end
@@ -464,7 +470,7 @@ local function process_adj_forms_and_overrides(data, args)
 		local other_is_masc = true
 		for _, case in ipairs(cases) do
 			for _, num in ipairs(nums) do
-				if not ut.equals(data.forms[case .. "_" .. num .. "_" .. gender],
+				if not m_table.deepEquals(data.forms[case .. "_" .. num .. "_" .. gender],
 						data.forms[case .. "_" .. num .. "_m"]) then
 					other_is_masc = false
 					break
@@ -515,7 +521,7 @@ local function show_forms(data, is_adj)
 							table.insert(notes, '<sup style="color: red">' .. this_noteindex .. '</sup>' .. this_note)
 							seen_notes[this_note] = this_noteindex
 						end
-						ut.insert_if_not(link_indices, this_noteindex)
+						m_table.insertIfNot(link_indices, this_noteindex)
 					end
 					val[i] = link .. '<sup style="color: red">' .. table.concat(link_indices, ",") .. '</sup>'
 				else
@@ -526,7 +532,10 @@ local function show_forms(data, is_adj)
 			data.forms[slot] = table.concat(val, is_adj and ", " or "<br />")
 		end
 	end
-	data.footnote = table.concat(notes, "<br />") .. data.footnote
+	for _, footnote in ipairs(data.footnotes) do
+		table.insert(notes, footnote)
+	end
+	data.footnotes = table.concat(notes, "<br />")
 end
 
 -- Generate the display form for a set of slots with identical content. We
@@ -539,11 +548,11 @@ local function finish_show_form(data, slots, is_adj)
 	local forms = data.forms[slot1]
 	local notetext = data.notetext[slot1]
 	for _, slot in ipairs(slots) do
-		if not ut.equals(data.forms[slot], forms) then
+		if not m_table.deepEquals(data.forms[slot], forms) then
 			error("data.forms[" .. slot1 .. "] = " .. (concat_forms_in_slot(forms) or "nil") ..
 				", but data.forms[" .. slot .. "] = " .. (concat_forms_in_slot(data.forms[slot]) or "nil"))
 		end
-		assert(ut.equals(data.notetext[slot], notetext))
+		assert(m_table.deepEquals(data.notetext[slot], notetext))
 	end
 	if not forms then
 		return "—"
@@ -600,7 +609,7 @@ local function partial_show_forms(data, is_adj)
 							table.insert(notes, '<sup style="color: red">' .. this_noteindex .. '</sup>' .. this_note)
 							seen_notes[this_note] = this_noteindex
 						end
-						ut.insert_if_not(link_indices, this_noteindex)
+						m_table.insertIfNot(link_indices, this_noteindex)
 					end
 					table.insert(notetext, '<sup style="color: red">' .. table.concat(link_indices, ",") .. '</sup>')
 				else
@@ -610,7 +619,10 @@ local function partial_show_forms(data, is_adj)
 			data.notetext[slot] = notetext
 		end
 	end
-	data.footnote = table.concat(notes, "<br />") .. data.footnote
+	for _, footnote in ipairs(data.footnotes) do
+		table.insert(notes, footnote)
+	end
+	data.footnotes = table.concat(notes, "<br />")
 end
 
 local function make_noun_table(data)
@@ -687,7 +699,7 @@ local function get_noun_subtype_by_ending(lemma, stem2, decltype, specified_subt
 		local ending = ending_and_subtypes[1]
 		local subtypes = ending_and_subtypes[2]
 		not_this_subtype = false
-		if specified_subtypes.pl and not ut.contains(subtypes, "pl") then
+		if specified_subtypes.pl and not m_table.contains(subtypes, "pl") then
 			-- We now require that plurale tantum terms specify a plural-form lemma.
 			-- The autodetected subtypes will include 'pl' for such lemmas; if not,
 			-- we fail this entry.
@@ -990,7 +1002,7 @@ local function get_adj_type_and_subtype_by_ending(lemma, stem2, decltype,
 		local subtypes = ending_and_subtypes[3]
 		local process_retval = ending_and_subtypes[4]
 		not_this_subtype = false
-		if specified_subtypes.pl and not ut.contains(subtypes, "pl") then
+		if specified_subtypes.pl and not m_table.contains(subtypes, "pl") then
 			-- We now require that plurale tantum terms specify a plural-form lemma.
 			-- The autodetected subtypes will include 'pl' for such lemmas; if not,
 			-- we fail this entry.
@@ -1737,7 +1749,7 @@ local function append_form(forms, notes, new_forms, new_notes, prefix)
 				if not notes[i] then
 					notes[i] = new_notes[1]
 				else
-					local combined_notes = ut.clone(notes[i])
+					local combined_notes = m_table.deepcopy(notes[i])
 					for _, note in ipairs(new_notes[1]) do
 						table.insert(combined_notes, note)
 					end
@@ -1771,7 +1783,7 @@ local function append_form(forms, notes, new_forms, new_notes, prefix)
 						-- i.e. (I - 1) * NJ + J.
 						ret_notes[(i - 1) * #new_forms + j] = new_notes[j]
 					else
-						local combined_notes = ut.clone(notes[i])
+						local combined_notes = m_table.deepcopy(notes[i])
 						for _, note in ipairs(new_notes[j]) do
 							table.insert(combined_notes, note)
 						end
@@ -1799,15 +1811,32 @@ local function apply_ligatures(forms, is_adj)
 	end
 end
 
--- Destructively modify any forms in FORMS (a map from a slot to a form or a
--- list of forms) by converting final m to n.
+-- Modify any forms in FORMS (a map from a slot to a form or a list of forms) by
+-- converting final m to optional n or m.
 local function apply_sufn(forms, is_adj)
 	for slot in iter_slots(is_adj) do
 		if type(forms[slot]) == "string" then
-			forms[slot] = forms[slot]:gsub("m$", "n")
+			if forms[slot]:find("m$") then
+				forms[slot] = {forms[slot]:gsub("m$", "n"), forms[slot]}
+			end
 		elseif type(forms[slot]) == "table" then
+			-- See if any final m's.
+			local final_m
 			for i = 1, #forms[slot] do
-				forms[slot][i] = forms[slot][i]:gsub("m$", "n")
+				if forms[slot][i]:find("m$") then
+					final_m = true
+					break
+				end
+			end
+			if final_m then
+				local newval = {}
+				for i = 1, #forms[slot] do
+					if forms[slot][i]:find("m$") then
+						local val = forms[slot][i]:gsub("m$", "n") -- discard second retval
+						table.insert(newval, val)
+					end
+					table.insert(newval, forms[slot][i])
+				end
 			end
 		end
 	end
@@ -1823,7 +1852,7 @@ local function propagate_number_restrictions(forms, num, is_adj)
 		for slot in iter_slots(is_adj) do
 			if rfind(slot, num) then
 				local other_num_slot = num == "sg" and slot:gsub("sg", "pl") or slot:gsub("pl", "sg")
-				forms[other_num_slot] = type(forms[slot]) == "table" and ut.clone(forms[slot]) or forms[slot]
+				forms[other_num_slot] = type(forms[slot]) == "table" and m_table.deepcopy(forms[slot]) or forms[slot]
 			end
 		end
 	end
@@ -1870,11 +1899,14 @@ local function decline_segment_run(parsed_run, pos, is_adj)
 		subtitleses = {},
 		orig_titles = {},
 		categories = {},
+		footnotes = {},
 		-- FIXME, do we really need to special-case this? Maybe the nonexistent vocative
 		-- form will automatically propagate up through the other forms.
 		voc = true,
 		-- May be set true if declining a 1-1 adjective
+		loc = false,
 		noneut = false,
+		nomf = false,
 	}
 
 	for slot in iter_slots(is_adj) do
@@ -1900,11 +1932,12 @@ local function decline_segment_run(parsed_run, pos, is_adj)
 
 				data = {
 					subtitles = {},
-					footnote = "",
 					num = seg.num or "",
 					gender = seg.gender,
 					voc = true,
+					loc = seg.loc,
 					noneut = false,
+					nomf = false,
 					pos = is_adj and pos or "adjectives",
 					forms = {},
 					types = seg.types,
@@ -1915,14 +1948,20 @@ local function decline_segment_run(parsed_run, pos, is_adj)
 				if not data.voc then
 					declensions.voc = false
 				end
+				if data.loc then
+					declensions.loc = true
+				end
 				if data.noneut then
 					declensions.noneut = true
 				end
+				if data.nomf then
+					declensions.nomf = true
+				end
 				-- Construct title out of "original title" and subtitles.
 				if data.types.sufn then
-					table.insert(data.subtitles, {"with", " ''m'' → ''n'' in compounds"})
+					table.insert(data.subtitles, {"with", " ''m'' optionally → ''n'' in compounds"})
 				elseif data.types.not_sufn then
-					table.insert(data.subtitles, {"without", " ''m'' → ''n'' in compounds"})
+					table.insert(data.subtitles, {"without", " ''m'' optionally → ''n'' in compounds"})
 				end
 				-- Record original title and subtitles for use in alternant title-constructing code.
 				table.insert(declensions.orig_titles, data.title)
@@ -1948,7 +1987,6 @@ local function decline_segment_run(parsed_run, pos, is_adj)
 
 				data = {
 					subtitles = {},
-					footnote = "",
 					num = seg.num or "",
 					loc = seg.loc,
 					pos = pos,
@@ -1983,9 +2021,9 @@ local function decline_segment_run(parsed_run, pos, is_adj)
 					data.title = data.title .. " noun"
 				end
 				if data.types.sufn then
-					table.insert(data.subtitles, {"with", " ''m'' → ''n'' in compounds"})
+					table.insert(data.subtitles, {"with", " ''m'' optionally → ''n'' in compounds"})
 				elseif data.types.not_sufn then
-					table.insert(data.subtitles, {"without", " ''m'' → ''n'' in compounds"})
+					table.insert(data.subtitles, {"without", " ''m'' optionally → ''n'' in compounds"})
 				end
 				-- Record original title and subtitles for use in alternant title-constructing code.
 				table.insert(declensions.orig_titles, data.title)
@@ -2087,8 +2125,12 @@ local function decline_segment_run(parsed_run, pos, is_adj)
 
 			if not seg.types.nocat and (is_adj or not seg.is_adj) then
 				for _, cat in ipairs(data.categories) do
-					ut.insert_if_not(declensions.categories, cat)
+					m_table.insertIfNot(declensions.categories, cat)
 				end
+			end
+
+			if data.footnote then
+				table.insert(declensions.footnotes, data.footnote)
 			end
 
 			if seg.prefix ~= "" and seg.prefix ~= "-" and seg.prefix ~= " " then
@@ -2101,6 +2143,7 @@ local function decline_segment_run(parsed_run, pos, is_adj)
 			local seg_subtitleses = {}
 			local seg_stems_seen = {}
 			local seg_categories = {}
+			local seg_footnotes = {}
 			-- If all alternants have exactly one non-constant segment and all are
 			-- of the same declension, we use special code that displays the
 			-- differences in the subtitles. Otherwise we use more general code
@@ -2141,7 +2184,7 @@ local function decline_segment_run(parsed_run, pos, is_adj)
 					for _, segment in ipairs(this_parsed_run.segments) do
 						if segment.decl then
 							table.insert(subtypeses, segment.types)
-							ut.insert_if_not(seg_stems_seen, segment.stem2)
+							m_table.insertIfNot(seg_stems_seen, segment.stem2)
 						end
 					end
 				end
@@ -2168,6 +2211,9 @@ local function decline_segment_run(parsed_run, pos, is_adj)
 				end
 				if this_declensions.noneut then
 					declensions.noneut = true
+				end
+				if this_declensions.nomf then
+					declensions.nomf = true
 				end
 				-- If there's a number restriction on the segment run, blank
 				-- out the forms outside the restriction. This allows us to
@@ -2229,7 +2275,7 @@ local function decline_segment_run(parsed_run, pos, is_adj)
 								else
 									local combined = mw.clone(curnotes[combined_index])
 									for _, note in ipairs(newnotes) do
-										ut.insert_if_not(combined, newnotes)
+										m_table.insertIfNot(combined, newnotes)
 									end
 									curnotes[combined_index] = combined
 								end
@@ -2238,9 +2284,12 @@ local function decline_segment_run(parsed_run, pos, is_adj)
 					end
 				end
 				for _, cat in ipairs(this_declensions.categories) do
-					ut.insert_if_not(seg_categories, cat)
+					m_table.insertIfNot(seg_categories, cat)
 				end
-				ut.insert_if_not(seg_titles, this_declensions.title)
+				for _, footnote in ipairs(this_declensions.footnotes) do
+					m_table.insertIfNot(seg_footnotes, footnote)
+				end
+				m_table.insertIfNot(seg_titles, this_declensions.title)
 				for _, subtitles in ipairs(this_declensions.subtitleses) do
 					table.insert(seg_subtitleses, subtitles)
 				end
@@ -2264,8 +2313,11 @@ local function decline_segment_run(parsed_run, pos, is_adj)
 
 			if is_adj or not seg.is_adj then
 				for _, cat in ipairs(seg_categories) do
-					ut.insert_if_not(declensions.categories, cat)
+					m_table.insertIfNot(declensions.categories, cat)
 				end
+			end
+			for _, footnote in ipairs(seg_footnotes) do
+				m_table.insertIfNot(declensions.footnotes, footnote)
 			end
 
 			local title_to_insert
@@ -2282,7 +2334,7 @@ local function decline_segment_run(parsed_run, pos, is_adj)
 				for i = 2, #seg_subtitleses do
 					local this_subtitles = seg_subtitleses[i]
 					for j = 1, num_common_subtitles do
-						if not ut.equals(first_subtitles[j], this_subtitles[j]) then
+						if not m_table.deepEquals(first_subtitles[j], this_subtitles[j]) then
 							num_common_subtitles = j - 1
 							break
 						end
@@ -2439,10 +2491,12 @@ local function construct_title(args_title, declensions_title, from_headword, par
 		if parsed_run.loc then
 			table.insert(post_text_parts, ", with locative")
 		end
-		if parsed_run.num == "sg" then
-			table.insert(post_text_parts, ", singular only")
-		elseif parsed_run.num == "pl" then
-			table.insert(post_text_parts, ", plural only")
+		if not apparent_decl == "indecl" then
+			if parsed_run.num == "sg" then
+				table.insert(post_text_parts, ", singular only")
+			elseif parsed_run.num == "pl" then
+				table.insert(post_text_parts, ", plural only")
+			end
 		end
 		
 		local post_text = table.concat(post_text_parts)	
@@ -2502,7 +2556,7 @@ function export.do_generate_noun_forms(parent_args, pos, from_headword, def, sup
 
 	local all_data = {
 		title = declensions.title,
-		footnote = args.footnote or "",
+		footnotes = {},
 		num = parsed_run.num or "",
 		gender = parsed_run.gender,
 		propses = parsed_run.propses,
@@ -2522,6 +2576,13 @@ function export.do_generate_noun_forms(parent_args, pos, from_headword, def, sup
 		num_type = args["type"],
 	}
 
+	if args.footnote then
+		m_table.insertIfNot(all_data.footnotes, args.footnote)
+	end
+	for _, footnote in ipairs(declensions.footnotes) do
+		m_table.insertIfNot(all_data.footnotes, footnote)
+	end
+		
 	for slot in iter_noun_slots() do
 		if declensions.notes[slot] then
 			for index, notes in pairs(declensions.notes[slot]) do
@@ -2542,6 +2603,7 @@ function export.do_generate_adj_forms(parent_args, pos, from_headword, def, supp
 		title = {},
 		num = {},
 		noneut = {type = "boolean"},
+		nomf = {type = "boolean"},
 	}
 	for slot in iter_adj_slots() do
 		params[slot] = {}
@@ -2611,7 +2673,7 @@ function export.do_generate_adj_forms(parent_args, pos, from_headword, def, supp
 
 	local all_data = {
 		title = declensions.title,
-		footnote = args.footnote or "",
+		footnotes = {},
 		num = parsed_run.num or "",
 		propses = parsed_run.propses,
 		forms = declensions.forms,
@@ -2620,7 +2682,9 @@ function export.do_generate_adj_forms(parent_args, pos, from_headword, def, supp
 		user_specified = {},
 		accel = {},
 		voc = declensions.voc,
+		loc = declensions.loc,
 		noneut = args.noneut or declensions.noneut,
+		nomf = args.nomf or declensions.nomf,
 		overriding_lemma = args.lemma,
 		comp = args.comp,
 		sup = args.sup,
@@ -2631,6 +2695,13 @@ function export.do_generate_adj_forms(parent_args, pos, from_headword, def, supp
 		indecl = args.indecl,
 		num_type = args["type"],
 	}
+
+	if args.footnote then
+		m_table.insertIfNot(all_data.footnotes, args.footnote)
+	end
+	for _, footnote in ipairs(declensions.footnotes) do
+		m_table.insertIfNot(all_data.footnotes, footnote)
+	end
 
 	for slot in iter_adj_slots() do
 		if declensions.notes[slot] then
@@ -2660,7 +2731,7 @@ function export.show_adj(frame)
 
 	partial_show_forms(data, true)
 
-	return m_adj_table.make_table(data, data.noneut)
+	return m_adj_table.make_table(data, data.noneut, data.nomf)
 end
 
 function export.generate_noun_forms(frame)
@@ -2680,6 +2751,3 @@ function export.generate_adj_forms(frame)
 end
 
 return export
-
--- For Vim, so we get 4-space tabs
--- vim: set ts=4 sw=4 noet:
