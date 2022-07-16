@@ -86,7 +86,7 @@ local AV = com.AV -- accented vowel regex class
 local C = com.C -- consonant regex class
 
 
-local fut_sub_note = "[mostly obsolete form, now mainly used in legal jargon]"
+local fut_sub_note = "[mostly obsolete, now mainly used in legal language]"
 local pres_sub_voseo_note = "[Argentine and Uruguayan " .. link_term("voseo", "term") .. " prefers the " ..
 	link_term("tú", "term") .. " form for the present subjunctive]"
 
@@ -944,9 +944,9 @@ local irreg_conjugations = {
 		forms = {
 			-- use 'vengu' because we're in a front environment; if we use 'veng', we'll get '#venjo'
 			pres1_and_sub = "vengu", vowel_alt = "ie-i", pret = "vin", pret_conj = "irreg",
-			-- uniquely for this verb, pres sub 1p/2p do not raise the vowel even though we are an
+			-- uniquely for this verb, pres sub 2sv/1p/2p do not raise the vowel even though we are an
 			-- e-ie-i verb (contrast sentir -> sintamos/sintáis)
-			pres_sub_1p = "vengamos", pres_sub_2p = "vengáis",
+			pres_sub_2sv = "vengás", pres_sub_1p = "vengamos", pres_sub_2p = "vengáis",
 			fut = "vendr", imp_2s = "vén" -- need the accent for the compounds; it will be removed in the simplex
 		}
 	},
@@ -1922,11 +1922,10 @@ end
 local function detect_all_indicator_specs(alternant_multiword_spec, from_headword)
 	-- Propagate some settings up or down.
 	iut.map_word_specs(alternant_multiword_spec, function(base)
-		if base.refl then
-			alternant_multiword_spec.refl = true
-		end
-		if base.clitic then
-			alternant_multiword_spec.clitic = true
+		for _, prop in ipairs { "refl", "clitic", "only3s", "only3sp" } do
+			if base[prop] then
+				alternant_multiword_spec[prop] = true
+			end
 		end
 		base.from_headword = from_headword
 		base.args = alternant_multiword_spec.args
@@ -1934,19 +1933,17 @@ local function detect_all_indicator_specs(alternant_multiword_spec, from_headwor
 		base.nocomb = alternant_multiword_spec.args.nocomb or base.clitic
 	end)
 
-	if alternant_multiword_spec.refl then
-		iut.map_word_specs(alternant_multiword_spec, function(base)
-			if not base.refl then
-				error("If some alternants are reflexive, all must be")
-			end
-		end)
-	end
-	if alternant_multiword_spec.clitic then
-		iut.map_word_specs(alternant_multiword_spec, function(base)
-			if not base.clitic then
-				error("If some alternants have a clitic, all must")
-			end
-		end)
+	if not from_headword and not alternant_multiword_spec.args.nocomb then
+		-- If we have a combined table, we run into issues if we have multiple
+		-- verbs and some are reflexive and some aren't, because we use a
+		-- different table for reflexive verbs. So throw an error.
+		if alternant_multiword_spec.refl then
+			iut.map_word_specs(alternant_multiword_spec, function(base)
+				if not base.refl then
+					error("If some alternants are reflexive, all must be")
+				end
+			end)
+		end
 	end
 
 	iut.map_word_specs(alternant_multiword_spec, function(base)
