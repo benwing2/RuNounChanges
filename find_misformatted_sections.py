@@ -124,9 +124,6 @@ def allowed_non_mainspace_pagetitle(pagetitle):
   return False
 
 def check_for_bad_subsections(secbody, pagetitle, pagemsg, langname):
-  if ":" in pagetitle and not allowed_non_mainspace_pagetitle(pagetitle):
-    pagemsg("WARNING: Not mainspace, not changing")
-    return secbody, []
   global args
   notes = []
   def append_note(note):
@@ -384,6 +381,12 @@ def check_for_bad_subsections(secbody, pagetitle, pagemsg, langname):
   return "".join(subsections), notes
 
 def process_text_on_page(index, pagetitle, text):
+  if ":" in pagetitle and not allowed_non_mainspace_pagetitle(pagetitle):
+    def pagemsg(txt):
+      msg("Page %s %s: %s" % (index, pagetitle, txt))
+    pagemsg("WARNING: Not mainspace, not changing")
+    return
+
   m = re.search(r"\A(.*?)(\n*)\Z", text, re.S)
   text, text_finalnl = m.groups()
   text += "\n\n"
@@ -484,8 +487,7 @@ def process_text_on_page(index, pagetitle, text):
     notes.extend(this_notes)
   return "".join(sections).rstrip("\n") + text_finalnl, notes
 
-parser = blib.create_argparser("Find misformatted sections of various sorts; should be run on language-specific output from find_regex.py",
-  include_pagefile=True, include_stdin=True)
+parser = blib.create_argparser("Find misformatted sections of various sorts", include_pagefile=True, include_stdin=True)
 parser.add_argument("--correct", action="store_true", help="Correct errors as much as possible.")
 parser.add_argument("--partial-page", action="store_true", help="Input was generated with 'find_regex.py --lang LANG' and has no ==LANG== header.")
 args = parser.parse_args()
