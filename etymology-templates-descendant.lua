@@ -2,8 +2,6 @@ local export = {}
 
 local listToSet = require("Module:table/listToSet")
 local rsplit = mw.text.split
-local u = mw.ustring.char
-local TEMPCOMMA = u(0xFFF0)
 
 local error_on_no_descendants = false
 
@@ -32,45 +30,26 @@ local function add_tooltip(text, tooltip)
 	return '<span class="desc-arr" title="' .. tooltip .. '">' .. text .. '</span>'
 end
 
--- Used when splitting on commas. If comma+whitespace is seen, replace the comma with a temporary char. Return whether
--- the replacement was done (meaning that it has to be undone).
-local function escape_comma_whitespace(val)
-	local need_tempcomma_undo = false
-	if val:find(",%s") then
-		val = val:gsub(",(%s)", TEMPCOMMA .. "%1")
-		need_tempcomma_undo = true
+
+local m_dialect_tags
+local function memoize_require_dialect_tags()
+	if not m_dialect_tags then
+		m_dialect_tags = require("Module:dialect tags")
 	end
-	return val, need_tempcomma_undo
+	return m_dialect_tags
 end
 
--- Undo the replacement of comma with a temporary char. See split_on_comma().
-local function unescape_comma_whitespace(val)
-	val = val:gsub(TEMPCOMMA, ",") -- assign to temp to discard second retval
-	return val
-end
-
--- Split a value on commas, but don't split on comma+whitespace. Lua doesn't have negative lookahead
--- assertions so it's a bit harder to do this. We do it by replacing comma followed by whitespace
--- with a temporary char, doing the split and undoing the temporary char replacement.
-local function split_on_comma(val)
-	local escaped_val, need_tempcomma_undo = escape_comma_whitespace(val)
-	escaped_val = rsplit(escaped_val, ",")
-	if need_tempcomma_undo then
-		for i, ev in ipairs(escaped_val) do
-			escaped_val[i] = unescape_comma_whitespace(ev)
-		end
-	end
-	return escaped_val
-end
 
 -- Replace comma+whitespace in the non-modifier parts of an alternating run (after parse_balanced_segment_run() is
--- called). See split_on_comma().
+-- called). See split_on_comma() in [[Module:dialect tags]].
 local function escape_comma_whitespace_in_alternating_run(run)
 	local need_tempcomma_undo = false
 	for i, seg in ipairs(run) do
 		if i % 2 == 1 then
 			local this_need_tempcomma_undo
-			run[i], this_need_tempcomma_undo = escape_comma_whitespace(seg)
+			if seg:find(",") then
+				run[i], this_need_tempcomma_undo = memoize_require_dialect_tags().escape_comma_whitespace(seg)
+			end
 			need_tempcomma_undo = need_tempcomma_undo or this_need_tempcomma_undo
 		end
 	end
@@ -256,7 +235,8 @@ local function desc_or_desc_tree(frame, desc_tree)
 		if not tags then
 			return nil
 		end
-		return require("Module:alternative forms").make_dialects(split_on_comma(tags), lang)
+		local m_dialect_tags = memoize_require_dialect_tags()
+		return m_dialect_tags.make_dialects(m_dialect_tags.split_on_comma(tags), lang)
 	end
 
 	-- Return a function of one argument `arg` (a param name), which fetches args[`arg`] if index == 0, else
@@ -363,10 +343,7 @@ local function desc_or_desc_tree(frame, desc_tree)
 		if index == 0 then
 			local dialects = tags_to_dialects(val("tag"))
 			if dialects then
-				dialects = "&ndash; ''" .. table.concat(dialects, ", ") .. "''"
-				-- Fixes the problem of '' being added to '' at the end of last dialect parameter
-				dialects = dialects:gsub("''''", "")
-				table.insert(postqs, dialects)
+				table.insert(postqs, memoize_require_dialect_tags().post_format_dialects(dialects))
 			end
 		end
 		if #postqs > 0 then
@@ -450,9 +427,9 @@ local function desc_or_desc_tree(frame, desc_tree)
 			-- so if we see a tag on the outer level that isn't in this format, we don't try to parse it. The
 			-- restriction to the outer level is to allow generated HTML inside of e.g. qualifier tags, such as
 			-- foo<q:similar to {{m|fr|bar}}>.
-			if term and term:find("<") and not term:find("^[^<]*<[a-z]*[^a-z:>]") then
+			if term and term:find("<") and not term:find("<[a-z]*[^a-z:>]") then
 				if not put then
-					put = require("Module:User:Benwing2/parse utilities")
+					put = require("Module:parse utilities")
 				end
 				local run = put.parse_balanced_segment_run(term, "<", ">")
 				-- Split the non-modifier parts of an alternating run on comma, but not on comma+whitespace.
@@ -460,7 +437,8 @@ local function desc_or_desc_tree(frame, desc_tree)
 				local comma_separated_runs
 				if need_tempcomma_undo then
 					comma_separated_runs =
-						put.split_alternating_runs_and_frob_raw_text(run, ",", unescape_comma_whitespace)
+						put.split_alternating_runs_and_frob_raw_text(run, ",",
+							memoize_require_dialect_tags().unescape_comma_whitespace)
 				else
 					comma_separated_runs = put.split_alternating_runs(run, ",")
 				end
@@ -531,7 +509,7 @@ local function desc_or_desc_tree(frame, desc_tree)
 				end
 				link = table.concat(sub_links, "/")
 			elseif term and term:find(",") then
-				local sub_terms = split_on_comma(term)
+				local sub_terms = memoize_require_dialect_tags().split_on_comma(term)
 				local sub_links = {}
 				for _, sub_term in ipairs(sub_terms) do
 					reinit_termobj(sub_term)
