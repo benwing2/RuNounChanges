@@ -1,18 +1,18 @@
 --[=[
 	This module contains functions for creating inflection tables for Old English
-	adjectives. It implements {{ang-adecl}} and {{ang-decl-adj-table}}.
+	adjectives. It implements {{ang-adecl}}.
 
 	Author: Benwing2
 
 	External entry points:
 
 	show(): For {{ang-adecl}}
-	make_table(): For {{ang-decl-adj-table}}
+	make_table(): For {{ang-decl-adj-table}} (no longer in existence)
 ]=]--
 
 local m_links = require("Module:links")
 local strutils = require("Module:string utilities")
-local ut = require("Module:utils")
+local m_table = require("Module:table")
 
 local lang = require("Module:languages").getByCode("ang")
 
@@ -23,8 +23,14 @@ local rmatch = mw.ustring.match
 local rsplit = mw.text.split
 
 -- version of rsubn() that discards all but the first return value
-local function rsub(term, foo, bar)
-	local retval = rsubn(term, foo, bar)
+local function rsub(term, foo, bar, n)
+	local retval = rsubn(term, foo, bar, n)
+	return retval
+end
+
+-- like str:gsub() but discards all but the first return value
+local function gsub(term, foo, bar, n)
+	local retval = term:gsub(foo, bar, n)
 	return retval
 end
 
@@ -178,11 +184,11 @@ end
 local function lengthen_final_vowel(stem)
 	local prefix, vowel = rmatch(stem, "^(.-)([eē][ao])$")
 	if prefix then
-		return prefix .. vowel:gsub("^e", "ē")
+		return prefix .. gsub(vowel, "^e", "ē")
 	end
 	prefix, vowel = rmatch(stem, "^(.-)([iī][eo])$")
 	if prefix then
-		return prefix .. vowel:gsub("^i", "ī")
+		return prefix .. gsub(vowel, "^i", "ī")
 	end
 	prefix, vowel = rmatch(stem, "^(.-)(" .. short_vowel_c .. ")$")
 	if prefix then
@@ -343,10 +349,10 @@ local function compute_adj_args(adjtype, bare, vstem, cstemn, cstemr, short, h)
 		for _, stem in ipairs(stems) do
 			local form = construct_stem_ending(stem, ending)
 			if type(form) == "string" then
-				ut.insert_if_not(args[slot], form)
+				m_table.insertIfNot(args[slot], form)
 			else
 				for _, f in ipairs(form) do
-					ut.insert_if_not(args[slot], f)
+					m_table.insertIfNot(args[slot], f)
 				end
 			end
 		end
@@ -370,7 +376,7 @@ local function compute_adj_args(adjtype, bare, vstem, cstemn, cstemr, short, h)
 		if ending == "um" then
 			return {stem .. "m", stem .. "um"}
 		elseif ending:find("^[aeiou%-]") then
-			return stem .. ending:gsub("^.", "")
+			return stem .. gsub(ending, "^.", "")
 		else
 			return stem .. ending
 		end
@@ -461,21 +467,20 @@ function export.show(frame)
 	local h = false
 	if rfind(lemma, cons_c .. "a$") then
 		adjtype = "weak"
-		stem = args.stem or lemma:gsub("a$", "")
+		stem = args.stem or gsub(lemma, "a$", "")
 		bare = stem
 	else
 		bare = lemma
 		if rfind(lemma, cons_c .. "e$") then
 			short = true
-			stem = args.stem or lemma:gsub("e$", "")
+			stem = args.stem or gsub(lemma, "e$", "")
 		elseif rfind(lemma, cons_c .. "[ou]$") then
-			short = true
 			if lemma:find("o$") then
-				bare = {lemma, lemma:gsub("o$", "u")}
+				bare = {lemma, gsub(lemma, "o$", "u")}
 			else
-				bare = {lemma, lemma:gsub("u$", "o")}
+				bare = {lemma, gsub(lemma, "u$", "o")}
 			end
-			stem = args.stem or lemma:gsub(".$", "w")
+			stem = args.stem or gsub(lemma, ".$", "w")
 		else
 			stem = args.stem or lemma
 			local syllables = break_into_syllables(stem)
@@ -493,11 +498,10 @@ function export.show(frame)
 			end
 			if #syllables > 2 and
 				--Special-case final -isċ and -iġ, which are contractable;
-				--otherwise, should end in [eou] + single consonant, and not -ed or -sum.
+				--otherwise, should end in [eou] + single consonant, and not -ed.
 				--In addition, the preceding syllable should be long.
 				(rfind(stem, "is[cċ]$") or rfind(stem, "i[gġ]$") or
-					(rfind(stem, cons_c .. "[eou]" .. cons_c .. "$") and
-					 not rfind(stem, "ed$") and not rfind(stem, "sum$"))) and
+					(rfind(stem, cons_c .. "[eou]" .. cons_c .. "$") and not rfind(stem, "ed$"))) and
 				is_long(syllables[#syllables - 2], syllables[#syllables - 1]) then
 				local x, y = rmatch(syllables[#syllables - 1], "^" .. cons_c .. "*(" .. cons_c .. ")(" .. cons_c .. ")")
 				if not x or contraction_possible(x, y) then
@@ -515,27 +519,27 @@ function export.show(frame)
 		-- þicce, þynne, wann, ierre, etc.
 		cstemn = rsub(stem, ".$", "")
 		cstemr = cstemn
-	elseif rfind(stem, "(" .. cons_c .. ")r$") then
+	elseif rfind(stem, cons_c .. "r$") then
 		-- ġīfre
-		cstemn = stem:gsub("r$", "er")
-		cstemr = stem:gsub("r$", "")
+		cstemn = gsub(stem, "r$", "er")
+		cstemr = gsub(stem, "r$", "")
 	elseif stem:find("[lr]n$") then
 		-- dyrne
-		cstemn = stem:gsub("n$", "")
+		cstemn = gsub(stem, "n$", "")
 		cstemr = stem
-	elseif rfind(stem, "(" .. cons_c .. ")n$") then
+	elseif rfind(stem, cons_c .. "n$") then
 		-- fǣcne
-		cstemn = stem:gsub("n$", "")
-		cstemr = stem:gsub("n$", "en")
-	elseif rfind(stem, "(" .. cons_c .. ")[lm]$") and not stem:find("[rl]m$") and not stem:find("rl$") then
+		cstemn = gsub(stem, "n$", "")
+		cstemr = gsub(stem, "n$", "en")
+	elseif rfind(stem, cons_c .. "[lm]$") and not stem:find("[rl]m$") and not stem:find("rl$") then
 		-- ǣ-cnōsle
-		cstemn = stem:gsub("(.)$", "e%1")
+		cstemn = gsub(stem, "(.)$", "e%1")
 		cstemr = cstemn
 	elseif rfind(stem, vowel_c .. "h$") then
 		-- hēah, wōh
 		h = true
 		short = "h"
-		vstem = lengthen_final_vowel(stem:gsub("h$", ""))
+		vstem = lengthen_final_vowel(gsub(stem, "h$", ""))
 		cstemn = {vstem, vstem .. "n"}
 		cstemr = {vstem, vstem .. "r"}
 	elseif rfind(stem, "[lr]h$") then
@@ -545,6 +549,10 @@ function export.show(frame)
 		vstem = lengthen_final_vowel(prefix) .. final_cons
 		cstemn = vstem
 		cstemr = vstem
+	elseif rfind(stem, cons_c .. "w$") then
+		-- nearu, stem nearw-, cstem nearo-
+		cstemn = rsub(stem, "(.)w$", "%1o")
+		cstemr = cstemn
 	elseif rfind(stem, vowel_c .. "$") then
 		-- frēo
 		h = true
