@@ -1,7 +1,5 @@
 local m_utilities = require("Module:utilities")
 local m_table = require("Module:table")
--- FIXME, port remaining functions to [[Module:table]] and use it instead
-local ut = require("Module:utils")
 local m_links = require("Module:links")
 local make_link = m_links.full_link
 local m_la_headword = require("Module:la-headword")
@@ -50,6 +48,7 @@ local make_perf_and_supine
 local make_perf
 local make_deponent_perf
 local make_supine
+local make_sigm
 local make_table
 local make_indc_rows
 local make_subj_rows
@@ -63,14 +62,17 @@ local checkirregular
 local flatten_values
 local link_google_books
 
-local rsplit = mw.text.split
-local rfind = mw.ustring.find
-local rmatch = mw.ustring.match
-local rsubn = mw.ustring.gsub
+local split = mw.text.split
+local find = mw.ustring.find
+local len = mw.ustring.len
+local match = mw.ustring.match
+local sub = mw.ustring.sub
+local gsub = mw.ustring.gsub
+local toNFD = mw.ustring.toNFD
 
--- version of rsubn() that discards all but the first return value
-local function rsub(term, foo, bar)
-	local retval = rsubn(term, foo, bar)
+-- version of gsub() that discards all but the first return value
+local function gsub1(term, foo, bar)
+	local retval = gsub(term, foo, bar)
 	return retval
 end
 
@@ -103,10 +105,10 @@ local function initialize_slots()
 				handle_slot(p .. "_" .. non_pers_slot, false)
 			end
 		end
-		for _, t in ipairs({"pres", "impf", "futr", "perf", "plup", "futp"}) do
+		for _, t in ipairs({"pres", "impf", "futr", "perf", "plup", "futp", "sigf"}) do
 			handle_tense(t, "indc")
 		end
-		for _, t in ipairs({"pres", "impf", "perf", "plup"}) do
+		for _, t in ipairs({"pres", "impf", "perf", "plup", "siga"}) do
 			handle_tense(t, "subj")
 		end
 		for _, t in ipairs({"pres", "futr"}) do
@@ -230,7 +232,7 @@ end
 
 local function split_prefix_and_base(lemma, main_verbs)
 	for _, main in ipairs(main_verbs) do
-		local prefix = rmatch(lemma, "^(.*)" .. main .. "$")
+		local prefix = match(lemma, "^(.*)" .. main .. "$")
 		if prefix then
 			return prefix, main
 		end
@@ -243,9 +245,9 @@ end
 -- the ending doesn't match.
 local function extract_base(lemma, ending)
 	if ending:find("%(") then
-		return rmatch(lemma, ending)
+		return match(lemma, ending)
 	else
-		return rmatch(lemma, "^(.*)" .. ending .. "$")
+		return match(lemma, "^(.*)" .. ending .. "$")
 	end
 end
 
@@ -316,14 +318,14 @@ local irreg_verbs_to_conj_type = {
 }
 
 local function detect_decl_and_subtypes(args)
-	local specs = rsplit(args[1] or "", "%.")
+	local specs = split(args[1] or "", "%.")
 	local subtypes = {}
 	local conj_arg
 	for i, spec in ipairs(specs) do
 		if i == 1 then
 			conj_arg = spec
 		else
-			local begins_with_hyphen = rfind(spec, "^%-")
+			local begins_with_hyphen = find(spec, "^%-")
 			spec = spec:gsub("%-", "")
 			if begins_with_hyphen then
 				spec = "-" .. spec
@@ -333,17 +335,23 @@ local function detect_decl_and_subtypes(args)
 	end
 
 	local orig_lemma = args[2] or mw.title.getCurrentTitle().subpageText
-	orig_lemma = rsub(orig_lemma, "o$", "ō")
+	orig_lemma = gsub1(orig_lemma, "o$", "ō")
 	local lemma = m_links.remove_links(orig_lemma)
 	local base, conjtype, conj_subtype, detected_subtypes
-	local base_conj_arg, auto_perf_supine = rmatch(conj_arg, "^([124])(%+%+?)$")
+	local base_conj_arg, auto_perf_supine = match(conj_arg, "^([124])(%+%+?)$")
 	if base_conj_arg then
 		if auto_perf_supine == "++" and base_conj_arg ~= "4" then
 			error("Conjugation types 1++ and 2++ not allowed")
 		end
 		conj_arg = base_conj_arg
 	end
-	local auto_perf, auto_supine
+	if sub(orig_lemma, 1, 1) == "-" then
+		subtypes.suffix = true
+	end
+	local auto_perf, auto_supine, auto_sigm
+	if subtypes.sigm or subtypes.sigmpasv or subtypes.suffix then
+		auto_sigm = true
+	end
 
 	if conj_arg == "1" then
 		conjtype = "1st"
@@ -352,10 +360,22 @@ local function detect_decl_and_subtypes(args)
 			{"or", {"depon"}},
 			{"at", {"impers"}},
 			{"ātur", {"depon", "impers"}},
+			{"ī", {"perfaspres"}},
 		})
 		if auto_perf_supine then
-			auto_perf = base .. "āv"
-			auto_supine = base .. "āt"
+			if subtypes.perfaspres then
+				auto_perf = base
+			else
+				auto_perf = base .. "āv"
+				auto_supine = base .. "āt"
+			end
+		end
+		if auto_sigm then
+			auto_sigm = base .. "āss"
+		end
+		if subtypes.suffix then
+			subtypes.p3inf = true
+			subtypes.sigmpasv = true
 		end
 	elseif conj_arg == "2" then
 		conjtype = "2nd"
@@ -364,10 +384,21 @@ local function detect_decl_and_subtypes(args)
 			{"eor", {"depon"}},
 			{"et", {"impers"}},
 			{"ētur", {"depon", "impers"}},
+			{"ī", {"perfaspres"}},
 		})
 		if auto_perf_supine then
-			auto_perf = base .. "u"
-			auto_supine = base .. "it"
+			if subtypes.perfaspres then
+				auto_perf = base
+			else
+				auto_perf = base .. "u"
+				auto_supine = base .. "it"
+			end
+		end
+		if auto_sigm then
+			auto_sigm = "-/ēss"
+		end
+		if subtypes.suffix then
+			subtypes.sigmpasv = true
 		end
 	elseif conj_arg == "3" then
 		base, detected_subtypes = get_subtype_by_ending(lemma, nil, subtypes, {
@@ -382,12 +413,22 @@ local function detect_decl_and_subtypes(args)
 				{"or", {"depon"}},
 				{"it", {"impers"}},
 				{"itur", {"depon", "impers"}},
+				{"ī", {"perfaspres"}},
 			})
 			if subtypes.I then
 				conjtype = "3rd-io"
 			else
 				conjtype = "3rd"
 			end
+		end
+		if subtypes.perfaspres then
+			auto_perf = base
+		end
+		if subtypes.suffix then
+			auto_perf = "-"
+			auto_supine = "-"
+			auto_sigm = "-"
+			subtypes.sigmpasv = true
 		end
 	elseif conj_arg == "4" then
 		conjtype = "4th"
@@ -396,13 +437,22 @@ local function detect_decl_and_subtypes(args)
 			{"ior", {"depon"}},
 			{"it", {"impers"}},
 			{"ītur", {"depon", "impers"}},
+			{"ī", {"perfaspres"}},
 		})
-		if auto_perf_supine == "++" then
+		if subtypes.perfaspres then
+			auto_perf = base
+		elseif auto_perf_supine == "++" then
 			auto_perf = base .. "īv/" .. base .. "i"
 			auto_supine = base .. "īt"
 		elseif auto_perf_supine == "+" then
 			auto_perf = base .. "īv"
 			auto_supine = base .. "īt"
+		end
+		if auto_sigm then
+			auto_sigm = base .. "īss"
+		end
+		if subtypes.suffix then
+			subtypes.sigm = true
 		end
 	elseif conj_arg == "irreg" then
 		conjtype = "irreg"
@@ -454,31 +504,47 @@ local function detect_decl_and_subtypes(args)
 	if conjtype ~= "irreg" then
 		args[1] = base
 		local perf_stem, supine_stem
-		if subtypes.depon or subtypes.semidepon then
+		if subtypes.depon or subtypes.semidepon or subtypes.perfaspres then
 			supine_stem = args[3] or auto_supine
-			if supine_stem == "-" then
+			if supine_stem == "-" and not subtypes.suffix then
 				supine_stem = nil
 			end
 			if not supine_stem then
-				subtypes.noperf = true
+				if subtypes.depon or subtypes.semidepon then
+					subtypes.noperf = true
+				end
 				subtypes.nosup = true
+			end
+			if subtypes.sigm or subtypes.sigmpasv then
+				local sigm_stem = args[5] or auto_sigm
+				if sigm_stem == "-" and not subtypes.suffix then
+					sigm_stem = nil
+				end
+				args[5] = sigm_stem
 			end
 			args[2] = supine_stem
 			args[3] = nil
 		else
 			perf_stem = args[3] or auto_perf
-			if perf_stem == "-" then
+			if perf_stem == "-" and not subtypes.suffix then
 				perf_stem = nil
 			end
 			if not perf_stem then
 				subtypes.noperf = true
 			end
 			supine_stem = args[4] or auto_supine
-			if supine_stem == "-" then
+			if supine_stem == "-" and not subtypes.suffix then
 				supine_stem = nil
 			end
 			if not supine_stem then
 				subtypes.nosup = true
+			end
+			if subtypes.sigm or subtypes.sigmpasv then
+				local sigm_stem = args[5] or auto_sigm
+				if sigm_stem == "-" and not subtypes.suffix then
+					sigm_stem = nil
+				end
+				args[5] = sigm_stem
 			end
 			args[2] = perf_stem
 			args[3] = supine_stem
@@ -488,8 +554,10 @@ local function detect_decl_and_subtypes(args)
 
 	for subtype, _ in pairs(subtypes) do
 		if not m_la_headword.allowed_subtypes[subtype] and
+			not m_la_headword.allowed_subtypes[sub(subtype, 2)] and
 			not (conjtype == "3rd" and subtype == "-I") and
-			not (conjtype == "3rd-io" and subtype == "I") then
+			not (conjtype == "3rd-io" and subtype == "I") and
+			not (subtype == "nound" or subtype == "sigm" or subtype == "sigmpasv" or subtype == "suffix") then
 			error("Unrecognized verb subtype " .. subtype)
 		end
 	end
@@ -551,11 +619,17 @@ function export.show(frame)
 		end
 		track(difconj and "different-conj" or "same-conj")
 	end
+	
+	if typeinfo.subtypes.suffix then data.categories = {} end
+
+	-- Check if the links to the verb forms exist
+	-- Has to happen after other categories are removed for suffixes
+	checkexist(data)
 
 	if domain == nil then
 		return make_table(data) .. m_utilities.format_categories(data.categories, lang)
 	else
-		local verb = data['forms']['1s_pres_actv_indc'] ~= nil and ('[['..mw.ustring.gsub(mw.ustring.toNFD(data['forms']['1s_pres_actv_indc']),'[^%w]+',"")..'|'..data['forms']['1s_pres_actv_indc'].. ']]') or 'verb'
+		local verb = data['forms']['1s_pres_actv_indc'] ~= nil and ('[['.. gsub(toNFD(data['forms']['1s_pres_actv_indc']),'[^%w]+',"")..'|'..data['forms']['1s_pres_actv_indc'].. ']]') or 'verb'
 		return link_google_books(verb, flatten_values(data['forms']), domain) end
 end
 
@@ -569,7 +643,7 @@ local function concat_forms(data, typeinfo, include_props)
 		for _, v in ipairs(val) do
 			if not form_is_empty(v) then
 				table.insert(ins_form,
-					rsub(rsub(rsub(v, "|", "<!>"), "=", "<->"), ",", "<.>")
+					gsub1(gsub1(gsub1(v, "|", "<!>"), "=", "<->"), ",", "<.>")
 				)
 			end
 		end
@@ -686,6 +760,32 @@ local function add_prefix_suffix(data, typeinfo)
 	end
 end
 
+local function notes_override(data, args)
+	local notes = {args["note1"], args["note2"], args["note3"]}
+	
+	for n, note in pairs(notes) do
+		if note == "-" then
+			data.footnotes[n] = nil
+		elseif note == "p3inf" then
+			data.footnotes[n] = "The present passive infinitive in -ier is a rare poetic form which is attested."
+		elseif note == "poetsyncperf" then
+			data.footnotes[n] = "At least one rare poetic syncopated perfect form is attested."
+		elseif note == "sigm" then
+			data.footnotes[n] = "At least one use of the archaic \"sigmatic future\" and \"sigmatic aorist\" tenses is attested, which are used by Old Latin writers; most notably Plautus and Terence. The sigmatic future is generally ascribed a future or future perfect meaning, while the sigmatic aorist expresses a possible desire (\"might want to\")."
+		elseif note == "sigmpasv" then
+			data.footnotes[n] = "At least one use of the archaic \"sigmatic future\" and \"sigmatic aorist\" tenses is attested, which are used by Old Latin writers; most notably Plautus and Terence. The sigmatic future is generally ascribed a future or future perfect meaning, while the sigmatic aorist expresses a possible desire (\"might want to\"). It is also attested as having a rare sigmatic future passive indicative form (\"will have been\")."
+		elseif note == "sigmdepon" then
+			data.footnotes[n] = "At least one use of the archaic \"sigmatic future\" tense is attested, which is used by Old Latin writers; most notably Plautus and Terence. The sigmatic future is generally ascribed a future or future perfect meaning, and, as the verb is deponent, takes the form of what would otherwise be the rare sigmatic future passive indicative tense."
+		elseif note then
+			data.footnotes[n] = note
+		end
+	end
+	
+	if args["notes"] == "-" then
+		data.footnotes = {}
+	end
+end
+
 local function set_linked_forms(data, typeinfo)
 	-- Generate linked variants of slots that may be the lemma.
 	-- If the form is the same as the lemma (with links removed),
@@ -715,6 +815,7 @@ function export.make_data(parent_args, from_headword, def1, def2)
 		[2] = {required = true, default = def2 or "amō"},
 		[3] = {},
 		[4] = {},
+		[5] = {},
 		prefix = {},
 		passive_prefix = {},
 		plural_prefix = {},
@@ -731,8 +832,13 @@ function export.make_data(parent_args, from_headword, def1, def2)
 		dat_suffix = {},
 		acc_suffix = {},
 		abl_suffix = {},
+		label = {},
+		note1= {},
+		note2= {},
+		note3= {},
+		notes= {},
 		-- examined directly in export.show()
-		search = {},
+		search = {}
 	}
 	for slot in iter_slots(true, false) do
 		params[slot] = {}
@@ -755,7 +861,7 @@ function export.make_data(parent_args, from_headword, def1, def2)
 	local data = {
 		forms = {},
 		title = {},
-		categories = args.cat and ut.clone(args.cat) or {},
+		categories = args.cat and m_table.deepcopy(args.cat) or {},
 		form_footnote_indices = {},
 		footnotes = {},
 		id = args.id,
@@ -793,10 +899,10 @@ function export.make_data(parent_args, from_headword, def1, def2)
 		if not prefix then
 			return nil
 		end
-		local no_space_prefix = rmatch(prefix, "(.*)_$")
+		local no_space_prefix = match(prefix, "(.*)_$")
 		if no_space_prefix then
 			return no_space_prefix
-		elseif rfind(prefix, "%-$") then
+		elseif find(prefix, "%-$") then
 			return prefix
 		else
 			return prefix .. " "
@@ -807,10 +913,10 @@ function export.make_data(parent_args, from_headword, def1, def2)
 		if not suffix then
 			return nil
 		end
-		local no_space_suffix = rmatch(suffix, "^_(.*)$")
+		local no_space_suffix = match(suffix, "^_(.*)$")
 		if no_space_suffix then
 			return no_space_suffix
-		elseif rfind(suffix, "^%-") then
+		elseif find(suffix, "^%-") then
 			return suffix
 		else
 			return " " .. suffix
@@ -856,9 +962,12 @@ function export.make_data(parent_args, from_headword, def1, def2)
 
 	-- Prepend any prefixes, append any suffixes
 	add_prefix_suffix(data)
-
-	-- Check if the links to the verb forms exist
-	checkexist(data)
+	
+	if args["label"] then
+		m_table.insertIfNot(data.title, args["label"])
+	end
+	
+	notes_override(data, args)
 
 	-- Check if the verb is irregular
 	if not conj_type == 'irreg' then checkirregular(args, data) end
@@ -869,7 +978,7 @@ local function form_contains(forms, form)
 	if type(forms) == "string" then
 		return forms == form
 	else
-		return ut.contains(forms, form)
+		return m_table.contains(forms, form)
 	end
 end
 
@@ -895,7 +1004,7 @@ local function add_form(data, key, stem, suf, pos)
 		elseif type(data.forms[key]) == "string" then
 			data.forms[key] = {data.forms[key]}
 		end
-		ut.insert_if_not(data.forms[key], stem .. s, pos)
+		m_table.insertIfNot(data.forms[key], stem .. s, pos)
 	end
 end
 
@@ -976,6 +1085,23 @@ local function make_perfect_passive(data)
 			(data.passive_prefix or "") .. prefix_joiner .. ppplink .. " + " ..
 			text .. " of " .. sumlink .. suffix_joiner .. (data.passive_suffix or "")
 	end
+	ppp = data.forms["1s_pres_actv_indc"]
+	if type(ppp) ~= "table" then
+		ppp = {ppp}
+	end
+	if ppp[1] == "faciō" then
+		ppp = {"factum"}
+		ppplinks = {}
+		for _, pppform in ipairs(ppp) do
+			table.insert(ppplinks, make_link({lang = lang, term = pppform}, "term"))
+		end
+		ppplink = table.concat(ppplinks, " or ")
+		sumlink = make_link({lang = lang, term = "sum"}, "term")
+		for slot, text in pairs(text_for_slot) do
+			data.forms[slot] =
+				data.forms[slot] .. " or " .. ppplink .. " + " .. text .. " of " .. sumlink
+		end
+	end
 end
 
 -- Make the gerund and gerundive/future passive participle. For the forms
@@ -1040,9 +1166,10 @@ local function make_gerund(data, typeinfo, base, und_variant, no_gerund, no_futr
 		}
 	end
 
-	if rfind(base, "[uv]end$") then
+	if find(base, "[uv]end$") or typeinfo.subtypes.nound then
 		-- Per Lane's grammar section 899: "Verbs in -ere and -īre often have
 		-- -undus, when not preceded by u or v, especially in formal style"
+		-- There is also an optional exclusion if -undus is not attested
 		und_variant = false
 	end
 	local und_base = und_variant and base:gsub("end$", "und")
@@ -1080,9 +1207,11 @@ postprocess = function(data, typeinfo)
 	-- looks at the perfect participle to derive other forms.
 	if typeinfo.subtypes.nosup then
 		-- Some verbs have no supine forms or forms derived from the supine
-		ut.insert_if_not(data.title, "no [[supine]] stem")
-		ut.insert_if_not(data.categories, "Latin verbs with missing supine stem")
-		ut.insert_if_not(data.categories, "Latin defective verbs")
+		if typeinfo.subtypes.perfaspres == nil then
+			m_table.insertIfNot(data.title, "no [[supine]] stem")
+		end
+		m_table.insertIfNot(data.categories, "Latin verbs with missing supine stem")
+		m_table.insertIfNot(data.categories, "Latin defective verbs")
 
 		for key, _ in pairs(data.forms) do
 			if cfind(key, "sup") or (
@@ -1097,9 +1226,11 @@ postprocess = function(data, typeinfo)
 	elseif typeinfo.subtypes.supfutractvonly then
 		-- Some verbs have no supine forms or forms derived from the supine,
 		-- except for the future active infinitive/participle
-		ut.insert_if_not(data.title, "no [[supine]] stem except in the [[future]] [[active]] [[participle]]")
-		ut.insert_if_not(data.categories, "Latin verbs with missing supine stem except in the future active participle")
-		ut.insert_if_not(data.categories, "Latin defective verbs")
+		if typeinfo.subtypes.perfaspres == nil then
+			m_table.insertIfNot(data.title, "no [[supine]] stem except in the [[future]] [[active]] [[participle]]")
+		end
+		m_table.insertIfNot(data.categories, "Latin verbs with missing supine stem except in the future active participle")
+		m_table.insertIfNot(data.categories, "Latin defective verbs")
 
 		for key, _ in pairs(data.forms) do
 			if cfind(key, "sup") or (
@@ -1110,7 +1241,7 @@ postprocess = function(data, typeinfo)
 			end
 		end
 	end
-
+	
 	-- Add information for the passive perfective forms
 	if data.forms["perf_pasv_ptc"] and not form_is_empty(data.forms["perf_pasv_ptc"]) then
 		if typeinfo.subtypes.passimpers then
@@ -1137,22 +1268,22 @@ postprocess = function(data, typeinfo)
 				if not form_is_empty(ppp) then
 					local ppp_s, ppp_p
 					if typeinfo.subtypes.mp then
-						ppp_p = make_raw_link(rsub(ppp, "ī$", "us"), ppp)
+						ppp_p = make_raw_link(gsub1(ppp, "ī$", "us"), ppp)
 					elseif typeinfo.subtypes.fp then
-						ppp_p = make_raw_link(rsub(ppp, "ae$", "us"), ppp)
+						ppp_p = make_raw_link(gsub1(ppp, "ae$", "us"), ppp)
 					elseif typeinfo.subtypes.np then
-						ppp_p = make_raw_link(rsub(ppp, "a$", "us"), ppp)
+						ppp_p = make_raw_link(gsub1(ppp, "a$", "us"), ppp)
 					elseif typeinfo.subtypes.f then
-						local ppp_lemma = rsub(ppp, "a$", "us")
+						local ppp_lemma = gsub1(ppp, "a$", "us")
 						ppp_s = make_raw_link(ppp_lemma, ppp)
-						ppp_p = make_raw_link(ppp_lemma, rsub(ppp, "a$", "ae"))
+						ppp_p = make_raw_link(ppp_lemma, gsub1(ppp, "a$", "ae"))
 					elseif typeinfo.subtypes.n then
-						local ppp_lemma = rsub(ppp, "um$", "us")
+						local ppp_lemma = gsub1(ppp, "um$", "us")
 						ppp_s = make_raw_link(ppp_lemma, ppp)
-						ppp_p = make_raw_link(ppp_lemma, rsub(ppp, "um$", "a"))
+						ppp_p = make_raw_link(ppp_lemma, gsub1(ppp, "um$", "a"))
 					else
 						ppp_s = make_raw_link(ppp)
-						ppp_p = make_raw_link(ppp, rsub(ppp, "us$", "ī"))
+						ppp_p = make_raw_link(ppp, gsub1(ppp, "us$", "ī"))
 					end
 					if not typeinfo.subtypes.mp and not typeinfo.subtypes.fp and not typeinfo.subtypes.np then
 						add_form(data, "3s_perf_pasv_indc", ppp_s, " [[est]]")
@@ -1175,13 +1306,20 @@ postprocess = function(data, typeinfo)
 
 	if typeinfo.subtypes.perfaspres then
 		-- Perfect forms as present tense
-		ut.insert_if_not(data.title, "active only")
-		ut.insert_if_not(data.title, "[[perfect]] forms as present")
-		ut.insert_if_not(data.title, "pluperfect as imperfect")
-		ut.insert_if_not(data.title, "future perfect as future")
-		ut.insert_if_not(data.categories, "Latin defective verbs")
-		ut.insert_if_not(data.categories, "Latin active-only verbs")
-        ut.insert_if_not(data.categories, "Latin verbs with perfect forms having imperfective meanings")
+		m_table.insertIfNot(data.title, "no [[present tense|present]] stem")
+		if typeinfo.subtypes.nosup then
+			m_table.insertIfNot(data.title, "no [[supine]] stem")
+		elseif typeinfo.subtypes.supfutractvonly then
+			m_table.insertIfNot(data.title, "no [[supine]] stem except in the [[future]] [[active]] [[participle]]")
+		end
+		m_table.insertIfNot(data.title, "active only")
+		m_table.insertIfNot(data.title, "[[perfect]] forms as present")
+		m_table.insertIfNot(data.title, "pluperfect as imperfect")
+		m_table.insertIfNot(data.title, "future perfect as future")
+		m_table.insertIfNot(data.categories, "Latin defective verbs")
+		m_table.insertIfNot(data.categories, "Latin active-only verbs")
+		m_table.insertIfNot(data.categories, "Latin verbs with missing present stem")
+        m_table.insertIfNot(data.categories, "Latin verbs with perfect forms having imperfective meanings")
 
 		-- Change perfect passive participle to perfect active participle
 		data.forms["perf_actv_ptc"] = data.forms["perf_pasv_ptc"]
@@ -1224,8 +1362,8 @@ postprocess = function(data, typeinfo)
 	-- i.e. there's no reason there couldn't be an impersonal deponent verb with no imperatives.
 	if typeinfo.subtypes.impers then
 		-- Impersonal verbs have only third-person singular forms.
-		ut.insert_if_not(data.title, "[[impersonal]]")
-		ut.insert_if_not(data.categories, "Latin impersonal verbs")
+		m_table.insertIfNot(data.title, "[[impersonal]]")
+		m_table.insertIfNot(data.categories, "Latin impersonal verbs")
 
 		-- Remove all non-3sg forms
 		for key, _ in pairs(data.forms) do
@@ -1234,8 +1372,8 @@ postprocess = function(data, typeinfo)
 			end
 		end
 	elseif typeinfo.subtypes["3only"] then
-		ut.insert_if_not(data.title, "[[third person]] only")
-		ut.insert_if_not(data.categories, "Latin third-person-only verbs")
+		m_table.insertIfNot(data.title, "[[third person]] only")
+		m_table.insertIfNot(data.categories, "Latin third-person-only verbs")
 
 		-- Remove all non-3sg forms
 		for key, _ in pairs(data.forms) do
@@ -1250,8 +1388,8 @@ postprocess = function(data, typeinfo)
 		-- Some verbs have no passive perfect forms (e.g. ārēscō, -ěre).
 		-- Only do anything here if the verb has a supine; otherwise it
 		-- necessarily has no passive perfect forms.
-		ut.insert_if_not(data.title, "no passive perfect forms")
-		ut.insert_if_not(data.categories, "Latin defective verbs")
+		m_table.insertIfNot(data.title, "no passive perfect forms")
+		m_table.insertIfNot(data.categories, "Latin defective verbs")
 
 		-- Remove all passive perfect forms
 		for key, _ in pairs(data.forms) do
@@ -1267,9 +1405,9 @@ postprocess = function(data, typeinfo)
 		-- meaning, but also have perfect active forms with the same meaning,
 		-- and have no imperfective passive. We already generated the perfective
 		-- forms but need to clear out the imperfective passive.
-		ut.insert_if_not(data.title, "optionally [[semi-deponent]]")
-		ut.insert_if_not(data.categories, "Latin semi-deponent verbs")
-		ut.insert_if_not(data.categories, "Latin optionally semi-deponent verbs")
+		m_table.insertIfNot(data.title, "optionally [[semi-deponent]]")
+		m_table.insertIfNot(data.categories, "Latin semi-deponent verbs")
+		m_table.insertIfNot(data.categories, "Latin optionally semi-deponent verbs")
 
 		-- Remove imperfective passive forms
 		for key, _ in pairs(data.forms) do
@@ -1280,8 +1418,8 @@ postprocess = function(data, typeinfo)
 	elseif typeinfo.subtypes.semidepon then
 		-- Semi-deponent verbs use perfective passive forms with active meaning,
 		-- and have no imperfective passive
-		ut.insert_if_not(data.title, "[[semi-deponent]]")
-		ut.insert_if_not(data.categories, "Latin semi-deponent verbs")
+		m_table.insertIfNot(data.title, "[[semi-deponent]]")
+		m_table.insertIfNot(data.categories, "Latin semi-deponent verbs")
 
 		-- Remove perfective active and imperfective passive forms
 		for key, _ in pairs(data.forms) do
@@ -1299,12 +1437,12 @@ postprocess = function(data, typeinfo)
 		end
 	elseif typeinfo.subtypes.depon then
 		-- Deponent verbs use passive forms with active meaning
-		ut.insert_if_not(data.title, "[[deponent]]")
-		ut.insert_if_not(data.categories, "Latin deponent verbs")
+		m_table.insertIfNot(data.title, "[[deponent]]")
+		m_table.insertIfNot(data.categories, "Latin deponent verbs")
 
 		-- Remove active forms and future passive infinitive
 		for key, _ in pairs(data.forms) do
-			if cfind(key, "actv") and key ~= "pres_actv_ptc" and key ~= "futr_actv_ptc" and key ~= "futr_actv_inf" or key == "futr_pasv_inf" then
+			if cfind(key, "actv") and key ~= "pres_actv_ptc" and key ~= "futr_actv_ptc" and key ~= "futr_actv_inf" and cfind(key, "sigf") == nil or key == "futr_pasv_inf" then
 				data.forms[key] = nil
 			end
 		end
@@ -1320,9 +1458,9 @@ postprocess = function(data, typeinfo)
 
 	if typeinfo.subtypes.noperf then
 		-- Some verbs have no perfect stem (e.g. inalbēscō, -ěre)
-		ut.insert_if_not(data.title, "no [[perfect tense|perfect]] stem")
-		ut.insert_if_not(data.categories, "Latin verbs with missing perfect stem")
-		ut.insert_if_not(data.categories, "Latin defective verbs")
+		m_table.insertIfNot(data.title, "no [[perfect tense|perfect]] stem")
+		m_table.insertIfNot(data.categories, "Latin verbs with missing perfect stem")
+		m_table.insertIfNot(data.categories, "Latin defective verbs")
 
 		-- Remove all active perfect forms (passive perfect forms may
 		-- still exist as they are formed with the supine stem)
@@ -1335,8 +1473,8 @@ postprocess = function(data, typeinfo)
 
 	if typeinfo.subtypes.nopass then
 		-- Remove all passive forms
-		ut.insert_if_not(data.title, "active only")
-		ut.insert_if_not(data.categories, "Latin active-only verbs")
+		m_table.insertIfNot(data.title, "active only")
+		m_table.insertIfNot(data.categories, "Latin active-only verbs")
 
 		-- Remove all non-3sg and passive forms
 		for key, _ in pairs(data.forms) do
@@ -1346,8 +1484,8 @@ postprocess = function(data, typeinfo)
 		end
 	elseif typeinfo.subtypes.pass3only then
 		-- Some verbs have only third-person forms in the passive
-		ut.insert_if_not(data.title, "only third-person forms in passive")
-		ut.insert_if_not(data.categories, "Latin verbs with third-person passive")
+		m_table.insertIfNot(data.title, "only third-person forms in passive")
+		m_table.insertIfNot(data.categories, "Latin verbs with third-person passive")
 
 		-- Remove all non-3rd-person passive forms and all passive imperatives
 		for key, _ in pairs(data.forms) do
@@ -1364,8 +1502,8 @@ postprocess = function(data, typeinfo)
 		end
 	elseif typeinfo.subtypes.passimpers then
 		-- Some verbs are impersonal in the passive
-		ut.insert_if_not(data.title, "[[impersonal]] in passive")
-		ut.insert_if_not(data.categories, "Latin verbs with impersonal passive")
+		m_table.insertIfNot(data.title, "[[impersonal]] in passive")
+		m_table.insertIfNot(data.categories, "Latin verbs with impersonal passive")
 
 		-- Remove all non-3sg passive forms
 		for key, _ in pairs(data.forms) do
@@ -1378,9 +1516,9 @@ postprocess = function(data, typeinfo)
 	-- Handle certain irregularities in the imperative
 	if typeinfo.subtypes.noimp then
 		-- Some verbs have no imperatives
-		ut.insert_if_not(data.title, "no [[imperative]]s")
-		ut.insert_if_not(data.categories, "Latin verbs with missing imperative")
-		ut.insert_if_not(data.categories, "Latin defective verbs")
+		m_table.insertIfNot(data.title, "no [[imperative]]s")
+		m_table.insertIfNot(data.categories, "Latin verbs with missing imperative")
+		m_table.insertIfNot(data.categories, "Latin defective verbs")
 
 		-- Remove all imperative forms
 		for key, _ in pairs(data.forms) do
@@ -1393,9 +1531,9 @@ postprocess = function(data, typeinfo)
 	-- Handle certain irregularities in the future
 	if typeinfo.subtypes.nofut then
 		-- Some verbs (e.g. soleō) have no future
-		ut.insert_if_not(data.title, "no [[future]]")
-		ut.insert_if_not(data.categories, "Latin verbs with missing future")
-		ut.insert_if_not(data.categories, "Latin defective verbs")
+		m_table.insertIfNot(data.title, "no [[future]]")
+		m_table.insertIfNot(data.categories, "Latin verbs with missing future")
+		m_table.insertIfNot(data.categories, "Latin defective verbs")
 
 		-- Remove all future forms
 		for key, _ in pairs(data.forms) do
@@ -1427,11 +1565,11 @@ postprocess = function(data, typeinfo)
 			end
 			local newvals = mw.clone(formval)
 			for _, fv in ipairs(formval) do
-				table.insert(newvals, mw.ustring.sub(fv, 1, -2) .. "ier")
+				table.insert(newvals, sub(fv, 1, -2) .. "ier")
 			end
 			data.forms[form] = newvals
 			data.form_footnote_indices[form] = tostring(noteindex)
-			data.footnotes[noteindex] = 'The present passive infinitive in -ier is a rare poetic form which is attested for this verb.'
+			data.footnotes[noteindex] = 'The present passive infinitive in -ier is a rare poetic form which is attested.'
 	end
 
 	--Add the syncopated perfect forms, omitting the separately handled fourth conjugation cases
@@ -1440,9 +1578,33 @@ postprocess = function(data, typeinfo)
 		local sss = {
 			--infinitive
 			{'perf_actv_inf', 'sse'},
-			--unambiguous perfect actives
+			--perfect actives
 		    {'2s_perf_actv_indc', 'stī'},
+		    {'3s_perf_actv_indc', 't'},
+		    {'1p_perf_actv_indc', 'mus'},
 			{'2p_perf_actv_indc', 'stis'},
+			{'3p_perf_actv_indc', 'runt'},
+			--pluperfect actives
+		    {'1s_plup_actv_indc', 'ram'},
+		    {'2s_plup_actv_indc', 'rās'},
+		    {'3s_plup_actv_indc', 'rat'},
+		    {'1p_plup_actv_indc', 'rāmus'},
+			{'2p_plup_actv_indc', 'rātis'},
+			{'3p_plup_actv_indc', 'rant'},
+			--future perfect actives
+		    {'1s_futp_actv_indc', 'rō'},
+		    {'2s_futp_actv_indc', 'ris'},
+		    {'3s_futp_actv_indc', 'rit'},
+		    {'1p_futp_actv_indc', 'rimus'},
+			{'2p_futp_actv_indc', 'ritis'},
+			{'3p_futp_actv_indc', 'rint'},
+			--perfect subjunctives
+		    {'1s_perf_actv_subj', 'rim'},
+			{'2s_perf_actv_subj', 'rīs'},
+			{'3s_perf_actv_subj', 'rit'},
+			{'1p_perf_actv_subj', 'rīmus'},
+			{'2p_perf_actv_subj', 'rītis'},
+			{'3p_perf_actv_subj', 'rint'},
 			--pluperfect subjunctives
 		    {'1s_plup_actv_subj', 'ssem'},
 			{'2s_plup_actv_subj', 'ssēs'},
@@ -1459,9 +1621,9 @@ postprocess = function(data, typeinfo)
 			end
 			local newvals = mw.clone(formval)
 			for _, fv in ipairs(formval) do
-				-- Can only syncopate 'vi', or 'vi' spelled as 'ui' after a vowel
-				if fv:find('vi' .. suff_sync .. '$') or mw.ustring.find(fv, '[aeiouyāēīōūȳăĕĭŏŭ]ui' .. suff_sync.. '$') then
-					ut.insert_if_not(newvals, mw.ustring.sub(fv, 1, -mw.ustring.len(suff_sync) - 3) .. suff_sync)
+				-- Can only syncopate 'vi', 've', 'vē', or any one of them spelled with a 'u' after a vowel
+				if fv:find('v[ieē]' .. suff_sync .. '$') or fv:find('vē' .. suff_sync .. '$') or find(fv, '[aeiouyāēīōūȳăĕĭŏŭ]u[ieē]' .. suff_sync.. '$') or find(fv, '[aeiouyāēīōūȳăĕĭŏŭ]uē' .. suff_sync.. '$') then
+					m_table.insertIfNot(newvals, sub(fv, 1, -len(suff_sync) - 3) .. suff_sync)
 				end
 			end
 			data.forms[form] = newvals
@@ -1471,6 +1633,15 @@ postprocess = function(data, typeinfo)
 			add_sync_perf(v[1], v[2])
 		end
 		data.footnotes[noteindex] = "At least one rare poetic syncopated perfect form is attested." end
+		
+	-- Add category for sigmatic forms
+	if typeinfo.subtypes.sigm or typeinfo.subtypes.sigmpasv then
+		m_table.insertIfNot(data.categories, "Latin verbs with sigmatic forms")
+	end
+	-- Add subcategory for passive sigmatic forms
+	if typeinfo.subtypes.sigmpasv or (typeinfo.subtypes.sigm and typeinfo.subtypes.depon) then
+		m_table.insertIfNot(data.categories, "Latin verbs with passive sigmatic forms")
+	end
 
 end
 
@@ -1486,19 +1657,21 @@ local function get_regular_stems(args, typeinfo)
 		typeinfo.pres_stem = ine(args[1])
 		typeinfo.perf_stem = nil
 		typeinfo.supine_stem = ine(args[2])
+	elseif typeinfo.subtypes.perfaspres then
+		typeinfo.perf_stem = ine(args[1])
+		typeinfo.supine_stem = ine(args[2])
 	else
 		typeinfo.pres_stem = ine(args[1])
 		typeinfo.perf_stem = ine(args[2])
 		typeinfo.supine_stem = ine(args[3])
 	end
-
-	if typeinfo.subtypes.perfaspres and not typeinfo.pres_stem then
-		typeinfo.pres_stem = "whatever"
+	if typeinfo.subtypes.sigm or typeinfo.subtypes.sigmpasv then
+		typeinfo.sigm_stem = ine(args[5])
 	end
 
 	-- Prepare stems
 	if not typeinfo.pres_stem then
-		if NAMESPACE == "Template" then
+		if NAMESPACE == "Template" or typeinfo.subtypes.perfaspres then
 			typeinfo.pres_stem = "-"
 		else
 			error("Present stem has not been provided")
@@ -1506,15 +1679,21 @@ local function get_regular_stems(args, typeinfo)
 	end
 
 	if typeinfo.perf_stem then
-		typeinfo.perf_stem = mw.text.split(typeinfo.perf_stem, "/")
+		typeinfo.perf_stem = split(typeinfo.perf_stem, "/")
 	else
 		typeinfo.perf_stem = {}
 	end
 
 	if typeinfo.supine_stem then
-		typeinfo.supine_stem = mw.text.split(typeinfo.supine_stem, "/")
+		typeinfo.supine_stem = split(typeinfo.supine_stem, "/")
 	else
 		typeinfo.supine_stem = {}
+	end
+	
+		if typeinfo.sigm_stem then
+		typeinfo.sigm_stem = split(typeinfo.sigm_stem, "/")
+	else
+		typeinfo.sigm_stem = {}
 	end
 end
 
@@ -1546,6 +1725,22 @@ conjugations["1st"] = function(args, data, typeinfo)
 
 	make_pres_1st(data, typeinfo, typeinfo.pres_stem)
 	make_perf_and_supine(data, typeinfo)
+	make_sigm(data, typeinfo, typeinfo.sigm_stem)
+	
+	--Additional forms in specific cases
+	if typeinfo.pres_stem == "dīlapid" then
+		add_form(data, "3p_sigf_actv_indc", "", "dīlapidāssunt", 2 )
+	elseif typeinfo.pres_stem == "invol" then
+		add_form(data, "3s_sigf_actv_indc", "", "involāsit", 2 )
+	elseif typeinfo.pres_stem == "viol" then
+		local noteindex = #(data.footnotes) + 1
+		add_form(data, "3p_futp_actv_indc", "", "violārint", 2 )
+		add_form(data, "3p_perf_actv_subj", "", "violārint", 2 )
+		add_form(data, "3s_sigf_actv_indc", "", "violāsit", 2 )
+		data.form_footnote_indices["3p_futp_actv_indc"] = tostring(noteindex)
+		data.form_footnote_indices["3p_perf_actv_subj"] = tostring(noteindex)
+		data.footnotes[noteindex] = 'Archaic.'
+	end
 end
 
 conjugations["2nd"] = function(args, data, typeinfo)
@@ -1573,6 +1768,12 @@ conjugations["2nd"] = function(args, data, typeinfo)
 
 	make_pres_2nd(data, typeinfo, typeinfo.pres_stem)
 	make_perf_and_supine(data, typeinfo)
+	make_sigm(data, typeinfo, typeinfo.sigm_stem)
+	
+	--Additional forms in specific cases
+	if typeinfo.pres_stem == "noc" then
+		add_form(data, "3s_siga_actv_subj", "", "noxsīt", 2 )
+	end
 end
 
 local function set_3rd_conj_categories(data, typeinfo)
@@ -1608,12 +1809,84 @@ conjugations["3rd"] = function(args, data, typeinfo)
 	table.insert(data.title, "[[Appendix:Latin third conjugation|third conjugation]]")
 	set_3rd_conj_categories(data, typeinfo)
 
-	if typeinfo.pres_stem and mw.ustring.match(typeinfo.pres_stem,"[āēīōū]sc$") then
+	if typeinfo.pres_stem and match(typeinfo.pres_stem,"[āēīōū]sc$") then
 		table.insert(data.categories, "Latin inchoative verbs")
 	end
 
 	make_pres_3rd(data, typeinfo, typeinfo.pres_stem)
 	make_perf_and_supine(data, typeinfo)
+	make_sigm(data, typeinfo, typeinfo.sigm_stem)
+	
+	--Additional forms in specific cases
+	--FIXME: needs to be cleared up
+	if match(typeinfo.pres_stem, "nōsc") then
+		local noteindex = #(data.footnotes) + 1
+		add_form(data, "2s_perf_actv_indc", "", sub(typeinfo.perf_stem[1],1,-2) .. "stī", 2 )
+		add_form(data, "1p_perf_actv_indc", "", sub(typeinfo.perf_stem[1],1,-2) .. "mus", 2 )
+		add_form(data, "2p_perf_actv_indc", "", sub(typeinfo.perf_stem[1],1,-2) .. "stis", 2 )
+		add_form(data, "3p_perf_actv_indc", "", sub(typeinfo.perf_stem[1],1,-2) .. "runt", 3 )
+		add_form(data, "1s_plup_actv_indc", "", sub(typeinfo.perf_stem[1],1,-2) .. "ram", 2 )
+		add_form(data, "2s_plup_actv_indc", "", sub(typeinfo.perf_stem[1],1,-2) .. "rās", 2 )
+		add_form(data, "3s_plup_actv_indc", "", sub(typeinfo.perf_stem[1],1,-2) .. "rat", 2 )
+		add_form(data, "1p_plup_actv_indc", "", sub(typeinfo.perf_stem[1],1,-2) .. "rāmus", 2 )
+		add_form(data, "2p_plup_actv_indc", "", sub(typeinfo.perf_stem[1],1,-2) .. "rātis", 2 )
+		add_form(data, "3p_plup_actv_indc", "", sub(typeinfo.perf_stem[1],1,-2) .. "rant", 2 )
+		add_form(data, "1s_futp_actv_indc", "", sub(typeinfo.perf_stem[1],1,-2) .. "rō", 2 )
+		add_form(data, "2s_futp_actv_indc", "", sub(typeinfo.perf_stem[1],1,-2) .. "ris", 2 )
+		add_form(data, "3s_futp_actv_indc", "", sub(typeinfo.perf_stem[1],1,-2) .. "rit", 2 )
+		add_form(data, "1p_futp_actv_indc", "", sub(typeinfo.perf_stem[1],1,-2) .. "rimus", 2 )
+		add_form(data, "2p_futp_actv_indc", "", sub(typeinfo.perf_stem[1],1,-2) .. "ritis", 2 )
+		add_form(data, "3p_futp_actv_indc", "", sub(typeinfo.perf_stem[1],1,-2) .. "rint", 2 )
+		add_form(data, "1s_perf_actv_subj", "", sub(typeinfo.perf_stem[1],1,-2) .. "rim", 2 )
+		add_form(data, "2s_perf_actv_subj", "", sub(typeinfo.perf_stem[1],1,-2) .. "rīs", 2 )
+		add_form(data, "3s_perf_actv_subj", "", sub(typeinfo.perf_stem[1],1,-2) .. "rit", 2 )
+		add_form(data, "1p_perf_actv_subj", "", sub(typeinfo.perf_stem[1],1,-2) .. "rīmus", 2 )
+		add_form(data, "2p_perf_actv_subj", "", sub(typeinfo.perf_stem[1],1,-2) .. "rītis", 2 )
+		add_form(data, "3p_perf_actv_subj", "", sub(typeinfo.perf_stem[1],1,-2) .. "rint", 2 )
+		add_form(data, "1s_plup_actv_subj", "", sub(typeinfo.perf_stem[1],1,-2) .. "ssem", 2 )
+		add_form(data, "2s_plup_actv_subj", "", sub(typeinfo.perf_stem[1],1,-2) .. "ssēs", 2 )
+		add_form(data, "3s_plup_actv_subj", "", sub(typeinfo.perf_stem[1],1,-2) .. "sset", 2 )
+		add_form(data, "1p_plup_actv_subj", "", sub(typeinfo.perf_stem[1],1,-2) .. "ssēmus", 2 )
+		add_form(data, "2p_plup_actv_subj", "", sub(typeinfo.perf_stem[1],1,-2) .. "ssētis", 2 )
+		add_form(data, "3p_plup_actv_subj", "", sub(typeinfo.perf_stem[1],1,-2) .. "ssent", 2 )
+		add_form(data, "perf_actv_inf", "", sub(typeinfo.perf_stem[1],1,-2) .. "sse", 2 )
+		data.form_footnote_indices["2s_perf_actv_indc"] = tostring(noteindex)
+		data.form_footnote_indices["1p_perf_actv_indc"] = tostring(noteindex)
+		data.form_footnote_indices["2p_perf_actv_indc"] = tostring(noteindex)
+		data.form_footnote_indices["3p_perf_actv_indc"] = tostring(noteindex)
+		data.form_footnote_indices["1s_plup_actv_indc"] = tostring(noteindex)
+		data.form_footnote_indices["2s_plup_actv_indc"] = tostring(noteindex)
+		data.form_footnote_indices["3s_plup_actv_indc"] = tostring(noteindex)
+		data.form_footnote_indices["1p_plup_actv_indc"] = tostring(noteindex)
+		data.form_footnote_indices["2p_plup_actv_indc"] = tostring(noteindex)
+		data.form_footnote_indices["3p_plup_actv_indc"] = tostring(noteindex)
+		data.form_footnote_indices["1s_futp_actv_indc"] = tostring(noteindex)
+		data.form_footnote_indices["2s_futp_actv_indc"] = tostring(noteindex)
+		data.form_footnote_indices["3s_futp_actv_indc"] = tostring(noteindex)
+		data.form_footnote_indices["1p_futp_actv_indc"] = tostring(noteindex)
+		data.form_footnote_indices["2p_futp_actv_indc"] = tostring(noteindex)
+		data.form_footnote_indices["3p_futp_actv_indc"] = tostring(noteindex)
+		data.form_footnote_indices["1s_perf_actv_subj"] = tostring(noteindex)
+		data.form_footnote_indices["2s_perf_actv_subj"] = tostring(noteindex)
+		data.form_footnote_indices["3s_perf_actv_subj"] = tostring(noteindex)
+		data.form_footnote_indices["1p_perf_actv_subj"] = tostring(noteindex)
+		data.form_footnote_indices["2p_perf_actv_subj"] = tostring(noteindex)
+		data.form_footnote_indices["3p_perf_actv_subj"] = tostring(noteindex)
+		data.form_footnote_indices["1s_plup_actv_subj"] = tostring(noteindex)
+		data.form_footnote_indices["2s_plup_actv_subj"] = tostring(noteindex)
+		data.form_footnote_indices["3s_plup_actv_subj"] = tostring(noteindex)
+		data.form_footnote_indices["1p_plup_actv_subj"] = tostring(noteindex)
+		data.form_footnote_indices["2p_plup_actv_subj"] = tostring(noteindex)
+		data.form_footnote_indices["3p_plup_actv_subj"] = tostring(noteindex)
+		data.form_footnote_indices["perf_actv_inf"] = tostring(noteindex)
+		data.footnotes[noteindex] = 'The verb \"nōscō\" and its compounds frequently drop the syllables \"vi\" and \"ve\" from their perfect, pluperfect and future perfect conjugations.'
+	end
+	if typeinfo.pres_stem == "ulcīsc" then
+		local noteindex = #(data.footnotes) + 1
+		add_form(data, "1s_sigf_actv_indc", "", "ullō", 2 )
+		data.form_footnote_indices["1s_sigf_actv_indc"] = tostring(noteindex)
+		data.footnotes[noteindex] = 'The form \"ullō\" may have resulted from a later, erroneous misreading of \"ulsō\".'
+	end
 end
 
 conjugations["3rd-io"] = function(args, data, typeinfo)
@@ -1624,6 +1897,7 @@ conjugations["3rd-io"] = function(args, data, typeinfo)
 
 	make_pres_3rd_io(data, typeinfo, typeinfo.pres_stem)
 	make_perf_and_supine(data, typeinfo)
+	make_sigm(data, typeinfo, typeinfo.sigm_stem)
 end
 
 local function ivi_ive(form)
@@ -1662,6 +1936,7 @@ conjugations["4th"] = function(args, data, typeinfo)
 
 	make_pres_4th(data, typeinfo, typeinfo.pres_stem)
 	make_perf_and_supine(data, typeinfo)
+	make_sigm(data, typeinfo, typeinfo.sigm_stem)
 
 	if form_contains(data.forms["1s_pres_actv_indc"], "serviō") or form_contains(data.forms["1s_pres_actv_indc"], "saeviō") then
 		add_forms(data, "impf_actv_indc", typeinfo.pres_stem,
@@ -1693,9 +1968,9 @@ conjugations["4th"] = function(args, data, typeinfo)
 				data.forms[key] = {}
 				for _, f in ipairs(forms) do
 					if typeinfo.subtypes.optsyncperf then
-						ut.insert_if_not(data.forms[key], f)
+						m_table.insertIfNot(data.forms[key], f)
 					end
-					ut.insert_if_not(data.forms[key], ivi_ive(f))
+					m_table.insertIfNot(data.forms[key], ivi_ive(f))
 				end
 			end
 		end
@@ -1862,8 +2137,21 @@ irreg_conjugations["dico"] = function(args, data, typeinfo)
 	make_pres_3rd(data, typeinfo, prefix .. "dīc")
 	make_perf(data, prefix .. "dīx")
 	make_supine(data, typeinfo, prefix .. "dict")
-
+	make_sigm(data, typeinfo, prefix .. "dīx")
+	
+	--Archaic regular imperative
+	local noteindex = #(data.footnotes) + 1
 	add_form(data, "2s_pres_actv_impr", prefix, "dīc", 1)
+	data.form_footnote_indices["2s_pres_actv_impr"] = tostring(noteindex)
+	
+	--Archaic future forms
+	if prefix == "" then
+		add_form(data, "1s_futr_actv_indc", "", "dīcēbō", 2 )
+		add_form(data, "3s_futr_actv_indc", "", "dīcēbit", 2 )
+		data.form_footnote_indices["1s_futr_actv_indc"] = tostring(noteindex)
+		data.form_footnote_indices["3s_futr_actv_indc"] = tostring(noteindex)
+	end
+	data.footnotes[noteindex] = 'Archaic.'
 end
 
 irreg_conjugations["do"] = function(args, data, typeinfo)
@@ -1928,6 +2216,7 @@ irreg_conjugations["duco"] = function(args, data, typeinfo)
 	make_pres_3rd(data, typeinfo, prefix .. "dūc")
 	make_perf(data, prefix .. "dūx")
 	make_supine(data, typeinfo, prefix .. "duct")
+	make_sigm(data, typeinfo, prefix .. "dūx")
 
 	add_form(data, "2s_pres_actv_impr", prefix, "dūc", 1)
 end
@@ -2053,7 +2342,7 @@ end
 
 irreg_conjugations["facio"] = function(args, data, typeinfo)
 	table.insert(data.title, "[[Appendix:Latin third conjugation|third conjugation]] ''iō''-variant")
-	table.insert(data.title, "[[Appendix:Latin irregular verbs|irregular]] and [[suppletive]] in the passive")
+	table.insert(data.title, "[[Appendix:Latin irregular verbs|irregular]] and partially [[suppletive]] in the passive")
 	table.insert(data.categories, "Latin third conjugation verbs")
 	table.insert(data.categories, "Latin irregular verbs")
 	table.insert(data.categories, "Latin suppletive verbs")
@@ -2066,10 +2355,24 @@ irreg_conjugations["facio"] = function(args, data, typeinfo)
 
 	make_perf(data, prefix .. "fēc")
 	make_supine(data, typeinfo, prefix .. "fact")
+	make_sigm(data, typeinfo, prefix .. "fax")
 
-	-- Active imperative
 	if prefix == "" then
-		add_form(data, "2s_pres_actv_impr", prefix, "fac", 1)
+		-- Active imperative
+		add_form(data, "2s_pres_actv_impr", "", "fac", 1)
+		-- Sigmatic forms
+		add_form(data, "1s_sigf_actv_indc", "", {"faxsō", "facsō", "faxiō"}, 2)
+		add_form(data, "2s_sigf_actv_indc", "", {"faxsis", "facsis", "facxis", "facxsis"},  2)
+		add_form(data, "3s_sigf_actv_indc", "", "faxsit", 2)
+		add_form(data, "1p_sigf_actv_indc", "", "faxsimus", 2)
+		add_form(data, "2p_sigf_actv_indc", "", "faxsitis", 2)
+		add_form(data, "3p_sigf_actv_indc", "", "faxsint", 2)
+		add_form(data, "1s_siga_actv_subj", "", {"faxsim", "faxēm"}, 2)
+		add_form(data, "2s_siga_actv_subj", "", {"faxsīs", "faxseis", "faxeis", "faxēs"}, 2)
+		add_form(data, "3s_siga_actv_subj", "", {"faxsīt", "faxeit", "faxēt"},  2)
+		add_form(data, "1p_siga_actv_subj", "", {"faxsīmus", "faxeimus"}, 2)
+		add_form(data, "2p_siga_actv_subj", "", {"faxsītis", "faxeitis"}, 2)
+		add_form(data, "3p_siga_actv_subj", "", {"faxsint", "faxēnt"}, 2)
 	end
 
 	fio(data, prefix, "pasv")
@@ -2470,7 +2773,9 @@ end
 
 irreg_conjugations["coepi"] = function(args, data, typeinfo)
 	table.insert(data.title, "[[Appendix:Latin third conjugation|third conjugation]]")
+	table.insert(data.title, "no [[present tense|present]] stem")
 	table.insert(data.categories, "Latin third conjugation verbs")
+	table.insert(data.categories, "Latin verbs with missing present stem")
 	table.insert(data.categories, "Latin defective verbs")
 
 	local prefix = typeinfo.prefix or ""
@@ -2530,6 +2835,12 @@ irreg_conjugations["sum"] = function(args, data, typeinfo)
 	data.forms["1p_pres_actv_subj"] = prefix_s .. "sīmus"
 	data.forms["2p_pres_actv_subj"] = prefix_s .. "sītis"
 	data.forms["3p_pres_actv_subj"] = prefix_s .. "sint"
+	if prefix_s == "ad" then
+		local noteindex = #(data.footnotes) + 1
+		add_form(data, "3p_pres_actv_subj", "", "adessint", 2 )
+		data.form_footnote_indices["3p_pres_actv_subj"] = tostring(noteindex)
+		data.footnotes[noteindex] = 'Archaic.'
+	end
 
 	data.forms["1s_impf_actv_subj"] = {prefix_e .. "essem", prefix_f .. "forem"}
 	data.forms["2s_impf_actv_subj"] = {prefix_e .. "essēs", prefix_f .. "forēs"}
@@ -2944,6 +3255,51 @@ make_supine = function(data, typeinfo, supine_stem)
 	end
 end
 
+make_sigm = function(data, typeinfo, sigm_stem)
+	if not (typeinfo.subtypes.sigm or typeinfo.subtypes.sigmpasv) then
+		return
+	end
+	if type(sigm_stem) ~= "table" then
+		sigm_stem = {sigm_stem}
+	end
+	local noteindex = #(data.footnotes) + 1
+	
+	for _, stem in ipairs(sigm_stem) do
+		-- Deponent verbs use the passive form
+		if typeinfo.subtypes.depon then
+			add_form(data, "1s_sigf_actv_indc", stem, "or")
+			add_form(data, "2s_sigf_actv_indc", stem, "eris")
+			add_form(data, "3s_sigf_actv_indc", stem, "itur")
+		else
+			for _, stem in ipairs(sigm_stem) do
+				-- Sigmatic future active indicative
+				add_forms(data, "sigf_actv_indc", stem, "ō", "is", "it", "imus", "itis", "int")
+				-- Sigmatic future passive indicative (option)
+				if typeinfo.subtypes.sigmpasv then
+					add_form(data, "1s_sigf_pasv_indc", stem, "or")
+					add_form(data, "2s_sigf_pasv_indc", stem, "eris")
+					add_form(data, "3s_sigf_pasv_indc", stem, "itur")
+				end
+				-- Sigmatic future active subjunctive
+				add_forms(data, "siga_actv_subj", stem, "im", "īs", "īt", "īmus", "ītis", "int")
+				-- Perfect infinitive
+				if not no_inf then
+					add_form(data, "sigm_actv_inf", stem, "ere")
+				end
+			end
+		end
+	end
+	data.form_footnote_indices["sigm"] = noteindex
+	if (typeinfo.subtypes.sigm or typeinfo.subtypes.sigmpasv) and not (typeinfo.subtypes.depon) then
+		data.footnotes[noteindex] = 'At least one use of the archaic \"sigmatic future\" and \"sigmatic aorist\" tenses is attested, which are used by Old Latin writers; most notably Plautus and Terence. The sigmatic future is generally ascribed a future or future perfect meaning, while the sigmatic aorist expresses a possible desire (\"might want to\").'
+		if typeinfo.subtypes.sigmpasv then
+			data.footnotes[noteindex] = data.footnotes[noteindex] .. ' It is also attested as having a rare sigmatic future passive indicative form (\"will have been\").'
+		end
+	elseif typeinfo.subtypes.depon then
+		data.footnotes[noteindex] = 'At least one use of the archaic \"sigmatic future\" tense is attested, which is used by Old Latin writers; most notably Plautus and Terence. The sigmatic future is generally ascribed a future or future perfect meaning, and, as the verb is deponent, takes the form of what would otherwise be the rare sigmatic future passive indicative tense.'
+	end
+end
+
 -- Functions for generating the inflection table
 
 -- Convert FORM (one or more forms) to a string of links. If the form is empty
@@ -2973,7 +3329,7 @@ local function show_form(form, accel)
 		end
 	end
 
-	return table.concat(form, ", ")
+	return table.concat(form, ",<br> ")
 end
 
 parts_to_tags = {
@@ -2990,7 +3346,10 @@ parts_to_tags = {
   ['futr'] = {'fut'},
   ['perf'] = {'perf'},
   ['plup'] = {'plup'},
-  ['futp'] = {'fut', 'perf'},
+  ['futp'] = {'futp'},
+  ['sigm'] = {'sigm'},
+  ['sigf'] = {'sigm', 'fut'},
+  ['siga'] = {'sigm', 'aor'},
   ['indc'] = {'ind'},
   ['subj'] = {'sub'},
   ['impr'] = {'imp'},
@@ -3012,14 +3371,22 @@ parts_to_tags = {
 local function convert_forms_into_links(data)
 	local accel_lemma = data.actual_lemma[1]
 	for slot in iter_slots(false, false) do
-		local slot_parts = rsplit(slot, "_")
+		local slot_parts = split(slot, "_")
 		local tags = {}
 		for _, part in ipairs(slot_parts) do
 			for _, tag in ipairs(parts_to_tags[part]) do
 				table.insert(tags, tag)
 			end
 		end
-		local accel_slot = table.concat(tags, "|")
+
+		-- put the case first for verbal nouns
+		local accel_slot
+		if tags[1] == "sup" or tags[1] == "ger" then
+			accel_slot = tags[2] .. "|" .. tags[1]
+		else
+			accel_slot = table.concat(tags, "|")
+		end
+
 		local accel = {form = accel_slot, lemma = accel_lemma}
 		data.forms[slot] = show_form(data.forms[slot], accel)
 	end
@@ -3090,6 +3457,8 @@ local tenses = {
 	["perf"] = "perfect",
 	["plup"] = "pluperfect",
 	["futp"] = "future&nbsp;perfect",
+	["sigf"] = "sigmatic&nbsp;future",
+	["siga"] = "sigmatic&nbsp;aorist"
 }
 
 local voices = {
@@ -3133,8 +3502,8 @@ make_indc_rows = function(data)
 	for _, v in ipairs({"actv", "pasv"}) do
 		local group = {}
 		local nonempty = false
-
-		for _, t in ipairs({"pres", "impf", "futr", "perf", "plup", "futp"}) do
+		
+		for _, t in ipairs({"pres", "impf", "futr", "perf", "plup", "futp", "sigf"}) do
 			local row = {}
 			local notempty = false
 
@@ -3159,9 +3528,16 @@ make_indc_rows = function(data)
 
 				row = table.concat(row)
 			end
-
+			
+			local fn
+			if t == "sigf" and data.form_footnote_indices["sigm"] then
+				fn = '<sup style="color: red">' .. data.form_footnote_indices["sigm"].."</sup>"
+			else
+				fn = ""
+			end
+			
 			if notempty then
-				table.insert(group, "\n! style=\"background:#c0cfe4\" | " .. tenses[t] .. row)
+				table.insert(group, "\n! style=\"background:#c0cfe4\" | " .. tenses[t] ..  fn .. row)
 			end
 		end
 
@@ -3195,7 +3571,7 @@ make_subj_rows = function(data)
 		local group = {}
 		local nonempty = false
 
-		for _, t in ipairs({"pres", "impf", "perf", "plup"}) do
+		for _, t in ipairs({"pres", "impf", "perf", "plup", "siga"}) do
 			local row = {}
 			local notempty = false
 
@@ -3220,9 +3596,16 @@ make_subj_rows = function(data)
 
 				row = table.concat(row)
 			end
+			
+			local fn
+			if t == "siga" and data.form_footnote_indices["sigm"] then
+				fn = '<sup style="color: red">' .. data.form_footnote_indices["sigm"].."</sup>"
+			else
+				fn = ""
+			end
 
 			if notempty then
-				table.insert(group, "\n! style=\"background:#c0e4c0\" | " .. tenses[t] .. row)
+				table.insert(group, "\n! style=\"background:#c0e4c0\" | " .. tenses[t] .. fn .. row)
 			end
 		end
 
@@ -3266,7 +3649,10 @@ make_impr_rows = function(data)
 			else
 				for col, p in ipairs({"1s", "2s", "3s", "1p", "2p", "3p"}) do
 					local slot = p .. "_" .. t .. "_" .. v .. "_impr"
-					row[col] = "\n| " .. data.forms[slot]
+					row[col] = "\n| " .. data.forms[slot] .. (
+						data.form_footnote_indices[slot] == nil and "" or
+						'<sup style="color: red">' .. data.form_footnote_indices[slot].."</sup>"
+					)
 
 					-- show_form() already called so can just check for "&mdash;"
 					if data.forms[slot] ~= "&mdash;" then
@@ -3399,7 +3785,7 @@ end
 override = function(data, args)
 	for slot in iter_slots(true, false) do
 		if args[slot] then
-			data.forms[slot] = mw.text.split(args[slot], "/")
+			data.forms[slot] = split(args[slot], "/")
 		end
 	end
 end
@@ -3431,9 +3817,9 @@ checkexist = function(data)
 end
 
 checkirregular = function(args,data)
-	local apocopic = mw.ustring.sub(args[1],1,-2)
-	apocopic = mw.ustring.gsub(apocopic,'[^aeiouyāēīōūȳ]+$','')
-	if args[1] and args[2] and not mw.ustring.find(args[2],'^'..apocopic) then
+	local apocopic = sub(args[1],1,-2)
+	apocopic = gsub(apocopic,'[^aeiouyāēīōūȳ]+$','')
+	if args[1] and args[2] and not find(args[2],'^'..apocopic) then
 		table.insert(data.categories,'Latin stem-changing verbs')
 	end
 end
@@ -3448,10 +3834,10 @@ end
 
 flatten_values = function(T)
 	function noaccents(x)
-		return mw.ustring.gsub(mw.ustring.toNFD(x),'[^%w]+',"")
+		return gsub(toNFD(x),'[^%w]+',"")
 	end
 	function cleanup(x)
-		return noaccents(string.gsub(string.gsub(string.gsub(x, '%[', ''), '%]', ''), ' ', '+'))
+		return noaccents(gsub(gsub(gsub(x, '%[', ''), '%]', ''), ' ', '+'))
 	end
 		local tbl = {}
 	for _, v in pairs(T) do
@@ -3461,7 +3847,7 @@ flatten_values = function(T)
 				tbl[#tbl+1] = cleanup(V)
 			end
 		else
-			if string.find(v, '<') == nil then
+			if find(v, '<') == nil then
 				tbl[#tbl+1] = cleanup(v)
 			end
 		end
@@ -3490,6 +3876,3 @@ link_google_books = function(verb, forms, domain)
 end
 
 return export
-
--- For Vim, so we get 4-space tabs
--- vim: set ts=4 sw=4 noet:
