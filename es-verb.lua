@@ -76,8 +76,8 @@ local rmatch = mw.ustring.match
 local rsplit = mw.text.split
 local rsub = com.rsub
 
-local function link_term(term, face)
-	return m_links.full_link({ lang = lang, term = term }, face)
+local function link_term(term)
+	return m_links.full_link({ lang = lang, term = term }, "term")
 end
 
 
@@ -87,8 +87,8 @@ local C = com.C -- consonant regex class
 
 
 local fut_sub_note = "[mostly obsolete, now mainly used in legal language]"
-local pres_sub_voseo_note = "[Argentine and Uruguayan " .. link_term("voseo", "term") .. " prefers the " ..
-	link_term("tú", "term") .. " form for the present subjunctive]"
+local pres_sub_voseo_note = "[Argentine and Uruguayan " .. link_term("voseo") .. " prefers the " ..
+	link_term("tú") .. " form for the present subjunctive]"
 
 local vowel_alternants = m_table.listToSet({"ie", "ie-i", "ye", "ye-i", "ue", "ue-u", "hue", "i", "í", "ú", "+"})
 local vowel_alternant_to_desc = {
@@ -114,17 +114,6 @@ local all_persons_numbers = {
 	["1p"] = "1|p",
 	["2p"] = "2|p",
 	["3p"] = "3|p",
-	["me"] = "me",
-	["te"] = "te",
-	["se"] = "se",
-	["nos"] = "nos",
-	["os"] = "os",
-	["lo"] = "lo",
-	["la"] = "la",
-	["le"] = "le",
-	["los"] = "los",
-	["las"] = "las",
-	["les"] = "les",
 }
 
 local person_number_list_basic = { "1s", "2s", "3s", "1p", "2p", "3p", }
@@ -160,20 +149,24 @@ local verb_slots_combined = {}
 
 local verb_slot_combined_rows = {}
 
+-- Accelerators for use in {{es-verb form of}} when we set the accelerator in all_verb_slots to "-".
+export.overriding_slot_accel = {}
+
 -- Add entries for a slot with person/number variants.
 -- `verb_slots` is the table to add to.
 -- `slot_prefix` is the prefix of the slot, typically specifying the tense/aspect.
--- `tag_suffix` is the set of inflection tags to add after the person/number tags,
--- or "-" to use "-" as the inflection tags (which indicates that no accelerator entry
--- should be generated).
-local function add_slot_personal(verb_slots, slot_prefix, tag_suffix, person_number_list)
+-- `tag_suffix` is the set of inflection tags to add after the person/number tags.
+-- `no_accel` indicates that no accelerator entry should be generated.
+local function add_slot_personal(verb_slots, slot_prefix, tag_suffix, person_number_list, no_accel)
 	for _, persnum in ipairs(person_number_list) do
 		local persnum_tag = all_persons_numbers[persnum]
 		local slot = slot_prefix .. "_" .. persnum
-		if tag_suffix == "-" then
+		local accel = persnum_tag .. "|" .. tag_suffix
+		if no_accel then
 			table.insert(verb_slots, {slot, "-"})
+			export.overriding_slot_accel[slot] = accel
 		else
-			table.insert(verb_slots, {slot, persnum_tag .. "|" .. tag_suffix})
+			table.insert(verb_slots, {slot, accel})
 		end
 	end
 end
@@ -188,27 +181,32 @@ add_slot_personal(verb_slots_basic, "impf_sub_ra", "impf|sub", person_number_lis
 add_slot_personal(verb_slots_basic, "impf_sub_se", "impf|sub", person_number_list_basic)
 add_slot_personal(verb_slots_basic, "fut_sub", "fut|sub", person_number_list_basic)
 add_slot_personal(verb_slots_basic, "imp", "imp", {"2s", "2sv", "3s", "1p", "2p", "3p"})
-add_slot_personal(verb_slots_basic, "neg_imp", "-", {"2s", "3s", "1p", "2p", "3p"})
+add_slot_personal(verb_slots_basic, "neg_imp", "neg|imp", {"2s", "3s", "1p", "2p", "3p"}, "no accel")
 
 local function add_combined_slot(basic_slot, slot_prefix, pronouns)
-	add_slot_personal(verb_slots_combined, basic_slot .. "_comb", slot_prefix .. "|combined", pronouns)
+	for _, pronoun in ipairs(pronouns) do
+		local slot = basic_slot .. "_comb_" .. pronoun
+		-- You have to pass this through full_link() to get a Spanish-specific link
+		local accel = slot_prefix .. "|combined with [[" .. pronoun .. "]]"
+		table.insert(verb_slots_combined, {slot, accel})
+	end
 	table.insert(verb_slot_combined_rows, {basic_slot, pronouns})
 end
 
 add_combined_slot("infinitive", "inf", {"me", "te", "se", "nos", "os", "lo", "la", "le", "los", "las", "les"})
 add_combined_slot("gerund", "gerund", {"me", "te", "se", "nos", "os", "lo", "la", "le", "los", "las", "les"})
-add_combined_slot("imp_2s", "imp|2s", {"me", "te", "nos", "lo", "la", "le", "los", "las", "les"})
-add_combined_slot("imp_3s", "imp|3s", {"me", "se", "nos", "lo", "la", "le", "los", "las", "les"})
-add_combined_slot("imp_1p", "imp|1p", {"te", "nos", "os", "lo", "la", "le", "los", "las", "les"})
-add_combined_slot("imp_2p", "imp|2p", {"me", "nos", "os", "lo", "la", "le", "los", "las", "les"})
-add_combined_slot("imp_3p", "imp|3p", {"me", "se", "nos", "lo", "la", "le", "los", "las", "les"})
+add_combined_slot("imp_2s", "2s|imp", {"me", "te", "nos", "lo", "la", "le", "los", "las", "les"})
+add_combined_slot("imp_3s", "3s|imp", {"me", "se", "nos", "lo", "la", "le", "los", "las", "les"})
+add_combined_slot("imp_1p", "1p|imp", {"te", "nos", "os", "lo", "la", "le", "los", "las", "les"})
+add_combined_slot("imp_2p", "2p|imp", {"me", "nos", "os", "lo", "la", "le", "los", "las", "les"})
+add_combined_slot("imp_3p", "3p|imp", {"me", "se", "nos", "lo", "la", "le", "los", "las", "les"})
 
-local all_verb_slots = {}
+export.all_verb_slots = {}
 for _, slot_and_accel in ipairs(verb_slots_basic) do
-	table.insert(all_verb_slots, slot_and_accel)
+	table.insert(export.all_verb_slots, slot_and_accel)
 end
 for _, slot_and_accel in ipairs(verb_slots_combined) do
-	table.insert(all_verb_slots, slot_and_accel)
+	table.insert(export.all_verb_slots, slot_and_accel)
 end
 
 local verb_slots_basic_map = {}
@@ -1967,7 +1965,7 @@ local function add_categories_and_annotation(alternant_multiword_spec, base, mul
 	end
 
 	if check_for_red_links and not from_headword and not multiword_lemma then
-		for _, slot_and_accel in ipairs(all_verb_slots) do
+		for _, slot_and_accel in ipairs(export.all_verb_slots) do
 			local slot = slot_and_accel[1]
 			local forms = base.forms[slot]
 			local must_break = false
@@ -2608,7 +2606,7 @@ local combined_form_reflexive_table = [=[
 local function make_table(alternant_multiword_spec)
 	local forms = alternant_multiword_spec.forms
 
-	forms.title = link_term(alternant_multiword_spec.lemmas[1].form, "term")
+	forms.title = link_term(alternant_multiword_spec.lemmas[1].form)
 	if alternant_multiword_spec.annotation ~= "" then
 		forms.title = forms.title .. " (" .. alternant_multiword_spec.annotation .. ")"
 	end
@@ -2643,12 +2641,14 @@ end
 -- Return value is WORD_SPEC, an object where the conjugated forms are in `WORD_SPEC.forms`
 -- for each slot. If there are no values for a slot, the slot key will be missing. The value
 -- for a given slot is a list of objects {form=FORM, footnotes=FOOTNOTES}.
-function export.do_generate_forms(parent_args, from_headword, def)
+function export.do_generate_forms(parent_args, from_headword, from_verb_form_of)
 	local params = {
-		[1] = {},
+		[1] = {required = from_verb_form_of},
 		["nocomb"] = {type = "boolean"},
 		["noautolinktext"] = {type = "boolean"},
 		["noautolinkverb"] = {type = "boolean"},
+		["pagename"] = {}, -- for testing/documentation pages
+		["json"] = {type = "boolean"}, -- for bot use
 	}
 
 	if from_headword then
@@ -2659,24 +2659,22 @@ function export.do_generate_forms(parent_args, from_headword, def)
 		params["pret_qual"] = {list = "pret=_qual", allow_holes = true}
 		params["part"] = {list = true} --participle
 		params["part_qual"] = {list = "part=_qual", allow_holes = true}
-		params["pagename"] = {} -- for testing
 		params["attn"] = {type = "boolean"}
 		params["id"] = {}
-		params["json"] = {}
-		params["pagename"] = {}
-		params["new"] = {} -- temporary hack; will remove
 	end
 
 	local args = require("Module:parameters").process(parent_args, params)
 	local PAGENAME = mw.title.getCurrentTitle().text
 
-	local arg1 = args[1]
+	local arg1 = args[1] or not from_verb_form_of and args.pagename
 	if not arg1 and from_headword then
-		arg1 = args.pagename or args.head[1]
+		arg1 = args.head[1]
 	end
 	if not arg1 then
-		if PAGENAME == "es-conj" or PAGENAME == "es-verb" then
-			arg1 = def or "licuar<+,ú>"
+		if (PAGENAME == "es-conj" or PAGENAME == "es-verb") and mw.title.getCurrentTitle().nsText == "Template" then
+			arg1 = "licuar<+,ú>"
+		elseif PAGENAME == "es-verb form of" and mw.title.getCurrentTitle().nsText == "Template" then
+			arg1 = "amar"
 		else
 			arg1 = PAGENAME
 		end
@@ -2722,7 +2720,7 @@ function export.do_generate_forms(parent_args, from_headword, def)
 	normalize_all_lemmas(alternant_multiword_spec)
 	detect_all_indicator_specs(alternant_multiword_spec, from_headword)
 	local inflect_props = {
-		slot_list = all_verb_slots,
+		slot_list = export.all_verb_slots,
 		lang = lang,
 		inflect_word_spec = conjugate_verb,
 		-- We add links around the generated verbal forms rather than allow the entire multiword
@@ -2739,6 +2737,9 @@ function export.do_generate_forms(parent_args, from_headword, def)
 	end
 
 	compute_categories_and_annotation(alternant_multiword_spec, from_headword)
+	if args.json then
+		return require("Module:JSON").toJSON(alternant_multiword_spec)
+	end
 	return alternant_multiword_spec
 end
 
@@ -2751,35 +2752,6 @@ function export.show(frame)
 	show_forms(alternant_multiword_spec)
 	return make_table(alternant_multiword_spec) ..
 		require("Module:utilities").format_categories(alternant_multiword_spec.categories, lang, nil, nil, force_cat)
-end
-
-
--- Concatenate all forms of all slots into a single string of the form
--- "SLOT=FORM,FORM,...|SLOT=FORM,FORM,...|...". Embedded pipe symbols (as might occur
--- in embedded links) are converted to <!>. If INCLUDE_PROPS is given, also include
--- additional properties (currently, none). This is for use by bots.
-local function concat_forms(alternant_multiword_spec, include_props)
-	local ins_text = {}
-	for _, slot_and_accel in ipairs(all_verb_slots) do
-		local slot = slot_and_accel[1]
-		local formtext = iut.concat_forms_in_slot(alternant_multiword_spec.forms[slot])
-		if formtext then
-			table.insert(ins_text, slot .. "=" .. formtext)
-		end
-	end
-	return table.concat(ins_text, "|")
-end
-
-
--- Template-callable function to parse and conjugate a verb given user-specified arguments and return
--- the forms as a string "SLOT=FORM,FORM,...|SLOT=FORM,FORM,...|...". Embedded pipe symbols (as might
--- occur in embedded links) are converted to <!>. If |include_props=1 is given, also include
--- additional properties (currently, none). This is for use by bots.
-function export.generate_forms(frame)
-	local include_props = frame.args["include_props"]
-	local parent_args = frame:getParent().args
-	local alternant_multiword_spec = export.do_generate_forms(parent_args)
-	return concat_forms(alternant_multiword_spec, include_props)
 end
 
 
