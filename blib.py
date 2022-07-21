@@ -9,6 +9,7 @@ from collections import defaultdict
 import xml.sax
 import difflib
 import traceback
+import multiprocessing as mp
 
 site = pywikibot.Site()
 
@@ -1002,8 +1003,11 @@ def create_argparser(desc, include_pagefile=False, include_stdin=False,
     parser.add_argument("--filter-pages", help="Regex to use to filter page names.")
     parser.add_argument("--filter-pages-not", help="Regex to use to filter page names; only includes pages not matching this regex.")
     parser.add_argument("--find-regex", help="Output as by find_regex.py.", action="store_true")
-    parser.add_argument("--no-output", help="In conjunction with --find-regex, don't output processed text.", action = "store_true")
+    parser.add_argument("--no-output", help="In conjunction with --find-regex, don't output processed text.", action="store_true")
     parser.add_argument("--skip-ignorable-pages", help="Skip 'ignorable' pages (talk pages, user pages, etc.).", action="store_true")
+    # Not implemented yet.
+    #parser.add_argument("--parallel", help="Do in parallel.", action="store_true")
+    #parser.add_argument("--num-workers", help="Number of workers for use with --parallel.", type=int, default=5)
   if include_stdin:
     parser.add_argument("--stdin", help="Read dump from stdin.", action="store_true")
     parser.add_argument("--only-lang", help="Only process the section of a page for this language (a canonical language name).")
@@ -1085,7 +1089,7 @@ def args_has_non_default_pages(args):
 # on the command line using --pages or read from a file using --pagefile.
 def do_pagefile_cats_refs(args, start, end, process, default_cats=[],
     default_refs=[], edit=False, stdin=False, only_lang=None,
-    filter_pages=None, ref_namespaces=None, canonicalize_pagename=None):
+    filter_pages=None, ref_namespaces=None, canonicalize_pagename=None, skip_ignorable_pages=False):
   args_ref_namespaces = args.ref_namespaces and args.ref_namespaces.decode("utf-8").split(",")
   args_filter_pages = args.filter_pages and args.filter_pages.decode("utf-8")
   args_filter_pages_not = args.filter_pages_not and args.filter_pages_not.decode("utf-8")
@@ -1136,7 +1140,7 @@ def do_pagefile_cats_refs(args, start, end, process, default_cats=[],
         return True
       if args_filter_pages_not and re.search(args_filter_pages_not, pagetitle):
         return True
-    if args.skip_ignorable_pages and page_should_be_ignored(pagetitle):
+    if (skip_ignorable_pages or args.skip_ignorable_pages) and page_should_be_ignored(pagetitle):
       return True
     return False
 
@@ -1447,6 +1451,9 @@ def try_repeatedly(fun, errandpagemsg, operation="save", bad_value_ret=None, max
         return bad_value_ret
       if "abusefilter-disallowed" in unicode(e):
         log_exception("Abuse filter: Disallowed", e, skipping=True)
+        return bad_value_ret
+      if "abusefilter-warning" in unicode(e):
+        log_exception("Abuse filter warning: Disallowed", e, skipping=True)
         return bad_value_ret
       if "customjsprotected" in unicode(e):
         log_exception("Protected JavaScript page: Disallowed", e, skipping=True)
@@ -2361,3 +2368,23 @@ def split_alternating_runs(segment_runs, splitchar, preserve_splitchar=False):
   if run:
     grouped_runs.append(run)
   return grouped_runs
+
+def do_process(q, iolock, process):
+  while True:
+    item = q.get()
+    if item is None:
+      break
+    process(item, iolock)
+
+def process_in_parallel(generator, process, num_workers=5):
+  q = mp.Queue(maxsize=num_workers)
+  iolock = mp.Lock()
+  pool = mp.Pool(num_workers, initializer=do_process, initargs=(q, iolock, process))
+  for index, item in enumerate(generator):
+    q.put(item)  # blocks until q below its max size
+    with iolock:
+      msg("Queued item #%s" % (index + 1))
+  for _ in range(num_workers):  # tell workers we're done
+    q.put(None)
+  pool.close()
+  pool.join()
