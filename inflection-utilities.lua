@@ -50,7 +50,7 @@ export.split_alternating_runs = put.split_alternating_runs
 -- odd-numbered runs if preserve_splitchar is given). Effectively we leave alone the footnotes and splitchars
 -- themselves, but otherwise strip extraneous spaces. Spaces in the middle of an element are also left alone.
 function export.split_alternating_runs_and_strip_spaces(segment_runs, splitchar, preserve_splitchar)
-	return put.split_alternating_runs_and_frob_raw_text(segment_runs, splitchar, preserve_splitchar, put.strip_spaces)
+	return put.split_alternating_runs_and_frob_raw_text(segment_runs, splitchar, put.strip_spaces, preserve_splitchar)
 end
 
 
