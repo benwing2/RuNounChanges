@@ -12,7 +12,7 @@ Authorship: Ben Wing <benwing2>
 TERMINOLOGY:
 
 -- "slot" = A particular combination of case/number.
-	 Example slot names for nouns are "gen_" (genitive singular) and
+	 Example slot names for nouns are "gen_s" (genitive singular) and
 	 "voc_p" (vocative plural). Each slot is filled with zero or more forms.
 
 -- "form" = The declined Belarusian form representing the value of a given slot.
@@ -749,7 +749,7 @@ decls["adj"] = function(base, stress)
 	-- If multiword, add variant codes to feminine adjectival instrumental
 	-- singular forms so we only get adjective -й endings with noun -й endings
 	-- and adjective -ю endings with noun -ю endings.
-	local adj_alternant_spec = require("Module:be-adjective").do_generate_forms(
+	local adj_alternant_multiword_spec = require("Module:be-adjective").do_generate_forms(
 		{base.lemma .. propspec}, nil, nil, nil, base.multiword
 	)
 	local function copy(from_slot, to_slot)
@@ -758,7 +758,7 @@ decls["adj"] = function(base, stress)
 		-- or its inverse, so we need to call the inverse function to remove extra
 		-- added marks (e.g. accent marks over ё and DOTBELOW marks under vowels
 		-- not to be destressed).
-		base.forms[to_slot] = iut.map_forms(adj_alternant_spec.forms[from_slot],
+		base.forms[to_slot] = iut.map_forms(adj_alternant_multiword_spec.forms[from_slot],
 			com.undo_mark_stressed_vowels_in_unstressed_syllables)
 	end
 	if base.number ~= "pl" then
@@ -2252,7 +2252,7 @@ end
 
 
 -- Externally callable function to parse and decline a noun given user-specified arguments.
--- Return value is WORD_SPEC, an object where the declined forms are in `WORD_SPEC.forms`
+-- Return value is ALTERNANT_MULTIWORD_SPEC, an object where the declined forms are in `ALTERNANT_MULTIWORD_SPEC.forms`
 -- for each slot. If there are no values for a slot, the slot key will be missing. The value
 -- for a given slot is a list of objects {form=FORM, footnotes=FOOTNOTES}.
 function export.do_generate_forms(parent_args, pos, from_headword, def)
@@ -2300,8 +2300,8 @@ end
 
 
 -- Externally callable function to parse and decline a noun where all forms
--- are given manually. Return value is WORD_SPEC, an object where the declined
--- forms are in `WORD_SPEC.forms` for each slot. If there are no values for a
+-- are given manually. Return value is ALTERNANT_MULTIWORD_SPEC, an object where the declined
+-- forms are in `ALTERNANT_MULTIWORD_SPEC.forms` for each slot. If there are no values for a
 -- slot, the slot key will be missing. The value for a given slot is a list of
 -- objects {form=FORM, footnotes=FOOTNOTES}.
 function export.do_generate_forms_manual(parent_args, number, pos, from_headword, def)
@@ -2356,16 +2356,16 @@ function export.do_generate_forms_manual(parent_args, number, pos, from_headword
 
 
 	local args = m_para.process(parent_args, params)
-	local alternant_spec = {
+	local alternant_multiword_spec = {
 		title = args.title,
 		footnotes = args.footnote,
 		forms = {},
 		number = number,
 		manual = true,
 	}
-	process_manual_overrides(alternant_spec.forms, args, alternant_spec.number, args.unknown_stress)
-	compute_categories_and_annotation(alternant_spec)
-	return alternant_spec
+	process_manual_overrides(alternant_multiword_spec.forms, args, alternant_multiword_spec.number, args.unknown_stress)
+	compute_categories_and_annotation(alternant_multiword_spec)
+	return alternant_multiword_spec
 end
 
 
@@ -2388,9 +2388,9 @@ function export.show_manual(frame)
 	}
 	local iargs = m_para.process(frame.args, iparams)
 	local parent_args = frame:getParent().args
-	local alternant_spec = export.do_generate_forms_manual(parent_args, iargs[1])
-	show_forms(alternant_spec)
-	return make_table(alternant_spec) .. require("Module:utilities").format_categories(alternant_spec.categories, lang)
+	local alternant_multiword_spec = export.do_generate_forms_manual(parent_args, iargs[1])
+	show_forms(alternant_multiword_spec)
+	return make_table(alternant_multiword_spec) .. require("Module:utilities").format_categories(alternant_multiword_spec.categories, lang)
 end
 
 
@@ -2398,16 +2398,16 @@ end
 -- "SLOT=FORM,FORM,...|SLOT=FORM,FORM,...|...". Embedded pipe symbols (as might occur
 -- in embedded links) are converted to <!>. If INCLUDE_PROPS is given, also include
 -- additional properties (currently, g= for headword genders). This is for use by bots.
-local function concat_forms(alternant_spec, include_props)
+local function concat_forms(alternant_multiword_spec, include_props)
 	local ins_text = {}
 	for slot, _ in pairs(output_noun_slots_with_linked) do
-		local formtext = iut.concat_forms_in_slot(alternant_spec.forms[slot])
+		local formtext = iut.concat_forms_in_slot(alternant_multiword_spec.forms[slot])
 		if formtext then
 			table.insert(ins_text, slot .. "=" .. formtext)
 		end
 	end
 	if include_props then
-		table.insert(ins_text, "g=" .. table.concat(alternant_spec.genders, ","))
+		table.insert(ins_text, "g=" .. table.concat(alternant_multiword_spec.genders, ","))
 	end
 	return table.concat(ins_text, "|")
 end
@@ -2420,8 +2420,8 @@ end
 function export.generate_forms(frame)
 	local include_props = frame.args["include_props"]
 	local parent_args = frame:getParent().args
-	local alternant_spec = export.do_generate_forms(parent_args)
-	return concat_forms(alternant_spec, include_props)
+	local alternant_multiword_spec = export.do_generate_forms(parent_args)
+	return concat_forms(alternant_multiword_spec, include_props)
 end
 
 --[=[
