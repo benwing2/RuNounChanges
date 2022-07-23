@@ -205,7 +205,7 @@ end
 -- Return the possible person/number combinations given the slot prefix.
 local function persnum_values(slot_prefix)
 	if slot_prefix:find("^imp_") then
-		return {"2s", "3s", "2p", "3p"}
+		return {"2s", "2p", "3p"}
 	else
 		return {"1s", "23s", "13p", "2p"}
 	end
@@ -370,7 +370,7 @@ local function add(base, stem, translit_stem, slot, ending, footnotes, double_wo
 			elseif ending_first == II then
 				doadd(stem_butlast, translit_stem_butlast)
 				return
-			elseif rfind(ending_first, "[" .. com.vowels .. "]") then
+			elseif ending_first ~= I and rfind(ending_first, "[" .. com.vowels .. "]") then
 				doadd(stem_butlast .. I .. "य", translit_stem_butlast and translit_stem_butlast .. "iy")
 				return
 			end
@@ -805,10 +805,10 @@ local function show_forms(alternant_multiword_spec)
 		end
 	end
 	iut.show_forms_with_translit(alternant_multiword_spec.forms, lemmas,
-		verb_slots_impers, props, alternant_multiword_spec.footnotes_impers)
+		verb_slots_impers, props)
 	alternant_multiword_spec.forms.footnote_impers = alternant_multiword_spec.forms.footnote
 	iut.show_forms_with_translit(alternant_multiword_spec.forms, lemmas,
-		verb_slots_pers, props, alternant_multiword_spec.footnotes_pers)
+		verb_slots_pers, props)
 	alternant_multiword_spec.forms.footnote_pers = alternant_multiword_spec.forms.footnote
 end
 
@@ -822,64 +822,64 @@ local function make_table(alternant_multiword_spec)
 <div class="NavContent">
 {\op}| class="inflection-table inflection-hi inflection-verb" data-toggle-category="inflection"
 |-
-| class="hi-tense-aspect-cell"colspan=100% | ''Undeclined''
+! class="hi-tense-aspect-cell"colspan=100% | ''Undeclined''
 |-
-| class="hi-tense-aspect-cell" colspan=2 | ''Stem''
+! class="hi-tense-aspect-cell" colspan=2 | ''Stem''
 | colspan="100%" | {stem}
 |-
-| class="hi-tense-aspect-cell" colspan=2 | ''Infinitive''
+! class="hi-tense-aspect-cell" colspan=2 | ''Infinitive''
 | colspan="100%" | {inf}
 |-
-| class="hi-tense-aspect-cell" colspan=2 | ''Oblique Infinitive''
+! class="hi-tense-aspect-cell" colspan=2 | ''Oblique Infinitive''
 | colspan="100%" | {inf_obl}
 |-
-| class="hi-tense-aspect-cell" colspan=2 | ''Conjunctive''
+! class="hi-tense-aspect-cell" colspan=2 | ''Conjunctive''
 | colspan="100%" | {conj}
 |-
-| class="hi-tense-aspect-cell" colspan=2 | ''Progressive''
+! class="hi-tense-aspect-cell" colspan=2 | ''Progressive''
 | colspan="100%" | {prog}
 |-
-| class="hi-tense-aspect-cell" colspan=100% | ''Participles''
+! class="hi-tense-aspect-cell" colspan=100% | ''Participles''
 |-
 |- class="hi-part-gender-number-header"
 | class="hi-tense-aspect-cell" colspan=2 |
-| {dir} {m} {s}
-| {m} {p}<br />{obl} {m} {s}
-| {f} {s}
-| {f} {p}
+! {dir} {m} {s}
+! {m} {p}<br />{obl} {m} {s}
+! {f} {s}
+! {f} {p}
 |-
-| class="hi-tense-aspect-cell" colspan=2 | ''Infinitive''
+! class="hi-tense-aspect-cell" colspan=2 | ''Infinitive''
 | {inf_ms}
 | {inf_mp}
 | {inf_fs}
 | {inf_fp}
 |-
-| class="hi-tense-aspect-cell" colspan=2 | ''Habitual''
+! class="hi-tense-aspect-cell" colspan=2 | ''Habitual''
 | {hab_ms}
 | {hab_mp}
 | {hab_fs}
 | {hab_fp}
 |-
-| class="hi-tense-aspect-cell" colspan=2 | ''Perfective''
+! class="hi-tense-aspect-cell" colspan=2 | ''Perfective''
 | {pfv_ms}
 | {pfv_mp}
 | {pfv_fs}
 | {pfv_fp}
 |-
-| class="hi-tense-aspect-cell" colspan=2 | ''Prospective<br>Agentive''
+! class="hi-tense-aspect-cell" colspan=2 | ''Prospective<br>Agentive''
 | {agent_ms}
 | {agent_mp}
 | {agent_fs}
 | {agent_fp}
 |-
-| class="hi-tense-aspect-cell" rowspan=2 | ''Adjectival''
-| class="hi-tense-aspect-cell" | ''Perfective''
+! class="hi-tense-aspect-cell" rowspan=2 | ''Adjectival''
+! class="hi-tense-aspect-cell" | ''Perfective''
 | {adj_pfv_ms}
 | {adj_pfv_mp}
 | {adj_pfv_fs}
 | {adj_pfv_fp}
 |-
-| class="hi-tense-aspect-cell" | ''Habitual''
+! class="hi-tense-aspect-cell" | ''Habitual''
 | {adj_hab_ms}
 | {adj_hab_mp}
 | {adj_hab_fs}
@@ -894,9 +894,8 @@ local function make_table(alternant_multiword_spec)
 ]=]
 
 	local person_number_header_sg_pl_headers = [=[
-| colspan=3 | '''Singular'''
-| colspan=1 | '''Singular/Plural'''
-| colspan=2 | '''Plural/Formal'''
+! colspan=3 | '''Singular'''
+! colspan=3 | '''Plural'''
 ]=]
 
 	local person_number_header_table_div = [=[
@@ -904,12 +903,12 @@ local function make_table(alternant_multiword_spec)
 ]=]
 
 	local person_number_header_pers_num_headers = [=[
-| '''1<sup>st</sup>'''<br><span lang="hi" class="Deva">[[मैं]]</span>
-| '''2<sup>nd</sup> intimate'''<br><span lang="hi" class="Deva">[[तू]]</span>
-| '''3<sup>rd</sup>'''<br><span lang="hi" class="Deva">[[यह]]/[[वह]]</span>
-| '''2<sup>nd</sup> familiar'''<br><span lang="hi" class="Deva">[[तुम]]</span>
-| '''1<sup>st</sup>'''<br><span lang="hi" class="Deva">[[हम]]</span>
-| '''2<sup>nd</sup> formal, 3<sup>rd</sup>'''<br><span lang="hi" class="Deva">[[ये]]/[[वे]]/[[आप]]</span>
+! '''1<sup>st</sup>'''<br><span lang="hi" class="Deva">[[मैं]]</span>
+! '''2<sup>nd</sup>'''<br><span lang="hi" class="Deva">[[तू]]</span>
+! '''3<sup>rd</sup>'''<br><span lang="hi" class="Deva">[[यह]]/[[वह]], [[ये]]/[[वो]]</span>
+! '''2<sup>nd</sup>'''<br><span lang="hi" class="Deva">[[तुम]]</span>
+! '''1<sup>st</sup>'''<br><span lang="hi" class="Deva">[[हम]]</span>
+! '''3<sup>rd</sup>, 2<sup>nd</sup>'''<br><span lang="hi" class="Deva">[[ये]]/[[वो]]/[[वे]], [[आप]]</span>
 ]=]
 
 	-- Regular person-number header used at the top of the table and in the middle.
@@ -930,317 +929,317 @@ local function make_table(alternant_multiword_spec)
 <div class="NavContent">
 {\op}| class="inflection-table inflection-hi inflection-verb" data-toggle-category="inflection"
 |-
-| class="hi-sec-div" rowspan=1 colspan=100% | ''Non-Aspectual''
-{person_number_header}{pres_impf_table}| class="hi-tense-aspect-cell" rowspan=2 colspan=1 | {PERF}
-| class="hi-mf-cell" | {m}
+! class="hi-sec-div" rowspan=1 colspan=100% | ''Non-Aspectual''
+{person_number_header}{pres_impf_table}! class="hi-tense-aspect-cell" rowspan=2 colspan=1 | {PERF}
+! class="hi-mf-cell" | {m}
 | colspan=3 | {ind_perf_ms}
 | colspan=3 | {ind_perf_mp}
 |- class="hi-row-f"
-| class="hi-mf-cell" | {f}
+! class="hi-mf-cell" | {f}
 | colspan=4 | {ind_perf_fs}
 | colspan=2 | {ind_perf_fp}
 |- class="hi-row-m"
-| class="hi-tense-aspect-cell" rowspan=2 colspan=1 | {FUT}
-| class="hi-mf-cell" | {m}
+! class="hi-tense-aspect-cell" rowspan=2 colspan=1 | {FUT}
+! class="hi-mf-cell" | {m}
 | {ind_fut_1sm}
 | colspan=2 | {ind_fut_23sm}
 | {ind_fut_2pm}
 | colspan=2 | {ind_fut_13pm}
 |- class="hi-row-f"
-| class="hi-mf-cell" | {f}
+! class="hi-mf-cell" | {f}
 | {ind_fut_1sf}
 | colspan=2 | {ind_fut_23sf}
 | {ind_fut_2pf}
 | colspan=2 | {ind_fut_13pf}
 {presum_table}{subj_table}
 |- class="hi-row-m"
-| class="hi-tense-aspect-cell" rowspan=2 colspan=1 | ''Contrafactual''
-| class="hi-tense-aspect-cell" rowspan=2 colspan=1 | {PST}
-| class="hi-mf-cell" | {m}
+! class="hi-tense-aspect-cell" rowspan=2 colspan=1 | ''Contrafactual''
+! class="hi-tense-aspect-cell" rowspan=2 colspan=1 | {PST}
+! class="hi-mf-cell" | {m}
 | colspan=3 | {cfact_ms}
 | colspan=3 | {cfact_mp}
 |- class="hi-row-f"
-| class="hi-mf-cell" | {f}
+! class="hi-mf-cell" | {f}
 | colspan=4 | {cfact_fs}
 | colspan=2 | {cfact_fp}
 |-
-| class="hi-tense-aspect-cell" rowspan=2 colspan=1 | ''Imperative''
-| class="hi-tense-aspect-cell" rowspan=1 colspan=1 | {PRS}
-| class="hi-mf-cell" | {mf}
+! class="hi-tense-aspect-cell" rowspan=2 colspan=1 | ''Imperative''
+! class="hi-tense-aspect-cell" rowspan=1 colspan=1 | {PRS}
+! class="hi-mf-cell" | {mf}
 |
 | {imp_pres_2s}
-| {imp_pres_3s}
+|
 | {imp_pres_2p}
 |
 | {imp_pres_3p}
 |-
-| class="hi-tense-aspect-cell" rowspan=1 colspan=1 | {FUT}
-| class="hi-mf-cell" | {mf}
+! class="hi-tense-aspect-cell" rowspan=1 colspan=1 | {FUT}
+! class="hi-mf-cell" | {mf}
 |
 | {imp_fut_2s}
-| {imp_fut_3s}
+|
 | {imp_fut_2p}
 |
 | {imp_fut_3p}
 |-
-| class="hi-sec-div" rowspan=1 colspan=100% | ''Habitual''
+! class="hi-sec-div" rowspan=1 colspan=100% | ''Habitual Aspect''
 |- class="hi-row-m"
-| class="hi-tense-aspect-cell" rowspan=4 colspan=1 | ''Indicative''
-| class="hi-tense-aspect-cell" rowspan=2 colspan=1 | {PRS}
-| class="hi-mf-cell" | {m}
+! class="hi-tense-aspect-cell" rowspan=4 colspan=1 | ''Indicative''
+! class="hi-tense-aspect-cell" rowspan=2 colspan=1 | {PRS}
+! class="hi-mf-cell" | {m}
 | {hab_ind_pres_1sm}
 | colspan=2 | {hab_ind_pres_23sm}
 | {hab_ind_pres_2pm}
 | colspan=2 | {hab_ind_pres_13pm}
 |- class="hi-row-f"
-| class="hi-mf-cell" | {f}
+! class="hi-mf-cell" | {f}
 | {hab_ind_pres_1sf}
 | colspan=2 | {hab_ind_pres_23sf}
 | {hab_ind_pres_2pf}
 | colspan=2 | {hab_ind_pres_13pf}
 |- class="hi-row-m"
-| class="hi-tense-aspect-cell" rowspan=2 colspan=1 | {PST}
-| class="hi-mf-cell" | {m}
+! class="hi-tense-aspect-cell" rowspan=2 colspan=1 | {PST}
+! class="hi-mf-cell" | {m}
 | colspan=3 | {hab_ind_past_ms}
 | colspan=3 | {hab_ind_past_mp}
 |- class="hi-row-f"
-| class="hi-mf-cell" | {f}
+! class="hi-mf-cell" | {f}
 | colspan=4 | {hab_ind_past_fs}
 | colspan=2 | {hab_ind_past_fp}
 |- class="hi-row-m"
-| class="hi-tense-aspect-cell" rowspan=2 colspan=1 | ''Presumptive''
-| class="hi-tense-aspect-cell" rowspan=2 colspan=1 | {PRS_PST}
-| class="hi-mf-cell" | {m}
+! class="hi-tense-aspect-cell" rowspan=2 colspan=1 | ''Presumptive''
+! class="hi-tense-aspect-cell" rowspan=2 colspan=1 | {PRS_PST}
+! class="hi-mf-cell" | {m}
 | {hab_presum_1sm}
 | colspan=2 | {hab_presum_23sm}
 | {hab_presum_2pm}
 | colspan=2 | {hab_presum_13pm}
 |- class="hi-row-f"
-| class="hi-mf-cell" | {f}
+! class="hi-mf-cell" | {f}
 | {hab_presum_1sf}
 | colspan=2 | {hab_presum_23sf}
 | {hab_presum_2pf}
 | colspan=2 | {hab_presum_13pf}
 |- class="hi-row-m"
-| class="hi-tense-aspect-cell" rowspan=2 colspan=1 | ''Subjunctive''
-| class="hi-tense-aspect-cell" rowspan=2 colspan=1 | {PRS}
-| class="hi-mf-cell" | {m}
+! class="hi-tense-aspect-cell" rowspan=2 colspan=1 | ''Subjunctive''
+! class="hi-tense-aspect-cell" rowspan=2 colspan=1 | {PRS}
+! class="hi-mf-cell" | {m}
 | {hab_subj_1sm}
 | colspan=2 | {hab_subj_23sm}
 | {hab_subj_2pm}
 | colspan=2 | {hab_subj_13pm}
 |- class="hi-row-f"
-| class="hi-mf-cell" | {f}
+! class="hi-mf-cell" | {f}
 | {hab_subj_1sf}
 | colspan=2 | {hab_subj_23sf}
 | {hab_subj_2pf}
 | colspan=2 | {hab_subj_13pf}
 |- class="hi-row-m"
-| class="hi-tense-aspect-cell" rowspan=2 colspan=1 | ''Contrafactual''
-| class="hi-tense-aspect-cell" rowspan=2 colspan=1 | {PST}
-| class="hi-mf-cell" | {m}
+! class="hi-tense-aspect-cell" rowspan=2 colspan=1 | ''Contrafactual''
+! class="hi-tense-aspect-cell" rowspan=2 colspan=1 | {PST}
+! class="hi-mf-cell" | {m}
 | colspan=3 | {hab_cfact_ms}
 | colspan=3 | {hab_cfact_mp}
 |- class="hi-row-f"
-| class="hi-mf-cell" | {f}
+! class="hi-mf-cell" | {f}
 | colspan=4 | {hab_cfact_fs}
 | colspan=2 | {hab_cfact_fp}
 |-
-| class="hi-sec-div" rowspan=1 colspan=100% | ''Perfective''
+! class="hi-sec-div" rowspan=1 colspan=100% | ''Perfective Aspect''
 {person_number_header}|- class="hi-row-m"
-| class="hi-tense-aspect-cell" rowspan=6 colspan=1 | ''Indicative''
-| class="hi-tense-aspect-cell" rowspan=2 colspan=1 | {PRS}
-| class="hi-mf-cell" | {m}
+! class="hi-tense-aspect-cell" rowspan=6 colspan=1 | ''Indicative''
+! class="hi-tense-aspect-cell" rowspan=2 colspan=1 | {PRS}
+! class="hi-mf-cell" | {m}
 | {pfv_ind_pres_1sm}
 | colspan=2 | {pfv_ind_pres_23sm}
 | {pfv_ind_pres_2pm}
 | colspan=2 | {pfv_ind_pres_13pm}
 |- class="hi-row-f"
-| class="hi-mf-cell" | {f}
+! class="hi-mf-cell" | {f}
 | {pfv_ind_pres_1sf}
 | colspan=2 | {pfv_ind_pres_23sf}
 | {pfv_ind_pres_2pf}
 | colspan=2 | {pfv_ind_pres_13pf}
 |- class="hi-row-m"
-| class="hi-tense-aspect-cell" rowspan=2 colspan=1 | {PST}
-| class="hi-mf-cell" | {m}
+! class="hi-tense-aspect-cell" rowspan=2 colspan=1 | {PST}
+! class="hi-mf-cell" | {m}
 | colspan=3 | {pfv_ind_past_ms}
 | colspan=3 | {pfv_ind_past_mp}
 |- class="hi-row-f"
-| class="hi-mf-cell" | {f}
+! class="hi-mf-cell" | {f}
 | colspan=4 | {pfv_ind_past_fs}
 | colspan=2 | {pfv_ind_past_fp}
 |- class="hi-row-m"
-| class="hi-tense-aspect-cell" rowspan=2 colspan=1 | {FUT}
-| class="hi-mf-cell" | {m}
+! class="hi-tense-aspect-cell" rowspan=2 colspan=1 | {FUT}
+! class="hi-mf-cell" | {m}
 | {pfv_ind_fut_1sm}
 | colspan=2 | {pfv_ind_fut_23sm}
 | {pfv_ind_fut_2pm}
 | colspan=2 | {pfv_ind_fut_13pm}
 |- class="hi-row-f"
-| class="hi-mf-cell" | {f}
+! class="hi-mf-cell" | {f}
 | {pfv_ind_fut_1sf}
 | colspan=2 | {pfv_ind_fut_23sf}
 | {pfv_ind_fut_2pf}
 | colspan=2 | {pfv_ind_fut_13pf}
 |- class="hi-row-m"
-| class="hi-tense-aspect-cell" rowspan=2 colspan=1 | ''Presumptive''
-| class="hi-tense-aspect-cell" rowspan=2 colspan=1 | {PRS_PST}
-| class="hi-mf-cell" | {m}
+! class="hi-tense-aspect-cell" rowspan=2 colspan=1 | ''Presumptive''
+! class="hi-tense-aspect-cell" rowspan=2 colspan=1 | {PRS_PST}
+! class="hi-mf-cell" | {m}
 | {pfv_presum_1sm}
 | colspan=2 | {pfv_presum_23sm}
 | {pfv_presum_2pm}
 | colspan=2 | {pfv_presum_13pm}
 |- class="hi-row-f"
-| class="hi-mf-cell" | {f}
+! class="hi-mf-cell" | {f}
 | {pfv_presum_1sf}
 | colspan=2 | {pfv_presum_23sf}
 | {pfv_presum_2pf}
 | colspan=2 | {pfv_presum_13pf}
 |- class="hi-row-m"
-| class="hi-tense-aspect-cell" rowspan=4 colspan=1 | ''Subjunctive''
-| class="hi-tense-aspect-cell" rowspan=2 colspan=1 | {PRS}
-| class="hi-mf-cell" | {m}
+! class="hi-tense-aspect-cell" rowspan=4 colspan=1 | ''Subjunctive''
+! class="hi-tense-aspect-cell" rowspan=2 colspan=1 | {PRS}
+! class="hi-mf-cell" | {m}
 | {pfv_subj_pres_1sm}
 | colspan=2 | {pfv_subj_pres_23sm}
 | {pfv_subj_pres_2pm}
 | colspan=2 | {pfv_subj_pres_13pm}
 |- class="hi-row-f"
-| class="hi-mf-cell" | {f}
+! class="hi-mf-cell" | {f}
 | {pfv_subj_pres_1sf}
 | colspan=2 | {pfv_subj_pres_23sf}
 | {pfv_subj_pres_2pf}
 | colspan=2 | {pfv_subj_pres_13pf}
 |- class="hi-row-m"
-| class="hi-tense-aspect-cell" rowspan=2 colspan=1 | {FUT}
-| class="hi-mf-cell" | {m}
+! class="hi-tense-aspect-cell" rowspan=2 colspan=1 | {FUT}
+! class="hi-mf-cell" | {m}
 | {pfv_subj_fut_1sm}
 | colspan=2 | {pfv_subj_fut_23sm}
 | {pfv_subj_fut_2pm}
 | colspan=2 | {pfv_subj_fut_13pm}
 |- class="hi-row-f"
-| class="hi-mf-cell" | {f}
+! class="hi-mf-cell" | {f}
 | {pfv_subj_fut_1sf}
 | colspan=2 | {pfv_subj_fut_23sf}
 | {pfv_subj_fut_2pf}
 | colspan=2 | {pfv_subj_fut_13pf}
 |- class="hi-row-m"
-| class="hi-tense-aspect-cell" rowspan=2 colspan=1 | ''Contrafactual''
-| class="hi-tense-aspect-cell" rowspan=2 colspan=1 | {PST}
-| class="hi-mf-cell" | {m}
+! class="hi-tense-aspect-cell" rowspan=2 colspan=1 | ''Contrafactual''
+! class="hi-tense-aspect-cell" rowspan=2 colspan=1 | {PST}
+! class="hi-mf-cell" | {m}
 | colspan=3 | {pfv_cfact_ms}
 | colspan=3 | {pfv_cfact_mp}
 |- class="hi-row-f"
-| class="hi-mf-cell" | {f}
+! class="hi-mf-cell" | {f}
 | colspan=4 | {pfv_cfact_fs}
 | colspan=2 | {pfv_cfact_fp}
 |-
-| class="hi-sec-div" rowspan=1 colspan=100% | ''Progressive''
+! class="hi-sec-div" rowspan=1 colspan=100% | ''Progressive Aspect''
 |- class="hi-row-m"
-| class="hi-tense-aspect-cell" rowspan=6 colspan=1 | ''Indicative''
-| class="hi-tense-aspect-cell" rowspan=2 colspan=1 | {PRS}
-| class="hi-mf-cell" | {m}
+! class="hi-tense-aspect-cell" rowspan=6 colspan=1 | ''Indicative''
+! class="hi-tense-aspect-cell" rowspan=2 colspan=1 | {PRS}
+! class="hi-mf-cell" | {m}
 | {prog_ind_pres_1sm}
 | colspan=2 | {prog_ind_pres_23sm}
 | {prog_ind_pres_2pm}
 | colspan=2 | {prog_ind_pres_13pm}
 |- class="hi-row-f"
-| class="hi-mf-cell" | {f}
+! class="hi-mf-cell" | {f}
 | {prog_ind_pres_1sf}
 | colspan=2 | {prog_ind_pres_23sf}
 | {prog_ind_pres_2pf}
 | colspan=2 | {prog_ind_pres_13pf}
 |- class="hi-row-m"
-| class="hi-tense-aspect-cell" rowspan=2 colspan=1 | {PST}
-| class="hi-mf-cell" | {m}
+! class="hi-tense-aspect-cell" rowspan=2 colspan=1 | {PST}
+! class="hi-mf-cell" | {m}
 | colspan=3 | {prog_ind_past_ms}
 | colspan=3 | {prog_ind_past_mp}
 |- class="hi-row-f"
-| class="hi-mf-cell" | {f}
+! class="hi-mf-cell" | {f}
 | colspan=4 | {prog_ind_past_fs}
 | colspan=2 | {prog_ind_past_fp}
 |- class="hi-row-m"
-| class="hi-tense-aspect-cell" rowspan=2 colspan=1 | {FUT}
-| class="hi-mf-cell" | {m}
+! class="hi-tense-aspect-cell" rowspan=2 colspan=1 | {FUT}
+! class="hi-mf-cell" | {m}
 | {prog_ind_fut_1sm}
 | colspan=2 | {prog_ind_fut_23sm}
 | {prog_ind_fut_2pm}
 | colspan=2 | {prog_ind_fut_13pm}
 |- class="hi-row-f"
-| class="hi-mf-cell" | {f}
+! class="hi-mf-cell" | {f}
 | {prog_ind_fut_1sf}
 | colspan=2 | {prog_ind_fut_23sf}
 | {prog_ind_fut_2pf}
 | colspan=2 | {prog_ind_fut_13pf}
 |- class="hi-row-m"
-| class="hi-tense-aspect-cell" rowspan=2 colspan=1 | ''Presumptive''
-| class="hi-tense-aspect-cell" rowspan=2 colspan=1 | {PRS_PST_FUT}
-| class="hi-mf-cell" | {m}
+! class="hi-tense-aspect-cell" rowspan=2 colspan=1 | ''Presumptive''
+! class="hi-tense-aspect-cell" rowspan=2 colspan=1 | {PRS_PST_FUT}
+! class="hi-mf-cell" | {m}
 | {prog_presum_1sm}
 | colspan=2 | {prog_presum_23sm}
 | {prog_presum_2pm}
 | colspan=2 | {prog_presum_13pm}
 |- class="hi-row-f"
-| class="hi-mf-cell" | {f}
+! class="hi-mf-cell" | {f}
 | {prog_presum_1sf}
 | colspan=2 | {prog_presum_23sf}
 | {prog_presum_2pf}
 | colspan=2 | {prog_presum_13pf}
 |- class="hi-row-m"
-| class="hi-tense-aspect-cell" rowspan=4 colspan=1 | ''Subjunctive''
-| class="hi-tense-aspect-cell" rowspan=2 colspan=1 | {PRS}
-| class="hi-mf-cell" | {m}
+! class="hi-tense-aspect-cell" rowspan=4 colspan=1 | ''Subjunctive''
+! class="hi-tense-aspect-cell" rowspan=2 colspan=1 | {PRS}
+! class="hi-mf-cell" | {m}
 | {prog_subj_pres_1sm}
 | colspan=2 | {prog_subj_pres_23sm}
 | {prog_subj_pres_2pm}
 | colspan=2 | {prog_subj_pres_13pm}
 |- class="hi-row-f"
-| class="hi-mf-cell" | {f}
+! class="hi-mf-cell" | {f}
 | {prog_subj_pres_1sf}
 | colspan=2 | {prog_subj_pres_23sf}
 | {prog_subj_pres_2pf}
 | colspan=2 | {prog_subj_pres_13pf}
 |- class="hi-row-m"
-| class="hi-tense-aspect-cell" rowspan=2 colspan=1 | {FUT}
-| class="hi-mf-cell" | {m}
+! class="hi-tense-aspect-cell" rowspan=2 colspan=1 | {FUT}
+! class="hi-mf-cell" | {m}
 | {prog_subj_fut_1sm}
 | colspan=2 | {prog_subj_fut_23sm}
 | {prog_subj_fut_2pm}
 | colspan=2 | {prog_subj_fut_13pm}
 |- class="hi-row-f"
-| class="hi-mf-cell" | {f}
+! class="hi-mf-cell" | {f}
 | {prog_subj_fut_1sf}
 | colspan=2 | {prog_subj_fut_23sf}
 | {prog_subj_fut_2pf}
 | colspan=2 | {prog_subj_fut_13pf}
 |- class="hi-row-m"
-| class="hi-tense-aspect-cell" rowspan=2 colspan=1 | ''Contrafactual''
-| class="hi-tense-aspect-cell" rowspan=2 colspan=1 | {PST}
-| class="hi-mf-cell" | {m}
+! class="hi-tense-aspect-cell" rowspan=2 colspan=1 | ''Contrafactual''
+! class="hi-tense-aspect-cell" rowspan=2 colspan=1 | {PST}
+! class="hi-mf-cell" | {m}
 | colspan=3 | {prog_cfact_ms}
 | colspan=3 | {prog_cfact_mp}
 |- class="hi-row-f"
-| class="hi-mf-cell" | {f}
+! class="hi-mf-cell" | {f}
 | colspan=4 | {prog_cfact_fs}
 | colspan=2 | {prog_cfact_fp}
 {reversed_person_number_header}|{\cl}{notes_clause}</div></div>]=]
 
 	local pres_impf_table = [=[
 |-
-| class="hi-tense-aspect-cell" rowspan=7 colspan=1 | ''Indicative''
-| class="hi-tense-aspect-cell" rowspan=1 colspan=1 | {PRS}
-| class="hi-mf-cell" | {mf}
+! class="hi-tense-aspect-cell" rowspan=7 colspan=1 | ''Indicative''
+! class="hi-tense-aspect-cell" rowspan=1 colspan=1 | {PRS}
+! class="hi-mf-cell" | {mf}
 | {ind_pres_1s}
 | colspan=2 | {ind_pres_23s}
 | {ind_pres_2p}
 | colspan=2 | {ind_pres_13p}
 |- class="hi-row-m"
-| class="hi-tense-aspect-cell" rowspan=2 colspan=1 | {IMPF}
-| class="hi-mf-cell" | {m}
+! class="hi-tense-aspect-cell" rowspan=2 colspan=1 | {IMPF}
+! class="hi-mf-cell" | {m}
 | colspan=3 | {ind_impf_ms}
 | colspan=3 | {ind_impf_mp}
 |- class="hi-row-f"
-| class="hi-mf-cell" | {f}
+! class="hi-mf-cell" | {f}
 | colspan=4 | {ind_impf_fs}
 | colspan=2 | {ind_impf_fp}
 |- class="hi-row-m"
@@ -1248,20 +1247,20 @@ local function make_table(alternant_multiword_spec)
 
 	local pres_impf_table_missing = [=[
 |- class="hi-row-m"
-| class="hi-tense-aspect-cell" rowspan=4 colspan=1 | ''Indicative''
+! class="hi-tense-aspect-cell" rowspan=4 colspan=1 | ''Indicative''
 ]=]
 
 	local presum_table = [=[
 |- class="hi-row-m"
-| class="hi-tense-aspect-cell" rowspan=2 colspan=1 | ''Presumptive''
-| class="hi-tense-aspect-cell" rowspan=2 colspan=1 | {PRS_PST_FUT}
-| class="hi-mf-cell" | {m}
+! class="hi-tense-aspect-cell" rowspan=2 colspan=1 | ''Presumptive''
+! class="hi-tense-aspect-cell" rowspan=2 colspan=1 | {PRS_PST_FUT}
+! class="hi-mf-cell" | {m}
 | {presum_1sm}
 | colspan=2 | {presum_23sm}
 | {presum_2pm}
 | colspan=2 | {presum_13pm}
 |- class="hi-row-f"
-| class="hi-mf-cell" | {f}
+! class="hi-mf-cell" | {f}
 | {presum_1sf}
 | colspan=2 | {presum_23sf}
 | {presum_2pf}
@@ -1270,9 +1269,9 @@ local function make_table(alternant_multiword_spec)
 
 	local combined_subj = [=[
 |-
-| class="hi-tense-aspect-cell" rowspan=1 colspan=1 | ''Subjunctive''
-| class="hi-tense-aspect-cell" rowspan=1 colspan=1 | {FUT}
-| class="hi-mf-cell" | {mf}
+! class="hi-tense-aspect-cell" rowspan=1 colspan=1 | ''Subjunctive''
+! class="hi-tense-aspect-cell" rowspan=1 colspan=1 | {FUT}
+! class="hi-mf-cell" | {mf}
 | {subj_fut_1s}
 | colspan=2 | {subj_fut_23s}
 | {subj_fut_2p}
@@ -1280,16 +1279,16 @@ local function make_table(alternant_multiword_spec)
 
 	local split_subj = [=[
 |-
-| class="hi-tense-aspect-cell" rowspan=2 colspan=1 | ''Subjunctive''
-| class="hi-tense-aspect-cell" rowspan=1 colspan=1 | {PRS}
-| class="hi-mf-cell" | {mf}
+! class="hi-tense-aspect-cell" rowspan=2 colspan=1 | ''Subjunctive''
+! class="hi-tense-aspect-cell" rowspan=1 colspan=1 | {PRS}
+! class="hi-mf-cell" | {mf}
 | {subj_pres_1s}
 | colspan=2 | {subj_pres_23s}
 | {subj_pres_2p}
 | colspan=2 | {subj_pres_13p}
 |-
-| class="hi-tense-aspect-cell" rowspan=1 colspan=1 | {FUT}
-| class="hi-mf-cell" | {mf}
+! class="hi-tense-aspect-cell" rowspan=1 colspan=1 | {FUT}
+! class="hi-mf-cell" | {mf}
 | {subj_fut_1s}
 | colspan=2 | {subj_fut_23s}
 | {subj_fut_2p}
@@ -1357,75 +1356,6 @@ local function make_table(alternant_multiword_spec)
 end
 
 
--- Implementation of template 'hi-verb cat'.
--- NOTE: Not currently used.
-function export.catboiler(frame)
-	local SUBPAGENAME = mw.title.getCurrentTitle().subpageText
-	local params = {
-		[1] = {},
-	}
-	local args = m_para.process(frame:getParent().args, params)
-
-	local function get_pos()
-		local pos = rmatch(SUBPAGENAME, "^Hindi.- ([^ ]*)s ")
-		if not pos then
-			pos = rmatch(SUBPAGENAME, "^Hindi.- ([^ ]*)s$")
-		end
-		if not pos then
-			error("Invalid category name, should be e.g. \"Hindi verbs with ...\" or \"Hindi ... verbs\"")
-		end
-		return pos
-	end
-
-	local function get_sort_key()
-		local pos, sort_key = rmatch(SUBPAGENAME, "^Hindi.- ([^ ]*)s with (.*)$")
-		if sort_key then
-			return sort_key
-		end
-		pos, sort_key = rmatch(SUBPAGENAME, "^Hindi ([^ ]*)s (.*)$")
-		if sort_key then
-			return sort_key
-		end
-		return rsub(SUBPAGENAME, "^Hindi ", "")
-	end
-
-	local cats = {}, pos
-
-	-- Insert the category CAT (a string) into the categories. String will
-	-- have "Hindi " prepended and ~ substituted for the plural part of speech.
-	local function insert(cat, atbeg)
-		local fullcat = "Hindi " .. rsub(cat, "~", pos .. "s")
-		if atbeg then
-			table.insert(cats, 1, fullcat)
-		else
-			table.insert(cats, fullcat)
-		end
-	end
-
-	local maintext
-	while true do
-		if args[1] then
-			maintext = "~ " .. args[1]
-			pos = get_pos()
-			break
-		end
-
-		error("Unrecognized Hindi verb category name")
-	end
-
-	insert("~|" .. get_sort_key(), "at beginning")
-
-	local categories = {}
-	for _, cat in ipairs(cats) do
-		table.insert(categories, "[[Category:" .. cat .. "]]")
-	end
-
-	return "This category contains Hindi " .. rsub(maintext, "~", pos .. "s")
-		.. "\n" ..
-		mw.getCurrentFrame():expandTemplate{title="hi-categoryTOC", args={}}
-		.. table.concat(categories, "")
-end
-
 -- Externally callable function to parse and conjugate a verb given user-specified arguments.
 -- Return value is WORD_SPEC, an object where the conjugated forms are in `WORD_SPEC.forms`
 -- for each slot. If there are no values for a slot, the slot key will be missing. The value
@@ -1433,8 +1363,6 @@ end
 function export.do_generate_forms(parent_args, pos, from_headword, def)
 	local params = {
 		[1] = {},
-		footnote_impers = {list = true},
-		footnote_pers = {list = true},
 		title = {},
 	}
 
@@ -1466,8 +1394,6 @@ function export.do_generate_forms(parent_args, pos, from_headword, def)
 	}
 	local alternant_multiword_spec = iut.parse_inflected_text(args[1], parse_props)
 	alternant_multiword_spec.title = args.title
-	alternant_multiword_spec.footnotes_impers = args.footnote_impers
-	alternant_multiword_spec.footnotes_pers = args.footnote_pers
 	alternant_multiword_spec.pos = pos or "verbs"
 	alternant_multiword_spec.args = args
 	com.normalize_all_lemmas(alternant_multiword_spec)
@@ -1508,7 +1434,7 @@ end
 -- additional properties (currently, none). This is for use by bots.
 local function concat_forms(alternant_spec, include_props)
 	local ins_text = {}
-	for slot, _ in pairs(verb_slots_with_linked) do
+	for slot, _ in pairs(all_verb_slots) do
 		local formtext = iut.concat_forms_in_slot(alternant_spec.forms[slot])
 		if formtext then
 			table.insert(ins_text, slot .. "=" .. formtext)
