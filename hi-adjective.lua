@@ -28,7 +28,7 @@ local m_table = require("Module:table")
 local m_string_utilities = require("Module:string utilities")
 local iut = require("Module:inflection utilities")
 local m_para = require("Module:parameters")
-local com = require("Module:User:Benwing2/hi-common")
+local com = require("Module:hi-common")
 
 local u = mw.ustring.char
 local rsplit = mw.text.split
@@ -137,19 +137,23 @@ decls["ind-ā"] = function(base)
 end
 
 decls["ān"] = function(base)
-	if rfind(base.lemma, "याँ$") then
-		local stem, translit_stem = com.strip_ending(base, "याँ")
-		add_decl(base, stem, translit_stem, "याँ", "एँ", "एँ", "एँ", "एँ", "एँ", "ईं", "ईं", "ईं", "ईं", "ईं", "ईं")
+	local nasal = rfind(base.lemma, M) and M or N
+
+	if rfind(base.lemma, "या" .. nasal .. "$") then
+		local stem, translit_stem = com.strip_ending(base, "या" .. nasal)
+		add_decl(base, stem, translit_stem, "या" .. nasal, "एँ", "एँ", "एँ", "एँ", "एँ", "ईं", "ईं", "ईं", "ईं", "ईं", "ईं")
 		add_decl(base, stem, translit_stem, nil, "यें", "यें", "यें", "यें", "यें", "यीं", "यीं", "यीं", "यीं", "यीं", "यीं")
 	else
-		local stem, translit_stem = com.strip_ending(base, AAM)
-		add_decl(base, stem, translit_stem, AAM, EN, EN, EN, EN, EN, IIN, IIN, IIN, IIN, IIN, IIN)
+		local stem, translit_stem = com.strip_ending(base, AA .. nasal)
+		add_decl(base, stem, translit_stem, AA .. nasal, EN, EN, EN, EN, EN, IIN, IIN, IIN, IIN, IIN, IIN)
 	end
 end
 
 decls["ind-ān"] = function(base)
-	local stem, translit_stem = com.strip_ending(base, "आँ")
-	add_decl(base, stem, translit_stem, "आँ", "एँ", "एँ", "एँ", "एँ", "एँ", "ईं", "ईं", "ईं", "ईं", "ईं", "ईं")
+	local nasal = rfind(base.lemma, M) and M or N
+
+	local stem, translit_stem = com.strip_ending(base, "आ" .. nasal)
+	add_decl(base, stem, translit_stem, "आ" .. nasal, "एँ", "एँ", "एँ", "एँ", "एँ", "ईं", "ईं", "ईं", "ईं", "ईं", "ईं")
 end
 
 decls["indecl"] = function(base)
@@ -185,15 +189,15 @@ end
 
 
 local function detect_indicator_spec(base)
-	if base.indecl == "$" then
+	if base.indecl then
 		base.decl = "indecl"
 	elseif rfind(base.lemma, AA .. "$") then
 		base.decl = "ā"
-	elseif rfind(base.lemma, "अ$") then
+	elseif rfind(base.lemma, "आ$") then
 		base.decl = "ind-ā"
-	elseif rfind(base.lemma, AAM .. "$") then
+	elseif rfind(base.lemma, AA .. "[" .. M .. N .. "]$") then
 		base.decl = "ān"
-	elseif rfind(base.lemma, "अँ$") then
+	elseif rfind(base.lemma, "आ[" .. M .. N .. "]$") then 
 		base.decl = "ind-ān"
 	else
 		error("Unrecognized adjective lemma: " .. base.lemma)
@@ -238,7 +242,7 @@ local function compute_category_and_desc(base)
 	end
 	local ind, stem = rmatch(base.decl, "^(ind%-)(.*)$")
 	if not ind then
-		stem = basel.decl
+		stem = base.decl
 	end
 	stem = rsub(stem, "n$", TILDE)
 	if ind then
@@ -360,105 +364,6 @@ local function make_table(alternant_multiword_spec)
 end
 
 
-
-export.adj_decl_endings = {
-	["ā-stem"] = {AA, E, II},
-	["independent ā-stem"] = {"अ", "ए", "ई"},
-	["ā̃-stem"] = {AAM, EN, IIN},
-	["independent ā̃-stem"] = {"अँ", "एँ", "ईं"},
-}
-
-
--- Implementation of template 'hi-adj cat'.
-function export.catboiler(frame)
-	local SUBPAGENAME = mw.title.getCurrentTitle().subpageText
-	local params = {
-		[1] = {},
-	}
-	local args = m_para.process(frame:getParent().args, params)
-
-	local function get_pos()
-		local pos = rmatch(SUBPAGENAME, "^Hindi.- ([^ ]*)s ")
-		if not pos then
-			pos = rmatch(SUBPAGENAME, "^Hindi.- ([^ ]*)s$")
-		end
-		if not pos then
-			error("Invalid category name, should be e.g. \"Hindi adjectives with ...\" or \"Hindi ... adjectives\"")
-		end
-		return pos
-	end
-
-	local function get_sort_key()
-		local pos, sort_key = rmatch(SUBPAGENAME, "^Hindi.- ([^ ]*)s with (.*)$")
-		if sort_key then
-			return sort_key
-		end
-		pos, sort_key = rmatch(SUBPAGENAME, "^Hindi ([^ ]*)s (.*)$")
-		if sort_key then
-			return sort_key
-		end
-		return rsub(SUBPAGENAME, "^Hindi ", "")
-	end
-
-	local cats = {}, pos
-
-	-- Insert the category CAT (a string) into the categories. String will
-	-- have "Hindi " prepended and ~ substituted for the plural part of speech.
-	local function insert(cat, atbeg)
-		local fullcat = "Hindi " .. rsub(cat, "~", pos .. "s")
-		if atbeg then
-			table.insert(cats, 1, fullcat)
-		else
-			table.insert(cats, fullcat)
-		end
-	end
-
-	local maintext
-	local stem, gender, stress, ending
-	while true do
-		if args[1] then
-			maintext = "~ " .. args[1]
-			pos = get_pos()
-			break
-		end
-
-		local stem
-		stem, pos = rmatch(SUBPAGENAME, "^Hindi (independent [^ %-]*%-stem) (.*)s$")
-		if not stem then
-			stem, pos = rmatch(SUBPAGENAME, "^Hindi ([^ %-]*%-stem) (.*)s$")
-		end
-		if stem then
-			if not export.adj_decl_endings[stem] then
-				error("Unrecognized adjective stem type in category name: '" .. stem .. "'")
-			end
-			local mdir, mop, f = unpack(export.adj_decl_endings[stem])
-			local endingtext = "ending in " .. mdir .. " in the direct masculine singular, in " .. mop .. " in the remaining masculine forms, and in " .. f .. " in all feminine forms."
-
-			maintext = stem .. " ~, " .. endingtext
-			if rfind(stem, "independent") then
-				maintext = maintext .. " Here, 'independent' means that the stem ending directly " ..
-				"follows a vowel and so uses the independent Devanagari form of the vowel that begins the ending."
-			end
-			insert("~ by stem type|" .. rsub(stem, "independent ", ""))
-			break
-		end
-		error("Unrecognized Hindi adjective category name")
-	end
-
-	insert("~|" .. get_sort_key(), "at beginning")
-
-	local categories = {}
-	for _, cat in ipairs(cats) do
-		table.insert(categories, "[[Category:" .. cat .. "]]")
-	end
-
-	return "This category contains Hindi " .. rsub(maintext, "~", pos .. "s")
-		.. "\n" ..
-		mw.getCurrentFrame():expandTemplate{title="hi-categoryTOC", args={}}
-		.. table.concat(categories, "")
-end
-
-
 -- Externally callable function to parse and decline an adjective given
 -- user-specified arguments. Return value is ALTERNANT_MULTIWORD_SPEC, an
 -- object where the declined forms are in `ALTERNANT_MULTIWORD_SPEC.forms` for
@@ -467,7 +372,7 @@ end
 -- {form=FORM, translit=TRANSLIT, footnotes=FOOTNOTES}.
 function export.do_generate_forms(parent_args, pos, from_headword, def)
 	local params = {
-		[1] = {required = true, default = def or "अच्छा"},
+		[1] = {},
 		footnote = {list = true},
 		title = {},
 	}
@@ -476,13 +381,21 @@ function export.do_generate_forms(parent_args, pos, from_headword, def)
 	end
 
 	local args = m_para.process(parent_args, params)
+
+	if not args[1] then
+		if mw.title.getCurrentTitle().text == "hi-adecl" then
+			args[1] = def or "अच्छा"
+		else
+			args[1] = ""
+		end
+	end
 	local alternant_multiword_spec = iut.parse_alternant_multiword_spec(args[1],
-		parse_indicator_spec, "allow default indicator")
+		parse_indicator_spec, "allow default indicator", "allow blank lemma")
 	alternant_multiword_spec.title = args.title
 	alternant_multiword_spec.footnotes = args.footnote
 	alternant_multiword_spec.pos = pos or "adjectives"
 	alternant_multiword_spec.forms = {}
-	com.normalize_all_lemmas(alternant_multiword_spec)
+	com.normalize_all_lemmas(alternant_multiword_spec, "always transliterate")
 	detect_all_indicator_specs(alternant_multiword_spec)
 	local decline_props = {
 		lang = lang,
