@@ -449,7 +449,9 @@ conjs["2"] = function(base, lemma, accent)
 	add_default_past(base, stem .. suffix)
 	if com.is_stressed(suffix) then
 		local pppstem = rsub(stem, "^(.*)([ую])$",
-			function(a, b) return a .. (b == "у" and "о́" or "ьо́") end)
+			function(a, b) return a .. (
+				b == "у" and "о́" or com.ends_in_vowel(a) and "йо́" or "ьо́"
+			) end)
 		add_ppp(base, pppstem .. "ван")
 	else
 		add_ppp(base, stem .. "ван")
@@ -1579,52 +1581,6 @@ local function make_table(alternant_spec)
 	forms.notes_clause = forms.footnote ~= "" and
 		m_string_utilities.format(notes_template, forms) or ""
 	return m_string_utilities.format(table_spec, forms)
-end
-
-
--- Implementation of template 'uk-verb cat'.
-function export.catboiler(frame)
-	local SUBPAGENAME = mw.title.getCurrentTitle().subpageText
-
-	local cats = {}
-
-	local cls, variant, pattern = rmatch(SUBPAGENAME, "^Ukrainian class ([0-9]*)([()%[%]°]*)([abc]?) verbs")
-	local text = nil
-	if not cls then
-		error("Invalid category name, should be e.g. \"Ukrainian class 3a verbs\"")
-	end
-	if pattern == "" then
-		table.insert(cats, "Ukrainian verbs by class|" .. cls .. variant)
-		text = "This category contains Ukrainian class " .. cls .. " verbs."
-	else
-		table.insert(cats, "Ukrainian verbs by class and accent pattern|" .. cls .. pattern)
-		table.insert(cats, "Ukrainian class " .. cls .. " verbs|" .. pattern)
-		text = "This category contains Ukrainian class " .. cls .. " verbs of " ..
-			"accent pattern " .. pattern .. (
-			variant == "" and "" or " and variant " .. variant) .. ". " .. (
-			pattern == "a" and "With this pattern, all forms are stem-stressed."
-			or pattern == "b" and "With this pattern, all forms are ending-stressed."
-			or "With this pattern, the first singular present indicative and all forms " ..
-			"outside of the present indicative are ending-stressed, while the remaining " ..
-			"forms of the present indicative are stem-stressed.").. (
-			variant == "" and "" or
-			cls == "3" and variant == "°" and " The variant code indicates that the -н of the stem " ..
-			"is missing in most non-present-tense forms." or
-			cls == "3" and (variant == "(°)" or variant == "[°]") and
-			" The variant code indicates that the -н of the stem " ..
-			"is optionally missing in most non-present-tense forms." or
-			cls == "6" and variant == "°" and
-			" The variant code indicates that the present tense is not " ..
-			"[[Appendix:Glossary#iotation|iotated]]. (In most verbs of this class, " ..
-			"the present tense is iotated, e.g. писа́ти with present tense " ..
-			"пишу́, пи́шеш, пи́ше, etc.)" or
-			error("Unrecognized variant code " .. variant .. " for class " .. cls)
-			)
-	end
-
-	return text	.. "\n" ..
-		mw.getCurrentFrame():expandTemplate{title="uk-categoryTOC", args={}}
-		.. require("Module:utilities").format_categories(cats, lang, nil, nil, "force")
 end
 
 
