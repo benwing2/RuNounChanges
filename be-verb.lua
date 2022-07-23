@@ -1178,11 +1178,11 @@ local function detect_indicator_and_form_spec(base)
 			if com.is_accented(base.pres_stem) then
 				error("With accent pattern b, explicit present stem .. '" .. base.pres_stem .. "' should not have an accent")
 			end
-			-- Add a fictitious vowel at the end so that mark_stressed_vowels_in_unstressed_syllables()
-			-- will function correctly, then remove it.
-			base.pres_stem = base.pres_stem .. "а́"
+			-- Add two fictitious vowels at the end so that mark_stressed_vowels_in_unstressed_syllables()
+			-- will function correctly, then remove them.
+			base.pres_stem = base.pres_stem .. "ава́"
 			base.pres_stem = com.mark_stressed_vowels_in_unstressed_syllables(base.pres_stem)
-			base.pres_stem = rsub(base.pres_stem, "а́$", "")
+			base.pres_stem = rsub(base.pres_stem, "ава́$", "")
 		end
 	end
 	if not base.past_accent then
@@ -1589,49 +1589,6 @@ local function make_table(alternant_spec)
 	forms.notes_clause = forms.footnote ~= "" and
 		m_string_utilities.format(notes_template, forms) or ""
 	return m_string_utilities.format(table_spec, forms)
-end
-
-
--- Implementation of template 'be-verb cat'.
-function export.catboiler(frame)
-	local SUBPAGENAME = mw.title.getCurrentTitle().subpageText
-
-	local cats = {}
-
-	local cls, variant, pattern = rmatch(SUBPAGENAME, "^Belarusian class ([0-9]*)(°?)([abc]?) verbs")
-	local text = nil
-	if not cls then
-		error("Invalid category name, should be e.g. \"Belarusian class 3a verbs\"")
-	end
-	if pattern == "" then
-		table.insert(cats, "Belarusian verbs by class|" .. cls .. variant)
-		text = "This category contains Belarusian class " .. cls .. " verbs."
-	else
-		table.insert(cats, "Belarusian verbs by class and accent pattern|" .. cls .. pattern)
-		table.insert(cats, "Belarusian class " .. cls .. " verbs|" .. pattern)
-		text = "This category contains Belarusian class " .. cls .. " verbs of " ..
-			"accent pattern " .. pattern .. (
-			variant == "" and "" or " and variant " .. variant) .. ". " .. (
-			pattern == "a" and "With this pattern, all forms are stem-stressed."
-			or pattern == "b" and "With this pattern, all forms are ending-stressed."
-			or "With this pattern, the first singular present indicative and all forms " ..
-			"outside of the present indicative are ending-stressed, while the remaining " ..
-			"forms of the present indicative are stem-stressed.").. (
-			variant == "" and "" or
-			cls == "3" and variant == "°" and " The variant code indicates that the -н of the stem " ..
-			"is missing in most non-present-tense forms." or
-			cls == "6" and variant == "°" and
-			" The variant code indicates that the present tense is not " ..
-			"[[Appendix:Glossary#iotation|iotated]]. (In most verbs of this class, " ..
-			"the present tense is iotated, e.g. піса́ць with present tense " ..
-			"пішу́, пі́шеш, пі́ше, etc.)" or
-			error("Unrecognized variant code " .. variant .. " for class " .. cls)
-			)
-	end
-
-	return text	.. "\n" ..
-		mw.getCurrentFrame():expandTemplate{title="be-categoryTOC", args={}}
-		.. require("Module:utilities").format_categories(cats, lang, nil, nil, "force")
 end
 
 
