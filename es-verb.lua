@@ -66,7 +66,7 @@ local m_string_utilities = require("Module:string utilities")
 local m_links = require("Module:links")
 local m_table = require("Module:table")
 local iut = require("Module:inflection utilities")
-local com = require("Module:User:Benwing2/es-common")
+local com = require("Module:es-common")
 
 local force_cat = false -- set to true for debugging
 local check_for_red_links = false -- set to false for debugging
@@ -1678,7 +1678,8 @@ end
 
 
 local function parse_indicator_spec(angle_bracket_spec)
-	local base = {}
+	-- Store the original angle bracket spec so we can reconstruct the overall conj spec with the lemma(s) in them.
+	local base = {angle_bracket_spec = angle_bracket_spec}
 	local function parse_err(msg)
 		error(msg .. ": " .. angle_bracket_spec)
 	end
@@ -1741,35 +1742,75 @@ local function parse_indicator_spec(angle_bracket_spec)
 end
 
 
--- Normalize all lemmas, substituting the pagename for blank lemmas and adding links to multiword lemmas.
-local function normalize_all_lemmas(alternant_multiword_spec)
+-- Reconstruct the overall verb spec from the output of iut.parse_inflected_text(), so we can use it in
+-- [[Module:accel/es]].
+function export.reconstruct_verb_spec(alternant_multiword_spec)
+	local parts = {}
 
-	-- (1) Add links to all before and after text.
+	for _, alternant_or_word_spec in ipairs(alternant_multiword_spec.alternant_or_word_specs) do
+		table.insert(parts, alternant_or_word_spec.user_specified_before_text)
+		if alternant_or_word_spec.alternants then
+			table.insert(parts, "((")
+			for i, multiword_spec in ipairs(alternant_or_word_spec.alternants) do
+				if i > 1 then
+					table.insert(parts, ",")
+				end
+				for _, word_spec in ipairs(multiword_spec.word_specs) do
+					table.insert(parts, word_spec.user_specified_before_text)
+					table.insert(parts, word_spec.user_specified_lemma)
+					table.insert(parts, word_spec.angle_bracket_spec)
+				end
+				table.insert(parts, multiword_spec.user_specified_post_text)
+			end
+			table.insert(parts, "))")
+		else
+			table.insert(parts, alternant_or_word_spec.user_specified_lemma)
+			table.insert(parts, alternant_or_word_spec.angle_bracket_spec)
+		end
+	end
+	table.insert(parts, alternant_multiword_spec.user_specified_post_text)
+
+	-- As a special case, if we see e.g. "amar<>", remove the <>. Don't do this if there are spaces, hyphens or
+	-- alternants.
+	local retval = table.concat(parts)
+	if not retval:find("[ %-]") and not retval:find("%(%(") then
+		local retval_no_angle_brackets = retval:match("^(.*)<>$")
+		if retval_no_angle_brackets then
+			return retval_no_angle_brackets
+		end
+	end
+	return retval
+end
+
+
+-- Normalize all lemmas, substituting the pagename for blank lemmas and adding links to multiword lemmas.
+local function normalize_all_lemmas(alternant_multiword_spec, pagename)
+
+	-- (1) Add links to all before and after text. Remember the original text so we can reconstruct the verb spec later.
 	if not alternant_multiword_spec.args.noautolinktext then
-		alternant_multiword_spec.post_text = com.add_links(alternant_multiword_spec.post_text)
 		for _, alternant_or_word_spec in ipairs(alternant_multiword_spec.alternant_or_word_specs) do
+			alternant_or_word_spec.user_specified_before_text = alternant_or_word_spec.before_text
 			alternant_or_word_spec.before_text = com.add_links(alternant_or_word_spec.before_text)
 			if alternant_or_word_spec.alternants then
 				for _, multiword_spec in ipairs(alternant_or_word_spec.alternants) do
-					multiword_spec.post_text = com.add_links(multiword_spec.post_text)
 					for _, word_spec in ipairs(multiword_spec.word_specs) do
+						word_spec.user_specified_before_text = word_spec.before_text
 						word_spec.before_text = com.add_links(word_spec.before_text)
 					end
+					multiword_spec.user_specified_post_text = multiword_spec.post_text
+					multiword_spec.post_text = com.add_links(multiword_spec.post_text)
 				end
 			end
 		end
+		alternant_multiword_spec.user_specified_post_text = alternant_multiword_spec.post_text
+		alternant_multiword_spec.post_text = com.add_links(alternant_multiword_spec.post_text)
 	end
 
 	-- (2) Remove any links from the lemma, but remember the original form
 	--     so we can use it below in the 'lemma_linked' form.
 	iut.map_word_specs(alternant_multiword_spec, function(base)
 		if base.lemma == "" then
-			base.lemma = alternant_multiword_spec.args.pagename or
-				alternant_multiword_spec.args.head and alternant_multiword_spec.args.head[1]
-			if not base.lemma then
-				local PAGENAME = mw.title.getCurrentTitle().text
-				base.lemma = PAGENAME
-			end
+			base.lemma = pagename
 		end
 
 		base.user_specified_lemma = base.lemma
@@ -2174,9 +2215,10 @@ end
 
 
 local function show_forms(alternant_multiword_spec)
-	local lemmas = iut.map_forms(alternant_multiword_spec.forms.infinitive,
-		remove_reflexive_indicators)
+	local lemmas = iut.map_forms(alternant_multiword_spec.forms.infinitive, remove_reflexive_indicators)
 	alternant_multiword_spec.lemmas = lemmas -- save for later use in make_table()
+
+	local reconstructed_verb_spec = export.reconstruct_verb_spec(alternant_multiword_spec)
 
 	-- Initialize the footnotes with those for the future subjunctive and maybe the pres subjunctive
 	-- voseo usage. In the latter case, we only do it if there is a distinct pres subjunctive voseo form.
@@ -2199,10 +2241,18 @@ local function show_forms(alternant_multiword_spec)
 		return obj
 	end
 
+	local function transform_accel_obj(slot, formobj, accel_obj)
+		if accel_obj then
+			accel_obj.form = "verb-form-" .. reconstructed_verb_spec
+		end
+		return accel_obj
+	end
+
 	local props = {
 		lang = lang,
 		lemmas = lemmas,
 		create_footnote_obj = create_footnote_obj,
+		transform_accel_obj = transform_accel_obj,
 	}
 	props.slot_list = verb_slots_basic
 	iut.show_forms(alternant_multiword_spec.forms, props)
@@ -2676,17 +2726,15 @@ function export.do_generate_forms(parent_args, from_headword, from_verb_form_of)
 	local args = require("Module:parameters").process(parent_args, params)
 	local PAGENAME = mw.title.getCurrentTitle().text
 
-	local arg1 = args[1] or not from_verb_form_of and args.pagename
-	if not arg1 and from_headword then
-		arg1 = args.head[1]
-	end
+	local pagename = not from_verb_form_of and args.pagename or from_headword and args.head[1] or PAGENAME
+	local arg1 = args[1]
 	if not arg1 then
 		if (PAGENAME == "es-conj" or PAGENAME == "es-verb") and mw.title.getCurrentTitle().nsText == "Template" then
 			arg1 = "licuar<+,ú>"
 		elseif PAGENAME == "es-verb form of" and mw.title.getCurrentTitle().nsText == "Template" then
 			arg1 = "amar"
 		else
-			arg1 = PAGENAME
+			arg1 = pagename
 		end
 	end
 
@@ -2719,7 +2767,6 @@ function export.do_generate_forms(parent_args, from_headword, from_verb_form_of)
 
 	local parse_props = {
 		parse_indicator_spec = parse_indicator_spec,
-		lang = lang,
 		allow_default_indicator = true,
 		allow_blank_lemma = true,
 	}
@@ -2727,11 +2774,10 @@ function export.do_generate_forms(parent_args, from_headword, from_verb_form_of)
 	local alternant_multiword_spec = iut.parse_inflected_text(escaped_arg1, parse_props)
 	alternant_multiword_spec.pos = pos or "verbs"
 	alternant_multiword_spec.args = args
-	normalize_all_lemmas(alternant_multiword_spec)
+	normalize_all_lemmas(alternant_multiword_spec, pagename)
 	detect_all_indicator_specs(alternant_multiword_spec, from_headword)
 	local inflect_props = {
 		slot_list = export.all_verb_slots,
-		lang = lang,
 		inflect_word_spec = conjugate_verb,
 		-- We add links around the generated verbal forms rather than allow the entire multiword
 		-- expression to be a link, so ensure that user-specified links get included as well.
@@ -2747,7 +2793,7 @@ function export.do_generate_forms(parent_args, from_headword, from_verb_form_of)
 	end
 
 	compute_categories_and_annotation(alternant_multiword_spec, from_headword)
-	if args.json then
+	if args.json and not from_headword and not from_verb_form_of then
 		return require("Module:JSON").toJSON(alternant_multiword_spec)
 	end
 	return alternant_multiword_spec
