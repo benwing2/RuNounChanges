@@ -116,15 +116,10 @@ local all_persons_numbers = {
 	["3p"] = "3|p",
 }
 
-local person_number_list_basic = { "1s", "2s", "3s", "1p", "2p", "3p", }
-local person_number_list_voseo = { "1s", "2s", "2sv", "3s", "1p", "2p", "3p", }
+local person_number_list_basic = {"1s", "2s", "3s", "1p", "2p", "3p"}
+local person_number_list_voseo = {"1s", "2s", "2sv", "3s", "1p", "2p", "3p"}
+local imp_person_number_list = {"2s", "2sv", "3s", "1p", "2p", "3p"}
 local neg_imp_person_number_list = {"2s", "3s", "1p", "2p", "3p"}
-
--- local persnum_to_index = {}
--- for k, v in pairs(person_number_list) do
--- 	persnum_to_index[v] = k
--- end
-local imp_person_number_list = { "2s", "2p", }
 
 person_number_to_reflexive_pronoun = {
 	["1s"] = "me",
@@ -187,28 +182,36 @@ add_slot_personal(verb_slots_basic, "pres_sub", "pres|sub", person_number_list_v
 add_slot_personal(verb_slots_basic, "impf_sub_ra", "impf|sub", person_number_list_basic)
 add_slot_personal(verb_slots_basic, "impf_sub_se", "impf|sub", person_number_list_basic)
 add_slot_personal(verb_slots_basic, "fut_sub", "fut|sub", person_number_list_basic)
-add_slot_personal(verb_slots_basic, "imp", "imp", {"2s", "2sv", "3s", "1p", "2p", "3p"})
+add_slot_personal(verb_slots_basic, "imp", "imp", imp_person_number_list)
 add_slot_personal(verb_slots_basic, "neg_imp", "neg|imp", neg_imp_person_number_list, "no accel")
 add_slot_personal(verb_slots_basic, "infinitive", "inf", person_number_list_basic)
 add_slot_personal(verb_slots_basic, "gerund", "ger", person_number_list_basic)
 
+local third_person_object_clitics = {"lo", "la", "le", "los", "las", "les"}
+
 local function add_combined_slot(basic_slot, slot_prefix, clitics)
-	for _, clitic in ipairs(clitics) do
+	local clitics_with_object = m_table.append(clitics, third_person_object_clitics)
+	for _, clitic in ipairs(clitics_with_object) do
 		local slot = basic_slot .. "_comb_" .. clitic
 		-- You have to pass this through full_link() to get a Spanish-specific link
 		local accel = slot_prefix .. "|combined with [[" .. clitic .. "]]"
 		table.insert(verb_slots_combined, {slot, accel})
 	end
-	table.insert(verb_slot_combined_rows, {basic_slot, clitics})
+	table.insert(verb_slot_combined_rows, {basic_slot, clitics_with_object})
 end
 
-add_combined_slot("infinitive", "inf", {"me", "te", "se", "nos", "os", "lo", "la", "le", "los", "las", "les"})
-add_combined_slot("gerund", "gerund", {"me", "te", "se", "nos", "os", "lo", "la", "le", "los", "las", "les"})
-add_combined_slot("imp_2s", "2s|imp", {"me", "te", "nos", "lo", "la", "le", "los", "las", "les"})
-add_combined_slot("imp_3s", "3s|imp", {"me", "se", "nos", "lo", "la", "le", "los", "las", "les"})
-add_combined_slot("imp_1p", "1p|imp", {"te", "nos", "os", "lo", "la", "le", "los", "las", "les"})
-add_combined_slot("imp_2p", "2p|imp", {"me", "nos", "os", "lo", "la", "le", "los", "las", "les"})
-add_combined_slot("imp_3p", "3p|imp", {"me", "se", "nos", "lo", "la", "le", "los", "las", "les"})
+add_combined_slot("infinitive", "inf", {"me", "te", "se", "nos", "os"})
+add_combined_slot("gerund", "gerund", {"me", "te", "se", "nos", "os"})
+
+local function add_combined_imp_slot(persnum, personal_clitics)
+	add_combined_slot("imp_" .. persnum, all_persons_numbers[persnum] .. "|imp", personal_clitics)
+end
+add_combined_imp_slot("2s", {"me", "te", "nos"})
+add_combined_imp_slot("2sv", {"me", "te", "nos"})
+add_combined_imp_slot("3s", {"me", "se", "nos"})
+add_combined_imp_slot("1p", {"te", "nos", "os"})
+add_combined_imp_slot("2p", {"me", "nos", "os"})
+add_combined_imp_slot("3p", {"me", "se", "nos"})
 
 export.all_verb_slots = {}
 for _, slot_and_accel in ipairs(verb_slots_basic) do
@@ -2283,11 +2286,9 @@ local basic_table = [=[
 |-
 ! colspan="3" style="background:#e2e4c0" | <span title="infinitivo">infinitive</span>
 | colspan="5" | {infinitive}
-
 |-
 ! colspan="3" style="background:#e2e4c0" | <span title="gerundio">gerund</span>
 | colspan="5" | {gerund}
-
 |-
 ! rowspan="3" colspan="2" style="background:#e2e4c0" | <span title="participio (pasado)">past participle</span>
 | colspan="2" style="background:#e2e4c0" |
@@ -2301,12 +2302,10 @@ local basic_table = [=[
 ! colspan="2" style="background:#e2e4c0" | plural
 | colspan="2" | {pp_mp}
 | colspan="2" | {pp_fp}
-
 |-
 ! colspan="2" rowspan="2" style="background:#DEDEDE" |
 ! colspan="3" style="background:#DEDEDE" | singular
 ! colspan="3" style="background:#DEDEDE" | plural
-
 |-
 ! style="background:#DEDEDE" | 1st person
 ! style="background:#DEDEDE" | 2nd person
@@ -2314,10 +2313,8 @@ local basic_table = [=[
 ! style="background:#DEDEDE" | 1st person
 ! style="background:#DEDEDE" | 2nd person
 ! style="background:#DEDEDE" | 3rd person
-
 |-{reflexive_non_finite_clause}
 ! rowspan="6" style="background:#c0cfe4" | <span title="indicativo">indicative</span>
-
 ! style="background:#ECECEC;width:12.5%" |
 ! style="background:#ECECEC;width:12.5%" | yo
 ! style="background:#ECECEC;width:12.5%" | tú<br />vos
@@ -2325,7 +2322,6 @@ local basic_table = [=[
 ! style="background:#ECECEC;width:12.5%" | nosotros<br />nosotras
 ! style="background:#ECECEC;width:12.5%" | vosotros<br />vosotras
 ! style="background:#ECECEC;width:12.5%" | ellos/ellas<br />ustedes
-
 |-
 ! style="height:3em;background:#ECECEC" | <span title="presente de indicativo">present</span>
 | {pres_1s}
@@ -2334,7 +2330,6 @@ local basic_table = [=[
 | {pres_1p}
 | {pres_2p}
 | {pres_3p}
-
 |-
 ! style="height:3em;background:#ECECEC" | <span title="pretérito imperfecto (copréterito)">imperfect</span>
 | {impf_1s}
@@ -2343,7 +2338,6 @@ local basic_table = [=[
 | {impf_1p}
 | {impf_2p}
 | {impf_3p}
-
 |-
 ! style="height:3em;background:#ECECEC" | <span title="pretérito perfecto simple (pretérito indefinido)">preterite</span>
 | {pret_1s}
@@ -2352,7 +2346,6 @@ local basic_table = [=[
 | {pret_1p}
 | {pret_2p}
 | {pret_3p}
-
 |-
 ! style="height:3em;background:#ECECEC" | <span title="futuro simple (futuro imperfecto)">future</span>
 | {fut_1s}
@@ -2361,7 +2354,6 @@ local basic_table = [=[
 | {fut_1p}
 | {fut_2p}
 | {fut_3p}
-
 |-
 ! style="height:3em;background:#ECECEC" | <span title="condicional simple (pospretérito de modo indicativo)">conditional</span>
 | {cond_1s}
@@ -2370,7 +2362,6 @@ local basic_table = [=[
 | {cond_1p}
 | {cond_2p}
 | {cond_3p}
-
 |-
 ! style="background:#DEDEDE;height:.75em" colspan="8" |
 |-
@@ -2382,7 +2373,6 @@ local basic_table = [=[
 ! style="background:#ECECEC" | nosotros<br />nosotras
 ! style="background:#ECECEC" | vosotros<br />vosotras
 ! style="background:#ECECEC" | ellos/ellas<br />ustedes
-
 |-
 ! style="height:3em;background:#ECECEC" | <span title="presente de subjuntivo">present</span>
 | {pres_sub_1s}
@@ -2391,7 +2381,6 @@ local basic_table = [=[
 | {pres_sub_1p}
 | {pres_sub_2p}
 | {pres_sub_3p}
-
 |-
 ! style="height:3em;background:#ECECEC" | <span title="pretérito imperfecto de subjuntivo">imperfect</span><br />(ra)
 | {impf_sub_ra_1s}
@@ -2400,7 +2389,6 @@ local basic_table = [=[
 | {impf_sub_ra_1p}
 | {impf_sub_ra_2p}
 | {impf_sub_ra_3p}
-
 |-
 ! style="height:3em;background:#ECECEC" | <span title="pretérito imperfecto de subjuntivo">imperfect</span><br />(se)
 | {impf_sub_se_1s}
@@ -2409,7 +2397,6 @@ local basic_table = [=[
 | {impf_sub_se_1p}
 | {impf_sub_se_2p}
 | {impf_sub_se_3p}
-
 |-
 ! style="height:3em;background:#ECECEC" | <span title="futuro simple de subjuntivo (futuro de subjuntivo)">future</span><sup style="color:red">1</sup>
 | {fut_sub_1s}
@@ -2418,7 +2405,6 @@ local basic_table = [=[
 | {fut_sub_1p}
 | {fut_sub_2p}
 | {fut_sub_3p}
-
 |-
 ! style="background:#DEDEDE;height:.75em" colspan="8" |
 |-
@@ -2430,7 +2416,6 @@ local basic_table = [=[
 ! style="background:#ECECEC" | nosotros<br />nosotras
 ! style="background:#ECECEC" | vosotros<br />vosotras
 ! style="background:#ECECEC" | ustedes
-
 |-
 ! style="height:3em;background:#ECECEC" | <span title="imperativo afirmativo">affirmative</span>
 |
@@ -2439,7 +2424,6 @@ local basic_table = [=[
 | {imp_1p}
 | {imp_2p}
 | {imp_3p}
-
 |-
 ! style="height:3em;background:#ECECEC" | <span title="imperativo negativo">negative</span>
 |
@@ -2481,75 +2465,11 @@ local reflexive_non_finite_template = [=[
 ! style="background:#DEDEDE;height:.75em" colspan="8" |
 |-]=]
 
-local combined_form_table = [=[
-{description}<div class="NavFrame">
-<div class="NavHead" align=center>&nbsp; &nbsp; Selected combined forms of {title}</div>
-<div class="NavContent">
-These forms are generated automatically and may not actually be used. Pronoun usage varies by region.
-{\op}| class="inflection-table" style="background:#F9F9F9;text-align:center;width:100%"
+local combined_form_combined_tu_vos_template = [=[
 
-|-
-! colspan="2" rowspan="2" style="background:#DEDEDE" |
-! colspan="3" style="background:#DEDEDE" | singular
-! colspan="3" style="background:#DEDEDE" | plural
-
-|-
-! style="background:#DEDEDE" | 1st person
-! style="background:#DEDEDE" | 2nd person
-! style="background:#DEDEDE" | 3rd person
-! style="background:#DEDEDE" | 1st person
-! style="background:#DEDEDE" | 2nd person
-! style="background:#DEDEDE" | 3rd person
-
-|-
-! rowspan="3" style="background:#c0cfe4" | with infinitive {infinitive}
-
-|-
-! style="height:3em;background:#ECECEC" | dative
-| {infinitive_comb_me}
-| {infinitive_comb_te}
-| {infinitive_comb_le}, {infinitive_comb_se}
-| {infinitive_comb_nos}
-| {infinitive_comb_os}
-| {infinitive_comb_les}, {infinitive_comb_se}
-
-|-
-! style="height:3em;background:#ECECEC" | accusative
-| {infinitive_comb_me}
-| {infinitive_comb_te}
-| {infinitive_comb_lo}, {infinitive_comb_la}, {infinitive_comb_se}
-| {infinitive_comb_nos}
-| {infinitive_comb_os}
-| {infinitive_comb_los}, {infinitive_comb_las}, {infinitive_comb_se}
-
-|-
 ! style="background:#DEDEDE;height:.35em" colspan="8" |
 |-
-! rowspan="3" style="background:#d0cfa4" | with gerund {gerund}
-
-|-
-! style="height:3em;background:#ECECEC" | dative
-| {gerund_comb_me}
-| {gerund_comb_te}
-| {gerund_comb_le}, {gerund_comb_se}
-| {gerund_comb_nos}
-| {gerund_comb_os}
-| {gerund_comb_les}, {gerund_comb_se}
-
-|-
-! style="height:3em;background:#ECECEC" | accusative
-| {gerund_comb_me}
-| {gerund_comb_te}
-| {gerund_comb_lo}, {gerund_comb_la}, {gerund_comb_se}
-| {gerund_comb_nos}
-| {gerund_comb_os}
-| {gerund_comb_los}, {gerund_comb_las}, {gerund_comb_se}
-
-|-
-! style="background:#DEDEDE;height:.35em" colspan="8" |
-|-
-! rowspan="3" style="background:#f2caa4" | with informal second-person singular imperative {imp_2s}
-
+! rowspan="3" style="background:#f2caa4" | with informal second-person singular ''tú/vos'' imperative {imp_2s}
 |-
 ! style="height:3em;background:#ECECEC" | dative
 | {imp_2s_comb_me}
@@ -2558,7 +2478,6 @@ These forms are generated automatically and may not actually be used. Pronoun us
 | {imp_2s_comb_nos}
 | ''not used''
 | {imp_2s_comb_les}
-
 |-
 ! style="height:3em;background:#ECECEC" | accusative
 | {imp_2s_comb_me}
@@ -2567,12 +2486,110 @@ These forms are generated automatically and may not actually be used. Pronoun us
 | {imp_2s_comb_nos}
 | ''not used''
 | {imp_2s_comb_los}, {imp_2s_comb_las}
+|-]=]
 
+local combined_form_separate_tu_vos_template = [=[
+
+! style="background:#DEDEDE;height:.35em" colspan="8" |
+|-
+! rowspan="3" style="background:#f2caa4" | with informal second-person singular ''tú'' imperative {imp_2s}
+|-
+! style="height:3em;background:#ECECEC" | dative
+| {imp_2s_comb_me}
+| {imp_2s_comb_te}
+| {imp_2s_comb_le}
+| {imp_2s_comb_nos}
+| ''not used''
+| {imp_2s_comb_les}
+|-
+! style="height:3em;background:#ECECEC" | accusative
+| {imp_2s_comb_me}
+| {imp_2s_comb_te}
+| {imp_2s_comb_lo}, {imp_2s_comb_la}
+| {imp_2s_comb_nos}
+| ''not used''
+| {imp_2s_comb_los}, {imp_2s_comb_las}
 |-
 ! style="background:#DEDEDE;height:.35em" colspan="8" |
 |-
-! rowspan="3" style="background:#f2caa4" | with formal second-person singular imperative {imp_3s}
+! rowspan="3" style="background:#f2caa4" | with informal second-person singular ''vos'' imperative {imp_2sv}
+|-
+! style="height:3em;background:#ECECEC" | dative
+| {imp_2sv_comb_me}
+| {imp_2sv_comb_te}
+| {imp_2sv_comb_le}
+| {imp_2sv_comb_nos}
+| ''not used''
+| {imp_2sv_comb_les}
+|-
+! style="height:3em;background:#ECECEC" | accusative
+| {imp_2sv_comb_me}
+| {imp_2sv_comb_te}
+| {imp_2sv_comb_lo}, {imp_2sv_comb_la}
+| {imp_2sv_comb_nos}
+| ''not used''
+| {imp_2sv_comb_los}, {imp_2sv_comb_las}
+|-]=]
 
+local combined_form_table = [=[
+{description}<div class="NavFrame">
+<div class="NavHead" align=center>&nbsp; &nbsp; Selected combined forms of {title}</div>
+<div class="NavContent">
+These forms are generated automatically and may not actually be used. Pronoun usage varies by region.
+{\op}| class="inflection-table" style="background:#F9F9F9;text-align:center;width:100%"
+|-
+! colspan="2" rowspan="2" style="background:#DEDEDE" |
+! colspan="3" style="background:#DEDEDE" | singular
+! colspan="3" style="background:#DEDEDE" | plural
+|-
+! style="background:#DEDEDE" | 1st person
+! style="background:#DEDEDE" | 2nd person
+! style="background:#DEDEDE" | 3rd person
+! style="background:#DEDEDE" | 1st person
+! style="background:#DEDEDE" | 2nd person
+! style="background:#DEDEDE" | 3rd person
+|-
+! rowspan="3" style="background:#c0cfe4" | with infinitive {infinitive}
+|-
+! style="height:3em;background:#ECECEC" | dative
+| {infinitive_comb_me}
+| {infinitive_comb_te}
+| {infinitive_comb_le}, {infinitive_comb_se}
+| {infinitive_comb_nos}
+| {infinitive_comb_os}
+| {infinitive_comb_les}, {infinitive_comb_se}
+|-
+! style="height:3em;background:#ECECEC" | accusative
+| {infinitive_comb_me}
+| {infinitive_comb_te}
+| {infinitive_comb_lo}, {infinitive_comb_la}, {infinitive_comb_se}
+| {infinitive_comb_nos}
+| {infinitive_comb_os}
+| {infinitive_comb_los}, {infinitive_comb_las}, {infinitive_comb_se}
+|-
+! style="background:#DEDEDE;height:.35em" colspan="8" |
+|-
+! rowspan="3" style="background:#d0cfa4" | with gerund {gerund}
+|-
+! style="height:3em;background:#ECECEC" | dative
+| {gerund_comb_me}
+| {gerund_comb_te}
+| {gerund_comb_le}, {gerund_comb_se}
+| {gerund_comb_nos}
+| {gerund_comb_os}
+| {gerund_comb_les}, {gerund_comb_se}
+|-
+! style="height:3em;background:#ECECEC" | accusative
+| {gerund_comb_me}
+| {gerund_comb_te}
+| {gerund_comb_lo}, {gerund_comb_la}, {gerund_comb_se}
+| {gerund_comb_nos}
+| {gerund_comb_os}
+| {gerund_comb_los}, {gerund_comb_las}, {gerund_comb_se}
+|-{tu_vos_clause}
+! style="background:#DEDEDE;height:.35em" colspan="8" |
+|-
+! rowspan="3" style="background:#f2caa4" | with formal second-person singular imperative {imp_3s}
 |-
 ! style="height:3em;background:#ECECEC" | dative
 | {imp_3s_comb_me}
@@ -2581,7 +2598,6 @@ These forms are generated automatically and may not actually be used. Pronoun us
 | {imp_3s_comb_nos}
 | ''not used''
 | {imp_3s_comb_les}
-
 |-
 ! style="height:3em;background:#ECECEC" | accusative
 | {imp_3s_comb_me}
@@ -2590,12 +2606,10 @@ These forms are generated automatically and may not actually be used. Pronoun us
 | {imp_3s_comb_nos}
 | ''not used''
 | {imp_3s_comb_los}, {imp_3s_comb_las}
-
 |-
 ! style="background:#DEDEDE;height:.35em" colspan="8" |
 |-
 ! rowspan="3" style="background:#f2caa4" | with first-person plural imperative {imp_1p}
-
 |-
 ! style="height:3em;background:#ECECEC" | dative
 | ''not used''
@@ -2604,7 +2618,6 @@ These forms are generated automatically and may not actually be used. Pronoun us
 | {imp_1p_comb_nos}
 | {imp_1p_comb_os}
 | {imp_1p_comb_les}
-
 |-
 ! style="height:3em;background:#ECECEC" | accusative
 | ''not used''
@@ -2613,12 +2626,10 @@ These forms are generated automatically and may not actually be used. Pronoun us
 | {imp_1p_comb_nos}
 | {imp_1p_comb_os}
 | {imp_1p_comb_los}, {imp_1p_comb_las}
-
 |-
 ! style="background:#DEDEDE;height:.35em" colspan="8" |
 |-
 ! rowspan="3" style="background:#f2caa4" | with informal second-person plural imperative {imp_2p}
-
 |-
 ! style="height:3em;background:#ECECEC" | dative
 | {imp_2p_comb_me}
@@ -2627,7 +2638,6 @@ These forms are generated automatically and may not actually be used. Pronoun us
 | {imp_2p_comb_nos}
 | {imp_2p_comb_os}
 | {imp_2p_comb_les}
-
 |-
 ! style="height:3em;background:#ECECEC" | accusative
 | {imp_2p_comb_me}
@@ -2636,12 +2646,10 @@ These forms are generated automatically and may not actually be used. Pronoun us
 | {imp_2p_comb_nos}
 | {imp_2p_comb_os}
 | {imp_2p_comb_los}, {imp_2p_comb_las}
-
 |-
 ! style="background:#DEDEDE;height:.35em" colspan="8" |
 |-
 ! rowspan="3" style="background:#f2caa4" | with formal second-person plural imperative {imp_3p}
-
 |-
 ! style="height:3em;background:#ECECEC" | dative
 | {imp_3p_comb_me}
@@ -2650,7 +2658,6 @@ These forms are generated automatically and may not actually be used. Pronoun us
 | {imp_3p_comb_nos}
 | ''not used''
 | {imp_3p_comb_les}, {imp_3p_comb_se}
-
 |-
 ! style="height:3em;background:#ECECEC" | accusative
 | {imp_3p_comb_me}
@@ -2689,6 +2696,10 @@ local function make_table(alternant_multiword_spec)
 	else
 		forms.footnote = alternant_multiword_spec.footnote_combined
 		forms.notes_clause = forms.footnote ~= "" and m_string_utilities.format(notes_template, forms) or ""
+		-- separate_imp_2sv is computed in show_forms().
+		local tu_vos_template = alternant_multiword_spec.separate_imp_2sv and combined_form_separate_tu_vos_template or
+			combined_form_combined_tu_vos_template
+		forms.tu_vos_clause = m_string_utilities.format(tu_vos_template, forms)
 		formatted_combined_table = m_string_utilities.format(combined_form_table, forms)
 	end
 
