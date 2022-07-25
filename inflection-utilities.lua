@@ -16,6 +16,10 @@ local function rsub(term, foo, bar)
 	return retval
 end
 
+local function track(page)
+	require("Module:debug/track")("inflection utilities/" .. page)
+	return true
+end
 
 local footnote_abbrevs = {
 	["a"] = "archaic",
@@ -50,6 +54,7 @@ export.split_alternating_runs = put.split_alternating_runs
 -- odd-numbered runs if preserve_splitchar is given). Effectively we leave alone the footnotes and splitchars
 -- themselves, but otherwise strip extraneous spaces. Spaces in the middle of an element are also left alone.
 function export.split_alternating_runs_and_strip_spaces(segment_runs, splitchar, preserve_splitchar)
+	track("split-alternating-runs-and-strip-spaces")
 	return put.split_alternating_runs_and_frob_raw_text(segment_runs, splitchar, put.strip_spaces, preserve_splitchar)
 end
 
@@ -146,7 +151,7 @@ function export.insert_form_into_list(list, form)
 
 				-- The behavior here has changed; track cases where the old behavior might
 				-- be needed by adding ! to the footnote.
-				require("Module:debug").track("inflection-utilities/combining-footnotes")
+				track("combining-footnotes")
 				local any_footnotes_with_bang = false
 				for _, footnote in ipairs(form.footnotes) do
 					local footnote_mods, _ = extract_footnote_modifiers(footnote)
@@ -383,6 +388,7 @@ end
 -- Older entry point. Equivalent to expand_footnote_or_references(note, true).
 -- FIXME: Convert all uses to use expand_footnote_or_references() instead.
 function export.expand_footnote(note)
+	track("expand-footnote")
 	return export.expand_footnote_or_references(note, false, "no parse refs")
 end
 
@@ -449,12 +455,6 @@ function export.combine_form_and_footnotes(form_or_form_obj, addl_footnotes, new
 		form_or_form_obj.footnotes = export.combine_footnotes(form_or_form_obj.footnotes, addl_footnotes)
 	end
 	return form_or_form_obj
-end
-
-
--- Older entry point. FIXME: Obsolete me.
-function export.generate_form(form, footnotes)
-	return export.combine_form_and_footnotes(form, footnotes)
 end
 
 
@@ -860,17 +860,6 @@ function export.parse_inflected_text(text, props)
 end
 
 
--- Older entry point. FIXME: Convert all uses of this to use export.parse_inflected_text() instead. 
-function export.parse_alternant_multiword_spec(text, parse_indicator_spec, allow_default_indicator, allow_blank_lemma)
-	local props = {
-		parse_indicator_spec = parse_indicator_spec,
-		allow_default_indicator = allow_default_indicator,
-		allow_blank_lemma = allow_blank_lemma,
-	}
-	return export.parse_inflected_text(text, props)
-end
-
-
 -- Inflect alternants in ALTERNANT_SPEC (an object as returned by parse_alternant()).
 -- This sets the form values in `ALTERNANT_SPEC.forms` for all slots.
 -- (If a given slot has no values, it will not be present in `ALTERNANT_SPEC.forms`).
@@ -996,12 +985,10 @@ is plural-only, and vice-versa.
 Latin script or manual transliteration cannot be specified in the input to parse_inflected_text(), this can be omitted.
 (Manual transliteration is allowed if the `lang` object is set in the `props` passed to parse_inflected_text().)
 
-`inflect_word_spec` is the function to do the actual inflection. Note that for compatibility purposes the same function
-can be set as the `decline_word_spec` property; don't use this in new code. It is passed a single argument, which is
-a WORD_SPEC object describing the word to be inflected and the user-provided inflection specifications. It is exactly
-the same as was returned by the `parse_indicator_spec` function provided in the `props` sent on input to
-`parse_inflected_text`, but has additional fields describing the word to be inflected and the surrounding text, as
-follows:
+`inflect_word_spec` is the function to do the actual inflection. It is passed a single argument, which is a WORD_SPEC
+object describing the word to be inflected and the user-provided inflection specifications. It is exactly the same as
+was returned by the `parse_indicator_spec` function provided in the `props` sent on input to `parse_inflected_text`, but
+has additional fields describing the word to be inflected and the surrounding text, as follows:
 {
   lemma = "LEMMA",
   before_text = "TEXT-BEFORE-WORD",
@@ -1058,8 +1045,6 @@ function export.inflect_multiword_or_alternant_multiword_spec(multiword_spec, pr
 	for _, word_spec in ipairs(is_alternant_multiword and multiword_spec.alternant_or_word_specs or multiword_spec.word_specs) do
 		if word_spec.alternants then
 			inflect_alternants(word_spec, props)
-		elseif props.decline_word_spec then
-			props.decline_word_spec(word_spec)
 		else
 			props.inflect_word_spec(word_spec)
 		end
@@ -1086,13 +1071,6 @@ function export.inflect_multiword_or_alternant_multiword_spec(multiword_spec, pr
 			end
 		end)
 	end
-end
-
-
--- Older entry point for inflecting a term. Equivalent to inflect_multiword_or_alternant_multiword_spec().
--- FIXME: Convert all uses to use inflect_multiword_or_alternant_multiword_spec() instead.
-function export.decline_multiword_or_alternant_multiword_spec(multiword_spec, props)
-	return export.inflect_multiword_or_alternant_multiword_spec(multiword_spec, props)
 end
 
 
@@ -1210,6 +1188,7 @@ into strings. Each form list turns into a string consisting of a comma-separated
   create_footnote_obj = nil or FUNCTION_TO_CREATE_FOOTNOTE_OBJ,
   canonicalize = nil or FUNCTION_TO_CANONICALIZE_EACH_FORM,
   transform_link = nil or FUNCTION_TO_TRANSFORM_EACH_LINK,
+  transform_accel_obj = nil or FUNCTION_TO_TRANSFORM_EACH_ACCEL_OBJ,
   join_spans = nil or FUNCTION_TO_JOIN_SPANS,
   allow_footnote_symbols = BOOLEAN,
   footnotes = nil or {"EXTRA_FOOTNOTE", "EXTRA_FOOTNOTE", ...},
@@ -1241,6 +1220,13 @@ arguments (slot, link, link_tr) and should return the transformed link (or if tr
 values, the transformed link and corresponding translit). It can return nil for no change. `transform_link` is used,
 for example, in [[Module:de-verb]], where it adds the appropriate pronoun ([[ich]], [[du]], etc.) to finite verb forms,
 and adds [[dass]] before special subordinate-clause variants of finte verb forms.
+
+`transform_accel_obj` is an optional function of three arguments (slot, formobj, accel_obj) to transform the default
+constructed accelerator object in `accel_obj` into an object that should be passed to full_link() in [[Module:links]].
+It should return the new accelerator object, or nil for no acceleration. It can destructively modify the accelerator
+object passed in. NOTE: This is called even when the passed-in `accel_obj` is nil (either because the accelerator in
+`slot_table` or `slot_list` is "-", or because the form contains links, or because for some reason there is no lemma
+available).
 
 `join_spans` is an optional function of three arguments (slot, orig_spans, tr_spans) where the spans in question are
 after linking and footnote processing. It should return a string (the joined spans) or nil for the default algorithm,
@@ -1309,6 +1295,9 @@ function export.show_forms(forms, props)
 							lemma_translit = props.include_translit and accel_lemma_translit or nil,
 						}
 					end
+					if props.transform_accel_obj then
+						accel_obj = props.transform_accel_obj(slot, form, accel_obj)
+					end
 					link = m_links.full_link{lang = props.lang, term = origentry, tr = "-", accel = accel_obj}
 				end
 				local tr = props.include_translit and (form.translit or props.lang:transliterate(m_links.remove_links(orig_text))) or nil
@@ -1368,18 +1357,6 @@ function export.show_forms(forms, props)
 		end
 	end
 	forms.footnote = table.concat(all_notes, "<br />")
-end
-
-
--- Older entry point. Same as `show_forms` but automatically sets include_translit = true in props.
--- FIXME: Convert all uses to use show_forms() instead.
-function export.show_forms_with_translit(forms, lemmas, slot_table, props, footnotes, allow_footnote_symbols)
-	props.lemmas = lemmas
-	props.slot_table = slot_table
-	props.footnotes = footnotes
-	props.allow_footnote_symbols = allow_footnote_symbols
-	props.include_translit = true
-	return export.show_forms(forms, props)
 end
 
 
