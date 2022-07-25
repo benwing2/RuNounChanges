@@ -132,106 +132,150 @@ person_number_to_reflexive_pronoun = {
 }
 
 
-local verb_slots_basic = {
-	{"infinitive", "inf"},
-	{"infinitive_linked", "inf"},
-	{"gerund", "ger"},
-	{"pp_ms", "m|s|past|part"},
-	{"pp_fs", "f|s|past|part"},
-	{"pp_mp", "m|p|past|part"},
-	{"pp_fp", "f|p|past|part"},
-}
+-- Initialize all the slots for which we generate forms. The particular slots may depend on whether we're generating
+-- combined slots (`not alternant_multiword_spec.nocomb`, which is always false if we're dealing with a verb with an
+-- attached clitic, such as [[hincarla]], or a reflexive or partly-reflexive verb, where a partly-reflexive verb is
+-- a conjoined term made up of two or more verbs, where some but not all are reflexive). It may also depend on whether
+-- we're being requested to generate some double-combined forms, such as [[llevándoselo]]; see the comment below for
+-- `verb_slot_double_combined_rows`.
+local function add_slots(alternant_multiword_spec)
+	alternant_multiword_spec.verb_slots_basic = {
+		{"infinitive", "inf"},
+		{"infinitive_linked", "inf"},
+		{"gerund", "ger"},
+		{"pp_ms", "m|s|past|part"},
+		{"pp_fs", "f|s|past|part"},
+		{"pp_mp", "m|p|past|part"},
+		{"pp_fp", "f|p|past|part"},
+	}
 
--- For 1s|ger, 2p|inf, etc.
-local verb_slots_personal_nonfinite = {}
+	alternant_multiword_spec.verb_slots_combined = {}
 
-local verb_slots_combined = {}
+	-- For generating combined forms. This is a list of lists of the form {BASIC_SLOT, CLITICS} where BASIC_SLOT is the
+	-- slot to add the clitic pronouns to (e.g. "gerund" or "imp_2s") and CLITICS is a list of the clitic pronouns to
+	-- add.
+	alternant_multiword_spec.verb_slot_combined_rows = {}
 
--- For generating combined forms. This is a list of lists of the form {BASIC_SLOT, CLITICS} where BASIC_SLOT is the
--- slot to add the clitic pronouns to (e.g. "gerund" or "imp_2s") and CLITICS is a list of the clitic pronouns to add.
-local verb_slot_combined_rows = {}
+	-- For generating double combined forms (e.g. [[llevándoselo]] or [[dámela]]). This is used by {{es-verb form of}}
+	-- when it detects that it is being requested to find the inflection tags for a double-combined form. The number of
+	-- double-combined forms is relatively large, so to optimize this, [[Module:es-inflections]] (which implements
+	-- {{es-verb form of}}) detects which two clitics are involved, and we only generate double-combined forms
+	-- involving those two clitics; this is specified using `double_combined_form_to_include`, passed into
+	-- do_generate_forms(). The value of this field is a list of lists of the form {SINGLE_COMB_SLOT, CLITICS} where
+	-- SINGLE_COMB_SLOT is the single-combined slot to add the object clitic pronouns to (e.g. "gerund_comb_se" or
+	-- "imp_2s_comb_me") and CLITICS is a list of the clitic pronouns to add. CLITICS will normally be a length-one
+	-- list whose value is one of {"lo", "la", "le", "los", "las", "les"}.
+	alternant_multiword_spec.verb_slot_double_combined_rows = {}
 
--- Accelerators for use in {{es-verb form of}} when we set the accelerator in all_verb_slots to "-".
-export.overriding_slot_accel = {}
+	-- Accelerators for use in {{es-verb form of}} when we set the accelerator in all_verb_slots to "-".
+	alternant_multiword_spec.overriding_slot_accel = {}
 
--- Add entries for a slot with person/number variants.
--- `verb_slots` is the table to add to.
--- `slot_prefix` is the prefix of the slot, typically specifying the tense/aspect.
--- `tag_suffix` is the set of inflection tags to add after the person/number tags.
--- `no_accel` indicates that no accelerator entry should be generated.
-local function add_slot_personal(verb_slots, slot_prefix, tag_suffix, person_number_list, no_accel)
-	for _, persnum in ipairs(person_number_list) do
-		local persnum_tag = all_persons_numbers[persnum]
-		local slot = slot_prefix .. "_" .. persnum
-		local accel = persnum_tag .. "|" .. tag_suffix
-		if no_accel then
-			table.insert(verb_slots, {slot, "-"})
-			export.overriding_slot_accel[slot] = accel
-		else
-			table.insert(verb_slots, {slot, accel})
+	-- Add entries for a slot with person/number variants.
+	-- `verb_slots` is the table to add to.
+	-- `slot_prefix` is the prefix of the slot, typically specifying the tense/aspect.
+	-- `tag_suffix` is the set of inflection tags to add after the person/number tags.
+	-- `no_accel` indicates that no accelerator entry should be generated.
+	local function add_slot_personal(verb_slots, slot_prefix, tag_suffix, person_number_list, no_accel)
+		for _, persnum in ipairs(person_number_list) do
+			local persnum_tag = all_persons_numbers[persnum]
+			local slot = slot_prefix .. "_" .. persnum
+			local accel = persnum_tag .. "|" .. tag_suffix
+			if no_accel then
+				table.insert(verb_slots, {slot, "-"})
+				export.overriding_slot_accel[slot] = accel
+			else
+				table.insert(verb_slots, {slot, accel})
+			end
 		end
 	end
-end
 
-add_slot_personal(verb_slots_basic, "pres", "pres|ind", person_number_list_voseo)
-add_slot_personal(verb_slots_basic, "impf", "impf|ind", person_number_list_basic)
-add_slot_personal(verb_slots_basic, "pret", "pret|ind", person_number_list_basic)
-add_slot_personal(verb_slots_basic, "fut", "fut|ind", person_number_list_basic)
-add_slot_personal(verb_slots_basic, "cond", "cond", person_number_list_basic)
-add_slot_personal(verb_slots_basic, "pres_sub", "pres|sub", person_number_list_voseo)
-add_slot_personal(verb_slots_basic, "impf_sub_ra", "impf|sub", person_number_list_basic)
-add_slot_personal(verb_slots_basic, "impf_sub_se", "impf|sub", person_number_list_basic)
-add_slot_personal(verb_slots_basic, "fut_sub", "fut|sub", person_number_list_basic)
-add_slot_personal(verb_slots_basic, "imp", "imp", imp_person_number_list)
-add_slot_personal(verb_slots_basic, "neg_imp", "neg|imp", neg_imp_person_number_list, "no accel")
-add_slot_personal(verb_slots_basic, "infinitive", "inf", person_number_list_basic)
-add_slot_personal(verb_slots_basic, "gerund", "ger", person_number_list_basic)
-
-local third_person_object_clitics = {"lo", "la", "le", "los", "las", "les"}
-
-local function add_combined_slot(basic_slot, slot_prefix, clitics)
-	local clitics_with_object = m_table.append(clitics, third_person_object_clitics)
-	for _, clitic in ipairs(clitics_with_object) do
-		local slot = basic_slot .. "_comb_" .. clitic
-		-- You have to pass this through full_link() to get a Spanish-specific link
-		local accel = slot_prefix .. "|combined with [[" .. clitic .. "]]"
-		table.insert(verb_slots_combined, {slot, accel})
+	local function add_basic_personal_slot(slot_prefix, tag_suffix, person_number_list, no_accel)
+		add_slot_personal(alternant_multiword_spec.verb_slots_basic, slot_prefix, tag_suffix, person_number_list, no_accel)
 	end
-	table.insert(verb_slot_combined_rows, {basic_slot, clitics_with_object})
+
+	add_basic_personal_slot("pres", "pres|ind", person_number_list_voseo)
+	add_basic_personal_slot("impf", "impf|ind", person_number_list_basic)
+	add_basic_personal_slot("pret", "pret|ind", person_number_list_basic)
+	add_basic_personal_slot("fut", "fut|ind", person_number_list_basic)
+	add_basic_personal_slot("cond", "cond", person_number_list_basic)
+	add_basic_personal_slot("pres_sub", "pres|sub", person_number_list_voseo)
+	add_basic_personal_slot("impf_sub_ra", "impf|sub", person_number_list_basic)
+	add_basic_personal_slot("impf_sub_se", "impf|sub", person_number_list_basic)
+	add_basic_personal_slot("fut_sub", "fut|sub", person_number_list_basic)
+	add_basic_personal_slot("imp", "imp", imp_person_number_list)
+	add_basic_personal_slot("neg_imp", "neg|imp", neg_imp_person_number_list, "no accel")
+	add_basic_personal_slot("infinitive", "inf", person_number_list_basic)
+	add_basic_personal_slot("gerund", "ger", person_number_list_basic)
+
+	local third_person_object_clitics = {"lo", "la", "le", "los", "las", "les"}
+
+	if not alternant_multiword_spec.nocomb then
+		local function add_combined_slot(basic_slot, slot_prefix, clitics)
+			local clitics_with_object = m_table.append(clitics, third_person_object_clitics)
+			for _, clitic in ipairs(clitics_with_object) do
+				local slot = basic_slot .. "_comb_" .. clitic
+				-- You have to pass this through full_link() to get a Spanish-specific link
+				local accel = slot_prefix .. "|combined with [[" .. clitic .. "]]"
+				table.insert(alternant_multiword_spec.verb_slots_combined, {slot, accel})
+			end
+			table.insert(alternant_multiword_spec.verb_slot_combined_rows, {basic_slot, clitics_with_object})
+
+			-- Also do double-combined forms for a specific set of clitics, if requested. See the comment above
+			-- `verb_slot_double_combined_rows` above.
+			if alternant_multiword_spec.double_combined_form_to_include then
+				local to_include_personal_clitic, to_include_object_clitic =
+					unpack(alternant_multiword_spec.double_combined_form_to_include)
+				for _, personal_clitic in ipairs(clitics) do
+					for _, object_clitic in ipairs(third_person_object_clitics) do
+						if personal_clitic == to_include_personal_clitic and object_clitic == to_include_object_clitic then
+							local single_comb_slot = basic_slot .. "_comb_" .. personal_clitic
+							local slot = single_comb_slot .. "_" .. object_clitic
+							local accel = slot_prefix .. "|combined with [[" .. personal_clitic .. "]] and [[" ..
+								object_clitic .. "]]"
+							table.insert(alternant_multiword_spec.verb_slots_combined, {slot, accel})
+							table.insert(alternant_multiword_spec.verb_slot_double_combined_rows,
+								{single_comb_slot, {object_clitic}})
+						end
+					end
+				end
+			end
+		end
+
+		add_combined_slot("infinitive", "inf", {"me", "te", "se", "nos", "os"})
+		add_combined_slot("gerund", "gerund", {"me", "te", "se", "nos", "os"})
+
+		local function add_combined_imp_slot(persnum, personal_clitics)
+			add_combined_slot("imp_" .. persnum, all_persons_numbers[persnum] .. "|imp", personal_clitics)
+		end
+		add_combined_imp_slot("2s", {"me", "te", "nos"})
+		add_combined_imp_slot("2sv", {"me", "te", "nos"})
+		add_combined_imp_slot("3s", {"me", "se", "nos"})
+		add_combined_imp_slot("1p", {"te", "nos", "os"})
+		add_combined_imp_slot("2p", {"me", "nos", "os"})
+		add_combined_imp_slot("3p", {"me", "se", "nos"})
+	end
+
+	alternant_multiword_spec.all_verb_slots = {}
+	for _, slot_and_accel in ipairs(alternant_multiword_spec.verb_slots_basic) do
+		table.insert(alternant_multiword_spec.all_verb_slots, slot_and_accel)
+	end
+	for _, slot_and_accel in ipairs(alternant_multiword_spec.verb_slots_combined) do
+		table.insert(alternant_multiword_spec.all_verb_slots, slot_and_accel)
+	end
+
+	alternant_multiword_spec.verb_slots_basic_map = {}
+	for _, slotaccel in ipairs(alternant_multiword_spec.verb_slots_basic) do
+		local slot, accel = unpack(slotaccel)
+		alternant_multiword_spec.verb_slots_basic_map[slot] = accel
+	end
+
+	local alternant_multiword_spec.verb_slots_combined_map = {}
+	for _, slotaccel in ipairs(alternant_multiword_spec.verb_slots_combined) do
+		local slot, accel = unpack(slotaccel)
+		alternant_multiword_spec.verb_slots_combined_map[slot] = accel
+	end
 end
 
-add_combined_slot("infinitive", "inf", {"me", "te", "se", "nos", "os"})
-add_combined_slot("gerund", "gerund", {"me", "te", "se", "nos", "os"})
-
-local function add_combined_imp_slot(persnum, personal_clitics)
-	add_combined_slot("imp_" .. persnum, all_persons_numbers[persnum] .. "|imp", personal_clitics)
-end
-add_combined_imp_slot("2s", {"me", "te", "nos"})
-add_combined_imp_slot("2sv", {"me", "te", "nos"})
-add_combined_imp_slot("3s", {"me", "se", "nos"})
-add_combined_imp_slot("1p", {"te", "nos", "os"})
-add_combined_imp_slot("2p", {"me", "nos", "os"})
-add_combined_imp_slot("3p", {"me", "se", "nos"})
-
-export.all_verb_slots = {}
-for _, slot_and_accel in ipairs(verb_slots_basic) do
-	table.insert(export.all_verb_slots, slot_and_accel)
-end
-for _, slot_and_accel in ipairs(verb_slots_combined) do
-	table.insert(export.all_verb_slots, slot_and_accel)
-end
-
-local verb_slots_basic_map = {}
-for _, slotaccel in ipairs(verb_slots_basic) do
-	local slot, accel = unpack(slotaccel)
-	verb_slots_basic_map[slot] = accel
-end
-
-local verb_slots_combined_map = {}
-for _, slotaccel in ipairs(verb_slots_combined) do
-	local slot, accel = unpack(slotaccel)
-	verb_slots_combined_map[slot] = accel
-end
 
 local function match_against_verbs(ref_verb, prefixes)
 	return function(verb)
@@ -1414,7 +1458,7 @@ end
 -- For these, a * is added, which indicates that the accent needs to remain. If we see such a *, we remove
 -- it but otherwise leave the form alone.
 local function remove_monosyllabic_accents(base)
-	for _, slotaccel in ipairs(verb_slots_basic) do
+	for _, slotaccel in ipairs(base.alternant_multiword_spec.verb_slots_basic) do
 		local slot, accel = unpack(slotaccel)
 		if base.forms[slot] then
 			for _, form in ipairs(base.forms[slot]) do
@@ -1487,11 +1531,20 @@ end
 
 -- Generate the combinations of verb form (infinitive, gerund or various imperatives) + clitic pronoun.
 local function add_combined_forms(base)
-	for _, base_slot_and_clitics in ipairs(verb_slot_combined_rows) do
+	for _, base_slot_and_clitics in ipairs(base.alternant_multiword_spec.verb_slot_combined_rows) do
 		local base_slot, clitics = unpack(base_slot_and_clitics)
 		add_forms_with_clitic(base, base_slot, clitics,
 			function(clitic, formobj, cliticized_form)
 				insert_form(base, base_slot .. "_comb_" .. clitic,
+					{form = cliticized_form, footnotes = formobj.footnotes})
+			end
+		)
+	end
+	for _, single_comb_slot_and_clitics in ipairs(base.alternant_multiword_spec.verb_slot_double_combined_rows) do
+		local single_comb_slot, clitics = unpack(single_comb_slot_and_clitics)
+		add_forms_with_clitic(base, single_comb_slot, clitics,
+			function(clitic, formobj, cliticized_form)
+				insert_form(base, single_comb_slot .. "_" .. clitic,
 					{form = cliticized_form, footnotes = formobj.footnotes})
 			end
 		)
@@ -1512,7 +1565,7 @@ end
 -- `do_joined` means to do only the forms where the pronoun is joined to the end of the form; otherwise, do only the
 -- forms where it is not joined and precedes the form.
 local function add_reflexive_or_fixed_clitic_to_forms(base, do_reflexive, do_joined)
-	for _, slotaccel in ipairs(verb_slots_basic) do
+	for _, slotaccel in ipairs(base.alternant_multiword_spec.verb_slots_basic) do
 		local slot, accel = unpack(slotaccel)
 		local clitic
 		if not do_reflexive then
@@ -1528,26 +1581,32 @@ local function add_reflexive_or_fixed_clitic_to_forms(base, do_reflexive, do_joi
 				-- do nothing with reflexive past participles or with infinitive linked (handled at the end)
 			elseif slot:find("^neg_imp_") then
 				error("Internal error: Should not have forms set for negative imperative at this stage")
-			elseif slot:find("infinitive") or slot:find("gerund") or slot:find("^imp_") then
-				if do_joined then
-					add_forms_with_clitic(base, slot, {clitic},
-						function(clitic, formobj, cliticized_form)
-							formobj.form = cliticized_form
-						end
-					)
+			else
+				-- Save the non-reflexive variant for use in {{es-verb form of}}.
+				if do_reflexive and base.alternant_multiword_spec.from_verb_form_of then
+					base.non_reflexive_forms[slot] = mw.clone(base.forms[slot])
 				end
-			elseif not do_joined then
-				-- Add clitic as separate word before all other forms. Check whether form already has brackets
-				-- (as will be the case if the form has a fixed clitic).
-				for _, form in ipairs(base.forms[slot]) do
-					if base.args.noautolinkverb then
-						form.form = clitic .. " " .. form.form
-					else
-						local clitic_pref = "[[" .. clitic .. "]] "
-						if form.form:find("%[%[") then
-							form.form = clitic_pref .. form.form
+				if slot:find("infinitive") or slot:find("gerund") or slot:find("^imp_") then
+					if do_joined then
+						add_forms_with_clitic(base, slot, {clitic},
+							function(clitic, formobj, cliticized_form)
+								formobj.form = cliticized_form
+							end
+						)
+					end
+				elseif not do_joined then
+					-- Add clitic as separate word before all other forms. Check whether form already has brackets
+					-- (as will be the case if the form has a fixed clitic).
+					for _, form in ipairs(base.forms[slot]) do
+						if base.alternant_multiword_spec.args.noautolinkverb then
+							form.form = clitic .. " " .. form.form
 						else
-							form.form = clitic_pref .. "[[" .. form.form .. "]]"
+							local clitic_pref = "[[" .. clitic .. "]] "
+							if form.form:find("%[%[") then
+								form.form = clitic_pref .. form.form
+							else
+								form.form = clitic_pref .. "[[" .. form.form .. "]]"
+							end
 						end
 					end
 				end
@@ -1579,7 +1638,7 @@ local function generate_negative_imperatives(base)
 		local from = "pres_sub_" .. persnum
 		local to = "neg_imp_" .. persnum
 		insert_forms(base, to, iut.map_forms(base.forms[from], function(form)
-			if base.args.noautolinkverb then
+			if base.alternant_multiword_spec.args.noautolinkverb then
 				return "no " .. form
 			elseif form:find("%[%[") then
 				-- already linked, e.g. when reflexive
@@ -1588,26 +1647,6 @@ local function generate_negative_imperatives(base)
 				return "[[no]] [[" .. form .. "]]"
 			end
 		end))
-	end
-end
-
-
-local function copy_imperatives_to_reflexive_combined_forms(base)
-	local copy_table = {
-		{"imp_2s", "imp_2s_comb_te"},
-		{"imp_3s", "imp_3s_comb_se"},
-		{"imp_1p", "imp_1p_comb_nos"},
-		{"imp_2p", "imp_2p_comb_os"},
-		{"imp_3p", "imp_3p_comb_se"},
-	}
-
-	-- Copy imperatives (with the clitic reflexive pronoun already added) to the appropriate "combined" reflexive
-	-- forms.
-	for _, entry in ipairs(copy_table) do
-		local from, to = unpack(entry)
-		-- Need to call map_forms() to clone the form objects because insert_forms() doesn't clone them, and may
-		-- side-effect them when inserting footnotes.
-		insert_forms(base, to, iut.map_forms(base.forms[from], function(form) return form end))
 	end
 end
 
@@ -1639,9 +1678,7 @@ local function conjugate_verb(base)
 	-- removed. (This happens e.g. for most present indicative forms of [[ver]], which have accents in them for the
 	-- prefixed derived verbs, but the accents shouldn't be present in the base verb.)
 	remove_monosyllabic_accents(base)
-	if not base.nocomb and not base.refl then
-		-- This should happen before add_reflexive_pronouns() because the combined forms of reflexive verbs don't have
-		-- the reflexive attached.
+	if not base.nocomb then
 		add_combined_forms(base)
 	end
 	-- We need to add joined reflexives, then joined and non-joined clitics, then non-joined reflexives, so we get
@@ -1664,17 +1701,12 @@ local function conjugate_verb(base)
 	-- and clitic in them.
 	generate_negative_imperatives(base)
 	if not base.nocomb then
-		if base.refl then
-			-- This should happen after process_slot_overrides() for reflexive-only basic slots so the overridden
-			-- forms (e.g. [[idos]]/[[iros]] for [[ir]]) get appropriately copied.
-			copy_imperatives_to_reflexive_combined_forms(base)
-		end
 		process_slot_overrides(base, false) -- do combined slot overrides
 	end
 	-- This should happen before add_missing_links_to_forms() so that the comparison `form == base.lemma`
 	-- in handle_infinitive_linked() works correctly and compares unlinked forms to unlinked forms.
 	handle_infinitive_linked(base)
-	if not base.args.noautolinkverb then
+	if not base.alternant_multiword_spec.args.noautolinkverb then
 		add_missing_links_to_forms(base)
 	end
 end
@@ -1904,6 +1936,7 @@ end
 
 local function detect_indicator_spec(base)
 	base.forms = {}
+	base.non_reflexive_forms = {}
 	base.stems = {}
 
 	if (base.only3s and 1 or 0) + (base.only3sp and 1 or 0) + (base.only3p and 1 or 0) > 1 then
@@ -1928,14 +1961,14 @@ local function detect_indicator_spec(base)
 			for stem, forms in pairs(irreg_conj.forms) do
 				if stem:find("^refl_") then
 					stem = stem:gsub("^refl_", "")
-					if not verb_slots_basic_map[stem] then
+					if not base.alternant_multiword_spec.verb_slots_basic_map[stem] then
 						error("Internal error: setting for 'refl_" .. stem .. "' does not refer to a basic verb slot")
 					end
 					base.basic_reflexive_only_overrides[stem] = forms
-				elseif verb_slots_basic_map[stem] then
+				elseif base.alternant_multiword_spec.verb_slots_basic_map[stem] then
 					-- an individual form override of a basic form
 					base.basic_overrides[stem] = forms
-				elseif verb_slots_combined_map[stem] then
+				elseif base.alternant_multiword_spec.verb_slots_combined_map[stem] then
 					-- an individual form override of a combined form
 					base.combined_overrides[stem] = forms
 				else
@@ -2001,7 +2034,7 @@ local function detect_indicator_spec(base)
 end
 
 
-local function detect_all_indicator_specs(alternant_multiword_spec, from_headword)
+local function detect_all_indicator_specs(alternant_multiword_spec)
 	-- Propagate some settings up or down.
 	iut.map_word_specs(alternant_multiword_spec, function(base)
 		for _, prop in ipairs { "refl", "clitic", "only3s", "only3sp", "only3p" } do
@@ -2009,33 +2042,22 @@ local function detect_all_indicator_specs(alternant_multiword_spec, from_headwor
 				alternant_multiword_spec[prop] = true
 			end
 		end
-		base.from_headword = from_headword
-		base.args = alternant_multiword_spec.args
-		-- If fixed clitic, don't include combined forms.
-		base.nocomb = alternant_multiword_spec.args.nocomb or base.clitic
+		base.alternant_multiword_spec = alternant_multiword_spec
+		-- If reflexive or fixed clitic, don't include combined forms.
+		alternant_multiword_spec.nocomb = alternant_multiword_spec.nocomb or base.clitic or base.refl
 	end)
 
-	if not from_headword and not alternant_multiword_spec.args.nocomb then
-		-- If we have a combined table, we run into issues if we have multiple
-		-- verbs and some are reflexive and some aren't, because we use a
-		-- different table for reflexive verbs. So throw an error.
-		if alternant_multiword_spec.refl then
-			iut.map_word_specs(alternant_multiword_spec, function(base)
-				if not base.refl then
-					error("If some alternants are reflexive, all must be")
-				end
-			end)
-		end
-	end
+	add_slots(alternant_multiword_spec)
 
 	iut.map_word_specs(alternant_multiword_spec, function(base)
+		base.nocomb = alternant_multiword_spec.args.nocomb
 		detect_indicator_spec(base)
 		construct_stems(base)
 	end)
 end
 
 
-local function add_categories_and_annotation(alternant_multiword_spec, base, multiword_lemma, from_headword)
+local function add_categories_and_annotation(alternant_multiword_spec, base, multiword_lemma)
 	local function insert_ann(anntype, value)
 		m_table.insertIfNot(alternant_multiword_spec.annotation[anntype], value)
 	end
@@ -2048,8 +2070,9 @@ local function add_categories_and_annotation(alternant_multiword_spec, base, mul
 		end
 	end
 
-	if check_for_red_links and not from_headword and not multiword_lemma then
-		for _, slot_and_accel in ipairs(export.all_verb_slots) do
+	if check_for_red_links and not alternant_multiword_spec.from_headword and not alternant_multiword_spec.from_verb_form_of
+		and multiword_lemma then
+		for _, slot_and_accel in ipairs(alternant_multiword_spec.all_verb_slots) do
 			local slot = slot_and_accel[1]
 			local forms = base.forms[slot]
 			local must_break = false
@@ -2176,7 +2199,7 @@ end
 -- Compute the categories to add the verb to, as well as the annotation to display in the
 -- conjugation title bar. We combine the code to do these functions as both categories and
 -- title bar contain similar information.
-local function compute_categories_and_annotation(alternant_multiword_spec, from_headword)
+local function compute_categories_and_annotation(alternant_multiword_spec)
 	alternant_multiword_spec.categories = {}
 	local ann = {}
 	alternant_multiword_spec.annotation = ann
@@ -2194,7 +2217,7 @@ local function compute_categories_and_annotation(alternant_multiword_spec, from_
 	end
 
 	iut.map_word_specs(alternant_multiword_spec, function(base)
-		add_categories_and_annotation(alternant_multiword_spec, base, multiword_lemma, from_headword)
+		add_categories_and_annotation(alternant_multiword_spec, base, multiword_lemma)
 	end)
 	local ann_parts = {}
 	local irreg = table.concat(ann.irreg, " or ")
@@ -2257,11 +2280,11 @@ local function show_forms(alternant_multiword_spec)
 		create_footnote_obj = create_footnote_obj,
 		transform_accel_obj = transform_accel_obj,
 	}
-	props.slot_list = verb_slots_basic
+	props.slot_list = alternant_multiword_spec.verb_slots_basic
 	iut.show_forms(alternant_multiword_spec.forms, props)
 	alternant_multiword_spec.footnote_basic = alternant_multiword_spec.forms.footnote
 	props.create_footnote_obj = nil
-	props.slot_list = verb_slots_combined
+	props.slot_list = alternant_multiword_spec.verb_slots_combined
 	iut.show_forms(alternant_multiword_spec.forms, props)
 	alternant_multiword_spec.footnote_combined = alternant_multiword_spec.forms.footnote
 end
@@ -2712,7 +2735,7 @@ end
 -- Return value is WORD_SPEC, an object where the conjugated forms are in `WORD_SPEC.forms`
 -- for each slot. If there are no values for a slot, the slot key will be missing. The value
 -- for a given slot is a list of objects {form=FORM, footnotes=FOOTNOTES}.
-function export.do_generate_forms(parent_args, from_headword, from_verb_form_of)
+function export.do_generate_forms(parent_args, from_headword, from_verb_form_of, double_combined_form_to_include)
 	local params = {
 		[1] = {required = from_verb_form_of},
 		["nocomb"] = {type = "boolean"},
@@ -2736,16 +2759,35 @@ function export.do_generate_forms(parent_args, from_headword, from_verb_form_of)
 
 	local args = require("Module:parameters").process(parent_args, params)
 	local PAGENAME = mw.title.getCurrentTitle().text
+	local function in_template_space()
+		return mw.title.getCurrentTitle().nsText == "Template"
+	end
 
+	-- Determine the verb spec we're being asked to generate the conjugation of. This may be taken from the
+	-- current page title or the value of |pagename=; but not when called from {{es-verb form of}}, where the
+	-- page title is a non-lemma form. Note that the verb spec may omit the infinitive; e.g. it may be "<ue>".
+	-- For this reason, we use the value of `pagename` computed here down below, when calling normalize_all_lemmas().
 	local pagename = not from_verb_form_of and args.pagename or from_headword and args.head[1] or PAGENAME
 	local arg1 = args[1]
 	if not arg1 then
-		if (PAGENAME == "es-conj" or PAGENAME == "es-verb") and mw.title.getCurrentTitle().nsText == "Template" then
+		if (PAGENAME == "es-conj" or PAGENAME == "es-verb") and in_template_space() then
 			arg1 = "licuar<+,ú>"
-		elseif PAGENAME == "es-verb form of" and mw.title.getCurrentTitle().nsText == "Template" then
+		elseif PAGENAME == "es-verb form of" and in_template_space() then
 			arg1 = "amar"
 		else
 			arg1 = pagename
+		end
+	end
+
+	-- When called from {{es-verb form of}}, determine the non-lemma form whose inflections we're being asked to
+	-- determine. This normally comes from the page title or the value of |pagename=.
+	local verb_form_of_form_name
+	if from_verb_form_of then
+		verb_form_of_form_name = args.pagename
+		if not verb_form_of_form_name and PAGENAME == "es-verb form of" and in_template_space() then
+			verb_form_of_form_name = "ame"
+		else
+			verb_form_of_form_name = PAGENAME
 		end
 	end
 
@@ -2785,10 +2827,32 @@ function export.do_generate_forms(parent_args, from_headword, from_verb_form_of)
 	local alternant_multiword_spec = iut.parse_inflected_text(escaped_arg1, parse_props)
 	alternant_multiword_spec.pos = pos or "verbs"
 	alternant_multiword_spec.args = args
+	alternant_multiword_spec.from_headword = from_headword
+	alternant_multiword_spec.from_verb_form_of = from_verb_form_of
+	alternant_multiword_spec.verb_form_of_form_name = verb_form_of_form_name
+
+	-- Now determine if we need to generate any double-combined forms, and if so, which clitics are involved.
+	-- See the comment above the initialization of `verb_slot_double_combined_rows` above in add_slots().
+	if verb_form_of_form_name and rfind(verb_form_of_form_name, AV) then
+		-- All double-clitic forms have an explicit accent, so we check for this. In addition, all double-clitic forms
+		-- are of the form "(me|te|se|nos|os)(lo|la|le)s$". We have no alternations in Lua patterns, but we can exploit
+		-- the similarity of the clitics in question.
+		local single_comb_form, object_clitic = rmatch(verb_form_of_form_name, "^(.*)(l[aeo]s?)$")
+		if single_comb_form then
+			local personal_clitic = rmatch(single_comb_form, "^.*([mts]e)$")
+			if not personal_clitic then
+				personal_clitic = rmatch(single_comb_form, "^.*(os)$")
+			end
+			if personal_clitic then
+				alternant_multiword_spec.double_combined_form_to_include = {personal_clitic, object_clitic}
+			end
+		end
+	end
+
 	normalize_all_lemmas(alternant_multiword_spec, pagename)
-	detect_all_indicator_specs(alternant_multiword_spec, from_headword)
+	detect_all_indicator_specs(alternant_multiword_spec)
 	local inflect_props = {
-		slot_list = export.all_verb_slots,
+		slot_list = alternant_multiword_spec.all_verb_slots,
 		inflect_word_spec = conjugate_verb,
 		-- We add links around the generated verbal forms rather than allow the entire multiword
 		-- expression to be a link, so ensure that user-specified links get included as well.
@@ -2803,7 +2867,7 @@ function export.do_generate_forms(parent_args, from_headword, from_verb_form_of)
 		end
 	end
 
-	compute_categories_and_annotation(alternant_multiword_spec, from_headword)
+	compute_categories_and_annotation(alternant_multiword_spec)
 	if args.json and not from_headword and not from_verb_form_of then
 		return require("Module:JSON").toJSON(alternant_multiword_spec)
 	end
