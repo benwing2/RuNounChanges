@@ -293,11 +293,15 @@ end
 local function show_forms(alternant_multiword_spec)
 	local lemmas = alternant_multiword_spec.forms.dir_m_s or {}
 	local props = {
+		lemmas = lemmas,
+		slot_table = adjective_slots_with_linked,
 		lang = lang,
+		include_translit = true,
+		-- Explicit additional top-level footnotes only occur with {{hi-adecl-manual}}.
+		footnotes = alternant_multiword_spec.footnotes,
+		allow_footnote_symbols = not not alternant_multiword_spec.footnotes,
 	}
-	iut.show_forms_with_translit(alternant_multiword_spec.forms, lemmas,
-		adjective_slots_with_linked, props, alternant_multiword_spec.footnotes,
-		"allow footnote symbols")
+	iut.show_forms(alternant_multiword_spec.forms, props)
 end
 
 
@@ -389,23 +393,24 @@ function export.do_generate_forms(parent_args, pos, from_headword, def)
 			args[1] = ""
 		end
 	end
-	local alternant_multiword_spec = iut.parse_alternant_multiword_spec(args[1],
-		parse_indicator_spec, "allow default indicator", "allow blank lemma")
+	local parse_props = {
+		parse_indicator_spec = parse_indicator_spec,
+		allow_default_indicator = true,
+		allow_blank_lemma = true,
+	}
+	local alternant_multiword_spec = iut.parse_inflected_text(args[1], parse_props)
 	alternant_multiword_spec.title = args.title
 	alternant_multiword_spec.footnotes = args.footnote
 	alternant_multiword_spec.pos = pos or "adjectives"
 	alternant_multiword_spec.forms = {}
 	com.normalize_all_lemmas(alternant_multiword_spec, "always transliterate")
 	detect_all_indicator_specs(alternant_multiword_spec)
-	local decline_props = {
+	local inflect_props = {
 		lang = lang,
-		skip_slot = function(slot)
-			return false
-		end,
 		slot_table = adjective_slots_with_linked,
-		decline_word_spec = decline_adjective,
+		inflect_word_spec = decline_adjective,
 	}
-	iut.decline_multiword_or_alternant_multiword_spec(alternant_multiword_spec, decline_props)
+	iut.inflect_multiword_or_alternant_multiword_spec(alternant_multiword_spec, inflect_props)
 	process_overrides(alternant_multiword_spec.forms, args)
 	compute_categories_and_annotation(alternant_multiword_spec)
 	return alternant_multiword_spec
@@ -427,16 +432,16 @@ function export.do_generate_forms_manual(parent_args, pos, from_headword, def)
 	end
 
 	local args = m_para.process(parent_args, params)
-	local alternant_spec = {
+	local alternant_multiword_spec = {
 		title = args.title,
 		footnotes = args.footnote,
 		forms = {},
 		manual = true,
 	}
-	process_overrides(alternant_spec.forms, args)
-	set_accusative(alternant_spec)
-	add_categories(alternant_spec)
-	return alternant_spec
+	process_overrides(alternant_multiword_spec.forms, args)
+	set_accusative(alternant_multiword_spec)
+	add_categories(alternant_multiword_spec)
+	return alternant_multiword_spec
 end
 
 
@@ -445,9 +450,9 @@ end
 -- of the declined forms.
 function export.show(frame)
 	local parent_args = frame:getParent().args
-	local alternant_spec = export.do_generate_forms(parent_args)
-	show_forms(alternant_spec)
-	return make_table(alternant_spec) .. require("Module:utilities").format_categories(alternant_spec.categories, lang)
+	local alternant_multiword_spec = export.do_generate_forms(parent_args)
+	show_forms(alternant_multiword_spec)
+	return make_table(alternant_multiword_spec) .. require("Module:utilities").format_categories(alternant_multiword_spec.categories, lang)
 end
 
 
@@ -456,9 +461,9 @@ end
 -- displayable table of the declined forms.
 function export.show_manual(frame)
 	local parent_args = frame:getParent().args
-	local alternant_spec = export.do_generate_forms_manual(parent_args)
-	show_forms(alternant_spec)
-	return make_table(alternant_spec) .. require("Module:utilities").format_categories(alternant_spec.categories, lang)
+	local alternant_multiword_spec = export.do_generate_forms_manual(parent_args)
+	show_forms(alternant_multiword_spec)
+	return make_table(alternant_multiword_spec) .. require("Module:utilities").format_categories(alternant_multiword_spec.categories, lang)
 end
 
 
@@ -468,10 +473,10 @@ end
 -- Devanagari representation of the form and TRANSLIT its manual transliteration. Embedded pipe symbols
 -- (as might occur in embedded links) are converted to <!>. If INCLUDE_PROPS is given, also include
 -- additional properties (currently, none). This is for use by bots.
-local function concat_forms(alternant_spec, include_props)
+local function concat_forms(alternant_multiword_spec, include_props)
 	local ins_text = {}
 	for slot, _ in pairs(adjective_slots) do
-		local formtext = iut.concat_forms_in_slot(alternant_spec.forms[slot])
+		local formtext = iut.concat_forms_in_slot(alternant_multiword_spec.forms[slot])
 		if formtext then
 			table.insert(ins_text, slot .. "=" .. formtext)
 		end
@@ -484,8 +489,8 @@ end
 function export.generate_forms(frame)
 	local include_props = frame.args["include_props"]
 	local parent_args = frame:getParent().args
-	local alternant_spec = export.do_generate_forms(parent_args)
-	return concat_forms(alternant_spec, include_props)
+	local alternant_multiword_spec = export.do_generate_forms(parent_args)
+	return concat_forms(alternant_multiword_spec, include_props)
 end
 
 

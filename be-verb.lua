@@ -223,7 +223,7 @@ end
 
 
 local function add_imperative(base, sg2, footnote)
-	local sg2form = iut.generate_form(sg2, footnote)
+	local sg2form = iut.combine_form_and_footnotes(sg2, footnote)
 	add(base, "impr_sg", sg2form, "")
 	add(base, "impr_pl", sg2form, "це")
 end
@@ -1195,29 +1195,29 @@ local function detect_indicator_and_form_spec(base)
 end
 
 
-local function detect_all_indicator_and_form_specs(alternant_spec)
-	for _, base in ipairs(alternant_spec.alternants) do
+local function detect_all_indicator_and_form_specs(alternant_multiword_spec)
+	for _, base in ipairs(alternant_multiword_spec.alternants) do
 		detect_indicator_and_form_spec(base)
-		if not alternant_spec.aspect then
-			alternant_spec.aspect = base.aspect
-		elseif alternant_spec.aspect ~= base.aspect then
-			alternant_spec.aspect = "both"
+		if not alternant_multiword_spec.aspect then
+			alternant_multiword_spec.aspect = base.aspect
+		elseif alternant_multiword_spec.aspect ~= base.aspect then
+			alternant_multiword_spec.aspect = "both"
 		end
-		if alternant_spec.is_refl == nil then
-			alternant_spec.is_refl = base.is_refl
-		elseif alternant_spec.is_refl ~= base.is_refl then
+		if alternant_multiword_spec.is_refl == nil then
+			alternant_multiword_spec.is_refl = base.is_refl
+		elseif alternant_multiword_spec.is_refl ~= base.is_refl then
 			error("With multiple alternants, all must agree on reflexivity")
 		end
-		if not alternant_spec.trans then
-			alternant_spec.trans = base.trans
-		elseif alternant_spec.trans ~= base.trans then
-			alternant_spec.trans = "mixed"
+		if not alternant_multiword_spec.trans then
+			alternant_multiword_spec.trans = base.trans
+		elseif alternant_multiword_spec.trans ~= base.trans then
+			alternant_multiword_spec.trans = "mixed"
 		end
 		for _, prop in ipairs({"nopres", "noimp", "nopast", "impers", "only3", "onlypl", "only3pl", "only3orpl"}) do
-			if alternant_spec[prop] == nil then
-				alternant_spec[prop] = base[prop]
-			elseif alternant_spec[prop] ~= base[prop] then
-				alternant_spec[prop] = false
+			if alternant_multiword_spec[prop] == nil then
+				alternant_multiword_spec[prop] = base[prop]
+			elseif alternant_multiword_spec[prop] ~= base[prop] then
+				alternant_multiword_spec[prop] = false
 			end
 		end
 	end
@@ -1269,12 +1269,12 @@ local function add_infinitive(base)
 end
 
 
-local function add_reflexive_suffix(alternant_spec)
-	if not alternant_spec.is_refl then
+local function add_reflexive_suffix(alternant_multiword_spec)
+	if not alternant_multiword_spec.is_refl then
 		return
 	end
-	for slot, formvals in pairs(alternant_spec.forms) do
-		alternant_spec.forms[slot] = iut.flatmap_forms(formvals, function(form)
+	for slot, formvals in pairs(alternant_multiword_spec.forms) do
+		alternant_multiword_spec.forms[slot] = iut.flatmap_forms(formvals, function(form)
 			if (slot == "infinitive" or rfind(slot, "^pres_futr_3")) and rfind(form, "ць$") then
 				return {rsub(form, "ць$", "цца")}
 			elseif slot == "pres_futr_3sg" and com.ends_in_vowel(form) then
@@ -1302,21 +1302,21 @@ end
 
 
 -- Used for manual specification using {{be-conj-manual}}.
-local function set_reflexive_flag(alternant_spec)
-	if alternant_spec.forms.infinitive then
-		for _, inf in ipairs(alternant_spec.forms.infinitive) do
+local function set_reflexive_flag(alternant_multiword_spec)
+	if alternant_multiword_spec.forms.infinitive then
+		for _, inf in ipairs(alternant_multiword_spec.forms.infinitive) do
 			if rfind(inf.form, "ся$") or rfind(inf.form, "ца$") then
-				alternant_spec.is_refl = true
+				alternant_multiword_spec.is_refl = true
 			end
 		end
 	end
 end
 
 
-local function set_present_future(alternant_spec)
-	local forms = alternant_spec.forms
+local function set_present_future(alternant_multiword_spec)
+	local forms = alternant_multiword_spec.forms
 	local futr_suffixes = {"1sg", "2sg", "3sg", "1pl", "2pl", "3pl"}
-	if alternant_spec.aspect == "pf" then
+	if alternant_multiword_spec.aspect == "pf" then
 		for _, suffix in ipairs(futr_suffixes) do
 			forms["futr_" .. suffix] = forms["pres_futr_" .. suffix]
 		end
@@ -1329,7 +1329,7 @@ local function set_present_future(alternant_spec)
 			for _, inf in ipairs(forms.infinitive) do
 				for _, slot_suffix in ipairs(futr_suffixes) do
 					local futrslot = "futr_" .. slot_suffix
-					if not skip_slot(alternant_spec, futrslot) then
+					if not skip_slot(alternant_multiword_spec, futrslot) then
 						iut.insert_form(forms, futrslot, {
 							form = "[[" .. budu_forms[slot_suffix] .. "]] [[" ..
 								com.initial_alternation(inf.form, budu_forms[slot_suffix]) .. "]]",
@@ -1343,37 +1343,37 @@ local function set_present_future(alternant_spec)
 end
 
 
-local function add_categories(alternant_spec)
+local function add_categories(alternant_multiword_spec)
 	local cats = {}
 	local function insert(cattype)
 		table.insert(cats, "Belarusian " .. cattype .. " verbs")
 	end
-	if alternant_spec.aspect == "impf" then
+	if alternant_multiword_spec.aspect == "impf" then
 		insert("imperfective")
-	elseif alternant_spec.aspect == "pf" then
+	elseif alternant_multiword_spec.aspect == "pf" then
 		insert("perfective")
 	else
-		assert(alternant_spec.aspect == "both")
+		assert(alternant_multiword_spec.aspect == "both")
 		insert("imperfective")
 		insert("perfective")
 		insert("biaspectual")
 	end
-	if alternant_spec.trans == "tr" then
+	if alternant_multiword_spec.trans == "tr" then
 		insert("transitive")
-	elseif alternant_spec.trans == "intr" then
+	elseif alternant_multiword_spec.trans == "intr" then
 		insert("intransitive")
-	elseif alternant_spec.trans == "mixed" then
+	elseif alternant_multiword_spec.trans == "mixed" then
 		insert("transitive")
 		insert("intransitive")
 	end
-	if alternant_spec.is_refl then
+	if alternant_multiword_spec.is_refl then
 		insert("reflexive")
 	end
-	if alternant_spec.impers then
+	if alternant_multiword_spec.impers then
 		insert("impersonal")
 	end
-	if alternant_spec.alternants then -- not when manual
-		for _, base in ipairs(alternant_spec.alternants) do
+	if alternant_multiword_spec.alternants then -- not when manual
+		for _, base in ipairs(alternant_multiword_spec.alternants) do
 			if base.conj == "irreg" or base.irreg then
 				insert("irregular")
 			end
@@ -1383,29 +1383,35 @@ local function add_categories(alternant_spec)
 			end
 		end
 	end
-	alternant_spec.categories = cats
+	alternant_multiword_spec.categories = cats
 end
 
 
-local function show_forms(alternant_spec)
+local function show_forms(alternant_multiword_spec)
 	local lemmas = {}
-	if alternant_spec.forms.infinitive then
-		for _, inf in ipairs(alternant_spec.forms.infinitive) do
+	if alternant_multiword_spec.forms.infinitive then
+		for _, inf in ipairs(alternant_multiword_spec.forms.infinitive) do
 			table.insert(lemmas, com.remove_monosyllabic_accents(inf.form))
 		end
 	end
-	props = {
+	local props = {
+		lemmas = lemmas,
+		slot_table = output_verb_slots,
 		lang = lang,
 		canonicalize = function(form)
 			return com.remove_monosyllabic_accents(form)
 		end,
+		include_translit = true,
+		-- Explicit additional top-level footnotes only occur with {{be-conj-manual}}.
+		footnotes = alternant_multiword_spec.footnotes,
+		allow_footnote_symbols = not not alternant_multiword_spec.footnotes,
 	}
-	iut.show_forms_with_translit(alternant_spec.forms, lemmas, output_verb_slots, props, alternant_spec.footnotes, "allow footnote symbols")
+	iut.show_forms(alternant_multiword_spec.forms, props)
 end
 
 
-local function make_table(alternant_spec)
-	local forms = alternant_spec.forms
+local function make_table(alternant_multiword_spec)
+	local forms = alternant_multiword_spec.forms
 
 	local table_spec_part1 = [=[
 <div class="NavFrame" style="width:60em">
@@ -1503,7 +1509,7 @@ local function make_table(alternant_spec)
 |{\cl}{notes_clause}</div></div>]=]
 
 	local table_spec = table_spec_part1 ..
-		(alternant_spec.aspect == "both" and table_spec_biaspectual or table_spec_single_aspect) ..
+		(alternant_multiword_spec.aspect == "both" and table_spec_biaspectual or table_spec_single_aspect) ..
 		table_spec_part2
 
 	local notes_template = [===[
@@ -1513,13 +1519,13 @@ local function make_table(alternant_spec)
 </div></div>
 ]===]
 
-	if alternant_spec.title then
-		forms.title = alternant_spec.title
+	if alternant_multiword_spec.title then
+		forms.title = alternant_multiword_spec.title
 	else
 		forms.title = 'Conjugation of <i lang="be" class="Cyrl">' .. forms.lemma .. '</i>'
 	end
 
-	if alternant_spec.manual then
+	if alternant_multiword_spec.manual then
 		forms.annotation = ""
 	else
 		local ann_parts = {}
@@ -1527,7 +1533,7 @@ local function make_table(alternant_spec)
 		local saw_base_irreg = false
 		local all_irreg_conj = true
 		local conjs = {}
-		for _, base in ipairs(alternant_spec.alternants) do
+		for _, base in ipairs(alternant_multiword_spec.alternants) do
 			m_table.insertIfNot(conjs, base.conj)
 			if base.conj == "irreg" then
 				saw_irreg_conj = true
@@ -1544,20 +1550,20 @@ local function make_table(alternant_spec)
 			table.insert(ann_parts, "class " .. table.concat(conjs, " // "))
 		end
 		table.insert(ann_parts,
-			alternant_spec.aspect == "impf" and "imperfective" or
-			alternant_spec.aspect == "pf" and "perfective" or
+			alternant_multiword_spec.aspect == "impf" and "imperfective" or
+			alternant_multiword_spec.aspect == "pf" and "perfective" or
 			"biaspectual")
-		if alternant_spec.trans then
+		if alternant_multiword_spec.trans then
 			table.insert(ann_parts,
-				alternant_spec.trans == "tr" and "transitive" or
-				alternant_spec.trans == "intr" and "intransitive" or
+				alternant_multiword_spec.trans == "tr" and "transitive" or
+				alternant_multiword_spec.trans == "intr" and "intransitive" or
 				"transitive and intransitive"
 			)
 		end
-		if alternant_spec.is_refl then
+		if alternant_multiword_spec.is_refl then
 			table.insert(ann_parts, "reflexive")
 		end
-		if alternant_spec.impers then
+		if alternant_multiword_spec.impers then
 			table.insert(ann_parts, "impersonal")
 		end
 		if saw_base_irreg and not saw_irreg_conj then
@@ -1578,9 +1584,9 @@ local function make_table(alternant_spec)
 	forms.ya_ty_yana = tag_text("я / ты / яна́")
 	forms.yano = tag_text("яно́")
 
-	if alternant_spec.aspect == "pf" then
+	if alternant_multiword_spec.aspect == "pf" then
 		forms.aspect_indicator = "[[perfective aspect]]"
-	elseif alternant_spec.aspect == "impf" then
+	elseif alternant_multiword_spec.aspect == "impf" then
 		forms.aspect_indicator = "[[imperfective aspect]]"
 	else
 		forms.aspect_indicator = "[[biaspectual]]"
@@ -1607,24 +1613,24 @@ function export.do_generate_forms(parent_args, pos, from_headword, def)
 	end
 
 	local args = m_para.process(parent_args, params)
-	local alternant_spec = parse_alternant_or_word_spec(args[1])
-	alternant_spec.title = args.title
-	alternant_spec.footnotes = args.footnote
-	alternant_spec.forms = {}
-	for _, base in ipairs(alternant_spec.alternants) do
-		base.forms = alternant_spec.forms
+	local alternant_multiword_spec = parse_alternant_or_word_spec(args[1])
+	alternant_multiword_spec.title = args.title
+	alternant_multiword_spec.footnotes = args.footnote
+	alternant_multiword_spec.forms = {}
+	for _, base in ipairs(alternant_multiword_spec.alternants) do
+		base.forms = alternant_multiword_spec.forms
 		normalize_lemma(base)
 	end
-	detect_all_indicator_and_form_specs(alternant_spec)
-	for _, base in ipairs(alternant_spec.alternants) do
+	detect_all_indicator_and_form_specs(alternant_multiword_spec)
+	for _, base in ipairs(alternant_multiword_spec.alternants) do
 		add_infinitive(base)
 		conjs[base.conjnum](base, base.lemma, base.accent)
 	end
-	add_reflexive_suffix(alternant_spec)
-	process_overrides(alternant_spec.forms, args)
-	set_present_future(alternant_spec)
-	add_categories(alternant_spec)
-	return alternant_spec
+	add_reflexive_suffix(alternant_multiword_spec)
+	process_overrides(alternant_multiword_spec.forms, args)
+	set_present_future(alternant_multiword_spec)
+	add_categories(alternant_multiword_spec)
+	return alternant_multiword_spec
 end
 
 
@@ -1646,18 +1652,18 @@ function export.do_generate_forms_manual(parent_args, pos, from_headword, def)
 	if args.aspect ~= "pf" and args.aspect ~= "impf" and args.aspect ~= "both" then
 		error("Aspect '" .. args.aspect .. "' must be 'pf', 'impf' or 'both'")
 	end
-	local alternant_spec = {
+	local alternant_multiword_spec = {
 		aspect = args.aspect,
 		title = args.title,
 		footnotes = args.footnote,
 		forms = {},
 		manual = true,
 	}
-	process_overrides(alternant_spec.forms, args)
-	set_reflexive_flag(alternant_spec)
-	set_present_future(alternant_spec)
-	add_categories(alternant_spec)
-	return alternant_spec
+	process_overrides(alternant_multiword_spec.forms, args)
+	set_reflexive_flag(alternant_multiword_spec)
+	set_present_future(alternant_multiword_spec)
+	add_categories(alternant_multiword_spec)
+	return alternant_multiword_spec
 end
 
 
@@ -1665,9 +1671,9 @@ end
 -- user-specified arguments and generate a displayable table of the conjugated forms.
 function export.show(frame)
 	local parent_args = frame:getParent().args
-	local alternant_spec = export.do_generate_forms(parent_args)
-	show_forms(alternant_spec)
-	return make_table(alternant_spec) .. require("Module:utilities").format_categories(alternant_spec.categories, lang)
+	local alternant_multiword_spec = export.do_generate_forms(parent_args)
+	show_forms(alternant_multiword_spec)
+	return make_table(alternant_multiword_spec) .. require("Module:utilities").format_categories(alternant_multiword_spec.categories, lang)
 end
 
 
@@ -1675,9 +1681,9 @@ end
 -- manually-specified inflections and generate a displayable table of the conjugated forms.
 function export.show_manual(frame)
 	local parent_args = frame:getParent().args
-	local alternant_spec = export.do_generate_forms_manual(parent_args)
-	show_forms(alternant_spec)
-	return make_table(alternant_spec) .. require("Module:utilities").format_categories(alternant_spec.categories, lang)
+	local alternant_multiword_spec = export.do_generate_forms_manual(parent_args)
+	show_forms(alternant_multiword_spec)
+	return make_table(alternant_multiword_spec) .. require("Module:utilities").format_categories(alternant_multiword_spec.categories, lang)
 end
 
 
@@ -1685,16 +1691,16 @@ end
 -- "SLOT=FORM,FORM,...|SLOT=FORM,FORM,...|...". Embedded pipe symbols (as might occur
 -- in embedded links) are converted to <!>. If INCLUDE_PROPS is given, also include
 -- additional properties (currently, only "|aspect=ASPECT"). This is for use by bots.
-local function concat_forms(alternant_spec, include_props)
+local function concat_forms(alternant_multiword_spec, include_props)
 	local ins_text = {}
 	for slot, _ in pairs(output_verb_slots) do
-		local formtext = iut.concat_forms_in_slot(alternant_spec.forms[slot])
+		local formtext = iut.concat_forms_in_slot(alternant_multiword_spec.forms[slot])
 		if formtext then
 			table.insert(ins_text, slot .. "=" .. formtext)
 		end
 	end
 	if include_props then
-		table.insert(ins_text, "aspect=" .. alternant_spec.aspect)
+		table.insert(ins_text, "aspect=" .. alternant_multiword_spec.aspect)
 	end
 	return table.concat(ins_text, "|")
 end
@@ -1706,8 +1712,8 @@ end
 function export.generate_forms(frame)
 	local include_props = frame.args["include_props"]
 	local parent_args = frame:getParent().args
-	local alternant_spec = export.do_generate_forms(parent_args)
-	return concat_forms(alternant_spec, include_props)
+	local alternant_multiword_spec = export.do_generate_forms(parent_args)
+	return concat_forms(alternant_multiword_spec, include_props)
 end
 
 

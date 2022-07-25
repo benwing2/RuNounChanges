@@ -465,11 +465,11 @@ declprops["indecl"] = {
 }
 
 decls["adj"] = function(base, stress)
-	local adj_alternant_spec = require("Module:hi-adjective").do_generate_forms(
+	local adj_alternant_multiword_spec = require("Module:hi-adjective").do_generate_forms(
 		{base.lemma .. "//" .. base.lemma_translit}
 	)
 	local function copy(from_slot, to_slot)
-		base.forms[to_slot] = adj_alternant_spec.forms[from_slot]
+		base.forms[to_slot] = adj_alternant_multiword_spec.forms[from_slot]
 	end
 	if base.number ~= "pl" then
 		copy("dir_m_s", "dir_s")
@@ -1207,11 +1207,15 @@ end
 local function show_forms(alternant_multiword_spec)
 	local lemmas = alternant_multiword_spec.forms.dir_s or alternant_multiword_spec.forms.dir_p or {}
 	local props = {
+		lemmas = lemmas,
+		slot_table = noun_slots_with_linked,
 		lang = lang,
+		include_translit = true,
+		-- Explicit additional top-level footnotes only occur with {{hi-ndecl-manual}} and variants.
+		footnotes = alternant_multiword_spec.footnotes,
+		allow_footnote_symbols = not not alternant_multiword_spec.footnotes,
 	}
-	iut.show_forms_with_translit(alternant_multiword_spec.forms, lemmas,
-		noun_slots_with_linked, props, alternant_multiword_spec.footnotes,
-		"allow footnote symbols")
+	iut.show_forms(alternant_multiword_spec.forms, props)
 end
 
 
@@ -1418,7 +1422,7 @@ function export.do_generate_forms_manual(parent_args, number, pos, from_headword
 
 
 	local args = m_para.process(parent_args, params)
-	local alternant_spec = {
+	local alternant_multiword_spec = {
 		title = args.title,
 		footnotes = args.footnote,
 		forms = {},
@@ -1426,9 +1430,9 @@ function export.do_generate_forms_manual(parent_args, number, pos, from_headword
 		pos = pos or "nouns",
 		manual = true,
 	}
-	process_manual_overrides(alternant_spec.forms, args, alternant_spec.number)
-	compute_categories_and_annotation(alternant_spec)
-	return alternant_spec
+	process_manual_overrides(alternant_multiword_spec.forms, args, alternant_multiword_spec.number)
+	compute_categories_and_annotation(alternant_multiword_spec)
+	return alternant_multiword_spec
 end
 
 
@@ -1451,9 +1455,9 @@ function export.show_manual(frame)
 	}
 	local iargs = m_para.process(frame.args, iparams)
 	local parent_args = frame:getParent().args
-	local alternant_spec = export.do_generate_forms_manual(parent_args, iargs[1])
-	show_forms(alternant_spec)
-	return make_table(alternant_spec) .. require("Module:utilities").format_categories(alternant_spec.categories, lang)
+	local alternant_multiword_spec = export.do_generate_forms_manual(parent_args, iargs[1])
+	show_forms(alternant_multiword_spec)
+	return make_table(alternant_multiword_spec) .. require("Module:utilities").format_categories(alternant_multiword_spec.categories, lang)
 end
 
 
@@ -1463,16 +1467,16 @@ end
 -- Devanagari representation of the form and TRANSLIT its manual transliteration. Embedded pipe symbols
 -- (as might occur in embedded links) are converted to <!>. If INCLUDE_PROPS is given, also include
 -- additional properties (currently, g= for headword genders). This is for use by bots.
-local function concat_forms(alternant_spec, include_props)
+local function concat_forms(alternant_multiword_spec, include_props)
 	local ins_text = {}
 	for slot, _ in pairs(noun_slots_with_linked) do
-		local formtext = iut.concat_forms_in_slot(alternant_spec.forms[slot])
+		local formtext = iut.concat_forms_in_slot(alternant_multiword_spec.forms[slot])
 		if formtext then
 			table.insert(ins_text, slot .. "=" .. formtext)
 		end
 	end
 	if include_props then
-		table.insert(ins_text, "g=" .. table.concat(alternant_spec.genders, ","))
+		table.insert(ins_text, "g=" .. table.concat(alternant_multiword_spec.genders, ","))
 	end
 	return table.concat(ins_text, "|")
 end
@@ -1483,8 +1487,8 @@ end
 function export.generate_forms(frame)
 	local include_props = frame.args["include_props"]
 	local parent_args = frame:getParent().args
-	local alternant_spec = export.do_generate_forms(parent_args)
-	return concat_forms(alternant_spec, include_props)
+	local alternant_multiword_spec = export.do_generate_forms(parent_args)
+	return concat_forms(alternant_multiword_spec, include_props)
 end
 
 return export

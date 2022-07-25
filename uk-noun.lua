@@ -720,6 +720,7 @@ declprops["semisoft-f"] = {
 
 decls["soft-f"] = function(base, stress)
 	base.no_retract_e = true
+	base.no_palatalize_c = true
 	local voc_s = rfind(stress.vowel_stem, "у́с$") and "ю" or -- бабу́ся, мату́ся, ду́ся, Катру́ся, etc.
 		"е"
 	add_decl(base, stress, "я", "і", "і", "ю", "ею", "і", voc_s,
@@ -747,10 +748,10 @@ declprops["j-f"] = {
 decls["third-f"] = function(base, stress)
 	base.no_retract_e = true
 	local nom_sg = rfind(stress.nonvowel_stem, "[сздтлнц]$") and "ь" or ""
-	-- All third-decl feminine nouns ending in -сть appear to have two possible genitive
-	-- singulars, at least per Slovozmina. Some other third-decl nouns (о́сінь "autumn",
-	-- сіль "salt" and смерть "death") behave the same way, but most don't.
-	local gen_sg = rfind(stress.vowel_stem, "ст$") and {"і", "и"} or "і"
+	-- All third-decl feminine nouns ending in -Cть appear to have two possible genitive
+	-- singulars, at least per the current orthography. Some other third-decl nouns (о́сінь "autumn",
+	-- сіль "salt" and кров "blood") behave the same way, but most don't.
+	local gen_sg = rfind(stress.vowel_stem, "[^аеєиіїоуюяАЕЄИІЇОУЮЯ́ ]т$") and {"і", "и"} or "і"
 	local hushing = rfind(stress.vowel_stem, "[чшжщ]$")
 	local plvowel = hushing and "а" or "я"
 	add_decl(base, stress, nom_sg, gen_sg, "і", nom_sg, nil, "і", "е",
@@ -948,9 +949,9 @@ decls["adj"] = function(base, stress)
 	if propspec ~= "" then
 		propspec = "<" .. propspec .. ">"
 	end
-	local adj_alternant_spec = require("Module:uk-adjective").do_generate_forms({base.lemma .. propspec})
+	local adj_alternant_multiword_spec = require("Module:uk-adjective").do_generate_forms({base.lemma .. propspec})
 	local function copy(from_slot, to_slot)
-		base.forms[to_slot] = adj_alternant_spec.forms[from_slot]
+		base.forms[to_slot] = adj_alternant_multiword_spec.forms[from_slot]
 	end
 	if base.number ~= "pl" then
 		if base.gender == "M" then
@@ -2354,14 +2355,18 @@ local function show_forms(alternant_multiword_spec)
 		end
 	end
 	local props = {
+		lemmas = lemmas,
+		slot_table = output_noun_slots_with_linked,
 		lang = lang,
 		canonicalize = function(form)
 			return com.remove_variant_codes(com.remove_monosyllabic_stress(form))
 		end,
+		include_translit = true,
+		-- Explicit additional top-level footnotes only occur with {{uk-ndecl-manual}} and variants.
+		footnotes = alternant_multiword_spec.footnotes,
+		allow_footnote_symbols = not not alternant_multiword_spec.footnotes,
 	}
-	iut.show_forms_with_translit(alternant_multiword_spec.forms, lemmas,
-		output_noun_slots_with_linked, props, alternant_multiword_spec.footnotes,
-		"allow footnote symbols")
+	iut.show_forms(alternant_multiword_spec.forms, props)
 end
 
 
@@ -2531,9 +2536,10 @@ end
 
 
 -- Externally callable function to parse and decline a noun given user-specified arguments.
--- Return value is WORD_SPEC, an object where the declined forms are in `WORD_SPEC.forms`
--- for each slot. If there are no values for a slot, the slot key will be missing. The value
--- for a given slot is a list of objects {form=FORM, footnotes=FOOTNOTES}.
+-- Return value is ALTERNANT_MULTIWORD_SPEC, an object where the declined forms are in
+-- `ALTERNANT_MULTIWORD_SPEC.forms` for each slot. If there are no values for a slot, the
+-- slot key will be missing. The value for a given slot is a list of objects
+-- {form=FORM, footnotes=FOOTNOTES}.
 function export.do_generate_forms(parent_args, pos, from_headword, def)
 	local params = {
 		[1] = {required = true, default = "віз<c.io>"},
@@ -2553,7 +2559,10 @@ function export.do_generate_forms(parent_args, pos, from_headword, def)
 	end
 
 	local args = m_para.process(parent_args, params)
-	local alternant_multiword_spec = iut.parse_alternant_multiword_spec(args[1], parse_indicator_spec)
+	local parse_props = {
+		parse_indicator_spec = parse_indicator_spec,
+	}
+	local alternant_multiword_spec = iut.parse_inflected_text(args[1], parse_props)
 	alternant_multiword_spec.title = args.title
 	alternant_multiword_spec.pos = args.pos or pos
 	alternant_multiword_spec.footnotes = args.footnote
@@ -2565,15 +2574,15 @@ function export.do_generate_forms(parent_args, pos, from_headword, def)
 	-- The default of "M" should apply only to plural adjectives, where it doesn't matter.
 	propagate_properties(alternant_multiword_spec, "gender", "M", "mixed")
 	determine_noun_status(alternant_multiword_spec)
-	local decline_props = {
+	local inflect_props = {
 		skip_slot = function(slot)
 			return skip_slot(alternant_multiword_spec.number, slot)
 		end,
 		slot_table = output_noun_slots_with_linked,
 		get_variants = get_variants,
-		decline_word_spec = decline_noun,
+		inflect_word_spec = decline_noun,
 	}
-	iut.decline_multiword_or_alternant_multiword_spec(alternant_multiword_spec, decline_props)
+	iut.inflect_multiword_or_alternant_multiword_spec(alternant_multiword_spec, inflect_props)
 	compute_categories_and_annotation(alternant_multiword_spec)
 	alternant_multiword_spec.genders = compute_headword_genders(alternant_multiword_spec)
 	return alternant_multiword_spec
@@ -2581,8 +2590,8 @@ end
 
 
 -- Externally callable function to parse and decline a noun where all forms
--- are given manually. Return value is WORD_SPEC, an object where the declined
--- forms are in `WORD_SPEC.forms` for each slot. If there are no values for a
+-- are given manually. Return value is ALTERNANT_MULTIWORD_SPEC, an object where the declined
+-- forms are in `ALTERNANT_MULTIWORD_SPEC.forms` for each slot. If there are no values for a
 -- slot, the slot key will be missing. The value for a given slot is a list of
 -- objects {form=FORM, footnotes=FOOTNOTES}.
 function export.do_generate_forms_manual(parent_args, number, pos, from_headword, def)
@@ -2630,7 +2639,7 @@ function export.do_generate_forms_manual(parent_args, number, pos, from_headword
 	end
 
 	local args = m_para.process(parent_args, params)
-	local alternant_spec = {
+	local alternant_multiword_spec = {
 		title = args.title,
 		footnotes = args.footnote,
 		pos = args.pos or pos,
@@ -2638,9 +2647,9 @@ function export.do_generate_forms_manual(parent_args, number, pos, from_headword
 		number = number,
 		manual = true,
 	}
-	process_manual_overrides(alternant_spec.forms, args, alternant_spec.number, args.unknown_stress)
-	compute_categories_and_annotation(alternant_spec)
-	return alternant_spec
+	process_manual_overrides(alternant_multiword_spec.forms, args, alternant_multiword_spec.number, args.unknown_stress)
+	compute_categories_and_annotation(alternant_multiword_spec)
+	return alternant_multiword_spec
 end
 
 
@@ -2663,9 +2672,9 @@ function export.show_manual(frame)
 	}
 	local iargs = m_para.process(frame.args, iparams)
 	local parent_args = frame:getParent().args
-	local alternant_spec = export.do_generate_forms_manual(parent_args, iargs[1])
-	show_forms(alternant_spec)
-	return make_table(alternant_spec) .. require("Module:utilities").format_categories(alternant_spec.categories, lang)
+	local alternant_multiword_spec = export.do_generate_forms_manual(parent_args, iargs[1])
+	show_forms(alternant_multiword_spec)
+	return make_table(alternant_multiword_spec) .. require("Module:utilities").format_categories(alternant_multiword_spec.categories, lang)
 end
 
 
@@ -2673,16 +2682,16 @@ end
 -- "SLOT=FORM,FORM,...|SLOT=FORM,FORM,...|...". Embedded pipe symbols (as might occur
 -- in embedded links) are converted to <!>. If INCLUDE_PROPS is given, also include
 -- additional properties (currently, g= for headword genders). This is for use by bots.
-local function concat_forms(alternant_spec, include_props)
+local function concat_forms(alternant_multiword_spec, include_props)
 	local ins_text = {}
 	for slot, _ in pairs(output_noun_slots_with_linked) do
-		local formtext = com.concat_forms_in_slot(alternant_spec.forms[slot])
+		local formtext = com.concat_forms_in_slot(alternant_multiword_spec.forms[slot])
 		if formtext then
 			table.insert(ins_text, slot .. "=" .. formtext)
 		end
 	end
 	if include_props then
-		table.insert(ins_text, "g=" .. table.concat(alternant_spec.genders, ","))
+		table.insert(ins_text, "g=" .. table.concat(alternant_multiword_spec.genders, ","))
 	end
 	return table.concat(ins_text, "|")
 end
@@ -2695,8 +2704,8 @@ end
 function export.generate_forms(frame)
 	local include_props = frame.args["include_props"]
 	local parent_args = frame:getParent().args
-	local alternant_spec = export.do_generate_forms(parent_args)
-	return concat_forms(alternant_spec, include_props)
+	local alternant_multiword_spec = export.do_generate_forms(parent_args)
+	return concat_forms(alternant_multiword_spec, include_props)
 end
 
 

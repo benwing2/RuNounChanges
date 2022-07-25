@@ -307,7 +307,7 @@ local function add(base, slot, stress, endings, footnotes, explicit_stem)
 			ending = com.maybe_accent_initial_syllable(ending)
 		end
 		stem, ending = apply_special_cases(base, slot, stem, ending)
-		ending = iut.generate_form(ending, footnotes)
+		ending = iut.combine_form_and_footnotes(ending, footnotes)
 		iut.add_forms(base.forms, slot, stem, ending,
 			com.combine_stem_ending_into_external_form)
 	end
@@ -2038,14 +2038,18 @@ local function show_forms(alternant_multiword_spec)
 		end
 	end
 	local props = {
+		lemmas = lemmas,
+		slot_table = output_noun_slots_with_linked,
 		lang = lang,
 		canonicalize = function(form)
 			return com.remove_variant_codes(com.remove_monosyllabic_accents(form))
 		end,
+		include_translit = true,
+		-- Explicit additional top-level footnotes only occur with {{be-ndecl-manual}}.
+		footnotes = alternant_multiword_spec.footnotes,
+		allow_footnote_symbols = not not alternant_multiword_spec.footnotes,
 	}
-	iut.show_forms_with_translit(alternant_multiword_spec.forms, lemmas,
-		output_noun_slots_with_linked, props, alternant_multiword_spec.footnotes,
-		"allow footnote symbols")
+	iut.show_forms(alternant_multiword_spec.forms, props)
 end
 
 
@@ -2273,7 +2277,10 @@ function export.do_generate_forms(parent_args, pos, from_headword, def)
 	end
 
 	local args = m_para.process(parent_args, params)
-	local alternant_multiword_spec = iut.parse_alternant_multiword_spec(args[1], parse_indicator_spec)
+	local parse_props = {
+		parse_indicator_spec = parse_indicator_spec,
+	}
+	local alternant_multiword_spec = iut.parse_inflected_text(args[1], parse_props)
 	alternant_multiword_spec.title = args.title
 	alternant_multiword_spec.footnotes = args.footnote
 	alternant_multiword_spec.args = args
@@ -2284,15 +2291,15 @@ function export.do_generate_forms(parent_args, pos, from_headword, def)
 	-- The default of "M" should apply only to plural adjectives, where it doesn't matter.
 	propagate_properties(alternant_multiword_spec, "gender", "M", "mixed")
 	determine_noun_status(alternant_multiword_spec)
-	local decline_props = {
+	local inflect_props = {
 		skip_slot = function(slot)
 			return skip_slot(alternant_multiword_spec.number, slot)
 		end,
 		slot_table = output_noun_slots_with_linked,
 		get_variants = com.get_variants,
-		decline_word_spec = decline_noun,
+		inflect_word_spec = decline_noun,
 	}
-	iut.decline_multiword_or_alternant_multiword_spec(alternant_multiword_spec, decline_props)
+	iut.inflect_multiword_or_alternant_multiword_spec(alternant_multiword_spec, inflect_props)
 	compute_categories_and_annotation(alternant_multiword_spec)
 	alternant_multiword_spec.genders = compute_headword_genders(alternant_multiword_spec)
 	return alternant_multiword_spec

@@ -178,7 +178,7 @@ function export.add_form(base, stem, translit_stem, slot, ending, footnotes, lin
 	end
 
 	footnotes = iut.combine_footnotes(base.footnotes, footnotes)
-	local ending_obj = iut.generate_form(ending, footnotes)
+	local ending_obj = iut.combine_form_and_footnotes(ending, footnotes)
 	if translit_stem then
 		stem = {form = stem, translit = translit_stem}
 	end

@@ -794,7 +794,10 @@ end
 local function show_forms(alternant_multiword_spec)
 	local lemmas = alternant_multiword_spec.forms.inf_ms or {}
 	local props = {
+		lemmas = lemmas,
+		slot_table = verb_slots_impers,
 		lang = lang,
+		include_translit = true,
 	}
 	if alternant_multiword_spec.multiword then
 		-- Remove variant codes that were added to ensure only parallel variants in
@@ -804,11 +807,10 @@ local function show_forms(alternant_multiword_spec)
 			return com.remove_variant_codes(form)
 		end
 	end
-	iut.show_forms_with_translit(alternant_multiword_spec.forms, lemmas,
-		verb_slots_impers, props)
+	iut.show_forms(alternant_multiword_spec.forms, props)
 	alternant_multiword_spec.forms.footnote_impers = alternant_multiword_spec.forms.footnote
-	iut.show_forms_with_translit(alternant_multiword_spec.forms, lemmas,
-		verb_slots_pers, props)
+	props.slot_table = verb_slots_pers
+	iut.show_forms(alternant_multiword_spec.forms, props)
 	alternant_multiword_spec.forms.footnote_pers = alternant_multiword_spec.forms.footnote
 end
 
@@ -1432,10 +1434,10 @@ end
 -- Devanagari representation of the form and TRANSLIT its manual transliteration. Embedded pipe symbols
 -- (as might occur in embedded links) are converted to <!>. If INCLUDE_PROPS is given, also include
 -- additional properties (currently, none). This is for use by bots.
-local function concat_forms(alternant_spec, include_props)
+local function concat_forms(alternant_multiword_spec, include_props)
 	local ins_text = {}
 	for slot, _ in pairs(all_verb_slots) do
-		local formtext = iut.concat_forms_in_slot(alternant_spec.forms[slot])
+		local formtext = iut.concat_forms_in_slot(alternant_multiword_spec.forms[slot])
 		if formtext then
 			table.insert(ins_text, slot .. "=" .. formtext)
 		end
@@ -1449,8 +1451,8 @@ end
 function export.generate_forms(frame)
 	local include_props = frame.args["include_props"]
 	local parent_args = frame:getParent().args
-	local alternant_spec = export.do_generate_forms(parent_args)
-	return concat_forms(alternant_spec, include_props)
+	local alternant_multiword_spec = export.do_generate_forms(parent_args)
+	return concat_forms(alternant_multiword_spec, include_props)
 end
 
 return export

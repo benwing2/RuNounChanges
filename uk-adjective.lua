@@ -552,14 +552,18 @@ local function show_forms(alternant_multiword_spec)
 		end
 	end
 	local props = {
+		lemmas = lemmas,
+		slot_table = get_output_adjective_slots(alternant_multiword_spec),
 		lang = lang,
 		canonicalize = function(form)
 			return com.remove_variant_codes(com.remove_monosyllabic_stress(form))
 		end,
+		include_translit = true,
+		-- Explicit additional top-level footnotes only occur with {{uk-adecl-manual}}.
+		footnotes = alternant_multiword_spec.footnotes,
+		allow_footnote_symbols = not not alternant_multiword_spec.footnotes,
 	}
-	iut.show_forms_with_translit(alternant_multiword_spec.forms, lemmas,
-		get_output_adjective_slots(alternant_multiword_spec), props,
-		alternant_multiword_spec.footnotes, "allow footnote symbols")
+	iut.show_forms(alternant_multiword_spec.forms, props)
 end
 
 
@@ -713,7 +717,7 @@ local function make_table(alternant_multiword_spec)
 ! style="height:0.2em;background:#d9ebff" colspan="6" |
 |-
 ! style="background:#eff7ff" colspan="2" | short form
-| colspan="4" | {short}]=]
+| colspan="1" | {short}]=]
 
 	local notes_template = [===[
 <div style="width:100%;text-align:left;background:#d9ebff">
@@ -767,104 +771,6 @@ local function make_table(alternant_multiword_spec)
 	)
 end
 
-
-local stem_expl = {
-	["ц-stem"] = "-ц",
-	["vowel-stem"] = "a vowel, or -й or -ь",
-	["soft-stem"] = "a soft consonant",
-	["hard-stem"] = "a hard consonant",
-	["possessive"] = "-ов, -єв, -ин or -їн",
-}
-
-
-export.adj_decl_endings = {
-	["hard stem-stressed"] = {"-ий", "-а", "-е", "-і"},
-	["hard ending-stressed"] = {"-и́й", "-а́", "-е́", "-і́"},
-	["soft"] = {"-ій", "-я", "-є", "-і"},
-	["c-stem"] = {"-ий", "-я", "-е", "-і"},
-	["j-stem"] = {"-їй", "-я", "-є", "-ї"},
-	["possessive"] = {"-", "-а", "-е", "-і"},
-	["surname"] = {"-", "-а", "(nil)", "-и"},
-}
-
-
--- Implementation of template 'ruadjcatboiler'.
-function export.catboiler(frame)
-	local SUBPAGENAME = mw.title.getCurrentTitle().subpageText
-	local params = {
-		[1] = {required = true},
-		[2] = {required = true},
-		[3] = {},
-		[4] = {},
-		[5] = {},
-	}
-
-	local parent_args = frame:getParent().args
-	local args = m_para.process(parent_args, params)
-
-	local cats = {}
-
-	local function insert(cat)
-	    table.insert(cats, "Ukrainian " .. rsub(cat, "~", "adjectives"))
-	end
-
-	local maintext, misctext
-	if args[1] == "adj" then
-		local stem, stress = rmatch(SUBPAGENAME, "^Ukrainian ([^ ]*) ([^ *]*)-stressed adjectives")
-		if not stem then
-			stem = rmatch(SUBPAGENAME, "^Ukrainian ([^ ]*) adjectives")
-			stress = ""
-		end
-		if not stem then
-			error("Invalid category name, should be e.g. \"Ukrainian hard-stem ending-stressed adjectives\"")
-		end
-		local stresstext = stress == "stem" and
-			"The adjectives in this category have stress on the stem." or
-			stress == "ending" and
-			"The adjectives in this category have stress on the endings." or
-			"All adjectives of this type have stress on the stem."
-		local endingtext = "ending in the nominative in masculine singular " .. args[2] .. ", feminine singular " .. args[3] .. ", neuter singular " .. args[4] .. " and plural " .. args[5] .. "."
-		local stemtext
-		if not stem_expl[stem] then
-			error("Invalid stem type " .. stem)
-		end
-		stemtext = " The stem ends in " .. stem_expl[stem] .. "."
-
-		maintext = stem .. " ~, " .. endingtext .. stemtext .. " " .. stresstext
-		insert("~ by stem type and stress|" .. stem .. " " .. stress)
-	elseif args[1] == "irreg" then
-		local irregularity = rmatch(SUBPAGENAME, "^Ukrainian adjectives with irregular (.*)")
-		if not irregularity then
-			error("Invalid category name, should be e.g. \"Ukrainian adjectives with irregular nominative masculine singular\"")
-		end
-		maintext = "~ with irregular " .. irregularity .. " (possibly along with other cases)."
-		insert("~ by irregularity|" .. irregularity)
-	elseif args[1] == "misc" then
-		misctext = args[2]
-		local sort_key = rmatch(SUBPAGENAME, "^Ukrainian adjectives with (.*)")
-		if not sort_key then
-			sort_key = rmatch(SUBPAGENAME, "^Ukrainian adjectives by (.*)")
-		end
-		if not sort_key then
-			sort_key = rmatch(SUBPAGENAME, "^Ukrainian adjectives (.*)")
-		end
-		if not sort_key then
-			sort_key = rmatch(SUBPAGENAME, "^Ukrainian (.*)")
-		end
-		if not sort_key then
-			error("Invalid category name, should begin with \"Ukrainian\": " .. SUBPAGENAME)
-		end
-		insert("~|" .. sort_key)
-	else
-		error("Unknown 'uk-adj cat' type " .. (args[1] or "(empty)"))
-	end
-
-	return (misctext or "This category contains Ukrainian " .. rsub(maintext, "~", "adjectives"))
-		.. "\n" ..
-		mw.getCurrentFrame():expandTemplate{title="uk-categoryTOC", args={}}
-		.. require("Module:utilities").format_categories(cats, lang, nil, nil, "force")
-end
-
 -- Externally callable function to parse and decline an adjective given
 -- user-specified arguments. Return value is WORD_SPEC, an object where the
 -- declined forms are in `WORD_SPEC.forms` for each slot. If there are no values
@@ -881,22 +787,22 @@ function export.do_generate_forms(parent_args, pos, from_headword, def)
 	end
 
 	local args = m_para.process(parent_args, params)
-	local alternant_multiword_spec = iut.parse_alternant_multiword_spec(args[1],
-		parse_indicator_spec, "allow default indicator")
+	local parse_props = {
+		parse_indicator_spec = parse_indicator_spec,
+		allow_default_indicator = true,
+	}
+	local alternant_multiword_spec = iut.parse_inflected_text(args[1], parse_props)
 	alternant_multiword_spec.title = args.title
 	alternant_multiword_spec.footnotes = args.footnote
 	alternant_multiword_spec.forms = {}
 	normalize_all_lemmas(alternant_multiword_spec)
 	detect_all_indicator_specs(alternant_multiword_spec)
-	local decline_props = {
-		skip_slot = function(slot)
-			return false
-		end,
+	local inflect_props = {
 		slot_table = get_output_adjective_slots(alternant_multiword_spec, "with linked"),
 		get_variants = get_variants,
-		decline_word_spec = decline_adjective,
+		inflect_word_spec = decline_adjective,
 	}
-	iut.decline_multiword_or_alternant_multiword_spec(alternant_multiword_spec, decline_props)
+	iut.inflect_multiword_or_alternant_multiword_spec(alternant_multiword_spec, inflect_props)
 	process_overrides(alternant_multiword_spec.forms, args)
 	set_accusative(alternant_multiword_spec)
 	add_categories(alternant_multiword_spec)
@@ -920,17 +826,17 @@ function export.do_generate_forms_manual(parent_args, pos, from_headword, def)
 	end
 
 	local args = m_para.process(parent_args, params)
-	local alternant_spec = {
+	local alternant_multiword_spec = {
 		special = args.special,
 		title = args.title,
 		footnotes = args.footnote,
 		forms = {},
 		manual = true,
 	}
-	process_overrides(alternant_spec.forms, args)
-	set_accusative(alternant_spec)
-	add_categories(alternant_spec)
-	return alternant_spec
+	process_overrides(alternant_multiword_spec.forms, args)
+	set_accusative(alternant_multiword_spec)
+	add_categories(alternant_multiword_spec)
+	return alternant_multiword_spec
 end
 
 
@@ -939,9 +845,9 @@ end
 -- of the declined forms.
 function export.show(frame)
 	local parent_args = frame:getParent().args
-	local alternant_spec = export.do_generate_forms(parent_args)
-	show_forms(alternant_spec)
-	return make_table(alternant_spec) .. require("Module:utilities").format_categories(alternant_spec.categories, lang)
+	local alternant_multiword_spec = export.do_generate_forms(parent_args)
+	show_forms(alternant_multiword_spec)
+	return make_table(alternant_multiword_spec) .. require("Module:utilities").format_categories(alternant_multiword_spec.categories, lang)
 end
 
 
@@ -950,9 +856,9 @@ end
 -- displayable table of the declined forms.
 function export.show_manual(frame)
 	local parent_args = frame:getParent().args
-	local alternant_spec = export.do_generate_forms_manual(parent_args)
-	show_forms(alternant_spec)
-	return make_table(alternant_spec) .. require("Module:utilities").format_categories(alternant_spec.categories, lang)
+	local alternant_multiword_spec = export.do_generate_forms_manual(parent_args)
+	show_forms(alternant_multiword_spec)
+	return make_table(alternant_multiword_spec) .. require("Module:utilities").format_categories(alternant_multiword_spec.categories, lang)
 end
 
 
@@ -961,10 +867,10 @@ end
 -- occur in embedded links) are converted to <!>. If INCLUDE_PROPS is given,
 -- also include additional properties (currently, none). This is for use by
 -- bots.
-local function concat_forms(alternant_spec, include_props)
+local function concat_forms(alternant_multiword_spec, include_props)
 	local ins_text = {}
-	for slot, _ in pairs(get_output_adjective_slots(alternant_spec)) do
-		local formtext = com.concat_forms_in_slot(alternant_spec.forms[slot])
+	for slot, _ in pairs(get_output_adjective_slots(alternant_multiword_spec)) do
+		local formtext = com.concat_forms_in_slot(alternant_multiword_spec.forms[slot])
 		if formtext then
 			table.insert(ins_text, slot .. "=" .. formtext)
 		end
@@ -981,8 +887,8 @@ end
 function export.generate_forms(frame)
 	local include_props = frame.args["include_props"]
 	local parent_args = frame:getParent().args
-	local alternant_spec = export.do_generate_forms(parent_args)
-	return concat_forms(alternant_spec, include_props)
+	local alternant_multiword_spec = export.do_generate_forms(parent_args)
+	return concat_forms(alternant_multiword_spec, include_props)
 end
 
 

@@ -180,7 +180,7 @@ local function add_normal_decl(base, stem,
 	dat_m, dat_f, dat_p, acc_f,
 	ins_m, ins_f, ins_p, loc_m, loc_f, loc_p,
 	footnote)
-	stem = iut.generate_form(stem, footnote)
+	stem = iut.combine_form_and_footnotes(stem, footnote)
 	add(base, "nom_m", stem, nom_m)
 	add(base, "nom_f", stem, nom_f)
 	add(base, "nom_n", stem, nom_n)
@@ -502,7 +502,7 @@ local function show_forms(alternant_multiword_spec)
 			table.insert(lemmas, com.remove_monosyllabic_accents(form.form))
 		end
 	end
-	props = {
+	local props = {
 		lemmas = lemmas,
 		slot_table = get_output_adjective_slots(alternant_multiword_spec),
 		lang = lang,
@@ -785,9 +785,9 @@ end
 -- of the declined forms.
 function export.show(frame)
 	local parent_args = frame:getParent().args
-	local alternant_spec = export.do_generate_forms(parent_args)
-	show_forms(alternant_spec)
-	return make_table(alternant_spec) .. require("Module:utilities").format_categories(alternant_spec.categories, lang)
+	local alternant_multiword_spec = export.do_generate_forms(parent_args)
+	show_forms(alternant_multiword_spec)
+	return make_table(alternant_multiword_spec) .. require("Module:utilities").format_categories(alternant_multiword_spec.categories, lang)
 end
 
 
@@ -796,9 +796,9 @@ end
 -- displayable table of the declined forms.
 function export.show_manual(frame)
 	local parent_args = frame:getParent().args
-	local alternant_spec = export.do_generate_forms_manual(parent_args)
-	show_forms(alternant_spec)
-	return make_table(alternant_spec) .. require("Module:utilities").format_categories(alternant_spec.categories, lang)
+	local alternant_multiword_spec = export.do_generate_forms_manual(parent_args)
+	show_forms(alternant_multiword_spec)
+	return make_table(alternant_multiword_spec) .. require("Module:utilities").format_categories(alternant_multiword_spec.categories, lang)
 end
 
 
@@ -807,10 +807,10 @@ end
 -- occur in embedded links) are converted to <!>. If INCLUDE_PROPS is given,
 -- also include additional properties (currently, none). This is for use by
 -- bots.
-local function concat_forms(alternant_spec, include_props)
+local function concat_forms(alternant_multiword_spec, include_props)
 	local ins_text = {}
-	for slot, _ in pairs(get_output_adjective_slots(alternant_spec)) do
-		local formtext = iut.concat_forms_in_slot(alternant_spec.forms[slot])
+	for slot, _ in pairs(get_output_adjective_slots(alternant_multiword_spec)) do
+		local formtext = iut.concat_forms_in_slot(alternant_multiword_spec.forms[slot])
 		if formtext then
 			table.insert(ins_text, slot .. "=" .. formtext)
 		end
@@ -827,8 +827,8 @@ end
 function export.generate_forms(frame)
 	local include_props = frame.args["include_props"]
 	local parent_args = frame:getParent().args
-	local alternant_spec = export.do_generate_forms(parent_args)
-	return concat_forms(alternant_spec, include_props)
+	local alternant_multiword_spec = export.do_generate_forms(parent_args)
+	return concat_forms(alternant_multiword_spec, include_props)
 end
 
 
