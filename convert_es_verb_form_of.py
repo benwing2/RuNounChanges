@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import pywikibot, re, sys, codecs, argparse
+import pywikibot, re, sys, codecs, argparse, json
 
 import blib
-from blib import getparam, rmparam, msg, site, tname, pname
+from blib import getparam, rmparam, msg, errandmsg, site, tname, pname
 
 conj_table = {}
 def lookup_conjugation(inf, pagemsg, errandpagemsg):
@@ -174,11 +174,61 @@ def process_text_on_page(index, pagetitle, pagetext):
     pagemsg("Replaced <%s> with <%s>" % (escape_newlines(verb_form_chunk), escape_newlines(chunks[k])))
   pagetext = "".join(chunks).rstrip("\n") + finalnl
 
+  parsed = blib.parse_text(pagetext)
+  for t in parsed.filter_templates():
+    origt = unicode(t)
+    def getp(param):
+      return getparam(t, param)
+    tn = tname(t)
+    if tn == "es-compound of":
+      inf = getp("1") + getp("2")
+      if not re.search(u"(ar|er|ir|ír)(se)?$", inf):
+        pagemsg("WARNING: Strange infinitive in {{es-compound of}}, skipping: %s" % origt)
+        continue
+      conjs, bad_reason = lookup_conjugation(inf, pagemsg, errandpagemsg)
+      if conjs is None:
+        pagemsg("WARNING: Can't find conjugation for infinitive '%s', skipping: %s" % (inf, origt))
+        continue
+      expansions = []
+      expansion_conjugations = []
+      full_expansions = []
+      for conj in conjs:
+        newtemp = "{{es-verb form of|%s|json=1}}" % conj
+        expansion = expand_text(newtemp)
+        if expansion is not False:
+          expansion = json.loads(expansion)
+          expansion_retval = expansion["retval"]
+          if expansion_retval not in expansions:
+            expansions.append(expansion_retval)
+            expansion_conjugations.append(conj)
+            full_expansions.append(expansion)
+      if len(expansions) == 0:
+        pagemsg("WARNING: No expansions, can't replace {{es-compound of}} with %s, skipping: %s"
+          % (newtemp, origt))
+        continue
+      if len(expansions) > 1:
+        pagemsg("WARNING: Multiple conjugations with differing expansions, can't replace {{es-compound of}}, skipping: %s"
+            % ", ".join("%s=%s" % (expansion_conjugations[i], expansion) for i, expansion in enumerate(expansions)))
+        continue
+      conj = expansion_conjugations[0]
+      if not full_expansions[0]["partial"]:
+        saw_comb = any("comb" in tag for tag in full_expansions[0]["tags"])
+        all_comb = all("comb" in tag for tag in full_expansions[0]["tags"])
+        if saw_comb and not all_comb:
+          pagemsg("WARNING: Mixture of combination and non-combination tags   ") FIXME
+      if not partial
+      notes.append("replace {{es-compound of}} with {{es-verb form of|%s}} for infinitive [[%s]]" % (conj, inf))
+      del t.params[:]
+      t.add("1", conj)
+      blib.set_template_name(t, "es-verb form of")
+      pagemsg("Replaced %s with %s" % (origt, unicode(t)))
+  pagetext = unicode(parsed)
+
   return pagetext, notes
   
-parser = blib.create_argparser(u"Convert {{es-verb form of}} to new format", include_pagefile=True, include_stdin=True)
+parser = blib.create_argparser(u"Convert {{es-verb form of}} and {{es-compound of}} to new format", include_pagefile=True, include_stdin=True)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
 blib.do_pagefile_cats_refs(args, start, end, process_text_on_page, edit=True, stdin=True,
-    default_refs=["Template:es-verb form of"])
+    default_refs=["Template:es-verb form of"], skip_ignorable_pages=True)
