@@ -139,6 +139,7 @@ person_number_to_reflexive_pronoun = {
 -- we're being requested to generate some double-combined forms, such as [[llevándoselo]]; see the comment below for
 -- `verb_slot_double_combined_rows`.
 local function add_slots(alternant_multiword_spec)
+	-- "Basic" slots: All slots that go into the regular table (not the combined-form table).
 	alternant_multiword_spec.verb_slots_basic = {
 		{"infinitive", "inf"},
 		{"infinitive_linked", "inf"},
@@ -149,48 +150,89 @@ local function add_slots(alternant_multiword_spec)
 		{"pp_fp", "f|p|past|part"},
 	}
 
+	-- Slots that go into the combined-form table, along with double-combined slots (e.g. [[llevándoselo]]) that are
+	-- requested for use with {{es-verb form of}}.
 	alternant_multiword_spec.verb_slots_combined = {}
 
-	-- For generating combined forms. This is a list of lists of the form {BASIC_SLOT, CLITICS} where BASIC_SLOT is the
-	-- slot to add the clitic pronouns to (e.g. "gerund" or "imp_2s") and CLITICS is a list of the clitic pronouns to
-	-- add.
+	-- Special slots used to handle non-reflexive parts of reflexive verbs in {{es-verb form of}}.
+	-- For example, for a reflexive-only verb like [[jambarse]], we want to be able to use {{es-verb form of}} on
+	-- [[jambe]] (which should mention that it is a part of 'me jambe', first-person singular present subjunctive, and
+	-- 'se jambe', third-person singular present subjunctive) or on [[jambamos]] (which should mention that it is a
+	-- part of 'nos jambamos', first-person plural present indicative or preterite). Similarly, we want to use
+	-- {{es-verb form of}} on [[jambando]] (which should mention that it is a part of 'se ... jambando', syntactic
+	-- variant of [[jambándose]], which is the gerund of [[jambarse]]). To do this, we need to be able to map
+	-- non-reflexive parts like [[jambe]], [[jambamos]], [[jambando]], etc. to their reflexive equivalent(s), to the
+	-- tag(s) of the equivalent(s), and, in the case of forms like [[jambando]], [[jambar]] and imperatives, to the
+	-- separated syntactic variant of the verb+clitic combination. We do this by creating slots for the non-reflexive
+	-- part equivalent of each basic reflexive slot, and for the separated syntactic-variant equivalent of each basic
+	-- reflexive slot that is formed of verb+clitic. We use slots in this way to deal with multiword lemmas. Note that
+	-- we run into difficulties mapping between reflexive verbs, non-reflexive part equivalents, and separated syntactic
+	-- variants if a slot contains more than one form. To handle this, if there are the same number of forms in two
+	-- slots we're trying to match up, we assume the forms match one-to-one; otherwise we don't match up the two slots
+	-- (which means {{es-verb form of}} won't work in this case, but such a case is extremely rare and not worth
+	-- worrying about). Alternatives that handle this "properly" are significantly more complicated and require
+	-- non-trivial modifications to [[Module:inflection utilities]].
+	local need_special_verb_form_of_slots = alternant_multiword_spec.from_verb_form_of and alternant_multiword_spec.refl
+
+	if need_special_verb_form_of_slots then
+		alternant_multiword_spec.verb_slots_reflexive_verb_form_of = {
+			{"infinitive_non_reflexive", "-"},
+			{"infinitive_variant", "-"},
+			{"gerund_non_reflexive", "-"},
+			{"gerund_variant", "-"},
+		}
+	else
+		alternant_multiword_spec.verb_slots_reflexive_verb_form_of = {}
+	end
+
+	-- For generating combined forms, i.e. combinations of a basic form (specifically, infinitive, gerund or an
+	-- imperative form) with a clitic (or in some cases, two clitics). This is a list of lists of the form
+	-- {BASIC_SLOT, CLITICS} where BASIC_SLOT is the slot to add the clitic pronouns to (e.g. "gerund" or "imp_2s")
+	-- and CLITICS is a list of the clitic pronouns to add.
 	alternant_multiword_spec.verb_slot_combined_rows = {}
 
 	-- For generating double combined forms (e.g. [[llevándoselo]] or [[dámela]]). This is used by {{es-verb form of}}
 	-- when it detects that it is being requested to find the inflection tags for a double-combined form. The number of
 	-- double-combined forms is relatively large, so to optimize this, [[Module:es-inflections]] (which implements
 	-- {{es-verb form of}}) detects which two clitics are involved, and we only generate double-combined forms
-	-- involving those two clitics; this is specified using `double_combined_form_to_include`, passed into
+	-- involving those two clitics; this is specified using `double_combined_forms_to_include`, passed into
 	-- do_generate_forms(). The value of this field is a list of lists of the form {SINGLE_COMB_SLOT, CLITICS} where
 	-- SINGLE_COMB_SLOT is the single-combined slot to add the object clitic pronouns to (e.g. "gerund_comb_se" or
 	-- "imp_2s_comb_me") and CLITICS is a list of the clitic pronouns to add. CLITICS will normally be a length-one
 	-- list whose value is one of {"lo", "la", "le", "los", "las", "les"}.
 	alternant_multiword_spec.verb_slot_double_combined_rows = {}
 
-	-- Accelerators for use in {{es-verb form of}} when we set the accelerator in all_verb_slots to "-".
-	alternant_multiword_spec.overriding_slot_accel = {}
-
 	-- Add entries for a slot with person/number variants.
 	-- `verb_slots` is the table to add to.
 	-- `slot_prefix` is the prefix of the slot, typically specifying the tense/aspect.
-	-- `tag_suffix` is the set of inflection tags to add after the person/number tags.
-	-- `no_accel` indicates that no accelerator entry should be generated.
-	local function add_slot_personal(verb_slots, slot_prefix, tag_suffix, person_number_list, no_accel)
+	-- `tag_suffix` is a string listing the set of inflection tags to add after the person/number tags.
+	-- `person_number_list` is a list of the person/number slot suffixes to add to `slot_prefix`.
+	local function add_personal_slot(verb_slots, slot_prefix, tag_suffix, person_number_list)
 		for _, persnum in ipairs(person_number_list) do
 			local persnum_tag = all_persons_numbers[persnum]
 			local slot = slot_prefix .. "_" .. persnum
 			local accel = persnum_tag .. "|" .. tag_suffix
-			if no_accel then
-				table.insert(verb_slots, {slot, "-"})
-				export.overriding_slot_accel[slot] = accel
-			else
-				table.insert(verb_slots, {slot, accel})
-			end
+			table.insert(verb_slots, {slot, accel})
 		end
 	end
 
-	local function add_basic_personal_slot(slot_prefix, tag_suffix, person_number_list, no_accel)
-		add_slot_personal(alternant_multiword_spec.verb_slots_basic, slot_prefix, tag_suffix, person_number_list, no_accel)
+	-- Add a personal slot (i.e. a slot with person/number variants) to `verb_slots_basic`.
+	local function add_basic_personal_slot(slot_prefix, tag_suffix, person_number_list, no_special_verb_form_of_slot,
+		need_variant_slot)
+		add_personal_slot(alternant_multiword_spec.verb_slots_basic, slot_prefix, tag_suffix, person_number_list)
+		-- Add special slots for handling non-reflexive parts of reflexive verbs in {{es-verb form of}}.
+		-- See comment above in `need_special_verb_form_of_slots`.
+		if need_special_verb_form_of_slots and not no_special_verb_form_of_slot then
+			for _, persnum in ipairs(person_number_list) do
+				local persnum_tag = all_persons_numbers[persnum]
+				local basic_slot = slot_prefix .. "_" .. persnum
+				local accel = persnum_tag .. "|" .. tag_suffix
+				table.insert(alternant_multiword_spec.verb_slots_reflexive_verb_form_of, {basic_slot .. "_non_reflexive", "-"})
+				if need_variant_slot then
+					table.insert(alternant_multiword_spec.verb_slots_reflexive_verb_form_of, {basic_slot .. "_variant", "-"})
+				end
+			end
+		end
 	end
 
 	add_basic_personal_slot("pres", "pres|ind", person_number_list_voseo)
@@ -202,64 +244,82 @@ local function add_slots(alternant_multiword_spec)
 	add_basic_personal_slot("impf_sub_ra", "impf|sub", person_number_list_basic)
 	add_basic_personal_slot("impf_sub_se", "impf|sub", person_number_list_basic)
 	add_basic_personal_slot("fut_sub", "fut|sub", person_number_list_basic)
-	add_basic_personal_slot("imp", "imp", imp_person_number_list)
-	add_basic_personal_slot("neg_imp", "neg|imp", neg_imp_person_number_list, "no accel")
-	add_basic_personal_slot("infinitive", "inf", person_number_list_basic)
-	add_basic_personal_slot("gerund", "ger", person_number_list_basic)
+	-- Need variant slots because the imperative clitics are suffixed.
+	add_basic_personal_slot("imp", "imp", imp_person_number_list, nil, "need variant slot")
+	-- Don't need special non-reflexive-part slots because the negative imperative is multiword, of which the
+	-- individual words are 'no' + subjunctive.
+	add_basic_personal_slot("neg_imp", "neg|imp", neg_imp_person_number_list, "no special verb form of")
+	-- Don't need special non-reflexive-part slots because we don't want [[jambando]] mapping to [[jambándome]]
+	-- (only [[jambándose]]) or [[jambar]] mapping to [[jambarme]] (only [[jambarse]]).
+	add_basic_personal_slot("infinitive", "inf", person_number_list_basic, "no special verb form of")
+	add_basic_personal_slot("gerund", "ger", person_number_list_basic, "no special verb form of")
 
 	local third_person_object_clitics = {"lo", "la", "le", "los", "las", "les"}
 
+	-- Add combined-form slots.
 	if not alternant_multiword_spec.nocomb then
-		local function add_combined_slot(basic_slot, slot_prefix, clitics)
-			local clitics_with_object = m_table.append(clitics, third_person_object_clitics)
+		-- Add a row of slots representing the combination of a basic slot with a clitic. `basic_slot` is the basic slot
+		-- descriptor, `tag_prefix` is a string describing the inflection tags of the basic slot, and `personal_clitics`
+		-- is a list of the personal clitics ("me", "te", "se", "nos" or "os") to add to the basic slot.
+		local function add_combined_slot_row(basic_slot, tag_prefix, personal_clitics)
+			-- First, add each individual combined slot to `verb_slots_combined`.
+			local clitics_with_object = m_table.append(personal_clitics, third_person_object_clitics)
 			for _, clitic in ipairs(clitics_with_object) do
 				local slot = basic_slot .. "_comb_" .. clitic
 				-- You have to pass this through full_link() to get a Spanish-specific link
-				local accel = slot_prefix .. "|combined with [[" .. clitic .. "]]"
+				local accel = tag_prefix .. "|combined with [[" .. clitic .. "]]"
 				table.insert(alternant_multiword_spec.verb_slots_combined, {slot, accel})
 			end
+
+			-- Also, add the row to `verb_slot_combined_rows`.
 			table.insert(alternant_multiword_spec.verb_slot_combined_rows, {basic_slot, clitics_with_object})
 
 			-- Also do double-combined forms for a specific set of clitics, if requested. See the comment above
 			-- `verb_slot_double_combined_rows` above.
-			if alternant_multiword_spec.double_combined_form_to_include then
-				local to_include_personal_clitic, to_include_object_clitic =
-					unpack(alternant_multiword_spec.double_combined_form_to_include)
-				for _, personal_clitic in ipairs(clitics) do
+			if alternant_multiword_spec.double_combined_forms_to_include then
+				for _, personal_clitic in ipairs(personal_clitics) do
 					for _, object_clitic in ipairs(third_person_object_clitics) do
-						if personal_clitic == to_include_personal_clitic and object_clitic == to_include_object_clitic then
-							local single_comb_slot = basic_slot .. "_comb_" .. personal_clitic
-							local slot = single_comb_slot .. "_" .. object_clitic
-							local accel = slot_prefix .. "|combined with [[" .. personal_clitic .. "]] and [[" ..
-								object_clitic .. "]]"
-							table.insert(alternant_multiword_spec.verb_slots_combined, {slot, accel})
-							table.insert(alternant_multiword_spec.verb_slot_double_combined_rows,
-								{single_comb_slot, {object_clitic}})
+						for _, form_to_include in ipairs(alternant_multiword_spec.double_combined_forms_to_include) do
+							local to_include_personal_clitic, to_include_object_clitic = unpack(form_to_include)
+							if personal_clitic == to_include_personal_clitic and object_clitic == to_include_object_clitic then
+								local single_comb_slot = basic_slot .. "_comb_" .. personal_clitic
+								local slot = single_comb_slot .. "_" .. object_clitic
+								local accel = tag_prefix .. "|combined with [[" .. personal_clitic .. "]] and [[" ..
+									object_clitic .. "]]"
+								table.insert(alternant_multiword_spec.verb_slots_combined, {slot, accel})
+								table.insert(alternant_multiword_spec.verb_slot_double_combined_rows,
+									{single_comb_slot, {object_clitic}})
+								break
+							end
 						end
 					end
 				end
 			end
 		end
 
-		add_combined_slot("infinitive", "inf", {"me", "te", "se", "nos", "os"})
-		add_combined_slot("gerund", "gerund", {"me", "te", "se", "nos", "os"})
+		add_combined_slot_row("infinitive", "inf", {"me", "te", "se", "nos", "os"})
+		add_combined_slot_row("gerund", "gerund", {"me", "te", "se", "nos", "os"})
 
-		local function add_combined_imp_slot(persnum, personal_clitics)
-			add_combined_slot("imp_" .. persnum, all_persons_numbers[persnum] .. "|imp", personal_clitics)
+		local function add_combined_imp_slot_row(persnum, personal_clitics)
+			add_combined_slot_row("imp_" .. persnum, all_persons_numbers[persnum] .. "|imp", personal_clitics)
 		end
-		add_combined_imp_slot("2s", {"me", "te", "nos"})
-		add_combined_imp_slot("2sv", {"me", "te", "nos"})
-		add_combined_imp_slot("3s", {"me", "se", "nos"})
-		add_combined_imp_slot("1p", {"te", "nos", "os"})
-		add_combined_imp_slot("2p", {"me", "nos", "os"})
-		add_combined_imp_slot("3p", {"me", "se", "nos"})
+		add_combined_imp_slot_row("2s", {"me", "te", "nos"})
+		add_combined_imp_slot_row("2sv", {"me", "te", "nos"})
+		add_combined_imp_slot_row("3s", {"me", "se", "nos"})
+		add_combined_imp_slot_row("1p", {"te", "nos", "os"})
+		add_combined_imp_slot_row("2p", {"me", "nos", "os"})
+		add_combined_imp_slot_row("3p", {"me", "se", "nos"})
 	end
 
+	-- Generate the list of all slots.
 	alternant_multiword_spec.all_verb_slots = {}
 	for _, slot_and_accel in ipairs(alternant_multiword_spec.verb_slots_basic) do
 		table.insert(alternant_multiword_spec.all_verb_slots, slot_and_accel)
 	end
 	for _, slot_and_accel in ipairs(alternant_multiword_spec.verb_slots_combined) do
+		table.insert(alternant_multiword_spec.all_verb_slots, slot_and_accel)
+	end
+	for _, slot_and_accel in ipairs(alternant_multiword_spec.verb_slots_reflexive_verb_form_of) do
 		table.insert(alternant_multiword_spec.all_verb_slots, slot_and_accel)
 	end
 
@@ -269,7 +329,7 @@ local function add_slots(alternant_multiword_spec)
 		alternant_multiword_spec.verb_slots_basic_map[slot] = accel
 	end
 
-	local alternant_multiword_spec.verb_slots_combined_map = {}
+	alternant_multiword_spec.verb_slots_combined_map = {}
 	for _, slotaccel in ipairs(alternant_multiword_spec.verb_slots_combined) do
 		local slot, accel = unpack(slotaccel)
 		alternant_multiword_spec.verb_slots_combined_map[slot] = accel
@@ -1561,6 +1621,22 @@ local function process_slot_overrides(base, do_basic, reflexive_only)
 end
 
 
+-- Prefix `form` with `clitic`, adding fixed text `between` between them. Add links as appropriate unless the user
+-- requested no links. Check whether form already has brackets (as will be the case if the form has a fixed clitic).
+local function add_clitic_to_form(base, clitic, between, form)
+	if base.alternant_multiword_spec.args.noautolinkverb then
+		return clitic .. between .. form
+	else
+		local clitic_pref = "[[" .. clitic .. "]]" .. between
+		if form:find("%[%[") then
+			return clitic_pref .. form
+		else
+			return clitic_pref .. "[[" .. form .. "]]"
+		end
+	end
+end
+
+
 -- Add a reflexive pronoun or fixed clitic, e.g. [[lo]], as appropriate to the base form that were generated.
 -- `do_joined` means to do only the forms where the pronoun is joined to the end of the form; otherwise, do only the
 -- forms where it is not joined and precedes the form.
@@ -1582,11 +1658,23 @@ local function add_reflexive_or_fixed_clitic_to_forms(base, do_reflexive, do_joi
 			elseif slot:find("^neg_imp_") then
 				error("Internal error: Should not have forms set for negative imperative at this stage")
 			else
-				-- Save the non-reflexive variant for use in {{es-verb form of}}.
-				if do_reflexive and base.alternant_multiword_spec.from_verb_form_of then
-					base.non_reflexive_forms[slot] = mw.clone(base.forms[slot])
+				local slot_has_suffixed_clitic = slot:find("infinitive") or slot:find("gerund") or slot:find("^imp_")
+				-- Maybe generate non-reflexive parts and separated syntactic variants for use in {{es-verb form of}}.
+				-- See comment in add_slots() above `need_special_verb_form_of_slots`.
+				if do_reflexive and base.alternant_multiword_spec.from_verb_form_of and
+					-- Skip personal variants of infinitives and gerunds so we don't think [[jambando]] is a
+					-- non-reflexive equivalent of [[jambándome]].
+					not slot:find("infinitive_") and not slot:find("gerund_") then
+					-- Clone the forms because we will be destructively modifying them just below, adding the reflexive
+					-- pronoun.
+					insert_forms(base, slot .. "_non_reflexive", mw.clone(base.forms[slot]))
+					if slot_has_suffixed_clitic then
+						insert_forms(base, slot .. "_variant", iut.map_forms(base.forms[slot], function(form)
+							add_clitic_to_form(base, clitic, " ... ", form)
+						end))
+					end
 				end
-				if slot:find("infinitive") or slot:find("gerund") or slot:find("^imp_") then
+				if slot_has_suffixed_clitic then
 					if do_joined then
 						add_forms_with_clitic(base, slot, {clitic},
 							function(clitic, formobj, cliticized_form)
@@ -1595,19 +1683,9 @@ local function add_reflexive_or_fixed_clitic_to_forms(base, do_reflexive, do_joi
 						)
 					end
 				elseif not do_joined then
-					-- Add clitic as separate word before all other forms. Check whether form already has brackets
-					-- (as will be the case if the form has a fixed clitic).
+					-- Add clitic as separate word before all other forms.
 					for _, form in ipairs(base.forms[slot]) do
-						if base.alternant_multiword_spec.args.noautolinkverb then
-							form.form = clitic .. " " .. form.form
-						else
-							local clitic_pref = "[[" .. clitic .. "]] "
-							if form.form:find("%[%[") then
-								form.form = clitic_pref .. form.form
-							else
-								form.form = clitic_pref .. "[[" .. form.form .. "]]"
-							end
-						end
+						form.form = add_clitic_to_form(base, clitic, " ", form.form)
 					end
 				end
 			end
@@ -2268,6 +2346,11 @@ local function show_forms(alternant_multiword_spec)
 	end
 
 	local function transform_accel_obj(slot, formobj, accel_obj)
+		-- No accelerators for negative imperatives, which are always multiword and derived directly from the
+		-- present subjunctive.
+		if slot:find("^neg_imp") then
+			return nil
+		end
 		if accel_obj then
 			accel_obj.form = "verb-form-" .. reconstructed_verb_spec
 		end
@@ -2735,7 +2818,7 @@ end
 -- Return value is WORD_SPEC, an object where the conjugated forms are in `WORD_SPEC.forms`
 -- for each slot. If there are no values for a slot, the slot key will be missing. The value
 -- for a given slot is a list of objects {form=FORM, footnotes=FOOTNOTES}.
-function export.do_generate_forms(parent_args, from_headword, from_verb_form_of, double_combined_form_to_include)
+function export.do_generate_forms(parent_args, from_headword, from_verb_form_of, double_combined_forms_to_include)
 	local params = {
 		[1] = {required = from_verb_form_of},
 		["nocomb"] = {type = "boolean"},
@@ -2781,13 +2864,15 @@ function export.do_generate_forms(parent_args, from_headword, from_verb_form_of,
 
 	-- When called from {{es-verb form of}}, determine the non-lemma form whose inflections we're being asked to
 	-- determine. This normally comes from the page title or the value of |pagename=.
-	local verb_form_of_form_name
+	local verb_form_of_form
 	if from_verb_form_of then
-		verb_form_of_form_name = args.pagename
-		if not verb_form_of_form_name and PAGENAME == "es-verb form of" and in_template_space() then
-			verb_form_of_form_name = "ame"
-		else
-			verb_form_of_form_name = PAGENAME
+		verb_form_of_form = args.pagename
+		if not verb_form_of_form then
+			if PAGENAME == "es-verb form of" and in_template_space() then
+				verb_form_of_form = "ame"
+			else
+				verb_form_of_form = PAGENAME
+			end
 		end
 	end
 
@@ -2829,22 +2914,29 @@ function export.do_generate_forms(parent_args, from_headword, from_verb_form_of,
 	alternant_multiword_spec.args = args
 	alternant_multiword_spec.from_headword = from_headword
 	alternant_multiword_spec.from_verb_form_of = from_verb_form_of
-	alternant_multiword_spec.verb_form_of_form_name = verb_form_of_form_name
+	alternant_multiword_spec.verb_form_of_form = verb_form_of_form
 
 	-- Now determine if we need to generate any double-combined forms, and if so, which clitics are involved.
 	-- See the comment above the initialization of `verb_slot_double_combined_rows` above in add_slots().
-	if verb_form_of_form_name and rfind(verb_form_of_form_name, AV) then
+	if verb_form_of_form and rfind(verb_form_of_form, AV) then
 		-- All double-clitic forms have an explicit accent, so we check for this. In addition, all double-clitic forms
 		-- are of the form "(me|te|se|nos|os)(lo|la|le)s$". We have no alternations in Lua patterns, but we can exploit
 		-- the similarity of the clitics in question.
-		local single_comb_form, object_clitic = rmatch(verb_form_of_form_name, "^(.*)(l[aeo]s?)$")
+		local single_comb_form, object_clitic = rmatch(verb_form_of_form, "^(.*)(l[aeo]s?)$")
 		if single_comb_form then
 			local personal_clitic = rmatch(single_comb_form, "^.*([mts]e)$")
 			if not personal_clitic then
-				personal_clitic = rmatch(single_comb_form, "^.*(os)$")
+				personal_clitic = rmatch(single_comb_form, "^.-(n?os)$")
 			end
 			if personal_clitic then
-				alternant_multiword_spec.double_combined_form_to_include = {personal_clitic, object_clitic}
+				if personal_clitic == "nos" then
+					-- "os" is a substring of "nos"; conceivably we could have a form ending in -n + os, and we don't
+					-- know whether to interpret as -n + os or - + nos.
+					alternant_multiword_spec.double_combined_forms_to_include =
+						{{"nos", object_clitic}, {"os", object_clitic}}
+				else
+					alternant_multiword_spec.double_combined_forms_to_include = {{personal_clitic, object_clitic}}
+				end
 			end
 		end
 	end
