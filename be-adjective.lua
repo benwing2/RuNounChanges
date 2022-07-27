@@ -67,44 +67,48 @@ end
 
 
 local output_adjective_slots = {
-	-- used with all variants
+	-- used with all variants but special == "dva" and special == "plonly"
 	nom_m = "nom|m|s",
 	nom_f = "nom|f|s",
 	nom_n = "nom|n|s",
-	-- not used with special
-	nom_p = "nom|p",
-	-- the following two only used with special
-	nom_mp = "nom|m//n|p",
-	nom_fp = "nom|f|p",
-	-- the following 10 used with all variants
 	gen_m = "gen|m//n|s",
 	gen_f = "gen|f|s",
-	gen_p = "gen|p",
 	dat_m = "dat|m//n|s",
 	dat_f = "dat|f|s",
-	dat_p = "dat|p",
 	acc_m_an = "an|acc|m|s",
 	acc_m_in = "in|acc|m|s",
 	acc_f = "acc|f|s",
 	acc_n = "acc|n|s",
-	-- the following two not used with special == "dva"
-	acc_p_an = "an|acc|p",
-	acc_p_in = "in|acc|p",
-	-- the following four only used with special == "dva"
-	acc_mp_an = "an|acc|m//n|p",
-	acc_mp_in = "in|acc|m//n|p",
-	acc_fp_an = "an|acc|f|p",
-	acc_fp_in = "in|acc|f|p",
-	-- the following two gendered plurals are only used with special == "cdva"
-	acc_mp = "acc|m//n|p",
-	acc_fp = "acc|f|p",
-	-- the next six are used with all variants
 	ins_m = "ins|m//n|s",
 	ins_f = "ins|f|s",
-	ins_p = "ins|p",
 	loc_m = "loc|m//n|s",
 	loc_f = "loc|f|s",
+
+	-- used with all variants but special == "dva"
+	nom_p = "nom|p",
+	gen_p = "gen|p",
+	dat_p = "dat|p",
+	acc_p_an = "an|acc|p",
+	acc_p_in = "in|acc|p",
+	ins_p = "ins|p",
 	loc_p = "loc|p",
+
+	-- only used with special == "dva"
+	nom_mp = "nom|m//n|p",
+	nom_fp = "nom|f|p",
+	gen_mp = "gen|m//n|p",
+	gen_fp = "gen|f|p",
+	dat_mp = "dat|m//n|p",
+	dat_fp = "dat|f|p",
+	acc_mp_an = "an|acc|m//n|p",
+	acc_mp_in = "in|acc|m//n|p",
+	acc_fp = "acc|f|p",
+	ins_mp = "ins|m//n|p",
+	ins_fp = "ins|f|p",
+	loc_mp = "loc|m//n|p",
+	loc_fp = "loc|f|p",
+
+	-- short forms
 	short_m = "short|m|s",
 	short_f = "short|f|s",
 	short_n = "short|n|s",
@@ -142,7 +146,7 @@ output_adjective_slots_surname_with_linked["nom_m_linked"] = "nom|m|s"
 
 local input_adjective_slots = {}
 for slot, _ in pairs(output_adjective_slots) do
-	if not rfind(slot, "_[ai]n$") then
+	if slot == "acc_f" or not rfind(slot, "^acc") then
 		table.insert(input_adjective_slots, slot)
 	end
 end
@@ -458,6 +462,10 @@ local function set_accusative(alternant_multiword_spec)
 	if alternant_multiword_spec.surname then
 		iut.insert_forms(forms, "acc_m", forms["gen_m"])
 		iut.insert_forms(forms, "acc_p", forms["gen_p"])
+	elseif alternant_multiword_spec.special == "dva" then
+		iut.insert_forms(forms, "acc_mp_an", forms["gen_mp"])
+		iut.insert_forms(forms, "acc_mp_in", forms["nom_mp"])
+		iut.insert_forms(forms, "acc_fp", forms["nom_fp"])
 	else
 		iut.insert_forms(forms, "acc_n", forms["nom_n"])
 		iut.insert_forms(forms, "acc_m_an", forms["gen_m"])
@@ -496,7 +504,8 @@ end
 
 local function show_forms(alternant_multiword_spec)
 	local lemmas = {}
-	local lemmaform = alternant_multiword_spec.forms.nom_m or alternant_multiword_spec.forms.nom_p 
+	local lemmaform = alternant_multiword_spec.forms.nom_m or alternant_multiword_spec.forms.nom_p or
+		alternant_multiword_spec.forms.nom_mp
 	if lemmaform then
 		for _, form in ipairs(lemmaform) do
 			table.insert(lemmas, com.remove_monosyllabic_accents(form.form))
@@ -521,14 +530,30 @@ end
 local function make_table(alternant_multiword_spec)
 	local forms = alternant_multiword_spec.forms
 
-	local table_spec = [=[
+	local function template_prelude(min_width)
+		return rsub([===[
+<div>
+<div class="NavFrame" style="display: inline-block; min-width: MINWIDTHem">
+<div class="NavHead" style="background:#eff7ff">{title}{annotation}</div>
+<div class="NavContent">
+{\op}| border="1px solid #000000" style="border-collapse:collapse;background:#F9F9F9;text-align:center; min-width:MINWIDTHem" class="inflection-table"
+|-
+]===], "MINWIDTH", min_width)
+	end
+
+	local function template_postlude()
+		return [=[
+|{\cl}{notes_clause}</div></div></div>]=]
+	end
+
+	local table_spec = template_prelude("70") .. [=[
 <div>
 <div class="NavFrame" style="display: inline-block; min-width: 70em">
 <div class="NavHead" style="background:#eff7ff">{title}{annotation}</div>
 <div class="NavContent">
 {\op}| border="1px solid #000000" style="border-collapse:collapse;background:#F9F9F9;text-align:center; min-width:70em" class="inflection-table"
 |-
-! style="width:20%;background:#d9ebff" colspan="2" | 
+! style="width:20%;background:#d9ebff" colspan="2" |
 ! style="background:#d9ebff" | masculine
 ! style="background:#d9ebff" | neuter
 ! style="background:#d9ebff" | feminine
@@ -570,16 +595,10 @@ local function make_table(alternant_multiword_spec)
 | colspan="2" | {loc_m}
 | {loc_f}
 | {loc_p}{short_clause}
-|{\cl}{notes_clause}</div></div></div>]=]
+]=] .. template_postlude()
 
-	local table_spec_surname = [=[
-<div>
-<div class="NavFrame" style="display: inline-block; min-width: 55em">
-<div class="NavHead" style="background:#eff7ff">{title}{annotation}</div>
-<div class="NavContent">
-{\op}| border="1px solid #000000" style="border-collapse:collapse;background:#F9F9F9;text-align:center; min-width:55em" class="inflection-table"
-|-
-! style="background:#d9ebff" | 
+	local table_spec_surname = template_prelude("55") .. [=[
+! style="background:#d9ebff" |
 ! style="background:#d9ebff" | masculine
 ! style="background:#d9ebff" | feminine
 ! style="background:#d9ebff" | plural
@@ -613,16 +632,10 @@ local function make_table(alternant_multiword_spec)
 | {loc_m}
 | {loc_f}
 | {loc_p}
-|{\cl}{notes_clause}</div></div></div>]=]
+]=] .. template_postlude()
 
-	local table_spec_plonly = [=[
-<div>
-<div class="NavFrame" style="display: inline-block; min-width: 25em">
-<div class="NavHead" style="background:#eff7ff">{title}{annotation}</div>
-<div class="NavContent">
-{\op}| border="1px solid #000000" style="border-collapse:collapse;background:#F9F9F9;text-align:center; min-width:25em" class="inflection-table"
-|-
-! style="width:50%;background:#d9ebff" colspan="2" | 
+	local table_spec_plonly = template_prelude("25") .. [=[
+! style="width:50%;background:#d9ebff" colspan="2" |
 ! style="background:#d9ebff" | plural
 |-
 ! style="background:#eff7ff" colspan="2" | nominative
@@ -646,7 +659,44 @@ local function make_table(alternant_multiword_spec)
 |-
 ! style="background:#eff7ff" colspan="2" | locative
 | {loc_p}
-|{\cl}{notes_clause}</div></div></div>]=]
+]=] .. template_postlude()
+
+	local table_spec_dva = template_prelude("40") .. [=[
+! style="width:40%;background:#d9ebff" colspan="2" |
+! style="background:#d9ebff" colspan="2" | plural
+|-
+! style="width:40%;background:#d9ebff" colspan="2" |
+! style="background:#d9ebff" | masculine/neuter
+! style="background:#d9ebff" | feminine
+|-
+! style="background:#eff7ff" colspan="2" | nominative
+| {nom_mp}
+| {nom_fp}
+|-
+! style="background:#eff7ff" colspan="2" | genitive
+| {gen_mp}
+| {gen_fp}
+|-
+! style="background:#eff7ff" colspan="2" | dative
+| {dat_mp}
+| {dat_fp}
+|-
+! style="background:#eff7ff" rowspan="2" | accusative
+! style="background:#eff7ff" | animate
+| {acc_mp_an}
+| rowspan="2" | {acc_fp}
+|-
+! style="background:#eff7ff" | inanimate
+| {acc_mp_in}
+|-
+! style="background:#eff7ff" colspan="2" | instrumental
+| {ins_mp}
+| {ins_fp}
+|-
+! style="background:#eff7ff" colspan="2" | locative
+| {loc_mp}
+| {loc_fp}
+]=] .. template_postlude()
 
 	local short_form_template = [=[
 
@@ -701,6 +751,7 @@ local function make_table(alternant_multiword_spec)
 	return m_string_utilities.format(
 		alternant_multiword_spec.surname and table_spec_surname or
 		alternant_multiword_spec.special == "plonly" and table_spec_plonly or
+		alternant_multiword_spec.special == "dva" and table_spec_dva or
 		table_spec, forms
 	)
 end
@@ -780,7 +831,7 @@ function export.do_generate_forms_manual(parent_args, pos, from_headword, def)
 end
 
 
--- Entry point for {{be-adecl}}. Template-callable function to parse and decline 
+-- Entry point for {{be-adecl}}. Template-callable function to parse and decline
 -- an adjective given user-specified arguments and generate a displayable table
 -- of the declined forms.
 function export.show(frame)
