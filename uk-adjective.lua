@@ -82,13 +82,11 @@ local output_adjective_slots = {
 	acc_m_in = "in|acc|m|s",
 	acc_f = "acc|f|s",
 	acc_n = "acc|n|s",
-	-- the following two not used with special == "dva"
 	acc_p_an = "an|acc|p",
+	-- the following not used with special == "dva"
 	acc_p_in = "in|acc|p",
-	-- the following four only used with special == "dva"
-	acc_mp_an = "an|acc|m//n|p",
+	-- the following two only used with special == "dva"
 	acc_mp_in = "in|acc|m//n|p",
-	acc_fp_an = "an|acc|f|p",
 	acc_fp_in = "in|acc|f|p",
 	-- the following two gendered plurals are only used with special == "cdva"
 	acc_mp = "acc|m//n|p",
@@ -507,6 +505,10 @@ local function set_accusative(alternant_multiword_spec)
 	if alternant_multiword_spec.surname then
 		iut.insert_forms(forms, "acc_m", forms["gen_m"])
 		iut.insert_forms(forms, "acc_p", forms["gen_p"])
+	elseif alternant_multiword_spec.special == "dva" then
+		iut.insert_forms(forms, "acc_p_an", forms["gen_p"])
+		iut.insert_forms(forms, "acc_mp_in", forms["nom_mp"])
+		iut.insert_forms(forms, "acc_fp_in", forms["nom_fp"])
 	else
 		iut.insert_forms(forms, "acc_n", forms["nom_n"])
 		iut.insert_forms(forms, "acc_m_an", forms["gen_m"])
@@ -545,7 +547,8 @@ end
 
 local function show_forms(alternant_multiword_spec)
 	local lemmas = {}
-	local lemmaform = alternant_multiword_spec.forms.nom_m or alternant_multiword_spec.forms.nom_p 
+	local lemmaform = alternant_multiword_spec.forms.nom_m or alternant_multiword_spec.forms.nom_p or
+		alternant_multiword_spec.forms.nom_mp
 	if lemmaform then
 		for _, form in ipairs(lemmaform) do
 			table.insert(lemmas, com.remove_monosyllabic_stress(form.form))
@@ -570,13 +573,23 @@ end
 local function make_table(alternant_multiword_spec)
 	local forms = alternant_multiword_spec.forms
 
-	local table_spec = [=[
+	local function template_prelude(min_width)
+		return rsub([===[
 <div>
-<div class="NavFrame" style="display: inline-block; min-width: 70em">
+<div class="NavFrame" style="display: inline-block; min-width: MINWIDTHem">
 <div class="NavHead" style="background:#eff7ff">{title}{annotation}</div>
 <div class="NavContent">
-{\op}| border="1px solid #000000" style="border-collapse:collapse;background:#F9F9F9;text-align:center; min-width:70em" class="inflection-table"
+{\op}| border="1px solid #000000" style="border-collapse:collapse;background:#F9F9F9;text-align:center; min-width:MINWIDTHem" class="inflection-table"
 |-
+]===], "MINWIDTH", min_width)
+	end
+
+	local function template_postlude()
+		return [=[
+|{\cl}{notes_clause}</div></div></div>]=]
+	end
+
+	local table_spec = template_prelude("70") .. [=[
 ! style="width:20%;background:#d9ebff" colspan="2" | 
 ! style="background:#d9ebff" | masculine
 ! style="background:#d9ebff" | neuter
@@ -619,15 +632,9 @@ local function make_table(alternant_multiword_spec)
 | colspan="2" | {loc_m}
 | {loc_f}
 | {loc_p}{short_clause}
-|{\cl}{notes_clause}</div></div></div>]=]
+]=] .. template_postlude()
 
-	local table_spec_surname = [=[
-<div>
-<div class="NavFrame" style="display: inline-block; min-width: 55em">
-<div class="NavHead" style="background:#eff7ff">{title}{annotation}</div>
-<div class="NavContent">
-{\op}| border="1px solid #000000" style="border-collapse:collapse;background:#F9F9F9;text-align:center; min-width:55em" class="inflection-table"
-|-
+	local table_spec_surname = template_prelude("55") .. [=[
 ! style="background:#d9ebff" | 
 ! style="background:#d9ebff" | masculine
 ! style="background:#d9ebff" | feminine
@@ -662,15 +669,9 @@ local function make_table(alternant_multiword_spec)
 | {loc_m}
 | {loc_f}
 | {loc_p}{vocative_clause}
-|{\cl}{notes_clause}</div></div></div>]=]
+]=] .. template_postlude()
 
-	local table_spec_plonly = [=[
-<div>
-<div class="NavFrame" style="display: inline-block; min-width: 25em">
-<div class="NavHead" style="background:#eff7ff">{title}{annotation}</div>
-<div class="NavContent">
-{\op}| border="1px solid #000000" style="border-collapse:collapse;background:#F9F9F9;text-align:center; min-width:25em" class="inflection-table"
-|-
+	local table_spec_plonly = template_prelude("25") .. [=[
 ! style="width:50%;background:#d9ebff" colspan="2" | 
 ! style="background:#d9ebff" | plural
 |-
@@ -695,7 +696,40 @@ local function make_table(alternant_multiword_spec)
 |-
 ! style="background:#eff7ff" colspan="2" | locative
 | {loc_p}{vocative_clause}
-|{\cl}{notes_clause}</div></div></div>]=]
+]=] .. template_postlude()
+
+	local table_spec_dva = template_prelude("40") .. [=[
+! style="width:40%;background:#d9ebff" colspan="2" | 
+! style="background:#d9ebff" colspan="2" | plural
+|-
+! style="width:40%;background:#d9ebff" colspan="2" | 
+! style="background:#d9ebff" | masculine/neuter
+! style="background:#d9ebff" | feminine
+|-
+! style="background:#eff7ff" colspan="2" | nominative
+| {nom_mp}
+| {nom_fp}
+|-
+! style="background:#eff7ff" colspan="2" | genitive
+| colspan="2" | {gen_p} 
+|-
+! style="background:#eff7ff" colspan="2" | dative
+| colspan="2" | {dat_p} 
+|-
+! style="background:#eff7ff" rowspan="2" | accusative
+! style="background:#eff7ff" | animate
+| colspan="2" | {acc_p_an} 
+|-
+! style="background:#eff7ff" | inanimate
+| {acc_mp_in}
+| {acc_fp_in}
+|-
+! style="background:#eff7ff" colspan="2" | instrumental
+| colspan="2" | {ins_p} 
+|-
+! style="background:#eff7ff" colspan="2" | locative
+| colspan="2" | {loc_p} 
+]=] .. template_postlude()
 
 	local vocative_template = [=[
 
@@ -755,6 +789,7 @@ local function make_table(alternant_multiword_spec)
 	forms.notes_clause = forms.footnote ~= "" and
 		m_string_utilities.format(notes_template, forms) or ""
 	forms.vocative_clause =
+		alternant_multiword_spec.special == "dva" and "" or
 		alternant_multiword_spec.special ~= "plonly" and
 		forms.voc_m and forms.voc_m ~= "—" and
 		m_string_utilities.format(vocative_template, forms) or
@@ -767,6 +802,7 @@ local function make_table(alternant_multiword_spec)
 	return m_string_utilities.format(
 		alternant_multiword_spec.surname and table_spec_surname or
 		alternant_multiword_spec.special == "plonly" and table_spec_plonly or
+		alternant_multiword_spec.special == "dva" and table_spec_dva or
 		table_spec, forms
 	)
 end
