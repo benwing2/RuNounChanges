@@ -94,43 +94,56 @@ function export.verb_form_of(frame)
 
 	-- If we don't find any matches, we try again, looking for non-reflexive forms of reflexive-only verbs.
 	if alternant_multiword_spec.refl and not lemma:find(" ") then
-		local refl_prons = {"me", "te", "se", "nos", "os"}
-		local tags_by_refl_pron = {}
-		local form_by_refl_pron = {}
-		local saw_matching_form = false
-		for _, slot_accel in ipairs(m_es_verb.all_verb_slots) do
+		local refl_forms_to_tags = {}
+		-- Only basic verb forms (not combined forms) have non-reflexive parts generated.
+		for _, slot_accel in ipairs(alternant_multiword_spec.verb_slots_basic) do
 			local slot, accel = unpack(slot_accel)
-			local forms = alternant_multiword_spec.forms[slot]
-			-- Skip "combined forms" for reflexive verbs; see above.
-			if forms and not slot:find("comb") then
-				for _, formobj in ipairs(forms) do
-					local form = m_links.remove_links(formobj.form)
-					for _, refl_pron in ipairs(refl_prons) do
-						local form_no_refl = form:match("^" .. refl_pron .. " (.*)$")
-						if pagename == form_no_refl then
-							saw_matching_form = true
-							if accel == "-" then
-								accel = m_es_verb.overriding_slot_accel[slot]
+			local part_forms = alternant_multiword_spec.forms[slot .. "_non_reflexive"]
+			local full_forms = alternant_multiword_spec.forms[slot]
+			local variant_forms = alternant_multiword_spec.forms[slot .. "_variant"]
+			-- Make sure same number of part and full forms, otherwise we can't match them up.
+			if part_forms and full_forms and #part_forms == #full_forms and (
+				not variant_forms or #part_forms == #variant_forms) then
+				-- Find part form the same as the non-lemma form we're generating the inflection(s) of,
+				-- and accumulate properties into refl_forms_to_tags.
+				for i, part_form in ipairs(part_forms) do
+					if part_form.form == non_lemma_form then
+						local saw_existing = false
+						for _, refl_form_to_tags in ipairs(refl_forms_to_tags) do
+							if refl_form_to_tags.form == full_forms[i].form then
+								table.insert(refl_form_to_tags.tags, accel)
+								saw_existing = true
+								break
 							end
-							if tags_by_refl_pron[refl_pron] then
-								m_table.insertIfNot(tags_by_refl_pron[refl_pron], accel)
-							else
-								tags_by_refl_pron[refl_pron] = {accel}
-								form_by_refl_pron[refl_pron] = formobj.form
-							end
-							break
+						end
+						if not saw_existing then
+							table.insert(refl_forms_to_tags, {
+								form = full_forms[i].form,
+								tags = {accel},
+								variant = variant_forms and variant_forms[i].form,
+							})
 						end
 					end
 				end
 			end
 		end
-		if saw_matching_form then
-			local parts = {}
-			for _, refl_pron in ipairs(refl_prons) do
-				if tags_by_refl_pron[refl_pron] then
-					local only_used_in =
-						frame:preprocess(("{{only used in|es|%s|nocap=1}}"):format(form_by_refl_pron[refl_pron]))
-					local inflection_of = generate_inflection_of(tags_by_refl_pron[refl_pron], lemma)
+
+		if #refl_forms_to_tags > 0 then
+			for _, refl_form_to_tags in ipairs(refl_forms_to_tags) do
+				local only_used_in
+				local tags = refl_forms_to_tags.tags
+				if refl_form_to_tags.variant then
+					only_used_in =
+						frame:preprocess(("{{only used in|es|%s|nocap=1}}, synactic variant of {{m|es|%s}}"):format(
+							refl_form_to_tags.variant, refl_form_to_tags.form)
+				else
+					only_used_in =
+						frame:preprocess(("{{only used in|es|%s|nocap=1}}"):format(refl_form_to_tags.form)
+				end
+				if refl_form_to_tags.form == lemma then
+					table.insert(parts, only_used_in)
+				else
+					local inflection_of = generate_inflection_of(refl_form_to_tags.tags, lemma)
 					table.insert(parts, ("%s, %s"):format(only_used_in, inflection_of))
 				end
 			end
