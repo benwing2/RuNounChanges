@@ -13,8 +13,108 @@ local form_types = {
 	{key = "fractional", display = "[[fractional|Fractional]]"},
 }
 
+local function track(page)
+	require("Module:debug/track")("number list/" .. page)
+	return true
+end
+
 function export.get_data_module_name(language_code)
 	return "Module:number list/data/" .. language_code
+end
+
+function export.split_term_and_translit_and_qualifier(data_module_term)
+	local term, translit, qualifier
+	term = data_module_term
+	while true do
+		local new_term, angle_bracketed = term:match("^(.-)(%b<>)$")
+		if not new_term then
+			break
+		end
+		local prefix, content = angle_bracketed:match "^<(%w+):(.+)>$"
+		if not prefix then
+			break
+		end
+		if prefix == "q" then
+			qualifier = content
+		elseif prefix == "tr" then
+			translit = content
+		else
+			-- Quit parsing on first unrecognized angle-bracketed item.
+			break
+		end
+		term = new_term
+	end
+	return term, translit, qualifier
+end
+
+local function get_term(data_module_term)
+	return (export.split_term_and_translit_and_qualifier(data_module_term))
+end
+
+-- Format a number in fixed point without any decimal. `tostring()` doesn't work because it converts
+-- large numbers such as 1000000000000000 to "1e+15".
+function export.format_fixed(number)
+	if type(number) == "string" then
+		return number
+	else
+		return ("%.0f"):format(number)
+	end
+end
+
+-- Construct a map from string representation of a number to a description object (a two-element list of
+-- {TYPE, NUMBER}). If the same string representation corresponds to more than one number, the table contains a
+-- list of description objects; otherwise it just contains a description object directly.
+local function construct_string_to_type_and_number(lang, number_data)
+	local str_to_data = {}
+	local function ins_type_and_number(str, typ, num)
+		str = lang:makeEntryName(get_term(str))
+		local newel = {typ, num}
+		if str_to_data[str] then
+			local existing = str_to_data[str]
+			if type(existing) == "table" and type(existing[1]) == "table" then
+				-- already a list of elements; insert if not already present
+				local already_seen = false
+				for _, existel in ipairs(existing) do
+					if existel[1] == typ and existel[2] == num then
+						already_seen = true
+						break
+					end
+				end
+				if not already_seen then
+					table.insert(existing, newel)
+				end
+			elseif existing[1] == typ and existing[2] == num then
+				-- already present for this number and type (possible if terms differ but entry names are the same)
+			else
+				str_to_data[str] = {existing, newel}
+			end
+		else
+			str_to_data[str] = newel
+		end
+	end
+
+	for num, numdata in pairs(number_data) do
+		for numtype, strs in pairs(numdata) do
+			if type(strs) == "table" then
+				for _, str in ipairs(strs) do
+					ins_type_and_number(str, numtype, num)
+				end
+			else
+				ins_type_and_number(strs, numtype, num)
+			end
+		end
+	end
+
+	return str_to_data
+end
+
+
+function export.lookup_number_by_string(lang, m_data, str)
+	if not m_data.string_to_number then
+		m_data.string_to_number = construct_string_to_type_and_number(lang, m_data.numbers)
+	end
+
+	return m_data.string_to_number[lang:makeEntryName(str)]
 end
 
 function export.lookup_data(m_data, numstr)
@@ -81,35 +181,6 @@ function export.display_number_type(number_type)
 	end
 end
 
-function export.split_term_and_translit_and_qualifier(data_module_term)
-	local term, translit, qualifier
-	term = data_module_term
-	while true do
-		local new_term, angle_bracketed = term:match("^(.-)(%b<>)$")
-		if not new_term then
-			break
-		end
-		local prefix, content = angle_bracketed:match "^<(%w+):(.+)>$"
-		if not prefix then
-			break
-		end
-		if prefix == "q" then
-			qualifier = content
-		elseif prefix == "tr" then
-			translit = content
-		else
-			-- Quit parsing on first unrecognized angle-bracketed item.
-			break
-		end
-		term = new_term
-	end
-	return term, translit, qualifier
-end
-
-local function get_term(data_module_term)
-	return (export.split_term_and_translit_and_qualifier(data_module_term))
-end
-
 function export.format_qualifier(phrase)
 	if phrase then
 		-- Avoid loading module when it's not going to be used.
@@ -127,15 +198,13 @@ function map(func, array)
 	return new_array
 end
 
-local function unsuffix(term)
-	if type(term) == "table" then
-		return map(unsuffix, term)
+local function unsuffix(m_data, term)
+	if not m_data.unsuffix then
+		error("Internal error: unsuffix() called but no 'unsuffix' entry in data module")
 	end
-	if term:find("^-a ") ~= nil then
-		return term:sub(4)
-	end
-	if term:sub(1, 1) == "-" then
-		return term:sub(2)
+	for _, entry in ipairs(m_data.unsuffix) do
+		local from, to = unpack(entry)
+		term = mw.ustring.gsub(term, from, to)
 	end
 	return term
 end
@@ -155,7 +224,7 @@ local function add_separator(numstr, separator, group, start)
 	return table.concat(parts, separator)
 end
 
-local function add_thousands_separator(numstr, separator)
+function export.add_thousands_separator(numstr, separator)
 	if #numstr < 4 then -- < 1000
 		return numstr
 	end
@@ -182,7 +251,7 @@ function export.generate_decimal_numeral(numeral_config, numstr)
 	end
 
 	if thousands_separator then
-		numstr = add_thousands_separator(numstr, thousands_separator)
+		numstr = export.add_thousands_separator(numstr, thousands_separator)
 	elseif Indic_separator then
 		numstr = add_Indic_separator(numstr, Indic_separator)
 	end
@@ -211,15 +280,29 @@ function export.show_box(frame)
 
 	local params = {
 		[1] = {required = true},
-		[2] = {required = true},
-		[3] = {},
-		[4] = {},
+		[2] = {},
+		[3] = {alias_of = "pagename"}, -- FIXME: eliminate in favor of pagename=
+		["pagename"] = {},
 		["type"] = {},
 	}
 
-	local args = require("Module:parameters").process(frame:getParent().args, params)
+	local parent_args = frame:getParent().args
+	if parent_args[3] then
+		track("show-box-3")
+	end
+	local args = require("Module:parameters").process(parent_args, params)
 
-	local lang = args[1] or "und"
+	local langcode = args[1] or "und"
+	local lang = require("Module:languages").getByCode(langcode, "1")
+
+	-- Get the data from the data module. [[Module:number list/data/en]] has to be loaded with require because its
+	-- exported numbers table has a metatable.
+	local module_name = export.get_data_module_name(langcode)
+	local m_data = require(module_name)
+
+	local pagename = args.pagename or (mw.title.getCurrentTitle().nsText == "Reconstruction" and "*" or "") .. mw.title.getCurrentTitle().subpageText
+
+	local cur_type
 
 	-- We represent all numbers as strings in this function to deal with the limited precision inherent in Lua numbers.
 	-- These large numbers do occur, such as 100 trillion ([[རབ་བཀྲམ་ཆེན་པོ]]), 1 sextillion, etc. Lua represents all
@@ -231,28 +314,41 @@ function export.show_box(frame)
 	-- mw.bcmath.new() throws an error.
 	--
 	-- In module data, we allow numbers to be indexed as Lua numbers or as strings. See lookup_data() below.
-	local cur_num = args[2] or "2"
-	local cur_type = args.type
+	local cur_num = args[2] or langcode == "und" and mw.title.getCurrentTitle().nsText == "Template" and "2" or nil
+	if not cur_num then
+		local type_and_num = export.lookup_number_by_string(lang, m_data, pagename)
+		if not type_and_num then
+			error("The current page name '" .. pagename .. "' does not match the spelling of any known number in [[" ..
+				module_name .. "]]. Check the data module or the spelling of the page.")
+		end
+		if type(type_and_num) == "table" and type(type_and_num[1]) == "table" then
+			local errparts = {}
+			for _, type_num in ipairs(type_and_num) do
+				local typ, num = unpack(type_num)
+				table.insert(errparts, ("%s (%s)"):format(typ, num))
+			end
+			error(table.concat("The current page name '" .. pagename .. "' matches the spelling of multiple numbers in [[" ..
+				module_name .. "]]: " .. table.concat(errparts, ",") .. ". Please specify the number explicitly."))
+		end
+		cur_type, cur_num = unpack(type_and_num)
+		cur_num = export.format_fixed(cur_num)
+	end
+
+	cur_type = args.type or cur_type
 	cur_num = cur_num:gsub(",", "") -- remove thousands separators
 	if not cur_num:find "^%d+$" then
 		error("Extraneous characters in parameter 2: should be decimal number (integer): '" .. cur_num .. "'")
 	end
-	local alt_pagename = args[3] or false
-	local remove_suffix = args[4] or false
-	lang = require("Module:languages").getByCode(lang) or error("The language code \"" .. lang .. "\" is not valid.")
 
-	local function maybe_unsuffix(...)
-		if remove_suffix then
-			return unsuffix(...)
-		else
-			return ...
+	local function maybe_unsuffix(term_or_terms)
+		if not m_data.unsuffix then
+			return term_or_terms
 		end
+		if type(term_or_terms) == "table" then
+			return map(function(term) return unsuffix(m_data, term) end, term_or_terms)
+		end
+		return unsuffix(m_data, term_or_terms)
 	end
-
-	-- Get the data from the data module. [[Module:number list/data/en]] has to be loaded with require because its
-	-- exported numbers table has a metatable.
-	local module_name = export.get_data_module_name(lang:getCode())
-	local m_data = require(module_name)
 
 	local function lookup_data(numstr)
 		return export.lookup_data(m_data, numstr)
@@ -266,14 +362,12 @@ function export.show_box(frame)
 
 	-- Go over each number and make links
 	local forms = {}
-	local full_pagename = (mw.title.getCurrentTitle().nsText=="Reconstruction" and "*" or "") .. mw.title.getCurrentTitle().subpageText
-	if alt_pagename then full_pagename = alt_pagename end
 
 	if cur_type and not cur_data[cur_type] then
 		error("The numeral type " .. cur_type .. " for " .. cur_num .. " is not found in [[" .. module_name .. "]].")
 	end
 
-	for _, form_type in ipairs(export.get_number_types(lang:getCode())) do
+	for _, form_type in ipairs(export.get_number_types(langcode)) do
 		local numeral = cur_data[form_type.key]
 		if numeral then
 			local form = {}
@@ -287,8 +381,11 @@ function export.show_box(frame)
 			for _, numeral in ipairs(numerals) do
 				local term, translit, qualifier = export.split_term_and_translit_and_qualifier(numeral)
 				-- If this number is the current page, then store the key for later use
-				if not cur_type and lang:makeEntryName(term) == full_pagename then
-					cur_type = form_type.key
+				if not cur_type then
+					local entry_name = lang:makeEntryName(term)
+					if entry_name == pagename or maybe_unsuffix(entry_name) == pagename then
+						cur_type = form_type.key
+					end
 				end
 
 				table.insert(form, full_link({
@@ -306,18 +403,18 @@ function export.show_box(frame)
 	end
 
 	if not cur_type and mw.title.getCurrentTitle().nsText ~= "Template" then
-		error("The current page name does not match any of the numbers listed in [[" .. module_name .. "]] for "
-			.. cur_num .. ". Check the data module or the spelling of the page.")
+		error("The current page name '" .. pagename .. "' does not match any of the numbers listed in [[" ..
+			module_name .. "]] for " .. cur_num .. ". Check the data module or the spelling of the page.")
 	end
 
 	-- Current number in header
-	local cur_display = add_thousands_separator(cur_num, ",")
+	local cur_display = export.add_thousands_separator(cur_num, ",")
 
 	local numeral
 	if m_data.numeral_config then
 		numeral = export.generate_decimal_numeral(m_data.numeral_config, cur_num)
 	elseif cur_data["numeral"] then
-		numeral = tostring(cur_data["numeral"])
+		numeral = export.format_fixed(cur_data["numeral"])
 	end
 
 	if numeral then
@@ -353,14 +450,14 @@ function export.show_box(frame)
 		local k = tonumber(kstr)
 		local m = #mstr
 		if m < 2 then
-			next_num = tostring(tonumber(cur_num) + 1)
-			prev_num = tostring(tonumber(cur_num) - 1)
+			next_num = export.format_fixed(tonumber(cur_num) + 1)
+			prev_num = export.format_fixed(tonumber(cur_num) - 1)
 		else
 			next_num = (k + 1) .. mstr
 			if k ~= 1 then
 				prev_num = (k - 1) .. mstr
 			elseif m == 2 then
-				prev_num = tostring(tonumber(cur_num) - 1)
+				prev_num = export.format_fixed(tonumber(cur_num) - 1)
 			else
 				prev_num = "9" .. string.rep("0", m - 1)
 			end
@@ -414,7 +511,7 @@ function export.show_box(frame)
 			entries = { num_type_data }
 		end
 
-		num = add_thousands_separator(num, ",")
+		num = export.add_thousands_separator(num, ",")
 		local num_arrow = num_follows and arrow .. num or num .. arrow
 		if #entries > 1 then
 			local terms = maybe_unsuffix(entries)
@@ -473,8 +570,8 @@ function export.show_box(frame)
 	end
 
 	local canonical_name = lang:getCanonicalName()
-	local appendix1 = canonical_name .. ' numerals'
-	local appendix2 = canonical_name .. ' numbers'
+	local appendix1 = canonical_name .. " numerals"
+	local appendix2 = canonical_name .. " numbers"
 	local appendix
 	local title
 	if mw.title.new(appendix1, "Appendix").exists then
@@ -484,7 +581,7 @@ function export.show_box(frame)
 	end
 
 	if appendix then
-		title = '[[Appendix:' .. appendix .. '|' .. appendix2 .. ']]'
+		title = "[[Appendix:" .. appendix .. "|" .. appendix2 .. "]]"
 	else
 		title = appendix2
 	end
@@ -581,26 +678,26 @@ function export.show_box_manual(frame)
 	lang = require("Module:languages").getByCode(lang) or error("The language code \"" .. lang .. "\" is not valid.")
 	sc = (sc and (require("Module:scripts").getByCode(sc) or error("The script code \"" .. sc .. "\" is not valid.")) or nil)
 
-	require("Module:debug").track("number list/" .. lang:getCode())
+	track(lang:getCode())
 
 	if sc then
-		require("Module:debug").track("number list/sc")
+		track("sc")
 	end
 
 	if headlink then
-		require("Module:debug").track("number list/headlink")
+		track("headlink")
 	end
 
 	if wplink then
-		require("Module:debug").track("number list/wplink")
+		track("wplink")
 	end
 
 	if alt then
-		require("Module:debug").track("number list/alt")
+		track("alt")
 	end
 
 	if cardinal_alt or ordinal_alt or adverbial_alt or multiplier_alt or distributive_alt or collective_alt or fractional_alt or optional1_alt or optional2_alt then
-		require("Module:debug").track("number list/xalt")
+		track("xalt")
 	end
 
 	local lang_type = lang:getType()
