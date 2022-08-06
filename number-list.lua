@@ -51,16 +51,6 @@ local function get_term(data_module_term)
 	return (export.split_term_and_translit_and_qualifier(data_module_term))
 end
 
--- Format a number in fixed point without any decimal. `tostring()` doesn't work because it converts
--- large numbers such as 1000000000000000 to "1e+15".
-function export.format_fixed(number)
-	if type(number) == "string" then
-		return number
-	else
-		return ("%.0f"):format(number)
-	end
-end
-
 -- Construct a map from string representation of a number to a description object (a two-element list of
 -- {TYPE, NUMBER}). If the same string representation corresponds to more than one number, the table contains a
 -- list of description objects; otherwise it just contains a description object directly.
@@ -228,14 +218,19 @@ function export.add_thousands_separator(numstr, separator)
 	if #numstr < 4 then -- < 1000
 		return numstr
 	end
-	return add_separator(numstr, separator, 3)
+	return add_separator(numstr, separator or ",", 3)
 end
 
 local function add_Indic_separator(numstr, separator)
 	return add_separator(numstr, separator, 2, 3)
 end
 
-function export.generate_decimal_numeral(numeral_config, numstr)
+-- Convert a number (represented as a string) to non-Arabic form based on the specs in `numeral_config`.
+-- This is used, for example, to display the Hindu, Eastern Arabic or Roman form of a number along with the standard
+-- Arabic form. Most of the code below assumes that the non-Arabic numerals are decimal, and the digits map one-to-one
+-- with Arabic numerals. If this is not the case (e.g. for Roman numerals), a special module function is called to do
+-- the conversion.
+function export.generate_non_arabic_numeral(numeral_config, numstr)
 	-- `numstr` is a number represented as a string. See comment near top of show_box().
 	if numeral_config.module and numeral_config.func then
 		return require("Module:" .. numeral_config.module)[numeral_config.func](numstr)
@@ -259,6 +254,48 @@ function export.generate_decimal_numeral(numeral_config, numstr)
 	return numstr:gsub("[0-9]", function (digit)
 		return mw.ustring.char(zero_codepoint + tonumber(digit))
 	end)
+end
+
+-- Format a number (either a Lua number or a string) in fixed point without any decimal point or scientific notation.
+-- `tostring()` doesn't work because it converts large numbers such as 1000000000000000 to "1e+15".
+function export.format_fixed(number)
+	if type(number) == "string" then
+		return number
+	else
+		return ("%.0f"):format(number)
+	end
+end
+
+-- Format a number (either a Lua number or a string) for display. Sufficiently small numbers are displayed in fixed
+-- point with thousands separators. Larger numbers are displayed in both fixed point and scientific notation using
+-- superscripts, and sufficiently large numbers are displayed only in scientific notation.
+function export.format_number_for_display(number)
+	local MAX_NUM_DIGITS_FOR_FIXED_ONLY = 6
+	local MIN_NUM_DIGITS_FOR_SCIENTIFIC_ONLY = 16
+	local numstr = export.format_fixed(number)
+	local fixed = export.add_thousands_separator(numstr)
+	if #numstr <= MAX_NUM_DIGITS_FOR_FIXED_ONLY then
+		return fixed
+	end
+	local kstr = numstr:match("^([0-9]*[1-9])0*$")
+	if not kstr then
+		error("Internal error: Unable to match number '" .. numstr .. "'")
+	end
+	local exponent = ("10<sup>%s</sup>"):format(#numstr - 1)
+	local mantissa
+	if kstr == "1" then
+		mantissa = ""
+	elseif #kstr == 1 then
+		mantissa = kstr .. " x "
+	else
+		mantissa = kstr:gsub("^([0-9])", "%1.") .. " x "
+	end
+	local scientific = mantissa .. exponent
+	if #numstr >= MIN_NUM_DIGITS_FOR_SCIENTIFIC_ONLY then
+		return scientific
+	else
+		return fixed .. " (" .. scientific .. ")"
+	end
 end
 
 local function remove_duplicate_entry_names(lang, terms)
@@ -326,8 +363,8 @@ function export.show_box(frame)
 				local typ, num = unpack(type_num)
 				table.insert(errparts, ("%s (%s)"):format(typ, num))
 			end
-			error(table.concat("The current page name '" .. pagename .. "' matches the spelling of multiple numbers in [[" ..
-				module_name .. "]]: " .. table.concat(errparts, ",") .. ". Please specify the number explicitly."))
+			error("The current page name '" .. pagename .. "' matches the spelling of multiple numbers in [[" ..
+				module_name .. "]]: " .. table.concat(errparts, ",") .. ". Please specify the number explicitly.")
 		end
 		cur_type, cur_num = unpack(type_and_num)
 		cur_num = export.format_fixed(cur_num)
@@ -356,7 +393,7 @@ function export.show_box(frame)
 	local cur_data = lookup_data(cur_num)
 
 	if not cur_data then
-		error('The number "' .. cur_num .. '" is not found in the "numbers" table in [[' .. module_name .. ']].')
+		error('The number "' .. cur_num .. '" is not found in the "numbers" table in [[' .. module_name .. "]].")
 	end
 
 	-- Go over each number and make links
@@ -407,11 +444,11 @@ function export.show_box(frame)
 	end
 
 	-- Current number in header
-	local cur_display = export.add_thousands_separator(cur_num, ",")
+	local cur_display = export.format_number_for_display(cur_num)
 
 	local numeral
 	if m_data.numeral_config then
-		numeral = export.generate_decimal_numeral(m_data.numeral_config, cur_num)
+		numeral = export.generate_non_arabic_numeral(m_data.numeral_config, cur_num)
 	elseif cur_data["numeral"] then
 		numeral = export.format_fixed(cur_data["numeral"])
 	end
@@ -444,6 +481,7 @@ function export.show_box(frame)
 		if not kstr then
 			error("Internal error: Unable to match number '" .. cur_num .. "'")
 		elseif #kstr > 15 then
+			-- This is because some numbers with 16 or more digits can't be represented exactly.
 			error("Can't handle number with more than 15 digits before the trailing zeros: '" .. cur_num .. "'")
 		end
 		local k = tonumber(kstr)
@@ -510,7 +548,7 @@ function export.show_box(frame)
 			entries = { num_type_data }
 		end
 
-		num = export.add_thousands_separator(num, ",")
+		num = export.format_number_for_display(num)
 		local num_arrow = num_follows and arrow .. num or num .. arrow
 		if #entries > 1 then
 			local terms = maybe_unsuffix(entries)
@@ -585,6 +623,19 @@ function export.show_box(frame)
 		title = appendix2
 	end
 
+	local footer = ""
+
+	if cur_data.wplink then
+		local footer_text =
+			"[[w:" .. lang:getCode() .. ":Main Page|" .. lang:getCanonicalName() .. " Wikipedia]] article on " ..
+			m_links.full_link({lang = lang, term = "w:" .. lang:getCode() .. ":" .. cur_data.wplink,
+			alt = export.format_number_for_display(cur_num)})
+		footer = [=[
+
+|-
+| colspan="3" style="text-align: center; background: #dddddd;" | ]=] .. footer_text
+	end
+
 	local edit_link = ' <sup>(<span class="plainlinks">[' ..
 		tostring(mw.uri.fullUrl(module_name, { action = "edit" })) ..
 		" edit]</span>)</sup>"
@@ -611,7 +662,7 @@ function export.show_box(frame)
 
 |
 ]=] or "") .. [=[|-
-| colspan="3" style="text-align: center;" | ]=] .. table.concat(forms, "<br/>") .. [=[
+| colspan="3" style="text-align: center;" | ]=] .. table.concat(forms, "<br/>") .. footer .. [=[
 
 |}]=]
 end
