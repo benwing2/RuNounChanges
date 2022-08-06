@@ -281,14 +281,13 @@ function export.show_box(frame)
 	local params = {
 		[1] = {required = true},
 		[2] = {},
-		[3] = {alias_of = "pagename"}, -- FIXME: eliminate in favor of pagename=
 		["pagename"] = {},
 		["type"] = {},
 	}
 
 	local parent_args = frame:getParent().args
-	if parent_args[3] then
-		track("show-box-3")
+	if parent_args.pagename then
+		track("show-box-pagename")
 	end
 	local args = require("Module:parameters").process(parent_args, params)
 
