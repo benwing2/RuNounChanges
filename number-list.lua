@@ -779,7 +779,7 @@ function export.show_box(frame)
 			"[[w:" .. lang:getCode() .. ":Main Page|" .. lang:getCanonicalName() .. " Wikipedia]] article on " ..
 			m_links.full_link({lang = lang, term = "w:" .. lang:getCode() .. ":" .. cur_data.wplink,
 			alt = export.format_number_for_display(cur_num)})
-		footer_display = "|-\n" .. format_cell(footer, nil, "#dddddd", has_outer_display and 5 or 3)
+		footer_display = '|- style="text-align: center;"\n' .. format_cell(footer, nil, "#dddddd", has_outer_display and 5 or 3)
 	else
 		footer_display = ""
 	end
