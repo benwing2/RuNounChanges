@@ -3,11 +3,6 @@ local export = {}
 local m_number_list = require("Module:number list")
 local m_links = require("Module:links")
 
-local function compare_numbers(a, b)
-	a, b = tonumber(a),  tonumber(b)
-	return a < b
-end
-
 local function link(lang, form)
 	local term, translit, qualifier = m_number_list.split_term_and_translit_and_qualifier(form)
 	return m_links.full_link({ lang = lang, term = term, tr = translit }) .. m_number_list.format_qualifier(qualifier)
@@ -182,7 +177,7 @@ function export.print_table(language_code, module)
 
 	local errors = Array()
 
-	for number, data in require("Module:table").sortedPairs(module.numbers, compare_numbers) do
+	for number, data in require("Module:table").sortedPairs(module.numbers, m_number_list.numbers_less_than) do
 		local number_string = m_number_list.format_fixed(number)
 
 		row(m_number_list.format_number_for_display(number_string))
