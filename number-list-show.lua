@@ -121,19 +121,21 @@ end
 
 function export.print_table(language_code, module)
 	local module = require(module)
-	
+
 	local lang = require("Module:languages").getByCode(language_code)
 	local full_link = require("Module:links").full_link
 	local tag_text = require("Module:script utilities").tag_text
 	local function tag(form)
 		return tag_text(form, lang)
 	end
-	
+
 	local form_types = m_number_list.get_number_types(language_code)
 	local numeral_index = 1
 	table.insert(form_types, numeral_index,
 		{key = "numeral", display = "Numeral"})
-	
+	table.insert(form_types, {key = "wplink", display = "Wikipedia link"})
+	local wplink_index = #form_types
+
 	local number_type_indices = {}
 	for number, data in pairs(module.numbers) do
 		for i, form_type in pairs(form_types) do
@@ -142,50 +144,52 @@ function export.print_table(language_code, module)
 			end
 		end
 	end
-	
+
 	local numeral_config = module.numeral_config
 	if numeral_config then
 		number_type_indices[numeral_index] = true
 	end
-	
+
+	local has_wplink_column = number_type_indices[wplink_index]
+
 	number_type_indices = require("Module:table").keysToList(number_type_indices)
-	
+
 	local Array = require("Module:array")
 	local output = Array()
-	
+
 	local function header(content)
 		output:insert(("! %s"):format(content))
 	end
-	
+
 	local function cell(content)
 		output:insert(("| %s"):format(content))
 	end
-	
+
 	local function row(content)
 		output:insert("|-\n")
 		if content then
 			cell(content)
 		end
 	end
-	
+
 	output:insert('{| class="wikitable"')
-	
+
 	-- Add headers.
 	header("Number")
 	for _, index in ipairs(number_type_indices) do
 		header(m_number_list.display_number_type(form_types[index]))
 	end
-	
+
 	local errors = Array()
-	
+
 	for number, data in require("Module:table").sortedPairs(module.numbers, compare_numbers) do
 		local number_string = m_number_list.format_fixed(number)
 
-		row(m_number_list.add_thousands_separator(number_string, ","))
-		
+		row(m_number_list.format_number_for_display(number_string))
+
 		local numeral
 		if numeral_config then
-			numeral = m_number_list.generate_decimal_numeral(numeral_config, number_string)
+			numeral = m_number_list.generate_non_arabic_numeral(numeral_config, number_string)
 		elseif data.numeral then
 			numeral = data.numeral
 		end
@@ -193,24 +197,30 @@ function export.print_table(language_code, module)
 			numeral = tag(numeral)
 			cell(numeral or "")
 		end
-		
+
 		for _, i in ipairs(number_type_indices) do
-			if i ~= numeral_index then
+			if i ~= numeral_index and i ~= wplink_index then
 				local form = data[form_types[i].key]
 				cell(type(form) == "table" and Array(form):map(function(f) return link(lang, f) end):concat(", ")
 					or form and link(lang, form)
 					or "")
 			end
 		end
-		
+
+		if data.wplink then
+			cell(("[[w:%s:%s|%s]]"):format(lang:getCode(), data.wplink, data.wplink))
+		elseif has_wplink_column then
+			cell("")
+		end
+
 		-- Check for numerical indices, which are syntax errors.
 		for i, word in ipairs(data) do
 			errors:insert({ number = number_string, word = word })
 		end
 	end
-	
+
 	output:insert('|}')
-	
+
 	if #errors > 0 then
 		output:insert(
 			1,
@@ -225,7 +235,7 @@ function export.print_table(language_code, module)
 			.. "[[Category:Errors in number data modules|"
 			.. lang:getCode() .. "]]</span>")
 	end
-	
+
 	return output:concat("\n")
 end
 
@@ -234,7 +244,7 @@ function export.table(frame)
 	if type(frame) == "table" then
 		language_code = frame.args[1]
 	end
-	
+
 	local module
 	if not language_code then
 		module = mw.title.getCurrentTitle().fullText
@@ -247,7 +257,7 @@ function export.table(frame)
 			return
 		end
 	end
-	
+
 	return export.print_table(language_code, module)
 end
 
