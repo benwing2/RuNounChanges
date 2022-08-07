@@ -22,6 +22,10 @@ function export.get_data_module_name(language_code)
 	return "Module:number list/data/" .. language_code
 end
 
+local function power_of(n)
+	return "1" .. string.rep("0", n)
+end
+
 function export.split_term_and_translit_and_qualifier(data_module_term)
 	local term, translit, qualifier
 	term = data_module_term
@@ -98,7 +102,6 @@ local function construct_string_to_type_and_number(lang, number_data)
 	return str_to_data
 end
 
-
 function export.lookup_number_by_string(lang, m_data, str)
 	if not m_data.string_to_number then
 		m_data.string_to_number = construct_string_to_type_and_number(lang, m_data.numbers)
@@ -109,6 +112,7 @@ end
 
 function export.lookup_data(m_data, numstr)
 	-- Don't try to convert very large numbers to Lua numbers because they may overflow.
+	-- Powers of 10 >= 10^22 cannot be represented exactly as a Lua number.
 	return m_data.numbers[numstr] or #numstr < 22 and m_data.numbers[tonumber(numstr)] or nil
 end
 
@@ -271,7 +275,7 @@ end
 -- superscripts, and sufficiently large numbers are displayed only in scientific notation.
 function export.format_number_for_display(number)
 	local MAX_NUM_DIGITS_FOR_FIXED_ONLY = 6
-	local MIN_NUM_DIGITS_FOR_SCIENTIFIC_ONLY = 16
+	local MIN_NUM_DIGITS_FOR_SCIENTIFIC_ONLY = 13
 	local numstr = export.format_fixed(number)
 	local fixed = export.add_thousands_separator(numstr)
 	if #numstr <= MAX_NUM_DIGITS_FOR_FIXED_ONLY then
@@ -296,6 +300,20 @@ function export.format_number_for_display(number)
 	else
 		return fixed .. " (" .. scientific .. ")"
 	end
+end
+
+-- Return true if a < b, where either may be a Lua number or the string representation of a number.
+function export.numbers_less_than(a, b)
+	a, b = export.format_fixed(a), export.format_fixed(b)
+	local alen = #a
+	local blen = #b
+	if alen < blen then
+		return true
+	end
+	if alen > blen then
+		return false
+	end
+	return a < b
 end
 
 local function remove_duplicate_entry_names(lang, terms)
@@ -471,11 +489,34 @@ function export.show_box(frame)
 	--
 	-- This works for numbers not in the above series; e.g. 45000 has 46000 as its previous number and 44000 as its
 	-- next number, while 45310 has 45311 as its next number and 45309 as its previous number.
+	--
+	-- If the next higher number in the series doesn't have an entry in the table, and the number is an exact power of
+	-- 10, look for a higher power of 10, up to 10^6 times greater. Similarly for next lower numbers.
+	--
+	-- We also display "outer numbers" in some circumstances, according to the following series:
+	-- 0; 10; 20; ...; 90; 100; 1,000; 10,000; 100,000; 1,000,000; 10,000,000; 100,000,000; 1,000,000,000; ...
+	--
+	-- We only try to find outer numbers if the number has at most one zero at the end (in which case we check 10 above
+	-- and below) or if it's an exact power of 10. If the number is an exact power of 10, and >= 1000, we proceed as
+	-- follows to find the next higher outer number:
+	--
+	-- 1. Check the next-higher power of 10 if it's greater than the next higher number determined in the first part
+	--    above.
+	-- 2. Check the next-higher power of 10 that's an exact multiple of 3 if it's greater than the number just checked
+	--    and also greater than the next higher number determined in the first part above.
+	-- 3. Check the next-higher power of 10 that's an exact multiple of 6 if it's greater than the number just checked
+	--    and also greater than the next higher number determined in the first part above.
+	--
+	-- Similarly for the next lower outer number.
 	local next_data, prev_data
 	local next_num, prev_num
+	local next_outer_data, prev_outer_data
+	local next_outer_num, prev_outer_num
 	if cur_num == "0" then
 		next_num = "1"
 		next_data = lookup_data(next_num)
+		next_outer_num = "10"
+		next_outer_data = lookup_data(next_outer_num)
 	else
 		local kstr, mstr = cur_num:match("^([0-9]*[1-9])(0*)$")
 		if not kstr then
@@ -486,15 +527,19 @@ function export.show_box(frame)
 		end
 		local k = tonumber(kstr)
 		local m = #mstr
-		if m < 2 then
+		if m < 2 then -- less than two zeros at the end
 			next_num = export.format_fixed(tonumber(cur_num) + 1)
 			prev_num = export.format_fixed(tonumber(cur_num) - 1)
+			if m == 1 then
+				next_outer_num = export.format_fixed(tonumber(cur_num) + 10)
+				prev_outer_num = export.format_fixed(tonumber(cur_num) - 10)
+			end
 		else
 			next_num = (k + 1) .. mstr
 			if k ~= 1 then
 				prev_num = (k - 1) .. mstr
-			elseif m == 2 then
-				prev_num = export.format_fixed(tonumber(cur_num) - 1)
+			elseif m == 2 then -- = 100
+				prev_num = "99"
 			else
 				prev_num = "9" .. string.rep("0", m - 1)
 			end
@@ -520,10 +565,74 @@ function export.show_box(frame)
 				if desired_zeros < 0 then
 					break
 				end
-				prev_num = "1" .. string.rep("0", desired_zeros)
+				prev_num = power_of(desired_zeros)
 				prev_data = lookup_data(prev_num)
 				if prev_data then
 					break
+				end
+			end
+		end
+
+		-- Now determine the "outer numbers" to display (if any).
+		if m == 1 then
+			next_outer_num = export.format_fixed(tonumber(cur_num) + 10)
+			next_outer_data = lookup_data(next_outer_num)
+			prev_outer_num = export.format_fixed(tonumber(cur_num) - 10)
+			prev_outer_data = lookup_data(prev_outer_num)
+		elseif m >= 2 and k == 1 then
+			-- for numbers with two or more zeros at the end, only display outer numbers if they're an exact
+			-- power of 10.
+			local lower_numbers_to_check, higher_numbers_to_check
+			-- Round n down to an even multiple of k. E.g. if k == 3, 3/4/5 -> 3, 6/7/8 -> 6, etc.
+			local function round_down_to_even_multiple(n, k)
+				return n - (n % k)
+			end
+			-- Round n up to an even multiple of k. E.g. if k == 3, 4/5/6 -> 6, 7/8/9 -> 9, etc.
+			local function round_up_to_even_multiple(n, k)
+				return round_down_to_even_multiple(n + k - 1, k)
+			end
+			if m == 2 then -- 100
+				lower_numbers_to_check = {"90"}
+				higher_numbers_to_check = {"1000"}
+			else
+				local prev_power = m - 1
+				lower_numbers_to_check = {power_of(prev_power)}
+				local prev_power_even_mod_3 = round_down_to_even_multiple(prev_power, 3)
+				if prev_power_even_mod_3 ~= prev_power and prev_power_even_mod_3 > 0 then
+					table.insert(lower_numbers_to_check, power_of(prev_power_even_mod_3))
+				end
+				local prev_power_even_mod_6 = round_down_to_even_multiple(prev_power, 6)
+				if prev_power_even_mod_6 ~= prev_power_even_mod_3 then
+					table.insert(lower_numbers_to_check, power_of(prev_power_even_mod_6))
+				end
+				local next_power = m + 1
+				higher_numbers_to_check = {power_of(next_power)}
+				local next_power_even_mod_3 = round_up_to_even_multiple(next_power, 3)
+				if next_power_even_mod_3 ~= next_power and next_power_even_mod_3 > 0 then
+					table.insert(higher_numbers_to_check, power_of(next_power_even_mod_3))
+				end
+				local next_power_even_mod_6 = round_up_to_even_multiple(next_power, 6)
+				if next_power_even_mod_6 ~= next_power_even_mod_3 then
+					table.insert(higher_numbers_to_check, power_of(next_power_even_mod_6))
+				end
+			end
+
+			for _, outer_num in ipairs(higher_numbers_to_check) do
+				if not next_data or export.numbers_less_than(next_num, outer_num) then
+					next_outer_data = lookup_data(outer_num)
+					if next_outer_data then
+						next_outer_num = outer_num
+						break
+					end
+				end
+			end
+			for _, outer_num in ipairs(lower_numbers_to_check) do
+				if not prev_data or export.numbers_less_than(outer_num, prev_num) then
+					prev_outer_data = lookup_data(outer_num)
+					if prev_outer_data then
+						prev_outer_num = outer_num
+						break
+					end
 				end
 			end
 		end
@@ -576,6 +685,7 @@ function export.show_box(frame)
 	--		else
 	--			← <numeral>
 	local prev_display = display_entries(prev_num, prev_data, "&nbsp;←&nbsp;&nbsp;", "num follows") or ""
+	local prev_outer_display = display_entries(prev_outer_num, prev_outer_data, "&nbsp;←&nbsp;&nbsp;", "num follows")
 
 	-- Link to next number
 	--
@@ -585,6 +695,7 @@ function export.show_box(frame)
 	--		else
 	--			<numeral> →
 	local next_display = display_entries(next_num, next_data, "&nbsp;&nbsp;→&nbsp;") or ""
+	local next_outer_display = display_entries(next_outer_num, next_outer_data, "&nbsp;&nbsp;→&nbsp;")
 
 	-- Link to number times ten and divided by ten
 	-- Show this only if the number is a power of ten times a number 1-9 (that is, of the form x000...)
@@ -623,56 +734,72 @@ function export.show_box(frame)
 		title = appendix2
 	end
 
-	local footer = ""
+	local function format_cell(contents, font_size, background, colspan, bold)
+		font_size = font_size and (" font-size:%s;"):format(font_size) or ""
+		background = background and (" background:%s;"):format(background) or ""
+		colspan = colspan and ('colspan="%s" '):format(colspan) or ""
+		bold = bold and "!" or "|"
+		return ('%s %sstyle="min-width: 6em;%s%s | %s\n'):format(bold, colspan, font_size, background, contents)
+	end
 
+	local has_outer_display = not not (prev_outer_display or next_outer_display)
+	local function format_up_down_display_row(display)
+		local blank_cell
+		if has_outer_display then
+			blank_cell = '| colspan="2" |\n'
+		else
+			blank_cell = "|\n"
+		end
+		local parts = {'|- style="text-align: center; background:#dddddd;"\n'}
+		table.insert(parts, blank_cell)
+		table.insert(parts, format_cell(display, "smaller"))
+		table.insert(parts, blank_cell)
+		return table.concat(parts)
+	end
+
+	up_display = up_display and format_up_down_display_row(up_display) or ""
+	down_display = down_display and format_up_down_display_row(down_display) or ""
+
+	local function format_display_cell(display)
+		return format_cell(display, "smaller", "#dddddd")
+	end
+
+	prev_display = format_display_cell(prev_display)
+	next_display = format_display_cell(next_display)
+	prev_outer_display = has_outer_display and format_display_cell(prev_outer_display or "") or ""
+	next_outer_display = has_outer_display and format_display_cell(next_outer_display or "") or ""
+	cur_display = format_cell(cur_display, "larger", nil, nil, "bold")
+
+	local forms_display = ('| colspan="%s" style="text-align: center;" | %s\n'):format(
+		has_outer_display and 5 or 3, table.concat(forms, "<br/>"))
+
+	local footer_display
 	if cur_data.wplink then
-		local footer_text =
+		local footer =
 			"[[w:" .. lang:getCode() .. ":Main Page|" .. lang:getCanonicalName() .. " Wikipedia]] article on " ..
 			m_links.full_link({lang = lang, term = "w:" .. lang:getCode() .. ":" .. cur_data.wplink,
 			alt = export.format_number_for_display(cur_num)})
-		footer = [=[
-
-|-
-| colspan="3" style="text-align: center; background: #dddddd;" | ]=] .. footer_text
+		footer_display = "|-\n" .. format_cell(footer, nil, "#dddddd", has_outer_display and 5 or 3)
+	else
+		footer_display = ""
 	end
 
 	local edit_link = ' <sup>(<span class="plainlinks">[' ..
 		tostring(mw.uri.fullUrl(module_name, { action = "edit" })) ..
 		" edit]</span>)</sup>"
 
-	return [=[{| class="floatright" cellpadding="5" cellspacing="0" style="background: #ffffff; border: 1px #aaa solid; border-collapse: collapse; margin-top: .5em;" rules="all" 
-|+ ''']=] .. title .. edit_link .. "'''" ..
-(up_display and [=[
-
-|- style="text-align: center; background:#dddddd;"
-|
-| style="font-size:smaller;" | ]=] .. up_display .. [=[
-
-|
-]=] or "\n") .. [=[|- style="text-align: center;"
-| style="min-width: 6em; font-size:smaller; background:#dddddd;" | ]=] .. prev_display .. [=[
-
-! style="min-width: 6em; font-size:larger;" | ]=] .. cur_display .. [=[
-
-| style="min-width: 6em; font-size:smaller; background:#dddddd;" | ]=] .. next_display .. [=[
-
-]=] .. (down_display and [=[|- style="text-align: center; background:#dddddd;"
-|
-| style="font-size:smaller;" | ]=] .. down_display .. [=[
-
-|
-]=] or "") .. [=[|-
-| colspan="3" style="text-align: center;" | ]=] .. table.concat(forms, "<br/>") .. footer .. [=[
-
-|}]=]
+	return [=[{| class="floatright" cellpadding="5" cellspacing="0" style="background: #ffffff; border: 1px #aaa solid; border-collapse: collapse; margin-top: .5em;" rules="all"
+|+ ''']=] .. title .. edit_link .. "'''\n" ..
+	up_display .. '|- style="text-align: center;"\n' ..
+	prev_outer_display .. prev_display .. cur_display .. next_display .. next_outer_display .. "|-\n" ..
+	down_display .. "|-\n" ..
+	forms_display .. footer_display .. "|}"
 end
 
 
-local trim = mw.text.trim
-
 -- Assumes string or nil (or false), the types that can be found in an args table.
 local function if_not_empty(val)
-	if val and trim(val) == "" then
+	if val and mw.text.trim(val) == "" then
 		return nil
 	else
 		return val
@@ -691,7 +818,7 @@ function export.show_box_manual(frame)
 	end
 
 	local lang = args[1] or (mw.title.getCurrentTitle().nsText == "Template" and "und") or error("Language code has not been specified. Please pass parameter 1 to the template.")
-	local sc = args["sc"]; 
+	local sc = args["sc"];
 	local headlink = args["headlink"]
 	local wplink = args["wplink"]
 	local alt = args["alt"]
@@ -831,7 +958,7 @@ function export.show_box_manual(frame)
 			m_links.full_link({lang = lang, sc = sc, term = "w:" .. lang:getCode() .. ":" .. wplink, alt = alt, tr = tr})
 	end
 
-	return [=[{| class="floatright" cellpadding="5" cellspacing="0" style="background: #ffffff; border: 1px #aaa solid; border-collapse: collapse; margin-top: .5em;" rules="all" 
+	return [=[{| class="floatright" cellpadding="5" cellspacing="0" style="background: #ffffff; border: 1px #aaa solid; border-collapse: collapse; margin-top: .5em;" rules="all"
 |+ ''']=] .. header .. [=['''
 |-
 | style="width: 64px; background:#dddddd; text-align: center; font-size:smaller;" | ]=] .. previous .. [=[
