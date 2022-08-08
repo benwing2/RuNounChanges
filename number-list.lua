@@ -338,12 +338,14 @@ local function remove_duplicate_entry_names(lang, terms)
 end
 
 function export.group_numeral_forms_by_tag(forms, pagename, m_data, lang)
+	local seen_forms = {}
 	local forms_by_tag = {}
 	local seen_tags = {}
 	local cur_tag
 
 	for _, form in ipairs(forms) do
 		local formobj = export.parse_term_and_modifiers(form)
+		table.insert(seen_forms, formobj)
 		local tag = formobj.tag or ""
 		-- If this number is the current page, then store the tag for later use
 		if not cur_tag and pagename then
@@ -359,7 +361,7 @@ function export.group_numeral_forms_by_tag(forms, pagename, m_data, lang)
 		table.insert(forms_by_tag[tag], formobj)
 	end
 
-	return forms_by_tag, seen_tags, cur_tag
+	return seen_forms, forms_by_tag, seen_tags, cur_tag
 end
 
 function export.format_formobj(formobj, m_data, lang)
@@ -453,7 +455,12 @@ function export.show_box(frame)
 
 	local cur_tag
 
-	for _, form_type in ipairs(export.get_number_types(langcode)) do
+	local forms_by_tag_per_form_type = {}
+	local seen_tags_per_form_type = {}
+
+	local form_types = export.get_number_types(langcode)
+
+	for _, form_type in ipairs(form_types) do
 		local numeral = cur_data[form_type.key]
 		if numeral then
 			local numerals
@@ -463,11 +470,20 @@ function export.show_box(frame)
 				numerals = numeral
 			end
 
-			local forms_by_tag, seen_tags, cur_tag = export.group_numeral_forms_by_tag(numerals, pagename, m_data, lang)
-			if cur_tag and not cur_type then
+			local seen_forms, forms_by_tag, seen_tags, this_cur_tag = export.group_numeral_forms_by_tag(numerals, pagename, m_data, lang)
+			forms_by_tag_per_form_type[form_type] = forms_by_tag
+			seen_tags_per_form_type[form_type] = seen_tags
+			if this_cur_tag and not cur_type then
 				cur_type = form_type.key
 			end
-
+			cur_tag = cur_tag or this_cur_tag
+		end
+	end
+	
+	for _, form_type in ipairs(form_types) do
+		local forms_by_tag = forms_by_tag_per_form_type[form_type]
+		local seen_tags = seen_tags_per_form_type[form_type]
+		if forms_by_tag then
 			local function insert_forms_by_tag(tag)
 				local formatted_tag_forms = {}
 
@@ -484,7 +500,7 @@ function export.show_box(frame)
 					table.concat(formatted_tag_forms, ", "))
 			end
 
-			if cur_tag then
+			if cur_tag and forms_by_tag[cur_tag] then
 				insert_forms_by_tag(cur_tag)
 			end
 			for _, tag in ipairs(seen_tags) do
@@ -689,28 +705,40 @@ function export.show_box(frame)
 		if not num_type_data then
 			return nil
 		end
-		local entries
-		if type(num_type_data) == "table" then
-			entries = remove_duplicate_entry_names(lang, num_type_data)
-		else
-			entries = { num_type_data }
+		local entries = num_type_data
+		if type(entries) ~= "table" then
+			entries = {entries}
 		end
+
+		local seen_forms, forms_by_tag = export.group_numeral_forms_by_tag(entries)
+
+		local forms_to_display
+		if cur_tag and forms_by_tag[cur_tag] then
+			forms_to_display = forms_by_tag[cur_tag]
+		else
+			forms_to_display = seen_forms
+		end
+
+		for i, form_to_display in ipairs(forms_to_display) do
+			forms_to_display[i] = maybe_unsuffix(m_data, form_to_display.term)
+		end
+
+		forms_to_display = remove_duplicate_entry_names(lang, forms_to_display)
 
 		num = export.format_number_for_display(num)
 		local num_arrow = num_follows and arrow .. num or num .. arrow
-		if #entries > 1 then
-			local terms = maybe_unsuffix(m_data, entries)
+		if #forms_to_display > 1 then
 			local a = ("a"):byte()
 			local links = {}
-			for i, term in ipairs(terms) do
-				links[i] = m_links.language_link{lang = lang, term = get_term(term), alt = "[" .. string.char(a + i - 1) .. "]"}
+			for i, term in ipairs(forms_to_display) do
+				links[i] = m_links.language_link{lang = lang, term = term, alt = "[" .. string.char(a + i - 1) .. "]"}
 			end
 			links = "<sup>" .. table.concat(links, ", ") .. "</sup>"
 			return num_follows and links .. num_arrow or num_arrow .. links
 		else
 			return m_links.language_link {
 				lang = lang,
-				term = maybe_unsuffix(m_data, get_term(entries[1])),
+				term = forms_to_display[1],
 				alt = num_arrow,
 			}
 		end
