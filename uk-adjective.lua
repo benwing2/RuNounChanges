@@ -532,8 +532,10 @@ local function check_allowed_overrides(alternant_multiword_spec, args)
 					break
 				end
 			end
-			error(("Override %s= not allowed for %s"):format(slot, special == "" and "regular declension" or
-				"special=" .. special))
+			if not allowed then
+				error(("Override %s= not allowed for %s"):format(slot, special == "" and "regular declension" or
+					"special=" .. special))
+			end
 		end
 	end
 end
