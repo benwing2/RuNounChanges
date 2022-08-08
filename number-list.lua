@@ -13,21 +13,28 @@ local form_types = {
 	{key = "fractional", display = "[[fractional|Fractional]]"},
 }
 
+-- Keys in a `numbers` entry that aren't form types.
+local non_form_types = {
+	numeral = true,
+	wplink = true,
+}
+
 local function track(page)
 	require("Module:debug/track")("number list/" .. page)
 	return true
 end
 
 function export.get_data_module_name(language_code)
-	return "Module:number list/data/" .. language_code
+	return "Module:User:Benwing2/number list/data/" .. language_code
 end
 
 local function power_of(n)
 	return "1" .. string.rep("0", n)
 end
 
-function export.split_term_and_translit_and_qualifier(data_module_term)
-	local term, translit, qualifier
+function export.parse_term_and_modifiers(data_module_term)
+	local retval = {}
+	local term
 	term = data_module_term
 	while true do
 		local new_term, angle_bracketed = term:match("^(.-)(%b<>)$")
@@ -38,33 +45,31 @@ function export.split_term_and_translit_and_qualifier(data_module_term)
 		if not prefix then
 			break
 		end
-		if prefix == "q" then
-			qualifier = content
-		elseif prefix == "tr" then
-			translit = content
+		if prefix == "q" or prefix == "qq" or prefix == "tr" or prefix == "tag" then
+			retval[prefix] = content
 		else
-			-- Quit parsing on first unrecognized angle-bracketed item.
-			break
+			error(("Unrecognized modified '%s' in data module term: %s"):format(prefix, data_module_term))
 		end
 		term = new_term
 	end
-	return term, translit, qualifier
+	retval.term = term
+	return retval
 end
 
 local function get_term(data_module_term)
-	return (export.split_term_and_translit_and_qualifier(data_module_term))
+	return export.parse_term_and_modifiers(data_module_term).term
 end
 
--- Construct a map from string representation of a number to a description object (a two-element list of
--- {TYPE, NUMBER}). If the same string representation corresponds to more than one number, the table contains a
--- list of description objects; otherwise it just contains a description object directly.
-local function construct_string_to_type_and_number(lang, number_data)
-	local str_to_data = {}
-	local function ins_type_and_number(str, typ, num)
-		str = lang:makeEntryName(get_term(str))
+-- Construct a map from number forms to a description object (a two-element list of {TYPE, NUMBER}). If the same form
+-- corresponds to more than one number, the table contains a list of description objects; otherwise it just contains a
+-- description object directly.
+local function construct_form_to_type_and_number(lang, number_data)
+	local form_to_data = {}
+	local function ins_type_and_number(form, typ, num)
+		form = lang:makeEntryName(get_term(form))
 		local newel = {typ, num}
-		if str_to_data[str] then
-			local existing = str_to_data[str]
+		if form_to_data[form] then
+			local existing = form_to_data[form]
 			if type(existing) == "table" and type(existing[1]) == "table" then
 				-- already a list of elements; insert if not already present
 				local already_seen = false
@@ -80,34 +85,36 @@ local function construct_string_to_type_and_number(lang, number_data)
 			elseif existing[1] == typ and existing[2] == num then
 				-- already present for this number and type (possible if terms differ but entry names are the same)
 			else
-				str_to_data[str] = {existing, newel}
+				form_to_data[form] = {existing, newel}
 			end
 		else
-			str_to_data[str] = newel
+			form_to_data[form] = newel
 		end
 	end
 
 	for num, numdata in pairs(number_data) do
-		for numtype, strs in pairs(numdata) do
-			if type(strs) == "table" then
-				for _, str in ipairs(strs) do
-					ins_type_and_number(str, numtype, num)
+		for numtype, forms in pairs(numdata) do
+			if non_form_types[numtype] then
+				-- do nothing
+			elseif type(forms) == "table" then
+				for _, form in ipairs(forms) do
+					ins_type_and_number(form, numtype, num)
 				end
 			else
-				ins_type_and_number(strs, numtype, num)
+				ins_type_and_number(forms, numtype, num)
 			end
 		end
 	end
 
-	return str_to_data
+	return form_to_data
 end
 
-function export.lookup_number_by_string(lang, m_data, str)
-	if not m_data.string_to_number then
-		m_data.string_to_number = construct_string_to_type_and_number(lang, m_data.numbers)
+function export.lookup_number_by_form(lang, m_data, str)
+	if not m_data.form_to_number then
+		m_data.form_to_number = construct_form_to_type_and_number(lang, m_data.numbers)
 	end
 
-	return m_data.string_to_number[lang:makeEntryName(str)]
+	return m_data.form_to_number[lang:makeEntryName(str)]
 end
 
 function export.lookup_data(m_data, numstr)
@@ -201,6 +208,16 @@ local function unsuffix(m_data, term)
 		term = mw.ustring.gsub(term, from, to)
 	end
 	return term
+end
+
+local function maybe_unsuffix(m_data, term_or_terms)
+	if not m_data.unsuffix then
+		return term_or_terms
+	end
+	if type(term_or_terms) == "table" then
+		return map(function(term) return unsuffix(m_data, term) end, term_or_terms)
+	end
+	return unsuffix(m_data, term_or_terms)
 end
 
 -- Group digits with a separator, such as a comma or a period. See [[w:Digit grouping]].
@@ -370,7 +387,7 @@ function export.show_box(frame)
 	-- In module data, we allow numbers to be indexed as Lua numbers or as strings. See lookup_data() below.
 	local cur_num = args[2] or langcode == "und" and mw.title.getCurrentTitle().nsText == "Template" and "2" or nil
 	if not cur_num then
-		local type_and_num = export.lookup_number_by_string(lang, m_data, pagename)
+		local type_and_num = export.lookup_number_by_form(lang, m_data, pagename)
 		if not type_and_num then
 			error("The current page name '" .. pagename .. "' does not match the spelling of any known number in [[" ..
 				module_name .. "]]. Check the data module or the spelling of the page.")
@@ -394,16 +411,6 @@ function export.show_box(frame)
 		error("Extraneous characters in parameter 2: should be decimal number (integer): '" .. cur_num .. "'")
 	end
 
-	local function maybe_unsuffix(term_or_terms)
-		if not m_data.unsuffix then
-			return term_or_terms
-		end
-		if type(term_or_terms) == "table" then
-			return map(function(term) return unsuffix(m_data, term) end, term_or_terms)
-		end
-		return unsuffix(m_data, term_or_terms)
-	end
-
 	local function lookup_data(numstr)
 		return export.lookup_data(m_data, numstr)
 	end
@@ -415,16 +422,50 @@ function export.show_box(frame)
 	end
 
 	-- Go over each number and make links
-	local forms = {}
+	local formatted_forms = {}
 
 	if cur_type and not cur_data[cur_type] then
 		error("The numeral type " .. cur_type .. " for " .. cur_num .. " is not found in [[" .. module_name .. "]].")
 	end
 
+	local cur_tag
+
+function export.group_numeral_forms_by_tag(forms, pagename, m_data, lang)
+	local forms_by_tag = {}
+	local seen_tags = {}
+	local cur_tag
+
+	for _, form in ipairs(forms) do
+		local formobj = export.parse_term_and_modifiers(form)
+		local tag = formobj.tag or ""
+		-- If this number is the current page, then store the tag for later use
+		if not cur_tag and pagename then
+			local entry_name = lang:makeEntryName(formobj.term)
+			if (entry_name == pagename or maybe_unsuffix(m_data, entry_name) == pagename) then
+				cur_tag = tag
+			end
+		end
+		if not forms_by_tag[tag] then
+			table.insert(seen_tags, tag)
+			forms_by_tag[tag] = {}
+		end
+		table.insert(forms_by_tag[tag], formobj)
+	end
+
+	return forms_by_tag, seen_tags, cur_tag
+end
+
+function export.format_formobj(formobj, m_data, lang)
+	local left_q = formobj.q and require("Module:qualifier").format_qualifier(formobj.q) .. " " or ""
+	local right_q = formobj.qq and " " .. require("Module:qualifier").format_qualifier(formobj.qq) or ""
+	return left_q .. m_links.full_link({
+		lang = lang, term = maybe_unsuffix(m_data, formobj.term), alt = formobj.term, tr = formobj.tr,
+	}) .. right_q
+end
+
 	for _, form_type in ipairs(export.get_number_types(langcode)) do
 		local numeral = cur_data[form_type.key]
 		if numeral then
-			local form = {}
 			local numerals
 			if type(numeral) == "string" then
 				numerals = {numeral}
@@ -432,27 +473,35 @@ function export.show_box(frame)
 				numerals = numeral
 			end
 
-			for _, numeral in ipairs(numerals) do
-				local term, translit, qualifier = export.split_term_and_translit_and_qualifier(numeral)
-				-- If this number is the current page, then store the key for later use
-				if not cur_type then
-					local entry_name = lang:makeEntryName(term)
-					if entry_name == pagename or maybe_unsuffix(entry_name) == pagename then
-						cur_type = form_type.key
-					end
+			local forms_by_tag, seen_tags, cur_tag = export.group_numeral_forms_by_tag(numerals, pagename, m_data, lang)
+			if cur_tag and not cur_type then
+				cur_type = form_type.key
+			end
+
+			local function insert_forms_by_tag(tag)
+				local formatted_tag_forms = {}
+
+				for _, formobj in ipairs(forms_by_tag[tag]) do
+					table.insert(formatted_tag_forms, export.format_formobj(formobj, m_data, lang))
 				end
 
-				table.insert(form, full_link({
-					lang = lang, term = maybe_unsuffix(term), alt = term, tr = translit,
-				}) .. export.format_qualifier(qualifier))
+				local displayed_number_type = export.display_number_type(form_type) .. (tag == "" and "" or (" (%s)"):format(tag))
+				if form_type.key == cur_type and tag == cur_tag then
+					displayed_number_type = "'''" .. displayed_number_type .. "'''"
+				end
+
+				table.insert(formatted_forms, " &nbsp;&nbsp;&nbsp; ''" .. displayed_number_type .. "'': " ..
+					table.concat(formatted_tag_forms, ", "))
 			end
 
-			local displayed_number_type = export.display_number_type(form_type)
-			if form_type.key == cur_type then
-				displayed_number_type = "'''" .. displayed_number_type .. "'''"
+			if cur_tag then
+				insert_forms_by_tag(cur_tag)
 			end
-
-			table.insert(forms, " &nbsp;&nbsp;&nbsp; ''" .. displayed_number_type .. "'': " .. table.concat(form, ", "))
+			for _, tag in ipairs(seen_tags) do
+				if tag ~= cur_tag then
+					insert_forms_by_tag(tag)
+				end
+			end
 		end
 	end
 
@@ -660,7 +709,7 @@ function export.show_box(frame)
 		num = export.format_number_for_display(num)
 		local num_arrow = num_follows and arrow .. num or num .. arrow
 		if #entries > 1 then
-			local terms = maybe_unsuffix(entries)
+			local terms = maybe_unsuffix(m_data, entries)
 			local a = ("a"):byte()
 			local links = {}
 			for i, term in ipairs(terms) do
@@ -671,7 +720,7 @@ function export.show_box(frame)
 		else
 			return m_links.language_link {
 				lang = lang,
-				term = maybe_unsuffix(get_term(entries[1])),
+				term = maybe_unsuffix(m_data, get_term(entries[1])),
 				alt = num_arrow,
 			}
 		end
@@ -771,7 +820,7 @@ function export.show_box(frame)
 	cur_display = format_cell(cur_display, "larger", nil, nil, "bold")
 
 	local forms_display = ('| colspan="%s" style="text-align: center;" | %s\n'):format(
-		has_outer_display and 5 or 3, table.concat(forms, "<br/>"))
+		has_outer_display and 5 or 3, table.concat(formatted_forms, "<br/>"))
 
 	local footer_display
 	if cur_data.wplink then
