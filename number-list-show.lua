@@ -1,11 +1,32 @@
 local export = {}
 
-local m_number_list = require("Module:number list")
-local m_links = require("Module:links")
+local m_number_list = require("Module:User:Benwing2/number list")
 
-local function link(lang, form)
-	local term, translit, qualifier = m_number_list.split_term_and_translit_and_qualifier(form)
-	return m_links.full_link({ lang = lang, term = term, tr = translit }) .. m_number_list.format_qualifier(qualifier)
+local function link_forms(forms, m_data, lang)
+	if type(forms) ~= "table" then
+		forms = {forms}
+	end
+	local forms_by_tag, seen_tags, cur_tag = m_number_list.group_numeral_forms_by_tag(forms)
+	local formatted_forms = {}
+	for _, tag in ipairs(seen_tags) do
+		local formatted_tag_forms = {}
+
+		for _, formobj in ipairs(forms_by_tag[tag]) do
+			table.insert(formatted_tag_forms, m_number_list.format_formobj(formobj, m_data, lang))
+		end
+		formatted_tag_forms = table.concat(formatted_tag_forms, ", ")
+		if tag == "" then
+			if #seen_tags == 1 then
+				table.insert(formatted_forms, formatted_tag_forms)
+			else
+				table.insert(formatted_forms, ("(default): %s"):format(formatted_tag_forms))
+			end
+		else
+			table.insert(formatted_forms, ("%s: %s"):format(tag, formatted_tag_forms))
+		end
+	end
+
+	return table.concat(formatted_forms, "<br />")
 end
 
 local function num_to_ordinal(numstr)
@@ -87,22 +108,14 @@ function export.number_table(frame)
 !—9
 ]=])
 	for i = min_row, max_row do
-		ins("|- align=right\n")
+		ins("|-\n")
 		ins("! style='white-space: nowrap;' | " .. i .. "—\n")
 		for j = 0, 9 do
 			ins(j == 0 and "| " or "|| ")
 			local num_data = m_number_list.lookup_data(m_data, tostring(i * 10 + j))
 			local forms = num_data and num_data[args[2]]
 			if forms then
-				if type(forms) == "table" then
-					local formparts = {}
-					for _, form in ipairs(forms) do
-						table.insert(formparts, link(lang, form))
-					end
-					ins(table.concat(formparts, ", "))
-				else
-					ins(link(lang, forms))
-				end
+				ins(link_forms(forms, m_data, lang))
 			else
 				ins("—")
 			end
@@ -196,9 +209,7 @@ function export.print_table(language_code, module)
 		for _, i in ipairs(number_type_indices) do
 			if i ~= numeral_index and i ~= wplink_index then
 				local form = data[form_types[i].key]
-				cell(type(form) == "table" and Array(form):map(function(f) return link(lang, f) end):concat(", ")
-					or form and link(lang, form)
-					or "")
+				cell(form and link_forms(form, data, lang) or "")
 			end
 		end
 
@@ -210,7 +221,9 @@ function export.print_table(language_code, module)
 
 		-- Check for numerical indices, which are syntax errors.
 		for i, word in ipairs(data) do
-			errors:insert({ number = number_string, word = word })
+			if type(word) == "string" then
+				errors:insert({ number = number_string, word = word })
+			end
 		end
 	end
 
@@ -224,7 +237,7 @@ function export.print_table(language_code, module)
 			.. errors
 				:map(
 					function(data)
-						return data.number .. ": " .. link(lang, data.word)
+						return data.number .. ": " .. data.word
 					end)
 				:concat ", "
 			.. "[[Category:Errors in number data modules|"
