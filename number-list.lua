@@ -182,15 +182,6 @@ function export.display_number_type(number_type)
 	end
 end
 
-function export.format_qualifier(phrase)
-	if phrase then
-		-- Avoid loading module when it's not going to be used.
-		return " " .. require "Module:qualifier".format_qualifier(phrase)
-	else
-		return ""
-	end
-end
-
 function map(func, array)
 	local new_array = {}
 	for i,v in ipairs(array) do
@@ -346,6 +337,38 @@ local function remove_duplicate_entry_names(lang, terms)
 	return filtered_entries
 end
 
+function export.group_numeral_forms_by_tag(forms, pagename, m_data, lang)
+	local forms_by_tag = {}
+	local seen_tags = {}
+	local cur_tag
+
+	for _, form in ipairs(forms) do
+		local formobj = export.parse_term_and_modifiers(form)
+		local tag = formobj.tag or ""
+		-- If this number is the current page, then store the tag for later use
+		if not cur_tag and pagename then
+			local entry_name = lang:makeEntryName(formobj.term)
+			if (entry_name == pagename or maybe_unsuffix(m_data, entry_name) == pagename) then
+				cur_tag = tag
+			end
+		end
+		if not forms_by_tag[tag] then
+			table.insert(seen_tags, tag)
+			forms_by_tag[tag] = {}
+		end
+		table.insert(forms_by_tag[tag], formobj)
+	end
+
+	return forms_by_tag, seen_tags, cur_tag
+end
+
+function export.format_formobj(formobj, m_data, lang)
+	local left_q = formobj.q and require("Module:qualifier").format_qualifier(formobj.q) .. " " or ""
+	local right_q = formobj.qq and " " .. require("Module:qualifier").format_qualifier(formobj.qq) or ""
+	return left_q .. m_links.full_link({
+		lang = lang, term = maybe_unsuffix(m_data, formobj.term), alt = formobj.term, tr = formobj.tr,
+	}) .. right_q
+end
 
 function export.show_box(frame)
 	local full_link = m_links.full_link
@@ -429,39 +452,6 @@ function export.show_box(frame)
 	end
 
 	local cur_tag
-
-function export.group_numeral_forms_by_tag(forms, pagename, m_data, lang)
-	local forms_by_tag = {}
-	local seen_tags = {}
-	local cur_tag
-
-	for _, form in ipairs(forms) do
-		local formobj = export.parse_term_and_modifiers(form)
-		local tag = formobj.tag or ""
-		-- If this number is the current page, then store the tag for later use
-		if not cur_tag and pagename then
-			local entry_name = lang:makeEntryName(formobj.term)
-			if (entry_name == pagename or maybe_unsuffix(m_data, entry_name) == pagename) then
-				cur_tag = tag
-			end
-		end
-		if not forms_by_tag[tag] then
-			table.insert(seen_tags, tag)
-			forms_by_tag[tag] = {}
-		end
-		table.insert(forms_by_tag[tag], formobj)
-	end
-
-	return forms_by_tag, seen_tags, cur_tag
-end
-
-function export.format_formobj(formobj, m_data, lang)
-	local left_q = formobj.q and require("Module:qualifier").format_qualifier(formobj.q) .. " " or ""
-	local right_q = formobj.qq and " " .. require("Module:qualifier").format_qualifier(formobj.qq) or ""
-	return left_q .. m_links.full_link({
-		lang = lang, term = maybe_unsuffix(m_data, formobj.term), alt = formobj.term, tr = formobj.tr,
-	}) .. right_q
-end
 
 	for _, form_type in ipairs(export.get_number_types(langcode)) do
 		local numeral = cur_data[form_type.key]
