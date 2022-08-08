@@ -113,7 +113,11 @@ def process_text_on_page(index, pagetitle, text, langcodes):
 
   def putval(t, lang, num, typ, val, tr):
     num = re.sub(r"(st|nd|rd|th)$", "", num)
-    if not re.search("^[0-9]+$", num):
+    m = re.search("^([0-9]+)[^0-9].*$", num)
+    if m:
+      pagemsg("WARNING: Number %s has extraneous text after it, ignoring extraneous text: %s" % (num, unicode(t)))
+      num = m.group(1)
+    elif not re.search("^[0-9]+$", num):
       pagemsg("WARNING: Bad number %s, doesn't look numeric: %s" % (num, unicode(t)))
       return
 
