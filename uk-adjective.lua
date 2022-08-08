@@ -61,99 +61,97 @@ local function rsubb(term, foo, bar)
 end
 
 
+-- All slots that are used by any of the different tables. The key is the slot and the value is a list of the
+-- tables that use the slot. "" = regular, "surname" = 'surname' indicator, "plonly" = special=plonly in
+-- {{uk-adecl-manual}}, "dva" = special=dva in {{uk-adecl-manual}}. Note that the accelerators for some of the
+-- below slots (gen_m, dat_m, ins_m, loc_m) are different for surnames vs. others, which we need to handle
+-- specially when constructing the output slots.
+local input_adjective_slots = {
+	nom_m = {"", "surname"},
+	nom_f = {"", "surname"},
+	nom_n = {""},
+	nom_p = {"", "surname", "plonly"},
+	nom_mp = {"dva"},
+	nom_fp = {"dva"},
+	gen_m = {"", "surname"},
+	gen_f = {"", "surname"},
+	gen_p = {"", "surname", "plonly", "dva"},
+	dat_m = {"", "surname"},
+	dat_f = {"", "surname"},
+	dat_p = {"", "surname", "plonly", "dva"},
+	acc_m = {"surname"},
+	acc_m_an = {""},
+	acc_m_in = {""},
+	acc_f = {"", "surname"},
+	acc_n = {""},
+	acc_p = {"surname"},
+	acc_p_an = {"", "plonly", "dva"},
+	acc_p_in = {"", "plonly"},
+	acc_mp_in = {"dva"},
+	acc_fp_in = {"dva"},
+	ins_m = {"", "surname"},
+	ins_f = {"", "surname"},
+	ins_p = {"", "surname", "plonly", "dva"},
+	loc_m = {"", "surname"},
+	loc_f = {"", "surname"},
+	loc_p = {"", "surname", "plonly", "dva"},
+	voc_m = {"surname"},
+	voc_f = {"surname"},
+	voc_p = {"surname"},
+	short = {""},
+}
+
+
 local output_adjective_slots = {
-	-- used with all variants
 	nom_m = "nom|m|s",
+	nom_m_linked = "nom|m|s", -- used in [[Module:uk-noun]]?
 	nom_f = "nom|f|s",
 	nom_n = "nom|n|s",
-	-- not used with special
 	nom_p = "nom|p",
-	-- the following two only used with special
 	nom_mp = "nom|m//n|p",
 	nom_fp = "nom|f|p",
-	-- the following 10 used with all variants
 	gen_m = "gen|m//n|s",
 	gen_f = "gen|f|s",
 	gen_p = "gen|p",
 	dat_m = "dat|m//n|s",
 	dat_f = "dat|f|s",
 	dat_p = "dat|p",
+	acc_m = "acc|m|s",
 	acc_m_an = "an|acc|m|s",
 	acc_m_in = "in|acc|m|s",
 	acc_f = "acc|f|s",
 	acc_n = "acc|n|s",
+	acc_p = "acc|p",
 	acc_p_an = "an|acc|p",
-	-- the following not used with special == "dva"
 	acc_p_in = "in|acc|p",
-	-- the following two only used with special == "dva"
 	acc_mp_in = "in|acc|m//n|p",
 	acc_fp_in = "in|acc|f|p",
-	-- the following two gendered plurals are only used with special == "cdva"
-	acc_mp = "acc|m//n|p",
-	acc_fp = "acc|f|p",
-	-- the next six are used with all variants
 	ins_m = "ins|m//n|s",
 	ins_f = "ins|f|s",
 	ins_p = "ins|p",
 	loc_m = "loc|m//n|s",
 	loc_f = "loc|f|s",
 	loc_p = "loc|p",
+	voc_m = "voc|m|s", --surname-only currently for the next three
+	voc_f = "voc|f|s",
+	voc_p = "voc|p",
 	short = "short|form",
 }
 
-local output_adjective_slots_with_linked = m_table.shallowcopy(output_adjective_slots)
-output_adjective_slots_with_linked["nom_m_linked"] = "nom|m|s"
 
-
-local output_adjective_slots_surname = {
-	nom_m = "nom|m|s",
-	nom_f = "nom|f|s",
-	nom_p = "nom|p",
-	gen_m = "gen|m|s",
-	gen_f = "gen|f|s",
-	gen_p = "gen|p",
-	dat_m = "dat|m|s",
-	dat_f = "dat|f|s",
-	dat_p = "dat|p",
-	acc_m = "acc|m|s",
-	acc_f = "acc|f|s",
-	acc_p = "acc|p",
-	ins_m = "ins|m|s",
-	ins_f = "ins|f|s",
-	ins_p = "ins|p",
-	loc_m = "loc|m|s",
-	loc_f = "loc|f|s",
-	loc_p = "loc|p",
-	voc_m = "voc|m|s",
-	voc_f = "voc|f|s",
-	voc_p = "voc|p",
-}
-
-local output_adjective_slots_surname_with_linked = m_table.shallowcopy(output_adjective_slots_surname)
-output_adjective_slots_surname_with_linked["nom_m_linked"] = "nom|m|s"
-
-
-local input_adjective_slots = {}
-for slot, _ in pairs(output_adjective_slots) do
-	if not rfind(slot, "_[ai]n$") then
-		table.insert(input_adjective_slots, slot)
+local function get_output_adjective_slots(alternant_multiword_spec)
+	if alternant_multiword_spec.surname then
+		output_adjective_slots.gen_m = "gen|m|s"
+		output_adjective_slots.dat_m = "dat|m|s"
+		output_adjective_slots.ins_m = "ins|m|s"
+		output_adjective_slots.loc_m = "loc|m|s"
 	end
-end
-
-
-local function get_output_adjective_slots(base, with_linked)
-	if base.surname then
-		return with_linked and output_adjective_slots_surname_with_linked or output_adjective_slots_surname
-	else
-		return with_linked and output_adjective_slots_with_linked or output_adjective_slots
-	end
+	return output_adjective_slots
 end
 
 
 local function add(base, slot, stems, endings)
-	if get_output_adjective_slots(base)[slot] then
-		iut.add_forms(base.forms, slot, stems, endings, com.combine_stem_ending)
-	end
+	iut.add_forms(base.forms, slot, stems, endings, com.combine_stem_ending)
 end
 
 
@@ -486,15 +484,56 @@ local function get_variants(form)
 end
 
 
-local function process_overrides(forms, args)
-	for _, slot in ipairs(input_adjective_slots) do
-		if args[slot] then
+local function fetch_footnotes(separated_group)
+	local footnotes
+	for j = 2, #separated_group - 1, 2 do
+		if separated_group[j + 1] ~= "" then
+			error("Extraneous text after bracketed footnotes: '" .. table.concat(separated_group) .. "'")
+		end
+		if not footnotes then
+			footnotes = {}
+		end
+		table.insert(footnotes, separated_group[j])
+	end
+	return footnotes
+end
+
+
+-- Process override for the arguments in `args`, storing the results into `forms`. If `do_acc`, only do accusative
+-- slots; otherwise, don't do accusative slots.
+local function process_overrides(forms, args, do_acc)
+	for slot, _ in pairs(input_adjective_slots) do
+		if args[slot] and not not do_acc == not not slot:find("^acc") then
 			forms[slot] = nil
 			if args[slot] ~= "-" and args[slot] ~= "—" then
-				for _, form in ipairs(rsplit(args[slot], "%s*,%s*")) do
-					iut.insert_form(forms, slot, {form=form})
+				local segments = iut.parse_balanced_segment_run(args[slot], "[", "]")
+				local comma_separated_groups = iut.split_alternating_runs(segments, "%s*,%s*")
+				for _, comma_separated_group in ipairs(comma_separated_groups) do
+					local formobj = {
+						form = comma_separated_group[1],
+						footnotes = fetch_footnotes(comma_separated_group),
+					}
+					iut.insert_form(forms, slot, formobj)
 				end
 			end
+		end
+	end
+end
+
+
+local function check_allowed_overrides(alternant_multiword_spec, args)
+	local special = alternant_multiword_spec.special or alternant_multiword_spec.surname and "surname" or ""
+	for slot, types in pairs(input_adjective_slots) do
+		if args[slot] then
+			local allowed = false
+			for _, typ in ipairs(types) do
+				if typ == special then
+					allowed = true
+					break
+				end
+			end
+			error(("Override %s= not allowed for %s"):format(slot, special == "" and "regular declension" or
+				"special=" .. special))
 		end
 	end
 end
@@ -562,9 +601,6 @@ local function show_forms(alternant_multiword_spec)
 			return com.remove_variant_codes(com.remove_monosyllabic_stress(form))
 		end,
 		include_translit = true,
-		-- Explicit additional top-level footnotes only occur with {{uk-adecl-manual}}.
-		footnotes = alternant_multiword_spec.footnotes,
-		allow_footnote_symbols = not not alternant_multiword_spec.footnotes,
 	}
 	iut.show_forms(alternant_multiword_spec.forms, props)
 end
@@ -815,10 +851,10 @@ end
 function export.do_generate_forms(parent_args, pos, from_headword, def)
 	local params = {
 		[1] = {required = true, default = "си́ній"},
-		footnote = {list = true},
+		json = {type = "boolean"}, -- for use with bots
 		title = {},
 	}
-	for _, slot in ipairs(input_adjective_slots) do
+	for slot, _ in pairs(input_adjective_slots) do
 		params[slot] = {}
 	end
 
@@ -829,19 +865,25 @@ function export.do_generate_forms(parent_args, pos, from_headword, def)
 	}
 	local alternant_multiword_spec = iut.parse_inflected_text(args[1], parse_props)
 	alternant_multiword_spec.title = args.title
-	alternant_multiword_spec.footnotes = args.footnote
 	alternant_multiword_spec.forms = {}
 	normalize_all_lemmas(alternant_multiword_spec)
 	detect_all_indicator_specs(alternant_multiword_spec)
+	check_allowed_overrides(alternant_multiword_spec, args)
 	local inflect_props = {
-		slot_table = get_output_adjective_slots(alternant_multiword_spec, "with linked"),
+		slot_table = get_output_adjective_slots(alternant_multiword_spec),
 		get_variants = get_variants,
 		inflect_word_spec = decline_adjective,
 	}
 	iut.inflect_multiword_or_alternant_multiword_spec(alternant_multiword_spec, inflect_props)
+	-- Do non-accusative overrides so they get copied to the accusative forms appropriately.
 	process_overrides(alternant_multiword_spec.forms, args)
 	set_accusative(alternant_multiword_spec)
+	-- Do accusative overrides after copying the accusative forms.
+	process_overrides(alternant_multiword_spec.forms, args, "do acc")
 	add_categories(alternant_multiword_spec)
+	if args.json and not from_headword then
+		return require("Module:JSON").toJSON(alternant_multiword_spec)
+	end
 	return alternant_multiword_spec
 end
 
@@ -854,10 +896,10 @@ end
 function export.do_generate_forms_manual(parent_args, pos, from_headword, def)
 	local params = {
 		special = {},
-		footnote = {list = true},
+		json = {type = "boolean"}, -- for use with bots
 		title = {},
 	}
-	for _, slot in ipairs(input_adjective_slots) do
+	for slot, _ in pairs(input_adjective_slots) do
 		params[slot] = {}
 	end
 
@@ -865,13 +907,19 @@ function export.do_generate_forms_manual(parent_args, pos, from_headword, def)
 	local alternant_multiword_spec = {
 		special = args.special,
 		title = args.title,
-		footnotes = args.footnote,
 		forms = {},
 		manual = true,
 	}
+	check_allowed_overrides(alternant_multiword_spec, args)
+	-- Do non-accusative overrides so they get copied to the accusative forms appropriately.
 	process_overrides(alternant_multiword_spec.forms, args)
 	set_accusative(alternant_multiword_spec)
+	-- Do accusative overrides after copying the accusative forms.
+	process_overrides(alternant_multiword_spec.forms, args, "do acc")
 	add_categories(alternant_multiword_spec)
+	if args.json and not from_headword then
+		return require("Module:JSON").toJSON(alternant_multiword_spec)
+	end
 	return alternant_multiword_spec
 end
 
@@ -895,36 +943,6 @@ function export.show_manual(frame)
 	local alternant_multiword_spec = export.do_generate_forms_manual(parent_args)
 	show_forms(alternant_multiword_spec)
 	return make_table(alternant_multiword_spec) .. require("Module:utilities").format_categories(alternant_multiword_spec.categories, lang)
-end
-
-
--- Concatenate all forms of all slots into a single string of the form
--- "SLOT=FORM,FORM,...|SLOT=FORM,FORM,...|...". Embedded pipe symbols (as might
--- occur in embedded links) are converted to <!>. If INCLUDE_PROPS is given,
--- also include additional properties (currently, none). This is for use by
--- bots.
-local function concat_forms(alternant_multiword_spec, include_props)
-	local ins_text = {}
-	for slot, _ in pairs(get_output_adjective_slots(alternant_multiword_spec)) do
-		local formtext = com.concat_forms_in_slot(alternant_multiword_spec.forms[slot])
-		if formtext then
-			table.insert(ins_text, slot .. "=" .. formtext)
-		end
-	end
-	return table.concat(ins_text, "|")
-end
-
--- Template-callable function to parse and decline an adjective given
--- user-specified arguments and return the forms as a string
--- "SLOT=FORM,FORM,...|SLOT=FORM,FORM,...|...". Embedded pipe symbols (as might
--- occur in embedded links) are converted to <!>. If |include_props=1 is given,
--- also include additional properties (currently, none). This is for use by
--- bots.
-function export.generate_forms(frame)
-	local include_props = frame.args["include_props"]
-	local parent_args = frame:getParent().args
-	local alternant_multiword_spec = export.do_generate_forms(parent_args)
-	return concat_forms(alternant_multiword_spec, include_props)
 end
 
 
