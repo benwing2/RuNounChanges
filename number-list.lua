@@ -182,33 +182,15 @@ function export.display_number_type(number_type)
 	end
 end
 
-function map(func, array)
-	local new_array = {}
-	for i,v in ipairs(array) do
-		new_array[i] = func(v)
-	end
-	return new_array
-end
-
-local function unsuffix(m_data, term)
+local function maybe_unsuffix(m_data, term)
 	if not m_data.unsuffix then
-		error("Internal error: unsuffix() called but no 'unsuffix' entry in data module")
+		return term
 	end
 	for _, entry in ipairs(m_data.unsuffix) do
 		local from, to = unpack(entry)
 		term = mw.ustring.gsub(term, from, to)
 	end
-	return term
-end
-
-local function maybe_unsuffix(m_data, term_or_terms)
-	if not m_data.unsuffix then
-		return term_or_terms
-	end
-	if type(term_or_terms) == "table" then
-		return map(function(term) return unsuffix(m_data, term) end, term_or_terms)
-	end
-	return unsuffix(m_data, term_or_terms)
+	term
 end
 
 -- Group digits with a separator, such as a comma or a period. See [[w:Digit grouping]].
@@ -322,19 +304,6 @@ function export.numbers_less_than(a, b)
 		return false
 	end
 	return a < b
-end
-
-local function remove_duplicate_entry_names(lang, terms)
-	local entries = map(function(term) return lang:makeEntryName(term) end, terms)
-	local seen_entries = {}
-	local filtered_entries = {}
-	for _, entry in ipairs(entries) do
-		if not seen_entries[entry] then
-			table.insert(filtered_entries, entry)
-			seen_entries[entry] = true
-		end
-	end
-	return filtered_entries
 end
 
 function export.group_numeral_forms_by_tag(forms, pagename, m_data, lang)
@@ -723,14 +692,22 @@ function export.show_box(frame)
 			forms_to_display[i] = maybe_unsuffix(m_data, form_to_display.term)
 		end
 
-		forms_to_display = remove_duplicate_entry_names(lang, forms_to_display)
+		local seen_pagenames = {}
+		local pagenames_to_display = {}
+		for _, form in ipairs(forms_to_display) do
+			form = lang:makeEntryName(form)
+			if not seen_entries[form] then
+				table.insert(pagenames_to_display, form)
+				seen_entries[form] = true
+			end
+		end
 
 		num = export.format_number_for_display(num)
 		local num_arrow = num_follows and arrow .. num or num .. arrow
-		if #forms_to_display > 1 then
+		if #pagenames_to_display > 1 then
 			local a = ("a"):byte()
 			local links = {}
-			for i, term in ipairs(forms_to_display) do
+			for i, term in ipairs(pagenames_to_display) do
 				links[i] = m_links.language_link{lang = lang, term = term, alt = "[" .. string.char(a + i - 1) .. "]"}
 			end
 			links = "<sup>" .. table.concat(links, ", ") .. "</sup>"
@@ -738,7 +715,7 @@ function export.show_box(frame)
 		else
 			return m_links.language_link {
 				lang = lang,
-				term = forms_to_display[1],
+				term = pagenames_to_display[1],
 				alt = num_arrow,
 			}
 		end
