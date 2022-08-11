@@ -32,6 +32,9 @@ local function power_of(n)
 	return "1" .. string.rep("0", n)
 end
 
+-- Parse a term with modifiers such as 'vuitanta-vuit<tag:Central>' or 'سیزده<tr:sizdah>'
+-- or 'سیزده<tr:sizdah><tag:Iranian>' into its component parts. Return a form object, i.e. an object with fields
+-- `term` for the term, and `tr`, `tag`, `q` or `qq` for the modifiers.
 function export.parse_term_and_modifiers(data_module_term)
 	local retval = {}
 	local term
@@ -60,9 +63,10 @@ local function get_term(data_module_term)
 	return export.parse_term_and_modifiers(data_module_term).term
 end
 
--- Construct a map from number forms to a description object (a two-element list of {TYPE, NUMBER}). If the same form
--- corresponds to more than one number, the table contains a list of description objects; otherwise it just contains a
--- description object directly.
+-- Construct a map from number forms to a description object (a two-element list of {TYPE, NUMBER}, where NUMBER is
+-- either a Lua number or a string, depending on how it appears in the underlying data). If the same form corresponds
+-- to more than one number, the table contains a list of description objects; otherwise it just contains a description
+-- object directly.
 local function construct_form_to_type_and_number(lang, number_data)
 	local form_to_data = {}
 	local function ins_type_and_number(form, typ, num)
@@ -109,6 +113,9 @@ local function construct_form_to_type_and_number(lang, number_data)
 	return form_to_data
 end
 
+-- Find the "description object" (a two-element list {TYPE, NUMBER}, where NUMBER is either a Lua number or a string,
+-- depending on how it appears in the underlying data) for a number form. The return value is either such a description
+-- object or (if multiple description objects match a given form) a list of such objects.
 function export.lookup_number_by_form(lang, m_data, str)
 	if not m_data.form_to_number then
 		m_data.form_to_number = construct_form_to_type_and_number(lang, m_data.numbers)
@@ -117,6 +124,7 @@ function export.lookup_number_by_form(lang, m_data, str)
 	return m_data.form_to_number[lang:makeEntryName(str)]
 end
 
+-- Find the `numbers` object for a given number (which should be in string representation).
 function export.lookup_data(m_data, numstr)
 	-- Don't try to convert very large numbers to Lua numbers because they may overflow.
 	-- Powers of 10 >= 10^22 cannot be represented exactly as a Lua number.
@@ -306,6 +314,17 @@ function export.numbers_less_than(a, b)
 	return a < b
 end
 
+-- Given a list of forms with attached inline modifiers (e.g. 'huitanta-huit<tag:Valencian>'), parse the forms into
+-- form objects (the return value of parse_term_and_modifiers()) and group by the tag. Four values are returned:
+-- `seen_forms`, `forms_by_tag`, `seen_tags`, `cur_tag` where:
+-- (1) `seen_forms` is the list of parsed form objects;
+-- (2) `forms_by_tag` is a table grouping the form objects by tag, where the key is the tag and the value is a list of
+--      the form objects seen with that tag (forms without tag are grouped under the empty-string tag);
+-- (3) `seen_tags` is a list of the tags encountered, in the order they were encountered;
+-- (4) `cur_tag` is the tag of the form that matches the current pagename.
+-- `cur_tag` is only non-nil if `pagename` (the current pagename) is specified; in that case, `m_data` and `lang` must
+-- also be given, containing respectively the data object for the current language and the language object for that
+-- language. If multiple forms match the current pagename, the tag of the first matching form is returned.
 function export.group_numeral_forms_by_tag(forms, pagename, m_data, lang)
 	local seen_forms = {}
 	local forms_by_tag = {}
@@ -316,7 +335,6 @@ function export.group_numeral_forms_by_tag(forms, pagename, m_data, lang)
 		local formobj = export.parse_term_and_modifiers(form)
 		table.insert(seen_forms, formobj)
 		local tag = formobj.tag or ""
-		-- If this number is the current page, then store the tag for later use
 		if not cur_tag and pagename then
 			local entry_name = lang:makeEntryName(formobj.term)
 			if (entry_name == pagename or maybe_unsuffix(m_data, entry_name) == pagename) then
@@ -333,6 +351,7 @@ function export.group_numeral_forms_by_tag(forms, pagename, m_data, lang)
 	return seen_forms, forms_by_tag, seen_tags, cur_tag
 end
 
+-- Given a form object (as returned by parse_term_and_modifiers()), format as appropriate for the current language.
 function export.format_formobj(formobj, m_data, lang)
 	local left_q = formobj.q and require("Module:qualifier").format_qualifier(formobj.q) .. " " or ""
 	local right_q = formobj.qq and " " .. require("Module:qualifier").format_qualifier(formobj.qq) or ""
@@ -341,6 +360,7 @@ function export.format_formobj(formobj, m_data, lang)
 	}) .. right_q
 end
 
+-- Implementation of {{number box}}.
 function export.show_box(frame)
 	local full_link = m_links.full_link
 
@@ -360,8 +380,8 @@ function export.show_box(frame)
 	local langcode = args[1] or "und"
 	local lang = require("Module:languages").getByCode(langcode, "1")
 
-	-- Get the data from the data module. [[Module:number list/data/en]] has to be loaded with require because its
-	-- exported numbers table has a metatable.
+	-- Get the data from the data module. Some modules (e.g. currently [[Module:number lista/data/ka]]) have to be
+	-- loaded with require() because the exported numbers table has a metatable.
 	local module_name = export.get_data_module_name(langcode)
 	local m_data = require(module_name)
 
@@ -415,7 +435,6 @@ function export.show_box(frame)
 		error('The number "' .. cur_num .. '" is not found in the "numbers" table in [[' .. module_name .. "]].")
 	end
 
-	-- Go over each number and make links
 	local formatted_forms = {}
 
 	if cur_type and not cur_data[cur_type] then
