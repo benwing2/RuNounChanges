@@ -190,7 +190,7 @@ local function maybe_unsuffix(m_data, term)
 		local from, to = unpack(entry)
 		term = mw.ustring.gsub(term, from, to)
 	end
-	term
+	return term
 end
 
 -- Group digits with a separator, such as a comma or a period. See [[w:Digit grouping]].
@@ -696,9 +696,9 @@ function export.show_box(frame)
 		local pagenames_to_display = {}
 		for _, form in ipairs(forms_to_display) do
 			form = lang:makeEntryName(form)
-			if not seen_entries[form] then
+			if not seen_pagenames[form] then
 				table.insert(pagenames_to_display, form)
-				seen_entries[form] = true
+				seen_pagenames[form] = true
 			end
 		end
 
