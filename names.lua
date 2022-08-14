@@ -8,7 +8,6 @@ local export = {}
 local enlang = m_languages.getByCode("en")
 
 local rfind = mw.ustring.find
-local rmatch = mw.ustring.match
 local rsubn = mw.ustring.gsub
 local rsplit = mw.text.split
 
@@ -42,8 +41,9 @@ end
 
 -- Used in category code
 export.personal_name_types = {
-	"surnames", "patronymics", "given names",
-	"male given names", "female given names", "unisex given names",
+	"surnames", "male surnames", "female surnames", "common-gender surnames",
+	"patronymics", "matronymics",
+	"given names", "male given names", "female given names", "unisex given names",
 	"diminutives of male given names", "diminutives of female given names",
 	"diminutives of unisex given names",
 	"augmentatives of male given names", "augmentatives of female given names",
@@ -89,8 +89,8 @@ local function parse_term_with_annotations(term, pname, deflang, allow_explicit_
 			error("Blank form for param '" .. pname .. "' not allowed")
 		end
 		local termobj = {term = {}}
-		local lang, form = run[1]:match("^(.-):(.*)$")
-		if lang then
+		local lang, form = run[1]:match("^([^%[%]]-):(.*)$")
+		if lang and lang ~= "w" then
 			if not allow_explicit_lang then
 				parse_err("Explicit language '" .. lang .. "' not allowed for this parameter")
 			end
@@ -277,17 +277,17 @@ local function get_fromtext(lang, args)
 	local function parse_from(from)
 		local unrecognized = false
 		local prefix, suffix
-		if from == "surnames" then
+  		 if from == "surnames" or from == "given names" or from == "nicknames" or from == "place names" or from == "common nouns" then
 			prefix = "transferred from the "
-			suffix = "surname"
+			suffix = from:gsub("s$", "")
 			table.insert(catparts, from)
-		elseif from == "place names" then
-			prefix = "transferred from the "
-			suffix = "place name"
-			table.insert(catparts, from)
-		elseif from == "coinages" then
+  		elseif from == "patronymics" or from == "matronymics" or from == "coinages" then
 			prefix = "originating "
-			suffix = "as a coinage"
+			suffix = "as a " .. from:gsub("s$", "")
+			table.insert(catparts, from)
+  		elseif from == "occupations" or from == "ethnonyms" then
+			prefix = "originating "
+			suffix = "as an " .. from:gsub("s$", "")
 			table.insert(catparts, from)
 		elseif from == "the Bible" then
 			prefix = "originating "
@@ -380,8 +380,10 @@ function export.given_name(frame)
 	local compat = parent_args.lang
 	local offset = compat and 0 or 1
 
+	local lang_index = compat and "lang" or 1
+
 	local params = {
-		[compat and "lang" or 1] = { required = true, default = "und" },
+		[lang_index] = { required = true, default = "und" },
 		["gender"] = { default = "unknown-gender" },
 		[1 + offset] = { alias_of = "gender", default = "unknown-gender" },
 		-- second gender
@@ -414,6 +416,11 @@ function export.given_name(frame)
 		["diminutive"] = { alias_of = "dimof", list = true },
 		["diminutivetype"] = { alias_of = "dimoftype" },
 		["dimform"] = { list = true },
+		["aug"] = { alias_of = "augof", list = true },
+		["augtype"] = { alias_of = "augoftype" },
+		["auginutive"] = { alias_of = "augof", list = true },
+		["auginutivetype"] = { alias_of = "augoftype" },
+		["augform"] = { list = true },
 		["blend"] = { list = true },
 		["blendtype"] = {},
 		["m"] = { list = true },
@@ -425,13 +432,15 @@ function export.given_name(frame)
 	local args = require("Module:parameters").process(parent_args, params)
 	
 	local textsegs = {}
-	local lang = m_languages.getByCode(args[compat and "lang" or 1], compat and "lang" or 1)
+	local langcode = args[lang_index]
+	local lang = m_languages.getByCode(langcode, lang_index)
 
 	local function fetch_typetext(param)
 		return args[param] and args[param] .. " " or ""
 	end
 
 	local dimoftext, numdims = join_names(lang, args, "dimof")
+	local augoftext, numaugs = join_names(lang, args, "augof")
 	local xlittext = join_names(nil, args, "xlit")
 	local blendtext = join_names(lang, args, "blend", "and")
 	local varoftext = join_names(lang, args, "varof")
@@ -439,6 +448,7 @@ function export.given_name(frame)
 	local ftext = join_names(lang, args, "f")
 	local varformtext, numvarforms = join_names(lang, args, "varform", ", ")
 	local dimformtext, numdimforms = join_names(lang, args, "dimform", ", ")
+	local augformtext, numaugforms = join_names(lang, args, "augform", ", ")
 	local meaningsegs = {}
 	for _, meaning in ipairs(args.meaning) do
 		table.insert(meaningsegs, '"' .. meaning .. '"')
@@ -448,10 +458,27 @@ function export.given_name(frame)
 
 	table.insert(textsegs, "<span class='use-with-mention'>")
 	local dimtype = args.dimtype
-	local article = args.A or
-		dimtype and rfind(dimtype, "^[aeiouAEIOU]") and "An" or
-		args.gender == "unknown-gender" and "An" or
-		"A"
+	local augtype = args.augtype
+	local article = args.A
+	local need_an = false
+	if not article then
+		if numdims > 0 then
+			need_an = dimtype and rfind(dimtype, "^[aeiouAEIOU]")
+		elseif numaugs > 0 then
+			if augtype then
+				need_an = rfind(augtype, "^[aeiouAEIOU]")
+			else
+				need_an = true -- "augmentative" needs an article
+			end
+		else
+			need_an = args.gender == "unknown-gender"
+		end
+		if langcode == "en" then
+			article = need_an and "An" or "A"
+		else
+			article = need_an and "an" or "a"
+		end
+	end
 
 	table.insert(textsegs, article .. " ")
 	if numdims > 0 then
@@ -460,16 +487,25 @@ function export.given_name(frame)
 			"[[diminutive]]" ..
 			(xlittext ~= "" and ", " .. xlittext .. "," or "") ..
 			" of the ")
+	elseif numaugs > 0 then
+		table.insert(textsegs,
+			(augtype and augtype .. " " or "") ..
+			"[[augmentative]]" ..
+			(xlittext ~= "" and ", " .. xlittext .. "," or "") ..
+			" of the ")
 	end
 	local genders = {}
 	table.insert(genders, args.gender)
 	table.insert(genders, args["or"])
 	table.insert(textsegs, table.concat(genders, " or ") .. " ")
-	table.insert(textsegs, numdims > 1 and "[[given name|given names]]" or
+	table.insert(textsegs, (numdims > 1 or numaugs > 1) and "[[given name|given names]]" or
 		"[[given name]]")
 	local need_comma = false
 	if numdims > 0 then
 		table.insert(textsegs, " " .. dimoftext)
+		need_comma = true
+	elseif numaugs > 0 then
+		table.insert(textsegs, " " .. augoftext)
 		need_comma = true
 	elseif xlittext ~= "" then
 		table.insert(textsegs, ", " .. xlittext)
@@ -537,14 +573,17 @@ function export.given_name(frame)
 	if dimformtext ~= "" then
 		table.insert(textsegs, "; diminutive form" .. (numdimforms > 1 and "s" or "") .. " " .. dimformtext)
 	end
+	if augformtext ~= "" then
+		table.insert(textsegs, "; augmentative form" .. (numaugforms > 1 and "s" or "") .. " " .. augformtext)
+	end
 	table.insert(textsegs, "</span>")
 
 	local categories = {}
 	local langname = lang:getCanonicalName() .. " "
-	local function insert_cats(isdim)
-		if isdim == "" then
+	local function insert_cats(dimaugof)
+		if dimaugof == "" then
 			-- No category such as "English diminutives of given names"
-			table.insert(categories, langname .. isdim .. "given names")
+			table.insert(categories, langname .. "given names")
 		end
 		local function insert_cats_gender(g)
 			if g == "unknown-gender" then
@@ -558,9 +597,9 @@ function export.given_name(frame)
 				insert_cats_gender("male")
 				insert_cats_gender("female")
 			end
-			table.insert(categories, langname .. isdim .. g .. " given names")
+			table.insert(categories, langname .. dimaugof .. g .. " given names")
 			for _, catpart in ipairs(from_catparts) do
-				table.insert(categories, langname .. isdim .. g .. " given names from " .. catpart)
+			table.insert(categories, langname .. dimaugof .. g .. " given names from " .. catpart)
 			end
 		end
 		insert_cats_gender(args.gender)
@@ -571,6 +610,8 @@ function export.given_name(frame)
 	insert_cats("")
 	if numdims > 0 then
 		insert_cats("diminutives of ")
+	elseif numaugs > 0 then
+		insert_cats("augmentatives of ")
 	end
 
 	return table.concat(textsegs, "") ..
@@ -583,8 +624,15 @@ function export.surname(frame)
 	local compat = parent_args.lang
 	local offset = compat and 0 or 1
 
+	if parent_args.dot or parent_args.nodot then
+		error("dot= and nodot= are no longer supported in [[Template:surname]] because a trailing period is no longer added by "
+				.. "default; if you want it, add it explicitly after the template")
+	end
+
+	local lang_index = compat and "lang" or 1
+
 	local params = {
-		[compat and "lang" or 1] = { required = true, default = "und" },
+		[lang_index] = { required = true, default = "und" },
 		["g"] = {list = true}, -- gender(s)
 		[1 + offset] = {}, -- adjective/qualifier
 		["usage"] = {},
@@ -594,7 +642,7 @@ function export.surname(frame)
 		["meaning"] = { list = true },
 		["meaningtype"] = {},
 		["q"] = {},
-		-- initial article: A or An
+		-- initial article: by default A or An (English), a or an (otherwise)
 		["A"] = {},
 		["sort"] = {},
 		["from"] = { list = true },
@@ -613,14 +661,14 @@ function export.surname(frame)
 		["mtype"] = {},
 		["f"] = { list = true },
 		["ftype"] = {},
-		["dot"] = {},
-		["nodot"] = {type = "boolean"},
+		["nocat"] = {type = "boolean"},
 	}
 
 	local args = require("Module:parameters").process(parent_args, params)
 	
 	local textsegs = {}
-	local lang = m_languages.getByCode(args[compat and "lang" or 1], compat and "lang" or 1)
+	local langcode = args[lang_index]
+	local lang = m_languages.getByCode(langcode, lang_index)
 
 	local function fetch_typetext(param)
 		return args[param] and args[param] .. " " or ""
@@ -641,32 +689,49 @@ function export.surname(frame)
 	local eqtext = get_eqtext(args)
 
 	table.insert(textsegs, "<span class='use-with-mention'>")
-	local article = args.A or
-		args.g[1] == "unknown-gender" and "An" or
-		adj and rfind(adj, "^[aeiouAEIOU]") and "An" or
-		"A"
 
-	table.insert(textsegs, article .. " ")
 	local genders = {}
 	for _, g in ipairs(args.g) do
 		local origg = g
+		if g == "unknown" or g == "unknown gender" or g == "?" then
+			g = "unknown-gender"
+		elseif g == "unisex" or g == "common gender" or g == "c" then
+			g = "common-gender"
+		elseif g == "m" then
+			g = "male"
+		elseif g == "f" then
+			g = "female"
+		end
 		if g == "unknown-gender" then
 			track("unknown gender")
-		else
-			if g == "unisex" or g == "common gender" then
-				g = "common-gender"
-			end
-			if g ~= "male" and g ~= "female" and g ~= "common-gender" then
-				error("Unrecognized gender: " .. origg)
-			end
+		elseif g ~= "male" and g ~= "female" and g ~= "common-gender" then
+			error("Unrecognized gender: " .. origg)
 		end
 		table.insert(genders, g)
 	end
+
+	local article_a, article_an
+	if langcode == "en" then
+		article_a, article_an = "A", "An"
+	else
+		article_a, article_an = "a", "an"
+	end
+	-- If gender is supplied, it goes before the specified adjective in adj=. The only value of gender that uses "an" is
+	-- "unknown-gender" (note that "unisex" wouldn't use it but in any case we map "unisex" to "common-gender"). If gender
+	-- isn't supplied, look at the first letter of the value of adj= if supplied; otherwise, the article is always "a"
+	-- because the word "surname" follows. Capitalize "A"/"An" if English.
+	local article = args.A or
+		#genders > 0 and genders[1] == "unknown-gender" and article_an or
+		#genders == 0 and adj and rfind(m_links.remove_links(adj), "^[aeiouAEIOU]") and article_an or
+		article_a
+	table.insert(textsegs, article .. " ")
+
 	if #genders > 0 then
 		table.insert(textsegs, table.concat(genders, " or ") .. " ")
 	end
 	if adj then
 		table.insert(textsegs, adj .. " ")
+	end
 	table.insert(textsegs, "[[surname]]")
 	local need_comma = false
 	if xlittext ~= "" then
@@ -734,6 +799,11 @@ function export.surname(frame)
 	end
 	table.insert(textsegs, "</span>")
 
+	local text = table.concat(textsegs, "")
+	if args.nocat then
+		return text
+	end
+
 	local categories = {}
 	local langname = lang:getCanonicalName() .. " "
 	local function insert_cats(g)
@@ -759,8 +829,7 @@ function export.surname(frame)
 		insert_cats_gender(g)
 	end
 
-	return table.concat(textsegs, "") ..
-		m_utilities.format_categories(categories, lang, args.sort, nil, force_cat)
+	return text .. m_utilities.format_categories(categories, lang, args.sort, nil, force_cat)
 end
 
 -- The entry point for {{name translit}}, {{name respelling}}, {{name obor}} and {{foreign name}}.
@@ -941,14 +1010,14 @@ function export.name_translit(frame)
 
 	local categories = {}
 	for _, nametype in ipairs(nametypes) do
-		local function insert_cats(isdim)
+		local function insert_cats(dimaugof)
 			local function insert_cats_type(ty)
 				if ty == "unisex given name" then
 					insert_cats_type("male given name")
 					insert_cats_type("female given name")
 				end
 				for i, source in ipairs(sources) do
-					table.insert(categories, lang:getCode() .. ":" .. source:getCanonicalName() .. " " .. isdim .. ty .. "s")
+					table.insert(categories, lang:getCode() .. ":" .. source:getCanonicalName() .. " " .. dimaugof .. ty .. "s")
 					table.insert(categories, lang:getCanonicalName() .. " terms derived from " .. source:getCanonicalName())
 					table.insert(categories, lang:getCanonicalName() .. " terms borrowed from " .. source:getCanonicalName())
 					if iargs.obor then
@@ -957,7 +1026,7 @@ function export.name_translit(frame)
 					local sourcelang = source_non_etym_langs[i]
 					if source:getCode() ~= sourcelang:getCode() then
 						-- etymology language
-						table.insert(categories, lang:getCode() .. ":" .. sourcelang:getCanonicalName() .. " " .. isdim .. ty .. "s")
+						table.insert(categories, lang:getCode() .. ":" .. sourcelang:getCanonicalName() .. " " .. dimaugof .. ty .. "s")
 					end
 				end
 			end
@@ -974,19 +1043,6 @@ function export.name_translit(frame)
 
 	return table.concat(textsegs, "") ..
 		m_utilities.format_categories(categories, lang, args.sort, nil, force_cat)
-end
-
-function export.do_xlits(frame)
-	local parent_args = frame:getParent().args
-
-	local params = {
-		[1] = { required = true, default = "und" },
-		["xlit"] = { list = true },
-	}
-
-	local args = require("Module:parameters").process(parent_args, params, true)
-	local lang = m_languages.getByCode(args[1], 1)
-	return (join_names(nil, args, "xlit"))
 end
 
 return export
