@@ -357,6 +357,11 @@ function export.numbers_less_than(a, b)
 	return a < b
 end
 
+-- Return true if a > b, where either may be a Lua number or the string representation of a number.
+function export.numbers_greater_than(a, b)
+	return export.numbers_less_than(b, a)
+end
+
 local function term_equals_pagename(term, pagename, m_data, lang)
 	local entry_name = lang:makeEntryName(term)
 	return entry_name == pagename or maybe_unsuffix(m_data, entry_name) == pagename
@@ -571,63 +576,26 @@ function export.show_box(frame)
 	--    be overridden for an individual number using `next_outer`/`prev_outer`. Otherwise, we try for the following
 	--    numbers in order, making sure in each case that the number is available and greater than the next/prev number;
 	--    otherwise we try the next number in the series.
-	--    a. If the base-10 mantissa is 1 through 9, the corresponding number with the mantissa one greater or less, and
-	--       the same number of zeros. Hence, for 300, we try 400 for the next outer, 200 for the previous outer. For
-	--       900, we try 1000 for the next outer and 800 for the previous outer. For 100 we try 200 for the next outer
-	--       but there is no previous outer at this step.
-	--    b. If the base-10 mantissa is 1 (i.e. the number is an exact power of 10), we try 10x greater and less.
-	--    c. If the base-10 mantissa is 1 (i.e. the number is an exact power of 10), we try 100x greater and less.
+	--    a. If the base-10 mantissa is not 1 or 0, we add 1 to or subtract 1 from the mantissa, keeping the same number
+	--       of zeros. Hence, for 300, we try 400 for the next outer, 200 for the previous outer. For 900, we try 1000
+	--       for the next outer and 800 for the previous outer. If the mantissa is 1, the next outer is computed the
+	--       same but for the previous outer we use 9 followed by one fewer zero. Hence, for 100 we try 200 for the next
+	--       outer but 90 for the previous outer. If the mantissa is 0 (i.e. the entire number is 0), we try 10 for the
+	--       next outer, and have no previous outer.
+	--    b. We try 10x greater and (if there is at least one zero) 10x less.
+	--    c. We try 100x greater and (if there is at least one zero) 100x less.
 	--    d. (repeat up to 1,000,000x, i.e. 10^6, greater and less)
 	-- 3. The upper/lower numbers, which are displayed above or below the central number box. These can be overridden
 	--    for an individual number using `upper`/`lower`. These are always a power of ten greater or less than the
 	--    number in question. We try up to 1,000,000x, i.e. 10^6, greater and less, not considering a number if it's
 	--    unavailable or is the same as the next/previous or next/previous outer number.
-	--
-	--
-	--
-	--    otherwise we 
-	-- We want a series of numbers like this:
-	-- 1, 2, ..., 9, 10, 11, 12, ..., 99, 100, 200, ..., 900, 1000, 2000, ..., 9000, 10000, 20000, ..., etc.
-	--
-	-- The general principle is as follows, for a number N:
-	-- 1. Decompose the number into K followed by M zeros.
-	-- 2. If M < 2, the next number of N + 1, and the previous number is N - 1.
-	-- 3. Otherwise, if K isn't 1, the next number is K + 1 followed by M zeros, and the previous number is K - 1
-	--    followed by M zeros.
-	-- 4. Otherwise, K == 1; if M == 2, the next number of formed the same as in (2) and the previous number is N - 1.
-	-- 5. Otherwise, next number of formed the same as in (2), but the previous number is formed by 9 followed by
-	--    M - 1 zeros.
-	--
-	-- This works for numbers not in the above series; e.g. 45000 has 46000 as its previous number and 44000 as its
-	-- next number, while 45310 has 45311 as its next number and 45309 as its previous number.
-	--
-	-- If the next higher number in the series doesn't have an entry in the table, and the number is an exact power of
-	-- 10, look for a higher power of 10, up to 10^6 times greater. Similarly for next lower numbers.
-	--
-	-- We also display "outer numbers" in some circumstances, according to the following series:
-	-- 0; 10; 20; ...; 90; 100; 1,000; 10,000; 100,000; 1,000,000; 10,000,000; 100,000,000; 1,000,000,000; ...
-	--
-	-- We only try to find outer numbers if the number has at most one zero at the end (in which case we check 10 above
-	-- and below) or if it's an exact power of 10. If the number is an exact power of 10, and >= 1000, we proceed as
-	-- follows to find the next higher outer number:
-	--
-	-- 1. Check the next-higher power of 10 if it's greater than the next higher number determined in the first part
-	--    above.
-	-- 2. Check the next-higher power of 10 that's an exact multiple of 3 if it's greater than the number just checked
-	--    and also greater than the next higher number determined in the first part above.
-	-- 3. Check the next-higher power of 10 that's an exact multiple of 6 if it's greater than the number just checked
-	--    and also greater than the next higher number determined in the first part above.
-	--
-	-- Similarly for the next lower outer number.
 	local next_data, prev_data
-	local next_num, prev_num
-	local next_outer_data, prev_outer_data
-	local next_outer_num, prev_outer_num
+	local next_num, prev_num = get_next_and_prev_keys(m_data, cur_num)
+
+	local k, m
 	if cur_num == "0" then
-		next_num = "1"
-		next_data = lookup_data(next_num)
-		next_outer_num = "10"
-		next_outer_data = lookup_data(next_outer_num)
+		k = 0
+		m = 1
 	else
 		local kstr, mstr = cur_num:match("^([0-9]*[1-9])(0*)$")
 		if not kstr then
@@ -636,112 +604,65 @@ function export.show_box(frame)
 			-- This is because some numbers with 16 or more digits can't be represented exactly.
 			error("Can't handle number with more than 15 digits before the trailing zeros: '" .. cur_num .. "'")
 		end
-		local k = tonumber(kstr)
-		local m = #mstr
-		if m < 2 then -- less than two zeros at the end
-			next_num = export.format_fixed(tonumber(cur_num) + 1)
-			prev_num = export.format_fixed(tonumber(cur_num) - 1)
-			if m == 1 then
-				next_outer_num = export.format_fixed(tonumber(cur_num) + 10)
-				prev_outer_num = export.format_fixed(tonumber(cur_num) - 10)
-			end
-		else
-			next_num = (k + 1) .. mstr
-			if k ~= 1 then
-				prev_num = (k - 1) .. mstr
-			elseif m == 2 then -- = 100
-				prev_num = "99"
-			else
-				prev_num = "9" .. string.rep("0", m - 1)
-			end
-		end
+		k = tonumber(kstr)
+		m = #mstr
+	end
 
-		next_data = lookup_data(next_num)
-		if not next_data and k == 1 then
+	local next_outer_data, prev_outer_data
+	local next_outer_num, prev_outer_num = cur_data.next_outer, cur_data.prev_outer
+	if next_outer_num then
+		next_outer_data = lookup_data(next_outer_num)
+		if not next_outer_data then
+			error(('The next outer number "%s" specified in the "numbers" table entry for "%s" cannot be found in '
+				.. "[[%s]]; please fix the module."):format(next_outer_num, cur_num, module_name))
+		end
+	else
+		local function try(num)
+			return (not next_num or export.numbers_greater_than(num, next_num)) and lookup_data(num) or nil
+		end
+		next_outer_num = (k + 1) .. string.rep("0", m)
+		next_outer_data = try(next_outer_num)
+		if not next_outer_data then
 			-- Try looking up a greater power of ten instead, adding up to 6 zeros.
 			for i = 1, 6 do
-				next_num = cur_num .. string.rep("0", i)
-				next_data = lookup_data(next_num)
-				if next_data then
+				next_outer_num = cur_num .. string.rep("0", i)
+				next_outer_data = try(next_outer_num)
+				if next_outer_num then
 					break
 				end
 			end
 		end
+	end
 
-		prev_data = lookup_data(prev_num)
-		if not prev_data and k == 1 then
-			-- Try looking up a smaller power of ten instead, removing up to 6 zeros.
-			for i = 1, 6 do
-				local desired_zeros = m - i
-				if desired_zeros < 0 then
-					break
-				end
-				prev_num = power_of(desired_zeros)
-				prev_data = lookup_data(prev_num)
-				if prev_data then
-					break
-				end
-			end
+	if prev_outer_num then
+		prev_outer_data = lookup_data(prev_outer_num)
+		if not prev_outer_data then
+			error(('The previous outer number "%s" specified in the "numbers" table entry for "%s" cannot be found in '
+				.. "[[%s]]; please fix the module."):format(prev_outer_num, cur_num, module_name))
 		end
-
-		-- Now determine the "outer numbers" to display (if any).
-		if m == 1 then
-			next_outer_num = export.format_fixed(tonumber(cur_num) + 10)
-			next_outer_data = lookup_data(next_outer_num)
-			prev_outer_num = export.format_fixed(tonumber(cur_num) - 10)
-			prev_outer_data = lookup_data(prev_outer_num)
-		elseif m >= 2 and k == 1 then
-			-- for numbers with two or more zeros at the end, only display outer numbers if they're an exact
-			-- power of 10.
-			local lower_numbers_to_check, higher_numbers_to_check
-			-- Round n down to an even multiple of k. E.g. if k == 3, 3/4/5 -> 3, 6/7/8 -> 6, etc.
-			local function round_down_to_even_multiple(n, k)
-				return n - (n % k)
-			end
-			-- Round n up to an even multiple of k. E.g. if k == 3, 4/5/6 -> 6, 7/8/9 -> 9, etc.
-			local function round_up_to_even_multiple(n, k)
-				return round_down_to_even_multiple(n + k - 1, k)
-			end
-			if m == 2 then -- 100
-				lower_numbers_to_check = {"90"}
-				higher_numbers_to_check = {"1000"}
+	else
+		local function try(num)
+			return (not prev_num or export.numbers_less_than(num, prev_num)) and lookup_data(num) or nil
+		end
+		if k == 0 then
+			-- no previous outer num
+		else
+			if k == 1 then
+				prev_outer_num = "9" .. string.rep("0", m - 1)
 			else
-				local prev_power = m - 1
-				lower_numbers_to_check = {power_of(prev_power)}
-				local prev_power_even_mod_3 = round_down_to_even_multiple(prev_power, 3)
-				if prev_power_even_mod_3 ~= prev_power and prev_power_even_mod_3 > 0 then
-					table.insert(lower_numbers_to_check, power_of(prev_power_even_mod_3))
-				end
-				local prev_power_even_mod_6 = round_down_to_even_multiple(prev_power, 6)
-				if prev_power_even_mod_6 ~= prev_power_even_mod_3 then
-					table.insert(lower_numbers_to_check, power_of(prev_power_even_mod_6))
-				end
-				local next_power = m + 1
-				higher_numbers_to_check = {power_of(next_power)}
-				local next_power_even_mod_3 = round_up_to_even_multiple(next_power, 3)
-				if next_power_even_mod_3 ~= next_power and next_power_even_mod_3 > 0 then
-					table.insert(higher_numbers_to_check, power_of(next_power_even_mod_3))
-				end
-				local next_power_even_mod_6 = round_up_to_even_multiple(next_power, 6)
-				if next_power_even_mod_6 ~= next_power_even_mod_3 then
-					table.insert(higher_numbers_to_check, power_of(next_power_even_mod_6))
-				end
+				prev_outer_num = (k - 1) .. string.rep("0", m)
 			end
-
-			for _, outer_num in ipairs(higher_numbers_to_check) do
-				if not next_data or export.numbers_less_than(next_num, outer_num) then
-					next_outer_data = lookup_data(outer_num)
-					if next_outer_data then
-						next_outer_num = outer_num
+			prev_outer_data = try(prev_outer_num)
+			if not prev_outer_data then
+				-- Try looking up a smaller power of ten instead, removing up to 6 zeros.
+				for i = 1, 6 do
+					local desired_zeros = m - i
+					if desired_zeros < 0 then
 						break
 					end
-				end
-			end
-			for _, outer_num in ipairs(lower_numbers_to_check) do
-				if not prev_data or export.numbers_less_than(outer_num, prev_num) then
-					prev_outer_data = lookup_data(outer_num)
+					prev_outer_num = k .. string.rep("0", desired_zeros)
+					prev_outer_data = lookup_data(prev_outer_num)
 					if prev_outer_data then
-						prev_outer_num = outer_num
 						break
 					end
 				end
