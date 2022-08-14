@@ -1190,10 +1190,13 @@ def do_pagefile_cats_refs(args, start, end, process, default_cats=[],
       return process(index, pagetitle, text)
 
   # Process a page read from Wiktionary using Pywikibot (as opposed to a page read from stdin, either from find_regex
-  # output or from a dump file).
-  def process_pywikibot_page(index, page):
+  # output or from a dump file). `no_check_seen` means to not check the `seen` set to see whether a page has already
+  # been seen. This is set when iterating over categories because the code to do this adds to the `seen` set itself
+  # (necessary because it can recursively process subcategories) so if we check the `seen` set we'll never process any
+  # pages.
+  def process_pywikibot_page(index, page, no_check_seen=False):
     pagetitle = unicode(page.title())
-    if seen is not None:
+    if not no_check_seen and seen is not None:
       if pagetitle in seen:
         return
       seen.add(pagetitle)
@@ -1289,15 +1292,15 @@ def do_pagefile_cats_refs(args, start, end, process, default_cats=[],
         if args.do_cat_and_subcats:
           for index, subcat in cat_subcats(cat, start, end, seen=seen, prune_cats_regex=args_prune_cats,
               do_this_page=True, recurse=args.recursive):
-            process_pywikibot_page(index, subcat)
+            process_pywikibot_page(index, subcat, no_check_seen=True)
         elif args.do_subcats:
           for index, subcat in cat_subcats(cat, start, end, seen=seen, prune_cats_regex=args_prune_cats,
               do_this_page=False, recurse=args.recursive):
-            process_pywikibot_page(index, subcat)
+            process_pywikibot_page(index, subcat, no_check_seen=True)
         else:
           for index, page in cat_articles(cat, start, end, seen=seen, prune_cats_regex=args_prune_cats,
               recurse=args.recursive, track_seen=args.track_seen):
-            process_pywikibot_page(index, page)
+            process_pywikibot_page(index, page, no_check_seen=True)
     if args.refs:
       for ref in split_utf8_arg(args.refs):
         # We don't use ref_namespaces here because the user might not want it.
@@ -1327,8 +1330,8 @@ def do_pagefile_cats_refs(args, start, end, process, default_cats=[],
     if not default_cats and not default_refs:
       raise ValueError("One of --pages, --pagefile, --cats, --refs, --specials, --contribs or --prefix-pages should be specified")
     for cat in default_cats:
-      for index, page in cat_articles(cat, start, end, track_seen=args.track_seen):
-        process_pywikibot_page(index, page)
+      for index, page in cat_articles(cat, start, end, seen=seen, track_seen=args.track_seen):
+        process_pywikibot_page(index, page, no_check_seen=True)
     for ref in default_refs:
       for index, page in references(ref, start, end, namespaces=ref_namespaces):
         process_pywikibot_page(index, page)
