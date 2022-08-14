@@ -17,6 +17,8 @@ local form_types = {
 local non_form_types = {
 	numeral = true,
 	wplink = true,
+	next = true,
+	prev = true,
 }
 
 local function track(page)
@@ -30,6 +32,16 @@ end
 
 local function power_of(n)
 	return "1" .. string.rep("0", n)
+end
+
+-- Format a number (either a Lua number or a string) in fixed point without any decimal point or scientific notation.
+-- `tostring()` doesn't work because it converts large numbers such as 1000000000000000 to "1e+15".
+function export.format_fixed(number)
+	if type(number) == "string" then
+		return number
+	else
+		return ("%.0f"):format(number)
+	end
 end
 
 -- Parse a term with modifiers such as 'vuitanta-vuit<tag:Central>' or 'سیزده<tr:sizdah>'
@@ -61,6 +73,54 @@ end
 
 local function get_term(data_module_term)
 	return export.parse_term_and_modifiers(data_module_term).term
+end
+
+-- Find the `numbers` object for a given number (which should be in string representation).
+function export.lookup_data(m_data, numstr)
+	-- Don't try to convert very large numbers to Lua numbers because they may overflow.
+	-- Powers of 10 >= 10^22 cannot be represented exactly as a Lua number.
+	return m_data.numbers[numstr] or #numstr < 22 and m_data.numbers[tonumber(numstr)] or nil
+end
+
+-- Given the data for a language and a number (which should be in string representation), find the next and previous
+-- numbers to display (in string representation).
+local function get_next_and_prev_keys(m_data, numstr)
+	local numdata = export.lookup_data(m_data, numstr)
+	if num numdata then
+		return nil, nil
+	end
+	local nextnum = numdata.next
+	local prevnum = numdata.prev
+	if not nextnum or not prevnum then
+		-- Find the next/previous numbers by sorting all the keys and locating the number in question among them.
+		local sorted_list = {}
+		local index = 1
+		for key, _ in pairs(m_data.numbers) do
+			sorted_list[index] = key
+			index = index + 1
+		end
+
+		table.sort(sorted_list, export.numbers_less_than)
+
+		-- We could binary search to save time, but given that we already sort, which is supra-linear, it won't
+		-- matter to search linearly.
+		for i, key in ipairs(sorted_list) do
+			if key == num then
+				nextnum = nextnum or sorted_list[i + 1]
+				prevnum = prevnum or sorted_list[i - 1]
+				break
+			end
+		end
+	end
+
+	if nextnum then
+		nextnum = export.format_fixed(nextnum)
+	end
+	if prevnum then
+		prevnum = export.format_fixed(prevnum)
+	end
+
+	return nextnum, prevnum
 end
 
 -- Construct a map from number forms to a description object (a two-element list of {TYPE, NUMBER}, where NUMBER is
@@ -122,13 +182,6 @@ function export.lookup_number_by_form(lang, m_data, str)
 	end
 
 	return m_data.form_to_number[lang:makeEntryName(str)]
-end
-
--- Find the `numbers` object for a given number (which should be in string representation).
-function export.lookup_data(m_data, numstr)
-	-- Don't try to convert very large numbers to Lua numbers because they may overflow.
-	-- Powers of 10 >= 10^22 cannot be represented exactly as a Lua number.
-	return m_data.numbers[numstr] or #numstr < 22 and m_data.numbers[tonumber(numstr)] or nil
 end
 
 local function index_of_number_type(t, type)
@@ -258,16 +311,6 @@ function export.generate_non_arabic_numeral(numeral_config, numstr)
 	end)
 end
 
--- Format a number (either a Lua number or a string) in fixed point without any decimal point or scientific notation.
--- `tostring()` doesn't work because it converts large numbers such as 1000000000000000 to "1e+15".
-function export.format_fixed(number)
-	if type(number) == "string" then
-		return number
-	else
-		return ("%.0f"):format(number)
-	end
-end
-
 -- Format a number (either a Lua number or a string) for display. Sufficiently small numbers are displayed in fixed
 -- point with thousands separators. Larger numbers are displayed in both fixed point and scientific notation using
 -- superscripts, and sufficiently large numbers are displayed only in scientific notation.
@@ -314,33 +357,27 @@ function export.numbers_less_than(a, b)
 	return a < b
 end
 
+local function term_equals_pagename(term, pagename, m_data, lang)
+	local entry_name = lang:makeEntryName(term)
+	return entry_name == pagename or maybe_unsuffix(m_data, entry_name) == pagename
+end
+
 -- Given a list of forms with attached inline modifiers (e.g. 'huitanta-huit<tag:Valencian>'), parse the forms into
--- form objects (the return value of parse_term_and_modifiers()) and group by the tag. Four values are returned:
--- `seen_forms`, `forms_by_tag`, `seen_tags`, `cur_tag` where:
+-- form objects (the return value of parse_term_and_modifiers()) and group by the tag. Three values are returned:
+-- `seen_forms`, `forms_by_tag`, `seen_tags` where:
 -- (1) `seen_forms` is the list of parsed form objects;
 -- (2) `forms_by_tag` is a table grouping the form objects by tag, where the key is the tag and the value is a list of
 --      the form objects seen with that tag (forms without tag are grouped under the empty-string tag);
--- (3) `seen_tags` is a list of the tags encountered, in the order they were encountered;
--- (4) `cur_tag` is the tag of the form that matches the current pagename.
--- `cur_tag` is only non-nil if `pagename` (the current pagename) is specified; in that case, `m_data` and `lang` must
--- also be given, containing respectively the data object for the current language and the language object for that
--- language. If multiple forms match the current pagename, the tag of the first matching form is returned.
-function export.group_numeral_forms_by_tag(forms, pagename, m_data, lang)
+-- (3) `seen_tags` is a list of the tags encountered, in the order they were encountered.
+function export.group_numeral_forms_by_tag(forms)
 	local seen_forms = {}
 	local forms_by_tag = {}
 	local seen_tags = {}
-	local cur_tag
 
 	for _, form in ipairs(forms) do
 		local formobj = export.parse_term_and_modifiers(form)
 		table.insert(seen_forms, formobj)
 		local tag = formobj.tag or ""
-		if not cur_tag and pagename then
-			local entry_name = lang:makeEntryName(formobj.term)
-			if (entry_name == pagename or maybe_unsuffix(m_data, entry_name) == pagename) then
-				cur_tag = tag
-			end
-		end
 		if not forms_by_tag[tag] then
 			table.insert(seen_tags, tag)
 			forms_by_tag[tag] = {}
@@ -348,7 +385,7 @@ function export.group_numeral_forms_by_tag(forms, pagename, m_data, lang)
 		table.insert(forms_by_tag[tag], formobj)
 	end
 
-	return seen_forms, forms_by_tag, seen_tags, cur_tag
+	return seen_forms, forms_by_tag, seen_tags
 end
 
 -- Given a form object (as returned by parse_term_and_modifiers()), format as appropriate for the current language.
@@ -369,6 +406,8 @@ function export.show_box(frame)
 		[2] = {},
 		["pagename"] = {},
 		["type"] = {},
+		["next"] = {},
+		["prev"] = {},
 	}
 
 	local parent_args = frame:getParent().args
@@ -458,13 +497,15 @@ function export.show_box(frame)
 				numerals = numeral
 			end
 
-			local seen_forms, forms_by_tag, seen_tags, this_cur_tag = export.group_numeral_forms_by_tag(numerals, pagename, m_data, lang)
+			local seen_forms, forms_by_tag, seen_tags = export.group_numeral_forms_by_tag(numerals)
 			forms_by_tag_per_form_type[form_type] = forms_by_tag
 			seen_tags_per_form_type[form_type] = seen_tags
-			if this_cur_tag and not cur_type then
-				cur_type = form_type.key
+			for _, formobj in ipairs(seen_forms) do
+				if not cur_tag and term_equals_pagename(formobj.term, pagename, m_data, lang) then
+					cur_tag = formobj.tag or ""
+					cur_type = cur_type or form_type.key
+				end
 			end
-			cur_tag = cur_tag or this_cur_tag
 		end
 	end
 	
@@ -475,12 +516,16 @@ function export.show_box(frame)
 			local function insert_forms_by_tag(tag)
 				local formatted_tag_forms = {}
 
+				local pagename_among_forms = false
 				for _, formobj in ipairs(forms_by_tag[tag]) do
 					table.insert(formatted_tag_forms, export.format_formobj(formobj, m_data, lang))
+					if term_equals_pagename(formobj.term, pagename, m_data, lang) then
+						pagename_among_forms = true
+					end
 				end
 
 				local displayed_number_type = export.display_number_type(form_type) .. (tag == "" and "" or (" (%s)"):format(tag))
-				if form_type.key == cur_type and tag == cur_tag then
+				if pagename_among_forms then
 					displayed_number_type = "'''" .. displayed_number_type .. "'''"
 				end
 
@@ -518,6 +563,29 @@ function export.show_box(frame)
 		cur_display = full_link({lang = lang, alt = numeral, tr = "-"}) .. "<br/><span style=\"font-size: smaller;\">" .. cur_display .. "</span>"
 	end
 
+	-- We have three series of numbers to determine:
+	--
+	-- 1. The next/previous numbers, which are always those in the sorted series of available numbers unless overridden
+	--    by `next`/`prev` specs in an individual number.
+	-- 2. The next/previous outer numbers, which are displayed to the outside of the next/previous numbers. These can
+	--    be overridden for an individual number using `next_outer`/`prev_outer`. Otherwise, we try for the following
+	--    numbers in order, making sure in each case that the number is available and greater than the next/prev number;
+	--    otherwise we try the next number in the series.
+	--    a. If the base-10 mantissa is 1 through 9, the corresponding number with the mantissa one greater or less, and
+	--       the same number of zeros. Hence, for 300, we try 400 for the next outer, 200 for the previous outer. For
+	--       900, we try 1000 for the next outer and 800 for the previous outer. For 100 we try 200 for the next outer
+	--       but there is no previous outer at this step.
+	--    b. If the base-10 mantissa is 1 (i.e. the number is an exact power of 10), we try 10x greater and less.
+	--    c. If the base-10 mantissa is 1 (i.e. the number is an exact power of 10), we try 100x greater and less.
+	--    d. (repeat up to 1,000,000x, i.e. 10^6, greater and less)
+	-- 3. The upper/lower numbers, which are displayed above or below the central number box. These can be overridden
+	--    for an individual number using `upper`/`lower`. These are always a power of ten greater or less than the
+	--    number in question. We try up to 1,000,000x, i.e. 10^6, greater and less, not considering a number if it's
+	--    unavailable or is the same as the next/previous or next/previous outer number.
+	--
+	--
+	--
+	--    otherwise we 
 	-- We want a series of numbers like this:
 	-- 1, 2, ..., 9, 10, 11, 12, ..., 99, 100, 200, ..., 900, 1000, 2000, ..., 9000, 10000, 20000, ..., etc.
 	--
