@@ -27,7 +27,7 @@ local function track(page)
 end
 
 function export.get_data_module_name(language_code)
-	return "Module:User:Benwing2/number list/data/" .. language_code
+	return "Module:number list/data/" .. language_code
 end
 
 local function power_of(n)
@@ -71,10 +71,6 @@ function export.parse_term_and_modifiers(data_module_term)
 	return retval
 end
 
-local function get_term(data_module_term)
-	return export.parse_term_and_modifiers(data_module_term).term
-end
-
 -- Find the `numbers` object for a given number (which should be in string representation).
 function export.lookup_data(m_data, numstr)
 	-- Don't try to convert very large numbers to Lua numbers because they may overflow.
@@ -86,7 +82,7 @@ end
 -- numbers to display (in string representation).
 local function get_next_and_prev_keys(m_data, numstr)
 	local numdata = export.lookup_data(m_data, numstr)
-	if num numdata then
+	if not numdata then
 		return nil, nil
 	end
 	local nextnum = numdata.next
@@ -105,7 +101,7 @@ local function get_next_and_prev_keys(m_data, numstr)
 		-- We could binary search to save time, but given that we already sort, which is supra-linear, it won't
 		-- matter to search linearly.
 		for i, key in ipairs(sorted_list) do
-			if key == num then
+			if export.format_fixed(key) == numstr then
 				nextnum = nextnum or sorted_list[i + 1]
 				prevnum = prevnum or sorted_list[i - 1]
 				break
@@ -123,65 +119,37 @@ local function get_next_and_prev_keys(m_data, numstr)
 	return nextnum, prevnum
 end
 
--- Construct a map from number forms to a description object (a two-element list of {TYPE, NUMBER}, where NUMBER is
--- either a Lua number or a string, depending on how it appears in the underlying data). If the same form corresponds
--- to more than one number, the table contains a list of description objects; otherwise it just contains a description
--- object directly.
-local function construct_form_to_type_and_number(lang, number_data)
-	local form_to_data = {}
-	local function ins_type_and_number(form, typ, num)
-		form = lang:makeEntryName(get_term(form))
-		local newel = {typ, num}
-		if form_to_data[form] then
-			local existing = form_to_data[form]
-			if type(existing) == "table" and type(existing[1]) == "table" then
-				-- already a list of elements; insert if not already present
-				local already_seen = false
-				for _, existel in ipairs(existing) do
-					if existel[1] == typ and existel[2] == num then
-						already_seen = true
-						break
-					end
-				end
-				if not already_seen then
-					table.insert(existing, newel)
-				end
-			elseif existing[1] == typ and existing[2] == num then
-				-- already present for this number and type (possible if terms differ but entry names are the same)
-			else
-				form_to_data[form] = {existing, newel}
-			end
-		else
-			form_to_data[form] = newel
+-- Find the "description objects" (a two-element list {NUMBER, TYPE}, where NUMBER is either a Lua number or a string,
+-- depending on how it appears in the underlying data) that matches `pagename` and (if given) `matching_type`.
+-- Return a list of such objects.
+local function lookup_number_by_form(lang, m_data, pagename, matching_type)
+	local retval = {}
+	local function check_form(form, num, typ)
+		form = lang:makeEntryName(export.parse_term_and_modifiers(form).term)
+		if form == pagename and (not matching_type or typ == matching_type) then
+			-- It's possible the same pagename occurs multiply for a given type and number, e.g. with different length
+			-- or accent marks. The calling code is OK with multiple entries for a given number (which can also occur
+			-- with different types, e.g. the ordinal and fractional forms for a given number are the same), but will
+			-- throw an error if different numbers are seen.
+			table.insert(retval, {num, typ})
 		end
 	end
 
-	for num, numdata in pairs(number_data) do
+	for num, numdata in pairs(m_data.numbers) do
 		for numtype, forms in pairs(numdata) do
 			if non_form_types[numtype] then
 				-- do nothing
 			elseif type(forms) == "table" then
 				for _, form in ipairs(forms) do
-					ins_type_and_number(form, numtype, num)
+					check_form(form, num, numtype)
 				end
 			else
-				ins_type_and_number(forms, numtype, num)
+				check_form(forms, num, numtype)
 			end
 		end
 	end
 
-	return form_to_data
-end
-
--- Find the "description object" (a two-element list {TYPE, NUMBER}, where NUMBER is either a Lua number or a string,
--- depending on how it appears in the underlying data) for a number form. The return value is either such a description
--- object or (if multiple description objects match a given form) a list of such objects.
-function export.lookup_number_by_form(lang, m_data, str)
-	if not m_data.form_to_number then
-		m_data.form_to_number = construct_form_to_type_and_number(lang, m_data.numbers)
-	end
-
-	return m_data.form_to_number[lang:makeEntryName(str)]
+	return retval
 end
 
 local function index_of_number_type(t, type)
@@ -197,9 +165,9 @@ end
 -- the numeral type that the form should appear before or after.
 -- The transformations are applied in order.
 local function add_form_types(additional_types)
-	local types = require "Module:table".deepcopy(form_types)
+	local types = require("Module:table").deepcopy(form_types)
 	for _, type in ipairs(additional_types) do
-		type = require "Module:table".shallowcopy(type)
+		type = require("Module:table").shallowcopy(type)
 		local i
 		if type.before or type.after then
 			i = index_of_number_type(types, type.before or type.after)
@@ -310,6 +278,7 @@ function export.generate_non_arabic_numeral(numeral_config, numstr)
 		return mw.ustring.char(zero_codepoint + tonumber(digit))
 	end)
 end
+
 
 -- Format a number (either a Lua number or a string) for display. Sufficiently small numbers are displayed in fixed
 -- point with thousands separators. Larger numbers are displayed in both fixed point and scientific notation using
@@ -424,14 +393,14 @@ function export.show_box(frame)
 	local langcode = args[1] or "und"
 	local lang = require("Module:languages").getByCode(langcode, "1")
 
-	-- Get the data from the data module. Some modules (e.g. currently [[Module:number lista/data/ka]]) have to be
+	-- Get the data from the data module. Some modules (e.g. currently [[Module:number list/data/ka]]) have to be
 	-- loaded with require() because the exported numbers table has a metatable.
 	local module_name = export.get_data_module_name(langcode)
 	local m_data = require(module_name)
 
 	local pagename = args.pagename or (mw.title.getCurrentTitle().nsText == "Reconstruction" and "*" or "") .. mw.title.getCurrentTitle().subpageText
 
-	local cur_type
+	local cur_type = args.type
 
 	-- We represent all numbers as strings in this function to deal with the limited precision inherent in Lua numbers.
 	-- These large numbers do occur, such as 100 trillion ([[རབ་བཀྲམ་ཆེན་པོ]]), 1 sextillion, etc. Lua represents all
@@ -442,39 +411,51 @@ function export.show_box(frame)
 	-- Wiktionary does not seem to have any such library installed. MediaWiki docs make mention of bcmath, but
 	-- mw.bcmath.new() throws an error.
 	--
-	-- In module data, we allow numbers to be indexed as Lua numbers or as strings. See lookup_data() below.
+	-- In module data, we allow numbers to be indexed as Lua numbers or as strings. See lookup_data() above.
 	local cur_num = args[2] or langcode == "und" and mw.title.getCurrentTitle().nsText == "Template" and "2" or nil
+
+	-- If a current number wasn't specified, find it by looking through the data for the current language and matching
+	-- forms against the pagename.
 	if not cur_num then
-		local type_and_num = export.lookup_number_by_form(lang, m_data, pagename)
-		if not type_and_num then
+		local nums_and_types = lookup_number_by_form(lang, m_data, pagename, cur_type)
+		if #nums_and_types == 0 then
 			error("The current page name '" .. pagename .. "' does not match the spelling of any known number in [[" ..
 				module_name .. "]]. Check the data module or the spelling of the page.")
 		end
-		if type(type_and_num) == "table" and type(type_and_num[1]) == "table" then
-			local errparts = {}
-			for _, type_num in ipairs(type_and_num) do
-				local typ, num = unpack(type_num)
-				table.insert(errparts, ("%s (%s)"):format(typ, num))
+		for _, num_and_type in ipairs(nums_and_types) do
+			local num, typ = unpack(num_and_type)
+			num = export.format_fixed(num)
+			if cur_num and num ~= cur_num then
+				local errparts = {}
+				for _, num_and_type in ipairs(nums_and_types) do
+					local num, typ = unpack(num_and_type)
+					table.insert(errparts, ("%s (%s)"):format(num, typ))
+				end
+				error("The current page name '" .. pagename .. "' matches the spelling of multiple numbers in [[" ..
+					module_name .. "]]: " .. table.concat(errparts, ",") .. ". Please specify the number explicitly.")
+			else
+				cur_num = num
 			end
-			error("The current page name '" .. pagename .. "' matches the spelling of multiple numbers in [[" ..
-				module_name .. "]]: " .. table.concat(errparts, ",") .. ". Please specify the number explicitly.")
 		end
-		cur_type, cur_num = unpack(type_and_num)
-		cur_num = export.format_fixed(cur_num)
 	end
 
-	cur_type = args.type or cur_type
 	cur_num = cur_num:gsub(",", "") -- remove thousands separators
-	if not cur_num:find "^%d+$" then
+	if not cur_num:find("^%d+$") then
 		error("Extraneous characters in parameter 2: should be decimal number (integer): '" .. cur_num .. "'")
 	end
 
-	local function lookup_data(numstr)
-		return export.lookup_data(m_data, numstr)
+	-- Wrapper around `export.lookup_data` that may throw an error if the number can't be found (specifically if
+	-- param_for_error is given).
+	local function lookup_data(numstr, param_for_error)
+		local retval = export.lookup_data(m_data, numstr)
+		if not retval and param_for_error then
+			error(('The %s number "%s" specified in the "numbers" table entry for "%s" cannot be found in '
+				.. "[[%s]]; please fix the module."):format(param_for_error, numstr, cur_num, module_name))
+		end
+		return retval
 	end
 
 	local cur_data = lookup_data(cur_num)
-
 	if not cur_data then
 		error('The number "' .. cur_num .. '" is not found in the "numbers" table in [[' .. module_name .. "]].")
 	end
@@ -487,10 +468,15 @@ function export.show_box(frame)
 
 	local cur_tag
 
+	local form_types = export.get_number_types(langcode)
+
+	-- For each form type (see `form_types` at top of file), group the entries for that form type by tag and figure out
+	-- what the current form type and tag is, i.e. the form type and tag for the form matching the pagename. Tags are
+	-- e.g. as in 'vuitanta-vuit<tag:Central>' or 'huitanta-huit<tag:Valencian>' for Catalan and allow different
+	-- logical sets of numbers for the same form type to be identified.
+
 	local forms_by_tag_per_form_type = {}
 	local seen_tags_per_form_type = {}
-
-	local form_types = export.get_number_types(langcode)
 
 	for _, form_type in ipairs(form_types) do
 		local numeral = cur_data[form_type.key]
@@ -513,7 +499,17 @@ function export.show_box(frame)
 			end
 		end
 	end
-	
+
+	-- Error if we couldn't locate the pagename among the forms for the current number. This only happens if the
+	-- number if given explicitly in 2=.
+
+	if not cur_type and mw.title.getCurrentTitle().nsText ~= "Template" then
+		error("The current page name '" .. pagename .. "' does not match any of the numbers listed in [[" ..
+			module_name .. "]] for " .. cur_num .. ". Check the data module or the spelling of the page.")
+	end
+
+	-- Now, format all the forms for all form types for the current number.
+
 	for _, form_type in ipairs(form_types) do
 		local forms_by_tag = forms_by_tag_per_form_type[form_type]
 		local seen_tags = seen_tags_per_form_type[form_type]
@@ -549,11 +545,6 @@ function export.show_box(frame)
 		end
 	end
 
-	if not cur_type and mw.title.getCurrentTitle().nsText ~= "Template" then
-		error("The current page name '" .. pagename .. "' does not match any of the numbers listed in [[" ..
-			module_name .. "]] for " .. cur_num .. ". Check the data module or the spelling of the page.")
-	end
-
 	-- Current number in header
 	local cur_display = export.format_number_for_display(cur_num)
 
@@ -567,6 +558,8 @@ function export.show_box(frame)
 	if numeral then
 		cur_display = full_link({lang = lang, alt = numeral, tr = "-"}) .. "<br/><span style=\"font-size: smaller;\">" .. cur_display .. "</span>"
 	end
+
+	--------------------- Determine next/prev, next/prev outer, and upper/lower numbers. ----------------------
 
 	-- We have three series of numbers to determine:
 	--
@@ -582,15 +575,19 @@ function export.show_box(frame)
 	--       same but for the previous outer we use 9 followed by one fewer zero. Hence, for 100 we try 200 for the next
 	--       outer but 90 for the previous outer. If the mantissa is 0 (i.e. the entire number is 0), we try 10 for the
 	--       next outer, and have no previous outer.
-	--    b. We try 10x greater and (if there is at least one zero) 10x less.
-	--    c. We try 100x greater and (if there is at least one zero) 100x less.
+	--    b. If the number is an even power of 10, we try 10x greater and (if there is at least one zero) 10x less.
+	--    c. If the number is an even power of 10, we try 100x greater and (if there is at least one zero) 100x less.
 	--    d. (repeat up to 1,000,000x, i.e. 10^6, greater and less)
 	-- 3. The upper/lower numbers, which are displayed above or below the central number box. These can be overridden
 	--    for an individual number using `upper`/`lower`. These are always a power of ten greater or less than the
-	--    number in question. We try up to 1,000,000x, i.e. 10^6, greater and less, not considering a number if it's
-	--    unavailable or is the same as the next/previous or next/previous outer number.
-	local next_data, prev_data
+	--    number in question. We try up to 1,000,000x, i.e. 10^6, greater and less, stopping at the first available number
+	--    not considering a number if it's the same as the next/previous number.
+
 	local next_num, prev_num = get_next_and_prev_keys(m_data, cur_num)
+	local next_data = next_num and lookup_data(next_num, "next")
+	local prev_data = prev_num and lookup_data(prev_num, "previous")
+
+	--------- Decompose number into mantisssa (k) and exponent (m). ----------
 
 	local k, m
 	if cur_num == "0" then
@@ -608,44 +605,66 @@ function export.show_box(frame)
 		m = #mstr
 	end
 
+	-- Find the next greater power of 10 for cur_num, up to 10^6. `try` should look up the data for a power of 10
+	-- and return it if it's available and the number passes any checks, otherwise nil.
+	local function find_greater_power_of_ten(try)
+		local num, data
+		for i = 1, 6 do
+			num = cur_num .. string.rep("0", i)
+			data = try(num)
+			if data then
+				return num, data
+			end
+		end
+		return nil, nil
+	end
+
+	-- Find the next lesser power of 10 for cur_num, up to 10^6. `try` should look up the data for a power of 10
+	-- and return it if it's available and the number passes any checks, otherwise nil.
+	local function find_lesser_power_of_ten(try)
+		local num, data
+		for i = 1, 6 do
+			local desired_zeros = m - i
+			if desired_zeros < 0 then
+				break
+			end
+			num = k .. string.rep("0", desired_zeros)
+			data = try(num)
+			if data then
+				return num, data
+			end
+		end
+		return nil, nil
+	end
+
+
 	local next_outer_data, prev_outer_data
 	local next_outer_num, prev_outer_num = cur_data.next_outer, cur_data.prev_outer
+
+	--------- Determine next outer number. ----------
 	if next_outer_num then
-		next_outer_data = lookup_data(next_outer_num)
-		if not next_outer_data then
-			error(('The next outer number "%s" specified in the "numbers" table entry for "%s" cannot be found in '
-				.. "[[%s]]; please fix the module."):format(next_outer_num, cur_num, module_name))
-		end
+		next_outer_data = lookup_data(next_outer_num, "next outer")
 	else
 		local function try(num)
 			return (not next_num or export.numbers_greater_than(num, next_num)) and lookup_data(num) or nil
 		end
 		next_outer_num = (k + 1) .. string.rep("0", m)
 		next_outer_data = try(next_outer_num)
-		if not next_outer_data then
+		if not next_outer_data and k == 1 then
 			-- Try looking up a greater power of ten instead, adding up to 6 zeros.
-			for i = 1, 6 do
-				next_outer_num = cur_num .. string.rep("0", i)
-				next_outer_data = try(next_outer_num)
-				if next_outer_num then
-					break
-				end
-			end
+			next_outer_num, next_outer_data = find_greater_power_of_ten(try)
 		end
 	end
 
+	--------- Determine previous outer number. ----------
 	if prev_outer_num then
-		prev_outer_data = lookup_data(prev_outer_num)
-		if not prev_outer_data then
-			error(('The previous outer number "%s" specified in the "numbers" table entry for "%s" cannot be found in '
-				.. "[[%s]]; please fix the module."):format(prev_outer_num, cur_num, module_name))
-		end
+		prev_outer_data = lookup_data(prev_outer_num, "previous outer")
 	else
 		local function try(num)
 			return (not prev_num or export.numbers_less_than(num, prev_num)) and lookup_data(num) or nil
 		end
-		if k == 0 then
-			-- no previous outer num
+		if k == 0 or m == 0 then
+			-- less than 10; no previous outer num
 		else
 			if k == 1 then
 				prev_outer_num = "9" .. string.rep("0", m - 1)
@@ -653,20 +672,39 @@ function export.show_box(frame)
 				prev_outer_num = (k - 1) .. string.rep("0", m)
 			end
 			prev_outer_data = try(prev_outer_num)
-			if not prev_outer_data then
+			if not prev_outer_data and k == 1 then
 				-- Try looking up a smaller power of ten instead, removing up to 6 zeros.
-				for i = 1, 6 do
-					local desired_zeros = m - i
-					if desired_zeros < 0 then
-						break
-					end
-					prev_outer_num = k .. string.rep("0", desired_zeros)
-					prev_outer_data = lookup_data(prev_outer_num)
-					if prev_outer_data then
-						break
-					end
-				end
+				prev_outer_num, prev_outer_data = find_lesser_power_of_ten(try)
 			end
+		end
+	end
+
+	local upper_data, lower_data
+	local upper_num, lower_num = cur_data.upper, cur_data.lower
+
+	--------- Determine upper number. ----------
+	if upper_num then
+		upper_data = lookup_data(upper_num, "upper")
+	else
+		-- Try looking up a greater power of ten, adding up to 6 zeros.
+		upper_num, upper_data = find_greater_power_of_ten(lookup_data)
+		if upper_num == next_num then
+			upper_num = nil
+			upper_data = nil
+		end
+	end
+
+	--------- Determine lower number. ----------
+	if lower_num then
+		lower_data = lookup_data(lower_num, "lower")
+	elseif k == 0 or m == 0 then
+		-- less than 10; no lower num
+	else
+		-- Try looking up a lesser power of ten, removing up to 6 zeros.
+		lower_num, lower_data = find_lesser_power_of_ten(lookup_data)
+		if lower_num == prev_num then
+			lower_num = nil
+			lower_data = nil
 		end
 	end
 
@@ -750,24 +788,8 @@ function export.show_box(frame)
 	local next_outer_display = display_entries(next_outer_num, next_outer_data, "&nbsp;&nbsp;→&nbsp;")
 
 	-- Link to number times ten and divided by ten
-	-- Show this only if the number is a power of ten times a number 1-9 (that is, of the form x000...)
-	local up_display
-	local down_display
-
-	if cur_num:find("^[1-9]0*$") then
-		up_num = cur_num .. "0"
-		if up_num ~= next_num then -- don't duplicate the next number (to the right) in the up number
-			up_display = display_entries(up_num, lookup_data(up_num), "")
-		end
-
-		-- Only divide by 10 if the number is a multiple of 10
-		if cur_num:find("0$") then
-			local down_num = cur_num:gsub("0$", "")
-			if down_num ~= prev_num then -- don't duplicate the previous number (to the left) in the down number
-				down_display = display_entries(down_num, lookup_data(down_num), "")
-			end
-		end
-	end
+	local upper_display = display_entries(upper_num, upper_data, "")
+	local lower_display = display_entries(lower_num, lower_data, "")
 
 	local canonical_name = lang:getCanonicalName()
 	local appendix1 = canonical_name .. " numerals"
@@ -795,7 +817,7 @@ function export.show_box(frame)
 	end
 
 	local has_outer_display = not not (prev_outer_display or next_outer_display)
-	local function format_up_down_display_row(display)
+	local function format_upper_lower_display_row(display)
 		local blank_cell
 		if has_outer_display then
 			blank_cell = '| colspan="2" |\n'
@@ -809,8 +831,8 @@ function export.show_box(frame)
 		return table.concat(parts)
 	end
 
-	up_display = up_display and format_up_down_display_row(up_display) or ""
-	down_display = down_display and format_up_down_display_row(down_display) or ""
+	upper_display = upper_display and format_upper_lower_display_row(upper_display) or ""
+	lower_display = lower_display and format_upper_lower_display_row(lower_display) or ""
 
 	local function format_display_cell(display)
 		return format_cell(display, "smaller", "#dddddd")
@@ -842,9 +864,9 @@ function export.show_box(frame)
 
 	return [=[{| class="floatright" cellpadding="5" cellspacing="0" style="background: #ffffff; border: 1px #aaa solid; border-collapse: collapse; margin-top: .5em;" rules="all"
 |+ ''']=] .. title .. edit_link .. "'''\n" ..
-	up_display .. '|- style="text-align: center;"\n' ..
+	upper_display .. '|- style="text-align: center;"\n' ..
 	prev_outer_display .. prev_display .. cur_display .. next_display .. next_outer_display .. "|-\n" ..
-	down_display .. "|-\n" ..
+	lower_display .. "|-\n" ..
 	forms_display .. footer_display .. "|}"
 end
 
