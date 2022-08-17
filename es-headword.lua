@@ -279,18 +279,22 @@ local function do_adjective(args, data, tracking_categories, is_superlative)
 			require("Module:table").serialCommaJoin(indicators, {dontTag = true}) .. ": " .. args.sp)
 	end
 
+	local argsf = args.f or {}
+	local argspl = args.pl or {}
+	local argsmpl = args.mpl or {}
+	local argsfpl = args.fpl or {}
+
 	if args.inv then
 		-- invariable adjective
 		table.insert(data.inflections, {label = "invariable"})
 		table.insert(data.categories, langname .. " indeclinable adjectives")
-		if args.sp or #args.f > 0 or #args.pl > 0 or #args.mpl > 0 or #args.fpl > 0 then
+		if args.sp or #argsf > 0 or #argspl > 0 or #argsmpl > 0 or #argsfpl > 0 then
 			error("Can't specify inflections with an invariable adjective")
 		end
 	else
 		local lemma = m_links.remove_links(data.heads[1] or PAGENAME)
 
 		-- Gather feminines.
-		local argsf = args.f
 		if #argsf == 0 then
 			argsf = {"+"}
 		end
@@ -304,9 +308,6 @@ local function do_adjective(args, data, tracking_categories, is_superlative)
 			table.insert(feminines, f)
 		end
 
-		local argspl = args.pl
-		local argsmpl = args.mpl
-		local argsfpl = args.fpl
 		if #argspl > 0 and (#argsmpl > 0 or #argsfpl > 0) then
 			error("Can't specify both pl= and mpl=/fpl=")
 		end
@@ -453,7 +454,7 @@ pos_functions["comparative adjectives"] = {
 		["mpl"] = {list = true}, --masculine plural override(s)
 	},
 	func = function(args, data, tracking_categories)
-		return do_adjective(args, data, tracking_categories)
+		return do_adjective(args, data, tracking_categories, false)
 	end
 }
 
@@ -469,6 +470,18 @@ pos_functions["superlative adjectives"] = {
 	},
 	func = function(args, data, tracking_categories)
 		return do_adjective(args, data, tracking_categories, true)
+	end
+}
+
+
+pos_functions["past participles"] = {
+	params = {
+		[1] = {}, --FIXME: ignore this until we've fixed the uses
+		["inv"] = {type = "boolean"}, --invariable
+		["sp"] = {}, -- special indicator: "first", "first-last", etc.
+	},
+	func = function(args, data, tracking_categories)
+		return do_adjective(args, data, tracking_categories, false)
 	end
 }
 
@@ -833,16 +846,45 @@ pos_functions["verbs"] = {
 			end
 		end
 
-		local function get_headword_inflection(forms)
-			if not forms or #forms == 0 then
-				forms = {{form = "-"}}
-			end
-			return forms
+		local specforms = alternant_multiword_spec.forms
+		local function slot_exists(slot)
+			return specforms[slot] and #specforms[slot] > 0
 		end
 
-		preses = get_headword_inflection(alternant_multiword_spec.forms.pres_1s)
-		prets = get_headword_inflection(alternant_multiword_spec.forms.pret_1s)
-		parts = get_headword_inflection(alternant_multiword_spec.forms.pp_ms)
+		local function do_finite(slot_tense, label_tense)
+			-- Use pres_3s if it exists and pres_1s doesn't exist (e.g. impersonal verbs); similarly for pres_3p (only3p verbs);
+			-- but fall back to pres_1s if neither pres_1s nor pres_3s nor pres_3p exist (e.g. [[empedernir]]).
+			local has_1s = slot_exists(slot_tense .. "_1s")
+			local has_3s = slot_exists(slot_tense .. "_3s")
+			local has_3p = slot_exists(slot_tense .. "_3p")
+			if has_1s or (not has_3s and not has_3p) then
+				return {
+					slot = slot_tense .. "_1s",
+					label = ("first-person singular %s"):format(label_tense),
+					accel = ("1|s|%s|ind"):format(slot_tense),
+				}
+			elseif has_3s then
+				return {
+					slot = slot_tense .. "_3s",
+					label = ("third-person singular %s"):format(label_tense),
+					accel = ("3|s|%s|ind"):format(slot_tense),
+				}
+			else
+				return {
+					slot = slot_tense .. "_3p",
+					label = ("third-person plural %s"):format(label_tense),
+					accel = ("3|p|%s|ind"):format(slot_tense),
+				}
+			end
+		end
+
+		preses = do_finite("pres", "present")
+		prets = do_finite("pret", "preterite")
+		parts = {
+			slot = "pp_ms",
+			label = "past participle",
+			accel = "m|s|past|part"
+		}
 
 		if #args.pres > 0 or #args.pret > 0 or #args.part > 0 then
 			track("verb-old-multiarg")
@@ -863,11 +905,14 @@ pos_functions["verbs"] = {
 			return stripped_qualifiers
 		end
 
-		local function do_verb_form(args, qualifiers, current_forms, label, accel_form)
+		local function do_verb_form(args, qualifiers, slot_desc)
 			local forms
 
 			if #args == 0 then
-				forms = current_forms
+				forms = specforms[slot_desc.slot]
+				if not forms or #forms == 0 then
+					forms = {{form = "-"}}
+				end
 			elseif #args == 1 and args[1] == "-" then
 				forms = {{form = "-"}}
 			else
@@ -888,10 +933,10 @@ pos_functions["verbs"] = {
 			end
 
 			if forms[1].form == "-" then
-				return {label = "no " .. label}
+				return {label = "no " .. slot_desc.label}
 			else
-				local into_table = {label = label}
-				local accel = {form = accel_form}
+				local into_table = {label = slot_desc.label}
+				local accel = {form = slot_desc.accel}
 				for _, form in ipairs(forms) do
 					local qualifiers = strip_brackets(form.footnotes)
 					-- Strip redundant brackets surrounding entire form. These may get generated e.g.
@@ -905,12 +950,17 @@ pos_functions["verbs"] = {
 			end
 		end
 
-		table.insert(data.inflections, do_verb_form(args.pres, args.pres_qual, preses,
-			"first-person singular present", "1|s|pres|ind"))
-		table.insert(data.inflections, do_verb_form(args.pret, args.pret_qual, prets,
-			"first-person singular preterite", "1|s|pret|ind"))
-		table.insert(data.inflections, do_verb_form(args.part, args.part_qual, parts,
-			"past participle", "m|s|past|part"))
+		if alternant_multiword_spec.only3s then
+			table.insert(data.inflections, {label = glossary_link("impersonal")})
+		elseif alternant_multiword_spec.only3sp then
+			table.insert(data.inflections, {label = "third-person only"})
+		elseif alternant_multiword_spec.only3p then
+			table.insert(data.inflections, {label = "third-person plural only"})
+		end
+	
+		table.insert(data.inflections, do_verb_form(args.pres, args.pres_qual, preses))
+		table.insert(data.inflections, do_verb_form(args.pret, args.pret_qual, prets))
+		table.insert(data.inflections, do_verb_form(args.part, args.part_qual, parts))
 	end
 }
 
