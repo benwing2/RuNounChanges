@@ -1087,7 +1087,7 @@ def args_has_non_default_pages(args):
 #
 # If canonicalize_pagename is given, it should be a function of one argument, which is called on pagenames specified
 # on the command line using --pages or read from a file using --pagefile.
-def do_pagefile_cats_refs(args, start, end, process, default_cats=[],
+def do_pagefile_cats_refs(args, start, end, process, default_pages=[],default_cats=[],
     default_refs=[], edit=False, stdin=False, only_lang=None,
     filter_pages=None, ref_namespaces=None, canonicalize_pagename=None, skip_ignorable_pages=False):
   args_ref_namespaces = args.ref_namespaces and args.ref_namespaces.decode("utf-8").split(",")
@@ -1327,8 +1327,10 @@ def do_pagefile_cats_refs(args, start, end, process, default_cats=[],
           process_pywikibot_page(index, page)
 
   else:
-    if not default_cats and not default_refs:
+    if not default_pages and not default_cats and not default_refs:
       raise ValueError("One of --pages, --pagefile, --cats, --refs, --specials, --contribs or --prefix-pages should be specified")
+    for index, pagetitle in iter_items(default_pages, start, end):
+      process_pywikibot_page(index, pywikibot.Page(site, pagetitle))
     for cat in default_cats:
       for index, page in cat_articles(cat, start, end, seen=seen, track_seen=args.track_seen):
         process_pywikibot_page(index, page, no_check_seen=True)
@@ -1993,7 +1995,7 @@ def find_lang_section(pagename, lang, pagemsg, errandpagemsg):
 #    sections[j] = secbody.rstrip("\n") + sectail
 #    text = "".join(sections)
 def find_modifiable_lang_section(text, lang, pagemsg, force_final_nls=False):
-  sections = re.split("(^==[^=]*==\n)", text, 0, re.M)
+  sections = re.split("(^==[^=\n]+==\n)", text, 0, re.M)
 
   has_non_lang = False
 
@@ -2018,29 +2020,41 @@ def find_modifiable_lang_section(text, lang, pagemsg, force_final_nls=False):
   secbody, sectail = split_trailing_separator_and_categories(sections[j])
 
   if force_final_nls:
-    m = re.search(r"\A(.*?)(\n*)\Z", secbody, re.S)
-    secbody, secbody_finalnl = m.groups()
-    secbody += "\n\n"
-    sectail = secbody_finalnl + sectail
+    secbody, sectail = force_two_newlines_in_secbody(secbody, sectail)
 
   return sections, j, secbody, sectail, has_non_lang
 
-def split_trailing_separator_and_categories(sectext):
-  # Extract off trailing separator
+def split_trailing_separator(sectext):
   mm = re.match(r"^(.*?\n)(\n*--+\n*)$", sectext, re.S)
   if mm:
     secbody, sectail = mm.group(1), mm.group(2)
   else:
     secbody = sectext
     sectail = ""
+  return secbody, sectail
 
-  # Split off categories at end
+def split_trailing_categories(secbody, sectail):
   mm = re.match(r"^(.*?\n)(\n*((?:\[\[[Cc]ategory:[^\[\]\n]+\]\]|\{\{(?:c|C|cat|cln|top|topic|topics|categorize|catlangname|catlangcode)\|[^{}\n]*\}\})\n*)*)$",
       secbody, re.S)
   if mm:
     secbody, secbodytail = mm.group(1), mm.group(2)
     sectail = secbodytail + sectail
+  return secbody, sectail
 
+def split_trailing_separator_and_categories(sectext):
+  # Extract off trailing separator
+  secbody, sectail = split_trailing_separator(sectext)
+
+  # Split off categories at end
+  secbody, sectail = split_trailing_categories(secbody, sectail)
+
+  return secbody, sectail
+
+def force_two_newlines_in_secbody(secbody, sectail):
+  m = re.search(r"\A(.*?)(\n*)\Z", secbody, re.S)
+  secbody, secbody_finalnl = m.groups()
+  secbody += "\n\n"
+  sectail = secbody_finalnl + sectail
   return secbody, sectail
 
 def split_text_into_sections(pagetext, lang):
