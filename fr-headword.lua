@@ -247,7 +247,7 @@ local additional_allowed_pronoun_genders = {
 	["p"] = true, -- mf-p doesn't make sense for e.g. [[iels]]/[[ielles]]
 }
 
-local function get_noun_pos(is_proper)
+local function get_noun_pos(pos)
 	return {
 		params = {
 			[1] = {},
@@ -263,7 +263,13 @@ local function get_noun_pos(is_proper)
 			},
 		func = function(args, data)
 			local lemma = data.pagename
-			local pos = is_proper and "proper nouns" or "nouns"
+			local is_proper = pos == "proper nouns"
+
+			if pos == "cardinal nouns" then
+				pos = "numerals"
+				data.pos_category = "numerals"
+				table.insert(data.categories, 1, langname .. " cardinal numbers")
+			end
 
 			-- Gather genders
 			table.insert(data.genders, args[1])
@@ -444,9 +450,9 @@ local function get_noun_pos(is_proper)
 	}
 end
 
-pos_functions["nouns"] = get_noun_pos(false)
-
-pos_functions["proper nouns"] = get_noun_pos(true)
+for _, noun_pos in ipairs { "nouns", "proper nouns", "cardinal nouns" } do
+	pos_functions[noun_pos] = get_noun_pos(noun_pos)
+end
 
 local function get_pronoun_pos()
 	return {
@@ -593,6 +599,12 @@ local function do_adjective(pos)
 			end
 			if args.onlyg then
 				table.insert(data.categories, langname .. " defective " .. pos)
+			end
+
+			if pos == "cardinal adjectives" then
+				pos = "numerals"
+				data.pos_category = "numerals"
+				table.insert(data.categories, 1, langname .. " cardinal numbers")
 			end
 
 			local function process_inflection(label, arg, accel, get_default, explicit_default_only)
@@ -760,6 +772,7 @@ end
 
 pos_functions["adjectives"] = do_adjective("adjectives")
 pos_functions["past participles"] = do_adjective("participles")
+pos_functions["cardinal adjectives"] = do_adjective("cardinal adjectives")
 
 pos_functions["verbs"] = {
 	param1_is_head = true,
@@ -807,6 +820,18 @@ pos_functions["verbs"] = {
 			end
 		end
 	end
+}
+
+pos_functions["cardinal invariable"] = {
+	return {
+		params = {},
+		func = function(args, data)
+			data.pos_category = "numerals"
+			table.insert(data.categories, langname .. " cardinal numbers")
+			table.insert(data.categories, langname .. " indeclinable numerals")
+			table.insert(data.inflections, {label = glossary_link("invariable")})
+		end,
+	}
 }
 
 return export
