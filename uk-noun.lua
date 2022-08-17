@@ -882,7 +882,7 @@ declprops["j-n"] = {
 }
 
 
-decls["fourth-n"] = function(base, stress)
+decls["ja-n"] = function(base, stress)
 	local loc_sg = rfind(stress.vowel_stem, "['й]$") and "ї" or "і"
 	if stress_patterns[stress.stress].loc_sg == "-" then
 		loc_sg = {"ю", loc_sg}
@@ -903,14 +903,14 @@ decls["fourth-n"] = function(base, stress)
 	end
 end
 
-declprops["fourth-n"] = {
-	desc = "4th-decl neut-form",
-	cat = "fourth-declension neuter-form",
+declprops["ja-n"] = {
+	desc = "neut in -ja",
+	cat = {"soft neuter nouns in -я", "soft neuter ~ nouns in -я"},
 }
 
 
 decls["en-n"] = function(base, stress)
-	decls["fourth-n"](base, stress)
+	decls["ja-n"](base, stress)
 	local n_stem = rsub(stress.vowel_stem, "'$", "ен")
 	add(base, "gen_s", stress, "і", nil, n_stem)
 	add(base, "dat_s", stress, "і", nil, n_stem)
@@ -1754,9 +1754,9 @@ local function determine_declension_and_gender(base)
 		elseif base.neutertype == "t" then
 			base.decl = "t-n"
 		elseif base.gender == "N" then
-			base.decl = "fourth-n"
+			base.decl = "ja-n"
 		elseif not base.gender and (rfind(stem, "'$") or rfind(stem, "(.)%1$")) then
-			base.decl = "fourth-n"
+			base.decl = "ja-n"
 			base.gender = "N"
 		elseif rfind(stem, com.vowel_c .. AC .. "?$") or rfind(stem, "['ьй]$") then
 			base.decl = "j-f"
