@@ -378,7 +378,7 @@ def get_items(lines):
     else:
       yield m.groups()
 
-for _, (index, pagetitle, spec) in blib.iter_items(get_items(lines), start, end, get_name=lambda x:x[1], get_index=lambda x:x[0]):
+for _, (index, pagetitle, spec) in blib.iter_items(get_items(lines), start, end, get_name=lambda x:x[1], get_index=lambda x:int(x[0])):
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
   page = pywikibot.Page(site, pagetitle)
