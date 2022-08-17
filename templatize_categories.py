@@ -6,7 +6,7 @@ import pywikibot, re, sys, codecs, argparse
 import blib
 from blib import getparam, rmparam, tname, pname, msg, site
 
-def process_text_on_page(index, pagetitle, text, lang, langname):
+def process_text_on_page(index, pagetitle, text, lang, langname, topicstemp):
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
@@ -37,7 +37,6 @@ def process_text_on_page(index, pagetitle, text, lang, langname):
     notes.append("replace underscores with spaces in [[Category:%s_...]]" % langname)
     text = newtext
 
-  topicstemp = args.topics_template
   newtext = re.sub(r"\[\[Category:%s:([^|\[\]{}]*)\|([^|\[\]{}]*)\]\]" % lang, r"{{%s|%s|\1|sort=\2}}" % (topicstemp, lang), text)
   if newtext != text:
     notes.append("templatize topical categories with sort key for lang=%s using {{%s}}" % (lang, topicstemp))
@@ -81,13 +80,14 @@ def process_text_on_page(index, pagetitle, text, lang, langname):
 
   return text, notes
 
-parser = blib.create_argparser(u"Templatize categories", include_pagefile=True, include_stdin=True)
-parser.add_argument("--lang", help="Code of language to templatize", required=True)
-parser.add_argument("--langname", help="Name of language to templatize", required=True)
-parser.add_argument("--topics-template", help="Name of topics template to use", default="C")
-args = parser.parse_args()
-start, end = blib.parse_start_end(args.start, args.end)
+if __name__ == "__main__":
+  parser = blib.create_argparser(u"Templatize categories", include_pagefile=True, include_stdin=True)
+  parser.add_argument("--lang", help="Code of language to templatize", required=True)
+  parser.add_argument("--langname", help="Name of language to templatize", required=True)
+  parser.add_argument("--topics-template", help="Name of topics template to use", default="C")
+  args = parser.parse_args()
+  start, end = blib.parse_start_end(args.start, args.end)
 
-def do_process_text_on_page(index, pagetitle, text):
-  return process_text_on_page(index, pagetitle, text, args.lang, args.langname)
-blib.do_pagefile_cats_refs(args, start, end, do_process_text_on_page, default_cats=[args.langname + " lemmas"], edit=True, stdin=True)
+  def do_process_text_on_page(index, pagetitle, text):
+    return process_text_on_page(index, pagetitle, text, args.lang, args.langname, args.topics_template)
+  blib.do_pagefile_cats_refs(args, start, end, do_process_text_on_page, default_cats=[args.langname + " lemmas"], edit=True, stdin=True)
