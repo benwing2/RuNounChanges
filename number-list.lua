@@ -26,8 +26,8 @@ local function track(page)
 	return true
 end
 
-function export.get_data_module_name(language_code)
-	return "Module:number list/data/" .. language_code
+function export.get_data_module_name(langcode)
+	return "Module:number list/data/" .. langcode
 end
 
 local function power_of(n)
@@ -44,30 +44,30 @@ function export.format_fixed(number)
 	end
 end
 
--- Parse a term with modifiers such as 'vuitanta-vuit<tag:Central>' or 'سیزده<tr:sizdah>'
+-- Parse a form with modifiers such as 'vuitanta-vuit<tag:Central>' or 'سیزده<tr:sizdah>'
 -- or 'سیزده<tr:sizdah><tag:Iranian>' into its component parts. Return a form object, i.e. an object with fields
--- `term` for the term, and `tr`, `tag`, `q` or `qq` for the modifiers.
-function export.parse_term_and_modifiers(data_module_term)
+-- `form` for the form, and `tr`, `tag`, `q` or `qq` for the modifiers.
+function export.parse_form_and_modifiers(form_with_modifiers)
 	local retval = {}
-	local term
-	term = data_module_term
+	local form
+	form = form_with_modifiers
 	while true do
-		local new_term, angle_bracketed = term:match("^(.-)(%b<>)$")
-		if not new_term then
+		local new_form, angle_bracketed = form:match("^(.-)(%b<>)$")
+		if not new_form then
 			break
 		end
 		local prefix, content = angle_bracketed:match "^<(%w+):(.+)>$"
 		if not prefix then
 			break
 		end
-		if prefix == "q" or prefix == "qq" or prefix == "tr" or prefix == "tag" then
+		if prefix == "q" or prefix == "qq" or prefix == "tr" or prefix == "tag" or prefix == "link" then
 			retval[prefix] = content
 		else
-			error(("Unrecognized modified '%s' in data module term: %s"):format(prefix, data_module_term))
+			error(("Unrecognized modifier '%s' in data module form: %s"):format(prefix, form_with_modifiers))
 		end
-		term = new_term
+		form = new_form
 	end
-	retval.term = term
+	retval.form = form
 	return retval
 end
 
@@ -76,6 +76,58 @@ function export.lookup_data(m_data, numstr)
 	-- Don't try to convert very large numbers to Lua numbers because they may overflow.
 	-- Powers of 10 >= 10^22 cannot be represented exactly as a Lua number.
 	return m_data.numbers[numstr] or #numstr < 22 and m_data.numbers[tonumber(numstr)] or nil
+end
+
+-- Return true if a < b, where either may be a Lua number or the string representation of a number.
+function export.numbers_less_than(a, b)
+	a, b = export.format_fixed(a), export.format_fixed(b)
+	local alen = #a
+	local blen = #b
+	if alen < blen then
+		return true
+	end
+	if alen > blen then
+		return false
+	end
+	return a < b
+end
+
+-- Return true if a > b, where either may be a Lua number or the string representation of a number.
+function export.numbers_greater_than(a, b)
+	return export.numbers_less_than(b, a)
+end
+
+-- Given a number form, convert it to its independent (un-affixed) form. This only makes sense for certain languages
+-- where there is a difference between independent and affixed forms of numerals. Currently the only such language
+-- is Swahili, where e.g. the cardinal number form for 3 is affixed [[-tatu]], independent [[tatu]], and the ordinal
+-- number form is [[-a tatu]], independent [[tatu]]. We rely on a set of Lua pattern substitutions to convert from
+-- affixed to independent form.
+--
+-- FIXME: This needs major rethinking in a way that isn't specific to Swahili.
+local function maybe_unaffix(m_data, form)
+	if not m_data.unaffix then
+		return form
+	end
+	for _, entry in ipairs(m_data.unaffix) do
+		local from, to = unpack(entry)
+		form = mw.ustring.gsub(form, from, to)
+	end
+	return form
+end
+
+-- Convert the given number form (taken from the data for `lang`, after parsing the form for modifiers and stripping
+-- the modifiers) to an entry name. The form may have links and/or accent/length marks that need to be stripped.
+local function form_to_entry_name(form, lang)
+	return lang:makeEntryName(m_links.remove_links(form))
+end
+
+-- Return true if the given number form (taken from the data for `lang`, after parsing the form for modifiers and
+-- stripping the modifiers) matches `pagename`. The form may have links and/or accent/length marks that need to be
+-- stripped, and we may need to convert the form to its independent (un-affixed) form, if there is a difference between
+-- independent and affixed forms (as in Swahili).
+local function form_equals_pagename(form, pagename, m_data, lang)
+	local entry_name = form_to_entry_name(form, lang)
+	return entry_name == pagename or maybe_unaffix(m_data, entry_name) == pagename
 end
 
 -- Given the data for a language and a number (which should be in string representation), find the next and previous
@@ -125,8 +177,8 @@ end
 local function lookup_number_by_form(lang, m_data, pagename, matching_type)
 	local retval = {}
 	local function check_form(form, num, typ)
-		form = lang:makeEntryName(export.parse_term_and_modifiers(form).term)
-		if form == pagename and (not matching_type or typ == matching_type) then
+		form = export.parse_form_and_modifiers(form).form
+		if form_equals_pagename(form, pagename, m_data, lang) and (not matching_type or typ == matching_type) then
 			-- It's possible the same pagename occurs multiply for a given type and number, e.g. with different length
 			-- or accent marks. The calling code is OK with multiple entries for a given number (which can also occur
 			-- with different types, e.g. the ordinal and fractional forms for a given number are the same), but will
@@ -194,8 +246,9 @@ local function add_form_types(additional_types)
 	return types
 end
 
-function export.get_number_types(language_code)
-	local m_data = require(export.get_data_module_name(language_code))
+-- Return all form types for the language in question, in order.
+function export.get_number_types(langcode)
+	local m_data = require(export.get_data_module_name(langcode))
 	local final_form_types = form_types
 	if m_data.additional_number_types then
 		final_form_types = add_form_types(m_data.additional_number_types)
@@ -203,23 +256,13 @@ function export.get_number_types(language_code)
 	return final_form_types
 end
 
+-- Convert a number type object (an object with `display` and `key` fields) to its displayed form.
 function export.display_number_type(number_type)
 	if number_type.display then
 		return number_type.display
 	else
 		return (number_type.key:gsub("^.", string.upper):gsub("_", " "))
 	end
-end
-
-local function maybe_unsuffix(m_data, term)
-	if not m_data.unsuffix then
-		return term
-	end
-	for _, entry in ipairs(m_data.unsuffix) do
-		local from, to = unpack(entry)
-		term = mw.ustring.gsub(term, from, to)
-	end
-	return term
 end
 
 -- Group digits with a separator, such as a comma or a period. See [[w:Digit grouping]].
@@ -312,32 +355,8 @@ function export.format_number_for_display(number)
 	end
 end
 
--- Return true if a < b, where either may be a Lua number or the string representation of a number.
-function export.numbers_less_than(a, b)
-	a, b = export.format_fixed(a), export.format_fixed(b)
-	local alen = #a
-	local blen = #b
-	if alen < blen then
-		return true
-	end
-	if alen > blen then
-		return false
-	end
-	return a < b
-end
-
--- Return true if a > b, where either may be a Lua number or the string representation of a number.
-function export.numbers_greater_than(a, b)
-	return export.numbers_less_than(b, a)
-end
-
-local function term_equals_pagename(term, pagename, m_data, lang)
-	local entry_name = lang:makeEntryName(term)
-	return entry_name == pagename or maybe_unsuffix(m_data, entry_name) == pagename
-end
-
 -- Given a list of forms with attached inline modifiers (e.g. 'huitanta-huit<tag:Valencian>'), parse the forms into
--- form objects (the return value of parse_term_and_modifiers()) and group by the tag. Three values are returned:
+-- form objects (the return value of parse_form_and_modifiers()) and group by the tag. Three values are returned:
 -- `seen_forms`, `forms_by_tag`, `seen_tags` where:
 -- (1) `seen_forms` is the list of parsed form objects;
 -- (2) `forms_by_tag` is a table grouping the form objects by tag, where the key is the tag and the value is a list of
@@ -349,7 +368,7 @@ function export.group_numeral_forms_by_tag(forms)
 	local seen_tags = {}
 
 	for _, form in ipairs(forms) do
-		local formobj = export.parse_term_and_modifiers(form)
+		local formobj = export.parse_form_and_modifiers(form)
 		table.insert(seen_forms, formobj)
 		local tag = formobj.tag or ""
 		if not forms_by_tag[tag] then
@@ -362,12 +381,12 @@ function export.group_numeral_forms_by_tag(forms)
 	return seen_forms, forms_by_tag, seen_tags
 end
 
--- Given a form object (as returned by parse_term_and_modifiers()), format as appropriate for the current language.
+-- Given a form object (as returned by parse_form_and_modifiers()), format as appropriate for the current language.
 function export.format_formobj(formobj, m_data, lang)
 	local left_q = formobj.q and require("Module:qualifier").format_qualifier(formobj.q) .. " " or ""
 	local right_q = formobj.qq and " " .. require("Module:qualifier").format_qualifier(formobj.qq) or ""
 	return left_q .. m_links.full_link({
-		lang = lang, term = maybe_unsuffix(m_data, formobj.term), alt = formobj.term, tr = formobj.tr,
+		lang = lang, term = maybe_unaffix(m_data, formobj.form), alt = formobj.form, tr = formobj.tr,
 	}) .. right_q
 end
 
@@ -492,7 +511,7 @@ function export.show_box(frame)
 			forms_by_tag_per_form_type[form_type] = forms_by_tag
 			seen_tags_per_form_type[form_type] = seen_tags
 			for _, formobj in ipairs(seen_forms) do
-				if not cur_tag and term_equals_pagename(formobj.term, pagename, m_data, lang) then
+				if not cur_tag and form_equals_pagename(formobj.form, pagename, m_data, lang) then
 					cur_tag = formobj.tag or ""
 					cur_type = cur_type or form_type.key
 				end
@@ -520,7 +539,7 @@ function export.show_box(frame)
 				local pagename_among_forms = false
 				for _, formobj in ipairs(forms_by_tag[tag]) do
 					table.insert(formatted_tag_forms, export.format_formobj(formobj, m_data, lang))
-					if term_equals_pagename(formobj.term, pagename, m_data, lang) then
+					if form_equals_pagename(formobj.form, pagename, m_data, lang) then
 						pagename_among_forms = true
 					end
 				end
@@ -566,22 +585,11 @@ function export.show_box(frame)
 	-- 1. The next/previous numbers, which are always those in the sorted series of available numbers unless overridden
 	--    by `next`/`prev` specs in an individual number.
 	-- 2. The next/previous outer numbers, which are displayed to the outside of the next/previous numbers. These can
-	--    be overridden for an individual number using `next_outer`/`prev_outer`. Otherwise, we try for the following
-	--    numbers in order, making sure in each case that the number is available and greater than the next/prev number;
-	--    otherwise we try the next number in the series.
-	--    a. If the base-10 mantissa is not 1 or 0, we add 1 to or subtract 1 from the mantissa, keeping the same number
-	--       of zeros. Hence, for 300, we try 400 for the next outer, 200 for the previous outer. For 900, we try 1000
-	--       for the next outer and 800 for the previous outer. If the mantissa is 1, the next outer is computed the
-	--       same but for the previous outer we use 9 followed by one fewer zero. Hence, for 100 we try 200 for the next
-	--       outer but 90 for the previous outer. If the mantissa is 0 (i.e. the entire number is 0), we try 10 for the
-	--       next outer, and have no previous outer.
-	--    b. If the number is an even power of 10, we try 10x greater and (if there is at least one zero) 10x less.
-	--    c. If the number is an even power of 10, we try 100x greater and (if there is at least one zero) 100x less.
-	--    d. (repeat up to 1,000,000x, i.e. 10^6, greater and less)
+	--    be overridden for an individual number using `next_outer`/`prev_outer`. Otherwise, we try according to an
+	--    algorithm described below in the code for computing the outer numbers.
 	-- 3. The upper/lower numbers, which are displayed above or below the central number box. These can be overridden
-	--    for an individual number using `upper`/`lower`. These are always a power of ten greater or less than the
-	--    number in question. We try up to 1,000,000x, i.e. 10^6, greater and less, stopping at the first available number
-	--    not considering a number if it's the same as the next/previous number.
+	--    for an individual number using `upper`/`lower`. These are always 10x greater or less than the number in
+	--    question, number not considering a number if it's the same as the next/previous number.
 
 	local next_num, prev_num = get_next_and_prev_keys(m_data, cur_num)
 	local next_data = next_num and lookup_data(next_num, "next")
@@ -607,52 +615,62 @@ function export.show_box(frame)
 
 	-- Find the next greater power of 10 for cur_num, up to 10^6. `try` should look up the data for a power of 10
 	-- and return it if it's available and the number passes any checks, otherwise nil.
-	local function find_greater_power_of_ten(try)
-		local num, data
-		for i = 1, 6 do
-			num = cur_num .. string.rep("0", i)
-			data = try(num)
-			if data then
-				return num, data
-			end
-		end
-		return nil, nil
+	local function make_greater_power_of_ten(power)
+		return cur_num .. string.rep("0", power)
 	end
 
 	-- Find the next lesser power of 10 for cur_num, up to 10^6. `try` should look up the data for a power of 10
 	-- and return it if it's available and the number passes any checks, otherwise nil.
-	local function find_lesser_power_of_ten(try)
-		local num, data
-		for i = 1, 6 do
-			local desired_zeros = m - i
-			if desired_zeros < 0 then
-				break
-			end
-			num = k .. string.rep("0", desired_zeros)
-			data = try(num)
-			if data then
-				return num, data
-			end
+	local function make_lesser_power_of_ten(power)
+		local desired_zeros = m - power
+		if desired_zeros < 0 then
+			return nil
 		end
-		return nil, nil
+		return k .. string.rep("0", desired_zeros)
 	end
 
 
 	local next_outer_data, prev_outer_data
 	local next_outer_num, prev_outer_num = cur_data.next_outer, cur_data.prev_outer
 
+	-- When trying to find then next/previous outer numbers, first, if the base-10 mantissa is not 1 or 0, we add 1 to
+	-- or subtract 1 from the mantissa, keeping the same number of zeros. Hence, for 300, we try 400 for the next outer,
+	-- 200 for the previous outer. For 900, we try 1000 for the next outer and 800 for the previous outer. If the
+	-- mantissa is 1, the next outer is computed the same but for the previous outer we use 9 followed by one fewer
+	-- zero. Hence, for 100 we try 200 for the next outer but 90 for the previous outer. If the mantissa is 0 (i.e. the
+	-- entire number is 0), we try 10 for the next outer, and have no previous outer.
+	--
+	-- Next, if the number is an even power of 10, we try 10x, 1000x greater, 100x greater and 1,000,000x greater, in
+	-- that sequence. Essentially, first we try the next power of 10; then we try the next short-scale number (billion,
+	-- trillion, etc. where large numbers follow a 10^3 sequence); then we try the next long-scale number (where large
+	-- numbers follow a 10^6 sequence); then we try the next Indic-scale number (where large numbers follow a 10^2
+	-- sequence: lakh, crore, arab, ...). We don't just try powers of 10 in order because then if e.g. we have entries
+	-- for one million, ten million, one hundred million and one billion, and the current number is one million, the
+	-- next number will be ten million and the next outer number one hundred million, when it would be cleaner to have
+	-- one billion as the outer number (and in many cases, there is no Wiktionary entry for one hundred million).
+	--
+	-- For the previous outer number, we do an analogous algorithm but make sure we don't try numbers less than 1.
+	local power_of_10_sequence = { 1, 3, 2, 6 }
+
 	--------- Determine next outer number. ----------
 	if next_outer_num then
 		next_outer_data = lookup_data(next_outer_num, "next outer")
 	else
 		local function try(num)
-			return (not next_num or export.numbers_greater_than(num, next_num)) and lookup_data(num) or nil
+			local data = (not next_num or export.numbers_greater_than(num, next_num)) and lookup_data(num) or nil
+			if data then
+				next_outer_num = num
+				next_outer_data = data
+			end
+			return data
 		end
-		next_outer_num = (k + 1) .. string.rep("0", m)
-		next_outer_data = try(next_outer_num)
-		if not next_outer_data and k == 1 then
-			-- Try looking up a greater power of ten instead, adding up to 6 zeros.
-			next_outer_num, next_outer_data = find_greater_power_of_ten(try)
+		if not try((k + 1) .. string.rep("0", m)) and k == 1 then
+			-- Try looking up a greater power of ten instead.
+			for _, power_of_10 in ipairs(power_of_10_sequence) do
+				if try(make_greater_power_of_ten(power_of_10)) then
+					break
+				end
+			end
 		end
 	end
 
@@ -661,20 +679,30 @@ function export.show_box(frame)
 		prev_outer_data = lookup_data(prev_outer_num, "previous outer")
 	else
 		local function try(num)
-			return (not prev_num or export.numbers_less_than(num, prev_num)) and lookup_data(num) or nil
+			local data = (not prev_num or export.numbers_less_than(num, prev_num)) and lookup_data(num) or nil
+			if data then
+				prev_outer_num = num
+				prev_outer_data = data
+			end
+			return data
 		end
 		if k == 0 or m == 0 then
 			-- less than 10; no previous outer num
 		else
+			local num_to_try
 			if k == 1 then
-				prev_outer_num = "9" .. string.rep("0", m - 1)
+				num_to_try = "9" .. string.rep("0", m - 1)
 			else
-				prev_outer_num = (k - 1) .. string.rep("0", m)
+				num_to_try = (k - 1) .. string.rep("0", m)
 			end
-			prev_outer_data = try(prev_outer_num)
-			if not prev_outer_data and k == 1 then
-				-- Try looking up a smaller power of ten instead, removing up to 6 zeros.
-				prev_outer_num, prev_outer_data = find_lesser_power_of_ten(try)
+			if not try(num_to_try) and k == 1 then
+				-- Try looking up a smaller power of ten instead.
+				for _, power_of_10 in ipairs(power_of_10_sequence) do
+					local num_to_try = make_lesser_power_of_ten(power_of_10)
+					if num_to_try and try(num_to_try) then
+						break
+					end
+				end
 			end
 		end
 	end
@@ -686,11 +714,12 @@ function export.show_box(frame)
 	if upper_num then
 		upper_data = lookup_data(upper_num, "upper")
 	else
-		-- Try looking up a greater power of ten, adding up to 6 zeros.
-		upper_num, upper_data = find_greater_power_of_ten(lookup_data)
+		-- Try looking up the next power of ten.
+		upper_num = make_greater_power_of_ten(1)
 		if upper_num == next_num then
 			upper_num = nil
-			upper_data = nil
+		else
+			upper_data = lookup_data(upper_num)
 		end
 	end
 
@@ -700,11 +729,12 @@ function export.show_box(frame)
 	elseif k == 0 or m == 0 then
 		-- less than 10; no lower num
 	else
-		-- Try looking up a lesser power of ten, removing up to 6 zeros.
-		lower_num, lower_data = find_lesser_power_of_ten(lookup_data)
+		-- Try looking up the previous power or 10.
+		lower_num = make_lesser_power_of_ten(1)
 		if lower_num == prev_num then
 			lower_num = nil
-			lower_data = nil
+		else
+			lower_data = lookup_data(lower_num)
 		end
 	end
 
@@ -735,13 +765,13 @@ function export.show_box(frame)
 		end
 
 		for i, form_to_display in ipairs(forms_to_display) do
-			forms_to_display[i] = maybe_unsuffix(m_data, form_to_display.term)
+			forms_to_display[i] = forms_to_display.link or maybe_unaffix(m_data,
+				form_to_entry_name(form_to_display.form, lang))
 		end
 
 		local seen_pagenames = {}
 		local pagenames_to_display = {}
 		for _, form in ipairs(forms_to_display) do
-			form = lang:makeEntryName(form)
 			if not seen_pagenames[form] then
 				table.insert(pagenames_to_display, form)
 				seen_pagenames[form] = true
