@@ -191,6 +191,11 @@ function export.print_table(language_code, module)
 	local errors = Array()
 
 	for number, data in require("Module:table").sortedPairs(module.numbers, m_number_list.numbers_less_than) do
+		local function check_string(val)
+			if type(val) ~= "string" then
+				error(("For number %s, Expected string but saw '%s"):format(number, mw.dumpObject(val)))
+			end
+		end
 		local number_string = m_number_list.format_fixed(number)
 
 		row(m_number_list.format_number_for_display(number_string))
@@ -202,6 +207,7 @@ function export.print_table(language_code, module)
 			numeral = data.numeral
 		end
 		if numeral then
+			check_string(numeral)
 			numeral = tag(numeral)
 			cell(numeral or "")
 		end
@@ -214,6 +220,7 @@ function export.print_table(language_code, module)
 		end
 
 		if data.wplink then
+			check_string(data.wplink)
 			cell(("[[w:%s:%s|%s]]"):format(lang:getCode(), data.wplink, data.wplink))
 		elseif has_wplink_column then
 			cell("")
