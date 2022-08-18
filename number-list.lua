@@ -121,12 +121,16 @@ local function form_to_entry_name(form, lang)
 	return lang:makeEntryName(m_links.remove_links(form))
 end
 
--- Return true if the given number form (taken from the data for `lang`, after parsing the form for modifiers and
--- stripping the modifiers) matches `pagename`. The form may have links and/or accent/length marks that need to be
--- stripped, and we may need to convert the form to its independent (un-affixed) form, if there is a difference between
--- independent and affixed forms (as in Swahili).
-local function form_equals_pagename(form, pagename, m_data, lang)
-	local entry_name = form_to_entry_name(form, lang)
+-- Return true if the given number form object (taken from the data for `lang`, after parsing the form for modifiers)
+-- matches `pagename`. If there is a <link:...> tag, we check against it. Otherwise, we check against the form itself.
+-- In this case, the form may have links and/or accent/length marks that need to be stripped, and we may need to convert
+-- the form to its independent (un-affixed) form, if there is a difference between independent and affixed forms (as in
+-- Swahili).
+local function form_equals_pagename(formobj, pagename, m_data, lang)
+	if formobj.link == pagename then
+		return true
+	end
+	local entry_name = form_to_entry_name(formobj.form, lang)
 	return entry_name == pagename or maybe_unaffix(m_data, entry_name) == pagename
 end
 
@@ -177,8 +181,8 @@ end
 local function lookup_number_by_form(lang, m_data, pagename, matching_type)
 	local retval = {}
 	local function check_form(form, num, typ)
-		form = export.parse_form_and_modifiers(form).form
-		if form_equals_pagename(form, pagename, m_data, lang) and (not matching_type or typ == matching_type) then
+		local formobj = export.parse_form_and_modifiers(form)
+		if form_equals_pagename(formobj, pagename, m_data, lang) and (not matching_type or typ == matching_type) then
 			-- It's possible the same pagename occurs multiply for a given type and number, e.g. with different length
 			-- or accent marks. The calling code is OK with multiple entries for a given number (which can also occur
 			-- with different types, e.g. the ordinal and fractional forms for a given number are the same), but will
@@ -511,7 +515,7 @@ function export.show_box(frame)
 			forms_by_tag_per_form_type[form_type] = forms_by_tag
 			seen_tags_per_form_type[form_type] = seen_tags
 			for _, formobj in ipairs(seen_forms) do
-				if not cur_tag and form_equals_pagename(formobj.form, pagename, m_data, lang) then
+				if not cur_tag and form_equals_pagename(formobj, pagename, m_data, lang) then
 					cur_tag = formobj.tag or ""
 					cur_type = cur_type or form_type.key
 				end
@@ -539,7 +543,7 @@ function export.show_box(frame)
 				local pagename_among_forms = false
 				for _, formobj in ipairs(forms_by_tag[tag]) do
 					table.insert(formatted_tag_forms, export.format_formobj(formobj, m_data, lang))
-					if form_equals_pagename(formobj.form, pagename, m_data, lang) then
+					if form_equals_pagename(formobj, pagename, m_data, lang) then
 						pagename_among_forms = true
 					end
 				end
@@ -765,7 +769,7 @@ function export.show_box(frame)
 		end
 
 		for i, form_to_display in ipairs(forms_to_display) do
-			forms_to_display[i] = forms_to_display.link or maybe_unaffix(m_data,
+			forms_to_display[i] = form_to_display.link or maybe_unaffix(m_data,
 				form_to_entry_name(form_to_display.form, lang))
 		end
 
