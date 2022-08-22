@@ -26,8 +26,12 @@ local function track(page)
 	return true
 end
 
-function export.get_data_module_name(langcode)
-	return "Module:number list/data/" .. langcode
+function export.get_data_module_name(langcode, must_exist)
+	local module_name = "Module:number list/data/" .. langcode
+	if must_exist and not mw.title.new(module_name).exists then
+		error(("Data module [[%s]] for language code '%s' does not exist"):format(module_name, langcode))
+	end
+	return module_name
 end
 
 local function power_of(n)
@@ -251,8 +255,7 @@ local function add_form_types(additional_types)
 end
 
 -- Return all form types for the language in question, in order.
-function export.get_number_types(langcode)
-	local m_data = require(export.get_data_module_name(langcode))
+function export.get_number_types(m_data)
 	local final_form_types = form_types
 	if m_data.additional_number_types then
 		final_form_types = add_form_types(m_data.additional_number_types)
@@ -403,8 +406,6 @@ function export.show_box(frame)
 		[2] = {},
 		["pagename"] = {},
 		["type"] = {},
-		["next"] = {},
-		["prev"] = {},
 	}
 
 	local parent_args = frame:getParent().args
@@ -418,7 +419,7 @@ function export.show_box(frame)
 
 	-- Get the data from the data module. Some modules (e.g. currently [[Module:number list/data/ka]]) have to be
 	-- loaded with require() because the exported numbers table has a metatable.
-	local module_name = export.get_data_module_name(langcode)
+	local module_name = export.get_data_module_name(langcode, "must exist")
 	local m_data = require(module_name)
 
 	local pagename = args.pagename or (mw.title.getCurrentTitle().nsText == "Reconstruction" and "*" or "") .. mw.title.getCurrentTitle().subpageText
@@ -491,7 +492,7 @@ function export.show_box(frame)
 
 	local cur_tag
 
-	local form_types = export.get_number_types(langcode)
+	local form_types = export.get_number_types(m_data)
 
 	-- For each form type (see `form_types` at top of file), group the entries for that form type by tag and figure out
 	-- what the current form type and tag is, i.e. the form type and tag for the form matching the pagename. Tags are
