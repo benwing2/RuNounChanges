@@ -597,7 +597,7 @@ def references(page, startsort = None, endsort = None, namespaces = None,
   pageiter = page.getReferences(only_template_inclusion = only_template_inclusion,
       namespaces = namespaces, filter_redirects = filter_redirects)
   if include_page:
-    pages = list(pageiter) + [page]
+    pages = [page] + list(pageiter)
   else:
     pages = pageiter
   for i, current in iter_items(pages, startsort, endsort):
