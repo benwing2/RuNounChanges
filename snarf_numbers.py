@@ -159,7 +159,7 @@ def process_text_on_page(index, pagetitle, text, langcodes):
   parsed = blib.parse_text(text)
   for t in parsed.filter_templates():
     def getp(param):
-      return getparam(t, param)
+      return getparam(t, param).strip()
     tn = tname(t)
     if tn in ["cardinalbox", "ordinalbox", "adverbialbox"]:
       boxtype = tn[:-3]
