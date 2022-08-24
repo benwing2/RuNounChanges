@@ -2,6 +2,23 @@ local export = {}
 
 local m_links = require("Module:links")
 
+--[=[
+
+Terminology:
+
+Number = a bare number; a mathematical entity which has different form types (e.g. cardinal, ordinal)
+Form type = a category of the forms that represent a number; examples are cardinal, ordinal, distributive, fractional
+Form = a word or expression that represents a number in a given language
+Tag = an identifier attached to a form that allows different logical subtypes of forms from the same form type to be
+      identified; e.g. 'vuitanta-vuit<tag:Central>' vs. 'huitanta-huit<tag:Valencian>' to identify variants of
+	  Catalan cardinal number 88 for different dialectal standards; there can be multiple tags per form, e.g.
+	  'tair ar ddeg<tag:vigesimal><tag:feminine>' for the Welsh number 13 where there are both decimal/vigesimal and
+	  masculine/feminine variants of this number
+Tag list = a list of tags in the order they are specified in the data, e.g. {"vigesimal", "feminine"} for the example
+           above
+Combined tag = the string representation of a tag list, using ||| to separate individual tags
+]=]
+
 local form_types = {
 	{key = "cardinal", display = "[[cardinal number|Cardinal]]"},
 	{key = "ordinal", display = "[[ordinal number|Ordinal]]"},
@@ -19,11 +36,60 @@ local non_form_types = {
 	wplink = true,
 	next = true,
 	prev = true,
+	next_outer = true,
+	prev_outer = true,
+	upper = true,
+	lower = true,
 }
 
 local function track(page)
 	require("Module:debug/track")("number list/" .. page)
 	return true
+end
+
+--[=[
+--
+-- General set intersection
+local function set_intersection(sets)
+	local intersection = {}
+	for key, _ in pairs(sets[1]) do
+		intersection[key] = true
+	end
+	for i = 2, #sets do
+		local this_set = sets[i]
+		for key, _ in pairs(intersection) do
+			if not this_set[key] then
+				-- See https://stackoverflow.com/questions/6167555/how-can-i-safely-iterate-a-lua-table-while-keys-are-being-removed
+				-- It is safe to modify or remove a key while iterating over the table.
+				intersection[key] = nil
+			end
+		end
+	end
+	return intersection
+end
+]=]
+
+local function set_intersection(set1, set2)
+	local intersection = {}
+	for key, _ in pairs(set1) do
+		intersection[key] = true
+	end
+	for key, _ in pairs(intersection) do
+		if not set2[key] then
+			-- See https://stackoverflow.com/questions/6167555/how-can-i-safely-iterate-a-lua-table-while-keys-are-being-removed
+			-- It is safe to modify or remove a key while iterating over the table.
+			intersection[key] = nil
+		end
+	end
+	return intersection
+end
+
+local function list_to_set(list)
+	local set = {}
+	for _, item in ipairs(t) do
+		set[item] = true
+	end
+	return set
 end
 
 function export.get_data_module_name(langcode, must_exist)
@@ -50,7 +116,8 @@ end
 
 -- Parse a form with modifiers such as 'vuitanta-vuit<tag:Central>' or 'سیزده<tr:sizdah>'
 -- or 'سیزده<tr:sizdah><tag:Iranian>' into its component parts. Return a form object, i.e. an object with fields
--- `form` for the form, and `tr`, `tag`, `q` or `qq` for the modifiers.
+-- `form` for the form, and `tr`, `tag`, `q`, `qq` or `link` for the modifiers. The `tag` field is a tag list
+-- (see above).
 function export.parse_form_and_modifiers(form_with_modifiers)
 	local retval = {}
 	local form
@@ -64,8 +131,19 @@ function export.parse_form_and_modifiers(form_with_modifiers)
 		if not prefix then
 			break
 		end
-		if prefix == "q" or prefix == "qq" or prefix == "tr" or prefix == "tag" or prefix == "link" then
-			retval[prefix] = content
+		if prefix == "tag" then
+			if retval.tag then
+				table.insert(retval.tag, content)
+			else
+				retval.tag = {content}
+			end
+		elseif prefix == "q" or prefix == "qq" or prefix == "tr" or prefix == "link" then
+			if retval[prefix] then
+				error(("Duplicate modifier '%s' in data module form, already saw value '%s': %s"):format(prefix,
+					retval[prefix], form_with_modifiers))
+			else
+				retval[prefix] = content
+			end
 		else
 			error(("Unrecognized modifier '%s' in data module form: %s"):format(prefix, form_with_modifiers))
 		end
@@ -126,10 +204,10 @@ local function form_to_entry_name(form, lang)
 end
 
 -- Return true if the given number form object (taken from the data for `lang`, after parsing the form for modifiers)
--- matches `pagename`. If there is a <link:...> tag, we check against it. Otherwise, we check against the form itself.
--- In this case, the form may have links and/or accent/length marks that need to be stripped, and we may need to convert
--- the form to its independent (un-affixed) form, if there is a difference between independent and affixed forms (as in
--- Swahili).
+-- matches `pagename`. If there is a <link:...> modifier, we check against it. Otherwise, we check against the form
+-- itself. In this case, the form may have links and/or accent/length marks that need to be stripped, and we may need
+-- to convert the form to its independent (un-affixed) form, if there is a difference between independent and affixed
+-- forms (as in Swahili).
 local function form_equals_pagename(formobj, pagename, m_data, lang)
 	if formobj.link == pagename then
 		return true
@@ -362,30 +440,40 @@ function export.format_number_for_display(number)
 	end
 end
 
--- Given a list of forms with attached inline modifiers (e.g. 'huitanta-huit<tag:Valencian>'), parse the forms into
--- form objects (the return value of parse_form_and_modifiers()) and group by the tag. Three values are returned:
+-- Map a list of tags to a single string that is equivalent. We need to do this because we can't easily put lists in the
+-- keys of tables.
+local function tag_list_to_combined_tag(tag_list)
+	return table.concat(tag_list, "|||")
+end
+
+-- Given a list of forms with attached inline modifiers (e.g. 'huitanta-huit<tag:Valencian>' or
+-- 'tair ar ddeg<tag:vigesimal><tag:feminine>'), parse the forms into form objects (the return value of
+-- parse_form_and_modifiers()) and group by the tag. Three values are returned:
 -- `seen_forms`, `forms_by_tag`, `seen_tags` where:
 -- (1) `seen_forms` is the list of parsed form objects;
--- (2) `forms_by_tag` is a table grouping the form objects by tag, where the key is the tag and the value is a list of
---      the form objects seen with that tag (forms without tag are grouped under the empty-string tag);
--- (3) `seen_tags` is a list of the tags encountered, in the order they were encountered.
+-- (2) `forms_by_tag` is a table grouping the form objects by combined tag, where the key is the tag and the value is
+--      a list of the form objects seen with that tag (forms without tag are grouped under the empty-string tag);
+-- (3) `seen_tags` is a list of the combined tags encountered, in the order they were encountered;
+-- (4) `combined_tags_to_tag_lists` is a map from combined tags to the corresponding tag lists.
 function export.group_numeral_forms_by_tag(forms)
 	local seen_forms = {}
-	local forms_by_tag = {}
+	local forms_by_combined_tag = {}
 	local seen_tags = {}
+	local combined_tags_to_tag_lists = {}
 
 	for _, form in ipairs(forms) do
 		local formobj = export.parse_form_and_modifiers(form)
 		table.insert(seen_forms, formobj)
-		local tag = formobj.tag or ""
-		if not forms_by_tag[tag] then
-			table.insert(seen_tags, tag)
-			forms_by_tag[tag] = {}
+		local combined_tag = formobj.tag and tag_list_to_combined_tag(formobj.tag) or ""
+		if not forms_by_tag[combined_tag] then
+			table.insert(seen_tags, combined_tag)
+			forms_by_tag[combined_tag] = {}
+			combined_tags_to_tag_lists[combined_tag] = formobj.tag or {}
 		end
 		table.insert(forms_by_tag[tag], formobj)
 	end
 
-	return seen_forms, forms_by_tag, seen_tags
+	return seen_forms, forms_by_tag, seen_tags, combined_tags_to_tag_lists
 end
 
 -- Given a form object (as returned by parse_form_and_modifiers()), format as appropriate for the current language.
@@ -490,17 +578,55 @@ function export.show_box(frame)
 		error("The numeral type " .. cur_type .. " for " .. cur_num .. " is not found in [[" .. module_name .. "]].")
 	end
 
-	local cur_tag
+	-- See above for the definition of "combined tag" and "tag list". The combined tag is just the concatenation of the
+	-- tag list with ||| between the tags.
+	local cur_tag_list, cur_combined_tag
 
 	local form_types = export.get_number_types(m_data)
 
+	-- LONG COMMENT EXPLAINING TAG HANDLING:
+	--
 	-- For each form type (see `form_types` at top of file), group the entries for that form type by tag and figure out
 	-- what the current form type and tag is, i.e. the form type and tag for the form matching the pagename. Tags are
 	-- e.g. as in 'vuitanta-vuit<tag:Central>' or 'huitanta-huit<tag:Valencian>' for Catalan and allow different
-	-- logical sets of numbers for the same form type to be identified.
+	-- logical sets of numbers for the same form type to be identified. There can potentially be multiple tags per
+	-- form, e.g. 'tair ar ddeg<tag:vigesimal><tag:feminine>' for the Welsh number 13 where there are both decimal/
+	-- vigesimal and masculine/feminine variants of this number.
+	--
+	-- We need to do two passes over all form types. In the first pass, for each form type we parse all the forms,
+	-- group them by tag, and store the results in a per-form-type table. In the second pass, we then format all forms
+	-- for all form types. The reason for doing two passes is because we need to know the current tag in order to
+	-- display a form type correctly (because we display the forms for the current tag before the forms for any other
+	-- tags), but we won't know the current tag until we have done a pass over all form types and forms of those form
+	-- types in order to determine which one matches the pagename.
+	--
+	-- We use the current tag in two ways:
+	-- 1. When displaying all the forms for a given number, we group both by form type and tag, and display the forms
+	--    for a given form type/tag combination on a single line. For a given form type, we display the forms for each
+	--    tag in the order the tags were specified in the data, except that the forms for the current tag are placed
+	--    before all others (so e.g. for Catalan, if the current tag is "Valencian", we list the Valencian form(s)
+	--    first even if the Central form(s) are listed first in the data file).
+	-- 2. When displaying links to adjacent numbers in display_adjacent_number_links(), if there aren't form(s) for the
+	--    current type, we don't display any links; but if there are mutiple tagged forms for the current type, we only
+	--    display links for the forms for the current tag if there are any such forms, otherwise we display links for
+	--    all forms of all tags.
+	--
+	-- In the presence of multiple tags, things get a bit more complicated:
+	-- 1. When displaying links to adjacent numbers, say the current tag is vigesimal+feminine, we want to prefer an
+	--    adjacent-number form that's both vigesimal and feminine, but otherwise we prefer one that's vigesimal or
+	--    feminine over one that's neither. Say the current tag is just vigesimal; we of course prefer an
+	--    adjacent-number form that's just vigesimal, but otherwise we prefer a tag that's vigesimal + either masculine
+	--    or feminine to a tag that's not vigesimal. So it seems we want the form(s) that have the maximum intersection
+	--    of tags, and if there are two different tag lists with the same number of intersecting tags (e.g. the current
+	--    tag is vigesimal+feminine and we have a choice of decimal+feminine or just vigesimal), we should prefer the
+	--    form that has fewer non-matching tags, hence we prefer the just-vigesimal form.
+	-- 2. By the same logic, when displaying all the forms for a given number, we should order by the size of the
+	--    intersection of the tag list in question with the current tag list, then inversely by the size of the tag list
+	--    (so we prefer tag lists with fewer non-matching tags), then by the order of the tag lists in the data file.
 
 	local forms_by_tag_per_form_type = {}
 	local seen_tags_per_form_type = {}
+	local combined_tags_to_tag_lists_per_form_type = {}
 
 	for _, form_type in ipairs(form_types) do
 		local numeral = cur_data[form_type.key]
@@ -512,12 +638,14 @@ function export.show_box(frame)
 				numerals = numeral
 			end
 
-			local seen_forms, forms_by_tag, seen_tags = export.group_numeral_forms_by_tag(numerals)
+			local seen_forms, forms_by_tag, seen_tags, combined_tags_to_tag_lists = export.group_numeral_forms_by_tag(numerals)
 			forms_by_tag_per_form_type[form_type] = forms_by_tag
 			seen_tags_per_form_type[form_type] = seen_tags
+			combined_tags_to_tag_lists_per_form_type[form_type] = combined_tags_to_tag_lists
 			for _, formobj in ipairs(seen_forms) do
-				if not cur_tag and form_equals_pagename(formobj, pagename, m_data, lang) then
-					cur_tag = formobj.tag or ""
+				if not cur_tag_list and form_equals_pagename(formobj, pagename, m_data, lang) then
+					cur_tag_list = formobj.tag or {}
+					cur_combined_tag = tag_list_to_combined_tag(cur_tag_list)
 					cur_type = cur_type or form_type.key
 				end
 			end
@@ -534,9 +662,40 @@ function export.show_box(frame)
 
 	-- Now, format all the forms for all form types for the current number.
 
+	local function sort_combined_tags(combined_tags, seen_tags, combined_tags_to_tag_lists)
+		local cur_tag_set = list_to_set(cur_tag_list)
+		local tags_to_order = {}
+		for i, tag in ipairs(seen_tags) do
+			tags_to_order[tag] = i
+		end
+		local function compare_tags(tag1, tag2)
+			-- See long comment above.
+			-- First compare by number of tags in common with the current tag list.
+			local tag_list1 = combined_tags_to_tag_lists[tag1]
+			local tag_list2 = combined_tags_to_tag_lists[tag2]
+			local num_common1 = set_intersection(cur_tag_set, list_to_set(tag_list1))
+			local num_common2 = set_intersection(cur_tag_set, list_to_set(tag_list2))
+			if num_common1 ~= num_common2 then
+				return num_common1 < num_common2
+			end
+			-- Then compare inversely by number of tags not in common with the current tag list (which is equivalent to
+			-- comparing by total number of tags, since tags should be distinct).
+			if #tag_list1 ~= #tag_list2 then
+				return #tag_list1 > #tag_list2
+			end
+			-- Finally, compare by the original ordering in the number data, but if a tag is the same as the current
+			-- tag, put it first, and if somehow we encounter a tag that's not in the original ordering, put it last.
+			local index1 = tag1 == cur_combined_tag and 0 or tags_to_order[tag1] or #seen_tags + 1
+			local index2 = tag2 == cur_combined_tag and 0 or tags_to_order[tag2] or #seen_tags + 1
+			return index1 < index2
+		end
+		table.sort(combined_tags, compare_tags)
+	end
+
 	for _, form_type in ipairs(form_types) do
 		local forms_by_tag = forms_by_tag_per_form_type[form_type]
 		local seen_tags = seen_tags_per_form_type[form_type]
+		local combined_tags_to_tag_lists = combined_tags_to_tag_lists_per_form_type[form_type]
 		if forms_by_tag then
 			local function insert_forms_by_tag(tag)
 				local formatted_tag_forms = {}
@@ -558,13 +717,9 @@ function export.show_box(frame)
 					table.concat(formatted_tag_forms, ", "))
 			end
 
-			if cur_tag and forms_by_tag[cur_tag] then
-				insert_forms_by_tag(cur_tag)
-			end
+			sort_combined_tags(seen_tags, seen_tags, combined_tags_to_tag_lists)
 			for _, tag in ipairs(seen_tags) do
-				if tag ~= cur_tag then
-					insert_forms_by_tag(tag)
-				end
+				insert_forms_by_tag(tag)
 			end
 		end
 	end
@@ -743,11 +898,31 @@ function export.show_box(frame)
 		end
 	end
 
-	-- Format the entry or entries associated with the current type of the number `num` (a string) with corresponding
-	-- data entry `num_data`. `arrow` is text to be inserted between the number and the textual representation of the
-	-- number. If `num_follows`, the number is appended after the textual representation; otherwise, before. Returns
-	-- nil if `num_data` is nil or there is no entry in `num_data` for the current number type.
-	local function display_entries(num, num_data, arrow, num_follows)
+	-- For a number `num` (an "adjacent" number to the current number, i.e. either next, previous, next/previous outer,
+	-- or upper/lower) with corresponding entry data `num_data`, display link(s) to the form(s) for this number that
+	-- are associated with the current type and tag. If there is a single form to be linked to, the form is linked
+	-- using the number itself as the display text; otherwise, the multiple forms are linked with superscripted [a],
+	-- [b], etc. and the number it displayed adjacent to the links. In either case, beside the number there may be an
+	-- arrow. If `arrow` == "rarrow", the format is like this:
+	--		if multiple entries:
+	--			<numeral> → <sup>[a], [b], ...</sup>
+	--		else
+	--			<numeral> →
+	-- If `arrow` == "larrow", the format is like this:
+	--		if multiple entries:
+	--			<sup>[a], [b], ...</sup> ← <numeral>
+	--		else
+	--			← <numeral>
+	-- Otherwise, the format is like this:
+	--		if multiple entries:
+	--			<numeral><sup>[a], [b], ...</sup>
+	--		else
+	--			<numeral>
+	--
+	-- Returns nil if `num_data` is nil or there is no entry in `num_data` for the current number type.
+	--
+	-- For the handling of tags in this function, see the "LONG COMMENT EXPLAINING TAG HANDLING" above.
+	local function display_adjacent_number_links(num, num_data, arrow)
 		if not num_data then
 			return nil
 		end
@@ -755,12 +930,12 @@ function export.show_box(frame)
 		if not num_type_data then
 			return nil
 		end
-		local entries = num_type_data
-		if type(entries) ~= "table" then
-			entries = {entries}
+		local forms = num_type_data
+		if type(forms) ~= "table" then
+			forms = {forms}
 		end
 
-		local seen_forms, forms_by_tag = export.group_numeral_forms_by_tag(entries)
+		local seen_forms, forms_by_tag = export.group_numeral_forms_by_tag(forms)
 
 		local forms_to_display
 		if cur_tag and forms_by_tag[cur_tag] then
@@ -784,7 +959,10 @@ function export.show_box(frame)
 		end
 
 		num = export.format_number_for_display(num)
-		local num_arrow = num_follows and arrow .. num or num .. arrow
+		local num_arrow =
+			arrow == "rarrow" and num .. "&nbsp;&nbsp;→&nbsp;" or
+			arrow == "larrow" and "&nbsp;←&nbsp;&nbsp;" .. num or
+			num
 		if #pagenames_to_display > 1 then
 			local a = ("a"):byte()
 			local links = {}
@@ -792,7 +970,7 @@ function export.show_box(frame)
 				links[i] = m_links.language_link{lang = lang, term = term, alt = "[" .. string.char(a + i - 1) .. "]"}
 			end
 			links = "<sup>" .. table.concat(links, ", ") .. "</sup>"
-			return num_follows and links .. num_arrow or num_arrow .. links
+			return arrow == "larrow" and links .. num_arrow or num_arrow .. links
 		else
 			return m_links.language_link {
 				lang = lang,
@@ -802,29 +980,17 @@ function export.show_box(frame)
 		end
 	end
 
-	-- Link to previous number
-	--
-	--	Current format:
-	--		if multiple entries:
-	--			<sup>[a], [b], ...</sup> ← <numeral>
-	--		else
-	--			← <numeral>
-	local prev_display = display_entries(prev_num, prev_data, "&nbsp;←&nbsp;&nbsp;", "num follows") or ""
-	local prev_outer_display = display_entries(prev_outer_num, prev_outer_data, "&nbsp;←&nbsp;&nbsp;", "num follows")
+	-- Display links to previous/next numbers
+	local prev_display = display_adjacent_number_links(prev_num, prev_data, "larrow") or ""
+	local next_display = display_adjacent_number_links(next_num, next_data, "rarrow") or ""
 
-	-- Link to next number
-	--
-	--	Current format:
-	--		if multiple entries:
-	--			<numeral> → <sup>[a], [b], ...</sup>
-	--		else
-	--			<numeral> →
-	local next_display = display_entries(next_num, next_data, "&nbsp;&nbsp;→&nbsp;") or ""
-	local next_outer_display = display_entries(next_outer_num, next_outer_data, "&nbsp;&nbsp;→&nbsp;")
+	-- Display links to previous/next outer numbers
+	local prev_outer_display = display_adjacent_number_links(prev_outer_num, prev_outer_data, "larrow")
+	local next_outer_display = display_adjacent_number_links(next_outer_num, next_outer_data, "rarrow")
 
-	-- Link to number times ten and divided by ten
-	local upper_display = display_entries(upper_num, upper_data, "")
-	local lower_display = display_entries(lower_num, lower_data, "")
+	-- Display links to upper/lower numbers
+	local upper_display = display_adjacent_number_links(upper_num, upper_data)
+	local lower_display = display_adjacent_number_links(lower_num, lower_data)
 
 	local canonical_name = lang:getCanonicalName()
 	local appendix1 = canonical_name .. " numerals"
