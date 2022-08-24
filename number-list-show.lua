@@ -41,6 +41,130 @@ local function num_to_ordinal(numstr)
 	end
 end
 
+local function print_full_table(lang, m_data)
+	local full_link = require("Module:links").full_link
+	local tag_text = require("Module:script utilities").tag_text
+	local function tag(form)
+		return tag_text(form, lang)
+	end
+
+	local form_types = m_number_list.get_number_types(m_data)
+	local numeral_index = 1
+	table.insert(form_types, numeral_index,
+		{key = "numeral", display = "Numeral"})
+	table.insert(form_types, {key = "wplink", display = "Wikipedia link"})
+	local wplink_index = #form_types
+
+	local number_type_indices = {}
+	for number, data in pairs(m_data.numbers) do
+		for i, form_type in pairs(form_types) do
+			if data[form_type.key] then
+				number_type_indices[i] = true
+			end
+		end
+	end
+
+	local numeral_config = m_data.numeral_config
+	if numeral_config then
+		number_type_indices[numeral_index] = true
+	end
+
+	local has_wplink_column = number_type_indices[wplink_index]
+
+	number_type_indices = require("Module:table").keysToList(number_type_indices)
+
+	local Array = require("Module:array")
+	local output = Array()
+
+	local function header(content)
+		output:insert(("! %s"):format(content))
+	end
+
+	local function cell(content)
+		output:insert(("| %s"):format(content))
+	end
+
+	local function row(content)
+		output:insert("|-\n")
+		if content then
+			cell(content)
+		end
+	end
+
+	output:insert('{| class="wikitable"')
+
+	-- Add headers.
+	header("Number")
+	for _, index in ipairs(number_type_indices) do
+		header(m_number_list.display_number_type(form_types[index]))
+	end
+
+	local errors = Array()
+
+	for number, data in require("Module:table").sortedPairs(m_data.numbers, m_number_list.numbers_less_than) do
+		local function check_string(val)
+			if type(val) ~= "string" then
+				error(("For number %s, Expected string but saw '%s"):format(number, mw.dumpObject(val)))
+			end
+		end
+		local number_string = m_number_list.format_fixed(number)
+
+		row(m_number_list.format_number_for_display(number_string))
+
+		local numeral
+		if numeral_config then
+			numeral = m_number_list.generate_non_arabic_numeral(numeral_config, number_string)
+		elseif data.numeral then
+			numeral = data.numeral
+		end
+		if numeral then
+			check_string(numeral)
+			numeral = tag(numeral)
+			cell(numeral or "")
+		end
+
+		for _, i in ipairs(number_type_indices) do
+			if i ~= numeral_index and i ~= wplink_index then
+				local form = data[form_types[i].key]
+				cell(form and link_forms(form, data, lang) or "")
+			end
+		end
+
+		if data.wplink then
+			check_string(data.wplink)
+			cell(("[[w:%s:%s|%s]]"):format(lang:getCode(), data.wplink, data.wplink))
+		elseif has_wplink_column then
+			cell("")
+		end
+
+		-- Check for numerical indices, which are syntax errors.
+		for i, word in ipairs(data) do
+			if type(word) == "string" then
+				errors:insert({ number = number_string, word = word })
+			end
+		end
+	end
+
+	output:insert('|}')
+
+	if #errors > 0 then
+		output:insert(
+			1,
+			'\n<span class="error">The following numbers were not inserted '
+			.. "correctly and need to be placed inside table syntax: "
+			.. errors
+				:map(
+					function(data)
+						return data.number .. ": " .. data.word
+					end)
+				:concat ", "
+			.. "[[Category:Errors in number data modules|"
+			.. lang:getCode() .. "]]</span>")
+	end
+
+	return output:concat("\n")
+end
+
 function export.number_table(frame)
 	local params = {
 		[1] = {required = true, default = "und"},
@@ -50,7 +174,11 @@ function export.number_table(frame)
 	local args = require("Module:parameters").process(frame:getParent().args, params)
 	local langcode = args[1]
 	local lang = require("Module:languages").getByCode(langcode, 1)
-	local m_data = require(m_number_list.get_data_module_name(langcode))
+	local data_module_name = m_number_list.get_data_module_name(langcode, "must exist")
+	local m_data = require(data_module_name)
+	if args[2] == "full" then
+		return print_table(lang, m_data)
+	end
 
 	local parts = {}
 	local function ins(text)
@@ -127,133 +255,7 @@ function export.number_table(frame)
 	return table.concat(parts)
 end
 
-function export.print_table(language_code, module)
-	local module = require(module)
-
-	local lang = require("Module:languages").getByCode(language_code)
-	local full_link = require("Module:links").full_link
-	local tag_text = require("Module:script utilities").tag_text
-	local function tag(form)
-		return tag_text(form, lang)
-	end
-
-	local form_types = m_number_list.get_number_types(language_code)
-	local numeral_index = 1
-	table.insert(form_types, numeral_index,
-		{key = "numeral", display = "Numeral"})
-	table.insert(form_types, {key = "wplink", display = "Wikipedia link"})
-	local wplink_index = #form_types
-
-	local number_type_indices = {}
-	for number, data in pairs(module.numbers) do
-		for i, form_type in pairs(form_types) do
-			if data[form_type.key] then
-				number_type_indices[i] = true
-			end
-		end
-	end
-
-	local numeral_config = module.numeral_config
-	if numeral_config then
-		number_type_indices[numeral_index] = true
-	end
-
-	local has_wplink_column = number_type_indices[wplink_index]
-
-	number_type_indices = require("Module:table").keysToList(number_type_indices)
-
-	local Array = require("Module:array")
-	local output = Array()
-
-	local function header(content)
-		output:insert(("! %s"):format(content))
-	end
-
-	local function cell(content)
-		output:insert(("| %s"):format(content))
-	end
-
-	local function row(content)
-		output:insert("|-\n")
-		if content then
-			cell(content)
-		end
-	end
-
-	output:insert('{| class="wikitable"')
-
-	-- Add headers.
-	header("Number")
-	for _, index in ipairs(number_type_indices) do
-		header(m_number_list.display_number_type(form_types[index]))
-	end
-
-	local errors = Array()
-
-	for number, data in require("Module:table").sortedPairs(module.numbers, m_number_list.numbers_less_than) do
-		local function check_string(val)
-			if type(val) ~= "string" then
-				error(("For number %s, Expected string but saw '%s"):format(number, mw.dumpObject(val)))
-			end
-		end
-		local number_string = m_number_list.format_fixed(number)
-
-		row(m_number_list.format_number_for_display(number_string))
-
-		local numeral
-		if numeral_config then
-			numeral = m_number_list.generate_non_arabic_numeral(numeral_config, number_string)
-		elseif data.numeral then
-			numeral = data.numeral
-		end
-		if numeral then
-			check_string(numeral)
-			numeral = tag(numeral)
-			cell(numeral or "")
-		end
-
-		for _, i in ipairs(number_type_indices) do
-			if i ~= numeral_index and i ~= wplink_index then
-				local form = data[form_types[i].key]
-				cell(form and link_forms(form, data, lang) or "")
-			end
-		end
-
-		if data.wplink then
-			check_string(data.wplink)
-			cell(("[[w:%s:%s|%s]]"):format(lang:getCode(), data.wplink, data.wplink))
-		elseif has_wplink_column then
-			cell("")
-		end
-
-		-- Check for numerical indices, which are syntax errors.
-		for i, word in ipairs(data) do
-			if type(word) == "string" then
-				errors:insert({ number = number_string, word = word })
-			end
-		end
-	end
-
-	output:insert('|}')
-
-	if #errors > 0 then
-		output:insert(
-			1,
-			'\n<span class="error">The following numbers were not inserted '
-			.. "correctly and need to be placed inside table syntax: "
-			.. errors
-				:map(
-					function(data)
-						return data.number .. ": " .. data.word
-					end)
-				:concat ", "
-			.. "[[Category:Errors in number data modules|"
-			.. lang:getCode() .. "]]</span>")
-	end
-
-	return output:concat("\n")
-end
-
+-- Called from [[Module:documentation/functions/number list]].
 function export.table(frame)
 	local language_code
 	if type(frame) == "table" then
@@ -273,7 +275,9 @@ function export.table(frame)
 		end
 	end
 
-	return export.print_table(language_code, module)
+	local lang = require("Module:languages").getByCode(language_code, true)
+	local m_data = require(module)
+	return print_full_table(lang, m_data)
 end
 
 return export
