@@ -591,20 +591,22 @@ local function do_adjective(pos)
 			},
 		func = function(args, data)
 			local lemma = data.pagename
-			if args.onlyg == "p" or args.onlyg == "m-p" or args.onlyg == "f-p" then
-				table.insert(data.categories, langname .. " pluralia tantum")
-			end
-			if args.onlyg == "s" or args.onlyg == "f-s" or args.onlyg == "f-s" then
-				table.insert(data.categories, langname .. " singularia tantum")
-			end
-			if args.onlyg then
-				table.insert(data.categories, langname .. " defective " .. pos)
-			end
-
 			if pos == "cardinal adjectives" then
 				pos = "numerals"
 				data.pos_category = "numerals"
 				table.insert(data.categories, 1, langname .. " cardinal numbers")
+			end
+
+			if pos ~= "numerals" then
+				if args.onlyg == "p" or args.onlyg == "m-p" or args.onlyg == "f-p" then
+					table.insert(data.categories, langname .. " pluralia tantum")
+				end
+				if args.onlyg == "s" or args.onlyg == "f-s" or args.onlyg == "f-s" then
+					table.insert(data.categories, langname .. " singularia tantum")
+				end
+				if args.onlyg then
+					table.insert(data.categories, langname .. " defective " .. pos)
+				end
 			end
 
 			local function process_inflection(label, arg, accel, get_default, explicit_default_only)
@@ -823,15 +825,13 @@ pos_functions["verbs"] = {
 }
 
 pos_functions["cardinal invariable"] = {
-	return {
-		params = {},
-		func = function(args, data)
-			data.pos_category = "numerals"
-			table.insert(data.categories, langname .. " cardinal numbers")
-			table.insert(data.categories, langname .. " indeclinable numerals")
-			table.insert(data.inflections, {label = glossary_link("invariable")})
-		end,
-	}
+	params = {},
+	func = function(args, data)
+		data.pos_category = "numerals"
+		table.insert(data.categories, langname .. " cardinal numbers")
+		table.insert(data.categories, langname .. " indeclinable numerals")
+		table.insert(data.inflections, {label = glossary_link("invariable")})
+	end
 }
 
 return export
