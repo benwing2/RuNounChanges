@@ -263,11 +263,29 @@ local function make_masculine(form, special)
 	return form
 end
 
-local function do_adjective(args, data, tracking_categories, is_superlative)
+local function do_adjective(args, data, tracking_categories, pos, is_superlative)
 	local feminines = {}
 	local plurals = {}
 	local masculine_plurals = {}
 	local feminine_plurals = {}
+
+	if pos == "cardinal adjectives" then
+		pos = "numerals"
+		data.pos_category = "numerals"
+		table.insert(data.categories, 1, langname .. " cardinal numbers")
+	end
+
+	if pos ~= "numerals" then
+		if args.onlyg == "p" or args.onlyg == "m-p" or args.onlyg == "f-p" then
+			table.insert(data.categories, langname .. " pluralia tantum")
+		end
+		if args.onlyg == "s" or args.onlyg == "f-s" or args.onlyg == "f-s" then
+			table.insert(data.categories, langname .. " singularia tantum")
+		end
+		if args.onlyg then
+			table.insert(data.categories, langname .. " defective " .. pos)
+		end
+	end
 
 	if args.sp and not require("Module:romance utilities").allowed_special_indicators[args.sp] then
 		local indicators = {}
