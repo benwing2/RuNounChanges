@@ -1,6 +1,6 @@
 local export = {numbers = {}}
 
-local m_numutils = require("Module:number list/utils")
+local m_numutils = require("Module:User:Benwing2/number list/utils")
 local map = m_numutils.map
 local power_of = m_numutils.power_of
 
@@ -110,10 +110,6 @@ for tens = 20, 90, 10 do
 		-- (2) -et- is inserted before "un" and "onze", but not after quatre-vingts.
 		-- (3) quatre-vingts changes to quatre-vingt- before a ones numeral.
 		local function generate_cardinal(tens_cardinal)
-			local term_part, tag_part = tens_cardinal:match("^(.*)(<.*>)$")
-			if term_part then
-				return generate_cardinal(term_part) .. tag_part
-			end
 			local ones_cardinal
 			tens_cardinal = rsub(tens_cardinal, "%-dix$", "") -- chop off -dix from vigesimal 70 and 90
 			tens_cardinal = rsub(tens_cardinal, "ts$", "t") -- quatre-vingts -> quatre-vingt
@@ -124,20 +120,14 @@ for tens = 20, 90, 10 do
 				ones_cardinal = numbers[ones].cardinal
 			end
 			if ones == 1 and tens_cardinal ~= "quatre-vingt" or ones == 11 and tens_cardinal == "soixante" then
-				return tens_cardinal .. "-et-" .. ones_cardinal
+				return {("%s et %s<tag:traditional spelling>"):format(tens_cardinal, ones_cardinal),
+					("%s-et-%s<tag:post-1990 spelling>"):format(tens_cardinal, ones_cardinal)}
 			else
 				return tens_cardinal .. "-" .. ones_cardinal
 			end
 		end
 
-		local tens_cardinal = numbers[tens].cardinal
-		local cardinal
-		if type(tens_cardinal) == "table" then
-			cardinal = map(generate_cardinal, tens_cardinal)
-		else
-			cardinal = generate_cardinal(tens_cardinal)
-		end
-
+		local cardinal = map(generate_cardinal, numbers[tens].cardinal)
 		make_number(num, cardinal)
 	end
 end
@@ -168,7 +158,8 @@ end
 
 make_number(100000, "cent mille", {"cent millième", "cent-millième"})
 make_number(1000000, "[[un]] [[million]]<link:million>", "millionième", nil, "million")
-make_number(2000000, "[[deux]] [[million]]s", {"deux millionième", "deux-millionième"})
+make_number(2000000, "[[deux]] [[million]]s",
+	{"deux millionième<tag:traditional spelling>", "deux-millionième<tag:post-1990 spelling>"})
 make_number(power_of(9), "[[un]] [[milliard]]<link:milliard>", "milliardième", nil, "milliard")
 make_number(power_of(12), {"[[un]] [[billion]]<link:billion>", "[[mille]] [[milliard]]s"},
 	{"[[billionième]], [[millième]] [[de]] [[milliardième]]"}, nil, "billion")
