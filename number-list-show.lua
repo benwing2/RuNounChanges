@@ -91,6 +91,13 @@ local function print_full_table(lang, m_data)
 		end
 	end
 
+	local data_module_name = m_number_list.get_data_module_name(lang:getCode())
+	if data_module_name then
+		output:insert('<div class="floatright"><sup>(<span class="plainlinks">[' ..
+			tostring(mw.uri.fullUrl(data_module_name, { action = "edit" })) ..
+			" edit]</span>)</sup></div>")
+	end
+
 	output:insert('{| class="wikitable"')
 
 	-- Add headers.
@@ -177,7 +184,7 @@ function export.number_table(frame)
 	local data_module_name = m_number_list.get_data_module_name(langcode, "must exist")
 	local m_data = require(data_module_name)
 	if args[2] == "full" then
-		return print_table(lang, m_data)
+		return print_full_table(lang, m_data)
 	end
 
 	local parts = {}
