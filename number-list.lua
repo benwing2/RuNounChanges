@@ -86,14 +86,14 @@ end
 
 local function list_to_set(list)
 	local set = {}
-	for _, item in ipairs(t) do
+	for _, item in ipairs(list) do
 		set[item] = true
 	end
 	return set
 end
 
 function export.get_data_module_name(langcode, must_exist)
-	local module_name = "Module:number list/data/" .. langcode
+	local module_name = "Module:User:Benwing2/number list/data/" .. langcode
 	if must_exist and not mw.title.new(module_name).exists then
 		error(("Data module [[%s]] for language code '%s' does not exist"):format(module_name, langcode))
 	end
@@ -457,7 +457,7 @@ end
 -- (4) `combined_tags_to_tag_lists` is a map from combined tags to the corresponding tag lists.
 function export.group_numeral_forms_by_tag(forms)
 	local seen_forms = {}
-	local forms_by_combined_tag = {}
+	local forms_by_tag = {}
 	local seen_tags = {}
 	local combined_tags_to_tag_lists = {}
 
@@ -470,7 +470,7 @@ function export.group_numeral_forms_by_tag(forms)
 			forms_by_tag[combined_tag] = {}
 			combined_tags_to_tag_lists[combined_tag] = formobj.tag or {}
 		end
-		table.insert(forms_by_tag[tag], formobj)
+		table.insert(forms_by_tag[combined_tag], formobj)
 	end
 
 	return seen_forms, forms_by_tag, seen_tags, combined_tags_to_tag_lists
@@ -673,10 +673,10 @@ function export.show_box(frame)
 			-- First compare by number of tags in common with the current tag list.
 			local tag_list1 = combined_tags_to_tag_lists[tag1]
 			local tag_list2 = combined_tags_to_tag_lists[tag2]
-			local num_common1 = set_intersection(cur_tag_set, list_to_set(tag_list1))
-			local num_common2 = set_intersection(cur_tag_set, list_to_set(tag_list2))
-			if num_common1 ~= num_common2 then
-				return num_common1 < num_common2
+			local common1 = set_intersection(cur_tag_set, list_to_set(tag_list1))
+			local common2 = set_intersection(cur_tag_set, list_to_set(tag_list2))
+			if #common1 ~= #common2 then
+				return #common1 < #common2
 			end
 			-- Then compare inversely by number of tags not in common with the current tag list (which is equivalent to
 			-- comparing by total number of tags, since tags should be distinct).
@@ -708,6 +708,10 @@ function export.show_box(frame)
 					end
 				end
 
+				if tag ~= "" then
+					local tag_list = combined_tags_to_tag_lists[tag]
+					tag = table.concat(tag_list, " / ")
+				end
 				local displayed_number_type = export.display_number_type(form_type) .. (tag == "" and "" or (" (%s)"):format(tag))
 				if pagename_among_forms then
 					displayed_number_type = "'''" .. displayed_number_type .. "'''"
@@ -755,7 +759,7 @@ function export.show_box(frame)
 	local next_data = next_num and lookup_data(next_num, "next")
 	local prev_data = prev_num and lookup_data(prev_num, "previous")
 
-	--------- Decompose number into mantisssa (k) and exponent (m). ----------
+	--------- Decompose number into mantissa (k) and exponent (m). ----------
 
 	local k, m
 	if cur_num == "0" then
