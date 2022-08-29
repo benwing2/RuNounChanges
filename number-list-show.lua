@@ -1,12 +1,12 @@
 local export = {}
 
-local m_number_list = require("Module:number list")
+local m_number_list = require("Module:User:Benwing2/number list")
 
 local function link_forms(forms, m_data, lang)
 	if type(forms) ~= "table" then
 		forms = {forms}
 	end
-	local seen_forms, forms_by_tag, seen_tags = m_number_list.group_numeral_forms_by_tag(forms)
+	local seen_forms, forms_by_tag, seen_tags, combined_tags_to_tag_lists = m_number_list.group_numeral_forms_by_tag(forms)
 	local formatted_forms = {}
 	for _, tag in ipairs(seen_tags) do
 		local formatted_tag_forms = {}
@@ -22,7 +22,8 @@ local function link_forms(forms, m_data, lang)
 				table.insert(formatted_forms, ("(default): %s"):format(formatted_tag_forms))
 			end
 		else
-			table.insert(formatted_forms, ("%s: %s"):format(tag, formatted_tag_forms))
+			local tag_list = combined_tags_to_tag_lists[tag]
+			table.insert(formatted_forms, ("%s: %s"):format(table.concat(tag_list, " / "), formatted_tag_forms))
 		end
 	end
 
