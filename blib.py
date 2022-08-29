@@ -1096,7 +1096,7 @@ def do_pagefile_cats_refs(args, start, end, process, default_pages=[],default_ca
 
   seen = set() if args.track_seen else None
 
-  def do_handle_find_regex_retval(retval, text, prev_comment, pagemsg):
+  def do_handle_stdin_retval(retval, text, prev_comment, pagemsg, is_find_regex):
     new, this_comment, has_changed = handle_process_page_retval(retval, text, pagemsg, args.verbose, args.diff)
     new = new or text
     if has_changed:
@@ -1124,9 +1124,9 @@ def do_pagefile_cats_refs(args, start, end, process, default_pages=[],default_ca
         if type(prev_comment) is list:
           prev_comment = "; ".join(group_notes(prev_comment))
         pagemsg("Skipped, no changes; previous comment = %s" % prev_comment)
-      else:
+      elif is_find_regex:
         pagemsg("Skipped, no changes")
-      if not args.no_output:
+      if is_find_regex and not args.no_output:
         final_newline = ""
         if not new.endswith("\n"):
           final_newline = "\n"
@@ -1224,7 +1224,7 @@ def do_pagefile_cats_refs(args, start, end, process, default_pages=[],default_ca
       # We are reading from Wiktionary but asked to output in find_regex format.
       retval = do_process_page(page, index)
       pagetext = safe_page_text(page, errandpagemsg)
-      do_handle_find_regex_retval(retval, pagetext, None, pagemsg)
+      do_handle_stdin_retval(retval, pagetext, None, pagemsg, is_find_regex=True)
     elif edit:
       do_edit(page, index, do_process_page, save=args.save, verbose=args.verbose,
           diff=args.diff)
@@ -1260,9 +1260,14 @@ def do_pagefile_cats_refs(args, start, end, process, default_pages=[],default_ca
           msg("Page %s %s: %s" % (index, pagetitle, txt))
         if prev_comment:
           prev_comment = parse_grouped_notes(prev_comment)
-        do_handle_find_regex_retval(retval, text, prev_comment, pagemsg)
+        do_handle_stdin_retval(retval, text, prev_comment, pagemsg, is_find_regex=True)
     else:
-      parse_dump(sys.stdin, do_process_stdin_text_on_page, start, end)
+      def do_process_stdin_dump_text_on_page(index, pagetitle, text):
+        retval = do_process_stdin_text_on_page(index, pagetitle, text)
+        def pagemsg(txt):
+          msg("Page %s %s: %s" % (index, pagetitle, txt))
+        do_handle_stdin_retval(retval, text, None, pagemsg, is_find_regex=False)
+      parse_dump(sys.stdin, do_process_stdin_dump_text_on_page, start, end)
 
   elif args_has_non_default_pages(args):
     if args.pages:
