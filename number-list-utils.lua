@@ -1,16 +1,39 @@
 local export = {}
 
+-- Map a function over `list`, which may in fact be a list of strings or a single string. The return value of the
+-- function may also be a single string or a list. If `list` is a list and the function returns a list, the results are
+-- flattened into a single list. If `list` is a single string and the function returns a single string, the return
+-- value of `map` will be a single string, otherwise a list. In all cases, when calling the function on a string, if
+-- the string has modifiers (e.g. 'vuitanta-vuit<tag:Central>' or 'سیزده<tr:sizdah>'), the function is called on the
+-- part without the modifiers, and the modifiers are then tacked onto the return value(s) of the function. Strings with
+-- multiple modifiers such as 'سیزده<tr:sizdah><tag:Iranian>' are correctly handled.
 function export.map(fun, list)
 	if type(list) == "table" then
 		local retval = {}
 		for _, item in ipairs(list) do
-			table.insert(retval, export.map(fun, item))
+			local mapret = export.map(fun, item)
+			if type(mapret) == "table" then
+				for _, ret in ipairs(mapret) do
+					table.insert(retval, ret)
+				end
+			else
+				table.insert(retval, mapret)
+			end
 		end
 		return retval
 	end
 	local term_part, tag_part = list:match("^(.*)(<.->)$")
 	if term_part then
-		return export.map(fun, term_part) .. tag_part
+		local mapret = export.map(fun, term_part)
+		if type(mapret) == "table" then
+			local retval = {}
+			for _, ret in ipairs(mapret) do
+				table.insert(retval, ret .. tag_part)
+			end
+			return retval
+		else
+			return mapret .. tag_part
+		end
 	end
 	return fun(list)
 end
