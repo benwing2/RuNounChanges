@@ -1,6 +1,7 @@
 local export = {numbers = {}}
 
 local m_numutils = require("Module:number list/utils")
+local map = m_numutils.map
 local power_of = m_numutils.power_of
 
 local numbers = export.numbers
@@ -14,22 +15,7 @@ local function rsub(term, foo, bar)
 	return retval
 end
 
-local function map(fun, list)
-	local retval = {}
-	for _, item in ipairs(list) do
-		table.insert(retval, fun(item))
-	end
-	return retval
-end
-
 local function add_ordinal_suffix(term)
-	if type(term) == "table" then
-		return map(add_ordinal_suffix, term)
-	end
-	local term_part, tag_part = term:match("^(.*)(<.*>)$")
-	if term_part then
-		return add_ordinal_suffix(term_part) .. tag_part
-	end
 	if rfind(term, "f$") then
 		return rsub(term, "f$", "vième") -- neuf -> neuvième
 	elseif rfind(term, "q$") then
@@ -46,7 +32,8 @@ local function make_number(num, cardinal, ordinal, multiplier, wplink)
 	local with_thousands = #numstr < 10 and m_numutils.add_thousands_separator(numstr, " ") or nil
 	numbers[num] = {
 		cardinal = cardinal,
-		ordinal = ordinal or add_ordinal_suffix(cardinal),
+		ordinal = ordinal or map(function (card) return add_ordinal_suffix(card) end, cardinal),
+		-- FIXME, should use superscript e
 		ordinal_abbr = with_thousands and {with_thousands .. "e", with_thousands .. "ème<q:nonstandard>"} or nil,
 		multiplier = multiplier,
 		wplink = wplink or type(num) == "number" and num < 1000000 and num .. " (nombre)" or nil,
