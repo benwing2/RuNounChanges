@@ -4,13 +4,13 @@ function export.map(fun, list)
 	if type(list) == "table" then
 		local retval = {}
 		for _, item in ipairs(list) do
-			table.insert(retval, map(fun, item))
+			table.insert(retval, export.map(fun, item))
 		end
 		return retval
 	end
 	local term_part, tag_part = list:match("^(.*)(<.->)$")
 	if term_part then
-		return map(fun, term_part) .. tag_part
+		return export.map(fun, term_part) .. tag_part
 	end
 	return fun(list)
 end
@@ -33,6 +33,9 @@ function export.add_thousands_separator(num, sep)
 	num = export.format_fixed(num)
 	if #num > 4 then
 		local num_remainder_digits = #num % 3
+		if num_remainder_digits == 0 then
+			num_remainder_digits = 3
+		end
 		local left_remainder_digits = num:sub(1, num_remainder_digits)
 		local right_power_of_3_digits = num:sub(1 + num_remainder_digits)
 		num = left_remainder_digits .. right_power_of_3_digits:gsub("(...)", sep .. "%1")
