@@ -212,15 +212,30 @@ numbers[90] = {
 	ordinal_abbr = "90ain",
 }
 
+-- Templates for vigesimal numbers 21-99, not counting even multiples of 10. Some vigesimal numbers are actually
+-- vigesimal and take units in the 11-19 range, while others take units in the 1-9 range even when they would be
+-- expected to take units in the 11-19 range. An example of the latter is 52, formed as "hanner cant ac" + the number
+-- for 2 (hence masculine "hanner cant ac dau", feminine "hanner cant ac dwy"). An example of the former is 74, formed
+-- as the number for 14 + "a thrigain" (hence masculine "pedwar ar ddeg a thrigain" and feminine
+-- "pedair ar ddeg a thrigain").
+--
+-- We determine the unit by taking either mod 10 or mod 20 of the overall number (depending on the second element of the
+-- two-element table below), and fetching the corresponding units cardinal(s) or ordinal(s). If at least one element in
+-- the resulting unit form(s) has a <tag:vigesimal> modifier, this means the number has different decimal and vigesimal
+-- forms (this happens with numbers 11 and above), so filter down to only the ones with the vigesimal tag, and remove
+-- it; otherwise take all forms. Then substitute the resulting unit form(s) into the template where it says UNIT, taking
+-- care to move tags on the unit form(s) to the end; map() does this automatically. Also add "<tag:vigesimal>" at the
+-- end of the return value to map(), i.e. directly after the template; any modifiers from the units forms will be tacked
+-- on after that.
 local vigesimal_templates = {
-	[2] = "DECIMAL ar hugain",
-	[3] = "VIGESIMAL ar hugain",
-	[4] = "deugain ac DECIMAL",
-	[5] = "hanner cant ac DECIMAL",
-	[6] = "trigain ac DECIMAL",
-	[7] = "VIGESIMAL a thrigain",
-	[8] = "pedwar ugain ac DECIMAL",
-	[9] = "VIGESIMAL a phedwar ugain",
+	[2] = {"UNIT ar hugain", 10},
+	[3] = {"UNIT ar hugain", 20},
+	[4] = {"deugain ac UNIT", 10},
+	[5] = {"hanner cant ac UNIT", 10},
+	[6] = {"trigain ac UNIT", 10},
+	[7] = {"UNIT a thrigain", 20},
+	[8] = {"pedwar ugain ac UNIT", 10},
+	[9] = {"UNIT a phedwar ugain", 20},
 }
 
 -- Generate the numbers from 20 to 99. This is not easy both because there are two systems for forming cardinals
@@ -234,39 +249,66 @@ for ten_multiplier=2, 9 do
 		-- First, the decimal forms. Only the cardinal is decimal. Formation is "TEN_UNIT deg ONE_UNIT" where
 		-- TEN_UNIT = the cardinal associated with `ten_multiplier` and ONE_UNIT = the cardinal associated with `one`.
 		-- Irregularities in the word "deg" follow the even multiples of 10, so we just copy them.
-		local ten_multiplier_card = filter(function(card) return card:find("<tag:decimal>") end, numbers[ten_multiplier].cardinal)
-		if #ten_multiplier_card ~= 1 then
-			error("Internal error: Multiple or no ten multiplier forms: " .. table.concat(ten_multiplier_card, ", "))
+		local decimal_ten_card = filter(function(card) return card:find("<tag:decimal>") end, numbers[ten_multiplier].cardinal)
+		if #decimal_ten_card ~= 1 then
+			error("Internal error: Multiple or no decimal ten multiplier forms: " .. table.concat(decimal_ten_card, ", "))
 		end
-		ten_multiplier_card = ten_multiplier_card[1]:gsub("<.*>", "") .. " "
-		local decimal_cardinal = map(function(card)
-			return ten_multiplier_card .. card end, numbers[one].cardinal)
+		local decimal_cardinal = map(function(unit_card)
+			return map(function(ten_card) return ten_card .. " " .. unit_card end, decimal_ten_card)
+		end, numbers[one].cardinal)
 
-		-- Now the vigesimal forms. Formation of the cardinals is according to `vigesimal_template` above, where
-		-- DECIMAL = the number mod 10, and VIGESIMAL = the number mod 20. For example, 52 is formed as
-		-- "hanner cant ac" + the number for 2 (hence masculine "hanner cant ac dau", feminine "hanner cant ac dwy"),
-		-- while 74 is formed as the number for 14 + "a thrigain" (hence masculine "pedwar ar ddeg a thrigain" and
-		-- feminine "pedair ar ddeg a thrigain").
-		local vigesimal_template = vigesimal_templates[ten_multiplier]
-		local vigesimal_unit
-		if vigesimal_template:find("DECIMAL") then
-			vigesimal_unit = one
+		-- Now the vigesimal forms. See the comment above `vigesimal_template`.
+		local vigesimal_template, unit_mod = unpack(vigesimal_templates[ten_multiplier])
+		local vigesimal_unit = num % unit_mod
+
+		-- First cardinal forms.
+		local vigesimal_unit_card = filter(function(card) return card:find("<tag:vigesimal>") end, numbers[vigesimal_unit].cardinal)
+		if #vigesimal_unit_card > 0 then
+			vigesimal_unit_card = map(function(unit_card) return rsub(unit_card, "<tag:vigesimal>", "") end, vigesimal_unit_card)
 		else
-			vigesimal_unit = one + 10 -- use of VIGESIMAL only occurs numbers in the 11-19 range mod 20.
+			vigesimal_unit_card = numbers[vigesimal_unit].cardinal
 		end
-		local vigesimal_unit_form = filter(function(card) return card:find("<tag:vigesimal>") end, numbers[ten_multiplier].cardinal)
+		local vigesimal_cardinal = map(function(unit_card) return rsub(vigesimal_template, "UNIT", unit_card) .. "<tag:vigesimal>" end,
+			vigesimal_unit_card)
 
-		if 
+		-- Next ordinal forms.
+		vigesimal_unit_ord = numbers[vigesimal_unit].ordinal -- ordinals always vigesimal
+		local vigesimal_ordinal = map(function(unit_ord) return rsub(vigesimal_template, "UNIT", unit_ord) .. "<tag:vigesimal>" end,
+			vigesimal_unit_ord)
 
-		if #ten_multiplier_card ~= 1 then
-			error("Internal error: Multiple or no ten multiplier forms: " .. table.concat(ten_multiplier_card, ", "))
+		-- Now combine vigesimal + decimal cardinal forms, possibly with special form for 99; similarly, take the
+		-- ordinal forms, possibly combining with special form for 99.
+		local combined_card
+		local combined_ord
+		if num == 99 then -- include special forms for 99 before regular forms
+			combined_card = {"cant namyn un"}
+			combined_ord = {"canfed namyn un"}
+		else
+			combined_card = {}
+			-- don't set combined_ord; it just uses the vigesimal forms directly.
 		end
-		ten_multiplier_card = ten_multiplier_card[1]:gsub("<.*>", "")
+		map(function(card) table.insert(combined_card, card) end, vigesimal_cardinal)
+		map(function(card) table.insert(combined_card, card) end, decimal_cardinal)
+		if combined_ord then
+			map(function(ord) table.insert(combined_ord, ord) end, vigesimal_ordinal)
+		else
+			combined_ord = vigesimal_ordinal
+			if #combined_ord == 1 then
+				combined_ord = combined_ord[1]
+			end
+		end
 
+		-- Now generate ordinal abbreviations.
+		-- FIXME
 
-
-
-		if 
+		numbers[num] = {
+			cardinal = combined_card,
+			ordinal = combined_ord,
+			ordinal_abbr = ordinal_abbr,
+		}
+	end
+end
+	
 numbers[21] = {
 	cardinal = {"dau ddeg un<tag:decimal>", "un ar hugain<tag:vigesimal>"},
 	ordinal = "unfed ar hugain",
