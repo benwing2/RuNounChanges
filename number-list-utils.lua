@@ -38,6 +38,22 @@ function export.map(fun, list)
 	return fun(list)
 end
 
+function export.filter(fun, list, return_single_item)
+	if type(list) ~= "table" then
+		list = {list}
+	end
+	local retval = {}
+	for _, item in ipairs(list) do
+		if fun(item) then
+			table.insert(retval, item)
+		end
+	end
+	if return_single_item and #retval == 1 then
+		retval = retval[1]
+	end
+	return retval
+end
+
 function export.power_of(n, base)
 	return (base or 1) .. string.rep("0", n)
 end
