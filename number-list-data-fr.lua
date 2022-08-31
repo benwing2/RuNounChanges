@@ -1,6 +1,6 @@
 local export = {numbers = {}}
 
-local m_numutils = require("Module:User:Benwing2/number list/utils")
+local m_numutils = require("Module:number list/utils")
 local map = m_numutils.map
 local power_of = m_numutils.power_of
 
@@ -156,32 +156,41 @@ for i = 2000, 10000, 1000 do
 	)
 end
 
-make_number(100000, "cent mille", {"cent millième", "cent-millième"})
-make_number(1000000, "[[un]] [[million]]<link:million>", "millionième", nil, "million")
-make_number(2000000, "[[deux]] [[million]]s",
+make_number(100000, {"cent mille<tag:traditional spelling>", "cent-mille<tag:post-1990 spelling"},
+	{"cent millième<tag:traditional spelling>", "cent-millième<tag:post-1990 spelling>"})
+make_number(1000000, {"[[un]] [[million]]<link:million><tag:traditional spelling>", "[[un]]-[[million]]<link:million><tag:post-1990 spelling>"},
+	"millionième", nil, "million")
+make_number(2000000, {"[[deux]] [[million]]s<tag:traditional spelling>", "[[deux]]-[[million]]s<tag:post-1990 spelling>"},
 	{"deux millionième<tag:traditional spelling>", "deux-millionième<tag:post-1990 spelling>"})
-make_number(power_of(9), "[[un]] [[milliard]]<link:milliard>", "milliardième", nil, "milliard")
-make_number(power_of(12), {"[[un]] [[billion]]<link:billion>", "[[mille]] [[milliard]]s"},
-	{"[[billionième]], [[millième]] [[de]] [[milliardième]]"}, nil, "billion")
-make_number(power_of(15), {"[[un]] [[billiard]]<link:billiard>", "[[un]] [[million]] [[de]] [[milliard]]s"},
+make_number(power_of(9), {"[[un]] [[milliard]]<link:milliard><tag:traditional spelling>", "[[un]]-[[milliard]]<link:milliard><tag:post-1990 spelling>"},
+	"milliardième", nil, "milliard")
+make_number(power_of(12), {"[[un]] [[billion]]<link:billion><tag:traditional spelling>", "[[un]]-[[billion]]<link:billion><tag:post-1990 spelling>", "[[mille]] [[milliard]]s<tag:traditional spelling>", "[[mille]]-[[milliard]]s<tag:post-1990 spelling>"},
+	{"billionième", "[[millième]] [[de]] [[milliardième]]"}, nil, "billion")
+make_number(power_of(15), {"[[un]] [[billiard]]<link:billiard><tag:traditional spelling>", "[[un]]-[[billiard]]<link:billiard><tag:post-1990 spelling>", "[[un]] [[million]] [[de]] [[milliard]]s<tag:traditional spelling>", "[[un]]-[[million]] [[de]] [[milliard]]s<tag:post-1990 spelling>"},
 	{"billiardième", "[[millionième]] [[de]] [[milliardième]]"}, nil, "billiard")
-make_number(power_of(18), {"[[un]] [[trillion]]<link:trillion>", "[[un]] [[milliard]] [[de]] [[milliard]]s"},
+make_number(power_of(18), {"[[un]] [[trillion]]<link:trillion><tag:traditional spelling>", "[[un]]-[[trillion]]<link:trillion><tag:post-1990 spelling>", "[[un]] [[milliard]] [[de]] [[milliard]]s<tag:traditional spelling>", "[[un]]-[[milliard]] [[de]] [[milliard]]s<tag:post-1990 spelling>"},
 	{"trillionième", "[[milliardième]] [[de]] [[milliardième]]"}, nil, "trillion")
-make_number(power_of(21), {"[[un]] [[trilliard]]<link:trilliard>", "[[mille]] [[milliard]]s [[de]] [[milliard]]s"},
+make_number(power_of(21), {"[[un]] [[trilliard]]<link:trilliard><tag:traditional spelling>", "[[un]]-[[trilliard]]<link:trilliard><tag:post-1990 spelling>", "[[mille]] [[milliard]]s [[de]] [[milliard]]s<tag:traditional spelling>", "[[mille]]-[[milliard]]s [[de]] [[milliard]]s<tag:post-1990 spelling>"},
 	{"trilliardième", "[[millième]] [[de]] [[milliardième]] [[de]] [[milliardième]]"},  nil, "trilliard")
-make_number(power_of(24), "[[un]] [[quadrillion]]<link:quadrillion>", "quadrillionième", nil, "quadrillion")
-make_number(power_of(27), "[[un]] [[quadrilliard]]<link:quadrilliard>", "quadrilliardième", nil, "quadrilliard")
-make_number(power_of(30), "[[un]] [[quintillion]]<link:quintillion>", "quintillionième", nil, "quintillion")
-make_number(power_of(33), "[[un]] [[quintilliard]]<link:quintilliard>", "quintilliardième", nil, "quintilliard")
-make_number(power_of(36), "[[un]] [[sextillion]]<link:sextillion>", "sextillionième", nil, "sextillion")
-make_number(power_of(39), "[[un]] [[sextilliard]]<link:sextilliard>", "sextilliardième", nil, "sextilliard")
-make_number(power_of(42), "[[un]] [[septillion]]<link:septillion>", "septillionième", nil, "septillion")
-make_number(power_of(45), "[[un]] [[septilliard]]<link:septilliard>", "septilliardième", nil, "septilliard")
-make_number(power_of(48), "[[un]] [[octillion]]<link:octillion>", "octillionième", nil, "octillion")
-make_number(power_of(51), "[[un]] [[octilliard]]<link:octilliard>", "octilliardième", nil, "octilliard")
-make_number(power_of(54), "[[un]] [[nonillion]]<link:nonillion>", "nonillionième", nil, "nonillion")
-make_number(power_of(57), "[[un]] [[nonilliard]]<link:nonilliard>", "nonilliardième", nil, "nonilliard")
-make_number(power_of(60), "[[un]] [[décillion]]<link:décillion>", "décillionième", nil, "décillion")
-make_number(power_of(63), "[[un]] [[décilliard]]<link:décilliard>", "décilliardième", nil, "décilliard")
+
+local function make_high_number(power, base)
+	make_number(power_of(power), {("[[un]] [[%s]]<link:%s><tag:traditional spelling>"):format(base, base), ("[[un]]-[[%s]]<link:%s><tag:post-1990 spelling>"):format(base, base)},
+		base .. "ième", nil, base)
+end
+
+make_high_number(24, "quadrillion")
+make_high_number(27, "quadrilliard")
+make_high_number(30, "quintillion")
+make_high_number(33, "quintilliard")
+make_high_number(36, "sextillion")
+make_high_number(39, "sextilliard")
+make_high_number(42, "septillion")
+make_high_number(45, "septilliard")
+make_high_number(48, "octillion")
+make_high_number(51, "octilliard")
+make_high_number(54, "nonillion")
+make_high_number(57, "nonilliard")
+make_high_number(60, "décillion")
+make_high_number(63, "décilliard")
 
 return export
