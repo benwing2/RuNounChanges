@@ -443,21 +443,32 @@ labels["terms derived from fiction"] = {
 	parents = {"terms attributed to a specific source"},
 }
 
-for _, source_and_desc in ipairs({
+for _, source_desc_display_topic_parents_and_sort in ipairs({
+	{"Dickensian works", "the works of [[w:Charles Dickens|Charles Dickens]]", nil, {"Charles Dickens"}},
 	{"DC Comics", "[[w:DC Comics|DC Comics]]"},
-	{"Duckburg and Mouseton", "[[w:The Walt Disney Company|Disney]]'s ''[[w:Duck universe|Duckburg]] and [[w:Mickey Mouse universe|Mouseton]]'' universe"},
-	{"Harry Potter", "the ''[[w:Harry Potter|Harry Potter]]'' series"},
-	{"Nineteen Eighty-Four", "[[w:George Orwell|George Orwell]]'s ''[[w:Nineteen Eighty-Four|Nineteen Eighty-Four]]''"},
-	{"Star Trek", "''[[w:Star Trek|Star Trek]]''"},
-	{"Star Wars", "''[[w:Star Wars|Star Wars]]''"},
-	{"The Simpsons", "''[[w:The Simpsons|The Simpsons]]''"},
-	{"Tolkien's legendarium", "the [[legendarium]] of [[w:J. R. R. Tolkien|J. R. R. Tolkien]]"},
+	{"Duckburg and Mouseton", "[[w:The Walt Disney Company|Disney]]'s [[w:Duck universe|Duckburg]] and [[w:Mickey Mouse universe|Mouseton]] universe", nil, {"Disney"}},
+	{"Harry Potter", "the ''[[w:Harry Potter|Harry Potter]]'' series", "''Harry Potter''", {"Harry Potter"}},
+	{"Nineteen Eighty-Four", "[[w:George Orwell|George Orwell]]'s ''[[w:Nineteen Eighty-Four|Nineteen Eighty-Four]]''", "''Nineteen Eighty-Four''"},
+	{"Star Trek", "''[[w:Star Trek|Star Trek]]''", "''Star Trek''", {"Star Trek"}},
+	{"Star Wars", "''[[w:Star Wars|Star Wars]]''", "''Star Wars''", {"Star Wars"}},
+	{"The Simpsons", "''[[w:The Simpsons|The Simpsons]]''", "''The Simpsons''", {"The Simpsons"}, "Simpsons"},
+	{"Tolkien's legendarium", "the [[legendarium]] of [[w:J. R. R. Tolkien|J. R. R. Tolkien]]", nil, {"J. R. R. Tolkien"}},
 }) do
-	local source, desc = unpack(source_and_desc)
+	local source, desc, display, topic_parents, sort = unpack(source_desc_display_topic_parents_and_sort)
 	labels["terms derived from " .. source] = {
 		description = "{{{langname}}} terms that originate from " .. desc .. ".",
-		parents = {"terms derived from fiction"},
 	}
+	if sort then
+		labels["terms derived from " .. source]["parents"] = {{name = "terms derived from fiction", sort = sort}}
+	else
+		labels["terms derived from " .. source]["parents"] = {"terms derived from fiction"}
+	end
+	if display then
+		labels["terms derived from " .. source]["display"] = "terms derived from " .. display
+	end
+	if topic_parents then
+		labels["terms derived from " .. source]["topic_parents"] = topic_parents
+	end
 end
 
 labels["terms derived from Greek mythology"] = {
