@@ -145,6 +145,7 @@ local display_hyphens = {
 	["Jpan"] = no_display_hyphen,
 	["Laoo"] = no_display_hyphen,
 	["Nshu"] = no_display_hyphen,
+	["Thaa"] = no_display_hyphen,
 	["Thai"] = no_display_hyphen,
 }
 for _, script in ipairs(arab_scripts) do
@@ -231,12 +232,12 @@ function export.link_term(terminfo, display_term, lang, sc, sort_key, force_cat,
 	local result
 
 	terminfo_new.term = display_term
+	terminfo_new.sc = terminfo_new.sc or sc
 	if terminfo_new.lang then
 		result = require("Module:etymology").format_derived(lang, terminfo_new, sort_key, nocat,
 			force_cat or debug_force_cat)
 	else
 		terminfo_new.lang = lang
-		terminfo_new.sc = terminfo_new.sc or sc
 		result = m_links.full_link(terminfo_new, "term", false)
 	end
 
@@ -358,6 +359,7 @@ local function get_affix_type(lang, sc, part)
 	part = reconstructed .. part
 	return affix_type, part
 end
+export.get_affix_type = get_affix_type
 
 
 -- Iterate an array up to the greatest integer index found.
