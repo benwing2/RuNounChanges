@@ -25,25 +25,25 @@ labels["AABB-type reduplications"] = {
 
 labels["alliterative compounds"] = {
 	description = "{{{langname}}} noun phrases composed of two or more stems that alliterate.",
-	umbrella_parents = "Types of compound words by language",
-	parents = {"compound words", "alliterative phrases"},
+	umbrella_parents = "Types of compound terms by language",
+	parents = {"compound terms", "alliterative phrases"},
 }
 
 labels["antonymous compounds"] = {
 	description = "{{{langname}}} compounds in which one part is an antonym of the other.",
-	umbrella_parents = "Types of compound words by language",
+	umbrella_parents = "Types of compound terms by language",
 	parents = {"dvandva compounds", sort = "antonym"},
 }
 
 labels["back-formations"] = {
-	description = "{{{langname}}} words formed by reversing a supposed regular formation, removing part of an older term.",
+	description = "{{{langname}}} terms formed by reversing a supposed regular formation, removing part of an older term.",
 	parents = {"terms by etymology"},
 }
 
 labels["bahuvrihi compounds"] = {
 	description = "{{{langname}}} compounds in which the first part (A) modifies the second (B), and whose meaning follows a [[metonymic]] pattern: “<person> having a B that is A.”",
-	umbrella_parents = "Types of compound words by language",
-	parents = {"compound words", "exocentric compounds"},
+	umbrella_parents = "Types of compound terms by language",
+	parents = {"compound terms", "exocentric compounds"},
 }
 
 labels["blends"] = {
@@ -90,16 +90,22 @@ local compound_poses = {
 for _, pos in ipairs(compound_poses) do
 	labels["compound " .. pos] = {
 		description = "{{{langname}}} " .. pos .. " composed of two or more stems.",
-		umbrella_parents = "Types of compound words by language",
-		parents = {{name = "compound words", sort = " "}, pos},
+		umbrella_parents = "Types of compound terms by language",
+		parents = {{name = "compound terms", sort = " "}, pos},
 	}
 end
 
 labels["compound determinatives"] = {
 	description = "{{{langname}}} determinatives composed of two or more stems.",
-	parents = {"compound words", "determiners"},
+	parents = {"compound terms", "determiners"},
 }
 
+labels["compound terms"] = {
+	description = "{{{langname}}} terms composed of two or more stems.",
+	parents = {"terms by etymology"},
+}
+
+-- FIXME, remove after renaming categories
 labels["compound words"] = {
 	description = "{{{langname}}} words composed of two or more stems.",
 	parents = {"terms by etymology"},
@@ -147,9 +153,9 @@ labels["doublets"] = {
 }
 
 labels["dvandva compounds"] = {
-	description = "{{{langname}}} words composed of two or more stems whose stems could be connected by an 'and'.",
-	umbrella_parents = "Types of compound words by language",
-	parents = {"compound words"},
+	description = "{{{langname}}} terms composed of two or more stems whose stems could be connected by an 'and'.",
+	umbrella_parents = "Types of compound terms by language",
+	parents = {"compound terms"},
 }
 
 labels["elongated forms"] = {
@@ -158,20 +164,20 @@ labels["elongated forms"] = {
 }
 
 labels["endocentric compounds"] = {
-	description = "{{{langname}}} words composed of two or more stems, one of which is the [[w:head (linguistics)|head]] of that compound.",
-	umbrella_parents = "Types of compound words by language",
-	parents = {"compound words"},
+	description = "{{{langname}}} terms composed of two or more stems, one of which is the [[w:head (linguistics)|head]] of that compound.",
+	umbrella_parents = "Types of compound terms by language",
+	parents = {"compound terms"},
 }
 
 labels["endocentric noun-noun compounds"] = {
-	description = "{{{langname}}} words composed of two or more stems, one of which is the [[w:head (linguistics)|head]] of that compound.",
-	umbrella_parents = "Types of compound words by language",
-	parents = {"endocentric compounds", "compound words"},
+	description = "{{{langname}}} terms composed of two or more stems, one of which is the [[w:head (linguistics)|head]] of that compound.",
+	umbrella_parents = "Types of compound terms by language",
+	parents = {"endocentric compounds", "compound terms"},
 }
 
 labels["endocentric verb-noun compounds"] = {
 	description = "{{{langname}}} compounds in which the first element is a verbal stem, the second a nominal stem and the head of the compound.",
-	umbrella_parents = "Types of compound words by language",
+	umbrella_parents = "Types of compound terms by language",
 	parents = {"endocentric compounds", "verb-noun compounds"},
 }
 
@@ -181,14 +187,14 @@ labels["eponyms"] = {
 }
 
 labels["exocentric compounds"] = {
-	description = "{{{langname}}} words composed of two or more stems, none of which is the [[w:head (linguistics)|head]] of that compound.",
-	umbrella_parents = "Types of compound words by language",
-	parents = {"compound words"},
+	description = "{{{langname}}} terms composed of two or more stems, none of which is the [[w:head (linguistics)|head]] of that compound.",
+	umbrella_parents = "Types of compound terms by language",
+	parents = {"compound terms"},
 }
 
 labels["exocentric verb-noun compounds"] = {
 	description = "{{{langname}}} compounds in which the first element is a transitive verb, the second a noun functioning as its direct object, and whose referent is the person or thing doing the action.",
-	umbrella_parents = "Types of compound words by language",
+	umbrella_parents = "Types of compound terms by language",
 	parents = {"exocentric compounds", "verb-noun compounds"},
 }
 
@@ -203,8 +209,8 @@ labels["ghost words"] = {
 }
 
 labels["karmadharaya compounds"] = {
-	description = "{{{langname}}} words composed of two or more stems in which the main stem determines the case endings.",
-	umbrella_parents = "Types of compound words by language",
+	description = "{{{langname}}} terms composed of two or more stems in which the main stem determines the case endings.",
+	umbrella_parents = "Types of compound terms by language",
 	parents = {"tatpurusa compounds"},
 }
 
@@ -219,7 +225,7 @@ labels["homophonic translations"] = {
 }
 
 labels["hybridisms"] = {
-	description = "{{{langname}}} words formed by elements of different linguistic origins.",
+	description = "{{{langname}}} terms formed by elements of different linguistic origins.",
 	parents = {"terms by etymology"},
 }
 
@@ -235,8 +241,8 @@ labels["internationalisms"] = {
 }
 
 labels["itaretara dvandva compounds"] = {
-	description = "{{{langname}}} words composed of two or more stems whose stems could be connected by an 'and'.",
-	umbrella_parents = "Types of compound words by language",
+	description = "{{{langname}}} terms composed of two or more stems whose stems could be connected by an 'and'.",
+	umbrella_parents = "Types of compound terms by language",
 	parents = {"dvandva compounds"},
 }
 
@@ -276,7 +282,7 @@ labels["numeronyms"] = {
 }
 
 labels["onomatopoeias"] = {
-	description = "{{{langname}}} words that were coined to sound like what they represent.",
+	description = "{{{langname}}} terms that were coined to sound like what they represent.",
 	parents = {"terms by etymology"},
 }
 
@@ -345,8 +351,8 @@ labels["retronyms"] = {
 
 labels["rhyming compounds"] = {
 	description = "{{{langname}}} noun phrases composed of two or more stems that rhyme.",
-	umbrella_parents = "Types of compound words by language",
-	parents = {"compound words", "rhyming phrases"},
+	umbrella_parents = "Types of compound terms by language",
+	parents = {"compound terms", "rhyming phrases"},
 }
 
 labels["roots"] = {
@@ -366,8 +372,8 @@ labels["Sanskritic formations"] = {
 }
 
 labels["samahara dvandva compounds"] = {
-	description = "{{{langname}}} words composed of two or more stems whose stems could be connected by an 'and'.",
-	umbrella_parents = "Types of compound words by language",
+	description = "{{{langname}}} terms composed of two or more stems whose stems could be connected by an 'and'.",
+	umbrella_parents = "Types of compound terms by language",
 	parents = {"dvandva compounds"},
 }
 
@@ -398,14 +404,14 @@ labels["spoonerisms"] = {
 
 labels["synonymous compounds"] = {
 	description = "{{{langname}}} compounds in which one part is a synonym of the other.",
-	umbrella_parents = "Types of compound words by language",
+	umbrella_parents = "Types of compound terms by language",
 	parents = {"dvandva compounds", sort = "synonym"},
 }
 
 labels["tatpurusa compounds"] = {
-	description = "{{{langname}}} words composed of two or more stems",
-	umbrella_parents = "Types of compound words by language",
-	parents = {"compound words"},
+	description = "{{{langname}}} terms composed of two or more stems",
+	umbrella_parents = "Types of compound terms by language",
+	parents = {"compound terms"},
 }
 
 labels["taxonomic eponyms"] = {
@@ -419,7 +425,7 @@ labels["terms attributed to a specific source"] = {
 }
 
 labels["terms containing fossilized case endings"] = {
-	description = "{{{langname}}} words or expressions which preserve case morphology which is no longer analyzable within the contemporary grammatical system or which has been entirely lost from the language.",
+	description = "{{{langname}}} terms which preserve case morphology which is no longer analyzable within the contemporary grammatical system or which has been entirely lost from the language.",
 	parents = {"terms by etymology"},
 }
 
@@ -561,25 +567,25 @@ labels["univerbations"] = {
 
 labels["verb-noun compounds"] = {
 	description = "{{{langname}}} compounds in which the first element is a transitive verb, the second a noun functioning as its direct object, and whose referent is the person or thing doing the action.",
-	umbrella_parents = "Types of compound words by language",
+	umbrella_parents = "Types of compound terms by language",
 	parents = {"compound nouns"},
 }
 
 labels["vrddhi derivatives"] = {
 	description = "{{{langname}}} terms derived from a Proto-Indo-European root by the process of [[w:vṛddhi|vṛddhi]] derivation.",
-	umbrella_parents = "Types of compound words by language",
+	umbrella_parents = "Types of compound terms by language",
 	parents = {"terms by etymology"},
 }
 
 labels["vrddhi gerundives"] = {
 	description = "{{{langname}}} [[gerundive]]s derived from a Proto-Indo-European root by the process of [[w:vṛddhi|vṛddhi]] derivation.",
-	umbrella_parents = "Types of compound words by language",
+	umbrella_parents = "Types of compound terms by language",
 	parents = {"vrddhi derivatives"},
 }
 
 labels["vyadhikarana compounds"] = {
-	description = "{{{langname}}} words composed of two or more stems in which the non-main stem determines the case endings.",
-	umbrella_parents = "Types of compound words by language",
+	description = "{{{langname}}} terms composed of two or more stems in which the non-main stem determines the case endings.",
+	umbrella_parents = "Types of compound terms by language",
 	parents = {"tatpurusa compounds"},
 }
 
@@ -588,6 +594,14 @@ labels["words derived through metathesis"] = {
 	parents = {{name = "terms by etymology", sort = "metathesis"}},
 }
 
+for _, fixtype in ipairs({"circumfix", "infix", "interfix", "prefix", "suffix",}) do
+	labels["terms by " .. fixtype] = {
+		description = "{{{langname}}} terms categorized by their " .. fixtype .. "es.",
+		parents = {{name = "terms by etymology", sort = fixtype}, fixtype .. "es"},
+	}
+end
+
+-- FIXME: Delete the following after we have renamed all categories.
 for _, fixtype in ipairs({"circumfix", "infix", "interfix", "prefix", "suffix",}) do
 	labels["words by " .. fixtype] = {
 		description = "{{{langname}}} words categorized by their " .. fixtype .. "es.",
@@ -667,6 +681,17 @@ raw_categories["Sanskritic formations by language"] = {
 	},
 }
 
+raw_categories["Types of compound terms by language"] = {
+	description = "Umbrella categories covering topics related to types of compound terms.",
+	additional = "{{{umbrella_meta_msg}}}",
+	parents = {
+		"Umbrella metacategories",
+		{name = "compound terms", is_label = true, sort = " "},
+		{name = "Terms by etymology subcategories by language", sort = " "},
+	},
+}
+
+-- FIXME, delete after renaming the categories
 raw_categories["Types of compound words by language"] = {
 	description = "Umbrella categories covering topics related to types of compound words.",
 	additional = "{{{umbrella_meta_msg}}}",
@@ -1309,22 +1334,23 @@ table.insert(handlers, function(data)
 
 		-- Compute parents.
 		local parents = {}
+		-- FIXME, remove the conditions on "words" when we've renamed the categories
 		if id then
-			if pos == "words" then
+			if pos == "terms" or pos == "words" then
 				table.insert(parents, {name = labelpref .. term, sort = id, args = args})
 			else
-				table.insert(parents, {name = "words " .. affixtype .. "ed with " .. term_and_id, sort = id .. ", " .. pos, args = args})
+				table.insert(parents, {name = "terms " .. affixtype .. "ed with " .. term_and_id, sort = id .. ", " .. pos, args = args})
 				table.insert(parents, {name = labelpref .. term, sort = id, args = args})
 			end
-		elseif pos ~= "words" then
-			table.insert(parents, {name = "words " .. affixtype .. "ed with " .. term, sort = pos, args = args})
+		elseif pos ~= "terms" and pos ~= "words" then
+			table.insert(parents, {name = "terms " .. affixtype .. "ed with " .. term, sort = pos, args = args})
 		end
-		table.insert(parents, {name = "words by " .. affixtype, sort = data.lang:makeSortKey(data.lang:makeEntryName(args.sort or term))})
+		table.insert(parents, {name = (pos == "words" and "words by " or "terms by ") .. affixtype, sort = data.lang:makeSortKey(data.lang:makeEntryName(args.sort or term))})
 
 		return {
 			description = "{{{langname}}} " .. pos .. " " .. desc[affixtype] .. " " .. require("Module:links").full_link({
 				lang = data.lang, term = term, alt = alt, sc = sc, id = id, tr = tr}, "term") .. ".",
-			breadcrumb = pos == "words" and m_script_utilities.tag_text(alt or term, data.lang, sc, "term") .. id_text or pos,
+			breadcrumb = (pos == "terms" or pos == "words") and m_script_utilities.tag_text(alt or term, data.lang, sc, "term") .. id_text or pos,
 			displaytitle = "{{{langname}}} " .. labelpref .. m_script_utilities.tag_text(term, data.lang, sc, "term") .. id_text,
 			parents = parents,
 			umbrella = false,
