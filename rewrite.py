@@ -6,7 +6,7 @@ import pywikibot
 from arabiclib import reorder_shadda
 
 def process_page(page, index, refrom, reto, pagetitle_sub, comment, lang_only,
-    warn_on_no_replacement, verbose):
+    warn_on_no_replacement, verbose, do_reorder_shadda):
   pagetitle = unicode(page.title())
   def pagemsg(txt):
     blib.msg("Page %s %s: %s" % (index, pagetitle, txt))
@@ -15,7 +15,8 @@ def process_page(page, index, refrom, reto, pagetitle_sub, comment, lang_only,
   #blib.msg("From: [[%s]], To: [[%s]]" % (refrom, reto))
   text = unicode(page.text)
   origtext = text
-  text = reorder_shadda(text)
+  if do_reorder_shadda:
+    text = reorder_shadda(text)
   zipped_fromto = zip(refrom, reto)
   def replace_text(text):
     for fromval, toval in zipped_fromto:
@@ -60,6 +61,7 @@ pa.add_argument("-t", "--to", help="To regex, can be specified multiple times",
 pa.add_argument("--comment", help="Specify the change comment to use")
 pa.add_argument('--pagetitle', help="Value to substitute page title with")
 pa.add_argument('--lang-only', help="Only replace in the specified language section")
+pa.add_argument('--reorder-shadda', help="Reorder shadda + short vowel to fix Unicode bug")
 pa.add_argument('--warn-on-no-replacement', action="store_true",
   help="Warn if no replacements made")
 args = pa.parse_args()
@@ -76,5 +78,5 @@ if len(from_) != len(to):
 
 def do_process_page(page, index, parsed):
   return process_page(page, index, from_, to, pagetitle_sub, comment, lang_only,
-    args.warn_on_no_replacement, args.verbose)
+    args.warn_on_no_replacement, args.verbose, args.reorder_shadda)
 blib.do_pagefile_cats_refs(args, start, end, do_process_page, edit=True)
