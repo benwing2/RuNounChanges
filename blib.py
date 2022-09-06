@@ -727,7 +727,7 @@ def split_utf8_arg(arg, canonicalize=None):
     if canonicalize:
       pagename = canonicalize(pagename)
     return pagename
-  return [process(x) for x in re.split(r",(?! )", arg)]
+  return [process(x) for x in re.split(r",(?=[^ ])", arg)]
 
 def yield_items_from_file(filename, canonicalize=None, filename_is_utf8=True, include_original_lineno=False,
     preserve_blank_lines=False):
@@ -994,6 +994,10 @@ def create_argparser(desc, include_pagefile=False, include_stdin=False,
     parser.add_argument("--refs", help="List of references to process, comma-separated.")
     parser.add_argument("--pages-and-refs", help="List of pages to process, comma-separated, along with references to those pages.")
     parser.add_argument("--specials", help="Special pages to do, comma-separated.")
+    parser.add_argument("--do-specials-cat-pages", action="store_true",
+      help="When processing specials pages that are categories, do pages of those categories.")
+    parser.add_argument("--do-specials-refs", action="store_true",
+      help="When processing specials pages, do references to those pages.")
     parser.add_argument("--contribs", help="Names of users whose contributions to iterate over, comma-separated.")
     parser.add_argument("--contribs-start", help="Timestamp to start doing contributions at.")
     parser.add_argument("--contribs-end", help="Timestamp to end doing contributions at.")
@@ -1270,6 +1274,7 @@ def do_pagefile_cats_refs(args, start, end, process, default_pages=[],default_ca
       parse_dump(sys.stdin, do_process_stdin_dump_text_on_page, start, end)
 
   elif args_has_non_default_pages(args):
+    args_prune_cats = args.prune_cats and args.prune_cats.decode("utf-8") or None
     if args.pages:
       pages = split_utf8_arg(args.pages, canonicalize=canonicalize_pagename)
       for index, pagetitle in iter_items(pages, start, end):
@@ -1292,7 +1297,6 @@ def do_pagefile_cats_refs(args, start, end, process, default_pages=[],default_ca
           get_name=lambda x:x[1], get_index=lambda x:x[0]):
         process_pywikibot_page(index, pywikibot.Page(site, pagetitle))
     if args.cats:
-      args_prune_cats = args.prune_cats and args.prune_cats.decode("utf-8") or None
       for cat in split_utf8_arg(args.cats):
         if args.do_cat_and_subcats:
           for index, subcat in cat_subcats(cat, start, end, seen=seen, prune_cats_regex=args_prune_cats,
@@ -1320,7 +1324,17 @@ def do_pagefile_cats_refs(args, start, end, process, default_pages=[],default_ca
     if args.specials:
       for special in split_utf8_arg(args.specials):
         for index, page in query_special_pages(special, start, end):
-          process_pywikibot_page(index, page)
+          title = unicode(page.title())
+          if args.do_specials_cat_pages and title.startswith("Category:"):
+            for index2, subcat in cat_articles(re.sub("^Category:", "", title), seen=seen, prune_cats_regex=args_prune_cats,
+                recurse=args.recursive):
+              process_pywikibot_page(index2, subcat, no_check_seen=True)
+          if args.do_specials_refs:
+            # We don't use ref_namespaces here because the user might not want it.
+            for index2, page2 in references(title, namespaces=args_ref_namespaces):
+              process_pywikibot_page(index2, page2)
+          if not args.do_specials_cat_pages and not args.do_specials_refs:
+            process_pywikibot_page(index, page)
     if args.contribs:
       for contrib in split_utf8_arg(args.contribs):
         for index, page in query_usercontribs(contrib, start, end, starttime=args.contribs_start, endtime=args.contribs_end):
@@ -2039,7 +2053,7 @@ def split_trailing_separator(sectext):
   return secbody, sectail
 
 def split_trailing_categories(secbody, sectail):
-  mm = re.match(r"^(.*?\n)(\n*((?:\[\[[Cc]ategory:[^\[\]\n]+\]\]|\{\{(?:c|C|cat|cln|top|topic|topics|categorize|catlangname|catlangcode)\|[^{}\n]*\}\})\n*)*)$",
+  mm = re.match(r"^(.*?\n)(\n*(?:(?:\[\[(?:[Cc][Aa][Tt][Ee][Gg][Oo][Rr][Yy]|[Cc][Aa][Tt]):[^\[\]\n]+\]\]|\{\{(?:c|C|cat|cln|top|topic|topics|categorize|catlangname|catlangcode)\|[^{}\n]*\}\})\n*)*)$",
       secbody, re.S)
   if mm:
     secbody, secbodytail = mm.group(1), mm.group(2)
