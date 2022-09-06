@@ -16,7 +16,7 @@ def process_page(index, page, contents, prev_comment, origcontents, verbose, arg
     errandmsg("Page %s %s: %s" % (index, pagetitle, txt))
 
   if contents == origcontents:
-    pagemsg("Skipping contents for %s because no change" % pagetitle)
+    pagemsg("Skipping contents because no change")
     return
   if verbose:
     pagemsg("For [[%s]]:" % pagetitle)
@@ -113,7 +113,7 @@ if __name__ == "__main__":
         pagemsg("Skipping because not found in among new page contents")
         return
       if origcontents == newtext:
-        pagemsg("Page %s %s: Skipping contents for %s because no change" % pagetitle)
+        pagemsg("Skipping contents because no change")
         return
       return process_page(index, page, newtext, comment, origcontents,
         args.verbose, arg_comment, arg_lang_only, args.allow_page_creation)
@@ -125,7 +125,7 @@ if __name__ == "__main__":
         get_name=lambda x:x[1], get_index=lambda x:x[0]):
       origcontents = origpages.get(pagetitle, None)
       if origcontents == newtext:
-        msg("Page %s %s: Skipping contents for %s because no change" % (index, pagetitle, pagetitle))
+        msg("Page %s %s: Skipping contents because no change" % (index, pagetitle))
       else:
         def do_process_page(page, index, parsed):
           return process_page(index, page, newtext, comment, origcontents,
