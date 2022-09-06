@@ -314,7 +314,7 @@ for i = 2000, 10000, 1000 do
 end
 
 make_simple_number(20000, "veinte mil", "veintemilésimo")
-make_simple_number(20001, "veintiún mil", "veintiunmilésimo")
+make_simple_number(21000, "veintiún mil", "veintiunmilésimo")
 make_simple_number(100000, "cien mil", "cienmilésimo")
 make_simple_number(200000, "doscientos mil", "doscientosmilésimo")
 make_simple_number(1000000, "[[un]] [[millón]]<link:millón>", "millonésimo", nil, "millón")
@@ -322,24 +322,31 @@ make_simple_number(2000000, "[[dos]] [[millón|millones]]", "dosmillonésimo")
 make_simple_number(10000000, "[[diez]] [[millón|millones]]", "diezmillonésimo")
 make_simple_number(100000000, "[[cien]] [[millón|millones]]", "cienmillonésimo")
 make_simple_number(power_of(9), {"mil millones", "[[un]] [[millardo]]<link:millardo>"}, {"milmillonésimo", "millardésimo"}, nil, "millardo")
-make_simple_number(power_of(12), "[[un]] [[billón]]<link:billón>", "billonésimo", nil, "billón")
-make_simple_number(power_of(18), "[[un]] [[trillón]]<link:trillón>", "trillonésimo", nil, "trillón")
-make_simple_number(power_of(24), "[[un]] [[cuatrillón]]<link:cuatrillón>", "cuatrillonésimo", nil, "cuatrillón")
-make_simple_number(power_of(30), "[[un]] [[quintillón]]<link:quintillón>", "quintillonésimo", nil, "quintillón")
-make_simple_number(power_of(36), "[[un]] [[sextillón]]<link:sextillón>", "sextillonésimo", nil, "sextillón")
-make_simple_number(power_of(42), "[[un]] [[septillón]]<link:septillón>", "septillonésimo", nil, "septillón")
-make_simple_number(power_of(48), "[[un]] [[octillón]]<link:octillón>", "octillonésimo", nil, "octillón")
-make_simple_number(power_of(54), "[[un]] [[nonillón]]<link:nonillón>", "nonillonésimo") -- no Spanish Wikipedia entry for [[nonillón]]
-make_simple_number(power_of(60), "[[un]] [[decillón]]<link:decillón>", "decillonésimo") -- no Spanish Wikipedia entry for [[decillón]]
-make_simple_number(power_of(66), "[[un]] [[undecillón]]<link:undecillón>", "undecillonésimo", nil, "undecillón")
-make_simple_number(power_of(72), "[[un]] [[duodecillón]]<link:duodecillón>", "duodecillonésimo", nil, "duodecillón")
-make_simple_number(power_of(78), "[[un]] [[tredecillón]]<link:tredecillón>", "tredecillonésimo", nil, "tredecillón")
-make_simple_number(power_of(84), "[[un]] [[cuatrodecillón]]<link:cuatrodecillón>", "cuatrodecillonésimo", nil, "cuatrodecillón")
-make_simple_number(power_of(90), "[[un]] [[quindecillón]]<link:quindecillón>", "quindecillonésimo", nil, "quindecillón")
-make_simple_number(power_of(96), "[[un]] [[sexdecillón]]<link:sexdecillón>", "sexdecillonésimo", nil, "sexdecillón")
-make_simple_number(power_of(102), "[[un]] [[septendecillón]]<link:septendecillón>", "septendecillonésimo", nil, "septendecillón")
-make_simple_number(power_of(108), "[[un]] [[octodecillón]]<link:octodecillón>", "octodecillonésimo", nil, "octodecillón")
-make_simple_number(power_of(114), "[[un]] [[novendecillón]]<link:novendecillón>", "novendecillonésimo", nil, "novendecillón")
-make_simple_number(power_of(120), "[[un]] [[vigintillón]]<link:vigintillón>", "vigintillonésimo", nil, "vigintillón")
+
+local function make_large_number(power, cardinal, nowplink)
+	local ordinal = cardinal:gsub("ón$", "onésimo")
+	make_simple_number(power_of(power), ("[[un]] [[%s]]<link:%s>"):format(cardinal, cardinal), ordinal, nil,
+		not nowplink and cardinal or nil)
+end
+
+make_large_number(12, "billón")
+make_large_number(18, "trillón")
+make_large_number(24, "cuatrillón")
+make_large_number(30, "quintillón")
+make_large_number(36, "sextillón")
+make_large_number(42, "septillón")
+make_large_number(48, "octillón")
+make_large_number(54, "nonillón", "nowplink") -- no Spanish Wikipedia entry for [[nonillón]]
+make_large_number(60, "decillón", "nowplink") -- no Spanish Wikipedia entry for [[decillón]]
+make_large_number(66, "undecillón")
+make_large_number(72, "duodecillón")
+make_large_number(78, "tredecillón")
+make_large_number(84, "cuatrodecillón")
+make_large_number(90, "quindecillón")
+make_large_number(96, "sexdecillón")
+make_large_number(102, "septendecillón")
+make_large_number(108, "octodecillón")
+make_large_number(114, "novendecillón")
+make_large_number(120, "vigintillón")
 
 return export
