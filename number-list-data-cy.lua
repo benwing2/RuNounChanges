@@ -2,6 +2,8 @@ local export = {numbers = {}}
 
 local m_numutils = require("Module:number list/utils")
 local map = m_numutils.map
+local filter = m_numutils.filter
+local power_of = m_numutils.power_of
 
 local rfind = mw.ustring.find
 local rsubn = mw.ustring.gsub
@@ -13,9 +15,6 @@ local function rsub(term, foo, bar)
 end
 
 local numbers = export.numbers
-
-local 
-
 
 numbers[0] = {
 	cardinal = "sero",
@@ -238,6 +237,8 @@ local vigesimal_templates = {
 	[9] = {"UNIT a phedwar ugain", 20},
 }
 
+local ordinal_suffixes = { "fed", "ed", "af", "il", "ydd", "edd", "eg", "ain" }
+
 -- Generate the numbers from 20 to 99. This is not easy both because there are two systems for forming cardinals
 -- (decimal and vigesimal) and because of all sorts of complexities, including masculine and feminine variants of
 -- certain numbers (exactly which numbers differs between the decimal and vigesimal systems), apocopated variants of
@@ -249,9 +250,9 @@ for ten_multiplier=2, 9 do
 		-- First, the decimal forms. Only the cardinal is decimal. Formation is "TEN_UNIT deg ONE_UNIT" where
 		-- TEN_UNIT = the cardinal associated with `ten_multiplier` and ONE_UNIT = the cardinal associated with `one`.
 		-- Irregularities in the word "deg" follow the even multiples of 10, so we just copy them.
-		local decimal_ten_card = filter(function(card) return card:find("<tag:decimal>") end, numbers[ten_multiplier].cardinal)
+		local decimal_ten_card = filter(function(card) return card:find("<tag:decimal>") end, numbers[ten_multiplier * 10].cardinal)
 		if #decimal_ten_card ~= 1 then
-			error("Internal error: Multiple or no decimal ten multiplier forms: " .. table.concat(decimal_ten_card, ", "))
+			error(("Internal error: Multiple or no decimal ten multiplier forms for number %s: %s"):format(num, table.concat(decimal_ten_card, ", ")))
 		end
 		local decimal_cardinal = map(function(unit_card)
 			return map(function(ten_card) return ten_card .. " " .. unit_card end, decimal_ten_card)
@@ -264,7 +265,9 @@ for ten_multiplier=2, 9 do
 		-- First cardinal forms.
 		local vigesimal_unit_card = filter(function(card) return card:find("<tag:vigesimal>") end, numbers[vigesimal_unit].cardinal)
 		if #vigesimal_unit_card > 0 then
-			vigesimal_unit_card = map(function(unit_card) return rsub(unit_card, "<tag:vigesimal>", "") end, vigesimal_unit_card)
+			for i, unit_card in ipairs(vigesimal_unit_card) do
+				vigesimal_unit_card[i] = rsub(unit_card, "<tag:vigesimal>", "")
+			end
 		else
 			vigesimal_unit_card = numbers[vigesimal_unit].cardinal
 		end
@@ -273,7 +276,7 @@ for ten_multiplier=2, 9 do
 
 		-- Next ordinal forms.
 		vigesimal_unit_ord = numbers[vigesimal_unit].ordinal -- ordinals always vigesimal
-		local vigesimal_ordinal = map(function(unit_ord) return rsub(vigesimal_template, "UNIT", unit_ord) .. "<tag:vigesimal>" end,
+		local vigesimal_ordinal = map(function(unit_ord) return rsub(vigesimal_template, "UNIT", unit_ord) end,
 			vigesimal_unit_ord)
 
 		-- Now combine vigesimal + decimal cardinal forms, possibly with special form for 99; similarly, take the
@@ -281,16 +284,24 @@ for ten_multiplier=2, 9 do
 		local combined_card
 		local combined_ord
 		if num == 99 then -- include special forms for 99 before regular forms
-			combined_card = {"cant namyn un"}
+			combined_card = {"cant namyn un<tag:vigesimal>"}
 			combined_ord = {"canfed namyn un"}
 		else
 			combined_card = {}
 			-- don't set combined_ord; it just uses the vigesimal forms directly.
 		end
-		map(function(card) table.insert(combined_card, card) end, vigesimal_cardinal)
-		map(function(card) table.insert(combined_card, card) end, decimal_cardinal)
+		local function insert(dest, source)
+			if type(source) ~= "table" then
+				source = {source}
+			end
+			for _, item in ipairs(source) do
+				table.insert(dest, item)
+			end
+		end
+		insert(combined_card, vigesimal_cardinal)
+		insert(combined_card, decimal_cardinal)
 		if combined_ord then
-			map(function(ord) table.insert(combined_ord, ord) end, vigesimal_ordinal)
+			insert(combined_ord, vigesimal_ordinal)
 		else
 			combined_ord = vigesimal_ordinal
 			if #combined_ord == 1 then
@@ -298,8 +309,29 @@ for ten_multiplier=2, 9 do
 			end
 		end
 
-		-- Now generate ordinal abbreviations.
-		-- FIXME
+		local ordinal_abbr = map(function(ord)
+			for _, suffix in ipairs(ordinal_suffixes) do
+				if rfind(ord, suffix .. "$") then
+					return num .. suffix
+				end
+			end
+			error(("Ordinal %s doesn't end with any of the recognized suffixes %s; please update the suffix list"):format(
+				ord, table.concat(ordinal_suffixes, ",")))
+		end, vigesimal_ordinal)
+
+		-- If all (both) ordinal abbrevs are the same, reduce to one.
+		if type(ordinal_abbr) == "table" and #ordinal_abbr > 1 then
+			if #ordinal_abbr > 2 then
+				error(("Don't currently know how to handle more than two ordinal variants, but saw %s"):format(
+					table.concat(ordinal_abbr)))
+			end
+			local abbr1 = rsub(ordinal_abbr[1], "<.*>", "")
+			local abbr2 = rsub(ordinal_abbr[2], "<.*>", "")
+			if abbr1 == abbr2 then
+				-- Remove masculine/feminine tag
+				ordinal_abbr = rsub(ordinal_abbr[1], "<tag:[a-z]+ine>", "")
+			end
+		end
 
 		numbers[num] = {
 			cardinal = combined_card,
@@ -309,158 +341,8 @@ for ten_multiplier=2, 9 do
 	end
 end
 	
-numbers[21] = {
-	cardinal = {"dau ddeg un<tag:decimal>", "un ar hugain<tag:vigesimal>"},
-	ordinal = "unfed ar hugain",
-	ordinal_abbr = "21ain",
-	wplink = "dau ddeg un",
-}
-
-numbers[22] = {
-	cardinal = {"dau ar hugain", "dau ddeg dau", "dau ddeg dwy", "dwy ar hugain"},
-	ordinal = "ail ar hugain",
-	[[decimal|Decimal]] = {"dau ddeg dau", "dau ddeg dwy"},
-	[[feminine|Feminine]] = {"dwy ar hugain", "dau ddeg dwy"},
-	[[masculine|Masculine]] = {"dau ddeg dau", "dau ar hugain"},
-	[[vigesimal|Vigesimal]] = {"dau ar hugain", "dwy ar hugain"},
-}
-
-numbers[23] = {
-	cardinal = {"tri ar hugain", "dau ddeg tri", "dau ddeg tair", "tair ar hugain"},
-	ordinal = {"trydydd ar hugain", "trydedd ar hugain"},
-	[[decimal|Decimal]] = {"dau ddeg tri", "dau ddeg tair", "un deg tair", "un deg tri"},
-	[[feminine|Feminine]] = {"dau ddeg tair", "tair ar hugain", "trydedd ar hugain"},
-	[[masculine|Masculine]] = {"dau ddeg tri", "tri ar hugain", "trydydd ar hugain"},
-	[[vigesimal|Vigesimal]] = {"tri ar hugain", "tair ar hugain"},
-}
-
-numbers[24] = {
-	cardinal = {"dau ddeg pedwar", "pedwar ar hugain", "dau ddeg pedair", "pedair ar hugain"},
-	ordinal = {"pedwerydd ar hugain", "pedwaredd ar hugain"},
-	[[decimal|Decimal]] = {"dau ddeg pedwar", "dau ddeg pedair"},
-	[[feminine|Feminine]] = {"dau ddeg pedair", "pedair ar hugain", "pedwaredd ar hugain"},
-	[[masculine|Masculine]] = {"dau ddeg pedwar", "pedwar ar hugain"},
-	[[vigesimal|Vigesimal]] = {"pedwar ar hugain", "pedair ar hugain"},
-}
-
-numbers[25] = {
-	cardinal = {"pump ar hugain", "dau ddeg pump"},
-	ordinal = "pumed ar hugain",
-	[[decimal|Decimal]] = "dau ddeg pump",
-	[[vigesimal|Vigesimal]] = "pump ar hugain",
-}
-
-numbers[26] = {
-	cardinal = {"chwech ar hugain", "dau ddeg chwech"},
-	ordinal = "chweched ar hugain",
-	[[decimal|Decimal]] = "dau ddeg chwech",
-	[[vigesimal|Vigesimal]] = "chwech ar hugain",
-}
-
-numbers[27] = {
-	cardinal = {"saith ar hugain", "dau ddeg saith"},
-	ordinal = "seithfed ar hugain",
-	[[decimal|Decimal]] = "dau ddeg saith",
-	[[vigesimal|Vigesimal]] = "saith ar hugain",
-}
-
-numbers[28] = {
-	cardinal = {"dau ddeg wyth", "wyth ar hugain"},
-	ordinal = "wythfed ar hugain",
-	[[decimal|Decimal]] = "dau ddeg wyth",
-	[[vigesimal|Vigesimal]] = "wyth ar hugain",
-}
-
-numbers[29] = {
-	cardinal = {"dau ddeg naw", "naw ar hugain"},
-	ordinal = "nawfed ar hugain",
-	[[decimal|Decimal]] = "dau ddeg naw",
-	[[vigesimal|Vigesimal]] = "naw ar hugain",
-}
-
-numbers[31] = {
-	cardinal = {"un ar ddeg ar hugain", "tri deg un"},
-	ordinal = "unfed ar ddeg ar hugain",
-	[[decimal|Decimal]] = "tri deg un",
-	[[vigesimal|Vigesimal]] = "un ar ddeg ar hugain",
-}
-
-numbers[32] = {
-	cardinal = {"deuddeg ar hugain", "tri deg dau"},
-	ordinal = "deuddegfed ar hugain",
-	[[decimal|Decimal]] = "tri ddeg dau",
-}
-
-numbers[33] = {
-	cardinal = "tri ar ddeg ar hugain",
-}
-
-numbers[39] = {
-	cardinal = "pedwar ar bymtheg ar hugain",
-	ordinal = "pedwerydd ar bymtheg ar hugain",
-}
-
-numbers[41] = {
-	cardinal = "un a deugain",
-	ordinal = "unfed ar deugain",
-}
-
-numbers[49] = {
-	cardinal = {"naw a deugain", "pedwar deg naw"},
-}
-
-numbers[51] = {
-	cardinal = {"hanner cant ac un", "pum deg un"},
-}
-
-numbers[59] = {
-	cardinal = {"pum deg naw", "pedwar ar bymtheg a deugain"},
-}
-
-numbers[61] = {
-	cardinal = {"chwe deg un", "un a thrigain"},
-}
-
-numbers[69] = {
-	cardinal = "naw a thrigain",
-}
-
-numbers[71] = {
-	cardinal = "un ar ddeg a thrigain",
-}
-
-numbers[79] = {
-	cardinal = "pedwar ar bymtheg a thrigain",
-}
-
-numbers[81] = {
-	cardinal = "un a phedwar ugain",
-}
-
-numbers[89] = {
-	cardinal = "naw a phedwar ugain",
-}
-
-numbers[91] = {
-	cardinal = "un ar ddeg a phedwar ugain",
-}
-
-numbers[98] = {
-	cardinal = {"deunaw a phedwar ugain", "naw deg wyth"},
-	ordinal = "deunawfed a phedwar ugain",
-}
-
-numbers[99] = {
-	cardinal = {"pedwar ar bymtheg a phedwar ugain", "cant namyn un", "naw deg naw", "pedair ar bymtheg a phedwar ugain"},
-	ordinal = {"canfed namyn un", "pedwerydd ar bymtheg a phedwar ugain", "pedwaredd ar bymtheg a phedwar ugain"},
-	[[decimal|Decimal]] = "naw deg naw",
-	[[feminine|Feminine]] = {"pedair ar bymtheg a phedwar ugain", "pedwaredd ar bymtheg a phedwar ugain"},
-	[[masculine|Masculie]] = "pedwar ar bymtheg a phedwar ugain",
-	[[vigesimal|Vigesimal]] = "pedwar ar bymtheg a phedwar ugain",
-}
-
 numbers[100] = {
-	cardinal = "cant",
+	cardinal = {"cant", "can<q:before nouns>"},
 	ordinal = "canfed",
 }
 
@@ -472,6 +354,67 @@ numbers[101] = {
 numbers[102] = {
 	cardinal = "cant a dau",
 	ordinal = "ail wedi'r cant",
+}
+
+for hundred, form in ipairs { "dau gant", "tri chant", "pedwar cant", "pum cant", "chwe chant",
+	"saith cant", "wyth cant", "naw cant" } do
+	local num = (hundred + 1) * 100
+	number[num] = {
+		cardinal = form,
+		ordinal = rsub(form, "t$", "") .. "fed",
+	}
+end
+
+for thousand, form in ipairs { "mil", "[[dau]] [[mil|vil]]", "[[tri]] [[mil]]", "[[pedwar]] [[mil]]",
+	"[[pump]] [[mil]]", "[[chwech]] [[mil]]", "[[saith]] mil", "wyth mil", "naw mil" } do
+	numbers[thousand * 1000] = {
+		cardinal = form,
+		ordinal = form .. "fed",
+	}
+end
+
+-- Handle 10000 through 90000.
+for num=10000, 90000, 10000 do
+	local multiplier = numbers[num / 1000].cardinal
+	local decimal_mult = filter(function(card) return card:find("<tag:decimal>") end, multiplier)
+	if #decimal_mult > 0 then
+		decimal_mult = map(function(card) return rsub(card, "<tag:decimal>", "") end, decimal_mult)
+	else
+		decimal_mult = multiplier
+	end
+	local cardinal = map(function(card) return ("[[%s]] [[mil]]"):format(card) end, decimal_mult)
+	local ordinal = map(function(card) return card .. "fed" end, cardinal)
+		
+	numbers[num] = {
+		cardinal = cardinal,
+		ordinal = ordinal,
+	}
+end
+
+-- Is this still used?
+--[=[
+numbers[10000] = {
+	cardinal = "myrdd",
+	ordinal = "myrddfed",
+}
+]=]
+
+-- Is this still used?
+--[=[
+numbers[100000] = {
+	cardinal = {"milcant", "milcan<q:before nouns>"},
+	ordinal = "milcanfed",
+}
+]=]
+
+numbers[1000000] = {
+	cardinal = "miliwn",
+	-- ordinal = "miliwnfed" or "miliyenfed"?
+}
+
+numbers[power_of(9)] = {
+	cardinal = "biliwn",
+	-- ordinal = "biliwnfed" or "biliyenfed"?
 }
 
 return export
