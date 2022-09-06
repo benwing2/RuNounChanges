@@ -7,7 +7,7 @@ local rsplit = mw.text.split
 
 local m_links = require("Module:links")
 local m_table = require("Module:table")
-local com = require("Module:User:Benwing2/pt-common")
+local com = require("Module:pt-common")
 local lang = require("Module:languages").getByCode("pt")
 local langname = lang:getCanonicalName()
 
@@ -20,7 +20,7 @@ local suffix_categories = {
 }
 
 local function track(page)
-	require("Module:debug").track("es-headword/" .. page)
+	require("Module:debug/track")("pt-headword/" .. page)
 	return true
 end
 
@@ -55,7 +55,8 @@ function export.show(frame)
 	-- FIXME: Remove this when we've converted all the old calls.
 	if (poscat == "adjectives" or poscat == "comparative adjectives" or poscat == "superlative adjectives") and (
 		parargs[1] or parargs[2] or parargs.old) then
-		return require("Module:pt-headword-old").show(frame)
+		track("pt-adj-old")
+		return require("Module:pt-headword/old").show(frame)
 	end
 
 	local params = {
