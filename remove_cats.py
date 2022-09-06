@@ -26,9 +26,10 @@ def process_text_on_page(index, pagetitle, text):
   origtext = text
   notes = []
   removed_cats = []
+  regex = args.regex.decode("utf-8")
 
   def should_remove_cat(cat):
-    return re.match(args.regex + "$", cat.replace("_", " "))
+    return re.match(regex + "$", cat.replace("_", " "))
 
   parsed = blib.parse_text(text)
 
@@ -94,7 +95,7 @@ def process_text_on_page(index, pagetitle, text):
 
   text = unicode(parsed)
 
-  for m in re.finditer(r"\[\[(?:Category|category|CAT):(.*?)\]\]\n?", text):
+  for m in re.finditer(r"\[\[(?:[Cc][Aa][Tt][Ee][Gg][Oo][Rr][Yy]|[Cc][Aa][Tt]):(.*?)\]\]\n?", text):
     cat = m.group(1)
     cat = re.sub(r"\|.*", "", cat)
     if should_remove_cat(cat):
