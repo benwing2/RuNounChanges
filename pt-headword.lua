@@ -1,172 +1,405 @@
-local m_adj = require("Module:pt-adjectives")
-local m_conj = require("Module:pt-conj")
-
-local lang = require("Module:languages").getByCode("pt")
-
 local export = {}
 local pos_functions = {}
+local rfind = mw.ustring.find
+local rmatch = mw.ustring.match
+local rsubn = mw.ustring.gsub
+local rsplit = mw.text.split
+
+local m_links = require("Module:links")
+local m_table = require("Module:table")
+local com = require("Module:User:Benwing2/pt-common")
+local lang = require("Module:languages").getByCode("pt")
+local langname = lang:getCanonicalName()
+
+local suffix_categories = {
+	["adjectives"] = true,
+	["adverbs"] = true,
+	["nouns"] = true,
+	["verbs"] = true,
+	["prepositional phrases"] = true,
+}
+
+local function track(page)
+	require("Module:debug").track("es-headword/" .. page)
+	return true
+end
+
+local function glossary_link(entry, text)
+	text = text or entry
+	return "[[Appendix:Glossary#" .. entry .. "|" .. text .. "]]"
+end
+
+
+local function check_all_missing(forms, plpos, tracking_categories)
+	for _, form in ipairs(forms) do
+		if type(form) == "table" then
+			form = form.term
+		end
+		if form then
+			local title = mw.title.new(form)
+			if title and not title.exists then
+				table.insert(tracking_categories, langname .. " " .. plpos .. " with red links in their headword lines")
+			end
+		end
+	end
+end
+
 
 -- The main entry point.
 -- This is the only function that can be invoked from a template.
 function export.show(frame)
-	local args = frame:getParent().args
-	PAGENAME = mw.title.getCurrentTitle().text
-	
 	local poscat = frame.args[1] or error("Part of speech has not been specified. Please pass parameter 1 to the module invocation.")
-	
-	local data = {lang = lang, pos_category = poscat, categories = {}, heads = {}, genders = {}, inflections = {}}
-	
-	-- Call POS-specific function
+
+	local parargs = frame:getParent().args
+
+	-- FIXME: Remove this when we've converted all the old calls.
+	if (poscat == "adjectives" or poscat == "comparative adjectives" or poscat == "superlative adjectives") and (
+		parargs[1] or parargs[2] or parargs.old) then
+		return require("Module:pt-headword-old").show(frame)
+	end
+
+	local params = {
+		["head"] = {list = true},
+		["splithyph"] = {type = "boolean"},
+		["nolinkhead"] = {type = "boolean"},
+		["json"] = {type = "boolean"},
+		["pagename"] = {}, -- for testing
+	}
+
 	if pos_functions[poscat] then
-		pos_functions[poscat](args, data)
+		for key, val in pairs(pos_functions[poscat].params) do
+			params[key] = val
+		end
 	end
-	
-	if args["head"] then
-		data.heads = { args["head"] }
+
+	local args = require("Module:parameters").process(parargs, params)
+
+	local pagename = args.pagename or mw.title.getCurrentTitle().text
+
+	local heads = args["head"]
+	if args.nolinkhead then
+		if #heads == 0 then
+			heads = {pagename}
+		end
+	else
+		local auto_linked_head = require("Module:romance utilities").add_lemma_links(pagename, args.splithyph)
+		if #heads == 0 then
+			heads = {auto_linked_head}
+		else
+			for _, head in ipairs(heads) do
+				if head == auto_linked_head then
+					track("redundant-head")
+				end
+			end
+		end
 	end
-	
-	if #data.heads == 0 then
-		data.heads = { "" }
+
+	local data = {
+		lang = lang,
+		pos_category = poscat,
+		categories = {},
+		heads = heads,
+		genders = {},
+		inflections = {},
+		categories = {},
+		pagename = pagename
+	}
+
+	if pagename:find("^%-") and suffix_categories[poscat] then
+		data.pos_category = "suffixes"
+		local singular_poscat = poscat:gsub("s$", "")
+		table.insert(data.categories, langname .. " " .. singular_poscat .. "-forming suffixes")
 	end
-	
+
+	local tracking_categories = {}
+
+	if pos_functions[poscat] then
+		pos_functions[poscat].func(args, data, tracking_categories, frame)
+	end
+
+	if args["json"] then
+		return require("Module:JSON").toJSON(data)
+	end
+
 	return require("Module:headword").full_headword(data)
+		.. (#tracking_categories > 0 and require("Module:utilities").format_categories(tracking_categories, lang) or "")
 end
 
--- Display additional inflection information for an adjective
-pos_functions["adjectives"] = function(args, data)
-	local base = args[1] or (mw.title.getCurrentTitle().nsText == "Template" and "{{{1}}}")
-	local infl_type = args[2] or (mw.title.getCurrentTitle().nsText == "Template" and "o") or ""
+
+local function fetch_qualifiers(qual, existing)
+	if not qual then
+		return existing
+	end
+	if not existing then
+		return {qual}
+	end
+	local retval = {}
+	for _, e in ipairs(existing) do
+		table.insert(retval, e)
+	end
+	table.insert(retval, qual)
+	return retval
+end
+
+
+local function process_terms_with_qualifiers(terms, quals)
+	local infls = {}
+	for i, term in ipairs(terms) do
+		table.insert(infls, {term = term, qualifiers = fetch_qualifiers(quals[i])})
+	end
+	return infls
+end
+
+
+local function do_adjective(args, data, tracking_categories, pos, is_superlative)
+	local feminines = {}
+	local masculine_plurals = {}
+	local feminine_plurals = {}
+	local plpos = require("Module:string utilities").pluralize(pos)
+
+	local romut = require("Module:romance utilities")
+	data.pos_category = plpos
 	
-	if base == "-" then
-		table.insert(data.inflections, {label = "[[Appendix:Glossary#invariable|invariable]]"})
-	elseif infl_type == "" then
-		local f_sg = {args["f"]}
-		local m_pl = {args["mpl"] or args["pl"]}
-		local f_pl = {args["fpl"]}
-		
-		if #f_sg > 0 then
-			f_sg.label = "feminine singular"
-			f_sg.accel = {form = "f|s"}
-			table.insert(data.inflections, f_sg)
+	if args.sp and not romut.allowed_special_indicators[args.sp] then
+		local indicators = {}
+		for indic, _ in pairs(romut.allowed_special_indicators) do
+			table.insert(indicators, "'" .. indic .. "'")
 		end
-		
-		if #f_pl == 0 or m_pl[1] == f_pl[1] then
-			m_pl.label = "plural"
-			m_pl.accel = {form = "p"}
-			table.insert(data.inflections, m_pl)
-		else
-			m_pl.label = "masculine plural"
-			m_pl.accel = {form = "m|p"}
-			table.insert(data.inflections, m_pl)
-			
-			f_pl.label = "feminine plural"
-			f_pl.accel = {form = "f|p"}
-			table.insert(data.inflections, f_pl)
+		table.sort(indicators)
+		error("Special inflection indicator beginning can only be " ..
+			m_table.serialCommaJoin(indicators, {dontTag = true}) .. ": " .. args.sp)
+	end
+
+	local lemma = m_links.remove_links(data.heads[1]) -- should always be specified
+
+	local function insert_inflection(forms, label, accel)
+		if #forms > 0 then
+			if forms[1].term == "-" then
+				table.insert(data.inflections, {label = "no " .. label})
+			else
+				forms.label = label
+				forms.accel = {form = accel}
+				table.insert(data.inflections, forms)
+			end
 		end
+	end
+
+	if args.inv then
+		-- invariable adjective
+		table.insert(data.inflections, {label = glossary_link("invariable")})
+		table.insert(data.categories, langname .. " indeclinable " .. plpos)
+		if args.sp or #args.f > 0 or #args.pl > 0 or #args.mpl > 0 or #args.fpl > 0 then
+			error("Can't specify inflections with an invariable adjective")
+		end
+	elseif args.fonly then
+		-- feminine-only
+		if #args.f > 0 then
+			error("Can't specify explicit feminines with feminine-only adjective")
+		end
+		if #args.pl > 0 then
+			error("Can't specify explicit plurals with feminine-only adjective, use fpl=")
+		end
+		if #args.mpl > 0 then
+			error("Can't specify explicit masculine plurals with feminine-only adjective")
+		end
+		local argsfpl = args.fpl
+		if #argsfpl == 0 then
+			argsfpl = {"+"}
+		end
+		for i, fpl in ipairs(argsfpl) do
+			if fpl == "+" then
+				local defpl = com.make_plural(lemma, args.sp)
+				if not defpl then
+					error("Unable to generate default plural of '" .. lemma .. "'")
+				end
+				fpl = defpl
+			elseif fpl == "#" then
+				fpl = lemma
+			end
+			table.insert(feminine_plurals, {term = fpl, fetch_qualifiers(args.fpl_qual[i])})
+		end
+
+		check_all_missing(feminine_plurals, plpos, tracking_categories)
+
+		table.insert(data.inflections, {label = "feminine-only"})
+		insert_inflection(feminine_plurals, "feminine plural", "f|p")
 	else
-		if not m_adj.inflections[infl_type] then
-			error("Unknown inflection type '" .. infl_type .. "'")
+		-- Gather feminines.
+		local argsf = args.f
+		if #argsf == 0 then
+			argsf = {"+"}
 		end
-		
-		if not base then error("Parameter 1 (base stem) may not be empty.") end
-		local infldata = {forms = {}, title = nil, categories = {}}
-		m_adj.inflections[infl_type](args, base, infldata)
-		
-		if infldata.forms["m_sg"][1] == infldata.forms["f_sg"][1] then
-			table.insert(data.genders, "m")
-			table.insert(data.genders, "f")
+		for i, f in ipairs(argsf) do
+			if f == "+" then
+				-- Generate default feminine.
+				f = make_feminine(lemma, args.sp)
+			elseif f == "#" then
+				f = lemma
+			end
+			table.insert(feminines, {term = f, qualifiers = fetch_qualifiers(args.f_qual[i])})
+		end
+
+		local argsmpl = args.mpl
+		local argsfpl = args.fpl
+		if #args.pl > 0 then
+			if #argsmpl > 0 or #argsfpl > 0 then
+				error("Can't specify both pl= and mpl=/fpl=")
+			end
+			argsmpl = args.pl
+			argsfpl = args.pl
+		end
+		if #argsmpl == 0 then
+			argsmpl = {"+"}
+		end
+		if #argsfpl == 0 then
+			argsfpl = {"+"}
+		end
+
+		for i, mpl in ipairs(argsmpl) do
+			if mpl == "+" then
+				-- Generate default masculine plural.
+				local defpl = com.make_plural(lemma, args.sp)
+				if not defpl then
+					error("Unable to generate default plural of '" .. lemma .. "'")
+				end
+				mpl = defpl
+			elseif mpl == "#" then
+				mpl = lemma
+			end
+			table.insert(masculine_plurals, {term = mpl, qualifiers = fetch_qualifiers(args.mpl_qual[i])})
+		end
+
+		for i, fpl in ipairs(argsfpl) do
+			if fpl == "+" then
+				for _, f in ipairs(feminines) do
+					-- Generate default feminine plural; f is a table.
+					local defpl = com.make_plural(f.term, args.sp)
+					if not defpl then
+						error("Unable to generate default plural of '" .. f.term .. "'")
+					end
+					table.insert(feminine_plurals, {term = defpl, qualifiers = fetch_qualifiers(args.fpl_qual[i], f.qualifiers)})
+				end
+			elseif fpl == "#" then
+				table.insert(feminine_plurals, {term = lemma, qualifiers = fetch_qualifiers(args.fpl_qual[i])})
+			else
+				table.insert(feminine_plurals, {term = fpl, qualifiers = fetch_qualifiers(args.fpl_qual[i])})
+			end
+		end
+
+		check_all_missing(feminines, plpos, tracking_categories)
+		check_all_missing(masculine_plurals, plpos, tracking_categories)
+		check_all_missing(feminine_plurals, plpos, tracking_categories)
+
+		local fem_like_lemma = #feminines == 1 and feminines[1].term == lemma and not feminines[1].qualifiers
+		local fem_pl_like_masc_pl = #masculine_plurals > 0 and #feminine_plurals > 0 and
+			m_table.deepEquals(masculine_plurals, feminine_plurals)
+		local masc_pl_like_lemma = #masculine_plurals == 1 and masculine_plurals[1].term == lemma and
+			not masculine_plurals[1].qualifiers
+		if fem_like_lemma and fem_pl_like_masc_pl and masc_pl_like_lemma then
+			-- actually invariable
+			table.insert(data.inflections, {label = glossary_link("invariable")})
+			table.insert(data.categories, langname .. " indeclinable " .. plpos)
 		else
-			table.insert(data.genders, "m")
-			
-			local f_sg = infldata.forms["f_sg"]
-			f_sg.label = "feminine singular"
-			f_sg.accel = {form = "f|s"}
-			table.insert(data.inflections, f_sg)
-		end
-		
-		if infldata.forms["m_pl"][1] == infldata.forms["f_pl"][1] then
-			local pl = infldata.forms["m_pl"]
-			pl.label = "plural"
-			pl.accel = {form = "p"}
-			table.insert(data.inflections, pl) 
-		else
-			local m_pl = infldata.forms["m_pl"]
-			m_pl.label = "masculine plural"
-			m_pl.accel = {form = "m|p"}
-			table.insert(data.inflections, m_pl)
-			
-			local f_pl = infldata.forms["f_pl"]
-			f_pl.label = "feminine plural"
-			f_pl.accel = {form = "f|p"}
-			table.insert(data.inflections, f_pl)
-		end
-		
-		if plural and not mw.title.new(plural).exists then
-			table.insert(data.categories, "Portuguese nouns with missing plurals")
-		end
-		
-		if plural2 and not mw.title.new(plural2).exists then
-			table.insert(data.categories, "Portuguese nouns with missing plurals")
+			-- Make sure there are feminines given and not same as lemma.
+			if not fem_like_lemma then
+				insert_inflection(feminines, "feminine", "f|s")
+			end
+
+			if fem_pl_like_masc_pl then
+				insert_inflection(masculine_plurals, "plural", "p")
+			else
+				insert_inflection(masculine_plurals, "masculine plural", "m|p")
+				insert_inflection(feminine_plurals, "feminine plural", "f|p")
+			end
 		end
 	end
-	
-	local comp = args["comp"]
-	
-	if comp == "no" then
-		table.insert(data.inflections, {label = "not [[Appendix:Glossary#comparable|comparable]]"})
-		table.insert(data.categories, lang:getCanonicalName() .. " uncomparable adjectives")
-	elseif comp == "both" then
-		table.insert(data.inflections, {label = "sometimes [[Appendix:Glossary#comparable|comparable]]"})
-		table.insert(data.categories, lang:getCanonicalName() .. " uncomparable adjectives")
-	else
-		table.insert(data.inflections, {label = "[[Appendix:Glossary#comparable|comparable]]"})
+
+	if args.comp and #args.comp > 0 then
+		local comps = process_terms_with_qualifiers(args.comp, args.comp_qual)
+		check_all_missing(comps, plpos, tracking_categories)
+		comps.label = "comparative"
+		table.insert(data.inflections, comps)
+	end
+
+	if args.sup and #args.sup > 0 then
+		local sups = process_terms_with_qualifiers(args.sup, args.sup_qual)
+		check_all_missing(sups, plpos, tracking_categories)
+		sups.label = "superlative"
+		table.insert(data.inflections, sups)
+	end
+
+	if args.irreg and is_superlative then
+		table.insert(data.categories, langname .. " irregular superlative adjectives")
 	end
 end
 
--- comparatives and superlatives
-pos_functions["comparative adjectives"] = pos_functions["adjectives"]
-pos_functions["superlative adjectives"] = pos_functions["adjectives"]
-
-local function addVerbInflections(verb, inflections)
-	local first_pres_sing = verb.forms.indi.pres.sing['1']
-	if first_pres_sing and #first_pres_sing > 0 then
-		table.insert(inflections, { label = "first-person singular present indicative", first_pres_sing })
+local function get_adjective_params(adjtype)
+	local params = {
+		["inv"] = {type = "boolean"}, --invariable
+		["sp"] = {}, -- special indicator: "first", "first-last", etc.
+		["f"] = {list = true}, --feminine form(s)
+		["f_qual"] = {list = "f=_qual", allow_holes = true},
+		["pl"] = {list = true}, --plural override(s)
+		["pl_qual"] = {list = "pl=_qual", allow_holes = true},
+		["fpl"] = {list = true}, --feminine plural override(s)
+		["fpl_qual"] = {list = "fpl=_qual", allow_holes = true},
+		["mpl"] = {list = true}, --masculine plural override(s)
+		["mpl_qual"] = {list = "mpl=_qual", allow_holes = true},
+	}
+	if adjtype == "base" or adjtype == "part" or adjtype == "det" then
+		params["comp"] = {list = true} --comparative(s)
+		params["comp_qual"] = {list = "comp=_qual", allow_holes = true}
+		params["sup"] = {list = true} --superlative(s)
+		params["sup_qual"] = {list = "sup=_qual", allow_holes = true}
+		params["fonly"] = {type = "boolean"} -- feminine only
 	end
-	if verb.forms.part_past then
-		table.insert(inflections, { label = "past participle", verb.forms.part_past.sing.m })
+	if adjtype == "sup" then
+		params["irreg"] = {type = "boolean"}
 	end
-	if verb.forms.short_part_past then
-		table.insert(inflections, { label = "short past participle", verb.forms.short_part_past.sing.m })
-	end
-	if verb.forms.long_part_past then
-		table.insert(inflections, { label = "long past participle", verb.forms.long_part_past.sing.m })
-	end
+	return params
 end
 
-local function addVerbCategories(verb, categories)
-	if verb.abundant then table.insert(categories, lang:getCanonicalName()  .. " abundant verbs") end
-	if verb.defective then table.insert(categories, lang:getCanonicalName() .. " defective verbs") end
-	if verb.irregular then table.insert(categories, lang:getCanonicalName() .. " irregular verbs") end
-	if verb.forms.short_part_past and verb.forms.long_part_past then
-		table.insert(categories, lang:getCanonicalName() .. " verbs with short and long past participle")
-	end
-end
+pos_functions["adjectives"] = {
+	params = get_adjective_params("base"),
+	func = function(args, data, tracking_categories)
+		do_adjective(args, data, tracking_categories, "adjective")
+	end,
+}
 
-pos_functions["verbs"] = function(args, data)
-	local beginning = args[1] or ""
-	local ending    = args[2] or ""
-	local compound  = args[3]
+pos_functions["comparative adjectives"] = {
+	params = get_adjective_params("comp"),
+	func = function(args, data, tracking_categories)
+		do_adjective(args, data, tracking_categories, "adjective")
+	end,
+}
 
-	local verb = m_conj.inflect(beginning, ending, compound)
+pos_functions["superlative adjectives"] = {
+	params = get_adjective_params("sup"),
+	func = function(args, data, tracking_categories)
+		do_adjective(args, data, tracking_categories, "adjective", true)
+	end,
+}
 
-	if verb then
-		table.insert(data.heads, verb.forms.infn.impe)
-		addVerbCategories(verb, data.categories)
-		addVerbInflections(verb, data.inflections)
-	else
-		table.insert(data.categories, "Requests for inflections in " .. lang:getCanonicalName() .. " verb entries")
-	end
-end
+pos_functions["past participles"] = {
+	params = get_adjective_params("part"),
+	func = function(args, data, tracking_categories)
+		do_adjective(args, data, tracking_categories, "participle")
+		data.pos_category = "past participles"
+	end,
+}
 
+pos_functions["determiners"] = {
+	params = get_adjective_params("det"),
+	func = function(args, data, tracking_categories)
+		do_adjective(args, data, tracking_categories, "determiner")
+	end,
+}
+
+pos_functions["adjective-like pronouns"] = {
+	params = get_adjective_params("pron"),
+	func = function(args, data, tracking_categories)
+		do_adjective(args, data, tracking_categories, "pronoun")
+	end,
+}
 
 return export
