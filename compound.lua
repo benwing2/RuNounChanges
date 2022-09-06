@@ -14,6 +14,8 @@ local rmatch = mw.ustring.match
 local debug_force_cat = false -- if set to true, always display categories even on userspace pages
 
 
+local default_pos = "term"
+
 -- ABOUT TEMPLATE AND DISPLAY HYPHENS:
 --
 -- The "template hyphen" is the per-script hyphen character that is used in
@@ -438,7 +440,7 @@ end
 
 
 function export.show_affixes(lang, sc, parts, pos, sort_key, typ, nocap, notext, nocat, lit, force_cat)
-	pos = pos or "word"
+	pos = pos or default_pos
 
 	pos = pluralize(pos)
 
@@ -485,7 +487,7 @@ function export.show_affixes(lang, sc, parts, pos, sort_key, typ, nocap, notext,
 				table.insert(categories, {cat="patronymics", sort_key=part_sort, sort_base=part_sort_base})
 			end
 
-			if pos ~= "words" and part.pos and rfind(part.pos, "diminutive") then
+			if pos ~= "terms" and part.pos and rfind(part.pos, "diminutive") then
 				table.insert(categories, {cat="diminutive " .. pos, sort_key=part_sort, sort_base=part_sort_base})
 			end
 
@@ -499,9 +501,9 @@ function export.show_affixes(lang, sc, parts, pos, sort_key, typ, nocap, notext,
 		end
 	end
 
-	-- If there are no categories, then there were no actual affixes, only a single regular word.
+	-- If there are no categories, then there were no actual affixes, only a single regular term.
 	if #categories == 0 then
-		error("The parameters did not include any affixes, and the word is not a compound. Please provide at least one affix.")
+		error("The parameters did not include any affixes, and the term is not a compound. Please provide at least one affix.")
 	end
 
 	table.insert(text_sections, export.concat_parts(lang, parts_formatted, categories, nocat, sort_key, lit, force_cat))
@@ -510,7 +512,7 @@ end
 
 
 function export.show_compound(lang, sc, parts, pos, sort_key, typ, nocap, notext, nocat, lit, force_cat)
-	pos = pos or "word"
+	pos = pos or default_pos
 
 	pos = pluralize(pos)
 
@@ -526,12 +528,9 @@ function export.show_compound(lang, sc, parts, pos, sort_key, typ, nocap, notext
 		local part_sc = part.sc or sc
 		local affix_type, display_term = get_affix_type(part_lang, part_sc, part.term)
 
-		-- If the word is an infix, recognize it as such (which means
-		-- e.g. that we will display the word without hyphens for
-		-- East Asian languages). Otherwise, ignore the fact that it
-		-- looks like an affix and display as specified in the template
-		-- (but pay attention to the detected affix type for certain
-		-- tracking purposes)
+		-- If the term is an infix, recognize it as such (which means e.g. that we will display the term without hyphens for
+		-- East Asian languages). Otherwise, ignore the fact that it looks like an affix and display as specified in the
+		-- template (but pay attention to the detected affix type for certain tracking purposes)
 		if affix_type == "infix" then
 			table.insert(categories, {cat=pos .. " interfixed with " .. make_entry_name_no_links(part_lang, display_term), sort_key=part.sort or sort_key})
 		else
@@ -635,7 +634,7 @@ end
 
 function export.show_circumfix(lang, sc, prefix, base, suffix, pos, sort_key, nocat, lit, force_cat)
 	local categories = {}
-	pos = pos or "word"
+	pos = pos or default_pos
 
 	pos = pluralize(pos)
 
@@ -677,7 +676,7 @@ end
 
 
 function export.show_confix(lang, sc, prefix, base, suffix, pos, sort_key, nocat, lit, force_cat)
-	pos = pos or "word"
+	pos = pos or default_pos
 
 	pos = pluralize(pos)
 
@@ -715,7 +714,7 @@ end
 
 function export.show_infix(lang, sc, base, infix, pos, sort_key, nocat, lit, force_cat)
 	local categories = {}
-	pos = pos or "word"
+	pos = pos or default_pos
 
 	pos = pluralize(pos)
 
@@ -739,7 +738,7 @@ end
 
 
 function export.show_prefixes(lang, sc, prefixes, base, pos, sort_key, nocat, lit, force_cat)
-	pos = pos or "word"
+	pos = pos or default_pos
 
 	pos = pluralize(pos)
 
@@ -782,7 +781,7 @@ end
 
 function export.show_suffixes(lang, sc, base, suffixes, pos, sort_key, nocat, lit, force_cat)
 	local categories = {}
-	pos = pos or "word"
+	pos = pos or default_pos
 
 	pos = pluralize(pos)
 
@@ -827,7 +826,7 @@ end
 
 function export.show_transfix(lang, sc, base, transfix, pos, sort_key, nocat, lit, force_cat)
 	local categories = {}
-	pos = pos or "word"
+	pos = pos or default_pos
 
 	pos = pluralize(pos)
 
@@ -847,12 +846,10 @@ function export.show_transfix(lang, sc, base, transfix, pos, sort_key, nocat, li
 end
 
 
--- Add a hyphen to a word in the appropriate place, based on the specified
--- affix type. For example, if `affix_type` == "prefix", we'll add a hyphen
--- onto the end if it's not already there. In general, if the template and
--- display hyphens are the same and the appropriate hyphen is already
--- present, we leave it, else we strip off the template hyphen if present
--- and add the display hyphen.
+-- Add a hyphen to a term in the appropriate place, based on the specified affix type. For example, if `affix_type` ==
+-- "prefix", we'll add a hyphen onto the end if it's not already there. In general, if the template and display hyphens
+-- are the same and the appropriate hyphen is already present, we leave it, else we strip off the template hyphen if
+-- present and add the display hyphen.
 function export.make_affix(term, lang, sc, affix_type)
 	if not (affix_type == "prefix" or affix_type == "suffix" or
 		affix_type == "circumfix" or affix_type == "infix" or
