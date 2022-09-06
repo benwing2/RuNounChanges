@@ -90,33 +90,51 @@ def process_text_in_section(sectext, pagemsg):
 
       subsectext = unicode(parsed)
 
-      could_parse = [False]
+      def split_on_comma_not_in_template(txt):
+        retval = []
+        parts = re.split(r"((?:\{\{[^{}]*\}\}|[^{},])*)", txt)
+        parts = [x.strip() for x in parts]
+        for i in xrange(1, len(parts), 2):
+          retval.append(parts[i])
+        return retval
 
-      def merge_alt(m):
+      def merge_alt(m, could_parse):
         mergedt = list(blib.parse_text("{{alt|foo}}").filter_templates())[0]
         preceding_space, before, orig_altforms, after = m.groups()
         altforms = orig_altforms.strip()
-        altforms = re.split(r"(\{\{alt\|(?:\{\{[^{}]*\}\}|[^{}]*)*\}\})", altforms)
+        altforms = re.split(r"(\{\{alt\|(?:\{\{[^{}]*\}\}|[^{}])*\}\})", altforms)
         thislang = None
         index = 1
-        qualifiers = []
+        alt_qualifiers = []
+        before_qualifiers = []
+        after_qualifiers = []
 
-        if before:
-          mm = re.search(r"^\{\{(?:s|sense|q|i|qual|qualifier|qf|gloss|gl)\|(?:\{\{[^{}]*\}\}|[^{}]*)*\}\}$", before)
+        def extract_qualifiers_from_before_after(text_to_parse, lang):
+          returned_qualifiers = []
+          mm = re.search(r"^\{\{(?:sense|s|q|i|qual|qualifier|qf|gloss|gl)\|(?:\{\{[^{}]*\}\}|[^{}])*\}\}$", text_to_parse)
           if mm:
-            qual = list(blib.parse_text(before).filter_templates())[0]
-            qualifiers.extend(blib.fetch_param_chain(qual, "1"))
-          else:
-            mm = re.search(r"^''\((.*?)\)''$", before)
-            if not mm:
-              mm = re.search(r"^''(.*?)''$", before)
+            qual = list(blib.parse_text(text_to_parse).filter_templates())[0]
+            returned_qualifiers.extend(blib.fetch_param_chain(qual, "1"))
+          if not mm:
+            mm = re.search(r"^\{\{lb\|%s\|(?:\{\{[^{}]*\}\}|[^{}])*\}\}$" % thislang, text_to_parse)
             if mm:
-              raw_qual_parts = re.split(r"([^ ,](?:\{\{[^{}]*\}\}|[^{},]*)*)", before)
-              for i in xrange(1, len(raw_qual_parts), 2):
-                qualifiers.append(raw_qual_parts[i])
+              qual = list(blib.parse_text(text_to_parse).filter_templates())[0]
+              returned_qualifiers.extend(blib.fetch_param_chain(qual, "2"))
+          if not mm:
+            mm = re.search(r"^''\((.*?)\)''$", text_to_parse)
+            if not mm:
+              mm = re.search(r"^\(''(.*?)''\)$", text_to_parse)
+            if not mm:
+              mm = re.search(r"^''(.*?)''$", text_to_parse)
+            if not mm:
+              mm = re.search(r"^\((.*?)\)$", text_to_parse)
+            if mm:
+              returned_qualifiers.extend(split_on_comma_not_in_template(mm.group(1)))
+            elif text_to_parse in ["{{T-V}}", "{{TV}}", "{{T-V distinction}}"]:
+              returned_qualifiers.append("T-V")
             else:
-              pagemsg("Unrecognized before-portion on {{alt}} line: %s" % m.group(0))
-              return m.group(0)
+              return None
+          return returned_qualifiers
 
         for i in xrange(1, len(altforms), 2):
           altt = list(blib.parse_text(altforms[i]).filter_templates())[0]
@@ -148,7 +166,7 @@ def process_text_in_section(sectext, pagemsg):
               pass
             elif re.search("^[0-9]+$", pn):
               if saw_qualifier_gap:
-                qualifiers.append(pv)
+                alt_qualifiers.append(pv)
               elif not pv:
                 saw_qualifier_gap = True
               else:
@@ -160,32 +178,19 @@ def process_text_in_section(sectext, pagemsg):
               return m.group(0)
           index += maxparam
 
-        if after:
-          mm = re.search(r"^\{\{(?:sense|s|q|i|qual|qualifier|qf|gloss|gl)\|(?:\{\{[^{}]*\}\}|[^{}]*)*\}\}$", after)
-          if mm:
-            qual = list(blib.parse_text(after).filter_templates())[0]
-            qualifiers.extend(blib.fetch_param_chain(qual, "1"))
-          if not mm:
-            mm = re.search(r"^\{\{lb\|%s\|(?:\{\{[^{}]*\}\}|[^{}]*)*\}\}$" % thislang, after)
-            if mm:
-              qual = list(blib.parse_text(after).filter_templates())[0]
-              qualifiers.extend(blib.fetch_param_chain(qual, "2"))
-          if not mm:
-            mm = re.search(r"^''\((.*?)\)''$", after)
-            if not mm:
-              mm = re.search(r"^''(.*?)''$", after)
-            if not mm:
-              mm = re.search(r"^\((.*?)\)$", after)
-            if mm:
-              raw_qual_parts = re.split(r"([^ ,](?:\{\{[^{}]*\}\}|[^{},]*)*)", after)
-              for i in xrange(1, len(raw_qual_parts), 2):
-                qualifiers.append(raw_qual_parts[i])
-            elif after in ["{{T-V}}", "{{TV}}", "{{T-V distinction}}"]:
-              qualifiers.append("T-V")
-            else:
-              pagemsg("Unrecognized after-portion on {{alt}} line: %s" % m.group(0))
-              return m.group(0)
+        if before:
+          before_qualifiers = extract_qualifiers_from_before_after(before, thislang)
+          if before_qualifiers is None:
+            pagemsg("Unrecognized before-portion '%s' on {{alt}} line: %s" % (before, m.group(0)))
+            return m.group(0)
 
+        if after:
+          after_qualifiers = extract_qualifiers_from_before_after(after, thislang)
+          if after_qualifiers is None:
+            pagemsg("Unrecognized after-portion '%s' on {{alt}} line: %s" % (after, m.group(0)))
+            return m.group(0)
+
+        qualifiers = before_qualifiers + alt_qualifiers + after_qualifiers
         if qualifiers:
           index += 1
           mergedt.add(str(index), "")
@@ -210,14 +215,42 @@ def process_text_in_section(sectext, pagemsg):
         return "* " + unicode(mergedt)
 
       lines = subsectext.split("\n")
+
+      def merge_alts_in_line(line):
+        could_parse = [False]
+        def do_merge_alt(m):
+          return merge_alt(m, could_parse)
+        could_parse[0] = False
+        line = re.sub(r"^\*?(\s*)(.*?):*\s*((?:\{\{alt\|(?:\{\{[^{}]*\}\}|[^{}])*\}\},*\s*)+):*\s*(.*?)$", do_merge_alt,
+            line, 0, re.UNICODE)
+        return line, could_parse[0]
+
       for lineind, line in enumerate(lines):
         if not line:
           continue
-        could_parse[0] = False
-        newline = re.sub(r"^\*?(\s*)(.*?)\s*((?:\{\{alt\|(?:\{\{[^{}]*\}\}|[^{}]*)*\}\},*\s*)+)(.*?)$", merge_alt, line,
-            0, re.UNICODE)
-        if newline == line and not could_parse[0]:
-          pagemsg("WARNING: Unable to parse ==Alternative forms== line: %s" % line)
+
+        def warning(txt):
+          pagemsg("Line %s: WARNING: %s" % (lineind + 1, txt))
+
+        newline, could_parse = merge_alts_in_line(line)
+        if newline == line and not could_parse:
+          # Unable to parse; try splitting on comma and parsing as multiple separate lines
+          line_parts = split_on_comma_not_in_template(line)
+          if len(line_parts) == 1:
+            warning("Unable to parse ==Alternative forms== line: %s" % line)
+          elif len(line_parts) < 1:
+            pagemsg("Internal error: split_on_comma_not_in_template() returned an empty list: %s" % line)
+          else:
+            for partno, line_part in enumerate(line_parts):
+              if partno > 0:
+                line_part = "* " + line_part
+              new_line_part, could_parse = merge_alts_in_line(line_part)
+              if new_line_part == line_part and not could_parse:
+                warning("Part %s: Unable to parse ==Alternative forms== line part: %s" % (partno + 1, line_part))
+                break
+              line_parts[partno] = new_line_part
+            else: # no break
+              lines[lineind] = "\n".join(line_parts)
         else:
           lines[lineind] = newline
       subsectext = "\n".join(lines)
