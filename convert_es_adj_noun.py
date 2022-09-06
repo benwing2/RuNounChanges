@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import pywikibot, re, sys, codecs, argparse
+import romance_utils
 
 import blib
 from blib import getparam, rmparam, tname, pname, msg, site
@@ -23,100 +24,24 @@ add_stress = {
 }
 
 prepositions = {
-  "a",
-  "al",
-  "de",
-  "del",
-  "como",
-  "con",
-  "en",
-  "para",
-  "por",
+  "a ",
+  "al ",
+  "de ",
+  "del ",
+  "como ",
+  "con ",
+  "en ",
+  "para ",
+  "por ",
 }
-
-all_specials = ["first", "second", "first-second", "first-last", "last", "each"]
 
 TEMPCHAR = u"\uFFF1"
 
 old_adj_template = "es-adj-old"
 #old_adj_template = "es-adj"
 
-def add_endings(bases, endings):
-  if bases is None or endings is None:
-    return None
-  retval = []
-  if type(bases) is not list:
-    bases = [bases]
-  if type(endings) is not list:
-    endings = [endings]
-  for base in bases:
-    for ending in endings:
-      retval.append(base + ending)
-  return retval
-
-def handle_multiword(form, special, inflect):
-  if special == "first":
-    m = re.search("^(.*?)( .*)$", form)
-    if not m:
-      return None
-    first, rest = m.groups()
-    return add_endings(inflect(first), rest)
-  elif special == "second":
-    m = re.search("^(.+? )(.+?)( .*)$", form)
-    if not m:
-      return None
-    first, second, rest = m.groups()
-    return add_endings(add_endings([first], inflect(second)), rest)
-  elif special == "first-second":
-    m = re.search("^([^ ]+)( )([^ ]+)( .*)$", form)
-    if not m:
-      return None
-    first, space, second, rest = m.groups()
-    return add_endings(add_endings(add_endings(inflect(first), space), inflect(second)), rest)
-  elif special == "first-last":
-    m = re.search("^(.*?)( .* )(.*?)$", form)
-    if not m:
-      m = re.search("^(.*?)( )(.*)$", form)
-    if not m:
-      return None
-    first, middle, last = m.groups()
-    return add_endings(add_endings(inflect(first), middle), inflect(last))
-  elif special == "last":
-    m = re.search("^(.* )(.*?)$", form)
-    if not m:
-      return None
-    rest, last = m.groups()
-    return add_endings(rest, inflect(last))
-  elif special == "each":
-    if " " not in form:
-      return None
-    terms = form.split(" ")
-    inflected_terms = []
-    for i, term in enumerate(terms):
-      term = inflect(term)
-      if i > 0:
-        term = add_endings(" ", term)
-      inflected_terms.append(term)
-    result = ""
-    for term in inflected_terms:
-      result = add_endings(result, term)
-    return result
-  else:
-    assert not special, "Saw unrecognized special=%s" % special
-
-  m = re.search("^(.*?)( (?:%s))( .*)$" % "|".join(prepositions), form)
-
-  if m:
-    first, space_prep, rest = m.groups()
-    return add_endings(inflect(first), space_prep + rest)
-
-  if " " in form:
-    return handle_multiword(form, "first-last", inflect)
-
-  return None
-
 def make_plural(form, special=None):
-  retval = handle_multiword(form, special, make_plural)
+  retval = romance_utils.handle_multiword(form, special, make_plural, prepositions)
   if retval:
     return retval
   if special:
@@ -184,7 +109,7 @@ def make_plural(form, special=None):
   return None
 
 def make_feminine(form, special=None):
-  retval = handle_multiword(form, special, make_feminine)
+  retval = romance_utils.handle_multiword(form, special, make_feminine, prepositions)
   if retval:
     assert len(retval) == 1
     return retval[0]
@@ -210,7 +135,7 @@ def make_feminine(form, special=None):
   return form
 
 def make_masculine(form, special=None):
-  retval = handle_multiword(form, special, make_masculine)
+  retval = romance_utils.handle_multiword(form, special, make_masculine, prepositions)
   if retval:
     assert len(retval) == 1
     return retval[0]
@@ -291,7 +216,7 @@ def process_text_on_page(index, pagetitle, text):
             pls_with_def.append(pl)
 
       actual_special = None
-      for special in all_specials:
+      for special in romance_utils.all_specials:
         special_pl = make_plural(lemma, special)
         if special_pl is None:
           continue
@@ -336,7 +261,7 @@ def process_text_on_page(index, pagetitle, text):
               blib.remove_param_chain(t, mf + "pl", mf + "pl")
               return
           actual_special = None
-          for special in all_specials:
+          for special in romance_utils.all_specials:
             special_mf = make_mf(lemma, special)
             if special_mf is None:
               continue
@@ -386,7 +311,7 @@ def process_text_on_page(index, pagetitle, text):
                 notes.append("remove redundant explicit %s plural %s in {{es-noun}}" % (mf_full, ",".join(mfpls)))
                 blib.remove_param_chain(t, mf + "pl", mf + "pl")
               else:
-                for special in all_specials:
+                for special in romance_utils.all_specials:
                   defpl = [x for y in mfs for x in (make_plural(y, special) or [])]
                   if set(defpl) == set(mfpls):
                     pagemsg("Found %s=%s, %spl=%s matches special=%s" % (
@@ -508,7 +433,7 @@ def process_text_on_page(index, pagetitle, text):
         fpls = ["+"]
       fpls = ["#" if x == lemma else x for x in fpls]
       actual_special = None
-      for special in all_specials:
+      for special in romance_utils.all_specials:
         deff = make_feminine(pagetitle, special)
         if deff is None:
           continue
