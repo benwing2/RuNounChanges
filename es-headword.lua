@@ -263,29 +263,11 @@ local function make_masculine(form, special)
 	return form
 end
 
-local function do_adjective(args, data, tracking_categories, pos, is_superlative)
+local function do_adjective(args, data, tracking_categories, is_superlative)
 	local feminines = {}
 	local plurals = {}
 	local masculine_plurals = {}
 	local feminine_plurals = {}
-
-	if pos == "cardinal adjectives" then
-		pos = "numerals"
-		data.pos_category = "numerals"
-		table.insert(data.categories, 1, langname .. " cardinal numbers")
-	end
-
-	if pos ~= "numerals" then
-		if args.onlyg == "p" or args.onlyg == "m-p" or args.onlyg == "f-p" then
-			table.insert(data.categories, langname .. " pluralia tantum")
-		end
-		if args.onlyg == "s" or args.onlyg == "f-s" or args.onlyg == "f-s" then
-			table.insert(data.categories, langname .. " singularia tantum")
-		end
-		if args.onlyg then
-			table.insert(data.categories, langname .. " defective " .. pos)
-		end
-	end
 
 	if args.sp and not require("Module:romance utilities").allowed_special_indicators[args.sp] then
 		local indicators = {}
@@ -397,10 +379,18 @@ local function do_adjective(args, data, tracking_categories, pos, is_superlative
 			end
 		end
 
+		if args.mapoc then
+			check_all_missing(args.mapoc, "adjectives", tracking_categories)
+		end
 		check_all_missing(feminines, "adjectives", tracking_categories)
 		check_all_missing(plurals, "adjectives", tracking_categories)
 		check_all_missing(masculine_plurals, "adjectives", tracking_categories)
 		check_all_missing(feminine_plurals, "adjectives", tracking_categories)
+
+		if args.mapoc and #args.mapoc > 0 then
+			args.mapoc.label = "masculine singular before a noun"
+			table.insert(data.inflections, args.mapoc)
+		end
 
 		-- Make sure there are feminines given and not same as lemma.
 		if #feminines > 0 and not (#feminines == 1 and feminines[1] == lemma) then
@@ -454,6 +444,7 @@ pos_functions["adjectives"] = {
 		["pl"] = {list = true}, --plural override(s)
 		["fpl"] = {list = true}, --feminine plural override(s)
 		["mpl"] = {list = true}, --masculine plural override(s)
+		["mapoc"] = {list = true}, --masculine apocopated (before a noun)
 		["comp"] = {list = true}, --comparative(s)
 		["sup"] = {list = true}, --superlative(s)
 	},
@@ -509,10 +500,34 @@ pos_functions["adverbs"] = {
 		["sup"] = {list = true}, --superlative(s)
 	},
 	func = function(args, data, tracking_categories, frame)
-		if args.sup and #args.sup > 0 then
+		if #args.sup > 0 then
 			check_all_missing(args.sup, "adverbs", tracking_categories)
 			args.sup.label = "superlative"
 			table.insert(data.inflections, args.sup)
+		end
+	end,
+}
+
+
+pos_functions["cardinal numbers"] = {
+	params = {
+		["f"] = {list = true}, --feminine(s)
+		["mapoc"] = {list = true}, --masculine apocopated form(s)
+	},
+	func = function(args, data, tracking_categories, frame)
+		data.pos_category = "numerals"
+		table.insert(data.categories, 1, langname .. " cardinal numbers")
+
+		if #args.f > 0 then
+			table.insert(data.genders, "m")
+			check_all_missing(args.f, "numerals", tracking_categories)
+			args.f.label = "feminine"
+			table.insert(data.inflections, args.f)
+		end
+		if #args.mapoc > 0 then
+			check_all_missing(args.mapoc, "numerals", tracking_categories)
+			args.mapoc.label = "masculine before a noun"
+			table.insert(data.inflections, args.mapoc)
 		end
 	end,
 }
