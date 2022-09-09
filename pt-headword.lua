@@ -20,7 +20,7 @@ local suffix_categories = {
 }
 
 local function track(page)
-	require("Module:debug/track")("pt-headword/" .. page)
+	require("Module:debug").track("pt-headword/" .. page)
 	return true
 end
 
@@ -51,13 +51,6 @@ function export.show(frame)
 	local poscat = frame.args[1] or error("Part of speech has not been specified. Please pass parameter 1 to the module invocation.")
 
 	local parargs = frame:getParent().args
-
-	-- FIXME: Remove this when we've converted all the old calls.
-	if (poscat == "adjectives" or poscat == "comparative adjectives" or poscat == "superlative adjectives") and (
-		parargs[1] or parargs[2] or parargs.old) then
-		track("pt-adj-old")
-		return require("Module:pt-headword/old").show(frame)
-	end
 
 	local params = {
 		["head"] = {list = true},
@@ -233,7 +226,7 @@ local function do_adjective(args, data, tracking_categories, pos, is_superlative
 		for i, f in ipairs(argsf) do
 			if f == "+" then
 				-- Generate default feminine.
-				f = make_feminine(lemma, args.sp)
+				f = com.make_feminine(lemma, args.sp)
 			elseif f == "#" then
 				f = lemma
 			end
@@ -243,11 +236,13 @@ local function do_adjective(args, data, tracking_categories, pos, is_superlative
 		local argsmpl = args.mpl
 		local argsfpl = args.fpl
 		if #args.pl > 0 then
-			if #argsmpl > 0 or #argsfpl > 0 then
+			if #argsmpl > 0 or #argsfpl > 0 or args.mpl_qual.maxindex > 0 or args.fpl_qual.maxindex > 0 then
 				error("Can't specify both pl= and mpl=/fpl=")
 			end
 			argsmpl = args.pl
+			args.mpl_qual = args.pl_qual
 			argsfpl = args.pl
+			args.fpl_qual = args.pl_qual
 		end
 		if #argsmpl == 0 then
 			argsmpl = {"+"}
@@ -308,11 +303,41 @@ local function do_adjective(args, data, tracking_categories, pos, is_superlative
 
 			if fem_pl_like_masc_pl then
 				insert_inflection(masculine_plurals, "plural", "p")
+				data.genders = {"mf"}
 			else
 				insert_inflection(masculine_plurals, "masculine plural", "m|p")
 				insert_inflection(feminine_plurals, "feminine plural", "f|p")
 			end
 		end
+	end
+
+	if args.n and #args.n > 0 then
+		local neuters = process_terms_with_qualifiers(args.n, args.n_qual)
+		check_all_missing(neuters, plpos, tracking_categories)
+		neuters.label = "neuter"
+		table.insert(data.inflections, neuters)
+	end
+
+	if args.hascomp then
+		if args.hascomp == "both" then
+			table.insert(data.inflections, {label = "sometimes " .. glossary_link("comparable")})
+			table.insert(data.categories, langname .. " comparable adjectives")
+			table.insert(data.categories, langname .. " uncomparable adjectives")
+		else
+			local hascomp = require("Module:yesno")(args.hascomp)
+			if hascomp == true then
+				table.insert(data.inflections, {label = glossary_link("comparable")})
+				table.insert(data.categories, langname .. " comparable adjectives")
+			elseif hascomp == false then
+				table.insert(data.inflections, {label = "not " .. glossary_link("comparable")})
+				table.insert(data.categories, langname .. " uncomparable adjectives")
+			else
+				error("Unrecognized value for hascomp=: " .. args.hascomp)
+			end
+		end
+	elseif args.comp and #args.comp > 0 or args.sup and #args.sup > 0 then
+		table.insert(data.inflections, {label = glossary_link("comparable")})
+		table.insert(data.categories, langname .. " comparable adjectives")
 	end
 
 	if args.comp and #args.comp > 0 then
@@ -342,10 +367,10 @@ local function get_adjective_params(adjtype)
 		["f_qual"] = {list = "f=_qual", allow_holes = true},
 		["pl"] = {list = true}, --plural override(s)
 		["pl_qual"] = {list = "pl=_qual", allow_holes = true},
-		["fpl"] = {list = true}, --feminine plural override(s)
-		["fpl_qual"] = {list = "fpl=_qual", allow_holes = true},
 		["mpl"] = {list = true}, --masculine plural override(s)
 		["mpl_qual"] = {list = "mpl=_qual", allow_holes = true},
+		["fpl"] = {list = true}, --feminine plural override(s)
+		["fpl_qual"] = {list = "fpl=_qual", allow_holes = true},
 	}
 	if adjtype == "base" or adjtype == "part" or adjtype == "det" then
 		params["comp"] = {list = true} --comparative(s)
@@ -353,9 +378,14 @@ local function get_adjective_params(adjtype)
 		params["sup"] = {list = true} --superlative(s)
 		params["sup_qual"] = {list = "sup=_qual", allow_holes = true}
 		params["fonly"] = {type = "boolean"} -- feminine only
+		params["hascomp"] = {} -- has comparative
 	end
 	if adjtype == "sup" then
 		params["irreg"] = {type = "boolean"}
+	end
+	if adjtype == "pron" then
+		params["n"] = {list = true} --neuter form(s)
+		params["n_qual"] = {list = "n=_qual", allow_holes = true}
 	end
 	return params
 end
