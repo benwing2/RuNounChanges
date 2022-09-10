@@ -1,0 +1,1 @@
+egrep '(([^rlc])\2|ll$|y$|[wWkKçÇ./0-9]|[A-Z][A-Z]|Aa|Ee|Ii|Oo|Uu|[Qq][^u]|ou|ie$|[^aeiounáéíóúcC ]h|h[^aeiouáéíóú]|[bcfghjmpqtuvx]$|[^A-Za-z áéíóúñÁÉÍÓÚü-]|^[Xx]|[Tt]x|xtl|[^aeiouáéíóú][ds]$|^[^aeiouAEIOUáéíóúÁÉÍÓÚ]*$|[^aeiouAEIOUáéíóúÁÉÍÓÚ ]y[^aeiouáéíóú ]|[yY][^aeiouáéíóú ])' "$@"
