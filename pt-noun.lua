@@ -36,74 +36,29 @@ local cats = {}
 local PAGENAME
 
 
-local function glossary_link(entry, text)
-	text = text or entry
-	return "[[Appendix:Glossary#" .. entry .. "|" .. text .. "]]"
-end
-
--- Auto-add links to a "space word" (after splitting on spaces). We split off
--- final punctuation, and then split on hyphens if split_hyphen is given.
-local function add_space_word_links(space_word, split_hyphen)
-	local space_word_no_punct, punct = rmatch(space_word, "^(.*)([,;:?!])$")
-	space_word_no_punct = space_word_no_punct or space_word
-	punct = punct or ""
-	local words
-	-- don't split prefixes and suffixes
-	if not split_hyphen or rfind(space_word_no_punct, "^%-") or rfind(space_word_no_punct, "%-$") then
-		words = {space_word_no_punct}
-	else
-		words = rsplit(space_word_no_punct, "%-")
-	end
-	local linked_words = {}
-	for _, word in ipairs(words) do
-		word = "[[" .. word .. "]]"
-		table.insert(linked_words, word)
-	end
-	return table.concat(linked_words, "-") .. punct
-end
-
--- Auto-add links to a lemma. We split on spaces, and also on hyphens
--- if split_hyphen is given or the word has no spaces. We don't always
--- split on hyphens because of cases like "má-formação arteriovenosa" where
--- "má-formação" should be linked as a whole, but provide the option to do it
--- for cases like "síndrome unha-patela". If there's no space, however, then
--- it makes sense to split on hyphens by default (e.g. for "segunda-feira").
--- Cases where only some of the hyphens should be split can always be handled
--- by explicitly specifying the head.
-local function add_lemma_links(lemma, split_hyphen)
-	if not rfind(lemma, " ") then
-		split_hyphen = true
-	end
-	local words = rsplit(lemma, " ")
-	local linked_words = {}
-	for _, word in ipairs(words) do
-		table.insert(linked_words, add_space_word_links(word, split_hyphen))
-	end
-	local retval = table.concat(linked_words, " ")
-	-- If we ended up with a single link consisting of the entire lemma,
-	-- remove the link.
-	local unlinked_retval = rmatch(retval, "^%[%[([^%[%]]*)%]%]$")
-	return unlinked_retval or retval
-end
 
 function export.show(frame)
-	local params = {
-		["head"] = {list = true},
-		[1] = {list = "g"},
-		["qual_g"] = {list = true, allow_holes = true},
-		[2] = {alias_of = "pl"},
+    	local params = {
+		[1] = {},
+		[2] = {},
 		
-		["f"] = {list = true},
-		["qual_f"] = {list = true, allow_holes = true},
-		["fpl"] = {list = true, allow_holes = true},
-		["qual_fpl"] = {list = true, allow_holes = true},
-		["m"] = {list = true},
-		["qual_m"] = {list = true, allow_holes = true},
-		["mpl"] = {list = true, allow_holes = true},
-		["qual_mpl"] = {list = true, allow_holes = true},
+		["f"] = {},
+		["f2"] = {},
+		["fpl"] = {},
+		["fpl2"] = {},
+		["g2"] = {},
+		["head"] = {},
 		["meta"] = {type = "boolean"},
-		["pl"] = {list = true},
-		["qual_pl"] = {list = true, allow_holes = true},
+		["pl"] = {alias_of = 2},
+		["pl2"] = {},
+		["pl3"] = {},
+		["qual_f"] = {},
+		["qual_f2"] = {},
+		["qual_g1"] = {},
+		["qual_g2"] = {},
+		["qual_pl"] = {},
+		["qual_pl2"] = {},
+		["qual_pl3"] = {},
 		["unc"] = {type = "boolean"},
 	}
 	
@@ -114,7 +69,7 @@ function export.show(frame)
     	require("Module:debug").track_unrecognized_args(unrecognized_args, "pt-noun")
     end
     
-    local PAGENAME = mw.title.getCurrentTitle().text
+    PAGENAME = mw.title.getCurrentTitle().text
 
     -- for compatibility with old pt-noun
     if (args[2] == "s") then args[2] = PAGENAME .. "s"
@@ -122,131 +77,16 @@ function export.show(frame)
 
     local is_plural = get_is_plural(args[1], args["g2"])
 	
-	local data = {
-		lang = lang,
-		pos_category = "nouns",
-		categories = {},
-		heads = args["head"],
-		genders = {},
-		inflections = {},
-		categories = {}
-	}
-
-	if is_plural then
-		table.insert(inflections, {label = glossary_link("plural only")}
-	elseif args[2] == "-" then
-		table.insert(inflections, {label = glossary_link("uncountable")}
-	elseif args["unc"] then
-		table.insert(inflections, {label = "usually " .. glossary_link("uncountable")}
-	end
-
-    if not is_plural then
-		local pl = args[2] or args["pl"]
-
-		local plurals = {label = "plural", accel = {form = "p"}}
-		if pl == "?" then
-			plurals.request = true
-		elseif pl ~= "-" then
-			local generated_plural = m_plural.get_plural(lemma)
-			
-			if not pl then
-				pl = generated_plural
-			elseif pl ~= generated_plural then
-				table.insert(data.categories, lang:getCanonicalName() .. " irregular nouns")
-			end
-			
-			if not pl then
-				plurals.request = true
-			else
-				table.insert(plurals, {term = pl, qualifiers = {args["qual_pl"]}})
-			end
-			if args["pl2"] then
-				table.insert(plurals, {term = args["pl2"], qualifiers = args["qual_pl2"]})
-			end
-			if args["pl3"] then
-				table.insert(plurals, {term = args["pl3"], qualifiers = args["qual_pl3"]})
-			end
-		end
-		table.insert(inflections, plurals)
-	end
-
-	local masculines = {}
-	local feminines = {}
-	local masculine_plurals = {}
-	local feminine_plurals = {}
-
-	-- Gather feminines. For each feminine, generate the corresponding plural(s).
-	for _, f in ipairs(args.f) do
-		table.insert(feminines, {term = f, qualifiers = 
-		local generated_plural = m_plural.get_plural(f)
-		if not generated_plural then
-			feminine_plurals.request = true
-		else
-			table.insert(feminine_plurals, {term = pl, qualifiers = args["qual_pl"]})
-			for _, pl in ipairs(fpls) do
-				table.insert(feminine_plurals, pl)
-			end
-		end
-	end
-
-	-- Gather feminines. For each masculine, generate the corresponding plural(s).
-	for _, m in ipairs(args.m) do
-		if m == "1" then
-			track("noun-m-1")
-		end
-		if m == "1" or m == "+" then
-			-- Generate default masculine.
-			local noun_forms = export.adjective_forms(title, "f")
-			if not noun_forms then
-				error("Unable to generate default masculine of '" .. title .. "'")
-			end
-			m = noun_forms.ms
-		end
-		table.insert(masculines, m)
-		local mpls = export.make_plural_noun(m, "m")
-		if mpls then
-			for _, pl in ipairs(mpls) do
-				table.insert(masculine_plurals, pl)
-			end
-		end
-	end
-
-	if #args.fpl > 0 then
-		-- Override any existing feminine plurals.
-		feminine_plurals = args.fpl
-	end
-	if #args.mpl > 0 then
-		-- Override any existing masculine plurals.
-		masculine_plurals = args.mpl
-	end
-	
-	local feminines = {}
-	if args["f"] then
-		
-
-function get_feminine(f, qualifier, is_plural)
-    if (f == "" or f == nil) then
-        return nil
-    end
-    
-    return merge("feminine", {form = "f"}, f, qualifier)
-end
-
-
-function get_feminine_plural(f, fpl, qualifier, is_unc, is_plural)
-    if (is_plural == true or is_unc == true or f == nil or f == "") then
-        return nil
-    end
-    return get_primary_plural(f, fpl, "feminine plural", {form = "p", lemma = f}, qualifier)
-end
-
+    local items = {}
+    table.insert(items, get_countability(args, is_plural))
+    table.insert(items, get_lemma_plurals(args, is_plural))
     table.insert(items, get_feminine(args["f"], args["qual_f"], is_plural))
     table.insert(items, get_feminine_plural(args["f"], args["fpl"], args["qual_fpl"], args[2] == "-", is_plural))
     table.insert(items, get_feminine(args["f2"], args["qual_f2"], is_plural))
     table.insert(items, get_feminine_plural(args["f2"], args["fpl2"], args["qual_fpl2"], args[2] == "-", is_plural))
     
     if args["meta"] then
-    	table.insert(data.categories, "Portuguese nouns with metaphonic plurals")
+    	table.insert(cats, "Portuguese nouns with metaphonic plurals")
     end
 	
     return
@@ -349,6 +189,16 @@ function get_is_plural(g1, g2)
 end
 
 
+-- Returns text indicating a special status with regards to countability. These
+-- are plural only, uncountable and usually uncountable.
+function get_countability(args, is_plural)
+    if (is_plural == true) then return "''plural only''" end
+    if (args[2] == "-")  then return "''uncountable''" end
+    if (args["unc"] ~= nil)  then return "''usually uncountable''" end
+    return nil
+end
+
+
 -- Returns the text with the description, link and qualifier of a plural 
 -- (i.e. "feminine plural of [[example]] (qualifier)"). If the plural is not
 -- present as a parameter, [[Module:pt-plural]] is used to automatically figure
@@ -383,7 +233,28 @@ function get_secondary_plural(pl, class, qualifier)
 end
 
 -- Puts together the text of the lemma's primary and two secondary plurals.
-function get_lemma_plurals(args, lemma, categories, is_plural)
+function get_lemma_plurals(args, is_plural)
+    if (is_plural == true) then
+        return nil
+    end
+    
+    local class = {form = "p"}
+    local pl = args[2];
+   
+    if (pl == nil or pl == "") then
+        pl = args["pl"]
+    end
+
+    if (pl == "?") then
+        table.insert(cats, "Requests for inflections in Portuguese noun entries")
+        return please_add("plural")
+    elseif (pl ~= "-") then
+        local text = get_primary_plural(PAGENAME, pl, "plural", class, args["qual_pl"])
+        text = text .. get_secondary_plural(args["pl2"], class, args["qual_pl2"])
+        text = text .. get_secondary_plural(args["pl3"], class, args["qual_pl3"])
+        return text
+    end
+    return nil
 end
 
 
