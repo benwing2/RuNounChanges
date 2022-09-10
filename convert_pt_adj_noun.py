@@ -224,8 +224,20 @@ def make_masculine(form, special=None):
   if special:
     return None
 
-  # FIXME, implement me
-  return form
+  formarr = [form]
+  def check(fr, to):
+    newform = re.sub(fr, to, formarr[0])
+    if newform != formarr[0]:
+      formarr[0] = newform
+      return True
+    return False
+
+  (
+  check("([dts])ora$", r"\1or") or
+  check("a$", "o")
+  )
+
+  return formarr[0]
 
 def process_text_on_page(index, pagetitle, text):
   global args
@@ -308,17 +320,20 @@ def process_text_on_page(index, pagetitle, text):
       fpls = blib.fetch_param_chain(t, "fpl", "fpl")
       if space_in_f and not fpls and not g.endswith("-p"):
         pagemsg("WARNING: Space in f=%s and old default noun algorithm applying" % ",".join(fs))
-      pl = getp("2") or getp("pl")
+      pl = getp("2") or getp("pl") or getp("plural")
+      if not pl:
+        old_defpl = make_plural(lemma, False)
+        if old_defpl is None:
+          pagemsg("WARNING: No plurals and can't generate default plural, skipping: %s" % unicode(t))
+          continue
+        pl = old_defpl
       pl_qual = getp("qual_pl")
       pl2 = getp("pl2")
       pl2_qual = getp("qual_pl2")
       pl3 = getp("pl3")
       pl3_qual = getp("qual_pl3")
-      if not pl and pl2 or not pl2 and pl3:
+      if not pl2 and pl3:
         pagemsg("WARNING: Saw gap in plurals, can't handle, skipping: %s" % unicode(t))
-        continue
-      if not pl and pl_qual:
-        pagemsg("WARNING: No value for pl= but saw qual_pl=%s, skipping: %s" % (pl_qual, unicode(t)))
         continue
       if not pl2 and pl2_qual:
         pagemsg("WARNING: No value for pl2= but saw qual_pl2=%s, skipping: %s" % (pl2_qual, unicode(t)))
@@ -332,13 +347,6 @@ def process_text_on_page(index, pagetitle, text):
       orig_pls = pls
       pls = [lemma + x if x in ["s", "es"] else x for x in pls]
       pl_quals = [pl_qual, pl2_qual, pl3_qual]
-      if not pls:
-        old_defpl = make_plural(lemma, False)
-        if old_defpl is None:
-          pagemsg("WARNING: No plurals and can't generate default plural, skipping: %s" % unicode(t))
-          continue
-        pls = [old_defpl]
-        pl_quals = [""]
 
       if unc:
         pls = ["-"] + pls
@@ -350,15 +358,14 @@ def process_text_on_page(index, pagetitle, text):
       pls_with_def = ["+" if pl == defpl else pl for pl in pls]
 
       actual_special = None
-      if " " in lemma:
-        for special in romance_utils.all_specials:
-          special_pl = make_plural(lemma, special)
-          if special_pl is None:
-            continue
-          if pls == [special_pl]:
-            pagemsg("Found special=%s with special_pl=%s" % (special, special_pl))
-            actual_special = special
-            break
+      for special in romance_utils.all_specials:
+        special_pl = make_plural(lemma, True, special)
+        if special_pl is None:
+          continue
+        if pls == [special_pl]:
+          pagemsg("Found special=%s with special_pl=%s" % (special, special_pl))
+          actual_special = special
+          break
 
       if pls_with_def == ["+"]:
         if pl_quals[0]:
@@ -442,7 +449,7 @@ def process_text_on_page(index, pagetitle, text):
               pagemsg("WARNING: Explicit %s=%s matches special=%s but no %s plural, allowing" % (
                 g, ",".join(mfs), actual_special, g_full))
             else:
-              special_mfpl = make_plural(special_mf, actual_special)
+              special_mfpl = make_plural(special_mf, True, actual_special)
               if special_mfpl:
                 if mfpls == [special_mfpl]:
                   pagemsg("Found %s=%s and special=%s, %spls=%s matches special_%spl" % (
@@ -500,7 +507,7 @@ def process_text_on_page(index, pagetitle, text):
       for param in t.params:
         pn = pname(param)
         pv = unicode(param.value)
-        if pn not in ["head", "1", "2", "f", "f2", "fpl", "fpl2", "g2", "meta", "pl", "pl2", "pl3",
+        if pn not in ["head", "1", "2", "f", "f2", "fpl", "fpl2", "g2", "meta", "pl", "pl2", "pl3", "plural",
             "qual_f", "qual_f2", "qual_g1", "qual_g2", "qual_pl", "qual_pl2", "qual_pl3", "unc",
             "m", "m2", "qual_m", "qual_m2", "old"]:
           pagemsg("WARNING: Saw unrecognized param %s=%s in %s" % (pn, pv, unicode(t)))
