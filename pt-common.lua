@@ -100,6 +100,7 @@ function export.make_plural(form, special)
 		try("m$", "ns") or -- final -m
 		try("([rz])$", "%1es") or -- final -r or -z
 		try("(" .. V .. ")$", "%1s") or -- final vowel
+		try("([ºª])$", "%1s") or -- ordinal indicator
 		try("(" .. AV .. ")s$", function(av) return (remove_accent[av] or av) .. "ses" end) or -- final -ês, -ós etc.
 		try("^(" .. NAV .. "*" .. C .. "[ui]s)$", "%1es") -- final stressed -us or -is after consonant
 
@@ -134,6 +135,8 @@ function export.make_feminine(form, special)
 		--             [[varão]] (varoa), [[verde-limão]] (invariable), [[vilão]] (vilã/viloa)
 		try("ão$", "ona") or
 		try("o$", "a") or
+		-- ordinal indicator
+		try("º$", "ª") or
 		-- [[francês]], [[português]], [[inglês]], [[holandês]] etc.
 		try("ês$", "esa") or
 		-- [[francez]], [[portuguez]], [[inglez]], [[holandez]] (archaic)
@@ -176,7 +179,9 @@ function export.make_masculine(form, special)
 
 	local changed =
 		try("([dts])ora$", "%1or") or
-		try("a$", "o")
+		try("a$", "o") or
+		-- ordinal indicator
+		try("ª$", "º")
 
 	return form
 end
