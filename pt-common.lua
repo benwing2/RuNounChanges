@@ -4,15 +4,18 @@ local romut_module = "Module:romance utilities"
 
 local rsubn = mw.ustring.gsub
 
-local unaccented_vowel = "aeiouà"
-local accented_vowel = "áéíóúýâêô"
-local maybe_accented_vowel = "ãõ"
+local unaccented_vowel = "aeiouàAEIOUÀ"
+local accented_vowel = "áéíóúýâêôÁÉÍÓÚÝÂÊÔ"
+local maybe_accented_vowel = "ãõÃÕ"
 local vowel = unaccented_vowel .. accented_vowel .. maybe_accented_vowel
 local V = "[" .. vowel .. "]"
 local AV = "[" .. accented_vowel .. "]"
 local NAV = "[^" .. accented_vowel .. "]"
 local C = "[^" .. vowel .. ".]"
-local remove_accent = {["á"]="a", ["é"]="e", ["í"]="i", ["ó"]="o", ["ú"]="u", ["ý"]="y", ["â"]="a", ["ê"]="e", ["ô"]="o"}
+local remove_accent = {
+	["á"]="a", ["é"]="e", ["í"]="i", ["ó"]="o", ["ú"]="u", ["ý"]="y", ["â"]="a", ["ê"]="e", ["ô"]="o",
+	["Á"]="A", ["É"]="E", ["Í"]="I", ["Ó"]="O", ["Ú"]="U", ["Ý"]="Y", ["Â"]="A", ["Ê"]="E", ["Ô"]="O"
+}
 
 -- version of rsubn() that discards all but the first return value
 local function rsub(term, foo, bar)
@@ -52,6 +55,7 @@ local prepositions = {
 	-- de + optional article
 	"de ",
 	"d[oa]s? ",
+	"d'",
 	-- em + optional article
 	"em ",
 	"n[oa]s? ",
