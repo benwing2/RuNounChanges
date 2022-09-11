@@ -1,5 +1,7 @@
 local export = {}
 
+local romut_module = "Module:romance utilities"
+
 local rsubn = mw.ustring.gsub
 
 local unaccented_vowel = "aeiouà"
@@ -68,7 +70,7 @@ local prepositions = {
 }
 
 function export.make_plural(form, special)
-	local retval = require("Module:romance utilities").handle_multiword(form, special, export.make_plural, prepositions)
+	local retval = require(romut_module).handle_multiword(form, special, export.make_plural, prepositions)
 	if retval then
 		if #retval ~= 1 then
 			error("Internal error: Should have one return value for make_plural: " .. table.concat(retval, ","))
@@ -105,7 +107,7 @@ function export.make_plural(form, special)
 end
 
 function export.make_feminine(form, special)
-	local retval = require("Module:romance utilities").handle_multiword(form, special, export.make_feminine, prepositions)
+	local retval = require(romut_module).handle_multiword(form, special, export.make_feminine, prepositions)
 	if retval then
 		if #retval ~= 1 then
 			error("Internal error: Should have one return value for make_feminine: " .. table.concat(retval, ","))
@@ -156,7 +158,7 @@ function export.make_feminine(form, special)
 end
 
 function export.make_masculine(form, special)
-	local retval = require("Module:romance utilities").handle_multiword(form, special, export.make_masculine, prepositions)
+	local retval = require(romut_module).handle_multiword(form, special, export.make_masculine, prepositions)
 	if retval then
 		if #retval ~= 1 then
 			error("Internal error: Should have one return value for make_masculine: " .. table.concat(retval, ","))
