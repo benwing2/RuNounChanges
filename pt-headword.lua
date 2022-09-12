@@ -7,6 +7,7 @@ local rsplit = mw.text.split
 local m_links = require("Module:links")
 local m_table = require("Module:table")
 local com = require("Module:pt-common")
+local romut_module = "Module:romance utilities"
 local lang = require("Module:languages").getByCode("pt")
 local langname = lang:getCanonicalName()
 
@@ -75,7 +76,7 @@ function export.show(frame)
 			heads = {pagename}
 		end
 	else
-		local auto_linked_head = require("Module:romance utilities").add_lemma_links(pagename, args.splithyph)
+		local auto_linked_head = require(romut_module).add_lemma_links(pagename, args.splithyph)
 		if #heads == 0 then
 			heads = {auto_linked_head}
 		else
@@ -152,13 +153,14 @@ local function replace_hash_with_lemma(term, lemma)
 	term = term:gsub("#", lemma)
 	return term
 end
-	
+
 local allowed_genders = m_table.listToSet(
-	{"m", "f", "mf", "mfbysense", "m-p", "f-p", "mf-p", "mfbysense-p", "?", "?-p"}
+	{"m", "f", "mf", "mfbysense", "m-p", "f-p", "mf-p", "mfbysense-p", "?", "?-p", "n", "n-p"}
 )
 
 local function do_noun(args, data, tracking_categories, pos)
 	local is_plurale_tantum = false
+	local has_singular = false
 	local plpos = require("Module:string utilities").pluralize(pos)
 
 	data.genders = {}
@@ -172,6 +174,7 @@ local function do_noun(args, data, tracking_categories, pos)
 		if g:find("-p$") then
 			is_plurale_tantum = true
 		else
+			has_singular = true
 			if g == "m" or g == "mf" or g == "mfbysense" then
 				saw_m = true
 			end
@@ -208,14 +211,18 @@ local function do_noun(args, data, tracking_categories, pos)
 	local args_fpl = args.fpl
 	local args_pl = args[2]
 
-	if is_plurale_tantum then
+	if is_plurale_tantum and not has_singular then
 		if #args_pl > 0 then
 			error("Can't specify plurals of plurale tantum " .. pos)
 		end
 		table.insert(data.inflections, {label = glossary_link("plural only")})
 	else
-		-- If no plurals, use the default plural unless mpl= or fpl= explicitly given.
-		if #args_pl == 0 and #args_mpl == 0 and #args_fpl == 0 then
+		if is_plurale_tantum then
+			-- both singular and plural
+			table.insert(data.inflections, {label = "sometimes " .. glossary_link("plural only") .. ", in variation"})
+		end
+		-- If no plurals, use the default plural.
+		if #args_pl == 0 then
 			args_pl = {"+"}
 		end
 		-- If only ~ given (countable and uncountable), add the default plural after it.
@@ -244,7 +251,7 @@ local function do_noun(args, data, tracking_categories, pos)
 			if pl == "+" then
 				make_plural_and_insert(lemma)
 			elseif pl:find("^%+") then
-				pl = require("Module:romance utilities").get_special_indicator(pl)
+				pl = require(romut_module).get_special_indicator(pl)
 				make_plural_and_insert(lemma, pl)
 			elseif pl == "?" or pl == "!" then
 				if i > 1 or #args_pl > 1 then
@@ -252,7 +259,8 @@ local function do_noun(args, data, tracking_categories, pos)
 				end
 				if pl == "?" then
 					-- Plural is unknown
-					table.insert(data.inflections, {label = "plural unknown or uncertain"})
+					-- Better not to display anything
+					-- table.insert(data.inflections, {label = "plural unknown or uncertain"})
 					table.insert(data.categories, langname .. " " .. plpos .. " with unknown or uncertain plurals")
 				else
 					-- Plural is not attested
@@ -286,7 +294,7 @@ local function do_noun(args, data, tracking_categories, pos)
 			end
 		end
 	end
-	
+
 	if #plurals > 1 then
 		table.insert(data.categories, langname .. " " .. plpos .. " with multiple plurals")
 	end
@@ -304,7 +312,7 @@ local function do_noun(args, data, tracking_categories, pos)
 			else
 				mf = replace_hash_with_lemma(mf, lemma)
 			end
-			local special = require("Module:romance utilities").get_special_indicator(mf)
+			local special = require(romut_module).get_special_indicator(mf)
 			if special then
 				mf = inflect(lemma, special)
 			end
@@ -359,7 +367,7 @@ local function do_noun(args, data, tracking_categories, pos)
 					end
 				end
 			elseif mfpl:find("^%+") then
-				mfpl = require("Module:romance utilities").get_special_indicator(mfpl)
+				mfpl = require(romut_module).get_special_indicator(mfpl)
 				if #singulars > 0 then
 					for _, mf in ipairs(singulars) do
 						-- mf is a table
@@ -450,9 +458,14 @@ local function do_noun(args, data, tracking_categories, pos)
 		table.insert(data.inflections, feminine_plurals)
 	end
 
+	if args.meta then
+		table.insert(data.inflections, {label = "[[Appendix:Portuguese pronunciation#Metaphony|metaphonic]]"})
+		table.insert(data.categories, langname .. " " .. plpos .. " with metaphony")
+	end
+
 	-- Maybe add category 'Portuguese nouns with irregular gender' (or similar)
 	local irreg_gender_lemma = com.rsub(lemma, " .*", "") -- only look at first word
-	if (irreg_gender_lemma:find("o$") and (gender_for_default_plural == "f" or gender_for_default_plural == "mf"
+	if (rfind(irreg_gender_lemma, "[^ã]o$") and (gender_for_default_plural == "f" or gender_for_default_plural == "mf"
 		or gender_for_default_plural == "mfbysense")) or
 		(irreg_gender_lemma:find("a$") and (gender_for_default_plural == "m" or gender_for_default_plural == "mf"
 		or gender_for_default_plural == "mfbysense")) then
@@ -474,6 +487,7 @@ local function get_noun_params()
 		["mpl_qual"] = {list = "mpl=_qual", allow_holes = true},
 		["fpl"] = {list = true},
 		["fpl_qual"] = {list = "fpl=_qual", allow_holes = true},
+		["meta"] = {type = "boolean"},
 	}
 end
 
@@ -484,15 +498,81 @@ pos_functions["nouns"] = {
 	end,
 }
 
+local function do_pronoun(args, data, tracking_categories, pos)
+	local plpos = require("Module:string utilities").pluralize(pos)
+
+	data.pos_category = plpos
+
+	local lemma = m_links.remove_links(data.heads[1]) -- should always be specified
+
+	data.genders = {}
+	for i, g in ipairs(args[1]) do
+		if g ~= "n" and g ~= "n-p" and not allowed_genders[g] then
+			error("Unrecognized gender: " .. g)
+		end
+		if args.g_qual[i] then
+			table.insert(data.genders, {spec = g, qualifiers = {args.g_qual[i]}})
+		else
+			table.insert(data.genders, g)
+		end
+	end
+
+	local function do_inflection(forms, quals, label)
+		if #forms > 0 then
+			local terms = process_terms_with_qualifiers(forms, quals)
+			check_all_missing(terms, plpos, tracking_categories)
+			terms.label = label
+			table.insert(data.inflections, terms)
+		end
+	end
+
+	do_inflection(args.m, args.m_qual, "masculine")
+	do_inflection(args.f, args.f_qual, "feminine")
+	do_inflection(args.sg, args.sg_qual, "singular")
+	do_inflection(args.pl, args.pl_qual, "plural")
+	do_inflection(args.mpl, args.mpl_qual, "masculine plural")
+	do_inflection(args.fpl, args.fpl_qual, "feminine plural")
+	do_inflection(args.n, args.n_qual, "neuter")
+end
+
+local function get_pronoun_params()
+	local params = {
+		[1] = {list = "g"}, --gender(s)
+		["g_qual"] = {list = "g=_qual", allow_holes = true},
+		["m"] = {list = true}, --masculine form(s)
+		["m_qual"] = {list = "m=_qual", allow_holes = true},
+		["f"] = {list = true}, --feminine form(s)
+		["f_qual"] = {list = "f=_qual", allow_holes = true},
+		["sg"] = {list = true}, --singular form(s)
+		["sg_qual"] = {list = "sg=_qual", allow_holes = true},
+		["pl"] = {list = true}, --plural form(s)
+		["pl_qual"] = {list = "pl=_qual", allow_holes = true},
+		["mpl"] = {list = true}, --masculine plural form(s)
+		["mpl_qual"] = {list = "mpl=_qual", allow_holes = true},
+		["fpl"] = {list = true}, --feminine plural form(s)
+		["fpl_qual"] = {list = "fpl=_qual", allow_holes = true},
+		["n"] = {list = true}, --neuter form(s)
+		["n_qual"] = {list = "n=_qual", allow_holes = true},
+	}
+	return params
+end
+
+pos_functions["pronouns"] = {
+	params = get_pronoun_params(),
+	func = function(args, data, tracking_categories)
+		do_pronoun(args, data, tracking_categories, "pronoun")
+	end,
+}
+
 local function do_adjective(args, data, tracking_categories, pos, is_superlative)
 	local feminines = {}
 	local masculine_plurals = {}
 	local feminine_plurals = {}
 	local plpos = require("Module:string utilities").pluralize(pos)
 
-	local romut = require("Module:romance utilities")
+	local romut = require(romut_module)
 	data.pos_category = plpos
-	
+
 	if args.sp and not romut.allowed_special_indicators[args.sp] then
 		local indicators = {}
 		for indic, _ in pairs(romut.allowed_special_indicators) do
@@ -692,6 +772,11 @@ local function do_adjective(args, data, tracking_categories, pos, is_superlative
 		table.insert(data.inflections, sups)
 	end
 
+	if args.meta then
+		table.insert(data.inflections, {label = "[[Appendix:Portuguese pronunciation#Metaphony|metaphonic]]"})
+		table.insert(data.categories, langname .. " " .. plpos .. " with metaphony")
+	end
+
 	if args.irreg and is_superlative then
 		table.insert(data.categories, langname .. " irregular superlative adjectives")
 	end
@@ -709,6 +794,7 @@ local function get_adjective_params(adjtype)
 		["mpl_qual"] = {list = "mpl=_qual", allow_holes = true},
 		["fpl"] = {list = true}, --feminine plural override(s)
 		["fpl_qual"] = {list = "fpl=_qual", allow_holes = true},
+		["meta"] = {type = "boolean"}, --metaphonic
 	}
 	if adjtype == "base" or adjtype == "part" or adjtype == "det" then
 		params["comp"] = {list = true} --comparative(s)
