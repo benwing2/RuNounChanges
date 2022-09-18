@@ -42,6 +42,7 @@ local rfind = mw.ustring.find
 local rmatch = mw.ustring.match
 local rsplit = mw.text.split
 local rsub = com.rsub
+local u = mw.ustring.char
 
 local function link_term(term)
 	return m_links.full_link({ lang = lang, term = term }, "term")
@@ -52,8 +53,9 @@ local V = com.V -- vowel regex class
 local AV = com.AV -- accented vowel regex class
 local C = com.C -- consonant regex class
 
-
-local fut_sub_note = "[mostly obsolete, now mainly used in legal language]"
+local AC = u(0x0301) -- acute =  ́
+local GR = u(0x0300) -- grave =  ̀
+local CFLEX = u(0x0302) -- circumflex =  ̂
 
 local vowel_alternants = m_table.listToSet({"i", "í", "u", "ú", "ei", "+"})
 local vowel_alternant_to_desc = {
@@ -412,6 +414,38 @@ The following stems are recognized:
 
 local irreg_conjugations = {
 	{
+		-- aguar/enxaguar, ambiguar/apaziguar/averiguar, minguar, cheguar?? (obsolete variant of [[chegar]])
+		match = "guar",
+		forms = {
+			-- combine_stem_ending() will move the acute accent backwards so it sits after the last vowel in [[minguar]]
+			pres_stressed = {{form = AC .. "gu", footnotes = {"[Brazil]"}}, {form = "gu", footnotes = {"[Portugal]"}}},
+			pres_sub_stressed = {
+				{form = AC .. "gu", footnotes = {"[Brazil]"}},
+				{form = "gu", footnotes = {"[Portugal]"}},
+				{form = AC .. "gü", footnotes = {"[Brazil]", "[superseded]"}},
+				{form = "gú", footnotes = {"[Portugal]", "[superseded]"}},
+			},
+			pres_sub_unstressed = {"gu", {form = "gü", footnotes = {"[Brazil]", "[superseded]"}}},
+			pret_1s = {"guei", {form = "güei", footnotes = {"[Brazil]", "[superseded]"}}},
+		}
+	},
+	{
+		-- adequar, antiquar, apropinquar
+		match = "quar",
+		forms = {
+			-- combine_stem_ending() will move the acute accent backwards so it sits after the last vowel in [[apropinquar]]
+			pres_stressed = {{form = AC .. "qu", footnotes = {"[Brazil]"}}, {form = "qu", footnotes = {"[Portugal]"}}},
+			pres_sub_stressed = {
+				{form = AC .. "qu", footnotes = {"[Brazil]"}},
+				{form = "qu", footnotes = {"[Portugal]"}},
+				{form = AC .. "qü", footnotes = {"[Brazil]", "[superseded]"}},
+				{form = "qú", footnotes = {"[Portugal]", "[superseded]"}},
+			},
+			pres_sub_unstressed = {"qu", {form = "qü", footnotes = {"[Brazil]", "[superseded]"}}},
+			pret_1s = {"quei", {form = "qüei", footnotes = {"[Brazil]", "[superseded]"}}},
+		}
+	},
+	{
 		-- abrir/desabrir/reabrir, cobrir/descobrir/encobrir/recobrir/redescobrir
 		match = "brir",
 		forms = {pp = "berto"}
@@ -507,13 +541,10 @@ local irreg_conjugations = {
 		-- dar, desdar
 		match = match_against_verbs("dar", {"^", "des"}),
 		forms = {
-			-- we need to override various present indicative forms and add an accent for the compounds;
-			-- not needed for the simplex and in fact the accents will be removed in that case
-			pres_1s = "doy",
+			pres_1s = "dou",
 			pres_2s = "dás",
 			pres_3s = "dá",
-			pres_2p = "dáis",
-			pres_3p = "dán",
+			pres_3p = "dão",
 			pret = "d", pret_conj = "er",
 			pres_sub_1s = "dé*",  -- * signals that the monosyllabic accent must remain
 			pres_sub_2s = "dés",
@@ -524,39 +555,14 @@ local irreg_conjugations = {
 		}
 	},
 	{
-		-- decir, redecir, entredecir
-		match = match_against_verbs("decir", {"^", "^re", "entre"}),
+		-- dizer, bendizer, condizer, contradizer, desdizer, maldizer, predizer, etc.
+		match = "dizer",
 		forms = {
-			-- for this and variant verbs in -decir, we set cons_alt to false because we don't want the
-			-- verb categorized as a c-zc alternating verb, which would happen by default
 			-- use 'digu' because we're in a front environment; if we use 'dig', we'll get '#dijo'
-			pres1_and_sub = "digu", vowel_alt = "i", cons_alt = false, pret = "dij", pret_conj = "irreg",
-			pp = "dich", fut = "dir",
+			pres1_and_sub = "digu", pres_3s = "diz",
+			pret = "dissé", pret_conj = "irreg", pret_1s = "disse", pret_3s = "disse", pp = "dito",
+			fut = "dir",
 			imp_2s = "dí" -- need the accent for the compounds; it will be removed in the simplex
-		}
-	},
-	{
-		-- antedecir, interdecir
-		match = match_against_verbs("decir", {"ante", "inter"}),
-		forms = {
-			pres1_and_sub = "digu", vowel_alt = "i", cons_alt = false, pret = "dij", pret_conj = "irreg",
-			pp = "dich", fut = "dir" -- imp_2s regular
-		}
-	},
-	{
-		-- bendecir, maldecir
-		match = match_against_verbs("decir", {"ben", "mal"}),
-		forms = {
-			pres1_and_sub = "digu", vowel_alt = "i", cons_alt = false, pret = "dij", pret_conj = "irreg",
-			pp = {"decid", "dit"} -- imp_2s regular, fut regular
-		}
-	},
-	{
-		-- condecir, contradecir, desdecir, predecir, others?
-		match = "decir",
-		forms = {
-			pres1_and_sub = "digu", vowel_alt = "i", cons_alt = false, pret = "dij", pret_conj = "irreg",
-			pp = "dich", fut = {"decir", "dir"} -- imp_2s regular
 		}
 	},
 	{
@@ -1172,7 +1178,7 @@ local function add_finite_non_present(base)
 		-- add_tense("pret", stems.pret, "e", "iste", "o", "imos", "isteis", "ieron")
 	elseif stems.pret_conj == "ar" then
 		add_tense("pret", stems.pret, "ei", "aste", "ou",
-			{{form = "amos", footnotes = {"Brazil"}}, {form = "ámos", footnotes = {"Portugal"}}}, "astes", "aram")
+			{{form = "amos", footnotes = {"[Brazil]"}}, {form = "ámos", footnotes = {"[Portugal]"}}}, "astes", "aram")
 	elseif stems.pret_conj == "er" then
 		add_tense("pret", stems.pret, "ei", "este", "eu", "emos", "estes", "eram")
 	else
