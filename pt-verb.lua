@@ -580,7 +580,7 @@ local irreg_conjugations = {
 
 	-- Verbs not needing entries here:
 	--
-	-- precaver: just use no_pres_stressed
+	-- precaver: use <no_pres_stressed>
 	-- -cer (verbs in -ecer, descer, vencer, etc.): automatically handled in combine_stem_ending()
 	-- -ger (proteger, reger, etc.): automatically handled in combine_stem_ending()
 	-- -guer (erguer/reerguer/soerguer): automatically handled in combine_stem_ending()
@@ -823,11 +823,40 @@ local irreg_conjugations = {
 	--                                             -ir                                        --
 	--------------------------------------------------------------------------------------------
 
-	{
-		-- abrir/desabrir/reabrir, cobrir/descobrir/encobrir/recobrir/redescobrir
-		match = "brir",
-		forms = {pp = "berto"}
-	},
+	-- Verbs not needing entries here:
+	--
+	-- abolir: use <u-o> (claimed in old module to have no pres1 or pres sub, but Priberam disagrees)
+	-- barrir: use <only3sp>
+	-- carpir, colorir/descolorir, demolir: use <no_pres1_and_sub>
+	-- delir, empedernir, espavorir, falir, florir, remir, renhir: use <no_pres_stressed>
+	-- empedernir: use <i-e> (claimed in old module to have no pres stressed, but Priberam disagrees)
+	-- transir: totally regular (claimed in old module to have no pres stressed, but Priberam disagrees)
+	-- aspergir, despir, flectir/deflectir/reflectir, mentir/desmentir,
+	--   sentir/assentir/consentir/dissentir/pressentir/ressentir, convergir/divergir, aderir/adherir,
+	--   ferir/auferir/conferir/deferir/desferir/diferir/differir/inferir/interferir/preferir/preferir/referir/transferir,
+	--   gerir/digerir/ingerir/sugerir, preterir, competir/repetir, servir, advertir/divertir,
+	--   vestir/investir/revestir/travestir,
+	--   seguir/conseguir/desconseguir/desseguir/perseguir/prosseguir: use <i-e>
+	-- inerir: use <i-e> (per Infopédia), use <only3sp> (per Priberam)
+	-- dormir, engolir, tossir, subir, acudir/sacudir, fugir, sumir/consumir: use <u-o>
+	-- polir/repolir (claimed in old module to have no pres stressed, but Priberam disagrees; Infopédia lists
+	--   repolir as completely regular and not like polir, but I think that's an error): use <u>
+	-- premir (claimed in old module to have no pres1 or sub, but Priberam and Infopédia disagree; Priberam says
+	--   primo/primes/prime, while Infopédia says primo/premes/preme; Priberam is probably more reliable): use <i>
+	-- extorquir/retorquir (claimed in old module to have no pres1 or sub, but Priberam disagrees): use <u-o,u>
+	-- agredir/progredir/regredir/transgredir: use <i>
+	-- cerzir/cergir: use <i-e,i> (per Infopédia; Priberam just says <i-e>)
+	-- proibir/coibir: use <í>
+	-- reunir: use <ú>
+	-- parir/malparir: use <no_pres_stressed> (old module had pres_1s = {paro (1_defective), pairo (1_obsolete_alt)},
+	--   pres_2s = pares, pres_3s = pare, and subjunctive stem par- or pair-, but both Priberam and Infopédia agree
+	--   in these verbs being no_pres_stressed)
+	-- explodir/implodir: use <u-o> (claimed in old module to be <+,u-o> but neither Priberam nor Infopédia agree)
+	--
+	-- -cir alternations (aducir, ressarcir): automatically handled in combine_stem_ending()
+	-- -gir alternations (agir, dirigir, exigir): automatically handled in combine_stem_ending()
+	-- -guir alternations: automatically handled in combine_stem_ending()
+
 	{
 		-- verbs in -air (cair, sair, trair and derivatives: decair/descair/recair, sobres(s)air,
 		-- abstrair/atrair/contrair/distrair/extrair/protrair/retrair/subtrair)
@@ -838,43 +867,128 @@ local irreg_conjugations = {
 		}
 	},
 	{
-		-- arguir, redarguir; FIXME
-		match = "arguir",
+		-- abrir/desabrir/reabrir, cobrir/descobrir/encobrir/recobrir/redescobrir
+		match = "brir",
+		forms = {pp = "berto"}
+	},
+	{
+		-- conduzir, produzir, reduzir, traduzir, etc.
+		match = "duzir",
 		forms = {
-			pres1_and_sub = "argu", pres_2s = "argúis", pres_3s = "argúi",
-			-- FIXME
+			pres_3s = "duz",
+			imp_2s = {"duz", "duze"}, -- per Infopédia
 		}
 	},
 	{
-		-- extinguir (not distinguir)
-		match = "extinguir",
+		-- pedir, desimpedir, despedir, espedir, expedir, impedir
+		-- medir
+		-- comedir (claimed in old module to have no pres stressed, but Priberam disagrees)
+		match = match_against_verbs("edir", {"m", "p"}),
+		forms = {pres1_and_sub = "eço"},
+	},
+	{
+		-- frigir
+		match = "frigir",
+		forms = {vowel_alt = "i-e", short_pp = "frito"},
+	},	
+	{
+		-- inserir
+		match = "inserir",
+		forms = {vowel_alt = "i-e", short_pp = "inserto"},
+	},
+	{
+		-- ir
+		match = "^ir",
 		forms = {
-			pp = {"extinguido", "extinto"},
+			pres_1s = "vou", pres_2s = "vais", pres_3s = "vai",
+			pres_1p = "vamos", pres_2p = "ides", pres_3p = "vão",
+			pres_sub_1s = "vá", pres_sub_2s = "vás", pres_sub_3s = "vá",
+			pres_sub_1p = "vamos", pres_sub_2p = "vades", pres_sub_3p = "vão",
+			pret = "fô", pret_1s = "fui", pret_3s = "foi", pret_conj = "irreg",
+		}
+	},
+	{
+		-- emergir, imergir, submergir
+		match = "mergir",
+		forms = {vowel_alt = {"i-e", "+"}, short_pp = "merso"},
+	},
+	{
+		match = "ouvir",
+		forms = {pres1_and_sub = {"ouç", "oiç"}},
+	},
+	{
+		-- old module says repelir specifically has short_pp = repulso but neither Infopédia nor Priberam agrees
+		match = "pelir",
+		forms = {pres1_and_sub = {{form = "pil", footnotes = "[per Infopédia; Priberam says these forms are missing]"}}},
+	},
+	{
+		-- exprimir, imprimir but not comprimir/descomprimir, deprimir, oprimir/opprimir, reprimir, suprimir/supprimir
+		-- exprimir with short_pp expresso per Infopédia
+		match = match_against_verbs("primir", {"ex", "im"}),
+		forms = {short_pp = "presso"}
+	},
+	{
+		-- rir, sorrir
+		match = match_against_verbs("rir", {"^", "sor"}),
+		forms = {
+			pres_2s = "ris", pres_3s = "ri", pres_2p = "rides", pres_3p = "riem",
+			pres1_and_sub = "ri",
+		},
+	},
+	{
+		-- distinguir, extinguir
+		match = "tinguir",
+		forms = {
+			short_pp = "tinto",
 			-- gu/g alternations handled in combine_stem_ending()
 		}
 	},
 	{
-		-- verbs in -seguir (conseguir, desconseguir, desseguir, ...)
-		match = "air",
+		-- delinquir, arguir/redarguir
+		-- NOTE: The following is based on delinquir, with arguir/redarguir by parallelism.
+		-- In Priberam, delinquir and arguir are exactly parallel, but in Infopédia they aren't; only delinquir has
+		-- alternatives like 'delínques'. I assume this is because forms like 'delínques' are Brazilian and
+		-- Infopédia is from Portugal, so their coverage of Brazilian forms may be inconsistent.
+		match = match_against_verbs("uir", {"delinq", "arg"}),
 		forms = {
-			pres1_and_sub = "ai", pres_2s = "ais", pres_3s = "ai",
-			-- all occurrences of accented í in endings handled in combine_stem_ending()
-		}
-	},
-	{
-		-- delinquir
-		match = "air",
-		forms = {
-			pres1_and_sub = "ai", pres_2s = "ais", pres_3s = "ai",
-			-- all occurrences of accented í in endings handled in combine_stem_ending()
-		}
-	},
-	{
-		-- extorquir/retorquir
-		match = "air",
-		forms = {
-			pres1_and_sub = "ai", pres_2s = "ais", pres_3s = "ai",
-			-- all occurrences of accented í in endings handled in combine_stem_ending()
+			-- use 'ü' because we're in a front environment; if we use 'u', we'll get '#delinco', '#argo'
+			pres1_and_sub = {{form = AC .. "ü", footnotes = {"[Brazil]"}}, {form = "ü", footnotes = {"[Portugal]"}}},
+			-- FIXME: verify. This is by partial parallelism with the present subjunctive of verbs in -quar (also a
+			-- front environment). Infopédia has 'delinquis ou delínques' and Priberam has 'delinqúis'.
+			pres_2s = {
+				{form = AC .. "ues", footnotes = {"[Brazil]"}},
+				{form = "uis", footnotes = {"[Portugal]"}},
+				-- This form should occur only with an infinitive 'delinqüir' etc.
+				-- {form = AC .. "ües", footnotes = {"[Brazil]", "[superseded]"}},
+				{form = "úis", footnotes = {"[Portugal]", "[superseded]"}},
+			},
+			-- Same as previous.
+			pres_3s = {
+				{form = AC .. "ue", footnotes = {"[Brazil]"}},
+				{form = "ui", footnotes = {"[Portugal]"}},
+				-- This form should occur only with an infinitive 'delinqüir' etc.
+				-- {form = AC .. "üe", footnotes = {"[Brazil]", "[superseded]"}},
+				{form = "úi", footnotes = {"[Portugal]", "[superseded]"}},
+			},
+			-- Infopédia has 'delinquem ou delínquem' and Priberam has 'delinqúem'.
+			pres_3p = {
+				{form = AC .. "uem", footnotes = {"[Brazil]"}},
+				{form = "uem", footnotes = {"[Portugal]"}},
+				-- This form should occur only with an infinitive 'delinqüir' etc.
+				-- {form = AC .. "üem", footnotes = {"[Brazil]", "[superseded]"}},
+				{form = "úem", footnotes = {"[Portugal]", "[superseded]"}},
+			},
+			-- FIXME: The old module also had several other alternative forms (given as [123]_alt, not identified as
+			-- obsolete):
+			-- impf: delinquia/delinquía, delinquias/delinquías, delinquia/delinquía, delinquíamos, delinquíeis, delinquiam/delinquíam
+			-- plup: delinquira/delinquíra, delinquiras/delinquíras, delinquira/delinquíra, delinquíramos, delinquíreis, delinquiram/delinquíram
+			-- pres_1p = delinquimos/delinquímos, pres_2p = delinquis/delinquís
+			-- pret = delinqui/delinquí, delinquiste/delinquíste, delinquiu, delinquimos/delinquímos, delinquistes/delinquístes, delinquiram/delinquíram
+			-- pers_inf = delinquir, delinquires, delinquir, delinquirmos, delinquirdes, delinquirem/delinquírem
+			-- fut_sub = delinquir, delinquires, delinquir, delinquirmos, delinquirdes, delinquirem/delinquírem
+			--
+			-- None of these alternative forms can be found in the Infopédia, Priberam, Collins or Reverso conjugation
+			-- tables, so their status is unclear, and I have omitted them.
 		}
 	},
 	{
@@ -901,50 +1015,18 @@ local irreg_conjugations = {
 		-- imiscuir, poluir, possuir, pruir
 		-- FIXME: old module lists short pp incluso for incluir that can't be verified, ask about this
 		-- FIXME: handle -uyr verbs?
-		match = "uir",
+		match = function(verb)
+			-- Don't match -guir verbs (e.g. seguir, conseguir).
+			if verb:find("guir") then
+				return nil
+			else
+				return match_against_verbs("uir", {""})
+			end
+		end,
 		forms = {
 			pres_2s = "uis", pres_3s = "ui",
 			-- all occurrences of accented í in endings handled in combine_stem_ending()
 		}
-	},
-	{
-		-- conduzir, produzir, reduzir, traduzir, etc.
-		match = "duzir",
-		forms = {
-			pres_3s = "duz",
-			imp_2s = {"duz", "duze"}, -- per Infopédia
-		}
-	},
-	{
-		-- frigir
-		match = "frigir",
-		forms = {vowel_alt = "i-e", short_pp = "frito"}
-	},
-	{
-		-- exprimir, imprimir but not comprimir/descomprimir, deprimir, oprimir/opprimir, reprimir, suprimir/supprimir
-		-- exprimir with short_pp expresso per Infopédia
-		match = match_against_verbs("primir", {"ex", "im"}),
-		forms = {short_pp = "presso"}
-	},
-	{
-		match = "^ir",
-		forms = {
-			pres_1s = "vou", pres_2s = "vais", pres_3s = "vai",
-			pres_1p = "vamos", pres_2p = "ides", pres_3p = "vão",
-			pres_sub_1s = "vá", pres_sub_2s = "vás", pres_sub_3s = "vá",
-			pres_sub_1p = "vamos", pres_sub_2p = "vades", pres_sub_3p = "vão",
-			pret = "fô", pret_1s = "fui", pret_3s = "foi", pret_conj = "irreg",
-		}
-	},
-	{
-		match = "ouvir",
-		forms = {pres1_and_sub = {"ouç", "oiç"}},
-	},
-	{
-		-- FIXME
-		match = "^raer",
-		-- use 'raigu' because we're in a front environment; if we use 'raig', we'll get '#raijo'
-		forms = {pres1_and_sub = {"raigu", "ray"}}
 	},
 	{
 		-- We want to match advir, convir, devir, etc. but not ouvir, servir, etc. No way to avoid listing each verb.
@@ -1103,45 +1185,11 @@ local function combine_stem_ending(base, slot, stem, ending, is_combining_ending
 		return stem .. ending
 	end
 
-	if base.stems.raising_conj and (rfind(ending, "^i" .. V) or
-		slot == "pres_sub_1p" or slot == "pres_sub_2p") then
-		-- need to raise e -> i, o -> u: dormir -> durmió, durmiera, durmiendo, durmamos
-		stem = rsub(stem, "([eo])(" .. C .. "*)$", function(vowel, rest) return raise_vowel[vowel] .. rest end)
-		-- also with stem ending in -gu or -qu (e.g. erguir -> irguió, irguiera, irguiendo, irgamos)
-		stem = rsub(stem, "([eo])(" .. C .. "*[gq]u)$", function(vowel, rest) return raise_vowel[vowel] .. rest end)
-	end
-
-	-- Lots of sound changes involving endings beginning with i + vowel
-	if rfind(ending, "^i" .. V) then
-		-- (1) final -i of stem absorbed: sonreír -> sonrió, sonriera, sonriendo; note that this rule may be fed
-		-- by the preceding one (stem sonre- raised to sonri-, then final i absorbed)
-		stem = stem:gsub("i$", "")
-
-		-- (2) In the preterite of irregular verbs (likewise for other tenses derived from the preterite stem, i.e.
-		--     imperfect and future subjunctive), initial i absorbed after j (dijeron not #dijieron, likewise for
-		--     condujeron, trajeron) and u (fueron not #fuyeron). Does not apply in regular verb tejer (tejieron not
-		--     #tejeron) and concluir (concluyeron not #conclueron).
-		if base.stems.pret_conj == "irreg" and rfind(stem, "[ju]$") then
-			ending = ending:gsub("^i", "")
-		end
-
-		-- (3) initial i -> y after vowel and word-initially: poseer -> poseyó, poseyera, poseyendo;
-		-- concluir -> concluyó, concluyera, concluyendo; ir -> yendo; but not conseguir/delinquir
-		if stem == "" or (rfind(stem, V .. "$") and not rfind(stem, "[gq]u$")) then
-			ending = ending:gsub("^i", "y")
-		end
-
-		-- (4) -gü + ie- -> -guye-: argüir -> arguyó, arguyera, arguyendo
-		if stem:find("gü$") then
-			-- transfer the y to the stem to avoid gü -> gu below in front/back conversions
-			stem = stem:gsub("ü$", "uy")
-			ending = ending:gsub("^i", "")
-		end
-
-		-- (5) initial i absorbed after ñ, ll, y: tañer -> tañó, tañera, tañendo; bullir -> bulló, bullera, bullendo
-		if rfind(stem, "[ñy]$") or rfind(stem, "ll$") then
-			ending = ending:gsub("^i", "")
-		end
+	-- If the ending begins with an acute accent, this is a signal to move the accent onto the last vowel of the stem.
+	-- Cf. míngua of minguar.
+	if ending:find("^" .. AC) then
+		ending = rsub(ending, "^" .. AC, "")
+		stem = rsub(stem, "([aeiouyAEIOUY])([^aeiouyAEIOUY]*)$", "%1" .. AC .. "%2")
 	end
 
 	-- If ending begins with i, it must get an accent after an unstressed vowel (in some but not all cases) to prevent
@@ -1164,18 +1212,6 @@ local function combine_stem_ending(base, slot, stem, ending, is_combining_ending
 		ending = ending:gsub("^i", "í")
 	end
 
-	-- If -oír/-uir (i.e. -ir with stem ending in -o/u, e.g. oír, concluir), a y must be added before endings
-	-- beginning with a/e/o. Check for base.stems.pret_conj == "irreg" to exclude stem fu- of [[ir]].
-	if base.conj == "ir" and rfind(ending, "^[aeoáéó]") and base.stems.pret_conj ~= "irreg" then
-		if rfind(stem, "[oú]$") then -- oír -> oye, rehuir -> rehúyo/rehúye (with indicator 'ú')
-			stem = stem .. "y"
-		elseif rfind(stem, "[^gq]u$") then -- concluir, but not conseguir or delinquir
-			stem = stem .. "y"
-		elseif stem:find("ü$") then -- argüir -> arguyendo
-			stem = stem:gsub("ü$", "uy")
-		end
-	end
-
 	-- Spelling changes in the stem; it depends on whether the stem given is the pre-front-vowel or
 	-- pre-back-vowel variant, as indicated by `frontback`. We want these front-back spelling changes to happen
 	-- between stem and ending, not between prefix and stem; the prefix may not have the same "front/backness"
@@ -1185,12 +1221,15 @@ local function combine_stem_ending(base, slot, stem, ending, is_combining_ending
 		stem = stem:gsub("c$", "ç") -- conhecer -> conheço, vencer -> venço, descer -> desço
 		stem = stem:gsub("g$", "j") -- proteger -> protejo, fugir -> fujo
 		stem = stem:gsub("gu$", "g") -- distinguir -> distingo, conseguir -> consigo
+		stem = stem:gsub("([gq])ü$", "%1u") -- argüir (superseded) -> arguo, delinqüir (superseded) -> delinquo
 	elseif base.frontback == "back" and is_front then
-		-- stem = stem:gsub("gu$", "gü") -- averiguar -> averigüei, minguar -> mingüei (obsolete)
-		-- stem = stem:gsub("qu$", "qü") -- antiquar -> antiqüei, adequar -> adeqüei (obsolete)
+		-- The following changes are all superseded so we don't do them:
+		-- averiguar -> averigüei, minguar -> mingüei; antiquar -> antiqüei, apropinquar -> apropinqüei
+		-- stem = stem:gsub("([gq])u$", "%1ü")
 		stem = stem:gsub("g$", "gu") -- cargar -> carguei, apagar -> apaguei
 		stem = stem:gsub("c$", "qu") -- marcar -> marquei
 		stem = rsub(stem, "ç$", "c") -- começar -> comecei
+		-- j does not go to g here; desejar -> deseje not #desege
 	end
 
 	return stem .. ending
@@ -1399,37 +1438,6 @@ local function copy_subjunctives_to_imperatives(base)
 		local from = "pres_sub_" .. persnum
 		local to = "imp_" .. persnum
 		insert_forms(base, to, iut.map_forms(base.forms[from], function(form) return form end))
-	end
-end
-
-
--- Remove monosyllabic accents (e.g. the 3sg preterite of fiar is fio not #fió). Note that there are a
--- few monosyllabic verb forms that intentionally have an accent, to distinguish them from other words
--- with the same pronunciation. These are as follows:
--- (1) [[sé]] 1sg present indicative of [[saber]];
--- (2) [[sé]] 2sg imperative of [[ser]];
--- (3) [[dé]] 1sg and 3sg present subjunctive of [[dar]].
--- For these, a * is added, which indicates that the accent needs to remain. If we see such a *, we remove
--- it but otherwise leave the form alone.
-local function remove_monosyllabic_accents(base)
-	for _, slotaccel in ipairs(base.alternant_multiword_spec.verb_slots_basic) do
-		local slot, accel = unpack(slotaccel)
-		if base.forms[slot] then
-			for _, form in ipairs(base.forms[slot]) do
-				if form.form:find("%*") then -- * means leave alone any accented vowel
-					form.form = form.form:gsub("%*", "")
-				elseif not rfind(form.form, "^%-") and rfind(form.form, AV) and not rfind(form.form, V .. C .. V) then
-					-- Has an accented vowel and no VCV sequence and not a suffix; may be monosyllabic, in which
-					-- case we need to remove the accent. Check # of syllables and remove accent if only 1. Note
-					-- that the checks for accented vowel and VCV sequence are not strictly needed, but are
-					-- optimizations to avoid running the whole syllabification algorithm on every verb form.
-					local syllables = com.syllabify(form.form)
-					if #syllables == 1 then
-						form.form = com.remove_accent_from_syllable(syllables[1])
-					end
-				end
-			end
-		end
 	end
 end
 
@@ -1646,10 +1654,6 @@ local function conjugate_verb(base)
 	-- This should happen after process_slot_overrides() in case a derived slot is based on an override (as with the
 	-- imp_3s of [[dar]], [[estar]]).
 	copy_subjunctives_to_imperatives(base)
-	-- This should happen after process_slot_overrides() because overrides may have accents in them that need to be
-	-- removed. (This happens e.g. for most present indicative forms of [[ver]], which have accents in them for the
-	-- prefixed derived verbs, but the accents shouldn't be present in the base verb.)
-	remove_monosyllabic_accents(base)
 	if not base.nocomb then
 		add_combined_forms(base)
 	end
