@@ -1,0 +1,159 @@
+;Before [ɫ]
+{{pt-IPA|acalmar}}
+{{pt-IPA|túnel}}
+{{pt-IPA|beldade}}
+;Next two sould have /ʃs/ (careful pronunciation), /ʃ/ (natural pronunciation) in Portugal
+{{pt-IPA|nascimento}}
+{{pt-IPA|fascículo}}
+;Should have iCi-eCi pronun in Portugal
+{{pt-IPA|adivinhar}}
+;Should have iCi-eCi pronun in Portugal across cluster
+{{pt-IPA|discrição}}
+;Should have both /ʃs/-/ʃ/ and iCi-eCi pronun in Portugal
+{{pt-IPA|piscina}}
+;If we implement the iCi -> eCi in Portugal, should go right to left and only affect the middle i
+{{pt-IPA|póliginía}}
+;Should have palatal t
+{{pt-IPA|br=Vié̱t(i)nã}}
+{{pt-IPA|fọrrọbọdó}}
+{{pt-IPA|br=Róliwúde|pt=Holiude}}
+;o should be ò in Portugal, ex- should be es- in Brazil, eis- in Portugal
+{{pt-IPA|extra-ordinário}}
+{{pt-IPA|cô̱adòção}}
+{{pt-IPA|br=des^i.onização}}
+;Should have /jon/ as ion- is treated as if word-initial
+{{pt-IPA|br=des^ionização}}
+;In next two, syllable with written accent should have secondary stress due to -mente
+{{pt-IPA|des^onéstamente}}
+{{pt-IPA|ridículamente}}
+;Syllable with written accent should have secondary stress due to -zinho
+{{pt-IPA|sózinho}}
+{{pt-IPA|bà.uzinho}}
+;Should not treat r before zinho as final /h/
+{{pt-IPA|arzinho}}
+-ex- should be -es- in Brazil, -eis- in Portugal
+{{pt-IPA|des^contextualizar}}
+{{pt-IPA|excésso}}
+{{pt-IPA|br=expek(i^)tativa,expetativa|pt=expèctativa}}
+{{pt-IPA|experienci^ar}}
+;Should not have final (h) in Brazil
+{{pt-IPA|expôr}}
+;Should have es-, eis- in Portugal along with /ʃs/, /ʃ/ (I think)
+{{pt-IPA|exsudar}}
+;Should have a syllable break between ò.in
+{{pt-IPA|ágròindustrial}}
+;Should have /frjar/ in Portugal, /fre.ah/ in Brazil
+{{pt-IPA|frear}}
+;Should have adʒ(i)ministração in Brazil a.dministração/a.dmenistração in Portugal
+{{pt-IPA|ad(i^)ministração}}
+;Another eCi example in Portugal
+{{pt-IPA|aquisitivo}}
+;Should not have eCi word-initially
+{{pt-IPA|pt=ēpidemiologia,epidemiologia}}
+;use of ò, ō for unstressed unreduced vowels in Portugal
+{{pt-IPA|pt=chòfér,chōfér}}
+;Should have /o/ in Brazil, /w/ in Portugal
+{{pt-IPA|coágulo}}
+;Should have /e/ in both Brazil and Portugal
+{{pt-IPA|cagüētar}}
+{{pt-IPA|br=des^equilíbri^o|pt=desiquilibrio,desēquilibrio}}
+;Should recognize -zinha like -zinho, and not treat the r like a verbal r; it shouldn't be in parens
+{{pt-IPA|colhérzinha}}
+{{pt-IPA|detèk(i^)ção}}
+{{pt-IPA|des^màgh(i^)netizar}}
+;Should have eCi pronun in Portugal
+{{pt-IPA|dicyonáryo}}
+;/jɔ/ in Portugal
+{{pt-IPA|br=Geórgia,Giórgia|pt=+|pagename=Geórgia}}
+;gi.ar in Brazil, gjar,gi.ar in Portugal
+{{pt-IPA|br=+|pt=+,gui.ar|pagename=guiar}}
+{{pt-IPA|pt=+|br=hackiar,rackiar|pagename=hackear}}
+;Should ignore the h for initial e- raising in Portugal
+{{pt-IPA|pt=hērdeiro,+|pagename=herdeiro}}
+;Portugal final -e should be (ɨ), probably suppressed before a vowel in the next word
+{{pt-IPA|Madride}}
+;Should have /ol/, /ɔl/ in Portugal
+{{pt-IPA|Moldávi^a}}
+{{pt-IPA|br=nêodími^o|pt=néòdímio,niodímio}}
+;Should generate /samowa/ as alternative pronunciation, marked as regional
+{{pt-IPA|pt=Samoa,Sàmoa}}
+;Should auto-generate vôo with /vowu/ as regional Portugal pronunciation
+{{pt-IPA|voo}}
+;Same
+{{pt-IPA|Alagoas}}
+;Same even though explicit ô
+{{pt-IPA|Côa}}
+;Should have /ɐw/ as first Portugal pronun, but /aw/ in Brazil
+{{pt-IPA|sāwdável,sa.udável}}
+;Should have /sɛˈɡmẽtu/ with .gm
+{{pt-IPA|sègh(i^)mento}}
+{{pt-IPA|cô̱adòção}}
+;Should also recognize ão when written ã̂o to force stress
+{{pt-IPA|côadòçã̂o}}
+{{pt-IPA|ècrã,ēcrã}}
+;Secondary stress with hyphens
+{{pt-IPA|quatro-centos}}
+{{pt-IPA|séte-centos}}
+;Should remove duplicates in Brazil
+{{pt-IPA|sacudu,sàcudu}}
+{{pt-IPA|errar,ērrar,èrrar}}
+;Should divide as a.brrogação in Portugal
+{{pt-IPA|ab(i^)rrogação}}
+;Should divide as a.bdicar in Portugal
+{{pt-IPA|ab(i^)dicar}}
+;(i^) and i^ should not affect stress
+{{pt-IPA|abrup(i^)to}}
+{{pt-IPA|abrup(i^)tamente}}
+;(i^) and i^ should not affect stress; should have /dʒig.nu/ and /dʒi.gi.nu/ with different syllabifications; Portugal /di.gnu/
+{{pt-IPA|digh(i^)no}}
+{{pt-IPA|Arak(^i)ne}}
+;Syllable division as a.ct in Portugal
+{{pt-IPA|actínyo}}
+;Syllable division as a.mn in Portugal, and mn should be /mn/ in Portugal
+{{pt-IPA|amnistia}}
+;Syllable division as /ɐˈksjɐ̃w̃/ in Portugal
+{{pt-IPA|pt=accião}}
+;Even when i^ is omitted, it still palatalizes; -i- should be before omission
+{{pt-IPA|ad(i^)jètivo}}
+{{pt-IPA|ad(i^)vogado}}
+;i^ before vowel is i. or y in Brazil, y in Portugal
+{{pt-IPA|Bi^anca}}
+{{pt-IPA|dúb(i^)ni^o}}
+;Should have u. and i. in Portugal
+{{pt-IPA|bruaca}}
+{{pt-IPA|druídico}}
+{{pt-IPA|triangularh}}
+{{pt-IPA|criògénico}}
+{{pt-IPA|des^truição}}
+;Stress -> secondary in prefixes
+{{pt-IPA|elétrò-}}
+;Stressed as normal in suffixes
+{{pt-IPA|-ada}}
+;Before colon: stress -> secondary, no raising of -o or -e
+{{pt-IPA|elétrò:deposição}}
+{{pt-IPA|elétrò:cárdio:grama}}
+;Combines many things
+{{pt-IPA|elétrò:màgh(^i)néticamente}}
+{{pt-IPA|elétrò:luminescêncya}}
+;'s' is /s/ here
+{{pt-IPA|elétrò:sérra}}
+; ò and i are separate
+{{pt-IPA|br=fóto:emissôr|pt=fótò:imissôr}}
+; e -> /i/ here
+{{pt-IPA|piézò:elétrico}}
+;Portugal /gwéla/
+{{pt-IPA|br=gu.éla|pt=goéla}}
+;Qualifier; should have u.í in Brazil but wí in Portugal for second pronun
+{{pt-IPA|gratuyto,gratuíto<q:nonstandard but common>}}
+;FIXME: consider changing to have ui be /uj/ by default
+{{pt-IPA|br=imbuy.a}}
+;Should not have (j) in -íz in Brazil
+{{pt-IPA|juiz}}
+;Handle refs
+{{pt-IPA|pt=menu<q:normative>,mènu<q:common but considered incorrect><ref:https://www.flip.pt/Duvidas-Linguisticas/Duvida-Linguistica/DID/752>}}
+;-da- should be unstressed
+{{pt-IPA|bicho-da-sêda}}
+{{pt-IPA|bíògeográfico}}
+{{pt-IPA|cabra-céga}}
+;Should have final [ɐ] in Brazil
+{{pt-IPA|açúcar}}
