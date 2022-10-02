@@ -13,6 +13,8 @@
 {{pt-IPA|piscina}}
 ;If we implement the iCi -> eCi in Portugal, should go right to left and only affect the middle i
 {{pt-IPA|póliginía}}
+;Should not have iCi -> eCi
+{{pt-IPA|crítico}}
 ;Should have palatal t
 {{pt-IPA|br=Vié̱t(i)nã}}
 {{pt-IPA|fọrrọbọdó}}
@@ -23,14 +25,6 @@
 {{pt-IPA|br=des^i.onização}}
 ;Should have /jon/ as ion- is treated as if word-initial
 {{pt-IPA|br=des^ionização}}
-;In next two, syllable with written accent should have secondary stress due to -mente
-{{pt-IPA|des^onéstamente}}
-{{pt-IPA|ridículamente}}
-;Syllable with written accent should have secondary stress due to -zinho
-{{pt-IPA|sózinho}}
-{{pt-IPA|bà.uzinho}}
-;Should not treat r before zinho as final /h/
-{{pt-IPA|arzinho}}
 -ex- should be -es- in Brazil, -eis- in Portugal
 {{pt-IPA|des^contextualizar}}
 {{pt-IPA|excésso}}
@@ -57,8 +51,40 @@
 ;Should have /e/ in both Brazil and Portugal
 {{pt-IPA|cagüētar}}
 {{pt-IPA|br=des^equilíbri^o|pt=desiquilibrio,desēquilibrio}}
+;In next two, syllable with written accent should have secondary stress due to -mente
+{{pt-IPA|des^onéstamente}}
+{{pt-IPA|ridículamente}}
+;Syllable with written accent should have secondary stress due to -zinho
+{{pt-IPA|cãozinho}}
+{{pt-IPA|céuzinho}}
+{{pt-IPA|sózinho}}
+{{pt-IPA|bà.uzinho}}
+{{pt-IPA|benzinho}}
+;Should have [ɐ] for 'a' even in Brazil
+{{pt-IPA|diazinho}}
+;Should have /me(j).z-/; make sure 's' is voiced
+{{pt-IPA|mês+inho}}
+;Should have -ẽj̃- in Brazil, -ɐ̃j̃- in Portugal
+{{pt-IPA|hòmenzinho}}
+{{pt-IPA|nenênzinho}}
+;Should not treat r before zinho as optional
+{{pt-IPA|arzinho}}
 ;Should recognize -zinha like -zinho, and not treat the r like a verbal r; it shouldn't be in parens
 {{pt-IPA|colhérzinha}}
+;Same here
+{{pt-IPA|Polegarzinha}}
+{{pt-IPA|cidadezinha}}
+;Should have vɔ(j)z, not stressed; syllable division should cross the +, i.e. /vɔ(j)ˈzĩ.ɲɐ/
+{{pt-IPA|vóz+inha}}
+;Should have [ɐ] for first 'a' even in Brazil
+{{pt-IPA|hórtazinha}}
+;ã should have secondary stress
+{{pt-IPA|irmãzinha}}
+;This is one way to avoid -zinha handling
+{{pt-IPA|papél de cosinha}}
+{{pt-IPA|pt=hómem-zão|br=hômem-zão}}
+;This should have two pronuns in Portugal, one normal and one bowa-zona labeled "regional"
+{{pt-IPA|boa-zona}}
 {{pt-IPA|detèk(i^)ção}}
 {{pt-IPA|des^màgh(i^)netizar}}
 ;Should have eCi pronun in Portugal
@@ -139,7 +165,7 @@
 {{pt-IPA|elétrò:sérra}}
 ; ò and i are separate
 {{pt-IPA|br=fóto:emissôr|pt=fótò:imissôr}}
-; e -> /i/ here
+; e -> /i/ here in Portugal
 {{pt-IPA|piézò:elétrico}}
 ;Portugal /gwéla/
 {{pt-IPA|br=gu.éla|pt=goéla}}
@@ -155,5 +181,36 @@
 {{pt-IPA|bicho-da-sêda}}
 {{pt-IPA|bíògeográfico}}
 {{pt-IPA|cabra-céga}}
-;Should have final [ɐ] in Brazil
+;Should have final [ɐ] in Brazil and should not have optional r
 {{pt-IPA|açúcar}}
+;Should use en- (careful pronunciation), in- (natural pronunciation)
+{{pt-IPA|ensino}}
+;Should have /ɛr/ in Portugal and should not have optional r in Brazil
+{{pt-IPA|africâner}}
+{{pt-IPA|anti-cristo}}
+{{pt-IPA|ântròpò:morfismo}}
+{{pt-IPA|arco da vélha}}
+{{pt-IPA|pt=arcoíris|br=+|pagename=arco-íris}}
+{{pt-IPA|autò^-}}
+{{pt-IPA|autò^:ajuda}}
+{{pt-IPA|br=autò^:estima|pt=autò^:estima,autò^:stima}}
+{{pt-IPA|autò^:medicar-se}}
+{{pt-IPA|autò^:retrato}}
+{{pt-IPA|autò^:serviço}}
+{{pt-IPA|campainha}}
+{{pt-IPA|càpi^^turar}}
+{{pt-IPA|Carrazêda de Ansi^ães}}
+{{pt-IPA|de nada}}
+;Should use /w/ in Portugal
+{{pt-IPA|carruagem}}
+{{pt-IPA|Castro-vêrde}}
+{{pt-IPA|cenrada}}
+{{pt-IPA|chamo-me}}
+{{pt-IPA|ci^entífico}}
+;-er in Portugal should be /ɛr/ because word-final unstressed
+{{pt-IPA|ínter:disciplinarh}}
+;Should have /i/ in Portugal
+{{pt-IPA|triangularh}}
+;Unstressed -a- in Brazil
+{{pt-IPA|br=Condeixa-a-Nóva|pt=Condeixà-Nóva}}
+{{pt-IPA|côr de burro quando fóge}}
