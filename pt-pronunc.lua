@@ -1,9 +1,77 @@
---[[
+--[=[
 This module implements the template {{pt-IPA}}.
 
 Author: Benwing
 
-]]
+-- FIXME:
+
+1. Implement i^ not before vowel = epenthetic i or deleted epenthetic i in Brazil (in that order), and i^^ not before
+   vowel = opposite order. Epenthetic i should not affect stress but should otherwise be treated like a normal vowel.
+   Deleted epenthetic i should trigger palatalization of t/d but have no other effects.
+2. Implement i^ before vowel = i.V or yV (in that order), and i^^ before vowel = opposite order.
+3. Implement i* = mandatory epenthetic i in Brazil.
+4. Implement o^ = u or o in Brazil (in that order), and o^^ = opposite order.
+5. Implement e^ = i or e in Brazil (in that order), and e^^ = opposite order.
+6. Implement des^ at beginning of word = /dis+/ or /des/ in Brazil (in that order), and des^^ = opposite order.
+7. In Portugal, before [ɫ], unstressed 'a' should be /a/; unstressed 'e' should be /ɛ/; and unstressed 'o' should be
+   either /o/ or /ɔ/ (in that order).
+8. Support qualifiers using <q:...> and <qq:...>.
+9. Support references using <ref:...>. Syntax is the same as for IPA ref=.
+10. In Portugal, unstressed o in hiatus should be /w/, and unstressed e in hiatus should be /j/.
+11. Support - (hyphen) = left and right parts should be treated as distinct phonological words but written joined
+    together, and non-final primary stresses turn into secondary stresses. Word-initial and word-final behavior should
+	happen, e.g. Brazil epenthesis of (j) before word-final /s/ followed a stressed vowel, Brazil raising of esC- and
+	Portugal rendering of o- as ò-, but syllabification should ignore the hyphen, e.g. if the hyphen follows a
+	consonant and precedes a vowel, the syllable division should happen before the consonant as normal.
+12. Support : (colon), similar to hyphen but in non-final parts, final vowels aren't rendered as closed.
+13. Support + (colon), similar to colon but non-final primary stresses aren't displayed.
+14. In Brazil, word-initial enC-, emC- should display as (careful pronunciation) ẽ-, (natural pronunciation) ĩ-.
+15. In Portugal, -sç- and -sc(e/i)- should show as (careful pronunciation) /ʃs/, (natural pronunciation) /ʃ/.
+16. In Portugal, grave accent indicates unstressed open a/e/o and macron indicates unstressed closed a/e/o; both are
+    ignored in Brazil.
+17. In Portugal, iCi where the first i is before the stress should (maybe) show as iCi, (traditional pronunciation) ɨCi.
+    In iCiCi, both of the first two i's show as ɨ in the traditional pronunciation (FIXME: verify this). C should be
+	only a single consonant, hence not in [[piscina]] or [[distrito]] (FIXME: verify this). Does not apply if the first
+	i is stressed (e.g. [[mínimo]], [[tília]], [[pírico]], [[tísica]]) or if the stressed i is word-final ([[Mimi]],
+	[[Lili]], [[chichizinho]], [[piripiri]]), or in certain other words ([[felicíssimo]], [[filhinho]], [[estilista]],
+	[[pirite]]). Possibly this means it doesn't apply when the stressed i is in a suffix (-íssimo, -inho, -ista). We
+	can always disable the eCi spelling by adding an h in 'ihCi' to make it look like a cluster between the i's. NOTE:
+	It appears that iCi -> eCi should apply in [[dicionário]], meaning if we apply it at the end, we have to distinguish
+	between glides from original i and glides from e or y.
+18. In Portugal and Brazil, stressed o in hiatus should automatically be ô (voo, Samoa, Alagoas, perdoe, abençoe).
+19. In Portugal, stressed closed ô in hiatus (whether written explicitly as e.g. vôo, Côa or generated automatically)
+    should show as e.g. /ˈbo.ɐ/, (regional) /ˈbo.wɐ/. (FIXME: Verify syllable division in second.)
+20. Recognize -zinha like -zinho, -mente. Just use hyphen (-) to handle these. We don't recognize -zão, -zona, -zito,
+    -zita because of too many false positives; you can just write the hyphen explicitly before the suffix as needed.
+	Cf. among our current vocabulary we have 10 -zão augmentatives (animalzão, aviãozão, cipozão, cuzão, homenzão,
+	leãozão, paizão, pãozão, pezão, tatuzão), 2 -ão augmentatives after a word ending in -z (codornizão, felizão), and
+	7 non-augmentatives (alazão, coalizão, razão, rezão, sazão, sezão, vazão). Similarly for -zona: we have 5 -zona
+	augmentatives (boazona, cuzona, maçãzona, mãezona, mãozona) against 8 non-augmentatives (amazona, aminofenazona,
+	arilidrazona, Arizona, cronozona, ecozona, Eurozona, fenazona) and no -ona augmentatives after words ending in -z.
+	For -zito, we have 1 -ito diminutive after a word ending in -z (Queluzito), one non-diminutive (quartzito), and no
+	-zito diminutives. For -zita we have 1 -zita diminutive (maçãzita) and 4 non-diminutives (andaluzita, monazita,
+	pedzita, stolzita).
+21. Don't special-case final 'a' before -zinho, -zinha, -mente. (FIXME: Ask Ungoliant about this. Maybe both unreduced
+    and reduced '-a' are possible here.)
+22. Final 'r' isn't optional before -zinho, -zinha, -mente.
+23. Consider making secondary stress optional in cases like traduçãozinha where the stress is directly before the
+    primary stress.
+24. In Brazil, unstressed final-syllable /a/ should be reduced even before a final consonant. Cf. [[açúcar]], [[tórax]].
+    (Except possibly /l/? FIXME: Verify.)
+25. Support + = pagename.
+26. Deduplicate final pronunciations without distinct qualifiers.
+27. Implement support for dot-under without accompanying quality diacritic. When attached to a/e/o, it defaults to acute
+    = open pronun, except in the following circumstances, where it defaults to circumflex: (1) in the diphthongs
+	ei/eu/oi/ou; (2) in a nasal vowel.
+28. Portugal final -e should show as optional (ɨ) unless there is a vowel-initial word following, in which case it
+    should not be displayed at all.
+29. Syllabification: "Improper" clusters of non-sibiliant-obstruent + obstruent (pt, bt, bd, dk, kt; ps, bs, bv, bʒ, tz,
+    dv, ks; ft), non-sibiliant-obstruent + nasal (pn, bn, tm, tn, dm, dn, gm, gn), nasal + nasal (mn) are syllabified in
+	Portugal as .pt, .bv, .mn, etc. Note ʃ.t, ʃ.p, ʃ.k, etc. But in Brazil, all of these divide between the consonants
+	(p.t, b.v, ʃ.t, s.p, etc.). Particular case: [[ab-rogação]] divides as a.brr in Portugal but ab.rr in Brazil.
+30. -ão, -ãe, -õe should be recognized as nasal diphthongs with a circumflex added to force stress.
+31. In CluV, CruV, CliV, CriV, the 'u' and 'i' are vowels not glides in both Portugal and Brazil.
+]=]
 
 local export = {}
 
@@ -24,26 +92,42 @@ local usub = mw.ustring.sub
 local ulen = mw.ustring.len
 
 local AC = u(0x0301) -- acute =  ́
-local GR = u(0x0300) -- grave =  ̀
+local GR = u(0x0300) -- grave =  ̀ = open vowel quality without stress in Portugal only
+local MACRON = u(0x0304) -- macron =  ̄ = closed vowel quality without stress in Portugal only
 local CFLEX = u(0x0302) -- circumflex =  ̂
 local TILDE = u(0x0303) -- tilde =  ̃
 local DIA = u(0x0308) -- diaeresis =  ̈
 local CEDILLA = u(0x0327) -- cedilla =  ̧
 local DOTOVER = u(0x0307) -- dot over =  ̇
+-- DOTUNDER indicates an explicitly unstressed syllable; useful when accompanied by a quality marker (acute or
+-- circumflex), or by itself with a/e/o, where it defaults to acute (except in the following circumstances, where it
+-- defaults to circumflex: (1) in the diphthongs ei/eu/oi/ou; (2) in a nasal vowel).
 local DOTUNDER = u(0x0323) -- dot under =  ̣
+-- LINEUNDER indicates an explicit secondary stress; normally not necessary as primary stress is converted to secondary
+-- stress if another primary stress follows, but can be used e.g. after a primary stress; can be accompanied by a
+-- quality marker (acute or circumflex) with a/e/o; if not, defaults to acute (except in the same circumstances where
+-- dot under defaults to circumflex).
+local LINEUNDER = u(0x0331) -- line under =  ̱
 local TEMP1 = u(0xFFF0)
 local SYLDIV = u(0xFFF1) -- used to represent a user-specific syllable divider (.) so we won't change it
 
-local vowel = "aɐeɛiɨoɔuAEO"
+-- I is used to represent epenthetic i in Brazilian variants (which should not affect stress assignment but is
+-- otherwise treated as a normal sound), and Ɨ represents deleted epenthetic i (which still palatalizes /t/ and /d/).
+local vowel = "aɐeɛiɨoɔuüAEOIƗ"
 local V = "[" .. vowel .. "]"
-local W = "[yw]" -- glide
+local NV = "[^" .. vowel .. "]"
+local high_front_vocalic = "iIƗy"
+local front_vocalic = "eɛɨ" .. high_front_vocalic
+local FRONTV = "[" .. front_vocalic .. "]"
+local glide = "yw"
+local W = "[" .. glide .. "]" -- glide
 local ipa_stress = "ˈˌ"
 local ipa_stress_c = "[" .. ipa_stress .. "]"
-local quality = AC .. CFLEX
+local quality = AC .. CFLEX .. GR .. MACRON
 local quality_c = "[" .. quality .. "]"
-local stress = GR .. DOTOVER .. DOTUNDER .. ipa_stress
+local stress = LINEUNDER .. DOTOVER .. DOTUNDER .. ipa_stress
 local stress_c = "[" .. stress .. "]"
-local non_primary_stress = GR .. DOTOVER .. DOTUNDER .. "ˌ"
+local non_primary_stress = LINEUNDER .. DOTOVER .. DOTUNDER .. "ˌ"
 local non_primary_stress_c = "[" .. non_primary_stress .. "]"
 local accent = quality .. stress .. TILDE
 local accent_c = "[" .. accent .. "]"
@@ -52,9 +136,9 @@ local charsep_c = "[" .. charsep .. "]"
 local wordsep = charsep .. " #"
 local wordsep_c = "[" .. wordsep .. "]"
 local C = "[^" .. vowel .. wordsep .. "]" -- consonant
-local C_NOT_H_OR_GLIDE = "[^hwy" .. vowel .. wordsep .. "]" -- consonant other than h, w or y
+local C_NOT_H_OR_GLIDE = "[^h" .. glide .. vowel .. wordsep .. "]" -- consonant other than h, w or y
 local C_OR_WORD_BOUNDARY = "[^" .. vowel .. charsep .. "]" -- consonant or word boundary
-local voiced_cons = "bdgjlʎmnɲŋrɾʁvwyzʒ" -- voiced sound
+local voiced_cons = "bdgjlʎmnɲŋrɾʁvwyzʒʤ" -- voiced sound
 
 -- Unstressed words with vowel reduction in Brazil and Portugal.
 local unstressed_words = require("Module:table").listToSet({
@@ -116,105 +200,84 @@ export.all_style_groups = {
 }
 
 export.all_style_descs = {
-	gbr = "Brazil",
-	rio = "Rio de Janeiro",
-	sp = "São Paulo",
-	gpt = "Portugal",
-	cpt = "Central Portugal",
+	gbr = "Brazil", -- "general" Brazil
+	rio = "Rio de Janeiro", -- Carioca accent
+	sp = "São Paulo", -- Paulistano accent
+	-- sbr = "Southern Brazil", -- (not added yet)
+	gpt = "Portugal", -- "general" Portugal
+	-- lisbon = "Lisbon", -- (not added yet)
+	cpt = "Central Portugal", -- Central Portugal outside of Lisbon
 	spt = "Southern Portugal"
 }
 
--- style == one of the following:
--- "gbr": "general" Brazil
--- "rio": Carioca accent (of Rio de Janeiro)
--- "sp": Paulistano accent (of São Paulo)
--- "gpt": "general" Portugal
--- "lisbon": Lisbon accent (not added yet)
--- "cpt": Central Portugal accent outside of Lisbon
--- "spt": Southern Portugal
-function export.IPA(text, style, phonetic)
-	local origtext = text
-
-	local function err(msg)
-		error(msg .. ": " .. origtext)
+local function flatmap(items, fun)
+	local new = {}
+	for _, item in ipairs(items) do
+		local results = fun(item)
+		for _, result in ipairs(results) do
+			table.insert(new, result)
+		end
 	end
+	return new
+end
 
+local function reorder_accents(text, err)
+	-- There can conceivably be up to three accents on a vowel: a quality mark (acute/circumflex/grave/macron); a mark
+	-- indicating secondary stress (lineunder), tertiary stress (dotunder; i.e. no stress but no vowel reduction) or
+	-- forced vowel reduction (dotover); and a nasalization mark (tilde). Order them as follows: quality - stress -
+	-- nasalization.
+	local function reorder_accent_string(accentstr)
+		local accents = rsplit(accentstr, "")
+		local accent_order = {
+			[AC] = 1,
+			[CFLEX] = 1,
+			[GR] = 1,
+			[MACRON] = 1,
+			[LINEUNDER] = 2,
+			[DOTUNDER] = 2,
+			[DOTOVER] = 2,
+			[TILDE] = 3,
+		}
+		table.sort(accents, function(ac1, ac2)
+			return accent_order[ac1] < accent_order[ac2]
+		end)
+		return table.concat(accents)
+	end
+	text = rsub(text, "(" .. accent_c .. "+)", reorder_accent_string)
+	-- Remove duplicate accents.
+	text = rsub_repeatedly(text, "(" .. accent_c .. ")%1", "%1")
+	-- Make sure we don't have more than one of a given class.
+	if rfind(text, quality_c .. quality_c) then
+		err("Two different quality diacritics cannot occur together")
+	end
+	if rfind(text, stress_c .. stress_c) then
+		err("Two different stress diacritics cannot occur together")
+	end
+	-- Only a/e/o can receive a circumflex, grave or macron.
+	if rfind(text, "[^aeo][" .. CFLEX .. GR .. MACRON .. "]") then
+		err("Only a/e/o can be followed by circumflex, grave or macron")
+	end
+	return text
+end
+
+local function one_term_ipa(text, style, phonetic, err)
 	local brazil = m_table.contains(export.all_style_groups.br, style)
 	local portugal = m_table.contains(export.all_style_groups.pt, style)
-
-	text = ulower(text or mw.title.getCurrentTitle().text)
-	-- decompose everything but ç and ü
-	text = mw.ustring.toNFD(text)
-	text = rsub(text, ".[" .. CEDILLA .. DIA .. "]", {
-		["c" .. CEDILLA] = "ç",
-		["u" .. DIA] = "ü",
-	})
-	-- There can conceivably be up to three accents on a vowel: a quality mark (acute/circumflex); a mark indicating
-	-- secondary stress (grave), tertiary stress (dotunder; i.e. no stress but no vowel reduction) or forced vowel
-	-- reduction (dotover); and a nasalization mark (tilde). Order them as follows: quality - stress - nasalization.
-	text = rsub(text, TILDE .. "([" .. AC .. CFLEX .. GR .. DOTUNDER .. DOTOVER .. "]+)", "%1" .. TILDE) -- tilde last
-	text = rsub(text, "([" .. GR .. DOTUNDER .. DOTOVER .. "])([" .. AC .. CFLEX .. "]+)", "%2%1") -- acute/cflex first
-	if rfind(text, "[^aeo]" .. CFLEX) then
-		err("Circumflex can only follow a/e/o")
-	end
-
-	-- convert commas and en/en dashes to IPA foot boundaries
-	text = rsub(text, "%s*[,–—]%s*", " | ")
-	-- question mark or exclamation point in the middle of a sentence -> IPA foot boundary
-	text = rsub(text, "([^%s])%s*[!?]%s*([^%s])", "%1 | %2")
-
-	-- canonicalize multiple spaces and remove leading and trailing spaces
-	local function canon_spaces(text)
-		text = rsub(text, "%s+", " ")
-		text = rsub(text, "^ ", "")
-		text = rsub(text, " $", "")
-		return text
-	end
-
-	text = canon_spaces(text)
-
-	-- Make prefixes unstressed with vowel reduction unless they have an explicit stress marker;
-	-- likewise for certain monosyllabic words (e.g. [[o]], [[se]], [[de]], etc.; also [[a]], [[das]], etc.
-	-- in Portugal) without stress marks.
-	local words = rsplit(text, " ")
-	for i, word in ipairs(words) do
-		if rfind(word, "%-$") and not rfind(word, accent_c) or unstressed_words[word] or
-			not brazil and unstressed_full_vowel_words_brazil[word] then
-			-- add DOTOVER to the last vowel not the first one, or we will mess up 'que' by
-			-- adding the DOTOVER after the 'u'
-			words[i] = rsub(word, "^(.*" .. V .. ")", "%1" .. DOTOVER)
-		end
-	end
-	-- Make certain monosyllabic words (e.g. [[meu]], [[com]]; also [[a]], [[das]], etc. in Brazil)
-	-- without stress marks be unstressed without vowel reduction.
-	for i, word in ipairs(words) do
-		if rfind(word, "%-$") and not rfind(word, accent_c) or unstressed_full_vowel_words[word] or
-			brazil and unstressed_full_vowel_words_brazil[word] then
-			-- add DOTUNDER to the first vowel not the last one, or we will mess up 'meu' by
-			-- adding the DOTUNDER after the 'u'
-			words[i] = rsub(word, "^(.-" .. V .. ")", "%1" .. DOTUNDER)
-		end
-	end
-
-	text = table.concat(words, " ")
-	-- Convert hyphens to spaces, to handle [[Áustria-Hungria]], [[franco-italiano]], etc.
-	text = rsub(text, "%-", " ")
-	-- canonicalize multiple spaces again, which may have been introduced by hyphens
-	text = canon_spaces(text)
-	-- now eliminate punctuation
-	text = rsub(text, "[!?']", "")
-	-- put # at word beginning and end and double ## at text/foot boundary beginning/end
-	text = rsub(text, " | ", "# | #")
-	text = "##" .. rsub(text, " ", "# #") .. "##"
-
-	-- [[à]], [[às]]; remove grave accent
-	text = rsub(text, "(#a" .. DOTUNDER .. "?)" .. GR .. "(s?#)", "%1%2")
 
 	-- x
 	text = rsub(text, "#x", "#ʃ") -- xérox, xilofone, etc.
 	text = rsub(text, "x#", "kç#") -- xérox, córtex, etc.
 	text = rsub(text, "(" .. V .. charsep_c .. "*[iu]" .. charsep_c .. "*)x", "%1ʃ") -- baixo, peixe, frouxo, etc.
-	text = rsub(text, "x(" .. C .. ")", "s%1") -- This prevents the error below from showing up in words like excelente, exclamação and têxtil
+	-- -exC- should be pronounced like -esC- in Brazil but -eisC- in Portugal. Cf. excelente, experiência, têxtil,
+	-- êxtase. Not with other vowels (cf. [[Felixlândia]], [[Laxmi]], [[Oxford]]).
+	-- FIXME: Maybe this applies only to Lisbon and environs?
+	text = rsub(text, "(e" .. accent_c .. "*)x(" .. C .. ")", function(v, c)
+		if brazil then
+			return v .. "s" .. c
+		else
+			return v .. "is" .. c
+		end
+	end)
 	if rfind(text, "x") then
 		err("x must be respelled z, ch, sh, cs, ss or similar")
 	end
@@ -229,12 +292,12 @@ function export.IPA(text, style, phonetic)
 	-- c, g, q
 	-- This should precede syllabification especially so that the latter isn't confused by gu, qu, gü, qü
 	-- also, c -> ç before front vowel ensures that cc e.g. in [[cóccix]], [[occitano]] isn't reduced to single c.
-	text = rsub(text, "c([iey])", "ç%1")
-	text = rsub(text, "g([iey])", "j%1")
-	text = rsub(text, "gu([iey])", "g%1")
+	text = rsub(text, "c(" .. FRONTV .. ")", "ç%1")
+	text = rsub(text, "g(" .. FRONTV .. ")", "j%1")
+	text = rsub(text, "gu(" .. FRONTV .. ")", "g%1")
 	-- [[camping]], [[doping]], [[jogging]], [[Bangkok]], [[angstrom]], [[tungstênio]]
-	text = rsub(text, "ng([^aeiouyüwhlr])", "n%1")
-	text = rsub(text, "qu([iey])", "k%1")
+	text = rsub(text, "ng([^" .. vowel .. glide .. "hlr])", "n%1")
+	text = rsub(text, "qu(" .. FRONTV .. ")", "k%1")
 	text = rsub(text, "ü", "u") -- [[agüentar]], [[freqüentemente]], [[Bündchen]], [[hübnerita]], etc.
 	text = rsub(text, "([gq])u(" .. V .. ")", "%1w%2") -- [[quando]], [[guarda]], etc.
 	text = rsub(text, "[cq]", "k") -- [[Qatar]], [[burqa]], [[Iraq]], etc.
@@ -271,6 +334,16 @@ function export.IPA(text, style, phonetic)
 
 	-- Respell [[homenzinho]] as 'homemzinho' so it is stressed correctly.
 	text = rsub(text, "n(" .. SYLDIV .. "?ziɲo#)", "m%1")
+
+	if brazil then
+		-- Palatalize t/d + i -> affricates in Brazil. Use special unitary symbols, which we later convert to regular
+		-- affricate symbols, so we can distinguish palatalized d from written dj.
+		local palatalize_td = {["t"] = "ʧ", ["d"] = "ʤ"}
+		text = rsub(text, "([td])([" .. high_front_vocalic .. "])",
+			function(td, high_vocalic) return palatalize_td[td] .. high_vocalic end)
+		-- Now delete the symbol for deleted epenthetic /i/; it still triggers palatalization of t and d.
+		text = rsub(text, "Ɨ", "")
+	end
 
 	-- Divide words into syllables.
 	-- First, change user-specified . into a special character so we won't move it around. We need to keep this
@@ -341,7 +414,7 @@ function export.IPA(text, style, phonetic)
 		-- Check for nasal vowel marked with tilde and without non-primary stress; assign stress to the last such
 		-- syllable in case there's more than one tilde, e.g. [[pãozão]]. Note, this can happen in the part before
 		-- -mente, cf. [[anticristãmente]], and before -zinho, cf. [[coraçãozinho]].
-		for i = #syllables,1,-2 do -- -2 because of the syllable dividers; see above.
+		for i = #syllables, 1, -2 do -- -2 because of the syllable dividers; see above.
 			local changed
 			syllables[i], changed = rsubb(syllables[i], "(" .. V .. quality_c .. "*)" .. TILDE, "%1ˈ" .. TILDE)
 			if changed then
@@ -354,11 +427,22 @@ function export.IPA(text, style, phonetic)
 		if #syllables > 1 and (rfind(word, "[aeo]s?#") or rfind(word, "[ae]m#") or rfind(word, "[ae]ns#")) then
 			-- Stress the last syllable but one. The -2 is because of the syllable dividers; see above.
 			sylno = #syllables - 2
+			-- Don't put stress on epenthetic i; instead, we stress the preceding syllable, as if epenthetic i weren't
+			-- there.
+			while sylno > 1 and rfind(syllables[sylno], "I") do
+				sylno = sylno - 2
+			end
+			-- It is (vaguely) possible that we have a one-syllable word beginning with a complex cluster such as gn-
+			-- followed by a normally unstressed ending such as -em. In this case, we want the ending to be stressed.
+			while sylno < #syllables and rfind(syllables[sylno], "I") do
+				sylno = syno + 2
+			end
 		else
 			sylno = #syllables
 		end
 		if rfind(syllables[sylno], stress_c) then
-			-- Don't do anything if stress mark already present.
+			-- Don't do anything if stress mark already present. (Since we check for primary stress above, this check
+			-- specifically affects non-primary stress.)
 			return
 		end
 		-- Add stress mark after first vowel (and any quality mark).
@@ -677,6 +761,7 @@ function export.IPA(text, style, phonetic)
 		text = rsub(text, "([lɫ]%.?)ð", "%1d")
 	end
 	text = rsub(text, "g", "ɡ") -- U+0261 LATIN SMALL LETTER SCRIPT G
+	text = rsub(text, "[ʧʤ]", {["ʧ"] = "t͡ʃ", ["ʤ"] = "d͡ʒ"})
 	text = rsub(text, "tʃ", "t͡ʃ")
 	text = rsub(text, "dʒ", "d͡ʒ")
 	text = rsub(text, "h", "")
@@ -698,6 +783,144 @@ function export.IPA(text, style, phonetic)
 
 	return text
 end
+
+-- text = Raw respelling 
+-- style = gbr, rio, etc. (see all_style_descs above).
+-- phonetic = true to generate the phonetic (instead of phonemic) pronunciation.
+function export.IPA(text, style, phonetic)
+	local origtext = text
+
+	local function err(msg)
+		error(msg .. ": " .. origtext)
+	end
+
+	text = ulower(text or mw.title.getCurrentTitle().text)
+	-- decompose everything but ç and ü
+	text = mw.ustring.toNFD(text)
+	text = rsub(text, ".[" .. CEDILLA .. DIA .. "]", {
+		["c" .. CEDILLA] = "ç",
+		["u" .. DIA] = "ü",
+	})
+	text = reorder_accents(text, err)
+
+	-- convert commas and en/en dashes to IPA foot boundaries
+	text = rsub(text, "%s*[,–—]%s*", " | ")
+	-- question mark or exclamation point in the middle of a sentence -> IPA foot boundary
+	text = rsub(text, "([^%s])%s*[!?]%s*([^%s])", "%1 | %2")
+
+	-- canonicalize multiple spaces and remove leading and trailing spaces
+	local function canon_spaces(text)
+		text = rsub(text, "%s+", " ")
+		text = rsub(text, "^ ", "")
+		text = rsub(text, " $", "")
+		return text
+	end
+
+	text = canon_spaces(text)
+
+	-- Make prefixes unstressed with vowel reduction unless they have an explicit stress marker;
+	-- likewise for certain monosyllabic words (e.g. [[o]], [[se]], [[de]], etc.; also [[a]], [[das]], etc.
+	-- in Portugal) without stress marks.
+	local words = rsplit(text, " ")
+	for i, word in ipairs(words) do
+		if rfind(word, "%-$") and not rfind(word, accent_c) or unstressed_words[word] or
+			not brazil and unstressed_full_vowel_words_brazil[word] then
+			-- add DOTOVER to the last vowel not the first one, or we will mess up 'que' by
+			-- adding the DOTOVER after the 'u'
+			words[i] = rsub(word, "^(.*" .. V .. quality_c .. "*)", "%1" .. DOTOVER)
+		end
+	end
+	-- Make certain monosyllabic words (e.g. [[meu]], [[com]]; also [[a]], [[das]], etc. in Brazil)
+	-- without stress marks be unstressed without vowel reduction.
+	for i, word in ipairs(words) do
+		if rfind(word, "%-$") and not rfind(word, accent_c) or unstressed_full_vowel_words[word] or
+			brazil and unstressed_full_vowel_words_brazil[word] then
+			-- add DOTUNDER to the first vowel not the last one, or we will mess up 'meu' by
+			-- adding the DOTUNDER after the 'u'; add after a quality marker for à, às
+			words[i] = rsub(word, "^(.-" .. V .. quality_c .. "*)", "%1" .. DOTUNDER)
+		end
+	end
+
+	text = table.concat(words, " ")
+	-- Convert hyphens to spaces, to handle [[Áustria-Hungria]], [[franco-italiano]], etc.
+	text = rsub(text, "%-", " ")
+	-- canonicalize multiple spaces again, which may have been introduced by hyphens
+	text = canon_spaces(text)
+	-- now eliminate punctuation
+	text = rsub(text, "[!?']", "")
+	-- put # at word beginning and end and double ## at text/foot boundary beginning/end
+	text = rsub(text, " | ", "# | #")
+	text = "##" .. rsub(text, " ", "# #") .. "##"
+
+	-- [[à]], [[às]]; remove grave accent
+	text = rsub(text, "(#a)" .. GR .. "(" .. DOTUNDER .. "?s?#)", "%1%2")
+
+	local variants
+	if brazil then
+		-- Remove grave accents and macrons, which have special meaning only for Portugal. Do this before handling o^
+		-- and similar so we can write autò^:... and have it correctly give 'autò-' in Portugal but 'autu-,auto-' in
+		-- Brazil.
+		text = rsub(text, "[" .. GR .. MACRON .. "]", "")
+
+		variants = {text}
+		if rfind(text, "i%^%^" .. V) then
+			variants = flatmap(variants, function(item)
+				return {rsub(item, "i%^%^(" .. V .. ")", "y%1"), rsub(item, "i%^%^(" .. V .. ")", "i.%1")}
+			end)
+		end
+		if rfind(text, "i%^" .. V) then
+			variants = flatmap(variants, function(item)
+				return {rsub(item, "i%^(" .. V .. ")", "i.%1"), rsub(item, "i%^(" .. V .. ")", "y%1")}
+			end)
+		end
+		if rfind(text, "i%^%^" .. NV) then
+			variants = flatmap(variants, function(item)
+				return {rsub(item, "i%^%^(" .. NV .. ")", "Ɨ%1"), rsub(item, "i%^%^(" .. NV .. ")", "I%1")}
+			end)
+		end
+		if rfind(text, "i%^" .. NV) then
+			variants = flatmap(variants, function(item)
+				return {rsub(item, "i%^(" .. NV .. ")", "I%1"), rsub(item, "i%^(" .. NV .. ")", "Ɨ%1")}
+			end)
+		end
+		if rfind(text, "i%*") then
+			variants = flatmap(variants, function(item)
+				return {rsub(item, "i%*", "I")}
+			end)
+		end
+		if rfind(text, "e%^%^") then
+			variants = flatmap(variants, function(item)
+				return {rsub(item, "e%^%^", "e"), rsub(item, "e%^%^", "i")}
+			end)
+		end
+		if rfind(text, "e%^") then
+			variants = flatmap(variants, function(item)
+				return {rsub(item, "e%^", "i"), rsub(item, "e%^", "e")}
+			end)
+		end
+		if rfind(text, "o%^%^") then
+			variants = flatmap(variants, function(item)
+				return {rsub(item, "o%^%^", "u"), rsub(item, "o%^%^", "o")}
+			end)
+		end
+		if rfind(text, "o%^") then
+			variants = flatmap(variants, function(item)
+				return {rsub(item, "o%^", "o"), rsub(item, "o%^", "u")}
+			end)
+		end
+	else -- Portugal
+		-- Convert grave accents and macrons to explicit dot-under + quality marker.
+		local grave_macron_to_quality = {
+			[GR] = AC,
+			[MACRON] = CFLEX,
+		}
+		text = rsub("[" .. GR .. MACRON .. "]", function(acc) return grave_macron_to_quality[acc] .. DOTUNDER end)
+		text = rsub(text, "[*%^]", "")
+	end
+
+	return variants
+end
+
 
 -- For bot usage; {{#invoke:pt-pronunc|IPA_string|SPELLING|style=STYLE|phonetic=PHONETIC}}
 -- where
@@ -988,4 +1211,3 @@ end
 
 
 return export
-g
