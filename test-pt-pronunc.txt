@@ -1,216 +1,223 @@
 ;Before [ɫ]
-{{pt-IPA|acalmar}}
-{{pt-IPA|túnel}}
-{{pt-IPA|beldade}}
+{{User:Benwing2/pt-IPA|acalmar}}
+{{User:Benwing2/pt-IPA|túnel}}
+{{User:Benwing2/pt-IPA|beldade}}
 ;Next two sould have /ʃs/ (careful pronunciation), /ʃ/ (natural pronunciation) in Portugal
-{{pt-IPA|nascimento}}
-{{pt-IPA|fascículo}}
+{{User:Benwing2/pt-IPA|nascimento}}
+{{User:Benwing2/pt-IPA|fascículo}}
 ;Should have iCi-eCi pronun in Portugal
-{{pt-IPA|adivinhar}}
-;Should have iCi-eCi pronun in Portugal across cluster
-{{pt-IPA|discrição}}
+{{User:Benwing2/pt-IPA|adivinhar}}
+;Should have iCi-eCi pronun in Portugal across cluster?
+{{User:Benwing2/pt-IPA|discrição}}
 ;Should have both /ʃs/-/ʃ/ and iCi-eCi pronun in Portugal
-{{pt-IPA|piscina}}
+{{User:Benwing2/pt-IPA|piscina}}
 ;If we implement the iCi -> eCi in Portugal, should go right to left and only affect the middle i
-{{pt-IPA|póliginía}}
+{{User:Benwing2/pt-IPA|póliginía}}
 ;Should not have iCi -> eCi
-{{pt-IPA|crítico}}
+{{User:Benwing2/pt-IPA|crítico}}
 ;Should have palatal t
-{{pt-IPA|br=Vié̱t(i)nã}}
-{{pt-IPA|fọrrọbọdó}}
-{{pt-IPA|br=Róliwúde|pt=Holiude}}
+{{User:Benwing2/pt-IPA|br=Vié̱ti^nã}}
+{{User:Benwing2/pt-IPA|fọrrọbọdó}}
+{{User:Benwing2/pt-IPA|br=Róliwúde|pt=Holiude}}
 ;o should be ò in Portugal, ex- should be es- in Brazil, eis- in Portugal
-{{pt-IPA|extra-ordinário}}
-{{pt-IPA|cô̱adòção}}
-{{pt-IPA|br=des^i.onização}}
+{{User:Benwing2/pt-IPA|extra-ordinário}}
+{{User:Benwing2/pt-IPA|cô̱adòção}}
+{{User:Benwing2/pt-IPA|br=des^i.onização}}
 ;Should have /jon/ as ion- is treated as if word-initial
-{{pt-IPA|br=des^ionização}}
--ex- should be -es- in Brazil, -eis- in Portugal
-{{pt-IPA|des^contextualizar}}
-{{pt-IPA|excésso}}
-{{pt-IPA|br=expek(i^)tativa,expetativa|pt=expèctativa}}
-{{pt-IPA|experienci^ar}}
+{{User:Benwing2/pt-IPA|br=des^ionização}}
+;-ex- should be -es- in Brazil, -eis- in Portugal
+{{User:Benwing2/pt-IPA|des^contextualizar}}
+;Initial ex- should be eis-/is- in Portugal
+{{User:Benwing2/pt-IPA|excésso}}
+{{User:Benwing2/pt-IPA|br=expeki^^tativa,expetativa|pt=expèctativa}}
+{{User:Benwing2/pt-IPA|experienci^ar}}
 ;Should not have final (h) in Brazil
-{{pt-IPA|expôr}}
+{{User:Benwing2/pt-IPA|expôr}}
 ;Should have es-, eis- in Portugal along with /ʃs/, /ʃ/ (I think)
-{{pt-IPA|exsudar}}
+{{User:Benwing2/pt-IPA|exsudar}}
 ;Should have a syllable break between ò.in
-{{pt-IPA|ágròindustrial}}
+{{User:Benwing2/pt-IPA|ágròindustrial}}
 ;Should have /frjar/ in Portugal, /fre.ah/ in Brazil
-{{pt-IPA|frear}}
+{{User:Benwing2/pt-IPA|frear}}
 ;Should have adʒ(i)ministração in Brazil a.dministração/a.dmenistração in Portugal
-{{pt-IPA|ad(i^)ministração}}
+{{User:Benwing2/pt-IPA|adi^ministração}}
 ;Another eCi example in Portugal
-{{pt-IPA|aquisitivo}}
+{{User:Benwing2/pt-IPA|aquisitivo}}
 ;Should not have eCi word-initially
-{{pt-IPA|pt=ēpidemiologia,epidemiologia}}
+{{User:Benwing2/pt-IPA|pt=ēpidemiologia,epidemiologia}}
 ;use of ò, ō for unstressed unreduced vowels in Portugal
-{{pt-IPA|pt=chòfér,chōfér}}
+{{User:Benwing2/pt-IPA|pt=chòfér,chōfér}}
 ;Should have /o/ in Brazil, /w/ in Portugal
-{{pt-IPA|coágulo}}
+{{User:Benwing2/pt-IPA|coágulo}}
 ;Should have /e/ in both Brazil and Portugal
-{{pt-IPA|cagüētar}}
-{{pt-IPA|br=des^equilíbri^o|pt=desiquilibrio,desēquilibrio}}
+{{User:Benwing2/pt-IPA|cagüētar}}
+{{User:Benwing2/pt-IPA|br=des^equilíbri^o|pt=desiquilibrio,desēquilibrio}}
 ;In next two, syllable with written accent should have secondary stress due to -mente
-{{pt-IPA|des^onéstamente}}
-{{pt-IPA|ridículamente}}
+{{User:Benwing2/pt-IPA|des^onéstamente}}
+{{User:Benwing2/pt-IPA|ridículamente}}
 ;Syllable with written accent should have secondary stress due to -zinho
-{{pt-IPA|cãozinho}}
-{{pt-IPA|céuzinho}}
-{{pt-IPA|sózinho}}
-{{pt-IPA|bà.uzinho}}
-{{pt-IPA|benzinho}}
+{{User:Benwing2/pt-IPA|cãozinho}}
+{{User:Benwing2/pt-IPA|céuzinho}}
+{{User:Benwing2/pt-IPA|sózinho}}
+{{User:Benwing2/pt-IPA|bà.uzinho}}
+{{User:Benwing2/pt-IPA|benzinho}}
 ;Should have [ɐ] for 'a' even in Brazil
-{{pt-IPA|diazinho}}
+{{User:Benwing2/pt-IPA|diazinho}}
 ;Should have /me(j).z-/; make sure 's' is voiced
-{{pt-IPA|mês+inho}}
+{{User:Benwing2/pt-IPA|mês+inho}}
 ;Should have -ẽj̃- in Brazil, -ɐ̃j̃- in Portugal
-{{pt-IPA|hòmenzinho}}
-{{pt-IPA|nenênzinho}}
+{{User:Benwing2/pt-IPA|hòmenzinho}}
+{{User:Benwing2/pt-IPA|nenênzinho}}
 ;Should not treat r before zinho as optional
-{{pt-IPA|arzinho}}
+{{User:Benwing2/pt-IPA|arzinho}}
 ;Should recognize -zinha like -zinho, and not treat the r like a verbal r; it shouldn't be in parens
-{{pt-IPA|colhérzinha}}
+{{User:Benwing2/pt-IPA|colhérzinha}}
 ;Same here
-{{pt-IPA|Polegarzinha}}
-{{pt-IPA|cidadezinha}}
+{{User:Benwing2/pt-IPA|Polegarzinha}}
+{{User:Benwing2/pt-IPA|cidadezinha}}
 ;Should have vɔ(j)z, not stressed; syllable division should cross the +, i.e. /vɔ(j)ˈzĩ.ɲɐ/
-{{pt-IPA|vóz+inha}}
+{{User:Benwing2/pt-IPA|vóz+inha}}
 ;Should have [ɐ] for first 'a' even in Brazil
-{{pt-IPA|hórtazinha}}
+{{User:Benwing2/pt-IPA|hórtazinha}}
 ;ã should have secondary stress
-{{pt-IPA|irmãzinha}}
+{{User:Benwing2/pt-IPA|irmãzinha}}
 ;This is one way to avoid -zinha handling
-{{pt-IPA|papél de cosinha}}
-{{pt-IPA|pt=hómem-zão|br=hômem-zão}}
+{{User:Benwing2/pt-IPA|papél de cosinha}}
+{{User:Benwing2/pt-IPA|pt=hómem-zão|br=hômem-zão}}
 ;This should have two pronuns in Portugal, one normal and one bowa-zona labeled "regional"
-{{pt-IPA|boa-zona}}
-{{pt-IPA|detèk(i^)ção}}
-{{pt-IPA|des^màgh(i^)netizar}}
+{{User:Benwing2/pt-IPA|boa-zona}}
+{{User:Benwing2/pt-IPA|detècção}}
+{{User:Benwing2/pt-IPA|des^màghi^netizar}}
 ;Should have eCi pronun in Portugal
-{{pt-IPA|dicyonáryo}}
+{{User:Benwing2/pt-IPA|dicyonáryo}}
 ;/jɔ/ in Portugal
-{{pt-IPA|br=Geórgia,Giórgia|pt=+|pagename=Geórgia}}
+{{User:Benwing2/pt-IPA|br=Geórgia,Giórgia|pt=+|pagename=Geórgia}}
 ;gi.ar in Brazil, gjar,gi.ar in Portugal
-{{pt-IPA|br=+|pt=+,gui.ar|pagename=guiar}}
-{{pt-IPA|pt=+|br=hackiar,rackiar|pagename=hackear}}
+{{User:Benwing2/pt-IPA|br=+|pt=+,gui.ar|pagename=guiar}}
+{{User:Benwing2/pt-IPA|pt=+|br=hackiar,rackiar|pagename=hackear}}
 ;Should ignore the h for initial e- raising in Portugal
-{{pt-IPA|pt=hērdeiro,+|pagename=herdeiro}}
+{{User:Benwing2/pt-IPA|pt=hērdeiro,+|pagename=herdeiro}}
 ;Portugal final -e should be (ɨ), probably suppressed before a vowel in the next word
-{{pt-IPA|Madride}}
+{{User:Benwing2/pt-IPA|Madride}}
 ;Should have /ol/, /ɔl/ in Portugal
-{{pt-IPA|Moldávi^a}}
-{{pt-IPA|br=nêodími^o|pt=néòdímio,niodímio}}
+{{User:Benwing2/pt-IPA|Moldávi^a}}
+{{User:Benwing2/pt-IPA|br=nêodími^o|pt=néòdímio,niodímio}}
 ;Should generate /samowa/ as alternative pronunciation, marked as regional
-{{pt-IPA|pt=Samoa,Sàmoa}}
+{{User:Benwing2/pt-IPA|pt=Samoa,Sàmoa}}
 ;Should auto-generate vôo with /vowu/ as regional Portugal pronunciation
-{{pt-IPA|voo}}
+{{User:Benwing2/pt-IPA|voo}}
 ;Same
-{{pt-IPA|Alagoas}}
+{{User:Benwing2/pt-IPA|Alagoas}}
 ;Same even though explicit ô
-{{pt-IPA|Côa}}
+{{User:Benwing2/pt-IPA|Côa}}
 ;Should have /ɐw/ as first Portugal pronun, but /aw/ in Brazil
-{{pt-IPA|sāwdável,sa.udável}}
+{{User:Benwing2/pt-IPA|sāwdável,sa.udável}}
 ;Should have /sɛˈɡmẽtu/ with .gm
-{{pt-IPA|sègh(i^)mento}}
-{{pt-IPA|cô̱adòção}}
+{{User:Benwing2/pt-IPA|sèghi^mento}}
+{{User:Benwing2/pt-IPA|cô̱adòção}}
 ;Should also recognize ão when written ã̂o to force stress
-{{pt-IPA|côadòçã̂o}}
-{{pt-IPA|ècrã,ēcrã}}
+{{User:Benwing2/pt-IPA|côadòçã̂o}}
+{{User:Benwing2/pt-IPA|ècrã,ēcrã}}
 ;Secondary stress with hyphens
-{{pt-IPA|quatro-centos}}
-{{pt-IPA|séte-centos}}
+{{User:Benwing2/pt-IPA|quatro-centos}}
+{{User:Benwing2/pt-IPA|séte-centos}}
 ;Should remove duplicates in Brazil
-{{pt-IPA|sacudu,sàcudu}}
-{{pt-IPA|errar,ērrar,èrrar}}
+{{User:Benwing2/pt-IPA|sacudu,sàcudu}}
+{{User:Benwing2/pt-IPA|errar,ērrar,èrrar}}
 ;Should divide as a.brrogação in Portugal
-{{pt-IPA|ab(i^)rrogação}}
+{{User:Benwing2/pt-IPA|abi^rrogação}}
 ;Should divide as a.bdicar in Portugal
-{{pt-IPA|ab(i^)dicar}}
-;(i^) and i^ should not affect stress
-{{pt-IPA|abrup(i^)to}}
-{{pt-IPA|abrup(i^)tamente}}
-;(i^) and i^ should not affect stress; should have /dʒig.nu/ and /dʒi.gi.nu/ with different syllabifications; Portugal /di.gnu/
-{{pt-IPA|digh(i^)no}}
-{{pt-IPA|Arak(^i)ne}}
+{{User:Benwing2/pt-IPA|abi^dicar}}
+;i*, i^ and i^^ should not affect stress
+{{User:Benwing2/pt-IPA|abrupi^^to}}
+{{User:Benwing2/pt-IPA|abrupi^^tamente}}
+;i*, i^ and i^^ should not affect stress; should have /dʒig.nu/ and /dʒi.gi.nu/ with different syllabifications; Portugal /di.gnu/
+{{User:Benwing2/pt-IPA|dighi^^no}}
+{{User:Benwing2/pt-IPA|Arak^ine}}
 ;Syllable division as a.ct in Portugal
-{{pt-IPA|actínyo}}
+{{User:Benwing2/pt-IPA|actínyo}}
 ;Syllable division as a.mn in Portugal, and mn should be /mn/ in Portugal
-{{pt-IPA|amnistia}}
+{{User:Benwing2/pt-IPA|amnistia}}
 ;Syllable division as /ɐˈksjɐ̃w̃/ in Portugal
-{{pt-IPA|pt=accião}}
+{{User:Benwing2/pt-IPA|pt=accião}}
 ;Even when i^ is omitted, it still palatalizes; -i- should be before omission
-{{pt-IPA|ad(i^)jètivo}}
-{{pt-IPA|ad(i^)vogado}}
+{{User:Benwing2/pt-IPA|adi^jètivo}}
+{{User:Benwing2/pt-IPA|adi^vogado}}
 ;i^ before vowel is i. or y in Brazil, y in Portugal
-{{pt-IPA|Bi^anca}}
-{{pt-IPA|dúb(i^)ni^o}}
+{{User:Benwing2/pt-IPA|Bi^anca}}
+{{User:Benwing2/pt-IPA|dúbi^ni^o}}
+;u^ = u or w in Brazil
+{{User:Benwing2/pt-IPA|sandu^íche}}
+;ó* = ó in Portugal, ô in Brazil
+{{pt-IPA|sácsòfó*ne}}
 ;Should have u. and i. in Portugal
-{{pt-IPA|bruaca}}
-{{pt-IPA|druídico}}
-{{pt-IPA|triangularh}}
-{{pt-IPA|criògénico}}
-{{pt-IPA|des^truição}}
+{{User:Benwing2/pt-IPA|bruaca}}
+{{User:Benwing2/pt-IPA|druídico}}
+{{User:Benwing2/pt-IPA|triangularh}}
+{{User:Benwing2/pt-IPA|criògénico}}
+{{User:Benwing2/pt-IPA|des^truição}}
 ;Stress -> secondary in prefixes
-{{pt-IPA|elétrò-}}
+{{User:Benwing2/pt-IPA|elétrò-}}
 ;Stressed as normal in suffixes
-{{pt-IPA|-ada}}
+{{User:Benwing2/pt-IPA|-ada}}
 ;Before colon: stress -> secondary, no raising of -o or -e
-{{pt-IPA|elétrò:deposição}}
-{{pt-IPA|elétrò:cárdio:grama}}
+{{User:Benwing2/pt-IPA|elétrò:deposição}}
+{{User:Benwing2/pt-IPA|elétrò:cárdio:grama}}
 ;Combines many things
-{{pt-IPA|elétrò:màgh(^i)néticamente}}
-{{pt-IPA|elétrò:luminescêncya}}
+{{User:Benwing2/pt-IPA|elétrò:màgh(^i)néticamente}}
+{{User:Benwing2/pt-IPA|elétrò:luminescêncya}}
 ;'s' is /s/ here
-{{pt-IPA|elétrò:sérra}}
+{{User:Benwing2/pt-IPA|elétrò:sérra}}
 ; ò and i are separate
-{{pt-IPA|br=fóto:emissôr|pt=fótò:imissôr}}
+{{User:Benwing2/pt-IPA|br=fóto:emissôr|pt=fótò:imissôr}}
 ; e -> /i/ here in Portugal
-{{pt-IPA|piézò:elétrico}}
+{{User:Benwing2/pt-IPA|piézò:elétrico}}
 ;Portugal /gwéla/
-{{pt-IPA|br=gu.éla|pt=goéla}}
+{{User:Benwing2/pt-IPA|br=gu.éla|pt=goéla}}
 ;Qualifier; should have u.í in Brazil but wí in Portugal for second pronun
-{{pt-IPA|gratuyto,gratuíto<q:nonstandard but common>}}
+{{User:Benwing2/pt-IPA|gratuyto,gratuíto<q:nonstandard but common>}}
 ;FIXME: consider changing to have ui be /uj/ by default
-{{pt-IPA|br=imbuy.a}}
+{{User:Benwing2/pt-IPA|br=imbuy.a}}
 ;Should not have (j) in -íz in Brazil
-{{pt-IPA|juiz}}
+{{User:Benwing2/pt-IPA|juiz}}
 ;Handle refs
-{{pt-IPA|pt=menu<q:normative>,mènu<q:common but considered incorrect><ref:https://www.flip.pt/Duvidas-Linguisticas/Duvida-Linguistica/DID/752>}}
+{{User:Benwing2/pt-IPA|pt=menu<q:normative>,mènu<q:common but considered incorrect><ref:https://www.flip.pt/Duvidas-Linguisticas/Duvida-Linguistica/DID/752>}}
 ;-da- should be unstressed
-{{pt-IPA|bicho-da-sêda}}
-{{pt-IPA|bíògeográfico}}
-{{pt-IPA|cabra-céga}}
+{{User:Benwing2/pt-IPA|bicho-da-sêda}}
+{{User:Benwing2/pt-IPA|bíògeográfico}}
+{{User:Benwing2/pt-IPA|cabra-céga}}
 ;Should have final [ɐ] in Brazil and should not have optional r
-{{pt-IPA|açúcar}}
+{{User:Benwing2/pt-IPA|açúcar}}
 ;Should use en- (careful pronunciation), in- (natural pronunciation)
-{{pt-IPA|ensino}}
+{{User:Benwing2/pt-IPA|ensino}}
 ;Should have /ɛr/ in Portugal and should not have optional r in Brazil
-{{pt-IPA|africâner}}
-{{pt-IPA|anti-cristo}}
-{{pt-IPA|ântròpò:morfismo}}
-{{pt-IPA|arco da vélha}}
-{{pt-IPA|pt=arcoíris|br=+|pagename=arco-íris}}
-{{pt-IPA|autò^-}}
-{{pt-IPA|autò^:ajuda}}
-{{pt-IPA|br=autò^:estima|pt=autò^:estima,autò^:stima}}
-{{pt-IPA|autò^:medicar-se}}
-{{pt-IPA|autò^:retrato}}
-{{pt-IPA|autò^:serviço}}
-{{pt-IPA|campainha}}
-{{pt-IPA|càpi^^turar}}
-{{pt-IPA|Carrazêda de Ansi^ães}}
-{{pt-IPA|de nada}}
+{{User:Benwing2/pt-IPA|africâner}}
+{{User:Benwing2/pt-IPA|anti-cristo}}
+{{User:Benwing2/pt-IPA|ântròpò:morfismo}}
+{{User:Benwing2/pt-IPA|arco da vélha}}
+{{User:Benwing2/pt-IPA|pt=arcoíris|br=+|pagename=arco-íris}}
+{{User:Benwing2/pt-IPA|autò^^-}}
+{{User:Benwing2/pt-IPA|autò^^:ajuda}}
+{{User:Benwing2/pt-IPA|br=autò^^:estima|pt=autò^^:estima,autò^^:stima}}
+{{User:Benwing2/pt-IPA|autò^^:medicar-se}}
+{{User:Benwing2/pt-IPA|autò^^:retrato}}
+{{User:Benwing2/pt-IPA|autò^^:serviço}}
+{{User:Benwing2/pt-IPA|campainha}}
+{{User:Benwing2/pt-IPA|càpi^^turar}}
+{{User:Benwing2/pt-IPA|cade^^ado}}
+{{User:Benwing2/pt-IPA|Carrazêda de Ansi^ães}}
+{{User:Benwing2/pt-IPA|de nada}}
 ;Should use /w/ in Portugal
-{{pt-IPA|carruagem}}
-{{pt-IPA|Castro-vêrde}}
-{{pt-IPA|cenrada}}
-{{pt-IPA|chamo-me}}
-{{pt-IPA|ci^entífico}}
+{{User:Benwing2/pt-IPA|carruagem}}
+{{User:Benwing2/pt-IPA|Castro-vêrde}}
+{{User:Benwing2/pt-IPA|cenrada}}
+{{User:Benwing2/pt-IPA|chamo-me}}
+{{User:Benwing2/pt-IPA|ci^entífico}}
 ;-er in Portugal should be /ɛr/ because word-final unstressed
-{{pt-IPA|ínter:disciplinarh}}
+{{User:Benwing2/pt-IPA|ínter:disciplinarh}}
 ;Should have /i/ in Portugal
-{{pt-IPA|triangularh}}
+{{User:Benwing2/pt-IPA|triangularh}}
 ;Unstressed -a- in Brazil
-{{pt-IPA|br=Condeixa-a-Nóva|pt=Condeixà-Nóva}}
-{{pt-IPA|côr de burro quando fóge}}
+{{User:Benwing2/pt-IPA|br=Condeixa-a-Nóva|pt=Condeixà-Nóva}}
+{{User:Benwing2/pt-IPA|côr de burro quando fóge}}
+{{User:Benwing2/pt-IPA|br=como|pt=cu̇mo,como}}
