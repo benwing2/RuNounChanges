@@ -20,7 +20,7 @@
 {{User:Benwing2/pt-IPA|fọrrọbọdó}}
 {{User:Benwing2/pt-IPA|br=Róliwúde|pt=Holiude}}
 ;o should be ò in Portugal, ex- should be es- in Brazil, eis- in Portugal
-{{User:Benwing2/pt-IPA|extra-ordinário}}
+{{User:Benwing2/pt-IPA|êxtra-ordinário}}
 {{User:Benwing2/pt-IPA|cô̱adòção}}
 {{User:Benwing2/pt-IPA|br=des^i.onização}}
 ;Should have /jon/ as ion- is treated as if word-initial
@@ -47,6 +47,7 @@
 {{User:Benwing2/pt-IPA|pt=ēpidemiologia,epidemiologia}}
 ;use of ò, ō for unstressed unreduced vowels in Portugal
 {{User:Benwing2/pt-IPA|pt=chòfér,chōfér}}
+{{User:Benwing2/pt-IPA|colòidal}}
 ;Should have /o/ in Brazil, /w/ in Portugal
 {{User:Benwing2/pt-IPA|coágulo}}
 ;Should have /e/ in both Brazil and Portugal
@@ -61,7 +62,6 @@
 {{User:Benwing2/pt-IPA|sózinho}}
 {{User:Benwing2/pt-IPA|bà.uzinho}}
 {{User:Benwing2/pt-IPA|benzinho}}
-;Should have [ɐ] for 'a' even in Brazil
 {{User:Benwing2/pt-IPA|diazinho}}
 ;Should have /me(j).z-/; make sure 's' is voiced
 {{User:Benwing2/pt-IPA|mês+inho}}
@@ -148,8 +148,16 @@
 {{User:Benwing2/pt-IPA|dúbi^ni^o}}
 ;u^ = u or w in Brazil
 {{User:Benwing2/pt-IPA|sandu^íche}}
-;ó* = ó in Portugal, ô in Brazil
-{{pt-IPA|sácsòfó*ne}}
+;ô* = ô in Brazil, ó in Portugal
+{{User:Benwing2/pt-IPA|sácsòfô*ne}}
+{{User:Benwing2/pt-IPA|combô*io}}
+{{User:Benwing2/pt-IPA|hô*mem-zão}}
+{{User:Benwing2/pt-IPA|hô*mò:sècsual}}
+;é* = é in Brazil, ê in Portugal
+{{User:Benwing2/pt-IPA|Coré*ia do Nórte}}
+{{User:Benwing2/pt-IPA|des^òcsirríbònuclé*ico}}
+;ó* = ó in Brazil, ô in Portugal
+{{User:Benwing2/pt-IPA|apó*io}}
 ;Should have u. and i. in Portugal
 {{User:Benwing2/pt-IPA|bruaca}}
 {{User:Benwing2/pt-IPA|druídico}}
@@ -221,3 +229,9 @@
 {{User:Benwing2/pt-IPA|br=Condeixa-a-Nóva|pt=Condeixà-Nóva}}
 {{User:Benwing2/pt-IPA|côr de burro quando fóge}}
 {{User:Benwing2/pt-IPA|br=como|pt=cu̇mo,como}}
+;Should reduce -sg- to /ʒ/
+{{User:Benwing2/pt-IPA|pt=transgénico}}
+;-s- should be /z/ (Brazil), /ʒ/ (Portugal)
+{{User:Benwing2/pt-IPA|transgredir}}
+{{User:Benwing2/pt-IPA|translàção}}
+{{User:Benwing2/pt-IPA|obi^^zequyar}}
