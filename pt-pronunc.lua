@@ -12,26 +12,28 @@ Author: Benwing
 3. Implement i* = mandatory epenthetic i in Brazil.
 4. Implement o^ = o or u in Brazil (in that order), and o^^ = opposite order.
 5. Implement e^ = e or i in Brazil (in that order), and e^^ = opposite order.
-6. Implement é* = é in Portugal, ê in Brazil (useful especially before nasal consonants).
-6. Implement ó* = ó in Portugal, ô in Brazil (useful especially before nasal consonants).
-6. Implement des^ at beginning of word = /dis+/ or /des/ in Brazil (in that order), and des^^ = opposite order.
-7. In Portugal, before [ɫ], unstressed 'a' should be /a/; unstressed 'e' should be /ɛ/; and unstressed 'o' should be
+6. Implement ê* = ê in Brazil, é in Portugal (useful especially before nasal consonants).
+7. Implement ô* = ô in Brazil, ó in Portugal (useful especially before nasal consonants).
+8. Implement é* = é in Brazil, ê in Portugal (useful especially in -éi-).
+9. Implement ô* = ó in Brazil, ô in Portugal (useful especially in -ói-).
+10. Implement des^ at beginning of word = /dis+/ or /des/ in Brazil (in that order), and des^^ = opposite order.
+11. In Portugal, before [ɫ], unstressed 'a' should be /a/; unstressed 'e' should be /ɛ/; and unstressed 'o' should be
    either /o/ or /ɔ/ (in that order).
-8. Support qualifiers using <q:...> and <qq:...>.
-9. Support references using <ref:...>. Syntax is the same as for IPA ref=.
-10. In Portugal, unstressed o in hiatus should be /w/, and unstressed e in hiatus should be /j/.
-11. Support - (hyphen) = left and right parts should be treated as distinct phonological words but written joined
+12. Support qualifiers using <q:...> and <qq:...>.
+13. Support references using <ref:...>. Syntax is the same as for IPA ref=.
+14. In Portugal, unstressed o in hiatus should be /w/, and unstressed e in hiatus should be /j/.
+15. Support - (hyphen) = left and right parts should be treated as distinct phonological words but written joined
     together, and non-final primary stresses turn into secondary stresses. Word-initial and word-final behavior should
 	happen, e.g. Brazil epenthesis of (j) before word-final /s/ followed a stressed vowel, Brazil raising of esC- and
 	Portugal rendering of o- as ò-, but syllabification should ignore the hyphen, e.g. if the hyphen follows a
 	consonant and precedes a vowel, the syllable division should happen before the consonant as normal.
-12. Support : (colon), similar to hyphen but in non-final parts, final vowels aren't rendered as closed.
-13. Support + (colon), similar to colon but non-final primary stresses aren't displayed.
-14. In Brazil, word-initial enC-, emC- should display as (careful pronunciation) ẽ-, (natural pronunciation) ĩ-.
-15. In Portugal, -sç- and -sc(e/i)- should show as (careful pronunciation) /ʃs/, (natural pronunciation) /ʃ/.
-16. In Portugal, grave accent indicates unstressed open a/e/o and macron indicates unstressed closed a/e/o; both are
+16. Support : (colon), similar to hyphen but in non-final parts, final vowels aren't rendered as closed.
+17. Support + (colon), similar to colon but non-final primary stresses aren't displayed.
+18. In Brazil, word-initial enC-, emC- should display as (careful pronunciation) ẽ-, (natural pronunciation) ĩ-.
+19. In Portugal, -sç- and -sc(e/i)- should show as (careful pronunciation) /ʃs/, (natural pronunciation) /ʃ/.
+20. In Portugal, grave accent indicates unstressed open a/e/o and macron indicates unstressed closed a/e/o; both are
     ignored in Brazil.
-17. In Portugal, iCi where the first i is before the stress should (maybe) show as iCi, (traditional pronunciation) ɨCi.
+21. In Portugal, iCi where the first i is before the stress should (maybe) show as iCi, (traditional pronunciation) ɨCi.
     In iCiCi, both of the first two i's show as ɨ in the traditional pronunciation (FIXME: verify this). C should be
 	only a single consonant, hence not in [[piscina]] or [[distrito]] (FIXME: verify this). Does not apply if the first
 	i is stressed (e.g. [[mínimo]], [[tília]], [[pírico]], [[tísica]]) or if the stressed i is word-final ([[Mimi]],
@@ -40,10 +42,10 @@ Author: Benwing
 	can always disable the eCi spelling by adding an h in 'ihCi' to make it look like a cluster between the i's. NOTE:
 	It appears that iCi -> eCi should apply in [[dicionário]], meaning if we apply it at the end, we have to distinguish
 	between glides from original i and glides from e or y.
-18. In Portugal and Brazil, stressed o in hiatus should automatically be ô (voo, Samoa, Alagoas, perdoe, abençoe). [DONE]
-19. In Portugal, stressed closed ô in hiatus (whether written explicitly as e.g. vôo, Côa or generated automatically)
+22. In Portugal and Brazil, stressed o in hiatus should automatically be ô (voo, Samoa, Alagoas, perdoe, abençoe). [DONE]
+23. In Portugal, stressed closed ô in hiatus (whether written explicitly as e.g. vôo, Côa or generated automatically)
     should show as e.g. /ˈbo.ɐ/, (regional) /ˈbo.wɐ/. (FIXME: Verify syllable division in second.) [DONE]
-20. Recognize -zinha like -zinho, -mente. Just use hyphen (-) to handle these. We don't recognize -zão, -zona, -zito,
+24. Recognize -zinha like -zinho, -mente. Just use hyphen (-) to handle these. We don't recognize -zão, -zona, -zito,
     -zita because of too many false positives; you can just write the hyphen explicitly before the suffix as needed.
 	Cf. among our current vocabulary we have 10 -zão augmentatives (animalzão, aviãozão, cipozão, cuzão, homenzão,
 	leãozão, paizão, pãozão, pezão, tatuzão), 2 -ão augmentatives after a word ending in -z (codornizão, felizão), and
@@ -53,30 +55,32 @@ Author: Benwing
 	For -zito, we have 1 -ito diminutive after a word ending in -z (Queluzito), one non-diminutive (quartzito), and no
 	-zito diminutives. For -zita we have 1 -zita diminutive (maçãzita) and 4 non-diminutives (andaluzita, monazita,
 	pedzita, stolzita).
-21. Final 'r' isn't optional before -zinho, -zinha, -mente.
-22. Consider making secondary stress optional in cases like traduçãozinha where the stress is directly before the
+25. Final 'r' isn't optional before -zinho, -zinha, -mente.
+26. Consider making secondary stress optional in cases like traduçãozinha where the stress is directly before the
     primary stress.
-23. In Brazil, unstressed final-syllable /a/ should be reduced even before a final consonant. Cf. [[açúcar]], [[tórax]].
+27. In Brazil, unstressed final-syllable /a/ should be reduced even before a final consonant. Cf. [[açúcar]], [[tórax]].
     (Except possibly /l/? FIXME: Verify.)
-24. Support + = pagename, and pagename= argument.
-25. Deduplicate final pronunciations without distinct qualifiers.
-26. Implement support for dot-under without accompanying quality diacritic. When attached to a/e/o, it defaults to acute
+28. Support + = pagename, and pagename= argument.
+29. Deduplicate final pronunciations without distinct qualifiers.
+30. Implement support for dot-under without accompanying quality diacritic. When attached to a/e/o, it defaults to acute
     = open pronun, except in the following circumstances, where it defaults to circumflex: (1) in the diphthongs
 	ei/eu/oi/ou; (2) in a nasal vowel.
-27. Portugal final -e should show as optional (ɨ) unless there is a vowel-initial word following, in which case it
+31. Portugal final -e should show as optional (ɨ) unless there is a vowel-initial word following, in which case it
     should not be displayed at all.
-28. Syllabification: "Improper" clusters of non-sibiliant-obstruent + obstruent (pt, bt, bd, dk, kt; ps, bs, bv, bʒ, tz,
+32. Syllabification: "Improper" clusters of non-sibiliant-obstruent + obstruent (pt, bt, bd, dk, kt; ps, bs, bv, bʒ, tz,
     dv, ks; ft), non-sibiliant-obstruent + nasal (pn, bn, tm, tn, dm, dn, gm, gn), nasal + nasal (mn) are syllabified in
 	Portugal as .pt, .bv, .mn, etc. Note ʃ.t, ʃ.p, ʃ.k, etc. But in Brazil, all of these divide between the consonants
 	(p.t, b.v, ʃ.t, s.p, etc.). Particular case: [[ab-rogação]] divides as a.brr in Portugal but ab.rr in Brazil.
-29. -ão, -ãe, -õe should be recognized as nasal diphthongs with a circumflex added to force stress.
-30. Recognize obsolete -aõ, -aẽ, -oẽ as equivalent to -ão, -ãe, -õe.
-31. In CluV, CruV, CliV, CriV, the 'u' and 'i' are vowels not glides in both Portugal and Brazil.
-32. Epenthesis of (j) before final stressed s in Brazil should not happen after i.
-33. Dialect markers such as "Brazil", "Portugal" should go at the beginning. [DONE]
-34. Portugal exC, êxC should be rendered like eiʃC (FIXME: Does this apply to "Central Portugal" as well?). Unstressed
+33. -ão, -ãe, -õe should be recognized as nasal diphthongs with a circumflex added to force stress.
+34. Recognize obsolete -aõ, -aẽ, -oẽ as equivalent to -ão, -ãe, -õe.
+35. In CluV, CruV, CliV, CriV, the 'u' and 'i' are vowels not glides in both Portugal and Brazil.
+36. Epenthesis of (j) before final stressed s in Brazil should not happen after i.
+37. Dialect markers such as "Brazil", "Portugal" should go at the beginning. [DONE]
+38. Portugal exC, êxC should be rendered like eiʃC (FIXME: Does this apply to "Central Portugal" as well?). Unstressed
     word-initial exC- should have two pronunciations, one with eiʃC- and the other with (i)ʃC-. exs- needs handling like
 	eiʃs-/(i)ʃs- not like eiss-.
+39. In Portugal, -sj- (e.g. [[transgénico]]) should reduce to a single /ʒ/.
+40. [[transgredir]] should have /z/ (Brazil), /ʒ/ (Portugal) instead of /s/, /ʃ/.
 ]=]
 
 local export = {}
@@ -374,15 +378,17 @@ local function one_term_ipa(text, style, phonetic, err)
 	-- that we want to allow the user to override this by explicitly adding a . between the <i> and <a>. So we need
 	-- to keep the distinction between user-specified . and auto-determined . until after stress assignment.
 	text = rsub(text, "%.", SYLDIV)
-	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*)(" .. C .. W .. "?" .. V .. ")", "%1.%2")
-	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*" .. C .. ")(" .. C .. V .. ")", "%1.%2")
-	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*" .. C .. "+)(" .. C .. C .. V .. ")", "%1.%2")
+	-- Divide before the last consonant (possibly followed by a glide). We then move the syllable division marker
+	-- leftwards over clusters that can form onsets.
+	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*" .. C .. "-)(" .. C .. W .. "*" .. V .. ")", "%1.%2")
 	text = rsub(text, "([pbfvktdg])%.([lr])", ".%1%2")
 	-- /tʃ/, /dʒ/ are normally single sounds, but adj- in [[adjetivo]], [[adjunto]] etc. should be 'ad.j'
 	text = rsub(text, "t%.ʃ", ".tʃ")
 	text = rsub(text, "d%.j", ".dj")
 	text = rsub(text, "#a.dj", "#ad.j")
-	text = rsub_repeatedly(text, "(" .. C .. ")%.s(" .. C .. ")", "%1s.%2")
+	if portugal then
+		FIXME
+	end
 	-- All vowels should be separated from adjacent vowels by a syllable division except
 	-- (1) aeo + unstressed i/u, ([[saiba]], [[peixe]], [[noite]], [[Paulo]], [[deusa]], [[ouro]]), except when
 	-- followed by nh or m/n/r/l + (non-vowel or word end), e.g. Bom.ba.im, ra.i.nha, Co.im.bra, sa.ir, but Jai.me,
