@@ -18,10 +18,10 @@ Author: Benwing
 9. Implement ô* = ó in Brazil, ô in Portugal (useful especially in -ói-).
 10. Implement des^ at beginning of word = /dis+/ or /des/ in Brazil (in that order), and des^^ = opposite order.
 11. In Portugal, before [ɫ], unstressed 'a' should be /a/; unstressed 'e' should be /ɛ/; and unstressed 'o' should be
-   either /o/ or /ɔ/ (in that order).
-12. Support qualifiers using <q:...> and <qq:...>.
-13. Support references using <ref:...>. Syntax is the same as for IPA ref=.
-14. In Portugal, unstressed o in hiatus should be /w/, and unstressed e in hiatus should be /j/.
+   either /o/ or /ɔ/ (in that order). [DONE]
+12. Support qualifiers using <q:...>. [DONE]
+13. Support references using <ref:...>. Syntax is the same as for IPA ref=. [DONE]
+14. In Portugal, unstressed o in hiatus should be /w/, and unstressed e in hiatus should be /j/. [DONE]
 15. Support - (hyphen) = left and right parts should be treated as distinct phonological words but written joined
     together, and non-final primary stresses turn into secondary stresses. Word-initial and word-final behavior should
 	happen, e.g. Brazil epenthesis of (j) before word-final /s/ followed a stressed vowel, Brazil raising of esC- and
@@ -29,10 +29,10 @@ Author: Benwing
 	consonant and precedes a vowel, the syllable division should happen before the consonant as normal.
 16. Support : (colon), similar to hyphen but in non-final parts, final vowels aren't rendered as closed.
 17. Support + (colon), similar to colon but non-final primary stresses aren't displayed.
-18. In Brazil, word-initial enC-, emC- should display as (careful pronunciation) ẽ-, (natural pronunciation) ĩ-.
-19. In Portugal, -sç- and -sc(e/i)- should show as (careful pronunciation) /ʃs/, (natural pronunciation) /ʃ/.
+18. In Brazil, word-initial enC-, emC- should display as (careful pronunciation) ẽ-, (natural pronunciation) ĩ-. [DONE]
+19. In Portugal, -sç- and -sc(e/i)- should show as (careful pronunciation) /ʃs/, (natural pronunciation) /ʃ/. [DONE]
 20. In Portugal, grave accent indicates unstressed open a/e/o and macron indicates unstressed closed a/e/o; both are
-    ignored in Brazil.
+    ignored in Brazil. [DONE]
 21. In Portugal, iCi where the first i is before the stress should (maybe) show as iCi, (traditional pronunciation) ɨCi.
     In iCiCi, both of the first two i's show as ɨ in the traditional pronunciation (FIXME: verify this). C should be
 	only a single consonant, hence not in [[piscina]] or [[distrito]] (FIXME: verify this). Does not apply if the first
@@ -81,6 +81,11 @@ Author: Benwing
 	eiʃs-/(i)ʃs- not like eiss-.
 39. In Portugal, -sj- (e.g. [[transgénico]]) should reduce to a single /ʒ/.
 40. [[transgredir]] should have /z/ (Brazil), /ʒ/ (Portugal) instead of /s/, /ʃ/.
+41. Unstressed -ie- in hiatus should automatically be -iè- in Portugal or maybe -iè-/-ié-?
+42. Initial esC- in Brazil should be either isC- or esC-.
+43. Initial sC- in Portugal and maybe Brazil should be /s/ not /ʃ/.
+44. Deleted epenthetic /i/ should block conversion of syllable-final m/n into nasalization, cf. [[amnésia]] respelled
+    'ami^nési^a'. [DONE]
 ]=]
 
 local export = {}
@@ -342,10 +347,10 @@ local function one_term_ipa(text, style, phonetic, err)
 	-- * [[cheddar]] respelled 'chéddarh' /ˈʃɛ.daʁ/;
 	-- * [[Hanna]] respelled 'Ranna' /ˈʁɐ̃.nɐ/;
 	-- * [[jazz]] respelled 'djézz' /ˈd͡ʒɛs/;
-	-- * [[Minnesota]] respelled 'Mìnnessôta' /ˌmi.neˈso.tɐ/;
+	-- * [[Minnesota]] respelled 'Minnessôta' /mi.neˈso.tɐ/;
 	-- * [[nutella]] respelled 'nutélla' /nuˈtɛ.lɐ/;
 	-- * [[shopping]] respeled 'shópping' /ˈʃɔ.pĩ/ or 'shóppem' /ˈʃɔ.pẽj̃/;
-	-- * [[Stonehenge]] respelled 'Stòwnn.rrendj' /ˌstownˈʁẽd͡ʒ/;
+	-- * [[Stonehenge]] respelled 'Sto̱wnn.rrendj' /ˌstownˈʁẽd͡ʒ/;
 	-- * [[Yunnan]] no respelling needed /juˈnɐ̃/.
 	--
 	-- Note that further processing of r and s happens after syllabification and stress assignment, because we need
@@ -353,11 +358,15 @@ local function one_term_ipa(text, style, phonetic, err)
 	text = rsub(text, "rr", "ʁ")
 	text = rsub(text, "nn", "N")
 	text = rsub(text, "mm", "M")
-	text = rsub(text, "ss", "S") -- will map later to /s/; need to special case to support spellings like 'nóss'
+	-- Deleted epenthetic /i/ should prevent preceding /m/, /n/ from being converted into nasalization.
+	text = rsub(text, "mƗ", "MƗ")
+	text = rsub(text, "nƗ", "NƗ")
+	-- Will map later to /s/; need to special case to support spellings like 'nóss' (= nós, plural of nó).
+	text = rsub(text, "ss", "S")
 	text = rsub(text, "(" .. C .. ")%1", "%1")
 
 	-- Respell [[homenzinho]] as 'homemzinho' so it is stressed correctly.
-	text = rsub(text, "n(" .. SYLDIV .. "?ziɲo#)", "m%1")
+	text = rsub(text, "n(" .. SYLDIV .. "?ziɲos?#)", "m%1")
 
 	if brazil then
 		-- Palatalize t/d + i -> affricates in Brazil. Use special unitary symbols, which we later convert to regular
@@ -387,6 +396,10 @@ local function one_term_ipa(text, style, phonetic, err)
 	text = rsub(text, "d%.j", ".dj")
 	text = rsub(text, "#a.dj", "#ad.j")
 	if portugal then
+32. Syllabification: "Improper" clusters of non-sibiliant-obstruent + obstruent (pt, bt, bd, dk, kt; ps, bs, bv, bʒ, tz,
+    dv, ks; ft), non-sibiliant-obstruent + nasal (pn, bn, tm, tn, dm, dn, gm, gn), nasal + nasal (mn) are syllabified in
+	Portugal as .pt, .bv, .mn, etc. Note ʃ.t, ʃ.p, ʃ.k, etc. But in Brazil, all of these divide between the consonants
+	(p.t, b.v, ʃ.t, s.p, etc.). Particular case: [[ab-rogação]] divides as a.brr in Portugal but ab.rr in Brazil.
 		FIXME
 	end
 	-- All vowels should be separated from adjacent vowels by a syllable division except
@@ -481,12 +494,15 @@ local function one_term_ipa(text, style, phonetic, err)
 		-- Preserve the syllable divider, which may be auto-added or user-specified.
 		local syllables = m_strutils.capturing_split(word, "([." .. SYLDIV .. "])")
 
-		if rfind(word, "[%." .. SYLDIV .. "]men%.te#") or rfind(word, "[%." .. SYLDIV .. "]zi%.ɲo#") then
+		if rfind(word, "[%." .. SYLDIV .. "]men%.te#") then
+			word = rsub(word, "[%." .. SYLDIV .. "](men%.te#)", "#@#%1")
+		else
+			word = rsub(rfind(word, "[%." .. SYLDIV .. "]zi%.ɲ[oa]s?#") then
 			local mente_syllables
-			-- Words ends in -mente or -zinho; add primary stress to the preceding portion as if stressed
-			-- (e.g. [[agitadamente]] -> 'agitádamente') unless already stressed (e.g. [[rapidamente]]
-			-- respelled 'rápidamente'). The primary stress will be converted to secondary stress further below.
-			-- Essentially, we rip the word apart into two words ('mente'/'zinho' and the preceding portion) and
+			-- Words ends in -mente, -zinho(s) or -zinha(s); add primary stress to the preceding portion as if stressed
+			-- (e.g. [[agitadamente]] -> 'agitádamente') unless already stressed (e.g. [[rapidamente]] respelled
+			-- 'rápidamente'). The primary stress will be converted to secondary stress further below. Essentially, we
+			-- rip the word apart into two words ('mente'/'zinho' and the preceding portion) and
 			-- stress each one independently. Note that the effect of adding a primary stress will also be to cause
 			-- an error if stressed 'e' or 'o' is not properly marked as é/ê or ó/ô; cf. [[certamente]], which must
 			-- be respelled 'cértamente', and [[posteriormente]], which must be respelled 'posteriôrmente', just as
@@ -1007,16 +1023,40 @@ function export.IPA_string(frame)
 end
 
 
-function export.express_styles(inputs, args_style)
+function export.express_styles(inputs, args_style, pagename)
 	local pronuns_by_style = {}
 	local expressed_styles = {}
 
 	local function dostyle(style)
 		pronuns_by_style[style] = {}
-		for _, val in ipairs(inputs[style]) do
-			local pronuns = export.IPA(val, style)
+		for _, val in ipairs(inputs[style].terms) do
+			local respelling = val.term
+			if respelling == "+" then
+				respelling = pagename
+			end
+
+			local refs
+			if #val.ref == 0 then
+				refs = nil
+			else
+				refs = {}
+				for _, refspec in ipairs(val.ref) do
+					local this_refs = require("Module:references").parse_references(refspec)
+					for _, this_ref in ipairs(this_refs) do
+						table.insert(refs, this_ref)
+					end
+				end
+			end
+
+			local pronuns = export.IPA(respelling, style)
 			for _, pronun in ipairs(pronuns) do
-				table.insert(pronuns_by_style[style], pronun)
+				local qualifiers = m_table.deepcopy(val.q)
+				for _, qual in ipairs(pronuns.qualifiers) do
+					m_table.insertIfNot(qualifiers, qual)
+				end
+				pronun.qualifiers = #qualifiers > 0 and qualifiers or nil
+				pronun.refs = refs
+				m_table.insertIfNot(pronuns_by_style[style], pronun)
 			end
 		end
 	end
@@ -1089,6 +1129,9 @@ function export.express_styles(inputs, args_style)
 			represented_styles = styles,
 			pronuns = pronuns_by_style[style],
 			indent = indent,
+			bullets = inputs[style].bullets,
+			pre = inputs[style].pre,
+			post = inputs[style].post,
 		}
 		for _, hidden_tag_style in ipairs(expressed_styles) do
 			if hidden_tag_style.tag == hidden_tag then
@@ -1148,11 +1191,8 @@ function export.show(frame)
 	-- Create parameter specs
 	local params = {
 		[1] = {}, -- this replaces style group 'all'
-		["pre"] = {},
-		["post"] = {},
-		["ref"] = {},
 		["style"] = {},
-		["bullets"] = {type = "number", default = 1},
+		["pagename"] = {},
 	}
 	for group, _ in pairs(export.all_style_groups) do
 		if group ~= "all" then
@@ -1166,6 +1206,7 @@ function export.show(frame)
 	-- Parse arguments
 	local parargs = frame:getParent().args
 	local args = require("Module:parameters").process(parargs, params)
+	local pagename = args.pagename or mw.title.getCurrentTitle().subpageText
 
 	-- Set inputs
 	local inputs = {}
@@ -1191,16 +1232,80 @@ function export.show(frame)
 	end
 	-- If no inputs given, set all styles based on current pagename.
 	if not next(inputs) then
-		local text = mw.title.getCurrentTitle().text
 		for _, style in ipairs(export.all_styles) do
-			inputs[style] = text
+			inputs[style] = "+"
 		end
 	end
 
+	-- Parse the arguments.
+	local put
 	for style, input in pairs(inputs) do
-		inputs[style] = rsplit(input, ",")
+		if input:find("<") then
+			local function parse_err(msg)
+				error(msg .. ": " .. style .. "= " .. input)
+			end
+			if not put then
+				put = require("Module:parse utilities")
+			end
+			local segments = put.parse_balanced_segment_run(input, "<", ">")
+			local comma_separated_groups = iut.split_alternating_runs(segments, "%s*,%s*")
+			local parsed = {terms = {}}
+			for i, group in ipairs(comma_separated_groups) do
+				local term = {term = group[1], ref = {}, q = {}}
+				for j = 2, #group - 1, 2 do
+					if group[j + 1] ~= "" then
+						parse_err("Extraneous text '" .. group[j + 1] .. "' after modifier")
+					end
+					local modtext = group[j]:match("^<(.*)>$")
+					if not modtext then
+						parse_err("Internal error: Modifier '" .. group[j] .. "' isn't surrounded by angle brackets")
+					end
+					local prefix, arg = modtext:match("^([a-z]+):(.*)$")
+					if not prefix then
+						parse_err("Modifier " .. group[j] .. " lacks a prefix, should begin with one of " ..
+							"'pre:', 'post:', 'ref:', 'bullets:' or 'q:'")
+					end
+					if prefix == "ref" or prefix == "q" then
+						table.insert(term[prefix], arg)
+					elseif prefix == "pre" or prefix == "post" or prefix == "bullets" then
+						if i < #comma_separated_groups then
+							parse_err("Modifier '" .. prefix .. "' should occur after the last comma-separated term")
+						end
+						if parsed[prefix] then
+							parse_err("Modifier '" .. prefix .. "' occurs twice, second occurrence " .. group[j])
+						end
+						if prefix == "bullets" then
+							if not arg:find("^[0-9]+$") then
+								parse_err("Modifier 'bullets' should have a number as argument")
+							end
+							parsed.bullets = tonumber(arg)
+						else
+							parsed[prefix] = arg
+						end
+					else
+						parse_err("Unrecognized prefix '" .. prefix .. "' in modifier " .. group[j]
+							.. ", should be one of 'pre', 'post', 'ref', 'bullets' or 'q'")
+					end
+				end
+				table.insert(parsed.terms, term)
+			end
+			if not parsed.bullets then
+				parsed.bullets = 1
+			end
+			inputs[style] = parsed
+		else
+			local terms = {}
+			for _, term in ipairs(rsplit(input, "%s*,%s*")) do
+				table.insert(terms, {term = term, ref = {}, q = {}})
+			end
+			inputs[style] = {
+				terms = terms,
+				bullets = 1,
+			}
+		end
 	end
-	local expressed_styles = export.express_styles(inputs, args.style)
+
+	local expressed_styles = export.express_styles(inputs, args.style, args.pagename)
 
 	local lines = {}
 
@@ -1219,19 +1324,24 @@ function export.show(frame)
 			table.insert(formatted_pronuns, formatted_phonemic)
 			table.insert(pronunciations, {
 				pron = "[" .. pronun.phonetic .. "]",
+				refs = pronun.refs,
 			})
-			table.insert(formatted_pronuns, "[" .. pronun.phonetic .. "]")
+			local reftext = ""
+			if pronun.refs then
+				reftext = string.rep("[1]", #pronun.refs)
+			end
+			table.insert(formatted_pronuns, "[" .. pronun.phonetic .. "]" .. reftext)
 		end
-		-- Number of bullets: When indent = 1, we want the number of bullets given by `args.bullets`,
-		-- and when indent = 2, we want `args.bullets + 1`, hence we subtract 1.
-		local bullet = string.rep("*", args.bullets + expressed_style.indent - 1) .. " "
+		-- Number of bullets: When indent = 1, we want the number of bullets given by `expressed_style.bullets`,
+		-- and when indent = 2, we want `expressed_style.bullets + 1`, hence we subtract 1.
+		local bullet = string.rep("*", expressed_style.bullets + expressed_style.indent - 1) .. " "
 		-- Here we construct the formatted line in `formatted`, and also try to construct the equivalent without HTML
 		-- and wiki markup in `formatted_for_len`, so we can compute the approximate textual length for use in sizing
 		-- the toggle box with the "more" button on the right.
-		local pre = is_first and args.pre and args.pre .. " " or ""
+		local pre = is_first and expressed_style.pre and expressed_style.pre .. " " or ""
 		local pre_for_len = pre .. (tag and "(" .. tag .. ") " or "")
 		pre = pre .. (tag and m_qual.format_qualifier(tag) .. " " or "")
-		local post = is_first and (args.ref or "") .. (args.post and " " .. args.post or "") or ""
+		local post = is_first and (expressed_style.post and " " .. expressed_style.post or "") or ""
 		local formatted = bullet .. pre .. m_IPA.format_IPA_full(lang, pronunciations) .. post
 		local formatted_for_len = bullet .. pre .. "IPA(key): " .. table.concat(formatted_pronuns, ", ") .. post
 		return formatted, formatted_for_len
