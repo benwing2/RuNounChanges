@@ -8,32 +8,34 @@ Author: Benwing
 1. Implement i^ not before vowel = epenthetic i or deleted epenthetic i in Brazil (in that order), and i^^ not before
    vowel = opposite order. Epenthetic i should not affect stress but should otherwise be treated like a normal vowel.
    Deleted epenthetic i should trigger palatalization of t/d but have no other effects. [DONE]
-2. Implement i^ before vowel = i.V or yV (in that order), and i^^ before vowel = opposite order.
-3. Implement i* = mandatory epenthetic i in Brazil.
-4. Implement o^ = o or u in Brazil (in that order), and o^^ = opposite order.
-5. Implement e^ = e or i in Brazil (in that order), and e^^ = opposite order.
-6. Implement ê* = ê in Brazil, é in Portugal (useful especially before nasal consonants).
-7. Implement ô* = ô in Brazil, ó in Portugal (useful especially before nasal consonants).
-8. Implement é* = é in Brazil, ê in Portugal (useful especially in -éi-).
-9. Implement ô* = ó in Brazil, ô in Portugal (useful especially in -ói-).
-10. Implement des^ at beginning of word = /dis+/ or /des/ in Brazil (in that order), and des^^ = opposite order.
-11. In Portugal, before [ɫ], unstressed 'a' should be /a/; unstressed 'e' should be /ɛ/; and unstressed 'o' should be
+2. Implement i^ before vowel = i.V or yV (in that order), and i^^ before vowel = opposite order. [DONE]
+3. Implement i* = mandatory epenthetic i in Brazil. [DONE]
+4. Implement u^ = u. or w (in that order), and u^^ = opposite order. [DONE]
+5. Implement e^ = e or i in Brazil (in that order), and e^^ = opposite order. [DONE]
+6. Implement o^ = o or u in Brazil (in that order), and o^^ = opposite order. [DONE]
+7. Implement ê* = ê in Brazil, é in Portugal (useful especially before nasal consonants). [DONE]
+8. Implement ô* = ô in Brazil, ó in Portugal (useful especially before nasal consonants). [DONE]
+9. Implement é* = é in Brazil, ê in Portugal (useful especially in -éi-). [DONE]
+10. Implement ó* = ó in Brazil, ô in Portugal (useful especially in -ói-). [DONE]
+11. Implement des^ at beginning of word = /dis+/ or /des/ in Brazil (in that order), and des^^ = opposite order. [DONE]
+12. In Portugal, before [ɫ], unstressed 'a' should be /a/; unstressed 'e' should be /ɛ/; and unstressed 'o' should be
    either /o/ or /ɔ/ (in that order). [DONE]
-12. Support qualifiers using <q:...>. [DONE]
-13. Support references using <ref:...>. Syntax is the same as for IPA ref=. [DONE]
-14. In Portugal, unstressed o in hiatus should be /w/, and unstressed e in hiatus should be /j/. [DONE]
-15. Support - (hyphen) = left and right parts should be treated as distinct phonological words but written joined
+13. Support qualifiers using <q:...>. [DONE]
+14. Support references using <ref:...>. Syntax is the same as for IPA ref=. [DONE]
+15. In Portugal, unstressed o in hiatus should be /w/, and unstressed e in hiatus should be /j/. [DONE]
+16. Support - (hyphen) = left and right parts should be treated as distinct phonological words but written joined
     together, and non-final primary stresses turn into secondary stresses. Word-initial and word-final behavior should
 	happen, e.g. Brazil epenthesis of (j) before word-final /s/ followed a stressed vowel, Brazil raising of esC- and
 	Portugal rendering of o- as ò-, but syllabification should ignore the hyphen, e.g. if the hyphen follows a
 	consonant and precedes a vowel, the syllable division should happen before the consonant as normal.
-16. Support : (colon), similar to hyphen but in non-final parts, final vowels aren't rendered as closed.
-17. Support + (colon), similar to colon but non-final primary stresses aren't displayed.
-18. In Brazil, word-initial enC-, emC- should display as (careful pronunciation) ẽ-, (natural pronunciation) ĩ-. [DONE]
-19. In Portugal, -sç- and -sc(e/i)- should show as (careful pronunciation) /ʃs/, (natural pronunciation) /ʃ/. [DONE]
-20. In Portugal, grave accent indicates unstressed open a/e/o and macron indicates unstressed closed a/e/o; both are
+17. Support : (colon), similar to hyphen but in non-final parts, final vowels aren't rendered as closed.
+18. Support + (colon), similar to colon but non-final primary stresses aren't displayed.
+19. In Brazil, word-initial enC-, emC- should display as (careful pronunciation) ẽ-, (natural pronunciation) ĩ-. [DONE]
+20. In Portugal, -sç- and -sc(e/i)- should show as (careful pronunciation) /ʃs/, (natural pronunciation) /ʃ/. Same for
+    -sz- ([[as]] [[zonas]]). [DONE] [FIXME: Verify this reduction in [[as]] [[zonas]].]
+21. In Portugal, grave accent indicates unstressed open a/e/o and macron indicates unstressed closed a/e/o; both are
     ignored in Brazil. [DONE]
-21. In Portugal, iCi where the first i is before the stress should (maybe) show as iCi, (traditional pronunciation) ɨCi.
+22. In Portugal, iCi where the first i is before the stress should (maybe) show as iCi, (traditional pronunciation) ɨCi.
     In iCiCi, both of the first two i's show as ɨ in the traditional pronunciation (FIXME: verify this). C should be
 	only a single consonant, hence not in [[piscina]] or [[distrito]] (FIXME: verify this). Does not apply if the first
 	i is stressed (e.g. [[mínimo]], [[tília]], [[pírico]], [[tísica]]) or if the stressed i is word-final ([[Mimi]],
@@ -42,10 +44,10 @@ Author: Benwing
 	can always disable the eCi spelling by adding an h in 'ihCi' to make it look like a cluster between the i's. NOTE:
 	It appears that iCi -> eCi should apply in [[dicionário]], meaning if we apply it at the end, we have to distinguish
 	between glides from original i and glides from e or y.
-22. In Portugal and Brazil, stressed o in hiatus should automatically be ô (voo, Samoa, Alagoas, perdoe, abençoe). [DONE]
-23. In Portugal, stressed closed ô in hiatus (whether written explicitly as e.g. vôo, Côa or generated automatically)
-    should show as e.g. /ˈbo.ɐ/, (regional) /ˈbo.wɐ/. (FIXME: Verify syllable division in second.) [DONE]
-24. Recognize -zinha like -zinho, -mente. Just use hyphen (-) to handle these. We don't recognize -zão, -zona, -zito,
+23. In Portugal and Brazil, stressed o in hiatus should automatically be ô (voo, Samoa, Alagoas, perdoe, abençoe). [DONE]
+24. In Portugal, stressed closed ô in hiatus (whether written explicitly as e.g. vôo, Côa or generated automatically)
+    should show as e.g. /ˈbo.ɐ/, (regional) /ˈbo.wɐ/. [DONE] [FIXME: Verify syllable division in second.]
+25. Recognize -zinha like -zinho, -mente. Just use hyphen (-) to handle these. We don't recognize -zão, -zona, -zito,
     -zita because of too many false positives; you can just write the hyphen explicitly before the suffix as needed.
 	Cf. among our current vocabulary we have 10 -zão augmentatives (animalzão, aviãozão, cipozão, cuzão, homenzão,
 	leãozão, paizão, pãozão, pezão, tatuzão), 2 -ão augmentatives after a word ending in -z (codornizão, felizão), and
@@ -54,37 +56,37 @@ Author: Benwing
 	arilidrazona, Arizona, cronozona, ecozona, Eurozona, fenazona) and no -ona augmentatives after words ending in -z.
 	For -zito, we have 1 -ito diminutive after a word ending in -z (Queluzito), one non-diminutive (quartzito), and no
 	-zito diminutives. For -zita we have 1 -zita diminutive (maçãzita) and 4 non-diminutives (andaluzita, monazita,
-	pedzita, stolzita).
-25. Final 'r' isn't optional before -zinho, -zinha, -mente.
-26. Consider making secondary stress optional in cases like traduçãozinha where the stress is directly before the
+	pedzita, stolzita). [DONE]
+26. Final 'r' isn't optional before -zinho, -zinha, -mente.
+27. Consider making secondary stress optional in cases like traduçãozinha where the stress is directly before the
     primary stress.
-27. In Brazil, unstressed final-syllable /a/ should be reduced even before a final consonant. Cf. [[açúcar]], [[tórax]].
+28. In Brazil, unstressed final-syllable /a/ should be reduced even before a final consonant. Cf. [[açúcar]], [[tórax]].
     (Except possibly /l/? FIXME: Verify.)
-28. Support + = pagename, and pagename= argument.
-29. Deduplicate final pronunciations without distinct qualifiers.
-30. Implement support for dot-under without accompanying quality diacritic. When attached to a/e/o, it defaults to acute
+29. Support + = pagename, and pagename= argument. [DONE]
+30. Deduplicate final pronunciations without distinct qualifiers. [DONE]
+31. Implement support for dot-under without accompanying quality diacritic. When attached to a/e/o, it defaults to acute
     = open pronun, except in the following circumstances, where it defaults to circumflex: (1) in the diphthongs
 	ei/eu/oi/ou; (2) in a nasal vowel.
-31. Portugal final -e should show as optional (ɨ) unless there is a vowel-initial word following, in which case it
+32. Portugal final -e should show as optional (ɨ) unless there is a vowel-initial word following, in which case it
     should not be displayed at all.
-32. Syllabification: "Improper" clusters of non-sibiliant-obstruent + obstruent (pt, bt, bd, dk, kt; ps, bs, bv, bʒ, tz,
+33. Syllabification: "Improper" clusters of non-sibiliant-obstruent + obstruent (pt, bt, bd, dk, kt; ps, bs, bv, bʒ, tz,
     dv, ks; ft), non-sibiliant-obstruent + nasal (pn, bn, tm, tn, dm, dn, gm, gn), nasal + nasal (mn) are syllabified in
 	Portugal as .pt, .bv, .mn, etc. Note ʃ.t, ʃ.p, ʃ.k, etc. But in Brazil, all of these divide between the consonants
-	(p.t, b.v, ʃ.t, s.p, etc.). Particular case: [[ab-rogação]] divides as a.brr in Portugal but ab.rr in Brazil.
-33. -ão, -ãe, -õe should be recognized as nasal diphthongs with a circumflex added to force stress.
-34. Recognize obsolete -aõ, -aẽ, -oẽ as equivalent to -ão, -ãe, -õe.
-35. In CluV, CruV, CliV, CriV, the 'u' and 'i' are vowels not glides in both Portugal and Brazil.
-36. Epenthesis of (j) before final stressed s in Brazil should not happen after i.
-37. Dialect markers such as "Brazil", "Portugal" should go at the beginning. [DONE]
-38. Portugal exC, êxC should be rendered like eiʃC (FIXME: Does this apply to "Central Portugal" as well?). Unstressed
+	(p.t, b.v, ʃ.t, s.p, etc.). Particular case: [[ab-rogação]] divides as a.brr in Portugal but ab.rr in Brazil. [DONE]
+34. -ão, -ãe, -õe should be recognized as nasal diphthongs with a circumflex added to force stress.
+35. Recognize obsolete -aõ, -aẽ, -oẽ as equivalent to -ão, -ãe, -õe.
+36. In CluV, CruV, CliV, CriV, the 'u' and 'i' are vowels not glides in both Portugal and Brazil.
+37. Epenthesis of (j) before final stressed s in Brazil should not happen after i. [DONE]
+38. Dialect markers such as "Brazil", "Portugal" should go at the beginning. [DONE]
+39. Portugal exC, êxC should be rendered like eiʃC (FIXME: Does this apply to "Central Portugal" as well?). Unstressed
     word-initial exC- should have two pronunciations, one with eiʃC- and the other with (i)ʃC-. exs- needs handling like
 	eiʃs-/(i)ʃs- not like eiss-.
-39. In Portugal, -sj- (e.g. [[transgénico]]) should reduce to a single /ʒ/.
-40. [[transgredir]] should have /z/ (Brazil), /ʒ/ (Portugal) instead of /s/, /ʃ/.
-41. Unstressed -ie- in hiatus should automatically be -iè- in Portugal or maybe -iè-/-ié-?
-42. Initial esC- in Brazil should be either isC- or esC-.
-43. Initial sC- in Portugal and maybe Brazil should be /s/ not /ʃ/.
-44. Deleted epenthetic /i/ should block conversion of syllable-final m/n into nasalization, cf. [[amnésia]] respelled
+40. -sj- (e.g. [[transgénico]]) should reduce to a single /ʒ/. [DONE]
+41. [[transgredir]] should have /z/ (Brazil), /ʒ/ (Portugal) instead of /s/, /ʃ/. [DONE]
+42. Unstressed -ie- in hiatus should automatically be -iè- in Portugal or maybe -iè-/-ié-?
+43. Initial esC- in Brazil should be either isC- or esC-. [DONE]
+44. Initial sC- in Portugal and maybe Brazil should be /s/ not /ʃ/.
+45. Deleted epenthetic /i/ should block conversion of syllable-final m/n into nasalization, cf. [[amnésia]] respelled
     'ami^nési^a'. [DONE]
 ]=]
 
@@ -143,7 +145,7 @@ local SYLDIV = u(0xFFF1) -- used to represent a user-specific syllable divider (
 --   speaker), before syllable-final /l/.
 local vowel = "aɐeɛiɨoɔuüAEẼIƗOƆ"
 local V = "[" .. vowel .. "]"
-local NV_NOT_CFLEX = "[^" .. vowel .. "%^]"
+local NV_NOT_SPACING_CFLEX = "[^" .. vowel .. "%^]"
 local high_front_vocalic = "iIƗy"
 local front_vocalic = "eɛɨẼ" .. high_front_vocalic
 local FRONTV = "[" .. front_vocalic .. "]"
@@ -391,16 +393,19 @@ local function one_term_ipa(text, style, phonetic, err)
 	-- leftwards over clusters that can form onsets.
 	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*" .. C .. "-)(" .. C .. W .. "*" .. V .. ")", "%1.%2")
 	text = rsub(text, "([pbfvktdg])%.([lr])", ".%1%2")
-	-- /tʃ/, /dʒ/ are normally single sounds, but adj- in [[adjetivo]], [[adjunto]] etc. should be 'ad.j'
-	text = rsub(text, "t%.ʃ", ".tʃ")
-	text = rsub(text, "d%.j", ".dj")
-	text = rsub(text, "#a.dj", "#ad.j")
 	if portugal then
-32. Syllabification: "Improper" clusters of non-sibiliant-obstruent + obstruent (pt, bt, bd, dk, kt; ps, bs, bv, bʒ, tz,
-    dv, ks; ft), non-sibiliant-obstruent + nasal (pn, bn, tm, tn, dm, dn, gm, gn), nasal + nasal (mn) are syllabified in
-	Portugal as .pt, .bv, .mn, etc. Note ʃ.t, ʃ.p, ʃ.k, etc. But in Brazil, all of these divide between the consonants
-	(p.t, b.v, ʃ.t, s.p, etc.). Particular case: [[ab-rogação]] divides as a.brr in Portugal but ab.rr in Brazil.
-		FIXME
+		-- "Improper" clusters of non-sibiliant-obstruent + obstruent (pt, bt, bd, dk, kt; ps, bs, bv, bʒ, tz, dv, ks;
+		-- ft), non-sibiliant-obstruent + nasal (pn, bn, tm, tn, dm, dn, gm, gn), nasal + nasal (mn) are syllabified in
+		-- Portugal as .pt, .bv, .mn, etc. Note ʃ.t, ʃ.p, ʃ.k, etc. But in Brazil, all of these divide between the
+		-- consonants (p.t, b.v, ʃ.t, s.p, etc.). Particular case: [[ab-rogação]] divides as a.brr in Portugal but ab.rr
+		-- in Brazil.
+		text = rsub(text, "([pbfvktdg])%.([pbfvktdgsSçzʃʒjmMnNɲʎʁ])", ".%1%2")
+		text = rsub(text, "([mM])%.([nN])", ".%1%2")
+	else
+		-- /tʃ/, /dʒ/ are normally single sounds, but adj- in [[adjetivo]], [[adjunto]] etc. should be 'ad.j'
+		text = rsub(text, "t%.ʃ", ".tʃ")
+		text = rsub(text, "d%.j", ".dj")
+		text = rsub(text, "#a.dj", "#ad.j")
 	end
 	-- All vowels should be separated from adjacent vowels by a syllable division except
 	-- (1) aeo + unstressed i/u, ([[saiba]], [[peixe]], [[noite]], [[Paulo]], [[deusa]], [[ouro]]), except when
@@ -616,10 +621,11 @@ local function one_term_ipa(text, style, phonetic, err)
 		text = rsub(text, "([EO])(s?#)", function(v, after) return brazil_final_vowel[v] .. after end)
 		-- Word-final unstressed -a(s) -> /ɐ/ (not before -mente)
 		text = rsub(text, "A(s?#[# ])", function(after) return "ɐ" .. after end)
-		-- Initial unmarked unstressed non-nasal e- + -sC- -> /i/ ([[estar]], [[esmeralda]]). To defeat this,
-		-- explicitly mark the <e> e.g. as <ệ> or <eh>.
+		-- Initial unmarked unstressed non-nasal e- + -sC- -> /i/ or /e/ ([[estar]], [[esmeralda]]). To defeat this,
+		-- explicitly mark the <e> e.g. as <ệ> or <eh>. We reuse the special symbol /I/ for this purpose, which later
+		-- on is converted to /i/ or /e/.
 		if not rfind(text, "#Es.ç") then
-			text = rsub(text, "#E(s" .. C .. "*%.)", "#i%1")
+			text = rsub(text, "#E(s" .. C .. "*%.)", "#I%1")
 		end
 		-- Remaining unstressed a, e, o without quality mark -> /a/ /e/ /o/.
 		local brazil_unstressed_vowel = {["A"] = "a", ["E"] = "e", ["O"] = "o"}
@@ -687,9 +693,13 @@ local function one_term_ipa(text, style, phonetic, err)
 	text = rsub(text, "(trɐ" .. stress_c .. "*" .. TILDE .. ".)s(" .. V .. ")", "%1z%2")
 	-- word final z -> s
 	text = rsub(text, "z#", "s#")
-	-- s is voiced between vowels (not nasalized) or between vowel and voiced consonant, including across word boundaries;
-	-- may be fed by previous rule
-	text = rsub(text, "(" .. V .. stress_c .. "*Y?%.?)s(" .. wordsep_c .. "*h?[" .. vowel .. voiced_cons .. "])", "%1z%2")
+	-- s is voiced between vowels (not nasalized) or between vowel and voiced consonant, including across word
+	-- boundaries; may be fed by previous rule. We have to split this into two rules before /s/ should not be voiced
+	-- between nasal vowel and another vowel ([[cansar]]) but should be voiced between nasal vowel and a voiced
+	-- consonant ([[transgredir]]). Note that almost all occurrences of nasal vowel + s + voiced consonant are in
+	-- trans- which potentially could be handled above, but there may be others, e.g. [[Flensburg]].
+	text = rsub(text, "(" .. V .. stress_c .. "*Y?%.?)s(" .. wordsep_c .. "*h?[" .. vowel .. "])", "%1z%2")
+	text = rsub(text, "(" .. V .. accent_c .. "*Y?%.?)s(" .. wordsep_c .. "*h?[" .. voiced_cons .. "])", "%1z%2")
 	-- z before voiceless consonant, e.g. [[Nazca]]; c and q already removed
 	text = rsub(text, "z(" .. wordsep_c .. "*[çfkpsʃt])", "%1s%2")
 	--Change Portugal initial /ɨʃ/ to /(i)ʃ/
@@ -704,10 +714,13 @@ local function one_term_ipa(text, style, phonetic, err)
 	end
 	text = rsub(text, "ç", "s")
 	text = rsub(text, "j", "ʒ")
-	-- Reduce identical sibilants, including across word boundaries.
+	-- Reduce identical sibilants/shibilants, including across word boundaries.
 	text = rsub(text, "([szʃʒ])(" .. wordsep_c .. "*)(%1)", "%2%1")
 	if style == "rio" then
-		-- Also reduce shibilant + sibilant ([[descer]], [[as]] [[zonas]]); not in Portugal.
+		-- Also reduce shibilant + sibilant ([[descer]], [[as]] [[zonas]]); not in Portugal, but in Portugal we later
+		-- generate two outputs in this case, either /ʃs/ and /ʒz/ (careful pronunciation) or /ʃ/ and /ʒ/ (natural
+		-- pronunciation). Note that the reduction of /ʃs/ to /ʃ/ in Portugal is different from the reduction of the
+		-- same to /s/ in Brazil.
 		text = rsub(text, "ʃ(" .. wordsep_c .. "*s)", "%1")
 		text = rsub(text, "ʒ(" .. wordsep_c .. "*z)", "%1")
 	end
@@ -939,15 +952,28 @@ function export.IPA(text, style, phonetic)
 		text = rsub(text, "[" .. GR .. MACRON .. "]", "")
 
 		variants = {text}
+		-- Handle i^ and i^^ before a vowel = /i/ or /j/.
 		variants = flatmap(variants, apply_sub("i%^%^(" .. V .. ")", "y%1", "i.%1"))
 		variants = flatmap(variants, apply_sub("i%^(" .. V .. ")", "i.%1", "y%1"))
-		variants = flatmap(variants, apply_sub("i%^%^(" .. NV_NOT_CFLEX .. ")", "Ɨ%1", "I%1"))
-		variants = flatmap(variants, apply_sub("i%^(" .. NV_NOT_CFLEX .. ")", "I%1", "Ɨ%1"))
+		-- Handle i^ and i^^ not before a vowel = optional epenthetic /i/.
+		variants = flatmap(variants, apply_sub("i%^%^(" .. NV_NOT_SPACING_CFLEX .. ")", "Ɨ%1", "I%1"))
+		variants = flatmap(variants, apply_sub("i%^(" .. NV_NOT_SPACING_CFLEX .. ")", "I%1", "Ɨ%1"))
+		-- Handle i* = epenthetic /i/.
 		variants = flatmap(variants, apply_sub("i%*", "I"))
+		-- Handle u^ and u^^ = /u/ or /w/.
+		variants = flatmap(variants, apply_sub("u%^%^", "w", "u."))
+		variants = flatmap(variants, apply_sub("u%^", "u.", "w"))
+		-- Handle e^ and e^^ = /e/ or /i/.
 		variants = flatmap(variants, apply_sub("e%^%^", "e", "i"))
 		variants = flatmap(variants, apply_sub("e%^", "i", "e"))
+		-- Handle o^ and o^^ = /o/ or /u/.
 		variants = flatmap(variants, apply_sub("o%^%^", "o", "u"))
 		variants = flatmap(variants, apply_sub("o%^", "u", "o"))
+		-- Handle ê*/ô*/é*/ó* = same as without asterisk.
+		variants = flatmap(variants, apply_sub("([eo][" .. AC .. CFLEX .. "])%*", "%1"))
+		-- Handle des^ at beginning of word = des or dis+, and des^^ = opposite order.
+		variants = flatmap(variants, apply_sub("#des%^%^", "#dis+", "#des"))
+		variants = flatmap(variants, apply_sub("#des%^", "#des", "#dis+"))
 	else -- Portugal
 		-- Convert grave accents and macrons to explicit dot-under + quality marker.
 		local grave_macron_to_quality = {
@@ -955,6 +981,9 @@ function export.IPA(text, style, phonetic)
 			[MACRON] = CFLEX,
 		}
 		text = rsub(text, "[" .. GR .. MACRON .. "]", function(acc) return grave_macron_to_quality[acc] .. DOTUNDER end)
+		-- ê*/ô* -> é/ó and é*/ó* -> ê/ô (reverse accents)
+		text = rsub(text, "([eo])([" .. AC .. CFLEX .. "])%*", function(eo, acc)
+			return eo .. (acc == CFLEX and AC or CFLEX) end)
 		-- Remove i*, i^ and i^^ not followed by a vowel (i.e. Brazilian epenthetic i), but not i^ and i^^ followed by
 		-- a vowel (which has a totally different meaning, i.e. i or y in Brazil).
 		text = rsub(text, "i[*%^]+(" .. NV_NOT_CFLEX .. ")", "%1")
@@ -990,10 +1019,13 @@ function export.IPA(text, style, phonetic)
 
 		if brazil then
 			result = flatmap(result, apply_sub("Ẽ", "e", {"careful pronunciation"}, "i", {"natural pronunciation"}))
+			result = flatmap(result, apply_sub("I", "i", nil, "e", nil)
 		else -- Portugal
 			result = flatmap(result, apply_sub("W", "", nil, "w", {"regional"}))
 			result = flatmap(result, apply_sub("ʃ([." .. ipa_stress .. "])s",
 					"ʃ%1s", {"careful pronunciation"}, "%1ʃ", {"natural pronunciation"}))
+			result = flatmap(result, apply_sub("ʒ([." .. ipa_stress .. "])z",
+					"ʒ%1z", {"careful pronunciation"}, "%1ʒ", {"natural pronunciation"}))
 			result = flatmap(result, apply_sub(item, "Ɔ", "o", nil, "ɔ", nil))
 		end
 
