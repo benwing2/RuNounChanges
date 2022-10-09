@@ -1,7 +1,10 @@
-;Before [ɫ]
+;Should have unstressed [a] Before [ɫ] in Portugal
 {{User:Benwing2/pt-IPA|acalmar}}
+;Should have unstressed [ɛ] Before [ɫ] in Portugal
 {{User:Benwing2/pt-IPA|túnel}}
 {{User:Benwing2/pt-IPA|beldade}}
+;Should have /ol/, /ɔl/ in Portugal
+{{User:Benwing2/pt-IPA|Moldávi^a}}
 ;Next two sould have /ʃs/ (careful pronunciation), /ʃ/ (natural pronunciation) in Portugal
 {{User:Benwing2/pt-IPA|nascimento}}
 {{User:Benwing2/pt-IPA|fascículo}}
@@ -17,10 +20,12 @@
 {{User:Benwing2/pt-IPA|crítico}}
 ;Should have palatal t
 {{User:Benwing2/pt-IPA|br=Vié̱ti^nã}}
+;Use of ọ without quality marker in unstressed syllable; should have /ɔ/
 {{User:Benwing2/pt-IPA|fọrrọbọdó}}
 {{User:Benwing2/pt-IPA|br=Róliwúde|pt=Holiude}}
 ;o should be ò in Portugal, ex- should be es- in Brazil, eis- in Portugal
 {{User:Benwing2/pt-IPA|êxtra-ordinário}}
+;Use of line-under to indicate secondary stress on first syllable
 {{User:Benwing2/pt-IPA|cô̱adòção}}
 {{User:Benwing2/pt-IPA|br=des^i.onização}}
 ;Should have /jon/ as ion- is treated as if word-initial
@@ -99,8 +104,6 @@
 {{User:Benwing2/pt-IPA|pt=hērdeiro,+|pagename=herdeiro}}
 ;Portugal final -e should be (ɨ), probably suppressed before a vowel in the next word
 {{User:Benwing2/pt-IPA|Madride}}
-;Should have /ol/, /ɔl/ in Portugal
-{{User:Benwing2/pt-IPA|Moldávi^a}}
 {{User:Benwing2/pt-IPA|br=nêodími^o|pt=néòdímio,niodímio}}
 ;Should generate /samowa/ as alternative pronunciation, marked as regional
 {{User:Benwing2/pt-IPA|pt=Samoa,Sàmoa}}
@@ -133,7 +136,7 @@
 {{User:Benwing2/pt-IPA|abrupi^^tamente}}
 ;i*, i^ and i^^ should not affect stress; should have /dʒig.nu/ and /dʒi.gi.nu/ with different syllabifications; Portugal /di.gnu/
 {{User:Benwing2/pt-IPA|dighi^^no}}
-{{User:Benwing2/pt-IPA|Arak^ine}}
+{{User:Benwing2/pt-IPA|Araki^ne}}
 ;Syllable division as a.ct in Portugal
 {{User:Benwing2/pt-IPA|actínyo}}
 ;Syllable division as a.mn in Portugal, and mn should be /mn/ in Portugal
@@ -172,7 +175,7 @@
 {{User:Benwing2/pt-IPA|elétrò:deposição}}
 {{User:Benwing2/pt-IPA|elétrò:cárdio:grama}}
 ;Combines many things
-{{User:Benwing2/pt-IPA|elétrò:màgh(^i)néticamente}}
+{{User:Benwing2/pt-IPA|elétrò:màghi^néticamente}}
 {{User:Benwing2/pt-IPA|elétrò:luminescêncya}}
 ;'s' is /s/ here
 {{User:Benwing2/pt-IPA|elétrò:sérra}}
@@ -235,3 +238,7 @@
 {{User:Benwing2/pt-IPA|transgredir}}
 {{User:Benwing2/pt-IPA|translàção}}
 {{User:Benwing2/pt-IPA|obi^^zequyar}}
+;Secondary stress should get converted to primary.
+{{User:Benwing2/pt-IPA|ô*nòmato:pé*ia}}
+Unstressed -ie- in hiatus should automatically lead to -iè- in Portugal
+{{User:Benwing2/pt-IPA|br=óste^ò:mielite}}
