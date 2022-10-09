@@ -88,6 +88,7 @@ Author: Benwing
 44. Initial sC- in Portugal and maybe Brazil should be /s/ not /ʃ/.
 45. Deleted epenthetic /i/ should block conversion of syllable-final m/n into nasalization, cf. [[amnésia]] respelled
     'ami^nési^a'. [DONE]
+46. Portugal 'o', 'os' should be unstressed with /u/, not have /ɔ/.
 ]=]
 
 local export = {}
@@ -158,17 +159,41 @@ local quality = AC .. CFLEX .. GR .. MACRON
 local quality_c = "[" .. quality .. "]"
 local stress = LINEUNDER .. DOTOVER .. DOTUNDER .. ipa_stress
 local stress_c = "[" .. stress .. "]"
-local non_primary_stress = LINEUNDER .. DOTOVER .. DOTUNDER .. "ˌ"
+local non_primary_stress = LINEUNDER .. DOTUNDER .. "ˌ"
 local non_primary_stress_c = "[" .. non_primary_stress .. "]"
 local accent = quality .. stress .. TILDE
 local accent_c = "[" .. accent .. "]"
-local charsep = accent .. "_." .. SYLDIV
+-- "component_sep" means any symbol that may separate word components (not including #, which is added at a certain
+-- point next to certain word components so that the adjacent characters are treated as if they are at word bounaries).
+local component_sep = "+:@*%-"
+local component_sep_c = "[" .. component_sep .. "]"
+-- "syl_transp" means any symbol that should be "transparent" (i.e. ignored) during syllabification processes. This
+-- should include a subset of the component_sep characters, currently + and * (which ++ is converted into).
+local syl_transp = "+*"
+local syl_transp_c = "[" .. syl_transp .. "]"
+-- Zero or more syllable-transparent component separators; used during syllabification.
+local STC = syl_transp_c .. "*"
+-- Syllable divider (auto-inserted or user-specified).
+local syldiv = "." .. SYLDIV
+local syldiv_c = "[" .. syldiv .. "]"
+-- "charsep" means any symbol that may separate the individual characters that make up a word, and which should be
+-- ignored for e.g. consonant-consonant assimilation processes. This currently includes accents and syllable dividers.
+local charsep = accent .. syldiv
 local charsep_c = "[" .. charsep .. "]"
-local wordsep = charsep .. " #"
+local word_divider = " #"
+-- "wordsep_not_component_sep" means the same as "wordsep" below but excludes syllable-transparent component separators.
+-- It is used in other collections of symbols rather than by itself.
+local wordsep_not_syl_transp = charsep .. word_divider
+-- "wordsep" means any symbol that may separate the individual characters that make up a word or may separate words or
+-- components, and which should be ignored for e.g. consonant-consonant assimilation processes that operate across
+-- words. This currently includes everything in "charsep" and "component_sep" plus symbols that may divide words.
+local wordsep = wordsep_not_syl_transp .. component_sep
 local wordsep_c = "[" .. wordsep .. "]"
-local C = "[^" .. vowel .. wordsep .. "]" -- consonant
-local C_NOT_H_OR_GLIDE = "[^h" .. glide .. vowel .. wordsep .. "]" -- consonant other than h, w or y
-local C_OR_WORD_BOUNDARY = "[^" .. vowel .. charsep .. "]" -- consonant or word boundary
+local C = "[^" .. vowel .. wordsep .. "_]" -- consonant
+-- consonant or syllable-transparent component separator
+local C_OR_SYL_TRANSP = "[^" .. vowel .. wordsep_not_syl_transp .. "_]"
+local C_NOT_H_OR_GLIDE = "[^h" .. glide .. vowel .. wordsep .. "_]" -- consonant other than h, w or y
+local C_OR_WORD_BOUNDARY = "[^" .. vowel .. charsep .. "_]" -- consonant or word boundary
 local voiced_cons = "bdgjlʎmnɲŋrɾʁvwyzʒʤ" -- voiced sound
 
 -- Unstressed words with vowel reduction in Brazil and Portugal.
@@ -367,9 +392,6 @@ local function one_term_ipa(text, style, phonetic, err)
 	text = rsub(text, "ss", "S")
 	text = rsub(text, "(" .. C .. ")%1", "%1")
 
-	-- Respell [[homenzinho]] as 'homemzinho' so it is stressed correctly.
-	text = rsub(text, "n(" .. SYLDIV .. "?ziɲos?#)", "m%1")
-
 	if brazil then
 		-- Palatalize t/d + i -> affricates in Brazil. Use special unitary symbols, which we later convert to regular
 		-- affricate symbols, so we can distinguish palatalized d from written dj.
@@ -389,23 +411,35 @@ local function one_term_ipa(text, style, phonetic, err)
 	-- that we want to allow the user to override this by explicitly adding a . between the <i> and <a>. So we need
 	-- to keep the distinction between user-specified . and auto-determined . until after stress assignment.
 	text = rsub(text, "%.", SYLDIV)
+	-- We have various characters indicating divisions between word components where we want to treat the components
+	-- more or less like separate words (e.g. -mente, -zinho/-zinha). Some such "characters" are digraphs, which we
+	-- convert internally to single characters to simplify the code. Here, -- separates off -mente/-zinho/-zinha and
+	-- ++ separates off prefixes. We want to ignore at least + and ++ (converted to *) for syllabification purposes.
+	text = rsub(text, "%-%-", "@")
+	text = rsub(text, "%+%+", "*")
+
+	-- Respell [[homenzinho]] as 'homemzinho' so it is stressed correctly.
+	text = rsub(text, "n(" .. SYLDIV .. "?ziɲos?#)", "m%1")
+
 	-- Divide before the last consonant (possibly followed by a glide). We then move the syllable division marker
-	-- leftwards over clusters that can form onsets.
-	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*" .. C .. "-)(" .. C .. W .. "*" .. V .. ")", "%1.%2")
-	text = rsub(text, "([pbfvktdg])%.([lr])", ".%1%2")
+	-- leftwards over clusters that can form onsets. Note that syllable-transparent component separators will always
+	-- be (and will continue to be) to the left of syllable dividers rather than to the right, so we don't need to
+	-- check for the latter situation.
+	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*" .. C_OR_SYL_TRANSP .. "-)(" .. C .. STC .. W .. "*" .. V .. ")", "%1.%2")
+	text = rsub(text, "([pbfvktdg]" .. STC .. ")%.([lr])", ".%1%2")
 	if portugal then
 		-- "Improper" clusters of non-sibiliant-obstruent + obstruent (pt, bt, bd, dk, kt; ps, bs, bv, bʒ, tz, dv, ks;
 		-- ft), non-sibiliant-obstruent + nasal (pn, bn, tm, tn, dm, dn, gm, gn), nasal + nasal (mn) are syllabified in
 		-- Portugal as .pt, .bv, .mn, etc. Note ʃ.t, ʃ.p, ʃ.k, etc. But in Brazil, all of these divide between the
 		-- consonants (p.t, b.v, ʃ.t, s.p, etc.). Particular case: [[ab-rogação]] divides as a.brr in Portugal but ab.rr
 		-- in Brazil.
-		text = rsub(text, "([pbfvktdg])%.([pbfvktdgsSçzʃʒjmMnNɲʎʁ])", ".%1%2")
-		text = rsub(text, "([mM])%.([nN])", ".%1%2")
+		text = rsub(text, "([pbfvktdg]" .. STC .. ")%.([pbfvktdgsSçzʃʒjmMnNɲʎʁ])", ".%1%2")
+		text = rsub(text, "([mM]" .. STC .. ")%.([nN])", ".%1%2")
 	else
 		-- /tʃ/, /dʒ/ are normally single sounds, but adj- in [[adjetivo]], [[adjunto]] etc. should be 'ad.j'
-		text = rsub(text, "t%.ʃ", ".tʃ")
-		text = rsub(text, "d%.j", ".dj")
-		text = rsub(text, "#a.dj", "#ad.j")
+		text = rsub(text, "(t" .. STC .. ")%.(ʃ)", ".%1%2")
+		text = rsub(text, "(d" .. STC .. ")%.(j)", ".%1%2")
+		text = rsub(text, "(#a" .. STC .. ")%.(d" .. STC .. ")(j)", "%1%2.%3")
 	end
 	-- All vowels should be separated from adjacent vowels by a syllable division except
 	-- (1) aeo + unstressed i/u, ([[saiba]], [[peixe]], [[noite]], [[Paulo]], [[deusa]], [[ouro]]), except when
@@ -421,21 +455,21 @@ local function one_term_ipa(text, style, phonetic, err)
 	-- [[Iaundé]], [[Raul]]. Note that in cases like [[Jaime]], [[queimar]], [[fauna]], [[baile]], [[Paulo]], [[beira]],
 	-- where a vowel follows the m/n/l/r, there will already be a syllable division between i.m, u.n, etc., which will
 	-- block the following substitution.
-	text = rsub(text, "([aeo]" .. accent_c .. "*)([iu][mnlr])", "%1.%2")
+	text = rsub(text, "([aeo]" .. accent_c .. "*" .. STC .. ")([iu]" .. STC .. "[mnlr])", "%1.%2")
 	-- Also put a syllable divider between [aeo].[iu].ɲ coming from 'nh' ([[rainha]], [[moinho]]).
-	text = rsub(text, "([aeo]" .. accent_c .. "*)([iu]%.ɲ)", "%1.%2")
+	text = rsub(text, "([aeo]" .. accent_c .. "*" .. STC .. ")([iu]" .. STC .. "%.ɲ)", "%1.%2")
 	-- Prevent syllable division between final -ui(s), -iu(s). This should precede the following rule that prevents
 	-- syllable division between ai etc., so that [[saiu]] "he left" gets divided as sa.iu.
-	text = rsub(text, "(u" .. accent_c .. "*)(is?#)", "%1" .. TEMP1 .. "%2")
-	text = rsub(text, "(i" .. accent_c .. "*)(us?#)", "%1" .. TEMP1 .. "%2")
+	text = rsub(text, "(u" .. accent_c .. "*" .. STC .. ")(is?#)", "%1" .. TEMP1 .. "%2")
+	text = rsub(text, "(i" .. accent_c .. "*" .. STC .. ")(us?#)", "%1" .. TEMP1 .. "%2")
 	-- Prevent syllable division between ai, ou, etc. unless either the second vowel is accented [[saído]]) or there's
 	-- a TEMP1 marker already after the second vowel (which will occur e.g. in [[saiu]] divided as 'sa.iu').
-	text = rsub_repeatedly(text, "([aeo]" .. accent_c .. "*)([iu][^" .. accent .. TEMP1 .. "])", "%1" .. TEMP1 .. "%2")
+	text = rsub_repeatedly(text, "([aeo]" .. accent_c .. "*" .. STC .. ")([iu][^" .. accent .. TEMP1 .. "])", "%1" .. TEMP1 .. "%2")
 	-- Prevent syllable division between nasal diphthongs unless somehow the second vowel is accented.
-	text = rsub_repeatedly(text, "(a" .. TILDE .. ")([eo][^" .. accent .. "])", "%1" .. TEMP1 .. "%2")
-	text = rsub_repeatedly(text, "(o" .. TILDE .. ")(e[^" .. accent .. "])", "%1" .. TEMP1 .. "%2")
+	text = rsub_repeatedly(text, "(a" .. TILDE .. STC .. ")([eo][^" .. accent .. "])", "%1" .. TEMP1 .. "%2")
+	text = rsub_repeatedly(text, "(o" .. TILDE .. STC .. ")(e[^" .. accent .. "])", "%1" .. TEMP1 .. "%2")
 	-- All other sequences of vowels get divided.
-	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*)(" .. V .. ")", "%1.%2")
+	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*" .. STC .. ")(" .. V .. ")", "%1.%2")
 	-- Remove the marker preventing syllable division.
 	text = rsub(text, TEMP1, "")
 
@@ -448,12 +482,15 @@ local function one_term_ipa(text, style, phonetic, err)
 	-- primary stresses; the first one will be converted to secondary stress down below. Note that `syllables` is
 	-- a list that includes the syllable dividers as separate items (either SYLDIV if user-specified, or . if
 	-- auto-added), so the actual syllables are found at indices 1, 3, 5, etc.
-	local function accent_word(word, syllables)
+	local function accent_word(word)
 		-- Check if stress already marked. We check first for primary stress before checking for tilde in case both
 		-- primary stress and tilde occur, e.g. [[bênção]], [[órgão]], [[hétmã]], [[connosco]] respelled 'cõnôsco'.
 		if rfind(word, "ˈ") then
-			return
+			return word
 		end
+
+		-- Preserve the syllable divider, which may be auto-added or user-specified.
+		local syllables = m_strutils.capturing_split(word, "([." .. SYLDIV .. "])")
 
 		-- Check for nasal vowel marked with tilde and without non-primary stress; assign stress to the last such
 		-- syllable in case there's more than one tilde, e.g. [[pãozão]]. Note, this can happen in the part before
@@ -462,7 +499,7 @@ local function one_term_ipa(text, style, phonetic, err)
 			local changed
 			syllables[i], changed = rsubb(syllables[i], "(" .. V .. quality_c .. "*)" .. TILDE, "%1ˈ" .. TILDE)
 			if changed then
-				return
+				return table.concat(syllables)
 			end
 		end
 
@@ -484,55 +521,61 @@ local function one_term_ipa(text, style, phonetic, err)
 		else
 			sylno = #syllables
 		end
+		-- If we are on a syllable without a vowel (can happen if it's the last syllable in a non-final component of a
+		-- word), stress the syllable to the left.
+		while sylno > 1 and not rfind(syllables[sylno], V) do
+			sylno = sylno - 2
+		end
 		if rfind(syllables[sylno], stress_c) then
 			-- Don't do anything if stress mark already present. (Since we check for primary stress above, this check
 			-- specifically affects non-primary stress.)
-			return
+			return word
 		end
 		-- Add stress mark after first vowel (and any quality mark).
 		syllables[sylno] = rsub(syllables[sylno], "^(.-" .. V .. quality_c .. "*)", "%1ˈ")
+		return table.concat(syllables)
 	end
 
-	-- Split the text into words and the words into syllables so we can correctly add stress to words without it.
+	-- Split the text into words and the words into components so we can correctly add stress to components without it.
 	local words = rsplit(text, " ")
 	for j, word in ipairs(words) do
-		-- Preserve the syllable divider, which may be auto-added or user-specified.
-		local syllables = m_strutils.capturing_split(word, "([." .. SYLDIV .. "])")
-
-		if rfind(word, "[%." .. SYLDIV .. "]men%.te#") then
-			word = rsub(word, "[%." .. SYLDIV .. "](men%.te#)", "#@#%1")
+		-- Words ends in -mente, -zinho(s) or -zinha(s); add primary stress to the preceding portion as if stressed
+		-- (e.g. [[agitadamente]] -> 'agitádamente') unless already stressed (e.g. [[rapidamente]] respelled
+		-- 'rápidamente'). The primary stress will be converted to secondary stress further below. Essentially, we
+		-- rip the word apart into two words ('mente'/'zinho' and the preceding portion) and
+		-- stress each one independently. Note that the effect of adding a primary stress will also be to cause
+		-- an error if stressed 'e' or 'o' is not properly marked as é/ê or ó/ô; cf. [[certamente]], which must
+		-- be respelled 'cértamente', and [[posteriormente]], which must be respelled 'posteriôrmente', just as
+		-- with [[certa]] and [[posterior]]. To prevent this happening, you can add an accent to -mente or
+		-- -zinho, e.g. [[dormente]] respelled 'dormênte', [[vizinho]] respelled 'vizínho'.
+		if rfind(word, syldiv_c .. "men%.te#") then
+			word = rsub(word, syldiv_c .. "(men%.te#)", "@%1")
 		else
-			word = rsub(rfind(word, "[%." .. SYLDIV .. "]zi%.ɲ[oa]s?#") then
-			local mente_syllables
-			-- Words ends in -mente, -zinho(s) or -zinha(s); add primary stress to the preceding portion as if stressed
-			-- (e.g. [[agitadamente]] -> 'agitádamente') unless already stressed (e.g. [[rapidamente]] respelled
-			-- 'rápidamente'). The primary stress will be converted to secondary stress further below. Essentially, we
-			-- rip the word apart into two words ('mente'/'zinho' and the preceding portion) and
-			-- stress each one independently. Note that the effect of adding a primary stress will also be to cause
-			-- an error if stressed 'e' or 'o' is not properly marked as é/ê or ó/ô; cf. [[certamente]], which must
-			-- be respelled 'cértamente', and [[posteriormente]], which must be respelled 'posteriôrmente', just as
-			-- with [[certa]] and [[posterior]]. To prevent this happening, you can add an accent to -mente or
-			-- -zinho, e.g. [[dormente]] respelled 'dormênte', [[vizinho]] respelled 'vizínho'.
-			mente_syllables = {}
-			mente_syllables[3] = table.remove(syllables)
-			mente_syllables[2] = table.remove(syllables) -- this will be a syllable divider
-			mente_syllables[1] = table.remove(syllables)
-			table.remove(syllables) -- this will be a syllable divider
-			accent_word(table.concat(syllables, "") .. "#", syllables)
-			accent_word("#" .. table.concat(mente_syllables, ""), mente_syllables)
-			-- Reconstruct the word. Put a # instead of . between the two parts so e.g. the vowel at the end
-			-- of the first part is treated as word-final. Don't cache the concat() before accent_word() changes
-			-- the syllables.
-			words[j] = table.concat(syllables, "") .. "#" .. table.concat(mente_syllables, "")
-		else
-			accent_word(word, syllables)
-			-- Reconstruct the word.
-			words[j] = table.concat(syllables, "")
+			word = rsub(word, syldiv_c .. "(zi%.ɲ[oa]s?#)", "@%1")
 		end
+
+		-- Split on components; preserve the component divider.
+		local components = m_strutils.capturing_split(word, "(" .. component_sep_c .. syldiv_c .. "*)")
+		for k = 1, #components, -2 do -- 2 because of the component dividers.
+			-- Don't add stress to components followed by ++ (converted to *).
+			if k == #components or not rfind(components[k + 1], "%*") then
+				components[k] = accent_word(components[k])
+			end
+		end
+		-- Reconstruct the word.
+		words[j] = table.concat(components, "")
 	end
 
 	-- Reconstruct the text from the words.
 	text = table.concat(words, " ")
+
+	-- Add word boundaries around component separators. We add them on both sides of - and -- (converted to @), which
+	-- behave mostly like a true word separator, but only on the right side of other component separators. Note that
+	-- some component separators (+ and ++ [converted to *]) are transparent to syllable boundaries, meaning that there
+	-- may be a syllable divider directly to the right of the component separator. To simplify the code below, we put
+	-- the word boundary marker on the outside of the syllable boundary marker.
+	text = rsub(text, "([%-@]" .. syldiv_c .. "?)", "#%1#")
+	text = rsub(text, "([+:*]" .. syldiv_c .. "?)", "%1#")
 
 	-- I has served its purpose (not considered when accenting).
 	text = rsub(text, "I", "i")
@@ -567,8 +610,6 @@ local function one_term_ipa(text, style, phonetic, err)
 		-- In Portugal, final -n is really /n/, and preceding unstressed e/o are open.
 		text = rsub(text, "n#", "N#")
 		text = rsub(text, "([EO])(N#)", "%1" .. AC .. "%2")
-		-- In Portugal, final unstressed -r opens the preceding e.
-		text = rsub(text, "(E)(r#)", "%1" .. AC .. "%2")
 	end
 	-- Acute accent on final -em ([[além]], [[também]]) and final -ens ([[parabéns]]) does not indicate an open
 	-- pronunciation.
@@ -620,7 +661,7 @@ local function one_term_ipa(text, style, phonetic, err)
 		local brazil_final_vowel = {["E"] = "i", ["O"] = "u"}
 		text = rsub(text, "([EO])(s?#)", function(v, after) return brazil_final_vowel[v] .. after end)
 		-- Word-final unstressed -a(s) -> /ɐ/ (not before -mente)
-		text = rsub(text, "A(s?#[# ])", function(after) return "ɐ" .. after end)
+		text = rsub(text, "A(s?#[^@])", function(after) return "ɐ" .. after end)
 		-- Initial unmarked unstressed non-nasal e- + -sC- -> /i/ or /e/ ([[estar]], [[esmeralda]]). To defeat this,
 		-- explicitly mark the <e> e.g. as <ệ> or <eh>. We reuse the special symbol /I/ for this purpose, which later
 		-- on is converted to /i/ or /e/.
@@ -632,17 +673,28 @@ local function one_term_ipa(text, style, phonetic, err)
 		text = rsub(text, "([AEO])([^" .. accent .. "])",
 			function(v, after) return brazil_unstressed_vowel[v] .. after end)
 	elseif portugal then
-		text = rsub(text, "Al(" .. C .. "*[.#])", "al%1")
-		text = rsub(text, "El(" .. C .. "*[.#])", "ɛl%1")
-		-- The symbol Ɔ is later converter to /o/ or /ɔ/.
-		text = rsub(text, "Ol(" .. C .. "*[.#])", "Ɔl%1")
+		-- In Portugal, final unstressed -r opens the preceding e.
+		text = rsub(text, "(E)(r#)", "%1" .. AC .. "%2")
+		-- In Portugal, unstressed a/e/o before coda l takes on an open quality. Note that any /l/ directly after a
+		-- vowel must be a coda /l/ because otherwise there would be a syllable boundary marker.
+		text = rsub(text, "([AEO])l", function(v)
+			-- The symbol Ɔ is later converted to /o/ or /ɔ/.
+			local vowel_to_before_l = {["A"] = "a", ["E"] = "ɛ", ["O"] = "Ɔ"}
+			return vowel_to_before_l[v] .. "l"
+		end)
 		
 		-- Initial unmarked unstressed non-nasal e- + -sC- -> /ɨ/ (later changed to /(i)/)
-		text = rsub(text, "#E(s" .. C .. "*%.)", "#ɨ%1")
-		-- Initial unmarked unstressed non-nasal e- -> /i/
+		text = rsub(text, "#Es", "#ɨs")
+		-- Initial unmarked unstressed non-nasal e- -> /i/.
 		text = rsub(text, "#E([^" .. accent .. "])", "#i%1")
-		-- Initial unmarked unstressed non-nasal o- -> /ɔ/
-		text = rsub(text, "#O([^" .. accent .. "])", "#ɔ%1")
+		-- Initial unmarked unstressed non-nasal o- -> /ɔ/ if another vowel follows (not 'o', 'os' by themselves).
+		text = rsub(text, "(#O)(.-#)", function(o, rest)
+			if rfind(rest, "^[^" .. accent .. "]") and rfind(rest, V) then
+				return "#ɔ" .. rest
+			else
+				return o .. rest
+			end
+		end)
 		-- All other unmarked unstressed non-nasal e, o, a -> /ɨ/ /u/ /ɐ/
 		local portugal_unstressed_vowel = {["A"] = "ɐ", ["E"] = "ɨ", ["O"] = "u"}
 		text = rsub(text, "([AEO])([^" .. accent .. "])",
@@ -677,9 +729,12 @@ local function one_term_ipa(text, style, phonetic, err)
 
 	if brazil then
 		-- Epenthesize /(j)/ in [[faz]], [[mas]], [[três]], [[dez]], [[feroz]], [[luz]], [[Jesus]], etc. Note, this only
-		-- triggers at actual word boundaries (not before -mente/-zinho), and not on nasal vowels or diphthongs. To
-		-- defeat this (e.g. in plurals), respell using 'ss' or 'hs'.
-		text = rsub(text, "(" .. V .. "ˈ)([sz]#[# ])", "%1Y%2")
+		-- triggers at actual word boundaries (not before -mente), and not on nasal vowels or diphthongs. To defeat this
+		-- (e.g. in plurals), respell using 'ss' or 'hs'.
+		text = rsub(text, "(" .. V .. "ˈ)([sz]#[^@])", "%1Y%2")
+		-- Also should happen at least before + (cf. [[rapazinho]] respelled 'rapaz+inho', [[vozinha]] respelled
+		-- 'vóz+inha').
+		text = rsub(text, "(" .. V .. "ˈ)([sz]%+)", "%1Y%2")
 		-- But should not happen after /i/.
 		text = rsub(text, "iˈY", "iˈ")
 	end
@@ -733,7 +788,7 @@ local function one_term_ipa(text, style, phonetic, err)
 	-- Initial r or l/n/s/z + r -> strong r (ʁ).
 	text = rsub(text, "([#" .. TILDE .. "lszʃʒ]%.?)r", "%1ʁ")
 	if brazil then
-		-- Coda r before vowel in verbs is /(ɾ)/.
+		-- Word-final r before vowel in verbs is /(ɾ)/.
 		text = rsub(text, "([aɛei]ˈ)r(#" .. wordsep_c .. "*h?" .. V .. ")", "%1(ɾ)%2")
 		-- Coda r before vowel is /ɾ/.
 		text = rsub(text, "r(" .. C .. "*[.#]" .. wordsep_c .. "*h?" .. V .. ")", "%1ɾ%2")
@@ -757,13 +812,17 @@ local function one_term_ipa(text, style, phonetic, err)
 		text = rsub(text, "R", "ʁ")
 	end
 	
-	-- Diphtong <ei>
+	-- Diphthong <ei>
 	if brazil then
 		-- In Brazil, add optional /j/ in <eir>, <eij>, <eig> and <eix> (as in [[cadeira]], [[beijo]], [[manteiga]] and
 		-- [[peixe]]).
 		text = rsub(text, "(e" .. accent_c .. "*)i(%.[ɾʒgʃ])", "%1(j)%2")
 		-- [In Brazil, add optional /j/ in <aix> (as in [[caixa]] and [[baixo]]).] -- This was added by an IP, see
-		-- [[Special:Contributions/186.212.6.138]]; this seems non-standard to me. (Benwing2)
+		-- [[Special:Contributions/186.212.6.138]]; this seems non-standard to me. If we are to include it, it should
+		-- not be done this way, but as two separate outputs with the one lacking the /j/ marked with a qualifier such
+		-- as "non-standard"; compare the way the initial enC- is handled (near the end of export.IPA()), where there
+		-- are two outputs, with /ẽC-/ marked as "careful pronunciation" and /ĩC-/ marked as "natural pronunciation".
+		-- (Benwing2)
 		-- text = rsub(text, "(a" .. accent_c .. "*)i(%.ʃ)", "%1(j)%2")
 	end
 	if style == "spt"  then
@@ -838,8 +897,10 @@ local function one_term_ipa(text, style, phonetic, err)
 	text = rsub(text, "H", "h")
 
 	-- Stress marks.
-	-- Change # in the middle of a word (words ending in -mente/-zinho) back to period.
-	text = rsub_repeatedly(text, "([^ #])#([^ #])", "%1.%2")
+	-- Component separators that aren't transparent to syllabification need to be made into syllable dividers.
+	text = rsub(text, "[:@%-]", ".")
+	-- IPA stress marks in components followed by ++ (converted to *) should be removed.
+	text = rsub(text, ipa_stress_c .. "([^" .. word_divider .. component_sep .. "]*%*)", "%1")
 	-- Move IPA stress marks to the beginning of the syllable.
 	text = rsub_repeatedly(text, "([#.])([^#.]*)(" .. ipa_stress_c .. ")", "%1%3%2")
 	-- Suppress syllable mark before IPA stress indicator.
@@ -847,8 +908,9 @@ local function one_term_ipa(text, style, phonetic, err)
 	-- Make all primary stresses but the last one in a given word be secondary. May be fed by the first rule above.
 	text = rsub_repeatedly(text, "ˈ([^ #]+)ˈ", "ˌ%1ˈ")
 
-	-- Remove # symbols at word/text boundaries, as well as _ to force separate interpretation, and recompose.
-	text = rsub(text, "[#_]", "")
+	-- Remove # symbols at word/text boundaries, as well as component separators and _ to force separate interpretation,
+	-- and recompose.
+	text = rsub(text, "[#_" .. component_sep .. "]", "")
 	text = mw.ustring.toNFC(text)
 
 	return text
@@ -895,10 +957,16 @@ function export.IPA(text, style, phonetic)
 	-- Make prefixes unstressed with vowel reduction unless they have an explicit stress marker;
 	-- likewise for certain monosyllabic words (e.g. [[o]], [[se]], [[de]], etc.; also [[a]], [[das]], etc.
 	-- in Portugal) without stress marks.
-	local words = rsplit(text, " ")
-	for i, word in ipairs(words) do
-		if rfind(word, "%-$") and not rfind(word, accent_c) or unstressed_words[word] or
-			not brazil and unstressed_full_vowel_words_brazil[word] then
+	local words = m_strutils.capturing_split(word, "([ %-]+)")
+	local function word_is_prefix(i)
+		-- Check for prefixes, either a final prefix (followed by "-" separator, then a blank word, then no more
+		-- words) or a non-final prefix (followed by "- " separator).
+		return (i == #words - 2 and words[i + 1] == "-" and words[i + 2] == "" or i < #words and iwords[i + 1] == "- ") and 
+			not rfind(word, accent_c)
+	end
+	for i = 1, #words, 2 do
+		local word = words[i]
+		if word_is_prefix(i) or unstressed_words[word] or not brazil and unstressed_full_vowel_words_brazil[word] then
 			-- add DOTOVER to the last vowel not the first one, or we will mess up 'que' by
 			-- adding the DOTOVER after the 'u'
 			words[i] = rsub(word, "^(.*" .. V .. quality_c .. "*)", "%1" .. DOTOVER)
@@ -906,20 +974,17 @@ function export.IPA(text, style, phonetic)
 	end
 	-- Make certain monosyllabic words (e.g. [[meu]], [[com]]; also [[a]], [[das]], etc. in Brazil)
 	-- without stress marks be unstressed without vowel reduction.
-	for i, word in ipairs(words) do
-		if rfind(word, "%-$") and not rfind(word, accent_c) or unstressed_full_vowel_words[word] or
+	for i = 1, #words, 2 do
+		local word = words[i]
+		if word_is_prefix(i) or unstressed_full_vowel_words[word] or
 			brazil and unstressed_full_vowel_words_brazil[word] then
 			-- add DOTUNDER to the first vowel not the last one, or we will mess up 'meu' by
 			-- adding the DOTUNDER after the 'u'; add after a quality marker for à, às
 			words[i] = rsub(word, "^(.-" .. V .. quality_c .. "*)", "%1" .. DOTUNDER)
 		end
 	end
+	text = table.concat(words)
 
-	text = table.concat(words, " ")
-	-- Convert hyphens to spaces, to handle [[Áustria-Hungria]], [[franco-italiano]], etc.
-	text = rsub(text, "%-", " ")
-	-- canonicalize multiple spaces again, which may have been introduced by hyphens
-	text = canon_spaces(text)
 	-- now eliminate punctuation
 	text = rsub(text, "[!?']", "")
 	-- put # at word beginning and end and double ## at text/foot boundary beginning/end
@@ -971,9 +1036,9 @@ function export.IPA(text, style, phonetic)
 		variants = flatmap(variants, apply_sub("o%^", "u", "o"))
 		-- Handle ê*/ô*/é*/ó* = same as without asterisk.
 		variants = flatmap(variants, apply_sub("([eo][" .. AC .. CFLEX .. "])%*", "%1"))
-		-- Handle des^ at beginning of word = des or dis+, and des^^ = opposite order.
-		variants = flatmap(variants, apply_sub("#des%^%^", "#dis+", "#des"))
-		variants = flatmap(variants, apply_sub("#des%^", "#des", "#dis+"))
+		-- Handle des^ at beginning of word = des or dis++, and des^^ = opposite order.
+		variants = flatmap(variants, apply_sub("#des%^%^", "#dis++", "#des"))
+		variants = flatmap(variants, apply_sub("#des%^", "#des", "#dis++"))
 	else -- Portugal
 		-- Convert grave accents and macrons to explicit dot-under + quality marker.
 		local grave_macron_to_quality = {
