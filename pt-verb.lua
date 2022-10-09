@@ -1176,6 +1176,68 @@ local function replace_reflexive_indicators(slot, form)
 end
 
 
+-- Apply vowel alternation to stem.
+local function apply_vowel_alternation(stem, alternation)
+	local ret, err
+	-- Treat final -gu, -qu as a consonant, so the previous vowel can alternate (e.g. conseguir -> consigo).
+	-- This means a verb in -guar can't have a u-ú alternation but I don't think there are any verbs like that.
+	stem = rsub(stem, "([gq])u$", "%1" .. TEMPC1)
+	local before_last_vowel, last_vowel, after_last_vowel = rmatch(stem, "^(.*)(" .. V .. ")(.-)$")
+	if alternation == "ie" then
+		if last_vowel == "e" or last_vowel == "i" then
+			-- allow i for adquirir -> adquiero, inquirir -> inquiero, etc.
+			ret = before_last_vowel .. "ie" .. after_last_vowel
+		else
+			err = "should have -e- or -i- as the last vowel"
+		end
+	elseif alternation == "ye" then
+		if last_vowel == "e" then
+			ret = before_last_vowel .. "ye" .. after_last_vowel
+		else
+			err = "should have -e- as the last vowel"
+		end
+	elseif alternation == "ue" then
+		if last_vowel == "o" or last_vowel == "u" then
+			-- allow u for jugar -> juego; correctly handle avergonzar -> avergüenzo
+			ret = (
+				last_vowel == "o" and before_last_vowel:find("g$") and before_last_vowel .. "üe" .. after_last_vowel or
+				before_last_vowel .. "ue" .. after_last_vowel
+			)
+		else
+			err = "should have -o- or -u- as the last vowel"
+		end
+	elseif alternation == "hue" then
+		if last_vowel == "o" then
+			ret = before_last_vowel .. "hue" .. after_last_vowel
+		else
+			err = "should have -o- as the last vowel"
+		end
+	elseif alternation == "i" then
+		if last_vowel == "e" then
+			ret = before_last_vowel .. "i" .. after_last_vowel
+		else
+			err = "should have -i- as the last vowel"
+		end
+	elseif alternation == "í" then
+		if last_vowel == "i" then
+			ret = before_last_vowel .. "í" .. after_last_vowel
+		else
+			err = "should have -i- as the last vowel"
+		end
+	elseif alternation == "ú" then
+		if last_vowel == "u" then
+			ret = before_last_vowel .. "ú" .. after_last_vowel
+		else
+			err = "should have -u- as the last vowel"
+		end
+	else
+		error("Internal error: Unrecognized vowel alternation '" .. alternation .. "'")
+	end
+	ret = ret and ret:gsub(TEMPC1, "u") or nil
+	return {ret = ret, err = err}
+end
+
+
 -- Add the `stem` to the `ending` for the given `slot` and apply any phonetic modifications.
 -- `is_combining_ending` is true if `ending` is actually the ending (this function is also
 -- called to combine prefix + stem). WARNING: This function is written very carefully; changes
