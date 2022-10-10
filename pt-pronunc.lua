@@ -156,6 +156,8 @@ local glide = "ywW"
 local W = "[" .. glide .. "]" -- glide
 local ipa_stress = "ˈˌ"
 local ipa_stress_c = "[" .. ipa_stress .. "]"
+local primary_quality = AC .. CFLEX
+local primary_quality_c = "[" .. primary_quality .. "]"
 local quality = AC .. CFLEX .. GR .. MACRON
 local quality_c = "[" .. quality .. "]"
 local stress = LINEUNDER .. DOTOVER .. DOTUNDER .. ipa_stress
@@ -196,6 +198,8 @@ local wordsep_c = "[" .. wordsep .. "]"
 local C = "[^" .. vowel .. wordsep .. "_]" -- consonant
 -- consonant or syllable-transparent component separator
 local C_OR_SYL_TRANSP = "[^" .. vowel .. wordsep_not_syl_transp .. "_]"
+local H_OR_SYL_TRANSP = "[h" .. syl_transp .. "]"
+local H_GLIDE_OR_SYL_TRANSP = "[h" .. glide .. syl_transp .. "]"
 local C_NOT_H_OR_GLIDE = "[^h" .. glide .. vowel .. wordsep .. "_]" -- consonant other than h, w or y
 local C_OR_WORD_BOUNDARY = "[^" .. vowel .. charsep .. "_]" -- consonant or word boundary
 local voiced_cons = "bdglʎmnɲŋrɾʁvzʒʤ" -- voiced sound
@@ -429,16 +433,16 @@ local function one_term_ipa(text, style, phonetic, err)
 	-- leftwards over clusters that can form onsets. Note that syllable-transparent component separators will always
 	-- be (and will continue to be) to the left of syllable dividers rather than to the right, so we don't need to
 	-- check for the latter situation.
-	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*" .. C_OR_SYL_TRANSP .. "-)(" .. C .. STC .. W .. "*" .. V .. ")", "%1.%2")
-	text = rsub(text, "([pbfvktdg]" .. STC .. ")%.([lr])", ".%1%2")
+	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*" .. C_OR_SYL_TRANSP .. "-)(" .. C .. H_GLIDE_OR_SYL_TRANSP .. "*" .. V .. ")", "%1.%2")
+	text = rsub(text, "([pbtdkgfv]" .. H_OR_SYL_TRANSP .. "*)%.([lr])", ".%1%2")
 	if portugal then
 		-- "Improper" clusters of non-sibiliant-obstruent + obstruent (pt, bt, bd, dk, kt; ps, bs, bv, bʒ, tz, dv, ks;
 		-- ft), non-sibiliant-obstruent + nasal (pn, bn, tm, tn, dm, dn, gm, gn), nasal + nasal (mn) are syllabified in
 		-- Portugal as .pt, .bv, .mn, etc. Note ʃ.t, ʃ.p, ʃ.k, etc. But in Brazil, all of these divide between the
 		-- consonants (p.t, b.v, ʃ.t, s.p, etc.). Particular case: [[ab-rogação]] divides as a.brr in Portugal but ab.rr
 		-- in Brazil.
-		text = rsub(text, "([pbfvktdg]" .. STC .. ")%.([pbfvktdgsSçzʃʒjmMnNɲʎʁ])", ".%1%2")
-		text = rsub(text, "([mM]" .. STC .. ")%.([nN])", ".%1%2")
+		text = rsub(text, "([pbtdkgfv]" .. H_OR_SYL_TRANSP .. "*)%.([pbtdkgfvsSçzʃʒjmMnNɲʎʁ])", ".%1%2")
+		text = rsub(text, "([mM]" .. H_OR_SYL_TRANSP .. "*)%.([nN])", ".%1%2")
 	else
 		-- /tʃ/, /dʒ/ are normally single sounds, but adj- in [[adjetivo]], [[adjunto]] etc. should be 'ad.j'
 		text = rsub(text, "(t" .. STC .. ")%.(ʃ)", ".%1%2")
@@ -932,7 +936,7 @@ function export.IPA(text, style, phonetic)
 		error(msg .. ": " .. origtext)
 	end
 
-	text = ulower(text or mw.title.getCurrentTitle().text)
+	text = ulower(text)
 	-- decompose everything but ç and ü
 	text = mw.ustring.toNFD(text)
 	text = rsub(text, ".[" .. CEDILLA .. DIA .. "]", {
@@ -960,7 +964,7 @@ function export.IPA(text, style, phonetic)
 	local function word_is_prefix(i)
 		-- Check for prefixes, either a final prefix (followed by "-" separator, then a blank word, then no more
 		-- words) or a non-final prefix (followed by "- " separator).
-		return (i == #words - 2 and words[i + 1] == "-" and words[i + 2] == "" or i < #words and words[i + 1] == "- ")
+		return i == #words - 2 and words[i + 1] == "-" and words[i + 2] == "" or i < #words and words[i + 1] == "- "
 	end
 	for i = 1, #words, 2 do
 		local word = words[i]
@@ -980,11 +984,12 @@ function export.IPA(text, style, phonetic)
 			-- adding the DOTUNDER after the 'u'; add after a quality marker for à, às
 			word = rsub(word, "^(.-" .. V .. quality_c .. "*)", "%1" .. DOTUNDER)
 		end
+		-- FIXME: This needs to happen at the end, which means we need to preserve an indication of prefixes until the end.
 		-- Make stressed prefixes have secondary stress.
-		if word_is_prefix(i) then
-			word = rsub(word, "(" .. quality_c .. ")$", "%1" .. LINEUNDER)
-			word = rsub(word, "(" .. quality_c .. "[^" .. stress .. "])", "%1" .. LINEUNDER)
-		end
+		--if word_is_prefix(i) then
+		--	word = rsub(word, "(" .. primary_quality_c .. ")$", "%1" .. LINEUNDER)
+		--	word = rsub(word, "(" .. primary_quality_c .. ")([^" .. stress .. "])", "%1" .. LINEUNDER .. "%2")
+		--end
 		words[i] = word
 	end
 	text = table.concat(words)
@@ -1039,11 +1044,11 @@ function export.IPA(text, style, phonetic)
 		flatmap_and_sub("u%^%^", "w", "u.")
 		flatmap_and_sub("u%^", "u.", "w")
 		-- Handle e^ and e^^ = /e/ or /i/.
-		flatmap_and_sub("e%^%^", "e", "i")
-		flatmap_and_sub("e%^", "i", "e")
+		flatmap_and_sub("e%^%^", "i", "e")
+		flatmap_and_sub("e%^", "e", "i")
 		-- Handle o^ and o^^ = /o/ or /u/.
-		flatmap_and_sub("o%^%^", "o", "u")
-		flatmap_and_sub("o%^", "u", "o")
+		flatmap_and_sub("o%^%^", "u", "o")
+		flatmap_and_sub("o%^", "o", "u")
 		-- Handle ê*/ô*/é*/ó* = same as without asterisk.
 		flatmap_and_sub("([eo][" .. AC .. CFLEX .. "])%*", "%1")
 		-- Handle des^ at beginning of word = des or dis++, and des^^ = opposite order.
@@ -1419,7 +1424,7 @@ function export.show(frame)
 		end
 	end
 
-	local expressed_styles = export.express_styles(inputs, args.style, args.pagename)
+	local expressed_styles = export.express_styles(inputs, args.style, pagename)
 
 	local lines = {}
 
