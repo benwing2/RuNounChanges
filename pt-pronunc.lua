@@ -91,6 +91,7 @@ Author: Benwing
     'ami^nési^a'. [DONE]
 47. Portugal 'o', 'os' should be unstressed with /u/, not have /ɔ/. [DONE]
 48. /s/ after nasal vowel before glide should not become voiced. [DONE]
+49. Implement raw=phonemic, raw=phonetic, raw=both.
 ]=]
 
 local export = {}
@@ -615,6 +616,12 @@ local function one_term_ipa(text, style, phonetic, err)
 	-- user explicitly added a . (converted to SYLDIV above).
 	text = rsub(text, "#i%.(" .. V .. ")", "#y%1")
 	if not brazil then
+		-- Outside of Brazil, e.i -> a.i, e.g. [[ateísta]], [[proteína]], [[proteinúrio]] respelled 'prote.inúrio'. But seems
+		-- not to happen in rei- ([[reincidente]], [[reiniciar]], [[reidratar]], etc.). Note, it does occur in [[reídeo]],
+		-- which needs respelling.
+		text = rsub(text, "(#re" .. syldiv_c .. ")(i)", "%1" .. TEMP1 .. "%2")
+		text = rsub(text, "e(" .. syldiv_c .. "i)", "a%1")
+		text = rsub(text, TEMP1, "")
 		-- Outside of Brazil, remove hiatus more generally whenever 'e./i.' or 'o./u.' precedes a vowel. Do this before
 		-- eliminating SYLDIV so the user can force hiatus using a period.
 		local hiatus_to_glide = {["e."] = "y", ["i."] = "y", ["o."] = "w", ["u."] = "w"}
@@ -1338,6 +1345,7 @@ function export.show(frame)
 	local params = {
 		[1] = {}, -- this replaces style group 'all'
 		["style"] = {},
+		["raw"] = {},
 		["pagename"] = {},
 	}
 	for group, _ in pairs(export.all_style_groups) do
@@ -1353,6 +1361,9 @@ function export.show(frame)
 	local parargs = frame:getParent().args
 	local args = require("Module:parameters").process(parargs, params)
 	local pagename = args.pagename or mw.title.getCurrentTitle().subpageText
+	if args.raw and args.raw ~= "phonemic" and args.raw ~= "phonetic" and args.raw ~= "both" then
+		error("raw= should have one of the values 'phonemic', 'phonetic' or 'both' but saw '" .. args.raw .. "'")
+	end
 
 	-- Set inputs
 	local inputs = {}
@@ -1459,10 +1470,11 @@ function export.show(frame)
 
 	local lines = {}
 
-	local function format_style(tag, expressed_style, is_first)
+	local function format_style(tag, expressed_style, is_first, raw)
 		local pronunciations = {}
 		local formatted_pronuns = {}
 		for _, pronun in ipairs(expressed_style.pronuns) do
+			if not raw or raw ~= "phonetic" then
 			table.insert(pronunciations, {
 				pron = "/" .. pronun.phonemic .. "/",
 				qualifiers = pronun.qualifiers,
@@ -1476,6 +1488,45 @@ function export.show(frame)
 				pron = "[" .. pronun.phonetic .. "]",
 				refs = pronun.refs,
 			})
+			local reftext = ""
+			if pronun.refs then
+				reftext = string.rep("[1]", #pronun.refs)
+			end
+			table.insert(formatted_pronuns, "[" .. pronun.phonetic .. "]" .. reftext)
+		end
+		-- Number of bullets: When indent = 1, we want the number of bullets given by `expressed_style.bullets`,
+		-- and when indent = 2, we want `expressed_style.bullets + 1`, hence we subtract 1.
+		local bullet = string.rep("*", expressed_style.bullets + expressed_style.indent - 1) .. " "
+		-- Here we construct the formatted line in `formatted`, and also try to construct the equivalent without HTML
+		-- and wiki markup in `formatted_for_len`, so we can compute the approximate textual length for use in sizing
+		-- the toggle box with the "more" button on the right.
+		local pre = is_first and expressed_style.pre and expressed_style.pre .. " " or ""
+		local pre_for_len = pre .. (tag and "(" .. tag .. ") " or "")
+		pre = pre .. (tag and m_qual.format_qualifier(tag) .. " " or "")
+		local post = is_first and (expressed_style.post and " " .. expressed_style.post or "") or ""
+		local formatted = bullet .. pre .. m_IPA.format_IPA_full(lang, pronunciations) .. post
+		local formatted_for_len = bullet .. pre .. "IPA(key): " .. table.concat(formatted_pronuns, ", ") .. post
+		return formatted, formatted_for_len
+	end
+
+	local function format_raw_style(expressed_style, raw_type)
+		local formatted_pronuns = {}
+		for _, pronun in ipairs(expressed_style.pronuns) do
+			local formatted_pronun = {}
+			if raw_type == "phonemic" or raw_type == "both" then
+				local formatted_phonemic = "/" .. pronun.phonemic .. "/"
+				if pronun.qualifiers then
+					formatted_phonemic = m_qual.format_qualifiers(pronun.qualifiers) .. " " .. formatted_phonemic
+				end
+				table.insert(formatted_pronun, formatted_phonemic)
+			end
+			if raw_type == "both" then
+				table.insert(formatted_pronun, " ")
+			end
+			if raw_type == "phonetic" or raw_type == "both" then
+				local formatted_phonetic = "[" .. pronun.phonetic .. "]"
+				table.insert(formatted_pronun, formatted_phonetic)
+			end
 			local reftext = ""
 			if pronun.refs then
 				reftext = string.rep("[1]", #pronun.refs)
