@@ -1,0 +1,81 @@
+==Special features==
+
+===Introduction===
+The general principle behind this module is to allow a single respelling to be used as much as possible for both Portugal and Brazil, despite the dramatic differences in pronunciation between the two dialects. To support this, various symbols are defined that have an effect in only one of the two dialects.
+
+For example, unstressed ''a e o'' in Portugal are normally pronounced as reduced vowels {{IPAchar|/ɐ ɨ u/}}, but sometimes as open vowels {{IPAchar|/a ɛ ɔ/}}, and sometimes (less frequently) as close vowels {{IPAchar|/ɐ e o/}}. The corresponding words in Brazil are usually pronounced with full vowels {{IPAchar|/a e o/}} regardless of the particular quality in Portugal. To support this, unmarked symbols <code>a e o</code> request the default unstressed pronunciation (usually reduced), while we provide special symbols <code>à è ò</code> to indicate unstressed open vowels in Portugal and special symbols <code>ā ē ō</code> to indicate unstressed close vowels in Portugal. All three sets of symbols map to the same pronunciation in Brazil.
+
+Conversely, in Brazil there are frequently multiple ways of pronouncing unstressed vowels {{IPAchar|/e i o u/}} in hiatus (i.e. directly before another vowel), where a single word often admits multiple pronunciations, while in Portugal these are fairly consistently pronounced as glides {{IPAchar|/j w/}}. We provide various symbols to support the variation in Brazil, which all map to glides in Portugal.
+
+Various specific situations are described in more detail below.
+
+===Special pronunciation symbols===
+* <code>+</code> stands for the pagename (see example above).
+* Grave accents <code>à è ò</code> indicate unstressed open vowels {{IPAchar|/a ɛ ɔ/}} in Portugal but have no effect in Brazil.
+* Macrons <code>ā ē ō</code> indicate unstressed closed vowels {{IPAchar|/ɐ e o/}} in Portugal but have no effect in Brazil.
+* The symbol <code>i*</code> indicates an epenthetic unstressed /i/ in Brazil (and has no effect on determination of the stressed vowel) but no vowel in Portugal.
+* The symbol <code>i^</code> not preceding a vowel indicates either an epenthetic unstressed /i/ in Brazil or no vowel (but still causes palatalization of /t/ and /d/) and indicates no vowel in Portugal.
+* The symbol <code>i^</code> preceding a vowel indicates either an unstressed /i/ in hiatus or a /j/ in Brazil and is the same as ''i'' in Portugal.
+* The symbol <code>i^^</code> is like <code>i^</code> (in both meanings) but with the two possibilities listed in the opposite order.
+* The symbol <code>u^</code> indicates either an unstressed /u/ in hiatus or a /w/ in Brazil and is the same as ''u'' in Portugal.
+* The symbol <code>u^^</code> is like <code>u^</code> but with the two possibilities listed in the opposite order.
+* The symbol <code>e^</code> indicates either an unstressed ''e'' or ''i'' in Brazil and is the same as ''e'' in Portugal.
+* The symbol <code>e^^</code> is like <code>e^</code> but with the two possibilities listed in the opposite order.
+* The symbol <code>o^</code> indicates either an unstressed ''o'' or ''u'' in Brazil and is the same as ''e'' in Portugal.
+* The symbol <code>o^^</code> is like <code>o^</code> but with the two possibilities listed in the opposite order.
+* The symbol <code>ê*</code> is like <code>ê</code> in Brazil but <code>é</code> in Portugal.
+* The symbol <code>é*</code> is like <code>é</code> in Brazil but <code>ê</code> in Portugal.
+* The symbol <code>ô*</code> is like <code>ô</code> in Brazil but <code>ó</code> in Portugal.
+* The symbol <code>ó*</code> is like <code>ó</code> in Brazil but <code>ô</code> in Portugal.
+Some mnemonics to help you remember these codes:
+# <code>^</code> indicates that there are two possible outputs in Brazil, the first of which is generally the same as the vowel directly preceding. For example, the first possible output for <code>i^</code> and <code>u^</code> in hiatus is </i/> and </u/> respectively. Similarly, the first possible output for <code>e^</code> and <code>o^</code> is </e/> and </o/> respectively.
+# <code>^^</code> is the same as <code>^</code> but the two outputs are given in opposite order.
+# <code>*</code> indicates a single output in Brazil that differs from the corresponding Portugal output, where the Brazil output is always the vowel exactly as written. Hence, <code>i*</code> means </i/> in Brazil (and nothing in Portugal). Similarly, <code>ê* ô* é* ó*</code> mean eactly those vowels in Brazil, but the "height-opposite" vowels in Portugal.
+
+===Prefixes and suffixes===
+Prefixes (words ending in a hyphen) are always treated as lacking primary stress. Any stressed vowels are given secondary stress. Suffixes (words beginning with a hyphen), however, are usually stressed as normal. To specify the pronunciation of an unstressed suffix such as {{m|pt|-a}} or {{m|pt|-fago}}, put a dot over the vowel that would be stressed, using the symbols <code>ȧ ė i̇ ȯ u̇</code>. For example, for {{m|pt|-fago}}, use
+
+{{tl|pt-IPA|-fȧgo}}
+
+which generates
+{{pt-IPA|-fȧgo}}
+
+===Deduplication===
+If the same pronunciation is generated twice for a given dialect (including with the same qualifiers and references, if any), only the first occurrence is displayed. This is useful, for example, when there are two Portugal pronunciation variants but only one Brazil pronunciation, such as for {{m|pt|hemorragia||hemorrhage}}; use
+
+{{tl|pt-IPA|hèmorragia,+}}
+
+which generates
+{{pt-IPA|hèmorragia,+|pagename=hemorragia}}
+Here, <code>+</code> expands to the pagename <code>hemorragia</code>, which differs from the first respelling only in the latter having <code>è</code> instead of <code>e</code>. Both variants map to the same sound {{IPAchar|/e/}} in Brazil, so the two Portugal variants end up pronounced the same and are deduplicated.
+
+===Epenthetic /i/ in Brazil===
+Brazilian Portuguese is known for having an unwritten epenthetic {{IPAchar|/i/}} inserted to break up difficult-to-pronounce consonant clusters. A well-known example is {{m|pt|advogado||lawyer}}, frequently pronounced as if written ''adivogado''. Words with epenthetic {{IPAchar|/i/}} often admit alternative pronunciations where the vowel is not pronounced on the surface (but is still present in a latent sense because it triggers palatalization of {{IPAchar|/t d/}} to {{IPAchar|/t͡ʃ d͡ʒ/}}). To indicate such a vowel, use one of the following symbols (all of which generate no vowel in Portugal dialects):
+* If the vowel is always present, use <code>i*</code>. This is typically the case, for example, with ''mn'' clusters such as in {{m|pt|amnésia||amnesia}}, which are not normally supported in Brazil (and in fact are one source of spelling differences between Brazil and Portugal, cf. Portugal {{m|pt|amnistia||amnesty}}, spelled {{m|pt|anistia}} in Brazil). (Another such cluster is ''brr'', such as in {{m|pt|ab-rogação||abrogation}}.) For example, for {{m|pt|gimnosperma||gymnosperm}}, write
+
+{{tl|pt-IPA|gimi*nòspérma}}
+
+which generates
+{{pt-IPA|gimi*nòspérma}}
+Here <code>i*</code> specifies a mandatory epenthetic {{IPAchar|/i/}} in Brazil that is not present in Portugal; meanwhile, <code>ò</code> specifies an unpredictable unstressed open {{IPAchar|/ɔ/}} that is not present in Brazil (which has normal </o/>).
+
+Similarly for {{m|pt|ab-rogação}}, write
+
+{{tl|pt-IPA|abi*rrogação}}
+
+which generates
+{{pt-IPA|abi*rrogação}}
+* If the vowel is usually present, but sometimes isn't, use <code>i^</code>. This is the case for most consonant clusters where the second consonant is a stop, fricative or nasal, i.e. any consonant other than </l/>, single </ɾ/> , or a glide </j/> or </w/>. (There are a few exceptions; see the next item.) An example is {{m|pt|pneu||tire}}; write
+
+{{tl|pt-IPA|pi^neu}}
+
+which generates
+{{pt-IPA|pi^neu}}
+Another example of note is {{m|pt|digno||worthy}}; write
+
+{{tl|pt-IPA|dighi^no}}
+
+which generates
+{{pt-IPA|dighi^no}}
+Two things should be noted here. One is the use of <code>gh</code> to get hard </ɡ/>; this is the recommended way of respelling in this situation. (<code>gu</code> would not work for Portugal, where the respelling <code>diguno</code> would be generated.) Similarly for a cluster with <code>c</code>, use respelling with <code>k</code>, e.g. respell {{m|pt|acne||acne}} as <code>aki^ne</code>. The other is the lack of a stress mark in the respelling. This is because the epenthetic </i/> that is generated is ignored for stress assignment purposes (but is treated as a normal vowel for all other purposes, e.g. palatalization of <code>t d</code>, softening of <code>c g</code>, and syllabification).
+* If the vowel is usually not present, but sometimes is, use <code>i^^</code>. This happens commonly with </kt/>, </ps/>, </pt/>, </bs/> and </bt/> clusters (exceptions are </ps/> and </bs/> clusters followed by another consonant, such as {{m|pt|substantivo}} ... FIXME.
