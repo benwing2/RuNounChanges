@@ -78,18 +78,19 @@ Author: Benwing
 36. In CluV, CruV, CliV, CriV, the 'u' and 'i' are vowels not glides in both Portugal and Brazil.
 37. Epenthesis of (j) before final stressed s in Brazil should not happen after i. [DONE]
 38. Dialect markers such as "Brazil", "Portugal" should go at the beginning. [DONE]
-39. Portugal exC, êxC should be rendered like eiʃC (FIXME: Does this apply to "Central Portugal" as well?). Unstressed
-    word-initial exC- should have two pronunciations, one with eiʃC- and the other with (i)ʃC-. exs- needs handling like
-	eiʃs-/(i)ʃs- not like eiss-.
-40. -sj- (e.g. [[transgénico]]) should reduce to a single /ʒ/. [DONE]
-41. [[transgredir]] should have /z/ (Brazil), /ʒ/ (Portugal) instead of /s/, /ʃ/. [DONE]
-42. Unstressed -ie- in hiatus should automatically be -iè- in Portugal or maybe -iè-/-ié-?
-43. Initial esC- in Brazil should be either isC- or esC-. [DONE]
-44. Initial sC- in Portugal and maybe Brazil should be /s/ not /ʃ/.
-45. Deleted epenthetic /i/ should block conversion of syllable-final m/n into nasalization, cf. [[amnésia]] respelled
+39. Portugal exC, êxC should be rendered like eiʃC (FIXME: Does this apply to "Central Portugal" as well?). exs- needs
+	handling like eiʃs-/(i)ʃs- not like eiss-. [DONE]
+40. Unstressed word-initial exC- should maybe have two pronunciations, one with eiʃC- and the other with (i)ʃC-.
+    (FIXME: Verify.)
+41. -sj- (e.g. [[transgénico]]) should reduce to a single /ʒ/. [DONE]
+42. [[transgredir]] should have /z/ (Brazil), /ʒ/ (Portugal) instead of /s/, /ʃ/. [DONE]
+43. Unstressed -ie- in hiatus should automatically be -iè- in Portugal or maybe -iè-/-ié-? [DONE] (FIXME: Verify.)
+44. Initial esC- in Brazil should be either isC- or esC-. [DONE]
+45. Initial sC- in Portugal and maybe Brazil should be /s/ not /ʃ/. [DONE]
+46. Deleted epenthetic /i/ should block conversion of syllable-final m/n into nasalization, cf. [[amnésia]] respelled
     'ami^nési^a'. [DONE]
-46. Portugal 'o', 'os' should be unstressed with /u/, not have /ɔ/. [DONE]
-47. /s/ after nasal vowel before glide should not become voiced. [DONE]
+47. Portugal 'o', 'os' should be unstressed with /u/, not have /ɔ/. [DONE]
+48. /s/ after nasal vowel before glide should not become voiced. [DONE]
 ]=]
 
 local export = {}
@@ -128,6 +129,7 @@ local DOTUNDER = u(0x0323) -- dot under =  ̣
 -- quality marker (acute or circumflex) with a/e/o; if not, defaults to acute (except in the same circumstances where
 -- dot under defaults to circumflex).
 local LINEUNDER = u(0x0331) -- line under =  ̱
+-- Serves to temorarily mark where a syllable division should not happen, and temporarily substitutes for comma+space.
 local TEMP1 = u(0xFFF0)
 local SYLDIV = u(0xFFF1) -- used to represent a user-specific syllable divider (.) so we won't change it
 
@@ -202,24 +204,32 @@ local H_OR_SYL_TRANSP = "[h" .. syl_transp .. "]"
 local H_GLIDE_OR_SYL_TRANSP = "[h" .. glide .. syl_transp .. "]"
 local C_NOT_H_OR_GLIDE = "[^h" .. glide .. vowel .. wordsep .. "_]" -- consonant other than h, w or y
 local C_OR_WORD_BOUNDARY = "[^" .. vowel .. charsep .. "_]" -- consonant or word boundary
-local voiced_cons = "bdglʎmnɲŋrɾʁvzʒʤ" -- voiced sound
+local voiced_cons = "bdglʎmnɲŋrɾʁvzjʒʤ" -- voiced sound
 
 -- Unstressed words with vowel reduction in Brazil and Portugal.
 local unstressed_words = require("Module:table").listToSet({
-	"o", "os", "la", "las", -- definite articles
+	"o", "os", -- definite articles
 	"me", "te", "se", "lhe", "lhes", "nos", "vos", -- unstressed object pronouns
-	"mo", "to", "lho", "lhos", -- object pronouns combined with articles
+	-- See https://en.wikipedia.org/wiki/Personal_pronouns_in_Portuguese#Contractions_between_clitic_pronouns
+	"mo", "mos", "to", "tos", "lho", "lhos", -- object pronouns combined with articles
+	-- Allomorphs of articles after certain consonants
+	"lo", "los", "no", -- [[nos]] above as object pronoun
+	-- Allomorphs of object pronouns before other pronouns
+	"vo", -- [[no]] above as allomorph of article
 	"que", -- subordinating conjunctions
 	"e", -- coordinating conjunctions
-	"de", "do", "dos", "no", "por", -- basic prepositions + combinations with articles; [[nos]] above as object pronoun
+	"de", "do", "dos", "por", -- basic prepositions + combinations with articles; [[no]], [[nos]] above already
 })
 
 -- Unstressed words with vowel reduction in Portugal only.
 local unstressed_full_vowel_words_brazil = require("Module:table").listToSet({
 	"a", "as", -- definite articles
-	"da", "das", "na", "nas", -- basic prepositions + combinations with articles
-	"ma", "ta", "lha", "lhas", -- object pronouns combined with articles
-	"mas", -- coordinating conjunctions
+	-- See https://en.wikipedia.org/wiki/Personal_pronouns_in_Portuguese#Contractions_between_clitic_pronouns
+	"ma", "mas", "ta", "tas", "lha", "lhas", -- object pronouns combined with articles
+	-- Allomorphs of articles after certain consonants
+	"la", "las", "na", "nas",
+	"da", "das", -- basic prepositions + combinations with articles; [[na]], [[nas]] above already
+	-- coordinating conjunctions; [[mas]] above already
 })
 
 -- Unstressed words without vowel reduction.
@@ -230,6 +240,14 @@ local unstressed_full_vowel_words = require("Module:table").listToSet({
 	"ao", "aos", "a" .. GR, "a" .. GR .. "s", -- basic prepositions + combinations with articles
 	"em", "com", -- other prepositions
 })
+
+local unstressed_pronunciation_substitution = {
+	["a" .. DOTUNDER .. "o"] = "a" .. DOTUNDER .. "u",
+	["a" .. DOTUNDER .. "os"] = "a" .. DOTUNDER .. "us",
+	["a" .. GR .. DOTUNDER] = "a" .. DOTUNDER,
+	["a" .. GR .. DOTUNDER .. "s"] = "a" .. DOTUNDER .. "s",
+	["po" .. DOTOVER .. "r"] = "pu" .. DOTOVER .. "r",
+}
 
 -- version of rsubn() that discards all but the first return value
 local function rsub(term, foo, bar)
@@ -338,6 +356,8 @@ local function one_term_ipa(text, style, phonetic, err)
 	text = rsub(text, "(e" .. accent_c .. "*)x(" .. C .. ")", function(v, c)
 		if brazil then
 			return v .. "s" .. c
+		elseif c == "s" then
+			return v .. "isç"
 		else
 			return v .. "is" .. c
 		end
@@ -399,6 +419,9 @@ local function one_term_ipa(text, style, phonetic, err)
 	-- Will map later to /s/; need to special case to support spellings like 'nóss' (= nós, plural of nó).
 	text = rsub(text, "ss", "S")
 	text = rsub(text, "(" .. C .. ")%1", "%1")
+
+	-- muit- is special and contains nasalization. Do before palatalization of t/d so [[muitíssimo]] works.
+	text = rsub(text, "(#mu" .. stress_c .. "*)(it)", "%1" .. TILDE .. "%2")
 
 	if brazil then
 		-- Palatalize t/d + i -> affricates in Brazil. Use special unitary symbols, which we later convert to regular
@@ -468,14 +491,16 @@ local function one_term_ipa(text, style, phonetic, err)
 	text = rsub(text, "([aeo]" .. accent_c .. "*" .. STC .. ")([iu]" .. STC .. "%.ɲ)", "%1.%2")
 	-- Prevent syllable division between final -ui(s), -iu(s). This should precede the following rule that prevents
 	-- syllable division between ai etc., so that [[saiu]] "he left" gets divided as sa.iu.
-	text = rsub(text, "(u" .. accent_c .. "*" .. STC .. ")(is?#)", "%1" .. TEMP1 .. "%2")
-	text = rsub(text, "(i" .. accent_c .. "*" .. STC .. ")(us?#)", "%1" .. TEMP1 .. "%2")
+	-- It doesn't make sense to have STC in the middle of a diphthong here.
+	text = rsub(text, "(u" .. accent_c .. "*)(is?#)", "%1" .. TEMP1 .. "%2")
+	text = rsub(text, "(i" .. accent_c .. "*)(us?#)", "%1" .. TEMP1 .. "%2")
 	-- Prevent syllable division between ai, ou, etc. unless either the second vowel is accented [[saído]]) or there's
 	-- a TEMP1 marker already after the second vowel (which will occur e.g. in [[saiu]] divided as 'sa.iu').
-	text = rsub_repeatedly(text, "([aeo]" .. accent_c .. "*" .. STC .. ")([iu][^" .. accent .. TEMP1 .. "])", "%1" .. TEMP1 .. "%2")
+	text = rsub_repeatedly(text, "([aeo]" .. accent_c .. "*)([iu][^" .. accent .. TEMP1 .. "])", "%1" .. TEMP1 .. "%2")
 	-- Prevent syllable division between nasal diphthongs unless somehow the second vowel is accented.
-	text = rsub_repeatedly(text, "(a" .. TILDE .. STC .. ")([eo][^" .. accent .. "])", "%1" .. TEMP1 .. "%2")
-	text = rsub_repeatedly(text, "(o" .. TILDE .. STC .. ")(e[^" .. accent .. "])", "%1" .. TEMP1 .. "%2")
+	text = rsub_repeatedly(text, "(a" .. TILDE .. ")([eo][^" .. accent .. "])", "%1" .. TEMP1 .. "%2")
+	text = rsub_repeatedly(text, "(o" .. TILDE .. ")(e[^" .. accent .. "])", "%1" .. TEMP1 .. "%2")
+	text = rsub_repeatedly(text, "(u" .. TILDE .. ")(i[^" .. accent .. "])", "%1" .. TEMP1 .. "%2")
 	-- All other sequences of vowels get divided.
 	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*" .. STC .. ")(" .. V .. ")", "%1.%2")
 	-- Remove the marker preventing syllable division.
@@ -622,8 +647,8 @@ local function one_term_ipa(text, style, phonetic, err)
 	text = rsub(text, "E" .. AC .. "(ˈ[mn]s?#)", "E" .. CFLEX .. "%1")
 	-- Vowel + m/n within a syllable gets converted to tilde.
 	text = rsub(text, "(" .. V .. quality_c .. "*" .. stress_c .. "*)[mn]", "%1" .. TILDE)
-	-- Vowel without quality mark + tilde needs to get the circumflex (possibly fed by the previous change).
-	text = rsub(text, "(" .. V .. ")(" .. stress_c .. "*)" .. TILDE, "%1" .. CFLEX .. "%2" .. TILDE)
+	-- Non-high vowel without quality mark + tilde needs to get the circumflex (possibly fed by the previous change).
+	text = rsub(text, "([AEO])(" .. stress_c .. "*)" .. TILDE, "%1" .. CFLEX .. "%2" .. TILDE)
 	-- Primary-stressed vowel without quality mark + m/n/nh across syllable boundary gets a circumflex, cf. [[cama]],
 	-- [[ano]], [[banho]].
 	text = rsub(text, "(" .. V .. ")(ˈ%.[mnɲMN])", "%1" .. CFLEX .. "%2")
@@ -646,6 +671,8 @@ local function one_term_ipa(text, style, phonetic, err)
 		function(v1, v2) return v1 .. nasal_termination_to_glide[v2] .. TILDE end)
 	-- Likewise for õe.
 	text = rsub(text, "(O" .. CFLEX .. stress_c .. "*" .. TILDE .. ")E", "%1y" .. TILDE)
+	-- Likewise for ũi (generated above from muit-).
+	text = rsub(text, "(u" .. stress_c .. "*" .. TILDE .. ")i", "%1y" .. TILDE)
 	-- Final -em and -ens (stressed or not) pronounced /ẽj̃(s)/. (Later converted to /ɐ̃j̃(s)/ in Portugal.)
 	text = rsub(text, "(E" .. CFLEX .. stress_c .. "*" .. TILDE .. ")(s?#)", "%1y" .. TILDE .. "%2")
 
@@ -688,7 +715,8 @@ local function one_term_ipa(text, style, phonetic, err)
 			local vowel_to_before_l = {["A"] = "a", ["E"] = "ɛ", ["O"] = "Ɔ"}
 			return vowel_to_before_l[v] .. "l"
 		end)
-		
+		-- Unstressed 'ie' -> /jɛ/
+		text = rsub(text, "yE([^" .. accent .. "])", "yɛ%1")
 		-- Initial unmarked unstressed non-nasal e- + -sC- -> /ɨ/ (later changed to /(i)/)
 		text = rsub(text, "#Es", "#ɨs")
 		-- Initial unmarked unstressed non-nasal e- -> /i/.
@@ -740,7 +768,7 @@ local function one_term_ipa(text, style, phonetic, err)
 		text = rsub(text, "(" .. V .. "ˈ)([sz]#[^@])", "%1Y%2")
 		-- Also should happen at least before + (cf. [[rapazinho]] respelled 'rapaz+inho', [[vozinha]] respelled
 		-- 'vóz+inha').
-		text = rsub(text, "(" .. V .. "ˈ)([sz]%+)", "%1Y%2")
+		text = rsub(text, "(" .. V .. "ˈ)(%.?[sz]%+)", "%1Y%2")
 		-- But should not happen after /i/.
 		text = rsub(text, "iˈY", "iˈ")
 	end
@@ -764,14 +792,14 @@ local function one_term_ipa(text, style, phonetic, err)
 	-- z before voiceless consonant, e.g. [[Nazca]]; c and q already removed
 	text = rsub(text, "z(" .. wordsep_c .. "*[çfkpsʃt])", "%1s%2")
 	--Change Portugal initial /ɨʃ/ to /(i)ʃ/
-	text = rsub(text, "##ɨs", "(i)s")
-	text = rsub(text, "##ɨz", "(i)z")
+	text = rsub(text, "#ɨ([sz])", "(i)%1")
 	if not brazil or style == "rio" then
-		-- Outside Brazil except for Rio; s/z before consonant (including across word boundaries) or end of utterance -> ʃ/ʒ
+		-- Outside Brazil except for Rio; s/z before consonant (including across word boundaries) or end of utterance -> ʃ/ʒ;
+		-- but not word-initially (e.g. [[stressado]]).
 		local shibilant = {["s"] = "ʃ", ["z"] = "j"}
 		text = rsub(text, "([sz])(##)", function(sz, after) return shibilant[sz] .. after end)
-		text = rsub(text, "([sz])(" .. wordsep_c .. "*" .. C_NOT_H_OR_GLIDE .. ")",
-			function(sz, after) return shibilant[sz] .. after end)
+		text = rsub(text, "([^#])([sz])(" .. wordsep_c .. "*" .. C_NOT_H_OR_GLIDE .. ")",
+			function(before, sz, after) return before .. shibilant[sz] .. after end)
 	end
 	text = rsub(text, "ç", "s")
 	text = rsub(text, "j", "ʒ")
@@ -797,7 +825,7 @@ local function one_term_ipa(text, style, phonetic, err)
 		-- Word-final r before vowel in verbs is /(ɾ)/.
 		text = rsub(text, "([aɛei]ˈ)r(#" .. wordsep_c .. "*h?" .. V .. ")", "%1(ɾ)%2")
 		-- Coda r before vowel is /ɾ/.
-		text = rsub(text, "r(" .. C .. "*[.#]" .. wordsep_c .. "*h?" .. V .. ")", "%1ɾ%2")
+		text = rsub(text, "r([.#]" .. wordsep_c .. "*h?" .. V .. ")", "ɾ%1")
 	end
 	-- Word-final r in Brazil in verbs (not [[pôr]]) is usually dropped. Use a spelling like 'marh' for [[mar]]
 	-- to prevent this. Make sure not to do this before -mente/-zinho ([[polegarzinha]], [[popularmente]]).
@@ -905,8 +933,8 @@ local function one_term_ipa(text, style, phonetic, err)
 	-- Stress marks and syllable dividers.
 	-- Component separators that aren't transparent to syllabification need to be made into syllable dividers.
 	text = rsub(text, "[:@%-]", ".")
-	-- IPA stress marks in components followed by ++ (converted to *) should be removed.
-	text = rsub(text, ipa_stress_c .. "([^" .. word_divider .. component_sep .. "]*%*)", "%1")
+	-- IPA stress marks in components followed by + should be removed.
+	text = rsub(text, ipa_stress_c .. "([^" .. word_divider .. component_sep .. "]*%+)", "%1")
 	-- Move IPA stress marks to the beginning of the syllable.
 	text = rsub_repeatedly(text, "([#.])([^#.]*)(" .. ipa_stress_c .. ")", "%1%3%2")
 	-- Suppress syllable divider before IPA stress indicator.
@@ -990,6 +1018,8 @@ function export.IPA(text, style, phonetic)
 		--	word = rsub(word, "(" .. primary_quality_c .. ")$", "%1" .. LINEUNDER)
 		--	word = rsub(word, "(" .. primary_quality_c .. ")([^" .. stress .. "])", "%1" .. LINEUNDER .. "%2")
 		--end
+		-- Some unstressed words need special pronunciation.
+		word = unstressed_pronunciation_substitution[word] or word
 		words[i] = word
 	end
 	text = table.concat(words)
@@ -1002,9 +1032,6 @@ function export.IPA(text, style, phonetic)
 	-- eliminate hyphens indicating prefixes/suffixes
 	text = rsub(text, "%-#", "#")
 	text = rsub(text, "#%-", "#")
-
-	-- [[à]], [[às]]; remove grave accent
-	text = rsub(text, "(#a)" .. GR .. "(" .. DOTUNDER .. "?s?#)", "%1%2")
 
 	local variants
 
@@ -1414,7 +1441,11 @@ function export.show(frame)
 			inputs[style] = parsed
 		else
 			local terms = {}
-			for _, term in ipairs(rsplit(input, "%s*,%s*")) do
+			-- We don't want to split on comma+space, which should become a foot boundary as in
+			-- [[rei morto, rei posto]].
+			local subbed_input = rsub(input, ", ", TEMP1)
+			for _, term in ipairs(rsplit(subbed_input, ",")) do
+				term = rsub(term, TEMP1, ", ")
 				table.insert(terms, {term = term, ref = {}, q = {}})
 			end
 			inputs[style] = {
