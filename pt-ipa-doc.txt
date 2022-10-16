@@ -28,9 +28,9 @@ Various specific situations are described in more detail below.
 * The symbol <code>ô*</code> is like <code>ô</code> in Brazil but <code>ó</code> in Portugal.
 * The symbol <code>ó*</code> is like <code>ó</code> in Brazil but <code>ô</code> in Portugal.
 Some mnemonics to help you remember these codes:
-# <code>^</code> indicates that there are two possible outputs in Brazil, the first of which is generally the same as the vowel directly preceding. For example, the first possible output for <code>i^</code> and <code>u^</code> in hiatus is </i/> and </u/> respectively. Similarly, the first possible output for <code>e^</code> and <code>o^</code> is </e/> and </o/> respectively.
+# <code>^</code> indicates that there are two possible outputs in Brazil, the first of which is generally the same as the vowel directly preceding. For example, the first possible output for <code>i^</code> and <code>u^</code> in hiatus is {{IPAchar|/i/}} and {{IPAchar|/u/}} respectively. Similarly, the first possible output for <code>e^</code> and <code>o^</code> is {{IPAchar|/e/}} and {{IPAchar|/o/}} respectively.
 # <code>^^</code> is the same as <code>^</code> but the two outputs are given in opposite order.
-# <code>*</code> indicates a single output in Brazil that differs from the corresponding Portugal output, where the Brazil output is always the vowel exactly as written. Hence, <code>i*</code> means </i/> in Brazil (and nothing in Portugal). Similarly, <code>ê* ô* é* ó*</code> mean eactly those vowels in Brazil, but the "height-opposite" vowels in Portugal.
+# <code>*</code> indicates a single output in Brazil that differs from the corresponding Portugal output, where the Brazil output is always the vowel exactly as written. Hence, <code>i*</code> means {{IPAchar|/i/}} in Brazil (and nothing in Portugal). Similarly, <code>ê* ô* é* ó*</code> mean eactly those vowels in Brazil, but the "height-opposite" vowels in Portugal.
 
 ===Prefixes and suffixes===
 Prefixes (words ending in a hyphen) are always treated as lacking primary stress. Any stressed vowels are given secondary stress. Suffixes (words beginning with a hyphen), however, are usually stressed as normal. To specify the pronunciation of an unstressed suffix such as {{m|pt|-a}} or {{m|pt|-fago}}, put a dot over the vowel that would be stressed, using the symbols <code>ȧ ė i̇ ȯ u̇</code>. For example, for {{m|pt|-fago}}, use
@@ -57,7 +57,7 @@ Brazilian Portuguese is known for having an unwritten epenthetic {{IPAchar|/i/}}
 
 which generates
 {{pt-IPA|gimi*nòspérma}}
-Here <code>i*</code> specifies a mandatory epenthetic {{IPAchar|/i/}} in Brazil that is not present in Portugal; meanwhile, <code>ò</code> specifies an unpredictable unstressed open {{IPAchar|/ɔ/}} that is not present in Brazil (which has normal </o/>).
+Here <code>i*</code> specifies a mandatory epenthetic {{IPAchar|/i/}} in Brazil that is not present in Portugal; meanwhile, <code>ò</code> specifies an unpredictable unstressed open {{IPAchar|/ɔ/}} that is not present in Brazil (which has normal {{IPAchar|/o/}}).
 
 Similarly for {{m|pt|ab-rogação}}, write
 
@@ -65,7 +65,7 @@ Similarly for {{m|pt|ab-rogação}}, write
 
 which generates
 {{pt-IPA|abi*rrogação}}
-* If the vowel is usually present, but sometimes isn't, use <code>i^</code>. This is the case for most consonant clusters where the second consonant is a stop, fricative or nasal, i.e. any consonant other than </l/>, single </ɾ/> , or a glide </j/> or </w/>. (There are a few exceptions; see the next item.) An example is {{m|pt|pneu||tire}}; write
+* If the vowel is usually present, but sometimes isn't, use <code>i^</code>. This is the case for most consonant clusters where the second consonant is a stop, fricative or nasal, i.e. any consonant other than {{IPAchar|/l/}}, single {{IPAchar|/ɾ/}} , or a glide {{IPAchar|/j/}} or {{IPAchar|/w/}}. (There are a few exceptions; see the next item.) An example is {{m|pt|pneu||tire}}; write
 
 {{tl|pt-IPA|pi^neu}}
 
@@ -77,5 +77,5 @@ Another example of note is {{m|pt|digno||worthy}}; write
 
 which generates
 {{pt-IPA|dighi^no}}
-Two things should be noted here. One is the use of <code>gh</code> to get hard </ɡ/>; this is the recommended way of respelling in this situation. (<code>gu</code> would not work for Portugal, where the respelling <code>diguno</code> would be generated.) Similarly for a cluster with <code>c</code>, use respelling with <code>k</code>, e.g. respell {{m|pt|acne||acne}} as <code>aki^ne</code>. The other is the lack of a stress mark in the respelling. This is because the epenthetic </i/> that is generated is ignored for stress assignment purposes (but is treated as a normal vowel for all other purposes, e.g. palatalization of <code>t d</code>, softening of <code>c g</code>, and syllabification).
-* If the vowel is usually not present, but sometimes is, use <code>i^^</code>. This happens commonly with </kt/>, </ps/>, </pt/>, </bs/> and </bt/> clusters (exceptions are </ps/> and </bs/> clusters followed by another consonant, such as {{m|pt|substantivo}} ... FIXME.
+Two things should be noted here. One is the use of <code>gh</code> to get hard {{IPAchar|/ɡ/}}; this is the recommended way of respelling in this situation. (<code>gu</code> would not work for Portugal, where the respelling <code>diguno</code> would be generated.) Similarly for a cluster with <code>c</code>, use respelling with <code>k</code>, e.g. respell {{m|pt|acne||acne}} as <code>aki^ne</code>. The other is the lack of a stress mark in the respelling. This is because the epenthetic {{IPAchar|/i/}} that is generated is ignored for stress assignment purposes (but is treated as a normal vowel for all other purposes, e.g. palatalization of <code>t d</code>, softening of <code>c g</code>, and syllabification).
+* If the vowel is usually not present, but sometimes is, use <code>i^^</code>. This happens commonly with {{IPAchar|/kt/}}, {{IPAchar|/ps/}}, {{IPAchar|/pt/}}, {{IPAchar|/bs/}} and {{IPAchar|/bt/}} clusters (exceptions are {{IPAchar|/ps/}} and {{IPAchar|/bs/}} clusters followed by another consonant, such as {{m|pt|substantivo}}).
