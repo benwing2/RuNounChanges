@@ -95,6 +95,10 @@ Author: Benwing
 50. Portugal final -ɨ should be suppressed before a vowel (with a tie sign), and made optional word-finally. [DONE]
 51. Final -dor/-tor/-sor/-ssor + feminine and plural should have closed /o/. [DONE]
 52. Final -oso should have closed /o/, but feminine and plural should have open /ɔ/. [DONE]
+53. Hiatuses in Brazil involving 'i' should have two possibilities (full vowel or glide); likewise for 'u'. [DONE]
+54. In Brazil phonetic representation, hiatuses involving 'i' should be [ɪ], and those involving 'u' should be [ʊ]. [DONE]
+55. ui^ should convert to 'ui' in Portugal = /wi/, but to 'u.i' or 'uy' in Brazil. [DONE]
+56. des^ should be 'des++' or 'dis++' (++ in both cases). [DONE]
 ]=]
 
 local export = {}
@@ -149,12 +153,13 @@ local SYLDIV = u(0xFFF1) -- used to represent a user-specific syllable divider (
 -- * Ẽ stands for a word-initial Brazilian sound that can be pronounced either /ẽ/ (in careful speech) or /ĩ/ (in
 --   natural speech) and originates from en- or em- before a consonant. We distinguish this from written in-/im-,
 --   which can be only /ĩ/, and written ehn-/ehm- (or similar), which can be only /ẽ/.
+-- * Ì is used to represent either i. in hiatus or /j/ in Brazil; likewise for Ù representing u. in hiatus or /w/.
 -- * Ɔ (capital version of ɔ) stands for a Portugal sound that can be pronounced either /o/ or /ɔ/ (depending on the
 --   speaker), before syllable-final /l/.
-local vowel = "aɐeɛiɨoɔuüAEẼIƗOƆ"
+local vowel = "aɐeɛiɨoɔuüAEẼIƗÌOƆÙ"
 local V = "[" .. vowel .. "]"
 local NV_NOT_SPACING_CFLEX = "[^" .. vowel .. "%^]"
-local high_front_vocalic = "iIƗy"
+local high_front_vocalic = "iIƗÌy"
 local front_vocalic = "eɛɨẼ" .. high_front_vocalic
 local FRONTV = "[" .. front_vocalic .. "]"
 -- W stands for regional /w/ between stressed /o/ and a following vowel in hiatus ([[voo]], [[boa]], [[perdoe]]).
@@ -194,7 +199,7 @@ local syldiv_c = "[" .. syldiv .. "]"
 -- ignored for e.g. consonant-consonant assimilation processes. This currently includes accents and syllable dividers.
 local charsep = accent .. syldiv
 local charsep_c = "[" .. charsep .. "]"
-local word_divider = " #"
+local word_divider = " #‿"
 -- "wordsep_not_component_sep" means the same as "wordsep" below but excludes syllable-transparent component separators.
 -- It is used in other collections of symbols rather than by itself.
 local wordsep_not_syl_transp = charsep .. word_divider .. component_sep_not_syl_transp
@@ -297,6 +302,14 @@ export.all_style_descs = {
 	cpt = "Central Portugal", -- Central Portugal outside of Lisbon
 	spt = "Southern Portugal"
 }
+
+local function map(items, fun)
+	local new = {}
+	for _, item in ipairs(items) do
+		table.insert(new, fun(item))
+	end
+	return new
+end
 
 local function flatmap(items, fun)
 	local new = {}
@@ -620,7 +633,14 @@ local function one_term_ipa(text, style, phonetic, err)
 	-- Remove hiatus between initial <i> and following vowel ([[Iasmim]]) unless the <i> is stressed ([[ia]]) or the
 	-- user explicitly added a . (converted to SYLDIV above).
 	text = rsub(text, "#i%.(" .. V .. ")", "#y%1")
-	if not brazil then
+	if brazil then
+		-- in Brazil, hiatuses involving i. or u. have two possibilities (full vowel or glide); represent using Ì. and Ù.,
+		-- which we later convert appropriately. Do this before eliminating SYLDIV so the user can force hiatus using a
+		-- period.
+		local hiatus_to_glide = {["i"] = "Ì", ["u"] = "Ù"}
+		text = rsub(text, "(" .. C_OR_WORD_BOUNDARY .. ")([iu])(%." .. V .. ")",
+			function(before, hiatus, after) return before .. hiatus_to_glide[hiatus] .. after end)
+	else
 		-- Outside of Brazil, e.i -> a.i, e.g. [[ateísta]], [[proteína]], [[proteinúrio]] respelled 'prote.inúrio'. But seems
 		-- not to happen in rei- ([[reincidente]], [[reiniciar]], [[reidratar]], etc.). Note, it does occur in [[reídeo]],
 		-- which needs respelling.
@@ -958,26 +978,6 @@ local function one_term_ipa(text, style, phonetic, err)
 	text = rsub(text, "h", "")
 	text = rsub(text, "H", "h")
 
-	-- Stress marks and syllable dividers.
-	-- Component separators that aren't transparent to syllabification need to be made into syllable dividers.
-	text = rsub(text, component_sep_not_syl_transp_c, ".")
-	-- IPA stress marks in components followed by + should be removed.
-	text = rsub(text, ipa_stress_c .. "([^" .. word_divider .. component_sep .. "]*%+)", "%1")
-	-- Component separators that are transparent to syllabification need to be removed now, before moving IPA stress marks
-	-- to the beginning of the syllable, so they don't interfere in this process.
-	text = rsub(text, syl_transp_c .. "#?", "")
-	-- Move IPA stress marks to the beginning of the syllable.
-	text = rsub_repeatedly(text, "([#.])([^#.]*)(" .. ipa_stress_c .. ")", "%1%3%2")
-	-- Suppress syllable divider before IPA stress indicator.
-	text = rsub(text, "%.(#?" .. ipa_stress_c .. ")", "%1")
-	-- Make all primary stresses but the last one in a given word be secondary. May be fed by the first rule above.
-	text = rsub_repeatedly(text, "ˈ([^ ]+)ˈ", "ˌ%1ˈ")
-
-	-- Remove # symbols at word/text boundaries, as well as component separators and _ to force separate interpretation,
-	-- and recompose.
-	text = rsub(text, "[#_" .. component_sep .. "]", "")
-	text = mw.ustring.toNFC(text)
-
 	return text
 end
 
@@ -1093,6 +1093,9 @@ function export.IPA(text, style, phonetic)
 		-- Handle i^ and i^^ before a vowel = /i/ or /j/.
 		flatmap_and_sub("i%^%^(" .. V .. ")", "y%1", "i.%1")
 		flatmap_and_sub("i%^(" .. V .. ")", "i.%1", "y%1")
+		-- Handle i^ and i^^ after a vowel = /i/ or /j/; mostly useful for ui^
+		flatmap_and_sub("(" .. V .. ")i%^%^", "%1y", "%1.i")
+		flatmap_and_sub("(" .. V .. ")i%^", "%1.i", "%1y")
 		-- Handle i^ and i^^ not before a vowel = optional epenthetic /i/.
 		flatmap_and_sub("i%^%^(" .. NV_NOT_SPACING_CFLEX .. ")", "Ɨ%1", "I%1")
 		flatmap_and_sub("i%^(" .. NV_NOT_SPACING_CFLEX .. ")", "I%1", "Ɨ%1")
@@ -1109,9 +1112,9 @@ function export.IPA(text, style, phonetic)
 		flatmap_and_sub("o%^", "o", "u")
 		-- Handle ê*/ô*/é*/ó* = same as without asterisk.
 		flatmap_and_sub("([eo][" .. AC .. CFLEX .. "])%*", "%1")
-		-- Handle des^ at beginning of word = des or dis++, and des^^ = opposite order.
-		flatmap_and_sub("#des%^%^", "#dis++", "#des")
-		flatmap_and_sub("#des%^", "#des", "#dis++")
+		-- Handle des^ at beginning of word = des++ or dis++, and des^^ = opposite order.
+		flatmap_and_sub("#des%^%^", "#dis++", "#des++")
+		flatmap_and_sub("#des%^", "#des++", "#dis++")
 		for _, variant in ipairs(variants) do
 			if rfind(variant, "[*%^]") then
 				err("* or ^ remains after applying all known replacements involving these charactres")
@@ -1127,10 +1130,11 @@ function export.IPA(text, style, phonetic)
 		-- ê*/ô* -> é/ó and é*/ó* -> ê/ô (reverse accents)
 		text = rsub(text, "([eo])([" .. AC .. CFLEX .. "])%*", function(eo, acc)
 			return eo .. (acc == CFLEX and AC or CFLEX) end)
-		-- Remove i*, i^ and i^^ not followed by a vowel (i.e. Brazilian epenthetic i), but not i^ and i^^ followed by
-		-- a vowel (which has a totally different meaning, i.e. i or y in Brazil).
-		text = rsub(text, "i[*%^]+(" .. NV_NOT_SPACING_CFLEX .. ")", "%1")
-		text = rsub(text, "[*%^]+", "")
+		-- Remove i*, i^ and i^^ not followed by a vowel (i.e. Brazilian epenthetic i), but not i^ and i^^ followed or
+		-- preceded by a vowel (which has a totally different meaning, i.e. i or y in Brazil).
+		text = rsub(text, "i%^+(" .. V .. ")", "i%1")
+		text = rsub(text, "(" .. V .. ")i%^+", "%1i")
+		text = rsub(text, "i?[*%^]+", "")
 		variants = {text}
 	end
 
@@ -1163,11 +1167,13 @@ function export.IPA(text, style, phonetic)
 		if brazil then
 			result = flatmap(result, apply_sub("Ẽ", "e", {"careful pronunciation"}, "i", {"natural pronunciation"}))
 			result = flatmap(result, apply_sub("I", "i", nil, "e", nil))
+			result = flatmap(result, apply_sub("Ì%.", "i.", nil, "j", {"faster pronunciation"}))
+			result = flatmap(result, apply_sub("Ù%.", "u.", nil, "w", {"faster pronunciation"}))
 		else -- Portugal
 			result = flatmap(result, apply_sub("W", "", nil, "w", {"regional"}))
-			result = flatmap(result, apply_sub("ʃ([." .. ipa_stress .. "])s",
+			result = flatmap(result, apply_sub("ʃ(" .. wordsep_c .. "*)s",
 					"ʃ%1s", {"careful pronunciation"}, "%1ʃ", {"natural pronunciation"}))
-			result = flatmap(result, apply_sub("ʒ([." .. ipa_stress .. "])z",
+			result = flatmap(result, apply_sub("ʒ(" .. wordsep_c .. "*)z",
 					"ʒ%1z", {"careful pronunciation"}, "%1ʒ", {"natural pronunciation"}))
 			result = flatmap(result, apply_sub("Ɔ", "o", nil, "ɔ", nil))
 		end
@@ -1175,7 +1181,47 @@ function export.IPA(text, style, phonetic)
 		return result
 	end
 
-	return flatmap(variants, call_one_term_ipa)
+	-- Final changes to the generated IPA to produce what's shown to the user. We used to do this at the end of
+	-- one_term_ipa() but the stuff below needs to happen after the expansion of Ì. and Ù. in Brazil to either i./u.
+	-- or j/w, because the latter transformation involves removing a syllable boundary, which will cause a stress mark
+	-- on the following syllable to retract to the beginning of the newly combined syllable. To avoid lots of hassle,
+	-- we postpone this stress mark movement till now.
+	local function finalize_ipa(text, phonetic)
+		-- Convert Brazil i/u in hiatus to ɪ/ʊ in the phonetic representation. This needs to happen after handling of
+		-- Ì. and Ù., which feeds this change.
+		if brazil and phonetic then
+			local phonetic_hiatus_iu_to_actual = {["i"] = "ɪ", ["u"] = "ʊ"}
+			text = rsub(text, "([iu])(%." .. V .. ")", function(iu, after) return phonetic_hiatus_iu_to_actual[iu] .. after end)
+		end
+
+		-- Stress marks and syllable dividers.
+		-- Component separators that aren't transparent to syllabification need to be made into syllable dividers.
+		text = rsub(text, component_sep_not_syl_transp_c, ".")
+		-- IPA stress marks in components followed by + should be removed.
+		text = rsub(text, ipa_stress_c .. "([^" .. word_divider .. component_sep .. "]*%+)", "%1")
+		-- Component separators that are transparent to syllabification need to be removed now, before moving IPA stress marks
+		-- to the beginning of the syllable, so they don't interfere in this process.
+		text = rsub(text, syl_transp_c .. "#?", "")
+		-- Move IPA stress marks to the beginning of the syllable.
+		text = rsub_repeatedly(text, "([#.])([^#.]*)(" .. ipa_stress_c .. ")", "%1%3%2")
+		-- Suppress syllable divider before IPA stress indicator.
+		text = rsub(text, "%.(#?" .. ipa_stress_c .. ")", "%1")
+		-- Make all primary stresses but the last one in a given word be secondary. May be fed by the first rule above.
+		text = rsub_repeatedly(text, "ˈ([^ ]+)ˈ", "ˌ%1ˈ")
+
+		-- Remove # symbols at word/text boundaries, as well as _ to force separate interpretation, and recompose.
+		text = rsub(text, "[#_]", "")
+		text = mw.ustring.toNFC(text)
+
+		return text
+	end
+
+	variants = flatmap(variants, call_one_term_ipa)
+	for i, variant in ipairs(variants) do
+		variants[i].phonemic = finalize_ipa(variants[i].phonemic, false)
+		variants[i].phonetic = finalize_ipa(variants[i].phonetic, true)
+	end
+	return variants
 end
 
 
