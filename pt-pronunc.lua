@@ -91,7 +91,10 @@ Author: Benwing
     'ami^nési^a'. [DONE]
 47. Portugal 'o', 'os' should be unstressed with /u/, not have /ɔ/. [DONE]
 48. /s/ after nasal vowel before glide should not become voiced. [DONE]
-49. Implement raw=phonemic, raw=phonetic, raw=both.
+49. [[arrozinho]] (which uses the + component divider) should have the IPA stress mark before the 'z' not after. [DONE]
+50. Portugal final -ɨ should be suppressed before a vowel (with a tie sign), and made optional word-finally. [DONE]
+51. Final -dor/-tor/-sor/-ssor + feminine and plural should have closed /o/. [DONE]
+52. Final -oso should have closed /o/, but feminine and plural should have open /ɔ/. [DONE]
 ]=]
 
 local export = {}
@@ -176,6 +179,8 @@ local syl_transp = "+*"
 local syl_transp_c = "[" .. syl_transp .. "]"
 -- Zero or more syllable-transparent component separators; used during syllabification.
 local STC = syl_transp_c .. "*"
+-- Component separators that are not transparent to syllabification. Includes colon (:), hyphen (-) and double hyphen
+-- (--), which is converted internally to @.
 local component_sep_not_syl_transp = ":@%-"
 local component_sep_not_syl_transp_c = "[" .. component_sep_not_syl_transp .. "]"
 -- "component_sep" means any symbol that may separate word components (not including #, which is added at a certain
@@ -693,6 +698,15 @@ local function one_term_ipa(text, style, phonetic, err)
 	-- it takes precedence; otherwise, act as if an acute accent were given.
 	text = rsub(text, "([AEO])(" .. non_primary_stress_c .. ")", "%1" .. AC .. "%2")
 
+	-- Stressed o in -dor, -dor, -sor ([[ganhador]], [[autor]], [[invasor]], [[agressor]], etc.) and feminines and plurals
+	-- is closed /o/.
+	text = rsub(text, "([dtsS])O(ˈr#)", "%1o%2")
+	text = rsub(text, "([dtsS])O(ˈ%.r[EA]s?#)", "%1o%2")
+	-- Stressed o in -oso is closed /o/.
+	text = rsub(text, "O(ˈ%.sO#)", "o%1")
+	-- Stressed o in -osa, -osos, -osas is open /ɔ/.
+	text = rsub(text, "O(ˈ%.s[OA]s?#)", "ɔ%1")
+
 	-- Unstressed syllables.
 	-- Before final <x>, unstressed e/o are open, e.g. [[córtex]], [[xérox]].
 	text = rsub(text, "([EO])(kç#)", "%1" .. AC .. "%2")
@@ -927,9 +941,16 @@ local function one_term_ipa(text, style, phonetic, err)
 		local occlude_fricative = { ["β"] = "b", ["ð"] = "d", ["ɣ"] = "g" }
 		text = rsub(text, "[bdg]", fricativize_stop)
 		text = rsub(text, "##([βðɣ])", function(bdg) return "##" .. occlude_fricative[bdg] end)
-		text = rsub(text, "(" .. TILDE .. "%.?)([βðɣ])", function(before, bdg) return before .. occlude_fricative[bdg] end)
-		text = rsub(text, "([lɫ]%.?)ð", "%1d")
+		text = rsub(text, "(" .. TILDE .. wordsep_c .. "*)([βðɣ])", function(before, bdg) return before .. occlude_fricative[bdg] end)
+		text = rsub(text, "([lɫ]" .. wordsep_c .. "*)ð", "%1d")
 	end
+
+	if portugal then
+		-- Suppress final -ɨ before a vowel, and make optional utterance-finally.
+		text = rsub(text, "ɨ#[ %-]#(" .. V .. ")", "‿%1")
+		text = rsub(text, "ɨ##", "(ɨ)##")
+	end
+
 	text = rsub(text, "g", "ɡ") -- U+0261 LATIN SMALL LETTER SCRIPT G
 	text = rsub(text, "[ʧʤ]", {["ʧ"] = "t͡ʃ", ["ʤ"] = "d͡ʒ"})
 	text = rsub(text, "tʃ", "t͡ʃ")
@@ -939,9 +960,12 @@ local function one_term_ipa(text, style, phonetic, err)
 
 	-- Stress marks and syllable dividers.
 	-- Component separators that aren't transparent to syllabification need to be made into syllable dividers.
-	text = rsub(text, "[:@%-]", ".")
+	text = rsub(text, component_sep_not_syl_transp_c, ".")
 	-- IPA stress marks in components followed by + should be removed.
 	text = rsub(text, ipa_stress_c .. "([^" .. word_divider .. component_sep .. "]*%+)", "%1")
+	-- Component separators that are transparent to syllabification need to be removed now, before moving IPA stress marks
+	-- to the beginning of the syllable, so they don't interfere in this process.
+	text = rsub(text, syl_transp_c .. "#?", "")
 	-- Move IPA stress marks to the beginning of the syllable.
 	text = rsub_repeatedly(text, "([#.])([^#.]*)(" .. ipa_stress_c .. ")", "%1%3%2")
 	-- Suppress syllable divider before IPA stress indicator.
@@ -1345,7 +1369,6 @@ function export.show(frame)
 	local params = {
 		[1] = {}, -- this replaces style group 'all'
 		["style"] = {},
-		["raw"] = {},
 		["pagename"] = {},
 	}
 	for group, _ in pairs(export.all_style_groups) do
@@ -1361,9 +1384,6 @@ function export.show(frame)
 	local parargs = frame:getParent().args
 	local args = require("Module:parameters").process(parargs, params)
 	local pagename = args.pagename or mw.title.getCurrentTitle().subpageText
-	if args.raw and args.raw ~= "phonemic" and args.raw ~= "phonetic" and args.raw ~= "both" then
-		error("raw= should have one of the values 'phonemic', 'phonetic' or 'both' but saw '" .. args.raw .. "'")
-	end
 
 	-- Set inputs
 	local inputs = {}
@@ -1470,11 +1490,10 @@ function export.show(frame)
 
 	local lines = {}
 
-	local function format_style(tag, expressed_style, is_first, raw)
+	local function format_style(tag, expressed_style, is_first)
 		local pronunciations = {}
 		local formatted_pronuns = {}
 		for _, pronun in ipairs(expressed_style.pronuns) do
-			if not raw or raw ~= "phonetic" then
 			table.insert(pronunciations, {
 				pron = "/" .. pronun.phonemic .. "/",
 				qualifiers = pronun.qualifiers,
@@ -1488,45 +1507,6 @@ function export.show(frame)
 				pron = "[" .. pronun.phonetic .. "]",
 				refs = pronun.refs,
 			})
-			local reftext = ""
-			if pronun.refs then
-				reftext = string.rep("[1]", #pronun.refs)
-			end
-			table.insert(formatted_pronuns, "[" .. pronun.phonetic .. "]" .. reftext)
-		end
-		-- Number of bullets: When indent = 1, we want the number of bullets given by `expressed_style.bullets`,
-		-- and when indent = 2, we want `expressed_style.bullets + 1`, hence we subtract 1.
-		local bullet = string.rep("*", expressed_style.bullets + expressed_style.indent - 1) .. " "
-		-- Here we construct the formatted line in `formatted`, and also try to construct the equivalent without HTML
-		-- and wiki markup in `formatted_for_len`, so we can compute the approximate textual length for use in sizing
-		-- the toggle box with the "more" button on the right.
-		local pre = is_first and expressed_style.pre and expressed_style.pre .. " " or ""
-		local pre_for_len = pre .. (tag and "(" .. tag .. ") " or "")
-		pre = pre .. (tag and m_qual.format_qualifier(tag) .. " " or "")
-		local post = is_first and (expressed_style.post and " " .. expressed_style.post or "") or ""
-		local formatted = bullet .. pre .. m_IPA.format_IPA_full(lang, pronunciations) .. post
-		local formatted_for_len = bullet .. pre .. "IPA(key): " .. table.concat(formatted_pronuns, ", ") .. post
-		return formatted, formatted_for_len
-	end
-
-	local function format_raw_style(expressed_style, raw_type)
-		local formatted_pronuns = {}
-		for _, pronun in ipairs(expressed_style.pronuns) do
-			local formatted_pronun = {}
-			if raw_type == "phonemic" or raw_type == "both" then
-				local formatted_phonemic = "/" .. pronun.phonemic .. "/"
-				if pronun.qualifiers then
-					formatted_phonemic = m_qual.format_qualifiers(pronun.qualifiers) .. " " .. formatted_phonemic
-				end
-				table.insert(formatted_pronun, formatted_phonemic)
-			end
-			if raw_type == "both" then
-				table.insert(formatted_pronun, " ")
-			end
-			if raw_type == "phonetic" or raw_type == "both" then
-				local formatted_phonetic = "[" .. pronun.phonetic .. "]"
-				table.insert(formatted_pronun, formatted_phonetic)
-			end
 			local reftext = ""
 			if pronun.refs then
 				reftext = string.rep("[1]", #pronun.refs)
