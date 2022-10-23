@@ -101,6 +101,7 @@ Author: Benwing
 56. des^ should be 'des++' or 'dis++' (++ in both cases). [DONE]
 57. Word-boundary special handling (e.g. des^, x-, -x, etc.) should also respect component boundaries e.g. in
     [[aerodeslizador]], [[criptoxantina]]. [DONE]
+58. Convert apostrophe to tie, and make tie transparent to syllabification. [DONE]
 ]=]
 
 local export = {}
@@ -179,20 +180,23 @@ local non_primary_stress = LINEUNDER .. DOTUNDER .. "ˌ"
 local non_primary_stress_c = "[" .. non_primary_stress .. "]"
 local accent = quality .. stress .. TILDE
 local accent_c = "[" .. accent .. "]"
--- "syl_transp" means any component separator that should be "transparent" (i.e. ignored) during syllabification
--- processes. This should include a subset of the component_sep characters, currently + and * (which ++ is converted
--- into).
-local syl_transp = "+*"
-local syl_transp_c = "[" .. syl_transp .. "]"
--- Zero or more syllable-transparent component separators; used during syllabification.
+-- Any component separator that should be "transparent" (i.e. ignored) during syllabification processes. This should
+-- include a subset of the component_sep characters, currently + and * (which ++ is converted into).
+local syl_transp_component_sep = "+*"
+local syl_transp_component_sep_c = "[" .. syl_transp_component_sep .. "]"
+-- Any character that should be "transparent" (i.e. ignored) during syllabification processes. This includes the
+-- syllable-transparent component separators + and ++ (converted into *) as well as the tie character, which originates
+-- from an apostrophe (e.g. [[barriga d'água]]).
+local syl_transp = syl_transp_component_sep .. "‿"
+-- Zero or more syllable-transparent characters; used during syllabification.
 local STC = syl_transp_c .. "*"
 -- Component separators that are not transparent to syllabification. Includes colon (:), hyphen (-) and double hyphen
 -- (--), which is converted internally to @.
-local component_sep_not_syl_transp = ":@%-"
-local component_sep_not_syl_transp_c = "[" .. component_sep_not_syl_transp .. "]"
+local non_syl_transp_component_sep = ":@%-"
+local non_syl_transp_component_sep_c = "[" .. non_syl_transp_component_sep .. "]"
 -- "component_sep" means any symbol that may separate word components (not including #, which is added at a certain
 -- point next to certain word components so that the adjacent characters are treated as if they are at word bounaries).
-local component_sep = syl_transp .. component_sep_not_syl_transp
+local component_sep = syl_transp_component_sep .. non_syl_transp_component_sep
 local component_sep_c = "[" .. component_sep .. "]"
 local word_or_component_sep_c = "[#" .. component_sep .. "]"
 -- Syllable divider (auto-inserted or user-specified).
@@ -202,10 +206,14 @@ local syldiv_c = "[" .. syldiv .. "]"
 -- ignored for e.g. consonant-consonant assimilation processes. This currently includes accents and syllable dividers.
 local charsep = accent .. syldiv
 local charsep_c = "[" .. charsep .. "]"
-local word_divider = " #‿"
--- "wordsep_not_component_sep" means the same as "wordsep" below but excludes syllable-transparent component separators.
--- It is used in other collections of symbols rather than by itself.
-local wordsep_not_syl_transp = charsep .. word_divider .. component_sep_not_syl_transp
+-- Characters that may divide words, other than the tie (‿), which is transparent to syllabification.
+local non_syl_transp_word_divider = " #"
+-- All characters that may divide words.
+local word_divider = non_syl_transp_word_divider .. "‿"
+-- "wordsep_not_syl_transp" means the same as "wordsep" below but excludes syllable-transparent characters. It is used
+-- in other collections of symbols (particularly when negated, so as to include syllable-transparent characters but
+-- otherwise exclude word separators) rather than by itself.
+local wordsep_not_syl_transp = charsep .. non_syl_transp_word_divider .. non_syl_transp_component_sep
 -- "wordsep" means any symbol that may separate the individual characters that make up a word or may separate words or
 -- components, and which should be ignored for e.g. consonant-consonant assimilation processes that operate across
 -- words. This currently includes everything in "charsep" and "component_sep" plus symbols that may divide words.
@@ -1051,8 +1059,10 @@ function export.IPA(text, style, phonetic)
 	end
 	text = table.concat(words)
 
-	-- now eliminate punctuation
-	text = rsub(text, "[!?']", "")
+	-- now eliminate word-final question mark and exclamation point (converted to foot boundary above when word-medial).
+	text = rsub(text, "[!?]", "")
+	-- apostrophe becomes tie (e.g. in [[barriga d'agua]])
+	text = rsub(text, "'", "‿")
 	-- put # at word beginning and end and double ## at text/foot boundary beginning/end
 	text = rsub(text, " | ", "# | #")
 	text = "##" .. rsub(text, " ", "# #") .. "##"
@@ -1192,12 +1202,12 @@ function export.IPA(text, style, phonetic)
 
 		-- Stress marks and syllable dividers.
 		-- Component separators that aren't transparent to syllabification need to be made into syllable dividers.
-		text = rsub(text, component_sep_not_syl_transp_c, ".")
+		text = rsub(text, non_syl_transp_component_sep_c, ".")
 		-- IPA stress marks in components followed by + should be removed.
 		text = rsub(text, ipa_stress_c .. "([^" .. word_divider .. component_sep .. "]*%+)", "%1")
 		-- Component separators that are transparent to syllabification need to be removed now, before moving IPA stress marks
 		-- to the beginning of the syllable, so they don't interfere in this process.
-		text = rsub(text, syl_transp_c .. "#?", "")
+		text = rsub(text, syl_transp_component_sep_c .. "#?", "")
 		-- Move IPA stress marks to the beginning of the syllable.
 		text = rsub_repeatedly(text, "([#.])([^#.]*)(" .. ipa_stress_c .. ")", "%1%3%2")
 		-- Suppress syllable divider before IPA stress indicator.
