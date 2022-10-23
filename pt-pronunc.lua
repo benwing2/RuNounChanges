@@ -17,7 +17,7 @@ Author: Benwing
 8. Implement ô* = ô in Brazil, ó in Portugal (useful especially before nasal consonants). [DONE]
 9. Implement é* = é in Brazil, ê in Portugal (useful especially in -éi-). [DONE]
 10. Implement ó* = ó in Brazil, ô in Portugal (useful especially in -ói-). [DONE]
-11. Implement des^ at beginning of word = /dis+/ or /des/ in Brazil (in that order), and des^^ = opposite order. [DONE]
+11. Implement des^ at beginning of word = 'dis++' or 'des++' in Brazil (in that order), and des^^ = opposite order. [DONE]
 12. In Portugal, before [ɫ], unstressed 'a' should be /a/; unstressed 'e' should be /ɛ/; and unstressed 'o' should be
    either /o/ or /ɔ/ (in that order). [DONE]
 13. Support qualifiers using <q:...>. [DONE]
@@ -102,6 +102,7 @@ Author: Benwing
 57. Word-boundary special handling (e.g. des^, x-, -x, etc.) should also respect component boundaries e.g. in
     [[aerodeslizador]], [[criptoxantina]]. [DONE]
 58. Convert apostrophe to tie, and make tie transparent to syllabification. [DONE]
+59. 'x' in -nx- should default to /ʃ/ ([[enxame]], [[enxugar]]) [DONE]
 ]=]
 
 local export = {}
@@ -188,6 +189,7 @@ local syl_transp_component_sep_c = "[" .. syl_transp_component_sep .. "]"
 -- syllable-transparent component separators + and ++ (converted into *) as well as the tie character, which originates
 -- from an apostrophe (e.g. [[barriga d'água]]).
 local syl_transp = syl_transp_component_sep .. "‿"
+local syl_transp_c = "[" .. syl_transp .. "]"
 -- Zero or more syllable-transparent characters; used during syllabification.
 local STC = syl_transp_c .. "*"
 -- Component separators that are not transparent to syllabification. Includes colon (:), hyphen (-) and double hyphen
@@ -371,7 +373,8 @@ local function one_term_ipa(text, style, phonetic, err)
 	-- x
 	text = rsub(text, "(" .. word_or_component_sep_c .. ")x", "%1ʃ") -- xérox, xilofone, etc.
 	text = rsub(text, "x(" .. word_or_component_sep_c .. ")", "kç%1") -- xérox, córtex, etc.
-	text = rsub(text, "(" .. V .. charsep_c .. "*[iu]" .. charsep_c .. "*)x", "%1ʃ") -- baixo, peixe, frouxo, etc.
+	-- This must follow handling of final -x so that [[manx]], [[Bronx]] are not affected.
+	text = rsub(text, "(" .. V .. charsep_c .. "*[iun]" .. charsep_c .. "*)x", "%1ʃ") -- baixo, peixe, frouxo, enxame, etc.
 	-- -exC- should be pronounced like -esC- in Brazil but -eisC- in Portugal. Cf. excelente, experiência, têxtil,
 	-- êxtase. Not with other vowels (cf. [[Felixlândia]], [[Laxmi]], [[Oxford]]).
 	-- FIXME: Maybe this applies only to Lisbon and environs?
