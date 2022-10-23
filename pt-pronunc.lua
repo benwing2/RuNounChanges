@@ -99,6 +99,8 @@ Author: Benwing
 54. In Brazil phonetic representation, hiatuses involving 'i' should be [ɪ], and those involving 'u' should be [ʊ]. [DONE]
 55. ui^ should convert to 'ui' in Portugal = /wi/, but to 'u.i' or 'uy' in Brazil. [DONE]
 56. des^ should be 'des++' or 'dis++' (++ in both cases). [DONE]
+57. Word-boundary special handling (e.g. des^, x-, -x, etc.) should also respect component boundaries e.g. in
+    [[aerodeslizador]], [[criptoxantina]]. [DONE]
 ]=]
 
 local export = {}
@@ -192,6 +194,7 @@ local component_sep_not_syl_transp_c = "[" .. component_sep_not_syl_transp .. "]
 -- point next to certain word components so that the adjacent characters are treated as if they are at word bounaries).
 local component_sep = syl_transp .. component_sep_not_syl_transp
 local component_sep_c = "[" .. component_sep .. "]"
+local word_or_component_sep_c = "[#" .. component_sep .. "]"
 -- Syllable divider (auto-inserted or user-specified).
 local syldiv = "." .. SYLDIV
 local syldiv_c = "[" .. syldiv .. "]"
@@ -303,14 +306,6 @@ export.all_style_descs = {
 	spt = "Southern Portugal"
 }
 
-local function map(items, fun)
-	local new = {}
-	for _, item in ipairs(items) do
-		table.insert(new, fun(item))
-	end
-	return new
-end
-
 local function flatmap(items, fun)
 	local new = {}
 	for _, item in ipairs(items) do
@@ -366,8 +361,8 @@ local function one_term_ipa(text, style, phonetic, err)
 	local portugal = m_table.contains(export.all_style_groups.pt, style)
 
 	-- x
-	text = rsub(text, "#x", "#ʃ") -- xérox, xilofone, etc.
-	text = rsub(text, "x#", "kç#") -- xérox, córtex, etc.
+	text = rsub(text, "(" .. word_or_component_sep_c .. ")x", "%1ʃ") -- xérox, xilofone, etc.
+	text = rsub(text, "x(" .. word_or_component_sep_c .. ")", "kç%1") -- xérox, córtex, etc.
 	text = rsub(text, "(" .. V .. charsep_c .. "*[iu]" .. charsep_c .. "*)x", "%1ʃ") -- baixo, peixe, frouxo, etc.
 	-- -exC- should be pronounced like -esC- in Brazil but -eisC- in Portugal. Cf. excelente, experiência, têxtil,
 	-- êxtase. Not with other vowels (cf. [[Felixlândia]], [[Laxmi]], [[Oxford]]).
@@ -390,7 +385,7 @@ local function one_term_ipa(text, style, phonetic, err)
 	text = rsub(text, "([scln])h", {["s"]="ʃ", ["c"]="ʃ", ["n"]="ɲ", ["l"]="ʎ" })
 
 	-- remove initial <h>
-	text = rsub(text, "#h([^" .. accent .. "])", "#%1")
+	text = rsub(text, "(" .. word_or_component_sep_c .. ")h([^" .. accent .. "])", "%1%2")
 
 	-- c, g, q
 	-- This should precede syllabification especially so that the latter isn't confused by gu, qu, gü, qü
@@ -440,7 +435,7 @@ local function one_term_ipa(text, style, phonetic, err)
 	text = rsub(text, "(" .. C .. ")%1", "%1")
 
 	-- muit- is special and contains nasalization. Do before palatalization of t/d so [[muitíssimo]] works.
-	text = rsub(text, "(#mu" .. stress_c .. "*)(it)", "%1" .. TILDE .. "%2")
+	text = rsub(text, "(" .. word_or_component_sep_c .. "mu" .. stress_c .. "*)(it)", "%1" .. TILDE .. "%2")
 
 	if brazil then
 		-- Palatalize t/d + i -> affricates in Brazil. Use special unitary symbols, which we later convert to regular
@@ -469,7 +464,7 @@ local function one_term_ipa(text, style, phonetic, err)
 	text = rsub(text, "%+%+", "*")
 
 	-- Respell [[homenzinho]] as 'homemzinho' so it is stressed correctly.
-	text = rsub(text, "n(" .. SYLDIV .. "?ziɲos?#)", "m%1")
+	text = rsub(text, "n(" .. SYLDIV .. "?ziɲos?" .. word_or_component_sep_c .. ")", "m%1")
 
 	-- Divide before the last consonant (possibly followed by a glide). We then move the syllable division marker
 	-- leftwards over clusters that can form onsets. Note that syllable-transparent component separators will always
@@ -489,7 +484,7 @@ local function one_term_ipa(text, style, phonetic, err)
 		-- /tʃ/, /dʒ/ are normally single sounds, but adj- in [[adjetivo]], [[adjunto]] etc. should be 'ad.j'
 		text = rsub(text, "(t" .. STC .. ")%.(ʃ)", ".%1%2")
 		text = rsub(text, "(d" .. STC .. ")%.(j)", ".%1%2")
-		text = rsub(text, "(#a" .. STC .. ")%.(d" .. STC .. ")(j)", "%1%2.%3")
+		text = rsub(text, "(" .. word_or_component_sep_c .. "a" .. STC .. ")%.(d" .. STC .. ")(j)", "%1%2.%3")
 	end
 	-- All vowels should be separated from adjacent vowels by a syllable division except
 	-- (1) aeo + unstressed i/u, ([[saiba]], [[peixe]], [[noite]], [[Paulo]], [[deusa]], [[ouro]]), except when
@@ -511,8 +506,8 @@ local function one_term_ipa(text, style, phonetic, err)
 	-- Prevent syllable division between final -ui(s), -iu(s). This should precede the following rule that prevents
 	-- syllable division between ai etc., so that [[saiu]] "he left" gets divided as sa.iu.
 	-- It doesn't make sense to have STC in the middle of a diphthong here.
-	text = rsub(text, "(u" .. accent_c .. "*)(is?#)", "%1" .. TEMP1 .. "%2")
-	text = rsub(text, "(i" .. accent_c .. "*)(us?#)", "%1" .. TEMP1 .. "%2")
+	text = rsub(text, "(u" .. accent_c .. "*)(is?" .. word_or_component_sep_c .. ")", "%1" .. TEMP1 .. "%2")
+	text = rsub(text, "(i" .. accent_c .. "*)(us?" .. word_or_component_sep_c .. ")", "%1" .. TEMP1 .. "%2")
 	-- Prevent syllable division between ai, ou, etc. unless either the second vowel is accented [[saído]]) or there's
 	-- a TEMP1 marker already after the second vowel (which will occur e.g. in [[saiu]] divided as 'sa.iu').
 	text = rsub_repeatedly(text, "([aeo]" .. accent_c .. "*)([iu][^" .. accent .. TEMP1 .. "])", "%1" .. TEMP1 .. "%2")
@@ -620,10 +615,11 @@ local function one_term_ipa(text, style, phonetic, err)
 	text = table.concat(words, " ")
 
 	-- Add word boundaries around component separators. We add them on both sides of - and -- (converted to @), which
-	-- behave mostly like a true word separator, but only on the right side of other component separators. Note that
-	-- some component separators (+ and ++ [converted to *]) are transparent to syllable boundaries, meaning that there
-	-- may be a syllable divider directly to the right of the component separator. To simplify the code below, we put
-	-- the word boundary marker on the outside of the syllable boundary marker.
+	-- behave mostly like a true word separator, but only on the right side of other component separators (which
+	-- corresponds to the beginning of the word following the separator). Note that some component separators (+ and ++
+	-- [converted to *]) are transparent to syllable boundaries, meaning that there may be a syllable divider directly
+	-- to the right of the component separator. To simplify the code below, we put the word boundary marker on the outside
+	-- of the syllable boundary marker.
 	text = rsub(text, "([%-@]" .. syldiv_c .. "?)", "#%1#")
 	text = rsub(text, "([+:*]" .. syldiv_c .. "?)", "%1#")
 
@@ -1112,9 +1108,9 @@ function export.IPA(text, style, phonetic)
 		flatmap_and_sub("o%^", "o", "u")
 		-- Handle ê*/ô*/é*/ó* = same as without asterisk.
 		flatmap_and_sub("([eo][" .. AC .. CFLEX .. "])%*", "%1")
-		-- Handle des^ at beginning of word = des++ or dis++, and des^^ = opposite order.
-		flatmap_and_sub("#des%^%^", "#dis++", "#des++")
-		flatmap_and_sub("#des%^", "#des++", "#dis++")
+		-- Handle des^ at beginning of word or component = des++ or dis++, and des^^ = opposite order.
+		flatmap_and_sub("(" .. word_or_component_sep_c .. ")des%^%^", "%1dis++", "%1des++")
+		flatmap_and_sub("(" .. word_or_component_sep_c .. ")des%^", "%1des++", "%1dis++")
 		for _, variant in ipairs(variants) do
 			if rfind(variant, "[*%^]") then
 				err("* or ^ remains after applying all known replacements involving these charactres")
