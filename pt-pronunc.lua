@@ -102,7 +102,11 @@ Author: Benwing
 57. Word-boundary special handling (e.g. des^, x-, -x, etc.) should also respect component boundaries e.g. in
     [[aerodeslizador]], [[criptoxantina]]. [DONE]
 58. Convert apostrophe to tie, and make tie transparent to syllabification. [DONE]
-59. 'x' in -nx- should default to /ʃ/ ([[enxame]], [[enxugar]]) [DONE]
+59. 'x' in -nx- should default to /ʃ/ ([[enxame]], [[enxugar]]). [DONE]
+60. Final i^ should not be stressed. [DONE]
+61. There should not be a comma between phonemic and phonetic representations. [DONE]
+62. Final stressed -io in Brazil should be either i.u or iw. [DONE]
+63. Unstressed final '-ax' has open /a/ including in Portugal. [DONE]
 ]=]
 
 local export = {}
@@ -145,22 +149,23 @@ local LINEUNDER = u(0x0331) -- line under =  ̱
 local TEMP1 = u(0xFFF0)
 local SYLDIV = u(0xFFF1) -- used to represent a user-specific syllable divider (.) so we won't change it
 
--- Since we lowercase all symbols at the beginning, we can later use capital letters to represent additional
--- distinctions, typically in cases where we want to remember the source of a given phoneme. We can also use composed
--- Unicode symbols with diacritics on them, since we maintain everything in decomposed format except for ç and ü.
+-- Since we convert all symbols at the beginning and decompose accented characters (except for ç and ü), we can later
+-- use capital and/or accented letters to represent additional distinctions, typically in cases where we want to
+-- remember the source of a given phoneme. By convention we use capital letters, optionally with accents.
 -- Specifically:
 -- * A/E/O represent written a/e/o where we don't yet know the vowel quality. Towards the beginning, we convert all
 --   written a/e/o to A/E/O and later convert them to their final qualities (which might include /a/ /e/ /o/, so we
 --   can't use those symbols directly for this purpose).
--- * I is used to represent epenthetic i in Brazilian variants (which should not affect stress assignment but is
---   otherwise treated as a normal sound), and Ɨ represents deleted epenthetic i (which still palatalizes /t/ and /d/).
 -- * Ẽ stands for a word-initial Brazilian sound that can be pronounced either /ẽ/ (in careful speech) or /ĩ/ (in
 --   natural speech) and originates from en- or em- before a consonant. We distinguish this from written in-/im-,
 --   which can be only /ĩ/, and written ehn-/ehm- (or similar), which can be only /ẽ/.
+-- * I is used to represent epenthetic i in Brazilian variants (which should not affect stress assignment but is
+--   otherwise treated as a normal sound), and Ɨ represents deleted epenthetic i (which still palatalizes /t/ and /d/).
 -- * Ì is used to represent either i. in hiatus or /j/ in Brazil; likewise for Ù representing u. in hiatus or /w/.
 -- * Ɔ (capital version of ɔ) stands for a Portugal sound that can be pronounced either /o/ or /ɔ/ (depending on the
 --   speaker), before syllable-final /l/.
-local vowel = "aɐeɛiɨoɔuüAEẼIƗÌOƆÙ"
+-- * Ú is used word-finally after i to represent either .u in hiatus or /w/ in Brazil.
+local vowel = "aɐeɛiɨoɔuüAEẼIƗÌOƆÙÚ"
 local V = "[" .. vowel .. "]"
 local NV_NOT_SPACING_CFLEX = "[^" .. vowel .. "%^]"
 local high_front_vocalic = "iIƗÌy"
@@ -563,21 +568,22 @@ local function one_term_ipa(text, style, phonetic, err)
 		if #syllables > 1 and (rfind(word, "[aeo]s?$") or rfind(word, "[ae]m$") or rfind(word, "[ae]ns$")) then
 			-- Stress the last syllable but one. The -2 is because of the syllable dividers; see above.
 			sylno = #syllables - 2
-			-- Don't put stress on epenthetic i; instead, we stress the preceding syllable, as if epenthetic i weren't
-			-- there.
-			while sylno > 1 and rfind(syllables[sylno], "I") do
-				sylno = sylno - 2
-			end
-			-- It is (vaguely) possible that we have a one-syllable word beginning with a complex cluster such as gn-
-			-- followed by a normally unstressed ending such as -em. In this case, we want the ending to be stressed.
-			while sylno < #syllables and rfind(syllables[sylno], "I") do
-				sylno = syno + 2
-			end
 		else
 			sylno = #syllables
 		end
+		-- Don't put stress on epenthetic i; instead, we stress the preceding syllable, as if epenthetic i weren't
+		-- there.
+		while sylno > 1 and rfind(syllables[sylno], "I") do
+			sylno = sylno - 2
+		end
+		-- It is (vaguely) possible that we have a one-syllable word beginning with a complex cluster such as gn-
+		-- followed by a normally unstressed ending such as -em. In this case, we want the ending to be stressed.
+		while sylno < #syllables and rfind(syllables[sylno], "I") do
+			sylno = syno + 2
+		end
 		-- If we are on a syllable without a vowel (can happen if it's the last syllable in a non-final component of a
-		-- word), stress the syllable to the left.
+		-- word, when using a component separator that is transparent to stress, such as in [[rapazinho]] respelled
+		-- 'rapaz+inho'), stress the syllable to the left.
 		while sylno > 1 and not rfind(syllables[sylno], V) do
 			sylno = sylno - 2
 		end
@@ -641,12 +647,16 @@ local function one_term_ipa(text, style, phonetic, err)
 	-- user explicitly added a . (converted to SYLDIV above).
 	text = rsub(text, "#i%.(" .. V .. ")", "#y%1")
 	if brazil then
-		-- in Brazil, hiatuses involving i. or u. have two possibilities (full vowel or glide); represent using Ì. and Ù.,
-		-- which we later convert appropriately. Do this before eliminating SYLDIV so the user can force hiatus using a
+		-- In Brazil, hiatuses involving i. or u. have two possibilities (full vowel or glide); represent using Ì. and Ù.,
+		-- which we later convert appropriately. Do this before eliminating SYLDIV so the user can force a hiatus using a
 		-- period.
 		local hiatus_to_glide = {["i"] = "Ì", ["u"] = "Ù"}
 		text = rsub(text, "(" .. C_OR_WORD_BOUNDARY .. ")([iu])(%." .. V .. ")",
 			function(before, hiatus, after) return before .. hiatus_to_glide[hiatus] .. after end)
+		-- In Brazil, hiatuses of the form í.o (e.g. [[rio]] "river", [[vazio]]; but not [[rio]] "I laugh") have two
+		-- possibilities (i.u or iw); represent using Ú, which we later convert appropriately. Do this before eliminating
+		-- SYLDIV so the user can force a hiatus using a period, as in [[rio]] "I laugh" respelled 'ri.o'.
+		text = rsub(text, "(i" .. ipa_stress_c .. "%.)o(s?#)", "%1Ú%2")
 	else
 		-- Outside of Brazil, e.i -> a.i, e.g. [[ateísta]], [[proteína]], [[proteinúrio]] respelled 'prote.inúrio'. But seems
 		-- not to happen in rei- ([[reincidente]], [[reiniciar]], [[reidratar]], etc.). Note, it does occur in [[reídeo]],
@@ -735,8 +745,8 @@ local function one_term_ipa(text, style, phonetic, err)
 	text = rsub(text, "O(ˈ%.s[OA]s?#)", "ɔ%1")
 
 	-- Unstressed syllables.
-	-- Before final <x>, unstressed e/o are open, e.g. [[córtex]], [[xérox]].
-	text = rsub(text, "([EO])(kç#)", "%1" .. AC .. "%2")
+	-- Before final <x>, unstressed a/e/o are open, e.g. [[córtex]], [[xérox]].
+	text = rsub(text, "([AEO])(kç#)", "%1" .. AC .. "%2")
 	if brazil then
 		-- Final unstressed -e(s), -o(s) -> /i/ /u/ (including before -mente)
 		local brazil_final_vowel = {["E"] = "i", ["O"] = "u"}
@@ -942,8 +952,8 @@ local function one_term_ipa(text, style, phonetic, err)
 	text = rsub(text, "y", "j")
 	text = rsub(text, "Y", "(j)") -- epenthesized in [[faz]], [[três]], etc.
 	local vowel_termination_to_glide = brazil and phonetic and
-	{["i"] = "ɪ̯", ["j"] = "ɪ̯", ["u"] = "ʊ̯", ["w"] = "ʊ̯"} or
-	{["i"] = "j", ["j"] = "j", ["u"] = "w", ["w"] = "w"}
+		{["i"] = "ɪ̯", ["j"] = "ɪ̯", ["u"] = "ʊ̯", ["w"] = "ʊ̯"} or
+		{["i"] = "j", ["j"] = "j", ["u"] = "w", ["w"] = "w"}
 	-- i/u as second part of diphthong becomes glide.
 	text = rsub(text, "(" .. V .. accent_c .. "*" .. "%(?)([ijuw])",
 		function(v1, v2) return v1 .. vowel_termination_to_glide[v2] end)
@@ -956,11 +966,7 @@ local function one_term_ipa(text, style, phonetic, err)
 	end
 
 	-- Stop consonants.
-	if brazil then
-		-- Palatalize t/d + i -> affricates in Brazil.
-		local palatalize_td = {["t"] = "t͡ʃ", ["d"] = "d͡ʒ"}
-		text = rsub(text, "([td])([ij])", function(td, high_vocalic) return palatalize_td[td] .. high_vocalic end)
-	elseif phonetic then
+	if portugal and phonetic then
 		-- Fricativize voiced stops in Portugal when not utterance-initial or after a nasal; also not in /ld/.
 		-- Easiest way to do this is to convert all voiced stops to fricative and then back to stop in the
 		-- appropriate contexts.
@@ -1152,18 +1158,27 @@ function export.IPA(text, style, phonetic)
 			phonemic = one_term_ipa(variant, style, false, err),
 			phonetic = one_term_ipa(variant, style, true, err),
 		}}
+		local function unpack_if_table(obj)
+			if type(obj) == "table" and obj[1] then
+				return unpack(obj)
+			else
+				return obj, obj
+			end
+		end
 		local function apply_sub(from, to1, qual1, to2, qual2)
 			return function(item)
 				if rfind(item.phonemic, from) or rfind(item.phonetic, from) then
+					local to1_phonemic, to1_phonetic = unpack_if_table(to1)
+					local to2_phonemic, to2_phonetic = unpack_if_table(to2)
 					return {
 						{
-							phonemic = rsub(item.phonemic, from, to1),
-							phonetic = rsub(item.phonetic, from, to1),
+							phonemic = rsub(item.phonemic, from, to1_phonemic),
+							phonetic = rsub(item.phonetic, from, to1_phonetic),
 							qualifiers = qual1,
 						},
 						{
-							phonemic = rsub(item.phonemic, from, to2),
-							phonetic = rsub(item.phonetic, from, to2),
+							phonemic = rsub(item.phonemic, from, to2_phonemic),
+							phonetic = rsub(item.phonetic, from, to2_phonetic),
 							qualifiers = qual2,
 						},
 					}
@@ -1176,8 +1191,11 @@ function export.IPA(text, style, phonetic)
 		if brazil then
 			result = flatmap(result, apply_sub("Ẽ", "e", {"careful pronunciation"}, "i", {"natural pronunciation"}))
 			result = flatmap(result, apply_sub("I", "i", nil, "e", nil))
-			result = flatmap(result, apply_sub("Ì%.", "i.", nil, "j", {"faster pronunciation"}))
-			result = flatmap(result, apply_sub("Ù%.", "u.", nil, "w", {"faster pronunciation"}))
+			result = flatmap(result, apply_sub("([ÌÙ])%.",
+				function(iu) return iu == "Ì" and "i." or "u." end, nil,
+				function(iu) return iu == "Ì" and "j" or "w" end, {"faster pronunciation"}))
+			-- Convert Ú resulting from stressed final '-io(s)'.'
+			result = flatmap(result, apply_sub("%.Ú", ".u", nil, {"w", "ʊ̯"}, nil))
 		else -- Portugal
 			result = flatmap(result, apply_sub("W", "", nil, "w", {"regional"}))
 			result = flatmap(result, apply_sub("ʃ(" .. wordsep_c .. "*)s",
@@ -1548,25 +1566,30 @@ function export.show(frame)
 	local function format_style(tag, expressed_style, is_first)
 		local pronunciations = {}
 		local formatted_pronuns = {}
-		for _, pronun in ipairs(expressed_style.pronuns) do
+		for i, pronun in ipairs(expressed_style.pronuns) do
 			table.insert(pronunciations, {
 				pron = "/" .. pronun.phonemic .. "/",
 				qualifiers = pronun.qualifiers,
+				separator = i > 1 and ", " or nil,
 			})
 			local formatted_phonemic = "/" .. pronun.phonemic .. "/"
 			if pronun.qualifiers then
 				formatted_phonemic = "(" .. table.concat(pronun.qualifiers, ", ") .. ") " .. formatted_phonemic
 			end
+			if i > 1 then
+				formatted_phonemic = ", " .. formatted_phonemic
+			end
 			table.insert(formatted_pronuns, formatted_phonemic)
 			table.insert(pronunciations, {
 				pron = "[" .. pronun.phonetic .. "]",
 				refs = pronun.refs,
+				separator = " ",
 			})
 			local reftext = ""
 			if pronun.refs then
 				reftext = string.rep("[1]", #pronun.refs)
 			end
-			table.insert(formatted_pronuns, "[" .. pronun.phonetic .. "]" .. reftext)
+			table.insert(formatted_pronuns, " [" .. pronun.phonetic .. "]" .. reftext)
 		end
 		-- Number of bullets: When indent = 1, we want the number of bullets given by `expressed_style.bullets`,
 		-- and when indent = 2, we want `expressed_style.bullets + 1`, hence we subtract 1.
@@ -1578,8 +1601,8 @@ function export.show(frame)
 		local pre_for_len = pre .. (tag and "(" .. tag .. ") " or "")
 		pre = pre .. (tag and m_qual.format_qualifier(tag) .. " " or "")
 		local post = is_first and (expressed_style.post and " " .. expressed_style.post or "") or ""
-		local formatted = bullet .. pre .. m_IPA.format_IPA_full(lang, pronunciations) .. post
-		local formatted_for_len = bullet .. pre .. "IPA(key): " .. table.concat(formatted_pronuns, ", ") .. post
+		local formatted = bullet .. pre .. m_IPA.format_IPA_full(lang, pronunciations, nil, "") .. post
+		local formatted_for_len = bullet .. pre .. "IPA(key): " .. table.concat(formatted_pronuns) .. post
 		return formatted, formatted_for_len
 	end
 
