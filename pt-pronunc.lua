@@ -60,15 +60,14 @@ Author: Benwing
 26. Final 'r' isn't optional before -zinho, -zinha, -mente. [DONE]
 27. Consider making secondary stress optional in cases like traduçãozinha where the stress is directly before the
     primary stress.
-28. In Brazil, unstressed final-syllable /a/ should be reduced even before a final consonant. Cf. [[açúcar]], [[tórax]].
-    (Except possibly /l/? FIXME: Verify.)
+28. In Brazil, unstressed final-syllable /a/ should be reduced before -r, cf. [[açúcar]]. [DONE]
 29. Support + = pagename, and pagename= argument. [DONE]
 30. Deduplicate final pronunciations without distinct qualifiers. [DONE]
 31. Implement support for dot-under without accompanying quality diacritic. When attached to a/e/o, it defaults to acute
     = open pronun, except in the following circumstances, where it defaults to circumflex: (1) in the diphthongs
 	ei/eu/oi/ou; (2) in a nasal vowel. [DONE]
 32. Portugal final -e should show as optional (ɨ) unless there is a vowel-initial word following, in which case it
-    should not be displayed at all.
+    should not be displayed at all. [DONE]
 33. Syllabification: "Improper" clusters of non-sibiliant-obstruent + obstruent (pt, bt, bd, dk, kt; ps, bs, bv, bʒ, tz,
     dv, ks; ft), non-sibiliant-obstruent + nasal (pn, bn, tm, tn, dm, dn, gm, gn), nasal + nasal (mn) are syllabified in
 	Portugal as .pt, .bv, .mn, etc. Note ʃ.t, ʃ.p, ʃ.k, etc. But in Brazil, all of these divide between the consonants
@@ -107,6 +106,9 @@ Author: Benwing
 61. There should not be a comma between phonemic and phonetic representations. [DONE]
 62. Final stressed -io in Brazil should be either i.u or iw. [DONE]
 63. Unstressed final '-ax' has open /a/ including in Portugal. [DONE]
+64. Clean up handling of qualifiers and fix bugs. [DONE]
+65. Support i#, u# for i./y or u./w in both Brazil and Portugal. [DONE]
+66. In Portugal, final unstressed -ar/-or should be pronounced open, but in Brazil, closed. [DONE]
 ]=]
 
 local export = {}
@@ -145,7 +147,8 @@ local DOTUNDER = u(0x0323) -- dot under =  ̣
 -- quality marker (acute or circumflex) with a/e/o; if not, defaults to acute (except in the same circumstances where
 -- dot under defaults to circumflex).
 local LINEUNDER = u(0x0331) -- line under =  ̱
--- Serves to temorarily mark where a syllable division should not happen, and temporarily substitutes for comma+space.
+-- Serves to temorarily mark where a syllable division should not happen; temporarily substitutes for comma+space;
+-- temporarily substitutes for #.
 local TEMP1 = u(0xFFF0)
 local SYLDIV = u(0xFFF1) -- used to represent a user-specific syllable divider (.) so we won't change it
 
@@ -409,11 +412,23 @@ local function one_term_ipa(text, style, phonetic, err)
 	-- using `if not brazil`. If we ever add a non-Brazil non-Portugal style, we will have to revisit the code below.
 	local brazil = m_table.contains(export.all_style_groups.br, style)
 
-	-- x
-	text = rsub(text, "(" .. word_or_component_sep_c .. ")x", "%1ʃ") -- xérox, xilofone, etc.
-	text = rsub(text, "x(" .. word_or_component_sep_c .. ")", "kç%1") -- xérox, córtex, etc.
-	-- This must follow handling of final -x so that [[manx]], [[Bronx]] are not affected.
-	text = rsub(text, "(" .. V .. charsep_c .. "*[iun]" .. charsep_c .. "*)x", "%1ʃ") -- baixo, peixe, frouxo, enxame, etc.
+	-- Initial x -> /ʃ/: [[xérox]], [[xilofone]], [[xadrez]], etc.
+	text = rsub(text, "(" .. word_or_component_sep_c .. ")x", "%1ʃ")
+	-- Final x -> /ks/ ([[clímax]], [[xérox]], [[córtex]], [[hélix]], [[durex]], [[lux]], etc.), but for now we map to
+	-- X because later on we open unstressed vowels before final x.
+	text = rsub(text, "x(" .. word_or_component_sep_c .. ")", "X%1")
+	-- x after certain dipthongs (ai, ei, oi, ou) and after -en- should be /ʃ/. Other diphthongs before x are rare
+	-- and mostly learned and we need to force explicit respelling.
+	text = rsub(text, "(([aeo])" .. charsep_c .. "*([iun])" .. charsep_c .. "*)x",
+		function(all, a, b)
+			local ab = a .. b
+			-- [[baixo]], [[peixe]], [[troixa]], [[frouxo]], [[enxame]], etc.
+			if ab == "ai" or ab == "ei" or ab == "oi" or ab == "ou" or ab == "en" then
+				return all .. "ʃ"
+			else
+				return all .. "x"
+			end
+		end)
 	-- -exC- should be pronounced like -esC- in Brazil but -eisC- in Portugal. Cf. excelente, experiência, têxtil,
 	-- êxtase. Not with other vowels (cf. [[Felixlândia]], [[Laxmi]], [[Oxford]]).
 	-- FIXME: Maybe this applies only to Lisbon and environs?
@@ -496,7 +511,6 @@ local function one_term_ipa(text, style, phonetic, err)
 		-- Now delete the symbol for deleted epenthetic /i/; it still triggers palatalization of t and d.
 		text = rsub(text, "Ɨ", "")
 	end
-
 	-- Divide words into syllables.
 	-- First, change user-specified . into a special character so we won't move it around. We need to keep this
 	-- going forward until after we place the stress, so we can correctly handle initial i- + vowel, as in [[ia]],
@@ -707,7 +721,6 @@ local function one_term_ipa(text, style, phonetic, err)
 
 	-- Convert user-specified syllable division back to period. See comment above when we add SYLDIV.
 	text = rsub(text, SYLDIV, ".")
-
 	-- Vowel quality handling. First convert all a -> A, e -> E, o -> O. We will then convert A -> a/ɐ, E -> e/ɛ/ɨ,
 	-- O -> o/ɔ/u depending on accent marks and context. Ultimately all vowels will be one of the nine qualities
 	-- aɐeɛiɨoɔu and following each vowel will either be nothing (no stress), an IPA primary stress mark (ˈ) or an
@@ -717,11 +730,11 @@ local function one_term_ipa(text, style, phonetic, err)
 	text = rsub(text, DOTOVER, "") -- eliminate DOTOVER; it served its purpose of preventing stress
 
 	-- Nasal vowel handling.
-
 	-- Final unstressed -am (in third-person plural verbs) pronounced like unstressed -ão.
 	text = rsub(text, "Am#", "A" .. TILDE .. "O#")
 	if not brazil then
-		-- In Portugal, final -n is really /n/, and preceding unstressed e/o are open.
+		-- In Portugal, final -n is really /n/, and preceding unstressed e/o are open ([[cólon]], [[crípton]], [[éon]];
+		-- [[glúten]], [[hífen]], [[pólen]]).
 		text = rsub(text, "n#", "N#")
 		text = rsub(text, "([EO])(N#)", "%1" .. AC .. "%2")
 	end
@@ -779,14 +792,18 @@ local function one_term_ipa(text, style, phonetic, err)
 	text = rsub(text, "O(ˈ%.s[OA]s?#)", "ɔ%1")
 
 	-- Unstressed syllables.
-	-- Before final <x>, unstressed a/e/o are open, e.g. [[córtex]], [[xérox]].
-	text = rsub(text, "([AEO])(kç#)", "%1" .. AC .. "%2")
+	-- Before final <x>, unstressed a/e/o are open, e.g. [[clímax]], [[córtex]], [[xérox]].
+	text = rsub(text, "([AEO])(X)", "%1" .. AC .. "%2")
+	-- Capital X has served its purpose, so replace it.
+	text = rsub(text, "X", "kç")
 	if brazil then
 		-- Final unstressed -e(s), -o(s) -> /i/ /u/ (including before -mente)
 		local brazil_final_vowel = {["E"] = "i", ["O"] = "u"}
 		text = rsub(text, "([EO])(s?#)", function(v, after) return brazil_final_vowel[v] .. after end)
 		-- Word-final unstressed -a(s) -> /ɐ/ (not before -mente)
 		text = rsub(text, "A(s?#[^@])", function(after) return "ɐ" .. after end)
+		-- Word-final unstressed -ar -> /ɐr/ (e.g. [[açúcar]])
+		text = rsub(text, "A(r#)", function(after) return "ɐ" .. after end)
 		-- Initial unmarked unstressed non-nasal e- + -sC- -> /i/ or /e/ ([[estar]], [[esmeralda]]). To defeat this,
 		-- explicitly mark the <e> e.g. as <ệ> or <eh>. We reuse the special symbol /I/ for this purpose, which later
 		-- on is converted to /i/ or /e/.
@@ -797,9 +814,10 @@ local function one_term_ipa(text, style, phonetic, err)
 		local brazil_unstressed_vowel = {["A"] = "a", ["E"] = "e", ["O"] = "o"}
 		text = rsub(text, "([AEO])([^" .. accent .. "])",
 			function(v, after) return brazil_unstressed_vowel[v] .. after end)
-	else then
-		-- In Portugal, final unstressed -r opens the preceding e.
-		text = rsub(text, "(E)(r#)", "%1" .. AC .. "%2")
+	else
+		-- In Portugal, final unstressed -r opens preceding a/e/o ([[dólar]], [[líder]], [[júnior]], [[inter-]]
+		-- respelled 'ínter:...').
+		text = rsub(text, "([AEO])(r" .. word_or_component_sep_c .. ")", "%1" .. AC .. "%2")
 		-- In Portugal, unstressed a/e/o before coda l takes on an open quality. Note that any /l/ directly after a
 		-- vowel must be a coda /l/ because otherwise there would be a syllable boundary marker.
 		text = rsub(text, "([AEO])l", function(v)
@@ -1106,6 +1124,8 @@ function export.IPA(text, style)
 	text = rsub(text, "[!?]", "")
 	-- apostrophe becomes tie (e.g. in [[barriga d'agua]])
 	text = rsub(text, "'", "‿")
+	-- user-specified # as in i# (= i. or y) and u# (= u. or w) becomes TEMP1 so we can add # for word boundaries.
+	text = rsub(text, "#", TEMP1)
 	-- put # at word beginning and end and double ## at text/foot boundary beginning/end
 	text = rsub(text, " | ", "# | #")
 	text = "##" .. rsub(text, " ", "# #") .. "##"
@@ -1128,12 +1148,12 @@ function export.IPA(text, style)
 					}
 				}
 				if to2 then
-					table.insert(retval, {
+					table.insert(retval,
 						{
 							respelling = rsub(item.respelling, from, to2),
 							qualifiers = combine_qualifiers(item.qualifiers, qual2),
 						}
-					})
+					)
 				end
 				return retval
 			else
@@ -1198,6 +1218,10 @@ function export.IPA(text, style)
 			end
 		end
 	end
+
+	-- Replace i# and u# sequences (above we replaced # with TEMP1).
+	flatmap_and_sub_pre("i" .. TEMP1, "i.", nil, "y", {"faster pronunciation"})
+	flatmap_and_sub_pre("u" .. TEMP1, "u.", nil, "w", {"faster pronunciation"})
 
 	local function call_one_term_ipa(variant)
 		local result = {{
