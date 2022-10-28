@@ -109,6 +109,8 @@ Author: Benwing
 64. Clean up handling of qualifiers and fix bugs. [DONE]
 65. Support i#, u# for i./y or u./w in both Brazil and Portugal. [DONE]
 66. In Portugal, final unstressed -ar/-or should be pronounced open, but in Brazil, closed. [DONE]
+67. Suppress initial e- in esC- in Portugal after /i/. [DONE]
+68. In C[lr][iu], [iu] should be either full vowel or glide in Portugal. [DONE]
 ]=]
 
 local export = {}
@@ -164,6 +166,7 @@ local SYLDIV = u(0xFFF1) -- used to represent a user-specific syllable divider (
 --   which can be only /ĩ/, and written ehn-/ehm- (or similar), which can be only /ẽ/.
 -- * I is used to represent epenthetic i in Brazilian variants (which should not affect stress assignment but is
 --   otherwise treated as a normal sound), and Ɨ represents deleted epenthetic i (which still palatalizes /t/ and /d/).
+--   I is also used to represent Portugal (i) from initial esC-.
 -- * Ì is used to represent either i. in hiatus or /j/ in Brazil; likewise for Ù representing u. in hiatus or /w/.
 -- * Ɔ (capital version of ɔ) stands for a Portugal sound that can be pronounced either /o/ or /ɔ/ (depending on the
 --   speaker), before syllable-final /l/.
@@ -698,9 +701,9 @@ local function one_term_ipa(text, style, phonetic, err)
 		-- In Brazil, hiatuses involving i. or u. have two possibilities (full vowel or glide); represent using Ì. and Ù.,
 		-- which we later convert appropriately. Do this before eliminating SYLDIV so the user can force a hiatus using a
 		-- period.
-		local hiatus_to_glide = {["i"] = "Ì", ["u"] = "Ù"}
+		local hiatus_to_optional_glide = {["i"] = "Ì", ["u"] = "Ù"}
 		text = rsub(text, "(" .. C_OR_WORD_BOUNDARY .. ")([iu])(%." .. V .. ")",
-			function(before, hiatus, after) return before .. hiatus_to_glide[hiatus] .. after end)
+			function(before, hiatus, after) return before .. hiatus_to_optional_glide[hiatus] .. after end)
 		-- In Brazil, hiatuses of the form í.o (e.g. [[rio]] "river", [[vazio]]; but not [[rio]] "I laugh") have two
 		-- possibilities (i.u or iw); represent using Ú, which we later convert appropriately. Do this before eliminating
 		-- SYLDIV so the user can force a hiatus using a period, as in [[rio]] "I laugh" respelled 'ri.o'.
@@ -712,6 +715,13 @@ local function one_term_ipa(text, style, phonetic, err)
 		text = rsub(text, "(#re" .. syldiv_c .. ")(i)", "%1" .. TEMP1 .. "%2")
 		text = rsub(text, "e(" .. syldiv_c .. "i)", "a%1")
 		text = rsub(text, TEMP1, "")
+		-- Outside of Brazil, hiatuses involving 'e./i.' or 'o./u.' after obstruent + l/r preceding a vowel have two
+		-- possibilities (full vowel or glide), as in [[criança]], [[altruista]], etc. Represent using Ì. and Ù., which
+		-- we later convert appropriately. Do this before eliminating SYLDIV so the user can force a hiatus using a
+		-- period.
+		local hiatus_to_optional_glide = {["e"] = "Ì", ["i"] = "Ì", ["o"] = "Ù", ["u"] = "Ù"}
+		text = rsub(text, "([pbtdkgfv]" .. H_OR_SYL_TRANSP .. "*[lr])([eiou])(%." .. V .. ")",
+			function(before, hiatus, after) return before .. hiatus_to_optional_glide[hiatus] .. after end)
 		-- Outside of Brazil, remove hiatus more generally whenever 'e./i.' or 'o./u.' precedes a vowel. Do this before
 		-- eliminating SYLDIV so the user can force hiatus using a period.
 		local hiatus_to_glide = {["e."] = "y", ["i."] = "y", ["o."] = "w", ["u."] = "w"}
@@ -827,8 +837,10 @@ local function one_term_ipa(text, style, phonetic, err)
 		end)
 		-- Unstressed 'ie' -> /jɛ/
 		text = rsub(text, "yE([^" .. accent .. "])", "yɛ%1")
-		-- Initial unmarked unstressed non-nasal e- + -sC- -> /ɨ/ (later changed to /(i)/)
-		text = rsub(text, "#Es", "#ɨs")
+		-- Initial unmarked unstressed non-nasal e- + -sC- -> temporary symbol I (later changed to /(i)/, except after
+		-- a vowel, in which case it is deleted). Note that /s/ directly after a vowel must be a coda /s/ because
+		-- otherwise there would be a syllable boundary marker.
+		text = rsub(text, "#Es", "#Is")
 		-- Initial unmarked unstressed non-nasal e- -> /i/.
 		text = rsub(text, "#E([^" .. accent .. "])", "#i%1")
 		-- Initial unmarked unstressed non-nasal o- -> /ɔ/ if another vowel follows (not 'o', 'os' by themselves).
@@ -901,8 +913,6 @@ local function one_term_ipa(text, style, phonetic, err)
 	text = rsub(text, "(" .. V .. accent_c .. "*Y?%.?)s(" .. wordsep_c .. "*h?[" .. voiced_cons .. "])", "%1z%2")
 	-- z before voiceless consonant, e.g. [[Nazca]]; c and q already removed
 	text = rsub(text, "z(" .. wordsep_c .. "*[çfkpsʃt])", "%1s%2")
-	--Change Portugal initial /ɨʃ/ to /(i)ʃ/
-	text = rsub(text, "#ɨ([sz])", "(i)%1")
 	if not brazil or style == "rio" then
 		-- Outside Brazil except for Rio; s/z before consonant (including across word boundaries) or end of utterance -> ʃ/ʒ;
 		-- but not word-initially (e.g. [[stressado]]).
@@ -1002,7 +1012,15 @@ local function one_term_ipa(text, style, phonetic, err)
 		text = rsub(text, "l(" .. C .. "*[.#])", "ɫ%1")
 	end
 	text = rsub(text, "y", "j")
-	text = rsub(text, "Y", "(j)") -- epenthesized in [[faz]], [[três]], etc.
+	if brazil then
+		text = rsub(text, "Y", "(j)") -- epenthesized in [[faz]], [[três]], etc.
+	else
+		-- 'I' in Portugal represents word-initial (i) before sC, except after /i/ (e.g. [[antiestático]]), in which
+		-- case it is elided. In the latter case, we need to elide the word/component separators, otherwise we end up
+		-- with an extra syllable divider: /ˌɐ̃.ti.ʃˈta.ti.ku/ instead of correct /ˌɐ̃.tiʃˈta.ti.ku/.
+		text = rsub(text, "(i" .. accent_c .. "*)" .. word_or_component_sep_c .. "*#I", "%1")
+		text = rsub(text, "I", "(i)")
+	end
 	local vowel_termination_to_glide = brazil and phonetic and
 		{["i"] = "ɪ̯", ["j"] = "ɪ̯", ["u"] = "ʊ̯", ["w"] = "ʊ̯"} or
 		{["i"] = "j", ["j"] = "j", ["u"] = "w", ["w"] = "w"}
@@ -1269,9 +1287,6 @@ function export.IPA(text, style)
 		if brazil then
 			flatmap_and_sub_post("Ẽ", "e", {"careful pronunciation"}, "i", {"natural pronunciation"})
 			flatmap_and_sub_post("I", "i", nil, "e", nil)
-			flatmap_and_sub_post("([ÌÙ])%.",
-				function(iu) return iu == "Ì" and "i." or "u." end, nil,
-				function(iu) return iu == "Ì" and "j" or "w" end, {"faster pronunciation"})
 			-- Convert Ú resulting from stressed final '-io(s)'.'
 			flatmap_and_sub_post("%.Ú", ".u", nil, {"w", "ʊ̯"}, nil)
 		else -- Portugal
@@ -1282,6 +1297,9 @@ function export.IPA(text, style)
 					"ʒ%1z", {"careful pronunciation"}, "%1ʒ", {"natural pronunciation"})
 			flatmap_and_sub_post("Ɔ", "o", nil, "ɔ", nil)
 		end
+		flatmap_and_sub_post("([ÌÙ])%.",
+			function(iu) return iu == "Ì" and "i." or "u." end, nil,
+			function(iu) return iu == "Ì" and "j" or "w" end, {"faster pronunciation"})
 
 		return result
 	end
