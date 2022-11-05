@@ -2,6 +2,91 @@ local export = {}
 
 local m_languages = require("Module:languages")
 
+-- Per-param modifiers, which can be specified either as separate parameters (e.g. t2=, pos3=) or as inline modifiers
+-- <t:...>, <pos:...>, etc. The key is the name fo the parameter (e.g. "t", "pos") and the value is a table with
+-- elements as follows:
+-- * `extra_specs`: An optional table of extra key-value pairs to add to the spec used for parsing the parameter
+--                  when specified as a separate parameter (e.g. {type = "boolean"} for a Boolean parameter, or
+--                  {alias_of = "t"} for the "gloss" parameter, which is aliased to "t"), on top of the default, which
+--                  is {list = true, allow_holes = true, require_index = true}.
+-- * `convert_func`: An optional function to convert the raw argument into the form passed to [[Module:affixusex]].
+--                   This function takes three parameters: (1) `arg` (the raw argument); (2) `inline` (true if we're
+--                   processing an inline modifier, false otherwise); (3) `i` (the logical index of the term being
+--                   processed, starting from 1).
+-- * `item_dest`: The name of the key used when storing the parameter's value into the processed `parts` list.
+--                Normally the same as the parameter's name. Different in the case of "gloss", which is an alias for
+--                "t".
+-- * `param_key`: The name of the key used in the `params` spec passed to [[Module:parameters]]. Normally the same as
+--                the parameter's name. Different in the case of "sc", where we distinguish per-term parameters
+--                "sc1", "sc2", etc. from the overall script parameter "sc".
+local param_mods = {
+	t = {},
+	gloss = {
+		-- "gloss" is an alias of "t". The `extra_specs` handles this automatically for separate parameters, and the
+		-- `item_dest` handles this for inline modifiers.
+		item_dest = "t",
+		extra_specs = {alias_of = "t"},
+	},
+	tr = {},
+	ts = {},
+	g = {},
+	id = {},
+	alt = {},
+	q = {},
+	qq = {},
+	lit = {},
+	pos = {},
+	lang = {
+		convert = function(arg, inline, i)
+			-- i + 1 because we want to reference the actual term param name, which is 2= for the first term, 3= for
+			-- the second, etc.
+			return m_languages.getByCode(arg, inline and "" .. (i + 1) .. ":lang" or "lang" .. i, "allow etym")
+		end,
+	},
+	sc = {
+		-- sc1=, sc2=, ... are different from sc=; the former apply to individual arguments when lang1=, lang2=, ...
+		-- is specified, while the latter applies to all arguments where langN=... isn't specified. To handle this in
+		-- separate parameter, we need to set the key in the `params` object passed to [[Module:parameters]] to
+		-- something else (in this case "langsc") and set `list = "sc"` in the value of the `params` object. This
+		-- causes [[Module:parameters]] to fetch parameters named sc1=, sc2= etc. but store them into "langsc", while
+		-- sc= is stored into "sc".
+		param_key = "langsc",
+		extra_specs = {list = "sc"},
+		convert = function(arg, inline, i)
+			-- i + 1 same as above for "lang".
+			return require("Module:scripts").getByCode(arg, inline and "" .. (i + 1) .. ":sc" or "sc" .. i)
+		end,
+	},
+	arrow = {
+		-- This is a Boolean param. The `extra_specs` below automatically handles this for separate parameters, but
+		-- we need to handle it ourselves as an inline modifier.
+		extra_specs = {type = "boolean"},
+		convert = function(arg, inline, i)
+			if inline then
+				return require("Module:yesno")(arg, true)
+			else
+				return arg
+			end
+		end,
+	},
+	joiner = {},
+	fulljoiner = {},
+	accel = {
+		convert = function(arg, inline, i)
+			return arg:gsub("_", "|") -- To allow use of | in templates
+		end,
+	},
+}
+
+local function get_valid_prefixes()
+	local valid_prefixes = {}
+	for param_mod, _ in pairs(param_mods) do
+		table.insert(valid_prefixes, param_mod)
+	end
+	table.sort(valid_prefixes)
+	return valid_prefixes
+end
+
 local rfind = mw.ustring.find
 local rsubn = mw.ustring.gsub
 
@@ -15,32 +100,28 @@ end
 
 function export.affixusex_t(frame)
 	local params = {
-		[1] = {required = true, default="und"},
+		[1] = {required = true, default = "und"},
 		[2] = {list = true, allow_holes = true},
 		
-		["t"] = {list = true, allow_holes = true, require_index = true},
-		["gloss"] = {list = true, allow_holes = true, require_index = true, alias_of = "t"},
-		["tr"] = {list = true, allow_holes = true, require_index = true},
-		["ts"] = {list = true, allow_holes = true, require_index = true},
-		["g"] = {list = true, allow_holes = true, require_index = true},
-		["id"] = {list = true, allow_holes = true, require_index = true},
 		["altaff"] = {},
-		["alt"] = {list = true, allow_holes = true, require_index = true},
-		["q"] = {list = true, allow_holes = true, require_index = true},
-		["lit"] = {list = true, allow_holes = true, require_index = true},
-		["pos"] = {list = true, allow_holes = true, require_index = true},
 		["sc"] = {},
 		["nointerp"] = {type = "boolean"},
-		["lang"] = {list = true, allow_holes = true, require_index = true},
-		-- Note, sc1=, sc2=, ... are different from sc=; the former apply to
-		-- individual arguments when lang1=, lang2=, ... is specified, while
-		-- the latter applies to all arguments where langN=... isn't specified
-		["langsc"] = {list = "sc", allow_holes = true, require_index = true},
-		["arrow"] = {list = true, allow_holes = true, require_index = true, type = "boolean"},
-		["joiner"] = {list = true, allow_holes = true, require_index = true},
-		["fulljoiner"] = {list = true, allow_holes = true, require_index = true},
-		["accel"] = {list = true, allow_holes = true, require_index = true},
+		["pagename"] = {},
 	}
+
+	local default_param_spec = {list = true, allow_holes = true, require_index = true}
+	for param_mod, param_mod_spec in pairs(param_mods) do
+		local param_key = param_mod_spec.param_key or param_mod
+		if not param_mod_spec.extra_specs then
+			params[param_key] = default_param_spec
+		else
+			local param_spec = mw.clone(default_param_spec)
+			for k, v in pairs(param_mod_spec.extra_specs) do
+				param_spec[k] = v
+			end
+			params[param_key] = param_spec
+		end
+	end
 
 	local aftype = frame.args["type"]
 	if aftype == "" or not aftype then
@@ -54,11 +135,10 @@ function export.affixusex_t(frame)
 	end
 
 	local args = require("Module:parameters").process(frame:getParent().args, params)
-	
-	local lang = args[1]
-	lang = m_languages.getByCode(lang) or m_languages.err(lang, 1)
+
+	local lang = m_languages.getByCode(args[1], 1)
 	local sc = args["sc"]
-	sc = (sc and (require("Module:scripts").getByCode(sc) or error("The script code \"" .. sc .. "\" is not valid.")) or nil)
+	sc = sc and require("Module:scripts").getByCode(sc, "sc") or nil
 
 	-- Find the maximum index among any of the list parameters.
 	local maxmaxindex = 0
@@ -68,98 +148,145 @@ function export.affixusex_t(frame)
 		end
 	end
 
-	-- Determine whether the terms in the numbered params contain a prefix or suffix.
-	-- If not, we may insert one before the last term (for suffixes) or the first
-	-- term (for prefixes).
+	local put
+
+	-- Build up the per-term objects.
+	local parts = {}
+	for i=1, maxmaxindex do
+		local part = {}
+		local term = args[2][i]
+
+		-- Parse all the term-specific modifiers and store in `part`.
+		for param_mod, param_mod_spec in pairs(param_mods) do
+			local dest = param_mod_spec.item_dest or param_mod
+			local param_key = param_mod_spec.param_key or param_mod
+			local arg = args[param_key][i]
+			if arg then
+				if convert_fun then
+					arg = convert_fun(arg, false, i)
+				end
+				part[dest] = arg
+			end
+		end
+
+		-- Remove and remember an initial exclamation point from the term, and parse off an initial language code (e.g.
+		-- 'la:minūtia' or 'grc:[[σκῶρ|σκατός]]').
+		if term then
+			if rfind(term, "^!") then
+				part.begins_with_exclamation_point = true
+				term = rsub(term, "^!", "")
+			end
+			local termlang, actual_term = term:match("^([A-Za-z0-9._-]+):(.*)$")
+			if termlang and termlang ~= "w" then -- special handling for w:... links to Wikipedia
+				-- i + 1 because terms begin at 2=.
+				termlang = m_languages.getByCode(termlang, i + 1, "allow etym")
+				term = actual_term
+			else
+				termlang = nil
+			end
+			if part.lang and termlang then
+				error(("Both lang%s= and a language in %s= given; specify one or the other"):format(i, i + 1))
+			end
+			part.lang = part.lang or termlang
+			part.term = term
+		end
+
+		-- Check for inline modifier, e.g. מרים<tr:Miryem>. But exclude HTML entry with <span ...>, <i ...>, <br/> or
+		-- similar in it, caused by wrapping an argument in {{l|...}}, {{af|...}} or similar. Basically, all tags of
+		-- the sort we parse here should consist of a less-than sign, plus letters, plus a colon, e.g. <tr:...>, so if
+		-- we see a tag on the outer level that isn't in this format, we don't try to parse it. The restriction to the
+		-- outer level is to allow generated HTML inside of e.g. qualifier tags, such as foo<q:similar to {{m|fr|bar}}>.
+		if term and term:find("<") and not term:find("^[^<]*<[a-z]*[^a-z:]") then
+			if not put then
+				put = require("Module:parse utilities")
+			end
+			local run = put.parse_balanced_segment_run(term, "<", ">")
+			local function parse_err(msg)
+				error(msg .. ": " .. (i + 1) .. "=" .. table.concat(run))
+			end
+			part.term = run[1]
+
+			for j = 2, #run - 1, 2 do
+				if run[j + 1] ~= "" then
+					parse_err("Extraneous text '" .. run[j + 1] .. "' after modifier")
+				end
+				local modtext = run[j]:match("^<(.*)>$")
+				if not modtext then
+					parse_err("Internal error: Modifier '" .. modtext .. "' isn't surrounded by angle brackets")
+				end
+				local prefix, arg = modtext:match("^([a-z]+):(.*)$")
+				if not prefix then
+					parse_err(("Modifier %s lacks a prefix, should begin with one of %s followed by a colon"):format(
+						run[j], table.concat(get_valid_prefixes(), ",")))
+				end
+				if not param_mods[prefix] then
+					parse_err(("Unrecognized prefix '%s' in modifier %s, should be one of %s"):format(
+						prefix, run[j], table.concat(get_valid_prefixes(), ",")))
+				end
+				local dest = param_mods[prefix].item_dest or prefix
+				if part[dest] then
+					parse_err("Modifier '" .. prefix .. "' occurs twice, second occurrence " .. run[j])
+				end
+				local convert_fun = param_mods[prefix].convert_fun
+				if convert_fun then
+					arg = convert_fun(arg, true, i)
+				end
+				part[dest] = arg
+			end
+		end
+
+		table.insert(parts, part)
+	end
+
+	-- Determine whether the terms in the numbered params contain a prefix or suffix. If not, we may insert one before
+	-- the last term (for suffixes) or the first term (for prefixes).
 	local affix_in_parts = false
-	local SUBPAGE = mw.title.getCurrentTitle().subpageText
-	local is_affix = {}
-	for i=1,maxmaxindex do
-		if args[2][i] then
-			-- Careful here, a prefix beginning with ! should be treated as a
-			-- normal term.
-			if rfind(args[2][i], "^!") or lang:makeEntryName(args[2][i]) == SUBPAGE then
+	local SUBPAGE = pagename or mw.title.getCurrentTitle().subpageText
+	for i=1, maxmaxindex do
+		if parts[i].term then
+			-- Careful here, a prefix beginning with ! should be treated as a normal term.
+			if parts[i].begins_with_exclamation_point or lang:makeEntryName(parts[i].term) == SUBPAGE then
 				affix_in_parts = true
-				is_affix[i] = true
+				if not parts[i].alt then
+					parts[i].alt = parts[i].term
+					parts[i].term = nil
+				end
 			end
 		end
 	end
 
+	-- Determine affix to check for prefixness/suffixness.
 	local insertable_aff = args["altaff"] or SUBPAGE
-	-- Insert suffix derived from page title or altaff=/altsuf= before the last
-	-- component if
-	-- (a) nointerp= isn't present, and
-	-- (b) no suffix is present among the parts (where "suffix" means a part that
-	--     matches the subpage name after diacritics have been removed, or a part
-	--     prefixed by !), and either
-	--    (i) {{suffixusex}}/{{sufex}} was used;
-	--    (ii) {{affixusex}}/{{afex}} was used and altaff= is given, and its value
-	--         looks like a suffix (begins with -, doesn't end in -; an infix is
-	--         not a suffix)
-	--    (iii) {{affixusex}}/{{afex}} was used and altaff= is not given and the
-	--          subpage title looks like a suffix (same conditions as for altaff=)
-	local insert_suffix = not args["nointerp"] and not affix_in_parts and (aftype == "suffix" or (
-		aftype == "affix" and rfind(insertable_aff, "^%-") and not rfind(insertable_aff, "%-$")))
-	-- Insert prefix derived from page title or altaff=/altpref= before the first
-	-- component using similar logic as preceding.
-	local insert_prefix = not args["nointerp"] and not affix_in_parts and (aftype == "prefix" or (
-		aftype == "affix" and rfind(insertable_aff, "%-$") and not rfind(insertable_aff, "^%-")))
 
-	-- Build up the per-term objects.
-	local parts = {}
-	for i=1,maxmaxindex do
-		-- If we're {{suffixusex}} and about to append the last term, or {{prefixusex}}
-		-- and about to append the first term, and no affix appeared among the terms, and
-		-- nointerp= isn't set, insert the affix (which comes either from altaff=/altpref=/altsuf=
-		-- or from the subpage name).
-		if i == maxmaxindex and insert_suffix or i == 1 and insert_prefix then
-			local affix = args["altaff"]
-			if not affix then
-				if lang:getType() == "reconstructed" then
-					affix = "*" .. SUBPAGE
-				else
-					affix = SUBPAGE
-				end
-			end
-			table.insert(parts, {alt = affix})
-		end
-
-		local part = {}
-		if is_affix[i] and not args["alt"][i] then
-			part.alt = rsub(args[2][i], "^!", "")
+	-- Determine affix to interpolate if needed.
+	local affix = args["altaff"]
+	if not affix then
+		if lang:getType() == "reconstructed" then
+			affix = "*" .. SUBPAGE
 		else
-			part.term = args[2][i]
-			part.alt = args["alt"][i]
+			affix = SUBPAGE
 		end
+	end
 
-		local langn = args["lang"][i]
-		if langn then
-			langn =
-				m_languages.getByCode(langn) or
-				require("Module:etymology languages").getByCode(langn) or
-				m_languages.err(langn, "lang" .. i)
+	-- Insert suffix derived from page title or altaff=/altsuf= before the last component if
+	-- (a) nointerp= isn't present, and
+	-- (b) no suffix is present among the parts (where "suffix" means a part that matches the subpage name after
+	--     diacritics have been removed, or a part prefixed by !), and either
+	--    (i) {{suffixusex}}/{{sufex}} was used;
+	--    (ii) {{affixusex}}/{{afex}} was used and altaff= is given, and its value looks like a suffix (begins with -,
+	--         doesn't end in -; an infix is not a suffix)
+	--    (iii) {{affixusex}}/{{afex}} was used and altaff= is not given and the subpage title looks like a suffix
+	--          (same conditions as for altaff=)
+	-- Insert prefix derived from page title or altaff=/altpref= before the first component using similar logic as
+	-- preceding.
+	if not args["nointerp"] and not affix_in_parts then
+		if aftype == "prefix" or (
+			aftype == "affix" and rfind(insertable_aff, "%-$") and not rfind(insertable_aff, "^%-")) then
+			table.insert(parts, 1, {alt = affix})
+		elseif aftype == "suffix" or (
+			aftype == "affix" and rfind(insertable_aff, "^%-") and not rfind(insertable_aff, "%-$")) then
+			table.insert(parts, maxmaxindex, {alt = affix})
 		end
-
-		local langsc = args["langsc"][i]
-		if langsc then
-			langsc = require("Module:scripts").getByCode(langsc) or error("The script code \"" .. langsc .. "\" is not valid.")
-		end
-
-		part.t = args["t"][i]
-		part.tr = args["tr"][i]
-		part.ts = args["ts"][i]
-		part.g = args["g"][i]
-		part.id = args["id"][i]
-		part.q = args["q"][i]
-		part.lit = args["lit"][i]
-		part.pos = args["pos"][i]
-		part.lang = langn
-		part.sc = langsc
-		part.arrow = args["arrow"][i]
-		part.joiner = args["joiner"][i]
-		part.fulljoiner = args["fulljoiner"][i]
-		part.accel = args["accel"][i] and string.gsub(args["accel"], "_", "|"),  -- To allow use of | in templates
-		table.insert(parts, part)
 	end
 
 	return require("Module:affixusex").format_affixusex(lang, sc, parts, aftype)
