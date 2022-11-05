@@ -111,6 +111,12 @@ Author: Benwing
 66. In Portugal, final unstressed -ar/-or should be pronounced open, but in Brazil, closed. [DONE]
 67. Suppress initial e- in esC- in Portugal after /i/. [DONE]
 68. In C[lr][iu], [iu] should be either full vowel or glide in Portugal. [DONE]
+69. Support substitution notation. [DONE]
+70. [[em]] by itself should be /ẽj̃/ or /ĩ/. [DONE]
+71. Suffixes beginning with a vowel should act as if a pseudo-consonant precedes. [DONE]
+72. Prefixes should change primary stress to secondary. [DONE]
+73. -ing should be like -im in Brazil but -ingh in Portugal. [DONE]
+74. Single 's' after colon should be /z/ not /s/, in keeping with normal spelling practices. [NOT YET, FIRST NEED TO PUSH APPROPRIATE RESPELLING CHANGES]
 ]=]
 
 local export = {}
@@ -153,6 +159,8 @@ local LINEUNDER = u(0x0331) -- line under =  ̱
 -- temporarily substitutes for #.
 local TEMP1 = u(0xFFF0)
 local SYLDIV = u(0xFFF1) -- used to represent a user-specific syllable divider (.) so we won't change it
+local PSEUDOCONS = u(0xFFF2) -- pseudo-consonant at the edge of prefixes ending in a vowel and suffixes beginning with a vowel
+local PREFIX_MARKER = u(0xFFF3) -- marker indicating a prefix so we can convert primary to secondary accents
 
 -- Since we convert all symbols at the beginning and decompose accented characters (except for ç and ü), we can later
 -- use capital and/or accented letters to represent additional distinctions, typically in cases where we want to
@@ -311,6 +319,7 @@ export.all_style_descs = {
 	spt = "Southern Portugal"
 }
 
+
 -- version of rsubn() that discards all but the first return value
 local function rsub(term, foo, bar)
 	local retval = rsubn(term, foo, bar)
@@ -335,6 +344,7 @@ local function rsub_repeatedly(term, foo, bar)
 	end
 end
 
+
 -- Flat-map a function `fun` over `items`. This is like `map` over a sequence followed by `flatten`, i.e. the function
 -- must itself return a sequence and all of the returned sequences are flattened into a single sequence.
 local function flatmap(items, fun)
@@ -347,6 +357,7 @@ local function flatmap(items, fun)
 	end
 	return new
 end
+
 
 -- Combine two sets of qualifiers, either of which may be nil or a list of qualifiers. Remove duplicate qualifiers.
 -- Return value is nil or a list of qualifiers.
@@ -363,6 +374,7 @@ local function combine_qualifiers(qual1, qual2)
 	end
 	return qualifiers
 end
+
 
 -- Reorder the diacritics (accent marks) in `text` according to a canonical order. Specifically, there can conceivably
 -- be up to three accents on a vowel: a quality mark (acute/circumflex/grave/macron); a mark indicating secondary stress
@@ -404,12 +416,13 @@ local function reorder_accents(text, err)
 	return text
 end
 
--- Generate partial IPA for a single term respelling `text` in the specified `style` ('gbr', 'rio', etc.; see
--- all_style_descs above). If `phonetic` is given, generate phonetic output, otherwise phonemic output. `err` is a
+
+-- Generate partial IPA for a single preprocessed term respelling `text` in the specified `style` ('gbr', 'rio', etc.;
+-- see all_style_descs above). If `phonetic` is given, generate phonetic output, otherwise phonemic output. `err` is a
 -- function of one argument (an error string) and should throw an error if called. This function is a subfunction of
--- `IPA` and cannot really be used by itself, because it generates output containing special symbols that are later
--- converted to multiple outputs and it depends on the caller to do some final transformations esp. to get stress marks
--- in the right place. The function `IPA` is meant to be called externally, but its return value is a list of outputs.
+-- `IPA` and cannot really be used by itself, because it generates output containing special symbols that need to be
+-- postprocessed into multiple outputs (and in addition some other final postprocessing needs to happen, e.g. to get
+-- stress marks in the right place). The function `IPA` is available be called externally.
 local function one_term_ipa(text, style, phonetic, err)
 	-- NOTE: In the code below we assume all styles are either Brazil or Portugal, and hence we can check for Portugal
 	-- using `if not brazil`. If we ever add a non-Brazil non-Portugal style, we will have to revisit the code below.
@@ -462,7 +475,7 @@ local function one_term_ipa(text, style, phonetic, err)
 	text = rsub(text, "g(" .. FRONTV .. ")", "j%1")
 	text = rsub(text, "gu(" .. FRONTV .. ")", "g%1")
 	-- [[camping]], [[doping]], [[jogging]], [[Bangkok]], [[angstrom]], [[tungstênio]]
-	text = rsub(text, "ng([^" .. vowel .. glide .. "hlr])", "n%1")
+	text = rsub(text, "ng([^" .. vowel .. glide .. "hlr])", brazil and "n%1" or "ngh%1")
 	text = rsub(text, "qu(" .. FRONTV .. ")", "k%1")
 	text = rsub(text, "ü", "u") -- [[agüentar]], [[freqüentemente]], [[Bündchen]], [[hübnerita]], etc.
 	text = rsub(text, "([gq])u(" .. V .. ")", "%1w%2") -- [[quando]], [[guarda]], etc.
@@ -505,11 +518,12 @@ local function one_term_ipa(text, style, phonetic, err)
 	-- muit- is special and contains nasalization. Do before palatalization of t/d so [[muitíssimo]] works.
 	text = rsub(text, "(" .. word_or_component_sep_c .. "mu" .. stress_c .. "*)(it)", "%1" .. TILDE .. "%2")
 
+	-- Palatalize t/d + Ɨ -> affricates in Brazil. Use special unitary symbols, which we later convert to regular affricate
+	-- symbols, so we can distinguish palatalized d from written dj. We only do Ɨ now so we can delete it; we do another
+	-- palatalization round towards the end after raising e -> i.
+	local palatalize_td = {["t"] = "ʧ", ["d"] = "ʤ"}
 	if brazil then
-		-- Palatalize t/d + i -> affricates in Brazil. Use special unitary symbols, which we later convert to regular
-		-- affricate symbols, so we can distinguish palatalized d from written dj.
-		local palatalize_td = {["t"] = "ʧ", ["d"] = "ʤ"}
-		text = rsub(text, "([td])([" .. high_front_vocalic .. "])",
+		text = rsub(text, "([td])(" .. word_or_component_sep_c .. "*Ɨ)",
 			function(td, high_vocalic) return palatalize_td[td] .. high_vocalic end)
 		-- Now delete the symbol for deleted epenthetic /i/; it still triggers palatalization of t and d.
 		text = rsub(text, "Ɨ", "")
@@ -616,7 +630,9 @@ local function one_term_ipa(text, style, phonetic, err)
 
 		-- Apply the default stress rule.
 		local sylno
-		if #syllables > 1 and (rfind(word, "[aeo]s?$") or rfind(word, "[ae]m$") or rfind(word, "[ae]ns$")) then
+		-- Prefixes ending in a vowel such as pseudo- have a PSEUDOCONS after the final vowel, but we don't want that to
+		-- interfere in the stress-assignment algorithm.
+		if #syllables > 1 and (rfind(word, "[aeo][s" .. PSEUDOCONS .. "]?$") or rfind(word, "[ae]m$") or rfind(word, "[ae]ns$")) then
 			-- Stress the last syllable but one. The -2 is because of the syllable dividers; see above.
 			sylno = #syllables - 2
 		else
@@ -651,7 +667,8 @@ local function one_term_ipa(text, style, phonetic, err)
 	-- Split the text into words and the words into components so we can correctly add stress to components without it.
 	local words = rsplit(text, " ")
 	for j, word_with_boundary_markers in ipairs(words) do
-		local begin_marker, word, end_marker = rmatch(word_with_boundary_markers, "^(#*)(.-)(#*)$")
+		-- Prefixes have a PREFIX_MARKER after the # at the end of the prefix; split it off.
+		local begin_marker, word, end_marker = rmatch(word_with_boundary_markers, "^(#*)(.-)([#" .. PREFIX_MARKER .. "]*)$")
 		-- Words ends in -mente, -zinho(s) or -zinha(s); add primary stress to the preceding portion as if stressed
 		-- (e.g. [[agitadamente]] -> 'agitádamente') unless already stressed (e.g. [[rapidamente]] respelled
 		-- 'rápidamente'). The primary stress will be converted to secondary stress further below. Essentially, we
@@ -767,7 +784,9 @@ local function one_term_ipa(text, style, phonetic, err)
 		text = rsub(text, "(" .. V .. quality_c .. "*" .. stress_c .. "*)(%.ɲ)", "%1" .. TILDE .. "%2")
 		-- Convert initial unstressed em-/en- before consonant to special symbol /Ẽ/, which later on is converted
 		-- to /e/ (careful pronunciation) or /i/ (natural pronunciation).
-		text = rsub(text, "(#E".. CFLEX .. TILDE ..")(%." .. C ..")", "#Ẽ" .. TILDE .. "%2")
+		text = rsub(text, "(#E" .. CFLEX .. TILDE ..")(%." .. C ..")", "#Ẽ" .. TILDE .. "%2")
+		-- Same in [[em]] standing alone (which will have a DOTUNDER in it), and in [[em-]].
+		text = rsub(text, "(#E" .. CFLEX .. DOTUNDER .. "?" .. TILDE ..")(#)", "#Ẽ" .. TILDE .. "%2")
 	end
 
 	-- Nasal diphthongs.
@@ -918,8 +937,13 @@ local function one_term_ipa(text, style, phonetic, err)
 		-- but not word-initially (e.g. [[stressado]]).
 		local shibilant = {["s"] = "ʃ", ["z"] = "j"}
 		text = rsub(text, "([sz])(##)", function(sz, after) return shibilant[sz] .. after end)
-		text = rsub(text, "([^#])([sz])(" .. wordsep_c .. "*" .. C_NOT_H_OR_GLIDE .. ")",
+		-- s/z are maintained word-initially but not following : or similar component boundary ([[antroposcopia]] respelled
+		-- 'antrópò:scopia'). To implement this, insert TEMP1 directly before the s/z we want to preserve, then check for this
+		-- TEMP1 not being present when converting to shibiliant, then remove TEMP1.
+		text = rsub(text, "([# %-]#)([sz])", "%1" .. TEMP1 .. "%2")
+		text = rsub_repeatedly(text, "([^" .. TEMP1 .. "])([sz])(" .. wordsep_c .. "*" .. C_NOT_H_OR_GLIDE .. ")",
 			function(before, sz, after) return before .. shibilant[sz] .. after end)
+		text = rsub(text, TEMP1, "")
 	end
 	text = rsub(text, "ç", "s")
 	text = rsub(text, "j", "ʒ")
@@ -998,6 +1022,23 @@ local function one_term_ipa(text, style, phonetic, err)
 		text = rsub(text, "e(" .. stress_c .. "*)(%.?[ʒʃɲʎ](" .. V .. "))", phonetic and "ɐ%1(ɪ̯)%2" or "ɐ%1(j)%2")
 	end
 
+	-- Stop consonants.
+	if brazil then
+		-- Palatalize t/d + i/y -> affricates in Brazil.
+		text = rsub(text, "([td])(" .. word_or_component_sep_c .. "*[" .. high_front_vocalic .. "])",
+			function(td, high_vocalic) return palatalize_td[td] .. high_vocalic end)
+	elseif phonetic then
+		-- Fricativize voiced stops in Portugal when not utterance-initial or after a nasal; also not in /ld/.
+		-- Easiest way to do this is to convert all voiced stops to fricative and then back to stop in the
+		-- appropriate contexts.
+		local fricativize_stop = { ["b"] = "β", ["d"] = "ð", ["g"] = "ɣ" }
+		local occlude_fricative = { ["β"] = "b", ["ð"] = "d", ["ɣ"] = "g" }
+		text = rsub(text, "[bdg]", fricativize_stop)
+		text = rsub(text, "##([βðɣ])", function(bdg) return "##" .. occlude_fricative[bdg] end)
+		text = rsub(text, "(" .. TILDE .. wordsep_c .. "*)([βðɣ])", function(before, bdg) return before .. occlude_fricative[bdg] end)
+		text = rsub(text, "(l" .. wordsep_c .. "*)ð", "%1d")
+	end
+
 	-- Glides and l. ou -> o(w) must precede coda l -> w in Brazil, because <ol> /ow/ cannot be reduced to /o/.
 	-- ou -> o(w) before conversion of remaining diphthongs to vowel-glide combinations so <ow> can be used to
 	-- indicate a non-reducible glide.
@@ -1035,19 +1076,6 @@ local function one_term_ipa(text, style, phonetic, err)
 		text = rsub(text, "([^#])ɲ", "%1j" .. TILDE)
 	end
 
-	-- Stop consonants.
-	if not brazil and phonetic then
-		-- Fricativize voiced stops in Portugal when not utterance-initial or after a nasal; also not in /ld/.
-		-- Easiest way to do this is to convert all voiced stops to fricative and then back to stop in the
-		-- appropriate contexts.
-		local fricativize_stop = { ["b"] = "β", ["d"] = "ð", ["g"] = "ɣ" }
-		local occlude_fricative = { ["β"] = "b", ["ð"] = "d", ["ɣ"] = "g" }
-		text = rsub(text, "[bdg]", fricativize_stop)
-		text = rsub(text, "##([βðɣ])", function(bdg) return "##" .. occlude_fricative[bdg] end)
-		text = rsub(text, "(" .. TILDE .. wordsep_c .. "*)([βðɣ])", function(before, bdg) return before .. occlude_fricative[bdg] end)
-		text = rsub(text, "([lɫ]" .. wordsep_c .. "*)ð", "%1d")
-	end
-
 	if not brazil then
 		-- Suppress final -ɨ before a vowel, and make optional utterance-finally.
 		text = rsub(text, "ɨ#[ %-]#(" .. V .. ")", "‿%1")
@@ -1064,9 +1092,14 @@ local function one_term_ipa(text, style, phonetic, err)
 	return text
 end
 
+
 -- Generate the IPA for a single term respelling `text` in the specified `style` ('gbr', 'rio', etc.; see
 -- all_style_descs above). Return value is a list of objects of the following form:
 --   { phonemic = STRING, phonetic = STRING, qualifiers = {STRING, ...} }
+-- Note that the returned qualifiers are only those generated automatically as a result of certain characteristics of
+-- the respelling, e.g. in Brazil initial em-/en- + consonant has two outputs, one labeled "careful pronunciation" and
+-- the other "natural pronunciation". User-specified qualifiers are added at the end by the caller of IPA(), and
+-- prepended to the auto-generated qualifiers.
 function export.IPA(text, style)
 	-- NOTE: In the code below we assume all styles are either Brazil or Portugal, and hence we can check for Portugal
 	-- using `if not brazil`. If we ever add a non-Brazil non-Portugal style, we will have to revisit the code below.
@@ -1126,36 +1159,33 @@ function export.IPA(text, style)
 			-- adding the DOTUNDER after the 'u'; add after a quality marker for à, às
 			word = rsub(word, "^(.-" .. V .. quality_c .. "*)", "%1" .. DOTUNDER)
 		end
-		-- FIXME: This needs to happen at the end, which means we need to preserve an indication of prefixes until the end.
-		-- Make stressed prefixes have secondary stress.
-		--if word_is_prefix(i) then
-		--	word = rsub(word, "(" .. primary_quality_c .. ")$", "%1" .. LINEUNDER)
-		--	word = rsub(word, "(" .. primary_quality_c .. ")([^" .. stress .. "])", "%1" .. LINEUNDER .. "%2")
-		--end
 		-- Some unstressed words need special pronunciation.
 		word = unstressed_pronunciation_substitution[word] or word
 		words[i] = word
 	end
 	text = table.concat(words)
 
-	-- now eliminate word-final question mark and exclamation point (converted to foot boundary above when word-medial).
+	-- Now eliminate word-final question mark and exclamation point (converted to foot boundary above when word-medial).
 	text = rsub(text, "[!?]", "")
-	-- apostrophe becomes tie (e.g. in [[barriga d'agua]])
+	-- Apostrophe becomes tie (e.g. in [[barriga d'agua]]).
 	text = rsub(text, "'", "‿")
-	-- user-specified # as in i# (= i. or y) and u# (= u. or w) becomes TEMP1 so we can add # for word boundaries.
+	-- User-specified # as in i# (= i. or y) and u# (= u. or w) becomes TEMP1 so we can add # for word boundaries.
 	text = rsub(text, "#", TEMP1)
-	-- put # at word beginning and end and double ## at text/foot boundary beginning/end
+	-- Put # at word beginning and end and double ## at text/foot boundary beginning/end.
 	text = rsub(text, " | ", "# | #")
 	text = "##" .. rsub(text, " ", "# #") .. "##"
-	-- eliminate hyphens indicating prefixes/suffixes
-	text = rsub(text, "%-#", "#")
+	-- Eliminate hyphens indicating prefixes/suffixes; but preserve a marker indicating prefixes, so we can later
+	-- convert primary to secondary stress.
+	text = rsub(text, "(" .. V .. charsep_c .. "*)(%-#)", "%1" .. PSEUDOCONS .. "%2")
+	text = rsub(text, "%-#", "#" .. PREFIX_MARKER)
+	text = rsub(text, "#%-(" .. V .. ")", "#" .. PSEUDOCONS .. "%1")
 	text = rsub(text, "#%-", "#")
 
 	local variants
 
-	-- flatmap() over `variants`, applying a function to each element; the function checks if `from` is found in the
-	-- element, and if so, replaces the element with two elements, one obtained by replacing `from` with `to1` and the
-	-- other by replacing `from` with `to2`. If `to2` is nil, only one element replaces the original element.
+	-- Map over each element in `variants`. If `from` is found in the element, replace the element with two elements, one
+	-- obtained by replacing `from` with `to1` and the other by replacing `from` with `to2`. If `to2` is nil, only one
+	-- element replaces the original element.
 	local function flatmap_and_sub_pre(from, to1, qual1, to2, qual2)
 		variants = flatmap(variants, function(item)
 			if rfind(item.respelling, from) then
@@ -1241,6 +1271,11 @@ function export.IPA(text, style)
 	flatmap_and_sub_pre("i" .. TEMP1, "i.", nil, "y", {"faster pronunciation"})
 	flatmap_and_sub_pre("u" .. TEMP1, "u.", nil, "w", {"faster pronunciation"})
 
+	-- Given a single variant element representing a preprocessed respelling along with any qualifiers resulting from the
+	-- preprocessing, generate the phonemic and phonetic representations using one_term_ipa() and postprocess to get the
+	-- final IPA. The postprocessing is there in general to handle cases where a single respelling produces multiple
+	-- outputs, such as Brazil -io producing either /i.u/ or /iw/. Note that user-specified qualifiers are not yet present
+	-- at any stage of this IPA generation; they are added at the end by the caller of IPA().
 	local function call_one_term_ipa(variant)
 		local result = {{
 			phonemic = one_term_ipa(variant.respelling, style, false, err),
@@ -1248,18 +1283,28 @@ function export.IPA(text, style)
 			qualifiers = variant.qualifiers,
 		}}
 
-		local function unpack_if_table(obj)
-			if type(obj) == "table" and obj[1] then
+		local function unpack_if_list(obj)
+			if type(obj) == "table" and #obj == 2 and obj[1] then
 				return unpack(obj)
 			else
 				return obj, obj
 			end
 		end
 
+		-- Map over each element in `result`. If `from` is found in the element, replace the element with two elements, one
+		-- obtained by replacing `from` with `to1` in both the phonemic and phonetic representations of the existing element,
+		-- and the other similarly by replacing `from` with `to2` in both the phonemic and phonetic representations. If `to2`
+		-- is nil, only one element replaces the original element. `qual1`, if non-nil, is a list of qualifiers to be added to
+		-- the new element associated with `to1` (appended to any existing qualifiers). Similarly, `qual2` is a list of
+		-- qualifiers to be added to the new element associated with `to2`. Normally, `to1` and `to2` can be anything that can
+		-- be used as the replacement argument to the Lua gsub() function, i.e. a string, a function or a table. However, if
+		-- `to1` or `to2` is a two-element list, it is unpacked into two separate substitution objects, respectively for the
+		-- phonemic and phonetic representations of the element being substituted. This is used, for example, when handling
+		-- Ú resulting from stressed final '-io(s)', so different phonemic vs. phonetic replacements can be used (/w/ vs [ʊ̯]).
 		local function flatmap_and_sub_post(from, to1, qual1, to2, qual2)
 			result = flatmap(result, function(item)
 				if rfind(item.phonemic, from) or rfind(item.phonetic, from) then
-					local to1_phonemic, to1_phonetic = unpack_if_table(to1)
+					local to1_phonemic, to1_phonetic = unpack_if_list(to1)
 					local retval = {
 						{
 							phonemic = rsub(item.phonemic, from, to1_phonemic),
@@ -1268,7 +1313,7 @@ function export.IPA(text, style)
 						}
 					}
 					if to2 then
-						local to2_phonemic, to2_phonetic = unpack_if_table(to2)
+						local to2_phonemic, to2_phonetic = unpack_if_list(to2)
 						table.insert(retval,
 							{
 								phonemic = rsub(item.phonemic, from, to2_phonemic),
@@ -1285,9 +1330,13 @@ function export.IPA(text, style)
 		end
 
 		if brazil then
+			-- Convert Ẽ from initial [[em]] as a word by itself to either /ẽj̃/ and /ĩ/.
+			flatmap_and_sub_post("Ẽ" .. TILDE .. "#", "e" .. TILDE .. "j" .. TILDE .. "#", {"careful pronunciation"},
+				"i" .. TILDE .. "#", {"natural pronunciation"})
+			-- Convert Ẽ from initial em-/en- + consonant to either /ẽ/ and /ĩ/.
 			flatmap_and_sub_post("Ẽ", "e", {"careful pronunciation"}, "i", {"natural pronunciation"})
 			flatmap_and_sub_post("I", "i", nil, "e", nil)
-			-- Convert Ú resulting from stressed final '-io(s)'.'
+			-- Convert Ú resulting from stressed final '-io(s)'.
 			flatmap_and_sub_post("%.Ú", ".u", nil, {"w", "ʊ̯"}, nil)
 		else -- Portugal
 			flatmap_and_sub_post("W", "", nil, "w", {"regional"})
@@ -1331,9 +1380,12 @@ function export.IPA(text, style)
 		text = rsub(text, "%.(#?" .. ipa_stress_c .. ")", "%1")
 		-- Make all primary stresses but the last one in a given word be secondary. May be fed by the first rule above.
 		text = rsub_repeatedly(text, "ˈ([^ ]+)ˈ", "ˌ%1ˈ")
+		-- Make primary stresses in prefixes become secondary.
+		text = rsub_repeatedly(text, "ˈ([^#]*#" .. PREFIX_MARKER .. ")", "ˌ%1")
 
-		-- Remove # symbols at word/text boundaries, as well as _ to force separate interpretation, and recompose.
-		text = rsub(text, "[#_]", "")
+		-- Remove # symbols at word/text boundaries, as well as _ (which forces separate interpretation), pseudo-consonant
+		-- markers (at edges of some prefixes/suffixes), and prefix markers, and recompose.
+		text = rsub(text, "[#_" .. PSEUDOCONS .. PREFIX_MARKER .. "]", "")
 		text = mw.ustring.toNFC(text)
 
 		return text
@@ -1367,6 +1419,44 @@ function export.IPA_json(frame)
 end
 
 
+function export.canonicalize_respelling(text, pagename)
+	if not text or text == "+" then
+		text = pagename
+	end
+
+	-- No such substitutions currently.
+	-- text = rsub(text, "%[([hHxXjJ])%]", function(sound)
+	-- 	return explicit_sound_to_substitution[ulower(sound)]
+	-- end)
+
+	if rfind(text, "^%[.*%]$") then
+		local subs = rsplit(rmatch(text, "^%[(.*)%]$"), ",")
+		text = pagename
+		for _, sub in ipairs(subs) do
+			local fromto = rsplit(sub, ":")
+			if #fromto ~= 2 then
+				error("Bad substitution spec " .. sub .. " in {{pt-IPA}}")
+			end
+			local from, to = fromto[1], fromto[2]
+			local newtext = text
+			if rfind(from, "^%^") then
+				-- whole-word match
+				from = rmatch(from, "^%^(.*)$")
+				newtext = rsub(text, "%f[%a]" .. require("Module:utilities").pattern_escape(from) .. "%f[%A]", to)
+			else
+				newtext = rsub(text, require("Module:utilities").pattern_escape(from), to)
+			end
+			if newtext == text then
+				error("Substitution spec " .. sub .. " didn't match respelling '" .. text .. "'")
+			end
+			text = newtext
+		end
+	end
+
+	return text
+end
+
+
 function export.express_styles(inputs, args_style, pagename)
 	local pronuns_by_style = {}
 	local expressed_styles = {}
@@ -1375,9 +1465,7 @@ function export.express_styles(inputs, args_style, pagename)
 		pronuns_by_style[style] = {}
 		for _, val in ipairs(inputs[style].terms) do
 			local respelling = val.term
-			if respelling == "+" then
-				respelling = pagename
-			end
+			respelling = export.canonicalize_respelling(respelling, pagename)
 
 			local refs
 			if #val.ref == 0 then
@@ -1586,17 +1674,50 @@ function export.show(frame)
 	-- Parse the arguments.
 	local put
 	for style, input in pairs(inputs) do
-		if input:find("<") then
+		if input:find("[<%[]") then
 			local function parse_err(msg)
 				error(msg .. ": " .. style .. "= " .. input)
 			end
 			if not put then
 				put = require("Module:parse utilities")
 			end
-			local segments = put.parse_balanced_segment_run(input, "<", ">")
-			local comma_separated_groups = put.split_alternating_runs(segments, "%s*,%s*")
+			-- We don't want to split off a comma followed by a space, as in [[rei morto, rei posto]], so replace
+			-- comma+space with a special character that we later undo.
+			input = rsub(input, ", ", TEMP1)
+			-- Parse balanced segment runs involving either [...] or <...>. We do this because we don't want commas
+			-- inside of square or angle brackets to count as respelling delimiters. However, we need to rejoin
+			-- square-bracketed segments with nearby ones after splitting alternating runs on comma. For example, if we
+			-- are given "a[x]a<q:learned>,[vol:vôl,ei:éi]<q:nonstandard>", after calling
+			-- parse_multi_delimiter_balanced_segment_run() we get the following output:
+			--
+			-- {"a", "[x]", "a", "<q:learned>", ",", "[vol:vôl,ei:éi]", "", "<q:nonstandard>", ""}
+			--
+			-- After calling split_alternating_runs(), we get the following:
+			--
+			-- {{"a", "[x]", "a", "<q:learned>", ""}, {"", "[vol:vôl,ei:éi]", "", "<q:nonstandard>", ""}}
+			--
+			-- We need to rejoin stuff on either side of the square-bracketed portions.
+			local segments = put.parse_multi_delimiter_balanced_segment_run(input, {{"<", ">"}, {"[", "]"}})
+			-- Not with spaces around the comma; see above for why we don't want to split off comma followed by space.
+			local comma_separated_groups = put.split_alternating_runs(segments, ",")
+
 			local parsed = {terms = {}}
 			for i, group in ipairs(comma_separated_groups) do
+				-- Rejoin bracketed segments with nearby ones, as described above.
+				local j = 2
+				while j <= #group do
+					if group[j]:find("^%[") then
+						group[j - 1] = group[j - 1] .. group[j] .. group[j + 1]
+						table.remove(group, j)
+						table.remove(group, j)
+					else
+						j = j + 2
+					end
+				end
+				for j, segment in ipairs(group) do
+					group[j] = rsub(segment, TEMP1, ", ")
+				end
+
 				local term = {term = group[1], ref = {}, q = {}}
 				for j = 2, #group - 1, 2 do
 					if group[j + 1] ~= "" then
