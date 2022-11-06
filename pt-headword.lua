@@ -29,6 +29,7 @@ local function glossary_link(entry, text)
 	return "[[Appendix:Glossary#" .. entry .. "|" .. text .. "]]"
 end
 
+local metaphonic_label = "[[Appendix:Portuguese pronunciation#Metaphony|metaphonic]]"
 
 local function check_all_missing(forms, plpos, tracking_categories)
 	for _, form in ipairs(forms) do
@@ -99,16 +100,19 @@ function export.show(frame)
 		pagename = pagename
 	}
 
+	local is_suffix = false
 	if pagename:find("^%-") and suffix_categories[poscat] then
+		is_suffix = true
 		data.pos_category = "suffixes"
 		local singular_poscat = poscat:gsub("s$", "")
 		table.insert(data.categories, langname .. " " .. singular_poscat .. "-forming suffixes")
+		table.insert(data.inflections, {label = singular_poscat .. "-forming suffix"})
 	end
 
 	local tracking_categories = {}
 
 	if pos_functions[poscat] then
-		pos_functions[poscat].func(args, data, tracking_categories, frame)
+		pos_functions[poscat].func(args, data, tracking_categories, frame, is_suffix)
 	end
 
 	if args["json"] then
@@ -154,13 +158,27 @@ local function replace_hash_with_lemma(term, lemma)
 	return term
 end
 
+local function is_metaphonic(args, lemma)
+	if args.nometa then
+		return false
+	end
+	if args.meta then
+		return true
+	end
+	-- Anything in -oso with a preceding vowel (e.g. [[gostoso]], [[curioso]]) is normally metaphonic.
+	return rfind(lemma, com.V .. ".*oso$")
+end
+
 local allowed_genders = m_table.listToSet(
 	{"m", "f", "mf", "mfbysense", "m-p", "f-p", "mf-p", "mfbysense-p", "?", "?-p", "n", "n-p"}
 )
 
-local function do_noun(args, data, tracking_categories, pos)
+local function do_noun(args, data, tracking_categories, pos, is_suffix, is_proper)
 	local is_plurale_tantum = false
 	local has_singular = false
+	if is_suffix then
+		pos = "suffix"
+	end
 	local plpos = require("Module:string utilities").pluralize(pos)
 
 	data.genders = {}
@@ -221,8 +239,8 @@ local function do_noun(args, data, tracking_categories, pos)
 			-- both singular and plural
 			table.insert(data.inflections, {label = "sometimes " .. glossary_link("plural only") .. ", in variation"})
 		end
-		-- If no plurals, use the default plural.
-		if #args_pl == 0 then
+		-- If no plurals, use the default plural if not a proper noun.
+		if #args_pl == 0 and not is_proper then
 			args_pl = {"+"}
 		end
 		-- If only ~ given (countable and uncountable), add the default plural after it.
@@ -458,8 +476,8 @@ local function do_noun(args, data, tracking_categories, pos)
 		table.insert(data.inflections, feminine_plurals)
 	end
 
-	if args.meta then
-		table.insert(data.inflections, {label = "[[Appendix:Portuguese pronunciation#Metaphony|metaphonic]]"})
+	if is_metaphonic(args, lemma) then
+		table.insert(data.inflections, {label = metaphonic_label})
 		table.insert(data.categories, langname .. " " .. plpos .. " with metaphony")
 	end
 
@@ -487,21 +505,34 @@ local function get_noun_params()
 		["mpl_qual"] = {list = "mpl=_qual", allow_holes = true},
 		["fpl"] = {list = true},
 		["fpl_qual"] = {list = "fpl=_qual", allow_holes = true},
-		["meta"] = {type = "boolean"},
+		["meta"] = {type = "boolean"}, -- metaphonic
+		["nometa"] = {type = "boolean"}, -- explicitly not metaphonic
 	}
 end
 
 pos_functions["nouns"] = {
 	params = get_noun_params(),
-	func = function(args, data, tracking_categories)
-		do_noun(args, data, tracking_categories, "noun")
+	func = function(args, data, tracking_categories, frame, is_suffix)
+		do_noun(args, data, tracking_categories, "noun", is_suffix)
 	end,
 }
 
-local function do_pronoun(args, data, tracking_categories, pos)
+pos_functions["proper nouns"] = {
+	params = get_noun_params(),
+	func = function(args, data, tracking_categories, frame, is_suffix)
+		do_noun(args, data, tracking_categories, "proper noun", is_suffix, "is proper noun")
+	end,
+}
+
+local function do_pronoun(args, data, tracking_categories, pos, is_suffix)
+	if is_suffix then
+		pos = "suffix"
+	end
 	local plpos = require("Module:string utilities").pluralize(pos)
 
-	data.pos_category = plpos
+	if not is_suffix then
+		data.pos_category = plpos
+	end
 
 	local lemma = m_links.remove_links(data.heads[1]) -- should always be specified
 
@@ -559,19 +590,24 @@ end
 
 pos_functions["pronouns"] = {
 	params = get_pronoun_params(),
-	func = function(args, data, tracking_categories)
-		do_pronoun(args, data, tracking_categories, "pronoun")
+	func = function(args, data, tracking_categories, frame, is_suffix)
+		do_pronoun(args, data, tracking_categories, "pronoun", is_suffix)
 	end,
 }
 
-local function do_adjective(args, data, tracking_categories, pos, is_superlative)
+local function do_adjective(args, data, tracking_categories, pos, is_suffix, is_superlative)
 	local feminines = {}
 	local masculine_plurals = {}
 	local feminine_plurals = {}
+	if is_suffix then
+		pos = "suffix"
+	end
 	local plpos = require("Module:string utilities").pluralize(pos)
 
 	local romut = require(romut_module)
-	data.pos_category = plpos
+	if not is_suffix then
+		data.pos_category = plpos
+	end
 
 	if args.sp and not romut.allowed_special_indicators[args.sp] then
 		local indicators = {}
@@ -597,23 +633,33 @@ local function do_adjective(args, data, tracking_categories, pos, is_superlative
 		end
 	end
 
+	local function insert_ancillary_inflection(forms, quals, label)
+		if forms and #forms > 0 then
+			local terms = process_terms_with_qualifiers(forms, quals)
+			check_all_missing(terms, plpos, tracking_categories)
+			terms.label = label
+			table.insert(data.inflections, terms)
+		end
+	end
+
+
 	if args.inv then
 		-- invariable adjective
 		table.insert(data.inflections, {label = glossary_link("invariable")})
 		table.insert(data.categories, langname .. " indeclinable " .. plpos)
 		if args.sp or #args.f > 0 or #args.pl > 0 or #args.mpl > 0 or #args.fpl > 0 then
-			error("Can't specify inflections with an invariable adjective")
+			error("Can't specify inflections with an invariable " .. pos)
 		end
 	elseif args.fonly then
 		-- feminine-only
 		if #args.f > 0 then
-			error("Can't specify explicit feminines with feminine-only adjective")
+			error("Can't specify explicit feminines with feminine-only " .. pos)
 		end
 		if #args.pl > 0 then
-			error("Can't specify explicit plurals with feminine-only adjective, use fpl=")
+			error("Can't specify explicit plurals with feminine-only " .. pos .. ", use fpl=")
 		end
 		if #args.mpl > 0 then
-			error("Can't specify explicit masculine plurals with feminine-only adjective")
+			error("Can't specify explicit masculine plurals with feminine-only " .. pos)
 		end
 		local argsfpl = args.fpl
 		if #argsfpl == 0 then
@@ -629,7 +675,7 @@ local function do_adjective(args, data, tracking_categories, pos, is_superlative
 			else
 				fpl = replace_hash_with_lemma(fpl, lemma)
 			end
-			table.insert(feminine_plurals, {term = fpl, fetch_qualifiers(args.fpl_qual[i])})
+			table.insert(feminine_plurals, {term = fpl, qualifiers = fetch_qualifiers(args.fpl_qual[i])})
 		end
 
 		check_all_missing(feminine_plurals, plpos, tracking_categories)
@@ -729,56 +775,40 @@ local function do_adjective(args, data, tracking_categories, pos, is_superlative
 		end
 	end
 
-	if args.n and #args.n > 0 then
-		local neuters = process_terms_with_qualifiers(args.n, args.n_qual)
-		check_all_missing(neuters, plpos, tracking_categories)
-		neuters.label = "neuter"
-		table.insert(data.inflections, neuters)
-	end
+	insert_ancillary_inflection(args.n, args.n_qual, "neuter")
 
 	if args.hascomp then
 		if args.hascomp == "both" then
 			table.insert(data.inflections, {label = "sometimes " .. glossary_link("comparable")})
-			table.insert(data.categories, langname .. " comparable adjectives")
-			table.insert(data.categories, langname .. " uncomparable adjectives")
+			table.insert(data.categories, langname .. " comparable " .. plpos)
+			table.insert(data.categories, langname .. " uncomparable " .. plpos)
 		else
 			local hascomp = require("Module:yesno")(args.hascomp)
 			if hascomp == true then
 				table.insert(data.inflections, {label = glossary_link("comparable")})
-				table.insert(data.categories, langname .. " comparable adjectives")
+				table.insert(data.categories, langname .. " comparable " .. plpos)
 			elseif hascomp == false then
 				table.insert(data.inflections, {label = "not " .. glossary_link("comparable")})
-				table.insert(data.categories, langname .. " uncomparable adjectives")
+				table.insert(data.categories, langname .. " uncomparable " .. plpos)
 			else
 				error("Unrecognized value for hascomp=: " .. args.hascomp)
 			end
 		end
 	elseif args.comp and #args.comp > 0 or args.sup and #args.sup > 0 then
 		table.insert(data.inflections, {label = glossary_link("comparable")})
-		table.insert(data.categories, langname .. " comparable adjectives")
+		table.insert(data.categories, langname .. " comparable " .. plpos)
 	end
 
-	if args.comp and #args.comp > 0 then
-		local comps = process_terms_with_qualifiers(args.comp, args.comp_qual)
-		check_all_missing(comps, plpos, tracking_categories)
-		comps.label = "comparative"
-		table.insert(data.inflections, comps)
-	end
+	insert_ancillary_inflection(args.comp, args.comp_qual, "comparative")
+	insert_ancillary_inflection(args.sup, args.sup_qual, "superlative")
 
-	if args.sup and #args.sup > 0 then
-		local sups = process_terms_with_qualifiers(args.sup, args.sup_qual)
-		check_all_missing(sups, plpos, tracking_categories)
-		sups.label = "superlative"
-		table.insert(data.inflections, sups)
-	end
-
-	if args.meta then
-		table.insert(data.inflections, {label = "[[Appendix:Portuguese pronunciation#Metaphony|metaphonic]]"})
+	if is_metaphonic(args, lemma) then
+		table.insert(data.inflections, {label = metaphonic_label})
 		table.insert(data.categories, langname .. " " .. plpos .. " with metaphony")
 	end
 
 	if args.irreg and is_superlative then
-		table.insert(data.categories, langname .. " irregular superlative adjectives")
+		table.insert(data.categories, langname .. " irregular superlative " .. plpos)
 	end
 end
 
@@ -794,7 +824,8 @@ local function get_adjective_params(adjtype)
 		["mpl_qual"] = {list = "mpl=_qual", allow_holes = true},
 		["fpl"] = {list = true}, --feminine plural override(s)
 		["fpl_qual"] = {list = "fpl=_qual", allow_holes = true},
-		["meta"] = {type = "boolean"}, --metaphonic
+		["meta"] = {type = "boolean"}, -- metaphonic
+		["nometa"] = {type = "boolean"}, -- explicitly not metaphonic
 	}
 	if adjtype == "base" or adjtype == "part" or adjtype == "det" then
 		params["comp"] = {list = true} --comparative(s)
@@ -816,44 +847,44 @@ end
 
 pos_functions["adjectives"] = {
 	params = get_adjective_params("base"),
-	func = function(args, data, tracking_categories)
-		do_adjective(args, data, tracking_categories, "adjective")
+	func = function(args, data, tracking_categories, frame, is_suffix)
+		do_adjective(args, data, tracking_categories, "adjective", is_suffix)
 	end,
 }
 
 pos_functions["comparative adjectives"] = {
 	params = get_adjective_params("comp"),
-	func = function(args, data, tracking_categories)
-		do_adjective(args, data, tracking_categories, "adjective")
+	func = function(args, data, tracking_categories, frame, is_suffix)
+		do_adjective(args, data, tracking_categories, "adjective", is_suffix)
 	end,
 }
 
 pos_functions["superlative adjectives"] = {
 	params = get_adjective_params("sup"),
-	func = function(args, data, tracking_categories)
-		do_adjective(args, data, tracking_categories, "adjective", true)
+	func = function(args, data, tracking_categories, frame, is_suffix)
+		do_adjective(args, data, tracking_categories, "adjective", is_suffix, "is superlative")
 	end,
 }
 
 pos_functions["past participles"] = {
 	params = get_adjective_params("part"),
-	func = function(args, data, tracking_categories)
-		do_adjective(args, data, tracking_categories, "participle")
+	func = function(args, data, tracking_categories, frame, is_suffix)
+		do_adjective(args, data, tracking_categories, "participle", is_suffix)
 		data.pos_category = "past participles"
 	end,
 }
 
 pos_functions["determiners"] = {
 	params = get_adjective_params("det"),
-	func = function(args, data, tracking_categories)
-		do_adjective(args, data, tracking_categories, "determiner")
+	func = function(args, data, tracking_categories, frame, is_suffix)
+		do_adjective(args, data, tracking_categories, "determiner", is_suffix)
 	end,
 }
 
 pos_functions["adjective-like pronouns"] = {
 	params = get_adjective_params("pron"),
-	func = function(args, data, tracking_categories)
-		do_adjective(args, data, tracking_categories, "pronoun")
+	func = function(args, data, tracking_categories, frame, is_suffix)
+		do_adjective(args, data, tracking_categories, "pronoun", is_suffix)
 	end,
 }
 
