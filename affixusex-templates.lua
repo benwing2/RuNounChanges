@@ -9,10 +9,10 @@ local m_languages = require("Module:languages")
 --                  when specified as a separate parameter (e.g. {type = "boolean"} for a Boolean parameter, or
 --                  {alias_of = "t"} for the "gloss" parameter, which is aliased to "t"), on top of the default, which
 --                  is {list = true, allow_holes = true, require_index = true}.
--- * `convert_func`: An optional function to convert the raw argument into the form passed to [[Module:affixusex]].
---                   This function takes three parameters: (1) `arg` (the raw argument); (2) `inline` (true if we're
---                   processing an inline modifier, false otherwise); (3) `i` (the logical index of the term being
---                   processed, starting from 1).
+-- * `convert`: An optional function to convert the raw argument into the form passed to [[Module:affixusex]].
+--              This function takes three parameters: (1) `arg` (the raw argument); (2) `inline` (true if we're
+--              processing an inline modifier, false otherwise); (3) `i` (the logical index of the term being
+--              processed, starting from 1).
 -- * `item_dest`: The name of the key used when storing the parameter's value into the processed `parts` list.
 --                Normally the same as the parameter's name. Different in the case of "gloss", which is an alias for
 --                "t".
@@ -162,8 +162,8 @@ function export.affixusex_t(frame)
 			local param_key = param_mod_spec.param_key or param_mod
 			local arg = args[param_key][i]
 			if arg then
-				if convert_fun then
-					arg = convert_fun(arg, false, i)
+				if param_mod_spec.convert then
+					arg = param_mod_spec.convert(arg, false, i)
 				end
 				part[dest] = arg
 			end
@@ -227,9 +227,8 @@ function export.affixusex_t(frame)
 				if part[dest] then
 					parse_err("Modifier '" .. prefix .. "' occurs twice, second occurrence " .. run[j])
 				end
-				local convert_fun = param_mods[prefix].convert_fun
-				if convert_fun then
-					arg = convert_fun(arg, true, i)
+				if param_mods[prefix].convert then
+					arg = param_mods[prefix].convert(arg, true, i)
 				end
 				part[dest] = arg
 			end
@@ -241,7 +240,7 @@ function export.affixusex_t(frame)
 	-- Determine whether the terms in the numbered params contain a prefix or suffix. If not, we may insert one before
 	-- the last term (for suffixes) or the first term (for prefixes).
 	local affix_in_parts = false
-	local SUBPAGE = pagename or mw.title.getCurrentTitle().subpageText
+	local SUBPAGE = args.pagename or mw.title.getCurrentTitle().subpageText
 	for i=1, maxmaxindex do
 		if parts[i].term then
 			-- Careful here, a prefix beginning with ! should be treated as a normal term.
