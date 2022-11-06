@@ -72,9 +72,9 @@ Author: Benwing
     dv, ks; ft), non-sibiliant-obstruent + nasal (pn, bn, tm, tn, dm, dn, gm, gn), nasal + nasal (mn) are syllabified in
 	Portugal as .pt, .bv, .mn, etc. Note ʃ.t, ʃ.p, ʃ.k, etc. But in Brazil, all of these divide between the consonants
 	(p.t, b.v, ʃ.t, s.p, etc.). Particular case: [[ab-rogação]] divides as a.brr in Portugal but ab.rr in Brazil. [DONE]
-34. -ão, -ãe, -õe should be recognized as nasal diphthongs with a circumflex added to force stress.
+34. -ão, -ãe, -õe should be recognized as nasal diphthongs with a circumflex added to force stress. [DONE]
 35. Recognize obsolete -aõ, -aẽ, -oẽ as equivalent to -ão, -ãe, -õe.
-36. In CluV, CruV, CliV, CriV, the 'u' and 'i' are vowels not glides in both Portugal and Brazil.
+36. In CluV, CruV, CliV, CriV, the 'u' and 'i' are vowels not glides in both Portugal and Brazil. [DONE]
 37. Epenthesis of (j) before final stressed s in Brazil should not happen after i. [DONE]
 38. Dialect markers such as "Brazil", "Portugal" should go at the beginning. [DONE]
 39. Portugal exC, êxC should be rendered like eiʃC (FIXME: Does this apply to "Central Portugal" as well?). exs- needs
@@ -116,7 +116,9 @@ Author: Benwing
 71. Suffixes beginning with a vowel should act as if a pseudo-consonant precedes. [DONE]
 72. Prefixes should change primary stress to secondary. [DONE]
 73. -ing should be like -im in Brazil but -ingh in Portugal. [DONE]
-74. Single 's' after colon should be /z/ not /s/, in keeping with normal spelling practices. [NOT YET, FIRST NEED TO PUSH APPROPRIATE RESPELLING CHANGES]
+74. Single 's' after colon should be /z/ not /s/, in keeping with normal spelling practices;
+    likewise for single 'r'. [NOT YET, FIRST NEED TO PUSH APPROPRIATE RESPELLING CHANGES]
+75. Intertonic 'o' after stressed i/e/ɛ ([[período]], [[rubéola]]) in Brazil should be .u or w.
 ]=]
 
 local export = {}
@@ -593,9 +595,9 @@ local function one_term_ipa(text, style, phonetic, err)
 	-- a TEMP1 marker already after the second vowel (which will occur e.g. in [[saiu]] divided as 'sa.iu').
 	text = rsub_repeatedly(text, "([aeo]" .. accent_c .. "*)([iu][^" .. accent .. TEMP1 .. "])", "%1" .. TEMP1 .. "%2")
 	-- Prevent syllable division between nasal diphthongs unless somehow the second vowel is accented.
-	text = rsub_repeatedly(text, "(a" .. TILDE .. ")([eo][^" .. accent .. "])", "%1" .. TEMP1 .. "%2")
-	text = rsub_repeatedly(text, "(o" .. TILDE .. ")(e[^" .. accent .. "])", "%1" .. TEMP1 .. "%2")
-	text = rsub_repeatedly(text, "(u" .. TILDE .. ")(i[^" .. accent .. "])", "%1" .. TEMP1 .. "%2")
+	text = rsub_repeatedly(text, "(a" .. accent_c .. "*" .. TILDE .. ")([eo][^" .. accent .. "])", "%1" .. TEMP1 .. "%2")
+	text = rsub_repeatedly(text, "(o" .. accent_c .. "*" .. TILDE .. ")(e[^" .. accent .. "])", "%1" .. TEMP1 .. "%2")
+	text = rsub_repeatedly(text, "(u" .. accent_c .. "*" .. TILDE .. ")(i[^" .. accent .. "])", "%1" .. TEMP1 .. "%2")
 	-- All other sequences of vowels get divided.
 	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*" .. STC .. ")(" .. V .. ")", "%1.%2")
 	-- Remove the marker preventing syllable division.
@@ -931,7 +933,7 @@ local function one_term_ipa(text, style, phonetic, err)
 	text = rsub(text, "(" .. V .. stress_c .. "*Y?%.?)s(" .. wordsep_c .. "*h?[" .. vowel .. glide .. "])", "%1z%2")
 	text = rsub(text, "(" .. V .. accent_c .. "*Y?%.?)s(" .. wordsep_c .. "*h?[" .. voiced_cons .. "])", "%1z%2")
 	-- z before voiceless consonant, e.g. [[Nazca]]; c and q already removed
-	text = rsub(text, "z(" .. wordsep_c .. "*[çfkpsʃt])", "%1s%2")
+	text = rsub(text, "z(" .. wordsep_c .. "*[çfkpsʃt])", "s%1")
 	if not brazil or style == "rio" then
 		-- Outside Brazil except for Rio; s/z before consonant (including across word boundaries) or end of utterance -> ʃ/ʒ;
 		-- but not word-initially (e.g. [[stressado]]).
@@ -1419,6 +1421,8 @@ function export.IPA_json(frame)
 end
 
 
+-- "Canonicalize" a single respelling (after splitting multiple respellings on comma and parsing off inline
+-- modifiers). This currently handles '+' and substitution notation.
 function export.canonicalize_respelling(text, pagename)
 	if not text or text == "+" then
 		text = pagename
@@ -1429,15 +1433,23 @@ function export.canonicalize_respelling(text, pagename)
 	-- 	return explicit_sound_to_substitution[ulower(sound)]
 	-- end)
 
+	-- Implement substitution notation.
 	if rfind(text, "^%[.*%]$") then
-		local subs = rsplit(rmatch(text, "^%[(.*)%]$"), ",")
+		local subs = rsplit(rmatch(text, "^%[(.*)%]$"), ";")
 		text = pagename
 		for _, sub in ipairs(subs) do
 			local fromto = rsplit(sub, ":")
-			if #fromto ~= 2 then
-				error("Bad substitution spec " .. sub .. " in {{pt-IPA}}")
+			if #fromto < 2 then
+				error("Bad substitution spec " .. sub .. " in {{pt-IPA}}, should have a colon in it")
 			end
-			local from, to = fromto[1], fromto[2]
+			local from, to
+			if #fromto == 2 then
+				from, to = fromto[1], fromto[2]
+			else
+				from = fromto[1]
+				table.remove(fromto, 1)
+				to = table.concat(fromto, ":")
+			end
 			local newtext = text
 			if rfind(from, "^%^") then
 				-- whole-word match
@@ -1446,7 +1458,7 @@ function export.canonicalize_respelling(text, pagename)
 			else
 				newtext = rsub(text, require("Module:utilities").pattern_escape(from), to)
 			end
-			if newtext == text then
+			if from ~= to and newtext == text then
 				error("Substitution spec " .. sub .. " didn't match respelling '" .. text .. "'")
 			end
 			text = newtext
@@ -1684,17 +1696,17 @@ function export.show(frame)
 			-- We don't want to split off a comma followed by a space, as in [[rei morto, rei posto]], so replace
 			-- comma+space with a special character that we later undo.
 			input = rsub(input, ", ", TEMP1)
-			-- Parse balanced segment runs involving either [...] or <...>. We do this because we don't want commas
-			-- inside of square or angle brackets to count as respelling delimiters. However, we need to rejoin
-			-- square-bracketed segments with nearby ones after splitting alternating runs on comma. For example, if we
-			-- are given "a[x]a<q:learned>,[vol:vôl,ei:éi]<q:nonstandard>", after calling
+			-- Parse balanced segment runs involving either [...] (substitution notation) or <...> (inline modifiers). We do this
+			-- because we don't want commas inside of square or angle brackets to count as respelling delimiters. However, we
+			-- need to rejoin square-bracketed segments with nearby ones after splitting alternating runs on comma. For example,
+			-- if we are given "a[x]a<q:learned>,[vol:vôl;ei:éi,ei]<q:nonstandard>", after calling
 			-- parse_multi_delimiter_balanced_segment_run() we get the following output:
 			--
-			-- {"a", "[x]", "a", "<q:learned>", ",", "[vol:vôl,ei:éi]", "", "<q:nonstandard>", ""}
+			-- {"a", "[x]", "a", "<q:learned>", ",", "[vol:vôl;ei:éi,ei]", "", "<q:nonstandard>", ""}
 			--
 			-- After calling split_alternating_runs(), we get the following:
 			--
-			-- {{"a", "[x]", "a", "<q:learned>", ""}, {"", "[vol:vôl,ei:éi]", "", "<q:nonstandard>", ""}}
+			-- {{"a", "[x]", "a", "<q:learned>", ""}, {"", "[vol:vôl;ei:éi,ei]", "", "<q:nonstandard>", ""}}
 			--
 			-- We need to rejoin stuff on either side of the square-bracketed portions.
 			local segments = put.parse_multi_delimiter_balanced_segment_run(input, {{"<", ">"}, {"[", "]"}})
