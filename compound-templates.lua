@@ -77,7 +77,7 @@ local function get_parsed_part(template, args, term_index, i)
 	local alt = args["alt"][i]
 	local id = args["id"][i]
 	local lang = args["partlang"][i]
-	local sc = fetch_script(args["partsc"][i], "partsc" .. i)
+	local sc = fetch_script(args["partsc"][i], "sc" .. i)
 	
 	local tr = args["tr"][i]
 	local ts = args["ts"][i]
@@ -442,7 +442,7 @@ function export.derivsee(frame)
 	
 	local id = args.id
 	local sc = fetch_script(args.sc, "sc")
-	local pos = require("Module:string utilities").pluralize(args.pos or "word")
+	local pos = require("Module:string utilities").pluralize(args.pos or "term")
 	
 	if not term then
 		local SUBPAGE = mw.title.getCurrentTitle().subpageText
