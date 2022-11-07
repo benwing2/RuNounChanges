@@ -46,7 +46,7 @@ local param_mods = {
 	sc = {
 		-- sc1=, sc2=, ... are different from sc=; the former apply to individual arguments when lang1=, lang2=, ...
 		-- is specified, while the latter applies to all arguments where langN=... isn't specified. To handle this in
-		-- separate parameter, we need to set the key in the `params` object passed to [[Module:parameters]] to
+		-- separate parameters, we need to set the key in the `params` object passed to [[Module:parameters]] to
 		-- something else (in this case "langsc") and set `list = "sc"` in the value of the `params` object. This
 		-- causes [[Module:parameters]] to fetch parameters named sc1=, sc2= etc. but store them into "langsc", while
 		-- sc= is stored into "sc".
