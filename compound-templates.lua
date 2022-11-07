@@ -7,6 +7,109 @@ local m_debug = require("Module:debug")
 local rsplit = mw.text.split
 
 
+-- Per-param modifiers, which can be specified either as separate parameters (e.g. t2=, pos3=) or as inline modifiers
+-- <t:...>, <pos:...>, etc. The key is the name fo the parameter (e.g. "t", "pos") and the value is a table with
+-- elements as follows:
+-- * `extra_specs`: An optional table of extra key-value pairs to add to the spec used for parsing the parameter
+--                  when specified as a separate parameter (e.g. {type = "boolean"} for a Boolean parameter, or
+--                  {alias_of = "t"} for the "gloss" parameter, which is aliased to "t"), on top of the default, which
+--                  is {list = true, allow_holes = true, require_index = true}.
+-- * `convert`: An optional function to convert the raw argument into the form passed to [[Module:compound]].
+--              This function takes four parameters: (1) `arg` (the raw argument); (2) `inline` (true if we're
+--              processing an inline modifier, false otherwise); (3) `term_index` (the actual index of the first term);
+--              (4) `i` (the logical index of the term being processed, starting from 1).
+-- * `item_dest`: The name of the key used when storing the parameter's value into the processed `parts` list.
+--                Normally the same as the parameter's name. Different in the case of "t", where we store the gloss in
+--                "gloss", and "g", where we store the genders in "genders".
+-- * `param_key`: The name of the key used in the `params` spec passed to [[Module:parameters]]. Normally the same as
+--                the parameter's name. Different in the case of "lit", "sc", etc. where e.g. we distinguish per-term
+--                parameters "lit1", "lit2", etc. from the overall parameter "lit".
+local param_mods = {
+	t = {
+		-- We need to store the t1=/t2= param and the <t:...> inline modifier into the "gloss" key of the parsed part,
+		-- because that is what [[Module:compound]] expects.
+		item_dest = "gloss",
+	},
+	gloss = {
+		-- The `extra_specs` handles the fact that "gloss" is an alias of "t".
+		extra_specs = {alias_of = "t"},
+	},
+	tr = {},
+	ts = {},
+	g = {
+		-- We need to store the g1=/g2= param and the <g:...> inline modifier into the "genders" key of the parsed part,
+		-- because that is what [[Module:compound]] expects.
+		item_dest = "genders",
+		convert = function(arg, inline, term_index, i)
+			return rsplit(arg, ",")
+		end,
+	},
+	id = {},
+	alt = {},
+	q = {},
+	-- Not yet supported in [[Module:compound]].
+	-- qq = {},
+	lit = {
+		-- lit1=, lit2=, ... are different from lit=; the former describe the literal meaning of an individual argument
+		-- while the latter applies to the expression as a whole and appears after them at the end. To handle this in
+		-- separate parameters, we need to set the key in the `params` object passed to [[Module:parameters]] to
+		-- something else (in this case "partlit") and set `list = "lit"` in the value of the `params` object. This
+		-- causes [[Module:parameters]] to fetch parameters named lit1=, lit2= etc. but store them into "partlit", while
+		-- lit= is stored into "lit".
+		param_key = "partlit",
+		extra_specs = {list = "lit"},
+	},
+	pos = {
+		-- pos1=, pos2=, ... are different from pos=; the former indicate the part of speech of an individual argument
+		-- and appear in parens after the term (similar to the pos= argument to {{l}}), while the latter applies to the
+		-- expression as a whole and controls the names of various categories. We handle the distinction identically to
+		-- lit1= etc. vs. lit=; see above.
+		param_key = "partpos",
+		extra_specs = {list = "pos"},
+	},
+	lang = {
+		-- lang1=, lang2=, ... are different from 1=; the former set the language of individual arguments that are
+		-- different from the overall language specified in 1=. Note that the preferred way of specifying a different
+		-- language for a given individual argument is using a language-code prefix, e.g. 'la:minūtia' or
+		-- 'grc:[[σκῶρ|σκατός]]', instead of using langN=. Since for compatibility purposes we may support lang= as
+		-- a synonym of 1=, we can't store langN= in "lang". Instead we do the same as for lit1= etc. vs. lit= above.
+		-- In addition, we need a conversion function to convert from language codes to language objects, which needs
+		-- to conditionalize the `param` parameter of `getByCode` of [[Module:languages]] on whether the param is
+		-- inline. (This only affects the error message.)
+		param_key = "partlang",
+		extra_specs = {list = "lang"},
+		convert = function(arg, inline, term_index, i)
+			-- term_index + i - 1 because we want to reference the actual term param name, which offsets from
+			-- `term_index` (the index of the first term); subtract 1 since i is one-based.
+			return m_languages.getByCode(arg, inline and "" .. (term_index + i - 1) .. ":lang" or "lang" .. i, "allow etym")
+		end,
+	},
+	sc = {
+		-- sc1=, sc2=, ... are different from sc=; the former apply to individual arguments when lang1=, lang2=, ...
+		-- is specified, while the latter applies to all arguments where langN=... isn't specified. We handle the
+		-- distinction identically to lit1= etc. vs. lit=; see above. In addition, we need a conversion function to
+		-- convert from script codes to script objects, which needs to conditionalize the `param` parameter of
+		-- `getByCode` of [[Module:scripts]] on whether the param is inline. (This only affects the error message.)
+		param_key = "partsc",
+		extra_specs = {list = "sc"},
+		convert = function(arg, inline, term_index, i)
+			-- term_index + i - 1 same as above for "lang".
+			return require("Module:scripts").getByCode(arg, inline and "" .. (term_index + i - 1) .. ":sc" or "sc" .. i)
+		end,
+	},
+}
+
+
+local function get_valid_prefixes()
+	local valid_prefixes = {}
+	for param_mod, _ in pairs(param_mods) do
+		table.insert(valid_prefixes, param_mod)
+	end
+	table.sort(valid_prefixes)
+	return valid_prefixes
+end
+
+
 local function fetch_script(sc, param)
 	return sc and require("Module:scripts").getByCode(sc, param) or nil
 end
@@ -24,28 +127,9 @@ local function parse_args(args, allow_compat, hack_params, has_source)
 		[lang_index] = {required = true, default = "und"},
 		[term_index] = {list = true, allow_holes = true},
 		
-		["t"] = {list = true, allow_holes = true, require_index = true},
-		["gloss"] = {list = true, allow_holes = true, require_index = true, alias_of = "t"},
-		["tr"] = {list = true, allow_holes = true, require_index = true},
-		["ts"] = {list = true, allow_holes = true, require_index = true},
-		["g"] = {list = true, allow_holes = true, require_index = true},
-		["id"] = {list = true, allow_holes = true, require_index = true},
-		["alt"] = {list = true, allow_holes = true, require_index = true},
-		["q"] = {list = true, allow_holes = true, require_index = true},
 		["lit"] = {},
-		-- Note, lit1=, lit2=, ... are different from lit=
-		["partlit"] = {list = "lit", allow_holes = true, require_index = true},
 		["pos"] = {},
-		-- Note, pos1=, pos2=, ... are different from pos=
-		["partpos"] = {list = "pos", allow_holes = true, require_index = true},
-		-- Note, lang1=, lang2=, ... are different from lang=; the former apply to
-		-- individual arguments, while the latter applies to all arguments
-		["partlang"] = {list = "lang", allow_holes = true, require_index = true},
 		["sc"] = {},
-		-- Note, sc1=, sc2=, ... are different from sc=; the former apply to
-		-- individual arguments when lang1=, lang2=, ... is specified, while
-		-- the latter applies to all arguments where langN=... isn't specified
-		["partsc"] = {list = "sc", allow_holes = true, require_index = true},
 		["pos"] = {},
 		["sort"] = {},
 		["nocat"] = {type = "boolean"},
@@ -56,6 +140,20 @@ local function parse_args(args, allow_compat, hack_params, has_source)
 	if has_source then
 		source_index = term_index - 1
 		params[source_index] = {required = true, default = "und"}
+	end
+
+	local default_param_spec = {list = true, allow_holes = true, require_index = true}
+	for param_mod, param_mod_spec in pairs(param_mods) do
+		local param_key = param_mod_spec.param_key or param_mod
+		if not param_mod_spec.extra_specs then
+			params[param_key] = default_param_spec
+		else
+			local param_spec = mw.clone(default_param_spec)
+			for k, v in pairs(param_mod_spec.extra_specs) do
+				param_spec[k] = v
+			end
+			params[param_key] = param_spec
+		end
 	end
 
 	if hack_params then
@@ -73,19 +171,8 @@ end
 
 
 local function get_parsed_part(template, args, term_index, i)
+	local part = {}
 	local term = args[term_index][i]
-	local alt = args["alt"][i]
-	local id = args["id"][i]
-	local lang = args["partlang"][i]
-	local sc = fetch_script(args["partsc"][i], "sc" .. i)
-	
-	local tr = args["tr"][i]
-	local ts = args["ts"][i]
-	local gloss = args["t"][i]
-	local pos = args["partpos"][i]
-	local lit = args["partlit"][i]
-	local q = args["q"][i]
-	local g = args["g"][i]
 
 	if lang then
 		lang = m_languages.getByCode(lang, "lang" .. i, "allow etym")
@@ -94,26 +181,87 @@ local function get_parsed_part(template, args, term_index, i)
 	if not (term or alt or tr or ts) then
 		require("Module:debug").track(template .. "/no term or alt or tr")
 		return nil
-	else
-		local termlang, actual_term
-		if term then
-			termlang, actual_term = term:match("^([A-Za-z0-9._-]+):(.*)$")
-			if termlang and termlang ~= "w" then -- special handling for w:... links to Wikipedia
-				-- -1 since i is one-based
-				termlang = m_languages.getByCode(termlang, term_index + i - 1, "allow etym")
-			else
-				termlang = nil
-				actual_term = term
-			end
-		end
-		if lang and termlang then
-			error(("Both lang%s= and a language in %s= given; specify one or the other"):format(i, term_index + i - 1))
-		end
-		return { term = actual_term, alt = alt, id = id, lang = lang or termlang, sc = sc, tr = tr,
-			ts = ts, gloss = gloss, pos = pos, lit = lit, q = q,
-			genders = g and rsplit(g, ",") or {}
-		}
 	end
+
+	-- Parse all the term-specific modifiers and store in `part`.
+	for param_mod, param_mod_spec in pairs(param_mods) do
+		local dest = param_mod_spec.item_dest or param_mod
+		local param_key = param_mod_spec.param_key or param_mod
+		local arg = args[param_key][i]
+		if arg then
+			if param_mod_spec.convert then
+				arg = param_mod_spec.convert(arg, false, i)
+			end
+			part[dest] = arg
+		end
+	end
+
+	-- Remove and remember an initial exclamation point from the term, and parse off an initial language code (e.g.
+	-- 'la:minūtia' or 'grc:[[σκῶρ|σκατός]]').
+	if term then
+		local termlang, actual_term = term:match("^([A-Za-z0-9._-]+):(.*)$")
+		if termlang and termlang ~= "w" then -- special handling for w:... links to Wikipedia
+			-- -1 since i is one-based
+			termlang = m_languages.getByCode(termlang, term_index + i - 1, "allow etym")
+			term = actual_term
+		else
+			termlang = nil
+		end
+		if part.lang and termlang then
+			error(("Both lang%s= and a language in %s= given; specify one or the other"):format(i, i + 1))
+		end
+		part.lang = part.lang or termlang
+		part.term = term
+	end
+
+	-- Check for inline modifier, e.g. מרים<tr:Miryem>. But exclude HTML entry with <span ...>, <i ...>, <br/> or
+	-- similar in it, caused by wrapping an argument in {{l|...}}, {{af|...}} or similar. Basically, all tags of
+	-- the sort we parse here should consist of a less-than sign, plus letters, plus a colon, e.g. <tr:...>, so if
+	-- we see a tag on the outer level that isn't in this format, we don't try to parse it. The restriction to the
+	-- outer level is to allow generated HTML inside of e.g. qualifier tags, such as foo<q:similar to {{m|fr|bar}}>.
+	if term and term:find("<") and not term:find("^[^<]*<[a-z]*[^a-z:]") then
+		if not put then
+			put = require("Module:parse utilities")
+		end
+		local run = put.parse_balanced_segment_run(term, "<", ">")
+		local function parse_err(msg)
+			error(msg .. ": " .. (i + 1) .. "=" .. table.concat(run))
+		end
+		part.term = run[1]
+
+		for j = 2, #run - 1, 2 do
+			if run[j + 1] ~= "" then
+				parse_err("Extraneous text '" .. run[j + 1] .. "' after modifier")
+			end
+			local modtext = run[j]:match("^<(.*)>$")
+			if not modtext then
+				parse_err("Internal error: Modifier '" .. modtext .. "' isn't surrounded by angle brackets")
+			end
+			local prefix, arg = modtext:match("^([a-z]+):(.*)$")
+			if not prefix then
+				parse_err(("Modifier %s lacks a prefix, should begin with one of %s followed by a colon"):format(
+					run[j], table.concat(get_valid_prefixes(), ",")))
+			end
+			if not param_mods[prefix] then
+				parse_err(("Unrecognized prefix '%s' in modifier %s, should be one of %s"):format(
+					prefix, run[j], table.concat(get_valid_prefixes(), ",")))
+			end
+			local dest = param_mods[prefix].item_dest or prefix
+			if part[dest] then
+				parse_err("Modifier '" .. prefix .. "' occurs twice, second occurrence " .. run[j])
+			end
+			if param_mods[prefix].convert then
+				arg = param_mods[prefix].convert(arg, true, term_index, i)
+			end
+			part[dest] = arg
+		end
+	end
+
+	-- FIXME: Either we should have a general mechanism in `param_mods` for default values, or (better) modify
+	-- [[Module:compound]] so it can handle nil for .genders.
+	part.genders = part.genders or {}
+
+	return part
 end
 
 
