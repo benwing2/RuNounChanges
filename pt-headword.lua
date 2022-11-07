@@ -19,6 +19,36 @@ local suffix_categories = {
 	["prepositional phrases"] = true,
 }
 
+-- When followed by a hyphen in a hyphenated compound, the hyphen will be included with the prefix when linked.
+local include_hyphen_prefixes = m_table.listToSet {
+	"ab",
+	"afro",
+	"anarco",
+	"anglo",
+	"ântero",
+	"anti",
+	"auto",
+	"contra",
+	"ex",
+	"franco",
+	"hiper",
+	"infra",
+	"inter",
+	"intra",
+	"macro",
+	"micro",
+	"neo",
+	"pan",
+	"pós",
+	"pré",
+	"pró",
+	"proto",
+	"sobre",
+	"sub",
+	"super",
+	"vice",
+}
+
 local function track(page)
 	require("Module:debug/track")("pt-headword/" .. page)
 	return true
@@ -77,7 +107,8 @@ function export.show(frame)
 			heads = {pagename}
 		end
 	else
-		local auto_linked_head = require(romut_module).add_lemma_links(pagename, args.splithyph)
+		local auto_linked_head = require(romut_module).add_lemma_links(pagename, args.splithyph, nil,
+			include_hyphen_prefixes)
 		if #heads == 0 then
 			heads = {auto_linked_head}
 		else
