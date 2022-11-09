@@ -2,7 +2,6 @@ local export = {}
 
 local m_compound = require("Module:compound")
 local m_languages = require("Module:languages")
-local m_debug = require("Module:debug")
 
 local rsplit = mw.text.split
 
@@ -178,19 +177,19 @@ local function get_parsed_part(template, args, term_index, i)
 		lang = m_languages.getByCode(lang, "lang" .. i, "allow etym")
 	end
 	
-	if not (term or alt or tr or ts) then
-		require("Module:debug").track(template .. "/no term or alt or tr")
+	if not (term or args["alt"][i] or args["tr"][i] or args["ts"][i]) then
+		require("Module:debug/track")(template .. "/no term or alt or tr")
 		return nil
 	end
 
-	-- Parse all the term-specific modifiers and store in `part`.
+	-- Parse all the term-specific parameters and store in `part`.
 	for param_mod, param_mod_spec in pairs(param_mods) do
 		local dest = param_mod_spec.item_dest or param_mod
 		local param_key = param_mod_spec.param_key or param_mod
 		local arg = args[param_key][i]
 		if arg then
 			if param_mod_spec.convert then
-				arg = param_mod_spec.convert(arg, false, i)
+				arg = param_mod_spec.convert(arg, false, term_index, i)
 			end
 			part[dest] = arg
 		end
