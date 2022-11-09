@@ -200,14 +200,15 @@ local function get_parsed_part(template, args, term_index, i)
 	if term then
 		local termlang, actual_term = term:match("^([A-Za-z0-9._-]+):(.*)$")
 		if termlang and termlang ~= "w" then -- special handling for w:... links to Wikipedia
-			-- -1 since i is one-based
+			-- term_index + i - 1 because we want to reference the actual term param name, which offsets from
+			-- `term_index` (the index of the first term); subtract 1 since i is one-based.
 			termlang = m_languages.getByCode(termlang, term_index + i - 1, "allow etym")
 			term = actual_term
 		else
 			termlang = nil
 		end
 		if part.lang and termlang then
-			error(("Both lang%s= and a language in %s= given; specify one or the other"):format(i, i + 1))
+			error(("Both lang%s= and a language in %s= given; specify one or the other"):format(i, term_index + i - 1))
 		end
 		part.lang = part.lang or termlang
 		part.term = term
@@ -224,7 +225,8 @@ local function get_parsed_part(template, args, term_index, i)
 		end
 		local run = put.parse_balanced_segment_run(term, "<", ">")
 		local function parse_err(msg)
-			error(msg .. ": " .. (i + 1) .. "=" .. table.concat(run))
+			-- For term_index + i - 1, see the call to m_languages.getByCode() about 25 lines up.
+			error(msg .. ": " .. (term_index + i - 1) .. "=" .. table.concat(run))
 		end
 		part.term = run[1]
 
