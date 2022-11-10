@@ -2,6 +2,8 @@ local export = {}
 local m_links = require("Module:links")
 local m_languages = require("Module:languages")
 
+local rsplit = mw.text.split
+
 -- See if the language's dialectal data module has a label corresponding to the dialect argument.
 function export.getLabel(dialect, dialect_data)
 	local data = dialect_data[dialect] or ( dialect_data.labels and dialect_data.labels[dialect] )
@@ -159,6 +161,8 @@ function export.create(frame)
 		local term = args[2][i]
 
 		if term ~= ";" then
+			termno = termno + 1
+
 			-- Compute whether any of the separate indexed params exist for this index.
 			local any_param_at_index = term ~= nil
 			for k, v in pairs(args) do
@@ -183,8 +187,6 @@ function export.create(frame)
 
 			-- If any of the params used for formatting this term is present, create a term and add it to the list.
 			if any_param_at_index then
-				termno = ternmo + 1
-
 				-- Initialize the `termobj` object and the `term` object passed to full_link() in [[Module:links]].
 				local termobj = {
 					joiner = i > 1 and (args[2][i - 1] == ";" and "; " or ", ") or "",
@@ -198,7 +200,7 @@ function export.create(frame)
 				-- Parse all the term-specific parameters and store in `term` or `termobj`.
 				for param_mod, param_mod_spec in pairs(param_mods) do
 					local dest = param_mod_spec.item_dest or param_mod
-					local arg = args[param_mod][termmno]
+					local arg = args[param_mod][termno]
 					if arg then
 						if param_mod_spec.convert then
 							arg = param_mod_spec.convert(arg, false, termno)
@@ -223,7 +225,7 @@ function export.create(frame)
 						-- Add 1 before first term index starts at 2.
 						error(msg .. ": " .. (i + 1) .. "=" .. table.concat(run))
 					end
-					part.term = run[1]
+					termobj.term.term = run[1] ~= "" and run[1] or nil
 
 					for j = 2, #run - 1, 2 do
 						if run[j + 1] ~= "" then
@@ -244,13 +246,13 @@ function export.create(frame)
 								prefix, run[j], table.concat(get_valid_prefixes(), ",")))
 						end
 						local dest = param_mod_spec.item_dest or prefix
-						if part[dest] then
+						local obj = param_mod_spec.outer and termobj or termobj.term
+						if obj[dest] then
 							parse_err("Modifier '" .. prefix .. "' occurs twice, second occurrence " .. run[j])
 						end
 						if param_mod_spec.convert then
 							arg = param_mod_spec.convert(arg, true, termno)
 						end
-						local obj = param_mod_spec.outer and termobj or termobj.term
 						obj[dest] = arg
 					end
 				end
@@ -277,7 +279,7 @@ function export.create(frame)
 				table.insert(items, termobj)
 				prev = true
 			else
-				if math.max(args.alt.maxindex, args.id.maxindex, args.tr.maxindex, args.ts.maxindex) >= i then
+				if math.max(args.alt.maxindex, args.id.maxindex, args.tr.maxindex, args.ts.maxindex) >= termno then
 					track("too few terms")
 				end
 
