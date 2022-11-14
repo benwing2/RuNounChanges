@@ -200,6 +200,11 @@ local function is_metaphonic(args, lemma)
 	return rfind(lemma, com.V .. ".*oso$")
 end
 
+
+-----------------------------------------------------------------------------------------
+--                                          Nouns                                      --
+-----------------------------------------------------------------------------------------
+
 local allowed_genders = m_table.listToSet(
 	{"m", "f", "mf", "mfbysense", "m-p", "f-p", "mf-p", "mfbysense-p", "?", "?-p", "n", "n-p"}
 )
@@ -555,6 +560,11 @@ pos_functions["proper nouns"] = {
 	end,
 }
 
+
+-----------------------------------------------------------------------------------------
+--                                        Pronouns                                     --
+-----------------------------------------------------------------------------------------
+
 local function do_pronoun(args, data, tracking_categories, pos, is_suffix)
 	if is_suffix then
 		pos = "suffix"
@@ -626,6 +636,47 @@ pos_functions["pronouns"] = {
 	end,
 }
 
+
+-----------------------------------------------------------------------------------------
+--                                       Adjectives                                    --
+-----------------------------------------------------------------------------------------
+
+local function insert_ancillary_inflection(data, forms, quals, label, plpos, tracking_categories)
+	if forms and #forms > 0 then
+		local terms = process_terms_with_qualifiers(forms, quals)
+		check_all_missing(terms, plpos, tracking_categories)
+		terms.label = label
+		table.insert(data.inflections, terms)
+	end
+end
+
+local function handle_adj_adv_hascomp(args, data, plpos, tracking_categories)
+	if args.hascomp then
+		if args.hascomp == "both" then
+			table.insert(data.inflections, {label = "sometimes " .. glossary_link("comparable")})
+			table.insert(data.categories, langname .. " comparable " .. plpos)
+			table.insert(data.categories, langname .. " uncomparable " .. plpos)
+		else
+			local hascomp = require("Module:yesno")(args.hascomp)
+			if hascomp == true then
+				table.insert(data.inflections, {label = glossary_link("comparable")})
+				table.insert(data.categories, langname .. " comparable " .. plpos)
+			elseif hascomp == false then
+				table.insert(data.inflections, {label = "not " .. glossary_link("comparable")})
+				table.insert(data.categories, langname .. " uncomparable " .. plpos)
+			else
+				error("Unrecognized value for hascomp=: " .. args.hascomp)
+			end
+		end
+	elseif args.comp and #args.comp > 0 or args.sup and #args.sup > 0 then
+		table.insert(data.inflections, {label = glossary_link("comparable")})
+		table.insert(data.categories, langname .. " comparable " .. plpos)
+	end
+
+	insert_ancillary_inflection(data, args.comp, args.comp_qual, "comparative", plos, tracking_categories)
+	insert_ancillary_inflection(data, args.sup, args.sup_qual, "superlative", plpos, tracking_categories)
+end
+
 local function do_adjective(args, data, tracking_categories, pos, is_suffix, is_superlative)
 	local feminines = {}
 	local masculine_plurals = {}
@@ -663,16 +714,6 @@ local function do_adjective(args, data, tracking_categories, pos, is_suffix, is_
 			end
 		end
 	end
-
-	local function insert_ancillary_inflection(forms, quals, label)
-		if forms and #forms > 0 then
-			local terms = process_terms_with_qualifiers(forms, quals)
-			check_all_missing(terms, plpos, tracking_categories)
-			terms.label = label
-			table.insert(data.inflections, terms)
-		end
-	end
-
 
 	if args.inv then
 		-- invariable adjective
@@ -806,32 +847,9 @@ local function do_adjective(args, data, tracking_categories, pos, is_suffix, is_
 		end
 	end
 
-	insert_ancillary_inflection(args.n, args.n_qual, "neuter")
+	insert_ancillary_inflection(data, args.n, args.n_qual, "neuter", plpos, tracking_categories)
 
-	if args.hascomp then
-		if args.hascomp == "both" then
-			table.insert(data.inflections, {label = "sometimes " .. glossary_link("comparable")})
-			table.insert(data.categories, langname .. " comparable " .. plpos)
-			table.insert(data.categories, langname .. " uncomparable " .. plpos)
-		else
-			local hascomp = require("Module:yesno")(args.hascomp)
-			if hascomp == true then
-				table.insert(data.inflections, {label = glossary_link("comparable")})
-				table.insert(data.categories, langname .. " comparable " .. plpos)
-			elseif hascomp == false then
-				table.insert(data.inflections, {label = "not " .. glossary_link("comparable")})
-				table.insert(data.categories, langname .. " uncomparable " .. plpos)
-			else
-				error("Unrecognized value for hascomp=: " .. args.hascomp)
-			end
-		end
-	elseif args.comp and #args.comp > 0 or args.sup and #args.sup > 0 then
-		table.insert(data.inflections, {label = glossary_link("comparable")})
-		table.insert(data.categories, langname .. " comparable " .. plpos)
-	end
-
-	insert_ancillary_inflection(args.comp, args.comp_qual, "comparative")
-	insert_ancillary_inflection(args.sup, args.sup_qual, "superlative")
+	handle_adj_adv_hascomp(args, data, plpos, tracking_categories)
 
 	if is_metaphonic(args, lemma) then
 		table.insert(data.inflections, {label = metaphonic_label})
@@ -916,6 +934,64 @@ pos_functions["adjective-like pronouns"] = {
 	params = get_adjective_params("pron"),
 	func = function(args, data, tracking_categories, frame, is_suffix)
 		do_adjective(args, data, tracking_categories, "pronoun", is_suffix)
+	end,
+}
+
+pos_functions["adjective-like contractions"] = {
+	params = get_adjective_params("contr"),
+	func = function(args, data, tracking_categories, frame, is_suffix)
+		do_adjective(args, data, tracking_categories, "contraction", is_suffix)
+	end,
+}
+
+
+-----------------------------------------------------------------------------------------
+--                                        Adverbs                                      --
+-----------------------------------------------------------------------------------------
+
+local function do_adverb(args, data, tracking_categories, pos, is_suffix)
+	if is_suffix then
+		pos = "suffix"
+	end
+	local plpos = require("Module:string utilities").pluralize(pos)
+
+	if not is_suffix then
+		data.pos_category = plpos
+	end
+
+	handle_adj_adv_hascomp(args, data, plpos, tracking_categories)
+end
+
+local function get_adverb_params(advtype)
+	local params = {}
+	if advtype == "base" then
+		params["comp"] = {list = true} --comparative(s)
+		params["comp_qual"] = {list = "comp=_qual", allow_holes = true}
+		params["sup"] = {list = true} --superlative(s)
+		params["sup_qual"] = {list = "sup=_qual", allow_holes = true}
+		params["hascomp"] = {} -- has comparative
+	end
+	return params
+end
+
+pos_functions["adverbs"] = {
+	params = get_adverb_params("base"),
+	func = function(args, data, tracking_categories, frame, is_suffix)
+		do_adverb(args, data, tracking_categories, "adverb", is_suffix)
+	end,
+}
+
+pos_functions["comparative adverbs"] = {
+	params = get_adverb_params("comp"),
+	func = function(args, data, tracking_categories, frame, is_suffix)
+		do_adverb(args, data, tracking_categories, "adverb", is_suffix)
+	end,
+}
+
+pos_functions["superlative adverbs"] = {
+	params = get_adverb_params("sup"),
+	func = function(args, data, tracking_categories, frame, is_suffix)
+		do_adverb(args, data, tracking_categories, "adverb", is_suffix)
 	end,
 }
 
