@@ -5553,7 +5553,7 @@ Page 390 ao: -------- begin text --------
 ===Contraction===
 {{pt-contr-adj|f=à}}
 
-# {{senseid|pt|a o}} {{contraction of|pt|[[a]] [[o]]||to the}}
+# {{senseid|pt|a o}} {{contraction of|pt|[[a]] [[o]]||to the {{q|masculine singular}}}}
 
 ====Quotations====
 {{seeCites|pt}}
@@ -5571,7 +5571,7 @@ Page 391 aos: -------- begin text --------
 ===Contraction===
 {{head|pt|contraction|g=m-p}}
 
-# {{contraction of|pt|[[a]] [[os]]|to the||nodot=1}}: {{infl of|pt|ao||m|p}}
+# {{contraction of|pt|[[a]] [[os]]|to the {{q|masculine plural}}||nodot=1}}: {{infl of|pt|ao||m|p}}
 
 ====Quotations====
 {{seeCites|pt|ao}}
@@ -11340,7 +11340,7 @@ Page 780 cas: -------- begin text --------
 ===Contraction===
 {{head|pt|contraction|g=f-p}}
 
-# {{lb|pt|colloquial}} {{contraction of|pt|[[com]] [[as]]||with the|nodot=1}}: {{infl of|pt|cos||f|p}}
+# {{lb|pt|colloquial}} {{contraction of|pt|[[com]] [[as]]||with the {{q|feminine plural}}|nodot=1}}: {{infl of|pt|cos||f|p}}
 
 ----
 
@@ -22174,7 +22174,7 @@ Page 1540 cos: -------- begin text --------
 ===Contraction===
 {{head|pt|contraction|g=m-p|feminine plural|cas}}
 
-# {{lb|pt|colloquial}} {{contraction of|pt|[[com]] [[os]]||with the}}
+# {{lb|pt|colloquial}} {{contraction of|pt|[[com]] [[os]]||with the {{q|masculine plural}}}}
 
 ----
 
@@ -22962,7 +22962,7 @@ Page 1592 cuma: -------- begin text --------
 ===Contraction===
 {{head|pt|contraction|g=f-s}}
 
-# {{lb|pt|Portugal|informal}} {{contraction of|pt|[[com]] [[uma]]||with a|nodot=1}}: {{infl of|pt|cum||f}}
+# {{lb|pt|Portugal|informal}} {{contraction of|pt|[[com]] [[uma]]||with a {{q|feminine}}|nodot=1}}: {{infl of|pt|cum||f}}
 #: {{ux|pt|Tou '''cuma''' fome!|I'm so '''hungry'''!}}
 
 ----
@@ -23456,7 +23456,7 @@ Page 1623 dalgum: -------- begin text --------
 ===Contraction===
 {{pt-contr-adj|f=dalguma}}
 
-# {{contraction of|pt|[[de]] [[algum]]||of some}}
+# {{contraction of|pt|[[de]] [[algum]]||of some {{q|masculine singular}}}}
 -------- end text --------
 Page 1624 dalguma: Found match for regex: =
 Page 1624 dalguma: -------- begin text --------
@@ -23468,7 +23468,7 @@ Page 1624 dalguma: -------- begin text --------
 ===Contraction===
 {{head|pt|contraction|g=f-s}}
 
-# {{contraction of|pt|[[de]] [[alguma]]||of some|nodot=1}}: {{infl of|pt|dalgum||f|s}}
+# {{contraction of|pt|[[de]] [[alguma]]||of some {{q|feminine singular}}|nodot=1}}: {{infl of|pt|dalgum||f|s}}
 -------- end text --------
 Page 1625 dalgumas: Found match for regex: =
 Page 1625 dalgumas: -------- begin text --------
@@ -23480,7 +23480,7 @@ Page 1625 dalgumas: -------- begin text --------
 ===Contraction===
 {{head|pt|contraction|g=f-p}}
 
-# {{contraction of|pt|[[de]] [[algumas]]||of some|nodot=1}}: {{infl of|pt|dalgum||f|p}}
+# {{contraction of|pt|[[de]] [[algumas]]||of some {{q|feminine plural}}|nodot=1}}: {{infl of|pt|dalgum||f|p}}
 -------- end text --------
 Page 1626 dalguns: Found match for regex: =
 Page 1626 dalguns: -------- begin text --------
@@ -23492,7 +23492,7 @@ Page 1626 dalguns: -------- begin text --------
 ===Contraction===
 {{head|pt|contraction|g=m-p}}
 
-# {{contraction of|pt|[[de]] [[alguns]]||of some|nodot=1}}: {{infl of|pt|dalgum||m|p}}
+# {{contraction of|pt|[[de]] [[alguns]]||of some {{q|masculine plural}}|nodot=1}}: {{infl of|pt|dalgum||m|p}}
 -------- end text --------
 Page 1627 dali: Found match for regex: =
 Page 1627 dali: -------- begin text --------
@@ -23620,7 +23620,7 @@ Page 1634 daquela: -------- begin text --------
 ===Contraction===
 {{head|pt|contraction|g=f-s}}
 
-# {{contraction of|pt|[[de]] [[aquela]]||of that|nodot=1}}: {{infl of|pt|daquele||f|s}}
+# {{contraction of|pt|[[de]] [[aquela]]||of/from that {{q|feminine}}|nodot=1}}: {{infl of|pt|daquele||f|s}}
 
 ====See also====
 {{Portuguese demonstratives}}
@@ -23634,7 +23634,7 @@ Page 1635 daquelas: -------- begin text --------
 ===Contraction===
 {{head|pt|contraction|g=f-p}}
 
-# {{contraction of|pt|[[de]] [[aquelas]]||of those|nodot=1}}: {{infl of|pt|daquele||f|p}}
+# {{contraction of|pt|[[de]] [[aquelas]]||of/from those {{q|feminine}}|nodot=1}}: {{infl of|pt|daquele||f|p}}
 
 ====See also====
 {{Portuguese demonstratives}}
@@ -23653,7 +23653,7 @@ Page 1636 daquele: -------- begin text --------
 ===Contraction===
 {{pt-contr-adj|f=daquela|n=daquilo}}
 
-# {{contraction of|pt|[[de]] [[aquele]]||of that}}
+# {{contraction of|pt|[[de]] [[aquele]]||of/from that {{q|masculine}}}}
 
 ====Quotations====
 {{seeCites|pt}}
@@ -23671,7 +23671,7 @@ Page 1637 daqueles: -------- begin text --------
 ===Contraction===
 {{head|pt|contraction|g=m-p}}
 
-# {{contraction of|pt|[[de]] [[aqueles]]||of those|nodot=1}}: {{infl of|pt|daquele||m|p}}
+# {{contraction of|pt|[[de]] [[aqueles]]||of/from those {{q|masculine plural}}|nodot=1}}: {{infl of|pt|daquele||m|p}}
 
 ====See also====
 {{Portuguese demonstratives}}
@@ -23711,7 +23711,7 @@ Page 1639 daquilo: -------- begin text --------
 ===Contraction===
 {{head|pt|contraction|g=n}}
 
-# {{contraction of|pt|[[de]] [[aquilo]]||of that|nodot=1}}: {{infl of|pt|daquele||n}}
+# {{contraction of|pt|[[de]] [[aquilo]]||of that thing|nodot=1}}: {{infl of|pt|daquele||n}}
 
 ====See also====
 {{Portuguese demonstratives}}
@@ -23798,9 +23798,6 @@ Page 1645 das: -------- begin text --------
 ===Alternative forms===
 * {{alter|pt|d'as}} {{qualifier|dated}}
 
-===Etymology===
-Contraction of {{compound|pt|de|t1=of|as|t2=the}}.
-
 ===Pronunciation===
 {{pt-IPA}}
 * {{hyphenation|pt|das}}
@@ -23808,16 +23805,11 @@ Contraction of {{compound|pt|de|t1=of|as|t2=the}}.
 ===Contraction===
 {{head|pt|contraction|g=f-p}}
 
-# {{senseid|pt|de as}} {{contraction of|pt|[[de]] [[as]]||pertaining or relating to the}}; {{l|en|of}} the; {{l|en|from}} the (feminine plural)
+# {{senseid|pt|de as}} {{contraction of|pt|[[de]] [[as]]||of/from the {{q|feminine plural}}|nodot=1}}: {{infl of|pt|do||f|p}}
 #* {{quote-book|pt|year=1572|author=Luís Vaz de Camões|title=Os Lusíadas|line=5|passage=Animais que elles tem em mais eſtima / Que todo o outro gado '''das''' manadas|t=Animals which they hold in higher esteem / Than any other cattle '''of the''' herds}}
 
 ====Quotations====
 * {{seeCites|pt|do}}
-
-===See also===
-* {{l|pt|da}} {{qualifier|singular form}}
-* {{l|pt|dos}} {{qualifier|masculine form}}
-* {{l|pt|do}} {{qualifier|singular masculine form}}
 
 ----
 
@@ -23903,7 +23895,7 @@ Page 1650 daí: -------- begin text --------
 ===Contraction===
 {{head|pt|contraction}}
 
-# {{contraction of|pt|[[de]] [[aí]]|nodot=1}}; "from there" (where you are)
+# {{contraction of|pt|[[de]] [[aí]]||from there {{q|near you}}|nodot=1}}
 #: {{ux|pt|Jogue a bola '''daí'''.|Throw the ball '''from there'''.}}
 #: {{ant|pt|daqui}}
 # {{lb|pt|Brazil}} [[then]], [[afterwards]]
@@ -24629,9 +24621,9 @@ Page 1703 dela: -------- begin text --------
 {{pt-IPA|déla}}
 
 ===Contraction===
-{{head|pt|contraction|g=f|plural|delas|masculine|dele|masculine plural|deles}}
+{{head|pt|contraction|g=f-s}}
 
-# {{non-gloss definition|Contraction of {{l|pt|de|'''de'''|gloss=of; from}} + {{l|pt|ela|'''ela'''|gloss=she; her; it}}}}
+# {{contraction of|pt|[[de]] [[ela]]||of her; her {{q|possessive}}|nodot=1}}: {{infl of|pt|dele||f|s}}
 #* '''2005''', [[w:J. K. Rowling|J. K. Rowling]], [[w:Lia Wyler|Lia Wyler]], ''Harry Potter e o Enigma do Príncipe'', Rocco, page 308:
 #*: Você notou os cabelos '''dela''', são negros e brilhantes e macios...
 #*:: You noticed '''her''' hair, it's dark and brilliant and soft...
@@ -24652,7 +24644,7 @@ Page 1704 delas: -------- begin text --------
 ===Contraction===
 {{head|pt|contraction|g=f-p}}
 
-# {{contraction of|pt|[[de]] [[elas]]||of them}}
+# {{contraction of|pt|[[de]] [[elas]]||of them {{q|feminine}}; their {{q|feminine}}|nodot=1}}: {{infl of|pt|dele||f|p}}
 
 ====Quotations====
 {{seeCites|pt|dele}}
@@ -24679,7 +24671,7 @@ Page 1705 dele: -------- begin text --------
 ====Contraction====
 {{pt-contr-adj|f=dela}}
 
-# {{non-gloss definition|Contraction of {{l|pt|de|gloss=of}} and {{l|pt|ele|gloss=him}}}}
+# {{contraction of|pt|[[de]] [[ele]]||of him; his|nodot=1}}
 #* {{RQ:mul:Rowling Harry Potter|pt-BR|7|page=373|text=Devíamos fechar os olhos '''dele'''.|t=We should close '''his''' eyes.}}
 
 =====Quotations=====
@@ -24726,7 +24718,7 @@ Page 1707 deles: -------- begin text --------
 ====Contraction====
 {{head|pt|contraction|g=m-p}}
 
-# {{contraction of|pt|[[de]] [[eles]]||of them}}
+# {{contraction of|pt|[[de]] [[ele]]||of them {{q|masculine}}; their {{q|masculine}}|nodot=1}}: {{infl of|pt|dele||m|p}}
 
 =====Quotations=====
 {{seeCites|pt|dele}}
@@ -25631,9 +25623,9 @@ Page 1769 desdo: -------- begin text --------
 {{pt-IPA|dêsdo}}
 
 ===Contraction===
-{{head|pt|contraction}}
+{{pt-contr-adj}}
 
-# {{lb|pt|archaic}} {{contraction of|pt|[[desde]] [[o]]}}
+# {{lb|pt|archaic}} {{contraction of|pt|[[desde]] [[o]]||since the {{q|masculine singular}}}}
 -------- end text --------
 Page 1770 desembaraçava: Found match for regex: =
 Page 1770 desembaraçava: -------- begin text --------
@@ -26041,9 +26033,9 @@ Page 1798 dessa: -------- begin text --------
 * {{rhymes|pt|ɛsɐ|s=2}}
 
 ===Contraction===
-{{head|pt|contraction}}
+{{head|pt|contraction|g=f-s}}
 
-# {{senseid|pt|de essa}} {{contraction of|pt|[[de]] [[essa]]||from that}}
+# {{senseid|pt|de essa}} {{contraction of|pt|[[de]] [[essa]]||of/from that {{q|feminine, near you}}|nodot=1}}: {{infl of|pt|desse||f|s}}
 #* '''2007''', [[w:J. K. Rowling|J. K. Rowling]], [[w:Lia Wyler|Lia Wyler]], ''Harry Potter e as Relíquias da Morte'', Rocco, page 350:
 #*: Harry mal respirava: será que a sorte, a pura sorte poderia livrá-los '''dessa''' encrenca?
 #*:: Harry was badly breathing: maybe luck, pure luck could save them from that trouble?
@@ -26061,9 +26053,9 @@ Page 1799 dessas: -------- begin text --------
 {{pt-IPA|déssas}}
 
 ===Contraction===
-{{head|pt|contraction}}
+{{head|pt|contraction|g=f-p}}
 
-# {{contraction of|pt|[[de]] [[essas]]}}
+# {{contraction of|pt|[[de]] [[essas]]||of/from those {{q|feminine, near you}}|nodot=1}}: {{infl of|pt|desse||f|p}}
 
 ====See also====
 {{Portuguese demonstratives}}
@@ -26081,9 +26073,9 @@ Page 1800 desse: -------- begin text --------
 * {{hyph|pt|des|se}}
 
 ====Contraction====
-{{head|pt|contraction}}
+{{pt-contr-adj|f=dessa|n=disso}}
 
-# {{contraction of|pt|[[de]] [[esse]]}}
+# {{contraction of|pt|[[de]] [[esse]]||of/from that {{q|masculine, near you}}}}
 
 ====See also====
 {{Portuguese demonstratives}}
@@ -26113,9 +26105,9 @@ Page 1801 desses: -------- begin text --------
 * {{hyph|pt|des|ses}}
 
 ====Contraction====
-{{head|pt|contraction}}
+{{head|pt|contraction|g=m-p}}
 
-# {{contraction of|pt|[[de]] [[esses]]}}
+# {{contraction of|pt|[[de]] [[esses]]||of/from those {{q|masculine, near you}}|nodot=1}}: {{infl of|pt|desse||m|p}}
 
 =====See also=====
 {{Portuguese demonstratives}}
@@ -26138,9 +26130,9 @@ Page 1802 desta: -------- begin text --------
 {{pt-IPA|désta}}
 
 ===Contraction===
-{{head|pt|contraction|g=f|plural|destas|masculine|deste|masculine plural|destes}}
+{{head|pt|contraction|g=f-s}}
 
-# {{non-gloss definition|contraction of {{l|pt|de|'''de'''|gloss=of}} + {{l|pt|esta|'''esta'''|gloss=this}}}}
+# {{contraction of|pt|[[de]] [[esta]]||of/from this {{q|feminine}}|nodot=1}}: {{infl of|pt|deste||f|s}}
 
 ====See also====
 {{Portuguese demonstratives}}
@@ -26186,9 +26178,9 @@ Page 1805 destas: -------- begin text --------
 {{pt-IPA|déstas}}
 
 ===Contraction===
-{{head|pt|contraction|g=f-p|singular|desta|masculine|deste|masculine plural|destes}}
+{{head|pt|contraction|g=f-p}}
 
-# {{non-gloss definition|contraction of {{l|pt|de|'''de'''|gloss=of}} + {{l|pt|esta|'''estas'''|gloss=these}}}}
+# {{contraction of|pt|[[de]] [[estas]]||of/from these {{q|feminine}}|nodot=1}}: {{infl of|pt|deste||f|p}}
 
 ====See also====
 {{Portuguese demonstratives}}
@@ -26212,7 +26204,7 @@ Page 1806 deste: -------- begin text --------
 ====Contraction====
 {{pt-contr-adj|f=desta|n=disto}}
 
-# {{non-gloss definition|contraction of {{l|pt|de|'''de'''|gloss=of}} + {{l|pt|este|'''este'''|gloss=this}}}}
+# {{contraction of|pt|[[de]] [[este]]||of/from this {{q|masculine}}}}
 #: {{ux|pt|A página '''deste''' livro está manchada.|translation='''This''' book'''’s''' page is stained.}}
 
 =====Quotations=====
@@ -26250,9 +26242,9 @@ Page 1807 destes: -------- begin text --------
 {{pt-IPA|dêstes}}
 
 ====Contraction====
-{{head|pt|contraction|g=m-p|singular|deste|feminine|desta|feminine plural|destas}}
+{{head|pt|contraction|g=m-p}}
 
-# {{non-gloss definition|contraction of {{l|pt|de|'''de'''|gloss=of}} + {{l|pt|estes|'''estes'''|gloss=these}}}}
+# {{contraction of|pt|[[de]] [[estes]]||of/from these {{q|masculine}}|nodot=1}}: {{infl of|pt|deste||m|p}}
 
 =====See also=====
 {{Portuguese demonstratives}}
@@ -27150,7 +27142,7 @@ Page 1876 deu: -------- begin text --------
 ===Contraction===
 {{head|pt|contraction}}
 
-# {{a|Brazil, non-standard}} {{non-gloss definition|Contraction of {{l|pt|de|gloss=of}} and {{l|pt|eu|gloss=I}}}}
+# {{lb|pt|Brazil|nonstandard}} {{contraction of|pt|[[de]] [[eu]]||my|lit=of I}}
 
 -------- end text --------
 Page 1877 deuses: Found match for regex: =
@@ -27769,9 +27761,9 @@ Page 1918 disso: -------- begin text --------
 {{pt-IPA}}
 
 ===Contraction===
-{{head|pt|contraction}}
+{{head|pt|contraction|g=n}}
 
-# {{senseid|pt|de isso}} {{non-gloss definition|contraction of {{l|pt|de|'''de'''|gloss=of}} + {{l|pt|isso|'''isso'''|gloss=this}}}}
+# {{senseid|pt|de isso}} {{contraction of|pt|[[de]] [[isso]]||of this thing|nodot=1}}: {{infl of|pt|desse||n}}
 
 ====See also====
 {{Portuguese demonstratives}}
@@ -27872,9 +27864,9 @@ Page 1925 disto: -------- begin text --------
 {{pt-IPA}}
 
 ===Contraction===
-{{head|pt|contraction}}
+{{head|pt|contraction|g=n}}
 
-# {{contraction of|pt|[[de]] [[isto]]||of this, from this}}
+# {{contraction of|pt|[[de]] [[isto]]||of/from this thing|nodot=1}}: {{infl of|pt|deste||n}}
 
 ====See also====
 {{Portuguese demonstratives}}
@@ -28615,14 +28607,13 @@ From {{inh-lite|pt|roa-opt|do}}, from {{m-lite|roa-opt|de||of}} + {{m-lite|roa-o
 
 ===Pronunciation===
 {{pt-IPA}}
-* {{a|South Brazil}} {{IPA-lite|pt|/do/}}
 * {{a|Azores|Madeira}} {{IPA-lite|pt|/dø/}}
 * {{hyphenation|pt|do}}
 
 ===Contraction===
-{{head-lite|pt|contractions|plural|dos|feminine|da|feminine plural|das|langname=Portuguese}}
+{{head-lite|pt|contractions|g=m-s|plural|dos|feminine|da|feminine plural|das|langname=Portuguese}}
 
-# {{senseid|pt|de o}} {{contraction of|pt|[[de]] [[o]]||pertaining or relating to the|nodot=1}}; [[of]] the; [[from]] the (masculine singular)
+# {{senseid|pt|de o}} {{contraction of|pt|[[de]] [[o]]||of/from the {{q|masculine singular}}}}
 #* {{RQ:mul:Rowling Harry Potter|pt-BR|6|page=184|text=Eu estava na esperança de encontrá-lo antes '''do''' jantar!|t=I was hoping to meet you before dinner!}}
 
 ====Quotations====
@@ -28857,7 +28848,7 @@ Page 1990 donde: Found match for regex: =
 Page 1990 donde: -------- begin text --------
 
 ===Etymology===
-{{contraction of|pt|[[de]] [[onde]]||from where}}
+{{contraction|pt|[[de]] [[onde]]||from where}}.
 
 ===Pronunciation===
 {{pt-IPA}}
@@ -29006,9 +28997,9 @@ Page 1999 dos: -------- begin text --------
 {{pt-IPA}}
 
 ===Contraction===
-{{head|pt|contraction}}
+{{head|pt|contraction|g=m-p}}
 
-# {{senseid|pt|de os}} {{contraction of|pt|[[de]] [[os]]||pertaining or relating to the}}; {{l|en|of}} the; {{l|en|from}} the (masculine plural)
+# {{senseid|pt|de os}} {{contraction of|pt|[[de]] [[os]]||of/from the {{q|masculine plural}}|nodot=1}}: {{infl of|pt|do||m|p}}
 #: {{ux|pt|'''dos''' Santos|t='''of the''' Saints}}
 
 ====Quotations====
@@ -29097,9 +29088,9 @@ Page 2004 doutro: -------- begin text --------
 * {{hyphenation|pt|dou|tro}}
 
 ===Contraction===
-{{head|pt|contraction|g=m|feminine|doutra|masculine plural|doutros|feminine plural|doutras}}
+{{pt-contr-adj}}
 
-# {{contraction of|pt|[[de]] [[outro]]}}
+# {{contraction of|pt|[[de]] [[outro]]||of another {{q|masculine singular}}}}
 -------- end text --------
 Page 2005 dragará: Found match for regex: =
 Page 2005 dragará: -------- begin text --------
@@ -29250,10 +29241,10 @@ From earlier {{m|pt|d'um}}, from {{m|pt|de|t=of}} + {{m|pt|um|t=a|pos=masculine 
 ===Contraction===
 {{pt-contr-adj|f=duma}}
 
-# {{contraction of|pt|[[de]] [[um]]||pertaining or relating to a|nodot=1}}: {{l|en|of}} a; {{l|en|from}} a (masculine singular)
+# {{contraction of|pt|[[de]] [[um]]||of/from a {{q|masculine}}}}
 
 ====Usage notes====
-The contraction of {{m|pt|de}} + {{m|pt|um}} / {{m|pt|uma}} is never obligatory and sometimes associated with spoken language. In a few cases it is not possible:
+* The contraction of {{m|pt|de}} + {{m|pt|um}} / {{m|pt|uma}} is never obligatory and sometimes associated with spoken language. In a few cases it is not possible:
 # When {{m|pt|de}} is part of a preposition, as in {{m|pt|em vez de}}:<ref>http://portuguese.stackexchange.com/questions/1573/quando-combinar-a-preposi%C3%A7%C3%A3o-de-com-os-artigos-indefinidos/1574</ref>
 #: Em vez '''de um''' escalão ter três anos, ...
 # When {{m|pt|um|id=numeral}} is a numeral:
@@ -29278,9 +29269,9 @@ From earlier {{m|pt|d'uma}}, {{m|pt|de||of}} + {{m|pt|uma||feminine singular ind
 {{pt-IPA}}
 
 ===Contraction===
-{{head|pt|contraction|g=f|feminine plural|dumas|masculine|dum|masculine plural|duns}}
+{{head|pt|contraction|g=f-s}}
 
-# {{contraction of|pt|[[de]] [[uma]]||pertaining or relating to a|nodot=1}}: {{l|en|of}} a; {{l|en|from}} a (feminine singular)
+# {{contraction of|pt|[[de]] [[uma]]||of/from a {{q|feminine}}|nodot=1}}: {{infl of|pt|dum||f|s}}
 #* '''1877''', Unknown, ''A boneca'', compiled in ''Contos para a Infância'', Guerra Junqueiro:
 #*: Deixe-me agora, leitor, contar-lhe uma história — a história '''duma''' boneca!
 #*:: Now let me, reader, tell you a story - the story '''of a''' doll!
@@ -29302,9 +29293,9 @@ From earlier {{m|pt|d'umas}}, from {{m|pt|de||of}} + {{m|pt|umas||masculine sing
 * {{hyphenation|pt|du|mas}}
 
 ===Contraction===
-{{head|pt|contraction|g=f-p|feminine singular|duma|masculine singular|dum|masculine plural|duns}}
+{{head|pt|contraction|g=f-p}}
 
-# {{contraction of|pt|[[de]] [[umas]]||pertaining or relating to some|nodot=1}}: {{l|en|of}} some; {{l|en|from}} some (feminine plural)
+# {{contraction of|pt|[[de]] [[umas]]||of/from some {{q|feminine plural}}|nodot=1}}: {{infl of|pt|dum||f|p}}
 -------- end text --------
 Page 2015 duns: Found match for regex: =
 Page 2015 duns: -------- begin text --------
@@ -29320,9 +29311,9 @@ From earlier {{m|pt|d'uns}}, from {{m|pt|de||of}} + {{m|pt|um||masculine singula
 * {{hyphenation|pt|duns}}
 
 ===Contraction===
-{{head|pt|contraction|g=m-p|masculine singular|dum|feminine singular|duma|feminine plural|dumas}}
+{{head|pt|contraction|g=m-p}}
 
-# {{contraction of|pt|[[de]] [[uns]]||pertaining or relating to some|nodot=1}}: {{l|en|some}}{{l|en|of}} some; {{l|en|from}} some (masculine plural)
+# {{contraction of|pt|[[de]] [[uns]]||of/from some {{q|masculine plural}}|nodot=1}}: {{infl of|pt|dum||m|p}}
 
 ----
 
@@ -29565,7 +29556,7 @@ Page 2031 elejo: Found match for regex: =
 Page 2031 elejo: -------- begin text --------
 
 ===Pronunciation===
-{{pt-IPA|elêjo|cpt=eléjo}}
+{{pt-IPA|elêjo}}
 * {{hyphenation|pt|e|le|jo}}
 
 ===Verb===
@@ -31842,9 +31833,6 @@ From {{inh|pt|la|stō|stat}}.
 Page 2188 estámos: Found match for regex: =
 Page 2188 estámos: -------- begin text --------
 
-===Pronunciation===
-{{pt-IPA|pt=+}}
-
 ===Verb===
 {{head|pt|misspelling}}
 
@@ -33233,7 +33221,7 @@ Page 2284 feche: Found match for regex: =
 Page 2284 feche: -------- begin text --------
 
 ===Pronunciation===
-{{pt-IPA|fêche|gpt=fêche|pt=féche}}
+{{pt-IPA|fêche|gpt=fêche|cpt=féche}}
 * {{homophones|pt|feixe|q1=Portugal}}
 * {{hyphenation|pt|fe|che}}
 
@@ -42066,8 +42054,9 @@ Page 2880 lha: -------- begin text --------
 ===Contraction===
 {{head|pt|contraction}}
 
-# {{contraction of|pt|[[lhe]] [[a]]}}
-# {{contraction of|pt|[[lhes]] [[a]]}}
+# {{infl of|pt|lho||f|s}}:
+## {{contraction of|pt|[[lhe]] [[a]]||[[it]]/[[her]] to [[him]]/[[her]]/[[it]]|nodot=1}}
+## {{contraction of|pt|[[lhes]] [[a]]||[[it]]/[[her]] to [[them]]|nodot=1}}
 
 ----
 
@@ -42082,8 +42071,9 @@ Page 2881 lhas: -------- begin text --------
 ===Contraction===
 {{head|pt|contraction}}
 
-# {{contraction of|pt|[[lhe]] [[as]]}}
-# {{contraction of|pt|[[lhes]] [[as]]}}
+# {{infl of|pt|lho||f|p}}:
+## {{contraction of|pt|[[lhe]] [[as]]||[[them]] {{q|feminine}} to [[him]]/[[her]]/[[it]]|nodot=1}}
+## {{contraction of|pt|[[lhes]] [[as]]||[[them]] {{q|feminine}} to [[them]]|nodot=1}}
 -------- end text --------
 Page 2882 lhes: Found match for regex: =
 Page 2882 lhes: -------- begin text --------
@@ -42127,12 +42117,11 @@ Page 2883 lho: -------- begin text --------
 * {{hyph|pt|lho}}
 
 ===Contraction===
-{{head|pt|contraction}}
+{{pt-contr-adj}}
 
-# {{senseid|pt|lhe o}} {{contraction of|pt|[[lhe]] [[o]]|dot=;}} [[it]]/[[him]] to [[him]]/[[her]]/[[it]]
-#* {{quote-book|pt|year=1882|author=Machado de Assis|title=O Alienista|chapter=|url=https://pt.wikipedia.org/wiki/O_Alienista|page=|text=Aos quarenta anos casou com D. Evarista da Costa e Mascarenhas, senhora de vinte e cinco anos, viúva de um juiz de fora, e não bonita nem simpática. Um dos tios dele, caçador de pacas perante o Eterno, e não menos franco, admirou‑se de semelhante escolha e '''disse‑lho'''.|translation=At the age of forty she married D. Evarista da Costa and Mascarenhas, a 25-year-old lady, widow of an outside judge, and not pretty or friendly. One of his uncles, a [[paca]] hunter before the Eternal, and no less frank, marveled at such a choice and said as much '''to her'''.}}
-
-# {{contraction of|pt|[[lhes]] [[o]]}}
+# {{senseid|pt|lhe o}} {{contraction of|pt|[[lhe]] [[o]]||[[it]]/[[him]] to [[him]]/[[her]]/[[it]]}}
+#* {{quote-book|pt|year=1882|author=Machado de Assis|title=O Alienista|chapter=|url=https://pt.wikipedia.org/wiki/O_Alienista|page=|text=Aos quarenta anos casou com D. Evarista da Costa e Mascarenhas, senhora de vinte e cinco anos, viúva de um juiz de fora, e não bonita nem simpática. Um dos tios dele, caçador de pacas perante o Eterno, e não menos franco, admirou‑se de semelhante escolha e '''disse‑lho'''.|translation=At the age of forty he married D. Evarista da Costa and Mascarenhas, a 25-year-old lady, widow of an outside judge, and not pretty or friendly. One of his uncles, a [[paca]] hunter before the Eternal, and no less frank, marveled at such a choice and said as much '''to her'''.}}
+# {{contraction of|pt|[[lhes]] [[o]]||[[it]]/[[him]] to [[them]]}}
 -------- end text --------
 Page 2884 lhos: Found match for regex: =
 Page 2884 lhos: -------- begin text --------
@@ -42144,8 +42133,9 @@ Page 2884 lhos: -------- begin text --------
 ===Contraction===
 {{head|pt|contraction}}
 
-# {{contraction of|pt|[[lhe]] [[os]]}}
-# {{contraction of|pt|[[lhes]] [[os]]}}
+# {{infl of|pt|lho||m|p}}:
+## {{contraction of|pt|[[lhe]] [[os]]||[[them]] {{q|masculine}} to [[him]]/[[her]]/[[it]]|nodot=1}}
+## {{contraction of|pt|[[lhes]] [[os]]||[[them]] {{q|masculine}} to [[them]]|nodot=1}}
 -------- end text --------
 Page 2885 li: Found match for regex: =
 Page 2885 li: -------- begin text --------
@@ -42986,7 +42976,7 @@ Page 2938 ma: -------- begin text --------
 ===Contraction===
 {{head-lite|pt|contractions|langname=Portuguese}}
 
-# {{contraction of|pt|[[me]] [[a]]}}
+# {{contraction of|pt|[[me]] [[a]]||her/it to me}}
 
 ----
 
@@ -44647,9 +44637,9 @@ Page 3042 mo: -------- begin text --------
 * {{hyph|pt|mo}}
 
 ===Contraction===
-{{head|pt|contraction}}
+{{head|pt|contraction|feminine|ma}}
 
-# {{contraction of|pt|[[me]] [[o]]}}
+# {{contraction of|pt|[[me]] [[o]]||him/it to me}}
 
 ----
 
@@ -46301,7 +46291,7 @@ Page 3158 n'água: -------- begin text --------
 ===Contraction===
 {{head|pt|contraction}}
 
-# {{contraction of|pt|{{l|pt|na}} {{l|pt|água}}||in the water; in a body of water}}
+# {{contraction of|pt|[[na]] [[água]]||in the water; in a body of water}}
 -------- end text --------
 Page 3159 nadando: Found match for regex: =
 Page 3159 nadando: -------- begin text --------
@@ -46360,9 +46350,9 @@ Page 3162 nalguma: -------- begin text --------
 {{pt-IPA}}
 
 ===Contraction===
-{{head|pt|contraction}}
+{{head|pt|contraction|g=f-s}}
 
-# {{senseid|pt|em alguma}} {{contraction of|pt|[[em]] [[alguma]]}} ({{inflection of|pt|nalgum||f}})
+# {{senseid|pt|em alguma}} {{contraction of|pt|[[em]] [[alguma]]||in some {{q|feminine singular}}|nodot=1}}: {{infl of|pt|nalgum||f|s}}
 -------- end text --------
 Page 3163 nanará: Found match for regex: =
 Page 3163 nanará: -------- begin text --------
@@ -46444,9 +46434,9 @@ Page 3168 naquela: -------- begin text --------
 {{pt-IPA|naquéla}}
 
 ===Contraction===
-{{head|pt|contraction|g=f|plural|naquelas|masculine|naquele|masculine plural|naqueles}}
+{{head|pt|contraction|g=f-s}}
 
-# {{non-gloss definition|contraction of {{l|pt|em|'''em'''|gloss=in; on; at}} + {{l|pt|aquela|'''aquela'''|gloss=that}}}}
+# {{contraction of|pt|[[em]] [[aquela]]||in that|nodot=1}}: {{infl of|pt|naquele||f|s}}
 #* {{RQ:mul:Rowling Harry Potter|pt-BR|6|page=100|text=Ele estava indo '''naquela''' direção [...]|t=He was going '''in that''' direction [...]}}
 
 ====Quotations====
@@ -46464,7 +46454,7 @@ Page 3169 naquelas: -------- begin text --------
 ===Contraction===
 {{head|pt|contraction|g=f-p}}
 
-# {{non-gloss definition|contraction of {{l|pt|em|'''em'''|gloss=in; on; at}} + {{l|pt|aquelas|'''aquelas'''|gloss=those}}}}
+# {{contraction of|pt|[[em]] [[aquelas]]||in those|nodot=1}}: {{infl of|pt|naquele||f|p}}
 
 ====See also====
 {{Portuguese demonstratives}}
@@ -46488,7 +46478,7 @@ Page 3170 naquele: -------- begin text --------
 ===Contraction===
 {{pt-contr-adj|f=naquela|n=naquilo}}
 
-# {{non-gloss definition|contraction of {{l|pt|em|'''em'''|gloss=in; on; at}} + {{l|pt|aquele|'''aquele'''|gloss=that}}}}
+# {{contraction of|pt|[[em]] [[aquele]]||in that}}
 #* '''2003''', [[w:J. K. Rowling|J. K. Rowling]], [[w:Lia Wyler|Lia Wyler]], ''Harry Potter e a Ordem da Fênix'', Rocco, page 225:
 #*: Harry teve a nítida impressão de que ele não era o único que estava omitindo informações '''naquele''' momento.
 #*:: Harry had the clear impression that he was not the only one who was omitting information in that moment.
@@ -46505,7 +46495,7 @@ Page 3171 naqueles: -------- begin text --------
 ===Contraction===
 {{head|pt|contraction|g=m-p}}
 
-# {{non-gloss definition|contraction of {{l|pt|em|'''em'''|gloss=in; on; at}} + {{l|pt|aqueles|'''aqueles'''|gloss=those}}}}
+# {{contraction of|pt|[[em]] [[aqueles]]||in those|nodot=1}}: {{infl of|pt|naquele||m|p}}
 
 ====See also====
 {{Portuguese demonstratives}}
@@ -46514,12 +46504,12 @@ Page 3172 naquilo: Found match for regex: =
 Page 3172 naquilo: -------- begin text --------
 
 ===Pronunciation===
-{{pt-IPA|naquilo}}
+{{pt-IPA}}
 
 ===Contraction===
-{{head|pt|contraction|g=m}}
+{{head|pt|contraction|g=n}}
 
-# {{non-gloss definition|contraction of {{l|pt|em|'''em'''|gloss=in; on; at}} + {{l|pt|aquilo|'''aquilo'''|gloss=that thing}}}}
+# {{contraction of|pt|[[em]] [[aquilo]]||in that thing|nodot=1}}: {{infl of|pt|naquele||n}}
 
 ====See also====
 {{Portuguese demonstratives}}
@@ -46569,9 +46559,9 @@ Page 3175 nas: -------- begin text --------
 ===Etymology 1===
 
 ====Contraction====
-{{head|pt|contraction}}
+{{head|pt|contraction|g=f-p}}
 
-# {{contraction of|pt|[[em]] [[as]]||in the {{q|feminine plural}}}}
+# {{contraction of|pt|[[em]] [[as]]||in the|nodot=1}}: {{infl of|pt|no||f|p}}
 #* '''2000''', {{w|J. K. Rowling}}, {{w|Lia Wyler}}, ''Harry Potter e o Cálice de Fogo'', Rocco, page 71:
 #*: {{quote|pt|Gosto de sentir uma brisa saudável '''nas''' minhas partes, obrigado.|I like to feel a healthy breeze '''on my''' parts, thank you.}}
 
@@ -46798,9 +46788,9 @@ Page 3190 nela: -------- begin text --------
 * {{hyphenation|pt|ne|la}}
 
 ===Contraction===
-{{head|pt|contraction|g=f}}
+{{head|pt|contraction|g=f-s}}
 
-# contraction of {{l|pt|em}} {{l|pt|ela}} ([[in]] [[her]]), feminine of {{l|pt|nele}}
+# {{contraction of|pt|[[em]] [[ela]]||in her|nodot=1}}: {{infl of|pt|nele||f|s}}
 
 ====Quotations====
 {{seeCites|pt|nele}}
@@ -46817,7 +46807,7 @@ Page 3191 nelas: -------- begin text --------
 ===Contraction===
 {{head|pt|contraction|g=f-p}}
 
-# {{feminine plural of|pt|nele}} (''contraction of {{l|pt|em|'''em'''|gloss=in}} {{l|pt|elas|'''elas'''|gloss=them f. pl.}}'')
+# {{contraction of|pt|[[em]] [[elas]]||in them {{q|feminine}}|nodot=1}}: {{infl of|pt|nele||f|p}}
 
 ====Quotations====
 {{seeCites|pt|nele}}
@@ -46832,7 +46822,7 @@ Page 3192 nele: -------- begin text --------
 ===Contraction===
 {{pt-contr-adj|f=nela}}
 
-# {{contraction of|pt|{{l|pt|em||in}} + {{l|pt|ele||him}}}}
+# {{contraction of|pt|[[em]] [[ele]]||in him}}
 
 ====Quotations====
 {{seeCites|pt}}
@@ -46845,9 +46835,9 @@ Page 3193 neles: -------- begin text --------
 * {{hyph|pt|ne|les}}
 
 ===Contraction===
-{{head|pt|contraction|g=m}}
+{{head|pt|contraction|g=m-p}}
 
-# contraction of {{l|pt|em}} {{l|pt|eles}} ([[in]] [[them]] (masculine)). Plural of {{l|pt|nele}}
+# {{contraction of|pt|[[em]] [[eles]]||in them {{q|masculine}}|nodot=1}}: {{infl of|pt|nele||m|p}}
 
 ====Quotations====
 {{seeCites|pt|nele}}
@@ -46897,9 +46887,9 @@ Page 3197 nessa: -------- begin text --------
 * {{rhymes|pt|ɛsɐ|s=2}}
 
 ===Contraction===
-{{head|pt|contraction}}
+{{head|pt|contraction|g=f-s}}
 
-# {{contraction of|pt|[[em]] [[essa]]}}
+# {{contraction of|pt|[[em]] [[essa]]||in that {{q|near you, feminine}}|nodot=1}}: {{infl of|pt|nesse||f|s}}
 #* {{RQ:mul:Rowling Harry Potter|pt-BR|6|page=141|text=Diante dessa confusão, é uma surpresa que tantos tenham obtido nota para passar '''nessa''' matéria.|t=From this confusion, it is a surprise that so much people had obtained grades to be approved in this subject.}}
 
 ====Quotations====
@@ -46916,9 +46906,9 @@ Page 3198 nessas: -------- begin text --------
 * {{hyphenation|pt|nes|sas}}
 
 ===Contraction===
-{{head|pt|contraction}}
+{{head|pt|contraction|g=f-p}}
 
-# {{contraction of|pt|[[em]] [[essas]]}}
+# {{contraction of|pt|[[em]] [[essas]]||in those {{q|near you, feminine}}|nodot=1}}: {{infl of|pt|nesse||f|p}}
 
 ====Quotations====
 {{seeCites|pt|nesse}}
@@ -46935,7 +46925,7 @@ Page 3199 nesse: -------- begin text --------
 ===Contraction===
 {{pt-contr-adj|f=nessa|n=nisso}}
 
-# {{contraction of|pt|[[em]] [[esse]]}}
+# {{contraction of|pt|[[em]] [[esse]]||in that {{q|near you, masculine}}}}
 
 ====Quotations====
 {{seeCites|pt}}
@@ -46951,9 +46941,9 @@ Page 3200 nesses: -------- begin text --------
 * {{hyphenation|pt|nes|ses}}
 
 ===Contraction===
-{{head|pt|contraction}}
+{{head|pt|contraction|g=m-p}}
 
-# {{contraction of|pt|[[em]] [[esses]]}}
+# {{contraction of|pt|[[em]] [[esses]]||in those {{q|near you, masculine}}|nodot=1}}: {{infl of|pt|nesse||m|p}}
 
 ====Quotations====
 {{seeCites|pt|nesse}}
@@ -46968,9 +46958,9 @@ Page 3201 nesta: -------- begin text --------
 {{pt-IPA|nésta}}
 
 ===Contraction===
-{{head|pt|contraction}}
+{{head|pt|contraction|g=f-s}}
 
-# {{contraction of|pt|[[em]] [[esta]]||on this}}
+# {{contraction of|pt|[[em]] [[esta]]||in this {{q|feminine}}|nodot=1}}: {{infl of|pt|neste||f|s}}
 #* {{RQ:mul:Rowling Harry Potter|pt-BR|6|page=141|text=Creio que já tiveram cinco professores '''nesta''' matéria.|t=I believe you already had five teachers on this subject.}}
 
 ====See also====
@@ -46983,9 +46973,9 @@ Page 3202 nestas: -------- begin text --------
 {{pt-IPA|néstas}}
 
 ===Contraction===
-{{head|pt|contraction}}
+{{head|pt|contraction|g=f-p}}
 
-# {{contraction of|pt|[[em]] [[estas]]||on these}}
+# {{contraction of|pt|[[em]] [[estas]]||in these {{q|feminine}}|nodot=1}}: {{infl of|pt|neste||f|p}}
 
 ====See also====
 {{Portuguese demonstratives}}
@@ -47000,7 +46990,7 @@ Page 3203 neste: -------- begin text --------
 ===Contraction===
 {{pt-contr-adj|f=nesta|n=nisto}}
 
-# {{contraction of|pt|[[em]] [[este]]|t=in this {{q|masculine singular}}}}
+# {{contraction of|pt|[[em]] [[este]]||in this {{q|masculine}}}}
 
 ====Quotations====
 {{seeCites|pt}}
@@ -47018,9 +47008,9 @@ Page 3204 nestes: -------- begin text --------
 {{pt-IPA|nêstes}}
 
 ===Contraction===
-{{head|pt|contraction}}
+{{head|pt|contraction|g=m-p}}
 
-# {{contraction of|pt|[[em]] [[estes]]||on these}}
+# {{contraction of|pt|[[em]] [[estes]]||in these {{q|masculine}}|nodot=1}}: {{infl of|pt|neste||m|p}}
 
 ====See also====
 {{Portuguese demonstratives}}
@@ -47092,17 +47082,14 @@ Page 3208 nevará: -------- begin text --------
 Page 3209 nisso: Found match for regex: =
 Page 3209 nisso: -------- begin text --------
 
-===Etymology===
-Contraction of {{m|pt|em||in}} + {{m|pt|isso||that, by you}}
-
 ===Pronunciation===
 {{pt-IPA}}
 * {{hyphenation|pt|nis|so}}
 
 ===Contraction===
-{{head|pt|contraction}}
+{{head|pt|contraction|g=n}}
 
-# [[in]] [[that]]
+# {{contraction of|pt|[[em]] [[isso]]||in that thing {{q|near you}}|nodot=1}}: {{infl of|pt|nesse||n}}
 
 ====See also====
 {{Portuguese demonstratives}}
@@ -47114,9 +47101,9 @@ Page 3210 nisto: -------- begin text --------
 {{pt-IPA}}
 
 ===Contraction===
-{{head|pt|contraction}}
+{{head|pt|contraction|g=n}}
 
-# contraction of {{l|pt|em}} {{l|pt|isto}} ([[in]] [[this]])
+# {{contraction of|pt|[[em]] [[isto]]||in this thing|nodot=1}}: {{infl of|pt|neste||n}}
 
 ====See also====
 {{Portuguese demonstratives}}
@@ -47132,9 +47119,9 @@ Page 3211 no: -------- begin text --------
 From {{inh|pt|roa-opt|no}}, clipping of {{m|roa-opt|eno}}, from {{m|roa-opt|en|t=in}} + {{m|roa-opt|o|t=the}}.
 
 ====Contraction====
-{{head|pt|contraction}}
+{{pt-contr-adj}}
 
-# {{senseid|pt|em o}} {{contraction of|pt|[[em]] [[o]]||in the {{q|masculine singular}}}}
+# {{senseid|pt|em o}} {{contraction of|pt|[[em]] [[o]]||in the}}
 #* '''2003''', [[w:J. K. Rowling|J. K. Rowling]], [[w:Lia Wyler|Lia Wyler]], ''Harry Potter e a Ordem da Fênix'', Rocco, page 546:
 #*: {{quote|pt|Está na hora de testarmos os nossos talentos '''no''' mundo real, você não acha?|It's time to test our talents '''in the''' real world, don't you think?}}
 
@@ -47360,9 +47347,9 @@ Page 3224 noutra: -------- begin text --------
 * {{hyphenation|pt|nou|tra}}
 
 ===Contraction===
-{{head|pt|contraction|g=f|feminine plural|noutras|masculine|noutro|masculine plural|noutros}}
+{{head|pt|contraction|g=f-s}}
 
-# {{contraction of|pt|[[em]] [[outra]]||in other, in another}}
+# {{contraction of|pt|[[em]] [[outra]]||in other, in another {{q|feminine singular}}|nodot=1}}: {{infl of|pt|noutro||f|s}}
 -------- end text --------
 Page 3225 noutras: Found match for regex: =
 Page 3225 noutras: -------- begin text --------
@@ -47372,9 +47359,9 @@ Page 3225 noutras: -------- begin text --------
 * {{hyphenation|pt|nou|tras}}
 
 ===Contraction===
-{{head|pt|contraction}}
+{{head|pt|contraction|g=f-p}}
 
-# {{contraction of|pt|[[em]] [[outras]]||in other, in another}}
+# {{contraction of|pt|[[em]] [[outras]]||in other, in another {{q|feminine plural}}|nodot=1}}: {{infl of|pt|noutro||f|p}}
 -------- end text --------
 Page 3226 noutro: Found match for regex: =
 Page 3226 noutro: -------- begin text --------
@@ -47386,7 +47373,7 @@ Page 3226 noutro: -------- begin text --------
 ===Contraction===
 {{pt-contr-adj}}
 
-# {{contraction of|pt|[[em]] [[outro]]||in other, in another}}
+# {{contraction of|pt|[[em]] [[outro]]||in other, in another {{q|masculine singular}}}}
 -------- end text --------
 Page 3227 noutros: Found match for regex: =
 Page 3227 noutros: -------- begin text --------
@@ -47396,9 +47383,9 @@ Page 3227 noutros: -------- begin text --------
 * {{hyphenation|pt|nou|tros}}
 
 ===Contraction===
-{{head|pt|contraction}}
+{{head|pt|contraction|g=m-p}}
 
-# {{contraction of|pt|[[em]] [[outros]]||in other, in another}}
+# {{contraction of|pt|[[em]] [[outros]]||in other, in another {{q|masculine plural}}|nodot=1}}: {{infl of|pt|noutro||m|p}}
 -------- end text --------
 Page 3228 nova: Found match for regex: =
 Page 3228 nova: -------- begin text --------
@@ -47512,9 +47499,9 @@ Page 3235 numa: -------- begin text --------
 {{pt-IPA}}
 
 ===Contraction===
-{{head|pt|contraction}}
+{{head|pt|contraction|g=f-s}}
 
-# {{senseid|pt|em uma}} {{contraction of|pt|[[em]] [[uma]]||in a|nodot=1}}: {{inflection of|pt|num||f|s}}
+# {{senseid|pt|em uma}} {{contraction of|pt|[[em]] [[uma]]||in a {{q|feminine}}|nodot=1}}: {{inflection of|pt|num||f|s}}
 #* '''1915''', [[w:Alberto Caeiro|Alberto Caeiro]] ([[w:Fernando Pessoa|Fernando Pessoa]]), [[s:pt:É noite|“É noite”]]:
 #*: ''É noite. A noite é muito escura. '''Numa''' casa a uma grande distancia. Brilha a luz d'uma janella.''
 #*:: It's night. The night is very dark. '''In a''' house a great distance away. The light from a window shines.
@@ -47538,7 +47525,7 @@ Page 3236 numas: -------- begin text --------
 ===Contraction===
 {{head|pt|contraction|g=f-p}}
 
-# {{feminine plural of|pt|num}}; {{contraction of|pt|[[em]] + [[umas]]}}
+# {{contraction of|pt|[[em]] [[umas]]||in some {{q|feminine plural}}|nodot=1}}: {{inflection of|pt|num||f|p}}
 -------- end text --------
 Page 3237 numera: Found match for regex: =
 Page 3237 numera: -------- begin text --------
@@ -47568,9 +47555,9 @@ Page 3238 nuns: -------- begin text --------
 * {{hyph|pt|nuns}}
 
 ===Contraction===
-{{head|pt|contraction}}
+{{head|pt|contraction|g=m-p}}
 
-# {{contraction of|pt|[[em]] [[uns]]||in some|nodot=1}}: {{inflection of|pt|num||m|p}}
+# {{contraction of|pt|[[em]] [[uns]]||in some {{q|masculine plural}}|nodot=1}}: {{inflection of|pt|num||m|p}}
 -------- end text --------
 Page 3239 nutará: Found match for regex: =
 Page 3239 nutará: -------- begin text --------
@@ -47671,7 +47658,7 @@ Page 3245 né: -------- begin text --------
 ===Contraction===
 {{head|pt|contraction|head=né?}}
 
-# {{lb|pt|colloquial|interrogatory}} {{contraction of|pt|não é}} {{ngd|Used as a [[tag question]] to ask for someone's opinion:}} {{l|en|isn't it so|isn't it (so)}}; {{l|en|innit}}; {{l|en|right}}
+# {{lb|pt|colloquial|interrogatory}} {{contraction of|pt|não é|nodot=1}}; {{ngd|used as a [[tag question]] to ask for someone's opinion:}} {{l|en|isn't it so|isn't it (so)}}; {{l|en|innit}}; {{l|en|right}}
 #: {{ux|pt|Você já comeu, '''né'''?|t=You have already eaten, '''right'''?}}
 # {{lb|pt|colloquial|often interrogatory}} {{ngd|Expresses that something is obvious:}} {{l|en|duh}}; {{l|en|obviously}}
 #: {{ux|pt|Do que é feito um anel de diamante? De diamantes, '''né?!'''|t=What is a diamond ring made of? Diamonds, '''obviously'''!}}
@@ -48314,7 +48301,7 @@ Page 3290 opto: Found match for regex: =
 Page 3290 opto: -------- begin text --------
 
 ===Pronunciation===
-{{pt-IPA|br=ópto,ópito|pt=ó.pto}}
+{{pt-IPA|ópi^^to}}
 * {{hyph|pt|op|to}}
 
 ===Verb===
@@ -48554,7 +48541,7 @@ Page 3302 ousa: Found match for regex: =
 Page 3302 ousa: -------- begin text --------
 
 ===Pronunciation===
-{{pt-IPA|pt=ousa}}
+{{pt-IPA}}
 * {{hyphenation|pt|ou|sa}}
 * {{rhymes|pt|owzɐ|ozɐ|s=2}}
 
@@ -48781,7 +48768,7 @@ Page 3318 ouça: -------- begin text --------
 * {{alter|pt|oiça||Central/Southern Portugal}}
 
 ===Pronunciation===
-{{pt-IPA|pt=ouça}}
+{{pt-IPA}}
 * {{hyph|pt|ou|ça}}
 * {{rhymes|pt|owsɐ|osɐ|s=2}}
 
@@ -48797,7 +48784,7 @@ Page 3319 ouço: -------- begin text --------
 * {{alter|pt|oiço||Central/Southern Portugal}}
 
 ===Pronunciation===
-{{pt-IPA|pt=ouço|br=owço}}
+{{pt-IPA}}
 * {{homophones|pt|osso|q1=Portugal}}
 * {{hyph|pt|ou|ço}}
 * {{rhymes|pt|owsu|osu|s=2}}
@@ -49937,7 +49924,7 @@ Page 3395 patológica: Found match for regex: =
 Page 3395 patológica: -------- begin text --------
 
 ===Pronunciation===
-{{pt-IPA|br=pàtológica|pt=patológica}}
+{{pt-IPA}}
 * {{hyph|pt|pa|to|ló|gi|ca}}
 
 ===Adjective===
@@ -49952,7 +49939,7 @@ Page 3396 patológicas: Found match for regex: =
 Page 3396 patológicas: -------- begin text --------
 
 ===Pronunciation===
-{{pt-IPA|br=pàtológicas|pt=patológicas}}
+{{pt-IPA}}
 * {{hyph|pt|pa|to|ló|gi|cas}}
 
 ===Adjective===
@@ -49967,7 +49954,7 @@ Page 3397 patológicos: Found match for regex: =
 Page 3397 patológicos: -------- begin text --------
 
 ===Pronunciation===
-{{pt-IPA|br=pàtológicos|pt=patológicos}}
+{{pt-IPA}}
 * {{hyph|pt|pa|to|ló|gi|cos}}
 
 ===Adjective===
@@ -50575,9 +50562,9 @@ From {{uder|pt|roa-opt|pela}}, from {{uder|pt|VL.|*per||by; through}} + {{m|la|*
 {{pt-IPA}}
 
 ====Contraction====
-{{head|pt|contraction|g=f-s|plural|pelas|masculine|pelo|masculine plural|pelos}}
+{{head|pt|contraction|g=f-s}}
 
-# {{senseid|pt|por a}} {{non-gloss definition|contraction of {{l|pt|por|'''por'''|gloss=by; through}} and {{l|pt|a|'''a'''|gloss=the}}}}
+# {{senseid|pt|por a}} {{contraction of|pt|por a||by/through the {{q|feminine singular}}|nodot=1}}: {{infl of|pt|pelo||f|s}}
 
 ===Etymology 2===
 Inflected form of {{m|pt|pelar||to skin}}.
@@ -50619,9 +50606,9 @@ Page 3441 pelas: -------- begin text --------
 {{pt-IPA}}
 
 ===Contraction===
-{{head|pt|contraction}}
+{{head|pt|contraction|g=f-p}}
 
-# {{contraction of|pt|[[por]] [[as]]||by the}}
+# {{contraction of|pt|por as||by/through the {{q|feminine plural}}|nodot=1}}: {{infl of|pt|pelo||f|p}}
 #* '''2000''', [[w:J. K. Rowling|J. K. Rowling]], [[w:Lia Wyler|Lia Wyler]], ''Harry Potter e o Prisioneiro de Azkaban'', Rocco, page 240:
 #*: Era difícil dizer se a professora os ouvira, pois seu rosto estava oculto '''pelas''' sombras.
 #*:: It was difficult to tell whether the teacher had heard them, because her face was hidden by the shadows.
@@ -50636,9 +50623,9 @@ Page 3442 pelos: -------- begin text --------
 {{pt-IPA}}
 
 ===Contraction===
-{{head|pt|contraction}}
+{{head|pt|contraction|g=m-p}}
 
-# {{contraction of|pt|[[por]] [[os]]||by the}}
+# {{contraction of|pt|por as||by/through the {{q|masculine plural}}|nodot=1}}: {{infl of|pt|pelo||m|p}}
 
 ===Noun===
 {{head|pt|noun form|g=m-p}}
@@ -51112,7 +51099,7 @@ Page 3476 perdoa: Found match for regex: =
 Page 3476 perdoa: -------- begin text --------
 
 ===Pronunciation===
-{{pt-IPA|pt=perdoua}}
+{{pt-IPA}}
 * {{hyphenation|pt|per|do|a}}
 
 ===Verb===
@@ -51124,7 +51111,7 @@ Page 3477 perdoo: Found match for regex: =
 Page 3477 perdoo: -------- begin text --------
 
 ===Pronunciation===
-{{pt-IPA|pt=perdouo}}
+{{pt-IPA}}
 * {{hyphenation|pt|per|do|o}}
 
 ===Verb===
@@ -52298,7 +52285,7 @@ Page 3556 poisa: Found match for regex: =
 Page 3556 poisa: -------- begin text --------
 
 ===Pronunciation===
-{{pt-IPA|pt=poisa}}
+{{pt-IPA}}
 * {{hyph|pt|poi|sa}}
 * {{rhymes|pt|ojzɐ|s=2}}
 
@@ -52794,7 +52781,7 @@ Page 3589 pousa: Found match for regex: =
 Page 3589 pousa: -------- begin text --------
 
 ===Pronunciation===
-{{pt-IPA|pt=pousa}}
+{{pt-IPA}}
 * {{hyphenation|pt|pou|sa}}
 * {{rhymes|pt|owzɐ|ozɐ|s=2}}
 
@@ -52846,7 +52833,7 @@ Page 3593 povoa: Found match for regex: =
 Page 3593 povoa: -------- begin text --------
 
 ===Pronunciation===
-{{pt-IPA|pt=povoua}}
+{{pt-IPA}}
 * {{hyphenation|pt|po|vo|a}}
 
 ===Verb===
@@ -52858,7 +52845,7 @@ Page 3594 povoo: Found match for regex: =
 Page 3594 povoo: -------- begin text --------
 
 ===Pronunciation===
-{{pt-IPA|pt=povouo}}
+{{pt-IPA}}
 * {{hyphenation|pt|po|vo|o}}
 * {{rhymes|pt|o.u|s=3}}
 
@@ -52883,12 +52870,12 @@ Page 3596 pras: Found match for regex: =
 Page 3596 pras: -------- begin text --------
 
 ===Pronunciation===
-* {{a|Brazil}} {{IPA|pt|/pɾas/}}
+{{pt-IPA|prȧs}}
 
 ===Contraction===
-{{head|pt|contraction}}
+{{head|pt|contraction|g=f-p}}
 
-# {{contraction of|pt|[[para]] [[as]]}}
+# {{lb|pt|Brazil|nonstandard|colloquial}} {{contraction of|pt|[[para]] [[as]]||for/to the {{q|feminine plural}}|nodot=1}}: {{infl of|pt|pro||f|p}}
 -------- end text --------
 Page 3597 preceitua: Found match for regex: =
 Page 3597 preceitua: -------- begin text --------
@@ -53117,7 +53104,7 @@ Page 3613 prelibava: Found match for regex: =
 Page 3613 prelibava: -------- begin text --------
 
 ===Pronunciation===
-* {{a|Brazil}} {{IPA|pt|/pɾe.li.ˈba.vɐ/}}
+{{pt-IPA}}
 
 ===Verb===
 {{head|pt|verb form}}
@@ -53144,7 +53131,7 @@ Page 3615 premiu: Found match for regex: =
 Page 3615 premiu: -------- begin text --------
 
 ===Pronunciation===
-* {{a|Brazil}} {{IPA|pt|/pɾe.ˈmiw/}}
+{{pt-IPA}}
 
 ===Verb===
 {{head|pt|verb form}}
@@ -53245,7 +53232,7 @@ Page 3623 prepúcios: Found match for regex: =
 Page 3623 prepúcios: -------- begin text --------
 
 ===Pronunciation===
-* {{a|Portugal}} {{IPA|pt|/pɾɨˈpusjʊʃ/}}
+{{pt-IPA}}
 
 ===Noun===
 {{head|pt|noun form}}
@@ -53349,7 +53336,7 @@ Page 3630 preços: Found match for regex: =
 Page 3630 preços: -------- begin text --------
 
 ===Pronunciation===
-{{pt-IPA|br=prêços|pt=prêços}}
+{{pt-IPA|prêços}}
 * {{hyphenation|pt|pre|ços}}
 
 ===Noun===
@@ -53364,7 +53351,7 @@ Page 3631 primeira: -------- begin text --------
 * {{l|pt|1ª}}, {{l|pt|1.ª}} {{qualifier|abbreviations}}
 
 ===Pronunciation===
-* {{a|PT}} {{IPA|pt|/pɾi.ˈmɐj.ɾɐ/}}
+{{pt-IPA}}
 * {{hyphenation|pt|pri|mei|ra}}
 
 ===Adjective===
@@ -53379,7 +53366,7 @@ Page 3632 primeiras: -------- begin text --------
 * {{alt|pt|1ªs||abbreviation}}
 
 ===Pronunciation===
-* {{a|PT}} {{IPA|pt|/pɾi.ˈmɐj.ɾɐʃ/}}
+{{pt-IPA}}
 * {{hyphenation|pt|pri|mei|ras}}
 
 ===Numeral===
@@ -53394,7 +53381,7 @@ Page 3633 primeiros: -------- begin text --------
 * {{alt|pt|1ºs||abbreviation}}
 
 ===Pronunciation===
-* {{a|PT}} {{IPA|pt|/pɾi.ˈmɐj.ɾuʃ/}}
+{{pt-IPA}}
 * {{hyphenation|pt|pri|mei|ros}}
 
 ===Numeral===
@@ -53421,7 +53408,7 @@ Page 3635 principiou: Found match for regex: =
 Page 3635 principiou: -------- begin text --------
 
 ===Pronunciation===
-{{pt-IPA|br=principiou,principyou|pt=principiou}}
+{{pt-IPA}}
 * {{hyph|pt|pri|ci|pi|ou}}
 
 ===Verb===
@@ -53433,7 +53420,7 @@ Page 3636 princípios: Found match for regex: =
 Page 3636 princípios: -------- begin text --------
 
 ===Pronunciation===
-* {{a|PT|Brazil}} {{IPA|pt|/pɾĩ.ˈsi.pjus/}}
+{{pt-IPA}}
 * {{hyphenation|pt|prin|cí|pi|os}}
 
 ===Noun===
@@ -53481,12 +53468,12 @@ Page 3639 pro: Found match for regex: =
 Page 3639 pro: -------- begin text --------
 
 ===Pronunciation===
-* {{a|Brazil}} {{IPA|pt|/pɾu/}}
+{{pt-IPA|prȯ}}
 
 ===Contraction===
-{{head|pt|contraction}}
+{{pt-contr-adj}}
 
-# {{lb|pt|colloquial}} {{non-gloss definition|contraction of {{m|pt|para|'''para'''|for}} + {{m|pt|o|'''o'''|the}}}}
+# {{lb|pt|Brazil|nonstandard|colloquial}} {{contraction of|pt|[[para]] [[o]]||for/to the {{q|masculine singular}}}}
 
 ----
 
@@ -53508,7 +53495,7 @@ Page 3641 procurando: Found match for regex: =
 Page 3641 procurando: -------- begin text --------
 
 ===Pronunciation===
-{{pt-IPA|pt=pròcurando|br=procurando}}
+{{pt-IPA|pròcurando}}
 * {{rhymes|pt|ɐ̃du|s=4}}
 * {{hyph|pt|pro|cu|ran|do}}
 
@@ -53524,7 +53511,7 @@ Page 3642 procurava: Found match for regex: =
 Page 3642 procurava: -------- begin text --------
 
 ===Pronunciation===
-{{pt-IPA|pt=pròcurava|br=procurava}}
+{{pt-IPA|pròcurava}}
 * {{hyph|pt|pro|cu|ra|va}}
 
 ===Verb===
@@ -53536,7 +53523,7 @@ Page 3643 procuro: Found match for regex: =
 Page 3643 procuro: -------- begin text --------
 
 ===Pronunciation===
-{{pt-IPA}}
+{{pt-IPA|pròcuro}}
 * {{rhymes|pt|uɾu|s=3}}
 * {{hyphenation|pt|pro|cu|ro}}
 
@@ -53552,7 +53539,7 @@ Page 3644 produz: Found match for regex: =
 Page 3644 produz: -------- begin text --------
 
 ===Pronunciation===
-* {{a|Brazil}} {{IPA|pt|/pɾoˈdu(j)s/|/pɾoˈdu(j)ʃ/}}
+{{pt-IPA}}
 
 ===Verb===
 {{head|pt|verb form}}
@@ -53579,7 +53566,7 @@ Page 3646 proferida: Found match for regex: =
 Page 3646 proferida: -------- begin text --------
 
 ===Pronunciation===
-* {{a|Brazil}} {{IPA|pt|/ˌpɾo.fe.ˈɾi.dɐ/}}
+{{pt-IPA}}
 
 ===Participle===
 {{head|pt|past participle form}}
@@ -53609,7 +53596,7 @@ Page 3648 profunda: Found match for regex: =
 Page 3648 profunda: -------- begin text --------
 
 ===Pronunciation===
-* {{a|Brazil}} {{IPA|pt|/pɾo.ˈfũ.dɐ/}}
+{{pt-IPA}}
 
 ===Adjective===
 {{head|pt|adjective form}}
@@ -53710,7 +53697,7 @@ Page 3655 pronuncia: Found match for regex: =
 Page 3655 pronuncia: -------- begin text --------
 
 ===Pronunciation===
-{{pt-IPA|pt=pronuncia}}
+{{pt-IPA}}
 * {{hyph|pt|pro|nun|ci|a}}
 
 ===Verb===
@@ -53757,12 +53744,12 @@ Page 3658 pros: Found match for regex: =
 Page 3658 pros: -------- begin text --------
 
 ===Pronunciation===
-* {{a|Brazil}} {{IPA|pt|/pɾus/}}
+{{pt-IPA|prȯs}}
 
 ===Contraction===
-{{head|pt|contraction}}
+{{head|pt|contraction|g=m-p}}
 
-# {{lb|pt|colloquial}} {{non-gloss definition|contraction of {{m|pt|para|'''para'''|for}} + {{m|pt|os|'''os'''|the}}}}
+# {{lb|pt|Brazil|nonstandard|colloquial}} {{contraction of|pt|[[para]] [[os]]||for/to the {{q|masculine plural}}|nodot=1}}: {{infl of|pt|pro||m|p}}
 
 ----
 
@@ -53847,7 +53834,7 @@ Page 3664 prostituições: Found match for regex: =
 Page 3664 prostituições: -------- begin text --------
 
 ===Pronunciation===
-* {{a|PT}} {{IPA|pt|/pɾust̪ɪt̪ʊɪˈsʊ̃ɪʃ/}}
+{{pt-IPA|prostitui^ções}}
 
 ===Noun===
 {{head|pt|noun form}}
@@ -53858,7 +53845,7 @@ Page 3665 prostitutas: Found match for regex: =
 Page 3665 prostitutas: -------- begin text --------
 
 ===Pronunciation===
-* {{a|Brazil}} {{IPA|pt|/ˌpɾos.t͡ʃi.ˈtu.tɐs/}}
+{{pt-IPA}}
 
 ===Noun===
 {{head|pt|noun form}}
@@ -53904,7 +53891,7 @@ Page 3668 provinha: Found match for regex: =
 Page 3668 provinha: -------- begin text --------
 
 ===Pronunciation===
-* {{a|Portugal}} {{IPA|pt|/pɾu.ˈvi.ɲɐ/}}
+{{pt-IPA}}
 
 ===Verb===
 {{head|pt|verb form}}
@@ -53932,25 +53919,25 @@ Page 3670 prum: Found match for regex: =
 Page 3670 prum: -------- begin text --------
 
 ===Pronunciation===
-* {{a|Brazil, Portugal}} {{IPA|pt|/pɾũ/}}
+{{pt-IPA}}
 
 ===Contraction===
-{{head|pt|contraction|plural|pruns|feminine|pruma|feminine plural|prumas}}
+{{pt-contr-adj|f=pruma}}
 
-# {{lb|pt|nonstandard|informal}} {{contraction of|pt|[[para]] [[um]]}}
-# {{lb|pt|nonstandard|informal}} {{contraction of|pt|[[por]] [[um]]}}
+# {{lb|pt|nonstandard|informal}} {{contraction of|pt|[[para]] [[um]]||for/to a {{q|masculine}}}}
+# {{lb|pt|nonstandard|informal}} {{contraction of|pt|[[por]] [[um]]||by/through a {{q|masculine}}}}
 -------- end text --------
 Page 3671 pruma: Found match for regex: =
 Page 3671 pruma: -------- begin text --------
 
 ===Pronunciation===
-* {{a|Brazil}} {{IPA|pt|/ˈpɾu.mɐ/}}
+{{pt-IPA}}
 
 ===Contraction===
-{{head|pt|contraction|g=f}}
+{{head|pt|contraction|g=f-s}}
 
-# {{lb|pt|nonstandard|informal}} {{contraction of|pt|[[para]] [[uma]]}}
-# {{lb|pt|nonstandard|informal}} {{contraction of|pt|[[por]] [[uma]]}}
+# {{lb|pt|nonstandard|informal}} {{contraction of|pt|[[para]] [[uma]]||for/to a {{q|feminine}}|nodot=1}}: {{infl of|pt|prum||f|s}}
+# {{lb|pt|nonstandard|informal}} {{contraction of|pt|[[por]] [[uma]]||by/through a {{q|feminine}}|nodot=1}}: {{infl of|pt|prum||f|s}}
 
 ===Verb===
 {{head|pt|verb form}}
@@ -53961,13 +53948,13 @@ Page 3672 prumas: Found match for regex: =
 Page 3672 prumas: -------- begin text --------
 
 ===Pronunciation===
-* {{a|Brazil}} {{IPA|pt|/ˈpɾu.mɐs/}}
+{{pt-IPA}}
 
 ===Contraction===
 {{head|pt|contraction|g=f-p}}
 
-# {{lb|pt|nonstandard|informal}} {{contraction of|pt|[[para]] [[umas]]}}
-# {{lb|pt|nonstandard|informal}} {{contraction of|pt|[[por]] [[umas]]}}
+# {{lb|pt|nonstandard|informal}} {{contraction of|pt|[[para]] [[umas]]||for/to some {{q|feminine plural}}|nodot=1}}: {{infl of|pt|prum||f|p}}
+# {{lb|pt|nonstandard|informal}} {{contraction of|pt|[[por]] [[umas]]||by/through some {{q|feminine plural}}|nodot=1}}: {{infl of|pt|prum||f|p}}
 
 ===Verb===
 {{head|pt|verb form}}
@@ -53978,13 +53965,13 @@ Page 3673 pruns: Found match for regex: =
 Page 3673 pruns: -------- begin text --------
 
 ===Pronunciation===
-* {{a|Brazil}} {{IPA|pt|/pɾũs/}}
+{{pt-IPA}}
 
 ===Contraction===
 {{head|pt|contraction|g=m-p}}
 
-# {{lb|pt|nonstandard|informal}} {{contraction of|pt|[[para]] [[uns]]}}
-# {{lb|pt|nonstandard|informal}} {{contraction of|pt|[[por]] [[uns]]}}
+# {{lb|pt|nonstandard|informal}} {{contraction of|pt|[[para]] [[uns]]||for/to some {{q|masculine plural}}|nodot=1}}: {{infl of|pt|prum||m|p}}
+# {{lb|pt|nonstandard|informal}} {{contraction of|pt|[[por]] [[uns]]||by/through some {{q|masculine plural}}|nodot=1}}: {{infl of|pt|prum||m|p}}
 -------- end text --------
 Page 3674 própria: Found match for regex: =
 Page 3674 própria: -------- begin text --------
@@ -54001,7 +53988,7 @@ Page 3675 próprias: Found match for regex: =
 Page 3675 próprias: -------- begin text --------
 
 ===Pronunciation===
-* {{a|PT}} {{IPA|pt|/ˈpɾɔ.pɾjɐʃ/}}
+{{pt-IPA}}
 
 ===Adjective===
 {{head|pt|adjective form}}
@@ -54012,7 +53999,7 @@ Page 3676 próprios: Found match for regex: =
 Page 3676 próprios: -------- begin text --------
 
 ===Pronunciation===
-* {{a|PT}} {{IPA|pt|/ˈpɾɔpɾjuʃ/}}
+{{pt-IPA}}
 
 ===Adjective===
 {{head|pt|adjective form}}
@@ -54063,7 +54050,7 @@ Page 3679 psicológica: Found match for regex: =
 Page 3679 psicológica: -------- begin text --------
 
 ===Pronunciation===
-* {{a|Brazil}} {{IPA|pt|/ˌpsi.ko.ˈlɔ.ʒi.kɐ/|/pi.ˌsi.ko-/}}
+{{pt-IPA|pi^ssicológica}}
 
 ===Adjective===
 {{head|pt|adjective form|g=f-s}}
@@ -54280,7 +54267,7 @@ Page 3695 punhos: Found match for regex: =
 Page 3695 punhos: -------- begin text --------
 
 ===Pronunciation===
-* {{a|PT}} {{IPA|pt|/ˈpu.ɲuʃ/}}
+{{pt-IPA}}
 
 ===Noun===
 {{head|pt|noun form}}
@@ -54564,7 +54551,7 @@ Page 3716 puxando: Found match for regex: =
 Page 3716 puxando: -------- begin text --------
 
 ===Pronunciation===
-* {{a|PT}} {{IPA|pt|/puˈʃɐ̃du/}}
+{{pt-IPA|puchando}}
 * {{rhymes|pt|ɐ̃du}}
 
 ===Verb===
@@ -54592,7 +54579,7 @@ Page 3718 puxou: Found match for regex: =
 Page 3718 puxou: -------- begin text --------
 
 ===Pronunciation===
-* {{a|Portugal}} {{IPA|pt|/puˈʃo(w)/}}
+{{pt-IPA|puchou}}
 
 ===Verb===
 {{head|pt|verb form}}
@@ -54764,7 +54751,7 @@ Page 3731 púdico: Found match for regex: =
 Page 3731 púdico: -------- begin text --------
 
 ===Pronunciation===
-{{pt-IPA|pt=púdico}}
+{{pt-IPA}}
 * {{hyphenation|pt|pú|di|co}}
 
 ===Adjective===
@@ -55415,7 +55402,7 @@ Page 3775 racionalizada: Found match for regex: =
 Page 3775 racionalizada: -------- begin text --------
 
 ===Pronunciation===
-* {{a|Brazil}} {{IPA|pt|/ˌʁa.sjo.ˌna.li.ˈza.dɐ/}}
+{{pt-IPA}}
 
 ===Adjective===
 {{head|pt|adjective form}}
@@ -55537,7 +55524,7 @@ Page 3783 ramagens: Found match for regex: =
 Page 3783 ramagens: -------- begin text --------
 
 ===Pronunciation===
-* {{a|PT}} {{IPA|pt|/ʁɐ.ˈma.ʒɐ̃j̃ʃ/}}
+{{pt-IPA}}
 
 ===Noun===
 {{head|pt|noun form|g=f}}
@@ -55561,7 +55548,7 @@ Page 3785 ramos: Found match for regex: =
 Page 3785 ramos: -------- begin text --------
 
 ===Pronunciation===
-* {{a|PT}} {{IPA|pt|/ˈʁɐ.muʃ/}}
+{{pt-IPA}}
 
 ===Noun===
 {{head|pt|noun form}}
@@ -55602,7 +55589,7 @@ Page 3788 ranqueada: Found match for regex: =
 Page 3788 ranqueada: -------- begin text --------
 
 ===Pronunciation===
-* {{a|Brazil}} {{IPA|pt|/ˌʁɐ̃.ke.ˈa.dɐ/|/ˌʁɐ̃.ki.ˈa.dɐ/|/ʁɐ̃.ˈkja.dɐ/}}
+{{pt-IPA|ranque^ada}}
 
 ===Adjective===
 {{head|pt|adjective form}}
@@ -55676,7 +55663,7 @@ Page 3792 raptará: -------- begin text --------
 {{nonlemma}}
 
 ===Pronunciation===
-{{pt-IPA|pt=+}}
+{{pt-IPA|rapi^^tará}}
 * {{rhymes|pt|a|s=3}}
 * {{hyph|pt|rap|ta|rá}}
 
@@ -55794,7 +55781,7 @@ Page 3799 razões: Found match for regex: =
 Page 3799 razões: -------- begin text --------
 
 ===Pronunciation===
-* {{a|PT}} {{IPA|pt|/ʁɐˈzõj̃ʃ/}}
+{{pt-IPA}}
 
 ===Noun===
 {{head|pt|noun form}}
@@ -55805,7 +55792,7 @@ Page 3800 reabre: Found match for regex: =
 Page 3800 reabre: -------- begin text --------
 
 ===Pronunciation===
-{{pt-IPA|pt=riabre}}
+{{pt-IPA}}
 * {{rhymes|pt|abɾi|q1=Brazil|abɾɨ|q2=Portugal|s=3}}
 * {{hyphenation|pt|re|a|bre}}
 
@@ -55825,8 +55812,7 @@ Page 3801 reais: -------- begin text --------
 * {{l|pt|reaes}} {{qualifier|obsolete}}
 
 ===Pronunciation===
-{{pt-IPA|pt=riais,reais}}
-* {{a|BR}} {{IPA|pt|/ʁeˈajs/|[heˈajs]|[χe-]|[re-]|[-ajs]|[-ajʃ]}}
+{{pt-IPA}}
 * {{hyph|pt|re|ais}}
 
 ===Adjective===
@@ -55901,7 +55887,7 @@ Page 3806 recebera: Found match for regex: =
 Page 3806 recebera: -------- begin text --------
 
 ===Pronunciation===
-* {{a|PT}} {{IPA|pt|/ʁɨsɨˈβeɾɐ/}}
+{{pt-IPA|recebêra}}
 
 ===Verb===
 {{head|pt|verb form}}
@@ -55913,7 +55899,7 @@ Page 3807 receberá: Found match for regex: =
 Page 3807 receberá: -------- begin text --------
 
 ===Pronunciation===
-* {{a|PT}} {{IPA|pt|/ʁɨsɨβɨˈɾa/}}
+{{pt-IPA}}
 
 ===Verb===
 {{head|pt|verb form}}
@@ -55924,7 +55910,7 @@ Page 3808 recebido: Found match for regex: =
 Page 3808 recebido: -------- begin text --------
 
 ===Pronunciation===
-* {{a|Portugal}} {{IPA|pt|/ʁɨ.sɨ.ˈβi.ðu/}}
+{{pt-IPA}}
 
 ===Participle===
 {{pt-pp}}
@@ -55938,8 +55924,7 @@ Page 3809 recebo: Found match for regex: =
 Page 3809 recebo: -------- begin text --------
 
 ===Pronunciation===
-* {{a|Brazil}} {{IPA|pt|/ʁe.ˈse.bu/}}
-* {{a|South Brazil}} {{IPA|pt|/he.ˈse.bo/}}
+{{pt-IPA|recêbo}}
 * {{hyphenation|pt|re|ce|bo}}
 
 ===Verb===
@@ -55951,7 +55936,7 @@ Page 3810 recentíssima: Found match for regex: =
 Page 3810 recentíssima: -------- begin text --------
 
 ===Pronunciation===
-* {{a|Brazil}} {{IPA|pt|/ʁe.sẽ.ˈt͡ʃi.si.mɐ/}}
+{{pt-IPA}}
 
 ===Adjective===
 {{head|pt|adjective form}}
@@ -56032,7 +56017,7 @@ Page 3816 recompense: Found match for regex: =
 Page 3816 recompense: -------- begin text --------
 
 ===Pronunciation===
-* {{a|Brazil}} {{IPA|pt|/ˌʁe.kõ.ˈpẽ.si/}}
+{{pt-IPA}}
 
 ===Verb===
 {{head|pt|verb form}}
@@ -56072,7 +56057,7 @@ Page 3819 recostada: Found match for regex: =
 Page 3819 recostada: -------- begin text --------
 
 ===Pronunciation===
-* {{a|Brazil}} {{IPA|pt|/ʁe.kos.ˈta.dɐ/}}
+{{pt-IPA}}
 
 ===Adjective===
 {{head|pt|adjective form}}
@@ -56148,7 +56133,7 @@ Page 3824 redonda: Found match for regex: =
 Page 3824 redonda: -------- begin text --------
 
 ===Pronunciation===
-* {{a|Brazil}} {{IPA|pt|/ʁe.ˈdõ.dɐ/}}
+{{pt-IPA}}
 
 ===Adjective===
 {{head|pt|adjective form}}
@@ -56162,7 +56147,7 @@ Page 3825 reduz: Found match for regex: =
 Page 3825 reduz: -------- begin text --------
 
 ===Pronunciation===
-* {{a|Brazil}} {{IPA|pt|/ʁe.ˈdu(j)s/}}
+{{pt-IPA}}
 
 ===Verb===
 {{head|pt|verb form}}
@@ -56260,7 +56245,7 @@ Page 3832 regatinhos: Found match for regex: =
 Page 3832 regatinhos: -------- begin text --------
 
 ===Pronunciation===
-* {{a|Brazil}} {{IPA|pt|/ʁe.ɡa.ˈt͡ʃi.ɲus/}}
+{{pt-IPA}}
 
 ===Noun===
 {{head|pt|noun form|g=m}}
@@ -56365,7 +56350,7 @@ Page 3839 relações: Found match for regex: =
 Page 3839 relações: -------- begin text --------
 
 ===Pronunciation===
-* {{a|PT}} {{IPA|pt|/ʁɨ.lɐ.ˈsõj̃ʃ/}}
+{{pt-IPA}}
 
 ===Noun===
 {{head|pt|noun form}}
@@ -56505,7 +56490,7 @@ Page 3848 rendas: Found match for regex: =
 Page 3848 rendas: -------- begin text --------
 
 ===Pronunciation===
-* {{a|PT}} {{IPA|pt|/ˈʁẽ.dɐʃ/}}
+{{pt-IPA}}
 
 ===Noun===
 {{head|pt|noun form|g=f}}
@@ -56627,7 +56612,7 @@ Page 3856 repeti: Found match for regex: =
 Page 3856 repeti: -------- begin text --------
 
 ===Pronunciation===
-{{pt-IPA|pt=repeti}}
+{{pt-IPA}}
 * {{homophones|pt|repetir|q1=Brazil}}
 * {{rhymes|pt|i|s=3}}
 * {{hyph|pt|re|pe|ti}}
@@ -56641,7 +56626,7 @@ Page 3857 replantais: Found match for regex: =
 Page 3857 replantais: -------- begin text --------
 
 ===Pronunciation===
-* {{a|Brazil}} {{IPA|pt|/ˌʁe.plɐ̃.ˈtajs/}}
+{{pt-IPA}}
 
 ===Verb===
 {{head|pt|verb form}}
@@ -56699,7 +56684,7 @@ Page 3861 repousa: Found match for regex: =
 Page 3861 repousa: -------- begin text --------
 
 ===Pronunciation===
-{{pt-IPA|br=repousa|pt=repousa}}
+{{pt-IPA}}
 * {{hyphenation|pt|re|pou|sa}}
 * {{rhymes|pt|owzɐ|ozɐ|s=3}}
 
@@ -56712,7 +56697,7 @@ Page 3862 repreenda: Found match for regex: =
 Page 3862 repreenda: -------- begin text --------
 
 ===Pronunciation===
-{{pt-IPA|pt=reprienda,repreenda}}
+{{pt-IPA|repre^enda}}
 * {{rhymes|pt|ẽdɐ|s=4}}
 * {{hyph|pt|re|pre|en|da}}
 
@@ -56725,7 +56710,7 @@ Page 3863 repreensões: Found match for regex: =
 Page 3863 repreensões: -------- begin text --------
 
 ===Pronunciation===
-* {{a|PT}} {{IPA|pt|/rɨpɾẽˈsʊ̃ɪʃ/}}
+{{pt-IPA|repre^ensões}}
 
 ===Noun===
 {{head|pt|noun form}}
@@ -56736,7 +56721,7 @@ Page 3864 representando: Found match for regex: =
 Page 3864 representando: -------- begin text --------
 
 ===Pronunciation===
-* {{a|Portugal}} {{IPA|pt|/ʁɨ.pɾɨ.zẽ.ˈtɐ̃.du/}}
+{{pt-IPA}}
 * {{hyphenation|pt|re|pre|sen|tan|do}}
 
 ===Verb===
@@ -56786,7 +56771,7 @@ Page 3867 reptará: -------- begin text --------
 {{nonlemma}}
 
 ===Pronunciation===
-{{pt-IPA|pt=rèptará}}
+{{pt-IPA|rèpi^^tará}}
 * {{rhymes|pt|a|s=3}}
 * {{hyph|pt|rep|ta|rá}}
 
@@ -56802,7 +56787,7 @@ Page 3868 repuxada: Found match for regex: =
 Page 3868 repuxada: -------- begin text --------
 
 ===Pronunciation===
-* {{a|Brazil}} {{IPA|pt|/ʁe.pu.ˈʃa.dɐ/}}
+{{pt-IPA|repuchada}}
 
 ===Adjective===
 {{head|pt|adjective form}}
@@ -56869,7 +56854,7 @@ Page 3872 resete: Found match for regex: =
 Page 3872 resete: -------- begin text --------
 
 ===Pronunciation===
-* {{a|BR}} {{IPA|pt|/ʁe.ˈzɛ.t(ʃ)i/}}
+{{pt-IPA|reséte}}
 * {{hyphenation|pt|re|se|te}}
 * {{rhymes|pt|ɛt(ʃ)i|s=3}}
 
@@ -56914,7 +56899,7 @@ Page 3875 respondeu: -------- begin text --------
 * {{alter|pt|respondeo||obsolete}}
 
 ===Pronunciation===
-* {{a|PT}} {{IPA|pt|/ʁɨʃ.põ.ˈdew/}}
+{{pt-IPA}}
 
 ===Verb===
 {{head|pt|verb form}}
@@ -57030,7 +57015,7 @@ Page 3884 ressoo: Found match for regex: =
 Page 3884 ressoo: -------- begin text --------
 
 ===Pronunciation===
-{{pt-IPA|pt=ressouo}}
+{{pt-IPA}}
 
 ===Verb===
 {{head|pt|verb form}}
@@ -57329,7 +57314,7 @@ Page 3904 rica: Found match for regex: =
 Page 3904 rica: -------- begin text --------
 
 ===Pronunciation===
-* {{a|PT}} {{IPA|pt|/ˈʁi.kɐ/}}
+{{pt-IPA}}
 
 ===Adjective===
 {{head|pt|adjective form}}
@@ -57375,7 +57360,7 @@ Page 3907 rime: Found match for regex: =
 Page 3907 rime: -------- begin text --------
 
 ===Pronunciation===
-* {{a|Brazil}} {{IPA|pt|/ˈʁi.mi/}}
+{{pt-IPA}}
 
 ===Verb===
 {{head|pt|verb form}}
@@ -57389,7 +57374,7 @@ Page 3908 rindo: Found match for regex: =
 Page 3908 rindo: -------- begin text --------
 
 ===Pronunciation===
-* {{a|PT}} {{IPA|pt|/ˈʁĩ.du/}}
+{{pt-IPA}}
 
 ===Verb===
 {{head|pt|verb form}}
@@ -57550,7 +57535,7 @@ Page 3919 roemos: Found match for regex: =
 Page 3919 roemos: -------- begin text --------
 
 ===Pronunciation===
-{{pt-IPA|pt=roêmos|br=roêmos,ruêmos}}
+{{pt-IPA|ro^emos}}
 * {{hyph|pt|ro|e|mos}}
 
 ===Verb===
@@ -57604,7 +57589,7 @@ Page 3922 rolando: Found match for regex: =
 Page 3922 rolando: -------- begin text --------
 
 ===Pronunciation===
-* {{a|Brazil}} {{IPA|pt|/ʁo.ˈlɐ̃.du/}}
+{{pt-IPA}}
 * {{homophones|pt|Rolando}}
 
 ===Verb===
@@ -57657,7 +57642,7 @@ Page 3925 rompeu: Found match for regex: =
 Page 3925 rompeu: -------- begin text --------
 
 ===Pronunciation===
-* {{a|PT}} {{IPA|pt|/ʁõ.ˈpew/}}
+{{pt-IPA}}
 
 ===Verb===
 {{head|pt|verb form}}
@@ -57717,7 +57702,7 @@ Page 3929 roo: Found match for regex: =
 Page 3929 roo: -------- begin text --------
 
 ===Pronunciation===
-{{pt-IPA|br=rôo|pt=rouo}}
+{{pt-IPA}}
 * {{hyph|pt|ro|o}}
 * {{rhymes|pt|o.u|s=2}}
 
@@ -57805,7 +57790,7 @@ Page 3935 roupas: Found match for regex: =
 Page 3935 roupas: -------- begin text --------
 
 ===Pronunciation===
-* {{a|PT}} {{IPA|pt|/ˈʁo(w).pɐʃ/}}
+{{pt-IPA}}
 
 ===Noun===
 {{head|pt|noun form|g=f}}
@@ -57848,7 +57833,7 @@ Page 3938 roídos: Found match for regex: =
 Page 3938 roídos: -------- begin text --------
 
 ===Pronunciation===
-* {{a|Brazil}} {{IPA|pt|/ʁo.ˈi.dus/}}
+{{pt-IPA}}
 
 ===Adjective===
 {{head|pt|adjective form}}
@@ -57915,8 +57900,7 @@ Page 3942 rugas: Found match for regex: =
 Page 3942 rugas: -------- begin text --------
 
 ===Pronunciation===
-* {{a|Brazil}} {{IPA|pt|/ˈʁu.ɡas/|/ˈʁu.ɡɐs/|/ˈʁu.ɡɐʃ/}}
-* {{a|South Brazil}} {{IPA|pt|/ˈhu.ɡas/|/ˈʀu.ɡas/}}
+{{pt-IPA}}
 * {{hyphenation|pt|ru|gas}}
 
 ===Noun===
@@ -57963,7 +57947,7 @@ Page 3945 rugosa: Found match for regex: =
 Page 3945 rugosa: -------- begin text --------
 
 ===Pronunciation===
-* {{a|Brazil}} {{IPA|pt|/ʁu.ˈɡɔ.zɐ/}}
+{{pt-IPA}}
 
 ===Adjective===
 {{head|pt|adjective form}}
@@ -57977,7 +57961,7 @@ Page 3946 ruins: Found match for regex: =
 Page 3946 ruins: -------- begin text --------
 
 ===Pronunciation===
-{{pt-IPA|br=ruins,ruyns|pt=ruins}}
+{{pt-IPA|br=+,ruyns|pt=+}}<!-- FIXME, are we sure about 'ruyns' for Brazil? -->
 * {{hyph|pt|ru|ins}}
 
 ===Adjective===
@@ -58037,7 +58021,7 @@ Page 3950 rumorosa: Found match for regex: =
 Page 3950 rumorosa: -------- begin text --------
 
 ===Pronunciation===
-* {{a|Brazil}} {{IPA|pt|/ʁu.mo.ˈɾɔ.zɐ/}}
+{{pt-IPA}}
 
 ===Adjective===
 {{head|pt|adjective form}}
@@ -58141,7 +58125,7 @@ Page 3957 ríspidos: Found match for regex: =
 Page 3957 ríspidos: -------- begin text --------
 
 ===Pronunciation===
-* {{a|South Brazil}} {{IPA|pt|/ˈhis.pi.dos/}}
+{{pt-IPA}}
 
 ===Adjective===
 {{head|pt|adjective form}}
@@ -58443,7 +58427,7 @@ Page 3980 sacristãos: Found match for regex: =
 Page 3980 sacristãos: -------- begin text --------
 
 ===Pronunciation===
-{{pt-IPA|pt=sàcristãos}}
+{{pt-IPA|sàcristãos}}
 * {{rhymes|pt|ɐ̃w̃s|q1=Brazil|ɐ̃w̃ʃ|q2=Portugal, Rio de Janeiro|s=3}}
 * {{hyph|pt|sa|cris|tãos}}
 
@@ -58609,14 +58593,18 @@ Page 3991 saias: Found match for regex: =
 Page 3991 saias: -------- begin text --------
 
 ===Pronunciation===
-* {{a|PT}} {{IPA|pt|/ˈsaj.ɐʃ/}}
+{{pt-IPA}}
 
-===Noun===
+===Etymology 1===
+
+====Noun====
 {{head|pt|noun form|g=f}}
 
 # {{plural of|pt|saia}}
 
-===Verb===
+===Etymology 2===
+
+====Verb====
 {{head|pt|verb form}}
 
 # {{pt-verb-form-of|sair}}
@@ -58688,7 +58676,7 @@ Page 3997 saindo: Found match for regex: =
 Page 3997 saindo: -------- begin text --------
 
 ===Pronunciation===
-* {{a|PT}} {{IPA|pt|/sɐˈĩdu/}}
+{{pt-IPA}}
 
 ===Verb===
 {{head|pt|gerund}}
@@ -59092,7 +59080,7 @@ Page 4023 santos: Found match for regex: =
 Page 4023 santos: -------- begin text --------
 
 ===Pronunciation===
-* {{a|PT}} {{IPA|pt|/ˈsɐ̃.tuʃ/}}
+{{pt-IPA}}
 
 ===Adjective===
 {{head|pt|adjective form}}
@@ -59111,7 +59099,7 @@ Page 4024 sapatos: Found match for regex: =
 Page 4024 sapatos: -------- begin text --------
 
 ===Pronunciation===
-* {{a|PT}} {{IPA|pt|/sɐˈpatuʃ/}}
+{{pt-IPA}}
 
 ===Noun===
 {{head|pt|noun form}}
@@ -59288,7 +59276,7 @@ Page 4037 saído: Found match for regex: =
 Page 4037 saído: -------- begin text --------
 
 ===Pronunciation===
-* {{a|PT}} {{IPA|pt|/sɐ.ˈi.ðu/}}
+{{pt-IPA}}
 
 ===Participle===
 {{pt-pp}}
@@ -59431,7 +59419,7 @@ Page 4047 seduções: Found match for regex: =
 Page 4047 seduções: -------- begin text --------
 
 ===Pronunciation===
-* {{a|PT}} {{IPA|pt|/sɨdʊˈsʊ̃ɪʃ/}}
+{{pt-IPA}}
 
 ===Noun===
 {{head|pt|noun form}}
@@ -59459,7 +59447,6 @@ Page 4049 segue: -------- begin text --------
 
 ===Pronunciation===
 {{pt-IPA|ségue}}
-* {{a|South Brazil}} {{IPA|pt|/ˈsɛ.ɡe/}}
 * {{homophones|pt|cegue}}
 * {{hyphenation|pt|se|gue}}
 
@@ -59473,7 +59460,7 @@ Page 4050 seguindo: Found match for regex: =
 Page 4050 seguindo: -------- begin text --------
 
 ===Pronunciation===
-* {{a|BR}} {{IPA|pt|/seˈɡĩdu/}}
+{{pt-IPA}}
 
 ===Verb===
 {{head|pt|verb form}}
@@ -59484,7 +59471,7 @@ Page 4051 seguira: Found match for regex: =
 Page 4051 seguira: -------- begin text --------
 
 ===Pronunciation===
-* {{a|PT}} {{IPA|pt|/sɨˈɣiɾɐ/}}
+{{pt-IPA}}
 
 ===Verb===
 {{head|pt|verb form}}
@@ -59554,17 +59541,25 @@ Page 4055 seja: Found match for regex: =
 Page 4055 seja: -------- begin text --------
 
 ===Pronunciation===
-{{pt-IPA|sêja|pt=séja|gpt=sêja}}
+{{pt-IPA|sêja}}
 * {{hyph|pt|se|ja}}
 
-===Verb===
+===Etymology 1===
+
+====Verb====
 {{head|pt|verb form}}
 
 # {{pt-verb-form-of|ser|a}}
-# {{pt-verb-form-of|sejar}}
 
-====Derived terms====
+=====Derived terms=====
 * {{l|pt|sejar}}
+
+===Etymology 2===
+
+====Verb====
+{{head|pt|verb form}}
+
+# {{pt-verb-form-of|sejar}}
 
 ----
 
@@ -59576,10 +59571,18 @@ Page 4056 sejais: -------- begin text --------
 {{pt-IPA|sejais}}
 * {{hyph|pt|se|jais}}
 
-===Verb===
+===Etymology 1===
+
+====Verb====
 {{head|pt|verb form}}
 
 # {{pt-verb-form-of|ser|ais}}
+
+===Etymology 2===
+
+====Verb====
+{{head|pt|verb form}}
+
 # {{pt-verb-form-of|sejar}}
 -------- end text --------
 Page 4057 sejam: Found match for regex: =
@@ -59590,24 +59593,41 @@ Page 4057 sejam: -------- begin text --------
 * {{l|pt|sejaõ}} {{qualifier|obsolete}}
 
 ===Pronunciation===
-{{pt-IPA|sêjam|cpt=séjam}}
+{{pt-IPA|sêjam}}
 
-===Verb===
+===Etymology 1===
+
+====Verb====
 {{head|pt|verb form}}
 
 # {{pt-verb-form-of|ser|am}}
+
+===Etymology 2===
+
+====Verb====
+{{head|pt|verb form}}
+
+# {{pt-verb-form-of|sejar}}
 -------- end text --------
 Page 4058 sejamos: Found match for regex: =
 Page 4058 sejamos: -------- begin text --------
 
 ===Pronunciation===
-{{pt-IPA|br=sejamos|pt=sejamos,sejámos}}
+{{pt-IPA}}
 * {{hyph|pt|se|ja|mos}}
 
-===Verb===
+===Etymology 1===
+
+====Verb====
 {{head|pt|verb form}}
 
 # {{pt-verb-form-of|ser|amos}}
+
+===Etymology 2===
+
+====Verb====
+{{head|pt|verb form}}
+
 # {{pt-verb-form-of|sejar}}
 -------- end text --------
 Page 4059 sejará: Found match for regex: =
@@ -59630,13 +59650,21 @@ Page 4060 sejas: Found match for regex: =
 Page 4060 sejas: -------- begin text --------
 
 ===Pronunciation===
-{{pt-IPA|sêjas|cpt=séjas}}
+{{pt-IPA|sêjas}}
 * {{hyph|pt|se|jas}}
 
-===Verb===
+===Etymology 1===
+
+====Verb====
 {{head|pt|verb form}}
 
 # {{pt-verb-form-of|ser|as}}
+
+===Etymology 2===
+
+====Verb====
+{{head|pt|verb form}}
+
 # {{pt-verb-form-of|sejar}}
 -------- end text --------
 Page 4061 seje: Found match for regex: =
@@ -59731,7 +59759,7 @@ Page 4067 senhoras: Found match for regex: =
 Page 4067 senhoras: -------- begin text --------
 
 ===Pronunciation===
-* {{a|PT}} {{IPA|pt|/sɨ.ˈɲo.ɾɐʃ/}}
+{{pt-IPA|senhôras}}
 
 ===Noun===
 {{head|pt|noun form}}
@@ -59742,7 +59770,7 @@ Page 4068 senhores: Found match for regex: =
 Page 4068 senhores: -------- begin text --------
 
 ===Pronunciation===
-{{pt-IPA|pt=senhôres}}
+{{pt-IPA|senhôres}}
 * {{hyph|pt|se|nho|res}}
 
 ===Noun===
@@ -59814,7 +59842,7 @@ Page 4073 sentenciarei: Found match for regex: =
 Page 4073 sentenciarei: -------- begin text --------
 
 ===Pronunciation===
-* {{a|Brazil}} {{IPA|pt|/sẽ.ˌtẽ.sja.ˈɾej/}}
+{{pt-IPA}}
 
 ===Verb===
 {{head|pt|verb form}}
@@ -59825,7 +59853,7 @@ Page 4074 sentia: Found match for regex: =
 Page 4074 sentia: -------- begin text --------
 
 ===Pronunciation===
-* {{a|PT}} {{IPA|pt|/sẽ.ˈti.ɐ/}}
+{{pt-IPA}}
 
 ===Verb===
 {{head|pt|verb form}}
@@ -59837,7 +59865,7 @@ Page 4075 sentindo: Found match for regex: =
 Page 4075 sentindo: -------- begin text --------
 
 ===Pronunciation===
-* {{a|PT}} {{IPA|pt|/sẽ.ˈtĩ.du/}}
+{{pt-IPA}}
 
 ===Verb===
 {{head|pt|verb form}}
@@ -59898,7 +59926,7 @@ Page 4079 sentou: Found match for regex: =
 Page 4079 sentou: -------- begin text --------
 
 ===Pronunciation===
-* {{a|PT}} {{IPA|pt|/sẽˈtow/}}
+{{pt-IPA}}
 
 ===Verb===
 {{head|pt|verb form}}
@@ -60099,7 +60127,7 @@ Page 4092 sereis: Found match for regex: =
 Page 4092 sereis: -------- begin text --------
 
 ===Pronunciation===
-{{pt-IPA|br=sereis|pt=serâis}}
+{{pt-IPA}}
 * {{hyph|pt|se|reis}}
 
 ===Verb===
@@ -60261,7 +60289,7 @@ Page 4100 sermões: Found match for regex: =
 Page 4100 sermões: -------- begin text --------
 
 ===Pronunciation===
-* {{a|Portugal}} {{IPA|pt|/sɨɾˈmʊ̃ɪʃ/}}
+{{pt-IPA}}
 
 ===Noun===
 {{head|pt|noun form}}
@@ -60355,7 +60383,7 @@ Page 4105 servi: Found match for regex: =
 Page 4105 servi: -------- begin text --------
 
 ===Pronunciation===
-* {{a|BR}} {{IPA|pt|/seχˈvi/}}
+{{pt-IPA}}
 
 ===Verb===
 {{head|pt|verb form}}
@@ -60457,7 +60485,7 @@ Page 4112 severas: Found match for regex: =
 Page 4112 severas: -------- begin text --------
 
 ===Pronunciation===
-* {{a|PT}} {{IPA|pt|/sɨ.ˈvɛ.ɾɐʃ/}}
+{{pt-IPA|sevéras}}
 
 ===Adjective===
 {{head|pt|adjective form}}
@@ -60474,7 +60502,7 @@ Page 4113 sexará: -------- begin text --------
 {{nonlemma}}
 
 ===Pronunciation===
-{{pt-IPA|pt=sècsará}}
+{{pt-IPA|sècsará}}
 * {{rhymes|pt|a|s=3}}
 * {{hyph|pt|se|xa|rá}}
 
@@ -60502,7 +60530,7 @@ Page 4115 silenciosa: Found match for regex: =
 Page 4115 silenciosa: -------- begin text --------
 
 ===Pronunciation===
-* {{a|PT}} {{IPA|pt|/si.lẽ.ˈsjɔ.zɐ/}}
+{{pt-IPA}}
 
 ===Adjective===
 {{head|pt|adjective form}}
@@ -60532,7 +60560,7 @@ Page 4117 simbolizando: Found match for regex: =
 Page 4117 simbolizando: -------- begin text --------
 
 ===Pronunciation===
-* {{a|Portugal}} {{IPA|pt|/sĩ.bu.li.ˈzɐ̃.du/}}
+{{pt-IPA}}
 
 ===Verb===
 {{head|pt|gerund}}
@@ -60575,8 +60603,7 @@ Page 4120 sinto: Found match for regex: =
 Page 4120 sinto: -------- begin text --------
 
 ===Pronunciation===
-* {{a|Brazil|Portugal}} {{IPA|pt|/ˈsĩ.tu/}}
-* {{a|South Brazil}} {{IPA|pt|/ˈsĩ.to/}}
+{{pt-IPA}}
 * {{homophones|pt|cinto}}
 
 ===Verb===
@@ -60717,7 +60744,7 @@ Page 4129 soa: Found match for regex: =
 Page 4129 soa: -------- begin text --------
 
 ===Pronunciation===
-{{pt-IPA|br=sôa|pt=soua}}
+{{pt-IPA}}
 * {{hyphenation|pt|so|a}}
 
 ===Verb===
@@ -60749,7 +60776,7 @@ Page 4131 sobe: Found match for regex: =
 Page 4131 sobe: -------- begin text --------
 
 ===Pronunciation===
-* {{a|PT}} {{IPA|pt|/ˈsɔ.βɨ/}}
+{{pt-IPA|sóbe}}
 
 ===Verb===
 {{head|pt|verb form}}
@@ -61000,7 +61027,7 @@ Page 4146 sombras: Found match for regex: =
 Page 4146 sombras: -------- begin text --------
 
 ===Pronunciation===
-* {{a|PT}} {{IPA|pt|/ˈsõ.bɾɐʃ/}}
+{{pt-IPA}}
 
 ===Noun===
 {{head|pt|noun form}}
@@ -61017,21 +61044,18 @@ Page 4147 some: Found match for regex: =
 Page 4147 some: -------- begin text --------
 
 ===Pronunciation===
-{{pt-IPA|pt=sóme}}
-* {{a|Brazil}} {{IPA|pt|/ˈso.mi/}}
-* {{a|South Brazil}} {{IPA|pt|/ˈso.me/}}
+{{pt-IPA|sô*me}}<!-- FIXME: 'some' form of [[sumir]] claimed to have Brazil pronun /ˈsɔ.mi/; I don't believe it -->
 
-===Verb===
+===Etymology 1===
+
+====Verb====
 {{head|pt|verb form}}
 
 # {{pt-verb-form-of|somar}}
 
-===Pronunciation===
-{{pt-IPA|pt=sóme}}
-* {{a|Brazil}} {{IPA|pt|/ˈsɔ.mi/}}
-* {{a|South Brazil}} {{IPA|pt|/ˈsɔ.me/}}
+===Etymology 2===
 
-===Verb===
+====Verb====
 {{head|pt|verb form}}
 
 # {{pt-verb-form-of|sumir|e}}
@@ -61080,7 +61104,7 @@ Page 4150 sonha: Found match for regex: =
 Page 4150 sonha: -------- begin text --------
 
 ===Pronunciation===
-* {{a|Brazil}} {{IPA|pt|/ˈsõɲɐ/}}
+{{pt-IPA}}
 
 ===Verb===
 {{head|pt|verb form}}
@@ -61120,7 +61144,7 @@ Page 4153 sonhos: Found match for regex: =
 Page 4153 sonhos: -------- begin text --------
 
 ===Pronunciation===
-* {{a|PT}} {{IPA|pt|/ˈso.ɲuʃ/}}
+{{pt-IPA}}
 
 ===Noun===
 {{head|pt|noun form}}
@@ -61131,7 +61155,7 @@ Page 4154 soo: Found match for regex: =
 Page 4154 soo: -------- begin text --------
 
 ===Pronunciation===
-{{pt-IPA|br=sôo|pt=souo}}
+{{pt-IPA}}
 * {{homophones|pt|[[sou]]-[[o]]}}
 * {{hyph|pt|so|o}}
 
@@ -61163,8 +61187,7 @@ Page 4156 sorria: Found match for regex: =
 Page 4156 sorria: -------- begin text --------
 
 ===Pronunciation===
-* {{a|PT}} {{IPA|pt|/su.ˈʁi.ɐ/}}
-* {{a|Brazil}} {{IPA|pt|/so.ˈʁi.ɐ/}}
+{{pt-IPA}}
 
 ===Verb===
 {{head|pt|verb form}}
@@ -61180,7 +61203,7 @@ Page 4157 sorrindo: Found match for regex: =
 Page 4157 sorrindo: -------- begin text --------
 
 ===Pronunciation===
-* {{a|PT}} {{IPA|pt|/su.ˈʁĩ.du/}}
+{{pt-IPA}}
 
 ===Verb===
 {{head|pt|verb form}}
@@ -61384,7 +61407,7 @@ Page 4172 stressará: -------- begin text --------
 {{nonlemma}}
 
 ===Pronunciation===
-{{pt-IPA|pt=strèssará}}
+{{pt-IPA|strèssará}}
 * {{rhymes|pt|a|s=3}}
 * {{hyph|pt|stres|sa|rá}}
 
@@ -61495,7 +61518,7 @@ Page 4176 subindo: Found match for regex: =
 Page 4176 subindo: -------- begin text --------
 
 ===Pronunciation===
-* {{a|PT}} {{IPA|pt|/suˈβĩdu/}}
+{{pt-IPA}}
 
 ===Verb===
 {{head|pt|verb form}}
@@ -61538,7 +61561,7 @@ Page 4179 submete: Found match for regex: =
 Page 4179 submete: -------- begin text --------
 
 ===Pronunciation===
-{{pt-IPA|subméte}}
+{{pt-IPA|subi^méte}}
 * {{rhymes|pt|ɛt͡ʃi|q1=Brazil|ɛtɨ|q2=Portugal|s=3}}
 * {{hyphenation|pt|sub|me|te}}
 
@@ -61551,7 +61574,7 @@ Page 4180 substitua: Found match for regex: =
 Page 4180 substitua: -------- begin text --------
 
 ===Pronunciation===
-{{pt-IPA}}
+{{pt-IPA|subi^stitua}}
 * {{rhymes|pt|uɐ|s=4}}
 * {{hyph|pt|subs|ti|tu|a}}
 
@@ -61567,7 +61590,7 @@ Page 4181 substituiu: Found match for regex: =
 Page 4181 substituiu: -------- begin text --------
 
 ===Pronunciation===
-{{pt-IPA}}
+{{pt-IPA|subi^stituiu}}
 * {{rhymes|pt|iw|s=4}}
 * {{hyph|pt|subs|ti|tu|iu}}
 
@@ -61580,7 +61603,7 @@ Page 4182 subtraio: Found match for regex: =
 Page 4182 subtraio: -------- begin text --------
 
 ===Pronunciation===
-{{pt-IPA|pt=subtraio}}
+{{pt-IPA|subi^^traio}}
 * {{rhymes|pt|aju|s=3}}
 * {{hyphenation|pt|sub|trai|o}}
 
@@ -61593,7 +61616,7 @@ Page 4183 subtraiu: Found match for regex: =
 Page 4183 subtraiu: -------- begin text --------
 
 ===Pronunciation===
-{{pt-IPA}}
+{{pt-IPA|subi^^traiu}}
 * {{rhymes|pt|iw|s=3}}
 * {{hyph|pt|sub|tra|iu}}
 
@@ -61606,7 +61629,7 @@ Page 4184 sucedido: Found match for regex: =
 Page 4184 sucedido: -------- begin text --------
 
 ===Pronunciation===
-* {{a|Portugal}} {{IPA|pt|/su.sɨ.ˈði.ðu/}}
+{{pt-IPA}}
 * {{hyphenation|pt|su|ce|di|do}}
 
 ===Participle===
@@ -61621,7 +61644,7 @@ Page 4185 sudanesas: Found match for regex: =
 Page 4185 sudanesas: -------- begin text --------
 
 ===Pronunciation===
-* {{a|Brazil}} {{IPA|pt|/ˌsu.dɐ.ˈne.zɐs/}}
+{{pt-IPA|sudanêsas}}
 
 ===Adjective===
 {{head|pt|adjective form}}
@@ -61640,7 +61663,7 @@ Page 4186 sudaneses: Found match for regex: =
 Page 4186 sudaneses: -------- begin text --------
 
 ===Pronunciation===
-* {{a|Brazil}} {{IPA|pt|/ˌsu.dɐ.ˈne.zis/}}
+{{pt-IPA|sudanêses}}
 
 ===Adjective===
 {{head|pt|adjective form}}
@@ -61659,7 +61682,7 @@ Page 4187 suficientes: Found match for regex: =
 Page 4187 suficientes: -------- begin text --------
 
 ===Pronunciation===
-* {{a|Brazil}} {{IPA|pt|/ˌsu.fi.ˈsjẽ.t͡ʃis/}}
+{{pt-IPA}}
 
 ===Adjective===
 {{head|pt|adjective form}}
@@ -61673,7 +61696,7 @@ Page 4188 sufocado: Found match for regex: =
 Page 4188 sufocado: -------- begin text --------
 
 ===Pronunciation===
-* {{a|Portugal}} {{IPA|pt|/su.fu.ˈka.ðu/}}
+{{pt-IPA}}
 * {{hyphenation|pt|su|fo|ca|do}}
 
 ===Participle===
@@ -61732,7 +61755,7 @@ Page 4192 sujeitos: Found match for regex: =
 Page 4192 sujeitos: -------- begin text --------
 
 ===Pronunciation===
-* {{a|PT}} {{IPA|pt|/su.ˈʒɐj.tuʃ/}}
+{{pt-IPA}}
 
 ===Noun===
 {{head|pt|noun form|g=m}}
@@ -61775,7 +61798,7 @@ Page 4195 sundanesas: Found match for regex: =
 Page 4195 sundanesas: -------- begin text --------
 
 ===Pronunciation===
-* {{a|Brazil}} {{IPA|pt|/ˌsũ.dɐ.ˈne.zɐs/}}
+{{pt-IPA|sundanêsas}}
 
 ===Adjective===
 {{head|pt|adjective form}}
@@ -61791,7 +61814,7 @@ Page 4196 sundaneses: Found match for regex: =
 Page 4196 sundaneses: -------- begin text --------
 
 ===Pronunciation===
-* {{a|Brazil}} {{IPA|pt|/ˌsũ.dɐ.ˈne.zis/}}
+{{pt-IPA|sundanêses}}
 
 ===Adjective===
 {{head|pt|adjective form}}
@@ -61937,7 +61960,7 @@ Page 4205 surgido: Found match for regex: =
 Page 4205 surgido: -------- begin text --------
 
 ===Pronunciation===
-* {{a|Brazil}} {{IPA|pt|/suʁ.ˈʒi.du/}}
+{{pt-IPA}}
 
 ===Participle===
 {{pt-pp}}
@@ -61985,7 +62008,7 @@ Page 4208 surpreenda: Found match for regex: =
 Page 4208 surpreenda: -------- begin text --------
 
 ===Pronunciation===
-{{pt-IPA|pt=surprienda,surpreenda}}
+{{pt-IPA|surpre^enda}}
 * {{rhymes|pt|ẽdɐ|s=4}}
 * {{hyph|pt|sur|pre|en|da}}
 
@@ -61998,7 +62021,7 @@ Page 4209 surreais: Found match for regex: =
 Page 4209 surreais: -------- begin text --------
 
 ===Pronunciation===
-{{pt-IPA|pt=surriais}}
+{{pt-IPA}}
 * {{rhymes|pt|ajs|q1=Brazil|ajʃ|q2=Portugal, Rio de Janeiro|s=3}}
 * {{hyph|pt|sur|re|ais}}
 
@@ -62091,7 +62114,7 @@ Page 4215 séculos: Found match for regex: =
 Page 4215 séculos: -------- begin text --------
 
 ===Pronunciation===
-* {{a|PT}} {{IPA|pt|/ˈsɛ.ku.luʃ/}}
+{{pt-IPA}}
 
 ===Noun===
 {{head|pt|noun form}}
@@ -62145,12 +62168,12 @@ Page 4219 ta: Found match for regex: =
 Page 4219 ta: -------- begin text --------
 
 ===Pronunciation===
-* {{IPA|pt|/tɐ/}}
+{{pt-IPA}}
 
 ===Contraction===
-{{head|pt|contraction}}
+{{head|pt|contraction|g=f-s}}
 
-# {{contraction of|pt|[[te]] [[a]]}}
+# {{contraction of|pt|[[te]] [[a]]||her/it to you {{q|familiar singular}}|nodot=1}}: {{infl of|pt|to||f}}
 
 ----
 
@@ -62240,10 +62263,10 @@ Page 4225 tamos: Found match for regex: =
 Page 4225 tamos: -------- begin text --------
 
 ===Etymology===
-Shortening of {{m|pt|estamos}}, first-person plural present indicative of {{m|pt|estar}}.
+{{clipping|pt|estamos}}, first-person plural present indicative of {{m|pt|estar}}.
 
 ===Pronunciation===
-* {{IPA|pt|/ˈtɐ.mus/}}
+{{pt-IPA}}
 
 ===Verb===
 {{head|pt|verb form}}
@@ -62481,10 +62504,10 @@ Page 4238 taria: Found match for regex: =
 Page 4238 taria: -------- begin text --------
 
 ===Etymology===
-Shortening of {{m|pt|estaria}}, first and third-person singular conditional indicative of {{m|pt|estar}}.
+{{clipping|pt|estaria}}, first and third-person singular conditional indicative of {{m|pt|estar}}.
 
 ===Pronunciation===
-* {{a|Brazil}} {{IPA|pt|/ta.ˈɾiɐ/}}
+{{pt-IPA}}
 
 ===Verb===
 {{head|pt|verb form}}
@@ -62533,7 +62556,7 @@ Page 4241 tava: -------- begin text --------
 Shortening of {{m|pt|estava}}, first and third-person singular imperfect indicative of {{m|pt|estar}}.
 
 ===Pronunciation===
-* {{IPA|pt|/ˈta.vɐ/}}
+{{pt-IPA}}
 
 ===Verb===
 {{head|pt|verb form}}
@@ -62597,8 +62620,6 @@ From {{inh-lite|pt|roa-opt|te}}, from {{inh-lite|pt|la|te|tē}} (accusative of {
 
 ===Pronunciation===
 {{pt-IPA}}
-* {{a|Northeast Brazil}} {{IPA|pt|/tɪ/|/ti/}}
-* {{a|South Brazil}} {{IPA|pt|/te/}}
 * {{hyph|pt|te}}
 
 ===Pronoun===
@@ -62622,7 +62643,7 @@ Page 4246 tecei: Found match for regex: =
 Page 4246 tecei: -------- begin text --------
 
 ===Pronunciation===
-* {{a|Portugal}} {{IPA|pt|/tɘsˈɐj/}}
+{{pt-IPA}}
 
 ===Verb===
 {{head|pt|verb form}}
@@ -62665,7 +62686,7 @@ Page 4249 teias: Found match for regex: =
 Page 4249 teias: -------- begin text --------
 
 ===Pronunciation===
-* {{a|PT}} {{IPA|pt|/ˈtɐj.ɐʃ/|/ˈtej.ɐʃ/}}
+{{pt-IPA}}
 
 ===Noun===
 {{head|pt|noun form}}
@@ -62692,10 +62713,10 @@ Page 4251 teja: Found match for regex: =
 Page 4251 teja: -------- begin text --------
 
 ===Etymology===
-Shortening of {{m|pt|esteja}}, a possible conjugation of the verb {{m|pt|estar}}.
+{{clipping|pt|esteja}}, a possible conjugation of the verb {{m|pt|estar}}.
 
 ===Pronunciation===
-* {{IPA|pt|/ˈte.ʒɐ/}}
+{{pt-IPA|têja}}
 
 ===Verb===
 {{head|pt|verb form}}
@@ -62709,7 +62730,7 @@ Page 4252 teje: Found match for regex: =
 Page 4252 teje: -------- begin text --------
 
 ===Pronunciation===
-* {{IPA|pt|/ˈte.ʒi/}}
+{{pt-IPA|têje}}
 
 ===Verb===
 {{head|pt|verb form}}
@@ -62795,7 +62816,7 @@ Page 4257 temeste: Found match for regex: =
 Page 4257 temeste: -------- begin text --------
 
 ===Pronunciation===
-* {{a|Brazil}} {{IPA|pt|/te.ˈmes.t͡ʃi/}}
+{{pt-IPA|temêste}}
 
 ===Verb===
 {{head|pt|verb form}}
@@ -62806,7 +62827,7 @@ Page 4258 temeu: Found match for regex: =
 Page 4258 temeu: -------- begin text --------
 
 ===Pronunciation===
-* {{a|Brazil}} {{IPA|pt|/te.ˈmew/}}
+{{pt-IPA}}
 
 ===Verb===
 {{head|pt|verb form}}
@@ -62989,7 +63010,7 @@ Page 4269 tensos: Found match for regex: =
 Page 4269 tensos: -------- begin text --------
 
 ===Pronunciation===
-* {{a|Brazil}} {{IPA|pt|/ˈtẽ.sus/}}
+{{pt-IPA}}
 
 ===Adjective===
 {{head|pt|adjective form}}
@@ -63054,7 +63075,7 @@ Page 4273 tentações: Found match for regex: =
 Page 4273 tentações: -------- begin text --------
 
 ===Pronunciation===
-* {{a|Portugal}} {{IPA|pt|/tɪ̃təˈsʊ̃ɪʃ/}}
+{{pt-IPA}}
 
 ===Noun===
 {{head|pt|noun form}}
@@ -63221,7 +63242,7 @@ Page 4285 terminou: Found match for regex: =
 Page 4285 terminou: -------- begin text --------
 
 ===Pronunciation===
-{{pt-IPA|pt=terminou}}
+{{pt-IPA}}
 * {{hyph|pt|ter|mi|nou}}
 
 ===Verb===
@@ -63792,9 +63813,9 @@ Page 4322 to: -------- begin text --------
 * {{hyph|pt|to}}
 
 ===Contraction===
-{{head|pt|contraction}}
+{{head|pt|contraction|feminine|ta}}
 
-# {{contraction of|pt|[[te]] [[o]]}}
+# {{contraction of|pt|[[te]] [[o]]|him/it to you {{q|familiar singular}}}}
 
 ----
 
@@ -63819,7 +63840,7 @@ Page 4324 tocam: Found match for regex: =
 Page 4324 tocam: -------- begin text --------
 
 ===Pronunciation===
-* {{a|Brazil}} {{IPA|pt|/ˈtɔ.kɐ̃w̃/}}
+{{pt-IPA|tócam}}
 
 ===Verb===
 {{head|pt|verb form}}
@@ -63833,8 +63854,7 @@ Page 4325 tocando: Found match for regex: =
 Page 4325 tocando: -------- begin text --------
 
 ===Pronunciation===
-* {{a|PT}} {{IPA|pt|/tuˈkɐ̃du/}}
-* {{a|BR}} {{IPA|pt|/toˈkɐ̃du/}}
+{{pt-IPA}}
 * {{rhymes|pt|ɐ̃du}}
 
 ===Verb===
@@ -63884,7 +63904,7 @@ Page 4328 tocava: Found match for regex: =
 Page 4328 tocava: -------- begin text --------
 
 ===Pronunciation===
-* {{a|Portugal}} {{IPA|pt|/tuˈkavɐ/}}
+{{pt-IPA}}
 
 ===Verb===
 {{head|pt|verb form}}
@@ -63950,8 +63970,7 @@ Page 4332 tomando: -------- begin text --------
 * {{l|pt|tomãdo}} {{qualifier|obsolete|abbreviation}}
 
 ===Pronunciation===
-* {{a|PT}} {{IPA|pt|/tu.ˈmɐ̃.du/}}
-* {{a|Brazil}} {{IPA|pt|/to.ˈmɐ̃.du/}}
+{{pt-IPA}}
 * {{rhymes|pt|ɐ̃du}}
 
 ===Verb===
@@ -63999,7 +64018,7 @@ Page 4335 tomava: Found match for regex: =
 Page 4335 tomava: -------- begin text --------
 
 ===Pronunciation===
-* {{a|Portugal}} {{IPA|pt|/tuˈmavɐ/}}
+{{pt-IPA}}
 
 ===Verb===
 {{head|pt|verb form}}
@@ -64011,7 +64030,7 @@ Page 4336 tome: Found match for regex: =
 Page 4336 tome: -------- begin text --------
 
 ===Pronunciation===
-* {{a|Portugal}} {{IPA|pt|/ˈtɔ.mɨ/}}
+{{pt-IPA|tô*me}}
 
 ===Verb===
 {{head|pt|verb form}}
@@ -64025,7 +64044,7 @@ Page 4337 tomou: Found match for regex: =
 Page 4337 tomou: -------- begin text --------
 
 ===Pronunciation===
-* {{a|PT}} {{IPA|pt|/tuˈmow/}}
+{{pt-IPA}}
 * {{rhymes|pt|ow|s=2}}
 
 ===Verb===
@@ -64037,7 +64056,7 @@ Page 4338 tons: Found match for regex: =
 Page 4338 tons: -------- begin text --------
 
 ===Pronunciation===
-* {{a|PT}} {{IPA|pt|/ˈtõʃ/}}
+{{pt-IPA}}
 
 ===Noun===
 {{head|pt|noun form|g=m}}
@@ -64308,17 +64327,24 @@ Page 4356 torrará: -------- begin text --------
 Page 4357 torres: Found match for regex: =
 Page 4357 torres: -------- begin text --------
 
-===Pronunciation===
-Noun:
-* {{a|PT}} {{IPA|pt|/ˈto.ʁɨʃ/}}
+===Etymology 1===
+
+====Pronunciation====
+{{pt-IPA|tôrres}}
 * {{hyphenation|pt|tor|res}}
 
-===Noun===
+====Noun====
 {{head|pt|noun form|g=f}}
 
 # {{plural of|pt|torre}}
 
-===Verb===
+===Etymology 2===
+
+====Pronunciation====
+{{pt-IPA|tórres}}
+* {{hyphenation|pt|tor|res}}
+
+====Verb====
 {{head|pt|verb form}}
 
 # {{pt-verb-form-of|torrar|e}}
@@ -64362,7 +64388,7 @@ Page 4360 toscanas: Found match for regex: =
 Page 4360 toscanas: -------- begin text --------
 
 ===Pronunciation===
-* {{a|PT}} {{IPA|pt|/tuʃ.ˈkɐ.nɐʃ/}}
+{{pt-IPA}}
 * {{hyphenation|pt|tos|ca|nas}}
 
 ===Adjective===
@@ -64382,7 +64408,7 @@ Page 4361 toscanos: Found match for regex: =
 Page 4361 toscanos: -------- begin text --------
 
 ===Pronunciation===
-* {{a|PT}} {{IPA|pt|/tuʃ.ˈkɐ.nuʃ/}}
+{{pt-IPA}}
 * {{hyphenation|pt|tos|ca|nos}}
 
 ===Adjective===
@@ -64826,7 +64852,7 @@ Page 4393 tranquilinha: Found match for regex: =
 Page 4393 tranquilinha: -------- begin text --------
 
 ===Pronunciation===
-* {{a|Brazil}} {{IPA|pt|/ˌtɾɐ̃.kwi.ˈli.ɲɐ/}}
+{{pt-IPA|tranqüilinha}}
 
 ===Adjective===
 {{head|pt|adjective form}}
@@ -64837,7 +64863,7 @@ Page 4394 tranquilinhas: Found match for regex: =
 Page 4394 tranquilinhas: -------- begin text --------
 
 ===Pronunciation===
-* {{a|Brazil}} {{IPA|pt|/ˌtɾɐ̃.kwi.ˈli.ɲɐs/}}
+{{pt-IPA|tranqüilinhas}}
 
 ===Adjective===
 {{head|pt|adjective form}}
@@ -64848,7 +64874,7 @@ Page 4395 tranquilinhos: Found match for regex: =
 Page 4395 tranquilinhos: -------- begin text --------
 
 ===Pronunciation===
-* {{a|Brazil}} {{IPA|pt|/ˌtɾɐ̃.kwi.ˈli.ɲus/}}
+{{pt-IPA|tranqüilinhos}}
 
 ===Adjective===
 {{head|pt|adjective form}}
@@ -64859,7 +64885,7 @@ Page 4396 tranquilizantes: Found match for regex: =
 Page 4396 tranquilizantes: -------- begin text --------
 
 ===Pronunciation===
-{{pt-IPA|trankwilizantes}}
+{{pt-IPA|tranqüilizantes}}
 * {{hyph|pt|tran|qui|li|zan|tes}}
 
 ===Adjective===
@@ -64879,7 +64905,7 @@ Page 4397 tranquilona: Found match for regex: =
 Page 4397 tranquilona: -------- begin text --------
 
 ===Pronunciation===
-* {{a|Brazil}} {{IPA|pt|/ˌtɾɐ̃.kwi.ˈlo.nɐ/}}
+{{pt-IPA|tranqüilona}}
 
 ===Adjective===
 {{head|pt|adjective form}}
@@ -64890,7 +64916,7 @@ Page 4398 tranquilonas: Found match for regex: =
 Page 4398 tranquilonas: -------- begin text --------
 
 ===Pronunciation===
-* {{a|Brazil}} {{IPA|pt|/ˌtɾɐ̃.kwi.ˈlo.nɐs/}}
+{{pt-IPA|tranqüilonas}}
 
 ===Adjective===
 {{head|pt|adjective form}}
@@ -64901,7 +64927,7 @@ Page 4399 tranquilos: Found match for regex: =
 Page 4399 tranquilos: -------- begin text --------
 
 ===Pronunciation===
-{{pt-IPA|trankwilos}}
+{{pt-IPA|tranqüilos}}
 * {{hyph|pt|tran|qui|los}}
 
 ===Adjective===
@@ -64916,7 +64942,7 @@ Page 4400 tranquilíssima: Found match for regex: =
 Page 4400 tranquilíssima: -------- begin text --------
 
 ===Pronunciation===
-* {{a|Brazil}} {{IPA|pt|/ˌtɾɐ̃.kwi.ˈli.si.mɐ/}}
+{{pt-IPA|tranqüilíssima}}
 
 ===Adjective===
 {{head|pt|adjective form}}
@@ -64927,7 +64953,7 @@ Page 4401 tranquilíssimas: Found match for regex: =
 Page 4401 tranquilíssimas: -------- begin text --------
 
 ===Pronunciation===
-* {{a|Brazil}} {{IPA|pt|/ˌtɾɐ̃.kwi.ˈli.si.mɐs/}}
+{{pt-IPA|tranqüilíssimas}}
 
 ===Adjective===
 {{head|pt|adjective form}}
@@ -64938,7 +64964,7 @@ Page 4402 tranquilíssimos: Found match for regex: =
 Page 4402 tranquilíssimos: -------- begin text --------
 
 ===Pronunciation===
-* {{a|Brazil}} {{IPA|pt|/ˌtɾɐ̃.kwi.ˈli.si.mus/}}
+{{pt-IPA|tranqüilíssimos}}
 
 ===Adjective===
 {{head|pt|adjective form}}
@@ -64949,7 +64975,7 @@ Page 4403 tranquilões: Found match for regex: =
 Page 4403 tranquilões: -------- begin text --------
 
 ===Pronunciation===
-* {{a|Brazil}} {{IPA|pt|/ˌtɾɐ̃.kwi.ˈlõj̃s/}}
+{{pt-IPA|tranqüilões}}
 
 ===Adjective===
 {{head|pt|adjective form}}
@@ -64960,7 +64986,7 @@ Page 4404 transcenda: Found match for regex: =
 Page 4404 transcenda: -------- begin text --------
 
 ===Pronunciation===
-{{pt-IPA|pt=transcenda,tranchenda}}
+{{pt-IPA}}
 * {{rhymes|pt|ẽdɐ|s=3}}
 * {{hyph|pt|trans|cen|da}}
 
@@ -64973,7 +64999,7 @@ Page 4405 transeuntes: Found match for regex: =
 Page 4405 transeuntes: -------- begin text --------
 
 ===Pronunciation===
-{{pt-IPA|br=trânseúntes}}
+{{pt-IPA}}
 
 ===Noun===
 {{head|pt|noun form|g=m|g2=f}}
@@ -64989,7 +65015,7 @@ Page 4406 transfiguro: Found match for regex: =
 Page 4406 transfiguro: -------- begin text --------
 
 ===Pronunciation===
-* {{IPA|pt|/trãs.fiˈɡu.ɾu/}}
+{{pt-IPA}}
 * {{hyphenation|pt|trans|fi|gu|ro}}
 * {{rhymes|pt|uɾu|s=4}}
 
@@ -65004,7 +65030,7 @@ Page 4407 transições: Found match for regex: =
 Page 4407 transições: -------- begin text --------
 
 ===Pronunciation===
-* {{a|Brazil}} {{IPA|pt|/ˌtɾɐ̃.zi.ˈsõj̃s/|/ˌtɾɐ̃.zi.ˈsõj̃ʃ/}}
+{{pt-IPA}}
 * {{hyphenation|pt|tran|si|ções}}
 
 ===Noun===
@@ -65029,7 +65055,7 @@ Page 4409 transversais: Found match for regex: =
 Page 4409 transversais: -------- begin text --------
 
 ===Pronunciation===
-* {{a|Brazil}} {{IPA|pt|/ˌtrɐ̃z.veʁ.ˈsajs/}}
+{{pt-IPA}}
 
 ===Adjective===
 {{head|pt|adjective form}}
@@ -65129,7 +65155,7 @@ Page 4416 trata: Found match for regex: =
 Page 4416 trata: -------- begin text --------
 
 ===Pronunciation===
-* {{a|Portugal|Brazil}} {{IPA|pt|/ˈtɾatɐ/}}
+{{pt-IPA}}
 
 ===Verb===
 {{head|pt|verb form}}
@@ -65143,7 +65169,7 @@ Page 4417 tratava: Found match for regex: =
 Page 4417 tratava: -------- begin text --------
 
 ===Pronunciation===
-* {{a|Portugal}} {{IPA|pt|/tɾɐˈtavɐ/}}
+{{pt-IPA}}
 
 ===Verb===
 {{head|pt|verb form}}
@@ -65155,7 +65181,7 @@ Page 4418 travando: Found match for regex: =
 Page 4418 travando: -------- begin text --------
 
 ===Pronunciation===
-* {{a|Portugal}} {{IPA|pt|/tɾɐˈvɐ̃du/}}
+{{pt-IPA}}
 
 ===Verb===
 {{head|pt|gerund}}
@@ -65166,7 +65192,7 @@ Page 4419 travou: Found match for regex: =
 Page 4419 travou: -------- begin text --------
 
 ===Pronunciation===
-* {{a|Portugal}} {{IPA|pt|/tɾɐˈvow/}}
+{{pt-IPA}}
 
 ===Verb===
 {{head|pt|verb form}}
@@ -65294,7 +65320,7 @@ Page 4429 tremia: Found match for regex: =
 Page 4429 tremia: -------- begin text --------
 
 ===Pronunciation===
-* {{a|PT}} {{IPA|pt|/tɾɨˈmiɐ/}}
+{{pt-IPA}}
 
 ===Verb===
 {{head|pt|verb form}}
@@ -65306,7 +65332,7 @@ Page 4430 trens-bala: Found match for regex: =
 Page 4430 trens-bala: -------- begin text --------
 
 ===Pronunciation===
-* {{a|Brazil}} {{IPA|pt|/ˌtɾẽj̃z ˈba.lɐ/}}
+{{pt-IPA}}
 
 ===Noun===
 {{head|pt|noun form|g=m}}
@@ -65380,7 +65406,7 @@ Page 4435 tristonha: Found match for regex: =
 Page 4435 tristonha: -------- begin text --------
 
 ===Pronunciation===
-* {{a|Portugal}} {{IPA|pt|/tɾiʃˈtoɲɐ/}}
+{{pt-IPA}}
 
 ===Adjective===
 {{head|pt|adjective form}}
@@ -65407,7 +65433,7 @@ Page 4437 trituro: Found match for regex: =
 Page 4437 trituro: -------- begin text --------
 
 ===Pronunciation===
-* {{IPA|pt|/tɾiˈtu.ɾu/}}
+{{pt-IPA}}
 * {{hyphenation|pt|tri|tu|ro}}
 * {{rhymes|pt|uɾu|s=3}}
 
@@ -65423,7 +65449,7 @@ Page 4438 troncos: Found match for regex: =
 Page 4438 troncos: -------- begin text --------
 
 ===Pronunciation===
-* {{a|Portugal}} {{IPA|pt|/ˈtɾõ.kuʃ/}}
+{{pt-IPA}}
 
 ===Noun===
 {{head|pt|noun form}}
@@ -65548,8 +65574,7 @@ Page 4448 tsunâmis: Found match for regex: =
 Page 4448 tsunâmis: -------- begin text --------
 
 ===Pronunciation===
-* {{a|Brazil}} {{IPA|pt|[tsu.ˈnɐ.mis]|[t͡ʃi.su.ˈnɐ.mis]}}
-* {{a|Portugal}} {{IPA|pt|/tsu.ˈnɐ.mis/}}
+{{pt-IPA|ti^^ssumâmis}}
 * {{hyphenation|pt|tsu|na|mis}}
 
 ===Noun===
@@ -65644,7 +65669,7 @@ Page 4453 tussa: Found match for regex: =
 Page 4453 tussa: -------- begin text --------
 
 ===Pronunciation===
-* {{a|Brazil|Portugal}} {{IPA|pt|/ˈtu.sɐ/}}
+{{pt-IPA}}
 
 ===Verb===
 {{head|pt|verb form}}
@@ -65755,7 +65780,7 @@ Page 4460 tímpanos: Found match for regex: =
 Page 4460 tímpanos: -------- begin text --------
 
 ===Pronunciation===
-* {{a|Brazil}} {{IPA|pt|/ˈt͡ʃĩ.pɐ.nus/}}
+{{pt-IPA}}
 
 ===Noun===
 {{head|pt|noun form|g=m}}
@@ -65932,7 +65957,7 @@ Page 4469 umbrais: Found match for regex: =
 Page 4469 umbrais: -------- begin text --------
 
 ===Pronunciation===
-* {{a|Brazil}} {{IPA|pt|/ũ.ˈbɾajs/}}
+{{pt-IPA}}
 
 ===Noun===
 {{head|pt|noun form|g=m}}
@@ -65943,7 +65968,7 @@ Page 4470 ungido: Found match for regex: =
 Page 4470 ungido: -------- begin text --------
 
 ===Pronunciation===
-* {{a|Portugal}} {{IPA|pt|/ũ.ˈʒi.ðu/}}
+{{pt-IPA}}
 * {{hyphenation|pt|un|gi|do}}
 
 ===Participle===
@@ -65958,7 +65983,7 @@ Page 4471 unhas: Found match for regex: =
 Page 4471 unhas: -------- begin text --------
 
 ===Pronunciation===
-* {{a|Portugal}} {{IPA|pt|/ˈu.ɲɐʃ/}}
+{{pt-IPA}}
 
 ===Noun===
 {{head|pt|noun form}}
@@ -65996,7 +66021,7 @@ Page 4474 universidades: Found match for regex: =
 Page 4474 universidades: -------- begin text --------
 
 ===Pronunciation===
-{{pt-IPA|br=universidades|pt=universidades}}
+{{pt-IPA}}
 * {{hyph|pt|u|ni|ver|si|da|des}}
 
 ===Noun===
@@ -66638,7 +66663,7 @@ Page 4517 vaivéns: Found match for regex: =
 Page 4517 vaivéns: -------- begin text --------
 
 ===Pronunciation===
-* {{a|Brazil}} {{IPA|pt|/ˌvaj.ˈvẽj̃s/}}
+{{pt-IPA|br=vai-véns|pt=vai.i.véns}}
 
 ===Noun===
 {{head|pt|noun form}}
@@ -66649,7 +66674,7 @@ Page 4518 vales: Found match for regex: =
 Page 4518 vales: -------- begin text --------
 
 ===Pronunciation===
-* {{a|Portugal}} {{IPA|pt|/ˈva.lɨʃ/}}
+{{pt-IPA}}
 
 ===Noun===
 {{head|pt|noun form}}
@@ -66707,7 +66732,7 @@ Page 4522 varandas: Found match for regex: =
 Page 4522 varandas: -------- begin text --------
 
 ===Pronunciation===
-* {{a|Portugal}} {{IPA|pt|/vɐ.ˈɾɐ̃.dɐʃ/}}
+{{pt-IPA}}
 
 ===Noun===
 {{head|pt|noun form}}
@@ -66734,8 +66759,7 @@ Page 4524 varonis: Found match for regex: =
 Page 4524 varonis: -------- begin text --------
 
 ===Pronunciation===
-* {{a|BR}} {{IPA|pt|/va.ɾoˈnis/}}
-* {{a|PT}} {{IPA|pt|/vɐ.ɾuˈniʃ/}}
+{{pt-IPA}}
 
 ===Adjective===
 {{head|pt|adjective form}}
@@ -66835,7 +66859,7 @@ Page 4532 vasos: Found match for regex: =
 Page 4532 vasos: -------- begin text --------
 
 ===Pronunciation===
-* {{a|Portugal}} {{IPA|pt|/ˈvazuʃ/}}
+{{pt-IPA}}
 
 ===Noun===
 {{head|pt|noun form}}
@@ -66849,7 +66873,7 @@ Page 4533 vasta: Found match for regex: =
 Page 4533 vasta: -------- begin text --------
 
 ===Pronunciation===
-* {{a|Portugal}} {{IPA|pt|/ˈvaʃ.tɐ/}}
+{{pt-IPA}}
 
 ===Adjective===
 {{head|pt|adjective form}}
@@ -66876,7 +66900,7 @@ Page 4535 vazias: Found match for regex: =
 Page 4535 vazias: -------- begin text --------
 
 ===Pronunciation===
-* {{a|Portugal}} {{IPA|pt|/vɐˈziɐʃ/}}
+{{pt-IPA}}
 
 ===Adjective===
 {{head|pt|adjective form}}
@@ -67164,7 +67188,7 @@ Page 4553 veias: Found match for regex: =
 Page 4553 veias: -------- begin text --------
 
 ===Pronunciation===
-* {{a|Portugal}} {{IPA|pt|/ˈvɐjɐʃ/}}
+{{pt-IPA}}
 
 ===Noun===
 {{head|pt|noun form}}
@@ -67175,7 +67199,7 @@ Page 4554 veios: Found match for regex: =
 Page 4554 veios: -------- begin text --------
 
 ===Pronunciation===
-* {{a|Brazil}} {{IPA|pt|/ˈvej.us/}}
+{{pt-IPA}}
 * {{homophones|pt|Veios}}
 
 ===Noun===
@@ -67215,14 +67239,18 @@ Page 4557 velas: Found match for regex: =
 Page 4557 velas: -------- begin text --------
 
 ===Pronunciation===
-* {{a|PT}} {{IPA|pt|/ˈvɛ.lɐʃ/}}
+{{pt-IPA|vélas}}
 
-===Noun===
+===Etymology 1===
+
+====Noun====
 {{head|pt|noun form|g=f}}
 
 # {{plural of|pt|vela}}
 
-===Verb===
+===Etymology 2===
+
+====Verb====
 {{head|pt|verb form}}
 
 # {{pt-verb form of|velar|ar|indicative|present|singular|second}}
@@ -67296,7 +67324,7 @@ Page 4562 veludos: Found match for regex: =
 Page 4562 veludos: -------- begin text --------
 
 ===Pronunciation===
-* {{a|Portugal}} {{IPA|pt|/vɨˈluðuʃ/}}
+{{pt-IPA}}
 
 ===Noun===
 {{head|pt|noun form}}
@@ -67483,7 +67511,7 @@ Page 4574 venhas: Found match for regex: =
 Page 4574 venhas: -------- begin text --------
 
 ===Pronunciation===
-* {{a|Portugal}} {{IPA|pt|/ˈve.ɲɐʃ/|/ˈvɐ.ɲɐʃ/|/ˈvɐj.ɲɐʃ/}}
+{{pt-IPA}}
 
 ===Verb===
 {{head|pt|verb form}}
@@ -67548,7 +67576,7 @@ Page 4578 ventas: Found match for regex: =
 Page 4578 ventas: -------- begin text --------
 
 ===Pronunciation===
-* {{a|PT}} {{IPA|pt|[ˈvẽtɐʃ]}}
+{{pt-IPA}}
 
 ===Noun===
 {{head|pt|noun form|g=f-p}}
@@ -67576,7 +67604,7 @@ Page 4579 ventos: Found match for regex: =
 Page 4579 ventos: -------- begin text --------
 
 ===Pronunciation===
-* {{a|Portugal}} {{IPA|pt|/ˈvẽ.tuʃ/}}
+{{pt-IPA}}
 
 ===Noun===
 {{head|pt|noun form|g=m}}
@@ -67600,7 +67628,7 @@ Page 4581 verdadeira: Found match for regex: =
 Page 4581 verdadeira: -------- begin text --------
 
 ===Pronunciation===
-* {{a|PT}} {{IPA|pt|/vɨɾ.ðɐ.ˈðɐj.ɾɐ/}}
+{{pt-IPA}}
 
 ===Adjective===
 {{head|pt|adjective form}}
@@ -67611,7 +67639,7 @@ Page 4582 verdadeiras: Found match for regex: =
 Page 4582 verdadeiras: -------- begin text --------
 
 ===Pronunciation===
-* {{a|PT}} {{IPA|pt|/vɨɾ.ðɐ.ˈðɐj.ɾɐʃ/}}
+{{pt-IPA}}
 
 ===Adjective===
 {{head|pt|adjective form}}
@@ -67622,7 +67650,7 @@ Page 4583 verdadeiros: Found match for regex: =
 Page 4583 verdadeiros: -------- begin text --------
 
 ===Pronunciation===
-* {{a|PT}} {{IPA|pt|/vɨɾ.ðɐ.ˈðɐj.ɾuʃ/}}
+{{pt-IPA}}
 
 ===Adjective===
 {{head|pt|adjective form}}
@@ -67633,7 +67661,7 @@ Page 4584 verdades: Found match for regex: =
 Page 4584 verdades: -------- begin text --------
 
 ===Pronunciation===
-* {{a|Portugal}} {{IPA|pt|/vɨɾ.ˈða.ðɨʃ/}}
+{{pt-IPA}}
 
 ===Noun===
 {{head|pt|noun form}}
@@ -67647,19 +67675,23 @@ Page 4585 verdes: Found match for regex: =
 Page 4585 verdes: -------- begin text --------
 
 ===Pronunciation===
-* {{a|PT}} {{IPA|pt|/ˈveɾ.ðɨʃ/}}
+{{pt-IPA|vêrdes}}
 
-===Adjective===
+===Etymology 1===
+
+====Adjective====
 {{head|pt|adjective form}}
 
 # {{adj form of|pt|verde||mf|p}}
 
-===Noun===
+====Noun====
 {{head|pt|noun form}}
 
 # {{plural of|pt|verde}}
 
-===Verb===
+===Etymology 2===
+
+====Verb====
 {{head|pt|verb form}}
 
 # {{pt-verb-form-of|ver|i|2|p}}
@@ -67683,7 +67715,7 @@ Page 4587 veremos: Found match for regex: =
 Page 4587 veremos: -------- begin text --------
 
 ===Pronunciation===
-* {{a|Portugal}} {{IPA|pt|/vɨˈɾemuʃ/}}
+{{pt-IPA}}
 
 ===Verb===
 {{head|pt|verb form}}
@@ -67713,7 +67745,7 @@ Page 4589 vermelha: Found match for regex: =
 Page 4589 vermelha: -------- begin text --------
 
 ===Pronunciation===
-{{pt-IPA|pt=vermêlha}}
+{{pt-IPA|vermêlha}}
 * {{rhymes|pt|eʎɐ|s=3}}
 * {{hyphenation|pt|ver|me|lha}}
 
@@ -67726,7 +67758,7 @@ Page 4590 vermelhos: Found match for regex: =
 Page 4590 vermelhos: -------- begin text --------
 
 ===Pronunciation===
-* {{a|Portugal}} {{IPA|pt|/vɨɾ.ˈmɐ(j).ʎuʃ/}}
+{{pt-IPA|vermêlhos}}
 
 ===Adjective===
 {{head|pt|adjective form}}
@@ -67758,7 +67790,7 @@ Page 4592 versos: Found match for regex: =
 Page 4592 versos: -------- begin text --------
 
 ===Pronunciation===
-* {{a|PT}} {{IPA|pt|/ˈvɛɾ.suʃ/}}
+{{pt-IPA|vérsos}}
 
 ===Noun===
 {{head|pt|noun form|g=m}}
@@ -67791,8 +67823,7 @@ Page 4594 verás: Found match for regex: =
 Page 4594 verás: -------- begin text --------
 
 ===Pronunciation===
-* {{a|Brazil}} {{IPA|pt|/veˈɾas/}}, /veˈɾaʃ/
-* {{a|Portugal}} {{IPA|pt|/vɨˈɾaʃ/}}
+{{pt-IPA|veráss}}
 
 ===Verb===
 {{head|pt|verb form}}
@@ -67819,7 +67850,7 @@ Page 4596 vestida: Found match for regex: =
 Page 4596 vestida: -------- begin text --------
 
 ===Pronunciation===
-* {{a|PT}} {{IPA|pt|/vɨʃ.ˈti.ðɐ/}}
+{{pt-IPA}}
 
 ===Adjective===
 {{head|pt|adjective form|g=f-s}}
@@ -67838,7 +67869,7 @@ Page 4597 vestidos: Found match for regex: =
 Page 4597 vestidos: -------- begin text --------
 
 ===Pronunciation===
-* {{a|PT}} {{IPA|pt|/vɨʃ.ˈti.ðuʃ/}}
+{{pt-IPA}}
 
 ===Adjective===
 {{head|pt|adjective form|g=m-p}}
@@ -67912,7 +67943,7 @@ Page 4601 viagens: Found match for regex: =
 Page 4601 viagens: -------- begin text --------
 
 ===Pronunciation===
-* {{a|Portugal}} {{IPA|pt|/viˈaʒẽʃ/}}
+{{pt-IPA}}
 
 ===Noun===
 {{head|pt|noun form}}
@@ -67938,7 +67969,7 @@ Page 4603 vidros: Found match for regex: =
 Page 4603 vidros: -------- begin text --------
 
 ===Pronunciation===
-* {{a|Portugal}} {{IPA|pt|/ˈvi.ðɾuʃ/}}
+{{pt-IPA}}
 
 ===Noun===
 {{head|pt|noun form}}
@@ -68165,7 +68196,7 @@ Page 4619 vindos: Found match for regex: =
 Page 4619 vindos: -------- begin text --------
 
 ===Pronunciation===
-* {{a|Brazil}} {{IPA|pt|/ˈvĩ.dus/}}
+{{pt-IPA}}
 
 ===Adjective===
 {{head|pt|adjective form|g=m-p}}
@@ -68196,7 +68227,7 @@ Page 4621 vinhos: Found match for regex: =
 Page 4621 vinhos: -------- begin text --------
 
 ===Pronunciation===
-* {{a|Portugal}} {{IPA|pt|/ˈviɲuʃ/}}
+{{pt-IPA}}
 
 ===Noun===
 {{head|pt|noun form}}
@@ -68338,7 +68369,7 @@ Page 4630 virou: Found match for regex: =
 Page 4630 virou: -------- begin text --------
 
 ===Pronunciation===
-* {{a|Portugal}} {{IPA|pt|/viˈɾow/}}
+{{pt-IPA}}
 
 ===Verb===
 {{head|pt|verb form}}
@@ -68349,7 +68380,7 @@ Page 4631 virtuais: Found match for regex: =
 Page 4631 virtuais: -------- begin text --------
 
 ===Pronunciation===
-* {{a|Brazil}} {{IPA|pt|/viʁ.tu.ˈajs/}}
+{{pt-IPA}}
 
 ===Adjective===
 {{head|pt|adjective form}}
@@ -68431,7 +68462,7 @@ Page 4636 visitas: Found match for regex: =
 Page 4636 visitas: -------- begin text --------
 
 ===Pronunciation===
-* {{a|Portugal}} {{IPA|pt|/viˈzitɐʃ/}}
+{{pt-IPA}}
 
 ===Verb===
 {{head|pt|verb form}}
@@ -68737,7 +68768,7 @@ Page 4658 vivos: Found match for regex: =
 Page 4658 vivos: -------- begin text --------
 
 ===Pronunciation===
-* {{a|Portugal}} {{IPA|pt|/ˈvi.vuʃ/}}
+{{pt-IPA}}
 
 ===Adjective===
 {{head|pt|adjective form}}
@@ -68767,7 +68798,7 @@ Page 4660 voa: Found match for regex: =
 Page 4660 voa: -------- begin text --------
 
 ===Pronunciation===
-{{pt-IPA|pt=voua}}
+{{pt-IPA}}
 * {{hyphenation|pt|vo|a}}
 
 ===Verb===
@@ -68779,7 +68810,7 @@ Page 4661 voando: Found match for regex: =
 Page 4661 voando: -------- begin text --------
 
 ===Pronunciation===
-{{pt-IPA|pt=vuando|br=voando}}
+{{pt-IPA}}
 * {{rhymes|pt|ɐ̃du|s=3}}
 * {{hyph|pt|vo|an|do}}
 
@@ -68792,7 +68823,7 @@ Page 4662 voara: Found match for regex: =
 Page 4662 voara: -------- begin text --------
 
 ===Pronunciation===
-* {{a|Portugal}} {{IPA|pt|/ˈvwaɾɐ/}}
+{{pt-IPA}}
 * {{hyph|pt|vo|a|ra}}
 
 ===Verb===
@@ -68873,14 +68904,18 @@ Page 4668 voltas: Found match for regex: =
 Page 4668 voltas: -------- begin text --------
 
 ===Pronunciation===
-* {{a|Portugal}} {{IPA|pt|/ˈvɔɫ.tɐʃ/}}
+{{pt-IPA|vóltas}}
 
-===Noun===
+===Etymology 1===
+
+====Noun====
 {{head|pt|noun form}}
 
 # {{plural of|pt|volta}}
 
-===Verb===
+===Etymology 2===
+
+====Verb====
 {{head|pt|verb form}}
 
 # {{pt-verb-form-of|voltar}}
@@ -68889,7 +68924,7 @@ Page 4669 voltasse: Found match for regex: =
 Page 4669 voltasse: -------- begin text --------
 
 ===Pronunciation===
-* {{a|Portugal}} {{IPA|pt|/vɔɫ.ˈta.sɨ/}}
+{{pt-IPA}}
 
 ===Verb===
 {{head|pt|verb form}}
@@ -68900,7 +68935,7 @@ Page 4670 voltava: Found match for regex: =
 Page 4670 voltava: -------- begin text --------
 
 ===Pronunciation===
-* {{a|PT}} {{IPA|pt|/voɫ.ˈta.vɐ/|/vɔɫ.ˈta.vɐ/}}
+{{pt-IPA}}
 
 ===Verb===
 {{head|pt|verb form}}
@@ -68911,7 +68946,7 @@ Page 4671 volto: Found match for regex: =
 Page 4671 volto: -------- begin text --------
 
 ===Pronunciation===
-* {{a|Portugal}} {{IPA|pt|/ˈvɔɫ.tu/}}
+{{pt-IPA|vólto}}
 
 ===Verb===
 {{head|pt|verb form}}
@@ -68922,8 +68957,7 @@ Page 4672 voltou: Found match for regex: =
 Page 4672 voltou: -------- begin text --------
 
 ===Pronunciation===
-* {{a|BR}} {{IPA|pt|/vow.ˈto(w)/}}
-* {{a|PT}} {{IPA|pt|/vɔɫ.ˈtow/}}
+{{pt-IPA}}
 
 ===Verb===
 {{head|pt|verb form}}
@@ -68935,7 +68969,7 @@ Page 4673 vontades: Found match for regex: =
 Page 4673 vontades: -------- begin text --------
 
 ===Pronunciation===
-* {{a|PT}} {{IPA|pt|/võ.ˈta.ðɨʃ/}}
+{{pt-IPA}}
 
 ===Noun===
 {{head|pt|noun form}}
@@ -68946,7 +68980,7 @@ Page 4674 vorazes: Found match for regex: =
 Page 4674 vorazes: -------- begin text --------
 
 ===Pronunciation===
-* {{a|Brazil}} {{IPA|pt|/vo.ˈɾa.zis/}}
+{{pt-IPA}}
 
 ===Adjective===
 {{head|pt|adjective form}}
@@ -69104,7 +69138,7 @@ Page 4683 várias: Found match for regex: =
 Page 4683 várias: -------- begin text --------
 
 ===Pronunciation===
-* {{a|Portugal}} {{IPA|pt|/ˈva.ɾjɐʃ/}}
+{{pt-IPA}}
 
 ===Adjective===
 {{head|pt|adjective form}}
@@ -69115,8 +69149,7 @@ Page 4684 vários: Found match for regex: =
 Page 4684 vários: -------- begin text --------
 
 ===Pronunciation===
-* {{a|Portugal}} {{IPA|pt|/ˈva.ɾjuʃ/}}
-* {{a|Brazil}} {{IPA|pt|/ˈva.ɾjus/|[ˈvä.ɾjʊs̻]}}
+{{pt-IPA}}
 
 ===Determiner===
 {{head|pt|determiner form}}
@@ -69391,7 +69424,7 @@ Page 4702 àquela: -------- begin text --------
 ===Contraction===
 {{head|pt|contraction|g=f-s}}
 
-# {{contraction of|pt|[[a]] [[aquela]]||to that|nodot=1}}: {{infl of|pt|àquele||f|s}}
+# {{contraction of|pt|[[a]] [[aquela]]||to that {{q|feminine}}|nodot=1}}: {{infl of|pt|àquele||f|s}}
 #* '''1999''', [[w:J. K. Rowling|J. K. Rowling]], [[w:Lia Wyler|Lia Wyler]], ''Harry Potter e o Prisioneiro de Azkaban'', Rocco, page 57:
 #*: O jantar '''àquela''' noite foi muito agradável.
 #*:: The dinner '''at that''' night was very pleasant.
@@ -69414,7 +69447,7 @@ Page 4703 àquelas: -------- begin text --------
 ===Contraction===
 {{head|pt|contraction|g=f-p}}
 
-# {{contraction of|pt|[[a]] [[aquelas]]||to those|nodot=1}}: {{infl of|pt|àquele||f|p}}
+# {{contraction of|pt|[[a]] [[aquelas]]||to those {{q|feminine}}|nodot=1}}: {{infl of|pt|àquele||f|p}}
 
 ====See also====
 {{Portuguese demonstratives}}
@@ -69435,7 +69468,7 @@ Page 4704 àquele: -------- begin text --------
 ===Contraction===
 {{pt-contr-adj|f=àquela|n=àquilo}}
 
-# {{contraction of|pt|[[a]] [[aquele]]||to that}}
+# {{contraction of|pt|[[a]] [[aquele]]||to that {{q|masculine}}}}
 #* '''2007''', [[w:J. K. Rowling|J. K. Rowling]], [[w:Lia Wyler|Lia Wyler]], ''Harry Potter e as Relíquias da Morte'', Rocco, page 287:
 #*: Por que, então, ela o conduzira '''àquele''' lugar?
 #*:: Why, then, had she led him '''to that''' place?
@@ -69458,7 +69491,7 @@ Page 4705 àqueles: -------- begin text --------
 ===Contraction===
 {{head|pt|contraction|g=m-p}}
 
-# {{contraction of|pt|[[a]] [[aqueles]]||to those|nodot=1}}: {{infl of|pt|àquele||m|p}}
+# {{contraction of|pt|[[a]] [[aqueles]]||to those {{q|masculine}}|nodot=1}}: {{infl of|pt|àquele||m|p}}
 
 ====See also====
 {{Portuguese demonstratives}}
@@ -69499,7 +69532,7 @@ Page 4707 às: -------- begin text --------
 ===Contraction===
 {{head|pt|contraction|g=f-p}}
 
-# {{contraction of|pt|[[a]] [[as]]||to the|nodot=1}}: {{infl of|pt|ao||f|p}}
+# {{contraction of|pt|[[a]] [[as]]||to the {{q|feminine plural}}|nodot=1}}: {{infl of|pt|ao||f|p}}
 #: {{ux|pt|Fui '''às''' cidades.|t=I went '''to the''' cities.}}
 
 ====Quotations====
@@ -69618,9 +69651,7 @@ Page 4716 ímãs: Found match for regex: =
 Page 4716 ímãs: -------- begin text --------
 
 ===Pronunciation===
-* {{a|Portugal}} {{IPA|pt|[ˈimɐ̃ʃ]}}
-* {{a|São Paulo}} {{IPA|pt|[ˈimɐ̃s]}}
-* {{a|Carioca}} {{IPA|pt|[ˈĩmɐ̃ʃ]}}
+{{pt-IPA}}
 
 ===Noun===
 {{head|pt|noun form|g=m-p}}
@@ -69661,7 +69692,7 @@ Page 4719 única: Found match for regex: =
 Page 4719 única: -------- begin text --------
 
 ===Pronunciation===
-* {{a|PT}} {{IPA|pt|/ˈu.ni.kɐ/}}
+{{pt-IPA}}
 
 ===Adjective===
 {{head|pt|adjective form}}
