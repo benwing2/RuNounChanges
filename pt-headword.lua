@@ -673,7 +673,7 @@ local function handle_adj_adv_hascomp(args, data, plpos, tracking_categories)
 		table.insert(data.categories, langname .. " comparable " .. plpos)
 	end
 
-	insert_ancillary_inflection(data, args.comp, args.comp_qual, "comparative", plos, tracking_categories)
+	insert_ancillary_inflection(data, args.comp, args.comp_qual, "comparative", plpos, tracking_categories)
 	insert_ancillary_inflection(data, args.sup, args.sup_qual, "superlative", plpos, tracking_categories)
 end
 
@@ -957,6 +957,45 @@ local function do_adverb(args, data, tracking_categories, pos, is_suffix)
 
 	if not is_suffix then
 		data.pos_category = plpos
+	end
+
+	local lemma = m_links.remove_links(data.heads[1]) -- should always be specified
+
+	-- If no comp, but a non-default sup given, then add the default adverbial comparative/superlative.
+	-- This is useful when an absolute superlative is given.
+	local saw_sup_plus = false
+	if not args.comp and args.sup then
+		for i, supval in ipairs(args.sup) do
+			if supval == "+" then
+				saw_sup_plus = true
+			end
+		end
+		if not saw_sup_plus then
+			args.comp = {"+"}
+			table.insert(args.sup, 1, "+")
+		end
+	end
+
+	-- If comp=+, use default adverbial comparative 'mais ...', and set a default adverbial superlative if unspecified.
+	local saw_comp_plus = false
+	if args.comp then
+		for i, compval in ipairs(args.comp) do
+			if compval == "+" then
+				saw_comp_plus = true
+				args.comp[i] = "[[mais]] [[" .. lemma .. "]]"
+			end
+		end
+	end
+	if saw_comp_plus and not args.sup then
+		args.sup = {"+"}
+	end
+	-- If sup=+ (possibly from comp=+), use default adverbial superlative 'o mais ...'.
+	if args.sup then
+		for i, supval in ipairs(args.sup) do
+			if supval == "+" then
+				args.sup[i] = "[[o]] [[mais]] [[" .. lemma .. "]]"
+			end
+		end
 	end
 
 	handle_adj_adv_hascomp(args, data, plpos, tracking_categories)
