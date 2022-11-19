@@ -1,4 +1,4 @@
-Beginning at Sun Nov 13 00:48:46 2022
+Beginning at Sat Nov 19 01:01:03 2022
 Page 1 -ais: Found match for regex: =
 Page 1 -ais: -------- begin text --------
 
@@ -1466,13 +1466,18 @@ Page 98 abre: -------- begin text --------
 Page 99 abria: Found match for regex: =
 Page 99 abria: -------- begin text --------
 
+===Etymology===
+{{nonlemma}}
+
 ===Pronunciation===
-* {{a|PT}} {{IPA|pt|/ɐˈβɾiɐ/}}
+{{pt-IPA}}
+* {{rhymes|pt|iɐ|s=3}}
+* {{hyph|pt|a|bri|a}}
 
 ===Verb===
 {{head|pt|verb form}}
 
-# {{pt-verb-form-of|abrir}}
+# {{pt-verb-form-of|abria}}
 -------- end text --------
 Page 100 abrindo: Found match for regex: =
 Page 100 abrindo: -------- begin text --------
@@ -4606,6 +4611,9 @@ Page 327 amai: -------- begin text --------
 Page 328 amais: Found match for regex: =
 Page 328 amais: -------- begin text --------
 
+===Etymology===
+{{nonlemma}}
+
 ===Pronunciation===
 {{pt-IPA}}
 * {{rhymes|pt|ajs|q1=Brazil|ajʃ|q2=Portugal, Rio de Janeiro|s=2}}
@@ -6728,6 +6736,9 @@ Page 468 assusto: -------- begin text --------
 Page 469 atais: Found match for regex: =
 Page 469 atais: -------- begin text --------
 
+===Etymology===
+{{nonlemma}}
+
 ===Pronunciation===
 {{pt-IPA}}
 * {{rhymes|pt|ajs|q1=Brazil|ajʃ|q2=Portugal, Rio de Janeiro|s=2}}
@@ -7939,15 +7950,18 @@ Page 550 bateu: -------- begin text --------
 Page 551 batia: Found match for regex: =
 Page 551 batia: -------- begin text --------
 
+===Etymology===
+{{nonlemma}}
+
 ===Pronunciation===
-* {{a|PT}} {{IPA|pt|/bɐˈtiɐ/}}
+{{pt-IPA}}
+* {{rhymes|pt|iɐ|s=3}}
+* {{hyph|pt|ba|ti|a}}
 
 ===Verb===
 {{head|pt|verb form}}
 
 # {{pt-verb-form-of|bater}}
-#* '''2003''', [[w:J. K. Rowling|J. K. Rowling]], [[w:Lia Wyler|Lia Wyler]], ''Harry Potter e a Ordem da Fênix'', Rocco, page 434:
-#*: O coração de Harry '''batia''' acelerado agora.
 
 ----
 
@@ -10858,6 +10872,9 @@ Page 747 canta: -------- begin text --------
 Page 748 cantais: Found match for regex: =
 Page 748 cantais: -------- begin text --------
 
+===Etymology===
+{{nonlemma}}
+
 ===Pronunciation===
 {{pt-IPA}}
 * {{rhymes|pt|ajs|q1=Brazil|ajʃ|q2=Portugal, Rio de Janeiro|s=2}}
@@ -12875,9 +12892,13 @@ Page 885 cedi: -------- begin text --------
 Page 886 cedia: Found match for regex: =
 Page 886 cedia: -------- begin text --------
 
+===Etymology===
+{{nonlemma}}
+
 ===Pronunciation===
 {{pt-IPA}}
-* {{hyphenation|pt|ce|di|a}}
+* {{rhymes|pt|iɐ|s=3}}
+* {{hyph|pt|ce|di|a}}
 
 ===Verb===
 {{head|pt|verb form}}
@@ -17837,9 +17858,13 @@ Page 1234 comi: -------- begin text --------
 Page 1235 comia: Found match for regex: =
 Page 1235 comia: -------- begin text --------
 
+===Etymology===
+{{nonlemma}}
+
 ===Pronunciation===
 {{pt-IPA}}
-* {{hyphenation|pt|co|mi|a}}
+* {{rhymes|pt|iɐ|s=3}}
+* {{hyph|pt|co|mi|a}}
 
 ===Verb===
 {{head|pt|verb form}}
@@ -22009,8 +22034,13 @@ Page 1532 correu: -------- begin text --------
 Page 1533 corria: Found match for regex: =
 Page 1533 corria: -------- begin text --------
 
+===Etymology===
+{{nonlemma}}
+
 ===Pronunciation===
 {{pt-IPA}}
+* {{rhymes|pt|iɐ|s=3}}
+* {{hyph|pt|cor|ri|a}}
 
 ===Verb===
 {{head|pt|verb form}}
@@ -23701,8 +23731,12 @@ Page 1641 daremos: -------- begin text --------
 Page 1642 daria: Found match for regex: =
 Page 1642 daria: -------- begin text --------
 
+===Etymology===
+{{nonlemma}}
+
 ===Pronunciation===
 {{pt-IPA}}
+* {{rhymes|pt|iɐ|s=3}}
 * {{hyph|pt|da|ri|a}}
 
 ===Verb===
@@ -25712,7 +25746,7 @@ Page 1778 desfará: -------- begin text --------
 {{rfe|pt}}
 
 ===Pronunciation===
-{{pt-IPA}}
+{{pt-IPA|des^fará}}
 * {{rhymes|pt|a|s=3}}
 * {{hyph|pt|des|fa|rá}}
 
@@ -27448,14 +27482,18 @@ Page 1898 diremos: -------- begin text --------
 Page 1899 diria: Found match for regex: =
 Page 1899 diria: -------- begin text --------
 
+===Etymology===
+{{rfe|pt}}
+
 ===Pronunciation===
 {{pt-IPA}}
+* {{rhymes|pt|iɐ|s=3}}
+* {{hyph|pt|di|ri|a}}
 
 ===Verb===
 {{head|pt|verb form}}
 
-# {{pt-verb form of|dizer||indicative|conditional|singular|first}}
-# {{pt-verb form of|dizer||indicative|conditional|singular|third}}
+# {{pt-verb-form-of|dizer|eria}}
 -------- end text --------
 Page 1900 dirá: Found match for regex: =
 Page 1900 dirá: -------- begin text --------
@@ -28548,14 +28586,18 @@ Page 1973 dizes: -------- begin text --------
 Page 1974 dizia: Found match for regex: =
 Page 1974 dizia: -------- begin text --------
 
+===Etymology===
+{{nonlemma}}
+
 ===Pronunciation===
 {{pt-IPA}}
+* {{rhymes|pt|iɐ|s=3}}
+* {{hyph|pt|di|zi|a}}
 
 ===Verb===
 {{head|pt|verb form}}
 
-# {{inflection of|pt|dizer||1|s|impf|indc}}
-# {{inflection of|pt|dizer||3|s|impf|indc}}
+# {{pt-verb-form-of|dizer}}
 -------- end text --------
 Page 1975 do: Found match for regex: =
 Page 1975 do: -------- begin text --------
@@ -29367,6 +29409,7 @@ Page 2020 dás: -------- begin text --------
 
 ===Pronunciation===
 {{pt-IPA}}
+* {{rhymes|pt|as|q1=Brazil|aʃ|q2=Portugal, Rio de Janeiro|ajs|q3=Brazil|ajʃ|q4=Rio de Janeiro|s=1}}
 * {{homophones|pt|dais|q1=Brazil}}
 * {{hyphenation|pt|dás}}
 
@@ -31156,12 +31199,13 @@ Page 2145 estais: -------- begin text --------
 
 ===Pronunciation===
 {{pt-IPA}}
+* {{homophones|pt|estás|q1=Brazil}}
 * {{hyph|pt|es|tais}}
 
 ===Verb===
 {{head|pt|verb form}}
 
-# {{pt-verb-form-of|estar|ais}}
+# {{pt-verb-form-of|estar}}
 -------- end text --------
 Page 2146 estamos: Found match for regex: =
 Page 2146 estamos: -------- begin text --------
@@ -31810,6 +31854,7 @@ Page 2189 estás: -------- begin text --------
 
 ===Pronunciation===
 {{pt-IPA}}
+* {{homophones|pt|estais|q1=Brazil}}
 * {{hyph|pt|es|tás}}
 
 ===Verb===
@@ -32776,16 +32821,20 @@ Page 2255 faremos: -------- begin text --------
 Page 2256 faria: Found match for regex: =
 Page 2256 faria: -------- begin text --------
 
+===Etymology===
+{{nonlemma}}
+
 ===Pronunciation===
 {{pt-IPA}}
+* {{rhymes|pt|iɐ|s=3}}
+* {{homophones|pt|Faria}}
+* {{hyph|pt|fa|ri|a}}
 * {{audio|pt|LL-Q5146 (por)-Santamarcanda-faria.wav|Audio (Oporto, Portugal)}}
-*{{hyph|pt|fa|ri|a}}
 
 ===Verb===
 {{head|pt|verb form}}
 
-# {{pt-verb-form-of|fazer|c|1|s}}
-# {{pt-verb-form-of|fazer|c|3|s}}
+# {{pt-verb-form-of|fazer|eria}}
 -------- end text --------
 Page 2257 fariam: Found match for regex: =
 Page 2257 fariam: -------- begin text --------
@@ -32923,10 +32972,10 @@ Page 2266 faz: Found match for regex: =
 Page 2266 faz: -------- begin text --------
 
 ===Pronunciation===
-* {{rhymes|pt|as|s=1}}
 {{pt-IPA}}
-* {{hyph|pt|faz}}
+* {{rhymes|pt|as|q1=Brazil|aʃ|q2=Portugal, Rio de Janeiro|ajs|q3=Brazil|ajʃ|q4=Rio de Janeiro|s=1}}
 * {{homophones|pt|fás}}
+* {{hyphenation|pt|faz}}
 
 ===Verb===
 {{head|pt|verb form}}
@@ -33017,8 +33066,12 @@ Page 2272 fazes: -------- begin text --------
 Page 2273 fazia: Found match for regex: =
 Page 2273 fazia: -------- begin text --------
 
+===Etymology===
+{{nonlemma}}
+
 ===Pronunciation===
 {{pt-IPA}}
+* {{rhymes|pt|iɐ|s=3}}
 * {{hyph|pt|fa|zi|a}}
 
 ===Verb===
@@ -35854,7 +35907,9 @@ Page 2460 fria: Found match for regex: =
 Page 2460 fria: -------- begin text --------
 
 ===Pronunciation===
-* {{a|PT|Brazil}} {{IPA|pt|/ˈfɾi.ɐ/}}
+{{pt-IPA}}
+* {{rhymes|pt|iɐ|s=2}}
+* {{hyph|pt|fri|a}}
 
 ===Adjective===
 {{head|pt|adjective form}}
@@ -36221,8 +36276,9 @@ Page 2485 fás: -------- begin text --------
 
 ===Pronunciation===
 {{pt-IPA}}
+* {{rhymes|pt|as|q1=Brazil|aʃ|q2=Portugal, Rio de Janeiro|ajs|q3=Brazil|ajʃ|q4=Rio de Janeiro|s=1}}
+* {{homophones|pt|faz}}
 * {{hyphenation|pt|fás}}
-* {{homophone|pt|faz}}
 
 ===Noun===
 {{head|pt|noun form}}
@@ -37885,33 +37941,41 @@ Page 2596 haveis: -------- begin text --------
 ===Alternative forms===
 * {{l|pt|heis}}
 
+===Etymology===
+From {{inh|pt|roa-opt|avedes}}, from {{inh|pt|VL.|*abetis}}, from {{inh|pt|la|habētis}}.<ref>[https://ciberduvidas.iscte-iul.pt/consultorio/perguntas/havemos-haveis-e-as-terminacoes-do-futuro-do-indicativo/34987 in Ciberdúvidas da Língua Portuguesa: 'Havemos, haveis e as terminações do futuro do indicativo' [consultado em 17-11-2022]]</ref>
+
 ===Pronunciation===
-{{pt-IPA|haveis}}
+{{pt-IPA}}
 * {{hyph|pt|ha|veis}}
 
 ===Verb===
 {{head|pt|verb form}}
 
 # {{pt-verb-form-of|haver}}
+
+===References===
+<references/>
 -------- end text --------
 Page 2597 havemos: Found match for regex: =
 Page 2597 havemos: -------- begin text --------
 
-=== Etymology ===
-[[:Category:Portuguese back-formations|Back-formation]] from [[haver#Portuguese|haver]].
-
 ===Alternative forms===
-* {{l|pt|hemos}}
+* {{alter|pt|hemos}}
+
+===Etymology===
+From {{inh|pt|roa-opt|avemos}}, from {{inh|pt|VL.|*abemos}}, from {{inh|pt|la|habēmus}}.<ref>[https://ciberduvidas.iscte-iul.pt/consultorio/perguntas/havemos-haveis-e-as-terminacoes-do-futuro-do-indicativo/34987 in Ciberdúvidas da Língua Portuguesa: 'Havemos, haveis e as terminações do futuro do indicativo' [consultado em 17-11-2022]]</ref>
 
 ===Pronunciation===
 {{pt-IPA|havêmos}}
+* {{hyph|pt|ha|ve|mos}}
 
 ===Verb===
 {{head|pt|verb form}}
 
-# {{inflection of|pt|haver||1|p|pres|indc}}
+# {{pt-verb-form-of|haver|psi|1|p}}
 
-[[Category:Portuguese back-formations]]
+===References===
+<references/>
 -------- end text --------
 Page 2598 havendo: Found match for regex: =
 Page 2598 havendo: -------- begin text --------
@@ -37956,14 +38020,19 @@ Page 2600 haverá: -------- begin text --------
 Page 2601 havia: Found match for regex: =
 Page 2601 havia: -------- begin text --------
 
+===Etymology===
+{{nonlemma}}
+
 ===Pronunciation===
-* {{a|PT}} {{IPA|pt|/ɐ.ˈvi.ɐ/}}
+{{pt-IPA}}
+* {{rhymes|pt|iɐ|s=3}}
+* {{homophones|pt|avia}}
+* {{hyph|pt|ha|vi|a}}
 
 ===Verb===
 {{head|pt|verb form}}
 
-# {{pt-verb form of|haver||indicative|imperfect|singular|first}}
-# {{pt-verb form of|haver||indicative|imperfect|singular|third}}
+# {{pt-verb-form-of|havia}}
 -------- end text --------
 Page 2602 hectares: Found match for regex: =
 Page 2602 hectares: -------- begin text --------
@@ -37986,10 +38055,11 @@ Page 2603 hei: -------- begin text --------
 * {{l|pt|ei}} {{qualifier|obsolete}}
 
 ===Etymology===
-From {{inh|pt|roa-opt|ei}}, from a Proto-Ibero-Romance variety ''ai'', from {{inh|pt|VL.|*aio}}, from {{inh|pt|la|habeō}}, from {{der|la|itc-pro|*habēō}} or {{m|itc-pro|*haβēō}}, the latter may be from {{der|la|ine-pro|*gʰeh₁bʰ-||to grab, to take}}.
+From {{inh|pt|roa-opt|ei}}, from a Proto-Ibero-Romance variety ''ai'', from {{inh|pt|VL.|*aio}}, from {{inh|pt|la|habeō}},<ref>[https://ciberduvidas.iscte-iul.pt/consultorio/perguntas/havemos-haveis-e-as-terminacoes-do-futuro-do-indicativo/34987 in Ciberdúvidas da Língua Portuguesa: 'Havemos, haveis e as terminações do futuro do indicativo' [consultado em 17-11-2022]]</ref> from {{der|la|itc-pro|*habēō}} or {{m|itc-pro|*haβēō}}, the latter may be from {{der|la|ine-pro|*gʰeh₁bʰ-||to grab, to take}}.
 
 ===Pronunciation===
 {{pt-IPA}}
+* {{homophones|pt|ei}}
 * {{hyph|pt|hei}}
 
 ===Verb===
@@ -37997,22 +38067,36 @@ From {{inh|pt|roa-opt|ei}}, from a Proto-Ibero-Romance variety ''ai'', from {{in
 
 # {{pt-verb-form-of|haver|o}}
 
+====Derived terms====
+* {{l|pt|-ei}}
+
+===References===
+<references/>
+
 ----
 
 -------- end text --------
 Page 2604 heis: Found match for regex: =
 Page 2604 heis: -------- begin text --------
 
-===Alternative forms===
-* {{l|pt|haveis}}
+===Etymology===
+From {{inh|pt|VL.|*etis}}, alternative form of {{m|VL.|*abetis}}, from {{inh|pt|la|habētis}}.<ref>[https://ciberduvidas.iscte-iul.pt/consultorio/perguntas/havemos-haveis-e-as-terminacoes-do-futuro-do-indicativo/34987 in Ciberdúvidas da Língua Portuguesa: 'Havemos, haveis e as terminações do futuro do indicativo' [consultado em 17-11-2022]]</ref>
 
 ===Pronunciation===
 {{pt-IPA}}
+* {{homophones|pt|eis|-eis}}
+* {{hyph|pt|heis}}
 
 ===Verb===
 {{head|pt|verb form}}
 
-# {{inflection of|pt|haver||2|p|pres|ind}}
+# {{alternative form of|pt|haveis}}; {{pt-verb-form-of|haver|eis}}
+
+====Derived terms====
+* {{l|pt|-eis}}
+
+===References===
+<references/>
 -------- end text --------
 Page 2605 heliográfica: Found match for regex: =
 Page 2605 heliográfica: -------- begin text --------
@@ -38081,16 +38165,23 @@ Page 2608 helvéticos: -------- begin text --------
 Page 2609 hemos: Found match for regex: =
 Page 2609 hemos: -------- begin text --------
 
-===Alternative forms===
-* {{l|pt|havemos}}
+===Etymology===
+From {{inh|pt|VL.|*emos}}, alternative form of {{m|VL.|*abemos}}, from {{inh|pt|la|habēmus}}.<ref>[https://ciberduvidas.iscte-iul.pt/consultorio/perguntas/havemos-haveis-e-as-terminacoes-do-futuro-do-indicativo/34987 in Ciberdúvidas da Língua Portuguesa: 'Havemos, haveis e as terminações do futuro do indicativo' [consultado em 17-11-2022]]</ref>
 
 ===Pronunciation===
 {{pt-IPA|hêmos}}
+* {{hyph|pt|he|mos}}
 
 ===Verb===
 {{head|pt|verb form}}
 
-# {{inflection of|pt|haver||1|p|pres|indc}}
+# {{alternative form of|pt|havemos}}; {{pt-verb-form-of|haver|psi|1|p}}
+
+====Derived terms====
+* {{l|pt|-emos}}
+
+===References===
+<references/>
 
 ----
 
@@ -38373,20 +38464,28 @@ Page 2628 há: -------- begin text --------
 ===Alternative forms===
 * {{l|pt|ha}} {{qualifier|obsolete}}
 
+===Etymology===
+From {{inh|pt|roa-opt|á}}, from {{inh|pt|VL.|*at}}, from {{inh|pt|la|habet}}.<ref>[https://ciberduvidas.iscte-iul.pt/consultorio/perguntas/havemos-haveis-e-as-terminacoes-do-futuro-do-indicativo/34987 in Ciberdúvidas da Língua Portuguesa: 'Havemos, haveis e as terminações do futuro do indicativo' [consultado em 17-11-2022]]</ref>
+
 ===Pronunciation===
 {{pt-IPA}}
-* {{homophones|pt|á}}
 * {{rhymes|pt|a|s=1}}
+* {{homophones|pt|á|à|-á}}
 * {{hyph|pt|há}}
 
 ===Verb===
 {{head|pt|verb form}}
 
-# (impersonal verb) [[there is]]; there are.
 # {{pt-verb-form-of|haver|e}}
 
 ====Quotations====
 {{seeCites|pt|haver}}
+
+====Derived terms====
+* {{l|pt|-á}}
+
+===References===
+<references/>
 
 ----
 
@@ -38394,21 +38493,34 @@ Page 2628 há: -------- begin text --------
 Page 2629 hás: Found match for regex: =
 Page 2629 hás: -------- begin text --------
 
+===Etymology===
+From {{inh|pt|roa-opt|ás}}, from {{inh|pt|VL.|*as}}, from {{inh|pt|la|habēs}}.<ref>[https://ciberduvidas.iscte-iul.pt/consultorio/perguntas/havemos-haveis-e-as-terminacoes-do-futuro-do-indicativo/34987 in Ciberdúvidas da Língua Portuguesa: 'Havemos, haveis e as terminações do futuro do indicativo' [consultado em 17-11-2022]]</ref>
+
 ===Pronunciation===
 {{pt-IPA}}
-* {{homophones|pt|às|ás|az|as|q4=Brazil}}
+* {{rhymes|pt|as|q1=Brazil|aʃ|q2=Portugal, Rio de Janeiro|ajs|q3=Brazil|ajʃ|q4=Rio de Janeiro|s=1}}
+* {{homophones|pt|ás|às|as|q3=Brazil}}
 * {{hyphenation|pt|hás}}
 
 ===Verb===
 {{head|pt|verb form}}
 
-# {{inflection of|pt|haver||2|s|pres|indc}}
+# {{pt-verb-form-of|haver|es}}
+
+====Derived terms====
+* {{l|pt|-ás}}
+
+===References===
+<references/>
 
 ----
 
 -------- end text --------
 Page 2630 hão: Found match for regex: =
 Page 2630 hão: -------- begin text --------
+
+===Etymology===
+From {{inh|pt|roa-opt|an}}, from {{inh|pt|VL.|*ant}}, from {{inh|pt|la|habent}}.<ref>[https://ciberduvidas.iscte-iul.pt/consultorio/perguntas/havemos-haveis-e-as-terminacoes-do-futuro-do-indicativo/34987 in Ciberdúvidas da Língua Portuguesa: 'Havemos, haveis e as terminações do futuro do indicativo' [consultado em 17-11-2022]]</ref>
 
 ===Pronunciation===
 {{pt-IPA}}
@@ -38418,6 +38530,12 @@ Page 2630 hão: -------- begin text --------
 {{head|pt|verb form}}
 
 # {{pt-verb-form-of|haver|em}}
+
+====Derived terms====
+* {{l|pt|-ão}}
+
+===References===
+<references/>
 
 ----
 
@@ -38437,8 +38555,12 @@ Page 2631 hóspedes: -------- begin text --------
 Page 2632 ia: Found match for regex: =
 Page 2632 ia: -------- begin text --------
 
+===Etymology===
+{{nonlemma}}
+
 ===Pronunciation===
 {{pt-IPA}}
+* {{rhymes|pt|iɐ|s=2}}
 * {{hyph|pt|i|a}}
 
 ===Verb===
@@ -39794,13 +39916,24 @@ Page 2727 iria: -------- begin text --------
 
 ===Pronunciation===
 {{pt-IPA}}
+* {{rhymes|pt|iɐ|s=3}}
 * {{homophones|pt|Iria}}
 * {{hyph|pt|i|ri|a}}
 
-===Verb===
+===Etymology 1===
+{{nonlemma}}
+
+====Verb====
 {{head|pt|verb form}}
 
 # {{pt-verb-form-of|ir}}
+
+===Etymology 2===
+{{nonlemma}}
+
+====Verb====
+{{head|pt|verb form}}
+
 # {{pt-verb-form-of|iriar}}
 -------- end text --------
 Page 2728 iriam: Found match for regex: =
@@ -42746,6 +42879,8 @@ Page 2931 lê: -------- begin text --------
 
 ===Pronunciation===
 {{pt-IPA}}
+* {{homophones|pt|ler|q1=Brazil}}
+* {{hyph|pt|lê}}
 
 ===Verb===
 {{head|pt|verb form}}
@@ -44879,8 +45014,13 @@ Page 3064 morreu: -------- begin text --------
 Page 3065 morria: Found match for regex: =
 Page 3065 morria: -------- begin text --------
 
+===Etymology===
+{{nonlemma}}
+
 ===Pronunciation===
-* {{a|Portugal}} {{IPA|pt|/muˈʁiɐ/}}
+{{pt-IPA}}
+* {{rhymes|pt|iɐ|s=3}}
+* {{hyph|pt|mor|ri|a}}
 
 ===Verb===
 {{head|pt|verb form}}
@@ -44926,8 +45066,8 @@ Page 3069 mortais: -------- begin text --------
 
 ===Pronunciation===
 {{pt-IPA}}
-* {{hyphenation|pt|mor|tais}}
 * {{homophones|pt|murtais|q1=Portugal}}
+* {{hyphenation|pt|mor|tais}}
 
 ===Adjective===
 {{head|pt|adjective form}}
@@ -46066,8 +46206,8 @@ Page 3151 murtais: -------- begin text --------
 
 ===Pronunciation===
 {{pt-IPA}}
-* {{hyphenation|pt|mur|tais}}
 * {{homophones|pt|mortais|q1=Portugal}}
+* {{hyphenation|pt|mur|tais}}
 
 ===Noun===
 {{head|pt|noun form}}
@@ -46117,7 +46257,9 @@ Page 3154 más: -------- begin text --------
 
 ===Pronunciation===
 {{pt-IPA}}
-* {{homophones|pt|mais|q2=Brazil, with intrusive /j/}}
+* {{rhymes|pt|as|q1=Brazil|aʃ|q2=Portugal, Rio de Janeiro|ajs|q3=Brazil|ajʃ|q4=Rio de Janeiro|s=1}}
+* {{homophones|pt|mas|q1=Brazil|mais|q2=Brazil}}
+* {{hyph|pt|más}}
 
 ===Adjective===
 {{head|pt|adjective form|g=f-p}}
@@ -49457,8 +49599,12 @@ Page 3368 pareço: -------- begin text --------
 Page 3369 paria: Found match for regex: =
 Page 3369 paria: -------- begin text --------
 
+===Etymology===
+{{nonlemma}}
+
 ===Pronunciation===
 {{pt-IPA}}
+* {{rhymes|pt|iɐ|s=3}}
 * {{hyph|pt|pa|ri|a}}
 
 ===Verb===
@@ -52043,7 +52189,7 @@ Page 3544 podem: Found match for regex: =
 Page 3544 podem: -------- begin text --------
 
 ===Pronunciation===
-{{pt-IPA|br=pódem}}
+{{pt-IPA|pódem}}
 
 ===Verb===
 {{head|pt|verb form}}
@@ -52432,14 +52578,18 @@ Page 3571 porei: -------- begin text --------
 Page 3572 poria: Found match for regex: =
 Page 3572 poria: -------- begin text --------
 
+===Etymology===
+{{nonlemma}}
+
 ===Pronunciation===
 {{pt-IPA}}
+* {{rhymes|pt|iɐ|s=3}}
+* {{hyph|pt|po|ri|a}}
 
 ===Verb===
 {{head|pt|verb form}}
 
-# {{pt-verb form of|pôr|er|indicative|conditional|singular|first}}
-# {{pt-verb form of|pôr|er|indicative|conditional|singular|third}}
+# {{pt-verb-form-of|pôr}}
 
 ----
 
@@ -53140,17 +53290,6 @@ Page 3621 prepara: -------- begin text --------
 
 ----
 
--------- end text --------
-Page 3622 preplexa: Found match for regex: =
-Page 3622 preplexa: -------- begin text --------
-
-===Pronunciation===
-* {{a|Brazil}} {{IPA|pt|/peʁ.ˈplɛk.sɐ/}}
-
-===Adjective===
-{{head|pt|adjective form}}
-
-# {{adj form of|pt|perplexo||f|s}}
 -------- end text --------
 Page 3623 prepúcios: Found match for regex: =
 Page 3623 prepúcios: -------- begin text --------
@@ -54557,6 +54696,7 @@ Page 3722 pás: -------- begin text --------
 
 ===Pronunciation===
 {{pt-IPA}}
+* {{rhymes|pt|as|q1=Brazil|aʃ|q2=Portugal, Rio de Janeiro|ajs|q3=Brazil|ajʃ|q4=Rio de Janeiro|s=1}}
 * {{homophones|pt|paz|pais|q2=Brazil}}
 * {{hyph|pt|pás}}
 
@@ -54691,8 +54831,7 @@ Page 3732 púnhamos: Found match for regex: =
 Page 3732 púnhamos: -------- begin text --------
 
 ===Pronunciation===
-{{pt-IPA|pt=púnhamos}}
-* {{a|Brazil}} {{IPA|pt|/ˈpu.ɲɐ.mus/}}
+{{pt-IPA}}
 
 ===Verb===
 {{head|pt|verb form}}
@@ -55098,14 +55237,18 @@ Page 3758 queres: -------- begin text --------
 Page 3759 queria: Found match for regex: =
 Page 3759 queria: -------- begin text --------
 
+===Etymology===
+{{nonlemma}}
+
 ===Pronunciation===
 {{pt-IPA}}
+* {{rhymes|pt|iɐ|s=3}}
+* {{hyph|pt|que|ri|a}}
 
 ===Verb===
 {{head|pt|verb form}}
 
-# {{pt-verb form of|querer|er|indicative|imperfect|singular|first}}
-# {{pt-verb form of|querer|er|indicative|imperfect|singular|third}}
+# {{pt-verb-form-of|querer}}
 -------- end text --------
 Page 3760 quilhará: Found match for regex: =
 Page 3760 quilhará: -------- begin text --------
@@ -60065,9 +60208,11 @@ Page 4096 seria: Found match for regex: =
 Page 4096 seria: -------- begin text --------
 
 ===Etymology 1===
+{{nonlemma}}
 
 ====Pronunciation====
 {{pt-IPA}}
+* {{rhymes|pt|iɐ|s=3}}
 * {{hyph|pt|se|ri|a}}
 
 ====Verb====
@@ -60075,12 +60220,21 @@ Page 4096 seria: -------- begin text --------
 
 # {{pt-verb-form-of|ser}}
 
+===Etymology 2===
+{{nonlemma}}
+
+====Pronunciation====
+{{pt-IPA}}
+* {{rhymes|pt|iɐ|s=3}}
+* {{hyph|pt|se|ri|a}}
+
 ====Verb====
 {{head|pt|verb form}}
 
 # {{pt-verb-form-of|seriar}}
 
-===Etymology 2===
+===Etymology 3===
+{{nonlemma}}
 
 ====Adjective====
 {{head|pt|adjective form}}
@@ -63039,14 +63193,18 @@ Page 4279 teremos: -------- begin text --------
 Page 4280 teria: Found match for regex: =
 Page 4280 teria: -------- begin text --------
 
+===Etymology===
+{{nonlemma}}
+
 ===Pronunciation===
 {{pt-IPA}}
+* {{rhymes|pt|iɐ|s=3}}
+* {{hyph|pt|te|ri|a}}
 
 ===Verb===
 {{head|pt|verb form}}
 
-# {{pt-verb form of|ter|er|indicative|conditional|singular|first}} (I [[would]] [[have]])
-# {{pt-verb form of|ter|er|indicative|conditional|singular|third}} (he/she/it [[would]] [[have]])
+# {{pt-verb-form-of|ter}}
 -------- end text --------
 Page 4281 terminada: Found match for regex: =
 Page 4281 terminada: -------- begin text --------
@@ -63566,7 +63724,7 @@ Page 4314 tivemos: Found match for regex: =
 Page 4314 tivemos: -------- begin text --------
 
 ===Pronunciation===
-{{pt-IPA|br=tivemos|pt=tivémos}}
+{{pt-IPA|tivê*mos}}
 * {{hyph|pt|ti|ve|mos}}
 
 ===Verb===
@@ -64648,6 +64806,7 @@ Page 4388 trais: -------- begin text --------
 
 ===Pronunciation===
 {{pt-IPA}}
+* {{rhymes|pt|ajs|q1=Brazil|ajʃ|q2=Portugal, Rio de Janeiro|s=1}}
 * {{homophones|pt|trás|q1=Brazil|traz|q2=Brazil}}
 * {{hyphenation|pt|trais}}
 
@@ -64976,14 +65135,18 @@ Page 4412 traremos: -------- begin text --------
 Page 4413 traria: Found match for regex: =
 Page 4413 traria: -------- begin text --------
 
+===Etymology===
+{{rfe|pt}}
+
 ===Pronunciation===
 {{pt-IPA}}
+* {{rhymes|pt|iɐ|s=3}}
+* {{hyph|pt|tra|ri|a}}
 
 ===Verb===
 {{head|pt|verb form}}
 
-# {{pt-verb form of|trazer|er|indicative|conditional|singular|first}}
-# {{pt-verb form of|trazer|er|indicative|conditional|singular|third}}
+# {{pt-verb-form-of|trazer|eria}}
 -------- end text --------
 Page 4414 trará: Found match for regex: =
 Page 4414 trará: -------- begin text --------
@@ -65064,10 +65227,9 @@ Page 4420 traz: Found match for regex: =
 Page 4420 traz: -------- begin text --------
 
 ===Pronunciation===
-* {{rhymes|pt|as|s=1}}
 {{pt-IPA}}
+* {{rhymes|pt|as|q1=Brazil|aʃ|q2=Portugal, Rio de Janeiro|ajs|q3=Brazil|ajʃ|q4=Rio de Janeiro|s=1}}
 * {{homophones|pt|trás|trais|q2=Brazil}}
-* {{rhymes|pt|ajʃ|aʃ|s1=1}}
 * {{hyph|pt|traz}}
 
 ===Verb===
@@ -65122,14 +65284,18 @@ Page 4424 trazes: -------- begin text --------
 Page 4425 trazia: Found match for regex: =
 Page 4425 trazia: -------- begin text --------
 
+===Etymology===
+{{nonlemma}}
+
 ===Pronunciation===
 {{pt-IPA}}
+* {{rhymes|pt|iɐ|s=3}}
+* {{hyph|pt|tra|zi|a}}
 
 ===Verb===
 {{head|pt|verb form}}
 
-# {{pt-verb form of|trazer|er|indicative|imperfect|singular|first}}
-# {{pt-verb form of|trazer|er|indicative|imperfect|singular|third}}
+# {{pt-verb-form-of|trazer}}
 -------- end text --------
 Page 4426 trazido: Found match for regex: =
 Page 4426 trazido: -------- begin text --------
@@ -66023,8 +66189,13 @@ Page 4483 usaria: -------- begin text --------
 Page 4484 usará: Found match for regex: =
 Page 4484 usará: -------- begin text --------
 
+===Etymology===
+{{nonlemma}}
+
 ===Pronunciation===
 {{pt-IPA}}
+* {{rhymes|pt|a|s=3}}
+* {{hyph|pt|u|sa|rá}}
 
 ===Verb===
 {{head|pt|verb form}}
@@ -66501,6 +66672,8 @@ From {{inh|pt|la|vādō|vādis}}.
 
 ===Pronunciation===
 {{pt-IPA}}
+* {{rhymes|pt|ajs|q1=Brazil|ajʃ|q2=Portugal, Rio de Janeiro|s=1}}
+* {{homophones|pt|vás|q1=Brazil|Vaz|q2=Brazil}}
 * {{hyph|pt|vais}}
 
 ===Verb===
@@ -66882,8 +67055,12 @@ Page 4543 vedaria: -------- begin text --------
 Page 4544 vedará: Found match for regex: =
 Page 4544 vedará: -------- begin text --------
 
+===Etymology===
+{{nonlemma}}
+
 ===Pronunciation===
 {{pt-IPA}}
+* {{rhymes|pt|a|s=3}}
 * {{hyph|pt|ve|da|rá}}
 
 ===Verb===
@@ -67569,14 +67746,18 @@ Page 4587 veremos: -------- begin text --------
 Page 4588 veria: Found match for regex: =
 Page 4588 veria: -------- begin text --------
 
+===Etymology===
+{{nonlemma}}
+
 ===Pronunciation===
 {{pt-IPA}}
+* {{rhymes|pt|iɐ|s=3}}
+* {{hyph|pt|ve|ri|a}}
 
 ===Verb===
 {{head|pt|verb form}}
 
-# {{inflection of|pt|ver||1|s|cond|indc}}
-# {{inflection of|pt|ver||3|s|cond|indc}}
+# {{pt-verb-form-of|ver}}
 -------- end text --------
 Page 4589 vermelha: Found match for regex: =
 Page 4589 vermelha: -------- begin text --------
@@ -68167,14 +68348,18 @@ Page 4626 vires: -------- begin text --------
 Page 4627 viria: Found match for regex: =
 Page 4627 viria: -------- begin text --------
 
+===Etymology===
+{{nonlemma}}
+
 ===Pronunciation===
 {{pt-IPA}}
+* {{rhymes|pt|iɐ|s=3}}
+* {{hyph|pt|vi|ri|a}}
 
 ===Verb===
 {{head|pt|verb form}}
 
-# {{pt-verb form of|vir|ir|indicative|conditional|singular|first}}
-# {{pt-verb form of|vir|ir|indicative|conditional|singular|third}}
+# {{pt-verb-form-of|vir}}
 -------- end text --------
 Page 4628 viriam: Found match for regex: =
 Page 4628 viriam: -------- begin text --------
@@ -68515,9 +68700,13 @@ Page 4651 viveria: -------- begin text --------
 Page 4652 viverá: Found match for regex: =
 Page 4652 viverá: -------- begin text --------
 
+===Etymology===
+{{nonlemma}}
+
 ===Pronunciation===
-* {{rhymes|pt|a|s=3}}
 {{pt-IPA}}
+* {{rhymes|pt|a|s=3}}
+* {{hyph|pt|vi|ve|rá}}
 
 ===Verb===
 {{head|pt|verb form}}
@@ -68566,8 +68755,13 @@ Page 4655 vivi: -------- begin text --------
 Page 4656 vivia: Found match for regex: =
 Page 4656 vivia: -------- begin text --------
 
+===Etymology===
+{{nonlemma}}
+
 ===Pronunciation===
 {{pt-IPA}}
+* {{rhymes|pt|iɐ|s=3}}
+* {{hyph|pt|vi|vi|a}}
 
 ===Verb===
 {{head|pt|verb form}}
@@ -68659,8 +68853,12 @@ Page 4662 voara: -------- begin text --------
 Page 4663 voará: Found match for regex: =
 Page 4663 voará: -------- begin text --------
 
+===Etymology===
+{{nonlemma}}
+
 ===Pronunciation===
-* {{a|Portugal}} {{IPA|pt|/vwɐˈɾa/}}
+{{pt-IPA}}
+* {{rhymes|pt|a|s=3}}
 * {{hyph|pt|vo|a|rá}}
 
 ===Verb===
@@ -68708,8 +68906,12 @@ Page 4666 voltara: -------- begin text --------
 Page 4667 voltará: Found match for regex: =
 Page 4667 voltará: -------- begin text --------
 
+===Etymology===
+{{nonlemma}}
+
 ===Pronunciation===
 {{pt-IPA}}
+* {{rhymes|pt|a|s=3}}
 * {{hyph|pt|vol|ta|rá}}
 
 ===Verb===
@@ -68982,6 +69184,8 @@ Page 4685 vás: -------- begin text --------
 
 ===Pronunciation===
 {{pt-IPA}}
+* {{rhymes|pt|as|q1=Brazil|aʃ|q2=Portugal, Rio de Janeiro|ajs|q3=Brazil|ajʃ|q4=Rio de Janeiro|s=1}}
+* {{homophones|pt|Vaz|vais|q2=Brazil}}
 * {{hyph|pt|vás}}
 
 ===Verb===
@@ -69536,5 +69740,5 @@ Page 4720 úteis: -------- begin text --------
 
 # {{adj form of|pt|útil||p}}
 -------- end text --------
-Elapsed time: 6 mins 44.83 secs
-Ending at Sun Nov 13 00:55:31 2022
+Elapsed time: 7 mins 1.56 secs
+Ending at Sat Nov 19 01:08:05 2022
